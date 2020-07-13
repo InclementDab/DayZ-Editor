@@ -1,0 +1,115 @@
+FrameWidgetClass EditorUIFrame {
+ clipchildren 0
+ ignorepointer 0
+ position 0 0
+ size 1 1
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ scriptclass ""
+ {
+  PanelWidgetClass LeftListPanel {
+   clipchildren 1
+   inheritalpha 1
+   ignorepointer 0
+   color 0.1725 0.1922 0.2118 1
+   position 0 0
+   size 300 0.9
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
+   style EditorPanel
+   {
+    EditBoxWidgetClass LeftPanelSearchBar {
+     position 0 0
+     size 1 25
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scriptclass ""
+     style Editor
+    }
+    ScrollWidgetClass LeftPanelScrollBar {
+     clipchildren 1
+     inheritalpha 1
+     ignorepointer 0
+     position 0 30
+     size 1 800
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style Colorable
+     "Scrollbar V" 1
+     {
+      WrapSpacerWidgetClass LeftListPanelSpacer {
+       inheritalpha 1
+       position 0 0
+       size 1 1
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       "Size To Content V" 1
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass RightListPanel {
+   clipchildren 0
+   inheritalpha 1
+   ignorepointer 0
+   color 0.1725 0.1765 0.1804 1
+   position 0 0
+   size 300 0.9
+   halign right_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
+   style Outline
+   {
+    ScrollWidgetClass RightListPanelScrollBar {
+     clipchildren 0
+     inheritalpha 1
+     ignorepointer 0
+     position 0 0
+     size 1 1
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style blank
+     "Scrollbar V" 1
+     "Scrollbar V Left" 1
+     {
+      WrapSpacerWidgetClass RightListPanelSpacer {
+       inheritalpha 1
+       position 0 0
+       size 1 1
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+      }
+     }
+    }
+   }
+  }
+ }
+}

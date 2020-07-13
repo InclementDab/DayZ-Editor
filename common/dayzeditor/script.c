@@ -1,0 +1,3 @@
+
+#define DEBUG
+#define DEVELOPER

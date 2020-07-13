@@ -1,0 +1,42 @@
+PanelWidgetClass EditorListItemTooltip {
+ visible 0
+ disabled 0
+ inheritalpha 0
+ ignorepointer 1
+ position 0 0
+ size 300 200
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ scriptclass "EditorListItemTooltip"
+ style rover_sim_blackbox
+ {
+  TextWidgetClass EditorListItemTooltipTitle {
+   inheritalpha 1
+   ignorepointer 1
+   position 0 10
+   size 250 48
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   font "gui/fonts/Metron-Bold22"
+   "text halign" center
+   "text valign" center
+  }
+  ItemPreviewWidgetClass EditorListItemTooltipPreview {
+   inheritalpha 1
+   ignorepointer 1
+   position 0 7
+   size 275 125
+   halign center_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+  }
+ }
+}
