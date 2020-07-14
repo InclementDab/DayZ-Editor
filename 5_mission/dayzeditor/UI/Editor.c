@@ -241,6 +241,40 @@ class Editor: Managed
 			delete browser_item;
 	}
 	
+	void ScaleTest()
+	{		
+		Object bounding_box = GetGame().CreateObjectEx("BoundingBox", vector.Zero, ECE_CREATEPHYSICS);
+		
+		set<Object> o;
+		vector bbCenter = MousePosToRay(o);
+		
+		float range, height;
+		range = 120;
+		height = 20;
+		
+		
+		vector transform[4] =
+		{ 
+            "1 0 0 0"
+            "0 1 0 0" 
+            "0 0 1 0"
+            "0 0 0 1"
+		};
+
+		transform[0][0] = range * 2.0;
+		transform[1][1] = height * 2.0;
+		transform[2][2] = range * 2.0;
+
+        transform[3][0] = bbCenter[0];
+        transform[3][1] = bbCenter[1];
+        transform[3][2] = bbCenter[2];
+        transform[3][3] = 1.0;
+
+        bounding_box.SetTransform(transform);
+
+		//target.Update();
+	}
+	
 	bool ui_state = false;
 	void OnKeyPress(int key) 
 	{
@@ -257,11 +291,11 @@ class Editor: Managed
 			
 						
 			case KeyCode.KC_LEFT:
-				m_EditorUI.Show(false);
+				ScaleTest();
 				break;
 			
 			case KeyCode.KC_RIGHT:
-				m_EditorUI.Show(true);
+				
 				break;
 		}
 	}

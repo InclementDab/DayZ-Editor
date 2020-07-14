@@ -6,6 +6,57 @@ class EditorEvents
 	event void OnObjectPlaced(Object obj, vector pos);
 }
 
+class EditorContextMenu: ScriptedWidgetEventHandler
+{
+	static ref EditorContextMenu instance;
+	protected Widget m_Root;
+	
+	protected void OnWidgetScriptInit(Widget w)
+	{
+		Print("EditorObjectMarkerHandler::OnWidgetScriptInit");
+		m_Root = w;
+		m_Root.SetHandler(this);
+	
+		instance = this;
+	}
+	
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (Editor.CurrentSelectedObject == null) return false;
+		
+		switch (w.GetName()) {
+			case ("CtxProperties"):
+				break;
+			
+			case ("CtxAlignToGround"):
+				vector v1 = Editor.CurrentSelectedObject.GetPosition();	
+				vector v2 = GetGame().GetSurfaceOrientation(v1[0], v1[2]);
+				Editor.CurrentSelectedObject.SetPosition(v2);
+			
+			
+				break;
+			
+			case ("CtxDelete"):
+				//Editor.DeleteObject(Editor.CurrentSelectedObject);
+				break;
+		}
+		
+		return true;
+	}
+	
+	static void ShowContextMenu(int x, int y)
+	{
+		instance.m_Root.SetPos(x, y);
+		instance.m_Root.Show(true);
+	}
+	
+	static void HideContextMenu()
+	{
+		instance.m_Root.Show(false);
+	}
+}
+
 
 class EditorUI: UIScriptedMenu
 {
@@ -30,6 +81,10 @@ class EditorUI: UIScriptedMenu
 	protected WrapSpacerWidget m_RightListPanelSpacer;
 		
 	protected ref EditorSearchBar m_EditorSearchBar;
+	
+	
+	protected Widget m_EditorCtxMenu;
+	
 	
 	ref array<ref EditorListItem> 	m_EditorListItems;
 	static ref array<ref EditorObject> EditorPlacedObjects;
@@ -104,36 +159,11 @@ class EditorUI: UIScriptedMenu
 		return null;
 	}
 		
-		
-	Shape shape;
 	override void Update(float timeslice)
 	{
-		set<Object> collisions = new set<Object>;
-		vector hitpos = Editor.MousePosToRay(collisions);
 		
- 		if (collisions.Count() > 0) {
-			for (int i = 0; i < collisions.Count(); i++) {
-				
-				vector min, max;
-				Object o = collisions[i];
-				o.GetWorldBounds(min, max);						 
-				Editor.SetObjectUnderCursor(o);
-				
-				vector mat[4];
-				o.GetTransform(mat);
-				if(shape) {
-					shape.Destroy();
-					shape = NULL;
-				}
-				
-				shape = Shape.Create(ShapeType.BBOX, 0x1fff7f7f, ShapeFlags.TRANSP|ShapeFlags.NOZWRITE, min, max);
-				
-				if (shape) {
-					shape.SetMatrix(mat);
-					//Print(max);
-				}
-			}
-		} 
+
+ 		
 		
 		super.Update(timeslice);
 		
@@ -142,9 +172,10 @@ class EditorUI: UIScriptedMenu
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		Print("EditorUI::OnDrag");
-		
 		return super.OnDrag(w, x, y);
 	}
+	
+	
 	
 	
 	
@@ -153,6 +184,7 @@ class EditorUI: UIScriptedMenu
 		Print("EditorUI::OnMouseButtonDown");
 		
 			if (button == 0) {
+				EditorContextMenu.HideContextMenu();
 				if (w == GetFocus()) return true;
 				
 				if (w.GetName() == "EditorListItemPanel") { // idk why but i cant use OnMouseButtonDown in editorobject
@@ -177,10 +209,6 @@ class EditorUI: UIScriptedMenu
 					if (Editor.ObjectUnderCursor != null)
 						Editor.SetActiveObject(Editor.ObjectUnderCursor);
 			}	
-			if (button == 1) {
-				// Implement Context menu
-				
-			}
 		}
 		return false;
 	}

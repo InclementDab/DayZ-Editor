@@ -13,6 +13,7 @@ FrameWidgetClass EditorObject {
  {
   PanelWidgetClass EditorObjectMarkerPanel {
    ignorepointer 0
+   color 0.6863 0.2588 0.5804 1
    position 0 0
    size 20 20
    hexactpos 1
@@ -25,6 +26,7 @@ FrameWidgetClass EditorObject {
     ImageWidgetClass EditorObjectMarkerImage {
      inheritalpha 1
      ignorepointer 1
+     color 0.6235 0.1569 0.5059 1
      position 0 0
      size 20 20
      hexactpos 1

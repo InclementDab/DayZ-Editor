@@ -45,6 +45,24 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 		return true;
 	}
 	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		/*Input input = GetGame().GetInput();
+				
+		if (input.LocalPress("UATempRaiseWeapon")) {
+			Print("Right Click");
+			int x, y;
+			GetMousePos(x, y);
+			EditorContextMenu.ShowContextMenu(x, y);
+		}*/
+		
+		Print("OnClick");
+		Print(button);
+		
+		
+		return true;
+	}
+	
 	void Update()
 	{
 		Object obj = Editor.CurrentSelectedObject;
