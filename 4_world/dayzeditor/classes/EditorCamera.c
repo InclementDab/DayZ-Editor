@@ -74,25 +74,25 @@ class EditorCamera: Camera
 		SendUpdateAccumalator = SendUpdateAccumalator + timeSlice;
 		
 		vector transform[4];
-		GetTransform( transform );
+		GetTransform(transform);
 
 		Input input = GetGame().GetInput();
 
-		float forward = input.LocalValue( "UAMoveForward" ) - input.LocalValue( "UAMoveBack" );
-		float strafe = input.LocalValue( "UAMoveRight" ) - input.LocalValue( "UAMoveLeft" );
-		float altitude = input.LocalValue( "UALeanLeft" ) - input.LocalValue( "UALeanRight" );
+		float forward = input.LocalValue("UAMoveForward") - input.LocalValue("UAMoveBack");
+		float strafe = input.LocalValue("UAMoveRight") - input.LocalValue("UAMoveLeft");
+		float altitude = input.LocalValue("UAMoveUp") - input.LocalValue("UAMoveDown");
 
-		float yawDiff = input.LocalValue( "UAAimLeft" ) - input.LocalValue( "UAAimRight" );
-		float pitchDiff = input.LocalValue( "UAAimDown" ) - input.LocalValue( "UAAimUp" );
+		float yawDiff = input.LocalValue("UAAimLeft") - input.LocalValue("UAAimRight");
+		float pitchDiff = input.LocalValue("UAAimDown") - input.LocalValue("UAAimUp");
 
-		float speedInc = input.LocalValue( "UACameraToolSpeedIncrease" ) - input.LocalValue( "UACameraToolSpeedDecrease" );
+		float speedInc = input.LocalValue("UACameraToolSpeedIncrease" ) - input.LocalValue("UACameraToolSpeedDecrease");
 
-		float zoomAmt = input.LocalValue( "UACameraToolZoomForwards" ) - input.LocalValue( "UACameraToolZoomBackwards" );
+		float zoomAmt = input.LocalValue("UACameraToolZoomForwards" ) - input.LocalValue("UACameraToolZoomBackwards");
 		if ( zoomAmt != 0 )
 			speedInc = 0;
 
-		bool shouldRoll = input.LocalValue( "UALookAround" );
-		bool increaseSpeeds = input.LocalValue( "UATurbo" );
+		bool shouldRoll = input.LocalValue("UALookAround");
+		bool increaseSpeeds = input.LocalValue("UATurbo");
 
 		if (!MoveFreeze) {
 			
@@ -106,8 +106,8 @@ class EditorCamera: Camera
 				
 				cam_speed = CAMERA_SPEED;
 
-				if ( increaseSpeeds ) {
-					cam_speed = cam_speed * CAMERA_BOOST_MULT;
+				if (increaseSpeeds) {
+					cam_speed = (cam_speed * CAMERA_BOOST_MULT) * (0.2 + (transform[3][1])/600) ;
 				}
 			}
 			
@@ -119,11 +119,6 @@ class EditorCamera: Camera
 
 			transform[3] = transform[3] + ( linearVelocity * timeSlice );
 
-			//float surfaceY = GetGame().SurfaceY( newPos[0], newPos[2] ) + 0.25;
-			//if ( newPos[1] < surfaceY ) 
-			//{
-			//	newPos[1] = surfaceY;
-			//}
 		}
 
 		SetTransform( transform );

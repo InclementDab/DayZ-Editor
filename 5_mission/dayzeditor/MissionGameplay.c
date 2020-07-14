@@ -98,7 +98,6 @@ class EditorMissionGameplay: MissionGameplay
         MapMarkerTypes.Init();
 
         m_UIManager = GetGame().GetUIManager();
-
         m_Initialized = true;
 
         // init hud ui

@@ -2,11 +2,17 @@
 
 class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 {
-	protected Widget m_Root;
+	protected ref Widget m_Root;
 	
 	void EditorObjectMarkerHandler()
 	{
 		Print("EditorObjectMarkerHandler");
+	}
+	
+	void ~EditorObjectMarkerHandler()
+	{
+		Print("~EditorObjectMarkerHandler");
+		//delete m_Root;
 	}
 		
 	protected void OnWidgetScriptInit(Widget w)
@@ -14,21 +20,21 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 		Print("EditorObjectMarkerHandler::OnWidgetScriptInit");
 		m_Root = w;
 		m_Root.SetHandler(this);
-		m_Root.SetAlpha(0.1);
+		m_Root.SetAlpha(0.25);
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		// you should set cursor here its smart smile :)
 		Print("EditorObjectMarkerHandler::OnMouseEnter");
-		m_Root.SetAlpha(1);
+		
 		
 		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		m_Root.SetAlpha(0.1);
+		
 		return true;
 	}
 		
@@ -60,6 +66,18 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 		Print(button);
 		
 		
+		return true;
+	}
+	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		m_Root.SetAlpha(1);
+		return true;
+	}
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		m_Root.SetAlpha(0.35);
 		return true;
 	}
 	
@@ -95,27 +113,24 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 
 class EditorObject: ScriptedWidgetEventHandler
 {
-	protected Widget m_Root;
+	protected ref Widget m_Root;
 	protected Object m_Object = null;
 	
 	// Object Markers
-	protected Widget m_EditorObjectMarkerPanel;
-	protected ImageWidget m_EditorObjectMarkerImage;
+	protected ref Widget m_EditorObjectMarkerPanel;
+	protected ref ImageWidget m_EditorObjectMarkerImage;
 	
 	// Browser Items
-	protected Widget m_EditorListItemFrame;
-	protected Widget m_EditorListItemPanel;
+	protected ref Widget m_EditorListItemFrame;
+	protected ref Widget m_EditorListItemPanel;
 	protected TextWidget m_EditorListItemText;	
 	
 	void ~EditorObject()
 	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 		Print("~EditorObject");
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 	}
-	
 
-		
-	
 	
 	protected void OnWidgetScriptInit(Widget w)
 	{
@@ -146,15 +161,15 @@ class EditorObject: ScriptedWidgetEventHandler
 		}		
 	}
 	
-	void Initialize(Object obj, Widget item_browser)
+	Widget Initialize(Object obj)
 	{
 		Print("EditorObject::Initialize " + obj);
 
 		m_Object = obj;
 		m_EditorListItemText.SetText(m_Object.GetType());
-		item_browser.AddChild(m_EditorListItemFrame);
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		return m_EditorListItemFrame;
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
@@ -179,24 +194,20 @@ class EditorObject: ScriptedWidgetEventHandler
 					
 			}
 		}
-		
-		
 		return true;
 	}
 	
 	override bool OnFocus(Widget w, int x, int y)
 	{
 		Print("EditorObject::OnFocus");
-		m_EditorListItemFrame.SetColor(COLOR_BLUE);
-		Editor.SetActiveObject(m_Object);
+		m_Root.SetColor(COLOR_BLUE);
 		return true;
 	}
 	
 	override bool OnFocusLost(Widget w, int x, int y)
 	{
 		Print("EditorObject::OnFocusLost");
-		m_EditorListItemFrame.SetColor(0xFFFFFFFF);
-		Editor.ClearActiveObject();
+		m_Root.SetColor(0xFFFFFFFF);
 		return true;
 	}	
 		

@@ -1,6 +1,9 @@
 
 static string layout_dir = "P:/DayZ_Server/dev/DayZEditor/Addons/Editor/Layouts/";
 
+
+
+
 class EditorEvents 
 {
 	event void OnObjectPlaced(Object obj, vector pos);
@@ -83,9 +86,6 @@ class EditorUI: UIScriptedMenu
 	protected ref EditorSearchBar m_EditorSearchBar;
 	
 	
-	protected Widget m_EditorCtxMenu;
-	
-	
 	ref array<ref EditorListItem> 	m_EditorListItems;
 	static ref array<ref EditorObject> EditorPlacedObjects;
 		
@@ -122,11 +122,8 @@ class EditorUI: UIScriptedMenu
 
 		m_EditorSearchBar = new EditorSearchBar(m_LeftListPanelSpacer);
 		m_LeftSearchBar.SetHandler(m_EditorSearchBar);
-		
-
-		
+				
 		EditorPlacedObjects = new ref array<ref EditorObject>;
-		//EditorObjectMarkers = new array<ref EditorObjectMarker>;
 		
 		layoutRoot.Show(false);
 		
@@ -151,7 +148,7 @@ class EditorUI: UIScriptedMenu
 	
 	Widget GetBrowserObjectFromEntity(Object obj)
 	{
-		foreach (ref EditorObject list_item: EditorPlacedObjects) {
+		foreach (EditorObject list_item: EditorPlacedObjects) {
 			if (obj == list_item.GetWorldObject()) {
 				return list_item.GetLayoutRoot();
 			}
@@ -161,22 +158,18 @@ class EditorUI: UIScriptedMenu
 		
 	override void Update(float timeslice)
 	{
-		
-
+		Input input = GetGame().GetInput();
+		if (input.LocalPress("UATempRaiseWeapon")) {
+			int x, y;
+			GetMousePos(x, y);			
+			EditorContextMenu.ShowContextMenu(x, y);
+		}
  		
 		
 		super.Update(timeslice);
 		
 	}
-	
-	override bool OnDrag(Widget w, int x, int y)
-	{
-		Print("EditorUI::OnDrag");
-		return super.OnDrag(w, x, y);
-	}
-	
-	
-	
+
 	
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
@@ -212,20 +205,24 @@ class EditorUI: UIScriptedMenu
 		}
 		return false;
 	}
-		
-	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
-	{
-		Print("EditorUI::OnMouseWheel");
-		Print(wheel);
-		
-		if (wheel == -1) {
-			// move camera up and down
-		}
-		
-		
-		return super.OnMouseWheel(w, x, y, wheel);
-	}	
 	
+	
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		Print("EditorUI::OnMouseEnter");
+		Editor.CursorAllowedToSelect = true; // this is stupid
+		return true;
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		Print("EditorUI::OnMouseLeave");
+		Editor.CursorAllowedToSelect = false;
+		return true;
+	}
+		
+		
 	void OnObjectPlaced(Object obj, vector position, vector orientation)
 	{
 		Print("EditorUI::OnObjectPlaced");
@@ -233,21 +230,21 @@ class EditorUI: UIScriptedMenu
 		EditorObject editor_object;
 		Widget editor_object_display = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
 		editor_object_display.GetScript(editor_object);
-		editor_object.Initialize(obj, m_RightListPanelSpacer);
+		m_RightListPanelSpacer.AddChild(editor_object.Initialize(obj));
 		EditorPlacedObjects.Insert(editor_object);
 	}
 
 	EditorObject CreateEditorObjectFromExisting(Object obj)
-	{
+	{		
+		return null;
 		Print("EditorUI::CreateEditorObjectFromExisting");
 		EditorObject editor_object;
 		Widget editor_object_display = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
 		editor_object_display.GetScript(editor_object);
-		editor_object.Initialize(obj, m_RightListPanelSpacer);
+		m_RightListPanelSpacer.AddChild(editor_object.Initialize(obj));
 		EditorPlacedObjects.Insert(editor_object);
 		return editor_object;
 	}
-
 }
 
 
