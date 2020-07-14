@@ -1,5 +1,6 @@
 FrameWidgetClass EditorObject {
- clipchildren 1
+ clipchildren 0
+ ignorepointer 0
  position -20 -20
  size 40 40
  hexactpos 1
@@ -11,13 +12,15 @@ FrameWidgetClass EditorObject {
  scriptclass "EditorObject"
  {
   PanelWidgetClass EditorObjectMarkerPanel {
-   ignorepointer 1
+   ignorepointer 0
    position 0 0
    size 40 40
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   draggable 1
+   scriptclass "EditorObjectMarkerHandler"
    {
     ImageWidgetClass EditorObjectMarkerImage {
      ignorepointer 1
@@ -30,40 +33,57 @@ FrameWidgetClass EditorObject {
      imageTexture "{A05B5E889A2390FE}data/gui/imagesets/game_template.edds"
     }
    }
+   {
+    ScriptParamsClass {
+    }
+   }
   }
-   PanelWidgetClass EditorListItemPanel {
-   visible 1
-   clipchildren 1
-   inheritalpha 1
-   ignorepointer 0
+  FrameWidgetClass EditorListItemFrame {
+   clipchildren 0
+   ignorepointer 1
    position 0 0
    size 300 35
-   halign center_ref
-   valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   draggable 1
-   style rover_sim_black_2
-   "no focus" 0
    {
-    TextWidgetClass EditorListItemText {
-     clipchildren 0
+    PanelWidgetClass EditorListItemPanel {
+     visible 1
+     clipchildren 1
      inheritalpha 1
-     ignorepointer 1
+     ignorepointer 0
      position 0 0
-     size 250 20
+     size 300 35
      halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     priority 5
-     font "gui/fonts/Metron"
-     "text halign" right
-     "text valign" center
+     priority 11
+     draggable 1
+     style rover_sim_black_2
+     "no focus" 0
+     {
+      TextWidgetClass EditorListItemText {
+       clipchildren 0
+       inheritalpha 1
+       ignorepointer 1
+       position 0 0
+       size 250 20
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       priority 5
+       font "gui/fonts/Metron"
+       "text halign" right
+       "text valign" center
+      }
+     }
     }
    }
   }

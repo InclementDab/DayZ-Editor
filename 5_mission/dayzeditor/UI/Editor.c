@@ -112,7 +112,7 @@ class Editor: Managed
 	
 	static ref array<ref Object>			PlacedObjects;
 	static ref array<string>				EditorListObjects;
-	static ref map<ref Object, ref EditorBrowserListItem> EditorBrowserListItems;
+	//static ref map<ref Object, ref EditorBrowserListItem> EditorBrowserListItems;
 	//static ref map<IEntity, ref EditorObjectMetaData> EditorObjectPlacedObjects;
 
 	
@@ -292,9 +292,9 @@ class Editor: Managed
 	{
 		Print("Editor::SetActiveObject: " + obj);
 		CurrentSelectedObject = obj;
-		EditorBrowserListItem browser_item = m_EditorUI.GetBrowserObjectFromEntity(obj);
+		Widget browser_item = m_EditorUI.GetBrowserObjectFromEntity(obj);
 		if (browser_item)
-			SetFocus(browser_item.GetLayoutRoot());
+			SetFocus(browser_item);
 		
 		delete ActiveCartesian;
 		ActiveCartesian = Cartesian.CreateOnObject(CurrentSelectedObject);
@@ -302,9 +302,16 @@ class Editor: Managed
 		
 	}
 	
+	static void ClearActiveObject()
+	{
+		Print("Editor::ClearActiveObject");
+		delete ActiveCartesian;
+		CurrentSelectedObject = null;
+	}
+	
 	void DeleteObject(Object obj)
 	{
-		EditorBrowserListItem browser_item = m_EditorUI.GetBrowserObjectFromEntity(obj);
+		Widget browser_item = m_EditorUI.GetBrowserObjectFromEntity(obj);
 		GetGame().ObjectDelete(obj);
 		if (browser_item)
 			delete browser_item;

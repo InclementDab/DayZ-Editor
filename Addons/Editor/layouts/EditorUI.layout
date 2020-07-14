@@ -33,8 +33,9 @@ FrameWidgetClass EditorUIFrame {
      vexactpos 1
      hexactsize 0
      vexactsize 1
-     scriptclass ""
-     style Editor
+     scriptclass "EditorSearchBar"
+     style EditorProperty
+     "no focus" 0
     }
     ScrollWidgetClass LeftPanelScrollBar {
      clipchildren 1
@@ -67,12 +68,12 @@ FrameWidgetClass EditorUIFrame {
    }
   }
   PanelWidgetClass RightListPanel {
-   clipchildren 0
+   clipchildren 1
    inheritalpha 1
    ignorepointer 0
    color 0.1725 0.1765 0.1804 1
    position 0 0
-   size 300 0.9
+   size 250 0.9
    halign right_ref
    valign bottom_ref
    hexactpos 1
@@ -110,6 +111,18 @@ FrameWidgetClass EditorUIFrame {
      }
     }
    }
+  }
+  ItemPreviewWidgetClass PanelEditorUICartesian {
+   ignorepointer 1
+   keepsafezone 0
+   position 315 15
+   size 200 200
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scriptclass "EditorUICartesian"
   }
  }
 }

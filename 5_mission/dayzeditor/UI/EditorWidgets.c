@@ -32,8 +32,7 @@ class EditorUI: UIScriptedMenu
 	protected ref EditorSearchBar m_EditorSearchBar;
 	
 	ref array<ref EditorListItem> 	m_EditorListItems;
-	static ref map<ref Object, ref EditorBrowserListItem> EditorBrowserListItems;
-	static ref array<ref EditorObjectMarker> EditorObjectMarkers; // temp
+	static ref array<ref EditorObject> EditorPlacedObjects;
 		
 	
 	void ~EditorUI()
@@ -69,8 +68,10 @@ class EditorUI: UIScriptedMenu
 		m_EditorSearchBar = new EditorSearchBar(m_LeftListPanelSpacer);
 		m_LeftSearchBar.SetHandler(m_EditorSearchBar);
 		
-		EditorBrowserListItems = new ref map<ref Object, ref EditorBrowserListItem>;
-		EditorObjectMarkers = new array<ref EditorObjectMarker>;
+
+		
+		EditorPlacedObjects = new ref array<ref EditorObject>;
+		//EditorObjectMarkers = new array<ref EditorObjectMarker>;
 		
 		layoutRoot.Show(false);
 		
@@ -93,11 +94,11 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	
-	EditorBrowserListItem GetBrowserObjectFromEntity(Object obj)
+	Widget GetBrowserObjectFromEntity(Object obj)
 	{
-		foreach (ref Object list_obj, ref EditorBrowserListItem list_item: EditorBrowserListItems) {
-			if (obj == list_obj) {
-				return list_item;
+		foreach (ref EditorObject list_item: EditorPlacedObjects) {
+			if (obj == list_item.GetWorldObject()) {
+				return list_item.GetLayoutRoot();
 			}
 		}
 		return null;
@@ -150,20 +151,37 @@ class EditorUI: UIScriptedMenu
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		Print("EditorUI::OnMouseButtonDown");
-		if (EditorMissionGameplay.m_Editor.IsPlacing()) {			
-			EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
-			Editor.PlaceObject(e.GetType(), e.GetWorldPosition(), vector.Up);				
-
-			if (!GetGame().GetInput().LocalValue("UATurbo")) {
-				delete Editor.ObjectInHand;
-			} 
-			return true;
-			
-		} else {
-			Editor.SetActiveObject(Editor.ObjectUnderCursor);
-		}	
 		
-		return true;
+			if (button == 0) {
+				if (w == GetFocus()) return true;
+				
+				if (w.GetName() == "EditorListItemPanel") { // idk why but i cant use OnMouseButtonDown in editorobject
+					if (Editor.IsPlacing())
+						delete Editor.ObjectInHand;
+					
+					SetFocus(w.GetParent());
+					return true;
+				}
+				
+				if (Editor.IsPlacing()) {
+					EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
+					Editor.PlaceObject(e.GetType(), e.GetWorldPosition(), vector.Up);				
+		
+					if (!GetGame().GetInput().LocalValue("UATurbo")) {
+						delete Editor.ObjectInHand;
+					} 
+					return true;
+					
+				} else {
+					//return false; // todo: check if object under cursor is one we placed
+					Editor.SetActiveObject(Editor.ObjectUnderCursor);
+			}	
+			if (button == 1) {
+				// Implement Context menu
+				
+			}
+		}
+		return false;
 	}
 		
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
@@ -182,20 +200,12 @@ class EditorUI: UIScriptedMenu
 	void OnObjectPlaced(Object obj, vector position, vector orientation)
 	{
 		Print("EditorUI::OnObjectPlaced");
-		
-		// Create Browser List Item
-		EditorBrowserListItem editor_browser_item;
-		Widget list_item = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorBrowserListItem.layout", m_RightListPanelSpacer);
-		list_item.GetScript(editor_browser_item);
-		editor_browser_item.SetObject(obj);
-		EditorBrowserListItems.Insert(obj, editor_browser_item);
-		
-		// Create Object Marker
-		EditorObjectMarker editor_object_marker;
-		Widget marker_item = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
-		marker_item.GetScript(editor_object_marker);
-		editor_object_marker.Init(obj);
-		EditorObjectMarkers.Insert(editor_object_marker);
+				
+		EditorObject editor_object;
+		Widget editor_object_display = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
+		editor_object_display.GetScript(editor_object);
+		editor_object.Initialize(obj, m_RightListPanelSpacer);
+		EditorPlacedObjects.Insert(editor_object);
 	}
 
 }
@@ -203,80 +213,6 @@ class EditorUI: UIScriptedMenu
 
 
 
-class EditorBrowserListItem: ScriptedWidgetEventHandler
-{
-	protected Widget m_Root;
-	protected Object m_Object;
-	
-	protected Widget m_EditorListItemPanel;
-	protected TextWidget m_EditorListItemText;	
-	
-	
-	void ~EditorBrowserListItem()
-	{
-		Print("~EditorBrowserListItem");
-		delete m_Root;
-	}
-
-	void SetObject(Object obj)
-	{
-		Print("EditorBrowserItem::SetObject");
-		m_Object = obj;
-		m_EditorListItemText.SetText(m_Object.GetType());
-	}
-	
-	protected void OnWidgetScriptInit(Widget w)
-	{
-		Print("EditorBrowserItem::OnWidgetScriptInit");
-		m_Root = w;
-		m_Root.SetHandler(this);
-		m_EditorListItemPanel = m_Root.FindAnyWidget("EditorListItemPanel");
-		m_EditorListItemText = TextWidget.Cast(m_Root.FindAnyWidget("EditorListItemText"));
-	}
-	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		Print("EditorBrowserItem::OnMouseButtonDown");
-		if (button == 0) {
-			if (w == GetFocus()) return true;
-			if (Editor.IsPlacing()) {
-				delete Editor.ObjectInHand;
-			}
-			
-			SetFocus(w);
-			return true;
-		}
-		
-		return false;
-	}
-	
-	
-	override bool OnFocus(Widget w, int x, int y)
-	{
-		Print("EditorBrowserItem::OnFocus");
-		w.SetColor(COLOR_BLUE);
-		Editor.SetActiveObject(m_Object);
-		return true;
-	}
-	
-	override bool OnFocusLost(Widget w, int x, int y)
-	{
-		Print("EditorBrowserItem::OnFocusLost");
-		w.SetColor(0xFFFFFFFF);
-		return true;
-	}		
-	
-	Object GetObject()
-	{
-		return m_Object;
-	}
-	
-	Widget GetLayoutRoot()
-	{
-		return m_EditorListItemPanel;
-	}
-	
-}
 
 
 
@@ -434,5 +370,50 @@ class EditorSearchBar: ScriptedWidgetEventHandler
 		
 		return super.OnChange(w, x, y, finished);
 	}
+	
+}
+
+
+class EditorUICartesian: ScriptedWidgetEventHandler
+{
+	static ItemPreviewWidget m_Root;
+	//protected ItemPreviewWidget m_EditorUICartesian;
+	
+	static EntityAI m_UICartiesian;
+	
+	void EditorUICartesian()
+	{
+		Print("EditorUICartesian");
+		m_UICartiesian = GetGame().CreateObject("BoundingBox", "0 0 0");
+		m_UICartiesian.SetOrientation(vector.Up);
+		m_UICartiesian.SetOrigin(vector.Zero);
+	}
+	
+	void ~EditorUICartesian()
+	{
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		GetGame().ObjectDelete(m_UICartiesian);
+	}
+	
+	protected void OnWidgetScriptInit(Widget w)
+	{
+		Print("EditorUICartesian::OnWidgetScriptInit");
+		m_Root = ItemPreviewWidget.Cast(w);
+		m_Root.SetHandler(this);
+		m_Root.SetItem(m_UICartiesian);
+		m_Root.SetForceFlipEnable(true);
+		m_Root.SetForceFlip(true);
+		m_Root.SetView(0);
+		//m_Root.SetView(m_Root.GetItem().GetViewIndex());
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+	}
+	
+	void Update()
+	{
+		//vector v = GetGame().GetCurrentCameraDirection();	
+		//m_Root.SetModelOrientation(v);
+	}
+	
 	
 }
