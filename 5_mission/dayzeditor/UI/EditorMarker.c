@@ -47,8 +47,8 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(DragUpdate);
-		Editor.RemoveBoundingBox();
-		Editor.ActiveBoundingBox = Editor.CreateBoundingBox(Editor.SelectedObject);
+		//Editor.RemoveBoundingBox();
+		//	Editor.ActiveBoundingBox = Editor.CreateBoundingBox(Editor.SelectedObject);
 		return true;
 	}
 	

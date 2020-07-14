@@ -49,7 +49,12 @@ class EditorMissionGameplay: MissionGameplay
 		
 		super.OnInit();
 	}
-
+	
+	override void OnMouseButtonPress(int button)
+	{
+		m_Editor.OnMouseButtonPress(button);
+	}
+	
 
    
     

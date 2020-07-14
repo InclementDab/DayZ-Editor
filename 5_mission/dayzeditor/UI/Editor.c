@@ -52,6 +52,7 @@ class Editor: Managed
 	static Object							ActiveBoundingBox;
 	
 	static ref array<ref Object>			SelectedObjects;
+	static ref array<ref BoundingBox>		ActiveBoundingBoxes;
 	
 	static ref array<ref Object>			PlacedObjects;
 	static ref array<string>				EditorListObjects;
@@ -70,6 +71,7 @@ class Editor: Managed
 		EditorListObjects 			= new array<string>;
 		EditorListItems 			= new array<ref EditorListItem>;
 		SelectedObjects				= new array<ref Object>;
+		ActiveBoundingBoxes			= new array<ref BoundingBox>;
 		
 		m_Camera = GetGame().CreateObject("EditorCamera", "7500 500 7500", false);
 		m_Camera.SetActive(true);
@@ -97,9 +99,6 @@ class Editor: Managed
 	
 	void ShowUI(bool state)
 	{ 
-		//if (state)
-		//	m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu()); 
-		//else m_UIManager.HideScriptedMenu(m_EditorUI);
 		m_EditorUI.Show(state);
 		if (!state) delete ObjectInHand;
 		m_Camera.LookFreeze = state;
@@ -141,6 +140,7 @@ class Editor: Managed
 	}
 	
 	
+	bool exit_condition = false;
 	
 	void Update() 
 	{
@@ -153,28 +153,55 @@ class Editor: Managed
 			ObjectInHand.SetProjectionOrientation(GetGame().SurfaceGetNormal(v[0], v[2]));
 			
 		} else {
-			
+			int x, y;
+			GetMousePos(x, y);
 			v = MousePosToRay(obj);
-			Object e = obj.Get(0);
-			if (e != NULL) {
-				int x, y;
-				GetMousePos(x, y);
-				OnMouseEnterObject(e, x, y);					
+			Object target = obj.Get(0);
+			
+			if (target != null && target != ObjectUnderCursor) {
+				exit_condition = false;				
+				SetObjectUnderCursor(target);
+				OnMouseEnterObject(target, x, y);					
+				
+			} else if (target == null && !exit_condition) { 
+				SetObjectUnderCursor(null);
+				exit_condition = OnMouseExitObject(x, y);
+				
 			}
 			
 		}
 	}
 	
 	static bool CursorAllowedToSelect = true;
-	static void OnMouseEnterObject(Object obj, int x, int y)
+	bool OnMouseEnterObject(Object target, int x, int y)
 	{
-		if (!CursorAllowedToSelect) return;
-		if (GetGame().GetInput().LocalHold("UAFire")) return;
+		//Print("OnMouseEnterObject");
+		if (!CursorAllowedToSelect) return false;
+		if (GetGame().GetInput().LocalHold("UAFire")) return false;		
+		CreateHighlight(target);
+		return true;
+	}
+	
+	bool OnMouseExitObject(int x, int y)
+	{
+		//Print("OnMouseExitObject");
+		if (GetGame().GetInput().LocalHold("UAFire")) return false;
+		//ActiveBoundingBoxes = new array<ref BoundingBox>;
 		
-		RemoveBoundingBox();
-		ActiveBoundingBox = CreateBoundingBox(obj);
-		SetObjectUnderCursor(obj);
-		
+		return true;
+	}
+	
+	void OnMouseButtonPress(int button)
+	{
+		Input input = GetGame().GetInput();
+		if (ObjectUnderCursor != null) {
+			if (input.LocalValue("UATurbo")) {
+				CreateSelection(ObjectUnderCursor, false);
+			} else {
+				CreateSelection(ObjectUnderCursor);
+			}
+			
+		}
 	}
 	
 	static void CreateObjectInHand(string name)
@@ -208,7 +235,7 @@ class Editor: Managed
 		SelectedObject = null;
 	}
 	
-	static void SelectObject(Object obj)
+	static void SelectObject(notnull Object obj)
 	{
 		Print("Editor::SelectObject: " + obj);
 		
@@ -220,56 +247,57 @@ class Editor: Managed
 			//EditorUI.CreateEditorObjectFromExisting(obj);
 	}
 	
+	
+	static void CreateHighlight(ref Object target)
+	{
+		//todo
+	}
+	
+	static void CreateSelection(ref Object target, bool remove_old = true)
+	{
+		if (remove_old) {
+ 			delete SelectedObjects; delete ActiveBoundingBoxes;
+			SelectedObjects = new array<ref Object>;
+			ActiveBoundingBoxes = new array<ref BoundingBox>;
+		}
+		
+		SelectedObjects.Insert(target);
+		ActiveBoundingBoxes.Insert(new BoundingBox(target));
+	}
+	
+	static void CreateSelections(array<Object> target, bool remove_old = true)
+	{
+		if (remove_old) {
+ 			delete SelectedObjects; delete ActiveBoundingBoxes;
+			SelectedObjects = new array<ref Object>;
+			ActiveBoundingBoxes = new array<ref BoundingBox>;	
+		}
+		
+		SelectedObjects.InsertArray(target);
+		set<BoundingBox> bboxes = CreateBoundingBoxes(target);
+		foreach (BoundingBox bbox: bboxes) {
+			ActiveBoundingBoxes.Insert(bbox);
+		}
+		
+
+		
+	}
+	
+	static void ClearSelections()
+	{
+		delete SelectedObjects; delete ActiveBoundingBoxes;
+	}
+	
 	static void DeleteObject(Object obj)
 	{
 		EditorObject browser_item = GetBrowserObjectFromEntity(obj);
 		GetGame().ObjectDelete(obj);
 		
 		if (browser_item)
-			delete browser_item;
-		
-
-		
+			delete browser_item;		
 	}
-	
-	static void RemoveBoundingBox()
-	{
-		GetGame().ObjectDelete(ActiveBoundingBox);
-	}
-	
-	static Object CreateBoundingBox(Object target)
-	{		
-		EntityAI bounding_box = GetGame().CreateObjectEx("BoundingBox", vector.Zero, ECE_CREATEPHYSICS);
-		
-		target.AddChild(bounding_box, -1);
-		
-		vector position = vector.Zero;
-		vector size = GetObjectSize(target);
-		
-	
-		vector transform[4] =
-		{ 
-            "1 0 0 0"
-            "0 1 0 0" 
-            "0 0 1 0"
-            "0 0 0 1"
-		};
 
 
-		transform[0][0] = size[0]/2;
-		transform[1][1] = size[1]/2;
-		transform[2][2] = size[2]/2;
-
-        transform[3][0] = position[0];
-        transform[3][1] = position[1];
-        transform[3][2] = position[2];
-        transform[3][3] = 1.0;
-		
-        bounding_box.SetTransform(transform);
-		
-		target.Update();
-		return bounding_box;
-	}
 	
 	bool ui_state = true;
 	void OnKeyPress(int key) 
@@ -283,7 +311,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_DELETE:
 				DeleteObject(SelectedObject);
-				RemoveBoundingBox();
+				//RemoveBoundingBox();
 				break;
 			
 						
@@ -308,9 +336,9 @@ class Editor: Managed
 		return ObjectInHand != null;
 	}
 	
-	static void SetObjectUnderCursor(notnull Object obj)
+	static void SetObjectUnderCursor(Object target)
 	{
-		ObjectUnderCursor = obj;
+		ObjectUnderCursor = target;
 	}
 	
 	static void LoadPlacedObjects()
@@ -318,6 +346,62 @@ class Editor: Managed
 		// todo: allow people to open their own savefiles
 		PlacedObjects = new array<ref Object>;
 	}
+}
+
+
+static set<BoundingBox> CreateBoundingBoxes(ref array<Object> targets)
+{
+	set<BoundingBox> bounding_boxes = new set<BoundingBox>;
+	BoundingBox b;
+	foreach (Object obj: targets) {
+		b = new BoundingBox(obj);
+		bounding_boxes.Insert(b);
+	}
+	return bounding_boxes;
+}
+
+class BoundingBox
+{
+	private Object m_Object;
+	
+	void BoundingBox(out notnull Object target)
+	{		
+		Print("BoundingBox");
+		EntityAI bounding_box = GetGame().CreateObjectEx("BoundingBoxBase", vector.Zero, ECE_CREATEPHYSICS);
+		
+		target.AddChild(bounding_box, -1);
+		
+		vector position = vector.Zero;
+		vector size = GetObjectSize(target);
+		vector transform[4] =
+		{ 
+            "1 0 0 0"
+            "0 1 0 0" 
+            "0 0 1 0"
+            "0 0 0 1"
+		};
+		
+		transform[0][0] = size[0]/2;
+		transform[1][1] = size[1]/2;
+		transform[2][2] = size[2]/2;
+
+        transform[3][0] = position[0];
+        transform[3][1] = position[1];
+        transform[3][2] = position[2];
+        transform[3][3] = 1.0;
+		
+        bounding_box.SetTransform(transform);
+		
+		target.Update();
+		m_Object = bounding_box;
+	}
+	
+	void ~BoundingBox()
+	{
+		Print("~BoundingBox");
+		GetGame().ObjectDelete(m_Object);
+	}
+	
 }
 
 

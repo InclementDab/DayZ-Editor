@@ -25,15 +25,32 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 		
 		switch (w.GetName()) {
 			case ("CtxProperties"):
+				EditorObjectPropertiesWindow properties_window;
+				Widget window = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectProperties.layout", GetGame().GetUIManager().GetMenu().GetLayoutRoot());
+				window.SetHandler(properties_window);
+				properties_window.SetObject(Editor.SelectedObject);
+				
 				break;
 			
 			case ("CtxAlignToGround"):
-				vector orientation = Editor.SelectedObject.GetOrientation();
-				vector v1 = Editor.SelectedObject.GetPosition();	
-				vector v2 = GetGame().GetSurfaceOrientation(v1[0], v1[2]);
-				v2[1] = orientation[1];
-				Editor.SelectedObject.SetOrientation(v2);	
-				Editor.RemoveBoundingBox();
+				//PlaceOnSurfaceRotated is better if you wanna spend 40k in college
+				
+				vector tra[4];		
+				Editor.SelectedObject.GetTransform(tra);	
+				float a = GetGame().SurfaceY(tra[3][0], tra[3][2]);
+				vector surface_orientation = GetGame().GetSurfaceOrientation(tra[3][0], tra[3][2]);
+				
+				vector mat[4];	
+				surface_orientation.RotationMatrixFromAngles(mat);
+				
+
+				mat[3] = tra[3];
+				Print(mat);
+				Print(tra);
+								
+				Editor.SelectedObject.SetTransform(mat);
+				Editor.SelectedObject.PlaceOnSurface();
+			
 				break;
 			
 			case ("CtxDelete"):
@@ -193,6 +210,7 @@ class EditorSearchBar: ScriptedWidgetEventHandler
 	void EditorSearchBar(WrapSpacerWidget searchContext)
 	{
 		m_SearchContext = searchContext;
+		m_Root.Enable(false); // annoying as shit
 	}
 		
 	override bool OnChange(Widget w, int x, int y, bool finished)
@@ -230,7 +248,7 @@ class EditorUICartesian: ScriptedWidgetEventHandler
 	void EditorUICartesian()
 	{
 		Print("EditorUICartesian");
-		m_UICartiesian = GetGame().CreateObject("BoundingBox", "0 0 0");
+		m_UICartiesian = GetGame().CreateObject("BoundingBoxBase", "0 0 0");
 		m_UICartiesian.SetOrientation(vector.Up);
 		m_UICartiesian.SetOrigin(vector.Zero);
 	}

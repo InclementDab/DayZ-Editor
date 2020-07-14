@@ -1,4 +1,24 @@
 
+vector ScreenPosToRay()
+{
+	int x, y;
+	GetMousePos(x, y);
+	
+	int x1, y1;
+	GetScreenSize(x1, y1);
+	int x2 = x1 / x; 
+	int y2 = y1 / y;
+	
+	
+	
+	vector v1 = GetGame().GetCurrentCameraDirection();
+	
+	
+	
+	return v1;
+}
+
+
 class EditorUI: UIScriptedMenu
 {
 	static ref EditorUI m_Instance;
@@ -59,24 +79,28 @@ class EditorUI: UIScriptedMenu
 		layoutRoot.Show(true);
 		m_Instance = this;
 		
-		monitor = new DebugMonitor();
-		monitor.Init();
+		//monitor = new DebugMonitor();
+		//monitor.Init();
 		
 		return layoutRoot;
 	}
 	
 	int x1, y1;
 	vector mouse_start;
+	EntityAI bounding_box;
 	void Update(float timeslice)
 	{
-		monitor.SetPosition(GetGame().GetPointerDirection());
+		
+		//monitor.SetPosition(ScreenPosToRay());
+		
 		Input input = GetGame().GetInput();
 		
 		if (input.LocalPress("UAFire")) {
+			
 			GetMousePos(x1, y1);
 			
 			vector start1 = GetGame().GetCurrentCameraPosition();
-			vector end1 = start1 + GetGame().GetPointerDirection() * 100;
+			vector end1 = start1 + GetGame().GetPointerDirection() * 1000;
 			vector dir1;
 			int component;
 			
@@ -84,6 +108,7 @@ class EditorUI: UIScriptedMenu
 		}
 		
 		if (input.LocalHold("UAFire")) {
+			Print("HoldFire");
 			int x2, y2;
 			GetMousePos(x2, y2);
 			Debug.ClearCanvas();
@@ -91,23 +116,52 @@ class EditorUI: UIScriptedMenu
 			Debug.m_CanvasDebug.DrawLine(x1, y1, x1, y2, 2, COLOR_BLUE);
 			Debug.m_CanvasDebug.DrawLine(x1, y2, x2, y2, 2, COLOR_BLUE);
 			Debug.m_CanvasDebug.DrawLine(x2, y1, x2, y2, 2, COLOR_BLUE);
+			
+			
 
 			vector direction = GetGame().GetCurrentCameraDirection();
 			vector start = GetGame().GetCurrentCameraPosition();
-			vector end = start + GetGame().GetPointerDirection() * 100;
+			vector end = start + GetGame().GetPointerDirection() * 1000;
 			vector pos, dir;
 			
 			DayZPhysics.RaycastRV(start, end, pos, dir, component);
 			float x3 = Math.AbsFloat(mouse_start[0] - pos[0]);
-			float y3 = 1000;
+			float y3 = Math.AbsFloat(mouse_start[1] - pos[1]);
 			float z3 = Math.AbsFloat(mouse_start[2] - pos[2]);
 			vector edgelength = {x3, y3, z3};
 			array<Object> excluded = new array<Object>;
 			array<Object> results = new array<Object>;
 			
-			GetGame().IsBoxColliding(start, direction, edgelength, excluded, results);
+			GetGame().IsBoxColliding(pos, direction, edgelength, excluded, results);
 			
-			monitor.SetBlood(results.Count());
+			GetGame().ObjectDelete(bounding_box);
+			bounding_box = GetGame().CreateObjectEx("BoundingBoxBase", pos, ECE_CREATEPHYSICS);
+			bounding_box.SetOrientation(direction);
+			
+			vector transform[4] =
+			{ 
+	            "1 0 0 0"
+	            "0 1 0 0" 
+	            "0 0 1 0"
+	            "0 0 0 1"
+			};
+			
+			transform[0][0] = edgelength[0];
+			transform[1][1] = edgelength[1];
+			transform[2][2] = edgelength[2];
+	
+	        transform[3][0] = pos[0];
+	        transform[3][1] = pos[1];
+	        transform[3][2] = pos[2];
+	        transform[3][3] = 1.0;
+			
+	        bounding_box.SetTransform(transform);
+			
+			
+			Editor.CreateSelections(results, false); //!input.LocalValue("UATurbo")
+			
+			
+			//monitor.SetBlood(results.Count());
 		}
 		
 		if (input.LocalRelease("UAFire")) {

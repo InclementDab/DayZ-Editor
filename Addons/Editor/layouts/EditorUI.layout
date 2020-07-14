@@ -26,6 +26,7 @@ FrameWidgetClass EditorUIFrame {
    style EditorPanel
    {
     EditBoxWidgetClass LeftPanelSearchBar {
+     disabled 1
      position 0 0
      size 1 25
      halign center_ref
