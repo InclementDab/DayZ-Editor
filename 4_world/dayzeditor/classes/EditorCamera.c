@@ -85,7 +85,9 @@ class EditorCamera: Camera
 
 		float speedInc = input.LocalValue("UACameraToolSpeedIncrease" ) - input.LocalValue("UACameraToolSpeedDecrease");
 
-		float zoomAmt = input.LocalValue("UACameraToolZoomForwards" ) - input.LocalValue("UACameraToolZoomBackwards");
+		float zoomAmt = input.LocalValue("UANextAction") - input.LocalValue("UAPrevAction");
+		
+		
 		if ( zoomAmt != 0 )
 			speedInc = 0;
 

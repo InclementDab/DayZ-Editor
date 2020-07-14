@@ -24,6 +24,16 @@ static vector MousePosToRay(out set<Object> collisions = null, Object ignore = n
 }
 
 
+static EditorObject GetBrowserObjectFromEntity(Object obj)
+{
+	foreach (EditorObject list_item: Editor.EditorPlacedObjects) {
+		if (obj == list_item.GetWorldObject()) {
+			return list_item;
+		}
+	}
+	return null;
+}	
+
 
 class Editor: Managed
 {
@@ -37,41 +47,44 @@ class Editor: Managed
 				
 	static ref Hologram 					ObjectInHand;
 	static Object							ObjectUnderCursor;
-	static Object							SelectedObject;
+	static Object							SelectedObject; // todo: boink
 	static ref Cartesian					ActiveCartesian;
 	static Object							ActiveBoundingBox;
+	
+	static ref array<ref Object>			SelectedObjects;
 	
 	static ref array<ref Object>			PlacedObjects;
 	static ref array<string>				EditorListObjects;
 	
 	
 	static ref array<ref EditorObject> 		EditorPlacedObjects;
+	static ref array<ref EditorListItem>	EditorListItems;
 	
 	void Editor()
 	{
-		Print("Editor");
+		Print("Editor");		
 		m_UIManager = GetGame().GetUIManager();
-		
 		
 		EditorPlacedObjects 		= new array<ref EditorObject>;
 		PlacedObjects 				= new array<ref Object>;
 		EditorListObjects 			= new array<string>;
-		
-		
-		LoadEditorObjects();
-		LoadPlacedObjects();
+		EditorListItems 			= new array<ref EditorListItem>;
+		SelectedObjects				= new array<ref Object>;
 		
 		m_Camera = GetGame().CreateObject("EditorCamera", "7500 500 7500", false);
 		m_Camera.SetActive(true);
+		
+		m_EditorUI = new EditorUI();
+		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
+		ShowUI(true);
+		
+		LoadEditorObjects();
+		LoadPlacedObjects();
 		
 		m_PlayerBase = GetGame().GetPlayer();
 		if (m_PlayerBase)
 			m_PlayerBase.GetInputController().SetDisabled(true);
 
-		m_EditorUI = new EditorUI();
-		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
-		 
-		Debug.InitCanvas();		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 		
@@ -116,7 +129,12 @@ class Editor: Managed
 		            continue;
 			        
 				EditorListObjects.Insert(Config_Name);	
-					
+				
+				EditorListItem editor_list_item;
+				Widget list_item = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorListItem.layout", m_EditorUI.m_LeftListPanelSpacer);
+				list_item.GetScript(editor_list_item);
+				editor_list_item.SetObject(Config_Name);
+				EditorListItems.Insert(editor_list_item);
 				
 		    }
 		}
@@ -151,7 +169,9 @@ class Editor: Managed
 	static void OnMouseEnterObject(Object obj, int x, int y)
 	{
 		if (!CursorAllowedToSelect) return;
-		GetGame().ObjectDelete(ActiveBoundingBox);
+		if (GetGame().GetInput().LocalHold("UAFire")) return;
+		
+		RemoveBoundingBox();
 		ActiveBoundingBox = CreateBoundingBox(obj);
 		SetObjectUnderCursor(obj);
 		
@@ -181,21 +201,6 @@ class Editor: Managed
 		return target;
 	}
 	
-
-	
-	static void SelectObject(Object obj)
-	{
-		Print("Editor::SetActiveObject: " + obj);
-		SelectedObject = obj;
-		Widget browser_item = m_EditorUI.GetBrowserObjectFromEntity(obj);
-		if (browser_item)
-			SetFocus(browser_item);
-		else 
-			m_EditorUI.CreateEditorObjectFromExisting(obj);
-		
-		delete ActiveCartesian;
-	}
-	
 	static void ClearActiveObject()
 	{
 		Print("Editor::ClearActiveObject");
@@ -203,12 +208,32 @@ class Editor: Managed
 		SelectedObject = null;
 	}
 	
-	void DeleteObject(Object obj)
+	static void SelectObject(Object obj)
 	{
-		Widget browser_item = m_EditorUI.GetBrowserObjectFromEntity(obj);
+		Print("Editor::SelectObject: " + obj);
+		
+		SelectedObject = obj;
+		EditorObject browser_item = GetBrowserObjectFromEntity(obj);
+		if (browser_item)
+			SetFocus(browser_item.GetLayoutRoot());
+		//else 
+			//EditorUI.CreateEditorObjectFromExisting(obj);
+	}
+	
+	static void DeleteObject(Object obj)
+	{
+		EditorObject browser_item = GetBrowserObjectFromEntity(obj);
 		GetGame().ObjectDelete(obj);
+		
 		if (browser_item)
 			delete browser_item;
+		
+
+		
+	}
+	
+	static void RemoveBoundingBox()
+	{
 		GetGame().ObjectDelete(ActiveBoundingBox);
 	}
 	
@@ -216,8 +241,11 @@ class Editor: Managed
 	{		
 		EntityAI bounding_box = GetGame().CreateObjectEx("BoundingBox", vector.Zero, ECE_CREATEPHYSICS);
 		
-		vector position = target.GetPosition();
+		target.AddChild(bounding_box, -1);
+		
+		vector position = vector.Zero;
 		vector size = GetObjectSize(target);
+		
 	
 		vector transform[4] =
 		{ 
@@ -236,9 +264,10 @@ class Editor: Managed
         transform[3][1] = position[1];
         transform[3][2] = position[2];
         transform[3][3] = 1.0;
-
+		
         bounding_box.SetTransform(transform);
-	
+		
+		target.Update();
 		return bounding_box;
 	}
 	
@@ -254,6 +283,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_DELETE:
 				DeleteObject(SelectedObject);
+				RemoveBoundingBox();
 				break;
 			
 						

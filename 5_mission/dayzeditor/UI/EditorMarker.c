@@ -47,6 +47,7 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(DragUpdate);
+		Editor.RemoveBoundingBox();
 		Editor.ActiveBoundingBox = Editor.CreateBoundingBox(Editor.SelectedObject);
 		return true;
 	}
@@ -88,14 +89,22 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 		
 		Input input = GetGame().GetInput();
 		
-		if (input.LocalValue("UALookAround")) {
-			vector pos = obj.GetPosition();
+		vector pos = obj.GetPosition();
+		
+		// Handle Z only motion
+		if (input.LocalValue("UALookAround")) {	
 			float dist = vector.Distance(GetGame().GetCurrentCameraPosition(), pos);
-			cursor_pos = MousePosToRay(o, Editor.SelectedObject, dist);			
-			vector v2 = {pos[0], cursor_pos[1] + size[1]/2, pos[2]};
-			Editor.SelectedObject.SetPosition(v2);
+			cursor_pos = MousePosToRay(o, obj, dist);			
+			vector v3 = {pos[0], cursor_pos[1] + size[1]/2, pos[2]};
+			obj.SetPosition(v3);
 			
-			
+		// Handle XY Plane Rotation
+		} else if (input.LocalValue("UATurbo")) {
+			cursor_pos = MousePosToRay(o, obj);
+			vector direction = vector.Direction(obj.GetPosition(), cursor_pos);
+			direction[1] = 0;
+			obj.SetDirection(direction);
+		
 		} else {
 			cursor_pos = MousePosToRay(o, Editor.SelectedObject);
 			cursor_pos[1] = cursor_pos[1] + size[1]/2;
@@ -111,22 +120,23 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 
 class EditorObject: ScriptedWidgetEventHandler
 {
-	protected ref Widget m_Root;
+	protected Widget m_Root;
 	protected Object m_Object = null;
 	
 	// Object Markers
-	protected ref Widget m_EditorObjectMarkerPanel;
-	protected ref ImageWidget m_EditorObjectMarkerImage;
+	protected Widget m_EditorObjectMarkerPanel;
+	protected ImageWidget m_EditorObjectMarkerImage;
 	
 	// Browser Items
-	protected ref Widget m_EditorListItemFrame;
-	protected ref Widget m_EditorListItemPanel;
+	protected Widget m_EditorListItemFrame;
 	protected TextWidget m_EditorListItemText;	
 	
 	void ~EditorObject()
 	{
 		Print("~EditorObject");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		delete m_Root; delete m_EditorObjectMarkerPanel; delete m_EditorObjectMarkerImage;
+		delete m_EditorListItemFrame; delete m_EditorListItemText;
 	}
 
 	
@@ -137,12 +147,9 @@ class EditorObject: ScriptedWidgetEventHandler
 		m_Root.SetHandler(this);
 		
 		m_EditorObjectMarkerPanel = m_Root.FindAnyWidget("EditorObjectMarkerPanel");
-		m_EditorObjectMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorObjectMarkerImage"));
-		//m_EditorObjectMarkerImage.LoadImageFile(0, "");
-		
+		m_EditorObjectMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorObjectMarkerImage"));		
 		
 		m_EditorListItemFrame = m_Root.FindAnyWidget("EditorListItemFrame");
-		m_EditorListItemPanel = m_Root.FindAnyWidget("EditorListItemPanel");
 		m_EditorListItemText = TextWidget.Cast(m_Root.FindAnyWidget("EditorListItemText"));
 		
 	}
@@ -172,14 +179,16 @@ class EditorObject: ScriptedWidgetEventHandler
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
+
 		Print("EditorObject::OnMouseButtonDown");
 		if (button == 0) {
 			
-			if (m_Root == GetFocus()) return true;
+			//if (w == GetFocus()) return true;
 			switch (w) {
-				case (m_EditorListItemPanel):
+				case (m_EditorListItemFrame):
 					if (Editor.IsPlacing())
 						delete Editor.ObjectInHand;
+					SetFocus(m_Root);
 					break;
 				
 				case (m_EditorObjectMarkerPanel):
@@ -198,18 +207,16 @@ class EditorObject: ScriptedWidgetEventHandler
 	override bool OnFocus(Widget w, int x, int y)
 	{
 		Print("EditorObject::OnFocus");
-		m_Root.SetColor(COLOR_BLUE);
+		m_EditorListItemFrame.SetColor(COLOR_BLUE);
 		return true;
 	}
 	
 	override bool OnFocusLost(Widget w, int x, int y)
 	{
 		Print("EditorObject::OnFocusLost");
-		m_Root.SetColor(0xFFFFFFFF);
+		m_EditorListItemFrame.SetColor(0xFFFFFFFF);
 		return true;
 	}	
-		
-	
 	
 	Object GetWorldObject()
 	{
@@ -218,7 +225,7 @@ class EditorObject: ScriptedWidgetEventHandler
 	
 	Widget GetLayoutRoot()
 	{
-		return m_Root;
+		return m_EditorListItemFrame;
 	}
 }
 

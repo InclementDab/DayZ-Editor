@@ -9,6 +9,7 @@ FrameWidgetClass EditorUIFrame {
  vexactpos 1
  hexactsize 0
  vexactsize 0
+ draggable 0
  {
   PanelWidgetClass LeftListPanel {
    clipchildren 1
@@ -98,6 +99,7 @@ FrameWidgetClass EditorUIFrame {
      {
       WrapSpacerWidgetClass RightListPanelSpacer {
        inheritalpha 1
+       ignorepointer 0
        position 0 0
        size 1 1
        halign center_ref

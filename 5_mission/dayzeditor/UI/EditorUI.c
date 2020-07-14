@@ -16,14 +16,13 @@ class EditorUI: UIScriptedMenu
 	protected EditBoxWidget m_LeftSearchBar;
 	
 	protected ScrollWidget m_LeftListPanelScrollBar;
-	protected WrapSpacerWidget m_LeftListPanelSpacer;	
-	WrapSpacerWidget GetLeftListPanelSpacer() { return m_LeftListPanelSpacer; }
+	WrapSpacerWidget m_LeftListPanelSpacer;	
 	
 	protected ScrollWidget m_RightListPanelScrollBar;
 	protected WrapSpacerWidget m_RightListPanelSpacer;
 		
 	protected ref EditorSearchBar m_EditorSearchBar;
-	static ref array<ref EditorListItem>	EditorListItems;
+	
 		
 	
 	void EditorUI()
@@ -36,6 +35,7 @@ class EditorUI: UIScriptedMenu
 		Print("~EditorUI");
 	}
 	
+	ref DebugMonitor monitor;
 	override Widget Init()
 	{
 		Print("EditorUI::Init");
@@ -53,12 +53,71 @@ class EditorUI: UIScriptedMenu
 
 		m_EditorSearchBar = new EditorSearchBar(m_LeftListPanelSpacer);
 		m_LeftSearchBar.SetHandler(m_EditorSearchBar);
-		EditorListItems 			= new array<ref EditorListItem>;
-		LoadItems();
+		
+		Debug.InitCanvas();	
 		
 		layoutRoot.Show(true);
 		m_Instance = this;
+		
+		monitor = new DebugMonitor();
+		monitor.Init();
+		
 		return layoutRoot;
+	}
+	
+	int x1, y1;
+	vector mouse_start;
+	void Update(float timeslice)
+	{
+		monitor.SetPosition(GetGame().GetPointerDirection());
+		Input input = GetGame().GetInput();
+		
+		if (input.LocalPress("UAFire")) {
+			GetMousePos(x1, y1);
+			
+			vector start1 = GetGame().GetCurrentCameraPosition();
+			vector end1 = start1 + GetGame().GetPointerDirection() * 100;
+			vector dir1;
+			int component;
+			
+			DayZPhysics.RaycastRV(start1, end1, mouse_start, dir1, component);
+		}
+		
+		if (input.LocalHold("UAFire")) {
+			int x2, y2;
+			GetMousePos(x2, y2);
+			Debug.ClearCanvas();
+			Debug.m_CanvasDebug.DrawLine(x1, y1, x2, y1, 2, COLOR_BLUE);
+			Debug.m_CanvasDebug.DrawLine(x1, y1, x1, y2, 2, COLOR_BLUE);
+			Debug.m_CanvasDebug.DrawLine(x1, y2, x2, y2, 2, COLOR_BLUE);
+			Debug.m_CanvasDebug.DrawLine(x2, y1, x2, y2, 2, COLOR_BLUE);
+
+			vector direction = GetGame().GetCurrentCameraDirection();
+			vector start = GetGame().GetCurrentCameraPosition();
+			vector end = start + GetGame().GetPointerDirection() * 100;
+			vector pos, dir;
+			
+			DayZPhysics.RaycastRV(start, end, pos, dir, component);
+			float x3 = Math.AbsFloat(mouse_start[0] - pos[0]);
+			float y3 = 1000;
+			float z3 = Math.AbsFloat(mouse_start[2] - pos[2]);
+			vector edgelength = {x3, y3, z3};
+			array<Object> excluded = new array<Object>;
+			array<Object> results = new array<Object>;
+			
+			GetGame().IsBoxColliding(start, direction, edgelength, excluded, results);
+			
+			monitor.SetBlood(results.Count());
+		}
+		
+		if (input.LocalRelease("UAFire")) {
+			Debug.ClearCanvas();
+		}
+		
+		
+		
+		
+		super.Update(timeslice);
 	}
 	
 	
@@ -66,60 +125,23 @@ class EditorUI: UIScriptedMenu
 	{
 		layoutRoot.Show(state);
 	}
-	
-	void LoadItems()
-	{
-		Print("LoadItems");
-		foreach (string item: Editor.EditorListObjects) {
-			Print(item);
-			EditorListItem editor_list_item;
-			Widget list_item = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorListItem.layout", m_LeftListPanelSpacer);
-			list_item.GetScript(editor_list_item);
-			editor_list_item.SetObject(item);
-			EditorListItems.Insert(editor_list_item);
-		}
-	}
 
-	
-	
-	Widget GetBrowserObjectFromEntity(Object obj)
-	{
-		foreach (EditorObject list_item: Editor.EditorPlacedObjects) {
-			if (obj == list_item.GetWorldObject()) {
-				return list_item.GetLayoutRoot();
-			}
-		}
-		return null;
-	}
-		
-	override void Update(float timeslice)
-	{
-
- 		
-		
-		super.Update(timeslice);
-		
-	}
-
-	
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
+		Print(w.GetName());
+		
+
 		Print("EditorUI::OnMouseButtonDown");
 		
 			if (button == 0) {
-				EditorContextMenu.HideContextMenu();
+								
 				if (w == GetFocus()) return true;
-				
-				if (w.GetName() == "EditorListItemPanel") { // idk why but i cant use OnMouseButtonDown in editorobject
-					if (Editor.IsPlacing())
-						delete Editor.ObjectInHand;
-					
+				if (w.GetName() == "EditorListItemFrame") { // idk why but i cant use OnMouseButtonDown in editorobject
+					if (Editor.IsPlacing()) delete Editor.ObjectInHand;
 					SetFocus(w.GetParent());
 					return true;
-				}
-				
-				if (Editor.IsPlacing()) {
+				} else if (Editor.IsPlacing()) {
 					EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
 					Editor.PlaceObject(e.GetType(), e.GetWorldPosition(), vector.Up);				
 		
@@ -128,10 +150,10 @@ class EditorUI: UIScriptedMenu
 					} 
 					return true;
 					
-				} else {
+				} else if (Editor.ObjectUnderCursor != null) {
 					//return false; // todo: check if object under cursor is one we placed
-					if (Editor.ObjectUnderCursor != null)
-						Editor.SelectObject(Editor.ObjectUnderCursor);
+					Editor.SelectObject(Editor.ObjectUnderCursor);
+					return true;
 			}	
 		}
 		return false;
@@ -150,6 +172,12 @@ class EditorUI: UIScriptedMenu
 		Editor.CursorAllowedToSelect = false;
 		return true;
 	}
+	
+	
+	
+
+	
+
 		
 		
 	void OnObjectPlaced(Object obj, vector position, vector orientation)
@@ -165,7 +193,6 @@ class EditorUI: UIScriptedMenu
 
 	EditorObject CreateEditorObjectFromExisting(Object obj)
 	{		
-		return null;
 		Print("EditorUI::CreateEditorObjectFromExisting");
 		EditorObject editor_object;
 		Widget editor_object_display = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");

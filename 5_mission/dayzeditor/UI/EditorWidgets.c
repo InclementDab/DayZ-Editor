@@ -3,21 +3,24 @@ static string layout_dir = "P:/DayZ_Server/dev/DayZEditor/Addons/Editor/Layouts/
 
 class EditorContextMenu: ScriptedWidgetEventHandler
 {
-	static ref EditorContextMenu instance;
-	protected Widget m_Root;
+	static ref EditorContextMenu m_Instance;
+	static EditorContextMenu GetInstance() 
+	{
+		return m_Instance;
+	}
 	
+	protected Widget m_Root;
 	protected void OnWidgetScriptInit(Widget w)
 	{
 		Print("EditorObjectMarkerHandler::OnWidgetScriptInit");
 		m_Root = w;
 		m_Root.SetHandler(this);
-	
-		instance = this;
-	}
-	
+		m_Instance = this;
+	}	
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
+		Print("EditorContextMenu::OnClick");
 		if (Editor.SelectedObject == null) return false;
 		
 		switch (w.GetName()) {
@@ -25,30 +28,36 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 				break;
 			
 			case ("CtxAlignToGround"):
+				vector orientation = Editor.SelectedObject.GetOrientation();
 				vector v1 = Editor.SelectedObject.GetPosition();	
 				vector v2 = GetGame().GetSurfaceOrientation(v1[0], v1[2]);
-				Editor.SelectedObject.SetPosition(v2);
-			
-			
+				v2[1] = orientation[1];
+				Editor.SelectedObject.SetOrientation(v2);	
+				Editor.RemoveBoundingBox();
 				break;
 			
 			case ("CtxDelete"):
 				//Editor.DeleteObject(Editor.SelectedObject);
 				break;
+			
+			default:
+				return false;
 		}
 		
+		m_Instance.m_Root.Show(false);
 		return true;
 	}
 	
+	
 	static void ShowContextMenu(int x, int y)
 	{
-		instance.m_Root.SetPos(x, y);
-		instance.m_Root.Show(true);
+		m_Instance.m_Root.SetPos(x, y);
+		m_Instance.m_Root.Show(true);
 	}
 	
 	static void HideContextMenu()
 	{
-		instance.m_Root.Show(false);
+		m_Instance.m_Root.Show(false);
 	}
 }
 
