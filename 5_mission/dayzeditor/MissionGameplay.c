@@ -50,6 +50,7 @@ class EditorMissionGameplay: MissionGameplay
 		super.OnMouseButtonPress(button);
 		
 	}
+
 	
     override void OnKeyPress(int key)
     {
@@ -67,9 +68,6 @@ class EditorMissionGameplay: MissionGameplay
 			
             case KeyCode.KC_ESCAPE:
                 PlayerBase player = GetGame().GetPlayer();
-                
-				//if (player.m_TraderMenu)
-                //    player.m_TraderMenu.m_active = false;
                 break;
 			case KeyCode.KC_DOWN:
 				delete m_Editor;
@@ -82,6 +80,7 @@ class EditorMissionGameplay: MissionGameplay
                 //Print("OnKeyRelease " + key);
         }
     }
+
 
 
     

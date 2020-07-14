@@ -1,95 +1,16 @@
 
-class Cartesian
+
+
+static vector GetObjectSize(Object obj)
 {
-	static EntityAI CartesianObject;
+	vector mins, maxs;
+	obj.GetWorldBounds(mins, maxs);	
+	vector pos = obj.GetPosition();
+	maxs -= pos; 
+	maxs = maxs*2;
+	return maxs;
 	
-	void Cartesian(vector position)
-	{
-		CartesianObject = GetGame().CreateObjectEx("WorldCartesian", position, ECE_KEEPHEIGHT|ECE_NOSURFACEALIGN|ECE_TRACE);
-		//CartesianObject = GetGame().CreateObject("WorldCartesian", position, false, false, false);
-		CartesianObject.SetOrientation(vector.Up);
-		
-	}
-	
-	void ~Cartesian()
-	{
-		GetGame().ObjectDelete(CartesianObject);
-	}
-	
-	static Cartesian CreateOnObject(Object obj)
-	{
-		vector min, max, final;
-		obj.GetWorldBounds(min, max);
-				
-		final[0] = (min[0] + max[0])/2;
-		final[2] = (min[2] + max[2])/2;
-		final[1] = max[1];		
-		return new Cartesian(final);
-	}
 }
-
-class BoundingBox
-{	
-	int color;
-	
-	vector b[2];
-
-	void BoundingBox(Object building)
-	{
-		vector min, max; 
-		building.GetWorldBounds(min, max);
-		color = COLOR_BLUE_A;
-		b[0] = min;
-		b[1] = max;
-		
-		Debug.ClearCanvas();		
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-	}
-	
-	void ~BoundingBox()
-	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-	}
-	
-	void Update()
-	{
-		vector b1 = { b[0][0], b[1][1], b[1][2] };
-		vector b2 = { b[1][0], b[1][1], b[0][2] };
-		vector b3 = { b[0][0], b[1][1], b[0][2] };
-		vector b4 = { b[1][0], b[1][1], b[1][2] };
-		vector b5 = { b[1][0], b[0][1], b[0][2] };
-		vector b6 = { b[0][0], b[0][1], b[1][2] };
-		vector b7 = { b[0][0], b[0][1], b[0][2] };
-		vector b8 = { b[1][0], b[0][1], b[1][2] };
-	
-		
-		int thickness = 2;
-		vector v1 = GetGame().GetScreenPos(b1);
-		vector v2 = GetGame().GetScreenPos(b2);
-		vector v3 = GetGame().GetScreenPos(b3);
-		vector v4 = GetGame().GetScreenPos(b4);
-		vector v5 = GetGame().GetScreenPos(b5);
-		vector v6 = GetGame().GetScreenPos(b6);
-		vector v7 = GetGame().GetScreenPos(b7);
-		vector v8 = GetGame().GetScreenPos(b8);
-		
-		Debug.ClearCanvas();
-		Debug.m_CanvasDebug.DrawLine(v6[0], v6[1], v1[0], v1[1], thickness, color);
-		Debug.m_CanvasDebug.DrawLine(v3[0], v3[1], v1[0], v1[1], thickness, color);
-		Debug.m_CanvasDebug.DrawLine(v4[0], v4[1], v1[0], v1[1], thickness, color);
-		Debug.m_CanvasDebug.DrawLine(v4[0], v4[1], v8[0], v8[1], thickness, color);
-		Debug.m_CanvasDebug.DrawLine(v5[0], v5[1], v8[0], v8[1], thickness, color);
-		Debug.m_CanvasDebug.DrawLine(v6[0], v6[1], v8[0], v8[1], thickness, color);
-		Debug.m_CanvasDebug.DrawLine(v7[0], v7[1], v3[0], v3[1], thickness, color);
-		Debug.m_CanvasDebug.DrawLine(v7[0], v7[1], v6[0], v6[1], thickness, color);
-		Debug.m_CanvasDebug.DrawLine(v7[0], v7[1], v5[0], v5[1], thickness, color);
-		Debug.m_CanvasDebug.DrawLine(v4[0], v4[1], v2[0], v2[1], thickness, color);
-		Debug.m_CanvasDebug.DrawLine(v2[0], v2[1], v5[0], v5[1], thickness, color);
-		Debug.m_CanvasDebug.DrawLine(v3[0], v3[1], v2[0], v2[1], thickness, color);
-	}
-}
-
-
 
 
 
@@ -199,6 +120,8 @@ class Editor: Managed
 		set<Object> obj;
 		if (IsPlacing()) {
 			vector v = MousePosToRay(obj, ObjectInHand.GetProjectionEntity());
+			vector size = GetObjectSize(ObjectInHand.GetProjectionEntity());
+			v[1] = v[1] + size[1]/2;
 			ObjectInHand.SetProjectionPosition(v);
 			ObjectInHand.SetProjectionOrientation(GetGame().SurfaceGetNormal(v[0], v[2]));
 			
@@ -206,35 +129,38 @@ class Editor: Managed
 		} else {
 			
 			v = MousePosToRay(obj);
-			if (obj == null) return;
+			//if (obj == null) return;
 			Object e = obj.Get(0);
 			if (e != NULL) {
 				int x, y;
 				GetMousePos(x, y);
-				
+				OnMouseEnterObject(e, x, y);
 				if ((PlacedObjects.Find(e) + 1) && ObjectUnderCursor != e) {
-					OnMouseEnterObject(e, x, y);
-				}
-				SetObjectUnderCursor(e);
-				
+					//OnMouseEnterObject(e, x, y);
+				}					
 			}
+			
 		}
 	}
 	
 	static void OnMouseEnterObject(Object obj, int x, int y)
 	{
-		Print("OnMouseEnterObject");
 		
 		delete ActiveBoundingBox;
 		ActiveBoundingBox = new BoundingBox(obj);
+		SetObjectUnderCursor(obj);
 	}
 	
 	static void CreateObjectInHand(string name)
 	{
-		EntityAI e = GetGame().CreateObject(name, "0 0 0");
+		EntityAI obj = GetGame().CreateObject(name, "0 0 0");
 		set<Object> o;
 		vector v =  MousePosToRay(o);
-		ObjectInHand = new Hologram(null, v, e);
+		vector size = GetObjectSize(obj);
+		
+		
+		v[1] = v[1] + size[1]/2;
+		ObjectInHand = new Hologram(null, v, obj);
 	}
 	
 	static bool IsPlacing()
@@ -243,16 +169,16 @@ class Editor: Managed
 	}
 	
 		
-	static vector MousePosToRay(out set<Object> collisions = null, Object ignore = null)
+	static vector MousePosToRay(out set<Object> collisions = null, Object ignore = null, float raycast_distance = 1000)
 	{
 		vector rayStart = GetGame().GetCurrentCameraPosition();
-		vector rayEnd = rayStart + GetGame().GetPointerDirection() * 1000;
+		vector rayEnd = rayStart + GetGame().GetPointerDirection() * raycast_distance;
 		vector hitPos;
 		vector hitNormal;
 		int hitComponentIndex;		
 		collisions = new set<Object>;
 
-		DayZPhysics.RaycastRV(rayStart, rayEnd, hitPos, hitNormal, hitComponentIndex, collisions, NULL, ignore);
+		DayZPhysics.RaycastRV(rayStart, rayEnd, hitPos, hitNormal, hitComponentIndex, collisions, NULL, ignore, false, false, 1, 5, CollisionFlags.FIRSTCONTACT);
 
 		
 		
@@ -270,13 +196,9 @@ class Editor: Managed
 	{
 		Print("Editor::PlaceObject");
 		Object b = GetGame().CreateObjectEx(name, position, ECE_KEEPHEIGHT|ECE_NOSURFACEALIGN|ECE_TRACE);
-		b.SetOrientation(orientation);			
-		
-		PlacedObjects.Insert(b);
-		
-		
+		b.SetOrientation(orientation);		
+		PlacedObjects.Insert(b);		
 		Editor.SetActiveObject(b);
-		
 		m_EditorUI.OnObjectPlaced(b, position, orientation);
 		
 		return b;
@@ -295,9 +217,11 @@ class Editor: Managed
 		Widget browser_item = m_EditorUI.GetBrowserObjectFromEntity(obj);
 		if (browser_item)
 			SetFocus(browser_item);
+		else 
+			m_EditorUI.CreateEditorObjectFromExisting(obj);
 		
 		delete ActiveCartesian;
-		ActiveCartesian = Cartesian.CreateOnObject(CurrentSelectedObject);
+		//ActiveCartesian = Cartesian.CreateOnObject(CurrentSelectedObject);
 		ActiveBoundingBox.color = COLOR_BLUE;
 		
 	}
@@ -342,4 +266,103 @@ class Editor: Managed
 		}
 	}
 	
+	
+	
+	
+}
+
+class Cartesian
+{
+	protected EntityAI CartesianObject;
+	
+	void Cartesian(vector position)
+	{
+		CartesianObject = GetGame().CreateObjectEx("WorldCartesian", position, ECE_KEEPHEIGHT|ECE_NOSURFACEALIGN|ECE_TRACE);
+		CartesianObject.SetOrientation(vector.Up);
+		
+	}
+	
+	void ~Cartesian()
+	{
+		GetGame().ObjectDelete(CartesianObject);
+	}
+	
+	static Cartesian CreateOnObject(Object obj)
+	{
+		vector size = GetObjectSize(obj);
+		vector position = obj.GetPosition();
+		
+		position[1] = position[1] + size[1]/2;
+		Cartesian c = new Cartesian(position);
+		vector c_size = GetObjectSize(c.CartesianObject);
+		vector c_pos = c.CartesianObject.GetPosition();
+		c_pos[0] = c_pos[0] + c_size[0]/2;
+		c_pos[1] = c_pos[1] + c_size[1]/2;
+		c_pos[2] = c_pos[2] + c_size[2]/2;
+		c.CartesianObject.SetPosition(c_pos);
+		
+		
+		
+		return c;
+	}
+}
+
+class BoundingBox
+{	
+	int color;
+	private Object m_Object;
+	
+	void BoundingBox(Object building)
+	{
+		m_Object = building;
+		color = COLOR_BLUE_A;
+		Debug.ClearCanvas();		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+	}
+	
+	void ~BoundingBox()
+	{
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+	}
+	
+	void Update()
+	{
+		vector min, max; 
+		vector b[2];
+		m_Object.GetWorldBounds(min, max);
+		b[0] = min; b[1] = max;
+		vector b1 = { b[0][0], b[1][1], b[1][2] };
+		vector b2 = { b[1][0], b[1][1], b[0][2] };
+		vector b3 = { b[0][0], b[1][1], b[0][2] };
+		vector b4 = { b[1][0], b[1][1], b[1][2] };
+		vector b5 = { b[1][0], b[0][1], b[0][2] };
+		vector b6 = { b[0][0], b[0][1], b[1][2] };
+		vector b7 = { b[0][0], b[0][1], b[0][2] };
+		vector b8 = { b[1][0], b[0][1], b[1][2] };
+		
+		
+		int thickness = 2;
+		vector v1 = GetGame().GetScreenPos(b1);
+		vector v2 = GetGame().GetScreenPos(b2);
+		vector v3 = GetGame().GetScreenPos(b3);
+		vector v4 = GetGame().GetScreenPos(b4);
+		vector v5 = GetGame().GetScreenPos(b5);
+		vector v6 = GetGame().GetScreenPos(b6);
+		vector v7 = GetGame().GetScreenPos(b7);
+		vector v8 = GetGame().GetScreenPos(b8);
+		
+		Debug.ClearCanvas();
+		Debug.m_CanvasDebug.DrawLine(v6[0], v6[1], v1[0], v1[1], thickness, color);
+		Debug.m_CanvasDebug.DrawLine(v3[0], v3[1], v1[0], v1[1], thickness, color);
+		Debug.m_CanvasDebug.DrawLine(v4[0], v4[1], v1[0], v1[1], thickness, color);
+		Debug.m_CanvasDebug.DrawLine(v4[0], v4[1], v8[0], v8[1], thickness, color);
+		Debug.m_CanvasDebug.DrawLine(v5[0], v5[1], v8[0], v8[1], thickness, color);
+		Debug.m_CanvasDebug.DrawLine(v6[0], v6[1], v8[0], v8[1], thickness, color);
+		Debug.m_CanvasDebug.DrawLine(v7[0], v7[1], v3[0], v3[1], thickness, color);
+		Debug.m_CanvasDebug.DrawLine(v7[0], v7[1], v6[0], v6[1], thickness, color);
+		Debug.m_CanvasDebug.DrawLine(v7[0], v7[1], v5[0], v5[1], thickness, color);
+		Debug.m_CanvasDebug.DrawLine(v4[0], v4[1], v2[0], v2[1], thickness, color);
+		Debug.m_CanvasDebug.DrawLine(v2[0], v2[1], v5[0], v5[1], thickness, color);
+		Debug.m_CanvasDebug.DrawLine(v3[0], v3[1], v2[0], v2[1], thickness, color);
+	}
 }

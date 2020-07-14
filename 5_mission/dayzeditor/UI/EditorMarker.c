@@ -14,27 +14,63 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 		Print("EditorObjectMarkerHandler::OnWidgetScriptInit");
 		m_Root = w;
 		m_Root.SetHandler(this);
+		m_Root.SetAlpha(0.1);
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		// you should set cursor here its smart smile :)
 		Print("EditorObjectMarkerHandler::OnMouseEnter");
-		
+		m_Root.SetAlpha(1);
 		
 		return true;
 	}
 	
-	override bool OnDragging(Widget w, int x, int y, Widget reciever)
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		//Print("EditorObjectMarkerHandler::OnDragging");
-		
-		set<Object> o;
-		vector v = Editor.MousePosToRay(o, Editor.CurrentSelectedObject);
-		Editor.CurrentSelectedObject.SetPosition(v);
-		
+		m_Root.SetAlpha(0.1);
 		return true;
 	}
+		
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		return true;
+		
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget receiver)
+	{
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		return true;
+	}
+	
+	void Update()
+	{
+		Object obj = Editor.CurrentSelectedObject;
+		vector cursor_pos;
+		vector size = GetObjectSize(obj);
+		set<Object> o;
+		
+		Input input = GetGame().GetInput();
+		
+		if (input.LocalValue("UALookAround")) {
+			vector pos = obj.GetPosition();
+			float dist = vector.Distance(GetGame().GetCurrentCameraPosition(), pos);
+			cursor_pos = Editor.MousePosToRay(o, Editor.CurrentSelectedObject, dist);			
+			vector v2 = {pos[0], cursor_pos[1] + size[1]/2, pos[2]};
+			Editor.CurrentSelectedObject.SetPosition(v2);
+			
+			
+		} else {
+			cursor_pos = Editor.MousePosToRay(o, Editor.CurrentSelectedObject);
+			cursor_pos[1] = cursor_pos[1] + size[1]/2;
+			Editor.CurrentSelectedObject.SetPosition(cursor_pos);
+		}
+	}
+	
+	
+
 }
 
 
@@ -59,6 +95,7 @@ class EditorObject: ScriptedWidgetEventHandler
 		Print("~EditorObject");
 	}
 	
+
 		
 	
 	
@@ -70,10 +107,13 @@ class EditorObject: ScriptedWidgetEventHandler
 		
 		m_EditorObjectMarkerPanel = m_Root.FindAnyWidget("EditorObjectMarkerPanel");
 		m_EditorObjectMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorObjectMarkerImage"));
+		//m_EditorObjectMarkerImage.LoadImageFile(0, "");
+		
 		
 		m_EditorListItemFrame = m_Root.FindAnyWidget("EditorListItemFrame");
 		m_EditorListItemPanel = m_Root.FindAnyWidget("EditorListItemPanel");
 		m_EditorListItemText = TextWidget.Cast(m_Root.FindAnyWidget("EditorListItemText"));
+		
 	}
 	
 			
@@ -81,6 +121,8 @@ class EditorObject: ScriptedWidgetEventHandler
 	{
 		if (m_Object != null) {
 			vector position = m_Object.GetPosition();
+			vector size = GetObjectSize(m_Object);
+			position[1] = position[1] - size[1]/2;
 			vector screenpos = GetGame().GetScreenPos(position);
 			m_EditorObjectMarkerPanel.SetPos(screenpos[0], screenpos[1]);
 		}		

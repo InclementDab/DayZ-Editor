@@ -174,7 +174,8 @@ class EditorUI: UIScriptedMenu
 					
 				} else {
 					//return false; // todo: check if object under cursor is one we placed
-					Editor.SetActiveObject(Editor.ObjectUnderCursor);
+					if (Editor.ObjectUnderCursor != null)
+						Editor.SetActiveObject(Editor.ObjectUnderCursor);
 			}	
 			if (button == 1) {
 				// Implement Context menu
@@ -206,6 +207,17 @@ class EditorUI: UIScriptedMenu
 		editor_object_display.GetScript(editor_object);
 		editor_object.Initialize(obj, m_RightListPanelSpacer);
 		EditorPlacedObjects.Insert(editor_object);
+	}
+
+	EditorObject CreateEditorObjectFromExisting(Object obj)
+	{
+		Print("EditorUI::CreateEditorObjectFromExisting");
+		EditorObject editor_object;
+		Widget editor_object_display = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
+		editor_object_display.GetScript(editor_object);
+		editor_object.Initialize(obj, m_RightListPanelSpacer);
+		EditorPlacedObjects.Insert(editor_object);
+		return editor_object;
 	}
 
 }
