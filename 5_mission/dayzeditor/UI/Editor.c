@@ -9,8 +9,20 @@ static vector GetObjectSize(Object obj)
 	maxs -= pos; 
 	maxs = maxs*2;
 	return maxs;
-	
 }
+
+static vector MousePosToRay(out set<Object> collisions = null, Object ignore = null, float raycast_distance = 1000)
+{
+	vector rayStart = GetGame().GetCurrentCameraPosition();
+	vector rayEnd = rayStart + GetGame().GetPointerDirection() * raycast_distance;
+	vector hitPos, hitNormal;
+	int hitComponentIndex;		
+	collisions = new set<Object>;
+
+	DayZPhysics.RaycastRV(rayStart, rayEnd, hitPos, hitNormal, hitComponentIndex, collisions, NULL, ignore, false, false, 1, 5, CollisionFlags.FIRSTCONTACT);
+	return hitPos;
+}
+
 
 
 class Editor: Managed
@@ -24,63 +36,61 @@ class Editor: Managed
  	
 				
 	static ref Hologram 					ObjectInHand;
-	static Object						ObjectUnderCursor;
-	static Object						CurrentSelectedObject;
-	static ref Cartesian						ActiveCartesian;
-	static Object						ActiveBoundingBox;
+	static Object							ObjectUnderCursor;
+	static Object							SelectedObject;
+	static ref Cartesian					ActiveCartesian;
+	static Object							ActiveBoundingBox;
 	
 	static ref array<ref Object>			PlacedObjects;
-	static ref array<string>				EditorListObjects;	
+	static ref array<string>				EditorListObjects;
+	
+	
+	static ref array<ref EditorObject> 		EditorPlacedObjects;
 	
 	void Editor()
 	{
 		Print("Editor");
 		m_UIManager = GetGame().GetUIManager();
-
+		
+		
+		EditorPlacedObjects 		= new array<ref EditorObject>;
+		PlacedObjects 				= new array<ref Object>;
+		EditorListObjects 			= new array<string>;
+		
+		
 		LoadEditorObjects();
 		LoadPlacedObjects();
 		
 		m_Camera = GetGame().CreateObject("EditorCamera", "7500 500 7500", false);
 		m_Camera.SetActive(true);
 		
-		
 		m_PlayerBase = GetGame().GetPlayer();
 		if (m_PlayerBase)
 			m_PlayerBase.GetInputController().SetDisabled(true);
 
-		
-		InitUI();
+		m_EditorUI = new EditorUI();
+		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
+		 
+		Debug.InitCanvas();		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-		Debug.InitCanvas();
-		
 	}
-	
+		
 	void ~Editor()
 	{
 		Print("~Editor");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 	}
 	
-	void InitUI()
-	{
-		m_EditorUI = new EditorUI();
-		m_EditorUI.Init();	
-	}
-	
-	bool first_time = true;
 	
 	void ShowUI(bool state)
-	{
-		if (first_time)
-			m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu()); 
-		
+	{ 
+		//if (state)
+		//	m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu()); 
+		//else m_UIManager.HideScriptedMenu(m_EditorUI);
 		m_EditorUI.Show(state);
+		if (!state) delete ObjectInHand;
 		m_Camera.LookFreeze = state;
 		m_UIManager.ShowUICursor(state);
-		if (!state) {
-			delete ObjectInHand;
-		}
-		first_time = false;
 	}
 	
 	void LoadEditorObjects()
@@ -90,6 +100,7 @@ class Editor: Managed
 		
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
+
 		
 		for (int i = 0; i < paths.Count(); i++)	{
 			string Config_Path = paths.Get(i);			
@@ -104,10 +115,14 @@ class Editor: Managed
 		        if (Base_Name != "housenodestruct")
 		            continue;
 			        
-				EditorListObjects.Insert(Config_Name);		
+				EditorListObjects.Insert(Config_Name);	
+					
+				
 		    }
 		}
 	}
+	
+	
 	
 	void Update() 
 	{
@@ -122,7 +137,6 @@ class Editor: Managed
 		} else {
 			
 			v = MousePosToRay(obj);
-			//if (obj == null) return;
 			Object e = obj.Get(0);
 			if (e != NULL) {
 				int x, y;
@@ -155,57 +169,24 @@ class Editor: Managed
 		ObjectInHand = new Hologram(null, v, obj);
 	}
 	
-	static bool IsPlacing()
-	{
-		return ObjectInHand != null;
-	}
-	
-		
-	static vector MousePosToRay(out set<Object> collisions = null, Object ignore = null, float raycast_distance = 1000)
-	{
-		vector rayStart = GetGame().GetCurrentCameraPosition();
-		vector rayEnd = rayStart + GetGame().GetPointerDirection() * raycast_distance;
-		vector hitPos;
-		vector hitNormal;
-		int hitComponentIndex;		
-		collisions = new set<Object>;
-
-		DayZPhysics.RaycastRV(rayStart, rayEnd, hitPos, hitNormal, hitComponentIndex, collisions, NULL, ignore, false, false, 1, 5, CollisionFlags.FIRSTCONTACT);
-
-		
-		
-		return hitPos;
-	}
-	
-	static void SetObjectUnderCursor(notnull Object obj)
-	{
-		ObjectUnderCursor = obj;
-	}
-	
-	
-	
 	static Object PlaceObject(string name, vector position, vector orientation)
 	{
 		Print("Editor::PlaceObject");
-		Object b = GetGame().CreateObjectEx(name, position, ECE_KEEPHEIGHT|ECE_NOSURFACEALIGN|ECE_TRACE);
-		b.SetOrientation(orientation);		
-		PlacedObjects.Insert(b);		
-		Editor.SetActiveObject(b);
-		m_EditorUI.OnObjectPlaced(b, position, orientation);
+		Object target = GetGame().CreateObjectEx(name, position, ECE_KEEPHEIGHT|ECE_NOSURFACEALIGN|ECE_TRACE);
+		target.SetOrientation(orientation);		
+		PlacedObjects.Insert(target);		
+		SelectObject(target);
+		m_EditorUI.OnObjectPlaced(target, position, orientation);
 		
-		return b;
+		return target;
 	}
 	
-	void LoadPlacedObjects()
-	{
-		// todo: allow people to open their own savefiles
-		PlacedObjects = new array<ref Object>;
-	}
+
 	
-	static void SetActiveObject(Object obj)
+	static void SelectObject(Object obj)
 	{
 		Print("Editor::SetActiveObject: " + obj);
-		CurrentSelectedObject = obj;
+		SelectedObject = obj;
 		Widget browser_item = m_EditorUI.GetBrowserObjectFromEntity(obj);
 		if (browser_item)
 			SetFocus(browser_item);
@@ -219,7 +200,7 @@ class Editor: Managed
 	{
 		Print("Editor::ClearActiveObject");
 		delete ActiveCartesian;
-		CurrentSelectedObject = null;
+		SelectedObject = null;
 	}
 	
 	void DeleteObject(Object obj)
@@ -261,70 +242,53 @@ class Editor: Managed
 		return bounding_box;
 	}
 	
-	bool ui_state = false;
+	bool ui_state = true;
 	void OnKeyPress(int key) 
 	{
 		switch (key)
 		{
 			case KeyCode.KC_SPACE:
-				ShowUI(ui_state);
 				ui_state = !ui_state;
+				ShowUI(ui_state);
 				break;
 			
 			case KeyCode.KC_DELETE:
-				DeleteObject(CurrentSelectedObject);
+				DeleteObject(SelectedObject);
 				break;
 			
 						
-			case KeyCode.KC_LEFT:
+			case KeyCode.KC_ESCAPE:
+				if (ui_state) {
+					ui_state = false;	
+					m_EditorUI.Show(ui_state);
+				} else {
+					// Pause menu	
+				}
 
 				break;
 			
 			case KeyCode.KC_RIGHT:
-				
 				break;
 		}
 	}
 	
 	
+	static bool IsPlacing()
+	{
+		return ObjectInHand != null;
+	}
 	
+	static void SetObjectUnderCursor(notnull Object obj)
+	{
+		ObjectUnderCursor = obj;
+	}
 	
+	static void LoadPlacedObjects()
+	{
+		// todo: allow people to open their own savefiles
+		PlacedObjects = new array<ref Object>;
+	}
 }
 
-class Cartesian
-{
-	protected EntityAI CartesianObject;
-	
-	void Cartesian(vector position)
-	{
-		CartesianObject = GetGame().CreateObjectEx("WorldCartesian", position, ECE_KEEPHEIGHT|ECE_NOSURFACEALIGN|ECE_TRACE);
-		CartesianObject.SetOrientation(vector.Up);
-		
-	}
-	
-	void ~Cartesian()
-	{
-		GetGame().ObjectDelete(CartesianObject);
-	}
-	
-	static Cartesian CreateOnObject(Object obj)
-	{
-		vector size = GetObjectSize(obj);
-		vector position = obj.GetPosition();
-		
-		position[1] = position[1] + size[1]/2;
-		Cartesian c = new Cartesian(position);
-		vector c_size = GetObjectSize(c.CartesianObject);
-		vector c_pos = c.CartesianObject.GetPosition();
-		c_pos[0] = c_pos[0] + c_size[0]/2;
-		c_pos[1] = c_pos[1] + c_size[1]/2;
-		c_pos[2] = c_pos[2] + c_size[2]/2;
-		c.CartesianObject.SetPosition(c_pos);
-		
-		
-		
-		return c;
-	}
-}
 
 

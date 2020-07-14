@@ -12,61 +12,59 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 	void ~EditorObjectMarkerHandler()
 	{
 		Print("~EditorObjectMarkerHandler");
-		//delete m_Root;
 	}
+	
+	
 		
 	protected void OnWidgetScriptInit(Widget w)
 	{
 		Print("EditorObjectMarkerHandler::OnWidgetScriptInit");
 		m_Root = w;
 		m_Root.SetHandler(this);
-		m_Root.SetAlpha(0.25);
+		m_Root.SetAlpha(0.35);
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		// you should set cursor here its smart smile :)
-		Print("EditorObjectMarkerHandler::OnMouseEnter");
-		
-		
+		m_Root.SetAlpha(0.9);
 		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		
+		m_Root.SetAlpha(0.35);
 		return true;
 	}
 		
 	override bool OnDrag(Widget w, int x, int y)
 	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DragUpdate);
 		return true;
 		
 	}
 	
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(DragUpdate);
+		Editor.ActiveBoundingBox = Editor.CreateBoundingBox(Editor.SelectedObject);
 		return true;
 	}
 	
-	override bool OnClick(Widget w, int x, int y, int button)
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		/*Input input = GetGame().GetInput();
-				
-		if (input.LocalPress("UATempRaiseWeapon")) {
-			Print("Right Click");
-			int x, y;
-			GetMousePos(x, y);
+		if (button == 0) {
+			SetFocus(m_Root);
+			Editor.SelectObject(Editor.ObjectUnderCursor);
+			return true;
+		}
+		
+		if (button == 1) {			
 			EditorContextMenu.ShowContextMenu(x, y);
-		}*/
+			return true;
+		}
 		
-		Print("OnClick");
-		Print(button);
-		
-		
-		return true;
+		return false;
 	}
 	
 	override bool OnFocus(Widget w, int x, int y)
@@ -81,9 +79,9 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 		return true;
 	}
 	
-	void Update()
+	void DragUpdate()
 	{
-		Object obj = Editor.CurrentSelectedObject;
+		Object obj = Editor.SelectedObject;
 		vector cursor_pos;
 		vector size = GetObjectSize(obj);
 		set<Object> o;
@@ -93,15 +91,15 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 		if (input.LocalValue("UALookAround")) {
 			vector pos = obj.GetPosition();
 			float dist = vector.Distance(GetGame().GetCurrentCameraPosition(), pos);
-			cursor_pos = Editor.MousePosToRay(o, Editor.CurrentSelectedObject, dist);			
+			cursor_pos = MousePosToRay(o, Editor.SelectedObject, dist);			
 			vector v2 = {pos[0], cursor_pos[1] + size[1]/2, pos[2]};
-			Editor.CurrentSelectedObject.SetPosition(v2);
+			Editor.SelectedObject.SetPosition(v2);
 			
 			
 		} else {
-			cursor_pos = Editor.MousePosToRay(o, Editor.CurrentSelectedObject);
+			cursor_pos = MousePosToRay(o, Editor.SelectedObject);
 			cursor_pos[1] = cursor_pos[1] + size[1]/2;
-			Editor.CurrentSelectedObject.SetPosition(cursor_pos);
+			Editor.SelectedObject.SetPosition(cursor_pos);
 		}
 	}
 	

@@ -23,7 +23,7 @@ class CfgVehicles
     class WorldCartesian : HouseNoDestruct
     {
         scope=1;
-        model = "P:\DayZ_Server\dev\DayZEditor\Addons\Editor\data\cartesian.p3d";
+        model = "P:\DayZ_Server\dev\DayZEditor\Addons\Editor\data\CartesianWidget.p3d";
     };
 
 

@@ -10,12 +10,16 @@
 static PlayerBase CreateCustomDefaultCharacter()
 {
     PlayerBase oPlayer = PlayerBase.Cast( GetGame().CreatePlayer( NULL, GetGame().CreateRandomPlayer(), "7500 0 7500", 0, "NONE") );
-
     oPlayer.GetInventory().CreateInInventory( "AviatorGlasses" );
-
     return oPlayer;
 }
 
+Mission EditorCreateCustomMission(string path)
+{
+	Print("DayZEditorGameplay::CreateCustomMission " + path);
+	
+	return new EditorMissionGameplay();
+}
 
 class EditorMissionServer: MissionServer
 {
@@ -23,226 +27,31 @@ class EditorMissionServer: MissionServer
 }
 
 
+static ref Editor m_Editor;
 class EditorMissionGameplay: MissionGameplay
 {
-	static ref Editor m_Editor;
-	static EditorMissionGameplay GetInstance()
-	{
-		return EditorMissionGameplay.Cast(GetGame().GetMission());
-	}
-		
-    void EditorMissionGameplay()
-    {
-		
-		Print("EditorMissionGameplay");	
-    }
-	
-
-    void ~EditorMissionGameplay()
-    {
-        Print("~EditorMissionGameplay");
-		
-    }
-	
-	override void OnMouseButtonPress(int button)
-	{
-		//m_Editor.OnMouseButtonDown(button);
-		super.OnMouseButtonPress(button);
-		
-	}
-
-	
+				
     override void OnKeyPress(int key)
     {
+		if (key == KeyCode.KC_F1) {
+			delete m_Editor;
+			m_Editor = new Editor();
+		}
+		
 		m_Editor.OnKeyPress(key);
     	super.OnKeyPress(key);        
-        
         m_Hud.KeyPress(key);
     }
 
-    override void OnKeyRelease(int key)
-    {
-        super.OnKeyRelease(key);
-
-        switch (key) {
-			
-            case KeyCode.KC_ESCAPE:
-                PlayerBase player = GetGame().GetPlayer();
-                break;
-			case KeyCode.KC_DOWN:
-				delete m_Editor;
-				m_Editor = new Editor(); 
-				break;
-
-
-            default:
-				break;
-                //Print("OnKeyRelease " + key);
-        }
-    }
-
-
-
-    
     override void OnInit()
-    {
-		Print("EditorMissionGameplay::OnInit");
-        if (m_Initialized)
-        {
-            return;
-        }
-		
-		
-
-        PPEffects.Init();
-        MapMarkerTypes.Init();
-
-        m_UIManager = GetGame().GetUIManager();
-        m_Initialized = true;
-
-        // init hud ui
-        if (!m_HudRootWidget)
-        {
-            m_HudRootWidget = GetGame().GetWorkspace().CreateWidgets("gui/layouts/day_z_hud.layout");
-            m_HudRootWidget.Show(false);
-			
-            m_Chat.Init(m_HudRootWidget.FindAnyWidget("ChatFrameWidget"));
-            m_ActionMenu.Init(m_HudRootWidget.FindAnyWidget("ActionsPanel"), TextWidget.Cast(m_HudRootWidget.FindAnyWidget("DefaultActionWidget")));
-            m_Hud.Init(m_HudRootWidget.FindAnyWidget("HudPanel"));
-
-            // von enabled icon
-            m_MicrophoneIcon = ImageWidget.Cast(m_HudRootWidget.FindAnyWidget("mic"));
-            m_MicrophoneIcon.Show(false);
-
-            // von voice level
-            m_VoiceLevels = m_HudRootWidget.FindAnyWidget("VoiceLevelsPanel");
-            m_VoiceLevelsWidgets = new map<int, ImageWidget>;       // [key] voice level
-            m_VoiceLevelTimers = new map<int, ref WidgetFadeTimer>; // [key] voice level
-
-            if (m_VoiceLevels)
-            {
-                m_VoiceLevelsWidgets.Set(VoiceLevelWhisper, ImageWidget.Cast(m_VoiceLevels.FindAnyWidget("Whisper")));
-                m_VoiceLevelsWidgets.Set(VoiceLevelTalk, ImageWidget.Cast(m_VoiceLevels.FindAnyWidget("Talk")));
-                m_VoiceLevelsWidgets.Set(VoiceLevelShout, ImageWidget.Cast(m_VoiceLevels.FindAnyWidget("Shout")));
-
-                m_VoiceLevelTimers.Set(VoiceLevelWhisper, new WidgetFadeTimer);
-                m_VoiceLevelTimers.Set(VoiceLevelTalk, new WidgetFadeTimer);
-                m_VoiceLevelTimers.Set(VoiceLevelShout, new WidgetFadeTimer);
-            }
-
-            HideVoiceLevelWidgets();
-
-            // chat channel
-            m_ChatChannelArea = m_HudRootWidget.FindAnyWidget("ChatChannelPanel");
-            m_ChatChannelText = TextWidget.Cast(m_HudRootWidget.FindAnyWidget("ChatChannelText"));
-        }
-
-        // init hud ui
-
-#ifdef DEBUG
-        
-            m_HudDebug = new HudDebug;
-            if (!m_HudDebug.IsInitialized()) {
-                m_HudDebug.Init(GetGame().GetWorkspace().CreateWidgets("gui/layouts/debug/day_z_hud_debug.layout"));
-
-                Debug.SetEnabledLogs(PluginConfigDebugProfile.GetInstance().GetLogsEnabled());
-            }
-#endif
-
-        //AIBehaviourHL.RegAIBehaviour("zombie2",AIBehaviourHLZombie2,AIBehaviourHLDataZombie2);
-        //RegBehaviour("zombie2",AIBehaviourHLZombie2,AIBehaviourHLDataZombie2);
-
-        if (GetGame().IsMultiplayer())
-        {
-            OnlineServices.m_MuteUpdateAsyncInvoker.Insert(SendMuteListToServer);
-        }
-    }
-
-
-    override void OnMissionStart()
-    {
-		Print("EditorMissionGameplay::OnMissionStart");		
+	{
 		m_Editor = new Editor(); 
-		super.OnMissionStart();
-    }
-
-    override void OnMissionFinish()
-    {
-        Print("EditorMissionGameplay::OnMissionFinish");
-		delete m_Editor;
-		super.OnMissionFinish();
-
-    }
-
-    
+		
+		super.OnInit();
+	}
 
 
- 
-
-    override void PlayerControlEnable(bool bForceSupress)
-    {
-		Print("EditorMissionGameplay::PlayerControlEnable");		
-        super.PlayerControlEnable(bForceSupress);
-
-        GetUApi().GetInputByName("UAWalkRunTemp").ForceEnable(false); // force walk off!
-        GetUApi().UpdateControls();
-
-        // supress control for next frame
-        GetUApi().SupressNextFrame(bForceSupress);
-
-        m_ControlDisabled = false;
-
-        PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
-        if (!player)
-            return;
-
-        HumanInputController hic = player.GetInputController();
-        hic.LimitsDisableSprint(false);
-    }
-
-    //!movement restrictions
-    override void PlayerControlDisable(int mode)
-    {
-		Print("EditorMissionGameplay::PlayerControlDisable");	
-        super.PlayerControlDisable(mode);
-
-        switch (mode)
-        {
-	        case INPUT_EXCLUDE_ALL:
-	        {
-	            GetUApi().ActivateExclude("menu");
-	            break;
-	        }
-	        case INPUT_EXCLUDE_INVENTORY:
-	        {
-	            GetUApi().ActivateExclude("inventory");
-	            GetUApi().GetInputByName("UAWalkRunTemp").ForceEnable(true); // force walk on!
-	            break;
-	        }
-	        case INPUT_EXCLUDE_MOUSE_ALL:
-	        {
-	            GetUApi().ActivateExclude("radialmenu");
-	            break;
-	        }
-	        case INPUT_EXCLUDE_MOUSE_RADIAL:
-	        {
-	            GetUApi().ActivateExclude("radialmenu");
-	            break;
-	        }
-        }
-
-        GetUApi().UpdateControls();
-        m_ControlDisabled = true;
-
-        PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
-        if (player)
-        {
-            HumanInputController hic = player.GetInputController();
-            //hic.ResetADS();
-            player.RequestResetADSSync();
-        }
-    }
-
+   
     
 
    
@@ -290,6 +99,7 @@ class EditorMissionGameplay: MissionGameplay
 
     override void ResetGUI()
     {
+		Print("EditorMissionGameplay::ResetGUI");
         DestroyInventory();
         InitInventory();
     }
@@ -494,12 +304,7 @@ class EditorMissionGameplay: MissionGameplay
 }
 
 
-Mission EditorCreateCustomMission(string path)
-{
-	Print("DayZEditorGameplay::CreateCustomMission " + path);
-	
-	return new EditorMissionGameplay();
-}
+
 
 
 static void ResetMission()
@@ -513,9 +318,6 @@ modded class DayZIntroScene
 	
 	void DayZIntroScene()
 	{
-		
-		
-		
 		delete m_Character;
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
 		m_FunnyMeme.SetOrientation(m_CharacterRot);
