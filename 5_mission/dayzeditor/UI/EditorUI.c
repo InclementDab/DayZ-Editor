@@ -9,13 +9,17 @@ vector ScreenPosToRay()
 	int x2 = x1 / x; 
 	int y2 = y1 / y;
 	
+	vector s = GetGame().GetCurrentCameraPosition();
+	vector p = { x2, 0, y2 };
+	vector r = { 5, 5, 5 };
 	
 	
-	vector v1 = GetGame().GetCurrentCameraDirection();
+	vector result = DivideVector(s + r * (p-s), (p-s).Normalized());
 	
 	
 	
-	return v1;
+	
+	return result;
 }
 
 
@@ -79,6 +83,8 @@ class EditorUI: UIScriptedMenu
 		layoutRoot.Show(true);
 		m_Instance = this;
 		
+		
+		
 		//monitor = new DebugMonitor();
 		//monitor.Init();
 		
@@ -86,102 +92,71 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	
-	
-	
-	int x1, y1;
-	vector mouse_start;
-	EntityAI bounding_box;
-	void Update(float timeslice)
+	void OnDrag(int x, int y)
 	{
-		//Print(timeslice);		
-		//monitor.SetPosition(ScreenPosToRay());
-		
-		Input input = GetGame().GetInput();
-		if (input.LocalPress("UAFire")) {
-			
-			GetMousePos(x1, y1);
-			
-			vector start1 = GetGame().GetCurrentCameraPosition();
-			vector end1 = start1 + GetGame().GetPointerDirection() * 1000;
-			vector dir1;
-			int component;
-			
-			DayZPhysics.RaycastRV(start1, end1, mouse_start, dir1, component);
-		}
-		
-		if (input.LocalHold("UAFire")) {
-			
-			int x2, y2;
-			GetMousePos(x2, y2);
-			Debug.ClearCanvas();
-			Debug.m_CanvasDebug.DrawLine(x1, y1, x2, y1, 2, COLOR_BLUE);
-			Debug.m_CanvasDebug.DrawLine(x1, y1, x1, y2, 2, COLOR_BLUE);
-			Debug.m_CanvasDebug.DrawLine(x1, y2, x2, y2, 2, COLOR_BLUE);
-			Debug.m_CanvasDebug.DrawLine(x2, y1, x2, y2, 2, COLOR_BLUE);
-			
-			
+		Print("OnDrag");
+		start_x = x; 
+		start_y = y;
 
-			vector direction = GetGame().GetCurrentCameraDirection();
-			vector start = GetGame().GetCurrentCameraPosition();
-			vector end = start + GetGame().GetPointerDirection() * 1000;
-			vector pos, dir;
-			
-			DayZPhysics.RaycastRV(start, end, pos, dir, component);
-			float x3 = Math.AbsFloat(mouse_start[0] - pos[0]);
-			float y3 = Math.AbsFloat(mouse_start[1] - pos[1]);
-			float z3 = Math.AbsFloat(mouse_start[2] - pos[2]);
-			vector edgelength = {x3, y3, z3};
-			ref array<Object> results = new array<Object>;
-			ref array<Object> exclude = new array<Object>;
-			GetGame().IsBoxColliding(pos, direction, edgelength, exclude, results);
-			
-			foreach (Object o: results) {
-				Editor.CreateSelection(o, false);
-			}
-			
-			
-			return;
-			// debug
-			GetGame().ObjectDelete(bounding_box);
-			bounding_box = GetGame().CreateObjectEx("BoundingBoxBase", pos, ECE_NONE);
-			bounding_box.SetOrientation(direction);
-			
-			vector transform[4] =
-			{ 
-	            "1 0 0 0"
-	            "0 1 0 0" 
-	            "0 0 1 0"
-	            "0 0 0 1"
-			};
-			
-			transform[0][0] = edgelength[0];
-			transform[1][1] = edgelength[1];
-			transform[2][2] = edgelength[2];
+		
+		//GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(OnDragging);
+	}
 	
-	        transform[3][0] = pos[0];
-	        transform[3][1] = pos[1];
-	        transform[3][2] = pos[2];
-	        transform[3][3] = 1.0;
-			
-	        bounding_box.SetTransform(transform);
-			
-			
-			//Editor.CreateSelection(results, false); //!input.LocalValue("UATurbo")
-			
-			
-			//monitor.SetBlood(results.Count());
-			
+	int start_x, start_y;
+	bool is_dragging = false;
+	void UpdateDrag(int current_x, int current_y, bool _is_dragging)
+	{
+		
+		if (!is_dragging) {
+			start_x = current_x; start_y = current_y;	
+			Editor.ClearSelections();
 		}
 		
-		if (input.LocalRelease("UAFire")) {
+		
+		is_dragging = _is_dragging;
+		
+		Debug.ClearCanvas();
+		int selection_box_thickness = 1;
+		int selection_box_color = ARGB(100, 255, 0, 0);
+		Debug.m_CanvasDebug.DrawLine(start_x, start_y, current_x, start_y, selection_box_thickness, selection_box_color);
+		Debug.m_CanvasDebug.DrawLine(start_x, start_y, start_x, current_y, selection_box_thickness, selection_box_color);
+		Debug.m_CanvasDebug.DrawLine(start_x, current_y, current_x, current_y, selection_box_thickness, selection_box_color);
+		Debug.m_CanvasDebug.DrawLine(current_x, start_y, current_x, current_y, selection_box_thickness, selection_box_color);
+		
+		int x_low, x_high, y_low, y_high;
+		
+		if (start_x > current_x) {
+			x_high = start_x;
+			x_low = current_x;
+		} else { 
+			x_low = start_x;
+			x_high = current_x;		
+		}
+		
+		if (start_y > current_y) {
+			y_high = start_y;
+			y_low = current_y;
+		} else { 
+			y_low = start_y;
+			y_high = current_y;		
+		}
+				
+		foreach (EditorObject list_item: Editor.EditorPlacedObjects) {
+			float pos_x, pos_y;
+			list_item.GetMarkerPosition(pos_x, pos_y);
+			if ((pos_x < x_high && pos_x > x_low) && (pos_y < y_high && pos_y > y_low)) {
+				Editor.CreateSelection(list_item.WorldObject, false);
+			}	
+		}
+		
+		
+		
+		if (!_is_dragging) {
 			Debug.ClearCanvas();
 		}
 		
-		
-		
-		
-		super.Update(timeslice);
 	}
+		
 	
 	
 	void Show(bool state)
@@ -197,31 +172,40 @@ class EditorUI: UIScriptedMenu
 
 		Print("EditorUI::OnMouseButtonDown");
 		
-			if (button == 0) {
-								
-				if (w == GetFocus()) return true;
-				if (w.GetName() == "EditorListItemFrame") { // idk why but i cant use OnMouseButtonDown in editorobject
-					if (Editor.IsPlacing()) delete Editor.ObjectInHand;
-					SetFocus(w.GetParent());
-					return true;
-				} else if (Editor.IsPlacing()) {
-					EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
-					Editor.PlaceObject(e.GetType(), e.GetWorldPosition(), vector.Up);				
-		
-					if (!GetGame().GetInput().LocalValue("UATurbo")) {
-						delete Editor.ObjectInHand;
-					} 
-					return true;
-					
-				} else if (Editor.ObjectUnderCursor != null) {
-					//return false; // todo: check if object under cursor is one we placed
-					Editor.SelectObject(Editor.ObjectUnderCursor);
-					return true;
-			}	
+		if (button == 0) {
+							
+			if (w == GetFocus()) return true;
+			if (w.GetName() == "EditorListItemFrame") { // idk why but i cant use OnMouseButtonDown in editorobject
+				if (Editor.IsPlacing()) delete Editor.ObjectInHand;
+				SetFocus(w.GetParent());
+				return true;
+			} else if (Editor.IsPlacing()) {
+				EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
+				Editor.PlaceObject(e.GetType(), e.GetWorldPosition(), vector.Up);				
+	
+				if (!GetGame().GetInput().LocalValue("UATurbo")) {
+					delete Editor.ObjectInHand;
+				} 
+				return true;
+				
+			} else if (Editor.ObjectUnderCursor != null) {
+				//return false; // todo: check if object under cursor is one we placed
+				return true;
+			} else if (!is_dragging) {
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CallUpdateDrag, 40);
+			}
+			
 		}
 		return false;
 	}
 	
+	
+	void CallUpdateDrag()
+	{
+		if (GetGame().GetInput().LocalValue("UAFire")) {
+			GetGame().GetDragQueue().Call(this, "UpdateDrag");
+		}
+	}
 	
 	
 	override bool OnMouseEnter(Widget w, int x, int y)

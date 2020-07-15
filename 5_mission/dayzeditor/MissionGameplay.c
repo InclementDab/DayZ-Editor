@@ -55,6 +55,8 @@ class EditorMissionGameplay: MissionGameplay
 		m_Editor.OnMouseButtonPress(button);
 	}
 	
+	
+	
 
    
     

@@ -2,12 +2,17 @@
 
 class EditorEvents 
 {
-	event void OnObjectPlaced(Object obj, vector pos) 
+	void OnObjectPlaced(Object obj, vector pos) 
 	{
 		
 	}
 	
-	event void OnObjectSelected(Object obj) 
+	void OnObjectSelected(Object obj) 
+	{
+		
+	}
+	
+	void OnDrag(int x, int y)
 	{
 		
 	}

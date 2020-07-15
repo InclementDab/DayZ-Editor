@@ -30,7 +30,7 @@ static vector MousePosToRay(out set<Object> collisions = null, Object ignore = n
 static EditorObject GetBrowserObjectFromEntity(Object obj)
 {
 	foreach (EditorObject list_item: Editor.EditorPlacedObjects) {
-		if (obj == list_item.GetWorldObject()) {
+		if (obj == list_item.WorldObject) {
 			return list_item;
 		}
 	}
@@ -48,7 +48,7 @@ static vector AverageVectors(vector v1, vector v2)
 	return result;
 }
 
-static vector DivideVector(vector v1, float v2)
+static vector DivideVectorByNumber(vector v1, float v2)
 {
 	vector result;
 	
@@ -58,6 +58,20 @@ static vector DivideVector(vector v1, float v2)
 	
 	return result;
 }
+
+
+static vector DivideVector(vector v1, vector v2)
+{
+	vector result;
+	
+	result[0] = v1[0]/v2[0];
+	result[1] = v1[1]/v2[1];
+	result[2] = v1[2]/v2[2];
+	
+	return result;
+}
+
+
 
 
 
@@ -73,7 +87,6 @@ class Editor: Managed
 				
 	static ref Hologram 					ObjectInHand;
 	static Object							ObjectUnderCursor;
-	static Object							SelectedObject; // todo: boink
 	static ref Cartesian					ActiveCartesian;
 	static Object							ActiveBoundingBox;
 	
@@ -96,7 +109,7 @@ class Editor: Managed
 		PlacedObjects 				= new array<Object>;
 		EditorListObjects 			= new array<string>;
 		EditorListItems 			= new array<EditorListItem>;
-		SelectedObjects				= new set<Object>;
+		SelectedObjects				= new set<Object>();
 		ActiveBoundingBoxes			= new array<ref BoundingBox>;
 		
 		m_Camera = GetGame().CreateObject("EditorCamera", "7500 500 7500", false);
@@ -198,6 +211,7 @@ class Editor: Managed
 		}
 	}
 	
+	
 	static bool CursorAllowedToSelect = true;
 	bool OnMouseEnterObject(Object target, int x, int y)
 	{
@@ -213,23 +227,23 @@ class Editor: Managed
 	
 	bool OnMouseExitObject(int x, int y)
 	{
-		//Print("OnMouseExitObject");
 		if (GetGame().GetInput().LocalHold("UAFire")) return false;
-		//ActiveBoundingBoxes = new array<ref BoundingBox>;
 		
 		return true;
 	}
 	
-	void OnMouseButtonPress(int button)
+	static void OnMouseButtonPress(int button)
 	{
+		Print("Editor::OnMouseButtonPress");
 		Input input = GetGame().GetInput();
-		if (ObjectUnderCursor != null) {
+		
+		
+		if (ObjectUnderCursor != null && SelectedObjects.Find(ObjectUnderCursor) == -1) {
 			if (input.LocalValue("UATurbo")) {
 				CreateSelection(ObjectUnderCursor, false);
 			} else {
 				CreateSelection(ObjectUnderCursor);
 			}
-			
 		}
 	}
 	
@@ -251,25 +265,13 @@ class Editor: Managed
 		Object target = GetGame().CreateObjectEx(name, position, ECE_KEEPHEIGHT|ECE_NOSURFACEALIGN|ECE_TRACE);
 		target.SetOrientation(orientation);		
 		PlacedObjects.Insert(target);		
-		SelectObject(target);
+		CreateSelection(target);
 		m_EditorUI.OnObjectPlaced(target, position, orientation);
 		
 		return target;
 	}
 	
-	
-	static void SelectObject(notnull Object obj)
-	{
-		Print("Editor::SelectObject: " + obj);
-		
-		EditorUI editor_ui = EditorUI.GetInstance(); // scuff
-		SelectedObject = obj;
-		EditorObject browser_item = GetBrowserObjectFromEntity(obj);
-		if (browser_item)
-			SetFocus(browser_item.GetLayoutRoot());
-		else 
-			editor_ui.CreateEditorObjectFromExisting(obj);
-	}
+
 	
 	
 	static void CreateHighlight(Object target)
@@ -279,34 +281,31 @@ class Editor: Managed
 	
 	static void CreateSelection(Object target, bool remove_old = true)
 	{
-		if (remove_old) {
- 			delete SelectedObjects; delete ActiveBoundingBoxes;
-			SelectedObjects = new set<Object>;
-			ActiveBoundingBoxes = new array<ref BoundingBox>;
-		}
 		
-		if (SelectedObjects.Insert(target) != -1) {
-			
+		if (remove_old) ClearSelections();
+		
+		int c = SelectedObjects.Count();
+		if (SelectedObjects.Insert(target) == c) {
 			BoundingBox bbox = new BoundingBox(target);
-			Editor.ActiveBoundingBoxes.Insert(bbox);
-			
+			Editor.ActiveBoundingBoxes.Insert(bbox);			
 		}
-		
 	}
-	
 	
 	static void ClearSelections()
 	{
-		delete SelectedObjects; delete ActiveBoundingBoxes;
+		SelectedObjects.Clear();
+		ActiveBoundingBoxes.Clear();
 	}
 	
-	static void DeleteObject(Object obj)
+	static void RemoveSelection(Object target)
 	{
-		EditorObject browser_item = GetBrowserObjectFromEntity(obj);
-		GetGame().ObjectDelete(obj);
-		
-		if (browser_item)
-			delete browser_item;		
+		// todo
+	}
+	
+	static void DeleteObject(EditorObject target)
+	{
+		GetGame().ObjectDelete(target.WorldObject);
+		delete target;		
 	}
 	
 	
@@ -321,8 +320,8 @@ class Editor: Managed
 				break;
 			
 			case KeyCode.KC_DELETE:
-				DeleteObject(SelectedObject);
-				//RemoveBoundingBox();
+				foreach (EditorObject selected_object: EditorPlacedObjects)
+					DeleteObject(selected_object);
 				break;
 			
 						
@@ -411,7 +410,6 @@ class BoundingBox
 			 
 			m_BBoxLines[i] = GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_NONE);
 			m_BBoxLines[i].SetTransform(transform);
-			vector v = { 255, 100, 50 };
 		
 			target.AddChild(m_BBoxLines[i], -1);
 		}

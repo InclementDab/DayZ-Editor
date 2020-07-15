@@ -22,22 +22,24 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		Print("EditorContextMenu::OnClick");
-		if (Editor.SelectedObject == null) return false;
+		if (Editor.SelectedObjects.Count() > 1) return false;
 		
+				
 		switch (w.GetName()) {
 			case ("CtxProperties"):
 				EditorObjectPropertiesWindow properties_window;
 				Widget window = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectProperties.layout", GetGame().GetUIManager().GetMenu().GetLayoutRoot());
 				window.SetHandler(properties_window);
-				properties_window.SetObject(Editor.SelectedObject);
+				properties_window.SetObject(Editor.SelectedObjects[0]);
 				
 				break;
 			
 			case ("CtxAlignToGround"):
 				//PlaceOnSurfaceRotated is better if you wanna spend 40k in college
 				
-				vector tra[4];		
-				Editor.SelectedObject.GetTransform(tra);	
+				vector tra[4];
+				
+				Editor.SelectedObjects[0].GetTransform(tra);	
 				float a = GetGame().SurfaceY(tra[3][0], tra[3][2]);
 				vector surface_orientation = GetGame().GetSurfaceOrientation(tra[3][0], tra[3][2]);
 				
@@ -49,8 +51,8 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 				Print(mat);
 				Print(tra);
 								
-				Editor.SelectedObject.SetTransform(mat);
-				Editor.SelectedObject.PlaceOnSurface();
+				Editor.SelectedObjects[0].SetTransform(mat);
+				Editor.SelectedObjects[0].PlaceOnSurface();
 			
 				break;
 			
@@ -71,6 +73,9 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 	{
 		m_Instance.m_Root.SetPos(x, y);
 		m_Instance.m_Root.Show(true);
+		
+		SpacerWidget widget = SpacerWidget.Cast(m_Instance.m_Root.FindAnyWidget("CtxWrapSpacer"));
+		widget.Enable(Editor.SelectedObjects.Count() > 1); // maybe temp idk
 	}
 	
 	static void HideContextMenu()
@@ -242,7 +247,7 @@ class EditorSearchBar: ScriptedWidgetEventHandler
 class EditorUICartesian: ScriptedWidgetEventHandler
 {
 	static ItemPreviewWidget m_Root;
-	//protected ItemPreviewWidget m_EditorUICartesian;
+	protected ItemPreviewWidget m_EditorUICartesian;
 	
 	static EntityAI m_UICartiesian;
 	
@@ -276,8 +281,8 @@ class EditorUICartesian: ScriptedWidgetEventHandler
 	
 	void Update()
 	{
-		//vector v = GetGame().GetCurrentCameraDirection();	
-		//m_Root.SetModelOrientation(v);
+		vector v = GetGame().GetCurrentCameraDirection();	
+		m_Root.SetModelOrientation(v.VectorToAngles());
 	}
 	
 	

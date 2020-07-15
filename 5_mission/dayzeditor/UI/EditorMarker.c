@@ -3,8 +3,6 @@
 class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 {
 	protected ref Widget m_Root;
-		
-		
 	protected void OnWidgetScriptInit(Widget w)
 	{
 		Print("EditorObjectMarkerHandler::OnWidgetScriptInit");
@@ -26,8 +24,12 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 		return true;
 	}
 		
+	vector drag_start_pos;
+	
 	override bool OnDrag(Widget w, int x, int y)
 	{
+		set<Object> o;
+		drag_start_pos = MousePosToRay(o);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DragUpdate);
 		return true;
 		
@@ -42,8 +44,9 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		if (button == 0) {
+			Editor.OnMouseButtonPress(button)
 			SetFocus(m_Root);
-			Editor.SelectObject(Editor.ObjectUnderCursor);
+			
 			return true;
 		}
 		
@@ -67,38 +70,51 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 		return true;
 	}
 	
+	
+	vector target_old_position = vector.Zero;
 	void DragUpdate()
 	{
-		Object target = Editor.SelectedObject;
+		Object target = Editor.ObjectUnderCursor;
 		
 		vector size = GetObjectSize(target);
 		set<Object> obj;
-		vector cursor_pos = MousePosToRay(obj, target);
+		vector cursor_projection = MousePosToRay(obj, target);
 		Input input = GetGame().GetInput();
-		
 		vector pos = target.GetPosition();
 		
 		// Handle Z only motion
 		if (input.LocalValue("UALookAround")) {	
 			float dist = vector.Distance(GetGame().GetCurrentCameraPosition(), pos);
-			cursor_pos = MousePosToRay(obj, target, dist);			
-			vector v3 = {pos[0], cursor_pos[1] + size[1]/2, pos[2]};
-			target.SetPosition(v3);
-			target.Update();
+			cursor_projection = MousePosToRay(obj, target, dist);			
+			vector v3 = {pos[0], cursor_projection[1] + size[1]/2, pos[2]};
+			
+			foreach (Object editor_positionup_object: Editor.SelectedObjects) {
+				editor_positionup_object.SetPosition(v3);
+				editor_positionup_object.Update();
+			}
 			
 		// Handle XY Plane Rotation
 			// needs to be updated to use transformations
 		} else if (input.LocalValue("UATurbo")) {
-			vector direction = vector.Direction(pos, cursor_pos);
+			vector direction = vector.Direction(pos, cursor_projection);
 			direction[1] = 0;
-			target.SetDirection(direction);
-			target.Update();
+			
+			foreach (Object editor_rotate_object: Editor.SelectedObjects) {
+				editor_rotate_object.SetDirection(direction); // i think its silly
+				editor_rotate_object.Update();
+			}
 			
 		} else {
-			cursor_pos[1] = cursor_pos[1] + size[1]/2;
-			target.SetPosition(cursor_pos);
-			target.Update();
 			
+			cursor_projection[1] = cursor_projection[1] + size[1]/2;
+			
+			vector posDelta = target.GetPosition() - target_old_position; 
+			foreach ( Object editor_position_object: Editor.SelectedObjects ) { 
+				Print(posDelta);
+				editor_position_object.SetPosition(cursor_projection + posDelta); 
+				editor_position_object.Update();
+			}
+			target_old_position = target.GetPosition();
 		}
 	}
 	
@@ -111,7 +127,7 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 class EditorObject: ScriptedWidgetEventHandler
 {
 	protected Widget m_Root;
-	protected Object m_Object = null;
+	Object WorldObject = null;
 	
 	// Object Markers
 	protected Widget m_EditorObjectMarkerPanel;
@@ -144,30 +160,29 @@ class EditorObject: ScriptedWidgetEventHandler
 		
 	}
 	
-			
-	void Update()
-	{
-		
-		vector clip_info[2];
-		float radius = m_Object.ClippingInfo(clip_info);	
-		vector position = AverageVectors(clip_info[0], clip_info[1]);
-		position = position + m_Object.GetPosition();
-		position[1] = position[1] - clip_info[1][1];
-		vector screenpos = GetGame().GetScreenPos(position);
-		m_EditorObjectMarkerPanel.SetPos(screenpos[0], screenpos[1]);
-			
-	}
-	
 	Widget Initialize(notnull Object obj)
 	{
 		Print("EditorObject::Initialize " + obj);
 
-		m_Object = obj;
-		m_EditorListItemText.SetText(m_Object.GetType());
+		WorldObject = obj;
+		m_EditorListItemText.SetText(WorldObject.GetType());
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		return m_EditorListItemFrame;
 	}
+	
+	void Update()
+	{
+		vector clip_info[2];
+		float radius = WorldObject.ClippingInfo(clip_info);	
+		vector position = AverageVectors(clip_info[0], clip_info[1]);
+		position = position + WorldObject.GetPosition();
+		position[1] = position[1] - clip_info[1][1];
+		vector screenpos = GetGame().GetScreenPos(position);
+		m_EditorObjectMarkerPanel.SetPos(screenpos[0], screenpos[1]);
+	}
+	
+
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
@@ -210,14 +225,15 @@ class EditorObject: ScriptedWidgetEventHandler
 		return true;
 	}	
 	
-	Object GetWorldObject()
-	{
-		return m_Object;
-	}
 	
 	Widget GetLayoutRoot()
 	{
 		return m_EditorListItemFrame;
+	}
+	
+	void GetMarkerPosition(out float x, out float y)
+	{
+		m_EditorObjectMarkerPanel.GetPos(x, y);
 	}
 }
 
