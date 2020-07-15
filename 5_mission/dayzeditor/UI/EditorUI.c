@@ -85,16 +85,18 @@ class EditorUI: UIScriptedMenu
 		return layoutRoot;
 	}
 	
+	
+	
+	
 	int x1, y1;
 	vector mouse_start;
 	EntityAI bounding_box;
 	void Update(float timeslice)
 	{
-		
+		//Print(timeslice);		
 		//monitor.SetPosition(ScreenPosToRay());
 		
 		Input input = GetGame().GetInput();
-		
 		if (input.LocalPress("UAFire")) {
 			
 			GetMousePos(x1, y1);
@@ -108,7 +110,7 @@ class EditorUI: UIScriptedMenu
 		}
 		
 		if (input.LocalHold("UAFire")) {
-			/*
+			
 			int x2, y2;
 			GetMousePos(x2, y2);
 			Debug.ClearCanvas();
@@ -129,13 +131,19 @@ class EditorUI: UIScriptedMenu
 			float y3 = Math.AbsFloat(mouse_start[1] - pos[1]);
 			float z3 = Math.AbsFloat(mouse_start[2] - pos[2]);
 			vector edgelength = {x3, y3, z3};
-			array<Object> excluded = new array<Object>;
-			array<Object> results = new array<Object>;
+			ref array<Object> results = new array<Object>;
+			ref array<Object> exclude = new array<Object>;
+			GetGame().IsBoxColliding(pos, direction, edgelength, exclude, results);
 			
-			GetGame().IsBoxColliding(pos, direction, edgelength, excluded, results);
+			foreach (Object o: results) {
+				Editor.CreateSelection(o, false);
+			}
 			
+			
+			return;
+			// debug
 			GetGame().ObjectDelete(bounding_box);
-			bounding_box = GetGame().CreateObjectEx("BoundingBoxBase", pos, ECE_CREATEPHYSICS);
+			bounding_box = GetGame().CreateObjectEx("BoundingBoxBase", pos, ECE_NONE);
 			bounding_box.SetOrientation(direction);
 			
 			vector transform[4] =
@@ -158,11 +166,11 @@ class EditorUI: UIScriptedMenu
 	        bounding_box.SetTransform(transform);
 			
 			
-			Editor.CreateSelections(results, false); //!input.LocalValue("UATurbo")
+			//Editor.CreateSelection(results, false); //!input.LocalValue("UATurbo")
 			
 			
 			//monitor.SetBlood(results.Count());
-			*/
+			
 		}
 		
 		if (input.LocalRelease("UAFire")) {

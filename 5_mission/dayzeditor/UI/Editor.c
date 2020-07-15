@@ -22,7 +22,7 @@ static vector MousePosToRay(out set<Object> collisions = null, Object ignore = n
 	int hitComponentIndex;		
 	collisions = new set<Object>;
 
-	DayZPhysics.RaycastRV(rayStart, rayEnd, hitPos, hitNormal, hitComponentIndex, collisions, NULL, ignore, false, false, 1, 5, CollisionFlags.FIRSTCONTACT);
+	DayZPhysics.RaycastRV(rayStart, rayEnd, hitPos, hitNormal, hitComponentIndex, collisions, NULL, ignore, false, false, 1, 0, CollisionFlags.FIRSTCONTACT);
 	return hitPos;
 }
 
@@ -36,6 +36,29 @@ static EditorObject GetBrowserObjectFromEntity(Object obj)
 	}
 	return null;
 }	
+
+static vector AverageVectors(vector v1, vector v2)
+{
+	vector result;
+	
+	result[0] = (v1[0] + v2[0])/2;
+	result[1] = (v1[1] + v2[1])/2;
+	result[2] = (v1[2] + v2[2])/2;
+	
+	return result;
+}
+
+static vector DivideVector(vector v1, float v2)
+{
+	vector result;
+	
+	result[0] = v1[0]/2;
+	result[1] = v1[1]/2;
+	result[2] = v1[2]/2;
+	
+	return result;
+}
+
 
 
 class Editor: Managed
@@ -54,26 +77,26 @@ class Editor: Managed
 	static ref Cartesian					ActiveCartesian;
 	static Object							ActiveBoundingBox;
 	
-	static ref array<ref Object>			SelectedObjects;
-	static ref array<ref BoundingBox>		ActiveBoundingBoxes;
+	static ref set<Object>					SelectedObjects;
+	static ref array<ref BoundingBox>			ActiveBoundingBoxes;
 	
-	static ref array<ref Object>			PlacedObjects;
+	static ref array<Object>			PlacedObjects;
 	static ref array<string>				EditorListObjects;
 	
 	
-	static ref array<ref EditorObject> 		EditorPlacedObjects;
-	static ref array<ref EditorListItem>	EditorListItems;
+	static ref array<EditorObject> 		EditorPlacedObjects;
+	static ref array<EditorListItem>	EditorListItems;
 	
 	void Editor()
 	{
 		Print("Editor");		
 		m_UIManager = GetGame().GetUIManager();
 		
-		EditorPlacedObjects 		= new array<ref EditorObject>;
-		PlacedObjects 				= new array<ref Object>;
+		EditorPlacedObjects 		= new array<EditorObject>;
+		PlacedObjects 				= new array<Object>;
 		EditorListObjects 			= new array<string>;
-		EditorListItems 			= new array<ref EditorListItem>;
-		SelectedObjects				= new array<ref Object>;
+		EditorListItems 			= new array<EditorListItem>;
+		SelectedObjects				= new set<Object>;
 		ActiveBoundingBoxes			= new array<ref BoundingBox>;
 		
 		m_Camera = GetGame().CreateObject("EditorCamera", "7500 500 7500", false);
@@ -180,8 +203,11 @@ class Editor: Managed
 	{
 		//Print("OnMouseEnterObject");
 		if (!CursorAllowedToSelect) return false;
-		if (GetGame().GetInput().LocalHold("UAFire")) return false;		
-		CreateHighlight(target);
+		if (GetGame().GetInput().LocalHold("UAFire")) return false;
+		if (GetGame().GetInput().LocalHold("UATurbo")) {
+			CreateSelection(target, false);
+		}
+		
 		return true;
 	}
 	
@@ -231,12 +257,6 @@ class Editor: Managed
 		return target;
 	}
 	
-	static void ClearActiveObject()
-	{
-		Print("Editor::ClearActiveObject");
-		delete ActiveCartesian;
-		SelectedObject = null;
-	}
 	
 	static void SelectObject(notnull Object obj)
 	{
@@ -252,44 +272,28 @@ class Editor: Managed
 	}
 	
 	
-	static void CreateHighlight(ref Object target)
+	static void CreateHighlight(Object target)
 	{
 		CreateSelection(target);
 	}
 	
-	static void CreateSelection(ref Object target, bool remove_old = true)
+	static void CreateSelection(Object target, bool remove_old = true)
 	{
 		if (remove_old) {
  			delete SelectedObjects; delete ActiveBoundingBoxes;
-			SelectedObjects = new array<ref Object>;
+			SelectedObjects = new set<Object>;
 			ActiveBoundingBoxes = new array<ref BoundingBox>;
 		}
 		
-		SelectedObjects.Insert(target);
-		ActiveBoundingBoxes.Insert(new BoundingBox(target));
+		if (SelectedObjects.Insert(target) != -1) {
+			
+			BoundingBox bbox = new BoundingBox(target);
+			Editor.ActiveBoundingBoxes.Insert(bbox);
+			
+		}
+		
 	}
 	
-	static void CreateSelections(ref array<ref Object> target, bool remove_old = true)
-	{
-		if (remove_old) {
- 			delete SelectedObjects; delete ActiveBoundingBoxes;
-			SelectedObjects = new array<ref Object>;
-			ActiveBoundingBoxes = new array<ref BoundingBox>;	
-		}
-		
-		foreach (ref Object obj: target) {
-			SelectedObjects.Insert(obj);
-		}
-		
-		ref array<ref BoundingBox> bboxes = CreateBoundingBoxes(target);
-		
-		foreach (ref BoundingBox bbox: bboxes) {
-			ActiveBoundingBoxes.Insert(bbox);
-		}
-		
-
-		
-	}
 	
 	static void ClearSelections()
 	{
@@ -304,8 +308,7 @@ class Editor: Managed
 		if (browser_item)
 			delete browser_item;		
 	}
-
-
+	
 	
 	bool ui_state = true;
 	void OnKeyPress(int key) 
@@ -352,64 +355,92 @@ class Editor: Managed
 	static void LoadPlacedObjects()
 	{
 		// todo: allow people to open their own savefiles
-		PlacedObjects = new array<ref Object>;
+		PlacedObjects = new array<Object>;
 	}
 }
 
 
-static ref array<ref BoundingBox> CreateBoundingBoxes(ref array<ref Object> targets)
-{
-	ref array<ref BoundingBox> bounding_boxes = new array<ref BoundingBox>;
-	BoundingBox b;
-	foreach (ref Object obj: targets) {
-		b = new BoundingBox(obj);
-		bounding_boxes.Insert(b);
-	}
-	return bounding_boxes;
-}
 
 class BoundingBox
 {
-	private Object m_Object;
+	EntityAI m_BBoxLines[12];	
 	
-	void BoundingBox(ref notnull Object target)
-	{		
-		EntityAI bounding_box = GetGame().CreateObjectEx("BoundingBoxBase", vector.Zero, ECE_CREATEPHYSICS);
+	void BoundingBox(notnull Object target)
+	{
+		Print("BoundingBox");
 		
-		target.AddChild(bounding_box, -1);
+		vector line_centers[12]; vector line_verticies[8];
+		vector clip_info[2];
+		float radius = target.ClippingInfo(clip_info); // idk do something cool w/ radius		
+		vector position = AverageVectors(clip_info[0], clip_info[1]);
 		
-		vector position = vector.Zero;
-		vector size = GetObjectSize(target);
-		vector transform[4] =
-		{ 
-            "1 0 0 0"
-            "0 1 0 0" 
-            "0 0 1 0"
-            "0 0 0 1"
-		};
+		line_verticies[0] = clip_info[0];
+		line_verticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
+		line_verticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
+		line_verticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
+		line_verticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
+		line_verticies[5] = clip_info[1];		
+		line_verticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
+		line_verticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
 		
-		transform[0][0] = size[0]/2;
-		transform[1][1] = size[1]/2;
-		transform[2][2] = size[2]/2;
-
-        transform[3][0] = position[0];
-        transform[3][1] = position[1];
-        transform[3][2] = position[2];
-        transform[3][3] = 1.0;
+		line_centers[0] = AverageVectors(line_verticies[0], line_verticies[1]);
+		line_centers[1] = AverageVectors(line_verticies[1], line_verticies[2]);
+		line_centers[2] = AverageVectors(line_verticies[2], line_verticies[3]);
+		line_centers[3] = AverageVectors(line_verticies[3], line_verticies[4]);
+		line_centers[4] = AverageVectors(line_verticies[4], line_verticies[5]);
+		line_centers[5] = AverageVectors(line_verticies[5], line_verticies[6]);
+		line_centers[6] = AverageVectors(line_verticies[6], line_verticies[7]);
+		line_centers[7] = AverageVectors(line_verticies[0], line_verticies[3]);
+		line_centers[8] = AverageVectors(line_verticies[7], line_verticies[4]);
+		line_centers[9] = AverageVectors(line_verticies[2], line_verticies[5]);
+		line_centers[10] = AverageVectors(line_verticies[1], line_verticies[6]);
+		line_centers[11] = AverageVectors(line_verticies[0], line_verticies[7]);
+				
+	
+		float line_width = 0.1;
+		for (int i = 0; i < 12; i++) {
+			
+			vector size = GetObjectSize(target);
+			vector transform[4];			
+			transform[3] = line_centers[i];
+			
+			for (int j = 0; j < 3; j++) {
+				transform[j][j] = ((position[j] == line_centers[i][j])*size[j]/2) + line_width;
+			}
+						
+			 
+			m_BBoxLines[i] = GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_NONE);
+			m_BBoxLines[i].SetTransform(transform);
+			vector v = { 255, 100, 50 };
 		
-        bounding_box.SetTransform(transform);
-		
-		m_Object = bounding_box;
+			target.AddChild(m_BBoxLines[i], -1);
+		}
 		target.Update();
-		
 	}
 	
 	void ~BoundingBox()
 	{
-		GetGame().ObjectDelete(m_Object);
-	}
+		Print("~BoundingBox");
+		
+		for (int i = 0; i < 12; i++) {
+			GetGame().ObjectDelete(m_BBoxLines[i]);
+			//Update();
+		}	
+	}	
 	
 }
+
+
+
+class TestBox: Object
+{
+	
+
+}
+
+
+
+
 
 
 

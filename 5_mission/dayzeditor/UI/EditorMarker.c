@@ -147,16 +147,18 @@ class EditorObject: ScriptedWidgetEventHandler
 			
 	void Update()
 	{
-		if (m_Object != null) {
-			vector position = m_Object.GetPosition();
-			vector size = GetObjectSize(m_Object);
-			position[1] = position[1] - size[1]/2;
-			vector screenpos = GetGame().GetScreenPos(position);
-			m_EditorObjectMarkerPanel.SetPos(screenpos[0], screenpos[1]);
-		}		
+		
+		vector clip_info[2];
+		float radius = m_Object.ClippingInfo(clip_info);	
+		vector position = AverageVectors(clip_info[0], clip_info[1]);
+		position = position + m_Object.GetPosition();
+		position[1] = position[1] - clip_info[1][1];
+		vector screenpos = GetGame().GetScreenPos(position);
+		m_EditorObjectMarkerPanel.SetPos(screenpos[0], screenpos[1]);
+			
 	}
 	
-	Widget Initialize(Object obj)
+	Widget Initialize(notnull Object obj)
 	{
 		Print("EditorObject::Initialize " + obj);
 
