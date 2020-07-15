@@ -8,7 +8,7 @@ PanelWidgetClass EditorObject {
  hexactsize 1
  vexactsize 1
  draggable 1
- scriptclass "EditorObject"
+ scriptclass "EditorObjectMarker"
  {
   PanelWidgetClass EditorObjectMarkerPanel {
    ignorepointer 0

@@ -11,7 +11,7 @@ class EditorObjectPropertiesWindow: ScriptedWidgetEventHandler
 	protected EditBoxWidget x_pos; protected EditBoxWidget y_pos; protected EditBoxWidget z_pos;
 	protected EditBoxWidget x_rot; protected EditBoxWidget y_rot; protected EditBoxWidget z_rot;
 	
-	protected Object m_Object;
+	protected EditorObject m_Object;
 			
 	void ~EditorObjectPropertiesWindow()
 	{
@@ -37,7 +37,7 @@ class EditorObjectPropertiesWindow: ScriptedWidgetEventHandler
 	}
 	
 	
-	void SetObject(Object target)
+	void SetObject(EditorObject target)
 	{
 		m_Object = target;
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);

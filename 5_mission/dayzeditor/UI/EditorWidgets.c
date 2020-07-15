@@ -1,5 +1,5 @@
 
-static string layout_dir = "P:/DayZ_Server/dev/DayZEditor/Addons/Editor/Layouts/";
+//static string layout_dir = "P:/DayZ_Server/dev/DayZEditor/Addons/Editor/Layouts/";
 //static string layout_dir = "DayZEditor/Editor/layouts/";
 
 class EditorContextMenu: ScriptedWidgetEventHandler
@@ -39,7 +39,7 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 				
 				vector tra[4];
 				
-				Editor.SelectedObjects[0].GetTransform(tra);	
+				Editor.SelectedObjects[0].WorldObject.GetTransform(tra);	
 				float a = GetGame().SurfaceY(tra[3][0], tra[3][2]);
 				vector surface_orientation = GetGame().GetSurfaceOrientation(tra[3][0], tra[3][2]);
 				
@@ -51,8 +51,8 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 				Print(mat);
 				Print(tra);
 								
-				Editor.SelectedObjects[0].SetTransform(mat);
-				Editor.SelectedObjects[0].PlaceOnSurface();
+				Editor.SelectedObjects[0].WorldObject.SetTransform(mat);
+				Editor.SelectedObjects[0].WorldObject.PlaceOnSurface();
 			
 				break;
 			

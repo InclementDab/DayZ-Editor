@@ -23,13 +23,9 @@ vector ScreenPosToRay()
 }
 
 
-class EditorUI: UIScriptedMenu
+modded class EditorUI
 {
-	static ref EditorUI m_Instance;
-	static EditorUI GetInstance()
-	{
-		return m_Instance;
-	}
+
 	
 	protected Widget m_Parent;
 	
@@ -42,16 +38,33 @@ class EditorUI: UIScriptedMenu
 	protected ScrollWidget m_LeftListPanelScrollBar;
 	WrapSpacerWidget m_LeftListPanelSpacer;	
 	
+
+	
+
 	protected ScrollWidget m_RightListPanelScrollBar;
-	protected WrapSpacerWidget m_RightListPanelSpacer;
+	WrapSpacerWidget m_RightListPanelSpacer;
+	
+	override WrapSpacerWidget GetRightPanelSpacer()
+	{
+		return m_RightListPanelSpacer;
+	}
 		
 	protected ref EditorSearchBar m_EditorSearchBar;
 	
+	static ref array<EditorListItem>	EditorListItems;
+	
+	EditorCamera							m_Camera;
 		
 	
 	void EditorUI()
 	{
 		Print("EditorUI");
+		EditorListItems = new array<EditorListItem>();
+						
+		float pos1 = Math.RandomFloat(2500, 13000);
+		float pos2 = Math.RandomFloat(2500, 13000);
+		m_Camera = GetGame().CreateObject("EditorCamera", Vector(pos1, 500, pos2), false);
+		m_Camera.SetActive(true);
 	}
 	
 	void ~EditorUI()
@@ -83,12 +96,30 @@ class EditorUI: UIScriptedMenu
 		layoutRoot.Show(true);
 		m_Instance = this;
 		
-		
-		
+		foreach (string item_name: Editor.EditorPlaceableObjects) {
+			EditorListItem editor_list_item;
+			Widget list_item = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorListItem.layout", m_LeftListPanelSpacer);
+			list_item.GetScript(editor_list_item);
+			editor_list_item.SetObject(item_name);
+			EditorListItems.Insert(editor_list_item);
+		}
+
 		//monitor = new DebugMonitor();
 		//monitor.Init();
 		
 		return layoutRoot;
+	}
+	
+	void Show()
+	{
+		m_Camera.LookFreeze = true;
+		GetGame().GetUIManager().ShowUICursor(true);
+	}
+	
+	void Hide()
+	{
+		m_Camera.LookFreeze = false;
+		GetGame().GetUIManager().ShowUICursor(false);
 	}
 	
 	
@@ -138,15 +169,15 @@ class EditorUI: UIScriptedMenu
 			y_high = current_y;		
 		}
 				
-		foreach (EditorObjectMarker list_item: Editor.EditorPlacedObjects) {
+		foreach (EditorObject editor_object: Editor.EditorObjects) {
+			
+			
 			float pos_x, pos_y;
-			list_item.GetMarkerPosition(pos_x, pos_y);
+			editor_object.ObjectMarker.GetMarkerPosition(pos_x, pos_y);
 			if ((pos_x < x_high && pos_x > x_low) && (pos_y < y_high && pos_y > y_low)) {
-				Editor.CreateSelection(list_item.WorldObject, false);
+				Editor.CreateSelection(editor_object, false);
 			}	
 		}
-		
-		
 		
 		if (!_is_dragging) {
 			Debug.ClearCanvas();
@@ -154,20 +185,16 @@ class EditorUI: UIScriptedMenu
 		
 	}
 		
-	
-	
-	void Show(bool state)
-	{
-		layoutRoot.Show(state);
-	}
-
-	
+		
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		Print(w.GetName());
-		
-
 		Print("EditorUI::OnMouseButtonDown");
+		
+		Input input = GetGame().GetInput();
+
+
+		
 		
 		if (button == 0) {
 							
@@ -178,20 +205,22 @@ class EditorUI: UIScriptedMenu
 				return true;
 			} else if (Editor.IsPlacing()) {
 				EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
-				Editor.PlaceObject(e.GetType(), e.GetWorldPosition(), vector.Up);				
-	
-				if (!GetGame().GetInput().LocalValue("UATurbo")) {
-					delete Editor.ObjectInHand;
-				} 
+				Editor.PlaceObject(e.GetType(), e.GetWorldPosition(), vector.Up);						
+				if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
 				return true;
 				
-			} else if (Editor.ObjectUnderCursor != null) {
-				//return false; // todo: check if object under cursor is one we placed
-				return true;
-			} else if (!is_dragging) {
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CallUpdateDrag, 40);
+			} else if (Editor.ObjectUnderCursor == null) Editor.ClearSelections();
+			else if (!is_dragging) GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CallUpdateDrag, 40);
+			else {
+				EditorObject editor_object = Editor.EditorObjectFromObject(Editor.ObjectUnderCursor);
+				if (editor_object != null) 
+					if (input.LocalValue("UATurbo")) 
+						Editor.CreateSelection(editor_object, false);
+					else 
+						Editor.CreateSelection(editor_object);
+					
+				
 			}
-			
 		}
 		return false;
 	}
@@ -223,20 +252,10 @@ class EditorUI: UIScriptedMenu
 	
 
 		
-		
-	void OnObjectPlaced(Object obj, vector position, vector orientation)
-	{
-		Print("EditorUI::OnObjectPlaced");
-				
-		EditorObjectMarker editor_object;
-		Widget editor_object_display = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
-		editor_object_display.GetScript(editor_object);
-		m_RightListPanelSpacer.AddChild(editor_object.Initialize(obj));
-		Editor.EditorPlacedObjects.Insert(editor_object);
-	}
+
 
 	EditorObjectMarker CreateEditorObjectFromExisting(Object obj)
-	{		
+	{		/*
 		Print("EditorUI::CreateEditorObjectFromExisting");
 		EditorObjectMarker editor_object;
 		Widget editor_object_display = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
@@ -244,6 +263,7 @@ class EditorUI: UIScriptedMenu
 		m_RightListPanelSpacer.AddChild(editor_object.Initialize(obj));
 		Editor.EditorPlacedObjects.Insert(editor_object);
 		return editor_object;
+	*/
 	}
 }
 

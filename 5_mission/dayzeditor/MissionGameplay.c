@@ -26,16 +26,39 @@ class EditorMissionServer: MissionServer
 
 }
 
-
+static ref EditorUI	m_EditorUI;	
 static ref Editor m_Editor;
 class EditorMissionGameplay: MissionGameplay
 {
-				
+	EditorUI GetEditorUI() { return m_EditorUI; }
+	bool ui_state = true;
     override void OnKeyPress(int key)
     {
 		if (key == KeyCode.KC_F1) {
-			delete m_Editor;
+			delete m_Editor; delete m_EditorUI;
 			m_Editor = new Editor();
+			m_EditorUI = new EditorUI();
+			
+		}
+		switch (key) {
+			case KeyCode.KC_SPACE:
+				if (!ui_state) {
+					m_EditorUI.Show();
+				} else
+					m_EditorUI.Hide();
+				ui_state = !ui_state;
+				//m_EditorUI.Show(ui_state);
+				
+				break;
+			
+			case KeyCode.KC_ESCAPE:
+				if (ui_state) {
+					ui_state = false;	
+					
+				} else {
+					// Pause menu	
+				}
+				break;
 		}
 		
 		m_Editor.OnKeyPress(key);
@@ -45,53 +68,39 @@ class EditorMissionGameplay: MissionGameplay
 
     override void OnInit()
 	{
-		m_Editor = new Editor(); 
-		
 		super.OnInit();
-	}
+		m_Editor = new Editor(); 
+		m_EditorUI = new EditorUI();	
+		
+		GetGame().GetUIManager().ShowScriptedMenu(m_EditorUI, GetGame().GetUIManager().GetMenu());
+		GetGame().GetUIManager().HideScriptedMenu(m_EditorUI);
+		GetGame().GetUIManager().ShowScriptedMenu(m_EditorUI, GetGame().GetUIManager().GetMenu());
+		//m_EditorUI.Init();
+		//m_EditorUI.Show(ui_state);
 	
-	override void OnMouseButtonPress(int button)
-	{
-		m_Editor.OnMouseButtonPress(button);
+		
 	}
 	
 	
 	
 
-   
-    
 
    
     override void ShowInventory()
     {
         UIScriptedMenu menu = GetUIManager().GetMenu();
 
-        if (!menu && GetGame().GetPlayer().GetHumanInventory().CanOpenInventory() && !GetGame().GetPlayer().IsInventorySoftLocked() && GetGame().GetPlayer().GetHumanInventory().IsInventoryUnlocked())
+        if (!menu)
         {
-            if (!m_InventoryMenu)
-            {
-                InitInventory();
-            }
-
-            if (!GetUIManager().FindMenu(MENU_INVENTORY))
-            {
-                GetUIManager().ShowScriptedMenu(m_InventoryMenu, null);
-                PlayerBase.Cast(GetGame().GetPlayer()).OnInventoryMenuOpen();
-            }
-            MoveHudForInventory(true);
-            PlayerControlDisable(INPUT_EXCLUDE_INVENTORY);
+            GetUIManager().ShowScriptedMenu(m_EditorUI, menu);
         }
     }
 
     override void HideInventory()
     {
-        if (m_InventoryMenu)
+        if (m_EditorUI)
         {
-            GetUIManager().HideScriptedMenu(m_InventoryMenu);
-            MoveHudForInventory(false);
-            PlayerControlEnable(false);
-            PlayerBase.Cast(GetGame().GetPlayer()).OnInventoryMenuClose();
-            VicinityItemManager.GetInstance().ResetRefreshCounter();
+			m_UIManager.HideScriptedMenu(m_EditorUI);
         }
     }
 
@@ -109,6 +118,8 @@ class EditorMissionGameplay: MissionGameplay
 		Print("EditorMissionGameplay::ResetGUI");
         DestroyInventory();
         InitInventory();
+		
+		
     }
 
     override void ShowChat()
