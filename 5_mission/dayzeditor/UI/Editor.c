@@ -74,6 +74,26 @@ static vector DivideVector(vector v1, vector v2)
 
 
 
+class EditorObject1
+{
+	Object WorldObject;
+	BoundingBox WorldBoundingBox;
+	
+	bool IsSelected = false;
+	
+	void EditorObject1(notnull Object world_object) 
+	{
+		WorldObject = world_object;
+	}
+	
+	
+	void OnSelected()
+	{
+		// createbbox
+	}
+	
+}
+
 
 class Editor: Managed
 {
@@ -91,13 +111,14 @@ class Editor: Managed
 	static Object							ActiveBoundingBox;
 	
 	static ref set<Object>					SelectedObjects;
-	static ref array<ref BoundingBox>			ActiveBoundingBoxes;
+	static ref array<ref BoundingBox>		ActiveBoundingBoxes;
 	
-	static ref array<Object>			PlacedObjects;
+	static ref array<Object>				PlacedObjects;
 	static ref array<string>				EditorListObjects;
 	
 	
-	static ref array<EditorObject> 		EditorPlacedObjects;
+	static ref set<EditorObject> 		EditorObjects;
+	
 	static ref array<EditorListItem>	EditorListItems;
 	
 	void Editor()
@@ -112,7 +133,10 @@ class Editor: Managed
 		SelectedObjects				= new set<Object>();
 		ActiveBoundingBoxes			= new array<ref BoundingBox>;
 		
-		m_Camera = GetGame().CreateObject("EditorCamera", "7500 500 7500", false);
+		float pos1 = Math.RandomFloat(2500, 13000);
+		float pos2 = Math.RandomFloat(2500, 13000);
+		
+		m_Camera = GetGame().CreateObject("EditorCamera", Vector(pos1, 500, pos2), false);
 		m_Camera.SetActive(true);
 		
 		m_EditorUI = new EditorUI();
@@ -236,13 +260,14 @@ class Editor: Managed
 	{
 		Print("Editor::OnMouseButtonPress");
 		Input input = GetGame().GetInput();
-		
-		
-		if (ObjectUnderCursor != null && SelectedObjects.Find(ObjectUnderCursor) == -1) {
-			if (input.LocalValue("UATurbo")) {
-				CreateSelection(ObjectUnderCursor, false);
-			} else {
-				CreateSelection(ObjectUnderCursor);
+		if (button == 0) {
+			if (ObjectUnderCursor == null) ClearSelections();
+			else if (SelectedObjects.Find(ObjectUnderCursor) == -1) {
+				if (input.LocalValue("UATurbo")) {
+					CreateSelection(ObjectUnderCursor, false);
+				} else {
+					CreateSelection(ObjectUnderCursor);
+				}
 			}
 		}
 	}
@@ -274,12 +299,12 @@ class Editor: Managed
 
 	
 	
-	static void CreateHighlight(Object target)
+	static void CreateHighlight(notnull Object target)
 	{
 		CreateSelection(target);
 	}
 	
-	static void CreateSelection(Object target, bool remove_old = true)
+	static void CreateSelection(notnull Object target, bool remove_old = true)
 	{
 		
 		if (remove_old) ClearSelections();
@@ -289,17 +314,29 @@ class Editor: Managed
 			BoundingBox bbox = new BoundingBox(target);
 			Editor.ActiveBoundingBoxes.Insert(bbox);			
 		}
+		
+		//m_EditorUI.monitor.SetBlood(Editor.SelectedObjects.Count());
 	}
 	
 	static void ClearSelections()
 	{
 		SelectedObjects.Clear();
 		ActiveBoundingBoxes.Clear();
+		//m_EditorUI.monitor.SetBlood(Editor.SelectedObjects.Count());
 	}
 	
 	static void RemoveSelection(Object target)
 	{
-		// todo
+		int index = SelectedObjects.Find(target);
+		if (index == -1) return;
+			
+		Object bounding_box = target.GetChildren();
+		if (bounding_box != null) {
+			//ActiveBoundingBoxes.RemoveItem(bounding_box); ah shit here we go again
+		}
+		SelectedObjects.Remove(index);
+			
+		
 	}
 	
 	static void DeleteObject(EditorObject target)
@@ -363,6 +400,7 @@ class Editor: Managed
 class BoundingBox
 {
 	EntityAI m_BBoxLines[12];	
+	EntityAI m_BBoxBase;
 	
 	void BoundingBox(notnull Object target)
 	{
@@ -413,6 +451,9 @@ class BoundingBox
 		
 			target.AddChild(m_BBoxLines[i], -1);
 		}
+		
+		//m_BBoxBase = GetGame().CreateObjectEx("BoundingBoxBase", vector.Zero, ECE_NONE);
+		
 		target.Update();
 	}
 	
@@ -422,19 +463,12 @@ class BoundingBox
 		
 		for (int i = 0; i < 12; i++) {
 			GetGame().ObjectDelete(m_BBoxLines[i]);
-			//Update();
+			m_BBoxLines[i].Update();
 		}	
 	}	
 	
 }
 
-
-
-class TestBox: Object
-{
-	
-
-}
 
 
 

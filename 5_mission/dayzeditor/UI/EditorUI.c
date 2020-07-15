@@ -97,9 +97,6 @@ class EditorUI: UIScriptedMenu
 		Print("OnDrag");
 		start_x = x; 
 		start_y = y;
-
-		
-		//GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(OnDragging);
 	}
 	
 	int start_x, start_y;
@@ -141,7 +138,7 @@ class EditorUI: UIScriptedMenu
 			y_high = current_y;		
 		}
 				
-		foreach (EditorObject list_item: Editor.EditorPlacedObjects) {
+		foreach (EditorObjectMarker list_item: Editor.EditorPlacedObjects) {
 			float pos_x, pos_y;
 			list_item.GetMarkerPosition(pos_x, pos_y);
 			if ((pos_x < x_high && pos_x > x_low) && (pos_y < y_high && pos_y > y_low)) {
@@ -231,17 +228,17 @@ class EditorUI: UIScriptedMenu
 	{
 		Print("EditorUI::OnObjectPlaced");
 				
-		EditorObject editor_object;
+		EditorObjectMarker editor_object;
 		Widget editor_object_display = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
 		editor_object_display.GetScript(editor_object);
 		m_RightListPanelSpacer.AddChild(editor_object.Initialize(obj));
 		Editor.EditorPlacedObjects.Insert(editor_object);
 	}
 
-	EditorObject CreateEditorObjectFromExisting(Object obj)
+	EditorObjectMarker CreateEditorObjectFromExisting(Object obj)
 	{		
 		Print("EditorUI::CreateEditorObjectFromExisting");
-		EditorObject editor_object;
+		EditorObjectMarker editor_object;
 		Widget editor_object_display = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
 		editor_object_display.GetScript(editor_object);
 		m_RightListPanelSpacer.AddChild(editor_object.Initialize(obj));
