@@ -22,21 +22,27 @@ class CfgMods
 		};
 		class defs
 		{
+			class coreScriptModule
+			{
+				value = "";
+				files[] = {"DayZEditor/scripts/1_core"};
+			};
+
 			class gameScriptModule
 			{
 				value="";
-				files[] = {"Editor/scripts/3_Game"};
+				files[] = {"DayZEditor/scripts/3_Game"};
 			};
 			class worldScriptModule
 			{
 				value="";
-				files[] = {"Editor/scripts/4_World"};
+				files[] = {"DayZEditor/scripts/4_World"};
 			};
 
 			class missionScriptModule 
 			{
 				value="";
-				files[] = {"Editor/scripts/5_Mission"};
+				files[] = {"DayZEditor/scripts/5_Mission"};
 			};
 		};
 	};

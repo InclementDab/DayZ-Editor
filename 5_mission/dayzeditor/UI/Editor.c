@@ -3,12 +3,15 @@
 
 static vector GetObjectSize(Object obj)
 {
-	vector mins, maxs;
-	obj.GetWorldBounds(mins, maxs);	
-	vector pos = obj.GetPosition();
-	maxs -= pos; 
-	maxs = maxs*2;
-	return maxs;
+	vector size[2];
+	vector result;
+	
+	float radius = obj.ClippingInfo(size);
+	
+	result[0] = Math.AbsFloat(size[0][0]) + Math.AbsFloat(size[1][0]);
+	result[1] = Math.AbsFloat(size[0][1]) + Math.AbsFloat(size[1][1]);
+	result[2] = Math.AbsFloat(size[0][2]) + Math.AbsFloat(size[1][2]);
+	return result;
 }
 
 static vector MousePosToRay(out set<Object> collisions = null, Object ignore = null, float raycast_distance = 1000)
@@ -239,18 +242,19 @@ class Editor: Managed
 	{
 		Print("Editor::SelectObject: " + obj);
 		
+		EditorUI editor_ui = EditorUI.GetInstance(); // scuff
 		SelectedObject = obj;
 		EditorObject browser_item = GetBrowserObjectFromEntity(obj);
 		if (browser_item)
 			SetFocus(browser_item.GetLayoutRoot());
-		//else 
-			//EditorUI.CreateEditorObjectFromExisting(obj);
+		else 
+			editor_ui.CreateEditorObjectFromExisting(obj);
 	}
 	
 	
 	static void CreateHighlight(ref Object target)
 	{
-		//todo
+		CreateSelection(target);
 	}
 	
 	static void CreateSelection(ref Object target, bool remove_old = true)
@@ -265,7 +269,7 @@ class Editor: Managed
 		ActiveBoundingBoxes.Insert(new BoundingBox(target));
 	}
 	
-	static void CreateSelections(array<Object> target, bool remove_old = true)
+	static void CreateSelections(ref array<ref Object> target, bool remove_old = true)
 	{
 		if (remove_old) {
  			delete SelectedObjects; delete ActiveBoundingBoxes;
@@ -273,9 +277,13 @@ class Editor: Managed
 			ActiveBoundingBoxes = new array<ref BoundingBox>;	
 		}
 		
-		SelectedObjects.InsertArray(target);
-		set<BoundingBox> bboxes = CreateBoundingBoxes(target);
-		foreach (BoundingBox bbox: bboxes) {
+		foreach (ref Object obj: target) {
+			SelectedObjects.Insert(obj);
+		}
+		
+		ref array<ref BoundingBox> bboxes = CreateBoundingBoxes(target);
+		
+		foreach (ref BoundingBox bbox: bboxes) {
 			ActiveBoundingBoxes.Insert(bbox);
 		}
 		
@@ -349,11 +357,11 @@ class Editor: Managed
 }
 
 
-static set<BoundingBox> CreateBoundingBoxes(ref array<Object> targets)
+static ref array<ref BoundingBox> CreateBoundingBoxes(ref array<ref Object> targets)
 {
-	set<BoundingBox> bounding_boxes = new set<BoundingBox>;
+	ref array<ref BoundingBox> bounding_boxes = new array<ref BoundingBox>;
 	BoundingBox b;
-	foreach (Object obj: targets) {
+	foreach (ref Object obj: targets) {
 		b = new BoundingBox(obj);
 		bounding_boxes.Insert(b);
 	}
@@ -364,9 +372,8 @@ class BoundingBox
 {
 	private Object m_Object;
 	
-	void BoundingBox(out notnull Object target)
+	void BoundingBox(ref notnull Object target)
 	{		
-		Print("BoundingBox");
 		EntityAI bounding_box = GetGame().CreateObjectEx("BoundingBoxBase", vector.Zero, ECE_CREATEPHYSICS);
 		
 		target.AddChild(bounding_box, -1);
@@ -392,13 +399,13 @@ class BoundingBox
 		
         bounding_box.SetTransform(transform);
 		
-		target.Update();
 		m_Object = bounding_box;
+		target.Update();
+		
 	}
 	
 	void ~BoundingBox()
 	{
-		Print("~BoundingBox");
 		GetGame().ObjectDelete(m_Object);
 	}
 	

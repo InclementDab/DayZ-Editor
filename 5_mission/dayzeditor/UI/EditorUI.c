@@ -108,7 +108,7 @@ class EditorUI: UIScriptedMenu
 		}
 		
 		if (input.LocalHold("UAFire")) {
-			Print("HoldFire");
+			/*
 			int x2, y2;
 			GetMousePos(x2, y2);
 			Debug.ClearCanvas();
@@ -162,6 +162,7 @@ class EditorUI: UIScriptedMenu
 			
 			
 			//monitor.SetBlood(results.Count());
+			*/
 		}
 		
 		if (input.LocalRelease("UAFire")) {

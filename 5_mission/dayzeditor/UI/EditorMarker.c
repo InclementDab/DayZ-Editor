@@ -3,25 +3,14 @@
 class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 {
 	protected ref Widget m_Root;
-	
-	void EditorObjectMarkerHandler()
-	{
-		Print("EditorObjectMarkerHandler");
-	}
-	
-	void ~EditorObjectMarkerHandler()
-	{
-		Print("~EditorObjectMarkerHandler");
-	}
-	
-	
+		
 		
 	protected void OnWidgetScriptInit(Widget w)
 	{
 		Print("EditorObjectMarkerHandler::OnWidgetScriptInit");
 		m_Root = w;
 		m_Root.SetHandler(this);
-		m_Root.SetAlpha(0.35);
+		m_Root.SetAlpha(0.25);
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
@@ -33,7 +22,7 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		m_Root.SetAlpha(0.35);
+		m_Root.SetAlpha(0.25);
 		return true;
 	}
 		
@@ -47,8 +36,6 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(DragUpdate);
-		//Editor.RemoveBoundingBox();
-		//	Editor.ActiveBoundingBox = Editor.CreateBoundingBox(Editor.SelectedObject);
 		return true;
 	}
 	
@@ -76,39 +63,42 @@ class EditorObjectMarkerHandler: ScriptedWidgetEventHandler
 	
 	override bool OnFocusLost(Widget w, int x, int y)
 	{
-		m_Root.SetAlpha(0.35);
+		m_Root.SetAlpha(0.25);
 		return true;
 	}
 	
 	void DragUpdate()
 	{
-		Object obj = Editor.SelectedObject;
-		vector cursor_pos;
-		vector size = GetObjectSize(obj);
-		set<Object> o;
+		Object target = Editor.SelectedObject;
 		
+		vector size = GetObjectSize(target);
+		set<Object> obj;
+		vector cursor_pos = MousePosToRay(obj, target);
 		Input input = GetGame().GetInput();
 		
-		vector pos = obj.GetPosition();
+		vector pos = target.GetPosition();
 		
 		// Handle Z only motion
 		if (input.LocalValue("UALookAround")) {	
 			float dist = vector.Distance(GetGame().GetCurrentCameraPosition(), pos);
-			cursor_pos = MousePosToRay(o, obj, dist);			
+			cursor_pos = MousePosToRay(obj, target, dist);			
 			vector v3 = {pos[0], cursor_pos[1] + size[1]/2, pos[2]};
-			obj.SetPosition(v3);
+			target.SetPosition(v3);
+			target.Update();
 			
 		// Handle XY Plane Rotation
+			// needs to be updated to use transformations
 		} else if (input.LocalValue("UATurbo")) {
-			cursor_pos = MousePosToRay(o, obj);
-			vector direction = vector.Direction(obj.GetPosition(), cursor_pos);
+			vector direction = vector.Direction(pos, cursor_pos);
 			direction[1] = 0;
-			obj.SetDirection(direction);
-		
+			target.SetDirection(direction);
+			target.Update();
+			
 		} else {
-			cursor_pos = MousePosToRay(o, Editor.SelectedObject);
 			cursor_pos[1] = cursor_pos[1] + size[1]/2;
-			Editor.SelectedObject.SetPosition(cursor_pos);
+			target.SetPosition(cursor_pos);
+			target.Update();
+			
 		}
 	}
 	

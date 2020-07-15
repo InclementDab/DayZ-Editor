@@ -1,5 +1,6 @@
 
 
+
 class CfgPatches
 {
     class Editor
@@ -31,6 +32,6 @@ class CfgVehicles
     {
         scope = 1;
         model = "P:\DayZ_Server\dev\DayZEditor\Addons\Editor\data\BoundingBoxBase.p3d";
-        };
+    };
 };
 

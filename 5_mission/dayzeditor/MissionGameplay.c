@@ -7,10 +7,10 @@
 // heading model? mouse control
 //bool			HeadingModel(float pDt, SDayZPlayerHeadingModel pModel);
 
-static PlayerBase CreateCustomDefaultCharacter()
+static PlayerBase CreateDefaultCharacter()
 {
     PlayerBase oPlayer = PlayerBase.Cast( GetGame().CreatePlayer( NULL, GetGame().CreateRandomPlayer(), "7500 0 7500", 0, "NONE") );
-    oPlayer.GetInventory().CreateInInventory( "AviatorGlasses" );
+    oPlayer.GetInventory().CreateInInventory("AviatorGlasses");
     return oPlayer;
 }
 
@@ -352,7 +352,7 @@ modded class MainMenu
 	
 	override void Play()
 	{
-		GetGame().PlayMission("missions\\DayZEditor.ChernarusPlus");
+		GetGame().PlayMission("P:\\DayZ_Server\\dev\\DayZEditor\\mission\\DayZEditor.ChernarusPlus");
 	}
 	
 	override bool OnMouseEnter( Widget w, int x, int y )
