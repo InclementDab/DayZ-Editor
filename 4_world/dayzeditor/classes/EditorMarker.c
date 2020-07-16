@@ -1,8 +1,8 @@
 
-class EditorUI: UIScriptedMenu
+class IEditorUI: UIScriptedMenu
 {
-	static ref EditorUI m_Instance;
-	static EditorUI GetInstance() { return m_Instance; }
+	static ref IEditorUI m_Instance;
+	static IEditorUI GetInstance() { return m_Instance; }
 	WrapSpacerWidget GetRightPanelSpacer() {}
 }
 
@@ -18,8 +18,12 @@ class EditorObjectMarker: ScriptedWidgetEventHandler
 	protected ImageWidget m_EditorObjectMarkerImage;
 	
 	// Browser Items
-	protected Widget m_EditorListItemFrame;
-	protected TextWidget m_EditorListItemText;	
+	Widget m_EditorListItemFrame;
+	TextWidget m_EditorListItemText;	
+	
+	static float ALPHA_ON_SHOW = 1;
+	static float ALPHA_ON_HIDE = 0.25;
+	
 	
 		
 	void ~EditorObjectMarker()
@@ -35,7 +39,7 @@ class EditorObjectMarker: ScriptedWidgetEventHandler
 		Print("EditorObjectMarker::SetObject");
 		m_EditorObject = target;
 		m_EditorListItemText.SetText(m_EditorObject.WorldObject.GetType());
-		EditorUI ui = EditorUI.GetInstance();
+		IEditorUI ui = IEditorUI.GetInstance();
 	
 		ui.GetRightPanelSpacer().AddChild(m_EditorListItemFrame);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
@@ -53,10 +57,9 @@ class EditorObjectMarker: ScriptedWidgetEventHandler
 		
 		m_EditorListItemFrame = m_Root.FindAnyWidget("EditorListItemFrame");
 		m_EditorListItemText = TextWidget.Cast(m_Root.FindAnyWidget("EditorListItemText"));
-		
-
 	}
 
+	bool is_selected = false;
 	
 	void Update()
 	{
@@ -65,7 +68,21 @@ class EditorObjectMarker: ScriptedWidgetEventHandler
 		vector position = AverageVectors(clip_info[0], clip_info[1]);
 		position = position + m_EditorObject.WorldObject.GetPosition();
 		position[1] = position[1] - clip_info[1][1];
+		
 		vector screenpos = GetGame().GetScreenPos(position);
+		int screen_x, screen_y;
+		GetScreenSize(screen_x, screen_y);
+		if (screenpos[0] > screen_x || screenpos[1] > screen_y || screenpos[0] <= 0 || screenpos[1] <= 0) {
+			m_EditorObjectMarkerPanel.Show(false);
+			return;
+		}
+		if (!is_selected) {
+			float distance = vector.Distance(position, GetGame().GetCurrentCameraPosition());
+			float alpha = ALPHA_ON_HIDE * 1 / (distance/250) * (distance < 1000);
+			m_EditorObjectMarkerPanel.SetAlpha(alpha); 
+		}
+		
+		m_EditorObjectMarkerPanel.Show(true); 
 		m_EditorObjectMarkerPanel.SetPos(screenpos[0], screenpos[1]);
 	}
 	
@@ -76,14 +93,14 @@ class EditorObjectMarker: ScriptedWidgetEventHandler
 		// you should set cursor here its smart smile :)
 		
 		if (w == m_EditorObjectMarkerPanel)
-			m_EditorObjectMarkerPanel.SetAlpha(0.75);
+			m_EditorObjectMarkerPanel.SetAlpha(ALPHA_ON_SHOW);
 		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		if (w == m_EditorObjectMarkerPanel)
-			m_EditorObjectMarkerPanel.SetAlpha(0.25);
+			m_EditorObjectMarkerPanel.SetAlpha(ALPHA_ON_HIDE);
 		return true;
 	}
 	
@@ -95,8 +112,6 @@ class EditorObjectMarker: ScriptedWidgetEventHandler
 		Print(w.GetName());
 		if (button == 0) {
 			
-			//if (w == GetFocus()) return true;
-
 			if (w.GetName() == "EditorListItemFrame") {
 
 				if (Editor.IsPlacing())
@@ -104,9 +119,9 @@ class EditorObjectMarker: ScriptedWidgetEventHandler
 				
 				SetFocus(m_Root);
 				
-			} else if (w.GetName() == "EditorObjectMarkerPanel") {
+			} else if (w.GetName() == "EditorObjectMarkerPanel" && Editor.SelectedObjects.Find(m_EditorObject) == -1) {
 				Editor.CreateSelection(m_EditorObject, !input.LocalValue("UATurbo"));
-				SetFocus(m_Root);
+				SetFocus(m_Root);				
 			}			
 		}
 		return true;
@@ -114,16 +129,22 @@ class EditorObjectMarker: ScriptedWidgetEventHandler
 	
 	void Select()
 	{
-		Print("EditorObject::OnFocus");
+		is_selected = true;
 		m_EditorListItemFrame.SetColor(COLOR_BLUE);
-		m_EditorObjectMarkerPanel.SetAlpha(1);
+		m_EditorObjectMarkerPanel.SetAlpha(ALPHA_ON_SHOW);
 	}
 	
 	void Deselect()
 	{
-		Print("EditorObject::OnFocusLost");
+		is_selected = false;
 		m_EditorListItemFrame.SetColor(0xFFFFFFFF);
-		m_EditorObjectMarkerPanel.SetAlpha(0.25);
+		m_EditorObjectMarkerPanel.SetAlpha(ALPHA_ON_HIDE);
+	}
+	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		Print("EditorObject::OnFocus");
+		return true;
 	}
 	
 	
@@ -153,9 +174,11 @@ class EditorObjectMarker: ScriptedWidgetEventHandler
 		return m_EditorListItemFrame;
 	}
 	
-	void GetMarkerPosition(out float x, out float y)
+	vector GetMarkerPosition()
 	{
+		float x, y;
 		m_EditorObjectMarkerPanel.GetPos(x, y);
+		return Vector(x, y, 0);
 	}
 }
 

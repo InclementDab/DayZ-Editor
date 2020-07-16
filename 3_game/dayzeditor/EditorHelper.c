@@ -12,7 +12,7 @@ static vector GetObjectSize(Object obj)
 	return result;
 }
 
-static vector MousePosToRay(out set<Object> collisions = null, Object ignore = null, float raycast_distance = 1000)
+static vector MousePosToRay(out set<Object> collisions = null, Object ignore = null, float raycast_distance = 1000, float radius = 0)
 {
 	vector rayStart = GetGame().GetCurrentCameraPosition();
 	vector rayEnd = rayStart + GetGame().GetPointerDirection() * raycast_distance;
@@ -20,7 +20,7 @@ static vector MousePosToRay(out set<Object> collisions = null, Object ignore = n
 	int hitComponentIndex;		
 	collisions = new set<Object>;
 
-	DayZPhysics.RaycastRV(rayStart, rayEnd, hitPos, hitNormal, hitComponentIndex, collisions, NULL, ignore, false, false, 1, 0, CollisionFlags.FIRSTCONTACT);
+	DayZPhysics.RaycastRV(rayStart, rayEnd, hitPos, hitNormal, hitComponentIndex, collisions, NULL, ignore, false, false, 1, radius, CollisionFlags.ALLOBJECTS);
 	return hitPos;
 }
 

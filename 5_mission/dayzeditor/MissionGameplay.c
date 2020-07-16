@@ -35,9 +35,12 @@ class EditorMissionGameplay: MissionGameplay
     override void OnKeyPress(int key)
     {
 		if (key == KeyCode.KC_F1) {
-			delete m_Editor; delete m_EditorUI;
-			m_Editor = new Editor();
-			m_EditorUI = new EditorUI();
+			//delete m_Editor; delete m_EditorUI;
+			
+			//m_Editor = new Editor();
+			//m_EditorUI = new EditorUI();
+			GetGame().GetUIManager().HideScriptedMenu(m_EditorUI);
+			GetGame().GetUIManager().ShowScriptedMenu(m_EditorUI, GetGame().GetUIManager().GetMenu());
 			
 		}
 		switch (key) {

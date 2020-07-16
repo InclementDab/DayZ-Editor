@@ -4,7 +4,7 @@ class Cartesian
 
     void Cartesian(vector position)
     {
-        CartesianObject = GetGame().CreateObjectEx("WorldCartesian", position, ECE_KEEPHEIGHT | ECE_NOSURFACEALIGN | ECE_TRACE);
+        CartesianObject = GetGame().CreateObjectEx("m_3DWidget", position, ECE_KEEPHEIGHT | ECE_NOSURFACEALIGN | ECE_TRACE);
         CartesianObject.SetOrientation(vector.Up);
     }
 

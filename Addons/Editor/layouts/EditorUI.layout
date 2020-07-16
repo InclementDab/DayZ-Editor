@@ -71,10 +71,10 @@ FrameWidgetClass EditorUIFrame {
   PanelWidgetClass RightListPanel {
    clipchildren 1
    inheritalpha 1
-   ignorepointer 0
+   ignorepointer 1
    color 0.1725 0.1765 0.1804 1
    position 0 0
-   size 250 0.9
+   size 300 0.9
    halign right_ref
    valign bottom_ref
    hexactpos 1
@@ -84,11 +84,11 @@ FrameWidgetClass EditorUIFrame {
    style Outline
    {
     ScrollWidgetClass RightListPanelScrollBar {
-     clipchildren 0
+     clipchildren 1
      inheritalpha 1
      ignorepointer 0
      position 0 0
-     size 1 1
+     size 1 800
      halign center_ref
      hexactpos 1
      vexactpos 1
@@ -96,7 +96,6 @@ FrameWidgetClass EditorUIFrame {
      vexactsize 0
      style blank
      "Scrollbar V" 1
-     "Scrollbar V Left" 1
      {
       WrapSpacerWidgetClass RightListPanelSpacer {
        inheritalpha 1

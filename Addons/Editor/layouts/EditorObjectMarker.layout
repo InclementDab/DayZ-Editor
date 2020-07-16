@@ -46,12 +46,14 @@ PanelWidgetClass EditorObject {
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   priority 5
+   draggable 1
    style EditorPanel
    {
     TextWidgetClass EditorListItemText {
      clipchildren 0
      inheritalpha 1
-     ignorepointer 1
+     ignorepointer 0
      position 0 0
      size 250 20
      halign center_ref
@@ -60,7 +62,7 @@ PanelWidgetClass EditorObject {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     priority 5
+     priority 10
      font "gui/fonts/Metron"
      "text halign" right
      "text valign" center

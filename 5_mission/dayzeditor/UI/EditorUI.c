@@ -23,10 +23,8 @@ vector ScreenPosToRay()
 }
 
 
-modded class EditorUI
+class EditorUI: IEditorUI
 {
-
-	
 	protected Widget m_Parent;
 	
 	protected Widget m_EditorUIFrame;
@@ -36,10 +34,7 @@ modded class EditorUI
 	protected EditBoxWidget m_LeftSearchBar;
 	
 	protected ScrollWidget m_LeftListPanelScrollBar;
-	WrapSpacerWidget m_LeftListPanelSpacer;	
-	
-
-	
+	WrapSpacerWidget m_LeftListPanelSpacer;		
 
 	protected ScrollWidget m_RightListPanelScrollBar;
 	WrapSpacerWidget m_RightListPanelSpacer;
@@ -70,6 +65,8 @@ modded class EditorUI
 	void ~EditorUI()
 	{
 		Print("~EditorUI");
+		delete m_EditorUIFrame; delete m_LeftListPanel; delete m_RightListPanel;
+		delete layoutRoot;
 	}
 	
 	ref DebugMonitor monitor;
@@ -123,28 +120,26 @@ modded class EditorUI
 	}
 	
 	
-	void OnDrag(int x, int y)
-	{
-		Print("OnDrag");
-		start_x = x; 
-		start_y = y;
-	}
+	
+
 	
 	int start_x, start_y;
 	bool is_dragging = false;
+	ref set<EditorObject> box_selection = new set<EditorObject>();
 	void UpdateDrag(int current_x, int current_y, bool _is_dragging)
 	{
 		
 		if (!is_dragging) {
 			start_x = current_x; start_y = current_y;	
 			Editor.ClearSelections();
+			box_selection.Clear();
 		}
 		
 		
 		is_dragging = _is_dragging;
 		
 		Debug.ClearCanvas();
-		int selection_box_thickness = 1;
+		int selection_box_thickness = 2;
 		int selection_box_color = ARGB(100, 255, 0, 0);
 		Debug.m_CanvasDebug.DrawLine(start_x, start_y, current_x, start_y, selection_box_thickness, selection_box_color);
 		Debug.m_CanvasDebug.DrawLine(start_x, start_y, start_x, current_y, selection_box_thickness, selection_box_color);
@@ -152,6 +147,7 @@ modded class EditorUI
 		Debug.m_CanvasDebug.DrawLine(current_x, start_y, current_x, current_y, selection_box_thickness, selection_box_color);
 		
 		int x_low, x_high, y_low, y_high;
+		
 		
 		if (start_x > current_x) {
 			x_high = start_x;
@@ -168,19 +164,32 @@ modded class EditorUI
 			y_low = start_y;
 			y_high = current_y;		
 		}
+		
+		
+		if (Editor.danger_zone) {
+			set<Object> o;
+			vector pos = MousePosToRay(o, null, 1000, 0);
+			foreach (Object ob: o) {
+				EditorObject eo = new EditorObject(ob);
+				eo.OnPlaced(pos, vector.Up);
+				Editor.CreateSelection(eo, false);
 				
-		foreach (EditorObject editor_object: Editor.EditorObjects) {
-			
-			
-			float pos_x, pos_y;
-			editor_object.ObjectMarker.GetMarkerPosition(pos_x, pos_y);
-			if ((pos_x < x_high && pos_x > x_low) && (pos_y < y_high && pos_y > y_low)) {
-				Editor.CreateSelection(editor_object, false);
-			}	
+			}
 		}
+		
+		foreach (EditorObject editor_object: Editor.EditorObjects) {
+			vector marker_pos = editor_object.ObjectMarker.GetMarkerPosition();
+			if ((marker_pos[0] < x_high && marker_pos[0] > x_low) && (marker_pos[1] < y_high && marker_pos[1] > y_low)) {				
+				//box_selection.Insert(editor_object);
+				Editor.CreateSelection(editor_object, false);
+			}
+		}
+
 		
 		if (!_is_dragging) {
 			Debug.ClearCanvas();
+			//foreach (EditorObject final_editor_object: box_selection) 
+			//	Editor.CreateSelection(final_editor_object, false);
 		}
 		
 	}
@@ -189,30 +198,39 @@ modded class EditorUI
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		Print(w.GetName());
-		Print("EditorUI::OnMouseButtonDown");
-		
-		Input input = GetGame().GetInput();
-
-
-		
-		
+		Print("EditorUI::OnMouseButtonDown");		
+		Input input = GetGame().GetInput();		
 		if (button == 0) {
 							
 			if (w == GetFocus()) return true;
-			if (w.GetName() == "EditorListItemFrame") { // idk why but i cant use OnMouseButtonDown in editorobject
+			if (w.GetName() == "EditorListItemFrame" || w.GetName() == "EditorListItemText") { // idk why but i cant use OnMouseButtonDown in editorobject
 				if (Editor.IsPlacing()) delete Editor.ObjectInHand;
-				SetFocus(w.GetParent());
-				return true;
+				foreach (EditorObject editor_object: Editor.EditorObjects) 
+					if (editor_object.ObjectMarker.m_EditorListItemText == w || editor_object.ObjectMarker.m_EditorListItemFrame == w) {
+						if (input.LocalValue("UATurbo")) {
+							// todo: Get Every Child between two selections
+							Editor.CreateSelection(editor_object, false);
+						} else 
+							Editor.CreateSelection(editor_object);
+					
+					
+					
+					return true;
+				}
+				
+				
+				
+				
 			} else if (Editor.IsPlacing()) {
 				EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
 				Editor.PlaceObject(e.GetType(), e.GetWorldPosition(), vector.Up);						
 				if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
 				return true;
 				
-			} else if (Editor.ObjectUnderCursor == null) Editor.ClearSelections();
-			else if (!is_dragging) GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CallUpdateDrag, 40);
+			} else if (!is_dragging) GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CallUpdateDrag, 40);
+			 else if (Editor.ObjectUnderCursor == null) Editor.ClearSelections();
 			else {
-				EditorObject editor_object = Editor.EditorObjectFromObject(Editor.ObjectUnderCursor);
+				editor_object = Editor.EditorObjectFromObject(Editor.ObjectUnderCursor);
 				if (editor_object != null) 
 					if (input.LocalValue("UATurbo")) 
 						Editor.CreateSelection(editor_object, false);
@@ -253,18 +271,18 @@ modded class EditorUI
 
 		
 
-
-	EditorObjectMarker CreateEditorObjectFromExisting(Object obj)
-	{		/*
+/*
+	EditorObject CreateEditorObjectFromExisting(Object obj)
+	{		
 		Print("EditorUI::CreateEditorObjectFromExisting");
-		EditorObjectMarker editor_object;
+		EditorObject editor_object;
 		Widget editor_object_display = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
 		editor_object_display.GetScript(editor_object);
 		m_RightListPanelSpacer.AddChild(editor_object.Initialize(obj));
 		Editor.EditorPlacedObjects.Insert(editor_object);
 		return editor_object;
-	*/
-	}
+	
+	}*/
 }
 
 

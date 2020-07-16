@@ -151,7 +151,7 @@ class EditorListItem: ScriptedWidgetEventHandler
 	override bool OnFocus(Widget w, int x, int y)
 	{
 		Print("EditorListItem::OnFocus");
-		w.SetColor(COLOR_BLUE);
+		w.SetColor(ARGB(99, 255, 255, 0));
 		
 		Editor.CreateObjectInHand(m_ObjectName);		
 		
@@ -246,23 +246,28 @@ class EditorSearchBar: ScriptedWidgetEventHandler
 
 class EditorUICartesian: ScriptedWidgetEventHandler
 {
-	static ItemPreviewWidget m_Root;
-	protected ItemPreviewWidget m_EditorUICartesian;
-	
-	static EntityAI m_UICartiesian;
+	static ItemPreviewWidget m_Root;	
+	static EntityAI m_3DWidget;
 	
 	void EditorUICartesian()
 	{
 		Print("EditorUICartesian");
-		m_UICartiesian = GetGame().CreateObject("BoundingBoxBase", "0 0 0");
-		m_UICartiesian.SetOrientation(vector.Up);
-		m_UICartiesian.SetOrigin(vector.Zero);
+		vector info[2];
+		m_3DWidget = GetGame().CreateObject("3DWidget", "0 0 0");
+		m_3DWidget.ClippingInfo(info);
+		
+
+		
+		float offset = Math.AbsFloat(info[0][0] * 2);
+		m_3DWidget.SetOrigin(Vector(offset, offset, offset));
+	
+		
 	}
 	
 	void ~EditorUICartesian()
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-		GetGame().ObjectDelete(m_UICartiesian);
+		GetGame().ObjectDelete(m_3DWidget);
 	}
 	
 	protected void OnWidgetScriptInit(Widget w)
@@ -270,10 +275,7 @@ class EditorUICartesian: ScriptedWidgetEventHandler
 		Print("EditorUICartesian::OnWidgetScriptInit");
 		m_Root = ItemPreviewWidget.Cast(w);
 		m_Root.SetHandler(this);
-		m_Root.SetItem(m_UICartiesian);
-		m_Root.SetForceFlipEnable(true);
-		m_Root.SetForceFlip(true);
-		m_Root.SetView(0);
+		m_Root.SetItem(m_3DWidget);
 		//m_Root.SetView(m_Root.GetItem().GetViewIndex());
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
@@ -281,8 +283,14 @@ class EditorUICartesian: ScriptedWidgetEventHandler
 	
 	void Update()
 	{
-		vector v = GetGame().GetCurrentCameraDirection();	
-		m_Root.SetModelOrientation(v.VectorToAngles());
+
+		vector v = GetGame().GetCurrentCameraDirection();
+		m_Root.SetModelOrientation("0 0 0");
+		m_Root.SetModelPosition("0 0 0");
+		
+		
+		
+		
 	}
 	
 	

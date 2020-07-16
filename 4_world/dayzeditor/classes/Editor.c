@@ -1,20 +1,6 @@
 
 
 
-
-
-
-static EditorObject GetBrowserObjectFromEntity(Object obj)
-{
-	foreach (EditorObject list_item: Editor.EditorObjects) {
-		if (obj == list_item.WorldObject) {
-			return list_item;
-		}
-	}
-	return null;
-}	
-
-
 class Editor: Managed
 {
 	private ref UIManager 					m_UIManager; 	
@@ -83,9 +69,12 @@ class Editor: Managed
 	
 	static EditorObject EditorObjectFromObject(notnull Object target)
 	{		
-		foreach (EditorObject editor_object: EditorObjects) {
-			if (editor_object.WorldObject == target)
+		for (int i = 0; i < EditorObjects.Count(); i++) {
+			EditorObject editor_object = EditorObjects[i];
+			if (editor_object == null) return null;
+			if (editor_object.WorldObject == target) {
 				return editor_object;
+			}
 		}
 		return null;
 	}
@@ -131,9 +120,6 @@ class Editor: Managed
 		//Print("OnMouseEnterObject");
 		if (!CursorAllowedToSelect) return false;
 		if (GetGame().GetInput().LocalHold("UAFire")) return false;
-		if (GetGame().GetInput().LocalHold("UATurbo")) {
-			CreateSelection(target, false);
-		}
 		
 		return true;
 	}
@@ -172,12 +158,12 @@ class Editor: Managed
 	
 	static void CreateSelection(notnull EditorObject target, bool remove_old = true)
 	{
-		Print("Editor.CreateSelection");
+		//Print("Editor::CreateSelection");
 		if (remove_old) ClearSelections();
 		
 		int c = SelectedObjects.Count();
 		if (SelectedObjects.Insert(target) == c) {
-			target.OnSelected();
+			target.Select();
 		}
 		
 
@@ -188,7 +174,7 @@ class Editor: Managed
 		Print("Editor.ClearSelections");
 		foreach (EditorObject editor_object: EditorObjects) {
 			if (editor_object.IsSelected)
-				editor_object.OnDeselected();
+				editor_object.Deselect();
 		}
 		
 		SelectedObjects.Clear();
@@ -200,10 +186,11 @@ class Editor: Managed
 		if (index == -1) return;
 		
 		SelectedObjects.Remove(index);
-		target.OnDeselected();
+		target.Deselect();
 	}
 	
 	
+	static bool danger_zone = false;
 	bool ui_state = true;
 	void OnKeyPress(int key) 
 	{
@@ -214,6 +201,10 @@ class Editor: Managed
 			case KeyCode.KC_DELETE:
 				foreach (EditorObject selected_object: SelectedObjects)
 					delete selected_object;
+				break;
+			
+			case KeyCode.KC_F4:
+				danger_zone = !danger_zone;
 				break;
 			
 						
