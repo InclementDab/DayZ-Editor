@@ -16,7 +16,7 @@ class EditorMap: EditorWidgetEventHandler
 		Print("~EditorMap");
 	}
 	
-	void OnObjectCreated(Class context, EditorObject obj, vector pos)
+	void OnObjectCreated(Class context, EditorObject obj)
 	{
 		MapWidget map_widget = MapWidget.Cast(m_Root);
 		map_widget.AddChild(obj.GetMapMarker());
