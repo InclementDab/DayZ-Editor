@@ -392,6 +392,7 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 0
          vexactsize 0
          Margin 0
+         "Size To Content V" 1
         }
        }
       }
@@ -478,6 +479,7 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 0
          vexactsize 0
          Margin 0
+         "Size To Content V" 1
         }
        }
       }
