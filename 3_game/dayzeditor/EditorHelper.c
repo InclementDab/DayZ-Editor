@@ -1,5 +1,5 @@
 
-static vector GetObjectSize(Object obj)
+static vector ObjectGetSize(Object obj)
 {
 	vector size[2];
 	vector result;
@@ -12,14 +12,14 @@ static vector GetObjectSize(Object obj)
 	return result;
 }
 
-static vector MousePosToRay(out set<Object> collisions = null, Object ignore = null, float raycast_distance = 1000, float radius = 0)
+static vector MousePosToRay(out set<Object> collisions, Object ignore = null, float raycast_distance = OBJECT_VIEW_DISTANCE, float radius = 0)
 {
 	vector rayStart = GetGame().GetCurrentCameraPosition();
 	vector rayEnd = rayStart + GetGame().GetPointerDirection() * raycast_distance;
 	vector hitPos, hitNormal;
 	int hitComponentIndex;		
 	collisions = new set<Object>;
-
+	
 	DayZPhysics.RaycastRV(rayStart, rayEnd, hitPos, hitNormal, hitComponentIndex, collisions, NULL, ignore, false, false, 1, radius, CollisionFlags.ALLOBJECTS);
 	return hitPos;
 }
@@ -59,4 +59,14 @@ static vector DivideVector(vector v1, vector v2)
 	result[2] = v1[2]/v2[2];
 	
 	return result;
+}
+
+
+
+
+modded class DayZGame
+{
+	
+	//todo migrate everything to 3_Game for performance and clout
+	
 }

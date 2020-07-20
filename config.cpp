@@ -43,6 +43,7 @@ class CfgMods
 			{
 				value="";
 				files[] = {"DayZEditor/scripts/5_Mission"};
+				entryPoint = "EditorCreateCustomMission";
 			};
 		};
 	};

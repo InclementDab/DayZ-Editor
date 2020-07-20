@@ -1,5 +1,46 @@
 
 
+class EditorCameraMapMarker: ScriptedWidgetEventHandler
+{
+	protected ref Widget m_Root;
+	protected ImageWidget m_EditorMapMarkerImage;
+	
+	protected EditorCamera m_ActiveCamera;
+	
+	void ~EditorCameraMapMarker()
+	{
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		delete m_Root; delete m_EditorMapMarkerImage;
+	}
+	
+	void OnWidgetScriptInit(Widget w)
+	{
+		Print("EditorCameraMapMarker::OnWidgetScriptInit");
+		m_Root = w;
+		m_Root.SetHandler(this);
+		
+		m_EditorMapMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorMapMarkerImage"));	
+	}
+	
+	void Update()
+	{
+		
+		MapWidget map_widget = MapWidget.Cast(m_Root.GetParent());
+		vector pos = map_widget.MapToScreen(m_ActiveCamera.GetPosition());
+		
+		m_Root.SetPos(pos[0], pos[1]);
+		vector ypr = m_ActiveCamera.GetYawPitchRoll();
+		
+		m_Root.SetRotation(0, 0, ypr[0] - 90);
+	}
+	
+	void SetCamera(EditorCamera camera)
+	{
+		m_ActiveCamera = camera;
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+	}
+}
+
 
 
 class EditorCamera: Camera
@@ -11,8 +52,8 @@ class EditorCamera: Camera
 	
 	float SendUpdateAccumalator = 0.0;
 	
-	bool LookFreeze;
-	bool MoveFreeze;
+	static bool LookFreeze;
+	static bool MoveFreeze;
 
 	Object SelectedTarget;
 	vector TargetPosition;
@@ -22,16 +63,25 @@ class EditorCamera: Camera
 
 	vector orientation;
 	
+	protected ref EditorCameraMapMarker CameraMapMarker;
+	protected Widget m_MapMarkerWidget;
+	
 	void EditorCamera()
 	{
 		SetEventMask(EntityEvent.FRAME);
 		SelectedTarget(NULL);
+		CameraMapMarker = new EditorCameraMapMarker();
+		m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorCameraMapMarker.layout");
+		m_MapMarkerWidget.GetScript(CameraMapMarker);
+		CameraMapMarker.SetCamera(this);
 	}
 
 	void ~EditorCamera()
 	{
 		SelectedTarget(NULL);
 	}
+	
+	Widget GetMapMarker() { return m_MapMarkerWidget; }
 
 	void OnTargetSelected( Object target )
 	{
@@ -75,11 +125,12 @@ class EditorCamera: Camera
 		GetTransform(transform);
 
 		Input input = GetGame().GetInput();
-
-		float forward = input.LocalValue("UAMoveForward") - input.LocalValue("UAMoveBack");
-		float strafe = input.LocalValue("UAMoveRight") - input.LocalValue("UAMoveLeft");
-		float altitude = input.LocalValue("UAMoveUp") - input.LocalValue("UAMoveDown");
-
+		
+		if (!input.LocalValue("UAWalkRunTemp")) {
+			float forward = input.LocalValue("UAMoveForward") - input.LocalValue("UAMoveBack");
+			float strafe = input.LocalValue("UAMoveRight") - input.LocalValue("UAMoveLeft");
+			float altitude = input.LocalValue("UAMoveUp") - input.LocalValue("UAMoveDown");
+		}
 		float yawDiff = input.LocalValue("UAAimLeft") - input.LocalValue("UAAimRight");
 		float pitchDiff = input.LocalValue("UAAimDown") - input.LocalValue("UAAimUp");
 
@@ -97,7 +148,7 @@ class EditorCamera: Camera
 		if (!MoveFreeze) {
 			
 			float cam_speed = CAMERA_SPEED;
-			if ( !shouldRoll && CAMERA_BOOST_MULT > 0 ){
+			if (!shouldRoll && CAMERA_BOOST_MULT > 0) {
 				CAMERA_SPEED += Math.Clamp( timeSlice * 40.0 * CAMERA_SPEED * speedInc / CAMERA_BOOST_MULT, -CAMERA_BOOST_MULT, CAMERA_BOOST_MULT );
 				
 				if ( CAMERA_SPEED < 0.001 ) {
@@ -121,7 +172,7 @@ class EditorCamera: Camera
 
 		}
 
-		SetTransform( transform );
+		SetTransform(transform);
 			
 		if (input.LocalValue("UATempRaiseWeapon") || !LookFreeze)
 		{

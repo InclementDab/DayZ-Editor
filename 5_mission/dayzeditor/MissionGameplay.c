@@ -14,7 +14,7 @@ static PlayerBase CreateDefaultCharacter()
     return oPlayer;
 }
 
-Mission EditorCreateCustomMission(string path)
+Mission CreateCustomMission(string path)
 {
 	Print("DayZEditorGameplay::CreateCustomMission " + path);
 	
@@ -26,86 +26,39 @@ class EditorMissionServer: MissionServer
 
 }
 
-static ref EditorUI	m_EditorUI;	
+
 static ref Editor m_Editor;
 class EditorMissionGameplay: MissionGameplay
 {
-	EditorUI GetEditorUI() { return m_EditorUI; }
-	bool ui_state = true;
+
     override void OnKeyPress(int key)
     {
-		if (key == KeyCode.KC_F1) {
-			//delete m_Editor; delete m_EditorUI;
-			
-			//m_Editor = new Editor();
-			//m_EditorUI = new EditorUI();
-			GetGame().GetUIManager().HideScriptedMenu(m_EditorUI);
-			GetGame().GetUIManager().ShowScriptedMenu(m_EditorUI, GetGame().GetUIManager().GetMenu());
-			
-		}
+		Input input = GetGame().GetInput();
+
 		switch (key) {
-			case KeyCode.KC_SPACE:
-				if (!ui_state) {
-					m_EditorUI.Show();
-				} else
-					m_EditorUI.Hide();
-				ui_state = !ui_state;
-				//m_EditorUI.Show(ui_state);
-				
+						
+			case KeyCode.KC_F1: {
+				delete m_Editor;
+				m_Editor = new Editor();				
 				break;
-			
-			case KeyCode.KC_ESCAPE:
-				if (ui_state) {
-					ui_state = false;	
-					
-				} else {
-					// Pause menu	
-				}
-				break;
+			}
 		}
 		
-		m_Editor.OnKeyPress(key);
-    	super.OnKeyPress(key);        
-        m_Hud.KeyPress(key);
-    }
 
+		if (m_Editor.OnKeyPress(key)) return;
+        if (m_Hud.KeyPress(key)) return;
+		super.OnKeyPress(key);
+    }
+	
     override void OnInit()
 	{
 		super.OnInit();
+		//PlayerBase player = CreateDefaultCharacter();
+		//GetGame().SelectPlayer(null, player);
 		m_Editor = new Editor(); 
-		m_EditorUI = new EditorUI();	
-		
-		GetGame().GetUIManager().ShowScriptedMenu(m_EditorUI, GetGame().GetUIManager().GetMenu());
-		GetGame().GetUIManager().HideScriptedMenu(m_EditorUI);
-		GetGame().GetUIManager().ShowScriptedMenu(m_EditorUI, GetGame().GetUIManager().GetMenu());
-		//m_EditorUI.Init();
-		//m_EditorUI.Show(ui_state);
-	
-		
 	}
-	
-	
-	
 
 
-   
-    override void ShowInventory()
-    {
-        UIScriptedMenu menu = GetUIManager().GetMenu();
-
-        if (!menu)
-        {
-            GetUIManager().ShowScriptedMenu(m_EditorUI, menu);
-        }
-    }
-
-    override void HideInventory()
-    {
-        if (m_EditorUI)
-        {
-			m_UIManager.HideScriptedMenu(m_EditorUI);
-        }
-    }
 
     void DestroyInventory()
     {
@@ -333,15 +286,47 @@ static void ResetMission()
 	GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(GetGame().RestartMission);
 }
 
+
+static DayZIntroScene IntroScene;
+
 modded class DayZIntroScene
 {
-	protected Object m_FunnyMeme;
+	Object m_FunnyMeme;
 	
 	void DayZIntroScene()
 	{
+		
 		delete m_Character;
+		m_CharacterPos = Vector(0.685547, 1, 5.68823).Multiply4(m_CameraTrans);
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
 		m_FunnyMeme.SetOrientation(m_CharacterRot);
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(FunnyMeme);
+	}
+	
+	void ~DayZIntroScene()
+	{
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(FunnyMeme);
+	}
+	
+	
+	
+	void FunnyMeme()
+	{
+		int x, y;
+		GetMousePos(x, y);
+		
+		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection();
+		mouse_pos[0] = mouse_pos[0] - 0.8;
+		mouse_pos[1] = mouse_pos[1] + 0.25;
+
+		vector lookat = vector.Direction(mouse_pos, m_Camera.GetPosition());
+		lookat[0] = (lookat[0] * -1.2);
+		lookat[1] = lookat[1] * -1;
+		
+		vector final = lookat - GetGame().GetCurrentCameraDirection();
+		m_FunnyMeme.SetDirection(final);
+		m_FunnyMeme.Update();
 	}
 }
 
@@ -365,14 +350,17 @@ modded class MainMenu
 		
 		return layoutRoot;
 	}
-	
-	override void Play()
-	{
-		GetGame().PlayMission("P:\\DayZ_Server\\dev\\DayZEditor\\mission\\DayZEditor.ChernarusPlus");
-	}
-	
-	override bool OnMouseEnter( Widget w, int x, int y )
-	{
+
+    override void Play()
+    {
+        //GetGame().SetMission(CreateMission("DayZEditor/Editor/mission/DayZEditor.ChernarusPlus"));
+        GetGame().PlayMission("P:\\DayZ_Server\\dev\\DayZEditor\\Addons\\Editor\\mission\\DayZEditor.ChernarusPlus");
+		//GetGame().PlayMission("ChernarusEditor");
+		
+    }
+
+    override bool OnMouseEnter(Widget w, int x, int y)
+    {
 		if(IsFocusable(w)) {
 			ColorHighlight( w );
 			return true;

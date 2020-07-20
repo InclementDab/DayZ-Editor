@@ -1,0 +1,31 @@
+
+PanelWidgetClass EditorMapMarker {
+  ignorepointer 0
+  color 0.6863 0.2588 0.5804 1
+  position 0 0
+  size 20 20
+  hexactpos 1
+  vexactpos 1
+  hexactsize 1
+  vexactsize 1
+  draggable 1
+  priority 250
+  scriptclass "EditorMapMarker"
+  {
+    ImageWidgetClass EditorMapMarkerImage {
+      inheritalpha 1
+      ignorepointer 1
+      color 0.6235 0.1569 0.5059 1
+      position 0 0
+      size 20 20
+      hexactpos 1
+      vexactpos 1
+      hexactsize 1
+      vexactsize 1
+      priority 250
+      imageTexture "{A05B5E889A2390FE}data/gui/imagesets/game_template.edds"
+      mode blend
+    }
+  }
+}
+  

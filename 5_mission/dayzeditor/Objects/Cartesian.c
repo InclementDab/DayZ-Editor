@@ -15,12 +15,12 @@ class Cartesian
 
     static Cartesian CreateOnObject(Object obj)
     {
-        vector size = GetObjectSize(obj);
+        vector size = ObjectGetSize(obj);
         vector position = obj.GetPosition();
 
         position[1] = position[1] + size[1] / 2;
         Cartesian c = new Cartesian(position);
-        vector c_size = GetObjectSize(c.CartesianObject);
+        vector c_size = ObjectGetSize(c.CartesianObject);
         vector c_pos = c.CartesianObject.GetPosition();
         c_pos[0] = c_pos[0] + c_size[0] / 2;
         c_pos[1] = c_pos[1] + c_size[1] / 2;
