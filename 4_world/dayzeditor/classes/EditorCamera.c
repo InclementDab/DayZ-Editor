@@ -92,6 +92,7 @@ class EditorCamera: Camera
 			float strafe = input.LocalValue("UAMoveRight") - input.LocalValue("UAMoveLeft");
 			float altitude = input.LocalValue("UAMoveUp") - input.LocalValue("UAMoveDown");
 		}
+		
 		float yawDiff = input.LocalValue("UAAimLeft") - input.LocalValue("UAAimRight");
 		float pitchDiff = input.LocalValue("UAAimDown") - input.LocalValue("UAAimUp");
 
@@ -99,24 +100,32 @@ class EditorCamera: Camera
 
 		float zoomAmt = input.LocalValue("UANextAction") - input.LocalValue("UAPrevAction");
 		
+		vector current_position = GetPosition();
+		float current_altitude = current_position[1] - GetGame().SurfaceY(current_position[0], current_position[2]);
+		Editor.ActiveEditorUI.m_DebugText4.SetText(current_altitude.ToString());
 		
-		if ( zoomAmt != 0 )
+		if (zoomAmt != 0)
 			speedInc = 0;
 
-		bool shouldRoll = input.LocalValue("UALookAround");
+		bool shouldRoll = false;input.LocalValue("UALookAround");
+		bool decreaseSpeeds = input.LocalValue("UALookAround");
 		bool increaseSpeeds = input.LocalValue("UATurbo");
 
 		if (!MoveFreeze) {
 			
 			float cam_speed = CAMERA_SPEED;
-			if (!shouldRoll && CAMERA_BOOST_MULT > 0) {
+			
+			if (CAMERA_BOOST_MULT > 0) {
 				CAMERA_SPEED += Math.Clamp( timeSlice * 40.0 * CAMERA_SPEED * speedInc / CAMERA_BOOST_MULT, -CAMERA_BOOST_MULT, CAMERA_BOOST_MULT );
 				
 				if ( CAMERA_SPEED < 0.001 ) {
 					CAMERA_SPEED = 0.001;
 				}
 				
-				cam_speed = CAMERA_SPEED;
+				cam_speed = CAMERA_SPEED;// + Math.Clamp(current_altitude - 50, -10, 250);
+				if (decreaseSpeeds) {
+					cam_speed = cam_speed * 0.1;	
+				}
 
 				if (increaseSpeeds) {
 					cam_speed = (cam_speed * CAMERA_BOOST_MULT) * (0.2 + (transform[3][1])/600) ;

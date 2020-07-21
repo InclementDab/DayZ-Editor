@@ -6,6 +6,8 @@ typedef ref array<string>> UndeleteableStringArray;
 typedef ref map<int, ref EditorObject> EditorObjectSet;
 
 
+// FlattenGrassEllipse!!!!! sim city mode
+
 class Editor: Managed
 {
 	private ref UIManager 					m_UIManager; 	
@@ -50,8 +52,14 @@ class Editor: Managed
 		ActiveEditorUI = new EditorUI();
 		EditorUIWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "Editor.layout");
 		EditorUIWidget.GetScript(ActiveEditorUI);
-	
-		ActiveCamera = GetGame().CreateObject("EditorCamera", Vector(0, 50, 0), false);
+
+		TIntArray center_pos = new TIntArray();		
+		string world_name;
+		GetGame().GetWorldName(world_name);
+		GetGame().ConfigGetIntArray(string.Format("CfgWorlds %1 centerPosition", world_name), center_pos);
+		
+		float y_level = 200 + GetGame().SurfaceY(center_pos[0], center_pos[1]);
+		ActiveCamera = GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false);
 		ActiveCamera.SetActive(true);
 		
 		ActiveEditorUI.GetMapWidget().AddChild(ActiveCamera.GetMapMarker());
@@ -143,7 +151,10 @@ class Editor: Managed
 		avg_position[2] = avg_position[2] / CopyCache.Count();
 		
 		foreach (EditorObject editor_object: CopyCache) {
-			EditorObject result = CreateObject(editor_object.GetType(), avg_position - editor_object.GetPosition() + CurrentMousePosition, editor_object.GetOrientation());
+			vector mat[4];
+			editor_object.GetTransform(mat);
+			mat[3] = avg_position - editor_object.GetPosition() + CurrentMousePosition;
+			EditorObject result = CreateObject(editor_object.GetType(), mat);
 			result.Select();
 		}
 	}	
@@ -167,27 +178,11 @@ class Editor: Managed
 	{
 		set<Object> obj = new set<Object>();
 		int x, y;
-		GetMousePos(x, y);
+		GetCursorPos(x, y);
 		CurrentMousePosition = MousePosToRay(obj);
 		
-		if (IsPlacing()) {
-			if (ActiveEditorUI.IsMapOpen()) {
-				vector pos = ActiveEditorUI.GetMapWidget().ScreenToMap(Vector(x, y, 0));
-				pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
-				ObjectInHand.SetProjectionPosition(pos);
-				ObjectInHand.SetProjectionOrientation(GetGame().SurfaceGetNormal(pos[0], pos[2]));
-				
-			} else {
-				
-				vector v = MousePosToRay(obj, ObjectInHand.GetProjectionEntity());
-				vector size = ObjectGetSize(ObjectInHand.GetProjectionEntity());
-				v[1] = v[1] + size[1]/2;
-				ObjectInHand.SetProjectionPosition(v);
-				ObjectInHand.SetProjectionOrientation(GetGame().SurfaceGetNormal(v[0], v[2]));
-			}
-			
-		} else {
-			
+	
+		if (!IsPlacing()) {
 			Object target = obj.Get(0);
 			
 			if (target != null) {
@@ -230,30 +225,27 @@ class Editor: Managed
 	}
 	
 	
-	// can we refactor this?
+	// can we refactor this? .... probably :)
 	static void CreateObjectInHand(string name)
 	{
-		EntityAI obj = GetGame().CreateObject(name, "0 0 0");
-		set<Object> o;
-		vector v =  MousePosToRay(o);
-		vector size = ObjectGetSize(obj);
-		v[1] = v[1] + size[1]/2;
-		
-		ObjectInHand = new EditorHologram(null, v, obj);
+		EntityAI obj = GetGame().CreateObject(name, "0 0 0");	
+			
+		ObjectInHand = new EditorHologram(null, vector.Zero, obj);
 		
 		GetGame().ObjectDelete(obj);
 	}
 	
 	
 	
-	static EditorObject CreateObject(string name, vector position, vector orientation)
+	static EditorObject CreateObject(string name, vector transform[4])
 	{
 		Print("Editor::CreateObject");
 	
 		
-		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", position, ECE_KEEPHEIGHT|ECE_NOSURFACEALIGN|ECE_TRACE);		
+		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", transform[3], ECE_NONE);		
+		editor_object.SetTransform(transform);
 		editor_object.SetObject(name);
-		editor_object.SetOrientation(orientation);
+		
 		editor_object.CreateBoundingBox();
 		editor_object.Update();
 		
@@ -387,6 +379,7 @@ class Editor: Managed
 				}
 				break;
 			}
+		
 		}
 		
 		return ActiveEditorUI.OnKeyPress(key));

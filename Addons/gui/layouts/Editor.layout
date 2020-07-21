@@ -572,6 +572,17 @@ FrameWidgetClass EditorMainFrame {
          vexactsize 1
          text "R"
         }
+        ButtonWidgetClass ToolbarMagnet {
+         position 0 0
+         size 28 28
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "n"
+         font "gui/fonts/metron-bold"
+         switch toggle
+        }
        }
       }
      }

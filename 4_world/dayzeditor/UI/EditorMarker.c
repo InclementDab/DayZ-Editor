@@ -28,34 +28,34 @@ class EditorMapMarker: UILinkedObject
 	
 	override void Update()
 	{
+
 		MapWidget map_widget = MapWidget.Cast(m_Root.GetParent());
 		vector pos = map_widget.MapToScreen(m_EditorObject.GetPosition());
 		
 		m_Root.SetPos(pos[0], pos[1]);
 		
-		if (m_EditorObject.IsSelected()) 
+		if (m_EditorObject.IsSelected() || MouseInside) 
 			m_Root.SetAlpha(ALPHA_ON_SHOW);
-		else m_Root.SetAlpha(ALPHA_ON_HIDE);
+		else 
+			m_Root.SetAlpha(ALPHA_ON_HIDE);
 
 	}
+	
+	private bool MouseInside = false;
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		// you should set cursor here its smart smile :)
 		Print("EditorMapMarker::OnMouseEnter");
-
-		m_Root.SetAlpha(ALPHA_ON_SHOW);
-		m_Root.Update();
-		return false;
+		MouseInside = true;
+		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		Print("EditorMapMarker::OnMouseLeave");
-
-		m_Root.SetAlpha(ALPHA_ON_HIDE);
-		m_Root.Update();
-		return false;
+		MouseInside = false;
+		return true;
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
@@ -64,16 +64,17 @@ class EditorMapMarker: UILinkedObject
 		
 		Input input = GetGame().GetInput();
 		
-		if (Editor.IsPlacing()) {
-			EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
-			EditorObject editor_object = Editor.CreateObject(e.GetType(), e.GetWorldPosition(), vector.Up);
-			editor_object.Select();
-			if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
-		} else if (input.LocalValue("UATurbo")) {
+			
+		if (!Editor.IsPlacing()) return false;
+		
+		if (input.LocalValue("UATurbo"))
 			m_EditorObject.Select(false);
-		} else if (input.LocalValue("UARunWalkTemp")) {
+		else if (input.LocalValue("UARunWalkTemp"))
 			m_EditorObject.ToggleSelect();
-		}
+		else
+			m_EditorObject.Select();
+
+		return true;
 		
 		
 
@@ -84,6 +85,7 @@ class EditorMapMarker: UILinkedObject
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		Print("EditorMapMarker::OnDrag");
+		if (Editor.IsPlacing()) return false;
 		Editor.EditorEventHandler.DragInvoke(this, m_EditorObject);
 		return true;
 	}
@@ -134,7 +136,7 @@ class EditorObjectMarker: UILinkedObject
 		
 		
 		m_Root.Show(true);
-		if (m_EditorObject.IsSelected()) {
+		if (m_EditorObject.IsSelected() || MouseInside) {
 			m_Root.SetAlpha(ALPHA_ON_SHOW);
 		} else {
 			m_Root.SetAlpha(ALPHA_ON_HIDE);
@@ -144,7 +146,7 @@ class EditorObjectMarker: UILinkedObject
 		m_Root.Update();
 	}
 
-
+	private bool MouseInside = false;
 	
 
 	override bool OnMouseEnter(Widget w, int x, int y)
@@ -152,7 +154,7 @@ class EditorObjectMarker: UILinkedObject
 		// you should set cursor here its smart smile :)
 		Print("EditorMarker::OnMouseEnter");
 
-		m_Root.SetAlpha(ALPHA_ON_SHOW);
+		MouseInside = true;
 		return true;
 	}
 	
@@ -160,7 +162,7 @@ class EditorObjectMarker: UILinkedObject
 	{
 		Print("EditorMarker::OnMouseLeave");
 
-		m_Root.SetAlpha(ALPHA_ON_HIDE);
+		MouseInside = false;
 		return true;
 	}
 	
@@ -168,8 +170,18 @@ class EditorObjectMarker: UILinkedObject
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		Print("EditorObjectMarker::OnMouseButtonDown: " + button);
+		Input input = GetGame().GetInput();
 		
-		return false;
+		if (!Editor.IsPlacing()) return false;
+		
+		if (input.LocalValue("UATurbo"))
+			m_EditorObject.Select(false);
+		else if (input.LocalValue("UARunWalkTemp"))
+			m_EditorObject.ToggleSelect();
+		else
+			m_EditorObject.Select();
+
+		return true;
 	}
 
 	

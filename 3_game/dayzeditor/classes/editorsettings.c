@@ -1,7 +1,7 @@
 static float VIEW_DISTANCE = 5000;
 static float OBJECT_VIEW_DISTANCE = 3000;
 
-
+static bool MAGNET_PLACEMENT = false;
 
 class EditorSettings 
 {

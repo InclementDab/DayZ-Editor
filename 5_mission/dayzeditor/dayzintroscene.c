@@ -1,8 +1,8 @@
 
-string CreateEditorMission()
+string CreateEditorMission(string map_name = "ChernarusPlus")
 {
 	Print("CreateEditorMission");
-	string mission = "$saves:DayZEditor.ChernarusPlus";
+	string mission = "$saves:DayZEditor." + map_name;
 	
 	if (!FileExist(mission)) {
 		Print("Editor Mission not found, creating....");
@@ -41,7 +41,7 @@ modded class DayZIntroScene
 	void FunnyMeme()
 	{
 		int x, y;
-		GetMousePos(x, y);
+		GetCursorPos(x, y);
 		
 		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection();
 		mouse_pos[0] = mouse_pos[0] - 0.8;
@@ -83,10 +83,8 @@ modded class MainMenu
 
     override void Play()
     {
-        //GetGame().SetMission(CreateMission("DayZEditor/Editor/mission/DayZEditor.ChernarusPlus"));
-        GetGame().PlayMission(CreateEditorMission());
-		//GetGame().PlayMission("ChernarusEditor");
-		
+		MapSelectWindow select_window = new MapSelectWindow();
+		GetGame().GetUIManager().ShowScriptedMenu(select_window, this);
     }
 
     override bool OnMouseEnter(Widget w, int x, int y)
@@ -95,6 +93,12 @@ modded class MainMenu
 			ColorHighlight( w );
 			return true;
 		}
+		return false;
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button) 
+	{
+		super.OnClick(w, x, y, button);
 		return false;
 	}
 }

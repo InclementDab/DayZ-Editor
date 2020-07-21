@@ -1,37 +1,6 @@
 
 
-class EditorHologram: Hologram
-{
-	protected Widget 				m_EditorMapMarkerWidget;
-	protected EditorMapMarker 		m_EditorMapMarker;
-	
-	private EditorUI				m_EditorUI;
-	
-	void EditorHologram(PlayerBase player, vector pos, ItemBase item) 
-	{
-		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorMapMarker.layout");
-		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
-		
-		m_EditorUI = EditorUI.GetInstance();
-		m_EditorUI.GetMapWidget().AddChild(m_EditorMapMarkerWidget); // scuffed plz fix am tired :)
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-	}
-	
-	void ~EditorHologram()
-	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-		delete m_EditorMapMarkerWidget; delete m_EditorMapMarker;
-	}
-	
-	void Update()
-	{
-		MapWidget map_widget = m_EditorUI.GetMapWidget();
-		vector pos = map_widget.MapToScreen(m_Projection.GetPosition());
-		m_EditorMapMarkerWidget.SetPos(pos[0], pos[1]);
-	}
-	
-	
-}
+
 
 class EditorObjectLink: Link<EditorObject>
 {
@@ -100,9 +69,6 @@ class EditorObject : BuildingBase
 	{
 		Print("EditorObject");
 		SetEventMask(EntityEvent.FRAME);
-
-		
-		
 	}
 	
 	void ~EditorObject()

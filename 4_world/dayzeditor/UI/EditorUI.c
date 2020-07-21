@@ -16,10 +16,10 @@ class EditorMap: EditorWidgetEventHandler
 		Print("~EditorMap");
 	}
 	
-	static void OnObjectCreated(Class context, EditorObject obj)
+	void OnObjectCreated(Class context, EditorObject obj)
 	{
-		//MapWidget map_widget = MapWidget.Cast(m_Root);
-		//map_widget.AddChild(obj.GetMapMarker());
+		MapWidget map_widget = MapWidget.Cast(m_Root);
+		map_widget.AddChild(obj.GetMapMarker());
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
@@ -39,14 +39,16 @@ class EditorMap: EditorWidgetEventHandler
 		if (button == 0) {
 			if (Editor.IsPlacing()) {
 				EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
-				EditorObject editor_object = Editor.CreateObject(e.GetType(), e.GetWorldPosition(), vector.Up);
+				vector mat[4];
+				e.GetTransform(mat);
+				EditorObject editor_object = Editor.CreateObject(e.GetType(), mat);
 				editor_object.Select();
 				if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
 				return true;
 			} else {
 				EditorUI.EditorCanvas.Clear();
 				EditorUI ui = EditorUI.GetInstance();
-				GetMousePos(ui.start_x, ui.start_y);
+				GetCursorPos(ui.start_x, ui.start_y);
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ui.DelayedDragBoxCheck, 40);
 				return true;
 			}
@@ -85,6 +87,7 @@ class EditorUI: EditorWidgetEventHandler
 	protected ButtonWidget m_RightbarHide;
 	protected ButtonWidget m_ToolbarUndo;
 	protected ButtonWidget m_ToolbarRedo;
+	protected ButtonWidget m_ToolbarMagnet;
 	
 	// Frames and Hosts
 	protected Widget m_LeftbarFrame;
@@ -157,6 +160,7 @@ class EditorUI: EditorWidgetEventHandler
 		m_RightbarHide			= ButtonWidget.Cast(m_Root.FindAnyWidget("RightbarHide"));
 		m_ToolbarUndo			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarUndo"));
 		m_ToolbarRedo			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarRedo"));
+		m_ToolbarMagnet			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarMagnet"));
 		
 		// Spacers
 		m_LeftbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("LeftbarSpacer"));
@@ -241,7 +245,10 @@ class EditorUI: EditorWidgetEventHandler
 	{
 		Print("EditorUI::OnClick");
 		if (button == 0) {
-			
+			if (w == m_ToolbarMagnet) {
+				MAGNET_PLACEMENT = m_ToolbarMagnet.GetState();
+				return true;
+			}
 		}
 		
 		return false;
@@ -277,14 +284,18 @@ class EditorUI: EditorWidgetEventHandler
 			}
 			
 			if (Editor.IsPlacing()) {
+				
 				EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
-				EditorObject editor_object = Editor.CreateObject(e.GetType(), e.GetWorldPosition(), vector.Up);
+				vector mat[4];
+				e.GetTransform(mat);
+				EditorObject editor_object = Editor.CreateObject(e.GetType(), mat);
 				editor_object.Select();
 				if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
+				
 			} else if (Editor.EditorObjectUnderCursor == null) {
 				// delayed dragbox
 				EditorUI.EditorCanvas.Clear();
-				GetMousePos(start_x, start_y);
+				GetCursorPos(start_x, start_y);
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DelayedDragBoxCheck, 40);
 				
 			} else if (Editor.EditorObjectUnderCursor != null) {
@@ -295,9 +306,7 @@ class EditorUI: EditorWidgetEventHandler
 		
 		// Right Click
 		if (button == 1) {
-			if (Editor.IsPlacing()) {
-				delete Editor.ObjectInHand;
-			}
+
 		}
 
 		return false;
@@ -323,6 +332,7 @@ class EditorUI: EditorWidgetEventHandler
 	bool OnKeyPress(int key)
 	{
 		switch (key) {
+			
 			case KeyCode.KC_M: {
 				
 				if (m_EditorMapContainer.IsVisible()) {
@@ -333,12 +343,24 @@ class EditorUI: EditorWidgetEventHandler
 				m_EditorMapContainer.Update();
 				return true;
 			}
-			
-			
+		
 			case KeyCode.KC_SPACE: {
 				if (GetGame().GetUIManager().IsCursorVisible() && !m_EditorMapContainer.IsVisible()) 
 					HideCursor();
 				else ShowCursor();
+				return true;
+			}
+			
+			case KeyCode.KC_U: {
+				MAGNET_PLACEMENT = !MAGNET_PLACEMENT;
+				m_ToolbarMagnet.SetState(MAGNET_PLACEMENT);
+				m_ToolbarMagnet.Update();
+				return true;
+			}
+			
+			case KeyCode.KC_Y: {
+				m_Root.Show(!m_Root.IsVisible());
+				
 				return true;
 			}
 		}
@@ -361,7 +383,7 @@ class EditorUI: EditorWidgetEventHandler
 	{	
 		IsDragging = true;
 		int current_x, current_y;
-		GetMousePos(current_x, current_y);
+		GetCursorPos(current_x, current_y);
 		EditorUI.EditorCanvas.Clear();
 		int selection_box_thickness = 2;
 		int selection_box_color = ARGB(100, 255, 0, 0);
@@ -487,10 +509,10 @@ class EditorUI: EditorWidgetEventHandler
 		
 		
 		// If map is ON	
-		if (m_EditorMapContainer.IsVisible()) {
+		if (IsMapOpen()) {
 			
 			int mouse_x, mouse_y;
-			GetMousePos(mouse_x, mouse_y);
+			GetCursorPos(mouse_x, mouse_y);
 			cursor_position = m_EditorMapWidget.ScreenToMap(Vector(mouse_x, mouse_y, 0));
 			cursor_position[1] = object_position[1] - GetGame().SurfaceY(object_position[0], object_position[2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 			target.SetPosition(cursor_position);
@@ -516,7 +538,14 @@ class EditorUI: EditorWidgetEventHandler
 				target.SetOrientation(object_orientation);
 				
 			} else {
-				target.SetPosition(cursor_position);	
+				
+
+				vector mat[4] = { "1 0 0", "0 1 0", "0 0 1", cursor_position };
+				vector surface_normal = GetGame().SurfaceGetNormal(cursor_position[0], cursor_position[2]);
+				target.PlaceOnSurfaceRotated(mat, cursor_position, surface_normal[0] * -1, surface_normal[2] * -1, 0, MAGNET_PLACEMENT);
+				target.SetTransform(mat);
+					
+				
 			}
 		}
 			
@@ -531,7 +560,7 @@ class EditorUI: EditorWidgetEventHandler
 			vector pos_delta = selected_position - object_position;
 			
 			// If map is ON	
-			if (m_EditorMapContainer.IsVisible()) {
+			if (IsMapOpen()) {
 			
 				cursor_position[1] = object_position[1] - GetGame().SurfaceY(object_position[0], object_position[2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 				selected_object.SetPosition(cursor_position + pos_delta); 
