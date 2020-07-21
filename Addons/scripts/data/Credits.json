@@ -1,0 +1,21 @@
+{
+    "Departments": [
+        {
+            "DepartmentName": "Example",
+            "Sections": [
+                {
+                    "SectionName": "Developers",
+                    "SectionLines": [
+                        "Jacob_Mango",
+                        "Arkensor"
+                },
+                {
+                    "SectionName": "Special Thanks",
+                    "SectionLines": [
+                        "You"
+                    ]
+                }
+            ]
+        }
+    ]
+}

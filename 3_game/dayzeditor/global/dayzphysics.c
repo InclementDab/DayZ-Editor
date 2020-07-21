@@ -1,0 +1,27 @@
+
+
+static vector MousePosToRay(out set<Object> collisions, Object ignore = null, float raycast_distance = OBJECT_VIEW_DISTANCE, float radius = 0)
+{
+	vector rayStart = GetGame().GetCurrentCameraPosition();
+	vector rayEnd = rayStart + GetGame().GetPointerDirection() * raycast_distance;
+	vector hitPos, hitNormal;
+	int hitComponentIndex;		
+	collisions = new set<Object>;
+	
+	DayZPhysics.RaycastRV(rayStart, rayEnd, hitPos, hitNormal, hitComponentIndex, collisions, NULL, ignore, false, false, 1, radius, CollisionFlags.ALLOBJECTS);
+	return hitPos;
+}
+
+
+static vector ObjectGetSize(Object obj)
+{
+	vector size[2];
+	vector result;
+	
+	float radius = obj.ClippingInfo(size);
+	
+	result[0] = Math.AbsFloat(size[0][0]) + Math.AbsFloat(size[1][0]);
+	result[1] = Math.AbsFloat(size[0][1]) + Math.AbsFloat(size[1][1]);
+	result[2] = Math.AbsFloat(size[0][2]) + Math.AbsFloat(size[1][2]);
+	return result;
+}

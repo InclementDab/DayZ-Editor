@@ -18,11 +18,11 @@ class CfgMods
 		type = "mod";
 		dependencies[] =
 		{
-			"Game", "World", "Mission"
+			"Core", "Game", "World", "Mission"
 		};
 		class defs
 		{
-			class coreScriptModule
+			class engineScriptModule
 			{
 				value = "";
 				files[] = {"DayZEditor/scripts/1_core"};
@@ -43,7 +43,6 @@ class CfgMods
 			{
 				value="";
 				files[] = {"DayZEditor/scripts/5_Mission"};
-				entryPoint = "EditorCreateCustomMission";
 			};
 		};
 	};

@@ -227,7 +227,7 @@ class EditorWidgetEventHandler: ScriptedWidgetEventHandler
 	
 	void EditorWidgetEventHandler()
 	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		
 	}
 	
 	void ~EditorWidgetEventHandler()
@@ -236,14 +236,31 @@ class EditorWidgetEventHandler: ScriptedWidgetEventHandler
 		delete m_Root;
 	}
 	
+	
+	
 	void OnWidgetScriptInit(Widget w)
 	{
 		m_Root = w;
 		m_Root.SetHandler(this);
+		
+		
+	}
+	
+	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
+	{
+		
+		return super.OnEvent(eventType, target, parameter0, parameter1);
+	}
+	
+	override bool OnSelect(Widget w, int x, int y)
+	{
+		Print("EditorWidgetEventHandler::OnSelect");
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		return super.OnSelect(w, x, y);
 	}
 	
 	Widget GetRoot() { return m_Root; }
-	void Update() { }	
+	void Update() { }
 }
 
 

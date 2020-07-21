@@ -1,7 +1,0 @@
-///<'Particles.pbo' properties via Mikero's dos tools, dll version 6.44>///
-prefix=DayZEditor\Editor
-Mikero=DePbo.dll.7.69
-version=Wed Jul 08 00:42:34 2020
-//Pbo Type is: Arma Addon
-//Sha: '5D92D56BED3B8F42AA65C71AE2371879C04F9FA1'
-//////</properties>//////

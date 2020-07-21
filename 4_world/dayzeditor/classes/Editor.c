@@ -178,6 +178,7 @@ class Editor: Managed
 				ObjectInHand.SetProjectionOrientation(GetGame().SurfaceGetNormal(pos[0], pos[2]));
 				
 			} else {
+				
 				vector v = MousePosToRay(obj, ObjectInHand.GetProjectionEntity());
 				vector size = ObjectGetSize(ObjectInHand.GetProjectionEntity());
 				v[1] = v[1] + size[1]/2;

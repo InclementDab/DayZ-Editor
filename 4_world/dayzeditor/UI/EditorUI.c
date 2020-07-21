@@ -8,7 +8,7 @@ class EditorMap: EditorWidgetEventHandler
 	void EditorMap()
 	{
 		Print("EditorMap");
-		Editor.EditorEventHandler.OnObjectCreated.Insert(OnObjectCreated);
+				
 	}
 	
 	void ~EditorMap()
@@ -16,16 +16,18 @@ class EditorMap: EditorWidgetEventHandler
 		Print("~EditorMap");
 	}
 	
-	void OnObjectCreated(Class context, EditorObject obj)
+	static void OnObjectCreated(Class context, EditorObject obj)
 	{
-		MapWidget map_widget = MapWidget.Cast(m_Root);
-		map_widget.AddChild(obj.GetMapMarker());
+		//MapWidget map_widget = MapWidget.Cast(m_Root);
+		//map_widget.AddChild(obj.GetMapMarker());
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
 		Print("EditorMap::OnWidgetScriptInit");
-		super.OnWidgetScriptInit(w);		
+		super.OnWidgetScriptInit(w);
+		
+		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);		
 	}
 	
 	private int start_x, start_y;
@@ -63,9 +65,6 @@ class EditorMap: EditorWidgetEventHandler
 	}
 	
 	MapWidget GetMapWidget() { return MapWidget.Cast(m_Root); }
-
-	
-	
 }
 
 class EditorUI: EditorWidgetEventHandler
@@ -116,10 +115,9 @@ class EditorUI: EditorWidgetEventHandler
 
 	// make it so you can search for items by mod name with @ModNameHere
 	void EditorUI()
-	{	
-		Editor.EditorEventHandler.OnObjectCreated.Insert(OnObjectCreated);
-		Editor.EditorEventHandler.OnObjectDrag.Insert(HandleObjectDrag);
-		Editor.EditorEventHandler.OnObjectDrop.Insert(HandleObjectDrop);
+	{
+		
+
 		
 		m_Instance = this;
 	}
@@ -180,6 +178,11 @@ class EditorUI: EditorWidgetEventHandler
 			list_widget.GetScript(list_item);
 			list_item.SetObject(placeable_object);
 		}
+		
+		// Event subscriptions
+		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
+		EditorEvents.OnObjectDrag.Insert(HandleObjectDrag);
+		EditorEvents.OnObjectDrop.Insert(HandleObjectDrop);
 				
 		// Update Thread
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);

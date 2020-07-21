@@ -7,29 +7,23 @@ class OnObjectCreateEventArgs
 	int mouse_x, mouse_y;
 }
 
-class ObjectSelectedEventArgs
-{
-	EditorObject Target;
-	bool SelectionStatus;
-	void ObjectSelectedEventArgs(EditorObject target, bool selectionstatus)
-	{
-		Target = target; 
-		SelectionStatus = selectionstatus;
-	}
-}
 
-
+// ObjectSelectedEventArgs
+// 0 EditorObject:  Target
+// 1 bool: Selection State
+typedef Param2<EditorObject, bool> ObjectSelectedEventArgs;
 
 
 class EditorEvents 
 {
-	ref ScriptInvoker OnObjectCreated;
-	ref ScriptInvoker OnObjectSelectionChanged;
-	ref ScriptInvoker OnObjectDrag;
-	ref ScriptInvoker OnObjectDrop;
+	static ref ScriptInvoker OnObjectCreated = new ScriptInvoker();
+	static ref ScriptInvoker OnObjectSelectionChanged = new ScriptInvoker();
+	static ref ScriptInvoker OnObjectDrag = new ScriptInvoker();
+	static ref ScriptInvoker OnObjectDrop = new ScriptInvoker();
 	
 	void EditorEvents()
 	{
+		Print("EditorEvents");
 		OnObjectCreated = new ScriptInvoker();
 		OnObjectSelectionChanged = new ScriptInvoker();
 		OnObjectDrag = new ScriptInvoker();
