@@ -1,10 +1,17 @@
 @echo off
 
-set "ADDONS=P:\DayZ_Server\dev\DayZEditor\Addons"
+set QUERY="HKEY_LOCAL_MACHINE\SOFTWARE\Bohemia Interactive\Dayz Tools\AddonBuilder"
 
-cd %ADDONS%
 
-MakePBO -U -P editor
-MakePBO -P gui
-MakePBO -P scripts
+for /f "tokens=2* skip=2" %%a in ('reg query %QUERY%  /V "path"') do ( 
+	set BUILDEREXE=%%b
+)
 
+for /f "tokens=2* skip=2" %%a in ('reg query %QUERY%  /V "exe"') do ( 
+	set BUILDEREXE="%BUILDEREXE%\%%b"
+)
+
+
+%BUILDEREXE% "%CD%\Addons\editor" "%CD%\Addons" -prefix=DayZEditor\editor
+%BUILDEREXE% "%CD%\Addons\gui" "%CD%\Addons" -prefix=DayZEditor\gui
+%BUILDEREXE% "%CD%\Addons\scripts" "%CD%\Addons" -prefix=DayZEditor\scripts
