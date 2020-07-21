@@ -35,6 +35,11 @@ class Editor: Managed
 	static ref EditorUI						ActiveEditorUI;	
 	static EditorCamera						ActiveCamera;
 	
+	static Object DebugObject0;
+	static Object DebugObject1;
+	static Object DebugObject2;
+	static Object DebugObject3;
+	
 
 	
 	void Editor()
@@ -379,6 +384,12 @@ class Editor: Managed
 				}
 				break;
 			}
+			
+			case KeyCode.KC_F3: {
+				dSetGravity(GetGame().GetPlayer(), Vector(0, 500, 0));
+				break;
+			}
+			
 		
 		}
 		

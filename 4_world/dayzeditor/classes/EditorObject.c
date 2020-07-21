@@ -135,7 +135,7 @@ class EditorObject : BuildingBase
 		line_centers[11] = AverageVectors(line_verticies[0], line_verticies[7]);
 				
 	
-		float line_width = 0.1;
+		float line_width = 0.01;
 		for (int i = 0; i < 12; i++) {
 			
 			vector transform[4];			

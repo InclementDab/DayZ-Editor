@@ -130,16 +130,15 @@ class EditorObjectMarker: UILinkedObject
 		int screen_x, screen_y;
 		GetScreenSize(screen_x, screen_y);
 		
-
-		m_Root.Show(!(screenpos[0] > screen_x || screenpos[1] > screen_y || screenpos[0] <= 0 || screenpos[1] <= 0));
+		
+		if (!override_show) {
 			
-		
-		
-		m_Root.Show(true);
-		if (m_EditorObject.IsSelected() || MouseInside) {
-			m_Root.SetAlpha(ALPHA_ON_SHOW);
-		} else {
-			m_Root.SetAlpha(ALPHA_ON_HIDE);
+			m_Root.Show(!(screenpos[0] > screen_x || screenpos[1] > screen_y || screenpos[0] <= 0 || screenpos[1] <= 0));
+			if (m_EditorObject.IsSelected() || MouseInside) {
+				m_Root.SetAlpha(ALPHA_ON_SHOW);
+			} else {
+				m_Root.SetAlpha(ALPHA_ON_HIDE);
+			}
 		}
 		
 		m_Root.SetPos(screenpos[0], screenpos[1]);
@@ -197,6 +196,13 @@ class EditorObjectMarker: UILinkedObject
 		Print("EditorObjectMarker::OnDrop");
 		Editor.EditorEventHandler.DropInvoke(this, m_EditorObject);
 		return true;
+	}
+	
+	private bool override_show = true;
+	void Show(bool show)
+	{
+		override_show = show;
+		m_Root.Show(show);
 	}
 }
 

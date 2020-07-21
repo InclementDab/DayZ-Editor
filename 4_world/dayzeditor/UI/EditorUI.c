@@ -360,6 +360,9 @@ class EditorUI: EditorWidgetEventHandler
 			
 			case KeyCode.KC_Y: {
 				m_Root.Show(!m_Root.IsVisible());
+				foreach (EditorObject editor_object: Editor.EditorObjects) {
+					editor_object.GetObjectMarker().Show(m_Root.IsVisible());
+				}
 				
 				return true;
 			}
@@ -480,15 +483,18 @@ class EditorUI: EditorWidgetEventHandler
 		m_RightbarSpacer.AddChild(target.GetObjectBrowser());
 	}
 	
-	
+	vector start_position;
 	void HandleObjectDrag(Class context, EditorObject target)
 	{
 		target.Select(false); // sanity check
+		start_position = target.GetPosition();
+		Editor.DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectDragUpdate, 0, true, target);		
 	}
 	
 	void HandleObjectDrop(Class context, EditorObject target)
 	{		
+		GetGame().ObjectDelete(Editor.DebugObject0);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectDragUpdate);
 	}
 	
@@ -508,6 +514,10 @@ class EditorUI: EditorWidgetEventHandler
 		Input input = GetGame().GetInput();
 		
 		
+		vector transform[4] = { "1 0 0", "0 1 0", "0 0 1", cursor_position };
+		vector surface_normal = GetGame().SurfaceGetNormal(cursor_position[0], cursor_position[2]);
+		
+		
 		// If map is ON	
 		if (IsMapOpen()) {
 			
@@ -521,34 +531,48 @@ class EditorUI: EditorWidgetEventHandler
 		
 			// Handle Z only motion*
 			if (input.LocalValue("UALookAround")) {	
-				//dist_to_ground = object_position[1] - GetGame().SurfaceY(object_position[0], object_position[2]);
-				float dist = vector.Distance(GetGame().GetCurrentCameraPosition(), object_position);
-				cursor_position = MousePosToRay(obj, target_object, dist);
-				cursor_position[0] = object_position[0];
-				cursor_position[1] = cursor_position[1] + object_size[1]/2;
-				cursor_position[2] = object_position[2];
-				target.SetPosition(cursor_position);
+				
+				vector object_transform[4];
+				target_object.GetTransform(object_transform);
+									
+				vector mouse_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), object_transform[3]);
+				mouse_pos[1] = mouse_pos[1] + object_size[1]/2;
+				vector ground, ground_dir;
+				int component;				
+				set<Object> oo;
+				DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, oo, NULL, target_object, false, true); // set to ground only
+
+				
+
+				Editor.DebugObject0.SetPosition(ground);
+				
+				transform[0] = object_transform[0];
+				transform[1] = object_transform[1];
+				transform[2] = object_transform[2];
+				transform[3] = ground + object_transform[1] * vector.Distance(ground, mouse_pos);
+				
+
+				
+				
 			
 			// Handle XY Rotation
 			} else if (input.LocalValue("UATurbo")) {
-				vector cursor_delta = cursor_position - object_position;
-				float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]);
-				object_orientation[0] = angle * Math.RAD2DEG;
 				
-				target.SetOrientation(object_orientation);
+				vector cursor_delta = cursor_position - object_position;
+				
+				float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;				
+				transform[3][0] = object_position[0];
+				transform[3][2] = object_position[2];
+				target.PlaceOnSurfaceRotated(transform, object_position, surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, MAGNET_PLACEMENT);
+				//vector.Direction(object_position, cursor_position);
+				//Math3D.DirectionAndUpMatrix(, target.GetTransformAxis(1), transform);
 				
 			} else {
-				
-
-				vector mat[4] = { "1 0 0", "0 1 0", "0 0 1", cursor_position };
-				vector surface_normal = GetGame().SurfaceGetNormal(cursor_position[0], cursor_position[2]);
-				target.PlaceOnSurfaceRotated(mat, cursor_position, surface_normal[0] * -1, surface_normal[2] * -1, 0, MAGNET_PLACEMENT);
-				target.SetTransform(mat);
-					
-				
+				target.PlaceOnSurfaceRotated(transform, cursor_position, surface_normal[0] * -1, surface_normal[2] * -1, 0, MAGNET_PLACEMENT);
 			}
 		}
-			
+		
+		target.SetTransform(transform);
 		target.Update();
 					
 		// This handles all other selected objects
