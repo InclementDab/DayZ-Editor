@@ -274,9 +274,10 @@ class EditorObject : BuildingBase
 		if (!IsInitialized) return vector.Zero;
 		vector clip_info[2];
 		m_WorldObject.ClippingInfo(clip_info);
+		vector result = Vector((clip_info[0][0] + clip_info[1][0]) / 2, clip_info[0][1], (clip_info[0][2] + clip_info[1][2]) / 2);
+		result += m_WorldObject.GetPosition();
 		
-		
-		return Vector((clip_info[0][0] + clip_info[1][0]) / 2, clip_info[0][1], (clip_info[0][2] + clip_info[1][2]) / 2);
+		return result;
 	}
 	
 	

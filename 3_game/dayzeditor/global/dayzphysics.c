@@ -5,15 +5,6 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 	vector ray_start = GetGame().GetCurrentCameraPosition();
 	vector ray_end = ray_start + GetGame().GetPointerDirection() * OBJECT_VIEW_DISTANCE;
 	
-	
-
-	
-	
-
-	
-	
-	
-	
 	vector hitPos, hitNormal;
 	int hitComponentIndex;		
 	collisions = new set<Object>;

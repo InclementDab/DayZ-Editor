@@ -536,17 +536,23 @@ class Editor: Managed
 		vector object_position = target_object.GetPosition();
 		vector object_size = target.GetSize();
 		vector object_orientation = target_object.GetOrientation();
+		vector object_transform[4];
+		target_object.GetTransform(object_transform);
 
-		set<Object> obj;
-		vector cursor_position = MousePosToRay(obj, target_object);
+		set<Object> o;
+		vector cursor_position = MousePosToRay(o, target_object);
 		cursor_position[1] = cursor_position[1] + object_size[1]/2;
 		
 		Input input = GetGame().GetInput();
 		
+		// Raycast ground below object
+		vector ground, ground_dir; int component;
+		DayZPhysics.RaycastRV(object_position, object_position + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target_object, false, true); // set to ground only
 		
-		vector transform[4] = { "1 0 0", "0 1 0", "0 0 1", cursor_position };
+		
+		vector cursor_transform[4] = { "1 0 0", "0 1 0", "0 0 1", cursor_position };
 		vector surface_normal = GetGame().SurfaceGetNormal(cursor_position[0], cursor_position[2]);
-		
+		float surface_level = GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 		
 		// If map is ON	
 		if (ActiveEditorUI.IsMapOpen()) {
@@ -561,27 +567,16 @@ class Editor: Managed
 		
 			// Handle Z only motion*
 			if (input.LocalValue("UALookAround")) {	
-				
-				vector object_transform[4];
-				target_object.GetTransform(object_transform);
-									
-				vector mouse_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), object_transform[3]);
-				mouse_pos[1] = mouse_pos[1] + object_size[1]/2;
-				vector ground, ground_dir;
-				int component;				
-				set<Object> oo;
-				DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, oo, NULL, target_object, false, true); // set to ground only
-
+						
+				cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground);
+				cursor_position[1] = cursor_position[1] + object_size[1]/2;
 				
 
 				Editor.DebugObject0.SetPosition(ground);
-				
-				transform[0] = object_transform[0];
-				transform[1] = object_transform[1];
-				transform[2] = object_transform[2];
-				transform[3] = ground + object_transform[1] * vector.Distance(ground, mouse_pos);
-				
-
+				cursor_transform[0] = object_transform[0];
+				cursor_transform[1] = object_transform[1];
+				cursor_transform[2] = object_transform[2];
+				cursor_transform[3] = ground + object_transform[1] * vector.Distance(ground, cursor_position);
 				
 				
 			
@@ -591,18 +586,19 @@ class Editor: Managed
 				vector cursor_delta = cursor_position - object_position;
 				
 				float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;				
-				transform[3][0] = object_position[0];
-				transform[3][2] = object_position[2];
-				target.PlaceOnSurfaceRotated(transform, object_position, surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, MAGNET_PLACEMENT);
+				cursor_transform[3][0] = object_position[0];
+				cursor_transform[3][2] = object_position[2];
+				target.PlaceOnSurfaceRotated(cursor_transform, object_position, surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, MAGNET_PLACEMENT);
 				//vector.Direction(object_position, cursor_position);
 				//Math3D.DirectionAndUpMatrix(, target.GetTransformAxis(1), transform);
 				
 			} else {
-				target.PlaceOnSurfaceRotated(transform, cursor_position, surface_normal[0] * -1, surface_normal[2] * -1, 0, MAGNET_PLACEMENT);
+				
+				target.PlaceOnSurfaceRotated(cursor_transform, cursor_position, surface_normal[0] * -1, surface_normal[2] * -1, 0, MAGNET_PLACEMENT);
 			}
 		}
 		
-		target.SetTransform(transform);
+		target.SetTransform(cursor_transform);
 		target.Update();
 					
 		// This handles all other selected objects
