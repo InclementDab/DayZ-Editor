@@ -1,7 +1,7 @@
 
 
 static const float ALPHA_ON_SHOW = 1;
-static const float ALPHA_ON_HIDE = 0.4;
+static const float ALPHA_ON_HIDE = 0.25;
 
 class EditorMapMarker: UILinkedObject
 {
@@ -86,14 +86,14 @@ class EditorMapMarker: UILinkedObject
 	{
 		Print("EditorMapMarker::OnDrag");
 		if (Editor.IsPlacing()) return false;
-		Editor.EditorEventHandler.DragInvoke(this, m_EditorObject);
+		EditorEvents.DragInvoke(this, m_EditorObject);
 		return true;
 	}
 	
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		Print("EditorMapMarker::OnDrop");	
-		Editor.EditorEventHandler.DropInvoke(this, m_EditorObject);
+		EditorEvents.DropInvoke(this, m_EditorObject);
 		return true;
 	}
 }
@@ -129,19 +129,19 @@ class EditorObjectMarker: UILinkedObject
 		vector screenpos = GetGame().GetScreenPos(position);
 		int screen_x, screen_y;
 		GetScreenSize(screen_x, screen_y);
+		m_Root.SetPos(screenpos[0], screenpos[1]);
 		
-		
-		if (!override_show) {
-			
+		if (override_show) {
 			m_Root.Show(!(screenpos[0] > screen_x || screenpos[1] > screen_y || screenpos[0] <= 0 || screenpos[1] <= 0));
-			if (m_EditorObject.IsSelected() || MouseInside) {
-				m_Root.SetAlpha(ALPHA_ON_SHOW);
-			} else {
-				m_Root.SetAlpha(ALPHA_ON_HIDE);
-			}
 		}
 		
-		m_Root.SetPos(screenpos[0], screenpos[1]);
+		if (m_EditorObject.IsSelected() || MouseInside) {
+			m_Root.SetAlpha(ALPHA_ON_SHOW);
+		} else {
+			m_Root.SetAlpha(ALPHA_ON_HIDE);
+		}
+		
+		
 		m_Root.Update();
 	}
 
@@ -152,7 +152,7 @@ class EditorObjectMarker: UILinkedObject
 	{
 		// you should set cursor here its smart smile :)
 		Print("EditorMarker::OnMouseEnter");
-
+		if (Editor.IsPlacing()) return false;
 		MouseInside = true;
 		return true;
 	}
@@ -165,13 +165,26 @@ class EditorObjectMarker: UILinkedObject
 		return true;
 	}
 	
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		Print("EditorObjectMarker::OnClick: " + button);
+		
+		
+		return true;
+	}
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		Print("EditorObjectMarker::OnMouseButtonDown: " + button);
+		
+		
 		Input input = GetGame().GetInput();
 		
-		if (!Editor.IsPlacing()) return false;
+		if (Editor.IsPlacing()) {
+			Editor.PlaceObject();
+			return true;
+		}
 		
 		if (input.LocalValue("UATurbo"))
 			m_EditorObject.Select(false);
@@ -179,6 +192,8 @@ class EditorObjectMarker: UILinkedObject
 			m_EditorObject.ToggleSelect();
 		else
 			m_EditorObject.Select();
+		
+
 
 		return true;
 	}
@@ -187,14 +202,17 @@ class EditorObjectMarker: UILinkedObject
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		Print("EditorObjectMarker::OnDrag");
-		Editor.EditorEventHandler.DragInvoke(this, m_EditorObject);
+		
+		if (Editor.IsPlacing()) return false;
+		
+		EditorEvents.DragInvoke(this, m_EditorObject);
 		return true;
 	}
 	
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		Print("EditorObjectMarker::OnDrop");
-		Editor.EditorEventHandler.DropInvoke(this, m_EditorObject);
+		EditorEvents.DropInvoke(this, m_EditorObject);
 		return true;
 	}
 	

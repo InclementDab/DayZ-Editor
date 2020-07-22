@@ -30,25 +30,25 @@ class EditorEvents
 		OnObjectDrop = new ScriptInvoker();
 	}
 	
-	void ObjectCreateInvoke(Class context, EditorObject obj) 
+	static void ObjectCreateInvoke(Class context, EditorObject obj) 
 	{
 		Print("EditorEvents::ObjectCreate");
 		OnObjectCreated.Invoke(context, obj);	
 	}
 	
-	void ObjectSelectedInvoke(Class context, ObjectSelectedEventArgs args) 
+	static void ObjectSelectedInvoke(Class context, ObjectSelectedEventArgs args) 
 	{
 		//Print("EditorEvents::ObjectSelected");
 		OnObjectSelectionChanged.Invoke(context, args);
 	}
 	
-	void DragInvoke(Class context, EditorObject obj)
+	static void DragInvoke(Class context, EditorObject obj)
 	{
 		Print("EditorEvents::Drag");
 		OnObjectDrag.Invoke(context, obj);
 	}
 	
-	void DropInvoke(Class context, EditorObject obj)
+	static void DropInvoke(Class context, EditorObject obj)
 	{
 		Print("EditorEvents::Drop");
 		OnObjectDrop.Invoke(context, obj);

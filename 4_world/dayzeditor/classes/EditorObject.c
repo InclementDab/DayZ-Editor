@@ -251,7 +251,7 @@ class EditorObject : BuildingBase
 		ShowBoundingBox();
 
 		ObjectSelectedEventArgs args(this, IsSelected);
-		Editor.EditorEventHandler.ObjectSelectedInvoke(this, args);
+		EditorEvents.ObjectSelectedInvoke(this, args);
 		
 		Editor.SelectedObjects.Insert(GetID(), this);
 	}
@@ -263,7 +263,7 @@ class EditorObject : BuildingBase
 		HideBoundingBox();
 		
 		ObjectSelectedEventArgs args(this, IsSelected);
-		Editor.EditorEventHandler.ObjectSelectedInvoke(this, args);
+		EditorEvents.ObjectSelectedInvoke(this, args);
 		
 		Editor.SelectedObjects.Remove(GetID());
 	}

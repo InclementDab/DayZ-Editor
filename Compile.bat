@@ -11,7 +11,10 @@ for /f "tokens=2* skip=2" %%a in ('reg query %QUERY%  /V "exe"') do (
 	set BUILDEREXE="%BUILDEREXE%\%%b"
 )
 
+REM %BUILDEREXE% "%CD%\Addons\editor" "%CD%\Addons" -prefix=DayZEditor\editor
+REM %BUILDEREXE% "%CD%\Addons\gui" "%CD%\Addons" -prefix=DayZEditor\gui
 
-%BUILDEREXE% "%CD%\Addons\editor" "%CD%\Addons" -prefix=DayZEditor\editor
-%BUILDEREXE% "%CD%\Addons\gui" "%CD%\Addons" -prefix=DayZEditor\gui
 REM %BUILDEREXE% "%CD%\Addons\scripts" "%CD%\Addons" -prefix=DayZEditor\scripts
+
+MakePBO -U %CD%\Addons\editor
+MakePBO -U %CD%\Addons\gui

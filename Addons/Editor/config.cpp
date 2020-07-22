@@ -31,16 +31,21 @@ class CfgVehicles
 		scope = 1;
 		model = "DayZEditor\Editor\data\Camera.p3d";
 	};
-	class 3DWidget: HouseNoDestruct
+	class TranslationWidget: HouseNoDestruct
 	{
 		scope = 1;
-		model = "DayZEditor\Editor\data\3DWidget.p3d";
+		model = "DayZEditor\Editor\data\TranslationWidget.p3d";
+		hiddenSelections[] = {"TranslateX", "TranslateY", "TranslateZ", "BoundingBox"};
+		hiddenSelectionsMaterials[] = {"DayZEditor\Editor\data\TranslationWidget\TranslationWidget.rvmat"};
+		hiddenSelectionsTextures[] = {"DayZEditor\Editor\data\TranslationWidget\TranslationWidget.paa"};
 	};
 	class RotationWidget: HouseNoDestruct
 	{
 		scope = 1;
 		model = "DayZEditor\Editor\data\RotationWidget.p3d";
 	};
+
+
 	class BoundingBoxBase: HouseNoDestruct
 	{
 		scope = 1;

@@ -1,7 +1,7 @@
 
 
 
-
+// make option Q and E go up and down no matter orientation
 
 
 class EditorCamera: Camera
@@ -143,7 +143,8 @@ class EditorCamera: Camera
 		}
 
 		SetTransform(transform);
-			
+		
+		orientation = GetOrientation();
 		if (input.LocalValue("UATempRaiseWeapon") || !LookFreeze)
 		{
 			angularVelocity = vector.Zero;

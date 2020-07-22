@@ -84,6 +84,7 @@ FrameWidgetClass EditorMainFrame {
    ignorepointer 1
    position 300 0
    size 300 150
+   halign right_ref
    valign bottom_ref
    hexactpos 1
    vexactpos 1
@@ -703,6 +704,29 @@ FrameWidgetClass EditorMainFrame {
        }
       }
      }
+    }
+   }
+  }
+  FrameWidgetClass OrientationFrame {
+   ignorepointer 1
+   position 300 0
+   size 150 150
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   {
+    RenderTargetWidgetClass OrientationView {
+     ignorepointer 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     refresh 1
     }
    }
   }
