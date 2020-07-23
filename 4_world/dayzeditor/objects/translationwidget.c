@@ -6,9 +6,14 @@ class TranslationWidget: BuildingBase
 	private Object m_RotationWidget;
 	private vector m_Position;
 	
+	
+	// made this into an IEntity by mistake and the rotation object placed...
 	void TranslationWidget()
 	{
 		Print("TranslationWidget");
+		//GetOnViewIndexChanged();
+		
+		
 		//TStringArray textures = GetHiddenSelectionsTextures();
 		//SetObjectTexture(GetHiddenSelectionIndex("TranslateY"), textures[0]);
 		//SetObjectTexture(GetHiddenSelectionIndex("TranslateZ"), textures[0]);		
@@ -16,6 +21,11 @@ class TranslationWidget: BuildingBase
 		AddChild(m_RotationWidget, -1);
 	}
 	
+	override void EEDelete(EntityAI parent)
+	{
+		GetGame().ObjectDelete(m_RotationWidget);
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(ThisGameSucks);
+	}
 	
 	void ~TranslationWidget()
 	{
@@ -162,6 +172,7 @@ class TranslationWidget: BuildingBase
 			
 			
 			case "rotationx": {
+				
 				object_orientation[2] = angle[2];
 				break;
 			}
@@ -174,9 +185,9 @@ class TranslationWidget: BuildingBase
 				object_orientation[0] = angle[0];
 				break;
 			}
-			
-			
 		}
+		
+		
 		
 		m_ParentObject.SetOrientation(object_orientation);
 		m_ParentObject.SetPosition(object_position);			
@@ -185,7 +196,11 @@ class TranslationWidget: BuildingBase
 		
 	}
 	
-	
+	override int GetViewIndex()
+	{
+		
+		return 1;
+	}
 
 	private bool mouse_inside = false;
 	bool IsMouseInside()

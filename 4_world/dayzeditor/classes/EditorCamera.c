@@ -145,8 +145,7 @@ class EditorCamera: Camera
 		SetTransform(transform);
 		
 		orientation = GetOrientation();
-		if (input.LocalValue("UATempRaiseWeapon") || !LookFreeze)
-		{
+		if (input.LocalValue("UATempRaiseWeapon") || !LookFreeze) {
 			angularVelocity = vector.Zero;
 
 			angularVelocity[0] = angularVelocity[0] + ( yawDiff * CAMERA_MSENS * 10 );
@@ -162,9 +161,9 @@ class EditorCamera: Camera
 
 			if ( orientation[1] <= -90 ) {
 				angularVelocity[1] = Math.Min( angularVelocity[1], 0 );
-				orientation[1] = -90;
+				orientation[1] = -89.9;
 			} else if ( orientation[1] >= 90 ) {
-				orientation[1] = 90;
+				orientation[1] = 89.9; // lazy
 				angularVelocity[1] = Math.Max( angularVelocity[1], 0 );
 			}
 

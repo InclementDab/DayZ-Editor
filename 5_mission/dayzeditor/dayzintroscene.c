@@ -77,7 +77,6 @@ modded class MainMenu
 		TextWidget tw = TextWidget.Cast(layoutRoot.FindAnyWidget("play_label"));
 		tw.SetText("Open Editor");
 		
-		//PluginFileHandler
 		return layoutRoot;
 	}
 

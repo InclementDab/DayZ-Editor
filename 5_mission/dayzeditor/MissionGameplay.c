@@ -7,10 +7,12 @@
 // heading model? mouse control
 //bool			HeadingModel(float pDt, SDayZPlayerHeadingModel pModel);
 
-static PlayerBase CreateDefaultCharacter()
+static PlayerBase CreateDefaultCharacter(vector pos, bool select = false)
 {
-    PlayerBase oPlayer = PlayerBase.Cast( GetGame().CreatePlayer( NULL, GetGame().CreateRandomPlayer(), "7500 0 7500", 0, "NONE") );
+    PlayerBase oPlayer = PlayerBase.Cast( GetGame().CreatePlayer( NULL, GetGame().CreateRandomPlayer(), pos, 0, "NONE") );
     oPlayer.GetInventory().CreateInInventory("AviatorGlasses");
+    oPlayer.GetInventory().CreateInInventory("AliceBag_Black");
+	if (select) GetGame().SelectPlayer(null, oPlayer);
     return oPlayer;
 }
 
@@ -39,6 +41,18 @@ class EditorMissionGameplay: MissionGameplay
 			case KeyCode.KC_F1: {
 				delete m_Editor;
 				m_Editor = new Editor();				
+				break;
+			}
+			
+			case KeyCode.KC_F2: {
+				set<Object> o;
+				vector v = MousePosToRay(o);
+				CreateDefaultCharacter(v, true);
+				break;
+			}
+			
+			case KeyCode.KC_F3: {
+				Editor.ActiveCamera.SetActive(true);
 				break;
 			}
 		}

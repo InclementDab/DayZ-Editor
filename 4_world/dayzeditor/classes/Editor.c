@@ -71,7 +71,6 @@ class Editor: Managed
 		
 		
 		LoadPlaceableObjects();
-		LoadPlacedObjects();
 		EditorSettings.Load();
 		
 		// Event subscriptions
@@ -193,7 +192,36 @@ class Editor: Managed
 			EditorObject result = CreateObject(editor_object.GetType(), mat);
 			result.Select();
 		}
-	}	
+	}
+	
+	void Save()
+	{	
+		EditorWorldData save_data = new EditorWorldData();
+		ActiveCamera.GetTransform(save_data.CameraPosition);
+		
+		
+		foreach (EditorObject save_object: EditorObjects) {
+			vector mat[4]; 
+			save_object.GetTransform(mat);
+			save_data.WorldObjects.Insert(new EditorWorldObject(save_object.GetType(), mat));
+		}
+		
+		EditorFileManager.SaveFile(save_data);
+	}
+	
+	void Open()
+	{
+		EditorWorldData load_data = EditorFileManager.LoadFile();
+		ActiveCamera.SetTransform(load_data.CameraPosition);
+		// find a proper way to remove all existing files. maybe restart editor
+		
+		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
+			EditorObject e_object = CreateObject(load_object.Classname, load_object.Transform);
+			
+			EditorObjects.Insert(e_object.GetID(), e_object);
+		}
+		
+	}
 
 	
 	
@@ -426,9 +454,19 @@ class Editor: Managed
 				break;
 			}
 			
-			case KeyCode.KC_F3: {
-				dSetGravity(GetGame().GetPlayer(), Vector(0, 500, 0));
-				break;
+			case KeyCode.KC_S: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Save();
+					
+					return true;
+				}
+			}
+			
+			case KeyCode.KC_O: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Open();
+					return true;
+				}
 			}
 			
 		
@@ -438,70 +476,9 @@ class Editor: Managed
 	}
 	
 	
-	static bool IsPlacing()
-	{
-		return ObjectInHand != null;
-	}
+	static bool IsPlacing() { return ObjectInHand != null; }
 	
-	static void LoadPlacedObjects()
-	{
-		// todo: allow people to open their own savefiles
-		//PlacedObjects = new array<Object>;
-	}
 	
-	static void ExportToFile(string filename = "$profile:editor_export.txt", ExportMode mode = ExportMode.TERRAINBUILDER)
-	{
-		DeleteFile(filename);
-		FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
-		if (handle == 0) {
-			Print("ExportToFile Failed: 0");
-			return;
-		}
-		
-		foreach (EditorObject editor_object: EditorObjects) {
-						
-			vector position = editor_object.GetObject().GetPosition();
-			vector orientation = editor_object.GetObject().GetOrientation();
-			string line;
-			
-			vector terrainbuilder_offset = Vector(200000, 0, 0);
-			
-			switch (mode) {
-				
-				case (ExportMode.TERRAINBUILDER): {
-					// "construction_house2";206638.935547;6076.024414;146.000015;0.000000;0.000000;1.000000;
-					position[1] = GetGame().SurfaceY(position[0], position[2]) - position[1];
-					line = string.Format("\"%1\";%2;%4;%3;%6;%5;%7;", editor_object.GetModelName(), position[0] + terrainbuilder_offset[0], position[1] + terrainbuilder_offset[1], position[2] + terrainbuilder_offset[2], orientation[0], orientation[1], orientation[2]);
-					FPrintln(handle, line);
-					break;
-				}
-					
-				case (ExportMode.COMFILE): {
-					// SpawnObject("Land_Construction_House2", "6638.935547 7.190318 6076.024414", "146.000015 0.000000 0.000000")
-					line = string.Format("SpawnObject(\"%1\", \"%2\", \"%3\");", editor_object.GetType(), position.ToString(false), orientation.ToString(false));
-					FPrintln(handle, line);
-					break;
-				}
-				
-				case ExportMode.EXPANSION: {
-					// Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
-					//orientation = orientation.VectorToAngles();
-					line = string.Format("%1|%2 %3 %4|%5 %6 %7", editor_object.GetType(), position[0], position[1], position[2], orientation[0], orientation[1], orientation[2]);
-					FPrintln(handle, line);
-					break;
-				}
-				
-				default: {
-					FPrintln(handle, "Line Export Failure");
-					break;
-				}
-				
-				
-				
-			} 
-		}
-		CloseFile(handle);
-	}
 	
 	
 	void OnObjectCreated(Class context, EditorObject target)

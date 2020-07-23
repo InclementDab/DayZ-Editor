@@ -626,7 +626,6 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         scriptclass "MenuBarFile"
          text "File"
          text_offset 0 0
          font "gui/fonts/FiraCodeBold16"
@@ -717,7 +716,7 @@ FrameWidgetClass EditorMainFrame {
    hexactsize 1
    vexactsize 1
    {
-    RenderTargetWidgetClass OrientationView {
+    ItemPreviewWidgetClass OrientationView {
      ignorepointer 1
      size 1 1
      halign center_ref
@@ -726,7 +725,6 @@ FrameWidgetClass EditorMainFrame {
      vexactpos 1
      hexactsize 0
      vexactsize 0
-     refresh 1
     }
    }
   }

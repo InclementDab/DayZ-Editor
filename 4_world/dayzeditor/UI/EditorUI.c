@@ -107,7 +107,7 @@ class EditorUI: EditorWidgetEventHandler
 	protected WrapSpacerWidget 	m_RightbarSpacer;
 	
 	// Orientation Tool
-	protected RenderTargetWidget m_OrientationWidget;
+	protected ItemPreviewWidget m_OrientationWidget;
 	
 	// Debug
 	TextWidget m_DebugText1;
@@ -122,17 +122,9 @@ class EditorUI: EditorWidgetEventHandler
 	// make it so you can search for items by mod name with @ModNameHere
 	void EditorUI()
 	{
-		
-
-		
 		m_Instance = this;
 	}
 	
-	void ~EditorUI()
-	{
-		
-	}
-
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
@@ -148,7 +140,7 @@ class EditorUI: EditorWidgetEventHandler
 		m_RightbarFrame			= m_Root.FindAnyWidget("RightbarFrame");
 		m_LeftbarPanelHost		= m_Root.FindAnyWidget("LeftbarPanelHost");
 		m_RightbarPanelHost		= m_Root.FindAnyWidget("RightbarPanelHost");
-		m_OrientationWidget		= RenderTargetWidget.Cast(m_Root.FindAnyWidget("OrientationView"));
+		m_OrientationWidget		= ItemPreviewWidget.Cast(m_Root.FindAnyWidget("OrientationView"));
 		
 		
 		m_EditorMapContainer	= m_Root.FindAnyWidget("MapContainer");
@@ -178,12 +170,10 @@ class EditorUI: EditorWidgetEventHandler
 		m_DebugText5			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText5"));
 		m_DebugText6			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText6"));
 		
+		EntityAI translate = GetGame().CreateObject("TranslationWidget", vector.Zero);
 		
-
+		m_OrientationWidget.SetItem(translate);
 		
-		//m_OrientationWidget.SetRefresh(1, 0);
-		//IEntity translate = GetGame().CreateObject("TranslationWidget", vector.Zero);
-		//SetWidgetWorld(m_OrientationWidget, translate, 0);
 		
 		// Update Thread
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
@@ -339,6 +329,8 @@ class EditorUI: EditorWidgetEventHandler
 				
 				return true;
 			}
+			
+
 		}
 		return false;
 	}
