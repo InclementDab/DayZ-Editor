@@ -2,7 +2,6 @@ class EditorCameraMapMarker: ScriptedWidgetEventHandler
 {
 	protected ref Widget m_Root;
 	protected ImageWidget m_EditorMapMarkerImage;
-	
 	protected EditorCamera m_ActiveCamera;
 	
 	void ~EditorCameraMapMarker()
@@ -18,13 +17,15 @@ class EditorCameraMapMarker: ScriptedWidgetEventHandler
 		m_Root.SetHandler(this);
 		
 		m_EditorMapMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorMapMarkerImage"));	
+		
+		m_MapWidget = Editor.ActiveEditorUI.GetMapWidget();
 	}
 	
+	private MapWidget m_MapWidget;
 	void Update()
 	{
-		
-		MapWidget map_widget = MapWidget.Cast(m_Root.GetParent());
-		vector pos = map_widget.MapToScreen(m_ActiveCamera.GetPosition());
+	
+		vector pos = m_MapWidget.MapToScreen(m_ActiveCamera.GetPosition());
 		
 		m_Root.SetPos(pos[0], pos[1]);
 		vector ypr = m_ActiveCamera.GetYawPitchRoll();

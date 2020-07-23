@@ -67,7 +67,7 @@ class Editor: Managed
 		float y_level = 200 + GetGame().SurfaceY(center_pos[0], center_pos[1]);
 		ActiveCamera = GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false);
 		ActiveCamera.SetActive(true);
-		ActiveEditorUI.GetMapWidget().AddChild(ActiveCamera.GetMapMarker());
+		
 		
 		
 		LoadPlaceableObjects();
@@ -78,6 +78,7 @@ class Editor: Managed
 		EditorEvents.OnObjectSelectionChanged.Insert(OnObjectSelected);
 		EditorEvents.OnObjectDrag.Insert(HandleObjectDrag);
 		EditorEvents.OnObjectDrop.Insert(HandleObjectDrop);
+		
 
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
@@ -98,9 +99,10 @@ class Editor: Managed
 		EditorActionStack.InsertAt(target, 0);
 	}
 
-	void LoadPlaceableObjects()
+	static void LoadPlaceableObjects(string filter = "")
 	{
 		Print("EditorUI::LoadPlaceableObjects");
+		
 		EditorPlaceableObjects = new set<string>();
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
@@ -114,9 +116,10 @@ class Editor: Managed
 		        GetGame().ConfigGetBaseName(Config_Path + " " + Config_Name, Base_Name);
 		        Base_Name.ToLower();
 		
-		        if (Base_Name != "housenodestruct")
-		            continue;
-			        
+		        //if (Base_Name != "housenodestruct")
+		        //    continue;
+			
+				
 				EditorPlaceableObjects.Insert(Config_Name);	
 				ActiveEditorUI.InsertPlaceableObject(Config_Name);
 		    }
@@ -261,6 +264,16 @@ class Editor: Managed
 				ObjectUnderCursor = null;
 			}			
 		}
+		
+		ActiveEditorUI.m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", CurrentMousePosition[0], CurrentMousePosition[1], CurrentMousePosition[2]));
+		
+		string line1;
+		if (!EditorObjectUnderCursor) 
+			line1 = "NULL";
+		else 
+			line1 = EditorObjectUnderCursor.GetType();
+		ActiveEditorUI.m_DebugText2.SetText(line1);
+		ActiveEditorUI.m_DebugText3.SetText(Editor.SelectedObjects.Count().ToString());
 	}
 	
 	
@@ -292,11 +305,11 @@ class Editor: Managed
 	// can we refactor this? .... probably :)
 	static void CreateObjectInHand(string name)
 	{
-		EntityAI obj = GetGame().CreateObject(name, "0 0 0");	
 			
-		ObjectInHand = new EditorHologram(null, vector.Zero, obj);
+			
+		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, "0 0 0"));
 		
-		GetGame().ObjectDelete(obj);
+		
 	}
 	
 	
@@ -484,6 +497,8 @@ class Editor: Managed
 	void OnObjectCreated(Class context, EditorObject target)
 	{
 		ActiveEditorUI.InsertPlacedObject(target);
+		
+		ActiveEditorUI.GetMap().OnObjectCreated(context, target);
 	}
 	
 	void OnObjectSelected(Class context, Param2<EditorObject,bool> params)
@@ -582,11 +597,13 @@ class Editor: Managed
 				
 				target.PlaceOnSurfaceRotated(cursor_transform, cursor_position, surface_normal[0] * -1, surface_normal[2] * -1, 0, MAGNET_PLACEMENT);
 			}
+			
+			target.SetTransform(cursor_transform);
+			target.Update();
 		}
 		
 
-		target.SetTransform(cursor_transform);
-		target.Update();
+
 					
 		// This handles all other selected objects
 		foreach (EditorObject selected_object: Editor.SelectedObjects) {
@@ -636,9 +653,11 @@ class Editor: Managed
 					
 					selected_object.SetPosition(cursor_position + pos_delta); 			
 				}	
+				
+				selected_object.Update();
 			}
 			
-			selected_object.Update();
+			
 		}
 	}
 }

@@ -64,22 +64,21 @@ class EditorMapMarker: UILinkedObject
 		
 		Input input = GetGame().GetInput();
 		
-			
-		if (!Editor.IsPlacing()) return false;
+		// ignores the object if you are placing
+		if (Editor.IsPlacing()) return false;
 		
+		// allows multiple objects to be dragged
+		if (m_EditorObject.IsSelected()) return true;
+		
+		// basic interaction
 		if (input.LocalValue("UATurbo"))
 			m_EditorObject.Select(false);
 		else if (input.LocalValue("UARunWalkTemp"))
 			m_EditorObject.ToggleSelect();
 		else
 			m_EditorObject.Select();
-
+		 // Blocks map from creating selection box
 		return true;
-		
-		
-
-		
-		return true; // Blocks map from creating selection box
 	}
 	
 	override bool OnDrag(Widget w, int x, int y)

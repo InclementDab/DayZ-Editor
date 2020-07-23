@@ -203,12 +203,12 @@ FrameWidgetClass EditorMainFrame {
    vexactsize 0
    priority 240
   }
-  FrameWidgetClass LeftbarFrame {
+  WrapSpacerWidgetClass LeftbarFrame {
    visible 1
    clipchildren 0
    ignorepointer 1
-   position 0 48
    size 300 0.956
+   valign bottom_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
@@ -353,13 +353,33 @@ FrameWidgetClass EditorMainFrame {
       }
      }
     }
+    EditBoxWidgetClass LeftbarPanelSearchBar {
+     position 0 0
+     size 1 0.03
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scriptclass "PlaceableSearchBar"
+     style EditorProperty
+     text "Search...."
+     "limit visible" 0
+     "Default text color" 0.3216 0.3216 0.3216 1
+     "Use default text" 1
+     "exact text" 1
+     font "gui/fonts/metron"
+     {
+      ScriptParamsClass {
+      }
+     }
+    }
     PanelWidgetClass LeftbarPanelHost {
      visible 1
      disabled 0
      ignorepointer 1
      color 0.302 0.302 0.302 0.3059
      position 0 60
-     size 1 0.94
+     size 1 0.91
      halign right_ref
      hexactpos 1
      vexactpos 1

@@ -202,6 +202,8 @@ class EditorObject : BuildingBase
 	
 		m_EditorObjectBrowserWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorPlacedListItem.layout");
 		m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
+		
+		Editor.ActiveEditorUI.GetMapWidget().AddChild(m_EditorMapMarkerWidget);
 	}
 	
 	

@@ -2,7 +2,7 @@
 PanelWidgetClass EditorObjectMarker {
   ignorepointer 0
   color 0.6863 0.2588 0.5804 1
-  position -10 -10
+  position 0 0
   clipchildren 0
   size 20 20
   hexactpos 1

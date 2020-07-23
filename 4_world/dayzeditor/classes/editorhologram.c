@@ -14,7 +14,7 @@ class EditorHologram: Hologram
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
 		m_EditorUI = EditorUI.GetInstance();
-		m_MapWidget = m_EditorUI.GetMapWidget(); 
+		m_MapWidget = m_EditorUI.GetMapWidget();
 		m_MapWidget.AddChild(m_EditorMapMarkerWidget); 
 	
 		
@@ -31,6 +31,7 @@ class EditorHologram: Hologram
 	{		
 		int x, y;
 		GetCursorPos(x, y);
+		if (m_Projection == NULL) return;
 		
 		// Handle Building
 		if (m_EditorUI.IsMapOpen()) {

@@ -24,10 +24,10 @@ modded class DayZIntroScene
 	{
 		
 		delete m_Character;
-		m_CharacterPos = Vector(0.685547, 1, 5.68823).Multiply4(m_CameraTrans);
+		m_CharacterPos = Vector(0.685547, 3, 5.68823).Multiply4(m_CameraTrans);
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
 		m_FunnyMeme.SetOrientation(m_CharacterRot);
-		
+		m_FunnyMeme.SetPosition(m_FunnyMeme.GetPosition() + Vector(0, 1, 0));
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(FunnyMeme);
 	}
 	
@@ -40,19 +40,11 @@ modded class DayZIntroScene
 	
 	void FunnyMeme()
 	{
-		int x, y;
-		GetCursorPos(x, y);
 		
-		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection();
-		mouse_pos[0] = mouse_pos[0] - 0.8;
-		mouse_pos[1] = mouse_pos[1] + 0.25;
-
-		vector lookat = vector.Direction(mouse_pos, m_Camera.GetPosition());
-		lookat[0] = (lookat[0] * -1.2);
-		lookat[1] = lookat[1] * -1;
+		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
+		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);
 		
-		vector final = lookat - GetGame().GetCurrentCameraDirection();
-		m_FunnyMeme.SetDirection(final);
+		m_FunnyMeme.SetDirection(lookat);
 		m_FunnyMeme.Update();
 	}
 }

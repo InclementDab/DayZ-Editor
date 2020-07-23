@@ -51,6 +51,11 @@ class EditorListItem: EditorWidgetEventHandler
 		w.SetColor(ARGB(0, 255, 255, 255));
 		return true;
 	}		
+	
+	string GetText()
+	{
+		return m_Name;
+	}
 }
 
 class EditorPlacedListItem: UILinkedObject
@@ -178,4 +183,56 @@ class MenuBarFile: EditorWidgetEventHandler
 		
 		return true;
 	}
+}
+
+
+class PlaceableSearchBar: EditorWidgetEventHandler
+{
+	
+	
+	override bool OnChange(Widget w, int x, int y, bool finished)
+	{
+		Print("PlaceableSearchBar::OnKeyDown");
+		
+		
+		WrapSpacerWidget spacer = WrapSpacerWidget.Cast(Editor.ActiveEditorUI.GetRoot().FindAnyWidget("LeftbarSpacer"));
+		string filter = EditBoxWidget.Cast(w).GetText();
+		Widget child = spacer.GetChildren();
+		while (child != null) {
+			EditorListItem editor_list_item;
+			child.GetScript(editor_list_item);
+			
+			if (editor_list_item != null) {
+				string Config_Lower = editor_list_item.GetText();
+				Config_Lower.ToLower();
+	           	child.Show(!(filter != "" && !Config_Lower.Contains(filter)));				
+			}
+						
+			child = child.GetSibling();
+
+			
+		}
+		
+		return true;
+	}
+	
+	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		Print("PlaceableSearchBar::OnFocus");
+		
+		Editor.ActiveCamera.MoveFreeze = true;
+		
+		return super.OnFocus(w, x, y);
+	}
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		Print("PlaceableSearchBar::OnFocusLost");
+		
+		Editor.ActiveCamera.MoveFreeze = false;
+		
+		return super.OnFocusLost(w, x, y);
+	}
+	
 }

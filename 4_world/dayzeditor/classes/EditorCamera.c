@@ -35,6 +35,9 @@ class EditorCamera: Camera
 		m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorCameraMapMarker.layout");
 		m_MapMarkerWidget.GetScript(CameraMapMarker);
 		CameraMapMarker.SetCamera(this);
+		
+		MapWidget map_widget = Editor.ActiveEditorUI.GetMapWidget();
+		map_widget.AddChild(m_MapMarkerWidget);
 	}
 
 	void ~EditorCamera()

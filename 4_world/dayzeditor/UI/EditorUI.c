@@ -18,7 +18,7 @@ class EditorMap: EditorWidgetEventHandler
 	
 	void OnObjectCreated(Class context, EditorObject obj)
 	{
-		MapWidget map_widget = MapWidget.Cast(m_Root);
+		MapWidget map_widget = GetMapWidget();
 		map_widget.AddChild(obj.GetMapMarker());
 	}
 	
@@ -27,8 +27,7 @@ class EditorMap: EditorWidgetEventHandler
 		Print("EditorMap::OnWidgetScriptInit");
 		super.OnWidgetScriptInit(w);
 		
-		if (EditorEvents.OnObjectCreated != null)
-			EditorEvents.OnObjectCreated.Insert(OnObjectCreated);		
+
 	}
 	
 	private int start_x, start_y;
@@ -97,14 +96,17 @@ class EditorUI: EditorWidgetEventHandler
 	protected Widget m_RightbarPanelHost;
 	
 
-	// Map
+	// Misc
 	protected Widget 			m_EditorMapContainer;
 	protected MapWidget 		m_EditorMapWidget;
 	protected ref EditorMap 	m_EditorMap;
+	protected EditBoxWidget 	m_LeftbarSearchBar;	
 
 	// Spacers for Item Lists
 	protected WrapSpacerWidget 	m_LeftbarSpacer;
 	protected WrapSpacerWidget 	m_RightbarSpacer;
+	
+	
 	
 	// Orientation Tool
 	protected ItemPreviewWidget m_OrientationWidget;
@@ -142,10 +144,10 @@ class EditorUI: EditorWidgetEventHandler
 		m_RightbarPanelHost		= m_Root.FindAnyWidget("RightbarPanelHost");
 		m_OrientationWidget		= ItemPreviewWidget.Cast(m_Root.FindAnyWidget("OrientationView"));
 		
-		
+		// Misc
 		m_EditorMapContainer	= m_Root.FindAnyWidget("MapContainer");
 		m_EditorMapWidget		= MapWidget.Cast(m_Root.FindAnyWidget("Map"));
-		
+		m_LeftbarSearchBar		= EditBoxWidget.Cast(m_Root.FindAnyWidget("LeftbarSearchBar"));
  
 		// Buttons
 		m_BuildingSelect		= ButtonWidget.Cast(m_Root.FindAnyWidget("BuildingSelect"));
@@ -162,6 +164,8 @@ class EditorUI: EditorWidgetEventHandler
 		m_LeftbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("LeftbarSpacer"));
 		m_RightbarSpacer		= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("RightbarSpacer"));
 		
+		
+		
 		// Debug
 		m_DebugText1			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText1"));
 		m_DebugText2			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText2"));
@@ -170,37 +174,16 @@ class EditorUI: EditorWidgetEventHandler
 		m_DebugText5			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText5"));
 		m_DebugText6			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText6"));
 		
-		EntityAI translate = GetGame().CreateObject("TranslationWidget", vector.Zero);
+		//EntityAI translate = GetGame().CreateObject("TranslationWidget", vector.Zero);
 		
-		m_OrientationWidget.SetItem(translate);
+		//m_OrientationWidget.SetItem(translate);
 		
 		
-		// Update Thread
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
 	private bool left_bar_hidden = false;
 	private bool right_bar_hidden = false;
 	
-	
-	void Update()
-	{
-		m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", Editor.CurrentMousePosition[0], Editor.CurrentMousePosition[1], Editor.CurrentMousePosition[2]));
-		
-		string line1;
-		if (!Editor.EditorObjectUnderCursor) 
-			line1 = "NULL";
-		else 
-			line1 = Editor.EditorObjectUnderCursor.GetType();
-		m_DebugText2.SetText(line1);
-		m_DebugText3.SetText(Editor.SelectedObjects.Count().ToString());
-		
-		if (Editor.IsPlacing() && IsMapOpen()) {
-		
-		}
-	}
-	
-
 	
 	
 
@@ -217,6 +200,7 @@ class EditorUI: EditorWidgetEventHandler
 		return false;
 	}
 	
+	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		Print("EditorUI::OnMouseButtonDown: " + button);
@@ -224,27 +208,15 @@ class EditorUI: EditorWidgetEventHandler
 		// Left Click
 		if (button == 0) {
 			
-			
-			
 			if (w == m_LeftbarHide) {
-				if (left_bar_hidden) {
-					m_LeftbarFrame.SetPos(0, 48);
-					left_bar_hidden = false;
-				} else {
-					m_LeftbarFrame.SetPos(-300, 48);
-					left_bar_hidden = true;
-				}
+				left_bar_hidden = !left_bar_hidden;
+				m_RightbarFrame.SetPos(-250 * left_bar_hidden, 48);
 				return true;
 			} 
 			
 			if (w == m_RightbarHide) {
-				if (right_bar_hidden) {
-					m_RightbarFrame.SetPos(0, 48);
-					right_bar_hidden = false;
-				} else {
-					m_RightbarFrame.SetPos(-300, 48);
-					right_bar_hidden = true;
-				}
+				right_bar_hidden = !right_bar_hidden;
+				m_RightbarFrame.SetPos(-250 * right_bar_hidden, 48);
 				return true;
 			}
 			
@@ -253,12 +225,12 @@ class EditorUI: EditorWidgetEventHandler
 				return true;
 				
 			} else if (Editor.GlobalTranslationWidget.IsMouseInside()) 
-				return true; 
+				return false; 
 			else if (Editor.EditorObjectUnderCursor == null) {
 				// delayed dragbox
 				EditorUI.EditorCanvas.Clear();
 				GetCursorPos(start_x, start_y);
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DelayedDragBoxCheck, 40);
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DelayedDragBoxCheck, 60);
 				
 			} else if (Editor.EditorObjectUnderCursor != null) {
 				Editor.EditorObjectUnderCursor.Select(!input.LocalValue("UATurbo"));
@@ -349,6 +321,11 @@ class EditorUI: EditorWidgetEventHandler
 	bool IsDragging = false; // this is very broken find a better way to do this
 	void UpdateDragBox()
 	{	
+		Input input = GetGame().GetInput();
+		if (input.LocalRelease("UAFire")) {
+			DragBoxQueue.Remove(UpdateDragBox);
+		}
+		
 		IsDragging = true;
 		int current_x, current_y;
 		GetCursorPos(current_x, current_y);
@@ -417,6 +394,7 @@ class EditorUI: EditorWidgetEventHandler
 		ShowCursor();
 	}
 	
+	EditorMap GetMap() { return m_EditorMap; }
 	MapWidget GetMapWidget() { return m_EditorMapWidget; }
 	
 	bool IsMapOpen() { return m_EditorMapContainer.IsVisible(); }
@@ -442,6 +420,7 @@ class EditorUI: EditorWidgetEventHandler
 		EditorExportWindow dialog = new EditorExportWindow();
 		//GetGame().GetUIManager().ShowScriptedMenu(dialog, this);
 	}
+	
 	
 	void InsertPlaceableObject(string placeable_object)
 	{
