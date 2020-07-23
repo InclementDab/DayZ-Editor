@@ -125,7 +125,6 @@ class EditorObjectMarker: UILinkedObject
 	override void Update()
 	{
 		vector position = m_EditorObject.GetBottomCenter();
-		position += m_EditorObject.GetObject().GetPosition();
 		vector screenpos = GetGame().GetScreenPos(position);
 		int screen_x, screen_y;
 		GetScreenSize(screen_x, screen_y);

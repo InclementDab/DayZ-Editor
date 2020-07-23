@@ -182,8 +182,8 @@ class EditorUI: EditorWidgetEventHandler
 
 		
 		//m_OrientationWidget.SetRefresh(1, 0);
-		IEntity translate = GetGame().CreateObject("TranslationWidget", vector.Zero);
-		SetWidgetWorld(m_OrientationWidget, translate, 0);
+		//IEntity translate = GetGame().CreateObject("TranslationWidget", vector.Zero);
+		//SetWidgetWorld(m_OrientationWidget, translate, 0);
 		
 		// Update Thread
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
@@ -233,6 +233,8 @@ class EditorUI: EditorWidgetEventHandler
 		Input input = GetGame().GetInput();	
 		// Left Click
 		if (button == 0) {
+			
+			if (Editor.GlobalTranslationWidget.IsMouseInside()) return true;
 			
 			if (w == m_LeftbarHide) {
 				if (left_bar_hidden) {

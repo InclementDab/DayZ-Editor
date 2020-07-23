@@ -69,7 +69,7 @@ class Editor: Managed
 		ActiveCamera.SetActive(true);
 		ActiveEditorUI.GetMapWidget().AddChild(ActiveCamera.GetMapMarker());
 		
-		//GlobalTranslationWidget = TranslationWidget.Create();
+		
 		LoadPlaceableObjects();
 		LoadPlacedObjects();
 		EditorSettings.Load();
@@ -511,7 +511,9 @@ class Editor: Managed
 	
 	void OnObjectSelected(Class context, Param2<EditorObject,bool> params)
 	{
-		Print("EditorUI::OnObjectSelected");		
+		Print("EditorUI::OnObjectSelected");	
+		
+
 	}
 	
 	
@@ -532,6 +534,11 @@ class Editor: Managed
 	
 	void ObjectDragUpdate(EditorObject target)
 	{
+		Input input = GetGame().GetInput();
+		if (input.LocalRelease("UAFire")) {
+			EditorEvents.DropInvoke(this, target);
+			return;
+		}
 		Object target_object = target.GetObject();
 		vector object_position = target_object.GetPosition();
 		vector object_size = target.GetSize();
@@ -543,7 +550,6 @@ class Editor: Managed
 		vector cursor_position = MousePosToRay(o, target_object);
 		cursor_position[1] = cursor_position[1] + object_size[1]/2;
 		
-		Input input = GetGame().GetInput();
 		
 		// Raycast ground below object
 		vector ground, ground_dir; int component;
@@ -571,7 +577,6 @@ class Editor: Managed
 				cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground);
 				cursor_position[1] = cursor_position[1] + object_size[1]/2;
 				
-
 				Editor.DebugObject0.SetPosition(ground);
 				cursor_transform[0] = object_transform[0];
 				cursor_transform[1] = object_transform[1];

@@ -35,7 +35,7 @@ class CfgVehicles
 	{
 		scope = 1;
 		model = "DayZEditor\Editor\data\TranslationWidget.p3d";
-		hiddenSelections[] = {"TranslateX", "TranslateY", "TranslateZ", "BoundingBox"};
+		hiddenSelections[] = {"TranslateX", "TranslateY", "TranslateZ"};
 		hiddenSelectionsMaterials[] = {"DayZEditor\Editor\data\TranslationWidget\TranslationWidget.rvmat"};
 		hiddenSelectionsTextures[] = {"DayZEditor\Editor\data\TranslationWidget\TranslationWidget.paa"};
 	};

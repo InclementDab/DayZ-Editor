@@ -109,17 +109,20 @@ class EditorObject : BuildingBase
 		vector clip_info[2];
 		vector size = GetSize();
 		
-		float radius = m_WorldObject.ClippingInfo(clip_info); // idk do something cool w/ radius		
-		vector position = AverageVectors(clip_info[0], clip_info[1]);
+		float radius = m_WorldObject.ClippingInfo(clip_info); // idk do something cool w/ radius
 		
+			
+		vector position = AverageVectors(clip_info[0], clip_info[1]);
+
 		line_verticies[0] = clip_info[0];
 		line_verticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
 		line_verticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
 		line_verticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
 		line_verticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
-		line_verticies[5] = clip_info[1];		
+		line_verticies[5] = clip_info[1];
 		line_verticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
 		line_verticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
+		
 		
 		line_centers[0] = AverageVectors(line_verticies[0], line_verticies[1]);
 		line_centers[1] = AverageVectors(line_verticies[1], line_verticies[2]);
@@ -247,9 +250,18 @@ class EditorObject : BuildingBase
 		if (clear_existing)
 			Editor.ClearSelections();
 		
+		if (IsSelected) return;
 		IsSelected = true;
 		ShowBoundingBox();
+		
+		vector size = GetSize();
+		vector position = vector.Zero;
+		position[1] = position[1] + size[1]/2;
+		
+		Editor.GlobalTranslationWidget = GetGame().CreateObjectEx("TranslationWidget", position, ECE_SETUP);
+		Editor.GlobalTranslationWidget.SetEditorObject(this, position);
 
+		
 		ObjectSelectedEventArgs args(this, IsSelected);
 		EditorEvents.ObjectSelectedInvoke(this, args);
 		
@@ -259,8 +271,11 @@ class EditorObject : BuildingBase
 	void Deselect()
 	{
 		//Print("EditorObject::Deselect");
+		if (!IsSelected) return;
 		IsSelected = false;
 		HideBoundingBox();
+		
+		GetGame().ObjectDelete(Editor.GlobalTranslationWidget);
 		
 		ObjectSelectedEventArgs args(this, IsSelected);
 		EditorEvents.ObjectSelectedInvoke(this, args);
