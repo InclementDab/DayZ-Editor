@@ -79,6 +79,7 @@ class Editor: Managed
 		EditorEvents.OnObjectDrag.Insert(HandleObjectDrag);
 		EditorEvents.OnObjectDrop.Insert(HandleObjectDrop);
 		
+		Editor.GlobalTranslationWidget = GetGame().CreateObject("TranslationWidget", vector.Zero);
 
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
@@ -505,7 +506,16 @@ class Editor: Managed
 	{
 		Print("EditorUI::OnObjectSelected");	
 		
-
+		
+		foreach (EditorObject selected_object: SelectedObjects) {
+			
+			
+			//Editor.GlobalTranslationWidget = GetGame().CreateObjectEx("TranslationWidget", selected_object.GetPosition(), ECE_SETUP);
+			//Editor.GlobalTranslationWidget.SetEditorObject(selected_object, selected_object.GetPosition());
+			continue;
+		}
+		
+		
 	}
 	
 	
@@ -524,7 +534,7 @@ class Editor: Managed
 	}
 	
 	
-	void ObjectDragUpdate(EditorObject target)
+	void ObjectDragUpdate(notnull EditorObject target)
 	{
 		Input input = GetGame().GetInput();
 		if (input.LocalRelease("UAFire")) {
@@ -555,6 +565,7 @@ class Editor: Managed
 		
 		vector surface_normal = GetGame().SurfaceGetNormal(cursor_position[0], cursor_position[2]);
 		float surface_level = GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
+		float height_from_surface = cursor_position[1] - surface_level;
 		
 		// If map is ON	
 		if (ActiveEditorUI.IsMapOpen()) {
@@ -596,6 +607,7 @@ class Editor: Managed
 			} else {
 				
 				target.PlaceOnSurfaceRotated(cursor_transform, cursor_position, surface_normal[0] * -1, surface_normal[2] * -1, 0, MAGNET_PLACEMENT);
+				//cursor_transform[3][1] = height_from_surface + surface_level;
 			}
 			
 			target.SetTransform(cursor_transform);
@@ -612,6 +624,8 @@ class Editor: Managed
 			vector selected_size = selected_object.GetSize();
 			vector selected_position = selected_object.GetPosition();
 			vector pos_delta = selected_position - object_position;
+			float angle_delta = Math.Atan2(pos_delta[0], pos_delta[2]) * Math.RAD2DEG;
+			surface_normal = GetGame().SurfaceGetNormal(selected_position[0], selected_position[2]);
 			
 			// If map is ON	
 			if (ActiveEditorUI.IsMapOpen()) {
@@ -623,36 +637,29 @@ class Editor: Managed
 				
 				if (input.LocalValue("UALookAround")) {
 					pos_delta[0] = selected_position[0];
-					pos_delta[1] = cursor_position[1] + pos_delta[1];
+					pos_delta[1] = cursor_transform[3][1] + pos_delta[1];
 					pos_delta[2] = selected_position[2];
 					selected_object.SetPosition(pos_delta);
 					
 				} else if (input.LocalValue("UATurbo")) {
 					vector rot_pos;
-					float magnitude = Math.Sqrt(Math.Pow(selected_position[0] - object_position[0], 2) + Math.Pow(selected_position[2] - object_position[2], 2));
-					//Print(magnitude);
 					
-					vector normal_delta = pos_delta.Normalized();
-					float delta_angle = Math.Atan2(normal_delta[0], normal_delta[2]);
-					//Print(delta_angle);
-					float ang = (delta_angle + angle) * Math.RAD2DEG;
+					angle -= angle_delta;				
+					//Print(angle);
+					vector new_postion = vector.RotateAroundZero(pos_delta, vector.Up, Math.Cos(angle), Math.Sin(angle));
 					
 					
+					Print(new_postion);					
 					
-					float x = ((selected_position[0] - object_position[0]) * Math.Cos(delta_angle)) - ((object_position[2] - selected_position[2]) * Math.Sin(delta_angle)) + object_position[0];
-					float y = ((object_position[2] - selected_position[2]) * Math.Cos(delta_angle)) - ((selected_position[0] - object_position[0]) * Math.Sin(delta_angle)) + object_position[2];
-					
-					rot_pos[0] = x;
-					rot_pos[1] = selected_position[1];
-					rot_pos[2] = y;
-					Print(rot_pos);
-					
-					selected_object.SetPosition(rot_pos);
+					selected_object.SetPosition(new_postion + object_position);
 					
 				} else {
+					cursor_transform[4] = { "1 0 0", "0 1 0", "0 0 1", cursor_position + pos_delta };
+					target.PlaceOnSurfaceRotated(cursor_transform, cursor_position + pos_delta, surface_normal[0] * -1, surface_normal[2] * -1, 0, MAGNET_PLACEMENT);
 					
-					selected_object.SetPosition(cursor_position + pos_delta); 			
+					selected_object.SetTransform(cursor_transform);
 				}	
+				
 				
 				selected_object.Update();
 			}

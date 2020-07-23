@@ -179,10 +179,10 @@ class EditorObjectMarker: UILinkedObject
 		
 		Input input = GetGame().GetInput();
 		
-		if (Editor.IsPlacing()) {
-			Editor.PlaceObject();
-			return true;
-		}
+		if (Editor.IsPlacing()) return false;
+		
+		// allows multiple objects to be dragged
+		if (m_EditorObject.IsSelected()) return true;
 		
 		if (input.LocalValue("UATurbo"))
 			m_EditorObject.Select(false);
@@ -275,16 +275,9 @@ class EditorWidgetEventHandler: ScriptedWidgetEventHandler
 	void OnWidgetScriptInit(Widget w)
 	{
 		m_Root = w;
-		m_Root.SetHandler(this);
-		
-		
+		m_Root.SetHandler(this);		
 	}
 	
-	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
-	{
-		
-		return super.OnEvent(eventType, target, parameter0, parameter1);
-	}
 	
 	override bool OnSelect(Widget w, int x, int y)
 	{

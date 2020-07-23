@@ -40,13 +40,66 @@ modded class DayZIntroScene
 	
 	void FunnyMeme()
 	{
+		Input input = GetGame().GetInput();
 		
 		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
 		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);
 		
 		m_FunnyMeme.SetDirection(lookat);
 		m_FunnyMeme.Update();
+		
+		if (input.LocalPress("UAFire")) {
+			
+			vector start = GetGame().GetCurrentCameraPosition();
+			vector end = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * 5000;
+			vector contact_pos, contact_dir;
+			int component;
+			
+			DayZPhysics.RaycastRV(start, end, contact_pos, contact_dir, component);
+	
+			vector newcam_pos = contact_pos;
+			newcam_pos[1] = newcam_pos[1] + 50;
+			Object new_camera = GetGame().CreateObjectEx("DSLRCamera", newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
+			
+			float scale = vector.Distance(contact_pos, start) * 0.25;
+			vector mat[4] = {
+				Vector(scale, 0, 0),
+				Vector(0, scale, 0),
+				Vector(0, 0, scale),
+				newcam_pos
+			};
+
+			
+			new_camera.SetTransform(mat);
+			
+			
+			
+			
+
+ 
+
+			
+	        vector mins, maxs;
+	        new_camera.GetBounds(mins, maxs);
+	        vector center = (mins + maxs) * 0.5;
+	        vector size = maxs - mins;
+	
+	        PhysicsGeomDef geoms[] = {PhysicsGeomDef("", dGeomCreateBox(size), "material/default", 0xffffffff)};
+	        dBodyDynamic(new_camera, true);
+	       	new_camera.SetDynamicPhysicsLifeTime(15.0);
+			dBodySetMass(new_camera, 100);
+			dBodySetDamping(new_camera, 100, 500);
+	        dBodyActive(new_camera, ActiveState.ACTIVE);
+	        new_camera.CreateDynamicPhysics(PhxInteractionLayers.RAGDOLL);
+		}
+		
+		
 	}
+	
+
+
+	
+
 }
 
 
@@ -87,9 +140,5 @@ modded class MainMenu
 		return false;
 	}
 	
-	override bool OnClick(Widget w, int x, int y, int button) 
-	{
-		super.OnClick(w, x, y, button);
-		return false;
-	}
+
 }

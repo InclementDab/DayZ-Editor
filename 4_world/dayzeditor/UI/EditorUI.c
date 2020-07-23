@@ -177,7 +177,7 @@ class EditorUI: EditorWidgetEventHandler
 		//EntityAI translate = GetGame().CreateObject("TranslationWidget", vector.Zero);
 		
 		//m_OrientationWidget.SetItem(translate);
-		
+		m_EditorMapWidget.GetScript(m_EditorMap);
 		
 	}
 	
@@ -225,7 +225,7 @@ class EditorUI: EditorWidgetEventHandler
 				return true;
 				
 			} else if (Editor.GlobalTranslationWidget.IsMouseInside()) 
-				return false; 
+				return true; 
 			else if (Editor.EditorObjectUnderCursor == null) {
 				// delayed dragbox
 				EditorUI.EditorCanvas.Clear();

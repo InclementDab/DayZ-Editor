@@ -260,14 +260,14 @@ class EditorObject : BuildingBase
 		vector position = vector.Zero;
 		position[1] = position[1] + size[1]/2;
 		
-		Editor.GlobalTranslationWidget = GetGame().CreateObjectEx("TranslationWidget", position, ECE_SETUP);
-		Editor.GlobalTranslationWidget.SetEditorObject(this, position);
+
 
 		
 		ObjectSelectedEventArgs args(this, IsSelected);
+		Editor.SelectedObjects.Insert(GetID(), this);
 		EditorEvents.ObjectSelectedInvoke(this, args);
 		
-		Editor.SelectedObjects.Insert(GetID(), this);
+		
 	}
 	
 	void Deselect()
