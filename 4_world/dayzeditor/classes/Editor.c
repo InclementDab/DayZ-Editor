@@ -539,14 +539,17 @@ class Editor: Managed
 			EditorEvents.DropInvoke(this, target);
 			return;
 		}
+		
 		Object target_object = target.GetObject();
 		vector object_position = target_object.GetPosition();
 		vector object_size = target.GetSize();
 		vector object_orientation = target_object.GetOrientation();
 		vector object_transform[4];
 		target_object.GetTransform(object_transform);
-
+		
 		set<Object> o;
+		
+		
 		vector cursor_position = MousePosToRay(o, target_object);
 		cursor_position[1] = cursor_position[1] + object_size[1]/2;
 		
@@ -557,6 +560,7 @@ class Editor: Managed
 		
 		
 		vector cursor_transform[4] = { "1 0 0", "0 1 0", "0 0 1", cursor_position };
+		
 		vector surface_normal = GetGame().SurfaceGetNormal(cursor_position[0], cursor_position[2]);
 		float surface_level = GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 		
@@ -603,6 +607,7 @@ class Editor: Managed
 			}
 		}
 		
+
 		target.SetTransform(cursor_transform);
 		target.Update();
 					

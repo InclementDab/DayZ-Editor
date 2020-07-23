@@ -234,7 +234,7 @@ class EditorUI: EditorWidgetEventHandler
 		// Left Click
 		if (button == 0) {
 			
-			if (Editor.GlobalTranslationWidget.IsMouseInside()) return true;
+			
 			
 			if (w == m_LeftbarHide) {
 				if (left_bar_hidden) {
@@ -259,12 +259,12 @@ class EditorUI: EditorWidgetEventHandler
 			}
 			
 			if (Editor.IsPlacing()) {
-				
 				Editor.PlaceObject();
-
 				return true;
 				
-			} else if (Editor.EditorObjectUnderCursor == null) {
+			} else if (Editor.GlobalTranslationWidget.IsMouseInside()) 
+				return true; 
+			else if (Editor.EditorObjectUnderCursor == null) {
 				// delayed dragbox
 				EditorUI.EditorCanvas.Clear();
 				GetCursorPos(start_x, start_y);
@@ -273,6 +273,7 @@ class EditorUI: EditorWidgetEventHandler
 			} else if (Editor.EditorObjectUnderCursor != null) {
 				Editor.EditorObjectUnderCursor.Select(!input.LocalValue("UATurbo"));
 			}
+			
 			
 		}
 		
