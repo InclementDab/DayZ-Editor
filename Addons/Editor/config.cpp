@@ -29,12 +29,12 @@ class CfgVehicles
 	class DSLRCamera: HouseNoDestruct
 	{
 		scope = 1;
-		model = "DayZEditor\Editor\data\Camera.p3d";
+		model = "DayZEditor\Editor\Camera.p3d";
 	};
 	class TranslationWidget: HouseNoDestruct
 	{
 		scope = 1;
-		model = "DayZEditor\Editor\data\TranslationWidget.p3d";
+		model = "DayZEditor\Editor\TranslationWidget.p3d";
 		hiddenSelections[] = {"TranslateX", "TranslateY", "TranslateZ"};
 		hiddenSelectionsMaterials[] = {"DayZEditor\Editor\data\TranslationWidget\TranslationWidget.rvmat"};
 		hiddenSelectionsTextures[] = {"DayZEditor\Editor\data\TranslationWidget\TranslationWidget.paa"};
@@ -42,17 +42,15 @@ class CfgVehicles
 	class RotationWidget: HouseNoDestruct
 	{
 		scope = 1;
-		model = "DayZEditor\Editor\data\RotationWidget.p3d";
+		model = "DayZEditor\Editor\RotationWidget.p3d";
 	};
 
 
 	class BoundingBoxBase: HouseNoDestruct
 	{
 		scope = 1;
-		model = "DayZEditor\Editor\data\BoundingBoxBase.p3d";
-		hiddenSelections[] = {"MainSection1"};
-		hiddenSelectionsMaterials[] = {"DayZEditor\Editor\data\BoundingBox\BoundingBoxShown.rvmat"};
-		hiddenSelectionsTextures[] = {"DayZEditor\Editor\data\BoundingBox\box_shown.paa"};
+		model = "DayZEditor\Editor\BoundingBoxBase.p3d";
+		hiddenSelections[] = {"BoundingBoxBase"};
 	};
 	class ThunderboltNorm: HouseNoDestruct
 	{
@@ -65,15 +63,5 @@ class CfgVehicles
 		model = "\DZ\Data\data\blesk2.p3d";
 		soundSetNear = "ThunderHeavy_Near_SoundSet";
 		soundSetFar = "ThunderHeavy_Far_SoundSet";
-	};
-};
-class CfgMissions
-{
-	class Missions
-	{
-		class ChernarusPlusEditor
-		{
-			directory = "DayZEditor\Editor\mission\DayZEditor.ChernarusPlus";
-		};
 	};
 };

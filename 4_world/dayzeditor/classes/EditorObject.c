@@ -72,7 +72,7 @@ class EditorObject : BuildingBase
 	protected EntityAI m_BBoxBase;
 	protected EntityAI m_CenterLine;
 	
-	
+	float LocalAngle; // temp
 	
 	void EditorObject()
 	{
@@ -369,16 +369,12 @@ class EditorObject : BuildingBase
 		Print("EditorObject::ShowBoundingBox");
 		BoundingBoxVisible = true;
 		for (int i = 0; i < 12; i++) {
-			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("MainSection1"), bbox_texture);
-			m_BBoxLines[i].SetObjectMaterial(m_BBoxLines[i].GetHiddenSelectionIndex("MainSection1"), bbox_material);
+			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxBase"), EditorSettings.BBOX_COLOR);
 			m_BBoxLines[i].Update();
 		}
 		
-		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("MainSection1"), bbox_texture);
-		m_CenterLine.SetObjectMaterial(m_CenterLine.GetHiddenSelectionIndex("MainSection1"), bbox_material);
-		
-		//m_BBoxBase.SetObjectTexture(m_BBoxBase.GetHiddenSelectionIndex("MainSection1"), bbox_texture);
-		//m_BBoxBase.SetObjectMaterial(m_BBoxBase.GetHiddenSelectionIndex("MainSection1"), bbox_material);
+		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxBase"), EditorSettings.BBOX_COLOR);
+		//m_BBoxBase.SetObjectTexture(m_BBoxBase.GetHiddenSelectionIndex("BoundingBoxBase"), "#(argb,8,8,3)color(1,1,0,1,co)");
 		
 	}
 	
@@ -389,16 +385,12 @@ class EditorObject : BuildingBase
 		Print("EditorObject::HideBoundingBox");
 		BoundingBoxVisible = false;
 		for (int i = 0; i < 12; i++) {
-			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("MainSection1"), "");
-			m_BBoxLines[i].SetObjectMaterial(m_BBoxLines[i].GetHiddenSelectionIndex("MainSection1"), "");
+			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxBase"), "");
 			m_BBoxLines[i].Update();
 		}	
 		
-		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("MainSection1"), "");
-		m_CenterLine.SetObjectMaterial(m_CenterLine.GetHiddenSelectionIndex("MainSection1"), "");
-		
-		//m_BBoxBase.SetObjectTexture(m_BBoxBase.GetHiddenSelectionIndex("MainSection1"), "");
-		//m_BBoxBase.SetObjectMaterial(m_BBoxBase.GetHiddenSelectionIndex("MainSection1"), "");
+		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxBase"), "");
+		//m_BBoxBase.SetObjectTexture(m_BBoxBase.GetHiddenSelectionIndex("BoundingBoxBase"), "");
 	}
 	
 	

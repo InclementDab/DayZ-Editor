@@ -522,13 +522,13 @@ class Editor: Managed
 			vector cursor_delta = cursor_position - object_transform[3];
 			float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
 			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, EditorSettings.MAGNET_PLACEMENT);
+			target.LocalAngle = angle;
 			
 		// Handle regular motion
 		} else {
 			
 			
 			if (EditorSettings.MAINTAIN_HEIGHT) {
-				
 				object_transform[3] = cursor_position + object_transform[1] * vector.Distance(ground, object_transform[3]);
 				
 			} else {
@@ -537,11 +537,16 @@ class Editor: Managed
 			}
 			
 			
-			// Place on surface rotated is additive to our matrix. need to reset it
-			if (EditorSettings.MAGNET_PLACEMENT)
-				object_transform = { "1 0 0", "0 1 0", "0 0 1", object_transform[3] };
+			// Place on surface rotated is additive to our matrix. need to reset it		
 			
-			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, 0, EditorSettings.MAGNET_PLACEMENT);
+			object_transform[0] = "1 0 0";
+			object_transform[1] = "0 1 0";
+			object_transform[2] = "0 0 1";
+			
+			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
+
+			
+		
 		}
 	
 		target.SetTransform(object_transform);
