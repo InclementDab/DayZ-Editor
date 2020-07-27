@@ -19,9 +19,9 @@ class Editor: Managed
 	static ref set<ref EditorObjectLink>	SessionCache;
 	static ref EditorObjectSet 				CopyCache;
 	
-	static ref set<string> 	EditorPlaceableObjects;
-	static vector 			CurrentMousePosition;
-	static bool 			IsDragging = false;
+	static ref set<string> 					EditorPlaceableObjects;
+	static vector 							CurrentMousePosition;
+	static bool 							IsDragging = false;
 		
 	static ref EditorObjectSet				SelectedObjects;
 	static ref EditorObjectSet 				EditorObjects;
@@ -67,8 +67,6 @@ class Editor: Managed
 		float y_level = 200 + GetGame().SurfaceY(center_pos[0], center_pos[1]);
 		ActiveCamera = GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false);
 		ActiveCamera.SetActive(true);
-		
-		
 		
 		LoadPlaceableObjects();
 		EditorSettings.Load();
@@ -117,8 +115,8 @@ class Editor: Managed
 		        GetGame().ConfigGetBaseName(Config_Path + " " + Config_Name, Base_Name);
 		        Base_Name.ToLower();
 		
-		        //if (Base_Name != "housenodestruct")
-		        //    continue;
+		        if (Base_Name != "housenodestruct")
+		            continue;
 			
 				
 				EditorPlaceableObjects.Insert(Config_Name);	
@@ -274,7 +272,7 @@ class Editor: Managed
 		else 
 			line1 = EditorObjectUnderCursor.GetType();
 		ActiveEditorUI.m_DebugText2.SetText(line1);
-		ActiveEditorUI.m_DebugText3.SetText(Editor.SelectedObjects.Count().ToString());
+		ActiveEditorUI.m_DebugText3.SetText(Editor.SessionCache.Count().ToString());
 	}
 	
 	
@@ -303,18 +301,13 @@ class Editor: Managed
 	}
 	
 	
-	// can we refactor this? .... probably :)
+
 	static void CreateObjectInHand(string name)
 	{
-			
-			
-		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, "0 0 0"));
-		
-		
+		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, "0 0 0"));		
 	}
 	
-	
-	
+
 	static EditorObject CreateObject(string name, vector transform[4])
 	{
 		Print("Editor::CreateObject");
@@ -322,13 +315,12 @@ class Editor: Managed
 		
 		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", transform[3], ECE_NONE);		
 		editor_object.SetTransform(transform);
-		editor_object.SetObject(name);
-		
-		editor_object.CreateBoundingBox();
+		editor_object.Init(name);
 		editor_object.Update();
 		
-		EditorObjectLink link = new EditorObjectLink(editor_object);
-		SessionCache.Insert(link);
+		
+		// maybe move this into createinvoke
+		SessionCache.Insert(new EditorObjectLink(editor_object));
 		
 		Editor.EditorObjects.Insert(editor_object.GetID(), editor_object);
 		
@@ -555,11 +547,10 @@ class Editor: Managed
 		DayZPhysics.RaycastRV(object_position, object_position + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target_object, false, true); // set to ground only
 		
 		vector cursor_position = MousePosToRay(o, target_object);
-		if (GROUND_MODE) {
+		if (GROUND_MODE)
 			cursor_position[1] = object_transform[3][1];
-		} else {
-			cursor_position[1] = cursor_position[1] + object_size[1] / 2;
-		}		
+		else cursor_position[1] = cursor_position[1] + object_size[1] / 2;
+				
 		Editor.DebugObject0.SetPosition(ground);
 		
 		vector transform_position[4] = { "1 0 0", "0 1 0", "0 0 1", cursor_position };

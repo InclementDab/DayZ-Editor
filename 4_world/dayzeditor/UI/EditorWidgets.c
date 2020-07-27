@@ -89,7 +89,6 @@ class EditorPlacedListItem: UILinkedObject
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		Print("EditorPlacedListItem::OnMouseButtonDown");
-		
 		Input input = GetGame().GetInput();
 		EditorObject editor_object = EditorObject.GetFromUILinkedRoot(m_Root);
 		// LMB
