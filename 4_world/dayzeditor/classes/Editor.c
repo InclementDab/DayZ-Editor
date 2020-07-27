@@ -517,7 +517,7 @@ class Editor: Managed
 		
 		// Handle XY Rotation
 		} else if (input.LocalValue("UATurbo")) {
-			object_transform = { "1 0 0", "0 1 0", "0 0 1", object_transform[3] };
+			//object_transform = { "1 0 0", "0 1 0", "0 0 1", object_transform[3] };
 			vector cursor_delta = cursor_position - object_transform[3];
 			float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
 				
