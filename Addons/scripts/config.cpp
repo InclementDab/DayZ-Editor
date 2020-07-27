@@ -12,37 +12,56 @@ class CfgPatches
 
 class CfgMods 
 {
-	class Editor_Scripts_
+	class DZ_Editor
 	{
-		dir = "Editor";
+		dir = "DayZEditor";
+		credits = "InclementDab";
+		creditsJson = "DayZEditor/Scripts/Data/Credits.json";
+		versionPath = "DayZEditor/scripts/Data/Version.hpp";
 		type = "mod";
 		dependencies[] =
 		{
-			"Core", "Game", "World", "Mission"
+			"Game", "World", "Mission"
 		};
 		class defs
 		{
 			class engineScriptModule
 			{
 				value = "";
-				files[] = {"DayZEditor/scripts/1_core"};
+				files[] =
+				{
+					"DayZEditor/scripts/common",
+					"DayZEditor/scripts/1_core"
+				};
 			};
 
 			class gameScriptModule
 			{
 				value="";
-				files[] = {"DayZEditor/scripts/3_Game"};
+				files[] = 
+				{
+					"DayZEditor/scripts/common",
+					"DayZEditor/scripts/3_Game"
+				};
 			};
 			class worldScriptModule
 			{
 				value="";
-				files[] = {"DayZEditor/scripts/4_World"};
+				files[] = 
+				{
+					"DayZEditor/scripts/common",
+					"DayZEditor/scripts/4_World"
+				};
 			};
 
 			class missionScriptModule 
 			{
 				value="";
-				files[] = {"DayZEditor/scripts/5_Mission"};
+				files[] = 
+				{
+					"DayZEditor/scripts/common",
+					"DayZEditor/scripts/5_Mission"
+				};
 			};
 		};
 	};

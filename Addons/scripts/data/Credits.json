@@ -1,21 +1,21 @@
 {
-    "Departments": [
-        {
+    "Departments": [{
             "DepartmentName": "Example",
-            "Sections": [
-                {
+            "Sections": [{
                     "SectionName": "Developers",
                     "SectionLines": [
-                        "Jacob_Mango",
-                        "Arkensor"
-                },
-                {
-                    "SectionName": "Special Thanks",
-                    "SectionLines": [
-                        "You"
-                    ]
-                }
-            ]
-        }
-    ]
-}
+                        "InclementDab",
+                        "Mango",
+                        "ZeRoY"
+                    },
+                    {
+                        "SectionName": "Testers",
+                        "SectionLines": [
+                            "InclementDab",
+                            "DanceOfJesus"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }

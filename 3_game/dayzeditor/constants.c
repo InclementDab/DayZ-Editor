@@ -1,4 +1,4 @@
-#define EDITOR_RELEASE
+
 #ifdef EDITOR_RELEASE
 static string layout_dir = "DayZEditor/gui/Layouts/";
 #else

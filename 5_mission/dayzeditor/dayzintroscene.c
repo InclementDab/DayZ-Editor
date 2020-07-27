@@ -117,14 +117,6 @@ modded class MainMenu
 		GetGame().GetUIManager().ShowScriptedMenu(select_window, this);
     }
 
-    override bool OnMouseEnter(Widget w, int x, int y)
-    {
-		if(IsFocusable(w)) {
-			ColorHighlight( w );
-			return true;
-		}
-		return false;
-	}
 	
 
 }
