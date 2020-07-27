@@ -519,37 +519,45 @@ class Editor: Managed
 		// this might crash once you add rotation widget unless you add as child
 		TranslationWidget translation_widget = TranslationWidget.Cast(context);
 		
+		vector object_position = target.GetPosition();
+		vector object_size = target.GetSize();
+		
 		set<Object> o;
-		vector cursor_position = MousePosToRay(o, null, 5 + vector.Distance(GetGame().GetCurrentCameraPosition(), target.GetPosition()));
+		vector ground, ground_dir; int component;
+		DayZPhysics.RaycastRV(object_position, object_position + Vector(0, 1, 0) * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true); // set to ground only
+
+		
+		vector cursor_position = MousePosToRay(o, null, vector.Distance(GetGame().GetCurrentCameraPosition(), target.GetPosition()));
 		
 		string name = translation_widget.GetActionComponentName(raycast_result.component);
 		
-		vector start_position = target.GetPosition();
-		start_position[1] = start_position[1] + target.GetSize()[1] / 2;
-		vector target_position = translation_widget.GetPosition();
+	
 		
+		
+		vector translation_position = translation_widget.GetPosition();
+	
+	
+		cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), translation_position);
 		switch (name) {
 			
 			case "translatex": {
-				target_position[0] = cursor_position[0]; //raycast_result.pos + vector.Forward * vector.Distance(raycast_result.pos, start_position);
-
+				translation_position[0] = cursor_position[0];
 				break;
 			}
 			
 			case "translatey": {
-				target_position[2] = cursor_position[2]; //raycast_result.pos + vector.Up * vector.Distance(raycast_result.pos, start_position);
+				translation_position[2] = cursor_position[2];
 				break;				
 			}
 			
 			case "translatez": {
-				
-				target_position[1] = cursor_position[1];
+				translation_position[1] = cursor_position[1];
 				break;
 			}
 			
 		}
 		
-		translation_widget.SetTranslationPosition(target_position);
+		translation_widget.SetTranslationPosition(translation_position);
 		translation_widget.Update();
 		
 	}
