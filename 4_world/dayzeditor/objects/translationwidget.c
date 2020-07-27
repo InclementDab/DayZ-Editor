@@ -36,7 +36,6 @@ class TranslationWidget: ItemBase
 	
 		if (m_ParentObject == null) return;
 
-		
 		// Scale object to camera distance
 		float scale = vector.Distance(GetGame().GetCurrentCameraPosition(), GetPosition()) / 20;
 		vector transform[4];
@@ -46,10 +45,6 @@ class TranslationWidget: ItemBase
 		transform[2][2] = scale;
 		SetTransform(transform);
 		Update();
-		/*
-		transform[3][1] = transform[3][1] - m_ParentObject.GetSize()[1] / 2;
-		m_ParentObject.SetPosition(transform[3]);
-		m_ParentObject.Update();*/
 	}
 	
 	
@@ -60,6 +55,16 @@ class TranslationWidget: ItemBase
 		pos[1] = pos[1] - m_ParentObject.GetSize()[1] / 2;
 		m_ParentObject.SetPosition(pos);
 		m_ParentObject.Update();
+	}
+	
+	void UpdatePosition()
+	{
+		vector pos;
+		pos = m_ParentObject.GetPosition();
+		pos[1] = pos[1] + m_ParentObject.GetSize()[1] / 2;
+		SetPosition(pos);
+		Update();
+		
 	}
 
 	void ~TranslationWidget()

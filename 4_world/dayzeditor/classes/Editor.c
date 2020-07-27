@@ -477,6 +477,7 @@ class Editor: Managed
 			}
 			
 			case "TranslationWidget": {
+				translation_offset = raycast_result.pos - TranslationWidget.Cast(context).GetPosition();
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(TranslationWidgetDragUpdate, 0, true, context, target, raycast_result);
 				break;
 			}
@@ -507,7 +508,7 @@ class Editor: Managed
 		GetGame().ObjectDelete(Editor.DebugObject0);
 	}
 	
-	
+	vector translation_offset;
 	void TranslationWidgetDragUpdate(Class context, notnull EditorObject target, ref RaycastRVResult raycast_result)
 	{
 		Input input = GetGame().GetInput();
@@ -523,22 +524,15 @@ class Editor: Managed
 		vector object_size = target.GetSize();
 		
 		set<Object> o;
-		vector ground, ground_dir; int component;
-		DayZPhysics.RaycastRV(object_position, object_position + Vector(0, 1, 0) * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true); // set to ground only
-
-		
 		vector cursor_position = MousePosToRay(o, null, vector.Distance(GetGame().GetCurrentCameraPosition(), target.GetPosition()));
 		
-		string name = translation_widget.GetActionComponentName(raycast_result.component);
-		
 	
-		
-		
 		vector translation_position = translation_widget.GetPosition();
+		
+		Print(translation_offset);
 	
-	
-		cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), translation_position);
-		switch (name) {
+		cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), translation_position) - translation_offset;
+		switch (translation_widget.GetActionComponentName(raycast_result.component)) {
 			
 			case "translatex": {
 				translation_position[0] = cursor_position[0];
@@ -587,7 +581,7 @@ class Editor: Managed
 			selected_object.Update();
 		}
 		
-		
+		GlobalTranslationWidget.UpdatePosition();
 	}
 	
 
@@ -719,7 +713,7 @@ class Editor: Managed
 		}
 		
 		
-		
+		GlobalTranslationWidget.UpdatePosition();
 		//Print(TickCount(starttime) / 1000);
 	}
 	
