@@ -69,8 +69,6 @@ class EditorMissionGameplay: MissionGameplay
     override void OnInit()
 	{
 		super.OnInit();
-		//PlayerBase player = CreateDefaultCharacter();
-		//GetGame().SelectPlayer(null, player);
 		m_Editor = new Editor(); 
 	}
 

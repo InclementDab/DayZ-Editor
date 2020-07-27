@@ -295,7 +295,6 @@ class Editor: Managed
 		
 		
 		vector cam_orientation = ActiveCamera.GetOrientation();	
-		
 		ActiveEditorUI.m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
 		
 		// debug

@@ -60,7 +60,9 @@ class EditorHologram: Hologram
 				
 		// Handle Map Marker
 		vector map_pos = m_MapWidget.MapToScreen(pos);
-		m_EditorMapMarkerWidget.SetPos(map_pos[0], map_pos[1]);
+		// -5 for cursor offset
+		// -10 to put cursor on center
+		m_EditorMapMarkerWidget.SetPos(map_pos[0] - 15, map_pos[1] - 15);
 		
 
 	}

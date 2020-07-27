@@ -190,24 +190,7 @@ class EditorUI: EditorWidgetEventHandler
 
 		return false;
 	}
-	
-	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
-	{
-		Print("EditorUI::OnMouseButtonUp: " + button);
 		
-		if (button == 0) {
-			if (IsDragging) { 
-				EditorUI.EditorCanvas.Clear();
-				DragBoxQueue.Remove(UpdateDragBox);
-				IsDragging = false;
-			}
-			
-		}
-		
-		return false;
-		
-	}
-	
 
 	bool OnKeyPress(int key)
 	{
@@ -278,7 +261,10 @@ class EditorUI: EditorWidgetEventHandler
 	{	
 		Input input = GetGame().GetInput();
 		if (input.LocalRelease("UAFire")) {
+			EditorUI.EditorCanvas.Clear();
+			IsDragging = false;
 			DragBoxQueue.Remove(UpdateDragBox);
+			return;
 		}
 		
 		IsDragging = true;

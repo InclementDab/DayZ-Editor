@@ -32,7 +32,9 @@ class EditorMapMarker: UILinkedObject
 		MapWidget map_widget = MapWidget.Cast(m_Root.GetParent());
 		vector pos = map_widget.MapToScreen(m_EditorObject.GetPosition());
 		
-		m_Root.SetPos(pos[0], pos[1]);
+		// -5 for cursor offset
+		// -10 to put cursor on center
+		m_Root.SetPos(pos[0] - 15, pos[1] - 15);
 		
 		if (m_EditorObject.IsSelected() || MouseInside) 
 			m_Root.SetAlpha(ALPHA_ON_SHOW);
