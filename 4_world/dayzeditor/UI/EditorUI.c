@@ -1,73 +1,8 @@
 
+// make it so you can search for items by mod name with @ModNameHere
 
 
 
-class EditorMap: EditorWidgetEventHandler
-{
-
-	void EditorMap()
-	{
-		Print("EditorMap");
-				
-	}
-	
-	void ~EditorMap()
-	{
-		Print("~EditorMap");
-	}
-	
-	void OnObjectCreated(Class context, EditorObject obj)
-	{
-		MapWidget map_widget = GetMapWidget();
-		map_widget.AddChild(obj.GetMapMarker());
-	}
-	
-	override void OnWidgetScriptInit(Widget w)
-	{
-		Print("EditorMap::OnWidgetScriptInit");
-		super.OnWidgetScriptInit(w);
-		
-
-	}
-	
-	private int start_x, start_y;
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		Input input = GetGame().GetInput();	
-		MapWidget map_widget = GetMapWidget();
-		
-		if (button == 0) {
-			if (Editor.IsPlacing()) {
-				EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
-				vector mat[4];
-				e.GetTransform(mat);
-				EditorObject editor_object = Editor.CreateObject(e.GetType(), mat);
-				editor_object.Select();
-				if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
-				return true;
-			} else {
-				EditorUI.EditorCanvas.Clear();
-				EditorUI ui = EditorUI.GetInstance();
-				GetCursorPos(ui.start_x, ui.start_y);
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ui.DelayedDragBoxCheck, 40);
-				return true;
-			}
-			
-		} else if (button == 2) {
-			vector teleport_dest = map_widget.ScreenToMap(Vector(x, y, 0));
-			vector current_pos = Editor.ActiveCamera.GetPosition();
-			teleport_dest[1] = current_pos[1] - GetGame().SurfaceY(current_pos[0], current_pos[2]) + GetGame().SurfaceY(teleport_dest[0], teleport_dest[2]);
-			Editor.ActiveCamera.SetPosition(teleport_dest);			
-			
-			return true;
-			
-		}
-		
-		return false;
-	}
-	
-	MapWidget GetMapWidget() { return MapWidget.Cast(m_Root); }
-}
 
 class EditorUI: EditorWidgetEventHandler
 {	
@@ -107,22 +42,21 @@ class EditorUI: EditorWidgetEventHandler
 	protected WrapSpacerWidget 	m_LeftbarSpacer;
 	protected WrapSpacerWidget 	m_RightbarSpacer;
 	
-	
-	
 	// Orientation Tool
 	protected ItemPreviewWidget m_OrientationWidget;
 	
 	// Debug
-	TextWidget m_DebugText1;
-	TextWidget m_DebugText2;
-	TextWidget m_DebugText3;
-	TextWidget m_DebugText4;
-	TextWidget m_DebugText5;
-	TextWidget m_DebugText6;
+	TextWidget 			m_DebugText1;
+	TextWidget			m_DebugText2;
+	TextWidget 			m_DebugText3;
+	TextWidget 			m_DebugText4;
+	TextWidget 			m_DebugText5;
+	TextWidget 			m_DebugText6;
+	TextListboxWidget 	m_DebugActionStack;
 	
 	
 
-	// make it so you can search for items by mod name with @ModNameHere
+	
 	void EditorUI()
 	{
 		m_Instance = this;
@@ -175,6 +109,7 @@ class EditorUI: EditorWidgetEventHandler
 		m_DebugText4			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText4"));
 		m_DebugText5			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText5"));
 		m_DebugText6			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText6"));
+		m_DebugActionStack		= TextListboxWidget.Cast(m_Root.FindAnyWidget("DebugActionStackListbox"));
 		
 		//EntityAI translate = GetGame().CreateObject("TranslationWidget", vector.Zero);
 		
@@ -305,7 +240,7 @@ class EditorUI: EditorWidgetEventHandler
 			
 			case KeyCode.KC_Y: {
 				m_Root.Show(!m_Root.IsVisible());
-				foreach (EditorObject editor_object: Editor.EditorObjects) {
+				foreach (EditorObject editor_object: Editor.PlacedObjects) {
 					editor_object.GetObjectMarker().Show(m_Root.IsVisible());
 				}
 				
@@ -367,7 +302,7 @@ class EditorUI: EditorWidgetEventHandler
 		}
 		
 		
-		foreach (EditorObject editor_object: Editor.EditorObjects) {
+		foreach (EditorObject editor_object: Editor.PlacedObjects) {
 			
 			float marker_x, marker_y;
 			if (IsMapOpen()) {

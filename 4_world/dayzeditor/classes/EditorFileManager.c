@@ -25,6 +25,24 @@ class EditorWorldData
 	
 }
 
+enum ExportMode 
+{
+	TERRAINBUILDER,
+	COMFILE, 
+	EXPANSION
+}
+
+
+enum HeightType 
+{
+	ASL,
+	ATL
+}
+
+class ExportSettings
+{
+	static HeightType ExportHeightType;
+}
 
 class EditorFileManager
 {
@@ -52,7 +70,7 @@ class EditorFileManager
 			return;
 		}
 		
-		foreach (EditorObject editor_object: Editor.EditorObjects) {
+		foreach (EditorObject editor_object: Editor.PlacedObjects) {
 						
 			vector position = editor_object.GetObject().GetPosition();
 			vector orientation = editor_object.GetObject().GetOrientation();

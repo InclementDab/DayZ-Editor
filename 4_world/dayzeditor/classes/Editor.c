@@ -17,16 +17,15 @@ class Editor: Managed
 	static EditorObject 					EditorObjectUnderCursor = null;
 	
 	static ref set<ref EditorObjectLink>	SessionCache;
-	static ref EditorObjectSet 				CopyCache;
+	static ref EditorObjectSet 				ClipboardCache;
+	static ref set<ref EditorAction> 		ActionStack;
 	
-	static ref set<string> 					EditorPlaceableObjects;
+	static ref set<string> 					PlaceableObjects;
 	static vector 							CurrentMousePosition;
 	static bool 							IsDragging = false;
 		
+	static ref EditorObjectSet 				PlacedObjects;
 	static ref EditorObjectSet				SelectedObjects;
-	static ref EditorObjectSet 				EditorObjects;
-	
-	static ref set<ref EditorAction> 		EditorActionStack;
 	
 	static ref Widget 						EditorUIWidget;
 	static ref EditorUI						ActiveEditorUI;	
@@ -39,15 +38,13 @@ class Editor: Managed
 	static Object DebugObject2;
 	static Object DebugObject3;
 	
-
-	
 	void Editor()
 	{
 		Print("Editor");
-		EditorObjects 				= new EditorObjectSet();
+		PlacedObjects 				= new EditorObjectSet();
 		SelectedObjects				= new EditorObjectSet();
 		SessionCache 				= new set<ref EditorObjectLink>();
-		EditorActionStack 			= new set<ref EditorAction>();
+		ActionStack 				= new set<ref EditorAction>();
 		
 		
 		m_UIManager = GetGame().GetUIManager();
@@ -90,19 +87,31 @@ class Editor: Managed
 	
 	static void InsertAction(EditorAction target)
 	{
-
-		for (int i = 0; i < EditorActionStack.Count(); i++) 
-			if (EditorActionStack[i].was_undone) 
-				delete EditorActionStack[i];
+		int count = ActionStack.Count();
+		for (int i = 0; i < count; i++) {
+			if (ActionStack[i].IsUndone()) {
+				ActionStack.Remove(i);
+				i--; count--;
+			}
+		}
+			
+		// Adds to bottom of stack
+		ActionStack.InsertAt(target, 0);
 		
-		EditorActionStack.InsertAt(target, 0);
+		// debug
+		ActiveEditorUI.m_DebugActionStack.ClearItems();
+		
+		for (int debug_i = 0; debug_i < ActionStack.Count(); debug_i++) {
+			ActiveEditorUI.m_DebugActionStack.AddItem(ActionStack[debug_i].GetName(), ActionStack[debug_i], 0);
+		}
+		
 	}
 
 	static void LoadPlaceableObjects(string filter = "")
 	{
 		Print("EditorUI::LoadPlaceableObjects");
 		
-		EditorPlaceableObjects = new set<string>();
+		PlaceableObjects = new set<string>();
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
 
@@ -117,9 +126,7 @@ class Editor: Managed
 		
 		        if (Base_Name != "housenodestruct")
 		            continue;
-			
-				
-				EditorPlaceableObjects.Insert(Config_Name);	
+				PlaceableObjects.Insert(Config_Name);	
 				ActiveEditorUI.InsertPlaceableObject(Config_Name);
 		    }
 		}
@@ -129,9 +136,19 @@ class Editor: Managed
 	void Undo()
 	{
 		Print("Editor::Undo");
-		foreach (EditorAction action: EditorActionStack) {
-			if (!action.was_undone) {
+		foreach (EditorAction action: ActionStack) {
+			if (!action.IsUndone()) {
 				action.CallUndo();
+				
+				//debug 
+				for (int i = 0; i < ActiveEditorUI.m_DebugActionStack.GetNumItems(); i++) {
+					EditorAction current_action;
+					ActiveEditorUI.m_DebugActionStack.GetItemData(i, 0, current_action);
+					if (current_action == action) 
+						ActiveEditorUI.m_DebugActionStack.SetItemColor(i, 0, COLOR_RED);
+					
+				}
+				
 				return;
 			}
 		}	
@@ -140,13 +157,21 @@ class Editor: Managed
 	void Redo()
 	{
 		Print("Editor::Redo");
-
-		
-		for (int i = EditorActionStack.Count() - 1; i >= 0; i--) {
-			EditorAction action = EditorActionStack.Get(i);
+		for (int i = ActionStack.Count() - 1; i >= 0; i--) {
+			EditorAction action = ActionStack.Get(i);
 			if (action == null) continue;
-			if (action.was_undone) {
+			if (action.IsUndone()) {
 				action.CallRedo();
+				
+				//debug 
+				for (int j = 0; j < ActiveEditorUI.m_DebugActionStack.GetNumItems(); j++) {
+					EditorAction current_action;
+					ActiveEditorUI.m_DebugActionStack.GetItemData(j, 0, current_action);
+					if (current_action == action) 
+						ActiveEditorUI.m_DebugActionStack.SetItemColor(j, 0, ARGB(255, 255, 255, 255));
+					
+				}
+				
 				return;
 			}
 		}
@@ -157,9 +182,9 @@ class Editor: Managed
 	void Cut()
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
-		CopyCache = new EditorObjectSet();
+		ClipboardCache = new EditorObjectSet();
 		foreach (int id, EditorObject selected_object: SelectedObjects) {
-			CopyCache.Insert(id, selected_object);
+			ClipboardCache.Insert(id, selected_object);
 			GetGame().ObjectDelete(selected_object);
 		} 
 		
@@ -169,9 +194,9 @@ class Editor: Managed
 	
 	void Copy()
 	{
-		CopyCache = new EditorObjectSet();
+		ClipboardCache = new EditorObjectSet();
 		foreach (int id, EditorObject selected_object: SelectedObjects) {
-			CopyCache.Insert(id, selected_object);			
+			ClipboardCache.Insert(id, selected_object);			
 		}
 	}
 	
@@ -179,15 +204,15 @@ class Editor: Managed
 	{
 		ClearSelections();
 		vector avg_position;
-		foreach (EditorObject copy_object: CopyCache) {
+		foreach (EditorObject copy_object: ClipboardCache) {
 			avg_position += copy_object.GetPosition();
 		}
 		
-		avg_position[0] = avg_position[0] / CopyCache.Count();
-		avg_position[1] = avg_position[1] / CopyCache.Count();
-		avg_position[2] = avg_position[2] / CopyCache.Count();
+		avg_position[0] = avg_position[0] / ClipboardCache.Count();
+		avg_position[1] = avg_position[1] / ClipboardCache.Count();
+		avg_position[2] = avg_position[2] / ClipboardCache.Count();
 		
-		foreach (EditorObject editor_object: CopyCache) {
+		foreach (EditorObject editor_object: ClipboardCache) {
 			vector mat[4];
 			editor_object.GetTransform(mat);
 			mat[3] = avg_position - editor_object.GetPosition() + CurrentMousePosition;
@@ -202,7 +227,7 @@ class Editor: Managed
 		ActiveCamera.GetTransform(save_data.CameraPosition);
 		
 		
-		foreach (EditorObject save_object: EditorObjects) {
+		foreach (EditorObject save_object: PlacedObjects) {
 			vector mat[4]; 
 			save_object.GetTransform(mat);
 			save_data.WorldObjects.Insert(new EditorWorldObject(save_object.GetType(), mat));
@@ -220,7 +245,7 @@ class Editor: Managed
 		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
 			EditorObject e_object = CreateObject(load_object.Classname, load_object.Transform);
 			
-			EditorObjects.Insert(e_object.GetID(), e_object);
+			PlacedObjects.Insert(e_object.GetID(), e_object);
 		}
 		
 	}
@@ -229,7 +254,7 @@ class Editor: Managed
 	
 	static EditorObject EditorObjectFromObject(Object target)
 	{
-		foreach (EditorObject editor_object: EditorObjects) {
+		foreach (EditorObject editor_object: PlacedObjects) {
 			if (editor_object.GetObject() == target) {
 				return editor_object;
 			}
@@ -307,23 +332,34 @@ class Editor: Managed
 		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, "0 0 0"));		
 	}
 	
+	static EditorObjectLink SearchSessionCache(EditorObject target)
+	{
+		foreach (EditorObjectLink editor_object_link: Editor.SessionCache) {
+			if (editor_object_link.Ptr() == target)
+				return editor_object_link;
+		}
+		return null;
+	}
 
 	static EditorObject CreateObject(string name, vector transform[4])
 	{
 		Print("Editor::CreateObject");
-	
-		
 		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", transform[3], ECE_NONE);		
 		editor_object.SetTransform(transform);
 		editor_object.Init(name);
 		editor_object.Update();
-		
-		
-		// maybe move this into createinvoke
+
+		// maybe move this into createinvoke	jk lol
 		SessionCache.Insert(new EditorObjectLink(editor_object));
 		
-		Editor.EditorObjects.Insert(editor_object.GetID(), editor_object);
 		
+		// Create Undo / redo action for creation
+		EditorObjectLink link = SearchSessionCache(editor_object);
+		EditorAction action = new EditorAction("Delete", "Create");
+		action.InsertUndoParameter(link, null);
+		action.InsertRedoParameter(link, null);
+		Editor.InsertAction(action);
+
 		EditorEvents.ObjectCreateInvoke(null, editor_object);
 		
 		return editor_object;
@@ -345,7 +381,7 @@ class Editor: Managed
 	static void ClearSelections()
 	{
 		Print("Editor::ClearSelections");		
-		foreach (EditorObject editor_object: EditorObjects) {
+		foreach (EditorObject editor_object: PlacedObjects) {
 			editor_object.Deselect();
 		}
 	}
@@ -354,9 +390,12 @@ class Editor: Managed
 	{
 		Print("Editor::DeleteObject");
 	
+		// Create Undo / redo action for deletion		
 		EditorAction action = new EditorAction("Create", "Delete");
 		foreach (EditorObject selected_object: target) {
-			EditorObjects.Remove(selected_object.GetID());
+			EditorObjectLink link = SearchSessionCache(selected_object);
+			action.InsertUndoParameter(link, null);
+			action.InsertRedoParameter(link, null);
 			GetGame().ObjectDelete(selected_object);
 		}
 		
@@ -364,123 +403,7 @@ class Editor: Managed
 		InsertAction(action);
 	}
 
-	
-	
-	
-	bool OnMouseButtonDown(int x, int y, int button)
-	{
-		Input input = GetGame().GetInput();
-		if (button == 2) {
-			
-			if (input.LocalValue("UAWalkRunTemp")) {
-				set<Object> oop;
-				vector v = MousePosToRay(oop);
-				LightingBolt.CreateLightning(v, 1);		
-			} else {				
-				set<Object> o;
-				vector pos = MousePosToRay(o);
-				vector current = ActiveCamera.GetPosition();
-				pos[1] = current[1];
-				ActiveCamera.SetPosition(pos);
-			}
-	
-			
-		}
-		
-		return true;
-	}
-	
-	bool OnKeyPress(int key) 
-	{
-		Input input = GetGame().GetInput();
-		switch (key) {
 
-			case KeyCode.KC_DELETE: {
-				DeleteObjects(SelectedObjects);
-				ClearSelections();
-				return true;
-			}
-
-			
-			case KeyCode.KC_Z: {
-				if (input.LocalValue("UAWalkRunTemp")) {
-					Undo();
-					return true;
-				}
-				break;
-			}
-			
-			case KeyCode.KC_Y: {
-				if (input.LocalValue("UAWalkRunTemp")) {
-					Redo();
-					return true;
-				}
-				break;
-			}
-			
-			case KeyCode.KC_A: {
-				if (input.LocalValue("UAWalkRunTemp")) {
-					ClearSelections();
-					foreach (EditorObject editor_object: EditorObjects) 
-						editor_object.Select();
-					return true;
-				}
-				break;
-			}
-			
-			case KeyCode.KC_X: {
-				if (input.LocalValue("UAWalkRunTemp")) {
-					Cut();
-					return true;
-				}
-				break;
-			}
-			
-			case KeyCode.KC_C: {
-				if (input.LocalValue("UAWalkRunTemp")) {
-					Copy();
-					return true;
-				}
-				break;
-			}
-			
-			case KeyCode.KC_V: {
-				if (input.LocalValue("UAWalkRunTemp")) {
-					Paste();
-					return true;
-				}
-				break;
-			}
-			
-			case KeyCode.KC_E: {
-				if (input.LocalValue("UAWalkRunTemp")) {
-					ActiveEditorUI.ShowExportWindow();
-					return true;
-				}
-				break;
-			}
-			
-			case KeyCode.KC_S: {
-				if (input.LocalValue("UAWalkRunTemp")) {
-					Save();
-					
-					return true;
-				}
-			}
-			
-			case KeyCode.KC_O: {
-				if (input.LocalValue("UAWalkRunTemp")) {
-					Open();
-					return true;
-				}
-			}
-			
-		
-		}
-		
-		return ActiveEditorUI.OnKeyPress(key));
-	}
-	
 	
 	static bool IsPlacing() { return ObjectInHand != null; }
 	
@@ -490,7 +413,6 @@ class Editor: Managed
 	void OnObjectCreated(Class context, EditorObject target)
 	{
 		ActiveEditorUI.InsertPlacedObject(target);
-		
 		ActiveEditorUI.GetMap().OnObjectCreated(context, target);
 	}
 	
@@ -509,22 +431,40 @@ class Editor: Managed
 	}
 	
 	
-	vector start_position;
+	
 	void HandleObjectDrag(Class context, EditorObject target)
 	{
-		start_position = target.GetPosition();
+		vector start_transform[4];
+		target.GetTransform(start_transform);
+				
+		foreach (EditorObject editor_object: Editor.SelectedObjects)
+			editor_object.TransformBeforeDrag = editor_object.GetTransformArray();
+		
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectDragUpdate, 0, true, target, start_transform);		
+		
+		// debug
 		Editor.DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectDragUpdate, 0, true, target);		
 	}
 	
 	void HandleObjectDrop(Class context, EditorObject target)
 	{		
-		GetGame().ObjectDelete(Editor.DebugObject0);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectDragUpdate);
+		
+		EditorAction action = new EditorAction("SetTransformArray", "SetTransformArray");
+		foreach (EditorObject editor_object: Editor.SelectedObjects) {
+			action.InsertUndoParameter(editor_object, editor_object.TransformBeforeDrag);
+			action.InsertRedoParameter(editor_object, editor_object.GetTransformArray());
+		}
+		
+		Editor.InsertAction(action);
+		
+		// debug
+		GetGame().ObjectDelete(Editor.DebugObject0);
 	}
 	
 	
-	void ObjectDragUpdate(notnull EditorObject target)
+	void ObjectDragUpdate(notnull EditorObject target, vector start_transform[4])
 	{
 		float starttime = TickCount(0);
 		Input input = GetGame().GetInput();
@@ -660,26 +600,125 @@ class Editor: Managed
 		
 		//Print(TickCount(starttime) / 1000);
 	}
-}
-
-
-enum ExportMode {
-	TERRAINBUILDER,
-	COMFILE, 
-	EXPANSION
-}
-
-
-enum HeightType {
-	ASL,
-	ATL
-}
-
-class ExportSettings
-{
-	static HeightType ExportHeightType;
 	
+	
+	bool OnMouseButtonDown(int x, int y, int button)
+	{
+		Input input = GetGame().GetInput();
+		if (button == 2) {
+			
+			if (input.LocalValue("UAWalkRunTemp")) {
+				set<Object> oop;
+				vector v = MousePosToRay(oop);
+				LightingBolt.CreateLightning(v, 1);		
+			} else {				
+				set<Object> o;
+				vector pos = MousePosToRay(o);
+				vector current = ActiveCamera.GetPosition();
+				pos[1] = current[1];
+				ActiveCamera.SetPosition(pos);
+			}
+	
+			
+		}
+		
+		return true;
+	}
+	
+	bool OnKeyPress(int key) 
+	{
+		Input input = GetGame().GetInput();
+		switch (key) {
+
+			case KeyCode.KC_DELETE: {
+				DeleteObjects(SelectedObjects);
+				ClearSelections();
+				return true;
+			}
+
+			
+			case KeyCode.KC_Z: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Undo();
+					return true;
+				}
+				break;
+			}
+			
+			case KeyCode.KC_Y: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Redo();
+					return true;
+				}
+				break;
+			}
+			
+			case KeyCode.KC_A: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					ClearSelections();
+					foreach (EditorObject editor_object: PlacedObjects) 
+						editor_object.Select(false);
+					return true;
+				}
+				break;
+			}
+			
+			case KeyCode.KC_X: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Cut();
+					return true;
+				}
+				break;
+			}
+			
+			case KeyCode.KC_C: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Copy();
+					return true;
+				}
+				break;
+			}
+			
+			case KeyCode.KC_V: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Paste();
+					return true;
+				}
+				break;
+			}
+			
+			case KeyCode.KC_E: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					ActiveEditorUI.ShowExportWindow();
+					return true;
+				}
+				break;
+			}
+			
+			case KeyCode.KC_S: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Save();
+					
+					return true;
+				}
+			}
+			
+			case KeyCode.KC_O: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Open();
+					return true;
+				}
+			}
+			
+		
+		}
+		
+		return ActiveEditorUI.OnKeyPress(key));
+	}
 }
+
+
+
 
 
 

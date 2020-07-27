@@ -254,8 +254,8 @@ class UILinkedObject : ScriptedWidgetEventHandler
 	
 	void SetObject(notnull EditorObject target) 
 	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		m_EditorObject = target;
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
 	void OnWidgetScriptInit(Widget w)

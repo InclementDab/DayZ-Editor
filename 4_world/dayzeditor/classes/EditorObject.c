@@ -1,45 +1,51 @@
 
 
 
-
-class EditorObjectLink: Link<EditorObject>
+// Permanent memory link between an EditorObject and the session
+class EditorObjectLink: ref Link<EditorObject>
 {
-	
+	private string type_name;
+	private vector transform[4];
 	
 	void EditorObjectLink(EditorObject init)
 	{
-		Print("EditorObjectLink");
-		Init(init);
-		EditorAction action = new EditorAction("Delete", "Create");
-		action.InsertUndoParameter(this, null);
-		action.InsertRedoParameter(this, null);
-		Editor.InsertAction(action);
+		Print("EditorObjectLink");		
+		type_name = init.GetType();
+		init.GetTransform(transform);
 	}
 	
 	void ~EditorObjectLink()
 	{
 		Print("~EditorObjectLink");
-		EditorAction action = new EditorAction("Create", "Delete");
-		action.InsertUndoParameter(this, null);
-		action.InsertRedoParameter(this, null);
-		Editor.InsertAction(action);
 	}
 	
 	void Create()
 	{
 		Print("EditorObjectLink::Create");
-		EditorObject editor_object = Ptr();
-		editor_object.Init(editor_object.GetType());
-		
-		
-		Init(editor_object);
-
+		if (IsNull()) {
+			
+			Init(GetGame().CreateObjectEx("EditorObject", transform[3], ECE_NONE));		
+			EditorObject editor_object = Ptr();
+			
+			editor_object.SetTransform(transform);
+			editor_object.Init(type_name);
+			editor_object.Update();
+			EditorEvents.ObjectCreateInvoke(null, editor_object);
+			
+			editor_object.Select(false);
+		} else {
+			
+			Print("EditorObjectLink::Create JUST CAME BACK AS NOT NULL");
+			Print("IM NOT SURE WHY BUT YOU SHOULD PROBABLY REPORT IT TO A DEVELOPER SMILE :)");
+		}
 	}
+
 	
 	void Delete()
 	{
 		Print("EditorObjectLink::Delete");
-		GetGame().ObjectDelete(Ptr());
+		EditorObject editor_object = Ptr();
+		GetGame().ObjectDelete(editor_object);
 	}
 }
 
@@ -71,12 +77,36 @@ class EditorObject : BuildingBase
 	void EditorObject()
 	{
 		Print("EditorObject");
-		SetEventMask(EntityEvent.FRAME);
+		//SetEventMask(EntityEvent.FRAME);
 	}
 	
 	void ~EditorObject()
 	{
 		Print("~EditorObject");
+	
+	}
+	
+	override void EEDelete(EntityAI parent)
+	{
+		Print("EditorObject::EEDelete");
+		super.EEDelete(parent);
+		Deselect();
+		
+		IsInitialized = false;
+		
+		GetGame().ObjectDelete(m_WorldObject);
+		GetGame().ObjectDelete(m_BBoxBase);
+		GetGame().ObjectDelete(m_CenterLine);
+		
+	
+		delete m_EditorObjectMarker; 
+		delete m_EditorObjectBrowser;
+		delete m_EditorMapMarker;
+		
+		for (int i = 0; i < 12; i++)
+			GetGame().ObjectDelete(m_BBoxLines[i]);
+		
+		Editor.PlacedObjects.Remove(GetID());
 	}
 	
 
@@ -115,6 +145,7 @@ class EditorObject : BuildingBase
 		
 		
 		CreateBoundingBox();
+		Editor.PlacedObjects.Insert(GetID(), this);
 	}
 	
 	static EditorObject CreateFromExistingObject(notnull Object target)	
@@ -225,31 +256,6 @@ class EditorObject : BuildingBase
 	
 	
 
-	
-	
-	override void EEDelete(EntityAI parent)
-	{
-		Print("Editor::EEDelete");
-		super.EEDelete(parent);
-		Deselect();
-		
-		IsInitialized = false;
-		
-		GetGame().ObjectDelete(m_WorldObject);
-		GetGame().ObjectDelete(m_BBoxBase);
-		GetGame().ObjectDelete(m_CenterLine);
-		
-	
-		delete m_EditorObjectMarker; 
-		delete m_EditorObjectBrowser;
-		delete m_EditorMapMarker;
-		
-		for (int i = 0; i < 12; i++)
-			GetGame().ObjectDelete(m_BBoxLines[i]);
-	}
-	
-	
-
 	bool OnMouseEnter(int x, int y)
 	{
 		return true;
@@ -318,6 +324,8 @@ class EditorObject : BuildingBase
 		return result;
 	}
 		
+	ref Param4<vector, vector, vector, vector> TransformBeforeDrag;
+	
 	Param4<vector, vector, vector, vector> GetTransformArray()
 	{
 		vector mat[4];
@@ -348,44 +356,12 @@ class EditorObject : BuildingBase
 		return result;
 	}
 	
-	ref Param4<vector, vector, vector, vector> TransformBeforeDrag;
-	vector DragOffset;
-	bool OnDrag()
-	{
-		Print("EditorObject::OnDrag");
-		
-		foreach (ref EditorObject editor_object: Editor.SelectedObjects) {
-			vector mat[4];
-			editor_object.GetTransform(mat);
-			editor_object.TransformBeforeDrag = new Param4<vector, vector, vector, vector>(mat[0], mat[1], mat[2], mat[3]);
-		}
-		
-		vector position = GetPosition();
-		//GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DragUpdate);
-		return true;
-	}
-	
-	bool OnDrop()
-	{
-		Print("EditorObject::OnDrop");
-		
-		//GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(DragUpdate);
-		EditorAction action = new EditorAction("SetTransformArray", "SetTransformArray");
-
-		foreach (ref EditorObject editor_object: Editor.SelectedObjects) {
-			action.InsertUndoParameter(editor_object, editor_object.TransformBeforeDrag);
-			action.InsertRedoParameter(editor_object, editor_object.GetTransformArray());
-		}
-		
-		Editor.InsertAction(action);
-		return true;
-	}
-	
-		
-	
 	
 
-	bool BoundingBoxVisible;
+	
+		
+
+	private bool BoundingBoxVisible;
 	void ShowBoundingBox()
 	{
 		if (!IsInitialized) return;
@@ -449,7 +425,7 @@ class EditorObject : BuildingBase
 	static EditorObject GetFromUILinkedRoot(Widget root)
 	{
 		Print("EditorObject::GetFromObjectRoot");
-		foreach (EditorObject editor_object: Editor.EditorObjects) {
+		foreach (EditorObject editor_object: Editor.PlacedObjects) {
 			if (editor_object.GetObjectBrowser() == root || editor_object.GetObjectMarker() == root)
 				return editor_object;
 		}
