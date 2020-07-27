@@ -562,11 +562,11 @@ class Editor: Managed
 		vector ground, ground_dir; int component;
 		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true); // set to ground only
 
-		vector cursor_position = MousePosToRay(o, target.GetObject());
+		vector cursor_position = MousePosToRay(o, target.GetObject(), EditorSettings.OBJECT_VIEW_DISTANCE, 0, true);
 		vector surface_normal = GetGame().SurfaceGetNormal(ground[0], ground[2]);
 		float surface_level = GetGame().SurfaceY(ground[0], ground[2]);
-		
 	
+		
 		// debug
 		Editor.DebugObject0.SetPosition(cursor_position);
 
@@ -587,11 +587,20 @@ class Editor: Managed
 			
 		// Handle regular motion
 		} else {
+		
+			/*
+			vector comp = target.GetDirection() - surface_normal.Perpend();
+			Math3D.DirectionAndUpMatrix(surface_normal.Perpend(), surface_normal, object_transform);
+			object_transform[3] = cursor_position;
+			object_transform[3][1] = object_transform[3][1] + object_size[1]/2;	
+			target.SetDirection(comp);
+			*/
+			
 			
 			if (EditorSettings.MAINTAIN_HEIGHT) 
-				if (EditorSettings.MAGNET_PLACEMENT)
-					object_transform[3] = cursor_position + surface_normal * vector.Distance(ground, object_transform[3]);
-				else 
+				if (EditorSettings.MAGNET_PLACEMENT) {
+					object_transform[3] = cursor_position + surface_normal * vector.Distance(ground, object_transform[3]);				
+				} else 
 					object_transform[3] = cursor_position + object_transform[1] * vector.Distance(ground, object_transform[3]);
 				
 			else {
@@ -602,7 +611,6 @@ class Editor: Managed
 			object_transform[0] = "1 0 0";
 			object_transform[1] = "0 1 0";
 			object_transform[2] = "0 0 1";
-			
 			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
 		}
 	
