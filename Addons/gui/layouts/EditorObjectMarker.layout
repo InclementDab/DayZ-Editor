@@ -15,7 +15,7 @@ PanelWidgetClass EditorObjectMarker {
     ImageWidgetClass EditorObjectMarkerImage {
       inheritalpha 1
       ignorepointer 1
-      color 0.6235 0.1569 0.5059 1
+      color 0.749 0.3725 0.3725 1
       position 0 0
       size 20 20
       hexactpos 1

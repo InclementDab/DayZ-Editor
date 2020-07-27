@@ -7,7 +7,7 @@ class EditorSettings
 	static float OBJECT_VIEW_DISTANCE = 3000;
 	
 	static bool MAGNET_PLACEMENT = false;
-	static bool GROUND_MODE = false;
+	static bool MAINTAIN_HEIGHT = false;
 	
 	static void Load()
 	{

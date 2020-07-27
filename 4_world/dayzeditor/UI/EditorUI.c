@@ -115,6 +115,7 @@ class EditorUI: EditorWidgetEventHandler
 		
 		//m_OrientationWidget.SetItem(translate);
 		m_EditorMapWidget.GetScript(m_EditorMap);
+		m_EditorMapWidget.SetMapPos(GetGame().GetCurrentCameraPosition());
 		
 	}
 	
@@ -133,7 +134,7 @@ class EditorUI: EditorWidgetEventHandler
 				return true;
 			}
 			if (w == m_ToolbarGround) {
-				EditorSettings.GROUND_MODE = m_ToolbarGround.GetState();
+				EditorSettings.MAINTAIN_HEIGHT = m_ToolbarGround.GetState();
 				return true;
 			}
 		}
@@ -209,6 +210,7 @@ class EditorUI: EditorWidgetEventHandler
 		
 	}
 	
+
 	bool OnKeyPress(int key)
 	{
 		switch (key) {
@@ -235,6 +237,7 @@ class EditorUI: EditorWidgetEventHandler
 				EditorSettings.MAGNET_PLACEMENT = !EditorSettings.MAGNET_PLACEMENT;
 				m_ToolbarMagnet.SetState(EditorSettings.MAGNET_PLACEMENT);
 				m_ToolbarMagnet.Update();
+				SetFocus(null);
 				return true;
 			}
 			
@@ -244,6 +247,15 @@ class EditorUI: EditorWidgetEventHandler
 					editor_object.GetObjectMarker().Show(m_Root.IsVisible());
 				}
 				
+				return true;
+			}
+			
+			case KeyCode.KC_G: {
+				
+				EditorSettings.MAINTAIN_HEIGHT = !EditorSettings.MAINTAIN_HEIGHT;
+				m_ToolbarGround.SetState(EditorSettings.MAINTAIN_HEIGHT);
+				m_ToolbarGround.Update();
+				SetFocus(null);
 				return true;
 			}
 			

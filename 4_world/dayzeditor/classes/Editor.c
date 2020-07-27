@@ -424,10 +424,7 @@ class Editor: Managed
 		
 		//if (SelectedObjects.Count() > 1) return;
 		//Editor.GlobalTranslationWidget = GetGame().CreateObjectEx("TranslationWidget", params.param1.GetPosition(), ECE_NONE);
-		//Editor.GlobalTranslationWidget.SetEditorObject(params.param1, params.param1.GetPosition());
-
-		
-		
+		//Editor.GlobalTranslationWidget.SetEditorObject(params.param1, params.param1.GetPosition());		
 	}
 	
 	
@@ -482,26 +479,20 @@ class Editor: Managed
 		// Raycast ground below object
 		set<Object> o;
 		vector ground, ground_dir; int component;
-		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true); // set to ground only
-		
+		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true, 1, 0, CollisionFlags.ALLOBJECTS); // set to ground only
+
 		vector cursor_position = MousePosToRay(o, target.GetObject());
+		vector surface_normal = GetGame().SurfaceGetNormal(ground[0], ground[2]);
+		float surface_level = GetGame().SurfaceY(ground[0], ground[2]);
 		
-		if (EditorSettings.GROUND_MODE)
-			cursor_position[1] = object_transform[3][1];
-		else 
-			cursor_position[1] = cursor_position[1] + object_size[1] / 2;
-		
-		vector surface_normal = GetGame().SurfaceGetNormal(cursor_position[0], cursor_position[2]);
-		float surface_level = GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 		
 		
 		// debug		
-		Editor.DebugObject0.SetPosition(ground);
+		Editor.DebugObject0.SetPosition(cursor_position);
 			
 		
 		// Handles if map is open
 		if (ActiveEditorUI.IsMapOpen()) {
-			
 			int mouse_x, mouse_y;
 			GetCursorPos(mouse_x, mouse_y);
 			cursor_position = ActiveEditorUI.GetMapWidget().ScreenToMap(Vector(mouse_x, mouse_y, 0));
@@ -513,9 +504,7 @@ class Editor: Managed
 				cursor_position[1] = object_transform[3][1] - GetGame().SurfaceY(object_transform[3][0], object_transform[3][2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 				selected_map_object.SetPosition(cursor_position + selected_map_object.GetPosition() - object_transform[3]); 
 			}
-			
 			return;
-			
 		}
 	
 
@@ -523,7 +512,7 @@ class Editor: Managed
 		// Handle Z only motion
 		if (input.LocalValue("UALookAround")) {	
 			cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground);
-			cursor_position[1] = cursor_position[1] + object_size[1]/2;
+			cursor_position[1] = cursor_position[1] + object_size[1]/2; // offset building height
 			object_transform[3] = ground + object_transform[1] * vector.Distance(ground, cursor_position);
 		
 		// Handle XY Rotation
@@ -536,10 +525,23 @@ class Editor: Managed
 			
 		// Handle regular motion
 		} else {
-			object_transform = { "1 0 0", "0 1 0", "0 0 1", cursor_position };
-			target.PlaceOnSurfaceRotated(object_transform, cursor_position, surface_normal[0] * -1, surface_normal[2] * -1, 0, EditorSettings.MAGNET_PLACEMENT);
+			
+			
+			if (EditorSettings.MAINTAIN_HEIGHT) {
+				
+				object_transform[3] = cursor_position + object_transform[1] * vector.Distance(ground, object_transform[3]);
+				
+			} else {
+				object_transform[3] = cursor_position;
+				object_transform[3][1] = object_transform[3][1] + object_size[1]/2;
+			}
+			
+			
+			// Place on surface rotated is additive to our matrix. need to reset it
+			object_transform = { "1 0 0", "0 1 0", "0 0 1", object_transform[3] };
+			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, 0, EditorSettings.MAGNET_PLACEMENT);
 		}
-		
+	
 		target.SetTransform(object_transform);
 		target.Update();
 		
@@ -555,11 +557,14 @@ class Editor: Managed
 			vector pos_delta = selected_transform[3] - start_transform[3];
 			float angle_delta = Math.Atan2(pos_delta[0], pos_delta[2]) * Math.RAD2DEG;
 			surface_normal = GetGame().SurfaceGetNormal(selected_transform[3][0], selected_transform[3][2]);
-	
+			
+			DayZPhysics.RaycastRV(selected_transform[3], selected_transform[3] + selected_transform[1] * -1000, ground, ground_dir, component, o, NULL, selected_object.GetObject(), false, true); // set to ground only
+			
 			// Handle Z only motion for all children				
 			if (input.LocalValue("UALookAround")) {
 				// Source object position + delta
-				selected_transform[3][1] = object_transform[3][1] + pos_delta[1];
+				//selected_transform[3][1] = object_transform[3][1] + pos_delta[1];
+				selected_transform[3] = ground + selected_transform[1] * vector.Distance(ground, cursor_position + pos_delta);
 				
 			// Handle XY Rotation for all children
 			} else if (input.LocalValue("UATurbo")) {

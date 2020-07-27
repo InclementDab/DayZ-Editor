@@ -127,7 +127,7 @@ class EditorObjectMarker: UILinkedObject
 		vector object_transform[4];
 		m_EditorObject.GetTransform(object_transform);
 		
-		if (EditorSettings.GROUND_MODE) {
+		if (EditorSettings.MAINTAIN_HEIGHT) {
 			// Raycast ground below object
 			set<Object> o;
 			vector ground_dir; int component;
