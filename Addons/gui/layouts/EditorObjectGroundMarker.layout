@@ -10,7 +10,7 @@ PanelWidgetClass EditorObjectMarker {
   hexactsize 1
   vexactsize 1
   draggable 1
-  scriptclass "EditorObjectBaseMarker"
+  scriptclass "EditorObjectGroundMarker"
   {
     ImageWidgetClass EditorObjectMarkerImage {
       inheritalpha 1

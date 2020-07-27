@@ -226,7 +226,7 @@ FrameWidgetClass EditorMainFrame {
    vexactsize 0
    priority 240
   }
-  WrapSpacerWidgetClass LeftbarFrame {
+  FrameWidgetClass LeftbarFrame {
    visible 1
    clipchildren 0
    ignorepointer 1
@@ -238,194 +238,31 @@ FrameWidgetClass EditorMainFrame {
    vexactsize 0
    priority 250
    {
-    PanelWidgetClass LeftbarPanelSelector {
-     visible 1
-     disabled 0
+    WrapSpacerWidgetClass LeftbarFrameWrapSpacer {
      ignorepointer 1
      position 0 0
-     size 1 0.06
+     size 1 1
      halign center_ref
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
      vexactsize 0
-     style editor_quad_dark
      {
-      WrapSpacerWidgetClass LeftbarPanelSelectorWrapper {
+      PanelWidgetClass LeftbarPanelSelector {
+       visible 1
+       disabled 0
        ignorepointer 1
        position 0 0
-       size 1 1
+       size 1 0.06
        halign center_ref
-       valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       style Outline
-       Padding 4
-       Margin 0
-       content_halign center
-       content_valign center
+       style editor_quad_dark
        {
-        ButtonWidgetClass BuildingSelect {
-         size 50 50
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         {
-          ImageWidgetClass BuildingSelectImage {
-           ignorepointer 1
-           color 0.9882 0.9882 0.9882 1
-           position 0 0
-           size 32 40
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           image0 "set:dayz_gui image:close"
-           mode blend
-           "src alpha" 1
-           stretch 0
-          }
-         }
-        }
-        ButtonWidgetClass VehicleSelect {
-         position 0 0
-         size 50 50
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         {
-          ImageWidgetClass VehicleSelectImage {
-           ignorepointer 1
-           color 0.9882 0.9882 0.9882 1
-           position 2 0
-           size 62 68
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           image0 "set:dayz_inventory image:doorfront"
-           mode blend
-           "src alpha" 1
-           stretch 0
-          }
-         }
-        }
-        ButtonWidgetClass EntitySelect {
-         size 50 50
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         {
-          ImageWidgetClass EntitySelectImage {
-           ignorepointer 1
-           color 0.9882 0.9882 0.9882 1
-           position -4 0
-           size 62 62
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           image0 "set:dayz_inventory image:magazine2"
-           mode blend
-           "src alpha" 1
-           stretch 0
-           "flip u" 1
-          }
-         }
-        }
-        ButtonWidgetClass HumanSelect {
-         position 0 0
-         size 50 50
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         {
-          ImageWidgetClass HumanSelectImage {
-           ignorepointer 1
-           position 0 0
-           size 72 72
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           image0 "set:dayz_inventory image:mask"
-           mode blend
-           "src alpha" 1
-           stretch 0
-          }
-         }
-        }
-       }
-      }
-     }
-    }
-    EditBoxWidgetClass LeftbarPanelSearchBar {
-     position 0 0
-     size 1 0.03
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     scriptclass "PlaceableSearchBar"
-     style EditorProperty
-     text "Search...."
-     "limit visible" 0
-     "Default text color" 0.3216 0.3216 0.3216 1
-     "Use default text" 1
-     "exact text" 1
-     font "gui/fonts/metron"
-     {
-      ScriptParamsClass {
-      }
-     }
-    }
-    PanelWidgetClass LeftbarPanelHost {
-     visible 1
-     disabled 0
-     ignorepointer 1
-     color 0.302 0.302 0.302 0.3059
-     position 0 60
-     size 1 0.91
-     halign right_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     style rover_sim_colorable
-     {
-      ScrollWidgetClass LeftbarScroll {
-       ignorepointer 1
-       color 0.2353 0.2353 0.2353 1
-       position 0 0
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       style blank
-       "Scrollbar V" 1
-       "Scrollbar V Left" 1
-       {
-        WrapSpacerWidgetClass LeftbarSpacer {
+        WrapSpacerWidgetClass LeftbarPanelSelectorWrapper {
          ignorepointer 1
          position 0 0
          size 1 1
@@ -435,8 +272,184 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         style Outline
+         Padding 4
          Margin 0
-         "Size To Content V" 1
+         content_halign center
+         content_valign center
+         {
+          ButtonWidgetClass BuildingSelect {
+           size 50 50
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ImageWidgetClass BuildingSelectImage {
+             ignorepointer 1
+             color 0.9882 0.9882 0.9882 1
+             position 0 0
+             size 32 40
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             image0 "set:dayz_gui image:close"
+             mode blend
+             "src alpha" 1
+             stretch 0
+            }
+           }
+          }
+          ButtonWidgetClass VehicleSelect {
+           position 0 0
+           size 50 50
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ImageWidgetClass VehicleSelectImage {
+             ignorepointer 1
+             color 0.9882 0.9882 0.9882 1
+             position 2 0
+             size 62 68
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             image0 "set:dayz_inventory image:doorfront"
+             mode blend
+             "src alpha" 1
+             stretch 0
+            }
+           }
+          }
+          ButtonWidgetClass EntitySelect {
+           size 50 50
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ImageWidgetClass EntitySelectImage {
+             ignorepointer 1
+             color 0.9882 0.9882 0.9882 1
+             position -4 0
+             size 62 62
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             image0 "set:dayz_inventory image:magazine2"
+             mode blend
+             "src alpha" 1
+             stretch 0
+             "flip u" 1
+            }
+           }
+          }
+          ButtonWidgetClass HumanSelect {
+           position 0 0
+           size 50 50
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ImageWidgetClass HumanSelectImage {
+             ignorepointer 1
+             position 0 0
+             size 72 72
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             image0 "set:dayz_inventory image:mask"
+             mode blend
+             "src alpha" 1
+             stretch 0
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      EditBoxWidgetClass LeftbarPanelSearchBar {
+       position 0 0
+       size 1 0.03
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scriptclass "PlaceableSearchBar"
+       style EditorProperty
+       text "Search...."
+       "limit visible" 0
+       "Default text color" 0.3216 0.3216 0.3216 1
+       "Use default text" 1
+       "exact text" 1
+       font "gui/fonts/metron"
+       {
+        ScriptParamsClass {
+        }
+       }
+      }
+      PanelWidgetClass LeftbarPanelHost {
+       visible 1
+       disabled 0
+       ignorepointer 1
+       color 0.302 0.302 0.302 0.3059
+       position 0 60
+       size 1 0.91
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style rover_sim_colorable
+       {
+        ScrollWidgetClass LeftbarScroll {
+         ignorepointer 1
+         color 0.2353 0.2353 0.2353 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         style blank
+         "Scrollbar V" 1
+         "Scrollbar V Left" 1
+         {
+          WrapSpacerWidgetClass LeftbarSpacer {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           Margin 0
+           "Size To Content V" 1
+          }
+         }
         }
        }
       }

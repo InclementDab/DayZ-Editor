@@ -9,9 +9,12 @@
 
 static PlayerBase CreateDefaultCharacter(vector pos, bool select = false)
 {
-    PlayerBase oPlayer = PlayerBase.Cast( GetGame().CreatePlayer( NULL, GetGame().CreateRandomPlayer(), pos, 0, "NONE") );
+    PlayerBase oPlayer = PlayerBase.Cast(GetGame().CreatePlayer(NULL, GetGame().CreateRandomPlayer(), pos, 0, "NONE"));
     oPlayer.GetInventory().CreateInInventory("AviatorGlasses");
     oPlayer.GetInventory().CreateInInventory("AliceBag_Black");
+	oPlayer.GetInventory().CreateInInventory("TranslationWidget");
+	//oPlayer.GetInventory().CreateInInventory("Rag");
+	
 	if (select) GetGame().SelectPlayer(null, oPlayer);
     return oPlayer;
 }
@@ -24,7 +27,7 @@ Mission CreateCustomMission(string path)
 
 class EditorMissionServer: MissionServer
 {
-
+	
 }
 
 

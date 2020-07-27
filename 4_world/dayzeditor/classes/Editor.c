@@ -53,6 +53,9 @@ class Editor: Managed
 		ActiveEditorUI = new EditorUI();
 		EditorUIWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "Editor.layout");
 		EditorUIWidget.GetScript(ActiveEditorUI);
+		EntityAI translate = GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_NONE, RF_FRONT);
+		ActiveEditorUI.m_OrientationWidget.SetItem(translate);
+		ActiveEditorUI.m_OrientationWidget.SetView(0);
 
 		// Init Spawn Position
 		TIntArray center_pos = new TIntArray();		
@@ -76,6 +79,7 @@ class Editor: Managed
 		
 		Editor.GlobalTranslationWidget = GetGame().CreateObject("TranslationWidget", vector.Zero);
 
+		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 		
@@ -289,7 +293,13 @@ class Editor: Managed
 			}			
 		}
 		
-		ActiveEditorUI.m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", CurrentMousePosition[0], CurrentMousePosition[1], CurrentMousePosition[2]));
+		
+		vector cam_orientation = ActiveCamera.GetOrientation();	
+		
+		ActiveEditorUI.m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
+		
+		// debug
+		ActiveEditorUI.m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", cam_orientation[0], cam_orientation[1], cam_orientation[2]));
 		
 		string line1;
 		if (!EditorObjectUnderCursor) 
@@ -431,20 +441,41 @@ class Editor: Managed
 	
 	void HandleObjectDrag(Class context, EditorObject target)
 	{
-				
+		
 		foreach (EditorObject editor_object: Editor.SelectedObjects)
 			editor_object.TransformBeforeDrag = editor_object.GetTransformArray();
 		
+		string name = context.ClassName();
+		switch (name) {
+			
+			case "EditorMapMarker": {
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectMapDragUpdate, 0, true, target);
+				break;
+			}
+			
+			case "EditorObjectGroundMarker": {
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectGroundDragUpdate, 0, true, target);
+				break;
+			}
+			
+			case "EditorObjectBaseMarker": {
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectBaseDragUpdate, 0, true, target);
+				break;
+			}
+			
+			
+		}
 		
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectDragUpdate, 0, true, target);		
 		
 		// debug
 		Editor.DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 	}
 	
 	void HandleObjectDrop(Class context, EditorObject target)
-	{		
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectDragUpdate);
+	{
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectMapDragUpdate);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectGroundDragUpdate);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectBaseDragUpdate);
 		
 		EditorAction action = new EditorAction("SetTransformArray", "SetTransformArray");
 		foreach (EditorObject editor_object: Editor.SelectedObjects) {
@@ -459,7 +490,66 @@ class Editor: Managed
 	}
 	
 	
-	void ObjectDragUpdate(notnull EditorObject target)
+	// Handles Marker Drag from Map
+	void ObjectMapDragUpdate(notnull EditorObject target)
+	{
+		Input input = GetGame().GetInput();
+		if (input.LocalRelease("UAFire")) {
+			EditorEvents.DropInvoke(this, target);
+			return;
+		}
+		
+		vector object_position = target.GetPosition();
+		int mouse_x, mouse_y;
+		GetCursorPos(mouse_x, mouse_y);
+		vector cursor_position = ActiveEditorUI.GetMapWidget().ScreenToMap(Vector(mouse_x, mouse_y, 0));
+		cursor_position[1] = object_position[1] - GetGame().SurfaceY(object_position[0], object_position[2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
+		target.SetPosition(cursor_position);
+		target.Update();
+		
+		foreach (EditorObject selected_object: SelectedObjects) {
+			if (selected_object == target) continue;
+			cursor_position[1] = object_position[1] - GetGame().SurfaceY(object_position[0], object_position[2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
+			selected_object.SetPosition(cursor_position + selected_object.GetPosition() - object_position); 
+			selected_object.Update();
+		}
+		
+		
+	}
+	
+	// Handles Marker Drag from Ground Marker
+	void ObjectGroundDragUpdate(notnull EditorObject target)
+	{
+		
+		Input input = GetGame().GetInput();
+		if (input.LocalRelease("UAFire")) {
+			EditorEvents.DropInvoke(this, target);
+			return;
+		}
+		
+		// Get Object transform
+		vector object_transform[4];
+		target.GetTransform(object_transform);
+		
+		// Raycast ground below object
+		set<Object> o;
+		vector ground, ground_dir; int component;
+		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true, 1, 0, CollisionFlags.ALLOBJECTS); // set to ground only
+		
+		// Get surface data
+		vector cursor_position = MousePosToRay(o, target.GetObject());
+		vector surface_normal = GetGame().SurfaceGetNormal(ground[0], ground[2]);
+		
+		object_transform[3] = cursor_position + object_transform[1] * vector.Distance(ground, object_transform[3]);
+		target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
+		
+		target.SetTransform(object_transform);
+		target.Update();
+	}
+	
+	
+	// Handles Marker Drag from Object Base Marker
+	void ObjectBaseDragUpdate(notnull EditorObject target)
 	{
 
 		float starttime = TickCount(0);
@@ -487,27 +577,9 @@ class Editor: Managed
 		
 		
 		
-		// debug		
+		// debug
 		Editor.DebugObject0.SetPosition(cursor_position);
 			
-		
-		// Handles if map is open
-		if (ActiveEditorUI.IsMapOpen()) {
-			int mouse_x, mouse_y;
-			GetCursorPos(mouse_x, mouse_y);
-			cursor_position = ActiveEditorUI.GetMapWidget().ScreenToMap(Vector(mouse_x, mouse_y, 0));
-			cursor_position[1] = object_transform[3][1] - GetGame().SurfaceY(object_transform[3][0], object_transform[3][2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
-			target.SetPosition(cursor_position);
-			
-			foreach (EditorObject selected_map_object: SelectedObjects) {
-				if (selected_map_object == target) continue;
-				cursor_position[1] = object_transform[3][1] - GetGame().SurfaceY(object_transform[3][0], object_transform[3][2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
-				selected_map_object.SetPosition(cursor_position + selected_map_object.GetPosition() - object_transform[3]); 
-			}
-			return;
-		}
-	
-
 		
 		// Handle Z only motion
 		if (input.LocalValue("UALookAround")) {	
@@ -517,6 +589,7 @@ class Editor: Managed
 		
 		// Handle XY Rotation
 		} else if (input.LocalValue("UATurbo")) {
+			
 			
 			object_transform = { "1 0 0", "0 1 0", "0 0 1", object_transform[3] };
 			vector cursor_delta = cursor_position - object_transform[3];
@@ -528,14 +601,11 @@ class Editor: Managed
 		} else {
 			
 			
-			if (EditorSettings.MAINTAIN_HEIGHT) {
-				object_transform[3] = cursor_position + object_transform[1] * vector.Distance(ground, object_transform[3]);
-				
-			} else {
-				object_transform[3] = cursor_position;
-				object_transform[3][1] = object_transform[3][1] + object_size[1]/2;
-			}
+
+			object_transform[3] = cursor_position;
+			object_transform[3][1] = object_transform[3][1] + object_size[1]/2;
 			
+		
 			
 			// Place on surface rotated is additive to our matrix. need to reset it		
 			
@@ -544,8 +614,6 @@ class Editor: Managed
 			object_transform[2] = "0 0 1";
 			
 			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
-
-			
 		
 		}
 	

@@ -97,13 +97,67 @@ class EditorMapMarker: UILinkedObject
 	}
 }
 
+class EditorObjectGroundMarker: EditorObjectMarker
+{
+	override void Update()
+	{
+		vector position;
+		vector object_transform[4];
+		m_EditorObject.GetTransform(object_transform);
+		
+		// Raycast ground below object
+		set<Object> o;
+		vector ground_dir; int component;
+		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject, false, true); // set to ground only
+	
+		
+		vector screenpos = GetGame().GetScreenPos(position);
+		int screen_x, screen_y;
+		GetScreenSize(screen_x, screen_y);
+		m_Root.SetPos(screenpos[0], screenpos[1]);
+		
+		if (override_show) {
+			// only show the markers if you have maintain_height markers on
+			m_Root.Show(EditorSettings.MAINTAIN_HEIGHT && !(screenpos[0] > screen_x || screenpos[1] > screen_y || screenpos[0] <= 0 || screenpos[1] <= 0));
+		}
+		
+		super.Update();
+		
 
+	}
+}
+
+class EditorObjectBaseMarker: EditorObjectMarker
+{
+	override void Update()
+	{
+		vector position;
+		vector object_transform[4];
+		m_EditorObject.GetTransform(object_transform);
+		
+		position = m_EditorObject.GetBottomCenter();
+		
+		vector screenpos = GetGame().GetScreenPos(position);
+		int screen_x, screen_y;
+		GetScreenSize(screen_x, screen_y);
+		m_Root.SetPos(screenpos[0], screenpos[1]);
+		
+		if (override_show) {
+			m_Root.Show(!(screenpos[0] > screen_x || screenpos[1] > screen_y || screenpos[0] <= 0 || screenpos[1] <= 0));
+		}
+		
+		super.Update();
+	}
+}
 
 
 class EditorObjectMarker: UILinkedObject
 {
 
 	protected ImageWidget m_EditorObjectMarkerImage;
+	protected bool override_show = true;
+	
+	private bool MouseInside = false;
 	
 	void ~EditorObjectMarker()
 	{
@@ -116,11 +170,23 @@ class EditorObjectMarker: UILinkedObject
 	{
 		Print("EditorObjectMarker::OnWidgetScriptInit");
 		super.OnWidgetScriptInit(w);
-		
+
 		m_EditorObjectMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorObjectMarkerImage"));		
 	}
 	
+	override void Update()
+	{
+		if (m_EditorObject.IsSelected() || MouseInside) {
+			m_Root.SetAlpha(ALPHA_ON_SHOW);
+		} else {
+			m_Root.SetAlpha(ALPHA_ON_HIDE);
+		}
+		
+		
+		m_Root.Update();
+	}
 	
+	/*
 	override void Update()
 	{
 		vector position;
@@ -134,9 +200,7 @@ class EditorObjectMarker: UILinkedObject
 			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject, false, true); // set to ground only
 		} else {
 			position = m_EditorObject.GetBottomCenter();
-		}
-		
-		
+		}		
 		
 		vector screenpos = GetGame().GetScreenPos(position);
 		int screen_x, screen_y;
@@ -156,10 +220,9 @@ class EditorObjectMarker: UILinkedObject
 		
 		m_Root.Update();
 	}
-
-	private bool MouseInside = false;
+	*/
 	
-
+	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		// you should set cursor here its smart smile :)
@@ -172,19 +235,10 @@ class EditorObjectMarker: UILinkedObject
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		Print("EditorMarker::OnMouseLeave");
-
 		MouseInside = false;
 		return true;
 	}
 	
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		Print("EditorObjectMarker::OnClick: " + button);
-		
-		
-		return true;
-	}
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
@@ -228,7 +282,7 @@ class EditorObjectMarker: UILinkedObject
 		return true;
 	}
 	
-	private bool override_show = true;
+	
 	void Show(bool show)
 	{
 		override_show = show;

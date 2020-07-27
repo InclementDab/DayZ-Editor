@@ -1,6 +1,6 @@
 
 
-class TranslationWidget: BuildingBase
+class TranslationWidget: ItemBase
 {
 	private EditorObject m_ParentObject;
 	private Object m_RotationWidget;
@@ -17,8 +17,8 @@ class TranslationWidget: BuildingBase
 		//TStringArray textures = GetHiddenSelectionsTextures();
 		//SetObjectTexture(GetHiddenSelectionIndex("TranslateY"), textures[0]);
 		//SetObjectTexture(GetHiddenSelectionIndex("TranslateZ"), textures[0]);		
-		m_RotationWidget = GetGame().CreateObjectEx("RotationWidget", vector.Zero, ECE_NONE);
-		AddChild(m_RotationWidget, -1);
+		//m_RotationWidget = GetGame().CreateObjectEx("RotationWidget", vector.Zero, ECE_NONE);
+		//AddChild(m_RotationWidget, -1);
 	}
 	
 	override void EEDelete(EntityAI parent)

@@ -43,7 +43,7 @@ class EditorUI: EditorWidgetEventHandler
 	protected WrapSpacerWidget 	m_RightbarSpacer;
 	
 	// Orientation Tool
-	protected ItemPreviewWidget m_OrientationWidget;
+	ItemPreviewWidget m_OrientationWidget;
 	
 	// Debug
 	TextWidget 			m_DebugText1;
@@ -110,10 +110,8 @@ class EditorUI: EditorWidgetEventHandler
 		m_DebugText5			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText5"));
 		m_DebugText6			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText6"));
 		m_DebugActionStack		= TextListboxWidget.Cast(m_Root.FindAnyWidget("DebugActionStackListbox"));
+
 		
-		//EntityAI translate = GetGame().CreateObject("TranslationWidget", vector.Zero);
-		
-		//m_OrientationWidget.SetItem(translate);
 		m_EditorMapWidget.GetScript(m_EditorMap);
 		m_EditorMapWidget.SetMapPos(GetGame().GetCurrentCameraPosition());
 		
