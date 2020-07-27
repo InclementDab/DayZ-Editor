@@ -88,6 +88,7 @@ class EditorUI: EditorWidgetEventHandler
 	protected ButtonWidget m_ToolbarUndo;
 	protected ButtonWidget m_ToolbarRedo;
 	protected ButtonWidget m_ToolbarMagnet;
+	protected ButtonWidget m_ToolbarGround;
 	
 	// Frames and Hosts
 	protected Widget m_LeftbarFrame;
@@ -159,6 +160,7 @@ class EditorUI: EditorWidgetEventHandler
 		m_ToolbarUndo			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarUndo"));
 		m_ToolbarRedo			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarRedo"));
 		m_ToolbarMagnet			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarMagnet"));
+		m_ToolbarGround			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarGround"));
 		
 		// Spacers
 		m_LeftbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("LeftbarSpacer"));
@@ -193,6 +195,10 @@ class EditorUI: EditorWidgetEventHandler
 		if (button == 0) {
 			if (w == m_ToolbarMagnet) {
 				MAGNET_PLACEMENT = m_ToolbarMagnet.GetState();
+				return true;
+			}
+			if (w == m_ToolbarGround) {
+				GROUND_MODE = m_ToolbarGround.GetState();
 				return true;
 			}
 		}
@@ -239,9 +245,13 @@ class EditorUI: EditorWidgetEventHandler
 			
 		}
 		
-		// Right Click
-		if (button == 1) {
-
+		// Middle Mouse
+		if (button == 2) {
+			if (input.LocalValue("UAWalkRunTemp")) {
+				set<Object> o;
+				vector pos = MousePosToRay(o);
+				LightingBolt.CreateLightning(pos, 5);
+			}
 		}
 
 		return false;
@@ -418,7 +428,7 @@ class EditorUI: EditorWidgetEventHandler
 		//GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorExportWindow.layout", Getm_Root());
 		
 		EditorExportWindow dialog = new EditorExportWindow();
-		//GetGame().GetUIManager().ShowScriptedMenu(dialog, this);
+		GetGame().GetUIManager().ShowScriptedMenu(dialog, GetGame().GetUIManager().GetMenu());
 	}
 	
 	

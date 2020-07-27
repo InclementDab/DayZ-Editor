@@ -604,6 +604,18 @@ FrameWidgetClass EditorMainFrame {
          font "gui/fonts/metron-bold"
          switch toggle
         }
+        ButtonWidgetClass ToolbarGround {
+         size 28 28
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "G"
+         font "gui/fonts/metron-bold"
+         switch toggle
+        }
        }
       }
      }

@@ -62,29 +62,15 @@ modded class DayZIntroScene
 			Object new_camera = GetGame().CreateObjectEx("DSLRCamera", newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
 			
 			float scale = vector.Distance(contact_pos, start) * 0.25;
-			vector mat[4] = {
-				Vector(scale, 0, 0),
-				Vector(0, scale, 0),
-				Vector(0, 0, scale),
-				newcam_pos
-			};
 
-			
-			new_camera.SetTransform(mat);
-			
-			
-			
-			
 
- 
 
-			
 	        vector mins, maxs;
 	        new_camera.GetBounds(mins, maxs);
 	        vector center = (mins + maxs) * 0.5;
 	        vector size = maxs - mins;
 	
-	        PhysicsGeomDef geoms[] = {PhysicsGeomDef("", dGeomCreateBox(size), "material/default", 0xffffffff)};
+	        
 	        dBodyDynamic(new_camera, true);
 	       	new_camera.SetDynamicPhysicsLifeTime(15.0);
 			dBodySetMass(new_camera, 100);

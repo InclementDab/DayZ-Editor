@@ -2,6 +2,7 @@ static float VIEW_DISTANCE = 5000;
 static float OBJECT_VIEW_DISTANCE = 3000;
 
 static bool MAGNET_PLACEMENT = false;
+static bool GROUND_MODE = false; // maybe make enum for magnet idk
 
 class EditorSettings 
 {

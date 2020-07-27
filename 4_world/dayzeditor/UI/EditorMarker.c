@@ -123,7 +123,21 @@ class EditorObjectMarker: UILinkedObject
 	
 	override void Update()
 	{
-		vector position = m_EditorObject.GetBottomCenter();
+		vector position;
+		vector object_transform[4];
+		m_EditorObject.GetTransform(object_transform);
+		
+		if (GROUND_MODE) {
+			// Raycast ground below object
+			set<Object> o;
+			vector ground_dir; int component;
+			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject, false, true); // set to ground only
+		} else {
+			position = m_EditorObject.GetBottomCenter();
+		}
+		
+		
+		
 		vector screenpos = GetGame().GetScreenPos(position);
 		int screen_x, screen_y;
 		GetScreenSize(screen_x, screen_y);

@@ -210,8 +210,3 @@ class TranslationWidget: BuildingBase
 }
 
 
-class RotationWidget: BuildingBase
-{
-	
-	
-}

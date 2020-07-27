@@ -43,7 +43,7 @@ class EditorFileManager
 		
 	}
 	
-	static void ExportToFile(string filename = "$profile:editor_export.txt", ExportMode mode = ExportMode.TERRAINBUILDER)
+	static void ExportToFile(ExportMode mode = ExportMode.TERRAINBUILDER, string filename = "$profile:editor_export.txt")
 	{
 		DeleteFile(filename);
 		FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
