@@ -452,13 +452,8 @@ class Editor: Managed
 				break;
 			}
 			
-			case "EditorObjectGroundMarker": {
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectGroundDragUpdate, 0, true, target);
-				break;
-			}
-			
-			case "EditorObjectBaseMarker": {
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectBaseDragUpdate, 0, true, target);
+			case "EditorObjectMarker": {
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectDragUpdate, 0, true, target);
 				break;
 			}
 			
@@ -473,8 +468,7 @@ class Editor: Managed
 	void HandleObjectDrop(Class context, EditorObject target)
 	{
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectMapDragUpdate);
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectGroundDragUpdate);
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectBaseDragUpdate);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectDragUpdate);
 		
 		EditorAction action = new EditorAction("SetTransformArray", "SetTransformArray");
 		foreach (EditorObject editor_object: Editor.SelectedObjects) {
@@ -539,16 +533,14 @@ class Editor: Managed
 		vector cursor_position = MousePosToRay(o, target.GetObject());
 		vector surface_normal = GetGame().SurfaceGetNormal(ground[0], ground[2]);
 		
-		object_transform[3] = cursor_position + object_transform[1] * vector.Distance(ground, object_transform[3]);
-		target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
-		
+
 		target.SetTransform(object_transform);
 		target.Update();
 	}
 	
 	
 	// Handles Marker Drag from Object Base Marker
-	void ObjectBaseDragUpdate(notnull EditorObject target)
+	void ObjectDragUpdate(notnull EditorObject target)
 	{
 
 		float starttime = TickCount(0);
@@ -568,18 +560,16 @@ class Editor: Managed
 		// Raycast ground below object
 		set<Object> o;
 		vector ground, ground_dir; int component;
-		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true, 1, 0, CollisionFlags.ALLOBJECTS); // set to ground only
+		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true); // set to ground only
 
 		vector cursor_position = MousePosToRay(o, target.GetObject());
 		vector surface_normal = GetGame().SurfaceGetNormal(ground[0], ground[2]);
 		float surface_level = GetGame().SurfaceY(ground[0], ground[2]);
 		
-		
-		
+	
 		// debug
 		Editor.DebugObject0.SetPosition(cursor_position);
-			
-		
+
 		// Handle Z only motion
 		if (input.LocalValue("UALookAround")) {	
 			cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground);
@@ -588,8 +578,7 @@ class Editor: Managed
 		
 		// Handle XY Rotation
 		} else if (input.LocalValue("UATurbo")) {
-			
-			
+		
 			object_transform = { "1 0 0", "0 1 0", "0 0 1", object_transform[3] };
 			vector cursor_delta = cursor_position - object_transform[3];
 			float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
@@ -599,21 +588,22 @@ class Editor: Managed
 		// Handle regular motion
 		} else {
 			
-			
-
-			object_transform[3] = cursor_position;
-			object_transform[3][1] = object_transform[3][1] + object_size[1]/2;
-			
+			if (EditorSettings.MAINTAIN_HEIGHT) 
+				if (EditorSettings.MAGNET_PLACEMENT)
+					object_transform[3] = cursor_position + surface_normal * vector.Distance(ground, object_transform[3]);
+				else 
+					object_transform[3] = cursor_position + object_transform[1] * vector.Distance(ground, object_transform[3]);
+				
+			else {
+				object_transform[3] = cursor_position;
+				object_transform[3][1] = object_transform[3][1] + object_size[1]/2;					
+			} 
 		
-			
-			// Place on surface rotated is additive to our matrix. need to reset it		
-			
 			object_transform[0] = "1 0 0";
 			object_transform[1] = "0 1 0";
 			object_transform[2] = "0 0 1";
 			
 			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
-		
 		}
 	
 		target.SetTransform(object_transform);

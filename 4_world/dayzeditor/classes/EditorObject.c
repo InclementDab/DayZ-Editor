@@ -64,8 +64,7 @@ class EditorObject : BuildingBase
 	protected Widget 		m_EditorObjectBrowserWidget;
 	protected Widget 		m_EditorMapMarkerWidget;
 	
-	ref UILinkedObject 		m_EditorObjectBaseMarker = null;
-	ref UILinkedObject 		m_EditorObjectGroundMarker = null;
+	ref UILinkedObject 		m_EditorObjectMarker = null;
 	ref UILinkedObject 		m_EditorObjectBrowser = null;
 	ref UILinkedObject		m_EditorMapMarker = null;
 	
@@ -100,8 +99,7 @@ class EditorObject : BuildingBase
 		GetGame().ObjectDelete(m_CenterLine);
 		
 	
-		delete m_EditorObjectBaseMarker; 
-		delete m_EditorObjectGroundMarker; 
+		delete m_EditorObjectMarker; 
 		delete m_EditorObjectBrowser;
 		delete m_EditorMapMarker;
 		
@@ -127,17 +125,11 @@ class EditorObject : BuildingBase
 		Update();
 		
 		// World Object base marker
-		m_EditorObjectBaseMarker = new UILinkedObject();
+		m_EditorObjectMarker = new UILinkedObject();
 		m_EditorObjectMarkerWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
-		m_EditorObjectMarkerWidget.GetScript(m_EditorObjectBaseMarker);
-		m_EditorObjectBaseMarker.SetObject(this);
-		
-		// World Object base marker
-		m_EditorObjectGroundMarker = new UILinkedObject();
-		m_EditorObjectMarkerWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectGroundMarker.layout");
-		m_EditorObjectMarkerWidget.GetScript(m_EditorObjectGroundMarker);
-		m_EditorObjectGroundMarker.SetObject(this);
-		
+		m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
+		m_EditorObjectMarker.SetObject(this);
+				
 		// Map marker
 		m_EditorMapMarker = new UILinkedObject();
 		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorMapMarker.layout");
@@ -414,7 +406,7 @@ class EditorObject : BuildingBase
 	vector GetMarkerPosition()
 	{
 		float x, y;
-		m_EditorObjectBaseMarker.GetLayoutRoot().GetPos(x, y);
+		m_EditorObjectMarker.GetLayoutRoot().GetPos(x, y);
 		return Vector(x, y, 0);
 	}
 	
