@@ -163,10 +163,22 @@ class EditorUI: EditorWidgetEventHandler
 			if (Editor.IsPlacing()) {
 				Editor.PlaceObject();
 				return true;
-				
-			} else if (Editor.GlobalTranslationWidget.IsMouseInside()) 
-				return true; 
-			else if (Editor.EditorObjectUnderCursor == null) {
+			} 
+			
+			// Raycast to see if TranslationWidget is under cursor			
+			RaycastRVParams raycast_params = new RaycastRVParams(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * EditorSettings.OBJECT_VIEW_DISTANCE);
+			ref array<ref RaycastRVResult> raycast_result = new array<ref RaycastRVResult>();
+			DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
+			
+			//DayZPhysics.RaycastRV(start_pos, end_pos, contact_pos, contact_dir, contact_comp, collisions);
+			if (raycast_result.Get(0).obj == Editor.GetTranslationWidget() && raycast_result.Get(0).obj != null) {
+				EditorEvents.DragInvoke(raycast_result[0].obj, Editor.GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
+				return true;
+			}
+			
+
+
+			if (Editor.EditorObjectUnderCursor == null) {
 				// delayed dragbox
 				EditorUI.EditorCanvas.Clear();
 				GetCursorPos(start_x, start_y);

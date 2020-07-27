@@ -10,6 +10,9 @@ typedef ref map<int, ref EditorObject> EditorObjectSet;
 
 class Editor: Managed
 {
+	private static ref Editor m_Instance;
+	static Editor GetInstance() { return m_Instance; }
+	
 	private ref UIManager 					m_UIManager; 	
 		
 	static ref EditorHologram 				ObjectInHand;
@@ -31,7 +34,7 @@ class Editor: Managed
 	static ref EditorUI						ActiveEditorUI;	
 	static EditorCamera						ActiveCamera;
 	
-	static TranslationWidget				GlobalTranslationWidget;
+	TranslationWidget						GlobalTranslationWidget;
 	
 	static Object DebugObject0;
 	static Object DebugObject1;
@@ -41,6 +44,7 @@ class Editor: Managed
 	void Editor()
 	{
 		Print("Editor");
+		m_Instance = this;
 		PlacedObjects 				= new EditorObjectSet();
 		SelectedObjects				= new EditorObjectSet();
 		SessionCache 				= new set<ref EditorObjectLink>();
@@ -73,14 +77,19 @@ class Editor: Managed
 		
 		// Event subscriptions
 		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
-		EditorEvents.OnObjectSelectionChanged.Insert(OnObjectSelected);
+		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
+		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
 		EditorEvents.OnObjectDrag.Insert(HandleObjectDrag);
 		EditorEvents.OnObjectDrop.Insert(HandleObjectDrop);
 		
-		Editor.GlobalTranslationWidget = GetGame().CreateObject("TranslationWidget", vector.Zero);
-
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		
+		// Debug
+		DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
+		DebugObject1 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
+		DebugObject2 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
+		DebugObject3 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 	}
 		
 	void ~Editor()
@@ -393,6 +402,8 @@ class Editor: Managed
 		foreach (EditorObject editor_object: PlacedObjects) {
 			editor_object.Deselect();
 		}
+		
+		
 	}
 	
 	void DeleteObjects(EditorObjectSet target)
@@ -408,15 +419,15 @@ class Editor: Managed
 			GetGame().ObjectDelete(selected_object);
 		}
 		
-		
 		InsertAction(action);
+		
+		GetGame().ObjectDelete(GlobalTranslationWidget);
 	}
 
 
 	
 	static bool IsPlacing() { return ObjectInHand != null; }
-	
-	
+	static TranslationWidget GetTranslationWidget() { return Editor.GetInstance().GlobalTranslationWidget; }
 	
 	
 	void OnObjectCreated(Class context, EditorObject target)
@@ -425,20 +436,28 @@ class Editor: Managed
 		ActiveEditorUI.GetMap().OnObjectCreated(context, target);
 	}
 	
-	void OnObjectSelected(Class context, Param2<EditorObject,bool> params)
+	void OnObjectSelected(Class context, EditorObject target)
 	{
-		Print("EditorUI::OnObjectSelected");	
-		if (!params.param2)
-			GetGame().ObjectDelete(Editor.GlobalTranslationWidget);
+		Print("Editor::OnObjectSelected");		
 		
-		//if (SelectedObjects.Count() > 1) return;
-		//Editor.GlobalTranslationWidget = GetGame().CreateObjectEx("TranslationWidget", params.param1.GetPosition(), ECE_NONE);
-		//Editor.GlobalTranslationWidget.SetEditorObject(params.param1, params.param1.GetPosition());		
+		if (GlobalTranslationWidget != null)
+			GetGame().ObjectDelete(GlobalTranslationWidget);
+		
+		
+		GlobalTranslationWidget = GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_SETUP | ECE_CREATEPHYSICS | ECE_LOCAL);
+		GlobalTranslationWidget.SetEditorObject(target);	
+		
+	}
+	
+	void OnObjectDeselected(Class context, EditorObject target)
+	{
+		Print("Editor::OnObjectDeselected");
+		GetGame().ObjectDelete(GlobalTranslationWidget);
 	}
 	
 	
 	
-	void HandleObjectDrag(Class context, EditorObject target)
+	void HandleObjectDrag(Class context, EditorObject target, ref RaycastRVResult raycast_result = null)
 	{
 		
 		foreach (EditorObject editor_object: Editor.SelectedObjects)
@@ -457,6 +476,11 @@ class Editor: Managed
 				break;
 			}
 			
+			case "TranslationWidget": {
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(TranslationWidgetDragUpdate, 0, true, context, target, raycast_result);
+				break;
+			}
+			
 			
 		}
 		
@@ -469,6 +493,7 @@ class Editor: Managed
 	{
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectMapDragUpdate);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectDragUpdate);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(TranslationWidgetDragUpdate);
 		
 		EditorAction action = new EditorAction("SetTransformArray", "SetTransformArray");
 		foreach (EditorObject editor_object: Editor.SelectedObjects) {
@@ -480,6 +505,53 @@ class Editor: Managed
 		
 		// debug
 		GetGame().ObjectDelete(Editor.DebugObject0);
+	}
+	
+	
+	void TranslationWidgetDragUpdate(Class context, notnull EditorObject target, ref RaycastRVResult raycast_result)
+	{
+		Input input = GetGame().GetInput();
+		if (input.LocalRelease("UAFire")) {
+			EditorEvents.DropInvoke(this, target);
+			return;
+		}
+		
+		// this might crash once you add rotation widget unless you add as child
+		TranslationWidget translation_widget = TranslationWidget.Cast(context);
+		
+		set<Object> o;
+		vector cursor_position = MousePosToRay(o, null, 5 + vector.Distance(GetGame().GetCurrentCameraPosition(), target.GetPosition()));
+		
+		string name = translation_widget.GetActionComponentName(raycast_result.component);
+		
+		vector start_position = target.GetPosition();
+		start_position[1] = start_position[1] + target.GetSize()[1] / 2;
+		vector target_position = translation_widget.GetPosition();
+		
+		switch (name) {
+			
+			case "translatex": {
+				target_position[0] = cursor_position[0]; //raycast_result.pos + vector.Forward * vector.Distance(raycast_result.pos, start_position);
+
+				break;
+			}
+			
+			case "translatey": {
+				target_position[2] = cursor_position[2]; //raycast_result.pos + vector.Up * vector.Distance(raycast_result.pos, start_position);
+				break;				
+			}
+			
+			case "translatez": {
+				
+				target_position[1] = cursor_position[1];
+				break;
+			}
+			
+		}
+		
+		translation_widget.SetTranslationPosition(target_position);
+		translation_widget.Update();
+		
 	}
 	
 	
@@ -510,33 +582,7 @@ class Editor: Managed
 		
 	}
 	
-	// Handles Marker Drag from Ground Marker
-	void ObjectGroundDragUpdate(notnull EditorObject target)
-	{
-		
-		Input input = GetGame().GetInput();
-		if (input.LocalRelease("UAFire")) {
-			EditorEvents.DropInvoke(this, target);
-			return;
-		}
-		
-		// Get Object transform
-		vector object_transform[4];
-		target.GetTransform(object_transform);
-		
-		// Raycast ground below object
-		set<Object> o;
-		vector ground, ground_dir; int component;
-		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true, 1, 0, CollisionFlags.ALLOBJECTS); // set to ground only
-		
-		// Get surface data
-		vector cursor_position = MousePosToRay(o, target.GetObject());
-		vector surface_normal = GetGame().SurfaceGetNormal(ground[0], ground[2]);
-		
 
-		target.SetTransform(object_transform);
-		target.Update();
-	}
 	
 	
 	// Handles Marker Drag from Object Base Marker
@@ -586,21 +632,12 @@ class Editor: Managed
 			target.LocalAngle = angle;
 			
 		// Handle regular motion
-		} else {
-		
-			/*
-			vector comp = target.GetDirection() - surface_normal.Perpend();
-			Math3D.DirectionAndUpMatrix(surface_normal.Perpend(), surface_normal, object_transform);
-			object_transform[3] = cursor_position;
-			object_transform[3][1] = object_transform[3][1] + object_size[1]/2;	
-			target.SetDirection(comp);
-			*/
-			
+		} else {			
 			
 			if (EditorSettings.MAINTAIN_HEIGHT) 
-				if (EditorSettings.MAGNET_PLACEMENT) {
+				if (EditorSettings.MAGNET_PLACEMENT)
 					object_transform[3] = cursor_position + surface_normal * vector.Distance(ground, object_transform[3]);				
-				} else 
+				else 
 					object_transform[3] = cursor_position + object_transform[1] * vector.Distance(ground, object_transform[3]);
 				
 			else {
@@ -622,21 +659,23 @@ class Editor: Managed
 			
 			if (selected_object == target) continue;
 			
-			// Get transform data
 			vector selected_transform[4];	
 			selected_object.GetTransform(selected_transform);
 			
 			vector pos_delta = selected_transform[3] - start_transform[3];
+			vector cursor_position_delta = object_transform[3] + selected_transform[3] - start_transform[3];
+			vector delta2 = start_transform[3] - selected_transform[3];
+		
 			float angle_delta = Math.Atan2(pos_delta[0], pos_delta[2]) * Math.RAD2DEG;
 			surface_normal = GetGame().SurfaceGetNormal(selected_transform[3][0], selected_transform[3][2]);
-			
 			DayZPhysics.RaycastRV(selected_transform[3], selected_transform[3] + selected_transform[1] * -1000, ground, ground_dir, component, o, NULL, selected_object.GetObject(), false, true); // set to ground only
+
 			
 			// Handle Z only motion for all children				
 			if (input.LocalValue("UALookAround")) {
 				// Source object position + delta
 				//selected_transform[3][1] = object_transform[3][1] + pos_delta[1];
-				selected_transform[3] = ground + selected_transform[1] * vector.Distance(ground, cursor_position + pos_delta);
+				selected_transform[3] = ground + selected_transform[1] * vector.Distance(cursor_position_delta, ground);
 				
 			// Handle XY Rotation for all children
 			} else if (input.LocalValue("UATurbo")) {
@@ -647,8 +686,22 @@ class Editor: Managed
 			
 			// Handle regular motion for all children
 			} else {
-				selected_transform = { "1 0 0", "0 1 0", "0 0 1", cursor_position + pos_delta };
-				selected_object.PlaceOnSurfaceRotated(selected_transform, cursor_position + pos_delta, surface_normal[0] * -1, surface_normal[2] * -1, 0, EditorSettings.MAGNET_PLACEMENT);
+				//cursor_position_delta[1] = ground[1];
+				if (EditorSettings.MAINTAIN_HEIGHT) {
+					if (EditorSettings.MAGNET_PLACEMENT) {
+						selected_transform[3] = cursor_position_delta + surface_normal * vector.Distance(ground, selected_transform[3]);
+					} else {
+					
+						selected_transform[3] = cursor_position_delta + selected_transform[1] * vector.Distance(ground, selected_transform[3]);
+					}
+				} else {
+					selected_transform[3] = cursor_position_delta;				
+				} 
+				
+				selected_transform[0] = "1 0 0";
+				selected_transform[1] = "0 1 0";
+				selected_transform[2] = "0 0 1";
+				selected_object.PlaceOnSurfaceRotated(selected_transform, selected_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, selected_object.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
 			}	
 			
 		

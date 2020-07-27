@@ -1,23 +1,12 @@
 
 
-class OnObjectCreateEventArgs
-{
-	EditorObject target;
-	vector CreatePosition;
-	int mouse_x, mouse_y;
-}
-
-
-// ObjectSelectedEventArgs
-// 0 EditorObject:  Target
-// 1 bool: Selection State
-typedef Param2<EditorObject, bool> ObjectSelectedEventArgs;
 
 
 class EditorEvents 
 {
 	static ref ScriptInvoker OnObjectCreated = new ScriptInvoker();
-	static ref ScriptInvoker OnObjectSelectionChanged = new ScriptInvoker();
+	static ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
+	static ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 	static ref ScriptInvoker OnObjectDrag = new ScriptInvoker();
 	static ref ScriptInvoker OnObjectDrop = new ScriptInvoker();
 	
@@ -25,7 +14,8 @@ class EditorEvents
 	{
 		Print("EditorEvents");
 		OnObjectCreated = new ScriptInvoker();
-		OnObjectSelectionChanged = new ScriptInvoker();
+		OnObjectSelected = new ScriptInvoker();
+		OnObjectDeselected = new ScriptInvoker();
 		OnObjectDrag = new ScriptInvoker();
 		OnObjectDrop = new ScriptInvoker();
 	}
@@ -36,16 +26,22 @@ class EditorEvents
 		OnObjectCreated.Invoke(context, obj);	
 	}
 	
-	static void ObjectSelectedInvoke(Class context, ObjectSelectedEventArgs args) 
+	static void ObjectSelectedInvoke(Class context, EditorObject obj) 
 	{
 		//Print("EditorEvents::ObjectSelected");
-		OnObjectSelectionChanged.Invoke(context, args);
+		OnObjectSelected.Invoke(context, obj);
 	}
 	
-	static void DragInvoke(Class context, EditorObject obj)
+	static void ObjectDeselectedInvoke(Class context, EditorObject obj) 
+	{
+		//Print("EditorEvents::OnObjectDeselected");
+		OnObjectDeselected.Invoke(context, obj);
+	}
+	
+	static void DragInvoke(Class context, EditorObject obj, ref RaycastRVResult raycast_result = null)
 	{
 		Print("EditorEvents::Drag");
-		OnObjectDrag.Invoke(context, obj);
+		OnObjectDrag.Invoke(context, obj, raycast_result);
 	}
 	
 	static void DropInvoke(Class context, EditorObject obj)

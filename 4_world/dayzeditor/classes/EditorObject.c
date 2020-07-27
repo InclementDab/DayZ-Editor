@@ -288,12 +288,8 @@ class EditorObject : BuildingBase
 		vector position = vector.Zero;
 		position[1] = position[1] + size[1]/2;
 		
-
-
-		
-		ObjectSelectedEventArgs args(this, IsSelected);
 		Editor.SelectedObjects.Insert(GetID(), this);
-		EditorEvents.ObjectSelectedInvoke(this, args);
+		EditorEvents.ObjectSelectedInvoke(this, this);
 		
 		
 	}
@@ -305,12 +301,9 @@ class EditorObject : BuildingBase
 		IsSelected = false;
 		HideBoundingBox();
 		
-		GetGame().ObjectDelete(Editor.GlobalTranslationWidget);
-		
-		ObjectSelectedEventArgs args(this, IsSelected);
-		EditorEvents.ObjectSelectedInvoke(this, args);
 		
 		Editor.SelectedObjects.Remove(GetID());
+		EditorEvents.ObjectDeselectedInvoke(this, this);
 	}
 
 	vector GetBottomCenter()
