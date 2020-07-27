@@ -48,7 +48,7 @@ class TranslationWidget: BuildingBase
 		
 		
 		vector start_pos = GetGame().GetCurrentCameraPosition();
-		vector end_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * OBJECT_VIEW_DISTANCE;
+		vector end_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * EditorSettings.OBJECT_VIEW_DISTANCE;
 		SetTransform(transform);
 		SetOrientation(-m_ParentObject.GetOrientation());
 		//SetOrientation(vector.Up);

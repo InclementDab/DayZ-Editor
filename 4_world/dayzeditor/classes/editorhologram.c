@@ -54,7 +54,7 @@ class EditorHologram: Hologram
 		
 		vector surface_normal = GetGame().SurfaceGetNormal(pos[0], pos[2]);
 		float surface_height = GetGame().SurfaceY(pos[0], pos[2]);
-		m_Projection.PlaceOnSurfaceRotated(mat, pos, surface_normal[0] * -1, surface_normal[2] * -1, 0, MAGNET_PLACEMENT);
+		m_Projection.PlaceOnSurfaceRotated(mat, pos, surface_normal[0] * -1, surface_normal[2] * -1, 0, EditorSettings.MAGNET_PLACEMENT);
 		m_Projection.SetTransform(mat);
 		
 				

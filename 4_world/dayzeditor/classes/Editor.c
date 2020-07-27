@@ -434,14 +434,12 @@ class Editor: Managed
 	
 	void HandleObjectDrag(Class context, EditorObject target)
 	{
-		vector start_transform[4];
-		target.GetTransform(start_transform);
 				
 		foreach (EditorObject editor_object: Editor.SelectedObjects)
 			editor_object.TransformBeforeDrag = editor_object.GetTransformArray();
 		
 		
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectDragUpdate, 0, true, target, start_transform);		
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectDragUpdate, 0, true, target);		
 		
 		// debug
 		Editor.DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
@@ -464,8 +462,9 @@ class Editor: Managed
 	}
 	
 	
-	void ObjectDragUpdate(notnull EditorObject target, vector start_transform[4])
+	void ObjectDragUpdate(notnull EditorObject target)
 	{
+
 		float starttime = TickCount(0);
 		Input input = GetGame().GetInput();
 		if (input.LocalRelease("UAFire")) {
@@ -474,129 +473,114 @@ class Editor: Managed
 		}
 		
 		// Get all object data 
-		Object target_object = target.GetObject();
-		vector object_position = target_object.GetPosition();
 		vector object_size = target.GetSize();
-		vector object_orientation = target_object.GetOrientation();
-		vector object_transform[4];
-		target_object.GetTransform(object_transform);
+		vector object_transform[4], start_transform[4];
+		// non-updated version of object_transform
+		target.GetTransform(start_transform); 
+		target.GetTransform(object_transform);
 		
 		// Raycast ground below object
 		set<Object> o;
 		vector ground, ground_dir; int component;
-		DayZPhysics.RaycastRV(object_position, object_position + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target_object, false, true); // set to ground only
+		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true); // set to ground only
 		
-		vector cursor_position = MousePosToRay(o, target_object);
-		if (GROUND_MODE)
+		vector cursor_position = MousePosToRay(o, target.GetObject());
+		
+		if (EditorSettings.GROUND_MODE)
 			cursor_position[1] = object_transform[3][1];
-		else cursor_position[1] = cursor_position[1] + object_size[1] / 2;
-				
-		Editor.DebugObject0.SetPosition(ground);
+		else 
+			cursor_position[1] = cursor_position[1] + object_size[1] / 2;
 		
-		vector transform_position[4] = { "1 0 0", "0 1 0", "0 0 1", cursor_position };
 		vector surface_normal = GetGame().SurfaceGetNormal(cursor_position[0], cursor_position[2]);
 		float surface_level = GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 		
 		
-		// If map is ON	
+		// debug		
+		Editor.DebugObject0.SetPosition(ground);
+			
+		
+		// Handles if map is open
 		if (ActiveEditorUI.IsMapOpen()) {
 			
 			int mouse_x, mouse_y;
 			GetCursorPos(mouse_x, mouse_y);
 			cursor_position = ActiveEditorUI.GetMapWidget().ScreenToMap(Vector(mouse_x, mouse_y, 0));
-			cursor_position[1] = object_position[1] - GetGame().SurfaceY(object_position[0], object_position[2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
+			cursor_position[1] = object_transform[3][1] - GetGame().SurfaceY(object_transform[3][0], object_transform[3][2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 			target.SetPosition(cursor_position);
 			
-		} else {
-		
-			// Handle Z only motion*
-			if (input.LocalValue("UALookAround")) {	
-						
-				cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground);
-				cursor_position[1] = cursor_position[1] + object_size[1]/2;
-				transform_position[0] = object_transform[0];
-				transform_position[1] = object_transform[1];
-				transform_position[2] = object_transform[2];	
-				transform_position[3] = ground + object_transform[1] * vector.Distance(ground, cursor_position);
-				
-			
-			// Handle XY Rotation
-			} else if (input.LocalValue("UATurbo")) {
-				
-				vector cursor_delta = cursor_position - object_position;
-				
-				float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;				
-				transform_position[3][0] = object_position[0];
-				transform_position[3][2] = object_position[2];
-				target.PlaceOnSurfaceRotated(transform_position, object_position, surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, MAGNET_PLACEMENT);
-				//vector.Direction(object_position, cursor_position);
-				//Math3D.DirectionAndUpMatrix(, target.GetTransformAxis(1), transform);
-				
-			} else {
-				
-				target.PlaceOnSurfaceRotated(transform_position, cursor_position, surface_normal[0] * -1, surface_normal[2] * -1, 0, MAGNET_PLACEMENT);
-				
+			foreach (EditorObject selected_map_object: SelectedObjects) {
+				if (selected_map_object == target) continue;
+				cursor_position[1] = object_transform[3][1] - GetGame().SurfaceY(object_transform[3][0], object_transform[3][2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
+				selected_map_object.SetPosition(cursor_position + selected_map_object.GetPosition() - object_transform[3]); 
 			}
 			
-			target.SetTransform(transform_position);
-			target.Update();
+			return;
+			
+		}
+	
+
+		
+		// Handle Z only motion
+		if (input.LocalValue("UALookAround")) {	
+			cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground);
+			cursor_position[1] = cursor_position[1] + object_size[1]/2;
+			object_transform[3] = ground + object_transform[1] * vector.Distance(ground, cursor_position);
+		
+		// Handle XY Rotation
+		} else if (input.LocalValue("UATurbo")) {
+			object_transform = { "1 0 0", "0 1 0", "0 0 1", object_transform[3] };
+			vector cursor_delta = cursor_position - object_transform[3];
+			float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
+				
+			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, EditorSettings.MAGNET_PLACEMENT);
+			
+		// Handle regular motion
+		} else {
+			object_transform = { "1 0 0", "0 1 0", "0 0 1", cursor_position };
+			target.PlaceOnSurfaceRotated(object_transform, cursor_position, surface_normal[0] * -1, surface_normal[2] * -1, 0, EditorSettings.MAGNET_PLACEMENT);
 		}
 		
-
-
-					
+		target.SetTransform(object_transform);
+		target.Update();
+		
 		// This handles all other selected objects
 		foreach (EditorObject selected_object: Editor.SelectedObjects) {
 			
 			if (selected_object == target) continue;
-			vector selected_size = selected_object.GetSize();
-			vector selected_position = selected_object.GetPosition();
-			vector pos_delta = selected_position - object_position;
+			
+			// Get transform data
+			vector selected_transform[4];	
+			selected_object.GetTransform(selected_transform);
+			
+			vector pos_delta = selected_transform[3] - start_transform[3];
 			float angle_delta = Math.Atan2(pos_delta[0], pos_delta[2]) * Math.RAD2DEG;
-			surface_normal = GetGame().SurfaceGetNormal(selected_position[0], selected_position[2]);
-			
-			// If map is ON	
-			if (ActiveEditorUI.IsMapOpen()) {
-			
-				cursor_position[1] = object_position[1] - GetGame().SurfaceY(object_position[0], object_position[2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
-				selected_object.SetPosition(cursor_position + pos_delta); 
+			surface_normal = GetGame().SurfaceGetNormal(selected_transform[3][0], selected_transform[3][2]);
+	
+			// Handle Z only motion for all children				
+			if (input.LocalValue("UALookAround")) {
+				// Source object position + delta
+				selected_transform[3][1] = object_transform[3][1] + pos_delta[1];
 				
+			// Handle XY Rotation for all children
+			} else if (input.LocalValue("UATurbo")) {
+				vector rot_pos;
+				angle -= angle_delta;				
+				vector new_postion = vector.RotateAroundZero(pos_delta, vector.Up, Math.Cos(angle), Math.Sin(angle));
+				selected_object.SetPosition(new_postion + object_transform[3]);
+			
+			// Handle regular motion for all children
 			} else {
-				
-				// Handle Z only motion for all child objects
-				if (input.LocalValue("UALookAround")) {
-					
-					pos_delta[0] = selected_position[0];
-					pos_delta[1] = transform_position[3][1] + pos_delta[1];
-					pos_delta[2] = selected_position[2];
-					selected_object.SetPosition(pos_delta);
-					
-				// Handle XY Rotation for all child 
-				} else if (input.LocalValue("UATurbo")) {
-					vector rot_pos;
-					
-					angle -= angle_delta;				
-					//Print(angle);
-					vector new_postion = vector.RotateAroundZero(pos_delta, vector.Up, Math.Cos(angle), Math.Sin(angle));
-					
-					
-					//Print(new_postion);					
-					
-					selected_object.SetPosition(new_postion + object_position);
-					
-				} else {
-					transform_position[4] = { "1 0 0", "0 1 0", "0 0 1", cursor_position + pos_delta };
-					target.PlaceOnSurfaceRotated(transform_position, cursor_position + pos_delta, surface_normal[0] * -1, surface_normal[2] * -1, 0, MAGNET_PLACEMENT);
-					
-					selected_object.SetTransform(transform_position);
-				}	
-				
-				
-				selected_object.Update();
-			}
+				selected_transform = { "1 0 0", "0 1 0", "0 0 1", cursor_position + pos_delta };
+				selected_object.PlaceOnSurfaceRotated(selected_transform, cursor_position + pos_delta, surface_normal[0] * -1, surface_normal[2] * -1, 0, EditorSettings.MAGNET_PLACEMENT);
+			}	
 			
+		
+			selected_object.SetTransform(selected_transform);
+			selected_object.Update();
 			
 		}
+		
+		
 		
 		//Print(TickCount(starttime) / 1000);
 	}

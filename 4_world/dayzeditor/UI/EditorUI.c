@@ -129,11 +129,11 @@ class EditorUI: EditorWidgetEventHandler
 		Print("EditorUI::OnClick");
 		if (button == 0) {
 			if (w == m_ToolbarMagnet) {
-				MAGNET_PLACEMENT = m_ToolbarMagnet.GetState();
+				EditorSettings.MAGNET_PLACEMENT = m_ToolbarMagnet.GetState();
 				return true;
 			}
 			if (w == m_ToolbarGround) {
-				GROUND_MODE = m_ToolbarGround.GetState();
+				EditorSettings.GROUND_MODE = m_ToolbarGround.GetState();
 				return true;
 			}
 		}
@@ -232,8 +232,8 @@ class EditorUI: EditorWidgetEventHandler
 			}
 			
 			case KeyCode.KC_U: {
-				MAGNET_PLACEMENT = !MAGNET_PLACEMENT;
-				m_ToolbarMagnet.SetState(MAGNET_PLACEMENT);
+				EditorSettings.MAGNET_PLACEMENT = !EditorSettings.MAGNET_PLACEMENT;
+				m_ToolbarMagnet.SetState(EditorSettings.MAGNET_PLACEMENT);
 				m_ToolbarMagnet.Update();
 				return true;
 			}

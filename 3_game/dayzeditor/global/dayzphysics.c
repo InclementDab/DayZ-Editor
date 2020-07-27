@@ -1,9 +1,9 @@
 
 
-static vector MousePosToRay(out set<Object> collisions, Object ignore = null, float raycast_distance = OBJECT_VIEW_DISTANCE, float radius = 0)
+static vector MousePosToRay(out set<Object> collisions, Object ignore = null, float raycast_distance = EditorSettings.OBJECT_VIEW_DISTANCE, float radius = 0)
 {
 	vector ray_start = GetGame().GetCurrentCameraPosition();
-	vector ray_end = ray_start + GetGame().GetPointerDirection() * OBJECT_VIEW_DISTANCE;
+	vector ray_end = ray_start + GetGame().GetPointerDirection() * EditorSettings.OBJECT_VIEW_DISTANCE;
 	
 	vector hitPos, hitNormal;
 	int hitComponentIndex;		
