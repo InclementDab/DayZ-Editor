@@ -517,10 +517,10 @@ class Editor: Managed
 		
 		// Handle XY Rotation
 		} else if (input.LocalValue("UATurbo")) {
-			//object_transform = { "1 0 0", "0 1 0", "0 0 1", object_transform[3] };
+			
+			object_transform = { "1 0 0", "0 1 0", "0 0 1", object_transform[3] };
 			vector cursor_delta = cursor_position - object_transform[3];
 			float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
-				
 			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, EditorSettings.MAGNET_PLACEMENT);
 			
 		// Handle regular motion
@@ -538,7 +538,9 @@ class Editor: Managed
 			
 			
 			// Place on surface rotated is additive to our matrix. need to reset it
-			object_transform = { "1 0 0", "0 1 0", "0 0 1", object_transform[3] };
+			if (EditorSettings.MAGNET_PLACEMENT)
+				object_transform = { "1 0 0", "0 1 0", "0 0 1", object_transform[3] };
+			
 			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, 0, EditorSettings.MAGNET_PLACEMENT);
 		}
 	
