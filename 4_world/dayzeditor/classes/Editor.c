@@ -307,7 +307,14 @@ class Editor: Managed
 		ActiveEditorUI.m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
 		
 		// debug
-		ActiveEditorUI.m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", cam_orientation[0], cam_orientation[1], cam_orientation[2]));
+		if (SelectedObjects.Count() == 1) {
+			EditorObject eo = SelectedObjects.Get(SelectedObjects.GetIteratorKey(SelectedObjects.Begin()));
+			vector debug_pos = eo.GetPosition();
+			ActiveEditorUI.m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", debug_pos[0], debug_pos[1], debug_pos[2]));
+			
+		}
+		
+		
 		
 		string line1;
 		if (!EditorObjectUnderCursor) 

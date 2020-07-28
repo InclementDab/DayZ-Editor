@@ -1,8 +1,8 @@
-WindowWidgetClass EditorDialog {
+WindowWidgetClass DataExportDialog {
  clipchildren 1
  ignorepointer 0
  color 0.8118 0.8118 0.8118 1
- size 500 250
+ size 500 350
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -10,127 +10,172 @@ WindowWidgetClass EditorDialog {
  hexactsize 1
  vexactsize 1
  priority 5
- draggable 1
- scriptclass "EditorDialog"
  style rover_sim_black_2
  "title visible" 0
  font "gui/fonts/metron"
  {
-  PanelWidgetClass TitleBar {
-   ignorepointer 0
-   color 0.749 0.3725 0.3725 1
-   size 1 30
+  PanelWidgetClass WindowDragWrapper {
+   ignorepointer 1
+   size 1 1
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 1
-   style rover_sim_colorable
+   vexactsize 0
+   draggable 1
+   style blank
    {
-    TextWidgetClass TitleText {
-     ignorepointer 1
-     position 0 0
+    PanelWidgetClass TitleBar {
+     ignorepointer 0
+     color 0.749 0.3725 0.3725 1
      size 1 30
      hexactpos 1
      vexactpos 1
      hexactsize 0
      vexactsize 1
-     text "Window Title"
-     font "gui/fonts/metron"
-     "text offset" 10 0
-     "exact text" 1
-     "size to text h" 0
-     "text valign" center
+     draggable 0
+     style rover_sim_colorable
+     {
+      TextWidgetClass TitleText {
+       ignorepointer 1
+       position 0 0
+       size 1 30
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       text "Export Data..."
+       font "gui/fonts/metron"
+       "text offset" 10 0
+       "exact text" 1
+       "size to text h" 0
+       "text valign" center
+      }
+      ButtonWidgetClass TitleClose {
+       position 0 0
+       size 25 30
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       priority 5
+       style Default
+       text "X"
+       font "gui/fonts/metron"
+      }
+     }
     }
-    ButtonWidgetClass TitleClose {
-     position 0 0
-     size 25 30
-     halign right_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     priority 5
-     style Empty
-     text "X"
-     font "gui/fonts/metron"
-    }
-   }
-  }
-  WrapSpacerWidgetClass ExportWindowStack {
-   clipchildren 0
-   ignorepointer 1
-   position 0 0
-   size 1 1
-   halign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   Padding 0
-   Margin 0
-   "Size To Content H" 1
-   "Size To Content V" 1
-   content_halign center
-   {
-    GridSpacerWidgetClass OptionsGrid {
+    WrapSpacerWidgetClass ExportWindowStack {
+     clipchildren 0
      ignorepointer 1
-     position 0 0
-     size 1 200
+     size 1 1
      halign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     Padding 0
-     Margin 0
-    }
-    GridSpacerWidgetClass ButtonWrapper {
-     ignorepointer 1
-     position 0 0
-     size 1 0.4
-     halign center_ref
-     valign bottom_ref
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
      vexactsize 0
-     scaled 1
-     Padding 5
-     Margin 5
-     "Size To Content H" 1
-     "Size To Content V" 1
+     style Empty
+     Padding 10
+     Margin 10
      content_halign center
      content_valign bottom
-     Columns 2
-     Rows 1
      {
-      ButtonWidgetClass ExportButton {
+      GridSpacerWidgetClass ButtonWrapper {
+       ignorepointer 1
        position 0 0
-       size 120 30
+       size 1 0.25
        halign center_ref
        valign bottom_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "EditorExportButton"
-       style Empty
-       text "Export"
-       font "gui/fonts/metron"
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       Padding 5
+       Margin 5
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign bottom
+       Columns 2
+       Rows 1
+       {
+        PanelWidgetClass SelectButtonPanel {
+         clipchildren 1
+         ignorepointer 1
+         color 1 1 1 0.6667
+         size 120 30
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         style Outline
+         "no focus" 0
+         {
+          ButtonWidgetClass SelectButton {
+           visible 1
+           position 0 0
+           size 120 30
+           halign center_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style Default
+           text "Select"
+           font "gui/fonts/metron"
+          }
+         }
+        }
+        PanelWidgetClass CloseButtonPanel {
+         clipchildren 1
+         ignorepointer 1
+         color 1 1 1 0.6667
+         size 120 30
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         style Outline
+         "no focus" 0
+         {
+          ButtonWidgetClass CloseButton {
+           visible 1
+           position 0 0
+           size 120 30
+           halign center_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style Default
+           text "Close"
+           font "gui/fonts/metron"
+          }
+         }
+        }
+       }
       }
-      ButtonWidgetClass CloseButton {
+      WrapSpacerWidgetClass MapHostPanel {
+       ignorepointer 1
+       color 0.749 0.3725 0.3725 1
        position 0 0
-       size 120 30
+       size 0.95 0.7
        halign center_ref
-       valign bottom_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "EditorCloseButton"
-       style Empty
-       text "Close"
-       font "gui/fonts/metron"
+       hexactsize 0
+       vexactsize 0
+       style Colorable
       }
      }
     }

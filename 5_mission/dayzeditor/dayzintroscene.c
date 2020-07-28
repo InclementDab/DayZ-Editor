@@ -63,20 +63,18 @@ modded class DayZIntroScene
 			
 			float scale = vector.Distance(contact_pos, start) * 0.25;
 
-
-
 	        vector mins, maxs;
 	        new_camera.GetBounds(mins, maxs);
 	        vector center = (mins + maxs) * 0.5;
 	        vector size = maxs - mins;
-	
 	        
 	        dBodyDynamic(new_camera, true);
-	       	new_camera.SetDynamicPhysicsLifeTime(15.0);
+	       	new_camera.SetDynamicPhysicsLifeTime(-1);
 			dBodySetMass(new_camera, 100);
 			dBodySetDamping(new_camera, 100, 500);
 	        dBodyActive(new_camera, ActiveState.ACTIVE);
 	        new_camera.CreateDynamicPhysics(PhxInteractionLayers.RAGDOLL);
+			//new_camera.SetDynamicPhysics();
 		}
 		
 		

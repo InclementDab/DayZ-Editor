@@ -80,9 +80,8 @@ class TranslationWidget: ItemBase
 		m_ParentObject = parent_object;
 		vector start_pos = m_ParentObject.GetPosition();
 		start_pos[1] = start_pos[1] + m_ParentObject.GetSize()[1] / 2;
-		SetPosition(start_pos);		
+		SetPosition(start_pos);
 	}
-	
 	
 	
 

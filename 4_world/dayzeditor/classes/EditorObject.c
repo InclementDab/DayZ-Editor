@@ -168,7 +168,7 @@ class EditorObject : BuildingBase
 		else return GetType();
 	}
 
-	
+
 	void CreateBoundingBox()
 	{
 		Print("EditorObject::CreateBoundingBox");
@@ -176,11 +176,11 @@ class EditorObject : BuildingBase
 		vector clip_info[2];
 		vector size = GetSize();
 		
-		float radius = m_WorldObject.ClippingInfo(clip_info); // idk do something cool w/ radius
-		
-			
-		vector position = AverageVectors(clip_info[0], clip_info[1]);
 
+		float radius = m_WorldObject.GetCollisionBox(clip_info); // idk do something cool w/ radius	
+		clip_info[0][1] = -clip_info[1][1];
+		vector position = AverageVectors(clip_info[0], clip_info[1]);
+		
 		line_verticies[0] = clip_info[0];
 		line_verticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
 		line_verticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
@@ -189,7 +189,6 @@ class EditorObject : BuildingBase
 		line_verticies[5] = clip_info[1];
 		line_verticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
 		line_verticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
-		
 		
 		line_centers[0] = AverageVectors(line_verticies[0], line_verticies[1]);
 		line_centers[1] = AverageVectors(line_verticies[1], line_verticies[2]);
@@ -211,10 +210,8 @@ class EditorObject : BuildingBase
 			vector transform[4];			
 			transform[3] = line_centers[i];
 			
-			for (int j = 0; j < 3; j++) {
-				transform[j][j] = ((position[j] == line_centers[i][j])*size[j]/2) + line_width;
-			}
-						
+			for (int j = 0; j < 3; j++) 
+				transform[j][j] = ((position[j] == line_centers[i][j])*size[j]/2) + line_width;						
 			 
 			m_BBoxLines[i] = GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_NONE);
 			m_BBoxLines[i].SetTransform(transform);			
@@ -225,27 +222,16 @@ class EditorObject : BuildingBase
 		
 		
 		vector y_axis_mat[4];
-		vector bottom_center;
+		vector bottom_center = GetBottomCenter() - GetPosition();
 		y_axis_mat[0][0] = line_width;
 		y_axis_mat[1][1] = 1000;
 		y_axis_mat[2][2] = line_width;
-		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1] - size[1]/2, bottom_center[2]);
+		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1], bottom_center[2]);
 		
 		m_CenterLine = GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE);
-
 		m_CenterLine.SetTransform(y_axis_mat);
 		AddChild(m_CenterLine, -1);
-		
-		
-		vector base_mat[4];
-		base_mat[3] = GetBottomCenter();
-		//m_BBoxBase = GetGame().CreateObjectEx("BoundingBoxBase", vector.Zero, ECE_NONE);
-		base_mat[0][0] = size[0]/2;
-		base_mat[1][1] = line_width;
-		base_mat[2][2] = size[2]/2;
-		//m_BBoxBase.SetTransform(base_mat);
-		//WorldObject.AddChild(m_BBoxBase, -1);
-		
+				
 		TStringArray textures = m_BBoxLines[0].GetHiddenSelectionsTextures();
 		TStringArray materials = m_BBoxLines[0].GetHiddenSelectionsMaterials();
 		bbox_texture = textures[0]; bbox_material = materials[0];
@@ -301,7 +287,6 @@ class EditorObject : BuildingBase
 		IsSelected = false;
 		HideBoundingBox();
 		
-		
 		Editor.SelectedObjects.Remove(GetID());
 		EditorEvents.ObjectDeselectedInvoke(this, this);
 	}
@@ -309,8 +294,10 @@ class EditorObject : BuildingBase
 	vector GetBottomCenter()
 	{
 		if (!IsInitialized) return vector.Zero;
+		
 		vector clip_info[2];
-		m_WorldObject.ClippingInfo(clip_info);
+		m_WorldObject.GetCollisionBox(clip_info);
+		clip_info[0][1] = -clip_info[1][1];
 		vector result = Vector((clip_info[0][0] + clip_info[1][0]) / 2, clip_info[0][1], (clip_info[0][2] + clip_info[1][2]) / 2);
 		result += m_WorldObject.GetPosition();
 		
@@ -318,7 +305,6 @@ class EditorObject : BuildingBase
 	}
 		
 	ref Param4<vector, vector, vector, vector> TransformBeforeDrag;
-	
 	Param4<vector, vector, vector, vector> GetTransformArray()
 	{
 		vector mat[4];
@@ -338,13 +324,14 @@ class EditorObject : BuildingBase
 
 	vector GetSize()
 	{
-		vector size[2];
+		vector clip_info[2];
 		vector result;
 
-		m_WorldObject.ClippingInfo(size);		
-		result[0] = Math.AbsFloat(size[0][0]) + Math.AbsFloat(size[1][0]);
-		result[1] = Math.AbsFloat(size[0][1]) + Math.AbsFloat(size[1][1]);
-		result[2] = Math.AbsFloat(size[0][2]) + Math.AbsFloat(size[1][2]);
+		m_WorldObject.GetCollisionBox(clip_info);
+		clip_info[0][1] = -clip_info[1][1];		
+		result[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
+		result[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
+		result[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
 		
 		return result;
 	}
