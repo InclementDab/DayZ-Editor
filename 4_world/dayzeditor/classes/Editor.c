@@ -34,6 +34,8 @@ class Editor: Managed
 	static ref EditorUI						ActiveEditorUI;	
 	static EditorCamera						ActiveCamera;
 	
+	static ref EditorBrush					ActiveBrush;
+	
 	TranslationWidget						GlobalTranslationWidget;
 	
 	static Object DebugObject0;
@@ -303,6 +305,7 @@ class Editor: Managed
 		}
 		
 		
+		
 		vector cam_orientation = ActiveCamera.GetOrientation();	
 		ActiveEditorUI.m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
 		
@@ -387,6 +390,9 @@ class Editor: Managed
 
 		EditorEvents.ObjectCreateInvoke(null, editor_object);
 		
+		// decal test
+		//CreateDecal(editor_object, editor_object.GetPosition(), editor_object.GetDirection(), 0.001, 0, 10, "{15B9A94519F37848}Graphics/Particles/Materials/Weapons/weapon_shot_fnx_03.emat", 10, 0);
+		
 		return editor_object;
 	}
 	
@@ -470,7 +476,7 @@ class Editor: Managed
 		foreach (EditorObject editor_object: Editor.SelectedObjects)
 			editor_object.TransformBeforeDrag = editor_object.GetTransformArray();
 		
-		string name = context.ClassName();
+		string name = context.ClassName();		
 		switch (name) {
 			
 			case "EditorMapMarker": {
@@ -487,8 +493,18 @@ class Editor: Managed
 				translation_offset = raycast_result.pos - TranslationWidget.Cast(context).GetPosition();
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(TranslationWidgetDragUpdate, 0, true, context, target, raycast_result);
 				break;
+			}			
+			
+			case "RotationWidget": {
+				translation_offset = raycast_result.pos - RotationWidget.Cast(context).GetPosition();
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(RotationWidgetDragUpdate, 0, true, context, target, raycast_result);
+				break;
 			}
 			
+			default: {
+				Print("Unhandled case: " + name);
+				break;
+			}
 			
 		}
 		
@@ -502,6 +518,7 @@ class Editor: Managed
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectMapDragUpdate);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(ObjectDragUpdate);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(TranslationWidgetDragUpdate);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(RotationWidgetDragUpdate);
 		
 		EditorAction action = new EditorAction("SetTransformArray", "SetTransformArray");
 		foreach (EditorObject editor_object: Editor.SelectedObjects) {
@@ -524,43 +541,92 @@ class Editor: Managed
 			return;
 		}
 		
-		// this might crash once you add rotation widget unless you add as child
 		TranslationWidget translation_widget = TranslationWidget.Cast(context);
-		
-		vector object_position = target.GetPosition();
-		vector object_size = target.GetSize();
-		
+	
 		set<Object> o;
-		vector cursor_position = MousePosToRay(o, null, vector.Distance(GetGame().GetCurrentCameraPosition(), target.GetPosition()));
+		vector cursor_position = MousePosToRay(o, null, vector.Distance(GetGame().GetCurrentCameraPosition(), target.GetPosition()));	
+		vector widget_position = translation_widget.GetPosition();
+			
+		cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), widget_position) - translation_offset;
 		
-	
-		vector translation_position = translation_widget.GetPosition();
+		string name = translation_widget.GetActionComponentName(raycast_result.component);
 		
-		Print(translation_offset);
-	
-		cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), translation_position) - translation_offset;
-		switch (translation_widget.GetActionComponentName(raycast_result.component)) {
+		switch (name) {
 			
 			case "translatex": {
-				translation_position[0] = cursor_position[0];
+				widget_position[0] = cursor_position[0];
 				break;
 			}
 			
 			case "translatey": {
-				translation_position[2] = cursor_position[2];
+				widget_position[2] = cursor_position[2];
 				break;				
 			}
 			
 			case "translatez": {
-				translation_position[1] = cursor_position[1];
+				widget_position[1] = cursor_position[1];
+				break;
+			}
+		}
+				
+		translation_widget.SetTranslationPosition(widget_position);
+		translation_widget.Update();
+		
+	}
+	
+	void RotationWidgetDragUpdate(Class context, notnull EditorObject target, ref RaycastRVResult raycast_result)
+	{
+		Input input = GetGame().GetInput();
+		if (input.LocalRelease("UAFire")) {
+			EditorEvents.DropInvoke(this, target);
+			return;
+		}
+		
+		RotationWidget rotation_widget = RotationWidget.Cast(context);
+		
+		set<Object> o;
+		vector cursor_position = MousePosToRay(o, null);	
+		vector widget_position = rotation_widget.GetPosition();
+		
+		
+		
+		cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), widget_position) - translation_offset;
+		
+		string name = rotation_widget.GetActionComponentName(raycast_result.component);
+		vector trans[4];
+		vector ori;
+		float angle;
+		target.GetTransform(trans);
+		cursor_position = target.GetPosition() - cursor_position;
+		ori = target.GetOrientation();
+		switch (name) {
+			
+			case "rotationx": {
+
+				angle = Math.Atan2(cursor_position[1], cursor_position[2]) * Math.RAD2DEG;
+				ori[2] = angle;
 				break;
 			}
 			
+			case "rotationy": {
+				angle = Math.Atan2(cursor_position[0], cursor_position[1]) * Math.RAD2DEG;
+				ori[1] = angle;
+				
+				//target.PlaceOnSurfaceRotated(trans, trans[3], angle, 0, 0, true);
+				
+				break;				
+			}
+			
+			case "rotationz": {
+				
+				angle = Math.Atan2(cursor_position[2], cursor_position[0]) * Math.RAD2DEG;
+				ori[0] = -angle;
+				break;
+			}
 		}
 		
-		translation_widget.SetTranslationPosition(translation_position);
-		translation_widget.Update();
-		
+		//target.SetTransform(trans);
+		rotation_widget.SetRotation(ori);
 	}
 	
 	
@@ -821,9 +887,9 @@ class Editor: Managed
 			case KeyCode.KC_S: {
 				if (input.LocalValue("UAWalkRunTemp")) {
 					Save();
-					
 					return true;
 				}
+				break;
 			}
 			
 			case KeyCode.KC_O: {
@@ -831,14 +897,64 @@ class Editor: Managed
 					Open();
 					return true;
 				}
+				break;
+			}
+		}
+		
+		// todo add increment size in ui
+		foreach (EditorObject selected_objects: SelectedObjects) {
+			
+			switch (key) {
+				case KeyCode.KC_UP: {
+					IncrementMove(selected_objects, 2, -0.5);
+					break;
+				}
+				
+				case KeyCode.KC_DOWN: {
+					IncrementMove(selected_objects, 2, 0.5);
+					break;
+				}
 			}
 			
-		
+			switch (key) {
+				case KeyCode.KC_LEFT: {
+					IncrementMove(selected_objects, 0, -0.5);
+					break;
+				}			
+				
+				case KeyCode.KC_RIGHT: {
+					IncrementMove(selected_objects, 0, 0.5);
+					break;
+				}			
+			}
+			
+			switch (key) {
+				case KeyCode.KC_PRIOR: {				
+					IncrementMove(selected_objects, 1, 0.5);
+					break;
+				}	
+				
+				case KeyCode.KC_NEXT: {
+					IncrementMove(selected_objects, 1, -0.5);
+					break;
+				}
+			}
 		}
 		
 		return ActiveEditorUI.OnKeyPress(key));
 	}
+	
+	void IncrementMove(EditorObject obj, int axis, float move)
+	{
+		vector pos = obj.GetPosition();
+		pos[axis] = pos[axis] + move;
+		obj.SetPosition(pos);
+		obj.Update();
+		GlobalTranslationWidget.UpdatePosition();
+		
+	}
 }
+
 
 
 

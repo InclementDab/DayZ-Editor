@@ -24,6 +24,7 @@ class EditorUI: EditorWidgetEventHandler
 	protected ButtonWidget m_ToolbarRedo;
 	protected ButtonWidget m_ToolbarMagnet;
 	protected ButtonWidget m_ToolbarGround;
+	protected ButtonWidget m_ToolbarSimcity;
 	
 	// Frames and Hosts
 	protected Widget m_LeftbarFrame;
@@ -95,6 +96,7 @@ class EditorUI: EditorWidgetEventHandler
 		m_ToolbarRedo			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarRedo"));
 		m_ToolbarMagnet			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarMagnet"));
 		m_ToolbarGround			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarGround"));
+		m_ToolbarSimcity		= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarSimCity"));
 		
 		// Spacers
 		m_LeftbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("LeftbarSpacer"));
@@ -135,6 +137,13 @@ class EditorUI: EditorWidgetEventHandler
 				EditorSettings.MAINTAIN_HEIGHT = m_ToolbarGround.GetState();
 				return true;
 			}
+			if (w == m_ToolbarSimcity) {
+				EditorSettings.SIM_CITY_MODE = m_ToolbarSimcity.GetState();
+				if (m_ToolbarSimcity.GetState()) {
+					Editor.ActiveBrush = new EditorBrush();
+				}
+				return true;
+			}
 		}
 		
 		return false;
@@ -150,13 +159,13 @@ class EditorUI: EditorWidgetEventHandler
 			
 			if (w == m_LeftbarHide) {
 				left_bar_hidden = !left_bar_hidden;
-				m_RightbarFrame.SetPos(-250 * left_bar_hidden, 48);
+				m_LeftbarFrame.SetPos(-300 * left_bar_hidden, 0);
 				return true;
 			} 
 			
 			if (w == m_RightbarHide) {
 				right_bar_hidden = !right_bar_hidden;
-				m_RightbarFrame.SetPos(-250 * right_bar_hidden, 48);
+				m_RightbarFrame.SetPos(-300 * right_bar_hidden, 48);
 				return true;
 			}
 			
@@ -171,7 +180,7 @@ class EditorUI: EditorWidgetEventHandler
 			DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
 			
 			//DayZPhysics.RaycastRV(start_pos, end_pos, contact_pos, contact_dir, contact_comp, collisions);
-			if (raycast_result.Get(0).obj == Editor.GetTranslationWidget() && raycast_result.Get(0).obj != null) {
+			if (raycast_result.Get(0).obj != null && (raycast_result.Get(0).obj == Editor.GetTranslationWidget() || raycast_result.Get(0).obj == Editor.GetTranslationWidget().GetRotationWidget())) {
 				EditorEvents.DragInvoke(raycast_result[0].obj, Editor.GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
 				return true;
 			}

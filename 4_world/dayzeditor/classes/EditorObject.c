@@ -204,7 +204,7 @@ class EditorObject : BuildingBase
 		line_centers[11] = AverageVectors(line_verticies[0], line_verticies[7]);
 				
 	
-		float line_width = 0.01;
+		float line_width = 0.05;
 		for (int i = 0; i < 12; i++) {
 			
 			vector transform[4];			
@@ -298,10 +298,28 @@ class EditorObject : BuildingBase
 		vector clip_info[2];
 		m_WorldObject.GetCollisionBox(clip_info);
 		clip_info[0][1] = -clip_info[1][1];
-		vector result = Vector((clip_info[0][0] + clip_info[1][0]) / 2, clip_info[0][1], (clip_info[0][2] + clip_info[1][2]) / 2);
-		result += m_WorldObject.GetPosition();
+		vector result;
+		vector up = GetTransformAxis(1);
+		result = up * -(vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
+		result += GetPosition();
+		return result;
+	}
+	
+	vector GetTopCenter()
+	{
+		if (!IsInitialized) return vector.Zero;
+		
+		vector clip_info[2];
+		m_WorldObject.GetCollisionBox(clip_info);
+		clip_info[0][1] = -clip_info[1][1];
+		vector result;
+		vector up = GetTransformAxis(1);
+		result = up * (vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
+		result += GetPosition();
+		return result;
 		
 		return result;
+		
 	}
 		
 	ref Param4<vector, vector, vector, vector> TransformBeforeDrag;

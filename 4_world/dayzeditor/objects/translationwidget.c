@@ -1,21 +1,43 @@
 
+class RotationWidget: ItemBase
+{
+	private EditorObject m_ParentObject = null;
+	void RotationWidget()
+	{
+		Print("RotationWidget");
+	}
+	
+	
+	void SetEditorObject(EditorObject parent_object)
+	{
+		m_ParentObject = parent_object;
+	}
+	
+	void SetRotation(vector ori) 
+	{
+		m_ParentObject.SetOrientation(ori);
+		m_ParentObject.Update();
+		
+		//SetPosition(m_ParentObject.GetTopCenter());
+	}
+	
+	EditorObject GetEditorObject() { return m_ParentObject; }
+}
+
+
 
 class TranslationWidget: ItemBase
 {
 	private EditorObject m_ParentObject = null;
-	private Object m_RotationWidget;
+	private RotationWidget m_RotationWidget;
 	
 	void TranslationWidget()
 	{
 		Print("TranslationWidget");
-		Print(ClearEventMask(EntityEvent.ALL));		
-		//TStringArray textures = GetHiddenSelectionsTextures();
-		//SetObjectTexture(GetHiddenSelectionIndex("TranslateY"), textures[0]);
-		//SetObjectTexture(GetHiddenSelectionIndex("TranslateZ"), textures[0]);		
-		//m_RotationWidget = GetGame().CreateObjectEx("RotationWidget", vector.Zero, ECE_NONE);
-		//AddChild(m_RotationWidget, -1);
 		
-		
+		m_RotationWidget = GetGame().CreateObjectEx("RotationWidget", vector.Zero, ECE_NONE);
+		AddChild(m_RotationWidget, -1);
+		Update();
 	}
 
 	override void EEInit()
@@ -55,16 +77,14 @@ class TranslationWidget: ItemBase
 		pos[1] = pos[1] - m_ParentObject.GetSize()[1] / 2;
 		m_ParentObject.SetPosition(pos);
 		m_ParentObject.Update();
+		
+		//UpdatePosition();
 	}
 	
 	void UpdatePosition()
 	{
-		vector pos;
-		pos = m_ParentObject.GetPosition();
-		pos[1] = pos[1] + m_ParentObject.GetSize()[1] / 2;
-		SetPosition(pos);
+		SetPosition(m_ParentObject.GetTopCenter());
 		Update();
-		
 	}
 
 	void ~TranslationWidget()
@@ -78,13 +98,15 @@ class TranslationWidget: ItemBase
 	void SetEditorObject(EditorObject parent_object)
 	{
 		m_ParentObject = parent_object;
-		vector start_pos = m_ParentObject.GetPosition();
-		start_pos[1] = start_pos[1] + m_ParentObject.GetSize()[1] / 2;
-		SetPosition(start_pos);
+		SetPosition(m_ParentObject.GetTopCenter());
+		m_RotationWidget.SetEditorObject(m_ParentObject);
 	}
 	
+	RotationWidget GetRotationWidget()
+	{
+		return m_RotationWidget;
+	}
 	
-
 	private bool mouse_inside = false;
 	bool IsMouseInside() { return mouse_inside; }
 	

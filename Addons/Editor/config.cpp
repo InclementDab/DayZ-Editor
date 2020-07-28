@@ -46,7 +46,8 @@ class CfgVehicles
 	{
 		scope = 1;
 		itemSize[]={16,16};
-		model = "DayZEditor\Editor\RotationWidget.p3d";
+		model = "\DayZEditor\Editor\RotationWidget.p3d";
+		hiddenSelections[] = {"RotationX", "RotationY", "RotationZ"};
 	};
 
 

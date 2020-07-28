@@ -8,6 +8,7 @@ class EditorSettings
 	
 	static bool MAGNET_PLACEMENT = false;
 	static bool MAINTAIN_HEIGHT = false;
+	static bool SIM_CITY_MODE = false;
 	
 	static string BBOX_COLOR = "#(argb,8,8,3)color(1,1,0,1,co)";
 	

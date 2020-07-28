@@ -1,0 +1,15 @@
+MetaFileClass {
+ Name "{9B12841B8FBC3A3E}DayZ_Server/dev/DayZEditor/Addons/editor/brush.emat"
+ Author "tyler-pc"
+ ChangeDate 716892412
+ Configurations {
+  EMATResourceClass PC {
+  }
+  EMATResourceClass XBOX_ONE : PC {
+  }
+  EMATResourceClass PS4 : PC {
+  }
+  EMATResourceClass LINUX : PC {
+  }
+ }
+}
