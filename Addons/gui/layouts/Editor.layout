@@ -677,6 +677,18 @@ FrameWidgetClass EditorMainFrame {
          font "gui/fonts/metron-bold"
          switch toggle
         }
+        ButtonWidgetClass SnapButton {
+         size 28 28
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "S"
+         font "gui/fonts/metron-bold"
+         switch toggle
+        }
         PanelWidgetClass Divider0 {
          ignorepointer 1
          position 0 0

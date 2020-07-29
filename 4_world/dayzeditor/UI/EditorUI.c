@@ -9,6 +9,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 	protected ButtonWidget 	m_RedoButton;
 	protected ButtonWidget 	m_MagnetButton;
 	protected ButtonWidget 	m_GroundButton;
+	protected ButtonWidget 	m_SnapButton;
 	protected ButtonWidget 	m_SimcityButton;
 	protected ButtonWidget 	m_DeleteBrushButton;
 	
@@ -29,6 +30,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 		m_RedoButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("RedoButton"));
 		m_MagnetButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("MagnetButton"));
 		m_GroundButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("GroundButton"));
+		m_SnapButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("SnapButton"));
 		m_SimcityButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("SimcityButton"));
 		m_DeleteBrushButton		= ButtonWidget.Cast(m_Root.FindAnyWidget("DeleteBrush"));
 		
@@ -56,6 +58,10 @@ class EditorUIToolbar: EditorWidgetEventHandler
 			}
 			if (w == m_GroundButton) {
 				EditorSettings.MAINTAIN_HEIGHT = m_GroundButton.GetState();
+				return true;
+			}
+			if (w == m_SnapButton) {
+				EditorSettings.SNAPPING_MODE = m_SnapButton.GetState();
 				return true;
 			}
 			

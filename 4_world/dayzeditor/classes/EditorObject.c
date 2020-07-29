@@ -67,7 +67,7 @@ class EditorObject : BuildingBase
 	ref UILinkedObject 		m_EditorObjectBrowser = null;
 	ref UILinkedObject		m_EditorMapMarker = null;
 	
-	protected EntityAI 		m_BBoxLines[12];	
+	EntityAI 		m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
 	protected EntityAI 		m_CenterLine;
 	
@@ -358,7 +358,43 @@ class EditorObject : BuildingBase
 	
 	
 
-	
+	void SetTransformWithSnapping(vector transform[4])
+	{	
+		SetTransform(transform);
+		Update();
+		
+		if (EditorSettings.SNAPPING_MODE) {
+			vector current_size = GetSize();
+			vector current_pos = GetPosition();
+			float snap_radius = 5;
+
+			foreach (EditorObject editor_object: Editor.PlacedObjects) {
+				if (editor_object == this) continue;
+				
+				vector size = editor_object.GetSize();
+				vector position = editor_object.GetPosition();
+				
+				if (vector.Distance(current_pos, position) < 100) {
+					
+					for (int i = 0; i < 12; i++) {
+						vector pos = editor_object.m_BBoxLines[i].GetPosition();
+						Print(vector.Distance(pos, current_pos));
+						if (vector.Distance(pos, current_pos) < snap_radius) {
+							SetPosition(pos);
+							Update();
+							return;
+						}
+						
+					}
+					
+				}
+				
+			}
+		
+		}
+		
+		Update();
+	}
 		
 
 	private bool BoundingBoxVisible;

@@ -745,7 +745,7 @@ class Editor: Managed
 			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
 		}
 	
-		target.SetTransform(object_transform);
+		target.SetTransformWithSnapping(object_transform);
 		target.Update();
 		
 		// This handles all other selected objects
