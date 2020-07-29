@@ -50,6 +50,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 		Print("EditorUIToolbar::OnClick");
 		if (button == 0) {
 			if (w == m_MagnetButton) {
+				Print(m_MagnetButton.GetState());
 				EditorSettings.MAGNET_PLACEMENT = m_MagnetButton.GetState();
 				return true;
 			}
@@ -57,16 +58,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				EditorSettings.MAINTAIN_HEIGHT = m_GroundButton.GetState();
 				return true;
 			}
-			if (w == m_SimcityButton) {
-				EditorSettings.SIM_CITY_MODE = m_SimcityButton.GetState();
-				if (m_SimcityButton.GetState()) {
-					//Editor.ActiveBrush = new NatureBrush(m_SimcityRadiusSlider.GetCurrent());
-					
-				} else {
-					delete Editor.ActiveBrush;
-				}
-				return true;
-			}
+			
 		}
 		
 		return false;
@@ -119,7 +111,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 		
 		
 		
-		return super.OnEvent(eventType, target, parameter0, parameter1);
+		return false;
 		
 	}
 	

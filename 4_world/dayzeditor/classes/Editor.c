@@ -403,9 +403,10 @@ class Editor: Managed
 		Input input = GetGame().GetInput();
 		EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
 		vector mat[4];
-		e.GetTransform(mat);
+		
+		
 		EditorObject editor_object = Editor.CreateObject(e.GetType(), e.GetPosition());
-		editor_object.SetTransform(mat);
+		editor_object.SetOrientation(e.GetOrientation());
 		editor_object.Select();
 		if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
 	}

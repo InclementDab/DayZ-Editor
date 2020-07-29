@@ -3,8 +3,8 @@
 
 class EditorSettings 
 {
-	static float VIEW_DISTANCE = 5000;
-	static float OBJECT_VIEW_DISTANCE = 3000;
+	static float VIEW_DISTANCE = 12000;
+	static float OBJECT_VIEW_DISTANCE = 5000;
 	
 	static bool MAGNET_PLACEMENT = false;
 	static bool MAINTAIN_HEIGHT = false;
