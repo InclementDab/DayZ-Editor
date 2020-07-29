@@ -2,6 +2,80 @@
 // make it so you can search for items by mod name with @ModNameHere
 
 
+class EditorUIToolbar: EditorWidgetEventHandler
+{
+	
+	protected ButtonWidget 	m_UndoButton;
+	protected ButtonWidget 	m_RedoButton;
+	protected ButtonWidget 	m_MagnetButton;
+	protected ButtonWidget 	m_GroundButton;
+	protected ButtonWidget 	m_SimcityButton;
+	
+	protected SliderWidget 	m_SimcityRadiusSlider;
+	protected TextWidget	m_SimcityRadiusText;
+	
+	override void OnWidgetScriptInit(Widget w)
+	{
+		Print("EditorUIToolbar::OnWidgetScriptInit");
+		super.OnWidgetScriptInit(w);
+		
+		m_UndoButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("UndoButton"));
+		m_RedoButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("RedoButton"));
+		m_MagnetButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("MagnetButton"));
+		m_GroundButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("GroundButton"));
+		m_SimcityButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("SimcityButton"));
+		
+		m_SimcityRadiusSlider	= SliderWidget.Cast(m_Root.FindAnyWidget("SimcityRadiusSlider"));
+		m_SimcityRadiusText		= TextWidget.Cast(m_Root.FindAnyWidget("SimcityRadiusText"));
+		
+		
+		m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
+	}
+	
+
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		Print("EditorUIToolbar::OnClick");
+		if (button == 0) {
+			if (w == m_MagnetButton) {
+				EditorSettings.MAGNET_PLACEMENT = m_MagnetButton.GetState();
+				return true;
+			}
+			if (w == m_GroundButton) {
+				EditorSettings.MAINTAIN_HEIGHT = m_GroundButton.GetState();
+				return true;
+			}
+			if (w == m_SimcityButton) {
+				EditorSettings.SIM_CITY_MODE = m_SimcityButton.GetState();
+				if (m_SimcityButton.GetState()) {
+					Editor.ActiveBrush = new EditorBrush();
+				} else {
+					delete Editor.ActiveBrush;
+				}
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
+	{
+		Print("EditorUIToolbar::OnUpdate");
+		if (target == m_SimcityRadiusSlider) {
+			m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
+			Editor.ActiveBrush.SetRadius(m_SimcityRadiusSlider.GetCurrent());
+		}
+		
+		
+		
+		return super.OnEvent(eventType, target, parameter0, parameter1);
+		
+	}
+	
+	
+}
+
 
 
 class EditorUI: EditorWidgetEventHandler
@@ -20,11 +94,7 @@ class EditorUI: EditorWidgetEventHandler
 	protected ButtonWidget m_HumanSelect;
 	protected ButtonWidget m_LeftbarHide;
 	protected ButtonWidget m_RightbarHide;
-	protected ButtonWidget m_ToolbarUndo;
-	protected ButtonWidget m_ToolbarRedo;
-	protected ButtonWidget m_ToolbarMagnet;
-	protected ButtonWidget m_ToolbarGround;
-	protected ButtonWidget m_ToolbarSimcity;
+
 	
 	// Frames and Hosts
 	protected Widget m_LeftbarFrame;
@@ -72,7 +142,6 @@ class EditorUI: EditorWidgetEventHandler
 		// Canvas
 		EditorCanvas			= CanvasWidget.Cast(m_Root.FindAnyWidget("EditorCanvas"));
 		
-		
 		// Frames
 		m_LeftbarFrame			= m_Root.FindAnyWidget("LeftbarFrame");
 		m_RightbarFrame			= m_Root.FindAnyWidget("RightbarFrame");
@@ -92,11 +161,6 @@ class EditorUI: EditorWidgetEventHandler
 		m_HumanSelect			= ButtonWidget.Cast(m_Root.FindAnyWidget("HumanSelect"));
 		m_LeftbarHide			= ButtonWidget.Cast(m_Root.FindAnyWidget("LeftbarHide"));
 		m_RightbarHide			= ButtonWidget.Cast(m_Root.FindAnyWidget("RightbarHide"));
-		m_ToolbarUndo			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarUndo"));
-		m_ToolbarRedo			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarRedo"));
-		m_ToolbarMagnet			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarMagnet"));
-		m_ToolbarGround			= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarGround"));
-		m_ToolbarSimcity		= ButtonWidget.Cast(m_Root.FindAnyWidget("ToolbarSimCity"));
 		
 		// Spacers
 		m_LeftbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("LeftbarSpacer"));
@@ -125,30 +189,6 @@ class EditorUI: EditorWidgetEventHandler
 	
 	
 
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		Print("EditorUI::OnClick");
-		if (button == 0) {
-			if (w == m_ToolbarMagnet) {
-				EditorSettings.MAGNET_PLACEMENT = m_ToolbarMagnet.GetState();
-				return true;
-			}
-			if (w == m_ToolbarGround) {
-				EditorSettings.MAINTAIN_HEIGHT = m_ToolbarGround.GetState();
-				return true;
-			}
-			if (w == m_ToolbarSimcity) {
-				EditorSettings.SIM_CITY_MODE = m_ToolbarSimcity.GetState();
-				if (m_ToolbarSimcity.GetState()) {
-					Editor.ActiveBrush = new EditorBrush();
-				}
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
@@ -180,14 +220,16 @@ class EditorUI: EditorWidgetEventHandler
 			DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
 			
 			//DayZPhysics.RaycastRV(start_pos, end_pos, contact_pos, contact_dir, contact_comp, collisions);
-			if (raycast_result.Get(0).obj != null && (raycast_result.Get(0).obj == Editor.GetTranslationWidget() || raycast_result.Get(0).obj == Editor.GetTranslationWidget().GetRotationWidget())) {
-				EditorEvents.DragInvoke(raycast_result[0].obj, Editor.GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
-				return true;
+			if (raycast_result.Get(0).obj != NULL) {
+				if ((raycast_result.Get(0).obj == Editor.GetTranslationWidget() || raycast_result.Get(0).obj == Editor.GetTranslationWidget().GetRotationWidget())) {
+					EditorEvents.DragInvoke(raycast_result[0].obj, Editor.GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
+					return true;
+				}
 			}
 			
 
 
-			if (Editor.EditorObjectUnderCursor == null) {
+			if (Editor.EditorObjectUnderCursor == null && Editor.ActiveBrush == null) {
 				// delayed dragbox
 				EditorUI.EditorCanvas.Clear();
 				GetCursorPos(start_x, start_y);
@@ -234,14 +276,14 @@ class EditorUI: EditorWidgetEventHandler
 				else ShowCursor();
 				return true;
 			}
-			
+			/*
 			case KeyCode.KC_U: {
 				EditorSettings.MAGNET_PLACEMENT = !EditorSettings.MAGNET_PLACEMENT;
 				m_ToolbarMagnet.SetState(EditorSettings.MAGNET_PLACEMENT);
 				m_ToolbarMagnet.Update();
 				SetFocus(null);
 				return true;
-			}
+			}*/
 			
 			case KeyCode.KC_Y: {
 				m_Root.Show(!m_Root.IsVisible());
@@ -251,7 +293,7 @@ class EditorUI: EditorWidgetEventHandler
 				
 				return true;
 			}
-			
+			/*
 			case KeyCode.KC_G: {
 				
 				EditorSettings.MAINTAIN_HEIGHT = !EditorSettings.MAINTAIN_HEIGHT;
@@ -259,9 +301,7 @@ class EditorUI: EditorWidgetEventHandler
 				m_ToolbarGround.Update();
 				SetFocus(null);
 				return true;
-			}
-			
-
+			}*/
 		}
 		return false;
 	}

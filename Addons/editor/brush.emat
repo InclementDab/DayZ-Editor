@@ -1,8 +1,0 @@
-MatSkin {
- AlbedoMap "{00912563F4664A5A}graphics/textures/test/cow/cow_brown_co.edds" 
- AlbedoMapTexMat {
-  1 0 0 0
- }
- Color 0.5765 0 0 1
- Specular 0.2588 0.6863 0.6863 1
-}

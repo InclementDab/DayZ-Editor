@@ -390,8 +390,6 @@ class Editor: Managed
 
 		EditorEvents.ObjectCreateInvoke(null, editor_object);
 		
-		// decal test
-		//CreateDecal(editor_object, editor_object.GetPosition(), editor_object.GetDirection(), 0.001, 0, 10, "{15B9A94519F37848}Graphics/Particles/Materials/Weapons/weapon_shot_fnx_03.emat", 10, 0);
 		
 		return editor_object;
 	}

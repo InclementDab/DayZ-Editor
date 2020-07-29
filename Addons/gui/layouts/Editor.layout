@@ -587,6 +587,7 @@ FrameWidgetClass EditorMainFrame {
    hexactsize 0
    vexactsize 0
    priority 250
+   scriptclass "EditorUIToolbar"
    {
     PanelWidgetClass ToolbarButtons {
      visible 1
@@ -611,7 +612,7 @@ FrameWidgetClass EditorMainFrame {
        vexactsize 0
        Margin 0
        {
-        ButtonWidgetClass ToolbarUndo {
+        ButtonWidgetClass UndoButton {
          position 0 0
          size 28 28
          hexactpos 1
@@ -620,7 +621,7 @@ FrameWidgetClass EditorMainFrame {
          vexactsize 1
          text "U"
         }
-        ButtonWidgetClass ToolbarRedo {
+        ButtonWidgetClass RedoButton {
          position 0 0
          size 28 28
          hexactpos 1
@@ -629,7 +630,7 @@ FrameWidgetClass EditorMainFrame {
          vexactsize 1
          text "R"
         }
-        ButtonWidgetClass ToolbarMagnet {
+        ButtonWidgetClass MagnetButton {
          position 0 0
          size 28 28
          hexactpos 1
@@ -640,7 +641,7 @@ FrameWidgetClass EditorMainFrame {
          font "gui/fonts/metron-bold"
          switch toggle
         }
-        ButtonWidgetClass ToolbarGround {
+        ButtonWidgetClass GroundButton {
          size 28 28
          halign center_ref
          valign center_ref
@@ -652,7 +653,8 @@ FrameWidgetClass EditorMainFrame {
          font "gui/fonts/metron-bold"
          switch toggle
         }
-        ButtonWidgetClass ToolbarSimCity {
+        ButtonWidgetClass SimcityButton {
+         clipchildren 0
          size 100 28
          halign center_ref
          valign center_ref
@@ -663,6 +665,27 @@ FrameWidgetClass EditorMainFrame {
          text "Sim City"
          font "gui/fonts/metron"
          switch toggle
+        }
+        SliderWidgetClass SimcityRadiusSlider {
+         size 120 28
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+        }
+        TextWidgetClass SimcityRadiusText {
+         ignorepointer 1
+         size 28 28
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "0"
+         font "gui/fonts/metron"
+         "text halign" center
+         "text valign" center
         }
        }
       }
