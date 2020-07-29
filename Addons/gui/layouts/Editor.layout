@@ -687,6 +687,20 @@ FrameWidgetClass EditorMainFrame {
          "text halign" center
          "text valign" center
         }
+        ButtonWidgetClass DeleteBrush {
+         clipchildren 0
+         size 100 28
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Delete"
+         font "gui/fonts/metron"
+         "text color" 0.6863 0.2588 0.2588 1
+         switch toggle
+        }
        }
       }
      }

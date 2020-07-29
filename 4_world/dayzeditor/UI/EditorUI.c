@@ -10,6 +10,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 	protected ButtonWidget 	m_MagnetButton;
 	protected ButtonWidget 	m_GroundButton;
 	protected ButtonWidget 	m_SimcityButton;
+	protected ButtonWidget 	m_DeleteBrushButton;
 	
 	protected SliderWidget 	m_SimcityRadiusSlider;
 	protected TextWidget	m_SimcityRadiusText;
@@ -24,6 +25,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 		m_MagnetButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("MagnetButton"));
 		m_GroundButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("GroundButton"));
 		m_SimcityButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("SimcityButton"));
+		m_DeleteBrushButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("DeleteBrush"));
 		
 		m_SimcityRadiusSlider	= SliderWidget.Cast(m_Root.FindAnyWidget("SimcityRadiusSlider"));
 		m_SimcityRadiusText		= TextWidget.Cast(m_Root.FindAnyWidget("SimcityRadiusText"));
@@ -48,7 +50,15 @@ class EditorUIToolbar: EditorWidgetEventHandler
 			if (w == m_SimcityButton) {
 				EditorSettings.SIM_CITY_MODE = m_SimcityButton.GetState();
 				if (m_SimcityButton.GetState()) {
-					Editor.ActiveBrush = new EditorBrush();
+					Editor.ActiveBrush = new NatureBrush();
+				} else {
+					delete Editor.ActiveBrush;
+				}
+				return true;
+			}			
+			if (w == m_DeleteBrushButton) {
+				if (m_DeleteBrushButton.GetState()) {
+					Editor.ActiveBrush = new DeleteBrush();
 				} else {
 					delete Editor.ActiveBrush;
 				}
@@ -61,7 +71,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 	
 	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
 	{
-		Print("EditorUIToolbar::OnUpdate");
+		//Print("EditorUIToolbar::OnUpdate");
 		if (target == m_SimcityRadiusSlider) {
 			m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
 			Editor.ActiveBrush.SetRadius(m_SimcityRadiusSlider.GetCurrent());

@@ -78,7 +78,6 @@ class Editor: Managed
 		EditorSettings.Load();
 		
 		// Event subscriptions
-		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
 		EditorEvents.OnObjectDrag.Insert(HandleObjectDrag);
@@ -369,24 +368,29 @@ class Editor: Managed
 		return null;
 	}
 
-	static EditorObject CreateObject(string name, vector transform[4])
+	static EditorObject CreateObject(string name, vector position)
 	{
 		Print("Editor::CreateObject");
-		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", transform[3], ECE_NONE);		
-		editor_object.SetTransform(transform);
+		
+			
+		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", position, ECE_NONE);
 		editor_object.Init(name);
-		editor_object.Update();
+
 
 		// maybe move this into createinvoke	jk lol
 		SessionCache.Insert(new EditorObjectLink(editor_object));
+		PlacedObjects.Insert(editor_object.GetID(), editor_object);
 		
-		
+
 		// Create Undo / redo action for creation
 		EditorObjectLink link = SearchSessionCache(editor_object);
 		EditorAction action = new EditorAction("Delete", "Create");
 		action.InsertUndoParameter(link, null);
 		action.InsertRedoParameter(link, null);
 		Editor.InsertAction(action);
+		
+		ActiveEditorUI.InsertPlacedObject(editor_object);
+		ActiveEditorUI.GetMap().OnObjectCreated(null, editor_object);
 
 		EditorEvents.ObjectCreateInvoke(null, editor_object);
 		
@@ -400,7 +404,8 @@ class Editor: Managed
 		EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
 		vector mat[4];
 		e.GetTransform(mat);
-		EditorObject editor_object = Editor.CreateObject(e.GetType(), mat);
+		EditorObject editor_object = Editor.CreateObject(e.GetType(), e.GetPosition());
+		editor_object.SetTransform(mat);
 		editor_object.Select();
 		if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
 	}
@@ -428,11 +433,30 @@ class Editor: Managed
 			action.InsertUndoParameter(link, null);
 			action.InsertRedoParameter(link, null);
 			GetGame().ObjectDelete(selected_object);
+			PlacedObjects.Remove(selected_object.GetID());
 		}
 		
 		InsertAction(action);
 		
 		GetGame().ObjectDelete(GlobalTranslationWidget);
+	}
+	
+	void DeleteObject(EditorObject target)
+	{
+		
+		EditorAction action = new EditorAction("Create", "Delete");
+
+		EditorObjectLink link = SearchSessionCache(target);
+		action.InsertUndoParameter(link, null);
+		action.InsertRedoParameter(link, null);
+		GetGame().ObjectDelete(target);
+		PlacedObjects.Remove(target.GetID());
+		
+		
+		InsertAction(action);
+		
+		GetGame().ObjectDelete(GlobalTranslationWidget);
+		
 	}
 
 
@@ -441,11 +465,7 @@ class Editor: Managed
 	static TranslationWidget GetTranslationWidget() { return Editor.GetInstance().GlobalTranslationWidget; }
 	
 	
-	void OnObjectCreated(Class context, EditorObject target)
-	{
-		ActiveEditorUI.InsertPlacedObject(target);
-		ActiveEditorUI.GetMap().OnObjectCreated(context, target);
-	}
+
 	
 	void OnObjectSelected(Class context, EditorObject target)
 	{

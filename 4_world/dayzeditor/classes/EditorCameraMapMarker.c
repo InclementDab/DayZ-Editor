@@ -7,7 +7,6 @@ class EditorCameraMapMarker: ScriptedWidgetEventHandler
 	void ~EditorCameraMapMarker()
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-		delete m_Root; delete m_EditorMapMarkerImage;
 	}
 	
 	void OnWidgetScriptInit(Widget w)
@@ -24,7 +23,7 @@ class EditorCameraMapMarker: ScriptedWidgetEventHandler
 	private MapWidget m_MapWidget;
 	void Update()
 	{
-	
+		if (m_ActiveCamera == null) return;
 		vector pos = m_MapWidget.MapToScreen(m_ActiveCamera.GetPosition());
 		
 		m_Root.SetPos(pos[0], pos[1]);

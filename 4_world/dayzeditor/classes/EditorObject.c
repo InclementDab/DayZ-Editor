@@ -56,9 +56,8 @@ class EditorObject : BuildingBase
 {
 	private bool IsInitialized = false;
 	private bool IsSelected = false;
-	private string bbox_texture, bbox_material;
 	
-	protected Object m_WorldObject;
+	protected Object 		m_WorldObject;
 	
 	protected Widget 		m_EditorObjectMarkerWidget;
 	protected Widget 		m_EditorObjectBrowserWidget;
@@ -68,16 +67,15 @@ class EditorObject : BuildingBase
 	ref UILinkedObject 		m_EditorObjectBrowser = null;
 	ref UILinkedObject		m_EditorMapMarker = null;
 	
-	protected EntityAI m_BBoxLines[12];	
-	protected EntityAI m_BBoxBase;
-	protected EntityAI m_CenterLine;
+	protected EntityAI 		m_BBoxLines[12];	
+	protected EntityAI 		m_BBoxBase;
+	protected EntityAI 		m_CenterLine;
 	
 	float LocalAngle; // temp
 	
 	void EditorObject()
 	{
 		Print("EditorObject");
-		//SetEventMask(EntityEvent.FRAME);
 	}
 	
 	void ~EditorObject()
@@ -86,10 +84,16 @@ class EditorObject : BuildingBase
 	
 	}
 	
+	override void Delete()
+	{
+		Print("Delete");
+		
+		super.Delete();
+	}
+	
 	override void EEDelete(EntityAI parent)
 	{
 		Print("EditorObject::EEDelete");
-		super.EEDelete(parent);
 		Deselect();
 		
 		IsInitialized = false;
@@ -103,10 +107,14 @@ class EditorObject : BuildingBase
 		delete m_EditorObjectBrowser;
 		delete m_EditorMapMarker;
 		
+		delete m_EditorObjectMarkerWidget;
+		delete m_EditorObjectBrowserWidget;
+		delete m_EditorMapMarkerWidget;
+		
 		for (int i = 0; i < 12; i++)
 			GetGame().ObjectDelete(m_BBoxLines[i]);
 		
-		Editor.PlacedObjects.Remove(GetID());
+		super.EEDelete(parent);
 	}
 	
 
@@ -114,15 +122,14 @@ class EditorObject : BuildingBase
 	{
 		Print("EditorObject::Init");
 		
-		if (type_name == string.Empty)
-			type_name = GetType();
 		
 		IsInitialized = true;
 		
 		Type = type_name;
-		m_WorldObject = GetGame().CreateObjectEx(type_name, vector.Zero, ECE_KEEPHEIGHT|ECE_NOSURFACEALIGN|ECE_TRACE);
+		m_WorldObject = GetGame().CreateObjectEx(type_name, vector.Zero, ECE_NONE);
 		AddChild(m_WorldObject, -1);
 		Update();
+		
 		
 		// World Object base marker
 		m_EditorObjectMarker = new UILinkedObject();
@@ -145,7 +152,6 @@ class EditorObject : BuildingBase
 		
 		
 		CreateBoundingBox();
-		Editor.PlacedObjects.Insert(GetID(), this);
 	}
 	
 	static EditorObject CreateFromExistingObject(notnull Object target)	
@@ -231,10 +237,6 @@ class EditorObject : BuildingBase
 		m_CenterLine = GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE);
 		m_CenterLine.SetTransform(y_axis_mat);
 		AddChild(m_CenterLine, -1);
-				
-		TStringArray textures = m_BBoxLines[0].GetHiddenSelectionsTextures();
-		TStringArray materials = m_BBoxLines[0].GetHiddenSelectionsMaterials();
-		bbox_texture = textures[0]; bbox_material = materials[0];
 		
 		HideBoundingBox();
 		Update();
@@ -367,11 +369,11 @@ class EditorObject : BuildingBase
 		Print("EditorObject::ShowBoundingBox");
 		BoundingBoxVisible = true;
 		for (int i = 0; i < 12; i++) {
-			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxBase"), EditorSettings.BBOX_COLOR);
+			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxBase"), "#(argb,8,8,3)color(1,1,0,1,co)");
 			m_BBoxLines[i].Update();
 		}
 		
-		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxBase"), EditorSettings.BBOX_COLOR);
+		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxBase"), "#(argb,8,8,3)color(1,1,0,1,co)");
 		//m_BBoxBase.SetObjectTexture(m_BBoxBase.GetHiddenSelectionIndex("BoundingBoxBase"), "#(argb,8,8,3)color(1,1,0,1,co)");
 		
 	}
@@ -388,7 +390,6 @@ class EditorObject : BuildingBase
 		}	
 		
 		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxBase"), "");
-		//m_BBoxBase.SetObjectTexture(m_BBoxBase.GetHiddenSelectionIndex("BoundingBoxBase"), "");
 	}
 	
 	
@@ -411,6 +412,8 @@ class EditorObject : BuildingBase
 	Widget GetObjectMarker() { return m_EditorObjectMarkerWidget; }
 	Widget GetObjectBrowser() { return m_EditorObjectBrowserWidget; }
 	Widget GetMapMarker() { return m_EditorMapMarkerWidget; }
+	
+	UILinkedObject GetEditorObjectMarker() { return m_EditorObjectMarker; }
 	
 	static EditorObject GetFromUILinkedRoot(Widget root)
 	{
