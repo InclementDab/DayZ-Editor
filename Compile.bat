@@ -21,11 +21,11 @@ robocopy /E "%CD%\3_game\dayzeditor" "%CD%\Addons\scripts\3_game"
 robocopy /E "%CD%\4_world\dayzeditor" "%CD%\Addons\scripts\4_world"
 robocopy /E "%CD%\5_mission\dayzeditor" "%CD%\Addons\scripts\5_mission"
 
-%BUILDEREXE% "%CD%\Addons\editor" "%CD%\Addons" -prefix=DayZEditor\editor
-%BUILDEREXE% "%CD%\Addons\gui" "%CD%\Addons" -prefix=DayZEditor\gui
+%BUILDEREXE% "%CD%\Addons\editor" "%CD%\Addons" -prefix=DayZEditor\editor -packonly
+%BUILDEREXE% "%CD%\Addons\gui" "%CD%\Addons" -prefix=DayZEditor\gui -packonly
 %BUILDEREXE% "%CD%\Addons\scripts" "%CD%\Addons" -prefix=DayZEditor\scripts -packonly
 
-rmdir /s "%CD%\Addons\scripts\1_core"
-rmdir /s "%CD%\Addons\scripts\3_game"
-rmdir /s "%CD%\Addons\scripts\4_world"
-rmdir /s "%CD%\Addons\scripts\5_mission"
+rmdir /s /q "%CD%\Addons\scripts\1_core"
+rmdir /s /q "%CD%\Addons\scripts\3_game"
+rmdir /s /q "%CD%\Addons\scripts\4_world"
+rmdir /s /q "%CD%\Addons\scripts\5_mission"
