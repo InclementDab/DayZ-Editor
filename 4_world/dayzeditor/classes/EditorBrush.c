@@ -10,7 +10,7 @@ class EditorBrush
 	protected EntityAI m_BrushDecal;
 	protected float m_BrushRadius;
 	
-	void EditorBrush()
+	void EditorBrush(float radius = 10)
 	{
 		Print("EditorBrush");
 		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
@@ -27,7 +27,7 @@ class EditorBrush
 		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
 		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
 		
-
+		SetRadius(radius);
 	}
 	
 	void ~EditorBrush()
@@ -78,7 +78,7 @@ class NatureBrush: EditorBrush
 	
 	private ref array<string> m_CurrentNatureData;
 	
-	void NatureBrush()
+	void NatureBrush(float radius = 1076)
 	{
 		SetDensity(0.2);
 		m_CurrentNatureData = new array<string>();
@@ -152,7 +152,22 @@ class DeleteBrush: EditorBrush
 				GetGame().ObjectDelete(r);
 			}
 		}
+	}
+}
+
+
+class BoomBrush: EditorBrush
+{
+	
+	override void DuringMouseDown(vector position)
+	{
+		vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
+		vector contact_pos, contact_dir;
+		int component;
+		set<Object> results = new set<Object>();
+		DayZPhysics.RaycastRV(position, position + surface_normal * 50, contact_pos, contact_dir, component, results, null, null, false, false, 0, m_BrushRadius / 2, CollisionFlags.ALLOBJECTS);
 		
-		
+		//GetGame().CreateObject("ExplosionTest", position, true);
+
 	}
 }

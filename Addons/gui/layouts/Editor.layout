@@ -216,7 +216,6 @@ FrameWidgetClass EditorMainFrame {
   }
   CanvasWidgetClass EditorCanvas {
    ignorepointer 1
-   position 2.42152 -1.21076
    size 1 1
    halign center_ref
    valign center_ref
@@ -630,6 +629,31 @@ FrameWidgetClass EditorMainFrame {
          vexactsize 1
          text "R"
         }
+        PanelWidgetClass Divider2 {
+         ignorepointer 1
+         position 0 0
+         size 15 28
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          PanelWidgetClass Divider3 {
+           ignorepointer 1
+           position 0 0
+           size 3 26
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style rover_sim_colorable
+          }
+         }
+        }
         ButtonWidgetClass MagnetButton {
          position 0 0
          size 28 28
@@ -653,6 +677,31 @@ FrameWidgetClass EditorMainFrame {
          font "gui/fonts/metron-bold"
          switch toggle
         }
+        PanelWidgetClass Divider0 {
+         ignorepointer 1
+         position 0 0
+         size 15 28
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          PanelWidgetClass Divider1 {
+           ignorepointer 1
+           position 0 0
+           size 3 26
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style rover_sim_colorable
+          }
+         }
+        }
         ButtonWidgetClass SimcityButton {
          clipchildren 0
          size 100 28
@@ -662,9 +711,20 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Sim City"
+         style MainMenu
+         text "Brush"
          font "gui/fonts/metron"
          switch toggle
+        }
+        XComboBoxWidgetClass BrushTypeBox {
+         position 0 0
+         size 200 28
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Default
+         items "Nature; Explosion; Delete;"
         }
         SliderWidgetClass SimcityRadiusSlider {
          size 120 28
@@ -677,7 +737,8 @@ FrameWidgetClass EditorMainFrame {
         }
         TextWidgetClass SimcityRadiusText {
          ignorepointer 1
-         size 28 28
+         position 0 0
+         size 48 28
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -687,20 +748,6 @@ FrameWidgetClass EditorMainFrame {
          font "gui/fonts/metron"
          "text halign" center
          "text valign" center
-        }
-        ButtonWidgetClass DeleteBrush {
-         clipchildren 0
-         size 100 28
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         text "Delete"
-         font "gui/fonts/metron"
-         "text color" 0.6863 0.2588 0.2588 1
-         switch toggle
         }
         SliderWidgetClass SimcityDensitySlider {
          size 120 28
@@ -715,7 +762,7 @@ FrameWidgetClass EditorMainFrame {
         }
         TextWidgetClass SimcityDensityText {
          ignorepointer 1
-         size 28 28
+         size 56 28
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -725,6 +772,31 @@ FrameWidgetClass EditorMainFrame {
          font "gui/fonts/metron"
          "text halign" center
          "text valign" center
+        }
+        PanelWidgetClass Divider4 {
+         ignorepointer 1
+         position 0 0
+         size 15 28
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          PanelWidgetClass Divider5 {
+           ignorepointer 1
+           position 0 0
+           size 3 26
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style rover_sim_colorable
+          }
+         }
         }
        }
       }

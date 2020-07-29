@@ -18,6 +18,8 @@ class EditorUIToolbar: EditorWidgetEventHandler
 	protected SliderWidget 	m_SimcityDensitySlider;
 	protected TextWidget	m_SimcityDensityText;
 	
+	protected XComboBoxWidget	m_BrushTypeBox;
+	
 	override void OnWidgetScriptInit(Widget w)
 	{
 		Print("EditorUIToolbar::OnWidgetScriptInit");
@@ -35,6 +37,8 @@ class EditorUIToolbar: EditorWidgetEventHandler
 		
 		m_SimcityDensitySlider	= SliderWidget.Cast(m_Root.FindAnyWidget("SimcityDensitySlider"));
 		m_SimcityDensityText	= TextWidget.Cast(m_Root.FindAnyWidget("SimcityDensityText"));
+		
+		m_BrushTypeBox	= XComboBoxWidget.Cast(m_Root.FindAnyWidget("BrushTypeBox"));
 		
 		
 		m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
@@ -56,16 +60,8 @@ class EditorUIToolbar: EditorWidgetEventHandler
 			if (w == m_SimcityButton) {
 				EditorSettings.SIM_CITY_MODE = m_SimcityButton.GetState();
 				if (m_SimcityButton.GetState()) {
-					Editor.ActiveBrush = new NatureBrush();
-					Editor.ActiveBrush.SetRadius(m_SimcityRadiusSlider.GetCurrent());
-				} else {
-					delete Editor.ActiveBrush;
-				}
-				return true;
-			}			
-			if (w == m_DeleteBrushButton) {
-				if (m_DeleteBrushButton.GetState()) {
-					Editor.ActiveBrush = new DeleteBrush();
+					//Editor.ActiveBrush = new NatureBrush(m_SimcityRadiusSlider.GetCurrent());
+					
 				} else {
 					delete Editor.ActiveBrush;
 				}
@@ -79,6 +75,38 @@ class EditorUIToolbar: EditorWidgetEventHandler
 	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
 	{
 		//Print("EditorUIToolbar::OnUpdate");
+		
+		if (target == m_BrushTypeBox || target == m_SimcityButton) {
+			
+			int index = m_BrushTypeBox.GetCurrentItem();
+			if (!m_SimcityButton.GetState()) { 
+				delete Editor.ActiveBrush;
+				return true;
+			}
+			
+			switch (index) {
+				
+				// NatureBrush
+				case 0: {
+					Editor.ActiveBrush = new NatureBrush(m_SimcityRadiusSlider.GetCurrent());
+					break;
+				}
+				
+				// ExplosionBrush
+				case 1: {
+					Editor.ActiveBrush = new BoomBrush(m_SimcityRadiusSlider.GetCurrent());
+					break;
+				}
+				
+				// DeleteBrush
+				case 2: {
+					Editor.ActiveBrush = new DeleteBrush(m_SimcityRadiusSlider.GetCurrent());
+					break;
+				}
+				
+			}
+		}
+		
 		if (target == m_SimcityRadiusSlider) {
 			m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
 			Editor.ActiveBrush.SetRadius(m_SimcityRadiusSlider.GetCurrent());

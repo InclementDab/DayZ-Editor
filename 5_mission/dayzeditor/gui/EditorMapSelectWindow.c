@@ -5,8 +5,7 @@ static const ref array<string> ExcludedMapItems = {
 	"DefaultLighting",
 	"DefaultWorld",
 	"initWorld",
-	"CAWorld",
-	"Sandbox"
+	"CAWorld"
 };
 
 
