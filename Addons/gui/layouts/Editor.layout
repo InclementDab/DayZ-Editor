@@ -673,6 +673,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         current 20
         }
         TextWidgetClass SimcityRadiusText {
          ignorepointer 1
@@ -700,6 +701,30 @@ FrameWidgetClass EditorMainFrame {
          font "gui/fonts/metron"
          "text color" 0.6863 0.2588 0.2588 1
          switch toggle
+        }
+        SliderWidgetClass SimcityDensitySlider {
+         size 120 28
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         maximum 1
+         step 0.01
+         current 0.25
+        }
+        TextWidgetClass SimcityDensityText {
+         ignorepointer 1
+         size 28 28
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "0"
+         font "gui/fonts/metron"
+         "text halign" center
+         "text valign" center
         }
        }
       }

@@ -7,16 +7,15 @@ static ref map<string, float> ChernarusTrees;
 
 class EditorBrush
 {
-	protected Object m_BrushDecal;
-	protected float m_BrushRadius = 10;
+	protected EntityAI m_BrushDecal;
+	protected float m_BrushRadius;
 	
 	void EditorBrush()
 	{
 		Print("EditorBrush");
 		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
-		SetRadius(10);
-		
+
 		ChernarusTrees = new map<string, float>();
 		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_3f", 	1);
 		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2sb", 1);
@@ -27,6 +26,8 @@ class EditorBrush
 		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1f", 	0.1);
 		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
 		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
+		
+
 	}
 	
 	void ~EditorBrush()
@@ -79,7 +80,7 @@ class NatureBrush: EditorBrush
 	
 	void NatureBrush()
 	{
-		SetBrushDensity(1);
+		SetDensity(0.2);
 		m_CurrentNatureData = new array<string>();
 		foreach (string name, float rate: ChernarusTrees) {
 		
@@ -106,7 +107,7 @@ class NatureBrush: EditorBrush
 			vector pos = position;
 			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
-
+	
 			Object tree = GetGame().CreateObjectEx(m_CurrentNatureData.Get(Math.RandomInt(0, m_CurrentNatureData.Count() - 1)), pos, ECE_NONE);
 			
 			vector size = ObjectGetSize(tree);
@@ -120,7 +121,7 @@ class NatureBrush: EditorBrush
 		}
 	}
 	
-	void SetBrushDensity(float density)
+	void SetDensity(float density)
 	{
 		m_BrushDensity = density;
 	}

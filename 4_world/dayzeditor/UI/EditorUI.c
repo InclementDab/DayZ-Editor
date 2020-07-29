@@ -13,7 +13,10 @@ class EditorUIToolbar: EditorWidgetEventHandler
 	protected ButtonWidget 	m_DeleteBrushButton;
 	
 	protected SliderWidget 	m_SimcityRadiusSlider;
-	protected TextWidget	m_SimcityRadiusText;
+	protected TextWidget	m_SimcityRadiusText;	
+	
+	protected SliderWidget 	m_SimcityDensitySlider;
+	protected TextWidget	m_SimcityDensityText;
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
@@ -25,10 +28,13 @@ class EditorUIToolbar: EditorWidgetEventHandler
 		m_MagnetButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("MagnetButton"));
 		m_GroundButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("GroundButton"));
 		m_SimcityButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("SimcityButton"));
-		m_DeleteBrushButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("DeleteBrush"));
+		m_DeleteBrushButton		= ButtonWidget.Cast(m_Root.FindAnyWidget("DeleteBrush"));
 		
 		m_SimcityRadiusSlider	= SliderWidget.Cast(m_Root.FindAnyWidget("SimcityRadiusSlider"));
-		m_SimcityRadiusText		= TextWidget.Cast(m_Root.FindAnyWidget("SimcityRadiusText"));
+		m_SimcityRadiusText		= TextWidget.Cast(m_Root.FindAnyWidget("SimcityRadiusText"));		
+		
+		m_SimcityDensitySlider	= SliderWidget.Cast(m_Root.FindAnyWidget("SimcityDensitySlider"));
+		m_SimcityDensityText	= TextWidget.Cast(m_Root.FindAnyWidget("SimcityDensityText"));
 		
 		
 		m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
@@ -51,6 +57,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				EditorSettings.SIM_CITY_MODE = m_SimcityButton.GetState();
 				if (m_SimcityButton.GetState()) {
 					Editor.ActiveBrush = new NatureBrush();
+					Editor.ActiveBrush.SetRadius(m_SimcityRadiusSlider.GetCurrent());
 				} else {
 					delete Editor.ActiveBrush;
 				}
@@ -75,6 +82,11 @@ class EditorUIToolbar: EditorWidgetEventHandler
 		if (target == m_SimcityRadiusSlider) {
 			m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
 			Editor.ActiveBrush.SetRadius(m_SimcityRadiusSlider.GetCurrent());
+		}
+		
+		if (target == m_SimcityDensitySlider) {
+			m_SimcityDensityText.SetText(m_SimcityDensitySlider.GetCurrent().ToString());
+			NatureBrush.Cast(Editor.ActiveBrush).SetDensity(m_SimcityDensitySlider.GetCurrent());
 		}
 		
 		

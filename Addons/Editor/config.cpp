@@ -29,7 +29,7 @@ class CfgVehicles
 	class DSLRCamera: HouseNoDestruct
 	{
 		scope = 1;
-		model = "DayZEditor\Editor\Camera.p3d";
+		model = "\DayZEditor\Editor\Camera.p3d";
 	};
 
 	class Inventory_Base;
@@ -54,12 +54,13 @@ class CfgVehicles
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\BrushBase.p3d";
+		hiddenSelectionsTextures[] = { "\DayZEditor\Editor\data\BrushBase.paa" };
 	};
 
 	class BoundingBoxBase: HouseNoDestruct
 	{
 		scope = 1;
-		model = "DayZEditor\Editor\BoundingBoxBase.p3d";
+		model = "\DayZEditor\Editor\BoundingBoxBase.p3d";
 		hiddenSelections[] = {"BoundingBoxBase"};
 	};
 	class ThunderboltNorm: HouseNoDestruct
