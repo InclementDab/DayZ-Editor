@@ -1,21 +1,15 @@
 // #include "Scripts/GUI/IngameHud.c"
 
 
-// creates player in world
-//GetGame().SelectPlayer(null, CreateCustomDefaultCharacter());
-
-// heading model? mouse control
-//bool			HeadingModel(float pDt, SDayZPlayerHeadingModel pModel);
 
 static PlayerBase CreateDefaultCharacter(vector pos, bool select = false)
 {
-    PlayerBase oPlayer = PlayerBase.Cast(GetGame().CreatePlayer(NULL, GetGame().CreateRandomPlayer(), pos, 0, "NONE"));
-    oPlayer.GetInventory().CreateInInventory("AviatorGlasses");
-    oPlayer.GetInventory().CreateInInventory("AliceBag_Black");
-	oPlayer.GetInventory().CreateInInventory("TranslationWidget");
-	//oPlayer.GetInventory().CreateInInventory("Rag");
+    PlayerBase player = PlayerBase.Cast(GetGame().CreatePlayer(NULL, GetGame().CreateRandomPlayer(), pos, 0, "NONE"));
+    player.GetInventory().CreateInInventory("AviatorGlasses");
+    player.GetInventory().CreateInInventory("AliceBag_Black");
+    player.GetInventory().CreateInInventory("TranslationWidget");
 	
-	if (select) GetGame().SelectPlayer(null, oPlayer);
+    if (select) GetGame().SelectPlayer(null, player);
     return oPlayer;
 }
 
