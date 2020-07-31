@@ -10,7 +10,7 @@ static PlayerBase CreateDefaultCharacter(vector pos, bool select = false)
     player.GetInventory().CreateInInventory("TranslationWidget");
 	
     if (select) GetGame().SelectPlayer(null, player);
-    return oPlayer;
+    return player;
 }
 
 Mission CreateCustomMission(string path)
