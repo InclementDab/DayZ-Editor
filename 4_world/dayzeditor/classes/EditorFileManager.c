@@ -1,4 +1,15 @@
 
+class COMImportData
+{
+	string name;
+	ref array<ref Param3<string, vector, vector>> m_SceneObjects;
+	
+	void COMImportData()
+	{
+		m_SceneObjects = new array<ref Param3<string, vector, vector>>();
+	}
+}
+
 class EditorWorldObject
 {
 	string Classname;
@@ -32,6 +43,11 @@ enum ExportMode
 	EXPANSION
 }
 
+enum ImportMode
+{
+	MAPFILE, 
+	COMFILE
+}
 
 enum HeightType 
 {
@@ -56,6 +72,36 @@ class EditorFileManager
 	{
 		EditorWorldData data = new EditorWorldData();
 		JsonFileLoader<EditorWorldData>.JsonLoadFile(filename, data);
+		
+		return data;
+		
+	}
+	
+	static EditorWorldData ImportFromFile(string filename, ImportMode mode = ImportMode.COMFILE)
+	{
+		EditorWorldData data = new EditorWorldData();
+
+		switch (mode) {
+			
+			case (ImportMode.COMFILE): {
+				
+				COMImportData com_data = new COMImportData();
+				JsonFileLoader<COMImportData>.JsonLoadFile(filename, com_data);
+				
+				
+				
+				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
+					Print("ImportFromFile::COMFILE::Import " + param.param1);
+					vector transform[4];
+					param.param3.RotationMatrixFromAngles(transform);
+					transform[3] = param.param2;
+					data.WorldObjects.Insert(new EditorWorldObject(param.param1, transform));
+				}
+
+				
+			}
+		}
+
 		
 		return data;
 		

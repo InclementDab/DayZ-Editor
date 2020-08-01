@@ -363,6 +363,8 @@ class EditorObject : BuildingBase
 		SetTransform(transform);
 		Update();
 		
+
+		// I cant wait to delete this... but not yet
 		if (EditorSettings.SNAPPING_MODE) {
 			vector current_size = GetSize();
 			vector current_pos = GetPosition();

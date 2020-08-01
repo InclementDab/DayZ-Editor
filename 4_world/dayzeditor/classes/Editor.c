@@ -837,7 +837,19 @@ class Editor: Managed
 	{
 		Input input = GetGame().GetInput();
 		switch (key) {
-
+			
+			case KeyCode.KC_ESCAPE: {
+				if (GetFocus()) {
+					SetFocus(null);
+					return true;  // escAPE KEY SPECIAL
+				} else {
+					//m_UIManager.GetMenu().GetVisibleMenu() != "PauseMenu"
+					// maybe something like this idk just add better escape func
+				}
+				
+				break;
+			}
+			
 			case KeyCode.KC_DELETE: {
 				DeleteObjects(SelectedObjects);
 				ClearSelections();
