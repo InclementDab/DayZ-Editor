@@ -841,7 +841,7 @@ class Editor: Managed
 			case KeyCode.KC_ESCAPE: {
 				if (GetFocus()) {
 					SetFocus(null);
-					return true;  // escAPE KEY SPECIAL
+					return false;  // escAPE KEY SPECIAL
 				} else {
 					//m_UIManager.GetMenu().GetVisibleMenu() != "PauseMenu"
 					// maybe something like this idk just add better escape func
