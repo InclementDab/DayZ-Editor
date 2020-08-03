@@ -373,7 +373,7 @@ class Editor: Managed
 		Print("Editor::CreateObject");
 		
 		//bool ai = GetGame().IsKindOf("Hatchback_02_Black", "DZ_LightAI");
-		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", position, ECE_NONE);
+		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", position, ECE_LOCAL);
 		editor_object.Init(name);
 
 
@@ -986,6 +986,9 @@ class Editor: Managed
 		return ActiveBrush;
 	}
 }
+
+
+
 
 
 

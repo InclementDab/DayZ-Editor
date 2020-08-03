@@ -62,10 +62,12 @@ class EditorObject : BuildingBase
 	protected Widget 		m_EditorObjectMarkerWidget;
 	protected Widget 		m_EditorObjectBrowserWidget;
 	protected Widget 		m_EditorMapMarkerWidget;
+	protected Widget 		m_EditorObjectPropertiesWidget;
 	
 	ref UILinkedObject 		m_EditorObjectMarker = null;
 	ref UILinkedObject 		m_EditorObjectBrowser = null;
 	ref UILinkedObject		m_EditorMapMarker = null;
+	ref UILinkedObject		m_EditorObjectPropertiesWindow = null;
 	
 	EntityAI 				m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
@@ -107,10 +109,12 @@ class EditorObject : BuildingBase
 		delete m_EditorObjectMarker; 
 		delete m_EditorObjectBrowser;
 		delete m_EditorMapMarker;
+		delete m_EditorObjectPropertiesWindow;
 		
 		delete m_EditorObjectMarkerWidget;
 		delete m_EditorObjectBrowserWidget;
 		delete m_EditorMapMarkerWidget;
+		delete m_EditorObjectPropertiesWidget;
 		
 		for (int i = 0; i < 12; i++)
 			GetGame().ObjectDelete(m_BBoxLines[i]);
@@ -149,7 +153,14 @@ class EditorObject : BuildingBase
 		m_EditorObjectBrowser = new UILinkedObject();
 		m_EditorObjectBrowserWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorPlacedListItem.layout");
 		m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
-		m_EditorObjectBrowser.SetObject(this);
+		m_EditorObjectBrowser.SetObject(this);		
+		
+		// Properties Dialog
+		m_EditorObjectPropertiesWindow = new UILinkedObject();
+		m_EditorObjectPropertiesWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "dialogs/EditorObjectProperties.layout");
+		m_EditorObjectPropertiesWidget.GetScript(m_EditorObjectPropertiesWindow);
+		m_EditorObjectPropertiesWindow.SetObject(this);
+		m_EditorObjectPropertiesWidget.Show(false);
 		
 		
 		CreateBoundingBox();
@@ -455,6 +466,13 @@ class EditorObject : BuildingBase
 	Widget GetMapMarker() { return m_EditorMapMarkerWidget; }
 	
 	UILinkedObject GetEditorObjectMarker() { return m_EditorObjectMarker; }
+	
+	void ShowPropertiesWindow(bool show) 
+	{
+		m_EditorObjectPropertiesWidget.Show(true);
+		m_EditorObjectPropertiesWidget.Update();
+		//SetModal(m_EditorObjectPropertiesWidget);
+	}
 	
 	static EditorObject GetFromUILinkedRoot(Widget root)
 	{

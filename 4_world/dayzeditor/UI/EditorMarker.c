@@ -219,6 +219,15 @@ class EditorObjectMarker: UILinkedObject
 	}
 	
 	
+	// todo Editor UI Manager that manages modal windows correctly :)
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		m_EditorObject.ShowPropertiesWindow(true);
+		
+		
+		return true;
+	}
+	
 	void Show(bool show)
 	{
 		override_show = show;

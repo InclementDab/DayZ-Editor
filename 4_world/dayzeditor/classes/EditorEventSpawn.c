@@ -132,7 +132,7 @@ class EditorEventManager
 				if (position[1] == 0)	
 					position[1] = GetGame().SurfaceY(position[0], position[2]);
 				
-				GetGame().CreateObject(event_spawn.EventName, position);
+				GetGame().CreateObject("BrushBase", position);
 			}
 			
 			

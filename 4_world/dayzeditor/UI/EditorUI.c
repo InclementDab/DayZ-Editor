@@ -125,6 +125,11 @@ class EditorUIToolbar: EditorWidgetEventHandler
 }
 
 
+enum EditorCursor
+{
+	DEFAULT,
+	HORIZONTAL_SCROLL
+}
 
 class EditorUI: EditorWidgetEventHandler
 {	
@@ -173,7 +178,8 @@ class EditorUI: EditorWidgetEventHandler
 	TextWidget 			m_DebugText6;
 	TextListboxWidget 	m_DebugActionStack;
 	
-	
+	// Cursors
+	protected Widget			m_HorizontalScrollWidget;
 
 	
 	void EditorUI()
@@ -229,12 +235,13 @@ class EditorUI: EditorWidgetEventHandler
 		m_EditorMapWidget.GetScript(m_EditorMap);
 		m_EditorMapWidget.SetMapPos(GetGame().GetCurrentCameraPosition());
 		
+		// Cursors
+		m_HorizontalScrollWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "cursors/horizontalwidget.layout");
+		
 	}
 	
 	private bool left_bar_hidden = false;
 	private bool right_bar_hidden = false;
-	
-	
 	
 
 	
@@ -297,7 +304,6 @@ class EditorUI: EditorWidgetEventHandler
 				vector pos = MousePosToRay(o);
 				LightingBolt.CreateLightning(pos, 5);
 			} else {
-							
 				pos = MousePosToRay(o);
 				pos[1] = Editor.ActiveCamera.GetPosition()[1];
 				Editor.ActiveCamera.SetPosition(pos);
@@ -466,6 +472,26 @@ class EditorUI: EditorWidgetEventHandler
 		GetGame().GetUIManager().ShowUICursor(false);
 	}
 	
+	void SetCursor(EditorCursor cursor_type = EditorCursor.DEFAULT)
+	{
+		switch (cursor_type) {
+			
+			case EditorCursor.DEFAULT: {
+				//SetCursorWidget(null);
+				//ShowCursorWidget(true);
+				break;
+				
+			}
+			
+			case EditorCursor.HORIZONTAL_SCROLL: {
+				//ShowCursorWidget(false);
+				//SetCursorWidget(m_HorizontalScrollWidget);
+				
+				break;
+			}			
+		}
+	}
+	
 	void ShowExportWindow()
 	{
 		Print("EditorUI::ShowExportWindow");	
@@ -489,9 +515,4 @@ class EditorUI: EditorWidgetEventHandler
 	{
 		m_RightbarSpacer.AddChild(target.GetObjectBrowser());
 	}
-	
-	
-	
-	
-	
 }
