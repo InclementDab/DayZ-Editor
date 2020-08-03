@@ -1,4 +1,6 @@
 
+
+
 class COMImportData
 {
 	string name;
@@ -12,12 +14,13 @@ class COMImportData
 
 class EditorWorldObject
 {
-	string Classname;
-	vector Transform[4];
+	string WorldObject_Typename;
+	vector WorldObject_Transform[4];
 	
 	void EditorWorldObject(string classname, vector transform[4]) 
 	{
-		Classname = classname; Transform = transform;
+		WorldObject_Typename = classname; 
+		WorldObject_Transform = transform;
 	}
 }
 
@@ -30,10 +33,7 @@ class EditorWorldData
 	void EditorWorldData()
 	{
 		WorldObjects = new array<ref EditorWorldObject>();
-	}
-	
-
-	
+	}	
 }
 
 enum ExportMode 
@@ -60,9 +60,64 @@ class ExportSettings
 	static HeightType ExportHeightType;
 }
 
+
+
 class EditorFileManager
 {
 
+	/*
+	static CfgEventSpawns LoadEventSpawns(string filename = "$profile:cfgeventspawns.xml")
+	{
+		CfgEventSpawns event_spawns = new CfgEventSpawns();
+		if (!FileExist(filename)) {
+			Print("File Not Found " + filename);
+			return event_spawns;
+		}
+		
+		string EVENT_OPEN = "<eventposdef>";
+		string EVENT_CLOSE = "</eventposdef>";
+		
+		FileHandle hndle = OpenFile(filename, FileMode.READ);
+		string line;
+		bool eventposdef_opened = false;
+		bool event_opened = false;
+		while (FGets(hndle, line) > 0) {
+			
+			if (line.Contains(EVENT_OPEN)) {
+				eventposdef_opened = true;
+			} else if (line.Contains(EVENT_CLOSE)) {
+				eventposdef_opened = false;
+			} else if (eventposdef_opened) {
+				
+				CfgEvent current_event;
+				if (line.Contains("<event")) {
+					event_opened = true;
+					current_event = new CfgEvent();
+				} else if (line.Contains("</event")) {
+					event_opened = false;
+					event_spawns.events.Insert(current_event);
+				} else if (event_opened) {
+					if (line.Contains("<pos")) {
+						
+						current_event.positions.Insert(new CfgPosition());
+					}
+				}
+				
+			}
+			
+		}
+		
+
+		
+		CloseFile(hndle);
+		
+
+		return event_spawns;
+		
+		
+	}
+	
+	*/
 	static void SaveFile(EditorWorldData data, string filename = "$profile:editor_save.txt")
 	{
 		JsonFileLoader<EditorWorldData>.JsonSaveFile(filename, data);
@@ -87,8 +142,6 @@ class EditorFileManager
 				
 				COMImportData com_data = new COMImportData();
 				JsonFileLoader<COMImportData>.JsonLoadFile(filename, com_data);
-				
-				
 				
 				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
 					Print("ImportFromFile::COMFILE::Import " + param.param1);

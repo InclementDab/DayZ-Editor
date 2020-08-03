@@ -296,6 +296,11 @@ class EditorUI: EditorWidgetEventHandler
 				set<Object> o;
 				vector pos = MousePosToRay(o);
 				LightingBolt.CreateLightning(pos, 5);
+			} else {
+							
+				pos = MousePosToRay(o);
+				pos[1] = Editor.ActiveCamera.GetPosition()[1];
+				Editor.ActiveCamera.SetPosition(pos);
 			}
 		}
 

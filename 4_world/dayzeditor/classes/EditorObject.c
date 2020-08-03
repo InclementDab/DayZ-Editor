@@ -67,11 +67,13 @@ class EditorObject : BuildingBase
 	ref UILinkedObject 		m_EditorObjectBrowser = null;
 	ref UILinkedObject		m_EditorMapMarker = null;
 	
-	EntityAI 		m_BBoxLines[12];	
+	EntityAI 				m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
 	protected EntityAI 		m_CenterLine;
 	
 	float LocalAngle; // temp
+	
+	static float line_width = 0.05;
 	
 	void EditorObject()
 	{
@@ -81,7 +83,6 @@ class EditorObject : BuildingBase
 	void ~EditorObject()
 	{
 		Print("~EditorObject");
-	
 	}
 	
 	override void Delete()
@@ -152,7 +153,10 @@ class EditorObject : BuildingBase
 		
 		
 		CreateBoundingBox();
+		
 	}
+	
+	
 	
 	static EditorObject CreateFromExistingObject(notnull Object target)	
 	{
@@ -174,11 +178,11 @@ class EditorObject : BuildingBase
 		else return GetType();
 	}
 
-
+	vector line_centers[12]; vector line_verticies[8];
 	void CreateBoundingBox()
 	{
 		Print("EditorObject::CreateBoundingBox");
-		vector line_centers[12]; vector line_verticies[8];
+		
 		vector clip_info[2];
 		vector size = GetSize();
 		
@@ -210,7 +214,7 @@ class EditorObject : BuildingBase
 		line_centers[11] = AverageVectors(line_verticies[0], line_verticies[7]);
 				
 	
-		float line_width = 0.05;
+		
 		for (int i = 0; i < 12; i++) {
 			
 			vector transform[4];			
@@ -223,7 +227,6 @@ class EditorObject : BuildingBase
 			m_BBoxLines[i].SetTransform(transform);			
 			
 			AddChild(m_BBoxLines[i], -1);
-			
 		}
 		
 		

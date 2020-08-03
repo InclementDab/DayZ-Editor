@@ -147,7 +147,7 @@ class DeleteBrush: EditorBrush
 			
 			EditorObject eo = Editor.EditorObjectFromObject(r);
 			if (eo != null) {
-				Editor.GetInstance().DeleteObject(eo);
+				Editor.DeleteObject(eo);
 			} else {
 				GetGame().ObjectDelete(r);
 			}

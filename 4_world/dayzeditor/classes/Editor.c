@@ -257,7 +257,7 @@ class Editor: Managed
 		// find a proper way to remove all existing files. maybe restart editor
 		
 		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
-			EditorObject e_object = CreateObject(load_object.Classname, load_object.Transform);
+			EditorObject e_object = CreateObject(load_object.WorldObject_Typename, load_object.WorldObject_Transform[3]);
 			
 			PlacedObjects.Insert(e_object.GetID(), e_object);
 		}
@@ -268,11 +268,11 @@ class Editor: Managed
 	
 	static EditorObject EditorObjectFromObject(Object target)
 	{
-		foreach (EditorObject editor_object: PlacedObjects) {
-			if (editor_object.GetObject() == target) {
+		foreach (EditorObject editor_object: PlacedObjects) 
+			if (editor_object.GetObject() == target) 
 				return editor_object;
-			}
-		}
+			
+		
 		
 		return null;
 	}
@@ -356,7 +356,7 @@ class Editor: Managed
 
 	static void CreateObjectInHand(string name)
 	{
-		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, "0 0 0"));		
+		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, vector.Zero));		
 	}
 	
 	static EditorObjectLink SearchSessionCache(EditorObject target)
@@ -372,7 +372,7 @@ class Editor: Managed
 	{
 		Print("Editor::CreateObject");
 		
-			
+		//bool ai = GetGame().IsKindOf("Hatchback_02_Black", "DZ_LightAI");
 		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", position, ECE_NONE);
 		editor_object.Init(name);
 
@@ -423,7 +423,7 @@ class Editor: Managed
 		
 	}
 	
-	void DeleteObjects(EditorObjectSet target)
+	static void DeleteObjects(EditorObjectSet target)
 	{
 		Print("Editor::DeleteObject");
 	
@@ -439,10 +439,10 @@ class Editor: Managed
 		
 		InsertAction(action);
 		
-		GetGame().ObjectDelete(GlobalTranslationWidget);
+		GetGame().ObjectDelete(Editor.GetTranslationWidget());
 	}
 	
-	void DeleteObject(EditorObject target)
+	static void DeleteObject(EditorObject target)
 	{
 		
 		EditorAction action = new EditorAction("Create", "Delete");
@@ -456,7 +456,7 @@ class Editor: Managed
 		
 		InsertAction(action);
 		
-		GetGame().ObjectDelete(GlobalTranslationWidget);
+		GetGame().ObjectDelete(Editor.GetTranslationWidget());
 		
 	}
 
@@ -809,23 +809,19 @@ class Editor: Managed
 		//Print(TickCount(starttime) / 1000);
 	}
 	
-	
+	// not used afaik
 	bool OnMouseButtonDown(int x, int y, int button)
 	{
 		Input input = GetGame().GetInput();
+		
+		
 		if (button == 2) {
 			
 			if (input.LocalValue("UAWalkRunTemp")) {
 				set<Object> oop;
 				vector v = MousePosToRay(oop);
 				LightingBolt.CreateLightning(v, 1);		
-			} else {				
-				set<Object> o;
-				vector pos = MousePosToRay(o);
-				vector current = ActiveCamera.GetPosition();
-				pos[1] = current[1];
-				ActiveCamera.SetPosition(pos);
-			}
+			} 
 	
 			
 		}
@@ -983,6 +979,11 @@ class Editor: Managed
 		obj.Update();
 		GlobalTranslationWidget.UpdatePosition();
 		
+	}
+	
+	static EditorBrush GetActiveBrush()
+	{
+		return ActiveBrush;
 	}
 }
 
