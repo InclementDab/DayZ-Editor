@@ -905,7 +905,10 @@ class Editor: Managed
 			
 			case KeyCode.KC_E: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					ActiveEditorUI.ShowExportWindow();
+					//ActiveEditorUI.ShowExportWindow();
+					EditorFileManager.ExportToFile(ExportMode.COMFILE, "$profile:export_server.txt");
+					EditorFileManager.ExportToFile(ExportMode.EXPANSION, "$profile:export_expansion.txt");
+					EditorFileManager.ExportToFile(ExportMode.TERRAINBUILDER, "$profile:export_terrainbuilder.txt", HeightType.ABSOLUTE);
 					return true;
 				}
 				break;

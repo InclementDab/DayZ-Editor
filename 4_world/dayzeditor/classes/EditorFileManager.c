@@ -65,59 +65,7 @@ class ExportSettings
 class EditorFileManager
 {
 
-	/*
-	static CfgEventSpawns LoadEventSpawns(string filename = "$profile:cfgeventspawns.xml")
-	{
-		CfgEventSpawns event_spawns = new CfgEventSpawns();
-		if (!FileExist(filename)) {
-			Print("File Not Found " + filename);
-			return event_spawns;
-		}
-		
-		string EVENT_OPEN = "<eventposdef>";
-		string EVENT_CLOSE = "</eventposdef>";
-		
-		FileHandle hndle = OpenFile(filename, FileMode.READ);
-		string line;
-		bool eventposdef_opened = false;
-		bool event_opened = false;
-		while (FGets(hndle, line) > 0) {
-			
-			if (line.Contains(EVENT_OPEN)) {
-				eventposdef_opened = true;
-			} else if (line.Contains(EVENT_CLOSE)) {
-				eventposdef_opened = false;
-			} else if (eventposdef_opened) {
-				
-				CfgEvent current_event;
-				if (line.Contains("<event")) {
-					event_opened = true;
-					current_event = new CfgEvent();
-				} else if (line.Contains("</event")) {
-					event_opened = false;
-					event_spawns.events.Insert(current_event);
-				} else if (event_opened) {
-					if (line.Contains("<pos")) {
-						
-						current_event.positions.Insert(new CfgPosition());
-					}
-				}
-				
-			}
-			
-		}
-		
 
-		
-		CloseFile(hndle);
-		
-
-		return event_spawns;
-		
-		
-	}
-	
-	*/
 	static void SaveFile(EditorWorldData data, string filename = "$profile:editor_save.txt")
 	{
 		JsonFileLoader<EditorWorldData>.JsonSaveFile(filename, data);
@@ -171,7 +119,7 @@ class EditorFileManager
 		
 		foreach (EditorObject editor_object: Editor.PlacedObjects) {
 						
-			vector position = editor_object.GetDefaultHitPosition();
+			vector position = editor_object.GetPosition();
 			vector orientation = editor_object.GetOrientation();
 			orientation = orientation.VectorToAngles();
 			float scale = 1;//editor_object.GetScale();
