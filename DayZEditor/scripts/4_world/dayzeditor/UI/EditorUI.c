@@ -86,16 +86,24 @@ class EditorUIToolbar: EditorWidgetEventHandler
 			
 			switch (index) {
 				
-				// NatureBrush
+				// Tree Brush
 				case 0: {
-					Editor.ActiveBrush = new NatureBrush(m_SimcityRadiusSlider.GetCurrent());
+					Editor.ActiveBrush = new TreeBrush(m_SimcityRadiusSlider.GetCurrent());
+					m_SimcityDensitySlider.Show(true);
+					m_SimcityRadiusSlider.Show(true);
+					break;
+				}				
+				
+				// Grass Brush
+				case 1: {
+					Editor.ActiveBrush = new GrassBrush(m_SimcityRadiusSlider.GetCurrent());
 					m_SimcityDensitySlider.Show(true);
 					m_SimcityRadiusSlider.Show(true);
 					break;
 				}
 				
 				// ExplosionBrush
-				case 1: {
+				case 2: {
 					Editor.ActiveBrush = new BoomBrush(m_SimcityRadiusSlider.GetCurrent());
 					m_SimcityDensitySlider.Show(true);
 					m_SimcityRadiusSlider.Show(true);
@@ -103,7 +111,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				}
 				
 				// DeleteBrush
-				case 2: {
+				case 3: {
 					Editor.ActiveBrush = new DeleteBrush(m_SimcityRadiusSlider.GetCurrent());
 					m_SimcityDensitySlider.Show(false);
 					m_SimcityRadiusSlider.Show(true);
