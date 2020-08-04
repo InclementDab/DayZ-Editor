@@ -98,8 +98,6 @@ class EditorFileManager
 					transform[3] = param.param2;
 					data.WorldObjects.Insert(new EditorWorldObject(param.param1, transform));
 				}
-
-				
 			}
 		}
 

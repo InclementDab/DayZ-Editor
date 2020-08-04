@@ -183,18 +183,23 @@ class EditorObjectMarker: UILinkedObject
 		
 		Input input = GetGame().GetInput();
 		
-		if (Editor.IsPlacing()) return false;
-		
-		// allows multiple objects to be dragged
-		if (m_EditorObject.IsSelected()) return true;
-		
-		if (input.LocalValue("UATurbo"))
-			m_EditorObject.Select(false);
-		else if (input.LocalValue("UARunWalkTemp"))
-			m_EditorObject.ToggleSelect();
-		else
-			m_EditorObject.Select();
-		
+		if (button == 0) {
+			if (Editor.IsPlacing()) return false;
+			
+			// allows multiple objects to be dragged
+			if (m_EditorObject.IsSelected()) return true;
+			
+			if (input.LocalValue("UATurbo"))
+				m_EditorObject.Select(false);
+			else if (input.LocalValue("UARunWalkTemp"))
+				m_EditorObject.ToggleSelect();
+			else
+				m_EditorObject.Select();
+		} else if (button == 1) {
+			Widget ctx_menu = m_EditorObject.GetContextMenu();
+			ctx_menu.Show(true);
+			ctx_menu.SetPos(x, y);
+		} else return false;
 
 
 		return true;

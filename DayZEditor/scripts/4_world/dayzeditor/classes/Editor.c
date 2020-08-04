@@ -337,9 +337,7 @@ class Editor: Managed
 			ActiveEditorUI.m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", debug_pos[0], debug_pos[1], debug_pos[2]));
 			
 		}
-		
-		
-		
+	
 		string line1;
 		if (!EditorObjectUnderCursor) 
 			line1 = "NULL";
@@ -349,17 +347,19 @@ class Editor: Managed
 		ActiveEditorUI.m_DebugText3.SetText(Editor.SessionCache.Count().ToString());
 	}
 	
-	
+	static void SetCameraTarget(Object target)
+	{
+		ActiveCamera.SelectTarget(target);
+	}
 	
 	bool OnMouseEnterObject(Object target, int x, int y)
 	{
 		//Print("Editor::OnMouseEnterObject");
 		EditorObjectUnderCursor = EditorObjectFromObject(target);
-		if (EditorObjectUnderCursor != null) {
+		if (EditorObjectUnderCursor != null)
 			return EditorObjectUnderCursor.OnMouseEnter(x, y);
-		}
-		
-		
+	
+	
 		return true;
 		
 	}
@@ -371,11 +371,8 @@ class Editor: Managed
 		EditorObjectUnderCursor = null;
 		
 		return true;
-		
 	}
 	
-	
-
 	static void CreateObjectInHand(string name)
 	{
 		// Turn Brush off when you start to place
@@ -601,12 +598,12 @@ class Editor: Managed
 		switch (name) {
 			
 			case "translatex": {
-				widget_position[0] = cursor_position[0];
+				widget_position[0] = cursor_position[2];
 				break;
 			}
 			
 			case "translatey": {
-				widget_position[2] = cursor_position[2];
+				widget_position[2] = cursor_position[0];
 				break;				
 			}
 			

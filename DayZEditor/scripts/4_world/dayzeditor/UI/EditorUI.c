@@ -662,8 +662,6 @@ class EditorUI: EditorWidgetEventHandler
 				editor_object.Deselect();
 			}
 		}
-		
-		
 	}
 	
 	
@@ -692,13 +690,11 @@ class EditorUI: EditorWidgetEventHandler
 	
 	void ShowCursor()
 	{
-		EditorCamera.LookFreeze = true;
 		GetGame().GetUIManager().ShowUICursor(true);
 	}
 	
 	void HideCursor()
 	{
-		EditorCamera.LookFreeze = false;
 		GetGame().GetUIManager().ShowUICursor(false);
 	}
 	

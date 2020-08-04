@@ -63,11 +63,13 @@ class EditorObject : BuildingBase
 	protected Widget 		m_EditorObjectBrowserWidget;
 	protected Widget 		m_EditorMapMarkerWidget;
 	protected Widget 		m_EditorObjectPropertiesWidget;
+	protected Widget 		m_EditorObjectContextWidget;
 	
 	ref UILinkedObject 		m_EditorObjectMarker = null;
 	ref UILinkedObject 		m_EditorObjectBrowser = null;
 	ref UILinkedObject		m_EditorMapMarker = null;
 	ref UILinkedObject		m_EditorObjectPropertiesWindow = null;
+	ref UILinkedObject		m_EditorObjectContextMenu = null;
 	
 	EntityAI 				m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
@@ -110,6 +112,7 @@ class EditorObject : BuildingBase
 		delete m_EditorObjectBrowser;
 		delete m_EditorMapMarker;
 		delete m_EditorObjectPropertiesWindow;
+		delete m_EditorObjectContextMenu;
 		
 		delete m_EditorObjectMarkerWidget;
 		delete m_EditorObjectBrowserWidget;
@@ -135,6 +138,7 @@ class EditorObject : BuildingBase
 		AddChild(m_WorldObject, -1);
 		Update();
 		
+		// todo move all this to EditorObjectUIManager thing
 		
 		// World Object base marker
 		m_EditorObjectMarker = new UILinkedObject();
@@ -160,7 +164,14 @@ class EditorObject : BuildingBase
 		m_EditorObjectPropertiesWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "dialogs/EditorObjectProperties.layout");
 		m_EditorObjectPropertiesWidget.GetScript(m_EditorObjectPropertiesWindow);
 		m_EditorObjectPropertiesWindow.SetObject(this);
-		m_EditorObjectPropertiesWidget.Show(false);
+		m_EditorObjectPropertiesWidget.Show(false);		
+		
+		// Context Menu
+		m_EditorObjectContextMenu = new UILinkedObject();
+		m_EditorObjectContextWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorContextMenu.layout");
+		m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
+		m_EditorObjectContextMenu.SetObject(this);
+		m_EditorObjectContextWidget.Show(false);
 		
 		
 		CreateBoundingBox();
@@ -476,6 +487,7 @@ class EditorObject : BuildingBase
 	Widget GetObjectMarker() { return m_EditorObjectMarkerWidget; }
 	Widget GetObjectBrowser() { return m_EditorObjectBrowserWidget; }
 	Widget GetMapMarker() { return m_EditorMapMarkerWidget; }
+	Widget GetContextMenu() { return m_EditorObjectContextWidget; }
 	
 	UILinkedObject GetEditorObjectMarker() { return m_EditorObjectMarker; }
 	

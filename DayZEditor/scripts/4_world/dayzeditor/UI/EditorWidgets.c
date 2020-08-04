@@ -1,4 +1,38 @@
 
+class EditorContextMenu: UILinkedObject
+{
+	
+	void EditorContextMenu()
+	{
+		Print("EditorContextMenu");
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		switch (w.GetName()) {
+			
+			
+			case "SetTargetButton": {
+				Editor.SetCameraTarget(m_EditorObject);
+				m_Root.Show(false);
+				return true;
+			}
+			
+		}
+		
+		
+		return false;
+	}
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		m_Root.Show(false);
+		return true;
+	}
+	
+}
+
+
 
 class EditorMap: EditorWidgetEventHandler
 {
@@ -20,13 +54,6 @@ class EditorMap: EditorWidgetEventHandler
 		map_widget.AddChild(obj.GetMapMarker());
 	}
 	
-	override void OnWidgetScriptInit(Widget w)
-	{
-		Print("EditorMap::OnWidgetScriptInit");
-		super.OnWidgetScriptInit(w);
-		
-
-	}
 	
 	private int start_x, start_y;
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
@@ -254,8 +281,7 @@ class MenuBarFile: EditorWidgetEventHandler
 
 class PlaceableSearchBar: EditorWidgetEventHandler
 {
-	
-	
+
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		Print("PlaceableSearchBar::OnChange");
@@ -289,7 +315,7 @@ class PlaceableSearchBar: EditorWidgetEventHandler
 	{
 		Print("PlaceableSearchBar::OnFocus");
 		
-		Editor.ActiveCamera.MoveFreeze = true;
+		Editor.ActiveCamera.MoveEnabled = false;
 		
 		return super.OnFocus(w, x, y);
 	}
@@ -298,7 +324,7 @@ class PlaceableSearchBar: EditorWidgetEventHandler
 	{
 		Print("PlaceableSearchBar::OnFocusLost");
 		
-		Editor.ActiveCamera.MoveFreeze = false;
+		Editor.ActiveCamera.MoveEnabled = true;
 		
 		return super.OnFocusLost(w, x, y);
 	}
