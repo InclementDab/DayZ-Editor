@@ -326,7 +326,10 @@ class EditorUI: EditorWidgetEventHandler
 				Editor.ActiveCamera.SetPosition(pos);
 			}
 		}
-
+		
+		// temp hopefully
+		SetFocus(null);
+		
 		return false;
 	}
 		

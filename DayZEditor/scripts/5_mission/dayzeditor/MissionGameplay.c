@@ -31,9 +31,9 @@ class EditorMissionGameplay: MissionGameplay
 			}
 		}
 		
-
+		if (m_Hud.KeyPress(key)) return;
+		if (m_Editor.ActiveEditorUI.OnKeyPress(key)) return;
 		if (m_Editor.OnKeyPress(key)) return;
-        if (m_Hud.KeyPress(key)) return;
 		super.OnKeyPress(key);
     }
 	

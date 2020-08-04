@@ -1002,7 +1002,7 @@ class Editor: Managed
 			}
 		}
 		
-		return ActiveEditorUI.OnKeyPress(key));
+		return false;
 	}
 	
 	void IncrementMove(EditorObject obj, int axis, float move)

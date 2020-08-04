@@ -135,14 +135,14 @@ class GrassBrush: DensityBrush
 	{
 		SetDensity(0.2);
 		m_CurrentNatureData = new array<string>();
-		
+
 		ChernarusGrass = new map<string, float>();
-        ChernarusGrass.Insert("bldr_c_grassdry2_summer",     1);
-        ChernarusGrass.Insert("bldr_c_grassdry3_summer",     0.2);
-        ChernarusGrass.Insert("bldr_c_grassdrytall2_summer", 0.2);
-        ChernarusGrass.Insert("bldr_c_grassdrytall3_summer", 0.1);
-        ChernarusGrass.Insert("bldr_c_grassdrytall_summer",  0.1);
-        ChernarusGrass.Insert("bldr_c_grassdry_summer",      1);
+		ChernarusGrass.Insert("bldr_plnt_c_grassdry2_summer",     1);
+		ChernarusGrass.Insert("bldr_plnt_c_grassdry3_summer",     0.2);
+		ChernarusGrass.Insert("bldr_plnt_c_grassdrytall2_summer", 0.2);
+		ChernarusGrass.Insert("bldr_plnt_c_grassdrytall3_summer", 0.1);
+		ChernarusGrass.Insert("bldr_plnt_c_grassdrytall_summer",  0.1);
+		ChernarusGrass.Insert("bldr_plnt_c_grassdry_summer",      1);
 		
 		foreach (string name, float rate: ChernarusGrass) {
 		
@@ -156,7 +156,7 @@ class GrassBrush: DensityBrush
 	
 	override void DuringMouseDown(vector position)
 	{
-		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
+		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 0.8))) return;
 		m_LastMousePosition = position;
 		
 		for (int i = 0; i < m_BrushDensity * 100; i++) {
@@ -191,7 +191,7 @@ class DeleteBrush: EditorBrush
 		vector contact_pos, contact_dir;
 		int component;
 		set<Object> results = new set<Object>();
-		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, m_BrushRadius / 2);
+		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, m_BrushRadius / 2, CollisionFlags.ALLOBJECTS);
 		EditorUI.GetInstance().m_DebugText3.SetText(results.Count().ToString());
 		
 		foreach (Object r: results) {
