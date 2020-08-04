@@ -2,22 +2,6 @@
 
 
 
-static PlayerBase CreateDefaultCharacter(vector pos, bool select = false)
-{
-	PlayerBase player;
-	if (GetGame().GetPlayer() != null) {
-		player = GetGame().GetPlayer();
-	} else {	
-	    player = PlayerBase.Cast(GetGame().CreatePlayer(NULL, GetGame().CreateRandomPlayer(), pos, 0, "NONE"));
-	    player.GetInventory().CreateInInventory("AviatorGlasses");
-	    player.GetInventory().CreateInInventory("AliceBag_Black");
-	    player.GetInventory().CreateInInventory("TranslationWidget");
-	}
-	
-    if (select) GetGame().SelectPlayer(null, player);
-	
-    return player;
-}
 
 Mission CreateCustomMission(string path)
 {
@@ -43,20 +27,6 @@ class EditorMissionGameplay: MissionGameplay
 						
 			case KeyCode.KC_F1: {
 				m_Editor = new Editor();				
-				break;
-			}
-			
-			case KeyCode.KC_F2: {
-				set<Object> o;
-				vector v = MousePosToRay(o);
-				CreateDefaultCharacter(v, true);
-				Editor.IsPlayerActive = true;
-				break;
-			}
-			
-			case KeyCode.KC_F3: {
-				Editor.ActiveCamera.SetActive(true);
-				Editor.IsPlayerActive = false;
 				break;
 			}
 		}

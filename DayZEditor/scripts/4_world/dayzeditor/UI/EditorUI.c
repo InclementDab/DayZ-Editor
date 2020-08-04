@@ -194,6 +194,8 @@ class EditorUI: EditorWidgetEventHandler
 		m_Instance = this;
 	}
 	
+
+	
 	
 	override void OnWidgetScriptInit(Widget w)
 	{

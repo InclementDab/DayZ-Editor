@@ -280,6 +280,7 @@ class EditorWidgetEventHandler: ScriptedWidgetEventHandler
 	void ~EditorWidgetEventHandler()
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		m_Root.Show(false);
 		delete m_Root;
 	}
 	

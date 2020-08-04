@@ -5,6 +5,24 @@ typedef ref array<string>> UndeleteableStringArray;
 typedef ref map<int, ref EditorObject> EditorObjectSet;
 
 
+static PlayerBase CreateDefaultCharacter()
+{
+	PlayerBase player;
+	if (GetGame().GetPlayer() != null) {
+		player = GetGame().GetPlayer();
+	} else {	
+	    player = PlayerBase.Cast(GetGame().CreatePlayer(NULL, GetGame().CreateRandomPlayer(), vector.Zero, 0, "NONE"));
+	    player.GetInventory().CreateInInventory("AviatorGlasses");
+	    player.GetInventory().CreateInInventory("AliceBag_Black");
+	    player.GetInventory().CreateInInventory("TranslationWidget");
+	}
+	
+   
+	
+    return player;
+}
+
+
 // FlattenGrassEllipse!!!!! sim city mode
 
 class Editor: Managed
@@ -26,6 +44,7 @@ class Editor: Managed
 	static vector 							CurrentMousePosition;
 	static bool 							IsDragging = false;
 	static bool 							IsPlayerActive = false;
+	static PlayerBase						EditorPlayer;
 		
 	static ref EditorObjectSet 				PlacedObjects;
 	static ref EditorObjectSet				SelectedObjects;
@@ -83,8 +102,11 @@ class Editor: Managed
 		EditorEvents.OnObjectDrag.Insert(HandleObjectDrag);
 		EditorEvents.OnObjectDrop.Insert(HandleObjectDrop);
 		
-		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		
+		// Character Creation
+		EditorPlayer = CreateDefaultCharacter();
+		EditorPlayer.DisableSimulation(true);
 		
 		// Debug
 		DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
@@ -916,6 +938,26 @@ class Editor: Managed
 					Open();
 					return true;
 				}
+				break;
+			}
+			
+			case KeyCode.KC_F2: {
+				// Create Character on cursor and select them
+				set<Object> o;
+				vector v = MousePosToRay(o);
+				GetGame().SelectPlayer(null, EditorPlayer);
+				EditorPlayer.SetPosition(v);
+				EditorPlayer.DisableSimulation(false);
+				Editor.IsPlayerActive = true;
+				
+				break;
+			}
+			
+			case KeyCode.KC_F3: {
+				// Deselect character
+				Editor.ActiveCamera.SetActive(true);
+				EditorPlayer.DisableSimulation(true);
+				Editor.IsPlayerActive = false;
 				break;
 			}
 		}
