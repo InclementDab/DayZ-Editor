@@ -1,9 +1,7 @@
 
-static const ref array<string> FagusTreeStyle = { "bldr_plnt_t_FagusSylvatica_1f", "bldr_plnt_t_FagusSylvatica_1fb", "bldr_plnt_t_FagusSylvatica_1fc", "bldr_plnt_t_FagusSylvatica_1fd", "bldr_plnt_t_FagusSylvatica_1fe", "bldr_plnt_t_FagusSylvatica_1s", "bldr_plnt_t_FagusSylvatica_2d", "bldr_plnt_t_FagusSylvatica_2f", "bldr_plnt_c_ElytrigiaTall", "bldr_plnt_c_ElytrigiaForest", "bldr_plnt_c_Elytrigia", "bldr_plnt_b_PiceaAbies_1f", "bldr_plnt_b_BetulaPendula_1f", "bldr_plnt_b_FagusSylvatica_1f" };
-
-
 
 static ref map<string, float> ChernarusTrees;
+static ref map<string, float> ChernarusGrass;
 
 class EditorBrush
 {
@@ -15,17 +13,6 @@ class EditorBrush
 		Print("EditorBrush");
 		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
-
-		ChernarusTrees = new map<string, float>();
-		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_3f", 	1);
-		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2sb", 1);
-		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_1f", 	1);
-		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_3d", 	0.2);
-		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1s", 	0.2);
-		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1fb", 0.1);
-		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1f", 	0.1);
-		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
-		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
 		
 		SetRadius(radius);
 	}
@@ -80,16 +67,28 @@ class DensityBrush: EditorBrush
 	}
 }
 
-class NatureBrush: DensityBrush
+class TreeBrush: DensityBrush
 {
 	
 	private vector m_LastMousePosition;
 	private ref array<string> m_CurrentNatureData;
 	
-	void NatureBrush(float radius = 10)
+	void TreeBrush(float radius = 10)
 	{
 		SetDensity(0.2);
 		m_CurrentNatureData = new array<string>();
+		
+		ChernarusTrees = new map<string, float>();
+		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_3f", 	1);
+		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2sb", 1);
+		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_1f", 	1);
+		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_3d", 	0.2);
+		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1s", 	0.2);
+		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1fb", 0.1);
+		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1f", 	0.1);
+		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
+		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
+		
 		foreach (string name, float rate: ChernarusTrees) {
 		
 			rate *= 100;
@@ -123,16 +122,68 @@ class NatureBrush: DensityBrush
 			
 		}
 	}
+}
+
+
+class GrassBrush: DensityBrush
+{
+	
+	private vector m_LastMousePosition;
+	private ref array<string> m_CurrentNatureData;
+	
+	void GrassBrush(float radius = 10)
+	{
+		SetDensity(0.2);
+		m_CurrentNatureData = new array<string>();
+
+		ChernarusGrass = new map<string, float>();
+		ChernarusGrass.Insert("bldr_plnt_c_grassdry2_summer",     1);
+		ChernarusGrass.Insert("bldr_plnt_c_grassdry3_summer",     0.2);
+		ChernarusGrass.Insert("bldr_plnt_c_grassdrytall2_summer", 0.2);
+		ChernarusGrass.Insert("bldr_plnt_c_grassdrytall3_summer", 0.1);
+		ChernarusGrass.Insert("bldr_plnt_c_grassdrytall_summer",  0.1);
+		ChernarusGrass.Insert("bldr_plnt_c_grassdry_summer",      1);
+		
+		foreach (string name, float rate: ChernarusGrass) {
+		
+			rate *= 100;
+			for (int i = 0; i < rate; i++) {
+				m_CurrentNatureData.Insert(name);
+			}
+			
+		}
+	}
+	
+	override void DuringMouseDown(vector position)
+	{
+		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 0.8))) return;
+		m_LastMousePosition = position;
+		
+		for (int i = 0; i < m_BrushDensity * 100; i++) {
+						
+			vector pos = position;
+			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
+			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
+	
+			Object tree = GetGame().CreateObjectEx(m_CurrentNatureData.Get(Math.RandomInt(0, m_CurrentNatureData.Count() - 1)), pos, ECE_NONE);
+			
+			vector size = ObjectGetSize(tree);
+			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2.4;
+			tree.SetPosition(pos);
+			
+			vector direction = Math3D.GetRandomDir();
+			direction[1] = Math.RandomFloat(-0.05, 0.05);
+			tree.SetDirection(direction);
+			
+		}
+	}
 	
 
 }
 
 
 class DeleteBrush: EditorBrush
-{
-	
-
-	
+{	
 	override void DuringMouseDown(vector position)
 	{
 		
@@ -140,7 +191,7 @@ class DeleteBrush: EditorBrush
 		vector contact_pos, contact_dir;
 		int component;
 		set<Object> results = new set<Object>();
-		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, m_BrushRadius / 2);
+		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, m_BrushRadius / 2, CollisionFlags.ALLOBJECTS);
 		EditorUI.GetInstance().m_DebugText3.SetText(results.Count().ToString());
 		
 		foreach (Object r: results) {

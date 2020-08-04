@@ -258,20 +258,22 @@ class PlaceableSearchBar: EditorWidgetEventHandler
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
-		Print("PlaceableSearchBar::OnKeyDown");
+		Print("PlaceableSearchBar::OnChange");
 		
 		
 		WrapSpacerWidget spacer = WrapSpacerWidget.Cast(Editor.ActiveEditorUI.GetRoot().FindAnyWidget("LeftbarSpacer"));
 		string filter = EditBoxWidget.Cast(w).GetText();
 		Widget child = spacer.GetChildren();
 		while (child != null) {
+			
 			EditorListItem editor_list_item;
 			child.GetScript(editor_list_item);
 			
 			if (editor_list_item != null) {
 				string Config_Lower = editor_list_item.GetText();
 				Config_Lower.ToLower();
-	           	child.Show(!(filter != "" && !Config_Lower.Contains(filter)));				
+				if (filter == "") return false;
+	           	child.Show(Config_Lower.Contains(filter));				
 			}
 						
 			child = child.GetSibling();

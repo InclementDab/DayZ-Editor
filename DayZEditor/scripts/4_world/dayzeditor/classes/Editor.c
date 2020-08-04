@@ -160,8 +160,8 @@ class Editor: Managed
 		        GetGame().ConfigGetBaseName(Config_Path + " " + Config_Name, Base_Name);
 		        Base_Name.ToLower();
 		
-		        if (Base_Name != "housenodestruct")
-		            continue;
+		        //if (Base_Name != "housenodestruct")
+		        //    continue;
 				PlaceableObjects.Insert(Config_Name);	
 				ActiveEditorUI.InsertPlaceableObject(Config_Name);
 		    }
@@ -737,7 +737,7 @@ class Editor: Managed
 	
 		
 		// debug
-		Editor.DebugObject0.SetPosition(cursor_position);
+		//Editor.DebugObject0.SetPosition(cursor_position);
 
 		// Handle Z only motion
 		if (input.LocalValue("UALookAround")) {	
@@ -1002,7 +1002,7 @@ class Editor: Managed
 			}
 		}
 		
-		return ActiveEditorUI.OnKeyPress(key));
+		return false;
 	}
 	
 	void IncrementMove(EditorObject obj, int axis, float move)

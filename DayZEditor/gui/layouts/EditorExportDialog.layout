@@ -1,0 +1,49 @@
+PanelWidgetClass EditorExportDialog {
+ color 0 0 0 1
+ position 300 50
+ size 0.2 0.3
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ style EditorPanel
+ {
+  PanelWidgetClass DirectorySelectorPanel {
+   ignorepointer 1
+   position 0 0
+   size 1 0.1
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+  }
+  ScrollWidgetClass LeftbarScroll {
+   ignorepointer 1
+   color 0.2353 0.2353 0.2353 1
+   size 1 0.9
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   style blank
+   "Scrollbar V" 1
+   "Scrollbar V Left" 1
+   {
+    WrapSpacerWidgetClass LeftbarSpacer {
+     ignorepointer 1
+     position 0 0
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     Margin 0
+     "Size To Content V" 1
+    }
+   }
+  }
+ }
+}

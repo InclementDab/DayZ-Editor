@@ -401,10 +401,6 @@ FrameWidgetClass EditorMainFrame {
        "Use default text" 1
        "exact text" 1
        font "gui/fonts/metron"
-       {
-        ScriptParamsClass {
-        }
-       }
       }
       PanelWidgetClass LeftbarPanelHost {
        visible 1
@@ -736,7 +732,7 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 1
          vexactsize 1
          style Default
-         items "Nature; Explosion; Delete;"
+         items "Trees; Grass; Explosion; Delete;"
         }
         SliderWidgetClass SimcityRadiusSlider {
          size 120 28
