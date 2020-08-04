@@ -115,11 +115,10 @@ class EditorUIToolbar: EditorWidgetEventHandler
 			NatureBrush.Cast(Editor.ActiveBrush).SetDensity(m_SimcityDensitySlider.GetCurrent());
 		}
 		
-		
-		
 		return false;
 		
 	}
+	
 	
 	
 }

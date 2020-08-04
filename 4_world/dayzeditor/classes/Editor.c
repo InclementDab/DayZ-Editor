@@ -356,6 +356,12 @@ class Editor: Managed
 
 	static void CreateObjectInHand(string name)
 	{
+		// Turn Brush off when you start to place
+		delete ActiveBrush;
+		EditorSettings.SIM_CITY_MODE = false;
+		ButtonWidget.Cast(ActiveEditorUI.GetRoot().FindAnyWidget("SimcityButton")).SetState(false);
+		
+		
 		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, vector.Zero));		
 	}
 	
