@@ -131,18 +131,18 @@ class GrassBrush: DensityBrush
 	private vector m_LastMousePosition;
 	private ref array<string> m_CurrentNatureData;
 	
-	void TreeBrush(float radius = 10)
+	void GrassBrush(float radius = 10)
 	{
 		SetDensity(0.2);
 		m_CurrentNatureData = new array<string>();
 		
 		ChernarusGrass = new map<string, float>();
-        ChernarusGrass.Insert("vbldr_c_grassdry2_summer",     1);
-        ChernarusGrass.Insert("vbldr_c_grassdry3_summer",     0.2);
-        ChernarusGrass.Insert("vbldr_c_grassdrytall2_summer", 0.2);
-        ChernarusGrass.Insert("vbldr_c_grassdrytall3_summer", 0.1);
-        ChernarusGrass.Insert("vbldr_c_grassdrytall_summer",  0.1);
-        ChernarusGrass.Insert("vbldr_c_grassdry_summer",      1);
+        ChernarusGrass.Insert("bldr_c_grassdry2_summer",     1);
+        ChernarusGrass.Insert("bldr_c_grassdry3_summer",     0.2);
+        ChernarusGrass.Insert("bldr_c_grassdrytall2_summer", 0.2);
+        ChernarusGrass.Insert("bldr_c_grassdrytall3_summer", 0.1);
+        ChernarusGrass.Insert("bldr_c_grassdrytall_summer",  0.1);
+        ChernarusGrass.Insert("bldr_c_grassdry_summer",      1);
 		
 		foreach (string name, float rate: ChernarusGrass) {
 		
