@@ -5,7 +5,7 @@ class LaunchOfflineModTool: DayZTool
 
 	void LaunchOfflineModTool()
 	{
-		BatchFile = GetWorkDriveDirectory() + "Batchfiles\\LaunchClient.bat";
+		BatchFile = "P:\\client.bat";
 	}
 	
 	override void Run()

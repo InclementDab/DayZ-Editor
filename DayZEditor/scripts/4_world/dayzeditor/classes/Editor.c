@@ -1,5 +1,4 @@
 
-
 typedef ref array<ref vector>> UndeleteableVectorArray;
 typedef ref array<string>> UndeleteableStringArray;
 
@@ -26,6 +25,7 @@ class Editor: Managed
 	static ref set<string> 					PlaceableObjects;
 	static vector 							CurrentMousePosition;
 	static bool 							IsDragging = false;
+	static bool 							IsPlayerActive = false;
 		
 	static ref EditorObjectSet 				PlacedObjects;
 	static ref EditorObjectSet				SelectedObjects;
@@ -699,6 +699,7 @@ class Editor: Managed
 		// Get all object data 
 		vector object_size = target.GetSize();
 		vector object_transform[4], start_transform[4];
+		
 		// non-updated version of object_transform
 		target.GetTransform(start_transform); 
 		target.GetTransform(object_transform);
@@ -708,7 +709,7 @@ class Editor: Managed
 		vector ground, ground_dir; int component;
 		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true); // set to ground only
 
-		vector cursor_position = MousePosToRay(o, target.GetObject(), EditorSettings.OBJECT_VIEW_DISTANCE, 0, true);
+		vector cursor_position = MousePosToRay(o, target.GetObject(), EditorSettings.OBJECT_VIEW_DISTANCE, 0, !IsPlayerActive);
 		vector surface_normal = GetGame().SurfaceGetNormal(ground[0], ground[2]);
 		float surface_level = GetGame().SurfaceY(ground[0], ground[2]);
 	
@@ -815,25 +816,7 @@ class Editor: Managed
 		//Print(TickCount(starttime) / 1000);
 	}
 	
-	// not used afaik
-	bool OnMouseButtonDown(int x, int y, int button)
-	{
-		Input input = GetGame().GetInput();
-		
-		
-		if (button == 2) {
-			
-			if (input.LocalValue("UAWalkRunTemp")) {
-				set<Object> oop;
-				vector v = MousePosToRay(oop);
-				LightingBolt.CreateLightning(v, 1);		
-			} 
 	
-			
-		}
-		
-		return true;
-	}
 	
 	bool OnKeyPress(int key) 
 	{
@@ -995,7 +978,6 @@ class Editor: Managed
 		return ActiveBrush;
 	}
 }
-
 
 
 

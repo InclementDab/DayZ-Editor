@@ -4,12 +4,18 @@
 
 static PlayerBase CreateDefaultCharacter(vector pos, bool select = false)
 {
-    PlayerBase player = PlayerBase.Cast(GetGame().CreatePlayer(NULL, GetGame().CreateRandomPlayer(), pos, 0, "NONE"));
-    player.GetInventory().CreateInInventory("AviatorGlasses");
-    player.GetInventory().CreateInInventory("AliceBag_Black");
-    player.GetInventory().CreateInInventory("TranslationWidget");
+	PlayerBase player;
+	if (GetGame().GetPlayer() != null) {
+		player = GetGame().GetPlayer();
+	} else {	
+	    player = PlayerBase.Cast(GetGame().CreatePlayer(NULL, GetGame().CreateRandomPlayer(), pos, 0, "NONE"));
+	    player.GetInventory().CreateInInventory("AviatorGlasses");
+	    player.GetInventory().CreateInInventory("AliceBag_Black");
+	    player.GetInventory().CreateInInventory("TranslationWidget");
+	}
 	
     if (select) GetGame().SelectPlayer(null, player);
+	
     return player;
 }
 
@@ -36,7 +42,6 @@ class EditorMissionGameplay: MissionGameplay
 		switch (key) {
 						
 			case KeyCode.KC_F1: {
-				delete m_Editor;
 				m_Editor = new Editor();				
 				break;
 			}
@@ -45,11 +50,13 @@ class EditorMissionGameplay: MissionGameplay
 				set<Object> o;
 				vector v = MousePosToRay(o);
 				CreateDefaultCharacter(v, true);
+				Editor.IsPlayerActive = true;
 				break;
 			}
 			
 			case KeyCode.KC_F3: {
 				Editor.ActiveCamera.SetActive(true);
+				Editor.IsPlayerActive = false;
 				break;
 			}
 		}
@@ -64,6 +71,7 @@ class EditorMissionGameplay: MissionGameplay
 	{
 		super.OnInit();
 		m_Editor = new Editor(); 
+		
 	}
 
 

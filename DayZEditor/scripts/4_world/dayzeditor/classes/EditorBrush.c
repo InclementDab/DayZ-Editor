@@ -70,15 +70,23 @@ class EditorBrush
 	}
 }
 
-
-class NatureBrush: EditorBrush
+class DensityBrush: EditorBrush
 {
 	protected float m_BrushDensity;
-	private vector m_LastMousePosition;
 	
+	void SetDensity(float density)
+	{
+		m_BrushDensity = density;
+	}
+}
+
+class NatureBrush: DensityBrush
+{
+	
+	private vector m_LastMousePosition;
 	private ref array<string> m_CurrentNatureData;
 	
-	void NatureBrush(float radius = 1076)
+	void NatureBrush(float radius = 10)
 	{
 		SetDensity(0.2);
 		m_CurrentNatureData = new array<string>();
@@ -97,13 +105,8 @@ class NatureBrush: EditorBrush
 		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
-		
 		for (int i = 0; i < m_BrushDensity * 100; i++) {
-			
-			vector transform[4];
-			Math3D.MatrixIdentity4(transform);
-			transform[3] = position;
-			
+						
 			vector pos = position;
 			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
@@ -121,17 +124,14 @@ class NatureBrush: EditorBrush
 		}
 	}
 	
-	void SetDensity(float density)
-	{
-		m_BrushDensity = density;
-	}
+
 }
 
 
 class DeleteBrush: EditorBrush
 {
 	
-	
+
 	
 	override void DuringMouseDown(vector position)
 	{
@@ -156,19 +156,26 @@ class DeleteBrush: EditorBrush
 }
 
 
-class BoomBrush: EditorBrush
+class BoomBrush: DensityBrush
 {
+	private vector m_LastMousePosition;
+	
+	void BoomBrush(float radius = 10)
+	{
+		SetDensity(0.2);
+	}
 	
 	override void DuringMouseDown(vector position)
 	{
-		vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
-		vector contact_pos, contact_dir;
-		int component;
-		set<Object> results = new set<Object>();
-		DayZPhysics.RaycastRV(position, position + surface_normal * 50, contact_pos, contact_dir, component, results, null, null, false, false, 0, m_BrushRadius / 2, CollisionFlags.ALLOBJECTS);
+		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
+		m_LastMousePosition = position;
 		
-		GetGame().CreateObject("ExplosionTest", position, true, false, false);
-		
-		
+		for (int i = 0; i < (m_BrushDensity * 10) + 1; i++) {
+			vector pos = position;
+			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
+			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
+	
+			GetGame().CreateObject("ExplosionTest", pos);
+		}
 	}
 }

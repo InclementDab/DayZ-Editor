@@ -79,6 +79,8 @@ class EditorUIToolbar: EditorWidgetEventHandler
 			int index = m_BrushTypeBox.GetCurrentItem();
 			if (!m_SimcityButton.GetState()) { 
 				delete Editor.ActiveBrush;
+				m_SimcityDensitySlider.Show(false);
+				m_SimcityRadiusSlider.Show(false);
 				return true;
 			}
 			
@@ -87,32 +89,38 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				// NatureBrush
 				case 0: {
 					Editor.ActiveBrush = new NatureBrush(m_SimcityRadiusSlider.GetCurrent());
+					m_SimcityDensitySlider.Show(true);
+					m_SimcityRadiusSlider.Show(true);
 					break;
 				}
 				
 				// ExplosionBrush
 				case 1: {
 					Editor.ActiveBrush = new BoomBrush(m_SimcityRadiusSlider.GetCurrent());
+					m_SimcityDensitySlider.Show(true);
+					m_SimcityRadiusSlider.Show(true);
 					break;
 				}
 				
 				// DeleteBrush
 				case 2: {
 					Editor.ActiveBrush = new DeleteBrush(m_SimcityRadiusSlider.GetCurrent());
+					m_SimcityDensitySlider.Show(false);
+					m_SimcityRadiusSlider.Show(true);
 					break;
 				}
 				
 			}
 		}
 		
-		if (target == m_SimcityRadiusSlider) {
+		if (target == m_SimcityRadiusSlider && m_SimcityRadiusSlider.IsVisible()) {
 			m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
 			Editor.ActiveBrush.SetRadius(m_SimcityRadiusSlider.GetCurrent());
 		}
 		
-		if (target == m_SimcityDensitySlider) {
+		if (target == m_SimcityDensitySlider && m_SimcityDensitySlider.IsVisible()) {
 			m_SimcityDensityText.SetText(m_SimcityDensitySlider.GetCurrent().ToString());
-			NatureBrush.Cast(Editor.ActiveBrush).SetDensity(m_SimcityDensitySlider.GetCurrent());
+			DensityBrush.Cast(Editor.ActiveBrush).SetDensity(m_SimcityDensitySlider.GetCurrent());
 		}
 		
 		return false;
@@ -304,8 +312,6 @@ class EditorUI: EditorWidgetEventHandler
 				LightingBolt.CreateLightning(pos, 5);
 			} else {
 				pos = MousePosToRay(o);
-				
-				GetGame().CreateObjectEx("Sedan_02", pos, ECE_CREATEPHYSICS);
 				pos[1] = Editor.ActiveCamera.GetPosition()[1];
 				Editor.ActiveCamera.SetPosition(pos);
 			}

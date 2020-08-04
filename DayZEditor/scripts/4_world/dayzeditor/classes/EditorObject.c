@@ -198,8 +198,14 @@ class EditorObject : BuildingBase
 		vector size = GetSize();
 		
 
-		float radius = m_WorldObject.GetCollisionBox(clip_info); // idk do something cool w/ radius	
-		clip_info[0][1] = -clip_info[1][1];
+		float radius = m_WorldObject.ClippingInfo(clip_info); // idk do something cool w/ radius	
+		
+		//vector mins, maxs;
+		//m_WorldObject.GetWorldBounds(mins, maxs);
+		//clip_info[0] = mins - GetPosition();
+		//clip_info[1] = maxs - GetPosition();
+	
+		//clip_info[0][1] = -clip_info[1][1];
 		vector position = AverageVectors(clip_info[0], clip_info[1]);
 		
 		line_verticies[0] = clip_info[0];
@@ -312,8 +318,8 @@ class EditorObject : BuildingBase
 		if (!IsInitialized) return vector.Zero;
 		
 		vector clip_info[2];
-		m_WorldObject.GetCollisionBox(clip_info);
-		clip_info[0][1] = -clip_info[1][1];
+		m_WorldObject.ClippingInfo(clip_info);
+		//clip_info[0][1] = -clip_info[1][1];
 		vector result;
 		vector up = GetTransformAxis(1);
 		result = up * -(vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
@@ -326,15 +332,18 @@ class EditorObject : BuildingBase
 		if (!IsInitialized) return vector.Zero;
 		
 		vector clip_info[2];
-		m_WorldObject.GetCollisionBox(clip_info);
-		clip_info[0][1] = -clip_info[1][1];
+		m_WorldObject.ClippingInfo(clip_info);
+		//clip_info[0][1] = -clip_info[1][1];
 		vector result;
 		vector up = GetTransformAxis(1);
 		result = up * (vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
 		result += GetPosition();
-		return result;
+		
+
+	
 		
 		return result;
+		
 		
 	}
 		
@@ -361,8 +370,11 @@ class EditorObject : BuildingBase
 		vector clip_info[2];
 		vector result;
 
-		m_WorldObject.GetCollisionBox(clip_info);
-		clip_info[0][1] = -clip_info[1][1];		
+		m_WorldObject.ClippingInfo(clip_info);
+		//clip_info[0][1] = -clip_info[1][1];	
+
+	
+			
 		result[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
 		result[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
 		result[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
@@ -437,11 +449,11 @@ class EditorObject : BuildingBase
 		Print("EditorObject::HideBoundingBox");
 		BoundingBoxVisible = false;
 		for (int i = 0; i < 12; i++) {
-			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxBase"), "");
+			m_BBoxLines[i].SetObjectTexture(0, "");
 			m_BBoxLines[i].Update();
 		}	
 		
-		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxBase"), "");
+		m_CenterLine.SetObjectTexture(0, "");
 	}
 	
 	

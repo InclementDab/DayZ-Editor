@@ -62,6 +62,8 @@ class CfgVehicles
 		scope = 1;
 		model = "\DayZEditor\Editor\BoundingBoxBase.p3d";
 		hiddenSelections[] = {"BoundingBoxBase"};
+		hiddenSelectionsTextures[] = {""};
+		hiddenSelectionsMaterials[] = {""};
 	};
 	class ThunderboltNorm: HouseNoDestruct
 	{
