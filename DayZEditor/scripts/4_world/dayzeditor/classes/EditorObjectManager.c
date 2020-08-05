@@ -48,7 +48,7 @@ class EditorObjectManager: Managed
 		Print("~EditorObjectManager");
 	}
 	
-	int GetPlaceableObjects(out array<string> placeable_objects) 
+	static int GetPlaceableObjects(out array<string> placeable_objects) 
 	{ 
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
@@ -64,7 +64,7 @@ class EditorObjectManager: Managed
 		
 		        //if (Base_Name != "housenodestruct")
 		        //    continue;
-				Print(Config_Name);
+				
 				placeable_objects.Insert(Config_Name);	
 				
 		    }

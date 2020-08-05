@@ -141,7 +141,7 @@ class EditorObject : Building
 	
 	void OnSelected()
 	{
-		ShowBoundingBox();	
+		ShowBoundingBox();
 	}
 	
 	void OnDeselected()

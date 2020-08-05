@@ -4,9 +4,7 @@ static const float ALPHA_ON_SHOW = 1;
 static const float ALPHA_ON_HIDE = 0.25;
 
 class EditorMapMarker: UILinkedObject
-{
-	protected ImageWidget m_EditorMapMarkerImage;
-	
+{	
 	void EditorMapMarker()
 	{
 		Print("EditorMapMarker");
@@ -15,15 +13,8 @@ class EditorMapMarker: UILinkedObject
 	void ~EditorMapMarker()
 	{
 		Print("~EditorMapMarker");
-		delete m_EditorMapMarkerImage;
 	}
 	
-	override void OnWidgetScriptInit(Widget w)
-	{
-		Print("EditorObjectMarker::OnWidgetScriptInit");
-		super.OnWidgetScriptInit(w);
-		m_EditorMapMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorMapMarkerImage"));		
-	}
 	
 	override void Update()
 	{
@@ -101,42 +92,28 @@ class EditorMapMarker: UILinkedObject
 class EditorObjectMarker: UILinkedObject
 {
 
-	protected ImageWidget m_EditorObjectMarkerImage;
 	protected bool override_show = true;
-	
 	private bool MouseInside = false;
 	
 	void ~EditorObjectMarker()
 	{
 		Print("~EditorObjectMarker");
-		delete m_EditorObjectMarkerImage;
 	}
-	
-	
-	override void OnWidgetScriptInit(Widget w)
-	{
-		Print("EditorObjectMarker::OnWidgetScriptInit");
-		super.OnWidgetScriptInit(w);
-
-		m_EditorObjectMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorObjectMarkerImage"));		
-	}
-	
-	
-	
+		
 	override void Update()
 	{
 		vector position;
 		vector object_transform[4];
 		m_EditorObject.GetTransform(object_transform);
 		
+		// Should the position be raycasted on the ground, or locked to the object
 		if (EditorSettings.MAINTAIN_HEIGHT) {
-			// Raycast ground below object
 			set<Object> o;
 			vector ground_dir; int component;
 			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject, false, true); // set to ground only
-		} else {
-			position = m_EditorObject.GetBottomCenter();
-		}
+		} 
+		else position = m_EditorObject.GetBottomCenter();
+	
 		
 		vector screenpos = GetGame().GetScreenPos(position);
 

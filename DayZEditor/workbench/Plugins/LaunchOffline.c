@@ -26,6 +26,40 @@ class OpenLogFiles: DayZTool
 	
 	override void Run()
 	{
-		RunDayZBat(BatchFile, true);
+		BetterRunDayZBat(BatchFile, "", true);
 	}
+}
+
+
+void BetterRunDayZBat(string filepath, string params = "", bool wait = false)
+{
+	
+	if (filepath.Length() < 2) return;
+	
+	filepath.Replace("\\", "/");
+	
+	if (filepath[1] != ":")
+	{
+		string cwd;
+		Workbench.GetCwd(cwd);
+		filepath = cwd + "/" + filepath;
+	}
+	
+	int index = filepath.IndexOf("/");
+	int last_index = index;
+	
+	while(index != -1)
+	{
+		last_index = index;
+		index = filepath.IndexOfFrom(last_index + 1, "/");
+	}
+	
+	if (last_index == -1) return;
+	
+	string path = filepath.Substring(0, last_index);
+	string bat = filepath.Substring(last_index + 1, filepath.Length() - last_index - 1);
+	
+	string final = "cmd /c \"chdir /D " + path + " & call " + bat + "\"";
+	Print(final);
+	Workbench.RunCmd(final, wait);
 }

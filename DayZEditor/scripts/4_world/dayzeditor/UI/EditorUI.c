@@ -265,6 +265,7 @@ class EditorUI: EditorWidgetEventHandler
 	void LoadPlaceableObjects()
 	{
 		// Load Placeable Objects
+		Print("Loading Placeables");
 		Widget child = m_LeftbarSpacer.GetChildren();
 		while (child) {
 			m_LeftbarSpacer.RemoveChild(child);
@@ -272,7 +273,8 @@ class EditorUI: EditorWidgetEventHandler
 		}
 		
 		array<string> placeable_objects = new array<string>();
-		Print(string.Format("Loaded %1 Placeable Objects", GetEditor().GetObjectManager().GetPlaceableObjects(placeable_objects)));
+
+		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(placeable_objects)));
 		foreach (string placeable_object: placeable_objects) {
 			EditorListItem list_item;
 			Widget list_widget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorListItem.layout", m_LeftbarSpacer);
@@ -281,24 +283,39 @@ class EditorUI: EditorWidgetEventHandler
 		}
 	}
 	
+	override bool OnClick(Widget w, int x, int y, int button) 
+	{
+		switch (button) {
+			
+			case 0: {
+				if (w == m_LeftbarHide) {
+					left_bar_hidden = !left_bar_hidden;
+					m_LeftbarFrame.SetPos(-300 * left_bar_hidden, 0);
+					return true;
+				} 
+				
+				if (w == m_RightbarHide) {
+					right_bar_hidden = !right_bar_hidden;
+					m_RightbarFrame.SetPos(-300 * right_bar_hidden, 48);
+					return true;
+				}
+				
+				Print(string.Format("Unhandled Click Event %1", w.GetName()));
+				break;
+				
+			}
+		}
+		
+		return false;
+		
+	}
+	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		Print("EditorUI::OnMouseButtonDown: " + button);
 		Input input = GetGame().GetInput();	
 		// Left Click
 		if (button == 0) {
-			
-			if (w == m_LeftbarHide) {
-				left_bar_hidden = !left_bar_hidden;
-				m_LeftbarFrame.SetPos(-300 * left_bar_hidden, 0);
-				return true;
-			} 
-			
-			if (w == m_RightbarHide) {
-				right_bar_hidden = !right_bar_hidden;
-				m_RightbarFrame.SetPos(-300 * right_bar_hidden, 48);
-				return true;
-			}
 			
 			if (Editor.IsPlacing()) {
 				Editor.PlaceObject();
@@ -318,15 +335,15 @@ class EditorUI: EditorWidgetEventHandler
 				}
 			}
 			
-
-
 			if (Editor.EditorObjectUnderCursor == null && GetEditor().GetEditorBrush() == null) {
 				// delayed dragbox
-				EditorUI.EditorCanvas.Clear();
+				GetEditor().GetObjectManager().ClearSelection();
 				GetCursorPos(start_x, start_y);
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DelayedDragBoxCheck, 60);
 				
-			} else if (Editor.EditorObjectUnderCursor != null) {
+			} 
+			
+			else if (Editor.EditorObjectUnderCursor != null) {
 				GetEditor().GetObjectManager().SelectObject(Editor.EditorObjectUnderCursor, !input.LocalValue("UATurbo"));
 			}
 			
