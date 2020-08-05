@@ -139,12 +139,13 @@ class EditorObjectMarker: UILinkedObject
 		}
 		
 		vector screenpos = GetGame().GetScreenPos(position);
+
 		int screen_x, screen_y;
 		GetScreenSize(screen_x, screen_y);
 		m_Root.SetPos(screenpos[0] - 15, screenpos[1] - 15);
 		
 		if (override_show) {
-			m_Root.Show(!(screenpos[0] > screen_x || screenpos[1] > screen_y || screenpos[0] <= 0 || screenpos[1] <= 0));
+			m_Root.Show(screenpos[2] > 0);			
 		}
 		
 		if (m_EditorObject.IsSelected() || MouseInside) {

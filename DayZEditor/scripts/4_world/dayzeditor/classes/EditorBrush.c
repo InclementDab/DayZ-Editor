@@ -88,6 +88,7 @@ class TreeBrush: DensityBrush
 		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1f", 	0.1);
 		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
 		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
+
 		
 		foreach (string name, float rate: ChernarusTrees) {
 		

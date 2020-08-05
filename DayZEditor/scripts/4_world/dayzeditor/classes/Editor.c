@@ -103,7 +103,6 @@ class Editor: Managed
 		
 		// Character Creation
 		EditorPlayer = CreateDefaultCharacter();
-		EditorPlayer.DisableSimulation(true);
 		
 		// Debug
 		DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
@@ -259,11 +258,12 @@ class Editor: Managed
 		EditorWorldData save_data = new EditorWorldData();
 		ActiveCamera.GetTransform(save_data.CameraPosition);
 		
-		
 		foreach (EditorObject save_object: PlacedObjects) {
-			vector mat[4]; 
-			save_object.GetTransform(mat);
-			save_data.WorldObjects.Insert(new EditorWorldObject(save_object.GetType(), mat));
+
+			EditorWorldObject world_object = new EditorWorldObject();
+			world_object.m_Typename = save_object.GetType();
+			save_object.GetTransform(world_object.m_Transform);
+			save_data.WorldObjects.Insert(world_object);
 		}
 		
 		EditorFileManager.SaveFile(save_data);
@@ -276,7 +276,7 @@ class Editor: Managed
 		// find a proper way to remove all existing files. maybe restart editor
 		
 		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
-			EditorObject e_object = CreateObject(load_object.WorldObject_Typename, load_object.WorldObject_Transform[3]);
+			EditorObject e_object = CreateObject(load_object.m_Typename, load_object.m_Transform[3]);
 			
 			PlacedObjects.Insert(e_object.GetID(), e_object);
 		}

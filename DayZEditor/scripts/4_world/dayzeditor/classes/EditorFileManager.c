@@ -14,14 +14,8 @@ class COMImportData
 
 class EditorWorldObject
 {
-	string WorldObject_Typename;
-	vector WorldObject_Transform[4];
-	
-	void EditorWorldObject(string classname, vector transform[4]) 
-	{
-		WorldObject_Typename = classname; 
-		WorldObject_Transform = transform;
-	}
+	string m_Typename;
+	vector m_Transform[4];
 }
 
 class EditorWorldData
@@ -66,9 +60,9 @@ class EditorFileManager
 {
 
 
-	static void SaveFile(EditorWorldData data, string filename = "$profile:editor_save.txt")
+	static void SaveFile(ref EditorWorldData data, string filename = "$profile:editor_save.txt")
 	{
-		JsonFileLoader<EditorWorldData>.JsonSaveFile(filename, data);
+		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(filename, data);
 	}
 	
 	static EditorWorldData LoadFile(string filename = "$profile:editor_save.txt")
@@ -96,7 +90,12 @@ class EditorFileManager
 					vector transform[4];
 					param.param3.RotationMatrixFromAngles(transform);
 					transform[3] = param.param2;
-					data.WorldObjects.Insert(new EditorWorldObject(param.param1, transform));
+					
+					EditorWorldObject world_object = new EditorWorldObject();
+					world_object.m_Typename = param.param1;
+					world_object.m_Transform = transform;
+					
+					data.WorldObjects.Insert(world_object);
 				}
 			}
 		}
@@ -121,10 +120,7 @@ class EditorFileManager
 			vector orientation = editor_object.GetOrientation();
 			orientation = orientation.VectorToAngles();
 			float scale = 1;//editor_object.GetScale();
-			
-
-			
-			
+	
 			vector terrainbuilder_offset = Vector(200000, 0, 0);
 			string line;
 			switch (mode) {

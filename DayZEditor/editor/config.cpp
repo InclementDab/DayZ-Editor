@@ -21,11 +21,7 @@ class CfgVehicles
 {
 	class Static;
 	class HouseNoDestruct;
-	class EditorObject: HouseNoDestruct
-	{
-		scope = 1;
-		displayName = "Editor Object";
-	};
+
 	class DSLRCamera: HouseNoDestruct
 	{
 		scope = 1;

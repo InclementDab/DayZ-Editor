@@ -1,58 +1,5 @@
 
-
-
-// Permanent memory link between an EditorObject and the session
-class EditorObjectLink: ref Link<EditorObject>
-{
-	private string type_name;
-	private vector transform[4];
-	
-	void EditorObjectLink(EditorObject init)
-	{
-		Print("EditorObjectLink");		
-		type_name = init.GetType();
-		init.GetTransform(transform);
-	}
-	
-	void ~EditorObjectLink()
-	{
-		Print("~EditorObjectLink");
-	}
-	
-	void Create()
-	{
-		Print("EditorObjectLink::Create");
-		if (IsNull()) {
-			
-			Init(GetGame().CreateObjectEx("EditorObject", transform[3], ECE_NONE));		
-			EditorObject editor_object = Ptr();
-			
-			editor_object.SetTransform(transform);
-			editor_object.Init(type_name);
-			editor_object.Update();
-			EditorEvents.ObjectCreateInvoke(null, editor_object);
-			
-			editor_object.Select(false);
-		} else {
-			
-			Print("EditorObjectLink::Create JUST CAME BACK AS NOT NULL");
-			Print("IM NOT SURE WHY BUT YOU SHOULD PROBABLY REPORT IT TO A DEVELOPER SMILE :)");
-		}
-	}
-
-	
-	void Delete()
-	{
-		Print("EditorObjectLink::Delete");
-		EditorObject editor_object = Ptr();
-		GetGame().ObjectDelete(editor_object);
-	}
-}
-
-
-
-
-class EditorObject : BuildingBase
+ class EditorObject : Building
 {
 	private bool IsInitialized = false;
 	private bool IsSelected = false;
@@ -87,14 +34,9 @@ class EditorObject : BuildingBase
 	void ~EditorObject()
 	{
 		Print("~EditorObject");
+		
 	}
 	
-	override void Delete()
-	{
-		Print("Delete");
-		
-		super.Delete();
-	}
 	
 	override void EEDelete(EntityAI parent)
 	{
@@ -103,9 +45,9 @@ class EditorObject : BuildingBase
 		
 		IsInitialized = false;
 		
-		GetGame().ObjectDelete(m_WorldObject);
-		GetGame().ObjectDelete(m_BBoxBase);
-		GetGame().ObjectDelete(m_CenterLine);
+		g_Game.ObjectDelete(m_WorldObject);
+		g_Game.ObjectDelete(m_BBoxBase);
+		g_Game.ObjectDelete(m_CenterLine);
 		
 	
 		delete m_EditorObjectMarker; 
@@ -120,21 +62,19 @@ class EditorObject : BuildingBase
 		delete m_EditorObjectPropertiesWidget;
 		
 		for (int i = 0; i < 12; i++)
-			GetGame().ObjectDelete(m_BBoxLines[i]);
+			g_Game.ObjectDelete(m_BBoxLines[i]);
 		
 		super.EEDelete(parent);
 	}
 	
 
-	void Init(string type_name = "")
+	void Init(string type_name)
 	{
 		Print("EditorObject::Init");
-		
-		
+	
 		IsInitialized = true;
-		
 		Type = type_name;
-		m_WorldObject = GetGame().CreateObjectEx(type_name, vector.Zero, ECE_NONE);
+		m_WorldObject = g_Game.CreateObjectEx(type_name, vector.Zero, ECE_LOCAL | ECE_SETUP | ECE_CREATEPHYSICS);
 		AddChild(m_WorldObject, -1);
 		Update();
 		
@@ -142,33 +82,33 @@ class EditorObject : BuildingBase
 		
 		// World Object base marker
 		m_EditorObjectMarker = new UILinkedObject();
-		m_EditorObjectMarkerWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
+		m_EditorObjectMarkerWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
 		m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
 		m_EditorObjectMarker.SetObject(this);
 				
 		// Map marker
 		m_EditorMapMarker = new UILinkedObject();
-		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorMapMarker.layout");
+		m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorMapMarker.layout");
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		m_EditorMapMarker.SetObject(this);
 		Editor.ActiveEditorUI.GetMapWidget().AddChild(m_EditorMapMarkerWidget);
 	
 		// Browser item
 		m_EditorObjectBrowser = new UILinkedObject();
-		m_EditorObjectBrowserWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorPlacedListItem.layout");
+		m_EditorObjectBrowserWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorPlacedListItem.layout");
 		m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
 		m_EditorObjectBrowser.SetObject(this);		
 		
 		// Properties Dialog
 		m_EditorObjectPropertiesWindow = new UILinkedObject();
-		m_EditorObjectPropertiesWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "dialogs/EditorObjectProperties.layout");
+		m_EditorObjectPropertiesWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "dialogs/EditorObjectProperties.layout");
 		m_EditorObjectPropertiesWidget.GetScript(m_EditorObjectPropertiesWindow);
 		m_EditorObjectPropertiesWindow.SetObject(this);
 		m_EditorObjectPropertiesWidget.Show(false);		
 		
 		// Context Menu
 		m_EditorObjectContextMenu = new UILinkedObject();
-		m_EditorObjectContextWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorContextMenu.layout");
+		m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorContextMenu.layout");
 		m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
 		m_EditorObjectContextMenu.SetObject(this);
 		m_EditorObjectContextWidget.Show(false);
@@ -198,6 +138,14 @@ class EditorObject : BuildingBase
 		if (name != string.Empty)
 			return name;
 		else return GetType();
+	}
+	
+	EditorWorldObject GetSaveData()
+	{
+		EditorWorldObject world_object = new EditorWorldObject();
+		world_object.m_Typename = GetType();
+		GetTransform(world_object.m_Transform);
+		return world_object;
 	}
 
 	vector line_centers[12]; vector line_verticies[8];
@@ -251,7 +199,7 @@ class EditorObject : BuildingBase
 			for (int j = 0; j < 3; j++) 
 				transform[j][j] = ((position[j] == line_centers[i][j])*size[j]/2) + line_width;						
 			 
-			m_BBoxLines[i] = GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_NONE);
+			m_BBoxLines[i] = g_Game.CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_NONE);
 			m_BBoxLines[i].SetTransform(transform);			
 			
 			AddChild(m_BBoxLines[i], -1);
@@ -265,7 +213,7 @@ class EditorObject : BuildingBase
 		y_axis_mat[2][2] = line_width;
 		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1], bottom_center[2]);
 		
-		m_CenterLine = GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE);
+		m_CenterLine = g_Game.CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE);
 		m_CenterLine.SetTransform(y_axis_mat);
 		AddChild(m_CenterLine, -1);
 		
@@ -349,13 +297,7 @@ class EditorObject : BuildingBase
 		vector up = GetTransformAxis(1);
 		result = up * (vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
 		result += GetPosition();
-		
-
-	
-		
 		return result;
-		
-		
 	}
 		
 	ref Param4<vector, vector, vector, vector> TransformBeforeDrag;
