@@ -197,9 +197,10 @@ class DeleteBrush: EditorBrush
 		
 		foreach (Object r: results) {
 			
-			EditorObject eo = Editor.EditorObjectFromObject(r);
+			EditorObject eo = GetEditor().GetObjectManager().GetEditorObject(r);
 			if (eo != null) {
-				Editor.DeleteObject(eo);
+				GetEditor().GetObjectManager().SelectObject(eo);
+				GetEditor().GetObjectManager().DeleteSelection();
 			} else {
 				GetGame().ObjectDelete(r);
 			}

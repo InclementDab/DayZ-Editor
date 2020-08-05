@@ -280,12 +280,12 @@ class EditorWidgetEventHandler: ScriptedWidgetEventHandler
 	
 	void EditorWidgetEventHandler()
 	{
-		
+		//GetEditor().GetUIManager().GetUpdateInvoker().Insert(Update);
 	}
 	
 	void ~EditorWidgetEventHandler()
 	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		GetEditor().GetUIManager().GetUpdateInvoker().Remove(Update);
 		m_Root.Show(false);
 		delete m_Root;
 	}
@@ -295,19 +295,12 @@ class EditorWidgetEventHandler: ScriptedWidgetEventHandler
 	void OnWidgetScriptInit(Widget w)
 	{
 		m_Root = w;
-		m_Root.SetHandler(this);		
+		m_Root.SetHandler(this);
 	}
 	
-	
-	override bool OnSelect(Widget w, int x, int y)
-	{
-		Print("EditorWidgetEventHandler::OnSelect");
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-		return super.OnSelect(w, x, y);
-	}
 	
 	Widget GetRoot() { return m_Root; }
-	void Update() { }
+	void Update(float timeslice) { }
 }
 
 

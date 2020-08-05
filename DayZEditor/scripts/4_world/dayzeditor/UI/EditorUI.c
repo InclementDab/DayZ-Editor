@@ -1,213 +1,9 @@
 
+
+
+
+
 // make it so you can search for items by mod name with @ModNameHere
-
-class EditorDropdownPrefab extends ScriptedWidgetEventHandler
-{
-	protected Widget				m_Root;
-	protected ScrollWidget			m_Scroller;
-	protected Widget				m_ContentContainer;
-	protected ref array<Widget>		m_Content		= new array<Widget>>;
-	
-	protected Widget				m_Button;
-	protected TextWidget			m_Text;
-	protected ImageWidget			m_ImageExpand;
-	protected ImageWidget			m_ImageCollapse;
-	
-	protected bool					m_IsExpanded;
-	ref ScriptInvoker				m_OnSelectItem	= new ScriptInvoker();
-
-	void EditorDropdownPrefab( Widget root, string text = "" )
-	{
-		m_Root				= GetGame().GetWorkspace().CreateWidgets( "gui/layouts/new_ui/dropdown_prefab/dropdown_prefab.layout", root );
-		
-		m_Scroller			= ScrollWidget.Cast( m_Root.FindAnyWidget( "dropdown_container" ) );
-		m_ContentContainer	= m_Root.FindAnyWidget( "dropdown_content" );
-		m_Text				= TextWidget.Cast( m_Root.FindAnyWidget( "dropdown_text" ) );
-		SetText( text );
-		
-		m_Button			= m_Root.FindAnyWidget( "dropdown_selector_button" );
-		m_ImageExpand		= ImageWidget.Cast( m_Root.FindAnyWidget( "expand_image" ) );
-		m_ImageCollapse		= ImageWidget.Cast( m_Root.FindAnyWidget( "collapse_image" ) );
-		
-		m_Root.SetHandler( this );
-		
-		RefreshContent();
-	}
-	
-	void RefreshContent()
-	{
-		Widget child = m_ContentContainer.GetChildren();
-		while( child )
-		{
-			if( m_Content.Find( child ) > -1 )
-			{
-				m_Content.Insert( child );
-			}
-		}
-		
-		m_ContentContainer.Update();
-		m_Root.Update();
-		
-		float x, y;
-		m_ContentContainer.GetScreenSize( x, y );
-		if( y > m_Scroller.GetContentHeight() )
-		{
-			m_Scroller.SetAlpha( 1 );
-		}
-		else
-		{
-			m_Scroller.SetAlpha( 0 );
-		}
-	}
-	
-	int AddElement( string text, Widget content = null )
-	{
-		ButtonWidget element = ButtonWidget.Cast( GetGame().GetWorkspace().CreateWidgets( "gui/layouts/new_ui/dropdown_prefab/dropdown_element.layout", m_ContentContainer ) );
-		element.SetText( text );
-		
-		if( content )
-		{
-			element.AddChild( content, false );
-		}
-		m_ContentContainer.Update();
-		m_Root.Update();
-		
-		m_Content.Insert( element );
-		return m_Content.Count() - 1;
-	}
-	
-	void RemoveElement( int index )
-	{
-		if( 0 < index && index < m_Content.Count() )
-		{
-			delete m_Content.Get( index );
-			m_ContentContainer.Update();
-			m_Root.Update();
-		}
-	}
-	
-	void Close()
-	{
-		if( m_IsExpanded )
-		{
-			m_Scroller.Show( false );
-			m_ImageExpand.Show( false );
-			m_ImageCollapse.Show( true );
-		}
-	}
-	
-	void SetText( string text )
-	{
-		m_Text.SetText( text );
-	}
-	
-	override bool OnClick( Widget w, int x, int y, int button )
-	{
-		int index = m_Content.Find( w );
-		if( index > -1 )
-		{
-			m_OnSelectItem.Invoke( index );
-			m_IsExpanded = false;
-			m_Scroller.Show( m_IsExpanded );
-			m_ImageExpand.Show( !m_IsExpanded );
-			m_ImageCollapse.Show( m_IsExpanded );
-			return true;
-		}
-		return false;
-	}
-	
-	override bool OnMouseButtonUp( Widget w, int x, int y, int button )
-	{
-		if( w == m_Root && button == MouseState.LEFT )
-		{
-			m_IsExpanded = !m_IsExpanded;
-			m_Scroller.Show( m_IsExpanded );
-			m_ImageExpand.Show( !m_IsExpanded );
-			m_ImageCollapse.Show( m_IsExpanded );
-			
-			m_Root.Update();
-			return true;
-		}
-		return false;
-	}
-}
-
-class EditorExportDialog: ScriptedWidgetEventHandler
-{
-	protected Widget m_Root;
-	protected Widget m_DirectorySelectorPanel;
-	protected WrapSpacerWidget m_ListEntryWrapper;
-	
-	protected ref EditorDropdownPrefab m_Dropdown;
-	protected ref array<string> m_Files;
-	
-	private string m_PathToMissions;
-	
-	void EditorExportDialog(Widget parent)
-	{
-		m_Root	= Widget.Cast( GetGame().GetWorkspace().CreateWidgets( "DayZEditor/gui/layouts/EditorExportDialog.layout", parent ) );
-			
-		m_DirectorySelectorPanel = Widget.Cast(m_Root.FindAnyWidget("DirectorySelectorPanel"));
-		m_ListEntryWrapper = WrapSpacerWidget.Cast(m_Root.FindAnyWidget("LeftbarSpacer"));
-				
-		m_Root.SetHandler(this);
-		
-		InitDialog();
-	}
-	
-	static array< string > FindFilesInLocation( string folder )
-	{
-		array< string > files = new array< string >;
-		string fileName;
-		FileAttr fileAttr;
-		FindFileHandle findFileHandle = FindFile( folder + "*", fileName, fileAttr, 0 );
-		if ( findFileHandle )
-		{
-			if ( fileName.Length() > 0 && !( fileAttr & FileAttr.DIRECTORY) )
-			{
-				files.Insert( fileName );
-			}
-			
-			while ( FindNextFile( findFileHandle, fileName, fileAttr ) )
-			{
-				if ( fileName.Length() > 0 && !( fileAttr & FileAttr.DIRECTORY) )
-				{
-					files.Insert( fileName );
-				}
-			}
-		}
-		CloseFindFile( findFileHandle );
-		return files;
-	}
-	
-	void InitDialog()
-	{
-		m_Dropdown		= new EditorDropdownPrefab( m_DirectorySelectorPanel, "Directory" );
-		m_Dropdown.m_OnSelectItem.Insert( OnSelectDirectory );
-						
-		m_PathToMissions = "missions";//"$saves:\\missions";
-		string path_find_pattern = m_PathToMissions + "\\*";	
-			
-		m_Files = new array<string>;
-		m_Files = FindFilesInLocation(path_find_pattern);	
-		
-		for( int i = 0; i < m_Files.Count(); i++ )
-		{
-			m_Dropdown.AddElement( m_Files[i] );
-		}
-	}
-	
-	void OnSelectDirectory()
-	{
-	
-	}
-	
-	void Show(bool state)
-	{
-		m_Root.Show(state);
-	}
-}
-
 class EditorUIToolbar: EditorWidgetEventHandler
 {
 	
@@ -284,7 +80,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 			
 			int index = m_BrushTypeBox.GetCurrentItem();
 			if (!m_SimcityButton.GetState()) { 
-				delete Editor.ActiveBrush;
+				GetEditor().GetUIManager().SetEditorBrush(null);
 				m_SimcityDensitySlider.Show(false);
 				m_SimcityRadiusSlider.Show(false);
 				return true;
@@ -294,7 +90,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				
 				// Tree Brush
 				case 0: {
-					Editor.ActiveBrush = new TreeBrush(m_SimcityRadiusSlider.GetCurrent());
+					GetEditor().GetUIManager().SetEditorBrush(new TreeBrush(m_SimcityRadiusSlider.GetCurrent()));
 					m_SimcityDensitySlider.Show(true);
 					m_SimcityRadiusSlider.Show(true);
 					break;
@@ -302,7 +98,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				
 				// Grass Brush
 				case 1: {
-					Editor.ActiveBrush = new GrassBrush(m_SimcityRadiusSlider.GetCurrent());
+					GetEditor().GetUIManager().SetEditorBrush(new GrassBrush(m_SimcityRadiusSlider.GetCurrent()));
 					m_SimcityDensitySlider.Show(true);
 					m_SimcityRadiusSlider.Show(true);
 					break;
@@ -310,7 +106,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				
 				// ExplosionBrush
 				case 2: {
-					Editor.ActiveBrush = new BoomBrush(m_SimcityRadiusSlider.GetCurrent());
+					GetEditor().GetUIManager().SetEditorBrush(new BoomBrush(m_SimcityRadiusSlider.GetCurrent()));
 					m_SimcityDensitySlider.Show(true);
 					m_SimcityRadiusSlider.Show(true);
 					break;
@@ -318,7 +114,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				
 				// DeleteBrush
 				case 3: {
-					Editor.ActiveBrush = new DeleteBrush(m_SimcityRadiusSlider.GetCurrent());
+					GetEditor().GetUIManager().SetEditorBrush(new DeleteBrush(m_SimcityRadiusSlider.GetCurrent()));
 					m_SimcityDensitySlider.Show(false);
 					m_SimcityRadiusSlider.Show(true);
 					break;
@@ -329,20 +125,17 @@ class EditorUIToolbar: EditorWidgetEventHandler
 		
 		if (target == m_SimcityRadiusSlider && m_SimcityRadiusSlider.IsVisible()) {
 			m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
-			Editor.ActiveBrush.SetRadius(m_SimcityRadiusSlider.GetCurrent());
+			GetEditor().GetUIManager().GetEditorBrush().SetRadius(m_SimcityRadiusSlider.GetCurrent());
 		}
 		
 		if (target == m_SimcityDensitySlider && m_SimcityDensitySlider.IsVisible()) {
 			m_SimcityDensityText.SetText(m_SimcityDensitySlider.GetCurrent().ToString());
-			DensityBrush.Cast(Editor.ActiveBrush).SetDensity(m_SimcityDensitySlider.GetCurrent());
+			DensityBrush.Cast(GetEditor().GetUIManager().GetEditorBrush()).SetDensity(m_SimcityDensitySlider.GetCurrent());
 		}
 		
 		return false;
 		
 	}
-	
-	
-	
 }
 
 
@@ -409,10 +202,7 @@ class EditorUI: EditorWidgetEventHandler
 	{
 		m_Instance = this;
 	}
-	
 
-	
-	
 	override void OnWidgetScriptInit(Widget w)
 	{
 		Print("EditorUI::OnWidgetScriptInit");
@@ -463,6 +253,15 @@ class EditorUI: EditorWidgetEventHandler
 		
 		m_ExportDialog = new EditorExportDialog(m_Root);
 		m_ExportDialog.Show(false); //! Comment me if you have implementent me or want to see me!
+		
+		
+		// Load Placeable Objects
+		foreach (string placeable_object: GetEditor().GetObjectManager().GetPlaceableObjects()) {
+			EditorListItem list_item;
+			Widget list_widget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorListItem.layout", m_LeftbarSpacer);
+			list_widget.GetScript(list_item);
+			list_item.SetObject(placeable_object);
+		}
 	}
 	
 	private bool left_bar_hidden = false;
@@ -509,7 +308,7 @@ class EditorUI: EditorWidgetEventHandler
 			
 
 
-			if (Editor.EditorObjectUnderCursor == null && Editor.ActiveBrush == null) {
+			if (Editor.EditorObjectUnderCursor == null && GetEditor().GetUIManager().GetEditorBrush() == null) {
 				// delayed dragbox
 				EditorUI.EditorCanvas.Clear();
 				GetCursorPos(start_x, start_y);
@@ -530,8 +329,8 @@ class EditorUI: EditorWidgetEventHandler
 				LightingBolt.CreateLightning(pos, 5);
 			} else {
 				pos = MousePosToRay(o);
-				pos[1] = Editor.ActiveCamera.GetPosition()[1];
-				Editor.ActiveCamera.SetPosition(pos);
+				pos[1] = GetEditor().GetUIManager().GetEditorCamera().GetPosition()[1];
+				GetEditor().GetUIManager().GetEditorCamera().SetPosition(pos);
 			}
 		}
 		
@@ -584,10 +383,7 @@ class EditorUI: EditorWidgetEventHandler
 			}*/
 			
 			case KeyCode.KC_Y: {
-				m_Root.Show(!m_Root.IsVisible());
-				foreach (EditorObject editor_object: Editor.PlacedObjects) {
-					editor_object.GetObjectMarker().Show(m_Root.IsVisible());
-				}
+				GetEditor().GetUIManager().SetVisibility(!GetEditor().GetUIManager().GetVisibility());
 				
 				return true;
 			}
@@ -655,7 +451,7 @@ class EditorUI: EditorWidgetEventHandler
 		}
 		
 		
-		foreach (EditorObject editor_object: Editor.PlacedObjects) {
+		foreach (EditorObject editor_object: GetEditor().GetObjectManager().GetPlacedObjects()) {
 			
 			float marker_x, marker_y;
 			if (IsMapOpen()) {
@@ -734,13 +530,7 @@ class EditorUI: EditorWidgetEventHandler
 	}
 	
 	
-	void InsertPlaceableObject(string placeable_object)
-	{
-		EditorListItem list_item;
-		Widget list_widget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorListItem.layout", m_LeftbarSpacer);
-		list_widget.GetScript(list_item);
-		list_item.SetObject(placeable_object);
-	}
+
 	
 	void InsertPlacedObject(EditorObject target)
 	{

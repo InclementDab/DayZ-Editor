@@ -2,6 +2,7 @@
 
 
 
+// remove the static invokes and let the Editor class manage it
 class EditorEvents 
 {
 	static ref ScriptInvoker OnObjectCreated = new ScriptInvoker();

@@ -66,8 +66,8 @@ class EditorMap: EditorWidgetEventHandler
 				EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
 				vector mat[4];
 				e.GetTransform(mat);
-				EditorObject editor_object = Editor.CreateObject(e.GetType(), mat);
-				editor_object.Select();
+				EditorObject editor_object = GetEditor().GetObjectManager().CreateObject(e.GetType(), mat[3]);
+				editor_object.SetTransform(mat);
 				if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
 				return true;
 			} else {
@@ -80,9 +80,9 @@ class EditorMap: EditorWidgetEventHandler
 			
 		} else if (button == 2) {
 			vector teleport_dest = map_widget.ScreenToMap(Vector(x, y, 0));
-			vector current_pos = Editor.ActiveCamera.GetPosition();
+			vector current_pos = GetEditor().GetUIManager().GetEditorCamera().GetPosition();
 			teleport_dest[1] = current_pos[1] - GetGame().SurfaceY(current_pos[0], current_pos[2]) + GetGame().SurfaceY(teleport_dest[0], teleport_dest[2]);
-			Editor.ActiveCamera.SetPosition(teleport_dest);			
+			GetEditor().GetUIManager().GetEditorCamera().SetPosition(teleport_dest);			
 			
 			return true;
 			
@@ -198,14 +198,14 @@ class EditorPlacedListItem: UILinkedObject
 				}
 				
 				m_EditorObject.Select(false);
-				if (Editor.SelectedObjects.Count() != 0) {
+				if (GetEditor().GetObjectManager().GetSelectedObjects().Count() != 0) {
 					Widget root_object = m_Root.GetParent().GetChildren();
-					bool selection_found = EditorObject.CheckIfRootIsSelected(root_object);
+					bool selection_found = GetEditor().GetObjectManager().CheckIfRootIsSelected(root_object);
 					
 					// Search down the browser for first selected object
 					while (!selection_found) {
 						root_object = root_object.GetSibling();
-						selection_found = EditorObject.CheckIfRootIsSelected(root_object);
+						selection_found = GetEditor().GetObjectManager().CheckIfRootIsSelected(root_object);
 						if (root_object == null) break;	
 					}
 										
@@ -213,7 +213,7 @@ class EditorPlacedListItem: UILinkedObject
 					while (selection_found) {
 						EditorObject.GetFromUILinkedRoot(root_object).Select(false);
 						root_object = root_object.GetSibling();
-						selection_found = !EditorObject.CheckIfRootIsSelected(root_object);
+						selection_found = !GetEditor().GetObjectManager().CheckIfRootIsSelected(root_object);
 						if (root_object == null) break;
 					}
 					return true;		
@@ -287,7 +287,7 @@ class PlaceableSearchBar: EditorWidgetEventHandler
 		Print("PlaceableSearchBar::OnChange");
 		
 		
-		WrapSpacerWidget spacer = WrapSpacerWidget.Cast(Editor.ActiveEditorUI.GetRoot().FindAnyWidget("LeftbarSpacer"));
+		WrapSpacerWidget spacer = WrapSpacerWidget.Cast(GetEditor().GetUIManager().GetEditorUI().GetRoot().FindAnyWidget("LeftbarSpacer"));
 		string filter = EditBoxWidget.Cast(w).GetText();
 		Widget child = spacer.GetChildren();
 		while (child != null) {
@@ -315,7 +315,7 @@ class PlaceableSearchBar: EditorWidgetEventHandler
 	{
 		Print("PlaceableSearchBar::OnFocus");
 		
-		Editor.ActiveCamera.MoveEnabled = false;
+		GetEditor().GetUIManager().GetEditorCamera().SetMoveEnabled(false);
 		
 		return super.OnFocus(w, x, y);
 	}
@@ -324,7 +324,7 @@ class PlaceableSearchBar: EditorWidgetEventHandler
 	{
 		Print("PlaceableSearchBar::OnFocusLost");
 		
-		Editor.ActiveCamera.MoveEnabled = true;
+		GetEditor().GetUIManager().GetEditorCamera().SetMoveEnabled(true);
 		
 		return super.OnFocusLost(w, x, y);
 	}

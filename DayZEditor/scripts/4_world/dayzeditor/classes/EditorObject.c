@@ -1,5 +1,7 @@
+typedef ref map<int, ref EditorObject> EditorObjectSet;
 
- class EditorObject : Building
+
+class EditorObject : Building
 {
 	private bool IsInitialized = false;
 	private bool IsSelected = false;
@@ -78,7 +80,7 @@
 		AddChild(m_WorldObject, -1);
 		Update();
 		
-		// todo move all this to EditorObjectUIManager thing
+		// todo move all this to EditorUIManager
 		
 		// World Object base marker
 		m_EditorObjectMarker = new UILinkedObject();
@@ -91,7 +93,7 @@
 		m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorMapMarker.layout");
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		m_EditorMapMarker.SetObject(this);
-		Editor.ActiveEditorUI.GetMapWidget().AddChild(m_EditorMapMarkerWidget);
+		GetEditor().GetUIManager().GetEditorUI().GetMapWidget().AddChild(m_EditorMapMarkerWidget);
 	
 		// Browser item
 		m_EditorObjectBrowser = new UILinkedObject();
@@ -124,6 +126,8 @@
 	{
 		// todo
 	}
+	
+	
 	
 	
 	private string Type;
@@ -245,7 +249,7 @@
 		//Print("EditorObject::Select");
 		
 		if (clear_existing)
-			Editor.ClearSelections();
+			GetEditor().GetObjectManager().ClearSelection();
 		
 		if (IsSelected) return;
 		IsSelected = true;
@@ -254,9 +258,8 @@
 		vector size = GetSize();
 		vector position = vector.Zero;
 		position[1] = position[1] + size[1]/2;
-		
-		Editor.SelectedObjects.Insert(GetID(), this);
-		EditorEvents.ObjectSelectedInvoke(this, this);
+		//Editor.SelectedObjects.Insert(GetID(), this);
+		//EditorEvents.ObjectSelectedInvoke(this, this);
 		
 		
 	}
@@ -268,8 +271,8 @@
 		IsSelected = false;
 		HideBoundingBox();
 		
-		Editor.SelectedObjects.Remove(GetID());
-		EditorEvents.ObjectDeselectedInvoke(this, this);
+		//Editor.SelectedObjects.Remove(GetID());
+		//EditorEvents.ObjectDeselectedInvoke(this, this);
 	}
 
 	vector GetBottomCenter()
@@ -346,7 +349,7 @@
 			vector current_pos = GetPosition();
 			float snap_radius = 5;
 
-			foreach (EditorObject editor_object: Editor.PlacedObjects) {
+			foreach (EditorObject editor_object: GetEditor().GetObjectManager().GetPlacedObjects()) {
 				if (editor_object == this) continue;
 				
 				vector size = editor_object.GetSize();
@@ -438,7 +441,7 @@
 	static EditorObject GetFromUILinkedRoot(Widget root)
 	{
 		Print("EditorObject::GetFromObjectRoot");
-		foreach (EditorObject editor_object: Editor.PlacedObjects) {
+		foreach (EditorObject editor_object: GetEditor().GetObjectManager().GetPlacedObjects()) {
 			if (editor_object.GetObjectBrowser() == root || editor_object.GetObjectMarker() == root)
 				return editor_object;
 		}
@@ -446,15 +449,7 @@
 		Print("GetFromObjectRoot: Item Not Found!");
 		return null;
 	}
-	
-	static bool CheckIfRootIsSelected(Widget root)
-	{
-		foreach (EditorObject editor_object: Editor.SelectedObjects)
-			if (editor_object.IsSelected() && (editor_object.GetObjectBrowser() == root || editor_object.GetObjectMarker() == root))
-				return true;
-		
-		return false;
-	}
+
 	
 	
 

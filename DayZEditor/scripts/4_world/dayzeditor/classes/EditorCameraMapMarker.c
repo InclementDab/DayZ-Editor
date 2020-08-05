@@ -1,28 +1,23 @@
-class EditorCameraMapMarker: ScriptedWidgetEventHandler
+class EditorCameraMapMarker: EditorWidgetEventHandler
 {
-	protected ref Widget m_Root;
 	protected ImageWidget m_EditorMapMarkerImage;
-	protected EditorCamera m_ActiveCamera;
+	protected EditorCamera m_ActiveCamera = null;
+	private MapWidget m_MapWidget;
 	
-	void ~EditorCameraMapMarker()
-	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-	}
-	
+
 	void OnWidgetScriptInit(Widget w)
 	{
 		Print("EditorCameraMapMarker::OnWidgetScriptInit");
-		m_Root = w;
-		m_Root.SetHandler(this);
+		super.OnWidgetScriptInit(w);
 		
 		m_EditorMapMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorMapMarkerImage"));	
-		
-		m_MapWidget = Editor.ActiveEditorUI.GetMapWidget();
+		m_MapWidget = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
 	}
 	
-	private MapWidget m_MapWidget;
-	void Update()
+	
+	override void Update(float timeslice)
 	{
+		if (m_Root == null) return;
 		if (m_ActiveCamera == null) return;
 		vector pos = m_MapWidget.MapToScreen(m_ActiveCamera.GetPosition());
 		
@@ -35,6 +30,6 @@ class EditorCameraMapMarker: ScriptedWidgetEventHandler
 	void SetCamera(EditorCamera camera)
 	{
 		m_ActiveCamera = camera;
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		GetEditor().GetUIManager().GetUpdateInvoker().Insert(Update);
 	}
 }

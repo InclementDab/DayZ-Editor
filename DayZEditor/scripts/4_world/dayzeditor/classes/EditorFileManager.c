@@ -114,7 +114,7 @@ class EditorFileManager
 			return;
 		}
 		
-		foreach (EditorObject editor_object: Editor.PlacedObjects) {
+		foreach (EditorObject editor_object: GetEditor().GetObjectManager().GetPlacedObjects()) {
 						
 			vector position = editor_object.GetPosition();
 			vector orientation = editor_object.GetOrientation();
