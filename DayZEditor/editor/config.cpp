@@ -42,6 +42,7 @@ class CfgVehicles
 		hiddenSelectionsMaterials[] = {"\DayZEditor\Editor\data\TranslationWidget.rvmat"};
 		hiddenSelectionsTextures[] = {"\DayZEditor\Editor\data\TranslationWidget.paa"};
 	};
+
 	class RotationWidget: Inventory_Base
 	{
 		scope = 1;
@@ -61,9 +62,7 @@ class CfgVehicles
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\BoundingBoxBase.p3d";
-		hiddenSelections[] = {"BoundingBoxBase"};
-		hiddenSelectionsTextures[] = {""};
-		hiddenSelectionsMaterials[] = {""};
+		hiddenSelections[] = {"BoundingBoxSelection"};
 	};
 	class ThunderboltNorm: HouseNoDestruct
 	{

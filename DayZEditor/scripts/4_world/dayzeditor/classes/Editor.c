@@ -17,8 +17,6 @@ static PlayerBase CreateDefaultCharacter()
 	    player.GetInventory().CreateInInventory("TranslationWidget");
 	}
 	
-   
-	
     return player;
 }
 
