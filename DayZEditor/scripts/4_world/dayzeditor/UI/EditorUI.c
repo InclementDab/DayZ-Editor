@@ -4,167 +4,6 @@
 
 
 // make it so you can search for items by mod name with @ModNameHere
-class EditorUIToolbar: EditorWidgetEventHandler
-{
-	
-	protected ButtonWidget 	m_UndoButton;
-	protected ButtonWidget 	m_RedoButton;
-	protected ButtonWidget 	m_MagnetButton;
-	protected ButtonWidget 	m_GroundButton;
-	protected ButtonWidget 	m_SnapButton;
-	protected ButtonWidget 	m_SimcityButton;
-	protected ButtonWidget 	m_DeleteBrushButton;
-	
-	protected SliderWidget 	m_SimcityRadiusSlider;
-	protected TextWidget	m_SimcityRadiusText;	
-	
-	protected SliderWidget 	m_SimcityDensitySlider;
-	protected TextWidget	m_SimcityDensityText;
-	
-	protected XComboBoxWidget	m_BrushTypeBox;
-	
-	override void OnWidgetScriptInit(Widget w)
-	{
-		Print("EditorUIToolbar::OnWidgetScriptInit");
-		super.OnWidgetScriptInit(w);
-		
-		m_UndoButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("UndoButton"));
-		m_RedoButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("RedoButton"));
-		m_MagnetButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("MagnetButton"));
-		m_GroundButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("GroundButton"));
-		m_SnapButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("SnapButton"));
-		m_SimcityButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("SimcityButton"));
-		m_DeleteBrushButton		= ButtonWidget.Cast(m_Root.FindAnyWidget("DeleteBrush"));
-		
-		m_SimcityRadiusSlider	= SliderWidget.Cast(m_Root.FindAnyWidget("SimcityRadiusSlider"));
-		m_SimcityRadiusText		= TextWidget.Cast(m_Root.FindAnyWidget("SimcityRadiusText"));		
-		
-		m_SimcityDensitySlider	= SliderWidget.Cast(m_Root.FindAnyWidget("SimcityDensitySlider"));
-		m_SimcityDensityText	= TextWidget.Cast(m_Root.FindAnyWidget("SimcityDensityText"));
-		
-		m_BrushTypeBox			= XComboBoxWidget.Cast(m_Root.FindAnyWidget("BrushTypeBox"));
-		
-		
-		m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
-		
-		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
-	}
-	
-
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		Print("EditorUIToolbar::OnClick");
-		if (button == 0) {
-			
-			switch (w) {
-				
-				case m_MagnetButton: {
-					EditorSettings.MAGNET_PLACEMENT = m_MagnetButton.GetState();
-					return true;
-				}
-				
-				case m_GroundButton: {
-					EditorSettings.MAINTAIN_HEIGHT = m_GroundButton.GetState();
-					return true;
-				}
-				
-				case m_SnapButton: {
-					EditorSettings.SNAPPING_MODE = m_SnapButton.GetState();
-					return true;
-				}
-				
-				case m_SimcityButton: {
-					if (!m_SimcityButton.GetState())
-						EditorEvents.BrushChangedInvoke(this, null);
-					else EditorEvents.BrushChangedInvoke(this, EditorBrushFromIndex(m_BrushTypeBox.GetCurrentItem()));
-					
-					return true;
-				}
-				
-				case m_BrushTypeBox: {
-					EditorEvents.BrushChangedInvoke(this, EditorBrushFromIndex(m_BrushTypeBox.GetCurrentItem()));
-					return true;
-				}
-				
-				default: {
-					Print(string.Format("%1 Doesnt have a click function!", w.GetName()));
-					return false;
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	
-	private EditorBrush EditorBrushFromIndex(int index)
-	{
-		switch (index) {
-				
-			// Tree Brush
-			case 0: {
-				return new TreeBrush(m_SimcityRadiusSlider.GetCurrent());
-			}				
-			
-			// Grass Brush
-			case 1: {
-				return new GrassBrush(m_SimcityRadiusSlider.GetCurrent());
-			}
-			
-			// ExplosionBrush
-			case 2: {
-				return new BoomBrush(m_SimcityRadiusSlider.GetCurrent());
-			}
-			
-			// DeleteBrush
-			case 3: {
-				return new DeleteBrush(m_SimcityRadiusSlider.GetCurrent());
-			}
-			
-			default: {
-				Print("Brush index not found");
-				break;
-			}
-		}
-		
-		return null;
-	}
-		
-	void OnBrushChanged(Class context, EditorBrush brush)
-	{
-		if (brush == null) {
-			m_SimcityDensitySlider.Show(false);
-			m_SimcityRadiusSlider.Show(false);
-		
-			m_SimcityDensityText.Show(false);
-			m_SimcityRadiusText.Show(false);
-			return;
-		}
-		
-		switch (brush.Type()) {
-			
-			case DeleteBrush: {
-				m_SimcityDensitySlider.Show(false);
-				m_SimcityRadiusSlider.Show(true);
-				
-				m_SimcityDensityText.Show(false);
-				m_SimcityRadiusText.Show(true);
-				break;
-			}
-		
-			default: {
-				m_SimcityDensitySlider.Show(true);
-				m_SimcityRadiusSlider.Show(true);
-				
-				m_SimcityDensityText.Show(true);
-				m_SimcityRadiusText.Show(true);
-				break;
-			}
-		}
-		
-	}
-}
-
 
 enum EditorCursor
 {
@@ -179,15 +18,33 @@ class EditorUI: EditorWidgetEventHandler
 	static EditorUI GetInstance() { return m_Instance; }
 	
 	// Canvas
-	static ref CanvasWidget EditorCanvas;
+	protected ref CanvasWidget m_EditorCanvas;
+	CanvasWidget GetCanvas() { return m_EditorCanvas; }
 	
-	// Buttons
+	// Center Space Widget
+	protected Widget m_CenterSpaceFrame;
+	Widget GetCenterSpaceFrame() { return m_CenterSpaceFrame; }
+	
+	// Buttons 
 	protected ButtonWidget m_BuildingSelect;
 	protected ButtonWidget m_VehicleSelect;
 	protected ButtonWidget m_EntitySelect;
 	protected ButtonWidget m_HumanSelect;
 	protected ButtonWidget m_LeftbarHide;
 	protected ButtonWidget m_RightbarHide;
+	
+	// Toolbar Buttons
+	protected ButtonWidget 	m_UndoButton;
+	protected ButtonWidget 	m_RedoButton;
+	protected ButtonWidget 	m_MagnetButton;
+	protected ButtonWidget 	m_GroundButton;
+	protected ButtonWidget 	m_SnapButton;
+	protected ButtonWidget 	m_SimcityButton;
+	protected SliderWidget 	m_SimcityRadiusSlider;
+	protected TextWidget	m_SimcityRadiusText;	
+	protected SliderWidget 	m_SimcityDensitySlider;
+	protected TextWidget	m_SimcityDensityText;
+	protected XComboBoxWidget	m_BrushTypeBox;
 
 	
 	// Frames and Hosts
@@ -236,7 +93,10 @@ class EditorUI: EditorWidgetEventHandler
 		super.OnWidgetScriptInit(w);
 		
 		// Canvas
-		EditorCanvas			= CanvasWidget.Cast(m_Root.FindAnyWidget("EditorCanvas"));
+		m_EditorCanvas			= CanvasWidget.Cast(m_Root.FindAnyWidget("EditorCanvas"));
+		
+		// Center Space
+		m_CenterSpaceFrame		= m_Root.FindAnyWidget("CenterSpaceFrame");
 		
 		// Frames
 		m_LeftbarFrame			= m_Root.FindAnyWidget("LeftbarFrame");
@@ -262,6 +122,21 @@ class EditorUI: EditorWidgetEventHandler
 		m_LeftbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("LeftbarSpacer"));
 		m_RightbarSpacer		= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("RightbarSpacer"));
 		
+		// Toolbar
+		m_UndoButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("UndoButton"));
+		m_RedoButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("RedoButton"));
+		m_MagnetButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("MagnetButton"));
+		m_GroundButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("GroundButton"));
+		m_SnapButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("SnapButton"));
+		m_SimcityButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("SimcityButton"));
+		m_SimcityRadiusSlider	= SliderWidget.Cast(m_Root.FindAnyWidget("SimcityRadiusSlider"));
+		m_SimcityRadiusText		= TextWidget.Cast(m_Root.FindAnyWidget("SimcityRadiusText"));		
+		m_SimcityDensitySlider	= SliderWidget.Cast(m_Root.FindAnyWidget("SimcityDensitySlider"));
+		m_SimcityDensityText	= TextWidget.Cast(m_Root.FindAnyWidget("SimcityDensityText"));
+		m_BrushTypeBox			= XComboBoxWidget.Cast(m_Root.FindAnyWidget("BrushTypeBox"));
+	
+		
+		
 		// Debug
 		m_DebugText1			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText1"));
 		m_DebugText2			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText2"));
@@ -281,7 +156,10 @@ class EditorUI: EditorWidgetEventHandler
 		m_ExportDialog = new EditorExportDialog(m_Root);
 		m_ExportDialog.Show(false); //! Comment me if you have implementent me or want to see me!
 		
-		
+		// Brush init
+		m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
+		m_SimcityDensityText.SetText(m_SimcityDensitySlider.GetCurrent().ToString());
+		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
 		
 
 	}
@@ -293,24 +171,55 @@ class EditorUI: EditorWidgetEventHandler
 	
 	override bool OnClick(Widget w, int x, int y, int button) 
 	{
-		switch (button) {
+		if (button == 0) {
 			
-			case 0: {
-				if (w == m_LeftbarHide) {
+			switch (w) {
+				
+				case m_MagnetButton: {
+					EditorSettings.MAGNET_PLACEMENT = m_MagnetButton.GetState();
+					return true;
+				}
+				
+				case m_GroundButton: {
+					EditorSettings.MAINTAIN_HEIGHT = m_GroundButton.GetState();
+					return true;
+				}
+				
+				case m_SnapButton: {
+					EditorSettings.SNAPPING_MODE = m_SnapButton.GetState();
+					return true;
+				}
+				
+				case m_SimcityButton: {
+					if (!m_SimcityButton.GetState())
+						EditorEvents.BrushChangedInvoke(this, null);
+					else EditorEvents.BrushChangedInvoke(this, EditorBrushFromIndex(m_BrushTypeBox.GetCurrentItem()));
+					
+					return true;
+				}
+				
+				case m_BrushTypeBox: {
+					EditorEvents.BrushChangedInvoke(this, EditorBrushFromIndex(m_BrushTypeBox.GetCurrentItem()));
+					return true;
+				}
+				
+				
+				case m_LeftbarHide: {
 					left_bar_hidden = !left_bar_hidden;
 					m_LeftbarFrame.SetPos(-300 * left_bar_hidden, 0);
 					return true;
 				} 
 				
-				if (w == m_RightbarHide) {
+				case m_RightbarHide: {
 					right_bar_hidden = !right_bar_hidden;
 					m_RightbarFrame.SetPos(-300 * right_bar_hidden, 48);
 					return true;
 				}
 				
-				Print(string.Format("Unhandled Click Event %1", w.GetName()));
-				break;
-				
+				default: {
+					Print(string.Format("%1 Doesnt have a click function!", w.GetName()));
+					return false;
+				}
 			}
 		}
 		
@@ -451,9 +360,10 @@ class EditorUI: EditorWidgetEventHandler
 	bool IsDragging = false; // this is very broken find a better way to do this
 	void UpdateDragBox()
 	{	
+		
 		Input input = GetGame().GetInput();
 		if (input.LocalRelease("UAFire")) {
-			EditorUI.EditorCanvas.Clear();
+			m_EditorCanvas.Clear();
 			IsDragging = false;
 			DragBoxQueue.Remove(UpdateDragBox);
 			return;
@@ -462,13 +372,13 @@ class EditorUI: EditorWidgetEventHandler
 		IsDragging = true;
 		int current_x, current_y;
 		GetCursorPos(current_x, current_y);
-		EditorUI.EditorCanvas.Clear();
+		m_EditorCanvas.Clear();
 		int selection_box_thickness = 2;
 		int selection_box_color = ARGB(100, 255, 0, 0);
-		EditorUI.EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, selection_box_thickness, selection_box_color);
-		EditorUI.EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, selection_box_thickness, selection_box_color);
-		EditorUI.EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, selection_box_thickness, selection_box_color);
-		EditorUI.EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, selection_box_thickness, selection_box_color);
+		m_EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, selection_box_thickness, selection_box_color);
+		m_EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, selection_box_thickness, selection_box_color);
+		m_EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, selection_box_thickness, selection_box_color);
+		m_EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, selection_box_thickness, selection_box_color);
 		
 		int x_low, x_high, y_low, y_high;
 		if (start_x > current_x) {
@@ -580,6 +490,74 @@ class EditorUI: EditorWidgetEventHandler
 		Widget list_widget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorListItem.layout", m_LeftbarSpacer);
 		list_widget.GetScript(list_item);
 		list_item.SetObject(target);
+	}
+	
+	
+	
+	private EditorBrush EditorBrushFromIndex(int index)
+	{
+		switch (index) {
+				
+			// Tree Brush
+			case 0: {
+				return new TreeBrush(m_SimcityRadiusSlider.GetCurrent());
+			}				
+			
+			// Grass Brush
+			case 1: {
+				return new GrassBrush(m_SimcityRadiusSlider.GetCurrent());
+			}
+			
+			// ExplosionBrush
+			case 2: {
+				return new BoomBrush(m_SimcityRadiusSlider.GetCurrent());
+			}
+			
+			// DeleteBrush
+			case 3: {
+				return new DeleteBrush(m_SimcityRadiusSlider.GetCurrent());
+			}
+			
+			default: {
+				Print("Brush index not found");
+				break;
+			}
+		}
+		
+		return null;
+	}
+		
+	void OnBrushChanged(Class context, EditorBrush brush)
+	{
+		if (brush == null) {
+			m_SimcityDensitySlider.Show(false);
+			m_SimcityRadiusSlider.Show(false);
+		
+			m_SimcityDensityText.Show(false);
+			m_SimcityRadiusText.Show(false);
+			return;
+		}
+		
+		switch (brush.Type()) {
+			
+			case DeleteBrush: {
+				m_SimcityDensitySlider.Show(false);
+				m_SimcityRadiusSlider.Show(true);
+				
+				m_SimcityDensityText.Show(false);
+				m_SimcityRadiusText.Show(true);
+				break;
+			}
+		
+			default: {
+				m_SimcityDensitySlider.Show(true);
+				m_SimcityRadiusSlider.Show(true);
+				
+				m_SimcityDensityText.Show(true);
+				m_SimcityRadiusText.Show(true);
+				break;
+			}
+		}
 		
 	}
 }

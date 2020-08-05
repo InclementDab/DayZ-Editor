@@ -71,7 +71,7 @@ class EditorMap: EditorWidgetEventHandler
 				if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
 				return true;
 			} else {
-				EditorUI.EditorCanvas.Clear();
+				GetEditor().GetUIManager().GetEditorUI().GetCanvas().Clear();
 				EditorUI ui = EditorUI.GetInstance();
 				GetCursorPos(ui.start_x, ui.start_y);
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ui.DelayedDragBoxCheck, 40);

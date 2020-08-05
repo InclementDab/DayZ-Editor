@@ -99,6 +99,19 @@ class EditorUIManager: Managed
 		m_EditorCamera.SetActive(state);
 	}
 	
+	bool IsCursorOverUI()
+	{
+		float pos_x, pos_y, size_x, size_y;
+		
+		m_EditorUI.GetCenterSpaceFrame().GetScreenPos(pos_x, pos_y);
+		m_EditorUI.GetCenterSpaceFrame().GetScreenSize(size_x, size_y);
+		
+		int cursor_x, cursor_y;
+		GetCursorPos(cursor_x, cursor_y);
+		
+		return (cursor_x > size_x + pos_x) || (cursor_x < pos_x) || (cursor_y > size_y + pos_y) || (cursor_y < pos_y);
+	}
+	
 
 	
 	
