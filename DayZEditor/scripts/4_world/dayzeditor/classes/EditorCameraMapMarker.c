@@ -2,23 +2,13 @@ class EditorCameraMapMarker: EditorWidgetEventHandler
 {
 	protected ImageWidget m_EditorMapMarkerImage;
 	protected EditorCamera m_ActiveCamera = null;
-	private MapWidget m_MapWidget;
-	
-
-	void OnWidgetScriptInit(Widget w)
-	{
-		Print("EditorCameraMapMarker::OnWidgetScriptInit");
-		super.OnWidgetScriptInit(w);
-		
-		m_EditorMapMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorMapMarkerImage"));	
-		m_MapWidget = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
-	}
 	
 	
 	override void Update(float timeslice)
 	{
 		if (m_Root == null) return;
 		if (m_ActiveCamera == null) return;
+		MapWidget m_MapWidget = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
 		vector pos = m_MapWidget.MapToScreen(m_ActiveCamera.GetPosition());
 		
 		m_Root.SetPos(pos[0], pos[1]);

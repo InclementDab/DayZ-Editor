@@ -8,13 +8,12 @@ class EditorUIManager: Managed
 	private ref EditorUI 		m_EditorUI;
 	private ref Widget 			m_EditorWidget;
 	private EditorCamera		m_EditorCamera;
-	private ref EditorBrush		m_EditorBrush;
 	private ref ScriptInvoker 		m_UpdateInvoker;
 	
 	// Getters
 	EditorUI GetEditorUI() { return m_EditorUI; }
 	EditorCamera GetEditorCamera() { return m_EditorCamera; }
-	EditorBrush GetEditorBrush() { return m_EditorBrush; }
+
 
 	ScriptInvoker GetUpdateInvoker() { return m_UpdateInvoker; }
 	
@@ -89,10 +88,7 @@ class EditorUIManager: Managed
 		m_EditorCamera.SetActive(state);
 	}
 	
-	void SetEditorBrush(EditorBrush editor_brush) 
-	{
-		m_EditorBrush = editor_brush;
-	}
+
 	
 	
 	private bool m_Visibility;

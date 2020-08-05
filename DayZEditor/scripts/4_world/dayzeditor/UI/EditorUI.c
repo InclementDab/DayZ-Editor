@@ -80,7 +80,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 			
 			int index = m_BrushTypeBox.GetCurrentItem();
 			if (!m_SimcityButton.GetState()) { 
-				GetEditor().GetUIManager().SetEditorBrush(null);
+				GetEditor().SetEditorBrush(null);
 				m_SimcityDensitySlider.Show(false);
 				m_SimcityRadiusSlider.Show(false);
 				return true;
@@ -90,7 +90,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				
 				// Tree Brush
 				case 0: {
-					GetEditor().GetUIManager().SetEditorBrush(new TreeBrush(m_SimcityRadiusSlider.GetCurrent()));
+					GetEditor().SetEditorBrush(new TreeBrush(m_SimcityRadiusSlider.GetCurrent()));
 					m_SimcityDensitySlider.Show(true);
 					m_SimcityRadiusSlider.Show(true);
 					break;
@@ -98,7 +98,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				
 				// Grass Brush
 				case 1: {
-					GetEditor().GetUIManager().SetEditorBrush(new GrassBrush(m_SimcityRadiusSlider.GetCurrent()));
+					GetEditor().SetEditorBrush(new GrassBrush(m_SimcityRadiusSlider.GetCurrent()));
 					m_SimcityDensitySlider.Show(true);
 					m_SimcityRadiusSlider.Show(true);
 					break;
@@ -106,7 +106,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				
 				// ExplosionBrush
 				case 2: {
-					GetEditor().GetUIManager().SetEditorBrush(new BoomBrush(m_SimcityRadiusSlider.GetCurrent()));
+					GetEditor().SetEditorBrush(new BoomBrush(m_SimcityRadiusSlider.GetCurrent()));
 					m_SimcityDensitySlider.Show(true);
 					m_SimcityRadiusSlider.Show(true);
 					break;
@@ -114,7 +114,7 @@ class EditorUIToolbar: EditorWidgetEventHandler
 				
 				// DeleteBrush
 				case 3: {
-					GetEditor().GetUIManager().SetEditorBrush(new DeleteBrush(m_SimcityRadiusSlider.GetCurrent()));
+					GetEditor().SetEditorBrush(new DeleteBrush(m_SimcityRadiusSlider.GetCurrent()));
 					m_SimcityDensitySlider.Show(false);
 					m_SimcityRadiusSlider.Show(true);
 					break;
@@ -125,12 +125,12 @@ class EditorUIToolbar: EditorWidgetEventHandler
 		
 		if (target == m_SimcityRadiusSlider && m_SimcityRadiusSlider.IsVisible()) {
 			m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
-			GetEditor().GetUIManager().GetEditorBrush().SetRadius(m_SimcityRadiusSlider.GetCurrent());
+			GetEditor().GetEditorBrush().SetRadius(m_SimcityRadiusSlider.GetCurrent());
 		}
 		
 		if (target == m_SimcityDensitySlider && m_SimcityDensitySlider.IsVisible()) {
 			m_SimcityDensityText.SetText(m_SimcityDensitySlider.GetCurrent().ToString());
-			DensityBrush.Cast(GetEditor().GetUIManager().GetEditorBrush()).SetDensity(m_SimcityDensitySlider.GetCurrent());
+			DensityBrush.Cast(GetEditor().GetEditorBrush()).SetDensity(m_SimcityDensitySlider.GetCurrent());
 		}
 		
 		return false;
@@ -308,7 +308,7 @@ class EditorUI: EditorWidgetEventHandler
 			
 
 
-			if (Editor.EditorObjectUnderCursor == null && GetEditor().GetUIManager().GetEditorBrush() == null) {
+			if (Editor.EditorObjectUnderCursor == null && GetEditor().GetEditorBrush() == null) {
 				// delayed dragbox
 				EditorUI.EditorCanvas.Clear();
 				GetCursorPos(start_x, start_y);

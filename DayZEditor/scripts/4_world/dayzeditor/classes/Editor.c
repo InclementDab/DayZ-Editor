@@ -36,11 +36,19 @@ class Editor: Managed
 
 	TranslationWidget						GlobalTranslationWidget;
 	
+	// debug
 	static Object DebugObject0, DebugObject1, DebugObject2, DebugObject3;
 	
 	// Getters
 	EditorObjectManager GetObjectManager() { return m_EditorObjectManager; }
 	EditorUIManager GetUIManager() { return m_EditorUIManager; }
+	
+	private ref EditorBrush	m_EditorBrush;
+	EditorBrush GetEditorBrush() { return m_EditorBrush; }
+	void SetEditorBrush(EditorBrush editor_brush) 
+	{
+		m_EditorBrush = editor_brush;
+	}
 	
 	void Editor()
 	{
@@ -206,7 +214,7 @@ class Editor: Managed
 	static void CreateObjectInHand(string name)
 	{
 		// Turn Brush off when you start to place
-		GetEditor().GetUIManager().SetEditorBrush(null);
+		GetEditor().SetEditorBrush(null);
 		EditorSettings.SIM_CITY_MODE = false;
 		ButtonWidget.Cast(GetEditor().GetUIManager().GetEditorUI().GetRoot().FindAnyWidget("SimcityButton")).SetState(false);
 		
