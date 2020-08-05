@@ -49,9 +49,15 @@ class EditorUIManager: Managed
 		
 		MapWidget map_widget = m_EditorUI.GetMapWidget();
 		map_widget.AddChild(m_MapMarkerWidget);
+	
 		
+		// Load placeable objects
+		ref array<ref PlaceableEditorObject> placeable_objects = new array<ref PlaceableEditorObject>();
+
+		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(placeable_objects)));
+		foreach (PlaceableEditorObject placeable_object: placeable_objects)
+			m_EditorUI.InsertPlaceableObject(placeable_object);
 		
-		m_EditorUI.LoadPlaceableObjects();
 		
 		// Subscribe to events (and twitch.tv/InclementDab)
 		EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);

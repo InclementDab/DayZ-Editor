@@ -732,7 +732,7 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 1
          vexactsize 1
          style Default
-         items "Trees; Grass; Explosion; Delete;"
+         items "Trees; Grass; Explosion; Delete"
         }
         SliderWidgetClass SimcityRadiusSlider {
          size 120 28

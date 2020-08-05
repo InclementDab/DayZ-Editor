@@ -62,7 +62,7 @@ class EditorMap: EditorWidgetEventHandler
 		MapWidget map_widget = GetMapWidget();
 		
 		if (button == 0) {
-			if (Editor.IsPlacing()) {
+			if (GetEditor().IsPlacing()) {
 				EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
 				vector mat[4];
 				e.GetTransform(mat);
@@ -98,8 +98,11 @@ class EditorMap: EditorWidgetEventHandler
 
 class EditorListItem: EditorWidgetEventHandler
 {
-	protected TextWidget 	m_EditorListItemText;
-	protected string 		m_Name;
+	private TextWidget 				m_EditorListItemText;
+	private PlaceableEditorObject 	m_PlaceableObject;
+	
+	// Getters
+	PlaceableEditorObject GetPlaceableObject() { return m_PlaceableObject; }
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
@@ -107,10 +110,10 @@ class EditorListItem: EditorWidgetEventHandler
 		m_EditorListItemText = m_Root.FindAnyWidget("EditorListItemText");
 	}
 	
-	void SetObject(string name)
+	void SetObject(PlaceableEditorObject target)
 	{
-		m_Name = name;
-		m_EditorListItemText.SetText(m_Name);
+		m_PlaceableObject = target;
+		m_EditorListItemText.SetText(m_PlaceableObject.GetType());
 		m_EditorListItemText.Update();
 	}
 	
@@ -120,7 +123,7 @@ class EditorListItem: EditorWidgetEventHandler
 		
 		if (button == 0) {
 			if (w == GetFocus()) return true;
-			if (Editor.IsPlacing()) {
+			if (GetEditor().IsPlacing()) {
 				delete Editor.ObjectInHand;
 			}
 			
@@ -135,7 +138,7 @@ class EditorListItem: EditorWidgetEventHandler
 	{
 		Print("EditorListItem::OnFocus");
 		w.SetColor(ARGB(90, 191, 95, 95));
-		Editor.CreateObjectInHand(m_Name);		
+		GetEditor().CreateObjectInHand(m_PlaceableObject.GetType());		
 		return true;
 	}
 	
@@ -146,10 +149,7 @@ class EditorListItem: EditorWidgetEventHandler
 		return true;
 	}		
 	
-	string GetText()
-	{
-		return m_Name;
-	}
+	
 }
 
 class EditorPlacedListItem: UILinkedObject
@@ -294,7 +294,7 @@ class PlaceableSearchBar: EditorWidgetEventHandler
 			child.GetScript(editor_list_item);
 			
 			if (editor_list_item != null) {
-				string Config_Lower = editor_list_item.GetText();
+				string Config_Lower = editor_list_item.GetPlaceableObject().GetType();
 				Config_Lower.ToLower();
 				if (filter == "") return false;
 	           	child.Show(Config_Lower.Contains(filter));				

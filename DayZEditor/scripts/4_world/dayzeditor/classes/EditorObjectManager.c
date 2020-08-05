@@ -48,7 +48,7 @@ class EditorObjectManager: Managed
 		Print("~EditorObjectManager");
 	}
 	
-	static int GetPlaceableObjects(out array<string> placeable_objects) 
+	static int GetPlaceableObjects(out array<ref PlaceableEditorObject> placeable_objects) 
 	{ 
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
@@ -61,11 +61,8 @@ class EditorObjectManager: Managed
 		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name);
 		        GetGame().ConfigGetBaseName(Config_Path + " " + Config_Name, Base_Name);
 		        Base_Name.ToLower();
-		
-		        //if (Base_Name != "housenodestruct")
-		        //    continue;
 				
-				placeable_objects.Insert(Config_Name);	
+				placeable_objects.Insert(new PlaceableEditorObject(Config_Name, Base_Name));	
 				
 		    }
 		}
@@ -154,7 +151,7 @@ class EditorObjectManager: Managed
 		}
 		
 		InsertAction(action);
-		GetGame().ObjectDelete(Editor.GetTranslationWidget());
+		GetGame().ObjectDelete(GetEditor().GetTranslationWidget());
 		return result;
 	}
 	

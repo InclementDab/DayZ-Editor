@@ -22,8 +22,8 @@ static Editor GetEditor() { return m_EditorInstance; }
 class Editor: Managed
 {
 	// Private Memebers
-	private ref EditorObjectManager			m_EditorObjectManager;
-	private ref EditorUIManager 			m_EditorUIManager;
+	private ref EditorObjectManager			m_EditorObjectManager = new EditorObjectManager();
+	private ref EditorUIManager 			m_EditorUIManager = new EditorUIManager();
 	
 	static ref EditorHologram 				ObjectInHand;
 	static Object							ObjectUnderCursor = null;
@@ -45,11 +45,10 @@ class Editor: Managed
 	
 	private ref EditorBrush	m_EditorBrush;
 	EditorBrush GetEditorBrush() { return m_EditorBrush; }
-	void SetEditorBrush(EditorBrush editor_brush) 
-	{
-		m_EditorBrush = editor_brush;
-	}
 	
+	bool IsPlacing() { return ObjectInHand != null; }
+	TranslationWidget GetTranslationWidget() { return GetEditor().GlobalTranslationWidget; }
+
 	void Editor()
 	{
 		Print("Editor");
@@ -61,13 +60,11 @@ class Editor: Managed
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
 		EditorEvents.OnObjectDrag.Insert(HandleObjectDrag);
 		EditorEvents.OnObjectDrop.Insert(HandleObjectDrop);
+		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
 				
 		// Character Creation
 		EditorPlayer = CreateDefaultCharacter();
 		
-		// Manager Init
-		m_EditorObjectManager = new EditorObjectManager();
-		m_EditorUIManager = new EditorUIManager();
 
 		// Debug
 		DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
@@ -190,6 +187,9 @@ class Editor: Managed
 		GetEditor().GetUIManager().GetEditorCamera().SelectTarget(target);
 	}
 	
+	
+	void OnBrushChanged(Class context, EditorBrush brush) { m_EditorBrush = brush; }
+	
 	bool OnMouseEnterObject(Object target, int x, int y)
 	{
 		//Print("Editor::OnMouseEnterObject");
@@ -211,10 +211,11 @@ class Editor: Managed
 		return true;
 	}
 	
-	static void CreateObjectInHand(string name)
+	void CreateObjectInHand(string name)
 	{
 		// Turn Brush off when you start to place
-		GetEditor().SetEditorBrush(null);
+		EditorEvents.BrushChangedInvoke(this, null);
+		
 		EditorSettings.SIM_CITY_MODE = false;
 		ButtonWidget.Cast(GetEditor().GetUIManager().GetEditorUI().GetRoot().FindAnyWidget("SimcityButton")).SetState(false);
 		
@@ -226,7 +227,7 @@ class Editor: Managed
 
 	
 	
-	static void PlaceObject()
+	void PlaceObject()
 	{
 		Input input = GetGame().GetInput();
 		EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
@@ -243,8 +244,7 @@ class Editor: Managed
 	}
 	
 
-	static bool IsPlacing() { return ObjectInHand != null; }
-	static TranslationWidget GetTranslationWidget() { return GetEditor().GlobalTranslationWidget; }
+
 	
 	
 
@@ -783,6 +783,8 @@ class Editor: Managed
 		GetGame().GetPlayer().GetInputController().OverrideAimChangeX(state, 0);
 		GetGame().GetPlayer().GetInputController().OverrideAimChangeY(state, 0);
 	}
+	
+	
 }
 
 

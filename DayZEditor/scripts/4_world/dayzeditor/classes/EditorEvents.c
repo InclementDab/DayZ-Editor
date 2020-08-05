@@ -5,25 +5,20 @@
 // remove the static invokes and let the Editor class manage it
 class EditorEvents 
 {
-	static ref ScriptInvoker OnObjectCreated = new ScriptInvoker();
-	static ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
+	static ref ScriptInvoker OnObjectCreated 	= new ScriptInvoker();
+	static ref ScriptInvoker OnObjectSelected 	= new ScriptInvoker();
 	static ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
-	static ref ScriptInvoker OnObjectDrag = new ScriptInvoker();
-	static ref ScriptInvoker OnObjectDrop = new ScriptInvoker();
+	static ref ScriptInvoker OnObjectDrag		= new ScriptInvoker();
+	static ref ScriptInvoker OnObjectDrop		= new ScriptInvoker();
 	
-	void EditorEvents()
-	{
-		Print("EditorEvents");
-		OnObjectCreated = new ScriptInvoker();
-		OnObjectSelected = new ScriptInvoker();
-		OnObjectDeselected = new ScriptInvoker();
-		OnObjectDrag = new ScriptInvoker();
-		OnObjectDrop = new ScriptInvoker();
-	}
+	static ref ScriptInvoker OnBrushChanged		= new ScriptInvoker();
+	
+	static ref ScriptInvoker OnSettingsChanged 	= new ScriptInvoker();
+
 	
 	static void ObjectCreateInvoke(Class context, EditorObject obj) 
 	{
-		Print("EditorEvents::ObjectCreate");
+		//Print("EditorEvents::ObjectCreate");
 		OnObjectCreated.Invoke(context, obj);	
 	}
 	
@@ -41,14 +36,27 @@ class EditorEvents
 	
 	static void DragInvoke(Class context, EditorObject obj, ref RaycastRVResult raycast_result = null)
 	{
-		Print("EditorEvents::Drag");
+		//Print("EditorEvents::DragInvoke");
 		OnObjectDrag.Invoke(context, obj, raycast_result);
 	}
 	
 	static void DropInvoke(Class context, EditorObject obj)
 	{
-		Print("EditorEvents::Drop");
+		//Print("EditorEvents::DropInvoke");
 		OnObjectDrop.Invoke(context, obj);
+	}
+	
+	static void BrushChangedInvoke(Class context, EditorBrush brush)
+	{
+		Print("EditorEvents::BrushChangedInvoke");
+		OnBrushChanged.Invoke(context, brush);
+		
+	}
+	
+	static void OnSettingsChanged(Class context, Class setting)
+	{
+		Print("EditorEvents::OnSettingChanged");
+		OnSettingsChanged.Invoke(context, setting);
 	}
 }
 

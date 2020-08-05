@@ -30,6 +30,22 @@ class OpenLogFiles: DayZTool
 	}
 }
 
+[WorkbenchPluginAttribute("Build Mod", "Builds current mod", "F8", "", {"ResourceManager", "ScriptEditor"})]
+class BuildMod: DayZTool
+{
+	string BatchFile;
+
+	void BuildMod()
+	{
+		BatchFile = "P:\\buildmod.bat";
+	}
+	
+	override void Run()
+	{
+		BetterRunDayZBat(BatchFile, "", true);
+	}
+}
+
 
 void BetterRunDayZBat(string filepath, string params = "", bool wait = false)
 {

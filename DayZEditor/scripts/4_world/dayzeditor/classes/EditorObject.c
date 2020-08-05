@@ -425,10 +425,20 @@ class EditorObject : Building
 		Print("GetFromObjectRoot: Item Not Found!");
 		return null;
 	}
+}
 
-	
-	
 
+class PlaceableEditorObject
+{
+	private string m_Type, m_Base;
+	
+	void PlaceableEditorObject(string name, string base)
+	{
+		m_Type = name; m_Base = base;
+	}
+	
+	string GetType() { return m_Type; }
+	string GetBase() { return m_Base; }
 }
 
 

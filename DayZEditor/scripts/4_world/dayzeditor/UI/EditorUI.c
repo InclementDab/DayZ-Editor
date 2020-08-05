@@ -42,10 +42,12 @@ class EditorUIToolbar: EditorWidgetEventHandler
 		m_SimcityDensitySlider	= SliderWidget.Cast(m_Root.FindAnyWidget("SimcityDensitySlider"));
 		m_SimcityDensityText	= TextWidget.Cast(m_Root.FindAnyWidget("SimcityDensityText"));
 		
-		m_BrushTypeBox	= XComboBoxWidget.Cast(m_Root.FindAnyWidget("BrushTypeBox"));
+		m_BrushTypeBox			= XComboBoxWidget.Cast(m_Root.FindAnyWidget("BrushTypeBox"));
 		
 		
 		m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
+		
+		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
 	}
 	
 
@@ -53,87 +55,112 @@ class EditorUIToolbar: EditorWidgetEventHandler
 	{
 		Print("EditorUIToolbar::OnClick");
 		if (button == 0) {
-			if (w == m_MagnetButton) {
-				Print(m_MagnetButton.GetState());
-				EditorSettings.MAGNET_PLACEMENT = m_MagnetButton.GetState();
-				return true;
-			}
-			if (w == m_GroundButton) {
-				EditorSettings.MAINTAIN_HEIGHT = m_GroundButton.GetState();
-				return true;
-			}
-			if (w == m_SnapButton) {
-				EditorSettings.SNAPPING_MODE = m_SnapButton.GetState();
-				return true;
-			}
 			
+			switch (w) {
+				
+				case m_MagnetButton: {
+					EditorSettings.MAGNET_PLACEMENT = m_MagnetButton.GetState();
+					return true;
+				}
+				
+				case m_GroundButton: {
+					EditorSettings.MAINTAIN_HEIGHT = m_GroundButton.GetState();
+					return true;
+				}
+				
+				case m_SnapButton: {
+					EditorSettings.SNAPPING_MODE = m_SnapButton.GetState();
+					return true;
+				}
+				
+				case m_SimcityButton: {
+					if (!m_SimcityButton.GetState())
+						EditorEvents.BrushChangedInvoke(this, null);
+					else EditorEvents.BrushChangedInvoke(this, EditorBrushFromIndex(m_BrushTypeBox.GetCurrentItem()));
+					
+					return true;
+				}
+				
+				case m_BrushTypeBox: {
+					EditorEvents.BrushChangedInvoke(this, EditorBrushFromIndex(m_BrushTypeBox.GetCurrentItem()));
+					return true;
+				}
+				
+				default: {
+					Print(string.Format("%1 Doesnt have a click function!", w.GetName()));
+					return false;
+				}
+			}
 		}
 		
 		return false;
 	}
 	
-	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
+	
+	private EditorBrush EditorBrushFromIndex(int index)
 	{
-		//Print("EditorUIToolbar::OnUpdate");
-		
-		if (target == m_BrushTypeBox || target == m_SimcityButton) {
+		switch (index) {
+				
+			// Tree Brush
+			case 0: {
+				return new TreeBrush(m_SimcityRadiusSlider.GetCurrent());
+			}				
 			
-			int index = m_BrushTypeBox.GetCurrentItem();
-			if (!m_SimcityButton.GetState()) { 
-				GetEditor().SetEditorBrush(null);
+			// Grass Brush
+			case 1: {
+				return new GrassBrush(m_SimcityRadiusSlider.GetCurrent());
+			}
+			
+			// ExplosionBrush
+			case 2: {
+				return new BoomBrush(m_SimcityRadiusSlider.GetCurrent());
+			}
+			
+			// DeleteBrush
+			case 3: {
+				return new DeleteBrush(m_SimcityRadiusSlider.GetCurrent());
+			}
+			
+			default: {
+				Print("Brush index not found");
+				break;
+			}
+		}
+		
+		return null;
+	}
+		
+	void OnBrushChanged(Class context, EditorBrush brush)
+	{
+		if (brush == null) {
+			m_SimcityDensitySlider.Show(false);
+			m_SimcityRadiusSlider.Show(false);
+		
+			m_SimcityDensityText.Show(false);
+			m_SimcityRadiusText.Show(false);
+			return;
+		}
+		
+		switch (brush.Type()) {
+			
+			case DeleteBrush: {
 				m_SimcityDensitySlider.Show(false);
-				m_SimcityRadiusSlider.Show(false);
-				return true;
+				m_SimcityRadiusSlider.Show(true);
+				
+				m_SimcityDensityText.Show(false);
+				m_SimcityRadiusText.Show(true);
+				break;
 			}
-			
-			switch (index) {
+		
+			default: {
+				m_SimcityDensitySlider.Show(true);
+				m_SimcityRadiusSlider.Show(true);
 				
-				// Tree Brush
-				case 0: {
-					GetEditor().SetEditorBrush(new TreeBrush(m_SimcityRadiusSlider.GetCurrent()));
-					m_SimcityDensitySlider.Show(true);
-					m_SimcityRadiusSlider.Show(true);
-					break;
-				}				
-				
-				// Grass Brush
-				case 1: {
-					GetEditor().SetEditorBrush(new GrassBrush(m_SimcityRadiusSlider.GetCurrent()));
-					m_SimcityDensitySlider.Show(true);
-					m_SimcityRadiusSlider.Show(true);
-					break;
-				}
-				
-				// ExplosionBrush
-				case 2: {
-					GetEditor().SetEditorBrush(new BoomBrush(m_SimcityRadiusSlider.GetCurrent()));
-					m_SimcityDensitySlider.Show(true);
-					m_SimcityRadiusSlider.Show(true);
-					break;
-				}
-				
-				// DeleteBrush
-				case 3: {
-					GetEditor().SetEditorBrush(new DeleteBrush(m_SimcityRadiusSlider.GetCurrent()));
-					m_SimcityDensitySlider.Show(false);
-					m_SimcityRadiusSlider.Show(true);
-					break;
-				}
-				
+				m_SimcityDensityText.Show(true);
+				m_SimcityRadiusText.Show(true);
+				break;
 			}
 		}
-		
-		if (target == m_SimcityRadiusSlider && m_SimcityRadiusSlider.IsVisible()) {
-			m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
-			GetEditor().GetEditorBrush().SetRadius(m_SimcityRadiusSlider.GetCurrent());
-		}
-		
-		if (target == m_SimcityDensitySlider && m_SimcityDensitySlider.IsVisible()) {
-			m_SimcityDensityText.SetText(m_SimcityDensitySlider.GetCurrent().ToString());
-			DensityBrush.Cast(GetEditor().GetEditorBrush()).SetDensity(m_SimcityDensitySlider.GetCurrent());
-		}
-		
-		return false;
 		
 	}
 }
@@ -249,12 +276,12 @@ class EditorUI: EditorWidgetEventHandler
 		m_EditorMapWidget.SetMapPos(GetGame().GetCurrentCameraPosition());
 		
 		// Cursors
-		m_HorizontalScrollWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "cursors/horizontalwidget.layout");
+		m_HorizontalScrollWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/cursors/horizontalwidget.layout");
 		
 		m_ExportDialog = new EditorExportDialog(m_Root);
 		m_ExportDialog.Show(false); //! Comment me if you have implementent me or want to see me!
 		
-		LoadPlaceableObjects();
+		
 		
 
 	}
@@ -262,26 +289,7 @@ class EditorUI: EditorWidgetEventHandler
 	private bool left_bar_hidden = false;
 	private bool right_bar_hidden = false;
 	
-	void LoadPlaceableObjects()
-	{
-		// Load Placeable Objects
-		Print("Loading Placeables");
-		Widget child = m_LeftbarSpacer.GetChildren();
-		while (child) {
-			m_LeftbarSpacer.RemoveChild(child);
-			child = child.GetSibling();
-		}
-		
-		array<string> placeable_objects = new array<string>();
 
-		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(placeable_objects)));
-		foreach (string placeable_object: placeable_objects) {
-			EditorListItem list_item;
-			Widget list_widget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorListItem.layout", m_LeftbarSpacer);
-			list_widget.GetScript(list_item);
-			list_item.SetObject(placeable_object);
-		}
-	}
 	
 	override bool OnClick(Widget w, int x, int y, int button) 
 	{
@@ -317,8 +325,8 @@ class EditorUI: EditorWidgetEventHandler
 		// Left Click
 		if (button == 0) {
 			
-			if (Editor.IsPlacing()) {
-				Editor.PlaceObject();
+			if (GetEditor().IsPlacing()) {
+				GetEditor().PlaceObject();
 				return true;
 			} 
 			
@@ -329,8 +337,8 @@ class EditorUI: EditorWidgetEventHandler
 			
 			//DayZPhysics.RaycastRV(start_pos, end_pos, contact_pos, contact_dir, contact_comp, collisions);
 			if (raycast_result.Get(0).obj != NULL) {
-				if ((raycast_result.Get(0).obj == Editor.GetTranslationWidget() || raycast_result.Get(0).obj == Editor.GetTranslationWidget().GetRotationWidget())) {
-					EditorEvents.DragInvoke(raycast_result[0].obj, Editor.GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
+				if ((raycast_result.Get(0).obj == GetEditor().GetTranslationWidget() || raycast_result.Get(0).obj == GetEditor().GetTranslationWidget().GetRotationWidget())) {
+					EditorEvents.DragInvoke(raycast_result[0].obj, GetEditor().GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
 					return true;
 				}
 			}
@@ -564,5 +572,14 @@ class EditorUI: EditorWidgetEventHandler
 	void InsertPlacedObject(EditorObject target)
 	{
 		m_RightbarSpacer.AddChild(target.GetObjectBrowser());
+	}
+	
+	void InsertPlaceableObject(PlaceableEditorObject target)
+	{
+		EditorListItem list_item;
+		Widget list_widget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorListItem.layout", m_LeftbarSpacer);
+		list_widget.GetScript(list_item);
+		list_item.SetObject(target);
+		
 	}
 }

@@ -28,7 +28,7 @@ class EditorBrush
 	
 	void UpdateBrush()
 	{
-		if (Editor.IsPlacing()) return;
+		if (GetEditor().IsPlacing()) return;
 		
 		set<Object> o;
 		vector CurrentMousePosition = MousePosToRay(o, null, EditorSettings.OBJECT_VIEW_DISTANCE, 0, true);

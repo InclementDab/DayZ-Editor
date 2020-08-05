@@ -57,7 +57,7 @@ class EditorMapMarker: UILinkedObject
 		Input input = GetGame().GetInput();
 		
 		// ignores the object if you are placing
-		if (Editor.IsPlacing()) return false;
+		if (GetEditor().IsPlacing()) return false;
 		
 		// allows multiple objects to be dragged
 		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) 
@@ -76,7 +76,7 @@ class EditorMapMarker: UILinkedObject
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		Print("EditorMapMarker::OnDrag");
-		if (Editor.IsPlacing()) return false;
+		if (GetEditor().IsPlacing()) return false;
 		EditorEvents.DragInvoke(this, m_EditorObject);
 		return true;
 	}
@@ -141,7 +141,7 @@ class EditorObjectMarker: UILinkedObject
 	{
 		// you should set cursor here its smart smile :)
 		Print("EditorMarker::OnMouseEnter");
-		if (Editor.IsPlacing()) return false;
+		if (GetEditor().IsPlacing()) return false;
 		MouseInside = true;
 		return true;
 	}
@@ -163,7 +163,7 @@ class EditorObjectMarker: UILinkedObject
 		
 		if (button == 0) {
 			
-			if (Editor.IsPlacing()) return false;
+			if (GetEditor().IsPlacing()) return false;
 			
 			// required for multiple objects to be dragged
 			if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) 
@@ -191,7 +191,7 @@ class EditorObjectMarker: UILinkedObject
 	{
 		Print("EditorObjectMarker::OnDrag");
 		
-		if (Editor.IsPlacing()) return false;
+		if (GetEditor().IsPlacing()) return false;
 		
 		EditorEvents.DragInvoke(this, m_EditorObject);
 		return true;
