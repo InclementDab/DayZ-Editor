@@ -40,8 +40,8 @@ class Editor: Managed
 	static Object DebugObject0, DebugObject1, DebugObject2, DebugObject3;
 	
 	// Getters
-	EditorObjectManager GetObjectManager() { return m_EditorObjectManager; }
-	EditorUIManager GetUIManager() { return m_EditorUIManager; }
+	ref EditorObjectManager GetObjectManager() { return m_EditorObjectManager; }
+	ref EditorUIManager GetUIManager() { return m_EditorUIManager; }
 	
 	private ref EditorBrush	m_EditorBrush;
 	EditorBrush GetEditorBrush() { return m_EditorBrush; }
@@ -68,7 +68,7 @@ class Editor: Managed
 		// Manager Init
 		m_EditorObjectManager = new EditorObjectManager();
 		m_EditorUIManager = new EditorUIManager();
-		
+
 		// Debug
 		DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 		DebugObject1 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
@@ -235,8 +235,11 @@ class Editor: Managed
 		
 		EditorObject editor_object = GetEditor().GetObjectManager().CreateObject(e.GetType(), e.GetPosition());
 		editor_object.SetOrientation(e.GetOrientation());
-		editor_object.Select();
-		if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
+		GetEditor().GetObjectManager().SelectObject(editor_object, !input.LocalValue("UATurbo"));
+		
+		if (!input.LocalValue("UATurbo")) { 
+			delete Editor.ObjectInHand;
+		}
 	}
 	
 

@@ -123,9 +123,20 @@ modded class DayZIntroScene
 }
 
 
+#define LOAD_MISSION 1
+
 modded class MainMenu 
 {
 	
+	void MainMenu()
+	{
+		
+#ifdef LOAD_MISSION		
+		Print("Loading straight into mission");
+		GetGame().PlayMission(CreateEditorMission("ChernarusPlus"));
+#endif
+		
+	}
 	
 	override Widget Init()
 	{
@@ -141,6 +152,8 @@ modded class MainMenu
 		
 		TextWidget tw = TextWidget.Cast(layoutRoot.FindAnyWidget("play_label"));
 		tw.SetText("Open Editor");
+		
+
 		
 		return layoutRoot;
 	}

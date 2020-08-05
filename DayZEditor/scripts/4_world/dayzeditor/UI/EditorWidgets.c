@@ -192,12 +192,12 @@ class EditorPlacedListItem: UILinkedObject
 			if (input.LocalValue("UATurbo")) {
 				
 				// If root object is already selected
-				if (editor_object.IsSelected()) {
-					editor_object.Deselect();
+				if (GetEditor().GetObjectManager().IsSelected(editor_object)) {
+					GetEditor().GetObjectManager().DeselectObject(m_EditorObject);
 					return true;
 				}
 				
-				m_EditorObject.Select(false);
+				GetEditor().GetObjectManager().SelectObject(m_EditorObject, false);
 				if (GetEditor().GetObjectManager().GetSelectedObjects().Count() != 0) {
 					Widget root_object = m_Root.GetParent().GetChildren();
 					bool selection_found = GetEditor().GetObjectManager().CheckIfRootIsSelected(root_object);
@@ -211,7 +211,7 @@ class EditorPlacedListItem: UILinkedObject
 										
 					// Search until last selected object
 					while (selection_found) {
-						EditorObject.GetFromUILinkedRoot(root_object).Select(false);
+						GetEditor().GetObjectManager().SelectObject(EditorObject.GetFromUILinkedRoot(root_object), false);
 						root_object = root_object.GetSibling();
 						selection_found = !GetEditor().GetObjectManager().CheckIfRootIsSelected(root_object);
 						if (root_object == null) break;
@@ -220,11 +220,9 @@ class EditorPlacedListItem: UILinkedObject
 				}			
 				
 			} else if (input.LocalValue("UAWalkRunTemp")) {
-				if (editor_object.IsSelected())
-					editor_object.Deselect();
-				else editor_object.Select(false);		
+				GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);		
 			} else {
-				m_EditorObject.Select();
+				GetEditor().GetObjectManager().SelectObject(m_EditorObject);
 			}
 		}
 		
@@ -234,7 +232,7 @@ class EditorPlacedListItem: UILinkedObject
 	
 	void Update()
 	{
-		if (m_EditorObject.IsSelected()) {
+		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) {
 			m_EditorPlacedListItemPanel.SetColor(COLOR_ON_SELECTED);
 			m_EditorPlacedListItemPanel.Update();
 		} else {

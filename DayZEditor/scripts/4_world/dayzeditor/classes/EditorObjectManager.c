@@ -1,9 +1,25 @@
 
+class EditorObjectSet: ref map<int, ref EditorObject>
+{
 	
+	bool InsertEditorObject(EditorObject target)
+	{
+		return Insert(target.GetID(), target);
+	}
+	
+	void RemoveEditorObject(EditorObject target)
+	{
+		Remove(target.GetID());
+	}
+	
+}
+
+
+//typedef ref map<int, ref EditorObject> EditorObjectSet;
 
 class EditorObjectManager: Managed
 {
-	private ref set<string> 				m_PlaceableObjects;
+	
 	private ref EditorObjectSet 			m_PlacedObjects;
 	private ref EditorObjectSet				m_SelectedObjects;
 	private ref set<ref EditorObjectLink>	m_SessionCache;
@@ -12,7 +28,6 @@ class EditorObjectManager: Managed
 	
 	
 	// Getters
-	ref set<string> GetPlaceableObjects() { return m_PlaceableObjects; }
 	ref set<ref EditorAction> GetActionStack() { return m_ActionStack; }
 	ref EditorObjectSet GetSelectedObjects() { return m_SelectedObjects; }
 	ref EditorObjectSet GetPlacedObjects() { return m_PlacedObjects; }
@@ -21,15 +36,21 @@ class EditorObjectManager: Managed
 	void EditorObjectManager() 
 	{ 
 		Print("EditorObjectManager");
-		
-		m_PlaceableObjects 	= new set<string>();
 		m_PlacedObjects 	= new EditorObjectSet();
 		m_SelectedObjects	= new EditorObjectSet();
 		m_SessionCache 		= new set<ref EditorObjectLink>();
 		m_ActionStack 		= new set<ref EditorAction>();
 		
-		
-		TStringArray paths 	= new TStringArray;
+	}
+	
+	void ~EditorObjectManager() 
+	{
+		Print("~EditorObjectManager");
+	}
+	
+	int GetPlaceableObjects(out array<string> placeable_objects) 
+	{ 
+		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
 
 		for (int i = 0; i < paths.Count(); i++)	{
@@ -43,21 +64,16 @@ class EditorObjectManager: Managed
 		
 		        //if (Base_Name != "housenodestruct")
 		        //    continue;
-				m_PlaceableObjects.Insert(Config_Name);	
+				Print(Config_Name);
+				placeable_objects.Insert(Config_Name);	
 				
 		    }
 		}
-		
+		return placeable_objects.Count();
 	}
 	
-	void ~EditorObjectManager() 
-	{
-		Print("~EditorObjectManager");
-	}
-		
 	
-	
-	EditorObject CreateObject(string name, vector position, bool select = true)
+	EditorObject CreateObject(string name, vector position)
 	{		
 		Print("EditorObjectManager::CreateObject");
 		//bool ai = GetGame().IsKindOf("Hatchback_02_Black", "DZ_LightAI");
@@ -77,7 +93,7 @@ class EditorObjectManager: Managed
 		action.InsertRedoParameter(link, null);
 		InsertAction(action);
 		EditorEvents.ObjectCreateInvoke(null, editor_object);
-	
+		
 		return editor_object;
 	}
 	
@@ -88,8 +104,7 @@ class EditorObjectManager: Managed
 			ClearSelection();
 		}
 		
-		target.Select(); // maybe move this to invoke instead of calling here
-		m_SelectedObjects.Insert(target.GetID(), target);
+		m_SelectedObjects.InsertEditorObject(target);
 		EditorEvents.ObjectSelectedInvoke(this, target);
 		
 		return m_SelectedObjects.Contains(target.GetID());
@@ -102,8 +117,7 @@ class EditorObjectManager: Managed
 			ClearSelection();
 		
 		foreach (EditorObject editor_object: target) {
-			bool result = SelectObject(editor_object, false);
-			if (!result) {
+			if (!SelectObject(editor_object, false)) {
 				Print("Failed to select object");
 			}
 		}
@@ -115,7 +129,6 @@ class EditorObjectManager: Managed
 	bool DeselectObject(EditorObject target)
 	{
 		Print("EditorObjectManager::DeselectObject");
-		target.Deselect(); // maybe move this to invoke instead of calling here
 		m_SelectedObjects.Remove(target.GetID()); // if deselection is broken this is why
 		EditorEvents.ObjectDeselectedInvoke(this, target);
 		
@@ -157,6 +170,17 @@ class EditorObjectManager: Managed
 	
 	}
 	
+	bool ToggleSelection(EditorObject target)
+	{
+		if (IsSelected(target))
+			return DeselectObject(target);
+		
+		return SelectObject(target, false);
+	}
+	
+	bool IsSelected(EditorObject target) { return m_SelectedObjects.Contains(target.GetID()); }
+	
+	
 	int CutSelection()
 	{
 		m_ClipboardCache = new EditorObjectSet();
@@ -191,15 +215,18 @@ class EditorObjectManager: Managed
 		avg_position[1] = avg_position[1] / m_ClipboardCache.Count();
 		avg_position[2] = avg_position[2] / m_ClipboardCache.Count();
 		
+		EditorObjectSet pasted_objects;
 		foreach (EditorObject editor_object: m_ClipboardCache) {
 			vector mat[4];
 			editor_object.GetTransform(mat);
 			mat[3] = avg_position - editor_object.GetPosition() + Editor.CurrentMousePosition;
 			EditorObject result = CreateObject(editor_object.GetType(), mat);
-			result.Select();
+			pasted_objects.InsertEditorObject(result);
 		}
 		
-		return m_ClipboardCache.Count();
+		SelectObjects(pasted_objects);
+		
+		return pasted_objects.Count();
 	}
 	
 	
@@ -228,8 +255,9 @@ class EditorObjectManager: Managed
 	
 	bool CheckIfRootIsSelected(Widget root)
 	{
+		
 		foreach (EditorObject editor_object: m_SelectedObjects)
-			if (editor_object.IsSelected() && (editor_object.GetObjectBrowser() == root || editor_object.GetObjectMarker() == root))
+			if (GetEditor().GetObjectManager().IsSelected(editor_object) && (editor_object.GetObjectBrowser() == root || editor_object.GetObjectMarker() == root))
 				return true;
 		
 		return false;

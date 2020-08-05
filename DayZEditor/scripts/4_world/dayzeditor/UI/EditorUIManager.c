@@ -50,9 +50,14 @@ class EditorUIManager: Managed
 		MapWidget map_widget = m_EditorUI.GetMapWidget();
 		map_widget.AddChild(m_MapMarkerWidget);
 		
+		
+		m_EditorUI.LoadPlaceableObjects();
+		
 		// Subscribe to events (and twitch.tv/InclementDab)
 		EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);
 		//EditorEvents.OnObjectCreated.Insert(O);
+		
+		
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}

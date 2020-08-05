@@ -1,10 +1,9 @@
-typedef ref map<int, ref EditorObject> EditorObjectSet;
+
 
 
 class EditorObject : Building
 {
 	private bool IsInitialized = false;
-	private bool IsSelected = false;
 	
 	protected Object 		m_WorldObject;
 	
@@ -28,6 +27,12 @@ class EditorObject : Building
 	
 	static float line_width = 0.05;
 	
+	// Getters 
+	Object GetObject() { return m_WorldObject; }
+	
+	private string m_Type;
+	override string GetType() { return m_Type; }
+	
 	void EditorObject()
 	{
 		Print("EditorObject");
@@ -38,44 +43,17 @@ class EditorObject : Building
 		Print("~EditorObject");
 		
 	}
+		
+	/*
+	* Initializers
+	*/
 	
-	
-	override void EEDelete(EntityAI parent)
-	{
-		Print("EditorObject::EEDelete");
-		Deselect();
-		
-		IsInitialized = false;
-		
-		g_Game.ObjectDelete(m_WorldObject);
-		g_Game.ObjectDelete(m_BBoxBase);
-		g_Game.ObjectDelete(m_CenterLine);
-		
-	
-		delete m_EditorObjectMarker; 
-		delete m_EditorObjectBrowser;
-		delete m_EditorMapMarker;
-		delete m_EditorObjectPropertiesWindow;
-		delete m_EditorObjectContextMenu;
-		
-		delete m_EditorObjectMarkerWidget;
-		delete m_EditorObjectBrowserWidget;
-		delete m_EditorMapMarkerWidget;
-		delete m_EditorObjectPropertiesWidget;
-		
-		for (int i = 0; i < 12; i++)
-			g_Game.ObjectDelete(m_BBoxLines[i]);
-		
-		super.EEDelete(parent);
-	}
-	
-
 	void Init(string type_name)
 	{
 		Print("EditorObject::Init");
 	
 		IsInitialized = true;
-		Type = type_name;
+		m_Type = type_name;
 		m_WorldObject = g_Game.CreateObjectEx(type_name, vector.Zero, ECE_LOCAL | ECE_SETUP | ECE_CREATEPHYSICS);
 		AddChild(m_WorldObject, -1);
 		Update();
@@ -118,6 +96,36 @@ class EditorObject : Building
 		
 		CreateBoundingBox();
 		
+		EditorEvents.OnObjectSelected.Insert(OnSelected);
+		EditorEvents.OnObjectDeselected.Insert(OnDeselected);
+		
+	}
+	
+	override void EEDelete(EntityAI parent)
+	{
+		Print("EditorObject::EEDelete");
+		
+		IsInitialized = false;
+		
+		delete m_EditorObjectMarker; 
+		delete m_EditorObjectBrowser;
+		delete m_EditorMapMarker;
+		delete m_EditorObjectPropertiesWindow;
+		delete m_EditorObjectContextMenu;
+		
+		delete m_EditorObjectMarkerWidget;
+		delete m_EditorObjectBrowserWidget;
+		delete m_EditorMapMarkerWidget;
+		delete m_EditorObjectPropertiesWidget;
+		
+		for (int i = 0; i < 12; i++)
+			g_Game.ObjectDelete(m_BBoxLines[i]);
+		
+		g_Game.ObjectDelete(m_WorldObject);
+		g_Game.ObjectDelete(m_BBoxBase);
+		g_Game.ObjectDelete(m_CenterLine);
+		
+		super.EEDelete(parent);
 	}
 	
 	
@@ -127,14 +135,35 @@ class EditorObject : Building
 		// todo
 	}
 	
+	/*********
+	* Events *
+	*********/
 	
-	
-	
-	private string Type;
-	override string GetType()
+	void OnSelected()
 	{
-		return Type;
+		ShowBoundingBox();	
 	}
+	
+	void OnDeselected()
+	{
+		HideBoundingBox();
+	}
+	
+	
+	bool OnMouseEnter(int x, int y)
+	{
+		return true;
+	}
+	
+	bool OnMouseLeave(int x, int y)
+	{
+		return true;
+	}
+	
+	
+	/*
+	* Functions
+	*/
 	
 	override string GetDisplayName()
 	{
@@ -227,53 +256,6 @@ class EditorObject : Building
 	
 	
 
-	bool OnMouseEnter(int x, int y)
-	{
-		return true;
-	}
-	
-	bool OnMouseLeave(int x, int y)
-	{
-		return true;
-	}
-	
-
-	void ToggleSelect()
-	{
-		if (IsSelected) Deselect();
-		else Select();
-	}
-	
-	void Select(bool clear_existing = true)
-	{
-		//Print("EditorObject::Select");
-		
-		if (clear_existing)
-			GetEditor().GetObjectManager().ClearSelection();
-		
-		if (IsSelected) return;
-		IsSelected = true;
-		ShowBoundingBox();
-		
-		vector size = GetSize();
-		vector position = vector.Zero;
-		position[1] = position[1] + size[1]/2;
-		//Editor.SelectedObjects.Insert(GetID(), this);
-		//EditorEvents.ObjectSelectedInvoke(this, this);
-		
-		
-	}
-	
-	void Deselect()
-	{
-		//Print("EditorObject::Deselect");
-		if (!IsSelected) return;
-		IsSelected = false;
-		HideBoundingBox();
-		
-		//Editor.SelectedObjects.Remove(GetID());
-		//EditorEvents.ObjectDeselectedInvoke(this, this);
-	}
 
 	vector GetBottomCenter()
 	{
@@ -409,13 +391,7 @@ class EditorObject : Building
 	
 	
 	
-	bool IsSelected() {	return IsSelected;	}
 
-	
-	Object GetObject()
-	{
-		return m_WorldObject;
-	}
 	
 	vector GetMarkerPosition()
 	{

@@ -35,7 +35,7 @@ class EditorMapMarker: UILinkedObject
 		// -10 to put cursor on center
 		m_Root.SetPos(pos[0] - 15, pos[1] - 15);
 		
-		if (m_EditorObject.IsSelected() || MouseInside) 
+		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject) || MouseInside) 
 			m_Root.SetAlpha(ALPHA_ON_SHOW);
 		else 
 			m_Root.SetAlpha(ALPHA_ON_HIDE);
@@ -69,15 +69,15 @@ class EditorMapMarker: UILinkedObject
 		if (Editor.IsPlacing()) return false;
 		
 		// allows multiple objects to be dragged
-		if (m_EditorObject.IsSelected()) return true;
+		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) 
+			return true;
 		
-		// basic interaction
-		if (input.LocalValue("UATurbo"))
-			m_EditorObject.Select(false);
-		else if (input.LocalValue("UARunWalkTemp"))
-			m_EditorObject.ToggleSelect();
+		// We want to Toggle selection if you are holding control
+		if (input.LocalValue("UARunWalkTemp"))
+			GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);
 		else
-			m_EditorObject.Select();
+			GetEditor().GetObjectManager().SelectObject(m_EditorObject, !input.LocalValue("UATurbo"));
+		
 		 // Blocks map from creating selection box
 		return true;
 	}
@@ -148,7 +148,7 @@ class EditorObjectMarker: UILinkedObject
 			m_Root.Show(screenpos[2] > 0);			
 		}
 		
-		if (m_EditorObject.IsSelected() || MouseInside) {
+		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject) || MouseInside) {
 			m_Root.SetAlpha(ALPHA_ON_SHOW);
 		} else {
 			m_Root.SetAlpha(ALPHA_ON_HIDE);
@@ -185,17 +185,20 @@ class EditorObjectMarker: UILinkedObject
 		Input input = GetGame().GetInput();
 		
 		if (button == 0) {
+			
 			if (Editor.IsPlacing()) return false;
 			
-			// allows multiple objects to be dragged
-			if (m_EditorObject.IsSelected()) return true;
+			// required for multiple objects to be dragged
+			if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) 
+				return true;
 			
-			if (input.LocalValue("UATurbo"))
-				m_EditorObject.Select(false);
-			else if (input.LocalValue("UARunWalkTemp"))
-				m_EditorObject.ToggleSelect();
+			// We want to Toggle selection if you are holding control
+			if (input.LocalValue("UARunWalkTemp"))
+				GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);
 			else
-				m_EditorObject.Select();
+				GetEditor().GetObjectManager().SelectObject(m_EditorObject, !input.LocalValue("UATurbo"));
+			
+			
 		} else if (button == 1) {
 			Widget ctx_menu = m_EditorObject.GetContextMenu();
 			ctx_menu.Show(true);

@@ -31,7 +31,7 @@ class EditorObjectLink: ref Link<EditorObject>
 			editor_object.Update();
 			EditorEvents.ObjectCreateInvoke(null, editor_object);
 			
-			editor_object.Select(false);
+			//editor_object.Select(false); todo fix
 		} else {
 			
 			Print("EditorObjectLink::Create JUST CAME BACK AS NOT NULL");

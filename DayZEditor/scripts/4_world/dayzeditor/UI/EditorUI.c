@@ -254,20 +254,32 @@ class EditorUI: EditorWidgetEventHandler
 		m_ExportDialog = new EditorExportDialog(m_Root);
 		m_ExportDialog.Show(false); //! Comment me if you have implementent me or want to see me!
 		
+		LoadPlaceableObjects();
 		
+
+	}
+	
+	private bool left_bar_hidden = false;
+	private bool right_bar_hidden = false;
+	
+	void LoadPlaceableObjects()
+	{
 		// Load Placeable Objects
-		foreach (string placeable_object: GetEditor().GetObjectManager().GetPlaceableObjects()) {
+		Widget child = m_LeftbarSpacer.GetChildren();
+		while (child) {
+			m_LeftbarSpacer.RemoveChild(child);
+			child = child.GetSibling();
+		}
+		
+		array<string> placeable_objects = new array<string>();
+		Print(string.Format("Loaded %1 Placeable Objects", GetEditor().GetObjectManager().GetPlaceableObjects(placeable_objects)));
+		foreach (string placeable_object: placeable_objects) {
 			EditorListItem list_item;
 			Widget list_widget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorListItem.layout", m_LeftbarSpacer);
 			list_widget.GetScript(list_item);
 			list_item.SetObject(placeable_object);
 		}
 	}
-	
-	private bool left_bar_hidden = false;
-	private bool right_bar_hidden = false;
-	
-
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
@@ -315,7 +327,7 @@ class EditorUI: EditorWidgetEventHandler
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DelayedDragBoxCheck, 60);
 				
 			} else if (Editor.EditorObjectUnderCursor != null) {
-				Editor.EditorObjectUnderCursor.Select(!input.LocalValue("UATurbo"));
+				GetEditor().GetObjectManager().SelectObject(Editor.EditorObjectUnderCursor, !input.LocalValue("UATurbo"));
 			}
 			
 			
@@ -450,8 +462,8 @@ class EditorUI: EditorWidgetEventHandler
 			y_low = start_y;
 		}
 		
-		
-		foreach (EditorObject editor_object: GetEditor().GetObjectManager().GetPlacedObjects()) {
+		ref EditorObjectSet placed_objects = GetEditor().GetObjectManager().GetPlacedObjects();
+		foreach (EditorObject editor_object: placed_objects) {
 			
 			float marker_x, marker_y;
 			if (IsMapOpen()) {
@@ -459,10 +471,10 @@ class EditorUI: EditorWidgetEventHandler
 			} else {
 				editor_object.GetObjectMarker().GetPos(marker_x, marker_y);
 			}
-			if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {				
-				editor_object.Select(false);
+			if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {		
+				GetEditor().GetObjectManager().SelectObject(editor_object, false);
 			} else {
-				editor_object.Deselect();
+				GetEditor().GetObjectManager().DeselectObject(editor_object);
 			}
 		}
 	}
