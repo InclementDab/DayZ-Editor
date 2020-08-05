@@ -115,7 +115,7 @@ class EditorEventManager
 		m_Events = new array<ref EditorEventSpawn>();
 		
 		
-		string file = "$profile:\\Editor\\db\\events.xml";
+		string file = "$profile:\\Editor\\cfgeventspawns.xml";
 		if (!FileExist(file)) {
 			Print("File not found!");
 			return;

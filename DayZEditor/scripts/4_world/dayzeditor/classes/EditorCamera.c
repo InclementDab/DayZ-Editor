@@ -78,7 +78,7 @@ class EditorCamera: Camera
 
 	override void EOnFrame( IEntity other, float timeSlice )
 	{
-		if (Editor.IsPlayerActive) return;
+		if (Editor.IsPlayerActive()) return;
 		if ( SendUpdateAccumalator > 0.5 ){
 			GetGame().UpdateSpectatorPosition(GetPosition());
 

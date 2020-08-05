@@ -23,7 +23,6 @@ static PlayerBase CreateDefaultCharacter()
 }
 
 
-// FlattenGrassEllipse!!!!! sim city mode
 
 class Editor: Managed
 {
@@ -43,7 +42,7 @@ class Editor: Managed
 	static ref set<string> 					PlaceableObjects;
 	static vector 							CurrentMousePosition;
 	static bool 							IsDragging = false;
-	static bool 							IsPlayerActive = false;
+	static bool 							PlayerActive = false;
 	static PlayerBase						EditorPlayer;
 		
 	static ref EditorObjectSet 				PlacedObjects;
@@ -311,7 +310,6 @@ class Editor: Managed
 	
 		if (!IsPlacing()) {
 			Object target = obj.Get(0);
-			
 			if (target != null) {
 				if (target != ObjectUnderCursor) {
 					if (ObjectUnderCursor != null) OnMouseExitObject(ObjectUnderCursor, x, y);
@@ -322,7 +320,7 @@ class Editor: Managed
 			} else if (ObjectUnderCursor != null) {
 				exit_condition = OnMouseExitObject(ObjectUnderCursor, x, y);
 				ObjectUnderCursor = null;
-			}			
+			}
 		}
 		
 		
@@ -728,7 +726,7 @@ class Editor: Managed
 		vector ground, ground_dir; int component;
 		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true); // set to ground only
 
-		vector cursor_position = MousePosToRay(o, target.GetObject(), EditorSettings.OBJECT_VIEW_DISTANCE, 0, !IsPlayerActive);
+		vector cursor_position = MousePosToRay(o, target.GetObject(), EditorSettings.OBJECT_VIEW_DISTANCE, 0, true);
 		vector surface_normal = GetGame().SurfaceGetNormal(ground[0], ground[2]);
 		float surface_level = GetGame().SurfaceY(ground[0], ground[2]);
 	
@@ -845,7 +843,7 @@ class Editor: Managed
 			case KeyCode.KC_ESCAPE: {
 				if (GetFocus()) {
 					SetFocus(null);
-					return false;  // escAPE KEY SPECIAL
+					return true;
 				} else {
 					//m_UIManager.GetMenu().GetVisibleMenu() != "PauseMenu"
 					// maybe something like this idk just add better escape func
@@ -945,16 +943,17 @@ class Editor: Managed
 				GetGame().SelectPlayer(null, EditorPlayer);
 				EditorPlayer.SetPosition(v);
 				EditorPlayer.DisableSimulation(false);
-				Editor.IsPlayerActive = true;
-				
+				PlayerActive = true;
+				ActiveEditorUI.GetRoot().Show(false);
 				break;
 			}
 			
 			case KeyCode.KC_F3: {
 				// Deselect character
-				Editor.ActiveCamera.SetActive(true);
+				ActiveCamera.SetActive(true);
 				EditorPlayer.DisableSimulation(true);
-				Editor.IsPlayerActive = false;
+				PlayerActive = false;
+				ActiveEditorUI.GetRoot().Show(true);
 				break;
 			}
 		}
@@ -1015,6 +1014,18 @@ class Editor: Managed
 	static EditorBrush GetActiveBrush()
 	{
 		return ActiveBrush;
+	}
+	
+	static bool IsPlayerActive()
+	{
+		return PlayerActive;
+	}
+	
+	// Remove this once you find an actual solution kekw
+	static void SetPlayerAimLock(bool state)
+	{
+		GetGame().GetPlayer().GetInputController().OverrideAimChangeX(state, 0);
+		GetGame().GetPlayer().GetInputController().OverrideAimChangeY(state, 0);
 	}
 }
 

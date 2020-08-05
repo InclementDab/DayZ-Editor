@@ -445,8 +445,6 @@ class EditorUI: EditorWidgetEventHandler
 		m_LeftbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("LeftbarSpacer"));
 		m_RightbarSpacer		= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("RightbarSpacer"));
 		
-		
-		
 		// Debug
 		m_DebugText1			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText1"));
 		m_DebugText2			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText2"));
@@ -560,9 +558,20 @@ class EditorUI: EditorWidgetEventHandler
 			}
 		
 			case KeyCode.KC_SPACE: {
-				if (GetGame().GetUIManager().IsCursorVisible() && !m_EditorMapContainer.IsVisible()) 
+				if (GetGame().GetUIManager().IsCursorVisible() && !m_EditorMapContainer.IsVisible()) {
 					HideCursor();
-				else ShowCursor();
+					if (Editor.IsPlayerActive()) {
+						//GetGame().GetPlayer().GetInputController().SetDisabled(false);
+						Editor.SetPlayerAimLock(false);
+					}
+				} 
+				else { 
+					ShowCursor();
+					if (Editor.IsPlayerActive()) {
+						//GetGame().GetPlayer().GetInputController().SetDisabled(true);
+						Editor.SetPlayerAimLock(true);
+					}
+				}
 				return true;
 			}
 			/*
@@ -600,9 +609,9 @@ class EditorUI: EditorWidgetEventHandler
 	void DelayedDragBoxCheck()
 	{
 		Input input = GetGame().GetInput();
-		if (input.LocalValue("UAFire")) {
+		if (input.LocalValue("UAFire"))
 			DragBoxQueue.Insert(UpdateDragBox);
-		}
+		
 		
 	}
 	
@@ -629,8 +638,6 @@ class EditorUI: EditorWidgetEventHandler
 		EditorUI.EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, selection_box_thickness, selection_box_color);
 		
 		int x_low, x_high, y_low, y_high;
-		
-		
 		if (start_x > current_x) {
 			x_high = start_x;
 			x_low = current_x;
@@ -721,9 +728,7 @@ class EditorUI: EditorWidgetEventHandler
 	void ShowExportWindow()
 	{
 		Print("EditorUI::ShowExportWindow");	
-		
 		//GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorExportWindow.layout", Getm_Root());
-		
 		EditorExportWindow dialog = new EditorExportWindow();
 		GetGame().GetUIManager().ShowScriptedMenu(dialog, GetGame().GetUIManager().GetMenu());
 	}

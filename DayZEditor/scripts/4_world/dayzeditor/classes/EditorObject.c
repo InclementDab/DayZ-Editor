@@ -383,9 +383,6 @@ class EditorObject : BuildingBase
 
 		m_WorldObject.ClippingInfo(clip_info);
 		//clip_info[0][1] = -clip_info[1][1];	
-
-	
-			
 		result[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
 		result[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
 		result[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
@@ -460,11 +457,11 @@ class EditorObject : BuildingBase
 		Print("EditorObject::HideBoundingBox");
 		BoundingBoxVisible = false;
 		for (int i = 0; i < 12; i++) {
-			m_BBoxLines[i].SetObjectTexture(0, "");
+			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxBase"), "");
 			m_BBoxLines[i].Update();
 		}	
 		
-		m_CenterLine.SetObjectTexture(0, "");
+		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxBase"), "");
 	}
 	
 	
