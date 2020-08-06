@@ -20,7 +20,7 @@ class MapSelectWindow: UIScriptedMenu
 
 	override Widget Init() 
 	{
-		layoutRoot 					= GetGame().GetWorkspace().CreateWidgets(layout_dir + "dialogs/EditorMapSelector.layout");
+		layoutRoot 					= GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");
 		m_WindowDragWrapper 		= layoutRoot.FindAnyWidget("WindowDragWrapper");
 		
 		m_TitleBar 					= layoutRoot.FindAnyWidget("WindowDragWrapper");

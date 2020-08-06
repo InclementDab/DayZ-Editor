@@ -62,33 +62,33 @@ class EditorObject : Building
 		
 		// World Object base marker
 		m_EditorObjectMarker = new UILinkedObject();
-		m_EditorObjectMarkerWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
+		m_EditorObjectMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorObjectMarker.layout");
 		m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
 		m_EditorObjectMarker.SetObject(this);
 				
 		// Map marker
 		m_EditorMapMarker = new UILinkedObject();
-		m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorMapMarker.layout");
+		m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		m_EditorMapMarker.SetObject(this);
 		GetEditor().GetUIManager().GetEditorUI().GetMapWidget().AddChild(m_EditorMapMarkerWidget);
 	
 		// Browser item
 		m_EditorObjectBrowser = new UILinkedObject();
-		m_EditorObjectBrowserWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorPlacedListItem.layout");
+		m_EditorObjectBrowserWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorPlacedListItem.layout");
 		m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
 		m_EditorObjectBrowser.SetObject(this);		
 		
 		// Properties Dialog
 		m_EditorObjectPropertiesWindow = new UILinkedObject();
-		m_EditorObjectPropertiesWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "dialogs/EditorObjectProperties.layout");
+		m_EditorObjectPropertiesWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorObjectProperties.layout");
 		m_EditorObjectPropertiesWidget.GetScript(m_EditorObjectPropertiesWindow);
 		m_EditorObjectPropertiesWindow.SetObject(this);
 		m_EditorObjectPropertiesWidget.Show(false);		
 		
 		// Context Menu
 		m_EditorObjectContextMenu = new UILinkedObject();
-		m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorContextMenu.layout");
+		m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout");
 		m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
 		m_EditorObjectContextMenu.SetObject(this);
 		m_EditorObjectContextWidget.Show(false);

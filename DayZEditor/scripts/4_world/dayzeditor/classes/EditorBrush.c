@@ -208,7 +208,6 @@ class DeleteBrush: EditorBrush
 		int component;
 		set<Object> results = new set<Object>();
 		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, m_BrushRadius / 2, CollisionFlags.ALLOBJECTS);
-		EditorUI.GetInstance().m_DebugText3.SetText(results.Count().ToString());
 		
 		foreach (Object r: results) {
 			

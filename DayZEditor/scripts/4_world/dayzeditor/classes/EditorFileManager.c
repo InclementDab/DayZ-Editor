@@ -55,21 +55,42 @@ class ExportSettings
 }
 
 
+enum FileDialogResult
+{
+	SUCCESS = 0,
+	NOT_FOUND = 1,
+	IN_USE = 2,
+	UNKNOWN_ERROR = 100
+}
+
 
 class EditorFileManager
 {
 
 
-	static void SaveFile(ref EditorWorldData data, string filename = "$profile:editor_save.txt")
+	static FileDialogResult SaveFile(ref EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
 	{
-		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(filename, data);
+		string file = filedir + filename + ".dze";
+		if (FileExist(file)) {
+			
+			GetEditor().GetUIManager().GetEditorUI().CreateDialog();
+	
+			
+		}
+		
+		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(file, data);
+		return FileDialogResult.SUCCESS;
 	}
 	
-	static EditorWorldData LoadFile(string filename = "$profile:editor_save.txt")
+	static FileDialogResult LoadFile(out EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
 	{
-		EditorWorldData data = new EditorWorldData();
-		JsonFileLoader<EditorWorldData>.JsonLoadFile(filename, data);
-		return data;
+		string file = filedir + filename + ".dze";
+		if (!FileExist(file)) {
+			return FileDialogResult.NOT_FOUND;
+		}
+		
+		JsonFileLoader<EditorWorldData>.JsonLoadFile(file, data);
+		return FileDialogResult.SUCCESS;
 	}
 	
 	static EditorWorldData ImportFromFile(string filename, ImportMode mode = ImportMode.COMFILE)
@@ -197,7 +218,7 @@ class EditorFileManager
 		
 		CloseFile(handle);
 		
-		GetEditor().GetUIManager().TriggerUINotification("Exported!");
+		GetEditor().GetUIManager().NotificationCreate("Exported!");
 		
 	}
 }

@@ -11,11 +11,10 @@ enum EditorCursor
 	HORIZONTAL_SCROLL
 }
 
-class EditorUI: EditorWidgetEventHandler
-{	
-	
-	static ref EditorUI m_Instance;
-	static EditorUI GetInstance() { return m_Instance; }
+class EditorUI: UIScriptedMenu
+{
+	private ref Widget 			m_Root;
+	Widget GetRoot() { return m_Root; }
 	
 	// Canvas
 	protected ref CanvasWidget m_EditorCanvas;
@@ -67,6 +66,12 @@ class EditorUI: EditorWidgetEventHandler
 	// Spacers for Item Lists
 	protected WrapSpacerWidget 	m_LeftbarSpacer;
 	protected WrapSpacerWidget 	m_RightbarSpacer;
+		
+	// Cursors
+	protected Widget			m_HorizontalScrollWidget;
+
+	// ExportDialog
+	protected ref EditorExportDialog m_ExportDialog;
 	
 	// Orientation Tool
 	ItemPreviewWidget m_OrientationWidget;
@@ -80,21 +85,32 @@ class EditorUI: EditorWidgetEventHandler
 	TextWidget 			m_DebugText6;
 	TextListboxWidget 	m_DebugActionStack;
 	
-	// Cursors
-	protected Widget			m_HorizontalScrollWidget;
-
-	// ExportDialog
-	protected ref EditorExportDialog m_ExportDialog;
+	
+	private ref EditorUIHandler m_EditorUIHandler;
+	EditorUIHandler GetHandler() { return m_EditorUIHandler; }
+	
+	// Private members
+	private bool left_bar_hidden = false;
+	private bool right_bar_hidden = false;
 	
 	void EditorUI()
 	{
-		m_Instance = this;
+		Print("EditorUI");
 	}
-
-	override void OnWidgetScriptInit(Widget w)
+	
+	void ~EditorUI()
 	{
-		Print("EditorUI::OnWidgetScriptInit");
-		super.OnWidgetScriptInit(w);
+		Print("~EditorUI");
+	}
+	
+	
+	override Widget Init()
+	{
+		// Init
+		m_EditorUIHandler = new EditorUIHandler();
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/Editor.layout");
+		m_Root.GetScript(m_EditorUIHandler);
+		
 		
 		// Canvas
 		m_EditorCanvas			= CanvasWidget.Cast(m_Root.FindAnyWidget("EditorCanvas"));
@@ -141,6 +157,15 @@ class EditorUI: EditorWidgetEventHandler
 	
 		m_NotificationFrame		= m_Root.FindAnyWidget("NotificationFrame");
 		
+		m_EditorMapWidget.GetScript(m_EditorMap);
+		m_EditorMapWidget.SetMapPos(GetGame().GetCurrentCameraPosition());
+		
+		// Cursors
+		m_HorizontalScrollWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/cursors/horizontalwidget.layout");
+		
+
+		m_ExportDialog = new EditorExportDialog(m_Root);
+		m_ExportDialog.Show(false); //! Comment me if you have implementent me or want to see me!
 		
 		// Debug
 		m_DebugText1			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText1"));
@@ -150,35 +175,87 @@ class EditorUI: EditorWidgetEventHandler
 		m_DebugText5			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText5"));
 		m_DebugText6			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText6"));
 		m_DebugActionStack		= TextListboxWidget.Cast(m_Root.FindAnyWidget("DebugActionStackListbox"));
-
-		
-		m_EditorMapWidget.GetScript(m_EditorMap);
-		m_EditorMapWidget.SetMapPos(GetGame().GetCurrentCameraPosition());
-		
-		// Cursors
-		m_HorizontalScrollWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/cursors/horizontalwidget.layout");
-		
-		m_ExportDialog = new EditorExportDialog(m_Root);
-		m_ExportDialog.Show(false); //! Comment me if you have implementent me or want to see me!
 		
 		// Brush init
 		m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
 		m_SimcityDensityText.SetText(m_SimcityDensitySlider.GetCurrent().ToString());
 		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
 		
-
+		return m_Root;
 	}
 	
-	private bool left_bar_hidden = false;
-	private bool right_bar_hidden = false;
 	
-	
-	void OnFrame(float timeslice)
+	void OpenMap()
 	{
-		
-		
+		Print("EditorUI::OpenMap");
+		m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() * 3);
+		m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() * 3);
+		m_EditorMapContainer.Show(true);
+		ShowCursor();
 	}
+	
+	void CloseMap()
+	{
+		Print("EditorUI::CloseMap");
+		m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() / 3);
+		m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() / 3);
+		m_EditorMapContainer.Show(false);
+		ShowCursor();
+	}
+	
+	void CreateDialog()
+	{
+		// todo use editor UI manager to do ShowDialog
+		//GetGame().GetUIManager().ShowDialog("Overwrite", "Do you really want to Overwrite?", 169, DBT_YESNO, DBB_YES, DMT_QUESTION, this);
+	}
+	
+	EditorMap GetMap() { return m_EditorMap; }
+	MapWidget GetMapWidget() { return m_EditorMapWidget; }
+	bool IsMapOpen() { return m_EditorMapContainer.IsVisible(); }
+	
+	void ShowCursor()
+	{
+		// todo use editor UI manager to do this
+		GetGame().GetUIManager().ShowUICursor(true);
+	}
+	
+	void HideCursor()
+	{
+		// todo use editor UI manager to do this
+		GetGame().GetUIManager().ShowUICursor(false);
+	}
+	
+	void SetCursor(EditorCursor cursor_type = EditorCursor.DEFAULT)
+	{
+		switch (cursor_type) {
+			
+			case EditorCursor.DEFAULT: {
+				//SetCursorWidget(null);
+				//ShowCursorWidget(true);
+				break;
+				
+			}
+			
+			case EditorCursor.HORIZONTAL_SCROLL: {
+				//ShowCursorWidget(false);
+				//SetCursorWidget(m_HorizontalScrollWidget);
+				
+				break;
+			}			
+		}
+	}
+	
+	
 
+	
+	
+	
+	
+	
+	
+	
+	/* Events */
+	
 	
 	override bool OnClick(Widget w, int x, int y, int button) 
 	{
@@ -357,6 +434,7 @@ class EditorUI: EditorWidgetEventHandler
 		return false;
 	}
 	
+		
 	ScriptInvoker DragBoxQueue = GetGame().GetUpdateQueue(CALL_CATEGORY_GUI);
 	int start_x, start_y;
 	void DelayedDragBoxCheck()
@@ -368,19 +446,16 @@ class EditorUI: EditorWidgetEventHandler
 		
 	}
 	
-	bool IsDragging = false; // this is very broken find a better way to do this
 	void UpdateDragBox()
 	{	
 		
 		Input input = GetGame().GetInput();
 		if (input.LocalRelease("UAFire")) {
 			m_EditorCanvas.Clear();
-			IsDragging = false;
 			DragBoxQueue.Remove(UpdateDragBox);
 			return;
 		}
 		
-		IsDragging = true;
 		int current_x, current_y;
 		GetCursorPos(current_x, current_y);
 		m_EditorCanvas.Clear();
@@ -426,58 +501,7 @@ class EditorUI: EditorWidgetEventHandler
 	}
 	
 	
-	void OpenMap()
-	{
-		Print("EditorUI::OpenMap");
-		m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() * 3);
-		m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() * 3);
-		m_EditorMapContainer.Show(true);
-		ShowCursor();
-	}
-	
-	void CloseMap()
-	{
-		Print("EditorUI::CloseMap");
-		m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() / 3);
-		m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() / 3);
-		m_EditorMapContainer.Show(false);
-		ShowCursor();
-	}
-	
-	EditorMap GetMap() { return m_EditorMap; }
-	MapWidget GetMapWidget() { return m_EditorMapWidget; }
-	
-	bool IsMapOpen() { return m_EditorMapContainer.IsVisible(); }
-	
-	void ShowCursor()
-	{
-		GetGame().GetUIManager().ShowUICursor(true);
-	}
-	
-	void HideCursor()
-	{
-		GetGame().GetUIManager().ShowUICursor(false);
-	}
-	
-	void SetCursor(EditorCursor cursor_type = EditorCursor.DEFAULT)
-	{
-		switch (cursor_type) {
-			
-			case EditorCursor.DEFAULT: {
-				//SetCursorWidget(null);
-				//ShowCursorWidget(true);
-				break;
-				
-			}
-			
-			case EditorCursor.HORIZONTAL_SCROLL: {
-				//ShowCursorWidget(false);
-				//SetCursorWidget(m_HorizontalScrollWidget);
-				
-				break;
-			}			
-		}
-	}
+
 	
 	void ShowExportWindow()
 	{
@@ -486,10 +510,7 @@ class EditorUI: EditorWidgetEventHandler
 		EditorExportWindow dialog = new EditorExportWindow();
 		GetGame().GetUIManager().ShowScriptedMenu(dialog, GetGame().GetUIManager().GetMenu());
 	}
-	
-	
 
-	
 	void InsertPlacedObject(EditorObject target)
 	{
 		m_RightbarSpacer.AddChild(target.GetObjectBrowser());
@@ -569,6 +590,39 @@ class EditorUI: EditorWidgetEventHandler
 				break;
 			}
 		}
+	}
+	
+}
+
+class EditorUIHandler: EditorWidgetEventHandler
+{	
+	
+	void EditorUIHandler()
+	{
+		Print("EditorUIHandler");
+	}
+	
+	void ~EditorUIHandler()
+	{
+		Print("~EditorUIHandler");
+	}
+		
+	void OnFrame(float timeslice)
+	{
+		
 		
 	}
+
+	
+	override bool OnModalResult(Widget w, int x, int y, int code, int result)
+	{
+		Print("EditorUIHandler::OnModalResult");
+		Print(code);
+		Print(result);
+		
+		return true;
+	}
+	
+
+
 }

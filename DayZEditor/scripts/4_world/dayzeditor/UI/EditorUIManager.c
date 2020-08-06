@@ -6,9 +6,9 @@ class EditorUIManager: Managed
 {
 	// Members
 	private ref EditorUI 		m_EditorUI;
-	private ref Widget 			m_EditorWidget;
 	private EditorCamera		m_EditorCamera;
-	private ref ScriptInvoker 		m_UpdateInvoker;
+	private ref ScriptInvoker 	m_UpdateInvoker;
+	private UIManager			m_UIManager;
 	
 	// Getters
 	EditorUI GetEditorUI() { return m_EditorUI; }
@@ -21,14 +21,16 @@ class EditorUIManager: Managed
 	{
 		Print("EditorUIManager");
 		m_UpdateInvoker = new ScriptInvoker();
+		m_UIManager = GetGame().GetUIManager();
 		
 		// Init UI
 		m_EditorUI = new EditorUI();
-		m_EditorWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "Editor.layout");
-		m_EditorWidget.GetScript(m_EditorUI);
-		EntityAI translate = GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_NONE, RF_FRONT);
+		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
+	
+		EntityAI translate = GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_NONE, RF_FRONT); // todo 1line
 		m_EditorUI.m_OrientationWidget.SetItem(translate);
 		m_EditorUI.m_OrientationWidget.SetView(0);
+		m_EditorUI.GetNotificationFrame().GetPos(notification_start_x, notification_start_y);
 		
 		// Init Spawn Position
 		TIntArray center_pos = new TIntArray();		
@@ -43,7 +45,7 @@ class EditorUIManager: Managed
 		
 		// Init Camera Map Marker
 		EditorCameraMapMarker CameraMapMarker = new EditorCameraMapMarker();
-		Widget m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorCameraMapMarker.layout");
+		Widget m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorCameraMapMarker.layout");
 		m_MapMarkerWidget.GetScript(CameraMapMarker);
 		CameraMapMarker.SetCamera(m_EditorCamera);
 		
@@ -60,11 +62,8 @@ class EditorUIManager: Managed
 		
 		
 		// Subscribe to events (and twitch.tv/InclementDab)
-		EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);
-		//EditorEvents.OnObjectCreated.Insert(O);
-		
-		
-		
+		EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);		
+	
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
@@ -81,6 +80,11 @@ class EditorUIManager: Managed
 		float timeslice = (GetGame().GetTime() - m_LastFrameTime) / 1000;
 		m_UpdateInvoker.Invoke(timeslice);
 		m_LastFrameTime = GetGame().GetTime();
+		
+		// move elsewhere?
+		vector cam_orientation = GetEditorCamera().GetOrientation();	
+		GetEditorUI().m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
+		
 	}
 	
 	
@@ -112,10 +116,12 @@ class EditorUIManager: Managed
 		return (cursor_x > size_x + pos_x) || (cursor_x < pos_x) || (cursor_y > size_y + pos_y) || (cursor_y < pos_y);
 	}
 	
-	
-	void TriggerUINotification(string text, int color = -4301218, float duration = 4)
+	private float notification_start_x, notification_start_y;
+	void NotificationCreate(string text, int color = -4301218, float duration = 4)
 	{
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationAnimateFrame);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationDestroy);
+		
 		Widget notif_frame = m_EditorUI.GetNotificationFrame();
 		Print(notif_frame);
 		Widget notif_panel = notif_frame.FindAnyWidget("NotificationPanel");
@@ -125,18 +131,17 @@ class EditorUIManager: Managed
 		notif_text.SetText(text);
 		notif_frame.Show(true);
 			
-		float start_x, start_y, width, height;
-		notif_frame.GetPos(start_x, start_y);
+		float width, height;
 		notif_frame.GetSize(width, height);
-		
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CloseUINotification, duration * 1000, false, notif_frame, start_x, start_y);
 		
 		EffectSound notif_sound = SEffectManager.PlaySound("Notification_SoundSet", GetEditorCamera().GetPosition());
 		notif_sound.SetSoundAutodestroy(true);
 		
+		// Animate pulldown
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationAnimateFrame, 0, true, notif_frame, GetGame().GetTime(), 0.25, notification_start_x, notification_start_x, notification_start_y, notification_start_y + height);
 		
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationAnimateFrame, 0, true, notif_frame, GetGame().GetTime(), 0.25, start_x, start_x, start_y, start_y + height);
-		
+		// Call destroy after duration done
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationDestroy, duration * 1000, false, notif_frame, notification_start_x, notification_start_y);
 	}
 	
 	
@@ -149,30 +154,29 @@ class EditorUIManager: Managed
 		anim_frametime /= 1000;
 		
 		float normalized_time = (1 / duration) * anim_frametime;
-		
-		
 		normalized_time = Math.Clamp(normalized_time, 0, 1);
-		Print(normalized_time);
 		
 		float pos_x = Math.Lerp(start_x, final_x, normalized_time);
 		float pos_y = Math.Lerp(start_y, final_y, normalized_time);
 		
 		root.SetPos(pos_x, pos_y);
 		
-		if (normalized_time >= 1) {
+		if (normalized_time >= 1)
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationAnimateFrame);
-		}
+		
 		
 	}
 	
-	private void CloseUINotification(Widget root, float start_x, float start_y)
+	private void NotificationDestroy(Widget root, float start_x, float start_y)
 	{
 		float current_x, current_y;
 		root.GetPos(current_x, current_y);
 		
 		float duration = 0.25;
+		// Animate in reverse
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationAnimateFrame, 0, true, root, GetGame().GetTime(), duration, current_x, start_x, current_y, start_y);
 		
+		// Hide Object
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(root.Show, duration * 1000, false, false);
 	}
 

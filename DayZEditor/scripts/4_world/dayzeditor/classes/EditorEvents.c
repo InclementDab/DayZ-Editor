@@ -10,9 +10,7 @@ class EditorEvents
 	static ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 	static ref ScriptInvoker OnObjectDrag		= new ScriptInvoker();
 	static ref ScriptInvoker OnObjectDrop		= new ScriptInvoker();
-	
 	static ref ScriptInvoker OnBrushChanged		= new ScriptInvoker();
-	
 	static ref ScriptInvoker OnSettingsChanged 	= new ScriptInvoker();
 
 	

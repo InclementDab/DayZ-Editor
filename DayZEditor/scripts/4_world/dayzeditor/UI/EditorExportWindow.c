@@ -18,7 +18,7 @@ class EditorExportWindow: UIScriptedMenu
 	override Widget Init()
 	{
 		super.Init();
-		layoutRoot 			= GetGame().GetWorkspace().CreateWidgets(layout_dir + "BaseWidgets/EditorExportWindow.layout");
+		layoutRoot 			= GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/BaseWidgets/EditorExportWindow.layout");
 		
 		m_TitleText 		= TextWidget.Cast(layoutRoot.FindAnyWidget("TitleText"));
 		m_TitleClose 		= ButtonWidget.Cast(layoutRoot.FindAnyWidget("TitleClose"));

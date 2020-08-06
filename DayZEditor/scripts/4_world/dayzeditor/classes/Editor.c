@@ -160,10 +160,7 @@ class Editor: Managed
 		}
 		
 		
-		
-		vector cam_orientation = GetUIManager().GetEditorCamera().GetOrientation();	
-		GetUIManager().GetEditorUI().m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
-		
+	
 		// debug
 		EditorObjectSet selected_objects = GetObjectManager().GetSelectedObjects();
 		if (selected_objects.Count() == 1) {
@@ -217,7 +214,8 @@ class Editor: Managed
 		EditorEvents.BrushChangedInvoke(this, null);
 		
 		EditorSettings.SIM_CITY_MODE = false;
-		ButtonWidget.Cast(GetEditor().GetUIManager().GetEditorUI().GetRoot().FindAnyWidget("SimcityButton")).SetState(false);
+		// remove me
+		//ButtonWidget.Cast(GetEditor().GetUIManager().GetEditorUI().GetRoot().FindAnyWidget("SimcityButton")).SetState(false);
 		
 		
 		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, vector.Zero));		
@@ -255,7 +253,7 @@ class Editor: Managed
  
 		EditorFileManager.SaveFile(save_data);
 		
-		GetEditor().GetUIManager().TriggerUINotification("Saved!", COLOR_GREEN); 
+		GetEditor().GetUIManager().NotificationCreate("Saved!", COLOR_GREEN); 
 	}
 	
 	void Open()
@@ -263,7 +261,9 @@ class Editor: Managed
 		delete m_EditorObjectManager;
 		m_EditorObjectManager = new EditorObjectManager();
 		
-		EditorWorldData load_data = EditorFileManager.LoadFile();
+		EditorWorldData load_data = new EditorWorldData();
+		int loadfile_result = EditorFileManager.LoadFile(load_data);
+		Print("LoadFile Result " + loadfile_result);
 		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
 		
 		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
@@ -271,7 +271,7 @@ class Editor: Managed
 			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
 		}
 		
-		GetEditor().GetUIManager().TriggerUINotification("Loaded!"); 
+		GetEditor().GetUIManager().NotificationCreate("Loaded!"); 
 	}
 	
 	

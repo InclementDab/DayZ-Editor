@@ -40,7 +40,7 @@ class EditorMap: EditorWidgetEventHandler
 	void EditorMap()
 	{
 		Print("EditorMap");
-				
+		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
 	}
 	
 	void ~EditorMap()
@@ -71,8 +71,8 @@ class EditorMap: EditorWidgetEventHandler
 				if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
 				return true;
 			} else {
-				GetEditor().GetUIManager().GetEditorUI().GetCanvas().Clear();
-				EditorUI ui = EditorUI.GetInstance();
+				EditorUI ui = GetEditor().GetUIManager().GetEditorUI();
+				ui.GetCanvas().Clear();
 				GetCursorPos(ui.start_x, ui.start_y);
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ui.DelayedDragBoxCheck, 40);
 				return true;

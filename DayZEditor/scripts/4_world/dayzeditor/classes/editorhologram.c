@@ -5,16 +5,14 @@ class EditorHologram: Hologram
 	protected Widget 				m_EditorMapMarkerWidget;
 	protected EditorMapMarker 		m_EditorMapMarker;
 	
-	private EditorUI				m_EditorUI;
 	private MapWidget				m_MapWidget;
 	
 	void EditorHologram(PlayerBase player, vector pos, ItemBase item) 
 	{
-		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorMapMarker.layout");
+		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
-		m_EditorUI = EditorUI.GetInstance();
-		m_MapWidget = m_EditorUI.GetMapWidget();
+		m_MapWidget = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
 		m_MapWidget.AddChild(m_EditorMapMarkerWidget); 
 	
 		
@@ -34,7 +32,7 @@ class EditorHologram: Hologram
 		if (m_Projection == NULL) return;
 		
 		// Handle Building
-		if (m_EditorUI.IsMapOpen()) {
+		if (GetEditor().GetUIManager().GetEditorUI().IsMapOpen()) {
 			vector pos = m_MapWidget.ScreenToMap(Vector(x, y, 0));
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]);	
 				

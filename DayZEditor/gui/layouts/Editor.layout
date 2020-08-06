@@ -9,7 +9,7 @@ FrameWidgetClass EditorMainFrame {
  hexactsize 0
  vexactsize 0
  draggable 0
- scriptclass "EditorUI"
+ scriptclass "EditorUIHandler"
  {
   FrameWidgetClass MapContainerWidget {
    clipchildren 0
