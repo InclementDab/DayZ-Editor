@@ -426,18 +426,7 @@ class EditorObject : Building
 }
 
 
-class PlaceableEditorObject
-{
-	private string m_Type, m_Base;
-	
-	void PlaceableEditorObject(string name, string base)
-	{
-		m_Type = name; m_Base = base;
-	}
-	
-	string GetType() { return m_Type; }
-	string GetBase() { return m_Base; }
-}
+
 
 
 

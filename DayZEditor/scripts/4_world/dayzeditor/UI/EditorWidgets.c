@@ -98,11 +98,11 @@ class EditorMap: EditorWidgetEventHandler
 
 class EditorListItem: EditorWidgetEventHandler
 {
-	private TextWidget 				m_EditorListItemText;
-	private ref PlaceableEditorObject 	m_PlaceableObject;
+	private TextWidget 					m_EditorListItemText;
+	private ref EditorPlaceableObject 	m_PlaceableObject;
 	
 	// Getters
-	PlaceableEditorObject GetPlaceableObject() { return m_PlaceableObject; }
+	EditorPlaceableObject GetPlaceableObject() { return m_PlaceableObject; }
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
@@ -110,7 +110,7 @@ class EditorListItem: EditorWidgetEventHandler
 		m_EditorListItemText = m_Root.FindAnyWidget("EditorListItemText");
 	}
 	
-	void SetObject(PlaceableEditorObject target)
+	void SetObject(EditorPlaceableObject target)
 	{
 		m_PlaceableObject = target;
 		m_EditorListItemText.SetText(m_PlaceableObject.GetType());

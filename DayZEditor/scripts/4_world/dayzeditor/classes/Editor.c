@@ -24,6 +24,7 @@ class Editor: Managed
 	// Private Memebers
 	private ref EditorObjectManager			m_EditorObjectManager = new EditorObjectManager();
 	private ref EditorUIManager 			m_EditorUIManager = new EditorUIManager();
+	private ref EditorSettings				m_EditorSettings = new EditorSettings();
 	
 	static ref EditorHologram 				ObjectInHand;
 	static Object							ObjectUnderCursor = null;
@@ -42,6 +43,7 @@ class Editor: Managed
 	// Getters
 	ref EditorObjectManager GetObjectManager() { return m_EditorObjectManager; }
 	ref EditorUIManager GetUIManager() { return m_EditorUIManager; }
+	ref EditorSettings GetSettings() { return m_EditorSettings; }
 	
 	private ref EditorBrush	m_EditorBrush;
 	EditorBrush GetEditorBrush() { return m_EditorBrush; }

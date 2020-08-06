@@ -11,6 +11,8 @@ enum EditorCursor
 	HORIZONTAL_SCROLL
 }
 
+
+
 class EditorUI: UIScriptedMenu
 {
 	private ref Widget 			m_Root;
@@ -31,6 +33,11 @@ class EditorUI: UIScriptedMenu
 	protected ButtonWidget m_HumanSelect;
 	protected ButtonWidget m_LeftbarHide;
 	protected ButtonWidget m_RightbarHide;
+	
+	protected ButtonWidget m_CategorySelectBuilding;
+	protected ButtonWidget m_CategorySelectVehicle;
+	protected ButtonWidget m_CategorySelectEntity;
+	protected ButtonWidget m_CategorySelectHuman;
 	
 	// Toolbar Buttons
 	protected ButtonWidget 	m_UndoButton;
@@ -138,9 +145,14 @@ class EditorUI: UIScriptedMenu
 		m_LeftbarHide			= ButtonWidget.Cast(m_Root.FindAnyWidget("LeftbarHide"));
 		m_RightbarHide			= ButtonWidget.Cast(m_Root.FindAnyWidget("RightbarHide"));
 		
+		m_CategorySelectBuilding= ButtonWidget.Cast(m_Root.FindAnyWidget("BuildingSelect"));
+		m_CategorySelectVehicle	= ButtonWidget.Cast(m_Root.FindAnyWidget("VehicleSelect"));
+		m_CategorySelectEntity	= ButtonWidget.Cast(m_Root.FindAnyWidget("EntitySelect"));
+		m_CategorySelectHuman	= ButtonWidget.Cast(m_Root.FindAnyWidget("HumanSelect"));
+		
 		// Spacers
 		m_LeftbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("LeftbarSpacer"));
-		m_RightbarSpacer		= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("RightbarSpacer"));
+		m_RightbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("RightbarSpacer"));
 		
 		// Toolbar
 		m_UndoButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("UndoButton"));
@@ -179,7 +191,12 @@ class EditorUI: UIScriptedMenu
 		// Brush init
 		m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
 		m_SimcityDensityText.SetText(m_SimcityDensitySlider.GetCurrent().ToString());
+		
+		// Events
 		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
+		EditorEvents.OnSettingsChanged.Insert(OnEditorSettingsChanged);		
+		
+
 		
 		return m_Root;
 	}
@@ -246,15 +263,28 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	
+	
 
 	
 	
 	
-	
-	
-	
-	
 	/* Events */
+	
+	void OnEditorSettingsChanged(Class context, string changed, EditorSettings settings)
+	{
+		Print("EditorUIManager::OnEditorSettingsChanged");
+		
+		switch (changed) {
+			
+			case "PlaceableObjectCategory": {
+				
+				SetPlaceableObjects(settings.GetPlaceableObjectCategory());
+				
+				break;
+			}
+			
+		}
+	}
 	
 	
 	override bool OnClick(Widget w, int x, int y, int button) 
@@ -301,6 +331,38 @@ class EditorUI: UIScriptedMenu
 				case m_RightbarHide: {
 					right_bar_hidden = !right_bar_hidden;
 					m_RightbarFrame.SetPos(-300 * right_bar_hidden, 48);
+					return true;
+				}
+				
+				case m_CategorySelectBuilding: {
+					GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.BUILDING);
+					m_CategorySelectVehicle.SetState(false);
+					m_CategorySelectEntity.SetState(false);
+					m_CategorySelectHuman.SetState(false);
+					return true;
+				}
+				
+				case m_CategorySelectVehicle: {
+					GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.VEHICLE);
+					m_CategorySelectBuilding.SetState(false);
+					m_CategorySelectEntity.SetState(false);
+					m_CategorySelectHuman.SetState(false);
+					return true;
+				}
+				
+				case m_CategorySelectEntity: {
+					GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.ENTITY);
+					m_CategorySelectVehicle.SetState(false);
+					m_CategorySelectBuilding.SetState(false);
+					m_CategorySelectHuman.SetState(false);
+					return true;
+				}
+				
+				case m_CategorySelectHuman: {
+					GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.HUMAN);
+					m_CategorySelectVehicle.SetState(false);
+					m_CategorySelectEntity.SetState(false);
+					m_CategorySelectBuilding.SetState(false);
 					return true;
 				}
 				
@@ -516,12 +578,26 @@ class EditorUI: UIScriptedMenu
 		m_RightbarSpacer.AddChild(target.GetObjectBrowser());
 	}
 	
-	void InsertPlaceableObject(PlaceableEditorObject target)
+
+		
+	private ref array<ref EditorListItem> m_CurrentPlaceableObjects;
+	void SetPlaceableObjects(PlaceableObjectCategory category)
 	{
-		EditorListItem list_item;
-		Widget list_widget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorListItem.layout", m_LeftbarSpacer);
-		list_widget.GetScript(list_item);
-		list_item.SetObject(target);
+		// Clear existing spacer
+		foreach (EditorListItem item: m_CurrentPlaceableObjects)
+			delete item;
+
+		m_CurrentPlaceableObjects = new array<ref EditorListItem>();
+		ref array<ref EditorPlaceableObject> target = new array<ref EditorPlaceableObject>();
+		
+		GetEditor().GetSettings().GetPlaceableObjectsByCategory(target, GetEditor().GetSettings().GetPlaceableObjectCategory());
+	
+		
+		foreach (ref EditorPlaceableObject placeable_object: target) {
+			EditorListItem list_item = placeable_object.GetListItem(m_LeftbarSpacer);
+			m_CurrentPlaceableObjects.Insert(list_item);
+		}
+
 	}
 	
 	

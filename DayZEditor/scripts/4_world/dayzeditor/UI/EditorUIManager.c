@@ -10,6 +10,9 @@ class EditorUIManager: Managed
 	private ref ScriptInvoker 	m_UpdateInvoker;
 	private UIManager			m_UIManager;
 	
+
+	
+	
 	// Getters
 	EditorUI GetEditorUI() { return m_EditorUI; }
 	EditorCamera GetEditorCamera() { return m_EditorCamera; }
@@ -53,17 +56,11 @@ class EditorUIManager: Managed
 		map_widget.AddChild(m_MapMarkerWidget);
 	
 		
-		// Load placeable objects
-		ref array<ref PlaceableEditorObject> placeable_objects = new array<ref PlaceableEditorObject>();
-
-		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(placeable_objects)));
-		foreach (PlaceableEditorObject placeable_object: placeable_objects)
-			m_EditorUI.InsertPlaceableObject(placeable_object);
-		
-		
 		// Subscribe to events (and twitch.tv/InclementDab)
 		EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);		
-	
+		
+		// Sets default
+		GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.BUILDING);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
@@ -96,6 +93,8 @@ class EditorUIManager: Managed
 		m_EditorUI.GetMap().OnObjectCreated(null, obj); // subscribe mee
 		
 	}
+	
+	
 	
 	void SetEditorCameraActive(bool state)
 	{
@@ -187,7 +186,8 @@ class EditorUIManager: Managed
 	void SetVisibility(bool state)
 	{
 		m_EditorUI.GetRoot().Show(state);
-		foreach (EditorObject editor_object: GetEditor().GetObjectManager().GetPlacedObjects()) {
+		EditorObjectSet placed_objects = GetEditor().GetObjectManager().GetPlacedObjects();
+		foreach (EditorObject editor_object: placed_objects) {
 			editor_object.GetObjectMarker().Show(state);
 		}
 		
@@ -196,6 +196,7 @@ class EditorUIManager: Managed
 	
 	
 	bool GetVisibility() { return m_Visibility;	}
+	
 	
 	
 	

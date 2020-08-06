@@ -12,6 +12,8 @@ class EditorEvents
 	static ref ScriptInvoker OnObjectDrop		= new ScriptInvoker();
 	static ref ScriptInvoker OnBrushChanged		= new ScriptInvoker();
 	static ref ScriptInvoker OnSettingsChanged 	= new ScriptInvoker();
+	
+	
 
 	
 	static void ObjectCreateInvoke(Class context, EditorObject obj) 
@@ -51,10 +53,12 @@ class EditorEvents
 		
 	}
 	
-	static void OnSettingsChanged(Class context, Class setting)
+	static void SettingsChangedInvoke(Class context, string changed, EditorSettings settings)
 	{
-		Print("EditorEvents::OnSettingChanged");
-		OnSettingsChanged.Invoke(context, setting);
-	}
+		Print("EditorEvents::SettingsChangedInvoke");
+		OnSettingsChanged.Invoke(context, changed, settings);
+	}	
+
+
 }
 
