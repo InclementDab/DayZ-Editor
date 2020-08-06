@@ -47,7 +47,6 @@ class EditorEventSpawn
 {
 	private string m_EventName;
 	private ref array<ref EventPosition> m_EventPositions;
-	
 	private ref array<string> m_TypeNames;
 	
 	void EditorEventSpawn(string event_name)

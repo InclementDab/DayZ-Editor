@@ -227,6 +227,10 @@ class Editor: Managed
 		m_PositionBeforeLootEditMode = camera.GetPosition();
 		camera.SetPosition(Vector(10, 1000, 0));
 		camera.SelectTarget(m_LootEditTarget);
+		
+		
+		ref EditorMapGroupProto proto_data = new EditorMapGroupProto(m_LootEditTarget); 
+		EditorXMLManager.LoadMapGroupProto(proto_data);
 		m_LootEditMode = true;
 	}
 	
@@ -248,10 +252,6 @@ class Editor: Managed
 		EditorEvents.BrushChangedInvoke(this, null);
 		
 		EditorSettings.SIM_CITY_MODE = false;
-		// remove me
-		//ButtonWidget.Cast(GetEditor().GetUIManager().GetEditorUI().GetRoot().FindAnyWidget("SimcityButton")).SetState(false);
-		
-		
 		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, vector.Zero));		
 	}
 	

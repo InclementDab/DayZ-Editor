@@ -555,7 +555,9 @@ class EditorUI: UIScriptedMenu
 		
 	void OnBrushChanged(Class context, EditorBrush brush)
 	{
+		
 		if (brush == null) {
+			m_SimcityButton.SetState(false);
 			m_SimcityDensitySlider.Show(false);
 			m_SimcityRadiusSlider.Show(false);
 		
