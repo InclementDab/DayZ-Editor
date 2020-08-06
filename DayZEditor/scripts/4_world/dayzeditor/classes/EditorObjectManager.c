@@ -72,11 +72,10 @@ class EditorObjectManager: Managed
 			
 		    for (int j = 0; j < g_Game.ConfigGetChildrenCount(Config_Path); j++) {
 				string Config_Name, Base_Name;
-		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name);
-		        GetGame().ConfigGetBaseName(Config_Path + " " + Config_Name, Base_Name);
-		        Base_Name.ToLower();
+		        g_Game.ConfigGetChildName(Config_Path, j, Config_Name); 
+				//g_Game.ConfigGetBaseName(Config_Path + " " + Config_Name, Base_Name);
 				
-				EditorPlaceableObject placeable_object = new EditorPlaceableObject(Config_Name, Base_Name);
+				EditorPlaceableObject placeable_object = new EditorPlaceableObject(Config_Name, Config_Path);
 				EditorPlaceableObjectSet plc_set = placeable_objects.GetElement(placeable_object.GetCategory());
 				plc_set.Insert(placeable_object);
 		    }

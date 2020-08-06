@@ -9,35 +9,67 @@ enum PlaceableObjectCategory
 
 
 static const ref array<string> BuildingTypes = {
-	"HouseNoDestruct"
+	"house"
 };
 
 static const ref array<string> VehicleTypes = {
-	"carscript"
+	"transport"
 };
 
 static const ref array<string> EntityTypes = {
-	"inventory_base"
+	"inventory_base",
+	"edible_base",
+	"clothing_base",
+	"weapon_base"
 };
 
 static const ref array<string> HumanTypes = {
-	"zombiemalebase",
-	"zombiefemalebase"
+	"dz_lightai",
+	"survivorbase"
 };
 
+static const ref array<array<string>> AllTypes = {
+	BuildingTypes, 
+	VehicleTypes,
+	EntityTypes,
+	HumanTypes
+};
 
 class EditorPlaceableObject: Managed
 {
-	private string m_Type, m_Base;
+	private string m_Type, m_Path, m_Base;
+	private PlaceableObjectCategory m_Category;
 	private Widget m_ListWidget;
 	
-	void EditorPlaceableObject(string name, string base)
+
+	void EditorPlaceableObject(string type, string path)
 	{
-		m_Type = name; m_Base = base;
+		m_Type = type; m_Path = path;
+		
+		TStringArray path_array = new TStringArray();
+		GetGame().ConfigGetFullPath(m_Path + " " + m_Type, path_array);
+
+		int i = 0;
+		foreach (array<string> current_type: AllTypes) {
+			foreach (string base: path_array) {
+				base.ToLower();
+				if (current_type.Find(base) + 1) {
+					m_Base = base;
+					m_Category = i;
+					return;
+				}
+			}
+			i++;
+		}
+		
+		Print(string.Format("%1 has no category!", m_Type));
+		m_Category = PlaceableObjectCategory.UNKNOWN;
+		
+	
 	}
 	
 	string GetType() { return m_Type; }
-	string GetBase() { return m_Base; }
+	//string GetBase() { return m_Base; }
 	
 	ref EditorListItem GetListItem(Widget parent)
 	{
@@ -50,20 +82,6 @@ class EditorPlaceableObject: Managed
 	
 	PlaceableObjectCategory GetCategory()
 	{
-	
-		if (BuildingTypes.Find(m_Base) + 1)
-			return PlaceableObjectCategory.BUILDING;
-		
-		if (VehicleTypes.Find(m_Base) + 1)
-			return PlaceableObjectCategory.VEHICLE;		
-		
-		if (EntityTypes.Find(m_Base) + 1)
-			return PlaceableObjectCategory.ENTITY;		
-		
-		if (HumanTypes.Find(m_Base) + 1)
-			return PlaceableObjectCategory.HUMAN;
-		
-		Print(string.Format("%1 has no category!", m_Base));
-		return PlaceableObjectCategory.UNKNOWN;
+		return m_Category;
 	}
 }

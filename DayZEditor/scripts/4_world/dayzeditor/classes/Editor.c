@@ -257,7 +257,6 @@ class Editor: Managed
 			save_data.WorldObjects.Insert(save_object.GetSaveData());
  
 		EditorFileManager.SaveFile(save_data);
-		
 		GetEditor().GetUIManager().NotificationCreate("Saved!", COLOR_GREEN); 
 	}
 	

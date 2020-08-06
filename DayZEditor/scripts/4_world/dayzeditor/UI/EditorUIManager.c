@@ -10,9 +10,6 @@ class EditorUIManager: Managed
 	private ref ScriptInvoker 	m_UpdateInvoker;
 	private UIManager			m_UIManager;
 	
-
-	
-	
 	// Getters
 	EditorUI GetEditorUI() { return m_EditorUI; }
 	EditorCamera GetEditorCamera() { return m_EditorCamera; }

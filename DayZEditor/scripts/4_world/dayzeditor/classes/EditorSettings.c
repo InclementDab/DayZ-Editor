@@ -18,7 +18,6 @@ class EditorSettings
 
 	
 	// private members
-	
 	private ref EditorPlaceableObjectsData m_PlaceableObjectsData;
 	EditorPlaceableObjectsData GetPlaceableObjectsData() { return m_PlaceableObjectsData; }
 	

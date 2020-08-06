@@ -72,6 +72,7 @@ class EditorUI: UIScriptedMenu
 
 	// Spacers for Item Lists
 	protected WrapSpacerWidget 	m_LeftbarSpacer;
+	WrapSpacerWidget GetLeftbarSpacer() { return m_LeftbarSpacer; }
 	protected WrapSpacerWidget 	m_RightbarSpacer;
 		
 	// Cursors
@@ -278,12 +279,13 @@ class EditorUI: UIScriptedMenu
 			delete item;
 
 		m_CurrentPlaceableObjects = new array<ref EditorListItem>();
-		
 		EditorPlaceableObjectSet data_set = GetEditor().GetSettings().GetPlaceableObjectsData().GetElement(category);
-		foreach (ref EditorPlaceableObject placeable_object: data_set)
+
+		foreach (ref EditorPlaceableObject placeable_object: data_set) {
 			m_CurrentPlaceableObjects.Insert(placeable_object.GetListItem(m_LeftbarSpacer));
+		}
 		
-		m_LeftbarSpacer.Update();
+		
 		
 	}
 	
