@@ -221,11 +221,11 @@ class Editor: Managed
 	// probably have an EditorMode enum with NORMAL, CHARACTER, LOOTEDITOR or something
 	void PlaceholderForEditLootSpawns(string name)
 	{
-		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 1000, 0), ECE_AIRBORNE);
+		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 1000, 0), ECE_NONE);
 		
 		EditorCamera camera = GetUIManager().GetEditorCamera();
 		m_PositionBeforeLootEditMode = camera.GetPosition();
-		camera.SetPosition(Vector(10, 1000, 0));
+		camera.SetPosition(Vector(10, 1000, 10));
 		camera.SelectTarget(m_LootEditTarget);
 		
 		
@@ -236,6 +236,12 @@ class Editor: Managed
 	
 	void PlaceholderRemoveLootMode()
 	{
+		IEntity child = m_LootEditTarget.GetChildren();
+		while (child != null) {
+			GetGame().ObjectDelete(child);
+			child = child.GetSibling();
+		}
+		
 		GetGame().ObjectDelete(m_LootEditTarget);
 		
 		EditorCamera camera = GetUIManager().GetEditorCamera();

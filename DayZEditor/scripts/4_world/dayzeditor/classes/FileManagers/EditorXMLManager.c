@@ -221,22 +221,12 @@ class EditorMapGroupProto: XMLCallback
 						
 					ref array<ref EditorLootPoint> loot_points = loot_container.GetLootPoints();
 					foreach (EditorLootPoint loot_point: loot_points) {
+						vector loot_pos = loot_point.GetPosition();
 						
-						Object loot_display = GetGame().CreateObjectEx("BoundingBoxBase", loot_point.GetPosition(), ECE_AIRBORNE);
-						vector mat[4] = {
-							"0.2 0 0",
-							"0 0.2 0",
-							"0 0 0.2",
-							loot_point.GetPosition()
-						};
-						
-						loot_display.SetTransform(mat);
-						loot_display.Update();
+						Object loot_display = GetGame().CreateObjectEx("DebugCylinder", Vector(loot_pos[2], loot_pos[1], loot_pos[0]), ECE_NONE);
 						
 						m_Building.AddChild(loot_display, -1);
 						m_Building.Update();
-						
-	
 						
 					}
 				}
