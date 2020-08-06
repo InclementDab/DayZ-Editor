@@ -209,9 +209,9 @@ class EditorUI: UIScriptedMenu
 		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);
 			
 		// Tooltips
-		m_TooltipMagnet = new EditorUITooltip("Magnet Mode", "Toogle magnet mode on/off.");
-		m_TooltipSnap = new EditorUITooltip("Snap Mode", "Toogle snap mode on/off.");
-		m_TooltipGround = new EditorUITooltip("Ground Mode", "Toogle ground mode on/off.");
+		m_TooltipMagnet = new EditorUITooltip("Toogle magnet mode on/off.", "Magnet Mode");
+		m_TooltipSnap = new EditorUITooltip("Toogle snap mode on/off.", "Snap Mode");
+		m_TooltipGround = new EditorUITooltip("Toogle ground mode on/off.", "Ground Mode");
 		
 		return m_Root;
 	}
