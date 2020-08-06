@@ -11,9 +11,11 @@ GridSpacerWidgetClass TooltipFrame {
  priority 901
  style Colorable
  Padding 0
- Margin 8
+ Margin 5
  "Size To Content H" 1
  "Size To Content V" 1
+ content_halign center
+ content_valign center
  Columns 1
  Rows 1
  {
@@ -32,6 +34,8 @@ GridSpacerWidgetClass TooltipFrame {
    Margin 0
    "Size To Content H" 1
    "Size To Content V" 1
+   content_halign center
+   content_valign center
    {
     RichTextWidgetClass TooltipTitle {
      ignorepointer 1
@@ -41,9 +45,8 @@ GridSpacerWidgetClass TooltipFrame {
      vexactpos 0
      hexactsize 0
      vexactsize 0
-     font "gui/fonts/metron-bold"
+     font "gui/fonts/metron16"
      "exact text" 1
-     "exact text size" 20
      "size to text h" 1
      "size to text v" 1
      "text halign" center
@@ -68,10 +71,8 @@ GridSpacerWidgetClass TooltipFrame {
      vexactpos 0
      hexactsize 0
      vexactsize 0
-     text "sdasdadsa"
-     font "gui/fonts/metron"
+     font "gui/fonts/metron16"
      "exact text" 1
-     "exact text size" 20
      "size to text h" 1
      "size to text v" 1
      "text halign" center
