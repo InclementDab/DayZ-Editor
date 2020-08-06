@@ -402,7 +402,7 @@ FrameWidgetClass EditorMainFrame {
        vexactsize 0
        style rover_sim_colorable
        {
-        EditBoxWidgetClass LeftbarPanelSearchBar {
+        EditBoxWidgetClass LeftbarSearchBar {
          color 0.6353 0.6353 0.6353 1
          position 0 0
          size 0.88 1
@@ -410,6 +410,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         priority 1
          scriptclass "PlaceableSearchBar"
          style EditorProperty
          "limit visible" 0
