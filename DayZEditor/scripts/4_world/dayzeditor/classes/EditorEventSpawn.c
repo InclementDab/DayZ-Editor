@@ -15,7 +15,6 @@ class EventPosition
 		XMLAttribute attribute_a = tag.GetAttribute("a");
 		
 		
-		
 		float x1, y1, z1, a1;
 		if (attribute_x != null) {
 			x1 = attribute_x.ValueAsFloat();
@@ -49,10 +48,13 @@ class EditorEventSpawn
 	private string m_EventName;
 	private ref array<ref EventPosition> m_EventPositions;
 	
+	private ref array<string> m_TypeNames;
+	
 	void EditorEventSpawn(string event_name)
 	{
 		m_EventName = event_name;
 		m_EventPositions = new array<ref EventPosition>();
+		m_TypeNames = new array<string>();
 	}
 	
 	ref array<ref EventPosition> GetPositions()
@@ -65,75 +67,157 @@ class EditorEventSpawn
 		m_EventPositions.Insert(event_position);
 		return m_EventPositions.Count();
 	}
+	
+	void InsertTypeName(string name)
+	{
+		m_TypeNames.Insert(name);
+	}
+	
+	ref array<string> GetTypeNames()
+	{
+		return m_TypeNames;
+	}
+	
+	string GetRandomTypeName()
+	{
+		return m_TypeNames.Get(Math.RandomInt(0, m_TypeNames.Count()));
+	}
+	
+	string GetName() { return m_EventName; }
 }
 
 
-class EditorXMLSpawnsCallback: XMLCallback
+
+class XMLEventsCallback: XMLCallback
 {
 	private ref array<ref EditorEventSpawn> m_Events;
 	
-	void EditorXMLSpawnsCallback(ref array<ref EditorEventSpawn> events)
+	void XMLEventsCallback(ref array<ref EditorEventSpawn> events)
 	{
 		m_Events = events;
 	}
 	
-	override void OnStart(ref XMLDocument document)
-    {
-		Print("EditorXMLSpawnsCallback::Start");	
-
+	bool SearchEventSpawns(out ref EditorEventSpawn event_spawn, string name)
+	{
+		name.ToLower();
+		foreach (EditorEventSpawn espawn: m_Events) {
+			string name_lower = espawn.GetName();
+			name_lower.ToLower();
+			if (name_lower == name) {
+				event_spawn = espawn;
+				return true;
+			}
+		}
+		
+		Print("Object Search Failed");
+		return false;
 	}
+	
+	override void OnSuccess(ref XMLDocument document)
+	{
+		Print("XMLEventsCallback::Success");		
+		XMLElement xml_events = document.Get(1).GetContent();
+		
+		for (int i = 0; i < xml_events.Count(); i++) {
+			
+			XMLTag event_tag = xml_events.Get(i);
+			if (event_tag.GetName() != "event") 
+				continue;
+			
+			XMLAttribute name_attribute = event_tag.GetAttribute("name");
+			string name = name_attribute.ValueAsString();
+			EditorEventSpawn event_spawn;
+			
+			if (SearchEventSpawns(event_spawn, name)) {
+								
+				XMLElement event_content = event_tag.GetContent();
+				for (int j = 0; j < event_content.Count(); j++) {
+					
+					XMLTag children_tag = event_content.Get(j);
+					if (children_tag.GetName() != "children")
+						continue;
+					
+					XMLElement children_content = children_tag.GetContent();
+					for (int k = 0; k < children_content.Count(); k++) {
+						
+						XMLTag spawnable_object = children_content.Get(k);
+						if (spawnable_object.GetName() != "child")
+							continue;
+						
+						XMLAttribute type_attribute = spawnable_object.GetAttribute("type");						
+						event_spawn.InsertTypeName(type_attribute.ValueAsString());
+					}					
+				}
+			}
+		}
+		
+		Print("Finished");
+		// Debug
+		foreach (ref EditorEventSpawn espawn: m_Events) {
+			
+			ref array<ref EventPosition> event_positions = espawn.GetPositions();
+			foreach (ref EventPosition pos: event_positions) {
+				vector position = pos.GetPosition();
+				if (position[1] == 0)	
+					position[1] = GetGame().SurfaceY(position[0], position[2]);
+				
+				string ename = espawn.GetRandomTypeName();
+				if (ename.Length() == 0) continue;
+				if (position == vector.Zero) continue;
+				if (GetGame().IsKindOf(ename, "DZ_LightAI")) continue;
+				
+				GetGame().CreateObject(ename, position, true);
+			}
+		}
+	}
+}
+
+
+class XMLEventSpawnsCallback: XMLCallback
+{
+	private ref array<ref EditorEventSpawn> m_Events;
+	
+	void XMLEventSpawnsCallback(ref array<ref EditorEventSpawn> events)
+	{
+		m_Events = events;
+	}
+	
 	
 	
 	override void OnSuccess(ref XMLDocument document)
 	{
-		Print("EditorXMLSpawnsCallback::Success");		
+		Print("XMLEventSpawnsCallback::Success");		
 		XMLElement content = document.Get(1).GetContent();
 		
 		for (int i = 0; i < content.Count(); i++) {
-			
-			XMLTag tag = content.Get(i);
-			
-			if (tag.GetName() != "event") 
+						
+			if (content.Get(i).GetName() != "event") 
 				continue;
 			
-			XMLAttribute name_attr = tag.GetAttribute("name");
+			XMLAttribute name_attr = content.Get(i).GetAttribute("name");
 			EditorEventSpawn event_spawn = new EditorEventSpawn(name_attr.ValueAsString());
 			
-			XMLElement element = tag.GetContent();
+			
+			XMLElement element = content.Get(i).GetContent();
 			for (int j = 0; j < element.Count(); j++) {
 				
-				XMLTag pos_tag = element.Get(j);
-				if (pos_tag.GetName() != "pos") 
+				if (element.Get(j).GetName() != "pos") 
 					continue;
 				
-				event_spawn.InsertPosition(EventPosition.CreateFromXMLTag(pos_tag));
+				event_spawn.InsertPosition(EventPosition.CreateFromXMLTag(element.Get(j)));
 			}
 			
 			m_Events.Insert(event_spawn);
 		}
 		
 		
-		// Debug
-		foreach (EditorEventSpawn espawn: m_Events) {
-			ref array<ref EventPosition> event_positions = espawn.GetPositions();
-			foreach (EventPosition pos: event_positions) {
-				vector position = pos.GetPosition();
-				if (position[1] == 0)	
-					position[1] = GetGame().SurfaceY(position[0], position[2]);
-				
-				GetGame().CreateObject("BrushBase", position);
-			}
-		}
-		
-
-
+		EditorEventManager.ImportEvents();
 	}
 	
 	
 	override void OnFailure(ref XMLDocument document)
 	{
-		Print("EditorXMLSpawnsCallback::Failure");	
-		
+		Print("XMLEventSpawnsCallback::Failure");	
 	}
 	
 }
@@ -142,31 +226,41 @@ class EditorXMLSpawnsCallback: XMLCallback
 class EditorEventManager
 {
 	static ref array<ref EditorEventSpawn> m_Events;
-	static ref EditorXMLSpawnsCallback m_XMLCallback;
+	static ref XMLEventsCallback m_XMLEventsCallback;
+	static ref XMLEventSpawnsCallback m_XMLEventSpawnsCallback;
 	
 	void EditorEventManager()
 	{
 	}
 	
+
+	
 	static void ImportEventPositions()
 	{
 		m_Events = new array<ref EditorEventSpawn>();
 		
-		
 		string file = "$profile:\\Editor\\cfgeventspawns.xml";
+		if (!FileExist(file)) {
+			Print("File not found!"); // todo replace with the new fileopen dialog result type
+			return;
+		}
+	
+		m_XMLEventSpawnsCallback = new XMLEventSpawnsCallback(m_Events);
+		GetXMLApi().Read(file, m_XMLEventSpawnsCallback);		
+		
+	}
+	
+	
+	static void ImportEvents()
+	{
+		string file = "$profile:\\Editor\\db\\events.xml";
 		if (!FileExist(file)) {
 			Print("File not found!");
 			return;
 		}
-		if (m_XMLCallback == null) {
-			delete m_XMLCallback;
-			m_XMLCallback = new EditorXMLSpawnsCallback(m_Events);
-			GetXMLApi().Read(file, m_XMLCallback);
-		}
 		
-
-		
-		
-	}
+		m_XMLEventsCallback = new XMLEventsCallback(m_Events);
+		GetXMLApi().Read(file, m_XMLEventsCallback);
 	
+	}
 }
