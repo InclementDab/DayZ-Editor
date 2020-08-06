@@ -213,16 +213,45 @@ class Editor: Managed
 		return true;
 	}
 	
+	
+	private Object m_LootEditTarget;
+	private bool m_LootEditMode;
+	private vector m_PositionBeforeLootEditMode;
+	
+	// probably have an EditorMode enum with NORMAL, CHARACTER, LOOTEDITOR or something
+	void PlaceholderForEditLootSpawns(string name)
+	{
+		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 1000, 0), ECE_AIRBORNE);
+		
+		EditorCamera camera = GetUIManager().GetEditorCamera();
+		m_PositionBeforeLootEditMode = camera.GetPosition();
+		camera.SetPosition(Vector(10, 1000, 0));
+		camera.SelectTarget(m_LootEditTarget);
+		
+		
+		ref EditorMapGroupProto proto_data = new EditorMapGroupProto(m_LootEditTarget); 
+		EditorXMLManager.LoadMapGroupProto(proto_data);
+		m_LootEditMode = true;
+	}
+	
+	void PlaceholderRemoveLootMode()
+	{
+		GetGame().ObjectDelete(m_LootEditTarget);
+		
+		EditorCamera camera = GetUIManager().GetEditorCamera();
+		camera.SetPosition(m_PositionBeforeLootEditMode);
+		camera.SelectTarget(null);
+		m_LootEditMode = false;
+	}
+	
+	bool IsLootEditActive() { return m_LootEditMode; }
+	
 	void CreateObjectInHand(string name)
 	{
 		// Turn Brush off when you start to place
 		EditorEvents.BrushChangedInvoke(this, null);
 		
 		EditorSettings.SIM_CITY_MODE = false;
-		// remove me
-		//ButtonWidget.Cast(GetEditor().GetUIManager().GetEditorUI().GetRoot().FindAnyWidget("SimcityButton")).SetState(false);
-		
-		
 		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, vector.Zero));		
 	}
 	
@@ -675,7 +704,10 @@ class Editor: Managed
 				if (GetFocus()) {
 					SetFocus(null);
 					return true;
+				} else if (m_LootEditMode) {
+					PlaceholderRemoveLootMode();
 				} else {
+					
 					//m_UIManager.GetMenu().GetVisibleMenu() != "PauseMenu"
 					// maybe something like this idk just add better escape func
 				}
@@ -814,7 +846,17 @@ class Editor: Managed
 					return true;
 				}
 				break;
+			}			
+			
+			case KeyCode.KC_R: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					EditorEventManager.ImportEventPositions();
+					return true;
+				}
+				break;
 			}
+			
+			
 			
 
 		}

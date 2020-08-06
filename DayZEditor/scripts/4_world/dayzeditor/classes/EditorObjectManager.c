@@ -116,6 +116,7 @@ class EditorObjectManager: Managed
 			ClearSelection();
 		}
 		
+		
 		m_SelectedObjects.InsertEditorObject(target);
 		EditorEvents.ObjectSelectedInvoke(this, target);
 		
@@ -227,7 +228,7 @@ class EditorObjectManager: Managed
 		avg_position[1] = avg_position[1] / m_ClipboardCache.Count();
 		avg_position[2] = avg_position[2] / m_ClipboardCache.Count();
 		
-		EditorObjectSet pasted_objects;
+		EditorObjectSet pasted_objects = new EditorObjectSet();
 		foreach (EditorObject editor_object: m_ClipboardCache) {
 			vector mat[4];
 			editor_object.GetTransform(mat);

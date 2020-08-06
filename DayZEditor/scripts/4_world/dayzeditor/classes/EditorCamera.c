@@ -55,7 +55,7 @@ class EditorCamera: Camera
 	void SelectTarget(Object target)
 	{
 		Print("ActiveCamera::SelectTarget");
-		if (target != SelectedTarget) {
+		if (target != SelectedTarget && target != null) {
 			TargetPosition = target.GetPosition();
 			IsTargeting = true;
 			OnTargetSelected(target);

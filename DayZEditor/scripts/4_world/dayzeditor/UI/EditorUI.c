@@ -459,12 +459,6 @@ class EditorUI: UIScriptedMenu
 	
 	void UpdateDragBox()
 	{	
-		if (GetGame().GetInput().LocalRelease("UAFire")) {
-			m_EditorCanvas.Clear();
-			DragBoxQueue.Remove(UpdateDragBox);
-			return;
-		}
-		
 		int current_x, current_y;
 		GetCursorPos(current_x, current_y);
 		m_EditorCanvas.Clear();
@@ -475,38 +469,50 @@ class EditorUI: UIScriptedMenu
 		m_EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, selection_box_thickness, selection_box_color);
 		m_EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, selection_box_thickness, selection_box_color);
 		
-		int x_low, x_high, y_low, y_high;
-		if (start_x > current_x) {
-			x_high = start_x;
-			x_low = current_x;
-		} else { 
-			x_high = current_x;
-			x_low = start_x;
-		}
 		
-		if (start_y > current_y) {
-			y_high = start_y;
-			y_low = current_y;
-		} else { 
-			y_high = current_y;
-			y_low = start_y;
-		}
 		
-		ref EditorObjectSet placed_objects = GetEditor().GetObjectManager().GetPlacedObjects();
-		foreach (EditorObject editor_object: placed_objects) {
+		if (GetGame().GetInput().LocalRelease("UAFire")) {
+			m_EditorCanvas.Clear();
+			DragBoxQueue.Remove(UpdateDragBox);
 			
-			float marker_x, marker_y;
-			if (IsMapOpen()) {
-				editor_object.GetMapMarker().GetPos(marker_x, marker_y);
-			} else {
-				editor_object.GetObjectMarker().GetPos(marker_x, marker_y);
+			int x_low, x_high, y_low, y_high;
+			if (start_x > current_x) {
+				x_high = start_x;
+				x_low = current_x;
+			} else { 
+				x_high = current_x;
+				x_low = start_x;
 			}
-			if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {		
-				GetEditor().GetObjectManager().SelectObject(editor_object, false);
-			} else {
-				GetEditor().GetObjectManager().DeselectObject(editor_object);
+			
+			if (start_y > current_y) {
+				y_high = start_y;
+				y_low = current_y;
+			} else { 
+				y_high = current_y;
+				y_low = start_y;
 			}
+			
+			ref EditorObjectSet placed_objects = GetEditor().GetObjectManager().GetPlacedObjects();
+			foreach (EditorObject editor_object: placed_objects) {
+				
+				float marker_x, marker_y;
+				if (IsMapOpen()) {
+					editor_object.GetMapMarker().GetPos(marker_x, marker_y);
+				} else {
+					editor_object.GetObjectMarker().GetPos(marker_x, marker_y);
+				}
+				
+				
+				if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {		
+					GetEditor().GetObjectManager().SelectObject(editor_object, false);
+				}
+			}
+			
+			return;
 		}
+		
+
+
 	}
 	
 	
@@ -562,7 +568,9 @@ class EditorUI: UIScriptedMenu
 		
 	void OnBrushChanged(Class context, EditorBrush brush)
 	{
+		
 		if (brush == null) {
+			m_SimcityButton.SetState(false);
 			m_SimcityDensitySlider.Show(false);
 			m_SimcityRadiusSlider.Show(false);
 		

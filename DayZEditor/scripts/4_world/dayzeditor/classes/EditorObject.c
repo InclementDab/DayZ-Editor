@@ -99,6 +99,8 @@ class EditorObject : Building
 		EditorEvents.OnObjectSelected.Insert(OnSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnDeselected);
 		
+		SetFlags(EntityFlags.STATIC, true);
+		
 	}
 	
 	override void EEDelete(EntityAI parent)
@@ -139,13 +141,18 @@ class EditorObject : Building
 	* Events *
 	*********/
 	
+	private bool m_IsSelected;
 	void OnSelected()
 	{
+		if (m_IsSelected) return;
+		m_IsSelected = true;
 		ShowBoundingBox();
 	}
 	
 	void OnDeselected()
 	{
+		if (!m_IsSelected) return;
+		m_IsSelected = false;
 		HideBoundingBox();
 	}
 	
