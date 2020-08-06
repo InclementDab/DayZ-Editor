@@ -9,6 +9,7 @@ class EditorUIManager: Managed
 	private EditorCamera		m_EditorCamera;
 	private ref ScriptInvoker 	m_UpdateInvoker;
 	private UIManager			m_UIManager;
+	private ref EditorPlaceableObjectSet m_PlaceableObjects;
 	
 	// Getters
 	EditorUI GetEditorUI() { return m_EditorUI; }
@@ -53,8 +54,16 @@ class EditorUIManager: Managed
 		map_widget.AddChild(m_MapMarkerWidget);
 	
 		
+		// Load PlaceableObjects
+		m_PlaceableObjects = new EditorPlaceableObjectSet();
+		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(m_PlaceableObjects)));
+		foreach (ref EditorPlaceableObject placeable_object: m_PlaceableObjects) {
+			m_EditorUI.InsertPlaceableObject(placeable_object);
+		}		
+		
 		// Subscribe to events (and twitch.tv/InclementDab)
 		EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);		
+		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);	
 		
 		// Sets default
 		GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.BUILDING);
@@ -195,7 +204,17 @@ class EditorUIManager: Managed
 	bool GetVisibility() { return m_Visibility;	}
 	
 	
-	
+		
+	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
+	{
+		Print("EditorUIManager::OnPlaceableCategoryChanged");
+
+		foreach (EditorPlaceableObject placeable_object: m_PlaceableObjects) {
+			Widget root = placeable_object.GetListItem().GetRoot();
+			root.Show(placeable_object.GetCategory() == category);
+			root.Update();
+		}
+	}
 	
 	
 }

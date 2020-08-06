@@ -195,7 +195,7 @@ class EditorUI: UIScriptedMenu
 		
 		// Events
 		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
-		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);		
+			
 			
 		return m_Root;
 	}
@@ -264,31 +264,15 @@ class EditorUI: UIScriptedMenu
 	
 	
 
-	
+	private ref array<ref EditorListItem> m_CurrentPlaceableObjects = new array<ref EditorListItem>();
+	void InsertPlaceableObject(EditorPlaceableObject placeable_object)
+	{
+		m_CurrentPlaceableObjects.Insert(placeable_object.SetListItem(m_LeftbarSpacer));
+	}
 	
 	
 	/* Events */
-	
-	private ref array<ref EditorListItem> m_CurrentPlaceableObjects;
-	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
-	{
-		Print("EditorUIManager::OnPlaceableCategoryChanged");
 		
-		// Clear existing spacer
-		foreach (EditorListItem item: m_CurrentPlaceableObjects)
-			delete item;
-
-		m_CurrentPlaceableObjects = new array<ref EditorListItem>();
-		EditorPlaceableObjectSet data_set = GetEditor().GetSettings().GetPlaceableObjectsData().GetElement(category);
-
-		foreach (ref EditorPlaceableObject placeable_object: data_set) {
-			m_CurrentPlaceableObjects.Insert(placeable_object.GetListItem(m_LeftbarSpacer));
-		}
-		
-		
-		
-	}
-	
 	
 	override bool OnClick(Widget w, int x, int y, int button) 
 	{

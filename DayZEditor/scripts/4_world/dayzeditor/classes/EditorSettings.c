@@ -5,6 +5,8 @@ typedef ref array<ref EditorPlaceableObject> EditorPlaceableObjectSet;
 typedef ref map<int, ref EditorPlaceableObjectSet> EditorPlaceableObjectsData;
 
 
+
+
 class EditorSettings 
 {
 	// shit thats gotta be changed
@@ -18,6 +20,8 @@ class EditorSettings
 
 	
 	// private members
+	
+	// todo bopped
 	private ref EditorPlaceableObjectsData m_PlaceableObjectsData;
 	EditorPlaceableObjectsData GetPlaceableObjectsData() { return m_PlaceableObjectsData; }
 	
@@ -35,7 +39,7 @@ class EditorSettings
 			m_PlaceableObjectsData.Insert(i, new EditorPlaceableObjectSet());
 		}
 		
-		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(m_PlaceableObjectsData)));
+		
 	}
 	
 	

@@ -40,7 +40,7 @@ class EditorPlaceableObject: Managed
 	private string m_Type, m_Path, m_Base;
 	private PlaceableObjectCategory m_Category;
 	private Widget m_ListWidget;
-	
+	private ref EditorListItem m_ListItem;
 
 	void EditorPlaceableObject(string type, string path)
 	{
@@ -71,13 +71,18 @@ class EditorPlaceableObject: Managed
 	string GetType() { return m_Type; }
 	//string GetBase() { return m_Base; }
 	
-	ref EditorListItem GetListItem(Widget parent)
+	
+	ref EditorListItem SetListItem(Widget parent)
 	{
-		ref EditorListItem list_item;
 		m_ListWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorListItem.layout", parent);
-		m_ListWidget.GetScript(list_item);
-		list_item.SetObject(this);
-		return list_item;
+		m_ListWidget.GetScript(m_ListItem);
+		m_ListItem.SetObject(this);
+		return m_ListItem;
+	}
+	
+	ref EditorListItem GetListItem()
+	{
+		return m_ListItem;
 	}
 	
 	PlaceableObjectCategory GetCategory()

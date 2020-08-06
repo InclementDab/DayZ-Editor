@@ -62,7 +62,7 @@ class EditorObjectManager: Managed
 		delete m_ActionStack;
 	}
 	
-	static int GetPlaceableObjects(out EditorPlaceableObjectsData placeable_objects) 
+	static int GetPlaceableObjects(out EditorPlaceableObjectSet placeable_objects) 
 	{ 
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
@@ -76,8 +76,9 @@ class EditorObjectManager: Managed
 				//g_Game.ConfigGetBaseName(Config_Path + " " + Config_Name, Base_Name);
 				
 				EditorPlaceableObject placeable_object = new EditorPlaceableObject(Config_Name, Config_Path);
-				EditorPlaceableObjectSet plc_set = placeable_objects.GetElement(placeable_object.GetCategory());
-				plc_set.Insert(placeable_object);
+				placeable_objects.Insert(placeable_object);
+				//EditorPlaceableObjectSet plc_set = placeable_objects.GetElement(placeable_object.GetCategory());
+				//plc_set.Insert(placeable_object);
 		    }
 		}
 		
