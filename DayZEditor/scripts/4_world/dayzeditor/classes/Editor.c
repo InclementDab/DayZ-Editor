@@ -272,8 +272,9 @@ class Editor: Managed
 	
 	void HandleObjectDrag(Class context, EditorObject target, ref RaycastRVResult raycast_result = null)
 	{
+		ref EditorObjectSet selected_objects = GetObjectManager().GetSelectedObjects();
 		
-		foreach (EditorObject editor_object: GetObjectManager().GetSelectedObjects())
+		foreach (EditorObject editor_object: selected_objects)
 			editor_object.TransformBeforeDrag = editor_object.GetTransformArray();
 		
 		string name = context.ClassName();		
@@ -671,9 +672,12 @@ class Editor: Managed
 			case KeyCode.KC_E: {
 				if (input.LocalValue("UAWalkRunTemp")) {
 					//GetUIManager().GetEditorUI().ShowExportWindow();
-					EditorFileManager.ExportToFile(ExportMode.COMFILE, "$profile:export_server.txt");
-					EditorFileManager.ExportToFile(ExportMode.EXPANSION, "$profile:export_expansion.txt");
-					EditorFileManager.ExportToFile(ExportMode.TERRAINBUILDER, "$profile:export_terrainbuilder.txt", HeightType.ABSOLUTE);
+					
+					// todo once UI is created, add "Export Selected Only"
+					ref EditorObjectSet export_objects = GetEditor().GetObjectManager().GetPlacedObjects();
+					EditorFileManager.ExportToFile(export_objects, ExportMode.COMFILE, "export_server");
+					EditorFileManager.ExportToFile(export_objects, ExportMode.EXPANSION, "export_expansion");
+					EditorFileManager.ExportToFile(export_objects, ExportMode.TERRAINBUILDER, "export_terrainbuilder", HeightType.ABSOLUTE);
 					return true;
 				}
 				break;

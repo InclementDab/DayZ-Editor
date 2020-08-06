@@ -99,7 +99,7 @@ class EditorMap: EditorWidgetEventHandler
 class EditorListItem: EditorWidgetEventHandler
 {
 	private TextWidget 				m_EditorListItemText;
-	private PlaceableEditorObject 	m_PlaceableObject;
+	private ref PlaceableEditorObject 	m_PlaceableObject;
 	
 	// Getters
 	PlaceableEditorObject GetPlaceableObject() { return m_PlaceableObject; }

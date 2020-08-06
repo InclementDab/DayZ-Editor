@@ -105,8 +105,27 @@ class EditorFileManager
 		
 	}
 	
-	static void ExportToFile(ExportMode mode = ExportMode.TERRAINBUILDER, string filename = "$profile:editor_export.txt", HeightType height_type = HeightType.RELATIVE)
+	static void ExportToFile(EditorObjectSet export_objects, ExportMode mode = ExportMode.TERRAINBUILDER, string filename = "export", HeightType height_type = HeightType.RELATIVE)
 	{
+		Print("Exporting to File...");
+		
+		switch (mode) {
+			
+			case ExportMode.EXPANSION: {
+				filename += ".map";
+				break;
+			}
+			
+			default: {
+				filename += ".txt";
+				break;
+			}
+			
+		}
+		
+		filename = "$profile:Editor/Export" + filename;
+		
+		
 		DeleteFile(filename);
 		FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
 		if (handle == 0) {
@@ -114,7 +133,7 @@ class EditorFileManager
 			return;
 		}
 		
-		foreach (EditorObject editor_object: GetEditor().GetObjectManager().GetPlacedObjects()) {
+		foreach (EditorObject editor_object: export_objects) {
 						
 			vector position = editor_object.GetPosition();
 			vector orientation = editor_object.GetOrientation();

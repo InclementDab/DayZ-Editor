@@ -167,6 +167,12 @@ class EditorUI: EditorWidgetEventHandler
 	private bool left_bar_hidden = false;
 	private bool right_bar_hidden = false;
 	
+	
+	void OnFrame(float timeslice)
+	{
+		
+		
+	}
 
 	
 	override bool OnClick(Widget w, int x, int y, int button) 
@@ -203,7 +209,7 @@ class EditorUI: EditorWidgetEventHandler
 					return true;
 				}
 				
-				
+				// todo resize m_CenterSpaceFrame when collapsed
 				case m_LeftbarHide: {
 					left_bar_hidden = !left_bar_hidden;
 					m_LeftbarFrame.SetPos(-300 * left_bar_hidden, 0);

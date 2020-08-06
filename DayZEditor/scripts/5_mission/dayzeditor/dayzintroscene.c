@@ -123,7 +123,7 @@ modded class DayZIntroScene
 }
 
 
-#define LOAD_MISSION 1
+//#define LOAD_MISSION 1
 
 modded class MainMenu 
 {

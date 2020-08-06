@@ -31,9 +31,10 @@ class EditorMissionGameplay: MissionGameplay
 			}
 		}
 		
-		if (m_Hud.KeyPress(key)) return;
+
 		if (GetEditor().GetUIManager().GetEditorUI().OnKeyPress(key)) return;
 		if (GetEditor().OnKeyPress(key)) return;
+		if (m_Hud.KeyPress(key)) return; // might need to be moved if you use UIScriptedMenus 
 		super.OnKeyPress(key);
     }
 	

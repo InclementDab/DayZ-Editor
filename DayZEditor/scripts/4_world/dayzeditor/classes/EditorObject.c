@@ -391,8 +391,6 @@ class EditorObject : Building
 	
 	
 	
-
-	
 	vector GetMarkerPosition()
 	{
 		float x, y;
