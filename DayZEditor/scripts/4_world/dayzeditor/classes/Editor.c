@@ -226,7 +226,7 @@ class Editor: Managed
 		EditorCamera camera = GetUIManager().GetEditorCamera();
 		m_PositionBeforeLootEditMode = camera.GetPosition();
 		camera.SetPosition(Vector(10, 1000, 10));
-		camera.SelectTarget(m_LootEditTarget);
+		//camera.SelectTarget(m_LootEditTarget);
 		
 		
 		ref EditorMapGroupProto proto_data = new EditorMapGroupProto(m_LootEditTarget); 
@@ -246,7 +246,7 @@ class Editor: Managed
 		
 		EditorCamera camera = GetUIManager().GetEditorCamera();
 		camera.SetPosition(m_PositionBeforeLootEditMode);
-		camera.SelectTarget(null);
+		//camera.SelectTarget(null);
 		m_LootEditMode = false;
 	}
 	
@@ -868,7 +868,8 @@ class Editor: Managed
 		}
 		
 		// todo add increment size in ui
-		foreach (EditorObject selected_objects: GetObjectManager().GetSelectedObjects()) {
+		EditorObjectSet selectedobjects = GetObjectManager().GetSelectedObjects();
+		foreach (EditorObject selected_objects: selectedobjects) {
 			
 			switch (key) {
 				case KeyCode.KC_UP: {
