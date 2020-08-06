@@ -263,6 +263,7 @@ FrameWidgetClass EditorMainFrame {
        {
         WrapSpacerWidgetClass LeftbarPanelSelectorWrapper {
          ignorepointer 1
+         color 0.6353 0.6353 0.6353 1
          position 0 0
          size 1 1
          halign center_ref
@@ -272,7 +273,7 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 0
          vexactsize 0
          style Outline
-         Padding 4
+         Padding 0
          Margin 0
          content_halign center
          content_valign center
@@ -412,8 +413,7 @@ FrameWidgetClass EditorMainFrame {
          scriptclass "PlaceableSearchBar"
          style EditorProperty
          "limit visible" 0
-         "Default text color" 0.1529 0.1529 0.1529 1
-         "Use default text" 1
+         "Use default text" 0
          "exact text" 1
          font "gui/fonts/metron"
         }
@@ -643,7 +643,7 @@ FrameWidgetClass EditorMainFrame {
      ignorepointer 1
      color 0.0627 0.0627 0.0627 0.549
      position 0 0
-     size 1 32
+     size 1 24
      halign center_ref
      hexactpos 1
      vexactpos 1
@@ -731,7 +731,7 @@ FrameWidgetClass EditorMainFrame {
            vexactsize 0
            style Normal
            text "FILE"
-           font "gui/fonts/system"
+           font "gui/fonts/metron-bold"
            "exact text" 0
            "text halign" center
            "text valign" center
@@ -760,7 +760,7 @@ FrameWidgetClass EditorMainFrame {
            vexactsize 0
            style Bold
            text "EDIT"
-           font "gui/fonts/system"
+           font "gui/fonts/metron-bold"
            "text halign" center
            "text valign" center
           }
@@ -788,7 +788,7 @@ FrameWidgetClass EditorMainFrame {
            vexactsize 0
            style Bold
            text "VIEW"
-           font "gui/fonts/system"
+           font "gui/fonts/metronbook-bold"
            "text halign" center
            "text valign" center
           }
@@ -906,6 +906,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         style Colorable
          font "gui/fonts/metron-bold"
          switch toggle
          {
@@ -918,6 +919,7 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           priority 1
            image0 "set:dayz_editor_gui image:magnet_icon"
            mode blend
            "src alpha" 1
@@ -934,6 +936,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         style Colorable
          font "gui/fonts/metron-bold"
          switch toggle
          {
@@ -962,12 +965,11 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "S"
+         style Colorable
          font "gui/fonts/metron-bold"
          switch toggle
          {
-          ImageWidgetClass Snap_Icon {
-           visible 0
+          ImageWidgetClass SnapButton_Icon {
            ignorepointer 1
            size 32 32
            halign center_ref
@@ -976,7 +978,7 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           image0 ""
+           image0 "set:dayz_editor_gui image:snap_icon"
            mode blend
            "src alpha" 1
            "no wrap" 1
@@ -1011,7 +1013,7 @@ FrameWidgetClass EditorMainFrame {
         }
         ButtonWidgetClass SimcityButton {
          clipchildren 0
-         size 100 32
+         size 98 32
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -1031,6 +1033,7 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 1
          vexactsize 1
          style Default
+         font "gui/fonts/metron"
          items "Trees; Grass; Explosion; Delete"
         }
         SliderWidgetClass SimcityRadiusSlider {
@@ -1291,7 +1294,7 @@ FrameWidgetClass EditorMainFrame {
   }
   FrameWidgetClass OrientationFrame {
    ignorepointer 1
-   position 300 0
+   position 300 32
    size 150 150
    valign bottom_ref
    hexactpos 1

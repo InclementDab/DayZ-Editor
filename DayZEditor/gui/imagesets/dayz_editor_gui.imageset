@@ -32,6 +32,12 @@ ImageSetClass {
    Size 64 64
    Flags 0
   }
+  ImageSetDefClass snap_icon {
+   Name "snap_icon"
+   Pos 296 21
+   Size 64 64
+   Flags 0
+  }
  }
  Groups {
  }
