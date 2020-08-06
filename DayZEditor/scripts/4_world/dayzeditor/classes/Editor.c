@@ -1,4 +1,7 @@
 
+// One day, someone important (likely Adam) will look over this codebase with a sny look of shame on their face
+// if today is that day. fix it.
+// and message me your feedback on discord :)
 
 
 static PlayerBase CreateDefaultCharacter()

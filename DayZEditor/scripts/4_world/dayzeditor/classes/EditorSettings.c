@@ -1,9 +1,13 @@
 
 
 
+typedef ref array<ref EditorPlaceableObject> EditorPlaceableObjectSet;
+typedef ref map<int, ref EditorPlaceableObjectSet> EditorPlaceableObjectsData;
+
 
 class EditorSettings 
 {
+	// shit thats gotta be changed
 	static float VIEW_DISTANCE = 12000;
 	static float OBJECT_VIEW_DISTANCE = 5000;
 	
@@ -13,8 +17,11 @@ class EditorSettings
 	static bool SIM_CITY_MODE = false;
 
 	
-	private ref array<ref EditorPlaceableObject> m_AllPlaceableObjects;
-
+	// private members
+	
+	private ref EditorPlaceableObjectsData m_PlaceableObjectsData;
+	EditorPlaceableObjectsData GetPlaceableObjectsData() { return m_PlaceableObjectsData; }
+	
 	private PlaceableObjectCategory m_PlaceableObjectCategory;
 	PlaceableObjectCategory GetPlaceableObjectCategory() { return m_PlaceableObjectCategory; }
 	
@@ -23,18 +30,16 @@ class EditorSettings
 	{
 		Print("EditorSettings");
 		// Load placeable objects		
-		m_AllPlaceableObjects = new array<ref EditorPlaceableObject>(); 
-		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(m_AllPlaceableObjects)));
+		m_PlaceableObjectsData = new EditorPlaceableObjectsData();
+		
+		for (int i = 0; i <= PlaceableObjectCategory.UNKNOWN; i++) {
+			m_PlaceableObjectsData.Insert(i, new EditorPlaceableObjectSet());
+		}
+		
+		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(m_PlaceableObjectsData)));
 	}
 	
 	
-	void GetPlaceableObjectsByCategory(out ref array<ref EditorPlaceableObject> target, PlaceableObjectCategory category)
-	{
-		Print("EditorSettings::GetPlaceableObjectsByCategory");
-		foreach (ref EditorPlaceableObject placeable_object: m_AllPlaceableObjects)
-			if (category == placeable_object.GetCategory() || (category == PlaceableObjectCategory.ENTITY && placeable_object.GetCategory() == PlaceableObjectCategory.UNKNOWN))
-				target.Insert(placeable_object);
-	}
 	
 	
 	static void Load()

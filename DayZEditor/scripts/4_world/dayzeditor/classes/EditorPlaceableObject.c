@@ -34,7 +34,6 @@ class EditorPlaceableObject: Managed
 	void EditorPlaceableObject(string name, string base)
 	{
 		m_Type = name; m_Base = base;
-
 	}
 	
 	string GetType() { return m_Type; }
@@ -64,6 +63,7 @@ class EditorPlaceableObject: Managed
 		if (HumanTypes.Find(m_Base) + 1)
 			return PlaceableObjectCategory.HUMAN;
 		
+		Print(string.Format("%1 has no category!", m_Base));
 		return PlaceableObjectCategory.UNKNOWN;
 	}
 }

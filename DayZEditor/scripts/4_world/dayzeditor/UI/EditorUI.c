@@ -15,7 +15,7 @@ enum EditorCursor
 
 class EditorUI: UIScriptedMenu
 {
-	private ref Widget 			m_Root;
+	private ref Widget m_Root;
 	Widget GetRoot() { return m_Root; }
 	
 	// Canvas
@@ -224,9 +224,9 @@ class EditorUI: UIScriptedMenu
 		//GetGame().GetUIManager().ShowDialog("Overwrite", "Do you really want to Overwrite?", 169, DBT_YESNO, DBB_YES, DMT_QUESTION, this);
 	}
 	
-	EditorMap GetMap() { return m_EditorMap; }
-	MapWidget GetMapWidget() { return m_EditorMapWidget; }
-	bool IsMapOpen() { return m_EditorMapContainer.IsVisible(); }
+	EditorMap GetMap() 			{ return m_EditorMap; }
+	MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
+	bool IsMapOpen() 			{ return m_EditorMapContainer.IsVisible(); }
 	
 	void ShowCursor()
 	{
@@ -278,13 +278,12 @@ class EditorUI: UIScriptedMenu
 			delete item;
 
 		m_CurrentPlaceableObjects = new array<ref EditorListItem>();
-		ref array<ref EditorPlaceableObject> target = new array<ref EditorPlaceableObject>();
 		
-		GetEditor().GetSettings().GetPlaceableObjectsByCategory(target, GetEditor().GetSettings().GetPlaceableObjectCategory());
-	
-		
-		foreach (ref EditorPlaceableObject placeable_object: target)
+		EditorPlaceableObjectSet data_set = GetEditor().GetSettings().GetPlaceableObjectsData().GetElement(category);
+		foreach (ref EditorPlaceableObject placeable_object: data_set)
 			m_CurrentPlaceableObjects.Insert(placeable_object.GetListItem(m_LeftbarSpacer));
+		
+		m_LeftbarSpacer.Update();
 		
 	}
 	
