@@ -25,6 +25,13 @@ class CfgMods
 		};
 		class defs
 		{
+			class imageSets
+			{
+				files[]=
+				{
+					"DayZEditor/gui/imagesets/dayz_editor_gui.imageset"
+				};
+			};
 			class engineScriptModule
 			{
 				value = "";
