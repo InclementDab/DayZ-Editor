@@ -1,8 +1,7 @@
 
 
 
-typedef ref array<ref EditorPlaceableObject> EditorPlaceableObjectSet;
-typedef ref map<int, ref EditorPlaceableObjectSet> EditorPlaceableObjectsData;
+
 
 
 
@@ -20,11 +19,7 @@ class EditorSettings
 
 	
 	// private members
-	
-	// todo bopped
-	private ref EditorPlaceableObjectsData m_PlaceableObjectsData;
-	EditorPlaceableObjectsData GetPlaceableObjectsData() { return m_PlaceableObjectsData; }
-	
+		
 	private PlaceableObjectCategory m_PlaceableObjectCategory;
 	PlaceableObjectCategory GetPlaceableObjectCategory() { return m_PlaceableObjectCategory; }
 	
@@ -32,14 +27,6 @@ class EditorSettings
 	void EditorSettings()
 	{
 		Print("EditorSettings");
-		// Load placeable objects		
-		m_PlaceableObjectsData = new EditorPlaceableObjectsData();
-		
-		for (int i = 0; i <= PlaceableObjectCategory.UNKNOWN; i++) {
-			m_PlaceableObjectsData.Insert(i, new EditorPlaceableObjectSet());
-		}
-		
-		
 	}
 	
 	

@@ -212,8 +212,9 @@ class EditorUIManager: Managed
 		foreach (EditorPlaceableObject placeable_object: m_PlaceableObjects) {
 			Widget root = placeable_object.GetListItem().GetRoot();
 			root.Show(placeable_object.GetCategory() == category);
-			root.Update();
 		}
+		
+
 	}
 	
 	

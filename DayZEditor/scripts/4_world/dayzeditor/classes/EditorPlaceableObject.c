@@ -1,11 +1,13 @@
-enum PlaceableObjectCategory
-{
+
+typedef ref array<ref EditorPlaceableObject> EditorPlaceableObjectSet;
+
+enum PlaceableObjectCategory {
 	BUILDING,
 	VEHICLE,
 	ENTITY,
 	HUMAN, 
 	UNKNOWN
-}
+};
 
 
 static const ref array<string> BuildingTypes = {
@@ -37,15 +39,18 @@ static const ref array<array<string>> AllTypes = {
 
 class EditorPlaceableObject: Managed
 {
+	// Private members
 	private string m_Type, m_Path, m_Base;
 	private PlaceableObjectCategory m_Category;
 	private Widget m_ListWidget;
 	private ref EditorListItem m_ListItem;
 
+	// Getters
+	string GetType() { return m_Type; }	
+	
 	void EditorPlaceableObject(string type, string path)
 	{
 		m_Type = type; m_Path = path;
-		
 		TStringArray path_array = new TStringArray();
 		GetGame().ConfigGetFullPath(m_Path + " " + m_Type, path_array);
 
@@ -68,8 +73,6 @@ class EditorPlaceableObject: Managed
 	
 	}
 	
-	string GetType() { return m_Type; }
-	//string GetBase() { return m_Base; }
 	
 	
 	ref EditorListItem SetListItem(Widget parent)

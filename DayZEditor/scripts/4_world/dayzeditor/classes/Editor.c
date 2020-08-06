@@ -227,9 +227,6 @@ class Editor: Managed
 	}
 	
 
-
-	
-	
 	void PlaceObject()
 	{
 		Input input = GetGame().GetInput();

@@ -72,8 +72,8 @@ class EditorUI: UIScriptedMenu
 
 	// Spacers for Item Lists
 	protected WrapSpacerWidget 	m_LeftbarSpacer;
-	WrapSpacerWidget GetLeftbarSpacer() { return m_LeftbarSpacer; }
 	protected WrapSpacerWidget 	m_RightbarSpacer;
+	protected ScrollWidget		m_LeftbarScroll;
 		
 	// Cursors
 	protected Widget			m_HorizontalScrollWidget;
@@ -153,7 +153,8 @@ class EditorUI: UIScriptedMenu
 		
 		// Spacers
 		m_LeftbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("LeftbarSpacer"));
-		m_RightbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("RightbarSpacer"));
+		m_RightbarSpacer		= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("RightbarSpacer"));
+		m_LeftbarScroll			= ScrollWidget.Cast(m_Root.FindAnyWidget("LeftbarScroll"));
 		
 		// Toolbar
 		m_UndoButton			= ButtonWidget.Cast(m_Root.FindAnyWidget("UndoButton"));
@@ -174,7 +175,7 @@ class EditorUI: UIScriptedMenu
 		m_EditorMapWidget.SetMapPos(GetGame().GetCurrentCameraPosition());
 		
 		// Cursors
-		m_HorizontalScrollWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/cursors/horizontalwidget.layout");
+		//m_HorizontalScrollWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/cursors/horizontalwidget.layout");
 		
 
 		m_ExportDialog = new EditorExportDialog(m_Root);
@@ -195,11 +196,24 @@ class EditorUI: UIScriptedMenu
 		
 		// Events
 		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
-			
+		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);
 			
 		return m_Root;
 	}
 	
+	
+	
+	override void Update(float timeslice)
+	{
+		super.Update(timeslice);
+				
+		if (m_LeftbarScroll.GetVScrollPos() > m_LeftbarScroll.GetContentHeight())
+			m_LeftbarScroll.VScrollToPos(0);
+		
+		
+		
+		
+	}
 	
 	void OpenMap()
 	{
@@ -626,6 +640,14 @@ class EditorUI: UIScriptedMenu
 				break;
 			}
 		}
+	}
+	
+	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
+	{
+		Print("EditorUI::OnPlaceableCategoryChanged");
+		
+		m_LeftbarSpacer.Update();
+
 	}
 	
 }
