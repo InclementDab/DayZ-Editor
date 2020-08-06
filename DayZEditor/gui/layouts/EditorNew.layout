@@ -8,37 +8,32 @@ FrameWidgetClass EditorMainFrame {
  draggable 0
  scriptclass "EditorUIHandler"
  {
-  WrapSpacerWidgetClass ToolbarFrame {
+  FrameWidgetClass MapContainerWidget {
    clipchildren 0
    ignorepointer 1
    position 0 0
-   size 1 0.044
+   size 1 1
    halign center_ref
+   valign center_ref
    hexactpos 0
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   priority 250
-   scriptclass ""
-   Padding 0
-   Margin 0
-   "Size To Content H" 1
-   "Size To Content V" 1
    {
-    PanelWidgetClass ToolbarMenubar {
+    WindowWidgetClass MapContainer {
+     visible 0
      clipchildren 0
-     ignorepointer 1
-     color 0.0627 0.0627 0.0627 0.549
      position 0 0
-     size 1 25
+     size 1 1
      halign center_ref
-     hexactpos 1
-     vexactpos 1
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
      hexactsize 0
-     vexactsize 1
-     style rover_sim_colorable
+     vexactsize 0
+     style Default
      {
-      WrapSpacerWidgetClass MenuBarWrapper {
+      PanelWidgetClass Background {
        clipchildren 0
        ignorepointer 1
        position 0 0
@@ -47,364 +42,34 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       style Empty
-       Padding 0
-       Margin 0
-       content_valign center
-       {
-        ButtonWidgetClass MenuBarFile {
-         clipchildren 0
-         color 0.749 0.3725 0.3725 1
-         position 0 0
-         size 0.04 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         text_offset 0 0
-         font "gui/fonts/FiraCodeBold16"
-         {
-          WrapSpacerWidgetClass FileListWrapSpacer {
-           visible 0
-           ignorepointer 1
-           color 0.1412 0.1412 0.1412 1
-           position 0 20
-           size 225 1
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 0
-           style Colorable
-           "Size To Content V" 1
-           content_halign center
-           {
-            ButtonWidgetClass FileListPanelNew {
-             color 0.749 0.3725 0.3725 1
-             size 1 24
-             halign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 1
-             style EmptyHighlight
-             text "New"
-             text_halign left
-             font "gui/fonts/FiraCodeBold"
-            }
-            ButtonWidgetClass FileListPanelOpen {
-             color 0.749 0.3725 0.3725 1
-             size 1 24
-             halign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 1
-             style EmptyHighlight
-             text "Open"
-             text_halign left
-             font "gui/fonts/FiraCodeBold"
-            }
-           }
-          }
-          TextWidgetClass MenuBarFileLable {
-           ignorepointer 1
-           position 0 0
-           size 1 1
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           style Bold
-           text "FILE"
-           font "gui/fonts/system"
-           "text halign" center
-           "text valign" center
-          }
-         }
-        }
-        ButtonWidgetClass MenuBarEdit {
-         color 0.749 0.3725 0.3725 1
-         position 0 0
-         size 0.04 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         font "gui/fonts/FiraCodeBold16"
-         {
-          TextWidgetClass MenuBarEditLable {
-           ignorepointer 1
-           position 0 0
-           size 1 1
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           style Bold
-           text "EDIT"
-           font "gui/fonts/system"
-           "text halign" center
-           "text valign" center
-          }
-         }
-        }
-        ButtonWidgetClass MenuBarView {
-         color 0.749 0.3725 0.3725 1
-         position 0 0
-         size 0.04 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         font "gui/fonts/FiraCodeBold16"
-         {
-          TextWidgetClass MenuBarViewLable {
-           ignorepointer 1
-           position 0 0
-           size 1 1
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           style Bold
-           text "VIEW"
-           font "gui/fonts/system"
-           "text halign" center
-           "text valign" center
-          }
-         }
-        }
-       }
+       draggable 0
+       style blank
       }
-     }
-    }
-    PanelWidgetClass ToolbarButtons {
-     visible 1
-     ignorepointer 1
-     color 0.302 0.302 0.302 1
-     position 0 20
-     size 1 28
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     style rover_sim_colorable
-     {
-      WrapSpacerWidgetClass ToolbarWrapper {
+      PanelWidgetClass BackPanelWidget {
+       visible 1
+       clipchildren 0
        ignorepointer 1
+       color 0.3647 0.3647 0.3647 1
        position 0 0
        size 1 1
-       hexactpos 1
-       vexactpos 1
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
        hexactsize 0
        vexactsize 0
-       Margin 0
+       style Outline
        {
-        ButtonWidgetClass UndoButton {
-         position 0 0
-         size 28 28
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         text "U"
-        }
-        ButtonWidgetClass RedoButton {
-         position 0 0
-         size 28 28
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         text "R"
-        }
-        PanelWidgetClass Divider2 {
-         ignorepointer 1
-         position 0 0
-         size 15 28
+        MapWidgetClass Map {
+         ignorepointer 0
+         size 1 1
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         {
-          PanelWidgetClass Divider3 {
-           ignorepointer 1
-           position 0 0
-           size 3 26
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           style rover_sim_colorable
-          }
-         }
-        }
-        ButtonWidgetClass MagnetButton {
-         position 0 0
-         size 28 28
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         text "n"
-         font "gui/fonts/metron-bold"
-         switch toggle
-        }
-        ButtonWidgetClass GroundButton {
-         size 28 28
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         text "G"
-         font "gui/fonts/metron-bold"
-         switch toggle
-        }
-        ButtonWidgetClass SnapButton {
-         size 28 28
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         text "S"
-         font "gui/fonts/metron-bold"
-         switch toggle
-        }
-        PanelWidgetClass Divider0 {
-         ignorepointer 1
-         position 0 0
-         size 15 28
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         {
-          PanelWidgetClass Divider1 {
-           ignorepointer 1
-           position 0 0
-           size 3 26
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           style rover_sim_colorable
-          }
-         }
-        }
-        ButtonWidgetClass SimcityButton {
-         clipchildren 0
-         size 100 28
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         style MainMenu
-         text "Brush"
-         font "gui/fonts/metron"
-         switch toggle
-        }
-        XComboBoxWidgetClass BrushTypeBox {
-         position 0 0
-         size 200 28
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         style Default
-         items "Trees; Grass; Explosion; Delete"
-        }
-        SliderWidgetClass SimcityRadiusSlider {
-         size 120 28
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         current 20
-        }
-        TextWidgetClass SimcityRadiusText {
-         ignorepointer 1
-         position 0 0
-         size 48 28
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         text "0"
-         font "gui/fonts/metron"
-         "text halign" center
-         "text valign" center
-        }
-        SliderWidgetClass SimcityDensitySlider {
-         size 120 28
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         maximum 1
-         step 0.01
-         current 0.25
-        }
-        TextWidgetClass SimcityDensityText {
-         ignorepointer 1
-         size 56 28
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         text "0"
-         font "gui/fonts/metron"
-         "text halign" center
-         "text valign" center
-        }
-        PanelWidgetClass Divider4 {
-         ignorepointer 1
-         position 0 0
-         size 15 28
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         {
-          PanelWidgetClass Divider5 {
-           ignorepointer 1
-           position 0 0
-           size 3 26
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           style rover_sim_colorable
-          }
-         }
+         hexactsize 0
+         vexactsize 0
+         scriptclass "EditorMap"
         }
        }
       }
@@ -412,191 +77,158 @@ FrameWidgetClass EditorMainFrame {
     }
    }
   }
-  WrapSpacerWidgetClass InfobarFrame {
+  FrameWidgetClass DebugFrame {
    ignorepointer 1
-   color 0.302 0.302 0.302 1
-   size 1 25
+   position 300 32
+   size 600 150
+   halign right_ref
    valign bottom_ref
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
    vexactsize 1
-   Padding 0
-   Margin 0
-   "Size To Content H" 1
-   "Size To Content V" 1
-   content_valign bottom
+   priority 250
    {
-    PanelWidgetClass InfobarPositionFrame {
+    PanelWidgetClass DebugPanel {
      ignorepointer 1
-     position 10 10
-     size 0.3 25
+     size 0.5 1
+     halign right_ref
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
-     vexactsize 1
+     vexactsize 0
+     style editor_quad_dark
      {
-      PanelWidgetClass Info_X {
+      WrapSpacerWidgetClass DebugWrapper {
        ignorepointer 1
-       position 5 0
-       size 120 25
+       position 0 0
+       size 1 1
+       halign center_ref
+       valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
+       style Outline
+       Padding 0
+       Margin 0
+       content_halign center
        {
-        PanelWidgetClass Info_X_Icon {
+        TextWidgetClass DebugText1 {
          ignorepointer 1
-         color 0.7529 0.2235 0.1686 1
-         size 25 25
+         position 0 0
+         size 1 25
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
-         style rover_sim_colorable
-         {
-          TextWidgetClass Info_X_IconLable {
-           ignorepointer 1
-           position 0 0
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           text "X"
-           "text halign" center
-           "text valign" center
-          }
-         }
+         font "gui/fonts/metron"
+         "text offset" 5 0
         }
-        TextWidgetClass Info_X_Value {
+        TextWidgetClass DebugText2 {
          ignorepointer 1
-         size 95 25
-         halign right_ref
+         position 0 0
+         size 1 25
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
-         text "1000.5"
-         font "gui/fonts/system"
-         "text halign" center
-         "text valign" center
+         font "gui/fonts/metron"
+         "text offset" 5 0
         }
-       }
-      }
-      PanelWidgetClass Info_Y {
-       ignorepointer 1
-       position 130 0
-       size 120 25
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       {
-        PanelWidgetClass Info_Y_Icon {
+        TextWidgetClass DebugText3 {
          ignorepointer 1
-         color 0.1529 0.6824 0.3765 1
-         size 25 25
+         position 0 0
+         size 1 25
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
-         style rover_sim_colorable
-         {
-          TextWidgetClass Info_Y_IconLable {
-           ignorepointer 1
-           position 0 0
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           text "Y"
-           "text halign" center
-           "text valign" center
-          }
-         }
+         font "gui/fonts/metron"
+         "text offset" 5 0
         }
-        TextWidgetClass Info_Y_Value {
+        TextWidgetClass DebugText4 {
          ignorepointer 1
-         size 95 25
-         halign right_ref
+         position 0 0
+         size 1 25
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
-         text "1000.5"
-         font "gui/fonts/system"
-         "text halign" center
-         "text valign" center
+         font "gui/fonts/metron"
+         "text offset" 5 0
         }
-       }
-      }
-      PanelWidgetClass Info_Z {
-       ignorepointer 1
-       position 255 0
-       size 120 25
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       {
-        PanelWidgetClass Info_Z_Icon {
+        TextWidgetClass DebugText5 {
          ignorepointer 1
-         color 0.1608 0.502 0.7255 1
-         size 25 25
+         position 0 0
+         size 1 25
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
-         style rover_sim_colorable
-         {
-          TextWidgetClass Info_Z_IconLable {
-           ignorepointer 1
-           position 0 0
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           text "Z"
-           "text halign" center
-           "text valign" center
-          }
-         }
+         font "gui/fonts/metron"
+         "text offset" 5 0
         }
-        TextWidgetClass Info_Z_Value {
+        TextWidgetClass DebugText6 {
          ignorepointer 1
-         size 95 25
-         halign right_ref
+         position 0 0
+         size 1 25
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
-         text "1000.5"
-         font "gui/fonts/system"
-         "text halign" center
-         "text valign" center
+         font "gui/fonts/metron"
+         "text offset" 5 0
         }
        }
       }
      }
     }
+    PanelWidgetClass DebugActionStackPanel {
+     ignorepointer 1
+     position 0 0
+     size 0.5 1
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     {
+      TextListboxWidgetClass DebugActionStackListbox {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style Default
+       lines 15
+       font "gui/fonts/metron16"
+      }
+     }
+    }
    }
+  }
+  CanvasWidgetClass EditorCanvas {
+   ignorepointer 1
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   priority 240
   }
   PanelWidgetClass LeftbarFrame {
    visible 1
    clipchildren 0
    ignorepointer 1
    color 0.302 0.302 0.302 0.549
-   position 0 25
-   size 300 0.93
+   position 0 32
+   size 300 0.88
    valign bottom_ref
    hexactpos 1
    vexactpos 1
@@ -760,7 +392,7 @@ FrameWidgetClass EditorMainFrame {
       }
       PanelWidgetClass LeftbarPanelSearchBarPanel {
        ignorepointer 1
-       color 0.1216 0.1216 0.1216 0.5882
+       color 0.1216 0.1216 0.1216 0.6275
        position 10 10
        size 0.99 0.03
        hexactpos 1
@@ -787,7 +419,7 @@ FrameWidgetClass EditorMainFrame {
         }
         PanelWidgetClass LeftbarPanelSearchBarIconSpacer {
          ignorepointer 1
-         color 0 0 0 1
+         color 0.1216 0.1216 0.1216 0.6275
          size 32 1
          halign right_ref
          hexactpos 1
@@ -890,6 +522,847 @@ FrameWidgetClass EditorMainFrame {
        imageTexture "{60621763B985C925}dta/gui/gui/imagesets/dayz_gui@2x.edds"
        mode blend
        "src alpha" 1
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass RightbarFrame {
+   visible 1
+   clipchildren 0
+   ignorepointer 1
+   color 0.302 0.302 0.302 0.549
+   position 0 32
+   size 300 0.88
+   halign right_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
+   priority 240
+   style rover_sim_colorable
+   {
+    PanelWidgetClass RightbarPanelHost {
+     visible 1
+     disabled 0
+     ignorepointer 1
+     color 0.302 0.302 0.302 0.3059
+     position 0 0
+     size 1 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      ScrollWidgetClass RightbarScroll {
+       ignorepointer 1
+       color 0.2353 0.2353 0.2353 1
+       position 0 0
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style blank
+       "Scrollbar V" 1
+       {
+        WrapSpacerWidgetClass RightbarSpacer {
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         Margin 0
+         "Size To Content V" 1
+        }
+       }
+      }
+     }
+    }
+    ButtonWidgetClass RightbarHide {
+     color 0.302 0.302 0.302 0.3922
+     position -28 60
+     size 28 44
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style DayZDefaultButtonNoBorder
+     {
+      ImageWidgetClass RightbarHideIcon {
+       ignorepointer 1
+       position 0 0
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       image0 "set:dayz_gui image:arrow_right"
+       imageTexture "{26FF075FC9718107}dta/gui/gui/imagesets/dayz_gui.edds"
+       mode blend
+       "src alpha" 1
+       "no wrap" 0
+       stretch 1
+       "flip u" 0
+       "flip v" 0
+      }
+     }
+    }
+   }
+  }
+  WrapSpacerWidgetClass ToolbarFrame {
+   clipchildren 0
+   ignorepointer 1
+   position 0 0
+   size 1 0.044
+   halign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   priority 250
+   scriptclass ""
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   {
+    PanelWidgetClass ToolbarMenubar {
+     clipchildren 0
+     ignorepointer 1
+     color 0.0627 0.0627 0.0627 0.549
+     position 0 0
+     size 1 32
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      WrapSpacerWidgetClass MenuBarWrapper {
+       clipchildren 0
+       ignorepointer 1
+       position 0 0
+       size 1 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style Empty
+       Padding 0
+       Margin 0
+       content_valign center
+       {
+        ButtonWidgetClass MenuBarFile {
+         clipchildren 0
+         color 0.749 0.3725 0.3725 1
+         position 0 0
+         size 0.04 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text_offset 0 0
+         font "gui/fonts/FiraCodeBold16"
+         {
+          WrapSpacerWidgetClass FileListWrapSpacer {
+           visible 0
+           ignorepointer 1
+           color 0.1412 0.1412 0.1412 1
+           position 0 20
+           size 225 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 0
+           style Colorable
+           "Size To Content V" 1
+           content_halign center
+           {
+            ButtonWidgetClass FileListPanelNew {
+             color 0.749 0.3725 0.3725 1
+             size 1 24
+             halign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             style EmptyHighlight
+             text "New"
+             text_halign left
+             font "gui/fonts/FiraCodeBold"
+            }
+            ButtonWidgetClass FileListPanelOpen {
+             color 0.749 0.3725 0.3725 1
+             size 1 24
+             halign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             style EmptyHighlight
+             text "Open"
+             text_halign left
+             font "gui/fonts/FiraCodeBold"
+            }
+           }
+          }
+          TextWidgetClass MenuBarFileLable {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style Normal
+           text "FILE"
+           font "gui/fonts/system"
+           "exact text" 0
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        ButtonWidgetClass MenuBarEdit {
+         color 0.749 0.3725 0.3725 1
+         position 0 0
+         size 0.04 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         font "gui/fonts/FiraCodeBold16"
+         {
+          TextWidgetClass MenuBarEditLable {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style Bold
+           text "EDIT"
+           font "gui/fonts/system"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        ButtonWidgetClass MenuBarView {
+         color 0.749 0.3725 0.3725 1
+         position 0 0
+         size 0.04 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         font "gui/fonts/FiraCodeBold16"
+         {
+          TextWidgetClass MenuBarViewLable {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style Bold
+           text "VIEW"
+           font "gui/fonts/system"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass ToolbarButtons {
+     visible 1
+     ignorepointer 1
+     color 0.302 0.302 0.302 1
+     position 0 20
+     size 1 32
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      WrapSpacerWidgetClass ToolbarWrapper {
+       ignorepointer 1
+       position 0 0
+       size 1 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       Margin 0
+       {
+        ButtonWidgetClass UndoButton {
+         position 0 0
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         {
+          ImageWidgetClass UndoButton_Icon {
+           ignorepointer 1
+           size 32 32
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+          }
+         }
+        }
+        ButtonWidgetClass RedoButton {
+         position 0 0
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         {
+          ImageWidgetClass RedoButton_Icon {
+           ignorepointer 1
+           size 32 32
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           "flip u" 1
+          }
+         }
+        }
+        PanelWidgetClass Divider2 {
+         ignorepointer 1
+         position 0 0
+         size 15 32
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          PanelWidgetClass Divider3 {
+           ignorepointer 1
+           position 0 0
+           size 3 26
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style rover_sim_colorable
+          }
+         }
+        }
+        ButtonWidgetClass MagnetButton {
+         position 0 0
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass MagnetButton_Icon {
+           ignorepointer 1
+           size 32 32
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_editor_gui image:magnet_icon"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+          }
+         }
+        }
+        ButtonWidgetClass GroundButton {
+         size 32 32
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass GroundButton_Icon {
+           ignorepointer 1
+           size 32 32
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_editor_gui image:grounding_icon"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+          }
+         }
+        }
+        ButtonWidgetClass SnapButton {
+         size 32 32
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "S"
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass Snap_Icon {
+           visible 0
+           ignorepointer 1
+           size 32 32
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 ""
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+          }
+         }
+        }
+        PanelWidgetClass Divider0 {
+         ignorepointer 1
+         position 0 0
+         size 15 32
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          PanelWidgetClass Divider1 {
+           ignorepointer 1
+           position 0 0
+           size 3 26
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style rover_sim_colorable
+          }
+         }
+        }
+        ButtonWidgetClass SimcityButton {
+         clipchildren 0
+         size 100 32
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style MainMenu
+         text "Brush"
+         font "gui/fonts/metron"
+         switch toggle
+        }
+        XComboBoxWidgetClass BrushTypeBox {
+         position 0 0
+         size 200 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Default
+         items "Trees; Grass; Explosion; Delete"
+        }
+        SliderWidgetClass SimcityRadiusSlider {
+         size 120 32
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         current 20
+        }
+        TextWidgetClass SimcityRadiusText {
+         ignorepointer 1
+         position 0 0
+         size 48 32
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "0"
+         font "gui/fonts/metron"
+         "text halign" center
+         "text valign" center
+        }
+        SliderWidgetClass SimcityDensitySlider {
+         size 120 32
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         maximum 1
+         step 0.01
+         current 0.25
+        }
+        TextWidgetClass SimcityDensityText {
+         ignorepointer 1
+         size 56 32
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "0"
+         font "gui/fonts/metron"
+         "text halign" center
+         "text valign" center
+        }
+        PanelWidgetClass Divider4 {
+         ignorepointer 1
+         position 0 0
+         size 15 32
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          PanelWidgetClass Divider5 {
+           ignorepointer 1
+           position 0 0
+           size 3 26
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style rover_sim_colorable
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  WrapSpacerWidgetClass InfobarFrame {
+   ignorepointer 1
+   color 0.302 0.302 0.302 1
+   size 1 32
+   valign bottom_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 1
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   content_valign bottom
+   {
+    PanelWidgetClass InfobarPositionFrame {
+     ignorepointer 1
+     position 10 10
+     size 0.3 32
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     {
+      PanelWidgetClass Info_X {
+       ignorepointer 1
+       position 5 0
+       size 120 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        PanelWidgetClass Info_X_Icon {
+         ignorepointer 1
+         color 0.7529 0.2235 0.1686 1
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass Info_X_IconLable {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "X"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        TextWidgetClass Info_X_Value {
+         ignorepointer 1
+         size 90 32
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "1000.5"
+         font "gui/fonts/system"
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      PanelWidgetClass Info_Y {
+       ignorepointer 1
+       position 130 0
+       size 120 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        PanelWidgetClass Info_Y_Icon {
+         ignorepointer 1
+         color 0.1529 0.6824 0.3765 1
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass Info_Y_IconLable {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "Y"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        TextWidgetClass Info_Y_Value {
+         ignorepointer 1
+         size 90 32
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "1000.5"
+         font "gui/fonts/system"
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      PanelWidgetClass Info_Z {
+       ignorepointer 1
+       position 255 0
+       size 120 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        PanelWidgetClass Info_Z_Icon {
+         ignorepointer 1
+         color 0.1608 0.502 0.7255 1
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass Info_Z_IconLable {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "Z"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        TextWidgetClass Info_Z_Value {
+         ignorepointer 1
+         size 90 32
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "1000.5"
+         font "gui/fonts/system"
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  FrameWidgetClass OrientationFrame {
+   ignorepointer 1
+   position 300 0
+   size 150 150
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   {
+    ItemPreviewWidgetClass OrientationView {
+     ignorepointer 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+    }
+   }
+  }
+  FrameWidgetClass CenterSpaceFrame {
+   clipchildren 0
+   ignorepointer 1
+   position 0 32
+   size 0.65 0.91
+   halign center_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   priority 1000
+  }
+  FrameWidgetClass NotificationFrame {
+   visible 0
+   ignorepointer 1
+   position 0 32
+   size 1 32
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   priority 249
+   {
+    PanelWidgetClass NotificationPanel {
+     ignorepointer 1
+     color 0.2588 0.6863 0.3647 1
+     position 0 0
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      TextWidgetClass NotificationText {
+       visible 1
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "NotificationText"
+       font "gui/fonts/metron"
+       "text halign" center
+       "text valign" center
       }
      }
     }

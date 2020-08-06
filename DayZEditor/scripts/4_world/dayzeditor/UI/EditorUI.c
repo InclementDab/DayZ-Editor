@@ -116,7 +116,7 @@ class EditorUI: UIScriptedMenu
 	{
 		// Init
 		m_EditorUIHandler = new EditorUIHandler();
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/Editor.layout");
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorNew.layout");
 		m_Root.GetScript(m_EditorUIHandler);
 		
 		
@@ -650,6 +650,58 @@ class EditorUI: UIScriptedMenu
 
 	}
 	
+	bool IsFocusable( Widget w )
+	{
+		if( w )
+		{
+			return ( w == m_UndoButton || w == m_RedoButton );
+		}
+		return false;
+	}
+	
+	override bool OnMouseEnter( Widget w, int x, int y )
+	{
+		if( IsFocusable( w ) )
+		{
+			ColorFocus( w, x, y );
+			return true;
+		}
+		return false;
+	}
+	
+	override bool OnMouseLeave( Widget w, Widget enterW, int x, int y )
+	{
+		if( IsFocusable( w ) )
+		{
+			ColorNoFocus( w, enterW, x, y );
+			return true;
+		}
+		return false;
+	}
+	
+	void ColorFocus( Widget w, int x, int y )
+	{
+		SetFocus( w );
+				
+		ImageWidget image	= ImageWidget.Cast( w.FindWidget( w.GetName() + "_Icon" ) );
+		
+		if( image )
+		{
+			image.SetColor( ARGB( 255, 41, 128, 185 ) );
+		}
+	}
+	
+	void ColorNoFocus( Widget w, Widget enterW, int x, int y )
+	{
+		SetFocus( w );
+				
+		ImageWidget image	= ImageWidget.Cast( w.FindWidget( w.GetName() + "_Icon" ) );
+		
+		if( image )
+		{
+			image.SetColor( ARGB( 255, 255, 255, 255 ) );
+		}
+	}	
 }
 
 class EditorUIHandler: EditorWidgetEventHandler
