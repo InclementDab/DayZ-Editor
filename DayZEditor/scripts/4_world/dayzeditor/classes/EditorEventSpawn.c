@@ -2,42 +2,38 @@ class EventPosition
 {
 	float x, y, z, a;
 	
-	static EventPosition CreateFromXML(string linePos)
+	void EventPosition(float _x, float _y, float _z, float _a)
 	{
-		ref EventPosition exEvPos = new EventPosition();
+		x = _x; y = _y; z = _z; a = _a;
+	}
 	
-		int xIndex = linePos.IndexOfFrom(0, "x=");
-		int yIndex = linePos.IndexOfFrom(0, "y=");
-		int zIndex = linePos.IndexOfFrom(0, "z=");
-		int aIndex = linePos.IndexOfFrom(0, "a=");
-
-		int startQuotation = -1;
-		int endQuotation = -1;
-
-		if ( xIndex >= 0 ) {
-			startQuotation = linePos.IndexOfFrom( xIndex, "\"" );
-			endQuotation = linePos.IndexOfFrom( startQuotation + 1, "\"" ) - startQuotation;
-			exEvPos.x = linePos.Substring( startQuotation + 1, endQuotation - 1 ).ToFloat();
-		}
-
-		if ( yIndex >= 0 ) {
-			startQuotation = linePos.IndexOfFrom( yIndex, "\"" );
-			endQuotation = linePos.IndexOfFrom( startQuotation + 1, "\"" ) - startQuotation;
-			exEvPos.y = linePos.Substring( startQuotation + 1, endQuotation - 1 ).ToFloat();
-		}				
-		if ( zIndex >= 0 ) {
-			startQuotation = linePos.IndexOfFrom( zIndex, "\"" );
-			endQuotation = linePos.IndexOfFrom( startQuotation + 1, "\"" ) - startQuotation;
-			exEvPos.z = linePos.Substring( startQuotation + 1, endQuotation - 1 ).ToFloat();
+	static EventPosition CreateFromXMLTag(XMLTag tag)
+	{
+		XMLAttribute attribute_x = tag.GetAttribute("x");
+		XMLAttribute attribute_y = tag.GetAttribute("y");
+		XMLAttribute attribute_z = tag.GetAttribute("z");
+		XMLAttribute attribute_a = tag.GetAttribute("a");
+		
+		
+		float x1, y1, z1, a1;
+		if (attribute_x != null) {
+			x1 = attribute_x.ValueAsFloat();
 		}
 		
-		if ( aIndex >= 0 ) {
-			startQuotation = linePos.IndexOfFrom( aIndex, "\"" );
-			endQuotation = linePos.IndexOfFrom( startQuotation + 1, "\"" ) - startQuotation;
-			exEvPos.a = linePos.Substring( startQuotation + 1, endQuotation - 1 ).ToFloat();
+		if (attribute_y != null) {
+			y1 = attribute_y.ValueAsFloat();
 		}
 		
-		return exEvPos;
+		if (attribute_z != null) {
+			z1 = attribute_z.ValueAsFloat();
+		}
+		
+		if (attribute_a != null) {
+			a1 = attribute_a.ValueAsFloat();
+		}
+		
+	
+		return new EventPosition(x1, y1, z1, a1);
 	}
 	
 	vector GetPosition()
@@ -49,52 +45,179 @@ class EventPosition
 
 class EditorEventSpawn
 {
-	string EventName
-	ref array<ref EventPosition> m_EventPositions;
+	private string m_EventName;
+	private ref array<ref EventPosition> m_EventPositions;
 	
-	void EditorEventSpawn(string eventName)
+	private ref array<string> m_TypeNames;
+	
+	void EditorEventSpawn(string event_name)
 	{
-		EventName = eventName;
+		m_EventName = event_name;
 		m_EventPositions = new array<ref EventPosition>();
+		m_TypeNames = new array<string>();
 	}
+	
+	ref array<ref EventPosition> GetPositions()
+	{
+		return m_EventPositions;
+	}
+	
+	int InsertPosition(EventPosition event_position)
+	{
+		m_EventPositions.Insert(event_position);
+		return m_EventPositions.Count();
+	}
+	
+	void InsertTypeName(string name)
+	{
+		m_TypeNames.Insert(name);
+	}
+	
+	ref array<string> GetTypeNames()
+	{
+		return m_TypeNames;
+	}
+	
+	string GetRandomTypeName()
+	{
+		return m_TypeNames.Get(Math.RandomInt(0, m_TypeNames.Count()));
+	}
+	
+	string GetName() { return m_EventName; }
 }
 
 
-class EditorXMLSpawnsCallback: XMLCallback
+
+class XMLEventsCallback: XMLCallback
 {
 	private ref array<ref EditorEventSpawn> m_Events;
 	
-	void EditorXMLSpawnsCallback(ref array<ref EditorEventSpawn> events)
+	void XMLEventsCallback(ref array<ref EditorEventSpawn> events)
 	{
 		m_Events = events;
 	}
 	
-	override void OnStart(ref XMLDocument document)
-    {
-		Print("EditorXMLSpawnsCallback::Start");	
-
+	bool SearchEventSpawns(out ref EditorEventSpawn event_spawn, string name)
+	{
+		name.ToLower();
+		foreach (EditorEventSpawn espawn: m_Events) {
+			string name_lower = espawn.GetName();
+			name_lower.ToLower();
+			if (name_lower == name) {
+				event_spawn = espawn;
+				return true;
+			}
+		}
+		
+		Print("Object Search Failed");
+		return false;
 	}
+	
+	override void OnSuccess(ref XMLDocument document)
+	{
+		Print("XMLEventsCallback::Success");		
+		XMLElement xml_events = document.Get(1).GetContent();
+		
+		for (int i = 0; i < xml_events.Count(); i++) {
+			
+			XMLTag event_tag = xml_events.Get(i);
+			if (event_tag.GetName() != "event") 
+				continue;
+			
+			XMLAttribute name_attribute = event_tag.GetAttribute("name");
+			string name = name_attribute.ValueAsString();
+			EditorEventSpawn event_spawn;
+			
+			if (SearchEventSpawns(event_spawn, name)) {
+								
+				XMLElement event_content = event_tag.GetContent();
+				for (int j = 0; j < event_content.Count(); j++) {
+					
+					XMLTag children_tag = event_content.Get(j);
+					if (children_tag.GetName() != "children")
+						continue;
+					
+					XMLElement children_content = children_tag.GetContent();
+					for (int k = 0; k < children_content.Count(); k++) {
+						
+						XMLTag spawnable_object = children_content.Get(k);
+						if (spawnable_object.GetName() != "child")
+							continue;
+						
+						XMLAttribute type_attribute = spawnable_object.GetAttribute("type");						
+						event_spawn.InsertTypeName(type_attribute.ValueAsString());
+					}					
+				}
+			}
+		}
+		
+		Print("Finished");
+		// Debug
+		foreach (ref EditorEventSpawn espawn: m_Events) {
+			
+			ref array<ref EventPosition> event_positions = espawn.GetPositions();
+			foreach (ref EventPosition pos: event_positions) {
+				vector position = pos.GetPosition();
+				if (position[1] == 0)	
+					position[1] = GetGame().SurfaceY(position[0], position[2]);
+				
+				string ename = espawn.GetRandomTypeName();
+				if (ename.Length() == 0) continue;
+				if (position == vector.Zero) continue;
+				if (GetGame().IsKindOf(ename, "DZ_LightAI")) continue;
+				
+				GetGame().CreateObject(ename, position, true);
+			}
+		}
+	}
+}
+
+
+class XMLEventSpawnsCallback: XMLCallback
+{
+	private ref array<ref EditorEventSpawn> m_Events;
+	
+	void XMLEventSpawnsCallback(ref array<ref EditorEventSpawn> events)
+	{
+		m_Events = events;
+	}
+	
 	
 	
 	override void OnSuccess(ref XMLDocument document)
 	{
-		Print("EditorXMLSpawnsCallback::Success");		
+		Print("XMLEventSpawnsCallback::Success");		
 		XMLElement content = document.Get(1).GetContent();
 		
-		
 		for (int i = 0; i < content.Count(); i++) {
-			XMLTag tag = content.Get(i);
+						
+			if (content.Get(i).GetName() != "event") 
+				continue;
 			
-			//Print(tag.GetName());
+			XMLAttribute name_attr = content.Get(i).GetAttribute("name");
+			EditorEventSpawn event_spawn = new EditorEventSpawn(name_attr.ValueAsString());
+			
+			
+			XMLElement element = content.Get(i).GetContent();
+			for (int j = 0; j < element.Count(); j++) {
+				
+				if (element.Get(j).GetName() != "pos") 
+					continue;
+				
+				event_spawn.InsertPosition(EventPosition.CreateFromXMLTag(element.Get(j)));
+			}
+			
+			m_Events.Insert(event_spawn);
 		}
-
+		
+		
+		EditorEventManager.ImportEvents();
 	}
 	
 	
 	override void OnFailure(ref XMLDocument document)
 	{
-		Print("EditorXMLSpawnsCallback::Failure");	
-		
+		Print("XMLEventSpawnsCallback::Failure");	
 	}
 	
 }
@@ -103,44 +226,41 @@ class EditorXMLSpawnsCallback: XMLCallback
 class EditorEventManager
 {
 	static ref array<ref EditorEventSpawn> m_Events;
-	static ref EditorXMLSpawnsCallback m_XMLCallback;
+	static ref XMLEventsCallback m_XMLEventsCallback;
+	static ref XMLEventSpawnsCallback m_XMLEventSpawnsCallback;
 	
 	void EditorEventManager()
 	{
-		m_Events = new array<ref EditorEventSpawn>();
 	}
+	
+
 	
 	static void ImportEventPositions()
 	{
 		m_Events = new array<ref EditorEventSpawn>();
 		
-		
 		string file = "$profile:\\Editor\\cfgeventspawns.xml";
+		if (!FileExist(file)) {
+			Print("File not found!"); // todo replace with the new fileopen dialog result type
+			return;
+		}
+	
+		m_XMLEventSpawnsCallback = new XMLEventSpawnsCallback(m_Events);
+		GetXMLApi().Read(file, m_XMLEventSpawnsCallback);		
+		
+	}
+	
+	
+	static void ImportEvents()
+	{
+		string file = "$profile:\\Editor\\db\\events.xml";
 		if (!FileExist(file)) {
 			Print("File not found!");
 			return;
 		}
-		if (m_XMLCallback == null) {
-			delete m_XMLCallback;
-			m_XMLCallback = new EditorXMLSpawnsCallback(m_Events);
-			GetXMLApi().Read(file, m_XMLCallback);
-		}
 		
-		// debug
-		foreach (EditorEventSpawn event_spawn: m_Events) {
-			
-			foreach (EventPosition pos: event_spawn.m_EventPositions) {
-				vector position = pos.GetPosition();
-				if (position[1] == 0)	
-					position[1] = GetGame().SurfaceY(position[0], position[2]);
-				
-				GetGame().CreateObject("BrushBase", position);
-			}
-			
-			
-		}
-		
-		
-	}
+		m_XMLEventsCallback = new XMLEventsCallback(m_Events);
+		GetXMLApi().Read(file, m_XMLEventsCallback);
 	
+	}
 }

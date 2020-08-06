@@ -215,23 +215,22 @@ class EditorUI: UIScriptedMenu
 		
 	}
 	
-	void OpenMap()
+	void ShowMap(bool state)
 	{
 		Print("EditorUI::OpenMap");
-		m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() * 3);
-		m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() * 3);
-		m_EditorMapContainer.Show(true);
+		if (state) {
+			m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() * 3);
+			m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() * 3);
+		} else {
+			m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() / 3);
+			m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() / 3);
+		}
+		
+		m_EditorMapContainer.Show(state);
+		m_EditorMapContainer.Update();
 		ShowCursor();
 	}
 	
-	void CloseMap()
-	{
-		Print("EditorUI::CloseMap");
-		m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() / 3);
-		m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() / 3);
-		m_EditorMapContainer.Show(false);
-		ShowCursor();
-	}
 	
 	void CreateDialog()
 	{
@@ -286,8 +285,6 @@ class EditorUI: UIScriptedMenu
 	
 	
 	/* Events */
-		
-	
 	override bool OnClick(Widget w, int x, int y, int button) 
 	{
 		if (button == 0) {
@@ -438,65 +435,6 @@ class EditorUI: UIScriptedMenu
 	}
 		
 
-	bool OnKeyPress(int key)
-	{
-		switch (key) {
-			
-			case KeyCode.KC_M: {
-				
-				if (m_EditorMapContainer.IsVisible()) {
-					CloseMap();
-				} else {
-					OpenMap();
-				}
-				m_EditorMapContainer.Update();
-				return true;
-			}
-		
-			case KeyCode.KC_SPACE: {
-				if (GetGame().GetUIManager().IsCursorVisible() && !m_EditorMapContainer.IsVisible()) {
-					HideCursor();
-					if (Editor.IsPlayerActive()) {
-						//GetGame().GetPlayer().GetInputController().SetDisabled(false);
-						Editor.SetPlayerAimLock(false);
-					}
-				} 
-				else { 
-					ShowCursor();
-					if (Editor.IsPlayerActive()) {
-						//GetGame().GetPlayer().GetInputController().SetDisabled(true);
-						Editor.SetPlayerAimLock(true);
-					}
-				}
-				return true;
-			}
-			/*
-			case KeyCode.KC_U: {
-				EditorSettings.MAGNET_PLACEMENT = !EditorSettings.MAGNET_PLACEMENT;
-				m_ToolbarMagnet.SetState(EditorSettings.MAGNET_PLACEMENT);
-				m_ToolbarMagnet.Update();
-				SetFocus(null);
-				return true;
-			}*/
-			
-			case KeyCode.KC_Y: {
-				GetEditor().GetUIManager().SetVisibility(!GetEditor().GetUIManager().GetVisibility());
-				
-				return true;
-			}
-			/*
-			case KeyCode.KC_G: {
-				
-				EditorSettings.MAINTAIN_HEIGHT = !EditorSettings.MAINTAIN_HEIGHT;
-				m_ToolbarGround.SetState(EditorSettings.MAINTAIN_HEIGHT);
-				m_ToolbarGround.Update();
-				SetFocus(null);
-				return true;
-			}*/
-		}
-		return false;
-	}
-	
 		
 	ScriptInvoker DragBoxQueue = GetGame().GetUpdateQueue(CALL_CATEGORY_GUI);
 	int start_x, start_y;
@@ -645,9 +583,43 @@ class EditorUI: UIScriptedMenu
 	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
 	{
 		Print("EditorUI::OnPlaceableCategoryChanged");
-		
 		m_LeftbarSpacer.Update();
-
+		
+		switch (category) {
+			
+			case PlaceableObjectCategory.BUILDING: {
+				m_CategorySelectBuilding.SetState(true);
+				m_CategorySelectVehicle.SetState(false);
+				m_CategorySelectEntity.SetState(false);
+				m_CategorySelectHuman.SetState(false);
+				break;
+			}
+			
+			case PlaceableObjectCategory.VEHICLE: {
+				m_CategorySelectBuilding.SetState(false);
+				m_CategorySelectVehicle.SetState(true);
+				m_CategorySelectEntity.SetState(false);
+				m_CategorySelectHuman.SetState(false);
+				break;
+			}
+			
+			case PlaceableObjectCategory.ENTITY: {
+				m_CategorySelectBuilding.SetState(false);
+				m_CategorySelectVehicle.SetState(false);
+				m_CategorySelectEntity.SetState(true);
+				m_CategorySelectHuman.SetState(false);
+				break;
+			}
+			
+			case PlaceableObjectCategory.HUMAN: {
+				m_CategorySelectBuilding.SetState(false);
+				m_CategorySelectVehicle.SetState(false);
+				m_CategorySelectEntity.SetState(false);
+				m_CategorySelectHuman.SetState(true);
+				break;
+			}
+		}
+		
 	}
 	
 	bool IsFocusable( Widget w )
@@ -717,12 +689,6 @@ class EditorUIHandler: EditorWidgetEventHandler
 		Print("~EditorUIHandler");
 	}
 		
-	void OnFrame(float timeslice)
-	{
-		
-		
-	}
-
 	
 	override bool OnModalResult(Widget w, int x, int y, int code, int result)
 	{
