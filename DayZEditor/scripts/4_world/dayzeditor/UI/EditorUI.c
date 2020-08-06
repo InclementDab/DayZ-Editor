@@ -106,6 +106,11 @@ class EditorUI: UIScriptedMenu
 	private bool m_FocusGround = false;
 	private bool m_FocusSnap = false;
 	
+	// Tooltips
+	private ref EditorUITooltip m_TooltipMagnet;
+	private ref EditorUITooltip m_TooltipSnap;
+	private ref EditorUITooltip m_TooltipGround;
+	
 	void EditorUI()
 	{
 		Print("EditorUI");
@@ -203,6 +208,11 @@ class EditorUI: UIScriptedMenu
 		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
 		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);
 			
+		// Tooltips
+		m_TooltipMagnet = new EditorUITooltip("Magnet Mode", "Toogle magnet mode on/off.");
+		m_TooltipSnap = new EditorUITooltip("Snap Mode", "Toogle snap mode on/off.");
+		m_TooltipGround = new EditorUITooltip("Ground Mode", "Toogle ground mode on/off.");
+		
 		return m_Root;
 	}
 	
@@ -635,16 +645,19 @@ class EditorUI: UIScriptedMenu
 		{
 			m_FocusMagnet = true;
 			ColorRed( w, x, y );
+			m_TooltipMagnet.ShowTooltip();
 			return true;
 		} else if( w == m_GroundButton )
 		{
 			m_FocusGround = true;
 			ColorPureApple( w, x, y );
+			m_TooltipGround.ShowTooltip();
 			return true;
 		} else if( w == m_SnapButton )
 		{
 			m_FocusSnap = true;
 			ColorQuinceJelly( w, x, y );
+			m_TooltipSnap.ShowTooltip();
 			return true;
 		}
 		return false;
@@ -660,16 +673,19 @@ class EditorUI: UIScriptedMenu
 		{
 			m_FocusMagnet = false;
 			ColorNoFocus( w, enterW, x, y );
+			m_TooltipMagnet.HideTooltip();
 			return true;
 		} else if( w == m_GroundButton )
 		{
 			m_FocusGround = false;
 			ColorNoFocus( w, enterW, x, y );
+			m_TooltipGround.HideTooltip();
 			return true;
 		} else if( w == m_SnapButton )
 		{
 			m_FocusSnap = false;
 			ColorNoFocus( w, enterW, x, y );
+			m_TooltipSnap.HideTooltip();
 			return true;
 		}
 		
