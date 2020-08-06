@@ -194,10 +194,8 @@ class EditorUI: UIScriptedMenu
 		
 		// Events
 		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
-		EditorEvents.OnSettingsChanged.Insert(OnEditorSettingsChanged);		
-		
-
-		
+		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);		
+			
 		return m_Root;
 	}
 	
@@ -270,20 +268,24 @@ class EditorUI: UIScriptedMenu
 	
 	/* Events */
 	
-	void OnEditorSettingsChanged(Class context, string changed, EditorSettings settings)
+	private ref array<ref EditorListItem> m_CurrentPlaceableObjects;
+	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
 	{
-		Print("EditorUIManager::OnEditorSettingsChanged");
+		Print("EditorUIManager::OnPlaceableCategoryChanged");
 		
-		switch (changed) {
-			
-			case "PlaceableObjectCategory": {
-				
-				SetPlaceableObjects(settings.GetPlaceableObjectCategory());
-				
-				break;
-			}
-			
-		}
+		// Clear existing spacer
+		foreach (EditorListItem item: m_CurrentPlaceableObjects)
+			delete item;
+
+		m_CurrentPlaceableObjects = new array<ref EditorListItem>();
+		ref array<ref EditorPlaceableObject> target = new array<ref EditorPlaceableObject>();
+		
+		GetEditor().GetSettings().GetPlaceableObjectsByCategory(target, GetEditor().GetSettings().GetPlaceableObjectCategory());
+	
+		
+		foreach (ref EditorPlaceableObject placeable_object: target)
+			m_CurrentPlaceableObjects.Insert(placeable_object.GetListItem(m_LeftbarSpacer));
+		
 	}
 	
 	
@@ -501,18 +503,13 @@ class EditorUI: UIScriptedMenu
 	int start_x, start_y;
 	void DelayedDragBoxCheck()
 	{
-		Input input = GetGame().GetInput();
-		if (input.LocalValue("UAFire"))
+		if (GetGame().GetInput().LocalValue("UAFire"))
 			DragBoxQueue.Insert(UpdateDragBox);
-		
-		
 	}
 	
 	void UpdateDragBox()
 	{	
-		
-		Input input = GetGame().GetInput();
-		if (input.LocalRelease("UAFire")) {
+		if (GetGame().GetInput().LocalRelease("UAFire")) {
 			m_EditorCanvas.Clear();
 			DragBoxQueue.Remove(UpdateDragBox);
 			return;
@@ -576,28 +573,6 @@ class EditorUI: UIScriptedMenu
 	void InsertPlacedObject(EditorObject target)
 	{
 		m_RightbarSpacer.AddChild(target.GetObjectBrowser());
-	}
-	
-
-		
-	private ref array<ref EditorListItem> m_CurrentPlaceableObjects;
-	void SetPlaceableObjects(PlaceableObjectCategory category)
-	{
-		// Clear existing spacer
-		foreach (EditorListItem item: m_CurrentPlaceableObjects)
-			delete item;
-
-		m_CurrentPlaceableObjects = new array<ref EditorListItem>();
-		ref array<ref EditorPlaceableObject> target = new array<ref EditorPlaceableObject>();
-		
-		GetEditor().GetSettings().GetPlaceableObjectsByCategory(target, GetEditor().GetSettings().GetPlaceableObjectCategory());
-	
-		
-		foreach (ref EditorPlaceableObject placeable_object: target) {
-			EditorListItem list_item = placeable_object.GetListItem(m_LeftbarSpacer);
-			m_CurrentPlaceableObjects.Insert(list_item);
-		}
-
 	}
 	
 	

@@ -12,6 +12,7 @@ class EditorEvents
 	static ref ScriptInvoker OnObjectDrop		= new ScriptInvoker();
 	static ref ScriptInvoker OnBrushChanged		= new ScriptInvoker();
 	static ref ScriptInvoker OnSettingsChanged 	= new ScriptInvoker();
+	static ref ScriptInvoker OnPlaceableCategoryChanged 	= new ScriptInvoker();
 	
 	
 
@@ -57,6 +58,12 @@ class EditorEvents
 	{
 		Print("EditorEvents::SettingsChangedInvoke");
 		OnSettingsChanged.Invoke(context, changed, settings);
+	}		
+	
+	static void PlaceableCategoryChangedInvoke(Class context, PlaceableObjectCategory category)
+	{
+		Print("EditorEvents::PlaceableCategoryChangedInvoke");
+		OnPlaceableCategoryChanged.Invoke(context, category);
 	}	
 
 

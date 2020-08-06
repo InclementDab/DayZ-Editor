@@ -26,6 +26,8 @@ class Editor: Managed
 	private ref EditorUIManager 			m_EditorUIManager = new EditorUIManager();
 	private ref EditorSettings				m_EditorSettings = new EditorSettings();
 	
+	private ref EditorBrush					m_EditorBrush;
+	
 	static ref EditorHologram 				ObjectInHand;
 	static Object							ObjectUnderCursor = null;
 	static EditorObject 					EditorObjectUnderCursor = null;
@@ -44,9 +46,7 @@ class Editor: Managed
 	ref EditorObjectManager GetObjectManager() { return m_EditorObjectManager; }
 	ref EditorUIManager GetUIManager() { return m_EditorUIManager; }
 	ref EditorSettings GetSettings() { return m_EditorSettings; }
-	
-	private ref EditorBrush	m_EditorBrush;
-	EditorBrush GetEditorBrush() { return m_EditorBrush; }
+	ref EditorBrush GetEditorBrush() { return m_EditorBrush; }
 	
 	bool IsPlacing() { return ObjectInHand != null; }
 	TranslationWidget GetTranslationWidget() { return GetEditor().GlobalTranslationWidget; }

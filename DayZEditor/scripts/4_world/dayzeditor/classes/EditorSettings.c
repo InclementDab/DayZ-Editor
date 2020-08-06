@@ -11,11 +11,7 @@ class EditorSettings
 	static bool MAINTAIN_HEIGHT = false;
 	static bool SNAPPING_MODE = false;
 	static bool SIM_CITY_MODE = false;
-	
-	ref array<ref EditorPlaceableObject> PlaceableBuildings;
-	ref array<ref EditorPlaceableObject> PlaceableVehicles;
-	ref array<ref EditorPlaceableObject> PlaceableEntities;
-	ref array<ref EditorPlaceableObject> PlaceableHumans;
+
 	
 	private ref array<ref EditorPlaceableObject> m_AllPlaceableObjects;
 
@@ -26,14 +22,8 @@ class EditorSettings
 	void EditorSettings()
 	{
 		Print("EditorSettings");
-		// Load placeable objects
-		PlaceableBuildings 	= new array<ref EditorPlaceableObject>();
-		PlaceableVehicles 	= new array<ref EditorPlaceableObject>();
-		PlaceableEntities 	= new array<ref EditorPlaceableObject>();
-		PlaceableHumans 	= new array<ref EditorPlaceableObject>();
-		
+		// Load placeable objects		
 		m_AllPlaceableObjects = new array<ref EditorPlaceableObject>(); 
-		
 		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(m_AllPlaceableObjects)));
 	}
 	
@@ -41,13 +31,9 @@ class EditorSettings
 	void GetPlaceableObjectsByCategory(out ref array<ref EditorPlaceableObject> target, PlaceableObjectCategory category)
 	{
 		Print("EditorSettings::GetPlaceableObjectsByCategory");
-		Print(m_AllPlaceableObjects.Count());
-		
 		foreach (ref EditorPlaceableObject placeable_object: m_AllPlaceableObjects)
-			if (category == placeable_object.GetCategory())
+			if (category == placeable_object.GetCategory() || (category == PlaceableObjectCategory.ENTITY && placeable_object.GetCategory() == PlaceableObjectCategory.UNKNOWN))
 				target.Insert(placeable_object);
-		
-		
 	}
 	
 	
@@ -68,8 +54,7 @@ class EditorSettings
 	void SetPlaceableObjectCategory(PlaceableObjectCategory category) 
 	{
 		m_PlaceableObjectCategory = category;
-		// todo find better way to do this
-		EditorEvents.SettingsChangedInvoke(this, "PlaceableObjectCategory", this);
+		EditorEvents.PlaceableCategoryChangedInvoke(this, category);
 	}
 	
 	
