@@ -122,7 +122,7 @@ class EditorObjectMarker: UILinkedObject
 		m_Root.SetPos(screenpos[0] - 15, screenpos[1] - 15);
 		
 		if (override_show) {
-			m_Root.Show(screenpos[2] > 0);			
+			m_Root.Show(screenpos[2] > 0 && screenpos[2] < 1000);			
 		}
 		
 		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject) || MouseInside) {

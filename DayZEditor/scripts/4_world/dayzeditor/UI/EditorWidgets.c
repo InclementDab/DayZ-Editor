@@ -117,6 +117,7 @@ class EditorListItem: EditorWidgetEventHandler
 		m_EditorListItemText.Update();
 	}
 	
+	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		Print("EditorListItem::OnMouseButtonDown");
@@ -129,6 +130,20 @@ class EditorListItem: EditorWidgetEventHandler
 			
 			SetFocus(w);
 			return true;
+		} else if (button == 1) {
+			
+			if (GetGame().GetInput().LocalValue("UAWalkRunTemp")) {
+				
+				// all very temporary please abstract elsewhere
+				if (GetEditor().IsLootEditActive()) {
+					GetEditor().PlaceholderRemoveLootMode();
+				} else {
+					GetEditor().PlaceholderForEditLootSpawns(m_PlaceableObject.GetType());
+				}
+				
+				return true;
+				
+			}
 		}
 		
 		return false;

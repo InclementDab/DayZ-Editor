@@ -151,7 +151,7 @@ class XMLEventsCallback: XMLCallback
 			}
 		}
 		
-		Print("Finished");
+
 		// Debug
 		foreach (ref EditorEventSpawn espawn: m_Events) {
 			
@@ -166,7 +166,10 @@ class XMLEventsCallback: XMLCallback
 				if (position == vector.Zero) continue;
 				if (GetGame().IsKindOf(ename, "DZ_LightAI")) continue;
 				
-				GetGame().CreateObject(ename, position, true);
+				GetEditor().GetObjectManager().CreateObject(ename, position);
+				
+				//Object o = GetGame().CreateObjectEx(ename, position, ECE_NONE);
+				//o.SetFlags(EntityFlags.STATIC, true);
 			}
 		}
 	}
