@@ -101,6 +101,16 @@ class EditorUI: UIScriptedMenu
 	private bool left_bar_hidden = false;
 	private bool right_bar_hidden = false;
 	
+	// Color management
+	private bool m_FocusMagnet = false;
+	private bool m_FocusGround = false;
+	private bool m_FocusSnap = false;
+	
+	// Tooltips
+	private ref EditorUITooltip m_TooltipMagnet;
+	private ref EditorUITooltip m_TooltipSnap;
+	private ref EditorUITooltip m_TooltipGround;
+	
 	void EditorUI()
 	{
 		Print("EditorUI");
@@ -116,7 +126,7 @@ class EditorUI: UIScriptedMenu
 	{
 		// Init
 		m_EditorUIHandler = new EditorUIHandler();
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/Editor.layout");
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorNew.layout");
 		m_Root.GetScript(m_EditorUIHandler);
 		
 		
@@ -198,6 +208,11 @@ class EditorUI: UIScriptedMenu
 		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
 		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);
 			
+		// Tooltips
+		m_TooltipMagnet = new EditorUITooltip("Toogle magnet mode on/off.", "Magnet Mode");
+		m_TooltipSnap = new EditorUITooltip("Toogle snap mode on/off.", "Snap Mode");
+		m_TooltipGround = new EditorUITooltip("Toogle ground mode on/off.", "Ground Mode");
+		
 		return m_Root;
 	}
 	
@@ -210,9 +225,7 @@ class EditorUI: UIScriptedMenu
 		if (m_LeftbarScroll.GetVScrollPos() > m_LeftbarScroll.GetContentHeight())
 			m_LeftbarScroll.VScrollToPos(0);
 		
-		
-		
-		
+		CheckToolbarButtonsState();
 	}
 	
 	void ShowMap(bool state)
@@ -630,6 +643,178 @@ class EditorUI: UIScriptedMenu
 		
 	}
 	
+	override bool OnMouseEnter( Widget w, int x, int y )
+	{
+		if( w == m_UndoButton || w == m_RedoButton )
+		{
+			ColorBlue( w, x, y );
+			return true;
+		} else if( w == m_MagnetButton )
+		{
+			m_FocusMagnet = true;
+			ColorRed( w, x, y );
+			m_TooltipMagnet.ShowTooltip();
+			return true;
+		} else if( w == m_GroundButton )
+		{
+			m_FocusGround = true;
+			ColorPureApple( w, x, y );
+			m_TooltipGround.ShowTooltip();
+			return true;
+		} else if( w == m_SnapButton )
+		{
+			m_FocusSnap = true;
+			ColorQuinceJelly( w, x, y );
+			m_TooltipSnap.ShowTooltip();
+			return true;
+		}
+		return false;
+	}
+	
+	override bool OnMouseLeave( Widget w, Widget enterW, int x, int y )
+	{
+		if( w == m_UndoButton || w == m_RedoButton )
+		{
+			ColorNoFocus( w, enterW, x, y );
+			return true;
+		} else if( w == m_MagnetButton )
+		{
+			m_FocusMagnet = false;
+			ColorNoFocus( w, enterW, x, y );
+			m_TooltipMagnet.HideTooltip();
+			return true;
+		} else if( w == m_GroundButton )
+		{
+			m_FocusGround = false;
+			ColorNoFocus( w, enterW, x, y );
+			m_TooltipGround.HideTooltip();
+			return true;
+		} else if( w == m_SnapButton )
+		{
+			m_FocusSnap = false;
+			ColorNoFocus( w, enterW, x, y );
+			m_TooltipSnap.HideTooltip();
+			return true;
+		}
+		
+		return false;
+	}
+	
+	void ColorBlue( Widget w, int x, int y )
+	{
+		SetFocus( w );
+				
+		ImageWidget image	= ImageWidget.Cast( w.FindWidget( w.GetName() + "_Icon" ) );
+		
+		if( image )
+		{
+			image.SetColor( ARGB( 255, 52, 152, 219 ) );
+		}
+	}
+	
+	void ColorRed( Widget w, int x, int y )
+	{
+		SetFocus( w );
+		
+		if( w.IsInherited( ButtonWidget ) )
+		{
+			ButtonWidget button = ButtonWidget.Cast( w );
+			button.SetColor( ARGB( 255, 0, 0, 0 ) );
+		}
+		
+		ImageWidget image	= ImageWidget.Cast( w.FindWidget( w.GetName() + "_Icon" ) );
+		
+		if( image )
+		{
+			image.SetColor( ARGB( 255, 231, 76, 60 ) );
+		}
+	}
+	
+	void ColorPureApple( Widget w, int x, int y )
+	{
+		SetFocus( w );
+				
+		if( w.IsInherited( ButtonWidget ) )
+		{
+			ButtonWidget button = ButtonWidget.Cast( w );
+			button.SetColor( ARGB( 255, 0, 0, 0 ) );
+		}
+		
+		ImageWidget image	= ImageWidget.Cast( w.FindWidget( w.GetName() + "_Icon" ) );
+		
+		if( image )
+		{
+			image.SetColor( ARGB( 255, 106, 176, 76 ) );
+		}
+	}
+	
+	void ColorQuinceJelly( Widget w, int x, int y )
+	{
+		SetFocus( w );
+		
+		if( w.IsInherited( ButtonWidget ) )
+		{
+			ButtonWidget button = ButtonWidget.Cast( w );
+			button.SetColor( ARGB( 255, 0, 0, 0 ) );
+		}		
+		
+		ImageWidget image	= ImageWidget.Cast( w.FindWidget( w.GetName() + "_Icon" ) );
+		
+		if( image )
+		{
+			image.SetColor( ARGB( 255, 240, 147, 43 ) );
+		}
+		
+		string name = w.GetName();
+		if( name.Contains("Magnet") )
+		
+	}
+	
+	void ColorNoFocus( Widget w, Widget enterW, int x, int y )
+	{
+		SetFocus( w );
+		
+		if( w.IsInherited( ButtonWidget ) )
+		{
+			ButtonWidget button = ButtonWidget.Cast( w );
+			button.SetColor( ARGB( 0, 0, 0, 0 ) );
+		}
+		
+		ImageWidget image	= ImageWidget.Cast( w.FindWidget( w.GetName() + "_Icon" ) );
+		
+		if( image )
+		{
+			image.SetColor( ARGB( 255, 255, 255, 255 ) );
+		}
+	}
+
+	private void CheckToolbarButtonsState()
+	{
+		//! Color managment
+		if ( m_MagnetButton.GetState() )
+		{
+			ColorRed( m_MagnetButton, 0, 0 );
+		} else if ( !m_MagnetButton.GetState() && !m_FocusMagnet )
+		{
+			ColorNoFocus( m_MagnetButton, null, 0, 0 );
+		}
+		
+		if ( m_GroundButton.GetState() )
+		{
+			ColorPureApple( m_GroundButton, 0, 0 );
+		} else if ( !m_GroundButton.GetState() && !m_FocusGround)
+		{
+			ColorNoFocus( m_GroundButton, null, 0, 0 );
+		}
+		
+		if ( m_SnapButton.GetState() )
+		{
+			ColorQuinceJelly( m_SnapButton, 0, 0 );
+		} else if ( !m_SnapButton.GetState() && !m_FocusSnap )
+		{
+			ColorNoFocus( m_SnapButton, null, 0, 0 );
+		}
+	}
 }
 
 class EditorUIHandler: EditorWidgetEventHandler
@@ -654,7 +839,4 @@ class EditorUIHandler: EditorWidgetEventHandler
 		
 		return true;
 	}
-	
-
-
 }
