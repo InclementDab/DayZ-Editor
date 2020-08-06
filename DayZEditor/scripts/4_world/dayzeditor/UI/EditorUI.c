@@ -45,6 +45,10 @@ class EditorUI: EditorWidgetEventHandler
 	protected SliderWidget 	m_SimcityDensitySlider;
 	protected TextWidget	m_SimcityDensityText;
 	protected XComboBoxWidget	m_BrushTypeBox;
+	
+	// Notifications
+	protected Widget m_NotificationFrame;
+	Widget GetNotificationFrame() { return m_NotificationFrame; }
 
 	
 	// Frames and Hosts
@@ -135,6 +139,7 @@ class EditorUI: EditorWidgetEventHandler
 		m_SimcityDensityText	= TextWidget.Cast(m_Root.FindAnyWidget("SimcityDensityText"));
 		m_BrushTypeBox			= XComboBoxWidget.Cast(m_Root.FindAnyWidget("BrushTypeBox"));
 	
+		m_NotificationFrame		= m_Root.FindAnyWidget("NotificationFrame");
 		
 		
 		// Debug

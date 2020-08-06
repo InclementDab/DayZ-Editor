@@ -420,7 +420,7 @@ class EditorObject : Building
 				return editor_object;
 		}
 		
-		Print("GetFromObjectRoot: Item Not Found!");
+		Print("GetFromUILinkedRoot: Item Not Found!");
 		return null;
 	}
 }

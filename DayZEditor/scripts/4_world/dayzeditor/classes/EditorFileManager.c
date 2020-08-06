@@ -63,13 +63,14 @@ class EditorFileManager
 	static void SaveFile(ref EditorWorldData data, string filename = "$profile:editor_save.txt")
 	{
 		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(filename, data);
+		GetEditor().GetUIManager().TriggerUINotification("Saved!", COLOR_GREEN); 
 	}
 	
 	static EditorWorldData LoadFile(string filename = "$profile:editor_save.txt")
 	{
 		EditorWorldData data = new EditorWorldData();
 		JsonFileLoader<EditorWorldData>.JsonLoadFile(filename, data);
-		
+		GetEditor().GetUIManager().TriggerUINotification("Loaded!"); 
 		return data;
 		
 	}
@@ -196,6 +197,10 @@ class EditorFileManager
 				
 			} 
 		}
+		
 		CloseFile(handle);
+		
+		GetEditor().GetUIManager().TriggerUINotification("Exported!");
+		
 	}
 }

@@ -112,6 +112,70 @@ class EditorUIManager: Managed
 		return (cursor_x > size_x + pos_x) || (cursor_x < pos_x) || (cursor_y > size_y + pos_y) || (cursor_y < pos_y);
 	}
 	
+	
+	void TriggerUINotification(string text, int color = -4301218, float duration = 4)
+	{
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationAnimateFrame);
+		Widget notif_frame = m_EditorUI.GetNotificationFrame();
+		Print(notif_frame);
+		Widget notif_panel = notif_frame.FindAnyWidget("NotificationPanel");
+		TextWidget notif_text = TextWidget.Cast(notif_frame.FindAnyWidget("NotificationText"));
+		
+		notif_panel.SetColor(color);
+		notif_text.SetText(text);
+		notif_frame.Show(true);
+			
+		float start_x, start_y, width, height;
+		notif_frame.GetPos(start_x, start_y);
+		notif_frame.GetSize(width, height);
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CloseUINotification, duration * 1000, false, notif_frame, start_x, start_y);
+		
+		EffectSound notif_sound = SEffectManager.PlaySound("Notification_SoundSet", GetGame().GetCurrentCameraPosition());
+		notif_sound.SetSoundAutodestroy(true);
+		
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationAnimateFrame, 0, true, notif_frame, GetGame().GetTime(), 0.25, start_x, start_x, start_y, start_y + height);
+		
+	}
+	
+	
+	
+	
+	private void NotificationAnimateFrame(Widget root, float anim_starttime, float duration, float start_x, float final_x, float start_y, float final_y)
+	{
+				
+		float anim_frametime = GetGame().GetTime() - anim_starttime;
+		anim_frametime /= 1000;
+		
+		float normalized_time = (1 / duration) * anim_frametime;
+		
+		
+		normalized_time = Math.Clamp(normalized_time, 0, 1);
+		Print(normalized_time);
+		
+		float pos_x = Math.Lerp(start_x, final_x, normalized_time);
+		float pos_y = Math.Lerp(start_y, final_y, normalized_time);
+		
+		root.SetPos(pos_x, pos_y);
+		
+		if (normalized_time >= 1) {
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationAnimateFrame);
+		}
+		
+	}
+	
+	private void CloseUINotification(Widget root, float start_x, float start_y)
+	{
+		float current_x, current_y;
+		root.GetPos(current_x, current_y);
+		
+		float duration = 0.25;
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationAnimateFrame, 0, true, root, GetGame().GetTime(), duration, current_x, start_x, current_y, start_y);
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(root.Show, duration * 1000, false, false);
+	}
+
 
 	
 	

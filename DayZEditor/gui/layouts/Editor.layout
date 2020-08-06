@@ -966,7 +966,7 @@ FrameWidgetClass EditorMainFrame {
   FrameWidgetClass NotificationFrame {
    visible 0
    ignorepointer 1
-   position 0 50
+   position 0 25
    size 1 25
    halign center_ref
    hexactpos 1
