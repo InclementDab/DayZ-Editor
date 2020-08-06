@@ -14,6 +14,9 @@ class EditorLootPoint
 	}
 	
 	vector GetPosition() { return m_Position; }
+	
+	float GetRange() { return m_Range; }
+	float GetHeight() { return m_Height; }
 }
 
 class EditorLootContainer
@@ -223,11 +226,26 @@ class EditorMapGroupProto: XMLCallback
 					foreach (EditorLootPoint loot_point: loot_points) {
 						vector loot_pos = loot_point.GetPosition();
 						
-						Object loot_display = GetGame().CreateObjectEx("DebugCylinder", Vector(loot_pos[2], loot_pos[1], loot_pos[0]), ECE_NONE);
-						
+						Object loot_display = GetGame().CreateObjectEx("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), ECE_NONE);
+						//EditorObject loot_display = GetEditor().GetObjectManager().CreateObject("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]));
 						m_Building.AddChild(loot_display, -1);
-						m_Building.Update();
 						
+						
+						
+						vector transform[4] = {
+							Vector(1, 0, 0),
+							Vector(0, 1, 0),
+							Vector(0, 0, 1),
+							Vector(-loot_pos[2], loot_pos[1], loot_pos[0])
+						};
+						
+						transform[0][0] = loot_point.GetRange() * 2.0;
+						transform[1][1] = loot_point.GetHeight() * 2.0;
+						transform[2][2] = loot_point.GetRange() * 2.0;
+						
+						loot_display.SetTransform(transform);
+						
+						m_Building.Update();
 					}
 				}
 								
