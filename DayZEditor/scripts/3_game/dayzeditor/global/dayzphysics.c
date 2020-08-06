@@ -12,13 +12,12 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 }
 
 
-static vector ObjectGetSize(Object obj)
+static vector ObjectGetSize(notnull Object obj)
 {
 	vector size[2];
 	vector result;
 	
-	float radius = obj.ClippingInfo(size);
-	
+	obj.ClippingInfo(size);
 	result[0] = Math.AbsFloat(size[0][0]) + Math.AbsFloat(size[1][0]);
 	result[1] = Math.AbsFloat(size[0][1]) + Math.AbsFloat(size[1][1]);
 	result[2] = Math.AbsFloat(size[0][2]) + Math.AbsFloat(size[1][2]);

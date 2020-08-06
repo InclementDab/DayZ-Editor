@@ -235,7 +235,7 @@ FrameWidgetClass EditorMainFrame {
    vexactpos 1
    hexactsize 1
    vexactsize 0
-   priority 250
+   priority 240
    {
     WrapSpacerWidgetClass LeftbarFrameWrapSpacer {
      ignorepointer 1
@@ -491,7 +491,7 @@ FrameWidgetClass EditorMainFrame {
    vexactpos 1
    hexactsize 1
    vexactsize 0
-   priority 250
+   priority 240
    {
     PanelWidgetClass RightbarPanelHost {
      visible 1
@@ -582,7 +582,7 @@ FrameWidgetClass EditorMainFrame {
    hexactsize 0
    vexactsize 0
    priority 250
-   scriptclass "EditorUIToolbar"
+   scriptclass ""
    {
     PanelWidgetClass ToolbarButtons {
      visible 1
@@ -732,7 +732,7 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 1
          vexactsize 1
          style Default
-         items "Trees; Grass; Explosion; Delete;"
+         items "Trees; Grass; Explosion; Delete"
         }
         SliderWidgetClass SimcityRadiusSlider {
          size 120 28
@@ -947,6 +947,63 @@ FrameWidgetClass EditorMainFrame {
      vexactpos 1
      hexactsize 0
      vexactsize 0
+    }
+   }
+  }
+  FrameWidgetClass CenterSpaceFrame {
+   clipchildren 0
+   ignorepointer 1
+   position 0 0
+   size 0.688 0.956
+   halign center_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   priority 1000
+  }
+  FrameWidgetClass NotificationFrame {
+   visible 0
+   ignorepointer 1
+   position 0 25
+   size 1 25
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   priority 249
+   {
+    PanelWidgetClass NotificationPanel {
+     ignorepointer 1
+     color 0.2588 0.6863 0.3647 1
+     position 0 0
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      TextWidgetClass NotificationText {
+       visible 1
+       ignorepointer 1
+       size 10 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "NotificationText"
+       font "gui/fonts/metron"
+       "text halign" center
+       "text valign" center
+      }
+     }
     }
    }
   }

@@ -60,10 +60,51 @@ class EditorEventSpawn
 }
 
 
+class EditorXMLSpawnsCallback: XMLCallback
+{
+	private ref array<ref EditorEventSpawn> m_Events;
+	
+	void EditorXMLSpawnsCallback(ref array<ref EditorEventSpawn> events)
+	{
+		m_Events = events;
+	}
+	
+	override void OnStart(ref XMLDocument document)
+    {
+		Print("EditorXMLSpawnsCallback::Start");	
+
+	}
+	
+	
+	override void OnSuccess(ref XMLDocument document)
+	{
+		Print("EditorXMLSpawnsCallback::Success");		
+		XMLElement content = document.Get(1).GetContent();
+		
+		
+		for (int i = 0; i < content.Count(); i++) {
+			XMLTag tag = content.Get(i);
+			
+			//Print(tag.GetName());
+		}
+
+	}
+	
+	
+	override void OnFailure(ref XMLDocument document)
+	{
+		Print("EditorXMLSpawnsCallback::Failure");	
+		
+	}
+	
+}
+
+
 class EditorEventManager
 {
 	static ref array<ref EditorEventSpawn> m_Events;
-
+	static ref EditorXMLSpawnsCallback m_XMLCallback;
+	
 	void EditorEventManager()
 	{
 		m_Events = new array<ref EditorEventSpawn>();
@@ -72,57 +113,18 @@ class EditorEventManager
 	static void ImportEventPositions()
 	{
 		m_Events = new array<ref EditorEventSpawn>();
-		if (m_Events && m_Events.Count() >= 0) {
-			m_Events.Clear();
-		}
 		
-		array<string> m_XMLData = new array<string>;
-	
-		FileHandle cfgeventspawnsFile = OpenFile("$profile:cfgeventspawns.xml", FileMode.READ);
-		string line_content = "";
-		if (cfgeventspawnsFile != 0) {
-			while (FGets(cfgeventspawnsFile, line_content) >= 0) {
-				m_XMLData.Insert( line_content );
-			}
-			CloseFile( cfgeventspawnsFile );
+		
+		string file = "$profile:\\Editor\\cfgeventspawns.xml";
+		if (!FileExist(file)) {
+			Print("File not found!");
+			return;
 		}
-	
-	
-		bool isInRightPlace = false;
-		EditorEventSpawn current_event;
-		for (int i = 0; i < m_XMLData.Count(); ++i) {
-			
-			string linePos = m_XMLData[i];
-			if (linePos.Contains( "<!--" ))
-				continue;
-	
-			if (linePos.Contains( "</event>" ) && isInRightPlace) {
-				isInRightPlace = false;
-				m_Events.Insert(current_event);
-				continue;
-			}
-	
-			if (linePos.Contains( "<event name=" )) {
-				isInRightPlace = true;
-	
-				TStringArray strs_name = new TStringArray;
-				linePos.Split( "\"", strs_name );
-	
-				current_event = new EditorEventSpawn(strs_name[1]);
-				continue;
-			}
-	
-			linePos.TrimInPlace();
-	
-			if (isInRightPlace && linePos != "") {
-				EventPosition event_position = EventPosition.CreateFromXML(linePos);
-				current_event.m_EventPositions.Insert(event_position);
-			}
-			
-			
+		if (m_XMLCallback == null) {
+			delete m_XMLCallback;
+			m_XMLCallback = new EditorXMLSpawnsCallback(m_Events);
+			GetXMLApi().Read(file, m_XMLCallback);
 		}
-	
-
 		
 		// debug
 		foreach (EditorEventSpawn event_spawn: m_Events) {

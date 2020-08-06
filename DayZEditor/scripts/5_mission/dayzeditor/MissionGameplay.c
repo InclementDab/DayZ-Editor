@@ -15,7 +15,7 @@ class EditorMissionServer: MissionServer
 }
 
 
-static ref Editor m_Editor;
+
 class EditorMissionGameplay: MissionGameplay
 {
 
@@ -26,21 +26,22 @@ class EditorMissionGameplay: MissionGameplay
 		switch (key) {
 						
 			case KeyCode.KC_F1: {
-				m_Editor = new Editor();				
+				m_EditorInstance = new Editor();			
 				break;
 			}
 		}
 		
-		if (m_Hud.KeyPress(key)) return;
-		if (m_Editor.ActiveEditorUI.OnKeyPress(key)) return;
-		if (m_Editor.OnKeyPress(key)) return;
+
+		if (GetEditor().GetUIManager().GetEditorUI().OnKeyPress(key)) return;
+		if (GetEditor().OnKeyPress(key)) return;
+		if (m_Hud.KeyPress(key)) return; // might need to be moved if you use UIScriptedMenus 
 		super.OnKeyPress(key);
     }
 	
     override void OnInit()
 	{
 		super.OnInit();
-		m_Editor = new Editor(); 
+		m_EditorInstance = new Editor(); 
 		
 	}
 

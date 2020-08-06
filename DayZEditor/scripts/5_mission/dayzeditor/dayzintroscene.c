@@ -15,6 +15,15 @@ string CreateEditorMission(string map_name = "ChernarusPlus")
 	return mission;
 }
 
+modded class MissionMainMenu
+{
+	override void OnUpdate(float timeslice)
+	{
+		super.OnUpdate(timeslice);
+		if (m_IntroScenePC)
+	    	m_IntroScenePC.OnUpdate(timeslice);
+	}
+}
 
 modded class DayZIntroScene
 {
@@ -27,26 +36,61 @@ modded class DayZIntroScene
 		m_CharacterPos = Vector(0.685547, 3, 5.68823).Multiply4(m_CameraTrans);
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
 		m_FunnyMeme.SetOrientation(m_CharacterRot);
-		m_FunnyMeme.SetPosition(m_FunnyMeme.GetPosition() + Vector(0, 1, 0));
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(FunnyMeme);
+		m_FunnyMeme.SetPosition(m_FunnyMeme.GetPosition() + Vector(0, 1, 0));		
 	}
+
 	
-	void ~DayZIntroScene()
+	
+	float offset;
+	int hour, minute;
+	
+	ref array<Object> m_FunnyMemes = new array<Object>();
+	
+	float totaltime;
+	void OnUpdate(float timeslice)
 	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(FunnyMeme);
-	}
-	
-	
-	
-	void FunnyMeme()
-	{
+		totaltime += timeslice / 2;
+		
 		Input input = GetGame().GetInput();
 		
 		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
 		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);
 		
+		vector pos = m_FunnyMeme.GetPosition();
+		pos[1] = pos[1] + Math.Sin(totaltime * Math.PI) / 1500;
+		m_FunnyMeme.SetPosition(pos);
+		
 		m_FunnyMeme.SetDirection(lookat);
 		m_FunnyMeme.Update();
+		
+		if (input.LocalValue("UAPersonView")) {
+			vector ori = m_FunnyMeme.GetOrientation();
+			offset += 10;
+			if (offset > 360) offset = 0;
+			ori[2] = ori[2] + offset;
+			
+			m_FunnyMeme.SetOrientation(ori);
+			m_FunnyMeme.Update();
+			
+			foreach (Object cam: m_FunnyMemes) {
+				vector trans[4];
+				cam.GetTransform(trans);
+				dBodyApplyTorqueImpulse(cam, trans[2].Normalized() * timeslice * 100 * 50);
+			}
+			
+			minute = (ori[2] / 360) * 60;
+			if (minute >= 60) {
+				minute = 0;
+				hour++;
+			}
+			
+			if (hour > 24) {
+				hour = 0;
+			}
+			
+			GetGame().GetWorld().SetDate(2018, 10, 1, hour, minute);
+			return;
+		}
 		
 		if (input.LocalPress("UAFire")) {
 			
@@ -68,29 +112,31 @@ modded class DayZIntroScene
 	        vector center = (mins + maxs) * 0.5;
 	        vector size = maxs - mins;
 	        
-	        dBodyDynamic(new_camera, true);
-	       	new_camera.SetDynamicPhysicsLifeTime(-1);
+			
+	        new_camera.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
+			new_camera.SetDynamicPhysicsLifeTime(-1);
 			dBodySetMass(new_camera, 100);
-			dBodySetDamping(new_camera, 100, 500);
-	        dBodyActive(new_camera, ActiveState.ACTIVE);
-	        new_camera.CreateDynamicPhysics(PhxInteractionLayers.RAGDOLL);
 			//new_camera.SetDynamicPhysics();
+			m_FunnyMemes.Insert(new_camera);
 		}
-		
-		
 	}
-	
-	
-
-
-	
-
 }
 
+
+//#define LOAD_MISSION 1
 
 modded class MainMenu 
 {
 	
+	void MainMenu()
+	{
+		
+#ifdef LOAD_MISSION		
+		Print("Loading straight into mission");
+		GetGame().PlayMission(CreateEditorMission("ChernarusPlus"));
+#endif
+		
+	}
 	
 	override Widget Init()
 	{
@@ -106,6 +152,8 @@ modded class MainMenu
 		
 		TextWidget tw = TextWidget.Cast(layoutRoot.FindAnyWidget("play_label"));
 		tw.SetText("Open Editor");
+		
+
 		
 		return layoutRoot;
 	}

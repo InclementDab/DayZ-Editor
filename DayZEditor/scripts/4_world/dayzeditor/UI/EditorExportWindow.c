@@ -42,31 +42,6 @@ class EditorExportWindow: UIScriptedMenu
 }
 
 
-class EditorExportButton: ScriptedWidgetEventHandler
-{
-	protected Widget m_Root;
-	
-	void ~EditorExportButton()
-	{
-		delete m_Root;
-	}
-	
-	void OnWidgetScriptInit(Widget w)
-	{
-		m_Root = w;
-		m_Root.SetHandler(this);
-	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		Print("EditorExportButton::OnClick");
-		EditorFileManager.ExportToFile();
-		
-		return true;
-	}
-	
-	
-}
 
 class EditorCloseButton: ScriptedWidgetEventHandler
 {

@@ -4,9 +4,7 @@ static const float ALPHA_ON_SHOW = 1;
 static const float ALPHA_ON_HIDE = 0.25;
 
 class EditorMapMarker: UILinkedObject
-{
-	protected ImageWidget m_EditorMapMarkerImage;
-	
+{	
 	void EditorMapMarker()
 	{
 		Print("EditorMapMarker");
@@ -15,15 +13,8 @@ class EditorMapMarker: UILinkedObject
 	void ~EditorMapMarker()
 	{
 		Print("~EditorMapMarker");
-		delete m_EditorMapMarkerImage;
 	}
 	
-	override void OnWidgetScriptInit(Widget w)
-	{
-		Print("EditorObjectMarker::OnWidgetScriptInit");
-		super.OnWidgetScriptInit(w);
-		m_EditorMapMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorMapMarkerImage"));		
-	}
 	
 	override void Update()
 	{
@@ -35,7 +26,7 @@ class EditorMapMarker: UILinkedObject
 		// -10 to put cursor on center
 		m_Root.SetPos(pos[0] - 15, pos[1] - 15);
 		
-		if (m_EditorObject.IsSelected() || MouseInside) 
+		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject) || MouseInside) 
 			m_Root.SetAlpha(ALPHA_ON_SHOW);
 		else 
 			m_Root.SetAlpha(ALPHA_ON_HIDE);
@@ -66,18 +57,18 @@ class EditorMapMarker: UILinkedObject
 		Input input = GetGame().GetInput();
 		
 		// ignores the object if you are placing
-		if (Editor.IsPlacing()) return false;
+		if (GetEditor().IsPlacing()) return false;
 		
 		// allows multiple objects to be dragged
-		if (m_EditorObject.IsSelected()) return true;
+		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) 
+			return true;
 		
-		// basic interaction
-		if (input.LocalValue("UATurbo"))
-			m_EditorObject.Select(false);
-		else if (input.LocalValue("UARunWalkTemp"))
-			m_EditorObject.ToggleSelect();
+		// We want to Toggle selection if you are holding control
+		if (input.LocalValue("UARunWalkTemp"))
+			GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);
 		else
-			m_EditorObject.Select();
+			GetEditor().GetObjectManager().SelectObject(m_EditorObject, !input.LocalValue("UATurbo"));
+		
 		 // Blocks map from creating selection box
 		return true;
 	}
@@ -85,7 +76,7 @@ class EditorMapMarker: UILinkedObject
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		Print("EditorMapMarker::OnDrag");
-		if (Editor.IsPlacing()) return false;
+		if (GetEditor().IsPlacing()) return false;
 		EditorEvents.DragInvoke(this, m_EditorObject);
 		return true;
 	}
@@ -101,53 +92,40 @@ class EditorMapMarker: UILinkedObject
 class EditorObjectMarker: UILinkedObject
 {
 
-	protected ImageWidget m_EditorObjectMarkerImage;
 	protected bool override_show = true;
-	
 	private bool MouseInside = false;
 	
 	void ~EditorObjectMarker()
 	{
 		Print("~EditorObjectMarker");
-		delete m_EditorObjectMarkerImage;
 	}
-	
-	
-	override void OnWidgetScriptInit(Widget w)
-	{
-		Print("EditorObjectMarker::OnWidgetScriptInit");
-		super.OnWidgetScriptInit(w);
-
-		m_EditorObjectMarkerImage = ImageWidget.Cast(m_Root.FindAnyWidget("EditorObjectMarkerImage"));		
-	}
-	
-	
-	
+		
 	override void Update()
 	{
 		vector position;
 		vector object_transform[4];
 		m_EditorObject.GetTransform(object_transform);
 		
+		// Should the position be raycasted on the ground, or locked to the object
 		if (EditorSettings.MAINTAIN_HEIGHT) {
-			// Raycast ground below object
 			set<Object> o;
 			vector ground_dir; int component;
 			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject, false, true); // set to ground only
-		} else {
-			position = m_EditorObject.GetBottomCenter();
-		}
+		} 
+		else position = m_EditorObject.GetBottomCenter();
+	
 		
 		vector screenpos = GetGame().GetScreenPos(position);
+
 		int screen_x, screen_y;
 		GetScreenSize(screen_x, screen_y);
 		m_Root.SetPos(screenpos[0] - 15, screenpos[1] - 15);
 		
 		if (override_show) {
-			m_Root.Show(!(screenpos[0] > screen_x || screenpos[1] > screen_y || screenpos[0] <= 0 || screenpos[1] <= 0));
+			m_Root.Show(screenpos[2] > 0);			
 		}
 		
-		if (m_EditorObject.IsSelected() || MouseInside) {
+		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject) || MouseInside) {
 			m_Root.SetAlpha(ALPHA_ON_SHOW);
 		} else {
 			m_Root.SetAlpha(ALPHA_ON_HIDE);
@@ -163,7 +141,7 @@ class EditorObjectMarker: UILinkedObject
 	{
 		// you should set cursor here its smart smile :)
 		Print("EditorMarker::OnMouseEnter");
-		if (Editor.IsPlacing()) return false;
+		if (GetEditor().IsPlacing()) return false;
 		MouseInside = true;
 		return true;
 	}
@@ -183,18 +161,26 @@ class EditorObjectMarker: UILinkedObject
 		
 		Input input = GetGame().GetInput();
 		
-		if (Editor.IsPlacing()) return false;
-		
-		// allows multiple objects to be dragged
-		if (m_EditorObject.IsSelected()) return true;
-		
-		if (input.LocalValue("UATurbo"))
-			m_EditorObject.Select(false);
-		else if (input.LocalValue("UARunWalkTemp"))
-			m_EditorObject.ToggleSelect();
-		else
-			m_EditorObject.Select();
-		
+		if (button == 0) {
+			
+			if (GetEditor().IsPlacing()) return false;
+			
+			// required for multiple objects to be dragged
+			if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) 
+				return true;
+			
+			// We want to Toggle selection if you are holding control
+			if (input.LocalValue("UARunWalkTemp"))
+				GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);
+			else
+				GetEditor().GetObjectManager().SelectObject(m_EditorObject, !input.LocalValue("UATurbo"));
+			
+			
+		} else if (button == 1) {
+			Widget ctx_menu = m_EditorObject.GetContextMenu();
+			ctx_menu.Show(true);
+			ctx_menu.SetPos(x, y);
+		} else return false;
 
 
 		return true;
@@ -205,7 +191,7 @@ class EditorObjectMarker: UILinkedObject
 	{
 		Print("EditorObjectMarker::OnDrag");
 		
-		if (Editor.IsPlacing()) return false;
+		if (GetEditor().IsPlacing()) return false;
 		
 		EditorEvents.DragInvoke(this, m_EditorObject);
 		return true;
@@ -274,12 +260,12 @@ class EditorWidgetEventHandler: ScriptedWidgetEventHandler
 	
 	void EditorWidgetEventHandler()
 	{
-		
+		//GetEditor().GetUIManager().GetUpdateInvoker().Insert(Update);
 	}
 	
 	void ~EditorWidgetEventHandler()
 	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		GetEditor().GetUIManager().GetUpdateInvoker().Remove(Update);
 		m_Root.Show(false);
 		delete m_Root;
 	}
@@ -289,19 +275,12 @@ class EditorWidgetEventHandler: ScriptedWidgetEventHandler
 	void OnWidgetScriptInit(Widget w)
 	{
 		m_Root = w;
-		m_Root.SetHandler(this);		
+		m_Root.SetHandler(this);
 	}
 	
-	
-	override bool OnSelect(Widget w, int x, int y)
-	{
-		Print("EditorWidgetEventHandler::OnSelect");
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-		return super.OnSelect(w, x, y);
-	}
 	
 	Widget GetRoot() { return m_Root; }
-	void Update() { }
+	void Update(float timeslice) { }
 }
 
 

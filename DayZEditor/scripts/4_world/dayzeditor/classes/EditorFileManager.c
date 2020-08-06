@@ -14,14 +14,8 @@ class COMImportData
 
 class EditorWorldObject
 {
-	string WorldObject_Typename;
-	vector WorldObject_Transform[4];
-	
-	void EditorWorldObject(string classname, vector transform[4]) 
-	{
-		WorldObject_Typename = classname; 
-		WorldObject_Transform = transform;
-	}
+	string m_Typename;
+	vector m_Transform[4];
 }
 
 class EditorWorldData
@@ -66,16 +60,17 @@ class EditorFileManager
 {
 
 
-	static void SaveFile(EditorWorldData data, string filename = "$profile:editor_save.txt")
+	static void SaveFile(ref EditorWorldData data, string filename = "$profile:editor_save.txt")
 	{
-		JsonFileLoader<EditorWorldData>.JsonSaveFile(filename, data);
+		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(filename, data);
+		GetEditor().GetUIManager().TriggerUINotification("Saved!", COLOR_GREEN); 
 	}
 	
 	static EditorWorldData LoadFile(string filename = "$profile:editor_save.txt")
 	{
 		EditorWorldData data = new EditorWorldData();
 		JsonFileLoader<EditorWorldData>.JsonLoadFile(filename, data);
-		
+		GetEditor().GetUIManager().TriggerUINotification("Loaded!"); 
 		return data;
 		
 	}
@@ -96,10 +91,13 @@ class EditorFileManager
 					vector transform[4];
 					param.param3.RotationMatrixFromAngles(transform);
 					transform[3] = param.param2;
-					data.WorldObjects.Insert(new EditorWorldObject(param.param1, transform));
+					
+					EditorWorldObject world_object = new EditorWorldObject();
+					world_object.m_Typename = param.param1;
+					world_object.m_Transform = transform;
+					
+					data.WorldObjects.Insert(world_object);
 				}
-
-				
 			}
 		}
 
@@ -108,8 +106,27 @@ class EditorFileManager
 		
 	}
 	
-	static void ExportToFile(ExportMode mode = ExportMode.TERRAINBUILDER, string filename = "$profile:editor_export.txt", HeightType height_type = HeightType.RELATIVE)
+	static void ExportToFile(EditorObjectSet export_objects, ExportMode mode = ExportMode.TERRAINBUILDER, string filename = "export", HeightType height_type = HeightType.RELATIVE)
 	{
+		Print("Exporting to File...");
+		
+		switch (mode) {
+			
+			case ExportMode.EXPANSION: {
+				filename += ".map";
+				break;
+			}
+			
+			default: {
+				filename += ".txt";
+				break;
+			}
+			
+		}
+		
+		filename = "$profile:Editor/Export" + filename;
+		
+		
 		DeleteFile(filename);
 		FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
 		if (handle == 0) {
@@ -117,16 +134,13 @@ class EditorFileManager
 			return;
 		}
 		
-		foreach (EditorObject editor_object: Editor.PlacedObjects) {
+		foreach (EditorObject editor_object: export_objects) {
 						
 			vector position = editor_object.GetPosition();
 			vector orientation = editor_object.GetOrientation();
 			orientation = orientation.VectorToAngles();
 			float scale = 1;//editor_object.GetScale();
-			
-
-			
-			
+	
 			vector terrainbuilder_offset = Vector(200000, 0, 0);
 			string line;
 			switch (mode) {
@@ -183,6 +197,10 @@ class EditorFileManager
 				
 			} 
 		}
+		
 		CloseFile(handle);
+		
+		GetEditor().GetUIManager().TriggerUINotification("Exported!");
+		
 	}
 }

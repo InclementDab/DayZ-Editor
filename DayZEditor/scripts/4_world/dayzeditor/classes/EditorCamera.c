@@ -13,8 +13,8 @@ class EditorCamera: Camera
 	
 	float SendUpdateAccumalator = 0.0;
 	
-	static bool LookFreeze;
-	static bool MoveFreeze;
+	private bool LookEnabled = true;
+	private bool MoveEnabled = true;
 
 	Object SelectedTarget;
 	vector TargetPosition;
@@ -24,52 +24,47 @@ class EditorCamera: Camera
 
 	vector orientation;
 	
-	protected ref EditorCameraMapMarker CameraMapMarker;
-	protected Widget m_MapMarkerWidget;
+	// Setters
+	void SetLookEnabled(bool state) { LookEnabled = state; }
+	void SetMoveEnabled(bool state) { MoveEnabled = state; }
 	
 	void EditorCamera()
 	{
 		SetEventMask(EntityEvent.FRAME);
-		SelectedTarget(NULL);
-		CameraMapMarker = new EditorCameraMapMarker();
-		m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorCameraMapMarker.layout");
-		m_MapMarkerWidget.GetScript(CameraMapMarker);
-		CameraMapMarker.SetCamera(this);
-		
-		MapWidget map_widget = Editor.ActiveEditorUI.GetMapWidget();
-		map_widget.AddChild(m_MapMarkerWidget);
+		SelectTarget(null);
+
 	}
 
 	void ~EditorCamera()
 	{
-		SelectedTarget(NULL);
+		SelectTarget(null);
 	}
 	
-	Widget GetMapMarker() { return m_MapMarkerWidget; }
 
 	void OnTargetSelected( Object target )
 	{
 		Print("OnTargetSelected");
 	}
 
-	void OnTargetDeselected( Object target )
+	void OnTargetDeselected(Object target)
 	{
+		Print("OnTargetDeselected");
 	}
 
-	void SelectedTarget(Object target)
+	private bool IsTargeting = false;
+	void SelectTarget(Object target)
 	{
+		Print("ActiveCamera::SelectTarget");
 		if (target != SelectedTarget) {
 			TargetPosition = target.GetPosition();
-			MoveFreeze = true;
-			LookFreeze = true;
-
+			IsTargeting = true;
 			OnTargetSelected(target);
-		} else if ( target == NULL && SelectedTarget ) {
-			TargetPosition = "0 0 0";
-			MoveFreeze = false;
-			LookFreeze = false;
-
+			
+		} else if (target == null) {
+			TargetPosition = vector.Zero;
+			IsTargeting = false;
 			OnTargetDeselected(SelectedTarget);
+			
 		}
 
 		SelectedTarget = target;
@@ -77,7 +72,7 @@ class EditorCamera: Camera
 
 	override void EOnFrame( IEntity other, float timeSlice )
 	{
-		if (Editor.IsPlayerActive) return;
+		if (Editor.IsPlayerActive()) return;
 		if ( SendUpdateAccumalator > 0.5 ){
 			GetGame().UpdateSpectatorPosition(GetPosition());
 
@@ -106,16 +101,16 @@ class EditorCamera: Camera
 		
 		vector current_position = GetPosition();
 		float current_altitude = current_position[1] - GetGame().SurfaceY(current_position[0], current_position[2]);
-		Editor.ActiveEditorUI.m_DebugText4.SetText(current_altitude.ToString());
 		
 		if (zoomAmt != 0)
 			speedInc = 0;
 
-		bool shouldRoll = false;input.LocalValue("UALookAround");
+		bool shouldRoll = false; //input.LocalValue("UALookAround");
 		bool decreaseSpeeds = input.LocalValue("UALookAround");
 		bool increaseSpeeds = input.LocalValue("UATurbo");
+		
 
-		if (!MoveFreeze) {
+		if (MoveEnabled) {
 			
 			float cam_speed = CAMERA_SPEED;
 			
@@ -149,13 +144,13 @@ class EditorCamera: Camera
 		SetTransform(transform);
 		
 		orientation = GetOrientation();
-		if (input.LocalValue("UATempRaiseWeapon") || !LookFreeze) {
+		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
+			//SelectTarget(null);
 			angularVelocity = vector.Zero;
-
 			angularVelocity[0] = angularVelocity[0] + ( yawDiff * CAMERA_MSENS * 10 );
 			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * CAMERA_MSENS * 10);
 			
-			if ( shouldRoll ) {
+			if (shouldRoll) {
 				angularVelocity[2] = angularVelocity[2] + ( speedInc * CAMERA_MSENS * 10);
 			}
 
@@ -176,6 +171,10 @@ class EditorCamera: Camera
 
 			SetOrientation( orientation );
 		}
+
+		if (IsTargeting) {
+			LookAt(TargetPosition);
+		}
 	}
 
 
@@ -190,6 +189,7 @@ class EditorCamera: Camera
 		d[1] = dir[1] * sin;
 		d[0] = dir[0] * sin;
 	}
+
 }
 
 

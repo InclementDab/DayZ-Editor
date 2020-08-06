@@ -28,7 +28,7 @@ class EditorBrush
 	
 	void UpdateBrush()
 	{
-		if (Editor.IsPlacing()) return;
+		if (GetEditor().IsPlacing()) return;
 		
 		set<Object> o;
 		vector CurrentMousePosition = MousePosToRay(o, null, EditorSettings.OBJECT_VIEW_DISTANCE, 0, true);
@@ -36,7 +36,8 @@ class EditorBrush
 		
 		
 		Input input = GetGame().GetInput();		
-		if (input.LocalValue("UAFire")) {
+		
+		if (input.LocalValue("UAFire") && !GetEditor().GetUIManager().IsCursorOverUI()) {
 			DuringMouseDown(CurrentMousePosition);
 		}
 	}
@@ -88,6 +89,7 @@ class TreeBrush: DensityBrush
 		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1f", 	0.1);
 		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
 		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
+
 		
 		foreach (string name, float rate: ChernarusTrees) {
 		
@@ -112,7 +114,14 @@ class TreeBrush: DensityBrush
 	
 			Object tree = GetGame().CreateObjectEx(m_CurrentNatureData.Get(Math.RandomInt(0, m_CurrentNatureData.Count() - 1)), pos, ECE_NONE);
 			
-			vector size = ObjectGetSize(tree);
+			// remove this once we change Object to a lower abstracted version of EditorObject
+			vector clip_info[2];
+			vector size;	
+			tree.ClippingInfo(clip_info);
+			size[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
+			size[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
+			size[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
+			
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2.4;
 			tree.SetPosition(pos);
 			
@@ -167,7 +176,14 @@ class GrassBrush: DensityBrush
 	
 			Object tree = GetGame().CreateObjectEx(m_CurrentNatureData.Get(Math.RandomInt(0, m_CurrentNatureData.Count() - 1)), pos, ECE_NONE);
 			
-			vector size = ObjectGetSize(tree);
+			// remove this once we change Object to a lower abstracted version of EditorObject
+			vector clip_info[2];
+			vector size;	
+			tree.ClippingInfo(clip_info);
+			size[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
+			size[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
+			size[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
+			
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2.4;
 			tree.SetPosition(pos);
 			
@@ -196,9 +212,10 @@ class DeleteBrush: EditorBrush
 		
 		foreach (Object r: results) {
 			
-			EditorObject eo = Editor.EditorObjectFromObject(r);
+			EditorObject eo = GetEditor().GetObjectManager().GetEditorObject(r);
 			if (eo != null) {
-				Editor.DeleteObject(eo);
+				GetEditor().GetObjectManager().SelectObject(eo);
+				GetEditor().GetObjectManager().DeleteSelection();
 			} else {
 				GetGame().ObjectDelete(r);
 			}
