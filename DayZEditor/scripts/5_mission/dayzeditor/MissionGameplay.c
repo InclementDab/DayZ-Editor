@@ -22,28 +22,35 @@ class EditorMissionGameplay: MissionGameplay
     override void OnKeyPress(int key)
     {
 		Input input = GetGame().GetInput();
-
+		
 		switch (key) {
-						
-			case KeyCode.KC_F1: {
-				m_EditorInstance = new Editor();			
+			
+			case KeyCode.KC_F5: {
+				m_HudRootWidget.Show(true);
+				break;
+			}
+			
+			case KeyCode.KC_F6: {
+				m_HudRootWidget.Show(false);
 				break;
 			}
 		}
-		
 
-		if (GetEditor().GetUIManager().GetEditorUI().OnKeyPress(key)) return;
-		if (GetEditor().OnKeyPress(key)) return;
+		
 		if (m_Hud.KeyPress(key)) return; // might need to be moved if you use UIScriptedMenus 
+		if (GetEditor().OnKeyPress(key)) return;
 		super.OnKeyPress(key);
     }
 	
     override void OnInit()
 	{
+		
 		super.OnInit();
 		m_EditorInstance = new Editor(); 
 		
+		m_HudRootWidget.Show(false);
 	}
+
 
 
 
@@ -60,8 +67,6 @@ class EditorMissionGameplay: MissionGameplay
 		Print("EditorMissionGameplay::ResetGUI");
         DestroyInventory();
         InitInventory();
-		
-		
     }
 
     override void ShowChat()

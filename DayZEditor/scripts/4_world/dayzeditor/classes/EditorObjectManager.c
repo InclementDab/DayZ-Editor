@@ -73,12 +73,9 @@ class EditorObjectManager: Managed
 		    for (int j = 0; j < g_Game.ConfigGetChildrenCount(Config_Path); j++) {
 				string Config_Name, Base_Name;
 		        g_Game.ConfigGetChildName(Config_Path, j, Config_Name); 
-				//g_Game.ConfigGetBaseName(Config_Path + " " + Config_Name, Base_Name);
 				
 				EditorPlaceableObject placeable_object = new EditorPlaceableObject(Config_Name, Config_Path);
 				placeable_objects.Insert(placeable_object);
-				//EditorPlaceableObjectSet plc_set = placeable_objects.GetElement(placeable_object.GetCategory());
-				//plc_set.Insert(placeable_object);
 		    }
 		}
 		
@@ -270,7 +267,6 @@ class EditorObjectManager: Managed
 	
 	bool CheckIfRootIsSelected(Widget root)
 	{
-		
 		foreach (EditorObject editor_object: m_SelectedObjects)
 			if (GetEditor().GetObjectManager().IsSelected(editor_object) && (editor_object.GetObjectBrowser() == root || editor_object.GetObjectMarker() == root))
 				return true;

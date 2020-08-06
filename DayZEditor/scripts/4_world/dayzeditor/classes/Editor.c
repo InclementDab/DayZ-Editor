@@ -629,7 +629,49 @@ class Editor: Managed
 		Input input = GetGame().GetInput();
 		switch (key) {
 			
+			case KeyCode.KC_F1: {
+				EditorEvents.PlaceableCategoryChangedInvoke(this, PlaceableObjectCategory.BUILDING);
+				return true;
+			}
+			
+			case KeyCode.KC_F2: {
+				EditorEvents.PlaceableCategoryChangedInvoke(this, PlaceableObjectCategory.VEHICLE);
+				return true;
+			}
+			
+			case KeyCode.KC_F3: {
+				EditorEvents.PlaceableCategoryChangedInvoke(this, PlaceableObjectCategory.ENTITY);
+				return true;
+			}
+			
+			case KeyCode.KC_F4: {
+				EditorEvents.PlaceableCategoryChangedInvoke(this, PlaceableObjectCategory.HUMAN);
+				return true;
+			}
+						
+			case KeyCode.KC_F5: {
+				// Create Character on cursor and select them
+				set<Object> o;
+				vector v = MousePosToRay(o);
+				GetUIManager().SetEditorCameraActive(false);
+				GetGame().SelectPlayer(null, EditorPlayer);
+				EditorPlayer.SetPosition(v);
+				PlayerActive = true;
+				GetUIManager().GetEditorUI().GetRoot().Show(false);
+				break;
+			}
+			
+			case KeyCode.KC_F6: {
+				// Deselect character
+				GetUIManager().SetEditorCameraActive(true);
+				PlayerActive = false;
+				GetUIManager().GetEditorUI().GetRoot().Show(true);
+				break;
+			}
+
+			
 			case KeyCode.KC_ESCAPE: {
+				
 				if (GetFocus()) {
 					SetFocus(null);
 					return true;
@@ -637,7 +679,6 @@ class Editor: Managed
 					//m_UIManager.GetMenu().GetVisibleMenu() != "PauseMenu"
 					// maybe something like this idk just add better escape func
 				}
-				
 				break;
 			}
 			
@@ -645,6 +686,52 @@ class Editor: Managed
 				GetObjectManager().DeleteSelection();				
 				return true;
 			}
+			
+			case KeyCode.KC_M: {
+								
+				GetUIManager().GetEditorUI().ShowMap(!GetUIManager().GetEditorUI().IsMapOpen());
+				return true;
+			}
+		
+			case KeyCode.KC_SPACE: {
+				if (GetGame().GetUIManager().IsCursorVisible() && !GetUIManager().GetEditorUI().IsMapOpen()) {
+					GetUIManager().GetEditorUI().HideCursor();
+					if (Editor.IsPlayerActive()) {
+						//GetGame().GetPlayer().GetInputController().SetDisabled(false);
+						Editor.SetPlayerAimLock(false);
+					}
+				} else { 
+					GetUIManager().GetEditorUI().ShowCursor();
+					if (Editor.IsPlayerActive()) {
+						//GetGame().GetPlayer().GetInputController().SetDisabled(true);
+						Editor.SetPlayerAimLock(true);
+					}
+				}
+				return true;
+			}
+			/*
+			case KeyCode.KC_U: {
+				EditorSettings.MAGNET_PLACEMENT = !EditorSettings.MAGNET_PLACEMENT;
+				m_ToolbarMagnet.SetState(EditorSettings.MAGNET_PLACEMENT);
+				m_ToolbarMagnet.Update();
+				SetFocus(null);
+				return true;
+			}*/
+			
+			case KeyCode.KC_Y: {
+				GetEditor().GetUIManager().SetVisibility(!GetEditor().GetUIManager().GetVisibility());
+				
+				return true;
+			}
+			/*
+			case KeyCode.KC_G: {
+				
+				EditorSettings.MAINTAIN_HEIGHT = !EditorSettings.MAINTAIN_HEIGHT;
+				m_ToolbarGround.SetState(EditorSettings.MAINTAIN_HEIGHT);
+				m_ToolbarGround.Update();
+				SetFocus(null);
+				return true;
+			}*/
 
 			
 			case KeyCode.KC_Z: {
@@ -729,27 +816,7 @@ class Editor: Managed
 				break;
 			}
 			
-			case KeyCode.KC_F2: {
-				// Create Character on cursor and select them
-				set<Object> o;
-				vector v = MousePosToRay(o);
-				GetUIManager().SetEditorCameraActive(false);
-				GetGame().SelectPlayer(null, EditorPlayer);
-				EditorPlayer.SetPosition(v);
-				//EditorPlayer.DisableSimulation(false); todo remove
-				PlayerActive = true;
-				GetUIManager().GetEditorUI().GetRoot().Show(false);
-				break;
-			}
-			
-			case KeyCode.KC_F3: {
-				// Deselect character
-				GetUIManager().SetEditorCameraActive(true);
-				//EditorPlayer.DisableSimulation(true); todo remove
-				PlayerActive = false;
-				GetUIManager().GetEditorUI().GetRoot().Show(true);
-				break;
-			}
+
 		}
 		
 		// todo add increment size in ui
