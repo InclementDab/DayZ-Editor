@@ -1,6 +1,14 @@
 
-class EditorObjectSet: ref map<int, ref EditorObject>
+class EditorObjectSet: map<int, EditorObject>
 {
+	
+	void ~EditorObjectSet()
+	{
+		foreach (EditorObject obj: this)
+			GetGame().ObjectDelete(obj);
+		
+		
+	}
 	
 	bool InsertEditorObject(EditorObject target)
 	{
@@ -46,6 +54,12 @@ class EditorObjectManager: Managed
 	void ~EditorObjectManager() 
 	{
 		Print("~EditorObjectManager");
+		
+		delete m_PlacedObjects;
+		delete m_SelectedObjects;
+		delete m_SessionCache;
+		delete m_ClipboardCache;
+		delete m_ActionStack;
 	}
 	
 	static int GetPlaceableObjects(out array<ref PlaceableEditorObject> placeable_objects) 
@@ -261,30 +275,7 @@ class EditorObjectManager: Managed
 	}
 	
 
-	void Save()
-	{	
-		EditorWorldData save_data = new EditorWorldData();
-		GetEditor().GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
-		
-		foreach (EditorObject save_object: m_PlacedObjects)	
-			save_data.WorldObjects.Insert(save_object.GetSaveData());
-		
-		
-		EditorFileManager.SaveFile(save_data);
-	}
-	
-	void Open()
-	{
-		EditorWorldData load_data = EditorFileManager.LoadFile();
-		GetEditor().GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
-		// find a proper way to remove all existing files. maybe delete the object manager :)
-		
-		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
-			EditorObject e_object = CreateObject(load_object.m_Typename, load_object.m_Transform[3]);
-			
-			m_PlacedObjects.Insert(e_object.GetID(), e_object);
-		}
-	}
+
 	
 	// O(n) shit :)
 	EditorObject GetEditorObject(Object target)

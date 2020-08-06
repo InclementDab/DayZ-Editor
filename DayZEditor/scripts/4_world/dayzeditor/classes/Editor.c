@@ -244,7 +244,35 @@ class Editor: Managed
 	}
 	
 
-
+	void Save()
+	{	
+		EditorWorldData save_data = new EditorWorldData();
+		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
+		
+		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
+		foreach (EditorObject save_object: placed_objects)	
+			save_data.WorldObjects.Insert(save_object.GetSaveData());
+ 
+		EditorFileManager.SaveFile(save_data);
+		
+		GetEditor().GetUIManager().TriggerUINotification("Saved!", COLOR_GREEN); 
+	}
+	
+	void Open()
+	{
+		delete m_EditorObjectManager;
+		m_EditorObjectManager = new EditorObjectManager();
+		
+		EditorWorldData load_data = EditorFileManager.LoadFile();
+		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
+		
+		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
+			EditorObject e_object =  GetObjectManager().CreateObject(load_object.m_Typename, load_object.m_Transform[3]);
+			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
+		}
+		
+		GetEditor().GetUIManager().TriggerUINotification("Loaded!"); 
+	}
 	
 	
 
@@ -532,7 +560,8 @@ class Editor: Managed
 		target.Update();
 		
 		// This handles all other selected objects
-		foreach (EditorObject selected_object: GetObjectManager().GetSelectedObjects()) {
+		EditorObjectSet selected_objects = GetObjectManager().GetSelectedObjects();
+		foreach (EditorObject selected_object: selected_objects) {
 			
 			if (selected_object == target) continue;
 			
@@ -685,7 +714,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_S: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					GetObjectManager().Save();
+					Save();
 					return true;
 				}
 				break;
@@ -693,7 +722,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_O: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					GetObjectManager().Open();
+					Open();
 					return true;
 				}
 				break;

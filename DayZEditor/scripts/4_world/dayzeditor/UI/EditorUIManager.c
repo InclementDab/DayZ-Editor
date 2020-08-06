@@ -131,7 +131,7 @@ class EditorUIManager: Managed
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CloseUINotification, duration * 1000, false, notif_frame, start_x, start_y);
 		
-		EffectSound notif_sound = SEffectManager.PlaySound("Notification_SoundSet", GetGame().GetCurrentCameraPosition());
+		EffectSound notif_sound = SEffectManager.PlaySound("Notification_SoundSet", GetEditorCamera().GetPosition());
 		notif_sound.SetSoundAutodestroy(true);
 		
 		
