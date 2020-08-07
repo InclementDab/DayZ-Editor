@@ -57,7 +57,6 @@ class Editor: Managed
 	void Editor()
 	{
 		Print("Editor");
-		
 		EditorSettings.Load();
 		
 		// Event subscriptions
@@ -77,7 +76,7 @@ class Editor: Managed
 		DebugObject2 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 		DebugObject3 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 		
-		
+		m_EditorSettings.SetPlaceableObjectCategory(PlaceableObjectCategory.BUILDING);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update); // Last thing always
 	}
 		
@@ -715,7 +714,7 @@ class Editor: Managed
 				
 				if (GetFocus()) {
 					SetFocus(null);
-					return true;
+					//return true;
 				} else if (m_LootEditMode) {
 					PlaceholderRemoveLootMode();
 				} else {
@@ -857,6 +856,11 @@ class Editor: Managed
 					EditorEventManager.ImportEventPositions();
 					return true;
 				}
+				break;
+			}
+			
+			default: {
+				Print("DEFAULT CASE: " + key);
 				break;
 			}
 			

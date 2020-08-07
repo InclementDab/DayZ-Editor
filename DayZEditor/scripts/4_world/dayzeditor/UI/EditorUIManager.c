@@ -66,7 +66,6 @@ class EditorUIManager: Managed
 		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);	
 		
 		// Sets default
-		GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.BUILDING);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
