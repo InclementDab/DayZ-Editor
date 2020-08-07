@@ -69,7 +69,7 @@ class EditorFileManager
 {
 
 
-	static FileDialogResult SaveFile(ref EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
+	static FileDialogResult Save(ref EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
 	{
 		string file = filedir + filename + ".dze";
 		if (FileExist(file)) {
@@ -83,7 +83,7 @@ class EditorFileManager
 		return FileDialogResult.SUCCESS;
 	}
 	
-	static FileDialogResult LoadFile(out EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
+	static FileDialogResult Open(out EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
 	{
 		string file = filedir + filename + ".dze";
 		if (!FileExist(file)) {
@@ -94,7 +94,7 @@ class EditorFileManager
 		return FileDialogResult.SUCCESS;
 	}
 	
-	static EditorWorldData ImportFromFile(string filename, ImportMode mode = ImportMode.COMFILE)
+	static EditorWorldData Import(string filename, ImportMode mode = ImportMode.COMFILE)
 	{
 		EditorWorldData data = new EditorWorldData();
 
@@ -125,7 +125,7 @@ class EditorFileManager
 		
 	}
 	
-	static void ExportToFile(EditorObjectSet export_objects, ExportMode mode = ExportMode.TERRAINBUILDER, string filename = "export", HeightType height_type = HeightType.RELATIVE)
+	static void Export(EditorObjectSet export_objects, ExportMode mode = ExportMode.TERRAINBUILDER, string filename = "export", HeightType height_type = HeightType.RELATIVE)
 	{
 		Print("Exporting to File...");
 		
