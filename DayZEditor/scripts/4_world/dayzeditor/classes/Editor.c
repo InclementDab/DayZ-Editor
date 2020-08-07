@@ -391,7 +391,8 @@ class Editor: Managed
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(RotationWidgetDragUpdate);
 		
 		EditorAction action = new EditorAction("SetTransformArray", "SetTransformArray");
-		foreach (EditorObject editor_object: GetObjectManager().GetSelectedObjects()) {
+		EditorObjectSet eo_set = GetObjectManager().GetSelectedObjects();
+		foreach (EditorObject editor_object: eo_set) {
 			action.InsertUndoParameter(editor_object, editor_object.TransformBeforeDrag);
 			action.InsertRedoParameter(editor_object, editor_object.GetTransformArray());
 		}
@@ -424,13 +425,13 @@ class Editor: Managed
 		switch (name) {
 			
 			case "translatex": {
-				widget_position[0] = cursor_position[2];
+				widget_position[0] = cursor_position[0];
 				break;
 			}
 			
 			case "translatey": {
-				widget_position[2] = cursor_position[0];
-				break;				
+				widget_position[2] = cursor_position[2];
+				break;
 			}
 			
 			case "translatez": {
@@ -495,8 +496,8 @@ class Editor: Managed
 			}
 		}
 		
-		//target.SetTransform(trans);
-		rotation_widget.SetRotation(ori);
+		// Disabled cause its very buggy
+		//rotation_widget.SetRotation(ori);
 	}
 	
 	
@@ -762,8 +763,12 @@ class Editor: Managed
 			}*/
 			
 			case KeyCode.KC_Y: {
-				GetEditor().GetUIManager().SetVisibility(!GetEditor().GetUIManager().GetVisibility());
 				
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Redo();
+				} else {
+					GetEditor().GetUIManager().SetVisibility(!GetEditor().GetUIManager().GetVisibility());
+				}
 				return true;
 			}
 			/*
@@ -785,13 +790,6 @@ class Editor: Managed
 				break;
 			}
 			
-			case KeyCode.KC_Y: {
-				if (input.LocalValue("UAWalkRunTemp")) {
-					Redo();
-					return true;
-				}
-				break;
-			}
 			
 			case KeyCode.KC_A: {
 				if (input.LocalValue("UAWalkRunTemp")) {

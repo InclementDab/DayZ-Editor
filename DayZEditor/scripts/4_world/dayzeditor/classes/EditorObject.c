@@ -1,5 +1,11 @@
 
-
+enum EditorObjectFlags
+{
+	EO_ALL,
+	EO_BBOX,
+	EO_MAPMARKER,
+	EO_WORLDMARKER
+}
 
 class EditorObject : Building
 {
@@ -48,7 +54,7 @@ class EditorObject : Building
 	* Initializers
 	*/
 	
-	void Init(string type_name)
+	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.EO_ALL)
 	{
 		Print("EditorObject::Init");
 	

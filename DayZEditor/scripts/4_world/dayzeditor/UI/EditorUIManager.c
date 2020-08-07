@@ -128,7 +128,6 @@ class EditorUIManager: Managed
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationDestroy);
 		
 		Widget notif_frame = m_EditorUI.GetNotificationFrame();
-		Print(notif_frame);
 		Widget notif_panel = notif_frame.FindAnyWidget("NotificationPanel");
 		TextWidget notif_text = TextWidget.Cast(notif_frame.FindAnyWidget("NotificationText"));
 		

@@ -265,7 +265,7 @@ class EditorWidgetEventHandler: ScriptedWidgetEventHandler
 	
 	void ~EditorWidgetEventHandler()
 	{
-		GetEditor().GetUIManager().GetUpdateInvoker().Remove(Update);
+		//GetEditor().GetUIManager().GetUpdateInvoker().Remove(Update);
 		m_Root.Show(false);
 		delete m_Root;
 	}

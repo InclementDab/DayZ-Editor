@@ -34,7 +34,8 @@ enum ExportMode
 {
 	TERRAINBUILDER,
 	COMFILE, 
-	EXPANSION
+	EXPANSION,
+	VPP
 }
 
 enum ImportMode
@@ -203,6 +204,13 @@ class EditorFileManager
 					//orientation = orientation.VectorToAngles();
 					line = string.Format("%1|%2 %3 %4|%5 %6 %7", editor_object.GetType(), position[0], position[1], position[2], orientation[0], orientation[1], orientation[2]);
 					FPrintln(handle, line);
+					break;
+				}
+				
+				case ExportMode.VPP: {
+					
+					//line = string.Format("%1|%2 %3 %4|%5 %6 %7", editor_object.GetType(), position[0], position[1], position[2], orientation[0], orientation[1], orientation[2]);
+					//FPrintln(handle, line);
 					break;
 				}
 				
