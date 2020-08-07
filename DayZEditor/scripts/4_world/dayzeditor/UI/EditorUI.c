@@ -138,7 +138,7 @@ class EditorUI: UIScriptedMenu
 	{
 		// Init
 		m_EditorUIHandler = new EditorUIHandler();
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorNew.layout");
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorNew.layout", GetGame().GetUIManager().GetMenu().GetLayoutRoot());
 		m_Root.GetScript(m_EditorUIHandler);
 		
 		
@@ -445,16 +445,21 @@ class EditorUI: UIScriptedMenu
 				}
 			}
 			
-			if (Editor.EditorObjectUnderCursor == null && GetEditor().GetEditorBrush() == null) {
-				// delayed dragbox
-				GetEditor().GetObjectManager().ClearSelection();
-				GetCursorPos(start_x, start_y);
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DelayedDragBoxCheck, 60);
-				
-			} 
+			GetEditor().GetObjectManager().ClearSelection();
 			
-			else if (Editor.EditorObjectUnderCursor != null) {
-				GetEditor().GetObjectManager().SelectObject(Editor.EditorObjectUnderCursor, !input.LocalValue("UATurbo"));
+			if (GetEditor().GetEditorBrush() == null) {
+				
+				if (Editor.EditorObjectUnderCursor == null) {
+					// delayed dragbox
+					GetCursorPos(start_x, start_y);
+					GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DelayedDragBoxCheck, 60);
+					
+					
+				} 
+				
+				else if (Editor.EditorObjectUnderCursor != null) {
+					GetEditor().GetObjectManager().SelectObject(Editor.EditorObjectUnderCursor, !input.LocalValue("UATurbo"));
+				}
 			}
 			
 			
@@ -834,16 +839,14 @@ class EditorUI: UIScriptedMenu
 		m_SimcityDensityText.SetText(EditorSettings.BRUSH_DENSITY.ToString());
 		
 		//! Color managment
-		if ( m_MagnetButton.GetState() )
-		{
+		if (m_MagnetButton.GetState()) {
 			ColorRed( m_MagnetButton, 0, 0 );
 		} else if ( !m_MagnetButton.GetState() && !m_FocusMagnet )
 		{
 			ColorNoFocus( m_MagnetButton, null, 0, 0 );
 		}
 		
-		if ( m_GroundButton.GetState() )
-		{
+		if (m_GroundButton.GetState()) {
 			ColorPureApple( m_GroundButton, 0, 0 );
 		} else if ( !m_GroundButton.GetState() && !m_FocusGround)
 		{
