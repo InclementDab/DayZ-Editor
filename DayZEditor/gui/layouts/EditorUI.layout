@@ -20,6 +20,7 @@ FrameWidgetClass EditorMainFrame {
    vexactpos 0
    hexactsize 0
    vexactsize 0
+   priority 1
    {
     WindowWidgetClass MapContainer {
      visible 0
@@ -221,7 +222,7 @@ FrameWidgetClass EditorMainFrame {
    vexactpos 1
    hexactsize 0
    vexactsize 0
-   priority 240
+   priority 239
   }
   PanelWidgetClass LeftbarFrame {
    visible 1
@@ -412,12 +413,17 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 0
          vexactsize 0
          priority 1
-         scriptclass ""
+         scriptclass "PlaceableSearchBar"
          style EditorProperty
+         text "Search...."
          "limit visible" 0
-         "Use default text" 0
+         "Use default text" 1
          "exact text" 1
          font "gui/fonts/metron"
+         {
+          ScriptParamsClass {
+          }
+         }
         }
         PanelWidgetClass LeftbarPanelSearchBarIconSpacer {
          ignorepointer 1
@@ -481,7 +487,7 @@ FrameWidgetClass EditorMainFrame {
           WrapSpacerWidgetClass LeftbarSpacer {
            visible 1
            disabled 0
-           ignorepointer 1
+           ignorepointer 0
            position 0 0
            size 1 1
            halign center_ref
@@ -490,7 +496,9 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 0
+           Padding 5
            Margin 0
+           "Size To Content H" 1
            "Size To Content V" 1
           }
          }
