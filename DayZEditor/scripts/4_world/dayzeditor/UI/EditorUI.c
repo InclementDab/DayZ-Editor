@@ -111,6 +111,17 @@ class EditorUI: UIScriptedMenu
 	private ref EditorUITooltip m_TooltipSnap;
 	private ref EditorUITooltip m_TooltipGround;
 	
+	// Info toolbar widgets
+	protected Widget m_ObjPosInfoPanel;
+	protected TextWidget m_ObjPosInfoX;
+	protected TextWidget m_ObjPosInfoY;
+	protected TextWidget m_ObjPosInfoZ;
+	
+	protected Widget m_CamPosInfoPanel;
+	protected TextWidget m_CamPosInfoX;
+	protected TextWidget m_CamPosInfoY;
+	protected TextWidget m_CamPosInfoZ;
+	
 	void EditorUI()
 	{
 		Print("EditorUI");
@@ -213,6 +224,17 @@ class EditorUI: UIScriptedMenu
 		m_TooltipSnap = new EditorUITooltip("Toogle snap mode on/off.", "Snap Mode");
 		m_TooltipGround = new EditorUITooltip("Toogle ground mode on/off.", "Ground Mode");
 		
+		// Info toolbar widgets
+		m_ObjPosInfoPanel = Widget.Cast(m_Root.FindAnyWidget("InfobarObjPosFrame"));
+		m_ObjPosInfoX = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_X_Value"));
+		m_ObjPosInfoY = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_Y_Value"));
+		m_ObjPosInfoZ = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_Z_Value"));
+		
+		m_CamPosInfoPanel = Widget.Cast(m_Root.FindAnyWidget("InfobarCamPosFrame"));
+		m_CamPosInfoX = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_X_Value"));
+		m_CamPosInfoY = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_Y_Value"));
+		m_CamPosInfoZ = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_Z_Value"));
+		
 		return m_Root;
 	}
 	
@@ -226,6 +248,9 @@ class EditorUI: UIScriptedMenu
 			m_LeftbarScroll.VScrollToPos(0);
 		
 		CheckToolbarButtonsState();
+		
+		if (m_CamPosInfoPanel.IsVisible())
+			UpdateInfoCamPos();
 	}
 	
 	void ShowMap(bool state)
@@ -814,6 +839,14 @@ class EditorUI: UIScriptedMenu
 		{
 			ColorNoFocus( m_SnapButton, null, 0, 0 );
 		}
+	}
+	
+	private void UpdateInfoCamPos()
+	{
+		vector campos = GetGame().GetCurrentCameraPosition();
+		m_CamPosInfoX.SetText(campos[0].ToString());
+		m_CamPosInfoY.SetText(campos[1].ToString());
+		m_CamPosInfoZ.SetText(campos[2].ToString());
 	}
 }
 

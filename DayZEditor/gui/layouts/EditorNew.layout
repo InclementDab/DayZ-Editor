@@ -2,8 +2,8 @@ FrameWidgetClass EditorMainFrame {
  clipchildren 0
  position 0 0
  size 1 1
- hexactpos 1
- vexactpos 1
+ hexactpos 0
+ vexactpos 0
  hexactsize 0
  vexactsize 0
  draggable 0
@@ -412,7 +412,7 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 0
          vexactsize 0
          priority 1
-         scriptclass "PlaceableSearchBar"
+         scriptclass ""
          style EditorProperty
          "limit visible" 0
          "Use default text" 0
@@ -643,7 +643,7 @@ FrameWidgetClass EditorMainFrame {
     PanelWidgetClass ToolbarMenubar {
      clipchildren 0
      ignorepointer 1
-     color 0.0627 0.0627 0.0627 0.549
+     color 0.0627 0.0627 0.0627 1
      position 0 0
      size 1 24
      halign center_ref
@@ -653,10 +653,23 @@ FrameWidgetClass EditorMainFrame {
      vexactsize 1
      style rover_sim_colorable
      {
+      ImageWidgetClass ToolbarIcon {
+       ignorepointer 1
+       size 24 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       imageTexture "{1A57E6DE48397D04}DayZEditor/gui/images/dayz_editor_icon_black.edds"
+       mode blend
+       "src alpha" 1
+       "no wrap" 1
+       stretch 1
+      }
       WrapSpacerWidgetClass MenuBarWrapper {
        clipchildren 0
        ignorepointer 1
-       position 0 0
+       position 24 0
        size 1 1
        hexactpos 1
        vexactpos 1
@@ -1116,51 +1129,49 @@ FrameWidgetClass EditorMainFrame {
     }
    }
   }
-  WrapSpacerWidgetClass InfobarFrame {
+  PanelWidgetClass InfobarFrame {
    ignorepointer 1
    color 0.302 0.302 0.302 1
-   position 0 0
-   size 1 32
+   size 1 24
+   halign center_ref
    valign bottom_ref
-   hexactpos 1
+   hexactpos 0
    vexactpos 1
    hexactsize 0
    vexactsize 1
    scaled 1
    priority 1
-   Padding 0
-   Margin 0
-   content_valign bottom
+   style rover_sim_colorable
    {
-    PanelWidgetClass InfobarPositionFrame {
+    PanelWidgetClass InfobarObjPosFrame {
      ignorepointer 1
-     position 0.01 0.197
-     size 0.3 32
+     size 0.24 24
+     valign bottom_ref
      hexactpos 0
      vexactpos 0
      hexactsize 0
      vexactsize 1
      {
-      PanelWidgetClass Info_X {
+      PanelWidgetClass Info_ObjPos_X {
        ignorepointer 1
        position 5 0
-       size 120 32
+       size 120 24
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
        {
-        PanelWidgetClass Info_X_Icon {
+        PanelWidgetClass Info_ObjPos_X_Icon {
          ignorepointer 1
          color 0.7529 0.2235 0.1686 1
-         size 32 32
+         size 24 24
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
          style rover_sim_colorable
          {
-          TextWidgetClass Info_X_IconLable {
+          TextWidgetClass Info_ObjPos_X_IconLable {
            ignorepointer 1
            position 0 0
            size 1 1
@@ -1176,9 +1187,9 @@ FrameWidgetClass EditorMainFrame {
           }
          }
         }
-        TextWidgetClass Info_X_Value {
+        TextWidgetClass Info_ObjPos_X_Value {
          ignorepointer 1
-         size 90 32
+         size 90 24
          halign right_ref
          hexactpos 1
          vexactpos 1
@@ -1191,26 +1202,26 @@ FrameWidgetClass EditorMainFrame {
         }
        }
       }
-      PanelWidgetClass Info_Y {
+      PanelWidgetClass Info_ObjPos_Y {
        ignorepointer 1
        position 130 0
-       size 120 32
+       size 120 24
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
        {
-        PanelWidgetClass Info_Y_Icon {
+        PanelWidgetClass Info_ObjPos_Y_Icon {
          ignorepointer 1
          color 0.1529 0.6824 0.3765 1
-         size 32 32
+         size 24 24
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
          style rover_sim_colorable
          {
-          TextWidgetClass Info_Y_IconLable {
+          TextWidgetClass Info_ObjPos_Y_IconLable {
            ignorepointer 1
            position 0 0
            size 1 1
@@ -1226,9 +1237,9 @@ FrameWidgetClass EditorMainFrame {
           }
          }
         }
-        TextWidgetClass Info_Y_Value {
+        TextWidgetClass Info_ObjPos_Y_Value {
          ignorepointer 1
-         size 90 32
+         size 90 24
          halign right_ref
          hexactpos 1
          vexactpos 1
@@ -1241,26 +1252,26 @@ FrameWidgetClass EditorMainFrame {
         }
        }
       }
-      PanelWidgetClass Info_Z {
+      PanelWidgetClass Info_ObjPos_Z {
        ignorepointer 1
        position 255 0
-       size 120 32
+       size 120 24
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
        {
-        PanelWidgetClass Info_Z_Icon {
+        PanelWidgetClass Info_ObjPos_Z_Icon {
          ignorepointer 1
          color 0.1608 0.502 0.7255 1
-         size 32 32
+         size 24 24
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
          style rover_sim_colorable
          {
-          TextWidgetClass Info_Z_IconLable {
+          TextWidgetClass Info_ObjPos_Z_IconLable {
            ignorepointer 1
            position 0 0
            size 1 1
@@ -1276,9 +1287,9 @@ FrameWidgetClass EditorMainFrame {
           }
          }
         }
-        TextWidgetClass Info_Z_Value {
+        TextWidgetClass Info_ObjPos_Z_Value {
          ignorepointer 1
-         size 90 32
+         size 90 24
          halign right_ref
          hexactpos 1
          vexactpos 1
@@ -1292,6 +1303,184 @@ FrameWidgetClass EditorMainFrame {
        }
       }
      }
+    }
+    PanelWidgetClass InfobarCamPosFrame {
+     ignorepointer 1
+     size 0.24 24
+     halign right_ref
+     valign bottom_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 1
+     {
+      PanelWidgetClass Info_CamPos_X {
+       ignorepointer 1
+       position 5 0
+       size 120 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        PanelWidgetClass Info_CamPos_X_Icon {
+         ignorepointer 1
+         color 0.7529 0.2235 0.1686 1
+         size 24 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass Info_CamPos_X_IconLable {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "X"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        TextWidgetClass Info_CamPos_X_Value {
+         ignorepointer 1
+         size 90 24
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "1000.5"
+         font "gui/fonts/system"
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      PanelWidgetClass Info_CamPos_Y {
+       ignorepointer 1
+       position 130 0
+       size 120 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        PanelWidgetClass Info_CamPos_Y_Icon {
+         ignorepointer 1
+         color 0.1529 0.6824 0.3765 1
+         size 24 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass Info_CamPos_Y_IconLable {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "Y"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        TextWidgetClass Info_CamPos_Y_Value {
+         ignorepointer 1
+         size 90 24
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "1000.5"
+         font "gui/fonts/system"
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      PanelWidgetClass Info_CamPos_Z {
+       ignorepointer 1
+       position 255 0
+       size 120 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        PanelWidgetClass Info_CamPos_Z_Icon {
+         ignorepointer 1
+         color 0.1608 0.502 0.7255 1
+         size 24 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass Info_CamPos_Z_IconLable {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           text "Z"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        TextWidgetClass Info_CamPos_Z_Value {
+         ignorepointer 1
+         size 90 24
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "1000.5"
+         font "gui/fonts/system"
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+     }
+    }
+    ImageWidgetClass InfobarCamIcon {
+     ignorepointer 1
+     position 0.24 0
+     size 24 24
+     halign right_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     image0 "set:dayz_editor_gui image:camera_icon"
+     mode blend
+     "src alpha" 1
+     "no wrap" 1
+     stretch 1
     }
    }
   }

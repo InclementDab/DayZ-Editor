@@ -38,6 +38,12 @@ ImageSetClass {
    Size 64 64
    Flags 0
   }
+  ImageSetDefClass camera_icon {
+   Name "camera_icon"
+   Pos 369 21
+   Size 64 64
+   Flags 0
+  }
  }
  Groups {
  }
