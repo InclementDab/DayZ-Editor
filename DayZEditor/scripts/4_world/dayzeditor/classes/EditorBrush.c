@@ -11,10 +11,10 @@ class EditorBrush
 	void EditorBrush(float radius = 10)
 	{
 		Print("EditorBrush");
+		EditorSettings.BRUSH_RADIUS = radius;
 		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 		
-		SetRadius(radius);
 	}
 	
 	void ~EditorBrush()
@@ -37,38 +37,25 @@ class EditorBrush
 		
 		Input input = GetGame().GetInput();		
 		
+		vector transform[4] = {
+			Vector(EditorSettings.BRUSH_RADIUS / 10, 0, 0),
+			Vector(0, EditorSettings.BRUSH_RADIUS / 10, 0),
+			Vector(0, 0, EditorSettings.BRUSH_RADIUS / 10),
+			m_BrushDecal.GetPosition()
+		};
+		
+		m_BrushDecal.SetTransform(transform);
+		
 		if (input.LocalValue("UAFire") && !GetEditor().GetUIManager().IsCursorOverUI()) {
 			DuringMouseDown(CurrentMousePosition);
 		}
 	}
 	
 	void DuringMouseDown(vector position) { }
-	
-	void SetRadius(float radius)
-	{
-		m_BrushRadius = radius;
-		
-		vector transform[4] = {
-			Vector(radius / 10, 0, 0),
-			Vector(0, radius / 10, 0),
-			Vector(0, 0, radius / 10),
-			m_BrushDecal.GetPosition()
-		};
-		m_BrushDecal.SetTransform(transform);
-	}
 }
 
-class DensityBrush: EditorBrush
-{
-	protected float m_BrushDensity;
-	
-	void SetDensity(float density)
-	{
-		m_BrushDensity = density;
-	}
-}
 
-class TreeBrush: DensityBrush
+class TreeBrush: EditorBrush
 {
 	
 	private vector m_LastMousePosition;
@@ -76,7 +63,7 @@ class TreeBrush: DensityBrush
 	
 	void TreeBrush(float radius = 10)
 	{
-		SetDensity(0.2);
+		EditorSettings.BRUSH_DENSITY = 0.2;
 		m_CurrentNatureData = new array<string>();
 		
 		ChernarusTrees = new map<string, float>();
@@ -103,14 +90,14 @@ class TreeBrush: DensityBrush
 	
 	override void DuringMouseDown(vector position)
 	{
-		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
+		if (vector.Distance(m_LastMousePosition, position) < (EditorSettings.BRUSH_RADIUS * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
-		for (int i = 0; i < m_BrushDensity * 100; i++) {
+		for (int i = 0; i < EditorSettings.BRUSH_DENSITY * 100; i++) {
 						
 			vector pos = position;
-			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
-			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
+			pos[0] = pos[0] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
+			pos[2] = pos[2] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
 	
 			Object tree = GetGame().CreateObjectEx(m_CurrentNatureData.Get(Math.RandomInt(0, m_CurrentNatureData.Count() - 1)), pos, ECE_NONE);
 			
@@ -134,7 +121,7 @@ class TreeBrush: DensityBrush
 }
 
 
-class GrassBrush: DensityBrush
+class GrassBrush: EditorBrush
 {
 	
 	private vector m_LastMousePosition;
@@ -142,7 +129,7 @@ class GrassBrush: DensityBrush
 	
 	void GrassBrush(float radius = 10)
 	{
-		SetDensity(0.2);
+		EditorSettings.BRUSH_RADIUS = radius;
 		m_CurrentNatureData = new array<string>();
 
 		ChernarusGrass = new map<string, float>();
@@ -165,14 +152,14 @@ class GrassBrush: DensityBrush
 	
 	override void DuringMouseDown(vector position)
 	{
-		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 0.8))) return;
+		if (vector.Distance(m_LastMousePosition, position) < (EditorSettings.BRUSH_RADIUS * Math.RandomFloat(0.5, 0.8))) return;
 		m_LastMousePosition = position;
 		
-		for (int i = 0; i < m_BrushDensity * 100; i++) {
+		for (int i = 0; i < EditorSettings.BRUSH_DENSITY * 100; i++) {
 						
 			vector pos = position;
-			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
-			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
+			pos[0] = pos[0] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
+			pos[2] = pos[2] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
 	
 			Object tree = GetGame().CreateObjectEx(m_CurrentNatureData.Get(Math.RandomInt(0, m_CurrentNatureData.Count() - 1)), pos, ECE_NONE);
 			
@@ -222,25 +209,25 @@ class DeleteBrush: EditorBrush
 	}
 }
 
-
-class BoomBrush: DensityBrush
+class BoomBrush: EditorBrush
 {
 	private vector m_LastMousePosition;
 	
 	void BoomBrush(float radius = 10)
 	{
-		SetDensity(0.2);
+		EditorSettings.BRUSH_RADIUS = radius;
+		EditorSettings.BRUSH_DENSITY = 0.2;
 	}
 	
 	override void DuringMouseDown(vector position)
 	{
-		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
+		if (vector.Distance(m_LastMousePosition, position) < (EditorSettings.BRUSH_RADIUS * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
-		for (int i = 0; i < (m_BrushDensity * 10) + 1; i++) {
+		for (int i = 0; i < (EditorSettings.BRUSH_RADIUS * 10) + 1; i++) {
 			vector pos = position;
-			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
-			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
+			pos[0] = pos[0] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
+			pos[2] = pos[2] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
 	
 			GetGame().CreateObject("ExplosionTest", pos);
 		}

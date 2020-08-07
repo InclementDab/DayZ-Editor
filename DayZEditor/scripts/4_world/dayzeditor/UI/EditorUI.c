@@ -85,6 +85,7 @@ class EditorUI: UIScriptedMenu
 	ItemPreviewWidget m_OrientationWidget;
 	
 	// Debug
+	private Widget		m_DebugFrame;
 	TextWidget 			m_DebugText1;
 	TextWidget			m_DebugText2;
 	TextWidget 			m_DebugText3;
@@ -220,20 +221,24 @@ class EditorUI: UIScriptedMenu
 		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);
 			
 		// Tooltips
-		m_TooltipMagnet = new EditorUITooltip("Toogle magnet mode on/off.", "Magnet Mode");
-		m_TooltipSnap = new EditorUITooltip("Toogle snap mode on/off.", "Snap Mode");
-		m_TooltipGround = new EditorUITooltip("Toogle ground mode on/off.", "Ground Mode");
+		m_TooltipMagnet = new EditorUITooltip("Toggle magnet mode on/off.", "Magnet Mode");
+		m_TooltipSnap = new EditorUITooltip("Toggle snap mode on/off.", "Snap Mode");
+		m_TooltipGround = new EditorUITooltip("Toggle ground mode on/off.", "Ground Mode");
 		
 		// Info toolbar widgets
-		m_ObjPosInfoPanel = Widget.Cast(m_Root.FindAnyWidget("InfobarObjPosFrame"));
+		m_ObjPosInfoPanel = m_Root.FindAnyWidget("InfobarObjPosFrame");
 		m_ObjPosInfoX = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_X_Value"));
 		m_ObjPosInfoY = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_Y_Value"));
 		m_ObjPosInfoZ = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_Z_Value"));
 		
-		m_CamPosInfoPanel = Widget.Cast(m_Root.FindAnyWidget("InfobarCamPosFrame"));
+		m_CamPosInfoPanel = m_Root.FindAnyWidget("InfobarCamPosFrame");
 		m_CamPosInfoX = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_X_Value"));
 		m_CamPosInfoY = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_Y_Value"));
 		m_CamPosInfoZ = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_Z_Value"));
+		
+		// debug info
+		m_DebugFrame = m_Root.FindAnyWidget("DebugFrame");
+		m_DebugFrame.Show(false);
 		
 		return m_Root;
 	}
@@ -247,7 +252,9 @@ class EditorUI: UIScriptedMenu
 		if (m_LeftbarScroll.GetVScrollPos() > m_LeftbarScroll.GetContentHeight())
 			m_LeftbarScroll.VScrollToPos(0);
 		
-		CheckToolbarButtonsState();
+		// every frame? monkaS
+		// todo switch this to events save some frames
+		RefreshToolbarButtonsState();
 		
 		if (m_CamPosInfoPanel.IsVisible())
 			UpdateInfoCamPos();
@@ -594,6 +601,7 @@ class EditorUI: UIScriptedMenu
 	void OnBrushChanged(Class context, EditorBrush brush)
 	{
 		
+		
 		if (brush == null) {
 			m_SimcityButton.SetState(false);
 			m_SimcityDensitySlider.Show(false);
@@ -813,8 +821,18 @@ class EditorUI: UIScriptedMenu
 		}
 	}
 
-	private void CheckToolbarButtonsState()
+	void RefreshToolbarButtonsState()
 	{
+		// Settings Management
+		m_GroundButton.SetState(EditorSettings.MAINTAIN_HEIGHT);
+		m_MagnetButton.SetState(EditorSettings.MAGNET_PLACEMENT);
+		
+		EditorSettings.BRUSH_RADIUS = m_SimcityRadiusSlider.GetCurrent();
+		EditorSettings.BRUSH_DENSITY = m_SimcityDensitySlider.GetCurrent();
+		
+		m_SimcityRadiusText.SetText(EditorSettings.BRUSH_RADIUS.ToString());
+		m_SimcityDensityText.SetText(EditorSettings.BRUSH_DENSITY.ToString());
+		
 		//! Color managment
 		if ( m_MagnetButton.GetState() )
 		{

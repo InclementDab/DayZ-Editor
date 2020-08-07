@@ -753,14 +753,12 @@ class Editor: Managed
 				}
 				return true;
 			}
-			/*
+			
 			case KeyCode.KC_U: {
 				EditorSettings.MAGNET_PLACEMENT = !EditorSettings.MAGNET_PLACEMENT;
-				m_ToolbarMagnet.SetState(EditorSettings.MAGNET_PLACEMENT);
-				m_ToolbarMagnet.Update();
 				SetFocus(null);
 				return true;
-			}*/
+			}
 			
 			case KeyCode.KC_Y: {
 				
@@ -771,15 +769,12 @@ class Editor: Managed
 				}
 				return true;
 			}
-			/*
+			
 			case KeyCode.KC_G: {
-				
 				EditorSettings.MAINTAIN_HEIGHT = !EditorSettings.MAINTAIN_HEIGHT;
-				m_ToolbarGround.SetState(EditorSettings.MAINTAIN_HEIGHT);
-				m_ToolbarGround.Update();
 				SetFocus(null);
 				return true;
-			}*/
+			}
 
 			
 			case KeyCode.KC_Z: {

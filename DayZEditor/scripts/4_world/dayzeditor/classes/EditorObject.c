@@ -57,7 +57,8 @@ class EditorObject : Building
 	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.EO_ALL)
 	{
 		Print("EditorObject::Init");
-	
+		SetFlags(EntityFlags.STATIC, true);
+		
 		IsInitialized = true;
 		m_Type = type_name;
 		m_WorldObject = g_Game.CreateObjectEx(type_name, vector.Zero, ECE_LOCAL | ECE_SETUP | ECE_CREATEPHYSICS);
@@ -104,9 +105,6 @@ class EditorObject : Building
 		
 		EditorEvents.OnObjectSelected.Insert(OnSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnDeselected);
-		
-		SetFlags(EntityFlags.STATIC, true);
-		
 	}
 	
 	override void EEDelete(EntityAI parent)
