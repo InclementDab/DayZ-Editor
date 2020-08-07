@@ -123,7 +123,7 @@ class EditorListItem: EditorWidgetEventHandler
 		Print("EditorListItem::OnMouseButtonDown");
 		
 		if (button == 0) {
-			if (w == GetFocus()) return true;
+			//if (w == GetFocus()) return true;
 			if (GetEditor().IsPlacing()) {
 				delete Editor.ObjectInHand;
 			}
@@ -191,16 +191,32 @@ class EditorPlacedListItem: UILinkedObject
 		
 		m_EditorPlacedListItemPanel = m_Root.FindAnyWidget("EditorPlacedListItemPanel");
 		m_EditorPlacedListItemText = TextWidget.Cast(m_Root.FindAnyWidget("EditorPlacedListItemText"));
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		
+		EditorEvents.OnObjectSelected.Insert(EditorObjectSelected);
+		EditorEvents.OnObjectDeselected.Insert(EditorObjectDeselected);
+		//GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+	}
+	
+	void EditorObjectSelected(Class context, EditorObject target)
+	{
+		m_EditorPlacedListItemPanel.SetColor(COLOR_ON_SELECTED);
+		m_EditorPlacedListItemPanel.Update();
+	}
+	
+	void EditorObjectDeselected(Class context, EditorObject target)
+	{
+		m_EditorPlacedListItemPanel.SetColor(ARGB(0, 255, 255, 255)); 
+		m_EditorPlacedListItemPanel.Update();
 	}
 	
 	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Print("EditorPlacedListItem::OnMouseButtonDown");
+		Print("EditorPlacedListItem::OnClick");
 		Input input = GetGame().GetInput();
 		EditorObject editor_object = EditorObject.GetFromUILinkedRoot(m_Root);
 		// LMB
+		/*
 		if (button == 0) {
 			
 			// If Holding Shift
@@ -240,21 +256,30 @@ class EditorPlacedListItem: UILinkedObject
 				GetEditor().GetObjectManager().SelectObject(m_EditorObject);
 			}
 		}
+		*/
 		
-		return true;
+		
+		return super.OnClick(w, x, y, button);
 		
 	}
 	
-	void Update()
+
+	override bool OnFocus(Widget w, int x, int y)
 	{
-		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) {
-			m_EditorPlacedListItemPanel.SetColor(COLOR_ON_SELECTED);
-			m_EditorPlacedListItemPanel.Update();
-		} else {
-			m_EditorPlacedListItemPanel.SetColor(ARGB(0, 255, 255, 255)); 
-			m_EditorPlacedListItemPanel.Update();
-		}
+		Print("EditorPlacedListItem::OnFocus");
+		Print(m_EditorObject);
+		GetEditor().GetObjectManager().SelectObject(m_EditorObject, false);
+		return super.OnFocus(w, x, y);
 	}
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		Print("EditorPlacedListItem::OnFocusLost");
+		GetEditor().GetObjectManager().DeselectObject(m_EditorObject);
+		return super.OnFocusLost(w, x, y);
+	}
+	
+	
 
 	
 	override void SetObject(notnull EditorObject target)

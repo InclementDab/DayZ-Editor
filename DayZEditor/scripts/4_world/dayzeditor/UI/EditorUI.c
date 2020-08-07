@@ -444,20 +444,20 @@ class EditorUI: UIScriptedMenu
 				}
 			}
 			
+			// fix before podcast :)
 			GetEditor().GetObjectManager().ClearSelection();
-			
 			if (GetEditor().GetEditorBrush() == null) {
 				
 				if (Editor.EditorObjectUnderCursor == null) {
-					// delayed dragbox
+					// delayed dragbox					
 					GetCursorPos(start_x, start_y);
 					GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DelayedDragBoxCheck, 60);
+					return true;
 					
 					
-				} 
-				
-				else if (Editor.EditorObjectUnderCursor != null) {
+				} else if (Editor.EditorObjectUnderCursor != null) {
 					GetEditor().GetObjectManager().SelectObject(Editor.EditorObjectUnderCursor, !input.LocalValue("UATurbo"));
+					return true;
 				}
 			}
 			
@@ -476,10 +476,7 @@ class EditorUI: UIScriptedMenu
 				GetEditor().GetUIManager().GetEditorCamera().SetPosition(pos);
 			}
 		}
-		
-		// temp hopefully
-		SetFocus(null);
-		
+				
 		return false;
 	}
 		
@@ -739,7 +736,7 @@ class EditorUI: UIScriptedMenu
 	
 	void ColorBlue( Widget w, int x, int y )
 	{
-		SetFocus( w );
+		//SetFocus( w );
 				
 		ImageWidget image	= ImageWidget.Cast( w.FindWidget( w.GetName() + "_Icon" ) );
 		
@@ -751,7 +748,7 @@ class EditorUI: UIScriptedMenu
 	
 	void ColorRed( Widget w, int x, int y )
 	{
-		SetFocus( w );
+		//SetFocus( w );
 		
 		if( w.IsInherited( ButtonWidget ) )
 		{
@@ -769,7 +766,7 @@ class EditorUI: UIScriptedMenu
 	
 	void ColorPureApple( Widget w, int x, int y )
 	{
-		SetFocus( w );
+		//SetFocus( w );
 				
 		if( w.IsInherited( ButtonWidget ) )
 		{
@@ -787,7 +784,7 @@ class EditorUI: UIScriptedMenu
 	
 	void ColorQuinceJelly( Widget w, int x, int y )
 	{
-		SetFocus( w );
+		//SetFocus( w );
 		
 		if( w.IsInherited( ButtonWidget ) )
 		{
@@ -809,7 +806,7 @@ class EditorUI: UIScriptedMenu
 	
 	void ColorNoFocus( Widget w, Widget enterW, int x, int y )
 	{
-		SetFocus( w );
+		//SetFocus( w );
 		
 		if( w.IsInherited( ButtonWidget ) )
 		{

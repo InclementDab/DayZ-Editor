@@ -258,9 +258,9 @@ class Editor: Managed
 	void CreateObjectInHand(string name)
 	{
 		// Turn Brush off when you start to place
-		EditorEvents.BrushChangedInvoke(this, null);
+		if (m_EditorBrush != null)
+			EditorEvents.BrushChangedInvoke(this, null);
 		
-		EditorSettings.SIM_CITY_MODE = false;
 		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, vector.Zero));		
 	}
 	
@@ -277,6 +277,7 @@ class Editor: Managed
 		GetEditor().GetObjectManager().SelectObject(editor_object, !input.LocalValue("UATurbo"));
 		
 		if (!input.LocalValue("UATurbo")) { 
+			SetFocus(null);
 			delete Editor.ObjectInHand;
 		}
 	}
