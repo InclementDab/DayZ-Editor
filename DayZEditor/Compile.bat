@@ -14,5 +14,5 @@ for /f "tokens=2* skip=2" %%a in ('reg query %QUERY%  /V "exe"') do (
 %BUILDEREXE% "%CD%\editor" "%CD%" -prefix=DayZEditor\editor -packonly
 %BUILDEREXE% "%CD%\gui" "%CD%" -prefix=DayZEditor\gui -packonly
 %BUILDEREXE% "%CD%\scripts" "%CD%" -prefix=DayZEditor\scripts -packonly
-%BUILDEREXE% "%CD%\sounds" "%CD%" -prefix=DayZEditor\scripts -packonly
+%BUILDEREXE% "%CD%\sounds" "%CD%" -prefix=DayZEditor\sounds -packonly
 
