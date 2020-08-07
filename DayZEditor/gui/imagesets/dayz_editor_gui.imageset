@@ -44,6 +44,12 @@ ImageSetClass {
    Size 64 64
    Flags 0
   }
+  ImageSetDefClass pos_icon {
+   Name "pos_icon"
+   Pos 447 21
+   Size 64 64
+   Flags 0
+  }
  }
  Groups {
  }
