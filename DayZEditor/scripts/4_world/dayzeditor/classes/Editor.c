@@ -13,7 +13,6 @@ static PlayerBase CreateDefaultCharacter()
 	    player = PlayerBase.Cast(GetGame().CreatePlayer(NULL, GetGame().CreateRandomPlayer(), vector.Zero, 0, "NONE"));
 	    player.GetInventory().CreateInInventory("AviatorGlasses");
 	    player.GetInventory().CreateInInventory("AliceBag_Black");
-	    player.GetInventory().CreateInInventory("TranslationWidget");
 	}
 	
     return player;
@@ -292,7 +291,7 @@ class Editor: Managed
 		foreach (EditorObject save_object: placed_objects)	
 			save_data.WorldObjects.Insert(save_object.GetSaveData());
  
-		EditorFileManager.SaveFile(save_data);
+		EditorFileManager.Save(save_data);
 		GetEditor().GetUIManager().NotificationCreate("Saved!", COLOR_GREEN); 
 	}
 	
@@ -302,8 +301,8 @@ class Editor: Managed
 		m_EditorObjectManager = new EditorObjectManager();
 		
 		EditorWorldData load_data = new EditorWorldData();
-		int loadfile_result = EditorFileManager.LoadFile(load_data);
-		Print("LoadFile Result " + loadfile_result);
+		int loadfile_result = EditorFileManager.Open(load_data);
+		Print("Open Result " + loadfile_result);
 		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
 		
 		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
@@ -517,7 +516,8 @@ class Editor: Managed
 		target.SetPosition(cursor_position);
 		target.Update();
 		
-		foreach (EditorObject selected_object: GetObjectManager().GetSelectedObjects()) {
+		EditorObjectSet object_set = GetObjectManager().GetSelectedObjects();
+		foreach (EditorObject selected_object: object_set) {
 			if (selected_object == target) continue;
 			cursor_position[1] = object_position[1] - GetGame().SurfaceY(object_position[0], object_position[2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 			selected_object.SetPosition(cursor_position + selected_object.GetPosition() - object_position); 
@@ -690,22 +690,12 @@ class Editor: Managed
 			}
 						
 			case KeyCode.KC_F5: {
-				// Create Character on cursor and select them
-				set<Object> o;
-				vector v = MousePosToRay(o);
-				GetUIManager().SetEditorCameraActive(false);
-				GetGame().SelectPlayer(null, EditorPlayer);
-				EditorPlayer.SetPosition(v);
-				PlayerActive = true;
-				GetUIManager().GetEditorUI().GetRoot().Show(false);
+				SetPlayerEnable(true);
 				break;
 			}
 			
 			case KeyCode.KC_F6: {
-				// Deselect character
-				GetUIManager().SetEditorCameraActive(true);
-				PlayerActive = false;
-				GetUIManager().GetEditorUI().GetRoot().Show(true);
+				SetPlayerEnable(false);
 				break;
 			}
 
@@ -827,9 +817,9 @@ class Editor: Managed
 					
 					// todo once UI is created, add "Export Selected Only"
 					ref EditorObjectSet export_objects = GetEditor().GetObjectManager().GetPlacedObjects();
-					EditorFileManager.ExportToFile(export_objects, ExportMode.COMFILE, "export_server");
-					EditorFileManager.ExportToFile(export_objects, ExportMode.EXPANSION, "export_expansion");
-					EditorFileManager.ExportToFile(export_objects, ExportMode.TERRAINBUILDER, "export_terrainbuilder", HeightType.ABSOLUTE);
+					EditorFileManager.Export(export_objects, ExportMode.COMFILE, "export_server");
+					EditorFileManager.Export(export_objects, ExportMode.EXPANSION, "export_expansion");
+					EditorFileManager.Export(export_objects, ExportMode.TERRAINBUILDER, "export_terrainbuilder", HeightType.ABSOLUTE);
 					return true;
 				}
 				break;
@@ -858,14 +848,6 @@ class Editor: Managed
 				}
 				break;
 			}
-			
-			default: {
-				Print("DEFAULT CASE: " + key);
-				break;
-			}
-			
-			
-			
 
 		}
 		
@@ -932,8 +914,23 @@ class Editor: Managed
 	// Remove this once you find an actual solution kekw
 	static void SetPlayerAimLock(bool state)
 	{
-		GetGame().GetPlayer().GetInputController().OverrideAimChangeX(state, 0);
-		GetGame().GetPlayer().GetInputController().OverrideAimChangeY(state, 0);
+		EditorPlayer.GetInputController().OverrideAimChangeX(state, 0);
+		EditorPlayer.GetInputController().OverrideAimChangeY(state, 0);
+	}
+	
+	void SetPlayerEnable(bool state)
+	{
+		if (state) {
+			set<Object> o;
+			vector v = MousePosToRay(o);
+			GetGame().SelectPlayer(null, EditorPlayer);
+			EditorPlayer.SetPosition(v);
+		}
+		
+		GetUIManager().SetEditorCameraActive(!state);
+		EditorPlayer.DisableSimulation(!state);
+		PlayerActive = state;
+		GetUIManager().GetEditorUI().GetRoot().Show(!state);
 	}
 }
 
