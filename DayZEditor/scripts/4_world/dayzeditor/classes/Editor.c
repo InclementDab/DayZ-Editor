@@ -171,7 +171,12 @@ class Editor: Managed
 		if (selected_objects.Count() == 1) {
 			EditorObject eo = selected_objects.Get(selected_objects.GetIteratorKey(selected_objects.Begin()));
 			vector debug_pos = eo.GetPosition();
-			GetUIManager().GetEditorUI().m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", debug_pos[0], debug_pos[1], debug_pos[2]));
+			//GetUIManager().GetEditorUI().m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", debug_pos[0], debug_pos[1], debug_pos[2]));
+			GetUIManager().GetEditorUI().ShowObjPosInfoPanel(true);
+			GetUIManager().GetEditorUI().UpdateInfoObjPos(debug_pos);
+		} else 
+		{ 
+			GetUIManager().GetEditorUI().ShowObjPosInfoPanel(false);
 		}
 	
 		string line1;
@@ -933,8 +938,6 @@ class Editor: Managed
 		GetGame().GetPlayer().GetInputController().OverrideAimChangeX(state, 0);
 		GetGame().GetPlayer().GetInputController().OverrideAimChangeY(state, 0);
 	}
-	
-	
 }
 
 

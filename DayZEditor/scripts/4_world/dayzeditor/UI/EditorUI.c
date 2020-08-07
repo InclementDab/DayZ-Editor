@@ -848,6 +848,18 @@ class EditorUI: UIScriptedMenu
 		m_CamPosInfoY.SetText(campos[1].ToString());
 		m_CamPosInfoZ.SetText(campos[2].ToString());
 	}
+	
+	void UpdateInfoObjPos(vector pos)
+	{		
+		m_ObjPosInfoX.SetText(pos[0].ToString());
+		m_ObjPosInfoY.SetText(pos[1].ToString());
+		m_ObjPosInfoZ.SetText(pos[2].ToString());
+	}
+	
+	void ShowObjPosInfoPanel(bool state)
+	{
+		m_ObjPosInfoPanel.Show(state);
+	}
 }
 
 class EditorUIHandler: EditorWidgetEventHandler
