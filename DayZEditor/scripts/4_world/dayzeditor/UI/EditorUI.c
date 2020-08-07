@@ -138,9 +138,8 @@ class EditorUI: UIScriptedMenu
 	{
 		// Init
 		m_EditorUIHandler = new EditorUIHandler();
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorNew.layout", GetGame().GetUIManager().GetMenu().GetLayoutRoot());
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorUI.layout");
 		m_Root.GetScript(m_EditorUIHandler);
-		
 		
 		// Canvas
 		m_EditorCanvas			= CanvasWidget.Cast(m_Root.FindAnyWidget("EditorCanvas"));
