@@ -72,4 +72,10 @@ class CfgVehicles
 		soundSetNear = "ThunderHeavy_Near_SoundSet";
 		soundSetFar = "ThunderHeavy_Far_SoundSet";
 	};
+	
+	class DebugCylinder: HouseNoDestruct
+	{
+		scope=2;
+		model="DayZEditor\editor\DebugCylinder.p3d";
+	};	
 };

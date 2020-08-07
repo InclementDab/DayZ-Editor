@@ -40,7 +40,7 @@ class EditorMap: EditorWidgetEventHandler
 	void EditorMap()
 	{
 		Print("EditorMap");
-				
+		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
 	}
 	
 	void ~EditorMap()
@@ -71,8 +71,8 @@ class EditorMap: EditorWidgetEventHandler
 				if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
 				return true;
 			} else {
-				GetEditor().GetUIManager().GetEditorUI().GetCanvas().Clear();
-				EditorUI ui = EditorUI.GetInstance();
+				EditorUI ui = GetEditor().GetUIManager().GetEditorUI();
+				ui.GetCanvas().Clear();
 				GetCursorPos(ui.start_x, ui.start_y);
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ui.DelayedDragBoxCheck, 40);
 				return true;
@@ -98,11 +98,11 @@ class EditorMap: EditorWidgetEventHandler
 
 class EditorListItem: EditorWidgetEventHandler
 {
-	private TextWidget 				m_EditorListItemText;
-	private ref PlaceableEditorObject 	m_PlaceableObject;
+	private TextWidget 					m_EditorListItemText;
+	private ref EditorPlaceableObject 	m_PlaceableObject;
 	
 	// Getters
-	PlaceableEditorObject GetPlaceableObject() { return m_PlaceableObject; }
+	EditorPlaceableObject GetPlaceableObject() { return m_PlaceableObject; }
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
@@ -110,12 +110,13 @@ class EditorListItem: EditorWidgetEventHandler
 		m_EditorListItemText = m_Root.FindAnyWidget("EditorListItemText");
 	}
 	
-	void SetObject(PlaceableEditorObject target)
+	void SetObject(EditorPlaceableObject target)
 	{
 		m_PlaceableObject = target;
 		m_EditorListItemText.SetText(m_PlaceableObject.GetType());
 		m_EditorListItemText.Update();
 	}
+	
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
@@ -129,6 +130,20 @@ class EditorListItem: EditorWidgetEventHandler
 			
 			SetFocus(w);
 			return true;
+		} else if (button == 1) {
+			
+			if (GetGame().GetInput().LocalValue("UAWalkRunTemp")) {
+				
+				// all very temporary please abstract elsewhere
+				if (GetEditor().IsLootEditActive()) {
+					GetEditor().PlaceholderRemoveLootMode();
+				} else {
+					GetEditor().PlaceholderForEditLootSpawns(m_PlaceableObject.GetType());
+				}
+				
+				return true;
+				
+			}
 		}
 		
 		return false;

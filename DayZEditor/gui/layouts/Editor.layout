@@ -9,7 +9,7 @@ FrameWidgetClass EditorMainFrame {
  hexactsize 0
  vexactsize 0
  draggable 0
- scriptclass "EditorUI"
+ scriptclass "EditorUIHandler"
  {
   FrameWidgetClass MapContainerWidget {
    clipchildren 0
@@ -284,8 +284,9 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           switch once
            {
-            ImageWidgetClass BuildingSelectImage {
+            ImageWidgetClass CategorySelectBuilding {
              ignorepointer 1
              color 0.9882 0.9882 0.9882 1
              position 0 0
@@ -310,8 +311,9 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           switch once
            {
-            ImageWidgetClass VehicleSelectImage {
+            ImageWidgetClass CategorySelectVehicle {
              ignorepointer 1
              color 0.9882 0.9882 0.9882 1
              position 2 0
@@ -337,8 +339,9 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           switch once
            {
-            ImageWidgetClass EntitySelectImage {
+            ImageWidgetClass CategorySelectEntity {
              ignorepointer 1
              color 0.9882 0.9882 0.9882 1
              position -4 0
@@ -364,8 +367,9 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           switch once
            {
-            ImageWidgetClass HumanSelectImage {
+            ImageWidgetClass CategorySelectHuman {
              ignorepointer 1
              position 0 0
              size 72 72
@@ -417,7 +421,7 @@ FrameWidgetClass EditorMainFrame {
        style rover_sim_colorable
        {
         ScrollWidgetClass LeftbarScroll {
-         ignorepointer 1
+         ignorepointer 0
          color 0.2353 0.2353 0.2353 1
          position 0 0
          size 1 1
@@ -432,6 +436,8 @@ FrameWidgetClass EditorMainFrame {
          "Scrollbar V Left" 1
          {
           WrapSpacerWidgetClass LeftbarSpacer {
+           visible 1
+           disabled 0
            ignorepointer 1
            position 0 0
            size 1 1

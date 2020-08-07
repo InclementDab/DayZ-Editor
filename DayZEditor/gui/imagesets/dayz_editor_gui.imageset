@@ -1,0 +1,50 @@
+ImageSetClass {
+ Name "dayz_editor_gui"
+ RefSize 1024 1024
+ Textures {
+  ImageSetTextureClass {
+   mpix 1
+   path "{572C6B626921F3CC}DayZEditor/gui/imagesets/dayz_editor_gui.edds"
+  }
+ }
+ Images {
+  ImageSetDefClass search_icon {
+   Name "search_icon"
+   Pos 20 21
+   Size 64 64
+   Flags 0
+  }
+  ImageSetDefClass arrow_round_icon {
+   Name "arrow_round_icon"
+   Pos 94 21
+   Size 64 64
+   Flags 0
+  }
+  ImageSetDefClass magnet_icon {
+   Name "magnet_icon"
+   Pos 160 21
+   Size 64 64
+   Flags 0
+  }
+  ImageSetDefClass grounding_icon {
+   Name "grounding_icon"
+   Pos 228 21
+   Size 64 64
+   Flags 0
+  }
+  ImageSetDefClass snap_icon {
+   Name "snap_icon"
+   Pos 296 21
+   Size 64 64
+   Flags 0
+  }
+  ImageSetDefClass camera_icon {
+   Name "camera_icon"
+   Pos 369 21
+   Size 64 64
+   Flags 0
+  }
+ }
+ Groups {
+ }
+}

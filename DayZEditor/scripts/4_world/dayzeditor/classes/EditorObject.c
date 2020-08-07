@@ -1,5 +1,11 @@
 
-
+enum EditorObjectFlags
+{
+	EO_ALL,
+	EO_BBOX,
+	EO_MAPMARKER,
+	EO_WORLDMARKER
+}
 
 class EditorObject : Building
 {
@@ -48,10 +54,11 @@ class EditorObject : Building
 	* Initializers
 	*/
 	
-	void Init(string type_name)
+	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.EO_ALL)
 	{
 		Print("EditorObject::Init");
-	
+		SetFlags(EntityFlags.STATIC, true);
+		
 		IsInitialized = true;
 		m_Type = type_name;
 		m_WorldObject = g_Game.CreateObjectEx(type_name, vector.Zero, ECE_LOCAL | ECE_SETUP | ECE_CREATEPHYSICS);
@@ -62,33 +69,33 @@ class EditorObject : Building
 		
 		// World Object base marker
 		m_EditorObjectMarker = new UILinkedObject();
-		m_EditorObjectMarkerWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorObjectMarker.layout");
+		m_EditorObjectMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorObjectMarker.layout");
 		m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
 		m_EditorObjectMarker.SetObject(this);
 				
 		// Map marker
 		m_EditorMapMarker = new UILinkedObject();
-		m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorMapMarker.layout");
+		m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		m_EditorMapMarker.SetObject(this);
 		GetEditor().GetUIManager().GetEditorUI().GetMapWidget().AddChild(m_EditorMapMarkerWidget);
 	
 		// Browser item
 		m_EditorObjectBrowser = new UILinkedObject();
-		m_EditorObjectBrowserWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorPlacedListItem.layout");
+		m_EditorObjectBrowserWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorPlacedListItem.layout");
 		m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
 		m_EditorObjectBrowser.SetObject(this);		
 		
 		// Properties Dialog
 		m_EditorObjectPropertiesWindow = new UILinkedObject();
-		m_EditorObjectPropertiesWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "dialogs/EditorObjectProperties.layout");
+		m_EditorObjectPropertiesWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorObjectProperties.layout");
 		m_EditorObjectPropertiesWidget.GetScript(m_EditorObjectPropertiesWindow);
 		m_EditorObjectPropertiesWindow.SetObject(this);
 		m_EditorObjectPropertiesWidget.Show(false);		
 		
 		// Context Menu
 		m_EditorObjectContextMenu = new UILinkedObject();
-		m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets(layout_dir + "EditorContextMenu.layout");
+		m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout");
 		m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
 		m_EditorObjectContextMenu.SetObject(this);
 		m_EditorObjectContextWidget.Show(false);
@@ -98,7 +105,6 @@ class EditorObject : Building
 		
 		EditorEvents.OnObjectSelected.Insert(OnSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnDeselected);
-		
 	}
 	
 	override void EEDelete(EntityAI parent)
@@ -139,13 +145,18 @@ class EditorObject : Building
 	* Events *
 	*********/
 	
+	private bool m_IsSelected;
 	void OnSelected()
 	{
+		if (m_IsSelected) return;
+		m_IsSelected = true;
 		ShowBoundingBox();
 	}
 	
 	void OnDeselected()
 	{
+		if (!m_IsSelected) return;
+		m_IsSelected = false;
 		HideBoundingBox();
 	}
 	
@@ -426,18 +437,7 @@ class EditorObject : Building
 }
 
 
-class PlaceableEditorObject
-{
-	private string m_Type, m_Base;
-	
-	void PlaceableEditorObject(string name, string base)
-	{
-		m_Type = name; m_Base = base;
-	}
-	
-	string GetType() { return m_Type; }
-	string GetBase() { return m_Base; }
-}
+
 
 
 

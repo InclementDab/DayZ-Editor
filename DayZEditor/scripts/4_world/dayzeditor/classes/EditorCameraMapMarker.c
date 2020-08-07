@@ -1,9 +1,7 @@
+
 class EditorCameraMapMarker: EditorWidgetEventHandler
 {
-	protected ImageWidget m_EditorMapMarkerImage;
-	protected EditorCamera m_ActiveCamera = null;
-	
-	
+	protected EditorCamera m_ActiveCamera = null;	
 	override void Update(float timeslice)
 	{
 		if (m_Root == null) return;

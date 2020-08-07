@@ -1,6 +1,14 @@
 
-class EditorObjectSet: ref map<int, ref EditorObject>
+class EditorObjectSet: map<int, EditorObject>
 {
+	
+	void ~EditorObjectSet()
+	{
+		foreach (EditorObject obj: this)
+			GetGame().ObjectDelete(obj);
+		
+		
+	}
 	
 	bool InsertEditorObject(EditorObject target)
 	{
@@ -46,9 +54,15 @@ class EditorObjectManager: Managed
 	void ~EditorObjectManager() 
 	{
 		Print("~EditorObjectManager");
+		
+		delete m_PlacedObjects;
+		delete m_SelectedObjects;
+		delete m_SessionCache;
+		delete m_ClipboardCache;
+		delete m_ActionStack;
 	}
 	
-	static int GetPlaceableObjects(out array<ref PlaceableEditorObject> placeable_objects) 
+	static int GetPlaceableObjects(out EditorPlaceableObjectSet placeable_objects) 
 	{ 
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
@@ -58,14 +72,15 @@ class EditorObjectManager: Managed
 			
 		    for (int j = 0; j < g_Game.ConfigGetChildrenCount(Config_Path); j++) {
 				string Config_Name, Base_Name;
-		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name);
-		        GetGame().ConfigGetBaseName(Config_Path + " " + Config_Name, Base_Name);
-		        Base_Name.ToLower();
+		        g_Game.ConfigGetChildName(Config_Path, j, Config_Name); 
 				
-				placeable_objects.Insert(new PlaceableEditorObject(Config_Name, Base_Name));	
-				
+				EditorPlaceableObject placeable_object = new EditorPlaceableObject(Config_Name, Config_Path);
+				placeable_objects.Insert(placeable_object);
 		    }
 		}
+		
+
+		
 		return placeable_objects.Count();
 	}
 	
@@ -100,6 +115,7 @@ class EditorObjectManager: Managed
 		if (reset_selection) {
 			ClearSelection();
 		}
+		
 		
 		m_SelectedObjects.InsertEditorObject(target);
 		EditorEvents.ObjectSelectedInvoke(this, target);
@@ -212,7 +228,7 @@ class EditorObjectManager: Managed
 		avg_position[1] = avg_position[1] / m_ClipboardCache.Count();
 		avg_position[2] = avg_position[2] / m_ClipboardCache.Count();
 		
-		EditorObjectSet pasted_objects;
+		EditorObjectSet pasted_objects = new EditorObjectSet();
 		foreach (EditorObject editor_object: m_ClipboardCache) {
 			vector mat[4];
 			editor_object.GetTransform(mat);
@@ -252,7 +268,6 @@ class EditorObjectManager: Managed
 	
 	bool CheckIfRootIsSelected(Widget root)
 	{
-		
 		foreach (EditorObject editor_object: m_SelectedObjects)
 			if (GetEditor().GetObjectManager().IsSelected(editor_object) && (editor_object.GetObjectBrowser() == root || editor_object.GetObjectMarker() == root))
 				return true;
@@ -261,30 +276,7 @@ class EditorObjectManager: Managed
 	}
 	
 
-	void Save()
-	{	
-		EditorWorldData save_data = new EditorWorldData();
-		GetEditor().GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
-		
-		foreach (EditorObject save_object: m_PlacedObjects)	
-			save_data.WorldObjects.Insert(save_object.GetSaveData());
-		
-		
-		EditorFileManager.SaveFile(save_data);
-	}
-	
-	void Open()
-	{
-		EditorWorldData load_data = EditorFileManager.LoadFile();
-		GetEditor().GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
-		// find a proper way to remove all existing files. maybe delete the object manager :)
-		
-		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
-			EditorObject e_object = CreateObject(load_object.m_Typename, load_object.m_Transform[3]);
-			
-			m_PlacedObjects.Insert(e_object.GetID(), e_object);
-		}
-	}
+
 	
 	// O(n) shit :)
 	EditorObject GetEditorObject(Object target)

@@ -20,7 +20,7 @@ class MapSelectWindow: UIScriptedMenu
 
 	override Widget Init() 
 	{
-		layoutRoot 					= GetGame().GetWorkspace().CreateWidgets(layout_dir + "dialogs/EditorMapSelector.layout");
+		layoutRoot 					= GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");
 		m_WindowDragWrapper 		= layoutRoot.FindAnyWidget("WindowDragWrapper");
 		
 		m_TitleBar 					= layoutRoot.FindAnyWidget("WindowDragWrapper");
@@ -139,4 +139,26 @@ class MapSelectWindow: UIScriptedMenu
 	    return false;
 	}
 	
+	
+	override bool OnDoubleClick( Widget w, int x, int y, int button )
+	{		
+		if (button != 0) return false; 
+		
+		if ( button == MouseState.LEFT )
+		{
+			if ( w == m_MapHostListbox )
+			{
+				string name;
+				m_MapHostListbox.GetItemText(m_MapHostListbox.GetSelectedRow(), 0, name);
+				if(name != "")
+				{
+					GetGame().PlayMission(CreateEditorMission(name));
+					Close();
+					return true;
+				}
+			}
+		}
+		
+		return super.OnDoubleClick( w, x, y, button );
+	}
 }

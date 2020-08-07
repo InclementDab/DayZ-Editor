@@ -1,4 +1,7 @@
 
+// One day, someone important (likely Adam) will look over this codebase with a sny look of shame on their face
+// if today is that day. fix it.
+// and message me your feedback on discord :)
 
 
 static PlayerBase CreateDefaultCharacter()
@@ -24,6 +27,9 @@ class Editor: Managed
 	// Private Memebers
 	private ref EditorObjectManager			m_EditorObjectManager = new EditorObjectManager();
 	private ref EditorUIManager 			m_EditorUIManager = new EditorUIManager();
+	private ref EditorSettings				m_EditorSettings = new EditorSettings();
+	
+	private ref EditorBrush					m_EditorBrush;
 	
 	static ref EditorHologram 				ObjectInHand;
 	static Object							ObjectUnderCursor = null;
@@ -42,9 +48,8 @@ class Editor: Managed
 	// Getters
 	ref EditorObjectManager GetObjectManager() { return m_EditorObjectManager; }
 	ref EditorUIManager GetUIManager() { return m_EditorUIManager; }
-	
-	private ref EditorBrush	m_EditorBrush;
-	EditorBrush GetEditorBrush() { return m_EditorBrush; }
+	ref EditorSettings GetSettings() { return m_EditorSettings; }
+	ref EditorBrush GetEditorBrush() { return m_EditorBrush; }
 	
 	bool IsPlacing() { return ObjectInHand != null; }
 	TranslationWidget GetTranslationWidget() { return GetEditor().GlobalTranslationWidget; }
@@ -160,16 +165,18 @@ class Editor: Managed
 		}
 		
 		
-		
-		vector cam_orientation = GetUIManager().GetEditorCamera().GetOrientation();	
-		GetUIManager().GetEditorUI().m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
-		
+	
 		// debug
 		EditorObjectSet selected_objects = GetObjectManager().GetSelectedObjects();
 		if (selected_objects.Count() == 1) {
 			EditorObject eo = selected_objects.Get(selected_objects.GetIteratorKey(selected_objects.Begin()));
 			vector debug_pos = eo.GetPosition();
-			GetUIManager().GetEditorUI().m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", debug_pos[0], debug_pos[1], debug_pos[2]));
+			//GetUIManager().GetEditorUI().m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", debug_pos[0], debug_pos[1], debug_pos[2]));
+			GetUIManager().GetEditorUI().ShowObjPosInfoPanel(true);
+			GetUIManager().GetEditorUI().UpdateInfoObjPos(debug_pos);
+		} else 
+		{ 
+			GetUIManager().GetEditorUI().ShowObjPosInfoPanel(false);
 		}
 	
 		string line1;
@@ -211,22 +218,55 @@ class Editor: Managed
 		return true;
 	}
 	
+	
+	private Object m_LootEditTarget;
+	private bool m_LootEditMode;
+	private vector m_PositionBeforeLootEditMode;
+	
+	// probably have an EditorMode enum with NORMAL, CHARACTER, LOOTEDITOR or something
+	void PlaceholderForEditLootSpawns(string name)
+	{
+		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 1000, 0), ECE_NONE);
+		
+		EditorCamera camera = GetUIManager().GetEditorCamera();
+		m_PositionBeforeLootEditMode = camera.GetPosition();
+		camera.SetPosition(Vector(10, 1000, 10));
+		//camera.SelectTarget(m_LootEditTarget);
+		
+		
+		ref EditorMapGroupProto proto_data = new EditorMapGroupProto(m_LootEditTarget); 
+		EditorXMLManager.LoadMapGroupProto(proto_data);
+		m_LootEditMode = true;
+	}
+	
+	void PlaceholderRemoveLootMode()
+	{
+		IEntity child = m_LootEditTarget.GetChildren();
+		while (child != null) {
+			GetGame().ObjectDelete(child);
+			child = child.GetSibling();
+		}
+		
+		GetGame().ObjectDelete(m_LootEditTarget);
+		
+		EditorCamera camera = GetUIManager().GetEditorCamera();
+		camera.SetPosition(m_PositionBeforeLootEditMode);
+		//camera.SelectTarget(null);
+		m_LootEditMode = false;
+	}
+	
+	bool IsLootEditActive() { return m_LootEditMode; }
+	
 	void CreateObjectInHand(string name)
 	{
 		// Turn Brush off when you start to place
 		EditorEvents.BrushChangedInvoke(this, null);
 		
 		EditorSettings.SIM_CITY_MODE = false;
-		ButtonWidget.Cast(GetEditor().GetUIManager().GetEditorUI().GetRoot().FindAnyWidget("SimcityButton")).SetState(false);
-		
-		
 		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, vector.Zero));		
 	}
 	
 
-
-	
-	
 	void PlaceObject()
 	{
 		Input input = GetGame().GetInput();
@@ -244,7 +284,36 @@ class Editor: Managed
 	}
 	
 
-
+	void Save()
+	{	
+		EditorWorldData save_data = new EditorWorldData();
+		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
+		
+		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
+		foreach (EditorObject save_object: placed_objects)	
+			save_data.WorldObjects.Insert(save_object.GetSaveData());
+ 
+		EditorFileManager.SaveFile(save_data);
+		GetEditor().GetUIManager().NotificationCreate("Saved!", COLOR_GREEN); 
+	}
+	
+	void Open()
+	{
+		delete m_EditorObjectManager;
+		m_EditorObjectManager = new EditorObjectManager();
+		
+		EditorWorldData load_data = new EditorWorldData();
+		int loadfile_result = EditorFileManager.LoadFile(load_data);
+		Print("LoadFile Result " + loadfile_result);
+		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
+		
+		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
+			EditorObject e_object =  GetObjectManager().CreateObject(load_object.m_Typename, load_object.m_Transform[3]);
+			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
+		}
+		
+		GetEditor().GetUIManager().NotificationCreate("Loaded!"); 
+	}
 	
 	
 
@@ -322,7 +391,8 @@ class Editor: Managed
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(RotationWidgetDragUpdate);
 		
 		EditorAction action = new EditorAction("SetTransformArray", "SetTransformArray");
-		foreach (EditorObject editor_object: GetObjectManager().GetSelectedObjects()) {
+		EditorObjectSet eo_set = GetObjectManager().GetSelectedObjects();
+		foreach (EditorObject editor_object: eo_set) {
 			action.InsertUndoParameter(editor_object, editor_object.TransformBeforeDrag);
 			action.InsertRedoParameter(editor_object, editor_object.GetTransformArray());
 		}
@@ -355,13 +425,13 @@ class Editor: Managed
 		switch (name) {
 			
 			case "translatex": {
-				widget_position[0] = cursor_position[2];
+				widget_position[0] = cursor_position[0];
 				break;
 			}
 			
 			case "translatey": {
-				widget_position[2] = cursor_position[0];
-				break;				
+				widget_position[2] = cursor_position[2];
+				break;
 			}
 			
 			case "translatez": {
@@ -426,8 +496,8 @@ class Editor: Managed
 			}
 		}
 		
-		//target.SetTransform(trans);
-		rotation_widget.SetRotation(ori);
+		// Disabled cause its very buggy
+		//rotation_widget.SetRotation(ori);
 	}
 	
 	
@@ -532,7 +602,8 @@ class Editor: Managed
 		target.Update();
 		
 		// This handles all other selected objects
-		foreach (EditorObject selected_object: GetObjectManager().GetSelectedObjects()) {
+		EditorObjectSet selected_objects = GetObjectManager().GetSelectedObjects();
+		foreach (EditorObject selected_object: selected_objects) {
 			
 			if (selected_object == target) continue;
 			
@@ -599,20 +670,109 @@ class Editor: Managed
 		Input input = GetGame().GetInput();
 		switch (key) {
 			
+			case KeyCode.KC_F1: {
+				EditorEvents.PlaceableCategoryChangedInvoke(this, PlaceableObjectCategory.BUILDING);
+				return true;
+			}
+			
+			case KeyCode.KC_F2: {
+				EditorEvents.PlaceableCategoryChangedInvoke(this, PlaceableObjectCategory.VEHICLE);
+				return true;
+			}
+			
+			case KeyCode.KC_F3: {
+				EditorEvents.PlaceableCategoryChangedInvoke(this, PlaceableObjectCategory.ENTITY);
+				return true;
+			}
+			
+			case KeyCode.KC_F4: {
+				EditorEvents.PlaceableCategoryChangedInvoke(this, PlaceableObjectCategory.HUMAN);
+				return true;
+			}
+						
+			case KeyCode.KC_F5: {
+				// Create Character on cursor and select them
+				set<Object> o;
+				vector v = MousePosToRay(o);
+				GetUIManager().SetEditorCameraActive(false);
+				GetGame().SelectPlayer(null, EditorPlayer);
+				EditorPlayer.SetPosition(v);
+				PlayerActive = true;
+				GetUIManager().GetEditorUI().GetRoot().Show(false);
+				break;
+			}
+			
+			case KeyCode.KC_F6: {
+				// Deselect character
+				GetUIManager().SetEditorCameraActive(true);
+				PlayerActive = false;
+				GetUIManager().GetEditorUI().GetRoot().Show(true);
+				break;
+			}
+
+			
 			case KeyCode.KC_ESCAPE: {
+				
 				if (GetFocus()) {
 					SetFocus(null);
 					return true;
+				} else if (m_LootEditMode) {
+					PlaceholderRemoveLootMode();
 				} else {
+					
 					//m_UIManager.GetMenu().GetVisibleMenu() != "PauseMenu"
 					// maybe something like this idk just add better escape func
 				}
-				
 				break;
 			}
 			
 			case KeyCode.KC_DELETE: {
 				GetObjectManager().DeleteSelection();				
+				return true;
+			}
+			
+			case KeyCode.KC_M: {
+								
+				GetUIManager().GetEditorUI().ShowMap(!GetUIManager().GetEditorUI().IsMapOpen());
+				return true;
+			}
+		
+			case KeyCode.KC_SPACE: {
+				if (GetGame().GetUIManager().IsCursorVisible() && !GetUIManager().GetEditorUI().IsMapOpen()) {
+					GetUIManager().GetEditorUI().HideCursor();
+					if (Editor.IsPlayerActive()) {
+						//GetGame().GetPlayer().GetInputController().SetDisabled(false);
+						Editor.SetPlayerAimLock(false);
+					}
+				} else { 
+					GetUIManager().GetEditorUI().ShowCursor();
+					if (Editor.IsPlayerActive()) {
+						//GetGame().GetPlayer().GetInputController().SetDisabled(true);
+						Editor.SetPlayerAimLock(true);
+					}
+				}
+				return true;
+			}
+			
+			case KeyCode.KC_U: {
+				EditorSettings.MAGNET_PLACEMENT = !EditorSettings.MAGNET_PLACEMENT;
+				SetFocus(null);
+				return true;
+			}
+			
+			case KeyCode.KC_Y: {
+				
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Redo();
+				} else {
+					GetEditor().GetUIManager().SetVisibility(!GetEditor().GetUIManager().GetVisibility());
+				}
+				return true;
+			}
+			
+			case KeyCode.KC_G: {
+				EditorSettings.MAINTAIN_HEIGHT = !EditorSettings.MAINTAIN_HEIGHT;
+				SetFocus(null);
 				return true;
 			}
 
@@ -625,13 +785,6 @@ class Editor: Managed
 				break;
 			}
 			
-			case KeyCode.KC_Y: {
-				if (input.LocalValue("UAWalkRunTemp")) {
-					Redo();
-					return true;
-				}
-				break;
-			}
 			
 			case KeyCode.KC_A: {
 				if (input.LocalValue("UAWalkRunTemp")) {
@@ -685,7 +838,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_S: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					GetObjectManager().Save();
+					Save();
 					return true;
 				}
 				break;
@@ -693,37 +846,28 @@ class Editor: Managed
 			
 			case KeyCode.KC_O: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					GetObjectManager().Open();
+					Open();
+					return true;
+				}
+				break;
+			}			
+			
+			case KeyCode.KC_R: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					EditorEventManager.ImportEventPositions();
 					return true;
 				}
 				break;
 			}
 			
-			case KeyCode.KC_F2: {
-				// Create Character on cursor and select them
-				set<Object> o;
-				vector v = MousePosToRay(o);
-				GetUIManager().SetEditorCameraActive(false);
-				GetGame().SelectPlayer(null, EditorPlayer);
-				EditorPlayer.SetPosition(v);
-				//EditorPlayer.DisableSimulation(false); todo remove
-				PlayerActive = true;
-				GetUIManager().GetEditorUI().GetRoot().Show(false);
-				break;
-			}
 			
-			case KeyCode.KC_F3: {
-				// Deselect character
-				GetUIManager().SetEditorCameraActive(true);
-				//EditorPlayer.DisableSimulation(true); todo remove
-				PlayerActive = false;
-				GetUIManager().GetEditorUI().GetRoot().Show(true);
-				break;
-			}
+			
+
 		}
 		
 		// todo add increment size in ui
-		foreach (EditorObject selected_objects: GetObjectManager().GetSelectedObjects()) {
+		EditorObjectSet selectedobjects = GetObjectManager().GetSelectedObjects();
+		foreach (EditorObject selected_objects: selectedobjects) {
 			
 			switch (key) {
 				case KeyCode.KC_UP: {
@@ -787,8 +931,6 @@ class Editor: Managed
 		GetGame().GetPlayer().GetInputController().OverrideAimChangeX(state, 0);
 		GetGame().GetPlayer().GetInputController().OverrideAimChangeY(state, 0);
 	}
-	
-	
 }
 
 
