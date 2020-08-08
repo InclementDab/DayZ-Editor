@@ -309,6 +309,7 @@ class XMLEditorBrushes: XMLCallback
 			EditorBrushSettings brush_settings = new EditorBrushSettings();
 			brush_settings.Name = brush.GetAttribute("name").ValueAsString();
 			
+			
 			// <BrushObject>
 			for (int j = 0; j < brush_objects.Count(); j++) {
 				XMLTag brush_object = brush_objects.Get(j);

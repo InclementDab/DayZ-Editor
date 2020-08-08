@@ -47,7 +47,7 @@ class CfgVehicles
 		hiddenSelections[] = {"RotationX", "RotationY", "RotationZ"};
 	};
 
-	class BrushBase: HouseNoDestruct
+	class BrushBase: Inventory_Base
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\BrushBase.p3d";

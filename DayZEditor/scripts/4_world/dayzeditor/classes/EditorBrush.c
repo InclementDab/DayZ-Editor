@@ -9,6 +9,7 @@ typedef ref array<ref EditorBrushSettings> EditorBrushSettingsSet;
 class EditorBrushSettings
 {
 	string Name;
+	
 	float MinRadius, MaxRadius;
 	ref TStringArray PlaceableObjects = new TStringArray();
 
@@ -26,8 +27,6 @@ class EditorBrushSettings
 		return true;
 	}
 	
-	
-	func OnMouseDown;
 }
 
 class EditorBrush
@@ -46,13 +45,14 @@ class EditorBrush
 	// Private members
 	private vector m_LastMousePosition;
 	private array<string> m_PlaceableObjects;
+	private ref ScriptInvoker m_Func = new ScriptInvoker();
 	
 	void EditorBrush(EditorBrushSettings settings)
 	{
 		Print("EditorBrush");
 		m_BrushSettings = settings;
 		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
-		m_BrushDecal.SetTexture("\DayZEditor\Editor\data\BrushDelete.paa");
+		//m_BrushDecal.SetTexture();
 
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
@@ -90,6 +90,7 @@ class EditorBrush
 		}*/
 		
 		if (input.LocalValue("UAFire")) {
+			
 			DuringMouseDown(CurrentMousePosition);
 		}
 	}
@@ -98,6 +99,7 @@ class EditorBrush
 	
 	void DuringMouseDown(vector position) 
 	{ 
+		
 		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
@@ -137,13 +139,11 @@ class EditorBrush
 
 
 
+
+
+//EditorBrush GetDeleteBrush(EditorBrushSettings settings) { return new DeleteBrush(settings); }
 class DeleteBrush: EditorBrush
 {	
-	
-	void DeleteBrush(EditorBrushSettings settings)
-	{
-		Print("DeleteBrush");
-	}
 	
 	override void DuringMouseDown(vector position)
 	{
@@ -151,7 +151,7 @@ class DeleteBrush: EditorBrush
 		vector contact_pos, contact_dir;
 		int component;
 		set<Object> results = new set<Object>();
-		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, m_BrushRadius / 2, CollisionFlags.ALLOBJECTS);
+		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, EditorBrush.GetRadius() / 2, CollisionFlags.ALLOBJECTS);
 		foreach (Object r: results) {
 			
 			EditorObject eo = GetEditor().GetObjectManager().GetEditorObject(r);
@@ -163,4 +163,5 @@ class DeleteBrush: EditorBrush
 			}
 		}
 	}
+
 }

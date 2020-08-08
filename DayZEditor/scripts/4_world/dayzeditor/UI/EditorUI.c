@@ -378,14 +378,14 @@ class EditorUI: UIScriptedMenu
 						EditorEvents.ChangeBrush(this, null);
 					else {
 						
-						EditorEvents.ChangeBrush(this, new EditorBrush(GetEditor().GetBrushFromName(brush_name)));
+						EditorEvents.ChangeBrush(this, GetEditor().GetBrushFromName(brush_name));
 					}
 					return true;
 				}
 				
 				case m_BrushTypeBox: {
 					brush_name = m_CurrentBrushNames.Get(m_BrushTypeBox.GetCurrentItem());
-					EditorEvents.ChangeBrush(this, new EditorBrush(GetEditor().GetBrushFromName(brush_name)));
+					EditorEvents.ChangeBrush(this, GetEditor().GetBrushFromName(brush_name));
 					return true;
 				}
 				

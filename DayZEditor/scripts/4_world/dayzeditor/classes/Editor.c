@@ -30,6 +30,7 @@ class Editor: Managed
 	
 	private ref EditorBrush					m_EditorBrush;
 	private ref EditorBrushSettingsSet 		m_EditorBrushTypes;
+	private ref map<string, typename> 		m_CustomBrushList = new map<string, typename>();
 	
 	static ref EditorHologram 				ObjectInHand;
 	static Object							ObjectUnderCursor = null;
@@ -71,7 +72,8 @@ class Editor: Managed
 		// Character Creation
 		EditorPlayer = CreateDefaultCharacter();
 		
-
+		RegisterCustomBrush("Delete", DeleteBrush);
+		
 		// Debug
 		DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 		DebugObject1 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
@@ -957,23 +959,36 @@ class Editor: Managed
 		m_EditorBrushTypes = brush_types;
 
 		foreach (EditorBrushSettings brush: m_EditorBrushTypes)
-			m_EditorUIManager.GetEditorUI().InsertBrush(brush.Name);
-		
+			m_EditorUIManager.GetEditorUI().InsertBrush(brush.Name);		
 	}
 	
 
+		
+	EditorBrush GetBrushFromName(string brush_name)
+	{		
 	
-	EditorBrushSettings GetBrushFromName(string brush_name)
-	{
 		EditorPrint("Editor::GetBrushFromName " + brush_name);
-		foreach (EditorBrushSettings brush: m_EditorBrushTypes)
-			if (brush.Name == brush_name)
-				return brush;
+		foreach (EditorBrushSettings settings: m_EditorBrushTypes) {
+			if (settings.Name == brush_name) {
+				
+				foreach (string name, typename type: m_CustomBrushList) 
+					if (name == brush_name)
+						return type.Spawn();
+					
+				return new EditorBrush(settings);			
+			}
+		}
 			
 		
 		EditorPrint("Editor::GetBrushFromName Brush not found!");
 		return null;
 	}
+	
+	void RegisterCustomBrush(string name, typename type)
+	{
+		m_CustomBrushList.Insert(name, type);
+	}
+	
 }
 
 

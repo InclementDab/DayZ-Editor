@@ -1,6 +1,6 @@
 
 
-class BrushBase: Building
+class BrushBase: ItemBase
 {
 
 	void BrushBase()
@@ -9,7 +9,7 @@ class BrushBase: Building
 	}
 	
 	
-	void SetTexture(string texture = "\DayZEditor\Editor\data\BrushBase.paa")
+	void SetTexture(string texture = "dayzeditor\\editor\\data\\brushdelete.paa")
 	{
 		Print("BrushBase::SetTexture");
 		SetObjectTexture(GetHiddenSelectionIndex("BrushBase"), texture);
