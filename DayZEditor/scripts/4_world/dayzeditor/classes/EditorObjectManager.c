@@ -129,11 +129,9 @@ class EditorObjectManager: Managed
 		if (reset_selection)
 			ClearSelection();
 		
-		foreach (EditorObject editor_object: target) {
-			if (!SelectObject(editor_object, false)) {
+		foreach (EditorObject editor_object: target)
+			if (!SelectObject(editor_object, false))
 				Print("Failed to select object");
-			}
-		}
 		
 		return m_SelectedObjects.Count(); 
 		

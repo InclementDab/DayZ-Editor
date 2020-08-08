@@ -47,13 +47,6 @@ class EditorEvents
 		OnObjectDrop.Invoke(context, obj);
 	}
 	
-	static void BrushChangedInvoke(Class context, EditorBrush brush)
-	{
-		Print("EditorEvents::BrushChangedInvoke");
-		OnBrushChanged.Invoke(context, brush);
-		
-	}
-	
 	static void SettingsChangedInvoke(Class context, string changed, EditorSettings settings)
 	{
 		Print("EditorEvents::SettingsChangedInvoke");
@@ -65,6 +58,14 @@ class EditorEvents
 		Print("EditorEvents::PlaceableCategoryChangedInvoke");
 		OnPlaceableCategoryChanged.Invoke(context, category);
 	}	
+	
+	
+	// Maybe a new way of doing stuff
+	static void ChangeBrush(Class context, EditorBrush brush)
+	{
+		Print("EditorEvents::ChangeBrush");
+		OnBrushChanged.Invoke(context, brush);
+	}
 
 
 }

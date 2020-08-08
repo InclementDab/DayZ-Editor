@@ -419,7 +419,7 @@ FrameWidgetClass EditorMainFrame {
          "limit visible" 0
          "Use default text" 1
          "exact text" 1
-         font "gui/fonts/metron"
+         font "gui/fonts/metron28"
          {
           ScriptParamsClass {
           }
@@ -1050,7 +1050,7 @@ FrameWidgetClass EditorMainFrame {
          vexactsize 1
          style MainMenu
          text "Brush"
-         font "gui/fonts/metron"
+         font "gui/fonts/metron28"
          switch toggle
         }
         XComboBoxWidgetClass BrushTypeBox {
@@ -1061,55 +1061,84 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 1
          vexactsize 1
          style Default
-         font "gui/fonts/metron"
-         items "Trees; Grass; Explosion; Delete"
+         font "gui/fonts/metron28"
         }
-        SliderWidgetClass SimcityRadiusSlider {
-         size 120 32
+        FrameWidgetClass SimcityRadiusFrame {
+         ignorepointer 1
+         size 140 32
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         current 20
+         {
+          SliderWidgetClass SimcityRadiusSlider {
+           visible 1
+           size 120 32
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           current 20
+          }
+          TextWidgetClass SimcityRadiusText {
+           visible 1
+           ignorepointer 1
+           size 56 32
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "0"
+           font "gui/fonts/metron"
+           "text halign" center
+           "text valign" center
+          }
+         }
         }
-        TextWidgetClass SimcityRadiusText {
+        FrameWidgetClass SimcityDensityFrame {
          ignorepointer 1
          position 0 0
-         size 48 32
+         size 140 32
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "0"
-         font "gui/fonts/metron"
-         "text halign" center
-         "text valign" center
-        }
-        SliderWidgetClass SimcityDensitySlider {
-         size 120 32
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         maximum 1
-         step 0.01
-         current 0.25
-        }
-        TextWidgetClass SimcityDensityText {
-         ignorepointer 1
-         size 56 32
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         text "0"
-         font "gui/fonts/metron"
-         "text halign" center
-         "text valign" center
+         {
+          SliderWidgetClass SimcityDensitySlider {
+           visible 1
+           size 120 32
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           maximum 1
+           step 0.01
+           current 0.25
+          }
+          TextWidgetClass SimcityDensityText {
+           visible 1
+           ignorepointer 1
+           size 56 32
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "0"
+           font "gui/fonts/metron28"
+           "text halign" center
+           "text valign" center
+          }
+         }
         }
         PanelWidgetClass Divider4 {
          ignorepointer 1

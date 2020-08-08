@@ -11,8 +11,6 @@ class EditorSettings
 	// shit thats gotta be changed
 	static float VIEW_DISTANCE = 12000;
 	static float OBJECT_VIEW_DISTANCE = 5000;
-	static float BRUSH_RADIUS = 0;
-	static float BRUSH_DENSITY = 0;
 	
 	static bool MAGNET_PLACEMENT = false;
 	static bool MAINTAIN_HEIGHT = false;

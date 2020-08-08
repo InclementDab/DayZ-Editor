@@ -29,6 +29,7 @@ class Editor: Managed
 	private ref EditorSettings				m_EditorSettings = new EditorSettings();
 	
 	private ref EditorBrush					m_EditorBrush;
+	private ref EditorBrushSettingsSet 		m_EditorBrushTypes;
 	
 	static ref EditorHologram 				ObjectInHand;
 	static Object							ObjectUnderCursor = null;
@@ -57,7 +58,9 @@ class Editor: Managed
 	{
 		Print("Editor");
 		EditorSettings.Load();
-		
+		// Load Brushes
+		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
+	
 		// Event subscriptions
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
@@ -259,7 +262,7 @@ class Editor: Managed
 	{
 		// Turn Brush off when you start to place
 		if (m_EditorBrush != null)
-			EditorEvents.BrushChangedInvoke(this, null);
+			EditorEvents.ChangeBrush(this, null);
 		
 		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, vector.Zero));		
 	}
@@ -846,6 +849,10 @@ class Editor: Managed
 				if (input.LocalValue("UAWalkRunTemp")) {
 					EditorEventManager.ImportEventPositions();
 					return true;
+				} else if (input.LocalValue("UALookAround")) {
+					// todo
+					GetEditor().ReloadBrushes("$profile:Editor/EditorBrushes.xml");
+					return true;
 				}
 				break;
 			}
@@ -932,6 +939,40 @@ class Editor: Managed
 		EditorPlayer.DisableSimulation(!state);
 		PlayerActive = state;
 		GetUIManager().GetEditorUI().GetRoot().Show(!state);
+	}
+	
+	
+	// Brush Management
+	void ReloadBrushes(string filename)
+	{
+		EditorPrint("EditorUIManager::ReloadBrushes");
+		XMLEditorBrushes xml_brushes = new XMLEditorBrushes();
+		EditorXMLManager.LoadBrushes(xml_brushes, filename);
+	}
+
+	
+	void SetBrushTypes(EditorBrushSettingsSet brush_types)
+	{
+		m_EditorUIManager.GetEditorUI().ClearBrushBox();
+		m_EditorBrushTypes = brush_types;
+
+		foreach (EditorBrushSettings brush: m_EditorBrushTypes)
+			m_EditorUIManager.GetEditorUI().InsertBrush(brush.Name);
+		
+	}
+	
+
+	
+	EditorBrushSettings GetBrushFromName(string brush_name)
+	{
+		EditorPrint("Editor::GetBrushFromName " + brush_name);
+		foreach (EditorBrushSettings brush: m_EditorBrushTypes)
+			if (brush.Name == brush_name)
+				return brush;
+			
+		
+		EditorPrint("Editor::GetBrushFromName Brush not found!");
+		return null;
 	}
 }
 

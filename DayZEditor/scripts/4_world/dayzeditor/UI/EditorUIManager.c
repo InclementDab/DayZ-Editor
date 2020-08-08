@@ -59,7 +59,8 @@ class EditorUIManager: Managed
 		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(m_PlaceableObjects)));
 		foreach (ref EditorPlaceableObject placeable_object: m_PlaceableObjects) {
 			m_EditorUI.InsertPlaceableObject(placeable_object);
-		}		
+		}	
+		
 		
 		// Subscribe to events (and twitch.tv/InclementDab)
 		EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);		
@@ -211,9 +212,12 @@ class EditorUIManager: Managed
 			Widget root = placeable_object.GetListItem().GetRoot();
 			root.Show(placeable_object.GetCategory() == category);
 		}
-		
-
 	}
 	
+	
+
+
+
+
 	
 }

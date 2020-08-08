@@ -18,6 +18,10 @@ class EditorUI: UIScriptedMenu
 	private ref Widget m_Root;
 	Widget GetRoot() { return m_Root; }
 	
+	// UIManager
+	// Maybe use EditorUIViewModel
+	private ref EditorUIManager m_UIManager;
+	
 	// Canvas
 	protected ref CanvasWidget m_EditorCanvas;
 	CanvasWidget GetCanvas() { return m_EditorCanvas; }
@@ -62,6 +66,9 @@ class EditorUI: UIScriptedMenu
 	protected Widget m_RightbarFrame;
 	protected Widget m_LeftbarPanelHost;
 	protected Widget m_RightbarPanelHost;
+	
+	protected Widget m_SimcityRadiusFrame;
+	protected Widget m_SimcityDensityFrame;
 	
 
 	// Misc
@@ -125,24 +132,21 @@ class EditorUI: UIScriptedMenu
 	
 	void EditorUI()
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorUI::EditorUI - Start");
-		#endif
+		EditorPrint("EditorUI");
 	}
 	
 	void ~EditorUI()
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorUI::~EditorUI - Start");
-		#endif
+		EditorPrint("~EditorUI");
 	}
 	
 	
 	override Widget Init()
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorUI:Init - Start");
-		#endif
+		EditorPrint("EditorUI::Init");
+		
+		// UIManager
+		m_UIManager = GetEditor().GetUIManager();
 		
 		// Init
 		m_EditorUIHandler = new EditorUIHandler();
@@ -160,6 +164,11 @@ class EditorUI: UIScriptedMenu
 		m_RightbarFrame			= m_Root.FindAnyWidget("RightbarFrame");
 		m_LeftbarPanelHost		= m_Root.FindAnyWidget("LeftbarPanelHost");
 		m_RightbarPanelHost		= m_Root.FindAnyWidget("RightbarPanelHost");
+		m_SimcityRadiusFrame	= m_Root.FindAnyWidget("SimcityRadiusFrame");
+		m_SimcityDensityFrame	= m_Root.FindAnyWidget("SimcityDensityFrame");
+		
+		
+		
 		m_OrientationWidget		= ItemPreviewWidget.Cast(m_Root.FindAnyWidget("OrientationView"));
 		
 		// Misc
@@ -224,7 +233,6 @@ class EditorUI: UIScriptedMenu
 		m_SimcityDensityText.SetText(m_SimcityDensitySlider.GetCurrent().ToString());
 		
 		// Events
-		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
 		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);
 			
 		// Tooltips
@@ -246,10 +254,9 @@ class EditorUI: UIScriptedMenu
 		// debug info
 		m_DebugFrame = m_Root.FindAnyWidget("DebugFrame");
 		m_DebugFrame.Show(false);
+			
 		
-		#ifdef EDITORPRINT
-		EditorPrint("EditorUI:Init - End and return m_Root");
-		#endif
+		
 		
 		return m_Root;
 	}
@@ -273,9 +280,7 @@ class EditorUI: UIScriptedMenu
 	
 	void ShowMap(bool state)
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorUI:ShowMap - Start");
-		#endif
+		EditorPrint("EditorUI::ShowMap");
 		
 		if (state) {
 			m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() * 3);
@@ -288,10 +293,6 @@ class EditorUI: UIScriptedMenu
 		m_EditorMapContainer.Show(state);
 		m_EditorMapContainer.Update();
 		ShowCursor();
-		
-		#ifdef EDITORPRINT
-		EditorPrint("EditorUI:ShowMap - End");
-		#endif
 	}
 	
 	
@@ -350,9 +351,7 @@ class EditorUI: UIScriptedMenu
 	/* Events */
 	override bool OnClick(Widget w, int x, int y, int button) 
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorUI:OnClick - Start");
-		#endif
+		EditorPrint("EditorUI::OnClick");
 		
 		if (button == 0) {
 			
@@ -374,15 +373,19 @@ class EditorUI: UIScriptedMenu
 				}
 				
 				case m_SimcityButton: {
+					string brush_name = m_CurrentBrushNames.Get(m_BrushTypeBox.GetCurrentItem());
 					if (!m_SimcityButton.GetState())
-						EditorEvents.BrushChangedInvoke(this, null);
-					else EditorEvents.BrushChangedInvoke(this, EditorBrushFromIndex(m_BrushTypeBox.GetCurrentItem()));
-					
+						EditorEvents.ChangeBrush(this, null);
+					else {
+						
+						EditorEvents.ChangeBrush(this, new EditorBrush(GetEditor().GetBrushFromName(brush_name)));
+					}
 					return true;
 				}
 				
 				case m_BrushTypeBox: {
-					EditorEvents.BrushChangedInvoke(this, EditorBrushFromIndex(m_BrushTypeBox.GetCurrentItem()));
+					brush_name = m_CurrentBrushNames.Get(m_BrushTypeBox.GetCurrentItem());
+					EditorEvents.ChangeBrush(this, new EditorBrush(GetEditor().GetBrushFromName(brush_name)));
 					return true;
 				}
 				
@@ -444,10 +447,7 @@ class EditorUI: UIScriptedMenu
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorUI:OnMouseButtonDown - Start");
-		EditorPrint("EditorUI:OnMouseButtonDown - Button: " + button);
-		#endif
+		EditorPrint("EditorUI::OnMouseButtonDown");
 		
 		Input input = GetGame().GetInput();	
 		// Left Click
@@ -463,15 +463,15 @@ class EditorUI: UIScriptedMenu
 			ref array<ref RaycastRVResult> raycast_result = new array<ref RaycastRVResult>();
 			DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
 			
-			//DayZPhysics.RaycastRV(start_pos, end_pos, contact_pos, contact_dir, contact_comp, collisions);
+			/* todo find better way to do this that doesnt throw null
 			if (raycast_result.Get(0).obj != NULL) {
 				if ((raycast_result.Get(0).obj == GetEditor().GetTranslationWidget() || raycast_result.Get(0).obj == GetEditor().GetTranslationWidget().GetRotationWidget())) {
 					EditorEvents.DragInvoke(raycast_result[0].obj, GetEditor().GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
 					return true;
 				}
-			}
+			}*/
 			
-			// fix before podcast :)
+			
 			GetEditor().GetObjectManager().ClearSelection();
 			if (GetEditor().GetEditorBrush() == null) {
 				
@@ -529,8 +529,7 @@ class EditorUI: UIScriptedMenu
 		m_EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, selection_box_thickness, selection_box_color);
 		m_EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, selection_box_thickness, selection_box_color);
 		
-		
-		
+	
 		if (GetGame().GetInput().LocalRelease("UAFire")) {
 			m_EditorCanvas.Clear();
 			DragBoxQueue.Remove(UpdateDragBox);
@@ -580,7 +579,7 @@ class EditorUI: UIScriptedMenu
 	
 	void ShowExportWindow()
 	{
-		Print("EditorUI::ShowExportWindow");	
+		Print("EditorUI::ShowExportWindow");
 		//GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorExportWindow.layout", Getm_Root());
 		EditorExportWindow dialog = new EditorExportWindow();
 		GetGame().GetUIManager().ShowScriptedMenu(dialog, GetGame().GetUIManager().GetMenu());
@@ -591,76 +590,22 @@ class EditorUI: UIScriptedMenu
 		m_RightbarSpacer.AddChild(target.GetObjectBrowser());
 	}
 	
+	private ref array<string> m_CurrentBrushNames = new array<string>();
+	void ClearBrushBox()
+	{
+		m_CurrentBrushNames.Clear();
+		m_BrushTypeBox.ClearAll();
+	}
+	
+	void InsertBrush(string name)
+	{
+		m_CurrentBrushNames.Insert(name);
+		m_BrushTypeBox.AddItem(name);
+	}
 	
 	
-	private EditorBrush EditorBrushFromIndex(int index)
-	{
-		switch (index) {
-				
-			// Tree Brush
-			case 0: {
-				return new TreeBrush(m_SimcityRadiusSlider.GetCurrent());
-			}				
-			
-			// Grass Brush
-			case 1: {
-				return new GrassBrush(m_SimcityRadiusSlider.GetCurrent());
-			}
-			
-			// ExplosionBrush
-			case 2: {
-				return new BoomBrush(m_SimcityRadiusSlider.GetCurrent());
-			}
-			
-			// DeleteBrush
-			case 3: {
-				return new DeleteBrush(m_SimcityRadiusSlider.GetCurrent());
-			}
-			
-			default: {
-				Print("Brush index not found");
-				break;
-			}
-		}
-		
-		return null;
-	}
-		
-	void OnBrushChanged(Class context, EditorBrush brush)
-	{
-		
-		
-		if (brush == null) {
-			m_SimcityButton.SetState(false);
-			m_SimcityDensitySlider.Show(false);
-			m_SimcityRadiusSlider.Show(false);
-		
-			m_SimcityDensityText.Show(false);
-			m_SimcityRadiusText.Show(false);
-			return;
-		}
-		
-		switch (brush.Type()) {
-			
-			case DeleteBrush: {
-				m_SimcityDensitySlider.Show(false);
-				m_SimcityRadiusSlider.Show(true);
-				
-				m_SimcityDensityText.Show(false);
-				m_SimcityRadiusText.Show(true);
-				break;
-			}
-		
-			default: {
-				m_SimcityDensitySlider.Show(true);
-				m_SimcityRadiusSlider.Show(true);
-				
-				m_SimcityDensityText.Show(true);
-				m_SimcityRadiusText.Show(true);
-				break;
-			}
-		}
-	}
+
+	
 	
 	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
 	{
@@ -709,9 +654,7 @@ class EditorUI: UIScriptedMenu
 	
 	override bool OnMouseEnter( Widget w, int x, int y )
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorUI:OnMouseEnter - Start");
-		#endif
+		EditorPrint("EditorUI::OnMouseEnter");
 		
 		if( w == m_UndoButton || w == m_RedoButton )
 		{
@@ -741,9 +684,8 @@ class EditorUI: UIScriptedMenu
 	
 	override bool OnMouseLeave( Widget w, Widget enterW, int x, int y )
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorUI:OnMouseLeave - Start");
-		#endif
+		EditorPrint("EditorUI::OnMouseLeave");
+		
 		
 		if( w == m_UndoButton || w == m_RedoButton )
 		{
@@ -856,11 +798,19 @@ class EditorUI: UIScriptedMenu
 		m_GroundButton.SetState(EditorSettings.MAINTAIN_HEIGHT);
 		m_MagnetButton.SetState(EditorSettings.MAGNET_PLACEMENT);
 		
-		EditorSettings.BRUSH_RADIUS = m_SimcityRadiusSlider.GetCurrent();
-		EditorSettings.BRUSH_DENSITY = m_SimcityDensitySlider.GetCurrent();
 		
-		m_SimcityRadiusText.SetText(EditorSettings.BRUSH_RADIUS.ToString());
-		m_SimcityDensityText.SetText(EditorSettings.BRUSH_DENSITY.ToString());
+		// Brush Management
+		bool brush_enable = m_SimcityButton.GetState();		
+		m_SimcityRadiusFrame.Show(brush_enable);
+		m_SimcityDensityFrame.Show(brush_enable);
+
+		EditorBrush.SetRadius(m_SimcityRadiusSlider.GetCurrent());
+		EditorBrush.SetDensity(m_SimcityDensitySlider.GetCurrent());
+				
+		m_SimcityRadiusText.SetText(m_SimcityRadiusSlider.GetCurrent().ToString());
+		m_SimcityDensityText.SetText(m_SimcityDensitySlider.GetCurrent().ToString());
+		
+		
 		
 		//! Color managment
 		if (m_MagnetButton.GetState()) {

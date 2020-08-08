@@ -1,20 +1,55 @@
 
 
-static ref map<string, float> ChernarusTrees;
-static ref map<string, float> ChernarusGrass;
+typedef ref array<ref EditorBrush> EditorBrushSet;
+typedef ref array<ref EditorBrushSettings> EditorBrushSettingsSet;
+// use FLAGS to define brush settings, radius, density etc...
+
+
+// This is the data that will be loaded from XML
+class EditorBrushSettings
+{
+	string Name;
+	float MinRadius, MaxRadius;
+	ref TStringArray PlaceableObjects = new TStringArray();
+
+	bool InsertPlaceableObject(string object_name, float object_frequency)
+	{
+		string model_name = GetGame().GetModelName("bldr_plnt_t_piceaabies_1s");
+		if (model_name == "UNKNOWN_P3D_FILE") {
+			Print(string.Format("%1 is not a valid Object Type!", model_name));
+			return false;
+		}
+
+		for (int i = 0; i < object_frequency * 100; i++)
+			PlaceableObjects.Insert(object_name);
+		
+		return true;
+	}
+}
 
 class EditorBrush
 {
 	protected EntityAI m_BrushDecal;
-	protected float m_BrushRadius;
+	protected ref EditorBrushSettings m_BrushSettings;
+
+	protected static float m_BrushRadius = 20;
+	static void SetRadius(float radius) { m_BrushRadius = radius; }
+	static float GetRadius() { return m_BrushRadius; }
 	
-	void EditorBrush(float radius = 10)
+	protected static float m_BrushDensity = 0.5;
+	static void SetDensity(float density) { m_BrushDensity = density; }
+	static float GetDensity() { return m_BrushDensity; }
+	
+	// Private members
+	private vector m_LastMousePosition;
+	private array<string> m_PlaceableObjects;
+	
+	void EditorBrush(EditorBrushSettings settings)
 	{
 		Print("EditorBrush");
-		EditorSettings.BRUSH_RADIUS = radius;
+		m_BrushSettings = settings;
 		m_BrushDecal = EntityAI.Cast(GetGame().CreateObject("BrushBase", vector.Zero));
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
-		
 	}
 	
 	void ~EditorBrush()
@@ -25,177 +60,87 @@ class EditorBrush
 	}
 	
 	
-	
 	void UpdateBrush()
 	{
 		if (GetEditor().IsPlacing()) return;
 		
 		set<Object> o;
 		vector CurrentMousePosition = MousePosToRay(o, null, EditorSettings.OBJECT_VIEW_DISTANCE, 0, true);
-		m_BrushDecal.SetPosition(CurrentMousePosition);
 		
-		
-		Input input = GetGame().GetInput();		
-		
+		Input input = GetGame().GetInput();
+
 		vector transform[4] = {
-			Vector(EditorSettings.BRUSH_RADIUS / 10, 0, 0),
-			Vector(0, EditorSettings.BRUSH_RADIUS / 10, 0),
-			Vector(0, 0, EditorSettings.BRUSH_RADIUS / 10),
-			m_BrushDecal.GetPosition()
+			Vector(m_BrushRadius / 10, 0, 0),
+			Vector(0, m_BrushRadius / 10, 0),
+			Vector(0, 0, m_BrushRadius / 10),
+			CurrentMousePosition
 		};
 		
 		m_BrushDecal.SetTransform(transform);
 		
-		if (input.LocalValue("UAFire") && !GetEditor().GetUIManager().IsCursorOverUI()) {
+		if (GetEditor().GetUIManager().IsCursorOverUI()) return;
+		/*
+		if (input.LocalPress("UAFire")) {
+			
+		}*/
+		
+		if (input.LocalValue("UAFire")) {
 			DuringMouseDown(CurrentMousePosition);
 		}
 	}
 	
-	void DuringMouseDown(vector position) { }
-}
-
-
-class TreeBrush: EditorBrush
-{
 	
-	private vector m_LastMousePosition;
-	private ref array<string> m_CurrentNatureData;
 	
-	void TreeBrush(float radius = 10)
-	{
-		EditorSettings.BRUSH_DENSITY = 0.2;
-		m_CurrentNatureData = new array<string>();
-		
-		ChernarusTrees = new map<string, float>();
-		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_3f", 	1);
-		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2sb", 1);
-		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_1f", 	1);
-		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_3d", 	0.2);
-		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1s", 	0.2);
-		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1fb", 0.1);
-		ChernarusTrees.Insert("bldr_plnt_t_piceaabies_1f", 	0.1);
-		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
-		ChernarusTrees.Insert("bldr_plnt_t_PiceaAbies_2s", 	0.1);
-
-		
-		foreach (string name, float rate: ChernarusTrees) {
-		
-			rate *= 100;
-			for (int i = 0; i < rate; i++) {
-				m_CurrentNatureData.Insert(name);
-			}
-			
-		}
-	}
-	
-	override void DuringMouseDown(vector position)
-	{
-		if (vector.Distance(m_LastMousePosition, position) < (EditorSettings.BRUSH_RADIUS * Math.RandomFloat(0.5, 1))) return;
+	void DuringMouseDown(vector position) 
+	{ 
+		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
-		for (int i = 0; i < EditorSettings.BRUSH_DENSITY * 100; i++) {
+		for (int i = 0; i < m_BrushDensity * 100; i++) {
 						
 			vector pos = position;
-			pos[0] = pos[0] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
-			pos[2] = pos[2] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
+			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
+			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 	
-			Object tree = GetGame().CreateObjectEx(m_CurrentNatureData.Get(Math.RandomInt(0, m_CurrentNatureData.Count() - 1)), pos, ECE_NONE);
+			Object placed_object = GetGame().CreateObjectEx(m_BrushSettings.PlaceableObjects.Get(Math.RandomInt(0, m_BrushSettings.PlaceableObjects.Count() - 1)), pos, ECE_NONE);
+			//if (placed_object == null) continue;
 			
 			// remove this once we change Object to a lower abstracted version of EditorObject
 			vector clip_info[2];
-			vector size;	
-			tree.ClippingInfo(clip_info);
+			vector size;
+			placed_object.ClippingInfo(clip_info);
 			size[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
 			size[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
 			size[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
 			
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2.4;
-			tree.SetPosition(pos);
+			placed_object.SetPosition(pos);
 			
 			vector direction = Math3D.GetRandomDir();
 			direction[1] = Math.RandomFloat(-0.05, 0.05);
-			tree.SetDirection(direction);
+			placed_object.SetDirection(direction);
 			
 		}
 	}
+	
+	void SetSettings(EditorBrushSettings settings) { m_BrushSettings = settings; }
+	EditorBrushSettings GetSettings() { return m_BrushSettings; }
+	
+	string GetName() { return m_BrushSettings.Name; }
+	
 }
 
-
-class GrassBrush: EditorBrush
-{
-	
-	private vector m_LastMousePosition;
-	private ref array<string> m_CurrentNatureData;
-	
-	void GrassBrush(float radius = 10)
-	{
-		EditorSettings.BRUSH_RADIUS = radius;
-		m_CurrentNatureData = new array<string>();
-
-		ChernarusGrass = new map<string, float>();
-		ChernarusGrass.Insert("bldr_plnt_c_grassdry2_summer",     1);
-		ChernarusGrass.Insert("bldr_plnt_c_grassdry3_summer",     0.2);
-		ChernarusGrass.Insert("bldr_plnt_c_grassdrytall2_summer", 0.2);
-		ChernarusGrass.Insert("bldr_plnt_c_grassdrytall3_summer", 0.1);
-		ChernarusGrass.Insert("bldr_plnt_c_grassdrytall_summer",  0.1);
-		ChernarusGrass.Insert("bldr_plnt_c_grassdry_summer",      1);
-		
-		foreach (string name, float rate: ChernarusGrass) {
-		
-			rate *= 100;
-			for (int i = 0; i < rate; i++) {
-				m_CurrentNatureData.Insert(name);
-			}
-			
-		}
-	}
-	
-	override void DuringMouseDown(vector position)
-	{
-		if (vector.Distance(m_LastMousePosition, position) < (EditorSettings.BRUSH_RADIUS * Math.RandomFloat(0.5, 0.8))) return;
-		m_LastMousePosition = position;
-		
-		for (int i = 0; i < EditorSettings.BRUSH_DENSITY * 100; i++) {
-						
-			vector pos = position;
-			pos[0] = pos[0] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
-			pos[2] = pos[2] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
-	
-			Object tree = GetGame().CreateObjectEx(m_CurrentNatureData.Get(Math.RandomInt(0, m_CurrentNatureData.Count() - 1)), pos, ECE_NONE);
-			
-			// remove this once we change Object to a lower abstracted version of EditorObject
-			vector clip_info[2];
-			vector size;	
-			tree.ClippingInfo(clip_info);
-			size[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
-			size[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
-			size[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
-			
-			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2.4;
-			tree.SetPosition(pos);
-			
-			vector direction = Math3D.GetRandomDir();
-			direction[1] = Math.RandomFloat(-0.05, 0.05);
-			tree.SetDirection(direction);
-			
-		}
-	}
-	
-
-}
 
 
 class DeleteBrush: EditorBrush
 {	
 	override void DuringMouseDown(vector position)
 	{
-		
 		vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
 		vector contact_pos, contact_dir;
 		int component;
 		set<Object> results = new set<Object>();
 		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, m_BrushRadius / 2, CollisionFlags.ALLOBJECTS);
-		
 		foreach (Object r: results) {
 			
 			EditorObject eo = GetEditor().GetObjectManager().GetEditorObject(r);
@@ -205,31 +150,6 @@ class DeleteBrush: EditorBrush
 			} else {
 				GetGame().ObjectDelete(r);
 			}
-		}
-	}
-}
-
-class BoomBrush: EditorBrush
-{
-	private vector m_LastMousePosition;
-	
-	void BoomBrush(float radius = 10)
-	{
-		EditorSettings.BRUSH_RADIUS = radius;
-		EditorSettings.BRUSH_DENSITY = 0.2;
-	}
-	
-	override void DuringMouseDown(vector position)
-	{
-		if (vector.Distance(m_LastMousePosition, position) < (EditorSettings.BRUSH_RADIUS * Math.RandomFloat(0.5, 1))) return;
-		m_LastMousePosition = position;
-		
-		for (int i = 0; i < (EditorSettings.BRUSH_RADIUS * 10) + 1; i++) {
-			vector pos = position;
-			pos[0] = pos[0] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
-			pos[2] = pos[2] + Math.RandomFloat(-EditorSettings.BRUSH_RADIUS / Math.PI, EditorSettings.BRUSH_RADIUS / Math.PI);
-	
-			GetGame().CreateObject("ExplosionTest", pos);
 		}
 	}
 }
