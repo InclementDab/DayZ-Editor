@@ -125,17 +125,25 @@ class EditorUI: UIScriptedMenu
 	
 	void EditorUI()
 	{
-		Print("EditorUI");
+		#ifdef EDITORPRINT
+		EditorPrint("EditorUI::EditorUI - Start");
+		#endif
 	}
 	
 	void ~EditorUI()
 	{
-		Print("~EditorUI");
+		#ifdef EDITORPRINT
+		EditorPrint("EditorUI::~EditorUI - Start");
+		#endif
 	}
 	
 	
 	override Widget Init()
 	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorUI:Init - Start");
+		#endif
+		
 		// Init
 		m_EditorUIHandler = new EditorUIHandler();
 		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorUI.layout");
@@ -239,13 +247,17 @@ class EditorUI: UIScriptedMenu
 		m_DebugFrame = m_Root.FindAnyWidget("DebugFrame");
 		m_DebugFrame.Show(false);
 		
+		#ifdef EDITORPRINT
+		EditorPrint("EditorUI:Init - End and return m_Root");
+		#endif
+		
 		return m_Root;
 	}
 	
 	
 	
 	override void Update(float timeslice)
-	{
+	{		
 		super.Update(timeslice);
 				
 		if (m_LeftbarScroll.GetVScrollPos() > m_LeftbarScroll.GetContentHeight())
@@ -261,7 +273,10 @@ class EditorUI: UIScriptedMenu
 	
 	void ShowMap(bool state)
 	{
-		Print("EditorUI::OpenMap");
+		#ifdef EDITORPRINT
+		EditorPrint("EditorUI:ShowMap - Start");
+		#endif
+		
 		if (state) {
 			m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() * 3);
 			m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() * 3);
@@ -273,6 +288,10 @@ class EditorUI: UIScriptedMenu
 		m_EditorMapContainer.Show(state);
 		m_EditorMapContainer.Update();
 		ShowCursor();
+		
+		#ifdef EDITORPRINT
+		EditorPrint("EditorUI:ShowMap - End");
+		#endif
 	}
 	
 	
@@ -331,6 +350,10 @@ class EditorUI: UIScriptedMenu
 	/* Events */
 	override bool OnClick(Widget w, int x, int y, int button) 
 	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorUI:OnClick - Start");
+		#endif
+		
 		if (button == 0) {
 			
 			switch (w) {
@@ -421,7 +444,11 @@ class EditorUI: UIScriptedMenu
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		Print("EditorUI::OnMouseButtonDown: " + button);
+		#ifdef EDITORPRINT
+		EditorPrint("EditorUI:OnMouseButtonDown - Start");
+		EditorPrint("EditorUI:OnMouseButtonDown - Button: " + button);
+		#endif
+		
 		Input input = GetGame().GetInput();	
 		// Left Click
 		if (button == 0) {
@@ -637,7 +664,10 @@ class EditorUI: UIScriptedMenu
 	
 	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
 	{
-		Print("EditorUI::OnPlaceableCategoryChanged");
+		#ifdef EDITORPRINT
+		EditorPrint("EditorUI:OnPlaceableCategoryChanged - Start");
+		#endif
+		
 		m_LeftbarSpacer.Update();
 		
 		switch (category) {
@@ -679,6 +709,10 @@ class EditorUI: UIScriptedMenu
 	
 	override bool OnMouseEnter( Widget w, int x, int y )
 	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorUI:OnMouseEnter - Start");
+		#endif
+		
 		if( w == m_UndoButton || w == m_RedoButton )
 		{
 			ColorBlue( w, x, y );
@@ -707,6 +741,10 @@ class EditorUI: UIScriptedMenu
 	
 	override bool OnMouseLeave( Widget w, Widget enterW, int x, int y )
 	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorUI:OnMouseLeave - Start");
+		#endif
+		
 		if( w == m_UndoButton || w == m_RedoButton )
 		{
 			ColorNoFocus( w, enterW, x, y );

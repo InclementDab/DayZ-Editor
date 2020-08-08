@@ -28,7 +28,7 @@ class EditorUIManager: Managed
 		m_EditorUI = new EditorUI();
 		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
 	
-		EntityAI translate = GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_NONE, RF_FRONT); // todo 1line
+		EntityAI translate = EntityAI.Cast(GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_NONE, RF_FRONT)); // todo 1line
 		m_EditorUI.m_OrientationWidget.SetItem(translate);
 		m_EditorUI.m_OrientationWidget.SetView(0);
 		m_EditorUI.GetNotificationFrame().GetPos(notification_start_x, notification_start_y);
@@ -41,7 +41,7 @@ class EditorUIManager: Managed
 		
 		// Init Camera
 		float y_level = 200 + GetGame().SurfaceY(center_pos[0], center_pos[1]);
-		m_EditorCamera = GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false);
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false));
 		m_EditorCamera.SetActive(true);
 		
 		// Init Camera Map Marker

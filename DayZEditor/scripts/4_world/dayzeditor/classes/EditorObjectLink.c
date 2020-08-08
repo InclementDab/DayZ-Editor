@@ -23,7 +23,7 @@ class EditorObjectLink: ref Link<EditorObject>
 		Print("EditorObjectLink::Create");
 		if (IsNull()) {
 			
-			Init(GetGame().CreateObjectEx("EditorObject", transform[3], ECE_NONE));		
+			Init(EditorObject.Cast(GetGame().CreateObjectEx("EditorObject", transform[3], ECE_NONE)));		
 			EditorObject editor_object = Ptr();
 			
 			editor_object.SetTransform(transform);

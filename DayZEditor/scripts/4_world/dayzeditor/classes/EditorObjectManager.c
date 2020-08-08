@@ -89,7 +89,7 @@ class EditorObjectManager: Managed
 	{		
 		Print("EditorObjectManager::CreateObject");
 		//bool ai = GetGame().IsKindOf("Hatchback_02_Black", "DZ_LightAI");
-		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", position, ECE_LOCAL);
+		EditorObject editor_object = EditorObject.Cast(GetGame().CreateObjectEx("EditorObject", position, ECE_LOCAL));
 		editor_object.Init(name);
 
 

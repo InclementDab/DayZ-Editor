@@ -12,7 +12,7 @@ class EditorBrush
 	{
 		Print("EditorBrush");
 		EditorSettings.BRUSH_RADIUS = radius;
-		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
+		m_BrushDecal = EntityAI.Cast(GetGame().CreateObject("BrushBase", vector.Zero));
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 		
 	}

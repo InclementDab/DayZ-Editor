@@ -98,6 +98,7 @@ class EditorMap: EditorWidgetEventHandler
 
 class EditorListItem: EditorWidgetEventHandler
 {
+	private Widget						m_EditorListItemPanel;
 	private ImageWidget					m_EditorListItemIcon;
 	private TextWidget 					m_EditorListItemText;
 	private ref EditorPlaceableObject 	m_PlaceableObject;
@@ -112,7 +113,8 @@ class EditorListItem: EditorWidgetEventHandler
 		#endif
 		
 		super.OnWidgetScriptInit(w);
-		m_EditorListItemIcon = ImageWidget.Cast(m_Root.FindAnyWidget("EditorListItemText"));
+		m_EditorListItemPanel = Widget.Cast(m_Root.FindAnyWidget("EditorListItemPanel"));
+		m_EditorListItemIcon = ImageWidget.Cast(m_Root.FindAnyWidget("EditorListItemIcon"));
 		m_EditorListItemText = TextWidget.Cast(m_Root.FindAnyWidget("EditorListItemText"));
 		
 		#ifdef EDITORPRINT
@@ -142,7 +144,7 @@ class EditorListItem: EditorWidgetEventHandler
 		EditorPrint("EditorListItem::OnMouseButtonDown - Start");
 		#endif
 		
-		if (button == 0) {
+		if (w == m_EditorListItemPanel && button == 0) {
 			//if (w == GetFocus()) return true;
 			if (GetEditor().IsPlacing()) {
 				delete Editor.ObjectInHand;
@@ -150,7 +152,7 @@ class EditorListItem: EditorWidgetEventHandler
 			
 			SetFocus(w);
 			return true;
-		} else if (button == 1) {
+		} else if (w == m_EditorListItemPanel && button == 1) {
 			
 			if (GetGame().GetInput().LocalValue("UAWalkRunTemp")) {
 				
@@ -175,9 +177,9 @@ class EditorListItem: EditorWidgetEventHandler
 		EditorPrint("EditorListItem::OnFocus - Start");
 		#endif
 		
-		if (w == m_Root)
+		if (w == m_EditorListItemPanel)
 		{
-			m_Root.SetColor(ARGB(255,41,128,185));
+			//m_Root.SetColor(ARGB(255,41,128,185));
 			GetEditor().CreateObjectInHand(m_PlaceableObject.GetType());	
 			return true;
 		}
@@ -191,9 +193,9 @@ class EditorListItem: EditorWidgetEventHandler
 		EditorPrint("EditorListItem::OnFocusLost - Start");
 		#endif
 		
-		if (w == m_Root)
+		if (w == m_EditorListItemPanel)
 		{
-			m_Root.SetColor(ARGB(255,35,35,35));
+			//m_Root.SetColor(ARGB(255,35,35,35));
 			return true;
 		}
 		
@@ -206,9 +208,9 @@ class EditorListItem: EditorWidgetEventHandler
 		EditorPrint("EditorListItem::OnMouseEnter - Start");
 		#endif
 		
-		if (w == m_Root)
+		if (w == m_EditorListItemPanel)
 		{
-			m_Root.SetColor(ARGB(255,41,128,185));
+			m_EditorListItemPanel.SetColor(ARGB(140,41,128,185));
 			return true;
 		}
 		return false;
@@ -220,9 +222,9 @@ class EditorListItem: EditorWidgetEventHandler
 		EditorPrint("EditorListItem::OnMouseLeave - Start");
 		#endif
 		
-		if (w == m_Root)
+		if (w == m_EditorListItemPanel)
 		{
-			m_Root.SetColor(ARGB(255,35,35,35));
+			m_EditorListItemPanel.SetColor(ARGB(140,35,35,35));
 			return true;
 		}
 		return false;

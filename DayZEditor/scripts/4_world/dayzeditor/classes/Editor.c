@@ -8,7 +8,7 @@ static PlayerBase CreateDefaultCharacter()
 {
 	PlayerBase player;
 	if (GetGame().GetPlayer() != null) {
-		player = GetGame().GetPlayer();
+		player = PlayerBase.Cast(GetGame().GetPlayer());
 	} else {	
 	    player = PlayerBase.Cast(GetGame().CreatePlayer(NULL, GetGame().CreateRandomPlayer(), vector.Zero, 0, "NONE"));
 	    player.GetInventory().CreateInInventory("AviatorGlasses");
@@ -241,7 +241,7 @@ class Editor: Managed
 	{
 		IEntity child = m_LootEditTarget.GetChildren();
 		while (child != null) {
-			GetGame().ObjectDelete(child);
+			GetGame().ObjectDelete(Object.Cast(child));
 			child = child.GetSibling();
 		}
 		
@@ -325,7 +325,7 @@ class Editor: Managed
 			GetGame().ObjectDelete(GlobalTranslationWidget);
 		
 		
-		GlobalTranslationWidget = GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_SETUP | ECE_CREATEPHYSICS | ECE_LOCAL);
+		GlobalTranslationWidget = TranslationWidget.Cast(GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_SETUP | ECE_CREATEPHYSICS | ECE_LOCAL));
 		GlobalTranslationWidget.SetEditorObject(target);	
 		
 	}
