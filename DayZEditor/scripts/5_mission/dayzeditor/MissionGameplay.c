@@ -54,7 +54,7 @@ class EditorMissionGameplay: MissionGameplay
 
 
 
-    void DestroyInventory()
+    override void DestroyInventory()
     {
         if (m_InventoryMenu) {
             m_InventoryMenu.Close();
