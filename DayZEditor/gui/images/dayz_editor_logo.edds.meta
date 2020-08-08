@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{03CB7ABB090B7555}DayZEditor/gui/images/dayz_editor_logo.tga"
+ Author "desktop-9st395p"
+ ChangeDate 799205640
+ Configurations {
+  TGAResourceClass PC {
+   SourceFile "dayz_editor_logo.tga"
+  }
+  TGAResourceClass XBOX_ONE : PC {
+  }
+  TGAResourceClass PS4 : PC {
+  }
+  TGAResourceClass LINUX : PC {
+  }
+ }
+}

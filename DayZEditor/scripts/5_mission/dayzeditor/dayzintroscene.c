@@ -131,10 +131,10 @@ modded class DayZIntroScene
 
 modded class MainMenu 
 {
+	protected ImageWidget m_Logo;
 	
 	void MainMenu()
 	{
-		
 #ifdef LOAD_MISSION		
 		Print("Loading straight into mission");
 		GetGame().PlayMission(CreateEditorMission("ChernarusPlus"));
@@ -157,7 +157,10 @@ modded class MainMenu
 		TextWidget tw = TextWidget.Cast(layoutRoot.FindAnyWidget("play_label"));
 		tw.SetText("Open Editor");
 		
-
+		m_Logo = ImageWidget.Cast(layoutRoot.FindAnyWidget("dayz_logo"));
+		m_Logo.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_logo.edds");
+		m_Logo.SetImage(0);
+		m_Logo.SetFlags(m_Logo.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		
 		return layoutRoot;
 	}

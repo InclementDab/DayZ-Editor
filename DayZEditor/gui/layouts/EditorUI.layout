@@ -458,7 +458,7 @@ FrameWidgetClass EditorMainFrame {
       PanelWidgetClass LeftbarPanelHost {
        visible 1
        disabled 0
-       ignorepointer 1
+       ignorepointer 0
        color 0.302 0.302 0.302 0.3059
        position 0 60
        size 1 0.91
