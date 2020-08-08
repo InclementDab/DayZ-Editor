@@ -14,9 +14,9 @@ class EditorBrushSettings
 
 	bool InsertPlaceableObject(string object_name, float object_frequency)
 	{
-		string model_name = GetGame().GetModelName("bldr_plnt_t_piceaabies_1s");
+		string model_name = GetGame().GetModelName(object_name);
 		if (model_name == "UNKNOWN_P3D_FILE") {
-			Print(string.Format("%1 is not a valid Object Type!", model_name));
+			Print(string.Format("%1 is not a valid Object Type!", object_name));
 			return false;
 		}
 
@@ -25,11 +25,14 @@ class EditorBrushSettings
 		
 		return true;
 	}
+	
+	
+	func OnMouseDown;
 }
 
 class EditorBrush
 {
-	protected EntityAI m_BrushDecal;
+	protected BrushBase m_BrushDecal;
 	protected ref EditorBrushSettings m_BrushSettings;
 
 	protected static float m_BrushRadius = 20;
@@ -48,7 +51,9 @@ class EditorBrush
 	{
 		Print("EditorBrush");
 		m_BrushSettings = settings;
-		m_BrushDecal = EntityAI.Cast(GetGame().CreateObject("BrushBase", vector.Zero));
+		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
+		m_BrushDecal.SetTexture("\DayZEditor\Editor\data\BrushDelete.paa");
+
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
 	
@@ -134,6 +139,12 @@ class EditorBrush
 
 class DeleteBrush: EditorBrush
 {	
+	
+	void DeleteBrush(EditorBrushSettings settings)
+	{
+		Print("DeleteBrush");
+	}
+	
 	override void DuringMouseDown(vector position)
 	{
 		vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);

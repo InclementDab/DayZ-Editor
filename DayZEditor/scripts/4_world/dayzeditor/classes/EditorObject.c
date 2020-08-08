@@ -393,11 +393,11 @@ class EditorObject : Building
 		Print("EditorObject::HideBoundingBox");
 		BoundingBoxVisible = false;
 		for (int i = 0; i < 12; i++) {
-			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "");
+			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(0,1,0.94902,1.0,co)");
 			m_BBoxLines[i].Update();
 		}
 		
-		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "");
+		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(0,1,0.94902,1.0,co)");
 	}
 	
 	
