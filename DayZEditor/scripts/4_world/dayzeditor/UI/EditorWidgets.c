@@ -144,7 +144,7 @@ class EditorListItem: EditorWidgetEventHandler
 		EditorPrint("EditorListItem::OnMouseButtonDown - Start");
 		#endif
 		
-		if (w == m_EditorListItemPanel && button == 0) {
+		if (button == 0) {
 			//if (w == GetFocus()) return true;
 			if (GetEditor().IsPlacing()) {
 				delete Editor.ObjectInHand;
@@ -152,7 +152,7 @@ class EditorListItem: EditorWidgetEventHandler
 			
 			SetFocus(w);
 			return true;
-		} else if (w == m_EditorListItemPanel && button == 1) {
+		} else if (button == 1) {
 			
 			if (GetGame().GetInput().LocalValue("UAWalkRunTemp")) {
 				

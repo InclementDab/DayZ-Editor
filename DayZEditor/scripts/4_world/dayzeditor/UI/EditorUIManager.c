@@ -41,7 +41,7 @@ class EditorUIManager: Managed
 		
 		// Init Camera
 		float y_level = 200 + GetGame().SurfaceY(center_pos[0], center_pos[1]);
-		m_EditorCamera = GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false);
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false));
 		m_EditorCamera.SetActive(true);
 		
 		// Init Camera Map Marker
