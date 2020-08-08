@@ -98,6 +98,7 @@ class EditorMap: EditorWidgetEventHandler
 
 class EditorListItem: EditorWidgetEventHandler
 {
+	private ImageWidget					m_EditorListItemIcon;
 	private TextWidget 					m_EditorListItemText;
 	private ref EditorPlaceableObject 	m_PlaceableObject;
 	
@@ -106,21 +107,40 @@ class EditorListItem: EditorWidgetEventHandler
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorListItem::OnWidgetScriptInit - Start");
+		#endif
+		
 		super.OnWidgetScriptInit(w);
-		m_EditorListItemText = m_Root.FindAnyWidget("EditorListItemText");
+		m_EditorListItemIcon = ImageWidget.Cast(m_Root.FindAnyWidget("EditorListItemText"));
+		m_EditorListItemText = TextWidget.Cast(m_Root.FindAnyWidget("EditorListItemText"));
+		
+		#ifdef EDITORPRINT
+		EditorPrint("EditorListItem::OnWidgetScriptInit - End");
+		#endif
 	}
 	
 	void SetObject(EditorPlaceableObject target)
 	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorListItem::SetObject - Start");
+		#endif
+		
 		m_PlaceableObject = target;
 		m_EditorListItemText.SetText(m_PlaceableObject.GetType());
 		m_EditorListItemText.Update();
+		
+		#ifdef EDITORPRINT
+		EditorPrint("EditorListItem::SetObject - End");
+		#endif
 	}
 	
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		Print("EditorListItem::OnMouseButtonDown");
+		#ifdef EDITORPRINT
+		EditorPrint("EditorListItem::OnMouseButtonDown - Start");
+		#endif
 		
 		if (button == 0) {
 			//if (w == GetFocus()) return true;
@@ -151,20 +171,62 @@ class EditorListItem: EditorWidgetEventHandler
 	
 	override bool OnFocus(Widget w, int x, int y)
 	{
-		Print("EditorListItem::OnFocus");
-		w.SetColor(ARGB(90, 191, 95, 95));
-		GetEditor().CreateObjectInHand(m_PlaceableObject.GetType());		
-		return true;
+		#ifdef EDITORPRINT
+		EditorPrint("EditorListItem::OnFocus - Start");
+		#endif
+		
+		if (w == m_Root)
+		{
+			m_Root.SetColor(ARGB(255,41,128,185));
+			GetEditor().CreateObjectInHand(m_PlaceableObject.GetType());	
+			return true;
+		}
+		
+		return false;
 	}
 	
 	override bool OnFocusLost(Widget w, int x, int y)
 	{
-		Print("EditorListItem::OnFocusLost");
-		w.SetColor(ARGB(0, 255, 255, 255));
-		return true;
+		#ifdef EDITORPRINT
+		EditorPrint("EditorListItem::OnFocusLost - Start");
+		#endif
+		
+		if (w == m_Root)
+		{
+			m_Root.SetColor(ARGB(255,35,35,35));
+			return true;
+		}
+		
+		return false;
 	}		
 	
+	override bool OnMouseEnter( Widget w, int x, int y )
+	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorListItem::OnMouseEnter - Start");
+		#endif
+		
+		if (w == m_Root)
+		{
+			m_Root.SetColor(ARGB(255,41,128,185));
+			return true;
+		}
+		return false;
+	}
 	
+	override bool OnMouseLeave( Widget w, Widget enterW, int x, int y )
+	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorListItem::OnMouseLeave - Start");
+		#endif
+		
+		if (w == m_Root)
+		{
+			m_Root.SetColor(ARGB(255,35,35,35));
+			return true;
+		}
+		return false;
+	}
 }
 
 class EditorPlacedListItem: UILinkedObject
@@ -302,7 +364,7 @@ class MenuBarFile: EditorWidgetEventHandler
 		Print("MenuBarFile::OnWidgetScriptInit");
 		super.OnWidgetScriptInit(w);
 		
-		m_FileListWrapSpacer = m_Root.FindAnyWidget("FileListWrapSpacer");
+		m_FileListWrapSpacer = WrapSpacerWidget.Cast(m_Root.FindAnyWidget("FileListWrapSpacer"));
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
