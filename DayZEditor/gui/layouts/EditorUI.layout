@@ -471,6 +471,7 @@ FrameWidgetClass EditorMainFrame {
        {
         ScrollWidgetClass LeftbarScroll {
          ignorepointer 0
+         keepsafezone 1
          color 0.2353 0.2353 0.2353 1
          position 0 0
          size 1 1
@@ -488,6 +489,7 @@ FrameWidgetClass EditorMainFrame {
            visible 1
            disabled 0
            ignorepointer 0
+           keepsafezone 1
            position 0 0
            size 1 1
            halign center_ref
