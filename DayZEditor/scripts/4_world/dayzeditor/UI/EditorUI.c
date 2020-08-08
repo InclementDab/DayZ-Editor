@@ -735,9 +735,7 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	void ColorBlue( Widget w, int x, int y )
-	{
-		//SetFocus( w );
-				
+	{		
 		ImageWidget image	= ImageWidget.Cast( w.FindWidget( w.GetName() + "_Icon" ) );
 		
 		if( image )
@@ -748,8 +746,6 @@ class EditorUI: UIScriptedMenu
 	
 	void ColorRed( Widget w, int x, int y )
 	{
-		//SetFocus( w );
-		
 		if( w.IsInherited( ButtonWidget ) )
 		{
 			ButtonWidget button = ButtonWidget.Cast( w );
@@ -765,9 +761,7 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	void ColorPureApple( Widget w, int x, int y )
-	{
-		//SetFocus( w );
-				
+	{		
 		if( w.IsInherited( ButtonWidget ) )
 		{
 			ButtonWidget button = ButtonWidget.Cast( w );
@@ -784,8 +778,6 @@ class EditorUI: UIScriptedMenu
 	
 	void ColorQuinceJelly( Widget w, int x, int y )
 	{
-		//SetFocus( w );
-		
 		if( w.IsInherited( ButtonWidget ) )
 		{
 			ButtonWidget button = ButtonWidget.Cast( w );
@@ -806,8 +798,6 @@ class EditorUI: UIScriptedMenu
 	
 	void ColorNoFocus( Widget w, Widget enterW, int x, int y )
 	{
-		//SetFocus( w );
-		
 		if( w.IsInherited( ButtonWidget ) )
 		{
 			ButtonWidget button = ButtonWidget.Cast( w );
