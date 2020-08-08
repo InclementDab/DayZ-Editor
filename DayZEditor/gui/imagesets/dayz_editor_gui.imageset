@@ -50,6 +50,18 @@ ImageSetClass {
    Size 64 64
    Flags 0
   }
+  ImageSetDefClass building_icon {
+   Name "building_icon"
+   Pos 512 21
+   Size 64 64
+   Flags 0
+  }
+  ImageSetDefClass tree_icon {
+   Name "tree_icon"
+   Pos 589 21
+   Size 64 64
+   Flags 0
+  }
  }
  Groups {
  }

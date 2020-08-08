@@ -103,6 +103,9 @@ class EditorListItem: EditorWidgetEventHandler
 	private TextWidget 					m_EditorListItemText;
 	private ref EditorPlaceableObject 	m_PlaceableObject;
 	
+	private static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
+	private static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
+	
 	// Getters
 	EditorPlaceableObject GetPlaceableObject() { return m_PlaceableObject; }
 	
@@ -130,6 +133,7 @@ class EditorListItem: EditorWidgetEventHandler
 		
 		m_PlaceableObject = target;
 		m_EditorListItemText.SetText(m_PlaceableObject.GetType());
+		GetIcon();
 		m_EditorListItemText.Update();
 		
 		#ifdef EDITORPRINT
@@ -179,28 +183,12 @@ class EditorListItem: EditorWidgetEventHandler
 		
 		if (w == m_EditorListItemPanel)
 		{
-			//m_Root.SetColor(ARGB(255,41,128,185));
 			GetEditor().CreateObjectInHand(m_PlaceableObject.GetType());	
 			return true;
 		}
 		
 		return false;
-	}
-	
-	override bool OnFocusLost(Widget w, int x, int y)
-	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorListItem::OnFocusLost - Start");
-		#endif
-		
-		if (w == m_EditorListItemPanel)
-		{
-			//m_Root.SetColor(ARGB(255,35,35,35));
-			return true;
-		}
-		
-		return false;
-	}		
+	}	
 	
 	override bool OnMouseEnter( Widget w, int x, int y )
 	{
@@ -210,7 +198,7 @@ class EditorListItem: EditorWidgetEventHandler
 		
 		if (w == m_EditorListItemPanel)
 		{
-			m_EditorListItemPanel.SetColor(ARGB(140,41,128,185));
+			m_EditorListItemPanel.SetColor(COLOR_ON_SELECTED);
 			return true;
 		}
 		return false;
@@ -224,33 +212,69 @@ class EditorListItem: EditorWidgetEventHandler
 		
 		if (w == m_EditorListItemPanel)
 		{
-			m_EditorListItemPanel.SetColor(ARGB(140,35,35,35));
+			m_EditorListItemPanel.SetColor(COLOR_ON_DESELECTED);
 			return true;
 		}
 		return false;
+	}
+	
+	private void GetIcon()
+	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorListItem::GetIcon - Start");
+		EditorPrint("EditorListItem::GetIcon - m_PlaceableObject: " + m_PlaceableObject.Type());
+		#endif
+		
+		string path;
+		if(m_PlaceableObject.IsInherited(BuildingBase))
+		{
+			path = "set:dayz_editor_gui image:building_icon";
+		} else if(m_PlaceableObject.IsInherited(PlantSuper))
+		{
+			path = "set:dayz_editor_gui image:tree_icon";
+		}
+		else {path = "DayZEditor/gui/images/dayz_editor_icon_black.edds"}
+		
+		SetIcon(path);
+	}
+	
+	private void SetIcon(string path)
+	{
+		m_EditorListItemIcon.LoadImageFile(0, path);
+		m_EditorListItemIcon.SetImage(0);
 	}
 }
 
 class EditorPlacedListItem: UILinkedObject
 {
-	
+	private ImageWidget		m_EditorPlacedListItemIcon;
 	protected TextWidget 	m_EditorPlacedListItemText;	
 	protected Widget 		m_EditorPlacedListItemPanel;	
 	
-	private static int COLOR_ON_SELECTED = COLOR_BLUE;
-	private static int COLOR_ON_DESELECTED = 0xFFFFFFFF;
+	private static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
+	private static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
 	
 	
 	void ~EditorPlacedListItem()
 	{
-		Print("~PlacedObjectListItem");
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::~EditorPlacedListItem - Start");
+		#endif
+		
 		delete m_EditorPlacedListItemText;
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::~EditorPlacedListItem - End");
+		#endif
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
-		Print("EditorPlacedListItem::OnWidgetScriptInit");
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::OnWidgetScriptInit - Start");
+		#endif
+		
 		super.OnWidgetScriptInit(w);
 		
 		m_EditorPlacedListItemPanel = m_Root.FindAnyWidget("EditorPlacedListItemPanel");
@@ -259,24 +283,47 @@ class EditorPlacedListItem: UILinkedObject
 		EditorEvents.OnObjectSelected.Insert(EditorObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(EditorObjectDeselected);
 		//GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::OnWidgetScriptInit - End");
+		#endif
 	}
 	
 	void EditorObjectSelected(Class context, EditorObject target)
 	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::EditorObjectSelected - Start");
+		#endif
+		
 		m_EditorPlacedListItemPanel.SetColor(COLOR_ON_SELECTED);
 		m_EditorPlacedListItemPanel.Update();
+		
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::EditorObjectSelected - End");
+		#endif
 	}
 	
 	void EditorObjectDeselected(Class context, EditorObject target)
 	{
-		m_EditorPlacedListItemPanel.SetColor(ARGB(0, 255, 255, 255)); 
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::EditorObjectDeselected - Start");
+		#endif
+		
+		m_EditorPlacedListItemPanel.SetColor(COLOR_ON_DESELECTED); 
 		m_EditorPlacedListItemPanel.Update();
+		
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::EditorObjectDeselected - End");
+		#endif
 	}
 	
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Print("EditorPlacedListItem::OnClick");
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::OnClick - Start");
+		#endif
+		
 		Input input = GetGame().GetInput();
 		EditorObject editor_object = EditorObject.GetFromUILinkedRoot(m_Root);
 		// LMB
@@ -330,17 +377,33 @@ class EditorPlacedListItem: UILinkedObject
 
 	override bool OnFocus(Widget w, int x, int y)
 	{
-		Print("EditorPlacedListItem::OnFocus");
-		Print(m_EditorObject);
-		GetEditor().GetObjectManager().SelectObject(m_EditorObject, false);
-		return super.OnFocus(w, x, y);
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::OnFocus - Start");
+		EditorPrint("EditorPlacedListItem::OnFocus - m_EditorObject: " + m_EditorObject);
+		#endif
+		
+		if (w == m_EditorPlacedListItemText)
+		{
+			GetEditor().GetObjectManager().SelectObject(m_EditorObject, false);
+			return true;
+		}
+		
+		return false;
 	}
 	
 	override bool OnFocusLost(Widget w, int x, int y)
 	{
-		Print("EditorPlacedListItem::OnFocusLost");
-		GetEditor().GetObjectManager().DeselectObject(m_EditorObject);
-		return super.OnFocusLost(w, x, y);
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::OnFocusLost - Start");
+		#endif
+		
+		if (w == m_EditorPlacedListItemText)
+		{
+			GetEditor().GetObjectManager().DeselectObject(m_EditorObject);
+			return true;
+		}
+		
+		return false;
 	}
 	
 	
@@ -348,11 +411,42 @@ class EditorPlacedListItem: UILinkedObject
 	
 	override void SetObject(notnull EditorObject target)
 	{
-		Print("EditorPlacedListItem::SetObject");
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::SetObject - Start");
+		#endif
+		
 		super.SetObject(target);
-		m_EditorPlacedListItemText.SetText(target.GetType());	
+		m_EditorPlacedListItemText.SetText(target.GetType());
+		m_EditorPlacedListItemText.Update();
 	}
 	
+	override bool OnMouseEnter( Widget w, int x, int y )
+	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::OnMouseEnter - Start");
+		#endif
+		
+		if (w == m_EditorPlacedListItemText)
+		{
+			m_EditorPlacedListItemText.SetColor(COLOR_ON_SELECTED);
+			return true;
+		}
+		return false;
+	}
+	
+	override bool OnMouseLeave( Widget w, Widget enterW, int x, int y )
+	{
+		#ifdef EDITORPRINT
+		EditorPrint("EditorPlacedListItem::OnMouseLeave - Start");
+		#endif
+		
+		if (w == m_EditorPlacedListItemText)
+		{
+			m_EditorPlacedListItemText.SetColor(COLOR_ON_DESELECTED);
+			return true;
+		}
+		return false;
+	}
 }
 
 

@@ -558,7 +558,7 @@ FrameWidgetClass EditorMainFrame {
     PanelWidgetClass RightbarPanelHost {
      visible 1
      disabled 0
-     ignorepointer 1
+     ignorepointer 0
      color 0.302 0.302 0.302 0.3059
      position 0 0
      size 1 1
@@ -569,7 +569,8 @@ FrameWidgetClass EditorMainFrame {
      style rover_sim_colorable
      {
       ScrollWidgetClass RightbarScroll {
-       ignorepointer 1
+       ignorepointer 0
+       keepsafezone 1
        color 0.2353 0.2353 0.2353 1
        position 0 0
        size 1 1
@@ -584,6 +585,7 @@ FrameWidgetClass EditorMainFrame {
        {
         WrapSpacerWidgetClass RightbarSpacer {
          ignorepointer 1
+         keepsafezone 1
          position 0 0
          size 1 1
          halign center_ref
@@ -592,6 +594,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         Padding 5
          Margin 0
          "Size To Content V" 1
         }
