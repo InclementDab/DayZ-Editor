@@ -6,7 +6,8 @@ class EditorCameraMapMarker: EditorWidgetEventHandler
 	{
 		if (m_Root == null) return;
 		if (m_ActiveCamera == null) return;
-		MapWidget m_MapWidget = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
+		//todo
+		MapWidget m_MapWidget;// = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
 		vector pos = m_MapWidget.MapToScreen(m_ActiveCamera.GetPosition());
 		
 		m_Root.SetPos(pos[0], pos[1]);

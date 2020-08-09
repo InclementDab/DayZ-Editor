@@ -12,9 +12,8 @@ class EditorHologram: Hologram
 		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
-		m_MapWidget = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
-		m_MapWidget.AddChild(m_EditorMapMarkerWidget); 
-	
+
+		GetEditor().GetUIManager().GetEditorUI().InsertMapObject(m_EditorMapMarkerWidget);
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}

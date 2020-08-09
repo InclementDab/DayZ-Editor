@@ -354,7 +354,7 @@ class Editor: Managed
 		switch (name) {
 			
 			case "EditorMapMarker": {
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectMapDragUpdate, 0, true, target);
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectMapDragUpdate, 0, true, context, target);
 				break;
 			}
 			
@@ -506,8 +506,11 @@ class Editor: Managed
 	
 	
 	// Handles Marker Drag from Map
-	void ObjectMapDragUpdate(notnull EditorObject target)
+	void ObjectMapDragUpdate(Class context, notnull EditorObject target)
 	{
+		EditorMapMarker map_marker;
+		Class.CastTo(map_marker, context);
+		
 		Input input = GetGame().GetInput();
 		if (input.LocalRelease("UAFire")) {
 			EditorEvents.DropInvoke(this, target);
@@ -517,7 +520,7 @@ class Editor: Managed
 		vector object_position = target.GetPosition();
 		int mouse_x, mouse_y;
 		GetCursorPos(mouse_x, mouse_y);
-		vector cursor_position = GetUIManager().GetEditorUI().GetMapWidget().ScreenToMap(Vector(mouse_x, mouse_y, 0));
+		vector cursor_position = map_marker.GetMapWidget().ScreenToMap(Vector(mouse_x, mouse_y, 0));
 		cursor_position[1] = object_position[1] - GetGame().SurfaceY(object_position[0], object_position[2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 		target.SetPosition(cursor_position);
 		target.Update();

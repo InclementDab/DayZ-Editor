@@ -56,14 +56,15 @@ class EditorObject : Building
 	* Initializers
 	*/
 	
-	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.OBJECTMARKER)
+	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.MAPMARKER)
 	{
+		flags = EditorObjectFlags.MAPMARKER;
 		m_Flags = flags;
 		if (m_Flags == EditorObjectFlags.ALL) {
 			//m_Flags = EditorObjectFlags.EO_BBOX | EditorObjectFlags.EO_MAPMARKER | EditorObjectFlags.EO_WORLDMARKER | EditorObjectFlags.EO_LISTITEM;
 		}
 		
-		m_Flags = EditorObjectFlags.BBOX;
+		
 		Print("EditorObject::Init");
 		SetFlags(EntityFlags.STATIC, true);
 		
@@ -81,8 +82,6 @@ class EditorObject : Building
 			m_EditorObjectMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorObjectMarker.layout");
 			m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
 			m_EditorObjectMarker.SetObject(this);
-			
-			//GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectMarkerWidget);
 		}
 		
 		// Map marker
@@ -91,7 +90,8 @@ class EditorObject : Building
 			m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
 			m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 			m_EditorMapMarker.SetObject(this);
-			GetEditor().GetUIManager().GetEditorUI().GetMapWidget().AddChild(m_EditorMapMarkerWidget);
+			
+			GetEditor().GetUIManager().GetEditorUI().InsertMapObject(m_EditorMapMarkerWidget);
 		}	
 			
 		// Browser item
@@ -102,26 +102,6 @@ class EditorObject : Building
 			m_EditorObjectBrowser.SetObject(this);
 			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectBrowser);
 		}
-		
-		// Properties Dialog
-		// todo move to world object+
-		/*
-		m_EditorObjectPropertiesWindow = new UILinkedObject();
-		m_EditorObjectPropertiesWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorObjectProperties.layout");
-		m_EditorObjectPropertiesWidget.GetScript(m_EditorObjectPropertiesWindow);
-		m_EditorObjectPropertiesWindow.SetObject(this);
-		m_EditorObjectPropertiesWidget.Show(false);		
-		*/
-		
-		// Context Menu
-		// todo move context menu to EO World Object
-		/*
-		m_EditorObjectContextMenu = new UILinkedObject();
-		m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout");
-		m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
-		m_EditorObjectContextMenu.SetObject(this);
-		m_EditorObjectContextWidget.Show(false);
-		*/
 		
 		if ((m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
 			CreateBoundingBox();
@@ -426,15 +406,7 @@ class EditorObject : Building
 		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(0,1,0.94902,1.0,co)");
 	}
 	
-	
-	
-	vector GetMarkerPosition()
-	{
-		float x, y;
-		m_EditorObjectMarker.GetLayoutRoot().GetPos(x, y);
-		return Vector(x, y, 0);
-	}
-	
+		
 	bool IsObjectMarkerEnabled() { return (m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
 	void GetObjectMarkerPos(out float x, out float y)
 	{
@@ -457,33 +429,6 @@ class EditorObject : Building
 	
 	bool IsBoundingBoxEnabled() { return (m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; }
 	
-	/*
-	Widget GetObjectMarker() { return m_EditorObjectMarkerWidget; }
-	Widget GetObjectBrowser() { return m_EditorObjectBrowserWidget; }
-	Widget GetMapMarker() { return m_EditorMapMarkerWidget; }
-	Widget GetContextMenu() { return m_EditorObjectContextWidget; }
-	
-	UILinkedObject GetEditorObjectMarker() { return m_EditorObjectMarker; }
-	*/
-	void ShowPropertiesWindow(bool show) 
-	{
-		m_EditorObjectPropertiesWidget.Show(true);
-		m_EditorObjectPropertiesWidget.Update();
-		//SetModal(m_EditorObjectPropertiesWidget);
-	}
-	
-	/*
-	static EditorObject GetFromUILinkedRoot(Widget root)
-	{
-		Print("EditorObject::GetFromObjectRoot");
-		foreach (EditorObject editor_object: GetEditor().GetObjectManager().GetPlacedObjects()) {
-			if (editor_object.GetObjectBrowser() == root || editor_object.GetObjectMarker() == root)
-				return editor_object;
-		}
-		
-		Print("GetFromUILinkedRoot: Item Not Found!");
-		return null;
-	}*/
 }
 
 

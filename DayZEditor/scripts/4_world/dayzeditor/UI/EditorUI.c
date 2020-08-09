@@ -300,7 +300,7 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	EditorMap GetMap() 			{ return m_EditorMap; }
-	MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
+	//MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
 	bool IsMapOpen() 			{ return m_EditorMapContainer.IsVisible(); }
 	
 	void ShowCursor()
@@ -343,6 +343,15 @@ class EditorUI: UIScriptedMenu
 	{
 		m_CurrentPlaceableObjects.Insert(placeable_object.SetListItem(m_LeftbarSpacer));
 	}
+	
+	void InsertMapObject(Widget map_marker)
+	{
+		Print("EditorUI::InsertMapObject " + map_marker.GetName());
+		m_EditorMapWidget.AddChild(map_marker);
+	}
+	
+	
+	
 	
 	
 	/* Events */

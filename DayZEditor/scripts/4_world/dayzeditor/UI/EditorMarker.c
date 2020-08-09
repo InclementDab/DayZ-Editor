@@ -5,9 +5,13 @@ static const float ALPHA_ON_HIDE = 0.25;
 
 class EditorMapMarker: UILinkedObject
 {	
+	private MapWidget m_MapWidget;
+	MapWidget GetMapWidget() { return m_MapWidget; }
+	
 	void EditorMapMarker()
 	{
 		Print("EditorMapMarker");
+		
 	}
 	
 	void ~EditorMapMarker()
@@ -18,9 +22,8 @@ class EditorMapMarker: UILinkedObject
 	
 	override void Update()
 	{
-
-		MapWidget map_widget = MapWidget.Cast(m_Root.GetParent());
-		vector pos = map_widget.MapToScreen(m_EditorObject.GetPosition());
+		m_MapWidget = MapWidget.Cast(m_Root.GetParent());
+		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());
 		
 		// -5 for cursor offset
 		// -10 to put cursor on center
@@ -70,7 +73,7 @@ class EditorMapMarker: UILinkedObject
 			GetEditor().GetObjectManager().SelectObject(m_EditorObject, !input.LocalValue("UATurbo"));
 		
 		 // Blocks map from creating selection box
-		return true;
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	
 	override bool OnDrag(Widget w, int x, int y)
@@ -85,6 +88,20 @@ class EditorMapMarker: UILinkedObject
 	{
 		Print("EditorMapMarker::OnDrop");	
 		EditorEvents.DropInvoke(this, m_EditorObject);
+		return true;
+	}
+	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		Print("EditorMapMarker::OnFocus");
+		GetEditor().GetObjectManager().SelectObject(m_EditorObject);
+		return true;
+	}
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		Print("EditorMapMarker::OnFocusLost");
+		GetEditor().GetObjectManager().DeselectObject(m_EditorObject);
 		return true;
 	}
 }
@@ -177,9 +194,14 @@ class EditorObjectMarker: UILinkedObject
 			
 			
 		} else if (button == 1) {
-			//Widget ctx_menu = m_EditorObject.GetContextMenu();
-			//ctx_menu.Show(true);
-			//ctx_menu.SetPos(x, y);
+			
+			/*
+			m_EditorObjectContextMenu = new UILinkedObject();
+			m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout");
+			m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
+			m_EditorObjectContextMenu.SetObject(this);
+			m_EditorObjectContextWidget.Show(false);
+			*/
 		} else return false;
 
 
@@ -207,10 +229,14 @@ class EditorObjectMarker: UILinkedObject
 	
 	// todo Editor UI Manager that manages modal windows correctly :)
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
-	{
-		m_EditorObject.ShowPropertiesWindow(true);
-		
-		
+	{		
+			/*
+		m_EditorObjectPropertiesWindow = new UILinkedObject();
+		m_EditorObjectPropertiesWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorObjectProperties.layout");
+		m_EditorObjectPropertiesWidget.GetScript(m_EditorObjectPropertiesWindow);
+		m_EditorObjectPropertiesWindow.SetObject(this);
+		m_EditorObjectPropertiesWidget.Show(false);		
+		*/
 		return true;
 	}
 	

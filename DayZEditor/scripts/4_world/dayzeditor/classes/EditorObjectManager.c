@@ -116,7 +116,6 @@ class EditorObjectManager: Managed
 			ClearSelection();
 		}
 		
-		
 		m_SelectedObjects.InsertEditorObject(target);
 		EditorEvents.ObjectSelectedInvoke(this, target);
 		
