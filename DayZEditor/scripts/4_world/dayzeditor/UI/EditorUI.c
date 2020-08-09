@@ -88,7 +88,7 @@ class EditorUI: UIScriptedMenu
 	protected ref EditorExportDialog m_ExportDialog;
 	
 	// Orientation Tool
-	ItemPreviewWidget m_OrientationWidget;
+	protected ItemPreviewWidget m_OrientationWidget;
 	
 	// Debug
 	private Widget		m_DebugFrame;
@@ -129,9 +129,10 @@ class EditorUI: UIScriptedMenu
 	protected TextWidget m_CamPosInfoY;
 	protected TextWidget m_CamPosInfoZ;
 	
-	void EditorUI()
+	void EditorUI(EditorUIManager uimanager)
 	{
 		EditorPrint("EditorUI");
+		m_UIManager = uimanager;
 	}
 	
 	void ~EditorUI()
@@ -144,8 +145,6 @@ class EditorUI: UIScriptedMenu
 	{
 		EditorPrint("EditorUI::Init");
 		
-		// UIManager
-		m_UIManager = GetEditor().GetUIManager();
 		
 		// Init
 		m_EditorUIHandler = new EditorUIHandler();
@@ -167,8 +166,11 @@ class EditorUI: UIScriptedMenu
 		m_SimcityDensityFrame	= m_Root.FindAnyWidget("SimcityDensityFrame");
 		
 		
-		
+		// Orientation Widget
 		m_OrientationWidget		= ItemPreviewWidget.Cast(m_Root.FindAnyWidget("OrientationView"));
+		EntityAI translate 		= EntityAI.Cast(GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_NONE, RF_FRONT)); // todo 1line
+		m_OrientationWidget.SetItem(translate);
+		m_OrientationWidget.SetView(0);
 		
 		// Misc
 		m_EditorMapContainer	= m_Root.FindAnyWidget("MapContainer");
@@ -272,6 +274,10 @@ class EditorUI: UIScriptedMenu
 		
 		if (m_CamPosInfoPanel.IsVisible())
 			UpdateInfoCamPos();
+		
+		vector cam_orientation = m_UIManager.GetEditorCamera().GetOrientation();	
+		m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
+		
 	}
 	
 	void ShowMap(bool state)

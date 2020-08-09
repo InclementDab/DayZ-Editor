@@ -18,7 +18,7 @@ class ExpansionImportData
 				continue;
 			}
 					
-			data.Insert(new EditorObjectData(name, position, rotation, EditorObjectFlags.NONE));
+			data.Insert(new EditorObjectData(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
 		}
 		
 		CloseFile(handler);
@@ -210,14 +210,14 @@ class EditorFileManager
 					editor_object.GetWorldObject().GetLODS(testlods);
 					
 					foreach (LOD lod: testlods) {
-						Print(editor_object.GetWorldObject().GetLODName(lod));
+						//Print(editor_object.GetWorldObject().GetLODName(lod));
 						array<Selection> selections = new array<Selection>();
 						lod.GetSelections(selections);
 						foreach (Selection s: selections) {
 							
-							Print(s.GetName());
+							//Print(s.GetName());
 							for (int fff = 0; fff < s.GetVertexCount(); fff++) {
-								Print(s.GetVertexPosition(lod, fff));
+								//Print(s.GetVertexPosition(lod, fff));
 							}
 						}
 					}

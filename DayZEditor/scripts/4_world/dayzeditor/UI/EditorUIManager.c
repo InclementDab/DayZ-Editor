@@ -14,8 +14,6 @@ class EditorUIManager: Managed
 	// Getters
 	EditorUI GetEditorUI() { return m_EditorUI; }
 	EditorCamera GetEditorCamera() { return m_EditorCamera; }
-
-
 	ScriptInvoker GetUpdateInvoker() { return m_UpdateInvoker; }
 	
 	void EditorUIManager()
@@ -25,12 +23,10 @@ class EditorUIManager: Managed
 		m_UIManager = GetGame().GetUIManager();
 		
 		// Init UI
-		m_EditorUI = new EditorUI();
+		m_EditorUI = new EditorUI(this);
 		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
 	
-		EntityAI translate = EntityAI.Cast(GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_NONE, RF_FRONT)); // todo 1line
-		m_EditorUI.m_OrientationWidget.SetItem(translate);
-		m_EditorUI.m_OrientationWidget.SetView(0);
+
 		m_EditorUI.GetNotificationFrame().GetPos(notification_start_x, notification_start_y);
 		
 		// Init Spawn Position
@@ -84,10 +80,7 @@ class EditorUIManager: Managed
 		m_UpdateInvoker.Invoke(timeslice);
 		m_LastFrameTime = GetGame().GetTime();
 		
-		// move elsewhere?
-		vector cam_orientation = GetEditorCamera().GetOrientation();	
-		GetEditorUI().m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
-		
+
 	}
 	
 	

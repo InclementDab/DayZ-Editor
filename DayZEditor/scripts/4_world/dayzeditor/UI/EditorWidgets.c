@@ -184,14 +184,25 @@ class EditorListItem: UILinkedObject
 		EditorPrint("EditorListItem::OnFocus - Start");
 		#endif
 		
-		if (w == m_EditorListItemPanel)
-		{
+		if (w == m_EditorListItemPanel) {
+			m_EditorListItemPanel.SetColor(COLOR_ON_SELECTED);
 			GetEditor().CreateObjectInHand(m_PlaceableObject.GetType());	
 			return true;
 		}
 		
 		return false;
 	}	
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		EditorPrint("EditorListItem::OnFocusLost");
+		if (w == m_EditorListItemPanel) {
+			m_EditorListItemPanel.SetColor(COLOR_ON_DESELECTED);
+			return true;
+		}
+		
+		return false;
+	}
 	
 	override bool OnMouseEnter( Widget w, int x, int y )
 	{
@@ -216,7 +227,10 @@ class EditorListItem: UILinkedObject
 		
 		if (w == m_EditorListItemPanel)
 		{
-			m_EditorListItemPanel.SetColor(COLOR_ON_DESELECTED);
+			if (GetFocus() != w) {
+				m_EditorListItemPanel.SetColor(COLOR_ON_DESELECTED);
+			}
+			
 			m_Tooltip.HideTooltip();
 			return true;
 		}

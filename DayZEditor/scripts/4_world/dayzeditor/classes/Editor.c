@@ -24,9 +24,9 @@ static Editor GetEditor() { return m_EditorInstance; }
 class Editor: Managed
 {
 	// Private Memebers
-	private ref EditorObjectManager			m_EditorObjectManager = new EditorObjectManager();
-	private ref EditorUIManager 			m_EditorUIManager = new EditorUIManager();
-	private ref EditorSettings				m_EditorSettings = new EditorSettings();
+	private ref EditorObjectManager			m_EditorObjectManager;
+	private ref EditorUIManager 			m_EditorUIManager;
+	private ref EditorSettings				m_EditorSettings;
 	
 	private ref EditorBrush					m_EditorBrush;
 	private ref EditorBrushSettingsSet 		m_EditorBrushTypes;
@@ -58,10 +58,11 @@ class Editor: Managed
 	void Editor()
 	{
 		Print("Editor");
-		EditorSettings.Load();
-		// Load Brushes
-		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
-	
+		m_EditorSettings = new EditorSettings();
+		m_EditorUIManager = new EditorUIManager();
+		m_EditorObjectManager = new EditorObjectManager();
+		
+		
 		// Event subscriptions
 		//EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 		//EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
@@ -72,6 +73,10 @@ class Editor: Managed
 		// Character Creation
 		EditorPlayer = CreateDefaultCharacter();
 		
+		
+		
+		// Load Brushes
+		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
 		RegisterCustomBrush("Delete", DeleteBrush);
 		
 		// Debug
@@ -166,6 +171,9 @@ class Editor: Managed
 				ObjectUnderCursor = null;
 			}
 		}
+		
+
+		
 		
 	
 		// debug
@@ -771,22 +779,7 @@ class Editor: Managed
 				return true;
 			}
 		
-			case KeyCode.KC_SPACE: {
-				if (GetGame().GetUIManager().IsCursorVisible() && !GetUIManager().GetEditorUI().IsMapOpen()) {
-					GetUIManager().GetEditorUI().HideCursor();
-					if (Editor.IsPlayerActive()) {
-						//GetGame().GetPlayer().GetInputController().SetDisabled(false);
-						Editor.SetPlayerAimLock(false);
-					}
-				} else { 
-					GetUIManager().GetEditorUI().ShowCursor();
-					if (Editor.IsPlayerActive()) {
-						//GetGame().GetPlayer().GetInputController().SetDisabled(true);
-						Editor.SetPlayerAimLock(true);
-					}
-				}
-				return true;
-			}
+	
 			
 			case KeyCode.KC_U: {
 				EditorSettings.MAGNET_PLACEMENT = !EditorSettings.MAGNET_PLACEMENT;
@@ -794,15 +787,6 @@ class Editor: Managed
 				return true;
 			}
 			
-			case KeyCode.KC_Y: {
-				
-				if (input.LocalValue("UAWalkRunTemp")) {
-					Redo();
-				} else {
-					GetEditor().GetUIManager().SetVisibility(!GetEditor().GetUIManager().GetVisibility());
-				}
-				return true;
-			}
 			
 			case KeyCode.KC_G: {
 				EditorSettings.MAINTAIN_HEIGHT = !EditorSettings.MAINTAIN_HEIGHT;
