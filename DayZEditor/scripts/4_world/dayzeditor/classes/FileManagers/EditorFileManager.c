@@ -12,22 +12,17 @@ class COMImportData
 	}
 }
 
-class EditorWorldObject
-{
-	string m_Typename;
-	vector m_Transform[4];
-}
 
-typedef ref array<ref EditorWorldObject> EditorWorldObjectSet;
+
 class EditorWorldData
 {
 	string MapName;
 	vector CameraPosition[4];
-	ref array<ref EditorWorldObject> WorldObjects;
+	ref EditorObjectDataSet EditorObjects;
 	
 	void EditorWorldData()
 	{
-		WorldObjects = new array<ref EditorWorldObject>();
+		EditorObjects = new EditorObjectDataSet();
 	}	
 }
 
@@ -104,16 +99,8 @@ class EditorFileManager
 				JsonFileLoader<COMImportData>.JsonLoadFile(filename, com_data);
 				
 				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
-					Print("ImportFromFile::COMFILE::Import " + param.param1);
-					vector transform[4];
-					param.param3.RotationMatrixFromAngles(transform);
-					transform[3] = param.param2;
-					
-					EditorWorldObject world_object = new EditorWorldObject();
-					world_object.m_Typename = param.param1;
-					world_object.m_Transform = transform;
-					
-					data.WorldObjects.Insert(world_object);
+					Print("ImportFromFile::COMFILE::Import " + param.param1);					
+					data.EditorObjects.Insert(new EditorObjectData(param.param1, param.param2, param.param3));
 				}
 			}
 		}

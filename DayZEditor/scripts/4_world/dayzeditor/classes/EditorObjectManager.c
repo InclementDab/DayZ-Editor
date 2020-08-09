@@ -215,11 +215,11 @@ class EditorObjectManager: Managed
 	void CutSelection()
 	{
 		string copy;
-		EditorWorldObjectSet world_objects = new EditorWorldObjectSet();
+		EditorObjectDataSet world_objects = new EditorObjectDataSet();
 		foreach (int id, EditorObject selected_object: m_SelectedObjects) {
-			world_objects.Insert(selected_object.GetSaveData());		
+			world_objects.Insert(selected_object.GetData());		
 		}
-		copy = JsonFileLoader<EditorWorldObjectSet>.JsonMakeData(world_objects);
+		copy = JsonFileLoader<EditorObjectDataSet>.JsonMakeData(world_objects);
 		GetGame().CopyToClipboard(copy);
 		DeleteSelection();
 	}
@@ -228,11 +228,11 @@ class EditorObjectManager: Managed
 	void CopySelection()
 	{
 		string copy;
-		EditorWorldObjectSet world_objects = new EditorWorldObjectSet();
+		EditorObjectDataSet world_objects = new EditorObjectDataSet();
 		foreach (int id, EditorObject selected_object: m_SelectedObjects) {
-			world_objects.Insert(selected_object.GetSaveData());			
+			world_objects.Insert(selected_object.GetData());			
 		}
-		copy = JsonFileLoader<EditorWorldObjectSet>.JsonMakeData(world_objects);
+		copy = JsonFileLoader<EditorObjectDataSet>.JsonMakeData(world_objects);
 		GetGame().CopyToClipboard(copy);
 	}
 	
@@ -241,25 +241,25 @@ class EditorObjectManager: Managed
 		string clipboard_text;
 		GetGame().CopyFromClipboard(clipboard_text);
 		
-		EditorWorldObjectSet data = new EditorWorldObjectSet();
-		JsonFileLoader<EditorWorldObjectSet>.JsonLoadData(clipboard_text, data);
+		EditorObjectDataSet data = new EditorObjectDataSet();
+		JsonFileLoader<EditorObjectDataSet>.JsonLoadData(clipboard_text, data);
 		if (data.Count() == 0) return;
 		
 		EditorEvents.ClearSelection(this);
 		vector avg_position;
 
-		foreach (EditorWorldObject copy_object: data) {
-			avg_position += copy_object.m_Transform[3];
+		foreach (EditorObjectData copy_object: data) {
+			avg_position += copy_object.Position;
 		}
 		
 		avg_position[0] = avg_position[0] / data.Count();
 		avg_position[1] = avg_position[1] / data.Count();
 		avg_position[2] = avg_position[2] / data.Count();
 		
-		foreach (EditorWorldObject pasted_object: data) {
+		foreach (EditorObjectData pasted_object: data) {
 			
 			
-			vector position = avg_position - pasted_object.m_Transform[3] + Editor.CurrentMousePosition;
+			vector position = avg_position - pasted_object.Position + Editor.CurrentMousePosition;
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",
@@ -267,7 +267,7 @@ class EditorObjectManager: Managed
 				position
 			};
 			
-			EditorObject editor_object = CreateObject(new EditorObjectData(pasted_object.m_Typename, position));
+			EditorObject editor_object = CreateObject(pasted_object);
 			float surfacey = GetGame().SurfaceY(position[0], position[2]);
 			vector size = editor_object.GetSize();
 			position[1] = surfacey + size[1] / 2;

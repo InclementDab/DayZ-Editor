@@ -224,13 +224,6 @@ class EditorObject
 		else return GetType();
 	}
 	
-	EditorWorldObject GetSaveData()
-	{
-		EditorWorldObject world_object = new EditorWorldObject();
-		world_object.m_Typename = GetType();
-		GetTransform(world_object.m_Transform);
-		return world_object;
-	}
 
 	vector line_centers[12]; vector line_verticies[8];
 	void CreateBoundingBox()

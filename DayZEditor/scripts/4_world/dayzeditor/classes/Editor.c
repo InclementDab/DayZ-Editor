@@ -305,7 +305,7 @@ class Editor: Managed
 		
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		foreach (EditorObject save_object: placed_objects)	
-			save_data.WorldObjects.Insert(save_object.GetSaveData());
+			save_data.EditorObjects.Insert(save_object.GetData());
  
 		EditorFileManager.Save(save_data);
 		GetEditor().GetUIManager().NotificationCreate("Saved!", COLOR_GREEN); 
@@ -321,9 +321,9 @@ class Editor: Managed
 		Print("Open Result " + loadfile_result);
 		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
 		
-		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
+		foreach (EditorObjectData load_object: load_data.EditorObjects) {
 			
-			EditorObject e_object =  GetObjectManager().CreateObject(new EditorObjectData(load_object.m_Typename, load_object.m_Transform[3]));
+			EditorObject e_object =  GetObjectManager().CreateObject(load_object);
 			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
 		}
 		
