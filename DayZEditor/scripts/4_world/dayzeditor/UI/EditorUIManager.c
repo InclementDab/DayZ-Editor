@@ -50,7 +50,7 @@ class EditorUIManager: Managed
 		m_MapMarkerWidget.GetScript(CameraMapMarker);
 		CameraMapMarker.SetCamera(m_EditorCamera, m_EditorUI.GetMapWidget(), m_UpdateInvoker);
 		m_EditorUI.InsertMapObject(m_MapMarkerWidget);
-		
+		m_EditorUI.GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));
 		
 	
 		

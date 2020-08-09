@@ -22,7 +22,8 @@ class EditorCameraMapMarker: EditorWidgetEventHandler
 	{
 		Print("EditorCameraMapMarker::SetCamera");
 		m_ActiveCamera = camera;
-		m_MapWidget = map_widget;
+		m_MapWidget = map_widget;		
+
 		update_invoker.Insert(Update);
 	}
 }
