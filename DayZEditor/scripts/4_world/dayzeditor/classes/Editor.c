@@ -807,8 +807,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_X: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					int r = GetObjectManager().CutSelection();
-					Print(string.Format("Cut %1 Objects", r));
+					GetObjectManager().CutSelection();
 					return true;
 				}
 				break;
@@ -816,8 +815,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_C: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					r = GetObjectManager().CopySelection();
-					Print(string.Format("Copied %1 Objects", r));
+					GetObjectManager().CopySelection();
 					return true;
 				}
 				break;

@@ -18,6 +18,7 @@ class EditorWorldObject
 	vector m_Transform[4];
 }
 
+typedef ref array<ref EditorWorldObject> EditorWorldObjectSet;
 class EditorWorldData
 {
 	string MapName;
@@ -73,10 +74,7 @@ class EditorFileManager
 	{
 		string file = filedir + filename + ".dze";
 		if (FileExist(file)) {
-			
-			GetEditor().GetUIManager().GetEditorUI().CreateDialog();
-	
-			
+			GetEditor().GetUIManager().GetEditorUI().CreateDialog();			
 		}
 		
 		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(file, data);
