@@ -29,7 +29,6 @@ class EditorObjectManager: Managed
 	private ref EditorObjectSet 			m_PlacedObjects;
 	private ref EditorObjectSet				m_SelectedObjects;
 	private ref set<ref EditorObjectLink>	m_SessionCache;
-	private ref EditorObjectSet 			m_ClipboardCache;
 	private ref set<ref EditorAction> 		m_ActionStack;
 	
 	
@@ -61,7 +60,6 @@ class EditorObjectManager: Managed
 		delete m_PlacedObjects;
 		delete m_SelectedObjects;
 		delete m_SessionCache;
-		delete m_ClipboardCache;
 		delete m_ActionStack;
 	}
 	
@@ -227,6 +225,7 @@ class EditorObjectManager: Managed
 		
 		EditorWorldObjectSet data = new EditorWorldObjectSet();
 		JsonFileLoader<EditorWorldObjectSet>.JsonLoadData(clipboard_text, data);
+		if (data.Count() == 0) return;
 		
 		EditorEvents.ClearSelection(this);
 		vector avg_position;
