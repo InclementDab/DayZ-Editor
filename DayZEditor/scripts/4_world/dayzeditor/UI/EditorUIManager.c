@@ -1,6 +1,6 @@
 
 
-
+typedef ref array<ref EditorPlaceableObject> EditorPlaceableObjectSet;
 
 class EditorUIManager: Managed
 {
@@ -58,7 +58,7 @@ class EditorUIManager: Managed
 		foreach (ref EditorPlaceableObject placeable_object: m_PlaceableObjects) {
 			m_EditorUI.InsertPlaceableObject(placeable_object);
 		}	
-		
+				
 		
 		// Subscribe to events (and twitch.tv/InclementDab)
 		EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);		
@@ -91,10 +91,7 @@ class EditorUIManager: Managed
 	
 	void OnEditorObjectCreated(Class context, EditorObject obj)
 	{
-		Print("EditorUIManager::OnObjectCreated");
-		
-		
-		
+		Print("EditorUIManager::OnObjectCreated");		
 	}
 	
 	

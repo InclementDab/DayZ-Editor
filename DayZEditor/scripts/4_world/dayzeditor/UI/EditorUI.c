@@ -478,7 +478,7 @@ class EditorUI: UIScriptedMenu
 			}*/
 			
 			
-			GetEditor().GetObjectManager().ClearSelection();
+			EditorEvents.ClearSelection(this);
 			if (GetEditor().GetEditorBrush() == null) {
 				
 				if (Editor.EditorObjectUnderCursor == null) {
@@ -489,7 +489,10 @@ class EditorUI: UIScriptedMenu
 					
 					
 				} else if (Editor.EditorObjectUnderCursor != null) {
-					GetEditor().GetObjectManager().SelectObject(Editor.EditorObjectUnderCursor, !input.LocalValue("UATurbo"));
+					if (!input.LocalValue("UATurbo")) {
+						EditorEvents.ClearSelection(this);
+					}
+					EditorEvents.SelectObject(this, Editor.EditorObjectUnderCursor);
 					return true;
 				}
 			}
@@ -563,15 +566,13 @@ class EditorUI: UIScriptedMenu
 				float marker_x, marker_y;
 				if (IsMapOpen()) {
 					editor_object.GetMapMarkerPos(marker_x, marker_y);
-					//editor_object.GetMapMarker().GetPos(marker_x, marker_y);
 				} else {
 					editor_object.GetObjectMarkerPos(marker_x, marker_y);
-					//editor_object.GetObjectMarker().GetPos(marker_x, marker_y);
 				}
 				
 				
 				if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {		
-					GetEditor().GetObjectManager().SelectObject(editor_object, false);
+					EditorEvents.SelectObject(this, editor_object);
 				}
 			}
 			

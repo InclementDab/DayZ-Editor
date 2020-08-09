@@ -72,6 +72,7 @@ class EditorMap: EditorWidgetEventHandler
 				if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
 				return true;
 			} else {
+				EditorEvents.ClearSelection(this);
 				EditorUI ui = GetEditor().GetUIManager().GetEditorUI();
 				ui.GetCanvas().Clear();
 				GetCursorPos(ui.start_x, ui.start_y);
@@ -106,6 +107,9 @@ class EditorListItem: UILinkedObject
 	
 	private static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
 	private static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
+	
+	
+	
 	
 	private ref EditorListItemTooltip m_Tooltip;
 	
@@ -259,27 +263,21 @@ class EditorPlacedListItem: UILinkedObject
 	
 	private static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
 	private static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
-	
+
 	
 	void ~EditorPlacedListItem()
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::~EditorPlacedListItem - Start");
-		#endif
+		Print("EditorPlacedListItem");
 		
 		delete m_EditorPlacedListItemText;
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-		
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::~EditorPlacedListItem - End");
-		#endif
 	}
+	
+	
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::OnWidgetScriptInit - Start");
-		#endif
+		Print("EditorPlacedListItem::OnWidgetScriptInit");
 		
 		super.OnWidgetScriptInit(w);
 		
@@ -290,65 +288,49 @@ class EditorPlacedListItem: UILinkedObject
 		EditorEvents.OnObjectDeselected.Insert(EditorObjectDeselected);
 		//GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::OnWidgetScriptInit - End");
-		#endif
+	
 	}
 	
 	void EditorObjectSelected(Class context, EditorObject target)
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::EditorObjectSelected - Start");
-		#endif
-		
-		m_EditorPlacedListItemPanel.SetColor(COLOR_ON_SELECTED);
-		m_EditorPlacedListItemPanel.Update();
-		
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::EditorObjectSelected - End");
-		#endif
+		if (target == m_EditorObject) {
+			m_EditorPlacedListItemPanel.SetColor(COLOR_ON_SELECTED);
+			m_EditorPlacedListItemPanel.Update();
+		}
 	}
 	
 	void EditorObjectDeselected(Class context, EditorObject target)
-	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::EditorObjectDeselected - Start");
-		#endif
-		
-		m_EditorPlacedListItemPanel.SetColor(COLOR_ON_DESELECTED); 
-		m_EditorPlacedListItemPanel.Update();
-		
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::EditorObjectDeselected - End");
-		#endif
+	{		
+		if (target == m_EditorObject) {
+			m_EditorPlacedListItemPanel.SetColor(COLOR_ON_DESELECTED); 
+			m_EditorPlacedListItemPanel.Update();
+		}
+
 	}
 	
-	
-	override bool OnClick(Widget w, int x, int y, int button)
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::OnClick - Start");
-		#endif
+		Print("EditorPlacedListItem::OnMouseButtonDown");
 		
+		//EditorEvents.SelectObject(this, m_EditorObject);
 		Input input = GetGame().GetInput();
-		//EditorObject editor_object = EditorObject.GetFromUILinkedRoot(m_Root);
-		// LMB
-		/*
 		if (button == 0) {
 			
 			// If Holding Shift
 			if (input.LocalValue("UATurbo")) {
 				
 				// If root object is already selected
-				if (GetEditor().GetObjectManager().IsSelected(editor_object)) {
-					GetEditor().GetObjectManager().DeselectObject(m_EditorObject);
+				if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) {
+					EditorEvents.DeselectObject(this, m_EditorObject);
 					return true;
 				}
 				
-				GetEditor().GetObjectManager().SelectObject(m_EditorObject, false);
+				EditorEvents.SelectObject(this, m_EditorObject);
 				if (GetEditor().GetObjectManager().GetSelectedObjects().Count() != 0) {
+					
 					Widget root_object = m_Root.GetParent().GetChildren();
 					bool selection_found = GetEditor().GetObjectManager().CheckIfRootIsSelected(root_object);
+					
 					
 					// Search down the browser for first selected object
 					while (!selection_found) {
@@ -359,7 +341,7 @@ class EditorPlacedListItem: UILinkedObject
 										
 					// Search until last selected object
 					while (selection_found) {
-						GetEditor().GetObjectManager().SelectObject(EditorObject.GetFromUILinkedRoot(root_object), false);
+						EditorEvents.SelectObject(this, GetEditor().GetObjectManager().GetFromUILinkedRoot(root_object));
 						root_object = root_object.GetSibling();
 						selection_found = !GetEditor().GetObjectManager().CheckIfRootIsSelected(root_object);
 						if (root_object == null) break;
@@ -370,89 +352,28 @@ class EditorPlacedListItem: UILinkedObject
 			} else if (input.LocalValue("UAWalkRunTemp")) {
 				GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);		
 			} else {
-				GetEditor().GetObjectManager().SelectObject(m_EditorObject);
+				EditorEvents.ClearSelection(this);
+				EditorEvents.SelectObject(this, m_EditorObject);
 			}
 		}
-		*/
-		
-		
-		return super.OnClick(w, x, y, button);
-		
+		return true;
 	}
 	
 
-	override bool OnFocus(Widget w, int x, int y)
-	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::OnFocus - Start");
-		EditorPrint("EditorPlacedListItem::OnFocus - m_EditorObject: " + m_EditorObject);
-		#endif
-		
-		if (w == m_EditorPlacedListItemText)
-		{
-			GetEditor().GetObjectManager().SelectObject(m_EditorObject, false);
-			return true;
-		}
-		
-		return false;
-	}
 	
-	override bool OnFocusLost(Widget w, int x, int y)
-	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::OnFocusLost - Start");
-		#endif
-		
-		if (w == m_EditorPlacedListItemText)
-		{
-			GetEditor().GetObjectManager().DeselectObject(m_EditorObject);
-			return true;
-		}
-		
-		return false;
-	}
 	
 	
 
 	
 	override void SetObject(notnull EditorObject target)
 	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::SetObject - Start");
-		#endif
+		Print("EditorPlacedListItem::SetObject");
 		
 		super.SetObject(target);
 		m_EditorPlacedListItemText.SetText(target.GetType());
 		m_EditorPlacedListItemText.Update();
 	}
-	
-	override bool OnMouseEnter( Widget w, int x, int y )
-	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::OnMouseEnter - Start");
-		#endif
-		
-		if (w == m_EditorPlacedListItemText)
-		{
-			m_EditorPlacedListItemText.SetColor(COLOR_ON_SELECTED);
-			return true;
-		}
-		return false;
-	}
-	
-	override bool OnMouseLeave( Widget w, Widget enterW, int x, int y )
-	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorPlacedListItem::OnMouseLeave - Start");
-		#endif
-		
-		if (w == m_EditorPlacedListItemText)
-		{
-			m_EditorPlacedListItemText.SetColor(COLOR_ON_DESELECTED);
-			return true;
-		}
-		return false;
-	}
+
 }
 
 

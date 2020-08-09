@@ -1,5 +1,5 @@
 
-typedef ref array<ref EditorPlaceableObject> EditorPlaceableObjectSet;
+
 
 enum PlaceableObjectCategory {
 	BUILDING,

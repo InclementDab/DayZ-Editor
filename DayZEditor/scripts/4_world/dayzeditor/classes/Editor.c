@@ -167,7 +167,6 @@ class Editor: Managed
 			}
 		}
 		
-		
 	
 		// debug
 		EditorObjectSet selected_objects = GetObjectManager().GetSelectedObjects();
@@ -279,7 +278,11 @@ class Editor: Managed
 		
 		EditorObject editor_object = GetEditor().GetObjectManager().CreateObject(e.GetType(), e.GetPosition());
 		editor_object.SetOrientation(e.GetOrientation());
-		GetEditor().GetObjectManager().SelectObject(editor_object, !input.LocalValue("UATurbo"));
+		
+		if (!input.LocalValue("UATurbo")) {
+			EditorEvents.ClearSelection(this);
+		}
+		EditorEvents.SelectObject(this, editor_object);
 		
 		if (!input.LocalValue("UATurbo")) { 
 			SetFocus(null);
@@ -787,7 +790,11 @@ class Editor: Managed
 			case KeyCode.KC_A: {
 				if (input.LocalValue("UAWalkRunTemp")) {
 					
-					GetObjectManager().SelectObjects(GetObjectManager().GetPlacedObjects());
+					EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
+					foreach (EditorObject obj: placed_objects) {
+						EditorEvents.SelectObject(this, obj);
+					}
+					
 					return true;
 				}
 				break;

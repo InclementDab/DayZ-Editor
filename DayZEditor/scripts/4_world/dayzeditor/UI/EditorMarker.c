@@ -69,9 +69,12 @@ class EditorMapMarker: UILinkedObject
 		// We want to Toggle selection if you are holding control
 		if (input.LocalValue("UARunWalkTemp"))
 			GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);
-		else
-			GetEditor().GetObjectManager().SelectObject(m_EditorObject, !input.LocalValue("UATurbo"));
-		
+		else {
+			if (!input.LocalValue("UATurbo"))
+				EditorEvents.ClearSelection(this);
+			
+			EditorEvents.SelectObject(this, m_EditorObject);
+		}
 		 // Blocks map from creating selection box
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
@@ -94,14 +97,14 @@ class EditorMapMarker: UILinkedObject
 	override bool OnFocus(Widget w, int x, int y)
 	{
 		Print("EditorMapMarker::OnFocus");
-		GetEditor().GetObjectManager().SelectObject(m_EditorObject);
+		EditorEvents.SelectObject(this, m_EditorObject);
 		return true;
 	}
 	
 	override bool OnFocusLost(Widget w, int x, int y)
 	{
 		Print("EditorMapMarker::OnFocusLost");
-		GetEditor().GetObjectManager().DeselectObject(m_EditorObject);
+		EditorEvents.DeselectObject(this, m_EditorObject);
 		return true;
 	}
 }
@@ -189,8 +192,12 @@ class EditorObjectMarker: UILinkedObject
 			// We want to Toggle selection if you are holding control
 			if (input.LocalValue("UARunWalkTemp"))
 				GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);
-			else
-				GetEditor().GetObjectManager().SelectObject(m_EditorObject, !input.LocalValue("UATurbo"));
+			else {
+				if (!input.LocalValue("UATurbo"))
+					EditorEvents.ClearSelection(this);
+				
+				EditorEvents.SelectObject(this, m_EditorObject);
+			}
 			
 			
 		} else if (button == 1) {
@@ -268,6 +275,8 @@ class UILinkedObject : ScriptedWidgetEventHandler
 		m_EditorObject = target;
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
+	
+	EditorObject GetEditorObject() { return m_EditorObject; }
 	
 	void OnWidgetScriptInit(Widget w)
 	{

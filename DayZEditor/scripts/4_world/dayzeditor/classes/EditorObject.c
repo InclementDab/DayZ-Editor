@@ -56,12 +56,11 @@ class EditorObject : Building
 	* Initializers
 	*/
 	
-	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.MAPMARKER)
+	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
-		flags = EditorObjectFlags.MAPMARKER;
 		m_Flags = flags;
 		if (m_Flags == EditorObjectFlags.ALL) {
-			//m_Flags = EditorObjectFlags.EO_BBOX | EditorObjectFlags.EO_MAPMARKER | EditorObjectFlags.EO_WORLDMARKER | EditorObjectFlags.EO_LISTITEM;
+			m_Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
 		}
 		
 		
@@ -406,21 +405,22 @@ class EditorObject : Building
 		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(0,1,0.94902,1.0,co)");
 	}
 	
-		
-	bool IsObjectMarkerEnabled() { return (m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
+	bool ListItemEnabled() { return (m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM; }
+	
+	bool ObjectMarkerEnabled() { return (m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
 	void GetObjectMarkerPos(out float x, out float y)
 	{
-		if (IsObjectMarkerEnabled()) {
+		if (ObjectMarkerEnabled()) {
 			m_EditorObjectMarkerWidget.GetPos(x, y);
 		} else {
 			x = -1; y = -1;
 		}
 	}
 	
-	bool IsMapMarkerEnabled() { return (m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
+	bool MapMarkerEnabled() { return (m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
 	void GetMapMarkerPos(out float x, out float y)
 	{
-		if (IsMapMarkerEnabled()) {
+		if (MapMarkerEnabled()) {
 			m_EditorMapMarkerWidget.GetPos(x, y);
 		} else {
 			x = -1; y = -1;
@@ -428,6 +428,23 @@ class EditorObject : Building
 	}
 	
 	bool IsBoundingBoxEnabled() { return (m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; }
+	
+	bool IsRootSelected(Widget root)
+	{
+		bool result;		
+		if (ListItemEnabled()) {
+			if (m_EditorObjectBrowserWidget == root)
+				return true;
+		}
+		if (ObjectMarkerEnabled()) {
+			if (m_EditorObjectMarkerWidget == root)
+				return true;
+		}
+		
+		return false;
+	}
+	
+
 	
 }
 

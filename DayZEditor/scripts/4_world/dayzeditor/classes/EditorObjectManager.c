@@ -49,6 +49,11 @@ class EditorObjectManager: Managed
 		m_SessionCache 		= new set<ref EditorObjectLink>();
 		m_ActionStack 		= new set<ref EditorAction>();
 		
+		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
+		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
+		EditorEvents.OnSelectionCleared.Insert(OnSelectionCleared);
+		EditorEvents.OnObjectDeleted.Insert(OnObjectDeleted);
+		
 	}
 	
 	void ~EditorObjectManager() 
@@ -109,19 +114,26 @@ class EditorObjectManager: Managed
 		return editor_object;
 	}
 	
-	bool SelectObject(EditorObject target, bool reset_selection = true)
+	void OnObjectSelected(Class context, EditorObject target)
 	{
 		Print("EditorObjectManager::SelectObject");
-		if (reset_selection) {
-			ClearSelection();
-		}
-		
 		m_SelectedObjects.InsertEditorObject(target);
-		EditorEvents.ObjectSelectedInvoke(this, target);
-		
-		return m_SelectedObjects.Contains(target.GetID());
 	}
 	
+	void OnObjectDeselected(Class context, EditorObject target)
+	{
+		Print("EditorObjectManager::SelectObject");
+		m_SelectedObjects.RemoveEditorObject(target);
+	}	
+	
+	void OnObjectDeleted(Class context, EditorObject target)
+	{
+		Print("EditorObjectManager::SelectObject");
+		m_SelectedObjects.RemoveEditorObject(target);
+	}
+	
+	
+	/*
 	int SelectObjects(EditorObjectSet target, bool reset_selection = true)
 	{
 		Print("EditorObjectManager::SelectObjects");
@@ -135,15 +147,8 @@ class EditorObjectManager: Managed
 		return m_SelectedObjects.Count(); 
 		
 	}
-	
-	bool DeselectObject(EditorObject target)
-	{
-		Print("EditorObjectManager::DeselectObject");
-		m_SelectedObjects.Remove(target.GetID()); // if deselection is broken this is why
-		EditorEvents.ObjectDeselectedInvoke(this, target);
-		
-		return m_SelectedObjects.Contains(target.GetID());
-	}
+	*/
+
 	
 	
 	int DeleteSelection()
@@ -157,10 +162,8 @@ class EditorObjectManager: Managed
 			action.InsertRedoParameter(link, null);
 			GetGame().ObjectDelete(selected_object);
 			m_PlacedObjects.Remove(selected_object.GetID());
+			EditorEvents.DeselectObject(this, selected_object);
 			
-			if (!DeselectObject(selected_object)) {
-				Print("Deselection Failed on Deletion");
-			}
 		}
 		
 		InsertAction(action);
@@ -170,22 +173,20 @@ class EditorObjectManager: Managed
 	
 
 	
-	bool ClearSelection()
+	void OnSelectionCleared(Class context)
 	{
 		Print("EditorObjectManager::ClearSelections");		
 		foreach (EditorObject editor_object: m_SelectedObjects)
-			DeselectObject(editor_object);
-		
-		return m_SelectedObjects.Count() == 0;
+			EditorEvents.DeselectObject(this, editor_object);
 	
 	}
 	
-	bool ToggleSelection(EditorObject target)
+	void ToggleSelection(EditorObject target)
 	{
 		if (IsSelected(target))
-			return DeselectObject(target);
+			EditorEvents.DeselectObject(this, target);
 		
-		return SelectObject(target, false);
+		EditorEvents.SelectObject(this, target);
 	}
 	
 	bool IsSelected(EditorObject target) { return m_SelectedObjects.Contains(target.GetID()); }
@@ -214,7 +215,7 @@ class EditorObjectManager: Managed
 	
 	int PasteSelection()
 	{
-		ClearSelection();
+		EditorEvents.ClearSelection(this);
 		vector avg_position;
 
 		foreach (EditorObject copy_object: m_ClipboardCache) {
@@ -232,9 +233,9 @@ class EditorObjectManager: Managed
 			mat[3] = avg_position - editor_object.GetPosition() + Editor.CurrentMousePosition;
 			EditorObject result = CreateObject(editor_object.GetType(), mat);
 			pasted_objects.InsertEditorObject(result);
+			EditorEvents.SelectObject(this, editor_object);
 		}
 		
-		SelectObjects(pasted_objects);
 		
 		return pasted_objects.Count();
 	}
@@ -259,20 +260,42 @@ class EditorObjectManager: Managed
 		for (int debug_i = 0; debug_i < m_ActionStack.Count(); debug_i++) {
 			GetEditor().GetUIManager().GetEditorUI().m_DebugActionStack.AddItem(m_ActionStack[debug_i].GetName(), m_ActionStack[debug_i], 0);
 		}
-		
 	}
 	
-	/*
+	EditorObject GetEditorObjectFromListItem(EditorPlacedListItem list_item)
+	{
+		foreach (EditorObject editor_object: m_PlacedObjects)
+			if (editor_object == list_item.GetEditorObject())
+				return editor_object;
+		
+		
+		Print("EditorObjectManager::GetEditorObjectFromListItem Item Not Found!");
+		return null;
+	}
+	
+	
 	bool CheckIfRootIsSelected(Widget root)
 	{
 		foreach (EditorObject editor_object: m_SelectedObjects)
-			if (GetEditor().GetObjectManager().IsSelected(editor_object) && (editor_object.GetObjectBrowser() == root || editor_object.GetObjectMarker() == root))
+			if (IsSelected(editor_object) && editor_object.IsRootSelected(root))
 				return true;
 		
 		return false;
 	}
 	
-*/
+	EditorObject GetFromUILinkedRoot(Widget root)
+	{
+		Print("EditorObjectManager::GetFromObjectRoot");
+		foreach (EditorObject editor_object: m_PlacedObjects)
+			if (editor_object.IsRootSelected(root))
+				return editor_object;
+		
+		
+		Print("EditorObjectManager::GetFromUILinkedRoot: Item Not Found!");
+		return null;
+	}
+	
+
 
 	
 	// O(n) shit :)

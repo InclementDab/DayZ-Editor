@@ -19,11 +19,11 @@ FrameWidgetClass EditorPlacedListItem {
    vexactpos 1
    hexactsize 0
    vexactsize 0
-   priority 50
+   priority 260
    style rover_sim_colorable
    {
 	TextWidgetClass EditorPlacedListItemText {
-     ignorepointer 1
+     ignorepointer 0
      size 250 1
      halign right_ref
      valign bottom_ref
@@ -36,7 +36,7 @@ FrameWidgetClass EditorPlacedListItem {
      "text valign" center
     }
 	ImageWidgetClass EditorListItemIcon {
-     ignorepointer 1
+     ignorepointer 0
      size 32 32
      hexactpos 1
      vexactpos 1
