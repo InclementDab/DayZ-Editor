@@ -1047,6 +1047,34 @@ class Editor: Managed
 		m_CustomBrushList.Insert(name, type);
 	}
 	
+	
+	static string RemoveUselessCharacters(string in)
+	{
+		in.Replace(" ", "");
+		in.Replace("@", "");
+		
+		return in;
+		
+	}
+	
+	static ModInfo GetModFromObject(string object_name)
+	{
+		ref array<ref ModInfo> mod_infos = new array<ref ModInfo>();
+		GetGame().GetModInfos(mod_infos);
+		string txt = GetGame().ConfigGetTextOut("CfgVehicles " + object_name + " model");
+		
+		foreach (ModInfo mod: mod_infos) {
+			string name = mod.GetName();
+			name = RemoveUselessCharacters(name);
+			if (txt.Contains(name)) {
+				return mod;
+			}
+		}
+		
+		Print("Mod not found");
+		return null;
+	}
+	
 }
 
 

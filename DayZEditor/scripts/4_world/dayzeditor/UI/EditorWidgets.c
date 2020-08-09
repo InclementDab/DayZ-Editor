@@ -257,7 +257,7 @@ class EditorListItem: UILinkedObject
 		SetIcon(path);
 	}
 	
-	private void SetIcon(string path)
+	void SetIcon(string path)
 	{
 		m_EditorListItemIcon.LoadImageFile(0, path);
 		m_EditorListItemIcon.SetImage(0);
