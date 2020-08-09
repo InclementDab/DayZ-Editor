@@ -48,8 +48,10 @@ class EditorUIManager: Managed
 		EditorCameraMapMarker CameraMapMarker = new EditorCameraMapMarker();
 		Widget m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorCameraMapMarker.layout");
 		m_MapMarkerWidget.GetScript(CameraMapMarker);
-		CameraMapMarker.SetCamera(m_EditorCamera);
+		CameraMapMarker.SetCamera(m_EditorCamera, m_EditorUI.GetMapWidget(), m_UpdateInvoker);
 		m_EditorUI.InsertMapObject(m_MapMarkerWidget);
+		
+		
 	
 		
 		// Load PlaceableObjects

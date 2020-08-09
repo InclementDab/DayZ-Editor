@@ -300,7 +300,7 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	EditorMap GetMap() 			{ return m_EditorMap; }
-	//MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
+	MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
 	bool IsMapOpen() 			{ return m_EditorMapContainer.IsVisible(); }
 	
 	void ShowCursor()

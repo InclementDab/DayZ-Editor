@@ -1,11 +1,12 @@
 
 enum EditorObjectFlags
 {
-	ALL,
-	BBOX,
-	MAPMARKER,
-	OBJECTMARKER,
-	LISTITEM 
+	NONE = 0,
+	BBOX = 2,
+	MAPMARKER = 4,
+	OBJECTMARKER = 8,
+	LISTITEM = 16,
+	ALL = 256
 };
 
 class EditorObject : Building
@@ -57,15 +58,14 @@ class EditorObject : Building
 	*/
 	
 	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.ALL)
-	{
+	{				
+		Print("EditorObject::Init");
+		SetFlags(EntityFlags.STATIC, true);
+		
 		m_Flags = flags;
 		if (m_Flags == EditorObjectFlags.ALL) {
 			m_Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
 		}
-		
-		
-		Print("EditorObject::Init");
-		SetFlags(EntityFlags.STATIC, true);
 		
 		IsInitialized = true;
 		m_Type = type_name;
@@ -73,7 +73,19 @@ class EditorObject : Building
 		AddChild(m_WorldObject, -1);
 		Update();
 		
-		// todo move all this to EditorUIManager
+		// Bounding Box
+		if ((m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
+			CreateBoundingBox();
+		}	
+
+		// Map marker
+		if ((m_Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
+			m_EditorMapMarker = new UILinkedObject();
+			m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
+			m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
+			m_EditorMapMarker.SetObject(this);
+			GetEditor().GetUIManager().GetEditorUI().InsertMapObject(m_EditorMapMarkerWidget);
+		}	
 		
 		// World Object base marker
 		if ((m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER) {
@@ -82,16 +94,6 @@ class EditorObject : Building
 			m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
 			m_EditorObjectMarker.SetObject(this);
 		}
-		
-		// Map marker
-		if ((m_Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
-			m_EditorMapMarker = new UILinkedObject();
-			m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
-			m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
-			m_EditorMapMarker.SetObject(this);
-			
-			GetEditor().GetUIManager().GetEditorUI().InsertMapObject(m_EditorMapMarkerWidget);
-		}	
 			
 		// Browser item
 		if ((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
@@ -102,9 +104,7 @@ class EditorObject : Building
 			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectBrowser);
 		}
 		
-		if ((m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
-			CreateBoundingBox();
-		}
+
 		
 		EditorEvents.OnObjectSelected.Insert(OnSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnDeselected);
