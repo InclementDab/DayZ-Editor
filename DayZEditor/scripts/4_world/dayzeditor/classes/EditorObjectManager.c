@@ -362,10 +362,7 @@ class EditorObjectManager: Managed
 	
 	
 	EditorObject GetSessionObjectById(int id) { return m_SessionCache.Get(id); }
-	void SetSessionObjectById(int id, EditorObject data)
-	{
-		m_SessionCache.Set(id, data);
-	}
+	void SetSessionObjectById(int id, EditorObject data) { m_SessionCache.Set(id, data); }
 	
 	
 	private ref array<ref EditorObjectData> m_SessionData = new array<ref EditorObjectData>();

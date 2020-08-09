@@ -1,9 +1,42 @@
 
 
 
+
+typedef FileSerializer Cerealizer;
+
+static FileDialogResult VPPReadFromFile(out ref EditorObjectDataSet data, string filename)
+{
+	Cerealizer file = new Cerealizer();
+	if (!FileExist(filename)) {
+		return FileDialogResult.NOT_FOUND;
+	}
+	
+	ref VPPToEditorBuildingSet bSet;
+	if (file.Open(filename, FileMode.READ)) {
+		file.Read(bSet);
+		file.Close();
+		
+	} else return FileDialogResult.UNKNOWN_ERROR;
+	
+	if (!bSet) return FileDialogResult.UNKNOWN_ERROR;
+	
+	ref array<ref VPPToEditorSpawnedBuilding> spawned_buildings = new array<ref VPPToEditorSpawnedBuilding>();
+	bSet.GetSpawnedBuildings(spawned_buildings);
+	Print(spawned_buildings.Count());
+	foreach (ref VPPToEditorSpawnedBuilding building: spawned_buildings) {
+		string name = building.GetName();
+		TStringArray name_split = new TStringArray();
+		name.Split("-", name_split);
+		data.InsertEditorData(new EditorObjectData(name_split.Get(0), building.GetPosition(), building.GetOrientation(), EditorObjectFlags.ALL));
+	}
+	
+	return FileDialogResult.SUCCESS;
+	
+}
+
 class ExpansionImportData
 {
-		
+
 	static void ReadFromFile(out ref EditorObjectDataSet data, string filename)
 	{
 		FileHandle handler = OpenFile(filename, FileMode.READ);
@@ -72,15 +105,17 @@ class EditorWorldData
 enum ExportMode 
 {
 	TERRAINBUILDER,
-	COMFILE, 
 	EXPANSION,
+	COMFILE,
 	VPP
 }
 
 enum ImportMode
 {
+	TERRAINBUILDER,
 	EXPANSION, 
-	COMFILE
+	COMFILE,
+	VPP
 }
 
 enum HeightType 
@@ -155,6 +190,19 @@ class EditorFileManager
 				Print("EditorFileManager::Import::EXPANSION");
 				ExpansionImportData.ReadFromFile(data.EditorObjects, filename);
 
+				break;
+			}
+			
+			case (ImportMode.VPP): {
+				Print("EditorFileManager::Import::VPP");
+				VPPReadFromFile(data.EditorObjects, filename);
+				
+				break;
+			}
+			
+			default: {
+				
+				Print(string.Format("%1 not implemented!", typename.EnumToString(ImportMode, mode)));
 				break;
 			}
 		}

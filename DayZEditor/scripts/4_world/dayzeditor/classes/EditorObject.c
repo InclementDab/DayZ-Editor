@@ -9,7 +9,33 @@ enum EditorObjectFlags
 	ALL = 256
 };
 
-typedef ref array<ref EditorObjectData> EditorObjectDataSet;
+
+class EditorObjectDataSet: set<ref EditorObjectData>
+{
+	
+	
+	bool InsertEditorData(EditorObjectData data)
+	{
+		string model_name = GetGame().GetModelName(data.Type);
+		if (model_name == "UNKNOWN_P3D_FILE") {
+			Print(string.Format("%1 is not a valid Object Type!", data.Type));
+			return false;
+		}
+		
+		Insert(data);
+		return true;
+	}
+	
+	bool RemoveEditorData(EditorObjectData data)
+	{
+		int index = Find(data);
+		if (index == -1) return false;
+		Remove(index);
+		return true;
+	}
+	
+}
+
 class EditorObjectData
 {	
 	string Type;
@@ -22,6 +48,7 @@ class EditorObjectData
 	
 	void EditorObjectData(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
+		Print("EditorObjectData");
 		Type = type; Position = position; Orientation = orientation; Flags = flags;
 	}
 	
@@ -69,6 +96,7 @@ class EditorObject
 		}
 		
 		m_WorldObject = GetGame().CreateObjectEx(data.Type, data.Position, ECE_NONE);
+		m_WorldObject.SetOrientation(m_Data.Orientation);
 		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
 		Update();
 		

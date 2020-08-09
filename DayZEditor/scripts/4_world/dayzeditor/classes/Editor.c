@@ -860,7 +860,8 @@ class Editor: Managed
 			
 			case KeyCode.KC_I: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					Import("$profile:Editor/SvetloyarskNoCollision.map", ImportMode.EXPANSION);
+					//Import("$profile:Editor/SvetloyarskNoCollision.map", ImportMode.EXPANSION);
+					Import("$profile:Editor/GM_Trader.vpp", ImportMode.VPP);
 					
 				}
 				break;
