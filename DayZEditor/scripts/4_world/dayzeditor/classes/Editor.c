@@ -577,8 +577,7 @@ class Editor: Managed
 		float surface_level = GetGame().SurfaceY(ground[0], ground[2]);
 	
 		
-		// debug
-
+		
 		// Handle Z only motion
 		if (input.LocalValue("UALookAround")) {	
 			cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground);

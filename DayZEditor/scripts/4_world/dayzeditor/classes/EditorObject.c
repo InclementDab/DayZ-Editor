@@ -198,8 +198,8 @@ class EditorObject
 		m_Data.Orientation = pos; 
 	}
 	
-	void GetTransform(out vector mat[]) { m_WorldObject.GetTransform(mat); }
-	void SetTransform(vector mat[]) { m_WorldObject.SetTransform(mat); }
+	void GetTransform(out vector mat[4]) { m_WorldObject.GetTransform(mat); }
+	void SetTransform(vector mat[4]) { m_WorldObject.SetTransform(mat); }
 	
 	void Update() { m_WorldObject.Update(); }
 	

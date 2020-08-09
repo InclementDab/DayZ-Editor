@@ -457,7 +457,7 @@ class EditorUI: UIScriptedMenu
 		Input input = GetGame().GetInput();	
 		// Left Click
 		if (button == 0) {
-			
+			SetFocus(null);
 			if (GetEditor().IsPlacing()) {
 				GetEditor().PlaceObject();
 				return true;

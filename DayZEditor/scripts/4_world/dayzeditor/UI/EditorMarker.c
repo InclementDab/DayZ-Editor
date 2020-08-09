@@ -131,8 +131,8 @@ class EditorObjectMarker: UILinkedObject
 			set<Object> o;
 			vector ground_dir; int component;
 			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject.GetWorldObject(), false, true); // set to ground only
-		} 
-		else position = m_EditorObject.GetBottomCenter();
+			
+		} else position = m_EditorObject.GetBottomCenter();
 	
 		
 		vector screenpos = GetGame().GetScreenPos(position);
