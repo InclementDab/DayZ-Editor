@@ -600,6 +600,13 @@ class Editor: Managed
 		// Handle regular motion
 		} else {			
 			
+			object_transform[0] = "1 0 0";
+			object_transform[1] = "0 1 0";
+			object_transform[2] = "0 0 1";
+			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
+			
+			
+			cursor_position[1] = cursor_position[1] - object_size[1]/2;
 			if (EditorSettings.MAINTAIN_HEIGHT) 
 				if (EditorSettings.MAGNET_PLACEMENT)
 					object_transform[3] = cursor_position + surface_normal * vector.Distance(ground, object_transform[3]);				
@@ -608,13 +615,10 @@ class Editor: Managed
 				
 			else {
 				object_transform[3] = cursor_position;
-				//object_transform[3][1] = object_transform[3][1] + object_size[1] / 2;					
+				object_transform[3][1] = object_transform[3][1] + object_size[1];					
 			} 
 		
-			object_transform[0] = "1 0 0";
-			object_transform[1] = "0 1 0";
-			object_transform[2] = "0 0 1";
-			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
+			
 		}
 		
 	
