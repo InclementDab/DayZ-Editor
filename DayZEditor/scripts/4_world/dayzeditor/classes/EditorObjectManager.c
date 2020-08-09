@@ -185,13 +185,13 @@ class EditorObjectManager: Managed
 	
 	void ToggleSelection(EditorObject target)
 	{
-		if (IsSelected(target))
+		if (target.IsSelected())
 			EditorEvents.DeselectObject(this, target);
 		
 		EditorEvents.SelectObject(this, target);
 	}
 	
-	bool IsSelected(EditorObject target) { return m_SelectedObjects.Contains(target.GetID()); }
+
 	
 	
 	void CutSelection()
@@ -282,7 +282,7 @@ class EditorObjectManager: Managed
 	bool CheckIfRootIsSelected(Widget root)
 	{
 		foreach (EditorObject editor_object: m_SelectedObjects)
-			if (IsSelected(editor_object) && editor_object.IsRootSelected(root))
+			if (editor_object.IsSelected() && editor_object.IsRootSelected(root))
 				return true;
 		
 		return false;

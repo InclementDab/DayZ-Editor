@@ -29,7 +29,7 @@ class EditorMapMarker: UILinkedObject
 		// -10 to put cursor on center
 		m_Root.SetPos(pos[0] - 15, pos[1] - 15);
 		
-		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject) || MouseInside) 
+		if (m_EditorObject.IsSelected() || MouseInside) 
 			m_Root.SetAlpha(ALPHA_ON_SHOW);
 		else 
 			m_Root.SetAlpha(ALPHA_ON_HIDE);
@@ -63,7 +63,7 @@ class EditorMapMarker: UILinkedObject
 		if (GetEditor().IsPlacing()) return false;
 		
 		// allows multiple objects to be dragged
-		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) 
+		if (m_EditorObject.IsSelected()) 
 			return true;
 		
 		// We want to Toggle selection if you are holding control
@@ -186,7 +186,7 @@ class EditorObjectMarker: UILinkedObject
 			if (GetEditor().IsPlacing()) return false;
 			
 			// required for multiple objects to be dragged
-			if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) 
+			if (m_EditorObject.IsSelected()) 
 				return true;
 			
 			// We want to Toggle selection if you are holding control

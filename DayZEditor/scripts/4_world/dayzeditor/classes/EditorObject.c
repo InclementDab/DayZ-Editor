@@ -43,6 +43,7 @@ class EditorObject: Building
 	private string m_Type;
 	override string GetType() { return m_Type; }
 	
+	
 	void EditorObject()
 	{
 		EditorPrint("EditorObject");

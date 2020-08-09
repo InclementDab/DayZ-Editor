@@ -47,18 +47,18 @@ class EditorAction: Managed
 	{
 		undone = true;
 		Print("EditorAction::CallUndo");		
-		foreach (Class source, Param param: UndoParameters) {
+		foreach (Class source, Param param: UndoParameters)
 			GetGame().GameScript.Call(source, m_UndoAction, param);
-		}		
+		
 	}
 	
 	void CallRedo()
 	{
 		Print("EditorAction::CallRedo");
 		undone = false;
-		foreach (Class source, Param param: RedoParameters) {
+		foreach (Class source, Param param: RedoParameters)
 			GetGame().GameScript.Call(source, m_RedoAction, param);
-		}	
+		
 	}
 	
 	void InsertUndoParameter(Class source, Param params)

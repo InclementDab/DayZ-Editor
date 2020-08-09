@@ -313,7 +313,7 @@ class EditorPlacedListItem: UILinkedObject
 			if (input.LocalValue("UATurbo")) {
 				
 				// If root object is already selected
-				if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) {
+				if (m_EditorObject.IsSelected()) {
 					EditorEvents.DeselectObject(this, m_EditorObject);
 					return true;
 				}
