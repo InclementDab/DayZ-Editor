@@ -42,7 +42,8 @@ class EditorPlaceableObject: Managed
 	// Private members
 	private string m_Type, m_Path, m_Base;
 	
-	private ModInfo m_ModInfo;
+	// Mod Data
+	private ModStructure	m_ModStructure;
 	
 	private PlaceableObjectCategory m_Category;
 	private Widget m_ListWidget;
@@ -50,12 +51,12 @@ class EditorPlaceableObject: Managed
 
 	// Getters
 	string GetType() { return m_Type; }	
-	ModInfo GetModInfo() { return m_ModInfo; }
+	ModStructure GetModInfo() { return m_ModStructure; }
 	
 	void EditorPlaceableObject(string type, string path)
 	{
 		m_Type = type; m_Path = path;
-		m_ModInfo = Editor.GetModFromObject(m_Type);
+		m_ModStructure = Editor.GetModFromObject(m_Type);
 		
 		TStringArray path_array = new TStringArray();
 		GetGame().ConfigGetFullPath(m_Path + " " + m_Type, path_array);
@@ -86,27 +87,13 @@ class EditorPlaceableObject: Managed
 		m_ListWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorListItem.layout", parent);
 		m_ListWidget.GetScript(m_ListItem);
 		m_ListItem.SetObject(this);
-		string logo = m_ModInfo.GetLogo();
-		if (logo == string.Empty)
-			logo = m_ModInfo.GetLogoSmall();
-		if (logo == string.Empty)
-			logo = m_ModInfo.GetLogoOver();
-		if (logo == string.Empty)
-			logo = m_ModInfo.GetPicture();
-		if (logo != string.Empty)
-			m_ListItem.SetIcon(logo);	
-		else m_ListItem.SetIcon("DayZEditor/gui/images/dayz_editor_icon_black.edds");
+		//Print(m_ModStructure.GetModName());
+		//m_ListItem.SetIcon(Editor.GetIconFromMod(m_ModStructure));
 		
 		return m_ListItem;
 	}
 	
-	ref EditorListItem GetListItem()
-	{
-		return m_ListItem;
-	}
+	ref EditorListItem GetListItem() { return m_ListItem; }
 	
-	PlaceableObjectCategory GetCategory()
-	{
-		return m_Category;
-	}
+	PlaceableObjectCategory GetCategory() { return m_Category; }
 }

@@ -599,7 +599,7 @@ class EditorUI: UIScriptedMenu
 		GetGame().GetUIManager().ShowScriptedMenu(dialog, GetGame().GetUIManager().GetMenu());
 	}
 
-	void InsertPlacedObject(EditorListItem target)
+	void InsertPlacedObject(EditorPlacedListItem target)
 	{
 		m_RightbarSpacer.AddChild(target.GetLayoutRoot());
 	}

@@ -44,10 +44,8 @@ class EditorBrush
 	
 	// Private members
 	private vector m_LastMousePosition;
-	private array<string> m_PlaceableObjects;
-	private ref ScriptInvoker m_Func = new ScriptInvoker();
 	
-	private EditorObjectManager m_ObjectManager;
+	protected EditorObjectManager m_ObjectManager;
 	
 	void EditorBrush(EditorBrushSettings settings)
 	{
@@ -159,17 +157,22 @@ class DeleteBrush: EditorBrush
 		int component;
 		set<Object> results = new set<Object>();
 		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, EditorBrush.GetRadius() / 2, CollisionFlags.ALLOBJECTS);
+		
 		foreach (Object r: results) {
-			
-			EditorObject eo = GetEditor().GetObjectManager().GetEditorObject(r);
+					
+			EditorObject eo = m_ObjectManager.GetEditorObject(r.GetID());
 			if (eo != null) {
-				
 				EditorEvents.SelectObject(this, eo);
-				GetEditor().GetObjectManager().DeleteSelection();
+				m_ObjectManager.DeleteSelection();
 			} else {
 				GetGame().ObjectDelete(r);
 			}
+			
 		}
+		
+		
+		
+		
 	}
 
 }

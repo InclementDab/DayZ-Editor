@@ -48,7 +48,7 @@ class EditorObjectData
 	
 	void EditorObjectData(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
-		Print("EditorObjectData");
+		EditorPrint("EditorObjectData");
 		Type = type; Position = position; Orientation = orientation; Flags = flags;
 	}
 	
@@ -58,7 +58,9 @@ class EditorObject
 {
 	protected EntityAI 		m_WorldObject;
 	EntityAI GetWorldObject() { return m_WorldObject; }
-
+	
+	// Mod Data
+	private ModStructure	m_ModStructure;
 	
 	protected Widget 		m_EditorObjectMarkerWidget;
 	protected Widget 		m_EditorObjectBrowserWidget;
@@ -66,11 +68,11 @@ class EditorObject
 	protected Widget 		m_EditorObjectPropertiesWidget;
 	protected Widget 		m_EditorObjectContextWidget;
 	
-	ref UILinkedObject 		m_EditorObjectMarker = null;
-	ref UILinkedObject 		m_EditorObjectBrowser = null;
-	ref UILinkedObject		m_EditorMapMarker = null;
-	ref UILinkedObject		m_EditorObjectPropertiesWindow = null;
-	ref UILinkedObject		m_EditorObjectContextMenu = null;
+	ref UILinkedObject 			m_EditorObjectMarker = null;
+	ref EditorPlacedListItem 		m_EditorObjectBrowser = null;
+	ref UILinkedObject			m_EditorMapMarker = null;
+	ref UILinkedObject			m_EditorObjectPropertiesWindow = null;
+	ref UILinkedObject			m_EditorObjectContextMenu = null;
 	
 	EntityAI 				m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
@@ -98,9 +100,10 @@ class EditorObject
 		m_WorldObject = GetGame().CreateObjectEx(data.Type, data.Position, ECE_NONE);
 		m_WorldObject.SetOrientation(m_Data.Orientation);
 		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
+		m_Data.ID = m_WorldObject.GetID();
 		Update();
 		
-		
+		m_ModStructure = Editor.GetModFromObject(m_Data.Type);
 		
 		// Bounding Box
 		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
@@ -126,10 +129,11 @@ class EditorObject
 			
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
-			m_EditorObjectBrowser = new UILinkedObject();
+			m_EditorObjectBrowser = new EditorPlacedListItem();
 			m_EditorObjectBrowserWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorPlacedListItem.layout");
 			m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
 			m_EditorObjectBrowser.SetObject(this);
+			m_EditorObjectBrowser.SetIcon(Editor.GetIconFromMod(m_ModStructure));
 			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectBrowser);
 		}
 		
@@ -139,7 +143,7 @@ class EditorObject
 	
 	void ~EditorObject()
 	{
-		Print("~EditorObject");
+		EditorPrint("~EditorObject");
 		m_Data.Position = GetPosition();
 		m_Data.Orientation = GetOrientation();
 		

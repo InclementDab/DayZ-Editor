@@ -1057,22 +1057,41 @@ class Editor: Managed
 		
 	}
 	
-	static ModInfo GetModFromObject(string object_name)
+	static ref ModStructure GetModFromObject(string object_name)
 	{
-		ref array<ref ModInfo> mod_infos = new array<ref ModInfo>();
-		GetGame().GetModInfos(mod_infos);
-		string txt = GetGame().ConfigGetTextOut("CfgVehicles " + object_name + " model");
 		
-		foreach (ModInfo mod: mod_infos) {
-			string name = mod.GetName();
-			name = RemoveUselessCharacters(name);
-			if (txt.Contains(name)) {
+		ref array<ref ModStructure> mods = ModLoader.GetMods();
+		string model_path = GetGame().ConfigGetTextOut("CfgVehicles " + object_name + " model");
+		
+		foreach (ModStructure mod: mods) {
+			string dir;
+			string path = mod.GetModPath();
+			GetGame().ConfigGetText(string.Format("%1 dir", path), dir);
+			//name = RemoveUselessCharacters(name);
+			dir.ToLower(); model_path.ToLower();
+			if (model_path.Contains(dir))
 				return mod;
-			}
+			
 		}
 		
-		Print("Mod not found");
 		return null;
+	}
+	
+	static string GetIconFromMod(ref ModStructure m_ModInfo)
+	{
+		if (m_ModInfo != null) {
+			string logo = m_ModInfo.GetModLogo();
+			if (logo == string.Empty)
+				logo = m_ModInfo.GetModLogoSmall();
+			if (logo == string.Empty)
+				logo = m_ModInfo.GetModLogoOver();
+			if (logo == string.Empty)
+				logo = m_ModInfo.GetModActionURL();
+			if (logo != string.Empty)
+				return logo;	
+		}
+		// default
+		return "DayZEditor/gui/images/dayz_editor_icon_black.edds";
 	}
 	
 }

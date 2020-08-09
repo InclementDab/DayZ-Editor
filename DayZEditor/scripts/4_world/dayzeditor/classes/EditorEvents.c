@@ -28,7 +28,7 @@ class EditorEvents
 	
 	static void ObjectDeleteInvoke(Class context, EditorObject obj) 
 	{
-		Print("EditorEvents::DeleteObject");
+		//Print("EditorEvents::DeleteObject");
 		OnObjectDeleted.Invoke(context, obj);	
 	}
 	

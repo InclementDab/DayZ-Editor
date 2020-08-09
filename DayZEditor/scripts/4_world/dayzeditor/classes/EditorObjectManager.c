@@ -359,6 +359,11 @@ class EditorObjectManager: Managed
 		return null;
 	}
 	
+	EditorObject GetEditorObject(int id)
+	{
+		return m_PlacedObjects.Get(id);
+	}
+	
 	
 	EditorObject GetSessionObjectById(int id) { return m_SessionCache.Get(id); }
 	void SetSessionObjectById(int id, EditorObject data) { m_SessionCache.Set(id, data); }

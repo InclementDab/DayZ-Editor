@@ -261,6 +261,7 @@ class EditorListItem: UILinkedObject
 	{
 		m_EditorListItemIcon.LoadImageFile(0, path);
 		m_EditorListItemIcon.SetImage(0);
+		m_EditorListItemIcon.Update();
 	}
 }
 
@@ -379,6 +380,16 @@ class EditorPlacedListItem: UILinkedObject
 		super.SetObject(target);
 		m_EditorPlacedListItemText.SetText(target.GetType());
 		m_EditorPlacedListItemText.Update();
+		
+		// this is really slow here todo
+		string logo = Editor.GetIconFromMod(Editor.GetModFromObject(target.GetType()));
+		SetIcon(logo);
+	}
+	
+	void SetIcon(string path)
+	{
+		m_EditorPlacedListItemIcon.LoadImageFile(0, path);
+		m_EditorPlacedListItemIcon.SetImage(0);
 	}
 
 }
