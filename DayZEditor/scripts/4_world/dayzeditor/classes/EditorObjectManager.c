@@ -5,7 +5,7 @@ class EditorObjectSet: map<int, EditorObject>
 	void ~EditorObjectSet()
 	{
 		foreach (EditorObject obj: this)
-			GetGame().ObjectDelete(obj);	
+			delete obj;
 	}
 	
 	bool InsertEditorObject(EditorObject target)
@@ -28,7 +28,8 @@ class EditorObjectManager: Managed
 	
 	private ref EditorObjectSet 			m_PlacedObjects;
 	private ref EditorObjectSet				m_SelectedObjects;
-	private ref set<ref EditorObjectLink>	m_SessionCache;
+	//private ref set<ref EditorObjectLink>	m_SessionCache;
+	private ref map<int, ref EditorObject> 	m_SessionCache;
 	private ref set<ref EditorAction> 		m_ActionStack;
 	
 	
@@ -36,14 +37,15 @@ class EditorObjectManager: Managed
 	ref set<ref EditorAction> GetActionStack() { return m_ActionStack; }
 	ref EditorObjectSet GetSelectedObjects() { return m_SelectedObjects; }
 	ref EditorObjectSet GetPlacedObjects() { return m_PlacedObjects; }
-	ref set<ref EditorObjectLink> GetSessionCache() { return m_SessionCache; }
+	ref map<int, ref EditorObject> GetSessionCache() { return m_SessionCache; }
 	
 	void EditorObjectManager() 
 	{ 
 		Print("EditorObjectManager");
 		m_PlacedObjects 	= new EditorObjectSet();
 		m_SelectedObjects	= new EditorObjectSet();
-		m_SessionCache 		= new set<ref EditorObjectLink>();
+		//m_SessionCache 		= new set<ref EditorObjectLink>();
+		m_SessionCache 		= new map<int, ref EditorObject>();
 		m_ActionStack 		= new set<ref EditorAction>();
 		
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
@@ -90,23 +92,35 @@ class EditorObjectManager: Managed
 	{		
 		EditorPrint("EditorObjectManager::CreateObject");
 
-		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", position, ECE_NONE);
-		editor_object.Init(name, flags);
+		//EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", position, ECE_NONE);
+		EditorObjectData editor_object_data = new EditorObjectData();
+		editor_object_data.Type = name;
+		editor_object_data.Position = position;
+		editor_object_data.Flags = flags;
+		editor_object_data.ID = m_SessionData.Count();
+		m_SessionData.Insert(editor_object_data);
+		EditorObject editor_object = new EditorObject(editor_object_data);
+		
+		m_SessionCache.Insert(editor_object.GetID(), editor_object);
 		m_PlacedObjects.Insert(editor_object.GetID(), editor_object);
 		
-		int x = TickCount(0);
-		EditorEvents.ObjectCreateInvoke(this, editor_object);
-		SetupObject(editor_object);
+
+		EditorAction action = new EditorAction("Delete", "Create");
+		ref Param1<int> params = new Param1<int>(editor_object.GetID());
+		action.InsertUndoParameter(editor_object, params);
+		action.InsertRedoParameter(editor_object, params);
+		InsertAction(action);
 		
-		Print(TickCount(x));
+		Print(editor_object.GetID());
+		EditorEvents.ObjectCreateInvoke(this, editor_object);
 		
 		return editor_object;
 	}
 	
 	private void SetupObject(EditorObject target)
 	{
-		EditorObjectLink link = new EditorObjectLink(target);
-		m_SessionCache.Insert(link);
+		//EditorObjectLink link = new EditorObjectLink(target);
+		//m_SessionCache.Insert(link);
 
 		// Create Undo / redo action for creation
 		//EditorAction action = new EditorAction("Delete", "Create");
@@ -159,13 +173,11 @@ class EditorObjectManager: Managed
 		int result = m_SelectedObjects.Count();
 		EditorAction action = new EditorAction("Create", "Delete");
 		foreach (EditorObject selected_object: m_SelectedObjects) {
-			EditorObjectLink link = SearchSessionCache(selected_object);
-			action.InsertUndoParameter(link, null);
-			action.InsertRedoParameter(link, null);
-			GetGame().ObjectDelete(selected_object);
+			action.InsertUndoParameter(selected_object, new Param1<int>(selected_object.GetID()));
+			action.InsertRedoParameter(selected_object, new Param1<int>(selected_object.GetID()));
 			m_PlacedObjects.Remove(selected_object.GetID());
 			EditorEvents.DeselectObject(this, selected_object);
-			
+			delete selected_object;
 		}
 		
 		InsertAction(action);
@@ -306,21 +318,38 @@ class EditorObjectManager: Managed
 	// O(n) shit :)
 	EditorObject GetEditorObject(Object target)
 	{
-		foreach (EditorObject editor_object: m_PlacedObjects) 
-			if (editor_object.GetObject() == target) 
+		foreach (ref EditorObject editor_object: m_PlacedObjects) 
+			if (editor_object.GetWorldObject() == target) 
 				return editor_object;
 		
 		return null;
 	}
 	
-	EditorObjectLink SearchSessionCache(EditorObject target)
+	
+	EditorObject GetSessionObjectById(int id) { return m_SessionCache.Get(id); }
+	void SetSessionObjectById(int id, EditorObject data)
 	{
-		foreach (EditorObjectLink editor_object_link: m_SessionCache)
-			if (editor_object_link.Ptr() == target)
-				return editor_object_link;
+		m_SessionCache.Set(id, data);
+	}
+	
+	
+	private ref array<ref EditorObjectData> m_SessionData = new array<ref EditorObjectData>();
+	EditorObjectData GetSessionDataById(int id)
+	{
+		foreach (EditorObjectData data: m_SessionData) {
+			if (data.ID == id)
+				return data;
+		}
 		
+		Print("Session Data Not Found!");
 		return null;
 	}
+	
+	void SetSessionDataById(int id, EditorObjectData data)
+	{
+		m_SessionData.Set(id, data);
+	}
+	
 	
 	
 	

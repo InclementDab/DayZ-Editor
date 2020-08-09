@@ -252,7 +252,7 @@ class EditorUI: UIScriptedMenu
 		
 		// debug info
 		m_DebugFrame = m_Root.FindAnyWidget("DebugFrame");
-		m_DebugFrame.Show(false);
+		//m_DebugFrame.Show(false);
 
 		return m_Root;
 	}

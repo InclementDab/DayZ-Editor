@@ -1,6 +1,7 @@
 
 
 // Permanent memory link between an EditorObject and the session
+/*
 class EditorObjectLink: ref Link<EditorObject>
 {
 	private string type_name;
@@ -34,7 +35,6 @@ class EditorObjectLink: ref Link<EditorObject>
 			
 			//editor_object.Select(false); todo fix
 		} else {
-			
 			Print("EditorObjectLink::Create JUST CAME BACK AS NOT NULL");
 			Print("IM NOT SURE WHY BUT YOU SHOULD PROBABLY REPORT IT TO A DEVELOPER SMILE :)");
 		}
@@ -48,4 +48,4 @@ class EditorObjectLink: ref Link<EditorObject>
 		GetGame().ObjectDelete(editor_object);
 	}
 }
-
+*/

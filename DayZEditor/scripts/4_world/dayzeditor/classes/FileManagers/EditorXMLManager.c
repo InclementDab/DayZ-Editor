@@ -250,7 +250,9 @@ class EditorMapGroupProto: XMLCallback
 						
 						//Object loot_display = GetGame().CreateObjectEx("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), ECE_NONE);
 						EditorObject loot_display = GetEditor().GetObjectManager().CreateObject("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), EditorObjectFlags.OBJECTMARKER);
-						m_Building.AddChild(loot_display, -1);
+						
+						// might be bad
+						m_Building.AddChild(loot_display.GetWorldObject(), -1);
 						
 						
 						

@@ -203,22 +203,25 @@ class Editor: Managed
 	bool OnMouseEnterObject(Object target, int x, int y)
 	{
 		//Print("Editor::OnMouseEnterObject");
+		/*
 		EditorObjectUnderCursor = GetObjectManager().GetEditorObject(target);
 		if (EditorObjectUnderCursor != null)
 			return EditorObjectUnderCursor.OnMouseEnter(x, y);
 	
 	
 		return true;
-		
+		*/
 	}
 	
 	bool OnMouseExitObject(Object target, int x, int y)
 	{
+		/*
 		if (EditorObjectUnderCursor != null)
 			EditorObjectUnderCursor.OnMouseLeave(x, y);
 		EditorObjectUnderCursor = null;
 		
 		return true;
+		*/
 	}
 	
 	
@@ -566,9 +569,9 @@ class Editor: Managed
 		// Raycast ground below object
 		set<Object> o;
 		vector ground, ground_dir; int component;
-		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true); // set to ground only
+		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetWorldObject(), false, true); // set to ground only
 
-		vector cursor_position = MousePosToRay(o, target.GetObject(), EditorSettings.OBJECT_VIEW_DISTANCE, 0, true);
+		vector cursor_position = MousePosToRay(o, target.GetWorldObject(), EditorSettings.OBJECT_VIEW_DISTANCE, 0, true);
 		vector surface_normal = GetGame().SurfaceGetNormal(ground[0], ground[2]);
 		float surface_level = GetGame().SurfaceY(ground[0], ground[2]);
 	
@@ -629,7 +632,7 @@ class Editor: Managed
 		
 			float angle_delta = Math.Atan2(pos_delta[0], pos_delta[2]) * Math.RAD2DEG;
 			surface_normal = GetGame().SurfaceGetNormal(selected_transform[3][0], selected_transform[3][2]);
-			DayZPhysics.RaycastRV(selected_transform[3], selected_transform[3] + selected_transform[1] * -1000, ground, ground_dir, component, o, NULL, selected_object.GetObject(), false, true); // set to ground only
+			DayZPhysics.RaycastRV(selected_transform[3], selected_transform[3] + selected_transform[1] * -1000, ground, ground_dir, component, o, NULL, selected_object.GetWorldObject(), false, true); // set to ground only
 
 			
 			// Handle Z only motion for all children				
@@ -672,7 +675,7 @@ class Editor: Managed
 		}
 		
 		
-		GlobalTranslationWidget.UpdatePosition();
+		//GlobalTranslationWidget.UpdatePosition();
 		//Print(TickCount(starttime) / 1000);
 	}
 	

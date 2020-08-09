@@ -166,10 +166,10 @@ class EditorFileManager
 					// "construction_house2";206638.935547;6076.024414;146.000015;0.000000;0.000000;1.000000;
 					// Name, X, Y, Yaw, Pitch, Roll, Scale, Relative Height
 					array<LOD> testlods = new array<LOD>();
-					editor_object.GetObject().GetLODS(testlods);
+					editor_object.GetWorldObject().GetLODS(testlods);
 					
 					foreach (LOD lod: testlods) {
-						Print(editor_object.GetObject().GetLODName(lod));
+						Print(editor_object.GetWorldObject().GetLODName(lod));
 						array<Selection> selections = new array<Selection>();
 						lod.GetSelections(selections);
 						foreach (Selection s: selections) {

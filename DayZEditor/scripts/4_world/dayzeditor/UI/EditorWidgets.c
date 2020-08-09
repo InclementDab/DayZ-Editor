@@ -13,7 +13,7 @@ class EditorContextMenu: UILinkedObject
 			
 			
 			case "SetTargetButton": {
-				Editor.SetCameraTarget(m_EditorObject);
+				Editor.SetCameraTarget(m_EditorObject.GetWorldObject());
 				m_Root.Show(false);
 				return true;
 			}

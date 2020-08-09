@@ -113,7 +113,7 @@ class EditorBrush
 			
 			string object_name = m_BrushSettings.PlaceableObjects.Get(Math.RandomInt(0, m_BrushSettings.PlaceableObjects.Count() - 1));
 			//Object placed_object = GetGame().CreateObjectEx(object_name, pos, ECE_NONE);
-			Object placed_object = m_ObjectManager.CreateObject(object_name, pos, EditorObjectFlags.NONE);
+			EditorObject placed_object = m_ObjectManager.CreateObject(object_name, pos, EditorObjectFlags.NONE);
 		
 			
 			// remove this once we change Object to a lower abstracted version of EditorObject
