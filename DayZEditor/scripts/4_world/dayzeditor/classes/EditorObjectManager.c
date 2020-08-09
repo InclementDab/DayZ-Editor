@@ -90,45 +90,48 @@ class EditorObjectManager: Managed
 	}
 	
 	
-	EditorObject CreateObject(string name, vector position)
+	EditorObject CreateObject(string name, vector position, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{		
-		Print("EditorObjectManager::CreateObject");
-		//bool ai = GetGame().IsKindOf("Hatchback_02_Black", "DZ_LightAI");
-		EditorObject editor_object = EditorObject.Cast(GetGame().CreateObjectEx("EditorObject", position, ECE_LOCAL));
-		editor_object.Init(name);
+		EditorPrint("EditorObjectManager::CreateObject");
 
-
-		// maybe move this into createinvoke	jk lol
-		m_SessionCache.Insert(new EditorObjectLink(editor_object));
+		EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", position, ECE_NONE);
+		editor_object.Init(name, flags);
 		m_PlacedObjects.Insert(editor_object.GetID(), editor_object);
 		
-
-		// Create Undo / redo action for creation
-		EditorObjectLink link = SearchSessionCache(editor_object);
-		EditorAction action = new EditorAction("Delete", "Create");
-		action.InsertUndoParameter(link, null);
-		action.InsertRedoParameter(link, null);
-		InsertAction(action);
-		EditorEvents.ObjectCreateInvoke(null, editor_object);
+		
+		//EditorEvents.ObjectCreateInvoke(null, editor_object);
 		
 		return editor_object;
 	}
 	
+	private void SetupObject(EditorObject target)
+	{
+		EditorObjectLink link = new EditorObjectLink(target);
+		m_SessionCache.Insert(link);
+
+		// Create Undo / redo action for creation
+		EditorAction action = new EditorAction("Delete", "Create");
+		action.InsertUndoParameter(link, null);
+		action.InsertRedoParameter(link, null);
+		InsertAction(action);
+	}
+	
+	
 	void OnObjectSelected(Class context, EditorObject target)
 	{
-		Print("EditorObjectManager::SelectObject");
+		EditorPrint("EditorObjectManager::SelectObject");
 		m_SelectedObjects.InsertEditorObject(target);
 	}
 	
 	void OnObjectDeselected(Class context, EditorObject target)
 	{
-		Print("EditorObjectManager::SelectObject");
+		EditorPrint("EditorObjectManager::SelectObject");
 		m_SelectedObjects.RemoveEditorObject(target);
 	}	
 	
 	void OnObjectDeleted(Class context, EditorObject target)
 	{
-		Print("EditorObjectManager::SelectObject");
+		EditorPrint("EditorObjectManager::SelectObject");
 		m_SelectedObjects.RemoveEditorObject(target);
 	}
 	

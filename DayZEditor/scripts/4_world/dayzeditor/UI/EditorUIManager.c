@@ -63,7 +63,7 @@ class EditorUIManager: Managed
 				
 		
 		// Subscribe to events (and twitch.tv/InclementDab)
-		EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);		
+		//EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);		
 		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);	
 		
 		// Sets default
@@ -93,14 +93,14 @@ class EditorUIManager: Managed
 	
 	void OnEditorObjectCreated(Class context, EditorObject obj)
 	{
-		Print("EditorUIManager::OnObjectCreated");		
+		EditorPrint("EditorUIManager::OnObjectCreated");		
 	}
 	
 	
 	
 	void SetEditorCameraActive(bool state)
 	{
-		Print("EditorUIManager::SetEditorCameraActive");
+		EditorPrint("EditorUIManager::SetEditorCameraActive");
 		m_EditorCamera.SetActive(state);
 	}
 	
@@ -202,7 +202,7 @@ class EditorUIManager: Managed
 		
 	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
 	{
-		Print("EditorUIManager::OnPlaceableCategoryChanged");
+		EditorPrint("EditorUIManager::OnPlaceableCategoryChanged");
 
 		foreach (EditorPlaceableObject placeable_object: m_PlaceableObjects) {
 			Widget root = placeable_object.GetListItem().GetLayoutRoot();

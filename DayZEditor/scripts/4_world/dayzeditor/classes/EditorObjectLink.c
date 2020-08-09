@@ -5,12 +5,14 @@ class EditorObjectLink: ref Link<EditorObject>
 {
 	private string type_name;
 	private vector transform[4];
+	private EditorObjectFlags flags;
 	
 	void EditorObjectLink(EditorObject init)
 	{
 		Print("EditorObjectLink");		
 		type_name = init.GetType();
 		init.GetTransform(transform);
+		flags = init.GetEditorFlags();
 	}
 	
 	void ~EditorObjectLink()
@@ -27,7 +29,7 @@ class EditorObjectLink: ref Link<EditorObject>
 			EditorObject editor_object = Ptr();
 			
 			editor_object.SetTransform(transform);
-			editor_object.Init(type_name);
+			editor_object.Init(type_name, flags);
 			editor_object.Update();
 			EditorEvents.ObjectCreateInvoke(null, editor_object);
 			

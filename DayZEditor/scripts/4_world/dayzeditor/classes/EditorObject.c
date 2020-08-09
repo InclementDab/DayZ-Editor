@@ -14,7 +14,10 @@ class EditorObject : Building
 	private bool IsInitialized = false;
 	
 	protected Object 		m_WorldObject;
+	Object GetObject() { return m_WorldObject; }
+	
 	protected EditorObjectFlags m_Flags;
+	EditorObjectFlags GetEditorFlags() { return m_Flags; }
 	
 	protected Widget 		m_EditorObjectMarkerWidget;
 	protected Widget 		m_EditorObjectBrowserWidget;
@@ -36,41 +39,39 @@ class EditorObject : Building
 	
 	static float line_width = 0.05;
 	
-	// Getters 
-	Object GetObject() { return m_WorldObject; }
 	
 	private string m_Type;
 	override string GetType() { return m_Type; }
 	
 	void EditorObject()
 	{
-		Print("EditorObject");
+		EditorPrint("EditorObject");
 	}
 	
 	void ~EditorObject()
 	{
-		Print("~EditorObject");
-		
+		EditorPrint("~EditorObject");
 	}
 		
 	/*
 	* Initializers
 	*/
 	
-	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	void Init(string type_name, EditorObjectFlags flags)
 	{				
-		Print("EditorObject::Init");
-		SetFlags(EntityFlags.STATIC, true);
+		EditorPrint("EditorObject::Init");
+		
 		
 		m_Flags = flags;
 		if (m_Flags == EditorObjectFlags.ALL) {
 			m_Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
 		}
 		
-		IsInitialized = true;
+		
 		m_Type = type_name;
-		m_WorldObject = g_Game.CreateObjectEx(type_name, vector.Zero, ECE_LOCAL | ECE_SETUP | ECE_CREATEPHYSICS);
+		m_WorldObject = g_Game.CreateObjectEx(type_name, vector.Zero, ECE_NONE);
 		AddChild(m_WorldObject, -1);
+		SetFlags(EntityFlags.STATIC, true);
 		Update();
 		
 		// Bounding Box
@@ -108,6 +109,7 @@ class EditorObject : Building
 		
 		EditorEvents.OnObjectSelected.Insert(OnSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnDeselected);
+		IsInitialized = true;
 	}
 	
 	override void EEDelete(EntityAI parent)
@@ -377,7 +379,7 @@ class EditorObject : Building
 	private bool BoundingBoxVisible;
 	void ShowBoundingBox()
 	{
-		if (!IsBoundingBoxEnabled()) return;
+		if (!BoundingBoxEnabled()) return;
 		if (!IsInitialized || BoundingBoxVisible) return;
 		Print("EditorObject::ShowBoundingBox");
 		BoundingBoxVisible = true;
@@ -393,16 +395,16 @@ class EditorObject : Building
 	
 	void HideBoundingBox()
 	{
-		if (!IsBoundingBoxEnabled()) return;
+		if (!BoundingBoxEnabled()) return;
 		if (!IsInitialized || !BoundingBoxVisible) return;
 		Print("EditorObject::HideBoundingBox");
 		BoundingBoxVisible = false;
 		for (int i = 0; i < 12; i++) {
-			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(0,1,0.94902,1.0,co)");
+			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "");
 			m_BBoxLines[i].Update();
 		}
 		
-		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(0,1,0.94902,1.0,co)");
+		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "");
 	}
 	
 	bool ListItemEnabled() { return (m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM; }
@@ -427,7 +429,7 @@ class EditorObject : Building
 		}
 	}
 	
-	bool IsBoundingBoxEnabled() { return (m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; }
+	bool BoundingBoxEnabled() { return (m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; }
 	
 	bool IsRootSelected(Widget root)
 	{

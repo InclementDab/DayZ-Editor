@@ -169,6 +169,7 @@ class Editor: Managed
 		
 	
 		// debug
+		return;
 		EditorObjectSet selected_objects = GetObjectManager().GetSelectedObjects();
 		if (selected_objects.Count() == 1) {
 			EditorObject eo = selected_objects.Get(selected_objects.GetIteratorKey(selected_objects.Begin()));
@@ -327,7 +328,7 @@ class Editor: Managed
 	
 	void OnObjectSelected(Class context, EditorObject target)
 	{
-		Print("Editor::OnObjectSelected");		
+		EditorPrint("Editor::OnObjectSelected");		
 		
 		if (GlobalTranslationWidget != null)
 			GetGame().ObjectDelete(GlobalTranslationWidget);
@@ -340,7 +341,7 @@ class Editor: Managed
 	
 	void OnObjectDeselected(Class context, EditorObject target)
 	{
-		Print("Editor::OnObjectDeselected");
+		EditorPrint("Editor::OnObjectDeselected");
 		GetGame().ObjectDelete(GlobalTranslationWidget);
 	}
 	

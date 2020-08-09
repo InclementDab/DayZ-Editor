@@ -469,13 +469,13 @@ class EditorUI: UIScriptedMenu
 			ref array<ref RaycastRVResult> raycast_result = new array<ref RaycastRVResult>();
 			DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
 			
-			/* todo find better way to do this that doesnt throw null
+			// todo find better way to do this that doesnt throw null
 			if (raycast_result.Get(0).obj != NULL) {
 				if ((raycast_result.Get(0).obj == GetEditor().GetTranslationWidget() || raycast_result.Get(0).obj == GetEditor().GetTranslationWidget().GetRotationWidget())) {
 					EditorEvents.DragInvoke(raycast_result[0].obj, GetEditor().GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
 					return true;
 				}
-			}*/
+			}
 			
 			
 			EditorEvents.ClearSelection(this);

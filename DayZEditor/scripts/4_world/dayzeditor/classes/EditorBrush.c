@@ -47,13 +47,15 @@ class EditorBrush
 	private array<string> m_PlaceableObjects;
 	private ref ScriptInvoker m_Func = new ScriptInvoker();
 	
+	private EditorObjectManager m_ObjectManager;
+	
 	void EditorBrush(EditorBrushSettings settings)
 	{
 		Print("EditorBrush");
 		m_BrushSettings = settings;
 		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
 		//m_BrushDecal.SetTexture();
-
+		m_ObjectManager = GetEditor().GetObjectManager();
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
 	
@@ -108,9 +110,10 @@ class EditorBrush
 			vector pos = position;
 			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
-	
-			Object placed_object = GetGame().CreateObjectEx(m_BrushSettings.PlaceableObjects.Get(Math.RandomInt(0, m_BrushSettings.PlaceableObjects.Count() - 1)), pos, ECE_NONE);
-			//if (placed_object == null) continue;
+			
+			string object_name = m_BrushSettings.PlaceableObjects.Get(Math.RandomInt(0, m_BrushSettings.PlaceableObjects.Count() - 1));
+			//Object placed_object = GetGame().CreateObjectEx(object_name, pos, ECE_NONE);
+			EditorObject placed_object = m_ObjectManager.CreateObject(object_name, pos, EditorObjectFlags.NONE);
 			
 			// remove this once we change Object to a lower abstracted version of EditorObject
 			vector clip_info[2];
