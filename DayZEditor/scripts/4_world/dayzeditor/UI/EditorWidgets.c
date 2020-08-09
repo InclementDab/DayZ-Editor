@@ -40,7 +40,7 @@ class EditorMap: EditorWidgetEventHandler
 	void EditorMap()
 	{
 		Print("EditorMap");
-		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
+		//EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
 	}
 	
 	void ~EditorMap()
@@ -50,8 +50,9 @@ class EditorMap: EditorWidgetEventHandler
 	
 	void OnObjectCreated(Class context, EditorObject obj)
 	{
-		MapWidget map_widget = GetMapWidget();
-		map_widget.AddChild(obj.GetMapMarker());
+		Print("EditorMap::OnObjectCreated");
+		//apWidget map_widget = GetMapWidget();
+		//map_widget.AddChild(obj.GetMapMarker());
 	}
 	
 	
@@ -96,7 +97,7 @@ class EditorMap: EditorWidgetEventHandler
 
 
 
-class EditorListItem: EditorWidgetEventHandler
+class EditorListItem: UILinkedObject
 {
 	private Widget						m_EditorListItemPanel;
 	private ImageWidget					m_EditorListItemIcon;
@@ -330,7 +331,7 @@ class EditorPlacedListItem: UILinkedObject
 		#endif
 		
 		Input input = GetGame().GetInput();
-		EditorObject editor_object = EditorObject.GetFromUILinkedRoot(m_Root);
+		//EditorObject editor_object = EditorObject.GetFromUILinkedRoot(m_Root);
 		// LMB
 		/*
 		if (button == 0) {

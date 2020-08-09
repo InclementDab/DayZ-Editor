@@ -177,9 +177,9 @@ class EditorObjectMarker: UILinkedObject
 			
 			
 		} else if (button == 1) {
-			Widget ctx_menu = m_EditorObject.GetContextMenu();
-			ctx_menu.Show(true);
-			ctx_menu.SetPos(x, y);
+			//Widget ctx_menu = m_EditorObject.GetContextMenu();
+			//ctx_menu.Show(true);
+			//ctx_menu.SetPos(x, y);
 		} else return false;
 
 

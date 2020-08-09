@@ -263,7 +263,7 @@ class EditorObjectManager: Managed
 		
 	}
 	
-	
+	/*
 	bool CheckIfRootIsSelected(Widget root)
 	{
 		foreach (EditorObject editor_object: m_SelectedObjects)
@@ -273,7 +273,7 @@ class EditorObjectManager: Managed
 		return false;
 	}
 	
-
+*/
 
 	
 	// O(n) shit :)

@@ -95,8 +95,7 @@ class EditorUIManager: Managed
 	{
 		Print("EditorUIManager::OnObjectCreated");
 		
-		m_EditorUI.InsertPlacedObject(obj);
-		m_EditorUI.GetMap().OnObjectCreated(null, obj); // subscribe mee
+		
 		
 	}
 	
@@ -192,9 +191,9 @@ class EditorUIManager: Managed
 	{
 		m_EditorUI.GetRoot().Show(state);
 		EditorObjectSet placed_objects = GetEditor().GetObjectManager().GetPlacedObjects();
-		foreach (EditorObject editor_object: placed_objects) {
+		/*foreach (EditorObject editor_object: placed_objects) {
 			editor_object.GetObjectMarker().Show(state);
-		}
+		}*/
 		
 		m_Visibility = state;
 	}
@@ -209,7 +208,7 @@ class EditorUIManager: Managed
 		Print("EditorUIManager::OnPlaceableCategoryChanged");
 
 		foreach (EditorPlaceableObject placeable_object: m_PlaceableObjects) {
-			Widget root = placeable_object.GetListItem().GetRoot();
+			Widget root = placeable_object.GetListItem().GetLayoutRoot();
 			root.Show(placeable_object.GetCategory() == category);
 		}
 	}

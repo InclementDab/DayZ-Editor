@@ -254,10 +254,7 @@ class EditorUI: UIScriptedMenu
 		// debug info
 		m_DebugFrame = m_Root.FindAnyWidget("DebugFrame");
 		m_DebugFrame.Show(false);
-			
-		
-		
-		
+
 		return m_Root;
 	}
 	
@@ -556,9 +553,11 @@ class EditorUI: UIScriptedMenu
 				
 				float marker_x, marker_y;
 				if (IsMapOpen()) {
-					editor_object.GetMapMarker().GetPos(marker_x, marker_y);
+					editor_object.GetMapMarkerPos(marker_x, marker_y);
+					//editor_object.GetMapMarker().GetPos(marker_x, marker_y);
 				} else {
-					editor_object.GetObjectMarker().GetPos(marker_x, marker_y);
+					editor_object.GetObjectMarkerPos(marker_x, marker_y);
+					//editor_object.GetObjectMarker().GetPos(marker_x, marker_y);
 				}
 				
 				
@@ -585,9 +584,9 @@ class EditorUI: UIScriptedMenu
 		GetGame().GetUIManager().ShowScriptedMenu(dialog, GetGame().GetUIManager().GetMenu());
 	}
 
-	void InsertPlacedObject(EditorObject target)
+	void InsertPlacedObject(EditorListItem target)
 	{
-		m_RightbarSpacer.AddChild(target.GetObjectBrowser());
+		m_RightbarSpacer.AddChild(target.GetLayoutRoot());
 	}
 	
 	private ref array<string> m_CurrentBrushNames = new array<string>();

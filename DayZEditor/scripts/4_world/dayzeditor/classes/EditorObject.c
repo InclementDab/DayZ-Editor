@@ -1,17 +1,19 @@
 
 enum EditorObjectFlags
 {
-	EO_ALL,
-	EO_BBOX,
-	EO_MAPMARKER,
-	EO_WORLDMARKER
-}
+	ALL,
+	BBOX,
+	MAPMARKER,
+	OBJECTMARKER,
+	LISTITEM 
+};
 
 class EditorObject : Building
 {
 	private bool IsInitialized = false;
 	
 	protected Object 		m_WorldObject;
+	protected EditorObjectFlags m_Flags;
 	
 	protected Widget 		m_EditorObjectMarkerWidget;
 	protected Widget 		m_EditorObjectBrowserWidget;
@@ -54,8 +56,14 @@ class EditorObject : Building
 	* Initializers
 	*/
 	
-	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.EO_ALL)
+	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.OBJECTMARKER)
 	{
+		m_Flags = flags;
+		if (m_Flags == EditorObjectFlags.ALL) {
+			//m_Flags = EditorObjectFlags.EO_BBOX | EditorObjectFlags.EO_MAPMARKER | EditorObjectFlags.EO_WORLDMARKER | EditorObjectFlags.EO_LISTITEM;
+		}
+		
+		m_Flags = EditorObjectFlags.BBOX;
 		Print("EditorObject::Init");
 		SetFlags(EntityFlags.STATIC, true);
 		
@@ -68,40 +76,56 @@ class EditorObject : Building
 		// todo move all this to EditorUIManager
 		
 		// World Object base marker
-		m_EditorObjectMarker = new UILinkedObject();
-		m_EditorObjectMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorObjectMarker.layout");
-		m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
-		m_EditorObjectMarker.SetObject(this);
-				
+		if ((m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER) {
+			m_EditorObjectMarker = new UILinkedObject();
+			m_EditorObjectMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorObjectMarker.layout");
+			m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
+			m_EditorObjectMarker.SetObject(this);
+			
+			//GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectMarkerWidget);
+		}
+		
 		// Map marker
-		m_EditorMapMarker = new UILinkedObject();
-		m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
-		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
-		m_EditorMapMarker.SetObject(this);
-		GetEditor().GetUIManager().GetEditorUI().GetMapWidget().AddChild(m_EditorMapMarkerWidget);
-	
+		if ((m_Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
+			m_EditorMapMarker = new UILinkedObject();
+			m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
+			m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
+			m_EditorMapMarker.SetObject(this);
+			GetEditor().GetUIManager().GetEditorUI().GetMapWidget().AddChild(m_EditorMapMarkerWidget);
+		}	
+			
 		// Browser item
-		m_EditorObjectBrowser = new UILinkedObject();
-		m_EditorObjectBrowserWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorPlacedListItem.layout");
-		m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
-		m_EditorObjectBrowser.SetObject(this);		
+		if ((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
+			m_EditorObjectBrowser = new UILinkedObject();
+			m_EditorObjectBrowserWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorPlacedListItem.layout");
+			m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
+			m_EditorObjectBrowser.SetObject(this);
+			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectBrowser);
+		}
 		
 		// Properties Dialog
+		// todo move to world object+
+		/*
 		m_EditorObjectPropertiesWindow = new UILinkedObject();
 		m_EditorObjectPropertiesWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorObjectProperties.layout");
 		m_EditorObjectPropertiesWidget.GetScript(m_EditorObjectPropertiesWindow);
 		m_EditorObjectPropertiesWindow.SetObject(this);
 		m_EditorObjectPropertiesWidget.Show(false);		
+		*/
 		
 		// Context Menu
+		// todo move context menu to EO World Object
+		/*
 		m_EditorObjectContextMenu = new UILinkedObject();
 		m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout");
 		m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
 		m_EditorObjectContextMenu.SetObject(this);
 		m_EditorObjectContextWidget.Show(false);
+		*/
 		
-		
-		CreateBoundingBox();
+		if ((m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
+			CreateBoundingBox();
+		}
 		
 		EditorEvents.OnObjectSelected.Insert(OnSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnDeselected);
@@ -374,6 +398,7 @@ class EditorObject : Building
 	private bool BoundingBoxVisible;
 	void ShowBoundingBox()
 	{
+		if (!IsBoundingBoxEnabled()) return;
 		if (!IsInitialized || BoundingBoxVisible) return;
 		Print("EditorObject::ShowBoundingBox");
 		BoundingBoxVisible = true;
@@ -389,6 +414,7 @@ class EditorObject : Building
 	
 	void HideBoundingBox()
 	{
+		if (!IsBoundingBoxEnabled()) return;
 		if (!IsInitialized || !BoundingBoxVisible) return;
 		Print("EditorObject::HideBoundingBox");
 		BoundingBoxVisible = false;
@@ -409,13 +435,36 @@ class EditorObject : Building
 		return Vector(x, y, 0);
 	}
 	
+	bool IsObjectMarkerEnabled() { return (m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
+	void GetObjectMarkerPos(out float x, out float y)
+	{
+		if (IsObjectMarkerEnabled()) {
+			m_EditorObjectMarkerWidget.GetPos(x, y);
+		} else {
+			x = -1; y = -1;
+		}
+	}
+	
+	bool IsMapMarkerEnabled() { return (m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
+	void GetMapMarkerPos(out float x, out float y)
+	{
+		if (IsMapMarkerEnabled()) {
+			m_EditorMapMarkerWidget.GetPos(x, y);
+		} else {
+			x = -1; y = -1;
+		}
+	}
+	
+	bool IsBoundingBoxEnabled() { return (m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; }
+	
+	/*
 	Widget GetObjectMarker() { return m_EditorObjectMarkerWidget; }
 	Widget GetObjectBrowser() { return m_EditorObjectBrowserWidget; }
 	Widget GetMapMarker() { return m_EditorMapMarkerWidget; }
 	Widget GetContextMenu() { return m_EditorObjectContextWidget; }
 	
 	UILinkedObject GetEditorObjectMarker() { return m_EditorObjectMarker; }
-	
+	*/
 	void ShowPropertiesWindow(bool show) 
 	{
 		m_EditorObjectPropertiesWidget.Show(true);
@@ -423,6 +472,7 @@ class EditorObject : Building
 		//SetModal(m_EditorObjectPropertiesWidget);
 	}
 	
+	/*
 	static EditorObject GetFromUILinkedRoot(Widget root)
 	{
 		Print("EditorObject::GetFromObjectRoot");
@@ -433,7 +483,7 @@ class EditorObject : Building
 		
 		Print("GetFromUILinkedRoot: Item Not Found!");
 		return null;
-	}
+	}*/
 }
 
 
