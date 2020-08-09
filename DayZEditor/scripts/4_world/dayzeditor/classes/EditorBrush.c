@@ -132,7 +132,7 @@ class EditorBrush
 			placed_object.SetDirection(direction);
 			
 			
-			data_set.Insert(new EditorObjectData(object_name, pos, placed_object.GetOrientation(), EditorObjectFlags.NONE));
+			data_set.Insert(new EditorObjectData(object_name, pos, placed_object.GetOrientation(), EditorObjectFlags.LISTITEM));
 			
 			GetGame().ObjectDelete(placed_object);		
 		}
@@ -149,9 +149,6 @@ class EditorBrush
 
 
 
-
-
-//EditorBrush GetDeleteBrush(EditorBrushSettings settings) { return new DeleteBrush(settings); }
 class DeleteBrush: EditorBrush
 {	
 	

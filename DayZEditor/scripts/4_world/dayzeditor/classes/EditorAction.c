@@ -63,13 +63,15 @@ class EditorAction: Managed
 	void Create(Param1<int> params)
 	{
 		EditorPrint("EditorAction::Create");
+		Sleep(10);
 		EditorObjectData data = GetEditor().GetObjectManager().GetSessionDataById(params.param1);
 		GetEditor().GetObjectManager().SetSessionObjectById(params.param1, new EditorObject(data));
 	}
 	
 	void Delete(Param1<int> params)
 	{
-		EditorPrint("EditorAction::Delete");		
+		EditorPrint("EditorAction::Delete");
+		Sleep(10);
 		EditorObject editor_object = GetEditor().GetObjectManager().GetSessionObjectById(params.param1);
 		GetEditor().GetObjectManager().SetSessionDataById(params.param1, editor_object.GetData());
 		delete editor_object;

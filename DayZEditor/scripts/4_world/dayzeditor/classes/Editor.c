@@ -327,9 +327,29 @@ class Editor: Managed
 			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
 		}
 		
-		GetEditor().GetUIManager().NotificationCreate("Loaded!"); 
+		GetEditor().GetUIManager().NotificationCreate("Load Complete " + typename.EnumToString(FileDialogResult, loadfile_result)); 
 	}
 	
+	void Import(string filename, ImportMode import_mode)
+	{
+		delete m_EditorObjectManager;
+		m_EditorObjectManager = new EditorObjectManager();
+		
+		
+		EditorWorldData import_data = new EditorWorldData();
+		int loadfile_result =  EditorFileManager.Import(import_data, filename, import_mode);
+		Print("Import Result " + loadfile_result);
+		
+		if (import_data.CameraPosition[3] != vector.Zero)
+			GetUIManager().GetEditorCamera().SetTransform(import_data.CameraPosition);
+		
+		foreach (EditorObjectData load_object: import_data.EditorObjects) {
+			EditorObject e_object = GetObjectManager().CreateObject(load_object);
+			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
+		}
+		
+		GetEditor().GetUIManager().NotificationCreate("Import Complete! " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+	}
 	
 
 	
@@ -850,6 +870,14 @@ class Editor: Managed
 					EditorFileManager.Export(export_objects, ExportMode.EXPANSION, "export_expansion");
 					EditorFileManager.Export(export_objects, ExportMode.TERRAINBUILDER, "export_terrainbuilder", HeightType.ABSOLUTE);
 					return true;
+				}
+				break;
+			}
+			
+			case KeyCode.KC_I: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					Import("$profile:Editor/SvetloyarskNoCollision.map", ImportMode.EXPANSION);
+					
 				}
 				break;
 			}

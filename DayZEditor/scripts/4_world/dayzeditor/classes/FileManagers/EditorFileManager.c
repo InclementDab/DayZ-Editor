@@ -1,6 +1,49 @@
 
 
 
+class ExpansionImportData
+{
+		
+	static void ReadFromFile(out ref EditorObjectDataSet data, string filename)
+	{
+		FileHandle handler = OpenFile(filename, FileMode.READ);
+		
+		string name;
+		vector position, rotation;
+		while (GetObjectFromFile(handler, name, position, rotation)) {	
+			
+			string model_name = GetGame().GetModelName(name);
+			if (model_name == "UNKNOWN_P3D_FILE") {
+				Print(string.Format("%1 is not a valid Object Type!", name));
+				continue;
+			}
+					
+			data.Insert(new EditorObjectData(name, position, rotation, EditorObjectFlags.NONE));
+		}
+		
+		CloseFile(handler);
+	}
+	
+    private static bool GetObjectFromFile(FileHandle file, out string name, out vector position, out vector rotation, out string special = "false")
+    {                
+        string line;
+        int lineSize = FGets( file, line );
+        
+        if ( lineSize < 1 )
+            return false;
+        
+        ref TStringArray tokens = new TStringArray;
+        line.Split( "|", tokens );
+
+        name = tokens.Get( 0 );        
+        position = tokens.Get( 1 ).ToVector();
+        rotation = tokens.Get( 2 ).ToVector();    
+        special = tokens.Get( 3 );
+
+        return true;
+    }
+}
+
 class COMImportData
 {
 	string name;
@@ -36,7 +79,7 @@ enum ExportMode
 
 enum ImportMode
 {
-	MAPFILE, 
+	EXPANSION, 
 	COMFILE
 }
 
@@ -87,10 +130,12 @@ class EditorFileManager
 		return FileDialogResult.SUCCESS;
 	}
 	
-	static EditorWorldData Import(string filename, ImportMode mode = ImportMode.COMFILE)
-	{
-		EditorWorldData data = new EditorWorldData();
-
+	static FileDialogResult Import(out EditorWorldData data, string filename, ImportMode mode = ImportMode.COMFILE)
+	{		
+		if (!FileExist(filename)) {
+			return FileDialogResult.NOT_FOUND;
+		}
+		
 		switch (mode) {
 			
 			case (ImportMode.COMFILE): {
@@ -102,11 +147,20 @@ class EditorFileManager
 					Print("ImportFromFile::COMFILE::Import " + param.param1);					
 					data.EditorObjects.Insert(new EditorObjectData(param.param1, param.param2, param.param3));
 				}
+				
+				break;
+			}
+			
+			case (ImportMode.EXPANSION): {
+				Print("EditorFileManager::Import::EXPANSION");
+				ExpansionImportData.ReadFromFile(data.EditorObjects, filename);
+
+				break;
 			}
 		}
 
 		
-		return data;
+		return FileDialogResult.SUCCESS;
 		
 	}
 	
@@ -128,7 +182,7 @@ class EditorFileManager
 			
 		}
 		
-		filename = "$profile:Editor/Export" + filename;
+		filename = "$profile:Editor/Export/" + filename;
 		
 		
 		DeleteFile(filename);
