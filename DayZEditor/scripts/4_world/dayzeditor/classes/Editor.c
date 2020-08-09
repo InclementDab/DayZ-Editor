@@ -63,8 +63,8 @@ class Editor: Managed
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
 	
 		// Event subscriptions
-		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
-		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
+		//EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
+		//EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
 		EditorEvents.OnObjectDrag.Insert(HandleObjectDrag);
 		EditorEvents.OnObjectDrop.Insert(HandleObjectDrop);
 		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
@@ -283,6 +283,7 @@ class Editor: Managed
 		if (!input.LocalValue("UATurbo")) {
 			EditorEvents.ClearSelection(this);
 		}
+		
 		EditorEvents.SelectObject(this, editor_object);
 		
 		if (!input.LocalValue("UATurbo")) { 
@@ -329,20 +330,20 @@ class Editor: Managed
 	void OnObjectSelected(Class context, EditorObject target)
 	{
 		EditorPrint("Editor::OnObjectSelected");		
-		
+		/*
 		if (GlobalTranslationWidget != null)
 			GetGame().ObjectDelete(GlobalTranslationWidget);
 		
 		
 		GlobalTranslationWidget = TranslationWidget.Cast(GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_SETUP | ECE_CREATEPHYSICS | ECE_LOCAL));
 		GlobalTranslationWidget.SetEditorObject(target);	
-		
+		*/
 	}
 	
 	void OnObjectDeselected(Class context, EditorObject target)
 	{
 		EditorPrint("Editor::OnObjectDeselected");
-		GetGame().ObjectDelete(GlobalTranslationWidget);
+		//GetGame().ObjectDelete(GlobalTranslationWidget);
 	}
 	
 	
@@ -791,10 +792,13 @@ class Editor: Managed
 			case KeyCode.KC_A: {
 				if (input.LocalValue("UAWalkRunTemp")) {
 					
-					EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
+					GetGame().GetTickTime();
+					EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();		
 					foreach (EditorObject obj: placed_objects) {
+						//GetGame().GameScript.Call(this, "SelectAllTemp", new Param1<EditorObject>(obj));
 						EditorEvents.SelectObject(this, obj);
 					}
+	
 					
 					return true;
 				}
@@ -915,6 +919,8 @@ class Editor: Managed
 		
 		return false;
 	}
+	
+	
 	
 	void IncrementMove(EditorObject obj, int axis, float move)
 	{

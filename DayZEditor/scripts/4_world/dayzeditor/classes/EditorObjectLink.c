@@ -9,7 +9,7 @@ class EditorObjectLink: ref Link<EditorObject>
 	
 	void EditorObjectLink(EditorObject init)
 	{
-		Print("EditorObjectLink");		
+		EditorPrint("EditorObjectLink");		
 		type_name = init.GetType();
 		init.GetTransform(transform);
 		flags = init.GetEditorFlags();
@@ -17,7 +17,7 @@ class EditorObjectLink: ref Link<EditorObject>
 	
 	void ~EditorObjectLink()
 	{
-		Print("~EditorObjectLink");
+		EditorPrint("~EditorObjectLink");
 	}
 	
 	void Create()

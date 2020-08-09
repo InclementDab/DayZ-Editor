@@ -285,9 +285,7 @@ class EditorPlacedListItem: UILinkedObject
 		m_EditorPlacedListItemText = TextWidget.Cast(m_Root.FindAnyWidget("EditorPlacedListItemText"));
 		
 		EditorEvents.OnObjectSelected.Insert(EditorObjectSelected);
-		EditorEvents.OnObjectDeselected.Insert(EditorObjectDeselected);
-		//GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-		
+		EditorEvents.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	
 	}
 	

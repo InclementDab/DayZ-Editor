@@ -5,9 +5,7 @@ class EditorObjectSet: map<int, EditorObject>
 	void ~EditorObjectSet()
 	{
 		foreach (EditorObject obj: this)
-			GetGame().ObjectDelete(obj);
-		
-		
+			GetGame().ObjectDelete(obj);	
 	}
 	
 	bool InsertEditorObject(EditorObject target)
@@ -98,8 +96,11 @@ class EditorObjectManager: Managed
 		editor_object.Init(name, flags);
 		m_PlacedObjects.Insert(editor_object.GetID(), editor_object);
 		
+		int x = TickCount(0);
+		EditorEvents.ObjectCreateInvoke(this, editor_object);
+		SetupObject(editor_object);
 		
-		//EditorEvents.ObjectCreateInvoke(null, editor_object);
+		Print(TickCount(x));
 		
 		return editor_object;
 	}
@@ -110,16 +111,16 @@ class EditorObjectManager: Managed
 		m_SessionCache.Insert(link);
 
 		// Create Undo / redo action for creation
-		EditorAction action = new EditorAction("Delete", "Create");
-		action.InsertUndoParameter(link, null);
-		action.InsertRedoParameter(link, null);
-		InsertAction(action);
+		//EditorAction action = new EditorAction("Delete", "Create");
+		//action.InsertUndoParameter(link, null);
+		//action.InsertRedoParameter(link, null);
+		//InsertAction(action);
 	}
 	
 	
 	void OnObjectSelected(Class context, EditorObject target)
 	{
-		EditorPrint("EditorObjectManager::SelectObject");
+		EditorPrint("EditorObjectManager::SelectObject");		
 		m_SelectedObjects.InsertEditorObject(target);
 	}
 	

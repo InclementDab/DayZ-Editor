@@ -32,11 +32,15 @@ class EditorEvents
 		OnObjectDeleted.Invoke(context, obj);	
 	}
 	
+
 	static void SelectObject(Class context, EditorObject obj) 
 	{
 		//Print("EditorEvents::ObjectSelected");
 		OnObjectSelected.Invoke(context, obj);
 	}
+	
+	
+	
 	
 	static void DeselectObject(Class context, EditorObject obj) 
 	{

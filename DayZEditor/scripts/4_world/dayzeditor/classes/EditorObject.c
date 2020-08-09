@@ -200,7 +200,7 @@ class EditorObject : Building
 	vector line_centers[12]; vector line_verticies[8];
 	void CreateBoundingBox()
 	{
-		Print("EditorObject::CreateBoundingBox");
+		EditorPrint("EditorObject::CreateBoundingBox");
 		
 		vector clip_info[2];
 		vector size = GetSize();
@@ -381,7 +381,7 @@ class EditorObject : Building
 	{
 		if (!BoundingBoxEnabled()) return;
 		if (!IsInitialized || BoundingBoxVisible) return;
-		Print("EditorObject::ShowBoundingBox");
+		EditorPrint("EditorObject::ShowBoundingBox");
 		BoundingBoxVisible = true;
 		for (int i = 0; i < 12; i++) {
 			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(1,1,0,1,co)");
@@ -397,12 +397,13 @@ class EditorObject : Building
 	{
 		if (!BoundingBoxEnabled()) return;
 		if (!IsInitialized || !BoundingBoxVisible) return;
-		Print("EditorObject::HideBoundingBox");
+		EditorPrint("EditorObject::HideBoundingBox");
 		BoundingBoxVisible = false;
 		for (int i = 0; i < 12; i++) {
-			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "");
+			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(0,1,0.94902,0.0,co)");
 			m_BBoxLines[i].Update();
 		}
+		
 		
 		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "");
 	}
