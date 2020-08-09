@@ -28,7 +28,6 @@ class EditorObjectLink: ref Link<EditorObject>
 			Init(EditorObject.Cast(GetGame().CreateObjectEx("EditorObject", transform[3], ECE_NONE)));		
 			EditorObject editor_object = Ptr();
 			
-			editor_object.SetTransform(transform);
 			editor_object.Init(type_name, flags);
 			editor_object.Update();
 			EditorEvents.ObjectCreateInvoke(null, editor_object);

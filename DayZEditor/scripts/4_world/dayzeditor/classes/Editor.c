@@ -266,7 +266,7 @@ class Editor: Managed
 		if (m_EditorBrush != null)
 			EditorEvents.ChangeBrush(this, null);
 		
-		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, vector.Zero));		
+		ObjectInHand = new EditorHologram(name, vector.Zero);		
 	}
 	
 
@@ -825,8 +825,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_V: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					r = GetObjectManager().PasteSelection();
-					Print(string.Format("Pasted %1 Objects", r));
+					GetObjectManager().PasteSelection();
 					return true;
 				}
 				break;

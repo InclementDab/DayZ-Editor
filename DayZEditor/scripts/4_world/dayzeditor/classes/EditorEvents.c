@@ -36,6 +36,7 @@ class EditorEvents
 	static void SelectObject(Class context, EditorObject obj) 
 	{
 		//Print("EditorEvents::ObjectSelected");
+		obj.OnSelected();
 		OnObjectSelected.Invoke(context, obj);
 	}
 	
@@ -45,6 +46,7 @@ class EditorEvents
 	static void DeselectObject(Class context, EditorObject obj) 
 	{
 		//Print("EditorEvents::OnObjectDeselected");
+		obj.OnDeselected();
 		OnObjectDeselected.Invoke(context, obj);
 	}
 	

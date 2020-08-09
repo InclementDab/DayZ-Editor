@@ -1,19 +1,23 @@
 
 
-class EditorHologram: Hologram
+class EditorHologram
 {
 	protected Widget 				m_EditorMapMarkerWidget;
 	protected EditorMapMarker 		m_EditorMapMarker;
 	
 	private MapWidget				m_MapWidget;
 	
-	void EditorHologram(PlayerBase player, vector pos, ItemBase item) 
+	private EntityAI				m_ProjectionEntity;
+	EntityAI GetProjectionEntity() { return m_ProjectionEntity; }
+	
+	void EditorHologram(string type_name, vector position) 
 	{
-		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
+		m_MapWidget = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
+		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout", m_MapWidget);
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
-
-		GetEditor().GetUIManager().GetEditorUI().InsertMapObject(m_EditorMapMarkerWidget);
+		m_ProjectionEntity = GetGame().CreateObjectEx(type_name, position, ECE_NONE);
+		
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
@@ -21,6 +25,7 @@ class EditorHologram: Hologram
 	void ~EditorHologram()
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		GetGame().ObjectDelete(m_ProjectionEntity);
 		delete m_EditorMapMarkerWidget; delete m_EditorMapMarker;
 	}
 	
@@ -28,7 +33,6 @@ class EditorHologram: Hologram
 	{		
 		int x, y;
 		GetCursorPos(x, y);
-		if (m_Projection == NULL) return;
 		
 		// Handle Building
 		if (GetEditor().GetUIManager().GetEditorUI().IsMapOpen()) {
@@ -37,11 +41,9 @@ class EditorHologram: Hologram
 				
 		} else {
 			set<Object> obj;
-			pos = MousePosToRay(obj, m_Projection);
+			pos = MousePosToRay(obj, m_ProjectionEntity);
 		}
-		
-
-		
+				
 		vector mat[4] = {
 			"1 0 0",
 			"0 1 0",
@@ -51,8 +53,8 @@ class EditorHologram: Hologram
 		
 		vector surface_normal = GetGame().SurfaceGetNormal(pos[0], pos[2]);
 		float surface_height = GetGame().SurfaceY(pos[0], pos[2]);
-		m_Projection.PlaceOnSurfaceRotated(mat, pos, surface_normal[0] * -1, surface_normal[2] * -1, 0, EditorSettings.MAGNET_PLACEMENT);
-		m_Projection.SetTransform(mat);
+		m_ProjectionEntity.PlaceOnSurfaceRotated(mat, pos, surface_normal[0] * -1, surface_normal[2] * -1, 0, EditorSettings.MAGNET_PLACEMENT);
+		m_ProjectionEntity.SetTransform(mat);
 		
 				
 		// Handle Map Marker

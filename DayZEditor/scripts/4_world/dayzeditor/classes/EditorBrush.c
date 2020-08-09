@@ -113,7 +113,8 @@ class EditorBrush
 			
 			string object_name = m_BrushSettings.PlaceableObjects.Get(Math.RandomInt(0, m_BrushSettings.PlaceableObjects.Count() - 1));
 			//Object placed_object = GetGame().CreateObjectEx(object_name, pos, ECE_NONE);
-			EditorObject placed_object = m_ObjectManager.CreateObject(object_name, pos, EditorObjectFlags.NONE);
+			Object placed_object = m_ObjectManager.CreateObject(object_name, pos, EditorObjectFlags.NONE);
+		
 			
 			// remove this once we change Object to a lower abstracted version of EditorObject
 			vector clip_info[2];
@@ -129,6 +130,8 @@ class EditorBrush
 			vector direction = Math3D.GetRandomDir();
 			direction[1] = Math.RandomFloat(-0.05, 0.05);
 			placed_object.SetDirection(direction);
+			
+			
 			
 		}
 	}

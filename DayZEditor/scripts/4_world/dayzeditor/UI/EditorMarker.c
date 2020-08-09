@@ -145,7 +145,7 @@ class EditorObjectMarker: UILinkedObject
 			m_Root.Show(screenpos[2] > 0 && screenpos[2] < 1000);			
 		}
 		
-		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject) || MouseInside) {
+		if (m_EditorObject.IsSelected() || MouseInside) {
 			m_Root.SetAlpha(ALPHA_ON_SHOW);
 		} else {
 			m_Root.SetAlpha(ALPHA_ON_HIDE);

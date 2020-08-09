@@ -64,12 +64,7 @@ class EditorMap: EditorWidgetEventHandler
 		
 		if (button == 0) {
 			if (GetEditor().IsPlacing()) {
-				EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
-				vector mat[4];
-				e.GetTransform(mat);
-				EditorObject editor_object = GetEditor().GetObjectManager().CreateObject(e.GetType(), mat[3]);
-				editor_object.SetTransform(mat);
-				if (!input.LocalValue("UATurbo")) delete Editor.ObjectInHand;
+				GetEditor().PlaceObject();
 				return true;
 			} else {
 				EditorEvents.ClearSelection(this);

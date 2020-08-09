@@ -9,12 +9,12 @@ enum EditorObjectFlags
 	ALL = 256
 };
 
-class EditorObject : Building
+class EditorObject: Building
 {
 	private bool IsInitialized = false;
 	
-	protected Object 		m_WorldObject;
-	Object GetObject() { return m_WorldObject; }
+	protected EntityAI 		m_WorldObject;
+	EntityAI GetObject() { return m_WorldObject; }
 	
 	protected EditorObjectFlags m_Flags;
 	EditorObjectFlags GetEditorFlags() { return m_Flags; }
@@ -38,7 +38,7 @@ class EditorObject : Building
 	float LocalAngle; // temp
 	
 	static float line_width = 0.05;
-	
+	private vector clip_info[2];
 	
 	private string m_Type;
 	override string GetType() { return m_Type; }
@@ -61,18 +61,20 @@ class EditorObject : Building
 	{				
 		EditorPrint("EditorObject::Init");
 		
-		
 		m_Flags = flags;
+		
 		if (m_Flags == EditorObjectFlags.ALL) {
 			m_Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
 		}
 		
-		
 		m_Type = type_name;
 		m_WorldObject = g_Game.CreateObjectEx(type_name, vector.Zero, ECE_NONE);
-		AddChild(m_WorldObject, -1);
+		AddChild(m_WorldObject, -1, true);
 		SetFlags(EntityFlags.STATIC, true);
 		Update();
+		
+		m_WorldObject.ClippingInfo(clip_info);
+		
 		
 		// Bounding Box
 		if ((m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
@@ -104,11 +106,7 @@ class EditorObject : Building
 			m_EditorObjectBrowser.SetObject(this);
 			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectBrowser);
 		}
-		
 
-		
-		EditorEvents.OnObjectSelected.Insert(OnSelected);
-		EditorEvents.OnObjectDeselected.Insert(OnDeselected);
 		IsInitialized = true;
 	}
 	
@@ -151,6 +149,7 @@ class EditorObject : Building
 	*********/
 	
 	private bool m_IsSelected;
+	bool IsSelected() { return m_IsSelected; }
 	void OnSelected()
 	{
 		if (m_IsSelected) return;
@@ -202,17 +201,8 @@ class EditorObject : Building
 	{
 		EditorPrint("EditorObject::CreateBoundingBox");
 		
-		vector clip_info[2];
 		vector size = GetSize();
-		
-
-		float radius = m_WorldObject.ClippingInfo(clip_info); // idk do something cool w/ radius	
-		
-		//vector mins, maxs;
-		//m_WorldObject.GetWorldBounds(mins, maxs);
-		//clip_info[0] = mins - GetPosition();
-		//clip_info[1] = maxs - GetPosition();
-	
+			
 		//clip_info[0][1] = -clip_info[1][1];
 		vector position = AverageVectors(clip_info[0], clip_info[1]);
 		
@@ -276,10 +266,6 @@ class EditorObject : Building
 	vector GetBottomCenter()
 	{
 		if (!IsInitialized) return vector.Zero;
-		
-		vector clip_info[2];
-		m_WorldObject.ClippingInfo(clip_info);
-		//clip_info[0][1] = -clip_info[1][1];
 		vector result;
 		vector up = GetTransformAxis(1);
 		result = up * -(vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
@@ -290,10 +276,6 @@ class EditorObject : Building
 	vector GetTopCenter()
 	{
 		if (!IsInitialized) return vector.Zero;
-		
-		vector clip_info[2];
-		m_WorldObject.ClippingInfo(clip_info);
-		//clip_info[0][1] = -clip_info[1][1];
 		vector result;
 		vector up = GetTransformAxis(1);
 		result = up * (vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
@@ -321,10 +303,8 @@ class EditorObject : Building
 
 	vector GetSize()
 	{
-		vector clip_info[2];
 		vector result;
 
-		m_WorldObject.ClippingInfo(clip_info);
 		//clip_info[0][1] = -clip_info[1][1];	
 		result[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
 		result[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
@@ -390,7 +370,6 @@ class EditorObject : Building
 		
 		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(1,1,0,1,co)");
 		//m_BBoxBase.SetObjectTexture(m_BBoxBase.GetHiddenSelectionIndex("BoundingBoxBase"), "#(argb,8,8,3)color(1,1,0,1,co)");
-		
 	}
 	
 	void HideBoundingBox()
@@ -400,7 +379,7 @@ class EditorObject : Building
 		EditorPrint("EditorObject::HideBoundingBox");
 		BoundingBoxVisible = false;
 		for (int i = 0; i < 12; i++) {
-			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(0,1,0.94902,0.0,co)");
+			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "");
 			m_BBoxLines[i].Update();
 		}
 		

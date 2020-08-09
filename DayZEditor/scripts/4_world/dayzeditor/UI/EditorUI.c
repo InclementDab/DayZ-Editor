@@ -12,7 +12,6 @@ enum EditorCursor
 }
 
 
-
 class EditorUI: UIScriptedMenu
 {
 	private ref Widget m_Root;
