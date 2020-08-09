@@ -73,8 +73,16 @@ class EditorAction: Managed
 		EditorObject editor_object = GetEditor().GetObjectManager().GetSessionObjectById(params.param1);
 		GetEditor().GetObjectManager().SetSessionDataById(params.param1, editor_object.GetData());
 		delete editor_object;
-		//EditorEvents.SelectObject(this, editor_object);
-		//GetEditor().GetObjectManager().DeleteSelection();
 	}
 	
+	
+	void SetTransform(Param3<int, vector, vector> params)
+	{
+		Print("EditorObject::SetTransform");
+		EditorObject editor_object = GetEditor().GetObjectManager().GetSessionObjectById(params.param1);
+		editor_object.SetPosition(params.param2);
+		editor_object.SetOrientation(params.param3);
+		editor_object.Update();
+		
+	}	
 }

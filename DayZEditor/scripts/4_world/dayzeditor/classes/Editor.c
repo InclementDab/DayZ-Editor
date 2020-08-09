@@ -402,7 +402,7 @@ class Editor: Managed
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(TranslationWidgetDragUpdate);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(RotationWidgetDragUpdate);
 		
-		EditorAction action = new EditorAction("SetTransformArray", "SetTransformArray");
+		EditorAction action = new EditorAction("SetTransform", "SetTransform");
 		EditorObjectSet eo_set = GetObjectManager().GetSelectedObjects();
 		foreach (EditorObject editor_object: eo_set) {
 			action.InsertUndoParameter(editor_object, editor_object.TransformBeforeDrag);

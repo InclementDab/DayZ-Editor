@@ -108,7 +108,9 @@ class EditorObject
 	void ~EditorObject()
 	{
 		Print("~EditorObject");
-	
+		m_Data.Position = GetPosition();
+		m_Data.Orientation = GetOrientation();
+		
 		delete m_EditorObjectMarker; 
 		delete m_EditorObjectBrowser;
 		delete m_EditorMapMarker;
@@ -181,10 +183,18 @@ class EditorObject
 	*/
 	
 	vector GetPosition() { return m_WorldObject.GetPosition(); }
-	void SetPosition(vector pos) { m_WorldObject.SetPosition(pos); }
+	void SetPosition(vector pos) 
+	{ 
+		m_WorldObject.SetPosition(pos); 
+		m_Data.Position = pos;
+	}
 	
 	vector GetOrientation() { return m_WorldObject.GetOrientation(); }
-	void SetOrientation(vector pos) { m_WorldObject.SetOrientation(pos); }
+	void SetOrientation(vector pos) 
+	{ 
+		m_WorldObject.SetOrientation(pos);
+		m_Data.Orientation = pos; 
+	}
 	
 	void GetTransform(out vector mat[]) { m_WorldObject.GetTransform(mat); }
 	void SetTransform(vector mat[]) { m_WorldObject.SetTransform(mat); }
@@ -307,23 +317,12 @@ class EditorObject
 		return result;
 	}
 		
-	ref Param4<vector, vector, vector, vector> TransformBeforeDrag;
-	Param4<vector, vector, vector, vector> GetTransformArray()
-	{
-		vector mat[4];
-		GetTransform(mat);
-		return new Param4<vector, vector, vector, vector>(mat[0], mat[1], mat[2], mat[3]);
+	ref Param3<int, vector, vector> TransformBeforeDrag;
+	Param3<int, vector, vector> GetTransformArray()
+	{	
+		return new Param3<int, vector, vector>(GetID(), GetPosition(), GetOrientation());
 	}
 
-	void SetTransformArray(Param4<vector, vector, vector, vector> param)
-	{
-		Print("EditorObject::SetTransformArray");
-		vector mat[4];
-		
-		mat[0] = param.param1; mat[1] = param.param2; mat[2] = param.param3; mat[3] = param.param4;
-		SetTransform(mat);
-		Update();
-	}
 	
 
 	vector GetSize()
