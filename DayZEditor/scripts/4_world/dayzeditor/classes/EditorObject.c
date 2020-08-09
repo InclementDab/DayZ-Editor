@@ -52,7 +52,6 @@ class EditorObject
 	float LocalAngle; // temp
 	
 	static float line_width = 0.05;
-	private vector clip_info[2];
 	
 	private EditorObjectData m_Data;
 	EditorObjectData GetData() { return m_Data; }
@@ -68,12 +67,11 @@ class EditorObject
 		if (m_Data.Flags == EditorObjectFlags.ALL) {
 			m_Data.Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
 		}
-
+		
 		m_WorldObject = GetGame().CreateObjectEx(data.Type, data.Position, ECE_NONE);
 		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
 		Update();
 		
-		m_WorldObject.ClippingInfo(clip_info);
 		
 		
 		// Bounding Box
@@ -208,7 +206,7 @@ class EditorObject
 		m_WorldObject.PlaceOnSurfaceRotated(trans, pos, dx, dz, fAngle, align); 
 	}
 	
-	void ClippingInfo(out vector clip_info[]) { m_WorldObject.ClippingInfo(clip_info); }
+	void ClippingInfo(out vector clip_info[2]) { m_WorldObject.ClippingInfo(clip_info); }
 	
 	void SetDirection(vector direction) { m_WorldObject.SetDirection(direction); }
 	
@@ -241,6 +239,8 @@ class EditorObject
 		
 		vector size = GetSize();
 			
+		vector clip_info[2];
+		ClippingInfo(clip_info);
 		//clip_info[0][1] = -clip_info[1][1];
 		vector position = AverageVectors(clip_info[0], clip_info[1]);
 		
@@ -299,24 +299,28 @@ class EditorObject
 	}
 	
 	
-
-
+	
 	vector GetBottomCenter()
-	{
+	{		
+		vector clip_info[2];
+		ClippingInfo(clip_info);
+		//clip_info[0][1] = -clip_info[1][1];
 		vector result;
 		vector up = GetTransformAxis(1);
-		float dist = vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, 0, 0));
-		
-		result = up * -(dist);
+		result = up * -(vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
 		result += GetPosition();
+	
 		return result;
 	}
 	
 	vector GetTopCenter()
-	{
+	{		
+		vector clip_info[2];
+		ClippingInfo(clip_info);
+		//clip_info[0][1] = -clip_info[1][1];
 		vector result;
 		vector up = GetTransformAxis(1);
-		result = up * (vector.Distance(Vector(0, 0, 0), Vector(0, clip_info[1][1], 0)));
+		result = up * (vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
 		result += GetPosition();
 		return result;
 	}
@@ -333,7 +337,8 @@ class EditorObject
 	{
 		vector result;
 
-		//clip_info[0][1] = -clip_info[1][1];	
+		vector clip_info[2];
+		ClippingInfo(clip_info);
 		result[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
 		result[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
 		result[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
@@ -346,7 +351,6 @@ class EditorObject
 	void SetTransformWithSnapping(vector transform[4])
 	{	
 		SetTransform(transform);
-		Update();
 		
 
 		// I cant wait to delete this... but not yet

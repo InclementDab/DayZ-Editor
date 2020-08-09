@@ -15,7 +15,7 @@ class EditorSettings
 	static bool MAGNET_PLACEMENT = false;
 	static bool MAINTAIN_HEIGHT = false;
 	static bool SNAPPING_MODE = false;
-
+	static bool COLLIDE_ON_DRAG = false;
 	
 	// private members
 		

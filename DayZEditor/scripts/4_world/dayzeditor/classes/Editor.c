@@ -243,6 +243,7 @@ class Editor: Managed
 		ref EditorMapGroupProto proto_data = new EditorMapGroupProto(m_LootEditTarget); 
 		EditorXMLManager.LoadMapGroupProto(proto_data);
 		m_LootEditMode = true;
+		EditorSettings.COLLIDE_ON_DRAG = true;
 	}
 	
 	void PlaceholderRemoveLootMode()
@@ -259,6 +260,7 @@ class Editor: Managed
 		camera.SetPosition(m_PositionBeforeLootEditMode);
 		//camera.SelectTarget(null);
 		m_LootEditMode = false;
+		EditorSettings.COLLIDE_ON_DRAG = false;
 	}
 	
 	bool IsLootEditActive() { return m_LootEditMode; }
@@ -552,7 +554,6 @@ class Editor: Managed
 	void ObjectDragUpdate(notnull EditorObject target)
 	{
 
-		float starttime = TickCount(0);
 		Input input = GetGame().GetInput();
 		if (input.LocalRelease("UAFire")) {
 			EditorEvents.DropInvoke(this, target);
@@ -567,21 +568,24 @@ class Editor: Managed
 		target.GetTransform(start_transform); 
 		target.GetTransform(object_transform);
 		
+		
 		// Raycast ground below object
 		set<Object> o;
 		vector ground, ground_dir; int component;
 		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetWorldObject(), false, true); // set to ground only
 
-		vector cursor_position = MousePosToRay(o, target.GetWorldObject(), EditorSettings.OBJECT_VIEW_DISTANCE, 0, true);
+		vector cursor_position = MousePosToRay(o, target.GetWorldObject(), EditorSettings.OBJECT_VIEW_DISTANCE, 0, !EditorSettings.COLLIDE_ON_DRAG);
 		vector surface_normal = GetGame().SurfaceGetNormal(ground[0], ground[2]);
 		float surface_level = GetGame().SurfaceY(ground[0], ground[2]);
 	
-		
-		
+		// debug
+		Editor.DebugObject0.SetPosition(cursor_position);
+
 		// Handle Z only motion
+		
 		if (input.LocalValue("UALookAround")) {	
 			cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground);
-			cursor_position[1] = cursor_position[1] + object_size[1]/2;
+			cursor_position[1] = cursor_position[1] + object_size[1]/2; // offset building height
 			object_transform[3] = ground + object_transform[1] * vector.Distance(ground, cursor_position);
 		
 		// Handle XY Rotation
@@ -604,7 +608,7 @@ class Editor: Managed
 				
 			else {
 				object_transform[3] = cursor_position;
-				object_transform[3][1] = object_transform[3][1] + object_size[1]/2;					
+				//object_transform[3][1] = object_transform[3][1] + object_size[1] / 2;					
 			} 
 		
 			object_transform[0] = "1 0 0";
@@ -612,8 +616,9 @@ class Editor: Managed
 			object_transform[2] = "0 0 1";
 			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
 		}
+		
 	
-		target.SetTransformWithSnapping(object_transform);
+		target.SetTransform(object_transform);
 		target.Update();
 		
 		// This handles all other selected objects

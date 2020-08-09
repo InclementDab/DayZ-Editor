@@ -221,7 +221,6 @@ class EditorObjectMarker: UILinkedObject
 		Print("EditorObjectMarker::OnDrag");
 		
 		if (GetEditor().IsPlacing()) return false;
-		
 		EditorEvents.DragInvoke(this, m_EditorObject);
 		return true;
 	}
@@ -233,7 +232,7 @@ class EditorObjectMarker: UILinkedObject
 		return true;
 	}
 	
-	
+
 	// todo Editor UI Manager that manages modal windows correctly :)
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{		
