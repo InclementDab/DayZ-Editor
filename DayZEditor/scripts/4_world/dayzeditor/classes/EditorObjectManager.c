@@ -91,20 +91,35 @@ class EditorObjectManager: Managed
 	}
 	
 	
-	EditorObject CreateObject(string name, vector position, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	void CreateObjects(ref EditorObjectDataSet data_list)
+	{
+		EditorPrint("EditorObjectManager::CreateObjects");
+		
+		EditorAction action = new EditorAction("Delete", "Create");
+		foreach (EditorObjectData editor_object_data: data_list) {
+			
+			editor_object_data.ID = m_SessionData.Count();
+			m_SessionData.Insert(editor_object_data);
+			EditorObject editor_object = new EditorObject(editor_object_data);
+			m_SessionCache.Insert(editor_object.GetID(), editor_object);
+			
+			ref Param1<int> params = new Param1<int>(editor_object.GetID());
+			action.InsertUndoParameter(editor_object, params);
+			action.InsertRedoParameter(editor_object, params);
+			
+		}
+		
+		InsertAction(action);		
+	}
+	
+	
+	EditorObject CreateObject(ref EditorObjectData editor_object_data)
 	{		
 		EditorPrint("EditorObjectManager::CreateObject");
-
-		//EditorObject editor_object = GetGame().CreateObjectEx("EditorObject", position, ECE_NONE);
-		EditorObjectData editor_object_data = new EditorObjectData();
-		editor_object_data.Type = name;
-		editor_object_data.Position = position;
-		editor_object_data.Flags = flags;
-		editor_object_data.ID = m_SessionData.Count();
 		
+		editor_object_data.ID = m_SessionData.Count();
 		m_SessionData.Insert(editor_object_data);
 		EditorObject editor_object = new EditorObject(editor_object_data);
-		
 		m_SessionCache.Insert(editor_object.GetID(), editor_object);
 		
 
@@ -113,9 +128,7 @@ class EditorObjectManager: Managed
 		action.InsertUndoParameter(editor_object, params);
 		action.InsertRedoParameter(editor_object, params);
 		InsertAction(action);
-		
-		
-		
+
 		return editor_object;
 	}
 	
@@ -245,7 +258,8 @@ class EditorObjectManager: Managed
 		
 		foreach (EditorWorldObject pasted_object: data) {
 			pasted_object.m_Transform[3] = avg_position - pasted_object.m_Transform[3] + Editor.CurrentMousePosition;
-			EditorObject editor_object = CreateObject(pasted_object.m_Typename, pasted_object.m_Transform[3]);
+			
+			EditorObject editor_object = CreateObject(new EditorObjectData(pasted_object.m_Typename, pasted_object.m_Transform[3]));
 			EditorEvents.SelectObject(this, editor_object);
 		}	
 	}

@@ -280,8 +280,8 @@ class Editor: Managed
 		vector mat[4];
 		
 		
-		EditorObject editor_object = GetEditor().GetObjectManager().CreateObject(e.GetType(), e.GetPosition());
-		editor_object.SetOrientation(e.GetOrientation());
+		EditorObject editor_object = GetEditor().GetObjectManager().CreateObject(new EditorObjectData(e.GetType(), e.GetPosition(), e.GetOrientation()));
+		
 		
 		if (!input.LocalValue("UATurbo")) {
 			EditorEvents.ClearSelection(this);
@@ -320,7 +320,8 @@ class Editor: Managed
 		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
 		
 		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
-			EditorObject e_object =  GetObjectManager().CreateObject(load_object.m_Typename, load_object.m_Transform[3]);
+			
+			EditorObject e_object =  GetObjectManager().CreateObject(new EditorObjectData(load_object.m_Typename, load_object.m_Transform[3]));
 			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
 		}
 		
@@ -577,12 +578,11 @@ class Editor: Managed
 	
 		
 		// debug
-		//Editor.DebugObject0.SetPosition(cursor_position);
 
 		// Handle Z only motion
 		if (input.LocalValue("UALookAround")) {	
 			cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground);
-			cursor_position[1] = cursor_position[1] + object_size[1]/2; // offset building height
+			cursor_position[1] = cursor_position[1] + object_size[1]/2;
 			object_transform[3] = ground + object_transform[1] * vector.Distance(ground, cursor_position);
 		
 		// Handle XY Rotation

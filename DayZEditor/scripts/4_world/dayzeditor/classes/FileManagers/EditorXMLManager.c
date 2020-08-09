@@ -249,7 +249,9 @@ class EditorMapGroupProto: XMLCallback
 						vector loot_pos = loot_point.GetPosition();
 						
 						//Object loot_display = GetGame().CreateObjectEx("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), ECE_NONE);
-						EditorObject loot_display = GetEditor().GetObjectManager().CreateObject("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), EditorObjectFlags.OBJECTMARKER);
+						
+						
+						EditorObject loot_display = GetEditor().GetObjectManager().CreateObject(new EditorObjectData("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), vector.Zero, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.BBOX));
 						
 						// might be bad
 						m_Building.AddChild(loot_display.GetWorldObject(), -1);

@@ -9,6 +9,7 @@ enum EditorObjectFlags
 	ALL = 256
 };
 
+typedef ref array<ref EditorObjectData> EditorObjectDataSet;
 class EditorObjectData
 {	
 	string Type;
@@ -16,8 +17,13 @@ class EditorObjectData
 	
 	vector Position;
 	vector Orientation;
-	float Scale; // AnimFlags
+	float Scale;
 	EditorObjectFlags Flags;
+	
+	void EditorObjectData(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
+	{
+		Type = type; Position = position; Orientation = orientation; Flags = flags;
+	}
 	
 }
 
@@ -56,8 +62,7 @@ class EditorObject
 	
 	void EditorObject(EditorObjectData data)
 	{
-		Print("EditorObject");
-		
+		EditorPrint("EditorObject");
 		m_Data = data;
 		
 		if (m_Data.Flags == EditorObjectFlags.ALL) {
@@ -300,7 +305,9 @@ class EditorObject
 	{
 		vector result;
 		vector up = GetTransformAxis(1);
-		result = up * -(vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
+		float dist = vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, 0, 0));
+		
+		result = up * -(dist);
 		result += GetPosition();
 		return result;
 	}
@@ -309,7 +316,7 @@ class EditorObject
 	{
 		vector result;
 		vector up = GetTransformAxis(1);
-		result = up * (vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
+		result = up * (vector.Distance(Vector(0, 0, 0), Vector(0, clip_info[1][1], 0)));
 		result += GetPosition();
 		return result;
 	}

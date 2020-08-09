@@ -105,18 +105,19 @@ class EditorBrush
 		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
+		ref EditorObjectDataSet data_set = new EditorObjectDataSet();
+		
 		for (int i = 0; i < m_BrushDensity * 100; i++) {
-						
+			
+			
 			vector pos = position;
 			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			
 			string object_name = m_BrushSettings.PlaceableObjects.Get(Math.RandomInt(0, m_BrushSettings.PlaceableObjects.Count() - 1));
-			//Object placed_object = GetGame().CreateObjectEx(object_name, pos, ECE_NONE);
-			EditorObject placed_object = m_ObjectManager.CreateObject(object_name, pos, EditorObjectFlags.NONE);
-		
+			Object placed_object = GetGame().CreateObjectEx(object_name, pos, ECE_NONE);
 			
-			// remove this once we change Object to a lower abstracted version of EditorObject
+		
 			vector clip_info[2];
 			vector size;
 			placed_object.ClippingInfo(clip_info);
@@ -125,15 +126,18 @@ class EditorBrush
 			size[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
 			
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2.4;
-			placed_object.SetPosition(pos);
 			
 			vector direction = Math3D.GetRandomDir();
 			direction[1] = Math.RandomFloat(-0.05, 0.05);
 			placed_object.SetDirection(direction);
 			
 			
+			data_set.Insert(new EditorObjectData(object_name, pos, placed_object.GetOrientation(), EditorObjectFlags.NONE));
 			
+			GetGame().ObjectDelete(placed_object);		
 		}
+		
+		m_ObjectManager.CreateObjects(data_set);
 	}
 	
 	void SetSettings(EditorBrushSettings settings) { m_BrushSettings = settings; }

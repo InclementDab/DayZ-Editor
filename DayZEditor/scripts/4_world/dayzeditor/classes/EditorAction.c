@@ -49,27 +49,27 @@ class EditorAction: Managed
 	
 	void InsertUndoParameter(EditorObject source, ref Param params)
 	{
-		Print("InsertUndoParameter");
+		EditorPrint("InsertUndoParameter");
 		UndoParameters.Insert(source.GetID(), params);
 	}	
 	
 	void InsertRedoParameter(EditorObject source, ref Param params)
 	{
-		Print("InsertRedoParameter");
+		EditorPrint("InsertRedoParameter");
 		RedoParameters.Insert(source.GetID(), params);
 	}
 	
 	
 	void Create(Param1<int> params)
 	{
-		Print("EditorAction::Create");
+		EditorPrint("EditorAction::Create");
 		EditorObjectData data = GetEditor().GetObjectManager().GetSessionDataById(params.param1);
 		GetEditor().GetObjectManager().SetSessionObjectById(params.param1, new EditorObject(data));
 	}
 	
 	void Delete(Param1<int> params)
 	{
-		Print("EditorAction::Delete");		
+		EditorPrint("EditorAction::Delete");		
 		EditorObject editor_object = GetEditor().GetObjectManager().GetSessionObjectById(params.param1);
 		GetEditor().GetObjectManager().SetSessionDataById(params.param1, editor_object.GetData());
 		delete editor_object;
@@ -78,7 +78,7 @@ class EditorAction: Managed
 	
 	void SetTransform(Param3<int, vector, vector> params)
 	{
-		Print("EditorObject::SetTransform");
+		EditorPrint("EditorObject::SetTransform");
 		EditorObject editor_object = GetEditor().GetObjectManager().GetSessionObjectById(params.param1);
 		editor_object.SetPosition(params.param2);
 		editor_object.SetOrientation(params.param3);
