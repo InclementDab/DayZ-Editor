@@ -31,7 +31,7 @@ class EditorBrushSettings
 
 class EditorBrush
 {
-	protected BrushBase m_BrushDecal;
+	protected EntityAI m_BrushDecal;
 	protected ref EditorBrushSettings m_BrushSettings;
 
 	protected static float m_BrushRadius = 20;
@@ -49,19 +49,29 @@ class EditorBrush
 	
 	void EditorBrush(EditorBrushSettings settings)
 	{
-		Print("EditorBrush");
+		EditorPrint("EditorBrush");
 		m_BrushSettings = settings;
 		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
-		//m_BrushDecal.SetTexture();
 		m_ObjectManager = GetEditor().GetObjectManager();
+		
+		if (m_BrushSettings.PlaceableObjects.Count() == 0)
+			return;
+		
+		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
 	
 	void ~EditorBrush()
 	{
-		Print("~EditorBrush");
+		EditorPrint("~EditorBrush");
 		GetGame().ObjectDelete(m_BrushDecal);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(UpdateBrush);
+	}
+	
+	void SetBrushTexture(string texture)
+	{
+		m_BrushDecal.SetObjectTexture(m_BrushDecal.GetHiddenSelectionIndex("BrushBase"), texture);
+		m_BrushDecal.Update();
 	}
 	
 	
@@ -149,6 +159,12 @@ class EditorBrush
 
 class DeleteBrush: EditorBrush
 {	
+	
+	void DeleteBrush(EditorBrushSettings settings)
+	{
+		EditorPrint("DeleteBrush");
+		SetBrushTexture("DayZEditor\\Editor\\data\\BrushDelete.paa");
+	}
 	
 	override void DuringMouseDown(vector position)
 	{
