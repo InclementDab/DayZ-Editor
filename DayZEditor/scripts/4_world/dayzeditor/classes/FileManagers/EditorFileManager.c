@@ -1,6 +1,101 @@
 
 
 
+
+typedef FileSerializer Cerealizer;
+
+static FileDialogResult ImportVPPData(out ref EditorObjectDataSet data, string filename)
+{
+	Cerealizer file = new Cerealizer();
+	if (!FileExist(filename)) {
+		return FileDialogResult.NOT_FOUND;
+	}
+	
+	ref VPPToEditorBuildingSet bSet;
+	if (file.Open(filename, FileMode.READ)) {
+		file.Read(bSet);
+		file.Close();
+		
+	} else return FileDialogResult.UNKNOWN_ERROR;
+	
+	if (!bSet) return FileDialogResult.UNKNOWN_ERROR;
+	
+	ref array<ref VPPToEditorSpawnedBuilding> spawned_buildings = new array<ref VPPToEditorSpawnedBuilding>();
+	bSet.GetSpawnedBuildings(spawned_buildings);
+	foreach (ref VPPToEditorSpawnedBuilding building: spawned_buildings) {
+		string name = building.GetName();
+		TStringArray name_split = new TStringArray();
+		name.Split("-", name_split);
+		data.InsertEditorData(new EditorObjectData(name_split.Get(0), building.GetPosition(), building.GetOrientation(), EditorObjectFlags.ALL));
+	}
+	
+	return FileDialogResult.SUCCESS;
+}
+
+static FileDialogResult ExportVPPData(ref EditorObjectDataSet data, string filename, string set_name = "DayZEditor Export")
+{
+
+	Cerealizer file = new Cerealizer();
+	
+	ref VPPToEditorBuildingSet bSet = new VPPToEditorBuildingSet(set_name);
+	
+	foreach (EditorObjectData object_data: data) {
+		bSet.AddBuilding(object_data.Type, object_data.Position, object_data.Orientation, true);
+		bSet.SetActive(true);
+	}
+	
+	
+	if (file.Open(filename, FileMode.APPEND)) {
+		file.Write(bSet);
+		file.Close();	
+	}
+	
+	return FileDialogResult.SUCCESS;
+}
+
+class ExpansionImportData
+{
+
+	static void ReadFromFile(out ref EditorObjectDataSet data, string filename)
+	{
+		FileHandle handler = OpenFile(filename, FileMode.READ);
+		
+		string name;
+		vector position, rotation;
+		while (GetObjectFromFile(handler, name, position, rotation)) {	
+			
+			string model_name = GetGame().GetModelName(name);
+			if (model_name == "UNKNOWN_P3D_FILE") {
+				Print(string.Format("%1 is not a valid Object Type!", name));
+				continue;
+			}
+					
+			data.Insert(new EditorObjectData(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
+		}
+		
+		CloseFile(handler);
+	}
+	
+    private static bool GetObjectFromFile(FileHandle file, out string name, out vector position, out vector rotation, out string special = "false")
+    {                
+        string line;
+        int lineSize = FGets( file, line );
+        
+        if ( lineSize < 1 )
+            return false;
+        
+        ref TStringArray tokens = new TStringArray;
+        line.Split( "|", tokens );
+
+        name = tokens.Get( 0 );        
+        position = tokens.Get( 1 ).ToVector();
+        rotation = tokens.Get( 2 ).ToVector();    
+        special = tokens.Get( 3 );
+
+        return true;
+    }
+}
+
 class COMImportData
 {
 	string name;
@@ -12,36 +107,34 @@ class COMImportData
 	}
 }
 
-class EditorWorldObject
-{
-	string m_Typename;
-	vector m_Transform[4];
-}
+
 
 class EditorWorldData
 {
 	string MapName;
 	vector CameraPosition[4];
-	ref array<ref EditorWorldObject> WorldObjects;
+	ref EditorObjectDataSet EditorObjects;
 	
 	void EditorWorldData()
 	{
-		WorldObjects = new array<ref EditorWorldObject>();
+		EditorObjects = new EditorObjectDataSet();
 	}	
 }
 
 enum ExportMode 
 {
 	TERRAINBUILDER,
-	COMFILE, 
 	EXPANSION,
+	COMFILE,
 	VPP
 }
 
 enum ImportMode
 {
-	MAPFILE, 
-	COMFILE
+	TERRAINBUILDER,
+	EXPANSION, 
+	COMFILE,
+	VPP
 }
 
 enum HeightType 
@@ -52,7 +145,8 @@ enum HeightType
 
 class ExportSettings
 {
-	static HeightType ExportHeightType;
+	ExportMode ExportFileMode;
+	HeightType ExportHeightType;
 }
 
 
@@ -69,21 +163,18 @@ class EditorFileManager
 {
 
 
-	static FileDialogResult SaveFile(ref EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
+	static FileDialogResult Save(ref EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
 	{
 		string file = filedir + filename + ".dze";
 		if (FileExist(file)) {
-			
-			GetEditor().GetUIManager().GetEditorUI().CreateDialog();
-	
-			
+			GetEditor().GetUIManager().GetEditorUI().CreateDialog();			
 		}
 		
 		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(file, data);
 		return FileDialogResult.SUCCESS;
 	}
 	
-	static FileDialogResult LoadFile(out EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
+	static FileDialogResult Open(out EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
 	{
 		string file = filedir + filename + ".dze";
 		if (!FileExist(file)) {
@@ -94,10 +185,12 @@ class EditorFileManager
 		return FileDialogResult.SUCCESS;
 	}
 	
-	static EditorWorldData ImportFromFile(string filename, ImportMode mode = ImportMode.COMFILE)
-	{
-		EditorWorldData data = new EditorWorldData();
-
+	static FileDialogResult Import(out EditorWorldData data, string filename, ImportMode mode = ImportMode.COMFILE)
+	{		
+		if (!FileExist(filename)) {
+			return FileDialogResult.NOT_FOUND;
+		}
+		
 		switch (mode) {
 			
 			case (ImportMode.COMFILE): {
@@ -106,33 +199,49 @@ class EditorFileManager
 				JsonFileLoader<COMImportData>.JsonLoadFile(filename, com_data);
 				
 				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
-					Print("ImportFromFile::COMFILE::Import " + param.param1);
-					vector transform[4];
-					param.param3.RotationMatrixFromAngles(transform);
-					transform[3] = param.param2;
-					
-					EditorWorldObject world_object = new EditorWorldObject();
-					world_object.m_Typename = param.param1;
-					world_object.m_Transform = transform;
-					
-					data.WorldObjects.Insert(world_object);
+					Print("ImportFromFile::COMFILE::Import " + param.param1);					
+					data.EditorObjects.Insert(new EditorObjectData(param.param1, param.param2, param.param3));
 				}
+				
+				break;
+			}
+			
+			case (ImportMode.EXPANSION): {
+				Print("EditorFileManager::Import::EXPANSION");
+				ExpansionImportData.ReadFromFile(data.EditorObjects, filename);
+
+				break;
+			}
+			
+			case (ImportMode.VPP): {
+				Print("EditorFileManager::Import::VPP");
+				return ImportVPPData(data.EditorObjects, filename);
+			}
+			
+			default: {
+				
+				Print(string.Format("%1 not implemented!", typename.EnumToString(ImportMode, mode)));
+				break;
 			}
 		}
 
 		
-		return data;
+		return FileDialogResult.SUCCESS;
 		
 	}
 	
-	static void ExportToFile(EditorObjectSet export_objects, ExportMode mode = ExportMode.TERRAINBUILDER, string filename = "export", HeightType height_type = HeightType.RELATIVE)
+	static FileDialogResult Export(ref EditorWorldData data, string filename, ref ExportSettings export_settings)
 	{
-		Print("Exporting to File...");
-		
-		switch (mode) {
+		Print("EditorFileManager::Export");		
+		switch (export_settings.ExportFileMode) {
 			
 			case ExportMode.EXPANSION: {
 				filename += ".map";
+				break;
+			}
+			
+			case ExportMode.VPP: {
+				filename += ".vpp";
 				break;
 			}
 			
@@ -143,16 +252,26 @@ class EditorFileManager
 			
 		}
 		
-		filename = "$profile:Editor/Export" + filename;
-		
-		
+		filename = "$profile:Editor/Export/" + filename;
 		DeleteFile(filename);
-		FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
+		
+		/*
+		//FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
 		if (handle == 0) {
-			Print("ExportToFile Failed: 0");
-			return;
+			return FileDialogResult.IN_USE;
+		}*/
+		
+		
+		switch (export_settings.ExportFileMode) {
+			
+			case ExportMode.VPP: {
+				return ExportVPPData(data.EditorObjects, filename);
+			}
+			
 		}
 		
+		
+		/*
 		foreach (EditorObject editor_object: export_objects) {
 						
 			vector position = editor_object.GetPosition();
@@ -162,23 +281,23 @@ class EditorFileManager
 	
 			vector terrainbuilder_offset = Vector(200000, 0, 0);
 			string line;
-			switch (mode) {
+			switch (export_settings.ExportFileMode) {
 				
 				case ExportMode.TERRAINBUILDER: {
 					// "construction_house2";206638.935547;6076.024414;146.000015;0.000000;0.000000;1.000000;
 					// Name, X, Y, Yaw, Pitch, Roll, Scale, Relative Height
 					array<LOD> testlods = new array<LOD>();
-					editor_object.GetObject().GetLODS(testlods);
+					editor_object.GetWorldObject().GetLODS(testlods);
 					
 					foreach (LOD lod: testlods) {
-						Print(editor_object.GetObject().GetLODName(lod));
+						//Print(editor_object.GetWorldObject().GetLODName(lod));
 						array<Selection> selections = new array<Selection>();
 						lod.GetSelections(selections);
 						foreach (Selection s: selections) {
 							
-							Print(s.GetName());
+							//Print(s.GetName());
 							for (int fff = 0; fff < s.GetVertexCount(); fff++) {
-								Print(s.GetVertexPosition(lod, fff));
+								//Print(s.GetVertexPosition(lod, fff));
 							}
 						}
 					}
@@ -207,12 +326,6 @@ class EditorFileManager
 					break;
 				}
 				
-				case ExportMode.VPP: {
-					
-					//line = string.Format("%1|%2 %3 %4|%5 %6 %7", editor_object.GetType(), position[0], position[1], position[2], orientation[0], orientation[1], orientation[2]);
-					//FPrintln(handle, line);
-					break;
-				}
 				
 				default: {
 					FPrintln(handle, "Line Export Failure");
@@ -222,11 +335,10 @@ class EditorFileManager
 				
 				
 			} 
-		}
+		}*/
 		
-		CloseFile(handle);
 		
-		GetEditor().GetUIManager().NotificationCreate("Exported!");
-		
+
+		return FileDialogResult.UNKNOWN_ERROR;
 	}
 }

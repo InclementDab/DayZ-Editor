@@ -5,9 +5,13 @@ static const float ALPHA_ON_HIDE = 0.25;
 
 class EditorMapMarker: UILinkedObject
 {	
+	private MapWidget m_MapWidget;
+	MapWidget GetMapWidget() { return m_MapWidget; }
+	
 	void EditorMapMarker()
 	{
 		Print("EditorMapMarker");
+		
 	}
 	
 	void ~EditorMapMarker()
@@ -18,15 +22,14 @@ class EditorMapMarker: UILinkedObject
 	
 	override void Update()
 	{
-
-		MapWidget map_widget = MapWidget.Cast(m_Root.GetParent());
-		vector pos = map_widget.MapToScreen(m_EditorObject.GetPosition());
+		m_MapWidget = MapWidget.Cast(m_Root.GetParent());
+		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());
 		
 		// -5 for cursor offset
 		// -10 to put cursor on center
 		m_Root.SetPos(pos[0] - 15, pos[1] - 15);
 		
-		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject) || MouseInside) 
+		if (m_EditorObject.IsSelected() || MouseInside) 
 			m_Root.SetAlpha(ALPHA_ON_SHOW);
 		else 
 			m_Root.SetAlpha(ALPHA_ON_HIDE);
@@ -60,17 +63,20 @@ class EditorMapMarker: UILinkedObject
 		if (GetEditor().IsPlacing()) return false;
 		
 		// allows multiple objects to be dragged
-		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) 
+		if (m_EditorObject.IsSelected()) 
 			return true;
 		
 		// We want to Toggle selection if you are holding control
 		if (input.LocalValue("UARunWalkTemp"))
 			GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);
-		else
-			GetEditor().GetObjectManager().SelectObject(m_EditorObject, !input.LocalValue("UATurbo"));
-		
+		else {
+			if (!input.LocalValue("UATurbo"))
+				EditorEvents.ClearSelection(this);
+			
+			EditorEvents.SelectObject(this, m_EditorObject);
+		}
 		 // Blocks map from creating selection box
-		return true;
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	
 	override bool OnDrag(Widget w, int x, int y)
@@ -85,6 +91,20 @@ class EditorMapMarker: UILinkedObject
 	{
 		Print("EditorMapMarker::OnDrop");	
 		EditorEvents.DropInvoke(this, m_EditorObject);
+		return true;
+	}
+	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		Print("EditorMapMarker::OnFocus");
+		EditorEvents.SelectObject(this, m_EditorObject);
+		return true;
+	}
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		Print("EditorMapMarker::OnFocusLost");
+		EditorEvents.DeselectObject(this, m_EditorObject);
 		return true;
 	}
 }
@@ -110,9 +130,9 @@ class EditorObjectMarker: UILinkedObject
 		if (EditorSettings.MAINTAIN_HEIGHT) {
 			set<Object> o;
 			vector ground_dir; int component;
-			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject, false, true); // set to ground only
-		} 
-		else position = m_EditorObject.GetBottomCenter();
+			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject.GetWorldObject(), false, true); // set to ground only
+			
+		} else position = m_EditorObject.GetBottomCenter();
 	
 		
 		vector screenpos = GetGame().GetScreenPos(position);
@@ -125,7 +145,7 @@ class EditorObjectMarker: UILinkedObject
 			m_Root.Show(screenpos[2] > 0 && screenpos[2] < 1000);			
 		}
 		
-		if (GetEditor().GetObjectManager().IsSelected(m_EditorObject) || MouseInside) {
+		if (m_EditorObject.IsSelected() || MouseInside) {
 			m_Root.SetAlpha(ALPHA_ON_SHOW);
 		} else {
 			m_Root.SetAlpha(ALPHA_ON_HIDE);
@@ -166,20 +186,29 @@ class EditorObjectMarker: UILinkedObject
 			if (GetEditor().IsPlacing()) return false;
 			
 			// required for multiple objects to be dragged
-			if (GetEditor().GetObjectManager().IsSelected(m_EditorObject)) 
+			if (m_EditorObject.IsSelected()) 
 				return true;
 			
 			// We want to Toggle selection if you are holding control
 			if (input.LocalValue("UARunWalkTemp"))
 				GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);
-			else
-				GetEditor().GetObjectManager().SelectObject(m_EditorObject, !input.LocalValue("UATurbo"));
+			else {
+				if (!input.LocalValue("UATurbo"))
+					EditorEvents.ClearSelection(this);
+				
+				EditorEvents.SelectObject(this, m_EditorObject);
+			}
 			
 			
 		} else if (button == 1) {
-			Widget ctx_menu = m_EditorObject.GetContextMenu();
-			ctx_menu.Show(true);
-			ctx_menu.SetPos(x, y);
+			
+			/*
+			m_EditorObjectContextMenu = new UILinkedObject();
+			m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout");
+			m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
+			m_EditorObjectContextMenu.SetObject(this);
+			m_EditorObjectContextWidget.Show(false);
+			*/
 		} else return false;
 
 
@@ -192,7 +221,6 @@ class EditorObjectMarker: UILinkedObject
 		Print("EditorObjectMarker::OnDrag");
 		
 		if (GetEditor().IsPlacing()) return false;
-		
 		EditorEvents.DragInvoke(this, m_EditorObject);
 		return true;
 	}
@@ -204,13 +232,17 @@ class EditorObjectMarker: UILinkedObject
 		return true;
 	}
 	
-	
+
 	// todo Editor UI Manager that manages modal windows correctly :)
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
-	{
-		m_EditorObject.ShowPropertiesWindow(true);
-		
-		
+	{		
+			/*
+		m_EditorObjectPropertiesWindow = new UILinkedObject();
+		m_EditorObjectPropertiesWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorObjectProperties.layout");
+		m_EditorObjectPropertiesWidget.GetScript(m_EditorObjectPropertiesWindow);
+		m_EditorObjectPropertiesWindow.SetObject(this);
+		m_EditorObjectPropertiesWidget.Show(false);		
+		*/
 		return true;
 	}
 	
@@ -242,6 +274,8 @@ class UILinkedObject : ScriptedWidgetEventHandler
 		m_EditorObject = target;
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
+	
+	EditorObject GetEditorObject() { return m_EditorObject; }
 	
 	void OnWidgetScriptInit(Widget w)
 	{

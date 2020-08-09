@@ -17,12 +17,12 @@ class EditorObjectPropertiesDialog: UILinkedObject
 	}
 	
 	
-	protected void OnWidgetScriptInit(Widget w)
+	protected override void OnWidgetScriptInit(Widget w)
 	{
 		Print("EditorObjectMarkerHandler::OnWidgetScriptInit");
 		super.OnWidgetScriptInit(w);
 		
-		x_pos = m_Root.FindAnyWidget("pos_x");
+		x_pos = TextWidget.Cast(m_Root.FindAnyWidget("pos_x"));
 				
 		m_ApplyButton 		= ButtonWidget.Cast(m_Root.FindAnyWidget("SelectButton"));
 		m_CancelButton 		= ButtonWidget.Cast(m_Root.FindAnyWidget("CloseButton"));

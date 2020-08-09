@@ -1,4 +1,26 @@
 
+class EditorXMLCallback<Class T>: XMLCallback
+{
+	private T m_Data;
+	T GetData() { return m_Data; }
+
+	private bool m_Success = false;
+	override void OnFailure(ref XMLDocument document)
+	{
+		Print("EditorXMLCallback::OnFailure");
+		m_Failed = false;
+	}
+	
+	override void OnSuccess(ref XMLDocument document)
+	{
+		Print("EditorXMLCallback::OnSuccess");
+		m_Success = true;
+	}
+	
+	bool GetSuccess() { return m_Success; }
+}
+
+
 class EditorLootPoint
 {
 	private vector m_Position;
@@ -92,14 +114,14 @@ class EditorMapGroupProto: XMLCallback
 {
 	
 	ref array<ref EditorMapGroupProtoGroup> m_MapGroupProto;
-	//ref array<ref EditorMapGroupProtoGroup> GetMapGroupData() { return m_MapGroupProto; }
+	ref array<ref EditorMapGroupProtoGroup> GetData() { return m_MapGroupProto; }
 	
 	private Object m_Building;
 	void EditorMapGroupProto(Object building)
 	{
 		m_Building = building;
 	}
-	
+		
 	override void OnSuccess(ref XMLDocument document)
 	{
 		Print("EditorMapGroupProto::OnSuccess");
@@ -226,9 +248,13 @@ class EditorMapGroupProto: XMLCallback
 					foreach (EditorLootPoint loot_point: loot_points) {
 						vector loot_pos = loot_point.GetPosition();
 						
-						Object loot_display = GetGame().CreateObjectEx("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), ECE_NONE);
-						//EditorObject loot_display = GetEditor().GetObjectManager().CreateObject("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]));
-						m_Building.AddChild(loot_display, -1);
+						//Object loot_display = GetGame().CreateObjectEx("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), ECE_NONE);
+						
+						
+						EditorObject loot_display = GetEditor().GetObjectManager().CreateObject(new EditorObjectData("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), vector.Zero, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.BBOX));
+						
+						// might be bad
+						m_Building.AddChild(loot_display.GetWorldObject(), -1);
 						
 						
 						
@@ -257,6 +283,85 @@ class EditorMapGroupProto: XMLCallback
 	}
 }
 
+// abstract to EditorXMLCallback
+class XMLEditorBrushes: XMLCallback
+{
+	private ref EditorBrushSettingsSet m_Data = new EditorBrushSettingsSet();
+	EditorBrushSettingsSet GetData() { return m_Data; }
+	
+	private bool m_Success = true;
+	
+	void XMLEditorBrushes()
+	{
+		Print("XMLEditorBrushes");
+	}
+		
+	override void OnSuccess(ref XMLDocument document)
+	{
+		Print("XMLEditorBrushes::OnSuccess");
+		m_Success = true;
+		
+		XMLElement brush_types = document.Get(1).GetContent();
+		
+		ref set<string> object_type_list = new set<string>();
+		// <BrushTypes>
+		for (int i = 0; i < brush_types.Count(); i++) {
+			
+			XMLTag brush = brush_types.Get(i);
+			XMLElement brush_objects = brush.GetContent();
+			
+			EditorBrushSettings brush_settings = new EditorBrushSettings();
+			brush_settings.Name = brush.GetAttribute("name").ValueAsString();
+			
+			
+			// <BrushObject>
+			for (int j = 0; j < brush_objects.Count(); j++) {
+				XMLTag brush_object = brush_objects.Get(j);
+				
+				// attributes
+				string object_type;
+				float object_frequency;
+				
+				// type attribute
+				XMLAttribute object_type_attribute = brush_object.GetAttribute("type");
+				if (object_type_attribute == null) {
+					EditorPrint("XMLEditorBrushes: Object type not specified, skipping...");
+					continue;
+				}
+				
+				object_type = object_type_attribute.ValueAsString();
+				if (object_type_list.Insert(object_type) == -1) {
+					EditorPrint("XMLEditorBrushes: Duplicate brush name found, skipping...");
+					continue;
+				}
+				
+				// frequency attribute
+				XMLAttribute object_frequency_attribute = brush_object.GetAttribute("frequency");
+				if (object_frequency_attribute == null) {
+					object_frequency = 1.0;
+				} else {
+					object_frequency = object_frequency_attribute.ValueAsFloat();
+				}
+				
+				brush_settings.InsertPlaceableObject(object_type, object_frequency);
+				
+				
+			}
+				
+			m_Data.Insert(brush_settings);
+		}
+		
+		GetEditor().SetBrushTypes(m_Data);
+	}
+	
+	override void OnFailure(ref XMLDocument document)
+	{
+		Print("XMLEditorBrushes::OnFailure");
+		m_Success = false;
+	}
+	
+}
+
 
 class EditorXMLManager
 {
@@ -264,6 +369,14 @@ class EditorXMLManager
 	static void LoadMapGroupProto(out ref EditorMapGroupProto group_proto, string filename = "$profile:Editor/mapgroupproto.xml")
 	{
 		GetXMLApi().Read(filename, group_proto);
+		
+		//return group_proto.GetSuccess();
+	}
+	
+	static void LoadBrushes(out ref XMLEditorBrushes brush_set, string filename)
+	{
+		GetXMLApi().Read(filename, brush_set);
+		
 	}
 
 }

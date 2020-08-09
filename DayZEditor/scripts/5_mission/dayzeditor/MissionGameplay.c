@@ -6,20 +6,76 @@
 Mission CreateCustomMission(string path)
 {
 	Print("DayZEditorGameplay::CreateCustomMission " + path);
-	return new EditorMissionGameplay();
+	return new MissionGameplay();
 }
 
-class EditorMissionServer: MissionServer
+
+
+modded class MissionGameplay
 {
 	
-}
+	override void OnInit()
+	{
+		super.OnInit();
 
-
-
-class EditorMissionGameplay: MissionGameplay
-{
-
-    override void OnKeyPress(int key)
+		
+		
+		
+		GetUApi().GetInputByName("UACOTModuleToggleCOT").ForceDisable(true);
+		GetUApi().GetInputByName("UACOTToggleButtons").ForceDisable(true);
+		GetUApi().GetInputByName("UACOTTogglePlayer").ForceDisable(true);
+		GetUApi().GetInputByName("UACOTToggleCamera").ForceDisable(true);
+		GetUApi().GetInputByName("UACOTToggleESP").ForceDisable(true);
+		GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
+		GetUApi().UpdateControls();
+		
+		//m_HudRootWidget.Show(false);
+	}
+	
+	override void OnMissionStart()
+	{
+		super.OnMissionStart();
+		m_EditorInstance = new Editor(); 
+	}
+	
+	override void OnUpdate(float timeslice)
+	{
+		Input input = GetGame().GetInput();
+		
+		
+		if (input.LocalPress("EditorToggleUI")) {
+			
+			if (input.LocalValue("UAWalkRunTemp")) {
+				m_EditorInstance.Redo();
+			} else {
+				m_EditorInstance.GetUIManager().SetVisibility(!m_EditorInstance.GetUIManager().GetVisibility());
+			}
+		}		
+		
+		if (input.LocalPress("EditorToggleCursor")) {
+			
+			if (GetGame().GetUIManager().IsCursorVisible() && !m_EditorInstance.GetUIManager().GetEditorUI().IsMapOpen()) {
+				m_EditorInstance.GetUIManager().GetEditorUI().HideCursor();
+				if (Editor.IsPlayerActive()) {
+					//GetGame().GetPlayer().GetInputController().SetDisabled(false);
+					Editor.SetPlayerAimLock(false);
+				}
+			} else { 
+				m_EditorInstance.GetUIManager().GetEditorUI().ShowCursor();
+				if (Editor.IsPlayerActive()) {
+					//GetGame().GetPlayer().GetInputController().SetDisabled(true);
+					Editor.SetPlayerAimLock(true);
+				}
+			}
+			
+		}
+		
+		
+		
+		super.OnUpdate(timeslice);
+	}
+	
+	override void OnKeyPress(int key)
     {
 		Input input = GetGame().GetInput();
 		
@@ -37,24 +93,26 @@ class EditorMissionGameplay: MissionGameplay
 		}
 
 		
-		if (m_Hud.KeyPress(key)) return; // might need to be moved if you use UIScriptedMenus 
-		if (GetEditor().OnKeyPress(key)) return;
+		//if (m_Hud.KeyPress(key)) return; // might need to be moved if you use UIScriptedMenus 
+		if (m_EditorInstance.OnKeyPress(key)) return;
 		super.OnKeyPress(key);
     }
 	
-    override void OnInit()
-	{
-		
-		super.OnInit();
-		m_EditorInstance = new Editor(); 
-		
-		m_HudRootWidget.Show(false);
-	}
+	
+	
+}
+/*
+class EditorMissionGameplay: MissionGameplay
+{
+
+    
+	
 
 
 
 
-    void DestroyInventory()
+
+    override void DestroyInventory()
     {
         if (m_InventoryMenu) {
             m_InventoryMenu.Close();
@@ -267,7 +325,7 @@ class EditorMissionGameplay: MissionGameplay
         return m_PlayerRespawning;
     }
 }
-
+*/
 
 
 

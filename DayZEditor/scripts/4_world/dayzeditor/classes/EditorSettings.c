@@ -11,14 +11,11 @@ class EditorSettings
 	// shit thats gotta be changed
 	static float VIEW_DISTANCE = 12000;
 	static float OBJECT_VIEW_DISTANCE = 5000;
-	static float BRUSH_RADIUS = 0;
-	static float BRUSH_DENSITY = 0;
 	
 	static bool MAGNET_PLACEMENT = false;
 	static bool MAINTAIN_HEIGHT = false;
 	static bool SNAPPING_MODE = false;
-	static bool SIM_CITY_MODE = false;
-
+	static bool COLLIDE_ON_DRAG = false;
 	
 	// private members
 		
@@ -49,7 +46,7 @@ class EditorSettings
 	}
 	
 	void SetPlaceableObjectCategory(PlaceableObjectCategory category) 
-	{
+	{ 
 		m_PlaceableObjectCategory = category;
 		EditorEvents.PlaceableCategoryChangedInvoke(this, category);
 	}

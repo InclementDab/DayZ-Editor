@@ -47,11 +47,12 @@ class CfgVehicles
 		hiddenSelections[] = {"RotationX", "RotationY", "RotationZ"};
 	};
 
-	class BrushBase: HouseNoDestruct
+	class BrushBase: Inventory_Base
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\BrushBase.p3d";
-		hiddenSelectionsTextures[] = { "\DayZEditor\Editor\data\BrushBase.paa" };
+		hiddenSelections[] = {"BrushBase"};
+		hiddenSelectionsTextures[] = { "\DayZEditor\Editor\data\BrushBase.paa", "\DayZEditor\Editor\data\BrushDelete.paa" };
 	};
 
 	class BoundingBoxBase: HouseNoDestruct

@@ -33,13 +33,13 @@ modded class DayZIntroScene
 	{
 		
 		delete m_Character;
-		m_CharacterPos = Vector(0.685547, 3, 5.68823).Multiply4(m_CameraTrans);
+		m_CharacterPos = Vector(0.685547, 50, 5.68823).Multiply4(m_CameraTrans);
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
 		m_FunnyMeme.SetOrientation(m_CharacterRot);
-		m_FunnyMeme.SetPosition(m_FunnyMeme.GetPosition() + Vector(0, 1, 0));		
+		m_FunnyMeme.SetPosition(m_FunnyMeme.GetPosition() + Vector(0, 1, 0));
 	}
 
-	
+
 	
 	float offset;
 	int hour, minute;
@@ -47,6 +47,7 @@ modded class DayZIntroScene
 	ref array<Object> m_FunnyMemes = new array<Object>();
 	
 	float totaltime;
+	
 	void OnUpdate(float timeslice)
 	{
 		totaltime += timeslice / 2;
@@ -56,12 +57,15 @@ modded class DayZIntroScene
 		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
 		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);
 		
+		
+		
 		vector pos = m_FunnyMeme.GetPosition();
+		
 		pos[1] = pos[1] + Math.Sin(totaltime * Math.PI) / 1500;
 		m_FunnyMeme.SetPosition(pos);
-		
 		m_FunnyMeme.SetDirection(lookat);
 		m_FunnyMeme.Update();
+		
 		
 		if (input.LocalValue("UAPersonView")) {
 			vector ori = m_FunnyMeme.GetOrientation();
@@ -127,10 +131,10 @@ modded class DayZIntroScene
 
 modded class MainMenu 
 {
+	protected ImageWidget m_Logo;
 	
 	void MainMenu()
 	{
-		
 #ifdef LOAD_MISSION		
 		Print("Loading straight into mission");
 		GetGame().PlayMission(CreateEditorMission("ChernarusPlus"));
@@ -153,7 +157,10 @@ modded class MainMenu
 		TextWidget tw = TextWidget.Cast(layoutRoot.FindAnyWidget("play_label"));
 		tw.SetText("Open Editor");
 		
-
+		m_Logo = ImageWidget.Cast(layoutRoot.FindAnyWidget("dayz_logo"));
+		m_Logo.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_logo.edds");
+		m_Logo.SetImage(0);
+		m_Logo.SetFlags(m_Logo.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		
 		return layoutRoot;
 	}

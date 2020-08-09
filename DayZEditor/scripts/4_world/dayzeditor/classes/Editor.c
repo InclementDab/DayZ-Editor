@@ -8,12 +8,11 @@ static PlayerBase CreateDefaultCharacter()
 {
 	PlayerBase player;
 	if (GetGame().GetPlayer() != null) {
-		player = GetGame().GetPlayer();
+		player = PlayerBase.Cast(GetGame().GetPlayer());
 	} else {	
 	    player = PlayerBase.Cast(GetGame().CreatePlayer(NULL, GetGame().CreateRandomPlayer(), vector.Zero, 0, "NONE"));
 	    player.GetInventory().CreateInInventory("AviatorGlasses");
 	    player.GetInventory().CreateInInventory("AliceBag_Black");
-	    player.GetInventory().CreateInInventory("TranslationWidget");
 	}
 	
     return player;
@@ -25,11 +24,13 @@ static Editor GetEditor() { return m_EditorInstance; }
 class Editor: Managed
 {
 	// Private Memebers
-	private ref EditorObjectManager			m_EditorObjectManager = new EditorObjectManager();
-	private ref EditorUIManager 			m_EditorUIManager = new EditorUIManager();
-	private ref EditorSettings				m_EditorSettings = new EditorSettings();
+	private ref EditorObjectManager			m_EditorObjectManager;
+	private ref EditorUIManager 			m_EditorUIManager;
+	private ref EditorSettings				m_EditorSettings;
 	
 	private ref EditorBrush					m_EditorBrush;
+	private ref EditorBrushSettingsSet 		m_EditorBrushTypes;
+	private ref map<string, typename> 		m_CustomBrushList = new map<string, typename>();
 	
 	static ref EditorHologram 				ObjectInHand;
 	static Object							ObjectUnderCursor = null;
@@ -57,12 +58,14 @@ class Editor: Managed
 	void Editor()
 	{
 		Print("Editor");
+		m_EditorSettings = new EditorSettings();
+		m_EditorUIManager = new EditorUIManager();
+		m_EditorObjectManager = new EditorObjectManager();
 		
-		EditorSettings.Load();
 		
 		// Event subscriptions
-		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
-		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
+		//EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
+		//EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
 		EditorEvents.OnObjectDrag.Insert(HandleObjectDrag);
 		EditorEvents.OnObjectDrop.Insert(HandleObjectDrop);
 		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
@@ -70,14 +73,19 @@ class Editor: Managed
 		// Character Creation
 		EditorPlayer = CreateDefaultCharacter();
 		
-
+		
+		
+		// Load Brushes
+		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
+		RegisterCustomBrush("Delete", DeleteBrush);
+		
 		// Debug
 		DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 		DebugObject1 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 		DebugObject2 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 		DebugObject3 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 		
-		
+		m_EditorSettings.SetPlaceableObjectCategory(PlaceableObjectCategory.BUILDING);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update); // Last thing always
 	}
 		
@@ -164,9 +172,12 @@ class Editor: Managed
 			}
 		}
 		
+
+		
 		
 	
 		// debug
+		return;
 		EditorObjectSet selected_objects = GetObjectManager().GetSelectedObjects();
 		if (selected_objects.Count() == 1) {
 			EditorObject eo = selected_objects.Get(selected_objects.GetIteratorKey(selected_objects.Begin()));
@@ -200,22 +211,25 @@ class Editor: Managed
 	bool OnMouseEnterObject(Object target, int x, int y)
 	{
 		//Print("Editor::OnMouseEnterObject");
+		/*
 		EditorObjectUnderCursor = GetObjectManager().GetEditorObject(target);
 		if (EditorObjectUnderCursor != null)
 			return EditorObjectUnderCursor.OnMouseEnter(x, y);
 	
 	
 		return true;
-		
+		*/
 	}
 	
 	bool OnMouseExitObject(Object target, int x, int y)
 	{
+		/*
 		if (EditorObjectUnderCursor != null)
 			EditorObjectUnderCursor.OnMouseLeave(x, y);
 		EditorObjectUnderCursor = null;
 		
 		return true;
+		*/
 	}
 	
 	
@@ -237,13 +251,14 @@ class Editor: Managed
 		ref EditorMapGroupProto proto_data = new EditorMapGroupProto(m_LootEditTarget); 
 		EditorXMLManager.LoadMapGroupProto(proto_data);
 		m_LootEditMode = true;
+		EditorSettings.COLLIDE_ON_DRAG = true;
 	}
 	
 	void PlaceholderRemoveLootMode()
 	{
 		IEntity child = m_LootEditTarget.GetChildren();
 		while (child != null) {
-			GetGame().ObjectDelete(child);
+			GetGame().ObjectDelete(Object.Cast(child));
 			child = child.GetSibling();
 		}
 		
@@ -253,6 +268,7 @@ class Editor: Managed
 		camera.SetPosition(m_PositionBeforeLootEditMode);
 		//camera.SelectTarget(null);
 		m_LootEditMode = false;
+		EditorSettings.COLLIDE_ON_DRAG = false;
 	}
 	
 	bool IsLootEditActive() { return m_LootEditMode; }
@@ -260,10 +276,10 @@ class Editor: Managed
 	void CreateObjectInHand(string name)
 	{
 		// Turn Brush off when you start to place
-		EditorEvents.BrushChangedInvoke(this, null);
+		if (m_EditorBrush != null)
+			EditorEvents.ChangeBrush(this, null);
 		
-		EditorSettings.SIM_CITY_MODE = false;
-		ObjectInHand = new EditorHologram(null, vector.Zero, GetGame().CreateObject(name, vector.Zero));		
+		ObjectInHand = new EditorHologram(name, vector.Zero);		
 	}
 	
 
@@ -274,16 +290,24 @@ class Editor: Managed
 		vector mat[4];
 		
 		
-		EditorObject editor_object = GetEditor().GetObjectManager().CreateObject(e.GetType(), e.GetPosition());
-		editor_object.SetOrientation(e.GetOrientation());
-		GetEditor().GetObjectManager().SelectObject(editor_object, !input.LocalValue("UATurbo"));
+		EditorObject editor_object = GetEditor().GetObjectManager().CreateObject(new EditorObjectData(e.GetType(), e.GetPosition(), e.GetOrientation()));
+		
+		
+		if (!input.LocalValue("UATurbo")) {
+			EditorEvents.ClearSelection(this);
+		}
+		
+		EditorEvents.SelectObject(this, editor_object);
 		
 		if (!input.LocalValue("UATurbo")) { 
+			SetFocus(null);
 			delete Editor.ObjectInHand;
 		}
 	}
-	
 
+	
+	
+	
 	void Save()
 	{	
 		EditorWorldData save_data = new EditorWorldData();
@@ -291,9 +315,9 @@ class Editor: Managed
 		
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		foreach (EditorObject save_object: placed_objects)	
-			save_data.WorldObjects.Insert(save_object.GetSaveData());
+			save_data.EditorObjects.Insert(save_object.GetData());
  
-		EditorFileManager.SaveFile(save_data);
+		EditorFileManager.Save(save_data);
 		GetEditor().GetUIManager().NotificationCreate("Saved!", COLOR_GREEN); 
 	}
 	
@@ -303,38 +327,80 @@ class Editor: Managed
 		m_EditorObjectManager = new EditorObjectManager();
 		
 		EditorWorldData load_data = new EditorWorldData();
-		int loadfile_result = EditorFileManager.LoadFile(load_data);
-		Print("LoadFile Result " + loadfile_result);
+		int loadfile_result = EditorFileManager.Open(load_data);
+		Print("Open Result " + loadfile_result);
 		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
 		
-		foreach (EditorWorldObject load_object: load_data.WorldObjects) {
-			EditorObject e_object =  GetObjectManager().CreateObject(load_object.m_Typename, load_object.m_Transform[3]);
+		foreach (EditorObjectData load_object: load_data.EditorObjects) {
+			
+			EditorObject e_object =  GetObjectManager().CreateObject(load_object);
 			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
 		}
 		
-		GetEditor().GetUIManager().NotificationCreate("Loaded!"); 
+		GetEditor().GetUIManager().NotificationCreate("Load Complete " + typename.EnumToString(FileDialogResult, loadfile_result)); 
 	}
 	
+	void Import(string filename, ImportMode import_mode)
+	{
+		delete m_EditorObjectManager;
+		m_EditorObjectManager = new EditorObjectManager();
+		
+		
+		EditorWorldData import_data = new EditorWorldData();
+		int loadfile_result =  EditorFileManager.Import(import_data, filename, import_mode);
+		Print("Import Result " + loadfile_result);
+		
+		if (import_data.CameraPosition[3] != vector.Zero)
+			GetUIManager().GetEditorCamera().SetTransform(import_data.CameraPosition);
+		
+		foreach (EditorObjectData load_object: import_data.EditorObjects) {
+			EditorObject e_object = GetObjectManager().CreateObject(load_object);
+			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
+		}
+		
+		GetEditor().GetUIManager().NotificationCreate("Import Complete " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+	}
+	
+	void Export()
+	{
+		EditorWorldData save_data = new EditorWorldData();
+		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
+		
+		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
+		foreach (EditorObject save_object: placed_objects)	
+			save_data.EditorObjects.Insert(save_object.GetData());
+ 
+		ExportSettings export_settings = new ExportSettings();
+		export_settings.ExportFileMode = ExportMode.VPP;
+		int loadfile_result = EditorFileManager.Export(save_data, "VPPTest", export_settings);
+		/*
+		EditorFileManager.Export(export_objects, ExportMode.COMFILE, "export_server");
+		EditorFileManager.Export(export_objects, ExportMode.EXPANSION, "export_expansion");
+		EditorFileManager.Export(export_objects, ExportMode.TERRAINBUILDER, "export_terrainbuilder", HeightType.ABSOLUTE);
+		*/
+		
+		GetEditor().GetUIManager().NotificationCreate("Export Complete " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+	}
 	
 
 	
 	void OnObjectSelected(Class context, EditorObject target)
 	{
-		Print("Editor::OnObjectSelected");		
-		
+		EditorPrint("Editor::OnObjectSelected");		
+		/*
 		if (GlobalTranslationWidget != null)
 			GetGame().ObjectDelete(GlobalTranslationWidget);
 		
 		
-		GlobalTranslationWidget = GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_SETUP | ECE_CREATEPHYSICS | ECE_LOCAL);
+		GlobalTranslationWidget = TranslationWidget.Cast(GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_SETUP | ECE_CREATEPHYSICS | ECE_LOCAL));
 		GlobalTranslationWidget.SetEditorObject(target);	
-		
+		*/
 	}
 	
 	void OnObjectDeselected(Class context, EditorObject target)
 	{
-		Print("Editor::OnObjectDeselected");
-		GetGame().ObjectDelete(GlobalTranslationWidget);
+		EditorPrint("Editor::OnObjectDeselected");
+		//GetGame().ObjectDelete(GlobalTranslationWidget);
 	}
 	
 	
@@ -350,7 +416,7 @@ class Editor: Managed
 		switch (name) {
 			
 			case "EditorMapMarker": {
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectMapDragUpdate, 0, true, target);
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ObjectMapDragUpdate, 0, true, context, target);
 				break;
 			}
 			
@@ -390,7 +456,7 @@ class Editor: Managed
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(TranslationWidgetDragUpdate);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(RotationWidgetDragUpdate);
 		
-		EditorAction action = new EditorAction("SetTransformArray", "SetTransformArray");
+		EditorAction action = new EditorAction("SetTransform", "SetTransform");
 		EditorObjectSet eo_set = GetObjectManager().GetSelectedObjects();
 		foreach (EditorObject editor_object: eo_set) {
 			action.InsertUndoParameter(editor_object, editor_object.TransformBeforeDrag);
@@ -502,8 +568,11 @@ class Editor: Managed
 	
 	
 	// Handles Marker Drag from Map
-	void ObjectMapDragUpdate(notnull EditorObject target)
+	void ObjectMapDragUpdate(Class context, notnull EditorObject target)
 	{
+		EditorMapMarker map_marker;
+		Class.CastTo(map_marker, context);
+		
 		Input input = GetGame().GetInput();
 		if (input.LocalRelease("UAFire")) {
 			EditorEvents.DropInvoke(this, target);
@@ -513,12 +582,13 @@ class Editor: Managed
 		vector object_position = target.GetPosition();
 		int mouse_x, mouse_y;
 		GetCursorPos(mouse_x, mouse_y);
-		vector cursor_position = GetUIManager().GetEditorUI().GetMapWidget().ScreenToMap(Vector(mouse_x, mouse_y, 0));
+		vector cursor_position = map_marker.GetMapWidget().ScreenToMap(Vector(mouse_x, mouse_y, 0));
 		cursor_position[1] = object_position[1] - GetGame().SurfaceY(object_position[0], object_position[2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 		target.SetPosition(cursor_position);
 		target.Update();
 		
-		foreach (EditorObject selected_object: GetObjectManager().GetSelectedObjects()) {
+		EditorObjectSet object_set = GetObjectManager().GetSelectedObjects();
+		foreach (EditorObject selected_object: object_set) {
 			if (selected_object == target) continue;
 			cursor_position[1] = object_position[1] - GetGame().SurfaceY(object_position[0], object_position[2]) + GetGame().SurfaceY(cursor_position[0], cursor_position[2]);
 			selected_object.SetPosition(cursor_position + selected_object.GetPosition() - object_position); 
@@ -535,7 +605,6 @@ class Editor: Managed
 	void ObjectDragUpdate(notnull EditorObject target)
 	{
 
-		float starttime = TickCount(0);
 		Input input = GetGame().GetInput();
 		if (input.LocalRelease("UAFire")) {
 			EditorEvents.DropInvoke(this, target);
@@ -550,20 +619,21 @@ class Editor: Managed
 		target.GetTransform(start_transform); 
 		target.GetTransform(object_transform);
 		
+		
 		// Raycast ground below object
 		set<Object> o;
 		vector ground, ground_dir; int component;
-		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetObject(), false, true); // set to ground only
+		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, ground, ground_dir, component, o, NULL, target.GetWorldObject(), false, true); // set to ground only
 
-		vector cursor_position = MousePosToRay(o, target.GetObject(), EditorSettings.OBJECT_VIEW_DISTANCE, 0, true);
+		vector cursor_position = MousePosToRay(o, target.GetWorldObject(), EditorSettings.OBJECT_VIEW_DISTANCE, 0, !EditorSettings.COLLIDE_ON_DRAG);
 		vector surface_normal = GetGame().SurfaceGetNormal(ground[0], ground[2]);
 		float surface_level = GetGame().SurfaceY(ground[0], ground[2]);
 	
-		
 		// debug
-		//Editor.DebugObject0.SetPosition(cursor_position);
+		Editor.DebugObject0.SetPosition(cursor_position);
 
 		// Handle Z only motion
+		
 		if (input.LocalValue("UALookAround")) {	
 			cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground);
 			cursor_position[1] = cursor_position[1] + object_size[1]/2; // offset building height
@@ -581,6 +651,13 @@ class Editor: Managed
 		// Handle regular motion
 		} else {			
 			
+			object_transform[0] = "1 0 0";
+			object_transform[1] = "0 1 0";
+			object_transform[2] = "0 0 1";
+			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
+			
+			
+			cursor_position[1] = cursor_position[1] - object_size[1]/2;
 			if (EditorSettings.MAINTAIN_HEIGHT) 
 				if (EditorSettings.MAGNET_PLACEMENT)
 					object_transform[3] = cursor_position + surface_normal * vector.Distance(ground, object_transform[3]);				
@@ -589,16 +666,14 @@ class Editor: Managed
 				
 			else {
 				object_transform[3] = cursor_position;
-				object_transform[3][1] = object_transform[3][1] + object_size[1]/2;					
+				object_transform[3][1] = object_transform[3][1] + object_size[1];					
 			} 
 		
-			object_transform[0] = "1 0 0";
-			object_transform[1] = "0 1 0";
-			object_transform[2] = "0 0 1";
-			target.PlaceOnSurfaceRotated(object_transform, object_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, target.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
+			
 		}
+		
 	
-		target.SetTransformWithSnapping(object_transform);
+		target.SetTransform(object_transform);
 		target.Update();
 		
 		// This handles all other selected objects
@@ -616,7 +691,7 @@ class Editor: Managed
 		
 			float angle_delta = Math.Atan2(pos_delta[0], pos_delta[2]) * Math.RAD2DEG;
 			surface_normal = GetGame().SurfaceGetNormal(selected_transform[3][0], selected_transform[3][2]);
-			DayZPhysics.RaycastRV(selected_transform[3], selected_transform[3] + selected_transform[1] * -1000, ground, ground_dir, component, o, NULL, selected_object.GetObject(), false, true); // set to ground only
+			DayZPhysics.RaycastRV(selected_transform[3], selected_transform[3] + selected_transform[1] * -1000, ground, ground_dir, component, o, NULL, selected_object.GetWorldObject(), false, true); // set to ground only
 
 			
 			// Handle Z only motion for all children				
@@ -659,7 +734,7 @@ class Editor: Managed
 		}
 		
 		
-		GlobalTranslationWidget.UpdatePosition();
+		//GlobalTranslationWidget.UpdatePosition();
 		//Print(TickCount(starttime) / 1000);
 	}
 	
@@ -691,22 +766,12 @@ class Editor: Managed
 			}
 						
 			case KeyCode.KC_F5: {
-				// Create Character on cursor and select them
-				set<Object> o;
-				vector v = MousePosToRay(o);
-				GetUIManager().SetEditorCameraActive(false);
-				GetGame().SelectPlayer(null, EditorPlayer);
-				EditorPlayer.SetPosition(v);
-				PlayerActive = true;
-				GetUIManager().GetEditorUI().GetRoot().Show(false);
+				SetPlayerEnable(true);
 				break;
 			}
 			
 			case KeyCode.KC_F6: {
-				// Deselect character
-				GetUIManager().SetEditorCameraActive(true);
-				PlayerActive = false;
-				GetUIManager().GetEditorUI().GetRoot().Show(true);
+				SetPlayerEnable(false);
 				break;
 			}
 
@@ -715,7 +780,7 @@ class Editor: Managed
 				
 				if (GetFocus()) {
 					SetFocus(null);
-					return true;
+					//return true;
 				} else if (m_LootEditMode) {
 					PlaceholderRemoveLootMode();
 				} else {
@@ -737,22 +802,7 @@ class Editor: Managed
 				return true;
 			}
 		
-			case KeyCode.KC_SPACE: {
-				if (GetGame().GetUIManager().IsCursorVisible() && !GetUIManager().GetEditorUI().IsMapOpen()) {
-					GetUIManager().GetEditorUI().HideCursor();
-					if (Editor.IsPlayerActive()) {
-						//GetGame().GetPlayer().GetInputController().SetDisabled(false);
-						Editor.SetPlayerAimLock(false);
-					}
-				} else { 
-					GetUIManager().GetEditorUI().ShowCursor();
-					if (Editor.IsPlayerActive()) {
-						//GetGame().GetPlayer().GetInputController().SetDisabled(true);
-						Editor.SetPlayerAimLock(true);
-					}
-				}
-				return true;
-			}
+	
 			
 			case KeyCode.KC_U: {
 				EditorSettings.MAGNET_PLACEMENT = !EditorSettings.MAGNET_PLACEMENT;
@@ -760,15 +810,6 @@ class Editor: Managed
 				return true;
 			}
 			
-			case KeyCode.KC_Y: {
-				
-				if (input.LocalValue("UAWalkRunTemp")) {
-					Redo();
-				} else {
-					GetEditor().GetUIManager().SetVisibility(!GetEditor().GetUIManager().GetVisibility());
-				}
-				return true;
-			}
 			
 			case KeyCode.KC_G: {
 				EditorSettings.MAINTAIN_HEIGHT = !EditorSettings.MAINTAIN_HEIGHT;
@@ -789,7 +830,14 @@ class Editor: Managed
 			case KeyCode.KC_A: {
 				if (input.LocalValue("UAWalkRunTemp")) {
 					
-					GetObjectManager().SelectObjects(GetObjectManager().GetPlacedObjects());
+					GetGame().GetTickTime();
+					EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();		
+					foreach (EditorObject obj: placed_objects) {
+						//GetGame().GameScript.Call(this, "SelectAllTemp", new Param1<EditorObject>(obj));
+						EditorEvents.SelectObject(this, obj);
+					}
+	
+					
 					return true;
 				}
 				break;
@@ -797,8 +845,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_X: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					int r = GetObjectManager().CutSelection();
-					Print(string.Format("Cut %1 Objects", r));
+					GetObjectManager().CutSelection();
 					return true;
 				}
 				break;
@@ -806,8 +853,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_C: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					r = GetObjectManager().CopySelection();
-					Print(string.Format("Copied %1 Objects", r));
+					GetObjectManager().CopySelection();
 					return true;
 				}
 				break;
@@ -815,8 +861,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_V: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					r = GetObjectManager().PasteSelection();
-					Print(string.Format("Pasted %1 Objects", r));
+					GetObjectManager().PasteSelection();
 					return true;
 				}
 				break;
@@ -827,11 +872,17 @@ class Editor: Managed
 					//GetUIManager().GetEditorUI().ShowExportWindow();
 					
 					// todo once UI is created, add "Export Selected Only"
-					ref EditorObjectSet export_objects = GetEditor().GetObjectManager().GetPlacedObjects();
-					EditorFileManager.ExportToFile(export_objects, ExportMode.COMFILE, "export_server");
-					EditorFileManager.ExportToFile(export_objects, ExportMode.EXPANSION, "export_expansion");
-					EditorFileManager.ExportToFile(export_objects, ExportMode.TERRAINBUILDER, "export_terrainbuilder", HeightType.ABSOLUTE);
+					Export();
 					return true;
+				}
+				break;
+			}
+			
+			case KeyCode.KC_I: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					//Import("$profile:Editor/SvetloyarskNoCollision.map", ImportMode.EXPANSION);
+					Import("$profile:Editor/GM_Trader.vpp", ImportMode.VPP);
+					
 				}
 				break;
 			}
@@ -856,12 +907,13 @@ class Editor: Managed
 				if (input.LocalValue("UAWalkRunTemp")) {
 					EditorEventManager.ImportEventPositions();
 					return true;
+				} else if (input.LocalValue("UALookAround")) {
+					// todo
+					GetEditor().ReloadBrushes("$profile:Editor/EditorBrushes.xml");
+					return true;
 				}
 				break;
 			}
-			
-			
-			
 
 		}
 		
@@ -909,6 +961,8 @@ class Editor: Managed
 		return false;
 	}
 	
+	
+	
 	void IncrementMove(EditorObject obj, int axis, float move)
 	{
 		vector pos = obj.GetPosition();
@@ -928,9 +982,118 @@ class Editor: Managed
 	// Remove this once you find an actual solution kekw
 	static void SetPlayerAimLock(bool state)
 	{
-		GetGame().GetPlayer().GetInputController().OverrideAimChangeX(state, 0);
-		GetGame().GetPlayer().GetInputController().OverrideAimChangeY(state, 0);
+		EditorPlayer.GetInputController().OverrideAimChangeX(state, 0);
+		EditorPlayer.GetInputController().OverrideAimChangeY(state, 0);
 	}
+	
+	void SetPlayerEnable(bool state)
+	{
+		if (state) {
+			set<Object> o;
+			vector v = MousePosToRay(o);
+			GetGame().SelectPlayer(null, EditorPlayer);
+			EditorPlayer.SetPosition(v);
+		}
+		
+		GetUIManager().SetEditorCameraActive(!state);
+		EditorPlayer.DisableSimulation(!state);
+		PlayerActive = state;
+		GetUIManager().GetEditorUI().GetRoot().Show(!state);
+	}
+	
+	
+	// Brush Management
+	void ReloadBrushes(string filename)
+	{
+		EditorPrint("EditorUIManager::ReloadBrushes");
+		XMLEditorBrushes xml_brushes = new XMLEditorBrushes();
+		EditorXMLManager.LoadBrushes(xml_brushes, filename);
+	}
+
+	
+	void SetBrushTypes(EditorBrushSettingsSet brush_types)
+	{
+		m_EditorUIManager.GetEditorUI().ClearBrushBox();
+		m_EditorBrushTypes = brush_types;
+
+		foreach (EditorBrushSettings brush: m_EditorBrushTypes)
+			m_EditorUIManager.GetEditorUI().InsertBrush(brush.Name);		
+	}
+	
+
+		
+	EditorBrush GetBrushFromName(string brush_name)
+	{		
+	
+		EditorPrint("Editor::GetBrushFromName " + brush_name);
+		foreach (EditorBrushSettings settings: m_EditorBrushTypes) {
+			if (settings.Name == brush_name) {
+				
+				foreach (string name, typename type: m_CustomBrushList) 
+					if (name == brush_name)
+						return type.Spawn();
+					
+				return new EditorBrush(settings);			
+			}
+		}
+			
+		
+		EditorPrint("Editor::GetBrushFromName Brush not found!");
+		return null;
+	}
+	
+	void RegisterCustomBrush(string name, typename type)
+	{
+		m_CustomBrushList.Insert(name, type);
+	}
+	
+	
+	static string RemoveUselessCharacters(string in)
+	{
+		in.Replace(" ", "");
+		in.Replace("@", "");
+		
+		return in;
+		
+	}
+	
+	static ref ModStructure GetModFromObject(string object_name)
+	{
+		
+		ref array<ref ModStructure> mods = ModLoader.GetMods();
+		string model_path = GetGame().ConfigGetTextOut("CfgVehicles " + object_name + " model");
+		
+		foreach (ModStructure mod: mods) {
+			string dir;
+			string path = mod.GetModPath();
+			GetGame().ConfigGetText(string.Format("%1 dir", path), dir);
+			//name = RemoveUselessCharacters(name);
+			dir.ToLower(); model_path.ToLower();
+			if (model_path.Contains(dir))
+				return mod;
+			
+		}
+		
+		return null;
+	}
+	
+	static string GetIconFromMod(ref ModStructure m_ModInfo)
+	{
+		if (m_ModInfo != null) {
+			string logo = m_ModInfo.GetModLogo();
+			if (logo == string.Empty)
+				logo = m_ModInfo.GetModLogoSmall();
+			if (logo == string.Empty)
+				logo = m_ModInfo.GetModLogoOver();
+			if (logo == string.Empty)
+				logo = m_ModInfo.GetModActionURL();
+			if (logo != string.Empty)
+				return logo;	
+		}
+		// default
+		return "DayZEditor/gui/images/dayz_editor_icon_black.edds";
+	}
+	
 }
 
 

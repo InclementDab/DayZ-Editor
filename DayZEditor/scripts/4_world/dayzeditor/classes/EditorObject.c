@@ -1,17 +1,66 @@
 
 enum EditorObjectFlags
 {
-	EO_ALL,
-	EO_BBOX,
-	EO_MAPMARKER,
-	EO_WORLDMARKER
+	NONE = 0,
+	BBOX = 2,
+	MAPMARKER = 4,
+	OBJECTMARKER = 8,
+	LISTITEM = 16,
+	ALL = 256
+};
+
+
+class EditorObjectDataSet: set<ref EditorObjectData>
+{
+	
+	
+	bool InsertEditorData(EditorObjectData data)
+	{
+		string model_name = GetGame().GetModelName(data.Type);
+		if (model_name == "UNKNOWN_P3D_FILE") {
+			Print(string.Format("%1 is not a valid Object Type!", data.Type));
+			return false;
+		}
+		
+		Insert(data);
+		return true;
+	}
+	
+	bool RemoveEditorData(EditorObjectData data)
+	{
+		int index = Find(data);
+		if (index == -1) return false;
+		Remove(index);
+		return true;
+	}
+	
 }
 
-class EditorObject : Building
-{
-	private bool IsInitialized = false;
+class EditorObjectData
+{	
+	string Type;
+	int ID;
 	
-	protected Object 		m_WorldObject;
+	vector Position;
+	vector Orientation;
+	float Scale;
+	EditorObjectFlags Flags;
+	
+	void EditorObjectData(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
+	{
+		EditorPrint("EditorObjectData");
+		Type = type; Position = position; Orientation = orientation; Flags = flags;
+	}
+	
+}
+
+class EditorObject
+{
+	protected EntityAI 		m_WorldObject;
+	EntityAI GetWorldObject() { return m_WorldObject; }
+	
+	// Mod Data
+	private ModStructure	m_ModStructure;
 	
 	protected Widget 		m_EditorObjectMarkerWidget;
 	protected Widget 		m_EditorObjectBrowserWidget;
@@ -19,11 +68,11 @@ class EditorObject : Building
 	protected Widget 		m_EditorObjectPropertiesWidget;
 	protected Widget 		m_EditorObjectContextWidget;
 	
-	ref UILinkedObject 		m_EditorObjectMarker = null;
-	ref UILinkedObject 		m_EditorObjectBrowser = null;
-	ref UILinkedObject		m_EditorMapMarker = null;
-	ref UILinkedObject		m_EditorObjectPropertiesWindow = null;
-	ref UILinkedObject		m_EditorObjectContextMenu = null;
+	ref UILinkedObject 			m_EditorObjectMarker = null;
+	ref EditorPlacedListItem 		m_EditorObjectBrowser = null;
+	ref UILinkedObject			m_EditorMapMarker = null;
+	ref UILinkedObject			m_EditorObjectPropertiesWindow = null;
+	ref UILinkedObject			m_EditorObjectContextMenu = null;
 	
 	EntityAI 				m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
@@ -33,85 +82,70 @@ class EditorObject : Building
 	
 	static float line_width = 0.05;
 	
-	// Getters 
-	Object GetObject() { return m_WorldObject; }
+	private EditorObjectData m_Data;
+	EditorObjectData GetData() { return m_Data; }
 	
-	private string m_Type;
-	override string GetType() { return m_Type; }
+	string GetType() { return m_Data.Type; }
+	int GetID() { return m_Data.ID; }
 	
-	void EditorObject()
+	void EditorObject(EditorObjectData data)
 	{
-		Print("EditorObject");
+		EditorPrint("EditorObject");
+		m_Data = data;
+		
+		if (m_Data.Flags == EditorObjectFlags.ALL) {
+			m_Data.Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
+		}
+		
+		m_WorldObject = GetGame().CreateObjectEx(data.Type, data.Position, ECE_NONE);
+		m_WorldObject.SetOrientation(m_Data.Orientation);
+		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
+		m_Data.ID = m_WorldObject.GetID();
+		Update();
+		
+		m_ModStructure = Editor.GetModFromObject(m_Data.Type);
+		
+		// Bounding Box
+		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
+			CreateBoundingBox();
+		}	
+
+		// Map marker
+		if ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
+			m_EditorMapMarker = new UILinkedObject();
+			m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
+			m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
+			m_EditorMapMarker.SetObject(this);
+			GetEditor().GetUIManager().GetEditorUI().InsertMapObject(m_EditorMapMarkerWidget);
+		}	
+		
+		// World Object base marker
+		if ((m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER) {
+			m_EditorObjectMarker = new UILinkedObject();
+			m_EditorObjectMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorObjectMarker.layout");
+			m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
+			m_EditorObjectMarker.SetObject(this);
+		}
+			
+		// Browser item
+		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
+			m_EditorObjectBrowser = new EditorPlacedListItem();
+			m_EditorObjectBrowserWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorPlacedListItem.layout");
+			m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
+			m_EditorObjectBrowser.SetObject(this);
+			m_EditorObjectBrowser.SetIcon(Editor.GetIconFromMod(m_ModStructure));
+			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectBrowser);
+		}
+		
+		EditorEvents.ObjectCreateInvoke(this, this);
+	
 	}
 	
 	void ~EditorObject()
 	{
-		Print("~EditorObject");
-		
-	}
-		
-	/*
-	* Initializers
-	*/
-	
-	void Init(string type_name, EditorObjectFlags flags = EditorObjectFlags.EO_ALL)
-	{
-		Print("EditorObject::Init");
-		SetFlags(EntityFlags.STATIC, true);
-		
-		IsInitialized = true;
-		m_Type = type_name;
-		m_WorldObject = g_Game.CreateObjectEx(type_name, vector.Zero, ECE_LOCAL | ECE_SETUP | ECE_CREATEPHYSICS);
-		AddChild(m_WorldObject, -1);
-		Update();
-		
-		// todo move all this to EditorUIManager
-		
-		// World Object base marker
-		m_EditorObjectMarker = new UILinkedObject();
-		m_EditorObjectMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorObjectMarker.layout");
-		m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
-		m_EditorObjectMarker.SetObject(this);
-				
-		// Map marker
-		m_EditorMapMarker = new UILinkedObject();
-		m_EditorMapMarkerWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
-		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
-		m_EditorMapMarker.SetObject(this);
-		GetEditor().GetUIManager().GetEditorUI().GetMapWidget().AddChild(m_EditorMapMarkerWidget);
-	
-		// Browser item
-		m_EditorObjectBrowser = new UILinkedObject();
-		m_EditorObjectBrowserWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorPlacedListItem.layout");
-		m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
-		m_EditorObjectBrowser.SetObject(this);		
-		
-		// Properties Dialog
-		m_EditorObjectPropertiesWindow = new UILinkedObject();
-		m_EditorObjectPropertiesWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorObjectProperties.layout");
-		m_EditorObjectPropertiesWidget.GetScript(m_EditorObjectPropertiesWindow);
-		m_EditorObjectPropertiesWindow.SetObject(this);
-		m_EditorObjectPropertiesWidget.Show(false);		
-		
-		// Context Menu
-		m_EditorObjectContextMenu = new UILinkedObject();
-		m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout");
-		m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
-		m_EditorObjectContextMenu.SetObject(this);
-		m_EditorObjectContextWidget.Show(false);
-		
-		
-		CreateBoundingBox();
-		
-		EditorEvents.OnObjectSelected.Insert(OnSelected);
-		EditorEvents.OnObjectDeselected.Insert(OnDeselected);
-	}
-	
-	override void EEDelete(EntityAI parent)
-	{
-		Print("EditorObject::EEDelete");
-		
-		IsInitialized = false;
+		EditorPrint("~EditorObject");
+		m_Data.Position = GetPosition();
+		m_Data.Orientation = GetOrientation();
 		
 		delete m_EditorObjectMarker; 
 		delete m_EditorObjectBrowser;
@@ -125,16 +159,19 @@ class EditorObject : Building
 		delete m_EditorObjectPropertiesWidget;
 		
 		for (int i = 0; i < 12; i++)
-			g_Game.ObjectDelete(m_BBoxLines[i]);
+			GetGame().ObjectDelete(m_BBoxLines[i]);
 		
-		g_Game.ObjectDelete(m_WorldObject);
-		g_Game.ObjectDelete(m_BBoxBase);
-		g_Game.ObjectDelete(m_CenterLine);
+		GetGame().ObjectDelete(m_WorldObject);
+		GetGame().ObjectDelete(m_BBoxBase);
+		GetGame().ObjectDelete(m_CenterLine);
 		
-		super.EEDelete(parent);
+		EditorEvents.ObjectDeleteInvoke(this, this);
 	}
+		
 	
-	
+	/*
+	* Initializers
+	*/
 	
 	static EditorObject CreateFromExistingObject(notnull Object target)	
 	{
@@ -146,6 +183,7 @@ class EditorObject : Building
 	*********/
 	
 	private bool m_IsSelected;
+	bool IsSelected() { return m_IsSelected; }
 	void OnSelected()
 	{
 		if (m_IsSelected) return;
@@ -170,13 +208,47 @@ class EditorObject : Building
 	{
 		return true;
 	}
-	
+
 	
 	/*
 	* Functions
 	*/
 	
-	override string GetDisplayName()
+	vector GetPosition() { return m_WorldObject.GetPosition(); }
+	void SetPosition(vector pos) 
+	{ 
+		m_WorldObject.SetPosition(pos); 
+		m_Data.Position = pos;
+	}
+	
+	vector GetOrientation() { return m_WorldObject.GetOrientation(); }
+	void SetOrientation(vector pos) 
+	{ 
+		m_WorldObject.SetOrientation(pos);
+		m_Data.Orientation = pos; 
+	}
+	
+	void GetTransform(out vector mat[4]) { m_WorldObject.GetTransform(mat); }
+	void SetTransform(vector mat[4]) { m_WorldObject.SetTransform(mat); }
+	
+	void Update() { m_WorldObject.Update(); }
+	
+	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) 
+	{
+		m_WorldObject.PlaceOnSurfaceRotated(trans, pos, dx, dz, fAngle, align); 
+	}
+	
+	void ClippingInfo(out vector clip_info[2]) { m_WorldObject.ClippingInfo(clip_info); }
+	
+	void SetDirection(vector direction) { m_WorldObject.SetDirection(direction); }
+	
+	void AddChild(notnull IEntity child, int pivot, bool position_only = false) { m_WorldObject.AddChild(child, pivot, position_only); }
+	
+	vector GetTransformAxis(int axis) { return m_WorldObject.GetTransformAxis(axis); }
+	
+	string GetModelName() { return m_WorldObject.GetModelName(); }
+	
+	string GetDisplayName()
 	{
 		string name = m_WorldObject.GetDisplayName();
 		if (name != string.Empty)
@@ -184,30 +256,16 @@ class EditorObject : Building
 		else return GetType();
 	}
 	
-	EditorWorldObject GetSaveData()
-	{
-		EditorWorldObject world_object = new EditorWorldObject();
-		world_object.m_Typename = GetType();
-		GetTransform(world_object.m_Transform);
-		return world_object;
-	}
 
 	vector line_centers[12]; vector line_verticies[8];
 	void CreateBoundingBox()
 	{
-		Print("EditorObject::CreateBoundingBox");
+		EditorPrint("EditorObject::CreateBoundingBox");
 		
-		vector clip_info[2];
 		vector size = GetSize();
-		
-
-		float radius = m_WorldObject.ClippingInfo(clip_info); // idk do something cool w/ radius	
-		
-		//vector mins, maxs;
-		//m_WorldObject.GetWorldBounds(mins, maxs);
-		//clip_info[0] = mins - GetPosition();
-		//clip_info[1] = maxs - GetPosition();
-	
+			
+		vector clip_info[2];
+		ClippingInfo(clip_info);
 		//clip_info[0][1] = -clip_info[1][1];
 		vector position = AverageVectors(clip_info[0], clip_info[1]);
 		
@@ -243,7 +301,7 @@ class EditorObject : Building
 			for (int j = 0; j < 3; j++) 
 				transform[j][j] = ((position[j] == line_centers[i][j])*size[j]/2) + line_width;						
 			 
-			m_BBoxLines[i] = g_Game.CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_NONE);
+			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_NONE));
 			m_BBoxLines[i].SetTransform(transform);			
 			
 			AddChild(m_BBoxLines[i], -1);
@@ -257,7 +315,7 @@ class EditorObject : Building
 		y_axis_mat[2][2] = line_width;
 		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1], bottom_center[2]);
 		
-		m_CenterLine = g_Game.CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE);
+		m_CenterLine = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE));
 		m_CenterLine.SetTransform(y_axis_mat);
 		AddChild(m_CenterLine, -1);
 		
@@ -266,28 +324,24 @@ class EditorObject : Building
 	}
 	
 	
-
-
+	
 	vector GetBottomCenter()
-	{
-		if (!IsInitialized) return vector.Zero;
-		
+	{		
 		vector clip_info[2];
-		m_WorldObject.ClippingInfo(clip_info);
+		ClippingInfo(clip_info);
 		//clip_info[0][1] = -clip_info[1][1];
 		vector result;
 		vector up = GetTransformAxis(1);
 		result = up * -(vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
 		result += GetPosition();
+	
 		return result;
 	}
 	
 	vector GetTopCenter()
-	{
-		if (!IsInitialized) return vector.Zero;
-		
+	{		
 		vector clip_info[2];
-		m_WorldObject.ClippingInfo(clip_info);
+		ClippingInfo(clip_info);
 		//clip_info[0][1] = -clip_info[1][1];
 		vector result;
 		vector up = GetTransformAxis(1);
@@ -296,31 +350,20 @@ class EditorObject : Building
 		return result;
 	}
 		
-	ref Param4<vector, vector, vector, vector> TransformBeforeDrag;
-	Param4<vector, vector, vector, vector> GetTransformArray()
-	{
-		vector mat[4];
-		GetTransform(mat);
-		return new Param4<vector, vector, vector, vector>(mat[0], mat[1], mat[2], mat[3]);
+	ref Param3<int, vector, vector> TransformBeforeDrag;
+	Param3<int, vector, vector> GetTransformArray()
+	{	
+		return new Param3<int, vector, vector>(GetID(), GetPosition(), GetOrientation());
 	}
 
-	void SetTransformArray(Param4<vector, vector, vector, vector> param)
-	{
-		vector mat[4];
-		
-		mat[0] = param.param1; mat[1] = param.param2; mat[2] = param.param3; mat[3] = param.param4;
-		SetTransform(mat);
-		Update();
-	}
 	
 
 	vector GetSize()
 	{
-		vector clip_info[2];
 		vector result;
 
-		m_WorldObject.ClippingInfo(clip_info);
-		//clip_info[0][1] = -clip_info[1][1];	
+		vector clip_info[2];
+		ClippingInfo(clip_info);
 		result[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
 		result[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
 		result[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
@@ -333,7 +376,6 @@ class EditorObject : Building
 	void SetTransformWithSnapping(vector transform[4])
 	{	
 		SetTransform(transform);
-		Update();
 		
 
 		// I cant wait to delete this... but not yet
@@ -374,8 +416,9 @@ class EditorObject : Building
 	private bool BoundingBoxVisible;
 	void ShowBoundingBox()
 	{
-		if (!IsInitialized || BoundingBoxVisible) return;
-		Print("EditorObject::ShowBoundingBox");
+		if (!BoundingBoxEnabled()) return;
+		if (BoundingBoxVisible) return;
+		EditorPrint("EditorObject::ShowBoundingBox");
 		BoundingBoxVisible = true;
 		for (int i = 0; i < 12; i++) {
 			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(1,1,0,1,co)");
@@ -384,56 +427,64 @@ class EditorObject : Building
 		
 		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(1,1,0,1,co)");
 		//m_BBoxBase.SetObjectTexture(m_BBoxBase.GetHiddenSelectionIndex("BoundingBoxBase"), "#(argb,8,8,3)color(1,1,0,1,co)");
-		
 	}
 	
 	void HideBoundingBox()
 	{
-		if (!IsInitialized || !BoundingBoxVisible) return;
-		Print("EditorObject::HideBoundingBox");
+		if (!BoundingBoxEnabled()) return;
+		if (!BoundingBoxVisible) return;
+		EditorPrint("EditorObject::HideBoundingBox");
 		BoundingBoxVisible = false;
 		for (int i = 0; i < 12; i++) {
 			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "");
 			m_BBoxLines[i].Update();
 		}
 		
+		
 		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "");
 	}
 	
+	bool ListItemEnabled() { return (m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM; }
 	
-	
-	vector GetMarkerPosition()
+	bool ObjectMarkerEnabled() { return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
+	void GetObjectMarkerPos(out float x, out float y)
 	{
-		float x, y;
-		m_EditorObjectMarker.GetLayoutRoot().GetPos(x, y);
-		return Vector(x, y, 0);
+		if (ObjectMarkerEnabled()) {
+			m_EditorObjectMarkerWidget.GetPos(x, y);
+		} else {
+			x = -1; y = -1;
+		}
 	}
 	
-	Widget GetObjectMarker() { return m_EditorObjectMarkerWidget; }
-	Widget GetObjectBrowser() { return m_EditorObjectBrowserWidget; }
-	Widget GetMapMarker() { return m_EditorMapMarkerWidget; }
-	Widget GetContextMenu() { return m_EditorObjectContextWidget; }
-	
-	UILinkedObject GetEditorObjectMarker() { return m_EditorObjectMarker; }
-	
-	void ShowPropertiesWindow(bool show) 
+	bool MapMarkerEnabled() { return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
+	void GetMapMarkerPos(out float x, out float y)
 	{
-		m_EditorObjectPropertiesWidget.Show(true);
-		m_EditorObjectPropertiesWidget.Update();
-		//SetModal(m_EditorObjectPropertiesWidget);
+		if (MapMarkerEnabled()) {
+			m_EditorMapMarkerWidget.GetPos(x, y);
+		} else {
+			x = -1; y = -1;
+		}
 	}
 	
-	static EditorObject GetFromUILinkedRoot(Widget root)
+	bool BoundingBoxEnabled() { return (m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; }
+	
+	bool IsRootSelected(Widget root)
 	{
-		Print("EditorObject::GetFromObjectRoot");
-		foreach (EditorObject editor_object: GetEditor().GetObjectManager().GetPlacedObjects()) {
-			if (editor_object.GetObjectBrowser() == root || editor_object.GetObjectMarker() == root)
-				return editor_object;
+		bool result;		
+		if (ListItemEnabled()) {
+			if (m_EditorObjectBrowserWidget == root)
+				return true;
+		}
+		if (ObjectMarkerEnabled()) {
+			if (m_EditorObjectMarkerWidget == root)
+				return true;
 		}
 		
-		Print("GetFromUILinkedRoot: Item Not Found!");
-		return null;
+		return false;
 	}
+	
+
+	
 }
 
 

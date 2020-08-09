@@ -35,7 +35,7 @@ class TranslationWidget: ItemBase
 	{
 		Print("TranslationWidget");
 		
-		m_RotationWidget = GetGame().CreateObjectEx("RotationWidget", vector.Zero, ECE_NONE);
+		m_RotationWidget = RotationWidget.Cast(GetGame().CreateObjectEx("RotationWidget", vector.Zero, ECE_NONE));
 		AddChild(m_RotationWidget, -1);
 		Update();
 	}

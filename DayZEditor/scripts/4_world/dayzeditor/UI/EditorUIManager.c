@@ -1,6 +1,6 @@
 
 
-
+typedef ref array<ref EditorPlaceableObject> EditorPlaceableObjectSet;
 
 class EditorUIManager: Managed
 {
@@ -14,8 +14,6 @@ class EditorUIManager: Managed
 	// Getters
 	EditorUI GetEditorUI() { return m_EditorUI; }
 	EditorCamera GetEditorCamera() { return m_EditorCamera; }
-
-
 	ScriptInvoker GetUpdateInvoker() { return m_UpdateInvoker; }
 	
 	void EditorUIManager()
@@ -25,12 +23,10 @@ class EditorUIManager: Managed
 		m_UIManager = GetGame().GetUIManager();
 		
 		// Init UI
-		m_EditorUI = new EditorUI();
+		m_EditorUI = new EditorUI(this);
 		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
 	
-		EntityAI translate = GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_NONE, RF_FRONT); // todo 1line
-		m_EditorUI.m_OrientationWidget.SetItem(translate);
-		m_EditorUI.m_OrientationWidget.SetView(0);
+
 		m_EditorUI.GetNotificationFrame().GetPos(notification_start_x, notification_start_y);
 		
 		// Init Spawn Position
@@ -41,17 +37,17 @@ class EditorUIManager: Managed
 		
 		// Init Camera
 		float y_level = 200 + GetGame().SurfaceY(center_pos[0], center_pos[1]);
-		m_EditorCamera = GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false);
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false));
 		m_EditorCamera.SetActive(true);
 		
 		// Init Camera Map Marker
 		EditorCameraMapMarker CameraMapMarker = new EditorCameraMapMarker();
 		Widget m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorCameraMapMarker.layout");
 		m_MapMarkerWidget.GetScript(CameraMapMarker);
-		CameraMapMarker.SetCamera(m_EditorCamera);
+		CameraMapMarker.SetCamera(m_EditorCamera, m_EditorUI.GetMapWidget(), m_UpdateInvoker);
+		m_EditorUI.InsertMapObject(m_MapMarkerWidget);
+		m_EditorUI.GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));
 		
-		MapWidget map_widget = m_EditorUI.GetMapWidget();
-		map_widget.AddChild(m_MapMarkerWidget);
 	
 		
 		// Load PlaceableObjects
@@ -59,14 +55,14 @@ class EditorUIManager: Managed
 		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(m_PlaceableObjects)));
 		foreach (ref EditorPlaceableObject placeable_object: m_PlaceableObjects) {
 			m_EditorUI.InsertPlaceableObject(placeable_object);
-		}		
+		}	
+				
 		
 		// Subscribe to events (and twitch.tv/InclementDab)
-		EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);		
+		//EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);		
 		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);	
 		
 		// Sets default
-		GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.BUILDING);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
@@ -84,27 +80,20 @@ class EditorUIManager: Managed
 		m_UpdateInvoker.Invoke(timeslice);
 		m_LastFrameTime = GetGame().GetTime();
 		
-		// move elsewhere?
-		vector cam_orientation = GetEditorCamera().GetOrientation();	
-		GetEditorUI().m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
-		
+
 	}
 	
 	
 	void OnEditorObjectCreated(Class context, EditorObject obj)
 	{
-		Print("EditorUIManager::OnObjectCreated");
-		
-		m_EditorUI.InsertPlacedObject(obj);
-		m_EditorUI.GetMap().OnObjectCreated(null, obj); // subscribe mee
-		
+		EditorPrint("EditorUIManager::OnObjectCreated");		
 	}
 	
 	
 	
 	void SetEditorCameraActive(bool state)
 	{
-		Print("EditorUIManager::SetEditorCameraActive");
+		EditorPrint("EditorUIManager::SetEditorCameraActive");
 		m_EditorCamera.SetActive(state);
 	}
 	
@@ -192,9 +181,9 @@ class EditorUIManager: Managed
 	{
 		m_EditorUI.GetRoot().Show(state);
 		EditorObjectSet placed_objects = GetEditor().GetObjectManager().GetPlacedObjects();
-		foreach (EditorObject editor_object: placed_objects) {
+		/*foreach (EditorObject editor_object: placed_objects) {
 			editor_object.GetObjectMarker().Show(state);
-		}
+		}*/
 		
 		m_Visibility = state;
 	}
@@ -206,15 +195,18 @@ class EditorUIManager: Managed
 		
 	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
 	{
-		Print("EditorUIManager::OnPlaceableCategoryChanged");
+		EditorPrint("EditorUIManager::OnPlaceableCategoryChanged");
 
 		foreach (EditorPlaceableObject placeable_object: m_PlaceableObjects) {
-			Widget root = placeable_object.GetListItem().GetRoot();
+			Widget root = placeable_object.GetListItem().GetLayoutRoot();
 			root.Show(placeable_object.GetCategory() == category);
 		}
-		
-
 	}
 	
+	
+
+
+
+
 	
 }
