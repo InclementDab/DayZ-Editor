@@ -4,7 +4,7 @@
 
 typedef FileSerializer Cerealizer;
 
-static FileDialogResult VPPReadFromFile(out ref EditorObjectDataSet data, string filename)
+static FileDialogResult ImportVPPData(out ref EditorObjectDataSet data, string filename)
 {
 	Cerealizer file = new Cerealizer();
 	if (!FileExist(filename)) {
@@ -22,7 +22,6 @@ static FileDialogResult VPPReadFromFile(out ref EditorObjectDataSet data, string
 	
 	ref array<ref VPPToEditorSpawnedBuilding> spawned_buildings = new array<ref VPPToEditorSpawnedBuilding>();
 	bSet.GetSpawnedBuildings(spawned_buildings);
-	Print(spawned_buildings.Count());
 	foreach (ref VPPToEditorSpawnedBuilding building: spawned_buildings) {
 		string name = building.GetName();
 		TStringArray name_split = new TStringArray();
@@ -31,7 +30,27 @@ static FileDialogResult VPPReadFromFile(out ref EditorObjectDataSet data, string
 	}
 	
 	return FileDialogResult.SUCCESS;
+}
+
+static FileDialogResult ExportVPPData(ref EditorObjectDataSet data, string filename, string set_name = "DayZEditor Export")
+{
+
+	Cerealizer file = new Cerealizer();
 	
+	ref VPPToEditorBuildingSet bSet = new VPPToEditorBuildingSet(set_name);
+	
+	foreach (EditorObjectData object_data: data) {
+		bSet.AddBuilding(object_data.Type, object_data.Position, object_data.Orientation, true);
+		bSet.SetActive(true);
+	}
+	
+	
+	if (file.Open(filename, FileMode.APPEND)) {
+		file.Write(bSet);
+		file.Close();	
+	}
+	
+	return FileDialogResult.SUCCESS;
 }
 
 class ExpansionImportData
@@ -126,7 +145,8 @@ enum HeightType
 
 class ExportSettings
 {
-	static HeightType ExportHeightType;
+	ExportMode ExportFileMode;
+	HeightType ExportHeightType;
 }
 
 
@@ -195,9 +215,7 @@ class EditorFileManager
 			
 			case (ImportMode.VPP): {
 				Print("EditorFileManager::Import::VPP");
-				VPPReadFromFile(data.EditorObjects, filename);
-				
-				break;
+				return ImportVPPData(data.EditorObjects, filename);
 			}
 			
 			default: {
@@ -212,14 +230,18 @@ class EditorFileManager
 		
 	}
 	
-	static void Export(EditorObjectSet export_objects, ExportMode mode = ExportMode.TERRAINBUILDER, string filename = "export", HeightType height_type = HeightType.RELATIVE)
+	static FileDialogResult Export(ref EditorWorldData data, string filename, ref ExportSettings export_settings)
 	{
-		Print("Exporting to File...");
-		
-		switch (mode) {
+		Print("EditorFileManager::Export");		
+		switch (export_settings.ExportFileMode) {
 			
 			case ExportMode.EXPANSION: {
 				filename += ".map";
+				break;
+			}
+			
+			case ExportMode.VPP: {
+				filename += ".vpp";
 				break;
 			}
 			
@@ -231,15 +253,25 @@ class EditorFileManager
 		}
 		
 		filename = "$profile:Editor/Export/" + filename;
-		
-		
 		DeleteFile(filename);
-		FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
+		
+		/*
+		//FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
 		if (handle == 0) {
-			Print("ExportToFile Failed: 0");
-			return;
+			return FileDialogResult.IN_USE;
+		}*/
+		
+		
+		switch (export_settings.ExportFileMode) {
+			
+			case ExportMode.VPP: {
+				return ExportVPPData(data.EditorObjects, filename);
+			}
+			
 		}
 		
+		
+		/*
 		foreach (EditorObject editor_object: export_objects) {
 						
 			vector position = editor_object.GetPosition();
@@ -249,7 +281,7 @@ class EditorFileManager
 	
 			vector terrainbuilder_offset = Vector(200000, 0, 0);
 			string line;
-			switch (mode) {
+			switch (export_settings.ExportFileMode) {
 				
 				case ExportMode.TERRAINBUILDER: {
 					// "construction_house2";206638.935547;6076.024414;146.000015;0.000000;0.000000;1.000000;
@@ -294,12 +326,6 @@ class EditorFileManager
 					break;
 				}
 				
-				case ExportMode.VPP: {
-					
-					//line = string.Format("%1|%2 %3 %4|%5 %6 %7", editor_object.GetType(), position[0], position[1], position[2], orientation[0], orientation[1], orientation[2]);
-					//FPrintln(handle, line);
-					break;
-				}
 				
 				default: {
 					FPrintln(handle, "Line Export Failure");
@@ -309,11 +335,10 @@ class EditorFileManager
 				
 				
 			} 
-		}
+		}*/
 		
-		CloseFile(handle);
 		
-		GetEditor().GetUIManager().NotificationCreate("Exported!");
-		
+
+		return FileDialogResult.UNKNOWN_ERROR;
 	}
 }

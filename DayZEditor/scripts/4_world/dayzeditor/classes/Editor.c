@@ -304,8 +304,10 @@ class Editor: Managed
 			delete Editor.ObjectInHand;
 		}
 	}
-	
 
+	
+	
+	
 	void Save()
 	{	
 		EditorWorldData save_data = new EditorWorldData();
@@ -356,7 +358,28 @@ class Editor: Managed
 			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
 		}
 		
-		GetEditor().GetUIManager().NotificationCreate("Import Complete! " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+		GetEditor().GetUIManager().NotificationCreate("Import Complete " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+	}
+	
+	void Export()
+	{
+		EditorWorldData save_data = new EditorWorldData();
+		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
+		
+		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
+		foreach (EditorObject save_object: placed_objects)	
+			save_data.EditorObjects.Insert(save_object.GetData());
+ 
+		ExportSettings export_settings = new ExportSettings();
+		export_settings.ExportFileMode = ExportMode.VPP;
+		int loadfile_result = EditorFileManager.Export(save_data, "VPPTest", export_settings);
+		/*
+		EditorFileManager.Export(export_objects, ExportMode.COMFILE, "export_server");
+		EditorFileManager.Export(export_objects, ExportMode.EXPANSION, "export_expansion");
+		EditorFileManager.Export(export_objects, ExportMode.TERRAINBUILDER, "export_terrainbuilder", HeightType.ABSOLUTE);
+		*/
+		
+		GetEditor().GetUIManager().NotificationCreate("Export Complete " + typename.EnumToString(FileDialogResult, loadfile_result)); 
 	}
 	
 
@@ -849,10 +872,7 @@ class Editor: Managed
 					//GetUIManager().GetEditorUI().ShowExportWindow();
 					
 					// todo once UI is created, add "Export Selected Only"
-					ref EditorObjectSet export_objects = GetEditor().GetObjectManager().GetPlacedObjects();
-					EditorFileManager.Export(export_objects, ExportMode.COMFILE, "export_server");
-					EditorFileManager.Export(export_objects, ExportMode.EXPANSION, "export_expansion");
-					EditorFileManager.Export(export_objects, ExportMode.TERRAINBUILDER, "export_terrainbuilder", HeightType.ABSOLUTE);
+					Export();
 					return true;
 				}
 				break;

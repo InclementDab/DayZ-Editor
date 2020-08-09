@@ -28,7 +28,6 @@ class EditorObjectManager: Managed
 	
 	private ref EditorObjectSet 			m_PlacedObjects;
 	private ref EditorObjectSet				m_SelectedObjects;
-	//private ref set<ref EditorObjectLink>	m_SessionCache;
 	private ref map<int, ref EditorObject> 	m_SessionCache;
 	private ref set<ref EditorAction> 		m_ActionStack;
 	
