@@ -48,9 +48,12 @@ class EditorObjectManager: Managed
 		m_SessionCache 		= new map<int, ref EditorObject>();
 		m_ActionStack 		= new set<ref EditorAction>();
 		
+		
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
 		EditorEvents.OnSelectionCleared.Insert(OnSelectionCleared);
+		
+		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
 		EditorEvents.OnObjectDeleted.Insert(OnObjectDeleted);
 		
 	}
@@ -98,11 +101,11 @@ class EditorObjectManager: Managed
 		editor_object_data.Position = position;
 		editor_object_data.Flags = flags;
 		editor_object_data.ID = m_SessionData.Count();
+		
 		m_SessionData.Insert(editor_object_data);
 		EditorObject editor_object = new EditorObject(editor_object_data);
 		
 		m_SessionCache.Insert(editor_object.GetID(), editor_object);
-		m_PlacedObjects.Insert(editor_object.GetID(), editor_object);
 		
 
 		EditorAction action = new EditorAction("Delete", "Create");
@@ -111,8 +114,7 @@ class EditorObjectManager: Managed
 		action.InsertRedoParameter(editor_object, params);
 		InsertAction(action);
 		
-		Print(editor_object.GetID());
-		EditorEvents.ObjectCreateInvoke(this, editor_object);
+		
 		
 		return editor_object;
 	}
@@ -142,49 +144,40 @@ class EditorObjectManager: Managed
 		m_SelectedObjects.RemoveEditorObject(target);
 	}	
 	
+	void OnObjectCreated(Class context, EditorObject target)
+	{
+		EditorPrint("EditorObjectManager::OnObjectCreated");
+		m_SelectedObjects.InsertEditorObject(target);
+		m_PlacedObjects.InsertEditorObject(target);
+	}	
+	
 	void OnObjectDeleted(Class context, EditorObject target)
 	{
-		EditorPrint("EditorObjectManager::SelectObject");
+		EditorPrint("EditorObjectManager::OnObjectDeleted");
 		m_SelectedObjects.RemoveEditorObject(target);
+		m_PlacedObjects.RemoveEditorObject(target);
 	}
 	
-	
-	/*
-	int SelectObjects(EditorObjectSet target, bool reset_selection = true)
-	{
-		Print("EditorObjectManager::SelectObjects");
-		if (reset_selection)
-			ClearSelection();
-		
-		foreach (EditorObject editor_object: target)
-			if (!SelectObject(editor_object, false))
-				Print("Failed to select object");
-		
-		return m_SelectedObjects.Count(); 
-		
-	}
-	*/
-
 	
 	
 	int DeleteSelection()
 	{
 		Print("EditorObjectManager::DeleteObject");
 		int result = m_SelectedObjects.Count();
+		
 		EditorAction action = new EditorAction("Create", "Delete");
 		foreach (EditorObject selected_object: m_SelectedObjects) {
 			action.InsertUndoParameter(selected_object, new Param1<int>(selected_object.GetID()));
 			action.InsertRedoParameter(selected_object, new Param1<int>(selected_object.GetID()));
-			m_PlacedObjects.Remove(selected_object.GetID());
-			EditorEvents.DeselectObject(this, selected_object);
 			delete selected_object;
 		}
 		
 		InsertAction(action);
-		GetGame().ObjectDelete(GetEditor().GetTranslationWidget());
+		//GetGame().ObjectDelete(GetEditor().GetTranslationWidget());
 		return result;
 	}
-	
+		
+		
 
 	
 	void OnSelectionCleared(Class context)

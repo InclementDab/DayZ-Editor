@@ -101,7 +101,8 @@ class EditorObject
 			m_EditorObjectBrowser.SetObject(this);
 			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectBrowser);
 		}
-
+		
+		EditorEvents.ObjectCreateInvoke(this, this);
 	
 	}
 	
@@ -128,18 +129,14 @@ class EditorObject
 		GetGame().ObjectDelete(m_WorldObject);
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
+		
+		EditorEvents.ObjectDeleteInvoke(this, this);
 	}
 		
+	
 	/*
 	* Initializers
 	*/
-	
-
-
-	
-
-	
-	
 	
 	static EditorObject CreateFromExistingObject(notnull Object target)	
 	{
