@@ -15,7 +15,7 @@ class MenuBarFile: EditorWidgetEventHandler
 		if (w == m_Root)
 			m_FileListWrapSpacer.Show(true);
 		
-		// todo handle new, open etc...
+		
 		
 		return true;
 	}

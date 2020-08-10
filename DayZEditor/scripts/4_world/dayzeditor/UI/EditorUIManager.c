@@ -81,6 +81,8 @@ class EditorUIManager: Managed
 		float timeslice = (GetGame().GetTime() - m_LastFrameTime) / 1000;
 		m_UpdateInvoker.Invoke(timeslice);
 		m_LastFrameTime = GetGame().GetTime();
+		
+		//m_EditorUI.SetOrientationWidget(GetEditorCamera().GetOrientation());
 	}
 	
 	void SetEditorUI(EditorUI ui)

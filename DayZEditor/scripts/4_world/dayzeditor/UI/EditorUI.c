@@ -274,10 +274,7 @@ class EditorUI: UIScriptedMenu
 		
 		if (m_CamPosInfoPanel.IsVisible())
 			UpdateInfoCamPos();
-		
-		vector cam_orientation = m_UIManager.GetEditorCamera().GetOrientation();	
-		m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
-		
+			
 	}
 	
 	void ShowMap(bool state)
@@ -295,6 +292,11 @@ class EditorUI: UIScriptedMenu
 		m_EditorMapContainer.Show(state);
 		m_EditorMapContainer.Update();
 		ShowCursor();
+	}
+	
+	void SetOrientationWidget(vector orientation)
+	{
+		m_OrientationWidget.SetModelOrientation(Vector(orientation[1], orientation[0], orientation[2]));
 	}
 	
 	
