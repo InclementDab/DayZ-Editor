@@ -5,6 +5,7 @@ PanelWidgetClass EditorDialogButton {
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ scriptclass ""
  style rover_sim_colorable
  {
   ButtonWidgetClass Button {

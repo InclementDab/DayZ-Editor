@@ -313,6 +313,7 @@ class EditorWidgetEventHandler: ScriptedWidgetEventHandler
 	
 	void OnWidgetScriptInit(Widget w)
 	{
+		Print("EditorWidgetEventHandler::Init");
 		m_Root = w;
 		m_Root.SetHandler(this);
 	}

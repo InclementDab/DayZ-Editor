@@ -462,12 +462,11 @@ class EditorUI: UIScriptedMenu
 				
 				default: {
 					Print(string.Format("%1 Doesnt have a click function!", w.GetName()));
-					return false;
 				}
 			}
 		}
 		
-		return false;
+		return super.OnClick(w, x, y, button);
 		
 	}
 	

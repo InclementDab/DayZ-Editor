@@ -213,17 +213,16 @@ class EditorUIManager: Managed
 	
 
 	// Modal Window Control
-	private Widget m_CurrentModal;
-	void ModalSet(Widget w)
+	private ref EditorDialog m_CurrentModal;
+	void ModalSet(EditorDialog w)
 	{
 		m_CurrentModal = w;
-		SetModal(m_CurrentModal);
+		SetModal(m_CurrentModal.GetRoot());
 	}
 	
 	void ModalClose()
 	{
-		m_CurrentModal.Unlink();
-		delete m_CurrentModal;
+		m_CurrentModal.GetRoot().Unlink();
 	}
 
 	bool IsModalActive()

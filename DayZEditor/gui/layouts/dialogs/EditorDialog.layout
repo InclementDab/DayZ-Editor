@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass EditorDialog {
  clipchildren 1
- ignorepointer 0
+ ignorepointer 1
  color 0.1373 0.1373 0.1373 0.549
  size 500 350
  halign center_ref
@@ -13,11 +13,12 @@ WrapSpacerWidgetClass EditorDialog {
  style Colorable
  Padding 0
  Margin 0
+ scriptclass ""
  "Size To Content H" 1
  "Size To Content V" 1
  {
   WrapSpacerWidgetClass WindowDragWrapper {
-   ignorepointer 0
+   ignorepointer 1
    size 1 1
    hexactpos 1
    vexactpos 1
@@ -41,6 +42,7 @@ WrapSpacerWidgetClass EditorDialog {
      hexactsize 0
      vexactsize 1
      draggable 0
+     
      style rover_sim_colorable
      {
       TextWidgetClass TitleText {
@@ -58,6 +60,7 @@ WrapSpacerWidgetClass EditorDialog {
        "text valign" center
       }
       ButtonWidgetClass TitleClose {
+       ignorepointer 0
        position 0 0
        size 24 24
        halign right_ref
@@ -91,7 +94,7 @@ WrapSpacerWidgetClass EditorDialog {
     }
     WrapSpacerWidgetClass MapSelectWindowStack {
      clipchildren 0
-     ignorepointer 0
+     ignorepointer 1
      size 1 1
      halign center_ref
      valign center_ref
@@ -108,7 +111,7 @@ WrapSpacerWidgetClass EditorDialog {
      content_valign bottom
      {
       GridSpacerWidgetClass ButtonGrid {
-       ignorepointer 0
+       ignorepointer 1
        color 0.1373 0.1373 0.1373 0.549
        position 0 0
        size 0.95 0.25
@@ -130,7 +133,7 @@ WrapSpacerWidgetClass EditorDialog {
        Rows 1
       }
       WrapSpacerWidgetClass DialogContent {
-       ignorepointer 0
+       ignorepointer 1
        color 0.1373 0.1373 0.1373 0.549
        position 0 0
        size 480 0.7

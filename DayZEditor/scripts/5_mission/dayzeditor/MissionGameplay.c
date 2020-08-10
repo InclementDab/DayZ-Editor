@@ -44,6 +44,7 @@ modded class MissionGameplay
 			
 			if (GetEditor().GetUIManager().IsModalActive()) {
 				GetEditor().GetUIManager().ModalClose();
+				
 				return;
 			} 
 			
