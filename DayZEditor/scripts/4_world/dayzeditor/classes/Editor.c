@@ -290,7 +290,7 @@ class Editor: Managed
 		vector mat[4];
 		
 		
-		EditorObject editor_object = m_EditorObjectManager.CreateObject(new EditorObjectData(e.GetType(), e.GetPosition(), e.GetOrientation()));
+		EditorObject editor_object = m_EditorObjectManager.CreateObject(EditorObjectData.Create(e.GetType(), e.GetPosition(), e.GetOrientation()));
 		
 		
 		

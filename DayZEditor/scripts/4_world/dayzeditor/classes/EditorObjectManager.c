@@ -94,7 +94,7 @@ class EditorObjectManager: Managed
 		EditorAction action = new EditorAction("Delete", "Create");
 		foreach (EditorObjectData editor_object_data: data_list) {
 			
-			m_SessionCache.InsertEditorData(editor_object_data);
+			
 			EditorObject editor_object = new EditorObject(editor_object_data);
 			
 			ref Param1<int> params = new Param1<int>(editor_object.GetID());
@@ -111,7 +111,7 @@ class EditorObjectManager: Managed
 	{		
 		EditorPrint("EditorObjectManager::CreateObject");
 		
-		m_SessionCache.InsertEditorData(editor_object_data);
+		
 		EditorObject editor_object = new EditorObject(editor_object_data);
 	
 		if (create_undo) {
@@ -276,7 +276,7 @@ class EditorObjectManager: Managed
 			};
 			
 
-			EditorObject editor_object = CreateObject(new EditorObjectData(pasted_object.Type, pasted_object.Position, pasted_object.Orientation, pasted_object.Flags));
+			EditorObject editor_object = CreateObject(EditorObjectData.Create(pasted_object.Type, pasted_object.Position, pasted_object.Orientation, pasted_object.Flags));
 			float surfacey = GetGame().SurfaceY(position[0], position[2]);
 			vector size = editor_object.GetSize();
 			position[1] = surfacey + size[1] / 2;

@@ -26,7 +26,7 @@ static FileDialogResult ImportVPPData(out ref EditorObjectDataSet data, string f
 		string name = building.GetName();
 		TStringArray name_split = new TStringArray();
 		name.Split("-", name_split);
-		data.InsertEditorData(new EditorObjectData(name_split.Get(0), building.GetPosition(), building.GetOrientation(), EditorObjectFlags.ALL));
+		data.InsertEditorData(EditorObjectData.Create(name_split.Get(0), building.GetPosition(), building.GetOrientation(), EditorObjectFlags.ALL));
 	}
 	
 	return FileDialogResult.SUCCESS;
@@ -70,7 +70,7 @@ class ExpansionImportData
 				continue;
 			}
 					
-			data.InsertEditorData(new EditorObjectData(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
+			data.InsertEditorData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
 		}
 		
 		CloseFile(handler);
@@ -200,7 +200,7 @@ class EditorFileManager
 				
 				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
 					Print("ImportFromFile::COMFILE::Import " + param.param1);					
-					data.EditorObjects.InsertEditorData(new EditorObjectData(param.param1, param.param2, param.param3));
+					data.EditorObjects.InsertEditorData(EditorObjectData.Create(param.param1, param.param2, param.param3));
 				}
 				
 				break;

@@ -41,11 +41,21 @@ class EditorObjectData
 	float Scale;
 	EditorObjectFlags Flags;
 	
-	void EditorObjectData(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
+	private void EditorObjectData(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorPrint("EditorObjectData");
-		m_Id = GetEditor().GetObjectManager().GetSessionCache().Count() + 200000;
-		Type = type; Position = position; Orientation = orientation; Flags = flags;		
+		Type = type; Position = position; Orientation = orientation; Flags = flags;	
+	}
+	
+	static EditorObjectData Create(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
+	{
+		EditorPrint("EditorObjectData::Create");
+		EditorObjectData data = new EditorObjectData(type, position, orientation, flags);
+		
+		EditorObjectDataSet session_cache = GetEditor().GetObjectManager().GetSessionCache();
+		data.m_Id = session_cache.Count() + 200000;
+		session_cache.InsertEditorData(data);
+		return data;
 	}
 	
 	private int m_Id;

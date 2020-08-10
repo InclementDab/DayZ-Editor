@@ -105,7 +105,7 @@ class EditorBrush
 	
 	void DuringMouseDown(vector position) 
 	{ 
-		if (m_BrushSettings.PlaceableObjects.Count() == 0) return;
+		//if (m_BrushSettings.PlaceableObjects.Count() == 0) return;
 		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
@@ -135,11 +135,13 @@ class EditorBrush
 			direction[1] = Math.RandomFloat(-0.05, 0.05);
 			placed_object.SetDirection(direction);
 			
-			
-			data_set.InsertEditorData(new EditorObjectData(object_name, pos, placed_object.GetOrientation(), EditorObjectFlags.NONE));
+			EditorObjectData d = EditorObjectData.Create(object_name, pos, placed_object.GetOrientation(), EditorObjectFlags.NONE);
+			Print(d.GetID());
+			data_set.InsertEditorData(d);
 			
 			GetGame().ObjectDelete(placed_object);		
 		}
+		
 		
 		m_ObjectManager.CreateObjects(data_set);
 	}
