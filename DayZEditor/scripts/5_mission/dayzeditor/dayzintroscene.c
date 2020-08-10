@@ -1,19 +1,5 @@
 
-string CreateEditorMission(string map_name = "ChernarusPlus")
-{
-	Print("CreateEditorMission");
-	string mission = "$saves:DayZEditor." + map_name;
-	
-	if (!FileExist(mission)) {
-		Print("Editor Mission not found, creating....");
-		MakeDirectory(mission);
-	}
-	
-	FileHandle init = OpenFile(mission + "/init.c", FileMode.WRITE);
-	CloseFile(init);
-	
-	return mission;
-}
+
 
 modded class MissionMainMenu
 {
@@ -158,7 +144,7 @@ modded class MainMenu
 		tw.SetText("Open Editor");
 		
 		m_Logo = ImageWidget.Cast(layoutRoot.FindAnyWidget("dayz_logo"));
-		m_Logo.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_logo.edds");
+		m_Logo.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
 		m_Logo.SetImage(0);
 		m_Logo.SetFlags(m_Logo.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		
@@ -167,8 +153,9 @@ modded class MainMenu
 
     override void Play()
     {
-		MapSelectWindow select_window = new MapSelectWindow();
-		GetGame().GetUIManager().ShowScriptedMenu(select_window, this);
+		MapSelectDialog select_window = new MapSelectDialog();
+		select_window.ShowDialog();
+		//GetGame().GetUIManager().ShowScriptedMenu(select_window, this);
     }
 
     override bool OnMouseEnter(Widget w, int x, int y)

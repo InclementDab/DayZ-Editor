@@ -1,0 +1,154 @@
+WrapSpacerWidgetClass EditorDialog {
+ clipchildren 1
+ ignorepointer 1
+ color 0.1373 0.1373 0.1373 0.549
+ size 500 350
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ priority 996
+ style Colorable
+ Padding 0
+ Margin 0
+ scriptclass ""
+ "Size To Content H" 1
+ "Size To Content V" 1
+ {
+  WrapSpacerWidgetClass WindowDragWrapper {
+   ignorepointer 1
+   size 1 1
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   draggable 1
+   style Colorable
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   content_halign center
+   content_valign center
+   {
+    PanelWidgetClass TitleBar {
+     ignorepointer 0
+     color 0.749 0.3725 0.3725 1
+     size 1 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     draggable 0
+     
+     style rover_sim_colorable
+     {
+      TextWidgetClass TitleText {
+       ignorepointer 1
+       position 0 0
+       size 1 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       font "gui/fonts/metron"
+       "text offset" 10 0
+       "exact text" 1
+       "size to text h" 0
+       "text valign" center
+      }
+      ButtonWidgetClass TitleClose {
+       ignorepointer 0
+       position 0 0
+       size 24 24
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       priority 5
+       style Default
+       font "gui/fonts/metron"
+       {
+        ImageWidgetClass TitleCloseIcon {
+         ignorepointer 1
+         color 0.8627 0.8627 0.8627 1
+         size 24 24
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         image0 "set:dayz_gui image:Close"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+        }
+       }
+      }
+     }
+    }
+    WrapSpacerWidgetClass MapSelectWindowStack {
+     clipchildren 0
+     ignorepointer 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style Empty
+     Padding 10
+     Margin 5
+     "Size To Content H" 1
+     "Size To Content V" 1
+     content_halign center
+     content_valign bottom
+     {
+      GridSpacerWidgetClass ButtonGrid {
+       ignorepointer 1
+       color 0.1373 0.1373 0.1373 0.549
+       position 0 0
+       size 0.95 0.25
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       style Colorable
+       Padding 5
+       Margin 5
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Columns 4
+       Rows 1
+      }
+      WrapSpacerWidgetClass DialogContent {
+       ignorepointer 1
+       color 0.1373 0.1373 0.1373 0.549
+       position 0 0
+       size 480 0.7
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       style Colorable
+       "Size To Content H" 1
+       "Size To Content V" 1
+      }
+     }
+    }
+   }
+  }
+ }
+}

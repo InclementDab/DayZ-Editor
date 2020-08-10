@@ -21,6 +21,9 @@ static PlayerBase CreateDefaultCharacter()
 private ref Editor m_EditorInstance;
 static Editor GetEditor() { return m_EditorInstance; }
 
+
+
+// yo maybe inherit from MissionGameplay smile :)
 class Editor: Managed
 {
 	// Private Memebers
@@ -134,7 +137,6 @@ class Editor: Managed
 			vector debug_pos = eo.GetPosition();
 			//GetUIManager().GetEditorUI().m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", debug_pos[0], debug_pos[1], debug_pos[2]));
 			GetUIManager().GetEditorUI().ShowObjPosInfoPanel(true);
-			GetUIManager().GetEditorUI().UpdateInfoObjPos(debug_pos);
 		} else 
 		{ 
 			GetUIManager().GetEditorUI().ShowObjPosInfoPanel(false);
@@ -259,7 +261,7 @@ class Editor: Managed
 	
 	void Undo()
 	{
-		Print("Editor::Undo");
+		EditorPrint("Editor::Undo");
 		foreach (EditorAction action: GetObjectManager().GetActionStack()) {
 			if (!action.IsUndone()) {
 				action.CallUndo();
@@ -279,7 +281,7 @@ class Editor: Managed
 	
 	void Redo()
 	{
-		Print("Editor::Redo");
+		EditorPrint("Editor::Redo");
 		for (int i = GetObjectManager().GetActionStack().Count() - 1; i >= 0; i--) {
 			EditorAction action = GetObjectManager().GetActionStack().Get(i);
 			if (action == null) continue;
@@ -307,9 +309,11 @@ class Editor: Managed
 	void New()
 	{
 		EditorPrint("Editor::New");
+
 		
-		delete m_EditorObjectManager;
-		m_EditorObjectManager = new EditorObjectManager();
+		MapSelectDialog select_window = new MapSelectDialog();
+		select_window.ShowDialog();
+
 		
 		// debug
 		GetEditor().GetUIManager().GetEditorUI().m_DebugActionStack.ClearItems();
@@ -325,6 +329,7 @@ class Editor: Managed
 		EditorWorldData save_data = new EditorWorldData();
 		
 		// Get Data
+		GetGame().GetWorldName(save_data.MapName);
 		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		
@@ -342,6 +347,7 @@ class Editor: Managed
 		EditorWorldData save_data = new EditorWorldData();
 		
 		// Get Data
+		GetGame().GetWorldName(save_data.MapName);
 		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		
@@ -811,29 +817,14 @@ class Editor: Managed
 				break;
 			}
 
-			
-			case KeyCode.KC_ESCAPE: {
-				
-				if (GetFocus()) {
-					SetFocus(null);
-					//return true;
-				} else if (m_LootEditMode) {
-					PlaceholderRemoveLootMode();
-				} else {
-					
-					//m_UIManager.GetMenu().GetVisibleMenu() != "PauseMenu"
-					// maybe something like this idk just add better escape func
-				}
-				break;
-			}
+		
 			
 			case KeyCode.KC_DELETE: {
 				m_EditorObjectManager.DeleteObjects(m_EditorObjectManager.GetSelectedObjects());			
 				return true;
 			}
 			
-			case KeyCode.KC_M: {
-								
+			case KeyCode.KC_M: {								
 				GetUIManager().GetEditorUI().ShowMap(!GetUIManager().GetEditorUI().IsMapOpen());
 				return true;
 			}

@@ -6,7 +6,7 @@ FrameWidgetClass EditorListItem {
  vexactpos 1
  hexactsize 1
  vexactsize 1
- scriptclass "EditorListItem"
+ scriptclass ""
  {
   PanelWidgetClass EditorListItemPanel {
    ignorepointer 0

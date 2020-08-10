@@ -1,15 +1,15 @@
 
 
-typedef ref array<ref EditorPlaceableObject> EditorPlaceableObjectSet;
+typedef ref array<ref EditorPlaceableListItem> EditorPlaceableListItemSet;
 
-class EditorUIManager: Managed
+class EditorUIManager: Managed // remove meeeee
 {
 	// Members
 	private ref EditorUI 		m_EditorUI;
 	private EditorCamera		m_EditorCamera;
 	private ref ScriptInvoker 	m_UpdateInvoker;
 	private UIManager			m_UIManager;
-	private ref EditorPlaceableObjectSet m_PlaceableObjects;
+	private ref EditorPlaceableListItemSet m_PlaceableObjects;
 	
 	// Getters
 	EditorUI GetEditorUI() { return m_EditorUI; }
@@ -22,11 +22,10 @@ class EditorUIManager: Managed
 		m_UpdateInvoker = new ScriptInvoker();
 		m_UIManager = GetGame().GetUIManager();
 		
+		
 		// Init UI
-		m_EditorUI = new EditorUI(this);
-		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
-	
-
+		m_EditorUI = new EditorUI();
+		m_UIManager.ShowScriptedMenu(m_EditorUI, GetGame().GetUIManager().GetMenu());
 		m_EditorUI.GetNotificationFrame().GetPos(notification_start_x, notification_start_y);
 		
 		// Init Spawn Position
@@ -55,9 +54,10 @@ class EditorUIManager: Managed
 	
 		
 		// Load PlaceableObjects
-		m_PlaceableObjects = new EditorPlaceableObjectSet();
+		m_PlaceableObjects = new EditorPlaceableListItemSet();
 		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(m_PlaceableObjects)));
-		foreach (ref EditorPlaceableObject placeable_object: m_PlaceableObjects) {
+		
+		foreach (ref EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
 			m_EditorUI.InsertPlaceableObject(placeable_object);
 		}	
 				
@@ -83,6 +83,13 @@ class EditorUIManager: Managed
 		float timeslice = (GetGame().GetTime() - m_LastFrameTime) / 1000;
 		m_UpdateInvoker.Invoke(timeslice);
 		m_LastFrameTime = GetGame().GetTime();
+		
+		//m_EditorUI.SetOrientationWidget(GetEditorCamera().GetOrientation());
+	}
+	
+	void SetEditorUI(EditorUI ui)
+	{
+		m_EditorUI = ui;
 	}
 	
 	
@@ -97,6 +104,16 @@ class EditorUIManager: Managed
 	{
 		EditorPrint("EditorUIManager::SetEditorCameraActive");
 		m_EditorCamera.SetActive(state);
+	}
+	
+	void ShowCursor()
+	{
+		GetGame().GetUIManager().ShowUICursor(true);
+	}
+	
+	void HideCursor()
+	{
+		GetGame().GetUIManager().ShowUICursor(false);
 	}
 	
 	bool IsCursorOverUI()
@@ -199,16 +216,35 @@ class EditorUIManager: Managed
 	{
 		EditorPrint("EditorUIManager::OnPlaceableCategoryChanged");
 
-		foreach (EditorPlaceableObject placeable_object: m_PlaceableObjects) {
-			Widget root = placeable_object.GetListItem().GetLayoutRoot();
-			root.Show(placeable_object.GetCategory() == category);
+		foreach (EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
+			Widget root = placeable_object.GetRoot();
+			root.Show(placeable_object.GetData().GetCategory() == category);
 		}
 	}
 	
 	
 
+	// Modal Window Control
+	private ref EditorDialog m_CurrentModal;
+	void ModalSet(EditorDialog w)
+	{
+		m_CurrentModal = w;
+		SetModal(m_CurrentModal.GetRoot());
+		ShowCursor();
+	}
+	
+	void ModalClose()
+	{
+		m_CurrentModal.GetRoot().Unlink();
+		m_CurrentModal = null;
+		ShowCursor();
+	}
 
-
-
+	bool IsModalActive()
+	{
+		return m_UIManager.IsModalVisible();
+	}
+	
+	
 	
 }

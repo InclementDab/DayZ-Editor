@@ -1,0 +1,98 @@
+WrapSpacerWidgetClass EditorListCategory {
+ clipchildren 1
+ size 290 0
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ draggable 0
+ scriptclass ""
+ Padding 0
+ Margin 0
+ "Size To Content H" 1
+ "Size To Content V" 1
+ {
+  WrapSpacerWidgetClass EditorListCategoryHeader {
+   visible 1
+   clipchildren 1
+   ignorepointer 1
+   keepsafezone 0
+   color 0.1373 0.1373 0.1373 0.549
+   size 290 26
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style Colorable
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   content_halign center
+   content_valign center
+   {
+    ButtonWidgetClass EditorListCategoryHeaderButton {
+     visible 1
+     clipchildren 0
+     ignorepointer 0
+     color 0.8627 0.8627 0.8627 0.549
+     size 280 26
+     halign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 1
+     vexactsize 1
+     priority 1
+     draggable 1
+     style Default
+     {
+      TextWidgetClass EditorListCategoryHeaderLable {
+       visible 1
+       ignorepointer 1
+       color 0.8627 0.8627 0.8627 1
+       size 250 26
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Normal
+       text "CATEGORY"
+       font "gui/fonts/metron12"
+       "exact text" 0
+       "text halign" center
+       "text valign" center
+      }
+      ImageWidgetClass EditorListCategoryHeaderIcon {
+       ignorepointer 1
+       color 0.8627 0.8627 0.8627 1
+       size 26 26
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       mode blend
+       "src alpha" 1
+       "no wrap" 1
+       stretch 1
+       "flip v" 0
+      }
+     }
+    }
+   }
+  }
+  WrapSpacerWidgetClass EditorListCategoryContent {
+   visible 1
+   ignorepointer 1
+   position 0 50
+   size 285 0
+   hexactpos 0
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+  }
+ }
+}

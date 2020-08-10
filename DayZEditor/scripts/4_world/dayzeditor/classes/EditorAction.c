@@ -32,8 +32,8 @@ class EditorAction
 	
 	void CallUndo()
 	{
+		EditorPrint("EditorAction::CallUndo");		
 		undone = true;
-		Print("EditorAction::CallUndo");		
 		foreach (int id, ref Param param: UndoParameters) {			
 			GetGame().GameScript.Call(this, m_UndoAction, param);
 		}
@@ -41,7 +41,7 @@ class EditorAction
 	
 	void CallRedo()
 	{
-		Print("EditorAction::CallRedo");
+		EditorPrint("EditorAction::CallRedo");
 		undone = false;
 		foreach (int id, ref Param param: RedoParameters) {
 			GetGame().GameScript.Call(this, m_RedoAction, param);
@@ -82,6 +82,7 @@ class EditorAction
 	void SetTransform(Param3<int, vector, vector> params)
 	{
 		EditorPrint("EditorObject::SetTransform");
+		Sleep(10);
 		EditorObject editor_object = GetEditor().GetObjectManager().GetPlacedObjectById(params.param1);
 		editor_object.SetPosition(params.param2);
 		editor_object.SetOrientation(params.param3);

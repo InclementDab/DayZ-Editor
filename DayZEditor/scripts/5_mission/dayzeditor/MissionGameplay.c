@@ -18,9 +18,7 @@ modded class MissionGameplay
 	{
 		super.OnInit();
 
-		
-		
-		
+	
 		GetUApi().GetInputByName("UACOTModuleToggleCOT").ForceDisable(true);
 		GetUApi().GetInputByName("UACOTToggleButtons").ForceDisable(true);
 		GetUApi().GetInputByName("UACOTTogglePlayer").ForceDisable(true);
@@ -38,41 +36,79 @@ modded class MissionGameplay
 		m_EditorInstance = new Editor(); 
 	}
 	
-	override void OnUpdate(float timeslice)
+	
+	void HandleInputs(Input input)
 	{
-		Input input = GetGame().GetInput();
+		
+		if (input.LocalPress("UAUIMenu", false) || input.LocalPress("UAUIBack", false)) {
+			
+			if (GetEditor().GetUIManager().IsModalActive()) {
+				GetEditor().GetUIManager().ModalClose();
+				return;
+			} 
+			
+			/*
+			if (GetFocus() != null) {
+				SetFocus(null);
+				return;
+			}*/
+			
+			
+			if (GetEditor().IsLootEditActive()) {
+				GetEditor().PlaceholderRemoveLootMode();
+				return;
+			}
+		
+
+			if (IsPaused() && !g_Game.GetUIManager().ScreenFadeVisible()) {
+				Continue();
+				return;
+			}
+			
+			if (!IsPaused()) {
+				Pause();
+				return;
+			}	
+		}
 		
 		
 		if (input.LocalPress("EditorToggleUI")) {
 			
-			if (input.LocalValue("UAWalkRunTemp")) {
+			if (input.LocalValue("UAWalkRunTemp"))
 				m_EditorInstance.Redo();
-			} else {
+			else 
 				m_EditorInstance.GetUIManager().SetVisibility(!m_EditorInstance.GetUIManager().GetVisibility());
-			}
-		}		
+			
+			
+			return;
+		} 
 		
 		if (input.LocalPress("EditorToggleCursor")) {
-			
 			if (GetGame().GetUIManager().IsCursorVisible() && !m_EditorInstance.GetUIManager().GetEditorUI().IsMapOpen()) {
-				m_EditorInstance.GetUIManager().GetEditorUI().HideCursor();
-				if (Editor.IsPlayerActive()) {
-					//GetGame().GetPlayer().GetInputController().SetDisabled(false);
+				m_EditorInstance.GetUIManager().HideCursor();
+				if (Editor.IsPlayerActive())
 					Editor.SetPlayerAimLock(false);
-				}
-			} else { 
-				m_EditorInstance.GetUIManager().GetEditorUI().ShowCursor();
-				if (Editor.IsPlayerActive()) {
-					//GetGame().GetPlayer().GetInputController().SetDisabled(true);
-					Editor.SetPlayerAimLock(true);
-				}
-			}
+				return;
+			} 
 			
-		}
+			
+			m_EditorInstance.GetUIManager().ShowCursor();
+			if (Editor.IsPlayerActive())
+				Editor.SetPlayerAimLock(true); //PlayerControlEnable(true); ????
+			return;
+		} 
 		
 		
+	}
+	
+	override void OnUpdate(float timeslice)
+	{
+		Input input = GetGame().GetInput();
 		
-		super.OnUpdate(timeslice);
+		HandleInputs(input);
+		
+		//super.OnUpdate(timeslice);
+		
 	}
 	
 	override void OnKeyPress(int key)
@@ -92,25 +128,54 @@ modded class MissionGameplay
 			}
 		}
 
-		
-		//if (m_Hud.KeyPress(key)) return; // might need to be moved if you use UIScriptedMenus 
+		m_Hud.KeyPress(key);
 		if (m_EditorInstance.OnKeyPress(key)) return;
 		super.OnKeyPress(key);
     }
 	
+	override bool IsPaused()
+    {
+        return GetGame().GetUIManager().IsMenuOpen(MENU_INGAME);
+    }
+
+    override void Pause()
+    {
+        if (IsPaused() || (GetGame().GetUIManager().GetMenu() && GetGame().GetUIManager().GetMenu().GetID() == MENU_INGAME))
+            return;
+
+        if (g_Game.IsClient() && g_Game.GetGameState() != DayZGameState.IN_GAME)
+            return;
+
+
+        CloseAllMenus();
+
+        // open ingame menu
+        GetUIManager().EnterScriptedMenu(MENU_INGAME, GetGame().GetUIManager().GetMenu());
+        PlayerControlDisable(INPUT_EXCLUDE_ALL);
+    }
+	
+	override void Continue()
+    {
+        int menu_id = GetGame().GetUIManager().GetMenu().GetID();
+        if (!IsPaused() || (menu_id != MENU_INGAME && menu_id != MENU_LOGOUT) || (m_Logout && m_Logout.layoutRoot.IsVisible()))
+            return;
+        
+        PlayerControlEnable(true);
+        GetUIManager().CloseMenu(MENU_INGAME);
+		
+		EditorUI ui = new EditorUI();
+		GetUIManager().ShowScriptedMenu(ui, GetGame().GetUIManager().GetMenu());
+		GetEditor().GetUIManager().SetEditorUI(ui);
+    }
 	
 	
 }
-/*
+
 class EditorMissionGameplay: MissionGameplay
 {
 
     
 	
-
-
-
-
 
     override void DestroyInventory()
     {
@@ -150,42 +215,9 @@ class EditorMissionGameplay: MissionGameplay
         GetHudDebug().HideCrosshairVisibility();
     }
 
-    override bool IsPaused()
-    {
-        return GetGame().GetUIManager().IsMenuOpen(MENU_INGAME);
-    }
+    
 
-    override void Pause()
-    {
-        if (IsPaused() || (GetGame().GetUIManager().GetMenu() && GetGame().GetUIManager().GetMenu().GetID() == MENU_INGAME))
-            return;
 
-        if (g_Game.IsClient() && g_Game.GetGameState() != DayZGameState.IN_GAME)
-            return;
-
-        PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
-        if (player && !player.IsPlayerLoaded() || IsPlayerRespawning())
-            return;
-
-        CloseAllMenus();
-
-        // open ingame menu
-        GetUIManager().EnterScriptedMenu(MENU_INGAME, GetGame().GetUIManager().GetMenu());
-        PlayerControlDisable(INPUT_EXCLUDE_ALL);
-    }
-
-    override void Continue()
-    {
-        int menu_id = GetGame().GetUIManager().GetMenu().GetID();
-        if (!IsPaused() || (menu_id != MENU_INGAME && menu_id != MENU_LOGOUT) || (m_Logout && m_Logout.layoutRoot.IsVisible()))
-        {
-            return;
-        }
-
-        PlayerControlEnable(true);
-        GetUIManager().CloseMenu(MENU_INGAME);
-        //GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CloseInGameMenu,1,true);
-    }
 
    
     override void AbortMission()
@@ -325,7 +357,7 @@ class EditorMissionGameplay: MissionGameplay
         return m_PlayerRespawning;
     }
 }
-*/
+
 
 
 

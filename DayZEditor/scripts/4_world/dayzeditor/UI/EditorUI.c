@@ -84,8 +84,7 @@ class EditorUI: UIScriptedMenu
 	// Cursors
 	protected Widget			m_HorizontalScrollWidget;
 
-	// ExportDialog
-	protected ref EditorExportDialog m_ExportDialog;
+
 	
 	// Orientation Tool
 	protected ItemPreviewWidget m_OrientationWidget;
@@ -120,19 +119,20 @@ class EditorUI: UIScriptedMenu
 	
 	// Info toolbar widgets
 	protected Widget m_ObjPosInfoPanel;
-	protected TextWidget m_ObjPosInfoX;
-	protected TextWidget m_ObjPosInfoY;
-	protected TextWidget m_ObjPosInfoZ;
 	
 	protected Widget m_CamPosInfoPanel;
 	protected TextWidget m_CamPosInfoX;
 	protected TextWidget m_CamPosInfoY;
 	protected TextWidget m_CamPosInfoZ;
+
+	protected float m_TestVariableX;
+	protected float m_TestVariableY;
+	protected float m_TestVariableZ;
 	
-	void EditorUI(EditorUIManager uimanager)
+	void EditorUI()
 	{
 		EditorPrint("EditorUI");
-		m_UIManager = uimanager;
+		m_UIManager = GetEditor().GetUIManager();
 	}
 	
 	void ~EditorUI()
@@ -217,8 +217,6 @@ class EditorUI: UIScriptedMenu
 		//m_HorizontalScrollWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/cursors/horizontalwidget.layout");
 		
 
-		m_ExportDialog = new EditorExportDialog(m_Root);
-		m_ExportDialog.Show(false); //! Comment me if you have implementent me or want to see me!
 		
 		// Debug
 		m_DebugText1			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText1"));
@@ -243,9 +241,13 @@ class EditorUI: UIScriptedMenu
 		
 		// Info toolbar widgets
 		m_ObjPosInfoPanel = m_Root.FindAnyWidget("InfobarObjPosFrame");
-		m_ObjPosInfoX = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_X_Value"));
-		m_ObjPosInfoY = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_Y_Value"));
-		m_ObjPosInfoZ = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_Z_Value"));
+		array< EditorView > views = EditorView.GetUIProperties(m_ObjPosInfoPanel, this);
+		Print( "EditorView count:" + views.Count() );
+		for (int index = 0; index < views.Count(); ++index)
+		{
+			Print( "index:" + index );
+			views[index].DebugPrint();
+		}
 		
 		m_CamPosInfoPanel = m_Root.FindAnyWidget("InfobarCamPosFrame");
 		m_CamPosInfoX = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_X_Value"));
@@ -255,14 +257,16 @@ class EditorUI: UIScriptedMenu
 		// debug info
 		m_DebugFrame = m_Root.FindAnyWidget("DebugFrame");
 		//m_DebugFrame.Show(false);
-
+		
 		return m_Root;
 	}
 	
 	
 	
 	override void Update(float timeslice)
-	{		
+	{
+		//Print("Test Vector: " + m_TestVariableX + ", " + m_TestVariableY + ", " + m_TestVariableZ);
+		
 		super.Update(timeslice);
 				
 		if (m_LeftbarScroll.GetVScrollPos() > m_LeftbarScroll.GetContentHeight())
@@ -274,27 +278,33 @@ class EditorUI: UIScriptedMenu
 		
 		if (m_CamPosInfoPanel.IsVisible())
 			UpdateInfoCamPos();
-		
-		vector cam_orientation = m_UIManager.GetEditorCamera().GetOrientation();	
-		m_OrientationWidget.SetModelOrientation(Vector(cam_orientation[1], cam_orientation[0], cam_orientation[2]));
-		
+			
 	}
 	
+	private bool cursor_state;
 	void ShowMap(bool state)
 	{
-		EditorPrint("EditorUI::ShowMap");
+		EditorPrint("EditorUI::ShowMap");			
 		
 		if (state) {
+			cursor_state = GetGame().GetUIManager().IsCursorVisible();
 			m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() * 3);
 			m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() * 3);
+			GetGame().GetUIManager().ShowUICursor(true);
 		} else {
+			GetGame().GetUIManager().ShowUICursor(cursor_state);
 			m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() / 3);
 			m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() / 3);
 		}
 		
 		m_EditorMapContainer.Show(state);
 		m_EditorMapContainer.Update();
-		ShowCursor();
+		
+	}
+	
+	void SetOrientationWidget(vector orientation)
+	{
+		m_OrientationWidget.SetModelOrientation(Vector(orientation[1], orientation[0], orientation[2]));
 	}
 	
 	
@@ -308,17 +318,7 @@ class EditorUI: UIScriptedMenu
 	MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
 	bool IsMapOpen() 			{ return m_EditorMapContainer.IsVisible(); }
 	
-	void ShowCursor()
-	{
-		// todo use editor UI manager to do this
-		GetGame().GetUIManager().ShowUICursor(true);
-	}
-	
-	void HideCursor()
-	{
-		// todo use editor UI manager to do this
-		GetGame().GetUIManager().ShowUICursor(false);
-	}
+
 	
 	void SetCursor(EditorCursor cursor_type = EditorCursor.DEFAULT)
 	{
@@ -343,16 +343,16 @@ class EditorUI: UIScriptedMenu
 	
 	
 
-	private ref array<ref EditorListItem> m_CurrentPlaceableObjects = new array<ref EditorListItem>();
-	void InsertPlaceableObject(EditorPlaceableObject placeable_object)
+	
+	void InsertPlaceableObject(EditorListItem target)
 	{
-		m_CurrentPlaceableObjects.Insert(placeable_object.SetListItem(m_LeftbarSpacer));
+		m_LeftbarSpacer.AddChild(target.GetRoot());
 	}
 	
 	
-	void InsertPlacedObject(EditorPlacedListItem target)
+	void InsertPlacedObject(EditorListItem target)
 	{
-		m_RightbarSpacer.AddChild(target.GetLayoutRoot());
+		m_RightbarSpacer.AddChild(target.GetRoot());
 	}
 	
 	void InsertMapObject(Widget map_marker)
@@ -453,15 +453,16 @@ class EditorUI: UIScriptedMenu
 				
 				default: {
 					Print(string.Format("%1 Doesnt have a click function!", w.GetName()));
-					return false;
 				}
 			}
 		}
 		
-		return false;
+		return super.OnClick(w, x, y, button);
 		
 	}
 	
+	
+	private ref array<ref EditorCollapsibleListItem> test_objects = new array<ref EditorCollapsibleListItem>();
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorPrint("EditorUI::OnMouseButtonDown");
@@ -469,7 +470,7 @@ class EditorUI: UIScriptedMenu
 		Input input = GetGame().GetInput();	
 		// Left Click
 		if (button == 0) {
-			SetFocus(null);
+			//SetFocus(null);
 			if (GetEditor().IsPlacing()) {
 				GetEditor().PlaceObject();
 				return true;
@@ -499,7 +500,7 @@ class EditorUI: UIScriptedMenu
 				}
 			}
 			
-			
+			/*
 			EditorEvents.ClearSelection(this);
 			if (GetEditor().GetEditorBrush() == null) {
 				
@@ -517,9 +518,21 @@ class EditorUI: UIScriptedMenu
 					EditorEvents.SelectObject(this, Editor.EditorObjectUnderCursor);
 					return true;
 				}
+			}*/
+			
+			
+		}
+		
+		// Right mouse
+		if (button == 1) {
+			if (w.GetName() == "RightbarScroll") {
+				
+				EditorCollapsibleListItem t = new EditorCollapsibleListItem();
+				test_objects.Insert(t);
+				InsertPlacedObject(t);
+				
 			}
-			
-			
+			return true;
 		}
 		
 		// Middle Mouse
@@ -870,13 +883,6 @@ class EditorUI: UIScriptedMenu
 		m_CamPosInfoX.SetText(campos[0].ToString());
 		m_CamPosInfoY.SetText(campos[1].ToString());
 		m_CamPosInfoZ.SetText(campos[2].ToString());
-	}
-	
-	void UpdateInfoObjPos(vector pos)
-	{		
-		m_ObjPosInfoX.SetText(pos[0].ToString());
-		m_ObjPosInfoY.SetText(pos[1].ToString());
-		m_ObjPosInfoZ.SetText(pos[2].ToString());
 	}
 	
 	void ShowObjPosInfoPanel(bool state)
