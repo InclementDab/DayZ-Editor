@@ -290,7 +290,8 @@ class Editor: Managed
 		vector mat[4];
 		
 		
-		EditorObject editor_object = GetEditor().GetObjectManager().CreateObject(new EditorObjectData(e.GetType(), e.GetPosition(), e.GetOrientation()));
+		EditorObject editor_object = m_EditorObjectManager.CreateObject(new EditorObjectData(e.GetType(), e.GetPosition(), e.GetOrientation()));
+		
 		
 		
 		if (!input.LocalValue("UATurbo")) {
@@ -315,7 +316,7 @@ class Editor: Managed
 		
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		foreach (EditorObject save_object: placed_objects)	
-			save_data.EditorObjects.Insert(save_object.GetData());
+			save_data.EditorObjects.InsertEditorData(save_object.GetData());
  
 		EditorFileManager.Save(save_data);
 		GetEditor().GetUIManager().NotificationCreate("Saved!", COLOR_GREEN); 
@@ -333,7 +334,7 @@ class Editor: Managed
 		
 		foreach (EditorObjectData load_object: load_data.EditorObjects) {
 			
-			EditorObject e_object =  GetObjectManager().CreateObject(load_object);
+			EditorObject e_object = GetObjectManager().CreateObject(load_object);
 			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
 		}
 		
@@ -368,7 +369,7 @@ class Editor: Managed
 		
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		foreach (EditorObject save_object: placed_objects)	
-			save_data.EditorObjects.Insert(save_object.GetData());
+			save_data.EditorObjects.InsertEditorData(save_object.GetData());
  
 		ExportSettings export_settings = new ExportSettings();
 		export_settings.ExportFileMode = ExportMode.VPP;
@@ -792,7 +793,7 @@ class Editor: Managed
 			}
 			
 			case KeyCode.KC_DELETE: {
-				GetObjectManager().DeleteSelection();				
+				m_EditorObjectManager.DeleteObjects(m_EditorObjectManager.GetSelectedObjects());			
 				return true;
 			}
 			

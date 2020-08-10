@@ -136,7 +136,7 @@ class EditorBrush
 			placed_object.SetDirection(direction);
 			
 			
-			data_set.Insert(new EditorObjectData(object_name, pos, placed_object.GetOrientation(), EditorObjectFlags.NONE));
+			data_set.InsertEditorData(new EditorObjectData(object_name, pos, placed_object.GetOrientation(), EditorObjectFlags.NONE));
 			
 			GetGame().ObjectDelete(placed_object);		
 		}
@@ -170,12 +170,13 @@ class DeleteBrush: EditorBrush
 		set<Object> results = new set<Object>();
 		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, EditorBrush.GetRadius() / 2, CollisionFlags.ALLOBJECTS);
 		EditorEvents.ClearSelection(this);
+		
+		// todo this is deleting one at a time. use DeleteObjects smile :)
 		foreach (Object r: results) {
 					
-			EditorObject eo = m_ObjectManager.GetSessionObjectById(r.GetID());
+			EditorObject eo = m_ObjectManager.GetPlacedObjectById(r.GetID());
 			if (eo != null) {
-				EditorEvents.SelectObject(this, eo);
-				m_ObjectManager.DeleteSelection();
+				m_ObjectManager.DeleteObject(eo);
 				
 			} else {
 				GetGame().ObjectDelete(r);

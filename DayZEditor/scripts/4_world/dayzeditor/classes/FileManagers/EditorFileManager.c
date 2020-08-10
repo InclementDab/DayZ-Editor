@@ -70,7 +70,7 @@ class ExpansionImportData
 				continue;
 			}
 					
-			data.Insert(new EditorObjectData(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
+			data.InsertEditorData(new EditorObjectData(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
 		}
 		
 		CloseFile(handler);
@@ -200,7 +200,7 @@ class EditorFileManager
 				
 				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
 					Print("ImportFromFile::COMFILE::Import " + param.param1);					
-					data.EditorObjects.Insert(new EditorObjectData(param.param1, param.param2, param.param3));
+					data.EditorObjects.InsertEditorData(new EditorObjectData(param.param1, param.param2, param.param3));
 				}
 				
 				break;

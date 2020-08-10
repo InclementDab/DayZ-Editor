@@ -10,9 +10,8 @@ enum EditorObjectFlags
 };
 
 
-class EditorObjectDataSet: set<ref EditorObjectData>
+class EditorObjectDataSet: map<int, ref EditorObjectData>
 {
-	
 	
 	bool InsertEditorData(EditorObjectData data)
 	{
@@ -22,15 +21,13 @@ class EditorObjectDataSet: set<ref EditorObjectData>
 			return false;
 		}
 		
-		Insert(data);
+		Insert(data.GetID(), data);
 		return true;
 	}
 	
 	bool RemoveEditorData(EditorObjectData data)
 	{
-		int index = Find(data);
-		if (index == -1) return false;
-		Remove(index);
+		Remove(data.GetID());
 		return true;
 	}
 	
@@ -39,8 +36,6 @@ class EditorObjectDataSet: set<ref EditorObjectData>
 class EditorObjectData
 {	
 	string Type;
-	int ID;
-	
 	vector Position;
 	vector Orientation;
 	float Scale;
@@ -49,13 +44,20 @@ class EditorObjectData
 	void EditorObjectData(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorPrint("EditorObjectData");
-		Type = type; Position = position; Orientation = orientation; Flags = flags;
+		m_Id = GetEditor().GetObjectManager().GetSessionCache().Count() + 200000;
+		Type = type; Position = position; Orientation = orientation; Flags = flags;		
 	}
+	
+	private int m_Id;
+	int GetID() { return m_Id; }
 	
 }
 
 class EditorObject
 {
+	private ref EditorObjectData m_Data;
+	EditorObjectData GetData() { return m_Data; }
+	
 	protected EntityAI 		m_WorldObject;
 	EntityAI GetWorldObject() { return m_WorldObject; }
 	
@@ -82,13 +84,12 @@ class EditorObject
 	
 	static float line_width = 0.05;
 	
-	private EditorObjectData m_Data;
-	EditorObjectData GetData() { return m_Data; }
+
 	
 	string GetType() { return m_Data.Type; }
-	int GetID() { return m_Data.ID; }
+	int GetID() { return m_Data.GetID(); }
 	
-	void EditorObject(EditorObjectData data)
+	void EditorObject(ref EditorObjectData data)
 	{
 		EditorPrint("EditorObject");
 		m_Data = data;
@@ -100,11 +101,6 @@ class EditorObject
 		m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Position, ECE_NONE);
 		m_WorldObject.SetOrientation(m_Data.Orientation);
 		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
-		if (m_Data.ID == 0) {
-			m_Data.ID = m_WorldObject.GetID();
-		} else {
-			m_WorldObject.SetID(m_Data.ID);
-		}
 		Update();
 		
 		m_ModStructure = Editor.GetModFromObject(m_Data.Type);
@@ -141,7 +137,7 @@ class EditorObject
 			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectBrowser);
 		}
 		
-		EditorEvents.ObjectCreateInvoke(this, this);
+		
 	
 	}
 	
@@ -169,7 +165,7 @@ class EditorObject
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
 		
-		EditorEvents.ObjectDeleteInvoke(this, this);
+		
 	}
 		
 	
