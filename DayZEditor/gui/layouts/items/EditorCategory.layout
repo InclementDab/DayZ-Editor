@@ -73,7 +73,7 @@ WrapSpacerWidgetClass EditorListCategory {
        "src alpha" 1
        "no wrap" 1
        stretch 1
-       "flip v" 1
+       "flip v" 0
       }
      }
     }
