@@ -15,7 +15,7 @@ PanelWidgetClass EditorDialogButton {
    hexactsize 0
    vexactsize 0
    {
-    TextWidgetClass ButtonLable {
+    TextWidgetClass ButtonLabel {
      ignorepointer 1
      position 0 0
      size 1 1
