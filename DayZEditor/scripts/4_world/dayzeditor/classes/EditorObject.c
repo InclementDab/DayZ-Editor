@@ -60,8 +60,7 @@ class EditorObjectData
 		lowest_id--;
 		data.m_Id = lowest_id;	
 		
-				
-		Print(data.m_Id);
+		EditorPrint(string.Format("EditorObjectData::Create ID: %1", data.m_Id), LogSeverity.INFO);
 		
 		session_cache.InsertEditorData(data);
 		return data;

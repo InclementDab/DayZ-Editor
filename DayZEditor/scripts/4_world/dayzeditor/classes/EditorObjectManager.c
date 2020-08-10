@@ -222,11 +222,7 @@ class EditorObjectManager: Managed
 	void CutSelection()
 	{
 		EditorPrint("EditorObjectManager::CutSelection");
-		ref array<ref EditorObjectData>> world_objects = new array<ref EditorObjectData>>();
-		foreach (int id, EditorObject selected_object: m_SelectedObjects)
-			world_objects.Insert(selected_object.GetData());		
-		
-		GetGame().CopyToClipboard(JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects));
+		CopySelection();
 		DeleteObjects(m_SelectedObjects);
 	}
 	
@@ -236,8 +232,19 @@ class EditorObjectManager: Managed
 		EditorPrint("EditorObjectManager::CopySelection");
 		
 		ref array<ref EditorObjectData>> world_objects = new ref array<ref EditorObjectData>>();
-		foreach (int id, EditorObject selected_object: m_SelectedObjects)
-			world_objects.Insert(selected_object.GetData());			
+		
+		vector avg_position;
+		foreach (int id, EditorObject copy_object: m_SelectedObjects)
+			avg_position += copy_object.GetPosition();
+		
+		for (int i = 0; i < 3; i++)
+			avg_position[i] = avg_position[i] / m_SelectedObjects.Count();
+		
+		foreach (int idx, EditorObject selected_object: m_SelectedObjects) {
+			EditorObjectData data = selected_object.GetData();
+			data.Position = selected_object.GetPosition() - avg_position;
+			world_objects.Insert(data);
+		}
 	
 		GetGame().CopyToClipboard(JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects));
 	}
@@ -253,14 +260,6 @@ class EditorObjectManager: Managed
 		if (data.Count() == 0) return;
 
 		EditorEvents.ClearSelection(this);
-		
-		vector avg_position;
-		foreach (ref EditorObjectData copy_object: data)
-			avg_position += copy_object.Position;
-		
-		
-		for (int i = 0; i < 3; i++)
-			avg_position[i] = avg_position[i] / data.Count();
 				
 		foreach (ref EditorObjectData pasted_object: data) {
 			
@@ -269,9 +268,9 @@ class EditorObjectManager: Managed
 				MapWidget map_widget = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
 				int x, y;
 				GetCursorPos(x, y);
-				position = avg_position - pasted_object.Position + map_widget.ScreenToMap(Vector(x, y, 0));
+				position = pasted_object.Position + map_widget.ScreenToMap(Vector(x, y, 0));
 			} else {
-				position = avg_position - pasted_object.Position + Editor.CurrentMousePosition;
+				position = pasted_object.Position + Editor.CurrentMousePosition;
 			}
 			
 			vector transform[4] = {
@@ -280,7 +279,7 @@ class EditorObjectManager: Managed
 				"0 0 1",
 				position
 			};
-						
+			
 			EditorObject editor_object = CreateObject(EditorObjectData.Create(pasted_object.Type, position, pasted_object.Orientation, pasted_object.Flags));
 			float surfacey = GetGame().SurfaceY(position[0], position[2]);
 			vector size = editor_object.GetSize();
