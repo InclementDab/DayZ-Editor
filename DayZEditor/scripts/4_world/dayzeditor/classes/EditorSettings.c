@@ -1,11 +1,3 @@
-
-
-
-
-
-
-
-
 class EditorSettings 
 {
 	// shit thats gotta be changed
@@ -17,10 +9,6 @@ class EditorSettings
 	static bool SNAPPING_MODE = false;
 	static bool COLLIDE_ON_DRAG = false;
 	
-	// private members
-		
-	private PlaceableObjectCategory m_PlaceableObjectCategory;
-	PlaceableObjectCategory GetPlaceableObjectCategory() { return m_PlaceableObjectCategory; }
 	
 	
 	void EditorSettings()
@@ -44,13 +32,16 @@ class EditorSettings
 	{
 		// todo save settings to ini or something
 	}
+
+	
+	// private members
+	private PlaceableObjectCategory m_PlaceableObjectCategory;
+	PlaceableObjectCategory GetPlaceableObjectCategory() { return m_PlaceableObjectCategory; }
 	
 	void SetPlaceableObjectCategory(PlaceableObjectCategory category) 
 	{ 
 		m_PlaceableObjectCategory = category;
 		EditorEvents.PlaceableCategoryChangedInvoke(this, category);
 	}
-	
-	
 	
 }

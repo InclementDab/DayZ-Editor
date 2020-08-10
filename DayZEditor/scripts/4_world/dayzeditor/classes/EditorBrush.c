@@ -9,7 +9,6 @@ typedef ref array<ref EditorBrushSettings> EditorBrushSettingsSet;
 class EditorBrushSettings
 {
 	string Name;
-	
 	float MinRadius, MaxRadius;
 	ref TStringArray PlaceableObjects = new TStringArray();
 
@@ -52,12 +51,7 @@ class EditorBrush
 		EditorPrint("EditorBrush");
 		m_BrushSettings = settings;
 		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
-		m_ObjectManager = GetEditor().GetObjectManager();
-		
-		if (m_BrushSettings.PlaceableObjects.Count() == 0)
-			return;
-		
-		
+		m_ObjectManager = GetEditor().GetObjectManager();		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
 	
@@ -70,7 +64,8 @@ class EditorBrush
 	
 	void SetBrushTexture(string texture)
 	{
-		m_BrushDecal.SetObjectTexture(m_BrushDecal.GetHiddenSelectionIndex("BrushBase"), texture);
+		EditorPrint("EditorBrush::SetBrushTexture " + texture);
+		m_BrushDecal.SetObjectTexture(0, texture);
 		m_BrushDecal.Update();
 	}
 	
@@ -91,6 +86,7 @@ class EditorBrush
 			CurrentMousePosition
 		};
 		
+		
 		m_BrushDecal.SetTransform(transform);
 		
 		if (GetEditor().GetUIManager().IsCursorOverUI()) return;
@@ -109,7 +105,7 @@ class EditorBrush
 	
 	void DuringMouseDown(vector position) 
 	{ 
-		
+		if (m_BrushSettings.PlaceableObjects.Count() == 0) return;
 		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
@@ -173,18 +169,20 @@ class DeleteBrush: EditorBrush
 		int component;
 		set<Object> results = new set<Object>();
 		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, EditorBrush.GetRadius() / 2, CollisionFlags.ALLOBJECTS);
-		
+		EditorEvents.ClearSelection(this);
 		foreach (Object r: results) {
 					
-			EditorObject eo = m_ObjectManager.GetEditorObject(r.GetID());
+			EditorObject eo = m_ObjectManager.GetSessionObjectById(r.GetID());
 			if (eo != null) {
 				EditorEvents.SelectObject(this, eo);
 				m_ObjectManager.DeleteSelection();
+				
 			} else {
 				GetGame().ObjectDelete(r);
 			}
-			
 		}
+		
+		
 		
 		
 		

@@ -1,6 +1,5 @@
 
 
-
 enum PlaceableObjectCategory {
 	BUILDING,
 	VEHICLE,

@@ -7,10 +7,12 @@ enum LogSeverity {
 };
 
 
+static LogSeverity LOG_SEVERITY = LogSeverity.DEBUG;
 
-static void EditorPrint(string s, LogSeverity severity = LogSeverity.INFO)
+static void EditorPrint(string s, LogSeverity severity = LogSeverity.TRACE)
 {
 	#ifdef EDITORPRINT
-	Print(string.Format("[EDITOR::%1] %2", typename.EnumToString(LogSeverity, severity), s));
+	if (severity >= LOG_SEVERITY)
+		Print(string.Format("[EDITOR::%1] %2", typename.EnumToString(LogSeverity, severity), s));
 	#endif
 }

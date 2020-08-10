@@ -266,6 +266,8 @@ class EditorObjectManager: Managed
 				position
 			};
 			
+			// setting this to zero will force the new object to be regenerated
+			pasted_object.ID = 0;
 			EditorObject editor_object = CreateObject(pasted_object);
 			float surfacey = GetGame().SurfaceY(position[0], position[2]);
 			vector size = editor_object.GetSize();

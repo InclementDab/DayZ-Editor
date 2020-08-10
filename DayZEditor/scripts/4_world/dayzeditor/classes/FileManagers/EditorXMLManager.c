@@ -298,7 +298,7 @@ class XMLEditorBrushes: XMLCallback
 		
 	override void OnSuccess(ref XMLDocument document)
 	{
-		Print("XMLEditorBrushes::OnSuccess");
+		EditorPrint("XMLEditorBrushes::OnSuccess");
 		m_Success = true;
 		
 		XMLElement brush_types = document.Get(1).GetContent();
@@ -312,6 +312,7 @@ class XMLEditorBrushes: XMLCallback
 			
 			EditorBrushSettings brush_settings = new EditorBrushSettings();
 			brush_settings.Name = brush.GetAttribute("name").ValueAsString();
+
 			
 			
 			// <BrushObject>

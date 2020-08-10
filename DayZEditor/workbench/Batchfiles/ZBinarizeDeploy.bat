@@ -6,13 +6,15 @@ set batchDirectory=%cd%
 
 set /a failed=0
 
-set /p enableCompression=Enable Compression?[Y/N]?
+REM set /p enableCompression=Enable Compression?[Y/N]?
+REM 
+REM if /I "%enableCompression%"=="Y" ( 
+REM 	set /a compression=1
+REM ) else (
+REM 	set /a compression=0
+REM )
 
-if /I "%enableCompression%"=="Y" ( 
-	set /a compression=1
-) else (
-	set /a compression=0
-)
+set /a compression=0
 
 if exist ../project.cfg (
 	echo Found the project.cfg

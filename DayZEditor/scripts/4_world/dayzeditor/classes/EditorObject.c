@@ -97,10 +97,14 @@ class EditorObject
 			m_Data.Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
 		}
 		
-		m_WorldObject = GetGame().CreateObjectEx(data.Type, data.Position, ECE_NONE);
+		m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Position, ECE_NONE);
 		m_WorldObject.SetOrientation(m_Data.Orientation);
 		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
-		m_Data.ID = m_WorldObject.GetID();
+		if (m_Data.ID == 0) {
+			m_Data.ID = m_WorldObject.GetID();
+		} else {
+			m_WorldObject.SetID(m_Data.ID);
+		}
 		Update();
 		
 		m_ModStructure = Editor.GetModFromObject(m_Data.Type);
