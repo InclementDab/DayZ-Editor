@@ -84,12 +84,15 @@ class Editor: Managed
 		DebugObject3 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 		
 		m_EditorSettings.SetPlaceableObjectCategory(PlaceableObjectCategory.BUILDING);
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(AutoSave, EditorSettings.AUTOSAVE_TIMER * 1000, true);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update); // Last thing always
 	}
 		
 	void ~Editor()
 	{
 		Print("~Editor");
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(AutoSave);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 	}
 	
@@ -313,6 +316,25 @@ class Editor: Managed
 		
 	}
 	
+	private string autosave_file;
+	void AutoSave()
+	{
+		EditorPrint("Editor::Autosave");
+		if (autosave_file == string.Empty) return;
+		
+		EditorWorldData save_data = new EditorWorldData();
+		
+		// Get Data
+		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
+		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
+		
+		// Save Data
+		foreach (EditorObject save_object: placed_objects)	
+			save_data.EditorObjects.InsertEditorData(save_object.GetData());
+		
+		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, autosave_file);
+		GetEditor().GetUIManager().NotificationCreate("Autosave " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
+	}
 	
 	void Save(string filename = "editor_save", string filedir = "$profile:Editor/")
 	{	
@@ -328,6 +350,7 @@ class Editor: Managed
 			save_data.EditorObjects.InsertEditorData(save_object.GetData());
  		
 		string file = filedir + filename + ".dze";
+		autosave_file = file;
 		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, file);
 		GetEditor().GetUIManager().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
 	}
@@ -347,7 +370,7 @@ class Editor: Managed
 		
 		// Load Data
 		string file = filedir + filename + ".dze";
-		int loadfile_result = EditorFileManager.Open(load_data, file);
+		FileDialogResult loadfile_result = EditorFileManager.Open(load_data, file);
 		
 		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
 		GetObjectManager().CreateObjects(load_data.EditorObjects, false);
@@ -367,11 +390,9 @@ class Editor: Managed
 			// debug
 			GetEditor().GetUIManager().GetEditorUI().m_DebugActionStack.ClearItems();
 		}
+				
 		
-		
-		
-		FileDialogResult loadfile_result =  EditorFileManager.Import(import_data, filename, import_mode);
-		Print("Import Result " + loadfile_result);
+		FileDialogResult loadfile_result = EditorFileManager.Import(import_data, filename, import_mode);
 		
 		if (import_data.CameraPosition[3] != vector.Zero)
 			GetUIManager().GetEditorCamera().SetTransform(import_data.CameraPosition);
@@ -407,6 +428,7 @@ class Editor: Managed
 		
 		GetUIManager().GetEditorCamera().GetTransform(export_data.CameraPosition);
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
+		
 		foreach (EditorObject save_object: placed_objects)	
 			export_data.EditorObjects.InsertEditorData(save_object.GetData());
  
@@ -418,8 +440,7 @@ class Editor: Managed
 
 	
 
-	
-	
+
 	void HandleObjectDrag(Class context, EditorObject target, ref RaycastRVResult raycast_result = null)
 	{
 		ref EditorObjectSet selected_objects = GetObjectManager().GetSelectedObjects();

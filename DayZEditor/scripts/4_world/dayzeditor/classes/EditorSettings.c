@@ -9,7 +9,9 @@ class EditorSettings
 	static bool SNAPPING_MODE = false;
 	static bool COLLIDE_ON_DRAG = false;
 	
-	
+	// Autosave timer in SECONDS!!!!!!!!!!!!!!!!
+	static int AUTOSAVE_TIMER = 240;
+
 	
 	void EditorSettings()
 	{
