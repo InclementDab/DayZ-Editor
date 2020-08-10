@@ -129,10 +129,10 @@ class EditorUI: UIScriptedMenu
 	protected TextWidget m_CamPosInfoY;
 	protected TextWidget m_CamPosInfoZ;
 	
-	void EditorUI(EditorUIManager uimanager)
+	void EditorUI()
 	{
 		EditorPrint("EditorUI");
-		m_UIManager = uimanager;
+		m_UIManager = GetEditor().GetUIManager();
 	}
 	
 	void ~EditorUI()

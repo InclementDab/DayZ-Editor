@@ -21,6 +21,9 @@ static PlayerBase CreateDefaultCharacter()
 private ref Editor m_EditorInstance;
 static Editor GetEditor() { return m_EditorInstance; }
 
+
+
+// yo maybe inherit from MissionGameplay smile :)
 class Editor: Managed
 {
 	// Private Memebers
@@ -820,7 +823,8 @@ class Editor: Managed
 				} else if (m_LootEditMode) {
 					PlaceholderRemoveLootMode();
 				} else {
-					
+					//UIScriptedMenu menu = GetGame().GetUIManager().EnterScriptedMenu(MENU_INGAME, m_EditorUIManager.GetEditorUI());
+					//GetGame().GetUIManager().ShowScriptedMenu(menu, m_EditorUIManager.GetEditorUI());
 					//m_UIManager.GetMenu().GetVisibleMenu() != "PauseMenu"
 					// maybe something like this idk just add better escape func
 				}

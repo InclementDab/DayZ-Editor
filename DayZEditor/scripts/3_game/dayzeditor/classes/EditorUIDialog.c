@@ -1,80 +1,86 @@
-enum EditorDialogType
-{
-	QUESTION = 0
-}
 
-class EditorUIDialog extends ScriptedWidgetEventHandler
+
+
+class EditorUIDialog: UIScriptedMenu
 {
-	private Widget m_Root;
 	
-	private ButtonWidget m_DialogBtnConfirm;
-	private ButtonWidget m_DialogBtnCancle;
-	private RichTextWidget m_DialogText;
+	protected ButtonWidget m_DialogBtnConfirm;
+	protected ButtonWidget m_DialogBtnCancle;
 	
-	private EditorDialogType m_Type;
+	protected ButtonWidget m_TitleClose;
+	protected RichTextWidget m_DialogText;
+	
+	protected TextWidget m_TitleText;
+	
 	
 	ref ScriptInvoker m_OnDialogConfirm;
 	ref ScriptInvoker m_OnDialogCancle;
 	
-	void EditorUIDialog(Widget parent, EditorDialogType type)
+	protected UIScriptedMenu m_Parent;
+	
+	void EditorUIDialog(UIScriptedMenu parent)
 	{
-		m_Root = GetGame().GetWorkspace().CreateWidgets(GetLayout(type), parent);
-		
-		m_Type = type;
-		
-		SetDialog();
+		m_Parent = parent;
 	}
 	
-	string GetLayout(EditorDialogType type)
+	override Widget Init()
 	{
-		string layout;
-		switch (type)
-		{
-			case EditorDialogType.QUESTION:
-			{
-				layout = "DayZEditor/gui/layouts/dialogs/EditorQuestionDialog.layout";
-			}
-			break;
-		}
+		layoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/dialogs/EditorQuestionDialog.layout", null);
+		layoutRoot.Show(true);
 		
-		return layout;
+		SetDialog();
+		
+		return layoutRoot;
 	}
+	
 	
 	private void SetDialog()
 	{
-		switch (m_Type)
-		{
-			case EditorDialogType.QUESTION:
-			{
-				m_DialogBtnConfirm = ButtonWidget.Cast(m_Root.FindAnyWidget("ConfirmtButton"));
-				m_DialogBtnCancle = ButtonWidget.Cast(m_Root.FindAnyWidget("CancleButton"));
-				m_DialogText = RichTextWidget.Cast(m_Root.FindAnyWidget("QuestionText"));
-				
-				m_OnDialogConfirm = new ScriptInvoker();
-				m_OnDialogCancle = new ScriptInvoker();
-			}
-			break;
-		}
+		m_DialogBtnConfirm = ButtonWidget.Cast(layoutRoot.FindAnyWidget("ConfirmtButton"));
+		m_DialogBtnCancle = ButtonWidget.Cast(layoutRoot.FindAnyWidget("CancleButton"));
+		m_DialogText = RichTextWidget.Cast(layoutRoot.FindAnyWidget("QuestionText"));
+		m_TitleText = TextWidget.Cast(layoutRoot.FindAnyWidget("TitleText"));
+		m_TitleClose = ButtonWidget.Cast(layoutRoot.FindAnyWidget("TitleClose"));
 	}
 	
-	void SetText(string text)
+	void SetTitleText(string text)
 	{
-		if (m_Type == EditorDialogType.QUESTION)
-		{
-			m_DialogText.SetText(text);
-		}
-	}	
+		m_TitleText.SetText(text);
+	}
+	
+	void SetDialogText(string text)
+	{
+		m_DialogText.SetText(text);
+	}
+	
+	UIScriptedMenu ShowDialog()
+	{
+		UIScriptedMenu m = GetGame().GetUIManager().ShowScriptedMenu(this, m_Parent);
+		SetModal(layoutRoot);
+		return m;
+	}
+	
+	override void OnShow()
+	{
+		EditorPrint("EditorDialogBase::OnShow");
+		//GetGame().GetUIManager().ShowCursor(true);
+	}
+	
+	override void OnHide()
+	{
+		EditorPrint("EditorDialogBase::OnHide");
+		//GetGame().GetUIManager().ShowCursor(true);
+	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		if (m_Type == EditorDialogType.QUESTION)
-		{
-			if(w == m_DialogBtnConfirm)
-			{
-				m_OnDialogConfirm.Invoke();
-			}else if(w == m_DialogBtnCancle)
-			{
-				m_OnDialogCancle.Invoke();
+		if (button == 0) {
+			switch (w) {
+				case m_TitleClose: {
+					Close();
+					return true;
+				}
+				
 			}
 		}
 		return false;

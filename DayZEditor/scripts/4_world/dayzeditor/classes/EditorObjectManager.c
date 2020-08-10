@@ -377,5 +377,40 @@ class EditorObjectManager
 		m_SelectedObjects.RemoveEditorObject(target);
 		m_PlacedObjects.RemoveEditorObject(target);
 	}
+	
+	
 
+	
+	void oof_dialog()
+	{
+		TestDialog dialog = new TestDialog(GetEditor().GetUIManager().GetEditorUI());
+		dialog.SetTitleText("Test Dialog");
+		dialog.SetDialogText("Body Text");
+		dialog.ShowDialog();
+	}
+}
+
+
+class TestDialog: EditorUIDialog
+{
+	//bool OnModalResult(Widget w, int x, int y, int code, int result)
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (button == 0) {
+			switch (w) {
+				case m_DialogBtnCancle: {
+					Close();
+					return true;
+				}
+				
+				case m_DialogBtnConfirm: {
+					Print("REEEEEEEEEEEEEEE");
+					return true;
+				}
+				
+			}
+		}
+		return super.OnClick(w, x, y, button);
+	}
 }
