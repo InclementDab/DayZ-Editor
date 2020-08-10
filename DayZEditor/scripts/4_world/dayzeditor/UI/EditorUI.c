@@ -268,7 +268,7 @@ class EditorUI: UIScriptedMenu
 	
 	override void Update(float timeslice)
 	{
-		Print("Test Vector: " + m_TestVariableX + ", " + m_TestVariableY + ", " + m_TestVariableZ);
+		//Print("Test Vector: " + m_TestVariableX + ", " + m_TestVariableY + ", " + m_TestVariableZ);
 		
 		super.Update(timeslice);
 				

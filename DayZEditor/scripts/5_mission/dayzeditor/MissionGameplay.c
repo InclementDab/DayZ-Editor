@@ -107,13 +107,6 @@ modded class MissionGameplay
 		
 		HandleInputs(input);
 		
-		
-		
-		
-
-		
-		
-		
 		//super.OnUpdate(timeslice);
 		
 	}

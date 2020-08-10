@@ -90,20 +90,25 @@ class EditorObjectManager
 	{
 		EditorPrint("EditorObjectManager::CreateObjects");
 		
-		if (create_undo) EditorAction action = new EditorAction("Delete", "Create");
+
+		EditorAction action = new EditorAction("Delete", "Create");
+		
 		foreach (EditorObjectData editor_object_data: data_list) {
 			
 			EditorObject editor_object = new EditorObject(editor_object_data);
 			
-			if (create_undo) {
-				action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-				action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			}
+			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			
 			
 			EditorEvents.ObjectCreateInvoke(this, editor_object);
 		}
 		
-		if (create_undo) InsertAction(action);		
+		if (create_undo) {
+			InsertAction(action);
+		} else {
+			delete action;
+		}
 	}
 	
 	
