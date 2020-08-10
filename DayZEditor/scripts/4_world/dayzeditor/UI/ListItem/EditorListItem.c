@@ -1,5 +1,21 @@
 
+ref array<ref EditorListItem> m_ListItemCache = new array<ref EditorListItem>();
 
+EditorListItem EditorListItemFromWidget(Widget w)
+{
+	
+	foreach (ref EditorListItem list_item: m_ListItemCache) {
+		if (list_item.GetRoot() == w)
+			return list_item;
+	}
+	
+	Print(m_ListItemCache.Count());
+	return null;
+}
+
+
+
+// maybe use widgets instead of ScriptedWidgetEventHandler
 class EditorListItem: ScriptedWidgetEventHandler
 {
 	protected Widget m_Root;
@@ -24,6 +40,9 @@ class EditorListItem: ScriptedWidgetEventHandler
 		
 		
 		m_Root.SetHandler(this);
+		
+		// temp
+		m_ListItemCache.Insert(this);
 	}
 	
 	void ~EditorListItem()
@@ -31,6 +50,8 @@ class EditorListItem: ScriptedWidgetEventHandler
 		EditorPrint("~EditorListItem");
 		m_Root.Unlink();
 	}
+	
+
 	
 	void SetText(string text) 
 	{
@@ -48,6 +69,72 @@ class EditorListItem: ScriptedWidgetEventHandler
 	{
 		m_EditorListCategoryHeader.SetColor(color);
 		m_EditorListCategoryHeader.Update();		
+	}
+	
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{		
+		return true;
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		return true;
+	}
+	
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		Print("DRAG TIME WEEEE");
+		return super.OnDrag(w, x, y);
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
+	{
+		
+		EditorListItem target = EditorListItemFromWidget(reciever.GetParent().GetParent());
+		if (target == null) {
+			Print("Drop failed. was null");
+			return false;
+		}
+		
+		EditorCollapsibleListItem collapsible;
+		if (CastTo(collapsible, target)) {
+			collapsible.InsertListItem(EditorListItemFromWidget(w.GetParent().GetParent()));
+		}
+		return true;
+	}
+	
+	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
+	{	
+		Print(w);
+		return true;
+	}
+	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		Print("EditorPlaceableListItem::OnFocus");
+		SetColor(COLOR_ON_SELECTED);
+		return true;
+	}
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		Print("EditorPlaceableListItem::OnFocusLost");
+		SetColor(COLOR_ON_DESELECTED);
+		return true;
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		Print("EditorPlaceableListItem::OnClick");
+		
+		if (button == 0) {
+			SetFocus(w);
+			return true;
+		}
+
+		
+		return false;
 	}
 	
 }
@@ -84,6 +171,8 @@ class EditorPlacedListItem: EditorListItem
 			SetColor(COLOR_ON_DESELECTED); 
 
 	}
+	
+	
 	
 }
 
@@ -158,12 +247,49 @@ class EditorCollapsibleListItem: EditorListItem
 {
 	private ref array<ref EditorListItem> m_CategoryChildren;
 	
+	protected WrapSpacerWidget m_EditorListCategoryContent;
+	
 	void EditorCollapsibleListItem()
 	{
 		Print("EditorCollapsibleListItem");
 		m_CategoryChildren = new array<ref EditorListItem>();
-		
+		m_EditorListCategoryContent = WrapSpacerWidget.Cast(m_Root.FindAnyWidget("EditorListCategoryContent"));
 		SetText("group0");
+	}
+	
+	void ~EditorCollapsibleListItem()
+	{
+		Print("~EditorCollapsibleListItem");
+	}
+	
+	void InsertListItem(EditorListItem item)
+	{
+		Print("InsertListItem");
+		m_CategoryChildren.Insert(item);
+		m_EditorListCategoryContent.AddChild(item.GetRoot());
+	}
+	
+	void RemoveListItem(EditorListItem item)
+	{
+		int index = m_CategoryChildren.Find(item);
+		if (index == -1) return;
+		m_CategoryChildren.Remove(index);
+	}
+	
+	
+	private bool temp;
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		Print("EditorCollapsibleListItem::OnClick");
+		
+
+		if (button == 1) {
+			temp = !temp;
+			m_EditorListCategoryContent.Show(temp);
+		}
+
+		
+		return super.OnClick(w, x, y, button);
 	}
 	
 	

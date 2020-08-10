@@ -5,6 +5,7 @@ WrapSpacerWidgetClass EditorListCategory {
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ draggable 0
  scriptclass ""
  Padding 0
  Margin 0
@@ -42,6 +43,7 @@ WrapSpacerWidgetClass EditorListCategory {
      hexactsize 1
      vexactsize 1
      priority 1
+     draggable 1
      style Default
      {
       TextWidgetClass EditorListCategoryHeaderLable {

@@ -461,6 +461,8 @@ class EditorUI: UIScriptedMenu
 		
 	}
 	
+	
+	private ref array<ref EditorCollapsibleListItem> test_objects = new array<ref EditorCollapsibleListItem>();
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorPrint("EditorUI::OnMouseButtonDown");
@@ -468,7 +470,7 @@ class EditorUI: UIScriptedMenu
 		Input input = GetGame().GetInput();	
 		// Left Click
 		if (button == 0) {
-			SetFocus(null);
+			//SetFocus(null);
 			if (GetEditor().IsPlacing()) {
 				GetEditor().PlaceObject();
 				return true;
@@ -498,7 +500,7 @@ class EditorUI: UIScriptedMenu
 				}
 			}
 			
-			
+			/*
 			EditorEvents.ClearSelection(this);
 			if (GetEditor().GetEditorBrush() == null) {
 				
@@ -516,9 +518,21 @@ class EditorUI: UIScriptedMenu
 					EditorEvents.SelectObject(this, Editor.EditorObjectUnderCursor);
 					return true;
 				}
+			}*/
+			
+			
+		}
+		
+		// Right mouse
+		if (button == 1) {
+			if (w.GetName() == "RightbarScroll") {
+				
+				EditorCollapsibleListItem t = new EditorCollapsibleListItem();
+				test_objects.Insert(t);
+				InsertPlacedObject(t);
+				
 			}
-			
-			
+			return true;
 		}
 		
 		// Middle Mouse
