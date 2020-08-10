@@ -4,19 +4,24 @@ class EditorListItem: ScriptedWidgetEventHandler
 {
 	protected Widget m_Root;
 	Widget GetRoot() { return m_Root; }
-	
-	// Title, VisibilityState, Icon
-	
+		
 	protected TextWidget m_ListItemText;
 	protected ImageWidget m_ListItemIcon;
+	
+	protected WrapSpacerWidget m_EditorListCategoryHeader;
+	
+	protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
+	protected static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
 	
 	void EditorListItem()
 	{
 		EditorPrint("EditorListItem");
 		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorCategory.layout", null);
 		
-		m_ListItemText 		= TextWidget.Cast(m_Root.FindAnyWidget("EditorListCategoryHeaderLable"));
-		m_ListItemIcon 		= ImageWidget.Cast(m_Root.FindAnyWidget("EditorListCategoryHeaderIcon"));
+		m_ListItemText 					= TextWidget.Cast(m_Root.FindAnyWidget("EditorListCategoryHeaderLable"));
+		m_ListItemIcon 					= ImageWidget.Cast(m_Root.FindAnyWidget("EditorListCategoryHeaderIcon"));
+		m_EditorListCategoryHeader 		= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("EditorListCategoryHeader"));
+		
 		
 		m_Root.SetHandler(this);
 	}
@@ -38,6 +43,13 @@ class EditorListItem: ScriptedWidgetEventHandler
 		m_ListItemIcon.SetImage(0);
 		m_ListItemIcon.Update();
 	}
+	
+	void SetColor(int color)
+	{
+		m_EditorListCategoryHeader.SetColor(color);
+		m_EditorListCategoryHeader.Update();		
+	}
+	
 }
 
 
@@ -53,6 +65,24 @@ class EditorPlacedListItem: EditorListItem
 		m_Data = data;
 		
 		SetText(m_Data.Type);
+		SetIcon(Editor.GetIconFromMod(Editor.GetModFromObject(m_Data.Type)));
+		
+		EditorEvents.OnObjectSelected.Insert(EditorObjectSelected);
+		EditorEvents.OnObjectDeselected.Insert(EditorObjectDeselected);	
+	}
+	
+	void EditorObjectSelected(Class context, EditorObject target)
+	{
+		if (target.GetID() == m_Data.GetID())
+			SetColor(COLOR_ON_SELECTED);
+		
+	}
+	
+	void EditorObjectDeselected(Class context, EditorObject target)
+	{		
+		if (target.GetID() == m_Data.GetID())
+			SetColor(COLOR_ON_DESELECTED); 
+
 	}
 	
 }
@@ -61,6 +91,7 @@ class EditorPlaceableListItem: EditorListItem
 {
 	private ref EditorPlaceableObjectData m_Data;
 	EditorPlaceableObjectData GetData() { return m_Data; }
+
 	
 	void EditorPlaceableListItem(EditorPlaceableObjectData data)
 	{
@@ -68,6 +99,56 @@ class EditorPlaceableListItem: EditorListItem
 		m_Data = data;
 		
 		SetText(m_Data.Type);
+		SetIcon(Editor.GetIconFromMod(Editor.GetModFromObject(m_Data.Type)));
+	}
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{		
+		return true;
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		return true;
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		Print("EditorPlaceableListItem::OnClick");
+		
+		if (button == 0) {
+			GetEditor().CreateObjectInHand(m_Data.Type);
+			SetFocus(w);
+			return true;
+		} else if (button == 1) {
+			
+			if (GetGame().GetInput().LocalValue("UAWalkRunTemp")) {				
+				// all very temporary please abstract elsewhere
+				if (GetEditor().IsLootEditActive())
+					GetEditor().PlaceholderRemoveLootMode();
+				else 
+					GetEditor().PlaceholderForEditLootSpawns(m_Data.Type);
+				
+				return true;				
+			}
+		}
+
+		
+		return false;
+	}
+	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		Print("EditorPlaceableListItem::OnFocus");
+		SetColor(COLOR_ON_SELECTED);
+		return true;
+	}
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		Print("EditorPlaceableListItem::OnFocusLost");
+		SetColor(COLOR_ON_DESELECTED);
+		return true;
 	}
 	
 }

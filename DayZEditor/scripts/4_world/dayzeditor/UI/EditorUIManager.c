@@ -22,6 +22,7 @@ class EditorUIManager: Managed // remove meeeee
 		m_UpdateInvoker = new ScriptInvoker();
 		m_UIManager = GetGame().GetUIManager();
 		
+		
 		// Init UI
 		m_EditorUI = new EditorUI();
 		m_UIManager.ShowScriptedMenu(m_EditorUI, GetGame().GetUIManager().GetMenu());
@@ -243,5 +244,7 @@ class EditorUIManager: Managed // remove meeeee
 	{
 		return m_UIManager.IsModalVisible();
 	}
+	
+	
 	
 }
