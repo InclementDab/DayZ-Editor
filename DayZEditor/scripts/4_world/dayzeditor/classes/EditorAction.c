@@ -8,7 +8,7 @@ class EditorAction: Managed
 	ref map<int, ref Param> RedoParameters = null;
 	
 	string m_UndoAction, m_RedoAction;
-		
+			
 	void EditorAction(string undo_action, string redo_action)
 	{
 		name = undo_action;
@@ -22,10 +22,12 @@ class EditorAction: Managed
 	{
 		Print("~EditorAction");
 		
+		foreach (int i, ref Param p: UndoParameters)
+			GetEditor().GetObjectManager().DeleteSessionData(i);
+		
 	}
 	
 	string GetName() { return name; }
-	
 	bool IsUndone() { return undone; }
 	
 	void CallUndo()

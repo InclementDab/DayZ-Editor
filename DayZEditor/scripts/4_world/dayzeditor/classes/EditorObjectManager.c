@@ -357,25 +357,11 @@ class EditorObjectManager: Managed
 	}
 	
 
-
+	void DeleteSessionData(int id) { m_SessionCache.Remove(id);	}
 	
-	// O(n) shit :)
-	EditorObject GetEditorObject(Object target)
-	{
-		foreach (ref EditorObject editor_object: m_PlacedObjects) 
-			if (editor_object.GetWorldObject() == target) 
-				return editor_object;
-		
-		return null;
-	}
 	
-	EditorObject GetEditorObject(int id)
-	{
-		return m_PlacedObjects.Get(id);
-	}
-	
-	EditorObjectData GetSessionDataById(int id) { return m_SessionCache.Get(id);	}
-	
+	EditorObject GetEditorObject(int id) { return m_PlacedObjects.Get(id); }
+	EditorObjectData GetSessionDataById(int id) { return m_SessionCache.Get(id); }
 	EditorObject GetPlacedObjectById(int id) { return m_PlacedObjects.Get(id); }
 	
 	
