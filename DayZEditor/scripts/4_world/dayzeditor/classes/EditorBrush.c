@@ -9,7 +9,6 @@ typedef ref array<ref EditorBrushSettings> EditorBrushSettingsSet;
 class EditorBrushSettings
 {
 	string Name;
-	
 	float MinRadius, MaxRadius;
 	ref TStringArray PlaceableObjects = new TStringArray();
 
@@ -31,7 +30,7 @@ class EditorBrushSettings
 
 class EditorBrush
 {
-	protected BrushBase m_BrushDecal;
+	protected EntityAI m_BrushDecal;
 	protected ref EditorBrushSettings m_BrushSettings;
 
 	protected static float m_BrushRadius = 20;
@@ -49,19 +48,25 @@ class EditorBrush
 	
 	void EditorBrush(EditorBrushSettings settings)
 	{
-		Print("EditorBrush");
+		EditorPrint("EditorBrush");
 		m_BrushSettings = settings;
 		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
-		//m_BrushDecal.SetTexture();
-		m_ObjectManager = GetEditor().GetObjectManager();
+		m_ObjectManager = GetEditor().GetObjectManager();		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
 	
 	void ~EditorBrush()
 	{
-		Print("~EditorBrush");
+		EditorPrint("~EditorBrush");
 		GetGame().ObjectDelete(m_BrushDecal);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(UpdateBrush);
+	}
+	
+	void SetBrushTexture(string texture)
+	{
+		EditorPrint("EditorBrush::SetBrushTexture " + texture);
+		m_BrushDecal.SetObjectTexture(0, texture);
+		m_BrushDecal.Update();
 	}
 	
 	
@@ -81,6 +86,7 @@ class EditorBrush
 			CurrentMousePosition
 		};
 		
+		
 		m_BrushDecal.SetTransform(transform);
 		
 		if (GetEditor().GetUIManager().IsCursorOverUI()) return;
@@ -99,7 +105,7 @@ class EditorBrush
 	
 	void DuringMouseDown(vector position) 
 	{ 
-		
+		//if (m_BrushSettings.PlaceableObjects.Count() == 0) return;
 		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
@@ -129,11 +135,12 @@ class EditorBrush
 			direction[1] = Math.RandomFloat(-0.05, 0.05);
 			placed_object.SetDirection(direction);
 			
-			
-			data_set.Insert(new EditorObjectData(object_name, pos, placed_object.GetOrientation(), EditorObjectFlags.NONE));
+			EditorObjectData d = EditorObjectData.Create(object_name, pos, placed_object.GetOrientation(), EditorObjectFlags.NONE);
+			data_set.InsertEditorData(d);
 			
 			GetGame().ObjectDelete(placed_object);		
 		}
+		
 		
 		m_ObjectManager.CreateObjects(data_set);
 	}
@@ -150,6 +157,12 @@ class EditorBrush
 class DeleteBrush: EditorBrush
 {	
 	
+	void DeleteBrush(EditorBrushSettings settings)
+	{
+		EditorPrint("DeleteBrush");
+		SetBrushTexture("DayZEditor\\Editor\\data\\BrushDelete.paa");
+	}
+	
 	override void DuringMouseDown(vector position)
 	{
 		vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
@@ -157,18 +170,21 @@ class DeleteBrush: EditorBrush
 		int component;
 		set<Object> results = new set<Object>();
 		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, EditorBrush.GetRadius() / 2, CollisionFlags.ALLOBJECTS);
+		EditorEvents.ClearSelection(this);
 		
+		// todo this is deleting one at a time. use DeleteObjects smile :)
 		foreach (Object r: results) {
 					
-			EditorObject eo = m_ObjectManager.GetEditorObject(r.GetID());
+			EditorObject eo = m_ObjectManager.GetPlacedObjectById(r.GetID());
 			if (eo != null) {
-				EditorEvents.SelectObject(this, eo);
-				m_ObjectManager.DeleteSelection();
+				m_ObjectManager.DeleteObject(eo);
+				
 			} else {
 				GetGame().ObjectDelete(r);
 			}
-			
 		}
+		
+		
 		
 		
 		

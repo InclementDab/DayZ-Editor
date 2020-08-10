@@ -1,5 +1,5 @@
 
-class EditorAction: Managed
+class EditorAction
 {
 	private string name;
 	private bool undone = false;
@@ -8,7 +8,7 @@ class EditorAction: Managed
 	ref map<int, ref Param> RedoParameters = null;
 	
 	string m_UndoAction, m_RedoAction;
-		
+			
 	void EditorAction(string undo_action, string redo_action)
 	{
 		name = undo_action;
@@ -22,10 +22,12 @@ class EditorAction: Managed
 	{
 		Print("~EditorAction");
 		
+		foreach (int i, ref Param p: UndoParameters)
+			GetEditor().GetObjectManager().DeleteSessionData(i);
+		
 	}
 	
 	string GetName() { return name; }
-	
 	bool IsUndone() { return undone; }
 	
 	void CallUndo()
@@ -65,23 +67,22 @@ class EditorAction: Managed
 		EditorPrint("EditorAction::Create");
 		Sleep(10);
 		EditorObjectData data = GetEditor().GetObjectManager().GetSessionDataById(params.param1);
-		GetEditor().GetObjectManager().SetSessionObjectById(params.param1, new EditorObject(data));
+		GetEditor().GetObjectManager().CreateObject(data, false);
 	}
 	
 	void Delete(Param1<int> params)
 	{
 		EditorPrint("EditorAction::Delete");
 		Sleep(10);
-		EditorObject editor_object = GetEditor().GetObjectManager().GetSessionObjectById(params.param1);
-		GetEditor().GetObjectManager().SetSessionDataById(params.param1, editor_object.GetData());
-		delete editor_object;
+		EditorObject editor_object = GetEditor().GetObjectManager().GetPlacedObjectById(params.param1);
+		GetEditor().GetObjectManager().DeleteObject(editor_object, false);
 	}
 	
 	
 	void SetTransform(Param3<int, vector, vector> params)
 	{
 		EditorPrint("EditorObject::SetTransform");
-		EditorObject editor_object = GetEditor().GetObjectManager().GetSessionObjectById(params.param1);
+		EditorObject editor_object = GetEditor().GetObjectManager().GetPlacedObjectById(params.param1);
 		editor_object.SetPosition(params.param2);
 		editor_object.SetOrientation(params.param3);
 		editor_object.Update();

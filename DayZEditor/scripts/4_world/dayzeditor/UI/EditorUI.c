@@ -349,6 +349,12 @@ class EditorUI: UIScriptedMenu
 		m_CurrentPlaceableObjects.Insert(placeable_object.SetListItem(m_LeftbarSpacer));
 	}
 	
+	
+	void InsertPlacedObject(EditorPlacedListItem target)
+	{
+		m_RightbarSpacer.AddChild(target.GetLayoutRoot());
+	}
+	
 	void InsertMapObject(Widget map_marker)
 	{
 		Print("EditorUI::InsertMapObject " + map_marker.GetName());
@@ -474,10 +480,21 @@ class EditorUI: UIScriptedMenu
 			ref array<ref RaycastRVResult> raycast_result = new array<ref RaycastRVResult>();
 			DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
 			
-			// todo find better way to do this that doesnt throw null
-			if (raycast_result.Get(0).obj != NULL) {
-				if ((raycast_result.Get(0).obj == GetEditor().GetTranslationWidget() || raycast_result.Get(0).obj == GetEditor().GetTranslationWidget().GetRotationWidget())) {
-					EditorEvents.DragInvoke(raycast_result[0].obj, GetEditor().GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
+
+			if (raycast_result.Count() > 0) {
+				Object obj = raycast_result.Get(0).obj;
+				if ((obj.GetType() == "TranslationWidget" || obj.GetType() == "RotationWidget")) {
+					EditorEvents.DragInvoke(obj, GetEditor().GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
+					return true;
+				}
+				
+				EditorObject editor_object = GetEditor().GetObjectManager().GetEditorObject(obj);
+				if (editor_object != null) {
+					if (input.LocalValue("UAWalkRunTemp")) {
+						EditorObjectManager.ToggleSelection(editor_object);
+					} else if (!input.LocalValue("UATurbo")) {
+						EditorEvents.ClearSelection(this);
+					} else EditorEvents.SelectObject(this, editor_object);
 					return true;
 				}
 			}
@@ -599,10 +616,7 @@ class EditorUI: UIScriptedMenu
 		GetGame().GetUIManager().ShowScriptedMenu(dialog, GetGame().GetUIManager().GetMenu());
 	}
 
-	void InsertPlacedObject(EditorPlacedListItem target)
-	{
-		m_RightbarSpacer.AddChild(target.GetLayoutRoot());
-	}
+
 	
 	private ref array<string> m_CurrentBrushNames = new array<string>();
 	void ClearBrushBox()

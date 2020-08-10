@@ -1,11 +1,11 @@
 
-class EditorObjectSet: map<int, EditorObject>
+class EditorObjectSet: map<int, ref EditorObject>
 {
 	
 	void ~EditorObjectSet()
 	{
-		foreach (EditorObject obj: this)
-			delete obj;
+		EditorPrint("~EditorObjectSet", LogSeverity.DEBUG);
+		GetEditor().GetObjectManager().DeleteObjects(this);
 	}
 	
 	bool InsertEditorObject(EditorObject target)
@@ -21,32 +21,28 @@ class EditorObjectSet: map<int, EditorObject>
 }
 
 
-//typedef ref map<int, ref EditorObject> EditorObjectSet;
-
-class EditorObjectManager: Managed
+class EditorObjectManager
 {
 	
-	private ref EditorObjectSet 			m_PlacedObjects;
-	private ref EditorObjectSet				m_SelectedObjects;
-	private ref map<int, ref EditorObject> 	m_SessionCache;
-	private ref set<ref EditorAction> 		m_ActionStack;
+	private ref EditorObjectSet 				m_PlacedObjects;
+	private ref EditorObjectSet					m_SelectedObjects;
+	private ref EditorObjectDataSet			 	m_SessionCache;
+	private ref set<ref EditorAction> 			m_ActionStack;
 	
 	
 	// Getters
 	ref set<ref EditorAction> GetActionStack() { return m_ActionStack; }
 	ref EditorObjectSet GetSelectedObjects() { return m_SelectedObjects; }
 	ref EditorObjectSet GetPlacedObjects() { return m_PlacedObjects; }
-	ref map<int, ref EditorObject> GetSessionCache() { return m_SessionCache; }
+	ref EditorObjectDataSet	 GetSessionCache() { return m_SessionCache; }
 	
 	void EditorObjectManager() 
 	{ 
 		Print("EditorObjectManager");
 		m_PlacedObjects 	= new EditorObjectSet();
 		m_SelectedObjects	= new EditorObjectSet();
-		//m_SessionCache 		= new set<ref EditorObjectLink>();
-		m_SessionCache 		= new map<int, ref EditorObject>();
+		m_SessionCache 		= new EditorObjectDataSet();
 		m_ActionStack 		= new set<ref EditorAction>();
-		
 		
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
@@ -60,7 +56,7 @@ class EditorObjectManager: Managed
 	void ~EditorObjectManager() 
 	{
 		Print("~EditorObjectManager");
-		
+
 		delete m_PlacedObjects;
 		delete m_SelectedObjects;
 		delete m_SessionCache;
@@ -90,44 +86,41 @@ class EditorObjectManager: Managed
 	}
 	
 	
-	void CreateObjects(ref EditorObjectDataSet data_list)
+	void CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
 	{
 		EditorPrint("EditorObjectManager::CreateObjects");
 		
-		EditorAction action = new EditorAction("Delete", "Create");
+		if (create_undo) EditorAction action = new EditorAction("Delete", "Create");
 		foreach (EditorObjectData editor_object_data: data_list) {
 			
-			editor_object_data.ID = m_SessionData.Count();
-			m_SessionData.Insert(editor_object_data);
 			EditorObject editor_object = new EditorObject(editor_object_data);
-			m_SessionCache.Insert(editor_object.GetID(), editor_object);
 			
-			ref Param1<int> params = new Param1<int>(editor_object.GetID());
-			action.InsertUndoParameter(editor_object, params);
-			action.InsertRedoParameter(editor_object, params);
+			if (create_undo) {
+				action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+				action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			}
 			
+			EditorEvents.ObjectCreateInvoke(this, editor_object);
 		}
 		
-		InsertAction(action);		
+		if (create_undo) InsertAction(action);		
 	}
 	
 	
-	EditorObject CreateObject(ref EditorObjectData editor_object_data)
+	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true)
 	{		
 		EditorPrint("EditorObjectManager::CreateObject");
 		
-		editor_object_data.ID = m_SessionData.Count();
-		m_SessionData.Insert(editor_object_data);
-		EditorObject editor_object = new EditorObject(editor_object_data);
-		m_SessionCache.Insert(editor_object.GetID(), editor_object);
 		
-
-		EditorAction action = new EditorAction("Delete", "Create");
-		ref Param1<int> params = new Param1<int>(editor_object.GetID());
-		action.InsertUndoParameter(editor_object, params);
-		action.InsertRedoParameter(editor_object, params);
-		InsertAction(action);
-
+		EditorObject editor_object = new EditorObject(editor_object_data);
+	
+		if (create_undo) {
+			EditorAction action = new EditorAction("Delete", "Create");;
+			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			InsertAction(action);
+		}
+		EditorEvents.ObjectCreateInvoke(this, editor_object);
 		return editor_object;
 	}
 	
@@ -144,49 +137,42 @@ class EditorObjectManager: Managed
 	}
 	
 	
-	void OnObjectSelected(Class context, EditorObject target)
+	
+	
+	
+	void DeleteObject(EditorObject target, bool create_undo = true)
 	{
-		EditorPrint("EditorObjectManager::SelectObject");		
-		m_SelectedObjects.InsertEditorObject(target);
-	}
-	
-	void OnObjectDeselected(Class context, EditorObject target)
-	{
-		EditorPrint("EditorObjectManager::SelectObject");
-		m_SelectedObjects.RemoveEditorObject(target);
-	}	
-	
-	void OnObjectCreated(Class context, EditorObject target)
-	{
-		EditorPrint("EditorObjectManager::OnObjectCreated");
-		m_SelectedObjects.InsertEditorObject(target);
-		m_PlacedObjects.InsertEditorObject(target);
-	}	
-	
-	void OnObjectDeleted(Class context, EditorObject target)
-	{
-		EditorPrint("EditorObjectManager::OnObjectDeleted");
-		m_SelectedObjects.RemoveEditorObject(target);
-		m_PlacedObjects.RemoveEditorObject(target);
-	}
-	
-	
-	
-	int DeleteSelection()
-	{
-		Print("EditorObjectManager::DeleteObject");
-		int result = m_SelectedObjects.Count();
+		EditorPrint("EditorObjectManager::DeleteObject");
+		EditorEvents.ObjectDeleteInvoke(this, target);
 		
-		EditorAction action = new EditorAction("Create", "Delete");
-		foreach (EditorObject selected_object: m_SelectedObjects) {
-			action.InsertUndoParameter(selected_object, new Param1<int>(selected_object.GetID()));
-			action.InsertRedoParameter(selected_object, new Param1<int>(selected_object.GetID()));
-			delete selected_object;
+		if (create_undo) {
+			EditorAction action = new EditorAction("Create", "Delete");
+			action.InsertUndoParameter(target, new Param1<int>(target.GetID()));
+			action.InsertRedoParameter(target, new Param1<int>(target.GetID()));
+			InsertAction(action);
 		}
 		
-		InsertAction(action);
-		//GetGame().ObjectDelete(GetEditor().GetTranslationWidget());
-		return result;
+		delete target;
+	}
+	
+	void DeleteObjects(EditorObjectSet target, bool create_undo = true)
+	{
+		EditorPrint("EditorObjectManager::DeleteObjects");
+		
+		if (create_undo) EditorAction action = new EditorAction("Create", "Delete");
+		
+		foreach (EditorObject editor_object: target) {
+			EditorEvents.ObjectDeleteInvoke(this, editor_object);
+			
+			if (create_undo) {
+				action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+				action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			}
+			
+			delete editor_object;
+		}	
+			
+		if (create_undo) InsertAction(action);
 	}
 		
 		
@@ -200,12 +186,11 @@ class EditorObjectManager: Managed
 	
 	}
 	
-	void ToggleSelection(EditorObject target)
+	static void ToggleSelection(EditorObject target)
 	{
 		if (target.IsSelected())
-			EditorEvents.DeselectObject(this, target);
-		
-		EditorEvents.SelectObject(this, target);
+			EditorEvents.DeselectObject(null, target);
+		else EditorEvents.SelectObject(null, target);
 	}
 	
 
@@ -213,52 +198,58 @@ class EditorObjectManager: Managed
 	
 	void CutSelection()
 	{
-		string copy;
-		EditorObjectDataSet world_objects = new EditorObjectDataSet();
-		foreach (int id, EditorObject selected_object: m_SelectedObjects) {
-			world_objects.Insert(selected_object.GetData());		
-		}
-		copy = JsonFileLoader<EditorObjectDataSet>.JsonMakeData(world_objects);
-		GetGame().CopyToClipboard(copy);
-		DeleteSelection();
+		EditorPrint("EditorObjectManager::CutSelection");
+		CopySelection();
+		DeleteObjects(m_SelectedObjects);
 	}
 	
 	
 	void CopySelection()
 	{
-		string copy;
-		EditorObjectDataSet world_objects = new EditorObjectDataSet();
-		foreach (int id, EditorObject selected_object: m_SelectedObjects) {
-			world_objects.Insert(selected_object.GetData());			
+		EditorPrint("EditorObjectManager::CopySelection");
+		
+		ref array<ref EditorObjectData>> world_objects = new ref array<ref EditorObjectData>>();
+		
+		vector avg_position;
+		foreach (int id, EditorObject copy_object: m_SelectedObjects)
+			avg_position += copy_object.GetPosition();
+		
+		for (int i = 0; i < 3; i++)
+			avg_position[i] = avg_position[i] / m_SelectedObjects.Count();
+		
+		foreach (int idx, EditorObject selected_object: m_SelectedObjects) {
+			EditorObjectData data = selected_object.GetData();
+			data.Position = selected_object.GetPosition() - avg_position;
+			world_objects.Insert(data);
 		}
-		copy = JsonFileLoader<EditorObjectDataSet>.JsonMakeData(world_objects);
-		GetGame().CopyToClipboard(copy);
+	
+		GetGame().CopyToClipboard(JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects));
 	}
 	
 	void PasteSelection()
 	{
+		EditorPrint("EditorObjectManager::PasteSelection");
 		string clipboard_text;
 		GetGame().CopyFromClipboard(clipboard_text);
 		
-		EditorObjectDataSet data = new EditorObjectDataSet();
-		JsonFileLoader<EditorObjectDataSet>.JsonLoadData(clipboard_text, data);
+		ref array<ref EditorObjectData>> data = new array<ref EditorObjectData>>();
+		JsonFileLoader<array<ref EditorObjectData>>.JsonLoadData(clipboard_text, data);
 		if (data.Count() == 0) return;
-		
-		EditorEvents.ClearSelection(this);
-		vector avg_position;
 
-		foreach (EditorObjectData copy_object: data) {
-			avg_position += copy_object.Position;
-		}
-		
-		avg_position[0] = avg_position[0] / data.Count();
-		avg_position[1] = avg_position[1] / data.Count();
-		avg_position[2] = avg_position[2] / data.Count();
-		
-		foreach (EditorObjectData pasted_object: data) {
+		EditorEvents.ClearSelection(this);
+				
+		foreach (ref EditorObjectData pasted_object: data) {
 			
+			vector position;
+			if (GetEditor().GetUIManager().GetEditorUI().IsMapOpen()) {
+				MapWidget map_widget = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
+				int x, y;
+				GetCursorPos(x, y);
+				position = pasted_object.Position + map_widget.ScreenToMap(Vector(x, y, 0));
+			} else {
+				position = pasted_object.Position + Editor.CurrentMousePosition;
+			}
 			
-			vector position = avg_position - pasted_object.Position + Editor.CurrentMousePosition;
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",
@@ -266,7 +257,7 @@ class EditorObjectManager: Managed
 				position
 			};
 			
-			EditorObject editor_object = CreateObject(pasted_object);
+			EditorObject editor_object = CreateObject(EditorObjectData.Create(pasted_object.Type, position, pasted_object.Orientation, pasted_object.Flags));
 			float surfacey = GetGame().SurfaceY(position[0], position[2]);
 			vector size = editor_object.GetSize();
 			position[1] = surfacey + size[1] / 2;
@@ -346,48 +337,45 @@ class EditorObjectManager: Managed
 		return null;
 	}
 	
-
-
-	
-	// O(n) shit :)
-	EditorObject GetEditorObject(Object target)
+	// EditorObject.WorldObject.GetID(), EditorObject.GetID()
+	private ref map<int, int> m_PlacedObjectIndex = new map<int, int>();
+	EditorObject GetEditorObject(notnull Object world_object)
 	{
-		foreach (ref EditorObject editor_object: m_PlacedObjects) 
-			if (editor_object.GetWorldObject() == target) 
-				return editor_object;
-		
-		return null;
+		int id = world_object.GetID();
+		int editor_obj_id = m_PlacedObjectIndex.Get(id);
+		return GetEditorObject(editor_obj_id);
 	}
 	
-	EditorObject GetEditorObject(int id)
+	void DeleteSessionData(int id) { m_SessionCache.Remove(id);	}
+	EditorObject GetEditorObject(int id) { return m_PlacedObjects.Get(id); }
+	EditorObjectData GetSessionDataById(int id) { return m_SessionCache.Get(id); }
+	EditorObject GetPlacedObjectById(int id) { return m_PlacedObjects.Get(id); }
+	
+	void OnObjectSelected(Class context, EditorObject target)
 	{
-		return m_PlacedObjects.Get(id);
+		EditorPrint("EditorObjectManager::SelectObject");		
+		m_SelectedObjects.InsertEditorObject(target);
 	}
 	
-	
-	EditorObject GetSessionObjectById(int id) { return m_SessionCache.Get(id); }
-	void SetSessionObjectById(int id, EditorObject data) { m_SessionCache.Set(id, data); }
-	
-	
-	private ref array<ref EditorObjectData> m_SessionData = new array<ref EditorObjectData>();
-	EditorObjectData GetSessionDataById(int id)
+	void OnObjectDeselected(Class context, EditorObject target)
 	{
-		foreach (EditorObjectData data: m_SessionData) {
-			if (data.ID == id)
-				return data;
-		}
-		
-		Print("Session Data Not Found!");
-		return null;
-	}
+		EditorPrint("EditorObjectManager::SelectObject");
+		m_SelectedObjects.RemoveEditorObject(target);
+	}	
 	
-	void SetSessionDataById(int id, EditorObjectData data)
+	void OnObjectCreated(Class context, EditorObject target)
 	{
-		m_SessionData.Set(id, data);
+		EditorPrint("EditorObjectManager::OnObjectCreated");
+		//m_SelectedObjects.InsertEditorObject(target);
+		m_PlacedObjects.InsertEditorObject(target);
+		m_PlacedObjectIndex.Insert(target.GetWorldObject().GetID(), target.GetID());
+	}	
+	
+	void OnObjectDeleted(Class context, EditorObject target)
+	{
+		EditorPrint("EditorObjectManager::OnObjectDeleted");
+		m_SelectedObjects.RemoveEditorObject(target);
+		m_PlacedObjects.RemoveEditorObject(target);
 	}
-	
-	
-	
-	
 
 }

@@ -64,8 +64,6 @@ class Editor: Managed
 		
 		
 		// Event subscriptions
-		//EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
-		//EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
 		EditorEvents.OnObjectDrag.Insert(HandleObjectDrag);
 		EditorEvents.OnObjectDrop.Insert(HandleObjectDrop);
 		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
@@ -86,68 +84,20 @@ class Editor: Managed
 		DebugObject3 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
 		
 		m_EditorSettings.SetPlaceableObjectCategory(PlaceableObjectCategory.BUILDING);
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(AutoSave, EditorSettings.AUTOSAVE_TIMER * 1000, true);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update); // Last thing always
 	}
 		
 	void ~Editor()
 	{
 		Print("~Editor");
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Remove(AutoSave);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 	}
 	
 	
 
-
-	
-	void Undo()
-	{
-		Print("Editor::Undo");
-		foreach (EditorAction action: GetObjectManager().GetActionStack()) {
-			if (!action.IsUndone()) {
-				action.CallUndo();
-				
-				//debug 
-				for (int i = 0; i < GetUIManager().GetEditorUI().m_DebugActionStack.GetNumItems(); i++) {
-					EditorAction current_action;
-					GetUIManager().GetEditorUI().m_DebugActionStack.GetItemData(i, 0, current_action);
-					if (current_action == action) 
-						GetUIManager().GetEditorUI().m_DebugActionStack.SetItemColor(i, 0, COLOR_RED);
-				}
-				
-				return;
-			}
-		}	
-	}
-	
-	void Redo()
-	{
-		Print("Editor::Redo");
-		for (int i = GetObjectManager().GetActionStack().Count() - 1; i >= 0; i--) {
-			EditorAction action = GetObjectManager().GetActionStack().Get(i);
-			if (action == null) continue;
-			if (action.IsUndone()) {
-				action.CallRedo();
-				
-				//debug 
-				for (int j = 0; j < GetUIManager().GetEditorUI().m_DebugActionStack.GetNumItems(); j++) {
-					EditorAction current_action;
-					GetUIManager().GetEditorUI().m_DebugActionStack.GetItemData(j, 0, current_action);
-					if (current_action == action) 
-						GetUIManager().GetEditorUI().m_DebugActionStack.SetItemColor(j, 0, ARGB(255, 255, 255, 255));
-					
-				}
-				
-				return;
-			}
-		}
-	}
-	
-	
-
-
-
-	
-	
 	bool exit_condition = false;
 	void Update() 
 	{
@@ -290,7 +240,8 @@ class Editor: Managed
 		vector mat[4];
 		
 		
-		EditorObject editor_object = GetEditor().GetObjectManager().CreateObject(new EditorObjectData(e.GetType(), e.GetPosition(), e.GetOrientation()));
+		EditorObject editor_object = m_EditorObjectManager.CreateObject(EditorObjectData.Create(e.GetType(), e.GetPosition(), e.GetOrientation()));
+		
 		
 		
 		if (!input.LocalValue("UATurbo")) {
@@ -306,105 +257,190 @@ class Editor: Managed
 	}
 
 	
-	
-	
-	void Save()
-	{	
-		EditorWorldData save_data = new EditorWorldData();
-		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
-		
-		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
-		foreach (EditorObject save_object: placed_objects)	
-			save_data.EditorObjects.Insert(save_object.GetData());
- 
-		EditorFileManager.Save(save_data);
-		GetEditor().GetUIManager().NotificationCreate("Saved!", COLOR_GREEN); 
+	void Undo()
+	{
+		Print("Editor::Undo");
+		foreach (EditorAction action: GetObjectManager().GetActionStack()) {
+			if (!action.IsUndone()) {
+				action.CallUndo();
+				
+				//debug 
+				for (int i = 0; i < GetUIManager().GetEditorUI().m_DebugActionStack.GetNumItems(); i++) {
+					EditorAction current_action;
+					GetUIManager().GetEditorUI().m_DebugActionStack.GetItemData(i, 0, current_action);
+					if (current_action == action) 
+						GetUIManager().GetEditorUI().m_DebugActionStack.SetItemColor(i, 0, COLOR_RED);
+				}
+				
+				return;
+			}
+		}	
 	}
 	
-	void Open()
+	void Redo()
 	{
-		delete m_EditorObjectManager;
-		m_EditorObjectManager = new EditorObjectManager();
-		
-		EditorWorldData load_data = new EditorWorldData();
-		int loadfile_result = EditorFileManager.Open(load_data);
-		Print("Open Result " + loadfile_result);
-		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
-		
-		foreach (EditorObjectData load_object: load_data.EditorObjects) {
-			
-			EditorObject e_object =  GetObjectManager().CreateObject(load_object);
-			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
+		Print("Editor::Redo");
+		for (int i = GetObjectManager().GetActionStack().Count() - 1; i >= 0; i--) {
+			EditorAction action = GetObjectManager().GetActionStack().Get(i);
+			if (action == null) continue;
+			if (action.IsUndone()) {
+				action.CallRedo();
+				
+				//debug 
+				for (int j = 0; j < GetUIManager().GetEditorUI().m_DebugActionStack.GetNumItems(); j++) {
+					EditorAction current_action;
+					GetUIManager().GetEditorUI().m_DebugActionStack.GetItemData(j, 0, current_action);
+					if (current_action == action) 
+						GetUIManager().GetEditorUI().m_DebugActionStack.SetItemColor(j, 0, ARGB(255, 255, 255, 255));
+					
+				}
+				
+				return;
+			}
 		}
-		
-		GetEditor().GetUIManager().NotificationCreate("Load Complete " + typename.EnumToString(FileDialogResult, loadfile_result)); 
 	}
 	
-	void Import(string filename, ImportMode import_mode)
+	
+	
+	/* SAVE, OPEN, IMPORT, EXPORT */
+	
+	void New()
 	{
+		EditorPrint("Editor::New");
+		
 		delete m_EditorObjectManager;
 		m_EditorObjectManager = new EditorObjectManager();
 		
+		// debug
+		GetEditor().GetUIManager().GetEditorUI().m_DebugActionStack.ClearItems();
 		
+	}
+	
+	private string autosave_file;
+	void AutoSave()
+	{
+		EditorPrint("Editor::Autosave");
+		if (autosave_file == string.Empty) return;
+		
+		EditorWorldData save_data = new EditorWorldData();
+		
+		// Get Data
+		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
+		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
+		
+		// Save Data
+		foreach (EditorObject save_object: placed_objects)	
+			save_data.EditorObjects.InsertEditorData(save_object.GetData());
+		
+		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, autosave_file);
+		GetEditor().GetUIManager().NotificationCreate("Autosave " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
+	}
+	
+	void Save(string filename = "editor_save", string filedir = "$profile:Editor/")
+	{	
+		EditorPrint("Editor::Save");
+		EditorWorldData save_data = new EditorWorldData();
+		
+		// Get Data
+		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
+		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
+		
+		// Save Data
+		foreach (EditorObject save_object: placed_objects)	
+			save_data.EditorObjects.InsertEditorData(save_object.GetData());
+ 		
+		string file = filedir + filename + ".dze";
+		autosave_file = file;
+		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, file);
+		GetEditor().GetUIManager().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
+	}
+	
+	void Open(string filename = "editor_save", string filedir = "$profile:Editor/")
+	{
+		EditorPrint("Editor::Open");
+		EditorWorldData load_data = new EditorWorldData();
+		
+		// Reset world data
+		delete m_EditorObjectManager;
+		m_EditorObjectManager = new EditorObjectManager();
+		
+		// debug
+		GetEditor().GetUIManager().GetEditorUI().m_DebugActionStack.ClearItems();
+		
+		
+		// Load Data
+		string file = filedir + filename + ".dze";
+		FileDialogResult loadfile_result = EditorFileManager.Open(load_data, file);
+		
+		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
+		GetObjectManager().CreateObjects(load_data.EditorObjects, false);
+		
+		GetEditor().GetUIManager().NotificationCreate("Load " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+	}
+	
+	void Import(ImportMode import_mode, string filename = "editor_import.txt", string filedir = "$profile:Editor/", bool merge = false)
+	{
+		EditorPrint("Editor::Import");
 		EditorWorldData import_data = new EditorWorldData();
-		int loadfile_result =  EditorFileManager.Import(import_data, filename, import_mode);
-		Print("Import Result " + loadfile_result);
+		
+		if (!merge) {
+			delete m_EditorObjectManager;
+			m_EditorObjectManager = new EditorObjectManager();
+			
+			// debug
+			GetEditor().GetUIManager().GetEditorUI().m_DebugActionStack.ClearItems();
+		}
+				
+		
+		FileDialogResult loadfile_result = EditorFileManager.Import(import_data, filename, import_mode);
 		
 		if (import_data.CameraPosition[3] != vector.Zero)
 			GetUIManager().GetEditorCamera().SetTransform(import_data.CameraPosition);
 		
-		foreach (EditorObjectData load_object: import_data.EditorObjects) {
-			EditorObject e_object = GetObjectManager().CreateObject(load_object);
-			GetObjectManager().GetPlacedObjects().Insert(e_object.GetID(), e_object);
-		}
-		
-		GetEditor().GetUIManager().NotificationCreate("Import Complete " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+		GetObjectManager().CreateObjects(import_data.EditorObjects);
+		GetEditor().GetUIManager().NotificationCreate("Import " + typename.EnumToString(FileDialogResult, loadfile_result)); 
 	}
 	
-	void Export()
+	void Export(ExportSettings export_settings, string filename = "editor_export", string filedir = "$profile:Editor/", )
 	{
-		EditorWorldData save_data = new EditorWorldData();
-		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
+		EditorPrint("Editor::Export");
+		EditorWorldData export_data = new EditorWorldData();
 		
+		string file = filedir + filename;
+		switch (export_settings.ExportFileMode) {
+			
+			case ExportMode.EXPANSION: {
+				file += ".map";
+				break;
+			}
+			
+			case ExportMode.VPP: {
+				file += ".vpp";
+				break;
+			}
+			
+			default: {
+				file += ".txt";
+				break;
+			}
+		}
+		
+		
+		GetUIManager().GetEditorCamera().GetTransform(export_data.CameraPosition);
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
-		foreach (EditorObject save_object: placed_objects)	
-			save_data.EditorObjects.Insert(save_object.GetData());
- 
-		ExportSettings export_settings = new ExportSettings();
-		export_settings.ExportFileMode = ExportMode.VPP;
-		int loadfile_result = EditorFileManager.Export(save_data, "VPPTest", export_settings);
-		/*
-		EditorFileManager.Export(export_objects, ExportMode.COMFILE, "export_server");
-		EditorFileManager.Export(export_objects, ExportMode.EXPANSION, "export_expansion");
-		EditorFileManager.Export(export_objects, ExportMode.TERRAINBUILDER, "export_terrainbuilder", HeightType.ABSOLUTE);
-		*/
 		
-		GetEditor().GetUIManager().NotificationCreate("Export Complete " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+		foreach (EditorObject save_object: placed_objects)	
+			export_data.EditorObjects.InsertEditorData(save_object.GetData());
+ 
+		FileDialogResult loadfile_result = EditorFileManager.Export(export_data, file, export_settings);
+				
+		GetEditor().GetUIManager().NotificationCreate("Export " + typename.EnumToString(FileDialogResult, loadfile_result)); 
 	}
 	
 
 	
-	void OnObjectSelected(Class context, EditorObject target)
-	{
-		EditorPrint("Editor::OnObjectSelected");		
-		/*
-		if (GlobalTranslationWidget != null)
-			GetGame().ObjectDelete(GlobalTranslationWidget);
-		
-		
-		GlobalTranslationWidget = TranslationWidget.Cast(GetGame().CreateObjectEx("TranslationWidget", vector.Zero, ECE_SETUP | ECE_CREATEPHYSICS | ECE_LOCAL));
-		GlobalTranslationWidget.SetEditorObject(target);	
-		*/
-	}
-	
-	void OnObjectDeselected(Class context, EditorObject target)
-	{
-		EditorPrint("Editor::OnObjectDeselected");
-		//GetGame().ObjectDelete(GlobalTranslationWidget);
-	}
-	
-	
-	
+
+
 	void HandleObjectDrag(Class context, EditorObject target, ref RaycastRVResult raycast_result = null)
 	{
 		ref EditorObjectSet selected_objects = GetObjectManager().GetSelectedObjects();
@@ -792,7 +828,7 @@ class Editor: Managed
 			}
 			
 			case KeyCode.KC_DELETE: {
-				GetObjectManager().DeleteSelection();				
+				m_EditorObjectManager.DeleteObjects(m_EditorObjectManager.GetSelectedObjects());			
 				return true;
 			}
 			
@@ -872,7 +908,18 @@ class Editor: Managed
 					//GetUIManager().GetEditorUI().ShowExportWindow();
 					
 					// todo once UI is created, add "Export Selected Only"
-					Export();
+					ExportSettings settings = new ExportSettings();
+					settings.ExportFileMode = ExportMode.EXPANSION;
+					settings.ExportSelectedOnly = true;
+					Export(settings, "ExpansionExport");
+					return true;
+				}
+				break;
+			}
+			
+			case KeyCode.KC_N: {
+				if (input.LocalValue("UAWalkRunTemp")) {
+					New();
 					return true;
 				}
 				break;
@@ -880,9 +927,7 @@ class Editor: Managed
 			
 			case KeyCode.KC_I: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					//Import("$profile:Editor/SvetloyarskNoCollision.map", ImportMode.EXPANSION);
-					Import("$profile:Editor/GM_Trader.vpp", ImportMode.VPP);
-					
+					Import(ImportMode.VPP, "GM_Trader.vpp");					
 				}
 				break;
 			}

@@ -35,6 +35,10 @@ class EditorUIManager: Managed
 		GetGame().GetWorldName(world_name);
 		GetGame().ConfigGetIntArray(string.Format("CfgWorlds %1 centerPosition", world_name), center_pos);
 		
+		// Random cam position smile :)
+		center_pos[0] = Math.RandomInt(3500, 8500);
+		center_pos[1] = Math.RandomInt(3500, 8500);
+		
 		// Init Camera
 		float y_level = 200 + GetGame().SurfaceY(center_pos[0], center_pos[1]);
 		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false));
@@ -79,8 +83,6 @@ class EditorUIManager: Managed
 		float timeslice = (GetGame().GetTime() - m_LastFrameTime) / 1000;
 		m_UpdateInvoker.Invoke(timeslice);
 		m_LastFrameTime = GetGame().GetTime();
-		
-
 	}
 	
 	

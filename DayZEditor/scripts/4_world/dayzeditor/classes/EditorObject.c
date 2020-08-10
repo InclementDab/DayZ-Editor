@@ -10,52 +10,72 @@ enum EditorObjectFlags
 };
 
 
-class EditorObjectDataSet: set<ref EditorObjectData>
+class EditorObjectDataSet: map<int, ref EditorObjectData>
 {
 	
-	
 	bool InsertEditorData(EditorObjectData data)
-	{
-		string model_name = GetGame().GetModelName(data.Type);
-		if (model_name == "UNKNOWN_P3D_FILE") {
-			Print(string.Format("%1 is not a valid Object Type!", data.Type));
-			return false;
-		}
-		
-		Insert(data);
+	{		
+		Insert(data.GetID(), data);
 		return true;
 	}
 	
 	bool RemoveEditorData(EditorObjectData data)
 	{
-		int index = Find(data);
-		if (index == -1) return false;
-		Remove(index);
+		Remove(data.GetID());
 		return true;
 	}
 	
 }
 
+// temp until i can find a better way to find "First" in a map that doesnt blow the software up
+static int lowest_id;
 class EditorObjectData
 {	
 	string Type;
-	int ID;
-	
 	vector Position;
 	vector Orientation;
 	float Scale;
 	EditorObjectFlags Flags;
 	
-	void EditorObjectData(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
+	private void EditorObjectData(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorPrint("EditorObjectData");
-		Type = type; Position = position; Orientation = orientation; Flags = flags;
+		Type = type; Position = position; Orientation = orientation; Flags = flags;	
 	}
+	
+	static EditorObjectData Create(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
+	{
+		EditorPrint("EditorObjectData::Create");
+		
+		if (GetGame().GetModelName(type) == "UNKNOWN_P3D_FILE") {
+			EditorPrint(string.Format("EditorObjectData::Create %1 is not a valid Object Type!", type), LogSeverity.ERROR);
+			return null;
+		}
+		
+		
+		EditorObjectData data = new EditorObjectData(type, position, orientation, flags);
+		EditorObjectDataSet session_cache = GetEditor().GetObjectManager().GetSessionCache();
+		
+		if (lowest_id == 0) lowest_id = 200000;
+		lowest_id--;
+		data.m_Id = lowest_id;	
+		
+		EditorPrint(string.Format("EditorObjectData::Create ID: %1", data.m_Id), LogSeverity.DEBUG);
+		
+		session_cache.InsertEditorData(data);
+		return data;
+	}
+	
+	private int m_Id;
+	int GetID() { return m_Id; }
 	
 }
 
 class EditorObject
 {
+	private ref EditorObjectData m_Data;
+	EditorObjectData GetData() { return m_Data; }
+	
 	protected EntityAI 		m_WorldObject;
 	EntityAI GetWorldObject() { return m_WorldObject; }
 	
@@ -68,11 +88,10 @@ class EditorObject
 	protected Widget 		m_EditorObjectPropertiesWidget;
 	protected Widget 		m_EditorObjectContextWidget;
 	
-	ref UILinkedObject 			m_EditorObjectMarker = null;
+	ref EditorObjectMarker 			m_EditorObjectMarker = null;
 	ref EditorPlacedListItem 		m_EditorObjectBrowser = null;
-	ref UILinkedObject			m_EditorMapMarker = null;
-	ref UILinkedObject			m_EditorObjectPropertiesWindow = null;
-	ref UILinkedObject			m_EditorObjectContextMenu = null;
+	ref EditorMapMarker				m_EditorMapMarker = null;
+
 	
 	EntityAI 				m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
@@ -82,13 +101,12 @@ class EditorObject
 	
 	static float line_width = 0.05;
 	
-	private EditorObjectData m_Data;
-	EditorObjectData GetData() { return m_Data; }
+
 	
 	string GetType() { return m_Data.Type; }
-	int GetID() { return m_Data.ID; }
+	int GetID() { return m_Data.GetID(); }
 	
-	void EditorObject(EditorObjectData data)
+	void EditorObject(ref EditorObjectData data)
 	{
 		EditorPrint("EditorObject");
 		m_Data = data;
@@ -97,10 +115,9 @@ class EditorObject
 			m_Data.Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
 		}
 		
-		m_WorldObject = GetGame().CreateObjectEx(data.Type, data.Position, ECE_NONE);
+		m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Position, ECE_NONE);
 		m_WorldObject.SetOrientation(m_Data.Orientation);
 		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
-		m_Data.ID = m_WorldObject.GetID();
 		Update();
 		
 		m_ModStructure = Editor.GetModFromObject(m_Data.Type);
@@ -112,7 +129,7 @@ class EditorObject
 
 		// Map marker
 		if ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
-			m_EditorMapMarker = new UILinkedObject();
+			m_EditorMapMarker = new EditorMapMarker();
 			m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
 			m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 			m_EditorMapMarker.SetObject(this);
@@ -121,7 +138,7 @@ class EditorObject
 		
 		// World Object base marker
 		if ((m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER) {
-			m_EditorObjectMarker = new UILinkedObject();
+			m_EditorObjectMarker = new EditorObjectMarker();
 			m_EditorObjectMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorObjectMarker.layout");
 			m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
 			m_EditorObjectMarker.SetObject(this);
@@ -133,11 +150,10 @@ class EditorObject
 			m_EditorObjectBrowserWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorPlacedListItem.layout");
 			m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
 			m_EditorObjectBrowser.SetObject(this);
-			m_EditorObjectBrowser.SetIcon(Editor.GetIconFromMod(m_ModStructure));
 			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectBrowser);
 		}
 		
-		EditorEvents.ObjectCreateInvoke(this, this);
+		
 	
 	}
 	
@@ -150,8 +166,6 @@ class EditorObject
 		delete m_EditorObjectMarker; 
 		delete m_EditorObjectBrowser;
 		delete m_EditorMapMarker;
-		delete m_EditorObjectPropertiesWindow;
-		delete m_EditorObjectContextMenu;
 		
 		delete m_EditorObjectMarkerWidget;
 		delete m_EditorObjectBrowserWidget;
@@ -165,7 +179,7 @@ class EditorObject
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
 		
-		EditorEvents.ObjectDeleteInvoke(this, this);
+		
 	}
 		
 	
@@ -187,6 +201,7 @@ class EditorObject
 	void OnSelected()
 	{
 		if (m_IsSelected) return;
+		EditorPrint("EditorObject::OnSelected");
 		m_IsSelected = true;
 		ShowBoundingBox();
 	}
@@ -194,6 +209,7 @@ class EditorObject
 	void OnDeselected()
 	{
 		if (!m_IsSelected) return;
+		EditorPrint("EditorObject::OnDeselected");
 		m_IsSelected = false;
 		HideBoundingBox();
 	}

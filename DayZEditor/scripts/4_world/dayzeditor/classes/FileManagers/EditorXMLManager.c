@@ -251,7 +251,7 @@ class EditorMapGroupProto: XMLCallback
 						//Object loot_display = GetGame().CreateObjectEx("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), ECE_NONE);
 						
 						
-						EditorObject loot_display = GetEditor().GetObjectManager().CreateObject(new EditorObjectData("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), vector.Zero, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.BBOX));
+						EditorObject loot_display = GetEditor().GetObjectManager().CreateObject(EditorObjectData.Create("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), vector.Zero, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.BBOX));
 						
 						// might be bad
 						m_Building.AddChild(loot_display.GetWorldObject(), -1);
@@ -298,7 +298,7 @@ class XMLEditorBrushes: XMLCallback
 		
 	override void OnSuccess(ref XMLDocument document)
 	{
-		Print("XMLEditorBrushes::OnSuccess");
+		EditorPrint("XMLEditorBrushes::OnSuccess");
 		m_Success = true;
 		
 		XMLElement brush_types = document.Get(1).GetContent();

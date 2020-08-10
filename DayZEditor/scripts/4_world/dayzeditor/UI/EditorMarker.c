@@ -112,12 +112,17 @@ class EditorMapMarker: UILinkedObject
 class EditorObjectMarker: UILinkedObject
 {
 
+	ref EditorObjectPropertiesDialog	m_EditorObjectPropertiesWindow = null;
+	ref UILinkedObject					m_EditorObjectContextMenu = null;
+	
 	protected bool override_show = true;
 	private bool MouseInside = false;
 	
 	void ~EditorObjectMarker()
 	{
-		Print("~EditorObjectMarker");
+		EditorPrint("~EditorObjectMarker");
+		delete m_EditorObjectPropertiesWindow;
+		delete m_EditorObjectContextMenu;
 	}
 		
 	override void Update()
@@ -160,7 +165,7 @@ class EditorObjectMarker: UILinkedObject
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		// you should set cursor here its smart smile :)
-		Print("EditorMarker::OnMouseEnter");
+		EditorPrint("EditorMarker::OnMouseEnter");
 		if (GetEditor().IsPlacing()) return false;
 		MouseInside = true;
 		return true;
@@ -168,7 +173,7 @@ class EditorObjectMarker: UILinkedObject
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		Print("EditorMarker::OnMouseLeave");
+		EditorPrint("EditorMarker::OnMouseLeave");
 		MouseInside = false;
 		return true;
 	}
@@ -176,7 +181,7 @@ class EditorObjectMarker: UILinkedObject
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		Print("EditorObjectMarker::OnMouseButtonDown: " + button);
+		EditorPrint("EditorObjectMarker::OnMouseButtonDown: " + button);
 		
 		
 		Input input = GetGame().GetInput();
@@ -218,7 +223,7 @@ class EditorObjectMarker: UILinkedObject
 	
 	override bool OnDrag(Widget w, int x, int y)
 	{
-		Print("EditorObjectMarker::OnDrag");
+		EditorPrint("EditorObjectMarker::OnDrag");
 		
 		if (GetEditor().IsPlacing()) return false;
 		EditorEvents.DragInvoke(this, m_EditorObject);
@@ -227,7 +232,7 @@ class EditorObjectMarker: UILinkedObject
 	
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
-		Print("EditorObjectMarker::OnDrop");
+		EditorPrint("EditorObjectMarker::OnDrop");
 		EditorEvents.DropInvoke(this, m_EditorObject);
 		return true;
 	}

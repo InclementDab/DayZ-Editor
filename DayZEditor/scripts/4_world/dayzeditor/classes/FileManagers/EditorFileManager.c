@@ -26,7 +26,7 @@ static FileDialogResult ImportVPPData(out ref EditorObjectDataSet data, string f
 		string name = building.GetName();
 		TStringArray name_split = new TStringArray();
 		name.Split("-", name_split);
-		data.InsertEditorData(new EditorObjectData(name_split.Get(0), building.GetPosition(), building.GetOrientation(), EditorObjectFlags.ALL));
+		data.InsertEditorData(EditorObjectData.Create(name_split.Get(0), building.GetPosition(), building.GetOrientation(), EditorObjectFlags.ALL));
 	}
 	
 	return FileDialogResult.SUCCESS;
@@ -70,7 +70,7 @@ class ExpansionImportData
 				continue;
 			}
 					
-			data.Insert(new EditorObjectData(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
+			data.InsertEditorData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
 		}
 		
 		CloseFile(handler);
@@ -118,7 +118,7 @@ class EditorWorldData
 	void EditorWorldData()
 	{
 		EditorObjects = new EditorObjectDataSet();
-	}	
+	}
 }
 
 enum ExportMode 
@@ -147,6 +147,7 @@ class ExportSettings
 {
 	ExportMode ExportFileMode;
 	HeightType ExportHeightType;
+	bool ExportSelectedOnly;
 }
 
 
@@ -155,6 +156,7 @@ enum FileDialogResult
 	SUCCESS = 0,
 	NOT_FOUND = 1,
 	IN_USE = 2,
+	NOT_SUPPORTED = 3,
 	UNKNOWN_ERROR = 100
 }
 
@@ -162,10 +164,9 @@ enum FileDialogResult
 class EditorFileManager
 {
 
-
-	static FileDialogResult Save(ref EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
+	static FileDialogResult Save(ref EditorWorldData data, string file)
 	{
-		string file = filedir + filename + ".dze";
+
 		if (FileExist(file)) {
 			GetEditor().GetUIManager().GetEditorUI().CreateDialog();			
 		}
@@ -174,9 +175,8 @@ class EditorFileManager
 		return FileDialogResult.SUCCESS;
 	}
 	
-	static FileDialogResult Open(out EditorWorldData data, string filename = "editor_save", string filedir = "$profile:Editor/")
+	static FileDialogResult Open(out EditorWorldData data, string file)
 	{
-		string file = filedir + filename + ".dze";
 		if (!FileExist(file)) {
 			return FileDialogResult.NOT_FOUND;
 		}
@@ -185,9 +185,9 @@ class EditorFileManager
 		return FileDialogResult.SUCCESS;
 	}
 	
-	static FileDialogResult Import(out EditorWorldData data, string filename, ImportMode mode = ImportMode.COMFILE)
+	static FileDialogResult Import(out EditorWorldData data, string file, ImportMode mode)
 	{		
-		if (!FileExist(filename)) {
+		if (!FileExist(file)) {
 			return FileDialogResult.NOT_FOUND;
 		}
 		
@@ -196,11 +196,11 @@ class EditorFileManager
 			case (ImportMode.COMFILE): {
 				
 				COMImportData com_data = new COMImportData();
-				JsonFileLoader<COMImportData>.JsonLoadFile(filename, com_data);
+				JsonFileLoader<COMImportData>.JsonLoadFile(file, com_data);
 				
 				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
 					Print("ImportFromFile::COMFILE::Import " + param.param1);					
-					data.EditorObjects.Insert(new EditorObjectData(param.param1, param.param2, param.param3));
+					data.EditorObjects.InsertEditorData(EditorObjectData.Create(param.param1, param.param2, param.param3));
 				}
 				
 				break;
@@ -208,14 +208,14 @@ class EditorFileManager
 			
 			case (ImportMode.EXPANSION): {
 				Print("EditorFileManager::Import::EXPANSION");
-				ExpansionImportData.ReadFromFile(data.EditorObjects, filename);
+				ExpansionImportData.ReadFromFile(data.EditorObjects, file);
 
 				break;
 			}
 			
 			case (ImportMode.VPP): {
 				Print("EditorFileManager::Import::VPP");
-				return ImportVPPData(data.EditorObjects, filename);
+				return ImportVPPData(data.EditorObjects, file);
 			}
 			
 			default: {
@@ -230,48 +230,46 @@ class EditorFileManager
 		
 	}
 	
-	static FileDialogResult Export(ref EditorWorldData data, string filename, ref ExportSettings export_settings)
+	static FileDialogResult Export(ref EditorWorldData data, string file, ref ExportSettings export_settings)
 	{
 		Print("EditorFileManager::Export");		
+		DeleteFile(file);
+		
 		switch (export_settings.ExportFileMode) {
 			
-			case ExportMode.EXPANSION: {
-				filename += ".map";
+			case ExportMode.TERRAINBUILDER: {
+				//return ExportTBData(data.EditorObjects, file);
 				break;
 			}
 			
-			case ExportMode.VPP: {
-				filename += ".vpp";
+			case ExportMode.EXPANSION: {
+				//return ExportVPPData(data.EditorObjects, file);
 				break;
+			}			
+			
+			case ExportMode.COMFILE: {
+				//return ExportVPPData(data.EditorObjects, file);
+				break;
+			}			
+			
+			case ExportMode.VPP: {
+				return ExportVPPData(data.EditorObjects, file);
 			}
 			
 			default: {
-				filename += ".txt";
-				break;
+				EditorPrint("ExportMode not supported! " + export_settings.ExportFileMode);
+				return FileDialogResult.NOT_SUPPORTED;
 			}
-			
 		}
 		
-		filename = "$profile:Editor/Export/" + filename;
-		DeleteFile(filename);
+		return FileDialogResult.UNKNOWN_ERROR;
 		
 		/*
 		//FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
 		if (handle == 0) {
 			return FileDialogResult.IN_USE;
-		}*/
-		
-		
-		switch (export_settings.ExportFileMode) {
-			
-			case ExportMode.VPP: {
-				return ExportVPPData(data.EditorObjects, filename);
-			}
-			
 		}
 		
-		
-		/*
 		foreach (EditorObject editor_object: export_objects) {
 						
 			vector position = editor_object.GetPosition();
@@ -339,6 +337,6 @@ class EditorFileManager
 		
 		
 
-		return FileDialogResult.UNKNOWN_ERROR;
+		
 	}
 }

@@ -52,7 +52,7 @@ class CfgVehicles
 		scope = 1;
 		model = "\DayZEditor\Editor\BrushBase.p3d";
 		hiddenSelections[] = {"BrushBase"};
-		hiddenSelectionsTextures[] = { "\DayZEditor\Editor\data\BrushBase.paa", "\DayZEditor\Editor\data\BrushDelete.paa" };
+		hiddenSelectionTextures[] = { "DayZEditor\\Editor\\data\\BrushDelete.paa" };
 	};
 
 	class BoundingBoxBase: HouseNoDestruct
