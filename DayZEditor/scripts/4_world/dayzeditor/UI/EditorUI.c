@@ -284,21 +284,25 @@ class EditorUI: UIScriptedMenu
 			
 	}
 	
+	private bool cursor_state;
 	void ShowMap(bool state)
 	{
-		EditorPrint("EditorUI::ShowMap");
+		EditorPrint("EditorUI::ShowMap");			
 		
 		if (state) {
+			cursor_state = GetGame().GetUIManager().IsCursorVisible();
 			m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() * 3);
 			m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() * 3);
+			GetGame().GetUIManager().ShowUICursor(true);
 		} else {
+			GetGame().GetUIManager().ShowUICursor(cursor_state);
 			m_LeftbarPanelHost.SetAlpha(m_LeftbarPanelHost.GetAlpha() / 3);
 			m_RightbarPanelHost.SetAlpha(m_RightbarPanelHost.GetAlpha() / 3);
 		}
 		
 		m_EditorMapContainer.Show(state);
 		m_EditorMapContainer.Update();
-		m_UIManager.ShowCursor();
+		
 	}
 	
 	void SetOrientationWidget(vector orientation)

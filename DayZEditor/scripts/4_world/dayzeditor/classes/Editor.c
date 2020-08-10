@@ -827,6 +827,7 @@ class Editor: Managed
 			case KeyCode.KC_M: {
 								
 				GetUIManager().GetEditorUI().ShowMap(!GetUIManager().GetEditorUI().IsMapOpen());
+				
 				return true;
 			}
 		
