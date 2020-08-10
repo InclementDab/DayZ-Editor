@@ -21,7 +21,7 @@ class EditorObjectSet: map<int, ref EditorObject>
 }
 
 
-class EditorObjectManager: Managed
+class EditorObjectManager
 {
 	
 	private ref EditorObjectSet 				m_PlacedObjects;
@@ -44,7 +44,6 @@ class EditorObjectManager: Managed
 		m_SessionCache 		= new EditorObjectDataSet();
 		m_ActionStack 		= new set<ref EditorAction>();
 		
-		
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
 		EditorEvents.OnSelectionCleared.Insert(OnSelectionCleared);
@@ -57,7 +56,7 @@ class EditorObjectManager: Managed
 	void ~EditorObjectManager() 
 	{
 		Print("~EditorObjectManager");
-		
+
 		delete m_PlacedObjects;
 		delete m_SelectedObjects;
 		delete m_SessionCache;
@@ -87,23 +86,24 @@ class EditorObjectManager: Managed
 	}
 	
 	
-	void CreateObjects(ref EditorObjectDataSet data_list)
+	void CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
 	{
 		EditorPrint("EditorObjectManager::CreateObjects");
 		
-		EditorAction action = new EditorAction("Delete", "Create");
+		if (create_undo) EditorAction action = new EditorAction("Delete", "Create");
 		foreach (EditorObjectData editor_object_data: data_list) {
-			
 			
 			EditorObject editor_object = new EditorObject(editor_object_data);
 			
-			ref Param1<int> params = new Param1<int>(editor_object.GetID());
-			action.InsertUndoParameter(editor_object, params);
-			action.InsertRedoParameter(editor_object, params);
+			if (create_undo) {
+				action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+				action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			}
+			
 			EditorEvents.ObjectCreateInvoke(this, editor_object);
 		}
 		
-		InsertAction(action);		
+		if (create_undo) InsertAction(action);		
 	}
 	
 	
@@ -115,10 +115,9 @@ class EditorObjectManager: Managed
 		EditorObject editor_object = new EditorObject(editor_object_data);
 	
 		if (create_undo) {
-			EditorAction action = new EditorAction("Delete", "Create");
-			ref Param1<int> params = new Param1<int>(editor_object.GetID());
-			action.InsertUndoParameter(editor_object, params);
-			action.InsertRedoParameter(editor_object, params);
+			EditorAction action = new EditorAction("Delete", "Create");;
+			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			InsertAction(action);
 		}
 		EditorEvents.ObjectCreateInvoke(this, editor_object);
@@ -138,31 +137,7 @@ class EditorObjectManager: Managed
 	}
 	
 	
-	void OnObjectSelected(Class context, EditorObject target)
-	{
-		EditorPrint("EditorObjectManager::SelectObject");		
-		m_SelectedObjects.InsertEditorObject(target);
-	}
 	
-	void OnObjectDeselected(Class context, EditorObject target)
-	{
-		EditorPrint("EditorObjectManager::SelectObject");
-		m_SelectedObjects.RemoveEditorObject(target);
-	}	
-	
-	void OnObjectCreated(Class context, EditorObject target)
-	{
-		EditorPrint("EditorObjectManager::OnObjectCreated");
-		//m_SelectedObjects.InsertEditorObject(target);
-		m_PlacedObjects.InsertEditorObject(target);
-	}	
-	
-	void OnObjectDeleted(Class context, EditorObject target)
-	{
-		EditorPrint("EditorObjectManager::OnObjectDeleted");
-		m_SelectedObjects.RemoveEditorObject(target);
-		m_PlacedObjects.RemoveEditorObject(target);
-	}
 	
 	
 	void DeleteObject(EditorObject target, bool create_undo = true)
@@ -183,18 +158,21 @@ class EditorObjectManager: Managed
 	void DeleteObjects(EditorObjectSet target, bool create_undo = true)
 	{
 		EditorPrint("EditorObjectManager::DeleteObjects");
+		
+		if (create_undo) EditorAction action = new EditorAction("Create", "Delete");
+		
 		foreach (EditorObject editor_object: target) {
 			EditorEvents.ObjectDeleteInvoke(this, editor_object);
-		
+			
 			if (create_undo) {
-				EditorAction action = new EditorAction("Create", "Delete");
 				action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 				action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-				InsertAction(action);
 			}
 			
 			delete editor_object;
-		}		
+		}	
+			
+		if (create_undo) InsertAction(action);
 	}
 		
 		
@@ -208,12 +186,11 @@ class EditorObjectManager: Managed
 	
 	}
 	
-	void ToggleSelection(EditorObject target)
+	static void ToggleSelection(EditorObject target)
 	{
 		if (target.IsSelected())
-			EditorEvents.DeselectObject(this, target);
-		
-		EditorEvents.SelectObject(this, target);
+			EditorEvents.DeselectObject(null, target);
+		else EditorEvents.SelectObject(null, target);
 	}
 	
 
@@ -360,14 +337,45 @@ class EditorObjectManager: Managed
 		return null;
 	}
 	
-
+	// EditorObject.WorldObject.GetID(), EditorObject.GetID()
+	private ref map<int, int> m_PlacedObjectIndex = new map<int, int>();
+	EditorObject GetEditorObject(notnull Object world_object)
+	{
+		int id = world_object.GetID();
+		int editor_obj_id = m_PlacedObjectIndex.Get(id);
+		return GetEditorObject(editor_obj_id);
+	}
+	
 	void DeleteSessionData(int id) { m_SessionCache.Remove(id);	}
-	
-	
 	EditorObject GetEditorObject(int id) { return m_PlacedObjects.Get(id); }
 	EditorObjectData GetSessionDataById(int id) { return m_SessionCache.Get(id); }
 	EditorObject GetPlacedObjectById(int id) { return m_PlacedObjects.Get(id); }
 	
+	void OnObjectSelected(Class context, EditorObject target)
+	{
+		EditorPrint("EditorObjectManager::SelectObject");		
+		m_SelectedObjects.InsertEditorObject(target);
+	}
 	
+	void OnObjectDeselected(Class context, EditorObject target)
+	{
+		EditorPrint("EditorObjectManager::SelectObject");
+		m_SelectedObjects.RemoveEditorObject(target);
+	}	
+	
+	void OnObjectCreated(Class context, EditorObject target)
+	{
+		EditorPrint("EditorObjectManager::OnObjectCreated");
+		//m_SelectedObjects.InsertEditorObject(target);
+		m_PlacedObjects.InsertEditorObject(target);
+		m_PlacedObjectIndex.Insert(target.GetWorldObject().GetID(), target.GetID());
+	}	
+	
+	void OnObjectDeleted(Class context, EditorObject target)
+	{
+		EditorPrint("EditorObjectManager::OnObjectDeleted");
+		m_SelectedObjects.RemoveEditorObject(target);
+		m_PlacedObjects.RemoveEditorObject(target);
+	}
 
 }

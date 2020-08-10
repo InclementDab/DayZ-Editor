@@ -1,5 +1,5 @@
 
-class EditorAction: Managed
+class EditorAction
 {
 	private string name;
 	private bool undone = false;

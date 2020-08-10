@@ -60,7 +60,7 @@ class EditorObjectData
 		lowest_id--;
 		data.m_Id = lowest_id;	
 		
-		EditorPrint(string.Format("EditorObjectData::Create ID: %1", data.m_Id), LogSeverity.INFO);
+		EditorPrint(string.Format("EditorObjectData::Create ID: %1", data.m_Id), LogSeverity.DEBUG);
 		
 		session_cache.InsertEditorData(data);
 		return data;
@@ -201,6 +201,7 @@ class EditorObject
 	void OnSelected()
 	{
 		if (m_IsSelected) return;
+		EditorPrint("EditorObject::OnSelected");
 		m_IsSelected = true;
 		ShowBoundingBox();
 	}
@@ -208,6 +209,7 @@ class EditorObject
 	void OnDeselected()
 	{
 		if (!m_IsSelected) return;
+		EditorPrint("EditorObject::OnDeselected");
 		m_IsSelected = false;
 		HideBoundingBox();
 	}
