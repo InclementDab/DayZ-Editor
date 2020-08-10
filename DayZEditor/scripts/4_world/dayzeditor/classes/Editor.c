@@ -261,7 +261,7 @@ class Editor: Managed
 	
 	void Undo()
 	{
-		Print("Editor::Undo");
+		EditorPrint("Editor::Undo");
 		foreach (EditorAction action: GetObjectManager().GetActionStack()) {
 			if (!action.IsUndone()) {
 				action.CallUndo();
@@ -281,7 +281,7 @@ class Editor: Managed
 	
 	void Redo()
 	{
-		Print("Editor::Redo");
+		EditorPrint("Editor::Redo");
 		for (int i = GetObjectManager().GetActionStack().Count() - 1; i >= 0; i--) {
 			EditorAction action = GetObjectManager().GetActionStack().Get(i);
 			if (action == null) continue;
@@ -311,7 +311,7 @@ class Editor: Managed
 		EditorPrint("Editor::New");
 
 		
-		MapSelectDialog select_window = MapSelectDialog.Create();
+		MapSelectDialog select_window = new MapSelectDialog();
 		select_window.ShowDialog();
 
 		
