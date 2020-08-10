@@ -1,26 +1,36 @@
-ButtonWidgetClass EditorDialogButton {
+PanelWidgetClass EditorDialogButton {
  color 0.1373 0.1373 0.1373 0.549
  size 100 32
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
- style Default
+ style rover_sim_colorable
  {
-  TextWidgetClass ButtonLabel {
-   ignorepointer 1
+  ButtonWidgetClass Button {
    position 0 0
    size 1 1
    hexactpos 0
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   text "Test"
-   font "gui/fonts/metron16"
-   "size to text h" 0
-   "size to text v" 0
-   "text halign" center
-   "text valign" center
+   {
+    TextWidgetClass ButtonLabel {
+     ignorepointer 1
+     position 0 0
+     size 1 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     text "Test"
+     font "gui/fonts/metron16"
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+     "text valign" center
+    }
+   }
   }
  }
 }
