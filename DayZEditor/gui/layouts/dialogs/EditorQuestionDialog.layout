@@ -1,0 +1,199 @@
+WindowWidgetClass EditorQuestionDialog {
+ clipchildren 1
+ ignorepointer 0
+ color 0.8118 0.8118 0.8118 1
+ size 500 350
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ priority 5
+ style rover_sim_black_2
+ "title visible" 0
+ font "gui/fonts/metron"
+ {
+  PanelWidgetClass WindowDragWrapper {
+   ignorepointer 1
+   size 1 1
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   draggable 1
+   style blank
+   {
+    PanelWidgetClass TitleBar {
+     ignorepointer 0
+     color 0.749 0.3725 0.3725 1
+     size 1 32
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     draggable 0
+     style rover_sim_colorable
+     {
+      TextWidgetClass TitleText {
+       ignorepointer 1
+       position 0 0
+       size 1 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       font "gui/fonts/metron"
+       "text offset" 10 0
+       "exact text" 1
+       "size to text h" 0
+       "text valign" center
+      }
+      ButtonWidgetClass TitleClose {
+       position 0 0
+       size 32 32
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       priority 5
+       style Default
+       text "X"
+       font "gui/fonts/metron"
+      }
+     }
+    }
+    WrapSpacerWidgetClass MapSelectWindowStack {
+     clipchildren 0
+     ignorepointer 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style Empty
+     Padding 10
+     Margin 10
+     content_halign center
+     content_valign bottom
+     {
+      GridSpacerWidgetClass ButtonWrapper {
+       ignorepointer 1
+       position 0 0
+       size 1 0.25
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       Padding 5
+       Margin 5
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign bottom
+       Columns 2
+       Rows 1
+       {
+        PanelWidgetClass CancleButtonPanel {
+         clipchildren 1
+         ignorepointer 1
+         color 1 1 1 0.6667
+         size 120 30
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         style Outline
+         "no focus" 0
+         {
+          ButtonWidgetClass CancleButton {
+           visible 1
+           position 0 0
+           size 120 30
+           halign center_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style Default
+           text "Cancle"
+           font "gui/fonts/metron"
+          }
+         }
+        }
+        PanelWidgetClass ConfirmButtonPanel {
+         clipchildren 1
+         ignorepointer 1
+         color 1 1 1 0.6667
+         size 120 30
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         style Outline
+         "no focus" 0
+         {
+          ButtonWidgetClass ConfirmtButton {
+           visible 1
+           position 0 0
+           size 120 30
+           halign center_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style Default
+           text "Yes"
+           font "gui/fonts/metron"
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass QuestionTextPanel {
+       ignorepointer 1
+       color 0.749 0.3725 0.3725 0.6863
+       position 0 0
+       size 0.95 0.7
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style rover_sim_black
+       {
+        RichTextWidgetClass QuestionText {
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         style DayZNormal
+         font "gui/fonts/metron16"
+         "exact text" 1
+         "size to text h" 0
+         "size to text v" 0
+         wrap 1
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
