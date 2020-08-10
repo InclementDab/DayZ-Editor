@@ -263,7 +263,17 @@ class EditorObjectManager: Managed
 			avg_position[i] = avg_position[i] / data.Count();
 				
 		foreach (ref EditorObjectData pasted_object: data) {
-			vector position = avg_position - pasted_object.Position + Editor.CurrentMousePosition;
+			
+			vector position;
+			if (GetEditor().GetUIManager().GetEditorUI().IsMapOpen()) {
+				MapWidget map_widget = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
+				int x, y;
+				GetCursorPos(x, y);
+				position = avg_position - pasted_object.Position + map_widget.ScreenToMap(Vector(x, y, 0));
+			} else {
+				position = avg_position - pasted_object.Position + Editor.CurrentMousePosition;
+			}
+			
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",
