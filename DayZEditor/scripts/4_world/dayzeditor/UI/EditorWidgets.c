@@ -293,6 +293,7 @@ class EditorPlacedListItem: UILinkedObject
 		
 		m_EditorPlacedListItemPanel = m_Root.FindAnyWidget("EditorPlacedListItemPanel");
 		m_EditorPlacedListItemText = TextWidget.Cast(m_Root.FindAnyWidget("EditorPlacedListItemText"));
+		m_EditorPlacedListItemIcon = ImageWidget.Cast(m_Root.FindAnyWidget("EditorPlacedListItemIcon"));
 		
 		EditorEvents.OnObjectSelected.Insert(EditorObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(EditorObjectDeselected);	
@@ -382,14 +383,14 @@ class EditorPlacedListItem: UILinkedObject
 		m_EditorPlacedListItemText.Update();
 		
 		// this is really slow here todo
-		string logo = Editor.GetIconFromMod(Editor.GetModFromObject(target.GetType()));
-		SetIcon(logo);
+		SetIcon(Editor.GetIconFromMod(Editor.GetModFromObject(target.GetType())));
 	}
 	
 	void SetIcon(string path)
 	{
 		m_EditorPlacedListItemIcon.LoadImageFile(0, path);
 		m_EditorPlacedListItemIcon.SetImage(0);
+		m_EditorPlacedListItemIcon.Update();
 	}
 
 }

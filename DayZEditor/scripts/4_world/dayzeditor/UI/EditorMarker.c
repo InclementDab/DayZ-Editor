@@ -112,12 +112,17 @@ class EditorMapMarker: UILinkedObject
 class EditorObjectMarker: UILinkedObject
 {
 
+	ref EditorObjectPropertiesDialog	m_EditorObjectPropertiesWindow = null;
+	ref UILinkedObject					m_EditorObjectContextMenu = null;
+	
 	protected bool override_show = true;
 	private bool MouseInside = false;
 	
 	void ~EditorObjectMarker()
 	{
 		Print("~EditorObjectMarker");
+		delete m_EditorObjectPropertiesWindow;
+		delete m_EditorObjectContextMenu;
 	}
 		
 	override void Update()

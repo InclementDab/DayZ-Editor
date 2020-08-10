@@ -89,11 +89,10 @@ class EditorObject
 	protected Widget 		m_EditorObjectPropertiesWidget;
 	protected Widget 		m_EditorObjectContextWidget;
 	
-	ref UILinkedObject 			m_EditorObjectMarker = null;
+	ref EditorObjectMarker 			m_EditorObjectMarker = null;
 	ref EditorPlacedListItem 		m_EditorObjectBrowser = null;
-	ref UILinkedObject			m_EditorMapMarker = null;
-	ref UILinkedObject			m_EditorObjectPropertiesWindow = null;
-	ref UILinkedObject			m_EditorObjectContextMenu = null;
+	ref EditorMapMarker				m_EditorMapMarker = null;
+
 	
 	EntityAI 				m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
@@ -131,7 +130,7 @@ class EditorObject
 
 		// Map marker
 		if ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
-			m_EditorMapMarker = new UILinkedObject();
+			m_EditorMapMarker = new EditorMapMarker();
 			m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
 			m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 			m_EditorMapMarker.SetObject(this);
@@ -140,7 +139,7 @@ class EditorObject
 		
 		// World Object base marker
 		if ((m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER) {
-			m_EditorObjectMarker = new UILinkedObject();
+			m_EditorObjectMarker = new EditorObjectMarker();
 			m_EditorObjectMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorObjectMarker.layout");
 			m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
 			m_EditorObjectMarker.SetObject(this);
@@ -152,7 +151,6 @@ class EditorObject
 			m_EditorObjectBrowserWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorPlacedListItem.layout");
 			m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
 			m_EditorObjectBrowser.SetObject(this);
-			m_EditorObjectBrowser.SetIcon(Editor.GetIconFromMod(m_ModStructure));
 			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectBrowser);
 		}
 		
@@ -169,8 +167,6 @@ class EditorObject
 		delete m_EditorObjectMarker; 
 		delete m_EditorObjectBrowser;
 		delete m_EditorMapMarker;
-		delete m_EditorObjectPropertiesWindow;
-		delete m_EditorObjectContextMenu;
 		
 		delete m_EditorObjectMarkerWidget;
 		delete m_EditorObjectBrowserWidget;

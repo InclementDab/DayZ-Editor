@@ -349,6 +349,12 @@ class EditorUI: UIScriptedMenu
 		m_CurrentPlaceableObjects.Insert(placeable_object.SetListItem(m_LeftbarSpacer));
 	}
 	
+	
+	void InsertPlacedObject(EditorPlacedListItem target)
+	{
+		m_RightbarSpacer.AddChild(target.GetLayoutRoot());
+	}
+	
 	void InsertMapObject(Widget map_marker)
 	{
 		Print("EditorUI::InsertMapObject " + map_marker.GetName());
@@ -599,10 +605,7 @@ class EditorUI: UIScriptedMenu
 		GetGame().GetUIManager().ShowScriptedMenu(dialog, GetGame().GetUIManager().GetMenu());
 	}
 
-	void InsertPlacedObject(EditorPlacedListItem target)
-	{
-		m_RightbarSpacer.AddChild(target.GetLayoutRoot());
-	}
+
 	
 	private ref array<string> m_CurrentBrushNames = new array<string>();
 	void ClearBrushBox()

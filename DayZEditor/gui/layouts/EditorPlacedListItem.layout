@@ -35,7 +35,7 @@ FrameWidgetClass EditorPlacedListItem {
      "text offset" 10 0
      "text valign" center
     }
-	ImageWidgetClass EditorListItemIcon {
+	ImageWidgetClass EditorPlacedListItemIcon {
      ignorepointer 0
      size 32 32
      hexactpos 1

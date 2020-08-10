@@ -86,8 +86,8 @@ class EditorPlaceableObject: Managed
 		m_ListWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorListItem.layout", parent);
 		m_ListWidget.GetScript(m_ListItem);
 		m_ListItem.SetObject(this);
-		//Print(m_ModStructure.GetModName());
-		//m_ListItem.SetIcon(Editor.GetIconFromMod(m_ModStructure));
+		Print(m_ModStructure.GetModName());
+		m_ListItem.SetIcon(Editor.GetIconFromMod(m_ModStructure));
 		
 		return m_ListItem;
 	}
