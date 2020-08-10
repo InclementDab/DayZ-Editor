@@ -17,7 +17,7 @@ WrapSpacerWidgetClass EditorDialog {
  "Size To Content V" 1
  {
   WrapSpacerWidgetClass WindowDragWrapper {
-   ignorepointer 1
+   ignorepointer 0
    size 1 1
    hexactpos 1
    vexactpos 1
@@ -108,7 +108,7 @@ WrapSpacerWidgetClass EditorDialog {
      content_valign bottom
      {
       GridSpacerWidgetClass ButtonGrid {
-       ignorepointer 1
+       ignorepointer 0
        color 0.1373 0.1373 0.1373 0.549
        position 0 0
        size 0.95 0.25
@@ -130,14 +130,14 @@ WrapSpacerWidgetClass EditorDialog {
        Rows 1
       }
       WrapSpacerWidgetClass DialogContent {
-       ignorepointer 1
+       ignorepointer 0
        color 0.1373 0.1373 0.1373 0.549
        position 0 0
-       size 0.95 0.7
+       size 480 0.7
        halign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 0
+       hexactsize 1
        vexactsize 0
        style Colorable
        "Size To Content H" 1
