@@ -221,52 +221,48 @@ class EditorObjectManager: Managed
 	
 	void CutSelection()
 	{
-		string copy;
-		EditorObjectDataSet world_objects = new EditorObjectDataSet();
-		foreach (int id, EditorObject selected_object: m_SelectedObjects) {
-			world_objects.InsertEditorData(selected_object.GetData());		
-		}
-		copy = JsonFileLoader<EditorObjectDataSet>.JsonMakeData(world_objects);
-		GetGame().CopyToClipboard(copy);
+		EditorPrint("EditorObjectManager::CutSelection");
+		ref array<ref EditorObjectData>> world_objects = new array<ref EditorObjectData>>();
+		foreach (int id, EditorObject selected_object: m_SelectedObjects)
+			world_objects.Insert(selected_object.GetData());		
 		
+		GetGame().CopyToClipboard(JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects));
 		DeleteObjects(m_SelectedObjects);
 	}
 	
 	
 	void CopySelection()
 	{
-		string copy;
-		EditorObjectDataSet world_objects = new EditorObjectDataSet();
-		foreach (int id, EditorObject selected_object: m_SelectedObjects) {
-			world_objects.InsertEditorData(selected_object.GetData());			
-		}
-		copy = JsonFileLoader<EditorObjectDataSet>.JsonMakeData(world_objects);
-		GetGame().CopyToClipboard(copy);
+		EditorPrint("EditorObjectManager::CopySelection");
+		
+		ref array<ref EditorObjectData>> world_objects = new ref array<ref EditorObjectData>>();
+		foreach (int id, EditorObject selected_object: m_SelectedObjects)
+			world_objects.Insert(selected_object.GetData());			
+	
+		GetGame().CopyToClipboard(JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects));
 	}
 	
 	void PasteSelection()
 	{
+		EditorPrint("EditorObjectManager::PasteSelection");
 		string clipboard_text;
 		GetGame().CopyFromClipboard(clipboard_text);
 		
-		EditorObjectDataSet data = new EditorObjectDataSet();
-		JsonFileLoader<EditorObjectDataSet>.JsonLoadData(clipboard_text, data);
+		ref array<ref EditorObjectData>> data = new array<ref EditorObjectData>>();
+		JsonFileLoader<array<ref EditorObjectData>>.JsonLoadData(clipboard_text, data);
 		if (data.Count() == 0) return;
-		
-		EditorEvents.ClearSelection(this);
-		vector avg_position;
 
-		foreach (EditorObjectData copy_object: data) {
+		EditorEvents.ClearSelection(this);
+		
+		vector avg_position;
+		foreach (ref EditorObjectData copy_object: data)
 			avg_position += copy_object.Position;
-		}
 		
-		avg_position[0] = avg_position[0] / data.Count();
-		avg_position[1] = avg_position[1] / data.Count();
-		avg_position[2] = avg_position[2] / data.Count();
 		
-		foreach (EditorObjectData pasted_object: data) {
-			
-			
+		for (int i = 0; i < 3; i++)
+			avg_position[i] = avg_position[i] / data.Count();
+				
+		foreach (ref EditorObjectData pasted_object: data) {
 			vector position = avg_position - pasted_object.Position + Editor.CurrentMousePosition;
 			vector transform[4] = {
 				"1 0 0",
@@ -274,9 +270,8 @@ class EditorObjectManager: Managed
 				"0 0 1",
 				position
 			};
-			
-
-			EditorObject editor_object = CreateObject(EditorObjectData.Create(pasted_object.Type, pasted_object.Position, pasted_object.Orientation, pasted_object.Flags));
+						
+			EditorObject editor_object = CreateObject(EditorObjectData.Create(pasted_object.Type, position, pasted_object.Orientation, pasted_object.Flags));
 			float surfacey = GetGame().SurfaceY(position[0], position[2]);
 			vector size = editor_object.GetSize();
 			position[1] = surfacey + size[1] / 2;

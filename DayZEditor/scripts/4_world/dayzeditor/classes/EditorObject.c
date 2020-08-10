@@ -14,13 +14,7 @@ class EditorObjectDataSet: map<int, ref EditorObjectData>
 {
 	
 	bool InsertEditorData(EditorObjectData data)
-	{
-		string model_name = GetGame().GetModelName(data.Type);
-		if (model_name == "UNKNOWN_P3D_FILE") {
-			Print(string.Format("%1 is not a valid Object Type!", data.Type));
-			return false;
-		}
-		
+	{		
 		Insert(data.GetID(), data);
 		return true;
 	}
@@ -33,6 +27,8 @@ class EditorObjectDataSet: map<int, ref EditorObjectData>
 	
 }
 
+// temp until i can find a better way to find "First" in a map that doesnt blow the software up
+static int lowest_id;
 class EditorObjectData
 {	
 	string Type;
@@ -50,10 +46,23 @@ class EditorObjectData
 	static EditorObjectData Create(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorPrint("EditorObjectData::Create");
-		EditorObjectData data = new EditorObjectData(type, position, orientation, flags);
 		
+		if (GetGame().GetModelName(type) == "UNKNOWN_P3D_FILE") {
+			EditorPrint(string.Format("EditorObjectData::Create %1 is not a valid Object Type!", type), LogSeverity.ERROR);
+			return null;
+		}
+		
+		
+		EditorObjectData data = new EditorObjectData(type, position, orientation, flags);
 		EditorObjectDataSet session_cache = GetEditor().GetObjectManager().GetSessionCache();
-		data.m_Id = session_cache.Count() + 200000;
+		
+		if (lowest_id == 0) lowest_id = 200000;
+		lowest_id--;
+		data.m_Id = lowest_id;	
+		
+				
+		Print(data.m_Id);
+		
 		session_cache.InsertEditorData(data);
 		return data;
 	}
