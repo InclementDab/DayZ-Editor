@@ -134,7 +134,6 @@ class Editor: Managed
 			vector debug_pos = eo.GetPosition();
 			//GetUIManager().GetEditorUI().m_DebugText1.SetText(string.Format("X: %1 Y: %2 Z: %3", debug_pos[0], debug_pos[1], debug_pos[2]));
 			GetUIManager().GetEditorUI().ShowObjPosInfoPanel(true);
-			GetUIManager().GetEditorUI().UpdateInfoObjPos(debug_pos);
 		} else 
 		{ 
 			GetUIManager().GetEditorUI().ShowObjPosInfoPanel(false);

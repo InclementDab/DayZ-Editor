@@ -120,14 +120,15 @@ class EditorUI: UIScriptedMenu
 	
 	// Info toolbar widgets
 	protected Widget m_ObjPosInfoPanel;
-	protected TextWidget m_ObjPosInfoX;
-	protected TextWidget m_ObjPosInfoY;
-	protected TextWidget m_ObjPosInfoZ;
 	
 	protected Widget m_CamPosInfoPanel;
 	protected TextWidget m_CamPosInfoX;
 	protected TextWidget m_CamPosInfoY;
 	protected TextWidget m_CamPosInfoZ;
+
+	protected float m_TestVariableX;
+	protected float m_TestVariableY;
+	protected float m_TestVariableZ;
 	
 	void EditorUI(EditorUIManager uimanager)
 	{
@@ -243,9 +244,13 @@ class EditorUI: UIScriptedMenu
 		
 		// Info toolbar widgets
 		m_ObjPosInfoPanel = m_Root.FindAnyWidget("InfobarObjPosFrame");
-		m_ObjPosInfoX = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_X_Value"));
-		m_ObjPosInfoY = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_Y_Value"));
-		m_ObjPosInfoZ = TextWidget.Cast(m_Root.FindAnyWidget("Info_ObjPos_Z_Value"));
+		array< EditorView > views = EditorView.GetUIProperties(m_ObjPosInfoPanel, this);
+		Print( "EditorView count:" + views.Count() );
+		for (int index = 0; index < views.Count(); ++index)
+		{
+			Print( "index:" + index );
+			views[index].DebugPrint();
+		}
 		
 		m_CamPosInfoPanel = m_Root.FindAnyWidget("InfobarCamPosFrame");
 		m_CamPosInfoX = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_X_Value"));
@@ -255,14 +260,16 @@ class EditorUI: UIScriptedMenu
 		// debug info
 		m_DebugFrame = m_Root.FindAnyWidget("DebugFrame");
 		//m_DebugFrame.Show(false);
-
+		
 		return m_Root;
 	}
 	
 	
 	
 	override void Update(float timeslice)
-	{		
+	{
+		Print("Test Vector: " + m_TestVariableX + ", " + m_TestVariableY + ", " + m_TestVariableZ);
+		
 		super.Update(timeslice);
 				
 		if (m_LeftbarScroll.GetVScrollPos() > m_LeftbarScroll.GetContentHeight())
@@ -870,13 +877,6 @@ class EditorUI: UIScriptedMenu
 		m_CamPosInfoX.SetText(campos[0].ToString());
 		m_CamPosInfoY.SetText(campos[1].ToString());
 		m_CamPosInfoZ.SetText(campos[2].ToString());
-	}
-	
-	void UpdateInfoObjPos(vector pos)
-	{		
-		m_ObjPosInfoX.SetText(pos[0].ToString());
-		m_ObjPosInfoY.SetText(pos[1].ToString());
-		m_ObjPosInfoZ.SetText(pos[2].ToString());
 	}
 	
 	void ShowObjPosInfoPanel(bool state)
