@@ -1,19 +1,5 @@
 
-string CreateEditorMission(string map_name = "ChernarusPlus")
-{
-	Print("CreateEditorMission");
-	string mission = "$saves:DayZEditor." + map_name;
-	
-	if (!FileExist(mission)) {
-		Print("Editor Mission not found, creating....");
-		MakeDirectory(mission);
-	}
-	
-	FileHandle init = OpenFile(mission + "/init.c", FileMode.WRITE);
-	CloseFile(init);
-	
-	return mission;
-}
+
 
 modded class MissionMainMenu
 {

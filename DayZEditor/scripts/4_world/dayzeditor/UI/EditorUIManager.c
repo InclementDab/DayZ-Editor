@@ -23,10 +23,8 @@ class EditorUIManager: Managed
 		m_UIManager = GetGame().GetUIManager();
 		
 		// Init UI
-		m_EditorUI = new EditorUI(this);
-		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
-	
-
+		m_EditorUI = new EditorUI();
+		m_UIManager.ShowScriptedMenu(m_EditorUI, GetGame().GetUIManager().GetMenu());
 		m_EditorUI.GetNotificationFrame().GetPos(notification_start_x, notification_start_y);
 		
 		// Init Spawn Position
@@ -83,6 +81,13 @@ class EditorUIManager: Managed
 		float timeslice = (GetGame().GetTime() - m_LastFrameTime) / 1000;
 		m_UpdateInvoker.Invoke(timeslice);
 		m_LastFrameTime = GetGame().GetTime();
+		
+		//m_EditorUI.SetOrientationWidget(GetEditorCamera().GetOrientation());
+	}
+	
+	void SetEditorUI(EditorUI ui)
+	{
+		m_EditorUI = ui;
 	}
 	
 	

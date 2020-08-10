@@ -21,6 +21,9 @@ static PlayerBase CreateDefaultCharacter()
 private ref Editor m_EditorInstance;
 static Editor GetEditor() { return m_EditorInstance; }
 
+
+
+// yo maybe inherit from MissionGameplay smile :)
 class Editor: Managed
 {
 	// Private Memebers
@@ -306,9 +309,10 @@ class Editor: Managed
 	void New()
 	{
 		EditorPrint("Editor::New");
+
 		
-		delete m_EditorObjectManager;
-		m_EditorObjectManager = new EditorObjectManager();
+		MapSelectWindow select_window = new MapSelectWindow();
+		GetGame().GetUIManager().ShowScriptedMenu(select_window, GetGame().GetUIManager().GetMenu());
 		
 		// debug
 		GetEditor().GetUIManager().GetEditorUI().m_DebugActionStack.ClearItems();
@@ -324,6 +328,7 @@ class Editor: Managed
 		EditorWorldData save_data = new EditorWorldData();
 		
 		// Get Data
+		GetGame().GetWorldName(save_data.MapName);
 		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		
@@ -341,6 +346,7 @@ class Editor: Managed
 		EditorWorldData save_data = new EditorWorldData();
 		
 		// Get Data
+		GetGame().GetWorldName(save_data.MapName);
 		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		
@@ -819,7 +825,8 @@ class Editor: Managed
 				} else if (m_LootEditMode) {
 					PlaceholderRemoveLootMode();
 				} else {
-					
+					//UIScriptedMenu menu = GetGame().GetUIManager().EnterScriptedMenu(MENU_INGAME, m_EditorUIManager.GetEditorUI());
+					//GetGame().GetUIManager().ShowScriptedMenu(menu, m_EditorUIManager.GetEditorUI());
 					//m_UIManager.GetMenu().GetVisibleMenu() != "PauseMenu"
 					// maybe something like this idk just add better escape func
 				}
