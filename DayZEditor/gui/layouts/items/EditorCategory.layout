@@ -55,7 +55,7 @@ WrapSpacerWidgetClass EditorListCategory {
        vexactsize 1
        style Normal
        text "CATEGORY"
-       font "gui/fonts/metron-bold12"
+       font "gui/fonts/metron12"
        "exact text" 0
        "text halign" center
        "text valign" center
