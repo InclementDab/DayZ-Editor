@@ -44,7 +44,6 @@ modded class MissionGameplay
 			
 			if (GetEditor().GetUIManager().IsModalActive()) {
 				GetEditor().GetUIManager().ModalClose();
-				
 				return;
 			} 
 			
@@ -86,14 +85,14 @@ modded class MissionGameplay
 		
 		if (input.LocalPress("EditorToggleCursor")) {
 			if (GetGame().GetUIManager().IsCursorVisible() && !m_EditorInstance.GetUIManager().GetEditorUI().IsMapOpen()) {
-				m_EditorInstance.GetUIManager().GetEditorUI().HideCursor();
+				m_EditorInstance.GetUIManager().HideCursor();
 				if (Editor.IsPlayerActive())
 					Editor.SetPlayerAimLock(false);
 				return;
 			} 
 			
 			
-			m_EditorInstance.GetUIManager().GetEditorUI().ShowCursor();
+			m_EditorInstance.GetUIManager().ShowCursor();
 			if (Editor.IsPlayerActive())
 				Editor.SetPlayerAimLock(true); //PlayerControlEnable(true); ????
 			return;

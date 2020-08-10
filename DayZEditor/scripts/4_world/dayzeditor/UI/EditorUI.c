@@ -298,7 +298,7 @@ class EditorUI: UIScriptedMenu
 		
 		m_EditorMapContainer.Show(state);
 		m_EditorMapContainer.Update();
-		ShowCursor();
+		m_UIManager.ShowCursor();
 	}
 	
 	void SetOrientationWidget(vector orientation)
@@ -317,17 +317,7 @@ class EditorUI: UIScriptedMenu
 	MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
 	bool IsMapOpen() 			{ return m_EditorMapContainer.IsVisible(); }
 	
-	void ShowCursor()
-	{
-		// todo use editor UI manager to do this
-		GetGame().GetUIManager().ShowUICursor(true);
-	}
-	
-	void HideCursor()
-	{
-		// todo use editor UI manager to do this
-		GetGame().GetUIManager().ShowUICursor(false);
-	}
+
 	
 	void SetCursor(EditorCursor cursor_type = EditorCursor.DEFAULT)
 	{

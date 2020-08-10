@@ -104,6 +104,16 @@ class EditorUIManager: Managed
 		m_EditorCamera.SetActive(state);
 	}
 	
+	void ShowCursor()
+	{
+		GetGame().GetUIManager().ShowUICursor(true);
+	}
+	
+	void HideCursor()
+	{
+		GetGame().GetUIManager().ShowUICursor(false);
+	}
+	
 	bool IsCursorOverUI()
 	{
 		float pos_x, pos_y, size_x, size_y;
@@ -218,16 +228,19 @@ class EditorUIManager: Managed
 	{
 		m_CurrentModal = w;
 		SetModal(m_CurrentModal.GetRoot());
+		ShowCursor();
 	}
 	
 	void ModalClose()
 	{
 		m_CurrentModal.GetRoot().Unlink();
+		m_CurrentModal = null;
+		ShowCursor();
 	}
 
 	bool IsModalActive()
 	{
-		return m_CurrentModal != null;
+		return m_UIManager.IsModalVisible();
 	}
 	
 }

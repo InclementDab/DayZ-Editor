@@ -24,6 +24,7 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	
 	protected WrapSpacerWidget m_ContentWrapper;
 	protected GridSpacerWidget m_ButtonGrid;
+	protected WrapSpacerWidget m_WindowDragWrapper;
 
 	
 	void EditorDialog()
@@ -38,19 +39,12 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		m_TitleClose		= ButtonWidget.Cast(m_Root.FindAnyWidget("TitleClose"));
 		m_ContentWrapper	= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("DialogContent"));
 		m_ButtonGrid		= GridSpacerWidget.Cast(m_Root.FindAnyWidget("ButtonGrid"));
+		m_WindowDragWrapper	= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("WindowDragWrapper"));
 		
 		m_Root.SetHandler(this);
 	}
 	
-	void ~EditorDialog()
-	{
-		Print("~EditorDialog");
-		m_Root.Unlink();
-	}
 	
-
-
-
 	
 	protected void SetContent(Widget content)
 	{
@@ -68,6 +62,7 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	void ShowDialog()
 	{
 		Print("MapSelectDialog::ShowDialog");
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		m_Root.Show(true);
 		GetEditor().GetUIManager().ModalSet(this);
 	}
@@ -75,15 +70,13 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	void CloseDialog()
 	{
 		Print("MapSelectDialog::CloseDialog");
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		m_Root.Show(false);
 		GetEditor().GetUIManager().ModalClose();
 	}
 	
+	void Update() {}
 
-	
-
-	
-
-		
 	float m_OffsetX, m_OffsetY;
 	override bool OnDrag(Widget w, int x, int y) 
 	{
@@ -121,7 +114,7 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	        m_TitleBar.SetPos(0, 0);
 			m_Root.SetPos(x - m_OffsetX, y - m_OffsetY);
 			
-			//m_WindowDragWrapper.SetPos(x - m_OffsetX, y - m_OffsetY);
+			m_WindowDragWrapper.SetPos(x - m_OffsetX, y - m_OffsetY);
 	        
 	        return true;
 	    }
@@ -155,8 +148,8 @@ class MapSelectDialog: EditorDialog
 	
 	protected TextListboxWidget m_MapHostListbox;
 	
-	private ButtonWidget m_SelectButton;
-	private ButtonWidget m_CloseButton;
+	private ref ButtonWidget m_SelectButton;
+	private ref ButtonWidget m_CloseButton;
 		
 	void MapSelectDialog()
 	{
@@ -177,9 +170,9 @@ class MapSelectDialog: EditorDialog
 	}
 	
 	
-	void Update(float timeslice)
+	
+	override void Update()
 	{
-		
 		m_TitleBar.SetPos(0, 0);
 		bool lots_of_branches_on_your_penis = m_MapHostListbox.GetSelectedRow() != -1;
 		if (lots_of_branches_on_your_penis)
