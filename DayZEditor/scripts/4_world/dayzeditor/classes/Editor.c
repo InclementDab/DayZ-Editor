@@ -824,10 +824,8 @@ class Editor: Managed
 				return true;
 			}
 			
-			case KeyCode.KC_M: {
-								
+			case KeyCode.KC_M: {								
 				GetUIManager().GetEditorUI().ShowMap(!GetUIManager().GetEditorUI().IsMapOpen());
-				
 				return true;
 			}
 		

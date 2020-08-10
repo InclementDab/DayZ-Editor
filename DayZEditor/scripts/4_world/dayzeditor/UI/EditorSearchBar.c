@@ -11,11 +11,11 @@ class PlaceableSearchBar: EditorWidgetEventHandler
 		Widget child = spacer.GetChildren();
 		while (child != null) {
 			
-			EditorListItem editor_list_item;
+			EditorPlaceableListItem editor_list_item;
 			child.GetScript(editor_list_item);
 			
 			if (editor_list_item != null) {
-				string Config_Lower = editor_list_item.GetPlaceableObject().GetType();
+				string Config_Lower = editor_list_item.GetData().Type;
 				Config_Lower.ToLower();
 				if (filter == "") return false;
 	           	child.Show(Config_Lower.Contains(filter));				

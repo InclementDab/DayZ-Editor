@@ -63,7 +63,7 @@ class EditorObjectManager
 		delete m_ActionStack;
 	}
 	
-	static int GetPlaceableObjects(out EditorPlaceableObjectSet placeable_objects) 
+	static int GetPlaceableObjects(out EditorPlaceableListItemSet placeable_objects) 
 	{ 
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
@@ -75,8 +75,8 @@ class EditorObjectManager
 				string Config_Name, Base_Name;
 		        g_Game.ConfigGetChildName(Config_Path, j, Config_Name); 
 				
-				EditorPlaceableObject placeable_object = new EditorPlaceableObject(Config_Name, Config_Path);
-				placeable_objects.Insert(placeable_object);
+				EditorPlaceableObjectData placeable_object_data = new EditorPlaceableObjectData(Config_Name, Config_Path);
+				placeable_objects.Insert(new EditorPlaceableListItem(placeable_object_data));
 		    }
 		}
 		
@@ -309,16 +309,7 @@ class EditorObjectManager
 		}
 	}
 	
-	EditorObject GetEditorObjectFromListItem(EditorPlacedListItem list_item)
-	{
-		foreach (EditorObject editor_object: m_PlacedObjects)
-			if (editor_object == list_item.GetEditorObject())
-				return editor_object;
-		
-		
-		Print("EditorObjectManager::GetEditorObjectFromListItem Item Not Found!");
-		return null;
-	}
+
 	
 	
 	bool CheckIfRootIsSelected(Widget root)
@@ -384,38 +375,5 @@ class EditorObjectManager
 	}
 	
 	
-
-	
-	void oof_dialog()
-	{
-		TestDialog dialog = new TestDialog(GetEditor().GetUIManager().GetEditorUI());
-		dialog.SetTitleText("Test Dialog");
-		dialog.SetDialogText("Body Text");
-		dialog.ShowDialog();
-	}
 }
 
-
-class TestDialog: EditorUIDialog
-{
-	//bool OnModalResult(Widget w, int x, int y, int code, int result)
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		if (button == 0) {
-			switch (w) {
-				case m_DialogBtnCancle: {
-					Close();
-					return true;
-				}
-				
-				case m_DialogBtnConfirm: {
-					Print("REEEEEEEEEEEEEEE");
-					return true;
-				}
-				
-			}
-		}
-		return super.OnClick(w, x, y, button);
-	}
-}

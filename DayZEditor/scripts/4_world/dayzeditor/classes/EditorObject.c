@@ -31,6 +31,9 @@ class EditorObjectDataSet: map<int, ref EditorObjectData>
 static int lowest_id;
 class EditorObjectData
 {	
+	private int m_Id;
+	int GetID() { return m_Id; }
+	
 	string Type;
 	vector Position;
 	vector Orientation;
@@ -66,8 +69,7 @@ class EditorObjectData
 		return data;
 	}
 	
-	private int m_Id;
-	int GetID() { return m_Id; }
+
 	
 }
 
@@ -89,9 +91,9 @@ class EditorObject
 	protected Widget 		m_EditorObjectContextWidget;
 	
 	ref EditorObjectMarker 			m_EditorObjectMarker = null;
-	ref EditorPlacedListItem 		m_EditorObjectBrowser = null;
 	ref EditorMapMarker				m_EditorMapMarker = null;
-
+	
+	private ref EditorPlacedListItem 		m_PlacedListItem;
 	
 	EntityAI 				m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
@@ -146,11 +148,8 @@ class EditorObject
 			
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
-			m_EditorObjectBrowser = new EditorPlacedListItem();
-			m_EditorObjectBrowserWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorPlacedListItem.layout");
-			m_EditorObjectBrowserWidget.GetScript(m_EditorObjectBrowser);
-			m_EditorObjectBrowser.SetObject(this);
-			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_EditorObjectBrowser);
+			m_PlacedListItem = new EditorPlacedListItem(m_Data);
+			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_PlacedListItem);
 		}
 		
 		
@@ -164,7 +163,7 @@ class EditorObject
 		m_Data.Orientation = GetOrientation();
 		
 		delete m_EditorObjectMarker; 
-		delete m_EditorObjectBrowser;
+		delete m_PlacedListItem;
 		delete m_EditorMapMarker;
 		
 		delete m_EditorObjectMarkerWidget;

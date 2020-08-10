@@ -84,8 +84,7 @@ class EditorUI: UIScriptedMenu
 	// Cursors
 	protected Widget			m_HorizontalScrollWidget;
 
-	// ExportDialog
-	protected ref EditorExportDialog m_ExportDialog;
+
 	
 	// Orientation Tool
 	protected ItemPreviewWidget m_OrientationWidget;
@@ -218,8 +217,6 @@ class EditorUI: UIScriptedMenu
 		//m_HorizontalScrollWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/cursors/horizontalwidget.layout");
 		
 
-		m_ExportDialog = new EditorExportDialog(m_Root);
-		m_ExportDialog.Show(false); //! Comment me if you have implementent me or want to see me!
 		
 		// Debug
 		m_DebugText1			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText1"));
@@ -346,16 +343,16 @@ class EditorUI: UIScriptedMenu
 	
 	
 
-	private ref array<ref EditorListItem> m_CurrentPlaceableObjects = new array<ref EditorListItem>();
-	void InsertPlaceableObject(EditorPlaceableObject placeable_object)
+	
+	void InsertPlaceableObject(EditorListItem target)
 	{
-		m_CurrentPlaceableObjects.Insert(placeable_object.SetListItem(m_LeftbarSpacer));
+		m_LeftbarSpacer.AddChild(target.GetRoot());
 	}
 	
 	
-	void InsertPlacedObject(EditorPlacedListItem target)
+	void InsertPlacedObject(EditorListItem target)
 	{
-		m_RightbarSpacer.AddChild(target.GetLayoutRoot());
+		m_RightbarSpacer.AddChild(target.GetRoot());
 	}
 	
 	void InsertMapObject(Widget map_marker)

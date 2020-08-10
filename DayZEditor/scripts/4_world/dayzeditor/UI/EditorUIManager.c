@@ -1,15 +1,15 @@
 
 
-typedef ref array<ref EditorPlaceableObject> EditorPlaceableObjectSet;
+typedef ref array<ref EditorPlaceableListItem> EditorPlaceableListItemSet;
 
-class EditorUIManager: Managed
+class EditorUIManager: Managed // remove meeeee
 {
 	// Members
 	private ref EditorUI 		m_EditorUI;
 	private EditorCamera		m_EditorCamera;
 	private ref ScriptInvoker 	m_UpdateInvoker;
 	private UIManager			m_UIManager;
-	private ref EditorPlaceableObjectSet m_PlaceableObjects;
+	private ref EditorPlaceableListItemSet m_PlaceableObjects;
 	
 	// Getters
 	EditorUI GetEditorUI() { return m_EditorUI; }
@@ -53,9 +53,10 @@ class EditorUIManager: Managed
 	
 		
 		// Load PlaceableObjects
-		m_PlaceableObjects = new EditorPlaceableObjectSet();
+		m_PlaceableObjects = new EditorPlaceableListItemSet();
 		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(m_PlaceableObjects)));
-		foreach (ref EditorPlaceableObject placeable_object: m_PlaceableObjects) {
+		
+		foreach (ref EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
 			m_EditorUI.InsertPlaceableObject(placeable_object);
 		}	
 				
@@ -214,9 +215,9 @@ class EditorUIManager: Managed
 	{
 		EditorPrint("EditorUIManager::OnPlaceableCategoryChanged");
 
-		foreach (EditorPlaceableObject placeable_object: m_PlaceableObjects) {
-			Widget root = placeable_object.GetListItem().GetLayoutRoot();
-			root.Show(placeable_object.GetCategory() == category);
+		foreach (EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
+			Widget root = placeable_object.GetRoot();
+			root.Show(placeable_object.GetData().GetCategory() == category);
 		}
 	}
 	
