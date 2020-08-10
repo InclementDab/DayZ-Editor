@@ -18,9 +18,7 @@ modded class MissionGameplay
 	{
 		super.OnInit();
 
-		
-		
-		
+	
 		GetUApi().GetInputByName("UACOTModuleToggleCOT").ForceDisable(true);
 		GetUApi().GetInputByName("UACOTToggleButtons").ForceDisable(true);
 		GetUApi().GetInputByName("UACOTTogglePlayer").ForceDisable(true);
@@ -38,52 +36,81 @@ modded class MissionGameplay
 		m_EditorInstance = new Editor(); 
 	}
 	
-	override void OnUpdate(float timeslice)
+	
+	void HandleInputs(Input input)
 	{
-		Input input = GetGame().GetInput();
+		
+		if (input.LocalPress("UAUIMenu", false) || input.LocalPress("UAUIBack", false)) {
+			
+			if (GetEditor().GetUIManager().IsModalActive()) {
+				GetEditor().GetUIManager().ModalClose();
+				return;
+			} 
+			
+			/*
+			if (GetFocus() != null) {
+				SetFocus(null);
+				return;
+			}*/
+			
+			
+			if (GetEditor().IsLootEditActive()) {
+				GetEditor().PlaceholderRemoveLootMode();
+				return;
+			}
+		
+
+			if (IsPaused() && !g_Game.GetUIManager().ScreenFadeVisible()) {
+				Continue();
+				return;
+			}
+			
+			if (!IsPaused()) {
+				Pause();
+				return;
+			}	
+		}
 		
 		
 		if (input.LocalPress("EditorToggleUI")) {
 			
-			if (input.LocalValue("UAWalkRunTemp")) {
+			if (input.LocalValue("UAWalkRunTemp"))
 				m_EditorInstance.Redo();
-			} else {
+			else 
 				m_EditorInstance.GetUIManager().SetVisibility(!m_EditorInstance.GetUIManager().GetVisibility());
-			}
-		} else if (input.LocalPress("EditorToggleCursor")) {
 			
-			if (GetGame().GetUIManager().IsCursorVisible() && !m_EditorInstance.GetUIManager().GetEditorUI().IsMapOpen()) {
-				m_EditorInstance.GetUIManager().GetEditorUI().HideCursor();
-				if (Editor.IsPlayerActive()) {
-					
-					Editor.SetPlayerAimLock(false);
-				}
-			} else { 
-				m_EditorInstance.GetUIManager().GetEditorUI().ShowCursor();
-				if (Editor.IsPlayerActive()) {
-					//PlayerControlEnable(true); ????
-					Editor.SetPlayerAimLock(true);
-				}
-			}	
+			
+			return;
 		} 
 		
-		if (!m_UIManager.IsDialogVisible()) {
+		if (input.LocalPress("EditorToggleCursor")) {
+			if (GetGame().GetUIManager().IsCursorVisible() && !m_EditorInstance.GetUIManager().GetEditorUI().IsMapOpen()) {
+				m_EditorInstance.GetUIManager().GetEditorUI().HideCursor();
+				if (Editor.IsPlayerActive())
+					Editor.SetPlayerAimLock(false);
+				return;
+			} 
+			
+			
+			m_EditorInstance.GetUIManager().GetEditorUI().ShowCursor();
+			if (Editor.IsPlayerActive())
+				Editor.SetPlayerAimLock(true); //PlayerControlEnable(true); ????
+			return;
+		} 
 		
+		
+	}
 	
-			if (IsPaused()) {
-				if (!g_Game.GetUIManager().ScreenFadeVisible()) {
-					if (input.LocalPress("UAUIMenu",false) || input.LocalPress("UAUIBack", false)) {
-						Continue();
-					}
-				}
-				
-			} else if (input.LocalPress("UAUIMenu", false)) {
-				Pause();
-			}
-				
-			
-			
-		}
+	override void OnUpdate(float timeslice)
+	{
+		Input input = GetGame().GetInput();
+		
+		HandleInputs(input);
+		
+		
+		
+		
+
 		
 		
 		

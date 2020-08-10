@@ -11,6 +11,7 @@ WindowWidgetClass MapSelectorDialog {
  vexactsize 1
  priority 5
  style rover_sim_black_2
+ scriptclass "MapSelectDialog"
  "title visible" 0
  font "gui/fonts/metron"
  {

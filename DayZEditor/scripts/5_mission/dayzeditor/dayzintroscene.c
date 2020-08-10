@@ -153,8 +153,9 @@ modded class MainMenu
 
     override void Play()
     {
-		MapSelectWindow select_window = new MapSelectWindow();
-		GetGame().GetUIManager().ShowScriptedMenu(select_window, this);
+		MapSelectDialog select_window = new MapSelectDialog();
+		select_window.ShowDialog();
+		//GetGame().GetUIManager().ShowScriptedMenu(select_window, this);
     }
 
     override bool OnMouseEnter(Widget w, int x, int y)

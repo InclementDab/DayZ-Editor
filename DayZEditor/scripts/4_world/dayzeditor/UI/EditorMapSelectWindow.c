@@ -9,8 +9,42 @@ static const ref array<string> ExcludedMapItems = {
 };
 
 
-class MapSelectWindow: UIScriptedMenu
+
+class EditorDialog: ScriptedWidgetEventHandler
+{
+	protected Widget layoutRoot;
+	
+	void OnWidgetScriptInit(Widget w)
+	{
+		Print("EditorDialog::OnWidgetScriptInit");
+		layoutRoot = w;
+		layoutRoot.SetHandler(this);
+		layoutRoot.Show(false);
+		
+	}
+	
+	void ShowDialog()
+	{
+		Print("MapSelectDialog::ShowDialog");
+		layoutRoot.Show(true);
+		GetEditor().GetUIManager().ModalSet(layoutRoot);
+	}
+	
+	void CloseDialog()
+	{
+		Print("MapSelectDialog::CloseDialog");
+		layoutRoot.Show(false);
+		GetEditor().GetUIManager().ModalClose();
+	}
+	
+}
+
+
+
+class MapSelectDialog: EditorDialog
 {	
+	
+	
 	protected Widget m_SelectButtonPanel;
 	protected ButtonWidget m_SelectButton;
 	protected TextListboxWidget m_MapHostListbox;
@@ -18,9 +52,22 @@ class MapSelectWindow: UIScriptedMenu
 	protected Widget m_TitleBar;
 	protected Widget m_WindowDragWrapper;
 
-	override Widget Init() 
+	static MapSelectDialog Create()
 	{
-		layoutRoot 					= GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");
+		MapSelectDialog dialog;
+		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");
+		w.GetScript(dialog);
+		return dialog;
+	}
+	
+	override void OnWidgetScriptInit(Widget w)
+	{
+		Print(w);
+		Print("MapSelectDialog::OnWidgetScriptInit");
+		super.OnWidgetScriptInit(w);
+		
+		
+		
 		m_WindowDragWrapper 		= layoutRoot.FindAnyWidget("WindowDragWrapper");
 		
 		m_TitleBar 					= layoutRoot.FindAnyWidget("WindowDragWrapper");
@@ -36,12 +83,10 @@ class MapSelectWindow: UIScriptedMenu
 			if (ExcludedMapItems.Find(name) == -1) {
 				m_MapHostListbox.AddItem(name, null, 0);
 			}
-		}
-		
-		return layoutRoot;
+		}		
 	}
 	
-	override void Update(float timeslice)
+	void Update(float timeslice)
 	{
 		m_TitleBar.SetPos(0, 0);
 		bool lots_of_branches_on_your_penis = m_MapHostListbox.GetSelectedRow() != -1;
@@ -60,7 +105,7 @@ class MapSelectWindow: UIScriptedMenu
 		switch (key) {
 			
 			case KeyCode.KC_ESCAPE: {
-				Close();
+				CloseDialog();
 				return true;
 			}
 			
@@ -77,14 +122,14 @@ class MapSelectWindow: UIScriptedMenu
 		if (button != 0) return false; 
 		
 		if (w == layoutRoot.FindAnyWidget("TitleClose") || w == layoutRoot.FindAnyWidget("CloseButton")) {
-			Close();
+			CloseDialog();
 			return true;
 
 		} else if (w == m_SelectButton) {
 			string name;
 			m_MapHostListbox.GetItemText(m_MapHostListbox.GetSelectedRow(), 0, name);
 			GetGame().PlayMission(CreateEditorMission(name));
-			Close();
+			CloseDialog();
 			return true;
 		}
 		
@@ -153,7 +198,7 @@ class MapSelectWindow: UIScriptedMenu
 				if(name != "")
 				{
 					GetGame().PlayMission(CreateEditorMission(name));
-					Close();
+					CloseDialog();
 					return true;
 				}
 			}

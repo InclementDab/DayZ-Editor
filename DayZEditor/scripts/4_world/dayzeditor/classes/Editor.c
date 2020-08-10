@@ -312,8 +312,9 @@ class Editor: Managed
 		EditorPrint("Editor::New");
 
 		
-		MapSelectWindow select_window = new MapSelectWindow();
-		GetGame().GetUIManager().ShowScriptedMenu(select_window, GetGame().GetUIManager().GetMenu());
+		MapSelectDialog select_window = MapSelectDialog.Create();
+		select_window.ShowDialog();
+
 		
 		// debug
 		GetEditor().GetUIManager().GetEditorUI().m_DebugActionStack.ClearItems();
@@ -817,22 +818,7 @@ class Editor: Managed
 				break;
 			}
 
-			
-			case KeyCode.KC_ESCAPE: {
-				
-				if (GetFocus()) {
-					SetFocus(null);
-					//return true;
-				} else if (m_LootEditMode) {
-					PlaceholderRemoveLootMode();
-				} else {
-					//UIScriptedMenu menu = GetGame().GetUIManager().EnterScriptedMenu(MENU_INGAME, m_EditorUIManager.GetEditorUI());
-					//GetGame().GetUIManager().ShowScriptedMenu(menu, m_EditorUIManager.GetEditorUI());
-					//m_UIManager.GetMenu().GetVisibleMenu() != "PauseMenu"
-					// maybe something like this idk just add better escape func
-				}
-				break;
-			}
+		
 			
 			case KeyCode.KC_DELETE: {
 				m_EditorObjectManager.DeleteObjects(m_EditorObjectManager.GetSelectedObjects());			

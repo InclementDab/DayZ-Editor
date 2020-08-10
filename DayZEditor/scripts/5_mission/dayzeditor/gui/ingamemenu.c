@@ -10,7 +10,7 @@ modded class InGameMenu
 		
 		
 		m_RestartDeadButton.Show(false);
-		ButtonSetText(m_RestartButton, "LOAD NEW MAP...");
+		ButtonSetText(m_RestartButton, "CHANGE MAP");
 		//ButtonSetText(m_RestartDeadButton, "OPEN FILE");
 		ButtonSetText(m_ContinueButton, "CONTINUE");
 		
@@ -31,8 +31,9 @@ modded class InGameMenu
 	
 	override void OnClick_Restart()
 	{
-		MapSelectWindow select_window = new MapSelectWindow();
-		GetGame().GetUIManager().ShowScriptedMenu(select_window, this);
+		MapSelectDialog select_window = new MapSelectDialog();
+		select_window.ShowDialog();
+		//GetGame().GetUIManager().ShowScriptedMenu(select_window, this);
 	}
 	
 	
