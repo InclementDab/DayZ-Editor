@@ -18,7 +18,7 @@ modded class InGameMenu
 		top.AddChildAfter(m_OptionsButton, m_RestartButton);
 		
 		ImageWidget dayz_logo = ImageWidget.Cast(layoutRoot.FindAnyWidget("dayz_logo"));
-		dayz_logo.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_logo.edds");
+		dayz_logo.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
 		dayz_logo.SetImage(0);
 		dayz_logo.SetFlags(dayz_logo.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		
