@@ -2,11 +2,12 @@ PanelWidgetClass EditorDropdownPrefab {
  clipchildren 0
  inheritalpha 0
  ignorepointer 0
- size 1 1
+ size 1 32
+ halign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 0
- vexactsize 0
+ vexactsize 1
  style blank
  {
   TextWidgetClass EditorDropdownText {
@@ -40,16 +41,16 @@ PanelWidgetClass EditorDropdownPrefab {
      clipchildren 0
      inheritalpha 1
      ignorepointer 1
-     size 0.7 0.7
+     size 22 24
      halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
-     hexactsize 0
-     vexactsize 0
+     hexactsize 1
+     vexactsize 1
      image0 ""
-     imageTexture "{D25B66FD84C3E662}DayZEditor/gui/icons/icon_folder_open_128x128.edds"
-     mode additive
+     imageTexture "{6D875E7F87B86425}DayZEditor/gui/icons/icon_arrow_down_128x128.edds"
+     mode blend
      "src alpha" 1
      "no wrap" 1
      stretch 1
@@ -61,15 +62,15 @@ PanelWidgetClass EditorDropdownPrefab {
      clipchildren 0
      inheritalpha 1
      ignorepointer 1
-     size 0.7 0.7
+     size 22 24
      halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
-     hexactsize 0
-     vexactsize 0
+     hexactsize 1
+     vexactsize 1
      image0 ""
-     imageTexture "{BEED19702104742D}DayZEditor/gui/icons/icon_folder_save_128x128.edds"
+     imageTexture "{2552DC57D71008EC}DayZEditor/gui/icons/icon_arrow_up_128x128.edds"
      mode additive
      "src alpha" 1
      "no wrap" 1
