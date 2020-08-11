@@ -38,10 +38,37 @@ class EditorFileDialog: EditorDialog
 		string filename;
 		FileAttr fileattr;
 		FindFileHandle filehandle = FindFile(filterdir, filename, fileattr, FindFileFlags.ALL);
-		m_FileHostListbox.AddItem(filename, new EditorFile(filename, directory, fileattr), 0);
-
+		ref array<ref EditorFile> file_array = new array<ref EditorFile>();
+		TStringArray sort_array = new TStringArray();
+		
+		file_array.Insert(new EditorFile(filename, directory, fileattr));
+		sort_array.Insert(filename);
+		
 		while (FindNextFile(filehandle, filename, fileattr)) {
-			m_FileHostListbox.AddItem(filename, new EditorFile(filename, directory, fileattr), 0);
+			file_array.Insert(new EditorFile(filename, directory, fileattr));
+			filename.ToLower();
+			sort_array.Insert(filename);
+		}
+		
+		sort_array.Sort();
+		
+		
+		
+		
+		ref array<ref EditorFile> sorted_file_array = new array<ref EditorFile>();
+		foreach (string sorted_name: sort_array) {
+			foreach (EditorFile unsorted_file: file_array) {
+				string lower_name = unsorted_file.FileName;
+				lower_name.ToLower();
+				if (sorted_name == lower_name) {
+					sorted_file_array.Insert(unsorted_file);
+				}
+			}
+		}
+		
+		
+		foreach (EditorFile sorted_file: sorted_file_array) {
+			m_FileHostListbox.AddItem(sorted_file.FileName, sorted_file, 0);
 		}
 		
 		CloseFindFile(filehandle);
