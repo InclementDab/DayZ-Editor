@@ -1,7 +1,7 @@
 
 //! Folders
-static const string EDITOR_PROFILE_FOLDER = "$profile:DayZEditor\\";
-static const string EDITOR_GUI_FOLDER = "DayZEditor\\gui\\";
+static const string EDITOR_PROFILE_FOLDER = "$profile:Editor\\";
+static const string EDITOR_GUI_FOLDER = "Editor\\gui\\";
 static const string EDITOR_GUI_ICONS_FOLDER = EDITOR_GUI_FOLDER + "icons\\";
 
 //! Icons

@@ -341,7 +341,7 @@ class Editor: Managed
 		GetEditor().GetUIManager().NotificationCreate("Autosave " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
 	}
 	
-	void Save(string filename = "editor_save", string filedir = "$profile:Editor/")
+	void Save(string file)
 	{	
 		EditorPrint("Editor::Save");
 		EditorWorldData save_data = new EditorWorldData();
@@ -356,13 +356,12 @@ class Editor: Managed
 		foreach (EditorObject save_object: placed_objects)	
 			save_data.EditorObjects.Insert(save_object.GetData());
  		
-		string file = filedir + filename + ".dze";
 		autosave_file = file;
 		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, file);
 		GetEditor().GetUIManager().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
 	}
 	
-	void Open(string filename, string filedir = "$profile:Editor/")
+	void Open(string file)
 	{
 		EditorPrint("Editor::Open");
 		EditorWorldData load_data = new EditorWorldData();
@@ -376,7 +375,6 @@ class Editor: Managed
 		
 		
 		// Load Data
-		string file = filedir + filename;
 		FileDialogResult loadfile_result = EditorFileManager.Open(load_data, file);
 		
 		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
@@ -391,7 +389,7 @@ class Editor: Managed
 		GetEditor().GetUIManager().NotificationCreate("Load " + typename.EnumToString(FileDialogResult, loadfile_result)); 
 	}
 	
-	void Import(ImportMode import_mode, string filename = "editor_import.txt", string filedir = "$profile:Editor/", bool merge = false)
+	void Import(ImportMode import_mode, string file, bool merge = false)
 	{
 		EditorPrint("Editor::Import");
 		EditorWorldData import_data = new EditorWorldData();
@@ -405,7 +403,7 @@ class Editor: Managed
 		}
 				
 		
-		FileDialogResult loadfile_result = EditorFileManager.Import(import_data, filename, import_mode);
+		FileDialogResult loadfile_result = EditorFileManager.Import(import_data, file, import_mode);
 		
 		if (import_data.CameraPosition[3] != vector.Zero)
 			GetUIManager().GetEditorCamera().SetTransform(import_data.CameraPosition);
@@ -420,12 +418,11 @@ class Editor: Managed
 		GetEditor().GetUIManager().NotificationCreate("Import " + typename.EnumToString(FileDialogResult, loadfile_result)); 
 	}
 	
-	void Export(ExportSettings export_settings, string filename = "editor_export", string filedir = "$profile:Editor/", )
+	void Export(ExportSettings export_settings, string file)
 	{
 		EditorPrint("Editor::Export");
 		EditorWorldData export_data = new EditorWorldData();
 		
-		string file = filedir + filename;
 		switch (export_settings.ExportFileMode) {
 			
 			case ExportMode.EXPANSION: {
@@ -938,7 +935,8 @@ class Editor: Managed
 			
 			case KeyCode.KC_S: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					Save();
+					EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
+					save_dialog.ShowDialog();
 					return true;
 				}
 				break;
@@ -946,8 +944,8 @@ class Editor: Managed
 			
 			case KeyCode.KC_O: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					EditorFileSelectDialog file_select = new EditorFileSelectDialog("$profile:Editor/");
-					file_select.ShowDialog();
+					EditorFileOpenDialog open_dialog = new EditorFileOpenDialog();
+					open_dialog.ShowDialog();
 					return true;
 				}
 				break;
