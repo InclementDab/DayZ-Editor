@@ -62,6 +62,18 @@ ImageSetClass {
    Size 64 64
    Flags 0
   }
+  ImageSetDefClass eye_closed_icon {
+   Name "eye_closed_icon"
+   Pos 656 21
+   Size 64 64
+   Flags 0
+  }
+  ImageSetDefClass eye_open_icon {
+   Name "eye_open_icon"
+   Pos 726 21
+   Size 64 64
+   Flags 0
+  }
  }
  Groups {
  }
