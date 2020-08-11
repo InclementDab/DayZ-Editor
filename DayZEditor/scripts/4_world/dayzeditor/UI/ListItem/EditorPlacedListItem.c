@@ -3,11 +3,12 @@ class EditorPlacedListItem: EditorListItem
 	private ref EditorObject m_Data;
 	EditorObject GetData() { return m_Data; }
 	
-	void EditorPlacedListItem(EditorObject data)
+	private void EditorPlacedListItem() { Print("EditorPlacedListItem"); }
+	
+	private void pCreate(EditorObject data)
 	{
-		Print("EditorPlacedListItem");
+		Print("EditorPlacedListItem::pCreate");
 		m_Data = data;
-		
 		m_ListItemCollapse.Show(false);
 		
 		SetText(m_Data.GetType());
@@ -15,6 +16,16 @@ class EditorPlacedListItem: EditorListItem
 		
 		m_Data.OnObjectSelected.Insert(EditorObjectSelected);
 		m_Data.OnObjectDeselected.Insert(EditorObjectDeselected);	
+	}
+	
+	static EditorPlacedListItem Create(EditorObject data)
+	{
+		Print("EditorPlacedListItem::Create");
+		EditorPlacedListItem item;
+		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
+		w.GetScript(item);
+		item.pCreate(data);
+		return item;
 	}
 	
 	void EditorObjectSelected(EditorObject data)

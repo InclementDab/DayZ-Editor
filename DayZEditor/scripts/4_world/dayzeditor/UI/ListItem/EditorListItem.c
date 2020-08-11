@@ -24,10 +24,120 @@ void RecursiveGetParent(out ref Widget w, string name)
 }
 
 
+
+
+
+class EditableTextWidget: ScriptedWidgetEventHandler
+{
+	
+	private TextWidget m_TextWidget;
+	private EditBoxWidget m_EditWidget;
+		
+	
+	reference string Text;
+	private string m_Text;
+	
+	void EditableTextWidget()
+	{
+		Print("EditableTextWidget");
+	}
+	
+	
+	void OnWidgetScriptInit(Widget w)
+	{
+		Print("EditableTextWidget::OnWidgetScriptInit");
+		if (!Class.CastTo(m_TextWidget, w)) {
+			EditorPrint(string.Format("EditableTextWidget must be used on type TextWidget! Found: %1", w.GetTypeName()), LogSeverity.ERROR);
+			return;
+		}
+		m_Text = Text;
+		m_TextWidget = w;
+		m_EditWidget = EditBoxWidget.Cast(m_TextWidget.FindAnyWidget("EditorListItemTextEditor"));
+		
+		m_TextWidget.SetHandler(this);
+		
+		m_TextWidget.SetText(m_Text);
+	}
+	
+	
+	override bool OnUpdate(Widget w)
+	{
+		Print("OnUpdate");
+		m_TextWidget.SetText(m_Text);
+		return true;
+	}
+		
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		Print("OnClick");
+		return false;
+	}
+	
+	
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		Print("EditableTextWidget::OnDoubleClick");
+		m_Text = Text;
+		//m_TextWidget.SetText(Text + "|");
+		SetFocus(m_EditWidget);
+		
+		//SetModal(m_EditWidget);
+		
+		return true;
+	}
+	
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		return false;
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		return false;
+	}
+	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		Print("EditableTextWidget::OnFocus");
+		return true;
+	}
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		Print("EditableTextWidget::OnFocusLost");
+		return true;
+	}
+	
+
+	
+	override bool OnKeyPress(Widget w, int x, int y, int key)
+	{
+		Print("EditableTextWidget::OnKeyPress");
+		
+		
+		m_Text += key.AsciiToString();
+		
+		return true;
+	}
+	
+	override bool OnKeyDown(Widget w, int x, int y, int key)
+	{
+		Print("EditableTextWidget::OnKeyDown");
+		
+		return true;
+	}
+	
+}
+
+
+
+
 // maybe use widgets instead of ScriptedWidgetEventHandler
 class EditorListItem: ScriptedWidgetEventHandler
 {
 	private int m_NestIndex;
+	private bool m_Collapsed = false;
 	
 	protected Widget m_Root;
 	Widget GetRoot() { return m_Root; }
@@ -43,14 +153,26 @@ class EditorListItem: ScriptedWidgetEventHandler
 	protected TextWidget m_ListItemLabel;
 	protected ImageWidget m_ListItemIcon;
 	
-	
 	protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
 	protected static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
+
+	void EditorListItem() 
+	{ 
+		EditorPrint("EditorListItem"); 
+		
+		if (m_ListItemCache == null) 
+			m_ListItemCache = new array<ref EditorListItem>();
+		m_ListItemCache.Insert(this);
+	}
+	void ~EditorListItem() { EditorPrint("~EditorListItem"); }
 	
-	void EditorListItem()
+
+	
+	
+	void OnWidgetScriptInit(Widget w)
 	{
-		EditorPrint("EditorListItem");
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
+		EditorPrint("EditorListItem::OnWidgetScriptInit");
+		m_Root = w;
 		
 		m_ListItemFrame					= m_Root.FindAnyWidget("EditorListItemFrame");
 		m_ListItemContent				= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("EditorListItemContent"));
@@ -63,19 +185,21 @@ class EditorListItem: ScriptedWidgetEventHandler
 		m_ListItemLabel 				= TextWidget.Cast(m_Root.FindAnyWidget("EditorListItemLabel"));
 		m_ListItemIcon 					= ImageWidget.Cast(m_Root.FindAnyWidget("EditorListItemIcon"));
 		
-		
 		m_Root.SetHandler(this);
-		
-		// temp
-		m_ListItemCache.Insert(this);
 	}
 	
-	void ~EditorListItem()
-	{
-		EditorPrint("~EditorListItem");
-		m_Root.Unlink();
+
+	/*
+	static EditorListItem Create()
+	{	
+		Print("EditorListItem::Create");
+		EditorListItem item;
+		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
+		w.GetScript(item);
+		return item;
 	}
 	
+	*/
 
 	
 	void SetText(string text) 
@@ -140,11 +264,27 @@ class EditorListItem: ScriptedWidgetEventHandler
 		Print("EditorPlaceableListItem::OnClick");
 		if (button == 0) {
 			
+			switch (w) {
+			
+				case m_ListItemCollapse: {
+					m_Collapsed = !m_Collapsed;
+					m_ListItemChildren.Show(!m_Collapsed);
+					
+					// temp
+					if (m_Collapsed)
+						m_ListItemCollapse.SetText(">");
+					else
+						m_ListItemCollapse.SetText("V");
+					
+					break;
+				}
+			}
+			
 		} else if (button == 1) {
 			// Context menu
 		}
 		
-		return super.OnClick(w, x, y, button);
+		return false;
 	}
 	
 	override bool OnFocus(Widget w, int x, int y)

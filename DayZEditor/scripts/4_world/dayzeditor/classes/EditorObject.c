@@ -153,7 +153,7 @@ class EditorObject
 			
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
-			m_PlacedListItem = new EditorPlacedListItem(this);
+			m_PlacedListItem = EditorPlacedListItem.Create(this);
 			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_PlacedListItem);
 		}
 		

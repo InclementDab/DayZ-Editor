@@ -2,14 +2,16 @@
 static int groupcount = 0;
 class EditorCollapsibleListItem: EditorListItem
 {
-	private bool m_Collapsed = false;
+	
 
 	private ref array<ref EditorListItem> m_CategoryChildren;
 	ref array<ref EditorListItem> GetChildren() { return m_CategoryChildren; }
 	
-	void EditorCollapsibleListItem()
+	private void EditorCollapsibleListItem() { Print("EditorCollapsibleListItem"); }
+	
+	private void pCreate()
 	{
-		Print("EditorCollapsibleListItem");
+		Print("EditorCollapsibleListItem::pCreate");
 		m_CategoryChildren = new array<ref EditorListItem>();
 		
 		SetText(string.Format("group%1", groupcount));
@@ -18,12 +20,16 @@ class EditorCollapsibleListItem: EditorListItem
 		EditorEvents.OnObjectDeselected.Insert(ObjectDeselected);
 	}
 	
-	
-	
-	void ~EditorCollapsibleListItem()
+	static EditorCollapsibleListItem Create()
 	{
-		Print("~EditorCollapsibleListItem");
+		Print("EditorCollapsibleListItem::Create");
+		EditorCollapsibleListItem item;
+		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
+		w.GetScript(item);
+		item.pCreate();
+		return item;
 	}
+	
 
 	void RemoveListItem(EditorListItem item)
 	{
@@ -65,18 +71,7 @@ class EditorCollapsibleListItem: EditorListItem
 		if (button == 0) {
 			
 			switch (w) {
-				case m_ListItemCollapse: {
-					m_Collapsed = !m_Collapsed;
-					m_ListItemChildren.Show(!m_Collapsed);
-					
-					// temp
-					if (m_Collapsed)
-						m_ListItemCollapse.SetText(">");
-					else
-						m_ListItemCollapse.SetText("V");
-					
-					break;
-				}
+
 				case m_ListItemButton: {
 					Select();
 					SelectAllChildren(m_CategoryChildren);					

@@ -76,7 +76,7 @@ class EditorObjectManager
 		        g_Game.ConfigGetChildName(Config_Path, j, Config_Name); 
 				
 				EditorPlaceableObjectData placeable_object_data = new EditorPlaceableObjectData(Config_Name, Config_Path);
-				placeable_objects.Insert(new EditorPlaceableListItem(placeable_object_data));
+				placeable_objects.Insert(EditorPlaceableListItem.Create(placeable_object_data));
 		    }
 		}
 		

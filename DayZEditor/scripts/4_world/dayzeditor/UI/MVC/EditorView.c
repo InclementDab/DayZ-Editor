@@ -101,8 +101,8 @@ class EditorView extends ScriptedWidgetEventHandler
 					text = ebw.GetText();
 				}
 				
-				Print(text);
-				Print(m_Model);
+				//Print(text);
+				//Print(m_Model);
 				DebugPrint();
 				
 				if (variable_type == "float")

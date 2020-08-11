@@ -115,6 +115,8 @@ modded class MissionGameplay
 	override void OnKeyPress(int key)
     {
 		Input input = GetGame().GetInput();
+
+		
 		
 		switch (key) {
 			
