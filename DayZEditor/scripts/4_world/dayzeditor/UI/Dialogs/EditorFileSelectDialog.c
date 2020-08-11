@@ -30,56 +30,63 @@ class EditorFileDialog: EditorDialog
 		m_FileHostListbox = TextListboxWidget.Cast(m_Root.FindAnyWidget("FolderHostListBox"));
 	}
 	
+	private void LoadFolders(string directory, out TStringArray folder_array)
+	{
+		string filename;
+		FileAttr fileattr;
+		directory += "*";
+		FindFileHandle filehandle = FindFile(directory, filename, fileattr, FindFileFlags.ALL);
+		
+		while (FindNextFile(filehandle, filename, fileattr)) {
+			if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
+				folder_array.Insert(filename);
+			} 
+			
+		}
+		
+		folder_array.Sort();
+	}
+	
 	void LoadFileDirectory(string directory, string filter)
 	{
 		EditorPrint("EditorFileDialog::LoadFileDirectory");
 		string filterdir = string.Format("%1%2", directory, filter);
 		m_FileHostListbox.ClearItems();
-		string filename;
-		FileAttr fileattr;
-		FindFileHandle filehandle = FindFile(filterdir, filename, fileattr, FindFileFlags.ALL);
 		ref array<ref EditorFile> editor_file_array = new array<ref EditorFile>();
+		ref array<ref EditorFile> sorted_file_array = new array<ref EditorFile>();
 		TStringArray file_array = new TStringArray();
 		TStringArray folder_array = new TStringArray();
 		
-		editor_file_array.Insert(new EditorFile(filename, directory, fileattr));
-		if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
-			folder_array.Insert(filename);
-		} else file_array.Insert(filename);
+		LoadFolders(directory, folder_array);
 		
-
 		
+		string filename;
+		FileAttr fileattr;
+		
+		FindFileHandle filehandle = FindFile(filterdir, filename, fileattr, FindFileFlags.ALL);
+	
 		while (FindNextFile(filehandle, filename, fileattr)) {
 			editor_file_array.Insert(new EditorFile(filename, directory, fileattr));
-			filename.ToLower();
-			
-			if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
-				folder_array.Insert(filename);
-			} else file_array.Insert(filename);
+			if ((fileattr & FileAttr.DIRECTORY) != FileAttr.DIRECTORY) {
+				file_array.Insert(filename);
+			} 
 		}
-		
-		
-		folder_array.Sort();
+	
 		file_array.Sort();
 		
 		
-		ref array<ref EditorFile> sorted_file_array = new array<ref EditorFile>();
+		
 		foreach (string sorted_folder_name: folder_array) {
-			foreach (EditorFile unsorted_folder: editor_file_array) {
-				string lower_name = unsorted_folder.FileName;
-				lower_name.ToLower(); 
-				if (sorted_folder_name == lower_name) {
-					sorted_file_array.Insert(unsorted_folder);
-				}
-			}
+			sorted_file_array.Insert(new EditorFile(sorted_folder_name, directory, FileAttr.DIRECTORY));
 		}
 		
 		
 		
 		foreach (string sorted_name: file_array) {
 			foreach (EditorFile unsorted_file: editor_file_array) {
-				lower_name = unsorted_file.FileName;
+				string lower_name = unsorted_file.FileName;
 				lower_name.ToLower();
+				sorted_name.ToLower();
 				if (sorted_name == lower_name) {
 					sorted_file_array.Insert(unsorted_file);
 				}
@@ -115,7 +122,7 @@ class EditorFileOpenDialog: EditorFileDialog
 		//string filter = "*.dze";
 		string filter = "*";
 		
-		LoadFileDirectory("$profile:", filter);
+		LoadFileDirectory("$profile:\\", filter);
 		
 	}
 	
