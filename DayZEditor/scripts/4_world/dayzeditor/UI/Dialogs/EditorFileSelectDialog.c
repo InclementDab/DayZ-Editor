@@ -38,33 +38,55 @@ class EditorFileDialog: EditorDialog
 		string filename;
 		FileAttr fileattr;
 		FindFileHandle filehandle = FindFile(filterdir, filename, fileattr, FindFileFlags.ALL);
-		ref array<ref EditorFile> file_array = new array<ref EditorFile>();
-		TStringArray sort_array = new TStringArray();
+		ref array<ref EditorFile> editor_file_array = new array<ref EditorFile>();
+		TStringArray file_array = new TStringArray();
+		TStringArray folder_array = new TStringArray();
 		
-		file_array.Insert(new EditorFile(filename, directory, fileattr));
-		sort_array.Insert(filename);
+		editor_file_array.Insert(new EditorFile(filename, directory, fileattr));
+		if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
+			folder_array.Insert(filename);
+		} else file_array.Insert(filename);
+		
+
 		
 		while (FindNextFile(filehandle, filename, fileattr)) {
-			file_array.Insert(new EditorFile(filename, directory, fileattr));
+			editor_file_array.Insert(new EditorFile(filename, directory, fileattr));
 			filename.ToLower();
-			sort_array.Insert(filename);
+			
+			if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
+				folder_array.Insert(filename);
+			} else file_array.Insert(filename);
 		}
 		
-		sort_array.Sort();
 		
-		
+		folder_array.Sort();
+		file_array.Sort();
 		
 		
 		ref array<ref EditorFile> sorted_file_array = new array<ref EditorFile>();
-		foreach (string sorted_name: sort_array) {
-			foreach (EditorFile unsorted_file: file_array) {
-				string lower_name = unsorted_file.FileName;
+		foreach (string sorted_folder_name: folder_array) {
+			foreach (EditorFile unsorted_folder: editor_file_array) {
+				string lower_name = unsorted_folder.FileName;
+				lower_name.ToLower(); 
+				if (sorted_folder_name == lower_name) {
+					sorted_file_array.Insert(unsorted_folder);
+				}
+			}
+		}
+		
+		
+		
+		foreach (string sorted_name: file_array) {
+			foreach (EditorFile unsorted_file: editor_file_array) {
+				lower_name = unsorted_file.FileName;
 				lower_name.ToLower();
 				if (sorted_name == lower_name) {
 					sorted_file_array.Insert(unsorted_file);
 				}
 			}
 		}
+		
+
 		
 		
 		foreach (EditorFile sorted_file: sorted_file_array) {
@@ -93,7 +115,7 @@ class EditorFileOpenDialog: EditorFileDialog
 		//string filter = "*.dze";
 		string filter = "*";
 		
-		LoadFileDirectory(EDITOR_PROFILE_FOLDER, filter);
+		LoadFileDirectory("$profile:", filter);
 		
 	}
 	
