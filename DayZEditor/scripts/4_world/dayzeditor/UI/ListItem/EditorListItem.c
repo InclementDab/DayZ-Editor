@@ -42,6 +42,7 @@ class EditorListItem: ScriptedWidgetEventHandler
 	Widget GetRoot() { return m_Root; }
 	
 	protected Widget m_ListItemFrame;
+	protected Widget m_EditorListItemLabelFrame;
 	protected WrapSpacerWidget m_ListItemContent;
 	protected WrapSpacerWidget m_ListItemChildren;
 	
@@ -55,14 +56,22 @@ class EditorListItem: ScriptedWidgetEventHandler
 	protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
 	protected static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
 
+#ifndef COMPONENT_SYSTEM // Game ONLY
 	void EditorListItem() 
 	{ 
 		EditorPrint("EditorListItem"); 
+		
+
+		Print("EditorListItem Client");
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
+		OnWidgetScriptInit(m_Root);
 		
 		if (m_ListItemCache == null) 
 			m_ListItemCache = new array<ref EditorListItem>();
 		m_ListItemCache.Insert(this);
 	}
+#endif
+	
 	void ~EditorListItem() { EditorPrint("~EditorListItem"); }
 	
 
@@ -71,9 +80,15 @@ class EditorListItem: ScriptedWidgetEventHandler
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorPrint("EditorListItem::OnWidgetScriptInit");
+		
+#ifdef COMPONENT_SYSTEM // Workbench ONLY
+		Print("EditorListItem Workbench");
 		m_Root = w;
+#endif
+		
 		
 		m_ListItemFrame					= m_Root.FindAnyWidget("EditorListItemFrame");
+		m_EditorListItemLabelFrame		= m_Root.FindAnyWidget("EditorListItemLabelFrame");
 		m_ListItemContent				= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("EditorListItemContent"));
 		m_ListItemChildren				= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("EditorListItemChildren"));
 		
@@ -88,22 +103,11 @@ class EditorListItem: ScriptedWidgetEventHandler
 	}
 	
 
-	/*
-	static EditorListItem Create()
-	{	
-		Print("EditorListItem::Create");
-		EditorListItem item;
-		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
-		w.GetScript(item);
-		return item;
-	}
-	
-	*/
-
-	
 	void SetText(string text) 
 	{
-		m_ListItemLabel.SetText(text);
+		EditableTextWidget editable;
+		m_EditorListItemLabelFrame.GetScript(editable);
+		editable.SetText(text);
 	}
 	
 	void SetIcon(string icon)

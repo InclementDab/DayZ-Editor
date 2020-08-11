@@ -527,7 +527,7 @@ class EditorUI: UIScriptedMenu
 		if (button == 1) {
 			if (w.GetName() == "RightbarScroll") {
 				
-				EditorCollapsibleListItem t = EditorCollapsibleListItem.Create();
+				EditorCollapsibleListItem t = new EditorCollapsibleListItem();
 				test_objects.Insert(t);
 				InsertPlacedObject(t);
 				

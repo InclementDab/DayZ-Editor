@@ -4,11 +4,11 @@ class EditorPlaceableListItem: EditorListItem
 	EditorPlaceableObjectData GetData() { return m_Data; }
 
 	
-	void EditorPlaceableListItem() { Print("EditorPlaceableListItem"); }
-	
-	private void pCreate(EditorPlaceableObjectData data)
-	{
-		Print("EditorPlaceableListItem::pCreate");
+	void EditorPlaceableListItem(ref EditorPlaceableObjectData data) 
+	{ 
+		Print("EditorPlaceableListItem"); 
+		m_Data = data;
+
 		m_ListItemCollapse.Show(false);
 
 		SetText(m_Data.Type);
@@ -18,18 +18,7 @@ class EditorPlaceableListItem: EditorListItem
 		EditorEvents.OnDestroyInHand.Insert(OnDestroyInHand);
 	}
 	
-	static EditorPlaceableListItem Create(EditorPlaceableObjectData data)
-	{
-		Print("EditorPlaceableListItem::Create");
-		EditorPlaceableListItem p_item;
-		EditorListItem item;
-		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
-		w.GetScript(item);
 		
-		Print(p_item);
-		return item;
-	}
-	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		Print("EditorPlaceableListItem::OnClick");

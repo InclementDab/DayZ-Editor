@@ -7,28 +7,17 @@ class EditorCollapsibleListItem: EditorListItem
 	private ref array<ref EditorListItem> m_CategoryChildren;
 	ref array<ref EditorListItem> GetChildren() { return m_CategoryChildren; }
 	
-	private void EditorCollapsibleListItem() { Print("EditorCollapsibleListItem"); }
-	
-	private void pCreate()
-	{
-		Print("EditorCollapsibleListItem::pCreate");
+	void EditorCollapsibleListItem() 
+	{ 
+		Print("EditorCollapsibleListItem");
 		m_CategoryChildren = new array<ref EditorListItem>();
 		
 		SetText(string.Format("group%1", groupcount));
 		groupcount++;
 		
-		EditorEvents.OnObjectDeselected.Insert(ObjectDeselected);
+		EditorEvents.OnObjectDeselected.Insert(ObjectDeselected); 
 	}
 	
-	static EditorCollapsibleListItem Create()
-	{
-		Print("EditorCollapsibleListItem::Create");
-		EditorCollapsibleListItem item;
-		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
-		w.GetScript(item);
-		item.pCreate();
-		return item;
-	}
 	
 
 	void RemoveListItem(EditorListItem item)

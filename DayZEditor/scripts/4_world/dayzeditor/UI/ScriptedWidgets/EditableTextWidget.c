@@ -8,7 +8,7 @@ class EditableTextWidget: ScriptedWidgetEventHandler
 	private EditBoxWidget m_EditWidget;
 	
 	private string m_Text;
-	
+	reference string Text;
 	
 	void EditableTextWidget()
 	{
@@ -28,33 +28,19 @@ class EditableTextWidget: ScriptedWidgetEventHandler
 		m_TextWidget = TextWidget.Cast(m_EditFrame.FindAnyWidget("EditorListItemLabel"));
 		m_EditWidget = EditBoxWidget.Cast(m_EditFrame.FindAnyWidget("EditorListItemTextEditor"));
 		
+		m_Text = Text;
+		
 		m_EditFrame.SetHandler(this);
 	}
 	
-	override bool OnUpdate(Widget w)
+	void SetText(string text)
 	{
-		Print("OnChanged");
-		
-		if (w == m_TextWidget) {
-			
-		}
-		
-		return super.OnUpdate(w);
+		Print(text);
+		m_Text = text;
+		m_TextWidget.SetText(text);
 	}
 	
-	override bool OnChange(Widget w, int x, int y, bool finished)
-	{
-		Print("OnChanged");
-		Print(w);
-		
-		return super.OnChange(w, x, y, finished);
-	}
 	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		Print("OnClick");
-		return false;
-	}
 		
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
