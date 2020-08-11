@@ -72,7 +72,11 @@ class EditorListItem: ScriptedWidgetEventHandler
 	}
 #endif
 	
-	void ~EditorListItem() { EditorPrint("~EditorListItem"); }
+	void ~EditorListItem() 
+	{ 
+		EditorPrint("~EditorListItem"); 
+		m_Root.Unlink();
+	}
 	
 
 	

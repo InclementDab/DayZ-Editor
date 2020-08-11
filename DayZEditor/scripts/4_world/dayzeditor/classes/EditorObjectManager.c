@@ -5,7 +5,7 @@ class EditorObjectSet: map<int, ref EditorObject>
 	void ~EditorObjectSet()
 	{
 		EditorPrint("~EditorObjectSet", LogSeverity.DEBUG);
-		GetEditor().GetObjectManager().DeleteObjects(this);
+		GetEditor().GetObjectManager().DeleteObjects(this, false);
 	}
 	
 	bool InsertEditorObject(EditorObject target)

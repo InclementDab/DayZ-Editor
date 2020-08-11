@@ -365,7 +365,6 @@ class Editor: Managed
 	void Open(string filename, string filedir = "$profile:Editor/")
 	{
 		EditorPrint("Editor::Open");
-		Print(filename);
 		EditorWorldData load_data = new EditorWorldData();
 		
 		// Reset world data
@@ -377,7 +376,7 @@ class Editor: Managed
 		
 		
 		// Load Data
-		string file = filedir + filename;//".dze";
+		string file = filedir + filename;
 		FileDialogResult loadfile_result = EditorFileManager.Open(load_data, file);
 		
 		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
