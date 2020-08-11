@@ -928,15 +928,16 @@ class Editor: Managed
 			
 			case KeyCode.KC_I: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					Import(ImportMode.VPP, "GM_Trader.vpp");					
+					EditorFileImportDialog import_dialog = new EditorFileImportDialog();
+					import_dialog.ShowDialog();
 				}
 				break;
 			}
 			
 			case KeyCode.KC_S: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
-					save_dialog.ShowDialog();
+					//EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
+					//save_dialog.ShowDialog();
 					return true;
 				}
 				break;
