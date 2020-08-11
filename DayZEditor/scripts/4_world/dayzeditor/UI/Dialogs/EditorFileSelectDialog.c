@@ -3,9 +3,9 @@ class EditorFile
 {
 	string FileName;
 	string FileDirectory;
-	FileAttr FileAtrributes;
+	FileSearchMode FileAtrributes;
 	
-	void EditorFile(string name, string directory, FileAttr attributes)
+	void EditorFile(string name, string directory, FileSearchMode attributes)
 	{
 		FileName = name; FileDirectory = directory; FileAtrributes = attributes;
 	}
@@ -15,6 +15,12 @@ class EditorFile
 		return string.Format("%1\\%2", FileDirectory, FileName);
 	}
 }
+
+
+enum FileSearchMode {
+	FOLDERS,
+	FILES
+};
 
 class EditorFileDialog: EditorDialog
 {
@@ -30,77 +36,58 @@ class EditorFileDialog: EditorDialog
 		m_FileHostListbox = TextListboxWidget.Cast(m_Root.FindAnyWidget("FolderHostListBox"));
 	}
 	
-	private void LoadFolders(string directory, out TStringArray folder_array)
+	private void LoadFiles(string directory, out ref array<ref EditorFile> folder_array, FileSearchMode search_mode)
 	{
+		TStringArray name_array = new TStringArray();
 		string filename;
 		FileAttr fileattr;
-		directory += "*";
-		FindFileHandle filehandle = FindFile(directory, filename, fileattr, FindFileFlags.ALL);
+
+		FindFileHandle filehandle = FindFile(directory + "*", filename, fileattr, FindFileFlags.ALL);
 		
 		while (FindNextFile(filehandle, filename, fileattr)) {
 			if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
-				folder_array.Insert(filename);
-			} 
-			
+				if (search_mode == FileSearchMode.FOLDERS) {
+					name_array.Insert(filename + "\\");
+				}
+			} else {
+				if (search_mode == FileSearchMode.FILES) {
+					name_array.Insert(filename);
+				}
+			}
 		}
+		CloseFindFile(filehandle);
+		name_array.Sort();
 		
-		folder_array.Sort();
+		foreach (string sorted_name: name_array) {
+			folder_array.Insert(new EditorFile(sorted_name, directory, search_mode));
+		}
 	}
+	
 	
 	void LoadFileDirectory(string directory, string filter)
 	{
 		EditorPrint("EditorFileDialog::LoadFileDirectory");
 		string filterdir = string.Format("%1%2", directory, filter);
+	
 		m_FileHostListbox.ClearItems();
 		ref array<ref EditorFile> editor_file_array = new array<ref EditorFile>();
-		ref array<ref EditorFile> sorted_file_array = new array<ref EditorFile>();
+		ref array<ref EditorFile> editor_folder_array = new array<ref EditorFile>();
 		TStringArray file_array = new TStringArray();
 		TStringArray folder_array = new TStringArray();
 		
-		LoadFolders(directory, folder_array);
-		
-		
-		string filename;
-		FileAttr fileattr;
-		
-		FindFileHandle filehandle = FindFile(filterdir, filename, fileattr, FindFileFlags.ALL);
-	
-		while (FindNextFile(filehandle, filename, fileattr)) {
-			editor_file_array.Insert(new EditorFile(filename, directory, fileattr));
-			if ((fileattr & FileAttr.DIRECTORY) != FileAttr.DIRECTORY) {
-				file_array.Insert(filename);
-			} 
-		}
-	
-		file_array.Sort();
-		
-		
-		
-		foreach (string sorted_folder_name: folder_array) {
-			sorted_file_array.Insert(new EditorFile(sorted_folder_name, directory, FileAttr.DIRECTORY));
-		}
-		
-		
-		
-		foreach (string sorted_name: file_array) {
-			foreach (EditorFile unsorted_file: editor_file_array) {
-				string lower_name = unsorted_file.FileName;
-				lower_name.ToLower();
-				sorted_name.ToLower();
-				if (sorted_name == lower_name) {
-					sorted_file_array.Insert(unsorted_file);
-				}
-			}
-		}
-		
+		LoadFiles(directory, editor_folder_array, FileSearchMode.FOLDERS);
+		LoadFiles(directory, editor_file_array, FileSearchMode.FILES);
+				
 
+		foreach (EditorFile sorted_folder: editor_folder_array) {
+			m_FileHostListbox.AddItem(sorted_folder.FileName, sorted_folder, 0);
+		}
 		
-		
-		foreach (EditorFile sorted_file: sorted_file_array) {
+		foreach (EditorFile sorted_file: editor_file_array) {
 			m_FileHostListbox.AddItem(sorted_file.FileName, sorted_file, 0);
 		}
 		
-		CloseFindFile(filehandle);
+		
 	}
 }
 
@@ -161,7 +148,7 @@ class EditorFileOpenDialog: EditorFileDialog
 		EditorFile data;
 		m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
 		
-		if ((data.FileAtrributes & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
+		if (data.FileAtrributes == FileSearchMode.FOLDERS) {
 			Print("Double clicked folder " + data.GetFile());
 			LoadFileDirectory(data.GetFile(), "\\*");
 			return true;
