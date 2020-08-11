@@ -18,7 +18,7 @@ string CreateEditorMission(string map_name = "ChernarusPlus")
 
 typedef FileSerializer Cerealizer;
 
-static FileDialogResult ImportVPPData(out ref EditorObjectDataSet data, string filename)
+static FileDialogResult ImportVPPData(out ref EditorObjectDataArray data, string filename)
 {
 	Cerealizer file = new Cerealizer();
 	if (!FileExist(filename)) {
@@ -40,13 +40,13 @@ static FileDialogResult ImportVPPData(out ref EditorObjectDataSet data, string f
 		string name = building.GetName();
 		TStringArray name_split = new TStringArray();
 		name.Split("-", name_split);
-		data.InsertEditorData(EditorObjectData.Create(name_split.Get(0), building.GetPosition(), building.GetOrientation(), EditorObjectFlags.ALL));
+		data.Insert(EditorObjectData.Create(name_split.Get(0), building.GetPosition(), building.GetOrientation(), EditorObjectFlags.ALL));
 	}
 	
 	return FileDialogResult.SUCCESS;
 }
 
-static FileDialogResult ExportVPPData(ref EditorObjectDataSet data, string filename, string set_name = "DayZEditor Export")
+static FileDialogResult ExportVPPData(ref EditorObjectDataArray data, string filename, string set_name = "DayZEditor Export")
 {
 
 	Cerealizer file = new Cerealizer();
@@ -70,7 +70,7 @@ static FileDialogResult ExportVPPData(ref EditorObjectDataSet data, string filen
 class ExpansionImportData
 {
 
-	static void ReadFromFile(out ref EditorObjectDataSet data, string filename)
+	static void ReadFromFile(out ref EditorObjectDataArray data, string filename)
 	{
 		FileHandle handler = OpenFile(filename, FileMode.READ);
 		
@@ -84,7 +84,7 @@ class ExpansionImportData
 				continue;
 			}
 					
-			data.InsertEditorData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
+			data.Insert(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
 		}
 		
 		CloseFile(handler);
@@ -122,16 +122,16 @@ class COMImportData
 }
 
 
-
+typedef ref array<ref EditorObjectData> EditorObjectDataArray;
 class EditorWorldData
 {
 	string MapName;
 	vector CameraPosition[4];
-	ref EditorObjectDataSet EditorObjects;
+	ref EditorObjectDataArray EditorObjects;
 	
 	void EditorWorldData()
 	{
-		EditorObjects = new EditorObjectDataSet();
+		EditorObjects = new EditorObjectDataArray();
 	}
 }
 
@@ -214,7 +214,7 @@ class EditorFileManager
 				
 				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
 					Print("ImportFromFile::COMFILE::Import " + param.param1);					
-					data.EditorObjects.InsertEditorData(EditorObjectData.Create(param.param1, param.param2, param.param3));
+					data.EditorObjects.Insert(EditorObjectData.Create(param.param1, param.param2, param.param3));
 				}
 				
 				break;

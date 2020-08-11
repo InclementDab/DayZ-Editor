@@ -335,7 +335,7 @@ class Editor: Managed
 		
 		// Save Data
 		foreach (EditorObject save_object: placed_objects)	
-			save_data.EditorObjects.InsertEditorData(save_object.GetData());
+			save_data.EditorObjects.Insert(save_object.GetData());
 		
 		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, autosave_file);
 		GetEditor().GetUIManager().NotificationCreate("Autosave " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
@@ -351,9 +351,10 @@ class Editor: Managed
 		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		
+		
 		// Save Data
 		foreach (EditorObject save_object: placed_objects)	
-			save_data.EditorObjects.InsertEditorData(save_object.GetData());
+			save_data.EditorObjects.Insert(save_object.GetData());
  		
 		string file = filedir + filename + ".dze";
 		autosave_file = file;
@@ -361,9 +362,10 @@ class Editor: Managed
 		GetEditor().GetUIManager().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
 	}
 	
-	void Open(string filename = "editor_save", string filedir = "$profile:Editor/")
+	void Open(string filename, string filedir = "$profile:Editor/")
 	{
 		EditorPrint("Editor::Open");
+		Print(filename);
 		EditorWorldData load_data = new EditorWorldData();
 		
 		// Reset world data
@@ -375,11 +377,17 @@ class Editor: Managed
 		
 		
 		// Load Data
-		string file = filedir + filename + ".dze";
+		string file = filedir + filename;//".dze";
 		FileDialogResult loadfile_result = EditorFileManager.Open(load_data, file);
 		
 		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
-		GetObjectManager().CreateObjects(load_data.EditorObjects, false);
+		// todo temp
+		EditorObjectDataSet a = new EditorObjectDataSet();
+		foreach (EditorObjectData o: load_data.EditorObjects) {
+			a.InsertEditorData(o);
+		}
+		
+		GetObjectManager().CreateObjects(a, false);
 		
 		GetEditor().GetUIManager().NotificationCreate("Load " + typename.EnumToString(FileDialogResult, loadfile_result)); 
 	}
@@ -403,7 +411,13 @@ class Editor: Managed
 		if (import_data.CameraPosition[3] != vector.Zero)
 			GetUIManager().GetEditorCamera().SetTransform(import_data.CameraPosition);
 		
-		GetObjectManager().CreateObjects(import_data.EditorObjects);
+				// todo temp
+		EditorObjectDataSet a = new EditorObjectDataSet();
+		foreach (EditorObjectData o: import_data.EditorObjects) {
+			a.InsertEditorData(o);
+		}
+		
+		GetObjectManager().CreateObjects(a);
 		GetEditor().GetUIManager().NotificationCreate("Import " + typename.EnumToString(FileDialogResult, loadfile_result)); 
 	}
 	
@@ -436,7 +450,7 @@ class Editor: Managed
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		
 		foreach (EditorObject save_object: placed_objects)	
-			export_data.EditorObjects.InsertEditorData(save_object.GetData());
+			export_data.EditorObjects.Insert(save_object.GetData());
  
 		FileDialogResult loadfile_result = EditorFileManager.Export(export_data, file, export_settings);
 				
@@ -933,7 +947,8 @@ class Editor: Managed
 			
 			case KeyCode.KC_O: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					Open();
+					EditorFileSelectDialog file_select = new EditorFileSelectDialog("$profile:Editor/");
+					file_select.ShowDialog();
 					return true;
 				}
 				break;
