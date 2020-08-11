@@ -1,31 +1,56 @@
 class EditorPlacedListItem: EditorListItem
 {
-	private ref EditorObjectData m_Data;
-	EditorObjectData GetData() { return m_Data; }
+	private ref EditorObject m_Data;
+	EditorObject GetData() { return m_Data; }
 	
-	void EditorPlacedListItem(EditorObjectData data)
+	void EditorPlacedListItem(EditorObject data)
 	{
 		Print("EditorPlacedListItem");
 		m_Data = data;
 		
-		SetText(m_Data.Type);
-		SetIcon(Editor.GetIconFromMod(Editor.GetModFromObject(m_Data.Type)));
+		m_ListItemCollapse.Show(false);
 		
-		EditorEvents.OnObjectSelected.Insert(EditorObjectSelected);
-		EditorEvents.OnObjectDeselected.Insert(EditorObjectDeselected);	
+		SetText(m_Data.GetType());
+		SetIcon(Editor.GetIconFromMod(Editor.GetModFromObject(m_Data.GetType())));
+		
+		m_Data.OnObjectSelected.Insert(EditorObjectSelected);
+		m_Data.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
 	
-	void EditorObjectSelected(Class context, EditorObject target)
+	void EditorObjectSelected(EditorObject data)
 	{
-		if (target.GetID() == m_Data.GetID())
-			SetColor(COLOR_ON_SELECTED);
-		
+		SetColor(COLOR_ON_SELECTED);
 	}
 	
-	void EditorObjectDeselected(Class context, EditorObject target)
-	{		
-		if (target.GetID() == m_Data.GetID())
-			SetColor(COLOR_ON_DESELECTED); 
-
-	}	
+	void EditorObjectDeselected(EditorObject data)
+	{
+		SetColor(COLOR_ON_DESELECTED);
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (button == 0) {
+		/*
+			if (GetGame().GetInput().LocalValue("UAWalkRunTemp"))
+				GetEditor().GetObjectManager().ToggleSelection(m_Data);
+			else {
+				
+			}*/
+		}
+		
+		return super.OnClick(w, x, y, button);
+	}
+	
+	override void Select()
+	{
+		EditorEvents.SelectObject(this, m_Data);
+		super.Select();
+	}
+	
+	override void Deselect()
+	{
+		EditorEvents.DeselectObject(this, m_Data);
+		super.Deselect();
+	}
+	
 }

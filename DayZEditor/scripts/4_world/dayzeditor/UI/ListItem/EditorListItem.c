@@ -16,9 +16,9 @@ EditorListItem EditorListItemFromWidget(Widget w)
 
 void RecursiveGetParent(out ref Widget w, string name)
 {
-	Print(w.GetName());
 	if (w.GetName() == name) 
 		return;
+	
 	w = w.GetParent();
 	RecursiveGetParent(w, name);
 }
@@ -111,72 +111,60 @@ class EditorListItem: ScriptedWidgetEventHandler
 		return m_NestIndex;
 	}
 	
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{		
-		return true;
-	}
+	override bool OnMouseEnter(Widget w, int x, int y) { return true; }
 	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		return true;
-	}
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y) { return true; }
 	
 	override bool OnDropReceived(Widget w, int x, int y, Widget reciever)
 	{
 		return OnListItemDropReceived(EditorListItemFromWidget(w));
 	}
 	
-	bool OnListItemDropReceived(EditorListItem target)
-	{
-		return false;
-	}
-	
-	/*
 	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
-		EditorPrint("EditorListItem::OnDrop");
-		EditorListItem target = EditorListItemFromWidget(reciever);
+		return OnListItemDrop(EditorListItemFromWidget(reciever));
+	}
+	
+	bool OnListItemDrop(EditorListItem target) { return false; }
 
-		if (target == null) {
-			EditorPrint("EditorListItem::OnDrop: Drop Failed", LogSeverity.WARNING);
-			return false;
-		}
-		
-		EditorCollapsibleListItem collapsible;
-		if (CastTo(collapsible, target)) {
-			collapsible.InsertListItem(this);
-		}
-		return super.OnDrop(w, x, y, reciever);
-	}*/
+	bool OnListItemDropReceived(EditorListItem target) { return false; }
 	
 	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
 	{	
-		//Print(w);
 		return true;
 	}
 	
-	override bool OnFocus(Widget w, int x, int y)
-	{
-		Print("EditorPlaceableListItem::OnFocus");
-		SetColor(COLOR_ON_SELECTED);
-		return true;
-	}
-	
-	override bool OnFocusLost(Widget w, int x, int y)
-	{
-		Print("EditorPlaceableListItem::OnFocusLost");
-		SetColor(COLOR_ON_DESELECTED);
-		return true;
-	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		Print("EditorPlaceableListItem::OnClick");
 		if (button == 0) {
-			SetFocus(w);
+			
+		} else if (button == 1) {
+			// Context menu
 		}
 		
 		return super.OnClick(w, x, y, button);
+	}
+	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		return true;
+	}
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		return true;
+	}
+
+	void Select()
+	{
+		SetColor(COLOR_ON_SELECTED);
+	}
+	
+	void Deselect()
+	{	
+		SetColor(COLOR_ON_DESELECTED);
 	}
 	
 }

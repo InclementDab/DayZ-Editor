@@ -102,9 +102,7 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	    if (w == m_TitleBar) {
 	        m_TitleBar.SetPos(0, 0);
 			m_Root.SetPos(x - m_OffsetX, y - m_OffsetY);
-			
 			m_WindowDragWrapper.SetPos(x - m_OffsetX, y - m_OffsetY);
-	        
 	        return true;
 	    }
 	    

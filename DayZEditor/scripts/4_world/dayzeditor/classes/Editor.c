@@ -35,7 +35,7 @@ class Editor: Managed
 	private ref EditorBrushSettingsSet 		m_EditorBrushTypes;
 	private ref map<string, typename> 		m_CustomBrushList = new map<string, typename>();
 	
-	static ref EditorHologram 				ObjectInHand;
+	private ref EditorHologram 				ObjectInHand;
 	static Object							ObjectUnderCursor = null;
 	static EditorObject 					EditorObjectUnderCursor = null;
 	
@@ -70,6 +70,8 @@ class Editor: Managed
 		EditorEvents.OnObjectDrag.Insert(HandleObjectDrag);
 		EditorEvents.OnObjectDrop.Insert(HandleObjectDrop);
 		EditorEvents.OnBrushChanged.Insert(OnBrushChanged);
+		EditorEvents.OnCreateInHand.Insert(OnCreateInHand);
+		EditorEvents.OnDestroyInHand.Insert(OnDestroyInHand);
 				
 		// Character Creation
 		EditorPlayer = CreateDefaultCharacter();
@@ -160,6 +162,22 @@ class Editor: Managed
 	
 	void OnBrushChanged(Class context, EditorBrush brush) { m_EditorBrush = brush; }
 	
+	void OnCreateInHand(Class context, string type)
+	{
+		// Turn Brush off when you start to place
+		if (m_EditorBrush != null)
+			EditorEvents.ChangeBrush(this, null);
+		
+		EditorEvents.ClearSelection(this);
+		
+		ObjectInHand = new EditorHologram(type, vector.Zero);		
+	}
+	
+	void OnDestroyInHand(Class context)
+	{
+		delete ObjectInHand;
+	}
+	
 	bool OnMouseEnterObject(Object target, int x, int y)
 	{
 		//Print("Editor::OnMouseEnterObject");
@@ -224,37 +242,21 @@ class Editor: Managed
 	}
 	
 	bool IsLootEditActive() { return m_LootEditMode; }
-	
-	void CreateObjectInHand(string name)
-	{
-		// Turn Brush off when you start to place
-		if (m_EditorBrush != null)
-			EditorEvents.ChangeBrush(this, null);
 		
-		ObjectInHand = new EditorHologram(name, vector.Zero);		
-	}
-	
 
 	void PlaceObject()
 	{
 		Input input = GetGame().GetInput();
-		EntityAI e = Editor.ObjectInHand.GetProjectionEntity();
+		EntityAI e = ObjectInHand.GetProjectionEntity();
 		vector mat[4];
 		
 		
 		EditorObject editor_object = m_EditorObjectManager.CreateObject(EditorObjectData.Create(e.GetType(), e.GetPosition(), e.GetOrientation()));
-		
-		
-		
-		if (!input.LocalValue("UATurbo")) {
-			EditorEvents.ClearSelection(this);
-		}
-		
+				
 		EditorEvents.SelectObject(this, editor_object);
 		
 		if (!input.LocalValue("UATurbo")) { 
-			SetFocus(null);
-			delete Editor.ObjectInHand;
+			EditorEvents.DestroyInHand(this);
 		}
 	}
 

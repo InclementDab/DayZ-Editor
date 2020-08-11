@@ -9,8 +9,13 @@ class EditorPlaceableListItem: EditorListItem
 		Print("EditorPlaceableListItem");
 		m_Data = data;
 		
+		m_ListItemCollapse.Show(false);
+		
 		SetText(m_Data.Type);
 		SetIcon(Editor.GetIconFromMod(Editor.GetModFromObject(m_Data.Type)));
+		
+		EditorEvents.OnCreateInHand.Insert(OnCreateInHand);
+		EditorEvents.OnDestroyInHand.Insert(OnDestroyInHand);
 	}
 	
 	
@@ -19,8 +24,7 @@ class EditorPlaceableListItem: EditorListItem
 		Print("EditorPlaceableListItem::OnClick");
 		
 		if (button == 0) {
-			GetEditor().CreateObjectInHand(m_Data.Type);
-			SetFocus(w);
+			EditorEvents.CreateInHand(this, m_Data.Type);
 			return true;
 		} else if (button == 1) {
 			
@@ -41,22 +45,24 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool OnDrag(Widget w, int x, int y)
 	{
-		// We dont want this to be draggable
+		// We dont want this to be draggable... yet
 		return true;
 	}
 	
-	override bool OnFocus(Widget w, int x, int y)
+	
+	
+	void OnCreateInHand(Class context, string type)
 	{
-		Print("EditorPlaceableListItem::OnFocus");
-		SetColor(COLOR_ON_SELECTED);
-		return true;
+		if (type == m_Data.Type)
+			Select();
 	}
 	
-	override bool OnFocusLost(Widget w, int x, int y)
+	void OnDestroyInHand(Class context)
 	{
-		Print("EditorPlaceableListItem::OnFocusLost");
-		SetColor(COLOR_ON_DESELECTED);
-		return true;
+		Deselect();
 	}
+	
+		
+	
 	
 }

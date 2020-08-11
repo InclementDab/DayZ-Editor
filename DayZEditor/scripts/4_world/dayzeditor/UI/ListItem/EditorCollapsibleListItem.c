@@ -13,21 +13,17 @@ class EditorCollapsibleListItem: EditorListItem
 		
 		SetText(string.Format("group%1", groupcount));
 		groupcount++;
+		
+		//EditorEvents.OnObjectDeselected.Insert();
 	}
+	
+	
 	
 	void ~EditorCollapsibleListItem()
 	{
 		Print("~EditorCollapsibleListItem");
 	}
-	
-	void InsertListItem(EditorListItem item)
-	{
-		Print("InsertListItem");
-		item.SetNestIndex(GetNestIndex() + 1);
-		m_CategoryChildren.Insert(item);
-		m_ListItemChildren.AddChild(item.GetRoot());
-	}
-	
+
 	void RemoveListItem(EditorListItem item)
 	{
 		int index = m_CategoryChildren.Find(item);
@@ -38,6 +34,7 @@ class EditorCollapsibleListItem: EditorListItem
 	bool ContainsChildListItem(EditorListItem item)
 	{
 		foreach (EditorListItem child: m_CategoryChildren) {
+			
 			// Check if child is collapsible
 			EditorCollapsibleListItem collapsible;
 			if (CastTo(collapsible, child)) {
@@ -63,8 +60,7 @@ class EditorCollapsibleListItem: EditorListItem
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		Print("EditorCollapsibleListItem::OnClick");
-		
-
+	
 		if (button == 0) {
 			
 			switch (w) {
@@ -79,7 +75,15 @@ class EditorCollapsibleListItem: EditorListItem
 						m_ListItemCollapse.SetText("V");
 					
 					break;
-				}				
+				}
+				case m_ListItemButton: {
+					
+					foreach (EditorListItem list_item: m_CategoryChildren) {
+						list_item.Select();
+					}
+					
+					break;
+				}
 			}			
 		}
 		
@@ -89,13 +93,22 @@ class EditorCollapsibleListItem: EditorListItem
 	
 	override bool OnListItemDropReceived(EditorListItem target)
 	{
+		Print("EditorCollapsibleListItem::OnListItemDropReceived");
+				
+		target.SetNestIndex(GetNestIndex() + 1);
+		m_CategoryChildren.Insert(target);
+		m_ListItemChildren.AddChild(target.GetRoot());	
+		
+		return true;
+	}
+	
+	override bool OnListItemDrop(EditorListItem target)
+	{
+		Print("EditorCollapsibleListItem::OnListItemDrop");
 		
 		if (ContainsChildListItem(target)) {
-			return true;
-		} else {
-			InsertListItem(target);
+			return false;
 		}
-		
 		return true;
 	}
 	

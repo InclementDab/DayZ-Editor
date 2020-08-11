@@ -8,6 +8,7 @@ WrapSpacerWidgetClass EditorListItem {
  vexactsize 1
  draggable 0
  scriptclass ""
+ "no focus" 1
  Padding 0
  Margin 0
  "Size To Content H" 1
@@ -38,6 +39,7 @@ WrapSpacerWidgetClass EditorListItem {
      hexactsize 0
      vexactsize 1
      style Colorable
+     "no focus" 1
      Padding 0
      Margin 0
      "Size To Content H" 1
@@ -61,6 +63,7 @@ WrapSpacerWidgetClass EditorListItem {
        priority 1
        draggable 1
        style Default
+       "no focus" 1
        {
         TextWidgetClass EditorListItemLabel {
          visible 1
@@ -107,6 +110,8 @@ WrapSpacerWidgetClass EditorListItem {
          vexactpos 0
          hexactsize 1
          vexactsize 1
+         style Empty
+         "no focus" 1
         }
         ButtonWidgetClass EditorListItemCollapse {
          position 0.03 0
@@ -116,6 +121,8 @@ WrapSpacerWidgetClass EditorListItem {
          vexactpos 0
          hexactsize 1
          vexactsize 1
+         style Empty
+         "no focus" 1
          text "V"
          font "gui/fonts/metron-bold"
          switch toggle
@@ -136,6 +143,7 @@ WrapSpacerWidgetClass EditorListItem {
    vexactpos 1
    hexactsize 0
    vexactsize 0
+   "no focus" 1
    Padding 0
    Margin 0
    "Size To Content V" 1
