@@ -19,8 +19,8 @@ class MapSelectDialog: EditorDialog
 		
 	void MapSelectDialog()
 	{
-		Widget content = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout", m_ContentWrapper);
-		//SetContent(content);
+		Widget content = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout", null);
+		SetContent(content);
 		
 		m_SelectButton = AddButton("Select");
 		m_CloseButton = AddButton("Close");
@@ -33,6 +33,7 @@ class MapSelectDialog: EditorDialog
 				m_MapHostListbox.AddItem(name, null, 0);
 			}
 		}
+		
 	}
 	
 	
@@ -77,16 +78,15 @@ class MapSelectDialog: EditorDialog
 	override bool OnDoubleClick( Widget w, int x, int y, int button )
 	{		
 		if (button != 0) return false; 
-		
+		Print(w);
 
 		if (w == m_MapHostListbox) {
 			string name;
 			m_MapHostListbox.GetItemText(m_MapHostListbox.GetSelectedRow(), 0, name);
-			if (name != "") {
-				GetGame().PlayMission(CreateEditorMission(name));
-				CloseDialog();
-				return true;
-			}
+			GetGame().PlayMission(CreateEditorMission(name));
+			CloseDialog();
+			return true;
+			
 		}
 		
 		

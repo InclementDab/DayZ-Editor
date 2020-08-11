@@ -3,7 +3,7 @@
 
 class EditorDialog extends ScriptedWidgetEventHandler
 {
-	protected Widget m_Root;
+	protected ref Widget m_Root;
 	Widget GetRoot() { return m_Root; }
 	
 	protected Widget m_TitleBar;
@@ -33,6 +33,10 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		m_Root.SetHandler(this);
 	}
 	
+	void ~EditorDialog()
+	{
+		Print("~EditorDialog");
+	}
 	
 	
 	protected void SetContent(Widget content)
@@ -53,7 +57,7 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		Print("MapSelectDialog::ShowDialog");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		m_Root.Show(true);
-		GetEditor().GetUIManager().ModalSet(this);
+		EditorUIManager.ModalSet(this);
 	}
 	
 	void CloseDialog()
@@ -61,7 +65,7 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		Print("MapSelectDialog::CloseDialog");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 		m_Root.Show(false);
-		GetEditor().GetUIManager().ModalClose();
+		EditorUIManager.ModalClose();
 	}
 	
 	void Update() {}
@@ -102,9 +106,7 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	    if (w == m_TitleBar) {
 	        m_TitleBar.SetPos(0, 0);
 			m_Root.SetPos(x - m_OffsetX, y - m_OffsetY);
-			
 			m_WindowDragWrapper.SetPos(x - m_OffsetX, y - m_OffsetY);
-	        
 	        return true;
 	    }
 	    
@@ -121,8 +123,6 @@ class EditorDialog extends ScriptedWidgetEventHandler
 			CloseDialog();
 			return true;
 		}
-		
-
 		
 		return super.OnClick(w, x, y, button);
 	}

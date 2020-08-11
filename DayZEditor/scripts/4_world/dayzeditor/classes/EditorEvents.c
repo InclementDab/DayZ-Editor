@@ -17,7 +17,8 @@ class EditorEvents
 	static ref ScriptInvoker OnSettingsChanged 	= new ScriptInvoker();
 	static ref ScriptInvoker OnPlaceableCategoryChanged 	= new ScriptInvoker();
 	
-	
+	static ref ScriptInvoker OnCreateInHand		= new ScriptInvoker();
+	static ref ScriptInvoker OnDestroyInHand	= new ScriptInvoker();
 
 	
 	static void ObjectCreateInvoke(Class context, EditorObject obj) 
@@ -86,6 +87,18 @@ class EditorEvents
 	{
 		Print("EditorEvents::ClearSelection");
 		OnSelectionCleared.Invoke(context);
+	}
+	
+	static void CreateInHand(Class context, string type)
+	{
+		Print("EditorEvents::OnCreateInHand");
+		OnCreateInHand.Invoke(context, type);
+	}
+	
+	static void DestroyInHand(Class context)
+	{
+		Print("EditorEvents::OnDestroyInHand");
+		OnDestroyInHand.Invoke(context);
 	}
 
 

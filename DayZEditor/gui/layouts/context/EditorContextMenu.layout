@@ -1,0 +1,12 @@
+WrapSpacerWidgetClass ContextMenuWidget {
+ clipchildren 0
+ size 250 0.873
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 0
+ priority 500
+ scriptclass ""
+ Margin 0
+ "Size To Content V" 1
+}

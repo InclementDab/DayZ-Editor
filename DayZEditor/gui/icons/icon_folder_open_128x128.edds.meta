@@ -1,10 +1,10 @@
 MetaFileClass {
- Name "{572C6B626921F3CC}DayZEditor/gui/imagesets/dayz_editor_gui.tga"
+ Name "{D25B66FD84C3E662}DayZEditor/gui/icons/icon_folder_open_128x128.edds"
  Author "desktop-9st395p"
- ChangeDate 709617931
+ ChangeDate -853710581
  Configurations {
   TGAResourceClass PC {
-   SourceFile "dayz_editor_gui.tga"
+   SourceFile "icon_folder_open_128x128.TGA"
   }
   TGAResourceClass XBOX_ONE : PC {
   }

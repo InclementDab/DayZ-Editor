@@ -103,6 +103,8 @@ class EditorObject
 	
 	static float line_width = 0.05;
 	
+	ref ScriptInvoker OnObjectSelected;
+	ref ScriptInvoker OnObjectDeselected;
 
 	
 	string GetType() { return m_Data.Type; }
@@ -112,6 +114,9 @@ class EditorObject
 	{
 		EditorPrint("EditorObject");
 		m_Data = data;
+		
+		OnObjectSelected = new ScriptInvoker();
+		OnObjectDeselected = new ScriptInvoker();
 		
 		if (m_Data.Flags == EditorObjectFlags.ALL) {
 			m_Data.Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
@@ -148,7 +153,7 @@ class EditorObject
 			
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
-			m_PlacedListItem = new EditorPlacedListItem(m_Data);
+			m_PlacedListItem = new EditorPlacedListItem(this);
 			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_PlacedListItem);
 		}
 		
@@ -203,6 +208,7 @@ class EditorObject
 		EditorPrint("EditorObject::OnSelected");
 		m_IsSelected = true;
 		ShowBoundingBox();
+		OnObjectSelected.Invoke(this);
 	}
 	
 	void OnDeselected()
@@ -211,6 +217,7 @@ class EditorObject
 		EditorPrint("EditorObject::OnDeselected");
 		m_IsSelected = false;
 		HideBoundingBox();
+		OnObjectDeselected.Invoke(this);
 	}
 	
 	

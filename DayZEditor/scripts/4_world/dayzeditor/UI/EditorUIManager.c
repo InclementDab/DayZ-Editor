@@ -106,12 +106,12 @@ class EditorUIManager: Managed // remove meeeee
 		m_EditorCamera.SetActive(state);
 	}
 	
-	void ShowCursor()
+	static void ShowCursor()
 	{
 		GetGame().GetUIManager().ShowUICursor(true);
 	}
 	
-	void HideCursor()
+	static void HideCursor()
 	{
 		GetGame().GetUIManager().ShowUICursor(false);
 	}
@@ -225,16 +225,18 @@ class EditorUIManager: Managed // remove meeeee
 	
 
 	// Modal Window Control
-	private ref EditorDialog m_CurrentModal;
-	void ModalSet(EditorDialog w)
+	private static ref EditorDialog m_CurrentModal;
+	static void ModalSet(EditorDialog w)
 	{
+		Print("ModalSet");
 		m_CurrentModal = w;
 		SetModal(m_CurrentModal.GetRoot());
 		ShowCursor();
 	}
 	
-	void ModalClose()
+	static void ModalClose()
 	{
+		Print("ModalClose");
 		m_CurrentModal.GetRoot().Unlink();
 		m_CurrentModal = null;
 		ShowCursor();
@@ -242,7 +244,7 @@ class EditorUIManager: Managed // remove meeeee
 
 	bool IsModalActive()
 	{
-		return m_UIManager.IsModalVisible();
+		return GetGame().GetUIManager().IsModalVisible();
 	}
 	
 	
