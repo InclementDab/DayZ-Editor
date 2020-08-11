@@ -500,7 +500,7 @@ class EditorUI: UIScriptedMenu
 				}
 			}
 			
-			/*
+			
 			EditorEvents.ClearSelection(this);
 			if (GetEditor().GetEditorBrush() == null) {
 				
@@ -518,7 +518,7 @@ class EditorUI: UIScriptedMenu
 					EditorEvents.SelectObject(this, Editor.EditorObjectUnderCursor);
 					return true;
 				}
-			}*/
+			}
 			
 			
 		}

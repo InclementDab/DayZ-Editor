@@ -3,28 +3,46 @@ ref array<ref EditorListItem> m_ListItemCache = new array<ref EditorListItem>();
 
 EditorListItem EditorListItemFromWidget(Widget w)
 {
-	
+	RecursiveGetParent(w, "EditorListItem");
 	foreach (ref EditorListItem list_item: m_ListItemCache) {
 		if (list_item.GetRoot() == w)
 			return list_item;
 	}
 	
-	Print(m_ListItemCache.Count());
+	EditorPrint("EditorListItem Not Found!", LogSeverity.ERROR);
 	return null;
 }
 
+
+void RecursiveGetParent(out ref Widget w, string name)
+{
+	Print(w.GetName());
+	if (w.GetName() == name) 
+		return;
+	w = w.GetParent();
+	RecursiveGetParent(w, name);
+}
 
 
 // maybe use widgets instead of ScriptedWidgetEventHandler
 class EditorListItem: ScriptedWidgetEventHandler
 {
+	private int m_NestIndex;
+	
 	protected Widget m_Root;
 	Widget GetRoot() { return m_Root; }
-		
-	protected TextWidget m_ListItemText;
+	
+	protected Widget m_ListItemFrame;
+	protected WrapSpacerWidget m_ListItemContent;
+	protected WrapSpacerWidget m_ListItemChildren;
+	
+	protected ButtonWidget m_ListItemButton;
+	protected ButtonWidget m_ListItemVisible;
+	protected ButtonWidget m_ListItemCollapse;
+	
+	protected TextWidget m_ListItemLabel;
 	protected ImageWidget m_ListItemIcon;
 	
-	protected WrapSpacerWidget m_EditorListCategoryHeader;
 	
 	protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
 	protected static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
@@ -32,11 +50,18 @@ class EditorListItem: ScriptedWidgetEventHandler
 	void EditorListItem()
 	{
 		EditorPrint("EditorListItem");
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorCategory.layout", null);
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
 		
-		m_ListItemText 					= TextWidget.Cast(m_Root.FindAnyWidget("EditorListCategoryHeaderLable"));
-		m_ListItemIcon 					= ImageWidget.Cast(m_Root.FindAnyWidget("EditorListCategoryHeaderIcon"));
-		m_EditorListCategoryHeader 		= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("EditorListCategoryHeader"));
+		m_ListItemFrame					= m_Root.FindAnyWidget("EditorListItemFrame");
+		m_ListItemContent				= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("EditorListItemContent"));
+		m_ListItemChildren				= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("EditorListItemChildren"));
+		
+		m_ListItemButton				= ButtonWidget.Cast(m_Root.FindAnyWidget("EditorListItemButton"));
+		m_ListItemVisible				= ButtonWidget.Cast(m_Root.FindAnyWidget("EditorListItemVisible"));
+		m_ListItemCollapse				= ButtonWidget.Cast(m_Root.FindAnyWidget("EditorListItemCollapse"));
+		
+		m_ListItemLabel 				= TextWidget.Cast(m_Root.FindAnyWidget("EditorListItemLabel"));
+		m_ListItemIcon 					= ImageWidget.Cast(m_Root.FindAnyWidget("EditorListItemIcon"));
 		
 		
 		m_Root.SetHandler(this);
@@ -55,7 +80,7 @@ class EditorListItem: ScriptedWidgetEventHandler
 	
 	void SetText(string text) 
 	{
-		m_ListItemText.SetText(text);
+		m_ListItemLabel.SetText(text);
 	}
 	
 	void SetIcon(string icon)
@@ -67,10 +92,24 @@ class EditorListItem: ScriptedWidgetEventHandler
 	
 	void SetColor(int color)
 	{
-		m_EditorListCategoryHeader.SetColor(color);
-		m_EditorListCategoryHeader.Update();		
+		m_ListItemContent.SetColor(color);
+		m_ListItemContent.Update();		
 	}
 	
+	void SetNestIndex(int index)
+	{
+		Print("EditorListItem::SetNestIndex " + index);
+		m_NestIndex = index;
+		float x, y;
+		m_ListItemFrame.GetSize(x, y);
+		m_ListItemFrame.SetSize(290 - 15 * m_NestIndex, y);
+		m_ListItemFrame.Update();
+	}
+	
+	int GetNestIndex()
+	{
+		return m_NestIndex;
+	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{		
@@ -82,31 +121,37 @@ class EditorListItem: ScriptedWidgetEventHandler
 		return true;
 	}
 	
-	override bool OnDrag(Widget w, int x, int y)
+	override bool OnDropReceived(Widget w, int x, int y, Widget reciever)
 	{
-		Print("DRAG TIME WEEEE");
-		return super.OnDrag(w, x, y);
+		return OnListItemDropReceived(EditorListItemFromWidget(w));
 	}
 	
+	bool OnListItemDropReceived(EditorListItem target)
+	{
+		return false;
+	}
+	
+	/*
 	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
-		
-		EditorListItem target = EditorListItemFromWidget(reciever.GetParent().GetParent());
+		EditorPrint("EditorListItem::OnDrop");
+		EditorListItem target = EditorListItemFromWidget(reciever);
+
 		if (target == null) {
-			Print("Drop failed. was null");
+			EditorPrint("EditorListItem::OnDrop: Drop Failed", LogSeverity.WARNING);
 			return false;
 		}
 		
 		EditorCollapsibleListItem collapsible;
 		if (CastTo(collapsible, target)) {
-			collapsible.InsertListItem(EditorListItemFromWidget(w.GetParent().GetParent()));
+			collapsible.InsertListItem(this);
 		}
-		return true;
-	}
+		return super.OnDrop(w, x, y, reciever);
+	}*/
 	
 	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
 	{	
-		Print(w);
+		//Print(w);
 		return true;
 	}
 	
@@ -127,345 +172,11 @@ class EditorListItem: ScriptedWidgetEventHandler
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		Print("EditorPlaceableListItem::OnClick");
-		
 		if (button == 0) {
 			SetFocus(w);
-			return true;
 		}
-
-		
-		return false;
-	}
-	
-}
-
-
-
-class EditorPlacedListItem: EditorListItem
-{
-	private ref EditorObjectData m_Data;
-	EditorObjectData GetData() { return m_Data; }
-	
-	void EditorPlacedListItem(EditorObjectData data)
-	{
-		Print("EditorPlacedListItem");
-		m_Data = data;
-		
-		SetText(m_Data.Type);
-		SetIcon(Editor.GetIconFromMod(Editor.GetModFromObject(m_Data.Type)));
-		
-		EditorEvents.OnObjectSelected.Insert(EditorObjectSelected);
-		EditorEvents.OnObjectDeselected.Insert(EditorObjectDeselected);	
-	}
-	
-	void EditorObjectSelected(Class context, EditorObject target)
-	{
-		if (target.GetID() == m_Data.GetID())
-			SetColor(COLOR_ON_SELECTED);
-		
-	}
-	
-	void EditorObjectDeselected(Class context, EditorObject target)
-	{		
-		if (target.GetID() == m_Data.GetID())
-			SetColor(COLOR_ON_DESELECTED); 
-
-	}
-	
-	
-	
-}
-
-class EditorPlaceableListItem: EditorListItem
-{
-	private ref EditorPlaceableObjectData m_Data;
-	EditorPlaceableObjectData GetData() { return m_Data; }
-
-	
-	void EditorPlaceableListItem(EditorPlaceableObjectData data)
-	{
-		Print("EditorPlaceableListItem");
-		m_Data = data;
-		
-		SetText(m_Data.Type);
-		SetIcon(Editor.GetIconFromMod(Editor.GetModFromObject(m_Data.Type)));
-	}
-	
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{		
-		return true;
-	}
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		return true;
-	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		Print("EditorPlaceableListItem::OnClick");
-		
-		if (button == 0) {
-			GetEditor().CreateObjectInHand(m_Data.Type);
-			SetFocus(w);
-			return true;
-		} else if (button == 1) {
-			
-			if (GetGame().GetInput().LocalValue("UAWalkRunTemp")) {				
-				// all very temporary please abstract elsewhere
-				if (GetEditor().IsLootEditActive())
-					GetEditor().PlaceholderRemoveLootMode();
-				else 
-					GetEditor().PlaceholderForEditLootSpawns(m_Data.Type);
-				
-				return true;				
-			}
-		}
-
-		
-		return false;
-	}
-	
-	override bool OnFocus(Widget w, int x, int y)
-	{
-		Print("EditorPlaceableListItem::OnFocus");
-		SetColor(COLOR_ON_SELECTED);
-		return true;
-	}
-	
-	override bool OnFocusLost(Widget w, int x, int y)
-	{
-		Print("EditorPlaceableListItem::OnFocusLost");
-		SetColor(COLOR_ON_DESELECTED);
-		return true;
-	}
-	
-}
-
-
-class EditorCollapsibleListItem: EditorListItem
-{
-	private ref array<ref EditorListItem> m_CategoryChildren;
-	
-	protected WrapSpacerWidget m_EditorListCategoryContent;
-	
-	void EditorCollapsibleListItem()
-	{
-		Print("EditorCollapsibleListItem");
-		m_CategoryChildren = new array<ref EditorListItem>();
-		m_EditorListCategoryContent = WrapSpacerWidget.Cast(m_Root.FindAnyWidget("EditorListCategoryContent"));
-		SetText("group0");
-	}
-	
-	void ~EditorCollapsibleListItem()
-	{
-		Print("~EditorCollapsibleListItem");
-	}
-	
-	void InsertListItem(EditorListItem item)
-	{
-		Print("InsertListItem");
-		m_CategoryChildren.Insert(item);
-		m_EditorListCategoryContent.AddChild(item.GetRoot());
-	}
-	
-	void RemoveListItem(EditorListItem item)
-	{
-		int index = m_CategoryChildren.Find(item);
-		if (index == -1) return;
-		m_CategoryChildren.Remove(index);
-	}
-	
-	
-	private bool temp;
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		Print("EditorCollapsibleListItem::OnClick");
-		
-
-		if (button == 1) {
-			temp = !temp;
-			m_EditorListCategoryContent.Show(temp);
-		}
-
 		
 		return super.OnClick(w, x, y, button);
 	}
 	
-	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-
-class EditorListItemTooltip extends ScriptedWidgetEventHandler
-{
-	private Widget m_Root;
-	private TextWidget m_Title;
-	private ItemPreviewWidget m_Preview;
-
-	private ref Timer	m_ToolTipUpdateTimer;
-	private ref EditorPlaceableObjectData m_PlaceableObject;
-	private EntityAI m_PreviewObj;
-	
-	void EditorListItemTooltip(EditorPlaceableObjectData obj)
-	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorListItemTooltip::EditorListItemTooltip - Start");
-		#endif
-		
-		m_Root = Widget.Cast( GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorListItemTooltip.layout") );
-		m_Title = TextWidget.Cast(m_Root.FindAnyWidget("EditorListItemTooltipTitle"));
-		m_Preview = ItemPreviewWidget.Cast(m_Root.FindAnyWidget("EditorListItemTooltipPreview"));
-
-		m_PlaceableObject = obj;
-		
-		m_Root.SetHandler( this );
-		
-		#ifdef EDITORPRINT
-		EditorPrint("EditorListItemTooltip::EditorListItemTooltip - End");
-		#endif
-	}
-	
-	void ~EditorListItemTooltip()
-	{
-		HideTooltip();
-		delete m_Root;
-	}
-		
-	void SetToolTip()
-	{
-		#ifdef EDITORPRINT
-		EditorPrint("EditorListItemTooltip::SetToolTip - Start");
-		#endif
-		
-		if(m_PlaceableObject)
-		{
-			m_Title.SetText(m_PlaceableObject.GetType());
-			m_PreviewObj = EntityAI.Cast(GetGame().CreateObjectEx(m_PlaceableObject.GetType(), vector.Zero, ECE_NONE));
-			
-			#ifdef EDITORPRINT
-			EditorPrint("EditorListItemTooltip::SetToolTip - m_PreviewObj: " + m_PreviewObj);
-			#endif
-			
-			m_Preview.SetItem(m_PreviewObj);
-			m_Preview.SetView(m_Preview.GetItem().GetViewIndex());
-		}
-		
-		#ifdef EDITORPRINT
-		EditorPrint("EditorListItemTooltip::SetToolTip - End");
-		#endif
-	}
-	
-	void SetPos(int x, int y)
-	{
-		m_Root.SetPos(x, y);
-	}
-		
-	void ShowTooltip()
-	{		
-		if (!m_ToolTipUpdateTimer)
-		{
-			m_ToolTipUpdateTimer = new Timer();
-			m_ToolTipUpdateTimer.Run( 0.01, this, "Update", NULL, true ); // Call Update all 0.01 seconds
-		}
-		
-		m_Root.Show( true );
-		
-		SetToolTip();
-		
-		int x, y;
-		GetMousePos(x,y);
-		m_Root.SetPos(x, y);
-		
-		m_Root.Update();
-	}
-		
-	void HideTooltip()
-	{		
-		if (m_ToolTipUpdateTimer)
-			m_ToolTipUpdateTimer.Stop();
-		
-		m_Root.Show(false);
-		m_Root.SetPos(0, 0);
-		//m_Title.SetText("");
-		
-		if(m_PreviewObj)
-		{
-			m_Preview.SetItem(null);
-			GetGame().ObjectDelete(m_PreviewObj);
-		}
-	}
-	
-	void SetColor(int color)
-	{		
-		m_Root.SetColor( color );
-	}
-	
-	void SetTextColor(int color)
-	{		
-		m_Title.SetColor( color );
-	}
-	
-	void Update( float timeslice )
-	{		
-		if ( m_Root && m_Root.IsVisible() ) 
-			UpdateTooltip();
-	}
-	
-	void UpdateTooltip()
-	{
-		int mouse_x;
-		int mouse_y;
-			
-		GetGame().GetMousePos( mouse_x, mouse_y );
-		m_Root.SetPos( mouse_x, mouse_y );
-		m_Root.Update();
-	}
-	
-	bool IsVisable()
-	{
-		return m_Root.IsVisible();
-	}
-}
-*/
