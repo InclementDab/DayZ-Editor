@@ -30,27 +30,16 @@ class EditorPlacedListItem: EditorListItem
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		if (button == 0) {
-		/*
+		
 			if (GetGame().GetInput().LocalValue("UAWalkRunTemp"))
 				GetEditor().GetObjectManager().ToggleSelection(m_Data);
 			else {
-				
-			}*/
+				EditorEvents.SelectObject(this, m_Data);
+			}
 		}
 		
 		return super.OnClick(w, x, y, button);
 	}
 	
-	override void Select()
-	{
-		EditorEvents.SelectObject(this, m_Data);
-		super.Select();
-	}
-	
-	override void Deselect()
-	{
-		EditorEvents.DeselectObject(this, m_Data);
-		super.Deselect();
-	}
 	
 }

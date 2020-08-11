@@ -5,6 +5,7 @@ class EditorCollapsibleListItem: EditorListItem
 	private bool m_Collapsed = false;
 
 	private ref array<ref EditorListItem> m_CategoryChildren;
+	ref array<ref EditorListItem> GetChildren() { return m_CategoryChildren; }
 	
 	void EditorCollapsibleListItem()
 	{
@@ -14,7 +15,7 @@ class EditorCollapsibleListItem: EditorListItem
 		SetText(string.Format("group%1", groupcount));
 		groupcount++;
 		
-		//EditorEvents.OnObjectDeselected.Insert();
+		EditorEvents.OnObjectDeselected.Insert(ObjectDeselected);
 	}
 	
 	
@@ -77,11 +78,8 @@ class EditorCollapsibleListItem: EditorListItem
 					break;
 				}
 				case m_ListItemButton: {
-					
-					foreach (EditorListItem list_item: m_CategoryChildren) {
-						list_item.Select();
-					}
-					
+					Select();
+					SelectAllChildren(m_CategoryChildren);					
 					break;
 				}
 			}			
@@ -110,6 +108,25 @@ class EditorCollapsibleListItem: EditorListItem
 			return false;
 		}
 		return true;
+	}
+	
+	void ObjectDeselected(Class context, EditorObject target)
+	{
+		Deselect();
+	}
+	
+	void SelectAllChildren(ref array<ref EditorListItem> children)
+	{
+		foreach (EditorListItem list_item: children) {
+			EditorPlacedListItem placed_item;
+			EditorCollapsibleListItem collapsible_item;
+			if (CastTo(placed_item, list_item)) {
+				EditorEvents.SelectObject(this, placed_item.GetData());
+			} else if (CastTo(collapsible_item, list_item)) {
+				collapsible_item.Select();
+				SelectAllChildren(collapsible_item.GetChildren());
+			}
+		}
 	}
 	
 }
