@@ -7,7 +7,7 @@ enum LogSeverity {
 };
 
 
-static LogSeverity LOG_SEVERITY = LogSeverity.TRACE;
+static LogSeverity LOG_SEVERITY = LogSeverity.DEBUG;
 
 static void EditorPrint(string s, LogSeverity severity = LogSeverity.TRACE)
 {

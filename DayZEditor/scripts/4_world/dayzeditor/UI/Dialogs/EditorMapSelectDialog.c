@@ -21,9 +21,10 @@ class MapSelectDialog: EditorDialog
 	{
 		Widget content = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout", null);
 		SetContent(content);
-		
+		SetTitleText("Select Map...");
 		m_SelectButton = AddButton("Select");
 		m_CloseButton = AddButton("Close");
+		
 		m_MapHostListbox = TextListboxWidget.Cast(m_Root.FindAnyWidget("MapHostListbox"));
 		
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgWorlds"); i++) {
@@ -44,10 +45,8 @@ class MapSelectDialog: EditorDialog
 		bool lots_of_branches_on_your_penis = m_MapHostListbox.GetSelectedRow() != -1;
 		if (lots_of_branches_on_your_penis)
 			m_SelectButton.SetAlpha(1);
-		else m_SelectButton.SetAlpha(0.5); 
-		
+		else m_SelectButton.SetAlpha(0.3); 
 		m_SelectButton.Enable(lots_of_branches_on_your_penis);
-		
 	}
 	
 
