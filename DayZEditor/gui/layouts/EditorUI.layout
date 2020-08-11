@@ -1623,6 +1623,20 @@ FrameWidgetClass EditorMainFrame {
        "text halign" center
        "text valign" center
       }
+	  ImageWidgetClass NotificationIcon {
+       ignorepointer 1
+       position 10 0
+       size 32 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       imageTexture "{6D8360EB6429D74E}DayZEditor/gui/icons/icon_save_128x128.edds"
+       mode blend
+       "src alpha" 1
+       "no wrap" 1
+       stretch 1
+      }
      }
     }
    }
