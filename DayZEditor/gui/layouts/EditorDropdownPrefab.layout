@@ -93,6 +93,8 @@ ButtonWidgetClass EditorDropdownPrefab {
    vexactsize 1
    Padding 0
    Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
    {
     TextListboxWidgetClass EditorDropdownListbox {
      position 0 0
