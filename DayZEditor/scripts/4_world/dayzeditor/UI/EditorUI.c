@@ -467,8 +467,8 @@ class EditorUI: UIScriptedMenu
 		EditorPrint("EditorUI::OnMouseButtonDown");
 		
 		
-		if (EditorUIManager.IsContextMenuActive()) {
-			EditorContextMenu menu = EditorUIManager.GetContextMenu();
+		if (GetEditor().GetUIManager().IsContextMenuActive()) {
+			EditorContextMenu menu = GetEditor().GetUIManager().GetContextMenu();
 			if (menu.GetRoot() != w)
 				menu.Close();
 		}
@@ -536,12 +536,14 @@ class EditorUI: UIScriptedMenu
 				
 				EditorContextMenu context_menu = new EditorContextMenu();
 				context_menu.AddButton(new EditorContextMenuButton("Create Folder", "CreatePlacedFolder", this));
-				EditorContextMenuFolder folder = EditorContextMenuFolder("Folder1");
-				folder.AddButton(new EditorContextMenuButton("Test1"));
-				context_menu.AddButton(folder);
 				context_menu.Show();
 
-			}
+			} else {
+
+				EditorObjectContextMenu object_context_menu = new EditorObjectContextMenu();
+				object_context_menu.Show();
+				return true;
+			}	
 			
 			
 			

@@ -199,7 +199,20 @@ class EditorObjectManager
 	}
 	
 
+	bool CanCut()
+	{
+		return m_SelectedObjects.Count() > 0;
+	}
 	
+	bool CanCopy()
+	{
+		return m_SelectedObjects.Count() > 0;
+	}
+	
+	bool CanPaste()
+	{
+		return true;
+	}
 	
 	void CutSelection()
 	{

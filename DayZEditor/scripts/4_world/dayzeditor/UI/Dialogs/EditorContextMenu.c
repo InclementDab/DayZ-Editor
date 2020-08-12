@@ -5,28 +5,33 @@ class EditorContextMenuButton: ScriptedWidgetEventHandler
 	protected Widget m_Root;
 	Widget GetRoot() { return m_Root; }
 	
+	protected ButtonWidget m_Button;
 	protected TextWidget m_Label;
 	protected ImageWidget m_Icon;
 	
 	string Label;
 	string Action;
+	string DisableCondition;
 	
 	Class Context;
 	ref Param Params;
-
+	
 
 	void EditorContextMenuButton(string label, string action = "", Class context = this, Param params = null)
 	{
 		Label = label; Action = action; Context = context; Params = params;
 		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenuElement.layout");
+		m_Button = ButtonWidget.Cast(m_Root.FindAnyWidget("ContextMenuButton"));
 		m_Label = TextWidget.Cast(m_Root.FindAnyWidget("ContextMenuLabel"));
 		m_Icon = ImageWidget.Cast(m_Root.FindAnyWidget("ContextMenuIcon"));
 		m_Root.SetHandler(this);
 		
 		m_Label.SetText(label);
+		
 	}
 	
-		
+
+	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		Print("EditorContextMenuButton::OnClick");
@@ -34,14 +39,23 @@ class EditorContextMenuButton: ScriptedWidgetEventHandler
 		if (button != 0) return false;
 		
 		GetGame().GameScript.Call(Context, Action, Params);	
-		
-		return true;
+		GetEditor().GetUIManager().ContextClose();
+		return super.OnClick(w, x, y, button);
 	}
 	
 	void Show(bool show)
 	{
 		m_Root.Show(show);
 	}
+	
+	void Disable(bool disable)
+	{
+		m_Button.Enable(!disable);
+		if (disable)
+			m_Button.SetAlpha(0.5);
+		else m_Button.SetAlpha(1);
+	}
+	
 
 }
 
@@ -86,9 +100,18 @@ class EditorContextMenuFolder: EditorContextMenuButton
 		m_ContextMenuChildren.AddChild(button.GetRoot());
 		m_ChildrenButtons.Insert(button);
 	}
+}
+
+class EditorContextMenuDivider: EditorContextMenuButton
+{
+	void EditorContextMenuDivider(string label, string action = "", Class context = this, Param params = null)
+	{
+		m_Root.SetSize(250, 10);
+		m_Label.Show(false);
+		m_Icon.Show(false);
+		m_Button.SetFlags(m_Button.GetFlags() | WidgetFlags.IGNOREPOINTER);
+	}
 	
-
-
 }
 
 
@@ -148,27 +171,22 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 		*/
 		m_Root.SetPos(x, y);
 		
-		EditorUIManager.ContextSet(this);
+		GetEditor().GetUIManager().ContextSet(this);
 	}
 	
 	void Close()
 	{
-		EditorUIManager.ContextClose();
+		GetEditor().GetUIManager().ContextClose();
 	}
 	
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		Print("EditorContextMenu::OnClick");
-		if (button != 0) return true;
-		
-
 				
 		return false;
 	}
-	
-	
-	
+		
 	override bool OnFocus(Widget w, int x, int y)
 	{
 		return false;
@@ -178,6 +196,8 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 	{
 		return false;
 	}
-	
-	
 }
+
+
+
+

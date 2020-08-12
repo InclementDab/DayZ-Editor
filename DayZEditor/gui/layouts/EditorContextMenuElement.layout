@@ -1,5 +1,6 @@
 FrameWidgetClass ContextMenuFrame {
  clipchildren 0
+ ignorepointer 1
  color 0.1373 0.1373 0.1373 0.3922
  position 0 0
  size 250 30
@@ -9,6 +10,7 @@ FrameWidgetClass ContextMenuFrame {
  vexactsize 1
  {
   ButtonWidgetClass ContextMenuButton {
+   ignorepointer 0
    position 0 0
    size 1 1
    halign center_ref
@@ -17,7 +19,7 @@ FrameWidgetClass ContextMenuFrame {
    vexactpos 1
    hexactsize 0
    vexactsize 0
-   style Editor
+   style MenuDefault
    {
     TextWidgetClass ContextMenuLabel {
      clipchildren 0

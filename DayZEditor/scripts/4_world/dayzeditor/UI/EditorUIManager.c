@@ -253,25 +253,27 @@ class EditorUIManager: Managed // remove meeeee
 	
 	
 	// Context Menu Control
-	private static ref EditorContextMenu m_ContextMenu = null;
-	static void ContextSet(EditorContextMenu context)
+	private ref EditorContextMenu m_ContextMenu = null;
+	void ContextSet(EditorContextMenu context)
 	{
 		EditorPrint("EditorUIManager::ContextSet", LogSeverity.DEBUG);
+		m_EditorCamera.SetLookEnabled(false);
 		m_ContextMenu = context;
 		ShowCursor();
 	}
 	
-	static void ContextClose()
+	void ContextClose()
 	{
 		EditorPrint("EditorUIManager::ContextClose", LogSeverity.DEBUG);
+		m_EditorCamera.SetLookEnabled(true);
 		m_ContextMenu.GetRoot().Unlink();
 		m_ContextMenu = null;
 		ShowCursor();
 	}
 	
-	static ref EditorContextMenu GetContextMenu() { return m_ContextMenu; }
+	ref EditorContextMenu GetContextMenu() { return m_ContextMenu; }
 	
-	static bool IsContextMenuActive() { return m_ContextMenu != null; }
+	bool IsContextMenuActive() { return m_ContextMenu != null; }
 	
 }
 

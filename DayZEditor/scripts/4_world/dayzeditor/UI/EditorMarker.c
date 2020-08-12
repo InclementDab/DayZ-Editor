@@ -186,9 +186,12 @@ class EditorObjectMarker: UILinkedObject
 		
 		Input input = GetGame().GetInput();
 		
+		
+		if (GetEditor().IsPlacing()) return false;
+		
+
+		
 		if (button == 0) {
-			
-			if (GetEditor().IsPlacing()) return false;
 			
 			// required for multiple objects to be dragged
 			if (m_EditorObject.IsSelected()) 
@@ -207,13 +210,9 @@ class EditorObjectMarker: UILinkedObject
 			
 		} else if (button == 1) {
 			
+			EditorEvents.SelectObject(this, m_EditorObject);
 			
-			EditorContextMenu context_menu = new EditorContextMenu();
-			context_menu.AddButton(new EditorContextMenuButton("Create Folder", "CreatePlacedFolder", this));
-			EditorContextMenuFolder folder = EditorContextMenuFolder("Folder1");
-			EditorContextMenuButton testbutton = new EditorContextMenuButton("Test1", "OnContextPropertiesClick", this);
-			folder.AddButton(testbutton);
-			context_menu.AddButton(folder);
+			EditorObjectContextMenu context_menu = new EditorObjectContextMenu();
 			context_menu.Show();
 			
 		} else return false;

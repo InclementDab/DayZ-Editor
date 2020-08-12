@@ -9,4 +9,6 @@ WrapSpacerWidgetClass EditorContextPanel {
  vexactsize 1
  style OutlineFilled
  "no focus" 1
+ Padding 0
+ Margin 0
 }
