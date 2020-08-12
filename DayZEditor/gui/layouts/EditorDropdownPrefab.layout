@@ -1,0 +1,141 @@
+PanelWidgetClass EditorDropdownPrefab {
+ clipchildren 0
+ inheritalpha 0
+ ignorepointer 0
+ size 1 32
+ halign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ style blank
+ {
+  TextWidgetClass EditorDropdownText {
+   clipchildren 0
+   ignorepointer 1
+   position 0 0
+   size 1 1
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   font "gui/fonts/etelkatextpro16"
+   "text offset" 10 0
+   text_proportion 0.55
+   "text valign" center
+  }
+  FrameWidgetClass EditorDropdownButton {
+   clipchildren 0
+   ignorepointer 1
+   position 0 0
+   size 1 1
+   halign right_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   fixaspect inside
+   {
+    ImageWidgetClass EditorDropdownExpandIcon {
+     visible 1
+     clipchildren 0
+     inheritalpha 1
+     ignorepointer 1
+     size 22 24
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     image0 ""
+     imageTexture "{6D875E7F87B86425}DayZEditor/gui/icons/icon_arrow_down_128x128.edds"
+     mode blend
+     "src alpha" 1
+     "no wrap" 1
+     stretch 1
+     "flip v" 0
+     filter 1
+    }
+    ImageWidgetClass EditorDropdownCollapseIcon {
+     visible 0
+     clipchildren 0
+     inheritalpha 1
+     ignorepointer 1
+     size 22 24
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     image0 ""
+     imageTexture "{2552DC57D71008EC}DayZEditor/gui/icons/icon_arrow_up_128x128.edds"
+     mode additive
+     "src alpha" 1
+     "no wrap" 1
+     stretch 1
+     "flip u" 0
+     "flip v" 0
+     filter 1
+    }
+   }
+  }
+  WrapSpacerWidgetClass EditorDropdownWraper {
+   visible 0
+   ignorepointer 1
+   position 0 1
+   size 1 500
+   halign center_ref
+   hexactpos 1
+   vexactpos 0
+   hexactsize 0
+   vexactsize 1
+   Padding 0
+   Margin 0
+   {
+    TextListboxWidgetClass EditorDropdownListbox {
+     position 0 0
+     size 1 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     lines 0
+     font "gui/fonts/metron14"
+    }
+    ScrollWidgetClass EditorDropdownScroller {
+     visible 0
+     clipchildren 0
+     ignorepointer 0
+     color 0.1373 0.1373 0.1373 0.549
+     position 0 1
+     size 1 1
+     halign center_ref
+     hexactpos 1
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style blank
+     {
+      GridSpacerWidgetClass EditorDropdownScrollerContent {
+       ignorepointer 0
+       color 0 0 0 0
+       size 1 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 1
+       Rows 100
+      }
+     }
+    }
+   }
+  }
+ }
+}
