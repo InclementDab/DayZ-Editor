@@ -924,10 +924,8 @@ class Editor: Managed
 					//GetUIManager().GetEditorUI().ShowExportWindow();
 					
 					// todo once UI is created, add "Export Selected Only"
-					ExportSettings settings = new ExportSettings();
-					settings.ExportFileMode = ExportMode.EXPANSION;
-					settings.ExportSelectedOnly = true;
-					Export(settings, "ExpansionExport");
+					EditorFileExportDialog export_dialog = new EditorFileExportDialog();
+					export_dialog.ShowDialog();
 					return true;
 				}
 				break;

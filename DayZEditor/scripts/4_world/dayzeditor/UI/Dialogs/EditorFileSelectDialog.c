@@ -324,3 +324,119 @@ class EditorFileSaveDialog: EditorFileDialog
 		return true;
 	}
 }
+
+
+
+
+
+class EditorFileExportDialog: EditorFileDialog
+{
+	protected EditBoxWidget m_FileNameBox;
+	
+	protected Widget m_EditorDropdownPrefab;
+	
+	protected ButtonWidget m_SaveButton;
+	protected ButtonWidget m_CloseButton;
+	
+	protected ButtonWidget m_EditorDropdownButton;
+	protected WrapSpacerWidget m_EditorDropdownWraper;
+	protected TextListboxWidget m_EditorDropdownListbox;
+	
+	private bool m_DropDownShown;
+	private ref map<string, ref ExportMode> m_ExportModes = new map<string, ref ExportMode>();
+	
+	void EditorFileExportDialog()
+	{
+		EditorPrint("EditorFileExportDialog");
+		
+		Widget box_prefab = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/content/EditorFileNameElement.layout");
+		m_FileNameBox = EditBoxWidget.Cast(box_prefab.FindAnyWidget("FileNameEditBox"));
+		m_FileNameBox.SetText("testsave.dze");
+		
+		Widget m_EditorDropdownPrefab = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorDropdownPrefab.layout");
+		m_EditorDropdownButton = ButtonWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownButton"));
+		m_EditorDropdownWraper = WrapSpacerWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownWraper"));
+		m_EditorDropdownListbox = TextListboxWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownListbox"));
+
+		m_EditorDropdownListbox.AddItem("Expansion *.map", null, 0);
+		
+		m_ExportModes.Insert("Expansion *.map", ExportMode.EXPANSION);
+		m_ExportModes.Insert("Terrain Builder *.txt", ExportMode.TERRAINBUILDER);
+		
+		/*
+		ExportSettings settings = new ExportSettings();
+		settings.ExportFileMode = ExportMode.EXPANSION;
+		settings.ExportSelectedOnly = true;
+		Export(settings, "ExpansionExport");
+		*/
+		AddWidget(m_FileNameBox);
+		m_SaveButton = AddButton("Export");
+		m_CloseButton = AddButton("Cancel");
+		AddWidget(m_EditorDropdownPrefab);
+		
+		string filter = "*";
+		LoadFileDirectory("$profile:\\", filter);
+		
+	}
+	
+	
+	void ~EditorFileExportDialog()
+	{
+		EditorPrint("~EditorFileExportDialog");
+	}
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		Print(w);
+		
+		return true;
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		Print("EditorFileExportDialog::OnClick");
+		
+		if (button != 0) return false; 
+		Print(w);
+		if (w == m_SaveButton) {
+			GetEditor().Save(m_CurrentDirectory + m_FileNameBox.GetText());
+			CloseDialog();
+			return true;
+		} 
+		
+		if (w == m_CloseButton) {
+			CloseDialog();
+			return true;
+		}
+		
+		if (w == m_FileHostListbox) {
+			EditorFile data;
+			m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
+			m_FileNameBox.SetText(data.FileName);
+			return true;
+		}
+		
+		if (w == m_EditorDropdownButton) {
+			m_DropDownShown = !m_DropDownShown;
+			m_EditorDropdownWraper.Show(m_DropDownShown);
+			return true;
+		}
+	
+		return super.OnClick(w, x, y, button);
+	}
+	
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0) return false;
+		EditorFile data;
+		m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
+		
+		if (data.FileAtrributes == FileSearchMode.FOLDERS) {
+			string filter = "*";
+			LoadFileDirectory(data.GetFile(), filter);
+			return true;
+		}
+		
+		return true;
+	}
+}
