@@ -24,15 +24,9 @@ modded class LoadingScreen
 		m_ImageLogoMid.GetPos(x, y);
 		m_ModdedWarning.SetPos(x, y - 40);
 		
-		Widget bottom = m_WidgetRoot.FindAnyWidget("BottomPanel");
 		int s_x, s_y;
-		float b_x, b_y;
 		GetScreenSize(s_x, s_y);
-
-		bottom.GetSize(b_x, b_y);
 		m_ProgressLoading.SetSize(s_x, 6);
-		m_ProgressLoading.SetPos(0, b_y * 2);
-		m_ProgressLoading.Update();
 	}
 	
 	override void Show()
