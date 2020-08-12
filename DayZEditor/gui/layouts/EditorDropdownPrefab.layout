@@ -1,4 +1,4 @@
-PanelWidgetClass EditorDropdownPrefab {
+ButtonWidgetClass EditorDropdownPrefab {
  clipchildren 0
  inheritalpha 0
  ignorepointer 0
@@ -8,7 +8,7 @@ PanelWidgetClass EditorDropdownPrefab {
  vexactpos 1
  hexactsize 0
  vexactsize 1
- style blank
+ style Empty
  {
   TextWidgetClass EditorDropdownText {
    clipchildren 0
@@ -24,7 +24,7 @@ PanelWidgetClass EditorDropdownPrefab {
    text_proportion 0.55
    "text valign" center
   }
-  FrameWidgetClass EditorDropdownButton {
+  FrameWidgetClass EditorDropdownIconFrame {
    clipchildren 0
    ignorepointer 1
    position 0 0
