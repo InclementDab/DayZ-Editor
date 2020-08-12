@@ -25,7 +25,7 @@ enum FileSearchMode {
 class EditorFileDialog: EditorDialog
 {
 	protected string m_CurrentDirectory;
-
+	protected string m_StartDirectory = "$profile:\\";
 	protected TextListboxWidget m_FileHostListbox;
 	
 	void EditorFileDialog()
@@ -124,7 +124,7 @@ class EditorFileOpenDialog: EditorFileDialog
 		
 		string filter = "*.dze";
 		
-		LoadFileDirectory("$profile:\\", filter);
+		LoadFileDirectory(m_StartDirectory, filter);
 		
 	}
 	
@@ -196,7 +196,7 @@ class EditorFileImportDialog: EditorFileDialog
 		string filter = "*.vpp";
 		//string filter = "*";
 		
-		LoadFileDirectory("$profile:\\", filter);
+		LoadFileDirectory(m_StartDirectory, filter);
 		
 	}
 	
@@ -252,7 +252,6 @@ class EditorFileImportDialog: EditorFileDialog
 class EditorFileSaveDialog: EditorFileDialog
 {
 	protected EditBoxWidget m_FileNameBox;
-	
 	protected ButtonWidget m_SaveButton;
 	protected ButtonWidget m_CloseButton;
 	
@@ -263,7 +262,14 @@ class EditorFileSaveDialog: EditorFileDialog
 		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/content/EditorFileNameElement.layout");
 		m_FileNameBox = EditBoxWidget.Cast(w.FindAnyWidget("FileNameEditBox"));
 		
-		m_FileNameBox.SetText("testsave.dze");
+		string default_name = "new";
+		int i = 1;
+		while (FileExist(m_StartDirectory + default_name)) {
+			default_name = string.Format("new(%1)", i);
+			i++;
+		}
+		
+		m_FileNameBox.SetText(default_name);
 
 		AddWidget(m_FileNameBox);
 		m_SaveButton = AddButton("Save");
@@ -271,7 +277,7 @@ class EditorFileSaveDialog: EditorFileDialog
 		
 		
 		string filter = "*";
-		LoadFileDirectory("$profile:\\", filter);
+		LoadFileDirectory(m_StartDirectory, filter);
 		
 	}
 	
@@ -410,7 +416,7 @@ class EditorFileExportDialog: EditorFileDialog
 		AddWidget(m_EditorDropdownPrefab);
 		
 		string filter = "*";
-		LoadFileDirectory("$profile:\\", filter);
+		LoadFileDirectory(m_StartDirectory, filter);
 		
 	}
 	
