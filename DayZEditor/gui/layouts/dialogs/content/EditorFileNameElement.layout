@@ -1,25 +1,27 @@
-FrameWidgetClass FileSaveElementPanel {
+PanelWidgetClass EditorFileNameElement {
  ignorepointer 1
- color 0.749 0.3725 0.3725 0.6863
- size 250 30
+ color 0.8627 0.8627 0.8627 1
+ size 250 32
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ style Outline
  {
   EditBoxWidgetClass FileNameEditBox {
    ignorepointer 0
-   color 1 1 1 0.3922
-   position 0 0
-   size 250 30
+   color 0 0 0 1
+   size 240 26
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   style Default
+   style ServerBrowser
+   "Default text color" 0 0 0 1
    font "gui/fonts/metron"
+   "text color" 0 0 0 1
   }
  }
 }
