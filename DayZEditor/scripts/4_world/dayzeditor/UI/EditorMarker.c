@@ -207,17 +207,21 @@ class EditorObjectMarker: UILinkedObject
 			
 		} else if (button == 1) {
 			
-			/*
-			m_EditorObjectContextMenu = new UILinkedObject();
-			m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout");
-			m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
-			m_EditorObjectContextMenu.SetObject(this);
-			m_EditorObjectContextWidget.Show(false);
-			*/
+			
+			EditorContextMenu ctx = new EditorContextMenu();
+			
+			ctx.AddButton(EditorContextMenuButtonData.Create("Properties", "OnContextPropertiesClick", this));
+			ctx.Show();
+			
 		} else return false;
 
 
 		return true;
+	}
+	
+	void OnContextPropertiesClick()
+	{
+		Print("WEEE");
 	}
 
 	

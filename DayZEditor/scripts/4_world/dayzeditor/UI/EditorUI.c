@@ -462,7 +462,6 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	
-	private ref array<ref EditorCollapsibleListItem> test_objects = new array<ref EditorCollapsibleListItem>();
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorPrint("EditorUI::OnMouseButtonDown");
@@ -535,17 +534,15 @@ class EditorUI: UIScriptedMenu
 			// temp
 			if (w.GetName() == "RightbarScroll") {
 				
-				EditorCollapsibleListItem t = new EditorCollapsibleListItem();
-				test_objects.Insert(t);
-				InsertPlacedObject(t);
+				EditorContextMenu context_menu = new EditorContextMenu();
+				context_menu.AddButton(EditorContextMenuButtonData.Create("Create Folder", "CreatePlacedFolder", this));
+				EditorContextMenuButtonData folder = EditorContextMenuButtonData.CreateFolder("Folder1");
 				
-			} else {
+				context_menu.AddButton(EditorContextMenuButtonData.Create("Create Folder", "CreatePlacedFolder", this));
+				context_menu.AddButton(EditorContextMenuButtonData.CreateDivider());
+				context_menu.AddButton(EditorContextMenuButtonData.CreateFolder("Folder2"));
+				context_menu.Show();
 
-				EditorContextMenu ctx = new EditorContextMenu();
-				ctx.AddButton("REEEEE1");
-				ctx.AddButton("REEEEE2");
-				
-				ctx.Show();
 			}
 			
 			
@@ -906,6 +903,12 @@ class EditorUI: UIScriptedMenu
 	void ShowObjPosInfoPanel(bool state)
 	{
 		m_ObjPosInfoPanel.Show(state);
+	}
+	
+	void CreatePlacedFolder()
+	{	
+		EditorCollapsibleListItem t = new EditorCollapsibleListItem();
+		InsertPlacedObject(t);
 	}
 }
 
