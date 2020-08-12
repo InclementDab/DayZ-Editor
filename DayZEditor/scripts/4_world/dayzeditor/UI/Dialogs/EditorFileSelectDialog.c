@@ -457,6 +457,14 @@ class EditorFileExportDialog: EditorFileDialog
 		if (w == m_SaveButton) {
 			ExportSettings settings = new ExportSettings();
 			settings.ExportFileMode = m_SelectedMode.Mode;
+			
+			// temp until adding more settings to export window
+			if (settings.ExportFileMode == ExportMode.TERRAINBUILDER)
+				settings.ExportOffset = Vector(200000, 0, 0);
+			
+			if (settings.ExportFileMode == ExportMode.VPP)
+				settings.ExportSetName = "DayZ Editor Export";
+			
 			GetEditor().Export(settings, m_CurrentDirectory + m_FileNameBox.GetText() + "." + m_SelectedMode.Ext);
 			CloseDialog();
 			return true;

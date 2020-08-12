@@ -441,7 +441,7 @@ class Editor: Managed
 		EditorPrint("Editor::Export");
 		EditorPrint("Exporting file to " + file, LogSeverity.INFO);
 		EditorWorldData export_data = new EditorWorldData();
-			
+		
 		
 		GetUIManager().GetEditorCamera().GetTransform(export_data.CameraPosition);
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();

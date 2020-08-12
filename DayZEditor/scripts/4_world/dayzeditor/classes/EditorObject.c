@@ -34,10 +34,13 @@ class EditorObjectData
 	private int m_Id;
 	int GetID() { return m_Id; }
 	
+
+	string GetModelName() { return GetGame().GetModelName(Type); }
+	
 	string Type;
 	vector Position;
 	vector Orientation;
-	float Scale;
+	float Scale = 1;
 	EditorObjectFlags Flags;
 	
 	private void EditorObjectData(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
