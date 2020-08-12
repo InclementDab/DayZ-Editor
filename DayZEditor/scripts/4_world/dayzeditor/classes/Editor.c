@@ -422,14 +422,18 @@ class Editor: Managed
 		if (import_data.CameraPosition[3] != vector.Zero)
 			GetUIManager().GetEditorCamera().SetTransform(import_data.CameraPosition);
 		
-				// todo temp
+		// todo temp
 		EditorObjectDataSet a = new EditorObjectDataSet();
 		foreach (EditorObjectData o: import_data.EditorObjects) {
 			a.InsertEditorData(o);
 		}
 		
 		GetObjectManager().CreateObjects(a);
-		GetEditor().GetUIManager().NotificationCreate("Import " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+		if (loadfile_result == FileDialogResult.SUCCESS) {
+			GetEditor().GetUIManager().NotificationCreate("Import Success!", COLOR_GREEN);
+		} else {
+			GetEditor().GetUIManager().NotificationCreate("Import Failed! " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_RED); 
+		}
 	}
 	
 	void Export(ExportSettings export_settings, string file)
@@ -437,25 +441,7 @@ class Editor: Managed
 		EditorPrint("Editor::Export");
 		EditorPrint("Exporting file to " + file, LogSeverity.INFO);
 		EditorWorldData export_data = new EditorWorldData();
-		
-		switch (export_settings.ExportFileMode) {
 			
-			case ExportMode.EXPANSION: {
-				file += ".map";
-				break;
-			}
-			
-			case ExportMode.VPP: {
-				file += ".vpp";
-				break;
-			}
-			
-			default: {
-				file += ".txt";
-				break;
-			}
-		}
-		
 		
 		GetUIManager().GetEditorCamera().GetTransform(export_data.CameraPosition);
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
@@ -465,7 +451,11 @@ class Editor: Managed
  
 		FileDialogResult loadfile_result = EditorFileManager.Export(export_data, file, export_settings);
 				
-		GetEditor().GetUIManager().NotificationCreate("Export " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+		if (loadfile_result == FileDialogResult.SUCCESS) {
+			GetEditor().GetUIManager().NotificationCreate("Export Success!", COLOR_GREEN);
+		} else {
+			GetEditor().GetUIManager().NotificationCreate("Export Failed! " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_RED); 
+		}
 	}
 	
 

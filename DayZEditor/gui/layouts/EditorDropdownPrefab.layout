@@ -82,7 +82,7 @@ ButtonWidgetClass EditorDropdownPrefab {
    }
   }
   WrapSpacerWidgetClass EditorDropdownWraper {
-   visible 0
+   visible 1
    ignorepointer 1
    position 0 1
    size 1 500
@@ -91,23 +91,27 @@ ButtonWidgetClass EditorDropdownPrefab {
    vexactpos 0
    hexactsize 0
    vexactsize 1
+   scriptclass ""
+   style Outline
    Padding 0
    Margin 0
    "Size To Content H" 1
    "Size To Content V" 1
    {
     TextListboxWidgetClass EditorDropdownListbox {
+     visible 0
      position 0 0
      size 1 1
      hexactpos 0
      vexactpos 0
      hexactsize 0
      vexactsize 0
+     style NoScrollBar
      lines 0
      font "gui/fonts/metron14"
     }
     ScrollWidgetClass EditorDropdownScroller {
-     visible 0
+     visible 1
      clipchildren 0
      ignorepointer 0
      color 0.1373 0.1373 0.1373 0.549

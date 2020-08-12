@@ -185,9 +185,7 @@ class EditorFileSerializer<Class T>
 		
 		m_Serializer.WriteToString(data, true, file_content);
 		
-		if (FileExist(filename)) 
-			if (!DeleteFile(filename))
-				return FileDialogResult.NOT_SUPPORTED;
+
 		
 			
 		
@@ -211,6 +209,9 @@ class EditorFileManager
 
 	static FileDialogResult Save(ref EditorWorldData data, string file)
 	{
+		if (FileExist(file)) 
+			if (!DeleteFile(file))
+				return FileDialogResult.NOT_SUPPORTED;
 		return EditorFileSerializer<ref EditorWorldData>.SaveFile(file, data);
 		//JsonFileLoader<ref EditorWorldData>.JsonSaveFile(file, data);
 		//return FileDialogResult.SUCCESS;
@@ -273,8 +274,11 @@ class EditorFileManager
 	
 	static FileDialogResult Export(ref EditorWorldData data, string file, ref ExportSettings export_settings)
 	{
-		Print("EditorFileManager::Export");		
-		DeleteFile(file);
+		Print("EditorFileManager::Export");
+		
+		if (FileExist(file)) 
+			if (!DeleteFile(file))
+				return FileDialogResult.NOT_SUPPORTED;
 		
 		switch (export_settings.ExportFileMode) {
 			

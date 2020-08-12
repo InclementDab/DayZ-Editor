@@ -326,24 +326,48 @@ class EditorFileSaveDialog: EditorFileDialog
 }
 
 
-
+class ExportListItemData
+{
+	Widget Root;
+	string Text;
+	string Ext;
+	ExportMode Mode;
+	
+	void ExportListItemData(Widget w, string text, string ext, ExportMode mode)
+	{
+		Root = w; Text = text; Ext = ext; Mode = mode;
+	}
+	
+	string GetFormattedText()
+	{
+		return string.Format("%1 (*.%2)", Text, Ext);
+	}
+	
+		
+}
 
 
 class EditorFileExportDialog: EditorFileDialog
 {
 	protected EditBoxWidget m_FileNameBox;
 	
-	protected Widget m_EditorDropdownPrefab;
+	protected ButtonWidget m_EditorDropdownPrefab;
 	
 	protected ButtonWidget m_SaveButton;
 	protected ButtonWidget m_CloseButton;
 	
-	protected ButtonWidget m_EditorDropdownButton;
 	protected WrapSpacerWidget m_EditorDropdownWraper;
 	protected TextListboxWidget m_EditorDropdownListbox;
+	protected ScrollWidget m_EditorDropdownScroller;
+	protected GridSpacerWidget m_EditorDropdownScrollerContent;
+	
+	protected ImageWidget m_EditorDropdownExpandIcon;
+	protected ImageWidget m_EditorDropdownCollapseIcon;
+	protected TextWidget m_EditorDropdownText;
 	
 	private bool m_DropDownShown;
-	private ref map<string, ref ExportMode> m_ExportModes = new map<string, ref ExportMode>();
+	private ref array<ref ExportListItemData> m_ExportModes = new array<ref ExportListItemData>();
+	private ref ExportListItemData m_SelectedMode;
 	
 	void EditorFileExportDialog()
 	{
@@ -351,24 +375,35 @@ class EditorFileExportDialog: EditorFileDialog
 		
 		Widget box_prefab = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/content/EditorFileNameElement.layout");
 		m_FileNameBox = EditBoxWidget.Cast(box_prefab.FindAnyWidget("FileNameEditBox"));
-		m_FileNameBox.SetText("testsave.dze");
+		m_FileNameBox.SetText("Export");
 		
-		Widget m_EditorDropdownPrefab = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorDropdownPrefab.layout");
-		m_EditorDropdownButton = ButtonWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownButton"));
+		m_EditorDropdownPrefab = ButtonWidget.Cast(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorDropdownPrefab.layout"));
 		m_EditorDropdownWraper = WrapSpacerWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownWraper"));
-		m_EditorDropdownListbox = TextListboxWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownListbox"));
+	
+		m_EditorDropdownExpandIcon = ImageWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownExpandIcon"));
+		m_EditorDropdownCollapseIcon = ImageWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownCollapseIcon"));
+		
+		m_EditorDropdownText = TextWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownText"));
+		
+		m_EditorDropdownScroller = ScrollWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownScroller"));
+		m_EditorDropdownScrollerContent = GridSpacerWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownScrollerContent"));
+		
+		
+		m_EditorDropdownScrollerContent.AddChild(CreateDropdownPrefabButton("Server File", "c", ExportMode.COMFILE));
+		m_EditorDropdownScrollerContent.AddChild(CreateDropdownPrefabButton("Expansion", "map", ExportMode.EXPANSION));
+		m_EditorDropdownScrollerContent.AddChild(CreateDropdownPrefabButton("Vanilla++", "vpp", ExportMode.VPP));
+		m_EditorDropdownScrollerContent.AddChild(CreateDropdownPrefabButton("Terrain Builder", "txt", ExportMode.TERRAINBUILDER));
+		
+	
+		m_EditorDropdownText.SetText(m_ExportModes.Get(0).GetFormattedText());
+		
+		float x, y;
+		m_EditorDropdownScrollerContent.GetSize(x, y);
+		m_EditorDropdownScroller.SetSize(x, y);
+		
+		ShowDropdown(false);
 
-		m_EditorDropdownListbox.AddItem("Expansion *.map", null, 0);
 		
-		m_ExportModes.Insert("Expansion *.map", ExportMode.EXPANSION);
-		m_ExportModes.Insert("Terrain Builder *.txt", ExportMode.TERRAINBUILDER);
-		
-		/*
-		ExportSettings settings = new ExportSettings();
-		settings.ExportFileMode = ExportMode.EXPANSION;
-		settings.ExportSelectedOnly = true;
-		Export(settings, "ExpansionExport");
-		*/
 		AddWidget(m_FileNameBox);
 		m_SaveButton = AddButton("Export");
 		m_CloseButton = AddButton("Cancel");
@@ -385,11 +420,32 @@ class EditorFileExportDialog: EditorFileDialog
 		EditorPrint("~EditorFileExportDialog");
 	}
 	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	private ButtonWidget CreateDropdownPrefabButton(string text, string ext, ExportMode mode)
 	{
-		Print(w);
+		ButtonWidget btn = ButtonWidget.Cast(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorDropdownElement.layout"));
+		TextWidget textwidget = TextWidget.Cast(btn.FindAnyWidget("ElementText"));
+		ExportListItemData data = new ExportListItemData(btn, text, ext, mode);
+		m_ExportModes.Insert(data);
+		textwidget.SetText(data.GetFormattedText());
 		
-		return true;
+		return btn;
+	}
+
+	
+	private void ShowDropdown(bool show)
+	{
+		m_EditorDropdownWraper.Show(show);
+		m_EditorDropdownExpandIcon.Show(!show);
+		m_EditorDropdownCollapseIcon.Show(show);
+	}
+	
+	private ExportListItemData GetExportModeFromPrefab(Widget w)
+	{
+		foreach (ExportListItemData data: m_ExportModes)
+			if (data.Root == w)
+				return data;
+		
+		return null;
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
@@ -399,7 +455,9 @@ class EditorFileExportDialog: EditorFileDialog
 		if (button != 0) return false; 
 		Print(w);
 		if (w == m_SaveButton) {
-			GetEditor().Save(m_CurrentDirectory + m_FileNameBox.GetText());
+			ExportSettings settings = new ExportSettings();
+			settings.ExportFileMode = m_SelectedMode.Mode;
+			GetEditor().Export(settings, m_CurrentDirectory + m_FileNameBox.GetText() + "." + m_SelectedMode.Ext);
 			CloseDialog();
 			return true;
 		} 
@@ -416,9 +474,20 @@ class EditorFileExportDialog: EditorFileDialog
 			return true;
 		}
 		
-		if (w == m_EditorDropdownButton) {
+		if (w == m_EditorDropdownPrefab) {
 			m_DropDownShown = !m_DropDownShown;
-			m_EditorDropdownWraper.Show(m_DropDownShown);
+			ShowDropdown(m_DropDownShown);
+			return true;
+		}
+		
+		ExportListItemData mode = GetExportModeFromPrefab(w);
+		if (mode != null) {
+			m_SelectedMode = mode;
+			m_EditorDropdownText.SetText(m_SelectedMode.GetFormattedText());
+			
+			m_DropDownShown = false;
+			ShowDropdown(m_DropDownShown);
+			
 			return true;
 		}
 	
