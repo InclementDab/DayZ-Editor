@@ -24,7 +24,8 @@ enum FileSearchMode {
 
 class EditorFileDialog: EditorDialog
 {
-	
+	protected string m_CurrentDirectory;
+
 	protected TextListboxWidget m_FileHostListbox;
 	
 	void EditorFileDialog()
@@ -81,6 +82,7 @@ class EditorFileDialog: EditorDialog
 	void LoadFileDirectory(string directory, string filter)
 	{
 		EditorPrint("EditorFileDialog::LoadFileDirectory");
+		m_CurrentDirectory = directory;
 		string filterdir = string.Format("%1%2", directory, filter);
 		Print(directory);
 		m_FileHostListbox.ClearItems();
@@ -121,7 +123,6 @@ class EditorFileOpenDialog: EditorFileDialog
 		m_CloseButton = AddButton("Cancel");
 		
 		string filter = "*.dze";
-		//string filter = "*";
 		
 		LoadFileDirectory("$profile:\\", filter);
 		
@@ -141,9 +142,9 @@ class EditorFileOpenDialog: EditorFileDialog
 		if (button != 0) return false; 
 		
 		if (w == m_OpenButton) {
-			string file;
-			m_FileHostListbox.GetItemText(m_FileHostListbox.GetSelectedRow(), 0, file);
-			GetEditor().Open(file);
+			EditorFile data;
+			m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
+			GetEditor().Open(data.GetFile());
 			CloseDialog();
 			return true;
 		} 
@@ -245,5 +246,81 @@ class EditorFileImportDialog: EditorFileDialog
 		
 		return true;
 	}
+}
+
+
+class EditorFileSaveDialog: EditorFileDialog
+{
+	protected EditBoxWidget m_FileNameBox;
 	
+	protected ButtonWidget m_SaveButton;
+	protected ButtonWidget m_CloseButton;
+	
+	void EditorFileSaveDialog()
+	{
+		EditorPrint("EditorFileSaveDialog");
+		
+		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/content/EditorFileNameElement.layout");
+		m_FileNameBox = EditBoxWidget.Cast(w.FindAnyWidget("FileNameEditBox"));
+		
+		m_FileNameBox.SetText("testsave.dze");
+
+		AddWidget(m_FileNameBox);
+		m_SaveButton = AddButton("Save");
+		m_CloseButton = AddButton("Cancel");
+		
+		
+		string filter = "*";
+		LoadFileDirectory("$profile:\\", filter);
+		
+	}
+	
+	
+	void ~EditorFileSaveDialog()
+	{
+		EditorPrint("~EditorFileSaveDialog");
+	}
+	
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		Print("EditorFileSaveDialog::OnClick");
+		
+		if (button != 0) return false; 
+		
+		if (w == m_SaveButton) {
+			GetEditor().Save(m_CurrentDirectory + m_FileNameBox.GetText());
+			CloseDialog();
+			return true;
+		} 
+		
+		if (w == m_CloseButton) {
+			CloseDialog();
+			return true;
+		}
+		
+		if (w == m_FileHostListbox) {
+			EditorFile data;
+			m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
+			m_FileNameBox.SetText(data.FileName);
+			return true;
+		}
+	
+		return super.OnClick(w, x, y, button);
+	}
+	
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0) return false;
+		EditorFile data;
+		m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
+		
+		if (data.FileAtrributes == FileSearchMode.FOLDERS) {
+			string filter = "*";
+			LoadFileDirectory(data.GetFile(), filter);
+			return true;
+		}
+		
+		return true;
+	}
 }

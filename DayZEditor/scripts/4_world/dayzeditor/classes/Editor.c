@@ -34,7 +34,9 @@ class Editor: Managed
 	private ref EditorBrush					m_EditorBrush;
 	private ref EditorBrushSettingsSet 		m_EditorBrushTypes;
 	private ref map<string, typename> 		m_CustomBrushList = new map<string, typename>();
-	
+
+	private string m_CurrentSaveFile = ".";
+		
 	private ref EditorHologram 				ObjectInHand;
 	static Object							ObjectUnderCursor = null;
 	static EditorObject 					EditorObjectUnderCursor = null;
@@ -320,11 +322,10 @@ class Editor: Managed
 		
 	}
 	
-	private string autosave_file;
 	void AutoSave()
 	{
 		EditorPrint("Editor::Autosave");
-		if (autosave_file == string.Empty) return;
+		if (m_CurrentSaveFile == string.Empty) return;
 		
 		EditorWorldData save_data = new EditorWorldData();
 		
@@ -337,13 +338,14 @@ class Editor: Managed
 		foreach (EditorObject save_object: placed_objects)	
 			save_data.EditorObjects.Insert(save_object.GetData());
 		
-		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, autosave_file);
+		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, m_CurrentSaveFile);
 		GetEditor().GetUIManager().NotificationCreate("Autosave " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
 	}
 	
 	void Save(string file)
 	{	
 		EditorPrint("Editor::Save");
+		EditorPrint("Saving file to " + file, LogSeverity.INFO);
 		EditorWorldData save_data = new EditorWorldData();
 		
 		// Get Data
@@ -356,14 +358,20 @@ class Editor: Managed
 		foreach (EditorObject save_object: placed_objects)	
 			save_data.EditorObjects.Insert(save_object.GetData());
  		
-		autosave_file = file;
 		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, file);
-		GetEditor().GetUIManager().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
+		
+		if (loadfile_result == FileDialogResult.SUCCESS) {
+			GetEditor().GetUIManager().NotificationCreate("Save Success!", COLOR_GREEN); 
+			m_CurrentSaveFile = file;
+		} else {
+			GetEditor().GetUIManager().NotificationCreate("Save Failed! " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_RED); 
+		}
 	}
 	
 	void Open(string file)
 	{
 		EditorPrint("Editor::Open");
+		EditorPrint("Opening file from " + file, LogSeverity.INFO);
 		EditorWorldData load_data = new EditorWorldData();
 		
 		// Reset world data
@@ -386,12 +394,18 @@ class Editor: Managed
 		
 		GetObjectManager().CreateObjects(a, false);
 		
-		GetEditor().GetUIManager().NotificationCreate("Load " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+		if (loadfile_result == FileDialogResult.SUCCESS) {
+			GetEditor().GetUIManager().NotificationCreate("Load Success!", COLOR_GREEN);
+			m_CurrentSaveFile = file;
+		} else {
+			GetEditor().GetUIManager().NotificationCreate("Load Failed! " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_RED); 
+		}
 	}
 	
 	void Import(ImportMode import_mode, string file, bool merge = false)
 	{
 		EditorPrint("Editor::Import");
+		EditorPrint("Importing file from " + file, LogSeverity.INFO);
 		EditorWorldData import_data = new EditorWorldData();
 		
 		if (!merge) {
@@ -421,6 +435,7 @@ class Editor: Managed
 	void Export(ExportSettings export_settings, string file)
 	{
 		EditorPrint("Editor::Export");
+		EditorPrint("Exporting file to " + file, LogSeverity.INFO);
 		EditorWorldData export_data = new EditorWorldData();
 		
 		switch (export_settings.ExportFileMode) {
@@ -936,8 +951,13 @@ class Editor: Managed
 			
 			case KeyCode.KC_S: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					//EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
-					//save_dialog.ShowDialog();
+					// if file doesnt exist OR we do CTRL + SHIFT
+					if (!FileExist(m_CurrentSaveFile) || input.LocalValue("UATurbo")) {
+						EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
+						save_dialog.ShowDialog();
+					} else {
+						Save(m_CurrentSaveFile);
+					}
 					return true;
 				}
 				break;

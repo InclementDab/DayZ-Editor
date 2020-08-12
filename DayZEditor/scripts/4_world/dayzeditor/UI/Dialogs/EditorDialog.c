@@ -52,6 +52,12 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		return btn;
 	}
 	
+	protected void AddWidget(Widget target)
+	{
+		m_ButtonGrid.AddChild(target);
+	}
+	
+	
 	protected void SetTitleText(string text)
 	{
 		m_TitleText.SetText(text);

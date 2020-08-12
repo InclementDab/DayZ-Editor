@@ -174,19 +174,46 @@ enum FileDialogResult
 	UNKNOWN_ERROR = 100
 }
 
+class EditorFileSerializer<Class T>
+{
+	protected static ref JsonSerializer m_Serializer = new JsonSerializer;
+	static FileDialogResult SaveFile(string filename, T data) 
+	{
+		string file_content;
+		if(!m_Serializer)
+			m_Serializer = new JsonSerializer;
+		
+		m_Serializer.WriteToString(data, true, file_content);
+		
+		if (FileExist(filename)) 
+			if (!DeleteFile(filename))
+				return FileDialogResult.NOT_SUPPORTED;
+		
+			
+		
+		FileHandle handle = OpenFile(filename, FileMode.APPEND);
+		if (handle == 0)
+			return FileDialogResult.IN_USE;
+		
+		FPrint(handle, file_content);
+		
+		CloseFile(handle);
+		
+		return FileDialogResult.SUCCESS;
+		
+	}
+	
+	
+}
 
 class EditorFileManager
 {
 
 	static FileDialogResult Save(ref EditorWorldData data, string file)
 	{
-
-		if (FileExist(file)) {
-			GetEditor().GetUIManager().GetEditorUI().CreateDialog();			
-		}
-		
-		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(file, data);
-		return FileDialogResult.SUCCESS;
+		return EditorFileSerializer<ref EditorWorldData>.SaveFile(file, data);
+		//JsonFileLoader<ref EditorWorldData>.JsonSaveFile(file, data);
+		//return FileDialogResult.SUCCESS;
 	}
 	
 	static FileDialogResult Open(out EditorWorldData data, string file)
