@@ -18,7 +18,11 @@ modded class LoadingScreen
 		m_ImageWidgetBackground.SetFlags(m_ImageWidgetBackground.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		m_ImageWidgetBackground.GetPos(back_x, back_y);
 		
-		m_ModdedWarning.SetText("WARNING! You are running a modded version of the game. If shits fucked? Deal with it.");
+		
+		m_ModdedWarning.SetText("WARNING! You are running a modded version of the game. If shits fucked? Deal with it.");	
+		
+		if (Math.RandomInt(0, 100) != 69)
+			m_ModdedWarning.Show(false);
 		
 		float x, y;
 		m_ImageLogoMid.GetPos(x, y);
@@ -28,6 +32,7 @@ modded class LoadingScreen
 		GetScreenSize(s_x, s_y);
 		m_ProgressLoading.SetSize(s_x, 6);
 	}
+	
 	
 	override void Show()
 	{
