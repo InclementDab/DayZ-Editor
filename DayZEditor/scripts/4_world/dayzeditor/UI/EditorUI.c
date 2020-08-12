@@ -535,12 +535,10 @@ class EditorUI: UIScriptedMenu
 			if (w.GetName() == "RightbarScroll") {
 				
 				EditorContextMenu context_menu = new EditorContextMenu();
-				context_menu.AddButton(EditorContextMenuButtonData.Create("Create Folder", "CreatePlacedFolder", this));
-				EditorContextMenuButtonData folder = EditorContextMenuButtonData.CreateFolder("Folder1");
-				
-				context_menu.AddButton(EditorContextMenuButtonData.Create("Create Folder", "CreatePlacedFolder", this));
-				context_menu.AddButton(EditorContextMenuButtonData.CreateDivider());
-				context_menu.AddButton(EditorContextMenuButtonData.CreateFolder("Folder2"));
+				context_menu.AddButton(new EditorContextMenuButton("Create Folder", "CreatePlacedFolder", this));
+				EditorContextMenuFolder folder = EditorContextMenuFolder("Folder1");
+				folder.AddButton(new EditorContextMenuButton("Test1"));
+				context_menu.AddButton(folder);
 				context_menu.Show();
 
 			}

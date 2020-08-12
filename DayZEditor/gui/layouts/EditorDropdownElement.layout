@@ -24,19 +24,5 @@ ButtonWidgetClass EditorDropdownElement {
    "text halign" center
    "text valign" center
   }
-  TextWidgetClass ElementDivider {
-   visible 0
-   ignorepointer 1
-   size 1 30
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 1
-   text "---------------------------------------------"
-   "text halign" center
-   "text valign" center
-  }
  }
 }

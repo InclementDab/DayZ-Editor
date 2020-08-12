@@ -1,71 +1,89 @@
 
-enum EditorContextMenuType 
+
+class EditorContextMenuButton: ScriptedWidgetEventHandler
 {
-	DEFAULT,
-	FOLDER,
-	DIVIDER
+	protected Widget m_Root;
+	Widget GetRoot() { return m_Root; }
 	
-};
-
-
-class EditorContextMenuButtonData
-{
+	protected TextWidget m_Label;
+	protected ImageWidget m_Icon;
+	
 	string Label;
 	string Action;
 	
 	Class Context;
 	ref Param Params;
-	
-	private EditorContextMenuType Type;
-	EditorContextMenuType GetType();
-	
-	private ref map<Widget, ref EditorContextMenuButtonData> m_ChildrenButtons;
-	
-	private void EditorContextMenuButtonData(string label, string action = "", Class context = this, Param params = null)
+
+
+	void EditorContextMenuButton(string label, string action = "", Class context = this, Param params = null)
 	{
 		Label = label; Action = action; Context = context; Params = params;
-		m_ChildrenButtons = new map<Widget, ref EditorContextMenuButtonData>();
-	}
-	
-	static EditorContextMenuButtonData Create(string label, string action, Class context, Param params = null)
-	{
-		return new EditorContextMenuButtonData(label, action, context, params);
-	}
-	
-	static EditorContextMenuButtonData CreateFolder(string label) 
-	{
-		EditorContextMenuButtonData data = new EditorContextMenuButtonData(label, "");
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenuElement.layout");
+		m_Label = TextWidget.Cast(m_Root.FindAnyWidget("ContextMenuLabel"));
+		m_Icon = ImageWidget.Cast(m_Root.FindAnyWidget("ContextMenuIcon"));
+		m_Root.SetHandler(this);
 		
-		data.Type = EditorContextMenuType.FOLDER;
+		m_Label.SetText(label);
+	}
+	
 		
-		return data;
-	}
-	
-	static EditorContextMenuButtonData CreateDivider()
-	{	
-		EditorContextMenuButtonData data = new EditorContextMenuButtonData("", "");
-		data.Type = EditorContextMenuType.DIVIDER;
-		return data;
-	}
-	
-	void AddToFolder(Widget w, EditorContextMenuButtonData data)
+	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		data.Context = this;
-		data.Action = "OnFolderClick";
-		data.Params = new Param1<Widget>(w);
-		float x, y, sizex, sizey;
-		w.GetPos(x, y);
-		w.GetSize(sizex, sizey);
-		w.SetPos(x + sizex, y);
-		w.Show(false);
-		m_ChildrenButtons.Insert(w, data);
+		Print("EditorContextMenuButton::OnClick");
+		
+		if (button != 0) return false;
+		
+		GetGame().GameScript.Call(Context, Action, Params);	
+		
+		return true;
 	}
 	
-	private void OnFolderClick(Widget w)
+	void Show(bool show)
 	{
-		Print("FolderClick");
-		w.Show(true);
+		m_Root.Show(show);
 	}
+
+}
+
+class EditorContextMenuFolder: EditorContextMenuButton
+{
+	private ref array<ref EditorContextMenuButton> m_ChildrenButtons = new array<ref EditorContextMenuButton>();
+	
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		Print("EditorContextMenuFolder::OnMouseEnter");
+		foreach (EditorContextMenuButton button: m_ChildrenButtons) {
+			button.Show(true);
+		}
+		
+		return true;
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		Print("EditorContextMenuFolder::OnMouseLeave");
+		foreach (EditorContextMenuButton button: m_ChildrenButtons) {
+			button.Show(false);
+		}
+		
+		return true;
+	}
+	
+	
+	void AddButton(EditorContextMenuButton button)
+	{
+		float x, y;
+		button.GetRoot().GetPos(x, y);
+		button.GetRoot().SetPos(x + 250, y);
+		
+		m_Root.AddChild(button.GetRoot());
+		m_ChildrenButtons.Insert(button);
+		
+	}
+	
+
+
 }
 
 
@@ -76,7 +94,7 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 	protected ref WrapSpacerWidget m_Root;
 	WrapSpacerWidget GetRoot() { return m_Root; }
 	
-	private ref map<Widget, ref EditorContextMenuButtonData> m_ContextButtons;
+	private ref array<ref EditorContextMenuButton> m_ContextButtons;
 	
 	void EditorContextMenu()
 	{
@@ -85,42 +103,13 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 		m_Root = WrapSpacerWidget.Cast(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout", null));
 		m_Root.Show(true);
 		m_Root.SetHandler(this);
-		m_ContextButtons = new map<Widget, ref EditorContextMenuButtonData>();
+		m_ContextButtons = new array<ref EditorContextMenuButton>();
 	}
 	
-	void AddButton(EditorContextMenuButtonData data)
-	{
-
-		Widget button = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorDropdownElement.layout", m_Root);
-		
-		switch (data.GetType()) {
-			
-			case EditorContextMenuType.DEFAULT: {
-				TextWidget text = TextWidget.Cast(button.FindAnyWidget("ElementText"));
-				text.SetText(data.Label);
-				break;
-			}
-			
-			case EditorContextMenuType.FOLDER: {
-				text = TextWidget.Cast(button.FindAnyWidget("ElementText"));
-				text.SetText(data.Label);
-				break;
-			}
-			
-			case EditorContextMenuType.DIVIDER: {
-				text = TextWidget.Cast(button.FindAnyWidget("ElementDivider"));
-				text.Show(true);
-				break;
-			}
-			
-			
-			
-		}
-		
-
-		
-		button.SetUserData(data);
-		m_ContextButtons.Insert(button, data);
+	void AddButton(EditorContextMenuButton button)
+	{		
+		m_Root.AddChild(button.GetRoot());
+		m_ContextButtons.Insert(button);
 	}
 	
 	void Show()
@@ -155,12 +144,6 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 		if (button != 0) return true;
 		
 
-		EditorContextMenuButtonData data = m_ContextButtons.Get(w);
-		if (data != null) {
-			GetGame().GameScript.Call(data.Context, data.Action, data.Params);
-			Close();
-			return true;
-		}
 				
 		return false;
 	}

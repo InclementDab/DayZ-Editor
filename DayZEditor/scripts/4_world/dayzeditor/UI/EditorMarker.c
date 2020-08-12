@@ -208,10 +208,12 @@ class EditorObjectMarker: UILinkedObject
 		} else if (button == 1) {
 			
 			
-			EditorContextMenu ctx = new EditorContextMenu();
-			
-			ctx.AddButton(EditorContextMenuButtonData.Create("Properties", "OnContextPropertiesClick", this));
-			ctx.Show();
+			EditorContextMenu context_menu = new EditorContextMenu();
+			context_menu.AddButton(new EditorContextMenuButton("Create Folder", "CreatePlacedFolder", this));
+			EditorContextMenuFolder folder = EditorContextMenuFolder("Folder1");
+			folder.AddButton(new EditorContextMenuButton("Test1"));
+			context_menu.AddButton(folder);
+			context_menu.Show();
 			
 		} else return false;
 
