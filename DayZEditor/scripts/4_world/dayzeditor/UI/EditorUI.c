@@ -467,6 +467,13 @@ class EditorUI: UIScriptedMenu
 	{
 		EditorPrint("EditorUI::OnMouseButtonDown");
 		
+		
+		if (EditorUIManager.IsContextMenuActive()) {
+			EditorContextMenu menu = EditorUIManager.GetContextMenu();
+			if (menu.GetRoot() != w)
+				menu.Close();
+		}
+		
 		Input input = GetGame().GetInput();	
 		// Left Click
 		if (button == 0) {
@@ -525,13 +532,24 @@ class EditorUI: UIScriptedMenu
 		
 		// Right mouse
 		if (button == 1) {
+			// temp
 			if (w.GetName() == "RightbarScroll") {
 				
 				EditorCollapsibleListItem t = new EditorCollapsibleListItem();
 				test_objects.Insert(t);
 				InsertPlacedObject(t);
 				
+			} else {
+
+				EditorContextMenu ctx = new EditorContextMenu();
+				ctx.AddButton("REEEEE1");
+				ctx.AddButton("REEEEE2");
+				
+				ctx.Show();
 			}
+			
+			
+			
 			return true;
 		}
 		

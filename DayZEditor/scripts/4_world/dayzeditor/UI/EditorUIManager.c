@@ -43,6 +43,8 @@ class EditorUIManager: Managed // remove meeeee
 		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false));
 		m_EditorCamera.SetActive(true);
 		
+
+		
 		// Init Camera Map Marker
 		EditorCameraMapMarker CameraMapMarker = new EditorCameraMapMarker();
 		Widget m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorCameraMapMarker.layout");
@@ -65,6 +67,8 @@ class EditorUIManager: Managed // remove meeeee
 		// Subscribe to events (and twitch.tv/InclementDab)
 		//EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);		
 		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);	
+		
+		
 		
 		// Sets default
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
@@ -225,19 +229,19 @@ class EditorUIManager: Managed // remove meeeee
 	
 
 	// Modal Window Control
-	private static ref EditorDialog m_CurrentModal;
-	static void ModalSet(EditorDialog w)
+	private static ref Widget m_CurrentModal;
+	static void ModalSet(Widget w)
 	{
 		Print("ModalSet");
 		m_CurrentModal = w;
-		SetModal(m_CurrentModal.GetRoot());
+		SetModal(m_CurrentModal);
 		ShowCursor();
 	}
 	
 	static void ModalClose()
 	{
 		Print("ModalClose");
-		m_CurrentModal.GetRoot().Unlink();
+		m_CurrentModal.Unlink();
 		m_CurrentModal = null;
 		ShowCursor();
 	}
@@ -248,5 +252,26 @@ class EditorUIManager: Managed // remove meeeee
 	}
 	
 	
+	// Context Menu Control
+	private static ref EditorContextMenu m_ContextMenu = null;
+	static void ContextSet(EditorContextMenu context)
+	{
+		EditorPrint("EditorUIManager::ContextSet", LogSeverity.DEBUG);
+		m_ContextMenu = context;
+		ShowCursor();
+	}
+	
+	static void ContextClose()
+	{
+		EditorPrint("EditorUIManager::ContextClose", LogSeverity.DEBUG);
+		m_ContextMenu.GetRoot().Unlink();
+		m_ContextMenu = null;
+		ShowCursor();
+	}
+	
+	static ref EditorContextMenu GetContextMenu() { return m_ContextMenu; }
+	
+	static bool IsContextMenuActive() { return m_ContextMenu != null; }
 	
 }
+

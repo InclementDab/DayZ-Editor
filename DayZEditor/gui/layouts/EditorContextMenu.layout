@@ -1,52 +1,14 @@
-FrameWidgetClass ContextMenuFrame {
+WrapSpacerWidgetClass EditorContextMenu {
+ clipchildren 0
+ color 0.1373 0.1373 0.1373 0.3922
  position 0 0
- size 250 350
+ size 0.2 30
  hexactpos 1
  vexactpos 1
- hexactsize 1
+ hexactsize 0
  vexactsize 1
- scriptclass "EditorContextMenu"
- {
-  PanelWidgetClass ContextMenuPanel {
-   ignorepointer 1
-   position 0 0
-   size 1 1
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   style rover_sim_blackbox
-   {
-    WrapSpacerWidgetClass ContextMenuSpacer {
-     ignorepointer 1
-     position 0 0
-     size 1 1
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     Padding 0
-     Margin 0
-     {
-      ButtonWidgetClass SetTargetButton {
-       size 1 25
-       halign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       text "Set Target"
-       text_offset 10 0
-       text_halign left
-       font "gui/fonts/metron"
-      }
-     }
-    }
-   }
-  }
- }
+ style Colorable
+ "no focus" 1
+ "Size To Content V" 1
+ content_halign center
 }
