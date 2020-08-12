@@ -211,7 +211,8 @@ class EditorObjectMarker: UILinkedObject
 			EditorContextMenu context_menu = new EditorContextMenu();
 			context_menu.AddButton(new EditorContextMenuButton("Create Folder", "CreatePlacedFolder", this));
 			EditorContextMenuFolder folder = EditorContextMenuFolder("Folder1");
-			folder.AddButton(new EditorContextMenuButton("Test1"));
+			EditorContextMenuButton testbutton = new EditorContextMenuButton("Test1", "OnContextPropertiesClick", this);
+			folder.AddButton(testbutton);
 			context_menu.AddButton(folder);
 			context_menu.Show();
 			
@@ -223,7 +224,7 @@ class EditorObjectMarker: UILinkedObject
 	
 	void OnContextPropertiesClick()
 	{
-		Print("WEEE");
+		GetEditor().GetObjectManager().DeleteObject(m_EditorObject);
 	}
 
 	

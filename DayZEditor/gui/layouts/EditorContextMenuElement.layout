@@ -46,5 +46,18 @@ FrameWidgetClass ContextMenuFrame {
     }
    }
   }
+  WrapSpacerWidgetClass ContextMenuChildren {
+   ignorepointer 1
+   position 250 0
+   size 250 0
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+  }
  }
 }

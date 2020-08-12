@@ -49,13 +49,23 @@ class EditorContextMenuFolder: EditorContextMenuButton
 {
 	private ref array<ref EditorContextMenuButton> m_ChildrenButtons = new array<ref EditorContextMenuButton>();
 	
+	protected WrapSpacerWidget m_ContextMenuChildren;
+	
+	void EditorContextMenuFolder(string label, string action = "", Class context = this, Param params = null)
+	{
+		EditorPrint("EditorContextMenuFolder");
+		
+		m_ContextMenuChildren = WrapSpacerWidget.Cast(m_Root.FindAnyWidget("ContextMenuChildren"));
+		
+				
+	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		Print("EditorContextMenuFolder::OnMouseEnter");
-		foreach (EditorContextMenuButton button: m_ChildrenButtons) {
+		foreach (EditorContextMenuButton button: m_ChildrenButtons)
 			button.Show(true);
-		}
+		
 		
 		return true;
 	}
@@ -63,23 +73,18 @@ class EditorContextMenuFolder: EditorContextMenuButton
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		Print("EditorContextMenuFolder::OnMouseLeave");
-		foreach (EditorContextMenuButton button: m_ChildrenButtons) {
+		foreach (EditorContextMenuButton button: m_ChildrenButtons)
 			button.Show(false);
-		}
+		
 		
 		return true;
 	}
 	
 	
 	void AddButton(EditorContextMenuButton button)
-	{
-		float x, y;
-		button.GetRoot().GetPos(x, y);
-		button.GetRoot().SetPos(x + 250, y);
-		
-		m_Root.AddChild(button.GetRoot());
+	{		
+		m_ContextMenuChildren.AddChild(button.GetRoot());
 		m_ChildrenButtons.Insert(button);
-		
 	}
 	
 
@@ -87,6 +92,12 @@ class EditorContextMenuFolder: EditorContextMenuButton
 }
 
 
+enum EditorContextMenuDirection
+{
+	LEFT = -1,
+	RIGHT = 1,
+	AUTO = 0
+};
 
 class EditorContextMenu: ScriptedWidgetEventHandler
 {
@@ -112,10 +123,18 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 		m_ContextButtons.Insert(button);
 	}
 	
-	void Show()
+
+	void Show(int x = -1, int y = -1, EditorContextMenuDirection direction = EditorContextMenuDirection.AUTO)
 	{	
 		m_Root.Show(true);
 		
+		int cursor_x, cursor_y;
+		
+		GetCursorPos(cursor_x, cursor_y);
+		if (x < 0) x = cursor_x;
+		if (y < 0) y = cursor_y;
+		
+		/*
 		float height, width;
 		int cursor_x, cursor_y, screen_x, screen_y;
 		GetCursorPos(cursor_x, cursor_y);
@@ -126,8 +145,8 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 		
 		cursor_x = Math.Clamp(cursor_x, 0, screen_x - width);
 		cursor_y = Math.Clamp(cursor_y, 0, screen_y - height);
-		
-		m_Root.SetPos(cursor_x, cursor_y);
+		*/
+		m_Root.SetPos(x, y);
 		
 		EditorUIManager.ContextSet(this);
 	}
