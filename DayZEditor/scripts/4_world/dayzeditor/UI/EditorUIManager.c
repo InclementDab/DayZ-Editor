@@ -252,11 +252,13 @@ class EditorUIManager: Managed // remove meeeee
 	}
 	
 	
-	// Context Menu Control
+	// Context Menu Control2
 	private ref EditorContextMenu m_ContextMenu = null;
 	void ContextSet(EditorContextMenu context)
 	{
 		EditorPrint("EditorUIManager::ContextSet", LogSeverity.DEBUG);
+		if (m_ContextMenu != null)
+			m_ContextMenu.GetRoot().Unlink();
 		m_EditorCamera.SetLookEnabled(false);
 		m_ContextMenu = context;
 		ShowCursor();

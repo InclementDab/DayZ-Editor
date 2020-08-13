@@ -20,10 +20,10 @@ class EditorContextMenuButton: ScriptedWidgetEventHandler
 	void EditorContextMenuButton(string label, string action = "", Class context = this, Param params = null)
 	{
 		Label = label; Action = action; Context = context; Params = params;
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenuElement.layout");
-		m_Button = ButtonWidget.Cast(m_Root.FindAnyWidget("ContextMenuButton"));
-		m_Label = TextWidget.Cast(m_Root.FindAnyWidget("ContextMenuLabel"));
-		m_Icon = ImageWidget.Cast(m_Root.FindAnyWidget("ContextMenuIcon"));
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/context/EditorContextElement.layout");
+		m_Button = ButtonWidget.Cast(m_Root.FindAnyWidget("EditorContextElementButton"));
+		m_Label = TextWidget.Cast(m_Root.FindAnyWidget("EditorContextElementLabel"));
+		m_Icon = ImageWidget.Cast(m_Root.FindAnyWidget("EditorContextElementIcon"));
 		m_Root.SetHandler(this);
 		
 		m_Label.SetText(label);
@@ -134,7 +134,7 @@ class EditorContextMenu: ScriptedWidgetEventHandler
 	{
 		EditorPrint("EditorContextMenu");
 		
-		m_Root = WrapSpacerWidget.Cast(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout", null));
+		m_Root = WrapSpacerWidget.Cast(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/context/EditorContextMenu.layout", null));
 		m_Root.Show(true);
 		m_Root.SetHandler(this);
 		m_ContextButtons = new array<ref EditorContextMenuButton>();

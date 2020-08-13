@@ -568,14 +568,14 @@ class EditorUI: UIScriptedMenu
 		EditorPrint("EditorUI::OnMouseButtonUp");
 		
 		if (button == 1) {
-			if (m_Timer.GetTime() < 0.1) {
+			if (m_Timer.GetTime() < 0.2) {
 				EditorObjectContextMenu object_context_menu = new EditorObjectContextMenu();
 				object_context_menu.Show();
 			}
 		}
 		
 		m_Timer.Stop();
-		return true;
+		return false;
 	}
 		
 	ScriptInvoker DragBoxQueue = GetGame().GetUpdateQueue(CALL_CATEGORY_GUI);

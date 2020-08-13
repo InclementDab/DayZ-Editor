@@ -4,6 +4,8 @@ class EditorObjectContextMenu: EditorContextMenu
 	protected ref EditorContextMenuButton m_CopyButton;
 	protected ref EditorContextMenuButton m_PasteButton;
 	
+	protected ref EditorContextMenuFolder m_FolderTest;
+	
 	private EditorObjectManager m_ObjectManager;
 	
 	void EditorObjectContextMenu()
@@ -23,5 +25,9 @@ class EditorObjectContextMenu: EditorContextMenu
 		AddButton(m_PasteButton);
 		
 		AddButton(new EditorContextMenuDivider(""));
+		
+		m_FolderTest = new EditorContextMenuFolder("Folder1");
+		m_FolderTest.AddButton(new EditorContextMenuButton("Option1"));
+		AddButton(m_FolderTest);
 	}
 }
