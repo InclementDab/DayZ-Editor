@@ -17,6 +17,8 @@ class EditorUI: UIScriptedMenu
 	private ref Widget m_Root;
 	Widget GetRoot() { return m_Root; }
 	
+	private ref Timer m_Timer = new Timer();
+	
 	// UIManager
 	// Maybe use EditorUIViewModel
 	private ref EditorUIManager m_UIManager;
@@ -539,13 +541,8 @@ class EditorUI: UIScriptedMenu
 				context_menu.Show();
 
 			} else {
-
-				EditorObjectContextMenu object_context_menu = new EditorObjectContextMenu();
-				object_context_menu.Show();
-				return true;
+				m_Timer.Continue();
 			}	
-			
-			
 			
 			return true;
 		}
@@ -565,8 +562,21 @@ class EditorUI: UIScriptedMenu
 				
 		return false;
 	}
+	
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{
+		EditorPrint("EditorUI::OnMouseButtonUp");
 		
-
+		if (button == 1) {
+			if (m_Timer.GetTime() < 0.1) {
+				EditorObjectContextMenu object_context_menu = new EditorObjectContextMenu();
+				object_context_menu.Show();
+			}
+		}
+		
+		m_Timer.Stop();
+		return true;
+	}
 		
 	ScriptInvoker DragBoxQueue = GetGame().GetUpdateQueue(CALL_CATEGORY_GUI);
 	int start_x, start_y;

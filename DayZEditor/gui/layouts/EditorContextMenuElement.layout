@@ -36,6 +36,7 @@ FrameWidgetClass ContextMenuFrame {
      "text valign" center
     }
     ImageWidgetClass ContextMenuIcon {
+     visible 0
      clipchildren 0
      ignorepointer 1
      position 5 0
@@ -45,6 +46,8 @@ FrameWidgetClass ContextMenuFrame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     mode blend
+     "src alpha" 1
     }
    }
   }
