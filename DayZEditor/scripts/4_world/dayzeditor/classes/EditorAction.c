@@ -20,10 +20,10 @@ class EditorAction
 	
 	void ~EditorAction()
 	{
-		Print("~EditorAction");
+		EditorLog.Trace("~EditorAction");
 		
 		foreach (int i, ref Param p: UndoParameters)
-			GetEditor().GetObjectManager().DeleteSessionData(i);
+			GetEditor().DeleteSessionData(i);
 		
 	}
 	
@@ -32,7 +32,7 @@ class EditorAction
 	
 	void CallUndo()
 	{
-		EditorPrint("EditorAction::CallUndo");		
+		EditorLog.Trace("EditorAction::CallUndo");		
 		undone = true;
 		foreach (int id, ref Param param: UndoParameters) {			
 			GetGame().GameScript.Call(this, m_UndoAction, param);
@@ -41,7 +41,7 @@ class EditorAction
 	
 	void CallRedo()
 	{
-		EditorPrint("EditorAction::CallRedo");
+		EditorLog.Trace("EditorAction::CallRedo");
 		undone = false;
 		foreach (int id, ref Param param: RedoParameters) {
 			GetGame().GameScript.Call(this, m_RedoAction, param);
@@ -51,39 +51,39 @@ class EditorAction
 	
 	void InsertUndoParameter(EditorObject source, ref Param params)
 	{
-		EditorPrint("InsertUndoParameter");
+		EditorLog.Trace("InsertUndoParameter");
 		UndoParameters.Insert(source.GetID(), params);
 	}	
 	
 	void InsertRedoParameter(EditorObject source, ref Param params)
 	{
-		EditorPrint("InsertRedoParameter");
+		EditorLog.Trace("InsertRedoParameter");
 		RedoParameters.Insert(source.GetID(), params);
 	}
 	
 	
 	void Create(Param1<int> params)
 	{
-		EditorPrint("EditorAction::Create");
+		EditorLog.Trace("EditorAction::Create");
 		Sleep(10);
-		EditorObjectData data = GetEditor().GetObjectManager().GetSessionDataById(params.param1);
-		GetEditor().GetObjectManager().CreateObject(data, false);
+		EditorObjectData data = GetEditor().GetSessionDataById(params.param1);
+		GetEditor().CreateObject(data, false);
 	}
 	
 	void Delete(Param1<int> params)
 	{
-		EditorPrint("EditorAction::Delete");
+		EditorLog.Trace("EditorAction::Delete");
 		Sleep(10);
-		EditorObject editor_object = GetEditor().GetObjectManager().GetPlacedObjectById(params.param1);
-		GetEditor().GetObjectManager().DeleteObject(editor_object, false);
+		EditorObject editor_object = GetEditor().GetPlacedObjectById(params.param1);
+		GetEditor().DeleteObject(editor_object, false);
 	}
 	
 	
 	void SetTransform(Param3<int, vector, vector> params)
 	{
-		EditorPrint("EditorObject::SetTransform");
+		EditorLog.Trace("EditorObject::SetTransform");
 		Sleep(10);
-		EditorObject editor_object = GetEditor().GetObjectManager().GetPlacedObjectById(params.param1);
+		EditorObject editor_object = GetEditor().GetPlacedObjectById(params.param1);
 		editor_object.SetPosition(params.param2);
 		editor_object.SetOrientation(params.param3);
 		editor_object.Update();

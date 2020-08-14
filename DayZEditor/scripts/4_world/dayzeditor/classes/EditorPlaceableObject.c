@@ -50,7 +50,7 @@ class EditorPlaceableObjectData
 		
 		
 		// probably really slow
-		m_ModStructure = Editor.GetModFromObject(Type);
+		m_ModStructure = EditorClientModule.GetModFromObject(Type);
 		
 		TStringArray path_array = new TStringArray();
 		GetGame().ConfigGetFullPath(Path + " " + Type, path_array);

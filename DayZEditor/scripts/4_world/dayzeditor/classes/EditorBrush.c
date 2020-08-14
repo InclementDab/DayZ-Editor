@@ -43,28 +43,26 @@ class EditorBrush
 	
 	// Private members
 	private vector m_LastMousePosition;
-	
-	protected EditorObjectManager m_ObjectManager;
+
 	
 	void EditorBrush(EditorBrushSettings settings)
 	{
-		EditorPrint("EditorBrush");
+		EditorLog.Trace("EditorBrush");
 		m_BrushSettings = settings;
-		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
-		m_ObjectManager = GetEditor().GetObjectManager();		
+		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);	
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
 	
 	void ~EditorBrush()
 	{
-		EditorPrint("~EditorBrush");
+		EditorLog.Trace("~EditorBrush");
 		GetGame().ObjectDelete(m_BrushDecal);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(UpdateBrush);
 	}
 	
 	void SetBrushTexture(string texture)
 	{
-		EditorPrint("EditorBrush::SetBrushTexture " + texture);
+		EditorLog.Trace("EditorBrush::SetBrushTexture " + texture);
 		m_BrushDecal.SetObjectTexture(0, texture);
 		m_BrushDecal.Update();
 	}
@@ -89,7 +87,7 @@ class EditorBrush
 		
 		m_BrushDecal.SetTransform(transform);
 		
-		if (GetEditor().GetUIManager().IsCursorOverUI()) return;
+		//if (GetEditor().GetUIManager().IsCursorOverUI()) return;
 		/*
 		if (input.LocalPress("UAFire")) {
 			
@@ -140,7 +138,7 @@ class EditorBrush
 			
 		}
 		
-		m_ObjectManager.CreateObjects(data_set);
+		GetEditor().CreateObjects(data_set);
 		
 	}
 	
@@ -158,7 +156,7 @@ class DeleteBrush: EditorBrush
 	
 	void DeleteBrush(EditorBrushSettings settings)
 	{
-		EditorPrint("DeleteBrush");
+		EditorLog.Trace("DeleteBrush");
 		SetBrushTexture("DayZEditor\\Editor\\data\\BrushDelete.paa");
 	}
 	
@@ -169,22 +167,19 @@ class DeleteBrush: EditorBrush
 		int component;
 		set<Object> results = new set<Object>();
 		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, EditorBrush.GetRadius() / 2, CollisionFlags.ALLOBJECTS);
-		EditorEvents.ClearSelection(this);
+		GetEditor().ClearSelection();
 		
 		// todo this is deleting one at a time. use DeleteObjects smile :)
 		foreach (Object r: results) {
 					
-			EditorObject eo = m_ObjectManager.GetPlacedObjectById(r.GetID());
+			EditorObject eo = GetEditor().GetPlacedObjectById(r.GetID());
 			if (eo != null) {
-				m_ObjectManager.DeleteObject(eo);
+				GetEditor().DeleteObject(eo);
 				
 			} else {
 				GetGame().ObjectDelete(r);
 			}
 		}
-		
-		
-		
 		
 		
 		

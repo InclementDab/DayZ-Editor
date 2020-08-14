@@ -1,8 +1,4 @@
 
-
-
-
-
 // make it so you can search for items by mod name with @ModNameHere
 
 enum EditorCursor
@@ -17,9 +13,6 @@ class EditorUI: UIScriptedMenu
 	private ref Widget m_Root;
 	Widget GetRoot() { return m_Root; }
 	
-	// UIManager
-	// Maybe use EditorUIViewModel
-	private ref EditorUIManager m_UIManager;
 	
 	// Canvas
 	protected ref CanvasWidget m_EditorCanvas;
@@ -99,9 +92,7 @@ class EditorUI: UIScriptedMenu
 	TextWidget 			m_DebugText6;
 	TextListboxWidget 	m_DebugActionStack;
 	
-	
-	private ref EditorUIHandler m_EditorUIHandler;
-	EditorUIHandler GetHandler() { return m_EditorUIHandler; }
+
 	
 	// Private members
 	private bool left_bar_hidden = false;
@@ -241,10 +232,9 @@ class EditorUI: UIScriptedMenu
 		
 		// Info toolbar widgets
 		m_ObjPosInfoPanel = m_Root.FindAnyWidget("InfobarObjPosFrame");
-		array< EditorView > views = EditorView.GetUIProperties(m_ObjPosInfoPanel, this);
+		array<EditorView> views = EditorView.GetUIProperties(m_ObjPosInfoPanel, this);
 		Print( "EditorView count:" + views.Count() );
-		for (int index = 0; index < views.Count(); ++index)
-		{
+		for (int index = 0; index < views.Count(); ++index) {
 			Print( "index:" + index );
 			views[index].DebugPrint();
 		}
@@ -261,6 +251,10 @@ class EditorUI: UIScriptedMenu
 		return m_Root;
 	}
 	
+	void Show(bool state)
+	{
+		m_Root.Show(state);
+	}
 	
 	
 	override void Update(float timeslice)
@@ -888,29 +882,5 @@ class EditorUI: UIScriptedMenu
 	void ShowObjPosInfoPanel(bool state)
 	{
 		m_ObjPosInfoPanel.Show(state);
-	}
-}
-
-class EditorUIHandler: EditorWidgetEventHandler
-{	
-	
-	void EditorUIHandler()
-	{
-		Print("EditorUIHandler");
-	}
-	
-	void ~EditorUIHandler()
-	{
-		Print("~EditorUIHandler");
-	}
-		
-	
-	override bool OnModalResult(Widget w, int x, int y, int code, int result)
-	{
-		Print("EditorUIHandler::OnModalResult");
-		Print(code);
-		Print(result);
-		
-		return true;
 	}
 }

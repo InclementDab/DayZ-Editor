@@ -31,15 +31,7 @@ class Editor: Managed
 	private ref EditorUIManager 			m_EditorUIManager;
 	private ref EditorSettings				m_EditorSettings;
 	
-	private ref EditorBrush					m_EditorBrush;
-	private ref EditorBrushSettingsSet 		m_EditorBrushTypes;
-	private ref map<string, typename> 		m_CustomBrushList = new map<string, typename>();
-	
-	private ref EditorHologram 				ObjectInHand;
-	static Object							ObjectUnderCursor = null;
-	static EditorObject 					EditorObjectUnderCursor = null;
-	
-	static vector 							CurrentMousePosition;
+
 	static bool 							IsDragging = false;
 	static bool 							PlayerActive = false;
 	static PlayerBase						EditorPlayer;
@@ -54,8 +46,7 @@ class Editor: Managed
 	ref EditorUIManager GetUIManager() { return m_EditorUIManager; }
 	ref EditorSettings GetSettings() { return m_EditorSettings; }
 	ref EditorBrush GetEditorBrush() { return m_EditorBrush; }
-	
-	bool IsPlacing() { return ObjectInHand != null; }
+
 	TranslationWidget GetTranslationWidget() { return GetEditor().GlobalTranslationWidget; }
 
 	void Editor()
@@ -75,7 +66,6 @@ class Editor: Managed
 				
 		// Character Creation
 		EditorPlayer = CreateDefaultCharacter();
-		
 		
 		
 		// Load Brushes
@@ -106,26 +96,7 @@ class Editor: Managed
 	bool exit_condition = false;
 	void Update() 
 	{
-		set<Object> obj = new set<Object>();
-		int x, y;
-		GetCursorPos(x, y);
-		CurrentMousePosition = MousePosToRay(obj);
-		
-	
-		if (!IsPlacing()) {
-			Object target = obj.Get(0);
-			if (target != null) {
-				if (target != ObjectUnderCursor) {
-					if (ObjectUnderCursor != null) OnMouseExitObject(ObjectUnderCursor, x, y);
-					OnMouseEnterObject(target, x, y);
-					ObjectUnderCursor = target;
-				}
-				
-			} else if (ObjectUnderCursor != null) {
-				exit_condition = OnMouseExitObject(ObjectUnderCursor, x, y);
-				ObjectUnderCursor = null;
-			}
-		}
+
 		
 
 		
@@ -178,29 +149,7 @@ class Editor: Managed
 		delete ObjectInHand;
 	}
 	
-	bool OnMouseEnterObject(Object target, int x, int y)
-	{
-		//Print("Editor::OnMouseEnterObject");
-		/*
-		EditorObjectUnderCursor = GetObjectManager().GetEditorObject(target);
-		if (EditorObjectUnderCursor != null)
-			return EditorObjectUnderCursor.OnMouseEnter(x, y);
-	
-	
-		return true;
-		*/
-	}
-	
-	bool OnMouseExitObject(Object target, int x, int y)
-	{
-		/*
-		if (EditorObjectUnderCursor != null)
-			EditorObjectUnderCursor.OnMouseLeave(x, y);
-		EditorObjectUnderCursor = null;
-		
-		return true;
-		*/
-	}
+
 	
 	
 	private Object m_LootEditTarget;

@@ -168,7 +168,7 @@ class EditorFileManager
 	{
 
 		if (FileExist(file)) {
-			GetEditor().GetUIManager().GetEditorUI().CreateDialog();			
+			GetEditor().GetEditorUI().CreateDialog();			
 		}
 		
 		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(file, data);
@@ -257,7 +257,7 @@ class EditorFileManager
 			}
 			
 			default: {
-				EditorPrint("ExportMode not supported! " + export_settings.ExportFileMode);
+				EditorLog.Error("ExportMode not supported! " + export_settings.ExportFileMode);
 				return FileDialogResult.NOT_SUPPORTED;
 			}
 		}

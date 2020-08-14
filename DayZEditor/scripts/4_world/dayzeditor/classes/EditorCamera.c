@@ -176,11 +176,12 @@ class EditorCamera: Camera
 		if (IsTargeting) {
 			LookAt(TargetPosition);
 		}
-		/*
+		
 		ScriptRPC rpc = new ScriptRPC();
 		rpc.Write(GetPosition());
 		rpc.Write(GetOrientation());
-		rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_UPDATE, true);*/
+		rpc.Write(timeSlice);
+		rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_UPDATE, true);
 	}
 
 

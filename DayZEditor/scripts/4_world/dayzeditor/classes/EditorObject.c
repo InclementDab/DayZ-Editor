@@ -1,4 +1,25 @@
 
+
+class EditorObjectSet: map<int, ref EditorObject>
+{
+	
+	void ~EditorObjectSet()
+	{
+		EditorLog.Trace("~EditorObjectSet");
+		GetEditor().DeleteObjects(this);
+	}
+	
+	bool InsertEditorObject(EditorObject target)
+	{
+		return Insert(target.GetID(), target);
+	}
+	
+	void RemoveEditorObject(EditorObject target)
+	{
+		Remove(target.GetID());
+	}
+}
+
 class EditorObject
 {
 	private ref EditorObjectData m_Data;
@@ -16,10 +37,9 @@ class EditorObject
 	protected Widget 		m_EditorObjectPropertiesWidget;
 	protected Widget 		m_EditorObjectContextWidget;
 	
-	ref EditorObjectMarker 			m_EditorObjectMarker = null;
-	ref EditorMapMarker				m_EditorMapMarker = null;
-	
+	private ref EditorMapMarker				m_EditorMapMarker;
 	private ref EditorPlacedListItem 		m_PlacedListItem;
+	private ref EditorObjectMarker			m_EditorObjectMarker;
 	
 	EntityAI 				m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
@@ -38,7 +58,7 @@ class EditorObject
 	
 	void EditorObject(ref EditorObjectData data)
 	{
-		EditorPrint("EditorObject");
+		EditorLog.Trace("EditorObject");
 		m_Data = data;
 		
 		OnObjectSelected = new ScriptInvoker();
@@ -53,7 +73,7 @@ class EditorObject
 		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
 		Update();
 		
-		m_ModStructure = Editor.GetModFromObject(m_Data.Type);
+		m_ModStructure = EditorClientModule.GetModFromObject(m_Data.Type);
 		
 		// Bounding Box
 		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
@@ -66,7 +86,7 @@ class EditorObject
 			m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
 			m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 			m_EditorMapMarker.SetObject(this);
-			GetEditor().GetUIManager().GetEditorUI().InsertMapObject(m_EditorMapMarkerWidget);
+			GetEditor().GetEditorUI().InsertMapObject(m_EditorMapMarkerWidget);
 		}	
 		
 		// World Object base marker
@@ -80,7 +100,7 @@ class EditorObject
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
 			m_PlacedListItem = new EditorPlacedListItem(this);
-			GetEditor().GetUIManager().GetEditorUI().InsertPlacedObject(m_PlacedListItem);
+			GetEditor().GetEditorUI().InsertPlacedObject(m_PlacedListItem);
 		}
 		
 		
@@ -89,7 +109,7 @@ class EditorObject
 	
 	void ~EditorObject()
 	{
-		EditorPrint("~EditorObject");
+		EditorLog.Trace("~EditorObject");
 		m_Data.Position = GetPosition();
 		m_Data.Orientation = GetOrientation();
 		
@@ -131,7 +151,7 @@ class EditorObject
 	void OnSelected()
 	{
 		if (m_IsSelected) return;
-		EditorPrint("EditorObject::OnSelected");
+		EditorLog.Trace("EditorObject::OnSelected");
 		m_IsSelected = true;
 		ShowBoundingBox();
 		OnObjectSelected.Invoke(this);
@@ -140,7 +160,7 @@ class EditorObject
 	void OnDeselected()
 	{
 		if (!m_IsSelected) return;
-		EditorPrint("EditorObject::OnDeselected");
+		EditorLog.Trace("EditorObject::OnDeselected");
 		m_IsSelected = false;
 		HideBoundingBox();
 		OnObjectDeselected.Invoke(this);
@@ -208,7 +228,7 @@ class EditorObject
 	vector line_centers[12]; vector line_verticies[8];
 	void CreateBoundingBox()
 	{
-		EditorPrint("EditorObject::CreateBoundingBox");
+		EditorLog.Trace("EditorObject::CreateBoundingBox");
 		
 		vector size = GetSize();
 			
@@ -332,7 +352,7 @@ class EditorObject
 			vector current_pos = GetPosition();
 			float snap_radius = 5;
 
-			foreach (EditorObject editor_object: GetEditor().GetObjectManager().GetPlacedObjects()) {
+			foreach (EditorObject editor_object: GetEditor().GetPlacedObjects()) {
 				if (editor_object == this) continue;
 				
 				vector size = editor_object.GetSize();
@@ -366,7 +386,7 @@ class EditorObject
 	{
 		if (!BoundingBoxEnabled()) return;
 		if (BoundingBoxVisible) return;
-		EditorPrint("EditorObject::ShowBoundingBox");
+		EditorLog.Trace("EditorObject::ShowBoundingBox");
 		BoundingBoxVisible = true;
 		for (int i = 0; i < 12; i++) {
 			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(1,1,0,1,co)");
@@ -381,7 +401,7 @@ class EditorObject
 	{
 		if (!BoundingBoxEnabled()) return;
 		if (!BoundingBoxVisible) return;
-		EditorPrint("EditorObject::HideBoundingBox");
+		EditorLog.Trace("EditorObject::HideBoundingBox");
 		BoundingBoxVisible = false;
 		for (int i = 0; i < 12; i++) {
 			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "");

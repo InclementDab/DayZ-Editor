@@ -43,7 +43,7 @@ class EditorSettings
 	void SetPlaceableObjectCategory(PlaceableObjectCategory category) 
 	{ 
 		m_PlaceableObjectCategory = category;
-		EditorEvents.PlaceableCategoryChangedInvoke(this, category);
+		//EditorEvents.PlaceableCategoryChangedInvoke(this, category);
 	}
 	
 }

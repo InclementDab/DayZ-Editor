@@ -182,14 +182,14 @@ class EditorView extends ScriptedWidgetEventHandler
 		return view;
 	}
 	
-	static ref array< EditorView > GetUIProperties(Widget root, Managed model)
+	static ref array<EditorView> GetUIProperties(Widget root, Managed model)
 	{
-		ref array< EditorView > views = new array< EditorView >();
+		ref array<EditorView> views = new array<EditorView>();
 		_GetUIProperties(root, model, views);
 		return views;
 	}
 	
-	private static void _GetUIProperties(Widget root, Managed model, inout array< EditorView > views)
+	private static void _GetUIProperties(Widget root, Managed model, inout array<EditorView> views)
 	{
 		EditorView view;
 		root.GetScript(view);

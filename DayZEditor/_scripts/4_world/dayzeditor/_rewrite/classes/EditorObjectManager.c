@@ -1,40 +1,15 @@
 
-class EditorObjectSet: map<int, ref EditorObject>
-{
-	
-	void ~EditorObjectSet()
-	{
-		EditorPrint("~EditorObjectSet", LogSeverity.DEBUG);
-		GetEditor().GetObjectManager().DeleteObjects(this);
-	}
-	
-	bool InsertEditorObject(EditorObject target)
-	{
-		return Insert(target.GetID(), target);
-	}
-	
-	void RemoveEditorObject(EditorObject target)
-	{
-		Remove(target.GetID());
-	}
-	
-}
+
 
 
 class EditorObjectManager
 {
 	
-	private ref EditorObjectSet 				m_PlacedObjects;
-	private ref EditorObjectSet					m_SelectedObjects;
-	private ref EditorObjectDataSet			 	m_SessionCache;
-	private ref set<ref EditorAction> 			m_ActionStack;
+
 	
 	
 	// Getters
-	ref set<ref EditorAction> GetActionStack() { return m_ActionStack; }
-	ref EditorObjectSet GetSelectedObjects() { return m_SelectedObjects; }
-	ref EditorObjectSet GetPlacedObjects() { return m_PlacedObjects; }
-	ref EditorObjectDataSet	 GetSessionCache() { return m_SessionCache; }
+
 	
 	void EditorObjectManager() 
 	{ 
@@ -46,8 +21,6 @@ class EditorObjectManager
 		
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
-		EditorEvents.OnSelectionCleared.Insert(OnSelectionCleared);
-		
 		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
 		EditorEvents.OnObjectDeleted.Insert(OnObjectDeleted);
 		
@@ -86,48 +59,7 @@ class EditorObjectManager
 	}
 	
 	
-	void CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
-	{
-		EditorPrint("EditorObjectManager::CreateObjects");
-		
 
-		EditorAction action = new EditorAction("Delete", "Create");
-		
-		foreach (EditorObjectData editor_object_data: data_list) {
-			
-			EditorObject editor_object = new EditorObject(editor_object_data);
-			
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			
-			
-			EditorEvents.ObjectCreateInvoke(this, editor_object);
-		}
-		
-		if (create_undo) {
-			InsertAction(action);
-		} else {
-			delete action;
-		}
-	}
-	
-	
-	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true)
-	{		
-		EditorPrint("EditorObjectManager::CreateObject");
-		
-		
-		EditorObject editor_object = new EditorObject(editor_object_data);
-	
-		if (create_undo) {
-			EditorAction action = new EditorAction("Delete", "Create");;
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			InsertAction(action);
-		}
-		EditorEvents.ObjectCreateInvoke(this, editor_object);
-		return editor_object;
-	}
 	
 	private void SetupObject(EditorObject target)
 	{
@@ -145,51 +77,11 @@ class EditorObjectManager
 	
 	
 	
-	void DeleteObject(EditorObject target, bool create_undo = true)
-	{
-		EditorPrint("EditorObjectManager::DeleteObject");
-		EditorEvents.ObjectDeleteInvoke(this, target);
-		
-		if (create_undo) {
-			EditorAction action = new EditorAction("Create", "Delete");
-			action.InsertUndoParameter(target, new Param1<int>(target.GetID()));
-			action.InsertRedoParameter(target, new Param1<int>(target.GetID()));
-			InsertAction(action);
-		}
-		
-		delete target;
-	}
 	
-	void DeleteObjects(EditorObjectSet target, bool create_undo = true)
-	{
-		EditorPrint("EditorObjectManager::DeleteObjects");
-		
-		if (create_undo) EditorAction action = new EditorAction("Create", "Delete");
-		
-		foreach (EditorObject editor_object: target) {
-			EditorEvents.ObjectDeleteInvoke(this, editor_object);
-			
-			if (create_undo) {
-				action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-				action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			}
-			
-			delete editor_object;
-		}	
-			
-		if (create_undo) InsertAction(action);
-	}
 		
 		
 
-	
-	void OnSelectionCleared(Class context)
-	{
-		Print("EditorObjectManager::ClearSelections");		
-		foreach (EditorObject editor_object: m_SelectedObjects)
-			EditorEvents.DeselectObject(this, editor_object);
-	
-	}
+
 	
 	static void ToggleSelection(EditorObject target)
 	{
@@ -288,26 +180,7 @@ class EditorObjectManager
 	}
 	
 	
-	void InsertAction(EditorAction target)
-	{
-		int count = m_ActionStack.Count();
-		for (int i = 0; i < count; i++) {
-			if (m_ActionStack[i].IsUndone()) {
-				m_ActionStack.Remove(i);
-				i--; count--;
-			}
-		}
-			
-		// Adds to bottom of stack
-		m_ActionStack.InsertAt(target, 0);
-		
-		// debug
-		GetEditor().GetUIManager().GetEditorUI().m_DebugActionStack.ClearItems();
-		
-		for (int debug_i = 0; debug_i < m_ActionStack.Count(); debug_i++) {
-			GetEditor().GetUIManager().GetEditorUI().m_DebugActionStack.AddItem(m_ActionStack[debug_i].GetName(), m_ActionStack[debug_i], 0);
-		}
-	}
+
 	
 
 	
@@ -334,46 +207,10 @@ class EditorObjectManager
 	}
 	
 	// EditorObject.WorldObject.GetID(), EditorObject.GetID()
-	private ref map<int, int> m_PlacedObjectIndex = new map<int, int>();
-	EditorObject GetEditorObject(notnull Object world_object)
-	{
-		int id = world_object.GetID();
-		int editor_obj_id = m_PlacedObjectIndex.Get(id);
-		return GetEditorObject(editor_obj_id);
-	}
+
+
 	
-	void DeleteSessionData(int id) { m_SessionCache.Remove(id);	}
-	EditorObject GetEditorObject(int id) { return m_PlacedObjects.Get(id); }
-	EditorObjectData GetSessionDataById(int id) { return m_SessionCache.Get(id); }
-	EditorObject GetPlacedObjectById(int id) { return m_PlacedObjects.Get(id); }
-	
-	void OnObjectSelected(Class context, EditorObject target)
-	{
-		EditorPrint("EditorObjectManager::SelectObject");		
-		m_SelectedObjects.InsertEditorObject(target);
-	}
-	
-	void OnObjectDeselected(Class context, EditorObject target)
-	{
-		EditorPrint("EditorObjectManager::SelectObject");
-		m_SelectedObjects.RemoveEditorObject(target);
-	}	
-	
-	void OnObjectCreated(Class context, EditorObject target)
-	{
-		EditorPrint("EditorObjectManager::OnObjectCreated");
-		//m_SelectedObjects.InsertEditorObject(target);
-		m_PlacedObjects.InsertEditorObject(target);
-		m_PlacedObjectIndex.Insert(target.GetWorldObject().GetID(), target.GetID());
-	}	
-	
-	void OnObjectDeleted(Class context, EditorObject target)
-	{
-		EditorPrint("EditorObjectManager::OnObjectDeleted");
-		m_SelectedObjects.RemoveEditorObject(target);
-		m_PlacedObjects.RemoveEditorObject(target);
-	}
-	
+
 	
 }
 

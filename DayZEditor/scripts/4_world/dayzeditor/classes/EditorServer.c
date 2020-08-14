@@ -62,8 +62,6 @@ class EditorServerModule: JMModuleBase
 	
 	private void RPC_UpdateEditor(ref ParamsReadContext ctx, PlayerIdentity senderRPC, Object target)
 	{
-		EditorLog.Trace("EditorServerModule::RPC_UpdateEditor");
-		
 		
 		vector pos, ori;
 		ctx.Read(pos);
@@ -75,7 +73,7 @@ class EditorServerModule: JMModuleBase
 		ori.RotationMatrixFromAngles(transform);
 		transform[3] = pos;
 
-		cam.MoveInTime(transform, 0.025);
+		cam.MoveInTime(transform, 0);
 	}
 		
 	private void RPC_CreateObject(ref ParamsReadContext ctx, PlayerIdentity senderRPC, Object target)
