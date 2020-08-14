@@ -3,7 +3,8 @@ modded class JMModuleConstructor
 {
 	override void RegisterModules(out TTypenameArray modules)
 	{
-		modules.Insert(Editor);
+		modules.Insert(EditorClientModule);
+		modules.Insert(EditorServerModule);
 	}
 	
 }

@@ -1,7 +1,7 @@
 
 
 
-
+#define EDITORPRINT
 
 
 class EditorLog
@@ -19,6 +19,13 @@ class EditorLog
 	{
 #ifdef EDITORPRINT
 		EditorPrint(msg, EditorLogLevel.TRACE);
+#endif
+	}
+	
+	static void Debug(Class msg)
+	{
+#ifdef EDITORPRINT
+		EditorPrint(msg.ToString(), EditorLogLevel.DEBUG);
 #endif
 	}
 	

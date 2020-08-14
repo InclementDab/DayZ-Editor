@@ -18,11 +18,10 @@ class EditorCamera: Camera
 
 	Object SelectedTarget;
 	vector TargetPosition;
-
 	vector linearVelocity;
 	vector angularVelocity;
-
 	vector orientation;
+	
 	
 	// Setters
 	void SetLookEnabled(bool state) { LookEnabled = state; }
@@ -30,16 +29,18 @@ class EditorCamera: Camera
 	
 	void EditorCamera()
 	{
+		EditorLog.Trace("EditorCamera");
 		SetEventMask(EntityEvent.FRAME);
 		SelectTarget(null);
-
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(PostInit);
 	}
 
 	void ~EditorCamera()
 	{
 		SelectTarget(null);
 	}
-	
+		
 
 	void OnTargetSelected( Object target )
 	{
@@ -68,6 +69,14 @@ class EditorCamera: Camera
 		}
 
 		SelectedTarget = target;
+	}
+	
+	void PostInit()
+	{
+		EditorLog.Trace("EditorCamera::PostInit");
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(GetPosition());
+		rpc.Send(null, EditorServerModuleRPC.CREATECAMERA, true, null);
 	}
 
 	override void EOnFrame( IEntity other, float timeSlice )

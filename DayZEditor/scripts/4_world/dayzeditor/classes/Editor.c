@@ -1,6 +1,6 @@
 
-private ref Editor m_EditorInstance;
-Editor GetEditor() 
+private ref EditorClientModule m_EditorInstance;
+EditorClientModule GetEditor() 
 { 	
 	//if (m_EditorInstance == null)
 	//	m_EditorInstance = new Editor();
@@ -10,30 +10,39 @@ Editor GetEditor()
 bool IsEditor() { return m_EditorInstance != null; }
 
 
-// Editor should be run on the client that wants to be editor
-class Editor: JMModuleBase
+enum EditorClientModuleRPC
 {
-	/* Private Members 
-	*	Keep these in the same order as in the constructor
-	*/
+	INVALID = 36114,
+	SERVERCREATEOBJECT
+};
+
+
+class EditorClientModule: JMModuleBase
+{
+	/* Private Members */
 	private Mission m_Mission;
 	
 	private UIManager m_UIManager;
-	private PlayerBase m_Player;
-	private PlayerIdentity m_PlayerIdentity;
 	private EditorCamera m_Camera;
+	EditorCamera GetCamera() { return m_Camera; }
 	
-	private bool m_Active;
+	private PlayerBase m_Player;
+		
+	private ref EditorObjectDataSet	m_SessionCache;
+	EditorObjectDataSet GetSessionCache() { return m_SessionCache; }
+	
+	private bool m_Active = false;
 	private Widget m_EditorUI;
 	
 	
 	// Public Members
-	void Editor()
+	void EditorClientModule()
 	{
-		EditorLog.Info("Editor");			
+		EditorLog.Info("Editor");
+		m_EditorInstance = this;			
 	}
 	
-	void ~Editor()
+	void ~EditorClientModule()
 	{
 		EditorLog.Info("~Editor");
 	}
@@ -41,6 +50,7 @@ class Editor: JMModuleBase
 	override void OnInit()
 	{
 		EditorLog.Trace("Editor::OnInit");
+		m_SessionCache = new EditorObjectDataSet();
 		
 		
 		/* UI Init */
@@ -48,47 +58,53 @@ class Editor: JMModuleBase
 				
 		/* EditorUI Init */
 		m_EditorUI = GetGame().GetWorkspace().CreateWidgets(EDITOR_GUI_LAYOUTS_FOLDER + "EditorUI.layout");
+		m_EditorUI.Show(false);
 		
 		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
 		
 	}
 	
+	override void OnMPSessionPlayerReady()
+	{
+		
+				
+		
+	}
 	
+	override void OnInvokeConnect( PlayerBase player, PlayerIdentity identity )
+	{
+		EditorLog.Trace("Editor::OnInvokeConnect");		
+		m_Player = player;
+		EditorLog.Debug(m_Player);
+	}
 	
 	override void OnMissionStart()
 	{
 		EditorLog.Trace("Editor::OnMissionStart");
-		EditorLog.Info("Loading Singleplayer Editor...");
 		m_Mission = GetGame().GetMission();
+		
+		// Only runs in Singleplayer
 		if (GetGame().IsServer() && !GetGame().IsMultiplayer()) {
-			m_EditorInstance = this;
+			EditorLog.Info("Loading Singleplayer Editor...");
+			m_Player = GetGame().GetPlayer();
 			m_Active = true;
+			SetActive(m_Active);
 		}
 		
-		SetActive(m_Active);	
+		
 	}
 	
 	override void OnMissionLoaded()
 	{
 		EditorLog.Trace("Editor::OnMissionLoaded");
 		
-		if (IsMissionClient()) {
-			
-			// Player Init
-			EditorLog.Info("Initializing Player");
-			m_Player = GetGame().GetPlayer();
-			m_PlayerIdentity = m_Player.GetIdentity();
-			
-			// Camera Init
-			EditorLog.Info("Initializing Camera");
-			m_Camera = GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 2, 0), ECE_LOCAL);
-		}
+
 	}
 	
 	
 	private void OnEditorToggleActive(UAInput input)
 	{
-		if (!input.LocalPress()) return;
+		if (!input.LocalPress()) return; 
 		EditorLog.Trace("Editor::OnEditorToggleActive");
 		m_Active = !m_Active;
 		SetActive(m_Active);
@@ -97,19 +113,55 @@ class Editor: JMModuleBase
 	
 	void SetActive(bool active)
 	{
+		if (m_Camera == null) {
+			// Camera Init
+			EditorLog.Info("Initializing Camera");
+			m_Camera = GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 10, 0), ECE_LOCAL);
+		}
+		
+		if (m_Player == null) {
+			m_Player = GetGame().GetPlayer();
+		}
+		
 		m_Camera.SetActive(m_Active);
 		m_EditorUI.Show(m_Active);
 		m_Mission.GetHud().Show(!m_Active);
 		
+		
 		if (!m_Active)
-			GetGame().SelectPlayer(m_PlayerIdentity, m_Player);
+			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
 	}
 	
 	
 	
-	override bool IsServer()
+	override int GetRPCMin()
 	{
-		return false;
+		return EditorClientModuleRPC.INVALID;
 	}
+
+	override int GetRPCMax()
+	{
+		return EditorClientModuleRPC.SERVERCREATEOBJECT;
+	}
+	
+	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ref ParamsReadContext ctx)
+	{
+		switch (rpc_type) {
+			
+			case EditorClientModuleRPC.SERVERCREATEOBJECT: {
+				
+				
+				
+				break;
+			}
+			
+			
+		}
+	}
+	
+	
+	
+	
+	override bool IsServer() { return false; }
 
 }
