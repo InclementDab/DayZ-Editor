@@ -16,14 +16,15 @@ class Editor
 	/* Private Members 
 	*	Keep these in the same order as in the constructor
 	*/
-	private MissionGameplay m_MissionGameplay;
+	private Mission m_Mission;
+	
 	private UIManager m_UIManager;
 	private PlayerBase m_Player;
 	private EditorCamera m_Camera;
 	
 	private bool m_Active;
-	
 	private Widget m_EditorUI;
+	
 	
 	// Public Members
 	
@@ -35,7 +36,7 @@ class Editor
 		EditorLog.Info("Editor");	
 		
 		/* Mission Init */
-		m_MissionGameplay = GetGame().GetMission();
+		m_Mission = GetGame().GetMission();
 		
 		/* UI Init */
 		m_UIManager = GetGame().GetUIManager();
@@ -48,8 +49,15 @@ class Editor
 		EditorLog.Info("Initializing Camera");
 		m_Camera = GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 2, 0), ECE_LOCAL);
 		
+		/* EditorUI Init */
+		m_EditorUI = GetGame().GetWorkspace().CreateWidgets(EDITOR_GUI_LAYOUTS_FOLDER + "EditorUI.layout");
 		
-		SetActive(true);
+		
+		/* Events Init */
+		EditorEvents.OnEditorSetActive.Insert(OnEditorSetActive);
+
+		m_Active = true;
+		EditorEvents.EditorSetActive(this, m_Active);
 		
 	}
 	
@@ -60,7 +68,7 @@ class Editor
 
 	
 	
-	
+	/* Event Pipeline */
 	void OnUpdate(float timeslice)
 	{
 		/* Input Handling */
@@ -76,7 +84,9 @@ class Editor
 		} 
 		
 		if (input.LocalPress("EditorToggleActive")) {
-			SetActive(!m_Active);
+			m_Active = !m_Active;
+			EditorLog.Info("Editor Active: " + m_Active);
+			EditorEvents.EditorSetActive(this, m_Active);
 		}
 		
 		if (input.LocalPress("EditorToggleCursor")) {
@@ -84,24 +94,35 @@ class Editor
 		} 
 	}
 	
-	// Toggles between the Editor and Player
-	private void SetActive(bool active)
+	void OnKeyPress(int key) {}
+	void OnKeyRelease(int key) {}
+	
+	void OnMouseButtonPress(int button){}
+	void OnMouseButtonRelease(int button){}
+	
+	void OnEvent(EventType event_type, Param params) 
 	{
-		EditorLog.Trace("Editor::SetActive");
 		
-		m_Active = active;
-		if (m_Active) {
+	}
+	
+	
+	
+	
+	/* EditorEvents */
+	
+	// Toggles between the Editor and Player
+	void OnEditorSetActive(Class context, bool state)
+	{
+		EditorLog.Trace("Editor::OnEditorSetActive");
+		if (state) {
 			m_Camera.SetActive(true);
-			m_MissionGameplay.PlayerControlDisable(INPUT_EXCLUDE_ALL);
-			m_MissionGameplay.m_HudRootWidget.Show(false);
 			m_EditorUI.Show(true);
+			m_Mission.GetHud().Show(false);
 			
 		} else {
 			GetGame().SelectPlayer(GetGame().GetPlayer().GetIdentity(), GetGame().GetPlayer());
-			m_MissionGameplay.PlayerControlEnable(true);
-			m_MissionGameplay.m_HudRootWidget.Show(true);
 			m_EditorUI.Show(false);
-
+			m_Mission.GetHud().Show(true);
 		}
 	}
 }

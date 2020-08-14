@@ -16,6 +16,8 @@ modded class MissionGameplay
 		GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
 		GetUApi().UpdateControls();
 		
+		
+		EditorEvents.OnEditorSetActive.Insert(OnEditorSetActive);
 	}
 	
 	void StartEditor()
@@ -39,9 +41,18 @@ modded class MissionGameplay
 			Print(GetGame().IsServer());
 			Print(GetGame().IsMultiplayer());
 			EditorLog.Error("Attempted to StartEditor as Server!");
-		}
-		
+		}	
+	}
 	
+	void OnEditorSetActive(Class context, bool state)
+	{
+		EditorLog.Trace("MissionGameplay::OnEditorSetActive");
+		if (state) {
+			PlayerControlDisable(INPUT_EXCLUDE_ALL);
+			
+		} else {
+			PlayerControlEnable(true);
+		}
 	}
 	
 	
@@ -54,6 +65,7 @@ modded class MissionGameplay
 	}
 	
 	
+	/* Editor Pipeline */
 	override void OnUpdate(float timeslice)
 	{
 		super.OnUpdate(timeslice);
@@ -62,6 +74,45 @@ modded class MissionGameplay
 			m_EditorInstance.OnUpdate(timeslice);		
 	}
 	
+	override void OnKeyPress(int key) 
+	{
+		super.OnKeyPress(key);
+		if (IsEditor())
+			m_EditorInstance.OnKeyPress(key);	
+	}
+	
+	override void OnKeyRelease(int key) 
+	{
+		super.OnKeyRelease(key);
+		if (IsEditor())
+			m_EditorInstance.OnKeyRelease(key);	
+	}
+	
+	
+	override void OnMouseButtonPress(int button)
+	{
+		super.OnMouseButtonPress(button);
+		if (IsEditor())
+			m_EditorInstance.OnMouseButtonPress(button);	
+	}
+	
+	override void OnMouseButtonRelease(int button)
+	{
+		super.OnMouseButtonRelease(button);
+		if (IsEditor())
+			m_EditorInstance.OnMouseButtonRelease(button);	
+	}
+	
+	override void OnEvent(EventType eventTypeId, Param params) 
+	{
+		super.OnEvent(eventTypeId, params);
+		if (IsEditor())
+			m_EditorInstance.OnEvent(eventTypeId, params);	
+	}
+	
+	
+	
+	/* Used for Offline Editor Mission Creation */
 	private string CreateEditorMission(string map_name = "ChernarusPlus")
 	{
 		EditorLog.Trace("EditorMissionGameplay::CreateEditorMission");

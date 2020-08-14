@@ -1,6 +1,7 @@
 
 //! Folders
 static const string EDITOR_GUI_FOLDER = "DayZEditor\\gui\\";
+static const string EDITOR_GUI_LAYOUTS_FOLDER = EDITOR_GUI_FOLDER + "layouts\\";
 static const string EDITOR_GUI_ICONS_FOLDER = EDITOR_GUI_FOLDER + "icons\\";
 
 //! Icons
