@@ -16,8 +16,7 @@ modded class MissionGameplay
 		GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
 		GetUApi().UpdateControls();
 		
-		
-		EditorEvents.OnEditorSetActive.Insert(OnEditorSetActive);
+
 	}
 	
 	void StartEditor()
@@ -43,18 +42,7 @@ modded class MissionGameplay
 			EditorLog.Error("Attempted to StartEditor as Server!");
 		}	
 	}
-	
-	void OnEditorSetActive(Class context, bool state)
-	{
-		EditorLog.Trace("MissionGameplay::OnEditorSetActive");
-		if (state) {
-			PlayerControlDisable(INPUT_EXCLUDE_ALL);
-			
-		} else {
-			PlayerControlEnable(true);
-		}
-	}
-	
+		
 	
 	override void OnMissionStart()
 	{

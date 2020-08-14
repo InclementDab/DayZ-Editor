@@ -56,7 +56,7 @@ class Editor
 		/* Events Init */
 		EditorEvents.OnEditorSetActive.Insert(OnEditorSetActive);
 
-		m_Active = true;
+		m_Active = false;
 		EditorEvents.EditorSetActive(this, m_Active);
 		
 	}
@@ -94,11 +94,25 @@ class Editor
 		} 
 	}
 	
-	void OnKeyPress(int key) {}
-	void OnKeyRelease(int key) {}
+	void OnKeyPress(int key) 
+	{
+		EditorLog.Trace("Editor::OnKeyPress");
+	}
 	
-	void OnMouseButtonPress(int button){}
-	void OnMouseButtonRelease(int button){}
+	void OnKeyRelease(int key)
+	{
+		
+	}
+	
+	void OnMouseButtonPress(int button)
+	{
+		
+	}
+	
+	void OnMouseButtonRelease(int button)
+	{
+		
+	}
 	
 	void OnEvent(EventType event_type, Param params) 
 	{
