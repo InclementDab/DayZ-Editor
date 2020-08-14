@@ -76,7 +76,7 @@ modded class MissionGameplay
 		FPrint(init, "\/\/ Returns Offline Editor Mission");
 		FPrint(init, "Mission CreateCustomMission(string path)");
 		FPrint(init, "{");
-		FPrint(init, "	return new EditorMissionGameplay();");
+		FPrint(init, "	return new MissionGameplay();");
 		FPrint(init, "}");
 			
 		CloseFile(init);
