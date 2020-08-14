@@ -32,8 +32,7 @@ class EditorCamera: Camera
 		EditorLog.Trace("EditorCamera");
 		SetEventMask(EntityEvent.FRAME);
 		SelectTarget(null);
-		
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(PostInit);
+
 	}
 
 	void ~EditorCamera()
@@ -71,13 +70,7 @@ class EditorCamera: Camera
 		SelectedTarget = target;
 	}
 	
-	void PostInit()
-	{
-		EditorLog.Trace("EditorCamera::PostInit");
-		ScriptRPC rpc = new ScriptRPC();
-		rpc.Write(GetPosition());
-		rpc.Send(null, EditorServerModuleRPC.CREATECAMERA, true, null);
-	}
+
 
 	override void EOnFrame( IEntity other, float timeSlice )
 	{
@@ -183,6 +176,11 @@ class EditorCamera: Camera
 		if (IsTargeting) {
 			LookAt(TargetPosition);
 		}
+		
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(GetPosition());
+		rpc.Write(GetOrientation());
+		rpc.Send(null, EditorClientModuleRPC.EDITOR_CLIENT_UPDATE, true);
 	}
 
 

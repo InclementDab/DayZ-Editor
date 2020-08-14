@@ -13,7 +13,10 @@ bool IsEditor() { return m_EditorInstance != null; }
 enum EditorClientModuleRPC
 {
 	INVALID = 36114,
-	SERVERCREATEOBJECT
+	EDITOR_CLIENT_UPDATE,
+	EDITOR_CLIENT_CREATED,
+	EDITOR_CLIENT_DESTROYED,
+	COUNT
 };
 
 
@@ -25,6 +28,9 @@ class EditorClientModule: JMModuleBase
 	private UIManager m_UIManager;
 	private EditorCamera m_Camera;
 	EditorCamera GetCamera() { return m_Camera; }
+	
+	private ref map<int, Object> m_EditorClientModels;
+	
 	
 	private PlayerBase m_Player;
 		
@@ -39,7 +45,8 @@ class EditorClientModule: JMModuleBase
 	void EditorClientModule()
 	{
 		EditorLog.Info("Editor");
-		m_EditorInstance = this;			
+		m_EditorInstance = this;	
+		
 	}
 	
 	void ~EditorClientModule()
@@ -51,7 +58,7 @@ class EditorClientModule: JMModuleBase
 	{
 		EditorLog.Trace("Editor::OnInit");
 		m_SessionCache = new EditorObjectDataSet();
-		
+		m_EditorClientModels = new map<int, Object>();
 		
 		/* UI Init */
 		m_UIManager = GetGame().GetUIManager();
@@ -63,6 +70,17 @@ class EditorClientModule: JMModuleBase
 		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
 		
 	}
+	
+	override void OnUpdate(float timeslice)
+	{
+		if (m_Camera != null) {
+			ScriptRPC update_rpc = new ScriptRPC();
+			update_rpc.Write(m_Camera.GetPosition());
+			update_rpc.Write(m_Camera.GetOrientation());
+			update_rpc.Send(null, EditorServerModuleRPC.EDITOR_SERVER_UPDATE, true);
+		}
+	}
+	
 	
 	override void OnMPSessionPlayerReady()
 	{
@@ -123,12 +141,20 @@ class EditorClientModule: JMModuleBase
 			m_Player = GetGame().GetPlayer();
 		}
 		
-		m_Camera.SetActive(m_Active);
-		m_EditorUI.Show(m_Active);
-		m_Mission.GetHud().Show(!m_Active);
+		ScriptRPC rpc = new ScriptRPC();
+		if (active) {
+			rpc.Write(this);
+			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATE, true);
+		} else {
+			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROY, true);
+		}
+		
+		m_Camera.SetActive(active);
+		m_EditorUI.Show(active);
+		m_Mission.GetHud().Show(!active);
 		
 		
-		if (!m_Active)
+		if (!active)
 			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
 	}
 	
@@ -141,26 +167,51 @@ class EditorClientModule: JMModuleBase
 
 	override int GetRPCMax()
 	{
-		return EditorClientModuleRPC.SERVERCREATEOBJECT;
+		return EditorClientModuleRPC.COUNT;
 	}
 	
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ref ParamsReadContext ctx)
 	{
 		switch (rpc_type) {
 			
-			case EditorClientModuleRPC.SERVERCREATEOBJECT: {
+			case EditorClientModuleRPC.EDITOR_CLIENT_UPDATE: {
+				//EditorLog.Debug("Editor::EDITOR_CLIENT_UPDATE");
+				int id;
+				vector pos, ori;
+				ctx.Read(id);
+				ctx.Read(pos);
+				ctx.Read(ori);
 				
-				
+				Object cam = m_EditorClientModels.Get(id);
+				cam.SetPosition(pos);
+				cam.SetOrientation(ori);
+			
 				
 				break;
 			}
+			
+			case EditorClientModuleRPC.EDITOR_CLIENT_CREATED: {
+				EditorLog.Debug("Editor::EDITOR_CLIENT_CREATE");
+				ctx.Read(id);
+				m_EditorClientModels.Set(id, GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_LOCAL));
+				Print(m_EditorClientModels.Count());
+				break;
+			}
+			
+			case EditorClientModuleRPC.EDITOR_CLIENT_DESTROYED: {
+				EditorLog.Debug("Editor::EDITOR_CLIENT_DESTROY");
+				ctx.Read(id);
+				m_EditorClientModels.Remove(id);
+				break;
+			}
+			
+
 			
 			
 		}
 	}
 	
-	
-	
+
 	
 	override bool IsServer() { return false; }
 
