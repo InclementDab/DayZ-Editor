@@ -1,48 +1,12 @@
 
-
-private ref Editor m_EditorInstance;
-Editor GetEditor() 
-{ 	
-	if (m_EditorInstance == null)
-		m_EditorInstance = new Editor();
-	return m_EditorInstance;
-}
-
-
-class EditorMissionServer: MissionServer
-{
-	
-	void EditorMissionServer()
-	{
-		GetRPCManager().AddRPC("Editor", "CreateOnPlayer", this, SingleplayerExecutionType.Client);
-	}
-	
-	static void CreateEditorOnPlayer(PlayerIdentity player)
-	{
-		GetRPCManager().SendRPC("Editor", "CreateOnPlayer", null, true, player); 
-	}
-	
-	private void CreateOnPlayer()
-	{
-		if (!GetGame().IsClient() || GetGame().IsServer()) {
-			EditorLog.Error("Attempted to CreateOnPlayer as Server!");
-			return;
-		}
-		
-		m_EditorInstance = GetEditor();
-	}
-	
-}
-
-
-class EditorMissionGameplay: MissionGameplay
+modded class MissionGameplay
 {
 
 	override void OnInit()
 	{
 		super.OnInit();
 		
-		GetRPCManager().AddRPC("Editor", "CreateOnPlayer", this, SingleplayerExecutionType.Client);
+		GetRPCManager().AddRPC("Editor", "SetPlayerAsEditor", this, SingleplayerExecutionType.Client);
 		
 		GetUApi().GetInputByName("UACOTModuleToggleCOT").ForceDisable(true);
 		GetUApi().GetInputByName("UACOTToggleButtons").ForceDisable(true);
@@ -54,17 +18,29 @@ class EditorMissionGameplay: MissionGameplay
 		
 	}
 	
-	private void CreateOnPlayer()
+	private void SetPlayerAsEditor()
 	{
-		Print(GetGame().IsClient());
-		Print(GetGame().IsServer());
-		Print(GetGame().IsMultiplayer());
 		
-		if (!GetGame().IsClient() || GetGame().IsServer()) {
-			EditorLog.Error("Attempted to CreateOnPlayer as Server!");
+		// Multiplayer case
+		if (GetGame().IsClient() && GetGame().IsMultiplayer()) {
+			EditorLog.Info("Loading Multiplayer Editor...");
+			m_EditorInstance = new Editor();
+		} 
+		
+		// Singleplayer Case
+		else if (GetGame().IsServer() && !GetGame().IsMultiplayer()) {
+			EditorLog.Info("Loading Singleplayer Editor...");
+			m_EditorInstance = new Editor();
 		}
 		
-		m_EditorInstance = new Editor();
+		// Server case
+		else {
+			Print(GetGame().IsClient());
+			Print(GetGame().IsServer());
+			Print(GetGame().IsMultiplayer());
+			EditorLog.Error("Attempted to SetPlayerAsEditor as Server!");
+		}
+		
 	
 	}
 	
@@ -72,14 +48,18 @@ class EditorMissionGameplay: MissionGameplay
 	override void OnMissionStart()
 	{
 		super.OnMissionStart();
-		//m_EditorInstance = GetEditor();
+		if (GetGame().IsServer() && !GetGame().IsMultiplayer()) {
+			SetPlayerAsEditor();
+		}
 	}
 	
 	
 	override void OnUpdate(float timeslice)
 	{
 		super.OnUpdate(timeslice);
-		//m_EditorInstance.OnUpdate(timeslice);		
+		
+		if (IsEditor())
+			m_EditorInstance.OnUpdate(timeslice);		
 	}
 	
 	private string CreateEditorMission(string map_name = "ChernarusPlus")

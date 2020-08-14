@@ -50,8 +50,6 @@ class LaunchServer: DayZTool
 
 	void LaunchServer()
 	{
-		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\Exit.bat", true);
-		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\ZBinarizeDeploy.bat", true);
 		RunDayZBat("P:\\DayZ_Server\\server.bat", true);
 	}
 	
