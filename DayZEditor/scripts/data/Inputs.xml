@@ -3,13 +3,19 @@
     <inputs>
         <actions>
             <input name="EditorToggleUI" loc="Toggle UI" />
+            <input name="EditorToggleActive" loc="Toggle Active" />
             <input name="EditorToggleCursor" loc="Toggle Cursor" />
         </actions>
     </inputs>
 
     <preset>
         <input name="EditorToggleUI">
-            <btn name="kY">
+            <btn name="kTab">
+            </btn>
+        </input>
+			
+		<input name="EditorToggleActive">
+            <btn name="kInsert">
             </btn>
         </input>
 

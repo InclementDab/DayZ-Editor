@@ -13,9 +13,17 @@ bool IsEditor() { return m_EditorInstance != null; }
 // Editor should be run on the client that wants to be editor
 class Editor
 {
-	// Private Members
-	private EditorCamera m_Camera;
+	/* Private Members 
+	*	Keep these in the same order as in the constructor
+	*/
+	private MissionGameplay m_MissionGameplay;
+	private UIManager m_UIManager;
 	private PlayerBase m_Player;
+	private EditorCamera m_Camera;
+	
+	private bool m_Active;
+	
+	private Widget m_EditorUI;
 	
 	// Public Members
 	
@@ -26,17 +34,22 @@ class Editor
 	{
 		EditorLog.Info("Editor");	
 		
-		// Player Init
+		/* Mission Init */
+		m_MissionGameplay = GetGame().GetMission();
+		
+		/* UI Init */
+		m_UIManager = GetGame().GetUIManager();
+		
+		/* Player Init */
 		EditorLog.Info("Initializing Player");
 		m_Player = GetGame().GetPlayer();
-		EditorLog.Info(m_Player);
 		
-		// Camera Init
+		/* Camera Init */
 		EditorLog.Info("Initializing Camera");
-		vector pos = m_Player.GetPosition();
-		pos[1] = pos[1] + 3;
-		m_Camera = GetGame().CreateObjectEx("EditorCamera", pos, ECE_LOCAL);
-		m_Camera.SetActive(true);
+		m_Camera = GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 2, 0), ECE_LOCAL);
+		
+		
+		SetActive(true);
 		
 	}
 	
@@ -50,8 +63,9 @@ class Editor
 	
 	void OnUpdate(float timeslice)
 	{
-		
+		/* Input Handling */
 		Input input = GetGame().GetInput();
+		
 		if (input.LocalPress("UAUIMenu", false) || input.LocalPress("UAUIBack", false)) {
 			
 		}
@@ -61,8 +75,33 @@ class Editor
 			
 		} 
 		
+		if (input.LocalPress("EditorToggleActive")) {
+			SetActive(!m_Active);
+		}
+		
 		if (input.LocalPress("EditorToggleCursor")) {
 
 		} 
+	}
+	
+	// Toggles between the Editor and Player
+	private void SetActive(bool active)
+	{
+		EditorLog.Trace("Editor::SetActive");
+		
+		m_Active = active;
+		if (m_Active) {
+			m_Camera.SetActive(true);
+			m_MissionGameplay.PlayerControlDisable(INPUT_EXCLUDE_ALL);
+			m_MissionGameplay.m_HudRootWidget.Show(false);
+			m_EditorUI.Show(true);
+			
+		} else {
+			GetGame().SelectPlayer(GetGame().GetPlayer().GetIdentity(), GetGame().GetPlayer());
+			m_MissionGameplay.PlayerControlEnable(true);
+			m_MissionGameplay.m_HudRootWidget.Show(true);
+			m_EditorUI.Show(false);
+
+		}
 	}
 }

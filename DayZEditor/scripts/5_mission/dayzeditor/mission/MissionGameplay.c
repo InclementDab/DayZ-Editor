@@ -6,7 +6,7 @@ modded class MissionGameplay
 	{
 		super.OnInit();
 		
-		GetRPCManager().AddRPC("Editor", "SetPlayerAsEditor", this, SingleplayerExecutionType.Client);
+		GetRPCManager().AddRPC("Editor", "StartEditor", this, SingleplayerExecutionType.Client);
 		
 		GetUApi().GetInputByName("UACOTModuleToggleCOT").ForceDisable(true);
 		GetUApi().GetInputByName("UACOTToggleButtons").ForceDisable(true);
@@ -18,7 +18,7 @@ modded class MissionGameplay
 		
 	}
 	
-	private void SetPlayerAsEditor()
+	void StartEditor()
 	{
 		
 		// Multiplayer case
@@ -38,7 +38,7 @@ modded class MissionGameplay
 			Print(GetGame().IsClient());
 			Print(GetGame().IsServer());
 			Print(GetGame().IsMultiplayer());
-			EditorLog.Error("Attempted to SetPlayerAsEditor as Server!");
+			EditorLog.Error("Attempted to StartEditor as Server!");
 		}
 		
 	
@@ -49,7 +49,7 @@ modded class MissionGameplay
 	{
 		super.OnMissionStart();
 		if (GetGame().IsServer() && !GetGame().IsMultiplayer()) {
-			SetPlayerAsEditor();
+			StartEditor();
 		}
 	}
 	

@@ -21,7 +21,7 @@ modded class MissionServer
 		JsonFileLoader<ref EditorServerPermissions>.JsonLoadFile("$profile:Editor/players.json", m_ServerPermissions);
 		foreach (string player_access: m_ServerPermissions.Players) {
 			if (player_access == player.GetPlainId()) {
-				GetRPCManager().SendRPC("Editor", "SetPlayerAsEditor", null, true, player); 
+				GetRPCManager().SendRPC("Editor", "StartEditor", null, true, player); 
 				EditorLog.Info(string.Format("%1 is now an Editor", player_access));
 				return;
 			}
