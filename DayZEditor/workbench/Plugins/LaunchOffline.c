@@ -43,6 +43,24 @@ class BuildMod: DayZTool
 	}
 }
 
+[WorkbenchPluginAttribute("Launch Server", "Launches Server", "F9", "", {"ResourceManager", "ScriptEditor"})]
+class LaunchServer: DayZTool
+{
+	string BatchFile;
+
+	void LaunchServer()
+	{
+		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\Exit.bat", true);
+		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\ZBinarizeDeploy.bat", true);
+		RunDayZBat("P:\\DayZ_Server\\server.bat", true);
+	}
+	
+	override void Run()
+	{
+		BetterRunDayZBat(BatchFile, "", true);
+	}
+}
+
 
 void BetterRunDayZBat(string filepath, string params = "", bool wait = false)
 {

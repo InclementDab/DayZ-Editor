@@ -36,6 +36,14 @@ class EditorLog
 #endif
 	}
 	
+	static void Info(Class msg)
+	{
+#ifdef EDITORPRINT
+		EditorPrint(msg.ToString(), EditorLogLevel.INFO);
+#endif
+	}
+	
+	
 	static void Warning(string msg)
 	{
 #ifdef EDITORPRINT
