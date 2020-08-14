@@ -34,7 +34,7 @@ class BuildMod: DayZTool
 	{
 		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\Exit.bat", true);
 		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\ZBinarizeDeploy.bat", true);
-		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\LaunchClient.bat", true);
+		//RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\LaunchClient.bat", true);
 	}
 	
 	override void Run()

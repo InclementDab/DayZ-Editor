@@ -15,7 +15,7 @@
         </input>
 			
 		<input name="EditorToggleActive">
-            <btn name="kInsert">
+            <btn name="kHome">
             </btn>
         </input>
 
