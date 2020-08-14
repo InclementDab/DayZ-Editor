@@ -13,9 +13,6 @@ bool IsEditor() { return m_EditorInstance != null; }
 enum EditorClientModuleRPC
 {
 	INVALID = 36114,
-	EDITOR_CLIENT_UPDATE,
-	EDITOR_CLIENT_CREATED,
-	EDITOR_CLIENT_DESTROYED,
 	COUNT
 };
 
@@ -29,7 +26,7 @@ class EditorClientModule: JMModuleBase
 	private EditorCamera m_Camera;
 	EditorCamera GetCamera() { return m_Camera; }
 	
-	private ref map<int, Object> m_EditorClientModels;
+	
 	
 	
 	private PlayerBase m_Player;
@@ -58,7 +55,6 @@ class EditorClientModule: JMModuleBase
 	{
 		EditorLog.Trace("Editor::OnInit");
 		m_SessionCache = new EditorObjectDataSet();
-		m_EditorClientModels = new map<int, Object>();
 		
 		/* UI Init */
 		m_UIManager = GetGame().GetUIManager();
@@ -66,6 +62,8 @@ class EditorClientModule: JMModuleBase
 		/* EditorUI Init */
 		m_EditorUI = GetGame().GetWorkspace().CreateWidgets(EDITOR_GUI_LAYOUTS_FOLDER + "EditorUI.layout");
 		m_EditorUI.Show(false);
+		
+
 		
 		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
 		
@@ -77,18 +75,12 @@ class EditorClientModule: JMModuleBase
 			ScriptRPC update_rpc = new ScriptRPC();
 			update_rpc.Write(m_Camera.GetPosition());
 			update_rpc.Write(m_Camera.GetOrientation());
-			update_rpc.Send(null, EditorServerModuleRPC.EDITOR_SERVER_UPDATE, true);
+			update_rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_UPDATE, true);
 		}
 	}
 	
 	
-	override void OnMPSessionPlayerReady()
-	{
-		
-				
-		
-	}
-	
+
 	override void OnInvokeConnect( PlayerBase player, PlayerIdentity identity )
 	{
 		EditorLog.Trace("Editor::OnInvokeConnect");		
@@ -102,21 +94,26 @@ class EditorClientModule: JMModuleBase
 		m_Mission = GetGame().GetMission();
 		
 		// Only runs in Singleplayer
-		if (GetGame().IsServer() && !GetGame().IsMultiplayer()) {
-			EditorLog.Info("Loading Singleplayer Editor...");
+		if (IsMissionOffline()) {
+			EditorLog.Info("Loading Offline Editor...");
 			m_Player = GetGame().GetPlayer();
 			m_Active = true;
 			SetActive(m_Active);
-		}
+		}		
 		
-		
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
+	}
+	
+	override void OnMissionFinish()
+	{
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
 	}
 	
 	override void OnMissionLoaded()
 	{
 		EditorLog.Trace("Editor::OnMissionLoaded");
-		
-
 	}
 	
 	
@@ -141,12 +138,12 @@ class EditorClientModule: JMModuleBase
 			m_Player = GetGame().GetPlayer();
 		}
 		
-		ScriptRPC rpc = new ScriptRPC();
+
 		if (active) {
-			rpc.Write(this);
-			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATE, true);
+
+			
 		} else {
-			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROY, true);
+			
 		}
 		
 		m_Camera.SetActive(active);
@@ -174,40 +171,7 @@ class EditorClientModule: JMModuleBase
 	{
 		switch (rpc_type) {
 			
-			case EditorClientModuleRPC.EDITOR_CLIENT_UPDATE: {
-				//EditorLog.Debug("Editor::EDITOR_CLIENT_UPDATE");
-				int id;
-				vector pos, ori;
-				ctx.Read(id);
-				ctx.Read(pos);
-				ctx.Read(ori);
-				
-				Object cam = m_EditorClientModels.Get(id);
-				cam.SetPosition(pos);
-				cam.SetOrientation(ori);
-			
-				
-				break;
-			}
-			
-			case EditorClientModuleRPC.EDITOR_CLIENT_CREATED: {
-				EditorLog.Debug("Editor::EDITOR_CLIENT_CREATE");
-				ctx.Read(id);
-				m_EditorClientModels.Set(id, GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_LOCAL));
-				Print(m_EditorClientModels.Count());
-				break;
-			}
-			
-			case EditorClientModuleRPC.EDITOR_CLIENT_DESTROYED: {
-				EditorLog.Debug("Editor::EDITOR_CLIENT_DESTROY");
-				ctx.Read(id);
-				m_EditorClientModels.Remove(id);
-				break;
-			}
-			
-
-			
-			
+		
 		}
 	}
 	

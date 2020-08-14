@@ -2,9 +2,9 @@
 enum EditorServerModuleRPC
 {
 	INVALID = 35114,
-	EDITOR_SERVER_UPDATE,
-	EDITOR_CLIENT_CREATE,
-	EDITOR_CLIENT_DESTROY,
+	EDITOR_CLIENT_UPDATE,
+	EDITOR_CLIENT_CREATED,
+	EDITOR_CLIENT_DESTROYED,
 	COUNT
 };
 
@@ -12,11 +12,11 @@ enum EditorServerModuleRPC
 class EditorServerModule: JMModuleBase
 {
 	
-	private ref map<int, ref EditorClientModule> m_EditorClients;
+	private ref map<int, EntityAI> m_EditorClientModels;
 	
 	override void OnInit()
 	{
-		m_EditorClients = new map<int, ref EditorClientModule>();
+		m_EditorClientModels = new map<int, EntityAI>();
 	}
 	
 	
@@ -34,32 +34,21 @@ class EditorServerModule: JMModuleBase
 	{
 		switch (rpc_type) {
 			
-			case EditorServerModuleRPC.EDITOR_SERVER_UPDATE: {
-				EditorLog.Debug("EditorServerModule::EDITOR_SERVER_UPDATE");
+			case EditorServerModuleRPC.EDITOR_CLIENT_UPDATE: {
+				//EditorLog.Debug("EditorServerModule::EDITOR_SERVER_UPDATE");
 				RPC_UpdateEditor(ctx, sender, target);
 				break;
 			}
 			
-			case EditorServerModuleRPC.EDITOR_CLIENT_CREATE: {
-				EditorLog.Debug("EditorServerModule::EDITOR_CLIENT_CREATE");
-				EditorClientModule m = new EditorClientModule();
-				ctx.Read(m);
-				m_EditorClients.Insert(sender.GetPlayerId(), m);
-				
-				ScriptRPC create_rpc = new ScriptRPC();
-				create_rpc.Write(sender.GetPlayerId());
-				create_rpc.Send(null, EditorClientModuleRPC.EDITOR_CLIENT_CREATED, true);
-				
+			case EditorServerModuleRPC.EDITOR_CLIENT_CREATED: {
+				EditorLog.Debug("EditorServerModule::EDITOR_CLIENT_CREATED");
+				m_EditorClientModels.Insert(sender.GetPlayerId(), GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_NONE));
 				break;
 			}
 			
-			case EditorServerModuleRPC.EDITOR_CLIENT_DESTROY: {
-				EditorLog.Debug("EditorServerModule::EDITOR_CLIENT_DESTROY");
-				m_EditorClients.Remove(sender.GetPlayerId());
-				
-				ScriptRPC destroy_rpc = new ScriptRPC();
-				destroy_rpc.Write(sender.GetPlayerId());
-				destroy_rpc.Send(null, EditorClientModuleRPC.EDITOR_CLIENT_DESTROYED, true);
+			case EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED: {
+				EditorLog.Debug("EditorServerModule::EDITOR_CLIENT_DESTROYED");
+				m_EditorClientModels.Remove(sender.GetPlayerId());
 				break;
 			}
 
@@ -80,15 +69,13 @@ class EditorServerModule: JMModuleBase
 		ctx.Read(pos);
 		ctx.Read(ori);
 		
-		//EditorClientModule client = m_EditorClients.Get(senderRPC.GetPlayerId());
-		
-		foreach (int id, ref EditorClientModule client: m_EditorClients) {
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Write(id);
-			rpc.Write(pos);
-			rpc.Write(ori);
-			rpc.Send(null, EditorClientModuleRPC.EDITOR_CLIENT_UPDATE, true);
-		}
+		EntityAI cam = m_EditorClientModels.Get(senderRPC.GetPlayerId());
+		vector transform[4];
+
+		ori.RotationMatrixFromAngles(transform);
+		transform[3] = pos;
+
+		cam.MoveInTime(transform, 0.025);
 	}
 		
 	private void RPC_CreateObject(ref ParamsReadContext ctx, PlayerIdentity senderRPC, Object target)
@@ -108,9 +95,6 @@ class EditorServerModule: JMModuleBase
 		ctx.Read(pos);
 	
 		Object world_object = GetGame().CreateObjectEx("DSLRCamera", pos, ECE_NONE);
-		Print(world_object);
-		Print(world_object.GetPosition());
-		//camera.SetWorldObject(world_object);
 	}
 	
 }
