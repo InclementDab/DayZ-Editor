@@ -239,10 +239,10 @@ class EditorObject
 			for (int j = 0; j < 3; j++) 
 				transform[j][j] = ((position[j] == line_centers[i][j])*size[j]/2) + line_width;						
 			 
-			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_NONE));
+			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_LOCAL));
 			m_BBoxLines[i].SetTransform(transform);			
 			
-			AddChild(m_BBoxLines[i], -1);
+			AddChild(m_BBoxLines[i], -1, true);
 		}
 		
 		
@@ -253,9 +253,9 @@ class EditorObject
 		y_axis_mat[2][2] = line_width;
 		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1], bottom_center[2]);
 		
-		m_CenterLine = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE));
+		m_CenterLine = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_LOCAL));
 		m_CenterLine.SetTransform(y_axis_mat);
-		AddChild(m_CenterLine, -1);
+		AddChild(m_CenterLine, -1, true);
 		
 		HideBoundingBox();
 		Update();

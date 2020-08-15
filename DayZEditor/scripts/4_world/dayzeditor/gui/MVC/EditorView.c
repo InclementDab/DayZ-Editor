@@ -1,12 +1,52 @@
 
-// TextListBoxWidget
-typedef ObservableDictionary<string, Class> TextListboxWidgetData;
+// TextListboxWidget
+class TextListboxWidgetData: ObservableDictionary<string, Class>
+{
+	void DictionaryAdd(TextListboxWidget w, Param params)
+	{
+		Param2<string, Class> changed_data = Param2<string, Class>.Cast(params);
+		w.AddItem(changed_data.param1, changed_data.param2, 0);
+	}
+	
+	void DictionaryRemove(TextListboxWidget w)
+	{
+		w.ClearItems();
+		for (int i = 0; i < Count(); i++) {
+			string key = GetKey(i);
+			w.AddItem(key, Get(key), 0);
+		}
+	}
+}
 
 // WrapSpacerWidget
-typedef ObservableCollection<Widget> WrapSpacerWidgetData;
+class WrapSpacerWidgetData: ObservableCollection<Widget>
+{
+	void DictionaryAdd(WrapSpacerWidget w, Param params)
+	{
+		w.AddChild(Param1<Widget>.Cast(params).param1);
+	}
+	
+	void DictionaryRemove(WrapSpacerWidget w, Param params)
+	{
+		w.RemoveChild(Param1<Widget>.Cast(params).param1);
+	}
+}
 
 // XComboBoxWidget
-typedef ObservableCollection<string> XComboBoxWidgetData;
+class XComboBoxWidgetData: ObservableCollection<string> 
+{
+	void DictionaryAdd(XComboBoxWidget w, Param params)
+	{
+		w.AddItem(Param1<string>.Cast(params).param1);
+	}
+	
+	void DictionaryRemove(XComboBoxWidget w)
+	{
+		w.ClearAll();
+		for (int i = 0; i < Count(); i++) 
+			w.AddItem(Get(i));
+	}
+}
 
 class EditorView extends ScriptedWidgetEventHandler
 {
@@ -96,14 +136,15 @@ class EditorView extends ScriptedWidgetEventHandler
 			// Param1: Widget
 			case WrapSpacerWidget: {
 				
+				WrapSpacerWidgetData wrap_data = WrapSpacerWidgetData.Cast(collection);
 				switch (action) {
 					case NotifyCollectionChangedAction.Add: {
-						m_LayoutRoot.AddChild(Param1<Widget>.Cast(changed_params).param1);
+						wrap_data.DictionaryAdd(WrapSpacerWidget.Cast(m_LayoutRoot), changed_params);
 						break;
 					}
 					
 					case NotifyCollectionChangedAction.Remove: {
-						m_LayoutRoot.RemoveChild(Param1<Widget>.Cast(changed_params).param1);
+						wrap_data.DictionaryRemove(WrapSpacerWidget.Cast(m_LayoutRoot), changed_params);
 						break;
 					}
 					
@@ -119,24 +160,15 @@ class EditorView extends ScriptedWidgetEventHandler
 			// Param2: Class
 			case TextListboxWidget: {
 				
-				TextListboxWidgetData listbox_data = TextListboxWidgetData.Cast(collection);
-				TextListboxWidget listbox_widget = TextListboxWidget.Cast(m_LayoutRoot);
-				Param2<string, Class> changed_data = Param2<string, Class>.Cast(changed_params);
-				
+				TextListboxWidgetData listbox_data = TextListboxWidgetData.Cast(collection);				
 				switch (action) {
 					case NotifyCollectionChangedAction.Add: {
-						listbox_widget.AddItem(changed_data.param1, changed_data.param2, 0);
+						listbox_data.DictionaryAdd(TextListboxWidget.Cast(m_LayoutRoot), changed_params);
 						break;
 					}
 					
 					case NotifyCollectionChangedAction.Remove: {
-						listbox_widget.ClearItems();
-						
-						for (int i = 0; i < listbox_data.Count(); i++) {
-							string key = listbox_data.GetKey(i);
-							listbox_widget.AddItem(key, listbox_data.Get(key), 0);
-						}
-						
+						listbox_data.DictionaryRemove(TextListboxWidget.Cast(m_LayoutRoot));
 						break;
 					}
 					
@@ -151,22 +183,15 @@ class EditorView extends ScriptedWidgetEventHandler
 			// Param1: string
 			case XComboBoxWidget: {
 								
-				XComboBoxWidgetData combo_box_data = XComboBoxWidgetData.Cast(collection);
-				XComboBoxWidget combobox_widget = XComboBoxWidget.Cast(m_LayoutRoot);
-				
+				XComboBoxWidgetData combo_box_data = XComboBoxWidgetData.Cast(collection);				
 				switch (action) {
 					case NotifyCollectionChangedAction.Add: {
-						combobox_widget.AddItem(Param1<string>.Cast(changed_params).param1);
+						combo_box_data.DictionaryAdd(XComboBoxWidget.Cast(m_LayoutRoot), changed_params);
 						break;
 					}
 					
 					case NotifyCollectionChangedAction.Remove: {
-						combobox_widget.ClearAll();
-						for (int j = 0; j < combo_box_data.Count(); j++) {
-							combobox_widget.AddItem(combo_box_data.Get(j));
-						}
-						
-						
+						combo_box_data.DictionaryRemove(XComboBoxWidget.Cast(m_LayoutRoot));
 						break;
 					}
 					
