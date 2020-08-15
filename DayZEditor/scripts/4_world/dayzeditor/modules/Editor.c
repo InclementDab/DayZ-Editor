@@ -46,7 +46,6 @@ class EditorClientModule: JMModuleBase
 	private ref EditorHologram 				m_ObjectInHand;
 	private ref EditorBrush					m_EditorBrush;
 	
-	private ref EditorPlaceableListItemSet 		m_PlaceableObjects;
 	private ref EditorObjectSet 				m_PlacedObjects;
 	private ref EditorObjectSet					m_SelectedObjects;
 	private ref EditorObjectDataSet			 	m_SessionCache;
@@ -86,14 +85,7 @@ class EditorClientModule: JMModuleBase
 		//array<EditorView> views = EditorView.GetUIProperties(m_EditorUI.GetRoot(), m_EditorUIViewModel);
 		//Print(views.Count());
 		
-		
-		// Load PlaceableObjects
-		/*
-		m_PlaceableObjects = new EditorPlaceableListItemSet();
-		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", EditorSettings.GetPlaceableObjects(m_PlaceableObjects)));
-		foreach (ref EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
-			m_EditorUI.InsertPlaceableObject(placeable_object);
-		}*/
+
 		
 		// Events
 		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
@@ -500,17 +492,6 @@ class EditorClientModule: JMModuleBase
 	}
 	
 	bool IsLootEditActive() { return m_LootEditMode; }
-	
-
-	void UpdatePlaceableItems(PlaceableObjectCategory category)
-	{
-		EditorLog.Trace("EditorUIManager::OnPlaceableCategoryChanged");
-
-		foreach (EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
-			Widget root = placeable_object.GetRoot();
-			root.Show(placeable_object.GetData().GetCategory() == category);
-		}
-	}
-	
+		
 
 }

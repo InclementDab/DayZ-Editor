@@ -1,11 +1,15 @@
 
 
+
+
 static ref EditorUIViewModel m_EditorUIViewModel;
 EditorUIViewModel GetEditorUIViewModel() { return m_EditorUIViewModel; }
 
 // 	  vvvvvvvvvvvvvvvvv  put THIS into ScriptClass
 class EditorUIViewModel: ViewModelBase
 {
+	private ref EditorPlaceableListItemSet m_PlaceableObjects;
+	
 	
 	string DebugText1;
 	string DebugText2;
@@ -18,31 +22,88 @@ class EditorUIViewModel: ViewModelBase
 	bool EntitySelect;
 	bool HumanSelect;
 	
+	ref TextListboxWidgetData WrapSpacerTest;
 	
 	void EditorUIViewModel()
 	{
 		EditorLog.Trace("EditorUIViewModel");
 		m_EditorUIViewModel = this;
+		WrapSpacerTest = new TextListboxWidgetData();
+		// Load PlaceableObjects
+		/*
+		m_PlaceableObjects = new EditorPlaceableListItemSet();
+		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", GetPlaceableObjects(m_PlaceableObjects)));
+		foreach (ref EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
+			//m_EditorUI.InsertPlaceableObject(placeable_object);
+		}*/
+				
+		UpdateViews();
+		
 	}
 	
-	override void OnPropertyChanged(string property_name)
+	static int GetPlaceableObjects(out EditorPlaceableListItemSet placeable_objects) 
+	{ 
+		TStringArray paths = new TStringArray;
+		paths.Insert(CFG_VEHICLESPATH);
+
+		for (int i = 0; i < paths.Count(); i++)	{
+			string Config_Path = paths.Get(i);			
+			
+		    for (int j = 0; j < GetGame().ConfigGetChildrenCount(Config_Path); j++) {
+				string Config_Name, Base_Name;
+		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name); 
+				
+				EditorPlaceableObjectData placeable_object_data = new EditorPlaceableObjectData(Config_Name, Config_Path);
+				placeable_objects.Insert(new EditorPlaceableListItem(placeable_object_data));
+		    }
+		}
+		
+		return placeable_objects.Count();
+	}
+	
+	void UpdatePlaceableItems(PlaceableObjectCategory category)
 	{
-		if (BuildingSelect) {
-			VehicleSelect = false; EntitySelect = false; HumanSelect = false;
-			GetEditor().UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
+		EditorLog.Trace("EditorUIViewModel::UpdatePlaceableItems");
+		foreach (EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
+			Widget root = placeable_object.GetRoot();
+			root.Show(placeable_object.GetData().GetCategory() == category);
 		}
-		else if (VehicleSelect) {
-			BuildingSelect = false; EntitySelect = false; HumanSelect = false;
-			GetEditor().UpdatePlaceableItems(PlaceableObjectCategory.VEHICLE);
+	}
+	
+	override void OnPropertyChanged(Widget target)
+	{
+		Print("OnPropertyChanged: " + target.GetName());
+		WrapSpacerTest.Insert(target.GetName());
+		switch (target.GetName()) {
+			
+			case "BuildingSelect": {
+				VehicleSelect = false; EntitySelect = false; HumanSelect = false;
+				//UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
+				break;
+			}
+			
+			case "VehicleSelect": {
+				BuildingSelect = false; EntitySelect = false; HumanSelect = false;
+				//UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
+				break;
+			}
+			
+			case "EntitySelect": {
+				BuildingSelect = false; VehicleSelect = false; HumanSelect = false;
+				//UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
+				break;
+			}
+			
+			case "HumanSelect": {
+				BuildingSelect = false; VehicleSelect = false; EntitySelect = false;
+				//UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
+				break;
+			}
+			
+			
 		}
-		else if (EntitySelect) {
-			BuildingSelect = false; VehicleSelect = false; HumanSelect = false;
-			GetEditor().UpdatePlaceableItems(PlaceableObjectCategory.ENTITY);
-		}
-		else if (HumanSelect) {
-			BuildingSelect = false; VehicleSelect = false; EntitySelect = false;
-			GetEditor().UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
-		}
+		
+	
 		
 		UpdateViews();
 	}
@@ -93,7 +154,6 @@ class ViewModelBase: Managed
 	{
 		foreach (ref EditorView view: m_ViewList)
 			view.UpdateView();
-		
 	}
 	
 	void InsertView(ref EditorView view)
@@ -109,7 +169,7 @@ class ViewModelBase: Managed
 			view.DebugPrint();
 	}
 	
-	void OnPropertyChanged(string property_name) {}
+	void OnPropertyChanged(Widget target) {}
 }
 
 

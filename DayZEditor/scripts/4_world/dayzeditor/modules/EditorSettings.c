@@ -47,16 +47,6 @@ class EditorSettings: JMModuleBase
 	}
 
 	
-	// private members
-	private PlaceableObjectCategory m_PlaceableObjectCategory;
-	PlaceableObjectCategory GetPlaceableObjectCategory() { return m_PlaceableObjectCategory; }
-	
-	void SetPlaceableObjectCategory(PlaceableObjectCategory category) 
-	{ 
-		m_PlaceableObjectCategory = category;
-		//EditorEvents.PlaceableCategoryChangedInvoke(this, category);
-	}
-	
 	// Brush Management
 	// move this to EditorBrush? make static
 	
@@ -100,26 +90,6 @@ class EditorSettings: JMModuleBase
 	
 	override bool IsServer() { return false; }
 	
-	static int GetPlaceableObjects(out EditorPlaceableListItemSet placeable_objects) 
-	{ 
-		TStringArray paths = new TStringArray;
-		paths.Insert(CFG_VEHICLESPATH);
 
-		for (int i = 0; i < paths.Count(); i++)	{
-			string Config_Path = paths.Get(i);			
-			
-		    for (int j = 0; j < g_Game.ConfigGetChildrenCount(Config_Path); j++) {
-				string Config_Name, Base_Name;
-		        g_Game.ConfigGetChildName(Config_Path, j, Config_Name); 
-				
-				EditorPlaceableObjectData placeable_object_data = new EditorPlaceableObjectData(Config_Name, Config_Path);
-				placeable_objects.Insert(new EditorPlaceableListItem(placeable_object_data));
-		    }
-		}
-		
-
-		
-		return placeable_objects.Count();
-	}
 }
 

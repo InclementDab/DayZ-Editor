@@ -287,9 +287,7 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	
-	
 
-	
 	void InsertPlaceableObject(EditorListItem target)
 	{
 		m_LeftbarSpacer.AddChild(target.GetRoot());

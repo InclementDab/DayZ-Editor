@@ -1,4 +1,6 @@
 
+typedef ref map<string, Class> TextListboxWidgetData;
+
 
 class EditorView extends ScriptedWidgetEventHandler
 {
@@ -15,10 +17,11 @@ class EditorView extends ScriptedWidgetEventHandler
 	
 	private Widget m_LayoutRoot;
 	private Widget m_ViewModelWidget;
-	private Widget m_ControlWidget;
 	
 	private ViewModelBase m_Model;
 	private typename m_WidgetType;
+	
+
 
 	void OnWidgetScriptInit(Widget w)
 	{
@@ -29,15 +32,15 @@ class EditorView extends ScriptedWidgetEventHandler
 		m_LayoutRoot.SetHandler(this);
 				
 		// Set the control widget to relevant Widget
-		m_ControlWidget = m_LayoutRoot.FindAnyWidget(control_name);
-		if (m_ControlWidget == null)
-			m_ControlWidget = m_LayoutRoot;
+		if (control_name != string.Empty) {
+			m_LayoutRoot = m_LayoutRoot.FindAnyWidget(control_name);
+		}
 		
 		// If var_name is blank, just use the name of root
 		if (variable_name == string.Empty)
-			variable_name = m_ControlWidget.GetName();
+			variable_name = m_LayoutRoot.GetName();
 		
-		m_WidgetType = m_ControlWidget.Type();
+		m_WidgetType = m_LayoutRoot.Type();
 		m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(view_model_widget);
 		
 		if (!m_ViewModelWidget) {
@@ -53,20 +56,38 @@ class EditorView extends ScriptedWidgetEventHandler
 		}
 		
 		m_Model.InsertView(this);
-		UpdateModel();
+		UpdateView();
 	}
 	
-
-	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
+	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		if (m_Model) {
-			
 			UpdateModel();
-			m_Model.OnPropertyChanged(variable_name);
+			m_Model.OnPropertyChanged(w);
+		}
+		return true;
+		//return super.OnChange(w, x, y, finished);
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (m_Model) {
+			UpdateModel();
+			m_Model.OnPropertyChanged(w);
 		}
 		
-		return super.OnEvent(eventType, target, parameter0, parameter1);
+		return true;
+		//return super.OnClick(w, x, y, button);
 	}
+
+	
+	// keeping this here if OnClick and OnChange dont work enough
+	/*
+	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
+	{
+		return true;
+		//return super.OnEvent(eventType, target, parameter0, parameter1);
+	}*/
 
 	// UI -> Model
 	void UpdateModel()
@@ -83,25 +104,39 @@ class EditorView extends ScriptedWidgetEventHandler
 			}
 			
 			case MultilineEditBoxWidget: {
-				MultilineEditBoxWidget.Cast(m_ControlWidget).GetText(text);
+				MultilineEditBoxWidget.Cast(m_LayoutRoot).GetText(text);
 				SetModelVariable(text);
 				break;
 			}
 			
 			case EditBoxWidget: {
-				SetModelVariable(EditBoxWidget.Cast(m_ControlWidget).GetText());
+				SetModelVariable(EditBoxWidget.Cast(m_LayoutRoot).GetText());
 				break;
 			}
 			
 			case ButtonWidget: {
-				SetModelVariable(ButtonWidget.Cast(m_ControlWidget).GetState());
+				SetModelVariable(ButtonWidget.Cast(m_LayoutRoot).GetState());
 				break;
 			}
 			
 			case CheckBoxWidget: {
-				SetModelVariable(CheckBoxWidget.Cast(m_ControlWidget).IsChecked());
+				SetModelVariable(CheckBoxWidget.Cast(m_LayoutRoot).IsChecked());
 				break;
-			} 
+			}
+			
+			case TextListboxWidget: {
+				TextListboxWidgetData data = new TextListboxWidgetData();
+				TextListboxWidget list_box = TextListboxWidget.Cast(m_LayoutRoot);
+				for (int i = 0; i < list_box.GetNumItems(); i++) {
+					string title; Class list_data;
+					list_box.GetItemText(i, 0, title);
+					list_box.GetItemData(i, 0, list_data);
+					data.Insert(title, list_data);
+				}
+				
+				break;
+			}
+			
 			
 			default: {
 				Error(string.Format("Unsupported Widget Type %1", m_WidgetType.ToString()));
@@ -116,25 +151,41 @@ class EditorView extends ScriptedWidgetEventHandler
 		EditorLog.Trace("EditorView::UpdateView");
 		if (!m_Model) return;
 		
+
 		switch (m_WidgetType) {
 
 			case TextWidget:
 			case EditBoxWidget:
 			case MultilineEditBoxWidget: {
-				TextWidget.Cast(m_ControlWidget).SetText(GetModelVariableString());
+				TextWidget.Cast(m_LayoutRoot).SetText(GetModelVariableString());
 				break;
 			}
 		
 			
 			case ButtonWidget: {
-				ButtonWidget.Cast(m_ControlWidget).SetState(GetModelVariableBool());
+				ButtonWidget.Cast(m_LayoutRoot).SetState(GetModelVariableBool());
 				break;
 			}
 			
 			case CheckBoxWidget: {
-				CheckBoxWidget.Cast(m_ControlWidget).SetChecked(GetModelVariableBool());
+				CheckBoxWidget.Cast(m_LayoutRoot).SetChecked(GetModelVariableBool());
 				break;
 			} 
+			
+			case TextListboxWidget: {
+				TextListboxWidget list_box = TextListboxWidget.Cast(m_LayoutRoot);
+				
+				TStringArray list_data = new TStringArray();
+				EnScript.GetClassVar(m_Model, variable_name, 0, list_data);
+				list_box.ClearItems();
+				
+				for (int i = 0; i < list_data.Count(); i++)
+					list_box.AddItem(list_data[i], null, 0);
+			
+				break;
+			}
+			
+	
 			
 			default: {
 				Error(string.Format("Unsupported Widget Type %1", m_WidgetType.ToString()));
@@ -183,6 +234,13 @@ class EditorView extends ScriptedWidgetEventHandler
 		bool state;
 		EnScript.GetClassVar(m_Model, variable_name, variable_index, state);
 		return state;
+	}
+	
+	
+	
+	void SetModelVariable(TextListboxWidgetData data)
+	{
+		EnScript.SetClassVar(m_Model, variable_name, variable_index, data);
 	}
 	
 	void SetModelVariable(string text)
