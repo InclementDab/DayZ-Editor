@@ -8,6 +8,11 @@ enum EditorViewType
 
 typedef ref map<string, typename> VariableHashMap;
 
+
+
+
+
+
 class EditorView extends ScriptedWidgetEventHandler
 {
 	reference string variable_name;
@@ -23,9 +28,7 @@ class EditorView extends ScriptedWidgetEventHandler
 	private ref VariableHashMap m_ModelHashMap;
 	
 	private const ref array<typename> supported_types = { int, float, string };
-	
-	
-	
+
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("EditorView::OnWidgetScriptInit");
@@ -47,7 +50,8 @@ class EditorView extends ScriptedWidgetEventHandler
 				m_Type = EditorViewType.CHECKBOX;
 				break;
 			default:
-				Error("Unsupported type");
+				Error(w.GetName() + " Unsupported type");
+				break;
 		}
 		
 		/*
@@ -110,27 +114,22 @@ class EditorView extends ScriptedWidgetEventHandler
 				}
 								
 				
-				//typename t = variable_type.ToType();
-				//Class c = t.Spawn();
-				/*
-				switch (variable_type.ToType()) {
-					
-					case string: {
-						c = text.ToString();
-						break;
-					}
-					
-					
-				}*/
-				
-				typename type = m_ModelHashMap.Get(variable_name);
-				
-				switch (type) {
+				switch (m_ModelHashMap.Get(variable_name)) {
 					
 					case string: {
 						EnScript.SetClassVar(m_Model, variable_name, variable_index, text);
+						break;
 					}
 					
+					case float: {
+						EnScript.SetClassVar(m_Model, variable_name, variable_index, text.ToFloat());
+						break;
+					}
+					
+					case int: {
+						EnScript.SetClassVar(m_Model, variable_name, variable_index, text.ToInt());
+						break;
+					}
 					
 				}
 				

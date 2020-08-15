@@ -80,6 +80,7 @@ FrameWidgetClass EditorMainFrame {
    }
   }
   FrameWidgetClass DebugFrame {
+   visible 0
    ignorepointer 1
    position 300 32
    size 600 150
@@ -90,6 +91,7 @@ FrameWidgetClass EditorMainFrame {
    hexactsize 1
    vexactsize 1
    priority 250
+   scriptclass ""
    {
     PanelWidgetClass DebugPanel {
      ignorepointer 1
@@ -154,12 +156,6 @@ FrameWidgetClass EditorMainFrame {
          scriptclass "EditorView"
          font "gui/fonts/metron"
          "text offset" 5 0
-         {
-          ScriptParamsClass {
-           variable_name "DebugText3"
-           variable_type "string"
-          }
-         }
         }
         TextWidgetClass DebugText4 {
          ignorepointer 1
@@ -1258,7 +1254,7 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       scriptclass "EditorView"
+       scriptclass ""
        {
         PanelWidgetClass Info_ObjPos_Y_Icon {
          ignorepointer 1
@@ -1298,14 +1294,6 @@ FrameWidgetClass EditorMainFrame {
          font "gui/fonts/system"
         }
        }
-       {
-        ScriptParamsClass {
-         variable_name "m_TestVariableY"
-         variable_type "float"
-         variable_index 0
-         control_name "Info_ObjPos_Y_Value"
-        }
-       }
       }
       PanelWidgetClass Info_ObjPos_Z {
        ignorepointer 1
@@ -1315,7 +1303,7 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       scriptclass "EditorView"
+       scriptclass ""
        {
         PanelWidgetClass Info_ObjPos_Z_Icon {
          ignorepointer 1
@@ -1353,14 +1341,6 @@ FrameWidgetClass EditorMainFrame {
          vexactsize 1
          text "1000.5"
          font "gui/fonts/system"
-        }
-       }
-       {
-        ScriptParamsClass {
-         variable_name "m_TestVariableZ"
-         variable_type "float"
-         variable_index 0
-         control_name "Info_ObjPos_Z_Value"
         }
        }
       }

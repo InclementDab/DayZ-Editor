@@ -7,40 +7,14 @@ class EditorUIViewModel: Managed
 	string DebugText3;
 	
 	
-}
-
-
-class EditorViewProperty<Class T1, Class T2> 
-{
-	protected T1 m_Widget;
-	protected T2 m_Value;
-	
-	void EditorViewProperty(T1 w)
+	void OnWidgetScriptInit(Widget w)
 	{
-		EditorLog.Trace("EditorViewModelProperty");
-		Print(w);
-	}
-	
-	static void SetValue(Widget w, T2 value)
-	{
-		Print("SetValue");
-		Print(value);
-	}
-	
-	static T2 GetValue(Widget w)
-	{
-		T2 value;
-		switch (w.Type()) {
-			
-			case MultilineTextWidget:
-			case MultilineEditBoxWidget: {
-				
-				break;
-			}
-			
-			
-		}
+		EditorLog.Trace("EditorUIViewModel::OnWidgetScriptInit");
 		
-		return value;
+		
 	}
 }
+	
+
+
+
