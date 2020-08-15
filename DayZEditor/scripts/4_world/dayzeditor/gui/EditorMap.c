@@ -32,7 +32,7 @@ class EditorMap: EditorWidgetEventHandler
 				return true;
 			} else {
 				GetEditor().ClearSelection();
-				EditorUI ui = GetEditor().GetUIManager().GetEditorUI();
+				EditorUI ui = GetEditor().GetEditorUI();
 				ui.GetCanvas().Clear();
 				GetCursorPos(ui.start_x, ui.start_y);
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ui.DelayedDragBoxCheck, 40);

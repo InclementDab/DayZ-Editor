@@ -25,6 +25,8 @@ class EditorClientModule: JMModuleBase
 	private EditorCamera m_Camera;
 	private PlayerBase m_Player;
 	
+	private ref EditorHologram 				m_ObjectInHand;
+	private ref EditorUI 					m_EditorUI;
 	private ref EditorBrush					m_EditorBrush;
 	
 	
@@ -35,15 +37,14 @@ class EditorClientModule: JMModuleBase
 	private bool m_Active = false;
 
 	/* UI Stuff */
-	private ref EditorUIManager m_EditorUIManager;
-	EditorUIManager GetUIManager() { return m_EditorUIManager; }
-	EditorUI GetEditorUI() { return m_EditorUIManager.GetEditorUI(); }
+	EditorUI GetEditorUI() { return m_EditorUI; }
 	EditorCamera GetCamera() { return m_Camera; }
 	EditorSettings GetSettings() { return GetModuleManager().GetModule(EditorSettings); }
 	
-	private ref EditorHologram ObjectInHand;
-	bool IsPlacing() { return ObjectInHand != null; }
 	
+	bool IsPlacing() { return m_ObjectInHand != null; }
+	
+	private ref EditorPlaceableListItemSet 		m_PlaceableObjects;
 	private ref EditorObjectSet 				m_PlacedObjects;
 	private ref EditorObjectSet					m_SelectedObjects;
 	private ref EditorObjectDataSet			 	m_SessionCache;
@@ -76,9 +77,19 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnInit");
 		m_SessionCache = new EditorObjectDataSet();
 		
-		/* UI Init */
+		// Init UI
 		m_UIManager = GetGame().GetUIManager();
-		m_EditorUIManager = new EditorUIManager();
+		m_EditorUI = new EditorUI();		
+		m_EditorUI.Show(false);
+		
+		
+		// Load PlaceableObjects
+		m_PlaceableObjects = new EditorPlaceableListItemSet();
+		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", EditorSettings.GetPlaceableObjects(m_PlaceableObjects)));
+		
+		foreach (ref EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
+			m_EditorUI.InsertPlaceableObject(placeable_object);
+		}	
 		
 		// Events
 		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
@@ -330,13 +341,13 @@ class EditorClientModule: JMModuleBase
 			EditorCameraMapMarker CameraMapMarker = new EditorCameraMapMarker();
 			Widget m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorCameraMapMarker.layout");
 			m_MapMarkerWidget.GetScript(CameraMapMarker);
-			CameraMapMarker.SetCamera(m_Camera, m_EditorUIManager.GetEditorUI().GetMapWidget());
-			m_EditorUIManager.GetEditorUI().InsertMapObject(m_MapMarkerWidget);
-			m_EditorUIManager.GetEditorUI().GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));
+			CameraMapMarker.SetCamera(m_Camera, m_EditorUI.GetMapWidget());
+			m_EditorUI.InsertMapObject(m_MapMarkerWidget);
+			m_EditorUI.GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));
 		}
 				
 		m_Camera.SetActive(active);
-		m_EditorUIManager.SetVisibility(active);
+		m_EditorUI.Show(active);
 		m_Mission.GetHud().Show(!active);
 		
 		
@@ -369,10 +380,10 @@ class EditorClientModule: JMModuleBase
 		m_ActionStack.InsertAt(target, 0);
 		
 		// debug
-		m_EditorUIManager.GetEditorUI().m_DebugActionStack.ClearItems();
+		m_EditorUI.m_DebugActionStack.ClearItems();
 		
 		for (int debug_i = 0; debug_i < m_ActionStack.Count(); debug_i++) {
-			m_EditorUIManager.GetEditorUI().m_DebugActionStack.AddItem(m_ActionStack[debug_i].GetName(), m_ActionStack[debug_i], 0);
+			m_EditorUI.m_DebugActionStack.AddItem(m_ActionStack[debug_i].GetName(), m_ActionStack[debug_i], 0);
 		}
 	}
 	
@@ -417,14 +428,14 @@ class EditorClientModule: JMModuleBase
 	void PlaceObject()
 	{
 		Input input = GetGame().GetInput();
-		EntityAI e = ObjectInHand.GetProjectionEntity();
+		EntityAI e = m_ObjectInHand.GetProjectionEntity();
 		vector mat[4];
 	
 		EditorObject editor_object = CreateObject(EditorObjectData.Create(e.GetType(), e.GetPosition(), e.GetOrientation()));
 		SelectObject(editor_object);
 		
 		if (!input.LocalValue("UATurbo")) { 
-			delete ObjectInHand;
+			delete m_ObjectInHand;
 		}
 		
 		EditorEvents.StopPlacing(this);
@@ -470,6 +481,17 @@ class EditorClientModule: JMModuleBase
 	
 	bool IsLootEditActive() { return m_LootEditMode; }
 	
+		
+	// todo this is broke
+	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
+	{
+		EditorLog.Trace("EditorUIManager::OnPlaceableCategoryChanged");
+
+		foreach (EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
+			Widget root = placeable_object.GetRoot();
+			root.Show(placeable_object.GetData().GetCategory() == category);
+		}
+	}
 	
 
 }

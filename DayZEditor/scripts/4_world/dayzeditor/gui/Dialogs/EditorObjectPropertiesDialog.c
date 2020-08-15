@@ -62,9 +62,9 @@ class EditorObjectPropertiesDialog: UILinkedObject
 		// temp
 		Print(w.GetName());
 		if (w.GetName() == "pos_x") {
-			GetEditor().GetUIManager().GetEditorUI().SetCursor(EditorCursor.HORIZONTAL_SCROLL);
+			GetEditor().GetEditorUI().SetCursor(EditorCursor.HORIZONTAL_SCROLL);
 		} else {
-			GetEditor().GetUIManager().GetEditorUI().SetCursor();
+			GetEditor().GetEditorUI().SetCursor();
 		}
 		
 		return true;

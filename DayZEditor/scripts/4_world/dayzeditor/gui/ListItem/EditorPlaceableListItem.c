@@ -1,3 +1,5 @@
+typedef ref array<ref EditorPlaceableListItem> EditorPlaceableListItemSet;
+
 class EditorPlaceableListItem: EditorListItem
 {
 	private ref EditorPlaceableObjectData m_Data;
