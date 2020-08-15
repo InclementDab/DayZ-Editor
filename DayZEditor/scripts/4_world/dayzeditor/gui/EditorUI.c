@@ -81,7 +81,7 @@ class EditorUI: UIScriptedMenu
 	protected ItemPreviewWidget m_OrientationWidget;
 	
 	// Debug
-	private Widget		m_DebugFrame;
+	protected Widget	m_DebugFrame;
 	TextWidget 			m_DebugText1;
 	TextWidget			m_DebugText2;
 	TextWidget 			m_DebugText3;
@@ -224,9 +224,7 @@ class EditorUI: UIScriptedMenu
 		m_TooltipGround = new EditorUITooltip("Toggle ground mode on/off.", "Ground Mode");
 		
 		// Info toolbar widgets
-		m_ObjPosInfoPanel = m_Root.FindAnyWidget("InfobarObjPosFrame");
-		array<EditorView> views = EditorView.GetUIProperties(m_ObjPosInfoPanel, this);
-		
+		m_ObjPosInfoPanel = m_Root.FindAnyWidget("InfobarObjPosFrame");		
 		
 		
 		m_CamPosInfoPanel = m_Root.FindAnyWidget("InfobarCamPosFrame");
@@ -236,7 +234,7 @@ class EditorUI: UIScriptedMenu
 		
 		// debug info
 		m_DebugFrame = m_Root.FindAnyWidget("DebugFrame");
-		//m_DebugFrame.Show(false);
+		m_DebugFrame.Show(true);
 		
 		// notification
 		m_NotificationFrame.GetPos(notification_start_x, notification_start_y);

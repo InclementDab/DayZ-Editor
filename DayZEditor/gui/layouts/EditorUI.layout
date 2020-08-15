@@ -80,7 +80,7 @@ FrameWidgetClass EditorMainFrame {
    }
   }
   FrameWidgetClass DebugFrame {
-   visible 0
+   visible 1
    ignorepointer 1
    position 300 32
    size 600 150
@@ -91,7 +91,7 @@ FrameWidgetClass EditorMainFrame {
    hexactsize 1
    vexactsize 1
    priority 250
-   scriptclass ""
+   scriptclass "EditorUIViewModel"
    {
     PanelWidgetClass DebugPanel {
      ignorepointer 1
@@ -128,9 +128,15 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         scriptclass ""
+         scriptclass "EditorView"
          font "gui/fonts/metron"
          "text offset" 5 0
+         {
+          ScriptParamsClass {
+           view_model_widget "DebugFrame"
+           variable_name "DebugText1"
+          }
+         }
         }
         TextWidgetClass DebugText2 {
          ignorepointer 1
@@ -217,6 +223,10 @@ FrameWidgetClass EditorMainFrame {
        font "gui/fonts/metron16"
       }
      }
+    }
+   }
+   {
+    ScriptParamsClass {
     }
    }
   }
@@ -420,7 +430,7 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 0
          vexactsize 0
          priority 1
-         scriptclass "PlaceableSearchBar"
+         scriptclass ""
          style EditorProperty
          text "Search...."
          "limit visible" 0

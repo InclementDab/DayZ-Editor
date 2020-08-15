@@ -6,7 +6,7 @@ enum EditorViewType
 
 
 
-typedef ref map<string, typename> VariableHashMap;
+
 
 
 
@@ -15,23 +15,27 @@ typedef ref map<string, typename> VariableHashMap;
 
 class EditorView extends ScriptedWidgetEventHandler
 {
+	
+	reference string view_model_widget;
 	reference string variable_name;
-	//reference string variable_type; // m_ControlTypes
 	reference int variable_index;
 	reference string control_name;
 	
+	private Widget m_ViewModelWidget;
 	private Widget m_LayoutRoot;
 	private Widget m_ControlWidget;
 	
 	private EditorViewType m_Type;
-	private Managed m_Model;
-	private ref VariableHashMap m_ModelHashMap;
+	private ViewModelBase m_Model;
+	
 	
 	private const ref array<typename> supported_types = { int, float, string };
 
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("EditorView::OnWidgetScriptInit");
+		if ((variable_name == string.Empty) || view_model_widget == string.Empty) return;
+		
 		m_LayoutRoot = w;
 		m_LayoutRoot.SetHandler(this);
 
@@ -51,27 +55,34 @@ class EditorView extends ScriptedWidgetEventHandler
 				break;
 			default:
 				Error(w.GetName() + " Unsupported type");
-				break;
+				return;
 		}
+		
+
+	
+		m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(view_model_widget);
+		
+		if (!m_ViewModelWidget) {
+			EditorLog.Error("ViewModel not found!");
+			return;
+		}
+		
+		m_ViewModelWidget.GetScript(m_Model);
+		
+		if (!m_Model) {
+			EditorLog.Error("Error on ViewModel GetScript!");
+			return;
+		}
+		
+		m_Model.InsertView(this);
+		
+		UpdateView();
+		
 		
 		/*
 		if (supported_types.Find(variable_type) == -1) {
 			EditorLog.Error("Unsupported type");
 		}*/
-	}
-	
-	void SetModel(Managed model)
-	{
-		m_Model = model;
-		
-		m_ModelHashMap = new VariableHashMap();
-		typename vtype = m_Model.Type();
-		int vcnt = vtype.GetVariableCount();
-		for (int i = 0; i < vcnt; i++) {
-			m_ModelHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));
-		}
-		
-		UpdateView();
 	}
 	
 	bool OnChange(Widget w, int x, int y, bool finished)
@@ -84,8 +95,9 @@ class EditorView extends ScriptedWidgetEventHandler
 
 	void DebugPrint()
 	{
+		EditorLog.Debug("EditorView::DebugPrint: " + m_LayoutRoot.GetName());
+		EditorLog.Debug("view_model_widget:" + view_model_widget);
 		EditorLog.Debug("variable_name:" + variable_name);
-		//EditorLog.Debug("variable_type:" + variable_type);
 		EditorLog.Debug("variable_index:" + variable_index);
 		EditorLog.Debug("control_name:" + control_name);
 	}
@@ -93,6 +105,7 @@ class EditorView extends ScriptedWidgetEventHandler
 	void UpdateView()
 	{
 		EditorLog.Trace("EditorView::UpdateView");
+		if (!m_Model) return;
 		switch (m_Type)
 		{
 			case EditorViewType.TEXT:
@@ -100,7 +113,7 @@ class EditorView extends ScriptedWidgetEventHandler
 				string text;
 				TextWidget tw = TextWidget.Cast(m_ControlWidget);
 				if (tw) {
-					EditorLog.Error("ViewModel cannot be updated for TextWidgets");
+					EditorLog.Warning("ViewModel cannot be updated for TextWidgets");
 				}
 				
 				MultilineEditBoxWidget mebw = MultilineEditBoxWidget.Cast(m_ControlWidget);
@@ -112,9 +125,10 @@ class EditorView extends ScriptedWidgetEventHandler
 				if (ebw) {
 					text = ebw.GetText();
 				}
-								
 				
-				switch (m_ModelHashMap.Get(variable_name)) {
+				
+				
+				switch (m_Model.GetVariableType(variable_name)) {
 					
 					case string: {
 						EnScript.SetClassVar(m_Model, variable_name, variable_index, text);
@@ -147,12 +161,15 @@ class EditorView extends ScriptedWidgetEventHandler
 	
 	void UpdateModel()
 	{
+		EditorLog.Trace("EditorView.UpdateModel");
+		if (!m_Model) return;
+		
 		switch (m_Type)
 		{
 			case EditorViewType.TEXT: {
 				string text;
 			
-				typename type = m_ModelHashMap.Get(variable_name);
+				typename type = m_Model.GetVariableType(variable_name);
 				
 				switch (type) {
 					
@@ -174,11 +191,13 @@ class EditorView extends ScriptedWidgetEventHandler
 						text = "" + text_int;
 						break;
 					}
-					
-					
 				}
 				
-			
+				TextWidget tw = TextWidget.Cast(m_ControlWidget);
+				if (tw) {
+					tw.SetText(text);
+				}
+				
 				MultilineEditBoxWidget mebw = MultilineEditBoxWidget.Cast(m_ControlWidget);
 				if (mebw) {
 					mebw.SetText(text);
@@ -190,6 +209,8 @@ class EditorView extends ScriptedWidgetEventHandler
 					ebw.SetText(text);
 					return;
 				}
+				
+				
 			
 				return;
 				
@@ -205,22 +226,28 @@ class EditorView extends ScriptedWidgetEventHandler
 		}
 	}
 	
-	static EditorView GetUIProperty(Widget root, Managed model, string name)
+	private void SetModel(ViewModelBase model)
+	{
+		m_Model = model;
+		UpdateView();
+	}
+	
+	static EditorView GetUIProperty(Widget root, ViewModelBase model, string name)
 	{
 		EditorView view;
 		root.FindAnyWidget(name).GetScript(view);
-		view.SetModel(model);		
+		view.SetModel(model);
 		return view;
 	}
 	
-	static ref array<EditorView> GetUIProperties(Widget root, Managed model)
+	static ref array<EditorView> GetUIProperties(Widget root, ViewModelBase model)
 	{
 		ref array<EditorView> views = new array<EditorView>();
 		_GetUIProperties(root, model, views);
 		return views;
 	}
 	
-	private static void _GetUIProperties(Widget root, Managed model, inout array<EditorView> views)
+	private static void _GetUIProperties(Widget root, ViewModelBase model, inout array<EditorView> views)
 	{
 		EditorView view;
 		root.GetScript(view);

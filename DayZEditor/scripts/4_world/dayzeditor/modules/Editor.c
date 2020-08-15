@@ -83,8 +83,8 @@ class EditorClientModule: JMModuleBase
 		m_EditorUI = new EditorUI();
 		m_EditorUIViewModel = new EditorUIViewModel();
 		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
-		array<EditorView> views = EditorView.GetUIProperties(m_EditorUI.GetRoot(), m_EditorUIViewModel);
-		Print(views.Count());
+		//array<EditorView> views = EditorView.GetUIProperties(m_EditorUI.GetRoot(), m_EditorUIViewModel);
+		//Print(views.Count());
 		
 		
 		// Load PlaceableObjects

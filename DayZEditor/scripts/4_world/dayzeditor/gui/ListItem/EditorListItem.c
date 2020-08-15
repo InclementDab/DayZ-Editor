@@ -14,22 +14,6 @@ EditorListItem EditorListItemFromWidget(Widget w)
 }
 
 
-void RecursiveGetParent(out ref Widget w, string name)
-{
-	if (w.GetName() == name) 
-		return;
-	
-	w = w.GetParent();
-	RecursiveGetParent(w, name);
-}
-
-
-
-
-
-
-
-
 
 
 // maybe use widgets instead of ScriptedWidgetEventHandler

@@ -12,12 +12,9 @@ class EditorLog
 	private static void EditorPrint(string msg, EditorLogLevel level)
 	{
 		msg = string.Format("[EDITOR::%1] %2", typename.EnumToString(EditorLogLevel, level), msg);
-		if (level == EditorLogLevel.ERROR) {
-			Error(msg);
-			DumpStack();
-		}
-		if (level >= CurrentLogLevel && level)
-			Print(msg);
+		Print(msg);
+//		if (level >= CurrentLogLevel && level)
+	//		Print(msg);
 	}
 	
 	static void Trace(string msg)
@@ -131,3 +128,28 @@ static string GetIconFromMod(ref ModStructure m_ModInfo)
 	return "DayZEditor/gui/images/dayz_editor_icon_black.edds";
 }
 
+static void RecursiveGetParent(out ref Widget w, string name)
+{
+	if (w.GetName() == name) 
+		return;
+	
+	w = w.GetParent();
+	RecursiveGetParent(w, name);
+}
+
+static Widget GetWidgetRoot(ref Widget w)
+{
+	Widget parent = w;
+	_GetWidgetRoot(parent);
+	return parent;
+}
+
+static void _GetWidgetRoot(out ref Widget w)
+{
+	if (w.GetParent() == null) {
+		return;	
+	}
+	
+	w = w.GetParent();
+	_GetWidgetRoot(w);
+}
