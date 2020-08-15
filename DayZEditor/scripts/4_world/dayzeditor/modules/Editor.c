@@ -334,8 +334,6 @@ class EditorClientModule: JMModuleBase
 			GetGame().GetWorldName(world_name);
 			GetGame().ConfigGetIntArray(string.Format("CfgWorlds %1 centerPosition", world_name), center_pos);
 			
-
-			
 			// Camera Init
 			// todo if singleplayer spawn on center of map, otherwise spawn on character in MP
 			vector pos = m_Player.GetPosition();

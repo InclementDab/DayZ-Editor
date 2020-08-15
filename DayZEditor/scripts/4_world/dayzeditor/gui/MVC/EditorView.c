@@ -3,10 +3,43 @@
 typedef ref map<string, Class> TextListboxWidgetData;
 
 // WrapSpacerWidget
-typedef ref array<ref Widget> WrapSpacerWidgetData;
+class WrapSpacerWidgetData: ref set<Widget> 
+{
+	bool ShouldUpdate;
+	
+	void WrapSpacerWidgetData()
+	{
+		EditorLog.Trace("WrapSpacerWidgetData");
+		ShouldUpdate = false;
+	}
+	
+	void ~WrapSpacerWidgetData()
+	{
+		EditorLog.Trace("~WrapSpacerWidgetData");
+	}
+	
+	void InsertWidget(Widget value)
+	{
+		EditorLog.Trace("WrapSpacerWidgetData::InsertWidget");
+		Print(value.GetName());
+		if (Insert(value) != -1)
+			ShouldUpdate = true;
+		
+	}
+	
+	void RemoveWidget(Widget value)
+	{
+		EditorLog.Trace("WrapSpacerWidgetData::RemoveWidget");
+		int find = Find(value);
+		if (find != -1) {
+			Remove(find);
+			ShouldUpdate = true;
+		}
+	}
+}
 
 // XComboBoxWidget
-typedef ref set<string> XComboBoxWidgetData;
+typedef ref array<string> XComboBoxWidgetData;
 
 class EditorView extends ScriptedWidgetEventHandler
 {
@@ -80,11 +113,9 @@ class EditorView extends ScriptedWidgetEventHandler
 	{
 		Print("OnClick");
 		if (m_Model) {
-			UpdateModel();
-			m_Model.OnPropertyChanged(w);
+			return m_Model.OnClick(w, x, y, button);
 		}
-		
-		
+	
 		return super.OnClick(w, x, y, button);
 	}
 	
@@ -153,8 +184,12 @@ class EditorView extends ScriptedWidgetEventHandler
 			}
 			
 			case XComboBoxWidget: {
-				XComboBoxWidgetData combo_data = new XComboBoxWidgetData();
+				//XComboBoxWidgetData combo_box_data = new XComboBoxWidgetData();
 				XComboBoxWidget combo_box = XComboBoxWidget.Cast(m_LayoutRoot);
+				
+				for (int c = 0; c < combo_box.GetNumItems(); c++) {
+					
+				}
 				
 				break;
 			}
@@ -197,20 +232,22 @@ class EditorView extends ScriptedWidgetEventHandler
 			
 			case TextListboxWidget: {
 				TextListboxWidget list_box = TextListboxWidget.Cast(m_LayoutRoot);
-				
 				TextListboxWidgetData list_data = new TextListboxWidgetData();
 				EnScript.GetClassVar(m_Model, variable_name, 0, list_data);
 				list_box.ClearItems();
 
 				
-				foreach (string text, Class data: list_data)
+				foreach (string text, Class data: list_data) {
 					list_box.AddItem(text, data, 0);
+				}
 				
+			
 							
 				break;
 			}
 			
 			case WrapSpacerWidget: {
+				Print("WrapSpacerWidget");
 				WrapSpacerWidgetData wrap_spacer_data = new WrapSpacerWidgetData();
 				WrapSpacerWidget wrap_spacer = WrapSpacerWidget.Cast(m_LayoutRoot);
 
@@ -219,11 +256,12 @@ class EditorView extends ScriptedWidgetEventHandler
 					break;
 				}
 				
-				
-				ClearWidgetChildren(wrap_spacer);
-				
-				foreach (Widget w: wrap_spacer_data) {
-					wrap_spacer.AddChild(w);
+				if (wrap_spacer_data.ShouldUpdate) {
+					ClearWidgetChildren(wrap_spacer);				
+					foreach (Widget w: wrap_spacer_data) {
+						wrap_spacer.AddChild(w);
+					}
+					wrap_spacer_data.ShouldUpdate = false;
 				}
 			
 				
@@ -244,7 +282,6 @@ class EditorView extends ScriptedWidgetEventHandler
 				foreach (string item: combo_box_data) {
 					combo_box.AddItem(item);
 				}
-				
 				
 				
 				break;

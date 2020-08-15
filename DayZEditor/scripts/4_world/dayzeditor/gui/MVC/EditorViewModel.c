@@ -48,13 +48,15 @@ class EditorHudViewModel: ViewModelBase
 		BrushTypeBox.Insert("Brush1");
 		BrushTypeBox.Insert("Brush2");
 		BrushTypeBox.Insert("Brush3");
+		
 		UpdateViews();		
 	}
 	
 	
 	void InsertPlaceableObject(EditorListItem target)
 	{
-		LeftbarSpacer.Insert(target.GetRoot());
+		m_PlaceableObjects.Insert(target);
+		LeftbarSpacer.InsertWidget(target.GetRoot());
 	}	
 	
 	void InsertPlacedObject(EditorListItem target)
@@ -70,9 +72,9 @@ class EditorHudViewModel: ViewModelBase
 	
 	int ReloadPlaceableObjects() 
 	{ 
+		m_PlaceableObjects = new EditorPlaceableListItemSet();
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
-
 		for (int i = 0; i < paths.Count(); i++)	{
 			string Config_Path = paths.Get(i);			
 			
@@ -94,6 +96,7 @@ class EditorHudViewModel: ViewModelBase
 			Widget root = placeable_object.GetRoot();
 			root.Show(placeable_object.GetData().GetCategory() == category);
 		}
+		
 	}
 	
 	void ClearBrushBox()
@@ -106,12 +109,9 @@ class EditorHudViewModel: ViewModelBase
 		BrushTypeBox.Insert(name);
 	}
 	
-	
-	override void OnPropertyChanged(Widget target)
+	override bool OnClick(Widget w, int x, int y, bool button) 
 	{
-		EditorLog.Trace("OnPropertyChanged: " + target.GetName());
-
-		switch (target.GetName()) {
+		switch (w.GetName()) {
 			
 			case "BuildingSelect": {
 				VehicleSelect = false; EntitySelect = false; HumanSelect = false;
@@ -136,12 +136,19 @@ class EditorHudViewModel: ViewModelBase
 				UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
 				break;
 			}
-			
-			
 		}
 		
-	
+		UpdateViews();
 		
+		return super.OnClick(w, x, y, button);
+	}
+	
+	
+	override void OnPropertyChanged(Widget target)
+	{
+		EditorLog.Trace("OnPropertyChanged: " + target.GetName());
+
+	
 		UpdateViews();
 	}
 }
@@ -207,6 +214,8 @@ class ViewModelBase: Managed
 	}
 	
 	void OnPropertyChanged(Widget target) {}
+	
+	bool OnClick(Widget w, int x, int y, bool button) { return true; }
 }
 
 
