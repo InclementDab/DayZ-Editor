@@ -73,7 +73,7 @@ class EditorUIViewModel: ViewModelBase
 	override void OnPropertyChanged(Widget target)
 	{
 		Print("OnPropertyChanged: " + target.GetName());
-		WrapSpacerTest.Insert(target.GetName());
+		WrapSpacerTest.Insert(target.GetName(), target);
 		switch (target.GetName()) {
 			
 			case "BuildingSelect": {

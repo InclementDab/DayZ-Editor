@@ -1,5 +1,7 @@
 
+// TextListBoxWidget
 typedef ref map<string, Class> TextListboxWidgetData;
+
 
 
 class EditorView extends ScriptedWidgetEventHandler
@@ -175,12 +177,18 @@ class EditorView extends ScriptedWidgetEventHandler
 			case TextListboxWidget: {
 				TextListboxWidget list_box = TextListboxWidget.Cast(m_LayoutRoot);
 				
-				TStringArray list_data = new TStringArray();
+				TextListboxWidgetData list_data = new TextListboxWidgetData();
 				EnScript.GetClassVar(m_Model, variable_name, 0, list_data);
 				list_box.ClearItems();
+
 				
+				foreach (string text, Class data: list_data) {
+					list_box.AddItem(text, data, 0);
+				}
+				
+				/*
 				for (int i = 0; i < list_data.Count(); i++)
-					list_box.AddItem(list_data[i], null, 0);
+					list_box.AddItem(list_data[i], null, 0);*/
 			
 				break;
 			}
