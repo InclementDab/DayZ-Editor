@@ -88,6 +88,17 @@ WrapSpacerWidgetClass EditorDialogOption {
      font "gui/fonts/etelkatextpro"
      "text valign" center
     }
+    PanelWidgetClass Spacer {
+     visible 1
+     ignorepointer 1
+     color 1 1 1 0.549
+     size 1 2
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style rover_sim_colorable
+    }
    }
   }
   WrapSpacerWidgetClass EditorDialogOptionContent {
