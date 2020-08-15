@@ -202,7 +202,7 @@ class ViewModelBase: Managed
 		for (int i = 0; i < vcnt; i++)
 			m_ModelHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));
 		
-		IObservable.NotifyOnCollectionChanged(OnCollectionChanged);
+		
 	}
 	
 
@@ -248,17 +248,7 @@ class ViewModelBase: Managed
 		PropertyChanged.Invoke(property_name);
 	}
 	
-	void OnCollectionChanged(IObservable collection, NotifyCollectionChangedAction action, string var_name)
-	{
-		Print("Changed");
-		Print(collection.ClassName());
-		Print(typename.EnumToString(NotifyCollectionChangedAction, action));
-		
-		
-		NotifyPropertyChanged(var_name);
-		
-		
-	}
+
 	
 	bool OnClick(Widget w, int x, int y, bool button) { return true; }
 }

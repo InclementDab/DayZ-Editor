@@ -88,7 +88,7 @@ class ObservableCollection<Class TValue>: IObservable
 	{
 		int index = _data.Insert(value);
 		if (index != -1) {
-			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Add, m_VariableName);
+			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Add, value, m_VariableName);
 		}
 		
 		return index;
@@ -98,11 +98,14 @@ class ObservableCollection<Class TValue>: IObservable
 	void Remove(int index)
 	{
 		int count = _data.Count();
-		_data.Remove(index);
 		
-		if (count != _data.Count()) {
-			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Remove, m_VariableName);
+		TValue value = _data.Get(index);
+		
+		if (value) {
+			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Remove, value, m_VariableName);
+			_data.Remove(index);
 		}
+		
 	}
 	
 	void Clear()

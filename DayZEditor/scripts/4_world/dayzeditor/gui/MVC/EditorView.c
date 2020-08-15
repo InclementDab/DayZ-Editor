@@ -66,6 +66,10 @@ class EditorView extends ScriptedWidgetEventHandler
 			return;
 		}
 		
+		if (observable_collection) {
+			IObservable.NotifyOnCollectionChanged(OnCollectionChanged);
+		}
+		
 
 		m_Model.InsertView(variable_name, this);		
 	}
@@ -75,6 +79,56 @@ class EditorView extends ScriptedWidgetEventHandler
 		if (property_name != variable_name) return;
 		EditorLog.Trace("EditorView::OnPropertyChanged: " + property_name);
 		UpdateView();
+	}
+	
+	
+	// relies on observable_collection being true. totally bypasses regular events 10x faster
+	void OnCollectionChanged(IObservable collection, NotifyCollectionChangedAction action, Class changed_value, string property_name)
+	{
+		if (property_name != variable_name) return;
+		EditorLog.Trace("EditorView::OnCollectionChanged: " + property_name);
+		
+		switch (m_WidgetType) {
+				
+			case WrapSpacerWidget: {
+				
+				WrapSpacerWidgetData wrap_spacer_data(property_name);
+				if (EnScript.GetClassVar(m_Model, property_name, 0, wrap_spacer_data)) {
+					Error(string.Format("Wrong Data Type in %1", m_LayoutRoot.GetName()));
+					break;
+				}
+				
+				switch (action) {
+					
+					case NotifyCollectionChangedAction.Add: {
+						m_LayoutRoot.AddChild(changed_value);
+						break;
+					}
+					
+					case NotifyCollectionChangedAction.Remove: {
+						m_LayoutRoot.RemoveChild(changed_value);
+						break;
+					}
+					
+					default: {
+						Error("Not Implemented Exception!");
+						break;
+					}
+					
+					
+				}
+				
+				
+				ClearWidgetChildren(m_LayoutRoot);
+				for (int wsd = 0; wsd < wrap_spacer_data.Count(); wsd++) {
+					
+				}
+				
+				break;
+			}
+			
+		}
+		
 	}
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)
@@ -226,18 +280,7 @@ class EditorView extends ScriptedWidgetEventHandler
 			}
 			
 			case WrapSpacerWidget: {
-				WrapSpacerWidgetData wrap_spacer_data(variable_name);
-				//WrapSpacerWidget wrap_spacer = WrapSpacerWidget.Cast(m_LayoutRoot);
-
-				if (EnScript.GetClassVar(m_Model, variable_name, 0, wrap_spacer_data)) {
-					Error(string.Format("Wrong Data Type in %1", m_LayoutRoot.GetName()));
-					break;
-				}
 				
-				ClearWidgetChildren(m_LayoutRoot);
-				for (int wsd = 0; wsd < wrap_spacer_data.Count(); wsd++) {
-					m_LayoutRoot.AddChild(wrap_spacer_data.Get(wsd));
-				}
 				
 				/*
 				if (wrap_spacer_data.ShouldUpdate) {
