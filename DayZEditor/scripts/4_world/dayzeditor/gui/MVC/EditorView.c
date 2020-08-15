@@ -70,7 +70,6 @@ class EditorView extends ScriptedWidgetEventHandler
 	void EditorView()
 	{
 		EditorLog.Trace("EditorView");
-		ViewModelBase.NotifyOnPropertyChanged(OnPropertyChanged);
 	}
 	
 	void OnWidgetScriptInit(Widget w)
@@ -108,13 +107,15 @@ class EditorView extends ScriptedWidgetEventHandler
 		
 
 		m_Model.InsertView(variable_name, this);
+		m_Model.PropertyChanged.Insert(OnPropertyChanged);
 		
 		typename var_type = m_Model.GetVariableType(variable_name);
-		
 		if (var_type.IsInherited(IObservable)) {
 			EditorLog.Trace("Inherited from Observable: " + var_type.ToString());
 			IObservable.NotifyOnCollectionChanged(OnCollectionChanged);
 		}
+		
+		
 	}
 	
 	void OnPropertyChanged(string property_name)
@@ -219,18 +220,16 @@ class EditorView extends ScriptedWidgetEventHandler
 		EditorLog.Trace("EditorView::OnChange");
 		if (m_Model) {
 			UpdateModel();
-			//m_Model.NotifyPropertyChanged(w.GetName());
 		}
-		return true;
-		//return super.OnChange(w, x, y, finished);
+
+		return super.OnChange(w, x, y, finished);
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Print("OnClick");
+		EditorLog.Trace("EditorView::OnClick");
 		if (m_Model) {
 			UpdateModel();
-			//return m_Model.OnClick(w, x, y, button);
 		}
 	
 		return super.OnClick(w, x, y, button);
@@ -282,28 +281,18 @@ class EditorView extends ScriptedWidgetEventHandler
 				break;
 			}
 			
-			case TextListboxWidget: {
-				TextListboxWidgetData data;
-				TextListboxWidget list_box = TextListboxWidget.Cast(m_LayoutRoot);
-				for (int i = 0; i < list_box.GetNumItems(); i++) {
-					string title; Class list_data;
-					list_box.GetItemText(i, 0, title);
-					list_box.GetItemData(i, 0, list_data);
-					data.Insert(title, list_data);
-				}
-				
+			case SliderWidget: {
+				SetModelVariable(SliderWidget.Cast(m_LayoutRoot).GetCurrent());
 				break;
 			}
 			
-			case WrapSpacerWidget: {
-				WrapSpacerWidgetData wrap_spacer_data(variable_name);
-				WrapSpacerWidget wrap_spacer = WrapSpacerWidget.Cast(m_LayoutRoot);
-				
+			case XComboBoxWidget: {
+	
+				int x = XComboBoxWidget.Cast(m_LayoutRoot).GetCurrentItem();
+				GetEditor().SetBrush(GetEditorHudViewModel().GetBrush(GetEditorHudViewModel().m_TempBrushDir.Get(x)));
+	
 				break;
 			}
-			
-			
-			
 			
 			default: {
 				Error(string.Format("Unsupported Widget Type %1", m_WidgetType.ToString()));
@@ -338,6 +327,11 @@ class EditorView extends ScriptedWidgetEventHandler
 				CheckBoxWidget.Cast(m_LayoutRoot).SetChecked(GetModelVariableBool());
 				break;
 			} 
+			
+			case SliderWidget: {
+				SliderWidget.Cast(m_LayoutRoot).SetCurrent(GetModelVariableFloat());
+				break;
+			}
 			
 			
 				
@@ -391,6 +385,13 @@ class EditorView extends ScriptedWidgetEventHandler
 		return state;
 	}
 	
+	float GetModelVariableFloat()
+	{
+		float value;
+		EnScript.GetClassVar(m_Model, variable_name, variable_index, value);
+		return value;
+	}
+	
 	
 	
 	void SetModelVariable(TextListboxWidgetData data)
@@ -431,6 +432,12 @@ class EditorView extends ScriptedWidgetEventHandler
 	void SetModelVariable(bool state)
 	{
 		EnScript.SetClassVar(m_Model, variable_name, variable_index, state);
+		m_Model.NotifyPropertyChanged(variable_name);
+	}
+	
+	void SetModelVariable(float value)
+	{
+		EnScript.SetClassVar(m_Model, variable_name, variable_index, value);
 		m_Model.NotifyPropertyChanged(variable_name);
 	}
 	

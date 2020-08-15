@@ -24,6 +24,9 @@ class EditorHudViewModel: ViewModelBase
 	bool LeftbarHide;
 	bool RightbarHide;
 	
+	float BrushRadius;
+	float BrushDensity;
+	
 	ref TextListboxWidgetData DebugActionStackListbox;
 	ref WrapSpacerWidgetData LeftbarSpacer;
 	ref WrapSpacerWidgetData RightbarSpacer;
@@ -43,13 +46,59 @@ class EditorHudViewModel: ViewModelBase
 		LeftbarSpacer 				= new WrapSpacerWidgetData("LeftbarSpacer");
 		RightbarSpacer 				= new WrapSpacerWidgetData("RightbarSpacer");
 		BrushTypeBox				= new XComboBoxWidgetData("BrushTypeBox");
+		
+		// Load Brushes
+		m_EditorBrushTypes = new EditorBrushDataSet();
+		m_CustomBrushList = new map<string, typename>();
+		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
+		RegisterCustomBrush("Delete", DeleteBrush);
+	}
+	
+	// Brush Management
+	private ref EditorBrushDataSet 		m_EditorBrushTypes;
+	private ref map<string, typename> 	m_CustomBrushList;
+	void ReloadBrushes(string filename)
+	{
+		EditorLog.Trace("EditorHudViewModel::ReloadBrushes");
+		XMLEditorBrushes xml_brushes = new XMLEditorBrushes();
+		GetXMLApi().Read(filename, xml_brushes);
+	}
+	
+	EditorBrushData GetLoadedBrushData(string name) { return m_EditorBrushTypes.Get(name); }
+	void RegisterCustomBrush(string name, typename type) { m_CustomBrushList.Insert(name, type); }
+	
+	void SetBrushTypes(EditorBrushDataSet brush_types)
+	{
+		EditorLog.Trace("EditorHudViewModel::SetBrushTypes");
+		ClearBrushBox();
+		m_EditorBrushTypes = brush_types;
+
+		foreach (EditorBrushData brush: m_EditorBrushTypes)
+			InsertBrush(brush.Name);		
+	}
+		
+	EditorBrush GetBrush(string brush_name)
+	{
+		EditorLog.Trace("EditorSettings::GetBrush " + brush_name);
+		foreach (EditorBrushData settings: m_EditorBrushTypes) {
+			if (settings.Name == brush_name) {
+				foreach (string name, typename type: m_CustomBrushList) 
+					if (name == brush_name)
+						return type.Spawn();
+					
+				return new EditorBrush(settings);
+			}
+		}
+		
+		EditorLog.Trace("EditorSettings::GetBrush Brush not found!");
+		return null;
 	}
 		
 
 	
 	void InsertPlaceableObject(EditorListItem target)
 	{
-		m_PlaceableObjects.Insert(target);
+		EditorLog.Trace("EditorHudViewModel::InsertPlaceableObject");
 		LeftbarSpacer.Insert(target.GetRoot());
 	}	
 	
@@ -77,7 +126,10 @@ class EditorHudViewModel: ViewModelBase
 				string Config_Name, Base_Name;
 		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name);
 				EditorPlaceableObjectData placeable_object_data = new EditorPlaceableObjectData(Config_Name, Config_Path);
-				InsertPlaceableObject(new EditorPlaceableListItem(placeable_object_data));
+				EditorListItem item = new EditorPlaceableListItem(placeable_object_data);
+				m_PlaceableObjects.Insert(item);
+				InsertPlaceableObject(item);
+				
 		    }
 		}
 		
@@ -98,21 +150,17 @@ class EditorHudViewModel: ViewModelBase
 	}
 	
 	
-	override bool OnClick(Widget w, int x, int y, bool button) 
-	{
-
-		
-		return super.OnClick(w, x, y, button);
-	}
-	
-	
 	void ClearBrushBox()
 	{
 		BrushTypeBox.Clear();
 	}
 	
+	ref map<int, string> m_TempBrushDir = new map<int, string>();
+	private int tempb = 0;
 	void InsertBrush(string name)
 	{
+		m_TempBrushDir.Insert(tempb, name);
+		tempb++;
 		BrushTypeBox.Insert(name);
 	}
 	
@@ -141,6 +189,16 @@ class EditorHudViewModel: ViewModelBase
 			case "HumanSelect": {
 				BuildingSelect = false; VehicleSelect = false; EntitySelect = false;
 				UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
+				break;
+			}
+			
+			case "BrushRadius": {
+				EditorBrush.SetRadius(BrushRadius);
+				break;
+			}
+			
+			case "BrushDensity": {
+				EditorBrush.SetDensity(BrushDensity);
 				break;
 			}
 		}
@@ -187,12 +245,7 @@ class ViewModelBase: Managed
 	}
 	
 
-	void UpdateViews()
-	{
-		foreach (ref EditorView view: m_ViewList)
-			view.UpdateView();
-	}
-	
+
 	void InsertView(string variable_name, ref EditorView view)
 	{
 		EditorLog.Trace("ViewModelBase::InsertView: " + variable_name);
@@ -207,9 +260,8 @@ class ViewModelBase: Managed
 	}
 	
 	// property_name = name of variable being changed
-	private static ref ScriptInvoker PropertyChanged = new ScriptInvoker();
-	
-	static void NotifyOnPropertyChanged(func action)
+	ref ScriptInvoker PropertyChanged = new ScriptInvoker();
+	void NotifyOnPropertyChanged(func action)
 	{	
 		if (PropertyChanged == null)
 			PropertyChanged = new ScriptInvoker();
@@ -221,7 +273,8 @@ class ViewModelBase: Managed
 	{
 		EditorLog.Trace("ViewModelBase::NotifyPropertyChanged: " + property_name);
 		if (property_name == string.Empty) {
-			UpdateViews();
+			foreach (ref EditorView view: m_ViewList)
+				view.UpdateView();
 			return;
 		}
 		

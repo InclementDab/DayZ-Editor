@@ -84,6 +84,7 @@ class EditorClientModule: JMModuleBase
 		m_UIManager = GetGame().GetUIManager();
 		m_EditorHud = new EditorHud();
 		m_EditorHud.Init(null);
+	
 
 		
 		// Events
@@ -241,7 +242,6 @@ class EditorClientModule: JMModuleBase
 		EditorEvents.ObjectCreated(this, editor_object);
 		
 		if (!create_undo) return editor_object;
-
 		
 		EditorAction action = new EditorAction("Delete", "Create");;
 		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
@@ -452,6 +452,30 @@ class EditorClientModule: JMModuleBase
 		
 		EditorEvents.StopPlacing(this);
 	}
+	
+	
+	void Undo()
+	{
+		EditorLog.Trace("Editor::Undo");
+		foreach (EditorAction action: GetActionStack()) {
+			if (!action.IsUndone()) {
+				action.CallUndo();
+			}
+		}	
+	}
+	
+	void Redo()
+	{
+		EditorLog.Trace("Editor::Redo");
+		for (int i = GetActionStack().Count() - 1; i >= 0; i--) {
+			EditorAction action = GetActionStack().Get(i);
+			if (action == null) continue;
+			if (action.IsUndone())
+				action.CallRedo();
+
+		}
+	}
+	
 	
 	
 	

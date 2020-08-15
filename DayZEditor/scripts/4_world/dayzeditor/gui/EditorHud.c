@@ -18,26 +18,30 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 		
 		// Load PlaceableObjects
 		// This is the last thing to initialize on the UI
+#ifndef COMPONENT_SYSTEM // not in workshop
 		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", GetEditorHudViewModel().ReloadPlaceableObjects()));
-		
+#endif
 		m_LayoutRoot.SetHandler(this);
 	}
 	
-#ifndef COMPONENT_SYSTEM // not in workshop
+
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudHandler::OnMouseButtonDown");
 		if (button == 0) {
+			
+#ifndef COMPONENT_SYSTEM
+			
 			if (GetEditor().IsPlacing()) {
 				GetEditor().PlaceObject();
 				return true;
 			}
-			
+#endif
 		}
 		
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
-#endif
+
 
 	override bool OnClick(Widget w, int x, int y, int button)
 	{

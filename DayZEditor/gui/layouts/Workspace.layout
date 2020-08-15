@@ -1,0 +1,12 @@
+WorkspaceWidgetClass EditorWorkspaceFix {
+ visible 1
+ disabled 0
+ clipchildren 0
+ position 0 0
+ size 1 1
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
+ draggable 0
+}

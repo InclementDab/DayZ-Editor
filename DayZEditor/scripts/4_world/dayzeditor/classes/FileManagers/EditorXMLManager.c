@@ -288,12 +288,11 @@ class XMLEditorBrushes: XMLCallback
 {
 	private ref EditorBrushDataSet m_Data;
 	
-	private func m_PostSuccess;
 
-	void XMLEditorBrushes(func post_success)
+	void XMLEditorBrushes()
 	{
 		EditorLog.Trace("XMLEditorBrushes");
-		m_PostSuccess = post_success;
+		m_Data = new EditorBrushDataSet();
 	}
 		
 	override void OnStart(ref XMLDocument document)
@@ -355,8 +354,7 @@ class XMLEditorBrushes: XMLCallback
 			m_Data.Insert(brush_settings.Name, brush_settings);
 		}
 		
-		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(m_PostSuccess, m_Data);
-		//GetEditor().GetSettings().SetBrushTypes(m_Data);
+		GetEditorHudViewModel().SetBrushTypes(m_Data);
 	}
 	
 	override void OnFailure(ref XMLDocument document)

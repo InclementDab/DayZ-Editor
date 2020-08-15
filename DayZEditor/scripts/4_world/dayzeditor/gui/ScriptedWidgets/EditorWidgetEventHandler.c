@@ -1,12 +1,10 @@
 class EditorWidgetEventHandler: ScriptedWidgetEventHandler
 {
 	protected ref Widget m_Root;
-	
-	
+
 	void ~EditorWidgetEventHandler()
 	{
 		m_Root.Show(false);
-		delete m_Root;
 	}
 	
 	

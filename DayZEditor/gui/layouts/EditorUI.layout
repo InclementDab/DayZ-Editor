@@ -1160,7 +1160,7 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 1
          vexactsize 1
          {
-          SliderWidgetClass SimcityRadiusSlider {
+          SliderWidgetClass BrushRadiusSlider {
            visible 1
            size 120 32
            halign center_ref
@@ -1169,9 +1169,16 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           scriptclass "EditorView"
            current 20
+           {
+            ScriptParamsClass {
+             view_model_widget "ViewModelFrame"
+             variable_name "BrushRadius"
+            }
+           }
           }
-          TextWidgetClass SimcityRadiusText {
+          TextWidgetClass BrushRadiusText {
            visible 1
            ignorepointer 1
            size 56 32
@@ -1181,10 +1188,17 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           scriptclass "EditorView"
            text "0"
            font "gui/fonts/metron"
            "text halign" center
            "text valign" center
+           {
+            ScriptParamsClass {
+             view_model_widget "ViewModelFrame"
+             variable_name "BrushRadius"
+            }
+           }
           }
          }
         }
@@ -1198,7 +1212,7 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 1
          vexactsize 1
          {
-          SliderWidgetClass SimcityDensitySlider {
+          SliderWidgetClass BrushDensitySlider {
            visible 1
            size 120 32
            halign center_ref
@@ -1207,11 +1221,18 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           scriptclass "EditorView"
            maximum 1
            step 0.01
            current 0.25
+           {
+            ScriptParamsClass {
+             view_model_widget "ViewModelFrame"
+             variable_name "BrushDensity"
+            }
+           }
           }
-          TextWidgetClass SimcityDensityText {
+          TextWidgetClass BrushDensityText {
            visible 1
            ignorepointer 1
            size 56 32
@@ -1221,10 +1242,17 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           scriptclass "EditorView"
            text "0"
            font "gui/fonts/metron28"
            "text halign" center
            "text valign" center
+           {
+            ScriptParamsClass {
+             view_model_widget "ViewModelFrame"
+             variable_name "BrushDensity"
+            }
+           }
           }
          }
         }

@@ -119,8 +119,9 @@ class EditorBrush
 			string object_name = m_BrushData.PlaceableObjects.Get(Math.RandomInt(0, m_BrushData.PlaceableObjects.Count() - 1));
 						
 			
-			data_set.InsertEditorData(EditorObjectData.Create(object_name, pos, vector.Up, EditorObjectFlags.NONE));
-			
+			EditorObjectData d = EditorObjectData.Create(object_name, pos, vector.Up, EditorObjectFlags.NONE);
+			GetEditor().CreateObject(d);
+		
 			/*
 			vector clip_info[2];
 			vector size;
@@ -138,7 +139,7 @@ class EditorBrush
 			
 		}
 		
-		GetEditor().CreateObjects(data_set);
+		//GetEditor().CreateObjects(data_set);
 		
 	}
 	

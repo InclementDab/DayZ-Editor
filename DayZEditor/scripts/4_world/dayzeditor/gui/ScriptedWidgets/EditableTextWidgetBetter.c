@@ -43,7 +43,6 @@ class EditableTextWidgetBetter: ScriptedWidgetEventHandler
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Print("OnClick");
 		return false;
 	}
 	

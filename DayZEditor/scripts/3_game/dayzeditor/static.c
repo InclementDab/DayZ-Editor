@@ -152,3 +152,30 @@ static void _GetWidgetRoot(out ref Widget w)
 	w = w.GetParent();
 	_GetWidgetRoot(w);
 }
+
+private static ref WorkspaceWidget stored_workspace;
+static Widget SafeCreateWidget(string file, Widget parent = null)
+{
+	CGame cgame = GetGame();
+	if (cgame == null) {
+		cgame = new CGame();
+		Print("Created New Game");
+	}
+	
+	WorkspaceWidget workspace = cgame.GetWorkspace();
+	if (workspace == null) {
+		workspace = cgame.GetLoadingWorkspace();
+		if (workspace == null) {
+			Print("AW SHIT BOYS, THIS SHIPS SINKIN AND YOUR GOIN DOWN WITH IT");
+		} else {
+			Print("LoadingWorkspace");
+		}
+	} else {
+		Print("Workspace");
+	}
+		
+	
+	return workspace.CreateWidgets(file, parent);
+	
+	
+}

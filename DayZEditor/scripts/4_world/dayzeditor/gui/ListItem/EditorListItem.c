@@ -32,27 +32,12 @@ class EditorListItem: ScriptedWidgetEventHandler
 	protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
 	protected static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
 
+
 	void EditorListItem() 
 	{ 
-		EditorLog.Trace("EditorListItem"); 
-		
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout");
-		OnWidgetScriptInit(m_Root);
-		
-		if (m_ListItemCache == null) 
-			m_ListItemCache = new map<Widget, ref EditorListItem>();
-		m_ListItemCache.Insert(m_Root, this);
-	}
-	
-	void ~EditorListItem() { EditorLog.Trace("~EditorListItem"); }
-	
+		EditorLog.Trace("EditorListItem");
 
-	
-	
-	void OnWidgetScriptInit(Widget w)
-	{
-		EditorLog.Trace("EditorListItem::OnWidgetScriptInit");
-				
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
 		
 		m_ListItemFrame					= m_Root.FindAnyWidget("EditorListItemFrame");
 		m_EditorListItemLabelFrame		= m_Root.FindAnyWidget("EditorListItemLabelFrame");
@@ -67,7 +52,16 @@ class EditorListItem: ScriptedWidgetEventHandler
 		m_ListItemIcon 					= ImageWidget.Cast(m_Root.FindAnyWidget("EditorListItemIcon"));
 		
 		m_Root.SetHandler(this);
+		
+		if (m_ListItemCache == null) 
+			m_ListItemCache = new map<Widget, ref EditorListItem>();
+		
+		m_ListItemCache.Insert(m_Root, this);
 	}
+
+
+	void ~EditorListItem() { EditorLog.Trace("~EditorListItem"); }
+	
 	
 
 	void SetText(string text) 

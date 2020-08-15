@@ -17,7 +17,6 @@ class EditorPlacedListItem: EditorListItem
 	}
 	
 	
-	
 	void EditorObjectSelected(EditorObject data)
 	{
 		SetColor(COLOR_ON_SELECTED);

@@ -68,9 +68,7 @@ class Editor: Managed
 		EditorPlayer = CreateDefaultCharacter();
 		
 		
-		// Load Brushes
-		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
-		RegisterCustomBrush("Delete", DeleteBrush);
+
 		
 		// Debug
 		DebugObject0 = GetGame().CreateObject("BoundingBoxBase", vector.Zero);
