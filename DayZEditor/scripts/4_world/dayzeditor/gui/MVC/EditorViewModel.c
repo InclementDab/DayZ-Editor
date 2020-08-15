@@ -13,7 +13,7 @@ class EditorUIViewModel: ViewModelBase
 	string DebugText4;
 	string DebugText5;
 	
-	
+	array<string> TextTest;
 	
 	
 	void EditorUIViewModel()
