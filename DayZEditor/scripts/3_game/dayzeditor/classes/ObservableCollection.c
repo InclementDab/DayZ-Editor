@@ -98,7 +98,6 @@ class ObservableCollection<Class TValue>: IObservable
 	void Remove(int index)
 	{
 		int count = _data.Count();
-		
 		TValue value = _data.Get(index);
 		
 		if (value) {

@@ -114,14 +114,6 @@ class EditorView extends ScriptedWidgetEventHandler
 						Error("Not Implemented Exception!");
 						break;
 					}
-					
-					
-				}
-				
-				
-				ClearWidgetChildren(m_LayoutRoot);
-				for (int wsd = 0; wsd < wrap_spacer_data.Count(); wsd++) {
-					
 				}
 				
 				break;
