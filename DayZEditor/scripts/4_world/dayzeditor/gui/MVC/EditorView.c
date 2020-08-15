@@ -68,6 +68,8 @@ class EditorView extends ScriptedWidgetEventHandler
 		
 		if (observable_collection) {
 			IObservable.NotifyOnCollectionChanged(OnCollectionChanged);
+			IObservable.NotifyOnDictionaryChanged(OnDictionaryChanged);
+			
 		}
 		
 
@@ -91,15 +93,8 @@ class EditorView extends ScriptedWidgetEventHandler
 		switch (m_WidgetType) {
 				
 			case WrapSpacerWidget: {
-				
-				WrapSpacerWidgetData wrap_spacer_data(property_name);
-				if (EnScript.GetClassVar(m_Model, property_name, 0, wrap_spacer_data)) {
-					Error(string.Format("Wrong Data Type in %1", m_LayoutRoot.GetName()));
-					break;
-				}
-				
+								
 				switch (action) {
-					
 					case NotifyCollectionChangedAction.Add: {
 						m_LayoutRoot.AddChild(changed_value);
 						break;
@@ -111,13 +106,59 @@ class EditorView extends ScriptedWidgetEventHandler
 					}
 					
 					default: {
-						Error("Not Implemented Exception!");
-						break;
+						Error("OnCollectionChanged: Not Implemented Exception!");
 					}
 				}
 				
 				break;
 			}
+			
+			default: {
+				Error("OnCollectionChanged: Invalid Widget Type");
+			}
+			
+		}
+	}
+	
+	void OnDictionaryChanged(Class dictionary, NotifyCollectionChangedAction action, string changed_key, Class changed_value, string property_name)
+	{
+		if (property_name != variable_name) return;
+		EditorLog.Trace("EditorView::OnDictionaryChanged: " + property_name);
+		Print(changed_key);
+		Print(changed_value);
+		Print(dictionary);
+		
+		switch (m_WidgetType) {
+			
+			case TextListboxWidget: {
+				
+				TextListboxWidget listbox_widget = TextListboxWidget.Cast(m_LayoutRoot);
+				
+				switch (action) {
+					case NotifyCollectionChangedAction.Add: {
+						listbox_widget.AddItem(changed_key, changed_value, 0);
+						break;
+					}
+					
+					case NotifyCollectionChangedAction.Remove: {
+						listbox_widget.ClearItems();
+						/*
+						for (int i = 0; i < dictionary.Count(); i++) {
+							Class key = dictionary.GetKey(i);
+							listbox_widget.AddItem(key.ToString(), dictionary.Get(key), 0);
+						}*/
+						
+						break;
+					}
+					
+					default: {
+						Error("OnDictionaryChanged: Not Implemented Exception!");
+					}
+				}
+		
+				break;
+			}
+			
 			
 		}
 		
@@ -257,37 +298,7 @@ class EditorView extends ScriptedWidgetEventHandler
 				break;
 			} 
 			
-			case TextListboxWidget: {
-				TextListboxWidget list_box = TextListboxWidget.Cast(m_LayoutRoot);
-				TextListboxWidgetData list_data(variable_name);
-				EnScript.GetClassVar(m_Model, variable_name, 0, list_data);
-				list_box.ClearItems();
-
-				for (int i = 0; i < list_data.Count(); i++) {
-					string key = list_data.GetKey(i);
-					list_box.AddItem(key, list_data.Get(key), 0);
-				}
-		
-				break;
-			}
 			
-			case WrapSpacerWidget: {
-				
-				
-				/*
-				if (wrap_spacer_data.ShouldUpdate) {
-					ClearWidgetChildren(wrap_spacer);				
-					foreach (Widget w: wrap_spacer_data) {
-						wrap_spacer.AddChild(w);
-					}
-					wrap_spacer_data.ShouldUpdate = false;
-				}
-			*/
-				
-				
-				
-				break;
-			}
 			
 			case XComboBoxWidget: {
 				XComboBoxWidgetData combo_box_data = new XComboBoxWidgetData(variable_name);

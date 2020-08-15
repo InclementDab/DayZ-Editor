@@ -15,11 +15,21 @@ class IObservable
 	protected static ref ScriptInvoker CollectionChanged = new ScriptInvoker();	
 	static void NotifyOnCollectionChanged(func action)
 	{
-		if (CollectionChanged == null) {
+		if (CollectionChanged == null)
 			CollectionChanged = new ScriptInvoker();
-		}
+		
 		
 		CollectionChanged.Insert(action);
+	}
+	
+	protected static ref ScriptInvoker DictionaryChanged = new ScriptInvoker();
+	static void NotifyOnDictionaryChanged(func action)
+	{
+		if (DictionaryChanged == null)
+			DictionaryChanged = new ScriptInvoker();
+		
+		
+		DictionaryChanged.Insert(action);
 	}
 	
 	
@@ -39,38 +49,38 @@ class ObservableDictionary<Class TKey, Class TValue>: IObservable
 	bool Insert(TKey key, TValue value)
 	{
 		if (_data.Insert(key, value)) {
-			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Add, m_VariableName);
+			DictionaryChanged.Invoke(this, NotifyCollectionChangedAction.Add, key, value, m_VariableName);
 			return true;
 		}
 		
 		return false;
 	}
 	
-	void Remove(string key)
+	void Remove(TKey key)
 	{
 		if (_data.Contains(key)) {
+			TValue value = _data.Get(key);
 			_data.Remove(key);
-			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Remove, m_VariableName);
+			DictionaryChanged.Invoke(this, NotifyCollectionChangedAction.Remove, key, value, m_VariableName);
 		}
 	}
 	
 	void Clear()
 	{
 		_data.Clear();
-		CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Reset);
+		DictionaryChanged.Invoke(this, NotifyCollectionChangedAction.Reset, null, null, m_VariableName);
 	}
 	
 	void Set(TKey key, TValue value)
 	{
 		_data.Set(key, value);
-		CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Replace, m_VariableName);
+		DictionaryChanged.Invoke(this, NotifyCollectionChangedAction.Replace, m_VariableName, key, value, m_VariableName);
 	}
 	
 	TValue Get(TKey key)
 	{
 		return _data.Get(key);
 	}
-	
 		
 	TKey GetKey(int index)
 	{
@@ -101,8 +111,8 @@ class ObservableCollection<Class TValue>: IObservable
 		TValue value = _data.Get(index);
 		
 		if (value) {
-			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Remove, value, m_VariableName);
 			_data.Remove(index);
+			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Remove, value, m_VariableName);
 		}
 		
 	}
