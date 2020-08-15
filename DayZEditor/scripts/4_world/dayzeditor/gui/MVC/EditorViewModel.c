@@ -148,8 +148,6 @@ class EditorHudViewModel: ViewModelBase
 			}
 		}
 		
-		UpdateViews();
-		
 		return super.OnClick(w, x, y, button);
 	}
 	

@@ -148,6 +148,38 @@ class EditorView extends ScriptedWidgetEventHandler
 				break;
 			}
 			
+			// Param1: string
+			case XComboBoxWidget: {
+								
+				XComboBoxWidgetData combo_box_data = XComboBoxWidgetData.Cast(collection);
+				XComboBoxWidget combobox_widget = XComboBoxWidget.Cast(m_LayoutRoot);
+				
+				switch (action) {
+					case NotifyCollectionChangedAction.Add: {
+						combobox_widget.AddItem(Param1<string>.Cast(changed_params).param1);
+						break;
+					}
+					
+					case NotifyCollectionChangedAction.Remove: {
+						combobox_widget.ClearAll();
+						for (int j = 0; j < combo_box_data.Count(); j++) {
+							combobox_widget.AddItem(combo_box_data.Get(j));
+						}
+						
+						
+						break;
+					}
+					
+					default: {
+						Error("OnCollectionChanged: Not Implemented Exception!");
+					}
+				}
+				
+				
+				break;
+			}
+			
+			
 			default: {
 				Error("OnCollectionChanged: Invalid Widget Type");
 			}
@@ -244,16 +276,6 @@ class EditorView extends ScriptedWidgetEventHandler
 				break;
 			}
 			
-			case XComboBoxWidget: {
-				//XComboBoxWidgetData combo_box_data = new XComboBoxWidgetData();
-				XComboBoxWidget combo_box = XComboBoxWidget.Cast(m_LayoutRoot);
-				
-				for (int c = 0; c < combo_box.GetNumItems(); c++) {
-					
-				}
-				
-				break;
-			}
 			
 			
 			
@@ -292,25 +314,7 @@ class EditorView extends ScriptedWidgetEventHandler
 			} 
 			
 			
-			
-			case XComboBoxWidget: {
-				XComboBoxWidgetData combo_box_data = new XComboBoxWidgetData(variable_name);
-				XComboBoxWidget combo_box = XComboBoxWidget.Cast(m_LayoutRoot);
 				
-				if (EnScript.GetClassVar(m_Model, variable_name, 0, combo_box_data)) {
-					Error(string.Format("Wrong Data Type in %1", m_LayoutRoot.GetName()));
-					break;
-				}
-				
-				for (int cbox = 0; cbox < combo_box_data.Count(); cbox++) {
-					combo_box.AddItem(combo_box_data.Get(cbox));					
-				}
-				
-				
-				
-				break;
-			}
-	
 			
 			default: {
 				Error(string.Format("Unsupported Widget Type %1", m_WidgetType.ToString()));
