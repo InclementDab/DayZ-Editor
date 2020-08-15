@@ -6,23 +6,21 @@ enum EditorViewType
 
 
 
-
-
-
-
-
-
-
 class EditorView extends ScriptedWidgetEventHandler
 {
-	
+	// Required
+	// Name of Widget that has ViewModel ScriptClass
 	reference string view_model_widget;
-	reference string variable_name;
-	reference int variable_index;
-	reference string control_name;
 	
-	private Widget m_ViewModelWidget;
+	// Optional
+	// if blank, will use name of Widget
+	reference string variable_name; 
+	reference int variable_index;
+	// if blank, will use this widget
+	reference string control_name; 
+	
 	private Widget m_LayoutRoot;
+	private Widget m_ViewModelWidget;
 	private Widget m_ControlWidget;
 	
 	private EditorViewType m_Type;
@@ -34,11 +32,16 @@ class EditorView extends ScriptedWidgetEventHandler
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("EditorView::OnWidgetScriptInit");
-		if ((variable_name == string.Empty) || view_model_widget == string.Empty) return;
+		if (view_model_widget == string.Empty) return;
 		
 		m_LayoutRoot = w;
 		m_LayoutRoot.SetHandler(this);
-
+		
+		
+		if (variable_name == string.Empty)
+			variable_name = m_LayoutRoot.GetName();
+		
+		
 		m_ControlWidget = m_LayoutRoot.FindAnyWidget(control_name);
 		if (m_ControlWidget == null)
 			m_ControlWidget = m_LayoutRoot;
@@ -63,19 +66,18 @@ class EditorView extends ScriptedWidgetEventHandler
 		m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(view_model_widget);
 		
 		if (!m_ViewModelWidget) {
-			EditorLog.Error("ViewModel not found!");
+			Error("ViewModel not found!");
 			return;
 		}
 		
 		m_ViewModelWidget.GetScript(m_Model);
 		
 		if (!m_Model) {
-			EditorLog.Error("Error on ViewModel GetScript!");
+			Error("Error on ViewModel GetScript!");
 			return;
 		}
 		
 		m_Model.InsertView(this);
-		
 		UpdateView();
 		
 		
@@ -87,6 +89,7 @@ class EditorView extends ScriptedWidgetEventHandler
 	
 	bool OnChange(Widget w, int x, int y, bool finished)
 	{
+		EditorLog.Trace("EditorView::OnChange");
 		if (m_Model)
 			UpdateView();
 		
@@ -226,40 +229,5 @@ class EditorView extends ScriptedWidgetEventHandler
 		}
 	}
 	
-	private void SetModel(ViewModelBase model)
-	{
-		m_Model = model;
-		UpdateView();
-	}
-	
-	static EditorView GetUIProperty(Widget root, ViewModelBase model, string name)
-	{
-		EditorView view;
-		root.FindAnyWidget(name).GetScript(view);
-		view.SetModel(model);
-		return view;
-	}
-	
-	static ref array<EditorView> GetUIProperties(Widget root, ViewModelBase model)
-	{
-		ref array<EditorView> views = new array<EditorView>();
-		_GetUIProperties(root, model, views);
-		return views;
-	}
-	
-	private static void _GetUIProperties(Widget root, ViewModelBase model, inout array<EditorView> views)
-	{
-		EditorView view;
-		root.GetScript(view);
-		if (view != null) {
-			view.SetModel(model);
-			views.Insert(view);
-		}
-		
-		Widget child = root.GetChildren();
-		while (child != null) {
-			_GetUIProperties(child, model, views);
-			child = child.GetSibling();
-		}
-	}
+
 };

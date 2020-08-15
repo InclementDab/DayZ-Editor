@@ -10,17 +10,16 @@ class EditorUIViewModel: ViewModelBase
 	string DebugText1;
 	string DebugText2;
 	string DebugText3;
+	string DebugText4;
+	string DebugText5;
+	
+	
 	
 	
 	void EditorUIViewModel()
 	{
 		EditorLog.Trace("EditorUIViewModel");
 		m_EditorUIViewModel = this;
-	}
-	
-	void ~EditorUIViewModel()
-	{
-		EditorLog.Trace("~EditorUIViewModel");
 	}
 }
 	

@@ -128,9 +128,9 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         scriptclass "EditorView"
          font "gui/fonts/metron"
          "text offset" 5 0
+         scriptclass "EditorView"
          {
           ScriptParamsClass {
            view_model_widget "DebugFrame"
@@ -149,6 +149,13 @@ FrameWidgetClass EditorMainFrame {
          scriptclass ""
          font "gui/fonts/metron"
          "text offset" 5 0
+         scriptclass "EditorView"
+         {
+          ScriptParamsClass {
+           view_model_widget "DebugFrame"
+           variable_name "DebugText2"
+          }
+         }
         }
         TextWidgetClass DebugText3 {
          visible 1
@@ -162,6 +169,13 @@ FrameWidgetClass EditorMainFrame {
          scriptclass "EditorView"
          font "gui/fonts/metron"
          "text offset" 5 0
+          scriptclass "EditorView"
+         {
+          ScriptParamsClass {
+           view_model_widget "DebugFrame"
+           variable_name "DebugText3"
+          }
+         }
         }
         TextWidgetClass DebugText4 {
          ignorepointer 1
@@ -173,6 +187,12 @@ FrameWidgetClass EditorMainFrame {
          vexactsize 1
          font "gui/fonts/metron"
          "text offset" 5 0
+         scriptclass "EditorView"
+         {
+          ScriptParamsClass {
+           view_model_widget "DebugFrame"
+          }
+         }
         }
         TextWidgetClass DebugText5 {
          ignorepointer 1
@@ -184,6 +204,12 @@ FrameWidgetClass EditorMainFrame {
          vexactsize 1
          font "gui/fonts/metron"
          "text offset" 5 0
+         scriptclass "EditorView"
+         {
+          ScriptParamsClass {
+           view_model_widget "DebugFrame"
+          }
+         }
         }
         TextWidgetClass DebugText6 {
          ignorepointer 1

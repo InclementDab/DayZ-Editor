@@ -80,14 +80,6 @@ class EditorUI: UIScriptedMenu
 	// Orientation Tool
 	protected ItemPreviewWidget m_OrientationWidget;
 	
-	// Debug
-	protected Widget	m_DebugFrame;
-	TextWidget 			m_DebugText1;
-	TextWidget			m_DebugText2;
-	TextWidget 			m_DebugText3;
-	TextWidget 			m_DebugText4;
-	TextWidget 			m_DebugText5;
-	TextWidget 			m_DebugText6;
 	TextListboxWidget 	m_DebugActionStack;
 	
 
@@ -194,20 +186,14 @@ class EditorUI: UIScriptedMenu
 		m_BrushTypeBox			= XComboBoxWidget.Cast(m_Root.FindAnyWidget("BrushTypeBox"));
 	
 		m_NotificationFrame		= m_Root.FindAnyWidget("NotificationFrame");
+		m_NotificationFrame.GetPos(notification_start_x, notification_start_y);
 		
+		// why aint we usin scriptclass?
 		m_EditorMapWidget.GetScript(m_EditorMap);
 		m_EditorMapWidget.SetMapPos(GetGame().GetCurrentCameraPosition());
 		
-		// Cursors
-		//m_HorizontalScrollWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/cursors/horizontalwidget.layout");
-		
+
 		// Debug
-		m_DebugText1			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText1"));
-		m_DebugText2			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText2"));
-		m_DebugText3			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText3"));
-		m_DebugText4			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText4"));
-		m_DebugText5			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText5"));
-		m_DebugText6			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText6"));
 		m_DebugActionStack		= TextListboxWidget.Cast(m_Root.FindAnyWidget("DebugActionStackListbox"));
 		
 		// Brush init
@@ -219,25 +205,21 @@ class EditorUI: UIScriptedMenu
 		//EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);
 			
 		// Tooltips
-		m_TooltipMagnet = new EditorUITooltip("Toggle magnet mode on/off.", "Magnet Mode");
-		m_TooltipSnap = new EditorUITooltip("Toggle snap mode on/off.", "Snap Mode");
-		m_TooltipGround = new EditorUITooltip("Toggle ground mode on/off.", "Ground Mode");
+		m_TooltipMagnet 	= new EditorUITooltip("Toggle magnet mode on/off.", "Magnet Mode");
+		m_TooltipSnap 		= new EditorUITooltip("Toggle snap mode on/off.", "Snap Mode");
+		m_TooltipGround 	= new EditorUITooltip("Toggle ground mode on/off.", "Ground Mode");
 		
 		// Info toolbar widgets
-		m_ObjPosInfoPanel = m_Root.FindAnyWidget("InfobarObjPosFrame");		
+		m_ObjPosInfoPanel 	= m_Root.FindAnyWidget("InfobarObjPosFrame");		
 		
 		
-		m_CamPosInfoPanel = m_Root.FindAnyWidget("InfobarCamPosFrame");
-		m_CamPosInfoX = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_X_Value"));
-		m_CamPosInfoY = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_Y_Value"));
-		m_CamPosInfoZ = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_Z_Value"));
+		m_CamPosInfoPanel	= m_Root.FindAnyWidget("InfobarCamPosFrame");
+		m_CamPosInfoX 		= TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_X_Value"));
+		m_CamPosInfoY 		= TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_Y_Value"));
+		m_CamPosInfoZ 		= TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_Z_Value"));
 		
-		// debug info
-		m_DebugFrame = m_Root.FindAnyWidget("DebugFrame");
-		m_DebugFrame.Show(true);
 		
-		// notification
-		m_NotificationFrame.GetPos(notification_start_x, notification_start_y);
+		
 		
 		return m_Root;
 	}
