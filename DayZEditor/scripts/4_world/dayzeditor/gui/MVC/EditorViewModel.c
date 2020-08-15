@@ -61,6 +61,7 @@ class EditorHudViewModel: ViewModelBase
 	
 	void InsertPlacedObject(EditorListItem target)
 	{
+		EditorLog.Trace("EditorHudViewModel::RightbarSpacer");
 		RightbarSpacer.Insert(target.GetRoot());
 	}
 	

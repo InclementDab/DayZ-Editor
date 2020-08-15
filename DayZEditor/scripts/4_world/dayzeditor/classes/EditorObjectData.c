@@ -35,6 +35,7 @@ class EditorObjectData
 	int GetID() { return m_Id; }
 	
 	string Type;
+	string DisplayName;
 	vector Position;
 	vector Orientation;
 	float Scale;
@@ -53,7 +54,8 @@ class EditorObjectData
 		
 		
 		EditorObjectData data = new EditorObjectData();
-		data.Type = type; data.Position = position; data.Orientation = orientation; data.Flags = flags;	
+		data.Type = type; data.Position = position; data.Orientation = orientation; data.Flags = flags;
+		data.DisplayName = data.Type;
 		EditorObjectDataSet session_cache = GetEditor().GetSessionCache();
 		
 		if (lowest_id == 0) lowest_id = 200000;

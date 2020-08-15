@@ -1,22 +1,14 @@
 
-ref array<ref EditorListItem> m_ListItemCache = new array<ref EditorListItem>();
+ref map<Widget, ref EditorListItem> m_ListItemCache = new map<Widget, ref EditorListItem>();
 
 EditorListItem EditorListItemFromWidget(Widget w)
 {
 	RecursiveGetParent(w, "EditorListItem");
-	foreach (ref EditorListItem list_item: m_ListItemCache) {
-		if (list_item.GetRoot() == w)
-			return list_item;
-	}
-	
-	EditorLog.Warning("EditorListItem Not Found!");
-	return null;
+	return m_ListItemCache.Get(w);
 }
 
 
 
-
-// maybe use widgets instead of ScriptedWidgetEventHandler
 class EditorListItem: ScriptedWidgetEventHandler
 {
 	private int m_NestIndex;
@@ -49,8 +41,8 @@ class EditorListItem: ScriptedWidgetEventHandler
 		OnWidgetScriptInit(m_Root);
 		
 		if (m_ListItemCache == null) 
-			m_ListItemCache = new array<ref EditorListItem>();
-		m_ListItemCache.Insert(this);
+			m_ListItemCache = new map<Widget, ref EditorListItem>();
+		m_ListItemCache.Insert(m_Root, this);
 	}
 #endif
 	
@@ -107,7 +99,7 @@ class EditorListItem: ScriptedWidgetEventHandler
 	
 	void SetNestIndex(int index)
 	{
-		Print("EditorListItem::SetNestIndex " + index);
+		EditorLog.Trace("EditorListItem::SetNestIndex " + index);
 		m_NestIndex = index;
 		float x, y;
 		m_ListItemFrame.GetSize(x, y);
@@ -146,7 +138,7 @@ class EditorListItem: ScriptedWidgetEventHandler
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Print("EditorPlaceableListItem::OnClick");
+		EditorLog.Trace("EditorPlaceableListItem::OnClick");
 		if (button == 0) {
 			
 			switch (w) {

@@ -256,6 +256,8 @@ class EditorObjectMarker: UILinkedObject
 		override_show = show;
 		m_Root.Show(show);
 	}
+	
+
 }
 
 

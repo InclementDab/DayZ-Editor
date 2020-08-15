@@ -9,15 +9,8 @@ class EditorObjectSet: map<int, ref EditorObject>
 		GetEditor().DeleteObjects(this);
 	}
 	
-	bool InsertEditorObject(EditorObject target)
-	{
-		return Insert(target.GetID(), target);
-	}
-	
-	void RemoveEditorObject(EditorObject target)
-	{
-		Remove(target.GetID());
-	}
+	bool InsertEditorObject(EditorObject target) { return Insert(target.GetID(), target); }
+	void RemoveEditorObject(EditorObject target) { Remove(target.GetID()); }
 }
 
 class EditorObject
@@ -29,19 +22,13 @@ class EditorObject
 	EntityAI GetWorldObject() { return m_WorldObject; }
 	
 	// Mod Data
-	private ModStructure	m_ModStructure;
-	
-	protected Widget 		m_EditorObjectMarkerWidget;
-	protected Widget 		m_EditorObjectBrowserWidget;
-	protected Widget 		m_EditorMapMarkerWidget;
-	protected Widget 		m_EditorObjectPropertiesWidget;
-	protected Widget 		m_EditorObjectContextWidget;
+	private ModStructure					m_ModStructure;
 	
 	private ref EditorMapMarker				m_EditorMapMarker;
 	private ref EditorPlacedListItem 		m_PlacedListItem;
 	private ref EditorObjectMarker			m_EditorObjectMarker;
 	
-	EntityAI 				m_BBoxLines[12];	
+	protected EntityAI		m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
 	protected EntityAI 		m_CenterLine;
 	
@@ -49,26 +36,24 @@ class EditorObject
 	
 	static float line_width = 0.05;
 	
-	ref ScriptInvoker OnObjectSelected;
-	ref ScriptInvoker OnObjectDeselected;
+	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
+	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 
-	
+	string GetDisplayName() { return m_Data.DisplayName; }
 	string GetType() { return m_Data.Type; }
 	int GetID() { return m_Data.GetID(); }
+	
 	
 	void EditorObject(ref EditorObjectData data)
 	{
 		EditorLog.Trace("EditorObject");
 		m_Data = data;
-		
-		OnObjectSelected = new ScriptInvoker();
-		OnObjectDeselected = new ScriptInvoker();
-		
+	
 		if (m_Data.Flags == EditorObjectFlags.ALL) {
 			m_Data.Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
 		}
 		
-		m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Position, ECE_NONE);
+		m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Position, ECE_LOCAL);
 		m_WorldObject.SetOrientation(m_Data.Orientation);
 		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
 		Update();
@@ -79,7 +64,7 @@ class EditorObject
 		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
 			CreateBoundingBox();
 		}	
-
+/*
 		// Map marker
 		if ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
 			m_EditorMapMarker = new EditorMapMarker();
@@ -96,7 +81,7 @@ class EditorObject
 			m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
 			m_EditorObjectMarker.SetObject(this);
 		}
-			
+		*/	
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
 			m_PlacedListItem = new EditorPlacedListItem(this);
@@ -116,11 +101,7 @@ class EditorObject
 		delete m_EditorObjectMarker; 
 		delete m_PlacedListItem;
 		delete m_EditorMapMarker;
-		
-		delete m_EditorObjectMarkerWidget;
-		delete m_EditorObjectBrowserWidget;
-		delete m_EditorMapMarkerWidget;
-		delete m_EditorObjectPropertiesWidget;
+	
 		
 		for (int i = 0; i < 12; i++)
 			GetGame().ObjectDelete(m_BBoxLines[i]);
@@ -133,9 +114,6 @@ class EditorObject
 	}
 		
 	
-	/*
-	* Initializers
-	*/
 	
 	static EditorObject CreateFromExistingObject(notnull Object target)	
 	{
@@ -215,14 +193,6 @@ class EditorObject
 	vector GetTransformAxis(int axis) { return m_WorldObject.GetTransformAxis(axis); }
 	
 	string GetModelName() { return m_WorldObject.GetModelName(); }
-	
-	string GetDisplayName()
-	{
-		string name = m_WorldObject.GetDisplayName();
-		if (name != string.Empty)
-			return name;
-		else return GetType();
-	}
 	
 
 	vector line_centers[12]; vector line_verticies[8];
@@ -418,7 +388,7 @@ class EditorObject
 	void GetObjectMarkerPos(out float x, out float y)
 	{
 		if (ObjectMarkerEnabled()) {
-			m_EditorObjectMarkerWidget.GetPos(x, y);
+			m_EditorObjectMarker.GetPos(x, y);
 		} else {
 			x = -1; y = -1;
 		}
@@ -428,7 +398,7 @@ class EditorObject
 	void GetMapMarkerPos(out float x, out float y)
 	{
 		if (MapMarkerEnabled()) {
-			m_EditorMapMarkerWidget.GetPos(x, y);
+			m_EditorMapMarker.GetPos(x, y);
 		} else {
 			x = -1; y = -1;
 		}
@@ -436,20 +406,7 @@ class EditorObject
 	
 	bool BoundingBoxEnabled() { return (m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; }
 	
-	bool IsRootSelected(Widget root)
-	{
-		bool result;		
-		if (ListItemEnabled()) {
-			if (m_EditorObjectBrowserWidget == root)
-				return true;
-		}
-		if (ObjectMarkerEnabled()) {
-			if (m_EditorObjectMarkerWidget == root)
-				return true;
-		}
-		
-		return false;
-	}
+
 	
 
 	

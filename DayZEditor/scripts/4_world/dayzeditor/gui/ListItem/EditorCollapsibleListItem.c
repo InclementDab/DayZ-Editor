@@ -9,7 +9,7 @@ class EditorCollapsibleListItem: EditorListItem
 	
 	void EditorCollapsibleListItem() 
 	{ 
-		Print("EditorCollapsibleListItem");
+		EditorLog.Trace("EditorCollapsibleListItem");
 		m_CategoryChildren = new array<ref EditorListItem>();
 		
 		SetText(string.Format("group%1", groupcount));
@@ -55,7 +55,7 @@ class EditorCollapsibleListItem: EditorListItem
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Print("EditorCollapsibleListItem::OnClick");
+		EditorLog.Trace("EditorCollapsibleListItem::OnClick");
 	
 		if (button == 0) {
 			
@@ -75,7 +75,7 @@ class EditorCollapsibleListItem: EditorListItem
 	
 	override bool OnListItemDropReceived(EditorListItem target)
 	{
-		Print("EditorCollapsibleListItem::OnListItemDropReceived");
+		EditorLog.Trace("EditorCollapsibleListItem::OnListItemDropReceived");
 				
 		target.SetNestIndex(GetNestIndex() + 1);
 		m_CategoryChildren.Insert(target);
@@ -86,7 +86,7 @@ class EditorCollapsibleListItem: EditorListItem
 	
 	override bool OnListItemDrop(EditorListItem target)
 	{
-		Print("EditorCollapsibleListItem::OnListItemDrop");
+		EditorLog.Trace("EditorCollapsibleListItem::OnListItemDrop");
 		
 		if (ContainsChildListItem(target)) {
 			return false;

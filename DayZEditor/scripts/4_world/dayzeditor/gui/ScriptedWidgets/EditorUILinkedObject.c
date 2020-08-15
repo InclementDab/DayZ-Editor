@@ -27,4 +27,6 @@ class UILinkedObject : ScriptedWidgetEventHandler
 	
 	
 	Widget GetLayoutRoot() { return m_Root;	}
+	
+	void GetPos(out float x, out float y) { m_Root.GetPos(x, y); }
 }

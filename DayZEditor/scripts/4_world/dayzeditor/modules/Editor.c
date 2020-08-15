@@ -40,10 +40,10 @@ class EditorClientModule: JMModuleBase
 	
 	bool IsPlacing() { return m_ObjectInHand != null; }
 
-	private ref EditorHud					m_EditorHud;
+	private ref EditorHud						m_EditorHud;
 	
-	private ref EditorHologram 				m_ObjectInHand;
-	private ref EditorBrush					m_EditorBrush;
+	private ref EditorHologram 					m_ObjectInHand;
+	private ref EditorBrush						m_EditorBrush;
 	
 	private ref EditorObjectSet 				m_PlacedObjects;
 	private ref EditorObjectSet					m_SelectedObjects;
@@ -74,12 +74,14 @@ class EditorClientModule: JMModuleBase
 	override void OnInit()
 	{
 		EditorLog.Trace("Editor::OnInit");
+		
+		m_PlacedObjects = new EditorObjectSet();
+		m_SelectedObjects = new EditorObjectSet();
 		m_SessionCache = new EditorObjectDataSet();
+		m_ActionStack = new set<ref EditorAction>();
 		
 		// Init UI
 		m_UIManager = GetGame().GetUIManager();
-		//m_EditorUI = new EditorUI();
-		//m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
 		m_EditorHud = new EditorHud();
 		m_EditorHud.Init(null);
 
