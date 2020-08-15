@@ -27,18 +27,21 @@ class EditorUIViewModel: ViewModelBase
 	
 	override void OnPropertyChanged(string property_name)
 	{
-		Print("Wait this shit works");
 		if (BuildingSelect) {
 			VehicleSelect = false; EntitySelect = false; HumanSelect = false;
+			GetEditor().UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
 		}
 		else if (VehicleSelect) {
 			BuildingSelect = false; EntitySelect = false; HumanSelect = false;
+			GetEditor().UpdatePlaceableItems(PlaceableObjectCategory.VEHICLE);
 		}
 		else if (EntitySelect) {
 			BuildingSelect = false; VehicleSelect = false; HumanSelect = false;
+			GetEditor().UpdatePlaceableItems(PlaceableObjectCategory.ENTITY);
 		}
 		else if (HumanSelect) {
 			BuildingSelect = false; VehicleSelect = false; EntitySelect = false;
+			GetEditor().UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
 		}
 		
 		UpdateViews();

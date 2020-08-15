@@ -22,18 +22,9 @@ class EditorUI: UIScriptedMenu
 	protected Widget m_CenterSpaceFrame;
 	
 	// Buttons 
-	protected ButtonWidget m_BuildingSelect;
-	protected ButtonWidget m_VehicleSelect;
-	protected ButtonWidget m_EntitySelect;
-	protected ButtonWidget m_HumanSelect;
 	protected ButtonWidget m_LeftbarHide;
 	protected ButtonWidget m_RightbarHide;
-	
-	protected ButtonWidget m_CategorySelectBuilding;
-	protected ButtonWidget m_CategorySelectVehicle;
-	protected ButtonWidget m_CategorySelectEntity;
-	protected ButtonWidget m_CategorySelectHuman;
-	
+		
 	// Toolbar Buttons
 	protected ButtonWidget 	m_UndoButton;
 	protected ButtonWidget 	m_RedoButton;
@@ -155,18 +146,9 @@ class EditorUI: UIScriptedMenu
 		m_LeftbarSearchBar		= EditBoxWidget.Cast(m_Root.FindAnyWidget("LeftbarSearchBar"));
  
 		// Buttons
-		m_BuildingSelect		= ButtonWidget.Cast(m_Root.FindAnyWidget("BuildingSelect"));
-		m_VehicleSelect			= ButtonWidget.Cast(m_Root.FindAnyWidget("VehicleSelect"));
-		m_EntitySelect			= ButtonWidget.Cast(m_Root.FindAnyWidget("EntitySelect"));
-		m_HumanSelect			= ButtonWidget.Cast(m_Root.FindAnyWidget("HumanSelect"));
 		m_LeftbarHide			= ButtonWidget.Cast(m_Root.FindAnyWidget("LeftbarHide"));
 		m_RightbarHide			= ButtonWidget.Cast(m_Root.FindAnyWidget("RightbarHide"));
-		
-		m_CategorySelectBuilding= ButtonWidget.Cast(m_Root.FindAnyWidget("BuildingSelect"));
-		m_CategorySelectVehicle	= ButtonWidget.Cast(m_Root.FindAnyWidget("VehicleSelect"));
-		m_CategorySelectEntity	= ButtonWidget.Cast(m_Root.FindAnyWidget("EntitySelect"));
-		m_CategorySelectHuman	= ButtonWidget.Cast(m_Root.FindAnyWidget("HumanSelect"));
-		
+				
 		// Spacers
 		m_LeftbarSpacer			= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("LeftbarSpacer"));
 		m_RightbarSpacer		= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("RightbarSpacer"));
@@ -283,9 +265,7 @@ class EditorUI: UIScriptedMenu
 	EditorMap GetMap() 			{ return m_EditorMap; }
 	MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
 	bool IsMapOpen() 			{ return m_EditorMapContainer.IsVisible(); }
-	
-
-	
+		
 	void SetCursor(EditorCursor cursor_type = EditorCursor.DEFAULT)
 	{
 		switch (cursor_type) {
@@ -383,39 +363,7 @@ class EditorUI: UIScriptedMenu
 					m_RightbarFrame.SetPos(-300 * right_bar_hidden, 48);
 					return true;
 				}
-				
-				case m_CategorySelectBuilding: {
-					GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.BUILDING);
-					m_CategorySelectVehicle.SetState(false);
-					m_CategorySelectEntity.SetState(false);
-					m_CategorySelectHuman.SetState(false);
-					return true;
-				}
-				
-				case m_CategorySelectVehicle: {
-					GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.VEHICLE);
-					m_CategorySelectBuilding.SetState(false);
-					m_CategorySelectEntity.SetState(false);
-					m_CategorySelectHuman.SetState(false);
-					return true;
-				}
-				
-				case m_CategorySelectEntity: {
-					GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.ENTITY);
-					m_CategorySelectVehicle.SetState(false);
-					m_CategorySelectBuilding.SetState(false);
-					m_CategorySelectHuman.SetState(false);
-					return true;
-				}
-				
-				case m_CategorySelectHuman: {
-					GetEditor().GetSettings().SetPlaceableObjectCategory(PlaceableObjectCategory.HUMAN);
-					m_CategorySelectVehicle.SetState(false);
-					m_CategorySelectEntity.SetState(false);
-					m_CategorySelectBuilding.SetState(false);
-					return true;
-				}
-				
+								
 				default: {
 					Print(string.Format("%1 Doesnt have a click function!", w.GetName()));
 				}
@@ -599,51 +547,6 @@ class EditorUI: UIScriptedMenu
 	
 	
 
-	
-	
-	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
-	{
-		EditorLog.Trace("EditorUI:OnPlaceableCategoryChanged - Start");
-
-		
-		m_LeftbarSpacer.Update();
-		
-		switch (category) {
-			
-			case PlaceableObjectCategory.BUILDING: {
-				m_CategorySelectBuilding.SetState(true);
-				m_CategorySelectVehicle.SetState(false);
-				m_CategorySelectEntity.SetState(false);
-				m_CategorySelectHuman.SetState(false);
-				break;
-			}
-			
-			case PlaceableObjectCategory.VEHICLE: {
-				m_CategorySelectBuilding.SetState(false);
-				m_CategorySelectVehicle.SetState(true);
-				m_CategorySelectEntity.SetState(false);
-				m_CategorySelectHuman.SetState(false);
-				break;
-			}
-			
-			case PlaceableObjectCategory.ENTITY: {
-				m_CategorySelectBuilding.SetState(false);
-				m_CategorySelectVehicle.SetState(false);
-				m_CategorySelectEntity.SetState(true);
-				m_CategorySelectHuman.SetState(false);
-				break;
-			}
-			
-			case PlaceableObjectCategory.HUMAN: {
-				m_CategorySelectBuilding.SetState(false);
-				m_CategorySelectVehicle.SetState(false);
-				m_CategorySelectEntity.SetState(false);
-				m_CategorySelectHuman.SetState(true);
-				break;
-			}
-		}
-		
-	}
 	
 	override bool OnMouseEnter( Widget w, int x, int y )
 	{

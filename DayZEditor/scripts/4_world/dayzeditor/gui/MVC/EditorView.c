@@ -59,14 +59,13 @@ class EditorView extends ScriptedWidgetEventHandler
 
 	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
 	{
-		//EditorLog.Trace("EditorView::OnChange");
-		
 		if (m_Model) {
+			
 			UpdateModel();
 			m_Model.OnPropertyChanged(variable_name);
 		}
 		
-		return true;
+		return super.OnEvent(eventType, target, parameter0, parameter1);
 	}
 
 	// UI -> Model

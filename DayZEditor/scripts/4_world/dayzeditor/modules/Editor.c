@@ -501,9 +501,8 @@ class EditorClientModule: JMModuleBase
 	
 	bool IsLootEditActive() { return m_LootEditMode; }
 	
-		
-	// todo this is broke
-	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
+
+	void UpdatePlaceableItems(PlaceableObjectCategory category)
 	{
 		EditorLog.Trace("EditorUIManager::OnPlaceableCategoryChanged");
 
