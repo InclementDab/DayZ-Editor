@@ -9,8 +9,7 @@ EditorHudViewModel GetEditorHudViewModel() { return m_EditorHudViewModel; }
 class EditorHudViewModel: ViewModelBase
 {
 	private ref EditorPlaceableListItemSet m_PlaceableObjects;
-	
-	
+
 	string DebugText1;
 	string DebugText2;
 	string DebugText3;

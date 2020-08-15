@@ -20,7 +20,6 @@ class EditorView extends ScriptedWidgetEventHandler
 	reference int variable_index;
 	// if blank, will use this widget
 	reference string control_name; 
-	reference bool observable_collection;
 	
 	private Widget m_LayoutRoot;
 	private Widget m_ViewModelWidget;
@@ -65,14 +64,17 @@ class EditorView extends ScriptedWidgetEventHandler
 			Error(string.Format("%1 Could not find ViewModel: %2", m_LayoutRoot.GetName(), view_model_widget));
 			return;
 		}
-		
-		if (observable_collection) {
-			IObservable.NotifyOnCollectionChanged(OnCollectionChanged);
-			
-		}
+
 		
 
-		m_Model.InsertView(variable_name, this);		
+		m_Model.InsertView(variable_name, this);
+		
+		typename var_type = m_Model.GetVariableType(variable_name);
+		
+		if (var_type.IsInherited(IObservable)) {
+			EditorLog.Trace("Inherited from Observable: " + var_type.ToString());
+			IObservable.NotifyOnCollectionChanged(OnCollectionChanged);
+		}
 	}
 	
 	void OnPropertyChanged(string property_name)
