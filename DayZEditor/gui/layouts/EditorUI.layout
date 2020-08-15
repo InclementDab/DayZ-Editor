@@ -118,6 +118,7 @@ FrameWidgetClass EditorMainFrame {
        content_halign center
        {
         TextWidgetClass DebugText1 {
+         visible 1
          ignorepointer 1
          position 0 0
          size 1 25
@@ -125,6 +126,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scriptclass ""
          font "gui/fonts/metron"
          "text offset" 5 0
         }
@@ -136,10 +138,12 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scriptclass ""
          font "gui/fonts/metron"
          "text offset" 5 0
         }
         TextWidgetClass DebugText3 {
+         visible 1
          ignorepointer 1
          position 0 0
          size 1 25
@@ -147,8 +151,15 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scriptclass "EditorView"
          font "gui/fonts/metron"
          "text offset" 5 0
+         {
+          ScriptParamsClass {
+           variable_name "DebugText3"
+           variable_type "string"
+          }
+         }
         }
         TextWidgetClass DebugText4 {
          ignorepointer 1
@@ -420,10 +431,6 @@ FrameWidgetClass EditorMainFrame {
          "Use default text" 1
          "exact text" 1
          font "gui/fonts/metron28"
-         {
-          ScriptParamsClass {
-          }
-         }
         }
         PanelWidgetClass LeftbarPanelSearchBarIconSpacer {
          ignorepointer 1
@@ -1203,7 +1210,6 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       scriptclass "EditorView"
        {
         PanelWidgetClass Info_ObjPos_X_Icon {
          ignorepointer 1
@@ -1241,14 +1247,6 @@ FrameWidgetClass EditorMainFrame {
          vexactsize 1
          text "1000.5"
          font "gui/fonts/system"
-        }
-       }
-       {
-        ScriptParamsClass {
-         variable_name "m_TestVariableX"
-         variable_type "float"
-         variable_index 0
-         control_name "Info_ObjPos_X_Value"
         }
        }
       }

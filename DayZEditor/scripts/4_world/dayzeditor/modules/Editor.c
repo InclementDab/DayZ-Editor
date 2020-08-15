@@ -39,10 +39,11 @@ class EditorClientModule: JMModuleBase
 	
 	
 	bool IsPlacing() { return m_ObjectInHand != null; }
-	
+
+	private ref EditorUI 					m_EditorUI;
+	private ref EditorUIViewModel 			m_EditorUIViewModel;	
 	
 	private ref EditorHologram 				m_ObjectInHand;
-	private ref EditorUI 					m_EditorUI;
 	private ref EditorBrush					m_EditorBrush;
 	
 	private ref EditorPlaceableListItemSet 		m_PlaceableObjects;
@@ -80,7 +81,11 @@ class EditorClientModule: JMModuleBase
 		// Init UI
 		m_UIManager = GetGame().GetUIManager();
 		m_EditorUI = new EditorUI();
+		m_EditorUIViewModel = new EditorUIViewModel();
 		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
+		array<EditorView> views = EditorView.GetUIProperties(m_EditorUI.GetRoot(), m_EditorUIViewModel);
+		Print(views.Count());
+		
 		
 		// Load PlaceableObjects
 		/*
