@@ -29,19 +29,23 @@ class EditorUIViewModel: ViewModelBase
 	{
 		EditorLog.Trace("EditorUIViewModel");
 		m_EditorUIViewModel = this;
+	}
+	
+	override void OnWidgetScriptInit(Widget w)
+	{
+		super.OnWidgetScriptInit(w);
+		
 		WrapSpacerTest = new TextListboxWidgetData();
 		LeftbarSpacer = new WrapSpacerWidgetData();
-		// Load PlaceableObjects
 		
+		// Load PlaceableObjects
 		m_PlaceableObjects = new EditorPlaceableListItemSet();
 		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", GetPlaceableObjects(m_PlaceableObjects)));
-		foreach (ref EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
+		foreach (ref EditorPlaceableListItem placeable_object: m_PlaceableObjects)
 			LeftbarSpacer.Insert(placeable_object.GetRoot());
-		}
 		
 		
-		UpdateViews();
-		
+		UpdateViews();		
 	}
 	
 	static int GetPlaceableObjects(out EditorPlaceableListItemSet placeable_objects) 
@@ -54,8 +58,7 @@ class EditorUIViewModel: ViewModelBase
 			
 		    for (int j = 0; j < GetGame().ConfigGetChildrenCount(Config_Path); j++) {
 				string Config_Name, Base_Name;
-		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name); 
-				
+		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name);
 				EditorPlaceableObjectData placeable_object_data = new EditorPlaceableObjectData(Config_Name, Config_Path);
 				placeable_objects.Insert(new EditorPlaceableListItem(placeable_object_data));
 		    }
@@ -76,30 +79,30 @@ class EditorUIViewModel: ViewModelBase
 	override void OnPropertyChanged(Widget target)
 	{
 		EditorLog.Trace("OnPropertyChanged: " + target.GetName());
-			
+
 		switch (target.GetName()) {
 			
 			case "BuildingSelect": {
 				VehicleSelect = false; EntitySelect = false; HumanSelect = false;
-				//UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
+				UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
 				break;
 			}
 			
 			case "VehicleSelect": {
 				BuildingSelect = false; EntitySelect = false; HumanSelect = false;
-				//UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
+				UpdatePlaceableItems(PlaceableObjectCategory.VEHICLE);
 				break;
 			}
 			
 			case "EntitySelect": {
 				BuildingSelect = false; VehicleSelect = false; HumanSelect = false;
-				//UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
+				UpdatePlaceableItems(PlaceableObjectCategory.ENTITY);
 				break;
 			}
 			
 			case "HumanSelect": {
 				BuildingSelect = false; VehicleSelect = false; EntitySelect = false;
-				//UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
+				UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
 				break;
 			}
 			

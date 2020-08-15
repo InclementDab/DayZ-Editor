@@ -3,7 +3,7 @@
 typedef ref map<string, Class> TextListboxWidgetData;
 
 // WrapSpacerWidget
-typedef ref array<Widget> WrapSpacerWidgetData;
+typedef ref array<ref Widget> WrapSpacerWidgetData;
 
 class EditorView extends ScriptedWidgetEventHandler
 {
@@ -64,6 +64,7 @@ class EditorView extends ScriptedWidgetEventHandler
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
+		Print("OnChange");
 		if (m_Model) {
 			UpdateModel();
 			m_Model.OnPropertyChanged(w);
@@ -74,6 +75,7 @@ class EditorView extends ScriptedWidgetEventHandler
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
+		Print("OnClick");
 		if (m_Model) {
 			UpdateModel();
 			m_Model.OnPropertyChanged(w);
@@ -82,7 +84,7 @@ class EditorView extends ScriptedWidgetEventHandler
 		return true;
 		//return super.OnClick(w, x, y, button);
 	}
-
+	
 	
 	// keeping this here if OnClick and OnChange dont work enough
 	/*
@@ -205,6 +207,9 @@ class EditorView extends ScriptedWidgetEventHandler
 					Error(string.Format("Wrong Data Type in %1", m_LayoutRoot.GetName()));
 					break;
 				}
+				
+				
+				ClearWidgetChildren(wrap_spacer);
 				
 				foreach (Widget w: wrap_spacer_data) {
 					wrap_spacer.AddChild(w);

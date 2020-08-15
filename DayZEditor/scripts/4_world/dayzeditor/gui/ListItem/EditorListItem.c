@@ -45,9 +45,7 @@ class EditorListItem: ScriptedWidgetEventHandler
 	{ 
 		EditorLog.Trace("EditorListItem"); 
 		
-
-		Print("EditorListItem Client");
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout");
 		OnWidgetScriptInit(m_Root);
 		
 		if (m_ListItemCache == null) 

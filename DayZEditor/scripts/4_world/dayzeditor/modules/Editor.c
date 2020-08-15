@@ -92,8 +92,8 @@ class EditorClientModule: JMModuleBase
 		EditorEvents.OnObjectDeleted.Insert(OnObjectDeleted);
 		
 		// Keybinds
-		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
-		RegisterBinding(new JMModuleBinding("OnEditorToggleCursor", "EditorToggleCursor"));
+		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive", true));
+		RegisterBinding(new JMModuleBinding("OnEditorToggleCursor", "EditorToggleCursor", true));
 		
 	}
 	

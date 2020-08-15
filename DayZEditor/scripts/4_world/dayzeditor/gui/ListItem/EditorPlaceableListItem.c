@@ -8,7 +8,7 @@ class EditorPlaceableListItem: EditorListItem
 	
 	void EditorPlaceableListItem(ref EditorPlaceableObjectData data) 
 	{ 
-		Print("EditorPlaceableListItem"); 
+		EditorLog.Trace("EditorPlaceableListItem"); 
 		m_Data = data;
 
 		m_ListItemCollapse.Show(false);
@@ -23,7 +23,7 @@ class EditorPlaceableListItem: EditorListItem
 		
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Print("EditorPlaceableListItem::OnClick");
+		EditorLog.Trace("EditorPlaceableListItem::OnClick");
 		
 		if (button == 0) {
 			GetEditor().CreateInHand(m_Data);
