@@ -13,13 +13,35 @@ class EditorUIViewModel: ViewModelBase
 	string DebugText4;
 	string DebugText5;
 	
-	array<string> TextTest;
+	bool BuildingSelect;
+	bool VehicleSelect;
+	bool EntitySelect;
+	bool HumanSelect;
 	
 	
 	void EditorUIViewModel()
 	{
 		EditorLog.Trace("EditorUIViewModel");
 		m_EditorUIViewModel = this;
+	}
+	
+	override void OnPropertyChanged(string property_name)
+	{
+		Print("Wait this shit works");
+		if (BuildingSelect) {
+			VehicleSelect = false; EntitySelect = false; HumanSelect = false;
+		}
+		else if (VehicleSelect) {
+			BuildingSelect = false; EntitySelect = false; HumanSelect = false;
+		}
+		else if (EntitySelect) {
+			BuildingSelect = false; VehicleSelect = false; HumanSelect = false;
+		}
+		else if (HumanSelect) {
+			BuildingSelect = false; VehicleSelect = false; EntitySelect = false;
+		}
+		
+		UpdateViews();
 	}
 }
 	
@@ -67,7 +89,7 @@ class ViewModelBase: Managed
 	void UpdateViews()
 	{
 		foreach (ref EditorView view: m_ViewList)
-			view.UpdateModel();
+			view.UpdateView();
 		
 	}
 	
@@ -82,8 +104,9 @@ class ViewModelBase: Managed
 		EditorLog.Debug("ViewModelBase::DebugPrint: " + m_LayoutRoot.GetName());
 		foreach (ref EditorView view: m_ViewList)
 			view.DebugPrint();
-		
 	}
+	
+	void OnPropertyChanged(string property_name) {}
 }
 
 

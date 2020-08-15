@@ -1,9 +1,3 @@
-enum EditorViewType
-{
-	TEXT,
-	BOOL
-};
-
 
 
 class EditorView extends ScriptedWidgetEventHandler
@@ -23,9 +17,7 @@ class EditorView extends ScriptedWidgetEventHandler
 	private Widget m_ViewModelWidget;
 	private Widget m_ControlWidget;
 	
-	private EditorViewType m_Type;
 	private ViewModelBase m_Model;
-
 	private typename m_WidgetType;
 
 	void OnWidgetScriptInit(Widget w)
@@ -35,67 +27,198 @@ class EditorView extends ScriptedWidgetEventHandler
 		
 		m_LayoutRoot = w;
 		m_LayoutRoot.SetHandler(this);
-		
-		
-		if (variable_name == string.Empty)
-			variable_name = m_LayoutRoot.GetName();
-		
-		
+				
+		// Set the control widget to relevant Widget
 		m_ControlWidget = m_LayoutRoot.FindAnyWidget(control_name);
 		if (m_ControlWidget == null)
 			m_ControlWidget = m_LayoutRoot;
 		
+		// If var_name is blank, just use the name of root
+		if (variable_name == string.Empty)
+			variable_name = m_ControlWidget.GetName();
+		
 		m_WidgetType = m_ControlWidget.Type();
-		
-		/*
-		switch (m_ControlWidget.GetTypeID())
-		{
-			case TextWidgetTypeID:
-			case EditBoxWidgetTypeID:
-			case MultilineEditBoxWidgetTypeID:
-				m_Type = EditorViewType.TEXT;
-				break;
-			case ButtonWidgetTypeID:
-			case CheckBoxWidgetTypeID:
-				m_Type = EditorViewType.BOOL;
-				break;
-			default:
-				Error(w.GetName() + " Unsupported type");
-				return;
-		}*/
-		
-		
-		
-
-	
 		m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(view_model_widget);
 		
 		if (!m_ViewModelWidget) {
-			Error("ViewModel not found!");
+			Error("ViewModel Widget not found!");
 			return;
 		}
 		
 		m_ViewModelWidget.GetScript(m_Model);
 		
 		if (!m_Model) {
-			Error("Error on ViewModel GetScript!");
+			Error(string.Format("%1 Could not find ViewModel: %2", m_LayoutRoot.GetName(), view_model_widget));
 			return;
 		}
 		
 		m_Model.InsertView(this);
-		UpdateView();
-		
+		UpdateModel();
 	}
 	
-	bool OnChange(Widget w, int x, int y, bool finished)
+
+	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
 	{
-		EditorLog.Trace("EditorView::OnChange");
-		if (m_Model)
-			UpdateView();
+		//EditorLog.Trace("EditorView::OnChange");
+		
+		if (m_Model) {
+			UpdateModel();
+			m_Model.OnPropertyChanged(variable_name);
+		}
 		
 		return true;
 	}
 
+	// UI -> Model
+	void UpdateModel()
+	{
+		EditorLog.Trace("EditorView::UpdateModel");
+		if (!m_Model) return;
+	
+		string text;
+		switch (m_WidgetType) {
+			
+			case TextWidget: {
+				EditorLog.Warning("ViewModel cannot be updated for TextWidgets");
+				break;
+			}
+			
+			case MultilineEditBoxWidget: {
+				MultilineEditBoxWidget.Cast(m_ControlWidget).GetText(text);
+				SetModelVariable(text);
+				break;
+			}
+			
+			case EditBoxWidget: {
+				SetModelVariable(EditBoxWidget.Cast(m_ControlWidget).GetText());
+				break;
+			}
+			
+			case ButtonWidget: {
+				SetModelVariable(ButtonWidget.Cast(m_ControlWidget).GetState());
+				break;
+			}
+			
+			case CheckBoxWidget: {
+				SetModelVariable(CheckBoxWidget.Cast(m_ControlWidget).IsChecked());
+				break;
+			} 
+			
+			default: {
+				Error(string.Format("Unsupported Widget Type %1", m_WidgetType.ToString()));
+				break;
+			}	
+		}
+	}
+	
+	// Model -> UI
+	void UpdateView()
+	{
+		EditorLog.Trace("EditorView::UpdateView");
+		if (!m_Model) return;
+		
+		switch (m_WidgetType) {
+
+			case TextWidget:
+			case EditBoxWidget:
+			case MultilineEditBoxWidget: {
+				TextWidget.Cast(m_ControlWidget).SetText(GetModelVariableString());
+				break;
+			}
+		
+			
+			case ButtonWidget: {
+				ButtonWidget.Cast(m_ControlWidget).SetState(GetModelVariableBool());
+				break;
+			}
+			
+			case CheckBoxWidget: {
+				CheckBoxWidget.Cast(m_ControlWidget).SetChecked(GetModelVariableBool());
+				break;
+			} 
+			
+			default: {
+				Error(string.Format("Unsupported Widget Type %1", m_WidgetType.ToString()));
+				break;
+			}	
+		}
+	}
+	
+	
+	string GetModelVariableString()
+	{
+		string text;
+		typename variable_type = m_Model.GetVariableType(variable_name);
+		switch (variable_type) {
+			
+			case string: {
+				EnScript.GetClassVar(m_Model, variable_name, variable_index, text);
+				return text;
+			}
+			
+			case float: {
+				float text_float;
+				EnScript.GetClassVar(m_Model, variable_name, variable_index, text_float);
+				text = "" + text_float;
+				return text;
+			}
+			
+			case int: {
+				int text_int;
+				EnScript.GetClassVar(m_Model, variable_name, variable_index, text_int);
+				text = "" + text_int;
+				return text;
+			}
+			
+			default: {
+				Error(string.Format("Unsupported Type: %1", variable_type.ToString()));
+				break;
+			}
+		}
+		
+		return string.Empty;
+	}
+	
+	bool GetModelVariableBool()
+	{
+		bool state;
+		EnScript.GetClassVar(m_Model, variable_name, variable_index, state);
+		return state;
+	}
+	
+	void SetModelVariable(string text)
+	{
+		typename variable_type = m_Model.GetVariableType(variable_name);
+		switch (variable_type) {
+					
+			case string: {
+				EnScript.SetClassVar(m_Model, variable_name, variable_index, text);
+				break;
+			}
+			
+			case float: {
+				EnScript.SetClassVar(m_Model, variable_name, variable_index, text.ToFloat());
+				break;
+			}
+			
+			case int: {
+				EnScript.SetClassVar(m_Model, variable_name, variable_index, text.ToInt());
+				break;
+			}
+			
+			default: {
+				Error(string.Format("Unsupported Type: %1", variable_type.ToString()));
+				break;
+			}
+		}
+	}
+	
+	void SetModelVariable(bool state)
+	{
+		EnScript.SetClassVar(m_Model, variable_name, variable_index, state);
+	}
+	
+	
 	void DebugPrint()
 	{
 		EditorLog.Debug("EditorView::DebugPrint: " + m_LayoutRoot.GetName());
@@ -104,161 +227,4 @@ class EditorView extends ScriptedWidgetEventHandler
 		EditorLog.Debug("variable_index:" + variable_index);
 		EditorLog.Debug("control_name:" + control_name);
 	}
-
-	void UpdateView()
-	{
-		EditorLog.Trace("EditorView::UpdateView");
-		if (!m_Model) return;
-		
-
-		switch (m_Type)
-		{
-			case EditorViewType.TEXT:
-			{
-				string text;
-				
-				TextWidget tw;
-				if (Class.CastTo(tw, m_ControlWidget)) {
-					EditorLog.Warning("ViewModel cannot be updated for TextWidgets");
-				} 
-				
-				MultilineEditBoxWidget ml;
-				if (Class.CastTo(ml, m_ControlWidget)) {
-					ml.GetText(text);
-				}
-							
-				EditBoxWidget eb;
-				if (Class.CastTo(eb, m_ControlWidget)) {
-					text = eb.GetText();
-				}
-				
-				typename variable_type = m_Model.GetVariableType(variable_name);
-				switch (variable_type) {
-					
-					case string: {
-						EnScript.SetClassVar(m_Model, variable_name, variable_index, text);
-						break;
-					}
-					
-					case float: {
-						EnScript.SetClassVar(m_Model, variable_name, variable_index, text.ToFloat());
-						break;
-					}
-					
-					case int: {
-						EnScript.SetClassVar(m_Model, variable_name, variable_index, text.ToInt());
-						break;
-					}
-					
-					default: {
-						Error(string.Format("Unsupported Type: %1", variable_type.ToString()));
-						break;
-					}
-					
-				}
-			
-				return;
-			}
-			case EditorViewType.BOOL: {
-				bool state;
-				
-				
-				CheckBoxWidget cb;
-				if (Class.CastTo(cb, m_ControlWidget)) {
-					state = cb.IsChecked();
-				}
-				
-				ButtonWidget bw;
-				if (Class.CastTo(bw, m_ControlWidget)) {
-					state = bw.GetState();
-				}
-				
-				EnScript.SetClassVar(m_Model, variable_name, variable_index, state);
-				
-				break;
-			}
-		}
-	}
-	
-	void UpdateModel()
-	{
-		EditorLog.Trace("EditorView.UpdateModel");
-		if (!m_Model) return;
-		
-		switch (m_Type)
-		{
-			case EditorViewType.TEXT: {
-				string text;
-				typename variable_type = m_Model.GetVariableType(variable_name);
-				switch (variable_type) {
-					
-					case string: {
-						EnScript.GetClassVar(m_Model, variable_name, variable_index, text);
-						break;
-					}
-					
-					case float: {
-						float text_float;
-						EnScript.GetClassVar(m_Model, variable_name, variable_index, text_float);
-						text = "" + text_float;
-						break;
-					}
-					
-					case int: {
-						int text_int;
-						EnScript.GetClassVar(m_Model, variable_name, variable_index, text_int);
-						text = "" + text_int;
-						break;
-					}
-					
-					default: {
-						Error(string.Format("Unsupported Type: %1", variable_type.ToString()));
-						break;
-					}
-				}
-				
-				
-				TextWidget tw;
-				if (Class.CastTo(tw, m_ControlWidget)) {
-					tw.SetText(text);
-				} 
-				
-				MultilineEditBoxWidget ml;
-				if (Class.CastTo(ml, m_ControlWidget)) {
-					ml.SetText(text);
-				}
-							
-				EditBoxWidget eb;
-				if (Class.CastTo(eb, m_ControlWidget)) {
-					eb.SetText(text);
-				}
-				
-				break;
-			}
-			
-			case EditorViewType.BOOL: {
-				bool state;
-				EnScript.GetClassVar(m_Model, variable_name, variable_index, state);
-				
-				CheckBoxWidget cb;
-				if (Class.CastTo(cb, m_ControlWidget)) {
-					cb.SetChecked(state);
-				}
-				
-				ButtonWidget bw;
-				if (Class.CastTo(bw, m_ControlWidget)) {
-					bw.SetState(state);
-				}
-				
-				break;
-			}
-			
-			default: {
-				Error(string.Format("Unsupported EditorViewType %1", m_Type));
-				break;
-			}
-		}
-	}
-	
-
 };

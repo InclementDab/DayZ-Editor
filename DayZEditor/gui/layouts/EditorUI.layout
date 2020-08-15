@@ -9,6 +9,20 @@ FrameWidgetClass EditorMainFrame {
  draggable 0
  scriptclass ""
  {
+  FrameWidgetClass ViewModelFrame {
+   ignorepointer 1
+   position 10 10
+   size 48 48
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scriptclass "EditorUIViewModel"
+   {
+    ScriptParamsClass {
+    }
+   }
+  }
   FrameWidgetClass MapContainerWidget {
    clipchildren 0
    ignorepointer 1
@@ -91,7 +105,7 @@ FrameWidgetClass EditorMainFrame {
    hexactsize 1
    vexactsize 1
    priority 250
-   scriptclass "EditorUIViewModel"
+   scriptclass ""
    {
     PanelWidgetClass DebugPanel {
      ignorepointer 1
@@ -133,8 +147,7 @@ FrameWidgetClass EditorMainFrame {
          "text offset" 5 0
          {
           ScriptParamsClass {
-           view_model_widget "DebugFrame"
-           variable_name "TextTest"
+           view_model_widget "ViewModelFrame"
           }
          }
         }
@@ -159,6 +172,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         draggable 0
          scriptclass "EditorView"
          font "gui/fonts/metron"
          "text offset" 5 0
@@ -223,10 +237,6 @@ FrameWidgetClass EditorMainFrame {
        font "gui/fonts/metron16"
       }
      }
-    }
-   }
-   {
-    ScriptParamsClass {
     }
    }
   }
@@ -298,12 +308,14 @@ FrameWidgetClass EditorMainFrame {
          content_valign center
          {
           ButtonWidgetClass BuildingSelect {
+           visible 1
            size 50 50
            valign center_ref
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           scriptclass "EditorView"
            switch once
            {
             ImageWidgetClass CategorySelectBuilding {
@@ -323,6 +335,11 @@ FrameWidgetClass EditorMainFrame {
              stretch 0
             }
            }
+           {
+            ScriptParamsClass {
+             view_model_widget "ViewModelFrame"
+            }
+           }
           }
           ButtonWidgetClass VehicleSelect {
            position 0 0
@@ -331,6 +348,7 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           scriptclass "EditorView"
            switch once
            {
             ImageWidgetClass CategorySelectVehicle {
@@ -350,6 +368,11 @@ FrameWidgetClass EditorMainFrame {
              stretch 0
             }
            }
+           {
+            ScriptParamsClass {
+             view_model_widget "ViewModelFrame"
+            }
+           }
           }
           ButtonWidgetClass EntitySelect {
            size 50 50
@@ -359,6 +382,7 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           scriptclass "EditorView"
            switch once
            {
             ImageWidgetClass CategorySelectEntity {
@@ -379,6 +403,11 @@ FrameWidgetClass EditorMainFrame {
              "flip u" 1
             }
            }
+           {
+            ScriptParamsClass {
+             view_model_widget "ViewModelFrame"
+            }
+           }
           }
           ButtonWidgetClass HumanSelect {
            position 0 0
@@ -387,6 +416,7 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           scriptclass "EditorView"
            switch once
            {
             ImageWidgetClass CategorySelectHuman {
@@ -403,6 +433,11 @@ FrameWidgetClass EditorMainFrame {
              mode blend
              "src alpha" 1
              stretch 0
+            }
+           }
+           {
+            ScriptParamsClass {
+             view_model_widget "ViewModelFrame"
             }
            }
           }
