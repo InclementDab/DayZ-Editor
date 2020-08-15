@@ -3,11 +3,19 @@
 class EditorHudHandler: ScriptedWidgetEventHandler
 {
 	protected Widget m_LayoutRoot;
+	protected Widget m_LeftbarFrame;
+	protected Widget m_RightbarFrame;
 	
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("EditorHudHandler::OnWidgetScriptInit");
 		m_LayoutRoot = w;
+				
+		m_LeftbarFrame			= m_LayoutRoot.FindAnyWidget("LeftbarFrame");
+		m_RightbarFrame			= m_LayoutRoot.FindAnyWidget("RightbarFrame");
+		
+		GetEditorHudViewModel().PropertyChanged.Insert(OnPropertyChanged);
+		
 		m_LayoutRoot.SetHandler(this);
 	}
 	
@@ -26,6 +34,48 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (button == 0) {
+			
+			
+			switch (w.GetName()) {
+				
+				case "LeftbarHide": {
+					
+					break;
+				}
+				
+				
+			}
+		}
+		
+		
+		return super.OnClick(w, x, y, button);
+	}
+	
+	void OnPropertyChanged(string property_name)
+	{
+		EditorLog.Trace("EditorHudHandler::OnPropertyChanged");
+		switch (property_name) {
+			
+			case "LeftbarHide": {
+				ShowLeftBar(GetEditorHudViewModel().LeftbarHide);
+				break;
+			}
+			
+		}
+	}
+	
+	void ShowLeftBar(bool state)
+	{
+		m_LeftbarFrame.SetPos(-300 * state, 0);
+	}
+	
+	void ShowRightBar(bool state)
+	{
+		m_RightbarFrame.SetPos(-300 * state, 48);
+	}
 }
 
 
@@ -35,7 +85,7 @@ class EditorHud: Hud
 {	
 	
 	protected Widget m_LayoutRoot;
-	
+
 	
 	// Misc get ridda this shit too
 	protected Widget 			m_EditorMapContainer;
@@ -56,8 +106,9 @@ class EditorHud: Hud
 	override void Init(Widget hud_panel_widget) 
 	{
 		EditorLog.Trace("EditorHud::Init");
-		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorUI.layout", hud_panel_widget);
+		m_LayoutRoot 			= GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorUI.layout", hud_panel_widget);
 		
+
 		
 		// Misc get ridda this shit too
 		m_EditorMapContainer	= m_LayoutRoot.FindAnyWidget("MapContainer");
@@ -135,5 +186,7 @@ class EditorHud: Hud
 	{
 		return GetGame().GetUIManager().IsModalVisible();
 	}
+	
+
 }
 

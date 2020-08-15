@@ -5,7 +5,7 @@ class EditorPlacedListItem: EditorListItem
 	
 	void EditorPlacedListItem(EditorObject data) 
 	{ 
-		Print("EditorPlacedListItem"); 
+		EditorLog.Trace("EditorPlacedListItem"); 
 		m_Data = data;
 		m_ListItemCollapse.Show(false);
 		

@@ -319,6 +319,7 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           draggable 0
            scriptclass "EditorView"
            switch once
            {
@@ -414,6 +415,7 @@ FrameWidgetClass EditorMainFrame {
            }
           }
           ButtonWidgetClass HumanSelect {
+           visible 1
            position 0 0
            size 50 50
            hexactpos 1
@@ -578,7 +580,9 @@ FrameWidgetClass EditorMainFrame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scriptclass "EditorView"
      style DayZDefaultButtonNoBorder
+     switch toggle
      {
       ImageWidgetClass LeftbarHideIcon {
        ignorepointer 1
@@ -592,6 +596,11 @@ FrameWidgetClass EditorMainFrame {
        imageTexture "{60621763B985C925}dta/gui/gui/imagesets/dayz_gui@2x.edds"
        mode blend
        "src alpha" 1
+      }
+     }
+     {
+      ScriptParamsClass {
+       view_model_widget "ViewModelFrame"
       }
      }
     }
@@ -675,7 +684,9 @@ FrameWidgetClass EditorMainFrame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scriptclass "EditorView"
      style DayZDefaultButtonNoBorder
+     switch toggle
      {
       ImageWidgetClass RightbarHideIcon {
        ignorepointer 1
@@ -696,6 +707,11 @@ FrameWidgetClass EditorMainFrame {
        stretch 1
        "flip u" 0
        "flip v" 0
+      }
+     }
+     {
+      ScriptParamsClass {
+       view_model_widget "ViewModelFrame"
       }
      }
     }

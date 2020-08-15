@@ -17,10 +17,32 @@ class EditorHudViewModel: ViewModelBase
 	string DebugText4;
 	string DebugText5;
 	
-	bool BuildingSelect;
-	bool VehicleSelect;
-	bool EntitySelect;
-	bool HumanSelect;
+	protected bool BuildingSelect;
+	void SetBuildingSelect(bool value) {
+		BuildingSelect = value;
+		NotifyPropertyChanged("BuildingSelect");
+	}
+	
+	protected bool VehicleSelect;
+	void SetVehicleSelect(bool value) {
+		VehicleSelect = value;
+		NotifyPropertyChanged("VehicleSelect");
+	}
+	
+	protected bool EntitySelect;
+	void SetEntitySelect(bool value) {
+		EntitySelect = value;
+		NotifyPropertyChanged("EntitySelect");
+	}
+	
+	protected bool HumanSelect;
+	void SetHumanSelect(bool value) {
+		HumanSelect = value;
+		NotifyPropertyChanged("HumanSelect");
+	}
+	
+	bool LeftbarHide;
+	bool RightbarHide;
 	
 	ref TextListboxWidgetData DebugActionStackListbox;
 	ref WrapSpacerWidgetData LeftbarSpacer;
@@ -45,10 +67,6 @@ class EditorHudViewModel: ViewModelBase
 		// Load PlaceableObjects
 		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
 		
-		BrushTypeBox.Insert("Brush1");
-		BrushTypeBox.Insert("Brush2");
-		BrushTypeBox.Insert("Brush3");
-		
 		UpdateViews();		
 	}
 	
@@ -61,8 +79,9 @@ class EditorHudViewModel: ViewModelBase
 	
 	void InsertPlacedObject(EditorListItem target)
 	{
-		EditorLog.Trace("EditorHudViewModel::RightbarSpacer");
-		RightbarSpacer.Insert(target.GetRoot());
+		EditorLog.Trace("EditorHudViewModel::InsertPlacedObject");
+		RightbarSpacer.InsertWidget(target.GetRoot());
+		UpdateViews();
 	}
 	
 	void InsertMapObject(Widget map_marker)
@@ -100,15 +119,6 @@ class EditorHudViewModel: ViewModelBase
 		
 	}
 	
-	void ClearBrushBox()
-	{
-		BrushTypeBox.Clear();
-	}
-	
-	void InsertBrush(string name)
-	{
-		BrushTypeBox.Insert(name);
-	}
 	
 	override bool OnClick(Widget w, int x, int y, bool button) 
 	{
@@ -145,13 +155,16 @@ class EditorHudViewModel: ViewModelBase
 	}
 	
 	
-	override void OnPropertyChanged(Widget target)
+	void ClearBrushBox()
 	{
-		EditorLog.Trace("OnPropertyChanged: " + target.GetName());
-
-	
-		UpdateViews();
+		BrushTypeBox.Clear();
 	}
+	
+	void InsertBrush(string name)
+	{
+		BrushTypeBox.Insert(name);
+	}
+
 }
 	
 
@@ -214,7 +227,22 @@ class ViewModelBase: Managed
 			view.DebugPrint();
 	}
 	
-	void OnPropertyChanged(Widget target) {}
+	// property_name = name of variable being changed
+	ref ScriptInvoker PropertyChanged;
+	void NotifyPropertyChanged(string property_name = "") 
+	{
+		EditorLog.Trace("ViewModelBase::NotifyPropertyChanged: " + property_name);
+		if (property_name == string.Empty) {
+			UpdateViews();
+			return;
+		}
+		
+		foreach (ref EditorView view: m_ViewList)
+			if (view.variable_name == property_name)
+				view.UpdateView();
+			
+		PropertyChanged.Invoke(property_name);
+	}
 	
 	bool OnClick(Widget w, int x, int y, bool button) { return true; }
 }

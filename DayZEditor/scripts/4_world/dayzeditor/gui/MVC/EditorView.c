@@ -1,6 +1,6 @@
 
 // TextListBoxWidget
-typedef ref map<string, Class> TextListboxWidgetData;
+typedef ref ObservableCollection<string, Class> TextListboxWidgetData;
 
 // WrapSpacerWidget
 class WrapSpacerWidgetData: ref set<Widget> 
@@ -83,7 +83,7 @@ class EditorView extends ScriptedWidgetEventHandler
 		m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(view_model_widget);
 		
 		if (!m_ViewModelWidget) {
-			Error("ViewModel Widget not found!");
+			Error(string.Format("ViewModel Widget not found! %1", view_model_widget));
 			return;
 		}
 		
@@ -103,7 +103,7 @@ class EditorView extends ScriptedWidgetEventHandler
 		Print("OnChange");
 		if (m_Model) {
 			UpdateModel();
-			m_Model.OnPropertyChanged(w);
+			m_Model.NotifyPropertyChanged(w.GetName());
 		}
 		return true;
 		//return super.OnChange(w, x, y, finished);
@@ -247,7 +247,6 @@ class EditorView extends ScriptedWidgetEventHandler
 			}
 			
 			case WrapSpacerWidget: {
-				Print("WrapSpacerWidget");
 				WrapSpacerWidgetData wrap_spacer_data = new WrapSpacerWidgetData();
 				WrapSpacerWidget wrap_spacer = WrapSpacerWidget.Cast(m_LayoutRoot);
 
