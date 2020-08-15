@@ -2,7 +2,8 @@
 // TextListBoxWidget
 typedef ref map<string, Class> TextListboxWidgetData;
 
-
+// WrapSpacerWidget
+typedef ref array<Widget> WrapSpacerWidgetData;
 
 class EditorView extends ScriptedWidgetEventHandler
 {
@@ -139,6 +140,13 @@ class EditorView extends ScriptedWidgetEventHandler
 				break;
 			}
 			
+			case WrapSpacerWidget: {
+				WrapSpacerWidgetData wrap_spacer_data = new WrapSpacerWidgetData();
+				WrapSpacerWidget wrap_spacer = WrapSpacerWidget.Cast(m_LayoutRoot);
+				
+				break;
+			}
+			
 			
 			default: {
 				Error(string.Format("Unsupported Widget Type %1", m_WidgetType.ToString()));
@@ -182,17 +190,31 @@ class EditorView extends ScriptedWidgetEventHandler
 				list_box.ClearItems();
 
 				
-				foreach (string text, Class data: list_data) {
+				foreach (string text, Class data: list_data)
 					list_box.AddItem(text, data, 0);
-				}
 				
-				/*
-				for (int i = 0; i < list_data.Count(); i++)
-					list_box.AddItem(list_data[i], null, 0);*/
-			
+							
 				break;
 			}
 			
+			case WrapSpacerWidget: {
+				WrapSpacerWidgetData wrap_spacer_data = new WrapSpacerWidgetData();
+				WrapSpacerWidget wrap_spacer = WrapSpacerWidget.Cast(m_LayoutRoot);
+
+				if (EnScript.GetClassVar(m_Model, variable_name, 0, wrap_spacer_data)) {
+					Error(string.Format("Wrong Data Type in %1", m_LayoutRoot.GetName()));
+					break;
+				}
+				
+				foreach (Widget w: wrap_spacer_data) {
+					wrap_spacer.AddChild(w);
+				}
+			
+				
+				
+				
+				break;
+			}
 	
 			
 			default: {

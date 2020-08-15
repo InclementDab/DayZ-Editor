@@ -23,20 +23,23 @@ class EditorUIViewModel: ViewModelBase
 	bool HumanSelect;
 	
 	ref TextListboxWidgetData WrapSpacerTest;
+	ref WrapSpacerWidgetData LeftbarSpacer;
 	
 	void EditorUIViewModel()
 	{
 		EditorLog.Trace("EditorUIViewModel");
 		m_EditorUIViewModel = this;
 		WrapSpacerTest = new TextListboxWidgetData();
+		LeftbarSpacer = new WrapSpacerWidgetData();
 		// Load PlaceableObjects
-		/*
+		
 		m_PlaceableObjects = new EditorPlaceableListItemSet();
 		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", GetPlaceableObjects(m_PlaceableObjects)));
 		foreach (ref EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
-			//m_EditorUI.InsertPlaceableObject(placeable_object);
-		}*/
-				
+			LeftbarSpacer.Insert(placeable_object.GetRoot());
+		}
+		
+		
 		UpdateViews();
 		
 	}
@@ -72,8 +75,8 @@ class EditorUIViewModel: ViewModelBase
 	
 	override void OnPropertyChanged(Widget target)
 	{
-		Print("OnPropertyChanged: " + target.GetName());
-		WrapSpacerTest.Insert(target.GetName(), target);
+		EditorLog.Trace("OnPropertyChanged: " + target.GetName());
+			
 		switch (target.GetName()) {
 			
 			case "BuildingSelect": {
