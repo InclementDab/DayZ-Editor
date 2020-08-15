@@ -28,7 +28,7 @@ class EditorClientModule: JMModuleBase
 	
 	
 	private ref EditorBrush					m_EditorBrush;
-	private ref EditorBrushSettingsSet 		m_EditorBrushTypes;
+	private ref EditorBrushDataSet 		m_EditorBrushTypes;
 	private ref map<string, typename> 		m_CustomBrushList = new map<string, typename>();
 	
 	
@@ -37,10 +37,11 @@ class EditorClientModule: JMModuleBase
 	static vector 							CurrentMousePosition;
 	
 	private bool m_Active = false;
-	
-	private ref EditorUI m_EditorUI;
-	EditorUI GetEditorUI() { return m_EditorUI; }
-	
+
+	/* UI Stuff */
+	private ref EditorUIManager m_EditorUIManager;
+	EditorUIManager GetUIManager() { return m_EditorUIManager; }
+	EditorUI GetEditorUI() { return m_EditorUIManager.GetEditorUI(); }
 	
 	private ref EditorHologram ObjectInHand;
 	bool IsPlacing() { return ObjectInHand != null; }
@@ -54,13 +55,10 @@ class EditorClientModule: JMModuleBase
 	ref EditorObjectSet GetSelectedObjects() { return m_SelectedObjects; }
 	ref EditorObjectSet GetPlacedObjects() { return m_PlacedObjects; }
 	ref EditorObjectDataSet	 GetSessionCache() { return m_SessionCache; }
-	
-	void DeleteSessionData(int id) { m_SessionCache.Remove(id);	}
-	EditorObject GetEditorObject(int id) { return m_PlacedObjects.Get(id); }
-	EditorObjectData GetSessionDataById(int id) { return m_SessionCache.Get(id); }
-	EditorObject GetPlacedObjectById(int id) { return m_PlacedObjects.Get(id); }
-	
+		
 	// Public Members
+	
+	
 	void EditorClientModule()
 	{
 		EditorLog.Info("Editor");
@@ -73,6 +71,8 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Info("~Editor");
 	}
 	
+	
+	// JMModuleBase Overrides
 	override void OnInit()
 	{
 		EditorLog.Trace("Editor::OnInit");
@@ -80,16 +80,13 @@ class EditorClientModule: JMModuleBase
 		
 		/* UI Init */
 		m_UIManager = GetGame().GetUIManager();
-				
-		/* EditorUI Init */
-		m_EditorUI = new EditorUI();
-		m_EditorUI.Show(false);
+		m_EditorUIManager = new EditorUIManager();
 		
-		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
-		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
+		// Events
 		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
 		EditorEvents.OnObjectDeleted.Insert(OnObjectDeleted);
 		
+		// Keybinds
 		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
 		
 	}
@@ -126,25 +123,7 @@ class EditorClientModule: JMModuleBase
 		}
 	}
 	
-	bool OnMouseEnterObject(Object target, int x, int y)
-	{
-
-	}
-	
-	bool OnMouseExitObject(Object target, int x, int y)
-	{
-
-	}
-	
-		
-	void ClearSelection()
-	{
-		Print("EditorObjectManager::ClearSelections");		
-		foreach (EditorObject editor_object: m_SelectedObjects)
-			EditorEvents.DeselectObject(this, editor_object);
-	
-	}
-	
+	override bool IsServer() { return false; }	
 
 	override void OnInvokeConnect(PlayerBase player, PlayerIdentity identity)
 	{
@@ -188,30 +167,7 @@ class EditorClientModule: JMModuleBase
 		m_Active = !m_Active;
 		SetActive(m_Active);
 	}
-	
-	
-	void SetActive(bool active)
-	{
-		if (m_Player == null) {
-			m_Player = GetGame().GetPlayer();
-		}
 		
-		if (m_Camera == null) {
-			// Camera Init
-			EditorLog.Info("Initializing Camera");
-			m_Camera = GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 10, 0), ECE_LOCAL);
-		}
-				
-		m_Camera.SetActive(active);
-		m_EditorUI.Show(active);
-		m_Mission.GetHud().Show(!active);
-		
-		
-		if (!active)
-			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
-	}
-	
-	
 	
 	override int GetRPCMin()
 	{
@@ -231,7 +187,7 @@ class EditorClientModule: JMModuleBase
 		}
 	}
 	
-	
+	// Object Management
 	void CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
 	{
 		EditorLog.Trace("Editor::CreateObjects");
@@ -309,6 +265,74 @@ class EditorClientModule: JMModuleBase
 		if (create_undo) InsertAction(action);
 	}
 	
+	// Call to select an object
+	void SelectObject(EditorObject target)
+	{
+		EditorLog.Trace("Editor::SelectObject");
+		m_SelectedObjects.InsertEditorObject(target);
+		EditorEvents.ObjectSelected(this, target);
+	}
+	
+	// Call to deselect an object
+	void DeselectObject(EditorObject target)
+	{
+		EditorLog.Trace("Editor::DeselectObject");
+		m_SelectedObjects.RemoveEditorObject(target);
+		EditorEvents.ObjectDeselected(this, target);
+	}	
+	
+	// Call to toggle selection
+	void ToggleSelection(EditorObject target)
+	{
+		EditorLog.Trace("Editor::ToggleSelection");
+		if (target.IsSelected()) {
+			DeselectObject(target);
+		} else {
+			SelectObject(target);
+		}
+	}
+	
+	// Call to clear selection
+	void ClearSelection()
+	{
+		Print("Editor::ClearSelection");		
+		foreach (EditorObject editor_object: m_SelectedObjects)
+			DeselectObject(editor_object);
+	}
+	
+	
+	// General Editor Stuff
+	void SetActive(bool active)
+	{
+		if (m_Player == null) {
+			m_Player = GetGame().GetPlayer();
+		}
+		
+		if (m_Camera == null) {
+			// Camera Init
+			EditorLog.Info("Initializing Camera");
+			m_Camera = GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 10, 0), ECE_LOCAL);
+		}
+				
+		m_Camera.SetActive(active);
+		m_EditorUIManager.SetVisibility(active);
+		m_Mission.GetHud().Show(!active);
+		
+		
+		if (!active)
+			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
+	}
+	
+	bool OnMouseEnterObject(Object target, int x, int y)
+	{
+
+	}
+	
+	bool OnMouseExitObject(Object target, int x, int y)
+	{
+
+	}
+	
 	
 	void InsertAction(EditorAction target)
 	{
@@ -324,59 +348,16 @@ class EditorClientModule: JMModuleBase
 		m_ActionStack.InsertAt(target, 0);
 		
 		// debug
-		m_EditorUI.m_DebugActionStack.ClearItems();
+		m_EditorUIManager.GetEditorUI().m_DebugActionStack.ClearItems();
 		
 		for (int debug_i = 0; debug_i < m_ActionStack.Count(); debug_i++) {
-			m_EditorUI.m_DebugActionStack.AddItem(m_ActionStack[debug_i].GetName(), m_ActionStack[debug_i], 0);
+			m_EditorUIManager.GetEditorUI().m_DebugActionStack.AddItem(m_ActionStack[debug_i].GetName(), m_ActionStack[debug_i], 0);
 		}
 	}
 	
+
 	
-	static ref ModStructure GetModFromObject(string object_name)
-	{
-		
-		ref array<ref ModStructure> mods = ModLoader.GetMods();
-		string model_path = GetGame().ConfigGetTextOut("CfgVehicles " + object_name + " model");
-		
-		foreach (ModStructure mod: mods) {
-			string dir;
-			string path = mod.GetModPath();
-			GetGame().ConfigGetText(string.Format("%1 dir", path), dir);
-			dir.ToLower(); model_path.ToLower();
-			if (model_path.Contains(dir))
-				return mod;
-			
-		}
-		
-		return null;
-	}
-	
-	static string GetIconFromMod(ref ModStructure m_ModInfo)
-	{
-		if (m_ModInfo != null) {
-			string logo = m_ModInfo.GetModLogo();
-			if (logo == string.Empty)
-				logo = m_ModInfo.GetModLogoSmall();
-			if (logo == string.Empty)
-				logo = m_ModInfo.GetModLogoOver();
-			if (logo == string.Empty)
-				logo = m_ModInfo.GetModActionURL();
-			if (logo != string.Empty)
-				return logo;	
-		}
-		// default
-		return "DayZEditor/gui/images/dayz_editor_icon_black.edds";
-	}
-	
-	void OnObjectSelected(Class context, EditorObject target)
-	{	
-		m_SelectedObjects.InsertEditorObject(target);
-	}
-	
-	void OnObjectDeselected(Class context, EditorObject target)
-	{
-		m_SelectedObjects.RemoveEditorObject(target);
-	}	
+
 	
 	void OnObjectCreated(Class context, EditorObject target)
 	{
@@ -393,14 +374,15 @@ class EditorClientModule: JMModuleBase
 	
 	// This is for hashmap lookup of placed objects. very fast
 	private ref map<int, int> m_PlacedObjectIndex = new map<int, int>();
-	EditorObject GetEditorObject(notnull Object world_object)
-	{
-		int id = world_object.GetID();
-		int editor_obj_id = m_PlacedObjectIndex.Get(id);
-		return GetEditorObject(editor_obj_id);
-	}
+	EditorObject GetEditorObject(notnull Object world_object) { return GetEditorObject(m_PlacedObjectIndex.Get(world_object.GetID())); }
+	EditorObject GetEditorObject(int id) { return m_PlacedObjects.Get(id); }
+	
+	void DeleteSessionData(int id) { m_SessionCache.Remove(id);	}
+	EditorObjectData GetSessionDataById(int id) { return m_SessionCache.Get(id); }
+	EditorObject GetPlacedObjectById(int id) { return m_PlacedObjects.Get(id); }
 	
 	// Brush Management
+	// move this to EditorBrush? make static
 	void ReloadBrushes(string filename)
 	{
 		EditorLog.Trace("EditorUIManager::ReloadBrushes");
@@ -409,16 +391,38 @@ class EditorClientModule: JMModuleBase
 	}
 
 	
-	void SetBrushTypes(EditorBrushSettingsSet brush_types)
+	void SetBrushTypes(EditorBrushDataSet brush_types)
 	{
-		m_EditorUI.ClearBrushBox();
+		m_EditorUIManager.GetEditorUI().ClearBrushBox();
 		m_EditorBrushTypes = brush_types;
 
-		foreach (EditorBrushSettings brush: m_EditorBrushTypes)
-			m_EditorUI.InsertBrush(brush.Name);		
+		foreach (EditorBrushData brush: m_EditorBrushTypes)
+			m_EditorUIManager.GetEditorUI().InsertBrush(brush.Name);		
+	}
+	
+	void SetBrush(EditorBrush brush) { m_EditorBrush = brush; }
+	void SetBrush(string brush_name) 
+	{
+		
+		
+	}
+	
+
+	
+	void PlaceObject()
+	{
+		Input input = GetGame().GetInput();
+		EntityAI e = ObjectInHand.GetProjectionEntity();
+		vector mat[4];
+	
+		EditorObject editor_object = CreateObject(EditorObjectData.Create(e.GetType(), e.GetPosition(), e.GetOrientation()));
+		SelectObject(editor_object);
+		
+		if (!input.LocalValue("UATurbo")) { 
+			delete ObjectInHand;
+		}
 	}
 	
 	
-	override bool IsServer() { return false; }
 
 }

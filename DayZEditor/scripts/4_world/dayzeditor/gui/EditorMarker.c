@@ -67,13 +67,13 @@ class EditorMapMarker: UILinkedObject
 			return true;
 		
 		// We want to Toggle selection if you are holding control
-		if (input.LocalValue("UARunWalkTemp"))
-			GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);
-		else {
+		if (input.LocalValue("UARunWalkTemp")) {
+			GetEditor().ToggleSelection(m_EditorObject);
+		} else {
 			if (!input.LocalValue("UATurbo"))
-				EditorEvents.ClearSelection(this);
+				GetEditor().ClearSelection();
 			
-			EditorEvents.SelectObject(this, m_EditorObject);
+			GetEditor().SelectObject(m_EditorObject);
 		}
 		 // Blocks map from creating selection box
 		return super.OnMouseButtonDown(w, x, y, button);
@@ -83,28 +83,28 @@ class EditorMapMarker: UILinkedObject
 	{
 		Print("EditorMapMarker::OnDrag");
 		if (GetEditor().IsPlacing()) return false;
-		EditorEvents.DragInvoke(this, m_EditorObject);
+		//EditorEvents.DragInvoke(this, m_EditorObject);
 		return true;
 	}
 	
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		Print("EditorMapMarker::OnDrop");	
-		EditorEvents.DropInvoke(this, m_EditorObject);
+		//EditorEvents.DropInvoke(this, m_EditorObject);
 		return true;
 	}
 	
 	override bool OnFocus(Widget w, int x, int y)
 	{
 		Print("EditorMapMarker::OnFocus");
-		EditorEvents.SelectObject(this, m_EditorObject);
+		GetEditor().SelectObject(m_EditorObject);
 		return true;
 	}
 	
 	override bool OnFocusLost(Widget w, int x, int y)
 	{
 		Print("EditorMapMarker::OnFocusLost");
-		EditorEvents.DeselectObject(this, m_EditorObject);
+		GetEditor().DeselectObject(m_EditorObject);
 		return true;
 	}
 }
@@ -120,7 +120,7 @@ class EditorObjectMarker: UILinkedObject
 	
 	void ~EditorObjectMarker()
 	{
-		EditorPrint("~EditorObjectMarker");
+		EditorLog.Trace("~EditorObjectMarker");
 		delete m_EditorObjectPropertiesWindow;
 		delete m_EditorObjectContextMenu;
 	}
@@ -165,7 +165,7 @@ class EditorObjectMarker: UILinkedObject
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		// you should set cursor here its smart smile :)
-		EditorPrint("EditorMarker::OnMouseEnter");
+		EditorLog.Trace("EditorMarker::OnMouseEnter");
 		if (GetEditor().IsPlacing()) return false;
 		MouseInside = true;
 		return true;
@@ -173,7 +173,7 @@ class EditorObjectMarker: UILinkedObject
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		EditorPrint("EditorMarker::OnMouseLeave");
+		EditorLog.Trace("EditorMarker::OnMouseLeave");
 		MouseInside = false;
 		return true;
 	}
@@ -181,7 +181,7 @@ class EditorObjectMarker: UILinkedObject
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		EditorPrint("EditorObjectMarker::OnMouseButtonDown: " + button);
+		EditorLog.Trace("EditorObjectMarker::OnMouseButtonDown: " + button);
 		
 		
 		Input input = GetGame().GetInput();
@@ -196,12 +196,12 @@ class EditorObjectMarker: UILinkedObject
 			
 			// We want to Toggle selection if you are holding control
 			if (input.LocalValue("UARunWalkTemp"))
-				GetEditor().GetObjectManager().ToggleSelection(m_EditorObject);
+				GetEditor().ToggleSelection(m_EditorObject);
 			else {
 				if (!input.LocalValue("UATurbo"))
-					EditorEvents.ClearSelection(this);
+					GetEditor().ClearSelection();
 				
-				EditorEvents.SelectObject(this, m_EditorObject);
+				GetEditor().SelectObject(m_EditorObject);
 			}
 			
 			
@@ -223,17 +223,17 @@ class EditorObjectMarker: UILinkedObject
 	
 	override bool OnDrag(Widget w, int x, int y)
 	{
-		EditorPrint("EditorObjectMarker::OnDrag");
+		EditorLog.Trace("EditorObjectMarker::OnDrag");
 		
 		if (GetEditor().IsPlacing()) return false;
-		EditorEvents.DragInvoke(this, m_EditorObject);
+		//EditorEvents.DragInvoke(this, m_EditorObject);
 		return true;
 	}
 	
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
-		EditorPrint("EditorObjectMarker::OnDrop");
-		EditorEvents.DropInvoke(this, m_EditorObject);
+		EditorLog.Trace("EditorObjectMarker::OnDrop");
+		//EditorEvents.DropInvoke(this, m_EditorObject);
 		return true;
 	}
 	

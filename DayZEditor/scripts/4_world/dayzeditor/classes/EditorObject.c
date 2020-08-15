@@ -73,7 +73,7 @@ class EditorObject
 		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
 		Update();
 		
-		m_ModStructure = EditorClientModule.GetModFromObject(m_Data.Type);
+		m_ModStructure = GetModFromObject(m_Data.Type);
 		
 		// Bounding Box
 		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {

@@ -17,19 +17,19 @@ class EditorEvents
 		OnObjectDeleted.Invoke(context, target);
 	}
 	
-	// Call to select an Editor Object
+	// Called AFTER Object is selected
 	static ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
-	static void SelectObject(Class context, EditorObject target)
+	static void ObjectSelected(Class context, EditorObject target)
 	{
-		EditorLog.Trace("EditorEvents::SelectObject");
+		EditorLog.Trace("EditorEvents::ObjectSelected");
 		OnObjectSelected.Invoke(context, target);
 	}
 	
-	// Call to deselect an Editor Object
+	// Called AFTER Object is deselected
 	static ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
-	static void DeselectObject(Class context, EditorObject target)
+	static void ObjectDeselected(Class context, EditorObject target)
 	{
-		EditorLog.Trace("EditorEvents::DeselectObject");
+		EditorLog.Trace("EditorEvents::ObjectDeselected");
 		OnObjectDeselected.Invoke(context, target);
 	}
 }

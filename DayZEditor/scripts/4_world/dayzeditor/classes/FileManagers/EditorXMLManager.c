@@ -286,8 +286,8 @@ class EditorMapGroupProto: XMLCallback
 // abstract to EditorXMLCallback
 class XMLEditorBrushes: XMLCallback
 {
-	private ref EditorBrushSettingsSet m_Data = new EditorBrushSettingsSet();
-	EditorBrushSettingsSet GetData() { return m_Data; }
+	private ref EditorBrushDataSet m_Data = new EditorBrushDataSet();
+	EditorBrushDataSet GetData() { return m_Data; }
 	
 	private bool m_Success = true;
 	
@@ -310,7 +310,7 @@ class XMLEditorBrushes: XMLCallback
 			XMLTag brush = brush_types.Get(i);
 			XMLElement brush_objects = brush.GetContent();
 			
-			EditorBrushSettings brush_settings = new EditorBrushSettings();
+			EditorBrushData brush_settings = new EditorBrushData();
 			brush_settings.Name = brush.GetAttribute("name").ValueAsString();
 			
 			

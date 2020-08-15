@@ -42,30 +42,5 @@ modded class MissionGameplay
 			EditorLog.Error("Attempted to StartEditor as Server!");
 		}	
 	}
-		
-		
-	
-	/* Used for Offline Editor Mission Creation */
-	private string CreateEditorMission(string map_name = "ChernarusPlus")
-	{
-		EditorLog.Trace("EditorMissionGameplay::CreateEditorMission");
-		string mission = "$saves:DayZEditor." + map_name;
-		
-		if (!FileExist(mission)) {
-			EditorLog.Info("Editor Mission not found, creating....");
-			MakeDirectory(mission);
-		}
-		
-		FileHandle init = OpenFile(mission + "/init.c", FileMode.WRITE);
-		FPrint(init, "\/\/ Returns Offline Editor Mission");
-		FPrint(init, "Mission CreateCustomMission(string path)");
-		FPrint(init, "{");
-		FPrint(init, "	return new MissionGameplay();");
-		FPrint(init, "}");
-			
-		CloseFile(init);
-		
-		return mission;
-	}
 }
 

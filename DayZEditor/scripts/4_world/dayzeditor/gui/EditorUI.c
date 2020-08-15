@@ -7,12 +7,12 @@ enum EditorCursor
 	HORIZONTAL_SCROLL
 }
 
-
+// START USING Hud CLASS NOT UISCRIPTEDMENU
 class EditorUI: UIScriptedMenu
 {
+	// Root
 	private ref Widget m_Root;
 	Widget GetRoot() { return m_Root; }
-	
 	
 	// Canvas
 	protected ref CanvasWidget m_EditorCanvas;
@@ -122,25 +122,22 @@ class EditorUI: UIScriptedMenu
 	
 	void EditorUI()
 	{
-		EditorPrint("EditorUI");
-		m_UIManager = GetEditor().GetUIManager();
+		EditorLog.Trace("EditorUI");
 	}
 	
 	void ~EditorUI()
 	{
-		EditorPrint("~EditorUI");
+		EditorLog.Trace("~EditorUI");
 	}
 	
 	
 	override Widget Init()
 	{
-		EditorPrint("EditorUI::Init");
+		EditorLog.Trace("EditorUI::Init");
 		
 		
 		// Init
-		m_EditorUIHandler = new EditorUIHandler();
 		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorUI.layout");
-		m_Root.GetScript(m_EditorUIHandler);
 		
 		// Canvas
 		m_EditorCanvas			= CanvasWidget.Cast(m_Root.FindAnyWidget("EditorCanvas"));
@@ -207,8 +204,6 @@ class EditorUI: UIScriptedMenu
 		// Cursors
 		//m_HorizontalScrollWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/cursors/horizontalwidget.layout");
 		
-
-		
 		// Debug
 		m_DebugText1			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText1"));
 		m_DebugText2			= TextWidget.Cast(m_Root.FindAnyWidget("DebugText2"));
@@ -223,7 +218,8 @@ class EditorUI: UIScriptedMenu
 		m_SimcityDensityText.SetText(m_SimcityDensitySlider.GetCurrent().ToString());
 		
 		// Events
-		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);
+		// this will go into ViewModel
+		//EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);
 			
 		// Tooltips
 		m_TooltipMagnet = new EditorUITooltip("Toggle magnet mode on/off.", "Magnet Mode");
@@ -278,7 +274,7 @@ class EditorUI: UIScriptedMenu
 	private bool cursor_state;
 	void ShowMap(bool state)
 	{
-		EditorPrint("EditorUI::ShowMap");			
+		EditorLog.Trace("EditorUI::ShowMap");			
 		
 		if (state) {
 			cursor_state = GetGame().GetUIManager().IsCursorVisible();
@@ -362,7 +358,7 @@ class EditorUI: UIScriptedMenu
 	/* Events */
 	override bool OnClick(Widget w, int x, int y, int button) 
 	{
-		EditorPrint("EditorUI::OnClick");
+		EditorLog.Trace("EditorUI::OnClick");
 		
 		if (button == 0) {
 			

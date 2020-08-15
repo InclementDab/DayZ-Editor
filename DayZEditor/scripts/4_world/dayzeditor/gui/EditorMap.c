@@ -31,7 +31,7 @@ class EditorMap: EditorWidgetEventHandler
 				GetEditor().PlaceObject();
 				return true;
 			} else {
-				EditorEvents.ClearSelection(this);
+				GetEditor().ClearSelection();
 				EditorUI ui = GetEditor().GetUIManager().GetEditorUI();
 				ui.GetCanvas().Clear();
 				GetCursorPos(ui.start_x, ui.start_y);

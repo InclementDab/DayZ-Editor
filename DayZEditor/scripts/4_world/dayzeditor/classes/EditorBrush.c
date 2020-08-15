@@ -1,12 +1,10 @@
 
 
 typedef ref array<ref EditorBrush> EditorBrushSet;
-typedef ref array<ref EditorBrushSettings> EditorBrushSettingsSet;
-// use FLAGS to define brush settings, radius, density etc...
-
+typedef ref array<ref EditorBrushData> EditorBrushDataSet;
 
 // This is the data that will be loaded from XML
-class EditorBrushSettings
+class EditorBrushData
 {
 	string Name;
 	float MinRadius, MaxRadius;
@@ -31,7 +29,7 @@ class EditorBrushSettings
 class EditorBrush
 {
 	protected EntityAI m_BrushDecal;
-	protected ref EditorBrushSettings m_BrushSettings;
+	protected ref EditorBrushData m_BrushData;
 
 	protected static float m_BrushRadius = 20;
 	static void SetRadius(float radius) { m_BrushRadius = radius; }
@@ -45,10 +43,10 @@ class EditorBrush
 	private vector m_LastMousePosition;
 
 	
-	void EditorBrush(EditorBrushSettings settings)
+	void EditorBrush(EditorBrushData settings)
 	{
 		EditorLog.Trace("EditorBrush");
-		m_BrushSettings = settings;
+		m_BrushData = settings;
 		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);	
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
@@ -58,6 +56,26 @@ class EditorBrush
 		EditorLog.Trace("~EditorBrush");
 		GetGame().ObjectDelete(m_BrushDecal);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(UpdateBrush);
+	}
+	
+	
+	static EditorBrush GetFromName(string brush_name)
+	{
+		EditorPrint("Editor::GetBrushFromName " + brush_name);
+		foreach (EditorBrushData settings: m_EditorBrushTypes) {
+			if (settings.Name == brush_name) {
+				
+				foreach (string name, typename type: m_CustomBrushList) 
+					if (name == brush_name)
+						return type.Spawn();
+					
+				return new EditorBrush(settings);			
+			}
+		}
+			
+		
+		EditorPrint("Editor::GetBrushFromName Brush not found!");
+		return null;
 	}
 	
 	void SetBrushTexture(string texture)
@@ -142,8 +160,8 @@ class EditorBrush
 		
 	}
 	
-	void SetSettings(EditorBrushSettings settings) { m_BrushSettings = settings; }
-	EditorBrushSettings GetSettings() { return m_BrushSettings; }
+	void SetSettings(EditorBrushData settings) { m_BrushSettings = settings; }
+	EditorBrushData GetSettings() { return m_BrushSettings; }
 	
 	string GetName() { return m_BrushSettings.Name; }
 	
@@ -154,7 +172,7 @@ class EditorBrush
 class DeleteBrush: EditorBrush
 {	
 	
-	void DeleteBrush(EditorBrushSettings settings)
+	void DeleteBrush(EditorBrushData settings)
 	{
 		EditorLog.Trace("DeleteBrush");
 		SetBrushTexture("DayZEditor\\Editor\\data\\BrushDelete.paa");
