@@ -1,0 +1,77 @@
+PanelWidgetClass EditorEditTextElement {
+ size 1 24
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ {
+  WrapSpacerWidgetClass EditorEditTextElementSpacer {
+   ignorepointer 1
+   size 0.7 24
+   halign right_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   {
+    WrapSpacerWidgetClass EditorEditTextElementWraper {
+     ignorepointer 1
+     position 0 0
+     size 525 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     "Size To Content V" 1
+     content_valign center
+     {
+      PanelWidgetClass EditorEditTextElementPanel {
+       ignorepointer 1
+       position 0 0
+       size 525 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        EditBoxWidgetClass EditorEditTextElementEditBox {
+         visible 1
+         size 525 24
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Editor
+         text "reee"
+         "exact text" 1
+         font "gui/fonts/etelkatextpro"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  TextWidgetClass EditorEditTextElementLable {
+   ignorepointer 1
+   size 0.3 24
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   text "Text"
+   font "gui/fonts/etelkatextpro"
+   "text offset" -5 0
+   "text halign" right
+  }
+ }
+}
