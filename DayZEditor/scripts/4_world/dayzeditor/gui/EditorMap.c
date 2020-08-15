@@ -41,9 +41,9 @@ class EditorMap: EditorWidgetEventHandler
 			
 		} else if (button == 2) {
 			vector teleport_dest = map_widget.ScreenToMap(Vector(x, y, 0));
-			vector current_pos = GetEditor().GetUIManager().GetEditorCamera().GetPosition();
+			vector current_pos = GetEditor().GetCamera().GetPosition();
 			teleport_dest[1] = current_pos[1] - GetGame().SurfaceY(current_pos[0], current_pos[2]) + GetGame().SurfaceY(teleport_dest[0], teleport_dest[2]);
-			GetEditor().GetUIManager().GetEditorCamera().SetPosition(teleport_dest);			
+			GetEditor().GetCamera().SetPosition(teleport_dest);			
 			
 			return true;
 			

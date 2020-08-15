@@ -268,6 +268,10 @@ class EditorUI: UIScriptedMenu
 		
 		if (m_CamPosInfoPanel.IsVisible())
 			UpdateInfoCamPos();
+		
+		
+		vector orientation = GetEditor().GetCamera().GetOrientation();
+		m_OrientationWidget.SetModelOrientation(Vector(orientation[1], orientation[0], orientation[2]));
 			
 	}
 	
@@ -291,12 +295,7 @@ class EditorUI: UIScriptedMenu
 		m_EditorMapContainer.Update();
 		
 	}
-	
-	void SetOrientationWidget(vector orientation)
-	{
-		m_OrientationWidget.SetModelOrientation(Vector(orientation[1], orientation[0], orientation[2]));
-	}
-	
+		
 	
 	void CreateDialog()
 	{
@@ -381,18 +380,17 @@ class EditorUI: UIScriptedMenu
 				
 				case m_SimcityButton: {
 					string brush_name = m_CurrentBrushNames.Get(m_BrushTypeBox.GetCurrentItem());
-					if (!m_SimcityButton.GetState())
-						EditorEvents.ChangeBrush(this, null);
-					else {
-						
-						EditorEvents.ChangeBrush(this, GetEditor().GetBrushFromName(brush_name));
+					if (!m_SimcityButton.GetState()) {
+						GetEditor().SetBrush(null);
+					} else {
+						GetEditor().SetBrush(GetEditor().GetSettings().GetBrush(brush_name));
 					}
 					return true;
 				}
 				
 				case m_BrushTypeBox: {
 					brush_name = m_CurrentBrushNames.Get(m_BrushTypeBox.GetCurrentItem());
-					EditorEvents.ChangeBrush(this, GetEditor().GetBrushFromName(brush_name));
+					GetEditor().SetBrush(GetEditor().GetSettings().GetBrush(brush_name));
 					return true;
 				}
 				
@@ -455,7 +453,7 @@ class EditorUI: UIScriptedMenu
 	private ref array<ref EditorCollapsibleListItem> test_objects = new array<ref EditorCollapsibleListItem>();
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		EditorPrint("EditorUI::OnMouseButtonDown");
+		EditorLog.Trace("EditorUI::OnMouseButtonDown");
 		
 		Input input = GetGame().GetInput();	
 		// Left Click
@@ -471,7 +469,7 @@ class EditorUI: UIScriptedMenu
 			ref array<ref RaycastRVResult> raycast_result = new array<ref RaycastRVResult>();
 			DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
 			
-
+/*
 			if (raycast_result.Count() > 0) {
 				Object obj = raycast_result.Get(0).obj;
 				if ((obj.GetType() == "TranslationWidget" || obj.GetType() == "RotationWidget")) {
@@ -489,23 +487,23 @@ class EditorUI: UIScriptedMenu
 					return true;
 				}
 			}
+			*/
 			
-			
-			EditorEvents.ClearSelection(this);
-			if (GetEditor().GetEditorBrush() == null) {
+			GetEditor().ClearSelection();
+			if (GetEditor().GetBrush() == null) {
 				
-				if (Editor.EditorObjectUnderCursor == null) {
+				if (GetEditor().EditorObjectUnderCursor == null) {
 					// delayed dragbox					
 					GetCursorPos(start_x, start_y);
 					GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DelayedDragBoxCheck, 60);
 					return true;
 					
 					
-				} else if (Editor.EditorObjectUnderCursor != null) {
+				} else if (GetEditor().EditorObjectUnderCursor != null) {
 					if (!input.LocalValue("UATurbo")) {
-						EditorEvents.ClearSelection(this);
+						GetEditor().ClearSelection();
 					}
-					EditorEvents.SelectObject(this, Editor.EditorObjectUnderCursor);
+					GetEditor().SelectObject(GetEditor().EditorObjectUnderCursor);
 					return true;
 				}
 			}
@@ -533,8 +531,8 @@ class EditorUI: UIScriptedMenu
 				LightingBolt.CreateLightning(pos, 5);
 			} else {
 				pos = MousePosToRay(o);
-				pos[1] = GetEditor().GetUIManager().GetEditorCamera().GetPosition()[1];
-				GetEditor().GetUIManager().GetEditorCamera().SetPosition(pos);
+				pos[1] = GetEditor().GetCamera().GetPosition()[1];
+				GetEditor().GetCamera().SetPosition(pos);
 			}
 		}
 				
@@ -585,7 +583,7 @@ class EditorUI: UIScriptedMenu
 				y_low = start_y;
 			}
 			
-			ref EditorObjectSet placed_objects = GetEditor().GetObjectManager().GetPlacedObjects();
+			ref EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
 			foreach (EditorObject editor_object: placed_objects) {
 				
 				float marker_x, marker_y;
@@ -597,7 +595,7 @@ class EditorUI: UIScriptedMenu
 				
 				
 				if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {		
-					EditorEvents.SelectObject(this, editor_object);
+					GetEditor().SelectObject(editor_object);
 				}
 			}
 			
@@ -608,18 +606,6 @@ class EditorUI: UIScriptedMenu
 
 	}
 	
-	
-
-	
-	void ShowExportWindow()
-	{
-		Print("EditorUI::ShowExportWindow");
-		//GetGame().GetWorkspace().CreateWidgets(layout_dir + "EditorExportWindow.layout", Getm_Root());
-		EditorExportWindow dialog = new EditorExportWindow();
-		GetGame().GetUIManager().ShowScriptedMenu(dialog, GetGame().GetUIManager().GetMenu());
-	}
-
-
 	
 	private ref array<string> m_CurrentBrushNames = new array<string>();
 	void ClearBrushBox()
@@ -685,7 +671,7 @@ class EditorUI: UIScriptedMenu
 	
 	override bool OnMouseEnter( Widget w, int x, int y )
 	{
-		EditorPrint("EditorUI::OnMouseEnter");
+		EditorLog.Trace("EditorUI::OnMouseEnter");
 		
 		if( w == m_UndoButton || w == m_RedoButton )
 		{
@@ -715,7 +701,7 @@ class EditorUI: UIScriptedMenu
 	
 	override bool OnMouseLeave( Widget w, Widget enterW, int x, int y )
 	{
-		EditorPrint("EditorUI::OnMouseLeave");
+		EditorLog.Trace("EditorUI::OnMouseLeave");
 		
 		
 		if( w == m_UndoButton || w == m_RedoButton )

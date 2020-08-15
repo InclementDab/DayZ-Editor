@@ -2,60 +2,29 @@
 
 typedef ref array<ref EditorPlaceableListItem> EditorPlaceableListItemSet;
 
-class EditorUIManager: Managed // remove meeeee
+class EditorUIManager
 {
 	// Members
 	private ref EditorUI 		m_EditorUI;
-	private EditorCamera		m_EditorCamera;
-	private ref ScriptInvoker 	m_UpdateInvoker;
-	private UIManager			m_UIManager;
 	private ref EditorPlaceableListItemSet m_PlaceableObjects;
 	
 	// Getters
 	EditorUI GetEditorUI() { return m_EditorUI; }
-	EditorCamera GetEditorCamera() { return m_EditorCamera; }
-	ScriptInvoker GetUpdateInvoker() { return m_UpdateInvoker; }
 	
 	void EditorUIManager()
 	{
-		Print("EditorUIManager");
-		m_UpdateInvoker = new ScriptInvoker();
-		m_UIManager = GetGame().GetUIManager();
-		
+		EditorLog.Trace("EditorUIManager");		
 		
 		// Init UI
 		m_EditorUI = new EditorUI();
-		m_UIManager.ShowScriptedMenu(m_EditorUI, GetGame().GetUIManager().GetMenu());
+		GetGame().GetUIManager().ShowScriptedMenu(m_EditorUI, GetGame().GetUIManager().GetMenu());
 		m_EditorUI.GetNotificationFrame().GetPos(notification_start_x, notification_start_y);
-		
-		// Init Spawn Position
-		TIntArray center_pos = new TIntArray();		
-		string world_name;
-		GetGame().GetWorldName(world_name);
-		GetGame().ConfigGetIntArray(string.Format("CfgWorlds %1 centerPosition", world_name), center_pos);
-		
-		// Random cam position smile :)
-		center_pos[0] = Math.RandomInt(3500, 8500);
-		center_pos[1] = Math.RandomInt(3500, 8500);
-		
-		// Init Camera
-		float y_level = 200 + GetGame().SurfaceY(center_pos[0], center_pos[1]);
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObject("EditorCamera", Vector(center_pos[0], y_level, center_pos[1]), false));
-		m_EditorCamera.SetActive(true);
-		
-		// Init Camera Map Marker
-		EditorCameraMapMarker CameraMapMarker = new EditorCameraMapMarker();
-		Widget m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorCameraMapMarker.layout");
-		m_MapMarkerWidget.GetScript(CameraMapMarker);
-		CameraMapMarker.SetCamera(m_EditorCamera, m_EditorUI.GetMapWidget(), m_UpdateInvoker);
-		m_EditorUI.InsertMapObject(m_MapMarkerWidget);
-		m_EditorUI.GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));
-		
+			
 	
 		
 		// Load PlaceableObjects
 		m_PlaceableObjects = new EditorPlaceableListItemSet();
-		Print(string.Format("Loaded %1 Placeable Objects", EditorObjectManager.GetPlaceableObjects(m_PlaceableObjects)));
+		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", EditorSettings.GetPlaceableObjects(m_PlaceableObjects)));
 		
 		foreach (ref EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
 			m_EditorUI.InsertPlaceableObject(placeable_object);
@@ -64,47 +33,14 @@ class EditorUIManager: Managed // remove meeeee
 		
 		// Subscribe to events (and twitch.tv/InclementDab)
 		//EditorEvents.OnObjectCreated.Insert(OnEditorObjectCreated);		
-		EditorEvents.OnPlaceableCategoryChanged.Insert(OnPlaceableCategoryChanged);	
+
+	}	
+	
 		
-		// Sets default
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-	}
-	
-	void ~EditorUIManager()
-	{
-		Print("~EditorUIManager");
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-	}
-	
-	
-	private int m_LastFrameTime;
-	void Update()
-	{
-		float timeslice = (GetGame().GetTime() - m_LastFrameTime) / 1000;
-		m_UpdateInvoker.Invoke(timeslice);
-		m_LastFrameTime = GetGame().GetTime();
+	//void SetEditorUI(EditorUI ui) { m_EditorUI = ui; }
 		
-		//m_EditorUI.SetOrientationWidget(GetEditorCamera().GetOrientation());
-	}
 	
-	void SetEditorUI(EditorUI ui)
-	{
-		m_EditorUI = ui;
-	}
-	
-	
-	void OnEditorObjectCreated(Class context, EditorObject obj)
-	{
-		EditorPrint("EditorUIManager::OnObjectCreated");		
-	}
-	
-	
-	
-	void SetEditorCameraActive(bool state)
-	{
-		EditorPrint("EditorUIManager::SetEditorCameraActive");
-		m_EditorCamera.SetActive(state);
-	}
+
 	
 	static void ShowCursor()
 	{
@@ -146,7 +82,7 @@ class EditorUIManager: Managed // remove meeeee
 		float width, height;
 		notif_frame.GetSize(width, height);
 		
-		EffectSound notif_sound = SEffectManager.PlaySound("Notification_SoundSet", GetEditorCamera().GetPosition());
+		EffectSound notif_sound = SEffectManager.PlaySound("Notification_SoundSet", GetEditor().GetCamera().GetPosition());
 		notif_sound.SetSoundAutodestroy(true);
 		
 		// Animate pulldown
@@ -199,7 +135,7 @@ class EditorUIManager: Managed // remove meeeee
 	void SetVisibility(bool state)
 	{
 		m_EditorUI.GetRoot().Show(state);
-		EditorObjectSet placed_objects = GetEditor().GetObjectManager().GetPlacedObjects();
+		EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
 		/*foreach (EditorObject editor_object: placed_objects) {
 			editor_object.GetObjectMarker().Show(state);
 		}*/
@@ -211,10 +147,10 @@ class EditorUIManager: Managed // remove meeeee
 	bool GetVisibility() { return m_Visibility;	}
 	
 	
-		
+	// todo this is broke
 	void OnPlaceableCategoryChanged(Class context, PlaceableObjectCategory category)
 	{
-		EditorPrint("EditorUIManager::OnPlaceableCategoryChanged");
+		EditorLog.Trace("EditorUIManager::OnPlaceableCategoryChanged");
 
 		foreach (EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
 			Widget root = placeable_object.GetRoot();

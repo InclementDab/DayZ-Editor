@@ -12,10 +12,10 @@ class EditorPlaceableListItem: EditorListItem
 		m_ListItemCollapse.Show(false);
 
 		SetText(m_Data.Type);
-		SetIcon(Editor.GetIconFromMod(Editor.GetModFromObject(m_Data.Type)));
+		SetIcon(GetIconFromMod(GetModFromObject(m_Data.Type)));
 		
-		EditorEvents.OnCreateInHand.Insert(OnCreateInHand);
-		EditorEvents.OnDestroyInHand.Insert(OnDestroyInHand);
+		EditorEvents.OnStartPlacing.Insert(StartPlacing);
+		EditorEvents.OnStopPlacing.Insert(StopPlacing);
 	}
 	
 		
@@ -24,7 +24,7 @@ class EditorPlaceableListItem: EditorListItem
 		Print("EditorPlaceableListItem::OnClick");
 		
 		if (button == 0) {
-			EditorEvents.CreateInHand(this, m_Data.Type);
+			GetEditor().CreateInHand(m_Data);
 			return true;
 		} else if (button == 1) {
 			
@@ -45,7 +45,7 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool OnDrag(Widget w, int x, int y)
 	{
-		EditorEvents.CreateInHand(this, m_Data.Type);
+		GetEditor().CreateInHand(m_Data);
 		return true;
 	}
 	
@@ -57,13 +57,13 @@ class EditorPlaceableListItem: EditorListItem
 	
 	
 	
-	void OnCreateInHand(Class context, string type)
+	void StartPlacing(Class context, string type)
 	{
 		if (type == m_Data.Type)
 			Select();
 	}
 	
-	void OnDestroyInHand(Class context)
+	void StopPlacing(Class context)
 	{
 		Deselect();
 	}

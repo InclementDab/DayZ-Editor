@@ -24,12 +24,8 @@ class EditorClientModule: JMModuleBase
 	private UIManager m_UIManager;
 	private EditorCamera m_Camera;
 	private PlayerBase m_Player;
-	EditorCamera GetCamera() { return m_Camera; }
-	
 	
 	private ref EditorBrush					m_EditorBrush;
-	private ref EditorBrushDataSet 		m_EditorBrushTypes;
-	private ref map<string, typename> 		m_CustomBrushList = new map<string, typename>();
 	
 	
 	static Object							ObjectUnderCursor = null;
@@ -42,6 +38,8 @@ class EditorClientModule: JMModuleBase
 	private ref EditorUIManager m_EditorUIManager;
 	EditorUIManager GetUIManager() { return m_EditorUIManager; }
 	EditorUI GetEditorUI() { return m_EditorUIManager.GetEditorUI(); }
+	EditorCamera GetCamera() { return m_Camera; }
+	EditorSettings GetSettings() { return GetModuleManager().GetModule(EditorSettings); }
 	
 	private ref EditorHologram ObjectInHand;
 	bool IsPlacing() { return ObjectInHand != null; }
@@ -309,9 +307,32 @@ class EditorClientModule: JMModuleBase
 		}
 		
 		if (m_Camera == null) {
-			// Camera Init
+
 			EditorLog.Info("Initializing Camera");
+			
+			// Init Spawn Position
+			TIntArray center_pos = new TIntArray();		
+			string world_name;
+			GetGame().GetWorldName(world_name);
+			GetGame().ConfigGetIntArray(string.Format("CfgWorlds %1 centerPosition", world_name), center_pos);
+			
+			// Random cam position smile :)
+			center_pos[0] = Math.RandomInt(3500, 8500);
+			center_pos[1] = Math.RandomInt(3500, 8500);
+			float y_level = GetGame().SurfaceY(center_pos[0], center_pos[1]);
+			
+			// Camera Init
+			// todo if singleplayer spawn on center of map, otherwise spawn on character in MP
 			m_Camera = GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 10, 0), ECE_LOCAL);
+			
+			
+			// Init Camera Map Marker
+			EditorCameraMapMarker CameraMapMarker = new EditorCameraMapMarker();
+			Widget m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorCameraMapMarker.layout");
+			m_MapMarkerWidget.GetScript(CameraMapMarker);
+			CameraMapMarker.SetCamera(m_Camera, m_EditorUIManager.GetEditorUI().GetMapWidget());
+			m_EditorUIManager.GetEditorUI().InsertMapObject(m_MapMarkerWidget);
+			m_EditorUIManager.GetEditorUI().GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));
 		}
 				
 		m_Camera.SetActive(active);
@@ -380,34 +401,18 @@ class EditorClientModule: JMModuleBase
 	void DeleteSessionData(int id) { m_SessionCache.Remove(id);	}
 	EditorObjectData GetSessionDataById(int id) { return m_SessionCache.Get(id); }
 	EditorObject GetPlacedObjectById(int id) { return m_PlacedObjects.Get(id); }
+		
+	void SetBrush(EditorBrush brush) { m_EditorBrush = brush; }	
+	EditorBrush GetBrush() { return m_EditorBrush; }
 	
-	// Brush Management
-	// move this to EditorBrush? make static
-	void ReloadBrushes(string filename)
-	{
-		EditorLog.Trace("EditorUIManager::ReloadBrushes");
-		XMLEditorBrushes xml_brushes = new XMLEditorBrushes();
-		EditorXMLManager.LoadBrushes(xml_brushes, filename);
-	}
-
 	
-	void SetBrushTypes(EditorBrushDataSet brush_types)
-	{
-		m_EditorUIManager.GetEditorUI().ClearBrushBox();
-		m_EditorBrushTypes = brush_types;
-
-		foreach (EditorBrushData brush: m_EditorBrushTypes)
-			m_EditorUIManager.GetEditorUI().InsertBrush(brush.Name);		
-	}
-	
-	void SetBrush(EditorBrush brush) { m_EditorBrush = brush; }
-	void SetBrush(string brush_name) 
+	void CreateInHand(EditorPlaceableObjectData data)
 	{
 		
+		EditorEvents.StartPlacing(this, data);
 		
+		// todo create hologram in hand
 	}
-	
-
 	
 	void PlaceObject()
 	{
@@ -421,7 +426,49 @@ class EditorClientModule: JMModuleBase
 		if (!input.LocalValue("UATurbo")) { 
 			delete ObjectInHand;
 		}
+		
+		EditorEvents.StopPlacing(this);
 	}
+	
+	
+	
+	// probably have an EditorMode enum with NORMAL, CHARACTER, LOOTEDITOR or something
+	
+	private Object m_LootEditTarget;
+	private bool m_LootEditMode;
+	private vector m_PositionBeforeLootEditMode;
+	void PlaceholderForEditLootSpawns(string name)
+	{
+		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 1000, 0), ECE_NONE);
+		
+		m_PositionBeforeLootEditMode = m_Camera.GetPosition();
+		m_Camera.SetPosition(Vector(10, 1000, 10));
+		//camera.SelectTarget(m_LootEditTarget);
+		
+		
+		ref EditorMapGroupProto proto_data = new EditorMapGroupProto(m_LootEditTarget); 
+		EditorXMLManager.LoadMapGroupProto(proto_data);
+		m_LootEditMode = true;
+		EditorSettings.COLLIDE_ON_DRAG = true;
+	}
+	
+	void PlaceholderRemoveLootMode()
+	{
+		IEntity child = m_LootEditTarget.GetChildren();
+		while (child != null) {
+			GetGame().ObjectDelete(Object.Cast(child));
+			child = child.GetSibling();
+		}
+		
+		GetGame().ObjectDelete(m_LootEditTarget);
+		
+		m_Camera.SetPosition(m_PositionBeforeLootEditMode);
+		//camera.SelectTarget(null);
+		m_LootEditMode = false;
+		EditorSettings.COLLIDE_ON_DRAG = false;
+	}
+	
+	bool IsLootEditActive() { return m_LootEditMode; }
 	
 	
 

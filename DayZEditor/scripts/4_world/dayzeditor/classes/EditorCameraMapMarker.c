@@ -18,12 +18,12 @@ class EditorCameraMapMarker: EditorWidgetEventHandler
 		m_Root.SetRotation(0, 0, ypr[0] - 90);
 	}
 	
-	void SetCamera(EditorCamera camera, MapWidget map_widget, ScriptInvoker update_invoker)
+	void SetCamera(EditorCamera camera, MapWidget map_widget)
 	{
 		Print("EditorCameraMapMarker::SetCamera");
 		m_ActiveCamera = camera;
 		m_MapWidget = map_widget;		
 
-		update_invoker.Insert(Update);
+		//update_invoker.Insert(Update);
 	}
 }

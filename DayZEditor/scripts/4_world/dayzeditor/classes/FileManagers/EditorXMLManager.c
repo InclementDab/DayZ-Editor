@@ -286,20 +286,24 @@ class EditorMapGroupProto: XMLCallback
 // abstract to EditorXMLCallback
 class XMLEditorBrushes: XMLCallback
 {
-	private ref EditorBrushDataSet m_Data = new EditorBrushDataSet();
-	EditorBrushDataSet GetData() { return m_Data; }
+	private ref EditorBrushDataSet m_Data;
 	
-	private bool m_Success = true;
-	
-	void XMLEditorBrushes()
+	private func m_PostSuccess;
+
+	void XMLEditorBrushes(func post_success)
 	{
-		Print("XMLEditorBrushes");
+		EditorLog.Trace("XMLEditorBrushes");
+		m_PostSuccess = post_success;
 	}
 		
+	override void OnStart(ref XMLDocument document)
+	{
+		EditorLog.Trace("XMLEditorBrushes::OnStart");
+	}
+	
 	override void OnSuccess(ref XMLDocument document)
 	{
-		EditorLog.Trace("XMLEditorBrushes::OnSuccess");
-		m_Success = true;
+		EditorLog.Info("XMLEditorBrushes::OnSuccess");
 		
 		XMLElement brush_types = document.Get(1).GetContent();
 		
@@ -348,16 +352,16 @@ class XMLEditorBrushes: XMLCallback
 				
 			}
 				
-			m_Data.Insert(brush_settings);
+			m_Data.Insert(brush_settings.Name, brush_settings);
 		}
 		
-		GetEditor().SetBrushTypes(m_Data);
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).Call(m_PostSuccess, m_Data);
+		//GetEditor().GetSettings().SetBrushTypes(m_Data);
 	}
 	
 	override void OnFailure(ref XMLDocument document)
 	{
-		Print("XMLEditorBrushes::OnFailure");
-		m_Success = false;
+		EditorLog.Error("XMLEditorBrushes::OnFailure");
 	}
 	
 }
@@ -376,7 +380,6 @@ class EditorXMLManager
 	static void LoadBrushes(out ref XMLEditorBrushes brush_set, string filename)
 	{
 		GetXMLApi().Read(filename, brush_set);
-		
 	}
 
 }

@@ -9,7 +9,7 @@ EditorListItem EditorListItemFromWidget(Widget w)
 			return list_item;
 	}
 	
-	EditorPrint("EditorListItem Not Found!", LogSeverity.ERROR);
+	EditorLog.Warning("EditorListItem Not Found!");
 	return null;
 }
 
@@ -59,7 +59,7 @@ class EditorListItem: ScriptedWidgetEventHandler
 #ifndef COMPONENT_SYSTEM // Game ONLY
 	void EditorListItem() 
 	{ 
-		EditorPrint("EditorListItem"); 
+		EditorLog.Trace("EditorListItem"); 
 		
 
 		Print("EditorListItem Client");
@@ -72,14 +72,14 @@ class EditorListItem: ScriptedWidgetEventHandler
 	}
 #endif
 	
-	void ~EditorListItem() { EditorPrint("~EditorListItem"); }
+	void ~EditorListItem() { EditorLog.Trace("~EditorListItem"); }
 	
 
 	
 	
 	void OnWidgetScriptInit(Widget w)
 	{
-		EditorPrint("EditorListItem::OnWidgetScriptInit");
+		EditorLog.Trace("EditorListItem::OnWidgetScriptInit");
 		
 #ifdef COMPONENT_SYSTEM // Workbench ONLY
 		Print("EditorListItem Workbench");

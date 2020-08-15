@@ -27,7 +27,7 @@ class EditableTextWidgetBetter: ScriptedWidgetEventHandler
 	{
 		Print("EditableTextWidget::OnWidgetScriptInit");
 		if (!Class.CastTo(m_TextWidget, w)) {
-			EditorPrint(string.Format("EditableTextWidget must be used on type TextWidget! Found: %1", w.GetTypeName()), LogSeverity.ERROR);
+			EditorLog.Error(string.Format("EditableTextWidget must be used on type TextWidget! Found: %1", w.GetTypeName()));
 			return;
 		}
 		m_Text = Text;

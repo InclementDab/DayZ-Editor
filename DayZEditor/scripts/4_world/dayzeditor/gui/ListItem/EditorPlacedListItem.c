@@ -10,7 +10,7 @@ class EditorPlacedListItem: EditorListItem
 		m_ListItemCollapse.Show(false);
 		
 		SetText(m_Data.GetType());
-		SetIcon(Editor.GetIconFromMod(Editor.GetModFromObject(m_Data.GetType())));
+		SetIcon(GetIconFromMod(GetModFromObject(m_Data.GetType())));
 		
 		m_Data.OnObjectSelected.Insert(EditorObjectSelected);
 		m_Data.OnObjectDeselected.Insert(EditorObjectDeselected);	
@@ -33,9 +33,9 @@ class EditorPlacedListItem: EditorListItem
 		if (button == 0) {
 		
 			if (GetGame().GetInput().LocalValue("UAWalkRunTemp"))
-				GetEditor().GetObjectManager().ToggleSelection(m_Data);
+				GetEditor().ToggleSelection(m_Data);
 			else {
-				EditorEvents.SelectObject(this, m_Data);
+				GetEditor().SelectObject(m_Data);
 			}
 		}
 		

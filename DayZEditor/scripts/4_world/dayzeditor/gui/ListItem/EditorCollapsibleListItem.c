@@ -105,7 +105,7 @@ class EditorCollapsibleListItem: EditorListItem
 			EditorPlacedListItem placed_item;
 			EditorCollapsibleListItem collapsible_item;
 			if (CastTo(placed_item, list_item)) {
-				EditorEvents.SelectObject(this, placed_item.GetData());
+				GetEditor().SelectObject(placed_item.GetData());
 			} else if (CastTo(collapsible_item, list_item)) {
 				collapsible_item.Select();
 				SelectAllChildren(collapsible_item.GetChildren());

@@ -1,7 +1,7 @@
 
 
 typedef ref array<ref EditorBrush> EditorBrushSet;
-typedef ref array<ref EditorBrushData> EditorBrushDataSet;
+typedef ref map<string, ref EditorBrushData> EditorBrushDataSet;
 
 // This is the data that will be loaded from XML
 class EditorBrushData
@@ -59,24 +59,6 @@ class EditorBrush
 	}
 	
 	
-	static EditorBrush GetFromName(string brush_name)
-	{
-		EditorPrint("Editor::GetBrushFromName " + brush_name);
-		foreach (EditorBrushData settings: m_EditorBrushTypes) {
-			if (settings.Name == brush_name) {
-				
-				foreach (string name, typename type: m_CustomBrushList) 
-					if (name == brush_name)
-						return type.Spawn();
-					
-				return new EditorBrush(settings);			
-			}
-		}
-			
-		
-		EditorPrint("Editor::GetBrushFromName Brush not found!");
-		return null;
-	}
 	
 	void SetBrushTexture(string texture)
 	{
@@ -134,7 +116,7 @@ class EditorBrush
 			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			
-			string object_name = m_BrushSettings.PlaceableObjects.Get(Math.RandomInt(0, m_BrushSettings.PlaceableObjects.Count() - 1));
+			string object_name = m_BrushData.PlaceableObjects.Get(Math.RandomInt(0, m_BrushData.PlaceableObjects.Count() - 1));
 						
 			
 			data_set.InsertEditorData(EditorObjectData.Create(object_name, pos, vector.Up, EditorObjectFlags.NONE));
@@ -160,10 +142,10 @@ class EditorBrush
 		
 	}
 	
-	void SetSettings(EditorBrushData settings) { m_BrushSettings = settings; }
-	EditorBrushData GetSettings() { return m_BrushSettings; }
+	void SetSettings(EditorBrushData settings) { m_BrushData = settings; }
+	EditorBrushData GetSettings() { return m_BrushData; }
 	
-	string GetName() { return m_BrushSettings.Name; }
+	string GetName() { return m_BrushData.Name; }
 	
 }
 
