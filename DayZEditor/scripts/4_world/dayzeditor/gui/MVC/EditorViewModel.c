@@ -59,29 +59,26 @@ class EditorHudViewModel: ViewModelBase
 	{
 		super.OnWidgetScriptInit(w);
 		
-		DebugActionStackListbox 	= new TextListboxWidgetData();
-		LeftbarSpacer 				= new WrapSpacerWidgetData();
-		RightbarSpacer 				= new WrapSpacerWidgetData();
-		BrushTypeBox				= new XComboBoxWidgetData();
+		DebugActionStackListbox 	= new TextListboxWidgetData("DebugActionStackListbox");
+		LeftbarSpacer 				= new WrapSpacerWidgetData("LeftbarSpacer");
+		RightbarSpacer 				= new WrapSpacerWidgetData("RightbarSpacer");
+		BrushTypeBox				= new XComboBoxWidgetData("BrushTypeBox");
 		
-		// Load PlaceableObjects
-		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
-		
-		UpdateViews();		
+
 	}
-	
+		
+
 	
 	void InsertPlaceableObject(EditorListItem target)
 	{
 		m_PlaceableObjects.Insert(target);
-		LeftbarSpacer.InsertWidget(target.GetRoot());
+		LeftbarSpacer.Insert(target.GetRoot());
 	}	
 	
 	void InsertPlacedObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudViewModel::InsertPlacedObject");
-		RightbarSpacer.InsertWidget(target.GetRoot());
-		UpdateViews();
+		RightbarSpacer.Insert(target.GetRoot());
 	}
 	
 	void InsertMapObject(Widget map_marker)
@@ -106,6 +103,9 @@ class EditorHudViewModel: ViewModelBase
 		    }
 		}
 		
+		if (j == 0) {
+			InsertPlaceableObject(new EditorPlaceableListItem(EditorPlaceableObjectData("Dummy_Name", "Dummy_Path")));
+		}
 		return j;
 	}
 	
@@ -183,21 +183,9 @@ class ViewModelBase: Managed
 	typename GetVariableType(string var_name) { return m_ModelHashMap.Get(var_name); }
 	
 	// View List
-	protected ref array<ref EditorView> m_ViewList;
+	protected ref map<string, ref EditorView> m_ViewList;
 	
-	void ViewModelBase()
-	{
-		EditorLog.Trace("ViewModelBase");
-		m_ModelHashMap = new VariableHashMap();
-		m_ViewList = new array<ref EditorView>();
-
-		typename vtype = Type();
-		int vcnt = vtype.GetVariableCount();
-		for (int i = 0; i < vcnt; i++) {
-			m_ModelHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));
-		}
-	}
-	
+	void ViewModelBase() { EditorLog.Trace("ViewModelBase"); }
 	void ~ViewModelBase() { EditorLog.Trace("~ViewModelBase"); }
 	
 		
@@ -205,6 +193,16 @@ class ViewModelBase: Managed
 	{
 		EditorLog.Trace("ViewModelBase::OnWidgetScriptInit");	
 		m_LayoutRoot = w;
+		
+		m_ModelHashMap = new VariableHashMap();
+		m_ViewList = new map<string, ref EditorView>();
+
+		typename vtype = Type();
+		int vcnt = vtype.GetVariableCount();
+		for (int i = 0; i < vcnt; i++)
+			m_ModelHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));
+		
+		IObservable.NotifyOnCollectionChanged(OnCollectionChanged);
 	}
 	
 
@@ -214,21 +212,30 @@ class ViewModelBase: Managed
 			view.UpdateView();
 	}
 	
-	void InsertView(ref EditorView view)
+	void InsertView(string variable_name, ref EditorView view)
 	{
-		EditorLog.Trace("ViewModelBase::InsertView: " + view);
-		m_ViewList.Insert(view);
+		EditorLog.Trace("ViewModelBase::InsertView: " + variable_name);
+		m_ViewList.Insert(variable_name, view);
 	}
 	
 	void DebugPrint()
 	{
 		EditorLog.Debug("ViewModelBase::DebugPrint: " + m_LayoutRoot.GetName());
-		foreach (ref EditorView view: m_ViewList)
+		foreach (string name, ref EditorView view: m_ViewList)
 			view.DebugPrint();
 	}
 	
 	// property_name = name of variable being changed
-	ref ScriptInvoker PropertyChanged;
+	private static ref ScriptInvoker PropertyChanged = new ScriptInvoker();
+	
+	static void NotifyOnPropertyChanged(func action)
+	{	
+		if (PropertyChanged == null)
+			PropertyChanged = new ScriptInvoker();
+		
+		PropertyChanged.Insert(action);
+	}
+	
 	void NotifyPropertyChanged(string property_name = "") 
 	{
 		EditorLog.Trace("ViewModelBase::NotifyPropertyChanged: " + property_name);
@@ -237,11 +244,20 @@ class ViewModelBase: Managed
 			return;
 		}
 		
-		foreach (ref EditorView view: m_ViewList)
-			if (view.variable_name == property_name)
-				view.UpdateView();
 			
 		PropertyChanged.Invoke(property_name);
+	}
+	
+	void OnCollectionChanged(IObservable collection, NotifyCollectionChangedAction action, string var_name)
+	{
+		Print("Changed");
+		Print(collection.ClassName());
+		Print(typename.EnumToString(NotifyCollectionChangedAction, action));
+		
+		
+		NotifyPropertyChanged(var_name);
+		
+		
 	}
 	
 	bool OnClick(Widget w, int x, int y, bool button) { return true; }

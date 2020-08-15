@@ -14,7 +14,11 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 		m_LeftbarFrame			= m_LayoutRoot.FindAnyWidget("LeftbarFrame");
 		m_RightbarFrame			= m_LayoutRoot.FindAnyWidget("RightbarFrame");
 		
-		GetEditorHudViewModel().PropertyChanged.Insert(OnPropertyChanged);
+		//GetEditorHudViewModel().PropertyChanged.Insert(OnPropertyChanged);
+		
+		// Load PlaceableObjects
+		// This is the last thing to initialize on the UI
+		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", GetEditorHudViewModel().ReloadPlaceableObjects()));
 		
 		m_LayoutRoot.SetHandler(this);
 	}
@@ -117,6 +121,8 @@ class EditorHud: Hud
 		// why aint we usin scriptclass?
 		m_EditorMapWidget.GetScript(m_EditorMap);
 		m_EditorMapWidget.SetMapPos(GetGame().GetCurrentCameraPosition());
+		
+		EditorLog.Trace("EditorHud::Init::Finished");
 	}
 	
 	override void Update(float timeslice)

@@ -32,7 +32,6 @@ class EditorListItem: ScriptedWidgetEventHandler
 	protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
 	protected static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
 
-#ifndef COMPONENT_SYSTEM // Game ONLY
 	void EditorListItem() 
 	{ 
 		EditorLog.Trace("EditorListItem"); 
@@ -44,7 +43,6 @@ class EditorListItem: ScriptedWidgetEventHandler
 			m_ListItemCache = new map<Widget, ref EditorListItem>();
 		m_ListItemCache.Insert(m_Root, this);
 	}
-#endif
 	
 	void ~EditorListItem() { EditorLog.Trace("~EditorListItem"); }
 	
@@ -54,12 +52,7 @@ class EditorListItem: ScriptedWidgetEventHandler
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("EditorListItem::OnWidgetScriptInit");
-		
-#ifdef COMPONENT_SYSTEM // Workbench ONLY
-		Print("EditorListItem Workbench");
-		m_Root = w;
-#endif
-		
+				
 		
 		m_ListItemFrame					= m_Root.FindAnyWidget("EditorListItemFrame");
 		m_EditorListItemLabelFrame		= m_Root.FindAnyWidget("EditorListItemLabelFrame");

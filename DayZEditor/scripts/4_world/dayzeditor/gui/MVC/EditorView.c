@@ -1,45 +1,12 @@
 
 // TextListBoxWidget
-typedef ref ObservableCollection<string, Class> TextListboxWidgetData;
+typedef ObservableDictionary<string, Class> TextListboxWidgetData;
 
 // WrapSpacerWidget
-class WrapSpacerWidgetData: ref set<Widget> 
-{
-	bool ShouldUpdate;
-	
-	void WrapSpacerWidgetData()
-	{
-		EditorLog.Trace("WrapSpacerWidgetData");
-		ShouldUpdate = false;
-	}
-	
-	void ~WrapSpacerWidgetData()
-	{
-		EditorLog.Trace("~WrapSpacerWidgetData");
-	}
-	
-	void InsertWidget(Widget value)
-	{
-		EditorLog.Trace("WrapSpacerWidgetData::InsertWidget");
-		Print(value.GetName());
-		if (Insert(value) != -1)
-			ShouldUpdate = true;
-		
-	}
-	
-	void RemoveWidget(Widget value)
-	{
-		EditorLog.Trace("WrapSpacerWidgetData::RemoveWidget");
-		int find = Find(value);
-		if (find != -1) {
-			Remove(find);
-			ShouldUpdate = true;
-		}
-	}
-}
+typedef ObservableCollection<Widget> WrapSpacerWidgetData;
 
 // XComboBoxWidget
-typedef ref array<string> XComboBoxWidgetData;
+typedef ObservableCollection<string> XComboBoxWidgetData;
 
 class EditorView extends ScriptedWidgetEventHandler
 {
@@ -53,15 +20,20 @@ class EditorView extends ScriptedWidgetEventHandler
 	reference int variable_index;
 	// if blank, will use this widget
 	reference string control_name; 
+	reference bool observable_collection;
 	
 	private Widget m_LayoutRoot;
 	private Widget m_ViewModelWidget;
 	
 	private ViewModelBase m_Model;
 	private typename m_WidgetType;
+
+	void EditorView()
+	{
+		EditorLog.Trace("EditorView");
+		ViewModelBase.NotifyOnPropertyChanged(OnPropertyChanged);
+	}
 	
-
-
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("EditorView::OnWidgetScriptInit");
@@ -94,13 +66,20 @@ class EditorView extends ScriptedWidgetEventHandler
 			return;
 		}
 		
-		m_Model.InsertView(this);
+
+		m_Model.InsertView(variable_name, this);		
+	}
+	
+	void OnPropertyChanged(string property_name)
+	{
+		if (property_name != variable_name) return;
+		EditorLog.Trace("EditorView::OnPropertyChanged: " + property_name);
 		UpdateView();
 	}
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
-		Print("OnChange");
+		EditorLog.Trace("EditorView::OnChange");
 		if (m_Model) {
 			UpdateModel();
 			m_Model.NotifyPropertyChanged(w.GetName());
@@ -128,6 +107,8 @@ class EditorView extends ScriptedWidgetEventHandler
 		//return super.OnEvent(eventType, target, parameter0, parameter1);
 	}*/
 
+	
+	
 	// UI -> Model
 	void UpdateModel()
 	{
@@ -164,7 +145,7 @@ class EditorView extends ScriptedWidgetEventHandler
 			}
 			
 			case TextListboxWidget: {
-				TextListboxWidgetData data = new TextListboxWidgetData();
+				TextListboxWidgetData data;
 				TextListboxWidget list_box = TextListboxWidget.Cast(m_LayoutRoot);
 				for (int i = 0; i < list_box.GetNumItems(); i++) {
 					string title; Class list_data;
@@ -177,7 +158,7 @@ class EditorView extends ScriptedWidgetEventHandler
 			}
 			
 			case WrapSpacerWidget: {
-				WrapSpacerWidgetData wrap_spacer_data = new WrapSpacerWidgetData();
+				WrapSpacerWidgetData wrap_spacer_data(variable_name);
 				WrapSpacerWidget wrap_spacer = WrapSpacerWidget.Cast(m_LayoutRoot);
 				
 				break;
@@ -232,29 +213,33 @@ class EditorView extends ScriptedWidgetEventHandler
 			
 			case TextListboxWidget: {
 				TextListboxWidget list_box = TextListboxWidget.Cast(m_LayoutRoot);
-				TextListboxWidgetData list_data = new TextListboxWidgetData();
+				TextListboxWidgetData list_data(variable_name);
 				EnScript.GetClassVar(m_Model, variable_name, 0, list_data);
 				list_box.ClearItems();
 
-				
-				foreach (string text, Class data: list_data) {
-					list_box.AddItem(text, data, 0);
+				for (int i = 0; i < list_data.Count(); i++) {
+					string key = list_data.GetKey(i);
+					list_box.AddItem(key, list_data.Get(key), 0);
 				}
-				
-			
-							
+		
 				break;
 			}
 			
 			case WrapSpacerWidget: {
-				WrapSpacerWidgetData wrap_spacer_data = new WrapSpacerWidgetData();
-				WrapSpacerWidget wrap_spacer = WrapSpacerWidget.Cast(m_LayoutRoot);
+				WrapSpacerWidgetData wrap_spacer_data(variable_name);
+				//WrapSpacerWidget wrap_spacer = WrapSpacerWidget.Cast(m_LayoutRoot);
 
 				if (EnScript.GetClassVar(m_Model, variable_name, 0, wrap_spacer_data)) {
 					Error(string.Format("Wrong Data Type in %1", m_LayoutRoot.GetName()));
 					break;
 				}
 				
+				ClearWidgetChildren(m_LayoutRoot);
+				for (int wsd = 0; wsd < wrap_spacer_data.Count(); wsd++) {
+					m_LayoutRoot.AddChild(wrap_spacer_data.Get(wsd));
+				}
+				
+				/*
 				if (wrap_spacer_data.ShouldUpdate) {
 					ClearWidgetChildren(wrap_spacer);				
 					foreach (Widget w: wrap_spacer_data) {
@@ -262,7 +247,7 @@ class EditorView extends ScriptedWidgetEventHandler
 					}
 					wrap_spacer_data.ShouldUpdate = false;
 				}
-			
+			*/
 				
 				
 				
@@ -270,7 +255,7 @@ class EditorView extends ScriptedWidgetEventHandler
 			}
 			
 			case XComboBoxWidget: {
-				XComboBoxWidgetData combo_box_data = new XComboBoxWidgetData();
+				XComboBoxWidgetData combo_box_data = new XComboBoxWidgetData(variable_name);
 				XComboBoxWidget combo_box = XComboBoxWidget.Cast(m_LayoutRoot);
 				
 				if (EnScript.GetClassVar(m_Model, variable_name, 0, combo_box_data)) {
@@ -278,9 +263,10 @@ class EditorView extends ScriptedWidgetEventHandler
 					break;
 				}
 				
-				foreach (string item: combo_box_data) {
-					combo_box.AddItem(item);
+				for (int cbox = 0; cbox < combo_box_data.Count(); cbox++) {
+					combo_box.AddItem(combo_box_data.Get(cbox));					
 				}
+				
 				
 				
 				break;

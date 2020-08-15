@@ -14,7 +14,7 @@ static PlayerBase CreateDefaultCharacter(vector position = "0 0 0")
 }
 
 
-static void ClearWidgetChildren(Widget w)
+static void ClearWidgetChildren(out ref Widget w)
 {
 	
 	Widget child = w.GetChildren();

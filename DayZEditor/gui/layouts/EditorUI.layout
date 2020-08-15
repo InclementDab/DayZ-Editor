@@ -560,6 +560,7 @@ FrameWidgetClass EditorMainFrame {
            {
             ScriptParamsClass {
              view_model_widget "ViewModelFrame"
+             observable_collection 1
             }
            }
           }
@@ -669,6 +670,7 @@ FrameWidgetClass EditorMainFrame {
          {
           ScriptParamsClass {
            view_model_widget "ViewModelFrame"
+           observable_collection 1
           }
          }
         }
