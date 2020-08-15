@@ -219,7 +219,7 @@ class EditorView extends ScriptedWidgetEventHandler
 		EditorLog.Trace("EditorView::OnChange");
 		if (m_Model) {
 			UpdateModel();
-			m_Model.NotifyPropertyChanged(w.GetName());
+			//m_Model.NotifyPropertyChanged(w.GetName());
 		}
 		return true;
 		//return super.OnChange(w, x, y, finished);
@@ -229,7 +229,8 @@ class EditorView extends ScriptedWidgetEventHandler
 	{
 		Print("OnClick");
 		if (m_Model) {
-			return m_Model.OnClick(w, x, y, button);
+			UpdateModel();
+			//return m_Model.OnClick(w, x, y, button);
 		}
 	
 		return super.OnClick(w, x, y, button);
@@ -395,6 +396,7 @@ class EditorView extends ScriptedWidgetEventHandler
 	void SetModelVariable(TextListboxWidgetData data)
 	{
 		EnScript.SetClassVar(m_Model, variable_name, variable_index, data);
+		m_Model.NotifyPropertyChanged(variable_name);
 	}
 	
 	void SetModelVariable(string text)
@@ -422,11 +424,14 @@ class EditorView extends ScriptedWidgetEventHandler
 				break;
 			}
 		}
+		
+		m_Model.NotifyPropertyChanged(variable_name);
 	}
 	
 	void SetModelVariable(bool state)
 	{
 		EnScript.SetClassVar(m_Model, variable_name, variable_index, state);
+		m_Model.NotifyPropertyChanged(variable_name);
 	}
 	
 	

@@ -237,7 +237,6 @@ FrameWidgetClass EditorMainFrame {
        {
         ScriptParamsClass {
          view_model_widget "ViewModelFrame"
-         observable_collection 1
         }
        }
       }
@@ -322,7 +321,7 @@ FrameWidgetClass EditorMainFrame {
            vexactsize 1
            draggable 0
            scriptclass "EditorView"
-           switch once
+           switch normal
            {
             ImageWidgetClass CategorySelectBuilding {
              ignorepointer 1
@@ -355,7 +354,7 @@ FrameWidgetClass EditorMainFrame {
            hexactsize 1
            vexactsize 1
            scriptclass "EditorView"
-           switch once
+           switch normal
            {
             ImageWidgetClass CategorySelectVehicle {
              ignorepointer 1
@@ -389,7 +388,7 @@ FrameWidgetClass EditorMainFrame {
            hexactsize 1
            vexactsize 1
            scriptclass "EditorView"
-           switch once
+           switch normal
            {
             ImageWidgetClass CategorySelectEntity {
              ignorepointer 1
@@ -424,7 +423,7 @@ FrameWidgetClass EditorMainFrame {
            hexactsize 1
            vexactsize 1
            scriptclass "EditorView"
-           switch once
+           switch normal
            {
             ImageWidgetClass CategorySelectHuman {
              ignorepointer 1
@@ -561,7 +560,6 @@ FrameWidgetClass EditorMainFrame {
            {
             ScriptParamsClass {
              view_model_widget "ViewModelFrame"
-             observable_collection 1
             }
            }
           }
@@ -671,7 +669,6 @@ FrameWidgetClass EditorMainFrame {
          {
           ScriptParamsClass {
            view_model_widget "ViewModelFrame"
-           observable_collection 1
           }
          }
         }

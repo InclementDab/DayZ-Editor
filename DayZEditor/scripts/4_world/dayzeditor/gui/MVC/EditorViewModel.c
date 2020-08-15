@@ -16,29 +16,10 @@ class EditorHudViewModel: ViewModelBase
 	string DebugText4;
 	string DebugText5;
 	
-	protected bool BuildingSelect;
-	void SetBuildingSelect(bool value) {
-		BuildingSelect = value;
-		NotifyPropertyChanged("BuildingSelect");
-	}
-	
-	protected bool VehicleSelect;
-	void SetVehicleSelect(bool value) {
-		VehicleSelect = value;
-		NotifyPropertyChanged("VehicleSelect");
-	}
-	
-	protected bool EntitySelect;
-	void SetEntitySelect(bool value) {
-		EntitySelect = value;
-		NotifyPropertyChanged("EntitySelect");
-	}
-	
-	protected bool HumanSelect;
-	void SetHumanSelect(bool value) {
-		HumanSelect = value;
-		NotifyPropertyChanged("HumanSelect");
-	}
+	bool BuildingSelect;
+	bool VehicleSelect;
+	bool EntitySelect;
+	bool HumanSelect;
 	
 	bool LeftbarHide;
 	bool RightbarHide;
@@ -62,8 +43,6 @@ class EditorHudViewModel: ViewModelBase
 		LeftbarSpacer 				= new WrapSpacerWidgetData("LeftbarSpacer");
 		RightbarSpacer 				= new WrapSpacerWidgetData("RightbarSpacer");
 		BrushTypeBox				= new XComboBoxWidgetData("BrushTypeBox");
-		
-
 	}
 		
 
@@ -121,7 +100,25 @@ class EditorHudViewModel: ViewModelBase
 	
 	override bool OnClick(Widget w, int x, int y, bool button) 
 	{
-		switch (w.GetName()) {
+
+		
+		return super.OnClick(w, x, y, button);
+	}
+	
+	
+	void ClearBrushBox()
+	{
+		BrushTypeBox.Clear();
+	}
+	
+	void InsertBrush(string name)
+	{
+		BrushTypeBox.Insert(name);
+	}
+	
+	override void NotifyPropertyChanged(string property_name = "")
+	{
+		switch (property_name) {
 			
 			case "BuildingSelect": {
 				VehicleSelect = false; EntitySelect = false; HumanSelect = false;
@@ -147,19 +144,6 @@ class EditorHudViewModel: ViewModelBase
 				break;
 			}
 		}
-		
-		return super.OnClick(w, x, y, button);
-	}
-	
-	
-	void ClearBrushBox()
-	{
-		BrushTypeBox.Clear();
-	}
-	
-	void InsertBrush(string name)
-	{
-		BrushTypeBox.Insert(name);
 	}
 
 }

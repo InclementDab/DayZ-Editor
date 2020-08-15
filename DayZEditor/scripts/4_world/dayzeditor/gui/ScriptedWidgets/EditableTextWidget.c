@@ -12,7 +12,7 @@ class EditableTextWidget: ScriptedWidgetEventHandler
 	
 	void EditableTextWidget()
 	{
-		Print("EditableTextWidget");
+		EditorLog.Trace("EditableTextWidget");
 		
 	}
 	
@@ -22,7 +22,7 @@ class EditableTextWidget: ScriptedWidgetEventHandler
 	
 	void OnWidgetScriptInit(Widget w)
 	{
-		Print("EditableTextWidget::OnWidgetScriptInit");
+		EditorLog.Trace("EditableTextWidget::OnWidgetScriptInit");
 		
 		m_EditFrame = w;
 		m_TextWidget = TextWidget.Cast(m_EditFrame.FindAnyWidget("EditorListItemLabel"));
@@ -62,14 +62,14 @@ class EditableTextWidget: ScriptedWidgetEventHandler
 	
 	override bool OnFocus(Widget w, int x, int y)
 	{
-		Print("EditableTextWidget::OnFocus");
+		EditorLog.Trace("EditableTextWidget::OnFocus");
 		StartEdit();
 		return true;
 	}
 	
 	override bool OnFocusLost(Widget w, int x, int y)
 	{
-		Print("EditableTextWidget::OnFocusLost");
+		EditorLog.Trace("EditableTextWidget::OnFocusLost");
 		EndEdit();
 		return true;
 	}
@@ -77,7 +77,7 @@ class EditableTextWidget: ScriptedWidgetEventHandler
 	
 	private void StartEdit()
 	{
-		Print("EditableTextWidget::StartEdit");	
+		EditorLog.Trace("EditableTextWidget::StartEdit");	
 		m_IsEditing = true;
 		
 		m_EditWidget.SetText(m_Text);
@@ -87,7 +87,7 @@ class EditableTextWidget: ScriptedWidgetEventHandler
 	
 	private void EndEdit()
 	{
-		Print("EditableTextWidget::EndEdit");
+		EditorLog.Trace("EditableTextWidget::EndEdit");
 		m_IsEditing = false;
 		m_Text = m_EditWidget.GetText();
 		m_TextWidget.SetText(m_Text);

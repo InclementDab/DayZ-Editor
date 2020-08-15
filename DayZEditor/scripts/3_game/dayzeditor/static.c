@@ -11,9 +11,9 @@ class EditorLog
 	
 	private static void EditorPrint(string msg, EditorLogLevel level)
 	{
-		Print(string.Format("[EDITOR::%1] %2", typename.EnumToString(EditorLogLevel, level), msg));
-//		if (level >= CurrentLogLevel && level)
-	//		Print(msg);
+		
+		if (level >= CurrentLogLevel)
+			Print(string.Format("[EDITOR::%1] %2", typename.EnumToString(EditorLogLevel, level), msg));
 	}
 	
 	static void Trace(string msg)

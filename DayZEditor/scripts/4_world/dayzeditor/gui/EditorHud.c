@@ -23,7 +23,7 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 		m_LayoutRoot.SetHandler(this);
 	}
 	
-	
+#ifndef COMPONENT_SYSTEM // not in workshop
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudHandler::OnMouseButtonDown");
@@ -37,7 +37,8 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 		
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
-	
+#endif
+
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		if (button == 0) {
