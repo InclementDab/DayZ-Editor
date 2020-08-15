@@ -1,11 +1,6 @@
 
 // make it so you can search for items by mod name with @ModNameHere
 
-enum EditorCursor
-{
-	DEFAULT,
-	HORIZONTAL_SCROLL
-}
 
 // START USING Hud CLASS NOT UISCRIPTEDMENU
 class EditorUI: UIScriptedMenu
@@ -266,33 +261,9 @@ class EditorUI: UIScriptedMenu
 	MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
 	bool IsMapOpen() 			{ return m_EditorMapContainer.IsVisible(); }
 		
-	void SetCursor(EditorCursor cursor_type = EditorCursor.DEFAULT)
-	{
-		switch (cursor_type) {
-			
-			case EditorCursor.DEFAULT: {
-				//SetCursorWidget(null);
-				//ShowCursorWidget(true);
-				break;
-				
-			}
-			
-			case EditorCursor.HORIZONTAL_SCROLL: {
-				//ShowCursorWidget(false);
-				//SetCursorWidget(m_HorizontalScrollWidget);
-				
-				break;
-			}			
-		}
-	}
 	
 	
 
-	void InsertPlaceableObject(EditorListItem target)
-	{
-		m_LeftbarSpacer.AddChild(target.GetRoot());
-	}
-	
 	
 	void InsertPlacedObject(EditorListItem target)
 	{

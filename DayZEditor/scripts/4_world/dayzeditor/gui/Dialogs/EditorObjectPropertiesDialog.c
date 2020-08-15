@@ -57,16 +57,5 @@ class EditorObjectPropertiesDialog: UILinkedObject
 		return false;
 	}
 	
-	override bool OnMouseEnter(Widget w, int x, int y) 
-	{
-		// temp
-		Print(w.GetName());
-		if (w.GetName() == "pos_x") {
-			GetEditor().GetEditorUI().SetCursor(EditorCursor.HORIZONTAL_SCROLL);
-		} else {
-			GetEditor().GetEditorUI().SetCursor();
-		}
-		
-		return true;
-	}
+
 }
