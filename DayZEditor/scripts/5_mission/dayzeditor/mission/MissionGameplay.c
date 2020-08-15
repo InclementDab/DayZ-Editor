@@ -1,7 +1,14 @@
 
 modded class MissionGameplay
 {
-
+	
+	
+	void MissionGameplay()
+	{
+		
+	}
+	
+	
 	override void OnInit()
 	{
 		super.OnInit();
@@ -16,7 +23,7 @@ modded class MissionGameplay
 		GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
 		GetUApi().UpdateControls();
 		
-
+		
 	}
 	
 	void StartEditor()

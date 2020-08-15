@@ -86,7 +86,7 @@ class EditorObject
 			m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
 			m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 			m_EditorMapMarker.SetObject(this);
-			GetEditor().GetEditorUI().InsertMapObject(m_EditorMapMarkerWidget);
+			GetEditorHudViewModel().InsertMapObject(m_EditorMapMarkerWidget);
 		}	
 		
 		// World Object base marker
@@ -100,7 +100,7 @@ class EditorObject
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
 			m_PlacedListItem = new EditorPlacedListItem(this);
-			GetEditor().GetEditorUI().InsertPlacedObject(m_PlacedListItem);
+			GetEditorHudViewModel().InsertPlacedObject(m_PlacedListItem);
 		}
 		
 		

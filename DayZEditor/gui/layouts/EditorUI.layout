@@ -18,11 +18,7 @@ FrameWidgetClass EditorMainFrame {
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   scriptclass "EditorUIViewModel"
-   {
-    ScriptParamsClass {
-    }
-   }
+   scriptclass "EditorHudViewModel"
   }
   FrameWidgetClass MapContainerWidget {
    clipchildren 0
@@ -233,9 +229,15 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
+       scriptclass "EditorView"
        style Default
        lines 15
        font "gui/fonts/metron16"
+       {
+        ScriptParamsClass {
+         view_model_widget "ViewModelFrame"
+        }
+       }
       }
      }
     }
@@ -649,10 +651,16 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         scriptclass "EditorView"
          Padding 0
          Margin 0
          "Size To Content V" 1
          content_halign right
+         {
+          ScriptParamsClass {
+           view_model_widget "ViewModelFrame"
+          }
+         }
         }
        }
       }
@@ -1116,8 +1124,14 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "EditorView"
          style Default
          font "gui/fonts/metron28"
+         {
+          ScriptParamsClass {
+           view_model_widget "ViewModelFrame"
+          }
+         }
         }
         FrameWidgetClass SimcityRadiusFrame {
          ignorepointer 1

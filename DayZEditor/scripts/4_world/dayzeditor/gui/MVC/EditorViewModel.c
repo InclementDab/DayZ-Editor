@@ -2,11 +2,11 @@
 
 
 
-static ref EditorUIViewModel m_EditorUIViewModel;
-EditorUIViewModel GetEditorUIViewModel() { return m_EditorUIViewModel; }
+static ref EditorHudViewModel m_EditorHudViewModel;
+EditorHudViewModel GetEditorHudViewModel() { return m_EditorHudViewModel; }
 
 // 	  vvvvvvvvvvvvvvvvv  put THIS into ScriptClass
-class EditorUIViewModel: ViewModelBase
+class EditorHudViewModel: ViewModelBase
 {
 	private ref EditorPlaceableListItemSet m_PlaceableObjects;
 	
@@ -22,33 +22,53 @@ class EditorUIViewModel: ViewModelBase
 	bool EntitySelect;
 	bool HumanSelect;
 	
-	ref TextListboxWidgetData WrapSpacerTest;
+	ref TextListboxWidgetData DebugActionStackListbox;
 	ref WrapSpacerWidgetData LeftbarSpacer;
+	ref WrapSpacerWidgetData RightbarSpacer;
+	ref XComboBoxWidgetData BrushTypeBox;
 	
-	void EditorUIViewModel()
+	void EditorHudViewModel()
 	{
-		EditorLog.Trace("EditorUIViewModel");
-		m_EditorUIViewModel = this;
+		EditorLog.Trace("EditorHudViewModel");
+		m_EditorHudViewModel = this;
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
 		
-		WrapSpacerTest = new TextListboxWidgetData();
-		LeftbarSpacer = new WrapSpacerWidgetData();
+		DebugActionStackListbox 	= new TextListboxWidgetData();
+		LeftbarSpacer 				= new WrapSpacerWidgetData();
+		RightbarSpacer 				= new WrapSpacerWidgetData();
+		BrushTypeBox				= new XComboBoxWidgetData();
 		
 		// Load PlaceableObjects
-		m_PlaceableObjects = new EditorPlaceableListItemSet();
-		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", GetPlaceableObjects(m_PlaceableObjects)));
-		foreach (ref EditorPlaceableListItem placeable_object: m_PlaceableObjects)
-			LeftbarSpacer.Insert(placeable_object.GetRoot());
+		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
 		
-		
+		BrushTypeBox.Insert("Brush1");
+		BrushTypeBox.Insert("Brush2");
+		BrushTypeBox.Insert("Brush3");
 		UpdateViews();		
 	}
 	
-	static int GetPlaceableObjects(out EditorPlaceableListItemSet placeable_objects) 
+	
+	void InsertPlaceableObject(EditorListItem target)
+	{
+		LeftbarSpacer.Insert(target.GetRoot());
+	}	
+	
+	void InsertPlacedObject(EditorListItem target)
+	{
+		RightbarSpacer.Insert(target.GetRoot());
+	}
+	
+	void InsertMapObject(Widget map_marker)
+	{
+		Print("EditorHudViewModel::InsertMapObject " + map_marker.GetName());
+		//m_EditorMapWidget.AddChild(map_marker);
+	}
+	
+	int ReloadPlaceableObjects() 
 	{ 
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
@@ -60,11 +80,11 @@ class EditorUIViewModel: ViewModelBase
 				string Config_Name, Base_Name;
 		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name);
 				EditorPlaceableObjectData placeable_object_data = new EditorPlaceableObjectData(Config_Name, Config_Path);
-				placeable_objects.Insert(new EditorPlaceableListItem(placeable_object_data));
+				InsertPlaceableObject(new EditorPlaceableListItem(placeable_object_data));
 		    }
 		}
 		
-		return placeable_objects.Count();
+		return j;
 	}
 	
 	void UpdatePlaceableItems(PlaceableObjectCategory category)
@@ -75,6 +95,17 @@ class EditorUIViewModel: ViewModelBase
 			root.Show(placeable_object.GetData().GetCategory() == category);
 		}
 	}
+	
+	void ClearBrushBox()
+	{
+		BrushTypeBox.Clear();
+	}
+	
+	void InsertBrush(string name)
+	{
+		BrushTypeBox.Insert(name);
+	}
+	
 	
 	override void OnPropertyChanged(Widget target)
 	{

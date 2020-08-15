@@ -12,7 +12,7 @@ class EditorHologram
 	
 	void EditorHologram(string type_name, vector position) 
 	{
-		m_MapWidget = GetEditor().GetEditorUI().GetMapWidget();
+		m_MapWidget = GetEditor().GetEditorHud().GetMapWidget();
 		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout", m_MapWidget);
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
@@ -35,7 +35,7 @@ class EditorHologram
 		GetCursorPos(x, y);
 		
 		// Handle Building
-		if (GetEditor().GetEditorUI().IsMapOpen()) {
+		if (GetEditor().GetEditorHud().IsMapOpen()) {
 			vector pos = m_MapWidget.ScreenToMap(Vector(x, y, 0));
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]);	
 				

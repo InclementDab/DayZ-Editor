@@ -251,11 +251,6 @@ class EditorUI: UIScriptedMenu
 	}
 		
 	
-	void CreateDialog()
-	{
-		// todo use editor UI manager to do ShowDialog
-		//GetGame().GetUIManager().ShowDialog("Overwrite", "Do you really want to Overwrite?", 169, DBT_YESNO, DBB_YES, DMT_QUESTION, this);
-	}
 	
 	EditorMap GetMap() 			{ return m_EditorMap; }
 	MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
@@ -264,17 +259,7 @@ class EditorUI: UIScriptedMenu
 	
 	
 
-	
-	void InsertPlacedObject(EditorListItem target)
-	{
-		m_RightbarSpacer.AddChild(target.GetRoot());
-	}
-	
-	void InsertMapObject(Widget map_marker)
-	{
-		Print("EditorUI::InsertMapObject " + map_marker.GetName());
-		m_EditorMapWidget.AddChild(map_marker);
-	}
+
 	
 	
 	
@@ -501,19 +486,7 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	
-	private ref array<string> m_CurrentBrushNames = new array<string>();
-	void ClearBrushBox()
-	{
-		m_CurrentBrushNames.Clear();
-		m_BrushTypeBox.ClearAll();
-	}
-	
-	void InsertBrush(string name)
-	{
-		m_CurrentBrushNames.Insert(name);
-		m_BrushTypeBox.AddItem(name);
-	}
-	
+
 	
 
 	
@@ -714,24 +687,7 @@ class EditorUI: UIScriptedMenu
 		m_ObjPosInfoPanel.Show(state);
 	}
 	
-	
-	/// stuff from manager
-		
-	static void ShowCursor()
-	{
-		GetGame().GetUIManager().ShowUICursor(true);
-	}
-	
-	static void HideCursor()
-	{
-		GetGame().GetUIManager().ShowUICursor(false);
-	}
-	
-	static void ToggleCursor()
-	{
-		GetGame().GetUIManager().ShowUICursor(!GetGame().GetUIManager().IsCursorVisible());
-	}
-	
+
 	bool IsCursorOverUI()
 	{
 		float pos_x, pos_y, size_x, size_y;
@@ -808,26 +764,5 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	
-	// Modal Window Control
-	private static ref EditorDialog m_CurrentModal;
-	static void ModalSet(EditorDialog w)
-	{
-		Print("ModalSet");
-		m_CurrentModal = w;
-		SetModal(m_CurrentModal.GetRoot());
-		ShowCursor();
-	}
-	
-	static void ModalClose()
-	{
-		Print("ModalClose");
-		m_CurrentModal.GetRoot().Unlink();
-		m_CurrentModal = null;
-		ShowCursor();
-	}
 
-	bool IsModalActive()
-	{
-		return GetGame().GetUIManager().IsModalVisible();
-	}
 }

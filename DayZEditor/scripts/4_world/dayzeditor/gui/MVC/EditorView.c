@@ -5,6 +5,9 @@ typedef ref map<string, Class> TextListboxWidgetData;
 // WrapSpacerWidget
 typedef ref array<ref Widget> WrapSpacerWidgetData;
 
+// XComboBoxWidget
+typedef ref set<string> XComboBoxWidgetData;
+
 class EditorView extends ScriptedWidgetEventHandler
 {
 	// Required
@@ -81,8 +84,8 @@ class EditorView extends ScriptedWidgetEventHandler
 			m_Model.OnPropertyChanged(w);
 		}
 		
-		return true;
-		//return super.OnClick(w, x, y, button);
+		
+		return super.OnClick(w, x, y, button);
 	}
 	
 	
@@ -148,6 +151,14 @@ class EditorView extends ScriptedWidgetEventHandler
 				
 				break;
 			}
+			
+			case XComboBoxWidget: {
+				XComboBoxWidgetData combo_data = new XComboBoxWidgetData();
+				XComboBoxWidget combo_box = XComboBoxWidget.Cast(m_LayoutRoot);
+				
+				break;
+			}
+			
 			
 			
 			default: {
@@ -215,6 +226,24 @@ class EditorView extends ScriptedWidgetEventHandler
 					wrap_spacer.AddChild(w);
 				}
 			
+				
+				
+				
+				break;
+			}
+			
+			case XComboBoxWidget: {
+				XComboBoxWidgetData combo_box_data = new XComboBoxWidgetData();
+				XComboBoxWidget combo_box = XComboBoxWidget.Cast(m_LayoutRoot);
+				
+				if (EnScript.GetClassVar(m_Model, variable_name, 0, combo_box_data)) {
+					Error(string.Format("Wrong Data Type in %1", m_LayoutRoot.GetName()));
+					break;
+				}
+				
+				foreach (string item: combo_box_data) {
+					combo_box.AddItem(item);
+				}
 				
 				
 				

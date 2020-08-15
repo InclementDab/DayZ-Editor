@@ -21,6 +21,7 @@ class EditorMap: EditorWidgetEventHandler
 	
 	
 	private int start_x, start_y;
+	/*
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		Input input = GetGame().GetInput();	
@@ -50,7 +51,7 @@ class EditorMap: EditorWidgetEventHandler
 		}
 		
 		return false;
-	}
+	}*/
 	
 	MapWidget GetMapWidget() { return MapWidget.Cast(m_Root); }
 }

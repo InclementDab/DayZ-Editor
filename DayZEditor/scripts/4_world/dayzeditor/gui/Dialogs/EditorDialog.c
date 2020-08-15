@@ -57,7 +57,7 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		Print("MapSelectDialog::ShowDialog");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		m_Root.Show(true);
-		EditorUI.ModalSet(this);
+		GetEditor().GetEditorHud().ModalSet(this);
 	}
 	
 	void CloseDialog()
@@ -65,7 +65,7 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		Print("MapSelectDialog::CloseDialog");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 		m_Root.Show(false);
-		EditorUI.ModalClose();
+		GetEditor().GetEditorHud().ModalClose();
 	}
 	
 	void Update() {}

@@ -165,12 +165,7 @@ class EditorFileManager
 {
 
 	static FileDialogResult Save(ref EditorWorldData data, string file)
-	{
-
-		if (FileExist(file)) {
-			GetEditor().GetEditorUI().CreateDialog();			
-		}
-		
+	{		
 		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(file, data);
 		return FileDialogResult.SUCCESS;
 	}

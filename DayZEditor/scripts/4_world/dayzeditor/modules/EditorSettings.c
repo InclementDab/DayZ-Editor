@@ -64,11 +64,11 @@ class EditorSettings: JMModuleBase
 	
 	void SetBrushTypes(EditorBrushDataSet brush_types)
 	{
-		GetEditor().GetEditorUI().ClearBrushBox();
+		GetEditorHudViewModel().ClearBrushBox();
 		m_EditorBrushTypes = brush_types;
 
 		foreach (EditorBrushData brush: m_EditorBrushTypes)
-			GetEditor().GetEditorUI().InsertBrush(brush.Name);		
+			GetEditorHudViewModel().InsertBrush(brush.Name);		
 	}
 		
 	EditorBrush GetBrush(string brush_name)

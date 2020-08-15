@@ -33,15 +33,14 @@ class EditorClientModule: JMModuleBase
 	private bool m_Active = false;
 
 	/* UI Stuff */
-	EditorUI GetEditorUI() { return m_EditorUI; }
+	EditorHud GetEditorHud() { return m_EditorHud; }
 	EditorCamera GetCamera() { return m_Camera; }
 	EditorSettings GetSettings() { return GetModuleManager().GetModule(EditorSettings); }
 	
 	
 	bool IsPlacing() { return m_ObjectInHand != null; }
 
-	private ref EditorUI 					m_EditorUI;
-	private ref EditorUIViewModel 			m_EditorUIViewModel;	
+	private ref EditorHud					m_EditorHud;
 	
 	private ref EditorHologram 				m_ObjectInHand;
 	private ref EditorBrush					m_EditorBrush;
@@ -79,12 +78,10 @@ class EditorClientModule: JMModuleBase
 		
 		// Init UI
 		m_UIManager = GetGame().GetUIManager();
-		m_EditorUI = new EditorUI();
-		m_EditorUIViewModel = new EditorUIViewModel();
-		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
-		//array<EditorView> views = EditorView.GetUIProperties(m_EditorUI.GetRoot(), m_EditorUIViewModel);
-		//Print(views.Count());
-		
+		//m_EditorUI = new EditorUI();
+		//m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
+		m_EditorHud = new EditorHud();
+		m_EditorHud.Init(null);
 
 		
 		// Events
@@ -188,7 +185,7 @@ class EditorClientModule: JMModuleBase
 	{
 		if (!input.LocalPress()) return; 
 		EditorLog.Trace("Editor::OnEditorToggleCursor");
-		EditorUI.ToggleCursor();
+		m_EditorHud.ToggleCursor();
 	}
 		
 	
@@ -359,7 +356,7 @@ class EditorClientModule: JMModuleBase
 		m_Camera.SetMoveEnabled(active);
 		m_Camera.SetActive(active);
 		
-		m_EditorUI.Show(active);
+		m_EditorHud.Show(active);
 		m_Mission.GetHud().Show(!active);
 		
 		
@@ -392,11 +389,7 @@ class EditorClientModule: JMModuleBase
 		m_ActionStack.InsertAt(target, 0);
 		
 		// debug
-		m_EditorUI.m_DebugActionStack.ClearItems();
-		
-		for (int debug_i = 0; debug_i < m_ActionStack.Count(); debug_i++) {
-			m_EditorUI.m_DebugActionStack.AddItem(m_ActionStack[debug_i].GetName(), m_ActionStack[debug_i], 0);
-		}
+		GetEditorHudViewModel().DebugActionStackListbox.Insert(target.GetName(), target);
 	}
 	
 
