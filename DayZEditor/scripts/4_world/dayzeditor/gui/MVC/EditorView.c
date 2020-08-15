@@ -90,8 +90,7 @@ class EditorView extends ScriptedWidgetEventHandler
 				string text;
 				
 				MultilineEditBoxWidget mebw = MultilineEditBoxWidget.Cast(m_ControlWidget);
-				if (mebw)
-				{
+				if (mebw) {
 					mebw.GetText(text);
 				}
 			
@@ -149,15 +148,13 @@ class EditorView extends ScriptedWidgetEventHandler
 				}
 			
 				MultilineEditBoxWidget mebw = MultilineEditBoxWidget.Cast(m_ControlWidget);
-				if (mebw)
-				{
+				if (mebw) {
 					mebw.SetText(text);
 					return;
 				}
 			
 				EditBoxWidget ebw = EditBoxWidget.Cast(m_ControlWidget);
-				if (ebw)
-				{
+				if (ebw) {
 					ebw.SetText(text);
 					return;
 				}
@@ -193,18 +190,14 @@ class EditorView extends ScriptedWidgetEventHandler
 	{
 		EditorView view;
 		root.GetScript(view);
-		if (view != null)
-		{
+		if (view != null) {
 			view.SetModel(model);
-			
 			views.Insert(view);
 		}
 		
 		Widget child = root.GetChildren();
-		while (child != null)
-		{
+		while (child != null) {
 			_GetUIProperties(child, model, views);
-			
 			child = child.GetSibling();
 		}
 	}

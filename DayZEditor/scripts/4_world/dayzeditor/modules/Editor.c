@@ -24,11 +24,7 @@ class EditorClientModule: JMModuleBase
 	private UIManager m_UIManager;
 	private EditorCamera m_Camera;
 	private PlayerBase m_Player;
-	
-	private ref EditorHologram 				m_ObjectInHand;
-	private ref EditorUI 					m_EditorUI;
-	private ref EditorBrush					m_EditorBrush;
-	
+
 	
 	static Object							ObjectUnderCursor = null;
 	static EditorObject 					EditorObjectUnderCursor = null;
@@ -43,6 +39,11 @@ class EditorClientModule: JMModuleBase
 	
 	
 	bool IsPlacing() { return m_ObjectInHand != null; }
+	
+	
+	private ref EditorHologram 				m_ObjectInHand;
+	private ref EditorUI 					m_EditorUI;
+	private ref EditorBrush					m_EditorBrush;
 	
 	private ref EditorPlaceableListItemSet 		m_PlaceableObjects;
 	private ref EditorObjectSet 				m_PlacedObjects;
@@ -61,8 +62,7 @@ class EditorClientModule: JMModuleBase
 	void EditorClientModule()
 	{
 		EditorLog.Info("Editor");
-		m_EditorInstance = this;	
-		
+		m_EditorInstance = this;
 	}
 	
 	void ~EditorClientModule()
@@ -79,17 +79,16 @@ class EditorClientModule: JMModuleBase
 		
 		// Init UI
 		m_UIManager = GetGame().GetUIManager();
-		m_EditorUI = new EditorUI();		
-		m_EditorUI.Show(false);
-		
+		m_EditorUI = new EditorUI();
+		m_UIManager.ShowScriptedMenu(m_EditorUI, m_UIManager.GetMenu());
 		
 		// Load PlaceableObjects
+		/*
 		m_PlaceableObjects = new EditorPlaceableListItemSet();
 		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", EditorSettings.GetPlaceableObjects(m_PlaceableObjects)));
-		
 		foreach (ref EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
 			m_EditorUI.InsertPlaceableObject(placeable_object);
-		}	
+		}*/
 		
 		// Events
 		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
@@ -97,6 +96,7 @@ class EditorClientModule: JMModuleBase
 		
 		// Keybinds
 		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
+		RegisterBinding(new JMModuleBinding("OnEditorToggleCursor", "EditorToggleCursor"));
 		
 	}
 	
@@ -140,7 +140,7 @@ class EditorClientModule: JMModuleBase
 		m_Player = player;
 		EditorLog.Debug(m_Player);
 	}
-	
+		
 	override void OnMissionStart()
 	{
 		EditorLog.Trace("Editor::OnMissionStart");
@@ -149,18 +149,23 @@ class EditorClientModule: JMModuleBase
 		// Only runs in Singleplayer
 		if (IsMissionOffline()) {
 			EditorLog.Info("Loading Offline Editor...");
+			
+			// Random cam position smile :)
+			float x = Math.RandomInt(3500, 8500);
+			float z = Math.RandomInt(3500, 8500);
+			float y = GetGame().SurfaceY(x, z);
+			m_Player = CreateDefaultCharacter(Vector(x, y, z));
 			m_Active = true;
 			SetActive(m_Active);
 		} else {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
 		}
-		
-		
 	}
 	
 	override void OnMissionFinish()
 	{
+		EditorLog.Trace("Editor::OnMissionFinish");
 		if (!IsMissionOffline()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
@@ -173,15 +178,24 @@ class EditorClientModule: JMModuleBase
 	}
 	
 	
+	// Inputs
 	private void OnEditorToggleActive(UAInput input)
 	{
 		if (!input.LocalPress()) return; 
 		EditorLog.Trace("Editor::OnEditorToggleActive");
 		m_Active = !m_Active;
 		SetActive(m_Active);
+	}	
+	
+	private void OnEditorToggleCursor(UAInput input)
+	{
+		if (!input.LocalPress()) return; 
+		EditorLog.Trace("Editor::OnEditorToggleCursor");
+		EditorUI.ToggleCursor();
 	}
 		
 	
+	// RPC stuff
 	override int GetRPCMin()
 	{
 		return EditorClientModuleRPC.INVALID;
@@ -227,17 +241,18 @@ class EditorClientModule: JMModuleBase
 	{		
 		EditorLog.Trace("Editor::CreateObject");
 		
-		
 		EditorObject editor_object = new EditorObject(editor_object_data);
-	
-		if (create_undo) {
-			EditorAction action = new EditorAction("Delete", "Create");;
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			InsertAction(action);
-		}
-		
 		EditorEvents.ObjectCreated(this, editor_object);
+		
+		if (!create_undo) return editor_object;
+
+		
+		EditorAction action = new EditorAction("Delete", "Create");;
+		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+		InsertAction(action);
+			
+	
 		return editor_object;
 	}
 
@@ -311,13 +326,10 @@ class EditorClientModule: JMModuleBase
 	}
 	
 	
-	// General Editor Stuff
+	// Call to enable / disable editor
 	void SetActive(bool active)
 	{
-		if (m_Player == null) {
-			m_Player = GetGame().GetPlayer();
-		}
-		
+				
 		if (m_Camera == null) {
 
 			EditorLog.Info("Initializing Camera");
@@ -328,26 +340,28 @@ class EditorClientModule: JMModuleBase
 			GetGame().GetWorldName(world_name);
 			GetGame().ConfigGetIntArray(string.Format("CfgWorlds %1 centerPosition", world_name), center_pos);
 			
-			// Random cam position smile :)
-			center_pos[0] = Math.RandomInt(3500, 8500);
-			center_pos[1] = Math.RandomInt(3500, 8500);
-			float y_level = GetGame().SurfaceY(center_pos[0], center_pos[1]);
+
 			
 			// Camera Init
 			// todo if singleplayer spawn on center of map, otherwise spawn on character in MP
-			m_Camera = GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 10, 0), ECE_LOCAL);
+			vector pos = m_Player.GetPosition();
+			m_Camera = GetGame().CreateObjectEx("EditorCamera", pos, ECE_LOCAL);
 			
 			
 			// Init Camera Map Marker
+			/*
 			EditorCameraMapMarker CameraMapMarker = new EditorCameraMapMarker();
 			Widget m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorCameraMapMarker.layout");
 			m_MapMarkerWidget.GetScript(CameraMapMarker);
 			CameraMapMarker.SetCamera(m_Camera, m_EditorUI.GetMapWidget());
 			m_EditorUI.InsertMapObject(m_MapMarkerWidget);
-			m_EditorUI.GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));
+			m_EditorUI.GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));*/
 		}
-				
+		
+		m_Camera.SetLookEnabled(active);
+		m_Camera.SetMoveEnabled(active);
 		m_Camera.SetActive(active);
+		
 		m_EditorUI.Show(active);
 		m_Mission.GetHud().Show(!active);
 		

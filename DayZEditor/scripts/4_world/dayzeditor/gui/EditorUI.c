@@ -133,9 +133,8 @@ class EditorUI: UIScriptedMenu
 	{
 		EditorLog.Trace("EditorUI::Init");
 		
-		
 		// Init
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorUI.layout");
+		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorUI.layout");
 		
 		// Canvas
 		m_EditorCanvas			= CanvasWidget.Cast(m_Root.FindAnyWidget("EditorCanvas"));
@@ -227,11 +226,8 @@ class EditorUI: UIScriptedMenu
 		// Info toolbar widgets
 		m_ObjPosInfoPanel = m_Root.FindAnyWidget("InfobarObjPosFrame");
 		array<EditorView> views = EditorView.GetUIProperties(m_ObjPosInfoPanel, this);
-		Print( "EditorView count:" + views.Count() );
-		for (int index = 0; index < views.Count(); ++index) {
-			Print( "index:" + index );
-			views[index].DebugPrint();
-		}
+		
+		
 		
 		m_CamPosInfoPanel = m_Root.FindAnyWidget("InfobarCamPosFrame");
 		m_CamPosInfoX = TextWidget.Cast(m_Root.FindAnyWidget("Info_CamPos_X_Value"));
@@ -877,6 +873,11 @@ class EditorUI: UIScriptedMenu
 	static void HideCursor()
 	{
 		GetGame().GetUIManager().ShowUICursor(false);
+	}
+	
+	static void ToggleCursor()
+	{
+		GetGame().GetUIManager().ShowUICursor(!GetGame().GetUIManager().IsCursorVisible());
 	}
 	
 	bool IsCursorOverUI()

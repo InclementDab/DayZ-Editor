@@ -125,3 +125,4 @@ static string GetIconFromMod(ref ModStructure m_ModInfo)
 	// default
 	return "DayZEditor/gui/images/dayz_editor_icon_black.edds";
 }
+
