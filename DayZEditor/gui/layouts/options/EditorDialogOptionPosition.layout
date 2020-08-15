@@ -1,0 +1,257 @@
+PanelWidgetClass EditorPosElement {
+ size 1 24
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ {
+  WrapSpacerWidgetClass PositionSpacer {
+   ignorepointer 1
+   size 0.7 24
+   halign right_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   {
+    WrapSpacerWidgetClass frame_x {
+     ignorepointer 1
+     position 0 0
+     size 175 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     "Size To Content V" 1
+     content_valign center
+     {
+      PanelWidgetClass lbl_x0 {
+       ignorepointer 1
+       keepsafezone 0
+       color 0.7647 0.1804 0.102 1
+       position 0 0
+       size 24 24
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass x0 {
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "X"
+         font "gui/fonts/etelkatextpro"
+         "exact text" 0
+         "exact text size" 45
+         "size to text h" 0
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      PanelWidgetClass txt_x0 {
+       ignorepointer 1
+       position 0 0
+       size 150 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        EditBoxWidgetClass pos_x {
+         visible 1
+         size 1 24
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style Editor
+         text "reee"
+         "exact text" 1
+         font "gui/fonts/etelkatextpro"
+        }
+       }
+      }
+     }
+    }
+    WrapSpacerWidgetClass frame_y {
+     ignorepointer 1
+     position 0 0
+     size 175 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     "Size To Content V" 1
+     content_valign center
+     {
+      PanelWidgetClass lbl_y {
+       ignorepointer 1
+       keepsafezone 0
+       color 0.5765 0.8157 0.2196 1
+       position 0 0
+       size 24 24
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass y {
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "Y"
+         font "gui/fonts/etelkatextpro"
+         "exact text" 0
+         "exact text size" 45
+         "size to text h" 0
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      PanelWidgetClass txt_y {
+       ignorepointer 1
+       position 0 0
+       size 150 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        EditBoxWidgetClass pos_y {
+         visible 1
+         size 1 24
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style Editor
+         text "reee"
+         "exact text" 1
+         font "gui/fonts/etelkatextpro"
+        }
+       }
+      }
+     }
+    }
+    WrapSpacerWidgetClass frame_z {
+     ignorepointer 1
+     position 0 0
+     size 175 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     "Size To Content V" 1
+     content_valign center
+     {
+      PanelWidgetClass lbl_z {
+       ignorepointer 1
+       keepsafezone 0
+       color 0.2588 0.5176 0.9176 1
+       position 0 0
+       size 24 24
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass z {
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "Z"
+         font "gui/fonts/etelkatextpro"
+         "exact text" 0
+         "size to text h" 0
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      PanelWidgetClass txt_z {
+       ignorepointer 1
+       position 0 0
+       size 150 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        EditBoxWidgetClass pos_z {
+         visible 1
+         size 1 24
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style Editor
+         text "reee"
+         "exact text" 1
+         font "gui/fonts/etelkatextpro"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  TextWidgetClass EditorPosElementLable {
+   ignorepointer 1
+   size 0.3 24
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   text "Position"
+   font "gui/fonts/etelkatextpro"
+   "text offset" -5 0
+   "text halign" right
+  }
+ }
+}

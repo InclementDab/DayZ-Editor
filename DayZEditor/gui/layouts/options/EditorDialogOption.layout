@@ -1,0 +1,113 @@
+WrapSpacerWidgetClass EditorDialogOption {
+ clipchildren 0
+ inheritalpha 0
+ ignorepointer 0
+ position 0 0
+ size 1 24
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ style Colorable
+ Padding 0
+ Margin 0
+ "Size To Content H" 1
+ "Size To Content V" 1
+ {
+  ButtonWidgetClass EditorDialogOptionButton {
+   size 1 24
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style Empty
+   {
+    FrameWidgetClass EditorDialogOptionPanel {
+     clipchildren 0
+     ignorepointer 1
+     size 1 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     fixaspect inside
+     {
+      ImageWidgetClass expand_image {
+       visible 1
+       clipchildren 0
+       inheritalpha 1
+       ignorepointer 1
+       color 1 1 1 0.549
+       size 0.7 0.7
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       image0 "set:dayz_gui image:icon_collapse"
+       mode blend
+       "src alpha" 1
+       "no wrap" 1
+       stretch 1
+       filter 1
+      }
+      ImageWidgetClass collapse_image {
+       visible 0
+       clipchildren 0
+       inheritalpha 1
+       ignorepointer 1
+       color 1 1 1 0.549
+       size 0.7 0.7
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       image0 "set:dayz_gui image:icon_expand"
+       mode blend
+       "src alpha" 1
+       "no wrap" 1
+       stretch 1
+       filter 1
+      }
+     }
+    }
+    TextWidgetClass EditorDialogOptionTitle {
+     clipchildren 0
+     ignorepointer 1
+     color 1 1 1 0.7843
+     size 0.96 24
+     halign right_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     text "Test Me"
+     font "gui/fonts/etelkatextpro"
+     "text valign" center
+    }
+   }
+  }
+  WrapSpacerWidgetClass EditorDialogOptionContent {
+   visible 1
+   clipchildren 0
+   ignorepointer 0
+   color 1 1 1 0
+   position 0 1
+   size 1 2400
+   halign center_ref
+   hexactpos 1
+   vexactpos 0
+   hexactsize 0
+   vexactsize 1
+   style Colorable
+   Padding 0
+   Margin 0
+   "Size To Content V" 1
+   content_halign center
+   content_valign center
+  }
+ }
+}
