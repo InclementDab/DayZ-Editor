@@ -31,7 +31,7 @@ class EditorView extends ScriptedWidgetEventHandler
 		EditorLog.Trace("EditorView::OnWidgetScriptInit");
 		m_LayoutRoot = w;
 		m_LayoutRoot.SetHandler(this);
-		
+
 		m_ControlWidget = m_LayoutRoot.FindAnyWidget(control_name);
 		if (m_ControlWidget == null)
 			m_ControlWidget = m_LayoutRoot;
