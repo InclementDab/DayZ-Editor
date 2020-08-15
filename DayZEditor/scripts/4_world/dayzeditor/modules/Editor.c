@@ -103,7 +103,7 @@ class EditorClientModule: JMModuleBase
 	private bool exit_condition = false;
 	override void OnUpdate(float timeslice)
 	{
-		if (m_Camera != null) {
+		if (m_Camera != null && !IsMissionOffline()) {
 			ScriptRPC update_rpc = new ScriptRPC();
 			update_rpc.Write(m_Camera.GetPosition());
 			update_rpc.Write(m_Camera.GetOrientation());
@@ -151,16 +151,20 @@ class EditorClientModule: JMModuleBase
 			EditorLog.Info("Loading Offline Editor...");
 			m_Active = true;
 			SetActive(m_Active);
-		}		
+		} else {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
+		}
 		
-		ScriptRPC rpc = new ScriptRPC();
-		rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
+		
 	}
 	
 	override void OnMissionFinish()
 	{
-		ScriptRPC rpc = new ScriptRPC();
-		rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
+		if (!IsMissionOffline()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
+		}
 	}
 	
 	override void OnMissionLoaded()
@@ -200,14 +204,11 @@ class EditorClientModule: JMModuleBase
 	void CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
 	{
 		EditorLog.Trace("Editor::CreateObjects");
-		
 
 		EditorAction action = new EditorAction("Delete", "Create");
-		
 		foreach (EditorObjectData editor_object_data: data_list) {
 			
 			EditorObject editor_object = new EditorObject(editor_object_data);
-			
 			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));			
 		}

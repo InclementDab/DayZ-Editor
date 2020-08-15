@@ -35,7 +35,7 @@ class EditorServerModule: JMModuleBase
 		switch (rpc_type) {
 			
 			case EditorServerModuleRPC.EDITOR_CLIENT_UPDATE: {
-				//EditorLog.Debug("EditorServerModule::EDITOR_SERVER_UPDATE");
+				EditorLog.Debug("EditorServerModule::EDITOR_SERVER_UPDATE");
 				RPC_UpdateEditor(ctx, sender, target);
 				break;
 			}
@@ -62,7 +62,6 @@ class EditorServerModule: JMModuleBase
 	
 	private void RPC_UpdateEditor(ref ParamsReadContext ctx, PlayerIdentity senderRPC, Object target)
 	{
-		
 		vector pos, ori;
 		ctx.Read(pos);
 		ctx.Read(ori);
