@@ -21,17 +21,7 @@ class IObservable
 		
 		CollectionChanged.Insert(action);
 	}
-	
-	protected static ref ScriptInvoker DictionaryChanged = new ScriptInvoker();
-	static void NotifyOnDictionaryChanged(func action)
-	{
-		if (DictionaryChanged == null)
-			DictionaryChanged = new ScriptInvoker();
 		
-		
-		DictionaryChanged.Insert(action);
-	}
-	
 	
 	protected string m_VariableName;
 	void IObservable(string var_name)
@@ -49,7 +39,7 @@ class ObservableDictionary<Class TKey, Class TValue>: IObservable
 	bool Insert(TKey key, TValue value)
 	{
 		if (_data.Insert(key, value)) {
-			DictionaryChanged.Invoke(this, NotifyCollectionChangedAction.Add, key, value, m_VariableName);
+			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Add, new Param2<TKey, TValue>(key, value), m_VariableName);
 			return true;
 		}
 		
@@ -61,20 +51,20 @@ class ObservableDictionary<Class TKey, Class TValue>: IObservable
 		if (_data.Contains(key)) {
 			TValue value = _data.Get(key);
 			_data.Remove(key);
-			DictionaryChanged.Invoke(this, NotifyCollectionChangedAction.Remove, key, value, m_VariableName);
+			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Remove, new Param2<TKey, TValue>(key, value), m_VariableName);
 		}
 	}
 	
 	void Clear()
 	{
 		_data.Clear();
-		DictionaryChanged.Invoke(this, NotifyCollectionChangedAction.Reset, null, null, m_VariableName);
+		CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Reset, null, m_VariableName);
 	}
 	
 	void Set(TKey key, TValue value)
 	{
 		_data.Set(key, value);
-		DictionaryChanged.Invoke(this, NotifyCollectionChangedAction.Replace, m_VariableName, key, value, m_VariableName);
+		CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Replace, m_VariableName, new Param2<TKey, TValue>(key, value), m_VariableName);
 	}
 	
 	TValue Get(TKey key)
@@ -98,7 +88,7 @@ class ObservableCollection<Class TValue>: IObservable
 	{
 		int index = _data.Insert(value);
 		if (index != -1) {
-			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Add, value, m_VariableName);
+			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Add, new Param1<TValue>(value), m_VariableName);
 		}
 		
 		return index;
@@ -112,7 +102,7 @@ class ObservableCollection<Class TValue>: IObservable
 		
 		if (value) {
 			_data.Remove(index);
-			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Remove, value, m_VariableName);
+			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Remove, new Param1<TValue>(value), m_VariableName);
 		}
 		
 	}
@@ -120,7 +110,7 @@ class ObservableCollection<Class TValue>: IObservable
 	void Clear()
 	{
 		_data.Clear();
-		CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Reset, m_VariableName);
+		CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Reset, null, m_VariableName);
 	}
 	
 	TValue Get(int index)
