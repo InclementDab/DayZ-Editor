@@ -1690,5 +1690,39 @@ FrameWidgetClass EditorMainFrame {
     }
    }
   }
+   FrameWidgetClass CrossHairs {
+   visible 1
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scriptclass ""
+   {
+    ImageWidgetClass CrossHairImage {
+     visible 0
+     inheritalpha 1
+     color 1 1 1 0.498
+     position 0 0
+     size 0.12 0.12
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     fixaspect fixwidth
+     image0 "set:dayz_crosshairs image:cross_128x128"
+     mode blend
+     "src alpha" 1
+     "no wrap" 1
+     stretch 0
+     filter 1
+    }
+   }
+  }
  }
 }

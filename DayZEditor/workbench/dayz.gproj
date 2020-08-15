@@ -10,15 +10,6 @@ GameProjectClass {
 					Name "Game Root"
 					Directory "P:"
 				}
-				FileSystemPathClass {
-					Name "Community Framework"
-					Directory "P:\JM\CF"
-				}				
-				
-				FileSystemPathClass {
-					Name "DayZ Editor"
-					Directory "P:\DayZEditor"
-				}
 			}
 			imageSets {
 				"gui/imagesets/ccgui_enforce.imageset"
@@ -35,6 +26,7 @@ GameProjectClass {
 				"gui/imagesets/playstation_buttons.imageset"
 				"gui/imagesets/selection.imageset"
 				"gui/imagesets/console_toolbar.imageset"
+				"DayZEditor/gui/imagesets/dayz_editor_gui.imageset"
 			}
 			widgetStyles {
 				"gui/looknfeel/dayzwidgets.styles" 
@@ -45,6 +37,7 @@ GameProjectClass {
 					Name "core"
 					Paths {
 						"scripts/1_Core"
+						"DayZEditor/scripts/1_Core"
 					}
 					EntryPoint ""
 				}
@@ -59,6 +52,8 @@ GameProjectClass {
 					Name "game"
 					Paths {
 						"scripts/3_Game"
+						"JM/CF/Scripts/3_Game"
+						"DayZEditor/scripts/3_Game"
 					}
 					EntryPoint "CreateGame"
 				}
@@ -66,6 +61,8 @@ GameProjectClass {
 					Name "world"
 					Paths {
 						"scripts/4_World"
+						"JM/CF/Scripts/4_World"
+						"DayZEditor/scripts/4_World"
 					}
 					EntryPoint ""
 				}
@@ -73,6 +70,8 @@ GameProjectClass {
 					Name "mission"
 					Paths {
 						"scripts/5_Mission"
+						"JM/CF/Scripts/5_Mission"
+						"DayZEditor/scripts/5_Mission"
 					}
 					EntryPoint "CreateMission"
 				}
