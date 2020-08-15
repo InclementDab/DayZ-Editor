@@ -206,7 +206,7 @@ class EditorView extends ScriptedWidgetEventHandler
 	// Model -> UI
 	void UpdateView()
 	{
-		EditorLog.Trace("EditorView::UpdateView");
+		//EditorLog.Trace("EditorView::UpdateView");
 		if (!m_Model) return;
 		
 

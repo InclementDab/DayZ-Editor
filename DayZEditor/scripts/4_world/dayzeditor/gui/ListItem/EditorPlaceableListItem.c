@@ -59,7 +59,7 @@ class EditorPlaceableListItem: EditorListItem
 	
 	
 	
-	void StartPlacing(Class context, string type)
+	void StartPlacing(Class context, EditorPlaceableObjectData type)
 	{
 		if (type == m_Data.Type)
 			Select();

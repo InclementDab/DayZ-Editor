@@ -1,5 +1,35 @@
 
 
+class EditorHudHandler: ScriptedWidgetEventHandler
+{
+	protected Widget m_LayoutRoot;
+	
+	void OnWidgetScriptInit(Widget w)
+	{
+		EditorLog.Trace("EditorHudHandler::OnWidgetScriptInit");
+		m_LayoutRoot = w;
+		m_LayoutRoot.SetHandler(this);
+	}
+	
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorHudHandler::OnMouseButtonDown");
+		if (button == 0) {
+			if (GetEditor().IsPlacing()) {
+				GetEditor().PlaceObject();
+				return true;
+			}
+			
+		}
+		
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+	
+}
+
+
+
 
 class EditorHud: Hud
 {	
@@ -40,6 +70,13 @@ class EditorHud: Hud
 	
 	override void Update(float timeslice)
 	{
+		Input input = GetGame().GetInput();
+		
+		
+		if (input.LocalPress("UAFire")) {
+			Print("Click");
+		}
+		
 		
 	}
 	

@@ -109,7 +109,7 @@ class EditorClientModule: JMModuleBase
 		int x, y;
 		GetCursorPos(x, y);
 		CurrentMousePosition = MousePosToRay(obj);
-	
+		
 		if (!IsPlacing()) {
 			Object target = obj.Get(0);
 			if (target != null) {
@@ -422,10 +422,17 @@ class EditorClientModule: JMModuleBase
 	
 	void CreateInHand(EditorPlaceableObjectData data)
 	{
+		EditorLog.Trace("Editor::CreateInHand");
+		
+		// Turn Brush off when you start to place
+		if (m_EditorBrush != null)
+			SetBrush(null);
+		
+		ClearSelection();
+		m_ObjectInHand = new EditorHologram(data.Type, CurrentMousePosition);
 		
 		EditorEvents.StartPlacing(this, data);
 		
-		// todo create hologram in hand
 	}
 	
 	void PlaceObject()
