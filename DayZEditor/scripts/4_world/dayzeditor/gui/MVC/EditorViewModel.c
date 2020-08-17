@@ -5,7 +5,6 @@ EditorHudViewModel GetEditorHudViewModel() { return m_EditorHudViewModel; }
 // 	  vvvvvvvvvvvvvvvvv  put THIS into ScriptClass
 class EditorHudViewModel: ViewModel
 {
-	private ref EditorPlaceableListItemSet m_PlaceableObjects;
 
 	TextWidgetData DebugText1;
 	TextWidgetData DebugText2;
@@ -115,7 +114,6 @@ class EditorHudViewModel: ViewModel
 	
 	int ReloadPlaceableObjects() 
 	{ 
-		m_PlaceableObjects = new EditorPlaceableListItemSet();
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
 		for (int i = 0; i < paths.Count(); i++)	{
@@ -125,9 +123,7 @@ class EditorHudViewModel: ViewModel
 				string Config_Name, Base_Name;
 		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name);
 				EditorPlaceableObjectData placeable_object_data = new EditorPlaceableObjectData(Config_Name, Config_Path);
-				EditorListItem item = new EditorPlaceableListItem(placeable_object_data);
-				m_PlaceableObjects.Insert(item);
-				InsertPlaceableObject(item);
+				InsertPlaceableObject(new EditorPlaceableListItem(placeable_object_data));
 				
 		    }
 		}
@@ -142,10 +138,16 @@ class EditorHudViewModel: ViewModel
 	void UpdatePlaceableItems(PlaceableObjectCategory category)
 	{
 		EditorLog.Trace("EditorUIViewModel::UpdatePlaceableItems");
-		foreach (EditorPlaceableListItem placeable_object: m_PlaceableObjects) {
-			Widget root = placeable_object.GetRoot();
-			root.Show(placeable_object.GetData().GetCategory() == category);
+		
+		for (int i = 0; i < LeftbarSpacer.Count(); i++) {
+			Widget list_item = LeftbarSpacer.Get(i);
+			EditorPlaceableListItem item;
+			list_item.GetUserData(item);
+			Print(item);
+			list_item.Show(item.GetData().GetCategory() == category);
 		}
+		
+		
 		
 	}
 	

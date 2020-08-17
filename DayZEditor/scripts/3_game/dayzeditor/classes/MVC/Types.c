@@ -2,15 +2,19 @@
 
 // TextWidget
 typedef string TextWidgetData;
+class TextWidgetData: string {}
 
 // ButtonWidget
 typedef bool ButtonWidgetData;
+class ButtonWidgetData: bool {}
 
 // CheckBoxWidget
 typedef bool CheckBoxWidgetData;
+class CheckBoxWidgetData: bool {}
 
 // SliderWidget
 typedef float SliderWidgetData;
+class SliderWidgetData: float {}
 
 // Interface POG
 class IWidgetData

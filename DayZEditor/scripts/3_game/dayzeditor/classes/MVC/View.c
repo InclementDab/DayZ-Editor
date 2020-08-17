@@ -120,7 +120,12 @@ class EditorView: ScriptedWidgetEventHandler
 			}
 			
 			case SliderWidget: {
-				//SetModelVariable(SliderWidget.Cast(m_LayoutRoot).GetCurrent());
+				SliderWidgetData _SliderWidgetData;
+				_SliderWidgetData = SliderWidget.Cast(m_LayoutRoot).GetCurrent();
+				EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _SliderWidgetData);
+				NotifyPropertyChanged(variable_name);
+				
+				//SetModelVariable();
 				break;
 			}
 			
@@ -145,9 +150,26 @@ class EditorView: ScriptedWidgetEventHandler
 			
 			case TextWidget: {
 				
-				TextWidgetData _TextWidgetData;
-				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextWidgetData);
-				TextWidget.Cast(m_LayoutRoot).SetText(_TextWidgetData);
+				switch (m_ViewModel.GetVariableBaseType(variable_name)) {
+					
+					
+					case string: {
+						string _TextWidgetDataS;
+						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextWidgetDataS);
+						TextWidget.Cast(m_LayoutRoot).SetText(_TextWidgetDataS);
+						break;
+					}
+					
+					case int:
+					case float: {
+						float _TextWidgetDataF;
+						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextWidgetDataF);
+						TextWidget.Cast(m_LayoutRoot).SetText(_TextWidgetDataF.ToString());
+						break;
+					}				
+				}
+						
+				
 				break;
 			}
 			

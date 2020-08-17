@@ -49,6 +49,7 @@ class EditorPlaceableObjectData
 		Type = type; Path = path;
 		// probably really slow
 		m_ModStructure = GetModFromObject(Type);
+				
 		
 		TStringArray path_array = new TStringArray();
 		GetGame().ConfigGetFullPath(Path + " " + Type, path_array);
@@ -66,7 +67,7 @@ class EditorPlaceableObjectData
 		}
 		
 		Print(string.Format("%1 has no category!", Type));
-		m_Category = PlaceableObjectCategory.UNKNOWN;		
+		m_Category = PlaceableObjectCategory.UNKNOWN;	
 	}
 	
 	

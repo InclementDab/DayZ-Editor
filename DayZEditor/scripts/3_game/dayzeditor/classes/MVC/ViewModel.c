@@ -1,4 +1,6 @@
 
+typedef ref array<ref EditorView> EditorViewSet;
+
 // Inherit this class, then put that class into ScriptClass for your View Model Widget
 class ViewModel: Managed
 {
@@ -9,7 +11,7 @@ class ViewModel: Managed
 	protected ref map<string, typename> m_ModelHashMap;
 	
 	// View List
-	protected ref map<string, ref EditorView> m_ViewList;
+	protected ref map<string, ref EditorViewSet> m_ViewList;
 	
 	void ViewModel() { EditorLog.Trace("ViewModel"); }
 	void ~ViewModel() { EditorLog.Trace("~ViewModel"); }
@@ -20,8 +22,8 @@ class ViewModel: Managed
 		m_LayoutRoot = w;
 		
 		m_ModelHashMap = new map<string, typename>();
-		m_ViewList = new map<string, ref EditorView>();
-
+		m_ViewList = new map<string, ref EditorViewSet>();
+		
 		typename vtype = Type();
 		int vcnt = vtype.GetVariableCount();
 		for (int i = 0; i < vcnt; i++)
@@ -36,7 +38,15 @@ class ViewModel: Managed
 	{
 		string variable_name = view.GetVariableName();
 		EditorLog.Trace("ViewModel::InsertView: " + variable_name);
-		m_ViewList.Insert(variable_name, view);
+		
+		if (m_ViewList.Get(variable_name)) {
+			EditorViewSet view_set = m_ViewList.Get(variable_name);
+			view_set.Insert(view);
+		} else {
+			view_set = new EditorViewSet();	
+			view_set.Insert(view);
+			m_ViewList.Insert(variable_name, view_set);
+		}
 	}
 	
 	
@@ -44,40 +54,73 @@ class ViewModel: Managed
 	{
 		//EditorLog.Trace(string.Format("ViewModel::NotifyPropertyChanged: %1", property_name));
 		
-		EditorView view = m_ViewList.Get(property_name);
-		if (view == null) {
+		EditorViewSet view_set = m_ViewList.Get(property_name);
+		if (view_set == null) {
 			Error(string.Format("Invalid Property Name: %1 - View not found", property_name));
 			return;
 		}
 		
-		view.OnPropertyChanged();
+		foreach (EditorView view: view_set) {
+			view.OnPropertyChanged();
+		}
+		
 	}
 	
 	
 	void OnCollectionChanged(string property_name, CollectionChangedEventArgs args)
 	{
 		EditorLog.Trace(string.Format("ViewModel::OnCollectionChanged: %1 Action: %2", property_name, args.param2));
-		EditorView view = m_ViewList.Get(property_name);
-		if (view == null) {
+		EditorViewSet view_set = m_ViewList.Get(property_name);
+		if (view_set == null) {
 			EditorLog.Debug(string.Format("ViewModel::OnCollectionChanged: View was null! %1", property_name));
 			//Error(string.Format("Invalid Collection Name: %1 - View not found", property_name));
 			return;
 		}
 		
-		view.OnCollectionChanged(args);
+		foreach (EditorView view: view_set) {
+			view.OnCollectionChanged(args);
+		}
+		
 	}
 
 	
 	ref map<string, typename> GetVariableHashMap() { return m_ModelHashMap; }
 	typename GetVariableType(string var_name) { return m_ModelHashMap.Get(var_name); }
 	
+	typename GetVariableBaseType(string var_name)
+	{
+		switch (GetVariableType(var_name)) {
+			
+			case TextWidgetData: {
+				return string;
+			}
+			
+			case ButtonWidgetData:
+			case CheckBoxWidgetData: {
+				return bool;
+			}
+			
+			case SliderWidgetData: {
+				return float;
+			}
+			
+			default: {
+				Error("Undefined Base Type! Defaulting to string");
+			}
+			
+		}
+		
+		return string;
+	}
+	
 	bool OnClick(Widget w, int x, int y, bool button) { return true; }
 	
 	void DebugPrint()
 	{
 		EditorLog.Debug("ViewModel::DebugPrint: " + m_LayoutRoot.GetName());
-		foreach (string name, ref EditorView view: m_ViewList)
-			view.DebugPrint();
+		foreach (string name, ref EditorViewSet view_set: m_ViewList)
+			foreach (EditorView view: view_set)
+				view.DebugPrint();
 	}
 }
 

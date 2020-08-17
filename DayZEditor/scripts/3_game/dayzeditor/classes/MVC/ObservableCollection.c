@@ -86,6 +86,7 @@ class ObservableDictionary<Class TKey, Class TValue>: Observable
 	int Count() { return _data.Count(); }
 }
 
+
 class ObservableCollection<Class TValue>: Observable
 {
 	private ref array<ref TValue> _data = new array<ref TValue>();	

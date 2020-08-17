@@ -8,8 +8,7 @@ class EditorPlaceableListItem: EditorListItem
 	void EditorPlaceableListItem(ref EditorPlaceableObjectData data) 
 	{ 
 		EditorLog.Trace("EditorPlaceableListItem"); 
-		m_Data = data;
-
+		m_Data = data;		
 		m_ListItemCollapse.Show(false);
 		
 		SetText(m_Data.Type);

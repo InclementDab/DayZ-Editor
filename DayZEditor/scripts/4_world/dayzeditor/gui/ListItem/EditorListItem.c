@@ -51,6 +51,7 @@ class EditorListItem: ScriptedWidgetEventHandler
 		m_ListItemLabel 				= TextWidget.Cast(m_Root.FindAnyWidget("EditorListItemLabel"));
 		m_ListItemIcon 					= ImageWidget.Cast(m_Root.FindAnyWidget("EditorListItemIcon"));
 		
+		m_Root.SetUserData(this);
 		m_Root.SetHandler(this);
 		
 		if (m_ListItemCache == null) 
