@@ -1,12 +1,17 @@
 
-class ObservableType<Class T1>
+class ObservableType<Class T1>: Observable
 {
 	private T1 _value;
 	
 	void Set(T1 value)
 	{
 		_value = value;
-		
+		NotifyPropertyChanged();
+	}
+	
+	T1 Get()
+	{
+		return _value;
 	}
 }
 
@@ -20,7 +25,7 @@ class EditorHudViewModel: ViewModel
 {
 	private ref EditorPlaceableListItemSet m_PlaceableObjects;
 
-	string DebugText1;
+	ref TextWidgetData DebugText1 = new TextWidgetData;
 	string DebugText2;
 	string DebugText3;
 	string DebugText4;
@@ -34,8 +39,8 @@ class EditorHudViewModel: ViewModel
 	bool LeftbarHide;
 	bool RightbarHide;
 	
-	float BrushRadius;
-	float BrushDensity;
+	SliderWidgetData BrushRadius;
+	SliderWidgetData BrushDensity;
 	
 	ref TextListboxWidgetData DebugActionStackListbox;
 	ref WrapSpacerWidgetData LeftbarSpacer;
@@ -174,7 +179,7 @@ class EditorHudViewModel: ViewModel
 		BrushTypeBox.Insert(name);
 	}
 	
-	override void NotifyPropertyChanged(string property_name = "")
+	void OnPropertyChanged(string property_name)
 	{
 		switch (property_name) {
 			
@@ -203,17 +208,17 @@ class EditorHudViewModel: ViewModel
 			}
 			
 			case "BrushRadius": {
-				EditorBrush.SetRadius(BrushRadius);
+				EditorBrush.SetRadius(BrushRadius.Get());
 				break;
 			}
 			
 			case "BrushDensity": {
-				EditorBrush.SetDensity(BrushDensity);
+				EditorBrush.SetDensity(BrushDensity.Get());
 				break;
 			}
 		}
 		
-		super.NotifyPropertyChanged(property_name);
+		//super.OnPropertyChanged(property_name);
 	}
 
 }

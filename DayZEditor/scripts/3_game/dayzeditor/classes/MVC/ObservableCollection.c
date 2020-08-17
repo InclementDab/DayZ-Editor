@@ -1,88 +1,18 @@
 
 
-// TextListboxWidget
-class TextListboxWidgetData: ObservableDictionary<string, Class>
+
+
+
+/*
+class KeyValuePair<Class T1, Class T2>: Param
 {
-	void DictionaryAdd(TextListboxWidget w, Param params)
-	{
-		Param2<string, Class> changed_data = Param2<string, Class>.Cast(params);
-		w.AddItem(changed_data.param1, changed_data.param2, 0);
-	}
 	
-	void DictionaryRemove(TextListboxWidget w)
-	{
-		w.ClearItems();
-		for (int i = 0; i < Count(); i++) {
-			string key = GetKey(i);
-			w.AddItem(key, Get(key), 0);
-		}
-	}
-}
-
-// WrapSpacerWidget
-class WrapSpacerWidgetData: ObservableCollection<Widget>
-{
-	void DictionaryAdd(WrapSpacerWidget w, Param params)
-	{
-		w.AddChild(Param1<Widget>.Cast(params).param1);
-	}
-	
-	void DictionaryRemove(WrapSpacerWidget w, Param params)
-	{
-		w.RemoveChild(Param1<Widget>.Cast(params).param1);
-	}
-}
-
-// XComboBoxWidget
-class XComboBoxWidgetData: ObservableCollection<string> 
-{
-	void DictionaryAdd(XComboBoxWidget w, Param params)
-	{
-		w.AddItem(Param1<string>.Cast(params).param1);
-	}
-	
-	void DictionaryRemove(XComboBoxWidget w)
-	{
-		w.ClearAll();
-		for (int i = 0; i < Count(); i++) 
-			w.AddItem(Get(i));
-	}
-}
-
-
-enum NotifyCollectionChangedAction {
-	Add,
-	Remove,
-	Replace,
-	Move,
-	Clear
-};
-
-
-// Event Args for Collection Changed
-// 0: Observable that was changed
-// 1: Collection Changed Action
-// 2: Changed Value
-// 3: Collection name
-typedef Param4<Observable, int, Param2<Class, Class>, string> CollectionChangedEventArgs;
+}*/
 
 
 class Observable
 {
-	
-	
-	// Called only when Collection is changed
-	protected static ref ScriptInvoker CollectionChanged = new ScriptInvoker();	
-	static void NotifyOnCollectionChanged(func action)
-	{
-		if (CollectionChanged == null)
-			CollectionChanged = new ScriptInvoker();
-		
-		
-		CollectionChanged.Insert(action);
-	}
-		
-	
+
 	protected string m_VariableName;
 	void Observable(string var_name)
 	{
@@ -94,8 +24,7 @@ class Observable
 class ObservableDictionary<Class TKey, Class TValue>: Observable
 {
 	private ref map<TKey, TValue> _data = new map<TKey, TValue>();
-	
-	
+
 	bool Insert(TKey key, TValue value)
 	{
 		if (_data.Insert(key, value)) {
@@ -105,7 +34,7 @@ class ObservableDictionary<Class TKey, Class TValue>: Observable
 		
 		return false;
 	}
-	
+
 	void Remove(TKey key)
 	{
 		if (_data.Contains(key)) {
@@ -170,7 +99,7 @@ class ObservableCollection<Class TValue>: Observable
 	void Clear()
 	{
 		_data.Clear();
-		CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Reset, null, m_VariableName);
+		CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Clear, null, m_VariableName);
 	}
 	
 	TValue Get(int index)

@@ -1,17 +1,21 @@
 
-
 class EditorView extends ScriptedWidgetEventHandler
 {
 	// Required
 	// Name of Widget that has ViewModel ScriptClass
-	reference string view_model_widget;
+	private reference string view_model_widget;
+	string GetViewModelWidgetName() { return view_model_widget; }
 	
 	// Optional
 	// if blank, will use name of Widget
-	reference string variable_name; 
-	reference int variable_index;
+	private reference string variable_name;
+	string GetVariableName() { return variable_name; } 
+	
+	private reference int variable_index;
+	int GetVariableIndex() { return variable_index; }
 	// if blank, will use this widget
-	reference string control_name; 
+	private reference string control_name; 
+	string GetControlName() { return control_name; } 
 	
 	private Widget m_LayoutRoot;
 	private Widget m_ViewModelWidget;
@@ -19,10 +23,9 @@ class EditorView extends ScriptedWidgetEventHandler
 	private ViewModel m_Model;
 	private typename m_WidgetType;
 
-	void EditorView()
-	{
-		EditorLog.Trace("EditorView");
-	}
+	void EditorView() { EditorLog.Trace("EditorView"); }
+	void ~EditorView() { EditorLog.Trace("~EditorView"); }
+	
 	
 	void OnWidgetScriptInit(Widget w)
 	{
@@ -55,33 +58,139 @@ class EditorView extends ScriptedWidgetEventHandler
 			Error(string.Format("%1 Could not find ViewModel: %2", m_LayoutRoot.GetName(), view_model_widget));
 			return;
 		}
-
 		
+		m_Model.InsertView(this);
+	}
 
-		m_Model.InsertView(variable_name, this);
-		m_Model.PropertyChanged.Insert(OnPropertyChanged);
-		
-		typename var_type = m_Model.GetVariableType(variable_name);
-		if (var_type.IsInherited(Observable)) {
-			EditorLog.Trace("Inherited from Observable: " + var_type.ToString());
-			Observable.NotifyOnCollectionChanged(OnCollectionChanged);
+
+	
+	override bool OnChange(Widget w, int x, int y, bool finished)
+	{
+		EditorLog.Trace("EditorView::OnChange");
+		if (m_Model) {
+			UpdateModel();
 		}
-		
-		
+
+		return super.OnChange(w, x, y, finished);
 	}
 	
-	void OnPropertyChanged(string property_name)
+	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		if (property_name != variable_name) return;
-		EditorLog.Trace("EditorView::OnPropertyChanged: " + property_name);
-		UpdateView();
+		EditorLog.Trace("EditorView::OnClick");
+		if (m_Model) {
+			UpdateModel();
+		}
+	
+		return super.OnClick(w, x, y, button);
 	}
 	
 	
-	// relies on observable_collection being true. totally bypasses regular events 10x faster
-	void OnCollectionChanged(Class collection, NotifyCollectionChangedAction action, Param changed_params, string property_name)
+	// keeping this here if OnClick and OnChange dont work enough
+	/*
+	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
 	{
-		if (property_name != variable_name) return;
+		return true;
+		//return super.OnEvent(eventType, target, parameter0, parameter1);
+	}*/
+
+	
+	
+	// UI -> Model
+	void UpdateModel()
+	{
+		EditorLog.Trace("EditorView::UpdateModel");
+		if (!m_Model) return;
+	
+		string text;
+		switch (m_WidgetType) {
+			
+			case TextWidget: {
+				EditorLog.Warning("ViewModel cannot be updated for TextWidgets");
+				break;
+			}
+			
+			case MultilineEditBoxWidget: {
+				MultilineEditBoxWidget.Cast(m_LayoutRoot).GetText(text);
+				//SetModelVariable(text);
+				break;
+			}
+			
+			case EditBoxWidget: {
+				//SetModelVariable(EditBoxWidget.Cast(m_LayoutRoot).GetText());
+				break;
+			}
+			
+			case ButtonWidget: {
+				//SetModelVariable(ButtonWidget.Cast(m_LayoutRoot).GetState());
+				break;
+			}
+			
+			case CheckBoxWidget: {
+				//SetModelVariable(CheckBoxWidget.Cast(m_LayoutRoot).IsChecked());
+				break;
+			}
+			
+			case SliderWidget: {
+				//SetModelVariable(SliderWidget.Cast(m_LayoutRoot).GetCurrent());
+				break;
+			}
+			
+			case XComboBoxWidget: {
+
+				break;
+			}
+			
+			default: {
+				Error(string.Format("Unsupported Widget Type %1", m_WidgetType.ToString()));
+				break;
+			}	
+		}
+	}
+	
+	
+	// Model -> UI
+	void OnPropertyChanged(Class value) 
+	{
+		switch (value.Type()) {
+			
+			case TextWidgetData: {
+				TextWidgetData t = TextWidgetData.Cast(value);
+				Print(t);
+				TextWidget.Cast(m_LayoutRoot).SetText(t.Get());
+				break;
+			}
+			
+		}
+	}
+
+	
+	private void _OnPropertyChanged(ButtonWidgetData value)
+	{
+		ButtonWidget.Cast(m_LayoutRoot).SetState(value.Get());
+	}
+	/*
+	private void _OnPropertyChanged(CheckBoxWidgetData value)
+	{
+		CheckBoxWidget.Cast(m_LayoutRoot).SetChecked(value.Get());
+	}
+	
+	private void _OnPropertyChanged(SliderWidgetData value)
+	{
+		SliderWidget.Cast(m_LayoutRoot).SetCurrent(value.Get());
+	}*/
+
+	
+	void OnCollectionChanged(CollectionChangedEventArgs args)
+	{
+		if (args.param4 != variable_name) return;
+		
+		
+		Class collection = args.param1;
+		NotifyCollectionChangedAction action = args.param2;
+		Param changed_params = args.param3;
+		string property_name = args.param4;
+		
+		Print(string.Format("collection changed passed: %1, %2", collection.ToString(), property_name));
 		EditorLog.Trace("EditorView::OnCollectionChanged: " + property_name);
 		
 		switch (m_WidgetType) {
@@ -165,135 +274,6 @@ class EditorView extends ScriptedWidgetEventHandler
 		}
 	}
 	
-
-	
-	override bool OnChange(Widget w, int x, int y, bool finished)
-	{
-		EditorLog.Trace("EditorView::OnChange");
-		if (m_Model) {
-			UpdateModel();
-		}
-
-		return super.OnChange(w, x, y, finished);
-	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorView::OnClick");
-		if (m_Model) {
-			UpdateModel();
-		}
-	
-		return super.OnClick(w, x, y, button);
-	}
-	
-	
-	// keeping this here if OnClick and OnChange dont work enough
-	/*
-	override bool OnEvent(EventType eventType, Widget target, int parameter0, int parameter1)
-	{
-		return true;
-		//return super.OnEvent(eventType, target, parameter0, parameter1);
-	}*/
-
-	
-	
-	// UI -> Model
-	void UpdateModel()
-	{
-		EditorLog.Trace("EditorView::UpdateModel");
-		if (!m_Model) return;
-	
-		string text;
-		switch (m_WidgetType) {
-			
-			case TextWidget: {
-				EditorLog.Warning("ViewModel cannot be updated for TextWidgets");
-				break;
-			}
-			
-			case MultilineEditBoxWidget: {
-				MultilineEditBoxWidget.Cast(m_LayoutRoot).GetText(text);
-				SetModelVariable(text);
-				break;
-			}
-			
-			case EditBoxWidget: {
-				SetModelVariable(EditBoxWidget.Cast(m_LayoutRoot).GetText());
-				break;
-			}
-			
-			case ButtonWidget: {
-				SetModelVariable(ButtonWidget.Cast(m_LayoutRoot).GetState());
-				break;
-			}
-			
-			case CheckBoxWidget: {
-				SetModelVariable(CheckBoxWidget.Cast(m_LayoutRoot).IsChecked());
-				break;
-			}
-			
-			case SliderWidget: {
-				SetModelVariable(SliderWidget.Cast(m_LayoutRoot).GetCurrent());
-				break;
-			}
-			
-			case XComboBoxWidget: {
-	
-		
-	
-				break;
-			}
-			
-			default: {
-				Error(string.Format("Unsupported Widget Type %1", m_WidgetType.ToString()));
-				break;
-			}	
-		}
-	}
-	
-	// Model -> UI
-	void UpdateView()
-	{
-		//EditorLog.Trace("EditorView::UpdateView");
-		if (!m_Model) return;
-		
-
-		switch (m_WidgetType) {
-
-			case TextWidget:
-			case EditBoxWidget:
-			case MultilineEditBoxWidget: {
-				TextWidget.Cast(m_LayoutRoot).SetText(GetModelVariableString());
-				break;
-			}
-		
-			
-			case ButtonWidget: {
-				ButtonWidget.Cast(m_LayoutRoot).SetState(GetModelVariableBool());
-				break;
-			}
-			
-			case CheckBoxWidget: {
-				CheckBoxWidget.Cast(m_LayoutRoot).SetChecked(GetModelVariableBool());
-				break;
-			} 
-			
-			case SliderWidget: {
-				SliderWidget.Cast(m_LayoutRoot).SetCurrent(GetModelVariableFloat());
-				break;
-			}
-			
-			
-				
-			
-			default: {
-				Error(string.Format("Unsupported Widget Type %1", m_WidgetType.ToString()));
-				break;
-			}	
-		}
-	}
-	
 	
 	string GetModelVariableString()
 	{
@@ -344,11 +324,11 @@ class EditorView extends ScriptedWidgetEventHandler
 	}
 	
 	
-	
+	/*
 	void SetModelVariable(TextListboxWidgetData data)
 	{
 		EnScript.SetClassVar(m_Model, variable_name, variable_index, data);
-		m_Model.NotifyPropertyChanged(variable_name);
+		m_Model.NotifyPropertyChanged(data);
 	}
 	
 	void SetModelVariable(string text)
@@ -390,7 +370,7 @@ class EditorView extends ScriptedWidgetEventHandler
 	{
 		EnScript.SetClassVar(m_Model, variable_name, variable_index, value);
 		m_Model.NotifyPropertyChanged(variable_name);
-	}
+	}*/
 	
 	
 	void DebugPrint()
