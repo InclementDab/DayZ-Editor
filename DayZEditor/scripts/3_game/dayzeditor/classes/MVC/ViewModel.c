@@ -4,8 +4,9 @@ typedef ref array<ref EditorView> EditorViewSet;
 // Inherit this class, then put that class into ScriptClass for your View Model Widget
 class ViewModel: Managed
 {
-	// Just stored for debug
+	// Widget Data
 	protected Widget m_LayoutRoot;
+	protected Widget m_ViewModelWidget;
 	
 	// Hashed Variable Data
 	protected ref map<string, typename> m_ModelHashMap;
@@ -19,7 +20,8 @@ class ViewModel: Managed
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("ViewModel::OnWidgetScriptInit");	
-		m_LayoutRoot = w;
+		m_ViewModelWidget = w;
+		m_LayoutRoot = GetWidgetRoot(m_ViewModelWidget);
 		
 		m_ModelHashMap = new map<string, typename>();
 		m_ViewList = new map<string, ref EditorViewSet>();
@@ -117,7 +119,7 @@ class ViewModel: Managed
 	
 	void DebugPrint()
 	{
-		EditorLog.Debug("ViewModel::DebugPrint: " + m_LayoutRoot.GetName());
+		EditorLog.Debug("ViewModel::DebugPrint: " + m_ViewModelWidget.GetName());
 		foreach (string name, ref EditorViewSet view_set: m_ViewList)
 			foreach (EditorView view: view_set)
 				view.DebugPrint();
