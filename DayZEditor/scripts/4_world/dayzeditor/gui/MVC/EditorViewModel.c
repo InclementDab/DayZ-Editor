@@ -12,10 +12,8 @@ class EditorHudViewModel: ViewModel
 	TextWidgetData DebugText4;
 	TextWidgetData DebugText5;
 	
-	bool BuildingSelect;
-	bool VehicleSelect;
-	bool EntitySelect;
-	bool HumanSelect;
+	ref array<ButtonWidgetData> CategorySelectButtons;
+
 	
 	bool LeftbarHide;
 	bool RightbarHide;
@@ -42,6 +40,8 @@ class EditorHudViewModel: ViewModel
 		LeftbarSpacer 				= new WrapSpacerWidgetData("LeftbarSpacer");
 		RightbarSpacer 				= new WrapSpacerWidgetData("RightbarSpacer");
 		BrushTypeBox				= new XComboBoxWidgetData("BrushTypeBox");
+		
+		CategorySelectButtons 		= new array<ButtonWidgetData>();
 		
 		// Reload Placeables
 		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
@@ -149,29 +149,24 @@ class EditorHudViewModel: ViewModel
 	{
 		switch (property_name) {
 			
-			case "BuildingSelect": {
-				VehicleSelect = false; EntitySelect = false; HumanSelect = false;
-				UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
+			case "CategorySelectButtons": {
+				foreach (bool b: CategorySelectButtons) {
+					b = false;
+				}
+				
 				break;
 			}
 			
-			case "VehicleSelect": {
-				BuildingSelect = false; EntitySelect = false; HumanSelect = false;
-				UpdatePlaceableItems(PlaceableObjectCategory.VEHICLE);
-				break;
-			}
+		}
+		
+		super.OnPropertyChanged(property_name);
+	}
+	
+	override bool OnClick(Widget w, int x, int y, bool button)
+	{
+		switch (w.GetName()) {
 			
-			case "EntitySelect": {
-				BuildingSelect = false; VehicleSelect = false; HumanSelect = false;
-				UpdatePlaceableItems(PlaceableObjectCategory.ENTITY);
-				break;
-			}
 			
-			case "HumanSelect": {
-				BuildingSelect = false; VehicleSelect = false; EntitySelect = false;
-				UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
-				break;
-			}
 			
 			case "BrushRadius": {
 				EditorBrush.SetRadius(BrushRadius);
@@ -184,7 +179,7 @@ class EditorHudViewModel: ViewModel
 			}
 		}
 		
-		super.OnPropertyChanged(property_name);
+		return true;
 	}
 
 }

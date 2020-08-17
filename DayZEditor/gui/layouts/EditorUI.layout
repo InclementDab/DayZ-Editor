@@ -348,6 +348,7 @@ FrameWidgetClass EditorMainFrame {
            {
             ScriptParamsClass {
              view_model_widget "ViewModelFrame"
+             variable_name "CategorySelectButtons"
             }
            }
           }
@@ -381,6 +382,8 @@ FrameWidgetClass EditorMainFrame {
            {
             ScriptParamsClass {
              view_model_widget "ViewModelFrame"
+             variable_name "CategorySelectButtons"
+             variable_index 1
             }
            }
           }
@@ -416,6 +419,8 @@ FrameWidgetClass EditorMainFrame {
            {
             ScriptParamsClass {
              view_model_widget "ViewModelFrame"
+             variable_name "CategorySelectButtons"
+             variable_index 2
             }
            }
           }
@@ -449,6 +454,8 @@ FrameWidgetClass EditorMainFrame {
            {
             ScriptParamsClass {
              view_model_widget "ViewModelFrame"
+             variable_name "CategorySelectButtons"
+             variable_index 3
             }
            }
           }

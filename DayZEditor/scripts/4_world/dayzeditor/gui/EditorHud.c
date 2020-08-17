@@ -6,19 +6,21 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 	protected Widget m_LeftbarFrame;
 	protected Widget m_RightbarFrame;
 	
-	
+	protected EditorHudViewModel m_ViewModel;
 	
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("EditorHudHandler::OnWidgetScriptInit");
 		m_LayoutRoot = w;
+		m_LayoutRoot.SetHandler(this);
 				
 		m_LeftbarFrame			= m_LayoutRoot.FindAnyWidget("LeftbarFrame");
 		m_RightbarFrame			= m_LayoutRoot.FindAnyWidget("RightbarFrame");
 		
-		//GetEditorHudViewModel().PropertyChanged.Insert(OnPropertyChanged);
-
-		m_LayoutRoot.SetHandler(this);
+		m_ViewModel 			= GetEditorHudViewModel();
+		
+		// Set default
+		m_ViewModel.UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
 	}
 	
 
@@ -44,13 +46,39 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
+		EditorLog.Trace("EditorHudHandler::OnClick " + w.GetName());
 		if (button == 0) {
 			
 			
 			switch (w.GetName()) {
 				
 				case "LeftbarHide": {
-					
+					ShowLeftBar(m_ViewModel.LeftbarHide);					
+					break;
+				}
+				
+				case "RightbarHide": {
+					ShowRightBar(m_ViewModel.RightbarHide);
+					break;
+				}
+				
+				case "BuildingSelect": {
+					m_ViewModel.UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
+					break;
+				}
+				
+				case "VehicleSelect": {
+					m_ViewModel.UpdatePlaceableItems(PlaceableObjectCategory.VEHICLE);
+					break;
+				}
+				
+				case "EntitySelect": {
+					m_ViewModel.UpdatePlaceableItems(PlaceableObjectCategory.ENTITY);
+					break;
+				}
+				
+				case "HumanSelect": {
+					m_ViewModel.UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
 					break;
 				}
 				
@@ -62,27 +90,15 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 		return super.OnClick(w, x, y, button);
 	}
 
-	void OnPropertyChanged(string property_name)
-	{
-		EditorLog.Trace("EditorHudHandler::OnPropertyChanged");
-		switch (property_name) {
-			
-			case "LeftbarHide": {
-				ShowLeftBar(GetEditorHudViewModel().LeftbarHide);
-				break;
-			}
-			
-		}
-	}
 	
 	void ShowLeftBar(bool state)
 	{
-		m_LeftbarFrame.SetPos(-300 * state, 0);
+		m_LeftbarFrame.SetPos(-300 * state, 32);
 	}
 	
 	void ShowRightBar(bool state)
 	{
-		m_RightbarFrame.SetPos(-300 * state, 48);
+		m_RightbarFrame.SetPos(-300 * state, 32);
 	}
 }
 

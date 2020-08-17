@@ -387,7 +387,7 @@ class EditorClientModule: JMModuleBase
 	// Call to clear selection
 	void ClearSelection()
 	{
-		Print("Editor::ClearSelection");		
+		EditorLog.Trace("Editor::ClearSelection");		
 		foreach (EditorObject editor_object: m_SelectedObjects)
 			DeselectObject(editor_object);
 	}
@@ -395,8 +395,7 @@ class EditorClientModule: JMModuleBase
 	
 	// Call to enable / disable editor
 	void SetActive(bool active)
-	{
-				
+	{	
 		if (m_Camera == null) {
 
 			EditorLog.Info("Initializing Camera");
