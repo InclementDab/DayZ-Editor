@@ -177,21 +177,21 @@ class EditorView: ScriptedWidgetEventHandler
 			case WrapSpacerWidget: {
 				WrapSpacerWidgetData _WrapSpacerWidgetData;
 				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _WrapSpacerWidgetData);
-				_WrapSpacerWidgetData.Reload(WrapSpacerWidget.Cast(m_LayoutRoot));
+				_WrapSpacerWidgetData.ReloadData(WrapSpacerWidget.Cast(m_LayoutRoot));
 				break;
 			}
 			
 			case TextListboxWidget: {
 				TextListboxWidgetData _TextListboxWidgetData;
 				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextListboxWidgetData);
-				_TextListboxWidgetData.Reload(TextListboxWidget.Cast(m_LayoutRoot));
+				_TextListboxWidgetData.ReloadData(TextListboxWidget.Cast(m_LayoutRoot));
 				break;
 			}
 			
 			case XComboBoxWidget: {
 				XComboBoxWidgetData _XComboBoxWidgetData;
 				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _XComboBoxWidgetData);
-				_XComboBoxWidgetData.Reload(XComboBoxWidget.Cast(m_LayoutRoot));
+				_XComboBoxWidgetData.ReloadData(XComboBoxWidget.Cast(m_LayoutRoot));
 				break;
 			}
 			
@@ -211,116 +211,31 @@ class EditorView: ScriptedWidgetEventHandler
 				
 		Observable collection = args.param1;
 		NotifyCollectionChangedAction action = args.param2;
-		Param changed_params = args.param3;
-				
-		switch (m_LayoutRoot.Type()) {
-			
-			
-			case WrapSpacerWidget: {
-				
-				WrapSpacerWidgetData wrap_data = WrapSpacerWidgetData.Cast(collection);
-				if (wrap_data == null) {
-					Error("WrapSpacerWidget: Wrong Type!");
-					return;
-				}
-				
-				switch (action) {
-					case NotifyCollectionChangedAction.Add: {
-						wrap_data.Add(m_LayoutRoot, changed_params);
-						break;
-					}
-					
-					case NotifyCollectionChangedAction.Remove: {
-						wrap_data.Remove(m_LayoutRoot, changed_params);
-						break;
-					}
-					
-					case NotifyCollectionChangedAction.Clear: {
-						wrap_data.Clear(m_LayoutRoot);
-						break;
-					}
-					
-					default: {
-						Error("OnCollectionChanged: Not Implemented Exception!");
-					}
-				}
-				
-				break;
-			}
-			
-
-			case TextListboxWidget: {
-				
-				TextListboxWidgetData listbox_data = TextListboxWidgetData.Cast(collection);				
-				if (listbox_data == null) {
-					Error("TextListboxWidget: Wrong Type!");
-					return;
-				}
-				
-				switch (action) {
-					case NotifyCollectionChangedAction.Add: {
-						listbox_data.Add(m_LayoutRoot, changed_params);
-						break;
-					}
-					
-					case NotifyCollectionChangedAction.Remove: {
-						listbox_data.Remove(m_LayoutRoot);
-						break;
-					}
-					
-					case NotifyCollectionChangedAction.Clear: {
-						listbox_data.Clear(m_LayoutRoot);
-						break;
-					}
-					
-					default: {
-						Error("OnCollectionChanged: Not Implemented Exception!");
-					}
-				}
+		ref Param changed_params = args.param3;
 		
+		Print(collection);
+		IWidgetData widget_data_interface(collection);
+		
+		switch (action) {
+			case NotifyCollectionChangedAction.Add: {
+				widget_data_interface.Add(m_LayoutRoot, changed_params);
 				break;
 			}
 			
-			
-			case XComboBoxWidget: {
-								
-				XComboBoxWidgetData combo_box_data = XComboBoxWidgetData.Cast(collection);				
-				if (combo_box_data == null) {
-					Error("XComboBoxWidgetData: Wrong Type!");
-					return;
-				}
-				
-				switch (action) {
-					case NotifyCollectionChangedAction.Add: {
-						combo_box_data.Add(m_LayoutRoot, changed_params);
-						break;
-					}
-					
-					case NotifyCollectionChangedAction.Remove: {
-						combo_box_data.Remove(m_LayoutRoot);
-						break;
-					}
-					
-					case NotifyCollectionChangedAction.Clear: {
-						combo_box_data.Clear(m_LayoutRoot);
-						break;
-					}
-					
-					default: {
-						Error("OnCollectionChanged: Not Implemented Exception!");
-					}
-				}
-				
-				
+			case NotifyCollectionChangedAction.Remove: {
+				widget_data_interface.Remove(m_LayoutRoot, changed_params);
 				break;
 			}
 			
+			case NotifyCollectionChangedAction.Clear: {
+				widget_data_interface.Clear(m_LayoutRoot);
+				break;
+			}
 			
 			default: {
-				Error("OnCollectionChanged: Invalid Widget Type");
+				Error("OnCollectionChanged: Not Implemented Exception!");
 			}
-			
-		}
+		}	
 	}
 	
 	

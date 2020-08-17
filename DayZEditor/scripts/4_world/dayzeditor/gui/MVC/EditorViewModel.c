@@ -70,7 +70,6 @@ class EditorHudViewModel: ViewModel
 	void SetBrushTypes(EditorBrushDataSet brush_types)
 	{
 		EditorLog.Trace("EditorHudViewModel::SetBrushTypes");
-		ClearBrushBox();
 		m_EditorBrushTypes = brush_types;
 
 		foreach (EditorBrushData brush: m_EditorBrushTypes)
@@ -159,12 +158,8 @@ class EditorHudViewModel: ViewModel
 		BrushTypeBox.Clear();
 	}
 	
-	ref map<int, string> m_TempBrushDir = new map<int, string>();
-	private int tempb = 0;
 	void InsertBrush(string name)
 	{
-		m_TempBrushDir.Insert(tempb, name);
-		tempb++;
 		BrushTypeBox.Insert(name);
 	}
 	

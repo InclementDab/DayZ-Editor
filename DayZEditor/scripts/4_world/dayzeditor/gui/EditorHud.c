@@ -2,9 +2,11 @@
 
 class EditorHudHandler: ScriptedWidgetEventHandler
 {
-	protected Widget m_LayoutRoot;
+	protected Widget m_LayoutRoot;	
 	protected Widget m_LeftbarFrame;
 	protected Widget m_RightbarFrame;
+	
+	
 	
 	void OnWidgetScriptInit(Widget w)
 	{
@@ -15,9 +17,6 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 		m_RightbarFrame			= m_LayoutRoot.FindAnyWidget("RightbarFrame");
 		
 		//GetEditorHudViewModel().PropertyChanged.Insert(OnPropertyChanged);
-		
-		// Load PlaceableObjects
-		// This is the last thing to initialize on the UI
 
 		m_LayoutRoot.SetHandler(this);
 	}
@@ -93,6 +92,7 @@ class EditorHud: Hud
 	
 	protected Widget m_LayoutRoot;
 
+	Widget GetRoot() { return m_LayoutRoot; }
 	
 	// Misc get ridda this shit too
 	protected Widget 			m_EditorMapContainer;
