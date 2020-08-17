@@ -151,12 +151,11 @@ class EditorView extends ScriptedWidgetEventHandler
 	// Model -> UI
 	void OnPropertyChanged(Class value) 
 	{
-		switch (value.Type()) {
+
+		switch (m_LayoutRoot.Type()) {
 			
-			case TextWidgetData: {
-				TextWidgetData t = TextWidgetData.Cast(value);
-				Print(t);
-				TextWidget.Cast(m_LayoutRoot).SetText(t.Get());
+			case TextWidget: {
+				TextWidget.Cast(m_LayoutRoot).SetText(TextWidgetData.Cast(value).Get());
 				break;
 			}
 			

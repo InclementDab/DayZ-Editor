@@ -28,7 +28,7 @@ class ViewModel: Managed
 			m_ModelHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));		
 		
 		NotifyOnCollectionChanged(OnCollectionChanged);
-		
+		NotifyOnPropertyChanged(OnPropertyChanged);
 	}
 	
 	void InsertView(ref EditorView view)
@@ -36,31 +36,21 @@ class ViewModel: Managed
 		string variable_name = view.GetVariableName();
 		EditorLog.Trace("ViewModel::InsertView: " + variable_name);
 		m_ViewList.Insert(variable_name, view);
-		
-		NotifyOnPropertyChanged(view.OnPropertyChanged);
 	}
 	
-	/*
-	protected void OnPropertyChanged(Class property)
+	
+	protected void OnPropertyChanged(PropertyChangedEventArgs args)
 	{
-		EditorLog.Trace(string.Format("ViewModel::NotifyPropertyChanged: %1", property.ClassName()));
+		EditorLog.Trace(string.Format("ViewModel::NotifyPropertyChanged: %1", args.param1));
 		
-		EditorView view = m_ViewList.Get(property_name);
+		EditorView view = m_ViewList.Get(args.param1);
 		if (view == null) {
-			Error(string.Format("Invalid Property Name: %1", property_name));
+			Error(string.Format("Invalid Property Name: %1", args.param1));
 			return;
 		}
 		
-		typename t = GetVariableType(property_name);
-		
-		
-		Class c = new Class;
-		
-		EnScript.GetClassVar(this, property_name, 0, c);
-		Print(c);
-		
-		view.OnPropertyChanged(c);
-	}*/
+		view.OnPropertyChanged(args.param2);
+	}
 	
 	
 	
@@ -92,9 +82,9 @@ class ViewModel: Managed
 
 // property_name = name of variable being changed
 ref ScriptInvoker PropertyChanged = new ScriptInvoker();
-void NotifyPropertyChanged(Class property)
+void NotifyPropertyChanged(PropertyChangedEventArgs args)
 {
-	PropertyChanged.Invoke(property);
+	PropertyChanged.Invoke(args);
 }
 
 

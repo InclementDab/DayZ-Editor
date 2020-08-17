@@ -1,13 +1,18 @@
 
-
 class WidgetData<Class T1>
 {
 	T1 value;
+	string name;
+	
+	void WidgetData(string _name)
+	{
+		name = _name;
+	}
 	
 	void Set(T1 _value)
 	{
 		value = _value;
-		NotifyPropertyChanged(this);
+		NotifyPropertyChanged(new Param2<string, Class>(name, this));
 	}
 	
 	T1 Get()
@@ -15,6 +20,8 @@ class WidgetData<Class T1>
 		return value;
 	}
 }
+
+
 
 
 
@@ -91,11 +98,6 @@ enum NotifyCollectionChangedAction {
 	Clear
 };
 
-class EventArgs
-{
-	
-}
-
 
 // Event Args for Collection Changed
 // 0: Observable that was changed
@@ -109,25 +111,5 @@ typedef Param4<Observable, int, Param2<Class, Class>, string> CollectionChangedE
 // Event Args for Property Changed
 // 0: Name of property changed
 // 1: New property value
-//typedef Param2<string, Class> PropertyChangedEventArgs;
-
-class PropertyChangedEventArgs<Class T1>: EventArgs
-{
-	private T1 m_Value;
-	private string m_Name;
-	
-	void PropertyChangedEventArgs(string name, T1 value)
-	{
-		m_Name = name;
-		m_Value = value;
-	}
-	
-	string GetName() { return m_Name; }
-	
-	T1 GetValue() { return m_Value; }
-	
-	
-	
-}
-
+typedef Param2<string, Class> PropertyChangedEventArgs;
 

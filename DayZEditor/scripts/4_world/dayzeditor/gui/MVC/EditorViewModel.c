@@ -1,22 +1,4 @@
 
-class ObservableType<Class T1>: Observable
-{
-	private T1 _value;
-	
-	void Set(T1 value)
-	{
-		_value = value;
-		NotifyPropertyChanged();
-	}
-	
-	T1 Get()
-	{
-		return _value;
-	}
-}
-
-
-
 static ref EditorHudViewModel m_EditorHudViewModel;
 EditorHudViewModel GetEditorHudViewModel() { return m_EditorHudViewModel; }
 
@@ -25,11 +7,11 @@ class EditorHudViewModel: ViewModel
 {
 	private ref EditorPlaceableListItemSet m_PlaceableObjects;
 
-	ref TextWidgetData DebugText1 = new TextWidgetData;
-	string DebugText2;
-	string DebugText3;
-	string DebugText4;
-	string DebugText5;
+	ref TextWidgetData DebugText1 = new TextWidgetData("DebugText1");
+	ref TextWidgetData DebugText2 = new TextWidgetData("DebugText2");
+	ref TextWidgetData DebugText3 = new TextWidgetData("DebugText3");
+	ref TextWidgetData DebugText4 = new TextWidgetData("DebugText4");
+	ref TextWidgetData DebugText5 = new TextWidgetData("DebugText5");
 	
 	bool BuildingSelect;
 	bool VehicleSelect;
