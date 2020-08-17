@@ -3,55 +3,139 @@
 static const float ALPHA_ON_SHOW = 1;
 static const float ALPHA_ON_HIDE = 0.25;
 
-class EditorMapMarker: UILinkedObject
-{	
-	private MapWidget m_MapWidget;
-	MapWidget GetMapWidget() { return m_MapWidget; }
-	
-	void EditorMapMarker()
+
+class EditorMarker: ScriptedWidgetEventHandler
+{
+	protected Widget m_LayoutRoot;
+	Widget GetLayoutRoot() { return m_LayoutRoot; }
+
+	void EditorMarker()
 	{
-		Print("EditorMapMarker");
+		EditorLog.Trace("EditorMarker");
+
+		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMarker.layout");
+		m_LayoutRoot.SetHandler(this);
 		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
-	void ~EditorMapMarker()
+	void ~EditorMarker()
 	{
-		Print("~EditorMapMarker");
+		EditorLog.Trace("~EditorMarker");
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		m_LayoutRoot.Unlink();
 	}
 	
 	
-	override void Update()
+	void Update() 
 	{
-		m_MapWidget = MapWidget.Cast(m_Root.GetParent());
-		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());
-		
-		// -5 for cursor offset
-		// -10 to put cursor on center
-		m_Root.SetPos(pos[0] - 15, pos[1] - 15);
-		
-		if (m_EditorObject.IsSelected() || MouseInside) 
-			m_Root.SetAlpha(ALPHA_ON_SHOW);
-		else 
-			m_Root.SetAlpha(ALPHA_ON_HIDE);
 
 	}
 	
-	private bool MouseInside = false;
+	void SetPos(float x, float y) 
+	{
+		// Offset to center of marker
+		x -= 15; y -= 15;
+		m_LayoutRoot.SetPos(x, y);
+		m_LayoutRoot.Update();
+	}
+	
+	void GetPos(out float x, out float y)
+	{
+		m_LayoutRoot.GetPos(x, y);
+	}
+	
+	void Show(bool show)
+	{
+		m_LayoutRoot.Show(show);
+	}
+	
+	protected bool IsMouseInside(int c_x, int c_y)
+	{
+		float x, y, w, h;
+		// Cursor sucks
+		c_x -= 5; c_y -= 5;
+		m_LayoutRoot.GetPos(x, y);
+		m_LayoutRoot.GetSize(w, h);
+		return (c_x < x + h && c_x > x - h) && (c_y < y + h && c_y > y - h);
+	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		// you should set cursor here its smart smile :)
-		Print("EditorMapMarker::OnMouseEnter");
-		MouseInside = true;
+		EditorLog.Trace("EditorMarker::OnMouseEnter");
+		// set cursor here?
 		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		Print("EditorMapMarker::OnMouseLeave");
-		MouseInside = false;
+		EditorLog.Trace("EditorMarker::OnMouseLeave");
 		return true;
 	}
+
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorMarker::OnDrag");
+		return true;
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
+	{
+		EditorLog.Trace("EditorMarker::OnDrop");
+		SetPos(x, y);
+		
+		return true;
+	}
+
+}
+
+class EditorObjectMarker: EditorMarker
+{	
+	protected EditorObject m_EditorObject;
+	EditorObject GetEditorObject() { return m_EditorObject; }
+	
+	void EditorObjectMarker(EditorObject editor_object)
+	{
+		EditorLog.Trace("EditorObjectMarker");
+		m_EditorObject = editor_object;
+	}
+	
+	override void Update()
+	{
+		int x, y;
+		GetCursorPos(x, y);
+		if (m_EditorObject.IsSelected() || IsMouseInside(x, y)) 
+			m_LayoutRoot.SetAlpha(ALPHA_ON_SHOW);
+		else 
+			m_LayoutRoot.SetAlpha(ALPHA_ON_HIDE);
+		
+		super.Update();
+	}
+}
+
+
+class EditorObjectMapMarker: EditorObjectMarker
+{		
+	private MapWidget m_MapWidget;
+	MapWidget GetMapWidget() { return m_MapWidget; }
+	
+	
+	override void Update()
+	{
+		m_MapWidget = MapWidget.Cast(m_LayoutRoot.GetParent());
+		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());
+		
+		// -5 for cursor offset
+		// -10 to put cursor on center
+	
+		
+		
+
+		super.Update();
+	}
+	
+		
+
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
@@ -93,38 +177,11 @@ class EditorMapMarker: UILinkedObject
 		//EditorEvents.DropInvoke(this, m_EditorObject);
 		return true;
 	}
-	
-	override bool OnFocus(Widget w, int x, int y)
-	{
-		Print("EditorMapMarker::OnFocus");
-		GetEditor().SelectObject(m_EditorObject);
-		return true;
-	}
-	
-	override bool OnFocusLost(Widget w, int x, int y)
-	{
-		Print("EditorMapMarker::OnFocusLost");
-		GetEditor().DeselectObject(m_EditorObject);
-		return true;
-	}
 }
 
-class EditorObjectMarker: UILinkedObject
+class EditorObjectWorldMarker: EditorObjectMarker
 {
 
-	ref EditorObjectPropertiesDialog	m_EditorObjectPropertiesWindow = null;
-	ref UILinkedObject					m_EditorObjectContextMenu = null;
-	
-	protected bool override_show = true;
-	private bool MouseInside = false;
-	
-	void ~EditorObjectMarker()
-	{
-		EditorLog.Trace("~EditorObjectMarker");
-		delete m_EditorObjectPropertiesWindow;
-		delete m_EditorObjectContextMenu;
-	}
-		
 	override void Update()
 	{
 		vector position;
@@ -139,44 +196,14 @@ class EditorObjectMarker: UILinkedObject
 			
 		} else position = m_EditorObject.GetBottomCenter();
 	
+		vector screen_pos = GetGame().GetScreenPos(position);
 		
-		vector screenpos = GetGame().GetScreenPos(position);
-
-		int screen_x, screen_y;
-		GetScreenSize(screen_x, screen_y);
-		m_Root.SetPos(screenpos[0] - 15, screenpos[1] - 15);
+		SetPos(screen_pos[0], screen_pos[1]);
 		
-		if (override_show) {
-			m_Root.Show(screenpos[2] > 0 && screenpos[2] < 1000);			
-		}
-		
-		if (m_EditorObject.IsSelected() || MouseInside) {
-			m_Root.SetAlpha(ALPHA_ON_SHOW);
-		} else {
-			m_Root.SetAlpha(ALPHA_ON_HIDE);
-		}
-		
-		
-		m_Root.Update();
+		super.Update();
 	}
 	
 	
-	
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		// you should set cursor here its smart smile :)
-		EditorLog.Trace("EditorMarker::OnMouseEnter");
-		if (GetEditor().IsPlacing()) return false;
-		MouseInside = true;
-		return true;
-	}
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		EditorLog.Trace("EditorMarker::OnMouseLeave");
-		MouseInside = false;
-		return true;
-	}
 	
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
@@ -250,12 +277,7 @@ class EditorObjectMarker: UILinkedObject
 		*/
 		return true;
 	}
-	
-	void Show(bool show)
-	{
-		override_show = show;
-		m_Root.Show(show);
-	}
+
 	
 
 }

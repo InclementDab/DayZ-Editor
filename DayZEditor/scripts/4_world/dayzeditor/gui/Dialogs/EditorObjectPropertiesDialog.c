@@ -1,40 +1,41 @@
 
 
 
-class EditorObjectPropertiesDialog: UILinkedObject
+class EditorObjectPropertiesDialog: ScriptedWidgetEventHandler
 {
+	protected Widget m_LayoutRoot;
+	Widget GetLayoutRoot() { return m_LayoutRoot; }
+	
+	protected EditorObject m_EditorObject;
+	EditorObject GetEditorObject() { return m_EditorObject; }
 	
 	protected ButtonWidget m_ApplyButton;
 	protected ButtonWidget m_CancelButton;
-			
 	protected TextWidget x_pos;
-	
 	protected EditorObject m_Object;
 			
-	void ~EditorObjectPropertiesDialog()
+	void EditorObjectPropertiesDialog(EditorObject editor_object)
 	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		EditorLog.Trace("EditorObjectPropertiesDialog");
+		m_EditorObject = editor_object;
+		
+		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorObjectProperties.layout");
+		m_LayoutRoot.SetHandler(this);
+		
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
-	
-	protected override void OnWidgetScriptInit(Widget w)
+	void ~EditorObjectPropertiesDialog()
 	{
-		Print("EditorObjectMarkerHandler::OnWidgetScriptInit");
-		super.OnWidgetScriptInit(w);
-		
-		x_pos = TextWidget.Cast(m_Root.FindAnyWidget("pos_x"));
-				
-		m_ApplyButton 		= ButtonWidget.Cast(m_Root.FindAnyWidget("SelectButton"));
-		m_CancelButton 		= ButtonWidget.Cast(m_Root.FindAnyWidget("CloseButton"));
+		EditorLog.Trace("~EditorObjectPropertiesDialog");
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 	}
 	
 
 	
-	override void Update()
+	void Update()
 	{
-		
-		vector position = m_EditorObject.GetPosition();
-		x_pos.SetText(position[0].ToString());
 		
 	}
 	
@@ -50,8 +51,8 @@ class EditorObjectPropertiesDialog: UILinkedObject
 		}
 		if (w == m_CancelButton) {
 			
-			m_Root.Show(false);
-			m_Root.Update();
+			m_LayoutRoot.Show(false);
+			m_LayoutRoot.Update();
 			return true;
 		}
 		return false;

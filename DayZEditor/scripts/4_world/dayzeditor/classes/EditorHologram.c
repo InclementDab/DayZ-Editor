@@ -3,7 +3,7 @@
 class EditorHologram
 {
 	protected Widget 				m_EditorMapMarkerWidget;
-	protected EditorMapMarker 		m_EditorMapMarker;
+	protected EditorObjectMapMarker 		m_EditorMapMarker;
 	
 	private MapWidget				m_MapWidget;
 	

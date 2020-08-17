@@ -247,7 +247,7 @@ FrameWidgetClass EditorProperties {
                  }
                 }
                 ImageWidgetClass collapse_image {
-                 visible 1
+                 visible 0
                  clipchildren 0
                  inheritalpha 1
                  ignorepointer 1

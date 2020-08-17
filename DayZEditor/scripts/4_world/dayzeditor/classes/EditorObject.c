@@ -24,9 +24,9 @@ class EditorObject
 	// Mod Data
 	private ModStructure					m_ModStructure;
 	
-	private ref EditorMapMarker				m_EditorMapMarker;
-	private ref EditorPlacedListItem 		m_PlacedListItem;
-	private ref EditorObjectMarker			m_EditorObjectMarker;
+	private ref EditorObjectMapMarker		m_EditorObjectMapMarker;
+	private ref EditorObjectWorldMarker		m_EditorObjectWorldMarker;
+	private ref EditorPlacedListItem 		m_EditorPlacedListItem;
 	
 	protected EntityAI		m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
@@ -64,28 +64,23 @@ class EditorObject
 		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
 			CreateBoundingBox();
 		}	
-/*
+
 		// Map marker
 		if ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
-			m_EditorMapMarker = new EditorMapMarker();
-			m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout");
-			m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
-			m_EditorMapMarker.SetObject(this);
-			GetEditorHudViewModel().InsertMapObject(m_EditorMapMarkerWidget);
+			//m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
+			//GetEditorHudViewModel().InsertMapMarker(m_EditorObjectMapMarker);
+
 		}	
 		
 		// World Object base marker
 		if ((m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER) {
-			m_EditorObjectMarker = new EditorObjectMarker();
-			m_EditorObjectMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorObjectMarker.layout");
-			m_EditorObjectMarkerWidget.GetScript(m_EditorObjectMarker);
-			m_EditorObjectMarker.SetObject(this);
+			m_EditorObjectWorldMarker = new EditorObjectWorldMarker(this);
 		}
-		*/	
+		
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
-			m_PlacedListItem = new EditorPlacedListItem(this);
-			GetEditorHudViewModel().InsertPlacedObject(m_PlacedListItem);
+			m_EditorPlacedListItem = new EditorPlacedListItem(this);
+			GetEditorHudViewModel().InsertPlacedObject(m_EditorPlacedListItem);
 		}
 		
 		
@@ -98,9 +93,9 @@ class EditorObject
 		m_Data.Position = GetPosition();
 		m_Data.Orientation = GetOrientation();
 		
-		delete m_EditorObjectMarker; 
-		delete m_PlacedListItem;
-		delete m_EditorMapMarker;
+		delete m_EditorObjectWorldMarker; 
+		delete m_EditorPlacedListItem;
+		delete m_EditorObjectMapMarker;
 	
 		
 		for (int i = 0; i < 12; i++)
@@ -385,24 +380,9 @@ class EditorObject
 	bool ListItemEnabled() { return (m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM; }
 	
 	bool ObjectMarkerEnabled() { return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
-	void GetObjectMarkerPos(out float x, out float y)
-	{
-		if (ObjectMarkerEnabled()) {
-			m_EditorObjectMarker.GetPos(x, y);
-		} else {
-			x = -1; y = -1;
-		}
-	}
 	
 	bool MapMarkerEnabled() { return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
-	void GetMapMarkerPos(out float x, out float y)
-	{
-		if (MapMarkerEnabled()) {
-			m_EditorMapMarker.GetPos(x, y);
-		} else {
-			x = -1; y = -1;
-		}
-	}
+
 	
 	bool BoundingBoxEnabled() { return (m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; }
 	

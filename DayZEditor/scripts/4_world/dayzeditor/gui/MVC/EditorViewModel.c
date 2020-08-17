@@ -106,9 +106,9 @@ class EditorHudViewModel: ViewModel
 		RightbarSpacer.Insert(target.GetRoot());
 	}
 	
-	void InsertMapObject(Widget map_marker)
+	void InsertMapMarker(EditorMarker map_marker)
 	{
-		Print("EditorHudViewModel::InsertMapObject " + map_marker.GetName());
+		Print("EditorHudViewModel::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
 		//m_EditorMapWidget.AddChild(map_marker);
 	}
 	
@@ -140,7 +140,6 @@ class EditorHudViewModel: ViewModel
 			Widget list_item = LeftbarSpacer.Get(i);
 			EditorPlaceableListItem item;
 			list_item.GetUserData(item);
-			Print(item);
 			list_item.Show(item.GetData().GetCategory() == category);
 		}
 		
