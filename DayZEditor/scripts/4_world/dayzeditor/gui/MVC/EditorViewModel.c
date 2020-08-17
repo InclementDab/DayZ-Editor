@@ -1,4 +1,14 @@
 
+class ObservableType<Class T1>
+{
+	private T1 _value;
+	
+	void Set(T1 value)
+	{
+		_value = value;
+		
+	}
+}
 
 
 
@@ -202,6 +212,8 @@ class EditorHudViewModel: ViewModelBase
 				break;
 			}
 		}
+		
+		super.NotifyPropertyChanged(property_name);
 	}
 
 }

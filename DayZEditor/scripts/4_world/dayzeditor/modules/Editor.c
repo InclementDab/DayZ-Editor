@@ -31,6 +31,7 @@ class EditorClientModule: JMModuleBase
 	static vector 							CurrentMousePosition;
 	
 	private bool m_Active = false;
+	bool IsActive() { return m_Active; }
 
 	/* UI Stuff */
 	EditorHud GetEditorHud() { return m_EditorHud; }
@@ -56,8 +57,7 @@ class EditorClientModule: JMModuleBase
 	ref EditorObjectDataSet	 GetSessionCache() { return m_SessionCache; }
 		
 	// Public Members
-	
-	
+
 	void EditorClientModule()
 	{
 		EditorLog.Info("Editor");
@@ -92,12 +92,18 @@ class EditorClientModule: JMModuleBase
 		EditorEvents.OnObjectDeleted.Insert(OnObjectDeleted);
 		
 		// Keybinds
-		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive", true));
-		RegisterBinding(new JMModuleBinding("OnEditorToggleCursor", "EditorToggleCursor", true));
+		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
+		RegisterBinding(new JMModuleBinding("OnEditorToggleCursor", "EditorToggleCursor"));
+		RegisterBinding(new JMModuleBinding("OnEditorToggleUI", "EditorToggleUI"));
+		
+		RegisterBinding(new JMModuleBinding("OnEditorToggleMap", "EditorToggleMap"));
 		
 	}
 	
 	private bool exit_condition = false;
+	private float avg_timeslice;
+	private int timeslice_count;
+	
 	override void OnUpdate(float timeslice)
 	{
 		if (m_Camera != null && !IsMissionOffline()) {
@@ -127,6 +133,13 @@ class EditorClientModule: JMModuleBase
 				ObjectUnderCursor = null;
 			}
 		}
+		
+		timeslice_count++;
+		
+		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
+		
+		GetEditorHudViewModel().DebugText1 = avg_timeslice.ToString();
+		GetEditorHudViewModel().NotifyPropertyChanged("DebugText1");
 	}
 	
 	override bool IsServer() { return false; }	
@@ -176,9 +189,16 @@ class EditorClientModule: JMModuleBase
 	
 	
 	// Inputs
+	
+	private bool ShouldProcessInput(UAInput input)
+	{
+		// Check if LocalPress, Check if LControl is pressed, Check if game is focused
+		return (input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
+	}
+	
 	private void OnEditorToggleActive(UAInput input)
 	{
-		if (!input.LocalPress()) return; 
+		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleActive");
 		m_Active = !m_Active;
 		SetActive(m_Active);
@@ -186,11 +206,58 @@ class EditorClientModule: JMModuleBase
 	
 	private void OnEditorToggleCursor(UAInput input)
 	{
-		if (!input.LocalPress()) return; 
+		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleCursor");
+		
+		// Dont want to toggle cursor on map
+		if (m_EditorHud.IsMapVisible()) return;
 		m_EditorHud.ToggleCursor();
+	}	
+	
+	private void OnEditorToggleUI(UAInput input)
+	{		
+		if (!ShouldProcessInput(input)) return;
+		EditorLog.Trace("Editor::OnEditorToggleUI");
+		
+		m_EditorHud.Show(!m_EditorHud.IsVisible());
+	}	
+	
+	private void OnEditorToggleMap(UAInput input)
+	{
+		if (!ShouldProcessInput(input)) return;
+		EditorLog.Trace("Editor::OnEditorToggleMap");
+		
+		m_EditorHud.ShowMap(!m_EditorHud.IsMapVisible());
+		m_EditorHud.ShowCursor();
+	}
+	
+	
+	// Only use this to handle hardcoded keys (ctrl + z etc...)
+	// Return TRUE if handled.
+	bool OnKeyPress(int key)
+	{		
+		// LControl Commands
+		if (KeyState(KeyCode.KC_LCONTROL)) {
+			
+			switch (key) {
+				
+				case KeyCode.KC_Z: {
+					Undo();
+					return true;
+				}
+				
+				case KeyCode.KC_Y: {
+					Redo();
+					return true;
+				}				
+			}
+		}
+		
+		return false;
 	}
 		
+	
+	
 	
 	// RPC stuff
 	override int GetRPCMin()
@@ -358,10 +425,13 @@ class EditorClientModule: JMModuleBase
 		
 		m_EditorHud.Show(active);
 		m_Mission.GetHud().Show(!active);
+		m_Player.GetInputController().SetDisabled(active);
 		
-		
-		if (!active)
+		if (!active) {	
 			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
+		} 
+			
+		
 	}
 	
 	bool OnMouseEnterObject(Object target, int x, int y)

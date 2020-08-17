@@ -2,20 +2,22 @@
 <modded_inputs>
     <inputs>
         <actions>
-            <input name="EditorToggleUI" loc="Toggle UI" />
-            <input name="EditorToggleActive" loc="Toggle Active" />
+            <input name="EditorToggleActive" loc="Enable / Disable" />
+            <input name="EditorToggleUI" loc="Show / Hide UI" />
             <input name="EditorToggleCursor" loc="Toggle Cursor" />
+			
+			<input name="EditorToggleMap" loc="Map" />
         </actions>
     </inputs>
 
     <preset>
-        <input name="EditorToggleUI">
-            <btn name="kTab">
-            </btn>
-        </input>
-			
 		<input name="EditorToggleActive">
             <btn name="kHome">
+            </btn>
+        </input>
+        
+		<input name="EditorToggleUI">
+            <btn name="kY">
             </btn>
         </input>
 
@@ -23,6 +25,9 @@
             <btn name="kSpace" />
         </input>
 
+        <input name="EditorToggleMap">
+            <btn name="kM" />
+        </input>
 
     </preset>
 </modded_inputs>

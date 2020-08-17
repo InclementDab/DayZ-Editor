@@ -22,6 +22,18 @@ modded class MissionGameplay
 		GetUApi().GetInputByName("UACOTToggleESP").ForceDisable(true);
 		GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
 		GetUApi().UpdateControls();
+	}
+	
+	override void OnKeyPress(int key)
+	{
+		// If Editor is NOT active, just do keypress
+		if (!GetEditor().IsActive()) {
+			super.OnKeyPress(key);
+		// If Editor IS active, and DOESNT handle the key, do keypress
+		} else if (!GetEditor().OnKeyPress(key)) {
+			super.OnKeyPress(key);
+		}
+		
 		
 		
 	}

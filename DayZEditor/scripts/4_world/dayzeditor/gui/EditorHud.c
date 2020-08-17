@@ -148,6 +148,11 @@ class EditorHud: Hud
 		m_LayoutRoot.Show(show);
 	}
 	
+	bool IsVisible()
+	{
+		return m_LayoutRoot.IsVisible();
+	}
+	
 	void ToggleCursor()
 	{
 		GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
@@ -163,11 +168,18 @@ class EditorHud: Hud
 		GetGame().GetUIManager().ShowCursor(false);
 	}
 	
+	void ShowMap(bool show)
+	{
+		m_EditorMapContainer.Show(show);
+	}
+	
+	bool IsMapVisible() { return m_EditorMapContainer.IsVisible(); }
+	
 	
 	// literally track down everything that uses these and DELETE THEM its SHIT CODE TYLER DO IT PUSSY
 	EditorMap GetMap() 			{ return m_EditorMap; }
 	MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
-	bool IsMapOpen() 			{ return m_EditorMapContainer.IsVisible(); }
+	
 	
 	
 	override void SetPermanentCrossHair(bool show) 
