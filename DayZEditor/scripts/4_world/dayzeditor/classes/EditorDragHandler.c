@@ -50,31 +50,37 @@ class ObjectDragHandler: DragHandler
 	{
 		vector begin_pos = GetGame().GetCurrentCameraPosition();
 		vector end_pos = begin_pos + GetGame().GetPointerDirection() * 3000;
-		vector contact_pos, contact_dir;
+		vector cursor_pos, contact_dir;
 		int component;
 		
-		DayZPhysics.RaycastRV(begin_pos, end_pos, contact_pos, contact_dir, component, null, null, null, false, true);
+		DayZPhysics.RaycastRV(begin_pos, end_pos, cursor_pos, contact_dir, component, null, null, null, false, true);
+		
+		
+		
 		
 		vector size = m_EditorObject.GetSize();
-		vector cursor_position = contact_pos;
+		vector ground_position = GetGroundPosition(transform);
+		vector surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
 		
 		if (KeyState(KeyCode.KC_LMENU)) {
-			vector ground_position = GetGroundPosition(transform);
-			cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground_position);
-			cursor_position[1] = cursor_position[1] + size[1]/2;
-			transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_position);
 			
+			cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground_position);
+			cursor_pos[1] = cursor_pos[1] + size[1]/2;
+			transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos);
 		}
 		
 		else if (KeyState(KeyCode.KC_LSHIFT)) {
-			
-			
+					
+			transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
+			vector cursor_delta = cursor_pos - transform[3];
+			float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
+			m_EditorObject.PlaceOnSurfaceRotated(transform, ground_position, surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, EditorSettings.MAGNET_PLACEMENT);			
 		}
 		
 		else {
 			
-			transform[3] = contact_pos;
-			transform[3][1] = contact_pos[1] + size[1] / 2;
+			transform[3] = cursor_pos;
+			transform[3][1] = cursor_pos[1] + size[1]/2;
 		}
 		
 		

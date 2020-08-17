@@ -33,6 +33,8 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 				GetEditor().PlaceObject();
 				return true;
 			}
+			
+			GetEditor().ClearSelection();
 #endif
 		}
 		
@@ -59,7 +61,7 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 		
 		return super.OnClick(w, x, y, button);
 	}
-	
+
 	void OnPropertyChanged(string property_name)
 	{
 		EditorLog.Trace("EditorHudHandler::OnPropertyChanged");
