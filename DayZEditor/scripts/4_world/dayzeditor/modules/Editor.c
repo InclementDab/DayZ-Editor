@@ -627,9 +627,7 @@ class EditorClientModule: JMModuleBase
 		// Handle Z only motion
 		
 		if (input.LocalValue("UALookAround")) {	
-			cursor_position = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground);
-			cursor_position[1] = cursor_position[1] + object_size[1]/2; // offset building height
-			object_transform[3] = ground + object_transform[1] * vector.Distance(ground, cursor_position);
+			
 		
 		// Handle XY Rotation
 		} else if (input.LocalValue("UATurbo")) {
