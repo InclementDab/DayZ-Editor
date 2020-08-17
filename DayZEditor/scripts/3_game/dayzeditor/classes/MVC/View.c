@@ -110,12 +110,16 @@ class EditorView: ScriptedWidgetEventHandler
 			}
 			
 			case ButtonWidget: {
-				//SetModelVariable(ButtonWidget.Cast(m_LayoutRoot).GetState());
+				ButtonWidgetData _ButtonWidgetData;
+				_ButtonWidgetData = ButtonWidget.Cast(m_LayoutRoot).GetState();
+				EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _ButtonWidgetData);
 				break;
 			}
 			
 			case CheckBoxWidget: {
-				//SetModelVariable(CheckBoxWidget.Cast(m_LayoutRoot).IsChecked());
+				CheckBoxWidgetData _CheckBoxWidgetData;
+				_CheckBoxWidgetData = CheckBoxWidget.Cast(m_LayoutRoot).IsChecked();
+				EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _CheckBoxWidgetData);
 				break;
 			}
 			
@@ -123,9 +127,6 @@ class EditorView: ScriptedWidgetEventHandler
 				SliderWidgetData _SliderWidgetData;
 				_SliderWidgetData = SliderWidget.Cast(m_LayoutRoot).GetCurrent();
 				EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _SliderWidgetData);
-				NotifyPropertyChanged(variable_name);
-				
-				//SetModelVariable();
 				break;
 			}
 			
@@ -136,8 +137,10 @@ class EditorView: ScriptedWidgetEventHandler
 			
 			default: {
 				Error(string.Format("Unsupported Widget Type %1", m_LayoutRoot.Type().ToString()));
-			}	
+			}
 		}
+		
+		NotifyPropertyChanged(variable_name);
 	}
 	
 	
@@ -166,7 +169,14 @@ class EditorView: ScriptedWidgetEventHandler
 						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextWidgetDataF);
 						TextWidget.Cast(m_LayoutRoot).SetText(_TextWidgetDataF.ToString());
 						break;
-					}				
+					}
+					
+					case bool: {
+						bool _TextWidgetDataB;
+						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextWidgetDataB);
+						TextWidget.Cast(m_LayoutRoot).SetText(_TextWidgetDataB.ToString());
+						break;
+					}
 				}
 						
 				
