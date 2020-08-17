@@ -87,6 +87,9 @@ class EditorObjectMarker: EditorMarker
 	protected EditorObject m_EditorObject;
 	EditorObject GetEditorObject() { return m_EditorObject; }
 	
+	protected ref DragHandler m_DragHandler;
+	DragHandler GetDragHandler() { return m_DragHandler; }
+	
 	void EditorObjectMarker(EditorObject editor_object)
 	{
 		EditorLog.Trace("EditorObjectMarker");
@@ -104,6 +107,39 @@ class EditorObjectMarker: EditorMarker
 		
 		super.Update();
 	}
+	
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{		
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(CheckDragBounds, 0, true, x, y);
+		return true;
+	}
+	
+	private void CheckDragBounds(int x, int y)
+	{
+		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
+			int c_x, c_y;
+			GetCursorPos(c_x, c_y);
+			
+			int dist_x = Math.AbsInt(x - c_x);
+			int dist_y = Math.AbsInt(y - c_y);
+			
+			if (dist_x + dist_y > 10) {
+				GetEditor().SelectObject(m_EditorObject);
+				m_DragHandler.OnDragStart();
+				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(CheckDragBounds);
+			}
+			
+			
+		} else {
+			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(CheckDragBounds);
+		}
+		
+		
+		
+		
+	}
+	
 }
 
 
@@ -112,13 +148,16 @@ class EditorObjectMapMarker: EditorObjectMarker
 	private MapWidget m_MapWidget;
 	MapWidget GetMapWidget() { return m_MapWidget; }
 	
+	void EditorObjectMapMarker(EditorObject editor_object)
+	{
+		
+	}
 	
 	override void Update()
 	{
 		m_MapWidget = MapWidget.Cast(m_LayoutRoot.GetParent());
 		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());	
 		
-	
 		super.Update();
 	}
 	
@@ -150,21 +189,6 @@ class EditorObjectMapMarker: EditorObjectMarker
 		 // Blocks map from creating selection box
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
-	
-	override bool OnDrag(Widget w, int x, int y)
-	{
-		Print("EditorMapMarker::OnDrag");
-		if (GetEditor().IsPlacing()) return false;
-		//EditorEvents.DragInvoke(this, m_EditorObject);
-		return true;
-	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget receiver)
-	{
-		Print("EditorMapMarker::OnDrop");	
-		//EditorEvents.DropInvoke(this, m_EditorObject);
-		return true;
-	}
 }
 
 class EditorObjectWorldMarker: EditorObjectMarker
@@ -172,6 +196,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	void EditorObjectWorldMarker(EditorObject editor_object)
 	{
 		EditorEvents.OnMapToggled.Insert(OnMapToggled);
+		m_DragHandler = new ObjectDragHandler(m_EditorObject);
 	}
 	
 	override void Update()
@@ -222,24 +247,6 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	}
 
 	
-	override bool OnDrag(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorObjectWorldMarker::OnDrag");
-		if (GetEditor().IsPlacing()) return false;
-		
-		GetEditor().SelectObject(m_EditorObject);
-		
-		return super.OnDrag(w, x, y);
-	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget reciever)
-	{
-		EditorLog.Trace("EditorObjectWorldMarker::OnDrop");
-		
-		return super.OnDrop(w, x, y, reciever);
-	}
-	
-
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{		
 			/*
@@ -254,7 +261,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 
 	void OnMapToggled(Class context, EditorMap editor_map, bool state)
 	{
-		
+		Show(!state);
 	}
 	
 

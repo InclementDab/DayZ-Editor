@@ -10,7 +10,7 @@ ButtonWidgetClass EditorMarker {
  hexactsize 1
  vexactsize 1
  priority 250
- draggable 1
+ draggable 0
  {
   ImageWidgetClass EditorMarkerImage {
    clipchildren 1
