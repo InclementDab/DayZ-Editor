@@ -36,7 +36,7 @@ class IWidgetData
 	void Set(Widget w, Param params)
 	{
 		EditorLog.Trace("IWidgetData::Set");
-		GetGame().GameScript.Call(m_Parent, "_Set", new Param2<Widget, Param>(w, params));
+		GetGame().GameScript.Call(m_Parent, "_SetData", new Param2<Widget, Param>(w, params));
 	}
 	
 	void Reload(Widget w)
