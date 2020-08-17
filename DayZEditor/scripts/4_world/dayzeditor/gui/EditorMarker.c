@@ -109,12 +109,7 @@ class EditorObjectMarker: EditorMarker
 		} else {
 			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(CheckDragBounds);
 		}
-		
-		
-		
-		
 	}
-	
 }
 
 
@@ -125,14 +120,15 @@ class EditorObjectMapMarker: EditorObjectMarker
 	
 	void EditorObjectMapMarker(EditorObject editor_object)
 	{
-		
+		m_DragHandler = new MapDragHandler(m_EditorObject);
 	}
 	
 	override void Update()
 	{
+		if (!GetEditor().GetEditorHud().IsMapVisible()) return;
 		m_MapWidget = MapWidget.Cast(m_LayoutRoot.GetParent());
-		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());	
-		
+		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());
+		SetPos(pos[0], pos[1]);
 		super.Update();
 	}
 	

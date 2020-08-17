@@ -109,7 +109,7 @@ class EditorHudViewModel: ViewModel
 	void InsertMapMarker(EditorMarker map_marker)
 	{
 		Print("EditorHudViewModel::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
-		//m_EditorMapWidget.AddChild(map_marker);
+		GetEditor().GetEditorHud().GetMapWidget().AddChild(map_marker.GetLayoutRoot());
 	}
 	
 	int ReloadPlaceableObjects() 

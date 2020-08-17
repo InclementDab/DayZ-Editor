@@ -67,8 +67,8 @@ class EditorObject
 
 		// Map marker
 		if ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
-			//m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
-			//GetEditorHudViewModel().InsertMapMarker(m_EditorObjectMapMarker);
+			m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
+			GetEditorHudViewModel().InsertMapMarker(m_EditorObjectMapMarker);
 
 		}	
 		

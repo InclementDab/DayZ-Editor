@@ -148,13 +148,6 @@ class EditorHud: Hud
 	
 	override void Update(float timeslice)
 	{
-		Input input = GetGame().GetInput();
-		
-		
-		if (input.LocalPress("UAFire")) {
-			Print("Click");
-		}
-		
 		
 	}
 	
