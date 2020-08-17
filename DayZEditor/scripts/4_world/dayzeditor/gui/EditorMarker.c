@@ -27,10 +27,7 @@ class EditorMarker: ScriptedWidgetEventHandler
 	}
 	
 	
-	void Update() 
-	{
-
-	}
+	void Update() {	}
 	
 	void SetPos(float x, float y) 
 	{
@@ -53,8 +50,6 @@ class EditorMarker: ScriptedWidgetEventHandler
 	protected bool IsMouseInside(int c_x, int c_y)
 	{
 		float x, y, w, h;
-		// Cursor sucks
-		c_x -= 5; c_y -= 5;
 		m_LayoutRoot.GetPos(x, y);
 		m_LayoutRoot.GetSize(w, h);
 		return (c_x < x + h && c_x > x - h) && (c_y < y + h && c_y > y - h);
@@ -83,10 +78,8 @@ class EditorMarker: ScriptedWidgetEventHandler
 	{
 		EditorLog.Trace("EditorMarker::OnDrop");
 		SetPos(x, y);
-		
 		return true;
 	}
-
 }
 
 class EditorObjectMarker: EditorMarker
@@ -123,14 +116,9 @@ class EditorObjectMapMarker: EditorObjectMarker
 	override void Update()
 	{
 		m_MapWidget = MapWidget.Cast(m_LayoutRoot.GetParent());
-		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());
+		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());	
 		
-		// -5 for cursor offset
-		// -10 to put cursor on center
 	
-		
-		
-
 		super.Update();
 	}
 	
@@ -181,7 +169,11 @@ class EditorObjectMapMarker: EditorObjectMarker
 
 class EditorObjectWorldMarker: EditorObjectMarker
 {
-
+	void EditorObjectWorldMarker(EditorObject editor_object)
+	{
+		EditorEvents.OnMapToggled.Insert(OnMapToggled);
+	}
+	
 	override void Update()
 	{
 		vector position;
@@ -197,75 +189,57 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		} else position = m_EditorObject.GetBottomCenter();
 	
 		vector screen_pos = GetGame().GetScreenPos(position);
-		
 		SetPos(screen_pos[0], screen_pos[1]);
 		
 		super.Update();
 	}
 	
 	
-	
-
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		EditorLog.Trace("EditorObjectMarker::OnMouseButtonDown: " + button);
-		
-		
-		Input input = GetGame().GetInput();
+		EditorLog.Trace("EditorObjectWorldMarker::OnClick: " + button);
 		
 		if (button == 0) {
 			
 			if (GetEditor().IsPlacing()) return false;
 			
-			// required for multiple objects to be dragged
-			if (m_EditorObject.IsSelected()) 
-				return true;
-			
 			// We want to Toggle selection if you are holding control
-			if (input.LocalValue("UARunWalkTemp"))
+			if (KeyState(KeyCode.KC_LCONTROL))
 				GetEditor().ToggleSelection(m_EditorObject);
 			else {
-				if (!input.LocalValue("UATurbo"))
+				// required for multiple objects to be dragged
+				if (m_EditorObject.IsSelected()) 
+					return true;
+				
+				if (!KeyState(KeyCode.KC_LSHIFT))
 					GetEditor().ClearSelection();
 				
 				GetEditor().SelectObject(m_EditorObject);
-			}
-			
-			
-		} else if (button == 1) {
-			
-			/*
-			m_EditorObjectContextMenu = new UILinkedObject();
-			m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout");
-			m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
-			m_EditorObjectContextMenu.SetObject(this);
-			m_EditorObjectContextWidget.Show(false);
-			*/
-		} else return false;
-
-
-		return true;
+			}	
+		}
+		
+		return super.OnClick(w, x, y, button);
 	}
 
 	
 	override bool OnDrag(Widget w, int x, int y)
 	{
-		EditorLog.Trace("EditorObjectMarker::OnDrag");
-		
+		EditorLog.Trace("EditorObjectWorldMarker::OnDrag");
 		if (GetEditor().IsPlacing()) return false;
-		//EditorEvents.DragInvoke(this, m_EditorObject);
-		return true;
+		
+		GetEditor().SelectObject(m_EditorObject);
+		
+		return super.OnDrag(w, x, y);
 	}
 	
-	override bool OnDrop(Widget w, int x, int y, Widget receiver)
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
-		EditorLog.Trace("EditorObjectMarker::OnDrop");
-		//EditorEvents.DropInvoke(this, m_EditorObject);
-		return true;
+		EditorLog.Trace("EditorObjectWorldMarker::OnDrop");
+		
+		return super.OnDrop(w, x, y, reciever);
 	}
 	
 
-	// todo Editor UI Manager that manages modal windows correctly :)
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{		
 			/*
@@ -278,6 +252,10 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		return true;
 	}
 
+	void OnMapToggled(Class context, EditorMap editor_map, bool state)
+	{
+		
+	}
 	
 
 }

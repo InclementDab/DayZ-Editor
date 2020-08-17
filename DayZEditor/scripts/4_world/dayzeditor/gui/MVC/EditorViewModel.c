@@ -141,10 +141,7 @@ class EditorHudViewModel: ViewModel
 			EditorPlaceableListItem item;
 			list_item.GetUserData(item);
 			list_item.Show(item.GetData().GetCategory() == category);
-		}
-		
-		
-		
+		}		
 	}
 	
 		

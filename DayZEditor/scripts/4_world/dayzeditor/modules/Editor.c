@@ -359,6 +359,7 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::SelectObject");
 		m_SelectedObjects.InsertEditorObject(target);
 		EditorEvents.ObjectSelected(this, target);
+		target.OnSelected();
 	}
 	
 	// Call to deselect an object
@@ -367,6 +368,7 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::DeselectObject");
 		m_SelectedObjects.RemoveEditorObject(target);
 		EditorEvents.ObjectDeselected(this, target);
+		target.OnDeselected();
 	}	
 	
 	// Call to toggle selection
