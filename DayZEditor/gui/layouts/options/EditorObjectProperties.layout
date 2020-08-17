@@ -1,4 +1,5 @@
 FrameWidgetClass EditorProperties {
+ visible 1
  ignorepointer 1
  position 0 0
  size 800 600
@@ -241,11 +242,12 @@ FrameWidgetClass EditorProperties {
                    view_model_widget "EditorPropertiesViewModel"
                    binding_name "visible"
                    variable_name "CollapseGeneral"
+                   invert_variable 1
                   }
                  }
                 }
                 ImageWidgetClass collapse_image {
-                 visible 0
+                 visible 1
                  clipchildren 0
                  inheritalpha 1
                  ignorepointer 1
@@ -267,6 +269,9 @@ FrameWidgetClass EditorProperties {
                  {
                   ScriptParamsClass {
                    view_model_widget "EditorPropertiesViewModel"
+                   binding_name "visible"
+                   variable_name "CollapseGeneral"
+                   invert_variable 0
                   }
                  }
                 }

@@ -1,4 +1,34 @@
 
+typedef Param2<string, int> ViewBindingAction;
+
+
+class ViewBindingActionController
+{
+	ref array<ref ViewBindingAction> ViewBindingActionList = {
+		new ViewBindingAction("visible", WidgetFlags.VISIBLE),
+		new ViewBindingAction("disabled", WidgetFlags.DISABLED),
+		new ViewBindingAction("clipchildren", WidgetFlags.CLIPCHILDREN)
+		
+	};
+	
+	
+	
+	WidgetFlags Get(string target)
+	{
+		foreach (ref ViewBindingAction action: ViewBindingActionList)
+			if (action.param1 == target)
+				return action.param2;
+		
+		return 0;
+	}
+}
+
+
+
+
+
+
+
 class ViewBinding: Managed
 {
 	
@@ -11,6 +41,8 @@ class ViewBinding: Managed
 	
 	reference string variable_name;
 	string GetVariableName() { return variable_name; } 
+	
+	reference bool invert_variable;
 	
 	reference int variable_index;
 	
@@ -62,23 +94,19 @@ class ViewBinding: Managed
 	
 	void OnPropertyChanged()
 	{
+		ViewBindingActionController controller();
 		foreach (string binding: bound_types) {
-			Print(m_LayoutRoot.GetName());
-			switch (binding) {
-				
-				case "visible": {
-					bool _TextWidgetDataB;
-					EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextWidgetDataB);
-					m_LayoutRoot.Show(_TextWidgetDataB);
-					m_LayoutRoot.Update();
-					break;
-				}
-				
-			}
-			
-		}
-	}
+		
+			bool _BindingParamValue;
+			EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _BindingParamValue);
 	
+			if (_BindingParamValue)
+				m_LayoutRoot.SetFlags(controller.Get(binding));
+			else 
+				m_LayoutRoot.ClearFlags(controller.Get(binding));		
+		
+		}
+	}	
 }
 
 

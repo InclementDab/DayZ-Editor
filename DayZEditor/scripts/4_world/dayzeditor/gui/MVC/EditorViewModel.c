@@ -72,7 +72,7 @@ class EditorHudViewModel: ViewModel
 		m_EditorBrushTypes = brush_types;
 
 		foreach (EditorBrushData brush: m_EditorBrushTypes)
-			InsertBrush(brush.Name);		
+			BrushTypeBox.Insert(brush.Name);		
 	}
 		
 	EditorBrush GetBrush(string brush_name)
@@ -123,13 +123,10 @@ class EditorHudViewModel: ViewModel
 				string Config_Name, Base_Name;
 		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name);
 				EditorPlaceableObjectData placeable_object_data = new EditorPlaceableObjectData(Config_Name, Config_Path);
+#ifndef COMPONENT_SYSTEM
 				InsertPlaceableObject(new EditorPlaceableListItem(placeable_object_data));
-				
+#endif
 		    }
-		}
-		
-		if (j == 0) {
-			InsertPlaceableObject(new EditorPlaceableListItem(EditorPlaceableObjectData("Dummy_Name", "Dummy_Path")));
 		}
 		
 		return j;
@@ -151,17 +148,7 @@ class EditorHudViewModel: ViewModel
 		
 	}
 	
-	
-	void ClearBrushBox()
-	{
-		BrushTypeBox.Clear();
-	}
-	
-	void InsertBrush(string name)
-	{
-		BrushTypeBox.Insert(name);
-	}
-	
+		
 	override void OnPropertyChanged(string property_name)
 	{
 		switch (property_name) {

@@ -8,12 +8,10 @@ class EditorPropertiesViewModel: ViewModel
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
-		super.OnWidgetScriptInit(w);
-		
+		super.OnWidgetScriptInit(w);		
 		TitleText = "Object Properties";
-	
 	}
-
+	
 	
 }
 
