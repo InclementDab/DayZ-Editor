@@ -178,7 +178,20 @@ class EditorView: ScriptedWidgetEventHandler
 				WrapSpacerWidgetData _WrapSpacerWidgetData;
 				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _WrapSpacerWidgetData);
 				_WrapSpacerWidgetData.Reload(WrapSpacerWidget.Cast(m_LayoutRoot));
-				
+				break;
+			}
+			
+			case TextListboxWidget: {
+				TextListboxWidgetData _TextListboxWidgetData;
+				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextListboxWidgetData);
+				_TextListboxWidgetData.Reload(TextListboxWidget.Cast(m_LayoutRoot));
+				break;
+			}
+			
+			case XComboBoxWidget: {
+				XComboBoxWidgetData _XComboBoxWidgetData;
+				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _XComboBoxWidgetData);
+				_XComboBoxWidgetData.Reload(XComboBoxWidget.Cast(m_LayoutRoot));
 				break;
 			}
 			
@@ -213,12 +226,17 @@ class EditorView: ScriptedWidgetEventHandler
 				
 				switch (action) {
 					case NotifyCollectionChangedAction.Add: {
-						wrap_data.Add(WrapSpacerWidget.Cast(m_LayoutRoot), changed_params);
+						wrap_data.Add(m_LayoutRoot, changed_params);
 						break;
 					}
 					
 					case NotifyCollectionChangedAction.Remove: {
-						wrap_data.Remove(WrapSpacerWidget.Cast(m_LayoutRoot), changed_params);
+						wrap_data.Remove(m_LayoutRoot, changed_params);
+						break;
+					}
+					
+					case NotifyCollectionChangedAction.Clear: {
+						wrap_data.Clear(m_LayoutRoot);
 						break;
 					}
 					
@@ -241,12 +259,17 @@ class EditorView: ScriptedWidgetEventHandler
 				
 				switch (action) {
 					case NotifyCollectionChangedAction.Add: {
-						listbox_data.Add(TextListboxWidget.Cast(m_LayoutRoot), changed_params);
+						listbox_data.Add(m_LayoutRoot, changed_params);
 						break;
 					}
 					
 					case NotifyCollectionChangedAction.Remove: {
-						listbox_data.Remove(TextListboxWidget.Cast(m_LayoutRoot));
+						listbox_data.Remove(m_LayoutRoot);
+						break;
+					}
+					
+					case NotifyCollectionChangedAction.Clear: {
+						listbox_data.Clear(m_LayoutRoot);
 						break;
 					}
 					
@@ -269,12 +292,17 @@ class EditorView: ScriptedWidgetEventHandler
 				
 				switch (action) {
 					case NotifyCollectionChangedAction.Add: {
-						combo_box_data.Add(XComboBoxWidget.Cast(m_LayoutRoot), changed_params);
+						combo_box_data.Add(m_LayoutRoot, changed_params);
 						break;
 					}
 					
 					case NotifyCollectionChangedAction.Remove: {
-						combo_box_data.Remove(XComboBoxWidget.Cast(m_LayoutRoot));
+						combo_box_data.Remove(m_LayoutRoot);
+						break;
+					}
+					
+					case NotifyCollectionChangedAction.Clear: {
+						combo_box_data.Clear(m_LayoutRoot);
 						break;
 					}
 					

@@ -19,39 +19,53 @@ class TextListboxWidgetData: ObservableDictionary<string, Class>
 {
 	// Param1: Text [string]
 	// Param2: UserData [Class]
-	void Add(TextListboxWidget w, Param params)
+	void Add(Widget w, Param params)
 	{
 		Param2<string, Class> changed_data = Param2<string, Class>.Cast(params);
-		w.AddItem(changed_data.param1, changed_data.param2, 0);
+		TextListboxWidget.Cast(w).AddItem(changed_data.param1, changed_data.param2, 0);
 	}
 	
-	void Remove(TextListboxWidget w)
+	void Remove(Widget w)
 	{
-		w.ClearItems();
+		Clear(w);
 		for (int i = 0; i < Count(); i++) {
 			string key = GetKey(i);
-			w.AddItem(key, Get(key), 0);
+			TextListboxWidget.Cast(w).AddItem(key, Get(key), 0);
+		}
+	}
+	
+	void Reload(Widget w)
+	{
+		Clear(w);
+		
+		for (int i = 0; i < Count(); i++) {
+			string key = GetKey(i);
+			TextListboxWidget.Cast(w).AddItem(key, Get(key), 0);
 		}
 	}
 
+	void Clear(Widget w)
+	{
+		TextListboxWidget.Cast(w).ClearItems();
+	}
 }
 
 // WrapSpacerWidget
 class WrapSpacerWidgetData: ObservableCollection<Widget>
 {
 	// Param1: Widget
-	void Add(WrapSpacerWidget w, Param params)
+	void Add(Widget w, Param params)
 	{
 		w.AddChild(Param1<Widget>.Cast(params).param1);
 	}
 	
 	// Param1: Widget
-	void Remove(WrapSpacerWidget w, Param params)
+	void Remove(Widget w, Param params)
 	{
 		w.RemoveChild(Param1<Widget>.Cast(params).param1);
 	}
 	
-	void Reload(WrapSpacerWidget w)
+	void Reload(Widget w)
 	{	
 		Clear(w);
 		
@@ -60,7 +74,7 @@ class WrapSpacerWidgetData: ObservableCollection<Widget>
 		}
 	}
 	
-	void Clear(WrapSpacerWidget w)
+	void Clear(Widget w)
 	{
 		Widget child = w.GetChildren();
 		while (child != null) {
@@ -74,16 +88,28 @@ class WrapSpacerWidgetData: ObservableCollection<Widget>
 class XComboBoxWidgetData: ObservableCollection<string> 
 {
 	// Param1: string
-	void Add(XComboBoxWidget w, Param params)
+	void Add(Widget w, Param params)
 	{
-		w.AddItem(Param1<string>.Cast(params).param1);
+		XComboBoxWidget.Cast(w).AddItem(Param1<string>.Cast(params).param1);
 	}
 	
-	void Remove(XComboBoxWidget w)
+	void Remove(Widget w)
 	{
-		w.ClearAll();
+		Clear();
 		for (int i = 0; i < Count(); i++) 
-			w.AddItem(Get(i));
+			XComboBoxWidget.Cast(w).AddItem(Get(i));
+	}
+	
+	void Reload(Widget w)
+	{
+		Clear(w);
+		for (int i = 0; i < Count(); i++) 
+			XComboBoxWidget.Cast(w).AddItem(Get(i));
+	}
+	
+	void Clear(Widget w)
+	{
+		XComboBoxWidget.Cast(w).ClearAll();
 	}
 }
 
