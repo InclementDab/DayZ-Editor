@@ -93,9 +93,11 @@ static string CreateEditorMission(string map_name = "ChernarusPlus")
 
 static ref ModStructure GetModFromObject(string object_name)
 {
-	
+	EditorLog.Trace("GetModFromObject");
 	ref array<ref ModStructure> mods = ModLoader.GetMods();
 	string model_path = GetGame().ConfigGetTextOut("CfgVehicles " + object_name + " model");
+	if (model_path == "UNKNOWN_P3D_FILE") return null;
+
 	
 	foreach (ModStructure mod: mods) {
 		string dir;
@@ -112,6 +114,7 @@ static ref ModStructure GetModFromObject(string object_name)
 
 static string GetIconFromMod(ref ModStructure m_ModInfo)
 {
+	EditorLog.Trace("GetIconFromMod");
 	if (m_ModInfo != null) {
 		string logo = m_ModInfo.GetModLogo();
 		if (logo == string.Empty)

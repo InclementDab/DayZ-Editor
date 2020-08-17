@@ -21,22 +21,22 @@ class IWidgetData
 		m_Parent = parent;
 	}
 	
-	void Add(Widget w, ref Param params)
+	void Add(Widget w, Param params)
 	{
 		EditorLog.Trace("IWidgetData::Add");
-		GetGame().GameScript.Call(m_Parent, "_AddData", new Param2<Widget, ref Param>(w, params));
+		GetGame().GameScript.Call(m_Parent, "_AddData", new Param2<Widget, Param>(w, params));
 	}
 	
-	void Remove(Widget w, ref Param params)
+	void Remove(Widget w, Param params)
 	{
 		EditorLog.Trace("IWidgetData::Remove");
-		GetGame().GameScript.Call(m_Parent, "_RemoveData", new Param2<Widget, ref Param>(w, params));
+		GetGame().GameScript.Call(m_Parent, "_RemoveData", new Param2<Widget, Param>(w, params));
 	}
 	
-	void Set(Widget w, ref Param params)
+	void Set(Widget w, Param params)
 	{
 		EditorLog.Trace("IWidgetData::Set");
-		GetGame().GameScript.Call(m_Parent, "_Set", new Param2<Widget, ref Param>(w, params));
+		GetGame().GameScript.Call(m_Parent, "_Set", new Param2<Widget, Param>(w, params));
 	}
 	
 	void Reload(Widget w)
@@ -62,24 +62,21 @@ class TextListboxWidgetData: ObservableCollection<TStringClassPair>
 	// Param2: TStringClassPair [Param2<string, Class>]
 	void AddData(Widget w, Param params)
 	{
-		Print(params);
-		Param2<int, TStringClassPair> collection_params = Param2<int, TStringClassPair>.Cast(params);
-		Print(collection_params);
-		TStringClassPair insert_params = TStringClassPair.Cast(collection_params.param2);
-		Print(insert_params);
+		TStringClassPair insert_params = TStringClassPair.Cast(Param2<int, TStringClassPair>.Cast(params).param2);
 		TextListboxWidget.Cast(w).AddItem(insert_params.param1, insert_params.param2, 0);
 	}
 	
 	
 	void RemoveData(Widget w, Param params)
 	{
-		Print(params);
 		TextListboxWidget.Cast(w).RemoveRow(Param2<int, TStringClassPair>.Cast(params).param1);
 	}
 	
 	void SetData(Widget w, Param params)
 	{
-		
+		Param2<int, TStringClassPair> collection_params = Param2<int, TStringClassPair>.Cast(params);
+		TStringClassPair insert_params = TStringClassPair.Cast(collection_params.param2);
+		TextListboxWidget.Cast(w).SetItem(collection_params.param1, insert_params.param1, insert_params.param2, 0);
 	}
 	
 	void ReloadData(Widget w)
@@ -122,7 +119,12 @@ class WrapSpacerWidgetData: ObservableCollection<Widget>
 	
 	void SetData(Widget w, Param params)
 	{
+		WrapSpacerWidget widget = WrapSpacerWidget.Cast(w);
+		Param2<int, Widget> collection_params = Param2<int, Widget>.Cast(params);
 		
+		widget.RemoveChild(this[collection_params.param1]);
+		widget.AddChildAfter(collection_params.param2, this[collection_params.param1 - 1]);
+		widget.Update();
 	}
 	
 	void ReloadData(Widget w)

@@ -136,9 +136,6 @@ class EditorHudViewModel: ViewModel
 			InsertPlaceableObject(new EditorPlaceableListItem(EditorPlaceableObjectData("Dummy_Name", "Dummy_Path")));
 		}
 		
-		// This reloads the view since data is added before view is created
-		OnPropertyChanged("LeftbarSpacer");
-		
 		return j;
 	}
 	

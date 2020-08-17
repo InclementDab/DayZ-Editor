@@ -207,11 +207,13 @@ class EditorView: ScriptedWidgetEventHandler
 	
 	void OnCollectionChanged(CollectionChangedEventArgs args)
 	{		
-		EditorLog.Trace("EditorView::OnCollectionChanged: " + variable_name);
+		EditorLog.Trace(string.Format("EditorView::OnCollectionChanged: %1 Action: %2", variable_name, args.param2));
 				
 		Observable collection = args.param1;
 		NotifyCollectionChangedAction action = args.param2;
 		ref Param changed_params = args.param3;
+		
+
 		
 		IWidgetData widget_data_interface(collection);
 		
@@ -232,7 +234,8 @@ class EditorView: ScriptedWidgetEventHandler
 			}
 			
 			case NotifyCollectionChangedAction.Set: {
-				
+				widget_data_interface.Set(m_LayoutRoot, changed_params);
+				break;
 			}
 			
 			default: {

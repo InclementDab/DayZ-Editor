@@ -5,14 +5,13 @@ class EditorPlaceableListItem: EditorListItem
 	private ref EditorPlaceableObjectData m_Data;
 	EditorPlaceableObjectData GetData() { return m_Data; }
 
-	
 	void EditorPlaceableListItem(ref EditorPlaceableObjectData data) 
 	{ 
 		EditorLog.Trace("EditorPlaceableListItem"); 
 		m_Data = data;
 
 		m_ListItemCollapse.Show(false);
-
+		
 		SetText(m_Data.Type);
 		SetIcon(GetIconFromMod(GetModFromObject(m_Data.Type)));
 		

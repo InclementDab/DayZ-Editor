@@ -129,8 +129,8 @@ class ObservableCollection<Class TValue>: Observable
 	
 	void Set(int index, TValue value)
 	{
-		_data.Set(index, value);
 		CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Set, new Param2<int, TValue>(index, value)));
+		_data.Set(index, value);
 	}
 	
 	int Move(int index, int moveindex)

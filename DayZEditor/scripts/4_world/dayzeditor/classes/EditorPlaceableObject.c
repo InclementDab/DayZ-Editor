@@ -52,7 +52,6 @@ class EditorPlaceableObjectData
 		
 		TStringArray path_array = new TStringArray();
 		GetGame().ConfigGetFullPath(Path + " " + Type, path_array);
-
 		int i = 0;
 		foreach (array<string> current_type: AllTypes) {
 			foreach (string base: path_array) {
