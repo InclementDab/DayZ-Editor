@@ -33,6 +33,12 @@ class IWidgetData
 		GetGame().GameScript.Call(m_Parent, "_RemoveData", new Param2<Widget, ref Param>(w, params));
 	}
 	
+	void Set(Widget w, ref Param params)
+	{
+		EditorLog.Trace("IWidgetData::Set");
+		GetGame().GameScript.Call(m_Parent, "_Set", new Param2<Widget, ref Param>(w, params));
+	}
+	
 	void Reload(Widget w)
 	{
 		EditorLog.Trace("IWidgetData::Reload");
@@ -48,39 +54,40 @@ class IWidgetData
 
 
 // TextListboxWidget
-class TextListboxWidgetData: ObservableDictionary<string, Class>
+typedef Param2<string, Class> TStringClassPair;
+class TextListboxWidgetData: ObservableCollection<TStringClassPair>
 {
 	
-	// Param1: Text [string]
-	// Param2: UserData [Class]
+	// Param1: Index [int]
+	// Param2: TStringClassPair [Param2<string, Class>]
 	void AddData(Widget w, Param params)
 	{
-		Param2<string, Class> param_data = Param2<string, Class>.Cast(params);
-		TextListboxWidget.Cast(w).AddItem(param_data.param1, param_data.param2, 0);
+		Print(params);
+		Param2<int, TStringClassPair> collection_params = Param2<int, TStringClassPair>.Cast(params);
+		Print(collection_params);
+		TStringClassPair insert_params = TStringClassPair.Cast(collection_params.param2);
+		Print(insert_params);
+		TextListboxWidget.Cast(w).AddItem(insert_params.param1, insert_params.param2, 0);
 	}
+	
 	
 	void RemoveData(Widget w, Param params)
 	{
-		TextListboxWidget list_widget = TextListboxWidget.Cast(w);
-		string param_text = Param2<string, Class>.Cast(params).param1;
-		for (int i = 0; i < list_widget.GetNumItems(); i++) {
-			string text;
-			list_widget.GetItemText(i, 0, text);
-			if (text == param_text) {
-				list_widget.RemoveRow(i);
-				return;
-			}
-			
-		}
+		Print(params);
+		TextListboxWidget.Cast(w).RemoveRow(Param2<int, TStringClassPair>.Cast(params).param1);
+	}
+	
+	void SetData(Widget w, Param params)
+	{
+		
 	}
 	
 	void ReloadData(Widget w)
 	{
 		ClearData(w);
-		
 		for (int i = 0; i < Count(); i++) {
-			string key = GetKey(i);
-			TextListboxWidget.Cast(w).AddItem(key, Get(key), 0);
+			TStringClassPair data = Get(i);
+			TextListboxWidget.Cast(w).AddItem(data.param1, data.param2, 0);
 		}
 	}
 
@@ -92,6 +99,7 @@ class TextListboxWidgetData: ObservableDictionary<string, Class>
 	
 	void _AddData(Param2<Widget, Param> params) { AddData(params.param1, params.param2); }
 	void _RemoveData(Param2<Widget, Param> params) { RemoveData(params.param1, params.param2); }	
+	void _SetData(Param2<Widget, Param> params) { SetData(params.param1, params.param2); }
 	void _ReloadData(Param1<Widget> params) { ReloadData(params.param1); }
 	void _ClearData(Param1<Widget> params) { ClearData(params.param1); }
 }
@@ -109,6 +117,12 @@ class WrapSpacerWidgetData: ObservableCollection<Widget>
 	void RemoveData(Widget w, Param params)
 	{
 		w.RemoveChild(Param2<int, Widget>.Cast(params).param2);
+	}
+	
+	
+	void SetData(Widget w, Param params)
+	{
+		
 	}
 	
 	void ReloadData(Widget w)
@@ -130,6 +144,7 @@ class WrapSpacerWidgetData: ObservableCollection<Widget>
 	
 	void _AddData(Param2<Widget, Param> params) { AddData(params.param1, params.param2); }
 	void _RemoveData(Param2<Widget, Param> params) { RemoveData(params.param1, params.param2); }	
+	void _SetData(Param2<Widget, Param> params) { SetData(params.param1, params.param2); }
 	void _ReloadData(Param1<Widget> params) { ReloadData(params.param1); }
 	void _ClearData(Param1<Widget> params) { ClearData(params.param1); }
 }
@@ -149,6 +164,11 @@ class XComboBoxWidgetData: ObservableCollection<string>
 		XComboBoxWidget.Cast(w).RemoveItem(Param2<int, string>.Cast(params).param1);
 	}
 	
+	void SetData(Widget w, Param params)
+	{
+		
+	}
+	
 	void ReloadData(Widget w)
 	{
 		ClearData(w);
@@ -163,6 +183,7 @@ class XComboBoxWidgetData: ObservableCollection<string>
 	
 	void _AddData(Param2<Widget, Param> params) { AddData(params.param1, params.param2); }
 	void _RemoveData(Param2<Widget, Param> params) { RemoveData(params.param1, params.param2); }	
+	void _SetData(Param2<Widget, Param> params) { SetData(params.param1, params.param2); }
 	void _ReloadData(Param1<Widget> params) { ReloadData(params.param1); }
 	void _ClearData(Param1<Widget> params) { ClearData(params.param1); }
 }

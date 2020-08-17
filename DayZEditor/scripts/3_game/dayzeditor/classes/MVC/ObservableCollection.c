@@ -5,7 +5,7 @@
 enum NotifyCollectionChangedAction {
 	Add,
 	Remove,
-	Replace,
+	Set,
 	Move,
 	Clear
 };
@@ -68,8 +68,10 @@ class ObservableDictionary<Class TKey, Class TValue>: Observable
 	void Set(TKey key, TValue value)
 	{
 		_data.Set(key, value);
-		CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Replace, new Param2<TKey, TValue>(key, value)));
+		CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Set, new Param2<TKey, TValue>(key, value)));
 	}
+	
+
 	
 	TValue Get(TKey key)
 	{
@@ -98,10 +100,18 @@ class ObservableCollection<Class TValue>: Observable
 		return index;
 	}
 	
+	int InsertAt(TValue value, int index)
+	{
+		int new_index = _data.InsertAt(value, index);
+		CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Add, new Param2<int, TValue>(new_index, value)));
+		return new_index;
+	}
+	
 	
 	void Remove(int index)
 	{
 		TValue value = _data.Get(index);
+		
 		if (value) {
 			_data.Remove(index);
 			CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, new Param2<int, TValue>(index, value)));
@@ -115,6 +125,19 @@ class ObservableCollection<Class TValue>: Observable
 			_data.Remove(index);
 			CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, new Param2<int, TValue>(index, value)));
 		}
+	}
+	
+	void Set(int index, TValue value)
+	{
+		_data.Set(index, value);
+		CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Set, new Param2<int, TValue>(index, value)));
+	}
+	
+	int Move(int index, int moveindex)
+	{
+		int new_index = _data.MoveIndex(index, moveindex);
+		CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Move, new Param2<int, int>(index, new_index)));
+		return new_index;
 	}
 	
 	void Clear()

@@ -231,6 +231,10 @@ class EditorView: ScriptedWidgetEventHandler
 				break;
 			}
 			
+			case NotifyCollectionChangedAction.Set: {
+				
+			}
+			
 			default: {
 				Error("OnCollectionChanged: Not Implemented Exception!");
 			}

@@ -459,7 +459,7 @@ class EditorClientModule: JMModuleBase
 		m_ActionStack.InsertAt(target, 0);
 		
 		// debug
-		GetEditorHudViewModel().DebugActionStackListbox.Insert(target.GetName(), target);
+		GetEditorHudViewModel().DebugActionStackListbox.Insert(new TStringClassPair(target.GetName(), target));
 	}
 	
 
