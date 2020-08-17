@@ -12,13 +12,11 @@ class KeyValuePair<Class T1, Class T2>: Param
 
 class Observable
 {
-
-	protected string m_VariableName;
-	void Observable(string var_name)
+	string m_VariableName;
+	void Observable(string variable_name)
 	{
-		m_VariableName = var_name;
+		m_VariableName = variable_name;
 	}
-	
 }
 
 class ObservableDictionary<Class TKey, Class TValue>: Observable
@@ -28,7 +26,7 @@ class ObservableDictionary<Class TKey, Class TValue>: Observable
 	bool Insert(TKey key, TValue value)
 	{
 		if (_data.Insert(key, value)) {
-			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Add, new Param2<TKey, TValue>(key, value), m_VariableName);
+			CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Add, new Param2<TKey, TValue>(key, value)));
 			return true;
 		}
 		
@@ -40,20 +38,20 @@ class ObservableDictionary<Class TKey, Class TValue>: Observable
 		if (_data.Contains(key)) {
 			TValue value = _data.Get(key);
 			_data.Remove(key);
-			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Remove, new Param2<TKey, TValue>(key, value), m_VariableName);
+			CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, new Param2<TKey, TValue>(key, value)));
 		}
 	}
 	
 	void Clear()
 	{
 		_data.Clear();
-		CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Clear, null, m_VariableName);
+		CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Clear, null));
 	}
 	
 	void Set(TKey key, TValue value)
 	{
 		_data.Set(key, value);
-		CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Replace, m_VariableName, new Param2<TKey, TValue>(key, value), m_VariableName);
+		CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Replace, new Param2<TKey, TValue>(key, value)));
 	}
 	
 	TValue Get(TKey key)
@@ -77,7 +75,7 @@ class ObservableCollection<Class TValue>: Observable
 	{
 		int index = _data.Insert(value);
 		if (index != -1) {
-			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Add, new Param1<TValue>(value), m_VariableName);
+			CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Add, new Param1<TValue>(value)));
 		}
 		
 		return index;
@@ -91,7 +89,7 @@ class ObservableCollection<Class TValue>: Observable
 		
 		if (value) {
 			_data.Remove(index);
-			CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Remove, new Param1<TValue>(value), m_VariableName);
+			CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, new Param1<TValue>(value)));
 		}
 		
 	}
@@ -99,7 +97,7 @@ class ObservableCollection<Class TValue>: Observable
 	void Clear()
 	{
 		_data.Clear();
-		CollectionChanged.Invoke(this, NotifyCollectionChangedAction.Clear, null, m_VariableName);
+		CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Clear, null));
 	}
 	
 	TValue Get(int index)

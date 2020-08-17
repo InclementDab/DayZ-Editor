@@ -27,39 +27,47 @@ class ViewModel: Managed
 		for (int i = 0; i < vcnt; i++)
 			m_ModelHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));		
 		
-		NotifyOnCollectionChanged(OnCollectionChanged);
+		
 		NotifyOnPropertyChanged(OnPropertyChanged);
+		NotifyOnCollectionChanged(OnCollectionChanged);
 	}
 	
 	void InsertView(ref EditorView view)
 	{
 		string variable_name = view.GetVariableName();
 		EditorLog.Trace("ViewModel::InsertView: " + variable_name);
-		m_ViewList.Insert(variable_name, view);
+		
+		if (m_ViewList.Get(variable_name) != null) {
+			EditorLog.Trace("View Found! Setting");
+			m_ViewList.Set(variable_name, view);
+		} else {
+			m_ViewList.Insert(variable_name, view);
+		}
+		
 	}
 	
 	
-	protected void OnPropertyChanged(PropertyChangedEventArgs args)
+	void OnPropertyChanged(string property_name)
 	{
-		EditorLog.Trace(string.Format("ViewModel::NotifyPropertyChanged: %1", args.param1));
+		//EditorLog.Trace(string.Format("ViewModel::NotifyPropertyChanged: %1", property_name));
 		
-		EditorView view = m_ViewList.Get(args.param1);
+		EditorView view = m_ViewList.Get(property_name);
 		if (view == null) {
-			Error(string.Format("Invalid Property Name: %1", args.param1));
+			Error(string.Format("Invalid Property Name: %1 - View not found", property_name));
 			return;
 		}
 		
-		view.OnPropertyChanged(args.param2);
+		view.OnPropertyChanged();
 	}
 	
 	
-	
-	void OnCollectionChanged(CollectionChangedEventArgs args)
+	void OnCollectionChanged(string property_name, CollectionChangedEventArgs args)
 	{
-		EditorLog.Trace(string.Format("ViewModel::OnCollectionChanged: %1", args.param4));
-		EditorView view = m_ViewList.Get(args.param4);
+		EditorLog.Trace(string.Format("ViewModel::OnCollectionChanged: %1", property_name));
+		EditorView view = m_ViewList.Get(property_name);
 		if (view == null) {
-			Error(string.Format("Invalid Collection Name: %1", args.param4));
+			//Error(string.Format("Invalid Collection Name: %1 - View not found", property_name));
+			m_ViewList.Insert(property_name, null);
 			return;
 		}
 		
@@ -81,10 +89,10 @@ class ViewModel: Managed
 }
 
 // property_name = name of variable being changed
-ref ScriptInvoker PropertyChanged = new ScriptInvoker();
-void NotifyPropertyChanged(PropertyChangedEventArgs args)
+ref ScriptInvoker PropertyChanged;
+void NotifyPropertyChanged(string property_name)
 {
-	PropertyChanged.Invoke(args);
+	PropertyChanged.Invoke(property_name);
 }
 
 
@@ -99,7 +107,7 @@ void NotifyOnPropertyChanged(func action)
 
 // Called only when Collection is changed
 // Use NotifyOnPropertyChanged to 'subscribe' to the Invoke
-ref ScriptInvoker CollectionChanged = new ScriptInvoker();	
+ref ScriptInvoker CollectionChanged;
 void NotifyOnCollectionChanged(func action)
 {
 	if (CollectionChanged == null)

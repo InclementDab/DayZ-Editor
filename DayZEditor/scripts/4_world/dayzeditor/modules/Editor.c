@@ -138,7 +138,8 @@ class EditorClientModule: JMModuleBase
 		
 		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
 		
-		GetEditorHudViewModel().DebugText1.Set(avg_timeslice.ToString());
+		GetEditorHudViewModel().DebugText1 = avg_timeslice.ToString();
+		NotifyPropertyChanged("DebugText1");
 	}
 	
 	override bool IsServer() { return false; }	

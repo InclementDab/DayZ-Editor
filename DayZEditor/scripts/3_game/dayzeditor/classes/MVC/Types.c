@@ -1,54 +1,31 @@
 
-class WidgetData<Class T1>
-{
-	T1 value;
-	string name;
-	
-	void WidgetData(string _name)
-	{
-		name = _name;
-	}
-	
-	void Set(T1 _value)
-	{
-		value = _value;
-		NotifyPropertyChanged(new Param2<string, Class>(name, this));
-	}
-	
-	T1 Get()
-	{
-		return value;
-	}
-}
-
-
-
-
 
 // TextWidget
-typedef WidgetData<string> TextWidgetData;
+typedef string TextWidgetData;
 
 // ButtonWidget
-typedef WidgetData<bool> ButtonWidgetData;
+typedef bool ButtonWidgetData;
 
 // CheckBoxWidget
-typedef WidgetData<bool> CheckBoxWidgetData;
+typedef bool CheckBoxWidgetData;
 
 // SliderWidget
-typedef WidgetData<float> SliderWidgetData;
+typedef float SliderWidgetData;
 
 
 
 // TextListboxWidget
 class TextListboxWidgetData: ObservableDictionary<string, Class>
 {
-	void DictionaryAdd(TextListboxWidget w, Param params)
+	// Param1: Text [string]
+	// Param2: UserData [Class]
+	void Add(TextListboxWidget w, Param params)
 	{
 		Param2<string, Class> changed_data = Param2<string, Class>.Cast(params);
 		w.AddItem(changed_data.param1, changed_data.param2, 0);
 	}
 	
-	void DictionaryRemove(TextListboxWidget w)
+	void Remove(TextListboxWidget w)
 	{
 		w.ClearItems();
 		for (int i = 0; i < Count(); i++) {
@@ -62,26 +39,47 @@ class TextListboxWidgetData: ObservableDictionary<string, Class>
 // WrapSpacerWidget
 class WrapSpacerWidgetData: ObservableCollection<Widget>
 {
-	void DictionaryAdd(WrapSpacerWidget w, Param params)
+	// Param1: Widget
+	void Add(WrapSpacerWidget w, Param params)
 	{
 		w.AddChild(Param1<Widget>.Cast(params).param1);
 	}
 	
-	void DictionaryRemove(WrapSpacerWidget w, Param params)
+	// Param1: Widget
+	void Remove(WrapSpacerWidget w, Param params)
 	{
 		w.RemoveChild(Param1<Widget>.Cast(params).param1);
+	}
+	
+	void Reload(WrapSpacerWidget w)
+	{	
+		Clear(w);
+		
+		for (int i = 0; i < Count(); i++) {
+			w.AddChild(Get(i));
+		}
+	}
+	
+	void Clear(WrapSpacerWidget w)
+	{
+		Widget child = w.GetChildren();
+		while (child != null) {
+			w.RemoveChild(child);
+			child = child.GetSibling();
+		}
 	}
 }
 
 // XComboBoxWidget
 class XComboBoxWidgetData: ObservableCollection<string> 
 {
-	void DictionaryAdd(XComboBoxWidget w, Param params)
+	// Param1: string
+	void Add(XComboBoxWidget w, Param params)
 	{
 		w.AddItem(Param1<string>.Cast(params).param1);
 	}
 	
-	void DictionaryRemove(XComboBoxWidget w)
+	void Remove(XComboBoxWidget w)
 	{
 		w.ClearAll();
 		for (int i = 0; i < Count(); i++) 
@@ -104,7 +102,7 @@ enum NotifyCollectionChangedAction {
 // 1: Collection Changed Action
 // 2: Changed Value
 // 3: Collection name
-typedef Param4<Observable, int, Param2<Class, Class>, string> CollectionChangedEventArgs;
+typedef Param3<Observable, int, Param> CollectionChangedEventArgs;
 
 
 

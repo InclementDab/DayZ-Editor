@@ -18,9 +18,7 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 		
 		// Load PlaceableObjects
 		// This is the last thing to initialize on the UI
-#ifndef COMPONENT_SYSTEM // not in workshop
-		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", GetEditorHudViewModel().ReloadPlaceableObjects()));
-#endif
+
 		m_LayoutRoot.SetHandler(this);
 	}
 	

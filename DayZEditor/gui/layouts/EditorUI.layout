@@ -157,9 +157,14 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         scriptclass ""
+         scriptclass "EditorView"
          font "gui/fonts/metron"
          "text offset" 5 0
+         {
+          ScriptParamsClass {
+           view_model_widget "ViewModelFrame"
+          }
+         }
         }
         TextWidgetClass DebugText3 {
          visible 1

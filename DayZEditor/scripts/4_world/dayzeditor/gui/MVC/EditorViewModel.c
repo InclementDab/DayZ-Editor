@@ -7,11 +7,11 @@ class EditorHudViewModel: ViewModel
 {
 	private ref EditorPlaceableListItemSet m_PlaceableObjects;
 
-	ref TextWidgetData DebugText1 = new TextWidgetData("DebugText1");
-	ref TextWidgetData DebugText2 = new TextWidgetData("DebugText2");
-	ref TextWidgetData DebugText3 = new TextWidgetData("DebugText3");
-	ref TextWidgetData DebugText4 = new TextWidgetData("DebugText4");
-	ref TextWidgetData DebugText5 = new TextWidgetData("DebugText5");
+	TextWidgetData DebugText1;
+	TextWidgetData DebugText2;
+	TextWidgetData DebugText3;
+	TextWidgetData DebugText4;
+	TextWidgetData DebugText5;
 	
 	bool BuildingSelect;
 	bool VehicleSelect;
@@ -43,6 +43,9 @@ class EditorHudViewModel: ViewModel
 		LeftbarSpacer 				= new WrapSpacerWidgetData("LeftbarSpacer");
 		RightbarSpacer 				= new WrapSpacerWidgetData("RightbarSpacer");
 		BrushTypeBox				= new XComboBoxWidgetData("BrushTypeBox");
+		
+		// Reload Placeables
+		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
 		
 		// Load Brushes
 		m_EditorBrushTypes = new EditorBrushDataSet();
@@ -133,6 +136,10 @@ class EditorHudViewModel: ViewModel
 		if (j == 0) {
 			InsertPlaceableObject(new EditorPlaceableListItem(EditorPlaceableObjectData("Dummy_Name", "Dummy_Path")));
 		}
+		
+		// This reloads the view since data is added before view is created
+		OnPropertyChanged("LeftbarSpacer");
+		
 		return j;
 	}
 	
@@ -161,7 +168,7 @@ class EditorHudViewModel: ViewModel
 		BrushTypeBox.Insert(name);
 	}
 	
-	void OnPropertyChanged(string property_name)
+	override void OnPropertyChanged(string property_name)
 	{
 		switch (property_name) {
 			
@@ -190,17 +197,17 @@ class EditorHudViewModel: ViewModel
 			}
 			
 			case "BrushRadius": {
-				EditorBrush.SetRadius(BrushRadius.Get());
+				EditorBrush.SetRadius(BrushRadius);
 				break;
 			}
 			
 			case "BrushDensity": {
-				EditorBrush.SetDensity(BrushDensity.Get());
+				EditorBrush.SetDensity(BrushDensity);
 				break;
 			}
 		}
 		
-		//super.OnPropertyChanged(property_name);
+		super.OnPropertyChanged(property_name);
 	}
 
 }
