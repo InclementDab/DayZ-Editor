@@ -32,7 +32,7 @@ class EditorMarker: ScriptedWidgetEventHandler
 	void SetPos(float x, float y) 
 	{
 		// Offset to center of marker
-		x -= 15; y -= 15;
+		x -= 10; y -= 10;
 		m_LayoutRoot.SetPos(x, y);
 		m_LayoutRoot.Update();
 	}
@@ -54,32 +54,7 @@ class EditorMarker: ScriptedWidgetEventHandler
 		m_LayoutRoot.GetSize(w, h);
 		return (c_x < x + h && c_x > x - h) && (c_y < y + h && c_y > y - h);
 	}
-	
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorMarker::OnMouseEnter");
-		// set cursor here?
-		return true;
-	}
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		EditorLog.Trace("EditorMarker::OnMouseLeave");
-		return true;
-	}
 
-	override bool OnDrag(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorMarker::OnDrag");
-		return true;
-	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget reciever)
-	{
-		EditorLog.Trace("EditorMarker::OnDrop");
-		SetPos(x, y);
-		return true;
-	}
 }
 
 class EditorObjectMarker: EditorMarker
@@ -161,8 +136,6 @@ class EditorObjectMapMarker: EditorObjectMarker
 		super.Update();
 	}
 	
-		
-
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{

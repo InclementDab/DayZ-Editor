@@ -170,7 +170,10 @@ class EditorObject
 	}
 	
 	void GetTransform(out vector mat[4]) { m_WorldObject.GetTransform(mat); }
-	void SetTransform(vector mat[4]) { m_WorldObject.SetTransform(mat); }
+	void SetTransform(vector mat[4]) 
+	{ 
+		m_WorldObject.SetTransform(mat); 
+	}
 	
 	void Update() { m_WorldObject.Update(); }
 	

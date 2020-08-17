@@ -20,21 +20,23 @@ class DragHandler
 	private void _OnDragging()
 	{
 		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
-			int x, y;
-			GetCursorPos(x, y);
-			OnDragging(x, y);
+			vector transform[4];
+			m_EditorObject.GetTransform(transform);
+			OnDragging(transform);
+			m_EditorObject.SetTransform(transform);
+			m_EditorObject.Update();
 		} else {
 			OnDragFinish();
 		}
 	}
 	
-	void OnDragging(int x, int y) { }
+	void OnDragging(out vector transform[4]) { }
 }
 
 
 class ObjectDragHandler: DragHandler
 {
-	override void OnDragging(int x, int y)
+	override void OnDragging(out vector transform[4])
 	{
 		vector begin_pos = GetGame().GetCurrentCameraPosition();
 		vector end_pos = begin_pos + GetGame().GetPointerDirection() * 3000;
@@ -42,7 +44,11 @@ class ObjectDragHandler: DragHandler
 		int component;
 		
 		DayZPhysics.RaycastRV(begin_pos, end_pos, contact_pos, contact_dir, component, null, null, null, false, true);
-		m_EditorObject.SetPosition(contact_pos);
+		
+		
+		vector size = m_EditorObject.GetSize();
+		transform[3] = contact_pos;
+		transform[3][1] = contact_pos[1] + size[1] / 2;
 		
 	}
 }
@@ -51,7 +57,7 @@ class ObjectDragHandler: DragHandler
 class MapDragHandler: DragHandler
 {
 	
-	override void OnDragging(int x, int y)
+	override void OnDragging(out vector transform[4])
 	{
 		
 		
