@@ -34,8 +34,7 @@ class EditorView: ScriptedWidgetEventHandler
 		if (view_model_widget == string.Empty) return;
 		
 		m_LayoutRoot = w;
-		
-				
+			
 		// Set the control widget to relevant Widget
 		if (control_name != string.Empty) {
 			m_LayoutRoot = m_LayoutRoot.FindAnyWidget(control_name);
@@ -154,7 +153,6 @@ class EditorView: ScriptedWidgetEventHandler
 			case TextWidget: {
 				
 				switch (m_ViewModel.GetVariableBaseType(variable_name)) {
-					
 					
 					case string: {
 						string _TextWidgetDataS;

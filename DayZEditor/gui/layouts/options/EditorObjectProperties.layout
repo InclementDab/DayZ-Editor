@@ -213,6 +213,8 @@ FrameWidgetClass EditorProperties {
                hexactsize 0
                vexactsize 0
                fixaspect inside
+               draggable 0
+               scriptclass ""
                {
                 ImageWidgetClass expand_image {
                  visible 1
@@ -227,12 +229,20 @@ FrameWidgetClass EditorProperties {
                  vexactpos 1
                  hexactsize 0
                  vexactsize 0
+                 scriptclass "ViewBinding"
                  image0 "set:dayz_gui image:icon_collapse"
                  mode blend
                  "src alpha" 1
                  "no wrap" 1
                  stretch 1
                  filter 1
+                 {
+                  ScriptParamsClass {
+                   view_model_widget "EditorPropertiesViewModel"
+                   binding_name "visible"
+                   variable_name "CollapseGeneral"
+                  }
+                 }
                 }
                 ImageWidgetClass collapse_image {
                  visible 0
@@ -247,12 +257,18 @@ FrameWidgetClass EditorProperties {
                  vexactpos 1
                  hexactsize 0
                  vexactsize 0
+                 scriptclass "ViewBinding"
                  image0 "set:dayz_gui image:icon_expand"
                  mode blend
                  "src alpha" 1
                  "no wrap" 1
                  stretch 1
                  filter 1
+                 {
+                  ScriptParamsClass {
+                   view_model_widget "EditorPropertiesViewModel"
+                  }
+                 }
                 }
                }
               }
@@ -301,6 +317,7 @@ FrameWidgetClass EditorProperties {
              vexactpos 0
              hexactsize 0
              vexactsize 1
+             scriptclass "ViewBinding"
              style Colorable
              Padding 0
              Margin 0
@@ -479,6 +496,13 @@ FrameWidgetClass EditorProperties {
                  "text halign" right
                 }
                }
+              }
+             }
+             {
+              ScriptParamsClass {
+               view_model_widget "EditorPropertiesViewModel"
+               binding_name "visible"
+               variable_name "CollapseGeneral"
               }
              }
             }

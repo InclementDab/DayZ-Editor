@@ -13,6 +13,7 @@ class ViewModel: Managed
 	
 	// View List
 	protected ref map<string, ref EditorViewSet> m_ViewList;
+	protected ref map<string, ref ViewBinding> m_BindingList;
 	
 	void ViewModel() { EditorLog.Trace("ViewModel"); }
 	void ~ViewModel() { EditorLog.Trace("~ViewModel"); }
@@ -25,6 +26,7 @@ class ViewModel: Managed
 		
 		m_ModelHashMap = new map<string, typename>();
 		m_ViewList = new map<string, ref EditorViewSet>();
+		m_BindingList = new map<string, ref ViewBinding>();
 		
 		typename vtype = Type();
 		int vcnt = vtype.GetVariableCount();
@@ -51,6 +53,14 @@ class ViewModel: Managed
 		}
 	}
 	
+	void InsertBinding(ViewBinding binding)
+	{
+		string variable_name = binding.GetVariableName();
+		EditorLog.Trace("ViewModel::InsertBinding: " + variable_name);
+		
+		m_BindingList.Insert(binding.GetWidgetName(), binding);
+	}
+	
 	
 	void OnPropertyChanged(string property_name)
 	{
@@ -65,6 +75,13 @@ class ViewModel: Managed
 		foreach (EditorView view: view_set) {
 			view.OnPropertyChanged();
 		}
+		
+		foreach (ViewBinding binding: m_BindingList) {
+			if (binding.GetVariableName() == property_name) {
+				binding.OnPropertyChanged();
+			}
+		}
+		
 		
 	}
 	
