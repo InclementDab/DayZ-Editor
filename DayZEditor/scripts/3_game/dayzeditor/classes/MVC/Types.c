@@ -123,6 +123,7 @@ class WrapSpacerWidgetData: ObservableCollection<Widget>
 		Param2<int, Widget> collection_params = Param2<int, Widget>.Cast(params);
 		
 		widget.RemoveChild(this[collection_params.param1]);
+		widget.Update();
 		widget.AddChildAfter(collection_params.param2, this[collection_params.param1 - 1]);
 		widget.Update();
 	}

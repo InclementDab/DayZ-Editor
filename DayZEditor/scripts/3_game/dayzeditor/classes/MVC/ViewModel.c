@@ -36,14 +36,7 @@ class ViewModel: Managed
 	{
 		string variable_name = view.GetVariableName();
 		EditorLog.Trace("ViewModel::InsertView: " + variable_name);
-		
-		if (m_ViewList.Get(variable_name) != null) {
-			EditorLog.Trace("View Found! Setting");
-			m_ViewList.Set(variable_name, view);
-		} else {
-			m_ViewList.Insert(variable_name, view);
-		}
-		
+		m_ViewList.Insert(variable_name, view);
 	}
 	
 	
@@ -63,11 +56,11 @@ class ViewModel: Managed
 	
 	void OnCollectionChanged(string property_name, CollectionChangedEventArgs args)
 	{
-		EditorLog.Trace(string.Format("ViewModel::OnCollectionChanged: %1", property_name));
+		EditorLog.Trace(string.Format("ViewModel::OnCollectionChanged: %1 Action: %2", property_name, args.param2));
 		EditorView view = m_ViewList.Get(property_name);
 		if (view == null) {
+			EditorLog.Debug(string.Format("ViewModel::OnCollectionChanged: View was null! %1", property_name));
 			//Error(string.Format("Invalid Collection Name: %1 - View not found", property_name));
-			m_ViewList.Insert(property_name, null);
 			return;
 		}
 		
