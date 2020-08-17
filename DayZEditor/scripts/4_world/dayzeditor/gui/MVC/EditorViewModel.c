@@ -16,7 +16,7 @@ static ref EditorHudViewModel m_EditorHudViewModel;
 EditorHudViewModel GetEditorHudViewModel() { return m_EditorHudViewModel; }
 
 // 	  vvvvvvvvvvvvvvvvv  put THIS into ScriptClass
-class EditorHudViewModel: ViewModelBase
+class EditorHudViewModel: ViewModel
 {
 	private ref EditorPlaceableListItemSet m_PlaceableObjects;
 
@@ -217,87 +217,7 @@ class EditorHudViewModel: ViewModelBase
 	}
 
 }
-	
 
-
-typedef ref map<string, typename> VariableHashMap;
-
-
-// abstract
-class ViewModelBase: Managed
-{
-	protected Widget m_LayoutRoot;
-	
-	// Hashed Variable Data
-	protected ref VariableHashMap m_ModelHashMap;
-	VariableHashMap GetVariableHashMap() { return m_ModelHashMap; }
-	typename GetVariableType(string var_name) { return m_ModelHashMap.Get(var_name); }
-	
-	// View List
-	protected ref map<string, ref EditorView> m_ViewList;
-	
-	void ViewModelBase() { EditorLog.Trace("ViewModelBase"); }
-	void ~ViewModelBase() { EditorLog.Trace("~ViewModelBase"); }
-	
-		
-	void OnWidgetScriptInit(Widget w)
-	{
-		EditorLog.Trace("ViewModelBase::OnWidgetScriptInit");	
-		m_LayoutRoot = w;
-		
-		m_ModelHashMap = new VariableHashMap();
-		m_ViewList = new map<string, ref EditorView>();
-
-		typename vtype = Type();
-		int vcnt = vtype.GetVariableCount();
-		for (int i = 0; i < vcnt; i++)
-			m_ModelHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));
-		
-		
-	}
-	
-
-
-	void InsertView(string variable_name, ref EditorView view)
-	{
-		EditorLog.Trace("ViewModelBase::InsertView: " + variable_name);
-		m_ViewList.Insert(variable_name, view);
-	}
-	
-	void DebugPrint()
-	{
-		EditorLog.Debug("ViewModelBase::DebugPrint: " + m_LayoutRoot.GetName());
-		foreach (string name, ref EditorView view: m_ViewList)
-			view.DebugPrint();
-	}
-	
-	// property_name = name of variable being changed
-	ref ScriptInvoker PropertyChanged = new ScriptInvoker();
-	void NotifyOnPropertyChanged(func action)
-	{	
-		if (PropertyChanged == null)
-			PropertyChanged = new ScriptInvoker();
-		
-		PropertyChanged.Insert(action);
-	}
-	
-	void NotifyPropertyChanged(string property_name = "") 
-	{
-		EditorLog.Trace("ViewModelBase::NotifyPropertyChanged: " + property_name);
-		if (property_name == string.Empty) {
-			foreach (ref EditorView view: m_ViewList)
-				view.UpdateView();
-			return;
-		}
-		
-			
-		PropertyChanged.Invoke(property_name);
-	}
-	
-
-	
-	bool OnClick(Widget w, int x, int y, bool button) { return true; }
-}
 
 
 
