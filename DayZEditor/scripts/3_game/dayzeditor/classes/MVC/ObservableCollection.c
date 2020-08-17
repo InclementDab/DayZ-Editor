@@ -2,12 +2,29 @@
 
 
 
+enum NotifyCollectionChangedAction {
+	Add,
+	Remove,
+	Replace,
+	Move,
+	Clear
+};
 
-/*
-class KeyValuePair<Class T1, Class T2>: Param
-{
-	
-}*/
+
+// Event Args for Collection Changed
+// 0: Observable that was changed
+// 1: Collection Changed Action
+// 2: Changed Value
+typedef Param3<Observable, int, Param> CollectionChangedEventArgs;
+
+
+
+// Event Args for Property Changed
+// 0: Name of property changed
+// 1: New property value
+typedef Param2<string, Class> PropertyChangedEventArgs;
+
+
 
 
 class Observable
@@ -75,7 +92,7 @@ class ObservableCollection<Class TValue>: Observable
 	{
 		int index = _data.Insert(value);
 		if (index != -1) {
-			CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Add, new Param1<TValue>(value)));
+			CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Add, new Param2<int, TValue>(index, value)));
 		}
 		
 		return index;
@@ -84,14 +101,20 @@ class ObservableCollection<Class TValue>: Observable
 	
 	void Remove(int index)
 	{
-		int count = _data.Count();
 		TValue value = _data.Get(index);
-		
 		if (value) {
 			_data.Remove(index);
-			CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, new Param1<TValue>(value)));
+			CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, new Param2<int, TValue>(index, value)));
 		}
-		
+	}
+	
+	void Remove(TValue value)
+	{
+		int index = _data.Find(value);
+		if (index != -1) {
+			_data.Remove(index);
+			CollectionChanged.Invoke(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, new Param2<int, TValue>(index, value)));
+		}
 	}
 	
 	void Clear()
@@ -112,7 +135,7 @@ class ObservableCollection<Class TValue>: Observable
 	
 	int Count() { return _data.Count(); }
 	
-	
+	int Find(TValue value) { return _data.Find(value); }
 	
 }
 

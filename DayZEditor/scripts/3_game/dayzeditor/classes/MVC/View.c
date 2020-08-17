@@ -213,7 +213,6 @@ class EditorView: ScriptedWidgetEventHandler
 		NotifyCollectionChangedAction action = args.param2;
 		ref Param changed_params = args.param3;
 		
-		Print(collection);
 		IWidgetData widget_data_interface(collection);
 		
 		switch (action) {

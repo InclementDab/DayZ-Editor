@@ -61,7 +61,6 @@ class TextListboxWidgetData: ObservableDictionary<string, Class>
 	
 	void RemoveData(Widget w, Param params)
 	{
-		
 		TextListboxWidget list_widget = TextListboxWidget.Cast(w);
 		string param_text = Param2<string, Class>.Cast(params).param1;
 		for (int i = 0; i < list_widget.GetNumItems(); i++) {
@@ -100,22 +99,21 @@ class TextListboxWidgetData: ObservableDictionary<string, Class>
 // WrapSpacerWidget
 class WrapSpacerWidgetData: ObservableCollection<Widget>
 {
-	// Param1: Widget
+	// Param1: Index
+	// Param2: Widget
 	void AddData(Widget w, Param params)
 	{
-		w.AddChild(Param1<Widget>.Cast(params).param1);
+		w.AddChild(Param2<int, Widget>.Cast(params).param2);
 	}
 	
-	// Param1: Widget
 	void RemoveData(Widget w, Param params)
 	{
-		w.RemoveChild(Param1<Widget>.Cast(params).param1);
+		w.RemoveChild(Param2<int, Widget>.Cast(params).param2);
 	}
 	
 	void ReloadData(Widget w)
 	{	
 		ClearData(w);
-		
 		for (int i = 0; i < Count(); i++) {
 			w.AddChild(Get(i));
 		}
@@ -139,17 +137,16 @@ class WrapSpacerWidgetData: ObservableCollection<Widget>
 // XComboBoxWidget
 class XComboBoxWidgetData: ObservableCollection<string> 
 {
-	// Param1: string
+	// Param1: index
+	// Param2: String
 	void AddData(Widget w, Param params)
 	{
-		XComboBoxWidget.Cast(w).AddItem(Param1<string>.Cast(params).param1);
+		XComboBoxWidget.Cast(w).AddItem(Param2<int, string>.Cast(params).param2);
 	}
 	
 	void RemoveData(Widget w, Param params)
-	{
-		ClearData(w);
-		for (int i = 0; i < Count(); i++) 
-			XComboBoxWidget.Cast(w).AddItem(Get(i));
+	{		
+		XComboBoxWidget.Cast(w).RemoveItem(Param2<int, string>.Cast(params).param1);
 	}
 	
 	void ReloadData(Widget w)
@@ -169,27 +166,4 @@ class XComboBoxWidgetData: ObservableCollection<string>
 	void _ReloadData(Param1<Widget> params) { ReloadData(params.param1); }
 	void _ClearData(Param1<Widget> params) { ClearData(params.param1); }
 }
-
-
-enum NotifyCollectionChangedAction {
-	Add,
-	Remove,
-	Replace,
-	Move,
-	Clear
-};
-
-
-// Event Args for Collection Changed
-// 0: Observable that was changed
-// 1: Collection Changed Action
-// 2: Changed Value
-typedef Param3<Observable, int, Param> CollectionChangedEventArgs;
-
-
-
-// Event Args for Property Changed
-// 0: Name of property changed
-// 1: New property value
-typedef Param2<string, Class> PropertyChangedEventArgs;
 
