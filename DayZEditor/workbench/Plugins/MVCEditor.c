@@ -2,7 +2,7 @@
 
 
 [WorkbenchPluginAttribute("Testing", "Hi mom", "Alt+3", "", {"ResourceManager", "ScriptEditor"})]
-class EditorViewOptions: MVCPlugin
+class EditorViewOptions: WorkbenchPlugin
 {
 	private static ref array<ref ParamEnum> param_enums = {};
 	[Attribute("0", "combobox", "ViewBinding: ", "", param_enums)]
@@ -18,8 +18,7 @@ class EditorViewOptions: MVCPlugin
 
 		m_Module.SetOpenedResource(file);
 		WidgetSource widget = m_Module.GetContainer();	
-		string controller_name = ControllerBase.GetFromWidget(widget);
-		m_Controller = ControllerBaseHashMap.Get(controller_name);	
+		m_Controller = ControllerBaseHashMap.Get(ControllerBase.GetFromWidget(widget));	
 		EnumerateViewBindings(widget, param_enums);
 
 		
@@ -48,29 +47,21 @@ class EditorViewOptions: MVCPlugin
 		m_Module = Workbench.GetModule("ResourceManager");
 		Workbench.SearchResources("EditorObjectProperties.layout", ResourceSearchCb);		
 	}
-	
-	[ButtonAttribute("Save", true)]
-	void Save()
-	{
-		m_DialogResult = 1;
-	}
-	
-	[ButtonAttribute("Cancel")]
-	void Cancel() { }
+		
+
 	
 	[ButtonAttribute("Edit")]
 	void Edit() 
 	{
-
-		Print(m_Controller);
 		EditorViewBase view = m_Controller.GetEditorView(param_enums.Get(CurrentViewEdit).m_Key);
 		Print(view);
 		EditorViewData data = view.GetData();
 		Print(data);
-		
 		Workbench.ScriptDialog("Edit View Data", "Edit View Binding Options", data);
 	}
 	
+	[ButtonAttribute("Close")]
+	void Close() { }
 	
 }
 

@@ -12,52 +12,39 @@ class EditorView: EditorViewBase
 	void EditorView() { EditorLog.Trace("EditorView"); }
 	void ~EditorView() { EditorLog.Trace("~EditorView"); }
 
-	
 
-	
 	void OnWidgetScriptInit(Widget w)
 	{
 		
 		EditorLog.Trace("EditorView::OnWidgetScriptInit");
+		m_LayoutRoot = w;
 		
 #ifdef COMPONENT_SYSTEM
 		
+		m_ViewModel = ControllerHashMap.Get(Controller.GetFromWidget(ControllerBase.GetWidgetSource()));
 		
-		m_EditorViewData = new EditorViewData("aaa", "test");
-		string controller_name = Controller.GetFromWidget(ControllerBase.GetWidgetSource());
-		m_ViewModel = ControllerHashMap.Get(controller_name);
-
-		/*
 		if (m_EditorViewProjectData == null) {
 			m_EditorViewProjectData = new EditorViewProjectData();
-			EditorViewProjectData.LoadData(m_EditorViewProjectData);
-			m_EditorViewData = m_EditorViewProjectData.GetData(w);
-			if (m_EditorViewData != null) {
-				Print("Data Found!");
-				Print(m_EditorViewData.ControllerWidget);
-			} else {
-				Print("Data NOT found");
-				m_EditorViewData = new EditorViewData("Controller Goes Here", w.GetName());
-			}
 		}
 		
-		/*
-		int result = m_MVCPlugin.ShowDialog(m_EditorViewData);
-		if (result > 0) {
-			m_EditorViewProjectData.InsertViewData(w, m_EditorViewData);
-			EditorViewProjectData.SaveData(m_EditorViewProjectData);
-			
-			
-		} else if (result == -2) {
-			// This only gets called if m_MVCPlugin is not set
-			Workbench.Dialog("Error", "Failed to load Workbench Module");
-		}	*/
+		EditorViewProjectData.LoadData(m_EditorViewProjectData, "P:\\DayZEditor\\layoutdata.bin");
+		m_EditorViewData = m_EditorViewProjectData.GetData(w);
+		if (m_EditorViewData != null) {
+			Print("Data Found!");
+		} else {
+			Print("Data NOT found");
+			m_EditorViewData = new EditorViewData(m_LayoutRoot.GetName());
+			m_EditorViewProjectData.InsertViewData(m_LayoutRoot, m_EditorViewData);
+			EditorViewProjectData.SaveData(m_EditorViewProjectData, "P:\\DayZEditor\\layoutdata.bin");
+		}
 		
+		m_EditorViewData.SetDialogCallback(this, "EditDialogCallback");
+
 #endif
 		
 		//if (ControllerWidget == string.Empty) return;
 		
-		m_LayoutRoot = w;
+		
 			
 		// Set the control widget to relevant Widget
 		if (ProxyName != string.Empty) {
@@ -105,7 +92,15 @@ class EditorView: EditorViewBase
 		return super.OnClick(w, x, y, button);
 	}
 	
-
+	void EditDialogCallback(int result)
+	{
+		EditorLog.Trace("EditorView::EditDialogCallback");
+		Print(result);
+		if (result > 0) {
+			m_EditorViewProjectData.InsertViewData(m_LayoutRoot, m_EditorViewData);
+			EditorViewProjectData.SaveData(m_EditorViewProjectData, "P:\\DayZEditor\\layoutdata.bin");
+		}
+	}
 
 	
 	// UI -> Model

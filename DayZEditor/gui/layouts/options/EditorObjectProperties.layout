@@ -237,8 +237,6 @@ FrameWidgetClass EditorProperties {
                font "gui/fonts/etelkatextpro"
                {
                 ScriptParamsClass {
-                 ControllerWidget "EditorPropertiesController"
-                 Edit_Options 1
                 }
                }
               }
