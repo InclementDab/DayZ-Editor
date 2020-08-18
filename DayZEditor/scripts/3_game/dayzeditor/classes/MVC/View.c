@@ -54,18 +54,10 @@ class EditorView: EditorViewBase
 		// If var_name is blank, just use the name of root
 		if (DataBindingName == string.Empty)
 			DataBindingName = m_LayoutRoot.GetName();
-		
-		/*m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(ControllerWidget);
-		
-		if (!m_ViewModelWidget) {
-			Workbench.Dialog("Error", string.Format("ViewModel Widget not found! \"%1\"", ControllerWidget));
-			return;
-		}
-		
-		m_ViewModelWidget.GetScript(m_ViewModel);*/
-		
+
+				
 		if (!m_ViewModel) {
-			Workbench.Dialog("Error", string.Format("%1: Could not find ViewModel \"%2\"", m_LayoutRoot.GetName(), ControllerWidget));
+			Workbench.Dialog("Error", string.Format("%1: Could not find ViewModel", m_LayoutRoot.GetName()));
 			return;
 		}
 		

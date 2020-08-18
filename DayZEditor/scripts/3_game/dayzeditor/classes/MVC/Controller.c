@@ -78,7 +78,6 @@ class Controller: ControllerBase
 	void OnCollectionChanged(string property_name, CollectionChangedEventArgs args)
 	{
 		EditorLog.Trace(string.Format("Controller::OnCollectionChanged: %1 Action: %2", property_name, args.param2));
-
 		m_EditorViewList.Get(property_name).OnCollectionChanged(args);	
 	}
 	
