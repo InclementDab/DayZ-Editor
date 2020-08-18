@@ -1,11 +1,6 @@
 
-class EditorWidgetTest: Managed
+
+class DabWidget: Widget
 {
-
-	void EditorWidgetTest()
-	{
-		//Print("EditorWidget");
-	}
-
+	
 }
-

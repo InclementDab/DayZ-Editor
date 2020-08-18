@@ -68,7 +68,7 @@ class EditorObject
 		// Map marker
 		if ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
 			m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
-			GetEditorHudViewModel().InsertMapMarker(m_EditorObjectMapMarker);
+			GetEditorHudController().InsertMapMarker(m_EditorObjectMapMarker);
 
 		}	
 		
@@ -80,7 +80,7 @@ class EditorObject
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
 			m_EditorPlacedListItem = new EditorPlacedListItem(this);
-			GetEditorHudViewModel().InsertPlacedObject(m_EditorPlacedListItem);
+			GetEditorHudController().InsertPlacedObject(m_EditorPlacedListItem);
 		}
 		
 		

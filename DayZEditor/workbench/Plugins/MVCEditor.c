@@ -6,7 +6,6 @@
 class EditorViewOptions: MVCPlugin
 {
 	
-	
 	[Attribute("", "editbox", "ViewModel Widget Name")]
 	string ViewModelWidget;
 
@@ -23,24 +22,26 @@ class EditorViewOptions: MVCPlugin
 	void EditorViewOptions()
 	{
 		Print("EditorViewOptions");
+		m_MVCPlugin = this;
 	}
 	
 	private int m_DialogResult = -1;
+	private EditorViewData m_ViewData;
 	
 	override int ShowDialog(ref EditorViewData view_data) 
 	{
-		
-		ViewModelWidget = view_data.ViewModelWidget; 
-		VariableName 	= view_data.VariableName; 
-		VariableIndex 	= view_data.VariableIndex; 
-		ControlName 	= view_data.ControlName;
+		m_ViewData 		= view_data;
+		ViewModelWidget = m_ViewData.ViewModelWidget; 
+		VariableName 	= m_ViewData.VariableName; 
+		VariableIndex 	= m_ViewData.VariableIndex; 
+		ControlName 	= m_ViewData.ControlName;
 		
 		Workbench.ScriptDialog("View Options", "Edit View Binding Options", this);
 		
-		view_data.ViewModelWidget = ViewModelWidget;
-		view_data.VariableName = VariableName;
-		view_data.VariableIndex = VariableIndex;
-		view_data.ControlName = ControlName;
+		m_ViewData.ViewModelWidget = ViewModelWidget;
+		m_ViewData.VariableName = VariableName;
+		m_ViewData.VariableIndex = VariableIndex;
+		m_ViewData.ControlName = ControlName;
 		
 		return m_DialogResult;
 	}
@@ -51,6 +52,19 @@ class EditorViewOptions: MVCPlugin
 	void Save()
 	{
 		m_DialogResult = 1;
+		ScriptEditor browser = Workbench.GetModule("ScriptEditor");
+		Print(browser);
+		
+		if (browser) {
+			string file;
+			browser.GetCurrentFile(file);
+			array<string> file_dir = {};
+			file.Split("/", file_dir);
+			Workbench.GetAbsolutePath(file_dir.Get(0), file);
+			file += "/layoutdata.bin";
+			FileName = file;
+			browser.Save();
+		}
 	}
 	
 	[ButtonAttribute("Cancel")]

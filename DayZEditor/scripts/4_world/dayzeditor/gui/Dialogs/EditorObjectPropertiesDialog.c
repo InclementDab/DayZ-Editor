@@ -1,26 +1,27 @@
-static ref EditorPropertiesViewModel m_EditorPropertiesViewModel;
-EditorPropertiesViewModel GetEditorPropertiesViewModel() { return m_EditorPropertiesViewModel; }
+static ref EditorPropertiesController m_EditorPropertiesController;
+EditorPropertiesController GetEditorPropertiesController() { return m_EditorPropertiesController; }
 
 
-class EditorPropertiesViewModel: ViewModel
+class EditorPropertiesController: Controller
 {
 	private EditorObject m_EditorObject;
 	
-	TextWidgetData TitleText;
-	ButtonWidgetData CollapseGeneral = true;
+	string TitleText;
+	bool CollapseGeneral = true;
 	
 	EditBoxWidgetDataF pos_x, pos_y, pos_z;
 	EditBoxWidgetDataF rot_x, rot_y, rot_z;
 	
-	void EditorPropertiesViewModel()
+	void EditorPropertiesController()
 	{
-		m_EditorPropertiesViewModel = this;
+		m_EditorPropertiesController = this;
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);		
 		TitleText = "Object Properties";
+		
 	}
 	
 	void SetEditorObject(EditorObject editor_object)
@@ -82,8 +83,8 @@ class EditorObjectPropertiesDialog: EditorDialog
 	protected ButtonWidget m_CancelButton;
 	protected EditorObject m_Object;
 	
-	protected Widget m_ViewModelFrame;
-	protected ref EditorPropertiesViewModel m_ViewModel;
+	protected Widget m_ControllerFrame;
+	protected ref EditorPropertiesController m_Controller;
 	
 	private vector m_StartPosition;
 	
@@ -93,10 +94,10 @@ class EditorObjectPropertiesDialog: EditorDialog
 		m_EditorObject = editor_object;
 		
 		SetContent(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorObjectProperties.layout"));
-		m_ViewModelFrame = m_ContentWrapper.FindAnyWidget("EditorPropertiesViewModel");
-		m_ViewModelFrame.GetScript(m_ViewModel);
-		m_ViewModel.SetEditorObject(m_EditorObject);
-		m_StartPosition = m_ViewModel.GetPosition();
+		m_ControllerFrame = m_ContentWrapper.FindAnyWidget("EditorPropertiesController");
+		m_ControllerFrame.GetScript(m_Controller);
+		m_Controller.SetEditorObject(m_EditorObject);
+		m_StartPosition = m_Controller.GetPosition();
 		
 		AddButton("Save", "SaveCallback");
 		AddButton("Cancel", "CancelCallback");
@@ -111,16 +112,16 @@ class EditorObjectPropertiesDialog: EditorDialog
 	void SaveCallback()
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog::SaveCallback");
-		m_EditorObject.SetPosition(m_ViewModel.GetPosition());
-		m_EditorObject.SetOrientation(m_ViewModel.GetOrientation());
+		m_EditorObject.SetPosition(m_Controller.GetPosition());
+		m_EditorObject.SetOrientation(m_Controller.GetOrientation());
 		CloseDialog();
 	}
 	
 	void CancelCallback()
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog::CancelCallback");
-		m_ViewModel.SetPosition(m_StartPosition);
-		m_ViewModel.SetOrientation(m_StartPosition);
+		m_Controller.SetPosition(m_StartPosition);
+		m_Controller.SetOrientation(m_StartPosition);
 		
 		CloseDialog();
 	}

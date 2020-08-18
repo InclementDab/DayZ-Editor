@@ -138,7 +138,7 @@ class EditorClientModule: JMModuleBase
 		
 		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
 		
-		GetEditorHudViewModel().DebugText1 = avg_timeslice.ToString();
+		GetEditorHudController().DebugText1 = avg_timeslice.ToString();
 		NotifyPropertyChanged("DebugText1");
 	}
 	
@@ -462,7 +462,7 @@ class EditorClientModule: JMModuleBase
 		m_ActionStack.InsertAt(target, 0);
 		
 		// debug
-		GetEditorHudViewModel().DebugActionStackListbox.Insert(new TStringClassPair(target.GetName(), target));
+		GetEditorHudController().DebugActionStackListbox.Insert(new TStringClassPair(target.GetName(), target));
 	}
 	
 

@@ -6,7 +6,7 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 	protected Widget m_LeftbarFrame;
 	protected Widget m_RightbarFrame;
 	
-	protected EditorHudViewModel m_ViewModel;
+	protected EditorHudController m_Controller;
 	
 	void OnWidgetScriptInit(Widget w)
 	{
@@ -17,10 +17,10 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 		m_LeftbarFrame			= m_LayoutRoot.FindAnyWidget("LeftbarFrame");
 		m_RightbarFrame			= m_LayoutRoot.FindAnyWidget("RightbarFrame");
 		
-		m_ViewModel 			= GetEditorHudViewModel();
+		m_Controller 			= GetEditorHudController();
 		
 		// Set default
-		m_ViewModel.UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
+		m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
 	}
 	
 
@@ -53,32 +53,32 @@ class EditorHudHandler: ScriptedWidgetEventHandler
 			switch (w.GetName()) {
 				
 				case "LeftbarHide": {
-					ShowLeftBar(m_ViewModel.LeftbarHide);					
+					ShowLeftBar(m_Controller.LeftbarHide);					
 					break;
 				}
 				
 				case "RightbarHide": {
-					ShowRightBar(m_ViewModel.RightbarHide);
+					ShowRightBar(m_Controller.RightbarHide);
 					break;
 				}
 				
 				case "BuildingSelect": {
-					m_ViewModel.UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
+					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
 					break;
 				}
 				
 				case "VehicleSelect": {
-					m_ViewModel.UpdatePlaceableItems(PlaceableObjectCategory.VEHICLE);
+					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.VEHICLE);
 					break;
 				}
 				
 				case "EntitySelect": {
-					m_ViewModel.UpdatePlaceableItems(PlaceableObjectCategory.ENTITY);
+					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.ENTITY);
 					break;
 				}
 				
 				case "HumanSelect": {
-					m_ViewModel.UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
+					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
 					break;
 				}
 				

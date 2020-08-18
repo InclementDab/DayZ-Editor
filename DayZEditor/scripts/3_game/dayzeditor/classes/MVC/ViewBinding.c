@@ -32,8 +32,8 @@ class ViewBindingActionController
 class ViewBinding: Managed
 {
 	
-	reference string view_model_widget;
-	string GetViewModelWidgetName() { return view_model_widget; }
+	reference string ControllerWidget;
+	string GetViewModelWidgetName() { return ControllerWidget; }
 	
 	// Comma seperated values of Widget properties to bind
 	reference string binding_name;
@@ -51,7 +51,7 @@ class ViewBinding: Managed
 	
 	private Widget m_ViewModelWidget;
 	
-	private ViewModel m_ViewModel;
+	private Controller m_ViewModel;
 	
 	private ref array<string> binding_types = { "visible", "disabled", "clipchildren", "inheritalpha", "ignorepointer", "keepsafezone" };
 	private ref array<string> bound_types = new array<string>();
@@ -61,7 +61,7 @@ class ViewBinding: Managed
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("ViewBinding::OnWidgetScriptInit");
-		if (view_model_widget == string.Empty) return;
+		if (ControllerWidget == string.Empty) return;
 		m_LayoutRoot = w;
 		 
 		binding_name.Split(",", bound_types);
@@ -73,17 +73,17 @@ class ViewBinding: Managed
 			}
 		}
 		
-		m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(view_model_widget);
+		m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(ControllerWidget);
 		
 		if (!m_ViewModelWidget) {
-			Error(string.Format("ViewModel Widget not found! %1", view_model_widget));
+			Error(string.Format("ViewModel Widget not found! %1", ControllerWidget));
 			return;
 		}
 		
 		m_ViewModelWidget.GetScript(m_ViewModel);
 		
 		if (!m_ViewModel) {
-			Error(string.Format("%1 Could not find ViewModel: %2", m_LayoutRoot.GetName(), view_model_widget));
+			Error(string.Format("%1 Could not find ViewModel: %2", m_LayoutRoot.GetName(), ControllerWidget));
 			return;
 		}
 		

@@ -1,9 +1,9 @@
 
-static ref EditorHudViewModel m_EditorHudViewModel;
-EditorHudViewModel GetEditorHudViewModel() { return m_EditorHudViewModel; }
+static ref EditorHudController m_EditorHudController;
+EditorHudController GetEditorHudController() { return m_EditorHudController; }
 
 // 	  vvvvvvvvvvvvvvvvv  put THIS into ScriptClass
-class EditorHudViewModel: ViewModel
+class EditorHudController: Controller
 {
 
 	TextWidgetData DebugText1;
@@ -26,10 +26,10 @@ class EditorHudViewModel: ViewModel
 	ref WrapSpacerWidgetData RightbarSpacer;
 	ref XComboBoxWidgetData BrushTypeBox;
 	
-	void EditorHudViewModel()
+	void EditorHudController()
 	{
-		EditorLog.Trace("EditorHudViewModel");
-		m_EditorHudViewModel = this;
+		EditorLog.Trace("EditorHudController");
+		m_EditorHudController = this;
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
@@ -58,7 +58,7 @@ class EditorHudViewModel: ViewModel
 	private ref map<string, typename> 	m_CustomBrushList;
 	void ReloadBrushes(string filename)
 	{
-		EditorLog.Trace("EditorHudViewModel::ReloadBrushes");
+		EditorLog.Trace("EditorHudController::ReloadBrushes");
 		XMLEditorBrushes xml_brushes = new XMLEditorBrushes();
 		GetXMLApi().Read(filename, xml_brushes);
 	}
@@ -68,7 +68,7 @@ class EditorHudViewModel: ViewModel
 	
 	void SetBrushTypes(EditorBrushDataSet brush_types)
 	{
-		EditorLog.Trace("EditorHudViewModel::SetBrushTypes");
+		EditorLog.Trace("EditorHudController::SetBrushTypes");
 		m_EditorBrushTypes = brush_types;
 
 		foreach (EditorBrushData brush: m_EditorBrushTypes)
@@ -96,19 +96,19 @@ class EditorHudViewModel: ViewModel
 	
 	void InsertPlaceableObject(EditorListItem target)
 	{
-		EditorLog.Trace("EditorHudViewModel::InsertPlaceableObject");
+		EditorLog.Trace("EditorHudController::InsertPlaceableObject");
 		LeftbarSpacer.Insert(target.GetRoot());
 	}	
 	
 	void InsertPlacedObject(EditorListItem target)
 	{
-		EditorLog.Trace("EditorHudViewModel::InsertPlacedObject");
+		EditorLog.Trace("EditorHudController::InsertPlacedObject");
 		RightbarSpacer.Insert(target.GetRoot());
 	}
 	
 	void InsertMapMarker(EditorMarker map_marker)
 	{
-		Print("EditorHudViewModel::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
+		Print("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
 		GetEditor().GetEditorHud().GetMapWidget().AddChild(map_marker.GetLayoutRoot());
 	}
 	
@@ -134,7 +134,7 @@ class EditorHudViewModel: ViewModel
 	
 	void UpdatePlaceableItems(PlaceableObjectCategory category)
 	{
-		EditorLog.Trace("EditorUIViewModel::UpdatePlaceableItems");
+		EditorLog.Trace("EditorUIController::UpdatePlaceableItems");
 		
 		for (int i = 0; i < LeftbarSpacer.Count(); i++) {
 			Widget list_item = LeftbarSpacer.Get(i);

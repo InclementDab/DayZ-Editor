@@ -8,7 +8,7 @@ FrameWidgetClass EditorProperties {
  hexactsize 1
  vexactsize 1
  {
-  FrameWidgetClass EditorPropertiesViewModel {
+  FrameWidgetClass EditorPropertiesController {
    visible 1
    ignorepointer 1
    position 10 10
@@ -17,7 +17,7 @@ FrameWidgetClass EditorProperties {
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   scriptclass "EditorPropertiesViewModel"
+   scriptclass "EditorPropertiesController"
    {
     ScriptParamsClass {
     }
@@ -237,7 +237,8 @@ FrameWidgetClass EditorProperties {
                font "gui/fonts/etelkatextpro"
                {
                 ScriptParamsClass {
-                 view_model_widget "EditorPropertiesViewModel"
+                 ControllerWidget "EditorPropertiesController"
+                 Edit_Options 1
                 }
                }
               }
@@ -317,7 +318,6 @@ FrameWidgetClass EditorProperties {
                font "gui/fonts/etelkatextpro"
                {
                 ScriptParamsClass {
-                 view_model_widget "EditorPropertiesViewModel"
                 }
                }
               }
@@ -396,7 +396,6 @@ FrameWidgetClass EditorProperties {
                font "gui/fonts/etelkatextpro"
                {
                 ScriptParamsClass {
-                 view_model_widget "EditorPropertiesViewModel"
                 }
                }
               }

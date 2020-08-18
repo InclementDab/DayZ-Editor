@@ -1,95 +1,104 @@
 
 
-
 class EditorView: ScriptedWidgetEventHandler
 {
 	
 
 	// Required
-	// Name of Widget that has ViewModel ScriptClass
-	private reference string view_model_widget;
-	string GetViewModelWidgetName() { return view_model_widget; }
+	// Name of Widget that has Controller ScriptClass
+	private reference string ControllerWidget;
+	string GetViewModelWidgetName() { return ControllerWidget; }
 	
-	//private reference bool Edit_Options;
+	private reference bool Edit_Options;
 		
 	// Optional
 	// if blank, will use name of Widget
-	private reference string variable_name;
-	string GetVariableName() { return variable_name; } 
+	private reference string DataBindingName;
+	string GetVariableName() { return DataBindingName; } 
 	
 	// Index of array if using arrays
-	private reference int variable_index;
-	int GetVariableIndex() { return variable_index; }
+	private reference int DataBindingIndex;
+	int GetVariableIndex() { return DataBindingIndex; }
 	
 	// if blank, will use this widget
-	private reference string control_name; 
-	string GetControlName() { return control_name; } 
+	private reference string ProxyName; 
+	string GetControlName() { return ProxyName; } 
 	
 	private Widget m_LayoutRoot;
 	private Widget m_ViewModelWidget;
 	
-	private ViewModel m_ViewModel;
+	private Controller m_ViewModel;
 
 	void EditorView() { EditorLog.Trace("EditorView"); }
 	void ~EditorView() { EditorLog.Trace("~EditorView"); }
-	
+
 	
 	void OnWidgetScriptInit(Widget w)
 	{
+		
 		EditorLog.Trace("EditorView::OnWidgetScriptInit");
 		
-	/*	
+		
 #ifdef COMPONENT_SYSTEM
 		
 		if (Edit_Options) {
 			Edit_Options = false;
 			
-			if (variable_name == string.Empty) {
-				variable_name = w.GetName();
+			if (m_EditorViewProjectData == null) {
+				
+				m_EditorViewProjectData = new EditorViewProjectData("");
 			}
 			
-			EditorViewData options(view_model_widget, variable_name, variable_index, control_name);
+			
+			if (DataBindingName == string.Empty) {
+				DataBindingName = w.GetName();
+			}
+			
+			EditorViewData options(ControllerWidget, DataBindingName, DataBindingIndex, ProxyName);
+			
 			
 			int result = m_MVCPlugin.ShowDialog(options);
 			if (result > 0) {
-				Print(options.ViewModelWidget);
-				view_model_widget = options.ViewModelWidget;
-				variable_name = options.VariableName;
-				variable_index = options.VariableIndex;
-				control_name = options.ControlName;
+				
+				ControllerWidget = options.ViewModelWidget;
+				DataBindingName = options.VariableName;
+				DataBindingIndex = options.VariableIndex;
+				ProxyName = options.ControlName;
+				Print(m_MVCPlugin.FileName);
+				
 				
 			} else if (result == -2) {
 				// This only gets called if m_MVCPlugin is not set
-				Error("Failed to load Workbench Module");
+				Workbench.Dialog("Error", "Failed to load Workbench Module");
 			}
 		}
 		
 #endif
-		*/
-		if (view_model_widget == string.Empty) return;
+		
+		if (ControllerWidget == string.Empty) return;
 		
 		m_LayoutRoot = w;
 			
 		// Set the control widget to relevant Widget
-		if (control_name != string.Empty) {
-			m_LayoutRoot = m_LayoutRoot.FindAnyWidget(control_name);
+		if (ProxyName != string.Empty) {
+			m_LayoutRoot = m_LayoutRoot.FindAnyWidget(ProxyName);
 		}
 		
 		// If var_name is blank, just use the name of root
-		if (variable_name == string.Empty)
-			variable_name = m_LayoutRoot.GetName();
+		if (DataBindingName == string.Empty)
+			DataBindingName = m_LayoutRoot.GetName();
 		
-		m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(view_model_widget);
+		m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(ControllerWidget);
 		
 		if (!m_ViewModelWidget) {
-			Workbench.Dialog("Error", string.Format("ViewModel Widget not found! %1", view_model_widget));
+			Workbench.Dialog("Error", string.Format("ViewModel Widget not found! \"%1\"", ControllerWidget));
 			return;
 		}
 		
 		m_ViewModelWidget.GetScript(m_ViewModel);
 		
 		if (!m_ViewModel) {
-			Workbench.Dialog("Error", string.Format("%1 Could not find ViewModel: %2", m_LayoutRoot.GetName(), view_model_widget));
+			Workbench.Dialog("Error", string.Format("%1: Could not find ViewModel \"%2\"", m_LayoutRoot.GetName(), ControllerWidget));
 			return;
 		}
 		
@@ -137,7 +146,7 @@ class EditorView: ScriptedWidgetEventHandler
 				for (int i = 0; i < _MultilineEditBoxWidget.GetLinesCount(); i++) {
 					string line;
 					_MultilineEditBoxWidget.GetLine(i, line);
-					EnScript.SetClassVar(m_ViewModel, variable_name, i, line);
+					EnScript.SetClassVar(m_ViewModel, DataBindingName, i, line);
 				}
 
 				break;
@@ -145,18 +154,18 @@ class EditorView: ScriptedWidgetEventHandler
 			
 			case EditBoxWidget: {
 
-				switch (m_ViewModel.GetVariableType(variable_name)) {
+				switch (m_ViewModel.GetVariableType(DataBindingName)) {
 					
 					case EditBoxWidgetData:
 					case string: {
 						EditBoxWidgetData _EditBoxWidgetData = EditBoxWidget.Cast(m_LayoutRoot).GetText();
-						EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetData);
+						EnScript.SetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _EditBoxWidgetData);
 						break;
 					}
 					
 					case EditBoxWidgetDataF: {
 						EditBoxWidgetDataF _EditBoxWidgetDataF = EditBoxWidget.Cast(m_LayoutRoot).GetText();
-						EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetDataF.GetValidString());
+						EnScript.SetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _EditBoxWidgetDataF.GetValidString());
 						break;
 					}
 					
@@ -172,21 +181,21 @@ class EditorView: ScriptedWidgetEventHandler
 			case ButtonWidget: {
 				ButtonWidgetData _ButtonWidgetData;
 				_ButtonWidgetData = ButtonWidget.Cast(m_LayoutRoot).GetState();
-				EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _ButtonWidgetData);
+				EnScript.SetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _ButtonWidgetData);
 				break;
 			}
 			
 			case CheckBoxWidget: {
 				CheckBoxWidgetData _CheckBoxWidgetData;
 				_CheckBoxWidgetData = CheckBoxWidget.Cast(m_LayoutRoot).IsChecked();
-				EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _CheckBoxWidgetData);
+				EnScript.SetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _CheckBoxWidgetData);
 				break;
 			}
 			
 			case SliderWidget: {
 				SliderWidgetData _SliderWidgetData;
 				_SliderWidgetData = SliderWidget.Cast(m_LayoutRoot).GetCurrent();
-				EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _SliderWidgetData);
+				EnScript.SetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _SliderWidgetData);
 				break;
 			}
 			
@@ -200,25 +209,25 @@ class EditorView: ScriptedWidgetEventHandler
 			}
 		}
 		
-		NotifyPropertyChanged(variable_name);
+		NotifyPropertyChanged(DataBindingName);
 	}
 	
 	
 	// Model -> UI
 	void OnPropertyChanged() 
 	{
-		//EditorLog.Trace("EditorView::OnPropertyChanged: " + variable_name);
+		//EditorLog.Trace("EditorView::OnPropertyChanged: " + DataBindingName);
 		
 		switch (m_LayoutRoot.Type()) {
 			
 			case TextWidget: {
 				
-				switch (m_ViewModel.GetVariableType(variable_name)) {
+				switch (m_ViewModel.GetVariableType(DataBindingName)) {
 					
 					case TextWidgetData:
 					case string: {
 						string _TextWidgetDataS;
-						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextWidgetDataS);
+						EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _TextWidgetDataS);
 						TextWidget.Cast(m_LayoutRoot).SetText(_TextWidgetDataS);
 						break;
 					}
@@ -226,14 +235,14 @@ class EditorView: ScriptedWidgetEventHandler
 					case int:
 					case float: {
 						float _TextWidgetDataF;
-						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextWidgetDataF);
+						EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _TextWidgetDataF);
 						TextWidget.Cast(m_LayoutRoot).SetText(_TextWidgetDataF.ToString());
 						break;
 					}
 					
 					case bool: {
 						bool _TextWidgetDataB;
-						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextWidgetDataB);
+						EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _TextWidgetDataB);
 						TextWidget.Cast(m_LayoutRoot).SetText(_TextWidgetDataB.ToString());
 						break;
 					}
@@ -244,13 +253,13 @@ class EditorView: ScriptedWidgetEventHandler
 			
 			case EditBoxWidget: {
 				
-				switch (m_ViewModel.GetVariableType(variable_name)) {
+				switch (m_ViewModel.GetVariableType(DataBindingName)) {
 					
 					case EditBoxWidgetData:
 					case EditBoxWidgetDataF:
 					case string: {
 						string _EditBoxWidgetDataS;
-						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetDataS);
+						EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _EditBoxWidgetDataS);
 						EditBoxWidget.Cast(m_LayoutRoot).SetText(_EditBoxWidgetDataS);
 						break;
 					}
@@ -258,22 +267,22 @@ class EditorView: ScriptedWidgetEventHandler
 					case int:
 					case float: {
 						float _EditBoxWidgetDataF;
-						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetDataF);
+						EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _EditBoxWidgetDataF);
 						EditBoxWidget.Cast(m_LayoutRoot).SetText(_EditBoxWidgetDataF.ToString());
 						break;
 					}
 					
 					case bool: {
 						bool _EditBoxWidgetDataB;
-						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetDataB);
+						EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _EditBoxWidgetDataB);
 						EditBoxWidget.Cast(m_LayoutRoot).SetText(_EditBoxWidgetDataB.ToString());
 						break;
 					}
 					
 					case vector: {
 						vector _EditBoxWidgetDataV;
-						EnScript.GetClassVar(m_ViewModel, variable_name, 0, _EditBoxWidgetDataV);
-						EditBoxWidget.Cast(m_LayoutRoot).SetText(_EditBoxWidgetDataV[variable_index].ToString());
+						EnScript.GetClassVar(m_ViewModel, DataBindingName, 0, _EditBoxWidgetDataV);
+						EditBoxWidget.Cast(m_LayoutRoot).SetText(_EditBoxWidgetDataV[DataBindingIndex].ToString());
 						break;
 					}
 				}
@@ -289,7 +298,7 @@ class EditorView: ScriptedWidgetEventHandler
 			case ButtonWidget: {
 				
 				ButtonWidgetData _ButtonWidgetData;
-				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _ButtonWidgetData);
+				EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _ButtonWidgetData);
 				ButtonWidget.Cast(m_LayoutRoot).SetState(_ButtonWidgetData);
 				break;
 			}
@@ -297,35 +306,35 @@ class EditorView: ScriptedWidgetEventHandler
 			case CheckBoxWidget: {
 				
 				CheckBoxWidgetData _CheckBoxWidgetData;
-				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _CheckBoxWidgetData);
+				EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _CheckBoxWidgetData);
 				CheckBoxWidget.Cast(m_LayoutRoot).SetChecked(_CheckBoxWidgetData);
 				break;
 			}
 			
 			case SliderWidget: {
 				SliderWidgetData _SliderWidgetData;
-				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _SliderWidgetData);
+				EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _SliderWidgetData);
 				SliderWidget.Cast(m_LayoutRoot).SetCurrent(_SliderWidgetData);
 				break;
 			}
 			
 			case WrapSpacerWidget: {
 				WrapSpacerWidgetData _WrapSpacerWidgetData;
-				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _WrapSpacerWidgetData);
+				EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _WrapSpacerWidgetData);
 				_WrapSpacerWidgetData.ReloadData(WrapSpacerWidget.Cast(m_LayoutRoot));
 				break;
 			}
 			
 			case TextListboxWidget: {
 				TextListboxWidgetData _TextListboxWidgetData;
-				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextListboxWidgetData);
+				EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _TextListboxWidgetData);
 				_TextListboxWidgetData.ReloadData(TextListboxWidget.Cast(m_LayoutRoot));
 				break;
 			}
 			
 			case XComboBoxWidget: {
 				XComboBoxWidgetData _XComboBoxWidgetData;
-				EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _XComboBoxWidgetData);
+				EnScript.GetClassVar(m_ViewModel, DataBindingName, DataBindingIndex, _XComboBoxWidgetData);
 				_XComboBoxWidgetData.ReloadData(XComboBoxWidget.Cast(m_LayoutRoot));
 				break;
 			}
@@ -342,7 +351,7 @@ class EditorView: ScriptedWidgetEventHandler
 	
 	void OnCollectionChanged(CollectionChangedEventArgs args)
 	{		
-		EditorLog.Trace(string.Format("EditorView::OnCollectionChanged: %1 Action: %2", variable_name, args.param2));
+		EditorLog.Trace(string.Format("EditorView::OnCollectionChanged: %1 Action: %2", DataBindingName, args.param2));
 				
 		Observable collection = args.param1;
 		NotifyCollectionChangedAction action = args.param2;
@@ -385,9 +394,9 @@ class EditorView: ScriptedWidgetEventHandler
 	void DebugPrint()
 	{
 		EditorLog.Debug("EditorView::DebugPrint: " + m_LayoutRoot.GetName());
-		EditorLog.Debug("view_model_widget:" + view_model_widget);
-		EditorLog.Debug("variable_name:" + variable_name);
-		EditorLog.Debug("variable_index:" + variable_index);
-		EditorLog.Debug("control_name:" + control_name);
+		EditorLog.Debug("ControllerWidget:" + ControllerWidget);
+		EditorLog.Debug("DataBindingName:" + DataBindingName);
+		EditorLog.Debug("DataBindingIndex:" + DataBindingIndex);
+		EditorLog.Debug("ProxyName:" + ProxyName);
 	}
 };

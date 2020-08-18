@@ -354,7 +354,7 @@ class XMLEditorBrushes: XMLCallback
 			m_Data.Insert(brush_settings.Name, brush_settings);
 		}
 		
-		GetEditorHudViewModel().SetBrushTypes(m_Data);
+		GetEditorHudController().SetBrushTypes(m_Data);
 	}
 	
 	override void OnFailure(ref XMLDocument document)
