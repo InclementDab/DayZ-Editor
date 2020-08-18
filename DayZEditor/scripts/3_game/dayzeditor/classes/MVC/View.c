@@ -8,7 +8,7 @@ class EditorView: EditorViewBase
 	string GetViewModelWidgetName() { return ControllerWidget; }
 	
 	private reference bool Edit_Options;
-		
+	
 	// Optional
 	// if blank, will use name of Widget
 	private reference string DataBindingName;
@@ -19,7 +19,7 @@ class EditorView: EditorViewBase
 	int GetVariableIndex() { return DataBindingIndex; }
 	
 	// if blank, will use this widget
-	private reference string ProxyName; 
+	private reference string ProxyName;
 	string GetControlName() { return ProxyName; } 
 	
 	private Widget m_LayoutRoot;

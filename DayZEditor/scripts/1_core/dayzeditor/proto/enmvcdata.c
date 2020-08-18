@@ -1,5 +1,8 @@
 
 
+typedef Managed ControllerBase;
+static ref map<string, ControllerBase> ControllerHashMap;
+
 static ref EditorViewProjectData m_EditorViewProjectData;
 EditorViewProjectData GetEditorViewProjectData() { return m_EditorViewProjectData; }
 

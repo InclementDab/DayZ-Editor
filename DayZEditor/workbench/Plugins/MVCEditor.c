@@ -1,60 +1,77 @@
 
-typedef int[] FrameWidgetClass;
-
-
 
 
 [WorkbenchPluginAttribute("Testing", "Hi mom", "Alt+3", "", {"ResourceManager", "ScriptEditor"})]
 class EditorViewOptions: MVCPlugin
 {
+	private static ref array<ref ParamEnum> param_enums = {};
+	[Attribute("0", "combobox", "ViewBinding: ", "", param_enums)]
+	int CurrentViewEdit;
+	
 	
 	protected ResourceBrowser m_Module;
+	
 	
 	void ResourceSearchCb(string file)
 	{
 		Print("Resource Found! " + file);
-					
+
 		m_Module.SetOpenedResource(file);
 		WidgetSource widget = m_Module.GetContainer();
 		
-		WidgetSource widget_chidren = widget.GetChildren();
-		Print(widget_chidren.GetClassName());
-		Print(widget_chidren.GetName());
+		ControllerBase controller = GetController(widget);
+	
+		EnumerateViewBindings(widget, param_enums);
 		
 		
+		Workbench.ScriptDialog("View Options", "Edit View Binding Options", this);
 		
-		int var_index = widget_chidren.VarIndex("scriptclass");
-		Print(var_index);
-		
-		
-		if (widget_chidren.IsVariableSet(var_index)) {
-			string scriptclass;
-			widget_chidren.Get(var_index, scriptclass);
-			Print(scriptclass);
-		} else {
-			Print("Vartype");
-			Print(widget_chidren.IsType(var_index, string));
-		}
-		
-		for (int i = 0; i < 10; i++) {
 			
+	}
+	
+	void EnumerateViewBindings(WidgetSource source, out ref array<ref ParamEnum> view_bindings)
+	{
+		if (!source) return;
+			
+		string script;
+		source.Get(source.VarIndex("scriptclass"), script);
+		
+		if (script == "EditorView") {
+			view_bindings.Insert(ParamEnum(source.GetName(), view_bindings.Count().ToString()));
 		}
 		
-		//widget.Get(0, frame_widget);
+		EnumerateViewBindings(source.GetChildren(), view_bindings);
+		EnumerateViewBindings(source.GetSibling(), view_bindings);
+	}
+	
+	ControllerBase GetController(WidgetSource source)
+	{
+		if (!source) return null;
 		
+		string script;
+		source.Get(source.VarIndex("scriptclass"), script);
+		typename type = script.ToType();
+		if (type.IsInherited(ControllerBase)) {
+			Print("Controller Found");
+			return ControllerHashMap.Get(source.GetName());
+		}
 		
+		if (GetController(source.GetChildren()) != null) {
+			return GetController(source.GetChildren());
+		}
 		
+		if (GetController(source.GetSibling()) != null) {
+			return GetController(source.GetSibling());
+		}
+		
+		return null;
 	}
 	
 	
 	override void Run()
-	{
-		
+	{		
 		m_Module = Workbench.GetModule("ResourceManager");
-		Workbench.SearchResources("EditorObjectProperties.layout", ResourceSearchCb);
-		
-		
-		Workbench.ScriptDialog("View Options", "Edit View Binding Options", m_EditorViewData);
+		Workbench.SearchResources("EditorObjectProperties.layout", ResourceSearchCb);		
 	}
 	
 	[ButtonAttribute("Save", true)]

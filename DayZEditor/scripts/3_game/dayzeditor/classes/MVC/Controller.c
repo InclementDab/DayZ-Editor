@@ -1,8 +1,10 @@
 
 typedef ref array<ref EditorView> TEditorViewSet;
 
+
+
 // Inherit this class, then put that class into ScriptClass for your View Model Widget
-class Controller: Managed
+class Controller: ControllerBase
 {
 	// Widget Data
 	protected Widget m_LayoutRoot;
@@ -20,7 +22,7 @@ class Controller: Managed
 	
 	void OnWidgetScriptInit(Widget w)
 	{
-		EditorLog.Trace("Controller::OnWidgetScriptInit");	
+		EditorLog.Trace("Controller::OnWidgetScriptInit");
 		m_ControllerWidget = w;
 		m_LayoutRoot = GetWidgetRoot(m_ControllerWidget);
 		
@@ -33,6 +35,11 @@ class Controller: Managed
 		for (int i = 0; i < vcnt; i++)
 			m_ModelHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));		
 		
+		if (ControllerHashMap == null) {
+			ControllerHashMap = new map<string, ControllerBase>();
+		}
+		
+		ControllerHashMap.Insert(m_ControllerWidget.GetName(), this);
 		
 		NotifyOnPropertyChanged(OnPropertyChanged);
 		NotifyOnCollectionChanged(OnCollectionChanged);
