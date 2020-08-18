@@ -1,9 +1,7 @@
 
 
 
-static ref map<string, ControllerBase> ControllerHashMap;
-
-
+static ref map<string, ControllerBase> ControllerBaseHashMap;
 class ControllerBase: Managed
 {
 	
@@ -16,14 +14,38 @@ class ControllerBase: Managed
 		m_EditorViewList = new map<string, ref EditorViewBase>();
 	}
 	
-	ref EditorViewData GetEditorViewData(string property_name)
+	EditorViewBase GetEditorView(string property_name)
 	{
-		return m_EditorViewList.Get(property_name).GetData();
+		return m_EditorViewList.Get(property_name);
 	}
 	
-	void SetEditorViewData(ref EditorViewData data, string property_name)
+	static string GetFromWidget(WidgetSource source)
 	{
-		m_EditorViewList.Get(property_name).SetData(data);
+		if (!source) return string.Empty;
+		
+		string script;
+		source.Get(source.VarIndex("scriptclass"), script);
+		typename type = script.ToType();
+		if (type.IsInherited(ControllerBase)) {
+			Print("Controller Found");
+			return source.GetName();
+		}
+		
+		if (GetFromWidget(source.GetChildren()) != string.Empty) {
+			return GetFromWidget(source.GetChildren());
+		}
+		
+		if (GetFromWidget(source.GetSibling()) != string.Empty) {
+			return GetFromWidget(source.GetSibling());
+		}
+		
+		return string.Empty;
+	}
+	
+	static WidgetSource GetWidgetSource()
+	{
+		ResourceBrowser m_Module = Workbench.GetModule("ResourceManager");
+		return m_Module.GetContainer();
 	}
 }
 

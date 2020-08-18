@@ -7,7 +7,7 @@ class EditorView: EditorViewBase
 	protected Widget m_LayoutRoot;
 	protected Widget m_ViewModelWidget;
 		
-	protected Controller m_ViewModel;
+	protected ref Controller m_ViewModel;
 
 	void EditorView() { EditorLog.Trace("EditorView"); }
 	void ~EditorView() { EditorLog.Trace("~EditorView"); }
@@ -22,9 +22,11 @@ class EditorView: EditorViewBase
 		
 #ifdef COMPONENT_SYSTEM
 		
+		
 		m_EditorViewData = new EditorViewData("aaa", "test");
-		
-		
+		string controller_name = Controller.GetFromWidget(ControllerBase.GetWidgetSource());
+		m_ViewModel = ControllerHashMap.Get(controller_name);
+
 		/*
 		if (m_EditorViewProjectData == null) {
 			m_EditorViewProjectData = new EditorViewProjectData();
@@ -53,7 +55,7 @@ class EditorView: EditorViewBase
 		
 #endif
 		
-		if (ControllerWidget == string.Empty) return;
+		//if (ControllerWidget == string.Empty) return;
 		
 		m_LayoutRoot = w;
 			
@@ -66,14 +68,14 @@ class EditorView: EditorViewBase
 		if (DataBindingName == string.Empty)
 			DataBindingName = m_LayoutRoot.GetName();
 		
-		m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(ControllerWidget);
+		/*m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(ControllerWidget);
 		
 		if (!m_ViewModelWidget) {
 			Workbench.Dialog("Error", string.Format("ViewModel Widget not found! \"%1\"", ControllerWidget));
 			return;
 		}
 		
-		m_ViewModelWidget.GetScript(m_ViewModel);
+		m_ViewModelWidget.GetScript(m_ViewModel);*/
 		
 		if (!m_ViewModel) {
 			Workbench.Dialog("Error", string.Format("%1: Could not find ViewModel \"%2\"", m_LayoutRoot.GetName(), ControllerWidget));

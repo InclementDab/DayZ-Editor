@@ -1,6 +1,6 @@
 
 typedef ref array<ref EditorView> TEditorViewSet;
-
+static ref map<string, Controller> ControllerHashMap;
 
 
 // Inherit this class, then put that class into ScriptClass for your View Model Widget
@@ -34,10 +34,16 @@ class Controller: ControllerBase
 			m_ModelHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));		
 		
 		if (ControllerHashMap == null) {
-			ControllerHashMap = new map<string, ControllerBase>();
+			ControllerHashMap = new map<string, Controller>();
 		}
 		
 		ControllerHashMap.Insert(m_ControllerWidget.GetName(), this);
+		
+		if (ControllerBaseHashMap == null) {
+			ControllerBaseHashMap = new map<string, ControllerBase>();
+		}
+		
+		ControllerBaseHashMap.Insert(m_ControllerWidget.GetName(), this);
 		
 		NotifyOnPropertyChanged(OnPropertyChanged);
 		NotifyOnCollectionChanged(OnCollectionChanged);
@@ -48,7 +54,7 @@ class Controller: ControllerBase
 		string variable_name = view.GetVariableName();
 		EditorLog.Trace("Controller::InsertView: " + variable_name);
 		
-		m_EditorViewList.Insert(variable_name, view);
+		Print(m_EditorViewList.Insert(variable_name, view));
 	}
 	
 	void InsertBinding(ViewBinding binding)
@@ -73,10 +79,10 @@ class Controller: ControllerBase
 	{
 		EditorLog.Trace(string.Format("Controller::OnCollectionChanged: %1 Action: %2", property_name, args.param2));
 
-		m_EditorViewList.Get(property_name).OnCollectionChanged(args);
-
-		
+		m_EditorViewList.Get(property_name).OnCollectionChanged(args);	
 	}
+	
+
 
 	
 	ref map<string, typename> GetVariableHashMap() { return m_ModelHashMap; }

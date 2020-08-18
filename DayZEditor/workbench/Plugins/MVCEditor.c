@@ -17,9 +17,9 @@ class EditorViewOptions: MVCPlugin
 		Print("Resource Found! " + file);
 
 		m_Module.SetOpenedResource(file);
-		WidgetSource widget = m_Module.GetContainer();
-		m_Controller = GetController(widget);
-		
+		WidgetSource widget = m_Module.GetContainer();	
+		string controller_name = ControllerBase.GetFromWidget(widget);
+		m_Controller = ControllerBaseHashMap.Get(controller_name);	
 		EnumerateViewBindings(widget, param_enums);
 
 		
@@ -41,30 +41,7 @@ class EditorViewOptions: MVCPlugin
 		EnumerateViewBindings(source.GetChildren(), view_bindings);
 		EnumerateViewBindings(source.GetSibling(), view_bindings);
 	}
-	
-	ControllerBase GetController(WidgetSource source)
-	{
-		if (!source) return null;
 		
-		string script;
-		source.Get(source.VarIndex("scriptclass"), script);
-		typename type = script.ToType();
-		if (type.IsInherited(ControllerBase)) {
-			Print("Controller Found");
-			return ControllerHashMap.Get(source.GetName());
-		}
-		
-		if (GetController(source.GetChildren()) != null) {
-			return GetController(source.GetChildren());
-		}
-		
-		if (GetController(source.GetSibling()) != null) {
-			return GetController(source.GetSibling());
-		}
-		
-		return null;
-	}
-	
 	
 	override void Run()
 	{		
@@ -84,7 +61,13 @@ class EditorViewOptions: MVCPlugin
 	[ButtonAttribute("Edit")]
 	void Edit() 
 	{
-		EditorViewData data = m_Controller.GetEditorViewData(param_enums.Get(CurrentViewEdit).m_Key);
+
+		Print(m_Controller);
+		EditorViewBase view = m_Controller.GetEditorView(param_enums.Get(CurrentViewEdit).m_Key);
+		Print(view);
+		EditorViewData data = view.GetData();
+		Print(data);
+		
 		Workbench.ScriptDialog("Edit View Data", "Edit View Binding Options", data);
 	}
 	
