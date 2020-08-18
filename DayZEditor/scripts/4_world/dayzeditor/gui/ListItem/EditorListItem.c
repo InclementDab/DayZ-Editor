@@ -61,7 +61,11 @@ class EditorListItem: ScriptedWidgetEventHandler
 	}
 
 
-	void ~EditorListItem() { EditorLog.Trace("~EditorListItem"); }
+	void ~EditorListItem() 
+	{ 
+		EditorLog.Trace("~EditorListItem"); 
+		m_Root.Unlink();
+	}
 	
 	
 

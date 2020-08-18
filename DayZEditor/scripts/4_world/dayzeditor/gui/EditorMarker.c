@@ -86,10 +86,25 @@ class EditorObjectMarker: EditorMarker
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{		
+		// ignores the object if you are placing
+		if (GetEditor().IsPlacing()) return false;
+		
+		// We want to Toggle selection if you are holding control
+		if (KeyState(KeyCode.KC_LCONTROL)) {
+			GetEditor().ToggleSelection(m_EditorObject);
+		} else {
+			if (!KeyState(KeyCode.KC_LSHIFT))
+				GetEditor().ClearSelection();
+			
+			GetEditor().SelectObject(m_EditorObject);
+		}
+		
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(CheckDragBounds, 0, true, x, y);
+		
 		return true;
 	}
 	
+	private const int DRAG_THRESHOLD = 10;
 	private void CheckDragBounds(int x, int y)
 	{
 		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
@@ -99,7 +114,7 @@ class EditorObjectMarker: EditorMarker
 			int dist_x = Math.AbsInt(x - c_x);
 			int dist_y = Math.AbsInt(y - c_y);
 			
-			if (dist_x + dist_y > 10) {
+			if (dist_x + dist_y > DRAG_THRESHOLD) {
 				GetEditor().SelectObject(m_EditorObject);
 				m_DragHandler.OnDragStart();
 				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(CheckDragBounds);
@@ -132,32 +147,6 @@ class EditorObjectMapMarker: EditorObjectMarker
 		super.Update();
 	}
 	
-	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		Print("EditorMapMarker::OnMouseButtonDown");
-		
-		Input input = GetGame().GetInput();
-		
-		// ignores the object if you are placing
-		if (GetEditor().IsPlacing()) return false;
-		
-		// allows multiple objects to be dragged
-		if (m_EditorObject.IsSelected()) 
-			return true;
-		
-		// We want to Toggle selection if you are holding control
-		if (input.LocalValue("UARunWalkTemp")) {
-			GetEditor().ToggleSelection(m_EditorObject);
-		} else {
-			if (!input.LocalValue("UATurbo"))
-				GetEditor().ClearSelection();
-			
-			GetEditor().SelectObject(m_EditorObject);
-		}
-		 // Blocks map from creating selection box
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
 }
 
 class EditorObjectWorldMarker: EditorObjectMarker
@@ -183,12 +172,15 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		} else position = m_EditorObject.GetBottomCenter();
 	
 		vector screen_pos = GetGame().GetScreenPos(position);
-		SetPos(screen_pos[0], screen_pos[1]);
+		
+		if (screen_pos[2] > 0)
+			SetPos(screen_pos[0], screen_pos[1]);
+		
 		
 		super.Update();
 	}
 	
-	
+	/*
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorObjectWorldMarker::OnClick: " + button);
@@ -213,7 +205,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		}
 		
 		return super.OnClick(w, x, y, button);
-	}
+	}*/
 
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)

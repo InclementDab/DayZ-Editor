@@ -55,9 +55,7 @@ class ObjectDragHandler: DragHandler
 		
 		DayZPhysics.RaycastRV(begin_pos, end_pos, cursor_pos, contact_dir, component, null, null, null, false, true);
 		
-		
-		
-		
+				
 		vector size = m_EditorObject.GetSize();
 		vector ground_position = GetGroundPosition(transform);
 		vector surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
