@@ -33,6 +33,7 @@ class EditorPropertiesViewModel: ViewModel
 	
 	void SetPosition(vector position)
 	{
+		
 		pos_x = position[0].ToString();
 		pos_y = position[1].ToString();
 		pos_z = position[2].ToString();
@@ -40,15 +41,13 @@ class EditorPropertiesViewModel: ViewModel
 	
 	vector GetPosition()
 	{
-		return Vector(pos_x.ToFloat(), pos_y.ToFloat(), pos_z.ToFloat());
+		StringEvaluater eval();		
+		return Vector(eval.Parse(pos_x), eval.Parse(pos_y), eval.Parse(pos_z));
 	}
 	
 	override void OnPropertyChanged(string property_name)
 	{
-		
-		
 		m_EditorObject.SetPosition(GetPosition());
-		
 		super.OnPropertyChanged(property_name);
 	}
 }
@@ -93,16 +92,20 @@ class EditorObjectPropertiesDialog: EditorDialog
 	void SaveCallback()
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog::SaveCallback");
-		
+		m_EditorObject.SetPosition(m_ViewModel.GetPosition());
 		CloseDialog();
 	}
 	
 	void CancelCallback()
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog::CancelCallback");
-		m_EditorObject.SetPosition(m_StartPosition);
+		m_ViewModel.SetPosition(m_StartPosition);
+		
 		
 		CloseDialog();
+		
+		
+		
 	}
 	
 

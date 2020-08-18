@@ -158,10 +158,7 @@ class EditorView: ScriptedWidgetEventHandler
 					
 					case EditBoxWidgetDataF: {
 						EditBoxWidgetDataF _EditBoxWidgetDataF = EditBoxWidget.Cast(m_LayoutRoot).GetText();
-						_EditBoxWidgetDataF = _EditBoxWidgetDataF.GetValidString();
-						
-						_EditBoxWidgetDataF = _EditBoxWidgetDataF.Evaluate();
-						EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetDataF);
+						EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetDataF.GetValidString());
 						break;
 					}
 					

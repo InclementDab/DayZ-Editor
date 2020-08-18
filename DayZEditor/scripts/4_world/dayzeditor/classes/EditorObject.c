@@ -160,6 +160,7 @@ class EditorObject
 	{ 
 		m_WorldObject.SetPosition(pos); 
 		m_Data.Position = pos;
+		Update();
 	}
 	
 	vector GetOrientation() { return m_WorldObject.GetOrientation(); }
@@ -167,12 +168,14 @@ class EditorObject
 	{ 
 		m_WorldObject.SetOrientation(pos);
 		m_Data.Orientation = pos; 
+		Update();
 	}
 	
 	void GetTransform(out vector mat[4]) { m_WorldObject.GetTransform(mat); }
 	void SetTransform(vector mat[4]) 
 	{ 
 		m_WorldObject.SetTransform(mat); 
+		Update();
 	}
 	
 	void Update() { m_WorldObject.Update(); }
