@@ -98,8 +98,6 @@ class EditorView: ScriptedWidgetEventHandler
 		
 		// This reloads the view incase data is added before view is created
 		OnPropertyChanged();
-		
-
 	}
 
 
@@ -146,10 +144,10 @@ class EditorView: ScriptedWidgetEventHandler
 			}
 			
 			case EditBoxWidget: {
-				Print(m_ViewModel.GetVariableType(variable_name));
+
 				switch (m_ViewModel.GetVariableType(variable_name)) {
 					
-					case TextWidgetData:
+					case EditBoxWidgetData:
 					case string: {
 						EditBoxWidgetData _EditBoxWidgetData = EditBoxWidget.Cast(m_LayoutRoot).GetText();
 						EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetData);

@@ -1,6 +1,10 @@
 
 
 
+
+
+
+
 class EditorDialog extends ScriptedWidgetEventHandler
 {
 	protected ref Widget m_Root;

@@ -10,6 +10,7 @@ class EditorPropertiesViewModel: ViewModel
 	ButtonWidgetData CollapseGeneral = true;
 	
 	EditBoxWidgetDataF pos_x, pos_y, pos_z;
+	EditBoxWidgetDataF rot_x, rot_y, rot_z;
 	
 	void EditorPropertiesViewModel()
 	{
@@ -29,20 +30,38 @@ class EditorPropertiesViewModel: ViewModel
 		OnPropertyChanged("pos_x");
 		OnPropertyChanged("pos_y");
 		OnPropertyChanged("pos_z");
+		
+		OnPropertyChanged("rot_x");
+		OnPropertyChanged("rot_y");
+		OnPropertyChanged("rot_z");
 	}
 	
 	void SetPosition(vector position)
 	{
-		
 		pos_x = position[0].ToString();
 		pos_y = position[1].ToString();
 		pos_z = position[2].ToString();
 	}
 	
+	void SetOrientation(vector orientation)
+	{
+		rot_x = orientation[0].ToString();
+		rot_y = orientation[1].ToString();
+		rot_z = orientation[2].ToString();
+	}
+	
+	
+	
 	vector GetPosition()
 	{
 		StringEvaluater eval();		
 		return Vector(eval.Parse(pos_x), eval.Parse(pos_y), eval.Parse(pos_z));
+	}
+	
+	vector GetOrientation()
+	{
+		StringEvaluater eval();
+		return Vector(eval.Parse(rot_x), eval.Parse(rot_y), eval.Parse(rot_z)); 
 	}
 	
 	override void OnPropertyChanged(string property_name)
@@ -93,6 +112,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog::SaveCallback");
 		m_EditorObject.SetPosition(m_ViewModel.GetPosition());
+		m_EditorObject.SetOrientation(m_ViewModel.GetOrientation());
 		CloseDialog();
 	}
 	
@@ -100,12 +120,9 @@ class EditorObjectPropertiesDialog: EditorDialog
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog::CancelCallback");
 		m_ViewModel.SetPosition(m_StartPosition);
-		
+		m_ViewModel.SetOrientation(m_StartPosition);
 		
 		CloseDialog();
-		
-		
-		
 	}
 	
 
