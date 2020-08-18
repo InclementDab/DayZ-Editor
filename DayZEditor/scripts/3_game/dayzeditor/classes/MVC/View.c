@@ -6,8 +6,11 @@ class EditorView: ScriptedWidgetEventHandler
 	private reference string view_model_widget;
 	string GetViewModelWidgetName() { return view_model_widget; }
 	
+	[Attribute("DefaultValue", "slider")]
+	reference string test;
 	
-	reference string test = "REEEE";
+	[Attribute("1", "combobox", "Projection type", "", ParamEnumArray.FromEnum(CameraType) )]
+	reference int Type;
 	
 	// Optional
 	// if blank, will use name of Widget
@@ -33,8 +36,6 @@ class EditorView: ScriptedWidgetEventHandler
 	
 	void OnWidgetScriptInit(Widget w)
 	{
-		test = "REEE";
-		Print(test);
 		EditorLog.Trace("EditorView::OnWidgetScriptInit");
 		if (view_model_widget == string.Empty) return;
 		
@@ -66,7 +67,6 @@ class EditorView: ScriptedWidgetEventHandler
 		m_ViewModel.InsertView(this);
 		m_LayoutRoot.SetHandler(this);
 		
-				
 		// This reloads the view incase data is added before view is created
 		OnPropertyChanged();
 	}

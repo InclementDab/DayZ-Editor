@@ -27,6 +27,7 @@ modded class DayZTool
 		string path = filepath.Substring(0, last_index);
 		string bat = filepath.Substring(last_index + 1, filepath.Length() - last_index - 1);
 		
+		Print("cmd /c \"chdir /D " + path + " & call " + bat + "\"");
 		Workbench.RunCmd("cmd /c \"chdir /D " + path + " & call " + bat + "\"", wait);
 	}
 }

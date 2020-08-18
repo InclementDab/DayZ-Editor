@@ -1,26 +1,34 @@
 
-[WorkbenchPluginAttribute("Tylers test plugin", "Hello world!")]
+
+
+[WorkbenchPluginAttribute("Tylers test plugin", "Hello world!", "", "")]
 class TestPlugin: WorkbenchPlugin
 {
 	
 	override void Run()
 	{
-		WBModuleDef m = Workbench.GetModule("TestEditor");
-		//Workbench.ScriptDialog("hii", "test", m);
+		
+	
 	}
 	
-	
-};
-
-
-typedef int[] TestEditor;
-class TestEditor: ScriptEditor
-{
-	
-	void TestEditor()
+	override void Configure()
 	{
-		Print("wtf that worked");
+		
+		Print(Workbench.OpenModule("TestEditor"));
+		
+		TestEditor editor = Workbench.GetModule("TestEditor");
+		BaseContainer container = editor.GetContainer();
+		
+		Print(editor);
+		Print(container);
+		
+		//Workbench.ScriptDialog("Configure My Ass", string.Format("Test %1 \n %2", t), this);
 	}
 	
-	
+	[ButtonAttribute("TestButton")]
+	void Test()
+	{
+		
+	}
 };
+
