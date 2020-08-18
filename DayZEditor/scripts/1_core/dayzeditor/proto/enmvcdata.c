@@ -1,7 +1,33 @@
 
 
-typedef Managed ControllerBase;
+
 static ref map<string, ControllerBase> ControllerHashMap;
+
+
+class ControllerBase: Managed
+{
+	
+	// View List
+	protected ref map<string, ref EditorViewBase> m_EditorViewList;
+	
+	
+	void ControllerBase()
+	{
+		m_EditorViewList = new map<string, ref EditorViewBase>();
+	}
+	
+	ref EditorViewData GetEditorViewData(string property_name)
+	{
+		return m_EditorViewList.Get(property_name).GetData();
+	}
+	
+	void SetEditorViewData(ref EditorViewData data, string property_name)
+	{
+		m_EditorViewList.Get(property_name).SetData(data);
+	}
+}
+
+
 
 static ref EditorViewProjectData m_EditorViewProjectData;
 EditorViewProjectData GetEditorViewProjectData() { return m_EditorViewProjectData; }
@@ -109,12 +135,38 @@ class MVCPlugin: WorkbenchPlugin
 
 class EditorViewBase: ScriptedWidgetEventHandler
 {
+	protected string ControllerWidget;
+	string GetViewModelWidgetName() { return ControllerWidget; }
+	
+	protected bool Edit_Options;
+	
+	// Optional
+	// if blank, will use name of Widget
+	protected string DataBindingName;
+	string GetVariableName() { return DataBindingName; } 
+	
+	// Index of array if using arrays
+	protected int DataBindingIndex;
+	int GetVariableIndex() { return DataBindingIndex; }
+	
+	// if blank, will use this widget
+	protected string ProxyName;
+	string GetControlName() { return ProxyName; } 
 
 	protected ref EditorViewData m_EditorViewData;
-	void SetViewData(EditorViewData view_data)
+	
+	ref EditorViewData GetData()
 	{
-		m_EditorViewData = view_data;
+		return m_EditorViewData;
 	}
+	
+	void SetData(ref EditorViewData data)
+	{
+		m_EditorViewData = data;
+	}
+
+	void OnPropertyChanged() {}
+	void OnCollectionChanged(CollectionChangedEventArgs args) {}
 }
 
 

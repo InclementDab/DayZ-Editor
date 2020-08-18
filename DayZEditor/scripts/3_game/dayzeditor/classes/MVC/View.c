@@ -3,31 +3,11 @@
 class EditorView: EditorViewBase
 {
 	// Required
-	// Name of Widget that has Controller ScriptClass
-	private reference string ControllerWidget;
-	string GetViewModelWidgetName() { return ControllerWidget; }
-	
-	private reference bool Edit_Options;
-	
-	// Optional
-	// if blank, will use name of Widget
-	private reference string DataBindingName;
-	string GetVariableName() { return DataBindingName; } 
-	
-	// Index of array if using arrays
-	private reference int DataBindingIndex;
-	int GetVariableIndex() { return DataBindingIndex; }
-	
-	// if blank, will use this widget
-	private reference string ProxyName;
-	string GetControlName() { return ProxyName; } 
-	
-	private Widget m_LayoutRoot;
-	private Widget m_ViewModelWidget;
-	
-	
-	
-	private Controller m_ViewModel;
+	// Name of Widget that has Controller ScriptClass	
+	protected Widget m_LayoutRoot;
+	protected Widget m_ViewModelWidget;
+		
+	protected Controller m_ViewModel;
 
 	void EditorView() { EditorLog.Trace("EditorView"); }
 	void ~EditorView() { EditorLog.Trace("~EditorView"); }
@@ -42,11 +22,7 @@ class EditorView: EditorViewBase
 		
 #ifdef COMPONENT_SYSTEM
 		
-		ResourceBrowser m = Workbench.GetModule("ResourceManager");
-		
-		Print(m.GetNumContainers());
-		BaseContainer cont = m.GetContainer();
-		Print(cont);
+		m_EditorViewData = new EditorViewData("aaa", "test");
 		
 		
 		/*
@@ -217,7 +193,7 @@ class EditorView: EditorViewBase
 	
 	
 	// Model -> UI
-	void OnPropertyChanged() 
+	override void OnPropertyChanged() 
 	{
 		//EditorLog.Trace("EditorView::OnPropertyChanged: " + DataBindingName);
 		
@@ -352,7 +328,7 @@ class EditorView: EditorViewBase
 
 
 	
-	void OnCollectionChanged(CollectionChangedEventArgs args)
+	override void OnCollectionChanged(CollectionChangedEventArgs args)
 	{		
 		EditorLog.Trace(string.Format("EditorView::OnCollectionChanged: %1 Action: %2", DataBindingName, args.param2));
 				

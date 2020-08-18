@@ -10,7 +10,7 @@ class EditorViewOptions: MVCPlugin
 	
 	
 	protected ResourceBrowser m_Module;
-	
+	protected ControllerBase m_Controller;
 	
 	void ResourceSearchCb(string file)
 	{
@@ -18,15 +18,13 @@ class EditorViewOptions: MVCPlugin
 
 		m_Module.SetOpenedResource(file);
 		WidgetSource widget = m_Module.GetContainer();
+		m_Controller = GetController(widget);
 		
-		ControllerBase controller = GetController(widget);
-	
 		EnumerateViewBindings(widget, param_enums);
-		
+
 		
 		Workbench.ScriptDialog("View Options", "Edit View Binding Options", this);
-		
-			
+	
 	}
 	
 	void EnumerateViewBindings(WidgetSource source, out ref array<ref ParamEnum> view_bindings)
@@ -83,6 +81,12 @@ class EditorViewOptions: MVCPlugin
 	[ButtonAttribute("Cancel")]
 	void Cancel() { }
 	
+	[ButtonAttribute("Edit")]
+	void Edit() 
+	{
+		EditorViewData data = m_Controller.GetEditorViewData(param_enums.Get(CurrentViewEdit).m_Key);
+		Workbench.ScriptDialog("Edit View Data", "Edit View Binding Options", data);
+	}
 	
 	
 }
