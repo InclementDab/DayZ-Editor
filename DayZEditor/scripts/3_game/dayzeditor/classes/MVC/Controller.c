@@ -64,7 +64,12 @@ class Controller: ControllerBase
 		m_BindingList.Insert(binding.GetWidgetName(), binding);
 	}
 	
-
+	override static void CreateControllerWidget(string name) 
+	{
+		WorkspaceWidget workspace = g_Game.GetWorkspace();
+		Widget frame = workspace.CreateWidget(FrameWidgetTypeID, 0, 0, 0, 0, 0, 0, 0, workspace);
+		frame.SetName(name);
+	}	
 	
 	
 	void OnPropertyChanged(string property_name)

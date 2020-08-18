@@ -40,11 +40,8 @@ class EditorView: EditorViewBase
 		
 		m_EditorViewData.SetDialogCallback(this, "EditDialogCallback");
 
-#endif
-		
-		//if (ControllerWidget == string.Empty) return;
-		
-		
+#endif	
+	
 			
 		// Set the control widget to relevant Widget
 		if (ProxyName != string.Empty) {
@@ -55,9 +52,8 @@ class EditorView: EditorViewBase
 		if (DataBindingName == string.Empty)
 			DataBindingName = m_LayoutRoot.GetName();
 
-				
 		if (!m_ViewModel) {
-			Workbench.Dialog("Error", string.Format("%1: Could not find ViewModel", m_LayoutRoot.GetName()));
+			//Workbench.Dialog("Error", string.Format("%1: Could not find ViewModel", m_LayoutRoot.GetName()));
 			return;
 		}
 		

@@ -17,11 +17,6 @@ FrameWidgetClass EditorProperties {
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   scriptclass "EditorPropertiesController"
-   {
-    ScriptParamsClass {
-    }
-   }
   }
   WrapSpacerWidgetClass EditorDialogOption {
    clipchildren 0

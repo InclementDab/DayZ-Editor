@@ -21,25 +21,33 @@ class ControllerBase: Managed
 	
 	static string GetFromWidget(WidgetSource source)
 	{
-		if (!source) return string.Empty;
 		
-		string script;
-		source.Get(source.VarIndex("scriptclass"), script);
-		typename type = script.ToType();
-		if (type.IsInherited(ControllerBase)) {
-			Print("Controller Found");
-			return source.GetName();
+		_GetFromWidget(source);
+		
+		
+		return _GetFromWidgetResult;
+	}
+	
+	private static string _GetFromWidgetResult;
+	private static void _GetFromWidget(WidgetSource source)
+	{
+		if (!source) return;
+			
+		int index = source.VarIndex("scriptclass");
+		
+		if (source.IsVariableSet(index)) {
+			string script;
+			source.Get(index, script);
+			typename type = script.ToType();
+			if (type.IsInherited(ControllerBase)) {
+				_GetFromWidgetResult = source.GetName();
+				return;
+			}		
 		}
 		
-		if (GetFromWidget(source.GetChildren()) != string.Empty) {
-			return GetFromWidget(source.GetChildren());
-		}
+		_GetFromWidget(source.GetChildren());
+		_GetFromWidget(source.GetSibling());
 		
-		if (GetFromWidget(source.GetSibling()) != string.Empty) {
-			return GetFromWidget(source.GetSibling());
-		}
-		
-		return string.Empty;
 	}
 	
 	static WidgetSource GetWidgetSource()
@@ -47,6 +55,8 @@ class ControllerBase: Managed
 		ResourceBrowser m_Module = Workbench.GetModule("ResourceManager");
 		return m_Module.GetContainer();
 	}
+	
+	static void CreateControllerWidget(string name) {}
 }
 
 
