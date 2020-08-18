@@ -1,17 +1,17 @@
 
+
+
 class EditorView: ScriptedWidgetEventHandler
 {
+	
+
 	// Required
 	// Name of Widget that has ViewModel ScriptClass
 	private reference string view_model_widget;
 	string GetViewModelWidgetName() { return view_model_widget; }
 	
-	[Attribute("DefaultValue", "slider")]
-	reference string test;
-	
-	[Attribute("1", "combobox", "Projection type", "", ParamEnumArray.FromEnum(CameraType) )]
-	reference int Type;
-	
+	//private reference bool Edit_Options;
+		
 	// Optional
 	// if blank, will use name of Widget
 	private reference string variable_name;
@@ -37,6 +37,35 @@ class EditorView: ScriptedWidgetEventHandler
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("EditorView::OnWidgetScriptInit");
+		
+	/*	
+#ifdef COMPONENT_SYSTEM
+		
+		if (Edit_Options) {
+			Edit_Options = false;
+			
+			if (variable_name == string.Empty) {
+				variable_name = w.GetName();
+			}
+			
+			EditorViewData options(view_model_widget, variable_name, variable_index, control_name);
+			
+			int result = m_MVCPlugin.ShowDialog(options);
+			if (result > 0) {
+				Print(options.ViewModelWidget);
+				view_model_widget = options.ViewModelWidget;
+				variable_name = options.VariableName;
+				variable_index = options.VariableIndex;
+				control_name = options.ControlName;
+				
+			} else if (result == -2) {
+				// This only gets called if m_MVCPlugin is not set
+				Error("Failed to load Workbench Module");
+			}
+		}
+		
+#endif
+		*/
 		if (view_model_widget == string.Empty) return;
 		
 		m_LayoutRoot = w;
@@ -53,14 +82,14 @@ class EditorView: ScriptedWidgetEventHandler
 		m_ViewModelWidget = GetWidgetRoot(m_LayoutRoot).FindAnyWidget(view_model_widget);
 		
 		if (!m_ViewModelWidget) {
-			Error(string.Format("ViewModel Widget not found! %1", view_model_widget));
+			Workbench.Dialog("Error", string.Format("ViewModel Widget not found! %1", view_model_widget));
 			return;
 		}
 		
 		m_ViewModelWidget.GetScript(m_ViewModel);
 		
 		if (!m_ViewModel) {
-			Error(string.Format("%1 Could not find ViewModel: %2", m_LayoutRoot.GetName(), view_model_widget));
+			Workbench.Dialog("Error", string.Format("%1 Could not find ViewModel: %2", m_LayoutRoot.GetName(), view_model_widget));
 			return;
 		}
 		
@@ -69,6 +98,8 @@ class EditorView: ScriptedWidgetEventHandler
 		
 		// This reloads the view incase data is added before view is created
 		OnPropertyChanged();
+		
+
 	}
 
 
@@ -115,8 +146,30 @@ class EditorView: ScriptedWidgetEventHandler
 			}
 			
 			case EditBoxWidget: {
-				EditBoxWidgetData _EditBoxWidgetData = EditBoxWidget.Cast(m_LayoutRoot).GetText();
-				EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetData);
+				Print(m_ViewModel.GetVariableType(variable_name));
+				switch (m_ViewModel.GetVariableType(variable_name)) {
+					
+					case TextWidgetData:
+					case string: {
+						EditBoxWidgetData _EditBoxWidgetData = EditBoxWidget.Cast(m_LayoutRoot).GetText();
+						EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetData);
+						break;
+					}
+					
+					case EditBoxWidgetDataF: {
+						EditBoxWidgetDataF _EditBoxWidgetDataF = EditBoxWidget.Cast(m_LayoutRoot).GetText();
+						_EditBoxWidgetDataF = _EditBoxWidgetDataF.GetValidString();
+						
+						_EditBoxWidgetDataF = _EditBoxWidgetDataF.Evaluate();
+						EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetDataF);
+						break;
+					}
+					
+					
+				}
+				
+				
+
 				
 				break;
 			}
@@ -199,6 +252,7 @@ class EditorView: ScriptedWidgetEventHandler
 				switch (m_ViewModel.GetVariableType(variable_name)) {
 					
 					case EditBoxWidgetData:
+					case EditBoxWidgetDataF:
 					case string: {
 						string _EditBoxWidgetDataS;
 						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetDataS);

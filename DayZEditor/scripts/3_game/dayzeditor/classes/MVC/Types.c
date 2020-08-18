@@ -8,6 +8,98 @@ class TextWidgetData: string {}
 typedef string EditBoxWidgetData;
 class EditBoxWidgetData: string {}
 
+// EditBoxWidget
+typedef string EditBoxWidgetDataF;
+class EditBoxWidgetDataF: string 
+{
+	
+	
+	string GetValidString()
+	{
+		string final;
+		for (int i = 0; i < value.Length(); i++) {
+			string char = value.Get(i);
+			int ascii = char.Hash();
+			if ((ascii >= 45 && ascii <= 57) || ascii == 43 || ascii == 42 || ascii == 32) {
+				final += char;
+			}
+		}
+
+		return final;
+	}
+	
+	
+	string Evaluate()
+	{
+		string final;
+		for (int i = 0; i < value.Length(); i++) {
+			string char = value.Get(i);
+			int ascii = char.Hash();
+			// yoink spaces
+			if (ascii != 32) {
+				final += char;
+			}
+			
+
+		}
+		
+		return final;
+	}
+	
+	float EvaluateExpression()
+	{
+		float val = 0;
+		ref array<string> mult_split = {};
+		
+		value.Split("*", mult_split);
+		Print(mult_split);
+		
+		foreach (string mult_expr: mult_split) {
+			ref array<string> div_split = {};
+			mult_expr.Split("/", div_split);
+			Print(div_split);
+			
+			foreach (string div_expr: div_split) {
+				ref array<string> add_split = {};
+				div_expr.Split("+", add_split);
+				Print(add_split);
+				
+				foreach (string add_expr: add_split) {
+					ref array<string> sub_split = {};
+					add_expr.Split("-", sub_split);
+					Print(sub_split);
+					
+					
+					foreach (string sub_expr: sub_split) {
+						sub_expr = sub_expr.Trim();
+						val -= sub_expr.ToFloat();
+					}
+					
+					add_expr = add_expr.Trim();
+					float add = add_expr.ToFloat();
+					val += add;
+					Print(add);
+				}
+				
+				div_expr = div_expr.Trim();
+				val /= div_expr.ToFloat();
+			}
+			
+			mult_expr = mult_expr.Trim();
+			val *= mult_expr.ToFloat();
+		}
+		
+		Print(val);
+		
+		return val;
+	}
+	
+	void EvaluateInPlace()
+	{
+		value = Evaluate();
+	}
+}
+
 // MultilineEditBoxWidget
 typedef TStringArray MultilineEditBoxWidgetData;
 class MultilineEditBoxWidgetData: TStringArray {}
