@@ -1,4 +1,28 @@
+static ref EditorPropertiesViewModel m_EditorPropertiesViewModel;
+EditorPropertiesViewModel GetEditorPropertiesViewModel() { return m_EditorPropertiesViewModel; }
 
+
+class EditorPropertiesViewModel: ViewModel
+{
+	
+	TextWidgetData TitleText;
+	ButtonWidgetData CollapseGeneral = true;
+	
+	vector ObjectPosition;
+	
+	void EditorPropertiesViewModel()
+	{
+		m_EditorPropertiesViewModel = this;
+	}
+	
+	override void OnWidgetScriptInit(Widget w)
+	{
+		super.OnWidgetScriptInit(w);		
+		TitleText = "Object Properties";
+		ObjectPosition[0] = 1;
+		
+	}
+}
 
 
 class EditorObjectPropertiesDialog: EditorDialog
@@ -22,11 +46,29 @@ class EditorObjectPropertiesDialog: EditorDialog
 		SetContent(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorObjectProperties.layout"));
 		m_ViewModelFrame = m_ContentWrapper.FindAnyWidget("EditorPropertiesViewModel");
 		m_ViewModelFrame.GetScript(m_ViewModel);
+		
+		//m_ViewModel.ObjectPosition = m_EditorObject.GetPosition();
+		
+		
+		AddButton("Save", "SaveCallback");
+		AddButton("Cancel", "CancelCallback");
+		
 	}
 	
 	void ~EditorObjectPropertiesDialog()
 	{
 		EditorLog.Trace("~EditorObjectPropertiesDialog");
+	}
+		
+	
+	void SaveCallback()
+	{
+		EditorLog.Trace("EditorObjectPropertiesDialog::SaveCallback");
+	}
+	
+	void CancelCallback()
+	{
+		EditorLog.Trace("EditorObjectPropertiesDialog::CancelCallback");
 	}
 	
 

@@ -4,6 +4,14 @@
 typedef string TextWidgetData;
 class TextWidgetData: string {}
 
+// EditBoxWidget
+typedef string EditBoxWidgetData;
+class EditBoxWidgetData: string {}
+
+// MultilineEditBoxWidget
+typedef TStringArray MultilineEditBoxWidgetData;
+class MultilineEditBoxWidgetData: TStringArray {}
+
 // ButtonWidget
 typedef bool ButtonWidgetData;
 class ButtonWidgetData: bool {}

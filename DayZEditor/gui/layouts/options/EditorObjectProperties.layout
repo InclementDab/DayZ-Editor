@@ -230,10 +230,16 @@ FrameWidgetClass EditorProperties {
                vexactpos 1
                hexactsize 0
                vexactsize 1
+               scriptclass "EditorView"
                style Editor
-               text "reee"
                "exact text" 1
                font "gui/fonts/etelkatextpro"
+               {
+                ScriptParamsClass {
+                 view_model_widget "EditorPropertiesViewModel"
+                 variable_name "ObjectPosition"
+                }
+               }
               }
              }
             }

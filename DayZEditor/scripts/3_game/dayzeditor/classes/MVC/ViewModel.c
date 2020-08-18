@@ -66,9 +66,10 @@ class ViewModel: Managed
 	{
 		//EditorLog.Trace(string.Format("ViewModel::NotifyPropertyChanged: %1", property_name));
 		
+		// for whatever reason. this action returns null every other time....
 		EditorViewSet view_set = m_ViewList.Get(property_name);
 		if (view_set == null) {
-			Error(string.Format("Invalid Property Name: %1 - View not found", property_name));
+			//Error(string.Format("Invalid Property Name: %1 - View not found", property_name));
 			return;
 		}
 		
@@ -106,31 +107,6 @@ class ViewModel: Managed
 	ref map<string, typename> GetVariableHashMap() { return m_ModelHashMap; }
 	typename GetVariableType(string var_name) { return m_ModelHashMap.Get(var_name); }
 	
-	typename GetVariableBaseType(string var_name)
-	{
-		switch (GetVariableType(var_name)) {
-			
-			case TextWidgetData: {
-				return string;
-			}
-			
-			case ButtonWidgetData:
-			case CheckBoxWidgetData: {
-				return bool;
-			}
-			
-			case SliderWidgetData: {
-				return float;
-			}
-			
-			default: {
-				Error("Undefined Base Type! Defaulting to string");
-			}
-			
-		}
-		
-		return string;
-	}
 	
 	bool OnClick(Widget w, int x, int y, bool button) { return true; }
 	

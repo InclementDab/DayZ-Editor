@@ -6,6 +6,9 @@ class EditorView: ScriptedWidgetEventHandler
 	private reference string view_model_widget;
 	string GetViewModelWidgetName() { return view_model_widget; }
 	
+	
+	reference string test = "REEEE";
+	
 	// Optional
 	// if blank, will use name of Widget
 	private reference string variable_name;
@@ -30,6 +33,8 @@ class EditorView: ScriptedWidgetEventHandler
 	
 	void OnWidgetScriptInit(Widget w)
 	{
+		test = "REEE";
+		Print(test);
 		EditorLog.Trace("EditorView::OnWidgetScriptInit");
 		if (view_model_widget == string.Empty) return;
 		
@@ -98,13 +103,21 @@ class EditorView: ScriptedWidgetEventHandler
 			}
 			
 			case MultilineEditBoxWidget: {
-				MultilineEditBoxWidget.Cast(m_LayoutRoot).GetText(text);
-				//SetModelVariable(text);
+				MultilineEditBoxWidgetData _MultilineEditBoxWidgetData;
+				MultilineEditBoxWidget _MultilineEditBoxWidget = MultilineEditBoxWidget.Cast(m_LayoutRoot);
+				for (int i = 0; i < _MultilineEditBoxWidget.GetLinesCount(); i++) {
+					string line;
+					_MultilineEditBoxWidget.GetLine(i, line);
+					EnScript.SetClassVar(m_ViewModel, variable_name, i, line);
+				}
+
 				break;
 			}
 			
 			case EditBoxWidget: {
-				//SetModelVariable(EditBoxWidget.Cast(m_LayoutRoot).GetText());
+				EditBoxWidgetData _EditBoxWidgetData = EditBoxWidget.Cast(m_LayoutRoot).GetText();
+				EnScript.SetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetData);
+				
 				break;
 			}
 			
@@ -152,8 +165,9 @@ class EditorView: ScriptedWidgetEventHandler
 			
 			case TextWidget: {
 				
-				switch (m_ViewModel.GetVariableBaseType(variable_name)) {
+				switch (m_ViewModel.GetVariableType(variable_name)) {
 					
+					case TextWidgetData:
 					case string: {
 						string _TextWidgetDataS;
 						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _TextWidgetDataS);
@@ -177,9 +191,51 @@ class EditorView: ScriptedWidgetEventHandler
 					}
 				}
 						
-				
 				break;
 			}
+			
+			case EditBoxWidget: {
+				
+				switch (m_ViewModel.GetVariableType(variable_name)) {
+					
+					case EditBoxWidgetData:
+					case string: {
+						string _EditBoxWidgetDataS;
+						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetDataS);
+						EditBoxWidget.Cast(m_LayoutRoot).SetText(_EditBoxWidgetDataS);
+						break;
+					}
+					
+					case int:
+					case float: {
+						float _EditBoxWidgetDataF;
+						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetDataF);
+						EditBoxWidget.Cast(m_LayoutRoot).SetText(_EditBoxWidgetDataF.ToString());
+						break;
+					}
+					
+					case bool: {
+						bool _EditBoxWidgetDataB;
+						EnScript.GetClassVar(m_ViewModel, variable_name, variable_index, _EditBoxWidgetDataB);
+						EditBoxWidget.Cast(m_LayoutRoot).SetText(_EditBoxWidgetDataB.ToString());
+						break;
+					}
+					
+					case vector: {
+						vector _EditBoxWidgetDataV;
+						EnScript.GetClassVar(m_ViewModel, variable_name, 0, _EditBoxWidgetDataV);
+						EditBoxWidget.Cast(m_LayoutRoot).SetText(_EditBoxWidgetDataV[variable_index].ToString());
+						break;
+					}
+				}
+						
+				break;
+				
+				
+			}
+			
+		
+			
 			
 			case ButtonWidget: {
 				

@@ -31,6 +31,8 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		m_WindowDragWrapper	= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("WindowDragWrapper"));
 		
 		m_Root.SetHandler(this);
+		
+		m_ButtonCallbacks = new map<ButtonWidget, string>();
 	}
 	
 	void ~EditorDialog()
@@ -51,6 +53,15 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		TextWidget txt = TextWidget.Cast(panel.FindAnyWidget("ButtonLabel"));
 		txt.SetText(label);
 		return ButtonWidget.Cast(panel.FindAnyWidget("Button"));
+	}
+	
+	private ref map<ButtonWidget, string> m_ButtonCallbacks;
+	protected ButtonWidget AddButton(string label, string callback)
+	{
+		
+		ButtonWidget bw = AddButton(label);
+		m_ButtonCallbacks.Insert(bw, callback);
+		return bw;
 	}
 	
 	void ShowDialog()
@@ -123,6 +134,11 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		if (w == m_TitleClose) {
 			CloseDialog();
 			return true;
+		}
+		
+		string callback = m_ButtonCallbacks.Get(w);
+		if (callback != string.Empty) {
+			GetGame().GameScript.Call(this, callback, null);
 		}
 		
 		return super.OnClick(w, x, y, button);
