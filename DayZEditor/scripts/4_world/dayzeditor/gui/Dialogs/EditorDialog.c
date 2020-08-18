@@ -39,9 +39,10 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	}
 	
 	
-	protected void SetContent(Widget content)
+	protected Widget SetContent(Widget content)
 	{
 		m_ContentWrapper.AddChild(content);
+		return m_ContentWrapper;
 	}
 	
 	protected ButtonWidget AddButton(string label) 

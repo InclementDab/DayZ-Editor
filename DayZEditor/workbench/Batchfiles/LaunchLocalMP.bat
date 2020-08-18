@@ -171,7 +171,7 @@ for %%a in ("%mods:;=" "%") do (
 chdir /d "%gameDirectory%"
 echo start %clientEXE% %clientLaunchParams% "-mod=%modList%" "%playerName%" -dologs -adminlog -freezecheck "-scriptDebug=true"
 
-start %clientEXE% %clientLaunchParams% "-mod=P:/Mods/@Community-Framework;P:/Mods/@Community-Online-Tools;P:/Mods/@DayZ-Expansion;P:/Mods/@DayZ-Expansion-Licensed;P:/Mods/@BuilderItems;%modList%" "%playerName%" -dologs -adminlog -freezecheck "-scriptDebug=true" -connect=127.0.0.1:2302
+start %clientEXE% %clientLaunchParams% "-mod=P:/Mods/@Community-Framework;P:/Mods/@BuilderItems;%modList%" "%playerName%" -dologs -adminlog -freezecheck "-scriptDebug=true" -connect=127.0.0.1:2302
 REM "-mission=P:\profiles\Client\Users\Tyler\DayZEditor.ChernarusPlus"
 
 

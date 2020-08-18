@@ -210,13 +210,9 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{		
-			/*
-		m_EditorObjectPropertiesWindow = new UILinkedObject();
-		m_EditorObjectPropertiesWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorObjectProperties.layout");
-		m_EditorObjectPropertiesWidget.GetScript(m_EditorObjectPropertiesWindow);
-		m_EditorObjectPropertiesWindow.SetObject(this);
-		m_EditorObjectPropertiesWidget.Show(false);		
-		*/
+		EditorObjectPropertiesDialog dialog = new EditorObjectPropertiesDialog(m_EditorObject);
+		dialog.ShowDialog();
+		
 		return true;
 	}
 

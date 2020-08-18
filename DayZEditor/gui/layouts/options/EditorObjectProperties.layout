@@ -2,7 +2,7 @@ FrameWidgetClass EditorProperties {
  visible 1
  ignorepointer 1
  position 0 0
- size 800 600
+ size 1000 600
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -23,497 +23,639 @@ FrameWidgetClass EditorProperties {
     }
    }
   }
-  WrapSpacerWidgetClass EditorDialog {
-   clipchildren 1
-   ignorepointer 1
-   color 0.1373 0.1373 0.1373 0.549
-   size 800 350
-   halign center_ref
-   valign center_ref
+  WrapSpacerWidgetClass EditorDialogOption {
+   clipchildren 0
+   inheritalpha 0
+   ignorepointer 0
+   position 0 0
+   size 1 24
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
-   priority 996
-   scriptclass ""
    style Colorable
    Padding 0
    Margin 0
    "Size To Content H" 1
    "Size To Content V" 1
    {
-    WrapSpacerWidgetClass WindowDragWrapper {
-     ignorepointer 1
-     size 1 1
+    ButtonWidgetClass EditorDialogOptionButton {
+     size 1 24
      hexactpos 1
      vexactpos 1
      hexactsize 0
-     vexactsize 0
-     draggable 1
+     vexactsize 1
+     style Empty
+     {
+      FrameWidgetClass EditorDialogOptionPanel {
+       clipchildren 0
+       ignorepointer 1
+       size 1 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       fixaspect inside
+       {
+        ImageWidgetClass expand_image {
+         visible 1
+         clipchildren 0
+         inheritalpha 1
+         ignorepointer 1
+         color 1 1 1 0.549
+         size 0.7 0.7
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         image0 "set:dayz_gui image:icon_collapse"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 1
+        }
+        ImageWidgetClass collapse_image {
+         visible 0
+         clipchildren 0
+         inheritalpha 1
+         ignorepointer 1
+         color 1 1 1 0.549
+         size 0.7 0.7
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         image0 "set:dayz_gui image:icon_expand"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 1
+        }
+       }
+      }
+      TextWidgetClass EditorDialogOptionTitle {
+       clipchildren 0
+       ignorepointer 1
+       color 1 1 1 0.7843
+       size 0.96 24
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       text "Test Me"
+       font "gui/fonts/etelkatextpro"
+       "text valign" center
+      }
+      PanelWidgetClass Spacer {
+       visible 1
+       ignorepointer 1
+       color 1 1 1 0.549
+       size 1 2
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+      }
+     }
+    }
+    WrapSpacerWidgetClass EditorDialogOptionContent {
+     visible 1
+     clipchildren 0
+     ignorepointer 0
+     color 1 1 1 0
+     position 0 1
+     size 1 2400
+     halign center_ref
+     hexactpos 1
+     vexactpos 0
+     hexactsize 0
+     vexactsize 1
      style Colorable
      Padding 0
      Margin 0
-     "Size To Content H" 1
      "Size To Content V" 1
      content_halign center
      content_valign center
      {
-      PanelWidgetClass TitleBar {
-       ignorepointer 0
-       color 0.7529 0.3686 0.3255 1
+      PanelWidgetClass EditorPosElement {
        size 1 24
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 1
-       draggable 0
-       style rover_sim_colorable
        {
-        TextWidgetClass TitleText {
-         visible 1
+        WrapSpacerWidgetClass PositionSpacer {
          ignorepointer 1
-         position 0 0
-         size 1 24
+         size 0.7 24
+         halign right_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         scriptclass "EditorView"
-         text "Edit: Test"
-         font "gui/fonts/etelkatextpro16"
-         "text offset" 10 0
-         "exact text" 1
-         "size to text h" 0
-         "text valign" center
+         Padding 0
+         Margin 0
+         "Size To Content H" 1
+         "Size To Content V" 1
          {
-          ScriptParamsClass {
-           view_model_widget "EditorPropertiesViewModel"
-          }
-         }
-        }
-        ButtonWidgetClass TitleClose {
-         visible 0
-         ignorepointer 0
-         position 0 0
-         size 24 24
-         halign right_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         priority 5
-         style Default
-         font "gui/fonts/metron"
-         {
-          ImageWidgetClass TitleCloseIcon {
+          WrapSpacerWidgetClass frame_x {
            ignorepointer 1
-           color 0 0 0 1
-           size 24 24
-           halign center_ref
-           valign center_ref
+           position 0 0
+           size 175 24
            hexactpos 1
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           image0 "set:dayz_gui image:Close"
-           mode blend
-           "src alpha" 1
-           "no wrap" 1
-           stretch 1
-          }
-         }
-        }
-       }
-      }
-      WrapSpacerWidgetClass EditorDialogSpacer {
-       clipchildren 0
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       style Empty
-       Padding 0
-       Margin 0
-       "Size To Content H" 1
-       "Size To Content V" 1
-       content_halign center
-       content_valign bottom
-       {
-        GridSpacerWidgetClass ButtonGrid {
-         ignorepointer 1
-         color 0.1373 0.1373 0.1373 0.549
-         size 1 30
-         halign center_ref
-         valign bottom_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scaled 1
-         style Colorable
-         Padding 5
-         Margin 5
-         content_halign center
-         content_valign center
-         Columns 4
-         Rows 1
-        }
-        WrapSpacerWidgetClass DialogContent {
-         ignorepointer 1
-         color 0.1373 0.1373 0.1373 0.549
-         position 0 0
-         size 1 0
-         halign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         style Colorable
-         "Size To Content H" 1
-         "Size To Content V" 1
-         content_halign center
-         content_valign center
-         {
-          WrapSpacerWidgetClass EditorDialogOption {
-           clipchildren 0
-           inheritalpha 0
-           ignorepointer 0
-           position 0 0
-           size 1 24
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           style Colorable
            Padding 0
            Margin 0
            "Size To Content H" 1
            "Size To Content V" 1
+           content_valign center
            {
-            ButtonWidgetClass EditorDialogOptionButton {
-             visible 1
-             size 1 24
+            PanelWidgetClass lbl_x0 {
+             ignorepointer 1
+             keepsafezone 0
+             color 0.7647 0.1804 0.102 1
+             position 0 0
+             size 24 24
+             halign center_ref
+             valign center_ref
              hexactpos 1
              vexactpos 1
-             hexactsize 0
+             hexactsize 1
              vexactsize 1
-             scriptclass "EditorView"
-             style Empty
-             switch toggle
+             style rover_sim_colorable
              {
-              FrameWidgetClass EditorDialogOptionPanel {
-               clipchildren 0
+              TextWidgetClass x0 {
                ignorepointer 1
                size 1 1
+               halign center_ref
+               valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 0
                vexactsize 0
-               fixaspect inside
-               draggable 0
-               scriptclass ""
-               {
-                ImageWidgetClass expand_image {
-                 visible 1
-                 clipchildren 0
-                 inheritalpha 1
-                 ignorepointer 1
-                 color 1 1 1 0.549
-                 size 0.7 0.7
-                 halign center_ref
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 0
-                 vexactsize 0
-                 scriptclass "ViewBinding"
-                 image0 "set:dayz_gui image:icon_collapse"
-                 mode blend
-                 "src alpha" 1
-                 "no wrap" 1
-                 stretch 1
-                 filter 1
-                 {
-                  ScriptParamsClass {
-                   view_model_widget "EditorPropertiesViewModel"
-                   binding_name "visible"
-                   variable_name "CollapseGeneral"
-                   invert_variable 1
-                  }
-                 }
-                }
-                ImageWidgetClass collapse_image {
-                 visible 0
-                 clipchildren 0
-                 inheritalpha 1
-                 ignorepointer 1
-                 color 1 1 1 0.549
-                 size 0.7 0.7
-                 halign center_ref
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 0
-                 vexactsize 0
-                 scriptclass "ViewBinding"
-                 image0 "set:dayz_gui image:icon_expand"
-                 mode blend
-                 "src alpha" 1
-                 "no wrap" 1
-                 stretch 1
-                 filter 1
-                 {
-                  ScriptParamsClass {
-                   view_model_widget "EditorPropertiesViewModel"
-                   binding_name "visible"
-                   variable_name "CollapseGeneral"
-                   invert_variable 0
-                  }
-                 }
-                }
-               }
-              }
-              TextWidgetClass EditorDialogOptionTitle {
-               clipchildren 0
-               ignorepointer 1
-               color 1 1 1 0.7843
-               size 0.96 24
-               halign right_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 1
-               text "Test Me"
+               text "X"
                font "gui/fonts/etelkatextpro"
+               "exact text" 0
+               "exact text size" 45
+               "size to text h" 0
+               "text halign" center
                "text valign" center
-              }
-              PanelWidgetClass Spacer {
-               visible 1
-               ignorepointer 1
-               color 1 1 1 0.549
-               size 1 2
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 1
-               style rover_sim_colorable
-              }
-             }
-             {
-              ScriptParamsClass {
-               view_model_widget "EditorPropertiesViewModel"
-               variable_name "CollapseGeneral"
               }
              }
             }
-            WrapSpacerWidgetClass EditorDialogOptionContent {
-             visible 1
-             clipchildren 0
-             ignorepointer 0
-             color 1 1 1 0
-             position 0 1
-             size 1 2400
-             halign center_ref
+            PanelWidgetClass txt_x0 {
+             ignorepointer 1
+             position 0 0
+             size 150 24
              hexactpos 1
-             vexactpos 0
-             hexactsize 0
+             vexactpos 1
+             hexactsize 1
              vexactsize 1
-             scriptclass "ViewBinding"
-             style Colorable
-             Padding 0
-             Margin 0
-             "Size To Content V" 1
-             content_halign center
-             content_valign center
              {
-              PanelWidgetClass EditorOptionSlider {
+              EditBoxWidgetClass pos_x {
+               visible 1
                size 1 24
+               halign center_ref
+               valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 0
                vexactsize 1
-               {
-                WrapSpacerWidgetClass EditorOptionSliderSpacer {
-                 ignorepointer 1
-                 size 0.7 24
-                 halign right_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 0
-                 vexactsize 1
-                 Padding 0
-                 Margin 0
-                 "Size To Content H" 1
-                 "Size To Content V" 1
-                 {
-                  WrapSpacerWidgetClass EditorOptionSliderWraper {
-                   ignorepointer 1
-                   position 0 0
-                   size 525 24
-                   hexactpos 1
-                   vexactpos 1
-                   hexactsize 1
-                   vexactsize 1
-                   Padding 0
-                   Margin 0
-                   "Size To Content H" 1
-                   "Size To Content V" 1
-                   content_valign center
-                   {
-                    PanelWidgetClass EditorOptionSliderPanel {
-                     ignorepointer 1
-                     position 0 0
-                     size 525 24
-                     hexactpos 1
-                     vexactpos 1
-                     hexactsize 1
-                     vexactsize 1
-                     {
-                      WrapSpacerWidgetClass EditorOptionSliderPanelWraper {
-                       clipchildren 0
-                       inheritalpha 0
-                       ignorepointer 0
-                       color 0 0 0 1
-                       position 0 0
-                       size 1 24
-                       hexactpos 1
-                       vexactpos 1
-                       hexactsize 0
-                       vexactsize 1
-                       style Colorable
-                       Padding 0
-                       Margin 0
-                       "Size To Content H" 1
-                       "Size To Content V" 1
-                       {
-                        PanelWidgetClass EditorOptionSliderWraperPanel {
-                         color 0 0 0 1
-                         size 1 24
-                         hexactpos 1
-                         vexactpos 1
-                         hexactsize 0
-                         vexactsize 1
-                         style blank
-                         {
-                          PanelWidgetClass EditorOptionSliderUpPanel {
-                           clipchildren 0
-                           ignorepointer 1
-                           color 0.2667 0.2667 0.2667 1
-                           size 1 1
-                           halign right_ref
-                           hexactpos 1
-                           vexactpos 1
-                           hexactsize 0
-                           vexactsize 0
-                           fixaspect inside
-                           style rover_sim_colorable
-                           {
-                            ImageWidgetClass EditorOptionSliderUpIcon {
-                             visible 1
-                             clipchildren 0
-                             inheritalpha 1
-                             ignorepointer 1
-                             size 0.7 0.7
-                             halign center_ref
-                             valign center_ref
-                             hexactpos 1
-                             vexactpos 1
-                             hexactsize 0
-                             vexactsize 0
-                             image0 "set:dayz_gui image:icon_collapse"
-                             mode blend
-                             "src alpha" 1
-                             "no wrap" 1
-                             stretch 1
-                             "flip u" 0
-                             "flip v" 0
-                             filter 1
-                             rotation 0 0 270
-                            }
-                           }
-                          }
-                          PanelWidgetClass EditorOptionSliderDownPanel {
-                           clipchildren 0
-                           ignorepointer 1
-                           color 0.2667 0.2667 0.2667 1
-                           size 1 1
-                           hexactpos 1
-                           vexactpos 1
-                           hexactsize 0
-                           vexactsize 0
-                           fixaspect inside
-                           style rover_sim_colorable
-                           {
-                            ImageWidgetClass EditorOptionSliderDownIcon {
-                             visible 1
-                             clipchildren 0
-                             inheritalpha 1
-                             ignorepointer 1
-                             size 0.7 0.7
-                             halign center_ref
-                             valign center_ref
-                             hexactpos 1
-                             vexactpos 1
-                             hexactsize 0
-                             vexactsize 0
-                             image0 "set:dayz_gui image:icon_collapse"
-                             mode blend
-                             "src alpha" 1
-                             "no wrap" 1
-                             stretch 1
-                             filter 1
-                             rotation 0 0 90
-                            }
-                           }
-                          }
-                          SliderWidgetClass EditorOptionSliderSlider {
-                           size 0.9 24
-                           halign center_ref
-                           hexactpos 1
-                           vexactpos 1
-                           hexactsize 0
-                           vexactsize 1
-                          }
-                         }
-                        }
-                       }
-                      }
-                     }
-                    }
-                   }
-                  }
-                 }
-                }
-                TextWidgetClass EditorOptionSliderLable {
-                 ignorepointer 1
-                 size 0.3 24
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 0
-                 vexactsize 1
-                 text "Text"
-                 font "gui/fonts/etelkatextpro"
-                 "text offset" -5 0
-                 "text halign" right
-                }
-               }
+               style Editor
+               text "reee"
+               "exact text" 1
+               font "gui/fonts/etelkatextpro"
               }
              }
+            }
+           }
+          }
+          WrapSpacerWidgetClass frame_y {
+           ignorepointer 1
+           position 0 0
+           size 175 24
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           Padding 0
+           Margin 0
+           "Size To Content H" 1
+           "Size To Content V" 1
+           content_valign center
+           {
+            PanelWidgetClass lbl_y {
+             ignorepointer 1
+             keepsafezone 0
+             color 0.5765 0.8157 0.2196 1
+             position 0 0
+             size 24 24
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             style rover_sim_colorable
              {
-              ScriptParamsClass {
-               view_model_widget "EditorPropertiesViewModel"
-               binding_name "visible"
-               variable_name "CollapseGeneral"
+              TextWidgetClass y {
+               ignorepointer 1
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               text "Y"
+               font "gui/fonts/etelkatextpro"
+               "exact text" 0
+               "exact text size" 45
+               "size to text h" 0
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+            PanelWidgetClass txt_y {
+             ignorepointer 1
+             position 0 0
+             size 150 24
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             {
+              EditBoxWidgetClass pos_y {
+               visible 1
+               size 1 24
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               style Editor
+               text "reee"
+               "exact text" 1
+               font "gui/fonts/etelkatextpro"
+              }
+             }
+            }
+           }
+          }
+          WrapSpacerWidgetClass frame_z {
+           ignorepointer 1
+           position 0 0
+           size 175 24
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           Padding 0
+           Margin 0
+           "Size To Content H" 1
+           "Size To Content V" 1
+           content_valign center
+           {
+            PanelWidgetClass lbl_z {
+             ignorepointer 1
+             keepsafezone 0
+             color 0.2588 0.5176 0.9176 1
+             position 0 0
+             size 24 24
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             style rover_sim_colorable
+             {
+              TextWidgetClass z {
+               ignorepointer 1
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               text "Z"
+               font "gui/fonts/etelkatextpro"
+               "exact text" 0
+               "size to text h" 0
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+            PanelWidgetClass txt_z {
+             ignorepointer 1
+             position 0 0
+             size 150 24
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             {
+              EditBoxWidgetClass pos_z {
+               visible 1
+               size 1 24
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               style Editor
+               text "reee"
+               "exact text" 1
+               font "gui/fonts/etelkatextpro"
               }
              }
             }
            }
           }
          }
+        }
+        TextWidgetClass EditorPosElementLable {
+         ignorepointer 1
+         size 0.3 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Position"
+         font "gui/fonts/etelkatextpro"
+         "text offset" -5 0
+         "text halign" right
+        }
+       }
+      }
+      PanelWidgetClass EditorPosElement0 {
+       size 1 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        WrapSpacerWidgetClass PositionSpacer0 {
+         ignorepointer 1
+         size 0.7 24
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         Padding 0
+         Margin 0
+         "Size To Content H" 1
+         "Size To Content V" 1
+         {
+          WrapSpacerWidgetClass frame_x0 {
+           ignorepointer 1
+           position 0 0
+           size 175 24
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           Padding 0
+           Margin 0
+           "Size To Content H" 1
+           "Size To Content V" 1
+           content_valign center
+           {
+            PanelWidgetClass lbl_x1 {
+             ignorepointer 1
+             keepsafezone 0
+             color 0.7647 0.1804 0.102 1
+             position 0 0
+             size 24 24
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             style rover_sim_colorable
+             {
+              TextWidgetClass x1 {
+               ignorepointer 1
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               text "X"
+               font "gui/fonts/etelkatextpro"
+               "exact text" 0
+               "exact text size" 45
+               "size to text h" 0
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+            PanelWidgetClass txt_x1 {
+             ignorepointer 1
+             position 0 0
+             size 150 24
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             {
+              EditBoxWidgetClass pos_x0 {
+               visible 1
+               size 1 24
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               style Editor
+               text "reee"
+               "exact text" 1
+               font "gui/fonts/etelkatextpro"
+              }
+             }
+            }
+           }
+          }
+          WrapSpacerWidgetClass frame_y0 {
+           ignorepointer 1
+           position 0 0
+           size 175 24
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           Padding 0
+           Margin 0
+           "Size To Content H" 1
+           "Size To Content V" 1
+           content_valign center
+           {
+            PanelWidgetClass lbl_y0 {
+             ignorepointer 1
+             keepsafezone 0
+             color 0.5765 0.8157 0.2196 1
+             position 0 0
+             size 24 24
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             style rover_sim_colorable
+             {
+              TextWidgetClass y0 {
+               ignorepointer 1
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               text "Y"
+               font "gui/fonts/etelkatextpro"
+               "exact text" 0
+               "exact text size" 45
+               "size to text h" 0
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+            PanelWidgetClass txt_y0 {
+             ignorepointer 1
+             position 0 0
+             size 150 24
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             {
+              EditBoxWidgetClass pos_y0 {
+               visible 1
+               size 1 24
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               style Editor
+               text "reee"
+               "exact text" 1
+               font "gui/fonts/etelkatextpro"
+              }
+             }
+            }
+           }
+          }
+          WrapSpacerWidgetClass frame_z0 {
+           ignorepointer 1
+           position 0 0
+           size 175 24
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           Padding 0
+           Margin 0
+           "Size To Content H" 1
+           "Size To Content V" 1
+           content_valign center
+           {
+            PanelWidgetClass lbl_z0 {
+             ignorepointer 1
+             keepsafezone 0
+             color 0.2588 0.5176 0.9176 1
+             position 0 0
+             size 24 24
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             style rover_sim_colorable
+             {
+              TextWidgetClass z0 {
+               ignorepointer 1
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               text "Z"
+               font "gui/fonts/etelkatextpro"
+               "exact text" 0
+               "size to text h" 0
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+            PanelWidgetClass txt_z0 {
+             ignorepointer 1
+             position 0 0
+             size 150 24
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             {
+              EditBoxWidgetClass pos_z0 {
+               visible 1
+               size 1 24
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               style Editor
+               text "reee"
+               "exact text" 1
+               font "gui/fonts/etelkatextpro"
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+        TextWidgetClass EditorPosElementLable0 {
+         ignorepointer 1
+         size 0.3 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Rotation"
+         font "gui/fonts/etelkatextpro"
+         "text offset" -5 0
+         "text halign" right
         }
        }
       }

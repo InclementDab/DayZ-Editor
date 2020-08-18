@@ -16,7 +16,7 @@ class EditorHologram
 		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout", m_MapWidget);
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
-		m_ProjectionEntity = GetGame().CreateObjectEx(type_name, position, ECE_NONE);
+		m_ProjectionEntity = GetGame().CreateObjectEx(type_name, position, ECE_LOCAL);
 		
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
@@ -26,7 +26,6 @@ class EditorHologram
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 		GetGame().ObjectDelete(m_ProjectionEntity);
-		delete m_EditorMapMarkerWidget; delete m_EditorMapMarker;
 	}
 	
 	void Update(float timeslice)
