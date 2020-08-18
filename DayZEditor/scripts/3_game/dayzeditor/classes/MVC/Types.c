@@ -84,7 +84,7 @@ class StringEvaluater
 	        else if (fnc == "tan") x = Math.Tan(x * Math.DEG2RAD);
 	        else Error("Unknown function: " + fnc);
 	    } else {
-	        Error("Unexpected: " + ch);
+	        //Error("Unexpected: " + ch);
 	    }
 	
 	    if (Eat("^".Hash())) x = Math.Pow(x, ParseFactor()); // exponentiation
@@ -115,7 +115,7 @@ class EditBoxWidgetDataF: string
 		for (int i = 0; i < value.Length(); i++) {
 			string char = value.Get(i);
 			int ascii = char.Hash();
-			if ((ascii >= 45 && ascii <= 57) || ascii == 43 || ascii == 42 || ascii == 32) {
+			if ((ascii >= 45 && ascii <= 57) || (ascii >= 40 && ascii <= 43) || ascii == " ".Hash() || ascii >= "^".Hash()) {
 				final += char;
 			}
 		}

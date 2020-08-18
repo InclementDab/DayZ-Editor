@@ -58,7 +58,6 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	private ref map<ButtonWidget, string> m_ButtonCallbacks;
 	protected ButtonWidget AddButton(string label, string callback)
 	{
-		
 		ButtonWidget bw = AddButton(label);
 		m_ButtonCallbacks.Insert(bw, callback);
 		return bw;
