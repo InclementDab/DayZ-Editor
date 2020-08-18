@@ -140,6 +140,7 @@ WrapSpacerWidgetClass EditorDialog {
        vexactpos 1
        hexactsize 0
        vexactsize 0
+       scriptclass ""
        style Colorable
        "Size To Content H" 1
        "Size To Content V" 1

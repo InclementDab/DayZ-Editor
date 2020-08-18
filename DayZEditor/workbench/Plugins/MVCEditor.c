@@ -1,4 +1,6 @@
 
+typedef int[] FrameWidgetClass;
+
 
 
 
@@ -6,71 +8,66 @@
 class EditorViewOptions: MVCPlugin
 {
 	
-	[Attribute("", "editbox", "ViewModel Widget Name")]
-	string ViewModelWidget;
-
-	[Attribute("", "editbox")]
-	string VariableName;
+	protected ResourceBrowser m_Module;
 	
-	[Attribute("", "spinbox")]
-	int VariableIndex;
-	
-	[Attribute("", "editbox")]
-	string ControlName;
-	
-	
-	void EditorViewOptions()
+	void ResourceSearchCb(string file)
 	{
-		Print("EditorViewOptions");
-		m_MVCPlugin = this;
+		Print("Resource Found! " + file);
+					
+		m_Module.SetOpenedResource(file);
+		WidgetSource widget = m_Module.GetContainer();
+		
+		WidgetSource widget_chidren = widget.GetChildren();
+		Print(widget_chidren.GetClassName());
+		Print(widget_chidren.GetName());
+		
+		
+		
+		int var_index = widget_chidren.VarIndex("scriptclass");
+		Print(var_index);
+		
+		
+		if (widget_chidren.IsVariableSet(var_index)) {
+			string scriptclass;
+			widget_chidren.Get(var_index, scriptclass);
+			Print(scriptclass);
+		} else {
+			Print("Vartype");
+			Print(widget_chidren.IsType(var_index, string));
+		}
+		
+		for (int i = 0; i < 10; i++) {
+			
+		}
+		
+		//widget.Get(0, frame_widget);
+		
+		
+		
 	}
 	
-	private int m_DialogResult = -1;
-	private EditorViewData m_ViewData;
 	
-	override int ShowDialog(ref EditorViewData view_data) 
+	override void Run()
 	{
-		m_ViewData 		= view_data;
-		ViewModelWidget = m_ViewData.ViewModelWidget; 
-		VariableName 	= m_ViewData.VariableName; 
-		VariableIndex 	= m_ViewData.VariableIndex; 
-		ControlName 	= m_ViewData.ControlName;
 		
-		Workbench.ScriptDialog("View Options", "Edit View Binding Options", this);
+		m_Module = Workbench.GetModule("ResourceManager");
+		Workbench.SearchResources("EditorObjectProperties.layout", ResourceSearchCb);
 		
-		m_ViewData.ViewModelWidget = ViewModelWidget;
-		m_ViewData.VariableName = VariableName;
-		m_ViewData.VariableIndex = VariableIndex;
-		m_ViewData.ControlName = ControlName;
 		
-		return m_DialogResult;
+		Workbench.ScriptDialog("View Options", "Edit View Binding Options", m_EditorViewData);
 	}
 	
-	override void Run() { m_MVCPlugin = new EditorViewOptions(); }
-
 	[ButtonAttribute("Save", true)]
 	void Save()
 	{
 		m_DialogResult = 1;
-		ScriptEditor browser = Workbench.GetModule("ScriptEditor");
-		Print(browser);
-		
-		if (browser) {
-			string file;
-			browser.GetCurrentFile(file);
-			array<string> file_dir = {};
-			file.Split("/", file_dir);
-			Workbench.GetAbsolutePath(file_dir.Get(0), file);
-			file += "/layoutdata.bin";
-			FileName = file;
-			browser.Save();
-		}
 	}
 	
 	[ButtonAttribute("Cancel")]
-	void Cancel()
-	{
-		m_DialogResult = 0;
-	}
+	void Cancel() { }
+	
+	
+	
 }
+
 

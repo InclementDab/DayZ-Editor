@@ -1,9 +1,7 @@
 
 
-class EditorView: ScriptedWidgetEventHandler
+class EditorView: EditorViewBase
 {
-	
-
 	// Required
 	// Name of Widget that has Controller ScriptClass
 	private reference string ControllerWidget;
@@ -27,10 +25,14 @@ class EditorView: ScriptedWidgetEventHandler
 	private Widget m_LayoutRoot;
 	private Widget m_ViewModelWidget;
 	
+	
+	
 	private Controller m_ViewModel;
 
 	void EditorView() { EditorLog.Trace("EditorView"); }
 	void ~EditorView() { EditorLog.Trace("~EditorView"); }
+
+	
 
 	
 	void OnWidgetScriptInit(Widget w)
@@ -38,40 +40,40 @@ class EditorView: ScriptedWidgetEventHandler
 		
 		EditorLog.Trace("EditorView::OnWidgetScriptInit");
 		
-		
 #ifdef COMPONENT_SYSTEM
 		
-		if (Edit_Options) {
-			Edit_Options = false;
-			
-			if (m_EditorViewProjectData == null) {
-				
-				m_EditorViewProjectData = new EditorViewProjectData("");
-			}
-			
-			
-			if (DataBindingName == string.Empty) {
-				DataBindingName = w.GetName();
-			}
-			
-			EditorViewData options(ControllerWidget, DataBindingName, DataBindingIndex, ProxyName);
-			
-			
-			int result = m_MVCPlugin.ShowDialog(options);
-			if (result > 0) {
-				
-				ControllerWidget = options.ViewModelWidget;
-				DataBindingName = options.VariableName;
-				DataBindingIndex = options.VariableIndex;
-				ProxyName = options.ControlName;
-				Print(m_MVCPlugin.FileName);
-				
-				
-			} else if (result == -2) {
-				// This only gets called if m_MVCPlugin is not set
-				Workbench.Dialog("Error", "Failed to load Workbench Module");
+		ResourceBrowser m = Workbench.GetModule("ResourceManager");
+		
+		Print(m.GetNumContainers());
+		BaseContainer cont = m.GetContainer();
+		Print(cont);
+		
+		
+		/*
+		if (m_EditorViewProjectData == null) {
+			m_EditorViewProjectData = new EditorViewProjectData();
+			EditorViewProjectData.LoadData(m_EditorViewProjectData);
+			m_EditorViewData = m_EditorViewProjectData.GetData(w);
+			if (m_EditorViewData != null) {
+				Print("Data Found!");
+				Print(m_EditorViewData.ControllerWidget);
+			} else {
+				Print("Data NOT found");
+				m_EditorViewData = new EditorViewData("Controller Goes Here", w.GetName());
 			}
 		}
+		
+		/*
+		int result = m_MVCPlugin.ShowDialog(m_EditorViewData);
+		if (result > 0) {
+			m_EditorViewProjectData.InsertViewData(w, m_EditorViewData);
+			EditorViewProjectData.SaveData(m_EditorViewProjectData);
+			
+			
+		} else if (result == -2) {
+			// This only gets called if m_MVCPlugin is not set
+			Workbench.Dialog("Error", "Failed to load Workbench Module");
+		}	*/
 		
 #endif
 		
@@ -125,6 +127,7 @@ class EditorView: ScriptedWidgetEventHandler
 		return super.OnClick(w, x, y, button);
 	}
 	
+
 
 	
 	// UI -> Model
