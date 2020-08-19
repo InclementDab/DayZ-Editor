@@ -233,9 +233,14 @@ FrameWidgetClass EditorProperties {
                hexactsize 0
                vexactsize 1
                draggable 0
+               scriptclass "EditorView"
                style Editor
                "exact text" 1
                font "gui/fonts/etelkatextpro"
+               {
+                ScriptParamsClass {
+                }
+               }
               }
              }
             }

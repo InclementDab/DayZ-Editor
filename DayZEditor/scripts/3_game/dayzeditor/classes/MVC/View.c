@@ -7,7 +7,7 @@ class EditorView: EditorViewBase
 	protected Widget m_LayoutRoot;
 	protected Widget m_ViewModelWidget;
 		
-	protected ref Controller m_ViewModel;
+	protected Controller m_ViewModel;
 
 	void EditorView() { EditorLog.Trace("EditorView"); }
 	void ~EditorView() { EditorLog.Trace("~EditorView"); }
@@ -21,7 +21,7 @@ class EditorView: EditorViewBase
 		
 #ifdef COMPONENT_SYSTEM
 		
-		m_ViewModel = ControllerHashMap.Get(Controller.GetFromWidget(ControllerBase.GetWidgetSource()));
+		m_ViewModel = ControllerHashMap.Get(Controller.GetTypeFromWidgetSource(Controller.GetWidgetSource()));
 		
 		if (m_EditorViewProjectData == null) {
 			m_EditorViewProjectData = new EditorViewProjectData();

@@ -1,66 +1,6 @@
 
 
 
-static ref map<string, ControllerBase> ControllerBaseHashMap;
-class ControllerBase: Managed
-{
-	
-	// View List
-	protected ref map<string, ref EditorViewBase> m_EditorViewList;
-	
-	
-	void ControllerBase()
-	{
-		Print("ControllerBase");
-		m_EditorViewList = new map<string, ref EditorViewBase>();
-		
-	}
-	
-	ref EditorViewBase GetEditorView(string property_name)
-	{
-		Print(m_EditorViewList.Count());
-		return m_EditorViewList.Get(property_name);
-	}
-	
-	static string GetFromWidget(WidgetSource source)
-	{
-		_GetFromWidget(source);		
-		return _GetFromWidgetResult;
-	}
-	
-	private static string _GetFromWidgetResult;
-
-	
-	private static void _GetFromWidget(WidgetSource source)
-	{
-		if (!source) return;
-			
-		int index = source.VarIndex("scriptclass");
-		
-		if (source.IsVariableSet(index)) {
-			string script;
-			source.Get(index, script);
-			typename type = script.ToType();
-			if (type.IsInherited(ControllerBase)) {
-				_GetFromWidgetResult = source.GetName();
-				return;
-			}		
-		}
-		
-		_GetFromWidget(source.GetChildren());
-		_GetFromWidget(source.GetSibling());
-		
-	}
-	
-	static WidgetSource GetWidgetSource()
-	{
-		ResourceBrowser m_Module = Workbench.GetModule("ResourceManager");
-		return m_Module.GetContainer();
-	}
-	
-}
-
-
 
 static ref EditorViewProjectData m_EditorViewProjectData;
 EditorViewProjectData GetEditorViewProjectData() { return m_EditorViewProjectData; }
@@ -196,4 +136,9 @@ class EditorViewBase: ScriptedWidgetEventHandler
 	void OnCollectionChanged(CollectionChangedEventArgs args) {}
 }
 
+
+class EditorViewOptionsCallback 
+{
+	ref array<ref ParamEnum> ResourceSearch() {}
+}
 

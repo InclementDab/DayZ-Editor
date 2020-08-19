@@ -1,13 +1,13 @@
 
 typedef ref array<ref EditorView> TEditorViewSet;
-static ref map<string, Controller> ControllerHashMap;
+static ref map<typename, Controller> ControllerHashMap;
 
-	
+typedef ref map<string, ref EditorViewBase> EditorViewHashMap;
 
 	
 
 // Inherit this class, then put that class into ScriptClass for your View Model Widget
-class Controller: ControllerBase
+class Controller: Managed
 {
 	// Widget Data
 	protected Widget m_LayoutRoot;
@@ -15,8 +15,11 @@ class Controller: ControllerBase
 	
 	// Hashed Variable Data
 	protected ref map<string, typename> m_ModelHashMap;
-	
 	protected ref map<string, ref ViewBinding> m_BindingList;
+	
+	// View List
+	protected ref EditorViewHashMap m_EditorViewList;
+	EditorViewHashMap GetEditorViewList() { return m_EditorViewList; }
 	
 	void Controller() { EditorLog.Trace("Controller"); }
 	void ~Controller() { EditorLog.Trace("~Controller"); }
@@ -37,7 +40,7 @@ class Controller: ControllerBase
 		
 		m_ModelHashMap = new map<string, typename>();
 		m_BindingList = new map<string, ref ViewBinding>();
-
+		m_EditorViewList = new EditorViewHashMap();
 		
 		typename vtype = Type();
 		int vcnt = vtype.GetVariableCount();
@@ -45,17 +48,11 @@ class Controller: ControllerBase
 			m_ModelHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));		
 		
 		if (ControllerHashMap == null) {
-			ControllerHashMap = new map<string, Controller>();
+			ControllerHashMap = new map<typename, Controller>();
 		}
 		
-		ControllerHashMap.Insert(m_ControllerWidget.GetName(), this);
-		
-		if (ControllerBaseHashMap == null) {
-			ControllerBaseHashMap = new map<string, ControllerBase>();
-		}
-		
-		ControllerBaseHashMap.Insert(m_ControllerWidget.GetName(), this);
-		
+		ControllerHashMap.Insert(Type(), this);
+				
 		NotifyOnPropertyChanged(OnPropertyChanged);
 		NotifyOnCollectionChanged(OnCollectionChanged);
 	}
@@ -90,7 +87,50 @@ class Controller: ControllerBase
 		m_EditorViewList.Get(property_name).OnCollectionChanged(args);	
 	}
 	
+	
+	
+	static typename GetTypeFromWidgetSource(WidgetSource source)
+	{
+		_GetTypeFromWidgetSource(source);
+		return _GetTypeResult;
+	}
+	
+	private static typename _GetTypeResult;
+	private static void _GetTypeFromWidgetSource(WidgetSource source)
+	{
+		if (!source) return;
+			
+		int index = source.VarIndex("scriptclass");
+		
+		if (source.IsVariableSet(index)) {
+			string script;
+			source.Get(index, script);
+			typename type = script.ToType();
+			if (type.IsInherited(Controller)) {
+				_GetTypeResult = type;
+				return;
+			}		
+		}
+		
+		_GetTypeFromWidgetSource(source.GetChildren());
+		_GetTypeFromWidgetSource(source.GetSibling());
+	}
+	
+	ref EditorViewBase GetEditorView(string property_name)
+	{
+		Print(m_EditorViewList.Count());
+		return m_EditorViewList.Get(property_name);
+	}
+	
 
+	
+	static WidgetSource GetWidgetSource()
+	{
+#ifdef COMPONENT_SYSTEM
+		ResourceBrowser m_Module = Workbench.GetModule("ResourceManager");
+		return m_Module.GetContainer();
+#endif
+	}
 
 	
 	ref map<string, typename> GetVariableHashMap() { return m_ModelHashMap; }
@@ -122,6 +162,7 @@ void NotifyOnPropertyChanged(func action)
 		PropertyChanged = new ScriptInvoker();
 	
 	PropertyChanged.Insert(action);
+
 }
 
 
@@ -135,3 +176,51 @@ void NotifyOnCollectionChanged(func action)
 	
 	CollectionChanged.Insert(action);
 }
+
+
+
+
+
+
+
+
+/*
+
+this is broke idk WHY
+modded class EditorViewOptionsCallback
+{
+	
+	protected ResourceBrowser m_Module;
+	protected Controller m_Controller;
+	
+	ref array<ref ParamEnum> ResourceSearch()
+	{
+
+		m_Module = Workbench.GetModule("ResourceManager");
+		WidgetSource widget = m_Module.GetContainer();
+		
+		if (ControllerHashMap != null) {
+			m_Controller = ControllerHashMap.Get(Controller.GetTypeFromWidgetSource(widget));
+			
+			if (m_Controller != null) {
+				Print("Enumerating views...");
+				
+				EditorViewHashMap view_list = m_Controller.GetEditorViewList();
+				int i;
+				foreach (string property_name, EditorView view: view_list) {
+					param_enums.Insert(ParamEnum(property_name, i.ToString()));
+					i++;
+				}
+	
+				// success
+				return param_enums;
+			}
+		}
+		
+		// Fail condition
+		Workbench.Dialog("oof!", "Controller not found!");
+		return null;
+	}	
+};
+*/
+
