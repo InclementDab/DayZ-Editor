@@ -1,15 +1,16 @@
 
 
 
-
-[WorkbenchPluginAttribute("MVC Controller Manager", "Edit MVC Settings", "Alt+3", "DayZEditor/kekw.png", {"ResourceManager", "ScriptEditor"})]
+[WorkbenchPluginAttribute("MVC Controller Manager", "Edit MVC Settings", "Alt+3", "", {"ResourceManager", "ScriptEditor"})]
 class EditorViewOptions: WorkbenchPlugin
 {
-	private static ref array<ref ParamEnum> param_enums = {};
+	private static ref ParamEnumArray param_enums = {};
+	
 	[Attribute("0", "combobox", "ViewBinding: ", "", param_enums)]
 	int CurrentViewEdit;
 
-	protected ResourceBrowser m_Module;
+	protected ResourceBrowser m_Module;	
+	protected EditorViewHashMap m_EditorViewHashMap;
 	
 	override void Run()
 	{	
@@ -18,7 +19,6 @@ class EditorViewOptions: WorkbenchPlugin
 
 									// replace once GetCurrentFile is fixed
 		Workbench.SearchResources("EditorDialogOptionPropertiesPrefab.layout", OnSuccess);
-		
 	}
 	
 	void OnSuccess(string file)
@@ -26,24 +26,26 @@ class EditorViewOptions: WorkbenchPlugin
 		Print("Resource Found! " + file);
 		m_Module.SetOpenedResource(file);
 		
-		EditorViewOptionsCallback cb();
+
+		m_EditorViewHashMap = EditorViewOptionsCallback.ResourceSearch();
+		for (int i = 0; i < m_EditorViewHashMap.Count(); i++) {
+			string property_name = m_EditorViewHashMap.GetKey(i);
+			param_enums.Insert(new ParamEnum(property_name, "" + i));
+		}
 		
-		
-		g_Script.Call(cb, "ResourceSearch", param_enums);
-		
-		
+		Print(param_enums);
 		Workbench.ScriptDialog("View Options", "Edit View Binding Options", this);
 	}
 	
 	[ButtonAttribute("Edit")]
 	void Edit() 
 	{
-		string property_name = param_enums.Get(CurrentViewEdit).m_Key;
+		string property_name = m_EditorViewHashMap.GetKey(CurrentViewEdit);
 		Print(property_name);
-		//EditorViewBase view = m_Controller.GetEditorView(property_name);
-		//Print(view);
-		//EditorViewData data = view.GetData();
-		//Workbench.ScriptDialog("Edit View Data", "Edit View Binding Options", data);
+		EditorViewBase view = m_EditorViewHashMap.Get(property_name);
+		Print(view);
+		EditorViewData data = view.GetData();
+		Workbench.ScriptDialog("Edit View Data", "Edit View Binding Options", data);
 	}
 	
 	[ButtonAttribute("Close")]

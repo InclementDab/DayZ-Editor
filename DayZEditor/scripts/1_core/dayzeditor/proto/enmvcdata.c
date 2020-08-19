@@ -1,6 +1,6 @@
 
 
-
+typedef ref map<string, ref EditorViewBase> EditorViewHashMap;
 
 static ref EditorViewProjectData m_EditorViewProjectData;
 EditorViewProjectData GetEditorViewProjectData() { return m_EditorViewProjectData; }
@@ -137,8 +137,16 @@ class EditorViewBase: ScriptedWidgetEventHandler
 }
 
 
+
 class EditorViewOptionsCallback 
 {
-	ref array<ref ParamEnum> ResourceSearch() {}
+	static string SearchAction;
+	static Class Instance;
+	static EditorViewHashMap ResourceSearch() 
+	{
+		EditorViewHashMap result;
+		g_Script.CallFunction(Instance, SearchAction, result, null);
+		return result;
+	}
 }
 

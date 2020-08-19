@@ -19,6 +19,7 @@ FrameWidgetClass EditorProperties {
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   draggable 0
    scriptclass "EditorPropertiesController"
    {
     ScriptParamsClass {
@@ -311,10 +312,16 @@ FrameWidgetClass EditorProperties {
                vexactpos 1
                hexactsize 0
                vexactsize 1
+               scriptclass "EditorView"
                style Editor
+               "no focus" 0
                text "reee"
                "exact text" 1
                font "gui/fonts/etelkatextpro"
+               {
+                ScriptParamsClass {
+                }
+               }
               }
              }
             }

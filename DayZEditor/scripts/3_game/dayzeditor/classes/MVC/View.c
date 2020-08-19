@@ -22,6 +22,7 @@ class EditorView: EditorViewBase
 #ifdef COMPONENT_SYSTEM
 		
 		m_ViewModel = ControllerHashMap.Get(Controller.GetTypeFromWidgetSource(Controller.GetWidgetSource()));
+
 		
 		if (m_EditorViewProjectData == null) {
 			m_EditorViewProjectData = new EditorViewProjectData();
