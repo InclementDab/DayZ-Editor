@@ -2,6 +2,9 @@
 typedef ref array<ref EditorView> TEditorViewSet;
 static ref map<string, Controller> ControllerHashMap;
 
+	
+
+	
 
 // Inherit this class, then put that class into ScriptClass for your View Model Widget
 class Controller: ControllerBase
@@ -21,6 +24,14 @@ class Controller: ControllerBase
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("Controller::OnWidgetScriptInit");
+		
+#ifdef COMPONENT_SYSTEM
+		if (Type() == Controller) {
+			Workbench.Dialog("Error", "Cannot use ScriptClass to type Controller. You must inherit it!");
+			return;
+		}
+#endif
+		
 		m_ControllerWidget = w;
 		m_LayoutRoot = GetWidgetRoot(m_ControllerWidget);
 		
@@ -63,14 +74,7 @@ class Controller: ControllerBase
 		EditorLog.Trace("Controller::InsertBinding: " + variable_name);
 		m_BindingList.Insert(binding.GetWidgetName(), binding);
 	}
-	
-	override static void CreateControllerWidget(string name) 
-	{
-		WorkspaceWidget workspace = g_Game.GetWorkspace();
-		Widget frame = workspace.CreateWidget(FrameWidgetTypeID, 0, 0, 0, 0, 0, 0, 0, workspace);
-		frame.SetName(name);
-	}	
-	
+
 	
 	void OnPropertyChanged(string property_name)
 	{

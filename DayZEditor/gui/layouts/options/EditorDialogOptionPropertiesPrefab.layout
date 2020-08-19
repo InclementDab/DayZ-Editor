@@ -7,6 +7,8 @@ FrameWidgetClass EditorProperties {
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ draggable 0
+ scriptclass ""
  {
   FrameWidgetClass EditorPropertiesController {
    visible 1
@@ -17,6 +19,11 @@ FrameWidgetClass EditorProperties {
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   scriptclass "EditorPropertiesController"
+   {
+    ScriptParamsClass {
+    }
+   }
   }
   WrapSpacerWidgetClass EditorDialogOption {
    clipchildren 0
@@ -226,14 +233,9 @@ FrameWidgetClass EditorProperties {
                hexactsize 0
                vexactsize 1
                draggable 0
-               scriptclass "EditorView"
                style Editor
                "exact text" 1
                font "gui/fonts/etelkatextpro"
-               {
-                ScriptParamsClass {
-                }
-               }
               }
              }
             }
@@ -304,15 +306,10 @@ FrameWidgetClass EditorProperties {
                vexactpos 1
                hexactsize 0
                vexactsize 1
-               scriptclass "EditorView"
                style Editor
                text "reee"
                "exact text" 1
                font "gui/fonts/etelkatextpro"
-               {
-                ScriptParamsClass {
-                }
-               }
               }
              }
             }
@@ -382,15 +379,10 @@ FrameWidgetClass EditorProperties {
                vexactpos 1
                hexactsize 0
                vexactsize 1
-               scriptclass "EditorView"
                style Editor
                text "reee"
                "exact text" 1
                font "gui/fonts/etelkatextpro"
-               {
-                ScriptParamsClass {
-                }
-               }
               }
              }
             }

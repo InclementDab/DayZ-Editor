@@ -11,7 +11,6 @@ class EditorViewCreateDialog
 	
 	void EditorViewCreateDialog(WidgetSource widget)
 	{
-		ControllerBase.CreateControllerWidget(Name);
 
 	}	
 	
@@ -63,10 +62,19 @@ class EditorViewOptions: WorkbenchPlugin
 
 		m_Module.SetOpenedResource(file);
 		WidgetSource widget = m_Module.GetContainer();	
-		m_Controller = ControllerBaseHashMap.Get(ControllerBase.GetFromWidget(widget));
+		
+		Print(m_Module.GetNumContainers());
+		Print(widget.GetName());
+		
+		if (ControllerBaseHashMap != null) {
+			m_Controller = ControllerBaseHashMap.Get(ControllerBase.GetFromWidget(widget));
+		} else {
+			EditorViewCreatePrompt create_dialog(widget);
+			Workbench.ScriptDialog("oof!", "Controller not found! Create New?", create_dialog);
+			return;
+		}
 		
 		if (m_Controller == null) {
-			EditorViewCreatePrompt create_dialog(widget);
 			Workbench.ScriptDialog("oof!", "Controller not found! Create New?", create_dialog);
 			return;
 		}
@@ -92,10 +100,11 @@ class EditorViewOptions: WorkbenchPlugin
 		
 	
 	override void Run()
-	{		
+	{	
+		Print("EditorViewOptions::Run");
 		m_Module = Workbench.GetModule("ResourceManager");
 									// replace once GetCurrentFile is fixed
-		Workbench.SearchResources("EditorObjectProperties.layout", ResourceSearchCb);		
+		Workbench.SearchResources("EditorDialogOptionPropertiesPrefab.layout", ResourceSearchCb);		
 	}
 		
 
@@ -103,7 +112,10 @@ class EditorViewOptions: WorkbenchPlugin
 	[ButtonAttribute("Edit")]
 	void Edit() 
 	{
-		EditorViewBase view = m_Controller.GetEditorView(param_enums.Get(CurrentViewEdit).m_Key);
+		string property_name = param_enums.Get(CurrentViewEdit).m_Key;
+		Print(property_name);
+		EditorViewBase view = m_Controller.GetEditorView(property_name);
+		Print(view);
 		EditorViewData data = view.GetData();
 		Workbench.ScriptDialog("Edit View Data", "Edit View Binding Options", data);
 	}

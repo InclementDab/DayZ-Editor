@@ -11,24 +11,26 @@ class ControllerBase: Managed
 	
 	void ControllerBase()
 	{
+		Print("ControllerBase");
 		m_EditorViewList = new map<string, ref EditorViewBase>();
+		
 	}
 	
-	EditorViewBase GetEditorView(string property_name)
+	ref EditorViewBase GetEditorView(string property_name)
 	{
+		Print(m_EditorViewList.Count());
 		return m_EditorViewList.Get(property_name);
 	}
 	
 	static string GetFromWidget(WidgetSource source)
 	{
-		
-		_GetFromWidget(source);
-		
-		
+		_GetFromWidget(source);		
 		return _GetFromWidgetResult;
 	}
 	
 	private static string _GetFromWidgetResult;
+
+	
 	private static void _GetFromWidget(WidgetSource source)
 	{
 		if (!source) return;
@@ -56,7 +58,6 @@ class ControllerBase: Managed
 		return m_Module.GetContainer();
 	}
 	
-	static void CreateControllerWidget(string name) {}
 }
 
 
@@ -78,8 +79,12 @@ class EditorViewProjectData
 	static void SaveData(ref EditorViewProjectData data, string file)
 	{
 		Print("EditorViewProjectData::SaveData");
+		if (FileExist(file)) {
+			DeleteFile(file);
+		}
+		
 		FileSerializer serializer = new FileSerializer();
-		serializer.Open(file, FileMode.APPEND);
+		serializer.Open(file, FileMode.WRITE);
 		serializer.Write(data);
 		serializer.Close();
 	}

@@ -53,7 +53,7 @@ class EditorView: EditorViewBase
 			DataBindingName = m_LayoutRoot.GetName();
 
 		if (!m_ViewModel) {
-			//Workbench.Dialog("Error", string.Format("%1: Could not find ViewModel", m_LayoutRoot.GetName()));
+			Workbench.Dialog("Error", string.Format("%1: Could not find ViewModel", m_LayoutRoot.GetName()));
 			return;
 		}
 		
