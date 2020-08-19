@@ -40,12 +40,11 @@ class EditorViewOptions: WorkbenchPlugin
 	[ButtonAttribute("Edit")]
 	void Edit() 
 	{
-		string property_name = m_EditorViewHashMap.GetKey(CurrentViewEdit);
-		Print(property_name);
-		EditorViewBase view = m_EditorViewHashMap.Get(property_name);
-		Print(view);
+		EditorViewBase view = m_EditorViewHashMap.Get(m_EditorViewHashMap.GetKey(CurrentViewEdit));
 		EditorViewData data = view.GetData();
-		Workbench.ScriptDialog("Edit View Data", "Edit View Binding Options", data);
+		data.ShowDialog();
+		
+		
 	}
 	
 	[ButtonAttribute("Close")]

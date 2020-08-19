@@ -39,7 +39,6 @@ class EditorView: EditorViewBase
 			EditorViewProjectData.SaveData(m_EditorViewProjectData, "P:\\DayZEditor\\layoutdata.bin");
 		}
 		
-		m_EditorViewData.SetDialogCallback(this, "EditDialogCallback");
 
 #endif	
 	

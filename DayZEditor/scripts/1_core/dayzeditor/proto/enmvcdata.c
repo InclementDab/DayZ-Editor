@@ -79,22 +79,28 @@ class EditorViewData
 	}
 	
 
-	private string DialogCallback;
-	private Class DialogCallbackInstance;
+
+	string _DataBindingName;
+	int _DataBindingIndex;
+	string _ProxyName;
 	
-	void SetDialogCallback(Class inst, string cb)
+	void ShowDialog()
 	{
-		DialogCallback = cb; DialogCallbackInstance = inst;
+		_DataBindingName = DataBindingName; _DataBindingIndex = DataBindingIndex; _ProxyName = ProxyName;
+		Workbench.ScriptDialog("Edit View Data", "Edit View Binding Options", this);
 	}
 	
 	[ButtonAttribute("Save", true)]
 	void Save()
 	{
-		g_Script.Call(DialogCallbackInstance, DialogCallback, 1);
+		
 	}
 	
 	[ButtonAttribute("Cancel")]
-	void Cancel() { }
+	void Cancel() 
+	{ 
+		DataBindingName = _DataBindingName; DataBindingIndex = _DataBindingIndex; ProxyName = _ProxyName;
+	}
 }
 
 
