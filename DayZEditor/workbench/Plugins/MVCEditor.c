@@ -26,14 +26,12 @@ class EditorViewOptions: WorkbenchPlugin
 		Print("Resource Found! " + file);
 		m_Module.SetOpenedResource(file);
 		
-
 		m_EditorViewHashMap = EditorViewOptionsCallback.ResourceSearch();
 		for (int i = 0; i < m_EditorViewHashMap.Count(); i++) {
 			string property_name = m_EditorViewHashMap.GetKey(i);
 			param_enums.Insert(new ParamEnum(property_name, "" + i));
 		}
-		
-		Print(param_enums);
+
 		Workbench.ScriptDialog("View Options", "Edit View Binding Options", this);
 	}
 	
@@ -42,7 +40,7 @@ class EditorViewOptions: WorkbenchPlugin
 	{
 		EditorViewBase view = m_EditorViewHashMap.Get(m_EditorViewHashMap.GetKey(CurrentViewEdit));
 		EditorViewData data = view.GetData();
-		data.ShowDialog();
+		data.ShowDialog(view.GetLayoutRoot());
 		
 		
 	}

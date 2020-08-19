@@ -84,8 +84,10 @@ class EditorViewData
 	int _DataBindingIndex;
 	string _ProxyName;
 	
-	void ShowDialog()
+	private Widget m_Widget;
+	void ShowDialog(Widget w)
 	{
+		m_Widget = w;
 		_DataBindingName = DataBindingName; _DataBindingIndex = DataBindingIndex; _ProxyName = ProxyName;
 		Workbench.ScriptDialog("Edit View Data", "Edit View Binding Options", this);
 	}
@@ -93,7 +95,8 @@ class EditorViewData
 	[ButtonAttribute("Save", true)]
 	void Save()
 	{
-		
+		m_EditorViewProjectData.InsertViewData(m_Widget, this);
+		EditorViewProjectData.SaveData(m_EditorViewProjectData, "P:\\DayZEditor\\layoutdata.bin");
 	}
 	
 	[ButtonAttribute("Cancel")]
@@ -126,6 +129,9 @@ class EditorViewBase: ScriptedWidgetEventHandler
 	protected string ProxyName;
 	string GetControlName() { return ProxyName; } 
 
+	protected Widget m_LayoutRoot;
+	Widget GetLayoutRoot() { return m_LayoutRoot; }
+	
 	protected ref EditorViewData m_EditorViewData;
 	
 	ref EditorViewData GetData()

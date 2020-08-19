@@ -2,10 +2,8 @@
 
 class EditorView: EditorViewBase
 {
-	// Required
-	// Name of Widget that has Controller ScriptClass	
-	protected Widget m_LayoutRoot;
-	protected Widget m_ViewModelWidget;
+
+	
 		
 	protected Controller m_ViewModel;
 
