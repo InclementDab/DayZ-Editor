@@ -214,6 +214,7 @@ class EditorClientModule: JMModuleBase
 		m_EditorHud.ToggleCursor();
 	}	
 	
+
 	private void OnEditorToggleUI(UAInput input)
 	{		
 		if (!ShouldProcessInput(input)) return;
