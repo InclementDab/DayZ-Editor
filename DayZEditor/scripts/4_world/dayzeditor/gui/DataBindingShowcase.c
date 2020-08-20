@@ -4,8 +4,8 @@
 class DataBindingShowcaseController: Controller
 {
 	
-	protected string WindowText;
-	float WindowSliderData;
+	protected DataBinding<string> WindowText;
+	DataBinding<float> WindowSliderData;
 
 	
 	override void OnWidgetScriptInit(Widget w)
@@ -14,7 +14,6 @@ class DataBindingShowcaseController: Controller
 		
 		super.OnWidgetScriptInit(w);
 	}
-	
 	
 }
 

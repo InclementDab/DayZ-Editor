@@ -8,6 +8,12 @@ modded class JMModuleConstructor
 		modules.Insert(EditorServerModule);
 	}
 	
+	
+	void Test()
+	{
+		
+	}
 }
+
 
 

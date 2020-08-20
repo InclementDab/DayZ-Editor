@@ -28,6 +28,7 @@ FrameWidgetClass WindowFrame {
    content_halign center
    {
     TextWidgetClass WindowText {
+     visible 1
      ignorepointer 1
      position 0 0
      size 0.8 50
@@ -36,7 +37,8 @@ FrameWidgetClass WindowFrame {
      vexactpos 1
      hexactsize 0
      vexactsize 1
-     scriptclass "DataBinding"
+     draggable 0
+     scriptclass "ViewBinding"
      {
       ScriptParamsClass {
       }
@@ -51,7 +53,7 @@ FrameWidgetClass WindowFrame {
      vexactpos 1
      hexactsize 0
      vexactsize 1
-     scriptclass "DataBinding"
+     scriptclass "ViewBinding"
      {
       ScriptParamsClass {
       }

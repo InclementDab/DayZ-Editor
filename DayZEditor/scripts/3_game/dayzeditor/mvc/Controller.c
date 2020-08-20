@@ -1,5 +1,5 @@
 
-typedef ref map<Widget, ref DataBinding> DataBindingHashMap;
+typedef ref map<Widget, ref ViewBinding> DataBindingHashMap;
 
 class PropertyHashMap: map<string, typename>
 {
@@ -26,6 +26,8 @@ class Controller: Managed
 	void Controller()
 	{
 		EditorLog.Trace("Controller");
+		
+		
 	}
 	
 	void OnWidgetScriptInit(Widget w)
@@ -59,10 +61,10 @@ class Controller: Managed
 	
 	private int LoadDataBindings(Widget w, out DataBindingHashMap binding_map)
 	{
-		DataBinding data_binding;
+		ViewBinding data_binding;
 		w.GetScript(data_binding);
 		
-		if (data_binding && data_binding.Type() == DataBinding) {
+		if (data_binding && data_binding.Type() == ViewBinding) {
 			binding_map.Insert(w, data_binding);
 		}
 		
@@ -83,6 +85,8 @@ class Controller: Managed
 		Workbench.Dialog(title, message);
 #endif
 	}
+	
+
 }
 
 

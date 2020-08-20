@@ -6,10 +6,10 @@ enum TinyDickJim {
 };
 
 
-
 typedef string BetterString;
 class BetterString: string
 {
+	static string value;
 	void Set(int n, string _value)
 	{
 		string pre = value.Substring(0, n);
@@ -17,23 +17,11 @@ class BetterString: string
 		int length = value.Length() - n;
 		string post = value.Substring(n, length);
 		value = pre + _value + post;
+		
 	}
 	
-	int Count()
-	{
-		return value.Length();
-	}
-	
-	array<string> Test()
-	{
-		return new array<string>;
-	}
-	
-	proto native MapIterator Begin();
-	proto native MapIterator End();
-	proto native MapIterator Next(MapIterator it);
-	//proto int GetIteratorKey(MapIterator it);
 }
+
 
 
 
@@ -78,6 +66,7 @@ class MVCEditorPlugin: WorkbenchPlugin
 	void MVCEditorPlugin()
 	{
 		Print("MVCEditorPlugin");
+
 	}
 	
 	void ~MVCEditorPlugin()
@@ -91,13 +80,17 @@ class MVCEditorPlugin: WorkbenchPlugin
 	{
 		
 		//WBModuleDef module = Workbench.GetModule("ParticleEditor");
+
+		Print("Opening");
 		Workbench.OpenModule("TestAddon");
 		WBModuleDef module = Workbench.GetModule("TestAddon");
+
 		
-		Print(module);
-		Print(module.GetNumContainers());
-	
-		
+		BetterString test = "test";
+		Print(test[2]);
+
+
+//		foreach (string t: test);
 		
 		Print(FileExist("$CurrentDir:/ToolAddons/TestAddon/init.c"));
 
@@ -115,13 +108,13 @@ class MVCEditorPlugin: WorkbenchPlugin
 	
 	override void RunCommandline() 
 	{
-		Print("WTF");
+	
 	}
 	
 	[ButtonAttribute("Close")]
 	void Close()
 	{
-		Print(test1);
+		
 	}	
 }
 
