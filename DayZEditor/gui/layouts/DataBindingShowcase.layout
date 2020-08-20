@@ -6,6 +6,8 @@ FrameWidgetClass WindowFrame {
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ draggable 0
+ scriptclass ""
  {
   WrapSpacerWidgetClass WindowContent {
    ignorepointer 1
@@ -17,6 +19,8 @@ FrameWidgetClass WindowFrame {
    vexactpos 1
    hexactsize 0
    vexactsize 0
+   scriptclass "DataBindingShowcaseController"
+   "no focus" 0
    Padding 5
    Margin 5
    "Size To Content H" 1
@@ -54,17 +58,6 @@ FrameWidgetClass WindowFrame {
      }
     }
    }
-  }
-  FrameWidgetClass WindowController {
-   ignorepointer 1
-   position 0 0
-   size 0 0
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   draggable 1
-   scriptclass "DataBindingShowcaseController"
    {
     ScriptParamsClass {
     }

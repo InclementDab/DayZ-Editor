@@ -1,11 +1,27 @@
 
 typedef ref map<Widget, ref DataBinding> DataBindingHashMap;
 
+class PropertyHashMap: map<string, typename>
+{
+		
+	static PropertyHashMap FromType(typename type)
+	{
+		PropertyHashMap hash_map = new PropertyHashMap();
+		for (int i = 0; i < type.GetVariableCount(); i++) {
+			hash_map.Insert(type.GetVariableName(i), type.GetVariableType(i));
+		}
+		
+		return hash_map;
+	}
+	
+}
+
 class Controller: Managed
 {
 	protected Widget m_LayoutRoot;
+	protected ref DataBindingHashMap m_DataBindingHashMap = new DataBindingHashMap();
+	protected ref PropertyHashMap m_PropertyHashMap = new PropertyHashMap();
 	
-	protected ref DataBindingHashMap m_DataBindingHashMap;
 	
 	void Controller()
 	{
@@ -18,55 +34,55 @@ class Controller: Managed
 		
 		m_LayoutRoot = w;
 		
+		// User must inherit from controller, not use it in ScriptClass
+		if (Type() == Controller) {
+			ErrorDialog("You cannot bind to data without creating your own controller class!");
+			return;
+		}
+		
+		// Load all child Widgets and obtain their DataBinding class
+		int binding_count = LoadDataBindings(m_LayoutRoot, m_DataBindingHashMap);
+		if (binding_count == 0) {
+			ErrorDialog("No DataBindings found! Is the controller in the Root Widget?");
+			return;
+		} else {
+			EditorLog.Info(string.Format("%1 DataBindings found!", binding_count));
+		}
 		
 
-		Widget tree_parent = GetWidgetRoot(m_LayoutRoot);
-		m_DataBindingHashMap = new DataBindingHashMap();
-		
-		LoadDataBindings(tree_parent, m_DataBindingHashMap);
-		
-#ifdef COMPONENT_SYSTEM
-		if (m_DataBindingHashMap.Count() == 0) {
-			Workbench.Dialog("Warning", "No DataBindings found! Make sure the Controller Widget is LAST");
-		}
-#else
-		EditorLog.Debug(string.Format("%1 DataBindings found!", m_DataBindingHashMap.Count()));
-#endif
+		// Load all properties of the inheriting Controller
+		m_PropertyHashMap = PropertyHashMap.FromType(Type());		
+		EditorLog.Info(string.Format("%1 Properties found!", m_PropertyHashMap.Count()));
+
 	}
 	
 	
-	private void LoadDataBindings(ref Widget w, ref DataBindingHashMap data_bindings)
+	private int LoadDataBindings(Widget w, out DataBindingHashMap binding_map)
 	{
-		//if (w == null) return;
-		
-		Print("Checking " + w.GetName());
 		DataBinding data_binding;
 		w.GetScript(data_binding);
 		
-		
 		if (data_binding && data_binding.Type() == DataBinding) {
-			Print("Script Found " + w.GetName());
-			data_bindings.Insert(w, data_binding);
+			binding_map.Insert(w, data_binding);
 		}
 		
-		Widget children = w.GetChildren();
-		if (children != null) {
-			Print("Getting Child");
-			LoadDataBindings(children, data_bindings);
+		if (w.GetChildren() != null) {
+			LoadDataBindings(w.GetChildren(), binding_map);
 		} 
 		
-		Widget sibling = w.GetSibling();
-		if (sibling != null) {
-			Print("Getting Sibling");
-			LoadDataBindings(sibling, data_bindings);
-		}
+		if (w.GetSibling() != null) {
+			LoadDataBindings(w.GetSibling(), binding_map);
+		}		
 		
-	
-
-		
+		return binding_map.Count();
 	}
 	
-	
+	private void ErrorDialog(string message, string title = "Warning")
+	{
+#ifdef COMPONENT_SYSTEM
+		Workbench.Dialog(title, message);
+#endif
+	}
 }
 
 
