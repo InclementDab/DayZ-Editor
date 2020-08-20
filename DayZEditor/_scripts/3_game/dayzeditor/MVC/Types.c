@@ -1,12 +1,5 @@
 
 
-class DataBinding<Class T1>
-{
-	
-	
-	
-}
-
 
 class WidgetDataConverter<Class T1>
 {

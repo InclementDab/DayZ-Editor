@@ -1,16 +1,12 @@
 
 
-
+/*
 [WorkbenchPluginAttribute("MVC Controller Manager", "Edit MVC Settings", "Alt+3", "", {"ResourceManager", "ScriptEditor"})]
 class EditorViewOptions: WorkbenchPlugin
 {
-	private static ref ParamEnumArray param_enums = {};
 	
-	[Attribute("0", "combobox", "ViewBinding: ", "", param_enums)]
-	int CurrentViewEdit;
-
 	protected ResourceBrowser m_Module;	
-	protected EditorViewHashMap m_EditorViewHashMap;
+	protected ref map<typename, Class> m_DataBindingHashMap;
 	
 	override void Run()
 	{	
@@ -26,7 +22,7 @@ class EditorViewOptions: WorkbenchPlugin
 		Print("Resource Found! " + file);
 		m_Module.SetOpenedResource(file);
 		
-		m_EditorViewHashMap = EditorViewOptionsCallback.ResourceSearch();
+		m_DataBindingHashMap = EditorViewOptionsCallback.ResourceSearch();
 		for (int i = 0; i < m_EditorViewHashMap.Count(); i++) {
 			string property_name = m_EditorViewHashMap.GetKey(i);
 			param_enums.Insert(new ParamEnum(property_name, "" + i));
@@ -38,7 +34,7 @@ class EditorViewOptions: WorkbenchPlugin
 	[ButtonAttribute("Edit")]
 	void Edit() 
 	{
-		EditorViewBase view = m_EditorViewHashMap.Get(m_EditorViewHashMap.GetKey(CurrentViewEdit));
+		EditorViewBase view = m_DataBindingHashMap.Get(m_DataBindingHashMap.GetKey(CurrentViewEdit));
 		EditorViewData data = view.GetData();
 		data.ShowDialog(view.GetLayoutRoot());
 		
@@ -47,4 +43,4 @@ class EditorViewOptions: WorkbenchPlugin
 	
 	[ButtonAttribute("Close")]
 	void Close() { }
-}
+}*/

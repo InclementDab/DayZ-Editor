@@ -2,31 +2,39 @@
 
 static ref map<typename, ref Controller> ControllerHashMap;
 
-	
+typedef ref map<string, ref DataBinding> DataBindingHashMap;
+typedef ref map<string, typename> PropertyHashMap;
 
 // Inherit this class, then put that class into ScriptClass for your View Model Widget
 class Controller: Managed
 {
 	// Widget Data
 	protected Widget m_LayoutRoot;
-	protected Widget m_ControllerWidget;
 	
 	// Hashed Variable Data
-	protected ref map<string, typename> m_ModelHashMap;
-	protected ref map<string, ref ViewBinding> m_BindingList;
+	protected ref PropertyHashMap m_PropertyHashMap;
 	
 	// View List
-	protected ref EditorViewHashMap m_EditorViewList;
-	EditorViewHashMap GetEditorViewList() { return m_EditorViewList; }
+	protected ref DataBindingHashMap m_DataBindings;
+	DataBindingHashMap GetDataBindings() { return m_DataBindings; }
 	
-	void Controller() 
+	private ControllerData m_Data;
+	
+	
+	void Controller()
 	{ 
 		EditorLog.Trace("Controller"); 
+		m_Data = data;
+		
 		if (ControllerHashMap == null)
 			ControllerHashMap = new map<typename, ref Controller>();
 		
 		ControllerHashMap.Insert(Type(), this);
+		
+		m_PropertyHashMap = new PropertyHashMap();
+		m_DataBindings = new DataBindingHashMap();
 	}
+	
 	void ~Controller() { EditorLog.Trace("~Controller"); }
 	
 	void OnWidgetScriptInit(Widget w)
@@ -40,51 +48,53 @@ class Controller: Managed
 		}
 #endif
 		
-		m_ControllerWidget = w;
-		m_LayoutRoot = GetWidgetRoot(m_ControllerWidget);
+		m_LayoutRoot = w;
 		
-		m_ModelHashMap = new map<string, typename>();
-		m_BindingList = new map<string, ref ViewBinding>();
-		m_EditorViewList = new EditorViewHashMap();
 		
 		typename vtype = Type();
 		int vcnt = vtype.GetVariableCount();
 		for (int i = 0; i < vcnt; i++)
-			m_ModelHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));		
+			m_PropertyHashMap.Insert(vtype.GetVariableName(i), vtype.GetVariableType(i));		
+		EditorLog.Info(string.Format("Controller::Init: %1 properties found!", i));
 		
-				
+		EnumerateDataBindings(m_DataBindings, m_LayoutRoot);
+		EditorLog.Info(string.Format("Controller::Init: %1 data bindings found!", m_DataBindings.Count()));
+		
+		
 		NotifyOnPropertyChanged(OnPropertyChanged);
 		NotifyOnCollectionChanged(OnCollectionChanged);
 	}
 	
-	void InsertView(ref EditorView view)
+	
+	void EnumerateDataBindings(out DataBindingHashMap data_bindings, Widget w)	
 	{
-		string variable_name = view.GetVariableName();
-		EditorLog.Trace("Controller::InsertView: " + variable_name);
+		if (w == null) return;
 		
-		Print(m_EditorViewList.Insert(variable_name, view));
+		Class script;
+		w.GetScript(script);
+		
+		if (script != null && script.IsInherited(DataBinding)) {
+			DataBinding binding = DataBinding.Cast(script);
+			//data_bindings.Insert(binding.DataBindingName, binding);
+		}
+		
+		EnumerateDataBindings(data_bindings, w.GetChildren());
+		EnumerateDataBindings(data_bindings, w.GetSibling());
 	}
 	
-	void InsertBinding(ViewBinding binding)
-	{
-		string variable_name = binding.GetVariableName();
-		EditorLog.Trace("Controller::InsertBinding: " + variable_name);
-		m_BindingList.Insert(binding.GetWidgetName(), binding);
-	}
-
 	
 	void OnPropertyChanged(string property_name)
 	{
 		//EditorLog.Trace(string.Format("Controller::NotifyPropertyChanged: %1", property_name));
-		m_EditorViewList.Get(property_name).OnPropertyChanged();
-		m_BindingList.Get(property_name).OnPropertyChanged();
+		//m_EditorViewList.Get(property_name).OnPropertyChanged();
+		//m_BindingList.Get(property_name).OnPropertyChanged();
 	}
 	
 	
 	void OnCollectionChanged(string property_name, CollectionChangedEventArgs args)
 	{
 		EditorLog.Trace(string.Format("Controller::OnCollectionChanged: %1 Action: %2", property_name, args.param2));
-		m_EditorViewList.Get(property_name).OnCollectionChanged(args);	
+		//m_EditorViewList.Get(property_name).OnCollectionChanged(args);	
 	}
 	
 	
@@ -117,10 +127,6 @@ class Controller: Managed
 		_GetTypeFromWidgetSource(source.GetSibling());
 	}
 	
-	ref EditorViewBase GetEditorView(string property_name)
-	{
-		return m_EditorViewList.Get(property_name);
-	}
 	
 
 	
@@ -131,18 +137,14 @@ class Controller: Managed
 		return m_Module.GetContainer();
 #endif
 	}
-
-	
-	ref map<string, typename> GetVariableHashMap() { return m_ModelHashMap; }
-	typename GetVariableType(string var_name) { return m_ModelHashMap.Get(var_name); }
 	
 	
 	bool OnClick(Widget w, int x, int y, bool button) { return true; }
 	
 	void DebugPrint()
 	{
-		EditorLog.Debug("Controller::DebugPrint: " + m_ControllerWidget.GetName());
-		foreach (string name, ref EditorView view: m_EditorViewList)
+		EditorLog.Debug("Controller::DebugPrint: " + m_LayoutRoot.GetName());
+		foreach (string name, DataBinding view: m_DataBindings)
 			view.DebugPrint();
 				
 	}
@@ -194,7 +196,7 @@ class IEditorViewOptionsCallback
 		EditorViewOptionsCallback.SearchAction = "ResourceSearch";
 	}
 	
-	ref EditorViewHashMap ResourceSearch()
+	DataBindingHashMap ResourceSearch()
 	{
 		Controller m_Controller;
 		ResourceBrowser m_Module = Workbench.GetModule("ResourceManager");
@@ -206,7 +208,7 @@ class IEditorViewOptionsCallback
 			if (m_Controller != null) {
 				Print("Controller found! Enumerating views...");
 				// success
-				return m_Controller.GetEditorViewList();
+				return m_Controller.GetDataBindings();
 			}
 		}
 		

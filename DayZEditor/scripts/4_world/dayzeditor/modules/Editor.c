@@ -138,8 +138,8 @@ class EditorClientModule: JMModuleBase
 		
 		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
 		
-		GetEditorHudController().DebugText1 = avg_timeslice.ToString();
-		NotifyPropertyChanged("DebugText1");
+		//GetEditorHudController().DebugText1 = avg_timeslice.ToString();
+		//NotifyPropertyChanged("DebugText1");
 	}
 	
 	override bool IsServer() { return false; }	
@@ -462,7 +462,7 @@ class EditorClientModule: JMModuleBase
 		m_ActionStack.InsertAt(target, 0);
 		
 		// debug
-		GetEditorHudController().DebugActionStackListbox.Insert(new TStringClassPair(target.GetName(), target));
+//		GetEditorHudController().DebugActionStackListbox.Insert(new TStringClassPair(target.GetName(), target));
 	}
 	
 

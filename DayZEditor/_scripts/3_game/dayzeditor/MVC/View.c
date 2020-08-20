@@ -1,12 +1,52 @@
 
 
-class EditorView: EditorViewBase
+class DataBinding: ScriptedWidgetEventHandler
 {
-
+	protected Widget m_LayoutRoot;
 	
-		
-	protected Controller m_ViewModel;
+	void OnWidgetScriptInit(Widget w)
+	{
+		EditorLog.Trace("DataBinding::OnWidgetScriptInit");
+		m_LayoutRoot = w;
+		m_LayoutRoot.SetHandler(this);
+	}
+	
+	
+	void DebugPrint()
+	{
+		EditorLog.Debug("EditorView::DebugPrint: " + m_LayoutRoot.GetName());
+		//EditorLog.Debug("ControllerWidget:" + ControllerWidget);
+		//EditorLog.Debug("DataBindingName:" + DataBindingName);
+		//EditorLog.Debug("DataBindingIndex:" + DataBindingIndex);
+		//EditorLog.Debug("ProxyName:" + ProxyName);
+	}
+	
+	
+	
+	// add methods for setting the data from different types. maybe use templates and a receiver class idk	
+	
+}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+class EditorView
+{
+	protected Controller m_ViewModel;
+	protected Widget m_LayoutRoot;
 	void EditorView() { EditorLog.Trace("EditorView"); }
 	void ~EditorView() { EditorLog.Trace("~EditorView"); }
 
@@ -18,15 +58,16 @@ class EditorView: EditorViewBase
 		m_LayoutRoot = w;
 		
 #ifdef COMPONENT_SYSTEM
-		
+		/*
 		m_ViewModel = ControllerHashMap.Get(Controller.GetTypeFromWidgetSource(Controller.GetWidgetSource()));
-
-		
-		if (m_EditorViewProjectData == null) {
-			m_EditorViewProjectData = new EditorViewProjectData();
+		if (!m_ViewModel) {
+			Workbench.Dialog("Error", string.Format("%1: Could not find ViewModel", m_LayoutRoot.GetName()));
+			return;
 		}
 		
-		EditorViewProjectData.LoadData(m_EditorViewProjectData, "P:\\DayZEditor\\layoutdata.bin");
+
+		
+		m_EditorViewProjectData = EditorViewProjectData.LoadData("P:\\DayZEditor\\layoutdata.bin");
 		m_EditorViewData = m_EditorViewProjectData.GetData(w);
 		if (m_EditorViewData != null) {
 			Print("Data Found!");
@@ -45,17 +86,8 @@ class EditorView: EditorViewBase
 		if (ProxyName != string.Empty) {
 			m_LayoutRoot = m_LayoutRoot.FindAnyWidget(ProxyName);
 		}
-		
-		// If var_name is blank, just use the name of root
-		if (DataBindingName == string.Empty)
-			DataBindingName = m_LayoutRoot.GetName();
 
-		if (!m_ViewModel) {
-			Workbench.Dialog("Error", string.Format("%1: Could not find ViewModel", m_LayoutRoot.GetName()));
-			return;
-		}
-		
-		m_ViewModel.InsertView(this);
+
 		m_LayoutRoot.SetHandler(this);
 		
 		// This reloads the view incase data is added before view is created
@@ -63,7 +95,7 @@ class EditorView: EditorViewBase
 	}
 
 
-	
+	/*
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		EditorLog.Trace("EditorView::OnChange");
@@ -91,7 +123,7 @@ class EditorView: EditorViewBase
 	
 	// UI -> Model
 	void UpdateModel()
-	{
+	{/*
 		EditorLog.Trace("EditorView::UpdateModel");
 	
 		string text;
@@ -176,8 +208,8 @@ class EditorView: EditorViewBase
 	
 	
 	// Model -> UI
-	override void OnPropertyChanged() 
-	{
+	void OnPropertyChanged() 
+	{/*
 		//EditorLog.Trace("EditorView::OnPropertyChanged: " + DataBindingName);
 		
 		switch (m_LayoutRoot.Type()) {
@@ -311,7 +343,7 @@ class EditorView: EditorViewBase
 
 
 	
-	override void OnCollectionChanged(CollectionChangedEventArgs args)
+	void OnCollectionChanged(CollectionChangedEventArgs args)
 	{		
 		EditorLog.Trace(string.Format("EditorView::OnCollectionChanged: %1 Action: %2", DataBindingName, args.param2));
 				
@@ -362,3 +394,5 @@ class EditorView: EditorViewBase
 		EditorLog.Debug("ProxyName:" + ProxyName);
 	}
 };
+
+*/

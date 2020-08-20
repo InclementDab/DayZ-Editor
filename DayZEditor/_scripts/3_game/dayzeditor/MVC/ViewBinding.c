@@ -88,7 +88,7 @@ class ViewBinding: Managed
 		}
 		
 		
-		m_ViewModel.InsertBinding(this);
+		//m_ViewModel.InsertBinding(this);
 		
 	}
 	

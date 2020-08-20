@@ -20,7 +20,7 @@ FrameWidgetClass EditorProperties {
    hexactsize 1
    vexactsize 1
    draggable 0
-   scriptclass "EditorPropertiesController"
+   scriptclass ""
    {
     ScriptParamsClass {
     }

@@ -1,24 +1,29 @@
 
 
-typedef ref map<string, ref EditorViewBase> EditorViewHashMap;
-
 static ref EditorViewProjectData m_EditorViewProjectData;
 EditorViewProjectData GetEditorViewProjectData() { return m_EditorViewProjectData; }
 
+typedef ref array<ref ControllerData> TControllerDataArray;
+typedef ref array<ref DataBindingData> TDataBindingDataArray;
+
+
+// Serialized Data for a full project
 class EditorViewProjectData
 {
-	private ref map<Widget, ref EditorViewData> m_EditorViewData;
-	
-	void EditorViewProjectData()
+	// Serialized Stuff
+	ref TControllerDataArray ControllerDataArray = {};
+
+	private void EditorViewProjectData() 
 	{
 		Print("EditorViewProjectData");
-		m_EditorViewProjectData = this;
-		m_EditorViewData = new map<Widget, ref EditorViewData>();
 	}
-	
-	static void SaveData(ref EditorViewProjectData data, string file)
+
+
+		
+	static void Save(string file, notnull ref EditorViewProjectData data)
 	{
 		Print("EditorViewProjectData::SaveData");
+
 		if (FileExist(file)) {
 			DeleteFile(file);
 		}
@@ -29,40 +34,51 @@ class EditorViewProjectData
 		serializer.Close();
 	}
 	
-	static void LoadData(out ref EditorViewProjectData data, string file) 
+	static ref EditorViewProjectData Load(string file) 
 	{
+		ref EditorViewProjectData data = new EditorViewProjectData();
+
 		Print("EditorViewProjectData::LoadData");
-		if (!FileExist(file)) {
-			Error("File Not Found!");
-			return;
-		}
+
 		FileSerializer serializer = new FileSerializer();
 		serializer.Open(file, FileMode.READ);
 		serializer.Read(data);
 		serializer.Close();
-	}
+		return data;
+	}	
+}
+
+
+// Serializable Data for a Controller
+class ControllerData
+{
+	// Serialized Data
+	string ControllerWidgetName;
+	ref TDataBindingDataArray DataBindingArray = {};
 	
-	void InsertViewData(Widget w, EditorViewData data)
-	{
-		m_EditorViewData.Insert(w, data);
-	}
+	[NonSerialized()]
+	private static ref ParamEnumArray param_enums = {};
 	
-	void RemoveViewData(Widget w)
-	{
-		m_EditorViewData.Remove(w);
-	}
+
+	[Attribute("0", "combobox", "ViewBinding: ", "", param_enums)]
+	int CurrentDataBinding;
+
 	
-	EditorViewData GetData(Widget w)
-	{
-		return m_EditorViewData.Get(w);
+	[ButtonAttribute("Close")]
+	void Close() 
+	{ 
+		
 	}
-	
 }
 
 
 
-class EditorViewData 
-{	
+
+// Serializable Data for a DataBinding
+class DataBindingData
+{
+	
+	string DataBindingWidgetName;
 	
 	[Attribute("", "editbox")]
 	string DataBindingName;
@@ -73,13 +89,11 @@ class EditorViewData
 	[Attribute("", "editbox")]
 	string ProxyName;
 	
-	void EditorViewData(string variable_name, int variable_index = 0, string control_name = "")
+	void DataBindingData(string variable_name, int variable_index = 0, string control_name = "")
 	{
 		DataBindingName = variable_name; DataBindingIndex = variable_index; ProxyName = control_name;
 	}
 	
-
-
 	string _DataBindingName;
 	int _DataBindingIndex;
 	string _ProxyName;
@@ -95,8 +109,8 @@ class EditorViewData
 	[ButtonAttribute("Save", true)]
 	void Save()
 	{
-		m_EditorViewProjectData.InsertViewData(m_Widget, this);
-		EditorViewProjectData.SaveData(m_EditorViewProjectData, "P:\\DayZEditor\\layoutdata.bin");
+		//m_EditorViewProjectData.InsertViewData(m_Widget, this);
+		//EditorViewProjectData.SaveData(m_EditorViewProjectData, "P:\\DayZEditor\\layoutdata.bin");
 	}
 	
 	[ButtonAttribute("Cancel")]
@@ -108,55 +122,13 @@ class EditorViewData
 
 
 
-
-class EditorViewBase: ScriptedWidgetEventHandler
-{
-	protected string ControllerWidget;
-	string GetViewModelWidgetName() { return ControllerWidget; }
-	
-	protected bool Edit_Options;
-	
-	// Optional
-	// if blank, will use name of Widget
-	protected string DataBindingName;
-	string GetVariableName() { return DataBindingName; } 
-	
-	// Index of array if using arrays
-	protected int DataBindingIndex;
-	int GetVariableIndex() { return DataBindingIndex; }
-	
-	// if blank, will use this widget
-	protected string ProxyName;
-	string GetControlName() { return ProxyName; } 
-
-	protected Widget m_LayoutRoot;
-	Widget GetLayoutRoot() { return m_LayoutRoot; }
-	
-	protected ref EditorViewData m_EditorViewData;
-	
-	ref EditorViewData GetData()
-	{
-		return m_EditorViewData;
-	}
-	
-	void SetData(ref EditorViewData data)
-	{
-		m_EditorViewData = data;
-	}
-
-	void OnPropertyChanged() {}
-	void OnCollectionChanged(CollectionChangedEventArgs args) {}
-}
-
-
-
 class EditorViewOptionsCallback 
 {
 	static string SearchAction;
 	static Class Instance;
-	static EditorViewHashMap ResourceSearch() 
+	static TDataBindingDataArray ResourceSearch() 
 	{
-		EditorViewHashMap result;
+		TDataBindingDataArray result;
 		g_Script.CallFunction(Instance, SearchAction, result, null);
 		return result;
 	}

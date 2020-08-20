@@ -2,22 +2,22 @@
 static ref EditorHudController m_EditorHudController;
 EditorHudController GetEditorHudController() { return m_EditorHudController; }
 
-// 	  vvvvvvvvvvvvvvvvv  put THIS into ScriptClass
-class EditorHudController: Controller
-{
 
+class EditorHudController
+{
+/*
 	TextWidgetData DebugText1;
 	TextWidgetData DebugText2;
 	TextWidgetData DebugText3;
 	TextWidgetData DebugText4;
-	TextWidgetData DebugText5;
+	TextWidgetData DebugText5;*/
 	
-	ref array<ButtonWidgetData> CategorySelectButtons;
+	//ref array<ButtonWidgetData> CategorySelectButtons;
 
 	
 	bool LeftbarHide;
 	bool RightbarHide;
-	
+	/*
 	SliderWidgetData BrushRadius;
 	SliderWidgetData BrushDensity;
 	
@@ -25,23 +25,23 @@ class EditorHudController: Controller
 	ref WrapSpacerWidgetData LeftbarSpacer;
 	ref WrapSpacerWidgetData RightbarSpacer;
 	ref XComboBoxWidgetData BrushTypeBox;
-	
+	*/
 	void EditorHudController()
 	{
 		EditorLog.Trace("EditorHudController");
 		m_EditorHudController = this;
 	}
 	
-	override void OnWidgetScriptInit(Widget w)
+	void OnWidgetScriptInit(Widget w)
 	{
-		super.OnWidgetScriptInit(w);
-		
+
+		/*
 		DebugActionStackListbox 	= new TextListboxWidgetData("DebugActionStackListbox");
 		LeftbarSpacer 				= new WrapSpacerWidgetData("LeftbarSpacer");
 		RightbarSpacer 				= new WrapSpacerWidgetData("RightbarSpacer");
 		BrushTypeBox				= new XComboBoxWidgetData("BrushTypeBox");
 		
-		CategorySelectButtons 		= new array<ButtonWidgetData>();
+		CategorySelectButtons 		= new array<ButtonWidgetData>();*/
 		
 		// Reload Placeables
 		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
@@ -70,9 +70,9 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::SetBrushTypes");
 		m_EditorBrushTypes = brush_types;
-
+/*
 		foreach (EditorBrushData brush: m_EditorBrushTypes)
-			BrushTypeBox.Insert(brush.Name);		
+			BrushTypeBox.Insert(brush.Name);*/		
 	}
 		
 	EditorBrush GetBrush(string brush_name)
@@ -97,13 +97,13 @@ class EditorHudController: Controller
 	void InsertPlaceableObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlaceableObject");
-		LeftbarSpacer.Insert(target.GetRoot());
+		//LeftbarSpacer.Insert(target.GetRoot());
 	}	
 	
 	void InsertPlacedObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlacedObject");
-		RightbarSpacer.Insert(target.GetRoot());
+		//RightbarSpacer.Insert(target.GetRoot());
 	}
 	
 	void InsertMapMarker(EditorMarker map_marker)
@@ -135,46 +135,44 @@ class EditorHudController: Controller
 	void UpdatePlaceableItems(PlaceableObjectCategory category)
 	{
 		EditorLog.Trace("EditorUIController::UpdatePlaceableItems");
-		
+		/*
 		for (int i = 0; i < LeftbarSpacer.Count(); i++) {
 			Widget list_item = LeftbarSpacer.Get(i);
 			EditorPlaceableListItem item;
 			list_item.GetUserData(item);
 			list_item.Show(item.GetData().GetCategory() == category);
-		}		
+		}		*/
 	}
 	
 		
-	override void OnPropertyChanged(string property_name)
+	void OnPropertyChanged(string property_name)
 	{
 		switch (property_name) {
 			
-			case "CategorySelectButtons": {
+			case "CategorySelectButtons": {/*
 				foreach (bool b: CategorySelectButtons) {
 					b = false;
 				}
 				
 				break;
-			}
+			*/}
 			
 		}
 		
-		super.OnPropertyChanged(property_name);
+		
 	}
 	
-	override bool OnClick(Widget w, int x, int y, bool button)
+	bool OnClick(Widget w, int x, int y, bool button)
 	{
 		switch (w.GetName()) {
 			
-			
-			
 			case "BrushRadius": {
-				EditorBrush.SetRadius(BrushRadius);
+				//EditorBrush.SetRadius(BrushRadius);
 				break;
 			}
 			
 			case "BrushDensity": {
-				EditorBrush.SetDensity(BrushDensity);
+				//EditorBrush.SetDensity(BrushDensity);
 				break;
 			}
 		}
