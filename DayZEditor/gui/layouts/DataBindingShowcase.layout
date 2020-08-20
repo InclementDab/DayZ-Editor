@@ -1,4 +1,5 @@
 FrameWidgetClass WindowFrame {
+ visible 1
  position 0 0
  size 800 600
  hexactpos 1
@@ -6,16 +7,6 @@ FrameWidgetClass WindowFrame {
  hexactsize 1
  vexactsize 1
  {
-  FrameWidgetClass WindowController {
-   ignorepointer 1
-   position 0 0
-   size 0 0
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   scriptclass "DataBindingShowcaseController"
-  }
   WrapSpacerWidgetClass WindowContent {
    ignorepointer 1
    position 0 0
@@ -48,6 +39,7 @@ FrameWidgetClass WindowFrame {
      }
     }
     SliderWidgetClass WindowSlider {
+     visible 1
      position 0 0
      size 0.8 50
      halign center_ref
@@ -60,6 +52,21 @@ FrameWidgetClass WindowFrame {
       ScriptParamsClass {
       }
      }
+    }
+   }
+  }
+  FrameWidgetClass WindowController {
+   ignorepointer 1
+   position 0 0
+   size 0 0
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   draggable 1
+   scriptclass "DataBindingShowcaseController"
+   {
+    ScriptParamsClass {
     }
    }
   }

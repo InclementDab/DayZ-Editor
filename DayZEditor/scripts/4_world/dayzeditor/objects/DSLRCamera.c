@@ -9,3 +9,5 @@ class DSLRCamera: EntityAI
 	
 	
 }
+
+

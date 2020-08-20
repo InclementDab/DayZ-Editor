@@ -4,7 +4,11 @@
 class DataBinding: ScriptedWidgetEventHandler
 {
 	protected Widget m_LayoutRoot;
-		
+	
+	
+	[Attribute("", "script")]
+	string test1;
+	
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("DataBinding::Init");

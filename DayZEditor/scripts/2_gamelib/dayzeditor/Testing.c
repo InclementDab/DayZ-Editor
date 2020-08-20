@@ -1,11 +1,9 @@
 
+ref ScriptInvoker script_invoker;
 
-
-
-static void GamelibPluginCreatedTrigger(Class context)
+void GameLibMain()
 {
-	Print("GamelibPluginCreatedTrigger");
-	
-	
+	Print("WOW");
+	script_invoker = new ScriptInvoker();
 }
 

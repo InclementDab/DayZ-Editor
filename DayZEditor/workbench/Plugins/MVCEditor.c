@@ -36,44 +36,53 @@ class BetterString: string
 }
 
 
-[WorkbenchPluginAttribute("MVC Controller Manager", "Edit MVC Settings", "Alt+3", "", {"ResourceManager", "ScriptEditor"})]
+
+[WorkbenchPluginAttribute("MVC Controller Manager", "Edit MVC Settings", "Alt+3", "", {"ResourceManager", "ScriptEditor", "TestAddon"})]
 class MVCEditorPlugin: WorkbenchPlugin
 {
-	// vector3, button, editboxWithButton
-	string m_Shortcut;
-	ref array<string> m_WBModules;
+	// vector3, button, editboxWithButton, script
 	
 	///< can be "editbox", "combobox", "spinbox", "slider", "font", "fileeditbox", "colorPicker", "flags", "resourceNamePicker"
-	[Attribute("", "vector3")]
-	vector DataBindingName;
 	
+	static string name = "script";
 	
+	[Attribute("", name)]
+	string test1;
 	
+	[Attribute("", name)]
+	int test2;
 	
-	[EditorAttribute("box", "StaticEntities/Walls", "testdesc", Vector(-5, -5, -5), Vector(-5, -5, -5), "255 255 255 255")]
-	int test;	
-	
-	static ref ParamEnumArray param_enums = { ParamEnum("TestButton", "0"), ParamEnum("Option2", "1") };
-	[Attribute("Test", "PopupComboBox", "combobox: ", "TestButton", param_enums)]
-	string TestButton;
+	[Attribute("", name)]
+	float test3;
 
 	
-	[Attribute("", "PopupComboBox")]
-	int spinbox;
+	[Attribute("", name)]
+	vector test5;
+			
+	[Attribute("", name, "", "", ParamEnumArray.FromEnum(EBool))]
+	int test7;
 	
+	[Attribute("1 1 1", "color", "Color", "", NULL )]
+	vector Color;
 	
+	//[Attribute("", "resourceNamePicker", "Model", "xob")]
+	//string Model;
+	//[Attribute("1", "combobox", "Physics", "", { ParamEnum("None", "2"), ParamEnum("Static", "1"), ParamEnum("Dynamic", "0") } )]
+	//int Type;
+
+	[Attribute("false", name)]
+	bool Debug;
+	
+
 	
 	void MVCEditorPlugin()
 	{
 		Print("MVCEditorPlugin");
-		CorePluginCreatedTrigger(this);
 	}
 	
 	void ~MVCEditorPlugin()
 	{
-		Print("~MVCEditorPlugin");
-		Widget w = GetFocus();
-		Print(w);
+		Print("~MVCEditorPlugin");		
 	}
 		
 	
@@ -82,16 +91,16 @@ class MVCEditorPlugin: WorkbenchPlugin
 	{
 		
 		//WBModuleDef module = Workbench.GetModule("ParticleEditor");
-		Workbench.OpenModule("WorldEditor");
-		WBModuleDef module = Workbench.GetModule("WorldEditor");
+		Workbench.OpenModule("TestAddon");
+		WBModuleDef module = Workbench.GetModule("TestAddon");
 		
 		Print(module);
 		Print(module.GetNumContainers());
+	
 		
-		BetterString test = "test";
-		test[1] = "f";
-		Print(test);
 		
+		Print(FileExist("$CurrentDir:/ToolAddons/TestAddon/init.c"));
+
 		
 		if (module) {
 			Workbench.OpenModule("ResourceManager");
@@ -109,5 +118,26 @@ class MVCEditorPlugin: WorkbenchPlugin
 		Print("WTF");
 	}
 	
+	[ButtonAttribute("Close")]
+	void Close()
+	{
+		Print(test1);
+	}	
 }
+
+
+
+
+class TestingTool
+{
+	//! Filled by workbench
+	WorldEditorAPI m_API;
+	
+	void TestingTool()
+	{
+		Print("TestingTool");
+		Print(m_API);
+	}
+}
+
 

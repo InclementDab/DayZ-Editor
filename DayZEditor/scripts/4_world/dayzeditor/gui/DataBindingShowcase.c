@@ -13,6 +13,7 @@ class DataBindingShowcaseController: Controller
 		EditorLog.Trace("DataBindingShowcaseController::Init");
 		
 		
+		
 		super.OnWidgetScriptInit(w);
 	}
 	

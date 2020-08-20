@@ -8,16 +8,12 @@ static void CorePluginCreatedTrigger(Class context)
 }
 
 
-[WorkbenchToolAttribute("REEEEEEE2", "", "Alt+2")]
-class TestingTool
+
+typedef int[] GuiLayoutScriptClassWidgetCommand;
+
+
+class GuiLayoutScriptClassWidgetCommand
 {
-	//! Filled by workbench
-	WorldEditorAPI m_API;
 	
-	void TestingTool()
-	{
-		Print("TestingTool");
-		Print(m_API);
-	}
 	
 }
