@@ -10,6 +10,7 @@ class DataBindingHashMap: map<string, ref DataBindingBase>
 	{
 		foreach (string name, DataBindingBase data: this) {
 			EditorLog.Debug(string.Format("%1: %2", name, data));
+			data.GetType();
 		}
 	}
 }
@@ -23,10 +24,10 @@ class DataBindingBase
 	
 	static DataBindingBase Create(ViewBinding view)
 	{
-		return GetDataType(view.GetRoot().Type());
+		return _Create(view.GetRoot().Type());
 	}
 	
-	private static DataBindingBase GetDataType(typename widget_type)
+	private static DataBindingBase _Create(typename widget_type)
 	{
 		switch (widget_type) {
 			
@@ -84,13 +85,28 @@ class DataBindingBase
 		}
 		
 		return false;
-		
 	}
+	
+	typename GetType() 
+	{ 
+		typename type = Type();
+		for (int i = 0; i < type.GetVariableCount(); i++) {
+			if (type.GetVariableName(i) == "m_Data") {
+				Print(type.GetVariableType(i));	
+				return type.GetVariableType(i);
+			}
+		}
+		
+		Print("Var not found!");
+		return typename;
+	}
+
 }
 
 class DataBinding<Class T>: DataBindingBase
 {
-
+	protected T m_Data;
+	T GetData() { return m_Data; }	
 }
 
 
@@ -125,3 +141,4 @@ class PropertyInfo
 		Type = type; Name = name;
 	}
 }
+
