@@ -101,6 +101,16 @@ class TypeConversionBool: TypeConversionTemplate<bool>
 
 class TypeConversionFloat: TypeConversionTemplate<float>
 {
+	override bool GetBool()
+	{
+		return (m_Value == 1);
+	}
+	
+	override void SetBool(bool value)
+	{
+		m_Value = value;
+	}
+	
 	override float GetFloat()
 	{
 		return m_Value;
@@ -110,6 +120,17 @@ class TypeConversionFloat: TypeConversionTemplate<float>
 	{
 		m_Value = value;
 	}
+	
+	override string GetString()
+	{
+		return string.ToString(m_Value, false, false, false);
+	}
+	
+	override void SetString(string value)
+	{
+		m_Value = value.ToFloat();
+	}
+	
 }
 
 class TypeConversionString: TypeConversionTemplate<string>
