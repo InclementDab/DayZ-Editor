@@ -125,7 +125,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
 			return;
 		}
-		
+				
 		switch (m_WidgetDataType) {
 			
 			case bool: {
@@ -143,9 +143,9 @@ class ViewBinding: ScriptedWidgetEventHandler
 			}			
 			
 			case string: {
-				string _string;
-				g_Script.CallFunction(m_LayoutRoot, widget_getter, _string, null);
-				m_PropertyDataConverter.SetString(_string);
+				//string _string = "";
+				//g_Script.CallFunction(m_LayoutRoot, widget_getter, _string, null);
+				m_PropertyDataConverter.SetString(EditBoxWidget.Cast(m_LayoutRoot).GetText());
 				break;
 			}			
 						

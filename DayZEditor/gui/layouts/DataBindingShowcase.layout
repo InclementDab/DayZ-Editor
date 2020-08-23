@@ -96,6 +96,7 @@ FrameWidgetClass WindowFrame {
        "text valign" center
        {
         ScriptParamsClass {
+         Binding_Name "WindowSlider"
         }
        }
       }

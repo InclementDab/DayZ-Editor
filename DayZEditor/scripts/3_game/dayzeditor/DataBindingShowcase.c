@@ -4,7 +4,8 @@
 class DataBindingShowcaseController: Controller
 {
 	
-	protected EquationEvaluater WindowText = "(10 / 2) + 7";
+	EquationEvaluater WindowText = "(10 / 2) + 7";
+	float WindowSlider = 10;
 	
 	bool EvaluateEquation;
 	
