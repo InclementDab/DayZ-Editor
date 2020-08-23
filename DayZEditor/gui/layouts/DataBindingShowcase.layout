@@ -1,7 +1,8 @@
 FrameWidgetClass WindowFrame {
  visible 1
- position 0 0
  size 800 600
+ halign center_ref
+ valign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 1

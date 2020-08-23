@@ -19,6 +19,10 @@ class ViewBinding: ScriptedWidgetEventHandler
 	private typename m_PropertyDataType;
 	
 	private Controller m_Controller;
+	
+	void ViewBinding() { EditorLog.Trace("ViewBinding"); }
+	void ~ViewBinding() { EditorLog.Trace("~ViewBinding"); }
+	
 	void SetController(Controller controller) 
 	{ 
 		EditorLog.Trace("ViewBinding::SetController");
@@ -85,17 +89,17 @@ class ViewBinding: ScriptedWidgetEventHandler
 		switch (m_WidgetDataType)
 		{
 			case bool: {
-				g_Script.Call(m_LayoutRoot, widget_setter, m_PropertyDataConverter.GetBool());
+				g_Script.CallFunction(m_LayoutRoot, widget_setter, null, m_PropertyDataConverter.GetBool());
 				break;
 			}
 			
 			case float: {
-				g_Script.Call(m_LayoutRoot, widget_setter, m_PropertyDataConverter.GetFloat());
+				g_Script.CallFunction(m_LayoutRoot, widget_setter, null, m_PropertyDataConverter.GetFloat());
 				break;
 			}
 			
 			case string: {
-				g_Script.Call(m_LayoutRoot, widget_setter, m_PropertyDataConverter.GetString());
+				g_Script.CallFunction(m_LayoutRoot, widget_setter, null, m_PropertyDataConverter.GetString());
 				break;
 			}
 						
@@ -104,8 +108,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 				return;
 			}
 		}		
-		
-		Print("Update done");
 	}
 	
 	

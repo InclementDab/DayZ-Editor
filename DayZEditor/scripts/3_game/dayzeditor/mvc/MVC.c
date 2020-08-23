@@ -17,11 +17,14 @@ class MVC
 	
 	void MVC()
 	{
+		EditorLog.Trace("MVC");
 		if (!m_TypeConverterHashMap) {
 			m_TypeConverterHashMap = new TypeConverterHashMap();
 			RegisterConversionTemplates(m_TypeConverterHashMap);
 		}
 	}
+	
+	void ~MVC() { EditorLog.Trace("~MVC"); }
 	
 	// Override THIS to add your own Custom Conversion Templates
 	void RegisterConversionTemplates(out TypeConverterHashMap type_conversions)

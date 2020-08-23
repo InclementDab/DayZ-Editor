@@ -15,10 +15,8 @@ class Controller: Managed
 		return m_PropertyHashMap.Get(property_name);
 	}
 	
-	void Controller()
-	{
-		EditorLog.Trace("Controller"); 
-	}
+	void Controller() { EditorLog.Trace("Controller"); }
+	void ~Controller() { EditorLog.Trace("~Controller"); }
 	
 	void OnWidgetScriptInit(Widget w)
 	{

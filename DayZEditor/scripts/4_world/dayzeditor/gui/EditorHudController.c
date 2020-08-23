@@ -44,7 +44,7 @@ class EditorHudController
 		CategorySelectButtons 		= new array<ButtonWidgetData>();*/
 		
 		// Reload Placeables
-		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
+		//EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
 		
 		// Load Brushes
 		m_EditorBrushTypes = new EditorBrushDataSet();

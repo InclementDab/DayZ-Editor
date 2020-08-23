@@ -7,8 +7,11 @@ class TypeConverterHashMap
 	
 	void TypeConverterHashMap()
 	{
+		EditorLog.Trace("TypeConverterHashMap");
 		value = new map<typename, typename>();
 	}
+	
+	void ~TypeConverterHashMap() { EditorLog.Trace("~TypeConverterHashMap"); }
 	
 	typename Get(typename conversion_type)
 	{
@@ -47,6 +50,9 @@ class TypeConverterHashMap
 
 class TypeConverter
 {			
+	void TypeConverter() { EditorLog.Trace("TypeConverter"); }
+	void ~TypeConverter() { EditorLog.Trace("~TypeConverter"); }
+	
 	bool GetBool();
 	float GetFloat();	
 	string GetString();
