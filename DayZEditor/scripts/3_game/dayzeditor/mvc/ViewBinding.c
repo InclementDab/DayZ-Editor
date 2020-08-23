@@ -22,9 +22,93 @@ class WidgetDataConverter<Class T>
 }
 
 
-
-class WidgetData
+class ViewBinding: ScriptedWidgetEventHandler
 {
+	protected Widget m_LayoutRoot;
+	
+	protected reference string Binding_Name;
+	protected reference int Binding_Index;
+	protected reference bool Two_Way_Binding;
+	
+	Widget GetRoot() { return m_LayoutRoot; }
+	string GetBindingName() { return Binding_Name; }
+	int GetBindingIndex() { return Binding_Index; }
+
+	void OnWidgetScriptInit(Widget w)
+	{
+		EditorLog.Trace("ViewBinding::Init");
+		m_LayoutRoot = w;
+		
+		if (Binding_Name == string.Empty) {
+			Binding_Name = m_LayoutRoot.GetName();
+		}
+		
+		if (Two_Way_Binding && !ViewBinding.SupportsTwoWayBinding(m_LayoutRoot.Type())) {
+			Controller.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
+		}		
+	}
+	
+	void Set(bool data)
+	{
+		EditorLog.Trace("ViewBinding::Set::Bool");
+
+		switch (m_LayoutRoot.Type()) {
+			
+			case ButtonWidget: {
+				ButtonWidget.Cast(m_LayoutRoot).SetState(data);
+				break;
+			}
+			
+			default: {
+				UnsupportedTypeError(m_LayoutRoot.Type());
+			}
+		}
+	}
+	
+	void Set(float data)
+	{
+		EditorLog.Trace("ViewBinding::Set::Bool");
+		
+		switch (m_LayoutRoot.Type()) {
+			case SliderWidget: {
+				SliderWidget.Cast(m_LayoutRoot).SetCurrent(data);
+				break;
+			}
+			
+			default: {
+				UnsupportedTypeError(m_LayoutRoot.Type());
+			}
+		}
+	}
+	
+	void Set(string data)
+	{
+		EditorLog.Trace("ViewBinding::Set::Float");
+		
+		switch (m_LayoutRoot.Type()) {
+			case TextWidget: {
+				TextWidget.Cast(m_LayoutRoot).SetText(data);
+				break;
+			}
+			
+			default: {
+				UnsupportedTypeError(m_LayoutRoot.Type());
+			}
+		}
+	}
+	
+	void UnsupportedTypeError(typename type)
+	{
+		Controller.ErrorDialog(string.Format("%1: Unsupported Type %2", m_LayoutRoot.Type(), type));
+	}
+	
+	override bool OnChange(Widget w, int x, int y, bool finished)
+	{
+		EditorLog.Trace("ViewBinding::OnChange");
+		return super.OnChange(w, x, y, finished);
+	}
+	
+	
 	static typename GetWidgetDataType(typename widget_type)
 	{
 		switch (widget_type) {
@@ -85,38 +169,6 @@ class WidgetData
 		return false;
 	}
 	
-	static void Set(Widget w, bool data)
-	{
-		EditorLog.Trace("WidgetData::Set::Bool");
-		
-		switch (w.Type()) {
-			
-			case ButtonWidget: {
-				ButtonWidget.Cast(w).SetState(data);
-				break;
-			}
-		}
-	}
-	
-	static void Set(Widget w, float data)
-	{
-		switch (w.Type()) {
-			case SliderWidget: {
-				SliderWidget.Cast(w).SetCurrent(data);
-				break;
-			}
-		}
-	}
-	
-	static void Set(Widget w, string data)
-	{
-		switch (w.Type()) {
-			case TextWidget: {
-				TextWidget.Cast(w).SetText(data);
-				break;
-			}
-		}
-	}
 	/*
 	static T Get(Widget w)
 	{
@@ -137,50 +189,6 @@ class WidgetData
 		Class.CastTo(result, 0);
 		return result;
 	}*/
-}
-
-
-
-class ViewBinding: ScriptedWidgetEventHandler
-{
-	protected Widget m_LayoutRoot;
-	
-	protected reference string Binding_Name;
-	protected reference int Binding_Index;
-	protected reference bool Two_Way_Binding;
-	
-	Widget GetRoot() { return m_LayoutRoot; }
-	string GetBindingName() { return Binding_Name; }
-	int GetBindingIndex() { return Binding_Index; }
-
-	void OnWidgetScriptInit(Widget w)
-	{
-		EditorLog.Trace("ViewBinding::Init");
-		m_LayoutRoot = w;
-		
-		if (Binding_Name == string.Empty) {
-			Binding_Name = m_LayoutRoot.GetName();
-		}
-		
-		if (Two_Way_Binding && !WidgetData.SupportsTwoWayBinding(m_LayoutRoot.Type())) {
-			Controller.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
-		}		
-	}
-	
-
-	
-	
-
-	
-	
-	override bool OnChange(Widget w, int x, int y, bool finished)
-	{
-		EditorLog.Trace("ViewBinding::OnChange");
-		
-		
-		
-		return super.OnChange(w, x, y, finished);
-	}
 }
 
 

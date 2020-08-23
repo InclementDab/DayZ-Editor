@@ -66,10 +66,7 @@ class Controller: Managed
 		
 	}
 	
-	void UnsupportedTypeError(typename type)
-	{
-		Controller.ErrorDialog(string.Format("%1: Unsupported Type %2", m_LayoutRoot.Type(), type));
-	}
+
 	
 	
 	
@@ -88,34 +85,32 @@ class Controller: Managed
 		
 		
 		EditorLog.Debug("NotifyPropertyChanged::SetData");
-		Widget layout_root = data.View.GetRoot();
+		ViewBinding view = data.View;
 		
 		switch (data.Property.Type) {
 			
 			case bool: {
 				bool _bool;
 				EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _bool);
-				WidgetData.Set(layout_root, _bool);
+				view.Set(_bool);
 				break;
 			}
 			
 			case float: {
 				float _float;
 				EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _float);
-				WidgetData.Set(layout_root, _float);
+				view.Set(_float);
 				break;
 			}
 			
 			case string: {
 				string _string;
 				EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _string);
-				WidgetData.Set(layout_root, _string);
+				view.Set(_string);
 				break;
 			}
 			
-			default: {
-				UnsupportedTypeError(data.Property.Type);
-			}
+
 		}
 	}
 	
