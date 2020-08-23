@@ -61,7 +61,7 @@ FrameWidgetClass WindowFrame {
      {
       ScriptParamsClass {
        Binding_Name "EvaluateEquation"
-       Two_Way_Binding 0
+       Two_Way_Binding 1
       }
      }
     }

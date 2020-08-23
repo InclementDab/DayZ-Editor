@@ -74,13 +74,14 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
 		
-		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
+		
 		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
 		if (widget_setter == string.Empty) {
 			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
 			return;
 		}
 		
+		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
 		switch (m_WidgetDataType)
 		{
 			case bool: {
@@ -103,6 +104,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 				return;
 			}
 		}		
+		
+		Print("Update done");
 	}
 	
 	
@@ -346,7 +349,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			}
 		}
 		
-		return Class;
+		return Widget;
 	}
 	
 	static bool SupportsTwoWayBinding(typename type)

@@ -1,110 +1,5 @@
 
 
-class EditorHudHandler: ScriptedWidgetEventHandler
-{
-	protected Widget m_LayoutRoot;	
-	protected Widget m_LeftbarFrame;
-	protected Widget m_RightbarFrame;
-	
-	protected EditorHudController m_Controller;
-	
-	void OnWidgetScriptInit(Widget w)
-	{
-		EditorLog.Trace("EditorHudHandler::OnWidgetScriptInit");
-		m_LayoutRoot = w;
-		m_LayoutRoot.SetHandler(this);
-				
-		m_LeftbarFrame			= m_LayoutRoot.FindAnyWidget("LeftbarFrame");
-		m_RightbarFrame			= m_LayoutRoot.FindAnyWidget("RightbarFrame");
-		
-		m_Controller 			= GetEditorHudController();
-		
-		// Set default
-		m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
-	}
-	
-
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorHudHandler::OnMouseButtonDown");
-		if (button == 0) {
-			
-#ifndef COMPONENT_SYSTEM
-			
-			if (GetEditor().IsPlacing()) {
-				GetEditor().PlaceObject();
-				return true;
-			}
-			
-			GetEditor().ClearSelection();
-#endif
-		}
-		
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-
-
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorHudHandler::OnClick " + w.GetName());
-		if (button == 0) {
-			
-			
-			switch (w.GetName()) {
-				
-				case "LeftbarHide": {
-					ShowLeftBar(m_Controller.LeftbarHide);					
-					break;
-				}
-				
-				case "RightbarHide": {
-					ShowRightBar(m_Controller.RightbarHide);
-					break;
-				}
-				
-				case "BuildingSelect": {
-					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
-					break;
-				}
-				
-				case "VehicleSelect": {
-					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.VEHICLE);
-					break;
-				}
-				
-				case "EntitySelect": {
-					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.ENTITY);
-					break;
-				}
-				
-				case "HumanSelect": {
-					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
-					break;
-				}
-				
-				
-			}
-		}
-		
-		
-		return super.OnClick(w, x, y, button);
-	}
-
-	
-	void ShowLeftBar(bool state)
-	{
-		m_LeftbarFrame.SetPos(-300 * state, 32);
-	}
-	
-	void ShowRightBar(bool state)
-	{
-		m_RightbarFrame.SetPos(-300 * state, 32);
-	}
-}
-
-
-
-
 class EditorHud: Hud
 {	
 	
@@ -132,7 +27,7 @@ class EditorHud: Hud
 	{
 		EditorLog.Trace("EditorHud::Init");
 		m_LayoutRoot 			= GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorUI.layout", hud_panel_widget);
-		
+		GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/DataBindingShowcase.layout", m_LayoutRoot);
 
 		
 		// Misc get ridda this shit too
@@ -222,3 +117,104 @@ class EditorHud: Hud
 
 }
 
+
+class EditorHudHandler: ScriptedWidgetEventHandler
+{
+	protected Widget m_LayoutRoot;	
+	protected Widget m_LeftbarFrame;
+	protected Widget m_RightbarFrame;
+		
+	void OnWidgetScriptInit(Widget w)
+	{
+		EditorLog.Trace("EditorHudHandler::OnWidgetScriptInit");
+		m_LayoutRoot = w;
+		m_LayoutRoot.SetHandler(this);
+				
+		m_LeftbarFrame			= m_LayoutRoot.FindAnyWidget("LeftbarFrame");
+		m_RightbarFrame			= m_LayoutRoot.FindAnyWidget("RightbarFrame");
+		
+		
+		// Set default
+		//m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
+		
+
+	}
+	
+
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorHudHandler::OnMouseButtonDown");
+		if (button == 0) {
+			
+#ifndef COMPONENT_SYSTEM
+			
+			if (GetEditor().IsPlacing()) {
+				GetEditor().PlaceObject();
+				return true;
+			}
+			
+			GetEditor().ClearSelection();
+#endif
+		}
+		
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+
+/*
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorHudHandler::OnClick " + w.GetName());
+		if (button == 0) {
+			
+			
+			switch (w.GetName()) {
+				
+				case "LeftbarHide": {
+					ShowLeftBar(m_Controller.LeftbarHide);					
+					break;
+				}
+				
+				case "RightbarHide": {
+					ShowRightBar(m_Controller.RightbarHide);
+					break;
+				}
+				
+				case "BuildingSelect": {
+					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.BUILDING);
+					break;
+				}
+				
+				case "VehicleSelect": {
+					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.VEHICLE);
+					break;
+				}
+				
+				case "EntitySelect": {
+					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.ENTITY);
+					break;
+				}
+				
+				case "HumanSelect": {
+					m_Controller.UpdatePlaceableItems(PlaceableObjectCategory.HUMAN);
+					break;
+				}
+				
+				
+			}
+		}
+		
+		
+		return super.OnClick(w, x, y, button);
+	}
+*/
+	
+	void ShowLeftBar(bool state)
+	{
+		m_LeftbarFrame.SetPos(-300 * state, 32);
+	}
+	
+	void ShowRightBar(bool state)
+	{
+		m_RightbarFrame.SetPos(-300 * state, 32);
+	}
+}

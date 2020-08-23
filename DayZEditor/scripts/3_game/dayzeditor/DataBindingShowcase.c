@@ -8,13 +8,10 @@ class DataBindingShowcaseController: Controller
 	
 	bool EvaluateEquation;
 	
-
-	
 	override void PropertyChanged(string property_name)
 	{
 		if (property_name == "EvaluateEquation") {
 			WindowText.Evaluate();
-			EvaluateEquation = false;
 			NotifyPropertyChanged("WindowText");
 		}
 	}
