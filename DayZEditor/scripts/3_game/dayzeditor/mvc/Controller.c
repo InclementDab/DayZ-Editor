@@ -7,6 +7,8 @@ class Controller: Managed
 	protected ref DataBindingHashMap m_DataBindingHashMap = new DataBindingHashMap();
 	protected ref PropertyHashMap m_PropertyHashMap = new PropertyHashMap();
 	
+	private ref PropertyHashMap m_ControllerPropertyHashMap = PropertyHashMap.FromType(Controller);
+	
 	void Controller()
 	{
 		EditorLog.Trace("Controller");
@@ -15,8 +17,7 @@ class Controller: Managed
 		m_PropertyHashMap = PropertyHashMap.FromType(Type());
 		
 		// Gets rid of properties that only exist in this class
-		PropertyHashMap controller_map = PropertyHashMap.FromType(Controller);
-		foreach (string name, typename type: controller_map) {
+		foreach (string name, typename type: m_ControllerPropertyHashMap) {
 			m_PropertyHashMap.Remove(name);
 		}
 		
@@ -46,7 +47,14 @@ class Controller: Managed
 		// debug
 		m_DataBindingHashMap.DebugPrint();
 		
-		
+		foreach (string name, DataBindingBase data: m_DataBindingHashMap) {
+			PropertyInfo prop = m_PropertyHashMap.GetPropertyInfo(name);
+			if (data.GetType() != prop.Type) {
+				ErrorDialog(string.Format("Invalid data type in %1. Found %2, supports %3", name, prop.Type, data.GetType()));
+				m_DataBindingHashMap.Remove(name);
+			}
+			
+		}
 		
 	}
 	

@@ -10,7 +10,6 @@ class DataBindingHashMap: map<string, ref DataBindingBase>
 	{
 		foreach (string name, DataBindingBase data: this) {
 			EditorLog.Debug(string.Format("%1: %2", name, data));
-			data.GetType();
 		}
 	}
 }
@@ -90,14 +89,11 @@ class DataBindingBase
 	typename GetType() 
 	{ 
 		typename type = Type();
-		for (int i = 0; i < type.GetVariableCount(); i++) {
-			if (type.GetVariableName(i) == "m_Data") {
-				Print(type.GetVariableType(i));	
+		for (int i = 0; i < type.GetVariableCount(); i++) 
+			if (type.GetVariableName(i) == "Data")
 				return type.GetVariableType(i);
-			}
-		}
 		
-		Print("Var not found!");
+		EditorLog.Error("DataBindingBase::GetType: could not find the Data Type!");
 		return typename;
 	}
 
@@ -105,8 +101,7 @@ class DataBindingBase
 
 class DataBinding<Class T>: DataBindingBase
 {
-	protected T m_Data;
-	T GetData() { return m_Data; }	
+	T Data;
 }
 
 
@@ -114,9 +109,9 @@ class DataBinding<Class T>: DataBindingBase
 // 1: Proprety Type
 class PropertyHashMap: map<string, typename>
 {
-	static PropertyHashMap FromType(typename type)
+	static ref PropertyHashMap FromType(typename type)
 	{
-		PropertyHashMap hash_map = new PropertyHashMap();
+		ref PropertyHashMap hash_map = new PropertyHashMap();
 		for (int i = 0; i < type.GetVariableCount(); i++) {
 			hash_map.Insert(type.GetVariableName(i), type.GetVariableType(i));	
 		}
