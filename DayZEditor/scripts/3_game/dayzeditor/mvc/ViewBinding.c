@@ -22,11 +22,10 @@ class ViewBinding: ScriptedWidgetEventHandler
 		}
 	}
 	
-	void OnPropertyChanged(WidgetData converter)
+	void OnPropertyChanged(DataBindingBase databinding)
 	{
-		Print(converter);
-		WidgetDataConverter<Class> conv = converter;
-		Print(conv);
+		Print(databinding);
+		
 	}
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)

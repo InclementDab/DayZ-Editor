@@ -1,9 +1,5 @@
 
-enum TinyDickJim {
-	1,
-	2,
-	3
-};
+
 
 
 typedef string BetterString;
@@ -20,10 +16,6 @@ class BetterString: string
 		
 	}	
 }
-
-
-
-
 
 
 [WorkbenchPluginAttribute("MVC Controller Manager", "Edit MVC Settings", "Alt+3", "", {"ResourceManager", "ScriptEditor", "TestAddon"})]
@@ -87,7 +79,6 @@ class MVCEditorPlugin: WorkbenchPlugin
 		WBModuleDef module = Workbench.GetModule("TestAddon");		
 		
 	
-		Print(FileExist("$CurrentDir:/ToolAddons/TestAddon/init.c"));
 
 		
 		if (module) {
