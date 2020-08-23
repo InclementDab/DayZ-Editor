@@ -1,14 +1,107 @@
 
-class TypeConverterBase
+class TypeConversion
 {
-	bool GetBool() { return false; }
-	float GetFloat() { return 0; }
-	string GetString() { return string.Empty; }
+	bool GetBool();
+	float GetFloat();	
+	string GetString();
+	Widget GetWidget();
+	
+	void SetFromModel(Class context, string name, int index);
 }
 
-
-class TypeConverter<Class T>: TypeConverterBase
+class TypeConversionTemplate<Class T>: TypeConversion
 {
+	protected T value;
+	
+	private void NotImplementedException(string method_name)
+	{
+		string msg = string.Format("NotImplementedException: %1", method_name);
+		#ifdef COMPONENT_SYSTEM
+		Error(msg);
+		Workbench.Dialog("Error", msg);
+		#else
+		EditorLog.Error(msg);
+		#endif
+	}
+	
+	T Get(Class context, string name, int index)
+	{
+		T _data;
+		EnScript.GetClassVar(context, name, index, _data);
+		return _data;
+	}
+	
+	override void SetFromModel(Class context, string name, int index)
+	{
+		EnScript.GetClassVar(context, name, index, value);
+	}
+	
+	void Set(T _value)
+	{
+		value = _value;
+	}
+}
+
+class TypeConversionBool: TypeConversionTemplate<bool>
+{
+	override bool GetBool()
+	{
+		return value;
+	}
+}
+
+class TypeConversionFloat: TypeConversionTemplate<float>
+{
+	override float GetFloat()
+	{
+		return value;
+	}
+}
+
+class TypeConversionString: TypeConversionTemplate<string>
+{	
+	override bool GetBool()
+	{
+		return string.ToString(value, false, false, false) == "1";
+	}
+	
+	override float GetFloat()
+	{
+		return string.ToString(value, false, false, false).ToFloat();
+	}
+	
+	override string GetString()
+	{
+		return string.ToString(value, false, false, false);
+	}
+}
+
+class TypeConversionHashMap: ref map<typename, typename>
+{
+	void TypeConversionHashMap()
+	{
+		RegisterTypeConversion(bool, TypeConversionBool);
+		RegisterTypeConversion(float, TypeConversionFloat);
+		RegisterTypeConversion(string, TypeConversionString);
+	}
+	
+	bool RegisterTypeConversion(typename conversion_type, typename conversion_class)
+	{		
+		if (conversion_class.IsInherited(TypeConversionTemplate)) {
+			return Insert(conversion_type, conversion_class);
+		} else {
+			Error("RegisterTypeConversion: TypeConversionType must be of type TypeConversionTemplate");
+		}
+		
+		return false;
+	}
+}
+
+class TypeConverter
+{
+	private static ref TypeConversionHashMap m_TypeConversionHashMap = new TypeConversionHashMap();
+	static typename GetTypeConversion(typename type) { return m_TypeConversionHashMap.Get(type); }
+	
 	Class Context;
 	string Name;
 	int Index;
@@ -16,46 +109,11 @@ class TypeConverter<Class T>: TypeConverterBase
 	void TypeConverter(Class context, string name, int index) 
 	{
 		Context = context; Name = name; Index = index;
+		
+		if (m_TypeConversionHashMap == null) {
+			m_TypeConversionHashMap = new TypeConversionHashMap();
+		}
 	}
-	
-	private T Get()
-	{
-		T _data;
-		EnScript.GetClassVar(Context, Name, Index, _data);
-		return _data;
-	}
-	
-	override bool GetBool()
-	{
-		return GetBool(Get());
-	}
-	
-	override float GetFloat()
-	{
-		return GetFloat(Get());
-	}
-	
-	override string GetString()
-	{
-		return GetString(Get());
-	}
-	
-	static bool GetBool(T data)
-	{
-		return (string.ToString(data, false, false, false) == "1");
-	}
-
-	static float GetFloat(T data)
-	{	
-		return string.ToString(data, false, false, false).ToFloat();
-	}
-
-	static string GetString(T data)
-	{
-		return string.ToString(data, false, false, false);
-	}
-	
-	
 }
 
 
@@ -70,7 +128,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	Widget GetRoot() { return m_LayoutRoot; }
 	string GetBindingName() { return Binding_Name; }
 	int GetBindingIndex() { return Binding_Index; }
-
+	
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("ViewBinding::Init");
@@ -83,19 +141,60 @@ class ViewBinding: ScriptedWidgetEventHandler
 		if (Two_Way_Binding && !ViewBinding.SupportsTwoWayBinding(m_LayoutRoot.Type())) {
 			Controller.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
 		}
+		
 	}
 	
 	void OnPropertyChanged(Controller controller)
 	{
 		EditorLog.Debug("ViewBinding::OnPropertyChanged");
 		
-		typename property_type = controller.GetPropertyType(Binding_Name);
-		typename data_type = GetWidgetDataType();
+		typename conversion_input = controller.GetPropertyType(Binding_Name);
+		typename conversion_output = GetWidgetDataType();
+				
 		
 		// If the property of the Controller is NOT the native widget data type			
-		if (data_type != property_type) {
-			EditorLog.Debug(string.Format("Attempting Type Conversion from %1 to %2", property_type, data_type));
+		if (conversion_output != conversion_input) {
+			EditorLog.Debug(string.Format("Attempting Type Conversion from %1 to %2", conversion_input, conversion_output));
 		}
+		
+
+		
+		TypeConverter type_converter = new TypeConverter(controller, Binding_Name, Binding_Index);
+		EditorLog.Debug(string.Format("ConversionInput: %1, ConversionOutput: %2", conversion_input, conversion_output));
+		
+		// Sets data value into the converter (intermediate data)
+		switch (conversion_input) {
+			
+			case bool: {
+				//TypeConversionBool _TypeConversionBool = TypeConverter.GetTypeConversion(conversion_output).Spawn();
+				//g_Script.Call(m_LayoutRoot, widget_setter, _TypeConversionBool.SetBool(_TypeConversionBool.Get(controller, Binding_Name, Binding_Index)));
+				break;
+			}
+			
+			case float: {
+				//TypeConversionFloat _TypeConversionFloat = TypeConverter.GetTypeConversion(conversion_output).Spawn();
+				//g_Script.Call(m_LayoutRoot, widget_setter, _TypeConversionFloat.SetFloat(_TypeConversionFloat.Get(controller, Binding_Name, Binding_Index)));
+				break;
+			}
+			
+			case string: {
+				
+				TypeConversionString _TypeConversionString = TypeConverter.GetTypeConversion(conversion_input).Spawn();
+				_TypeConversionString.SetFromModel(controller, Binding_Name, Binding_Index);
+				UpdateView(_TypeConversionString, conversion_output);
+				break;
+			}
+			
+			default: {
+				UnsupportedConversionError(conversion_input, conversion_output);
+			}
+			
+		}
+	}
+	
+	void UpdateView(TypeConversion type_conversion, typename conversion_output)
+	{
+		EditorLog.Trace("UpdateView: " + type_conversion);
 		
 		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
 		if (widget_setter == string.Empty) {
@@ -103,27 +202,26 @@ class ViewBinding: ScriptedWidgetEventHandler
 			return;
 		}
 		
-		TypeConverterBase _TypeConverter = GetTypeConverter(controller);
-		
-		switch (data_type) {
+		switch (conversion_output)
+		{
 			
 			case bool: {
-				g_Script.Call(m_LayoutRoot, widget_setter, _TypeConverter.GetBool());
+				g_Script.Call(m_LayoutRoot, widget_setter, type_conversion.GetBool());
 				break;
 			}
 			
 			case float: {
-				g_Script.Call(m_LayoutRoot, widget_setter, _TypeConverter.GetFloat());
+				g_Script.Call(m_LayoutRoot, widget_setter, type_conversion.GetFloat());
 				break;
 			}
 			
 			case string: {
-				g_Script.Call(m_LayoutRoot, widget_setter, _TypeConverter.GetString());
+				g_Script.Call(m_LayoutRoot, widget_setter, type_conversion.GetString());
 				break;
 			}
 			
 			default: {
-				UnsupportedConversionError(property_type, data_type);
+				UnsupportedConversionError(type_conversion.Type(), conversion_output);
 			}
 			
 		}
@@ -140,7 +238,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		Controller.ErrorDialog(string.Format("Unsupported conversion from %1 to %2!", from_type, to_type));
 	}
 	
-	private TypeConverterBase GetTypeConverter(Controller controller)
+	private TypeConverter GetTypeConverter(Controller controller)
 	{
 		
 		switch (controller.GetPropertyType(Binding_Name)) {
