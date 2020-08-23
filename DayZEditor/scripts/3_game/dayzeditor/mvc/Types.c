@@ -1,11 +1,8 @@
 
 
 
-
-
 class DataBindingHashMap: ref map<string, ref DataBindingBase> 
 {
-	
 	void DebugPrint()
 	{
 		foreach (string name, DataBindingBase data: this) {
@@ -19,7 +16,7 @@ class DataBindingBase
 	private void DataBindingBase() {}
 	
 	ref PropertyInfo Property;
-	ref ViewBinding View;	
+	ref ViewBinding View;
 	
 	static DataBindingBase Create(ViewBinding view)
 	{
@@ -106,6 +103,16 @@ class DataBindingBase
 		
 		switch (type) {
 			
+			case int: {
+				switch (from_type) {
+					case float:
+					case string: {
+						return true;
+					}
+				}
+				break;
+			}
+			
 			case float: {
 				switch (from_type) {
 					case int:
@@ -133,12 +140,61 @@ class DataBindingBase
 		EditorLog.Debug(string.Format("Cannot convert from type %1 to %2", from_type, type));
 		return false;
 	}
-
 }
+
+
+class TypeConverter<Class T>
+{
+	
+	private static void HandleError(typename type)
+	{
+		Controller.ErrorDialog(string.Format("Invalid Conversion Type! %1 to %2", type.ToString(), T.ToString().ToType()));
+	}
+}
+
 
 class DataBinding<Class T>: DataBindingBase
 {
 	T Data;
+		
+	
+	
+
+	
+	T ConvertFrom(string data)
+	{
+
+		
+		return Data;
+	}
+	
+	T ConvertFrom(Widget data)
+	{
+
+		
+		return Data;
+	}	
+	
+	T ConvertFrom(TStringArray data)
+	{
+		
+		
+		return Data;
+	}	
+	
+	T ConvertFrom(EntityAI data)
+	{
+
+		
+		return Data;
+	}	
+	
+	T ConvertFrom(DayZPlayer data)
+	{
+
+		
+		return Data;
+	}
 }
 
 
@@ -171,6 +227,25 @@ class PropertyInfo
 	void PropertyInfo(typename type, string name)
 	{
 		Type = type; Name = name;
+	}
+}
+
+class TPropertyInfo<Class T>
+{
+	T Type;
+	string Name;
+	
+	
+	void TPropertyInfo(string name)
+	{
+		Name = name;
+	}
+	
+	T GetPropertyValue(Class instance, int index = 0)
+	{
+		T value;
+		EnScript.GetClassVar(instance, Name, index, value); 
+		return value;
 	}
 }
 

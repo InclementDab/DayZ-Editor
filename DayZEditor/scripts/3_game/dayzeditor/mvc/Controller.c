@@ -34,9 +34,10 @@ class Controller: Managed
 		
 		// Gets rid of properties that only exist in this class
 		m_ControllerPropertyHashMap = PropertyHashMap.FromType(Controller);
-		foreach (string name, typename type: m_ControllerPropertyHashMap) {
-			m_PropertyHashMap.Remove(name);
-		}
+		// Commented due to crashes for whatever reason smile
+		//foreach (string name, typename type: m_ControllerPropertyHashMap) {
+		//	m_PropertyHashMap.Remove(name);
+		//}
 		
 		EditorLog.Info(string.Format("%1 Properties found!", m_PropertyHashMap.Count()));
 		
@@ -58,8 +59,8 @@ class Controller: Managed
 				ErrorDialog(string.Format("Invalid data type in %1. Found %2, supports %3", data_name, prop.Type, data.GetType()));
 				m_DataBindingHashMap.Remove(data_name);
 			}
-			
 		}
+		
 		
 	}
 	
@@ -74,6 +75,13 @@ class Controller: Managed
 			return;
 		}
 		
+		string result;
+		
+		EnScript.GetClassVar(this, data.Property.Name, 0, result);
+		
+		
+		
+		g_Script.Call(data.View, "OnPropertyChanged", null);
 	}
 	
 
