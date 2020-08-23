@@ -54,7 +54,6 @@ FrameWidgetClass WindowFrame {
        switch toggle
        {
         ScriptParamsClass {
-         Binding_Name "WindowText"
          Two_Way_Binding 1
         }
        }
@@ -103,7 +102,7 @@ FrameWidgetClass WindowFrame {
      }
      {
       ScriptParamsClass {
-       Binding_Name "WindowSliderData"
+       Binding_Name "_WindowSliderData"
        Two_Way_Binding 1
       }
      }

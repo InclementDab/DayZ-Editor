@@ -57,16 +57,20 @@ class ViewBinding: ScriptedWidgetEventHandler
 	{
 		EditorLog.Trace("ViewBinding::OnPropertyChanged " + Binding_Name);		
 		//EditorLog.Debug(string.Format("PropertyDataType: %1, WidgetDataType: %2", m_PropertyDataType, m_WidgetDataType));
-		
-		// If the property of the Controller is NOT the native widget data type			
-		if (m_WidgetDataType != m_PropertyDataType) {
-			EditorLog.Debug(string.Format("Attempting Type Conversion from %1 to %2", m_PropertyDataType, m_WidgetDataType));
+				
+		if (!m_PropertyDataType) {
+			MVC.ErrorDialog(string.Format("Binding not found: %1", Binding_Name));
+			return;
 		}
-		
 		
 		if (!m_PropertyDataConverter) {
 			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
 			return;			
+		}
+		
+		// If the property of the Controller is NOT the native widget data type			
+		if (m_WidgetDataType != m_PropertyDataType) {
+			EditorLog.Debug(string.Format("Attempting Type Conversion from %1 to %2", m_PropertyDataType, m_WidgetDataType));
 		}
 		
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
@@ -104,10 +108,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 				MVC.UnsupportedConversionError(m_PropertyDataConverter.Type(), m_WidgetDataType);
 				return;
 			}
-		}
-		
-		m_Controller.PropertyChanged(Binding_Name);
-		
+		}		
 	}
 	
 	
@@ -174,10 +175,10 @@ class ViewBinding: ScriptedWidgetEventHandler
 		if (button != 0) 
 			return false;
 		
-		EditorLog.Trace("ViewBinding::OnClick");
+		EditorLog.Trace("ViewBinding::OnClick " + w.Type());
 		
 		switch (w.Type()) {
-			// doesnt get effected by OnChanged
+
 			case ButtonWidget: {
 				UpdateModel();
 				return true;

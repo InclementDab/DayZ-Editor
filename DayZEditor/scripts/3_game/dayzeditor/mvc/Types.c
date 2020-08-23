@@ -17,7 +17,7 @@ class PropertyHashMap: ref map<string, typename>
 
 // 0: Property Name
 // 1: View Binding
-typedef set<ref ViewBinding> ViewBindingSet;
+typedef ref set<ref ViewBinding> ViewBindingSet;
 class ViewBindingHashMap: ref map<string, ref ViewBindingSet>
 {
 	void DebugPrint()

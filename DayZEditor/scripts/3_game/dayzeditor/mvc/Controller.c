@@ -69,7 +69,7 @@ class Controller: Managed
 	void NotifyPropertyChanged(string property_name)
 	{
 		EditorLog.Trace("Controller::NotifyPropertyChanged");
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(property_name);
+		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(property_name);
 		
 		if (!view_set) {
 			MVC.ErrorDialog(string.Format("NotifyPropertyChanged: Property Not Found! %1", property_name));
@@ -79,6 +79,8 @@ class Controller: Managed
 		foreach (ViewBinding view: view_set) {
 			view.OnPropertyChanged();
 		}
+		
+		PropertyChanged(property_name);
 	}
 	
 	// Called every time a property is changed. 
