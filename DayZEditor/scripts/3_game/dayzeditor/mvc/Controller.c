@@ -35,8 +35,8 @@ class Controller: Managed
 		m_PropertyHashMap = PropertyHashMap.FromType(Type());
 		
 		// Gets rid of properties that only exist in this class
-		PropertyHashMap controller_hashbrowns = PropertyHashMap.FromType(Controller);
-		// Commented due to crashes for whatever reason smile
+		//PropertyHashMap controller_hashbrowns = PropertyHashMap.FromType(Controller);
+		// Commented due to crashes for whatever reason smile :)
 		//foreach (string name, typename type: controller_hashbrowns) {
 		//	m_PropertyHashMap.Remove(name);
 		//}
@@ -88,7 +88,7 @@ class Controller: Managed
 	void PropertyChanged(string property_name);
 	
 	
-		
+	
 	private int LoadDataBindings(Widget w, out ViewBindingHashMap binding_map)
 	{
 		ViewBinding view_binding;
