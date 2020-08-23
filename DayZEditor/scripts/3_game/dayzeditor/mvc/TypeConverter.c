@@ -83,9 +83,19 @@ class TypeConversionBool: TypeConversionTemplate<bool>
 		return m_Value;
 	}
 	
+	override string GetString()
+	{
+		return string.ToString(m_Value, false, false, false);
+	}
+	
 	override void SetBool(bool value)
 	{
 		m_Value = value;
+	}
+	
+	override void SetString(string value)
+	{
+		m_Value = (value == "1");
 	}
 }
 
@@ -119,10 +129,25 @@ class TypeConversionString: TypeConversionTemplate<string>
 		return string.ToString(m_Value, false, false, false);
 	}
 	
+	override void SetBool(bool value)
+	{
+		if (value)
+			m_Value = "1";
+		else 
+			m_Value = "0";
+	}
+	
+	override void SetFloat(float value)
+	{	
+		m_Value = value.ToString();
+	}
+	
 	override void SetString(string value)
 	{
 		m_Value = value;
 	}
+	
+
 }
 
 

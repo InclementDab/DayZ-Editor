@@ -8,7 +8,7 @@ class DataBindingShowcaseController: Controller
 	protected string WindowText;
 	int WindowSliderData;
 	
-	bool WindowButton;
+	string WindowButton;
 	
 	void DataBindingShowcaseController()
 	{

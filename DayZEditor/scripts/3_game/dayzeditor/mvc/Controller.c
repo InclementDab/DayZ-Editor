@@ -65,9 +65,6 @@ class Controller: Managed
 				
 	}
 	
-
-
-	
 	
 	void NotifyPropertyChanged(string property_name)
 	{

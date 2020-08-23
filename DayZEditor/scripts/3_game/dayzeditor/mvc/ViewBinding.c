@@ -16,13 +16,20 @@ class ViewBinding: ScriptedWidgetEventHandler
 	private ref TypeConverter m_InputTypeConverter;
 	private ref TypeConverter m_OutputTypeConverter;
 	
+	private typename m_ConversionInput;
+	private typename m_ConversionOutput;
+	
 	private Controller m_Controller;
 	void SetController(Controller controller) 
 	{ 
 		EditorLog.Trace("ViewBinding::SetController");
 		m_Controller = controller;
-		m_InputTypeConverter = MVC.GetTypeConversion(m_Controller.GetPropertyType(Binding_Name));
-		m_OutputTypeConverter = MVC.GetTypeConversion(GetWidgetDataType());
+		
+		m_ConversionInput = m_Controller.GetPropertyType(Binding_Name);
+		m_ConversionOutput = GetWidgetDataType();
+		
+		m_InputTypeConverter = MVC.GetTypeConversion(m_ConversionInput);
+		m_OutputTypeConverter = MVC.GetTypeConversion(m_ConversionOutput);
 	}
 	
 	void OnWidgetScriptInit(Widget w)
@@ -44,30 +51,27 @@ class ViewBinding: ScriptedWidgetEventHandler
 	void OnPropertyChanged()
 	{
 		EditorLog.Trace("ViewBinding::OnPropertyChanged");
-		
-		typename conversion_input = m_Controller.GetPropertyType(Binding_Name);
-		typename conversion_output = GetWidgetDataType();
-		
+				
 		// If the property of the Controller is NOT the native widget data type			
-		if (conversion_output != conversion_input) {
-			EditorLog.Debug(string.Format("Attempting Type Conversion from %1 to %2", conversion_input, conversion_output));
+		if (m_ConversionOutput != m_ConversionInput) {
+			EditorLog.Debug(string.Format("Attempting Type Conversion from %1 to %2", m_ConversionInput, m_ConversionOutput));
 		}
 				
-		EditorLog.Debug(string.Format("ConversionInput: %1, ConversionOutput: %2", conversion_input, conversion_output));
+		EditorLog.Debug(string.Format("ConversionInput: %1, ConversionOutput: %2", m_ConversionInput, m_ConversionOutput));
 		
 		// Sets data value into the converter (intermediate data)
 		
 		if (!m_InputTypeConverter) {
-			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", conversion_input));
+			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_ConversionInput));
 			return;
 		}
 		
 		m_InputTypeConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
-		UpdateView(conversion_output);
+		UpdateView();
 		m_Controller.PropertyChanged(Binding_Name);
 	}
 	
-	private void UpdateView(typename conversion_output)
+	private void UpdateView()
 	{
 		EditorLog.Trace("ViewBinding::UpdateView");
 		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
@@ -76,7 +80,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			return;
 		}
 		
-		switch (conversion_output)
+		switch (m_ConversionOutput)
 		{
 			case bool: {
 				g_Script.Call(m_LayoutRoot, widget_setter, m_InputTypeConverter.GetBool());
@@ -99,13 +103,13 @@ class ViewBinding: ScriptedWidgetEventHandler
 			}
 			
 			default: {
-				MVC.UnsupportedConversionError(m_InputTypeConverter.Type(), conversion_output);
+				MVC.UnsupportedConversionError(m_InputTypeConverter.Type(), m_ConversionOutput);
 			}
 			
 		}
 	}
 		
-	private void UpdateModel(typename conversion_input)
+	private void UpdateModel()
 	{
 		if (!Two_Way_Binding || !SupportsTwoWayBinding(m_LayoutRoot.Type())) return;
 		EditorLog.Trace("ViewBinding::UpdateModel");
@@ -116,7 +120,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			return;
 		}
 		
-		switch (conversion_input) {
+		switch (m_ConversionInput) {
 			
 			case bool: {
 				bool _bool;
@@ -125,9 +129,31 @@ class ViewBinding: ScriptedWidgetEventHandler
 				break;
 			}
 			
+			case float: {
+				float _float;
+				g_Script.CallFunction(m_LayoutRoot, widget_getter, _float, null);
+				m_OutputTypeConverter.SetFloat(_float);
+				break;
+			}			
+			
+			case string: {
+				string _string;
+				g_Script.CallFunction(m_LayoutRoot, widget_getter, _string, null);
+				m_OutputTypeConverter.SetString(_string);
+				break;
+			}			
+			
+			case Widget: {
+				Widget _widget;
+				g_Script.CallFunction(m_LayoutRoot, widget_getter, _widget, null);
+				m_OutputTypeConverter.SetWidget(_widget);
+				break;
+			}
+			
 			
 			default: {
-				MVC.UnsupportedConversionError(m_OutputTypeConverter.Type(), conversion_input);
+				MVC.UnsupportedConversionError(m_OutputTypeConverter.Type(), m_ConversionInput);
+				return;
 			}
 		}
 		
@@ -142,7 +168,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	{
 		EditorLog.Trace("ViewBinding::OnChange");
 		
-		UpdateModel(m_Controller.GetPropertyType(Binding_Name));
+		UpdateModel();
 		
 		
 		return super.OnChange(w, x, y, finished);
