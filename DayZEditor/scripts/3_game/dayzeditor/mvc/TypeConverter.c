@@ -50,12 +50,10 @@ class TypeConverter
 	bool GetBool();
 	float GetFloat();	
 	string GetString();
-	Widget GetWidget();
 	
 	void SetBool(bool value);
 	void SetFloat(float value);
 	void SetString(string value);
-	void SetWidget(Widget value);
 	
 	void SetToController(Class context, string name, int index);
 	void GetFromController(Class context, string name, int index);
@@ -168,6 +166,3 @@ class TypeConversionString: TypeConversionTemplate<string>
 		m_Value = value;
 	}
 }
-
-
-

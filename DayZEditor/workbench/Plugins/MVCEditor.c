@@ -74,20 +74,8 @@ class MVCEditorPlugin: WorkbenchPlugin
 		
 		//WBModuleDef module = Workbench.GetModule("ParticleEditor");
 
-		Print("Opening");
-		Workbench.OpenModule("TestAddon");
-		WBModuleDef module = Workbench.GetModule("TestAddon");		
-		
-	
-
-		
-		if (module) {
-			Workbench.OpenModule("ResourceManager");
-		}
-
-	
 		//Workbench.GetModule("ResourceManager").GetNumContainers();
-		Workbench.ScriptDialog("Edit View Binding Options", "", this);
+		//Workbench.ScriptDialog("Edit View Binding Options", "", this);
 	}
 	
 

@@ -46,23 +46,22 @@ FrameWidgetClass WindowFrame {
       }
      }
     }
-    CheckBoxWidgetClass WindowCheckBox {
+    ButtonWidgetClass WindowTextToggleValue {
      visible 1
-     clipchildren 1
      size 50 50
-     halign center_ref
+     halign right_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scaled 1
      scriptclass "ViewBinding"
-     style Default
+     style Editor
+     switch normal
      {
       ScriptParamsClass {
-       Binding_Name "WindowText"
-       Two_Way_Binding 1
+       Binding_Name "EvaluateEquation"
+       Two_Way_Binding 0
       }
      }
     }
@@ -96,30 +95,29 @@ FrameWidgetClass WindowFrame {
        "text valign" center
        {
         ScriptParamsClass {
-         Binding_Name "WindowSliderData"
         }
        }
       }
      }
      {
       ScriptParamsClass {
-       Binding_Name "WindowSliderData"
        Two_Way_Binding 1
       }
      }
     }
-    ButtonWidgetClass WindowTextToggleValue {
+    CheckBoxWidgetClass WindowCheckBox {
      visible 1
+     clipchildren 1
      size 50 50
-     halign right_ref
+     halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scaled 1
      scriptclass "ViewBinding"
-     style Editor
-     switch toggle
+     style Default
      {
       ScriptParamsClass {
        Two_Way_Binding 1

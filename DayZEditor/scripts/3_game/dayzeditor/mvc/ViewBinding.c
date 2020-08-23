@@ -26,7 +26,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		m_PropertyDataType = m_Controller.GetPropertyType(Binding_Name);		
 		m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyDataType);
-		
 		m_WidgetDataType = GetWidgetDataType(m_LayoutRoot.Type());
 		
 		// Updates the view on first load
@@ -98,12 +97,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 				g_Script.Call(m_LayoutRoot, widget_setter, m_PropertyDataConverter.GetString());
 				break;
 			}
-			
-			case Widget: {
-				g_Script.Call(m_LayoutRoot, widget_setter, m_PropertyDataConverter.GetWidget());
-				break;
-			}
-			
+						
 			default: {
 				MVC.UnsupportedConversionError(m_PropertyDataConverter.Type(), m_WidgetDataType);
 				return;
@@ -149,14 +143,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 				m_PropertyDataConverter.SetString(_string);
 				break;
 			}			
-			
-			case Widget: {
-				Widget _widget;
-				g_Script.CallFunction(m_LayoutRoot, widget_getter, _widget, null);
-				m_PropertyDataConverter.SetWidget(_widget);
-				break;
-			}
-			
+						
 			
 			default: {
 				MVC.UnsupportedConversionError(m_PropertyDataConverter.Type(), m_WidgetDataType);
@@ -208,6 +195,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 			case ScrollWidget:
 			case SpacerWidget:
 				return "AddChild";*/
+			
+
 			
 			case ButtonWidget:
 				return "SetState";
@@ -264,7 +253,9 @@ class ViewBinding: ScriptedWidgetEventHandler
 			case WrapSpacerWidget:
 			case ScrollWidget:
 			case SpacerWidget:
-				return "AddChild";*/
+				return "GetChildren";*/
+			
+		
 			
 			case ButtonWidget:
 				return "GetState";
@@ -309,14 +300,18 @@ class ViewBinding: ScriptedWidgetEventHandler
 	static typename GetWidgetDataType(typename widget_type)
 	{
 		switch (widget_type) {
-			
-			case Widget:
+
+			/* Observables
 			case SpacerBaseWidget:
 			case GridSpacerWidget:
 			case WrapSpacerWidget:
 			case ScrollWidget:
 			case SpacerWidget:
+			case Widget:
 				return Widget;
+			*/
+						
+
 			
 			case ButtonWidget:
 			case CheckBoxWidget:
@@ -351,7 +346,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			}
 		}
 		
-		return typename;
+		return Class;
 	}
 	
 	static bool SupportsTwoWayBinding(typename type)
