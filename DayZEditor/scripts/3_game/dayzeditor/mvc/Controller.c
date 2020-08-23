@@ -60,14 +60,14 @@ class Controller: Managed
 				m_DataBindingHashMap.Remove(data_name);
 			}
 		}*/
-			
-		
-		NotifyPropertyChanged("WindowSliderData");
-		
+				
 	}
 	
 
-	
+	void UnsupportedConversionError(typename from_type, typename to_type)
+	{
+		ErrorDialog(string.Format("Unsupported conversion from %1 to %2!", from_type, to_type));
+	}
 	
 	
 	void NotifyPropertyChanged(string property_name)
@@ -89,60 +89,96 @@ class Controller: Managed
 		
 		
 		// If the property of the Controller is the native widget data type
-		if (widgetdata_type == property_type) {
-			switch (widgetdata_type) {
-				case bool: {
-					bool _bool;
-					EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _bool);
-					view.Set(_bool);
-					break;
-				}
-				
-				case float: {
-					float _float;
-					EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _float);
-					view.Set(_float);
-					break;
-				}
-				
-				case string: {
-					string _string;
-					EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _string);
-					view.Set(_string);
-					break;
-				}
-			}
+
 			
-		} else {
-			
+		if (widgetdata_type != property_type) {
 			EditorLog.Debug(string.Format("Attempting conversion from %1 to %2", property_type, widgetdata_type));
-			
-			switch (property_type) {
-				case bool: {
-					switch (widgetdata_type) {
-						case float: {
-							_float = WidgetDataConverter<float>.ToFloat(this, data.View.GetBindingName(), data.View.GetBindingIndex());
-							view.Set(_float);
-							break;
-						}
+		}
+		
+		switch (property_type) {		
+					
+			case bool: {
+				WidgetDataConverter<bool> _WidgetDataConverterBool(this, data.View.GetBindingName(), data.View.GetBindingIndex());
+				switch (widgetdata_type) {
+					
+					case bool: {
+						view.Set(_WidgetDataConverterBool.Get());
+						break;
 					}
-					break;
+					
+					case float: {
+						view.Set(_WidgetDataConverterBool.ToFloat());
+						break;
+					}
+					
+					case string: {
+						view.Set(_WidgetDataConverterBool._ToString());
+						break;
+					}
+														
+					default: {
+						UnsupportedConversionError(property_type, widgetdata_type);
+					}
+				}
+				break;
+			}
+			
+			case float: {
+				WidgetDataConverter<float> _WidgetDataConverterFloat(this, data.View.GetBindingName(), data.View.GetBindingIndex());
+				switch (widgetdata_type) {
+										
+					case bool: {
+						view.Set(_WidgetDataConverterFloat.ToBool());
+						break;
+					}
+					
+					case float: {
+						view.Set(_WidgetDataConverterFloat.Get());
+						break;
+					}
+					
+					case string: {
+						view.Set(_WidgetDataConverterFloat.Get());
+						break;
+					}
+					
+					default: {
+						UnsupportedConversionError(property_type, widgetdata_type);
+					}
 				}
 				
-				case string: {
-					switch (widgetdata_type) {
-						case bool: {
-							_bool = WidgetDataConverter<string>.ToBool(this, data.View.GetBindingName(), data.View.GetBindingIndex());
-							view.Set(_bool);
-							break;
-						}
-					}
-					break;
-				}		
 			}
+			
+			case string: {
+				
+				WidgetDataConverter<string> _WidgetDataConverterString(this, data.View.GetBindingName(), data.View.GetBindingIndex());
+				switch (widgetdata_type) {
+										
+					case bool: {
+						view.Set(_WidgetDataConverterString.ToBool());
+						break;
+					}
+					
+					case float: {
+						view.Set(_WidgetDataConverterString.ToFloat());
+						break;
+					}
+					
+					case string: {
+						view.Set(_WidgetDataConverterString.Get());
+						break;
+					}
+					
+					default: {
+						UnsupportedConversionError(property_type, widgetdata_type);
+					}
+				}
+				
+				break;
+			}		
 		}
 	}
-	
+		
 	private int LoadDataBindings(Widget w, out DataBindingHashMap binding_map)
 	{
 		ViewBinding view_binding;
