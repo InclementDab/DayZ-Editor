@@ -11,6 +11,16 @@ class DataBindingHashMap: ref map<string, ref DataBinding<Class>>
 	}
 }
 
+class ViewBindingHashMap: ref map<string, ref ViewBinding>
+{
+	void DebugPrint()
+	{
+		foreach (string name, ViewBinding view: this)
+			EditorLog.Debug(string.Format("%1: %2", name, view));
+		
+	}
+}
+
 class DataBindingBase 
 {
 	private void DataBindingBase() {}
@@ -149,12 +159,7 @@ class DataBinding<Class T>: DataBindingBase
 	void DataBinding(string property_name)
 	{
 		Property = new PropertyInfo(property_name, T);
-	}
-
-	
-	
-	
-	
+	}	
 	
 	static void UnsupportedTypeError(typename type)
 	{

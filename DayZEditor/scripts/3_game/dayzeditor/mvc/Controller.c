@@ -9,7 +9,7 @@ class Controller: Managed
 	
 	// Protected members
 	protected Widget m_LayoutRoot;
-	protected ref DataBindingHashMap m_DataBindingHashMap = new DataBindingHashMap();
+	protected ref ViewBindingHashMap m_ViewBindingHashMap = new ViewBindingHashMap();
 	protected ref PropertyHashMap m_PropertyHashMap;
 	
 	
@@ -42,7 +42,7 @@ class Controller: Managed
 		EditorLog.Info(string.Format("%1 Properties found!", m_PropertyHashMap.Count()));
 		
 		// Load all child Widgets and obtain their DataBinding class
-		int binding_count = LoadDataBindings(m_LayoutRoot, m_DataBindingHashMap);
+		int binding_count = LoadDataBindings(m_LayoutRoot, m_ViewBindingHashMap);
 		if (binding_count == 0) {
 			ErrorDialog("No DataBindings found! Is the controller in a parent Widget?");
 			return;
@@ -51,7 +51,7 @@ class Controller: Managed
 		}
 		
 		// debug
-		m_DataBindingHashMap.DebugPrint();
+		m_ViewBindingHashMap.DebugPrint();
 		/*
 		foreach (string data_name, DataBindingBase data: m_DataBindingHashMap) {
 			PropertyInfo prop = m_PropertyHashMap.GetPropertyInfo(data_name);
@@ -73,16 +73,15 @@ class Controller: Managed
 	void NotifyPropertyChanged(string property_name)
 	{
 		EditorLog.Trace("Controller::NotifyPropertyChanged");
-		DataBinding<Class> data = m_DataBindingHashMap.Get(property_name);
+		ViewBinding view = m_ViewBindingHashMap.Get(property_name);
 		
-		if (!data) {
+		if (!view) {
 			ErrorDialog(string.Format("NotifyPropertyChanged: Property Not Found! %1", property_name));
 			return;
 		}
 		
 		
 		EditorLog.Debug("NotifyPropertyChanged::SetData");
-		ViewBinding view = data.View;
 		
 		typename property_type = m_PropertyHashMap.Get(view.GetBindingName());
 		typename widgetdata_type = view.GetWidgetDataType();
@@ -98,7 +97,7 @@ class Controller: Managed
 		switch (property_type) {		
 					
 			case bool: {
-				WidgetDataConverter<bool> _WidgetDataConverterBool(this, data.View.GetBindingName(), data.View.GetBindingIndex());
+				WidgetDataConverter<bool> _WidgetDataConverterBool(this, view.GetBindingName(), view.GetBindingIndex());
 				switch (widgetdata_type) {
 					
 					case bool: {
@@ -124,7 +123,7 @@ class Controller: Managed
 			}
 			
 			case float: {
-				WidgetDataConverter<float> _WidgetDataConverterFloat(this, data.View.GetBindingName(), data.View.GetBindingIndex());
+				WidgetDataConverter<float> _WidgetDataConverterFloat(this, view.GetBindingName(), view.GetBindingIndex());
 				switch (widgetdata_type) {
 										
 					case bool: {
@@ -138,7 +137,7 @@ class Controller: Managed
 					}
 					
 					case string: {
-						view.Set(_WidgetDataConverterFloat.Get());
+						view.Set(_WidgetDataConverterFloat._ToString());
 						break;
 					}
 					
@@ -151,7 +150,7 @@ class Controller: Managed
 			
 			case string: {
 				
-				WidgetDataConverter<string> _WidgetDataConverterString(this, data.View.GetBindingName(), data.View.GetBindingIndex());
+				WidgetDataConverter<string> _WidgetDataConverterString(this, view.GetBindingName(), view.GetBindingIndex());
 				switch (widgetdata_type) {
 										
 					case bool: {
@@ -179,14 +178,13 @@ class Controller: Managed
 		}
 	}
 		
-	private int LoadDataBindings(Widget w, out DataBindingHashMap binding_map)
+	private int LoadDataBindings(Widget w, out ViewBindingHashMap binding_map)
 	{
 		ViewBinding view_binding;
 		w.GetScript(view_binding);
 		
 		if (view_binding && view_binding.Type() == ViewBinding) {
-			DataBindingBase data_binding = DataBinding.Create(view_binding);
-			binding_map.Insert(view_binding.GetBindingName(), data_binding);
+			binding_map.Insert(view_binding.GetBindingName(), view_binding);
 		}
 		
 		if (w.GetChildren() != null) {
