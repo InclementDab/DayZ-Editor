@@ -3,37 +3,42 @@
 
 class Controller: Managed
 {
+	// Private members
+	private ref PropertyHashMap m_ControllerPropertyHashMap;
+	
+	
+	// Protected members
 	protected Widget m_LayoutRoot;
 	protected ref DataBindingHashMap m_DataBindingHashMap = new DataBindingHashMap();
-	protected ref PropertyHashMap m_PropertyHashMap = new PropertyHashMap();
+	protected ref PropertyHashMap m_PropertyHashMap;
 	
-	private ref PropertyHashMap m_ControllerPropertyHashMap = PropertyHashMap.FromType(Controller);
 	
 	void Controller()
 	{
-		EditorLog.Trace("Controller");
-		
-		// Load all properties of the inheriting Controller
-		m_PropertyHashMap = PropertyHashMap.FromType(Type());
-		
-		// Gets rid of properties that only exist in this class
-		foreach (string name, typename type: m_ControllerPropertyHashMap) {
-			m_PropertyHashMap.Remove(name);
-		}
-		
-		EditorLog.Info(string.Format("%1 Properties found!", m_PropertyHashMap.Count()));
+		EditorLog.Trace("Controller"); 
 	}
 	
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("Controller::Init");
 		m_LayoutRoot = w;
-		
+				
 		// User must inherit from controller, not use it in ScriptClass
 		if (Type() == Controller) {
 			ErrorDialog("You cannot bind to data without creating your own controller class!");
 			return;
 		}
+		
+		// Load all properties of the inheriting Controller
+		m_PropertyHashMap = PropertyHashMap.FromType(Type());
+		
+		// Gets rid of properties that only exist in this class
+		m_ControllerPropertyHashMap = PropertyHashMap.FromType(Controller);
+		foreach (string name, typename type: m_ControllerPropertyHashMap) {
+			m_PropertyHashMap.Remove(name);
+		}
+		
+		EditorLog.Info(string.Format("%1 Properties found!", m_PropertyHashMap.Count()));
 		
 		// Load all child Widgets and obtain their DataBinding class
 		int binding_count = LoadDataBindings(m_LayoutRoot, m_DataBindingHashMap);
@@ -47,11 +52,11 @@ class Controller: Managed
 		// debug
 		m_DataBindingHashMap.DebugPrint();
 		
-		foreach (string name, DataBindingBase data: m_DataBindingHashMap) {
-			PropertyInfo prop = m_PropertyHashMap.GetPropertyInfo(name);
-			if (data.GetType() != prop.Type) {
-				ErrorDialog(string.Format("Invalid data type in %1. Found %2, supports %3", name, prop.Type, data.GetType()));
-				m_DataBindingHashMap.Remove(name);
+		foreach (string data_name, DataBindingBase data: m_DataBindingHashMap) {
+			PropertyInfo prop = m_PropertyHashMap.GetPropertyInfo(data_name);
+			if (!data.CanConvertFrom(prop.Type)) {
+				ErrorDialog(string.Format("Invalid data type in %1. Found %2, supports %3", data_name, prop.Type, data.GetType()));
+				m_DataBindingHashMap.Remove(data_name);
 			}
 			
 		}

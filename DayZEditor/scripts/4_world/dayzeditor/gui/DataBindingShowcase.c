@@ -5,7 +5,7 @@ class DataBindingShowcaseController: Controller
 {
 	
 	protected string WindowText;
-	float WindowSliderData;
+	int WindowSliderData;
 
 	
 	override void OnWidgetScriptInit(Widget w)

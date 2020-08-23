@@ -3,7 +3,7 @@
 
 
 
-class DataBindingHashMap: map<string, ref DataBindingBase> 
+class DataBindingHashMap: ref map<string, ref DataBindingBase> 
 {
 	
 	void DebugPrint()
@@ -87,7 +87,7 @@ class DataBindingBase
 	}
 	
 	typename GetType() 
-	{ 
+	{
 		typename type = Type();
 		for (int i = 0; i < type.GetVariableCount(); i++) 
 			if (type.GetVariableName(i) == "Data")
@@ -95,6 +95,43 @@ class DataBindingBase
 		
 		EditorLog.Error("DataBindingBase::GetType: could not find the Data Type!");
 		return typename;
+	}
+	
+	bool CanConvertFrom(typename from_type)
+	{
+		typename type = GetType();
+		
+		// No conversion required
+		if (type == from_type) return true;
+		
+		switch (type) {
+			
+			case float: {
+				switch (from_type) {
+					case int:
+					case string: {
+						return true;
+					}
+				}
+				
+				break;
+			}
+			
+			case string: {
+				switch (from_type) {
+					case bool:				
+					case int:
+					case float:
+					case TStringArray:
+						return true;
+				}
+				
+				break;
+			}
+		}
+		
+		EditorLog.Debug(string.Format("Cannot convert from type %1 to %2", from_type, type));
+		return false;
 	}
 
 }
@@ -107,7 +144,7 @@ class DataBinding<Class T>: DataBindingBase
 
 // 0: Property Name
 // 1: Proprety Type
-class PropertyHashMap: map<string, typename>
+class PropertyHashMap: ref map<string, typename>
 {
 	static ref PropertyHashMap FromType(typename type)
 	{
