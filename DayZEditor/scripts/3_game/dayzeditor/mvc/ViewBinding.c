@@ -45,56 +45,39 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		if (Two_Way_Binding && !ViewBinding.SupportsTwoWayBinding(m_LayoutRoot.Type())) {
 			Controller.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
-		}		
+		}
 	}
 	
 	void Set(bool data)
 	{
 		EditorLog.Trace("ViewBinding::Set::Bool");
 
-		switch (m_LayoutRoot.Type()) {
-			
-			case ButtonWidget: {
-				ButtonWidget.Cast(m_LayoutRoot).SetState(data);
-				break;
-			}
-			
-			default: {
-				UnsupportedTypeError(m_LayoutRoot.Type());
-			}
-		}
+		string setter = GetWidgetSetter(m_LayoutRoot.Type());
+		if (setter != string.Empty)
+			g_Script.Call(m_LayoutRoot, setter, data);
+		else UnsupportedTypeError(m_LayoutRoot.Type());
+		
 	}
 	
 	void Set(float data)
 	{
-		EditorLog.Trace("ViewBinding::Set::Bool");
+		EditorLog.Trace("ViewBinding::Set::Float");
 		
-		switch (m_LayoutRoot.Type()) {
-			case SliderWidget: {
-				SliderWidget.Cast(m_LayoutRoot).SetCurrent(data);
-				break;
-			}
-			
-			default: {
-				UnsupportedTypeError(m_LayoutRoot.Type());
-			}
-		}
+		
+		string setter = GetWidgetSetter(m_LayoutRoot.Type());
+		if (setter != string.Empty)
+			g_Script.Call(m_LayoutRoot, setter, data);
+		else UnsupportedTypeError(m_LayoutRoot.Type());
 	}
 	
 	void Set(string data)
 	{
-		EditorLog.Trace("ViewBinding::Set::Float");
+		EditorLog.Trace("ViewBinding::Set::String");
 		
-		switch (m_LayoutRoot.Type()) {
-			case TextWidget: {
-				TextWidget.Cast(m_LayoutRoot).SetText(data);
-				break;
-			}
-			
-			default: {
-				UnsupportedTypeError(m_LayoutRoot.Type());
-			}
-		}
+		string setter = GetWidgetSetter(m_LayoutRoot.Type());
+		if (setter != string.Empty)
+			g_Script.Call(m_LayoutRoot, setter, data);
+		else UnsupportedTypeError(m_LayoutRoot.Type());
 	}
 	
 	void UnsupportedTypeError(typename type)
@@ -107,6 +90,65 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Trace("ViewBinding::OnChange");
 		return super.OnChange(w, x, y, finished);
 	}
+	
+	static string GetWidgetSetter(typename widget_type)
+	{
+		switch (widget_type) {
+			
+			/* Observables
+			case Widget:
+			case SpacerBaseWidget:
+			case GridSpacerWidget:
+			case WrapSpacerWidget:
+			case ScrollWidget:
+			case SpacerWidget:
+				return "AddChild";*/
+			
+			case ButtonWidget:
+				return "SetState";
+			
+			case CheckBoxWidget:
+				return "SetChecked";
+			
+			case SliderWidget:			
+			case ProgressBarWidget:
+			case SimpleProgressBarWidget:
+				return "SetCurrent";
+			
+			case TextWidget:
+			case EditBoxWidget:
+			case RichTextWidget:
+			case MultilineEditBoxWidget:
+				return "SetText";
+			
+			case HtmlWidget:
+				return "LoadFile";
+			
+			/* Unsupported
+			case ImageWidget:
+			case VideoWidget:
+				return string.Empty;*/
+			
+			/* Observables
+			case XComboBoxWidget:
+			case MultilineTextWidget:
+				return TStringArray;*/
+			
+			case ItemPreviewWidget:
+				return "SetItem";
+			
+			case PlayerPreviewWidget:
+				return "SetPlayer";
+			
+			default: {
+				Error(string.Format("Unknown Type Specified %1", widget_type));
+			}
+		}
+		
+		return string.Empty;
+	}
+	
+
 	
 	
 	static typename GetWidgetDataType(typename widget_type)

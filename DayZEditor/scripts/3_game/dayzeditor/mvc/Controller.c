@@ -81,9 +81,6 @@ class Controller: Managed
 		}
 		
 		
-		
-		
-		
 		EditorLog.Debug("NotifyPropertyChanged::SetData");
 		ViewBinding view = data.View;
 		
