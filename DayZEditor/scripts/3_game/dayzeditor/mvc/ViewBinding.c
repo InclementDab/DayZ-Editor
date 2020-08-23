@@ -40,7 +40,6 @@ class TypeConverter<Class T>: TypeConverterBase
 		return GetString(Get());
 	}
 	
-	
 	static bool GetBool(T data)
 	{
 		return (string.ToString(data, false, false, false) == "1");
@@ -86,41 +85,84 @@ class ViewBinding: ScriptedWidgetEventHandler
 		}
 	}
 	
-	void Set(bool data)
+	void OnPropertyChanged(Controller controller)
 	{
-		EditorLog.Trace("ViewBinding::Set::Bool");
-
-		string setter = GetWidgetSetter(m_LayoutRoot.Type());
-		if (setter != string.Empty)
-			g_Script.Call(m_LayoutRoot, setter, data);
-		else UnsupportedTypeError(m_LayoutRoot.Type());
+		EditorLog.Debug("ViewBinding::OnPropertyChanged");
 		
+		typename property_type = controller.GetPropertyType(Binding_Name);
+		typename data_type = GetWidgetDataType();
+		
+		// If the property of the Controller is NOT the native widget data type			
+		if (data_type != property_type) {
+			EditorLog.Debug(string.Format("Attempting Type Conversion from %1 to %2", property_type, data_type));
+		}
+		
+		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
+		if (widget_setter == string.Empty) {
+			UnsupportedTypeError(m_LayoutRoot.Type());
+			return;
+		}
+		
+		TypeConverterBase _TypeConverter = GetTypeConverter(controller);
+		
+		switch (data_type) {
+			
+			case bool: {
+				g_Script.Call(m_LayoutRoot, widget_setter, _TypeConverter.GetBool());
+				break;
+			}
+			
+			case float: {
+				g_Script.Call(m_LayoutRoot, widget_setter, _TypeConverter.GetFloat());
+				break;
+			}
+			
+			case string: {
+				g_Script.Call(m_LayoutRoot, widget_setter, _TypeConverter.GetString());
+				break;
+			}
+			
+			default: {
+				UnsupportedConversionError(property_type, data_type);
+			}
+			
+		}
 	}
 	
-	void Set(float data)
-	{
-		EditorLog.Trace("ViewBinding::Set::Float");
-		
-		
-		string setter = GetWidgetSetter(m_LayoutRoot.Type());
-		if (setter != string.Empty)
-			g_Script.Call(m_LayoutRoot, setter, data);
-		else UnsupportedTypeError(m_LayoutRoot.Type());
-	}
-	
-	void Set(string data)
-	{
-		EditorLog.Trace("ViewBinding::Set::String");
-				
-		string setter = GetWidgetSetter(m_LayoutRoot.Type());
-		if (setter != string.Empty)
-			g_Script.Call(m_LayoutRoot, setter, data);
-		else UnsupportedTypeError(m_LayoutRoot.Type());
-	}
 	
 	void UnsupportedTypeError(typename type)
 	{
 		Controller.ErrorDialog(string.Format("%1: Unsupported Type %2", m_LayoutRoot.Type(), type));
+	}
+	
+	void UnsupportedConversionError(typename from_type, typename to_type)
+	{
+		Controller.ErrorDialog(string.Format("Unsupported conversion from %1 to %2!", from_type, to_type));
+	}
+	
+	private TypeConverterBase GetTypeConverter(Controller controller)
+	{
+		
+		switch (controller.GetPropertyType(Binding_Name)) {
+			
+			case bool: {
+				return new TypeConverter<bool>(controller, Binding_Name, Binding_Index);
+			}
+			
+			case float: {
+				return new TypeConverter<float>(controller, Binding_Name, Binding_Index);
+			}
+			
+			case string: {
+				return new TypeConverter<string>(controller, Binding_Name, Binding_Index);
+			}
+			
+			default: {
+				Controller.ErrorDialog(string.Format("Unsupported data converter: %1", controller.GetPropertyType(Binding_Name)));
+			}
+		}
+		
+		return null;
 	}
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)

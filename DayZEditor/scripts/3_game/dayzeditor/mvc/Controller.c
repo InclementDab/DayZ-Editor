@@ -11,7 +11,9 @@ class Controller: Managed
 	protected Widget m_LayoutRoot;
 	protected ref ViewBindingHashMap m_ViewBindingHashMap = new ViewBindingHashMap();
 	protected ref PropertyHashMap m_PropertyHashMap;
-	
+	typename GetPropertyType(string property_name) {
+		return m_PropertyHashMap.Get(property_name);
+	}
 	
 	void Controller()
 	{
@@ -64,10 +66,7 @@ class Controller: Managed
 	}
 	
 
-	void UnsupportedConversionError(typename from_type, typename to_type)
-	{
-		ErrorDialog(string.Format("Unsupported conversion from %1 to %2!", from_type, to_type));
-	}
+
 	
 	
 	void NotifyPropertyChanged(string property_name)
@@ -80,68 +79,11 @@ class Controller: Managed
 			return;
 		}
 		
-		
-		EditorLog.Debug("NotifyPropertyChanged::SetData");
-		
-		typename property_type = m_PropertyHashMap.Get(view.GetBindingName());
-		typename widgetdata_type = view.GetWidgetDataType();
-		
-		
-		// If the property of the Controller is the native widget data type
-
 			
-		if (widgetdata_type != property_type) {
-			EditorLog.Debug(string.Format("Attempting conversion from %1 to %2", property_type, widgetdata_type));
-		}
-		
-		TypeConverterBase _TypeConverter = GetTypeConverter(view);
-		switch (widgetdata_type) {
-								
-			case bool: {
-				view.Set(_TypeConverter.GetBool());
-				break;
-			}
-			
-			case float: {
-				view.Set(_TypeConverter.GetFloat());
-				break;
-			}
-			
-			case string: {
-				view.Set(_TypeConverter.GetString());
-				break;
-			}
-			
-			default: {
-				UnsupportedConversionError(property_type, widgetdata_type);
-			}
-		}
+		view.OnPropertyChanged(this);
 	}
 	
-	private TypeConverterBase GetTypeConverter(ViewBinding view)
-	{
-		typename property_type = m_PropertyHashMap.Get(view.GetBindingName());
-		switch (property_type) {
-			
-			case bool: {
-				return new TypeConverter<bool>(this, view.GetBindingName(), view.GetBindingIndex());
-			}
-			
-			case float: {
-				return new TypeConverter<float>(this, view.GetBindingName(), view.GetBindingIndex());
-			}
-			
-			case string: {
-				return new TypeConverter<string>(this, view.GetBindingName(), view.GetBindingIndex());
-			}
-			
-			default: {
-				ErrorDialog(string.Format("Unsupported data converter: %1", property_type));
-			}
-		}
-		
-		return null;
-	}
+	
 		
 	private int LoadDataBindings(Widget w, out ViewBindingHashMap binding_map)
 	{
