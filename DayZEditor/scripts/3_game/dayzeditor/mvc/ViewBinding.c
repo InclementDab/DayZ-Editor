@@ -13,7 +13,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	string GetBindingName() { return Binding_Name; }
 	int GetBindingIndex() { return Binding_Index; }
 	
-	private typename m_WidgetDataType = GetWidgetDataType();
+	private typename m_WidgetDataType;
 	
 	private ref TypeConverter m_PropertyDataConverter;
 	private typename m_PropertyDataType;
@@ -42,25 +42,25 @@ class ViewBinding: ScriptedWidgetEventHandler
 			MVC.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
 		}
 		
+		m_WidgetDataType = GetWidgetDataType(m_LayoutRoot.Type());
+		
 		m_LayoutRoot.SetHandler(this);
 	}
 	
 	void OnPropertyChanged()
 	{
-		EditorLog.Trace("ViewBinding::OnPropertyChanged");
-				
+		EditorLog.Trace("ViewBinding::OnPropertyChanged");		
+		EditorLog.Debug(string.Format("PropertyDataType: %1, WidgetDataType: %2", m_PropertyDataType, m_WidgetDataType));
+		
 		// If the property of the Controller is NOT the native widget data type			
 		if (m_WidgetDataType != m_PropertyDataType) {
 			EditorLog.Debug(string.Format("Attempting Type Conversion from %1 to %2", m_PropertyDataType, m_WidgetDataType));
 		}
-				
-		EditorLog.Debug(string.Format("ConversionInput: %1, ConversionOutput: %2", m_PropertyDataType, m_WidgetDataType));
 		
-		// Sets data value into the converter (intermediate data)
 		
 		if (!m_PropertyDataConverter) {
 			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
-			return;
+			return;			
 		}
 		
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
@@ -214,7 +214,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 				return "SetPlayer";
 			
 			default: {
-				Error(string.Format("Unknown Type Specified %1", widget_type));
+				MVC.ErrorDialog(string.Format("Unknown Type Specified %1", widget_type));
 			}
 		}
 		
@@ -266,15 +266,13 @@ class ViewBinding: ScriptedWidgetEventHandler
 				return "GetDummyPlayer";
 			
 			default: {
-				Error(string.Format("Unknown Type Specified %1", widget_type));
+				MVC.ErrorDialog(string.Format("Unknown Type Specified %1", widget_type));
 			}
 		}
 		
 		return string.Empty;
 	}
 	
-
-	typename GetWidgetDataType() { return GetWidgetDataType(GetRoot().Type()); }
 	
 	static typename GetWidgetDataType(typename widget_type)
 	{
@@ -317,7 +315,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 				return DayZPlayer;
 			
 			default: {
-				Error(string.Format("Unknown Type Specified %1", widget_type));
+				MVC.ErrorDialog(string.Format("Unknown Type Specified %1", widget_type));
 			}
 		}
 		
