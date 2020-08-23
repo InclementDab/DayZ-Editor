@@ -4,33 +4,17 @@
 class DataBindingShowcaseController: Controller
 {
 	
-	protected bool WindowText;
+	protected string WindowText = "true";
+	private float WindowSliderData = 60;
 	
-	private float _WindowSliderData = 60;
-	float WindowSliderData = _WindowSliderData;
-	
+	bool WindowTextToggleValue;
 	
 	override void PropertyChanged(string property_name)
 	{
-		if (property_name == "WindowText") {
-			
-			if (WindowText)
-				WindowSliderData = _WindowSliderData / 2;
-			else WindowSliderData = _WindowSliderData;
-			
+		if (property_name == "WindowTextToggleValue") {
+			WindowSliderData = 100 * WindowTextToggleValue;
 			NotifyPropertyChanged("WindowSliderData");
-		} 
-		
-		else if (property_name == "_WindowSliderData") {
-			if (WindowText)
-				WindowSliderData = _WindowSliderData / 2;
-			else WindowSliderData = _WindowSliderData;
-			
-			NotifyPropertyChanged("WindowSliderData");
-			
 		}
 	}
-
-	
 }
 
