@@ -95,9 +95,6 @@ class Controller: Managed
 		if (view_binding && view_binding.Type() == ViewBinding) {
 			binding_map.InsertView(view_binding.GetBindingName(), view_binding);
 			view_binding.SetController(this);
-			
-			// Loads data for first time
-			NotifyPropertyChanged(view_binding.GetBindingName());
 		}
 		
 		if (w.GetChildren() != null) {

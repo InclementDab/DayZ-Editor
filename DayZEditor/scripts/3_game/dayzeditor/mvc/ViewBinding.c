@@ -26,6 +26,15 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		m_PropertyDataType = m_Controller.GetPropertyType(Binding_Name);		
 		m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyDataType);
+		
+		m_WidgetDataType = GetWidgetDataType(m_LayoutRoot.Type());
+		
+		// Updates the view on first load
+		if (m_PropertyDataConverter) {
+			OnPropertyChanged();
+		} else {
+			EditorLog.Warning(string.Format("[%1] Binding not found!", m_LayoutRoot.GetName()));
+		}
 	}
 	
 	void OnWidgetScriptInit(Widget w)
@@ -41,7 +50,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 			MVC.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
 		}
 		
-		m_WidgetDataType = GetWidgetDataType(m_LayoutRoot.Type());
 		m_LayoutRoot.SetHandler(this);
 	}
 	
@@ -101,21 +109,21 @@ class ViewBinding: ScriptedWidgetEventHandler
 		m_Controller.PropertyChanged(Binding_Name);
 		
 	}
-
 	
-	override bool OnChange(Widget w, int x, int y, bool finished)
+	
+	
+	void UpdateModel()
 	{
-		EditorLog.Trace("ViewBinding::OnChange");
-		
 		if (!Two_Way_Binding || !SupportsTwoWayBinding(m_LayoutRoot.Type())) 
-			return super.OnChange(w, x, y, finished);
+			return;
 		
+		EditorLog.Trace("ViewBinding::UpdateModel");
 		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 		
 		string widget_getter = GetWidgetGetter(m_LayoutRoot.Type());
 		if (widget_getter == string.Empty) {
 			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
-			return super.OnChange(w, x, y, finished);
+			return;
 		}
 		
 		switch (m_WidgetDataType) {
@@ -151,14 +159,39 @@ class ViewBinding: ScriptedWidgetEventHandler
 			
 			default: {
 				MVC.UnsupportedConversionError(m_PropertyDataConverter.Type(), m_WidgetDataType);
-				return super.OnChange(w, x, y, finished);
+				return;
 			}
 		}
 		
 
 		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, Binding_Index);
 		m_Controller.NotifyPropertyChanged(Binding_Name);
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
 		
+		if (button != 0) 
+			return false;
+		
+		EditorLog.Trace("ViewBinding::OnClick");
+		
+		switch (w.Type()) {
+			// doesnt get effected by OnChanged
+			case ButtonWidget: {
+				UpdateModel();
+				return true;
+			}			
+		}
+		
+		return false;
+	}
+	
+	
+	override bool OnChange(Widget w, int x, int y, bool finished)
+	{
+		EditorLog.Trace("ViewBinding::OnChange");
+		UpdateModel();
 		return super.OnChange(w, x, y, finished);
 	}
 	

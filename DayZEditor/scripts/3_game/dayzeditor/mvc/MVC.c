@@ -10,7 +10,7 @@ class MVC
 			_MVC = new MVC();
 		}
 		// todo remove
-		_MVC = new MVC();
+		//_MVC = new MVC();
 		
 		return m_TypeConverterHashMap.Get(type).Spawn(); 
 	}

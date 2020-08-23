@@ -138,7 +138,9 @@ class TypeConversionString: TypeConversionTemplate<string>
 {	
 	override bool GetBool()
 	{
-		return string.ToString(m_Value, false, false, false) == "true";
+		string value = string.ToString(m_Value, false, false, false);
+		value.ToLower();
+		return (value == "true");
 	}
 	
 	override float GetFloat()
@@ -165,8 +167,6 @@ class TypeConversionString: TypeConversionTemplate<string>
 	{
 		m_Value = value;
 	}
-	
-
 }
 
 
