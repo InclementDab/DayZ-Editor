@@ -69,65 +69,7 @@ class DataBindingBase
 	}
 	
 	
-	static typename GetWidgetDataType(typename widget_type)
-	{
-		switch (widget_type) {
-			
-			case Widget:
-			case SpacerBaseWidget:
-				return Widget;
-			
-			case ButtonWidget:
-			case CheckBoxWidget:
-				return bool;
-			
-			case SliderWidget:
-			case ProgressBarWidget:
-			case SimpleProgressBarWidget:
-				return float;
-			
-			case TextWidget:
-			case ImageWidget:
-			case EditBoxWidget:
-			case HtmlWidget:
-			case VideoWidget:
-				return string;
-			
-			case RichTextWidget:
-			case MultilineTextWidget:
-			case MultilineEditBoxWidget:
-			case XComboBoxWidget:
-				return TStringArray;
-			
-			case ItemPreviewWidget:
-				return EntityAI;
-			
-			case PlayerPreviewWidget:
-				return DayZPlayer;
-			
-			default: {
-				Error(string.Format("Unknown Type Specified %1", widget_type));
-			}
-		}
-		
-		return typename;
-	}
-	
-	static bool SupportsTwoWayBinding(typename type)
-	{
-		switch (type) {
-			case ButtonWidget:
-			case CheckBoxWidget:
-			case SliderWidget:
-			case EditBoxWidget:
-			case MultilineEditBoxWidget:
-			case RichTextWidget:
-				return true;
-	
-		}
-		
-		return false;
-	}
+
 	
 	typename GetType() 
 	{

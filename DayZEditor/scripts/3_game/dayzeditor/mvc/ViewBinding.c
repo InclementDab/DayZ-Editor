@@ -1,54 +1,125 @@
 
-class WidgetDataConverter
+
+class WidgetDataConverter<Class T>
 {
-	bool ToBool()
+	static bool ToBool(T data)
 	{
-		return true;
+		string str = string.ToString(data);
+		str.ToLower();
+		return str == "true";
 	}
 	
-	float ToFloat()
+	static float ToFloat(T data)
+	{	
+		string str = string.ToString(data);
+		return str.ToFloat();
+	}
+	
+	static string _ToString(T data)
 	{
-		return 0;
+		return string.ToString(data);
 	}
 }
 
 
-class WidgetData<Class T>
+
+class WidgetData
 {
-	static void Set(Widget w, T data)
+	static typename GetWidgetDataType(typename widget_type)
 	{
-		EditorLog.Trace("WidgetData::Set");
-		typename widget_type = DataBindingBase.GetWidgetDataType(w.Type());
-		Print(widget_type);
 		switch (widget_type) {
 			
-			case bool: {
-				switch (w.Type()) {
-					
-					case ButtonWidget: {
-						ButtonWidget.Cast(w).SetState(data);
-						break;
-					}
-				}
+			case Widget:
+			case SpacerBaseWidget:
+				return Widget;
+			
+			case ButtonWidget:
+			case CheckBoxWidget:
+				return bool;
+			
+			case SliderWidget:
+			case ProgressBarWidget:
+			case SimpleProgressBarWidget:
+				return float;
+			
+			case TextWidget:
+			case ImageWidget:
+			case EditBoxWidget:
+			case HtmlWidget:
+			case VideoWidget:
+				return string;
+			
+			case RichTextWidget:
+			case MultilineTextWidget:
+			case MultilineEditBoxWidget:
+			case XComboBoxWidget:
+				return TStringArray;
+			
+			case ItemPreviewWidget:
+				return EntityAI;
+			
+			case PlayerPreviewWidget:
+				return DayZPlayer;
+			
+			default: {
+				Error(string.Format("Unknown Type Specified %1", widget_type));
+			}
+		}
+		
+		return typename;
+	}
+	
+	static bool SupportsTwoWayBinding(typename type)
+	{
+		switch (type) {
+			case ButtonWidget:
+			case CheckBoxWidget:
+			case SliderWidget:
+			case EditBoxWidget:
+			case MultilineEditBoxWidget:
+			case RichTextWidget:
+				return true;
+	
+		}
+		
+		return false;
+	}
+	
+	static void Set(Widget w, bool data)
+	{
+		EditorLog.Trace("WidgetData::Set::Bool");
+		
+		switch (w.Type()) {
+			
+			case ButtonWidget: {
+				ButtonWidget.Cast(w).SetState(data);
 				break;
 			}
-			
-			case float: {
-				switch (w.Type()) {
-					
-					case SliderWidget: {
-						SliderWidget.Cast(w).SetCurrent(data);
-						break;
-					}
-				}
-			}
-			
 		}
 	}
 	
+	static void Set(Widget w, float data)
+	{
+		switch (w.Type()) {
+			case SliderWidget: {
+				SliderWidget.Cast(w).SetCurrent(data);
+				break;
+			}
+		}
+	}
+	
+	static void Set(Widget w, string data)
+	{
+		switch (w.Type()) {
+			case TextWidget: {
+				TextWidget.Cast(w).SetText(data);
+				break;
+			}
+		}
+	}
+	/*
 	static T Get(Widget w)
-	{		
-		T result;
+	{
 		switch (w.Type()) {
 			
 			case ButtonWidget: {
@@ -58,12 +129,16 @@ class WidgetData<Class T>
 			case SliderWidget: {
 				return SliderWidget.Cast(w).GetCurrent();
 			}
-			
+
 		}
 		
+		T result;
+		
+		Class.CastTo(result, 0);
 		return result;
-	}
+	}*/
 }
+
 
 
 class ViewBinding: ScriptedWidgetEventHandler
@@ -87,39 +162,15 @@ class ViewBinding: ScriptedWidgetEventHandler
 			Binding_Name = m_LayoutRoot.GetName();
 		}
 		
-		if (Two_Way_Binding && !DataBindingBase.SupportsTwoWayBinding(m_LayoutRoot.Type())) {
+		if (Two_Way_Binding && !WidgetData.SupportsTwoWayBinding(m_LayoutRoot.Type())) {
 			Controller.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
 		}		
 	}
 	
-	void UnsupportedTypeError(typename type)
-	{
-		Controller.ErrorDialog(string.Format("%1: Unsupported Type %2", m_LayoutRoot.Type(), type));
-	}
+
 	
 	
-	
-	void SetData(WidgetDataConverter converter)
-	{
-		EditorLog.Trace("ViewBinding::SetData");
-		typename widget_type = DataBindingBase.GetWidgetDataType(m_LayoutRoot.Type());
-		switch (widget_type) {
-			
-			case bool: {
-				WidgetData<bool>.Set(m_LayoutRoot, converter.ToBool());
-				break;
-			}
-			
-			case float: {
-				WidgetData<float>.Set(m_LayoutRoot, converter.ToFloat());
-				break;
-			}
-			
-			default: {
-				UnsupportedTypeError(widget_type);
-			}
-		}
-	}
+
 	
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)

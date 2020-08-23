@@ -66,6 +66,12 @@ class Controller: Managed
 		
 	}
 	
+	void UnsupportedTypeError(typename type)
+	{
+		Controller.ErrorDialog(string.Format("%1: Unsupported Type %2", m_LayoutRoot.Type(), type));
+	}
+	
+	
 	
 	void NotifyPropertyChanged(string property_name)
 	{
@@ -77,13 +83,40 @@ class Controller: Managed
 			return;
 		}
 		
-		WidgetDataConverter converter();
-		data.View.SetData(converter);
-		//data.OnPropertyChanged(this);
 		
 		
 		
-		//g_Script.Call(data.View, "OnPropertyChanged", data.Property);
+		
+		EditorLog.Debug("NotifyPropertyChanged::SetData");
+		Widget layout_root = data.View.GetRoot();
+		
+		switch (data.Property.Type) {
+			
+			case bool: {
+				bool _bool;
+				EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _bool);
+				WidgetData.Set(layout_root, _bool);
+				break;
+			}
+			
+			case float: {
+				float _float;
+				EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _float);
+				WidgetData.Set(layout_root, _float);
+				break;
+			}
+			
+			case string: {
+				string _string;
+				EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _string);
+				WidgetData.Set(layout_root, _string);
+				break;
+			}
+			
+			default: {
+				UnsupportedTypeError(data.Property.Type);
+			}
+		}
 	}
 	
 
