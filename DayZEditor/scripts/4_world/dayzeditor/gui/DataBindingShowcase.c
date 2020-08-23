@@ -20,12 +20,6 @@ class DataBindingShowcaseController: Controller
 		
 		super.OnWidgetScriptInit(w);
 		
-		
-		WindowText = "REEE";
-		NotifyPropertyChanged("WindowText");
-		
-		//WindowButton = "1";
-		//NotifyPropertyChanged("WindowButton");
 	}
 	
 	override void PropertyChanged(string property_name)

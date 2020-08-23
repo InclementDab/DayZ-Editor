@@ -41,7 +41,7 @@ FrameWidgetClass WindowFrame {
      scriptclass "ViewBinding"
      {
       ScriptParamsClass {
-       Two_Way_Binding 1
+       Two_Way_Binding 0
       }
      }
     }
@@ -55,9 +55,12 @@ FrameWidgetClass WindowFrame {
      hexactsize 0
      vexactsize 1
      scriptclass "ViewBinding"
+     step 0.05
      {
       TextWidgetClass WindowSliderReadout {
+       visible 1
        ignorepointer 1
+       color 0 0 0 1
        size 150 50
        halign center_ref
        valign center_ref
@@ -66,6 +69,10 @@ FrameWidgetClass WindowFrame {
        hexactsize 1
        vexactsize 1
        scriptclass "ViewBinding"
+       font "gui/fonts/metron48"
+       "exact text" 1
+       "text halign" center
+       "text valign" center
        {
         ScriptParamsClass {
          Binding_Name "WindowSliderData"
@@ -94,6 +101,7 @@ FrameWidgetClass WindowFrame {
      style Default
      {
       ScriptParamsClass {
+       Binding_Name "WindowText"
        Two_Way_Binding 1
       }
      }
