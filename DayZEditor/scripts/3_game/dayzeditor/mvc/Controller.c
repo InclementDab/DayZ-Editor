@@ -111,7 +111,6 @@ class Controller: Managed
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("Controller::Init");
-		
 		m_LayoutRoot = w;
 		
 		// User must inherit from controller, not use it in ScriptClass
@@ -128,13 +127,14 @@ class Controller: Managed
 		} else {
 			EditorLog.Info(string.Format("%1 DataBindings found!", binding_count));
 		}
+		
+		m_DataBindingHashMap.DebugPrint();
 	}
 	
 	
 	void NotifyPropertyChanged(string property_name)
 	{
 		EditorLog.Trace("Controller::NotifyPropertyChanged");
-		
 		DataBindingBase data = m_DataBindingHashMap.Get(property_name);
 		
 		if (!data) {

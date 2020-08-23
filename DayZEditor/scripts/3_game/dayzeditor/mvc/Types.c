@@ -12,4 +12,13 @@ class PropertyInfo
 	}
 }
 
-class DataBindingHashMap: map<string, ref DataBindingBase> {}
+class DataBindingHashMap: map<string, ref DataBindingBase> 
+{
+	
+	void DebugPrint()
+	{
+		foreach (string name, DataBindingBase data: this) {
+			EditorLog.Debug(string.Format("%1: %2", name, data));
+		}
+	}
+}
