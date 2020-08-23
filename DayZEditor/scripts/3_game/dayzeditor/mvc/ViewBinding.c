@@ -64,13 +64,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 		}
 		
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
-		UpdateView();
 		
-	}
-	
-	private void UpdateView()
-	{
-		EditorLog.Trace("ViewBinding::UpdateView");
+		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
 		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
 		if (widget_setter == string.Empty) {
 			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
@@ -106,17 +101,23 @@ class ViewBinding: ScriptedWidgetEventHandler
 		}
 		
 		m_Controller.PropertyChanged(Binding_Name);
-	}
 		
-	private void UpdateModel()
+	}
+
+	
+	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
-		if (!Two_Way_Binding || !SupportsTwoWayBinding(m_LayoutRoot.Type())) return;
-		EditorLog.Trace("ViewBinding::UpdateModel");
+		EditorLog.Trace("ViewBinding::OnChange");
+		
+		if (!Two_Way_Binding || !SupportsTwoWayBinding(m_LayoutRoot.Type())) 
+			return super.OnChange(w, x, y, finished);
+		
+		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 		
 		string widget_getter = GetWidgetGetter(m_LayoutRoot.Type());
 		if (widget_getter == string.Empty) {
 			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
-			return;
+			return super.OnChange(w, x, y, finished);
 		}
 		
 		switch (m_WidgetDataType) {
@@ -152,7 +153,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			
 			default: {
 				MVC.UnsupportedConversionError(m_PropertyDataConverter.Type(), m_WidgetDataType);
-				return;
+				return super.OnChange(w, x, y, finished);
 			}
 		}
 		
@@ -160,13 +161,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, Binding_Index);
 		m_Controller.PropertyChanged(Binding_Name);
 		
-	}
-	
-	
-	override bool OnChange(Widget w, int x, int y, bool finished)
-	{
-		EditorLog.Trace("ViewBinding::OnChange");		
-		UpdateModel();		
 		return super.OnChange(w, x, y, finished);
 	}
 	
