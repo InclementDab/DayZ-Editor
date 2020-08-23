@@ -84,7 +84,19 @@ class Controller: Managed
 		EditorLog.Debug("NotifyPropertyChanged::SetData");
 		ViewBinding view = data.View;
 		
-		switch (data.Property.Type) {
+		typename prop_type = m_PropertyHashMap.Get(view.GetBindingName());
+		if (view.GetWidgetDataType() != prop_type) {
+			EditorLog.Debug(string.Format("Attempting conversion from %1 to %2", prop_type, view.GetWidgetDataType()));
+			
+			switch (view.GetWidgetDataType()) {
+				
+				
+				
+				
+			}
+		}
+		
+		switch (view.GetWidgetDataType()) {
 			
 			case bool: {
 				bool _bool;

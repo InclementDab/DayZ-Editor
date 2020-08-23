@@ -19,6 +19,8 @@ class WidgetDataConverter<Class T>
 	{
 		return string.ToString(data);
 	}
+	
+	
 }
 
 
@@ -73,7 +75,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	void Set(string data)
 	{
 		EditorLog.Trace("ViewBinding::Set::String");
-		
+				
 		string setter = GetWidgetSetter(m_LayoutRoot.Type());
 		if (setter != string.Empty)
 			g_Script.Call(m_LayoutRoot, setter, data);
@@ -149,7 +151,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	}
 	
 
-	
+	typename GetWidgetDataType() { return GetWidgetDataType(GetRoot().Type()); }
 	
 	static typename GetWidgetDataType(typename widget_type)
 	{
@@ -157,6 +159,10 @@ class ViewBinding: ScriptedWidgetEventHandler
 			
 			case Widget:
 			case SpacerBaseWidget:
+			case GridSpacerWidget:
+			case WrapSpacerWidget:
+			case ScrollWidget:
+			case SpacerWidget:
 				return Widget;
 			
 			case ButtonWidget:

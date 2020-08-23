@@ -7,7 +7,7 @@ class DataBindingShowcaseController: Controller
 	protected string WindowText;
 	int WindowSliderData;
 	
-	bool WindowButton;
+	string WindowButton;
 
 	
 	override void OnWidgetScriptInit(Widget w)
@@ -20,7 +20,7 @@ class DataBindingShowcaseController: Controller
 		WindowText = "REEE";
 		NotifyPropertyChanged("WindowText");
 		
-		WindowButton = true;
+		WindowButton = "true";
 		NotifyPropertyChanged("WindowButton");
 	}
 	
