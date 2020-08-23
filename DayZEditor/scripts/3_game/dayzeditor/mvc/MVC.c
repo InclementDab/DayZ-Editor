@@ -35,13 +35,12 @@ class MVC
 			
 	static void ErrorDialog(string message, string title = "Warning")
 	{		
-#ifdef COMPONENT_SYSTEM 
+		EditorLog.Warning(message);
 		
+#ifdef COMPONENT_SYSTEM 		
 		// If Workbench is open
 		Error(message);
 		Workbench.Dialog(title, message);
-#else
-		EditorLog.Warning(message);
 #endif
 	}
 	

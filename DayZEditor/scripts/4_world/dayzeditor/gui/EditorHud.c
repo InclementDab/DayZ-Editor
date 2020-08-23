@@ -26,9 +26,9 @@ class EditorHud: Hud
 	override void Init(Widget hud_panel_widget) 
 	{
 		EditorLog.Trace("EditorHud::Init");
-		m_LayoutRoot 			= GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorUI.layout", hud_panel_widget);
-		GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/DataBindingShowcase.layout", m_LayoutRoot);
+		m_LayoutRoot 			= GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorUI.layout", hud_panel_widget);		
 
+		GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/DataBindingShowcase.layout", m_LayoutRoot);
 		
 		// Misc get ridda this shit too
 		m_EditorMapContainer	= m_LayoutRoot.FindAnyWidget("MapContainer");
