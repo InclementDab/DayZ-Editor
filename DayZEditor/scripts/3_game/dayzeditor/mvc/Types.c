@@ -1,11 +1,11 @@
 
 
 
-class DataBindingHashMap: ref map<string, ref DataBindingBase> 
+class DataBindingHashMap: ref map<string, ref DataBinding<Class>> 
 {
 	void DebugPrint()
 	{
-		foreach (string name, DataBindingBase data: this) {
+		foreach (string name, DataBinding<Class> data: this) {
 			EditorLog.Debug(string.Format("%1: %2", name, data));
 		}
 	}
@@ -15,49 +15,50 @@ class DataBindingBase
 {
 	private void DataBindingBase() {}
 	
-	ref PropertyInfo Property;
 	ref ViewBinding View;
 	
 	static DataBindingBase Create(ViewBinding view)
-	{
-		return _Create(view.GetRoot().Type());
+	{ 
+		DataBindingBase base = _Create(view.GetRoot().Type(), view.GetBindingName());
+		base.View = view;
+		return base;
 	}
 	
-	private static DataBindingBase _Create(typename widget_type)
+	private static DataBindingBase _Create(typename widget_type, string property_name)
 	{
 		switch (widget_type) {
 			
 			case Widget:
 			case SpacerBaseWidget:
-				return new DataBinding<Widget>;
+				return new DataBinding<Widget>(property_name);
 			
 			case ButtonWidget:
 			case CheckBoxWidget:
-				return new DataBinding<bool>;
+				return new DataBinding<bool>(property_name);
 			
 			case SliderWidget:
 			case ProgressBarWidget:
 			case SimpleProgressBarWidget:
-				return new DataBinding<float>;
+				return new DataBinding<float>(property_name);
 			
 			case TextWidget:
 			case ImageWidget:
 			case EditBoxWidget:
 			case HtmlWidget:
 			case VideoWidget:
-				return new DataBinding<string>;
+				return new DataBinding<string>(property_name);
 			
 			case RichTextWidget:
 			case MultilineTextWidget:
 			case MultilineEditBoxWidget:
 			case XComboBoxWidget:
-				return new DataBinding<TStringArray>;
+				return new DataBinding<TStringArray>(property_name);
 			
 			case ItemPreviewWidget:
-				return new DataBinding<EntityAI>;
+				return new DataBinding<EntityAI>(property_name);
 			
 			case PlayerPreviewWidget:
-				return new DataBinding<DayZPlayer>;
+				return new DataBinding<DayZPlayer>(property_name);
 			
 			default: {
 				Error(string.Format("Unknown Type Specified %1", widget_type));
@@ -65,6 +66,51 @@ class DataBindingBase
 		}
 		
 		return new DataBindingBase;
+	}
+	
+	
+	static typename GetWidgetDataType(typename widget_type)
+	{
+		switch (widget_type) {
+			
+			case Widget:
+			case SpacerBaseWidget:
+				return Widget;
+			
+			case ButtonWidget:
+			case CheckBoxWidget:
+				return bool;
+			
+			case SliderWidget:
+			case ProgressBarWidget:
+			case SimpleProgressBarWidget:
+				return float;
+			
+			case TextWidget:
+			case ImageWidget:
+			case EditBoxWidget:
+			case HtmlWidget:
+			case VideoWidget:
+				return string;
+			
+			case RichTextWidget:
+			case MultilineTextWidget:
+			case MultilineEditBoxWidget:
+			case XComboBoxWidget:
+				return TStringArray;
+			
+			case ItemPreviewWidget:
+				return EntityAI;
+			
+			case PlayerPreviewWidget:
+				return DayZPlayer;
+			
+			default: {
+				Error(string.Format("Unknown Type Specified %1", widget_type));
+			}
+		}
+		
+		return typename;
 	}
 	
 	static bool SupportsTwoWayBinding(typename type)
@@ -156,11 +202,56 @@ class TypeConverter<Class T>
 class DataBinding<Class T>: DataBindingBase
 {
 	T Data;
-		
+	ref PropertyInfo Property;
 	
-	
+	void DataBinding(string property_name)
+	{
+		Property = new PropertyInfo(property_name, T);
+	}
 
 	
+	
+	
+	
+	
+	static void UnsupportedTypeError(typename type)
+	{
+		Controller.ErrorDialog(string.Format("DataBinding: Unsupported Type %1", type));
+	}
+
+}
+
+
+class PropertyInfo
+{
+	typename Type;
+	string Name;
+	
+	void PropertyInfo(string name, typename type)
+	{
+		Name = name; Type = type;
+	}
+}
+
+
+// 0: Property Name
+// 1: Proprety Type
+class PropertyHashMap: ref map<string, typename>
+{
+	static ref PropertyHashMap FromType(typename type)
+	{
+		ref PropertyHashMap hash_map = new PropertyHashMap();
+		for (int i = 0; i < type.GetVariableCount(); i++) {
+			hash_map.Insert(type.GetVariableName(i), type.GetVariableType(i));	
+		}
+		
+		return hash_map;
+	}
+}
+
+
+/*
+
 	T ConvertFrom(string data)
 	{
 
@@ -194,58 +285,4 @@ class DataBinding<Class T>: DataBindingBase
 
 		
 		return Data;
-	}
-}
-
-
-// 0: Property Name
-// 1: Proprety Type
-class PropertyHashMap: ref map<string, typename>
-{
-	static ref PropertyHashMap FromType(typename type)
-	{
-		ref PropertyHashMap hash_map = new PropertyHashMap();
-		for (int i = 0; i < type.GetVariableCount(); i++) {
-			hash_map.Insert(type.GetVariableName(i), type.GetVariableType(i));	
-		}
-		
-		return hash_map;
-	}
-	
-	PropertyInfo GetPropertyInfo(string key)
-	{
-		return new PropertyInfo(Get(key), key);
-	}
-}
-
-
-class PropertyInfo
-{
-	typename Type;
-	string Name;
-	
-	void PropertyInfo(typename type, string name)
-	{
-		Type = type; Name = name;
-	}
-}
-
-class TPropertyInfo<Class T>
-{
-	T Type;
-	string Name;
-	
-	
-	void TPropertyInfo(string name)
-	{
-		Name = name;
-	}
-	
-	T GetPropertyValue(Class instance, int index = 0)
-	{
-		T value;
-		EnScript.GetClassVar(instance, Name, index, value); 
-		return value;
-	}
-}
-
+	}*/

@@ -52,15 +52,17 @@ class Controller: Managed
 		
 		// debug
 		m_DataBindingHashMap.DebugPrint();
-		
+		/*
 		foreach (string data_name, DataBindingBase data: m_DataBindingHashMap) {
 			PropertyInfo prop = m_PropertyHashMap.GetPropertyInfo(data_name);
 			if (!data.CanConvertFrom(prop.Type)) {
 				ErrorDialog(string.Format("Invalid data type in %1. Found %2, supports %3", data_name, prop.Type, data.GetType()));
 				m_DataBindingHashMap.Remove(data_name);
 			}
-		}
+		}*/
+			
 		
+		NotifyPropertyChanged("WindowSliderData");
 		
 	}
 	
@@ -68,20 +70,20 @@ class Controller: Managed
 	void NotifyPropertyChanged(string property_name)
 	{
 		EditorLog.Trace("Controller::NotifyPropertyChanged");
-		DataBindingBase data = m_DataBindingHashMap.Get(property_name);
+		DataBinding<Class> data = m_DataBindingHashMap.Get(property_name);
 		
 		if (!data) {
 			ErrorDialog(string.Format("NotifyPropertyChanged: Property Not Found! %1", property_name));
 			return;
 		}
 		
-		string result;
+		WidgetDataConverter converter();
+		data.View.SetData(converter);
+		//data.OnPropertyChanged(this);
 		
-		EnScript.GetClassVar(this, data.Property.Name, 0, result);
 		
 		
-		
-		g_Script.Call(data.View, "OnPropertyChanged", null);
+		//g_Script.Call(data.View, "OnPropertyChanged", data.Property);
 	}
 	
 
@@ -95,7 +97,6 @@ class Controller: Managed
 		
 		if (view_binding && view_binding.Type() == ViewBinding) {
 			DataBindingBase data_binding = DataBinding.Create(view_binding);
-			data_binding.Property = m_PropertyHashMap.GetPropertyInfo(view_binding.GetBindingName());
 			binding_map.Insert(view_binding.GetBindingName(), data_binding);
 		}
 		
