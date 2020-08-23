@@ -27,7 +27,7 @@ FrameWidgetClass WindowFrame {
    "Size To Content V" 1
    content_halign center
    {
-    TextWidgetClass WindowText {
+    EditBoxWidgetClass WindowText {
      visible 1
      ignorepointer 1
      position 0 0

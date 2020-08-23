@@ -79,8 +79,11 @@ class Controller: Managed
 			return;
 		}
 		
-		view.OnPropertyChanged(this);
+		view.OnPropertyChanged();
 	}
+	
+	// Called every time a property is changed. Triggers for NotifyPropertyChanged and Two-Way bindings
+	void PropertyChanged(string property_name);
 	
 	
 		
@@ -91,6 +94,7 @@ class Controller: Managed
 		
 		if (view_binding && view_binding.Type() == ViewBinding) {
 			binding_map.Insert(view_binding.GetBindingName(), view_binding);
+			view_binding.SetController(this);
 		}
 		
 		if (w.GetChildren() != null) {

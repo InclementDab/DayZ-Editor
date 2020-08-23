@@ -52,22 +52,27 @@ class TypeConverter
 	string GetString();
 	Widget GetWidget();
 	
+	void SetBool(bool value);
+	void SetFloat(float value);
+	void SetString(string value);
+	void SetWidget(Widget value);
+	
 	void SetToController(Class context, string name, int index);
 	void GetFromController(Class context, string name, int index);
 }
 
 class TypeConversionTemplate<Class T>: TypeConverter
 {
-	protected T value;
+	protected T m_Value;
 	
 	override void SetToController(Class context, string name, int index)
 	{
-		EnScript.SetClassVar(context, name, index, value);
+		EnScript.SetClassVar(context, name, index, m_Value);
 	}
 	
 	override void GetFromController(Class context, string name, int index)
 	{
-		EnScript.GetClassVar(context, name, index, value);
+		EnScript.GetClassVar(context, name, index, m_Value);
 	}
 }
 
@@ -75,7 +80,12 @@ class TypeConversionBool: TypeConversionTemplate<bool>
 {
 	override bool GetBool()
 	{
-		return value;
+		return m_Value;
+	}
+	
+	override void SetBool(bool value)
+	{
+		m_Value = value;
 	}
 }
 
@@ -83,7 +93,12 @@ class TypeConversionFloat: TypeConversionTemplate<float>
 {
 	override float GetFloat()
 	{
-		return value;
+		return m_Value;
+	}
+	
+	override void SetFloat(float value)
+	{
+		m_Value = value;
 	}
 }
 
@@ -91,17 +106,22 @@ class TypeConversionString: TypeConversionTemplate<string>
 {	
 	override bool GetBool()
 	{
-		return string.ToString(value, false, false, false) == "1";
+		return string.ToString(m_Value, false, false, false) == "1";
 	}
 	
 	override float GetFloat()
 	{
-		return string.ToString(value, false, false, false).ToFloat();
+		return string.ToString(m_Value, false, false, false).ToFloat();
 	}
 	
 	override string GetString()
 	{
-		return string.ToString(value, false, false, false);
+		return string.ToString(m_Value, false, false, false);
+	}
+	
+	override void SetString(string value)
+	{
+		m_Value = value;
 	}
 }
 
