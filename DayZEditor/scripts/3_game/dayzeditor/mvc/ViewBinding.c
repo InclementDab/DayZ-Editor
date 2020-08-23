@@ -163,33 +163,9 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Debug(string.Format("ConversionInput: %1, ConversionOutput: %2", conversion_input, conversion_output));
 		
 		// Sets data value into the converter (intermediate data)
-		switch (conversion_input) {
-			
-			case bool: {
-				//TypeConversionBool _TypeConversionBool = TypeConverter.GetTypeConversion(conversion_output).Spawn();
-				//g_Script.Call(m_LayoutRoot, widget_setter, _TypeConversionBool.SetBool(_TypeConversionBool.Get(controller, Binding_Name, Binding_Index)));
-				break;
-			}
-			
-			case float: {
-				//TypeConversionFloat _TypeConversionFloat = TypeConverter.GetTypeConversion(conversion_output).Spawn();
-				//g_Script.Call(m_LayoutRoot, widget_setter, _TypeConversionFloat.SetFloat(_TypeConversionFloat.Get(controller, Binding_Name, Binding_Index)));
-				break;
-			}
-			
-			case string: {
-				
-				TypeConversionString _TypeConversionString = TypeConverter.GetTypeConversion(conversion_input).Spawn();
-				_TypeConversionString.SetFromModel(controller, Binding_Name, Binding_Index);
-				UpdateView(_TypeConversionString, conversion_output);
-				break;
-			}
-			
-			default: {
-				UnsupportedConversionError(conversion_input, conversion_output);
-			}
-			
-		}
+		TypeConversion _TypeConversion = TypeConverter.GetTypeConversion(conversion_input).Spawn();
+		_TypeConversion.SetFromModel(controller, Binding_Name, Binding_Index);
+		UpdateView(_TypeConversion, conversion_output);
 	}
 	
 	void UpdateView(TypeConversion type_conversion, typename conversion_output)
