@@ -6,7 +6,6 @@ class MVC
 	protected static ref TypeConverterHashMap m_TypeConverterHashMap;
 	static TypeConverter GetTypeConversion(typename type) 
 	{
-		EditorLog.Trace("MVC::GetTypeConversion");
 		if (!_MVC) {
 			_MVC = new MVC();
 		}
@@ -18,7 +17,6 @@ class MVC
 	
 	void MVC()
 	{
-		EditorLog.Trace("MVC");
 		if (!m_TypeConverterHashMap) {
 			m_TypeConverterHashMap = new TypeConverterHashMap();
 			RegisterConversionTemplates(m_TypeConverterHashMap);

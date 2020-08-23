@@ -35,9 +35,9 @@ class Controller: Managed
 		m_PropertyHashMap = PropertyHashMap.FromType(Type());
 		
 		// Gets rid of properties that only exist in this class
-		m_ControllerPropertyHashMap = PropertyHashMap.FromType(Controller);
+		PropertyHashMap controller_hashbrowns = PropertyHashMap.FromType(Controller);
 		// Commented due to crashes for whatever reason smile
-		//foreach (string name, typename type: m_ControllerPropertyHashMap) {
+		//foreach (string name, typename type: controller_hashbrowns) {
 		//	m_PropertyHashMap.Remove(name);
 		//}
 		
@@ -69,17 +69,20 @@ class Controller: Managed
 	void NotifyPropertyChanged(string property_name)
 	{
 		EditorLog.Trace("Controller::NotifyPropertyChanged");
-		ViewBinding view = m_ViewBindingHashMap.Get(property_name);
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(property_name);
 		
-		if (!view) {
+		if (!view_set) {
 			MVC.ErrorDialog(string.Format("NotifyPropertyChanged: Property Not Found! %1", property_name));
 			return;
 		}
 		
-		view.OnPropertyChanged();
+		foreach (ViewBinding view: view_set) {
+			view.OnPropertyChanged();
+		}
 	}
 	
-	// Called every time a property is changed. Triggers for NotifyPropertyChanged and Two-Way bindings
+	// Called every time a property is changed. 
+	// Override this when you want to have an event AFTER property is changed
 	void PropertyChanged(string property_name);
 	
 	
@@ -90,8 +93,11 @@ class Controller: Managed
 		w.GetScript(view_binding);
 		
 		if (view_binding && view_binding.Type() == ViewBinding) {
-			binding_map.Insert(view_binding.GetBindingName(), view_binding);
+			binding_map.InsertView(view_binding.GetBindingName(), view_binding);
 			view_binding.SetController(this);
+			
+			// Loads data for first time
+			NotifyPropertyChanged(view_binding.GetBindingName());
 		}
 		
 		if (w.GetChildren() != null) {

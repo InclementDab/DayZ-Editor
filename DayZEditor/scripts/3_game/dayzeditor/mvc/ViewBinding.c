@@ -18,7 +18,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 	private ref TypeConverter m_PropertyDataConverter;
 	private typename m_PropertyDataType;
 	
-	
 	private Controller m_Controller;
 	void SetController(Controller controller) 
 	{ 
@@ -43,14 +42,13 @@ class ViewBinding: ScriptedWidgetEventHandler
 		}
 		
 		m_WidgetDataType = GetWidgetDataType(m_LayoutRoot.Type());
-		
 		m_LayoutRoot.SetHandler(this);
 	}
 	
 	void OnPropertyChanged()
 	{
-		EditorLog.Trace("ViewBinding::OnPropertyChanged");		
-		EditorLog.Debug(string.Format("PropertyDataType: %1, WidgetDataType: %2", m_PropertyDataType, m_WidgetDataType));
+		EditorLog.Trace("ViewBinding::OnPropertyChanged " + Binding_Name);		
+		//EditorLog.Debug(string.Format("PropertyDataType: %1, WidgetDataType: %2", m_PropertyDataType, m_WidgetDataType));
 		
 		// If the property of the Controller is NOT the native widget data type			
 		if (m_WidgetDataType != m_PropertyDataType) {
@@ -159,7 +157,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 
 		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, Binding_Index);
-		m_Controller.PropertyChanged(Binding_Name);
+		m_Controller.NotifyPropertyChanged(Binding_Name);
 		
 		return super.OnChange(w, x, y, finished);
 	}

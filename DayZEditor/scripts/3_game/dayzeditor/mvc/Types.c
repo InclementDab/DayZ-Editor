@@ -17,12 +17,31 @@ class PropertyHashMap: ref map<string, typename>
 
 // 0: Property Name
 // 1: View Binding
-class ViewBindingHashMap: ref map<string, ref ViewBinding>
+typedef set<ref ViewBinding> ViewBindingSet;
+class ViewBindingHashMap: ref map<string, ref ViewBindingSet>
 {
 	void DebugPrint()
 	{
-		foreach (string name, ViewBinding view: this)
-			EditorLog.Debug(string.Format("%1: %2", name, view));
+		foreach (string name, ViewBindingSet view_set: this) {
+			EditorLog.Debug(string.Format("[%1]:", name)); 
+			foreach (ViewBinding view: view_set) {
+				EditorLog.Debug(string.Format("    %1", view.GetRoot().GetName()));
+			}
+		}		
+	}
+	
+	void InsertView(string key, ViewBinding view)
+	{
+		ViewBindingSet view_set = Get(key);
+		if (!view_set) {
+			view_set = new ViewBindingSet();
+			view_set.Insert(view);
+			Insert(key, view_set);
+		} else {
+			view_set.Insert(view);
+		}
+		
+		
 		
 	}
 }

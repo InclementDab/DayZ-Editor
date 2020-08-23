@@ -41,6 +41,7 @@ FrameWidgetClass WindowFrame {
      scriptclass "ViewBinding"
      {
       ScriptParamsClass {
+       Two_Way_Binding 1
       }
      }
     }
@@ -55,8 +56,27 @@ FrameWidgetClass WindowFrame {
      vexactsize 1
      scriptclass "ViewBinding"
      {
+      TextWidgetClass WindowSliderReadout {
+       ignorepointer 1
+       size 150 50
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       {
+        ScriptParamsClass {
+         Binding_Name "WindowSliderData"
+        }
+       }
+      }
+     }
+     {
       ScriptParamsClass {
        Binding_Name "WindowSliderData"
+       Two_Way_Binding 1
       }
      }
     }
@@ -74,6 +94,7 @@ FrameWidgetClass WindowFrame {
      style Default
      {
       ScriptParamsClass {
+       Two_Way_Binding 1
       }
      }
     }

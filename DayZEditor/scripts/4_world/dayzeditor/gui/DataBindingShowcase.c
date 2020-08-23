@@ -6,8 +6,7 @@ class DataBindingShowcaseController: Controller
 {
 	
 	protected string WindowText;
-	int WindowSliderData;
-	
+	float WindowSliderData = 50;
 	string WindowButton;
 	
 	void DataBindingShowcaseController()
@@ -31,8 +30,7 @@ class DataBindingShowcaseController: Controller
 	
 	override void PropertyChanged(string property_name)
 	{
-		Print(property_name);
-		Print(WindowButton);
+		Print(WindowSliderData);
 	}
 	
 	
