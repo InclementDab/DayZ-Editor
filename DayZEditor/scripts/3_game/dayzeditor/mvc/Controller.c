@@ -1,33 +1,35 @@
 
-typedef ref map<Widget, ref ViewBinding> DataBindingHashMap;
+// 0: Property Name
+// 1: View Binding
+class ViewBindingHashMap: map<string, ref ViewBinding>
+{
+	
+}
 
+// 0: Property Name
+// 1: Proprety Type
 class PropertyHashMap: map<string, typename>
 {
-		
 	static PropertyHashMap FromType(typename type)
 	{
 		PropertyHashMap hash_map = new PropertyHashMap();
 		for (int i = 0; i < type.GetVariableCount(); i++) {
-			hash_map.Insert(type.GetVariableName(i), type.GetVariableType(i));
+			hash_map.Insert(type.GetVariableName(i), type.GetVariableType(i));	
 		}
 		
 		return hash_map;
 	}
-	
 }
 
 class Controller: Managed
 {
 	protected Widget m_LayoutRoot;
-	protected ref DataBindingHashMap m_DataBindingHashMap = new DataBindingHashMap();
+	protected ref ViewBindingHashMap m_ViewBindingHashMap = new ViewBindingHashMap();
 	protected ref PropertyHashMap m_PropertyHashMap = new PropertyHashMap();
-	
 	
 	void Controller()
 	{
 		EditorLog.Trace("Controller");
-		
-		
 	}
 	
 	void OnWidgetScriptInit(Widget w)
@@ -43,9 +45,9 @@ class Controller: Managed
 		}
 		
 		// Load all child Widgets and obtain their DataBinding class
-		int binding_count = LoadDataBindings(m_LayoutRoot, m_DataBindingHashMap);
+		int binding_count = LoadDataBindings(m_LayoutRoot, m_ViewBindingHashMap);
 		if (binding_count == 0) {
-			ErrorDialog("No DataBindings found! Is the controller in the Root Widget?");
+			ErrorDialog("No DataBindings found! Is the controller in a parent Widget?");
 			return;
 		} else {
 			EditorLog.Info(string.Format("%1 DataBindings found!", binding_count));
@@ -53,19 +55,50 @@ class Controller: Managed
 		
 
 		// Load all properties of the inheriting Controller
-		m_PropertyHashMap = PropertyHashMap.FromType(Type());		
+		m_PropertyHashMap = PropertyHashMap.FromType(Type());
+		
+		// Gets rid of properties that only exist in this class
+		PropertyHashMap controller_map = PropertyHashMap.FromType(Controller);
+		foreach (string name, typename type: controller_map) {
+			m_PropertyHashMap.Remove(name);
+		}
+		
 		EditorLog.Info(string.Format("%1 Properties found!", m_PropertyHashMap.Count()));
-
+		
+		
+		
 	}
 	
 	
-	private int LoadDataBindings(Widget w, out DataBindingHashMap binding_map)
+	void NotifyPropertyChanged(string property_name)
+	{
+		EditorLog.Trace("Controller::NotifyPropertyChanged");
+		
+		ViewBinding view = m_ViewBindingHashMap.Get(property_name);
+		
+		if (!view) {
+			ErrorDialog(string.Format("NotifyPropertyChanged: Property Not Found! %1", property_name));
+			return;
+		}
+		
+		WidgetData data = WidgetData.GetDataType(view.GetRoot());
+				
+		data.SetData(this, view.GetBindingName(), view.GetBindingIndex());
+		view.OnPropertyChanged(data);
+		
+	}
+	
+
+
+	
+	
+	private int LoadDataBindings(Widget w, out ViewBindingHashMap binding_map)
 	{
 		ViewBinding data_binding;
 		w.GetScript(data_binding);
 		
 		if (data_binding && data_binding.Type() == ViewBinding) {
-			binding_map.Insert(w, data_binding);
+			binding_map.Insert(data_binding.GetBindingName(), data_binding);
 		}
 		
 		if (w.GetChildren() != null) {
@@ -80,14 +113,20 @@ class Controller: Managed
 	}
 	
 	private void ErrorDialog(string message, string title = "Warning")
-	{
+	{		
 #ifdef COMPONENT_SYSTEM
 		Workbench.Dialog(title, message);
+#else
+		EditorLog.Warning(message);
 #endif
 	}
 	
 
 }
+
+
+
+
 
 
 

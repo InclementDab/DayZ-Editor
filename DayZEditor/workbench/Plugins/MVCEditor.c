@@ -18,9 +18,10 @@ class BetterString: string
 		string post = value.Substring(n, length);
 		value = pre + _value + post;
 		
-	}
-	
+	}	
 }
+
+
 
 
 
@@ -83,15 +84,9 @@ class MVCEditorPlugin: WorkbenchPlugin
 
 		Print("Opening");
 		Workbench.OpenModule("TestAddon");
-		WBModuleDef module = Workbench.GetModule("TestAddon");
-
+		WBModuleDef module = Workbench.GetModule("TestAddon");		
 		
-		BetterString test = "test";
-		Print(test[2]);
-
-
-//		foreach (string t: test);
-		
+	
 		Print(FileExist("$CurrentDir:/ToolAddons/TestAddon/init.c"));
 
 		
@@ -114,7 +109,7 @@ class MVCEditorPlugin: WorkbenchPlugin
 	[ButtonAttribute("Close")]
 	void Close()
 	{
-		
+
 	}	
 }
 
@@ -130,7 +125,12 @@ class TestingTool
 	{
 		Print("TestingTool");
 		Print(m_API);
+		
+		
+		
 	}
+
+	
 }
 
 

@@ -1,45 +1,7 @@
 
 
 
-class WidgetDataConverter<Class T1>
-{
-	// 0: Widget Type
-	// 1: Data Type
-	ref map<typename, typename> m_WidgetDataPairs = new map<typename, typename>();
-	
-	void WidgetDataConverter()
-	{
-		m_WidgetDataPairs.Insert(Widget, Widget);
-		m_WidgetDataPairs.Insert(SpacerBaseWidget, Widget);
-		
-		m_WidgetDataPairs.Insert(ButtonWidget, bool);
-		m_WidgetDataPairs.Insert(CheckBoxWidget, bool);
-				
-		m_WidgetDataPairs.Insert(SliderWidget, float);
-		m_WidgetDataPairs.Insert(ProgressBarWidget, float);
-		m_WidgetDataPairs.Insert(SimpleProgressBarWidget, float);
-		
-		m_WidgetDataPairs.Insert(TextWidget, string);
-		m_WidgetDataPairs.Insert(ImageWidget, string);
-		m_WidgetDataPairs.Insert(EditBoxWidget, string);
-		m_WidgetDataPairs.Insert(HtmlWidget, string);
-		m_WidgetDataPairs.Insert(VideoWidget, string);		
-		
-		m_WidgetDataPairs.Insert(RichTextWidget, TStringArray);
-		m_WidgetDataPairs.Insert(MultilineTextWidget, TStringArray);
-		m_WidgetDataPairs.Insert(MultilineEditBoxWidget, TStringArray);
-		m_WidgetDataPairs.Insert(XComboBoxWidget, TStringArray);
-		
-		m_WidgetDataPairs.Insert(ItemPreviewWidget, EntityAI);
-		m_WidgetDataPairs.Insert(PlayerPreviewWidget, DayZPlayer);		
-	}
-	
-	static T1 GetData()
-	{
-		
-	}
-	
-}
+
 
 
 
