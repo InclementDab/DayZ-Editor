@@ -23,7 +23,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		}
 		
 		if (Two_Way_Binding && !ViewBinding.SupportsTwoWayBinding(m_LayoutRoot.Type())) {
-			Controller.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
+			MVC.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
 		}
 		
 	}
@@ -34,7 +34,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		typename conversion_input = controller.GetPropertyType(Binding_Name);
 		typename conversion_output = GetWidgetDataType();
-				
 		
 		// If the property of the Controller is NOT the native widget data type			
 		if (conversion_output != conversion_input) {
@@ -44,18 +43,23 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Debug(string.Format("ConversionInput: %1, ConversionOutput: %2", conversion_input, conversion_output));
 		
 		// Sets data value into the converter (intermediate data)
-		TypeConverter _TypeConverter = TypeConverter.GetTypeConversion(conversion_input);
-		_TypeConverter.SetFromController(controller, Binding_Name, Binding_Index);
+		TypeConverter _TypeConverter = MVC.GetTypeConversion(conversion_input);
+		if (!_TypeConverter) {
+			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", conversion_input));
+			return;
+		}
+		
+		_TypeConverter.GetFromController(controller, Binding_Name, Binding_Index);
 		UpdateView(_TypeConverter, conversion_output);
 	}
 	
-	void UpdateView(TypeConverter type_converter, typename conversion_output)
+	private void UpdateView(TypeConverter type_converter, typename conversion_output)
 	{
 		EditorLog.Trace("ViewBinding::UpdateView");
-
+		
 		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
 		if (widget_setter == string.Empty) {
-			UnsupportedTypeError(m_LayoutRoot.Type());
+			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
 			return;
 		}
 		
@@ -77,24 +81,20 @@ class ViewBinding: ScriptedWidgetEventHandler
 			}
 			
 			default: {
-				UnsupportedConversionError(type_converter.Type(), conversion_output);
+				MVC.UnsupportedConversionError(type_converter.Type(), conversion_output);
 			}
 			
 		}
 	}
-	
-	
-	void UnsupportedTypeError(typename type)
+		
+	private void UpdateModel()
 	{
-		Controller.ErrorDialog(string.Format("%1: Unsupported Type %2", m_LayoutRoot.Type(), type));
+		if (!Two_Way_Binding || !SupportsTwoWayBinding(m_LayoutRoot.Type())) return;
+		EditorLog.Trace("ViewBinding::UpdateModel");
+		
 	}
 	
-	void UnsupportedConversionError(typename from_type, typename to_type)
-	{
-		Controller.ErrorDialog(string.Format("Unsupported conversion from %1 to %2!", from_type, to_type));
-	}
-	
-	
+
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
@@ -225,27 +225,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		return false;
 	}
-	
-	/*
-	static T Get(Widget w)
-	{
-		switch (w.Type()) {
-			
-			case ButtonWidget: {
-				return ButtonWidget.Cast(w).GetState();
-			}
-			
-			case SliderWidget: {
-				return SliderWidget.Cast(w).GetCurrent();
-			}
-
-		}
-		
-		T result;
-		
-		Class.CastTo(result, 0);
-		return result;
-	}*/
 }
 
 

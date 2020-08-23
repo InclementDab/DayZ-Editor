@@ -27,7 +27,7 @@ class Controller: Managed
 				
 		// User must inherit from controller, not use it in ScriptClass
 		if (Type() == Controller) {
-			ErrorDialog("You cannot bind to data without creating your own controller class!");
+			MVC.ErrorDialog("You cannot bind to data without creating your own controller class!");
 			return;
 		}
 		
@@ -46,7 +46,7 @@ class Controller: Managed
 		// Load all child Widgets and obtain their DataBinding class
 		int binding_count = LoadDataBindings(m_LayoutRoot, m_ViewBindingHashMap);
 		if (binding_count == 0) {
-			ErrorDialog("No DataBindings found! Is the controller in a parent Widget?");
+			MVC.ErrorDialog("No DataBindings found! Is the controller in a parent Widget?");
 			return;
 		} else {
 			EditorLog.Info(string.Format("%1 DataBindings found!", binding_count));
@@ -75,11 +75,10 @@ class Controller: Managed
 		ViewBinding view = m_ViewBindingHashMap.Get(property_name);
 		
 		if (!view) {
-			ErrorDialog(string.Format("NotifyPropertyChanged: Property Not Found! %1", property_name));
+			MVC.ErrorDialog(string.Format("NotifyPropertyChanged: Property Not Found! %1", property_name));
 			return;
 		}
 		
-			
 		view.OnPropertyChanged(this);
 	}
 	
@@ -105,15 +104,7 @@ class Controller: Managed
 		return binding_map.Count();
 	}
 	
-	static void ErrorDialog(string message, string title = "Warning")
-	{		
-#ifdef COMPONENT_SYSTEM
-		Error(message);
-		Workbench.Dialog(title, message);
-#else
-		EditorLog.Warning(message);
-#endif
-	}
+
 }
 
 
