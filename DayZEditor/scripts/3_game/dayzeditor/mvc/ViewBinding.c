@@ -2,22 +2,40 @@
 
 class WidgetDataConverter<Class T>
 {
+	static bool ToBool(Class controller, string name, int index)
+	{
+		T _data;
+		EnScript.GetClassVar(controller, name, index, _data);
+		return ToBool(_data);
+	}
+	
 	static bool ToBool(T data)
 	{
-		string str = string.ToString(data);
-		str.ToLower();
-		return str == "true";
+		return (string.ToString(data, false, false, false) == "1");
+	}
+	
+	static float ToFloat(Class controller, string name, int index)
+	{
+		T _data;
+		EnScript.GetClassVar(controller, name, index, _data);
+		return ToFloat(_data);
 	}
 	
 	static float ToFloat(T data)
 	{	
-		string str = string.ToString(data);
-		return str.ToFloat();
+		return string.ToString(data, false, false, false).ToFloat();
+	}
+	
+	static string _ToString(Class controller, string name, int index)
+	{
+		T _data;
+		EnScript.GetClassVar(controller, name, index, _data);
+		return _ToString(_data);
 	}
 	
 	static string _ToString(T data)
 	{
-		return string.ToString(data);
+		return string.ToString(data, false, false, false);
 	}
 	
 	

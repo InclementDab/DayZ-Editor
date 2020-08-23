@@ -20,7 +20,7 @@ class DataBindingShowcaseController: Controller
 		WindowText = "REEE";
 		NotifyPropertyChanged("WindowText");
 		
-		WindowButton = "true";
+		WindowButton = "1";
 		NotifyPropertyChanged("WindowButton");
 	}
 	

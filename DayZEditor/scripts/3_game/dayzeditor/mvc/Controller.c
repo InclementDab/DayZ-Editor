@@ -84,48 +84,64 @@ class Controller: Managed
 		EditorLog.Debug("NotifyPropertyChanged::SetData");
 		ViewBinding view = data.View;
 		
-		typename prop_type = m_PropertyHashMap.Get(view.GetBindingName());
-		if (view.GetWidgetDataType() != prop_type) {
-			EditorLog.Debug(string.Format("Attempting conversion from %1 to %2", prop_type, view.GetWidgetDataType()));
-			
-			switch (view.GetWidgetDataType()) {
-				
-				
-				
-				
-			}
-		}
+		typename property_type = m_PropertyHashMap.Get(view.GetBindingName());
+		typename widgetdata_type = view.GetWidgetDataType();
 		
-		switch (view.GetWidgetDataType()) {
-			
-			case bool: {
-				bool _bool;
-				EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _bool);
-				view.Set(_bool);
-				break;
+		
+		// If the property of the Controller is the native widget data type
+		if (widgetdata_type == property_type) {
+			switch (widgetdata_type) {
+				case bool: {
+					bool _bool;
+					EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _bool);
+					view.Set(_bool);
+					break;
+				}
+				
+				case float: {
+					float _float;
+					EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _float);
+					view.Set(_float);
+					break;
+				}
+				
+				case string: {
+					string _string;
+					EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _string);
+					view.Set(_string);
+					break;
+				}
 			}
 			
-			case float: {
-				float _float;
-				EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _float);
-				view.Set(_float);
-				break;
-			}
+		} else {
 			
-			case string: {
-				string _string;
-				EnScript.GetClassVar(this, data.View.GetBindingName(), data.View.GetBindingIndex(), _string);
-				view.Set(_string);
-				break;
-			}
+			EditorLog.Debug(string.Format("Attempting conversion from %1 to %2", property_type, widgetdata_type));
 			
-
+			switch (property_type) {
+				case bool: {
+					switch (widgetdata_type) {
+						case float: {
+							_float = WidgetDataConverter<float>.ToFloat(this, data.View.GetBindingName(), data.View.GetBindingIndex());
+							view.Set(_float);
+							break;
+						}
+					}
+					break;
+				}
+				
+				case string: {
+					switch (widgetdata_type) {
+						case bool: {
+							_bool = WidgetDataConverter<string>.ToBool(this, data.View.GetBindingName(), data.View.GetBindingIndex());
+							view.Set(_bool);
+							break;
+						}
+					}
+					break;
+				}		
+			}
 		}
 	}
-	
-
-
-	
 	
 	private int LoadDataBindings(Widget w, out DataBindingHashMap binding_map)
 	{
@@ -158,6 +174,8 @@ class Controller: Managed
 #endif
 	}
 }
+
+
 
 
 
