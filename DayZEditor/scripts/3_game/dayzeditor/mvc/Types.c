@@ -141,16 +141,6 @@ class DataBindingBase
 }
 
 
-class TypeConverter<Class T>
-{
-	
-	private static void HandleError(typename type)
-	{
-		Controller.ErrorDialog(string.Format("Invalid Conversion Type! %1 to %2", type.ToString(), T.ToString().ToType()));
-	}
-}
-
-
 class DataBinding<Class T>: DataBindingBase
 {
 	T Data;

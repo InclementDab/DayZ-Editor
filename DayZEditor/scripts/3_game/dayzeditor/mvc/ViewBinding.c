@@ -1,50 +1,57 @@
 
+class TypeConverterBase
+{
+	bool GetBool() { return false; }
+	float GetFloat() { return 0; }
+	string GetString() { return string.Empty; }
+}
 
-class WidgetDataConverter<Class T>
+
+class TypeConverter<Class T>: TypeConverterBase
 {
 	Class Context;
 	string Name;
 	int Index;
 	
-	void WidgetDataConverter(Class context, string name, int index) 
+	void TypeConverter(Class context, string name, int index) 
 	{
 		Context = context; Name = name; Index = index;
 	}
 	
-	T Get()
+	private T Get()
 	{
 		T _data;
 		EnScript.GetClassVar(Context, Name, Index, _data);
 		return _data;
 	}
 	
-	bool ToBool()
+	override bool GetBool()
 	{
-		return ToBool(Get());
+		return GetBool(Get());
 	}
 	
-	float ToFloat()
+	override float GetFloat()
 	{
-		return ToFloat(Get());
+		return GetFloat(Get());
 	}
 	
-	string _ToString()
+	override string GetString()
 	{
-		return _ToString(Get());
+		return GetString(Get());
 	}
 	
 	
-	static bool ToBool(T data)
+	static bool GetBool(T data)
 	{
 		return (string.ToString(data, false, false, false) == "1");
 	}
 
-	static float ToFloat(T data)
+	static float GetFloat(T data)
 	{	
 		return string.ToString(data, false, false, false).ToFloat();
 	}
 
-	static string _ToString(T data)
+	static string GetString(T data)
 	{
 		return string.ToString(data, false, false, false);
 	}
