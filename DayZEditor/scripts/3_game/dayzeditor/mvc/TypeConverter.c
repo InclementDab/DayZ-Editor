@@ -1,14 +1,48 @@
 
 
 
-class TypeConverterHashMap: ref map<typename, typename>
+class TypeConverterHashMap
 {
-	void TypeConversionHashMap()
+	private ref map<typename, typename> value;
+	
+	void TypeConverterHashMap()
 	{
-		MVC.RegisterTypeConversion(bool, TypeConversionBool);
-		MVC.RegisterTypeConversion(float, TypeConversionFloat);
-		MVC.RegisterTypeConversion(string, TypeConversionString);
-	}	
+		value = new map<typename, typename>();
+	}
+	
+	typename Get(typename conversion_type)
+	{
+		return value.Get(conversion_type);
+	}
+	
+	void Remove(typename conversion_type)
+	{
+		value.Remove(conversion_type);
+	}
+	
+	void Set(typename conversion_type, typename conversion_class)
+	{
+		EditorLog.Trace("TypeConverterHashMap::Set");
+		
+		if (!conversion_class.IsInherited(TypeConversionTemplate)) {
+			MVC.ErrorDialog(string.Format("RegisterTypeConversion: %1 must inherit from type TypeConversionTemplate", conversion_class));
+			return;
+		}
+		
+		value.Set(conversion_type, conversion_class);
+	} 
+	
+	bool Insert(typename conversion_type, typename conversion_class)
+	{
+		EditorLog.Trace("TypeConverterHashMap::Insert");
+		
+		if (!conversion_class.IsInherited(TypeConversionTemplate)) {
+			MVC.ErrorDialog(string.Format("RegisterTypeConversion: %1 must inherit from type TypeConversionTemplate", conversion_class));
+			return false;
+		}
+		
+		return value.Insert(conversion_type, conversion_class);
+	}
 }
 
 class TypeConverter

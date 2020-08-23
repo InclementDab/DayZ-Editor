@@ -56,7 +56,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 	private void UpdateView(TypeConverter type_converter, typename conversion_output)
 	{
 		EditorLog.Trace("ViewBinding::UpdateView");
-		
 		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
 		if (widget_setter == string.Empty) {
 			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
@@ -80,6 +79,11 @@ class ViewBinding: ScriptedWidgetEventHandler
 				break;
 			}
 			
+			case Widget: {
+				g_Script.Call(m_LayoutRoot, widget_setter, type_converter.GetWidget());
+				break;
+			}
+			
 			default: {
 				MVC.UnsupportedConversionError(type_converter.Type(), conversion_output);
 			}
@@ -91,6 +95,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 	{
 		if (!Two_Way_Binding || !SupportsTwoWayBinding(m_LayoutRoot.Type())) return;
 		EditorLog.Trace("ViewBinding::UpdateModel");
+		
+		
 		
 	}
 	
