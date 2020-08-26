@@ -43,16 +43,6 @@ class ViewBindingHashMap: ref map<string, ref ViewBindingSet>
 	}
 }
 
-class PropertyInfo
-{
-	typename Type;
-	string Name;
-	
-	void PropertyInfo(string name, typename type)
-	{
-		Name = name; Type = type;
-	}
-}
 
 
 
