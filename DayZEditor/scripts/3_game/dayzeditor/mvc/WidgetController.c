@@ -187,30 +187,20 @@ class SpacerWidgetController: WidgetController
 	
 	override void ReplaceData(int index, TypeConverter type_converter) {
 		SpacerWidget spacer_widget = SpacerWidget.Cast(m_Widget);
-		Widget child = GetWidgetFromIndex(index);
-		Print(child);
-		if (!child) return;
-		spacer_widget.RemoveChild(child);
-		spacer_widget.AddChildAfter(type_converter.GetWidget(), GetWidgetFromIndex(index - 1));
-		
-	}
-	
-	private Widget GetWidgetFromIndex(int index)
-	{
-		Print(string.Format("Returning %1th child", index));
-		SpacerWidget spacer_widget = SpacerWidget.Cast(m_Widget);
-		
+
 		Widget child = spacer_widget.GetChildren();
 		while (child) {
 			if (index == 0)
-				return child;
+				break;
 			
 			child = child.GetSibling();
 			index--;
 		}
 		
-		return null;
+		spacer_widget.AddChildAfter(type_converter.GetWidget(), child);
+		spacer_widget.RemoveChild(child);
 	}
+	
 	
 		
 	override void ClearData() {

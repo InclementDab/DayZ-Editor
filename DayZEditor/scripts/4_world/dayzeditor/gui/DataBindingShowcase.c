@@ -40,12 +40,6 @@ class DataBindingShowcaseController: Controller
 			WindowText = !WindowText;
 			NotifyPropertyChanged("WindowText");
 		}
-		
-		/*
-		if (property_name == "EvaluateEquation") {
-			WindowText.Evaluate();
-			NotifyPropertyChanged("WindowText");
-		}*/
 	}
 	
 

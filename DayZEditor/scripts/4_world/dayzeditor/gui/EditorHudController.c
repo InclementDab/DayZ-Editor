@@ -23,12 +23,15 @@ class EditorHudController: Controller
 	
 	float BrushRadius = 50;
 	float BrushDensity = 0.5;
-	/*
-	ref TextListboxWidgetData DebugActionStackListbox;
-	ref WrapSpacerWidgetData LeftbarSpacer;
-	ref WrapSpacerWidgetData RightbarSpacer;
-	ref XComboBoxWidgetData BrushTypeBox;
-	*/
+	
+	//ref TextListboxWidgetData DebugActionStackListbox;
+	ref ObservableCollection<Widget> LeftbarSpacer;
+	ref ObservableCollection<Widget> RightbarSpacer;
+	ref ObservableCollection<string> BrushTypeBox;
+	ref ObservableCollection<string> DebugActionStackListbox;
+	
+	//ref XComboBoxWidgetData BrushTypeBox;
+	
 	void EditorHudController()
 	{
 		EditorLog.Trace("EditorHudController");
@@ -37,15 +40,14 @@ class EditorHudController: Controller
 	void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
-		/*
-		DebugActionStackListbox 	= new TextListboxWidgetData("DebugActionStackListbox");
-		LeftbarSpacer 				= new WrapSpacerWidgetData("LeftbarSpacer");
-		RightbarSpacer 				= new WrapSpacerWidgetData("RightbarSpacer");
-		BrushTypeBox				= new XComboBoxWidgetData("BrushTypeBox");
-		*/
+		
+		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
+		BrushTypeBox				= new ObservableCollection<string>("BrushTypeBox", this);
+		LeftbarSpacer 				= new ObservableCollection<Widget>("LeftbarSpacer", this);
+		RightbarSpacer 				= new ObservableCollection<Widget>("RightbarSpacer", this);
 		
 		// Reload Placeables
-		//EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
+		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
 		
 		// Load Brushes
 		m_EditorBrushTypes = new EditorBrushDataSet();
@@ -99,13 +101,13 @@ class EditorHudController: Controller
 	void InsertPlaceableObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlaceableObject");
-		//LeftbarSpacer.Insert(target.GetRoot());
+		LeftbarSpacer.Insert(target.GetRoot());
 	}	
 	
 	void InsertPlacedObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlacedObject");
-		//RightbarSpacer.Insert(target.GetRoot());
+		RightbarSpacer.Insert(target.GetRoot());
 	}
 	
 	void InsertMapMarker(EditorMarker map_marker)
