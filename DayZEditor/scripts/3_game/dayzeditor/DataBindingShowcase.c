@@ -10,7 +10,7 @@ class DataBindingShowcaseController: Controller
 	
 	bool EvaluateEquation;
 	
-	ref ObservableCollection<Widget> WindowListWidgets;
+	ref ObservableCollection<string> WindowListWidgets;
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
@@ -18,8 +18,12 @@ class DataBindingShowcaseController: Controller
 		
 	
 		
-		WindowListWidgets = new ObservableCollection<Widget>("WindowListWidgets", this);
-		WindowListWidgets.Insert(w);
+		WindowListWidgets = new ObservableCollection<string>("WindowListWidgets", this);
+		WindowListWidgets.Insert("Test1");
+		WindowListWidgets.Insert("Test2");
+		WindowListWidgets.Remove(1);
+		WindowListWidgets.Insert("Test3");
+		
 		
 	}
 	

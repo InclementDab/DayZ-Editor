@@ -84,7 +84,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
 		if (widget_setter == string.Empty) {
-			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
 			return;
 		}
 		
@@ -103,6 +102,11 @@ class ViewBinding: ScriptedWidgetEventHandler
 			
 			case string: {
 				g_Script.CallFunction(m_LayoutRoot, widget_setter, null, m_PropertyDataConverter.GetString());
+				break;
+			}
+			
+			case Observable: {
+				// Reload all data here
 				break;
 			}
 						
@@ -134,16 +138,32 @@ class ViewBinding: ScriptedWidgetEventHandler
 		}
 		
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
-
+		EditorLog.Debug(string.Format("[%1] Updating Collection View...", m_LayoutRoot.Type()));
+		
 		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
 		if (widget_setter == string.Empty) {
-			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
 			return;
 		}
 		
-		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
 		
-		Print(m_WidgetDataType);
+		switch (args.param2) {
+			
+			case NotifyCollectionChangedAction.Add: {
+				g_Script.CallFunctionParams(m_LayoutRoot, widget_setter, null, args.param3);
+				break;
+			}
+			
+			
+			case NotifyCollectionChangedAction.Remove: {
+				g_Script.CallFunctionParams(m_LayoutRoot, widget_setter, null, args.param3);
+				break;
+			}
+			
+			
+			default: {
+				MVC.ErrorDialog(string.Format("Unsupported CollectionChangedAction: %1", args.param2));
+			}
+		}
 	}
 	
 	
@@ -183,8 +203,12 @@ class ViewBinding: ScriptedWidgetEventHandler
 				//g_Script.CallFunction(m_LayoutRoot, widget_getter, _string, null);
 				m_PropertyDataConverter.SetString(EditBoxWidget.Cast(m_LayoutRoot).GetText());
 				break;
-			}			
-						
+			}
+			
+			case Observable: {
+				// Reload all data here
+				break;
+			}
 			
 			default: {
 				MVC.UnsupportedConversionError(m_PropertyDataConverter.Type(), m_WidgetDataType);
@@ -224,6 +248,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		return super.OnChange(w, x, y, finished);
 	}
 	
+		
 	static string GetWidgetSetter(typename widget_type)
 	{
 		switch (widget_type) {
@@ -253,11 +278,13 @@ class ViewBinding: ScriptedWidgetEventHandler
 			case TextWidget:
 			case EditBoxWidget:
 			case RichTextWidget:
-			case MultilineEditBoxWidget:
 				return "SetText";
 			
 			case HtmlWidget:
 				return "LoadFile";
+			
+			case MultilineEditBoxWidget:
+				return "SetLine";
 			
 			/* Unsupported
 			case ImageWidget:
@@ -276,7 +303,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 				return "SetPlayer";
 			
 			default: {
-				MVC.ErrorDialog(string.Format("Unknown Type Specified %1", widget_type));
+				MVC.ErrorDialog(string.Format("Unsupported Set Type Specified %1", widget_type));
 			}
 		}
 		
@@ -330,7 +357,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 				return "GetDummyPlayer";
 			
 			default: {
-				MVC.ErrorDialog(string.Format("Unknown Type Specified %1", widget_type));
+				MVC.ErrorDialog(string.Format("Unsupported Get Type Specified %1", widget_type));
 			}
 		}
 		
@@ -348,12 +375,10 @@ class ViewBinding: ScriptedWidgetEventHandler
 			case WrapSpacerWidget:
 			case ScrollWidget:
 			case SpacerWidget:
-			case Widget:
+			//case Widget: // this might be a weird one
 				return Observable;
 			
-						
 
-			
 			case ButtonWidget:
 			case CheckBoxWidget:
 				return bool;
@@ -374,7 +399,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			case MultilineTextWidget:
 			case MultilineEditBoxWidget:
 			case XComboBoxWidget:
-				return TStringArray;
+				return Observable;
 			
 			case ItemPreviewWidget:
 				return EntityAI;
@@ -383,7 +408,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 				return DayZPlayer;
 			
 			default: {
-				MVC.ErrorDialog(string.Format("Unknown Type Specified %1", widget_type));
+				MVC.UnsupportedTypeError(widget_type);
 			}
 		}
 		

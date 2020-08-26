@@ -14,9 +14,6 @@ class Controller: Managed
 	typename GetPropertyType(string property_name) {
 		return m_PropertyHashMap.Get(property_name);
 	}
-	Class GetPropertyValue(string property_name) {
-		
-	}
 	
 	void Controller() { EditorLog.Trace("Controller"); }
 	void ~Controller() { EditorLog.Trace("~Controller"); }
