@@ -1,6 +1,9 @@
 
 
 
+
+
+
 class DataBindingShowcaseController: Controller
 {
 	
@@ -9,6 +12,17 @@ class DataBindingShowcaseController: Controller
 	
 	bool EvaluateEquation;
 	
+	
+	override void OnWidgetScriptInit(Widget w)
+	{
+		super.OnWidgetScriptInit(w);
+		
+		Print(__LINE__);
+		Print(__FILE__); // useful shit
+		
+		// tools.pak?????
+	}
+	
 	override void PropertyChanged(string property_name)
 	{
 		if (property_name == "EvaluateEquation") {
@@ -16,17 +30,20 @@ class DataBindingShowcaseController: Controller
 			NotifyPropertyChanged("WindowText");
 		}
 	}
+	
+
 }
 
 
 // Example for defining a custom type
-
 modded class MVC
 {
 	override void RegisterConversionTemplates(out TypeConverterHashMap type_conversions)
 	{
 		super.RegisterConversionTemplates(type_conversions);
 		type_conversions.Insert(EquationEvaluater, TypeConversionString);
+		
+
 	}
 }
 

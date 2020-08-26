@@ -9,18 +9,8 @@ FrameWidgetClass EditorMainFrame {
  hexactsize 0
  vexactsize 0
  draggable 0
- scriptclass "EditorHudHandler"
+ scriptclass "EditorHudController"
  {
-  FrameWidgetClass ViewModelFrame {
-   ignorepointer 1
-   position 10 10
-   size 48 48
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   scriptclass "EditorHudController"
-  }
   FrameWidgetClass MapContainerWidget {
    clipchildren 0
    ignorepointer 1
@@ -140,12 +130,11 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         scriptclass "EditorView"
+         scriptclass "ViewBinding"
          font "gui/fonts/metron"
          "text offset" 5 0
          {
           ScriptParamsClass {
-           view_model_widget "ViewModelFrame"
           }
          }
         }
@@ -157,12 +146,11 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         scriptclass "EditorView"
+         scriptclass "ViewBinding"
          font "gui/fonts/metron"
          "text offset" 5 0
          {
           ScriptParamsClass {
-           view_model_widget "ViewModelFrame"
           }
          }
         }
@@ -176,9 +164,13 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 0
          vexactsize 1
          draggable 0
-         scriptclass "EditorView"
+         scriptclass "ViewBinding"
          font "gui/fonts/metron"
          "text offset" 5 0
+         {
+          ScriptParamsClass {
+          }
+         }
         }
         TextWidgetClass DebugText4 {
          ignorepointer 1
@@ -188,8 +180,13 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scriptclass "ViewBinding"
          font "gui/fonts/metron"
          "text offset" 5 0
+         {
+          ScriptParamsClass {
+          }
+         }
         }
         TextWidgetClass DebugText5 {
          ignorepointer 1
@@ -199,8 +196,13 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scriptclass "ViewBinding"
          font "gui/fonts/metron"
          "text offset" 5 0
+         {
+          ScriptParamsClass {
+          }
+         }
         }
         TextWidgetClass DebugText6 {
          ignorepointer 1
@@ -210,8 +212,13 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scriptclass "ViewBinding"
          font "gui/fonts/metron"
          "text offset" 5 0
+         {
+          ScriptParamsClass {
+          }
+         }
         }
        }
       }
@@ -235,15 +242,10 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       scriptclass "EditorView"
+       scriptclass ""
        style Default
        lines 15
        font "gui/fonts/metron16"
-       {
-        ScriptParamsClass {
-         view_model_widget "ViewModelFrame"
-        }
-       }
       }
      }
     }
@@ -325,7 +327,7 @@ FrameWidgetClass EditorMainFrame {
            hexactsize 1
            vexactsize 1
            draggable 0
-           scriptclass "EditorView"
+           scriptclass "ViewBinding"
            switch normal
            {
             ImageWidgetClass CategorySelectBuilding {
@@ -347,8 +349,7 @@ FrameWidgetClass EditorMainFrame {
            }
            {
             ScriptParamsClass {
-             view_model_widget "ViewModelFrame"
-             variable_name "CategorySelectButtons"
+             Two_Way_Binding 1
             }
            }
           }
@@ -359,7 +360,7 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           scriptclass "EditorView"
+           scriptclass "ViewBinding"
            switch normal
            {
             ImageWidgetClass CategorySelectVehicle {
@@ -381,9 +382,7 @@ FrameWidgetClass EditorMainFrame {
            }
            {
             ScriptParamsClass {
-             view_model_widget "ViewModelFrame"
-             variable_name "CategorySelectButtons"
-             variable_index 1
+             Two_Way_Binding 1
             }
            }
           }
@@ -395,7 +394,8 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           scriptclass "EditorView"
+           draggable 0
+           scriptclass "ViewBinding"
            switch normal
            {
             ImageWidgetClass CategorySelectEntity {
@@ -418,9 +418,7 @@ FrameWidgetClass EditorMainFrame {
            }
            {
             ScriptParamsClass {
-             view_model_widget "ViewModelFrame"
-             variable_name "CategorySelectButtons"
-             variable_index 2
+             Two_Way_Binding 1
             }
            }
           }
@@ -432,7 +430,7 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           scriptclass "EditorView"
+           scriptclass "ViewBinding"
            switch normal
            {
             ImageWidgetClass CategorySelectHuman {
@@ -453,9 +451,7 @@ FrameWidgetClass EditorMainFrame {
            }
            {
             ScriptParamsClass {
-             view_model_widget "ViewModelFrame"
-             variable_name "CategorySelectButtons"
-             variable_index 3
+             Two_Way_Binding 1
             }
            }
           }
@@ -564,16 +560,11 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           scriptclass "EditorView"
+           scriptclass ""
            Padding 0
            Margin 0
            "Size To Content H" 1
            "Size To Content V" 1
-           {
-            ScriptParamsClass {
-             view_model_widget "ViewModelFrame"
-            }
-           }
           }
          }
         }
@@ -592,7 +583,7 @@ FrameWidgetClass EditorMainFrame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scriptclass "EditorView"
+     scriptclass ""
      style DayZDefaultButtonNoBorder
      switch toggle
      {
@@ -608,11 +599,6 @@ FrameWidgetClass EditorMainFrame {
        imageTexture "{60621763B985C925}dta/gui/gui/imagesets/dayz_gui@2x.edds"
        mode blend
        "src alpha" 1
-      }
-     }
-     {
-      ScriptParamsClass {
-       view_model_widget "ViewModelFrame"
       }
      }
     }
@@ -673,16 +659,11 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         scriptclass "EditorView"
+         scriptclass ""
          Padding 0
          Margin 0
          "Size To Content V" 1
          content_halign right
-         {
-          ScriptParamsClass {
-           view_model_widget "ViewModelFrame"
-          }
-         }
         }
        }
       }
@@ -696,7 +677,7 @@ FrameWidgetClass EditorMainFrame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scriptclass "EditorView"
+     scriptclass ""
      style DayZDefaultButtonNoBorder
      switch toggle
      {
@@ -719,11 +700,6 @@ FrameWidgetClass EditorMainFrame {
        stretch 1
        "flip u" 0
        "flip v" 0
-      }
-     }
-     {
-      ScriptParamsClass {
-       view_model_widget "ViewModelFrame"
       }
      }
     }
@@ -1154,14 +1130,9 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         scriptclass "EditorView"
+         scriptclass ""
          style Default
          font "gui/fonts/metron28"
-         {
-          ScriptParamsClass {
-           view_model_widget "ViewModelFrame"
-          }
-         }
         }
         FrameWidgetClass SimcityRadiusFrame {
          ignorepointer 1
@@ -1181,12 +1152,12 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           scriptclass "EditorView"
+           scriptclass "ViewBinding"
            current 20
            {
             ScriptParamsClass {
-             view_model_widget "ViewModelFrame"
-             variable_name "BrushRadius"
+             Binding_Name "BrushRadius"
+             Two_Way_Binding 1
             }
            }
           }
@@ -1200,15 +1171,14 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           scriptclass "EditorView"
+           scriptclass "ViewBinding"
            text "0"
            font "gui/fonts/metron"
            "text halign" center
            "text valign" center
            {
             ScriptParamsClass {
-             view_model_widget "ViewModelFrame"
-             variable_name "BrushRadius"
+             Binding_Name "BrushRadius"
             }
            }
           }
@@ -1233,14 +1203,14 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           scriptclass "EditorView"
+           scriptclass "ViewBinding"
            maximum 1
            step 0.01
            current 0.25
            {
             ScriptParamsClass {
-             view_model_widget "ViewModelFrame"
-             variable_name "BrushDensity"
+             Binding_Name "BrushDensity"
+             Two_Way_Binding 1
             }
            }
           }
@@ -1254,15 +1224,14 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           scriptclass "EditorView"
+           scriptclass "ViewBinding"
            text "0"
            font "gui/fonts/metron28"
            "text halign" center
            "text valign" center
            {
             ScriptParamsClass {
-             view_model_widget "ViewModelFrame"
-             variable_name "BrushDensity"
+             Binding_Name "BrushDensity"
             }
            }
           }

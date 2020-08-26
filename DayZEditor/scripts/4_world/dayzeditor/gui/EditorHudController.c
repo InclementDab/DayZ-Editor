@@ -3,24 +3,27 @@ static ref EditorHudController m_EditorHudController;
 EditorHudController GetEditorHudController() { return m_EditorHudController; }
 
 
-class EditorHudController
+
+class EditorHudController: Controller
 {
-/*
-	TextWidgetData DebugText1;
-	TextWidgetData DebugText2;
-	TextWidgetData DebugText3;
-	TextWidgetData DebugText4;
-	TextWidgetData DebugText5;*/
+	string DebugText1;
+	string DebugText2;
+	string DebugText3;
+	string DebugText4;
+	string DebugText5;
 	
-	//ref array<ButtonWidgetData> CategorySelectButtons;
+	bool BuildingSelect = true;
+	bool VehicleSelect;
+	bool EntitySelect;
+	bool HumanSelect;
 
 	
 	bool LeftbarHide;
 	bool RightbarHide;
-	/*
-	SliderWidgetData BrushRadius;
-	SliderWidgetData BrushDensity;
 	
+	float BrushRadius = 50;
+	float BrushDensity = 0.5;
+	/*
 	ref TextListboxWidgetData DebugActionStackListbox;
 	ref WrapSpacerWidgetData LeftbarSpacer;
 	ref WrapSpacerWidgetData RightbarSpacer;
@@ -29,19 +32,17 @@ class EditorHudController
 	void EditorHudController()
 	{
 		EditorLog.Trace("EditorHudController");
-		m_EditorHudController = this;
 	}
 	
 	void OnWidgetScriptInit(Widget w)
 	{
-
+		super.OnWidgetScriptInit(w);
 		/*
 		DebugActionStackListbox 	= new TextListboxWidgetData("DebugActionStackListbox");
 		LeftbarSpacer 				= new WrapSpacerWidgetData("LeftbarSpacer");
 		RightbarSpacer 				= new WrapSpacerWidgetData("RightbarSpacer");
 		BrushTypeBox				= new XComboBoxWidgetData("BrushTypeBox");
-		
-		CategorySelectButtons 		= new array<ButtonWidgetData>();*/
+		*/
 		
 		// Reload Placeables
 		//EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
@@ -51,7 +52,18 @@ class EditorHudController
 		m_CustomBrushList = new map<string, typename>();
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
 		RegisterCustomBrush("Delete", DeleteBrush);
+		
+		
+	
+
 	}
+	
+	
+	static void VTest()
+	{
+		
+	}
+
 	
 	// Brush Management
 	private ref EditorBrushDataSet 		m_EditorBrushTypes;
@@ -145,41 +157,45 @@ class EditorHudController
 	}
 	
 		
-	void OnPropertyChanged(string property_name)
+
+	override void PropertyChanged(string property_name)
 	{
+		
 		switch (property_name) {
 			
-			case "CategorySelectButtons": {/*
-				foreach (bool b: CategorySelectButtons) {
-					b = false;
-				}
-				
-				break;
-			*/}
-			
-		}
-		
-		
-	}
-	
-	bool OnClick(Widget w, int x, int y, bool button)
-	{
-		switch (w.GetName()) {
-			
-			case "BrushRadius": {
-				//EditorBrush.SetRadius(BrushRadius);
+			case "BuildingSelect": {
+				VehicleSelect = false; EntitySelect = false; HumanSelect = false;
+				NotifyPropertyChanged("VehicleSelect");
+				NotifyPropertyChanged("EntitySelect");
+				NotifyPropertyChanged("HumanSelect");
 				break;
 			}
 			
-			case "BrushDensity": {
-				//EditorBrush.SetDensity(BrushDensity);
+			case "VehicleSelect": {
+				BuildingSelect = false; EntitySelect = false; HumanSelect = false;
+				NotifyPropertyChanged("BuildingSelect");
+				NotifyPropertyChanged("EntitySelect");
+				NotifyPropertyChanged("HumanSelect");
 				break;
 			}
-		}
-		
-		return true;
+			
+			case "EntitySelect": {
+				BuildingSelect = false; VehicleSelect = false; HumanSelect = false;
+				NotifyPropertyChanged("BuildingSelect");
+				NotifyPropertyChanged("VehicleSelect");
+				NotifyPropertyChanged("HumanSelect");
+				break;
+			}
+			
+			case "HumanSelect": {
+				BuildingSelect = false; VehicleSelect = false; EntitySelect = false;
+				NotifyPropertyChanged("BuildingSelect");
+				NotifyPropertyChanged("VehicleSelect");
+				NotifyPropertyChanged("EntitySelect");
+				break;
+			}			
+		}		
 	}
-
 }
 
 
