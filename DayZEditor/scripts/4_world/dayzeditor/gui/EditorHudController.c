@@ -122,7 +122,6 @@ class EditorHudController: Controller
 	override void PropertyChanged(string property_name)
 	{
 		EditorLog.Trace("EditorHudController::PropertyChanged: " + property_name);
-		Print(BrushTypeSelection);
 		
 		switch (property_name) {
 			

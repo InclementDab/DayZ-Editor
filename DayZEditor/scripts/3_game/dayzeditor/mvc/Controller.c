@@ -70,13 +70,10 @@ class Controller: ScriptedWidgetEventHandler
 		EditorLog.Trace("Controller::NotifyPropertyChanged " + property_name);
 		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(property_name);
 		
-		if (!view_set) {
-			MVC.ErrorDialog(string.Format("NotifyPropertyChanged: Property Not Found! %1", property_name));
-			return;
-		}
-		
-		foreach (ViewBinding view: view_set) {
-			view.OnPropertyChanged();
+		if (view_set) {
+			foreach (ViewBinding view: view_set) {
+				view.OnPropertyChanged();
+			}
 		}
 		
 		PropertyChanged(property_name);
@@ -88,13 +85,10 @@ class Controller: ScriptedWidgetEventHandler
 		EditorLog.Trace("Controller::NotifyCollectionChanged " + collection_name);
 		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(collection_name);
 		
-		if (!view_set) {
-			MVC.ErrorDialog(string.Format("NotifyCollectionChanged: Property Not Found! %1", collection_name));
-			return;
-		}
-		
-		foreach (ViewBinding view: view_set) {
-			view.OnCollectionChanged(args);
+		if (view_set) {
+			foreach (ViewBinding view: view_set) {
+				view.OnCollectionChanged(args);
+			}
 		}
 		
 		CollectionChanged(collection_name, args);

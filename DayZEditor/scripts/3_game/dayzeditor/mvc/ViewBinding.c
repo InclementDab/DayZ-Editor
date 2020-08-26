@@ -166,6 +166,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		if (m_SelectedDataConverter) {
 			m_WidgetController.GetSelection(m_SelectedDataConverter);
 			m_SelectedDataConverter.SetToController(m_Controller, Selected_Item, 0);
+			m_Controller.NotifyPropertyChanged(Selected_Item);
 		}
 		
 		if (!Two_Way_Binding || !m_WidgetController.CanTwoWayBind()) {
