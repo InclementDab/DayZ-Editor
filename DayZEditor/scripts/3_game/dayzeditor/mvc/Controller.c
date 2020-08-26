@@ -14,6 +14,9 @@ class Controller: Managed
 	typename GetPropertyType(string property_name) {
 		return m_PropertyHashMap.Get(property_name);
 	}
+	Class GetPropertyValue(string property_name) {
+		
+	}
 	
 	void Controller() { EditorLog.Trace("Controller"); }
 	void ~Controller() { EditorLog.Trace("~Controller"); }
@@ -63,10 +66,10 @@ class Controller: Managed
 				
 	}
 	
-	
+	// This must be called manually by the user
 	void NotifyPropertyChanged(string property_name)
 	{
-		EditorLog.Trace("Controller::NotifyPropertyChanged");
+		EditorLog.Trace("Controller::NotifyPropertyChanged " + property_name);
 		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(property_name);
 		
 		if (!view_set) {
@@ -81,10 +84,33 @@ class Controller: Managed
 		PropertyChanged(property_name);
 	}
 	
+	// This gets called automatically when a collection is changed
+	void NotifyCollectionChanged(string collection_name, CollectionChangedEventArgs args)
+	{
+		EditorLog.Trace("Controller::NotifyCollectionChanged " + collection_name);
+		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(collection_name);
+		
+		if (!view_set) {
+			MVC.ErrorDialog(string.Format("NotifyCollectionChanged: Property Not Found! %1", collection_name));
+			return;
+		}
+		
+		foreach (ViewBinding view: view_set) {
+			view.OnCollectionChanged(args);
+		}
+		
+		CollectionChanged(collection_name, args);
+	}
+	
 	// Called every time a property is changed. 
 	// Override this when you want to have an event AFTER property is changed
-	void PropertyChanged(string property_name);
+	protected void PropertyChanged(string property_name);
 	
+	// Called every time an observable collection is changed.
+	// Override this when you want to have an event AFTER collection is changed
+	protected void CollectionChanged(string collection_name, CollectionChangedEventArgs args);
+	
+
 	
 	
 	private int LoadDataBindings(Widget w, out ViewBindingHashMap binding_map)

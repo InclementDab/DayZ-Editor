@@ -20,23 +20,26 @@ class ViewBinding: ScriptedWidgetEventHandler
 	
 	private Controller m_Controller;
 	
-	void ViewBinding() { EditorLog.Trace("ViewBinding"); }
-	void ~ViewBinding() { EditorLog.Trace("~ViewBinding"); }
+	void ViewBinding() { /*EditorLog.Trace("ViewBinding");*/ }
+	void ~ViewBinding() { /*EditorLog.Trace("~ViewBinding");*/ }
 	
 	void SetController(Controller controller) 
 	{ 
 		EditorLog.Trace("ViewBinding::SetController");
 		m_Controller = controller;
 		
-		m_PropertyDataType = m_Controller.GetPropertyType(Binding_Name);		
+		m_PropertyDataType = m_Controller.GetPropertyType(Binding_Name);
+		if (m_PropertyDataType.IsInherited(Observable))
+			m_PropertyDataType = Observable.Cast(m_PropertyDataType.Spawn()).GetType();
+		
 		m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyDataType);
 		m_WidgetDataType = GetWidgetDataType(m_LayoutRoot.Type());
 		
 		// Updates the view on first load
-		if (m_PropertyDataConverter) {
+		if (m_PropertyDataConverter) {			
 			OnPropertyChanged();
 		} else {
-			EditorLog.Warning(string.Format("[%1] Binding not found!", m_LayoutRoot.GetName()));
+			EditorLog.Warning(string.Format("[%1] Data Converter not found!", m_LayoutRoot.GetName()));
 		}
 	}
 	
@@ -108,6 +111,39 @@ class ViewBinding: ScriptedWidgetEventHandler
 				return;
 			}
 		}		
+	}
+	
+	
+	void OnCollectionChanged(CollectionChangedEventArgs args)
+	{
+		EditorLog.Trace("ViewBinding::OnCollectionChanged " + Binding_Name);
+		
+		if (!m_PropertyDataType) {
+			MVC.ErrorDialog(string.Format("Binding not found: %1", Binding_Name));
+			return;
+		}
+		
+		if (!m_PropertyDataConverter) {
+			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
+			return;			
+		}
+		
+		// If the property of the Controller is NOT the native widget data type			
+		if (m_WidgetDataType != m_PropertyDataType) {
+			EditorLog.Debug(string.Format("Attempting Type Conversion from %1 to %2", m_PropertyDataType, m_WidgetDataType));
+		}
+		
+		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
+
+		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
+		if (widget_setter == string.Empty) {
+			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
+			return;
+		}
+		
+		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
+		
+		Print(m_WidgetDataType);
 	}
 	
 	
@@ -306,15 +342,15 @@ class ViewBinding: ScriptedWidgetEventHandler
 	{
 		switch (widget_type) {
 
-			/* Observables
+			// Observables
 			case SpacerBaseWidget:
 			case GridSpacerWidget:
 			case WrapSpacerWidget:
 			case ScrollWidget:
 			case SpacerWidget:
 			case Widget:
-				return Widget;
-			*/
+				return Observable;
+			
 						
 
 			

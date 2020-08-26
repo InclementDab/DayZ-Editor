@@ -1,7 +1,5 @@
-
-
-
-
+//Print(__LINE__);
+//Print(__FILE__); // useful shit // tools.pak?????
 
 
 class DataBindingShowcaseController: Controller
@@ -12,15 +10,17 @@ class DataBindingShowcaseController: Controller
 	
 	bool EvaluateEquation;
 	
+	ref ObservableCollection<Widget> WindowListWidgets;
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
 		
-		Print(__LINE__);
-		Print(__FILE__); // useful shit
+	
 		
-		// tools.pak?????
+		WindowListWidgets = new ObservableCollection<Widget>("WindowListWidgets", this);
+		WindowListWidgets.Insert(w);
+		
 	}
 	
 	override void PropertyChanged(string property_name)

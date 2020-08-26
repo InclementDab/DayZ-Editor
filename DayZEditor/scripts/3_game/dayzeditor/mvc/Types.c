@@ -39,10 +39,7 @@ class ViewBindingHashMap: ref map<string, ref ViewBindingSet>
 			Insert(key, view_set);
 		} else {
 			view_set.Insert(view);
-		}
-		
-		
-		
+		}		
 	}
 }
 
