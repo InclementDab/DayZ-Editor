@@ -34,6 +34,9 @@ class DataBindingShowcaseController: Controller
 		data.Name = "Test";
 		WindowListWidgets.Insert(data);
 		
+		ref EditorBrushData data2 = new EditorBrushData();
+		data2.Name = "Test2";
+		WindowListWidgets.Insert(data2);
 	}
 	
 	override void PropertyChanged(string property_name)
@@ -45,8 +48,31 @@ class DataBindingShowcaseController: Controller
 		}
 	}
 	
+	// Return Value: Not implemented yet
+	bool OnWindowTextToggle(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("OnWindowTextToggle");
+		
+		return false;
+	}
+	
+	bool OnWindowCheckToggle(CheckBoxCommandArgs args)
+	{
+		EditorLog.Trace("OnWindowCheckToggle");
+		
+		return false;
+	}
+	
+	bool OnComboBoxChanged(XComboBoxCommandArgs args)
+	{
+		EditorLog.Trace("OnComboBoxChanged");
+		return false;
+	}
+	
 
 }
+
+
 
 
 

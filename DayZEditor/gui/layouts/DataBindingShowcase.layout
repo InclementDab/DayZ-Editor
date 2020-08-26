@@ -31,6 +31,7 @@ FrameWidgetClass WindowFrame {
    {
     EditBoxWidgetClass WindowText {
      visible 1
+     disabled 0
      ignorepointer 0
      position 0 0
      size 0.8 50
@@ -50,6 +51,8 @@ FrameWidgetClass WindowFrame {
     }
     ButtonWidgetClass WindowTextToggleValue {
      visible 1
+     disabled 0
+     ignorepointer 0
      size 50 50
      halign right_ref
      valign center_ref
@@ -63,7 +66,7 @@ FrameWidgetClass WindowFrame {
      switch normal
      {
       ScriptParamsClass {
-       Two_Way_Binding 1
+       Command "OnWindowTextToggle"
       }
      }
     }
@@ -124,8 +127,7 @@ FrameWidgetClass WindowFrame {
      style Default
      {
       ScriptParamsClass {
-       Binding_Name "WindowText"
-       Two_Way_Binding 1
+       Command "OnWindowCheckToggle"
       }
      }
     }
@@ -142,6 +144,7 @@ FrameWidgetClass WindowFrame {
      scriptclass "ViewBinding"
      {
       ScriptParamsClass {
+       Command "OnComboBoxChanged"
       }
      }
     }

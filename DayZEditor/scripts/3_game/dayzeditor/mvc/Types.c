@@ -44,7 +44,53 @@ class ViewBindingHashMap: ref map<string, ref ViewBindingSet>
 }
 
 
+// 0: Source Widget
+// 1: Button
+// 2: Button State
+typedef Param3<ButtonWidget, int, bool> ButtonCommandArgs;
+
+// 0: Source Widget
+// 1: Button
+// 2: CheckBox State
+typedef Param2<CheckBoxWidget, bool> CheckBoxCommandArgs;
 
 
+// 0: Source Widget
+// 1: Button
+// 2: Selected Item
+typedef Param2<XComboBoxWidget, int> XComboBoxCommandArgs;
+
+
+
+
+enum WidgetEventType {
+	WidgetEventChange,
+	WidgetEventChildAdd,
+	WidgetEventChildRemove,
+	WidgetEventClick,
+	WidgetEventController,
+	WidgetEventDrag,
+	WidgetEventDragging,
+	WidgetEventDraggingOver,
+	WidgetEventDrop,
+	WidgetEventDropReceived,
+	WidgetEventFocus,
+	WidgetEventFocusLost,
+	WidgetEventItemSelected,
+	WidgetEventItemSelectedTypeID,
+	WidgetEventKeyDown,
+	WidgetEventKeyPress,
+	WidgetEventModalResult,
+	WidgetEventMouseButtonDown,
+	WidgetEventMouseButtonUp,
+	WidgetEventMouseDoubleClick,
+	WidgetEventMouseEnter,
+	WidgetEventMouseLeave,
+	WidgetEventMouseMove,
+	WidgetEventMouseWheel,
+	WidgetEventResize,
+	WidgetEventSliderChange,
+	WidgetEventUpdate	
+};
 
 

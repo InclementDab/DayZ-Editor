@@ -8,6 +8,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	protected reference string Binding_Name;
 	protected reference int Binding_Index;
 	protected reference bool Two_Way_Binding;
+	protected reference string Command;
 	
 	Widget GetRoot() { return m_LayoutRoot; }
 	string GetBindingName() { return Binding_Name; }
@@ -126,7 +127,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 			
 		// Anonymouse Data Setter
 		m_PropertyDataConverter.SetParam(args.param4);
-				
 		switch (args.param2) {
 						
 			
@@ -160,17 +160,17 @@ class ViewBinding: ScriptedWidgetEventHandler
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		if (button != 0) 
-			return false;
 		
 		EditorLog.Trace("ViewBinding::OnClick " + w.Type());
 		
 		switch (w.Type()) {
-
 			case ButtonWidget: {
 				UpdateModel();
-				return true;
+				InvokeCommand(new ButtonCommandArgs(ButtonWidget.Cast(w), button, ButtonWidget.Cast(w).GetState()));
+				break;
 			}
+			
+
 		}
 		
 		return false;
@@ -180,10 +180,42 @@ class ViewBinding: ScriptedWidgetEventHandler
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		EditorLog.Trace("ViewBinding::OnChange");
+		
+		
+		switch (w.Type()) {
+			
+			case CheckBoxWidget: {
+				InvokeCommand(new CheckBoxCommandArgs(CheckBoxWidget.Cast(w), CheckBoxWidget.Cast(w).IsChecked()));
+				break;
+			}
+			
+			case XComboBoxWidget: {
+				InvokeCommand(new XComboBoxCommandArgs(XComboBoxWidget.Cast(w), XComboBoxWidget.Cast(w).GetCurrentItem()));
+				break;
+			}
+			
+		}
+		
 		UpdateModel();
+		
+
 		return super.OnChange(w, x, y, finished);
 	}
+		
 	
+	
+	private bool InvokeCommand(Param params)
+	{
+		if (Command == string.Empty) {
+			return false;
+		}
+		
+		EditorLog.Trace("ViewBinding::InvokeCommand");
+		
+		bool result;
+		g_Script.CallFunction(m_Controller, Command, result, params);
+		return result;
+	}
 }
 
 

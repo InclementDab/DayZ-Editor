@@ -49,7 +49,7 @@ class TypeConverterHashMap
 }
 
 class TypeConverter
-{			
+{
 	void TypeConverter() { EditorLog.Trace("TypeConverter"); }
 	void ~TypeConverter() { EditorLog.Trace("~TypeConverter"); }
 	typename GetType();
