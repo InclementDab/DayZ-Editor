@@ -176,7 +176,27 @@ class EditorHudController: Controller
 	}
 	
 	void LeftbarSpacerExecute(WrapSpacerCommandArgs args) {
+		EditorLog.Trace("EditorHudController::LeftbarSpacerExecute");
+	}
+	
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
+		if (button == 0) {
+
+#ifndef COMPONENT_SYSTEM
+			
+			if (GetEditor().IsPlacing()) {
+				GetEditor().PlaceObject();
+				return true;
+			}
+			
+			GetEditor().ClearSelection();
+#endif
+		}
 		
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 }
 

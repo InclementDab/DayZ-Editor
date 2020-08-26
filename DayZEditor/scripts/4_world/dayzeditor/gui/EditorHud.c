@@ -117,27 +117,6 @@ class EditorHud: Hud
 	bool IsModalActive() {
 		return GetGame().GetUIManager().IsModalVisible();
 	}
-	
-	
-	/*
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorHudHandler::OnMouseButtonDown");
-		if (button == 0) {
-
-#ifndef COMPONENT_SYSTEM
-			
-			if (GetEditor().IsPlacing()) {
-				GetEditor().PlaceObject();
-				return true;
-			}
-			
-			GetEditor().ClearSelection();
-#endif
-		}
-		
-		return super.OnMouseButtonDown(w, x, y, button);
-	}*/
 }
 
 

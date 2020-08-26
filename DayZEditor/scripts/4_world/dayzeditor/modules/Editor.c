@@ -138,8 +138,11 @@ class EditorClientModule: JMModuleBase
 		
 		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
 		
+		// debug
+		EditorLog.CurrentLogLevel = EditorLogLevel.WARNING;
 		m_EditorHud.GetController().DebugText1 = avg_timeslice.ToString();
 		m_EditorHud.GetController().NotifyPropertyChanged("DebugText1");
+		EditorLog.CurrentLogLevel = EditorLogLevel.TRACE;
 	}
 	
 	override bool IsServer() { return false; }	

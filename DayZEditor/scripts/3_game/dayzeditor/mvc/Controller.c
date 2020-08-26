@@ -1,7 +1,7 @@
 
 
 
-class Controller: Managed
+class Controller: ScriptedWidgetEventHandler
 {
 	// Private members
 	private ref PropertyHashMap m_ControllerPropertyHashMap;
@@ -49,6 +49,8 @@ class Controller: Managed
 		} else {
 			EditorLog.Info(string.Format("%1 DataBindings found!", binding_count));
 		}
+		
+		m_LayoutRoot.SetHandler(this);
 		
 		// debug
 		m_ViewBindingHashMap.DebugPrint();
