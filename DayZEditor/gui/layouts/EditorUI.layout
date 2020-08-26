@@ -1122,6 +1122,8 @@ FrameWidgetClass EditorMainFrame {
          }
         }
         ButtonWidgetClass BrushToggleButton {
+         visible 1
+         disabled 0
          clipchildren 0
          size 98 32
          halign center_ref
@@ -1138,6 +1140,8 @@ FrameWidgetClass EditorMainFrame {
          {
           ScriptParamsClass {
            Two_Way_Binding 1
+           Command_Execute "BrushToggleExecute"
+           Command_CanExecute "CanBrushToggleExecute"
           }
          }
         }

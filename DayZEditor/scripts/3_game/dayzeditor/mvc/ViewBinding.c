@@ -37,11 +37,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		}
 		
 		// Updates the view on first load
-		if (m_PropertyDataConverter) {
-			OnPropertyChanged();
-		} else {
-			EditorLog.Warning(string.Format("[%1] Data Converter not found!", m_LayoutRoot.GetName()));
-		}
+		OnPropertyChanged();
 	}
 	
 	void OnWidgetScriptInit(Widget w)
@@ -229,7 +225,10 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Trace("ViewBinding::UpdateCommand");
 		
 		bool result;
-		g_Script.CallFunction(m_Controller, Command_CanExecute, result, null);
+		if (g_Script.CallFunction(m_Controller, Command_CanExecute, result, 0) != 0) {
+			return;
+		}
+		
 		
 		if (result) {
 			m_LayoutRoot.ClearFlags(WidgetFlags.IGNOREPOINTER);

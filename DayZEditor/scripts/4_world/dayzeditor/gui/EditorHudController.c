@@ -19,8 +19,6 @@ class EditorHudController: Controller
 	bool LeftbarHide;
 	bool RightbarHide;
 	
-	bool BrushToggleButton;
-	
 	float BrushRadius = 50;
 	float BrushDensity = 0.5;
 	
@@ -130,18 +128,28 @@ class EditorHudController: Controller
 				break;
 			}
 
-#ifndef COMPONENT_SYSTEM
-			case "BrushToggleButton": {
-				if (BrushToggleButton) {
-					int index = XComboBoxWidget.Cast(m_LayoutRoot.FindAnyWidget("BrushTypeBox")).GetCurrentItem();
-					GetEditor().SetBrush(EditorBrush.Create(BrushTypeBox[index]));
-				} else {
-					GetEditor().SetBrush(null);
-				}
-				break;
-			}
-#endif
+
 		}
+	}
+	
+	bool BrushToggleExecute(ButtonCommandArgs args) 
+	{
+		
+#ifndef COMPONENT_SYSTEM
+		if (args.param3) {
+			int index = XComboBoxWidget.Cast(m_LayoutRoot.FindAnyWidget("BrushTypeBox")).GetCurrentItem();
+			GetEditor().SetBrush(EditorBrush.Create(BrushTypeBox[index]));
+		} else {
+			GetEditor().SetBrush(null);
+		}	
+#endif
+		
+		return false;
+	}
+	
+	bool CanBrushToggleExecute() {
+		return true;
+		return (BrushTypeBox.Count() > 0);
 	}
 }
 

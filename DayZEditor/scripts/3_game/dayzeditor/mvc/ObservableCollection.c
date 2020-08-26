@@ -139,9 +139,13 @@ class ObservableCollection<Class TValue>: Observable
 		return v;
 	}
 	
-	int Count() { return _data.Count(); }
+	int Count() { 
+		return _data.Count(); 
+	}
 	
-	int Find(TValue value) { return _data.Find(value); }
+	int Find(TValue value) { 
+		return _data.Find(value); 
+	}
 	
 }
 
