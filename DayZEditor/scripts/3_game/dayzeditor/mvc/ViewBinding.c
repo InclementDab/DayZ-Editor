@@ -63,7 +63,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		}
 		
 
-		
 		m_LayoutRoot.SetHandler(this);
 	}
 	
@@ -72,7 +71,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Trace("ViewBinding::OnPropertyChanged " + Binding_Name);		
 						
 		if (!m_PropertyDataType) {
-			MVC.ErrorDialog(string.Format("Binding not found: %1", Binding_Name));
+			EditorLog.Warning(string.Format("Binding not found: %1", Binding_Name));
 			return;
 		}
 		
@@ -84,16 +83,15 @@ class ViewBinding: ScriptedWidgetEventHandler
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
 		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
 		
-
 		m_WidgetController.SetData(m_PropertyDataConverter);
 	}
 	
 	void UpdateModel()
 	{
+		EditorLog.Trace("ViewBinding::UpdateModel");
 		if (!Two_Way_Binding || !m_WidgetController.CanTwoWayBind()) 
 			return;
 		
-		EditorLog.Trace("ViewBinding::UpdateModel");
 		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 		
 		m_WidgetController.GetData(m_PropertyDataConverter);

@@ -31,14 +31,30 @@ class RadioButtonData: ref map<string, ref RadioButtonHashMap>
 
 ref RadioButtonData _RadioButtonData;
 
+
+class RadioButtonGroup: ViewBinding
+{
+	
+	
+	
+}
+
+
 class RadioButton: ViewBinding
 {
 	reference string Group_Name;
 	reference int Button_ID;
 	
-	override void SetController(Controller controller) {
+	protected typename m_RadioButtonPropertyDataType;
+	protected ref TypeConverter m_RadioButtonPropertyDataConverter;
+	
+	override void SetController(Controller controller) 
+	{ 
+		EditorLog.Trace("RadioButton::SetController");	
 		super.SetController(controller);
-		m_PropertyDataType = int; // override 
+		
+		m_RadioButtonPropertyDataType = m_Controller.GetPropertyType(Group_Name);
+		m_RadioButtonPropertyDataConverter = MVC.GetTypeConversion(m_RadioButtonPropertyDataType);
 	}
 	
 	void RadioButton()
@@ -64,6 +80,15 @@ class RadioButton: ViewBinding
 	}
 	
 	
+	override void UpdateModel()
+	{
+		EditorLog.Trace("RadioButton::UpdateModel");
+		super.UpdateModel();
+		
+		m_RadioButtonPropertyDataConverter.SetFloat(Button_ID);
+		m_RadioButtonPropertyDataConverter.SetToController(m_Controller, Group_Name, 0);
+		m_Controller.PropertyChanged(Group_Name);
+	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
@@ -81,6 +106,8 @@ class RadioButton: ViewBinding
 				_CheckBoxWidget.SetChecked(id == Button_ID);
 			}
 		}
+		
+		//UpdateModel();
 		
 		
 		return true;

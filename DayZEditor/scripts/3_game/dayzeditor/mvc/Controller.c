@@ -101,13 +101,12 @@ class Controller: Managed
 	
 	// Called every time a property is changed. 
 	// Override this when you want to have an event AFTER property is changed
-	protected void PropertyChanged(string property_name);
+	void PropertyChanged(string property_name);
 	
 	// Called every time an observable collection is changed.
 	// Override this when you want to have an event AFTER collection is changed
-	protected void CollectionChanged(string collection_name, CollectionChangedEventArgs args);
+	void CollectionChanged(string collection_name, CollectionChangedEventArgs args);
 	
-
 	
 	
 	private int LoadDataBindings(Widget w, out ViewBindingHashMap binding_map)
@@ -115,7 +114,7 @@ class Controller: Managed
 		ViewBinding view_binding;
 		w.GetScript(view_binding);
 		
-		if (view_binding && view_binding.Type() == ViewBinding) {
+		if (view_binding && (view_binding.IsInherited(ViewBinding))) {
 			binding_map.InsertView(view_binding.GetBindingName(), view_binding);
 			view_binding.SetController(this);
 		}

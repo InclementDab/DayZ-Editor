@@ -36,6 +36,8 @@ class DataBindingShowcaseController: Controller
 	
 	override void PropertyChanged(string property_name)
 	{
+		Print(RadioButtonGroup);
+		
 		if (property_name == "WindowTextToggleValue") {
 			WindowText = !WindowText;
 			NotifyPropertyChanged("WindowText");

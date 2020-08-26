@@ -205,6 +205,7 @@ FrameWidgetClass WindowFrame {
        scriptclass "RadioButton"
        {
         ScriptParamsClass {
+         Two_Way_Binding 0
          Group_Name "RadioButtonGroup"
          Button_ID 5
         }
