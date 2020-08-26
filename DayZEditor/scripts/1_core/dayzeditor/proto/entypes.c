@@ -12,7 +12,7 @@ enum NotifyCollectionChangedAction {
 // 1: Collection Changed Action
 // 2: Changed Index
 // 3: Changed Value
-typedef Param4<Class, int, int, Param> CollectionChangedEventArgs;
+typedef Param4<Class, int, int, ref Param> CollectionChangedEventArgs;
 
 
 

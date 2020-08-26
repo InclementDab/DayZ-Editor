@@ -60,6 +60,7 @@ class TypeConverter
 	string GetString();
 	vector GetVector();
 	Widget GetWidget();
+	Param GetParam();
 	
 	void SetBool(bool value);
 	void SetInt(int value);
@@ -67,15 +68,33 @@ class TypeConverter
 	void SetString(string value);
 	void SetVector(vector value);
 	void SetWidget(Widget value);
+	void SetParam(Param value);
 	
 	void SetToController(Class context, string name, int index);
 	void GetFromController(Class context, string name, int index);
 }
 
+
 class TypeConversionTemplate<Class T>: TypeConverter
 {
 	protected T m_Value;
 	
+	void SetData(T value) {
+		EditorLog.Trace("TypeConversionTemplate::SetData");
+		m_Value = value;
+	}
+	
+	T GetData() {
+		EditorLog.Trace("TypeConversionTemplate::GetData");
+		return m_Value;
+	}
+	
+	override void SetParam(Param value) {
+		EditorLog.Trace("TypeConversionTemplate::SetParam");
+		m_Value = Param1<T>.Cast(value).param1;
+		Print(m_Value);
+	}
+			
 	override typename GetType() {
 		return T;
 	}

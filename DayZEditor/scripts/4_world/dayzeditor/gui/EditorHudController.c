@@ -24,7 +24,7 @@ class EditorHudController: Controller
 	//ref TextListboxWidgetData DebugActionStackListbox;
 	ref ObservableCollection<Widget> LeftbarSpacer;
 	ref ObservableCollection<Widget> RightbarSpacer;
-	ref ObservableCollection<string> BrushTypeBox;
+	ref ObservableCollection<ref EditorBrushData> BrushTypeBox;
 	ref ObservableCollection<string> DebugActionStackListbox;
 	
 	//ref XComboBoxWidgetData BrushTypeBox;
@@ -39,7 +39,7 @@ class EditorHudController: Controller
 		super.OnWidgetScriptInit(w);
 		
 		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
-		BrushTypeBox				= new ObservableCollection<string>("BrushTypeBox", this);
+		BrushTypeBox				= new ObservableCollection<ref EditorBrushData>("BrushTypeBox", this);
 		LeftbarSpacer 				= new ObservableCollection<Widget>("LeftbarSpacer", this);
 		RightbarSpacer 				= new ObservableCollection<Widget>("RightbarSpacer", this);
 		

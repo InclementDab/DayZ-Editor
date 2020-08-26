@@ -16,7 +16,7 @@ class DataBindingShowcaseController: Controller
 	
 	int RadioButtons = 8;
 	
-	ref ObservableCollection<Widget> WindowListWidgets;
+	ref ObservableCollection<ref EditorBrushData> WindowListWidgets;
 	
 	void DataBindingShowcaseController()
 	{
@@ -28,6 +28,12 @@ class DataBindingShowcaseController: Controller
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
+		WindowListWidgets = new ObservableCollection<ref EditorBrushData>("WindowListWidgets", this);
+		
+		ref EditorBrushData data = new EditorBrushData();
+		data.Name = "Test";
+		WindowListWidgets.Insert(data);
+		
 	}
 	
 	override void PropertyChanged(string property_name)

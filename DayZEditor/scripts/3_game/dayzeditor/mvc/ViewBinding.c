@@ -36,7 +36,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		// Updates the view on first load
 		if (m_PropertyDataConverter) {
 			OnPropertyChanged();
-			
 		} else {
 			EditorLog.Warning(string.Format("[%1] Data Converter not found!", m_LayoutRoot.GetName()));
 		}
@@ -91,6 +90,11 @@ class ViewBinding: ScriptedWidgetEventHandler
 		if (!Two_Way_Binding || !m_WidgetController.CanTwoWayBind()) 
 			return;
 		
+		if (!m_PropertyDataConverter) {
+			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
+			return;
+		}
+		
 		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 		
 		m_WidgetController.GetData(m_PropertyDataConverter);
@@ -99,7 +103,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	}
 	
 	
-	void OnCollectionChanged(CollectionChangedEventArgs args)
+	void OnCollectionChanged(ref CollectionChangedEventArgs args)
 	{
 		EditorLog.Trace("ViewBinding::OnCollectionChanged " + Binding_Name);
 		
@@ -119,24 +123,24 @@ class ViewBinding: ScriptedWidgetEventHandler
 		}
 
 		EditorLog.Debug(string.Format("[%1] Updating Collection View...", m_LayoutRoot.Type()));
-	
-
+			
+		// Anonymouse Data Setter
+		m_PropertyDataConverter.SetParam(args.param4);
+				
 		switch (args.param2) {
+						
 			
 			case NotifyCollectionChangedAction.Add: {
-				SetConverterData(m_PropertyDataConverter, args.param4);
 				m_WidgetController.InsertData(args.param3, m_PropertyDataConverter);
 				break;
 			}
 			
 			case NotifyCollectionChangedAction.Remove: {
-				SetConverterData(m_PropertyDataConverter, args.param4);
 				m_WidgetController.RemoveData(args.param3, m_PropertyDataConverter);
 				break;
 			}
 			
 			case NotifyCollectionChangedAction.Set: {
-				SetConverterData(m_PropertyDataConverter, args.param4);
 				m_WidgetController.ReplaceData(args.param3, m_PropertyDataConverter);
 				break;
 			}
@@ -152,40 +156,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 				break;
 			}
 		}
-	}
-	
-	private static bool SetConverterData(out notnull TypeConverter data_converter, Param data)
-	{
-		switch (data_converter.GetType()) {
-			
-			case bool: {
-				data_converter.SetBool(Param1<bool>.Cast(data).param1);
-				break;
-			}
-			
-			case int:
-			case float: {
-				data_converter.SetFloat(Param1<float>.Cast(data).param1);
-				break;
-			}
-			
-			case string: {
-				data_converter.SetString(Param1<string>.Cast(data).param1);
-				break;
-			}
-			
-			case Widget: {
-				data_converter.SetWidget(Param1<Widget>.Cast(data).param1);
-				break;
-			}
-			
-			default: {
-				MVC.UnsupportedTypeError(data_converter.GetType());
-				return false;
-			}	
-		}
-		
-		return true;
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)

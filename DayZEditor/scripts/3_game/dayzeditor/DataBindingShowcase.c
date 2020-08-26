@@ -10,8 +10,6 @@ modded class MVC
 	}
 }
 
-
-
 typedef string EquationEvaluater;
 class EquationEvaluater: string
 {

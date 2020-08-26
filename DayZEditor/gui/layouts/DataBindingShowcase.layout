@@ -129,7 +129,7 @@ FrameWidgetClass WindowFrame {
       }
      }
     }
-    WrapSpacerWidgetClass WindowListWidgets {
+    XComboBoxWidgetClass WindowListWidgets {
      visible 1
      ignorepointer 1
      position 0 0

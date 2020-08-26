@@ -7,8 +7,7 @@ class Observable
 	protected string m_VariableName;
 	protected Controller m_Controller;
 	protected typename m_Type;
-	void Observable(string variable_name, Controller parent_controller)
-	{
+	void Observable(string variable_name, Controller parent_controller)	{
 		m_VariableName = variable_name; m_Controller = parent_controller;
 	}
 	
