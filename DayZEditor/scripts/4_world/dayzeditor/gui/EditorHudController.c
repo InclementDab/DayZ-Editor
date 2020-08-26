@@ -180,27 +180,19 @@ class EditorHudController: Controller
 	}
 	
 	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
-		if (button == 0) {
 
-#ifndef COMPONENT_SYSTEM
-			
-			if (GetEditor().IsPlacing()) {
-				GetEditor().PlaceObject();
-				return true;
-			}
-			
-			GetEditor().ClearSelection();
-#endif
+	
+	
+	
+	void UndoButtonExecute(ButtonCommandArgs args) 
+	{
+		EditorLog.Trace("EditorHudController::UndoButtonExecute");
+		if (args.param3) {
+			args.param1.SetColor(COLOR_BLUE);
+		} else {
+			args.param1.SetColor(COLOR_DEFAULT);
 		}
-		
-		return super.OnMouseButtonDown(w, x, y, button);
 	}
-	
-	
-	
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
@@ -253,6 +245,24 @@ class EditorHudController: Controller
 			
 		return false;
 	}	
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
+		if (button != 0) return false;
+
+#ifndef COMPONENT_SYSTEM
+		if (GetEditor().IsPlacing()) {
+			GetEditor().PlaceObject();
+			return true;
+		}
+		
+		GetEditor().ClearSelection();
+#endif
+		
+		
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
 }
 
 

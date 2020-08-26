@@ -1116,11 +1116,13 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           draggable 0
            image0 "set:dayz_editor_gui image:snap_icon"
            mode blend
            "src alpha" 1
            "no wrap" 1
            stretch 1
+           filter 1
           }
          }
          {
