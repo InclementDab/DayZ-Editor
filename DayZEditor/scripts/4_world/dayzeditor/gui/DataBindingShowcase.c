@@ -28,9 +28,6 @@ class DataBindingShowcaseController: Controller
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
-	
-		WindowText = true;
-				
 	}
 	
 	override void PropertyChanged(string property_name)

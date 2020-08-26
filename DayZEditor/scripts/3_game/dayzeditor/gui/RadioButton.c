@@ -35,8 +35,6 @@ class RadioButtonGroup: ViewBinding
 		
 		// Load Child RadioButtons
 		EditorLog.Info(string.Format("Loaded %1 Radio Buttons", LoadChildButtons(m_LayoutRoot, m_RadioButtonHashMap)));
-		
-		
 	}
 	
 	override void UpdateModel()
@@ -79,13 +77,13 @@ class RadioButtonGroup: ViewBinding
 			radio_button.SetGroup(this);
 		}
 		
-		if (w.GetChildren() != null) {
+		if (w.GetChildren() != null)
 			LoadChildButtons(w.GetChildren(), button_hashmap);
-		} 
 		
-		if (w.GetSibling() != null) {
+		
+		if (w.GetSibling() != null)
 			LoadChildButtons(w.GetSibling(), button_hashmap);
-		}
+	
 		
 		return button_hashmap.Count();
 	}

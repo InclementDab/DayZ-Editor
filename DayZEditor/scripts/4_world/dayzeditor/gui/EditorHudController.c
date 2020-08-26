@@ -46,6 +46,7 @@ class EditorHudController: Controller
 		// Reload Placeables
 		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
 		
+		
 		// Load Brushes
 		m_EditorBrushTypes = new EditorBrushDataSet();
 		m_CustomBrushList = new map<string, typename>();
@@ -60,7 +61,13 @@ class EditorHudController: Controller
 	void ReloadBrushes(string filename)
 	{
 		EditorLog.Trace("EditorHudController::ReloadBrushes");
-		XMLEditorBrushes xml_brushes = new XMLEditorBrushes();
+		XMLEditorBrushes xml_brushes(BrushTypeBox);
+		
+		if (!FileExist(filename)) {
+			EditorLog.Error("File not found: " + filename);
+			return;
+		}
+	
 		GetXMLApi().Read(filename, xml_brushes);
 	}
 	
@@ -71,9 +78,9 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::SetBrushTypes");
 		m_EditorBrushTypes = brush_types;
-/*
+
 		foreach (EditorBrushData brush: m_EditorBrushTypes)
-			BrushTypeBox.Insert(brush.Name);*/		
+			BrushTypeBox.Insert(brush.Name);	
 	}
 		
 	EditorBrush GetBrush(string brush_name)

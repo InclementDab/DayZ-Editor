@@ -26,6 +26,9 @@ static WidgetController GetWidgetController(Widget widget)
 		case GridSpacerWidget:
 		case WrapSpacerWidget: 
 			return new SpacerWidgetController(widget);
+		
+		case XComboBoxWidget:
+			return new XComboBoxWidgetController(widget);
 	}
 	
 	
@@ -220,6 +223,17 @@ class SpacerWidgetController: WidgetController
 		MultilineEditBoxWidget w = MultilineEditBoxWidget.Cast(m_Widget);
 		for (int i = 0; i < w.GetLinesCount(); i++)
 			w.SetLine(i, string.Empty);		
+	}
+}
+
+class XComboBoxWidgetController: WidgetController
+{
+	override void InsertData(int index, TypeConverter type_converter) {
+		XComboBoxWidget.Cast(m_Widget).AddItem(type_converter.GetString());
+	}
+	
+	override void RemoveData(int index, TypeConverter type_converter) {
+		XComboBoxWidget.Cast(m_Widget).RemoveItem(index);
 	}
 }
 

@@ -1143,9 +1143,13 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         scriptclass ""
+         scriptclass "ViewBinding"
          style Default
          font "gui/fonts/metron28"
+         {
+          ScriptParamsClass {
+          }
+         }
         }
         FrameWidgetClass SimcityRadiusFrame {
          ignorepointer 1

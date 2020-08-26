@@ -286,13 +286,13 @@ class EditorMapGroupProto: XMLCallback
 // abstract to EditorXMLCallback
 class XMLEditorBrushes: XMLCallback
 {
-	private ref EditorBrushDataSet m_Data;
+	private ObservableCollection<string> m_Data;
 	
 
-	void XMLEditorBrushes()
+	void XMLEditorBrushes(ObservableCollection<string> data) 
 	{
 		EditorLog.Trace("XMLEditorBrushes");
-		m_Data = new EditorBrushDataSet();
+		m_Data = data;
 	}
 		
 	override void OnStart(ref XMLDocument document)
@@ -347,14 +347,10 @@ class XMLEditorBrushes: XMLCallback
 				}
 				
 				brush_settings.InsertPlaceableObject(object_type, object_frequency);
-				
-				
 			}
-				
-			m_Data.Insert(brush_settings.Name, brush_settings);
+							
+			m_Data.Insert(brush_settings.Name); // brush_settings
 		}
-		
-		GetEditorHudController().SetBrushTypes(m_Data);
 	}
 	
 	override void OnFailure(ref XMLDocument document)
@@ -374,10 +370,4 @@ class EditorXMLManager
 		
 		//return group_proto.GetSuccess();
 	}
-	
-	static void LoadBrushes(out ref XMLEditorBrushes brush_set, string filename)
-	{
-		GetXMLApi().Read(filename, brush_set);
-	}
-
 }
