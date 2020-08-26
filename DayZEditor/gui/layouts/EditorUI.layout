@@ -312,6 +312,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         scriptclass "RadioButtonGroup"
          style Outline
          Padding 0
          Margin 0
@@ -327,7 +328,7 @@ FrameWidgetClass EditorMainFrame {
            hexactsize 1
            vexactsize 1
            draggable 0
-           scriptclass "ViewBinding"
+           scriptclass "RadioButton"
            switch normal
            {
             ImageWidgetClass CategorySelectBuilding {
@@ -349,7 +350,6 @@ FrameWidgetClass EditorMainFrame {
            }
            {
             ScriptParamsClass {
-             Two_Way_Binding 1
             }
            }
           }
@@ -360,7 +360,7 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           scriptclass "ViewBinding"
+           scriptclass "RadioButton"
            switch normal
            {
             ImageWidgetClass CategorySelectVehicle {
@@ -382,7 +382,7 @@ FrameWidgetClass EditorMainFrame {
            }
            {
             ScriptParamsClass {
-             Two_Way_Binding 1
+             Button_ID 1
             }
            }
           }
@@ -395,7 +395,7 @@ FrameWidgetClass EditorMainFrame {
            hexactsize 1
            vexactsize 1
            draggable 0
-           scriptclass "ViewBinding"
+           scriptclass "RadioButton"
            switch normal
            {
             ImageWidgetClass CategorySelectEntity {
@@ -418,7 +418,7 @@ FrameWidgetClass EditorMainFrame {
            }
            {
             ScriptParamsClass {
-             Two_Way_Binding 1
+             Button_ID 2
             }
            }
           }
@@ -430,7 +430,7 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           scriptclass "ViewBinding"
+           scriptclass "RadioButton"
            switch normal
            {
             ImageWidgetClass CategorySelectHuman {
@@ -451,9 +451,14 @@ FrameWidgetClass EditorMainFrame {
            }
            {
             ScriptParamsClass {
-             Two_Way_Binding 1
+             Button_ID 3
             }
            }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "PlaceableCategorySelection"
           }
          }
         }

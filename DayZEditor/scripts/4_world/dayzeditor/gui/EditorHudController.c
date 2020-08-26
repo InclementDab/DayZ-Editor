@@ -12,10 +12,7 @@ class EditorHudController: Controller
 	string DebugText4;
 	string DebugText5;
 	
-	bool BuildingSelect = true;
-	bool VehicleSelect;
-	bool EntitySelect;
-	bool HumanSelect;
+	int PlaceableCategorySelection = 0;
 
 	
 	bool LeftbarHide;
@@ -136,57 +133,20 @@ class EditorHudController: Controller
 		return j;
 	}
 	
-	void UpdatePlaceableItems(PlaceableObjectCategory category)
-	{
-		EditorLog.Trace("EditorUIController::UpdatePlaceableItems");
-		/*
-		for (int i = 0; i < LeftbarSpacer.Count(); i++) {
-			Widget list_item = LeftbarSpacer.Get(i);
-			EditorPlaceableListItem item;
-			list_item.GetUserData(item);
-			list_item.Show(item.GetData().GetCategory() == category);
-		}		*/
-	}
-	
-		
+
 
 	override void PropertyChanged(string property_name)
 	{
+		if (property_name == "PlaceableCategorySelection") {
+			
+			for (int i = 0; i < LeftbarSpacer.Count(); i++) {
+				Widget list_item = LeftbarSpacer.Get(i);
+				EditorPlaceableListItem item;
+				list_item.GetUserData(item);
+				list_item.Show(item.GetData().GetCategory() == PlaceableCategorySelection);
+			}
+		}
 		
-		switch (property_name) {
-			
-			case "BuildingSelect": {
-				VehicleSelect = false; EntitySelect = false; HumanSelect = false;
-				NotifyPropertyChanged("VehicleSelect");
-				NotifyPropertyChanged("EntitySelect");
-				NotifyPropertyChanged("HumanSelect");
-				break;
-			}
-			
-			case "VehicleSelect": {
-				BuildingSelect = false; EntitySelect = false; HumanSelect = false;
-				NotifyPropertyChanged("BuildingSelect");
-				NotifyPropertyChanged("EntitySelect");
-				NotifyPropertyChanged("HumanSelect");
-				break;
-			}
-			
-			case "EntitySelect": {
-				BuildingSelect = false; VehicleSelect = false; HumanSelect = false;
-				NotifyPropertyChanged("BuildingSelect");
-				NotifyPropertyChanged("VehicleSelect");
-				NotifyPropertyChanged("HumanSelect");
-				break;
-			}
-			
-			case "HumanSelect": {
-				BuildingSelect = false; VehicleSelect = false; EntitySelect = false;
-				NotifyPropertyChanged("BuildingSelect");
-				NotifyPropertyChanged("VehicleSelect");
-				NotifyPropertyChanged("EntitySelect");
-				break;
-			}			
-		}		
 	}
 }
 
