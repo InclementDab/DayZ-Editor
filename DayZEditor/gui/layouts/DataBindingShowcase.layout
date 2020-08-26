@@ -67,7 +67,7 @@ FrameWidgetClass WindowFrame {
      }
     }
     SliderWidgetClass WindowSlider {
-     visible 0
+     visible 1
      position 0 0
      size 0.8 50
      halign center_ref

@@ -24,6 +24,8 @@ class DataBindingShowcaseController: Controller
 		WindowListWidgets.Remove(1);
 		WindowListWidgets.Insert("Test3");
 		
+		Print(__LINE__);
+		Print(__FILE__);
 		
 	}
 	

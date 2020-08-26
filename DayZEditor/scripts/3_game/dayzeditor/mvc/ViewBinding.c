@@ -28,16 +28,22 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Trace("ViewBinding::SetController");
 		m_Controller = controller;
 		
-		m_PropertyDataType = m_Controller.GetPropertyType(Binding_Name);
-		if (m_PropertyDataType.IsInherited(Observable))
-			m_PropertyDataType = Observable.Cast(m_PropertyDataType.Spawn()).GetType();
 		
-		m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyDataType);
-		m_WidgetDataType = GetWidgetDataType(m_LayoutRoot.Type());
+		
+		m_PropertyDataType = m_Controller.GetPropertyType(Binding_Name);
+		
+		if (m_PropertyDataType.IsInherited(Observable)) {
+			m_PropertyDataConverter = MVC.GetTypeConversion(Observable.Cast(m_PropertyDataType.Spawn()).GetType());
+		} else {
+			m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyDataType);
+		}
+		
+		
 		
 		// Updates the view on first load
-		if (m_PropertyDataConverter) {			
-			OnPropertyChanged();
+		if (m_PropertyDataConverter) {
+			//OnPropertyChanged();
+			
 		} else {
 			EditorLog.Warning(string.Format("[%1] Data Converter not found!", m_LayoutRoot.GetName()));
 		}
@@ -55,6 +61,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 		if (Two_Way_Binding && !ViewBinding.SupportsTwoWayBinding(m_LayoutRoot.Type())) {
 			MVC.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
 		}
+		
+		m_WidgetDataType = GetWidgetDataType(m_LayoutRoot.Type());
 		
 		m_LayoutRoot.SetHandler(this);
 	}
@@ -82,8 +90,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
 		
 		
-		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
-		if (widget_setter == string.Empty) {
+		string widget_setter;
+		if (!GetWidgetSetter(m_LayoutRoot.Type(), widget_setter)) {
 			return;
 		}
 		
@@ -105,8 +113,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 				break;
 			}
 			
-			case Observable: {
-				// Reload all data here
+			case Widget: {
+				g_Script.CallFunction(m_LayoutRoot, widget_setter, null, m_PropertyDataConverter.GetWidget());
 				break;
 			}
 						
@@ -139,27 +147,20 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
 		EditorLog.Debug(string.Format("[%1] Updating Collection View...", m_LayoutRoot.Type()));
-		
-		string widget_setter = GetWidgetSetter(m_LayoutRoot.Type());
-		if (widget_setter == string.Empty) {
+
+		string widget_setter;
+		if (!GetWidgetSetter(m_LayoutRoot.Type(), widget_setter)) {
 			return;
 		}
-		
-		
+		Print(widget_setter);
 		switch (args.param2) {
 			
-			case NotifyCollectionChangedAction.Add: {
-				g_Script.CallFunctionParams(m_LayoutRoot, widget_setter, null, args.param3);
-				break;
-			}
-			
-			
+			case NotifyCollectionChangedAction.Add:
 			case NotifyCollectionChangedAction.Remove: {
 				g_Script.CallFunctionParams(m_LayoutRoot, widget_setter, null, args.param3);
 				break;
 			}
-			
-			
+						
 			default: {
 				MVC.ErrorDialog(string.Format("Unsupported CollectionChangedAction: %1", args.param2));
 			}
@@ -176,9 +177,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Trace("ViewBinding::UpdateModel");
 		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 		
-		string widget_getter = GetWidgetGetter(m_LayoutRoot.Type());
-		if (widget_getter == string.Empty) {
-			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
+		string widget_getter;
+		if (!GetWidgetGetter(m_LayoutRoot.Type(), widget_getter)) {
 			return;
 		}
 				
@@ -202,11 +202,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 				//string _string = "";
 				//g_Script.CallFunction(m_LayoutRoot, widget_getter, _string, null);
 				m_PropertyDataConverter.SetString(EditBoxWidget.Cast(m_LayoutRoot).GetText());
-				break;
-			}
-			
-			case Observable: {
-				// Reload all data here
 				break;
 			}
 			
@@ -248,8 +243,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 		return super.OnChange(w, x, y, finished);
 	}
 	
-		
-	static string GetWidgetSetter(typename widget_type)
+	
+	static bool GetWidgetSetter(typename widget_type, out string widget_setter)
 	{
 		switch (widget_type) {
 			
@@ -262,29 +257,33 @@ class ViewBinding: ScriptedWidgetEventHandler
 			case SpacerWidget:
 				return "AddChild";*/
 			
-
-			
 			case ButtonWidget:
-				return "SetState";
+				widget_setter = "SetState";
+				break;
 			
 			case CheckBoxWidget:
-				return "SetChecked";
+				widget_setter = "SetChecked";
+				break;
 			
 			case SliderWidget:			
 			case ProgressBarWidget:
 			case SimpleProgressBarWidget:
-				return "SetCurrent";
+				widget_setter = "SetCurrent";
+				break;
 			
 			case TextWidget:
 			case EditBoxWidget:
 			case RichTextWidget:
-				return "SetText";
+				widget_setter = "SetText";
+				break;
 			
 			case HtmlWidget:
-				return "LoadFile";
+				widget_setter = "LoadFile";
+				break;
 			
 			case MultilineEditBoxWidget:
-				return "SetLine";
+				widget_setter = "SetLine";
+				break;
 			
 			/* Unsupported
 			case ImageWidget:
@@ -297,20 +296,23 @@ class ViewBinding: ScriptedWidgetEventHandler
 				return TStringArray;*/
 			
 			case ItemPreviewWidget:
-				return "SetItem";
+				widget_setter = "SetItem";
+				break;
 			
 			case PlayerPreviewWidget:
-				return "SetPlayer";
+				widget_setter = "SetPlayer";
+				break;
 			
 			default: {
 				MVC.ErrorDialog(string.Format("Unsupported Set Type Specified %1", widget_type));
+				return false;
 			}
 		}
 		
-		return string.Empty;
+		return true;
 	}
 	
-	static string GetWidgetGetter(typename widget_type)
+	static bool GetWidgetGetter(typename widget_type, out string widget_getter)
 	{
 		switch (widget_type) {
 			
@@ -326,18 +328,22 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 			
 			case ButtonWidget:
-				return "GetState";
+				widget_getter = "GetState";
+				break;
 			
 			case CheckBoxWidget:
-				return "IsChecked";
+				widget_getter = "IsChecked";
+				break;
 			
 			case SliderWidget:			
 			case ProgressBarWidget:
 			case SimpleProgressBarWidget:
-				return "GetCurrent";
+				widget_getter = "GetCurrent";
+				break;
 			
 			case EditBoxWidget:
-				return "GetText";
+				widget_getter = "GetText";
+				break;
 			
 			
 			/* Unsupported
@@ -351,17 +357,20 @@ class ViewBinding: ScriptedWidgetEventHandler
 				return TStringArray;*/
 			
 			case ItemPreviewWidget:
-				return "GetItem";
+				widget_getter = "GetItem";
+				break;
 			
 			case PlayerPreviewWidget:
-				return "GetDummyPlayer";
+				widget_getter = "GetDummyPlayer";
+				break;
 			
 			default: {
 				MVC.ErrorDialog(string.Format("Unsupported Get Type Specified %1", widget_type));
+				return false;
 			}
 		}
 		
-		return string.Empty;
+		return true;
 	}
 	
 	
@@ -376,7 +385,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			case ScrollWidget:
 			case SpacerWidget:
 			//case Widget: // this might be a weird one
-				return Observable;
+				return Widget;
 			
 
 			case ButtonWidget:
@@ -393,13 +402,14 @@ class ViewBinding: ScriptedWidgetEventHandler
 			case EditBoxWidget:
 			case HtmlWidget:
 			case VideoWidget:
-				return string;
-			
 			case RichTextWidget:
 			case MultilineTextWidget:
 			case MultilineEditBoxWidget:
 			case XComboBoxWidget:
-				return Observable;
+				return string;
+			
+
+			
 			
 			case ItemPreviewWidget:
 				return EntityAI;
