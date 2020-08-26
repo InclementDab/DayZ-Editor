@@ -14,7 +14,7 @@ class DataBindingShowcaseController: Controller
 	
 	bool WindowTextToggleValue;
 	
-	int RadioButtonGroup;
+	int RadioButtons;
 	
 	ref ObservableCollection<Widget> WindowListWidgets;
 	
@@ -29,14 +29,13 @@ class DataBindingShowcaseController: Controller
 	{
 		super.OnWidgetScriptInit(w);
 	
-		
 		WindowText = true;
 				
 	}
 	
 	override void PropertyChanged(string property_name)
 	{
-		Print(RadioButtonGroup);
+		Print(RadioButtons);
 		
 		if (property_name == "WindowTextToggleValue") {
 			WindowText = !WindowText;

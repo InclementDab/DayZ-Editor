@@ -129,8 +129,6 @@ class Controller: Managed
 		
 		return binding_map.Count();
 	}
-	
-
 }
 
 

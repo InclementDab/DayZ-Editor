@@ -77,7 +77,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		if (!m_PropertyDataConverter) {
 			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
-			return;			
+			return;
 		}
 				
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);

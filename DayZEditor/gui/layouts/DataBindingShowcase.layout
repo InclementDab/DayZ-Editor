@@ -144,6 +144,7 @@ FrameWidgetClass WindowFrame {
      }
     }
     WrapSpacerWidgetClass RadioButtonGroup {
+     visible 1
      ignorepointer 1
      position 0 0
      size 250 50
@@ -153,7 +154,7 @@ FrameWidgetClass WindowFrame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scriptclass ""
+     scriptclass "RadioButtonGroup"
      Padding 5
      Margin 5
      content_valign center
@@ -172,8 +173,6 @@ FrameWidgetClass WindowFrame {
        scriptclass "RadioButton"
        {
         ScriptParamsClass {
-         Group_Name "RadioButtonGroup"
-         Button_ID 1
         }
        }
       }
@@ -188,8 +187,7 @@ FrameWidgetClass WindowFrame {
        scriptclass "RadioButton"
        {
         ScriptParamsClass {
-         Group_Name "RadioButtonGroup"
-         Button_ID 2
+         Button_ID 1
         }
        }
       }
@@ -205,11 +203,15 @@ FrameWidgetClass WindowFrame {
        scriptclass "RadioButton"
        {
         ScriptParamsClass {
-         Two_Way_Binding 0
-         Group_Name "RadioButtonGroup"
          Button_ID 5
         }
        }
+      }
+     }
+     {
+      ScriptParamsClass {
+       Binding_Name "RadioButtons"
+       Two_Way_Binding 0
       }
      }
     }
