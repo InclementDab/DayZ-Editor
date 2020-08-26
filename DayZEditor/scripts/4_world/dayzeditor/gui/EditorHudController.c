@@ -27,10 +27,15 @@ class EditorHudController: Controller
 	//ref TextListboxWidgetData DebugActionStackListbox;
 	ref ObservableCollection<Widget> LeftbarSpacer;
 	ref ObservableCollection<Widget> RightbarSpacer;
-	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
+	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 	ref ObservableCollection<string> DebugActionStackListbox;
 	
-	ref XComboBoxWidget BrushTypeBox;
+	
+	// View Properties
+	protected Widget LeftbarFrame;
+	protected Widget RightbarFrame;
+	protected XComboBoxWidget BrushTypeBox;
+	
 	
 	void EditorHudController()
 	{
@@ -45,6 +50,7 @@ class EditorHudController: Controller
 		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
 		LeftbarSpacer 				= new ObservableCollection<Widget>("LeftbarSpacer", this);
 		RightbarSpacer 				= new ObservableCollection<Widget>("RightbarSpacer", this);
+		BrushTypeBoxData 			= new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 		
 		// Reload Placeables
 		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
@@ -129,8 +135,6 @@ class EditorHudController: Controller
 				}
 				break;
 			}
-
-
 		}
 	}
 	
@@ -146,10 +150,10 @@ class EditorHudController: Controller
 	}
 	
 	
-	bool BrushToggleExecute(ButtonCommandArgs args) 
+	void BrushToggleExecute(ButtonCommandArgs args) 
 	{
+		EditorLog.Trace("EditorHudController::BrushToggleExecute");
 		SelectBrush(args.param3);
-		return false;
 	}
 	
 	bool CanBrushToggleExecute() 
@@ -158,10 +162,22 @@ class EditorHudController: Controller
 		return (BrushTypeBoxData.Count() > 0);
 	}
 	
-	bool BrushTypeBoxExecute(XComboBoxCommandArgs args)
+	void BrushTypeBoxExecute(XComboBoxCommandArgs args)
 	{
+		EditorLog.Trace("EditorHudController::BrushTypeBoxExecute");
 		SelectBrush(BrushToggleButton);
-		return false;
+	}
+	
+	void ToggleLeftBar(ButtonCommandArgs args) {
+		float x, y;
+		LeftbarFrame.GetPos(x, y);
+		LeftbarFrame.SetPos(-300 * args.param3, y);
+	}
+	
+	void ToggleRightBar(ButtonCommandArgs args) {
+		float x, y;
+		RightbarFrame.GetPos(x, y);
+		RightbarFrame.SetPos(-300 * args.param3, y);
 	}
 }
 

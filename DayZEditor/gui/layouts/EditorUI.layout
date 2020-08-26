@@ -253,6 +253,7 @@ FrameWidgetClass EditorMainFrame {
   }
   CanvasWidgetClass EditorCanvas {
    ignorepointer 1
+   position 44.3571 -123.429
    size 1 1
    halign center_ref
    valign center_ref
@@ -276,6 +277,7 @@ FrameWidgetClass EditorMainFrame {
    vexactsize 0
    priority 240
    style rover_sim_colorable
+   "no focus" 0
    {
     WrapSpacerWidgetClass LeftbarFrameWrapSpacer {
      ignorepointer 1
@@ -592,7 +594,7 @@ FrameWidgetClass EditorMainFrame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scriptclass ""
+     scriptclass "ViewBinding"
      style DayZDefaultButtonNoBorder
      switch toggle
      {
@@ -608,6 +610,11 @@ FrameWidgetClass EditorMainFrame {
        imageTexture "{60621763B985C925}dta/gui/gui/imagesets/dayz_gui@2x.edds"
        mode blend
        "src alpha" 1
+      }
+     }
+     {
+      ScriptParamsClass {
+       Command_Execute "ToggleLeftBar"
       }
      }
     }
@@ -690,7 +697,7 @@ FrameWidgetClass EditorMainFrame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scriptclass ""
+     scriptclass "ViewBinding"
      style DayZDefaultButtonNoBorder
      switch toggle
      {
@@ -713,6 +720,11 @@ FrameWidgetClass EditorMainFrame {
        stretch 1
        "flip u" 0
        "flip v" 0
+      }
+     }
+     {
+      ScriptParamsClass {
+       Command_Execute "ToggleRightBar"
       }
      }
     }
@@ -1134,6 +1146,7 @@ FrameWidgetClass EditorMainFrame {
          vexactsize 1
          scriptclass "ViewBinding"
          style MainMenu
+         "no focus" 0
          text "Brush"
          font "gui/fonts/metron28"
          switch toggle
@@ -1160,6 +1173,7 @@ FrameWidgetClass EditorMainFrame {
           ScriptParamsClass {
            Binding_Name "BrushTypeBoxData"
            Command_Execute "BrushTypeBoxExecute"
+           Command_CanExecute " "
           }
          }
         }

@@ -13,9 +13,7 @@ class EditorHud: Hud
 	protected ref EditorMap 	m_EditorMap;
 	protected EditBoxWidget 	m_LeftbarSearchBar;	
 	
-	// View Properties
-	protected Widget m_LeftbarFrame;
-	protected Widget m_RightbarFrame;
+
 	
 	void EditorHud()
 	{
@@ -42,11 +40,7 @@ class EditorHud: Hud
 		// why aint we usin scriptclass?
 		m_EditorMapWidget.GetScript(m_EditorMap);
 		m_EditorMapWidget.SetMapPos(GetGame().GetCurrentCameraPosition());
-		
-		// View Properties
-		m_LeftbarFrame			= m_LayoutRoot.FindAnyWidget("LeftbarFrame");
-		m_RightbarFrame			= m_LayoutRoot.FindAnyWidget("RightbarFrame");
-		
+				
 		EditorLog.Trace("EditorHud::Init::Finished");
 	}
 	
@@ -122,14 +116,6 @@ class EditorHud: Hud
 		return GetGame().GetUIManager().IsModalVisible();
 	}
 	
-	// ICommand o.O
-	void ShowLeftBar(bool state) {
-		m_LeftbarFrame.SetPos(-300 * state, 32);
-	}
-	
-	void ShowRightBar(bool state) {
-		m_RightbarFrame.SetPos(-300 * state, 32);
-	}
 	
 	/*
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
