@@ -13,11 +13,10 @@ class ViewBinding: ScriptedWidgetEventHandler
 	string GetBindingName() { return Binding_Name; }
 	int GetBindingIndex() { return Binding_Index; }
 	
-	private ref WidgetController m_WidgetController;
-	private ref TypeConverter m_PropertyDataConverter;
-	private typename m_PropertyDataType;
-	
-	private Controller m_Controller;
+	protected ref WidgetController m_WidgetController;
+	protected ref TypeConverter m_PropertyDataConverter;
+	protected typename m_PropertyDataType;
+	protected Controller m_Controller;
 	
 	void ViewBinding() { /*EditorLog.Trace("ViewBinding");*/ }
 	void ~ViewBinding() { /*EditorLog.Trace("~ViewBinding");*/ }

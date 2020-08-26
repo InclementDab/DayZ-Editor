@@ -143,6 +143,75 @@ FrameWidgetClass WindowFrame {
       }
      }
     }
+    WrapSpacerWidgetClass RadioButtonGroup {
+     ignorepointer 1
+     position 0 0
+     size 250 50
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass ""
+     Padding 5
+     Margin 5
+     content_valign center
+     {
+      CheckBoxWidgetClass RadioButton0 {
+       visible 1
+       position 0 0
+       size 50 50
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       draggable 0
+       scriptclass "RadioButton"
+       {
+        ScriptParamsClass {
+         Group_Name "RadioButtonGroup"
+         Button_ID 1
+        }
+       }
+      }
+      CheckBoxWidgetClass RadioButton1 {
+       size 50 50
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "RadioButton"
+       {
+        ScriptParamsClass {
+         Group_Name "RadioButtonGroup"
+         Button_ID 2
+        }
+       }
+      }
+      CheckBoxWidgetClass RadioButton2 {
+       visible 1
+       size 50 50
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "RadioButton"
+       {
+        ScriptParamsClass {
+         Group_Name "RadioButtonGroup"
+         Button_ID 5
+        }
+       }
+      }
+     }
+    }
    }
    {
     ScriptParamsClass {

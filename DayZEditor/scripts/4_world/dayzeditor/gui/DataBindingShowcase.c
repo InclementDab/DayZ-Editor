@@ -14,21 +14,21 @@ class DataBindingShowcaseController: Controller
 	
 	bool WindowTextToggleValue;
 	
+	int RadioButtonGroup;
+	
 	ref ObservableCollection<Widget> WindowListWidgets;
 	
 	void DataBindingShowcaseController()
 	{
+		EditorLog.Trace("DataBindingShowcaseController");
 		m_DataBindingShowcaseController = this;
 	}
 	
+
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
 	
-		WindowListWidgets = new ObservableCollection<Widget>("WindowListWidgets", this);
-		EditorListItem list_item = new EditorListItem();
-		list_item.SetText("REEEEEE");
-		WindowListWidgets.Insert(list_item.GetRoot());
 		
 		WindowText = true;
 				
