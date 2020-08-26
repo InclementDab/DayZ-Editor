@@ -198,8 +198,69 @@ class EditorHudController: Controller
 		
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
+	
+	
+	
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorUI::OnMouseEnter");
+		
+		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
+		switch (w.GetName()) {
+			
+			case "UndoButton":
+			case "RedoButton": {
+				icon.SetColor(COLOR_BLUE);
+				return true;
+			}
+			
+			case "MagnetButton": {
+				icon.SetColor(COLOR_CANDY);
+				return true;
+			}
+			
+			case "GroundButton": {
+				icon.SetColor(COLOR_APPLE);
+				return true;
+			}
+			
+			case "SnapButton": {
+				icon.SetColor(COLOR_JELLY);
+				return true;
+			}			
+		}
+		
+		return false;
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		EditorLog.Trace("EditorUI::OnMouseLeave");
+		
+		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
+		switch (w.GetName()) {
+			
+			case "UndoButton":
+			case "RedoButton":
+			case "MagnetButton":
+			case "GroundButton":
+			case "SnapButton": {
+				icon.SetColor(COLOR_DEFAULT);
+				return true;
+			}
+		}
+			
+		return false;
+	}	
 }
 
+
+//static const int COLOR_BLUE 	= -13330213;
+static const int COLOR_CANDY 	= -1618884;
+static const int COLOR_APPLE 	= -9785268;
+static const int COLOR_JELLY 	= -1010901;
+static const int COLOR_DEFAULT 	= -1;
 
 
 

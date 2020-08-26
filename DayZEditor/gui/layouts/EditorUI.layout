@@ -1055,6 +1055,7 @@ FrameWidgetClass EditorMainFrame {
          }
          {
           ScriptParamsClass {
+           Two_Way_Binding 1
           }
          }
         }
@@ -1089,6 +1090,7 @@ FrameWidgetClass EditorMainFrame {
          }
          {
           ScriptParamsClass {
+           Two_Way_Binding 1
           }
          }
         }
@@ -1123,6 +1125,7 @@ FrameWidgetClass EditorMainFrame {
          }
          {
           ScriptParamsClass {
+           Two_Way_Binding 1
           }
          }
         }
