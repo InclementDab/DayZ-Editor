@@ -69,6 +69,11 @@ class DataBindingShowcaseController: Controller
 		return false;
 	}
 	
+	bool CanComboBoxChange()
+	{
+		return true;
+	}
+	
 
 }
 

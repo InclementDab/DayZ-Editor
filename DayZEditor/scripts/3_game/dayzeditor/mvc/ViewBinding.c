@@ -8,7 +8,9 @@ class ViewBinding: ScriptedWidgetEventHandler
 	protected reference string Binding_Name;
 	protected reference int Binding_Index;
 	protected reference bool Two_Way_Binding;
-	protected reference string Command;
+	protected reference string Command_Execute;
+	protected reference string Command_CanExecute;
+	
 	
 	Widget GetRoot() { return m_LayoutRoot; }
 	string GetBindingName() { return Binding_Name; }
@@ -68,7 +70,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 	void OnPropertyChanged()
 	{
 		EditorLog.Trace("ViewBinding::OnPropertyChanged " + Binding_Name);		
-						
+		UpdateCommand();
+		
 		if (!m_PropertyDataType) {
 			EditorLog.Warning(string.Format("Binding not found: %1", Binding_Name));
 			return;
@@ -206,15 +209,36 @@ class ViewBinding: ScriptedWidgetEventHandler
 	
 	private bool InvokeCommand(Param params)
 	{
-		if (Command == string.Empty) {
+		if (Command_Execute == string.Empty) {
 			return false;
 		}
 		
 		EditorLog.Trace("ViewBinding::InvokeCommand");
 		
 		bool result;
-		g_Script.CallFunction(m_Controller, Command, result, params);
+		g_Script.CallFunction(m_Controller, Command_Execute, result, params);
 		return result;
+	}
+	
+	private void UpdateCommand()
+	{
+		if (Command_CanExecute == string.Empty) {
+			return;
+		}
+		
+		EditorLog.Trace("ViewBinding::UpdateCommand");
+		
+		bool result;
+		g_Script.CallFunction(m_Controller, Command_CanExecute, result, null);
+		
+		if (result) {
+			m_LayoutRoot.ClearFlags(WidgetFlags.IGNOREPOINTER);
+		} else {
+			m_LayoutRoot.SetFlags(WidgetFlags.IGNOREPOINTER);
+			if (GetFocus() == m_LayoutRoot) {
+				SetFocus(null);
+			}
+		}
 	}
 }
 

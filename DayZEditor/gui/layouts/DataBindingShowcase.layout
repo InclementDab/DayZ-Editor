@@ -134,7 +134,7 @@ FrameWidgetClass WindowFrame {
     XComboBoxWidgetClass WindowListWidgets {
      visible 1
      clipchildren 0
-     ignorepointer 1
+     ignorepointer 0
      position 0 0
      size 1 250
      hexactpos 1
@@ -144,7 +144,8 @@ FrameWidgetClass WindowFrame {
      scriptclass "ViewBinding"
      {
       ScriptParamsClass {
-       Command "OnComboBoxChanged"
+       Command_Execute "OnComboBoxChanged"
+       Command_CanExecute "CanComboBoxChange"
       }
      }
     }
