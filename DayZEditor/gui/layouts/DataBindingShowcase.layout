@@ -128,7 +128,7 @@ FrameWidgetClass WindowFrame {
       }
      }
     }
-    MultilineEditBoxWidgetClass WindowListWidgets {
+    WrapSpacerWidgetClass WindowListWidgets {
      visible 1
      ignorepointer 1
      position 0 0

@@ -191,26 +191,3 @@ class TypeConversionWidget: TypeConversionTemplate<Widget>
 		return m_Value;
 	}
 }
-
-class TypeConversionCollection: TypeConversionTemplate<ObservableCollection<string>>
-{
-	
-	override void SetString(string value) {
-		TStringArray split_array = new TStringArray();
-		value.Split("\n", split_array);
-		foreach (string line: split_array)
-			m_Value.Insert(line);
-		
-	}
-	
-	override string GetString()	{
-		string result;
-		for (int i = 0; i < m_Value.Count(); i++) 
-			if (i != m_Value.Count() - 1)
-				result += m_Value.Get(i) + "\n";
-			else 
-				result += m_Value.Get(i);
-		
-		return result;
-	}
-}

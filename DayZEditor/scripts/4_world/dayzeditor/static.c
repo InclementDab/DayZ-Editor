@@ -21,6 +21,6 @@ static void ClearWidgetChildren(out ref Widget w)
 	while (child != null) {
 		w.RemoveChild(child);
 		child = child.GetSibling();
-	}
-	
+	}	
 }
+

@@ -1,6 +1,1 @@
 
-
-class DabWidget: Widget
-{
-	
-}

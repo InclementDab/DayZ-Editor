@@ -116,7 +116,7 @@ class EditorClientModule: JMModuleBase
 		
 		set<Object> obj = new set<Object>();
 		int x, y;
-		GetCursorPos(x, y);
+		GetMousePos(x, y);
 		CurrentMousePosition = MousePosToRay(obj);
 		
 		if (!IsPlacing()) {

@@ -74,7 +74,7 @@ class EditorObjectMarker: EditorMarker
 	override void Update()
 	{
 		int x, y;
-		GetCursorPos(x, y);
+		GetMousePos(x, y);
 		if (m_EditorObject.IsSelected() || IsMouseInside(x, y)) 
 			m_LayoutRoot.SetAlpha(ALPHA_ON_SHOW);
 		else 
@@ -109,7 +109,7 @@ class EditorObjectMarker: EditorMarker
 	{
 		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
 			int c_x, c_y;
-			GetCursorPos(c_x, c_y);
+			GetMousePos(c_x, c_y);
 			
 			int dist_x = Math.AbsInt(x - c_x);
 			int dist_y = Math.AbsInt(y - c_y);

@@ -37,7 +37,7 @@ class EditorListItem: ScriptedWidgetEventHandler
 	{ 
 		EditorLog.Trace("EditorListItem");
 
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);
+		if (!CreateWidget(m_Root, "DayZEditor/gui/Layouts/items/EditorListItem.layout", null)) return;
 		
 		m_ListItemFrame					= m_Root.FindAnyWidget("EditorListItemFrame");
 		m_EditorListItemLabelFrame		= m_Root.FindAnyWidget("EditorListItemLabelFrame");

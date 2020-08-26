@@ -155,3 +155,23 @@ static void _GetWidgetRoot(out ref Widget w)
 	w = w.GetParent();
 	_GetWidgetRoot(w);
 }
+
+
+
+static bool CreateWidget(out Widget w, string layout_name, Widget parent = null)
+{
+	CGame game = GetGame();
+	if (!game) {
+		Error("CreateWidget: Game is null!");
+		return false;
+	}
+	
+	WorkspaceWidget workspace = game.GetWorkspace();
+	if (!workspace) {
+		Error("CreateWidget: Workspace is null! Try restarting Workbench!");
+		return false;
+	}
+	
+	w = workspace.CreateWidgets(layout_name, parent);
+	return true;
+}

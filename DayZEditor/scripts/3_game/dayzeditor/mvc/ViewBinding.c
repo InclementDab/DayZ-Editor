@@ -56,7 +56,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		m_WidgetController = GetWidgetController(m_LayoutRoot);
 		if (!m_WidgetController) {
 			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
-			return;
 		}
 		
 		// Check for two way binding support
@@ -64,6 +63,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			MVC.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
 		}
 		
+
 		
 		m_LayoutRoot.SetHandler(this);
 	}
@@ -98,7 +98,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 		
 		m_WidgetController.GetData(m_PropertyDataConverter);
-
 		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, Binding_Index);
 		m_Controller.NotifyPropertyChanged(Binding_Name);
 	}
@@ -117,14 +116,15 @@ class ViewBinding: ScriptedWidgetEventHandler
 			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
 			return;			
 		}
-
 		
-		//m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
+		if (!m_WidgetController) {
+			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
+			return;
+		}
+
 		EditorLog.Debug(string.Format("[%1] Updating Collection View...", m_LayoutRoot.Type()));
 	
-		
-		
-		
+
 		switch (args.param2) {
 			
 			case NotifyCollectionChangedAction.Add: {
@@ -134,7 +134,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 			}
 			
 			case NotifyCollectionChangedAction.Remove: {
-				m_WidgetController.RemoveData(args.param3);
+				SetConverterData(m_PropertyDataConverter, args.param4);
+				m_WidgetController.RemoveData(args.param3, m_PropertyDataConverter);
 				break;
 			}
 			

@@ -93,28 +93,22 @@ class ObservableCollection<Class TValue>: Observable
 	int InsertAt(TValue value, int index)
 	{
 		int new_index = _data.InsertAt(value, index);
-		m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Add, index, new Param1<TValue>(value)));
+		m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Set, index, new Param1<TValue>(value)));
 		return new_index;
 	}
 	
 	
 	void Remove(int index)
 	{
-		TValue value = _data.Get(index);
-		
-		if (value) {
-			_data.Remove(index);
-			m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, index, new Param1<TValue>(value)));
-		}
+		m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, index, new Param1<TValue>(_data.Get(index))));	
+		_data.Remove(index);	
 	}
 	
 	void Remove(TValue value)
 	{
 		int index = _data.Find(value);
-		if (index != -1) {
-			_data.Remove(index);
-			m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, index, new Param1<TValue>(value)));
-		}
+		if (index != -1)
+			Remove(index);
 	}
 	
 	void Set(int index, TValue value)

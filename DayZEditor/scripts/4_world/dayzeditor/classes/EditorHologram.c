@@ -31,7 +31,7 @@ class EditorHologram
 	void Update(float timeslice)
 	{		
 		int x, y;
-		GetCursorPos(x, y);
+		GetMousePos(x, y);
 		
 		// Handle Building
 		if (GetEditor().GetEditorHud().IsMapVisible()) {

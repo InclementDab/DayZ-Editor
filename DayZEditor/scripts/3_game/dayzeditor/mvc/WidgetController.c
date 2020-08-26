@@ -21,6 +21,11 @@ static WidgetController GetWidgetController(Widget widget)
 		// Collection Controllers
 		case MultilineEditBoxWidget:
 			return new MultilineEditBoxWidgetController(widget);
+		
+		case SpacerWidget:
+		case GridSpacerWidget:
+		case WrapSpacerWidget: 
+			return new SpacerWidgetController(widget);
 	}
 	
 	
@@ -28,7 +33,7 @@ static WidgetController GetWidgetController(Widget widget)
 }
 
 class WidgetController
-{
+{	
 	protected Widget m_Widget;
 	void WidgetController(Widget w) {
 		m_Widget = w;
@@ -44,7 +49,7 @@ class WidgetController
 	
 	// Collection Stuff
 	void InsertData(int index, TypeConverter type_converter);
-	void RemoveData(int index);
+	void RemoveData(int index, TypeConverter type_converter);
 	void ReplaceData(int index, TypeConverter type_converter);
 	void MoveData(int start_index, int final_index);
 	void ClearData();
@@ -122,6 +127,10 @@ class TextWidgetController: WidgetController
 
 class MultilineEditBoxWidgetController: WidgetController
 {
+	override bool CanTwoWayBind() {
+		return true;
+	}
+	
 	override void SetData(TypeConverter type_converter) {
 		MultilineEditBoxWidget.Cast(m_Widget).SetText(type_converter.GetString());
 	}
@@ -136,7 +145,7 @@ class MultilineEditBoxWidgetController: WidgetController
 		MultilineEditBoxWidget.Cast(m_Widget).SetLine(index, type_converter.GetString());
 	}
 	
-	override void RemoveData(int index) {
+	override void RemoveData(int index, TypeConverter type_converter) {
 		MultilineEditBoxWidget.Cast(m_Widget).SetLine(index, string.Empty);
 	}
 	
@@ -150,4 +159,67 @@ class MultilineEditBoxWidgetController: WidgetController
 			w.SetLine(i, string.Empty);		
 	}
 }
+
+class SpacerWidgetController: WidgetController
+{
+	/*
+	override bool CanTwoWayBind() {
+		return true;
+	}
+	
+	override void SetData(TypeConverter type_converter) {
+		SpacerWidget.Cast(m_Widget).SetText(type_converter.GetWidget());
+	}
+	
+	override void GetData(out TypeConverter type_converter) {
+		string out_text;
+		SpacerWidget.Cast(m_Widget).GetText(out_text);
+		type_converter.SetString(out_text);
+	}*/
+	
+	override void InsertData(int index, TypeConverter type_converter) {
+		SpacerWidget.Cast(m_Widget).AddChild(type_converter.GetWidget());
+	}
+	
+	override void RemoveData(int index, TypeConverter type_converter) {
+		SpacerWidget.Cast(m_Widget).RemoveChild(type_converter.GetWidget());
+	}
+	
+	override void ReplaceData(int index, TypeConverter type_converter) {
+		SpacerWidget spacer_widget = SpacerWidget.Cast(m_Widget);
+		Widget child = GetWidgetFromIndex(index);
+		Print(child);
+		if (!child) return;
+		spacer_widget.RemoveChild(child);
+		spacer_widget.AddChildAfter(type_converter.GetWidget(), GetWidgetFromIndex(index - 1));
+		
+	}
+	
+	private Widget GetWidgetFromIndex(int index)
+	{
+		Print(string.Format("Returning %1th child", index));
+		SpacerWidget spacer_widget = SpacerWidget.Cast(m_Widget);
+		
+		Widget child = spacer_widget.GetChildren();
+		while (child) {
+			if (index == 0)
+				return child;
+			
+			child = child.GetSibling();
+			index--;
+		}
+		
+		return null;
+	}
+	
+		
+	override void ClearData() {
+		MultilineEditBoxWidget w = MultilineEditBoxWidget.Cast(m_Widget);
+		for (int i = 0; i < w.GetLinesCount(); i++)
+			w.SetLine(i, string.Empty);		
+	}
+}
+
+
+
 

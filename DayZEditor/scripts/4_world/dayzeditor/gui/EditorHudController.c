@@ -52,19 +52,9 @@ class EditorHudController: Controller
 		m_CustomBrushList = new map<string, typename>();
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
 		RegisterCustomBrush("Delete", DeleteBrush);
-		
-		
-	
-
 	}
 	
-	
-	static void VTest()
-	{
 		
-	}
-
-	
 	// Brush Management
 	private ref EditorBrushDataSet 		m_EditorBrushTypes;
 	private ref map<string, typename> 	m_CustomBrushList;
