@@ -947,6 +947,7 @@ FrameWidgetClass EditorMainFrame {
        Margin 0
        {
         ButtonWidgetClass UndoButton {
+         clipchildren 0
          position 0 0
          size 32 32
          hexactpos 1
@@ -956,10 +957,12 @@ FrameWidgetClass EditorMainFrame {
          scriptclass ""
          style Colorable
          "no focus" 0
+         text_offset 0 0
          switch once
          {
           ImageWidgetClass UndoButton_Icon {
            ignorepointer 1
+           position 0 0
            size 32 32
            halign center_ref
            valign center_ref
@@ -967,6 +970,7 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           draggable 0
            image0 "set:dayz_editor_gui image:arrow_round_icon"
            mode additive
            "src alpha" 1
@@ -976,6 +980,7 @@ FrameWidgetClass EditorMainFrame {
          }
         }
         ButtonWidgetClass RedoButton {
+         clipchildren 0
          ignorepointer 0
          position 0 0
          size 32 32
@@ -1034,6 +1039,7 @@ FrameWidgetClass EditorMainFrame {
          }
         }
         ButtonWidgetClass MagnetButton {
+         clipchildren 0
          position 0 0
          size 32 32
          hexactpos 1
@@ -1069,6 +1075,7 @@ FrameWidgetClass EditorMainFrame {
          }
         }
         ButtonWidgetClass GroundButton {
+         clipchildren 0
          size 32 32
          halign center_ref
          valign center_ref
@@ -1104,6 +1111,7 @@ FrameWidgetClass EditorMainFrame {
          }
         }
         ButtonWidgetClass SnapButton {
+         clipchildren 0
          size 32 32
          halign center_ref
          valign center_ref

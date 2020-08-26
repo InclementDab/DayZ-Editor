@@ -188,27 +188,15 @@ class EditorHudController: Controller
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseEnter");
 		
-		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
+		
 		switch (w.GetName()) {
 			
+			case "SnapButton":
+			case "GroundButton":
+			case "MagnetButton":
 			case "UndoButton":
 			case "RedoButton": {
-				icon.SetColor(COLOR_SALMON);
-				return true;
-			}
-			
-			case "MagnetButton": {
-				icon.SetColor(COLOR_CANDY);
-				return true;
-			}
-			
-			case "GroundButton": {
-				icon.SetColor(COLOR_APPLE);
-				return true;
-			}
-			
-			case "SnapButton": {
-				icon.SetColor(COLOR_JELLY);
+				w.SetColor(COLOR_SALMON_A);
 				return true;
 			}			
 		}
@@ -228,7 +216,7 @@ class EditorHudController: Controller
 			case "MagnetButton":
 			case "GroundButton":
 			case "SnapButton": {
-				icon.SetColor(COLOR_WHITE);
+				w.SetColor(COLOR_EMPTY);
 				return true;
 			}
 		}
@@ -258,12 +246,14 @@ class EditorHudController: Controller
 		EditorLog.Trace("EditorHudController::OnMouseButtonUp");
 		if (button != 0) return false;
 		
+		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		switch (w.GetName()) {
 			
 			case "UndoButton": 
 			case "RedoButton": {
 				w.SetColor(COLOR_EMPTY);
 				ButtonWidget.Cast(w).SetState(false);
+				icon.SetPos(0, 0);
 				break;
 			}
 		}
@@ -275,11 +265,32 @@ class EditorHudController: Controller
 		EditorLog.Trace("EditorHudController::OnClick");
 		if (button != 0) return false;
 		
+		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
+		int pos = ButtonWidget.Cast(w).GetState() * 1;
 		switch (w.GetName()) {
 			
 			case "UndoButton": 
 			case "RedoButton": {
-				w.SetColor(COLOR_WHITE_A);
+				w.SetColor(COLOR_SALMON_A);
+				icon.SetPos(pos, pos);
+				break;
+			}
+			
+			case "MagnetButton": {
+				icon.SetColor((COLOR_CANDY * ButtonWidget.Cast(w).GetState()) - 1);
+				icon.SetPos(pos, pos);
+				break;
+			}
+			
+			case "GroundButton": {
+				icon.SetColor((COLOR_APPLE * ButtonWidget.Cast(w).GetState()) - 1);
+				icon.SetPos(pos, pos);
+				break;
+			}
+			
+			case "SnapButton": {
+				icon.SetColor((COLOR_JELLY * ButtonWidget.Cast(w).GetState()) - 1);
+				icon.SetPos(pos, pos);
 				break;
 			}
 		}
