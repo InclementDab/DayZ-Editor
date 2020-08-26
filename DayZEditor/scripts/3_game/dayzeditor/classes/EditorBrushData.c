@@ -1,12 +1,14 @@
 typedef ref map<string, ref EditorBrushData> EditorBrushDataSet;
 
 // This is the data that will be loaded from XML
-class EditorBrushData: Class
+class EditorBrushData
 {
 	string Name;
 	float MinRadius, MaxRadius;
 	ref TStringArray PlaceableObjects = new TStringArray();
-
+	
+	typename BrushClassName;
+	
 	bool InsertPlaceableObject(string object_name, float object_frequency)
 	{
 		string model_name = GetGame().GetModelName(object_name);

@@ -316,40 +316,46 @@ class XMLEditorBrushes: XMLCallback
 			EditorBrushData brush_settings = new EditorBrushData();
 			brush_settings.Name = brush.GetAttribute("name").ValueAsString();
 			
+			XMLAttribute class_attribute = brush.GetAttribute("class");
+			if (class_attribute) {
+				EditorLog.Info("XMLEditorBrushes: Code defined brush found!");
+				brush_settings.BrushClassName = class_attribute.ValueAsString().ToType();
+			} else {
 			
-			// <BrushObject>
-			for (int j = 0; j < brush_objects.Count(); j++) {
-				XMLTag brush_object = brush_objects.Get(j);
-				
-				// attributes
-				string object_type;
-				float object_frequency;
-				
-				// type attribute
-				XMLAttribute object_type_attribute = brush_object.GetAttribute("type");
-				if (object_type_attribute == null) {
-					EditorLog.Trace("XMLEditorBrushes: Object type not specified, skipping...");
-					continue;
+				// <BrushObject>
+				for (int j = 0; j < brush_objects.Count(); j++) {
+					XMLTag brush_object = brush_objects.Get(j);
+					
+					// attributes
+					string object_type;
+					float object_frequency;
+					
+					// type attribute
+					XMLAttribute object_type_attribute = brush_object.GetAttribute("type");
+					if (object_type_attribute == null) {
+						EditorLog.Trace("XMLEditorBrushes: Object type not specified, skipping...");
+						continue;
+					}
+					
+					object_type = object_type_attribute.ValueAsString();
+					if (object_type_list.Insert(object_type) == -1) {
+						EditorLog.Trace("XMLEditorBrushes: Duplicate brush name found, skipping...");
+						continue;
+					}
+					
+					// frequency attribute
+					XMLAttribute object_frequency_attribute = brush_object.GetAttribute("frequency");
+					if (object_frequency_attribute == null) {
+						object_frequency = 1.0;
+					} else {
+						object_frequency = object_frequency_attribute.ValueAsFloat();
+					}
+					
+					brush_settings.InsertPlaceableObject(object_type, object_frequency);
 				}
-				
-				object_type = object_type_attribute.ValueAsString();
-				if (object_type_list.Insert(object_type) == -1) {
-					EditorLog.Trace("XMLEditorBrushes: Duplicate brush name found, skipping...");
-					continue;
-				}
-				
-				// frequency attribute
-				XMLAttribute object_frequency_attribute = brush_object.GetAttribute("frequency");
-				if (object_frequency_attribute == null) {
-					object_frequency = 1.0;
-				} else {
-					object_frequency = object_frequency_attribute.ValueAsFloat();
-				}
-				
-				brush_settings.InsertPlaceableObject(object_type, object_frequency);
 			}
 							
-			m_Data.Insert(brush_settings); // brush_settings
+			m_Data.Insert(brush_settings);
 		}
 	}
 	

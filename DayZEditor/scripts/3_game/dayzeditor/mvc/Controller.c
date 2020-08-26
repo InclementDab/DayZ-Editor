@@ -60,7 +60,6 @@ class Controller: Managed
 				m_DataBindingHashMap.Remove(data_name);
 			}
 		}*/
-				
 	}
 	
 	// This must be called manually by the user

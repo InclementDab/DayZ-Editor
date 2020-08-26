@@ -90,9 +90,11 @@ class TypeConversionTemplate<Class T>: TypeConverter
 	}
 	
 	override void SetParam(Param value) {
-		EditorLog.Trace("TypeConversionTemplate::SetParam");
 		m_Value = Param1<T>.Cast(value).param1;
-		Print(m_Value);
+	}
+	
+	override Param GetParam() {
+		return new Param1<T>(m_Value);
 	}
 			
 	override typename GetType() {

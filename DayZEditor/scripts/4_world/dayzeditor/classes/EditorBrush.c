@@ -20,21 +20,32 @@ class EditorBrush
 	private vector m_LastMousePosition;
 
 	
-	void EditorBrush(EditorBrushData settings)
+	void EditorBrush(EditorBrushData settings = null)
 	{
 		EditorLog.Trace("EditorBrush");
 		m_BrushData = settings;
-		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);	
+		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
+
 	
 	void ~EditorBrush()
 	{
-		EditorLog.Trace("~EditorBrush");
+		EditorLog.Trace("~EditorBrush");		
 		GetGame().ObjectDelete(m_BrushDecal);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(UpdateBrush);
 	}
 	
+	static EditorBrush Create(EditorBrushData settings) 
+	{
+		EditorLog.Trace("EditorBrush::Create " + settings.Name);
+
+		if (settings.BrushClassName) {
+			return settings.BrushClassName.Spawn();
+		}
+	
+		return new EditorBrush(settings);
+	}	
 	
 	
 	void SetBrushTexture(string texture)
@@ -71,7 +82,6 @@ class EditorBrush
 		}*/
 		
 		if (input.LocalValue("UAFire")) {
-			
 			DuringMouseDown(CurrentMousePosition);
 		}
 	}
@@ -120,9 +130,6 @@ class EditorBrush
 		
 	}
 	
-	void SetSettings(EditorBrushData settings) { m_BrushData = settings; }
-	EditorBrushData GetSettings() { return m_BrushData; }
-	
 	string GetName() { return m_BrushData.Name; }
 	
 }
@@ -132,10 +139,10 @@ class EditorBrush
 class DeleteBrush: EditorBrush
 {	
 	
-	void DeleteBrush(EditorBrushData settings)
+	void DeleteBrush(EditorBrushData settings = null)
 	{
 		EditorLog.Trace("DeleteBrush");
-		SetBrushTexture("DayZEditor\\Editor\\data\\BrushDelete.paa");
+		//SetBrushTexture("DayZEditor\\Editor\\data\\BrushDelete.paa");
 	}
 	
 	override void DuringMouseDown(vector position)
@@ -153,14 +160,10 @@ class DeleteBrush: EditorBrush
 			EditorObject eo = GetEditor().GetPlacedObjectById(r.GetID());
 			if (eo != null) {
 				GetEditor().DeleteObject(eo);
-				
 			} else {
 				GetGame().ObjectDelete(r);
 			}
-		}
-		
-		
-		
+		}		
 	}
 
 }

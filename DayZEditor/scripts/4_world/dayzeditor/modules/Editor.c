@@ -492,8 +492,13 @@ class EditorClientModule: JMModuleBase
 	EditorObjectData GetSessionDataById(int id) { return m_SessionCache.Get(id); }
 	EditorObject GetPlacedObjectById(int id) { return m_PlacedObjects.Get(id); }
 		
-	void SetBrush(EditorBrush brush) { m_EditorBrush = brush; }	
-	EditorBrush GetBrush() { return m_EditorBrush; }
+	void SetBrush(EditorBrush brush) { 
+		m_EditorBrush = brush; 
+	}
+	
+	EditorBrush GetBrush() { 
+		return m_EditorBrush; 
+	}
 	
 	
 	void CreateInHand(EditorPlaceableObjectData data)

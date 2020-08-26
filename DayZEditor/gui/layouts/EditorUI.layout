@@ -1121,7 +1121,7 @@ FrameWidgetClass EditorMainFrame {
           }
          }
         }
-        ButtonWidgetClass SimcityButton {
+        ButtonWidgetClass BrushToggleButton {
          clipchildren 0
          size 98 32
          halign center_ref
@@ -1130,10 +1130,16 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          style MainMenu
          text "Brush"
          font "gui/fonts/metron28"
          switch toggle
+         {
+          ScriptParamsClass {
+           Two_Way_Binding 1
+          }
+         }
         }
         XComboBoxWidgetClass BrushTypeBox {
          visible 1

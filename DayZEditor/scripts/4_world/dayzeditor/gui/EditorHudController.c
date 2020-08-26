@@ -6,6 +6,8 @@ EditorHudController GetEditorHudController() { return m_EditorHudController; }
 
 class EditorHudController: Controller
 {
+
+	// Data Binding
 	string DebugText1;
 	string DebugText2;
 	string DebugText3;
@@ -13,10 +15,11 @@ class EditorHudController: Controller
 	string DebugText5;
 	
 	int PlaceableCategorySelection = 0;
-
 	
 	bool LeftbarHide;
 	bool RightbarHide;
+	
+	bool BrushToggleButton;
 	
 	float BrushRadius = 50;
 	float BrushDensity = 0.5;
@@ -27,7 +30,7 @@ class EditorHudController: Controller
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBox;
 	ref ObservableCollection<string> DebugActionStackListbox;
 	
-	//ref XComboBoxWidgetData BrushTypeBox;
+	
 	
 	void EditorHudController()
 	{
@@ -48,16 +51,11 @@ class EditorHudController: Controller
 		
 		
 		// Load Brushes
-		m_EditorBrushTypes = new EditorBrushDataSet();
-		m_CustomBrushList = new map<string, typename>();
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
-		RegisterCustomBrush("Delete", DeleteBrush);
 	}
 	
 		
 	// Brush Management
-	private ref EditorBrushDataSet 		m_EditorBrushTypes;
-	private ref map<string, typename> 	m_CustomBrushList;
 	void ReloadBrushes(string filename)
 	{
 		EditorLog.Trace("EditorHudController::ReloadBrushes");
@@ -70,40 +68,8 @@ class EditorHudController: Controller
 	
 		GetXMLApi().Read(filename, xml_brushes);
 	}
-	
-	EditorBrushData GetLoadedBrushData(string name) { 
-		return m_EditorBrushTypes.Get(name); 
-	}
-	
-	void RegisterCustomBrush(string name, typename type) { 
-		m_CustomBrushList.Insert(name, type); 
-	}
-	
-			
-	EditorBrush CreateBrush(string brush_name)
-	{
-		EditorLog.Trace("EditorSettings::CreateBrush " + brush_name);
-		
-		
-		
-		
-		
-		EditorLog.Trace("EditorSettings::CreateBrush Brush not found!");
-		return null;
-		
-		
-		foreach (EditorBrushData settings: m_EditorBrushTypes) {
-			if (settings.Name == brush_name) {
-				foreach (string name, typename type: m_CustomBrushList) 
-					if (name == brush_name)
-						return type.Spawn();
-					
-				return new EditorBrush(settings);
-			}
-		}
-		
 
-	}
+	
 		
 
 	
@@ -149,16 +115,35 @@ class EditorHudController: Controller
 
 	override void PropertyChanged(string property_name)
 	{
-		if (property_name == "PlaceableCategorySelection") {
-			
-			for (int i = 0; i < LeftbarSpacer.Count(); i++) {
-				Widget list_item = LeftbarSpacer.Get(i);
-				EditorPlaceableListItem item;
-				list_item.GetUserData(item);
-				list_item.Show(item.GetData().GetCategory() == PlaceableCategorySelection);
-			}
-		}
+		EditorLog.Trace("EditorHudController::PropertyChanged: " + property_name);
 		
+		switch (property_name) {
+			
+			case "PlaceableCategorySelection": {
+			
+				for (int i = 0; i < LeftbarSpacer.Count(); i++) {
+					Widget list_item = LeftbarSpacer.Get(i);
+					EditorPlaceableListItem item;
+					list_item.GetUserData(item);
+					list_item.Show(item.GetData().GetCategory() == PlaceableCategorySelection);
+				}
+				break;
+			}
+
+#ifndef COMPONENT_SYSTEM
+			case "BrushTypeBox":
+			case "BrushToggleButton": {
+				if (BrushToggleButton) {
+					int index = XComboBoxWidget.Cast(m_LayoutRoot.FindAnyWidget("BrushTypeBox")).GetCurrentItem();
+					GetEditor().SetBrush(EditorBrush.Create(BrushTypeBox[index]));
+				} else {
+					GetEditor().SetBrush(null);
+				}
+				break;
+			}
+#endif
+			
+		}
 	}
 }
 
