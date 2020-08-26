@@ -48,25 +48,24 @@ class DataBindingShowcaseController: Controller
 		}
 	}
 	
-	// Return Value: Not implemented yet
-	bool OnWindowTextToggle(ButtonCommandArgs args)
+
+	void OnWindowTextToggle(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("OnWindowTextToggle");
-		
-		return false;
+
 	}
 	
-	bool OnWindowCheckToggle(CheckBoxCommandArgs args)
+	void OnWindowCheckToggle(CheckBoxCommandArgs args)
 	{
 		EditorLog.Trace("OnWindowCheckToggle");
 		
-		return false;
+
 	}
 	
-	bool OnComboBoxChanged(XComboBoxCommandArgs args)
+	void OnComboBoxChanged(XComboBoxCommandArgs args)
 	{
 		EditorLog.Trace("OnComboBoxChanged");
-		return false;
+
 	}
 	
 	bool CanComboBoxChange()

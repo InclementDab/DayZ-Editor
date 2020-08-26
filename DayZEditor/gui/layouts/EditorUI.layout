@@ -1158,6 +1158,8 @@ FrameWidgetClass EditorMainFrame {
          font "gui/fonts/metron28"
          {
           ScriptParamsClass {
+           Binding_Name "BrushTypeBoxData"
+           Command_Execute "BrushTypeBoxExecute"
           }
          }
         }

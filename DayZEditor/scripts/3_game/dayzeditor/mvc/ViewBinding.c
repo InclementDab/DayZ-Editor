@@ -67,7 +67,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 	{
 		EditorLog.Trace("ViewBinding::OnPropertyChanged " + Binding_Name);		
 		UpdateCommand();
-		
 		if (!m_PropertyDataType) {
 			EditorLog.Warning(string.Format("Binding not found: %1", Binding_Name));
 			return;
@@ -87,6 +86,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	void UpdateModel()
 	{
 		EditorLog.Trace("ViewBinding::UpdateModel");
+		UpdateCommand();
 		if (!Two_Way_Binding || !m_WidgetController.CanTwoWayBind()) 
 			return;
 		
@@ -106,7 +106,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	void OnCollectionChanged(ref CollectionChangedEventArgs args)
 	{
 		EditorLog.Trace("ViewBinding::OnCollectionChanged " + Binding_Name);
-		
+		UpdateCommand();
 		if (!m_PropertyDataType) {
 			MVC.ErrorDialog(string.Format("Binding not found: %1", Binding_Name));
 			return;
@@ -203,17 +203,14 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 	
 	
-	private bool InvokeCommand(Param params)
+	private void InvokeCommand(Param params)
 	{
 		if (Command_Execute == string.Empty) {
-			return false;
+			return;
 		}
 		
 		EditorLog.Trace("ViewBinding::InvokeCommand");
-		
-		bool result;
-		g_Script.CallFunction(m_Controller, Command_Execute, result, params);
-		return result;
+		g_Script.CallFunction(m_Controller, Command_Execute, null, params);
 	}
 	
 	private void UpdateCommand()
@@ -228,7 +225,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		if (g_Script.CallFunction(m_Controller, Command_CanExecute, result, 0) != 0) {
 			return;
 		}
-		
 		
 		if (result) {
 			m_LayoutRoot.ClearFlags(WidgetFlags.IGNOREPOINTER);

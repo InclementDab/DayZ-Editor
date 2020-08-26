@@ -50,14 +50,12 @@ class ViewBindingHashMap: ref map<string, ref ViewBindingSet>
 typedef Param3<ButtonWidget, int, bool> ButtonCommandArgs;
 
 // 0: Source Widget
-// 1: Button
-// 2: CheckBox State
+// 1: CheckBox State
 typedef Param2<CheckBoxWidget, bool> CheckBoxCommandArgs;
 
 
 // 0: Source Widget
-// 1: Button
-// 2: Selected Item
+// 1: Selected Item
 typedef Param2<XComboBoxWidget, int> XComboBoxCommandArgs;
 
 

@@ -22,25 +22,27 @@ class EditorHudController: Controller
 	float BrushRadius = 50;
 	float BrushDensity = 0.5;
 	
+	bool BrushToggleButton;
+	
 	//ref TextListboxWidgetData DebugActionStackListbox;
 	ref ObservableCollection<Widget> LeftbarSpacer;
 	ref ObservableCollection<Widget> RightbarSpacer;
-	ref ObservableCollection<ref EditorBrushData> BrushTypeBox;
+	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 	ref ObservableCollection<string> DebugActionStackListbox;
 	
-	
+	ref XComboBoxWidget BrushTypeBox;
 	
 	void EditorHudController()
 	{
 		EditorLog.Trace("EditorHudController");
 	}
 	
-	void OnWidgetScriptInit(Widget w)
+	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
 		
+		
 		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
-		BrushTypeBox				= new ObservableCollection<ref EditorBrushData>("BrushTypeBox", this);
 		LeftbarSpacer 				= new ObservableCollection<Widget>("LeftbarSpacer", this);
 		RightbarSpacer 				= new ObservableCollection<Widget>("RightbarSpacer", this);
 		
@@ -57,7 +59,7 @@ class EditorHudController: Controller
 	void ReloadBrushes(string filename)
 	{
 		EditorLog.Trace("EditorHudController::ReloadBrushes");
-		XMLEditorBrushes xml_brushes(BrushTypeBox);
+		XMLEditorBrushes xml_brushes(BrushTypeBoxData);
 		
 		if (!FileExist(filename)) {
 			EditorLog.Error("File not found: " + filename);
@@ -132,24 +134,34 @@ class EditorHudController: Controller
 		}
 	}
 	
-	bool BrushToggleExecute(ButtonCommandArgs args) 
+	void SelectBrush(bool state)
 	{
-		
 #ifndef COMPONENT_SYSTEM
-		if (args.param3) {
-			int index = XComboBoxWidget.Cast(m_LayoutRoot.FindAnyWidget("BrushTypeBox")).GetCurrentItem();
-			GetEditor().SetBrush(EditorBrush.Create(BrushTypeBox[index]));
+		if (state) {
+			GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeBox.GetCurrentItem()]));
 		} else {
 			GetEditor().SetBrush(null);
 		}	
 #endif
-		
+	}
+	
+	
+	bool BrushToggleExecute(ButtonCommandArgs args) 
+	{
+		SelectBrush(args.param3);
 		return false;
 	}
 	
-	bool CanBrushToggleExecute() {
+	bool CanBrushToggleExecute() 
+	{
 		return true;
-		return (BrushTypeBox.Count() > 0);
+		return (BrushTypeBoxData.Count() > 0);
+	}
+	
+	bool BrushTypeBoxExecute(XComboBoxCommandArgs args)
+	{
+		SelectBrush(BrushToggleButton);
+		return false;
 	}
 }
 
