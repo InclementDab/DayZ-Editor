@@ -71,21 +71,27 @@ class EditorHudController: Controller
 		GetXMLApi().Read(filename, xml_brushes);
 	}
 	
-	EditorBrushData GetLoadedBrushData(string name) { return m_EditorBrushTypes.Get(name); }
-	void RegisterCustomBrush(string name, typename type) { m_CustomBrushList.Insert(name, type); }
-	
-	void SetBrushTypes(EditorBrushDataSet brush_types)
-	{
-		EditorLog.Trace("EditorHudController::SetBrushTypes");
-		m_EditorBrushTypes = brush_types;
-
-		foreach (EditorBrushData brush: m_EditorBrushTypes)
-			BrushTypeBox.Insert(brush.Name);	
+	EditorBrushData GetLoadedBrushData(string name) { 
+		return m_EditorBrushTypes.Get(name); 
 	}
-		
-	EditorBrush GetBrush(string brush_name)
+	
+	void RegisterCustomBrush(string name, typename type) { 
+		m_CustomBrushList.Insert(name, type); 
+	}
+	
+			
+	EditorBrush CreateBrush(string brush_name)
 	{
-		EditorLog.Trace("EditorSettings::GetBrush " + brush_name);
+		EditorLog.Trace("EditorSettings::CreateBrush " + brush_name);
+		
+		
+		
+		
+		
+		EditorLog.Trace("EditorSettings::CreateBrush Brush not found!");
+		return null;
+		
+		
 		foreach (EditorBrushData settings: m_EditorBrushTypes) {
 			if (settings.Name == brush_name) {
 				foreach (string name, typename type: m_CustomBrushList) 
@@ -96,8 +102,7 @@ class EditorHudController: Controller
 			}
 		}
 		
-		EditorLog.Trace("EditorSettings::GetBrush Brush not found!");
-		return null;
+
 	}
 		
 
