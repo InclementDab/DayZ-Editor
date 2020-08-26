@@ -953,7 +953,10 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         style Empty
+         scriptclass ""
+         style Colorable
+         "no focus" 0
+         switch once
          {
           ImageWidgetClass UndoButton_Icon {
            ignorepointer 1
@@ -965,7 +968,7 @@ FrameWidgetClass EditorMainFrame {
            hexactsize 1
            vexactsize 1
            image0 "set:dayz_editor_gui image:arrow_round_icon"
-           mode blend
+           mode additive
            "src alpha" 1
            "no wrap" 1
            stretch 1
@@ -973,13 +976,17 @@ FrameWidgetClass EditorMainFrame {
          }
         }
         ButtonWidgetClass RedoButton {
+         ignorepointer 0
          position 0 0
          size 32 32
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         style Empty
+         scriptclass ""
+         style Colorable
+         "no focus" 0
+         switch once
          {
           ImageWidgetClass RedoButton_Icon {
            ignorepointer 1
@@ -991,11 +998,13 @@ FrameWidgetClass EditorMainFrame {
            hexactsize 1
            vexactsize 1
            image0 "set:dayz_editor_gui image:arrow_round_icon"
-           mode blend
+           mode additive
            "src alpha" 1
            "no wrap" 1
            stretch 1
            "flip u" 1
+           filter 1
+           "Transition width" 0
           }
          }
         }

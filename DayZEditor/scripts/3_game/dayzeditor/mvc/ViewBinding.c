@@ -195,8 +195,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 				InvokeCommand(new ButtonCommandArgs(ButtonWidget.Cast(w), button, ButtonWidget.Cast(w).GetState()));
 				break;
 			}
-			
-
 		}
 		
 		return false;
@@ -224,8 +222,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 
 		UpdateModel();
 		
-
-		return super.OnChange(w, x, y, finished);
+		return false;
+		//return super.OnChange(w, x, y, finished);
 	}
 		
 	

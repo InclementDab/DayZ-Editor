@@ -139,6 +139,8 @@ class EditorHudController: Controller
 				SelectBrush(BrushToggleButton);
 				break;
 			}
+			
+
 		}
 	}
 	
@@ -182,28 +184,16 @@ class EditorHudController: Controller
 	
 
 	
-	
-	
-	void UndoButtonExecute(ButtonCommandArgs args) 
-	{
-		EditorLog.Trace("EditorHudController::UndoButtonExecute");
-		if (args.param3) {
-			args.param1.SetColor(COLOR_BLUE);
-		} else {
-			args.param1.SetColor(COLOR_DEFAULT);
-		}
-	}
-	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorLog.Trace("EditorUI::OnMouseEnter");
+		//EditorLog.Trace("EditorHudController::OnMouseEnter");
 		
 		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		switch (w.GetName()) {
 			
 			case "UndoButton":
 			case "RedoButton": {
-				icon.SetColor(COLOR_BLUE);
+				icon.SetColor(COLOR_SALMON);
 				return true;
 			}
 			
@@ -228,7 +218,7 @@ class EditorHudController: Controller
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		EditorLog.Trace("EditorUI::OnMouseLeave");
+		//EditorLog.Trace("EditorHudController::OnMouseLeave");
 		
 		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		switch (w.GetName()) {
@@ -238,13 +228,13 @@ class EditorHudController: Controller
 			case "MagnetButton":
 			case "GroundButton":
 			case "SnapButton": {
-				icon.SetColor(COLOR_DEFAULT);
+				icon.SetColor(COLOR_WHITE);
 				return true;
 			}
 		}
 			
 		return false;
-	}	
+	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
@@ -260,17 +250,56 @@ class EditorHudController: Controller
 		GetEditor().ClearSelection();
 #endif
 		
-		
-		return super.OnMouseButtonDown(w, x, y, button);
+		return false;
 	}
+	
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorHudController::OnMouseButtonUp");
+		if (button != 0) return false;
+		
+		switch (w.GetName()) {
+			
+			case "UndoButton": 
+			case "RedoButton": {
+				w.SetColor(COLOR_EMPTY);
+				ButtonWidget.Cast(w).SetState(false);
+				break;
+			}
+		}
+		return false;
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorHudController::OnClick");
+		if (button != 0) return false;
+		
+		switch (w.GetName()) {
+			
+			case "UndoButton": 
+			case "RedoButton": {
+				w.SetColor(COLOR_WHITE_A);
+				break;
+			}
+		}
+		
+		return false;
+	}
+	
 }
 
 
 //static const int COLOR_BLUE 	= -13330213;
+static const int COLOR_SALMON	= -4235425;
+static const int COLOR_SALMON_A	= 2143248223;
 static const int COLOR_CANDY 	= -1618884;
 static const int COLOR_APPLE 	= -9785268;
 static const int COLOR_JELLY 	= -1010901;
-static const int COLOR_DEFAULT 	= -1;
+static const int COLOR_BLACK	= -16777216;
+static const int COLOR_WHITE 	= -1;
+static const int COLOR_WHITE_A	= 855638015;
+static const int COLOR_EMPTY 	= 0;
 
 
 
