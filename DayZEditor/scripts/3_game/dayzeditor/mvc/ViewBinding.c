@@ -159,7 +159,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		
+
 		EditorLog.Trace("ViewBinding::OnClick " + w.Type());
 		
 		switch (w.Type()) {
@@ -178,7 +178,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
-		EditorLog.Trace("ViewBinding::OnChange");
+		EditorLog.Trace("ViewBinding::OnChange " + w.GetName());
 		
 		
 		switch (w.Type()) {

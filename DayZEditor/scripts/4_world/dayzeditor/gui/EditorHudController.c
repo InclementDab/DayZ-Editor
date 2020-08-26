@@ -1,9 +1,4 @@
 
-static ref EditorHudController m_EditorHudController;
-EditorHudController GetEditorHudController() { return m_EditorHudController; }
-
-
-
 class EditorHudController: Controller
 {
 
@@ -178,6 +173,10 @@ class EditorHudController: Controller
 		float x, y;
 		RightbarFrame.GetPos(x, y);
 		RightbarFrame.SetPos(-300 * args.param3, y);
+	}
+	
+	void LeftbarSpacerExecute(WrapSpacerCommandArgs args) {
+		
 	}
 }
 

@@ -13,15 +13,16 @@ class EditorHud: Hud
 	protected ref EditorMap 	m_EditorMap;
 	protected EditBoxWidget 	m_LeftbarSearchBar;	
 	
-
+	protected ref EditorHudController 	m_EditorHudController;
+	ref EditorHudController GetController() { 
+		return m_EditorHudController;
+	}
 	
-	void EditorHud()
-	{
+	void EditorHud() {
 		EditorLog.Info("EditorHud");
 	}
 	
-	void ~EditorHud()
-	{
+	void ~EditorHud() {
 		EditorLog.Info("~EditorHud");
 	}
 	
@@ -29,7 +30,8 @@ class EditorHud: Hud
 	{
 		EditorLog.Trace("EditorHud::Init");
 		m_LayoutRoot 			= GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorUI.layout", hud_panel_widget);		
-
+		m_LayoutRoot.GetScript(m_EditorHudController);
+		
 		// Showcase UI
 		//GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/DataBindingShowcase.layout", m_LayoutRoot);
 		

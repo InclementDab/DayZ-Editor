@@ -21,8 +21,7 @@ class EditorObject
 	protected EntityAI 		m_WorldObject;
 	EntityAI GetWorldObject() { return m_WorldObject; }
 	
-	// Mod Data
-	private ModStructure					m_ModStructure;
+	
 	
 	private ref EditorObjectMapMarker		m_EditorObjectMapMarker;
 	private ref EditorObjectWorldMarker		m_EditorObjectWorldMarker;
@@ -58,7 +57,7 @@ class EditorObject
 		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
 		Update();
 		
-		m_ModStructure = GetModFromObject(m_Data.Type);
+		
 		
 		// Bounding Box
 		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
@@ -68,8 +67,7 @@ class EditorObject
 		// Map marker
 		if ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
 			m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
-			GetEditorHudController().InsertMapMarker(m_EditorObjectMapMarker);
-
+			GetEditor().GetEditorHud().GetController().InsertMapMarker(m_EditorObjectMapMarker);
 		}	
 		
 		// World Object base marker
@@ -80,7 +78,7 @@ class EditorObject
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
 			m_EditorPlacedListItem = new EditorPlacedListItem(this);
-			GetEditorHudController().InsertPlacedObject(m_EditorPlacedListItem);
+			GetEditor().GetEditorHud().GetController().InsertPlacedObject(m_EditorPlacedListItem);
 		}
 		
 		

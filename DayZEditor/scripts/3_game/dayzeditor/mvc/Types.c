@@ -59,6 +59,8 @@ typedef Param2<CheckBoxWidget, bool> CheckBoxCommandArgs;
 typedef Param2<XComboBoxWidget, int> XComboBoxCommandArgs;
 
 
+typedef Param2<WrapSpacerWidget, Widget> WrapSpacerCommandArgs;
+
 
 
 enum WidgetEventType {

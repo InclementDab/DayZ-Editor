@@ -40,6 +40,7 @@ class EditorObjectData
 	vector Orientation;
 	float Scale;
 	EditorObjectFlags Flags;
+	ModStructure ObjectMod;
 	
 	void EditorObjectData() {}
 	
@@ -53,9 +54,12 @@ class EditorObjectData
 		}
 		
 		
+		
 		EditorObjectData data = new EditorObjectData();
 		data.Type = type; data.Position = position; data.Orientation = orientation; data.Flags = flags;
 		data.DisplayName = data.Type;
+		data.ObjectMod = GetModFromObject(data.Type);
+		
 		EditorObjectDataSet session_cache = GetEditor().GetSessionCache();
 		
 		if (lowest_id == 0) lowest_id = 200000;
@@ -66,6 +70,11 @@ class EditorObjectData
 		
 		session_cache.InsertEditorData(data);
 		return data;
+	}
+	
+	static EditorObjectData Create(EditorPlaceableObjectData data)
+	{
+		
 	}
 	
 	void OnSend(Serializer serializer)

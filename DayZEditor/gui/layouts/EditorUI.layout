@@ -557,6 +557,7 @@ FrameWidgetClass EditorMainFrame {
           WrapSpacerWidgetClass LeftbarSpacer {
            visible 1
            disabled 0
+           clipchildren 1
            ignorepointer 0
            keepsafezone 1
            position 0 0
@@ -574,6 +575,7 @@ FrameWidgetClass EditorMainFrame {
            "Size To Content V" 1
            {
             ScriptParamsClass {
+             Command_Execute "LeftbarSpacerExecute"
             }
            }
           }
@@ -690,6 +692,7 @@ FrameWidgetClass EditorMainFrame {
      }
     }
     ButtonWidgetClass RightbarHide {
+     clipchildren 1
      color 0.302 0.302 0.302 0.3922
      position -28 60
      size 28 44

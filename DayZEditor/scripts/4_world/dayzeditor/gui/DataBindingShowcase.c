@@ -58,8 +58,6 @@ class DataBindingShowcaseController: Controller
 	void OnWindowCheckToggle(CheckBoxCommandArgs args)
 	{
 		EditorLog.Trace("OnWindowCheckToggle");
-		
-
 	}
 	
 	void OnComboBoxChanged(XComboBoxCommandArgs args)
