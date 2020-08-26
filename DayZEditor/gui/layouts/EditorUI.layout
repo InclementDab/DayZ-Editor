@@ -938,12 +938,13 @@ FrameWidgetClass EditorMainFrame {
      {
       WrapSpacerWidgetClass ToolbarWrapper {
        ignorepointer 1
-       position 0 0
+       position 5 0
        size 1 1
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 0
+       Padding 3
        Margin 0
        {
         ButtonWidgetClass UndoButton {
@@ -1170,31 +1171,6 @@ FrameWidgetClass EditorMainFrame {
            hexactsize 1
            vexactsize 1
            style rover_sim_colorable
-          }
-         }
-        }
-        ButtonWidgetClass BrushToggleButton2 {
-         visible 1
-         disabled 0
-         clipchildren 0
-         size 98 32
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style MainMenu
-         "no focus" 0
-         text "Brush"
-         font "gui/fonts/metron28"
-         switch toggle
-         {
-          ScriptParamsClass {
-           Command_Execute "BrushToggleExecute"
-           Command_CanExecute "CanBrushToggleExecute"
-           Two_Way_Binding 1
           }
          }
         }
