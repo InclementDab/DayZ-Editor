@@ -18,6 +18,7 @@ class EditorHudController: Controller
 	float BrushDensity = 0.5;
 	
 	bool BrushToggleButton;
+	int BrushTypeSelection;
 	
 	bool MagnetButton;
 	bool GroundButton;
@@ -29,16 +30,14 @@ class EditorHudController: Controller
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 	ref ObservableCollection<string> DebugActionStackListbox;
 	
-	int BrushTypeSelection;
+	
 	
 	// View Properties
 	protected Widget LeftbarFrame;
 	protected Widget RightbarFrame;
-	protected XComboBoxWidget BrushTypeBox;
 	
 	
-	void EditorHudController()
-	{
+	void EditorHudController() {
 		EditorLog.Trace("EditorHudController");
 	}
 	
@@ -135,6 +134,11 @@ class EditorHudController: Controller
 				}
 				break;
 			}
+			
+			case "BrushTypeSelection": {
+				SelectBrush(BrushToggleButton);
+				break;
+			}
 		}
 	}
 	
@@ -142,7 +146,7 @@ class EditorHudController: Controller
 	{
 #ifndef COMPONENT_SYSTEM
 		if (state) {
-			GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeBox.GetCurrentItem()]));
+			GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
 		} else {
 			GetEditor().SetBrush(null);
 		}	
@@ -156,25 +160,16 @@ class EditorHudController: Controller
 		SelectBrush(args.param3);
 	}
 	
-	bool CanBrushToggleExecute() 
-	{
-		return true;
-		return (BrushTypeBoxData.Count() > 0);
-	}
 	
-	void BrushTypeBoxExecute(XComboBoxCommandArgs args)
+	void ToggleLeftBar(ButtonCommandArgs args) 
 	{
-		EditorLog.Trace("EditorHudController::BrushTypeBoxExecute");
-		SelectBrush(BrushToggleButton);
-	}
-	
-	void ToggleLeftBar(ButtonCommandArgs args) {
 		float x, y;
 		LeftbarFrame.GetPos(x, y);
 		LeftbarFrame.SetPos(-300 * args.param3, y);
 	}
 	
-	void ToggleRightBar(ButtonCommandArgs args) {
+	void ToggleRightBar(ButtonCommandArgs args) 
+	{
 		float x, y;
 		RightbarFrame.GetPos(x, y);
 		RightbarFrame.SetPos(-300 * args.param3, y);
