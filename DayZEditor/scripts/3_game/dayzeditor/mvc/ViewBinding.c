@@ -121,43 +121,14 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		//m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
 		EditorLog.Debug(string.Format("[%1] Updating Collection View...", m_LayoutRoot.Type()));
-
-		
-		switch (m_PropertyDataConverter.GetType()) {
-			
-			case bool: {
-				m_PropertyDataConverter.SetBool(Param1<bool>.Cast(args.param4).param1);
-				break;
-			}
-			
-			case int:
-			case float: {
-				m_PropertyDataConverter.SetFloat(Param1<float>.Cast(args.param4).param1);
-				break;
-			}
-			
-			case string: {
-				m_PropertyDataConverter.SetString(Param1<string>.Cast(args.param4).param1);
-				break;
-			}
-			
-			case Widget: {
-				m_PropertyDataConverter.SetWidget(Param1<Widget>.Cast(args.param4).param1);
-				break;
-			}
-			
-			default: {
-				MVC.UnsupportedTypeError(m_PropertyDataConverter.GetType());
-			}
-			
-		}
-		
+	
 		
 		
 		
 		switch (args.param2) {
 			
 			case NotifyCollectionChangedAction.Add: {
+				SetConverterData(m_PropertyDataConverter, args.param4);
 				m_WidgetController.InsertData(args.param3, m_PropertyDataConverter);
 				break;
 			}
@@ -168,12 +139,14 @@ class ViewBinding: ScriptedWidgetEventHandler
 			}
 			
 			case NotifyCollectionChangedAction.Set: {
+				SetConverterData(m_PropertyDataConverter, args.param4);
 				m_WidgetController.ReplaceData(args.param3, m_PropertyDataConverter);
 				break;
 			}
 			
 			case NotifyCollectionChangedAction.Move: {
-				MVC.ErrorDialog(string.Format("Unsupported CollectionChangedAction: %1", args.param2));
+				// this ones a weird case /shrug
+				m_WidgetController.MoveData(args.param3, Param1<int>.Cast(args.param4).param1);
 				break;	
 			}
 			
@@ -182,6 +155,40 @@ class ViewBinding: ScriptedWidgetEventHandler
 				break;
 			}
 		}
+	}
+	
+	private static bool SetConverterData(out notnull TypeConverter data_converter, Param data)
+	{
+		switch (data_converter.GetType()) {
+			
+			case bool: {
+				data_converter.SetBool(Param1<bool>.Cast(data).param1);
+				break;
+			}
+			
+			case int:
+			case float: {
+				data_converter.SetFloat(Param1<float>.Cast(data).param1);
+				break;
+			}
+			
+			case string: {
+				data_converter.SetString(Param1<string>.Cast(data).param1);
+				break;
+			}
+			
+			case Widget: {
+				data_converter.SetWidget(Param1<Widget>.Cast(data).param1);
+				break;
+			}
+			
+			default: {
+				MVC.UnsupportedTypeError(data_converter.GetType());
+				return false;
+			}	
+		}
+		
+		return true;
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)

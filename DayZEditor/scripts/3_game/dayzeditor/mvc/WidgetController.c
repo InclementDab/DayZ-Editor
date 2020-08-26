@@ -46,6 +46,7 @@ class WidgetController
 	void InsertData(int index, TypeConverter type_converter);
 	void RemoveData(int index);
 	void ReplaceData(int index, TypeConverter type_converter);
+	void MoveData(int start_index, int final_index);
 	void ClearData();
 }
 
@@ -121,6 +122,15 @@ class TextWidgetController: WidgetController
 
 class MultilineEditBoxWidgetController: WidgetController
 {
+	override void SetData(TypeConverter type_converter) {
+		MultilineEditBoxWidget.Cast(m_Widget).SetText(type_converter.GetString());
+	}
+	
+	override void GetData(out TypeConverter type_converter) {
+		string out_text;
+		MultilineEditBoxWidget.Cast(m_Widget).GetText(out_text);
+		type_converter.SetString(out_text);
+	}
 	
 	override void InsertData(int index, TypeConverter type_converter) {
 		MultilineEditBoxWidget.Cast(m_Widget).SetLine(index, type_converter.GetString());
@@ -130,14 +140,14 @@ class MultilineEditBoxWidgetController: WidgetController
 		MultilineEditBoxWidget.Cast(m_Widget).SetLine(index, string.Empty);
 	}
 	
-	override void SetData(TypeConverter type_converter) {
-		MultilineEditBoxWidget.Cast(m_Widget).SetText(type_converter.GetString());
+	override void ReplaceData(int index, TypeConverter type_converter) {
+		MultilineEditBoxWidget.Cast(m_Widget).SetLine(index, type_converter.GetString());
 	}
-	
-	override void GetData(out TypeConverter type_converter) {
-		string out_text;
-		MultilineEditBoxWidget.Cast(m_Widget).GetText(out_text);
-		type_converter.SetString(out_text);
+		
+	override void ClearData() {
+		MultilineEditBoxWidget w = MultilineEditBoxWidget.Cast(m_Widget);
+		for (int i = 0; i < w.GetLinesCount(); i++)
+			w.SetLine(i, string.Empty);		
 	}
 }
 
