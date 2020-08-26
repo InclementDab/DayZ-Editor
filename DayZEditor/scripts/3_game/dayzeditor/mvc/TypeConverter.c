@@ -55,11 +55,13 @@ class TypeConverter
 	typename GetType();
 	
 	bool GetBool();
-	float GetFloat();	
+	int GetInt();
+	float GetFloat();
 	string GetString();
 	Widget GetWidget();
 	
 	void SetBool(bool value);
+	void SetInt(int value);
 	void SetFloat(float value);
 	void SetString(string value);
 	void SetWidget(Widget value);
@@ -71,52 +73,35 @@ class TypeConverter
 class TypeConversionTemplate<Class T>: TypeConverter
 {
 	protected T m_Value;
+	
 	override typename GetType() {
 		return T;
 	}
-	
-	override void SetToController(Class context, string name, int index)
-	{
+		
+	override void SetToController(Class context, string name, int index) {
 		EnScript.SetClassVar(context, name, index, m_Value);
 	}
 	
-	override void GetFromController(Class context, string name, int index)
-	{
+	override void GetFromController(Class context, string name, int index) {
 		EnScript.GetClassVar(context, name, index, m_Value);
 	}
 }
 
 class TypeConversionBool: TypeConversionTemplate<bool>
 {
-	override bool GetBool()
-	{
+	override bool GetBool() {
 		return m_Value;
 	}
 	
-	override string GetString()
-	{
-		return m_Value.ToString();
-	}
-	
-	override void SetBool(bool value)
-	{
+	override void SetBool(bool value) {
 		m_Value = value;
 	}
 	
-	override void SetString(string value)
-	{
-		value.ToLower();
-		m_Value = (value == "true");
-	}
-}
-
-class TypeConversionFloat: TypeConversionTemplate<float>
-{
-	override bool GetBool() {
-		return (m_Value == 1);
+	override int GetInt() {
+		return m_Value;
 	}
 	
-	override void SetBool(bool value) {
+	override void SetInt(int value) {
 		m_Value = value;
 	}
 	
@@ -129,21 +114,30 @@ class TypeConversionFloat: TypeConversionTemplate<float>
 	}
 	
 	override string GetString() {
-		return string.ToString(m_Value, false, false, false);
+		return m_Value.ToString();
 	}
 	
 	override void SetString(string value) {
-		m_Value = value.ToFloat();
+		value.ToLower();
+		m_Value = (value == "true");
 	}
 }
 
 class TypeConversionInt: TypeConversionTemplate<int>
 {
 	override bool GetBool() {
-		return (m_Value == 1);
+		return m_Value;
 	}
 	
 	override void SetBool(bool value) {
+		m_Value = value;
+	}
+	
+	override int GetInt() {
+		return m_Value;
+	}
+	
+	override void SetInt(int value) {
 		m_Value = value;
 	}
 	
@@ -164,50 +158,83 @@ class TypeConversionInt: TypeConversionTemplate<int>
 	}
 }
 
-class TypeConversionString: TypeConversionTemplate<string>
-{	
-	override bool GetBool()
-	{
-		string value = string.ToString(m_Value, false, false, false);
-		value.ToLower();
-		return (value == "true");
+class TypeConversionFloat: TypeConversionTemplate<float>
+{
+	override bool GetBool() {
+		return m_Value;
 	}
 	
-	override float GetFloat()
-	{
-		return string.ToString(m_Value, false, false, false).ToFloat();
+	override void SetBool(bool value) {
+		m_Value = value;
 	}
 	
-	override string GetString()
-	{
+	override int GetInt() {
+		return m_Value;
+	}
+	
+	override void SetInt(int value) {
+		m_Value = value;
+	}
+	
+	override float GetFloat() {
+		return m_Value;
+	}
+	
+	override void SetFloat(float value) {
+		m_Value = value;
+	}
+	
+	override string GetString() {
 		return string.ToString(m_Value, false, false, false);
 	}
 	
-	override void SetBool(bool value)
-	{
-		m_Value = value.ToString();
+	override void SetString(string value) {
+		m_Value = value.ToFloat();
+	}
+}
+
+class TypeConversionString: TypeConversionTemplate<string>
+{	
+	override bool GetBool() {
+		return string.ToString(m_Value, false, false, false) == "1";
+	}
+		
+	override void SetBool(bool value) {
+		m_Value = string.ToString(value, false, false, false);
 	}
 	
-	override void SetFloat(float value)
-	{	
-		m_Value = value.ToString();
+	override int GetInt() {
+		return m_Value.ToInt();
 	}
 	
-	override void SetString(string value)
-	{
+	override void SetInt(int value) {
+		m_Value = string.ToString(value, false, false, false);
+	}
+	
+	override float GetFloat() {
+		return m_Value.ToFloat();
+	}
+	
+	override void SetFloat(float value) {
+		m_Value = string.ToString(value, false, false, false);
+	}
+	
+	override string GetString() {
+		return m_Value;
+	}
+	
+	override void SetString(string value) {
 		m_Value = value;
 	}
 }
 
 class TypeConversionWidget: TypeConversionTemplate<Widget>
 {
-	override void SetWidget(Widget value)
-	{
+	override void SetWidget(Widget value) {
 		m_Value = value;
 	}
 	
-	override Widget GetWidget()
-	{
+	override Widget GetWidget() {
 		return m_Value;
 	}
 }

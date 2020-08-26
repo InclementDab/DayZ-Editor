@@ -41,7 +41,7 @@ class RadioButtonGroup: ViewBinding
 		EditorLog.Trace("RadioButtonGroup::UpdateModel");		
 		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 
-		m_PropertyDataConverter.SetFloat(m_ActiveButton);
+		m_PropertyDataConverter.SetInt(m_ActiveButton);
 		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, Binding_Index);
 		m_Controller.NotifyPropertyChanged(Binding_Name);
 	}
