@@ -14,7 +14,7 @@ class DataBindingShowcaseController: Controller
 	
 	bool WindowTextToggleValue;
 	
-	int RadioButtons;
+	int RadioButtons = 8;
 	
 	ref ObservableCollection<Widget> WindowListWidgets;
 	
@@ -35,11 +35,10 @@ class DataBindingShowcaseController: Controller
 	
 	override void PropertyChanged(string property_name)
 	{
-		Print(RadioButtons);
 		
 		if (property_name == "WindowTextToggleValue") {
-			WindowText = !WindowText;
-			NotifyPropertyChanged("WindowText");
+			RadioButtons = 8;
+			NotifyPropertyChanged("RadioButtons");
 		}
 	}
 	

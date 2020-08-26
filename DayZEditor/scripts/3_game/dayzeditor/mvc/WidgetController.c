@@ -55,7 +55,20 @@ class WidgetController
 	void ClearData();
 }
 
-
+class GroupWidgetController: WidgetController
+{
+	private ref array<ref WidgetController> m_WidgetControllers = {};
+	
+	void AddController(WidgetController widget_controller) {
+		m_WidgetControllers.Insert(widget_controller);
+	}
+	
+	override void SetData(TypeConverter type_converter) {
+		foreach (WidgetController widget_controller: m_WidgetControllers) {
+			widget_controller.SetData(type_converter);
+		}
+	}
+}
 
 class ButtonWidgetController: WidgetController
 {

@@ -22,9 +22,10 @@ class RadioButtonGroup: ViewBinding
 	override void SetController(Controller controller)
 	{
 		EditorLog.Trace("RadioButtonGroup::SetController");
-		super.SetController(controller);
+		m_Controller = controller;
 		m_PropertyDataType = int;
 		m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyDataType);
+		OnPropertyChanged();
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
@@ -34,6 +35,8 @@ class RadioButtonGroup: ViewBinding
 		
 		// Load Child RadioButtons
 		EditorLog.Info(string.Format("Loaded %1 Radio Buttons", LoadChildButtons(m_LayoutRoot, m_RadioButtonHashMap)));
+		
+		
 	}
 	
 	override void UpdateModel()
@@ -48,7 +51,22 @@ class RadioButtonGroup: ViewBinding
 	
 	override void OnPropertyChanged()
 	{
-		EditorLog.Trace("RadioButtonGroup::OnPropertyChanged");
+		EditorLog.Trace("RadioButtonGroup::OnPropertyChanged " + Binding_Name);		
+						
+		if (!m_PropertyDataType) {
+			EditorLog.Warning(string.Format("Binding not found: %1", Binding_Name));
+			return;
+		}
+		
+		if (!m_PropertyDataConverter) {
+			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
+			return;
+		}
+
+		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
+		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
+		
+		SetActiveRadioButton(m_PropertyDataConverter.GetInt());
 	}
 	
 	private int LoadChildButtons(Widget w, out RadioButtonHashMap button_hashmap)
@@ -67,32 +85,31 @@ class RadioButtonGroup: ViewBinding
 		
 		if (w.GetSibling() != null) {
 			LoadChildButtons(w.GetSibling(), button_hashmap);
-		}		
+		}
 		
 		return button_hashmap.Count();
 	}
 	
-	void OnRadioButtonClick(RadioButton source_button)
+	void SetActiveRadioButton(int button_id)
 	{
-		EditorLog.Trace("RadioButtonGroup::OnClick");
-		m_ActiveButton = source_button.GetID();
-		Print(m_ActiveButton);
+		EditorLog.Trace("RadioButtonGroup::SetActiveRadioButton");
+		m_ActiveButton = button_id;
 		foreach (int id, ref RadioButton radio_button: m_RadioButtonHashMap) {	
 			
 			switch (radio_button.GetRoot().Type()) {
 				
 				case ButtonWidget: {
-					ButtonWidget.Cast(radio_button.GetRoot()).SetState(id == source_button.GetID());
+					ButtonWidget.Cast(radio_button.GetRoot()).SetState(id == button_id);
 					break;
 				}
 				
 				case CheckBoxWidget: {
-					CheckBoxWidget.Cast(radio_button.GetRoot()).SetChecked(id == source_button.GetID());
+					CheckBoxWidget.Cast(radio_button.GetRoot()).SetChecked(id == button_id);
 					break;
 				}
 				
 				default: {
-					MVC.ErrorDialog(string.Format("RadioButtonGroup::OnRadioButtonClick: Invalid Type %1", radio_button.GetRoot().Type()));
+					MVC.ErrorDialog(string.Format("RadioButtonGroup::SetActiveRadioButton: Invalid Type %1", radio_button.GetRoot().Type()));
 				}
 			}
 		}
@@ -127,14 +144,16 @@ class RadioButton: ScriptedWidgetEventHandler
 	{
 		EditorLog.Trace("RadioButton::SetGroup");
 		m_RadioButtonGroup = button_group;
-	}
-	
+	}	
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		EditorLog.Trace("RadioButton::OnClick");		
-		m_RadioButtonGroup.OnRadioButtonClick(this);
-		return true;
+		EditorLog.Trace("RadioButton::OnClick " + w.Type());
+		if (button != 0) return false;
+		m_RadioButtonGroup.SetActiveRadioButton(Button_ID);
+		
+		return false;
 	}
+
 }
 

@@ -25,7 +25,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 	{ 
 		EditorLog.Trace("ViewBinding::SetController");
 		m_Controller = controller;
-	
 		m_PropertyDataType = m_Controller.GetPropertyType(Binding_Name);
 		
 		if (m_PropertyDataType.IsInherited(Observable)) {
@@ -79,7 +78,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
 			return;
 		}
-				
+
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
 		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
 		

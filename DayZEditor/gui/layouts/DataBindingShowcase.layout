@@ -43,6 +43,7 @@ FrameWidgetClass WindowFrame {
      scriptclass "ViewBinding"
      {
       ScriptParamsClass {
+       Binding_Name "RadioButtons"
        Two_Way_Binding 0
       }
      }
@@ -204,6 +205,82 @@ FrameWidgetClass WindowFrame {
        {
         ScriptParamsClass {
          Button_ID 5
+        }
+       }
+      }
+     }
+     {
+      ScriptParamsClass {
+       Binding_Name "RadioButtons"
+       Two_Way_Binding 0
+      }
+     }
+    }
+    WrapSpacerWidgetClass RadioButtonGroup0 {
+     visible 1
+     ignorepointer 1
+     position 0 0
+     size 250 50
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass "RadioButtonGroup"
+     Padding 5
+     Margin 5
+     content_valign center
+     {
+      ButtonWidgetClass RadioButton3 {
+       visible 1
+       position 0 0
+       size 50 50
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       draggable 0
+       scriptclass "RadioButton"
+       style Editor
+       {
+        ScriptParamsClass {
+         Button_ID 6
+        }
+       }
+      }
+      ButtonWidgetClass RadioButton4 {
+       size 50 50
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "RadioButton"
+       style Editor
+       {
+        ScriptParamsClass {
+         Button_ID 7
+        }
+       }
+      }
+      ButtonWidgetClass RadioButton5 {
+       visible 1
+       size 50 50
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "RadioButton"
+       style Editor
+       {
+        ScriptParamsClass {
+         Button_ID 8
         }
        }
       }

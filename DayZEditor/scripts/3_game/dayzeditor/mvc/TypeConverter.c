@@ -58,12 +58,14 @@ class TypeConverter
 	int GetInt();
 	float GetFloat();
 	string GetString();
+	vector GetVector();
 	Widget GetWidget();
 	
 	void SetBool(bool value);
 	void SetInt(int value);
 	void SetFloat(float value);
 	void SetString(string value);
+	void SetVector(vector value);
 	void SetWidget(Widget value);
 	
 	void SetToController(Class context, string name, int index);
@@ -118,8 +120,7 @@ class TypeConversionBool: TypeConversionTemplate<bool>
 	}
 	
 	override void SetString(string value) {
-		value.ToLower();
-		m_Value = (value == "true");
+		m_Value = (value == "1");
 	}
 }
 
@@ -219,12 +220,39 @@ class TypeConversionString: TypeConversionTemplate<string>
 		m_Value = string.ToString(value, false, false, false);
 	}
 	
+	override vector GetVector() {
+		return m_Value.ToVector();
+	}
+	
+	override void SetVector(vector value) {
+		m_Value = value.ToString(false);
+	}
+	
 	override string GetString() {
 		return m_Value;
 	}
 	
 	override void SetString(string value) {
 		m_Value = value;
+	}
+}
+
+class TypeConversionVector: TypeConversionTemplate<vector>
+{
+	override vector GetVector() {
+		return m_Value;
+	}
+	
+	override void SetVector(vector value) {
+		m_Value = value;
+	}
+	
+	override string GetString() {
+		return m_Value.ToString(false);
+	}
+	
+	override void SetString(string value) {
+		m_Value = value.ToVector();
 	}
 }
 
