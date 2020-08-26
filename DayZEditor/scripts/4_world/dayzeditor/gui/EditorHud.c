@@ -32,7 +32,8 @@ class EditorHud: Hud
 		EditorLog.Trace("EditorHud::Init");
 		m_LayoutRoot 			= GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorUI.layout", hud_panel_widget);		
 
-		GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/DataBindingShowcase.layout", m_LayoutRoot);
+		// Showcase UI
+		//GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/DataBindingShowcase.layout", m_LayoutRoot);
 		
 		// Misc get ridda this shit too
 		m_EditorMapContainer	= m_LayoutRoot.FindAnyWidget("MapContainer");
@@ -117,18 +118,16 @@ class EditorHud: Hud
 		ShowCursor();
 	}
 
-	bool IsModalActive()
-	{
+	bool IsModalActive() {
 		return GetGame().GetUIManager().IsModalVisible();
 	}
 	
-	void ShowLeftBar(bool state)
-	{
+	// ICommand o.O
+	void ShowLeftBar(bool state) {
 		m_LeftbarFrame.SetPos(-300 * state, 32);
 	}
 	
-	void ShowRightBar(bool state)
-	{
+	void ShowRightBar(bool state) {
 		m_RightbarFrame.SetPos(-300 * state, 32);
 	}
 	

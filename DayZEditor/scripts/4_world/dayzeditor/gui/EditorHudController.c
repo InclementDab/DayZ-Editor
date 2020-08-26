@@ -131,7 +131,6 @@ class EditorHudController: Controller
 			}
 
 #ifndef COMPONENT_SYSTEM
-			case "BrushTypeBox":
 			case "BrushToggleButton": {
 				if (BrushToggleButton) {
 					int index = XComboBoxWidget.Cast(m_LayoutRoot.FindAnyWidget("BrushTypeBox")).GetCurrentItem();
@@ -142,7 +141,6 @@ class EditorHudController: Controller
 				break;
 			}
 #endif
-			
 		}
 	}
 }

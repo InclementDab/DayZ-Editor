@@ -171,11 +171,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 				UpdateModel();
 				return true;
 			}
-			
-			case XComboBoxWidget: {
-				m_Controller.PropertyChanged(w.GetName());
-				return false;
-			}
 		}
 		
 		return false;
