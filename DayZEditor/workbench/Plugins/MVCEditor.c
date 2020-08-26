@@ -75,7 +75,15 @@ class MVCEditorPlugin: WorkbenchPlugin
 		//WBModuleDef module = Workbench.GetModule("ParticleEditor");
 
 		//Workbench.GetModule("ResourceManager").GetNumContainers();
-		//Workbench.ScriptDialog("Edit View Binding Options", "", this);
+		
+		"->".();
+		
+		Workbench.ScriptDialog("Edit View Binding Options", "", this);
+	}
+	
+	void "->"()
+	{
+		Print("test");
 	}
 	
 

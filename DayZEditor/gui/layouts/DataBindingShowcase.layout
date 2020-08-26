@@ -52,7 +52,7 @@ FrameWidgetClass WindowFrame {
      visible 1
      disabled 0
      ignorepointer 0
-     size 50 50
+     size 50 46
      halign right_ref
      valign center_ref
      hexactpos 1
@@ -60,6 +60,7 @@ FrameWidgetClass WindowFrame {
      hexactsize 1
      vexactsize 1
      scaled 1
+     draggable 1
      scriptclass "ViewBinding"
      style Editor
      "no focus" 0
@@ -82,6 +83,7 @@ FrameWidgetClass WindowFrame {
      vexactsize 1
      scriptclass "ViewBinding"
      step 0.05
+     vertical 0
      {
       TextWidgetClass WindowSliderReadout {
        visible 1
@@ -116,6 +118,7 @@ FrameWidgetClass WindowFrame {
     CheckBoxWidgetClass WindowCheckBox {
      visible 1
      clipchildren 1
+     position 2 0
      size 50 50
      halign center_ref
      valign center_ref
@@ -126,8 +129,11 @@ FrameWidgetClass WindowFrame {
      scaled 1
      scriptclass "ViewBinding"
      style Default
+     "no focus" 0
      {
       ScriptParamsClass {
+       Binding_Name "WindowText"
+       Two_Way_Binding 1
       }
      }
     }

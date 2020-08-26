@@ -6,8 +6,8 @@ ref DataBindingShowcaseController m_DataBindingShowcaseController;
 class DataBindingShowcaseController: Controller
 {
 	
-	//EquationEvaluater WindowText = "(10 / 2) + 7";
-	bool WindowText;
+	EquationEvaluater WindowText = "(10 / 2) + 7";
+	//bool WindowText;
 	float WindowSlider = 10;
 	
 	bool EvaluateEquation;
@@ -46,9 +46,9 @@ class DataBindingShowcaseController: Controller
 	override void PropertyChanged(string property_name)
 	{
 		
-		if (property_name == "WindowTextToggleValue") {
-			SelectedObject = 1;
-			NotifyPropertyChanged("WindowListWidgets");
+		if (property_name == "WindowTextToggle") {
+			WindowText.Evaluate();
+			NotifyPropertyChanged("WindowText");
 			
 		}
 	}
