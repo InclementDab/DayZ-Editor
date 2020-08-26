@@ -47,9 +47,11 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Trace("ViewBinding::SetController");
 		m_Controller = controller;
 		typename property_type = GetPropertyType(Binding_Name);
-		
-		if (property_type.IsInherited(Observable)) {
-			m_SelectedDataConverter = MVC.GetTypeConversion(GetPropertyType(Selected_Item));			
+
+		if (Selected_Item != string.Empty)
+			m_SelectedDataConverter = MVC.GetTypeConversion(GetPropertyType(Selected_Item));
+				
+		if (property_type.IsInherited(Observable)) {			
 			m_PropertyDataConverter = MVC.GetTypeConversion(Observable.Cast(property_type.Spawn()).GetType());
 		} else {
 			m_PropertyDataConverter = MVC.GetTypeConversion(property_type);

@@ -81,6 +81,11 @@ class ButtonWidgetController: WidgetController
 		return true;
 	}
 	
+	override void SetSelection(TypeConverter type_converter) {
+		ButtonWidget.Cast(m_Widget).SetText(type_converter.GetString());
+	}
+	
+	
 	override void SetData(TypeConverter type_converter) {
 		ButtonWidget.Cast(m_Widget).SetState(type_converter.GetBool());
 	}

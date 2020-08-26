@@ -17,7 +17,7 @@ class EditorHudController: Controller
 	float BrushRadius = 50;
 	float BrushDensity = 0.5;
 	
-	bool BrushToggleButton;
+	bool BrushToggleButtonState;
 	int BrushTypeSelection;
 	
 	bool MagnetButton;
@@ -35,7 +35,7 @@ class EditorHudController: Controller
 	// View Properties
 	protected Widget LeftbarFrame;
 	protected Widget RightbarFrame;
-	
+	protected ButtonWidget BrushToggleButton;
 	
 	void EditorHudController() {
 		EditorLog.Trace("EditorHudController");
@@ -136,12 +136,30 @@ class EditorHudController: Controller
 			}
 			
 			case "BrushTypeSelection": {
-				SelectBrush(BrushToggleButton);
+				SelectBrush(BrushToggleButtonState);
+				break;
+			}
+			
+			case "BrushTypeBoxData": {
+				BrushToggleButton.SetText(BrushTypeBoxData.Get(BrushTypeSelection).Name);
 				break;
 			}
 			
 
 		}
+	}
+	
+	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
+	{
+		EditorLog.Trace("EditorHudController::CollectionChanged: " + collection_name);
+		switch (collection_name) {
+			
+			case "BrushTypeBoxData": {
+				BrushToggleButton.SetText(BrushTypeBoxData.Get(BrushTypeSelection).Name);
+				break;
+			}
+		}
+		
 	}
 	
 	void SelectBrush(bool state)
@@ -260,37 +278,55 @@ class EditorHudController: Controller
 		return false;
 	}
 	
+	
+	private int GetHighlightColor(string widget_name)
+	{
+		switch (widget_name) {
+			
+			case "UndoButton": 
+			case "RedoButton": {
+				return COLOR_SALMON_A;
+			}
+			
+			case "MagnetButton": {
+				return COLOR_CANDY;
+			}
+			
+			case "GroundButton": {
+				return COLOR_APPLE;
+			}
+			
+			case "SnapButton": {
+				return COLOR_JELLY;
+			}
+		}
+		
+		return 0;
+	}
+	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::OnClick");
 		if (button != 0) return false;
 		
 		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
-		int pos = ButtonWidget.Cast(w).GetState() * 1;
+		
 		switch (w.GetName()) {
 			
 			case "UndoButton": 
 			case "RedoButton": {
 				w.SetColor(COLOR_SALMON_A);
+				int pos = ButtonWidget.Cast(w).GetState() * 1;
 				icon.SetPos(pos, pos);
 				break;
 			}
 			
+			case "SnapButton":
+			case "GroundButton":
 			case "MagnetButton": {
-				icon.SetColor((COLOR_CANDY * ButtonWidget.Cast(w).GetState()) - 1);
-				icon.SetPos(pos, pos);
-				break;
-			}
-			
-			case "GroundButton": {
-				icon.SetColor((COLOR_APPLE * ButtonWidget.Cast(w).GetState()) - 1);
-				icon.SetPos(pos, pos);
-				break;
-			}
-			
-			case "SnapButton": {
-				icon.SetColor((COLOR_JELLY * ButtonWidget.Cast(w).GetState()) - 1);
-				icon.SetPos(pos, pos);
+				bool button_state = ButtonWidget.Cast(w).GetState();
+				icon.SetColor((GetHighlightColor(w.GetName()) * button_state) - 1);
+				icon.SetPos(button_state * 1, button_state * 1);
 				break;
 			}
 		}

@@ -1173,7 +1173,7 @@ FrameWidgetClass EditorMainFrame {
           }
          }
         }
-        ButtonWidgetClass BrushToggleButton {
+        ButtonWidgetClass BrushToggleButton2 {
          visible 1
          disabled 0
          clipchildren 0
@@ -1200,15 +1200,46 @@ FrameWidgetClass EditorMainFrame {
         }
         XComboBoxWidgetClass BrushTypeBox {
          visible 1
+         clipchildren 1
+         ignorepointer 0
          position 0 0
          size 200 32
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         draggable 0
          scriptclass "ViewBinding"
-         style Default
+         style debugUI
+         "no focus" 1
          font "gui/fonts/metron28"
+         "text color" 1 1 1 0
+         {
+          ButtonWidgetClass BrushToggleButton {
+           visible 1
+           ignorepointer 0
+           color 0.749 0.3725 0.3725 1
+           position 0 0
+           size 0.7 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           priority 5
+           scriptclass "ViewBinding"
+           style Default
+           "no focus" 1
+           switch toggle
+           {
+            ScriptParamsClass {
+             Binding_Name "BrushToggleButtonState"
+             Two_Way_Binding 1
+            }
+           }
+          }
+         }
          {
           ScriptParamsClass {
            Binding_Name "BrushTypeBoxData"

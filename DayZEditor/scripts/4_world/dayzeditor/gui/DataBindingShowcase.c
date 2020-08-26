@@ -12,13 +12,15 @@ class DataBindingShowcaseController: Controller
 	
 	bool EvaluateEquation;
 	
-	bool WindowTextToggleValue;
+	bool WindowTextToggle;
 	
 	int RadioButtons = 8;
 	
 	int SelectedObject;
 	
 	ref ObservableCollection<ref EditorBrushData> WindowListWidgets;
+	
+	TextWidget WindowTextToggleValue;
 	
 	void DataBindingShowcaseController()
 	{
@@ -55,12 +57,17 @@ class DataBindingShowcaseController: Controller
 	void OnWindowTextToggle(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("OnWindowTextToggle");
+		Print(WindowTextToggleValue);
+		
+		
 
 	}
 	
 	void OnWindowCheckToggle(CheckBoxCommandArgs args)
 	{
 		EditorLog.Trace("OnWindowCheckToggle");
+		
+		
 	}
 	
 	void OnComboBoxChanged(XComboBoxCommandArgs args)

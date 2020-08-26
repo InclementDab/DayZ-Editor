@@ -29,7 +29,7 @@ FrameWidgetClass WindowFrame {
    content_halign center
    content_valign center
    {
-    EditBoxWidgetClass WindowText {
+    TextWidgetClass WindowText {
      visible 1
      disabled 0
      ignorepointer 0
@@ -44,7 +44,6 @@ FrameWidgetClass WindowFrame {
      scriptclass "ViewBinding"
      {
       ScriptParamsClass {
-       Binding_Name "RadioButtons"
        Two_Way_Binding 0
       }
      }
@@ -63,9 +62,12 @@ FrameWidgetClass WindowFrame {
      scaled 1
      scriptclass "ViewBinding"
      style Editor
+     "no focus" 0
      switch normal
      {
       ScriptParamsClass {
+       Binding_Name "WindowTextToggle"
+       Command_Execute "OnWindowTextToggle"
       }
      }
     }
