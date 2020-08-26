@@ -140,23 +140,26 @@ class ViewBinding: ScriptedWidgetEventHandler
 	private void UpdateView()
 	{
 		EditorLog.Trace("ViewBinding::UpdateView");
-		
+		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
 
 		if (!m_PropertyDataConverter) {
 			MVC.TypeConversionError(GetPropertyType(Binding_Name));
 			return;
 		}
+		
+		if (m_SelectedDataConverter) {
+			m_SelectedDataConverter.GetFromController(m_Controller, Selected_Item, 0);
+			m_WidgetController.SetSelection(m_SelectedDataConverter);
+		}
 
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, 0);
-		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
-		
 		m_WidgetController.SetData(m_PropertyDataConverter);
 	}
 	
 	private void UpdateModel()
 	{
 		EditorLog.Trace("ViewBinding::UpdateModel");
-		
+		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 		
 		if (!m_PropertyDataConverter) {
 			MVC.TypeConversionError(GetPropertyType(Binding_Name));
@@ -174,10 +177,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			return;
 		}
 
-
-		
-		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
-		
+				
 		m_WidgetController.GetData(m_PropertyDataConverter);
 		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, 0);
 		m_Controller.NotifyPropertyChanged(Binding_Name);

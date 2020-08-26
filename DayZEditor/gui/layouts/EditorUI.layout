@@ -1191,6 +1191,7 @@ FrameWidgetClass EditorMainFrame {
           ScriptParamsClass {
            Binding_Name "BrushTypeBoxData"
            Command_Execute "BrushTypeBoxExecute"
+           Command_CanExecute " "
            Selected_Item "BrushTypeSelection"
           }
          }

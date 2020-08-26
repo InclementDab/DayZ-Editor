@@ -16,6 +16,8 @@ class DataBindingShowcaseController: Controller
 	
 	int RadioButtons = 8;
 	
+	int SelectedObject;
+	
 	ref ObservableCollection<ref EditorBrushData> WindowListWidgets;
 	
 	void DataBindingShowcaseController()
@@ -43,8 +45,9 @@ class DataBindingShowcaseController: Controller
 	{
 		
 		if (property_name == "WindowTextToggleValue") {
-			RadioButtons = 8;
-			NotifyPropertyChanged("RadioButtons");
+			SelectedObject = 1;
+			NotifyPropertyChanged("WindowListWidgets");
+			
 		}
 	}
 	
