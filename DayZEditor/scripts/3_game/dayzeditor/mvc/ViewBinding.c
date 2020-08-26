@@ -13,8 +13,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	string GetBindingName() { return Binding_Name; }
 	int GetBindingIndex() { return Binding_Index; }
 	
-	private typename m_WidgetDataType;
-	
+	private ref WidgetController m_WidgetController;
 	private ref TypeConverter m_PropertyDataConverter;
 	private typename m_PropertyDataType;
 	
@@ -27,9 +26,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	{ 
 		EditorLog.Trace("ViewBinding::SetController");
 		m_Controller = controller;
-		
-		
-		
+	
 		m_PropertyDataType = m_Controller.GetPropertyType(Binding_Name);
 		
 		if (m_PropertyDataType.IsInherited(Observable)) {
@@ -42,7 +39,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		// Updates the view on first load
 		if (m_PropertyDataConverter) {
-			//OnPropertyChanged();
+			OnPropertyChanged();
 			
 		} else {
 			EditorLog.Warning(string.Format("[%1] Data Converter not found!", m_LayoutRoot.GetName()));
@@ -62,7 +59,12 @@ class ViewBinding: ScriptedWidgetEventHandler
 			MVC.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
 		}
 		
-		m_WidgetDataType = GetWidgetDataType(m_LayoutRoot.Type());
+		m_WidgetController = GetWidgetController(m_LayoutRoot);
+		if (!m_WidgetController) {
+			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
+			return;
+		}
+		
 		
 		m_LayoutRoot.SetHandler(this);
 	}
@@ -70,104 +72,23 @@ class ViewBinding: ScriptedWidgetEventHandler
 	void OnPropertyChanged()
 	{
 		EditorLog.Trace("ViewBinding::OnPropertyChanged " + Binding_Name);		
-		//EditorLog.Debug(string.Format("PropertyDataType: %1, WidgetDataType: %2", m_PropertyDataType, m_WidgetDataType));
+						
+		if (!m_PropertyDataType) {
+			MVC.ErrorDialog(string.Format("Binding not found: %1", Binding_Name));
+			return;
+		}
+		
+		if (!m_PropertyDataConverter) {
+			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
+			return;			
+		}
 				
-		if (!m_PropertyDataType) {
-			MVC.ErrorDialog(string.Format("Binding not found: %1", Binding_Name));
-			return;
-		}
-		
-		if (!m_PropertyDataConverter) {
-			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
-			return;			
-		}
-		
-		// If the property of the Controller is NOT the native widget data type			
-		if (m_WidgetDataType != m_PropertyDataType) {
-			EditorLog.Debug(string.Format("Attempting Type Conversion from %1 to %2", m_PropertyDataType, m_WidgetDataType));
-		}
-		
 		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
-		
-		
-		string widget_setter;
-		if (!GetWidgetSetter(m_LayoutRoot.Type(), widget_setter)) {
-			return;
-		}
-		
 		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
-		switch (m_WidgetDataType)
-		{
-			case bool: {
-				g_Script.CallFunction(m_LayoutRoot, widget_setter, null, m_PropertyDataConverter.GetBool());
-				break;
-			}
-			
-			case float: {
-				g_Script.CallFunction(m_LayoutRoot, widget_setter, null, m_PropertyDataConverter.GetFloat());
-				break;
-			}
-			
-			case string: {
-				g_Script.CallFunction(m_LayoutRoot, widget_setter, null, m_PropertyDataConverter.GetString());
-				break;
-			}
-			
-			case Widget: {
-				g_Script.CallFunction(m_LayoutRoot, widget_setter, null, m_PropertyDataConverter.GetWidget());
-				break;
-			}
-						
-			default: {
-				MVC.UnsupportedConversionError(m_PropertyDataConverter.Type(), m_WidgetDataType);
-				return;
-			}
-		}		
-	}
-	
-	
-	void OnCollectionChanged(CollectionChangedEventArgs args)
-	{
-		EditorLog.Trace("ViewBinding::OnCollectionChanged " + Binding_Name);
 		
-		if (!m_PropertyDataType) {
-			MVC.ErrorDialog(string.Format("Binding not found: %1", Binding_Name));
-			return;
-		}
-		
-		if (!m_PropertyDataConverter) {
-			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
-			return;			
-		}
-		
-		// If the property of the Controller is NOT the native widget data type			
-		if (m_WidgetDataType != m_PropertyDataType) {
-			EditorLog.Debug(string.Format("Attempting Type Conversion from %1 to %2", m_PropertyDataType, m_WidgetDataType));
-		}
-		
-		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
-		EditorLog.Debug(string.Format("[%1] Updating Collection View...", m_LayoutRoot.Type()));
 
-		string widget_setter;
-		if (!GetWidgetSetter(m_LayoutRoot.Type(), widget_setter)) {
-			return;
-		}
-		Print(widget_setter);
-		switch (args.param2) {
-			
-			case NotifyCollectionChangedAction.Add:
-			case NotifyCollectionChangedAction.Remove: {
-				g_Script.CallFunctionParams(m_LayoutRoot, widget_setter, null, args.param3);
-				break;
-			}
-						
-			default: {
-				MVC.ErrorDialog(string.Format("Unsupported CollectionChangedAction: %1", args.param2));
-			}
-		}
+		m_WidgetController.SetData(m_PropertyDataConverter);	
 	}
-	
-	
 	
 	void UpdateModel()
 	{
@@ -177,11 +98,9 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Trace("ViewBinding::UpdateModel");
 		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 		
-		string widget_getter;
-		if (!GetWidgetGetter(m_LayoutRoot.Type(), widget_getter)) {
-			return;
-		}
-				
+		m_WidgetController.GetData(m_PropertyDataConverter);
+		
+			/*	
 		switch (m_WidgetDataType) {
 			
 			case bool: {
@@ -209,11 +128,46 @@ class ViewBinding: ScriptedWidgetEventHandler
 				MVC.UnsupportedConversionError(m_PropertyDataConverter.Type(), m_WidgetDataType);
 				return;
 			}
-		}
+		}*/
 		
 
 		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, Binding_Index);
 		m_Controller.NotifyPropertyChanged(Binding_Name);
+	}
+	
+	
+	void OnCollectionChanged(CollectionChangedEventArgs args)
+	{
+		EditorLog.Trace("ViewBinding::OnCollectionChanged " + Binding_Name);
+		
+		if (!m_PropertyDataType) {
+			MVC.ErrorDialog(string.Format("Binding not found: %1", Binding_Name));
+			return;
+		}
+		
+		if (!m_PropertyDataConverter) {
+			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
+			return;			
+		}
+
+		
+		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
+		EditorLog.Debug(string.Format("[%1] Updating Collection View...", m_LayoutRoot.Type()));
+
+
+		
+		switch (args.param2) {
+			
+			case NotifyCollectionChangedAction.Add:
+			case NotifyCollectionChangedAction.Remove: {
+				
+				break;
+			}
+						
+			default: {
+				MVC.ErrorDialog(string.Format("Unsupported CollectionChangedAction: %1", args.param2));
+			}
+		}
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
@@ -243,187 +197,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		return super.OnChange(w, x, y, finished);
 	}
 	
-	
-	static bool GetWidgetSetter(typename widget_type, out string widget_setter)
-	{
-		switch (widget_type) {
-			
-			/* Observables
-			case Widget:
-			case SpacerBaseWidget:
-			case GridSpacerWidget:
-			case WrapSpacerWidget:
-			case ScrollWidget:
-			case SpacerWidget:
-				return "AddChild";*/
-			
-			case ButtonWidget:
-				widget_setter = "SetState";
-				break;
-			
-			case CheckBoxWidget:
-				widget_setter = "SetChecked";
-				break;
-			
-			case SliderWidget:			
-			case ProgressBarWidget:
-			case SimpleProgressBarWidget:
-				widget_setter = "SetCurrent";
-				break;
-			
-			case TextWidget:
-			case EditBoxWidget:
-			case RichTextWidget:
-				widget_setter = "SetText";
-				break;
-			
-			case HtmlWidget:
-				widget_setter = "LoadFile";
-				break;
-			
-			case MultilineEditBoxWidget:
-				widget_setter = "SetLine";
-				break;
-			
-			/* Unsupported
-			case ImageWidget:
-			case VideoWidget:
-				return string.Empty;*/
-			
-			/* Observables
-			case XComboBoxWidget:
-			case MultilineTextWidget:
-				return TStringArray;*/
-			
-			case ItemPreviewWidget:
-				widget_setter = "SetItem";
-				break;
-			
-			case PlayerPreviewWidget:
-				widget_setter = "SetPlayer";
-				break;
-			
-			default: {
-				MVC.ErrorDialog(string.Format("Unsupported Set Type Specified %1", widget_type));
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
-	static bool GetWidgetGetter(typename widget_type, out string widget_getter)
-	{
-		switch (widget_type) {
-			
-			/* Observables
-			case Widget:
-			case SpacerBaseWidget:
-			case GridSpacerWidget:
-			case WrapSpacerWidget:
-			case ScrollWidget:
-			case SpacerWidget:
-				return "GetChildren";*/
-			
-		
-			
-			case ButtonWidget:
-				widget_getter = "GetState";
-				break;
-			
-			case CheckBoxWidget:
-				widget_getter = "IsChecked";
-				break;
-			
-			case SliderWidget:			
-			case ProgressBarWidget:
-			case SimpleProgressBarWidget:
-				widget_getter = "GetCurrent";
-				break;
-			
-			case EditBoxWidget:
-				widget_getter = "GetText";
-				break;
-			
-			
-			/* Unsupported
-			case ImageWidget:
-			case VideoWidget:
-				return string.Empty;*/
-			
-			/* Observables
-			case XComboBoxWidget:
-			case MultilineTextWidget:
-				return TStringArray;*/
-			
-			case ItemPreviewWidget:
-				widget_getter = "GetItem";
-				break;
-			
-			case PlayerPreviewWidget:
-				widget_getter = "GetDummyPlayer";
-				break;
-			
-			default: {
-				MVC.ErrorDialog(string.Format("Unsupported Get Type Specified %1", widget_type));
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
-	
-	static typename GetWidgetDataType(typename widget_type)
-	{
-		switch (widget_type) {
 
-			// Observables
-			case SpacerBaseWidget:
-			case GridSpacerWidget:
-			case WrapSpacerWidget:
-			case ScrollWidget:
-			case SpacerWidget:
-			//case Widget: // this might be a weird one
-				return Widget;
-			
-
-			case ButtonWidget:
-			case CheckBoxWidget:
-				return bool;
-			
-			case SliderWidget:
-			case ProgressBarWidget:
-			case SimpleProgressBarWidget:
-				return float;
-			
-			case TextWidget:
-			case ImageWidget:
-			case EditBoxWidget:
-			case HtmlWidget:
-			case VideoWidget:
-			case RichTextWidget:
-			case MultilineTextWidget:
-			case MultilineEditBoxWidget:
-			case XComboBoxWidget:
-				return string;
-			
-
-			
-			
-			case ItemPreviewWidget:
-				return EntityAI;
-			
-			case PlayerPreviewWidget:
-				return DayZPlayer;
-			
-			default: {
-				MVC.UnsupportedTypeError(widget_type);
-			}
-		}
-		
-		return Widget;
-	}
 	
 	static bool SupportsTwoWayBinding(typename type)
 	{

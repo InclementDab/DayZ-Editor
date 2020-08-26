@@ -43,7 +43,7 @@ FrameWidgetClass WindowFrame {
      scriptclass "ViewBinding"
      {
       ScriptParamsClass {
-       Two_Way_Binding 1
+       Two_Way_Binding 0
       }
      }
     }
@@ -56,12 +56,12 @@ FrameWidgetClass WindowFrame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scaled 1
      scriptclass "ViewBinding"
      style Editor
      switch normal
      {
       ScriptParamsClass {
-       Binding_Name "EvaluateEquation"
        Two_Way_Binding 1
       }
      }
@@ -122,6 +122,7 @@ FrameWidgetClass WindowFrame {
      style Default
      {
       ScriptParamsClass {
+       Binding_Name "WindowText"
        Two_Way_Binding 1
       }
      }
