@@ -51,6 +51,7 @@ class WidgetController
 	void GetData(out TypeConverter type_converter);
 	
 	// Collection Stuff
+	void GetSelection(out TypeConverter type_converter);
 	void InsertData(int index, TypeConverter type_converter);
 	void RemoveData(int index, TypeConverter type_converter);
 	void ReplaceData(int index, TypeConverter type_converter);
@@ -228,6 +229,10 @@ class SpacerWidgetController: WidgetController
 
 class XComboBoxWidgetController: WidgetController
 {
+	override void GetSelection(out TypeConverter type_converter) {
+		type_converter.SetInt(XComboBoxWidget.Cast(m_Widget).GetCurrentItem());
+	}
+	
 	override void InsertData(int index, TypeConverter type_converter) {
 		XComboBoxWidget.Cast(m_Widget).AddItem(type_converter.GetString());
 	}

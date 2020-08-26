@@ -5,21 +5,39 @@ class ViewBinding: ScriptedWidgetEventHandler
 {
 	protected Widget m_LayoutRoot;
 	
+	// Name of Binding. If blank, uses the Widget name (not advised)
 	protected reference string Binding_Name;
-	protected reference int Binding_Index;
-	protected reference bool Two_Way_Binding;
+	
+	// Function called when type is Clicked, Selected, or Changed
 	protected reference string Command_Execute;
+	
+	// Function that returns bool defining whether or not the Command_Execute can be called
 	protected reference string Command_CanExecute;
 	
+	// Only valid if type is ObservableCollection
+	protected reference string Selected_Item;
 	
-	Widget GetRoot() { return m_LayoutRoot; }
-	string GetBindingName() { return Binding_Name; }
-	int GetBindingIndex() { return Binding_Index; }
+	// If true, Bindings go both ways. Otherwise the controller is the master
+	protected reference bool Two_Way_Binding;
 	
-	protected ref WidgetController m_WidgetController;
-	protected ref TypeConverter m_PropertyDataConverter;
-	protected typename m_PropertyDataType;
+	
+	Widget GetRoot() { 
+		return m_LayoutRoot; 
+	}
+	
+	string GetBindingName() { 
+		return Binding_Name; 
+	}
+	
+	typename GetPropertyType(string property_name) {
+		return m_Controller.GetPropertyType(property_name);
+	}
+	
 	protected Controller m_Controller;
+	protected ref TypeConverter m_PropertyDataConverter;
+	protected ref WidgetController m_WidgetController;
+	
+	protected ref TypeConverter m_SelectedDataConverter;
 	
 	void ViewBinding() { /*EditorLog.Trace("ViewBinding");*/ }
 	void ~ViewBinding() { /*EditorLog.Trace("~ViewBinding");*/ }
@@ -28,16 +46,17 @@ class ViewBinding: ScriptedWidgetEventHandler
 	{ 
 		EditorLog.Trace("ViewBinding::SetController");
 		m_Controller = controller;
-		m_PropertyDataType = m_Controller.GetPropertyType(Binding_Name);
+		typename property_type = GetPropertyType(Binding_Name);
 		
-		if (m_PropertyDataType.IsInherited(Observable)) {
-			m_PropertyDataConverter = MVC.GetTypeConversion(Observable.Cast(m_PropertyDataType.Spawn()).GetType());
+		if (property_type.IsInherited(Observable)) {
+			m_SelectedDataConverter = MVC.GetTypeConversion(GetPropertyType(Selected_Item));			
+			m_PropertyDataConverter = MVC.GetTypeConversion(Observable.Cast(property_type.Spawn()).GetType());
 		} else {
-			m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyDataType);
+			m_PropertyDataConverter = MVC.GetTypeConversion(property_type);
 		}
 		
 		// Updates the view on first load
-		OnPropertyChanged();
+		UpdateView();
 	}
 	
 	void OnWidgetScriptInit(Widget w)
@@ -65,55 +84,17 @@ class ViewBinding: ScriptedWidgetEventHandler
 	
 	void OnPropertyChanged()
 	{
-		EditorLog.Trace("ViewBinding::OnPropertyChanged " + Binding_Name);		
-		UpdateCommand();
-		if (!m_PropertyDataType) {
-			EditorLog.Warning(string.Format("Binding not found: %1", Binding_Name));
-			return;
-		}
-		
-		if (!m_PropertyDataConverter) {
-			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
-			return;
-		}
+		EditorLog.Trace("ViewBinding::OnPropertyChanged " + Binding_Name);
+		UpdateView();
+	}
 
-		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
-		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
-		
-		m_WidgetController.SetData(m_PropertyDataConverter);
-	}
-	
-	void UpdateModel()
-	{
-		EditorLog.Trace("ViewBinding::UpdateModel");
-		UpdateCommand();
-		if (!Two_Way_Binding || !m_WidgetController.CanTwoWayBind()) 
-			return;
-		
-		if (!m_PropertyDataConverter) {
-			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
-			return;
-		}
-		
-		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
-		
-		m_WidgetController.GetData(m_PropertyDataConverter);
-		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, Binding_Index);
-		m_Controller.NotifyPropertyChanged(Binding_Name);
-	}
-	
-	
 	void OnCollectionChanged(ref CollectionChangedEventArgs args)
 	{
 		EditorLog.Trace("ViewBinding::OnCollectionChanged " + Binding_Name);
-		UpdateCommand();
-		if (!m_PropertyDataType) {
-			MVC.ErrorDialog(string.Format("Binding not found: %1", Binding_Name));
-			return;
-		}
+
 		
 		if (!m_PropertyDataConverter) {
-			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
+			MVC.TypeConversionError(GetPropertyType(Binding_Name));
 			return;			
 		}
 		
@@ -128,7 +109,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		m_PropertyDataConverter.SetParam(args.param4);
 		switch (args.param2) {
 						
-			
 			case NotifyCollectionChangedAction.Add: {
 				m_WidgetController.InsertData(args.param3, m_PropertyDataConverter);
 				break;
@@ -156,6 +136,52 @@ class ViewBinding: ScriptedWidgetEventHandler
 			}
 		}
 	}
+	
+	private void UpdateView()
+	{
+		EditorLog.Trace("ViewBinding::UpdateView");
+		
+
+		if (!m_PropertyDataConverter) {
+			MVC.TypeConversionError(GetPropertyType(Binding_Name));
+			return;
+		}
+
+		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, 0);
+		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
+		
+		m_WidgetController.SetData(m_PropertyDataConverter);
+	}
+	
+	private void UpdateModel()
+	{
+		EditorLog.Trace("ViewBinding::UpdateModel");
+		
+		
+		if (!m_PropertyDataConverter) {
+			MVC.TypeConversionError(GetPropertyType(Binding_Name));
+			return;
+		}
+		
+		if (m_SelectedDataConverter) {
+			m_WidgetController.GetSelection(m_SelectedDataConverter);
+			m_SelectedDataConverter.SetToController(m_Controller, Selected_Item, 0);
+		}
+		
+		if (!Two_Way_Binding || !m_WidgetController.CanTwoWayBind()) {
+			m_Controller.NotifyPropertyChanged(Binding_Name);
+			return;
+		}
+
+
+		
+		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
+		
+		m_WidgetController.GetData(m_PropertyDataConverter);
+		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, 0);
+		m_Controller.NotifyPropertyChanged(Binding_Name);
+	}
+	
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
@@ -194,7 +220,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			}
 			
 		}
-		
+
 		UpdateModel();
 		
 

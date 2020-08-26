@@ -19,12 +19,17 @@ class EditorHudController: Controller
 	
 	bool BrushToggleButton;
 	
+	bool MagnetButton;
+	bool GroundButton;
+	bool SnapButton;
+	
 	//ref TextListboxWidgetData DebugActionStackListbox;
 	ref ObservableCollection<Widget> LeftbarSpacer;
 	ref ObservableCollection<Widget> RightbarSpacer;
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 	ref ObservableCollection<string> DebugActionStackListbox;
 	
+	int BrushTypeSelection;
 	
 	// View Properties
 	protected Widget LeftbarFrame;
@@ -117,6 +122,7 @@ class EditorHudController: Controller
 	override void PropertyChanged(string property_name)
 	{
 		EditorLog.Trace("EditorHudController::PropertyChanged: " + property_name);
+		Print(BrushTypeSelection);
 		
 		switch (property_name) {
 			

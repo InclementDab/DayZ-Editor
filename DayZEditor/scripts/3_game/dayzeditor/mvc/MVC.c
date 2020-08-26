@@ -60,7 +60,15 @@ class MVC
 	{
 		ErrorDialog(string.Format("Unsupported conversion from %1 to %2!", from_type, to_type));
 	}
-
+	
+	static void TypeConversionError(typename property_type)
+	{
+		if (!property_type) {
+			EditorLog.Warning("Data Binding not found!");
+		} else {
+			EditorLog.Warning(string.Format("Could not find TypeConversion for Type %1\nUse MVC.RegisterConversionTemplates to register custom types", property_type.ToString()));
+		}
+	}
 	
 }
 

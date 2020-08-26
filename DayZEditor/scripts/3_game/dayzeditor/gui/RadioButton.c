@@ -23,8 +23,7 @@ class RadioButtonGroup: ViewBinding
 	{
 		EditorLog.Trace("RadioButtonGroup::SetController");
 		m_Controller = controller;
-		m_PropertyDataType = int;
-		m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyDataType);
+		m_PropertyDataConverter = MVC.GetTypeConversion(int);
 		OnPropertyChanged();
 	}
 	
@@ -43,7 +42,7 @@ class RadioButtonGroup: ViewBinding
 		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 
 		m_PropertyDataConverter.SetInt(m_ActiveButton);
-		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, Binding_Index);
+		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, 0);
 		m_Controller.NotifyPropertyChanged(Binding_Name);
 	}
 	
@@ -51,17 +50,13 @@ class RadioButtonGroup: ViewBinding
 	{
 		EditorLog.Trace("RadioButtonGroup::OnPropertyChanged " + Binding_Name);		
 						
-		if (!m_PropertyDataType) {
-			EditorLog.Warning(string.Format("Binding not found: %1", Binding_Name));
-			return;
-		}
 		
 		if (!m_PropertyDataConverter) {
-			MVC.ErrorDialog(string.Format("Could not find TypeConversion for Type %1\nUse TypeConverter.RegisterTypeConversion to register custom types", m_PropertyDataType));
+			MVC.TypeConversionError(GetPropertyType(Binding_Name));
 			return;
 		}
 
-		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
+		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, 0);
 		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
 		
 		SetActiveRadioButton(m_PropertyDataConverter.GetInt());

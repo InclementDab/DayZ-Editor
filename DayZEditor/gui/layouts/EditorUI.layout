@@ -1031,6 +1031,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          style Colorable
          font "gui/fonts/metron-bold"
          switch toggle
@@ -1052,6 +1053,10 @@ FrameWidgetClass EditorMainFrame {
            stretch 1
           }
          }
+         {
+          ScriptParamsClass {
+          }
+         }
         }
         ButtonWidgetClass GroundButton {
          size 32 32
@@ -1061,6 +1066,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          style Colorable
          font "gui/fonts/metron-bold"
          switch toggle
@@ -1081,6 +1087,10 @@ FrameWidgetClass EditorMainFrame {
            stretch 1
           }
          }
+         {
+          ScriptParamsClass {
+          }
+         }
         }
         ButtonWidgetClass SnapButton {
          size 32 32
@@ -1090,6 +1100,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          style Colorable
          font "gui/fonts/metron-bold"
          switch toggle
@@ -1108,6 +1119,10 @@ FrameWidgetClass EditorMainFrame {
            "src alpha" 1
            "no wrap" 1
            stretch 1
+          }
+         }
+         {
+          ScriptParamsClass {
           }
          }
         }
@@ -1155,9 +1170,9 @@ FrameWidgetClass EditorMainFrame {
          switch toggle
          {
           ScriptParamsClass {
-           Two_Way_Binding 1
            Command_Execute "BrushToggleExecute"
            Command_CanExecute "CanBrushToggleExecute"
+           Two_Way_Binding 1
           }
          }
         }
@@ -1176,7 +1191,7 @@ FrameWidgetClass EditorMainFrame {
           ScriptParamsClass {
            Binding_Name "BrushTypeBoxData"
            Command_Execute "BrushTypeBoxExecute"
-           Command_CanExecute " "
+           Selected_Item "BrushTypeSelection"
           }
          }
         }
