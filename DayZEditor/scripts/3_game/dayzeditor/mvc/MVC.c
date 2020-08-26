@@ -34,6 +34,7 @@ class MVC
 		type_conversions.Insert(float, TypeConversionFloat);
 		type_conversions.Insert(string, TypeConversionString);
 		type_conversions.Insert(Widget, TypeConversionWidget);
+		type_conversions.Insert(ObservableCollection, TypeConversionCollection);
 	}
 	
 			

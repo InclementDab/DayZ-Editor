@@ -35,8 +35,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 			m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyDataType);
 		}
 		
-		
-		
 		// Updates the view on first load
 		if (m_PropertyDataConverter) {
 			OnPropertyChanged();
@@ -88,7 +86,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
 		
 
-		m_WidgetController.SetData(m_PropertyDataConverter);	
+		m_WidgetController.SetData(m_PropertyDataConverter);
 	}
 	
 	void UpdateModel()
@@ -121,28 +119,73 @@ class ViewBinding: ScriptedWidgetEventHandler
 		}
 
 		
-		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
+		//m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, Binding_Index);
 		EditorLog.Debug(string.Format("[%1] Updating Collection View...", m_LayoutRoot.Type()));
 
-
+		
+		switch (m_PropertyDataConverter.GetType()) {
+			
+			case bool: {
+				m_PropertyDataConverter.SetBool(Param1<bool>.Cast(args.param4).param1);
+				break;
+			}
+			
+			case int:
+			case float: {
+				m_PropertyDataConverter.SetFloat(Param1<float>.Cast(args.param4).param1);
+				break;
+			}
+			
+			case string: {
+				m_PropertyDataConverter.SetString(Param1<string>.Cast(args.param4).param1);
+				break;
+			}
+			
+			case Widget: {
+				m_PropertyDataConverter.SetWidget(Param1<Widget>.Cast(args.param4).param1);
+				break;
+			}
+			
+			default: {
+				MVC.UnsupportedTypeError(m_PropertyDataConverter.GetType());
+			}
+			
+		}
+		
+		
+		
 		
 		switch (args.param2) {
 			
-			case NotifyCollectionChangedAction.Add:
-			case NotifyCollectionChangedAction.Remove: {
-				
+			case NotifyCollectionChangedAction.Add: {
+				m_WidgetController.InsertData(args.param3, m_PropertyDataConverter);
 				break;
 			}
-						
-			default: {
+			
+			case NotifyCollectionChangedAction.Remove: {
+				m_WidgetController.RemoveData(args.param3);
+				break;
+			}
+			
+			case NotifyCollectionChangedAction.Set: {
+				m_WidgetController.ReplaceData(args.param3, m_PropertyDataConverter);
+				break;
+			}
+			
+			case NotifyCollectionChangedAction.Move: {
 				MVC.ErrorDialog(string.Format("Unsupported CollectionChangedAction: %1", args.param2));
+				break;	
+			}
+			
+			case NotifyCollectionChangedAction.Clear: {
+				m_WidgetController.ClearData();
+				break;
 			}
 		}
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		
 		if (button != 0) 
 			return false;
 		

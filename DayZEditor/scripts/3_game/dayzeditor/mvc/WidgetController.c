@@ -43,9 +43,9 @@ class WidgetController
 	void GetData(out TypeConverter type_converter);
 	
 	// Collection Stuff
-	void AddData(TypeConverter type_converter);
+	void InsertData(int index, TypeConverter type_converter);
 	void RemoveData(int index);
-	void SetData(int index, TypeConverter type_converter);
+	void ReplaceData(int index, TypeConverter type_converter);
 	void ClearData();
 }
 
@@ -122,16 +122,22 @@ class TextWidgetController: WidgetController
 class MultilineEditBoxWidgetController: WidgetController
 {
 	
-	override void AddData(TypeConverter type_converter) {
-		
+	override void InsertData(int index, TypeConverter type_converter) {
+		MultilineEditBoxWidget.Cast(m_Widget).SetLine(index, type_converter.GetString());
 	}
 	
 	override void RemoveData(int index) {
-		
+		MultilineEditBoxWidget.Cast(m_Widget).SetLine(index, string.Empty);
 	}
 	
 	override void SetData(TypeConverter type_converter) {
-		TextWidget.Cast(m_Widget).SetText(type_converter.GetString());
+		MultilineEditBoxWidget.Cast(m_Widget).SetText(type_converter.GetString());
+	}
+	
+	override void GetData(out TypeConverter type_converter) {
+		string out_text;
+		MultilineEditBoxWidget.Cast(m_Widget).GetText(out_text);
+		type_converter.SetString(out_text);
 	}
 }
 

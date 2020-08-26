@@ -84,7 +84,7 @@ class ObservableCollection<Class TValue>: Observable
 	{
 		int index = _data.Insert(value);
 		if (index != -1) {
-			m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Add, new Param2<int, TValue>(index, value)));
+			m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Add, index, new Param1<TValue>(value)));
 		}
 		
 		return index;
@@ -93,7 +93,7 @@ class ObservableCollection<Class TValue>: Observable
 	int InsertAt(TValue value, int index)
 	{
 		int new_index = _data.InsertAt(value, index);
-		m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Add, new Param2<int, TValue>(new_index, value)));
+		m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Add, index, new Param1<TValue>(value)));
 		return new_index;
 	}
 	
@@ -104,7 +104,7 @@ class ObservableCollection<Class TValue>: Observable
 		
 		if (value) {
 			_data.Remove(index);
-			m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, new Param2<int, TValue>(index, value)));
+			m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, index, new Param1<TValue>(value)));
 		}
 	}
 	
@@ -113,27 +113,27 @@ class ObservableCollection<Class TValue>: Observable
 		int index = _data.Find(value);
 		if (index != -1) {
 			_data.Remove(index);
-			m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, new Param2<int, TValue>(index, value)));
+			m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Remove, index, new Param1<TValue>(value)));
 		}
 	}
 	
 	void Set(int index, TValue value)
 	{
-		m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Set, new Param2<int, TValue>(index, value)));
+		m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Set, index, new Param1<TValue>(value)));
 		_data.Set(index, value);
 	}
 	
 	int Move(int index, int moveindex)
 	{
 		int new_index = _data.MoveIndex(index, moveindex);
-		m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Move, new Param2<int, int>(index, new_index)));
+		m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Move, index, new Param1<int>(new_index)));
 		return new_index;
 	}
 	
 	void Clear()
 	{
 		_data.Clear();
-		m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Clear, null));
+		m_Controller.NotifyCollectionChanged(m_VariableName, new CollectionChangedEventArgs(this, NotifyCollectionChangedAction.Clear, -1, null));
 	}
 	
 	TValue Get(int index)

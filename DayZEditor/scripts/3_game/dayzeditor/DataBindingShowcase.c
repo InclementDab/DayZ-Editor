@@ -13,19 +13,19 @@ class DataBindingShowcaseController: Controller
 	
 	bool WindowTextToggleValue;
 	
-	//ref ObservableCollection<string> WindowListWidgets;
+	ref ObservableCollection<string> WindowListWidgets;
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
 		
 	
-		/*
+		
 		WindowListWidgets = new ObservableCollection<string>("WindowListWidgets", this);
 		WindowListWidgets.Insert("Test1");
 		WindowListWidgets.Insert("Test2");
 		WindowListWidgets.Remove(1);
-		WindowListWidgets.Insert("Test3");*/
+		WindowListWidgets.Insert("Test3");
 		
 		WindowText = true;
 				

@@ -52,6 +52,7 @@ class TypeConverter
 {			
 	void TypeConverter() { EditorLog.Trace("TypeConverter"); }
 	void ~TypeConverter() { EditorLog.Trace("~TypeConverter"); }
+	typename GetType();
 	
 	bool GetBool();
 	float GetFloat();	
@@ -70,6 +71,9 @@ class TypeConverter
 class TypeConversionTemplate<Class T>: TypeConverter
 {
 	protected T m_Value;
+	override typename GetType() {
+		return T;
+	}
 	
 	override void SetToController(Class context, string name, int index)
 	{
@@ -185,5 +189,28 @@ class TypeConversionWidget: TypeConversionTemplate<Widget>
 	override Widget GetWidget()
 	{
 		return m_Value;
+	}
+}
+
+class TypeConversionCollection: TypeConversionTemplate<ObservableCollection<string>>
+{
+	
+	override void SetString(string value) {
+		TStringArray split_array = new TStringArray();
+		value.Split("\n", split_array);
+		foreach (string line: split_array)
+			m_Value.Insert(line);
+		
+	}
+	
+	override string GetString()	{
+		string result;
+		for (int i = 0; i < m_Value.Count(); i++) 
+			if (i != m_Value.Count() - 1)
+				result += m_Value.Get(i) + "\n";
+			else 
+				result += m_Value.Get(i);
+		
+		return result;
 	}
 }

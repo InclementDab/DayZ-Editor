@@ -10,8 +10,9 @@ enum NotifyCollectionChangedAction {
 // Event Args for Collection Changed
 // 0: Observable that was changed
 // 1: Collection Changed Action
-// 2: Changed Value
-typedef Param3<Class, int, Param> CollectionChangedEventArgs;
+// 2: Changed Index
+// 3: Changed Value
+typedef Param4<Class, int, int, Param> CollectionChangedEventArgs;
 
 
 
