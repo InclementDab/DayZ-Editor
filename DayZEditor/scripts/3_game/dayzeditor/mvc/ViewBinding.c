@@ -55,14 +55,15 @@ class ViewBinding: ScriptedWidgetEventHandler
 			Binding_Name = m_LayoutRoot.GetName();
 		}
 		
-		if (Two_Way_Binding && !ViewBinding.SupportsTwoWayBinding(m_LayoutRoot.Type())) {
-			MVC.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
-		}
-		
 		m_WidgetController = GetWidgetController(m_LayoutRoot);
 		if (!m_WidgetController) {
 			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
 			return;
+		}
+		
+		// Check for two way binding support
+		if (Two_Way_Binding && !m_WidgetController.CanTwoWayBind()) {
+			MVC.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
 		}
 		
 		
@@ -92,44 +93,13 @@ class ViewBinding: ScriptedWidgetEventHandler
 	
 	void UpdateModel()
 	{
-		if (!Two_Way_Binding || !SupportsTwoWayBinding(m_LayoutRoot.Type())) 
+		if (!Two_Way_Binding || !m_WidgetController.CanTwoWayBind()) 
 			return;
 		
 		EditorLog.Trace("ViewBinding::UpdateModel");
 		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 		
 		m_WidgetController.GetData(m_PropertyDataConverter);
-		
-			/*	
-		switch (m_WidgetDataType) {
-			
-			case bool: {
-				bool _bool;
-				g_Script.CallFunction(m_LayoutRoot, widget_getter, _bool, null);
-				m_PropertyDataConverter.SetBool(_bool);
-				break;
-			}
-			
-			case float: {
-				float _float;
-				g_Script.CallFunction(m_LayoutRoot, widget_getter, _float, null);
-				m_PropertyDataConverter.SetFloat(_float);
-				break;
-			}			
-			
-			case string: {
-				//string _string = "";
-				//g_Script.CallFunction(m_LayoutRoot, widget_getter, _string, null);
-				m_PropertyDataConverter.SetString(EditBoxWidget.Cast(m_LayoutRoot).GetText());
-				break;
-			}
-			
-			default: {
-				MVC.UnsupportedConversionError(m_PropertyDataConverter.Type(), m_WidgetDataType);
-				return;
-			}
-		}*/
-		
 
 		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, Binding_Index);
 		m_Controller.NotifyPropertyChanged(Binding_Name);
@@ -197,23 +167,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		return super.OnChange(w, x, y, finished);
 	}
 	
-
-	
-	static bool SupportsTwoWayBinding(typename type)
-	{
-		switch (type) {
-			case ButtonWidget:
-			case CheckBoxWidget:
-			case SliderWidget:
-			case EditBoxWidget:
-			case MultilineEditBoxWidget:
-			case RichTextWidget:
-				return true;
-	
-		}
-		
-		return false;
-	}
 }
 
 

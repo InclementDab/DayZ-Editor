@@ -97,6 +97,7 @@ FrameWidgetClass WindowFrame {
        {
         ScriptParamsClass {
          Binding_Name "WindowSlider"
+         Two_Way_Binding 0
         }
        }
       }

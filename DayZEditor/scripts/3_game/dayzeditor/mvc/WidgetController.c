@@ -11,6 +11,16 @@ static WidgetController GetWidgetController(Widget widget)
 		
 		case EditBoxWidget:
 			return new EditBoxWidgetController(widget):
+		
+		case SliderWidget:
+			return new SliderWidgetController(widget);
+		
+		case TextWidget:
+			return new TextWidgetController(widget);
+		
+		// Collection Controllers
+		case MultilineEditBoxWidget:
+			return new MultilineEditBoxWidgetController(widget);
 	}
 	
 	
@@ -24,13 +34,15 @@ class WidgetController
 		m_Widget = w;
 	}
 	
+	bool CanTwoWayBind() {
+		return false;
+	}
+	
+	// Base Controller Stuff
 	void SetData(TypeConverter type_converter);	
 	void GetData(out TypeConverter type_converter);
-}
-
-
-class WidgetCollectionController: WidgetController
-{
+	
+	// Collection Stuff
 	void AddData(TypeConverter type_converter);
 	void RemoveData(int index);
 	void SetData(int index, TypeConverter type_converter);
@@ -38,8 +50,13 @@ class WidgetCollectionController: WidgetController
 }
 
 
+
 class ButtonWidgetController: WidgetController
 {
+	override bool CanTwoWayBind() {
+		return true;
+	}
+	
 	override void SetData(TypeConverter type_converter) {
 		ButtonWidget.Cast(m_Widget).SetState(type_converter.GetBool());
 	}
@@ -51,6 +68,10 @@ class ButtonWidgetController: WidgetController
 
 class EditBoxWidgetController: WidgetController
 {
+	override bool CanTwoWayBind() {
+		return true;
+	}
+	
 	override void SetData(TypeConverter type_converter) {
 		EditBoxWidget.Cast(m_Widget).SetText(type_converter.GetString());
 	}
@@ -62,12 +83,55 @@ class EditBoxWidgetController: WidgetController
 
 class CheckBoxWidgetController: WidgetController
 {
+	override bool CanTwoWayBind() {
+		return true;
+	}
+	
 	override void SetData(TypeConverter type_converter) {
 		CheckBoxWidget.Cast(m_Widget).SetChecked(type_converter.GetBool());
 	}
 	
 	override void GetData(out TypeConverter type_converter) {
 		type_converter.SetBool(CheckBoxWidget.Cast(m_Widget).IsChecked());
+	}
+}
+
+class SliderWidgetController: WidgetController
+{
+	override bool CanTwoWayBind() {
+		return true;
+	}
+	
+	override void SetData(TypeConverter type_converter) {
+		SliderWidget.Cast(m_Widget).SetCurrent(type_converter.GetFloat());
+	}
+	
+	override void GetData(out TypeConverter type_converter) {
+		type_converter.SetFloat(SliderWidget.Cast(m_Widget).GetCurrent());
+	}
+}
+
+class TextWidgetController: WidgetController
+{
+	override void SetData(TypeConverter type_converter) {
+		TextWidget.Cast(m_Widget).SetText(type_converter.GetString());
+	}
+}
+
+
+class MultilineEditBoxWidgetController: WidgetController
+{
+	
+	override void AddData(TypeConverter type_converter) {
+		
+	}
+	
+	override void RemoveData(int index) {
+		
+	}
+	
+	override void SetData(TypeConverter type_converter) {
+		TextWidget.Cast(m_Widget).SetText(type_converter.GetString());
 	}
 }
 
