@@ -44,8 +44,7 @@ class Controller: ScriptedWidgetEventHandler
 		// Load all child Widgets and obtain their DataBinding class
 		int binding_count = LoadDataBindings(m_LayoutRoot, m_ViewBindingHashMap);
 		if (binding_count == 0) {
-			MVC.ErrorDialog("No DataBindings found! Is the controller in a parent Widget?");
-			return;
+			EditorLog.Warning("No DataBindings found! Is the controller in a parent Widget?");
 		} else {
 			EditorLog.Info(string.Format("%1 DataBindings found!", binding_count));
 		}

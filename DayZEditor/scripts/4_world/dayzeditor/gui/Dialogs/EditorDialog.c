@@ -1,102 +1,45 @@
 
 
-
-
-
-
-
-class EditorDialog extends ScriptedWidgetEventHandler
+class EditorDialogController: Controller
 {
-	protected ref Widget m_Root;
-	Widget GetRoot() { return m_Root; }
 	
-	protected Widget m_TitleBar;
+	Widget TitleBar;
+	TextWidget TitleText;
+	ButtonWidget TitleClose;
 	
-	protected TextWidget m_TitleText;
-	protected ButtonWidget m_TitleClose;
+	WrapSpacerWidget DialogContent;
+	GridSpacerWidget ButtonGrid;
+	WrapSpacerWidget WindowDragWrapper;
 	
-	protected WrapSpacerWidget m_ContentWrapper;
-	protected GridSpacerWidget m_ButtonGrid;
-	protected WrapSpacerWidget m_WindowDragWrapper;
-
+	private ref ButtonCallbackHashMap m_ButtonCallbacks = new ButtonCallbackHashMap();
 	
-	void EditorDialog()
-	{
-		Print("EditorDialog");
-		
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialog.layout", null);
-		m_Root.Show(false);
-			
-		m_TitleBar			= m_Root.FindAnyWidget("TitleBar");
-		m_TitleText 		= TextWidget.Cast(m_Root.FindAnyWidget("TitleText"));
-		m_TitleClose		= ButtonWidget.Cast(m_Root.FindAnyWidget("TitleClose"));
-		m_ContentWrapper	= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("DialogContent"));
-		m_ButtonGrid		= GridSpacerWidget.Cast(m_Root.FindAnyWidget("ButtonGrid"));
-		m_WindowDragWrapper	= WrapSpacerWidget.Cast(m_Root.FindAnyWidget("WindowDragWrapper"));
-		
-		m_Root.SetHandler(this);
-		
-		m_ButtonCallbacks = new map<ButtonWidget, string>();
+	protected ref EditorDialog m_EditorDialog;
+	void SetEditorDialog(EditorDialog editor_dialog) {
+		m_EditorDialog = editor_dialog;
 	}
 	
-	void ~EditorDialog()
-	{
-		Print("~EditorDialog");
+	void EditorDialogController() {
+		EditorLog.Trace("EditorDialogController");
+	}
+	
+	void ~EditorDialogController() {
+		EditorLog.Trace("~EditorDialogController");
 	}
 	
 	
-	protected Widget SetContent(Widget content)
-	{
-		m_ContentWrapper.AddChild(content);
-		return m_ContentWrapper;
-	}
-	
-	protected ButtonWidget AddButton(string label) 
-	{
-		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", m_ButtonGrid);		
-		TextWidget txt = TextWidget.Cast(panel.FindAnyWidget("ButtonLabel"));
-		txt.SetText(label);
-		return ButtonWidget.Cast(panel.FindAnyWidget("Button"));
-	}
-	
-	private ref map<ButtonWidget, string> m_ButtonCallbacks;
-	protected ButtonWidget AddButton(string label, string callback)
-	{
-		ButtonWidget bw = AddButton(label);
-		m_ButtonCallbacks.Insert(bw, callback);
-		return bw;
-	}
-	
-	void ShowDialog()
-	{
-		Print("MapSelectDialog::ShowDialog");
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-		m_Root.Show(true);
-		GetEditor().GetEditorHud().ModalSet(this);
-	}
-	
-	void CloseDialog()
-	{
-		Print("MapSelectDialog::CloseDialog");
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-		m_Root.Show(false);
-		GetEditor().GetEditorHud().ModalClose();
-	}
-	
-	void Update() {}
-
 	float m_OffsetX, m_OffsetY;
 	override bool OnDrag(Widget w, int x, int y) 
 	{
-		if (w == m_TitleBar) {
+		EditorLog.Trace("EditorDialogController::OnDrag");
+		if (w == TitleBar) {
 			
-			m_Root.GetPos(m_OffsetX, m_OffsetY);
+			m_LayoutRoot.GetPos(m_OffsetX, m_OffsetY);
 			
 			m_OffsetX = x - m_OffsetX;
 			m_OffsetY = y - m_OffsetY;
 	
-			m_TitleBar.SetPos(0, 0, true);
-			m_TitleBar.SetPos(0, 0, false);
+			TitleBar.SetPos(0, 0, true);
+			TitleBar.SetPos(0, 0, false);
 			
 			return true;
 		}
@@ -106,10 +49,10 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	
 	override bool OnDragging(Widget w, int x, int y, Widget reciever)
 	{
-		if (w == m_TitleBar) {
+		if (w == TitleBar) {
 
-			m_Root.SetPos(x - m_OffsetX, y - m_OffsetY, true);
-			m_TitleBar.SetPos(0, 0, true);
+			m_LayoutRoot.SetPos(x - m_OffsetX, y - m_OffsetY, true);
+			TitleBar.SetPos(0, 0, true);
 			return true;
 		}
 		
@@ -118,10 +61,11 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	
 	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
-	    if (w == m_TitleBar) {
-	        m_TitleBar.SetPos(0, 0);
-			m_Root.SetPos(x - m_OffsetX, y - m_OffsetY);
-			m_WindowDragWrapper.SetPos(x - m_OffsetX, y - m_OffsetY);
+		EditorLog.Trace("EditorDialogController::OnDrop");
+	    if (w == TitleBar) {
+	        TitleBar.SetPos(0, 0);
+			m_LayoutRoot.SetPos(x - m_OffsetX, y - m_OffsetY);
+			WindowDragWrapper.SetPos(x - m_OffsetX, y - m_OffsetY);
 	        return true;
 	    }
 	    
@@ -130,22 +74,104 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Print("EditorDialog::OnClick");
+		EditorLog.Trace("EditorDialogController::OnClick");
 		
 		if (button != 0) return false; 
 		
-		if (w == m_TitleClose) {
-			CloseDialog();
+		if (w == TitleClose) {
+			m_EditorDialog.CloseDialog();
 			return true;
 		}
 		
 		string callback = m_ButtonCallbacks.Get(w);
 		if (callback != string.Empty) {
-			GetGame().GameScript.Call(this, callback, null);
+			GetGame().GameScript.Call(m_EditorDialog, callback, null);
 		}
 		
 		return super.OnClick(w, x, y, button);
 	}
+	
+	void AddButton(ButtonWidget bw, string callback)
+	{
+		m_ButtonCallbacks.Insert(bw, callback);
+	}
+}
+
+
+typedef ref map<ButtonWidget, string> ButtonCallbackHashMap;
+
+class EditorDialog: Managed
+{
+	
+	
+	protected ref Widget m_LayoutRoot;
+	Widget GetRoot() { 
+		return m_LayoutRoot; 
+	}
+	
+	protected ref EditorDialogController m_DialogController;
+	
+	
+	void EditorDialog() 
+	{
+		EditorLog.Trace("EditorDialog");
+
+		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialog.layout", null);
+		Print(m_LayoutRoot);
+		Print(m_LayoutRoot.GetName());
+		m_LayoutRoot.GetScript(m_DialogController);
+		Print(m_DialogController);
+		m_LayoutRoot.Show(false);
+		
+		
+		m_DialogController.SetEditorDialog(this);
+	}
+	
+	void ~EditorDialog() 
+	{
+		EditorLog.Trace("~EditorDialog");
+	}
+
+
+	void AddContent(Widget content)
+	{
+		Print(m_DialogController);
+		m_DialogController.DialogContent.AddChild(content);
+	}
+	
+	
+	protected ButtonWidget AddButton(string label) 
+	{
+		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", m_DialogController.ButtonGrid);		
+		TextWidget.Cast(panel.FindAnyWidget("ButtonLabel")).SetText(label);
+		return ButtonWidget.Cast(panel.FindAnyWidget("Button"));
+	}
+	
+	
+	protected ButtonWidget AddButton(string label, string callback)
+	{
+		ButtonWidget bw = AddButton(label);
+		
+		return bw;
+	}
+	
+	void ShowDialog()
+	{
+		EditorLog.Trace("EditorDialog::ShowDialog");
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		m_LayoutRoot.Show(true);
+		GetEditor().GetEditorHud().ModalSet(this);
+	}
+	
+	void CloseDialog()
+	{
+		EditorLog.Trace("EditorDialog::CloseDialog");
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		m_LayoutRoot.Show(false);
+		GetEditor().GetEditorHud().ModalClose();
+	}
+	
+	void Update();
 
 	
 }

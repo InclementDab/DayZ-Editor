@@ -10,7 +10,7 @@ WrapSpacerWidgetClass EditorDialog {
  hexactsize 1
  vexactsize 1
  priority 996
- scriptclass ""
+ scriptclass "EditorDialogController"
  style Colorable
  Padding 0
  Margin 0
@@ -131,6 +131,7 @@ WrapSpacerWidgetClass EditorDialog {
        Rows 1
       }
       WrapSpacerWidgetClass DialogContent {
+       visible 1
        ignorepointer 1
        color 0.1373 0.1373 0.1373 0.549
        position 0 0
@@ -150,6 +151,10 @@ WrapSpacerWidgetClass EditorDialog {
      }
     }
    }
+  }
+ }
+ {
+  ScriptParamsClass {
   }
  }
 }

@@ -25,9 +25,11 @@ class EditorObject
 	protected EntityAI 		m_BBoxBase;
 	protected EntityAI 		m_CenterLine;
 	
+	string testname = "REEE";
+	
 	float LocalAngle; // temp
 	
-	static float line_width = 0.05;
+	static float line_width = 0.02;
 	
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
@@ -257,10 +259,6 @@ class EditorObject
 		line_centers[11] = AverageVectors(line_verticies[5], line_verticies[6]);
 		
 		
-		
-		
-		
-	
 		
 		for (int i = 0; i < 12; i++) {
 			
