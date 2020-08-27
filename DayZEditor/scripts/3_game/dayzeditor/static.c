@@ -14,8 +14,6 @@ class EditorLog
 	static string ExclusiveLogMode;
 	
 	private static string m_LastCalledType;	
-	private static float avg_timeslice;
-	private static int timeslice_count;
 	
 	static void EditorPrint(string msg, EditorLogLevel level)
 	{
