@@ -2,6 +2,8 @@ class EditorPropertiesController: Controller
 {
 	protected EditorObject m_EditorObject;
 	
+	bool EditorDialogOptionButton;
+	
 	EquationEvaluater pos_x, pos_y, pos_z;
 	EquationEvaluater rot_x, rot_y, rot_z;
 	
@@ -59,5 +61,12 @@ class EditorPropertiesController: Controller
 		EnScript.GetClassVar(this, w_name, 0, w_eval);
 		EnScript.SetClassVar(this, w_name, 0, (w_eval.Evaluate() + direction).ToString());
 		NotifyPropertyChanged(w_name);
+	}
+	
+	void ToggleCategoryButton(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorObjectPropertiesDialog::ToggleCategoryButton");
+		args.param1.FindAnyWidget("expand_image").Show(args.param3);
+		args.param1.FindAnyWidget("collapse_image").Show(!args.param3);
 	}
 }

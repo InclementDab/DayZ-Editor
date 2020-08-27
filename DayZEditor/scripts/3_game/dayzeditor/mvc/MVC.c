@@ -39,9 +39,9 @@ class MVC
 	}
 	
 	
-	static void PropertyNotFoundError(typename type, string property_name)
+	static void PropertyNotFoundError(string property_name)
 	{
-		EditorLog.Error("Property '%2' not found in %1", type.ToString(), property_name);
+		EditorLog.Error("Property '%2' not found", property_name);
 	}
 	
 	static void UnsupportedTypeError(typename type)

@@ -33,7 +33,10 @@ PanelWidgetClass EditorProperties {
      vexactpos 1
      hexactsize 0
      vexactsize 1
+     scaled 1
+     scriptclass "ViewBinding"
      style Empty
+     "no focus" 0
      {
       FrameWidgetClass EditorDialogOptionPanel {
        clipchildren 0
@@ -111,6 +114,12 @@ PanelWidgetClass EditorProperties {
        hexactsize 0
        vexactsize 1
        style rover_sim_colorable
+      }
+     }
+     {
+      ScriptParamsClass {
+       Command_Execute "ToggleCategoryButton"
+       Two_Way_Binding 1
       }
      }
     }

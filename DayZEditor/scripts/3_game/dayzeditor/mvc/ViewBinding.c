@@ -51,7 +51,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		m_PropertyType = GetPropertyType(Binding_Name);
 		
 		if (!m_PropertyType) {
-			MVC.PropertyNotFoundError(m_PropertyType, Binding_Name);
+			MVC.PropertyNotFoundError(Binding_Name);
 		}
 
 		if (Selected_Item != string.Empty)

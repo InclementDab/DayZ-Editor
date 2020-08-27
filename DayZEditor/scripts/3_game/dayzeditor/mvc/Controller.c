@@ -10,6 +10,7 @@ class Controller: Managed
 		m_ChildControllers.Insert(controller);
 	}
 	
+	
 	// Protected members
 	protected Widget m_LayoutRoot;
 	Widget GetLayoutRoot() {
@@ -119,13 +120,13 @@ class Controller: Managed
 			view_binding.SetController(this);
 		}
 		
-		if (w.GetChildren() != null) {
+		if (w.GetChildren() != null)
 			LoadDataBindings(w.GetChildren(), binding_map);
-		} 
 		
-		if (w.GetSibling() != null) {
+		
+		if (w.GetSibling() != null) 
 			LoadDataBindings(w.GetSibling(), binding_map);
-		}		
+		
 		
 		return binding_map.Count();
 	}
