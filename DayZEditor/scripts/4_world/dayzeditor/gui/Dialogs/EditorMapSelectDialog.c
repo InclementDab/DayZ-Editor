@@ -23,8 +23,8 @@ class MapSelectDialog: EditorDialog
 		
 		AddContent(content);
 		
-		m_SelectButton = AddButton("Select");
-		m_CloseButton = AddButton("Close");
+		m_SelectButton = AddButton("Select", "");
+		m_CloseButton = AddButton("Close", "");
 		m_MapHostListbox = TextListboxWidget.Cast(m_LayoutRoot.FindAnyWidget("MapHostListbox"));
 		
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgWorlds"); i++) {

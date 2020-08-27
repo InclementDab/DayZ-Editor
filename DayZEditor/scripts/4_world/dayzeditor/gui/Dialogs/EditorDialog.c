@@ -117,7 +117,7 @@ class EditorDialog: Managed
 	{
 		EditorLog.Trace("EditorDialog");
 
-		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialog.layout", null);
+		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialog.layout", null);
 		m_LayoutRoot.GetScript(m_DialogController);
 		m_LayoutRoot.Show(false);
 		
@@ -130,26 +130,26 @@ class EditorDialog: Managed
 	}
 
 
-	void AddContent(Widget content)
+	protected void AddContent(Widget content)
 	{
 		Print(m_DialogController);
 		m_DialogController.DialogContent.AddChild(content);
 	}
 	
 	
-	protected ButtonWidget AddButton(string label) 
+	protected ButtonWidget AddButton(string label, string callback) 
 	{
 		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", m_DialogController.ButtonGrid);		
-		TextWidget.Cast(panel.FindAnyWidget("ButtonLabel")).SetText(label);
-		return ButtonWidget.Cast(panel.FindAnyWidget("Button"));
+		ButtonWidget bw = ButtonWidget.Cast(panel.FindAnyWidget("Button"));
+		bw.SetText(label);
+		m_DialogController.AddButton(bw, callback);
+		return bw;
 	}
 	
 	
-	protected ButtonWidget AddButton(string label, string callback)
+	protected void SetTitle(string title)
 	{
-		ButtonWidget bw = AddButton(label);
-		
-		return bw;
+		m_DialogController.TitleText.SetText(title);
 	}
 	
 	void ShowDialog()

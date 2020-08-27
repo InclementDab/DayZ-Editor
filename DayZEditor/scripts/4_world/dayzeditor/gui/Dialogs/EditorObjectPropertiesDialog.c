@@ -62,8 +62,10 @@ class EditorObjectPropertiesDialog: EditorDialog
 		content.GetScript(m_EditorPropertiesController);
 		m_EditorPropertiesController.SetEditorObject(m_EditorObject);
 		
+		SetTitle("Edit: Object Properties");
 		AddButton("Save", "SaveCallback");
 		AddButton("Cancel", "CancelCallback");
+		
 	}
 	
 	void ~EditorObjectPropertiesDialog() {
