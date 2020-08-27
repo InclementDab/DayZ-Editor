@@ -29,7 +29,8 @@ class EditorHologram
 	}
 	
 	void Update(float timeslice)
-	{		
+	{
+		if (m_ProjectionEntity == null) return;
 		int x, y;
 		GetMousePos(x, y);
 		

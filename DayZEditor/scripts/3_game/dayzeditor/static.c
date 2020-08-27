@@ -8,7 +8,7 @@ class EditorLog
 {
 	
 	static EditorLogLevel CurrentLogLevel = EditorLogLevel.TRACE;
-	
+	static string ExclusiveLogMode;
 	
 	private static string m_LastCalledType;
 	private static void EditorPrint(string msg, EditorLogLevel level)
@@ -29,6 +29,14 @@ class EditorLog
 			if (msg.Contains("::")) {
 				TStringArray msg_split();
 				msg.Split(":", msg_split);
+				
+				if (ExclusiveLogMode != string.Empty) {
+					string exclusive_type = msg_split[0];
+					ExclusiveLogMode.ToLower(); exclusive_type.ToLower();
+					if (ExclusiveLogMode.Trim() != exclusive_type.Trim())
+						return;
+				}
+				
 				if (m_LastCalledType != msg_split[0]) {
 					m_LastCalledType = msg_split[0];
 					Print("\n");
@@ -37,6 +45,10 @@ class EditorLog
 				
 				PrintFormat("	%1", msg_split[1]);
 			} else {
+				
+				if (ExclusiveLogMode != string.Empty) {
+					//return;
+				} 
 				
 				if (m_LastCalledType != msg) {
 					m_LastCalledType = msg;

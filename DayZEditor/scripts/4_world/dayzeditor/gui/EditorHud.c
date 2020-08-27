@@ -124,28 +124,46 @@ class EditorHud: Hud
 		m_DoubleClickButton = -1;
 	}
 	
-	private Widget m_CurrentWidget;
+	private Widget _GetWidgetUnderCursor() {
+		return GetWidgetUnderCursor();
+	}
+	
+
+	private ref Widget m_CurrentEnterWidget;
 	private void MouseUpdatePosition(int x, int y)
 	{
 		//EditorLog.Trace("EditorHud::MouseUpdatePosition X%1 Y%2", x.ToString(), y.ToString());
 		
-		Widget w = GetWidgetUnderCursor();		
-		if (m_CurrentWidget != w) {
-			OnMouseLeave(m_CurrentWidget, w, x, y);
-			m_CurrentWidget = w;
-			OnMouseEnter(m_CurrentWidget, x, y);
+		ref Widget current_widget = _GetWidgetUnderCursor();
+		//m_CurrentEnterWidget = current_widget;
+
+		if (current_widget) {
+		
+			if (m_CurrentEnterWidget != current_widget) {
+				if (m_CurrentEnterWidget) {
+					OnMouseLeave(m_CurrentEnterWidget, current_widget, x, y);
+				}
+				
+				m_CurrentEnterWidget = current_widget;
+				
+				OnMouseEnter(current_widget, x, y);
+			} 
+			
+		} else {
+			m_CurrentEnterWidget = current_widget;
 		}
+		
 	}
 	
 	void OnMouseDown(int button)
 	{
 		//EditorLog.Trace("EditorHud::OnMouseDown %1", typename.EnumToString(BetterMouseState, button));
 		
-		Widget w = GetWidgetUnderCursor();
+		ref Widget w = _GetWidgetUnderCursor();
 		// Checks if Widget is Control Class
 		// Also checks if Modal is active, if it is, it will only fire click events
 		// within that modal window
-		if (w.IsControlClass() && !IsModalActive() || (IsModalActive() && IsModalCommand(w))) {
+		if (w && w.IsControlClass() && !IsModalActive() || (IsModalActive() && IsModalCommand(w))) {
 			OnClick(w, button);
 			return;
 		}
@@ -192,18 +210,18 @@ class EditorHud: Hud
 	}
 	
 	void OnKeyPress(int key)
-	{	
+	{
 		EditorLog.Trace("EditorHud::OnKeyPress %1", key.ToString());
 	}
 	
 	void OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseEnter %1", w.GetName());
+		EditorLog.Trace("EditorHud::OnMouseEnter %1", w.ToString());
 	}
 	
 	void OnMouseLeave(Widget w, Widget enter_w, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseLeave %1 enter: %2", w.GetName(), enter_w.GetName());
+		EditorLog.Trace("EditorHud::OnMouseLeave %1 enter %2", w.ToString(), enter_w.ToString());
 	}
 	
 	
