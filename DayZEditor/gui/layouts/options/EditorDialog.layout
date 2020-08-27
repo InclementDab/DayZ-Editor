@@ -60,7 +60,7 @@ WrapSpacerWidgetClass EditorDialog {
        "text valign" center
       }
       ButtonWidgetClass TitleClose {
-       visible 0
+       visible 1
        ignorepointer 0
        position 0 0
        size 24 24
@@ -71,11 +71,12 @@ WrapSpacerWidgetClass EditorDialog {
        vexactsize 1
        priority 5
        style Default
-       font "gui/fonts/metron"
+       text "X"
+       font "gui/fonts/Metron-Bold"
        {
         ImageWidgetClass TitleCloseIcon {
+         visible 0
          ignorepointer 1
-         color 0 0 0 1
          size 24 24
          halign center_ref
          valign center_ref
@@ -83,6 +84,7 @@ WrapSpacerWidgetClass EditorDialog {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scaled 1
          image0 "set:dayz_gui image:Close"
          mode blend
          "src alpha" 1

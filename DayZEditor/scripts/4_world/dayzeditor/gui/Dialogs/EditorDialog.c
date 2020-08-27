@@ -83,12 +83,13 @@ class EditorDialogController: Controller
 			return true;
 		}
 		
-		string callback = m_ButtonCallbacks.Get(w);
-		if (callback != string.Empty) {
-			GetGame().GameScript.Call(m_EditorDialog, callback, null);
+
+		if (m_ButtonCallbacks[w] != string.Empty) {
+			GetGame().GameScript.Call(m_EditorDialog, m_ButtonCallbacks[w], null);
+			return true;
 		}
 		
-		return super.OnClick(w, x, y, button);
+		return false;
 	}
 	
 	void AddButton(ButtonWidget bw, string callback)
@@ -117,12 +118,8 @@ class EditorDialog: Managed
 		EditorLog.Trace("EditorDialog");
 
 		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialog.layout", null);
-		Print(m_LayoutRoot);
-		Print(m_LayoutRoot.GetName());
 		m_LayoutRoot.GetScript(m_DialogController);
-		Print(m_DialogController);
 		m_LayoutRoot.Show(false);
-		
 		
 		m_DialogController.SetEditorDialog(this);
 	}
