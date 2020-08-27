@@ -28,7 +28,7 @@ class TypeConverterHashMap
 		EditorLog.Trace("TypeConverterHashMap::Set");
 		
 		if (!conversion_class.IsInherited(TypeConversionTemplate)) {
-			MVC.ErrorDialog(string.Format("RegisterTypeConversion: %1 must inherit from type TypeConversionTemplate", conversion_class));
+			EditorLog.Error("TypeConverterHashMap: %1 must inherit from type TypeConversionTemplate", conversion_class.ToString());
 			return;
 		}
 		
@@ -40,7 +40,7 @@ class TypeConverterHashMap
 		EditorLog.Trace("TypeConverterHashMap::Insert");
 		
 		if (!conversion_class.IsInherited(TypeConversionTemplate)) {
-			MVC.ErrorDialog(string.Format("RegisterTypeConversion: %1 must inherit from type TypeConversionTemplate", conversion_class));
+			EditorLog.Error("TypeConverterHashMap: %1 must inherit from type TypeConversionTemplate", conversion_class.ToString());
 			return false;
 		}
 		

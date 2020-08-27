@@ -29,7 +29,7 @@ class Controller: ScriptedWidgetEventHandler
 				
 		// User must inherit from controller, not use it in ScriptClass
 		if (Type() == Controller) {
-			MVC.ErrorDialog("You cannot bind to data without creating your own controller class!");
+			EditorLog.Error("You cannot bind to data without creating your own controller class!");
 			return;
 		}
 		

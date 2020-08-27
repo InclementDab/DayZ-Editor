@@ -98,6 +98,7 @@ class EditorHud: Hud
 	
 	// Modal Window Control
 	private ref EditorDialog m_CurrentModal = null;
+	
 	void ModalSet(EditorDialog w)
 	{
 		EditorLog.Trace("ModalSet");
@@ -111,12 +112,15 @@ class EditorHud: Hud
 		EditorLog.Trace("ModalClose");
 		m_CurrentModal.GetRoot().Unlink();
 		m_CurrentModal = null;
-		
 		ShowCursor();
 	}
 
 	bool IsModalActive() {
 		return (m_CurrentModal != null);
+	}
+	
+	bool IsModalCommand(Widget w) {
+		return (m_CurrentModal.GetRoot().FindAnyWidget(w.GetName()) != null);
 	}
 	
 	private ButtonWidget m_CurrentButton;

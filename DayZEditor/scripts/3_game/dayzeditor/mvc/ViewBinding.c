@@ -83,7 +83,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 		// Check for two way binding support
 		if (Two_Way_Binding && !m_WidgetController.CanTwoWayBind()) {
-			MVC.ErrorDialog(string.Format("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type()));
+			EditorLog.Error("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type().ToString());
 		}
 		
 
@@ -92,13 +92,13 @@ class ViewBinding: ScriptedWidgetEventHandler
 	
 	void OnPropertyChanged()
 	{
-		EditorLog.Trace("ViewBinding::OnPropertyChanged " + Binding_Name);
+		EditorLog.Trace("ViewBinding::OnPropertyChanged: %1", Binding_Name);
 		UpdateView();
 	}
 
 	void OnCollectionChanged(ref CollectionChangedEventArgs args)
 	{
-		EditorLog.Trace("ViewBinding::OnCollectionChanged " + Binding_Name);
+		EditorLog.Trace("ViewBinding::OnCollectionChanged: %1", Binding_Name);
 
 		
 		if (!m_PropertyDataConverter) {
@@ -111,7 +111,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			return;
 		}
 
-		EditorLog.Debug(string.Format("[%1] Updating Collection View...", m_LayoutRoot.Type()));
+		EditorLog.Debug("Updating Collection View: %1", m_LayoutRoot.Type().ToString());
 			
 		// Anonymouse Data Setter
 		m_PropertyDataConverter.SetParam(args.param4);
@@ -148,7 +148,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	private void UpdateView()
 	{
 		EditorLog.Trace("ViewBinding::UpdateView");
-		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
+		EditorLog.Debug("Updating View: %1", m_LayoutRoot.Type().ToString());
 
 		if (!m_PropertyDataConverter) {
 			MVC.TypeConversionError(m_PropertyType);
@@ -167,7 +167,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	private void UpdateModel()
 	{
 		EditorLog.Trace("ViewBinding::UpdateModel");
-		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
+		EditorLog.Debug("Updating Model: %1", m_LayoutRoot.Type().ToString());
 		
 		if (!m_PropertyDataConverter) {
 			MVC.TypeConversionError(m_PropertyType);

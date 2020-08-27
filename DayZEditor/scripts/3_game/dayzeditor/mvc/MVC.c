@@ -38,32 +38,20 @@ class MVC
 		type_conversions.Insert(Widget, TypeConversionWidget);
 	}
 	
-			
-	static void ErrorDialog(string message, string title = "Warning")
-	{		
-		EditorLog.Warning(message);
-		
-#ifdef COMPONENT_SYSTEM 		
-		// If Workbench is open
-		Error(message);
-		Workbench.Dialog(title, message);
-#endif
-	}
-	
 	
 	static void PropertyNotFoundError(typename type, string property_name)
 	{
-		ErrorDialog(string.Format("[%1]: Property Not Found: %2", type, property_name));
+		EditorLog.Error("Property '%2' not found in %1", type.ToString(), property_name);
 	}
 	
 	static void UnsupportedTypeError(typename type)
 	{
-		ErrorDialog(string.Format("Unsupported Type: %1", type));
+		EditorLog.Error("Unsupported Type: %1", type.ToString());
 	}
 	
 	static void UnsupportedConversionError(typename from_type, typename to_type)
 	{
-		ErrorDialog(string.Format("Unsupported conversion from %1 to %2!", from_type, to_type));
+		EditorLog.Error("Unsupported conversion from %1 to %2!", from_type.ToString(), to_type.ToString());
 	}
 	
 	static void TypeConversionError(typename property_type)

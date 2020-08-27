@@ -102,7 +102,7 @@ class RadioButtonGroup: ViewBinding
 				}
 				
 				default: {
-					MVC.ErrorDialog(string.Format("RadioButtonGroup::SetActiveRadioButton: Invalid Type %1", radio_button.GetRoot().Type()));
+					EditorLog.Error("RadioButtonGroup::SetActiveRadioButton: Invalid Type %1", radio_button.GetRoot().Type().ToString());
 				}
 			}
 		}
@@ -126,7 +126,7 @@ class RadioButton: ScriptedWidgetEventHandler
 		m_LayoutRoot = w;
 		
 		if ((m_LayoutRoot.Type() != ButtonWidget) && (m_LayoutRoot.Type() != CheckBoxWidget)) {
-			MVC.ErrorDialog(string.Format("Invalid type for RadioButton: %1", m_LayoutRoot.Type()));
+			EditorLog.Error("Invalid type for RadioButton: %1", m_LayoutRoot.Type().ToString());
 			return;
 		}
 		

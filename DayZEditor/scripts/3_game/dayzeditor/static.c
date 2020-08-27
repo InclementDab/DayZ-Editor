@@ -9,12 +9,41 @@ class EditorLog
 	
 	static EditorLogLevel CurrentLogLevel = EditorLogLevel.TRACE;
 	
+	
+	private static string m_LastCalledType;
 	private static void EditorPrint(string msg, EditorLogLevel level)
 	{
+		if (level >= CurrentLogLevel) {
+			
+			if (level == EditorLogLevel.ERROR) {
+				Error2("", msg);
+#ifdef COMPONENT_SYSTEM
+				Workbench.Dialog("Editor Log Error", msg);		
+#endif
+				return;
+			}
+			
+			string loglevel = typename.EnumToString(EditorLogLevel, level);
+			loglevel.ToLower();
 		
-		if (level >= CurrentLogLevel)
-			Print(string.Format("[EDITOR::%1] %2", typename.EnumToString(EditorLogLevel, level), msg));
+			if (msg.Contains("::")) {
+				TStringArray msg_split();
+				msg.Split(":", msg_split);
+				if (m_LastCalledType != msg_split[0]) {
+					m_LastCalledType = msg_split[0];
+					Print("\n");
+					PrintFormat("[%1::%2]:", loglevel, m_LastCalledType);
+				}
+				
+				PrintFormat("	%1", msg_split[1]);
+			} else {
+				PrintFormat("[%1] %2", loglevel, msg);
+			}
+							
+		}
 	}
+	
+	
 	
 	static void Trace(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
@@ -23,6 +52,36 @@ class EditorLog
 #endif
 	}
 	
+	static void Debug(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
+	{
+#ifdef EDITORPRINT
+		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), EditorLogLevel.DEBUG);
+#endif
+	}	
+	
+	static void Info(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
+	{
+#ifdef EDITORPRINT
+		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), EditorLogLevel.INFO);
+#endif
+	}	
+	
+	static void Warning(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
+	{
+#ifdef EDITORPRINT
+		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), EditorLogLevel.WARNING);
+#endif
+	}	
+	
+	static void Error(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
+	{
+		// Special Case :)
+		// ALWAYS bitch about errors
+		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), EditorLogLevel.ERROR);
+
+	}
+	
+	
 	static void Debug(Class msg)
 	{
 #ifdef EDITORPRINT
@@ -30,19 +89,7 @@ class EditorLog
 #endif
 	}
 	
-	static void Debug(string msg)
-	{
-#ifdef EDITORPRINT
-		EditorPrint(msg, EditorLogLevel.DEBUG);
-#endif
-	}
-	
-	static void Info(string msg)
-	{
-#ifdef EDITORPRINT
-		EditorPrint(msg, EditorLogLevel.INFO);
-#endif
-	}
+
 	
 	static void Info(Class msg)
 	{
@@ -51,20 +98,7 @@ class EditorLog
 #endif
 	}
 	
-	
-	static void Warning(string msg)
-	{
-#ifdef EDITORPRINT
-		EditorPrint(msg, EditorLogLevel.WARNING);
-#endif
-	}
-	
-	static void Error(string msg)
-	{
-#ifdef EDITORPRINT
-		EditorPrint(msg, EditorLogLevel.ERROR);
-#endif
-	}
+
 }
 
 

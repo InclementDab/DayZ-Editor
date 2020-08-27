@@ -168,10 +168,7 @@ class EditorClientModule: JMModuleBase
 		}
 		
 	
-		
-		
-		
-		
+	
 		// debug
 		timeslice_count++;
 		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
@@ -279,14 +276,22 @@ class EditorClientModule: JMModuleBase
 	
 	void OnMouseDown(int button)
 	{
-		EditorLog.Trace("Editor::OnMouseDown %1", typename.EnumToString(BetterMouseState, button));
+		//EditorLog.Trace("Editor::OnMouseDown %1", typename.EnumToString(BetterMouseState, button));
+		
+		Widget w = GetWidgetUnderCursor();
+		// Checks if Widget is Control Class
+		// Also checks if Modal is active, if it is, it will only fire click events
+		// within that modal window
+		if (w.IsControlClass() && !m_EditorHud.IsModalActive() || (m_EditorHud.IsModalActive() && m_EditorHud.IsModalCommand(w))) {
+			Shape s = Shape.CreateCylinder(COLOR_RED, ShapeFlags.VISIBLE | ShapeFlags.NOZBUFFER | ShapeFlags.NOZWRITE, GetGame().GetCurrentCameraPosition(), 5, 5);
+			OnClick(w, button);
+			return;
+		}
 		
 		switch (button) {
 			
 			case BetterMouseState.LEFT: {
-				
-
-				
+								
 				break;
 			}
 			
@@ -302,7 +307,34 @@ class EditorClientModule: JMModuleBase
 	
 	void OnMouseUp(int button)
 	{
-		EditorLog.Trace("Editor::OnMouseUp %1", typename.EnumToString(BetterMouseState, button));
+		//EditorLog.Trace("Editor::OnMouseUp %1", typename.EnumToString(BetterMouseState, button));
+	}
+	
+	void OnClick(Widget w, int button)
+	{
+		EditorLog.Trace("Editor::OnClick %1", w.GetName());
+		if (m_DoubleClickButton == button) {
+			OnDoubleClick(w, button);
+			return;
+		}
+		
+		
+
+		
+		m_DoubleClickButton = button;
+		thread ResetDoubleClick();
+	}
+	
+	private const int DOUBLE_CLICK_THRESHOLD = 250;
+	private int m_DoubleClickButton;
+	private void ResetDoubleClick()	{
+		Sleep(DOUBLE_CLICK_THRESHOLD);
+		m_DoubleClickButton = -1;
+	}
+		
+	void OnDoubleClick(Widget w, int button)
+	{
+		EditorLog.Trace("Editor::OnDoubleClick %1", w.GetName());
 	}
 	
 	
