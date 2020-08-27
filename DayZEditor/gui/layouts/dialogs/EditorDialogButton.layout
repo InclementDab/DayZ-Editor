@@ -6,9 +6,10 @@ PanelWidgetClass EditorDialogButton {
  hexactsize 1
  vexactsize 1
  priority 1
+ scriptclass "EditorDialogButtonHandler"
  style rover_sim_black_2
  {
-  PanelWidgetClass Background {
+  PanelWidgetClass DialogButtonOutline {
    ignorepointer 1
    position 0 0
    size 1 1
@@ -20,7 +21,7 @@ PanelWidgetClass EditorDialogButton {
    vexactsize 0
    style Outline
    {
-    ButtonWidgetClass Button {
+    ButtonWidgetClass DialogButton {
      position 0 0
      size 1 1
      halign center_ref
@@ -29,9 +30,21 @@ PanelWidgetClass EditorDialogButton {
      vexactpos 1
      hexactsize 0
      vexactsize 0
+     scriptclass "ViewBinding"
      style Default
+     "no focus" 0
+     {
+      ScriptParamsClass {
+       Binding_Name "DialogButtonData"
+       Two_Way_Binding 1
+      }
+     }
     }
    }
+  }
+ }
+ {
+  ScriptParamsClass {
   }
  }
 }

@@ -33,6 +33,8 @@ class ViewBinding: ScriptedWidgetEventHandler
 		return m_Controller.GetPropertyType(property_name);
 	}
 	
+	protected typename m_PropertyType;
+	
 	protected Controller m_Controller;
 	protected ref TypeConverter m_PropertyDataConverter;
 	protected ref WidgetController m_WidgetController;
@@ -46,15 +48,19 @@ class ViewBinding: ScriptedWidgetEventHandler
 	{ 
 		EditorLog.Trace("ViewBinding::SetController");
 		m_Controller = controller;
-		typename property_type = GetPropertyType(Binding_Name);
+		m_PropertyType = GetPropertyType(Binding_Name);
+		
+		if (!m_PropertyType) {
+			MVC.PropertyNotFoundError(m_PropertyType, Binding_Name);
+		}
 
 		if (Selected_Item != string.Empty)
 			m_SelectedDataConverter = MVC.GetTypeConversion(GetPropertyType(Selected_Item));
 				
-		if (property_type.IsInherited(Observable)) {			
-			m_PropertyDataConverter = MVC.GetTypeConversion(Observable.Cast(property_type.Spawn()).GetType());
+		if (m_PropertyType.IsInherited(Observable)) {			
+			m_PropertyDataConverter = MVC.GetTypeConversion(Observable.Cast(m_PropertyType.Spawn()).GetType());
 		} else {
-			m_PropertyDataConverter = MVC.GetTypeConversion(property_type);
+			m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyType);
 		}
 		
 		// Updates the view on first load
@@ -96,7 +102,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 
 		
 		if (!m_PropertyDataConverter) {
-			MVC.TypeConversionError(GetPropertyType(Binding_Name));
+			MVC.TypeConversionError(m_PropertyType);
 			return;			
 		}
 		
@@ -145,7 +151,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
 
 		if (!m_PropertyDataConverter) {
-			MVC.TypeConversionError(GetPropertyType(Binding_Name));
+			MVC.TypeConversionError(m_PropertyType);
 			return;
 		}
 		
@@ -164,7 +170,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 		
 		if (!m_PropertyDataConverter) {
-			MVC.TypeConversionError(GetPropertyType(Binding_Name));
+			MVC.TypeConversionError(m_PropertyType);
 			return;
 		}
 		
@@ -230,17 +236,17 @@ class ViewBinding: ScriptedWidgetEventHandler
 		
 	
 	
-	private void InvokeCommand(Param params)
+	void InvokeCommand(Param params)
 	{
 		if (Command_Execute == string.Empty) {
 			return;
 		}
-		
+				
 		EditorLog.Trace("ViewBinding::InvokeCommand");
 		g_Script.CallFunction(m_Controller, Command_Execute, null, params);
 	}
 	
-	private void UpdateCommand()
+	void UpdateCommand()
 	{
 		if (Command_CanExecute == string.Empty) {
 			return;

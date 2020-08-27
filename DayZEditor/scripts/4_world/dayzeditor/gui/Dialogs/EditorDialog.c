@@ -1,4 +1,5 @@
 
+typedef ref map<ButtonWidget, string> ButtonCallbackHashMap;
 
 class EditorDialogController: Controller
 {
@@ -10,6 +11,8 @@ class EditorDialogController: Controller
 	WrapSpacerWidget DialogContent;
 	GridSpacerWidget ButtonGrid;
 	WrapSpacerWidget WindowDragWrapper;
+	
+	bool DialogButtonData;
 	
 	private ref ButtonCallbackHashMap m_ButtonCallbacks = new ButtonCallbackHashMap();
 	
@@ -26,6 +29,10 @@ class EditorDialogController: Controller
 		EditorLog.Trace("~EditorDialogController");
 	}
 	
+	override void PropertyChanged(string property_name)
+	{
+		Print("PropertyChanged " + property_name);
+	}
 	
 	float m_OffsetX, m_OffsetY;
 	override bool OnDrag(Widget w, int x, int y) 
@@ -99,7 +106,51 @@ class EditorDialogController: Controller
 }
 
 
-typedef ref map<ButtonWidget, string> ButtonCallbackHashMap;
+class EditorDialogButtonHandler: ScriptedWidgetEventHandler
+{
+	protected Widget m_LayoutRoot;
+	
+	protected Widget DialogButtonOutline;
+	protected ButtonWidget DialogButton;
+	
+
+	
+	void OnWidgetScriptInit(Widget w)
+	{
+		EditorLog.Trace("EditorDialogButtonHandler::OnWidgetScriptInit");
+		m_LayoutRoot = w;
+		m_LayoutRoot.SetHandler(this);
+	}
+	
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{	
+		EditorLog.Trace("EditorDialogButtonHandler::OnClick");
+		
+		return false;
+	}
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorDialogButtonHandler::OnMouseEnter");
+		
+		
+		
+		return false;
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		EditorLog.Trace("EditorDialogButtonHandler::OnMouseLeave");
+		
+		
+		return false;
+	}
+	
+	
+	
+}
+
 
 class EditorDialog: Managed
 {

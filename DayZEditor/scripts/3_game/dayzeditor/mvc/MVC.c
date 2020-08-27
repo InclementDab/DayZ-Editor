@@ -51,9 +51,14 @@ class MVC
 	}
 	
 	
+	static void PropertyNotFoundError(typename type, string property_name)
+	{
+		ErrorDialog(string.Format("[%1]: Property Not Found: %2", type, property_name));
+	}
+	
 	static void UnsupportedTypeError(typename type)
 	{
-		ErrorDialog(string.Format("Unsupported Type %1", type));
+		ErrorDialog(string.Format("Unsupported Type: %1", type));
 	}
 	
 	static void UnsupportedConversionError(typename from_type, typename to_type)
@@ -69,6 +74,8 @@ class MVC
 			EditorLog.Warning(string.Format("Could not find TypeConversion for Type %1\nUse MVC.RegisterConversionTemplates to register custom types", property_type.ToString()));
 		}
 	}
+	
+
 	
 }
 

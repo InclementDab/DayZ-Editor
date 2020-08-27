@@ -16,10 +16,10 @@ class EditorLog
 			Print(string.Format("[EDITOR::%1] %2", typename.EnumToString(EditorLogLevel, level), msg));
 	}
 	
-	static void Trace(string msg)
+	static void Trace(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
 #ifdef EDITORPRINT
-		EditorPrint(msg, EditorLogLevel.TRACE);
+		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), EditorLogLevel.TRACE);
 #endif
 	}
 	
