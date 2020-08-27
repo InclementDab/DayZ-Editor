@@ -4,68 +4,86 @@
 #define EDITORPRINT
 
 
+
+
+
 class EditorLog
 {
 	
 	static EditorLogLevel CurrentLogLevel = EditorLogLevel.TRACE;
 	static string ExclusiveLogMode;
 	
-	private static string m_LastCalledType;
-	private static void EditorPrint(string msg, EditorLogLevel level)
+	private static string m_LastCalledType;	
+	private static float avg_timeslice;
+	private static int timeslice_count;
+	
+	static void EditorPrint(string msg, EditorLogLevel level)
 	{
-		if (level >= CurrentLogLevel) {
+	
+		if (level >= EditorLog.CurrentLogLevel) {
 			
 			if (level == EditorLogLevel.ERROR) {
-				Error2("", msg);
-#ifdef COMPONENT_SYSTEM
+				Error2("Editor Error", msg);
+	#ifdef COMPONENT_SYSTEM
 				Workbench.Dialog("Editor Log Error", msg);		
-#endif
+	#endif
 				return;
 			}
 			
-			string loglevel = typename.EnumToString(EditorLogLevel, level);
-			loglevel.ToLower();
-		
+			string loglevel;
+			switch (level) {
+				case EditorLogLevel.TRACE:
+					loglevel = "trace";
+					break;
+				
+				case EditorLogLevel.DEBUG: {
+					loglevel = "debug";
+					break;
+				}			
+				
+				case EditorLogLevel.INFO: {
+					loglevel = "info";
+					break;
+				}
+				
+				case EditorLogLevel.WARNING: {
+					loglevel = "warning";
+					break;
+				}
+				
+				case EditorLogLevel.ERROR: {
+					loglevel = "error";
+					break;
+				}
+			}
+	
+			
 			if (msg.Contains("::")) {
 				TStringArray msg_split();
 				msg.Split(":", msg_split);
 				
-				if (ExclusiveLogMode != string.Empty) {
-					string exclusive_type = msg_split[0];
-					ExclusiveLogMode.ToLower(); exclusive_type.ToLower();
-					if (ExclusiveLogMode.Trim() != exclusive_type.Trim())
-						return;
+				if (ExclusiveLogMode != string.Empty && ExclusiveLogMode != msg_split[0]) {
+					return;
 				}
 				
 				if (m_LastCalledType != msg_split[0]) {
 					m_LastCalledType = msg_split[0];
-					Print("\n");
 					PrintFormat("[%1::%2]:", loglevel, m_LastCalledType);
 				}
 				
-				PrintFormat("	%1", msg_split[1]);
-			} else {
-				
-				if (ExclusiveLogMode != string.Empty) {
-					//return;
-				} 
-				
-				if (m_LastCalledType != msg) {
-					m_LastCalledType = msg;
-					Print("\n");
-				} 
-				
-				PrintFormat("[%1::%2]", loglevel, msg);
+
+				PrintFormat("	%1", msg.Substring(msg_split[0].Length() + 2, msg.Length() - msg_split[0].Length() - 2));
+			} 
+			else if (ExclusiveLogMode == string.Empty) {
+				PrintFormat("[%1] %2", loglevel, msg);
 			}
-							
 		}
 	}
 	
 	
-	
 	static void Trace(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
-#ifdef EDITORPRINT
+#ifdef EDITORPRINT		
 		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), EditorLogLevel.TRACE);
 #endif
 	}
