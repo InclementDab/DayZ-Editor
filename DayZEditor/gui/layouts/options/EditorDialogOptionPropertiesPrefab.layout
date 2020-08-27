@@ -28,6 +28,7 @@ PanelWidgetClass EditorProperties {
    "Size To Content V" 1
    {
     ButtonWidgetClass EditorDialogOptionButton {
+     disabled 0
      size 1 24
      hexactpos 1
      vexactpos 1
@@ -35,8 +36,9 @@ PanelWidgetClass EditorProperties {
      vexactsize 1
      scaled 1
      scriptclass "ViewBinding"
-     style Empty
+     style Colorable
      "no focus" 0
+     switch toggle
      {
       FrameWidgetClass EditorDialogOptionPanel {
        clipchildren 0
@@ -87,6 +89,7 @@ PanelWidgetClass EditorProperties {
          "no wrap" 1
          stretch 1
          filter 1
+         rotation 0 0 90
         }
        }
       }
@@ -106,8 +109,9 @@ PanelWidgetClass EditorProperties {
       }
       PanelWidgetClass Spacer {
        visible 1
+       clipchildren 1
        ignorepointer 1
-       color 1 1 1 0.549
+       color 1 1 1 0.5882
        size 1 2
        hexactpos 1
        vexactpos 1

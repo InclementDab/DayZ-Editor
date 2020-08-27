@@ -2,7 +2,9 @@ class EditorPropertiesController: Controller
 {
 	protected EditorObject m_EditorObject;
 	
-	bool EditorDialogOptionButton;
+	bool EditorDialogOptionButton = true;
+	
+	protected WrapSpacerWidget EditorDialogOptionContent;
 	
 	EquationEvaluater pos_x, pos_y, pos_z;
 	EquationEvaluater rot_x, rot_y, rot_z;
@@ -66,7 +68,8 @@ class EditorPropertiesController: Controller
 	void ToggleCategoryButton(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog::ToggleCategoryButton");
-		args.param1.FindAnyWidget("expand_image").Show(args.param3);
-		args.param1.FindAnyWidget("collapse_image").Show(!args.param3);
+		args.param1.FindAnyWidget("expand_image").Show(EditorDialogOptionButton);
+		args.param1.FindAnyWidget("collapse_image").Show(!EditorDialogOptionButton);
+		EditorDialogOptionContent.Show(EditorDialogOptionButton);
 	}
 }
