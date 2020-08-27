@@ -9,6 +9,10 @@ class Controller: ScriptedWidgetEventHandler
 	
 	// Protected members
 	protected Widget m_LayoutRoot;
+	Widget GetLayoutRoot() {
+		return m_LayoutRoot;
+	}
+	
 	protected ref ViewBindingHashMap m_ViewBindingHashMap = new ViewBindingHashMap();
 	protected ref PropertyHashMap m_PropertyHashMap;
 	typename GetPropertyType(string property_name) {

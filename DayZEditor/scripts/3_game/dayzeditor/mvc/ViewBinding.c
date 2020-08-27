@@ -46,7 +46,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	
 	void SetController(Controller controller) 
 	{ 
-		EditorLog.Trace("ViewBinding::SetController");
+		EditorLog.Trace("ViewBinding::SetController: %1", controller.GetLayoutRoot().GetName());
 		m_Controller = controller;
 		m_PropertyType = GetPropertyType(Binding_Name);
 		
@@ -69,7 +69,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 	
 	void OnWidgetScriptInit(Widget w)
 	{
-		EditorLog.Trace("ViewBinding::Init");
+		EditorLog.Trace("[%1] ViewBinding::Init", w.GetName());
 		m_LayoutRoot = w;
 		
 		if (Binding_Name == string.Empty) {

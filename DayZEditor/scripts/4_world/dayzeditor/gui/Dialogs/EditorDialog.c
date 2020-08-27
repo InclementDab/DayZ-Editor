@@ -1,5 +1,4 @@
 
-typedef ref map<ButtonWidget, string> ButtonCallbackHashMap;
 
 class EditorDialogController: Controller
 {
@@ -12,10 +11,7 @@ class EditorDialogController: Controller
 	GridSpacerWidget ButtonGrid;
 	WrapSpacerWidget WindowDragWrapper;
 	
-	bool DialogButtonData;
-	
-	private ref ButtonCallbackHashMap m_ButtonCallbacks = new ButtonCallbackHashMap();
-	
+		
 	protected ref EditorDialog m_EditorDialog;
 	void SetEditorDialog(EditorDialog editor_dialog) {
 		m_EditorDialog = editor_dialog;
@@ -89,20 +85,10 @@ class EditorDialogController: Controller
 			m_EditorDialog.CloseDialog();
 			return true;
 		}
-		
 
-		if (m_ButtonCallbacks[w] != string.Empty) {
-			GetGame().GameScript.Call(m_EditorDialog, m_ButtonCallbacks[w], null);
-			return true;
-		}
-		
 		return false;
 	}
 	
-	void AddButton(ButtonWidget bw, string callback)
-	{
-		m_ButtonCallbacks.Insert(bw, callback);
-	}
 }
 
 
@@ -113,8 +99,9 @@ class EditorDialogButtonHandler: ScriptedWidgetEventHandler
 	protected Widget DialogButtonOutline;
 	protected ButtonWidget DialogButton;
 	
+	protected Class m_CallbackContext;
+	protected string m_CallbackAction;
 
-	
 	void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("EditorDialogButtonHandler::OnWidgetScriptInit");
@@ -122,11 +109,25 @@ class EditorDialogButtonHandler: ScriptedWidgetEventHandler
 		m_LayoutRoot.SetHandler(this);
 	}
 	
+	void SetLabel(string label) {
+		DialogButton.SetText(label);
+	}
+	
+	void SetCallback(Class context, string action) {
+		m_CallbackContext = context;
+		m_CallbackAction = action;
+	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{	
 		EditorLog.Trace("EditorDialogButtonHandler::OnClick");
+		if (button != 0) return false;
 		
+		if (m_CallbackContext && m_CallbackAction) {
+			g_Script.Call(m_CallbackContext, m_CallbackAction, null);
+			return true;
+		}
+				
 		return false;
 	}
 	
@@ -175,8 +176,7 @@ class EditorDialog: Managed
 		m_DialogController.SetEditorDialog(this);
 	}
 	
-	void ~EditorDialog() 
-	{
+	void ~EditorDialog() {
 		EditorLog.Trace("~EditorDialog");
 	}
 
@@ -191,10 +191,11 @@ class EditorDialog: Managed
 	protected ButtonWidget AddButton(string label, string callback) 
 	{
 		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", m_DialogController.ButtonGrid);		
-		ButtonWidget bw = ButtonWidget.Cast(panel.FindAnyWidget("Button"));
-		bw.SetText(label);
-		m_DialogController.AddButton(bw, callback);
-		return bw;
+		EditorDialogButtonHandler handler;
+		panel.GetScript(handler);
+		handler.SetLabel(label);
+		handler.SetCallback(this, callback);
+		return panel;
 	}
 	
 	
