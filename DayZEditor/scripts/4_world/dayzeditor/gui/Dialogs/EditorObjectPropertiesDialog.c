@@ -19,6 +19,16 @@ class EditorPropertiesController: Controller
 		NotifyPropertyChanged("pos_y");
 		NotifyPropertyChanged("pos_z");
 		
+		
+		vector orientation = m_EditorObject.GetOrientation();
+		rot_x = orientation[0].ToString();
+		rot_y = orientation[1].ToString();
+		rot_z = orientation[2].ToString();
+		
+		NotifyPropertyChanged("rot_x");
+		NotifyPropertyChanged("rot_y");
+		NotifyPropertyChanged("rot_z");
+		
 	}
 	
 	override void PropertyChanged(string property_name)
@@ -30,6 +40,13 @@ class EditorPropertiesController: Controller
 			case "pos_y":
 			case "pos_z": {
 				m_EditorObject.SetPosition(Vector(pos_x.Evaluate(), pos_y.Evaluate(), pos_z.Evaluate()));
+				break;
+			}
+			
+			case "rot_x":
+			case "rot_y":
+			case "rot_z": {
+				m_EditorObject.SetOrientation(Vector(rot_x.Evaluate(), rot_y.Evaluate(), rot_z.Evaluate()));
 				break;
 			}
 		}
@@ -64,6 +81,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 	}
 	
 	private vector m_StartPosition;
+	private vector m_StartOrientation;
 	
 	void EditorObjectPropertiesDialog(EditorObject editor_object)
 	{
@@ -74,6 +92,8 @@ class EditorObjectPropertiesDialog: EditorDialog
 		AddContent(content);
 		content.GetScript(m_EditorPropertiesController);
 		m_EditorPropertiesController.SetEditorObject(m_EditorObject);
+		m_StartPosition = m_EditorObject.GetPosition();
+		m_StartOrientation = m_EditorObject.GetOrientation();
 		
 		SetTitle("Edit: Object Properties");
 		AddButton("Save", "SaveCallback");
@@ -92,6 +112,8 @@ class EditorObjectPropertiesDialog: EditorDialog
 	
 	void CancelCallback() {
 		EditorLog.Trace("EditorObjectPropertiesDialog::CancelCallback");
+		m_EditorObject.SetPosition(m_StartPosition);
+		m_EditorObject.SetOrientation(m_StartOrientation);
 		CloseDialog();
 	}
 	

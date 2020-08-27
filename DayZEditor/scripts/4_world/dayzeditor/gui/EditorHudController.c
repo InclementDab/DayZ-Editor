@@ -245,15 +245,7 @@ class EditorHudController: Controller
 			
 	}
 	
-	override void OnMouseDown(Widget w, int button)
-	{
-		//EditorLog.Trace("EditorHudController::OnMouseButtonDown");
-		if (button != 0) return;
 
-
-		
-
-	}
 	
 	override void OnMouseUp(Widget w, int button)
 	{
