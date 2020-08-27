@@ -1,7 +1,7 @@
 
 
 
-class Controller: ScriptedWidgetEventHandler
+class Controller: Managed
 {
 	// Private members
 	private ref PropertyHashMap m_ControllerPropertyHashMap;
@@ -53,8 +53,7 @@ class Controller: ScriptedWidgetEventHandler
 			EditorLog.Info(string.Format("%1 DataBindings found!", binding_count));
 		}
 		
-		m_LayoutRoot.SetHandler(this);
-		
+
 		// debug
 		m_ViewBindingHashMap.DebugPrint();
 		/*
@@ -127,6 +126,15 @@ class Controller: ScriptedWidgetEventHandler
 		
 		return binding_map.Count();
 	}
+	
+	void OnMouseDown(Widget w, int button);
+	void OnMouseUp(Widget w, int button);
+	void OnMouseWheel(Widget w, int direction);
+	void OnClick(Widget w, int button);
+	void OnDoubleClick(Widget w, int button);
+	void OnKeyPress(int key);
+	void OnMouseEnter(Widget w, int x, int y);
+	void OnMouseLeave(Widget w, Widget enter_w, int x, int y);
 }
 
 

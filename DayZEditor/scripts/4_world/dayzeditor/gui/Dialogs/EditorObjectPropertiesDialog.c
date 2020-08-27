@@ -34,6 +34,17 @@ class EditorPropertiesController: Controller
 			}
 		}
 	}
+	
+	override void OnMouseWheel(Widget w, int direction)
+	{
+		EditorLog.Trace("EditorPropertiesController::OnMouseWheel %1", w.GetName());
+		string w_name = w.GetName();
+		
+		EquationEvaluater w_eval;
+		EnScript.GetClassVar(this, w_name, 0, w_eval);
+		EnScript.SetClassVar(this, w_name, 0, (w_eval.Evaluate() + direction).ToString());
+		NotifyPropertyChanged(w_name);
+	}
 }
 
 
@@ -48,7 +59,9 @@ class EditorObjectPropertiesDialog: EditorDialog
 	protected EditorObject m_Object;
 	
 	protected ref EditorPropertiesController m_EditorPropertiesController;
-	
+	override Controller GetController() {
+		return m_EditorPropertiesController;
+	}
 	
 	private vector m_StartPosition;
 	
@@ -65,7 +78,6 @@ class EditorObjectPropertiesDialog: EditorDialog
 		SetTitle("Edit: Object Properties");
 		AddButton("Save", "SaveCallback");
 		AddButton("Cancel", "CancelCallback");
-		
 	}
 	
 	void ~EditorObjectPropertiesDialog() {

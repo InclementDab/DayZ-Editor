@@ -29,7 +29,7 @@ class EditorDialogController: Controller
 	{
 		Print("PropertyChanged " + property_name);
 	}
-	
+	/*
 	float m_OffsetX, m_OffsetY;
 	override bool OnDrag(Widget w, int x, int y) 
 	{
@@ -73,20 +73,18 @@ class EditorDialogController: Controller
 	    }
 	    
 	    return false;
-	}
+	}*/
 	
-	override bool OnClick(Widget w, int x, int y, int button)
+	override void OnClick(Widget w, int button)
 	{
 		EditorLog.Trace("EditorDialogController::OnClick");
 		
-		if (button != 0) return false; 
+		if (button != 0) return; 
 		
 		if (w == TitleClose) {
 			m_EditorDialog.CloseDialog();
-			return true;
 		}
 
-		return false;
 	}
 	
 }
@@ -163,6 +161,9 @@ class EditorDialog: Managed
 	}
 	
 	protected ref EditorDialogController m_DialogController;
+	Controller GetController() { 
+		return m_DialogController; 
+	}
 	
 	
 	void EditorDialog() 

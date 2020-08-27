@@ -42,6 +42,7 @@ FrameWidgetClass WindowFrame {
      vexactsize 1
      draggable 0
      scriptclass "ViewBinding"
+     style ServerBrowser
      {
       ScriptParamsClass {
        Two_Way_Binding 0

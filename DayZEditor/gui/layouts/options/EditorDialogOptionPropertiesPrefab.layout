@@ -13,7 +13,7 @@ PanelWidgetClass EditorProperties {
   WrapSpacerWidgetClass EditorDialogOption {
    clipchildren 0
    inheritalpha 0
-   ignorepointer 0
+   ignorepointer 1
    position 0 0
    size 1 24
    hexactpos 1
@@ -117,7 +117,7 @@ PanelWidgetClass EditorProperties {
     WrapSpacerWidgetClass EditorDialogOptionContent {
      visible 1
      clipchildren 0
-     ignorepointer 0
+     ignorepointer 1
      color 1 1 1 0
      position 0 1
      size 1 2400

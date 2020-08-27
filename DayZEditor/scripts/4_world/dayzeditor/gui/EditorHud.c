@@ -16,6 +16,14 @@ class EditorHud: Hud
 		return m_EditorHudController;
 	}
 	
+	protected Controller GetActiveController() {
+		if (IsModalActive()) {
+			return m_CurrentModal.GetController();
+		} else {
+			return m_EditorHudController;
+		}
+	}
+	
 	// literally track down everything that uses these and DELETE THEM its SHIT CODE TYLER DO IT PUSSY
 	EditorMap GetMap() 			{ 
 		return m_EditorMap; 
@@ -30,6 +38,32 @@ class EditorHud: Hud
 	
 	bool IsMapVisible() { 
 		return m_EditorMapContainer.IsVisible(); 
+	}
+	
+	override void Show(bool show) 
+	{
+		EditorLog.Trace("EditorHud::Show");
+		m_LayoutRoot.Show(show);
+	}
+	
+	bool IsVisible() {
+		return m_LayoutRoot.IsVisible();
+	}
+	
+	void ToggleCursor() {
+		GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
+	}
+	
+	override void ShowCursor() {
+		GetGame().GetUIManager().ShowCursor(true);
+	}
+	
+	override void HideCursor() {
+		GetGame().GetUIManager().ShowCursor(false);
+	}
+	
+	void ShowMap(bool show)	{
+		m_EditorMapContainer.Show(show);
 	}
 	
 	void EditorHud() {
@@ -64,25 +98,28 @@ class EditorHud: Hud
 	{
 		
 		typename mouse_state_type = BetterMouseState;
-		// Handles OnMouseDown and OnMouseUp events
+		
+		
 		for (int i = 0; i < 3; i++) {
 			int mouse_state;
 			mouse_state_type.GetVariableValue(null, i, mouse_state);
 			if (GetMouseState(i) & MB_PRESSED_MASK) {
 				if ((m_ActiveMouseStates & mouse_state) == 0) {
 					m_ActiveMouseStates |= mouse_state;
-					OnMouseDown(mouse_state);
+					OnMouseDown(i);
+					
 				}
 			} else { 
 				if ((m_ActiveMouseStates & mouse_state) == mouse_state) {
 					m_ActiveMouseStates &= ~mouse_state;
-					OnMouseUp(mouse_state);
+					OnMouseUp(i);
+					
 				}
 			}
 		}
 		
 		if (GetMouseState(MouseState.WHEEL) != 0) {
-			OnMouseWheel(GetMouseState(MouseState.WHEEL));
+			OnMouseWheel(GetMouseState(MouseState.WHEEL));			
 		}
 		
 		if (GetMouseState(MouseState.X) != 0 || GetMouseState(MouseState.Y) != 0) {
@@ -92,31 +129,7 @@ class EditorHud: Hud
 		}
 	}
 	
-	override void Show(bool show) 
-	{
-		EditorLog.Trace("EditorHud::Show");
-		m_LayoutRoot.Show(show);
-	}
-	
-	bool IsVisible() {
-		return m_LayoutRoot.IsVisible();
-	}
-	
-	void ToggleCursor() {
-		GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
-	}
-	
-	override void ShowCursor() {
-		GetGame().GetUIManager().ShowCursor(true);
-	}
-	
-	override void HideCursor() {
-		GetGame().GetUIManager().ShowCursor(false);
-	}
-	
-	void ShowMap(bool show)	{
-		m_EditorMapContainer.Show(show);
-	}
+
 	
 
 	
@@ -130,23 +143,18 @@ class EditorHud: Hud
 		m_DoubleClickButton = -1;
 	}
 	
-	// for thread blocking
-	private Widget _GetWidgetUnderCursor() {
-		return GetWidgetUnderCursor();
-	}
-	
+
 
 	private ref Widget m_CurrentEnterWidget;
 	private void MouseUpdatePosition(int x, int y)
 	{
 		//EditorLog.Trace("EditorHud::MouseUpdatePosition X%1 Y%2", x.ToString(), y.ToString());
 		
-		ref Widget current_widget = _GetWidgetUnderCursor();
-
+		Widget current_widget = GetWidgetUnderCursor();
 		if (current_widget) {
 			if (m_CurrentEnterWidget != current_widget) {
 				if (m_CurrentEnterWidget) {
-					OnMouseLeave(m_CurrentEnterWidget, current_widget, x, y);
+					//OnMouseLeave(m_CurrentEnterWidget, current_widget, x, y);
 				}
 				m_CurrentEnterWidget = current_widget;
 				OnMouseEnter(current_widget, x, y);
@@ -160,27 +168,32 @@ class EditorHud: Hud
 	
 	void OnMouseDown(int button)
 	{
-		EditorLog.Trace("EditorHud::OnMouseDown %1", typename.EnumToString(BetterMouseState, button));
-		return;
-		ref Widget w = _GetWidgetUnderCursor();
-		// Checks if Widget is Control Class
-		// Also checks if Modal is active, if it is, it will only fire click events
-		// within that modal window
-		if (w && w.IsControlClass() && !IsModalActive() || (IsModalActive() && IsModalCommand(w))) {
-			OnClick(w, button);
-			return;
-		}
+		EditorLog.Trace("EditorHud::OnMouseDown %1", typename.EnumToString(MouseState, button));
 		
+		Widget target = GetWidgetUnderCursor();	
+		if (target) {
+			GetActiveController().OnMouseDown(target, button);
+			if (target.IsControlClass())
+				OnClick(target, button);
+			
+		}
 		switch (button) {
 			
-			case BetterMouseState.LEFT: {
+			case MouseState.LEFT: {
+#ifndef COMPONENT_SYSTEM
+				if (GetEditor().IsPlacing()) {
+					GetEditor().PlaceObject();
+					return;
+				}
+				GetEditor().ClearSelection();
+#endif
 				break;
 			}
 			
-			case BetterMouseState.MIDDLE: {
+			case MouseState.MIDDLE: {
 				
 				if (KeyState(KeyCode.KC_LCONTROL))
-					EditorLog.Info(GetWidgetUnderCursor().GetName());
+					EditorLog.Info(target.GetName());
 				
 				break;
 			}
@@ -189,17 +202,27 @@ class EditorHud: Hud
 	
 	void OnMouseUp(int button)
 	{
-		EditorLog.Trace("EditorHud::OnMouseUp %1", typename.EnumToString(BetterMouseState, button));
+		EditorLog.Trace("EditorHud::OnMouseUp %1", typename.EnumToString(MouseState, button));
+		Widget w = GetWidgetUnderCursor();
+		if (!w) return;
+	
+		GetActiveController().OnMouseUp(w, button);
 	}
 	
 	void OnMouseWheel(int direction)
 	{
-		EditorLog.Trace("EditorHud::OnMouseWheel %1", direction.ToString());
+		Widget w = GetWidgetUnderCursor();
+		EditorLog.Trace("EditorHud::OnMouseWheel %1", w.GetName());
+		if (!w) return;
+		
+		GetActiveController().OnMouseWheel(w, direction);	
 	}
 	
 	void OnClick(Widget w, int button)
 	{
 		EditorLog.Trace("EditorHud::OnClick %1", w.GetName());
+		GetActiveController().OnClick(w, button);
+		
 		if (m_DoubleClickButton == button) {
 			OnDoubleClick(w, button);
 			return;
@@ -212,21 +235,25 @@ class EditorHud: Hud
 	void OnDoubleClick(Widget w, int button)
 	{
 		EditorLog.Trace("EditorHud::OnDoubleClick: %1", w.GetName());
+		GetActiveController().OnDoubleClick(w, button);
 	}
 	
 	void OnKeyPress(int key)
 	{
 		EditorLog.Trace("EditorHud::OnKeyPress: %1", key.ToString());
+		GetActiveController().OnKeyPress(key);
 	}
 	
 	void OnMouseEnter(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseEnter: %1", w.GetName());
+		GetActiveController().OnMouseEnter(w, x, y);
 	}
 	
 	void OnMouseLeave(Widget w, Widget enter_w, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseLeave %1 enter %2", w.GetName(), enter_w.GetName());
+		GetActiveController().OnMouseLeave(w, enter_w, x, y);
 	}
 	/*
 	void OnDrag(Widget target, int x, int y)

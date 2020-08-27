@@ -201,13 +201,19 @@ class EditorHudController: Controller
 	}
 	
 	
+	
+	
+	
+
+	override void OnMouseWheel(Widget w, int direction)
+	{
+		//EditorLog.Trace("EditorHudController::OnMouseWheel");
+	}
 
 	
-	override bool OnMouseEnter(Widget w, int x, int y)
+	override void OnMouseEnter(Widget w, int x, int y)
 	{
-		//EditorLog.Trace("EditorHudController::OnMouseEnter");
-		
-		
+		//EditorLog.Trace("EditorHudController::OnMouseEnter");		
 		switch (w.GetName()) {
 			
 			case "SnapButton":
@@ -216,14 +222,12 @@ class EditorHudController: Controller
 			case "UndoButton":
 			case "RedoButton": {
 				w.SetColor(COLOR_SALMON_A);
-				return true;
 			}			
 		}
 		
-		return false;
 	}
 	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	override void OnMouseLeave(Widget w, Widget enter_w, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseLeave");
 		
@@ -236,34 +240,25 @@ class EditorHudController: Controller
 			case "GroundButton":
 			case "SnapButton": {
 				w.SetColor(COLOR_EMPTY);
-				return true;
 			}
 		}
 			
-		return false;
 	}
 	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	override void OnMouseDown(Widget w, int button)
 	{
-		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
-		if (button != 0) return false;
+		//EditorLog.Trace("EditorHudController::OnMouseButtonDown");
+		if (button != 0) return;
 
-#ifndef COMPONENT_SYSTEM
-		if (GetEditor().IsPlacing()) {
-			GetEditor().PlaceObject();
-			return true;
-		}
+
 		
-		GetEditor().ClearSelection();
-#endif
-		
-		return false;
+
 	}
 	
-	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	override void OnMouseUp(Widget w, int button)
 	{
-		EditorLog.Trace("EditorHudController::OnMouseButtonUp");
-		if (button != 0) return false;
+		//EditorLog.Trace("EditorHudController::OnMouseButtonUp");
+		if (button != 0) return;
 		
 		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		switch (w.GetName()) {
@@ -276,39 +271,12 @@ class EditorHudController: Controller
 				break;
 			}
 		}
-		return false;
 	}
-	
-	
-	private int GetHighlightColor(string widget_name)
-	{
-		switch (widget_name) {
-			
-			case "UndoButton": 
-			case "RedoButton": {
-				return COLOR_SALMON_A;
-			}
-			
-			case "MagnetButton": {
-				return COLOR_CANDY;
-			}
-			
-			case "GroundButton": {
-				return COLOR_APPLE;
-			}
-			
-			case "SnapButton": {
-				return COLOR_JELLY;
-			}
-		}
 		
-		return 0;
-	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
+	override void OnClick(Widget w, int button)
 	{
-		EditorLog.Trace("EditorHudController::OnClick");
-		if (button != 0) return false;
+		//EditorLog.Trace("EditorHudController::OnClick");
+		if (button != 0) return;
 		
 		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		
@@ -332,7 +300,33 @@ class EditorHudController: Controller
 			}
 		}
 		
-		return false;
+	}
+	
+	
+		
+	private int GetHighlightColor(string widget_name)
+	{
+		switch (widget_name) {
+			
+			case "UndoButton": 
+			case "RedoButton": {
+				return COLOR_SALMON_A;
+			}
+			
+			case "MagnetButton": {
+				return COLOR_CANDY;
+			}
+			
+			case "GroundButton": {
+				return COLOR_APPLE;
+			}
+			
+			case "SnapButton": {
+				return COLOR_JELLY;
+			}
+		}
+		
+		return 0;
 	}
 	
 }
