@@ -25,7 +25,6 @@ class EditorObject
 	protected EntityAI 		m_BBoxBase;
 	protected EntityAI 		m_CenterLine;
 	
-	string testname = "REEE";
 	
 	float LocalAngle; // temp
 	

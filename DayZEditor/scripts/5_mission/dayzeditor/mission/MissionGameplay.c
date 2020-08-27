@@ -32,11 +32,19 @@ modded class MissionGameplay
 		// If Editor IS active, and DOESNT handle the key, do keypress
 		} else if (!GetEditor().OnKeyPress(key)) {
 			super.OnKeyPress(key);
-		}
-		
-		
-		
+		}		
 	}
+	
+	override void OnUpdate(float timeslice)
+	{
+		if (GetEditor().IsActive()) {
+			GetModuleManager().OnUpdate(timeslice);
+			//GetEditor().OnUpdate(timeslice);
+		} else { 
+			super.OnUpdate(timeslice);
+		}
+	}
+	
 	
 	void StartEditor()
 	{

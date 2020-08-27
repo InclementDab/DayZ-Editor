@@ -17,6 +17,12 @@ enum EditorClientModuleRPC
 };
 
 
+enum BetterMouseState {
+	LEFT = 1,
+	RIGHT = 2,
+	MIDDLE = 4
+};
+
 class EditorClientModule: JMModuleBase
 {
 	/* Private Members */
@@ -32,6 +38,8 @@ class EditorClientModule: JMModuleBase
 	
 	private bool m_Active = false;
 	bool IsActive() { return m_Active; }
+	
+	private int ActiveMouseStates;
 
 	/* UI Stuff */
 	EditorHud GetEditorHud() 
@@ -139,11 +147,34 @@ class EditorClientModule: JMModuleBase
 			}
 		}
 		
-		timeslice_count++;
 		
-		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
+		
+		typename mouse_state_type = BetterMouseState;
+		// Handles OnMouseDown and OnMouseUp events
+		for (int i = 0; i < 3; i++) {
+			int mouse_state;
+			mouse_state_type.GetVariableValue(null, i, mouse_state);
+			if (GetMouseState(i) & MB_PRESSED_MASK) {
+				if ((ActiveMouseStates & mouse_state) == 0) {
+					ActiveMouseStates |= mouse_state;
+					OnMouseDown(mouse_state);
+				}
+			} else { 
+				if ((ActiveMouseStates & mouse_state) == mouse_state) {
+					ActiveMouseStates &= ~mouse_state;
+					OnMouseUp(mouse_state);
+				}
+			}
+		}
+		
+	
+		
+		
+		
 		
 		// debug
+		timeslice_count++;
+		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
 		EditorLog.CurrentLogLevel = EditorLogLevel.WARNING;
 		m_EditorHud.GetController().DebugText1 = avg_timeslice.ToString();
 		m_EditorHud.GetController().NotifyPropertyChanged("DebugText1");
@@ -208,6 +239,7 @@ class EditorClientModule: JMModuleBase
 	{
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleActive");
+		
 		m_Active = !m_Active;
 		SetActive(m_Active);
 	}	
@@ -243,6 +275,37 @@ class EditorClientModule: JMModuleBase
 	}
 	
 	
+	
+	
+	void OnMouseDown(int button)
+	{
+		EditorLog.Trace("Editor::OnMouseDown %1", typename.EnumToString(BetterMouseState, button));
+		
+		switch (button) {
+			
+			case BetterMouseState.LEFT: {
+				
+
+				
+				break;
+			}
+			
+			case BetterMouseState.MIDDLE: {
+				
+				if (KeyState(KeyCode.KC_LCONTROL))
+					EditorLog.Info(GetWidgetUnderCursor().GetName());
+				
+				break;
+			}
+		}
+	}
+	
+	void OnMouseUp(int button)
+	{
+		EditorLog.Trace("Editor::OnMouseUp %1", typename.EnumToString(BetterMouseState, button));
+	}
+	
+	
 	// Only use this to handle hardcoded keys (ctrl + z etc...)
 	// Return TRUE if handled.
 	bool OnKeyPress(int key)
@@ -251,7 +314,6 @@ class EditorClientModule: JMModuleBase
 		if (KeyState(KeyCode.KC_LCONTROL)) {
 			
 			switch (key) {
-				
 				case KeyCode.KC_Z: {
 					Undo();
 					return true;
@@ -262,6 +324,23 @@ class EditorClientModule: JMModuleBase
 					return true;
 				}				
 			}
+		} else {
+			
+			switch (key) {
+				
+				case KeyCode.KC_ESCAPE: {
+					ActiveMouseStates = 0;
+					if (m_EditorHud.IsModalActive()) {
+						m_EditorHud.ModalClose();
+						return true;
+					}
+					
+					break;
+				}
+				
+				
+			}
+			
 		}
 		
 		return false;
@@ -433,6 +512,10 @@ class EditorClientModule: JMModuleBase
 		
 		m_EditorHud.Show(active);
 		m_Mission.GetHud().Show(!active);
+		m_Mission.GetHud().ShowHud(!active);
+		m_Mission.GetHud().ShowHudUI(!active);
+		m_Mission.GetHud().SetPermanentCrossHair(!active);
+	
 		
 		if (!active) {	
 			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);

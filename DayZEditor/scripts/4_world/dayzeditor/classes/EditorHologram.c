@@ -4,9 +4,7 @@ class EditorHologram
 {
 	protected Widget 					m_EditorMapMarkerWidget;
 	protected EditorObjectMapMarker 	m_EditorMapMarker;
-	
 	protected MapWidget					m_MapWidget;
-	
 	protected EntityAI					m_ProjectionEntity;
 	
 	EntityAI GetProjectionEntity() 

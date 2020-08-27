@@ -97,7 +97,7 @@ class EditorHud: Hud
 	}
 	
 	// Modal Window Control
-	private ref EditorDialog m_CurrentModal;
+	private ref EditorDialog m_CurrentModal = null;
 	void ModalSet(EditorDialog w)
 	{
 		EditorLog.Trace("ModalSet");
@@ -110,13 +110,13 @@ class EditorHud: Hud
 	{
 		EditorLog.Trace("ModalClose");
 		m_CurrentModal.GetRoot().Unlink();
-		delete m_CurrentModal;
+		m_CurrentModal = null;
 		
 		ShowCursor();
 	}
 
 	bool IsModalActive() {
-		return GetGame().GetUIManager().IsModalVisible();
+		return (m_CurrentModal != null);
 	}
 	
 	private ButtonWidget m_CurrentButton;
