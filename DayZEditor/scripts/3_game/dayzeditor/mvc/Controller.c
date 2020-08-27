@@ -53,7 +53,7 @@ class Controller: Managed
 			EditorLog.Info(string.Format("%1 DataBindings found!", binding_count));
 		}
 		
-
+		
 		// debug
 		m_ViewBindingHashMap.DebugPrint();
 		/*
@@ -127,11 +127,11 @@ class Controller: Managed
 		return binding_map.Count();
 	}
 	
-	void OnMouseDown(Widget w, int button);
-	void OnMouseUp(Widget w, int button);
-	void OnMouseWheel(Widget w, int direction);
-	void OnClick(Widget w, int button);
-	void OnDoubleClick(Widget w, int button);
+	void OnMouseDown(Widget w, int button, int x, int y);
+	void OnMouseUp(Widget w, int button, int x, int y);
+	void OnMouseWheel(Widget w, int direction, int x, int y);
+	void OnClick(Widget w, int button, int x, int y);
+	void OnDoubleClick(Widget w, int button, int x, int y);
 	void OnKeyPress(int key);
 	void OnMouseEnter(Widget w, int x, int y);
 	void OnMouseLeave(Widget w, Widget enter_w, int x, int y);

@@ -6,7 +6,7 @@ ref DataBindingShowcaseController m_DataBindingShowcaseController;
 class DataBindingShowcaseController: Controller
 {
 	
-	EquationEvaluater WindowText = "(10 / 2) + 7";
+	EquationEvaluater WindowText;
 	//bool WindowText;
 	float WindowSlider = 10;
 	
@@ -46,21 +46,23 @@ class DataBindingShowcaseController: Controller
 	override void PropertyChanged(string property_name)
 	{
 		
-		if (property_name == "WindowTextToggle") {
-			WindowText.Evaluate();
-			NotifyPropertyChanged("WindowText");
-			
-		}
 	}
 	
 
 	void OnWindowTextToggle(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("OnWindowTextToggle");
-		Print(WindowTextToggleValue);
+		
+		int tick = TickCount(0);
+		WindowText = "(10 / 2) + 7";
+		NotifyPropertyChanged("WindowText");
+		Print(TickCount(tick));
 		
 		
-
+		tick = TickCount(0);
+		WindowText = WindowText.Evaluate().ToString();
+		NotifyPropertyChanged("WindowText");
+		Print(TickCount(tick));
 	}
 	
 	void OnWindowCheckToggle(CheckBoxCommandArgs args)

@@ -29,9 +29,10 @@ class EditorDialogController: Controller
 	{
 		Print("PropertyChanged " + property_name);
 	}
-	/*
+	
+	
 	float m_OffsetX, m_OffsetY;
-	override bool OnDrag(Widget w, int x, int y) 
+	bool OnDrag(Widget w, int x, int y) 
 	{
 		EditorLog.Trace("EditorDialogController::OnDrag");
 		if (w == TitleBar) {
@@ -50,7 +51,7 @@ class EditorDialogController: Controller
 		return false;
 	}
 	
-	override bool OnDragging(Widget w, int x, int y, Widget reciever)
+	bool OnDragging(Widget w, int x, int y, Widget reciever)
 	{
 		if (w == TitleBar) {
 
@@ -62,7 +63,7 @@ class EditorDialogController: Controller
 		return true;//super.OnDragging(w, x, y, reciever);
 	}
 	
-	override bool OnDrop(Widget w, int x, int y, Widget reciever)
+	bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
 		EditorLog.Trace("EditorDialogController::OnDrop");
 	    if (w == TitleBar) {
@@ -73,9 +74,9 @@ class EditorDialogController: Controller
 	    }
 	    
 	    return false;
-	}*/
+	}
 	
-	override void OnClick(Widget w, int button)
+	override void OnClick(Widget w, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorDialogController::OnClick");
 		

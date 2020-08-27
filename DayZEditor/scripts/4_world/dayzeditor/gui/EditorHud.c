@@ -96,9 +96,10 @@ class EditorHud: Hud
 	
 	override void Update(float timeslice)
 	{
-		
+		int x, y;
+		GetMousePos(x, y);
 		typename mouse_state_type = BetterMouseState;
-		
+		Widget target = GetWidgetUnderCursor();	
 		
 		for (int i = 0; i < 3; i++) {
 			int mouse_state;
@@ -106,35 +107,37 @@ class EditorHud: Hud
 			if (GetMouseState(i) & MB_PRESSED_MASK) {
 				if ((m_ActiveMouseStates & mouse_state) == 0) {
 					m_ActiveMouseStates |= mouse_state;
-					OnMouseDown(i);
-					
+					GetEditor().OnMouseDown(i, x, y);
+					if (target) {
+						OnMouseDown(target, i, x, y);
+					}
 				}
-			} else { 
+			} else {
 				if ((m_ActiveMouseStates & mouse_state) == mouse_state) {
 					m_ActiveMouseStates &= ~mouse_state;
-					OnMouseUp(i);
-					
+					GetEditor().OnMouseUp(i, x, y);
+					if (target) {
+						OnMouseUp(target, i, x, y);
+					}					
 				}
 			}
 		}
 		
 		if (GetMouseState(MouseState.WHEEL) != 0) {
-			OnMouseWheel(GetMouseState(MouseState.WHEEL));			
+			OnMouseWheel(target, GetMouseState(MouseState.WHEEL), x, y);			
 		}
 		
+			
+		
 		if (GetMouseState(MouseState.X) != 0 || GetMouseState(MouseState.Y) != 0) {
-			int x, y;
-			GetMousePos(x, y);
 			MouseUpdatePosition(x, y);
 		}
 	}
 	
-
-	
-
 	
 	// Control Events
 	private const int DOUBLE_CLICK_THRESHOLD = 250;
+	private const int RESET_DRAG_THRESHOLD = 100;
 	
 	private int m_ActiveMouseStates;
 	private int m_DoubleClickButton;
@@ -144,6 +147,33 @@ class EditorHud: Hud
 	}
 	
 
+	
+	private void ResetDrag(Widget target, int x, int y) {
+		Sleep(RESET_DRAG_THRESHOLD);
+		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {			
+			
+			EditorLog.Trace("EditorHud::ResetDrag");
+			thread OnDrag(target, x, y);
+			
+			int safe = 0;
+			// If Left mouse button is down
+			while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
+				if (safe > 10000) {
+					Print("Hitting e-Stop");
+					break;
+				}
+				safe++;
+				Print(safe);
+				
+				GetMousePos(x, y);
+				//thread OnDragging(target, x, y);
+			} 
+						
+			GetMousePos(x, y);
+			thread OnDrop(target, GetWidgetUnderCursor(), x, y);			
+		}
+	}
+	
 
 	private ref Widget m_CurrentEnterWidget;
 	private void MouseUpdatePosition(int x, int y)
@@ -163,68 +193,43 @@ class EditorHud: Hud
 		} else {
 			m_CurrentEnterWidget = null;
 		}
-		
 	}
 	
-	void OnMouseDown(int button)
+	void OnMouseDown(Widget target, int button, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseDown %1", typename.EnumToString(MouseState, button));
+		EditorLog.Trace("EditorHud::OnMouseDown: %1", target.GetName());
+		GetActiveController().OnMouseDown(target, button, x, y);
 		
-		Widget target = GetWidgetUnderCursor();	
-		if (target) {
-			GetActiveController().OnMouseDown(target, button);
-			if (target.IsControlClass())
-				OnClick(target, button);
-			
+		if (button == MouseState.LEFT && (target.GetFlags() & WidgetFlags.DRAGGABLE)) {
+			thread ResetDrag(target, x, y);
 		}
-		switch (button) {
-			
-			case MouseState.LEFT: {
-#ifndef COMPONENT_SYSTEM
-				if (GetEditor().IsPlacing()) {
-					GetEditor().PlaceObject();
-					return;
-				}
-				GetEditor().ClearSelection();
-#endif
-				break;
-			}
-			
-			case MouseState.MIDDLE: {
-				
-				if (KeyState(KeyCode.KC_LCONTROL))
-					EditorLog.Info(target.GetName());
-				
-				break;
-			}
+		
+		if (target.IsControlClass()) {
+			OnClick(target, button, x, y);
+			return;
 		}
 	}
 	
-	void OnMouseUp(int button)
+	void OnMouseUp(Widget target, int button, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseUp %1", typename.EnumToString(MouseState, button));
-		Widget w = GetWidgetUnderCursor();
-		if (!w) return;
-	
-		GetActiveController().OnMouseUp(w, button);
+		EditorLog.Trace("EditorHud::OnMouseUp %1", target.GetName());
+		GetActiveController().OnMouseUp(target, button, x, y);		
 	}
 	
-	void OnMouseWheel(int direction)
+	void OnMouseWheel(Widget target, int direction, int x, int y)
 	{
-		Widget w = GetWidgetUnderCursor();
-		EditorLog.Trace("EditorHud::OnMouseWheel %1", w.GetName());
-		if (!w) return;
-		
-		GetActiveController().OnMouseWheel(w, direction);	
+		EditorLog.Trace("EditorHud::OnMouseWheel: %1", target.GetName());
+		GetActiveController().OnMouseWheel(target, direction, x, y);	
 	}
 	
-	void OnClick(Widget w, int button)
+	
+	void OnClick(Widget w, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnClick %1", w.GetName());
-		GetActiveController().OnClick(w, button);
+		GetActiveController().OnClick(w, button, x, y);
 		
 		if (m_DoubleClickButton == button) {
-			OnDoubleClick(w, button);
+			OnDoubleClick(w, button, x, y);
 			return;
 		}
 		
@@ -232,10 +237,10 @@ class EditorHud: Hud
 		thread ResetDoubleClick();
 	}	
 		
-	void OnDoubleClick(Widget w, int button)
+	void OnDoubleClick(Widget w, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnDoubleClick: %1", w.GetName());
-		GetActiveController().OnDoubleClick(w, button);
+		GetActiveController().OnDoubleClick(w, button, x, y);
 	}
 	
 	void OnKeyPress(int key)
@@ -255,7 +260,7 @@ class EditorHud: Hud
 		EditorLog.Trace("EditorHud::OnMouseLeave %1 enter %2", w.GetName(), enter_w.GetName());
 		GetActiveController().OnMouseLeave(w, enter_w, x, y);
 	}
-	/*
+	
 	void OnDrag(Widget target, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnDrag: %1", target.GetName());
@@ -274,7 +279,7 @@ class EditorHud: Hud
 	void OnDropReceived(Widget target, Widget received_target, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnDropReceived: %1 received_target: %2 X:%3 Y:%4", target.GetName(), received_target.GetName(), x.ToString(), y.ToString());
-	}*/
+	}
 	
 	
 	

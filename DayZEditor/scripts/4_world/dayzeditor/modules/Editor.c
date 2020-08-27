@@ -262,9 +262,36 @@ class EditorClientModule: JMModuleBase
 	
 	
 	
-	
+	void OnMouseDown(int button, int x, int y)
+	{
+		
+		switch (button) {
+			
+			case MouseState.LEFT: {
+#ifndef COMPONENT_SYSTEM
+				if (GetEditor().IsPlacing()) {
+					GetEditor().PlaceObject();
+					return;
+				}
+				GetEditor().ClearSelection();
+#endif
+				break;
+			}
+			
+			case MouseState.MIDDLE: {
+				
+				if (KeyState(KeyCode.KC_LCONTROL))
+					EditorLog.Info(GetWidgetUnderCursor().GetName());
+				
+				break;
+			}
+		}
+	}
 
-	
+	void OnMouseUp(int button, int x, int y)
+	{
+		
+	}
 	
 	// Only use this to handle hardcoded keys (ctrl + z etc...)
 	// Return TRUE if handled.

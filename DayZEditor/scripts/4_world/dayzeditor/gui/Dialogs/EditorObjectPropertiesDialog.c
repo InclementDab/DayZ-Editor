@@ -52,7 +52,7 @@ class EditorPropertiesController: Controller
 		}
 	}
 	
-	override void OnMouseWheel(Widget w, int direction)
+	override void OnMouseWheel(Widget w, int direction, int x, int y)
 	{
 		EditorLog.Trace("EditorPropertiesController::OnMouseWheel %1", w.GetName());
 		string w_name = w.GetName();

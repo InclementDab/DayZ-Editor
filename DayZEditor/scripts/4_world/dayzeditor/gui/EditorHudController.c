@@ -205,7 +205,7 @@ class EditorHudController: Controller
 	
 	
 
-	override void OnMouseWheel(Widget w, int direction)
+	override void OnMouseWheel(Widget w, int direction, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseWheel");
 	}
@@ -247,7 +247,7 @@ class EditorHudController: Controller
 	
 
 	
-	override void OnMouseUp(Widget w, int button)
+	override void OnMouseUp(Widget w, int button, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseButtonUp");
 		if (button != 0) return;
@@ -265,7 +265,7 @@ class EditorHudController: Controller
 		}
 	}
 		
-	override void OnClick(Widget w, int button)
+	override void OnClick(Widget w, int button, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::OnClick");
 		if (button != 0) return;
