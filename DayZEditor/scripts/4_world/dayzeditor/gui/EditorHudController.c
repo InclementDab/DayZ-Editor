@@ -8,6 +8,7 @@ class EditorHudController: Controller
 	string DebugText3;
 	string DebugText4;
 	string DebugText5;
+	string DebugText6;
 	
 	int PlaceableCategorySelection = 0;
 	

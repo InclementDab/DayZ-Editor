@@ -4,8 +4,6 @@ class EditorHud: Hud
 {	
 	
 	protected Widget m_LayoutRoot;
-
-	Widget GetRoot() { return m_LayoutRoot; }
 	
 	// Misc get ridda this shit too
 	protected Widget 			m_EditorMapContainer;
@@ -24,6 +22,10 @@ class EditorHud: Hud
 	}
 	MapWidget GetMapWidget() 	{ 
 		return m_EditorMapWidget; 
+	}
+	
+	Widget GetRoot() { 
+		return m_LayoutRoot; 
 	}
 	
 	bool IsMapVisible() { 
@@ -79,6 +81,10 @@ class EditorHud: Hud
 			}
 		}
 		
+		if (GetMouseState(MouseState.WHEEL) != 0) {
+			OnMouseWheel(GetMouseState(MouseState.WHEEL));
+		}
+		
 		if (GetMouseState(MouseState.X) != 0 || GetMouseState(MouseState.Y) != 0) {
 			int x, y;
 			GetMousePos(x, y);
@@ -124,6 +130,7 @@ class EditorHud: Hud
 		m_DoubleClickButton = -1;
 	}
 	
+	// for thread blocking
 	private Widget _GetWidgetUnderCursor() {
 		return GetWidgetUnderCursor();
 	}
@@ -135,30 +142,26 @@ class EditorHud: Hud
 		//EditorLog.Trace("EditorHud::MouseUpdatePosition X%1 Y%2", x.ToString(), y.ToString());
 		
 		ref Widget current_widget = _GetWidgetUnderCursor();
-		//m_CurrentEnterWidget = current_widget;
 
 		if (current_widget) {
-		
 			if (m_CurrentEnterWidget != current_widget) {
 				if (m_CurrentEnterWidget) {
 					OnMouseLeave(m_CurrentEnterWidget, current_widget, x, y);
 				}
-				
 				m_CurrentEnterWidget = current_widget;
-				
 				OnMouseEnter(current_widget, x, y);
 			} 
 			
 		} else {
-			m_CurrentEnterWidget = current_widget;
+			m_CurrentEnterWidget = null;
 		}
 		
 	}
 	
 	void OnMouseDown(int button)
 	{
-		//EditorLog.Trace("EditorHud::OnMouseDown %1", typename.EnumToString(BetterMouseState, button));
-		
+		EditorLog.Trace("EditorHud::OnMouseDown %1", typename.EnumToString(BetterMouseState, button));
+		return;
 		ref Widget w = _GetWidgetUnderCursor();
 		// Checks if Widget is Control Class
 		// Also checks if Modal is active, if it is, it will only fire click events
@@ -171,7 +174,6 @@ class EditorHud: Hud
 		switch (button) {
 			
 			case BetterMouseState.LEFT: {
-								
 				break;
 			}
 			
@@ -187,7 +189,12 @@ class EditorHud: Hud
 	
 	void OnMouseUp(int button)
 	{
-		//EditorLog.Trace("EditorHud::OnMouseUp %1", typename.EnumToString(BetterMouseState, button));
+		EditorLog.Trace("EditorHud::OnMouseUp %1", typename.EnumToString(BetterMouseState, button));
+	}
+	
+	void OnMouseWheel(int direction)
+	{
+		EditorLog.Trace("EditorHud::OnMouseWheel %1", direction.ToString());
 	}
 	
 	void OnClick(Widget w, int button)
@@ -198,31 +205,49 @@ class EditorHud: Hud
 			return;
 		}
 		
-
-		
 		m_DoubleClickButton = button;
 		thread ResetDoubleClick();
 	}	
 		
 	void OnDoubleClick(Widget w, int button)
 	{
-		EditorLog.Trace("EditorHud::OnDoubleClick %1", w.GetName());
+		EditorLog.Trace("EditorHud::OnDoubleClick: %1", w.GetName());
 	}
 	
 	void OnKeyPress(int key)
 	{
-		EditorLog.Trace("EditorHud::OnKeyPress %1", key.ToString());
+		EditorLog.Trace("EditorHud::OnKeyPress: %1", key.ToString());
 	}
 	
 	void OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseEnter %1", w.ToString());
+		EditorLog.Trace("EditorHud::OnMouseEnter: %1", w.GetName());
 	}
 	
 	void OnMouseLeave(Widget w, Widget enter_w, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseLeave %1 enter %2", w.ToString(), enter_w.ToString());
+		EditorLog.Trace("EditorHud::OnMouseLeave %1 enter %2", w.GetName(), enter_w.GetName());
 	}
+	/*
+	void OnDrag(Widget target, int x, int y)
+	{
+		EditorLog.Trace("EditorHud::OnDrag: %1", target.GetName());
+	}
+	
+	void OnDrop(Widget target, Widget drop_target, int x, int y)
+	{
+		EditorLog.Trace("EditorHud::OnDrop: %1 drop_target: %2", target.GetName(), drop_target.GetName());
+	}
+	
+	void OnDragging(Widget target, int x, int y)
+	{
+		EditorLog.Trace("EditorHud::OnDragging: %1 X:%2 Y:%3", target.GetName(), x.ToString(), y.ToString());
+	}
+	
+	void OnDropReceived(Widget target, Widget received_target, int x, int y)
+	{
+		EditorLog.Trace("EditorHud::OnDropReceived: %1 received_target: %2 X:%3 Y:%4", target.GetName(), received_target.GetName(), x.ToString(), y.ToString());
+	}*/
 	
 	
 	
@@ -279,5 +304,7 @@ class EditorHud: Hud
 		view_binding.InvokeCommand(new ButtonCommandArgs(m_CurrentButton, 0, true));
 	}
 }
+
+
 
 
