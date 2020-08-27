@@ -36,6 +36,7 @@ class EditorHudController: Controller
 	protected Widget LeftbarFrame;
 	protected Widget RightbarFrame;
 	protected ButtonWidget BrushToggleButton;
+
 	
 	void EditorHudController() {
 		EditorLog.Trace("EditorHudController");
@@ -44,8 +45,7 @@ class EditorHudController: Controller
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
-		
-		
+				
 		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
 		LeftbarSpacer 				= new ObservableCollection<Widget>("LeftbarSpacer", this);
 		RightbarSpacer 				= new ObservableCollection<Widget>("RightbarSpacer", this);

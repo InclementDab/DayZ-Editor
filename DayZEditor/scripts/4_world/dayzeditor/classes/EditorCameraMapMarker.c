@@ -7,8 +7,7 @@ class EditorCameraMapMarker: EditorWidgetEventHandler
 	
 	override void Update(float timeslice)
 	{
-		if (m_Root == null) return;
-		if (m_ActiveCamera == null) return;
+		if (!m_Root || !m_ActiveCamera) return;
 
 		vector pos = m_MapWidget.MapToScreen(m_ActiveCamera.GetPosition());
 		

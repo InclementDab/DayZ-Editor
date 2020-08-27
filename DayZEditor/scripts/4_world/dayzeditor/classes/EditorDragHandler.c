@@ -30,7 +30,7 @@ class DragHandler
 		}
 	}
 	
-	void OnDragging(out vector transform[4]) { }
+	void OnDragging(out vector transform[4]);
 	
 	
 	vector GetGroundPosition(vector transform[4])

@@ -15,18 +15,12 @@ class EditorObjectSet: map<int, ref EditorObject>
 
 class EditorObject
 {
-	private ref EditorObjectData m_Data;
-	EditorObjectData GetData() { return m_Data; }
+	protected ref EditorObjectData 			m_Data;
+	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
+	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
+	protected ref EditorPlacedListItem 		m_EditorPlacedListItem;
 	
 	protected EntityAI 		m_WorldObject;
-	EntityAI GetWorldObject() { return m_WorldObject; }
-	
-	
-	
-	private ref EditorObjectMapMarker		m_EditorObjectMapMarker;
-	private ref EditorObjectWorldMarker		m_EditorObjectWorldMarker;
-	private ref EditorPlacedListItem 		m_EditorPlacedListItem;
-	
 	protected EntityAI		m_BBoxLines[12];	
 	protected EntityAI 		m_BBoxBase;
 	protected EntityAI 		m_CenterLine;
@@ -118,7 +112,7 @@ class EditorObject
 	*********/
 	
 	private bool m_IsSelected;
-	bool IsSelected() { return m_IsSelected; }
+	bool IsSelected() return m_IsSelected;
 	void OnSelected()
 	{
 		if (m_IsSelected) return;
@@ -137,23 +131,26 @@ class EditorObject
 		OnObjectDeselected.Invoke(this);
 	}
 	
+	EditorObjectData GetData() {
+		return m_Data;
+	}
 	
-	bool OnMouseEnter(int x, int y)
-	{
+	EntityAI GetWorldObject() {
+		return m_WorldObject;
+	}
+	
+	bool OnMouseEnter(int x, int y)	{
 		return true;
 	}
 	
-	bool OnMouseLeave(int x, int y)
-	{
+	bool OnMouseLeave(int x, int y) {
 		return true;
 	}
 
+	vector GetPosition() { 
+		return m_WorldObject.GetPosition(); 
+	}
 	
-	/*
-	* Functions
-	*/
-	
-	vector GetPosition() { return m_WorldObject.GetPosition(); }
 	void SetPosition(vector pos) 
 	{ 
 		m_WorldObject.SetPosition(pos); 
@@ -169,29 +166,58 @@ class EditorObject
 		Update();
 	}
 	
-	void GetTransform(out vector mat[4]) { m_WorldObject.GetTransform(mat); }
-	void SetTransform(vector mat[4]) 
-	{ 
+	void GetTransform(out vector mat[4]) { 
+		m_WorldObject.GetTransform(mat); 
+	}
+	
+	void SetTransform(vector mat[4]) { 
 		m_WorldObject.SetTransform(mat); 
 		Update();
 	}
 	
-	void Update() { m_WorldObject.Update(); }
+	void Update() { 
+		m_WorldObject.Update(); 
+	}
 	
-	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) 
-	{
+	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) {
 		m_WorldObject.PlaceOnSurfaceRotated(trans, pos, dx, dz, fAngle, align); 
 	}
 	
-	void ClippingInfo(out vector clip_info[2]) { m_WorldObject.ClippingInfo(clip_info); }
+	void ClippingInfo(out vector clip_info[2]) { 
+		m_WorldObject.ClippingInfo(clip_info); 
+	}
 	
-	void SetDirection(vector direction) { m_WorldObject.SetDirection(direction); }
+	void SetDirection(vector direction) { 
+		m_WorldObject.SetDirection(direction); 
+	}
 	
-	void AddChild(notnull IEntity child, int pivot, bool position_only = false) { m_WorldObject.AddChild(child, pivot, position_only); }
+	void AddChild(notnull IEntity child, int pivot, bool position_only = false) { 
+		m_WorldObject.AddChild(child, pivot, position_only); 
+	}
 	
-	vector GetTransformAxis(int axis) { return m_WorldObject.GetTransformAxis(axis); }
+	vector GetTransformAxis(int axis) { 
+		return m_WorldObject.GetTransformAxis(axis); 
+	}
 	
-	string GetModelName() { return m_WorldObject.GetModelName(); }
+	string GetModelName() { 
+		return m_WorldObject.GetModelName(); 
+	}
+	
+	bool ListItemEnabled() { 
+		return (m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM; 
+	}
+	
+	bool ObjectMarkerEnabled() { 
+		return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; 
+	}
+	
+	bool MapMarkerEnabled() { 
+		return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER;
+	}
+
+	bool BoundingBoxEnabled() { 
+		return (m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; 
+	}
 	
 
 	vector line_centers[12]; vector line_verticies[8];
@@ -216,18 +242,24 @@ class EditorObject
 		line_verticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
 		
 		line_centers[0] = AverageVectors(line_verticies[0], line_verticies[1]);
-		line_centers[1] = AverageVectors(line_verticies[1], line_verticies[2]);
-		line_centers[2] = AverageVectors(line_verticies[2], line_verticies[3]);
-		line_centers[3] = AverageVectors(line_verticies[3], line_verticies[4]);
-		line_centers[4] = AverageVectors(line_verticies[4], line_verticies[5]);
-		line_centers[5] = AverageVectors(line_verticies[5], line_verticies[6]);
-		line_centers[6] = AverageVectors(line_verticies[6], line_verticies[7]);
-		line_centers[7] = AverageVectors(line_verticies[0], line_verticies[3]);
-		line_centers[8] = AverageVectors(line_verticies[7], line_verticies[4]);
-		line_centers[9] = AverageVectors(line_verticies[2], line_verticies[5]);
-		line_centers[10] = AverageVectors(line_verticies[1], line_verticies[6]);
-		line_centers[11] = AverageVectors(line_verticies[0], line_verticies[7]);
-				
+		line_centers[1] = AverageVectors(line_verticies[0], line_verticies[3]);
+		line_centers[2] = AverageVectors(line_verticies[0], line_verticies[7]);
+		line_centers[3] = AverageVectors(line_verticies[4], line_verticies[7]);
+		line_centers[4] = AverageVectors(line_verticies[6], line_verticies[7]);
+		
+		line_centers[5] = AverageVectors(line_verticies[1], line_verticies[2]);
+		line_centers[6] = AverageVectors(line_verticies[1], line_verticies[6]);
+		line_centers[7] = AverageVectors(line_verticies[3], line_verticies[2]);
+		line_centers[8] = AverageVectors(line_verticies[3], line_verticies[4]);
+		
+		line_centers[9] = AverageVectors(line_verticies[5], line_verticies[2]);
+		line_centers[10] = AverageVectors(line_verticies[5], line_verticies[4]);		
+		line_centers[11] = AverageVectors(line_verticies[5], line_verticies[6]);
+		
+		
+		
+		
+		
 	
 		
 		for (int i = 0; i < 12; i++) {
@@ -381,14 +413,7 @@ class EditorObject
 		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "");
 	}
 	
-	bool ListItemEnabled() { return (m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM; }
-	
-	bool ObjectMarkerEnabled() { return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
-	
-	bool MapMarkerEnabled() { return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; }
 
-	
-	bool BoundingBoxEnabled() { return (m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; }
 	
 
 	

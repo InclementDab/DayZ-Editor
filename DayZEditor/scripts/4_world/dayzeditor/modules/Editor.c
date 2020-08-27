@@ -34,10 +34,23 @@ class EditorClientModule: JMModuleBase
 	bool IsActive() { return m_Active; }
 
 	/* UI Stuff */
-	EditorHud GetEditorHud() { return m_EditorHud; }
-	EditorCamera GetCamera() { return m_Camera; }
-	EditorSettings GetSettings() { return GetModuleManager().GetModule(EditorSettings); }
+	EditorHud GetEditorHud() 
+		return m_EditorHud;
 	
+	EditorCamera GetCamera() 
+		return m_Camera;
+	
+	EditorSettings GetSettings()
+		return GetModuleManager().GetModule(EditorSettings);
+	
+	EditorObjectSet GetSelectedObjects() 
+		return m_SelectedObjects; 
+	
+	EditorObjectSet GetPlacedObjects()
+		return m_PlacedObjects; 
+	
+	EditorObjectDataSet	 GetSessionCache()
+		return m_SessionCache; 
 	
 	bool IsPlacing() { return m_ObjectInHand != null; }
 
@@ -50,12 +63,7 @@ class EditorClientModule: JMModuleBase
 	private ref EditorObjectSet					m_SelectedObjects;
 	private ref EditorObjectDataSet			 	m_SessionCache;
 	private ref set<ref EditorAction> 			m_ActionStack;
-	
-	ref set<ref EditorAction> GetActionStack() { return m_ActionStack; }
-	ref EditorObjectSet GetSelectedObjects() { return m_SelectedObjects; }
-	ref EditorObjectSet GetPlacedObjects() { return m_PlacedObjects; }
-	ref EditorObjectDataSet	 GetSessionCache() { return m_SessionCache; }
-		
+			
 	// Public Members
 
 	void EditorClientModule()
@@ -84,8 +92,6 @@ class EditorClientModule: JMModuleBase
 		m_UIManager = GetGame().GetUIManager();
 		m_EditorHud = new EditorHud();
 		m_EditorHud.Init(null);
-	
-
 		
 		// Events
 		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
@@ -97,7 +103,6 @@ class EditorClientModule: JMModuleBase
 		RegisterBinding(new JMModuleBinding("OnEditorToggleUI", "EditorToggleUI"));
 		
 		RegisterBinding(new JMModuleBinding("OnEditorToggleMap", "EditorToggleMap"));
-		
 	}
 	
 	private bool exit_condition = false;
@@ -261,20 +266,16 @@ class EditorClientModule: JMModuleBase
 		
 		return false;
 	}
-		
-	
-	
+			
 	
 	// RPC stuff
-	override int GetRPCMin()
-	{
+	override int GetRPCMin() 
 		return EditorClientModuleRPC.INVALID;
-	}
+	
 
 	override int GetRPCMax()
-	{
 		return EditorClientModuleRPC.COUNT;
-	}
+	
 	
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ref ParamsReadContext ctx)
 	{
@@ -381,11 +382,11 @@ class EditorClientModule: JMModuleBase
 	void ToggleSelection(EditorObject target)
 	{
 		EditorLog.Trace("Editor::ToggleSelection");
-		if (target.IsSelected()) {
+		if (target.IsSelected())
 			DeselectObject(target);
-		} else {
+		else
 			SelectObject(target);
-		}
+		
 	}
 	
 	// Call to clear selection
@@ -432,11 +433,12 @@ class EditorClientModule: JMModuleBase
 		
 		m_EditorHud.Show(active);
 		m_Mission.GetHud().Show(!active);
-		m_Player.GetInputController().SetDisabled(active);
 		
 		if (!active) {	
 			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
-		} 
+		}
+		
+		m_Player.GetInputController().SetDisabled(active);
 			
 		
 	}
@@ -488,12 +490,26 @@ class EditorClientModule: JMModuleBase
 	
 	// This is for hashmap lookup of placed objects. very fast
 	private ref map<int, int> m_PlacedObjectIndex = new map<int, int>();
-	EditorObject GetEditorObject(notnull Object world_object) { return GetEditorObject(m_PlacedObjectIndex.Get(world_object.GetID())); }
-	EditorObject GetEditorObject(int id) { return m_PlacedObjects.Get(id); }
 	
-	void DeleteSessionData(int id) { m_SessionCache.Remove(id);	}
-	EditorObjectData GetSessionDataById(int id) { return m_SessionCache.Get(id); }
-	EditorObject GetPlacedObjectById(int id) { return m_PlacedObjects.Get(id); }
+	EditorObject GetEditorObject(notnull Object world_object) { 
+		return GetEditorObject(m_PlacedObjectIndex.Get(world_object.GetID())); 
+	}
+	
+	EditorObject GetEditorObject(int id) { 
+		return m_PlacedObjects.Get(id); 
+	}
+	
+	void DeleteSessionData(int id) { 
+		m_SessionCache.Remove(id);	
+	}
+	
+	EditorObjectData GetSessionDataById(int id) { 
+		return m_SessionCache.Get(id); 
+	}
+	
+	EditorObject GetPlacedObjectById(int id) { 
+		return m_PlacedObjects.Get(id); 
+	}
 		
 	void SetBrush(EditorBrush brush) { 
 		m_EditorBrush = brush; 
@@ -539,23 +555,18 @@ class EditorClientModule: JMModuleBase
 	void Undo()
 	{
 		EditorLog.Trace("Editor::Undo");
-		foreach (EditorAction action: GetActionStack()) {
-			if (!action.IsUndone()) {
+		foreach (EditorAction action: m_ActionStack)
+			if (!action.IsUndone())
 				action.CallUndo();
-			}
-		}	
 	}
 	
 	void Redo()
 	{
 		EditorLog.Trace("Editor::Redo");
-		for (int i = GetActionStack().Count() - 1; i >= 0; i--) {
-			EditorAction action = GetActionStack().Get(i);
-			if (action == null) continue;
-			if (action.IsUndone())
-				action.CallRedo();
-
-		}
+		for (int i = m_ActionStack.Count() - 1; i >= 0; i--)
+			if (m_ActionStack[i] != null && m_ActionStack[i].IsUndone())
+				m_ActionStack[i].CallRedo();
+		
 	}
 	
 	
@@ -571,9 +582,7 @@ class EditorClientModule: JMModuleBase
 		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 1000, 0), ECE_NONE);
 		
 		m_PositionBeforeLootEditMode = m_Camera.GetPosition();
-		m_Camera.SetPosition(Vector(10, 1000, 10));
-		//camera.SelectTarget(m_LootEditTarget);
-		
+		m_Camera.SetPosition(Vector(10, 1000, 10));		
 		
 		ref EditorMapGroupProto proto_data = new EditorMapGroupProto(m_LootEditTarget); 
 		EditorXMLManager.LoadMapGroupProto(proto_data);

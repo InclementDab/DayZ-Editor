@@ -42,7 +42,7 @@ class EditorHud: Hud
 		// why aint we usin scriptclass?
 		m_EditorMapWidget.GetScript(m_EditorMap);
 		m_EditorMapWidget.SetMapPos(GetGame().GetCurrentCameraPosition());
-				
+		
 		EditorLog.Trace("EditorHud::Init::Finished");
 	}
 	

@@ -2,13 +2,15 @@
 
 class EditorHologram
 {
-	protected Widget 				m_EditorMapMarkerWidget;
-	protected EditorObjectMapMarker 		m_EditorMapMarker;
+	protected Widget 					m_EditorMapMarkerWidget;
+	protected EditorObjectMapMarker 	m_EditorMapMarker;
 	
-	private MapWidget				m_MapWidget;
+	protected MapWidget					m_MapWidget;
 	
-	private EntityAI				m_ProjectionEntity;
-	EntityAI GetProjectionEntity() { return m_ProjectionEntity; }
+	protected EntityAI					m_ProjectionEntity;
+	
+	EntityAI GetProjectionEntity() 
+		return m_ProjectionEntity;
 	
 	void EditorHologram(string type_name, vector position) 
 	{

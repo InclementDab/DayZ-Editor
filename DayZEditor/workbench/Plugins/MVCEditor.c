@@ -76,15 +76,12 @@ class MVCEditorPlugin: WorkbenchPlugin
 
 		//Workbench.GetModule("ResourceManager").GetNumContainers();
 		
-		"->".();
+
 		
 		Workbench.ScriptDialog("Edit View Binding Options", "", this);
 	}
 	
-	void "->"()
-	{
-		Print("test");
-	}
+
 	
 
 	
