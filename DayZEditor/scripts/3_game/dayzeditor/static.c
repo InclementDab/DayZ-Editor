@@ -37,7 +37,13 @@ class EditorLog
 				
 				PrintFormat("	%1", msg_split[1]);
 			} else {
-				PrintFormat("[%1] %2", loglevel, msg);
+				
+				if (m_LastCalledType != msg) {
+					m_LastCalledType = msg;
+					Print("\n");
+				} 
+				
+				PrintFormat("[%1::%2]", loglevel, msg);
 			}
 							
 		}

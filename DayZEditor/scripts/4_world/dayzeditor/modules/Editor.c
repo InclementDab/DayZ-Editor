@@ -123,7 +123,10 @@ class EditorClientModule: JMModuleBase
 	
 	override void OnUpdate(float timeslice)
 	{
-		if (m_Camera != null && !IsMissionOffline()) {
+
+		m_EditorHud.Update(timeslice);
+		
+		if (m_Camera && !IsMissionOffline()) {
 			ScriptRPC update_rpc = new ScriptRPC();
 			update_rpc.Write(m_Camera.GetPosition());
 			update_rpc.Write(m_Camera.GetOrientation());

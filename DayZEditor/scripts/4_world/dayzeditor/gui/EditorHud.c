@@ -60,22 +60,29 @@ class EditorHud: Hud
 	
 	override void Update(float timeslice)
 	{
+		
 		typename mouse_state_type = BetterMouseState;
 		// Handles OnMouseDown and OnMouseUp events
 		for (int i = 0; i < 3; i++) {
 			int mouse_state;
 			mouse_state_type.GetVariableValue(null, i, mouse_state);
 			if (GetMouseState(i) & MB_PRESSED_MASK) {
-				if ((ActiveMouseStates & mouse_state) == 0) {
-					ActiveMouseStates |= mouse_state;
+				if ((m_ActiveMouseStates & mouse_state) == 0) {
+					m_ActiveMouseStates |= mouse_state;
 					OnMouseDown(mouse_state);
 				}
 			} else { 
-				if ((ActiveMouseStates & mouse_state) == mouse_state) {
-					ActiveMouseStates &= ~mouse_state;
+				if ((m_ActiveMouseStates & mouse_state) == mouse_state) {
+					m_ActiveMouseStates &= ~mouse_state;
 					OnMouseUp(mouse_state);
 				}
 			}
+		}
+		
+		if (GetMouseState(MouseState.X) != 0 || GetMouseState(MouseState.Y) != 0) {
+			int x, y;
+			GetMousePos(x, y);
+			MouseUpdatePosition(x, y);
 		}
 	}
 	
@@ -110,16 +117,29 @@ class EditorHud: Hud
 	// Control Events
 	private const int DOUBLE_CLICK_THRESHOLD = 250;
 	
-	private int ActiveMouseStates;
+	private int m_ActiveMouseStates;
 	private int m_DoubleClickButton;
 	private void ResetDoubleClick()	{
 		Sleep(DOUBLE_CLICK_THRESHOLD);
 		m_DoubleClickButton = -1;
 	}
 	
+	private Widget m_CurrentWidget;
+	private void MouseUpdatePosition(int x, int y)
+	{
+		//EditorLog.Trace("EditorHud::MouseUpdatePosition X%1 Y%2", x.ToString(), y.ToString());
+		
+		Widget w = GetWidgetUnderCursor();		
+		if (m_CurrentWidget != w) {
+			OnMouseLeave(m_CurrentWidget, w, x, y);
+			m_CurrentWidget = w;
+			OnMouseEnter(m_CurrentWidget, x, y);
+		}
+	}
+	
 	void OnMouseDown(int button)
 	{
-		//EditorLog.Trace("Editor::OnMouseDown %1", typename.EnumToString(BetterMouseState, button));
+		//EditorLog.Trace("EditorHud::OnMouseDown %1", typename.EnumToString(BetterMouseState, button));
 		
 		Widget w = GetWidgetUnderCursor();
 		// Checks if Widget is Control Class
@@ -149,17 +169,16 @@ class EditorHud: Hud
 	
 	void OnMouseUp(int button)
 	{
-		//EditorLog.Trace("Editor::OnMouseUp %1", typename.EnumToString(BetterMouseState, button));
+		//EditorLog.Trace("EditorHud::OnMouseUp %1", typename.EnumToString(BetterMouseState, button));
 	}
 	
 	void OnClick(Widget w, int button)
 	{
-		EditorLog.Trace("Editor::OnClick %1", w.GetName());
+		EditorLog.Trace("EditorHud::OnClick %1", w.GetName());
 		if (m_DoubleClickButton == button) {
 			OnDoubleClick(w, button);
 			return;
 		}
-		
 		
 
 		
@@ -169,12 +188,22 @@ class EditorHud: Hud
 		
 	void OnDoubleClick(Widget w, int button)
 	{
-		EditorLog.Trace("Editor::OnDoubleClick %1", w.GetName());
+		EditorLog.Trace("EditorHud::OnDoubleClick %1", w.GetName());
 	}
 	
 	void OnKeyPress(int key)
 	{	
-		EditorLog.Trace("Editor::OnKeyPress %1", key.ToString());
+		EditorLog.Trace("EditorHud::OnKeyPress %1", key.ToString());
+	}
+	
+	void OnMouseEnter(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorHud::OnMouseEnter %1", w.GetName());
+	}
+	
+	void OnMouseLeave(Widget w, Widget enter_w, int x, int y)
+	{
+		EditorLog.Trace("EditorHud::OnMouseLeave %1 enter: %2", w.GetName(), enter_w.GetName());
 	}
 	
 	
@@ -185,7 +214,7 @@ class EditorHud: Hud
 	private ref EditorDialog m_CurrentModal = null;
 	void ModalSet(EditorDialog w)
 	{
-		EditorLog.Trace("ModalSet");
+		EditorLog.Trace("EditorHud::ModalSet");
 		m_CurrentModal = w;
 		//SetModal(m_CurrentModal.GetRoot());
 		ShowCursor();
@@ -193,7 +222,7 @@ class EditorHud: Hud
 	
 	void ModalClose()
 	{
-		EditorLog.Trace("ModalClose");
+		EditorLog.Trace("EditorHud::ModalClose");
 		m_CurrentModal.GetRoot().Unlink();
 		m_CurrentModal = null;
 		ShowCursor();
