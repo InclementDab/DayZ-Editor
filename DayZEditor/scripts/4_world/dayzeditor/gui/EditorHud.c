@@ -296,7 +296,7 @@ class EditorHud: Hud
 	{
 		EditorLog.Trace("EditorHud::ModalSet");
 		m_CurrentModal = w;
-		//SetModal(m_CurrentModal.GetRoot());
+		GetEditor().GetCamera().SetMoveEnabled(false);
 		ShowCursor();
 	}
 	
@@ -305,6 +305,7 @@ class EditorHud: Hud
 		EditorLog.Trace("EditorHud::ModalClose");
 		m_CurrentModal.GetRoot().Unlink();
 		m_CurrentModal = null;
+		GetEditor().GetCamera().SetMoveEnabled(true);
 		ShowCursor();
 	}
 

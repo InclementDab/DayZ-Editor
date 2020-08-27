@@ -211,7 +211,7 @@ WrapSpacerWidgetClass EditorProperties {
                font "gui/fonts/etelkatextpro"
                {
                 ScriptParamsClass {
-                 Binding_Name "EditBoxNameData"
+                 Binding_Name "EditorObjectDisplayName"
                  Two_Way_Binding 1
                 }
                }

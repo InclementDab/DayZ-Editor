@@ -33,7 +33,14 @@ class EditorObject
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 
-	string GetDisplayName() { return m_Data.DisplayName; }
+	void SetDisplayName(string display_name) {
+		m_Data.DisplayName = display_name;
+		m_EditorPlacedListItem.SetText(m_Data.DisplayName);
+	}
+	
+	string GetDisplayName() { 
+		return m_Data.DisplayName; 
+	}
 	string GetType() { return m_Data.Type; }
 	int GetID() { return m_Data.GetID(); }
 	

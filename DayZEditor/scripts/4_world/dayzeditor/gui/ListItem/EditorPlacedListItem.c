@@ -1,7 +1,9 @@
 class EditorPlacedListItem: EditorListItem
 {
 	private ref EditorObject m_Data;
-	EditorObject GetData() { return m_Data; }
+	EditorObject GetData() { 
+		return m_Data; 
+	}
 	
 	void EditorPlacedListItem(EditorObject data) 
 	{ 
@@ -9,7 +11,7 @@ class EditorPlacedListItem: EditorListItem
 		m_Data = data;
 		m_ListItemCollapse.Show(false);
 		
-		SetText(m_Data.GetType());
+		SetText(m_Data.GetDisplayName());
 		SetIcon(GetIconFromMod(GetModFromObject(m_Data.GetType())));
 		
 		m_Data.OnObjectSelected.Insert(EditorObjectSelected);
@@ -17,13 +19,11 @@ class EditorPlacedListItem: EditorListItem
 	}
 	
 	
-	void EditorObjectSelected(EditorObject data)
-	{
+	void EditorObjectSelected(EditorObject data) {
 		SetColor(COLOR_ON_SELECTED);
 	}
 	
-	void EditorObjectDeselected(EditorObject data)
-	{
+	void EditorObjectDeselected(EditorObject data) {
 		SetColor(COLOR_ON_DESELECTED);
 	}
 	

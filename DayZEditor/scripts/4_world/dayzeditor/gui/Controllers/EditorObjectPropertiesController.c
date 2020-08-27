@@ -1,12 +1,9 @@
 class EditorPropertiesController: Controller
 {
 	protected EditorObject m_EditorObject;
-	
-	
-	string EditBoxNameData;
-	
 	protected WrapSpacerWidget EditorDialogOptionContent;
 	
+	string EditorObjectDisplayName;
 	EquationEvaluater pos_x, pos_y, pos_z;
 	EquationEvaluater rot_x, rot_y, rot_z;
 	
@@ -32,6 +29,9 @@ class EditorPropertiesController: Controller
 		NotifyPropertyChanged("rot_y");
 		NotifyPropertyChanged("rot_z");
 		
+		EditorObjectDisplayName = m_EditorObject.GetDisplayName();
+		NotifyPropertyChanged("EditorObjectDisplayName");
+		
 	}
 	
 	override void PropertyChanged(string property_name)
@@ -50,6 +50,11 @@ class EditorPropertiesController: Controller
 			case "rot_y":
 			case "rot_z": {
 				m_EditorObject.SetOrientation(Vector(rot_x.Evaluate(), rot_y.Evaluate(), rot_z.Evaluate()));
+				break;
+			}
+			
+			case "EditorObjectDisplayName": {
+				m_EditorObject.SetDisplayName(EditorObjectDisplayName);
 				break;
 			}
 		}
