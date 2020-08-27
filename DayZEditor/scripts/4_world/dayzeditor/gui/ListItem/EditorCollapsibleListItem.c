@@ -3,7 +3,6 @@ static int groupcount = 0;
 class EditorCollapsibleListItem: EditorListItem
 {
 	
-
 	private ref array<ref EditorListItem> m_CategoryChildren;
 	ref array<ref EditorListItem> GetChildren() { return m_CategoryChildren; }
 	

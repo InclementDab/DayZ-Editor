@@ -201,6 +201,12 @@ class EditorHudController: Controller
 	}
 	
 	
+	void ButtonCreateFolderExecute(ButtonCommandArgs args) {
+		EditorLog.Trace("EditorHudController::ButtonCreateFolderExecute");
+		EditorCollapsibleListItem category();
+		InsertPlacedObject(category);
+	}
+	
 	
 	
 	

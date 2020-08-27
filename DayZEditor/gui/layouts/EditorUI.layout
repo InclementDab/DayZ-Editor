@@ -83,7 +83,7 @@ FrameWidgetClass EditorMainFrame {
    }
   }
   FrameWidgetClass DebugFrame {
-   visible 1
+   visible 0
    ignorepointer 1
    position 300 32
    size 600 150
@@ -656,10 +656,8 @@ FrameWidgetClass EditorMainFrame {
        ignorepointer 0
        keepsafezone 1
        color 0.2353 0.2353 0.2353 1
-       position 0 0
-       size 1 1
+       size 1 0.965
        halign center_ref
-       valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
@@ -685,6 +683,94 @@ FrameWidgetClass EditorMainFrame {
          content_halign right
          {
           ScriptParamsClass {
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass RightbarCreatePanel {
+       ignorepointer 1
+       size 1 0.035
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style rover_sim_blackbox
+       {
+        WrapSpacerWidgetClass RightbarCreateButtonHost {
+         visible 1
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         Padding 0
+         Margin 15
+         content_valign center
+         {
+          ButtonWidgetClass ButtonCreateFolder {
+           size 25 25
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           {
+            ImageWidgetClass ButtonCreateFolderImage {
+             ignorepointer 1
+             position 0 0
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             image0 "set:dayz_gui image:exit"
+             mode blend
+             "src alpha" 1
+             "no wrap" 0
+             rotation 0 0 45
+            }
+           }
+           {
+            ScriptParamsClass {
+             Command_Execute "ButtonCreateFolderExecute"
+            }
+           }
+          }
+         }
+        }
+        ButtonWidgetClass ButtonDelete {
+         position 15 0
+         size 25 25
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          ImageWidgetClass ButtonDeleteImage {
+           ignorepointer 1
+           size 1 1
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           image0 "set:dayz_gui image:exit"
+           mode blend
+           "src alpha" 1
+           "no wrap" 0
           }
          }
         }
