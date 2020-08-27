@@ -37,9 +37,11 @@ class EditorClientModule: JMModuleBase
 	static vector 							CurrentMousePosition;
 	
 	private bool m_Active = false;
-	bool IsActive() { return m_Active; }
+	bool IsActive() { 
+		return m_Active; 
+	}
 	
-	private int ActiveMouseStates;
+	
 
 	/* UI Stuff */
 	EditorHud GetEditorHud() 
@@ -60,7 +62,9 @@ class EditorClientModule: JMModuleBase
 	EditorObjectDataSet	 GetSessionCache()
 		return m_SessionCache; 
 	
-	bool IsPlacing() { return m_ObjectInHand != null; }
+	bool IsPlacing() { 
+		return m_ObjectInHand != null; 
+	}
 
 	private ref EditorHud						m_EditorHud;
 	
@@ -148,25 +152,7 @@ class EditorClientModule: JMModuleBase
 		}
 		
 		
-		
-		typename mouse_state_type = BetterMouseState;
-		// Handles OnMouseDown and OnMouseUp events
-		for (int i = 0; i < 3; i++) {
-			int mouse_state;
-			mouse_state_type.GetVariableValue(null, i, mouse_state);
-			if (GetMouseState(i) & MB_PRESSED_MASK) {
-				if ((ActiveMouseStates & mouse_state) == 0) {
-					ActiveMouseStates |= mouse_state;
-					OnMouseDown(mouse_state);
-				}
-			} else { 
-				if ((ActiveMouseStates & mouse_state) == mouse_state) {
-					ActiveMouseStates &= ~mouse_state;
-					OnMouseUp(mouse_state);
-				}
-			}
-		}
-		
+			
 	
 	
 		// debug
@@ -274,74 +260,16 @@ class EditorClientModule: JMModuleBase
 	
 	
 	
-	void OnMouseDown(int button)
-	{
-		//EditorLog.Trace("Editor::OnMouseDown %1", typename.EnumToString(BetterMouseState, button));
-		
-		Widget w = GetWidgetUnderCursor();
-		// Checks if Widget is Control Class
-		// Also checks if Modal is active, if it is, it will only fire click events
-		// within that modal window
-		if (w.IsControlClass() && !m_EditorHud.IsModalActive() || (m_EditorHud.IsModalActive() && m_EditorHud.IsModalCommand(w))) {
-			Shape s = Shape.CreateCylinder(COLOR_RED, ShapeFlags.VISIBLE | ShapeFlags.NOZBUFFER | ShapeFlags.NOZWRITE, GetGame().GetCurrentCameraPosition(), 5, 5);
-			OnClick(w, button);
-			return;
-		}
-		
-		switch (button) {
-			
-			case BetterMouseState.LEFT: {
-								
-				break;
-			}
-			
-			case BetterMouseState.MIDDLE: {
-				
-				if (KeyState(KeyCode.KC_LCONTROL))
-					EditorLog.Info(GetWidgetUnderCursor().GetName());
-				
-				break;
-			}
-		}
-	}
-	
-	void OnMouseUp(int button)
-	{
-		//EditorLog.Trace("Editor::OnMouseUp %1", typename.EnumToString(BetterMouseState, button));
-	}
-	
-	void OnClick(Widget w, int button)
-	{
-		EditorLog.Trace("Editor::OnClick %1", w.GetName());
-		if (m_DoubleClickButton == button) {
-			OnDoubleClick(w, button);
-			return;
-		}
-		
-		
 
-		
-		m_DoubleClickButton = button;
-		thread ResetDoubleClick();
-	}
-	
-	private const int DOUBLE_CLICK_THRESHOLD = 250;
-	private int m_DoubleClickButton;
-	private void ResetDoubleClick()	{
-		Sleep(DOUBLE_CLICK_THRESHOLD);
-		m_DoubleClickButton = -1;
-	}
-		
-	void OnDoubleClick(Widget w, int button)
-	{
-		EditorLog.Trace("Editor::OnDoubleClick %1", w.GetName());
-	}
 	
 	
 	// Only use this to handle hardcoded keys (ctrl + z etc...)
 	// Return TRUE if handled.
 	bool OnKeyPress(int key)
 	{		
+		
+		m_EditorHud.OnKeyPress(key);
+		
 		// LControl Commands
 		if (KeyState(KeyCode.KC_LCONTROL)) {
 			
@@ -361,18 +289,15 @@ class EditorClientModule: JMModuleBase
 			switch (key) {
 				
 				case KeyCode.KC_ESCAPE: {
-					ActiveMouseStates = 0;
+				
 					if (m_EditorHud.IsModalActive()) {
 						m_EditorHud.ModalClose();
 						return true;
 					}
 					
 					break;
-				}
-				
-				
-			}
-			
+				}				
+			}	
 		}
 		
 		return false;

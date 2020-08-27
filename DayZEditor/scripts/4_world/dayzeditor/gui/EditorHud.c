@@ -18,6 +18,18 @@ class EditorHud: Hud
 		return m_EditorHudController;
 	}
 	
+	// literally track down everything that uses these and DELETE THEM its SHIT CODE TYLER DO IT PUSSY
+	EditorMap GetMap() 			{ 
+		return m_EditorMap; 
+	}
+	MapWidget GetMapWidget() 	{ 
+		return m_EditorMapWidget; 
+	}
+	
+	bool IsMapVisible() { 
+		return m_EditorMapContainer.IsVisible(); 
+	}
+	
 	void EditorHud() {
 		EditorLog.Info("EditorHud");
 	}
@@ -48,7 +60,23 @@ class EditorHud: Hud
 	
 	override void Update(float timeslice)
 	{
-		
+		typename mouse_state_type = BetterMouseState;
+		// Handles OnMouseDown and OnMouseUp events
+		for (int i = 0; i < 3; i++) {
+			int mouse_state;
+			mouse_state_type.GetVariableValue(null, i, mouse_state);
+			if (GetMouseState(i) & MB_PRESSED_MASK) {
+				if ((ActiveMouseStates & mouse_state) == 0) {
+					ActiveMouseStates |= mouse_state;
+					OnMouseDown(mouse_state);
+				}
+			} else { 
+				if ((ActiveMouseStates & mouse_state) == mouse_state) {
+					ActiveMouseStates &= ~mouse_state;
+					OnMouseUp(mouse_state);
+				}
+			}
+		}
 	}
 	
 	override void Show(bool show) 
@@ -57,48 +85,104 @@ class EditorHud: Hud
 		m_LayoutRoot.Show(show);
 	}
 	
-	bool IsVisible()
-	{
+	bool IsVisible() {
 		return m_LayoutRoot.IsVisible();
 	}
 	
-	void ToggleCursor()
-	{
+	void ToggleCursor() {
 		GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
 	}
 	
-	override void ShowCursor() 
-	{
+	override void ShowCursor() {
 		GetGame().GetUIManager().ShowCursor(true);
 	}
 	
-	override void HideCursor() 
-	{
+	override void HideCursor() {
 		GetGame().GetUIManager().ShowCursor(false);
 	}
 	
-	void ShowMap(bool show)
-	{
+	void ShowMap(bool show)	{
 		m_EditorMapContainer.Show(show);
 	}
 	
-	bool IsMapVisible() { return m_EditorMapContainer.IsVisible(); }
+
 	
+	// Control Events
+	private const int DOUBLE_CLICK_THRESHOLD = 250;
 	
-	// literally track down everything that uses these and DELETE THEM its SHIT CODE TYLER DO IT PUSSY
-	EditorMap GetMap() 			{ return m_EditorMap; }
-	MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
-	
-	
-	
-	override void SetPermanentCrossHair(bool show) 
-	{
-		// todo 
+	private int ActiveMouseStates;
+	private int m_DoubleClickButton;
+	private void ResetDoubleClick()	{
+		Sleep(DOUBLE_CLICK_THRESHOLD);
+		m_DoubleClickButton = -1;
 	}
+	
+	void OnMouseDown(int button)
+	{
+		//EditorLog.Trace("Editor::OnMouseDown %1", typename.EnumToString(BetterMouseState, button));
+		
+		Widget w = GetWidgetUnderCursor();
+		// Checks if Widget is Control Class
+		// Also checks if Modal is active, if it is, it will only fire click events
+		// within that modal window
+		if (w.IsControlClass() && !IsModalActive() || (IsModalActive() && IsModalCommand(w))) {
+			OnClick(w, button);
+			return;
+		}
+		
+		switch (button) {
+			
+			case BetterMouseState.LEFT: {
+								
+				break;
+			}
+			
+			case BetterMouseState.MIDDLE: {
+				
+				if (KeyState(KeyCode.KC_LCONTROL))
+					EditorLog.Info(GetWidgetUnderCursor().GetName());
+				
+				break;
+			}
+		}
+	}
+	
+	void OnMouseUp(int button)
+	{
+		//EditorLog.Trace("Editor::OnMouseUp %1", typename.EnumToString(BetterMouseState, button));
+	}
+	
+	void OnClick(Widget w, int button)
+	{
+		EditorLog.Trace("Editor::OnClick %1", w.GetName());
+		if (m_DoubleClickButton == button) {
+			OnDoubleClick(w, button);
+			return;
+		}
+		
+		
+
+		
+		m_DoubleClickButton = button;
+		thread ResetDoubleClick();
+	}	
+		
+	void OnDoubleClick(Widget w, int button)
+	{
+		EditorLog.Trace("Editor::OnDoubleClick %1", w.GetName());
+	}
+	
+	void OnKeyPress(int key)
+	{	
+		EditorLog.Trace("Editor::OnKeyPress %1", key.ToString());
+	}
+	
+	
+	
+	override void SetPermanentCrossHair(bool show); // todo
 	
 	// Modal Window Control
 	private ref EditorDialog m_CurrentModal = null;
-	
 	void ModalSet(EditorDialog w)
 	{
 		EditorLog.Trace("ModalSet");
@@ -123,6 +207,7 @@ class EditorHud: Hud
 		return (m_CurrentModal.GetRoot().FindAnyWidget(w.GetName()) != null);
 	}
 	
+	// Current "button" on UI
 	private ButtonWidget m_CurrentButton;
 	void SetCurrentButton(ButtonWidget button)
 	{
