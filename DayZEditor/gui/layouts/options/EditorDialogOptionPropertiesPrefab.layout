@@ -2,7 +2,7 @@ PanelWidgetClass EditorProperties {
  visible 1
  ignorepointer 1
  position 0 0
- size 1000 600
+ size 800 400
  hexactpos 1
  vexactpos 1
  hexactsize 1

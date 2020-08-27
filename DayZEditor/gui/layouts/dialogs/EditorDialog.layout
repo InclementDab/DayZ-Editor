@@ -1,8 +1,9 @@
 WrapSpacerWidgetClass EditorDialog {
  clipchildren 1
  ignorepointer 1
- color 0.1373 0.1373 0.1373 0.549
- size 800 350
+ color 0.1529 0.1529 0.1529 0.8824
+ position 0 0
+ size 800 0
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -94,10 +95,10 @@ WrapSpacerWidgetClass EditorDialog {
      content_halign center
      content_valign bottom
      {
-      GridSpacerWidgetClass ButtonGrid {
+      WrapSpacerWidgetClass ButtonGrid {
        ignorepointer 1
        color 0.1373 0.1373 0.1373 0.549
-       size 1 30
+       size 1 80
        halign center_ref
        valign bottom_ref
        hexactpos 1
@@ -110,8 +111,6 @@ WrapSpacerWidgetClass EditorDialog {
        Margin 5
        content_halign center
        content_valign center
-       Columns 4
-       Rows 1
       }
       WrapSpacerWidgetClass DialogContent {
        visible 1

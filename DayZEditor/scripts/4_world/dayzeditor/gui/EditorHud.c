@@ -100,17 +100,18 @@ class EditorHud: Hud
 	private ref EditorDialog m_CurrentModal;
 	void ModalSet(EditorDialog w)
 	{
-		Print("ModalSet");
+		EditorLog.Trace("ModalSet");
 		m_CurrentModal = w;
-		SetModal(m_CurrentModal.GetRoot());
+		//SetModal(m_CurrentModal.GetRoot());
 		ShowCursor();
 	}
 	
 	void ModalClose()
 	{
-		Print("ModalClose");
+		EditorLog.Trace("ModalClose");
 		m_CurrentModal.GetRoot().Unlink();
-		m_CurrentModal = null;
+		delete m_CurrentModal;
+		
 		ShowCursor();
 	}
 

@@ -210,6 +210,11 @@ class EditorDialog: Managed
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		m_LayoutRoot.Show(true);
 		GetEditor().GetEditorHud().ModalSet(this);
+		
+		float du, dv, dx, dy;
+		m_LayoutRoot.GetScreenSize(du, dv);		
+		m_LayoutRoot.GetPos(dx, dy);
+		m_LayoutRoot.SetPos(dx, dy - dv / 2);
 	}
 	
 	void CloseDialog()
