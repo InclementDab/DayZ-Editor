@@ -1,4 +1,4 @@
-PanelWidgetClass EditorProperties {
+WrapSpacerWidgetClass EditorProperties {
  visible 1
  ignorepointer 1
  position 0 0
@@ -9,8 +9,239 @@ PanelWidgetClass EditorProperties {
  vexactsize 1
  draggable 0
  scriptclass "EditorPropertiesController"
+ Padding 10
+ Margin 10
+ "Size To Content H" 1
+ "Size To Content V" 1
  {
-  WrapSpacerWidgetClass EditorDialogOption {
+  WrapSpacerWidgetClass EditorDialogOptionName {
+   clipchildren 0
+   inheritalpha 0
+   ignorepointer 1
+   position 0 0
+   size 1 24
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scriptclass ""
+   style Colorable
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   {
+    ButtonWidgetClass EditorDialogOptionNameButton {
+     visible 1
+     disabled 0
+     size 1 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 1
+     scriptclass "ViewBinding"
+     style Colorable
+     "no focus" 0
+     switch toggle
+     {
+      FrameWidgetClass EditorDialogOptionNamePanel {
+       clipchildren 0
+       ignorepointer 1
+       size 1 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       fixaspect inside
+       {
+        ImageWidgetClass EditorDialogOptionNameButton_expand_image {
+         visible 1
+         clipchildren 0
+         inheritalpha 1
+         ignorepointer 1
+         color 1 1 1 0.549
+         size 0.7 0.7
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         image0 "set:dayz_gui image:icon_collapse"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 1
+        }
+        ImageWidgetClass EditorDialogOptionNameButton_collapse_image {
+         visible 0
+         clipchildren 0
+         inheritalpha 1
+         ignorepointer 1
+         color 1 1 1 0.549
+         size 0.7 0.7
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         image0 "set:dayz_gui image:icon_expand"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 1
+         rotation 0 0 90
+        }
+       }
+      }
+      TextWidgetClass EditorDialogOptionTitle0 {
+       clipchildren 0
+       ignorepointer 1
+       color 1 1 1 0.7843
+       size 0.96 24
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       text "Name"
+       font "gui/fonts/etelkatextpro"
+       "text valign" center
+      }
+      PanelWidgetClass Spacer0 {
+       visible 1
+       clipchildren 1
+       ignorepointer 1
+       color 1 1 1 0.5882
+       size 1 2
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+      }
+     }
+     {
+      ScriptParamsClass {
+       Binding_Name "EditorNamePropertiesExpand"
+       Command_Execute "ToggleCategoryButton"
+       Two_Way_Binding 1
+      }
+     }
+    }
+    WrapSpacerWidgetClass EditorDialogOptionNameContent {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     color 1 1 1 0
+     position 0 1
+     size 1 2400
+     halign center_ref
+     hexactpos 1
+     vexactpos 0
+     hexactsize 0
+     vexactsize 1
+     style Colorable
+     Padding 5
+     Margin 5
+     "Size To Content V" 1
+     content_halign center
+     content_valign center
+     {
+      PanelWidgetClass EditorEditTextElement {
+       size 1 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        WrapSpacerWidgetClass EditorEditTextElementSpacer {
+         ignorepointer 1
+         size 0.7 24
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         Padding 0
+         Margin 0
+         "Size To Content H" 1
+         "Size To Content V" 1
+         {
+          WrapSpacerWidgetClass EditorEditTextElementWraper {
+           ignorepointer 1
+           position 0 0
+           size 525 24
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           Padding 0
+           Margin 0
+           "Size To Content H" 1
+           "Size To Content V" 1
+           content_valign center
+           {
+            PanelWidgetClass EditorEditTextElementPanel {
+             ignorepointer 1
+             position 0 0
+             size 525 24
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             {
+              EditBoxWidgetClass EditorEditTextElementEditBox {
+               visible 1
+               size 525 24
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scriptclass "ViewBinding"
+               style Editor
+               text "reee"
+               "exact text" 1
+               font "gui/fonts/etelkatextpro"
+               {
+                ScriptParamsClass {
+                 Binding_Name "EditBoxNameData"
+                 Two_Way_Binding 1
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+        TextWidgetClass EditorEditTextElementLabel {
+         clipchildren 1
+         ignorepointer 1
+         size 0.3 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Name"
+         font "gui/fonts/etelkatextpro"
+         "text offset" -5 0
+         "text halign" right
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  WrapSpacerWidgetClass EditorDialogOptionPosition {
    clipchildren 0
    inheritalpha 0
    ignorepointer 1
@@ -50,7 +281,7 @@ PanelWidgetClass EditorProperties {
        vexactsize 0
        fixaspect inside
        {
-        ImageWidgetClass expand_image {
+        ImageWidgetClass EditorDialogOptionButton_expand_image {
          visible 1
          clipchildren 0
          inheritalpha 1
@@ -70,7 +301,7 @@ PanelWidgetClass EditorProperties {
          stretch 1
          filter 1
         }
-        ImageWidgetClass collapse_image {
+        ImageWidgetClass EditorDialogOptionButton_collapse_image {
          visible 0
          clipchildren 0
          inheritalpha 1
@@ -122,6 +353,7 @@ PanelWidgetClass EditorProperties {
      }
      {
       ScriptParamsClass {
+       Binding_Name "EditorPositionPropertiesExpand"
        Command_Execute "ToggleCategoryButton"
        Two_Way_Binding 1
       }

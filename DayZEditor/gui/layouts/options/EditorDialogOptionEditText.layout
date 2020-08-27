@@ -61,7 +61,7 @@ PanelWidgetClass EditorEditTextElement {
     }
    }
   }
-  TextWidgetClass EditorEditTextElementLable {
+  TextWidgetClass EditorEditTextElementLabel {
    ignorepointer 1
    size 0.3 24
    hexactpos 1

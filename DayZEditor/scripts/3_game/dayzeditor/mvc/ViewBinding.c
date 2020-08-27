@@ -6,19 +6,19 @@ class ViewBinding: ScriptedWidgetEventHandler
 	protected Widget m_LayoutRoot;
 	
 	// Name of Binding. If blank, uses the Widget name (not advised)
-	protected reference string Binding_Name;
+	reference string Binding_Name;
 	
 	// Function called when type is Clicked, Selected, or Changed
-	protected reference string Command_Execute;
+	reference string Command_Execute;
 	
 	// Function that returns bool defining whether or not the Command_Execute can be called
-	protected reference string Command_CanExecute;
+	reference string Command_CanExecute;
 	
 	// Only valid if type is ObservableCollection
-	protected reference string Selected_Item;
+	reference string Selected_Item;
 	
 	// If true, Bindings go both ways. Otherwise the controller is the master
-	protected reference bool Two_Way_Binding;
+	reference bool Two_Way_Binding;
 	
 	
 	Widget GetRoot() { 

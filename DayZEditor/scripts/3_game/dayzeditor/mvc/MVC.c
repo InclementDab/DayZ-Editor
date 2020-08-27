@@ -41,7 +41,7 @@ class MVC
 	
 	static void PropertyNotFoundError(string property_name)
 	{
-		EditorLog.Error("Property '%2' not found", property_name);
+		EditorLog.Info("Property '%1' not found", property_name);
 	}
 	
 	static void UnsupportedTypeError(typename type)
