@@ -137,7 +137,7 @@ class EditorHud: Hud
 	
 	// Control Events
 	private const int DOUBLE_CLICK_THRESHOLD = 250;
-	private const int RESET_DRAG_THRESHOLD = 100;
+	private const int RESET_DRAG_THRESHOLD = 30;
 	
 	private int m_ActiveMouseStates;
 	private int m_DoubleClickButton;
@@ -151,7 +151,7 @@ class EditorHud: Hud
 	private void ResetDrag(Widget target, int x, int y) {
 		Sleep(RESET_DRAG_THRESHOLD);
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) return;
-					
+		
 		EditorLog.Trace("EditorHud::ResetDrag");
 		m_DragWidget = target;
 		OnDrag(target, x, y);

@@ -15,8 +15,8 @@ class EditorDialog: Managed
 	}
 	
 	
-	void EditorDialog() 
-	{
+	void EditorDialog() {
+		
 		EditorLog.Trace("EditorDialog");
 
 		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialog.layout", null);
@@ -42,7 +42,7 @@ class EditorDialog: Managed
 		Controller controller;
 		content.GetScript(controller);
 		if (controller) {
-			m_DialogController.SetChildController(controller);
+			m_DialogController.AddChildController(controller);
 		}
 		
 		return controller;
