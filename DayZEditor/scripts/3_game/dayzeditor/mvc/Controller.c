@@ -135,6 +135,10 @@ class Controller: Managed
 	void OnKeyPress(int key);
 	void OnMouseEnter(Widget w, int x, int y);
 	void OnMouseLeave(Widget w, Widget enter_w, int x, int y);
+	void OnDrag(Widget target, int x, int y);
+	void OnDrop(Widget target, Widget drop_target, int x, int y);
+	void OnDragging(Widget target, int x, int y);
+	void OnDropReceived(Widget target, Widget received_target, int x, int y);
 }
 
 

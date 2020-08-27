@@ -2,7 +2,6 @@ WrapSpacerWidgetClass EditorDialog {
  clipchildren 1
  ignorepointer 1
  color 0.1529 0.1529 0.1529 0.8824
- position 0 0
  size 800 0
  halign center_ref
  valign center_ref
@@ -20,6 +19,7 @@ WrapSpacerWidgetClass EditorDialog {
  {
   WrapSpacerWidgetClass WindowDragWrapper {
    ignorepointer 0
+   position 0 0
    size 1 1
    hexactpos 1
    vexactpos 1

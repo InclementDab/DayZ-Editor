@@ -147,31 +147,32 @@ class EditorHud: Hud
 	}
 	
 
-	
+	private ref Widget m_DragWidget;
 	private void ResetDrag(Widget target, int x, int y) {
 		Sleep(RESET_DRAG_THRESHOLD);
-		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {			
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) return;
+					
+		EditorLog.Trace("EditorHud::ResetDrag");
+		m_DragWidget = target;
+		OnDrag(target, x, y);
+		
+		g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Insert(_DragUpdater);		
+	}
+	
+	private void _DragUpdater()
+	{
+		int x, y;
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+			g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Remove(_DragUpdater);
 			
-			EditorLog.Trace("EditorHud::ResetDrag");
-			thread OnDrag(target, x, y);
-			
-			int safe = 0;
-			// If Left mouse button is down
-			while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
-				if (safe > 10000) {
-					Print("Hitting e-Stop");
-					break;
-				}
-				safe++;
-				Print(safe);
-				
-				GetMousePos(x, y);
-				//thread OnDragging(target, x, y);
-			} 
-						
 			GetMousePos(x, y);
-			thread OnDrop(target, GetWidgetUnderCursor(), x, y);			
-		}
+			OnDrop(m_DragWidget, m_DragWidget, x, y);	
+			return;
+		} 
+		
+		
+		GetMousePos(x, y);
+		OnDragging(m_DragWidget, x, y);
 	}
 	
 
@@ -223,13 +224,13 @@ class EditorHud: Hud
 	}
 	
 	
-	void OnClick(Widget w, int button, int x, int y)
+	void OnClick(Widget target, int button, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnClick %1", w.GetName());
-		GetActiveController().OnClick(w, button, x, y);
+		EditorLog.Trace("EditorHud::OnClick %1", target.GetName());
+		GetActiveController().OnClick(target, button, x, y);
 		
 		if (m_DoubleClickButton == button) {
-			OnDoubleClick(w, button, x, y);
+			OnDoubleClick(target, button, x, y);
 			return;
 		}
 		
@@ -237,10 +238,10 @@ class EditorHud: Hud
 		thread ResetDoubleClick();
 	}	
 		
-	void OnDoubleClick(Widget w, int button, int x, int y)
+	void OnDoubleClick(Widget target, int button, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnDoubleClick: %1", w.GetName());
-		GetActiveController().OnDoubleClick(w, button, x, y);
+		EditorLog.Trace("EditorHud::OnDoubleClick: %1", target.GetName());
+		GetActiveController().OnDoubleClick(target, button, x, y);
 	}
 	
 	void OnKeyPress(int key)
@@ -249,36 +250,40 @@ class EditorHud: Hud
 		GetActiveController().OnKeyPress(key);
 	}
 	
-	void OnMouseEnter(Widget w, int x, int y)
+	void OnMouseEnter(Widget target, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseEnter: %1", w.GetName());
-		GetActiveController().OnMouseEnter(w, x, y);
+		EditorLog.Trace("EditorHud::OnMouseEnter: %1", target.GetName());
+		GetActiveController().OnMouseEnter(target, x, y);
 	}
 	
-	void OnMouseLeave(Widget w, Widget enter_w, int x, int y)
+	void OnMouseLeave(Widget target, Widget enter_w, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseLeave %1 enter %2", w.GetName(), enter_w.GetName());
-		GetActiveController().OnMouseLeave(w, enter_w, x, y);
+		EditorLog.Trace("EditorHud::OnMouseLeave %1 enter %2", target.GetName(), enter_w.GetName());
+		GetActiveController().OnMouseLeave(target, enter_w, x, y);
 	}
 	
 	void OnDrag(Widget target, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnDrag: %1", target.GetName());
+		GetActiveController().OnDrag(target, x, y);
 	}
 	
 	void OnDrop(Widget target, Widget drop_target, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnDrop: %1 drop_target: %2", target.GetName(), drop_target.GetName());
+		GetActiveController().OnDrop(target, drop_target, x, y);
 	}
 	
 	void OnDragging(Widget target, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnDragging: %1 X:%2 Y:%3", target.GetName(), x.ToString(), y.ToString());
+		//EditorLog.Trace("EditorHud::OnDragging: %1 X:%2 Y:%3", target.GetName(), x.ToString(), y.ToString());
+		GetActiveController().OnDragging(target, x, y);
 	}
 	
 	void OnDropReceived(Widget target, Widget received_target, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnDropReceived: %1 received_target: %2 X:%3 Y:%4", target.GetName(), received_target.GetName(), x.ToString(), y.ToString());
+		GetActiveController().OnDropReceived(target, received_target, x, y);
 	}
 	
 	
