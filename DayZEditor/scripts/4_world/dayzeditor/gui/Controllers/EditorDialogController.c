@@ -39,14 +39,8 @@ class EditorDialogController: Controller
 	{
 		EditorLog.Trace("EditorDialogController::OnDrag");
 		if (target == WindowDragWrapper) {
-			
 			m_LayoutRoot.GetPos(m_OffsetX, m_OffsetY);
-			
-			m_OffsetX = x - m_OffsetX;
-			m_OffsetY = y - m_OffsetY;
-	
-			TitleBar.SetPos(0, 0, true);
-			TitleBar.SetPos(0, 0, false);
+			m_OffsetX -= x; m_OffsetY -= y;
 		}
 		
 		m_ChildController.OnDrag(target, x, y);
@@ -55,10 +49,7 @@ class EditorDialogController: Controller
 	override void OnDragging(Widget target, int x, int y)
 	{
 		EditorLog.Trace("EditorDialogController::OnDragging: %1 X:%2 Y:%3", target.GetName(), x.ToString(), y.ToString());
-		Print(m_LayoutRoot.GetName());
-
-		m_LayoutRoot.SetPos(x, y);
-		//TitleBar.SetPos(0, 0, true);
+		m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);		
 		
 		m_ChildController.OnDragging(target, x, y);
 	}
@@ -67,9 +58,7 @@ class EditorDialogController: Controller
 	{
 		EditorLog.Trace("EditorDialogController::OnDrop");
 	    if (target == WindowDragWrapper) {
-	        //TitleBar.SetPos(0, 0);
-			m_LayoutRoot.SetPos(x - m_OffsetX, y - m_OffsetY);
-			WindowDragWrapper.SetPos(x - m_OffsetX, y - m_OffsetY);
+			m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);
 			return;
 	    }
 		
