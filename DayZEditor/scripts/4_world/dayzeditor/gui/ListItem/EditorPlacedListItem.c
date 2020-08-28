@@ -26,20 +26,7 @@ class EditorPlacedListItem: EditorListItem
 	void EditorObjectDeselected(EditorObject data) {
 		m_EditorListItemController.Deselect();
 	}
-	/*
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		if (button == 0) {
-		
-			if (GetGame().GetInput().LocalValue("UAWalkRunTemp"))
-				GetEditor().ToggleSelection(m_Data);
-			else {
-				GetEditor().SelectObject(m_Data);
-			}
-		}
-		
-		return super.OnClick(w, x, y, button);
-	}
-	*/
+	
+	
 	
 }

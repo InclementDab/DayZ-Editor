@@ -50,8 +50,14 @@ class EditorListItemController: Controller
 	}
 	
 	
+	override void OnDrag(Widget target, int x, int y)
+	{
+		//EditorLog.Trace("EditorListItemController::OnDrag");
+	}
+	
 	override void OnDrop(Widget target, Widget drop_target, int x, int y)
 	{	
+		return;
 		EditorLog.Trace("EditorListItemController::OnDrop");
 		
 		EditorListItem drop_target_item;
@@ -64,24 +70,39 @@ class EditorListItemController: Controller
 	}
 	
 	
-	
-	void EditorListItemButtonExecute(ButtonCommandArgs args)
+	override void OnClick(Widget w, int button, int x, int y)
 	{
-		EditorLog.Trace("EditorListItemController::EditorListItemButtonExecute");
+		EditorLog.Trace("EditorListItemController::OnClick");
 		
-		switch (m_ListItem.Type()) {
-			
-			case EditorPlaceableListItem: {
-				GetEditor().CreateInHand(EditorPlaceableListItem.Cast(m_ListItem).GetData());
-				Select();
-				break;
-			}
-			
-			default: {
-				Select();
+		switch (button) {
+		
+			case 0: {
+				
+				switch (m_ListItem.Type()) {
+					
+					case EditorPlaceableListItem: {
+						GetEditor().CreateInHand(EditorPlaceableListItem.Cast(m_ListItem).GetData());
+						Select();
+						break;
+					}
+					
+					case EditorPlacedListItem: {
+						EditorPlacedListItem placed_item = EditorPlacedListItem.Cast(m_ListItem);
+						if (KeyState(KeyCode.KC_LCONTROL)) {
+							GetEditor().ToggleSelection(placed_item.GetData());
+						} else {
+							GetEditor().ClearSelection();
+							GetEditor().SelectObject(placed_item.GetData());
+						}
+						break;
+					}
+				}
 			}
 		}
+		super.OnClick(w, button, x, y);
+		
 	}
+	
 	
 	void EditorListItemCollapseExecute(ButtonCommandArgs args)
 	{

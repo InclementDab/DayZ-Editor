@@ -65,7 +65,6 @@ WrapSpacerWidgetClass EditorListItem {
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       priority 1
        draggable 1
        scriptclass "ViewBinding"
        style Empty
@@ -211,7 +210,6 @@ WrapSpacerWidgetClass EditorListItem {
        }
        {
         ScriptParamsClass {
-         Command_Execute "EditorListItemButtonExecute"
          Two_Way_Binding 1
         }
        }

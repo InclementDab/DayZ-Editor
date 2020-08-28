@@ -83,12 +83,14 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::InsertPlaceableObject");
 		LeftbarSpacer.Insert(target);
+		AddChildController(target.GetController());
 	}	
 	
 	void InsertPlacedObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlacedObject");
 		RightbarSpacer.Insert(target);
+		AddChildController(target.GetController());
 	}
 	
 	void InsertMapMarker(EditorMarker map_marker)
@@ -297,6 +299,8 @@ class EditorHudController: Controller
 				break;
 			}
 		}
+		
+		super.OnClick(w, button, x, y);
 		
 	}
 	
