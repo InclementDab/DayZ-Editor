@@ -8,7 +8,7 @@ WrapSpacerWidgetClass EditorListItem {
  hexactsize 1
  vexactsize 1
  draggable 0
- scriptclass "EditorListItemController"
+ scriptclass ""
  "no focus" 1
  Padding 0
  Margin 0
@@ -41,6 +41,7 @@ WrapSpacerWidgetClass EditorListItem {
      vexactpos 0
      hexactsize 0
      vexactsize 1
+     scriptclass "EditorListItemController"
      style Colorable
      "no focus" 1
      Padding 0
@@ -125,14 +126,13 @@ WrapSpacerWidgetClass EditorListItem {
              font "gui/fonts/metron14"
              {
               ScriptParamsClass {
-               Binding_Name "EditorListItemLabelData"
+               Binding_Name "EditorListItemLabel"
               }
              }
             }
            }
            {
             ScriptParamsClass {
-             Binding_Name "EditorListItemLabelData"
             }
            }
           }
@@ -161,7 +161,6 @@ WrapSpacerWidgetClass EditorListItem {
          "flip v" 0
          {
           ScriptParamsClass {
-           Binding_Name "EditorListItemIconData"
           }
          }
         }
@@ -179,13 +178,13 @@ WrapSpacerWidgetClass EditorListItem {
          "no focus" 1
          {
           ScriptParamsClass {
-           Binding_Name "EditorListItemVisibleData"
            Command_Execute "EditorListItemVisibleExecute"
            Two_Way_Binding 1
           }
          }
         }
         ButtonWidgetClass EditorListItemCollapse {
+         visible 0
          position 0.03 0
          size 26 26
          valign center_ref
@@ -201,8 +200,8 @@ WrapSpacerWidgetClass EditorListItem {
          switch toggle
          {
           ScriptParamsClass {
-           Binding_Name "EditorListItemCollapseData"
            Command_Execute "EditorListItemCollapseExecute"
+           Selected_Item "EditorListItemCollapseText"
            Two_Way_Binding 1
           }
          }
@@ -210,11 +209,14 @@ WrapSpacerWidgetClass EditorListItem {
        }
        {
         ScriptParamsClass {
-         Binding_Name "EditorListItemButtonData"
          Command_Execute "EditorListItemButtonExecute"
          Two_Way_Binding 1
         }
        }
+      }
+     }
+     {
+      ScriptParamsClass {
       }
      }
     }
@@ -242,10 +244,6 @@ WrapSpacerWidgetClass EditorListItem {
      Two_Way_Binding 0
     }
    }
-  }
- }
- {
-  ScriptParamsClass {
   }
  }
 }

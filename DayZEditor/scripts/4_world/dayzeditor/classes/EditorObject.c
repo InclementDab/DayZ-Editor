@@ -35,8 +35,7 @@ class EditorObject
 
 	void SetDisplayName(string display_name) {
 		m_Data.DisplayName = display_name;
-		m_EditorPlacedListItem.GetController().EditorListItemLabelData = m_Data.DisplayName;
-		m_EditorPlacedListItem.GetController().NotifyPropertyChanged("EditorListItemLabelData");
+		m_EditorPlacedListItem.GetController().SetLabel(m_Data.DisplayName);
 	}
 	
 	string GetDisplayName() { 

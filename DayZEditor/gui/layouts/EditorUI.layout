@@ -551,6 +551,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         scriptclass ""
          style blank
          "Scrollbar V" 1
          "Scrollbar V Left" 1

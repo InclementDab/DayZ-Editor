@@ -1,5 +1,6 @@
 
 
+
 class EditorListItemController: Controller
 {
 	private typename m_ListItemType;	
@@ -10,20 +11,16 @@ class EditorListItemController: Controller
 	}
 	
 	
-	Widget EditorListItemFrame;
-	Widget EditorListItemLabelFrame;
+
 	WrapSpacerWidget EditorListItemContent;
 	WrapSpacerWidget EditorListItemChildren;
 	
-	ButtonWidget EditorListItemButton;
-	ButtonWidget EditorListItemVisible;
-	ButtonWidget EditorListItemCollapse;
-	
-	bool EditorListItemButtonData;
-	bool EditorListItemCollapseData;
-	bool EditorListItemVisibleData;
-	string EditorListItemLabelData;
-	string EditorListItemIconData;
+	bool EditorListItemButton;
+	bool EditorListItemCollapse;
+	bool EditorListItemVisible;
+	string EditorListItemLabel;
+	string EditorListItemIcon;
+	string EditorListItemCollapseText;
 	int EditorListItemContentColor;
 	
 	protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
@@ -91,7 +88,6 @@ class EditorListItemController: Controller
 	{
 		EditorLog.Trace("EditorListItemController::EditorListItemCollapseExecute");
 		
-		
 		switch (m_ListItemType) {
 			
 			case EditorCollapsibleListItem: {
@@ -99,9 +95,11 @@ class EditorListItemController: Controller
 				
 				// temp
 				if (args.param3)
-					EditorListItemCollapse.SetText(">");
+					EditorListItemCollapseText = ">";
 				else
-					EditorListItemCollapse.SetText("V");
+					EditorListItemCollapseText = "V";
+				
+				NotifyPropertyChanged("EditorListItemCollapseText");
 				break;
 			}
 			
@@ -131,12 +129,12 @@ class EditorListItemController: Controller
 	}
 	
 	void SetLabel(string label) {
-		EditorListItemLabelData = label;
+		EditorListItemLabel = label;
 		NotifyPropertyChanged("EditorListItemLabelData");
 	}
 	
 	void SetIcon(string icon) {
-		EditorListItemIconData = icon;
+		EditorListItemIcon = icon;
 		NotifyPropertyChanged("EditorListItemIconData");
 	}
 	

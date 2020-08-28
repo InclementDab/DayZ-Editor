@@ -11,7 +11,6 @@ class EditorPlacedListItem: EditorListItem
 		EditorLog.Trace("EditorPlacedListItem"); 
 		m_Data = data;
 		
-		m_EditorListItemController.EditorListItemCollapse.Show(false);
 		m_EditorListItemController.SetLabel(m_Data.GetDisplayName());
 		m_EditorListItemController.SetIcon(GetIconFromMod(m_Data.GetData().ObjectMod));
 		

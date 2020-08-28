@@ -1,13 +1,4 @@
 
-class WidgetData<Class T>
-{
-	static T GetFromWidget(Widget w)
-	{
-		T list_item;
-		w.GetUserData(list_item);
-		return list_item;
-	}
-}
 
 
 class EditorListItem: EditorWidget
@@ -44,9 +35,9 @@ class EditorListItem: EditorWidget
 		EditorLog.Trace("EditorListItem::SetNestIndex " + index);
 		m_NestIndex = index;
 		float x, y;
-		m_EditorListItemController.EditorListItemFrame.GetSize(x, y);
-		m_EditorListItemController.EditorListItemFrame.SetSize(290 - 15 * m_NestIndex, y);
-		m_EditorListItemController.EditorListItemFrame.Update();
+		Widget frame = m_LayoutRoot.FindAnyWidget("EditorListItemFrame");
+		frame.GetSize(x, y);
+		frame.SetSize(290 - 15 * m_NestIndex, y);
 	}
 	
 	int GetNestIndex() {
