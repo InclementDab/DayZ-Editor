@@ -9,10 +9,10 @@ class EditorPlacedListItem: EditorListItem
 	{ 
 		EditorLog.Trace("EditorPlacedListItem"); 
 		m_Data = data;
-		m_ListItemCollapse.Show(false);
 		
-		SetText(m_Data.GetDisplayName());
-		SetIcon(GetIconFromMod(GetModFromObject(m_Data.GetType())));
+		m_EditorListItemController.EditorListItemCollapse.Show(false);
+		m_EditorListItemController.EditorListItemLabelData = m_Data.GetDisplayName();
+		m_EditorListItemController.EditorListItemIconData = GetIconFromMod(m_Data.GetData().ObjectMod);
 		
 		m_Data.OnObjectSelected.Insert(EditorObjectSelected);
 		m_Data.OnObjectDeselected.Insert(EditorObjectDeselected);	
@@ -20,13 +20,13 @@ class EditorPlacedListItem: EditorListItem
 	
 	
 	void EditorObjectSelected(EditorObject data) {
-		SetColor(COLOR_ON_SELECTED);
+		m_EditorListItemController.Select();
 	}
 	
 	void EditorObjectDeselected(EditorObject data) {
-		SetColor(COLOR_ON_DESELECTED);
+		m_EditorListItemController.Deselect();
 	}
-	
+	/*
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		if (button == 0) {
@@ -40,6 +40,6 @@ class EditorPlacedListItem: EditorListItem
 		
 		return super.OnClick(w, x, y, button);
 	}
-	
+	*/
 	
 }

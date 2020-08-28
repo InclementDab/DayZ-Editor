@@ -11,10 +11,11 @@ class EditorCollapsibleListItem: EditorListItem
 		EditorLog.Trace("EditorCollapsibleListItem");
 		m_CategoryChildren = new array<ref EditorListItem>();
 		
-		SetText(string.Format("group%1", groupcount));
+		m_EditorListItemController.EditorListItemLabelData = string.Format("group%1", groupcount);
+		m_EditorListItemController.NotifyPropertyChanged("EditorListItemLabelData");
+		
 		groupcount++;
 		
-		EditorEvents.OnObjectDeselected.Insert(ObjectDeselected); 
 	}
 	
 	
@@ -50,66 +51,6 @@ class EditorCollapsibleListItem: EditorListItem
 			item.SetNestIndex(index + 1);
 		}
 	}
-	
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorCollapsibleListItem::OnClick");
-	
-		if (button == 0) {
-			
-			switch (w) {
 
-				case m_ListItemButton: {
-					Select();
-					SelectAllChildren(m_CategoryChildren);					
-					break;
-				}
-			}			
-		}
-		
-		return super.OnClick(w, x, y, button);
-	}
-	
-	
-	override bool OnListItemDropReceived(EditorListItem target)
-	{
-		EditorLog.Trace("EditorCollapsibleListItem::OnListItemDropReceived");
-				
-		target.SetNestIndex(GetNestIndex() + 1);
-		m_CategoryChildren.Insert(target);
-		m_ListItemChildren.AddChild(target.GetRoot());	
-		
-		return true;
-	}
-	
-	override bool OnListItemDrop(EditorListItem target)
-	{
-		EditorLog.Trace("EditorCollapsibleListItem::OnListItemDrop");
-		
-		if (ContainsChildListItem(target)) {
-			return false;
-		}
-		return true;
-	}
-	
-	void ObjectDeselected(Class context, EditorObject target)
-	{
-		Deselect();
-	}
-	
-	void SelectAllChildren(ref array<ref EditorListItem> children)
-	{
-		foreach (EditorListItem list_item: children) {
-			EditorPlacedListItem placed_item;
-			EditorCollapsibleListItem collapsible_item;
-			if (CastTo(placed_item, list_item)) {
-				GetEditor().SelectObject(placed_item.GetData());
-			} else if (CastTo(collapsible_item, list_item)) {
-				collapsible_item.Select();
-				SelectAllChildren(collapsible_item.GetChildren());
-			}
-		}
-	}
 	
 }

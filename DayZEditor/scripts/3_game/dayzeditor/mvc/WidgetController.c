@@ -29,6 +29,10 @@ static WidgetController GetWidgetController(Widget widget)
 		
 		case XComboBoxWidget:
 			return new XComboBoxWidgetController(widget);
+		
+		case ImageWidget:
+			return new ImageWidgetController(widget);
+		
 	}
 	
 	
@@ -253,6 +257,15 @@ class XComboBoxWidgetController: WidgetController
 	}
 }
 
+class ImageWidgetController: WidgetController
+{
+	
+	override void SetData(TypeConverter type_converter) {
+		ImageWidget.Cast(m_Widget).LoadImageFile(0, type_converter.GetString());
+		ImageWidget.Cast(m_Widget).SetImage(0);
+	}
+	
+}
 
 
 

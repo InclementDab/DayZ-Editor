@@ -8,16 +8,17 @@ class EditorPlaceableListItem: EditorListItem
 	void EditorPlaceableListItem(ref EditorPlaceableObjectData data) 
 	{ 
 		EditorLog.Trace("EditorPlaceableListItem"); 
-		m_Data = data;		
-		m_ListItemCollapse.Show(false);
+		m_Data = data;
 		
-		SetText(m_Data.Type);
-		SetIcon(GetIconFromMod(GetModFromObject(m_Data.Type)));
+		m_EditorListItemController.EditorListItemCollapse.Show(false);
+		m_EditorListItemController.EditorListItemLabelData = m_Data.Type;
+		m_EditorListItemController.EditorListItemIconData = GetIconFromMod(GetModFromObject(m_Data.Type));
+	
 		
 		EditorEvents.OnStartPlacing.Insert(StartPlacing);
 		EditorEvents.OnStopPlacing.Insert(StopPlacing);
 	}
-	
+	/*
 		
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
@@ -54,18 +55,18 @@ class EditorPlaceableListItem: EditorListItem
 		GetEditor().PlaceObject();
 		return true;
 	}
-	
+	*/
 	
 	
 	void StartPlacing(Class context, EditorPlaceableObjectData type)
 	{
 		if (type == m_Data.Type)
-			Select();
+			m_EditorListItemController.Select();
 	}
 	
 	void StopPlacing(Class context)
 	{
-		Deselect();
+		m_EditorListItemController.Deselect();
 	}
 	
 		
