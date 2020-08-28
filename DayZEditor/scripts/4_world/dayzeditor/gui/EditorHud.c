@@ -11,18 +11,13 @@ class EditorHud: Hud
 	protected ref EditorMap 	m_EditorMap;
 	protected EditBoxWidget 	m_LeftbarSearchBar;	
 	
+	protected ref ViewBindingHashMap m_ViewBindingHashMap = new ViewBindingHashMap();
+	
 	protected ref EditorHudController 	m_EditorHudController;
 	ref EditorHudController GetController() { 
 		return m_EditorHudController;
 	}
-	
-	protected Controller GetActiveController() {
-		if (IsModalActive()) {
-			return m_CurrentModal.GetController();
-		} else {
-			return m_EditorHudController;
-		}
-	}
+
 	
 	// literally track down everything that uses these and DELETE THEM its SHIT CODE TYLER DO IT PUSSY
 	EditorMap GetMap() 			{ 
@@ -66,8 +61,15 @@ class EditorHud: Hud
 		m_EditorMapContainer.Show(show);
 	}
 	
+	void OnViewBindingCreated(ViewBinding view_binding)
+	{
+		EditorLog.Info("EditorHud::OnViewBindingCreated");
+		m_ViewBindingHashMap.InsertView(view_binding);
+	}
+	
 	void EditorHud() {
 		EditorLog.Info("EditorHud");
+		OnViewBindingCreated.Insert(OnViewBindingCreated);
 	}
 	
 	void ~EditorHud() {
@@ -199,7 +201,11 @@ class EditorHud: Hud
 	void OnMouseDown(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseDown: %1", target.GetName());
-		GetActiveController().OnMouseDown(target, button, x, y);
+		
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		foreach (ViewBinding view: view_set) {
+			view.OnMouseDown(target, button, x, y);
+		}
 		
 		if (button == MouseState.LEFT && (target.GetFlags() & WidgetFlags.DRAGGABLE)) {
 			thread ResetDrag(target, x, y);
@@ -214,20 +220,32 @@ class EditorHud: Hud
 	void OnMouseUp(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseUp %1", target.GetName());
-		GetActiveController().OnMouseUp(target, button, x, y);		
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		if (!view_set) return;
+		foreach (ViewBinding view: view_set) {
+			view.OnMouseUp(target, button, x, y);
+		}	
 	}
 	
 	void OnMouseWheel(Widget target, int direction, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseWheel: %1", target.GetName());
-		GetActiveController().OnMouseWheel(target, direction, x, y);	
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		if (!view_set) return;
+		foreach (ViewBinding view: view_set) {
+			view.OnMouseWheel(target, direction, x, y);
+		}	
 	}
 	
 	
 	void OnClick(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnClick %1", target.GetName());
-		GetActiveController().OnClick(target, button, x, y);
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		if (!view_set) return;
+		foreach (ViewBinding view: view_set) {
+			view.OnClick(target, button, x, y);
+		}	
 		
 		if (m_DoubleClickButton == button) {
 			OnDoubleClick(target, button, x, y);
@@ -241,49 +259,79 @@ class EditorHud: Hud
 	void OnDoubleClick(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnDoubleClick: %1", target.GetName());
-		GetActiveController().OnDoubleClick(target, button, x, y);
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		if (!view_set) return;
+		foreach (ViewBinding view: view_set) {
+			view.OnDoubleClick(target, button, x, y);
+		}	
 	}
 	
 	void OnKeyPress(int key)
 	{
 		EditorLog.Trace("EditorHud::OnKeyPress: %1", key.ToString());
-		GetActiveController().OnKeyPress(key);
+		//foreach (ViewBinding view: m_ViewBindingHashMap.Get(target.GetName())) {
+		//	view.OnKeyPress(key);
+		//}	
 	}
 	
 	void OnMouseEnter(Widget target, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseEnter: %1", target.GetName());
-		GetActiveController().OnMouseEnter(target, x, y);
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		if (!view_set) return;
+		foreach (ViewBinding view: view_set) {
+			view.OnMouseEnter(target, x, y);
+		}	
 	}
 	
 	void OnMouseLeave(Widget target, Widget enter_w, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseLeave %1 enter %2", target.GetName(), enter_w.GetName());
-		GetActiveController().OnMouseLeave(target, enter_w, x, y);
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		if (!view_set) return;
+		foreach (ViewBinding view: view_set) {
+			view.OnMouseLeave(target, enter_w, x, y);
+		}	
 	}
 	
 	void OnDrag(Widget target, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnDrag: %1", target.GetName());
-		GetActiveController().OnDrag(target, x, y);
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		if (!view_set) return;
+		foreach (ViewBinding view: view_set) {
+			view.OnDrag(target, x, y);
+		}	
 	}
 	
 	void OnDrop(Widget target, Widget drop_target, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnDrop: %1 drop_target: %2", target.GetName(), drop_target.GetName());
-		GetActiveController().OnDrop(target, drop_target, x, y);
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		if (!view_set) return;
+		foreach (ViewBinding view: view_set) {
+			view.OnDrop(target, drop_target, x, y);
+		}	
 	}
 	
 	void OnDragging(Widget target, int x, int y)
 	{
 		//EditorLog.Trace("EditorHud::OnDragging: %1 X:%2 Y:%3", target.GetName(), x.ToString(), y.ToString());
-		GetActiveController().OnDragging(target, x, y);
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		if (!view_set) return;
+		foreach (ViewBinding view: view_set) {
+			view.OnDragging(target, x, y);
+		}
 	}
 	
 	void OnDropReceived(Widget target, Widget received_target, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnDropReceived: %1 received_target: %2 X:%3 Y:%4", target.GetName(), received_target.GetName(), x.ToString(), y.ToString());
-		GetActiveController().OnDropReceived(target, received_target, x, y);
+		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		if (!view_set) return;
+		foreach (ViewBinding view: view_set) {
+			view.OnDropReceived(target, received_target, x, y);
+		}
 	}
 	
 	

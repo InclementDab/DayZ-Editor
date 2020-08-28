@@ -22,6 +22,7 @@ static WidgetController GetWidgetController(Widget widget)
 		case MultilineEditBoxWidget:
 			return new MultilineEditBoxWidgetController(widget);
 		
+		case Widget:
 		case SpacerWidget:
 		case GridSpacerWidget:
 		case WrapSpacerWidget: 

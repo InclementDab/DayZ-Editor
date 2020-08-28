@@ -1,7 +1,12 @@
+static ref ScriptInvoker OnViewBindingCreated = new ScriptInvoker();
+static void ViewBindingCreated(ViewBinding view_binding)
+{
+	EditorLog.Trace("EditorEvents::ViewBindingCreated");
+	OnViewBindingCreated.Invoke(view_binding);
+}
 
 
-
-class ViewBinding: ScriptedWidgetEventHandler
+class ViewBinding: Managed
 {
 	protected Widget m_LayoutRoot;
 	
@@ -63,6 +68,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyType);
 		}
 		
+		
 		// Updates the view on first load
 		UpdateView();
 	}
@@ -86,8 +92,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			EditorLog.Error("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type().ToString());
 		}
 		
-
-		m_LayoutRoot.SetHandler(this);
+		ViewBindingCreated(this);
 	}
 	
 	void OnPropertyChanged()
@@ -191,7 +196,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 		m_Controller.NotifyPropertyChanged(Binding_Name);
 	}
 	
-	
+	/*
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 
@@ -233,6 +238,44 @@ class ViewBinding: ScriptedWidgetEventHandler
 		return false;
 		//return super.OnChange(w, x, y, finished);
 	}
+	
+	*/
+	
+	void OnMouseDown(Widget w, int button, int x, int y)
+		m_Controller.OnMouseDown(this, button, x, y);
+	
+	void OnMouseUp(Widget w, int button, int x, int y)
+		m_Controller.OnMouseUp(this, button, x, y);
+	
+	void OnMouseWheel(Widget w, int direction, int x, int y)
+		m_Controller.OnMouseWheel(this, direction, x, y);
+	
+	void OnClick(Widget w, int button, int x, int y)
+		m_Controller.OnClick(this, button, x, y);
+	
+	void OnDoubleClick(Widget w, int button, int x, int y)
+		m_Controller.OnDoubleClick(this, button, x, y);
+	
+	void OnKeyPress(int key)
+		m_Controller.OnKeyPress(this, key);
+	
+	void OnMouseEnter(Widget w, int x, int y)
+		m_Controller.OnMouseEnter(this, x, y);
+	
+	void OnMouseLeave(Widget w, Widget enter_w, int x, int y)
+		m_Controller.OnMouseLeave(this, enter_w, x, y);
+	
+	void OnDrag(Widget target, int x, int y) 
+		m_Controller.OnDrag(target, x, y);
+	
+	void OnDrop(Widget target, Widget drop_target, int x, int y)
+		m_Controller.OnDrop(target, drop_target, x, y);
+	
+	void OnDragging(Widget target, int x, int y)
+		m_Controller.OnDragging(target, x, y);
+	
+	void OnDropReceived(Widget target, Widget received_target, int x, int y)
+		m_Controller.OnDropReceived(target, received_target, x, y);
 		
 	
 	

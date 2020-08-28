@@ -40,11 +40,7 @@ class EditorDialog: Managed
 	{
 		m_DialogController.DialogContent.AddChild(content);
 		Controller controller;
-		content.GetScript(controller);
-		if (controller) {
-			m_DialogController.AddChildController(controller);
-		}
-		
+		content.GetScript(controller);		
 		return controller;
 	}
 	

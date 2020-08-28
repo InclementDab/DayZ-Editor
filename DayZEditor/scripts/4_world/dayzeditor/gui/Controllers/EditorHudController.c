@@ -83,14 +83,12 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::InsertPlaceableObject");
 		LeftbarSpacer.Insert(target);
-		AddChildController(target.GetController());
 	}	
 	
 	void InsertPlacedObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlacedObject");
 		RightbarSpacer.Insert(target);
-		AddChildController(target.GetController());
 	}
 	
 	void InsertMapMarker(EditorMarker map_marker)
@@ -213,41 +211,52 @@ class EditorHudController: Controller
 	
 	
 
-	override void OnMouseWheel(Widget w, int direction, int x, int y)
+	override void OnMouseWheel(ViewBinding target, int direction, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseWheel");
 	}
 
 	
-	override void OnMouseEnter(Widget w, int x, int y)
+	override void OnMouseEnter(ViewBinding target, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseEnter");		
-		switch (w.GetName()) {
+		switch (target.GetRoot().GetName()) {
 			
 			case "SnapButton":
 			case "GroundButton":
 			case "MagnetButton":
 			case "UndoButton":
 			case "RedoButton": {
-				w.SetColor(COLOR_SALMON_A);
-			}			
+				target.GetRoot().SetColor(COLOR_SALMON_A);
+				break;
+			}
+			
+			case "EditorListItemHighlight": {
+				target.GetRoot().Show(true);
+				break;
+			}
 		}
-		
 	}
 	
-	override void OnMouseLeave(Widget w, Widget enter_w, int x, int y)
+	override void OnMouseLeave(ViewBinding target, Widget enter_w, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseLeave");
 		
-		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
-		switch (w.GetName()) {
+		Widget icon = target.GetRoot().FindAnyWidget(string.Format("%1_Icon", target.GetRoot().GetName()));
+		switch (target.GetRoot().GetName()) {
 			
 			case "UndoButton":
 			case "RedoButton":
 			case "MagnetButton":
 			case "GroundButton":
 			case "SnapButton": {
-				w.SetColor(COLOR_EMPTY);
+				target.GetRoot().SetColor(COLOR_EMPTY);
+				break;
+			}
+			
+			case "EditorListItemHighlight": {
+				target.GetRoot().Show(false);
+				break;
 			}
 		}
 			
@@ -255,37 +264,36 @@ class EditorHudController: Controller
 	
 
 	
-	override void OnMouseUp(Widget w, int button, int x, int y)
+	override void OnMouseUp(ViewBinding target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseButtonUp");
 		if (button != 0) return;
 		
-		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
-		switch (w.GetName()) {
+		Widget icon = target.GetRoot().FindAnyWidget(string.Format("%1_Icon", target.GetRoot().GetName()));
+		switch (target.GetRoot().GetName()) {
 			
 			case "UndoButton": 
 			case "RedoButton": {
-				w.SetColor(COLOR_EMPTY);
-				ButtonWidget.Cast(w).SetState(false);
+				target.GetRoot().SetColor(COLOR_EMPTY);
+				ButtonWidget.Cast(target.GetRoot()).SetState(false);
 				icon.SetPos(0, 0);
 				break;
 			}
 		}
 	}
 		
-	override void OnClick(Widget w, int button, int x, int y)
+	override void OnClick(ViewBinding target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::OnClick");
 		if (button != 0) return;
 		
-		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
-		
-		switch (w.GetName()) {
+		Widget icon = target.GetRoot().FindAnyWidget(string.Format("%1_Icon", target.GetRoot().GetName()));
+		switch (target.GetRoot().GetName()) {
 			
 			case "UndoButton": 
 			case "RedoButton": {
-				w.SetColor(COLOR_SALMON_A);
-				int pos = ButtonWidget.Cast(w).GetState() * 1;
+				target.GetRoot().SetColor(COLOR_SALMON_A);
+				int pos = ButtonWidget.Cast(target.GetRoot()).GetState() * 1;
 				icon.SetPos(pos, pos);
 				break;
 			}
@@ -293,15 +301,18 @@ class EditorHudController: Controller
 			case "SnapButton":
 			case "GroundButton":
 			case "MagnetButton": {
-				bool button_state = ButtonWidget.Cast(w).GetState();
-				icon.SetColor((GetHighlightColor(w.GetName()) * button_state) - 1);
+				bool button_state = ButtonWidget.Cast(target.GetRoot()).GetState();
+				icon.SetColor((GetHighlightColor(target.GetRoot().GetName()) * button_state) - 1);
 				icon.SetPos(button_state * 1, button_state * 1);
 				break;
 			}
-		}
-		
-		super.OnClick(w, button, x, y);
-		
+			
+			case "EditorListItemButton": {
+				
+				
+				break;
+			}
+		}		
 	}
 	
 	

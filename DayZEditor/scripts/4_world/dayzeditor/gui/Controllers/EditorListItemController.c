@@ -9,20 +9,14 @@ class EditorListItemController: Controller
 		m_ListItem = list_item;
 	}
 	
-	
-
-	WrapSpacerWidget EditorListItemContent;
-	WrapSpacerWidget EditorListItemChildren;
-	
-
-	bool EditorListItemCollapse;
-	bool EditorListItemVisible;
-	string EditorListItemLabel;
-	string EditorListItemIcon;
-	string EditorListItemCollapseText;
+	protected Widget EditorListItemContent;
+	protected TextWidget EditorListItemLabel;
+	protected ImageWidget EditorListItemIcon;
+	protected WrapSpacerWidget EditorListItemChildren;
 	
 	protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
 	protected static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
+
 	
 	ref ObservableCollection<ref EditorListItem> ChildListItems;
 	
@@ -39,22 +33,14 @@ class EditorListItemController: Controller
 		ChildListItems = new ObservableCollection<ref EditorListItem>("ChildListItems", this);
 	}
 	
-	override void PropertyChanged(string property_name) 
-	{
-		EditorLog.Trace("EditorListItemController::PropertyChanged");
-		switch (property_name) {
-			
 
-
-		}
-	}
 	
 	
 	override void OnDrag(Widget target, int x, int y)
 	{
 		//EditorLog.Trace("EditorListItemController::OnDrag");
 	}
-	
+	/*
 	override void OnDrop(Widget target, Widget drop_target, int x, int y)
 	{	
 		return;
@@ -67,39 +53,33 @@ class EditorListItemController: Controller
 		target.GetUserData(target_item);
 		target_item.SetNestIndex(drop_target_item.GetNestIndex() + 1);
 		drop_target_item.GetController().ChildListItems.Insert(target_item);
-	}
+	}*/
 	
 	
-	override void OnClick(Widget w, int button, int x, int y)
+	override void OnClick(ViewBinding target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorListItemController::OnClick");
 		
-		switch (button) {
-		
-			case 0: {
-				
-				switch (m_ListItem.Type()) {
-					
-					case EditorPlaceableListItem: {
-						GetEditor().CreateInHand(EditorPlaceableListItem.Cast(m_ListItem).GetData());
-						Select();
-						break;
-					}
-					
-					case EditorPlacedListItem: {
-						EditorPlacedListItem placed_item = EditorPlacedListItem.Cast(m_ListItem);
-						if (KeyState(KeyCode.KC_LCONTROL)) {
-							GetEditor().ToggleSelection(placed_item.GetData());
-						} else {
-							GetEditor().ClearSelection();
-							GetEditor().SelectObject(placed_item.GetData());
-						}
-						break;
-					}
+	
+		switch (m_ListItem.Type()) {
+			
+			case EditorPlaceableListItem: {
+				GetEditor().CreateInHand(EditorPlaceableListItem.Cast(m_ListItem).GetData());
+				Select();
+				break;
+			}
+			
+			case EditorPlacedListItem: {
+				EditorPlacedListItem placed_item = EditorPlacedListItem.Cast(m_ListItem);
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					GetEditor().ToggleSelection(placed_item.GetData());
+				} else {
+					GetEditor().ClearSelection();
+					GetEditor().SelectObject(placed_item.GetData());
 				}
+				break;
 			}
 		}
-		super.OnClick(w, button, x, y);
 		
 	}
 	
@@ -114,12 +94,13 @@ class EditorListItemController: Controller
 				EditorListItemChildren.Show(!args.param3);
 				
 				// temp
+				/*
 				if (args.param3)
 					EditorListItemCollapseText = ">";
 				else
 					EditorListItemCollapseText = "V";
 				
-				NotifyPropertyChanged("EditorListItemCollapseText");
+				NotifyPropertyChanged("EditorListItemCollapseText");*/
 				break;
 			}
 			
@@ -131,7 +112,15 @@ class EditorListItemController: Controller
 		EditorLog.Trace("EditorListItemController::EditorListItemVisibleExecute");
 	}
 	
-		
+	
+	void SelectAllChildren()
+	{
+		for (int i = 0; i < ChildListItems.Count(); i++) {
+			ChildListItems[i].GetController().Select();
+			ChildListItems[i].GetController().SelectAllChildren();
+		}
+	}
+
 	void Select() {
 		//EditorLog.Trace("EditorListItemController::Select");
 		EditorListItemContent.SetColor(COLOR_ON_SELECTED);
@@ -145,22 +134,14 @@ class EditorListItemController: Controller
 	}
 	
 	void SetLabel(string label) {
-		EditorListItemLabel = label;
-		NotifyPropertyChanged("EditorListItemLabel");
+		EditorListItemLabel.SetText(label);
 	}
 	
 	void SetIcon(string icon) {
-		EditorListItemIcon = icon;
-		NotifyPropertyChanged("EditorListItemIcon");
+		EditorListItemIcon.LoadImageFile(0, icon);
+		EditorListItemIcon.SetImage(0);
 	}
-	
-	void SelectAllChildren()
-	{
-		for (int i = 0; i < ChildListItems.Count(); i++) {
-			ChildListItems[i].GetController().Select();
-			ChildListItems[i].GetController().SelectAllChildren();
-		}
-	}
+
 
 	
 }

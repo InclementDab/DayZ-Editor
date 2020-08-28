@@ -60,6 +60,7 @@ class EditorPropertiesController: Controller
 		}
 	}
 	
+	/*
 	override void OnMouseWheel(Widget w, int direction, int x, int y)
 	{
 		EditorLog.Trace("EditorPropertiesController::OnMouseWheel %1", w.GetName());
@@ -69,7 +70,7 @@ class EditorPropertiesController: Controller
 		EnScript.GetClassVar(this, w_name, 0, w_eval);
 		EnScript.SetClassVar(this, w_name, 0, (w_eval.Evaluate() + direction).ToString());
 		NotifyPropertyChanged(w_name);
-	}
+	}*/
 	
 	void ToggleCategoryButton(ButtonCommandArgs args)
 	{

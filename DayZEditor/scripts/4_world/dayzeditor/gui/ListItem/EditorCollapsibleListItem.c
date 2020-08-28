@@ -12,7 +12,7 @@ class EditorCollapsibleListItem: EditorListItem
 		m_CategoryChildren = new array<ref EditorListItem>();
 		
 		m_LayoutRoot.FindAnyWidget("EditorListItemCollapse").Show(true);
-		m_EditorListItemController.SetLabel(string.Format("group%1", groupcount));
+		m_Controller.SetLabel(string.Format("group%1", groupcount));
 		
 		
 		groupcount++;

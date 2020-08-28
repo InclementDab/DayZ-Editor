@@ -264,19 +264,20 @@ class EditorClientModule: JMModuleBase
 	// target CAN BE NULL HERE!!
 	void OnMouseDown(Widget target, int button, int x, int y)
 	{
-		
+		EditorLog.Trace("Editor::OnMouseDown");
 		switch (button) {
 			
 			case MouseState.LEFT: {
 #ifndef COMPONENT_SYSTEM
 				
-				if (!target) {
-					if (GetEditor().IsPlacing()) {
-						GetEditor().PlaceObject();
-						return;
-					}
-					GetEditor().ClearSelection();
+
+				if (IsPlacing()) {
+					PlaceObject();
+					return;
 				}
+				
+				ClearSelection();
+				
 #endif
 				break;
 			}

@@ -3,7 +3,6 @@ typedef ref array<ref EditorPlaceableListItem> EditorPlaceableListItemSet;
 
 
 
-
 class EditorPlaceableListItem: EditorListItem
 {
 	private ref EditorPlaceableObjectData m_Data;
@@ -17,8 +16,8 @@ class EditorPlaceableListItem: EditorListItem
 		EditorLog.Trace("EditorPlaceableListItem"); 
 		m_Data = data;
 		
-		m_EditorListItemController.SetLabel(m_Data.Type);
-		m_EditorListItemController.SetIcon(GetIconFromMod(GetModFromObject(m_Data.Type)));
+		m_Controller.SetLabel(m_Data.Type);
+		m_Controller.SetIcon(GetIconFromMod(GetModFromObject(m_Data.Type)));
 		
 		EditorEvents.OnStartPlacing.Insert(StartPlacing);
 		EditorEvents.OnStopPlacing.Insert(StopPlacing);
@@ -45,13 +44,13 @@ class EditorPlaceableListItem: EditorListItem
 	void StartPlacing(Class context, EditorPlaceableObjectData type)
 	{
 		if (type == m_Data)
-			m_EditorListItemController.Select();
-		else m_EditorListItemController.Deselect();
+			m_Controller.Select();
+		else m_Controller.Deselect();
 	}
 	
 	void StopPlacing(Class context)
 	{
-		m_EditorListItemController.Deselect();
+		m_Controller.Deselect();
 	}
 	
 		

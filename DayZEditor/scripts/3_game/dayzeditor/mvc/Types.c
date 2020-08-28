@@ -18,20 +18,21 @@ class PropertyHashMap: ref map<string, typename>
 // 0: Property Name
 // 1: View Binding
 typedef ref set<ref ViewBinding> ViewBindingSet;
-class ViewBindingHashMap: ref map<string, ref ViewBindingSet>
+class ViewBindingHashMap: ref map<Widget, ref ViewBindingSet>
 {
 	void DebugPrint()
 	{
-		foreach (string name, ViewBindingSet view_set: this) {
-			EditorLog.Debug(string.Format("[%1]:", name)); 
+		foreach (Widget w, ViewBindingSet view_set: this) {
+			EditorLog.Debug(string.Format("[%1]:", w.GetName())); 
 			foreach (ViewBinding view: view_set) {
 				EditorLog.Debug(string.Format("    %1", view.GetRoot().GetName()));
 			}
 		}		
 	}
 	
-	void InsertView(string key, ViewBinding view)
+	void InsertView(ViewBinding view)
 	{
+		Widget key = view.GetRoot();
 		ViewBindingSet view_set = Get(key);
 		if (!view_set) {
 			view_set = new ViewBindingSet();

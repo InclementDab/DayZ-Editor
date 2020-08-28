@@ -5,11 +5,6 @@ class Controller: Managed
 {
 	// Private members
 	private ref PropertyHashMap m_ControllerPropertyHashMap;
-	private ref array<ref Controller> m_ChildControllers = {};
-	void AddChildController(Controller controller) {
-		m_ChildControllers.Insert(controller);
-	}
-	
 	
 	// Protected members
 	protected Widget m_LayoutRoot;
@@ -74,7 +69,7 @@ class Controller: Managed
 	void NotifyPropertyChanged(string property_name)
 	{
 		EditorLog.Trace("Controller::NotifyPropertyChanged " + property_name);
-		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(property_name);
+		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(m_LayoutRoot.FindAnyWidget(property_name));
 		
 		if (view_set) {
 			foreach (ViewBinding view: view_set) {
@@ -89,7 +84,7 @@ class Controller: Managed
 	void NotifyCollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{
 		EditorLog.Trace("Controller::NotifyCollectionChanged " + collection_name);
-		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(collection_name);
+		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(m_LayoutRoot.FindAnyWidget(collection_name));
 		
 		if (view_set) {
 			foreach (ViewBinding view: view_set) {
@@ -116,7 +111,7 @@ class Controller: Managed
 		w.GetScript(view_binding);
 		
 		if (view_binding && (view_binding.IsInherited(ViewBinding))) {
-			binding_map.InsertView(view_binding.GetBindingName(), view_binding);
+			binding_map.InsertView(view_binding);
 			view_binding.SetController(this);
 		}
 		
@@ -131,55 +126,20 @@ class Controller: Managed
 		return binding_map.Count();
 	}
 	
-
 	
-	void OnMouseDown(Widget w, int button, int x, int y)
-		foreach (Controller c: m_ChildControllers)
-			c.OnMouseDown(w, button, x, y);
-		
-	void OnMouseUp(Widget w, int button, int x, int y)
-		foreach (Controller c: m_ChildControllers)
-			c.OnMouseUp(w, button, x, y);
+	void OnMouseDown(ViewBinding target, int button, int x, int y);
+	void OnMouseUp(ViewBinding target, int button, int x, int y);
+	void OnMouseWheel(ViewBinding target, int direction, int x, int y);
+	void OnClick(ViewBinding target, int button, int x, int y);
+	void OnDoubleClick(ViewBinding target, int button, int x, int y);
+	void OnKeyPress(ViewBinding target, int key);
+	void OnMouseEnter(ViewBinding target, int x, int y);
+	void OnMouseLeave(ViewBinding target, Widget enter_w, int x, int y);
 	
-	void OnMouseWheel(Widget w, int direction, int x, int y)
-		foreach (Controller c: m_ChildControllers)
-			c.OnMouseWheel(w, direction, x, y);
-	
-	void OnClick(Widget w, int button, int x, int y)
-		foreach (Controller c: m_ChildControllers)
-			c.OnClick(w, button, x, y);
-	
-	void OnDoubleClick(Widget w, int button, int x, int y)
-		foreach (Controller c: m_ChildControllers)
-			c.OnDoubleClick(w, button, x, y);
-	
-	void OnKeyPress(int key)
-		foreach (Controller c: m_ChildControllers)
-			c.OnKeyPress(key);
-	
-	void OnMouseEnter(Widget w, int x, int y)
-		foreach (Controller c: m_ChildControllers)
-			c.OnMouseEnter(w, x, y);
-	
-	void OnMouseLeave(Widget w, Widget enter_w, int x, int y)
-		foreach (Controller c: m_ChildControllers)
-			c.OnMouseLeave(w, enter_w, x, y);
-	
-	void OnDrag(Widget target, int x, int y)
-		foreach (Controller c: m_ChildControllers)
-			c.OnDrag(target, x, y);
-	
-	void OnDrop(Widget target, Widget drop_target, int x, int y)
-		foreach (Controller c: m_ChildControllers)
-			c.OnDrop(target, drop_target, x, y);
-	
-	void OnDragging(Widget target, int x, int y)
-		foreach (Controller c: m_ChildControllers)
-			c.OnDragging(target, x, y);
-	
-	void OnDropReceived(Widget target, Widget received_target, int x, int y)
-		foreach (Controller c: m_ChildControllers)
-			c.OnDropReceived(target, received_target, x, y);
+	void OnDrag(Widget target, int x, int y);
+	void OnDrop(Widget target, Widget drop_target, int x, int y);
+	void OnDragging(Widget target, int x, int y);
+	void OnDropReceived(Widget target, Widget received_target, int x, int y);
 }
 
 

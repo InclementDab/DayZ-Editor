@@ -29,6 +29,26 @@ WrapSpacerWidgetClass EditorListItem {
    vexactsize 1
    scriptclass ""
    {
+    PanelWidgetClass EditorListItemHighlight {
+     visible 0
+     ignorepointer 0
+     color 0.6549 0.7098 0.8745 1
+     position 0 0
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scriptclass "ViewBinding"
+     style Outline
+     "no focus" 0
+     {
+      ScriptParamsClass {
+      }
+     }
+    }
     WrapSpacerWidgetClass EditorListItemContent {
      visible 1
      clipchildren 1
@@ -98,7 +118,7 @@ WrapSpacerWidgetClass EditorListItem {
            vexactpos 0
            hexactsize 0
            vexactsize 0
-           scriptclass "ViewBinding"
+           scriptclass ""
            style Normal
            text "CATEGORY"
            font "gui/fonts/metron14"
@@ -119,21 +139,12 @@ WrapSpacerWidgetClass EditorListItem {
              vexactpos 0
              hexactsize 0
              vexactsize 0
-             scriptclass "ViewBinding"
+             scriptclass ""
              style Default
              "limit visible" 0
              "Use default text" 0
              "exact text" 1
              font "gui/fonts/metron14"
-             {
-              ScriptParamsClass {
-               Binding_Name "EditorListItemLabel"
-              }
-             }
-            }
-           }
-           {
-            ScriptParamsClass {
             }
            }
           }
@@ -154,16 +165,12 @@ WrapSpacerWidgetClass EditorListItem {
          vexactpos 0
          hexactsize 1
          vexactsize 1
-         scriptclass "ViewBinding"
+         scriptclass ""
          mode blend
          "src alpha" 1
          "no wrap" 1
          stretch 1
          "flip v" 0
-         {
-          ScriptParamsClass {
-          }
-         }
         }
         ButtonWidgetClass EditorListItemVisible {
          position 0.03 0
@@ -174,15 +181,9 @@ WrapSpacerWidgetClass EditorListItem {
          vexactpos 0
          hexactsize 1
          vexactsize 1
-         scriptclass "ViewBinding"
+         scriptclass ""
          style Empty
          "no focus" 1
-         {
-          ScriptParamsClass {
-           Command_Execute "EditorListItemVisibleExecute"
-           Two_Way_Binding 1
-          }
-         }
         }
         ButtonWidgetClass EditorListItemCollapse {
          visible 0
@@ -193,24 +194,16 @@ WrapSpacerWidgetClass EditorListItem {
          vexactpos 0
          hexactsize 1
          vexactsize 1
-         scriptclass "ViewBinding"
+         scriptclass ""
          style Empty
          "no focus" 1
          text "V"
          font "gui/fonts/metron-bold"
          switch toggle
-         {
-          ScriptParamsClass {
-           Command_Execute "EditorListItemCollapseExecute"
-           Selected_Item "EditorListItemCollapseText"
-           Two_Way_Binding 1
-          }
-         }
         }
        }
        {
         ScriptParamsClass {
-         Two_Way_Binding 1
         }
        }
       }
@@ -228,18 +221,12 @@ WrapSpacerWidgetClass EditorListItem {
    vexactpos 1
    hexactsize 0
    vexactsize 0
-   scriptclass "ViewBinding"
+   scriptclass ""
    "no focus" 1
    Padding 0
    Margin 0
    "Size To Content V" 1
    content_halign right
-   {
-    ScriptParamsClass {
-     Binding_Name "ChildListItems"
-     Two_Way_Binding 0
-    }
-   }
   }
  }
  {

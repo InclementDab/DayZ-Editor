@@ -37,7 +37,6 @@ class EditorDialogController: Controller
 			m_OffsetX -= x; m_OffsetY -= y;
 		}
 		
-		super.OnDrag(target, x, y);
 	}
 	
 	override void OnDragging(Widget target, int x, int y)
@@ -45,7 +44,6 @@ class EditorDialogController: Controller
 		EditorLog.Trace("EditorDialogController::OnDragging: %1 X:%2 Y:%3", target.GetName(), x.ToString(), y.ToString());
 		m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);		
 		
-		super.OnDragging(target, x, y);
 	}
 	
 	override void OnDrop(Widget target, Widget drop_target, int x, int y)
@@ -56,22 +54,19 @@ class EditorDialogController: Controller
 			return;
 	    }
 		
-	    super.OnDrop(target, drop_target, x, y);
 	}
 	
-	override void OnClick(Widget w, int button, int x, int y)
+	override void OnClick(ViewBinding target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorDialogController::OnClick");
 		
 		if (button != 0) return; 
 		
-		if (w == TitleClose) {
+		if (target.GetRoot() == TitleClose) {
 			m_EditorDialog.CloseDialog();
 			return;
 		}
 		
-		super.OnClick(w, button, x, y);
-
 	}
 	
 }
