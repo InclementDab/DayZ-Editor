@@ -44,6 +44,9 @@ class EditorWidget
 		return m_LayoutRoot; 
 	}
 	
+	void SetLayoutRoot(Widget layout_root) {
+		m_LayoutRoot = layout_root;
+	}
 }
 
 
@@ -52,6 +55,10 @@ class TypeConversionEditorWidget: TypeConversionTemplate<EditorWidget>
 	
 	override Widget GetWidget() {
 		return m_Value.GetLayoutRoot();
+	}
+	
+	override void SetWidget(Widget value) {
+		m_Value.SetLayoutRoot(value);
 	}
 	
 }

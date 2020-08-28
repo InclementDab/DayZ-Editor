@@ -11,8 +11,7 @@ class EditorCollapsibleListItem: EditorListItem
 		EditorLog.Trace("EditorCollapsibleListItem");
 		m_CategoryChildren = new array<ref EditorListItem>();
 		
-		m_EditorListItemController.EditorListItemLabelData = string.Format("group%1", groupcount);
-		m_EditorListItemController.NotifyPropertyChanged("EditorListItemLabelData");
+		m_EditorListItemController.SetLabel(string.Format("group%1", groupcount));
 		
 		groupcount++;
 		

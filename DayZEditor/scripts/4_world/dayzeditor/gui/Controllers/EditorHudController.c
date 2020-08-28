@@ -26,8 +26,8 @@ class EditorHudController: Controller
 	bool SnapButton;
 	
 	//ref TextListboxWidgetData DebugActionStackListbox;
-	ref ObservableCollection<Widget> LeftbarSpacer;
-	ref ObservableCollection<Widget> RightbarSpacer;
+	ref ObservableCollection<ref EditorWidget> LeftbarSpacer;
+	ref ObservableCollection<ref EditorWidget> RightbarSpacer;
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 	ref ObservableCollection<string> DebugActionStackListbox;
 	
@@ -48,8 +48,8 @@ class EditorHudController: Controller
 		super.OnWidgetScriptInit(w);
 				
 		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
-		LeftbarSpacer 				= new ObservableCollection<Widget>("LeftbarSpacer", this);
-		RightbarSpacer 				= new ObservableCollection<Widget>("RightbarSpacer", this);
+		LeftbarSpacer 				= new ObservableCollection<ref EditorWidget>("LeftbarSpacer", this);
+		RightbarSpacer 				= new ObservableCollection<ref EditorWidget>("RightbarSpacer", this);
 		BrushTypeBoxData 			= new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 		
 		// Reload Placeables
@@ -82,13 +82,13 @@ class EditorHudController: Controller
 	void InsertPlaceableObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlaceableObject");
-		LeftbarSpacer.Insert(target.GetLayoutRoot());
+		LeftbarSpacer.Insert(target);
 	}	
 	
 	void InsertPlacedObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlacedObject");
-		RightbarSpacer.Insert(target.GetLayoutRoot());
+		RightbarSpacer.Insert(target);
 	}
 	
 	void InsertMapMarker(EditorMarker map_marker)
@@ -128,7 +128,7 @@ class EditorHudController: Controller
 			case "PlaceableCategorySelection": {
 			
 				for (int i = 0; i < LeftbarSpacer.Count(); i++) {
-					Widget list_item = LeftbarSpacer.Get(i);
+					Widget list_item = LeftbarSpacer[i].GetLayoutRoot();
 					EditorPlaceableListItem item;
 					list_item.GetUserData(item);
 					list_item.Show(item.GetData().GetCategory() == PlaceableCategorySelection);

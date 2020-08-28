@@ -12,8 +12,8 @@ class EditorPlacedListItem: EditorListItem
 		m_Data = data;
 		
 		m_EditorListItemController.EditorListItemCollapse.Show(false);
-		m_EditorListItemController.EditorListItemLabelData = m_Data.GetDisplayName();
-		m_EditorListItemController.EditorListItemIconData = GetIconFromMod(m_Data.GetData().ObjectMod);
+		m_EditorListItemController.SetLabel(m_Data.GetDisplayName());
+		m_EditorListItemController.SetIcon(GetIconFromMod(m_Data.GetData().ObjectMod));
 		
 		m_Data.OnObjectSelected.Insert(EditorObjectSelected);
 		m_Data.OnObjectDeselected.Insert(EditorObjectDeselected);	

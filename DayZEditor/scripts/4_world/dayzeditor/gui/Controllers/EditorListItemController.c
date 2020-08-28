@@ -103,6 +103,15 @@ class EditorListItemController: Controller
 		NotifyPropertyChanged("EditorListItemContentColor");
 	}
 	
+	void SetLabel(string label) {
+		EditorListItemLabelData = label;
+		NotifyPropertyChanged("EditorListItemLabelData");
+	}
+	
+	void SetIcon(string icon) {
+		EditorListItemIconData = icon;
+		NotifyPropertyChanged("EditorListItemIconData");
+	}
 	
 	void SelectAllChildren()
 	{
