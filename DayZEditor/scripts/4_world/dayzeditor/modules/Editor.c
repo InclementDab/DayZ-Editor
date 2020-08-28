@@ -261,19 +261,22 @@ class EditorClientModule: JMModuleBase
 	}
 	
 	
-	
-	void OnMouseDown(int button, int x, int y)
+	// target CAN BE NULL HERE!!
+	void OnMouseDown(Widget target, int button, int x, int y)
 	{
 		
 		switch (button) {
 			
 			case MouseState.LEFT: {
 #ifndef COMPONENT_SYSTEM
-				if (GetEditor().IsPlacing()) {
-					GetEditor().PlaceObject();
-					return;
+				
+				if (!target) {
+					if (GetEditor().IsPlacing()) {
+						GetEditor().PlaceObject();
+						return;
+					}
+					GetEditor().ClearSelection();
 				}
-				GetEditor().ClearSelection();
 #endif
 				break;
 			}
@@ -288,7 +291,7 @@ class EditorClientModule: JMModuleBase
 		}
 	}
 
-	void OnMouseUp(int button, int x, int y)
+	void OnMouseUp(Widget target, int button, int x, int y)
 	{
 		
 	}

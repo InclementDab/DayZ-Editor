@@ -44,7 +44,7 @@ class EditorPlaceableListItem: EditorListItem
 	
 	void StartPlacing(Class context, EditorPlaceableObjectData type)
 	{
-		if (type.Type == m_Data.Type)
+		if (type == m_Data)
 			m_EditorListItemController.Select();
 		else m_EditorListItemController.Deselect();
 	}

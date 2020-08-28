@@ -73,6 +73,7 @@ class EditorListItemController: Controller
 			
 			case EditorPlaceableListItem: {
 				GetEditor().CreateInHand(EditorPlaceableListItem.Cast(m_ListItem).GetData());
+				Select();
 				break;
 			}
 			

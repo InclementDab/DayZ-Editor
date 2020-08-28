@@ -107,7 +107,7 @@ class EditorHud: Hud
 			if (GetMouseState(i) & MB_PRESSED_MASK) {
 				if ((m_ActiveMouseStates & mouse_state) == 0) {
 					m_ActiveMouseStates |= mouse_state;
-					GetEditor().OnMouseDown(i, x, y);
+					GetEditor().OnMouseDown(target, i, x, y);
 					if (target) {
 						OnMouseDown(target, i, x, y);
 					}
@@ -115,7 +115,7 @@ class EditorHud: Hud
 			} else {
 				if ((m_ActiveMouseStates & mouse_state) == mouse_state) {
 					m_ActiveMouseStates &= ~mouse_state;
-					GetEditor().OnMouseUp(i, x, y);
+					GetEditor().OnMouseUp(target, i, x, y);
 					if (target) {
 						OnMouseUp(target, i, x, y);
 					}					
