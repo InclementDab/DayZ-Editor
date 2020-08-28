@@ -29,6 +29,7 @@ class EditorPropertiesController: Controller
 		NotifyPropertyChanged("rot_y");
 		NotifyPropertyChanged("rot_z");
 		
+		Print(m_EditorObject.GetDisplayName());
 		EditorObjectDisplayName = m_EditorObject.GetDisplayName();
 		NotifyPropertyChanged("EditorObjectDisplayName");
 		
@@ -60,17 +61,17 @@ class EditorPropertiesController: Controller
 		}
 	}
 	
-	/*
-	override void OnMouseWheel(Widget w, int direction, int x, int y)
+	
+	override void OnMouseWheel(ViewBinding target, int direction, int x, int y)
 	{
-		EditorLog.Trace("EditorPropertiesController::OnMouseWheel %1", w.GetName());
-		string w_name = w.GetName();
+		EditorLog.Trace("EditorPropertiesController::OnMouseWheel %1", target.GetRoot().GetName());
+		string w_name = target.GetRoot().GetName();
 		
 		EquationEvaluater w_eval;
 		EnScript.GetClassVar(this, w_name, 0, w_eval);
 		EnScript.SetClassVar(this, w_name, 0, (w_eval.Evaluate() + direction).ToString());
 		NotifyPropertyChanged(w_name);
-	}*/
+	}
 	
 	void ToggleCategoryButton(ButtonCommandArgs args)
 	{

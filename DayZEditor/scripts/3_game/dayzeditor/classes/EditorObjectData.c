@@ -53,8 +53,6 @@ class EditorObjectData
 			return null;
 		}
 		
-		
-		
 		EditorObjectData data = new EditorObjectData();
 		data.Type = type; data.Position = position; data.Orientation = orientation; data.Flags = flags;
 		data.DisplayName = data.Type;

@@ -203,13 +203,15 @@ class EditorHud: Hud
 		EditorLog.Trace("EditorHud::OnMouseDown: %1", target.GetName());
 		
 		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
+		if (!view_set) return;
 		foreach (ViewBinding view: view_set) {
 			view.OnMouseDown(target, button, x, y);
 		}
-		
+				
 		if (button == MouseState.LEFT && (target.GetFlags() & WidgetFlags.DRAGGABLE)) {
 			thread ResetDrag(target, x, y);
 		}
+		
 		
 		if (target.IsControlClass()) {
 			OnClick(target, button, x, y);

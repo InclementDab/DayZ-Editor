@@ -41,6 +41,7 @@ class EditorObject
 	string GetDisplayName() { 
 		return m_Data.DisplayName; 
 	}
+	
 	string GetType() { return m_Data.Type; }
 	int GetID() { return m_Data.GetID(); }
 	

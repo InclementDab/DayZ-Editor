@@ -44,6 +44,32 @@ class ViewBindingHashMap: ref map<Widget, ref ViewBindingSet>
 	}
 }
 
+class DataBindingHashMap: ref map<string, ref ViewBindingSet>
+{
+	void DebugPrint()
+	{
+		foreach (string name, ViewBindingSet view_set: this) {
+			EditorLog.Debug(string.Format("[%1]:", name)); 
+			foreach (ViewBinding view: view_set) {
+				EditorLog.Debug(string.Format("    %1", view.GetRoot().GetName()));
+			}
+		}
+	}
+	
+	void InsertView(ViewBinding view)
+	{
+		string key = view.GetBindingName();
+		ViewBindingSet view_set = Get(key);
+		if (!view_set) {
+			view_set = new ViewBindingSet();
+			view_set.Insert(view);
+			Insert(key, view_set);
+		} else {
+			view_set.Insert(view);
+		}		
+	}
+}
+
 
 // 0: Source Widget
 // 1: Button

@@ -27,6 +27,7 @@ WrapSpacerWidgetClass EditorDialog {
    vexactsize 0
    priority 5
    draggable 1
+   scriptclass "ViewBinding"
    style Colorable
    Padding 0
    Margin 0
@@ -132,6 +133,10 @@ WrapSpacerWidgetClass EditorDialog {
        content_valign center
       }
      }
+    }
+   }
+   {
+    ScriptParamsClass {
     }
    }
   }

@@ -42,8 +42,7 @@ class EditorDialogController: Controller
 	override void OnDragging(Widget target, int x, int y)
 	{
 		EditorLog.Trace("EditorDialogController::OnDragging: %1 X:%2 Y:%3", target.GetName(), x.ToString(), y.ToString());
-		m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);		
-		
+		m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);
 	}
 	
 	override void OnDrop(Widget target, Widget drop_target, int x, int y)

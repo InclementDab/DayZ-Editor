@@ -12,7 +12,7 @@ class Controller: Managed
 		return m_LayoutRoot;
 	}
 	
-	protected ref ViewBindingHashMap m_ViewBindingHashMap = new ViewBindingHashMap();
+	protected ref DataBindingHashMap m_ViewBindingHashMap = new DataBindingHashMap();
 	protected ref PropertyHashMap m_PropertyHashMap;
 	typename GetPropertyType(string property_name) {
 		return m_PropertyHashMap.Get(property_name);
@@ -69,7 +69,7 @@ class Controller: Managed
 	void NotifyPropertyChanged(string property_name)
 	{
 		EditorLog.Trace("Controller::NotifyPropertyChanged " + property_name);
-		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(m_LayoutRoot.FindAnyWidget(property_name));
+		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(property_name);
 		
 		if (view_set) {
 			foreach (ViewBinding view: view_set) {
@@ -84,7 +84,7 @@ class Controller: Managed
 	void NotifyCollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{
 		EditorLog.Trace("Controller::NotifyCollectionChanged " + collection_name);
-		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(m_LayoutRoot.FindAnyWidget(collection_name));
+		ref ViewBindingSet view_set = m_ViewBindingHashMap.Get(collection_name);
 		
 		if (view_set) {
 			foreach (ViewBinding view: view_set) {
@@ -105,7 +105,7 @@ class Controller: Managed
 	
 	
 	
-	private int LoadDataBindings(Widget w, out ViewBindingHashMap binding_map)
+	private int LoadDataBindings(Widget w, out DataBindingHashMap binding_map)
 	{
 		ViewBinding view_binding;
 		w.GetScript(view_binding);
