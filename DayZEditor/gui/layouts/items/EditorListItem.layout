@@ -244,4 +244,8 @@ WrapSpacerWidgetClass EditorListItem {
    }
   }
  }
+ {
+  ScriptParamsClass {
+  }
+ }
 }

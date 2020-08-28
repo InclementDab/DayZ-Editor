@@ -1,10 +1,17 @@
 typedef ref array<ref EditorPlaceableListItem> EditorPlaceableListItemSet;
 
+
+
+
+
 class EditorPlaceableListItem: EditorListItem
 {
 	private ref EditorPlaceableObjectData m_Data;
-	EditorPlaceableObjectData GetData() { return m_Data; }
+	EditorPlaceableObjectData GetData() { 
+		return m_Data; 
+	}
 
+	
 	void EditorPlaceableListItem(ref EditorPlaceableObjectData data) 
 	{ 
 		EditorLog.Trace("EditorPlaceableListItem"); 
@@ -14,36 +21,14 @@ class EditorPlaceableListItem: EditorListItem
 		m_EditorListItemController.SetLabel(m_Data.Type);
 		m_EditorListItemController.SetIcon(GetIconFromMod(GetModFromObject(m_Data.Type)));
 		
-		
 		EditorEvents.OnStartPlacing.Insert(StartPlacing);
 		EditorEvents.OnStopPlacing.Insert(StopPlacing);
 	}
+	
+
 	/*
 		
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorPlaceableListItem::OnClick");
-		
-		if (button == 0) {
-			GetEditor().CreateInHand(m_Data);
-			return true;
-		} else if (button == 1) {
-			
-			if (GetGame().GetInput().LocalValue("UAWalkRunTemp")) {				
-				// all very temporary please abstract elsewhere
-				if (GetEditor().IsLootEditActive())
-					GetEditor().PlaceholderRemoveLootMode();
-				else 
-					GetEditor().PlaceholderForEditLootSpawns(m_Data.Type);
-				
-				return true;				
-			}
-		}
 
-		
-		return false;
-	}
-	
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		GetEditor().CreateInHand(m_Data);

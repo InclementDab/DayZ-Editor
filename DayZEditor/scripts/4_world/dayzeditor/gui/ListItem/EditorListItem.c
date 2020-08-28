@@ -1,4 +1,13 @@
 
+class WidgetData<Class T>
+{
+	static T GetFromWidget(Widget w)
+	{
+		T list_item;
+		w.GetUserData(list_item);
+		return list_item;
+	}
+}
 
 
 class EditorListItem: EditorWidget
@@ -17,7 +26,10 @@ class EditorListItem: EditorWidget
 		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);		
 		m_LayoutRoot.GetScript(m_EditorListItemController);
 		m_LayoutRoot.SetUserData(this);
+		
+		m_EditorListItemController.SetListItem(this);
 	}
+	
 
 
 	void ~EditorListItem() 

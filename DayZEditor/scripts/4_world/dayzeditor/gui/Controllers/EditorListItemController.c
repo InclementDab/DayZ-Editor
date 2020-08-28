@@ -2,6 +2,13 @@
 
 class EditorListItemController: Controller
 {
+	private typename m_ListItemType;	
+	private EditorListItem m_ListItem;
+	void SetListItem(EditorListItem list_item) {
+		m_ListItem = list_item;
+		m_ListItemType = m_ListItem.Type();
+	}
+	
 	
 	Widget EditorListItemFrame;
 	Widget EditorListItemLabelFrame;
@@ -45,22 +52,10 @@ class EditorListItemController: Controller
 				EditorListItemContent.Update();	
 				break;
 			}
-			
-			case "EditorListItemCollapseData": {
-				EditorListItemChildren.Show(!EditorListItemCollapseData);
-				
-				// temp
-				if (EditorListItemCollapseData)
-					EditorListItemCollapse.SetText(">");
-				else
-					EditorListItemCollapse.SetText("V");
-				
-				break;
-			}
+
 		}
 	}
 	
-		
 	
 	override void OnDrop(Widget target, Widget drop_target, int x, int y)
 	{	
@@ -79,26 +74,58 @@ class EditorListItemController: Controller
 	
 	void EditorListItemButtonExecute(ButtonCommandArgs args)
 	{
+		EditorLog.Trace("EditorListItemController::EditorListItemButtonExecute");
+		
+		switch (m_ListItemType) {
+			
+			case EditorPlaceableListItem: {
+				GetEditor().CreateInHand(EditorPlaceableListItem.Cast(m_ListItem).GetData());
+				break;
+			}
+			
+		}
 		
 	}
 	
 	void EditorListItemCollapseExecute(ButtonCommandArgs args)
 	{
+		EditorLog.Trace("EditorListItemController::EditorListItemCollapseExecute");
 		
+		
+		switch (m_ListItemType) {
+			
+			case EditorCollapsibleListItem: {
+				EditorListItemChildren.Show(!args.param3);
+				
+				// temp
+				if (args.param3)
+					EditorListItemCollapse.SetText(">");
+				else
+					EditorListItemCollapse.SetText("V");
+				break;
+			}
+			
+		}
+		
+		
+				
+
 	}
 	
 	void EditorListItemVisibleExecute(ButtonCommandArgs args)
 	{
-		
+		EditorLog.Trace("EditorListItemController::EditorListItemVisibleExecute");
 	}
 	
 		
 	void Select() {
+		EditorLog.Trace("EditorListItemController::Select");
 		EditorListItemContentColor = COLOR_ON_SELECTED;
 		NotifyPropertyChanged("EditorListItemContentColor");
 	}
 	
 	void Deselect() {	
+		EditorLog.Trace("EditorListItemController::Deselect");
 		EditorListItemContentColor = COLOR_ON_DESELECTED;
 		NotifyPropertyChanged("EditorListItemContentColor");
 	}

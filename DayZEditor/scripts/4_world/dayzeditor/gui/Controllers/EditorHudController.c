@@ -219,7 +219,7 @@ class EditorHudController: Controller
 	
 	override void OnMouseEnter(Widget w, int x, int y)
 	{
-		//EditorLog.Trace("EditorHudController::OnMouseEnter");		
+		EditorLog.Trace("EditorHudController::OnMouseEnter");		
 		switch (w.GetName()) {
 			
 			case "SnapButton":
@@ -235,7 +235,7 @@ class EditorHudController: Controller
 	
 	override void OnMouseLeave(Widget w, Widget enter_w, int x, int y)
 	{
-		//EditorLog.Trace("EditorHudController::OnMouseLeave");
+		EditorLog.Trace("EditorHudController::OnMouseLeave");
 		
 		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		switch (w.GetName()) {
@@ -255,7 +255,7 @@ class EditorHudController: Controller
 	
 	override void OnMouseUp(Widget w, int button, int x, int y)
 	{
-		//EditorLog.Trace("EditorHudController::OnMouseButtonUp");
+		EditorLog.Trace("EditorHudController::OnMouseButtonUp");
 		if (button != 0) return;
 		
 		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
@@ -273,7 +273,7 @@ class EditorHudController: Controller
 		
 	override void OnClick(Widget w, int button, int x, int y)
 	{
-		//EditorLog.Trace("EditorHudController::OnClick");
+		EditorLog.Trace("EditorHudController::OnClick");
 		if (button != 0) return;
 		
 		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
@@ -326,6 +326,8 @@ class EditorHudController: Controller
 		
 		return 0;
 	}
+	
+
 	
 }
 
