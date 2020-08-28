@@ -1,3 +1,4 @@
+
 class EditorPlacedListItem: EditorListItem
 {
 	private ref EditorObject m_Data;

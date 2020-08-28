@@ -247,7 +247,7 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnEditorToggleUI");
 		
 		m_EditorHud.Show(!m_EditorHud.IsVisible());
-	}	
+	}
 	
 	private void OnEditorToggleMap(UAInput input)
 	{

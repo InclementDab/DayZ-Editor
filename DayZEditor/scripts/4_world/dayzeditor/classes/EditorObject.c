@@ -51,6 +51,8 @@ class EditorObject
 		EditorLog.Trace("EditorObject");
 		m_Data = data;
 	
+		GetEditor().GetSessionCache().InsertEditorData(m_Data);
+	
 		if (m_Data.Flags == EditorObjectFlags.ALL) {
 			m_Data.Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
 		}

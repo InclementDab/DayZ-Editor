@@ -60,15 +60,14 @@ class EditorObjectData
 		data.DisplayName = data.Type;
 		data.ObjectMod = GetModFromObject(data.Type);
 		
-		EditorObjectDataSet session_cache = GetEditor().GetSessionCache();
-		
+
 		if (lowest_id == 0) lowest_id = 200000;
 		lowest_id--;
 		data.m_Id = lowest_id;	
 		
 		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));
 		
-		session_cache.InsertEditorData(data);
+		
 		return data;
 	}
 	

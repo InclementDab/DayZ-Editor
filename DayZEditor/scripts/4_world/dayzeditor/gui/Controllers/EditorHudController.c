@@ -82,13 +82,13 @@ class EditorHudController: Controller
 	void InsertPlaceableObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlaceableObject");
-		LeftbarSpacer.Insert(target.GetRoot());
+		LeftbarSpacer.Insert(target.GetLayoutRoot());
 	}	
 	
 	void InsertPlacedObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlacedObject");
-		RightbarSpacer.Insert(target.GetRoot());
+		RightbarSpacer.Insert(target.GetLayoutRoot());
 	}
 	
 	void InsertMapMarker(EditorMarker map_marker)

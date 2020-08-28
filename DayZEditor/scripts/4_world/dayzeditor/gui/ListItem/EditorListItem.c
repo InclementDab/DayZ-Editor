@@ -1,17 +1,10 @@
 
 
 
-class EditorListItem
+class EditorListItem: EditorWidget
 {
 	private int m_NestIndex;
-	
-	protected Widget m_Root;
-	Widget GetRoot() { 
-		return m_Root;
-	}
-	
-
-	
+		
 	protected ref EditorListItemController m_EditorListItemController;
 	EditorListItemController GetController() { 
 		return m_EditorListItemController; 
@@ -21,16 +14,16 @@ class EditorListItem
 	{ 
 		EditorLog.Trace("EditorListItem");
 
-		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);		
-		m_Root.GetScript(m_EditorListItemController);
-		m_Root.SetUserData(this);
+		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);		
+		m_LayoutRoot.GetScript(m_EditorListItemController);
+		m_LayoutRoot.SetUserData(this);
 	}
 
 
 	void ~EditorListItem() 
 	{ 
 		EditorLog.Trace("~EditorListItem"); 
-		m_Root.Unlink();
+		//m_LayoutRoot.Unlink();
 	}
 	
 	
