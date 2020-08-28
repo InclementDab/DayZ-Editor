@@ -3,11 +3,10 @@
 
 class EditorListItemController: Controller
 {
-	private typename m_ListItemType;	
+
 	private EditorListItem m_ListItem;
 	void SetListItem(EditorListItem list_item) {
 		m_ListItem = list_item;
-		m_ListItemType = m_ListItem.Type();
 	}
 	
 	
@@ -15,13 +14,12 @@ class EditorListItemController: Controller
 	WrapSpacerWidget EditorListItemContent;
 	WrapSpacerWidget EditorListItemChildren;
 	
-	bool EditorListItemButton;
+
 	bool EditorListItemCollapse;
 	bool EditorListItemVisible;
 	string EditorListItemLabel;
 	string EditorListItemIcon;
 	string EditorListItemCollapseText;
-	int EditorListItemContentColor;
 	
 	protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
 	protected static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
@@ -35,20 +33,18 @@ class EditorListItemController: Controller
 	
 	override void OnWidgetScriptInit(Widget w)
 	{
+		EditorLog.Trace("EditorListItemController::OnWidgetScriptInit");
 		super.OnWidgetScriptInit(w);
+		
 		ChildListItems = new ObservableCollection<ref EditorListItem>("ChildListItems", this);
 	}
 	
 	override void PropertyChanged(string property_name) 
 	{
-		
+		EditorLog.Trace("EditorListItemController::PropertyChanged");
 		switch (property_name) {
 			
-			case "EditorListItemContentColor": {
-				EditorListItemContent.SetColor(EditorListItemContentColor);
-				EditorListItemContent.Update();	
-				break;
-			}
+
 
 		}
 	}
@@ -73,22 +69,24 @@ class EditorListItemController: Controller
 	{
 		EditorLog.Trace("EditorListItemController::EditorListItemButtonExecute");
 		
-		switch (m_ListItemType) {
+		switch (m_ListItem.Type()) {
 			
 			case EditorPlaceableListItem: {
 				GetEditor().CreateInHand(EditorPlaceableListItem.Cast(m_ListItem).GetData());
 				break;
 			}
 			
+			default: {
+				Select();
+			}
 		}
-		
 	}
 	
 	void EditorListItemCollapseExecute(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorListItemController::EditorListItemCollapseExecute");
 		
-		switch (m_ListItemType) {
+		switch (m_ListItem.Type()) {
 			
 			case EditorCollapsibleListItem: {
 				EditorListItemChildren.Show(!args.param3);
@@ -104,10 +102,6 @@ class EditorListItemController: Controller
 			}
 			
 		}
-		
-		
-				
-
 	}
 	
 	void EditorListItemVisibleExecute(ButtonCommandArgs args)
@@ -117,25 +111,25 @@ class EditorListItemController: Controller
 	
 		
 	void Select() {
-		EditorLog.Trace("EditorListItemController::Select");
-		EditorListItemContentColor = COLOR_ON_SELECTED;
-		NotifyPropertyChanged("EditorListItemContentColor");
+		//EditorLog.Trace("EditorListItemController::Select");
+		EditorListItemContent.SetColor(COLOR_ON_SELECTED);
+		EditorListItemContent.Update();	
 	}
 	
 	void Deselect() {	
-		EditorLog.Trace("EditorListItemController::Deselect");
-		EditorListItemContentColor = COLOR_ON_DESELECTED;
-		NotifyPropertyChanged("EditorListItemContentColor");
+		//EditorLog.Trace("EditorListItemController::Deselect");
+		EditorListItemContent.SetColor(COLOR_ON_DESELECTED);
+		EditorListItemContent.Update();	
 	}
 	
 	void SetLabel(string label) {
 		EditorListItemLabel = label;
-		NotifyPropertyChanged("EditorListItemLabelData");
+		NotifyPropertyChanged("EditorListItemLabel");
 	}
 	
 	void SetIcon(string icon) {
 		EditorListItemIcon = icon;
-		NotifyPropertyChanged("EditorListItemIconData");
+		NotifyPropertyChanged("EditorListItemIcon");
 	}
 	
 	void SelectAllChildren()

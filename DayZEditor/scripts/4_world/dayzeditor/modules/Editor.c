@@ -590,7 +590,7 @@ class EditorClientModule: JMModuleBase
 	}
 	
 	
-	void CreateInHand(EditorPlaceableObjectData data)
+	void CreateInHand(ref EditorPlaceableObjectData data)
 	{
 		EditorLog.Trace("Editor::CreateInHand");
 		
@@ -601,8 +601,7 @@ class EditorClientModule: JMModuleBase
 		ClearSelection();
 		m_ObjectInHand = new EditorHologram(data.Type, CurrentMousePosition);
 		
-		EditorEvents.StartPlacing(this, data);
-		
+		EditorEvents.StartPlacing(this, data);		
 	}
 	
 	void PlaceObject()
