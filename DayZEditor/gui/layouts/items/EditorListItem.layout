@@ -19,6 +19,7 @@ WrapSpacerWidgetClass EditorListItem {
  {
   FrameWidgetClass EditorListItemFrame {
    visible 1
+   inheritalpha 0
    ignorepointer 1
    size 290 30
    halign right_ref
@@ -27,11 +28,12 @@ WrapSpacerWidgetClass EditorListItem {
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   draggable 0
    scriptclass ""
    {
     PanelWidgetClass EditorListItemHighlight {
      visible 0
-     ignorepointer 0
+     ignorepointer 1
      color 0.6549 0.7098 0.8745 1
      position 0 0
      size 1 1
@@ -75,6 +77,7 @@ WrapSpacerWidgetClass EditorListItem {
      {
       ButtonWidgetClass EditorListItemButton {
        visible 1
+       disabled 0
        clipchildren 0
        ignorepointer 0
        color 0.8627 0.8627 0.8627 0.549
@@ -195,12 +198,18 @@ WrapSpacerWidgetClass EditorListItem {
          vexactpos 0
          hexactsize 1
          vexactsize 1
-         scriptclass ""
+         scriptclass "ViewBinding"
          style Empty
          "no focus" 1
          text "V"
          font "gui/fonts/metron-bold"
          switch toggle
+         {
+          ScriptParamsClass {
+           Command_Execute "EditorListItemCollapseExecute"
+           Two_Way_Binding 1
+          }
+         }
         }
        }
        {
@@ -215,19 +224,25 @@ WrapSpacerWidgetClass EditorListItem {
   WrapSpacerWidgetClass EditorListItemChildren {
    visible 1
    clipchildren 1
-   ignorepointer 1
+   ignorepointer 0
    position 0 50
    size 1 0
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 0
-   scriptclass ""
+   draggable 1
+   scriptclass "ViewBinding"
    "no focus" 1
    Padding 0
    Margin 0
    "Size To Content V" 1
    content_halign right
+   {
+    ScriptParamsClass {
+     Binding_Name "ChildListItems"
+    }
+   }
   }
  }
  {

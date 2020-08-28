@@ -149,35 +149,6 @@ class EditorHud: Hud
 	}
 	
 
-	private ref Widget m_DragWidget;
-	private void ResetDrag(Widget target, int x, int y) {
-		Sleep(RESET_DRAG_THRESHOLD);
-		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) return;
-		
-		EditorLog.Trace("EditorHud::ResetDrag");
-		m_DragWidget = target;
-		OnDrag(target, x, y);
-		
-		g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Insert(_DragUpdater);		
-	}
-	
-	private void _DragUpdater()
-	{
-		int x, y;
-		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
-			g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Remove(_DragUpdater);
-			
-			GetMousePos(x, y);
-			OnDrop(m_DragWidget, m_DragWidget, x, y);	
-			return;
-		} 
-		
-		
-		GetMousePos(x, y);
-		OnDragging(m_DragWidget, x, y);
-	}
-	
-
 	private ref Widget m_CurrentEnterWidget;
 	private void MouseUpdatePosition(int x, int y)
 	{
@@ -207,11 +178,6 @@ class EditorHud: Hud
 		foreach (ViewBinding view: view_set) {
 			view.OnMouseDown(target, button, x, y);
 		}
-				
-		if (button == MouseState.LEFT && (target.GetFlags() & WidgetFlags.DRAGGABLE)) {
-			thread ResetDrag(target, x, y);
-		}
-		
 		
 		if (target.IsControlClass()) {
 			OnClick(target, button, x, y);
@@ -235,7 +201,7 @@ class EditorHud: Hud
 		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
 		if (!view_set) return;
 		foreach (ViewBinding view: view_set) {
-			view.OnMouseWheel(target, direction, x, y);
+			view.OnViewMouseWheel(target, direction, x, y);
 		}	
 	}
 	
@@ -246,7 +212,7 @@ class EditorHud: Hud
 		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
 		if (!view_set) return;
 		foreach (ViewBinding view: view_set) {
-			view.OnClick(target, button, x, y);
+			view.OnViewClick(target, button, x, y);
 		}	
 		
 		if (m_DoubleClickButton == button) {
@@ -264,7 +230,7 @@ class EditorHud: Hud
 		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
 		if (!view_set) return;
 		foreach (ViewBinding view: view_set) {
-			view.OnDoubleClick(target, button, x, y);
+			view.OnViewDoubleClick(target, button, x, y);
 		}	
 	}
 	
@@ -282,7 +248,7 @@ class EditorHud: Hud
 		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
 		if (!view_set) return;
 		foreach (ViewBinding view: view_set) {
-			view.OnMouseEnter(target, x, y);
+			view.OnViewMouseEnter(target, x, y);
 		}	
 	}
 	
@@ -292,50 +258,10 @@ class EditorHud: Hud
 		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
 		if (!view_set) return;
 		foreach (ViewBinding view: view_set) {
-			view.OnMouseLeave(target, enter_w, x, y);
+			view.OnViewMouseLeave(target, enter_w, x, y);
 		}	
 	}
-	
-	void OnDrag(Widget target, int x, int y)
-	{
-		EditorLog.Trace("EditorHud::OnDrag: %1", target.GetName());
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
-		if (!view_set) return;
-		foreach (ViewBinding view: view_set) {
-			view.OnDrag(target, x, y);
-		}	
-	}
-	
-	void OnDrop(Widget target, Widget drop_target, int x, int y)
-	{
-		EditorLog.Trace("EditorHud::OnDrop: %1 drop_target: %2", target.GetName(), drop_target.GetName());
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
-		if (!view_set) return;
-		foreach (ViewBinding view: view_set) {
-			view.OnDrop(target, drop_target, x, y);
-		}	
-	}
-	
-	void OnDragging(Widget target, int x, int y)
-	{
-		//EditorLog.Trace("EditorHud::OnDragging: %1 X:%2 Y:%3", target.GetName(), x.ToString(), y.ToString());
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
-		if (!view_set) return;
-		foreach (ViewBinding view: view_set) {
-			view.OnDragging(target, x, y);
-		}
-	}
-	
-	void OnDropReceived(Widget target, Widget received_target, int x, int y)
-	{
-		EditorLog.Trace("EditorHud::OnDropReceived: %1 received_target: %2 X:%3 Y:%4", target.GetName(), received_target.GetName(), x.ToString(), y.ToString());
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
-		if (!view_set) return;
-		foreach (ViewBinding view: view_set) {
-			view.OnDropReceived(target, received_target, x, y);
-		}
-	}
-	
+
 	
 	
 	override void SetPermanentCrossHair(bool show); // todo

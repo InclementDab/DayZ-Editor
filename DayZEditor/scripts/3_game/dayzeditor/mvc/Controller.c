@@ -136,10 +136,11 @@ class Controller: Managed
 	void OnMouseEnter(ViewBinding target, int x, int y);
 	void OnMouseLeave(ViewBinding target, Widget enter_w, int x, int y);
 	
-	void OnDrag(Widget target, int x, int y);
-	void OnDrop(Widget target, Widget drop_target, int x, int y);
-	void OnDragging(Widget target, int x, int y);
-	void OnDropReceived(Widget target, Widget received_target, int x, int y);
+	bool OnDrag(Widget w, int x, int y);
+	bool OnDragging(Widget w, int x, int y, Widget reciever);
+	bool OnDraggingOver(Widget w, int x, int y, Widget reciever);
+	bool OnDrop(Widget w, int x, int y, Widget reciever);
+	bool OnDropReceived(Widget w, int x, int y, Widget reciever);
 }
 
 

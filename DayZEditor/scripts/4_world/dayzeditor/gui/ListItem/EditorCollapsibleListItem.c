@@ -14,7 +14,6 @@ class EditorCollapsibleListItem: EditorListItem
 		m_LayoutRoot.FindAnyWidget("EditorListItemCollapse").Show(true);
 		m_Controller.SetLabel(string.Format("group%1", groupcount));
 		
-		
 		groupcount++;
 		
 	}

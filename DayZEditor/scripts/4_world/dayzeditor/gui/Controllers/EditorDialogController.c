@@ -29,36 +29,39 @@ class EditorDialogController: Controller
 	
 	
 	float m_OffsetX, m_OffsetY;
-	override void OnDrag(Widget target, int x, int y) 
+	override bool OnDrag(Widget w, int x, int y) 
 	{
 		EditorLog.Trace("EditorDialogController::OnDrag");
-		if (target == WindowDragWrapper) {
+		if (w == WindowDragWrapper) {
 			m_LayoutRoot.GetPos(m_OffsetX, m_OffsetY);
 			m_OffsetX -= x; m_OffsetY -= y;
 		}
 		
+		return false;
+		
 	}
 	
-	override void OnDragging(Widget target, int x, int y)
+	override bool OnDragging(Widget w, int x, int y, Widget reciever)
 	{
-		EditorLog.Trace("EditorDialogController::OnDragging: %1 X:%2 Y:%3", target.GetName(), x.ToString(), y.ToString());
+		EditorLog.Trace("EditorDialogController::OnDragging: %1 X:%2 Y:%3", w.GetName(), x.ToString(), y.ToString());
 		m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);
+		return false;
 	}
 	
-	override void OnDrop(Widget target, Widget drop_target, int x, int y)
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
 		EditorLog.Trace("EditorDialogController::OnDrop");
-	    if (target == WindowDragWrapper) {
+	    if (w == WindowDragWrapper) {
 			m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);
-			return;
-	    }
+			return false;
+		}
 		
+		return false;
 	}
 	
 	override void OnClick(ViewBinding target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorDialogController::OnClick");
-		
 		if (button != 0) return; 
 		
 		if (target.GetRoot() == TitleClose) {
