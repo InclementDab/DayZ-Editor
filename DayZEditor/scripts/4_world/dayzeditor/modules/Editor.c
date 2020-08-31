@@ -115,6 +115,7 @@ class EditorClientModule: JMModuleBase
 		RegisterBinding(new JMModuleBinding("OnEditorToggleUI", "EditorToggleUI"));
 		
 		RegisterBinding(new JMModuleBinding("OnEditorToggleMap", "EditorToggleMap"));
+		RegisterBinding(new JMModuleBinding("OnEditorDeleteObject", "EditorDeleteObject"));
 	}
 	
 	private bool exit_condition = false;
@@ -258,6 +259,14 @@ class EditorClientModule: JMModuleBase
 		m_EditorHud.ShowCursor();
 		
 		EditorEvents.MapToggled(this, m_EditorHud.GetMap(), m_EditorHud.IsMapVisible());
+	}	
+	
+	private void OnEditorDeleteObject(UAInput input)
+	{
+		if (!ShouldProcessInput(input)) return;
+		EditorLog.Trace("Editor::OnEditorDeleteObject");
+		
+		DeleteObjects(m_SelectedObjects);
 	}
 	
 	
