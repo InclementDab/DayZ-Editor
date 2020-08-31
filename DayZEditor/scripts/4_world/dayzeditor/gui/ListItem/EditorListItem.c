@@ -19,7 +19,7 @@ class EditorListItem: EditorWidget
 	void ~EditorListItem() 
 	{ 
 		EditorLog.Trace("~EditorListItem"); 
-		//m_LayoutRoot.Unlink();
+		m_LayoutRoot.Unlink();
 	}
 
 			

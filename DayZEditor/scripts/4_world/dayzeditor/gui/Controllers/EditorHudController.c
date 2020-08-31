@@ -153,6 +153,21 @@ class EditorHudController: Controller
 				break;
 			}
 			
+			case "MagnetButton": {
+				EditorSettings.MAGNET_PLACEMENT = MagnetButton;
+				break;
+			}
+			
+			case "GroundButton": {
+				EditorSettings.MAINTAIN_HEIGHT = GroundButton;
+				break;
+			}
+			
+			case "SnapButton": {
+				EditorSettings.SNAPPING_MODE = SnapButton;
+				break;
+			}
+			
 
 		}
 	}

@@ -21,8 +21,8 @@ class EditorPropertiesController: Controller
 		
 		
 		vector orientation = m_EditorObject.GetOrientation();
-		rot_x = orientation[0].ToString();
-		rot_y = orientation[1].ToString();
+		rot_x = orientation[1].ToString();
+		rot_y = orientation[0].ToString();
 		rot_z = orientation[2].ToString();
 		
 		NotifyPropertyChanged("rot_x");
@@ -50,7 +50,7 @@ class EditorPropertiesController: Controller
 			case "rot_x":
 			case "rot_y":
 			case "rot_z": {
-				m_EditorObject.SetOrientation(Vector(rot_x.Evaluate(), rot_y.Evaluate(), rot_z.Evaluate()));
+				m_EditorObject.SetOrientation(Vector(rot_y.Evaluate(), rot_x.Evaluate(), rot_z.Evaluate()));
 				break;
 			}
 			
@@ -69,6 +69,12 @@ class EditorPropertiesController: Controller
 		
 		EquationEvaluater w_eval;
 		EnScript.GetClassVar(this, w_name, 0, w_eval);
+		
+		if (KeyState(KeyCode.KC_LCONTROL)) {
+			direction *= 10;
+		}
+		
+		
 		EnScript.SetClassVar(this, w_name, 0, (w_eval.Evaluate() + direction).ToString());
 		NotifyPropertyChanged(w_name);
 	}

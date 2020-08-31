@@ -83,7 +83,7 @@ FrameWidgetClass EditorMainFrame {
    }
   }
   FrameWidgetClass DebugFrame {
-   visible 0
+   visible 1
    ignorepointer 1
    position 300 32
    size 600 150
