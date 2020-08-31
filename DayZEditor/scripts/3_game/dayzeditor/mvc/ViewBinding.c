@@ -188,10 +188,9 @@ class ViewBinding: MVCEventHandler
 		m_Controller.NotifyPropertyChanged(Binding_Name);
 	}
 	
-	/*
+	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-
 		EditorLog.Trace("ViewBinding::OnClick " + w.Type());
 		
 		switch (w.Type()) {
@@ -209,8 +208,7 @@ class ViewBinding: MVCEventHandler
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		EditorLog.Trace("ViewBinding::OnChange " + w.GetName());
-		
-		
+	
 		switch (w.Type()) {
 			
 			case CheckBoxWidget: {
@@ -231,7 +229,7 @@ class ViewBinding: MVCEventHandler
 		//return super.OnChange(w, x, y, finished);
 	}
 	
-	*/
+	
 	
 	override void MVCOnMouseDown(Widget target, int button, int x, int y)
 		m_Controller.MVCOnMouseDown(target, button, x, y);
