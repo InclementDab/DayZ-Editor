@@ -81,8 +81,16 @@ class EditorBrush
 			
 		}*/
 		
+		if (input.LocalPress("UAFire")) {
+			OnMouseDown(CurrentMousePosition);
+		}
+		
 		if (input.LocalValue("UAFire")) {
 			DuringMouseDown(CurrentMousePosition);
+		}
+		
+		if (input.LocalRelease("UAFire")) {
+			OnMouseUp(CurrentMousePosition);
 		}
 	}
 	
@@ -126,11 +134,23 @@ class EditorBrush
 			
 		}
 		
-		//GetEditor().CreateObjects(data_set);
+		//GetEditor().CreateObjects(data_set);	
+	}
+	
+	void OnMouseUp(vector position)
+	{
+		// Reset mouse position when releasing mouse. 
+		m_LastMousePosition = vector.Zero;
+	}
+	
+	void OnMouseDown(vector position)
+	{
 		
 	}
 	
-	string GetName() { return m_BrushData.Name; }
+	string GetName() { 
+		return m_BrushData.Name; 
+	}
 	
 }
 

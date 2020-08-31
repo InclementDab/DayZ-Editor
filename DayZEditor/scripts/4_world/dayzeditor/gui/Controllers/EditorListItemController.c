@@ -34,7 +34,41 @@ class EditorListItemController: Controller
 	}
 	
 
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorListItemController::OnMouseEnter");
+		
+		switch (m_ListItem.Type()) {
+			case EditorPlacedListItem:
+			case EditorPlaceableListItem: {
+				w.SetColor(COLOR_SALMON);
+				break;
+			}
+			
+			
+		}
+		
+		
+		return false;
+	}
 	
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		EditorLog.Trace("EditorListItemController::OnMouseLeave");
+		
+		
+		switch (m_ListItem.Type()) {
+			
+			case EditorPlacedListItem:
+			case EditorPlaceableListItem: {
+				w.SetColor(COLOR_EMPTY);
+				break;
+			}
+		}
+		
+		return false;
+	}
 	
 	override void MVCOnDrag(Widget target, int x, int y)
 	{

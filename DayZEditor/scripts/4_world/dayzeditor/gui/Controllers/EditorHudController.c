@@ -146,6 +146,13 @@ class EditorHudController: Controller
 				break;
 			}
 			
+			case "BrushRadius":
+			case "BrushDensity": {
+				EditorBrush.SetRadius(BrushRadius);
+				EditorBrush.SetDensity(BrushDensity);
+				break;
+			}
+			
 
 		}
 	}
@@ -236,48 +243,45 @@ class EditorHudController: Controller
 	}
 
 	
-	override void MVCOnMouseEnter(Widget target, int x, int y)
+	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorLog.Trace("EditorHudController::MVCOnMouseEnter %1", target.GetName());		
-		switch (target.GetName()) {
+		EditorLog.Trace("EditorHudController::OnMouseEnter %1", w.GetName());		
+		switch (w.GetName()) {
 			
 			case "SnapButton":
 			case "GroundButton":
 			case "MagnetButton":
 			case "UndoButton":
 			case "RedoButton": {
-				target.SetColor(COLOR_SALMON_A);
+				w.SetColor(COLOR_SALMON_A);
 				break;
 			}
 			
-			case "EditorListItemHighlight": {
-				target.Show(true);
-				break;
-			}
+		
 		}
+		
+		return false;
 	}
 	
-	override void MVCOnMouseLeave(Widget target, int x, int y)
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		EditorLog.Trace("EditorHudController::MVCOnMouseLeave %1", target.GetName());
+		EditorLog.Trace("EditorHudController::OnMouseLeave %1", w.GetName());
 		
-		Widget icon = target.FindAnyWidget(string.Format("%1_Icon", target.GetName()));
-		switch (target.GetName()) {
+		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
+		switch (w.GetName()) {
 			
 			case "UndoButton":
 			case "RedoButton":
 			case "MagnetButton":
 			case "GroundButton":
 			case "SnapButton": {
-				target.SetColor(COLOR_EMPTY);
+				w.SetColor(COLOR_EMPTY);
 				break;
 			}
-			
-			case "EditorListItemHighlight": {
-				target.Show(false);
-				break;
-			}
+		
 		}
+		
+		return false;
 			
 	}
 	

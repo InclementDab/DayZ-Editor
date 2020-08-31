@@ -77,7 +77,7 @@ WrapSpacerWidgetClass EditorListItem {
        visible 1
        clipchildren 0
        ignorepointer 0
-       color 0.8627 0.8627 0.8627 0.549
+       color 0 0 0 0
        position 0 0
        size 1 1
        halign center_ref
@@ -88,7 +88,7 @@ WrapSpacerWidgetClass EditorListItem {
        vexactsize 0
        draggable 1
        scriptclass "ViewBinding"
-       style Empty
+       style Colorable
        "no focus" 1
        switch normal
        {
