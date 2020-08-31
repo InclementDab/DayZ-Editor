@@ -1,17 +1,12 @@
 
 
 
-class Controller: Managed
+class Controller: MVCEventHandler
 {
 	// Private members
 	private ref PropertyHashMap m_ControllerPropertyHashMap;
 	
-	// Protected members
-	protected Widget m_LayoutRoot;
-	Widget GetLayoutRoot() {
-		return m_LayoutRoot;
-	}
-	
+		
 	protected ref DataBindingHashMap m_ViewBindingHashMap = new DataBindingHashMap();
 	protected ref PropertyHashMap m_PropertyHashMap;
 	typename GetPropertyType(string property_name) {
@@ -21,11 +16,11 @@ class Controller: Managed
 	void Controller() { EditorLog.Trace("Controller"); }
 	void ~Controller() { EditorLog.Trace("~Controller"); }
 	
-	void OnWidgetScriptInit(Widget w)
+	override void OnWidgetScriptInit(Widget w)
 	{
+		super.OnWidgetScriptInit(w);
+		
 		EditorLog.Trace("Controller::Init");
-		m_LayoutRoot = w;
-				
 		// User must inherit from controller, not use it in ScriptClass
 		if (Type() == Controller) {
 			EditorLog.Error("You cannot bind to data without creating your own controller class!");
@@ -127,20 +122,7 @@ class Controller: Managed
 	}
 	
 	
-	void OnMouseDown(ViewBinding target, int button, int x, int y);
-	void OnMouseUp(ViewBinding target, int button, int x, int y);
-	void OnMouseWheel(ViewBinding target, int direction, int x, int y);
-	void OnClick(ViewBinding target, int button, int x, int y);
-	void OnDoubleClick(ViewBinding target, int button, int x, int y);
-	void OnKeyPress(ViewBinding target, int key);
-	void OnMouseEnter(ViewBinding target, int x, int y);
-	void OnMouseLeave(ViewBinding target, Widget enter_w, int x, int y);
 	
-	bool OnDrag(Widget w, int x, int y);
-	bool OnDragging(Widget w, int x, int y, Widget reciever);
-	bool OnDraggingOver(Widget w, int x, int y, Widget reciever);
-	bool OnDrop(Widget w, int x, int y, Widget reciever);
-	bool OnDropReceived(Widget w, int x, int y, Widget reciever);
 }
 
 

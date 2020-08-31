@@ -70,6 +70,14 @@ class DataBindingHashMap: ref map<string, ref ViewBindingSet>
 	}
 }
 
+class MVCEventHashMap: ref map<Widget, ref MVCEventHandler>
+{
+	void InsertMVCEvent(MVCEventHandler event_handler)
+	{
+		Insert(event_handler.GetLayoutRoot(), event_handler);
+	}
+}
+
 
 // 0: Source Widget
 // 1: Button

@@ -17,6 +17,7 @@ class EditorListItemController: Controller
 	protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
 	protected static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
 
+	
 	ref ObservableCollection<ref EditorListItem> ChildListItems;
 	
 	void EditorListItemController()	{
@@ -32,60 +33,34 @@ class EditorListItemController: Controller
 		ChildListItems = new ObservableCollection<ref EditorListItem>("ChildListItems", this);
 	}
 	
+
 	
-	override bool OnDragging(Widget w, int x, int y, Widget reciever)
+	
+	override void MVCOnDrag(Widget target, int x, int y)
 	{
-		return false;
+		//EditorLog.Trace("EditorListItemController::OnDrag");
 	}
-	
-	
-	override bool OnDrag(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorListItemController::OnDrag");
-		
-		return false;
-	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget reciever)
+	/*
+	override void OnDrop(Widget target, Widget drop_target, int x, int y)
 	{	
+		return;
 		EditorLog.Trace("EditorListItemController::OnDrop");
 		
+		EditorListItem drop_target_item;
+		drop_target.GetUserData(drop_target_item);
+		
 		EditorListItem target_item;
-		w.GetUserData(target_item);
-	
-		if (reciever) {
-			
-			EditorListItem drop_target;
-			reciever.GetUserData(drop_target);
-			
-			switch (drop_target.Type()) {
-				
-				case EditorCollapsibleListItem: {
-					target_item.SetNestIndex(drop_target.GetNestIndex() + 1);
-					drop_target.GetController().ChildListItems.Insert(target_item);
-					break;
-				}
-				
-				default: {
-					// use the AddChildAfter stuff once you get the observable thing
-					
-				}
-				
-			}
-		} else {
-			// use the AddChildAfter stuff once you get the observable thing
-			
-		}
-		
-		
-
-		return false;
-	}
+		target.GetUserData(target_item);
+		target_item.SetNestIndex(drop_target_item.GetNestIndex() + 1);
+		drop_target_item.GetController().ChildListItems.Insert(target_item);
+	}*/
 	
 	
-	override void OnClick(ViewBinding target, int button, int x, int y)
+	override void MVCOnClick(Widget target, int button, int x, int y)
 	{
-		EditorLog.Trace("EditorListItemController::OnClick %1", target.GetBindingName());
+		EditorLog.Trace("EditorListItemController::MVCOnClick");
+		
+	
 		switch (m_ListItem.Type()) {
 			
 			case EditorPlaceableListItem: {
@@ -104,8 +79,6 @@ class EditorListItemController: Controller
 				}
 				break;
 			}
-			
-			
 		}
 		
 	}
@@ -115,13 +88,10 @@ class EditorListItemController: Controller
 	{
 		EditorLog.Trace("EditorListItemController::EditorListItemCollapseExecute");
 		
-		EditorListItemChildren.Show(!args.param3);
-		EditorListItemChildren.Update();
-		
 		switch (m_ListItem.Type()) {
 			
 			case EditorCollapsibleListItem: {
-				
+				EditorListItemChildren.Show(!args.param3);
 				
 				// temp
 				/*

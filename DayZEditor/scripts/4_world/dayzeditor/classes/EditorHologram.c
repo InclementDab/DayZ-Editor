@@ -31,6 +31,7 @@ class EditorHologram
 	void Update(float timeslice)
 	{
 		if (m_ProjectionEntity == null) return;
+		if (!m_ProjectionEntity.IsInherited(EntityAI)) return;
 		int x, y;
 		GetMousePos(x, y);
 		

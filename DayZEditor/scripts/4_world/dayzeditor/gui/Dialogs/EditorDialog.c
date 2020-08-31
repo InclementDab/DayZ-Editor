@@ -14,6 +14,9 @@ class EditorDialog: Managed
 		return m_DialogController;
 	}
 	
+	string GetTitle() {
+		return m_Title;
+	}
 	
 	void EditorDialog() {
 		
@@ -31,8 +34,7 @@ class EditorDialog: Managed
 	}
 
 
-	protected void AddContent(Widget content)
-	{
+	protected void AddContent(Widget content) {
 		m_DialogController.DialogContent.AddChild(content);
 	}
 	
@@ -63,9 +65,7 @@ class EditorDialog: Managed
 		m_DialogController.TitleText.SetText(m_Title);
 	}
 	
-	string GetTitle() {
-		return m_Title;
-	}
+
 	
 	void ShowDialog()
 	{

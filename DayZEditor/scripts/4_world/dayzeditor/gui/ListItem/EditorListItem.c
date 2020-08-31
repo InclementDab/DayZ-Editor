@@ -14,7 +14,6 @@ class EditorListItem: EditorWidget
 		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/items/EditorListItem.layout", null);		
 		m_LayoutRoot.GetScript(m_Controller);
 		m_Controller.SetListItem(this);
-		m_LayoutRoot.FindAnyWidget("EditorListItemButton").SetUserData(this);
 	}
 	
 	void ~EditorListItem() 

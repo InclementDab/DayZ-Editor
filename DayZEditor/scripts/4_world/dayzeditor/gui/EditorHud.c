@@ -11,7 +11,7 @@ class EditorHud: Hud
 	protected ref EditorMap 	m_EditorMap;
 	protected EditBoxWidget 	m_LeftbarSearchBar;	
 	
-	protected ref ViewBindingHashMap m_ViewBindingHashMap = new ViewBindingHashMap();
+	protected ref MVCEventHashMap m_MVCEventHashMap = new MVCEventHashMap();
 	
 	protected ref EditorHudController 	m_EditorHudController;
 	ref EditorHudController GetController() { 
@@ -61,15 +61,15 @@ class EditorHud: Hud
 		m_EditorMapContainer.Show(show);
 	}
 	
-	void OnViewBindingCreated(ViewBinding view_binding)
+	void OnMVCEventHandlerCreated(MVCEventHandler mvc_event)
 	{
-		EditorLog.Info("EditorHud::OnViewBindingCreated");
-		m_ViewBindingHashMap.InsertView(view_binding);
+		EditorLog.Info("EditorHud::OnMVCEventHandlerCreated");
+		m_MVCEventHashMap.InsertMVCEvent(mvc_event);
 	}
 	
 	void EditorHud() {
 		EditorLog.Info("EditorHud");
-		OnViewBindingCreated.Insert(OnViewBindingCreated);
+		OnMVCEventHandlerCreated.Insert(OnMVCEventHandlerCreated);
 	}
 	
 	void ~EditorHud() {
@@ -149,6 +149,35 @@ class EditorHud: Hud
 	}
 	
 
+	private ref Widget m_DragWidget;
+	private void ResetDrag(Widget target, int x, int y) {
+		Sleep(RESET_DRAG_THRESHOLD);
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) return;
+		
+		EditorLog.Trace("EditorHud::ResetDrag");
+		m_DragWidget = target;
+		OnDrag(target, x, y);
+		
+		g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Insert(_DragUpdater);		
+	}
+	
+	private void _DragUpdater()
+	{
+		int x, y;
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+			g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Remove(_DragUpdater);
+			
+			GetMousePos(x, y);
+			OnDrop(m_DragWidget, m_DragWidget, x, y);	
+			return;
+		} 
+		
+		
+		GetMousePos(x, y);
+		OnDragging(m_DragWidget, x, y);
+	}
+	
+
 	private ref Widget m_CurrentEnterWidget;
 	private void MouseUpdatePosition(int x, int y)
 	{
@@ -157,9 +186,7 @@ class EditorHud: Hud
 		Widget current_widget = GetWidgetUnderCursor();
 		if (current_widget) {
 			if (m_CurrentEnterWidget != current_widget) {
-				if (m_CurrentEnterWidget) {
-					//OnMouseLeave(m_CurrentEnterWidget, current_widget, x, y);
-				}
+				OnMouseLeave(m_CurrentEnterWidget, x, y);
 				m_CurrentEnterWidget = current_widget;
 				OnMouseEnter(current_widget, x, y);
 			} 
@@ -173,11 +200,15 @@ class EditorHud: Hud
 	{
 		EditorLog.Trace("EditorHud::OnMouseDown: %1", target.GetName());
 		
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
-		if (!view_set) return;
-		foreach (ViewBinding view: view_set) {
-			view.OnMouseDown(target, button, x, y);
+		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
+		mvc_event.MVCOnMouseDown(target, button, x, y);
+		
+				
+		if (button == MouseState.LEFT && (target.GetFlags() & WidgetFlags.DRAGGABLE)) {
+			thread ResetDrag(target, x, y);
 		}
+		
 		
 		if (target.IsControlClass()) {
 			OnClick(target, button, x, y);
@@ -188,32 +219,32 @@ class EditorHud: Hud
 	void OnMouseUp(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseUp %1", target.GetName());
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
-		if (!view_set) return;
-		foreach (ViewBinding view: view_set) {
-			view.OnMouseUp(target, button, x, y);
-		}	
+		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
+
+		mvc_event.MVCOnMouseUp(target, button, x, y);
+			
 	}
 	
 	void OnMouseWheel(Widget target, int direction, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseWheel: %1", target.GetName());
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
-		if (!view_set) return;
-		foreach (ViewBinding view: view_set) {
-			view.OnViewMouseWheel(target, direction, x, y);
-		}	
+		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
+
+		mvc_event.MVCOnMouseWheel(target, direction, x, y);
+			
 	}
 	
 	
 	void OnClick(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnClick %1", target.GetName());
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
-		if (!view_set) return;
-		foreach (ViewBinding view: view_set) {
-			view.OnViewClick(target, button, x, y);
-		}	
+		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
+		
+		mvc_event.MVCOnClick(target, button, x, y);
+		
 		
 		if (m_DoubleClickButton == button) {
 			OnDoubleClick(target, button, x, y);
@@ -227,43 +258,79 @@ class EditorHud: Hud
 	void OnDoubleClick(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnDoubleClick: %1", target.GetName());
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
-		if (!view_set) return;
-		foreach (ViewBinding view: view_set) {
-			view.OnViewDoubleClick(target, button, x, y);
-		}	
+		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
+		mvc_event.MVCOnDoubleClick(target, button, x, y);
+			
 	}
 	
 	void OnKeyPress(int key)
 	{
 		//EditorLog.Trace("EditorHud::OnKeyPress: %1", key.ToString());
-		//foreach (ViewBinding view: m_ViewBindingHashMap.Get(target.GetName())) {
-		//	view.OnKeyPress(key);
-		//}	
+		/*MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
+
+		mvc_event.OnKeyPress(key);
+			*/
 	}
 	
 	void OnMouseEnter(Widget target, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseEnter: %1", target.GetName());
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
-		if (!view_set) return;
+		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
 		
-		foreach (ViewBinding view: view_set)
-			view.OnViewMouseEnter(target, x, y);
+		mvc_event.OnMouseEnter(target, x, y);
 		
 	}
 	
-	void OnMouseLeave(Widget target, Widget enter_w, int x, int y)
+	void OnMouseLeave(Widget target, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseLeave: %1 Enter: %2", target.GetName(), enter_w.GetName());
-		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
-		if (!view_set) return;
-		
-		foreach (ViewBinding view: view_set)
-			view.OnViewMouseLeave(target, enter_w, x, y);
+		EditorLog.Trace("EditorHud::OnMouseLeave: %1", target.GetName());
+		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
+		mvc_event.MVCOnMouseLeave(target, x, y);
 		
 	}
+	
+	void OnDrag(Widget target, int x, int y)
+	{
+		EditorLog.Trace("EditorHud::OnDrag: %1", target.GetName());
+		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
+		mvc_event.MVCOnDrag(target, x, y);
+		
+	}
+	
+	void OnDrop(Widget target, Widget drop_target, int x, int y)
+	{
+		EditorLog.Trace("EditorHud::OnDrop: %1 drop_target: %2", target.GetName(), drop_target.GetName());
+		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
+	
+		mvc_event.MVCOnDrop(target, drop_target, x, y);
+		
+	}
+	
+	void OnDragging(Widget target, int x, int y)
+	{
+		//EditorLog.Trace("EditorHud::OnDragging: %1 X:%2 Y:%3", target.GetName(), x.ToString(), y.ToString());
+		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
 
+		mvc_event.MVCOnDragging(target, x, y);
+		
+	}
+	
+	void OnDropReceived(Widget target, Widget received_target, int x, int y)
+	{
+		EditorLog.Trace("EditorHud::OnDropReceived: %1 received_target: %2 X:%3 Y:%4", target.GetName(), received_target.GetName(), x.ToString(), y.ToString());
+		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+		if (!mvc_event) return;
+		mvc_event.MVCOnDropReceived(target, received_target, x, y);
+		
+	}
+	
 	
 	
 	override void SetPermanentCrossHair(bool show); // todo

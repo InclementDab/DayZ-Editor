@@ -73,9 +73,14 @@ WrapSpacerWidgetClass EditorDialog {
        hexactsize 1
        vexactsize 1
        priority 5
+       scriptclass "ViewBinding"
        style Default
        text "X"
        font "gui/fonts/Metron-Bold"
+       {
+        ScriptParamsClass {
+        }
+       }
       }
      }
     }

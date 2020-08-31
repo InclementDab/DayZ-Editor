@@ -62,10 +62,10 @@ class EditorPropertiesController: Controller
 	}
 	
 	
-	override void OnMouseWheel(ViewBinding target, int direction, int x, int y)
+	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
 	{
-		EditorLog.Trace("EditorPropertiesController::OnMouseWheel %1", target.GetRoot().GetName());
-		string w_name = target.GetRoot().GetName();
+		EditorLog.Trace("EditorPropertiesController::OnMouseWheel %1", target.GetName());
+		string w_name = target.GetName();
 		
 		EquationEvaluater w_eval;
 		EnScript.GetClassVar(this, w_name, 0, w_eval);

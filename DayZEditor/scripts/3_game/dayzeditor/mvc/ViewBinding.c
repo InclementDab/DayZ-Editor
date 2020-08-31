@@ -1,14 +1,8 @@
-static ref ScriptInvoker OnViewBindingCreated = new ScriptInvoker();
-static void ViewBindingCreated(ViewBinding view_binding)
-{
-	EditorLog.Trace("EditorEvents::ViewBindingCreated");
-	OnViewBindingCreated.Invoke(view_binding);
-}
 
 
-class ViewBinding: ScriptedWidgetEventHandler
+
+class ViewBinding: MVCEventHandler
 {
-	protected Widget m_LayoutRoot;
 	
 	// Name of Binding. If blank, uses the Widget name (not advised)
 	reference string Binding_Name;
@@ -73,10 +67,10 @@ class ViewBinding: ScriptedWidgetEventHandler
 		UpdateView();
 	}
 	
-	void OnWidgetScriptInit(Widget w)
+	override void OnWidgetScriptInit(Widget w)
 	{
+		super.OnWidgetScriptInit(w);
 		EditorLog.Trace("[%1] ViewBinding::Init", w.GetName());
-		m_LayoutRoot = w;
 		
 		if (Binding_Name == string.Empty) {
 			Binding_Name = m_LayoutRoot.GetName();
@@ -91,9 +85,6 @@ class ViewBinding: ScriptedWidgetEventHandler
 		if (Two_Way_Binding && !m_WidgetController.CanTwoWayBind()) {
 			EditorLog.Error("Two Way Binding for %1 is not supported!", m_LayoutRoot.Type().ToString());
 		}
-		m_LayoutRoot.SetHandler(this);
-		
-		ViewBindingCreated(this);
 	}
 	
 	void OnPropertyChanged()
@@ -197,9 +188,10 @@ class ViewBinding: ScriptedWidgetEventHandler
 		m_Controller.NotifyPropertyChanged(Binding_Name);
 	}
 	
-	
-	void OnViewClick(Widget w, int x, int y, int button)
+	/*
+	override bool OnClick(Widget w, int x, int y, int button)
 	{
+
 		EditorLog.Trace("ViewBinding::OnClick " + w.Type());
 		
 		switch (w.Type()) {
@@ -210,7 +202,7 @@ class ViewBinding: ScriptedWidgetEventHandler
 			}
 		}
 		
-		m_Controller.OnClick(this, button, x, y);
+		return false;
 	}
 	
 	
@@ -239,45 +231,44 @@ class ViewBinding: ScriptedWidgetEventHandler
 		//return super.OnChange(w, x, y, finished);
 	}
 	
+	*/
 	
+	override void MVCOnMouseDown(Widget target, int button, int x, int y)
+		m_Controller.MVCOnMouseDown(target, button, x, y);
 	
-	void OnMouseDown(Widget w, int button, int x, int y)
-		m_Controller.OnMouseDown(this, button, x, y);
+	override void MVCOnMouseUp(Widget target, int button, int x, int y)
+		m_Controller.MVCOnMouseUp(target, button, x, y);
 	
-	void OnMouseUp(Widget w, int button, int x, int y)
-		m_Controller.OnMouseUp(this, button, x, y);
+	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
+		m_Controller.MVCOnMouseWheel(target, direction, x, y);
 	
-	void OnViewMouseWheel(Widget w, int direction, int x, int y)
-		m_Controller.OnMouseWheel(this, direction, x, y);		
+	override void MVCOnClick(Widget target, int button, int x, int y)
+		m_Controller.MVCOnClick(target, button, x, y);
 	
-	void OnViewDoubleClick(Widget w, int button, int x, int y)
-		m_Controller.OnDoubleClick(this, button, x, y);
+	override void MVCOnDoubleClick(Widget target, int button, int x, int y)
+		m_Controller.MVCOnDoubleClick(target, button, x, y);
 	
-	void OnKeyPress(int key)
-		m_Controller.OnKeyPress(this, key);
+//	override void MVCOnKeyPress(int key)
+		//m_Controller.OnKeyPress(key);
 	
-	void OnViewMouseEnter(Widget w, int x, int y)
-		m_Controller.OnMouseEnter(this, x, y);
+	override void MVCOnMouseEnter(Widget target, int x, int y)
+		m_Controller.MVCOnMouseEnter(target, x, y);
 	
-	void OnViewMouseLeave(Widget w, Widget enter_w, int x, int y)
-		m_Controller.OnMouseLeave(this, enter_w, x, y);
+	override void MVCOnMouseLeave(Widget target, int x, int y)
+		m_Controller.MVCOnMouseLeave(target, x, y);
 	
-	override bool OnDrag(Widget w, int x, int y)
-		return m_Controller.OnDrag(w, x, y);
+	override void MVCOnDrag(Widget target, int x, int y) 
+		m_Controller.MVCOnDrag(target, x, y);
 	
-	override bool OnDragging(Widget w, int x, int y, Widget reciever)
-		return m_Controller.OnDragging(w, x, y, reciever);
+	override void MVCOnDrop(Widget target, Widget drop_target, int x, int y)
+		m_Controller.MVCOnDrop(target, drop_target, x, y);
 	
-	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
-		return m_Controller.OnDraggingOver(w, x, y, reciever);
+	override void MVCOnDragging(Widget target, int x, int y)
+		m_Controller.MVCOnDragging(target, x, y);
 	
-	override bool OnDrop(Widget w, int x, int y, Widget reciever)
-		return m_Controller.OnDrop(w, x, y, reciever);
-	
-	override bool OnDropReceived(Widget w, int x, int y, Widget reciever)
-		return m_Controller.OnDropReceived(w, x, y, reciever);
+	override void MVCOnDropReceived(Widget target, Widget received_target, int x, int y)
+		m_Controller.MVCOnDropReceived(target, received_target, x, y);
 		
-	
 	
 	void InvokeCommand(Param params)
 	{

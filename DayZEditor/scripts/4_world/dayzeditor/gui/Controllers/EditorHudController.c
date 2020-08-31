@@ -211,51 +211,51 @@ class EditorHudController: Controller
 	
 	
 
-	override void OnMouseWheel(ViewBinding target, int direction, int x, int y)
+	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
 	{
-		//EditorLog.Trace("EditorHudController::OnMouseWheel");
+		//EditorLog.Trace("EditorHudController::MVCOnMouseWheel");
 	}
 
 	
-	override void OnMouseEnter(ViewBinding target, int x, int y)
+	override void MVCOnMouseEnter(Widget target, int x, int y)
 	{
-		EditorLog.Trace("EditorHudController::OnMouseEnter");		
-		switch (target.GetRoot().GetName()) {
+		EditorLog.Trace("EditorHudController::MVCOnMouseEnter %1", target.GetName());		
+		switch (target.GetName()) {
 			
 			case "SnapButton":
 			case "GroundButton":
 			case "MagnetButton":
 			case "UndoButton":
 			case "RedoButton": {
-				target.GetRoot().SetColor(COLOR_SALMON_A);
+				target.SetColor(COLOR_SALMON_A);
 				break;
 			}
 			
 			case "EditorListItemHighlight": {
-				target.GetRoot().Show(true);
+				target.Show(true);
 				break;
 			}
 		}
 	}
 	
-	override void OnMouseLeave(ViewBinding target, Widget enter_w, int x, int y)
+	override void MVCOnMouseLeave(Widget target, int x, int y)
 	{
-		EditorLog.Trace("EditorHudController::OnMouseLeave");
+		EditorLog.Trace("EditorHudController::MVCOnMouseLeave %1", target.GetName());
 		
-		Widget icon = target.GetRoot().FindAnyWidget(string.Format("%1_Icon", target.GetRoot().GetName()));
-		switch (target.GetRoot().GetName()) {
+		Widget icon = target.FindAnyWidget(string.Format("%1_Icon", target.GetName()));
+		switch (target.GetName()) {
 			
 			case "UndoButton":
 			case "RedoButton":
 			case "MagnetButton":
 			case "GroundButton":
 			case "SnapButton": {
-				target.GetRoot().SetColor(COLOR_EMPTY);
+				target.SetColor(COLOR_EMPTY);
 				break;
 			}
 			
 			case "EditorListItemHighlight": {
-				target.GetRoot().Show(false);
+				target.Show(false);
 				break;
 			}
 		}
@@ -264,36 +264,36 @@ class EditorHudController: Controller
 	
 
 	
-	override void OnMouseUp(ViewBinding target, int button, int x, int y)
+	override void MVCOnMouseUp(Widget target, int button, int x, int y)
 	{
-		EditorLog.Trace("EditorHudController::OnMouseButtonUp");
+		EditorLog.Trace("EditorHudController::MVCOnMouseButtonUp");
 		if (button != 0) return;
 		
-		Widget icon = target.GetRoot().FindAnyWidget(string.Format("%1_Icon", target.GetRoot().GetName()));
-		switch (target.GetRoot().GetName()) {
+		Widget icon = target.FindAnyWidget(string.Format("%1_Icon", target.GetName()));
+		switch (target.GetName()) {
 			
 			case "UndoButton": 
 			case "RedoButton": {
-				target.GetRoot().SetColor(COLOR_EMPTY);
-				ButtonWidget.Cast(target.GetRoot()).SetState(false);
+				target.SetColor(COLOR_EMPTY);
+				ButtonWidget.Cast(target).SetState(false);
 				icon.SetPos(0, 0);
 				break;
 			}
 		}
 	}
 		
-	override void OnClick(ViewBinding target, int button, int x, int y)
+	override void MVCOnClick(Widget target, int button, int x, int y)
 	{
-		EditorLog.Trace("EditorHudController::OnClick");
+		EditorLog.Trace("EditorHudController::MVCOnClick");
 		if (button != 0) return;
 		
-		Widget icon = target.GetRoot().FindAnyWidget(string.Format("%1_Icon", target.GetRoot().GetName()));
-		switch (target.GetRoot().GetName()) {
+		Widget icon = target.FindAnyWidget(string.Format("%1_Icon", target.GetName()));
+		switch (target.GetName()) {
 			
 			case "UndoButton": 
 			case "RedoButton": {
-				target.GetRoot().SetColor(COLOR_SALMON_A);
-				int pos = ButtonWidget.Cast(target.GetRoot()).GetState() * 1;
+				target.SetColor(COLOR_SALMON_A);
+				int pos = ButtonWidget.Cast(target).GetState() * 1;
 				icon.SetPos(pos, pos);
 				break;
 			}
@@ -301,8 +301,8 @@ class EditorHudController: Controller
 			case "SnapButton":
 			case "GroundButton":
 			case "MagnetButton": {
-				bool button_state = ButtonWidget.Cast(target.GetRoot()).GetState();
-				icon.SetColor((GetHighlightColor(target.GetRoot().GetName()) * button_state) - 1);
+				bool button_state = ButtonWidget.Cast(target).GetState();
+				icon.SetColor((GetHighlightColor(target.GetName()) * button_state) - 1);
 				icon.SetPos(button_state * 1, button_state * 1);
 				break;
 			}
