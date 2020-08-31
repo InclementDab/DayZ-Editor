@@ -87,11 +87,7 @@ class ObjectDragHandler: DragHandler
 			
 			cursor_pos[1] = cursor_pos[1] - size[1]/2;
 			if (EditorSettings.MAINTAIN_HEIGHT) 
-				if (EditorSettings.MAGNET_PLACEMENT)
-					transform[3] = cursor_pos + surface_normal * vector.Distance(ground_position, transform[3]);				
-				else 
-					transform[3] = cursor_pos + transform[1] * vector.Distance(ground_position, transform[3]);
-				
+				transform[3] = cursor_pos + transform[1] * vector.Distance(ground_position, transform[3]);				
 			else {
 				transform[3] = cursor_pos;
 				transform[3][1] = transform[3][1] + size[1];		
