@@ -56,9 +56,15 @@ class EditorDialog: Managed
 	}
 	
 	
+	private string m_Title;
 	protected void SetTitle(string title)
 	{
-		m_DialogController.TitleText.SetText(title);
+		m_Title = title;
+		m_DialogController.TitleText.SetText(m_Title);
+	}
+	
+	string GetTitle() {
+		return m_Title;
 	}
 	
 	void ShowDialog()

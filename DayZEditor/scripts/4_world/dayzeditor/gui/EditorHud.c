@@ -236,7 +236,7 @@ class EditorHud: Hud
 	
 	void OnKeyPress(int key)
 	{
-		EditorLog.Trace("EditorHud::OnKeyPress: %1", key.ToString());
+		//EditorLog.Trace("EditorHud::OnKeyPress: %1", key.ToString());
 		//foreach (ViewBinding view: m_ViewBindingHashMap.Get(target.GetName())) {
 		//	view.OnKeyPress(key);
 		//}	
@@ -247,19 +247,21 @@ class EditorHud: Hud
 		EditorLog.Trace("EditorHud::OnMouseEnter: %1", target.GetName());
 		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
 		if (!view_set) return;
-		foreach (ViewBinding view: view_set) {
+		
+		foreach (ViewBinding view: view_set)
 			view.OnViewMouseEnter(target, x, y);
-		}	
+		
 	}
 	
 	void OnMouseLeave(Widget target, Widget enter_w, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseLeave %1 enter %2", target.GetName(), enter_w.GetName());
+		EditorLog.Trace("EditorHud::OnMouseLeave: %1 Enter: %2", target.GetName(), enter_w.GetName());
 		ViewBindingSet view_set = m_ViewBindingHashMap.Get(target);
 		if (!view_set) return;
-		foreach (ViewBinding view: view_set) {
+		
+		foreach (ViewBinding view: view_set)
 			view.OnViewMouseLeave(target, enter_w, x, y);
-		}	
+		
 	}
 
 	
@@ -270,9 +272,10 @@ class EditorHud: Hud
 	private ref EditorDialog m_CurrentModal = null;
 	void ModalSet(EditorDialog w)
 	{
-		EditorLog.Trace("EditorHud::ModalSet");
+		EditorLog.Trace("EditorHud::ModalSet: ", w.GetTitle());
 		m_CurrentModal = w;
 		GetEditor().GetCamera().SetMoveEnabled(false);
+		GetEditor().GetCamera().SetLookEnabled(false);
 		ShowCursor();
 	}
 	
@@ -282,6 +285,7 @@ class EditorHud: Hud
 		m_CurrentModal.GetRoot().Unlink();
 		m_CurrentModal = null;
 		GetEditor().GetCamera().SetMoveEnabled(true);
+		GetEditor().GetCamera().SetLookEnabled(true);
 		ShowCursor();
 	}
 
