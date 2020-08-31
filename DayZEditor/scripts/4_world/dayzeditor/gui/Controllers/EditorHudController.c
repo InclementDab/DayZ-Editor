@@ -214,6 +214,25 @@ class EditorHudController: Controller
 	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::MVCOnMouseWheel");
+		
+		switch (target.GetName()) {
+			
+			case "BrushRadiusText":
+			case "BrushRadiusSlider": {
+				BrushRadius += direction * 2;
+				BrushRadius = Math.Clamp(BrushRadius, 0, 100);
+				NotifyPropertyChanged("BrushRadius");
+				break;
+			}
+			
+			case "BrushDensityText":
+			case "BrushDensitySlider": {
+				BrushDensity += direction * 0.05;
+				BrushDensity = Math.Clamp(BrushDensity, 0, 1);
+				NotifyPropertyChanged("BrushDensity");
+				break;
+			}
+		}
 	}
 
 	
