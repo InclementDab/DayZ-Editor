@@ -9,90 +9,85 @@ static const ref array<string> ExcludedMapItems = {
 };
 
 
-class MapSelectDialog: EditorDialog
-{	
+class MapSelectDialogController: Controller
+{
+	TextListboxWidget MapHostListbox;
 	
-	protected TextListboxWidget m_MapHostListbox;
 	
-	private ref ButtonWidget m_SelectButton;
-	private ref ButtonWidget m_CloseButton;
-		
-	void MapSelectDialog()
+	override void OnWidgetScriptInit(Widget w)
 	{
-		Widget content = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout", null);
-		
-		AddContent(content);
-		
-		m_SelectButton = AddButton("Select", "");
-		m_CloseButton = AddButton("Close", "");
-		m_MapHostListbox = TextListboxWidget.Cast(m_LayoutRoot.FindAnyWidget("MapHostListbox"));
+		super.OnWidgetScriptInit(w);
 		
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgWorlds"); i++) {
 			string name;
 			GetGame().ConfigGetChildName("CfgWorlds", i, name);
-			if (ExcludedMapItems.Find(name) == -1) {
-				m_MapHostListbox.AddItem(name, null, 0);
-			}
+			if (ExcludedMapItems.Find(name) == -1)
+				MapHostListbox.AddItem(name, null, 0);
 		}
-		
 	}
+}
+
+
+class MapSelectDialog: EditorDialog
+{	
+		
+	private ref ButtonWidget m_SelectButton;
+	private ref ButtonWidget m_CloseButton;
 	
+	protected ref MapSelectDialogController m_MapSelectDialogController;
+		
+	void MapSelectDialog()
+	{
+		EditorLog.Trace("MapSelectDialog");
+		m_MapSelectDialogController = AddContent("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");
+		m_SelectButton = AddButton("Select", "SelectCallback");
+		m_CloseButton = AddButton("Close", "CloseCallback");
+	}
 	
 	
 	override void Update()
 	{
 		m_DialogController.TitleBar.SetPos(0, 0);
-		bool lots_of_branches_on_your_penis = m_MapHostListbox.GetSelectedRow() != -1;
-		if (lots_of_branches_on_your_penis)
+		if (m_MapSelectDialogController.MapHostListbox.GetSelectedRow() != -1)
 			m_SelectButton.SetAlpha(1);
 		else m_SelectButton.SetAlpha(0.5); 
 		
-		m_SelectButton.Enable(lots_of_branches_on_your_penis);
+		m_SelectButton.Enable(m_MapSelectDialogController.MapHostListbox.GetSelectedRow() != -1);
 		
 	}
 	
-
-
-/*
-	override bool OnClick(Widget w, int x, int y, int button)
+	void SelectCallback()
 	{
-		Print("MapSelectDialog::OnClick");
+		EditorLog.Trace("MapSelectDialog::SelectCallback");
 		
-		if (button != 0) return false; 
-		
-		if (w == m_SelectButton) {
-			string name;
-			m_MapHostListbox.GetItemText(m_MapHostListbox.GetSelectedRow(), 0, name);
-			GetGame().PlayMission(CreateEditorMission(name));
-			CloseDialog();
-			return true;
-		} 
-		
-		if (w == m_CloseButton) {
-			CloseDialog();
-			return true;
-		}
-	
-		return super.OnClick(w, x, y, button);
+		string name;
+		m_MapSelectDialogController.MapHostListbox.GetItemText(m_MapSelectDialogController.MapHostListbox.GetSelectedRow(), 0, name);
+		GetGame().PlayMission(CreateEditorMission(name));
+		CloseDialog();
 	}
 	
-	override bool OnDoubleClick( Widget w, int x, int y, int button )
+	void CloseCallback()
+	{
+		EditorLog.Trace("MapSelectDialog::CloseCallback");
+		CloseDialog();
+	}
+	
+	
+	
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{		
 		if (button != 0) return false; 
-		Print(w);
 
-		if (w == m_MapHostListbox) {
+		if (w == m_MapSelectDialogController.MapHostListbox) {
 			string name;
-			m_MapHostListbox.GetItemText(m_MapHostListbox.GetSelectedRow(), 0, name);
+			m_MapSelectDialogController.MapHostListbox.GetItemText(m_MapSelectDialogController.MapHostListbox.GetSelectedRow(), 0, name);
 			GetGame().PlayMission(CreateEditorMission(name));
 			CloseDialog();
 			return true;
 			
-		}
-		
-		
+		}		
 		return super.OnDoubleClick( w, x, y, button );
 	}
-	*/
+	
 
 }

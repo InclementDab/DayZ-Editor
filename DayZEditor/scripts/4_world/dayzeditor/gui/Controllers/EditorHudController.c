@@ -31,8 +31,6 @@ class EditorHudController: Controller
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 	ref ObservableCollection<string> DebugActionStackListbox;
 	
-	
-	
 	// View Properties
 	protected Widget LeftbarFrame;
 	protected Widget RightbarFrame;

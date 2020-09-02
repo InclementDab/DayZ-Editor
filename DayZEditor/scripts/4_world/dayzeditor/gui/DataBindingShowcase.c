@@ -6,9 +6,9 @@ ref DataBindingShowcaseController m_DataBindingShowcaseController;
 class DataBindingShowcaseController: Controller
 {
 	
-	EquationEvaluater WindowText;
+	EquationEvaluater WindowTextData;
 	//bool WindowText;
-	float WindowSlider = 10;
+	float WindowSlider = 25;
 	
 	bool EvaluateEquation;
 	
@@ -20,7 +20,7 @@ class DataBindingShowcaseController: Controller
 	
 	ref ObservableCollection<ref EditorBrushData> WindowListWidgets;
 	
-	TextWidget WindowTextToggleValue;
+	protected TextWidget WindowTextToggleValue;
 	
 	void DataBindingShowcaseController()
 	{
@@ -33,7 +33,7 @@ class DataBindingShowcaseController: Controller
 	{
 		super.OnWidgetScriptInit(w);
 		WindowListWidgets = new ObservableCollection<ref EditorBrushData>("WindowListWidgets", this);
-		
+				
 		ref EditorBrushData data = new EditorBrushData();
 		data.Name = "Test";
 		WindowListWidgets.Insert(data);
@@ -54,14 +54,14 @@ class DataBindingShowcaseController: Controller
 		EditorLog.Trace("OnWindowTextToggle");
 		
 		int tick = TickCount(0);
-		WindowText = "(10 / 2) + 7";
-		NotifyPropertyChanged("WindowText");
+		WindowTextData = "(10 / 2) + 7";
+		NotifyPropertyChanged("WindowTextData");
 		Print(TickCount(tick));
 		
 		
 		tick = TickCount(0);
-		WindowText = WindowText.Evaluate().ToString();
-		NotifyPropertyChanged("WindowText");
+		WindowTextData = WindowTextData.Evaluate().ToString();
+		NotifyPropertyChanged("WindowTextData");
 		Print(TickCount(tick));
 	}
 	

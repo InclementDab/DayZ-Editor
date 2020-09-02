@@ -1,13 +1,9 @@
 
 
 
-class EditorDialog: Managed
+class EditorDialog: MVCEventHandler
 {
-	
-	protected ref Widget m_LayoutRoot;
-	Widget GetRoot() { 
-		return m_LayoutRoot; 
-	}
+
 	
 	protected ref EditorDialogController m_DialogController;
 	Controller GetController() {
@@ -31,15 +27,22 @@ class EditorDialog: Managed
 	
 	void ~EditorDialog() {
 		EditorLog.Trace("~EditorDialog");
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 	}
 
 
-	protected void AddContent(Widget content) {
+	
+	protected Controller AddContent(Widget content)
+	{
 		m_DialogController.DialogContent.AddChild(content);
+		Controller controller;
+		content.GetScript(controller);		
+		return controller;
 	}
 	
-	protected Controller AddContentWithController(Widget content)
+	protected Controller AddContent(string layout)
 	{
+		Widget content = GetGame().GetWorkspace().CreateWidgets(layout);
 		m_DialogController.DialogContent.AddChild(content);
 		Controller controller;
 		content.GetScript(controller);		

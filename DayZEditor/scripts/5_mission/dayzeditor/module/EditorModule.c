@@ -7,5 +7,4 @@ modded class JMModuleConstructor
 		modules.Insert(EditorClientModule);
 		modules.Insert(EditorServerModule);
 	}
-
 }

@@ -13,11 +13,10 @@ modded class MissionMainMenu
 
 modded class DayZIntroScene
 {
-	Object m_FunnyMeme;
+	private Object m_FunnyMeme;
 	
 	void DayZIntroScene()
 	{
-		
 		delete m_Character;
 		m_CharacterPos = Vector(0.685547, 50, 5.68823).Multiply4(m_CameraTrans);
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
@@ -42,9 +41,6 @@ modded class DayZIntroScene
 		
 		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
 		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);
-		
-		
-		
 		vector pos = m_FunnyMeme.GetPosition();
 		
 		pos[1] = pos[1] + Math.Sin(totaltime * Math.PI) / 1500;
@@ -52,7 +48,7 @@ modded class DayZIntroScene
 		m_FunnyMeme.SetDirection(lookat);
 		m_FunnyMeme.Update();
 		
-		
+		// easter egg
 		if (input.LocalValue("UAPersonView")) {
 			vector ori = m_FunnyMeme.GetOrientation();
 			offset += 10;
@@ -82,6 +78,7 @@ modded class DayZIntroScene
 			return;
 		}
 		
+		// another easter egg
 		if (input.LocalPress("UAFire")) {
 			
 			vector start = GetGame().GetCurrentCameraPosition();
@@ -106,27 +103,17 @@ modded class DayZIntroScene
 	        new_camera.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
 			new_camera.SetDynamicPhysicsLifeTime(-1);
 			dBodySetMass(new_camera, 100);
-			//new_camera.SetDynamicPhysics();
 			m_FunnyMemes.Insert(new_camera);
 		}
 	}
 }
 
 
-//#define LOAD_MISSION 1
+
 
 modded class MainMenu 
 {
 	protected ImageWidget m_Logo;
-	
-	void MainMenu()
-	{
-#ifdef LOAD_MISSION		
-		Print("Loading straight into mission");
-		GetGame().PlayMission(CreateEditorMission("ChernarusPlus"));
-#endif
-		
-	}
 	
 	override Widget Init()
 	{

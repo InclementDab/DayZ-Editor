@@ -349,7 +349,7 @@ class EditorHud: Hud
 	void ModalClose()
 	{
 		EditorLog.Trace("EditorHud::ModalClose");
-		m_CurrentModal.GetRoot().Unlink();
+		m_CurrentModal.GetLayoutRoot().Unlink();
 		m_CurrentModal = null;
 		GetEditor().GetCamera().SetMoveEnabled(true);
 		GetEditor().GetCamera().SetLookEnabled(true);
@@ -361,7 +361,7 @@ class EditorHud: Hud
 	}
 	
 	bool IsModalCommand(Widget w) {
-		return (m_CurrentModal.GetRoot().FindAnyWidget(w.GetName()) != null);
+		return (m_CurrentModal.GetLayoutRoot().FindAnyWidget(w.GetName()) != null);
 	}
 	
 	// Current "button" on UI

@@ -52,7 +52,7 @@ class EditorWidget
 
 class TypeConversionEditorWidget: TypeConversionTemplate<EditorWidget>
 {
-	
+		
 	override Widget GetWidget() {
 		return m_Value.GetLayoutRoot();
 	}

@@ -132,6 +132,8 @@ class EditorClientModule: JMModuleBase
 		
 		// Init UI
 		m_UIManager = GetGame().GetUIManager();
+		
+		// Init Hud
 		m_EditorHud = new EditorHud();
 		m_EditorHud.Init(null);
 		
@@ -184,11 +186,7 @@ class EditorClientModule: JMModuleBase
 				ObjectUnderCursor = null;
 			}
 		}
-		
-		
 			
-	
-	
 		// debug
 		timeslice_count++;
 		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
@@ -223,6 +221,8 @@ class EditorClientModule: JMModuleBase
 			m_Player = CreateDefaultCharacter(Vector(x, y, z));
 			m_Active = true;
 			SetActive(m_Active);
+			
+
 		} else {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
@@ -366,6 +366,11 @@ class EditorClientModule: JMModuleBase
 					if (m_EditorHud.IsModalActive()) {
 						m_EditorHud.ModalClose();
 						return true;
+					// jank
+					} else if (!GetGame().GetMission().IsPaused()) {
+						GetGame().GetMission().Pause();
+					} else {
+						GetGame().GetMission().Continue();
 					}
 					
 					break;

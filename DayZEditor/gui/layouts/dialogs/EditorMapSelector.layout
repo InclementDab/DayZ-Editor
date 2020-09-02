@@ -6,6 +6,7 @@ PanelWidgetClass MapHostPanel {
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ scriptclass "MapSelectDialogController"
  style rover_sim_black
  {
   TextListboxWidgetClass MapHostListbox {

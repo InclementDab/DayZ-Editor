@@ -19,8 +19,8 @@ class EditorObjectPropertiesDialog: EditorDialog
 		EditorLog.Trace("EditorObjectPropertiesDialog");
 		m_EditorObject = editor_object;
 		
-		Widget content = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionPropertiesPrefab.layout");
-		m_EditorPropertiesController = AddContentWithController(content);
+		
+		m_EditorPropertiesController = AddContent("DayZEditor/gui/Layouts/options/EditorDialogOptionPropertiesPrefab.layout");
 		m_EditorPropertiesController.SetEditorObject(m_EditorObject);
 		m_StartPosition = m_EditorObject.GetPosition();
 		m_StartOrientation = m_EditorObject.GetOrientation();

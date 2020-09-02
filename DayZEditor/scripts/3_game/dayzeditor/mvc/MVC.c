@@ -24,7 +24,9 @@ class MVC
 		}
 	}
 	
-	void ~MVC() { EditorLog.Trace("~MVC"); }
+	void ~MVC() { 
+		EditorLog.Trace("~MVC"); 
+	}
 	
 	// Override THIS to add your own Custom Conversion Templates
 	void RegisterConversionTemplates(out TypeConverterHashMap type_conversions)

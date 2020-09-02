@@ -45,6 +45,7 @@ FrameWidgetClass WindowFrame {
      style ServerBrowser
      {
       ScriptParamsClass {
+       Binding_Name "WindowTextToggle"
        Two_Way_Binding 0
       }
      }
@@ -69,7 +70,7 @@ FrameWidgetClass WindowFrame {
      {
       ScriptParamsClass {
        Binding_Name "WindowTextToggle"
-       Command_Execute "OnWindowTextToggle"
+       Two_Way_Binding 1
       }
      }
     }
@@ -83,6 +84,7 @@ FrameWidgetClass WindowFrame {
      hexactsize 0
      vexactsize 1
      scriptclass "ViewBinding"
+     maximum 250
      step 0.05
      vertical 0
      {

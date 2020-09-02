@@ -48,7 +48,6 @@ modded class MissionGameplay
 	
 	void StartEditor()
 	{
-		
 		// Multiplayer case
 		if (GetGame().IsClient() && GetGame().IsMultiplayer()) {
 			EditorLog.Info("Loading Multiplayer Editor...");
