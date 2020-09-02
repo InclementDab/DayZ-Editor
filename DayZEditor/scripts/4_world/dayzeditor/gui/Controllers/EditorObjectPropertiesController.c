@@ -4,8 +4,8 @@ class EditorPropertiesController: Controller
 	protected WrapSpacerWidget EditorDialogOptionContent;
 	
 	string EditorObjectDisplayName;
-	EquationEvaluater pos_x, pos_y, pos_z;
-	EquationEvaluater rot_x, rot_y, rot_z;
+	StringEvaluater pos_x, pos_y, pos_z;
+	StringEvaluater rot_x, rot_y, rot_z;
 	
 	void SetEditorObject(EditorObject editor_object) {
 		EditorLog.Trace("EditorPropertiesController::SetEditorObject");
@@ -43,14 +43,14 @@ class EditorPropertiesController: Controller
 			case "pos_x":
 			case "pos_y":
 			case "pos_z": {
-				m_EditorObject.SetPosition(Vector(pos_x.Evaluate(), pos_z.Evaluate(), pos_y.Evaluate()));
+				m_EditorObject.SetPosition(Vector(pos_x.Parse(), pos_z.Parse(), pos_y.Parse()));
 				break;
 			}
 			
 			case "rot_x":
 			case "rot_y":
 			case "rot_z": {
-				m_EditorObject.SetOrientation(Vector(rot_z.Evaluate(), rot_x.Evaluate(), rot_y.Evaluate()));
+				m_EditorObject.SetOrientation(Vector(rot_z.Parse(), rot_x.Parse(), rot_y.Parse()));
 				break;
 			}
 			
@@ -67,14 +67,14 @@ class EditorPropertiesController: Controller
 		EditorLog.Trace("EditorPropertiesController::OnMouseWheel %1", target.GetName());
 		string w_name = target.GetName();
 		
-		EquationEvaluater w_eval;
+		StringEvaluater w_eval;
 		EnScript.GetClassVar(this, w_name, 0, w_eval);
 		
 		if (KeyState(KeyCode.KC_LCONTROL)) {
 			direction *= 10;
 		}
 		
-		EnScript.SetClassVar(this, w_name, 0, (w_eval.Evaluate() + direction).ToString());
+		EnScript.SetClassVar(this, w_name, 0, (w_eval.Parse() + direction).ToString());
 		NotifyPropertyChanged(w_name);
 	}
 	

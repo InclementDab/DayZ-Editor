@@ -1,23 +1,24 @@
 
 
-
-class StringEvaluater
+typedef string StringEvaluater;
+class StringEvaluater: string
 {
-	int pos = -1;
-	int ch;
-	string value;
+	static int pos;
+	static int ch;
 	
-	float Parse(string _value)
+	float Parse()
 	{
 		pos = -1;
-		value = _value;
+		ch = 0;
 		NextChar();
 		float x = ParseExpression();
-		if (pos < value.Length()) Error("Unexpected: " + ch);
+		if (pos < value.Length()) {
+			Error("Unexpected: " + ch);
+		}
 		return x;
 	}
 	
-	void NextChar() 
+	private void NextChar() 
 	{
 		pos++;
 		if (pos < value.Length()) {
@@ -27,7 +28,7 @@ class StringEvaluater
 		}
 	}
 	
-	bool Eat(int charToEat) 
+	private bool Eat(int charToEat) 
 	{
 	    while (ch == 32) NextChar();
 	    if (ch == charToEat) {
@@ -37,7 +38,7 @@ class StringEvaluater
 	    return false;
 	}
 	
-	float ParseExpression() 
+	private float ParseExpression() 
 	{
 	    float x = ParseTerm();
 	    while (!false) {
@@ -49,7 +50,7 @@ class StringEvaluater
 		return x;
 	}
 	
-	float ParseTerm() 
+	private float ParseTerm() 
 	{
 	    float x = ParseFactor();
 	    while (true) {
@@ -61,7 +62,7 @@ class StringEvaluater
 		return x;
 	}
 	
-	float ParseFactor() 
+	private float ParseFactor() 
 	{
 	    if (Eat("+".Hash())) return ParseFactor(); // unary plus
 	    if (Eat("-".Hash())) return -ParseFactor(); // unary minus

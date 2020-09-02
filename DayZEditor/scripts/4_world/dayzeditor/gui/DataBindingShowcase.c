@@ -1,12 +1,15 @@
 //Print(__LINE__);
 //Print(__FILE__); // useful shit // tools.pak?????
 
+
+
+
 ref DataBindingShowcaseController m_DataBindingShowcaseController;
 
 class DataBindingShowcaseController: Controller
 {
 	
-	EquationEvaluater WindowTextData;
+	StringEvaluater WindowTextData;
 	//bool WindowText;
 	float WindowSlider = 25;
 	
@@ -60,7 +63,7 @@ class DataBindingShowcaseController: Controller
 		
 		
 		tick = TickCount(0);
-		WindowTextData = WindowTextData.Evaluate().ToString();
+		WindowTextData = WindowTextData.Parse().ToString();
 		NotifyPropertyChanged("WindowTextData");
 		Print(TickCount(tick));
 	}

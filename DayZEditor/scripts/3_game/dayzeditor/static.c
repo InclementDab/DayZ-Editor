@@ -3,10 +3,6 @@
 
 #define EDITORPRINT
 
-
-
-
-
 class EditorLog
 {
 	

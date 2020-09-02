@@ -45,10 +45,7 @@ static WidgetController GetWidgetController(Widget widget)
 
 class WidgetController
 {	
-	protected Widget m_Widget;
-	void WidgetController(Widget w) {
-		m_Widget = w;
-	}
+	Widget GetWidget();
 	
 	bool CanTwoWayBind() {
 		return false;
@@ -68,130 +65,129 @@ class WidgetController
 	void ClearData();
 }
 
-class GroupWidgetController: WidgetController
+class WidgetControllerTemplate<Class T>: WidgetController
 {
-	private ref array<ref WidgetController> m_WidgetControllers = {};
+	protected T m_Widget;
 	
-	void AddController(WidgetController widget_controller) {
-		m_WidgetControllers.Insert(widget_controller);
+	override Widget GetWidget() {
+		return m_Widget;
 	}
 	
-	override void SetData(TypeConverter type_converter) {
-		foreach (WidgetController widget_controller: m_WidgetControllers) {
-			widget_controller.SetData(type_converter);
-		}
+	void WidgetControllerTemplate(Widget w)	{
+		Class.CastTo(m_Widget, w);
 	}
 }
 
-class ButtonWidgetController: WidgetController
+
+
+class ButtonWidgetController: WidgetControllerTemplate<ButtonWidget>
 {
 	override bool CanTwoWayBind() {
 		return true;
 	}
 	
 	override void SetSelection(TypeConverter type_converter) {
-		ButtonWidget.Cast(m_Widget).SetText(type_converter.GetString());
+		m_Widget.SetText(type_converter.GetString());
 	}
 	
 	
 	override void SetData(TypeConverter type_converter) {
-		ButtonWidget.Cast(m_Widget).SetState(type_converter.GetBool());
+		m_Widget.SetState(type_converter.GetBool());
 	}
 	
 	override void GetData(out TypeConverter type_converter) {
-		type_converter.SetBool(ButtonWidget.Cast(m_Widget).GetState());
+		type_converter.SetBool(m_Widget.GetState());
 	}
 }
 
-class EditBoxWidgetController: WidgetController
+class EditBoxWidgetController: WidgetControllerTemplate<EditBoxWidget>
 {
 	override bool CanTwoWayBind() {
 		return true;
 	}
 	
 	override void SetData(TypeConverter type_converter) {
-		EditBoxWidget.Cast(m_Widget).SetText(type_converter.GetString());
+		m_Widget.SetText(type_converter.GetString());
 	}
 	
 	override void GetData(out TypeConverter type_converter) {
-		type_converter.SetString(EditBoxWidget.Cast(m_Widget).GetText());
+		type_converter.SetString(m_Widget.GetText());
 	}
 }
 
-class CheckBoxWidgetController: WidgetController
+class CheckBoxWidgetController: WidgetControllerTemplate<CheckBoxWidget>
 {
 	override bool CanTwoWayBind() {
 		return true;
 	}
 	
 	override void SetData(TypeConverter type_converter) {
-		CheckBoxWidget.Cast(m_Widget).SetChecked(type_converter.GetBool());
+		m_Widget.SetChecked(type_converter.GetBool());
 	}
 	
 	override void GetData(out TypeConverter type_converter) {
-		type_converter.SetBool(CheckBoxWidget.Cast(m_Widget).IsChecked());
+		type_converter.SetBool(m_Widget.IsChecked());
 	}
 }
 
-class SliderWidgetController: WidgetController
+class SliderWidgetController: WidgetControllerTemplate<SliderWidget>
 {
 	override bool CanTwoWayBind() {
 		return true;
 	}
 	
 	override void SetData(TypeConverter type_converter) {
-		SliderWidget.Cast(m_Widget).SetCurrent(type_converter.GetFloat());
+		m_Widget.SetCurrent(type_converter.GetFloat());
 	}
 	
 	override void GetData(out TypeConverter type_converter) {
-		type_converter.SetFloat(SliderWidget.Cast(m_Widget).GetCurrent());
+		type_converter.SetFloat(m_Widget.GetCurrent());
 	}
 }
 
-class TextWidgetController: WidgetController
+class TextWidgetController: WidgetControllerTemplate<TextWidget>
 {
 	override void SetData(TypeConverter type_converter) {
-		TextWidget.Cast(m_Widget).SetText(type_converter.GetString());
+		m_Widget.SetText(type_converter.GetString());
 	}
 }
 
 
-class MultilineEditBoxWidgetController: WidgetController
+class MultilineEditBoxWidgetController: WidgetControllerTemplate<MultilineEditBoxWidget>
 {
 	override bool CanTwoWayBind() {
 		return true;
 	}
 	
 	override void SetData(TypeConverter type_converter) {
-		MultilineEditBoxWidget.Cast(m_Widget).SetText(type_converter.GetString());
+		m_Widget.SetText(type_converter.GetString());
 	}
 	
 	override void GetData(out TypeConverter type_converter) {
 		string out_text;
-		MultilineEditBoxWidget.Cast(m_Widget).GetText(out_text);
+		m_Widget.GetText(out_text);
 		type_converter.SetString(out_text);
 	}
 	
 	override void InsertData(int index, TypeConverter type_converter) {
-		MultilineEditBoxWidget.Cast(m_Widget).SetLine(index, type_converter.GetString());
+		m_Widget.SetLine(index, type_converter.GetString());
 	}
 	
 	override void RemoveData(int index, TypeConverter type_converter) {
-		MultilineEditBoxWidget.Cast(m_Widget).SetLine(index, string.Empty);
+		m_Widget.SetLine(index, string.Empty);
 	}
 	
 	override void ReplaceData(int index, TypeConverter type_converter) {
-		MultilineEditBoxWidget.Cast(m_Widget).SetLine(index, type_converter.GetString());
+		m_Widget.SetLine(index, type_converter.GetString());
 	}
 		
 	override void ClearData() {
-		MultilineEditBoxWidget w = MultilineEditBoxWidget.Cast(m_Widget);
-		for (int i = 0; i < w.GetLinesCount(); i++)
-			w.SetLine(i, string.Empty);		
+		for (int i = 0; i < m_Widget.GetLinesCount(); i++)
+			m_Widget.SetLine(i, string.Empty);		
 	}
 }
 
-class SpacerWidgetController: WidgetController
+class SpacerWidgetController: WidgetControllerTemplate<SpacerWidget>
 {
 	/*
 	override bool CanTwoWayBind() {
@@ -199,27 +195,26 @@ class SpacerWidgetController: WidgetController
 	}
 	
 	override void SetData(TypeConverter type_converter) {
-		SpacerWidget.Cast(m_Widget).SetText(type_converter.GetWidget());
+		m_Widget.SetText(type_converter.GetWidget());
 	}
 	
 	override void GetData(out TypeConverter type_converter) {
 		string out_text;
-		SpacerWidget.Cast(m_Widget).GetText(out_text);
+		m_Widget.GetText(out_text);
 		type_converter.SetString(out_text);
 	}*/
 	
 	override void InsertData(int index, TypeConverter type_converter) {
-		SpacerWidget.Cast(m_Widget).AddChild(type_converter.GetWidget());
+		m_Widget.AddChild(type_converter.GetWidget());
 	}
 	
 	override void RemoveData(int index, TypeConverter type_converter) {
-		SpacerWidget.Cast(m_Widget).RemoveChild(type_converter.GetWidget());
+		m_Widget.RemoveChild(type_converter.GetWidget());
 	}
 	
 	override void ReplaceData(int index, TypeConverter type_converter) {
-		SpacerWidget spacer_widget = SpacerWidget.Cast(m_Widget);
 
-		Widget child = spacer_widget.GetChildren();
+		Widget child = m_Widget.GetChildren();
 		while (child) {
 			if (index == 0)
 				break;
@@ -228,62 +223,57 @@ class SpacerWidgetController: WidgetController
 			index--;
 		}
 		
-		spacer_widget.AddChildAfter(type_converter.GetWidget(), child);
-		spacer_widget.RemoveChild(child);
+		m_Widget.AddChildAfter(type_converter.GetWidget(), child);
+		m_Widget.RemoveChild(child);
 	}
 	
 	
-		
-	override void ClearData() {
-		MultilineEditBoxWidget w = MultilineEditBoxWidget.Cast(m_Widget);
-		for (int i = 0; i < w.GetLinesCount(); i++)
-			w.SetLine(i, string.Empty);		
-	}
+
 }
 
-class XComboBoxWidgetController: WidgetController
+class XComboBoxWidgetController: WidgetControllerTemplate<XComboBoxWidget>
 {
 	override void SetSelection(TypeConverter type_converter) {
-		XComboBoxWidget.Cast(m_Widget).SetCurrentItem(type_converter.GetInt());
+		m_Widget.SetCurrentItem(type_converter.GetInt());
 	}
 	
 	override void GetSelection(out TypeConverter type_converter) {
-		type_converter.SetInt(XComboBoxWidget.Cast(m_Widget).GetCurrentItem());
+		type_converter.SetInt(m_Widget.GetCurrentItem());
 	}
 	
 	
 	override void InsertData(int index, TypeConverter type_converter) {
-		XComboBoxWidget.Cast(m_Widget).AddItem(type_converter.GetString());
+		m_Widget.AddItem(type_converter.GetString());
 	}
 	
 	override void RemoveData(int index, TypeConverter type_converter) {
-		XComboBoxWidget.Cast(m_Widget).RemoveItem(index);
+		m_Widget.RemoveItem(index);
 	}
 }
 
-class ImageWidgetController: WidgetController
+class ImageWidgetController: WidgetControllerTemplate<ImageWidget>
 {
 	
 	override void SetData(TypeConverter type_converter) {
-		ImageWidget.Cast(m_Widget).LoadImageFile(0, type_converter.GetString());
-		ImageWidget.Cast(m_Widget).SetImage(0);
+		m_Widget.LoadImageFile(0, type_converter.GetString());
+		m_Widget.SetImage(0);
 	}
 	
 }
 
 
-class TextListboxController: WidgetController
+class TextListboxController: WidgetControllerTemplate<TextListboxWidget>
 {
 	override void InsertData(int index, TypeConverter type_converter) {
-		TextListboxWidget.Cast(m_Widget).AddItem(type_converter.GetString(), type_converter.GetParam(), 0, index);
+		m_Widget.AddItem(type_converter.GetString(), type_converter.GetParam(), 0, index);
 	}
 	
 	override void RemoveData(int index, TypeConverter type_converter) {
-		TextListboxWidget.Cast(m_Widget).SetItem(index, string.Empty, null, 0);
+		m_Widget.SetItem(index, string.Empty, null, 0);
 	}
 	
 	override void ClearData() {
-		TextListboxWidget.Cast(m_Widget).ClearItems();
+		m_Widget.ClearItems();
 	}
 }
 

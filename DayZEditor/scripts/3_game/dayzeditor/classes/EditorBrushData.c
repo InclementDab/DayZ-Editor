@@ -25,26 +25,7 @@ class EditorBrushData
 }
 
 
-modded class MVC
-{
-	override void RegisterConversionTemplates(out TypeConverterHashMap type_conversions)
-	{
-		super.RegisterConversionTemplates(type_conversions);
-		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
-	}
-}
 
 
-class TypeConversionBrush: TypeConversionTemplate<ref EditorBrushData>
-{
-	
-	override void SetString(string value) {
-		m_Value.Name = value;
-	}
-	
-	override string GetString() {
-		return m_Value.Name;
-	}
-	
-}
+
 

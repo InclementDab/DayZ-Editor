@@ -4,22 +4,15 @@ modded class MVC
 	override void RegisterConversionTemplates(out TypeConverterHashMap type_conversions)
 	{
 		super.RegisterConversionTemplates(type_conversions);
-		type_conversions.Insert(EquationEvaluater, TypeConversionEquation);
+		type_conversions.Insert(StringEvaluater, TypeConversionEquation);
 		type_conversions.Insert(EditorWidget, TypeConversionEditorWidget);
+		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
 	}
 }
 
-typedef string EquationEvaluater;
-class EquationEvaluater: string
-{
-	float Evaluate()
-	{
-		StringEvaluater evaluater();
-		return evaluater.Parse(value);
-	}
-}
 
-class TypeConversionEquation: TypeConversionTemplate<string>
+
+class TypeConversionEquation: TypeConversionTemplate<StringEvaluater>
 {
 	
 	override void SetString(string value) {
@@ -59,6 +52,20 @@ class TypeConversionEditorWidget: TypeConversionTemplate<EditorWidget>
 	
 	override void SetWidget(Widget value) {
 		m_Value.SetLayoutRoot(value);
+	}
+	
+}
+
+
+class TypeConversionBrush: TypeConversionTemplate<ref EditorBrushData>
+{
+	
+	override void SetString(string value) {
+		m_Value.Name = value;
+	}
+	
+	override string GetString() {
+		return m_Value.Name;
 	}
 	
 }
