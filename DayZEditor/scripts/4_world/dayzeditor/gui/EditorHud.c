@@ -87,7 +87,7 @@ class EditorHud: Hud
 		m_LayoutRoot.GetScript(m_EditorHudController);
 		
 		// Showcase UI
-		//GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/DataBindingShowcase.layout", m_LayoutRoot);
+		GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/DataBindingShowcase.layout", m_LayoutRoot);
 		
 		// Misc get ridda this shit too
 		m_EditorMapContainer	= m_LayoutRoot.FindAnyWidget("MapContainer");
@@ -113,16 +113,12 @@ class EditorHud: Hud
 			if (GetMouseState(i) & MB_PRESSED_MASK) {
 				if ((m_ActiveMouseStates & mouse_state) == 0) {
 					m_ActiveMouseStates |= mouse_state;
-					
 					OnMouseDown(target, i, x, y);
-
 				}
 			} else {
 				if ((m_ActiveMouseStates & mouse_state) == mouse_state) {
 					m_ActiveMouseStates &= ~mouse_state;
-					if (!GetEditor().OnMouseUp(target, i, x, y) && target) {
-						OnMouseUp(target, i, x, y);
-					}					
+					OnMouseUp(target, i, x, y);				
 				}
 			}
 		}
@@ -229,11 +225,15 @@ class EditorHud: Hud
 	void OnMouseUp(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseUp %1", target.GetName());
-		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
-		if (!mvc_event) return;
-				
-		mvc_event.MVCOnMouseUp(target, button, x, y);
-			
+		
+		if (target) {
+			MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+			if (mvc_event) {
+				mvc_event.MVCOnMouseUp(target, button, x, y);
+			}
+		}
+		
+		GetEditor().OnMouseUp(target, button, x, y);			
 	}
 	
 	void OnMouseWheel(Widget target, int direction, int x, int y)
@@ -299,7 +299,6 @@ class EditorHud: Hud
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
 		mvc_event.MVCOnMouseLeave(target, x, y);
-		
 	}
 	
 	void OnDrag(Widget target, int x, int y)

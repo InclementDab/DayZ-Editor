@@ -42,7 +42,8 @@ FrameWidgetClass WindowFrame {
      vexactsize 1
      draggable 0
      scriptclass "ViewBinding"
-     style ServerBrowser
+     style Default
+     "limit visible" 0
      {
       ScriptParamsClass {
        Binding_Name "WindowTextToggle"

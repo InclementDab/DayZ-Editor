@@ -216,6 +216,8 @@ class EditorClientModule: JMModuleBase
 			}
 		}
 		
+		
+		EditorLog.CurrentLogLevel = EditorLogLevel.WARNING;
 		if (m_Camera) {
 			vector cam_pos = m_Camera.GetPosition();
 			
@@ -232,7 +234,6 @@ class EditorClientModule: JMModuleBase
 		// debug
 		timeslice_count++;
 		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
-		EditorLog.CurrentLogLevel = EditorLogLevel.WARNING;
 		m_EditorHudController.DebugText1 = avg_timeslice.ToString();
 		m_EditorHudController.NotifyPropertyChanged("DebugText1");
 		EditorLog.CurrentLogLevel = EditorLogLevel.TRACE;
