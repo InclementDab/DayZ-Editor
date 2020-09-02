@@ -123,6 +123,7 @@ class EditorClientModule: JMModuleBase
 	}
 
 	private ref EditorHud						m_EditorHud;
+	private EditorHudController 				m_EditorHudController;
 	
 	private ref EditorHologram 					m_ObjectInHand;
 	private ref EditorBrush						m_EditorBrush;
@@ -164,6 +165,7 @@ class EditorClientModule: JMModuleBase
 		// Init Hud
 		m_EditorHud = new EditorHud();
 		m_EditorHud.Init(null);
+		m_EditorHudController = m_EditorHud.GetController();
 		
 		// Events
 		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
@@ -213,13 +215,26 @@ class EditorClientModule: JMModuleBase
 				ObjectUnderCursor = null;
 			}
 		}
+		
+		if (m_Camera) {
+			vector cam_pos = m_Camera.GetPosition();
+			
+			m_EditorHudController.cam_x = cam_pos[0];
+			m_EditorHudController.cam_y = cam_pos[2];
+			m_EditorHudController.cam_z = cam_pos[1];
+			
+			m_EditorHudController.NotifyPropertyChanged("cam_x");
+			m_EditorHudController.NotifyPropertyChanged("cam_y");
+			m_EditorHudController.NotifyPropertyChanged("cam_z");
+			
+		}
 			
 		// debug
 		timeslice_count++;
 		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
 		EditorLog.CurrentLogLevel = EditorLogLevel.WARNING;
-		m_EditorHud.GetController().DebugText1 = avg_timeslice.ToString();
-		m_EditorHud.GetController().NotifyPropertyChanged("DebugText1");
+		m_EditorHudController.DebugText1 = avg_timeslice.ToString();
+		m_EditorHudController.NotifyPropertyChanged("DebugText1");
 		EditorLog.CurrentLogLevel = EditorLogLevel.TRACE;
 	}
 	

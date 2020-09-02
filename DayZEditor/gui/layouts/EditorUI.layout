@@ -243,6 +243,7 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
+       scaled 1
        draggable 0
        scriptclass "ViewBinding"
        style Default
@@ -1676,10 +1677,16 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          text "1000.5"
          font "gui/fonts/system"
          "text halign" center
          "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "cam_x"
+          }
+         }
         }
        }
       }
@@ -1726,10 +1733,16 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          text "1000.5"
          font "gui/fonts/system"
          "text halign" center
          "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "cam_y"
+          }
+         }
         }
        }
       }
@@ -1776,10 +1789,16 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          text "1000.5"
          font "gui/fonts/system"
          "text halign" center
          "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "cam_z"
+          }
+         }
         }
        }
       }

@@ -25,6 +25,9 @@ class EditorHudController: Controller
 	bool GroundButton;
 	bool SnapButton;
 	
+	float cam_x, cam_y, cam_z;	
+	float obj_x, obj_y, obj_z;
+	
 	//ref TextListboxWidgetData DebugActionStackListbox;
 	ref ObservableCollection<ref EditorWidget> LeftbarSpacer;
 	ref ObservableCollection<ref EditorWidget> RightbarSpacer;
