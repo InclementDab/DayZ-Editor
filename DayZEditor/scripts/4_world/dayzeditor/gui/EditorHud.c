@@ -113,9 +113,9 @@ class EditorHud: Hud
 			if (GetMouseState(i) & MB_PRESSED_MASK) {
 				if ((m_ActiveMouseStates & mouse_state) == 0) {
 					m_ActiveMouseStates |= mouse_state;
-					if (!GetEditor().OnMouseDown(target, i, x, y) && target) {
-						OnMouseDown(target, i, x, y);
-					}
+					
+					OnMouseDown(target, i, x, y);
+
 				}
 			} else {
 				if ((m_ActiveMouseStates & mouse_state) == mouse_state) {
@@ -204,24 +204,26 @@ class EditorHud: Hud
 	{
 		EditorLog.Trace("EditorHud::OnMouseDown: %1", target.GetName());
 		
-		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
-		if (!mvc_event) return;
-		mvc_event.MVCOnMouseDown(target, button, x, y);	
-		
-		
-		if (button == MouseState.LEFT) {
+		if (target) {
 			
-			if (target.GetFlags() & WidgetFlags.DRAGGABLE) {
+			MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
+			if (mvc_event) {
+				mvc_event.MVCOnMouseDown(target, button, x, y);	
+			}
+					
+			if (button == MouseState.LEFT && (target.GetFlags() & WidgetFlags.DRAGGABLE)) {
 				thread ResetDrag(target, x, y);
 			}
 			
-			
-		}
+			if (target.IsControlClass()) {
+				OnClick(target, button, x, y);
+				return;
+			}
+		} 
 		
-		if (target.IsControlClass()) {
-			OnClick(target, button, x, y);
-			return;
-		}
+			
+		GetEditor().OnMouseDown(target, button, x, y);
+			
 	}
 	
 	void OnMouseUp(Widget target, int button, int x, int y)
@@ -229,7 +231,7 @@ class EditorHud: Hud
 		EditorLog.Trace("EditorHud::OnMouseUp %1", target.GetName());
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
-
+				
 		mvc_event.MVCOnMouseUp(target, button, x, y);
 			
 	}
