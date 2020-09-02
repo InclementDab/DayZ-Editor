@@ -27,6 +27,10 @@ class EditorHud: Hud
 		return m_EditorMapWidget; 
 	}
 	
+	bool IsMapOpen() 			{ 
+		return m_EditorMapContainer.IsVisible(); 
+	}
+	
 	Widget GetRoot() { 
 		return m_LayoutRoot; 
 	}
@@ -109,16 +113,14 @@ class EditorHud: Hud
 			if (GetMouseState(i) & MB_PRESSED_MASK) {
 				if ((m_ActiveMouseStates & mouse_state) == 0) {
 					m_ActiveMouseStates |= mouse_state;
-					GetEditor().OnMouseDown(target, i, x, y);
-					if (target) {
+					if (!GetEditor().OnMouseDown(target, i, x, y) && target) {
 						OnMouseDown(target, i, x, y);
 					}
 				}
 			} else {
 				if ((m_ActiveMouseStates & mouse_state) == mouse_state) {
 					m_ActiveMouseStates &= ~mouse_state;
-					GetEditor().OnMouseUp(target, i, x, y);
-					if (target) {
+					if (!GetEditor().OnMouseUp(target, i, x, y) && target) {
 						OnMouseUp(target, i, x, y);
 					}					
 				}
@@ -129,7 +131,6 @@ class EditorHud: Hud
 			OnMouseWheel(target, GetMouseState(MouseState.WHEEL), x, y);			
 		}
 		
-			
 		
 		if (GetMouseState(MouseState.X) != 0 || GetMouseState(MouseState.Y) != 0) {
 			MouseUpdatePosition(x, y);
@@ -178,6 +179,9 @@ class EditorHud: Hud
 	}
 	
 
+	
+	
+
 	private ref Widget m_CurrentEnterWidget;
 	private void MouseUpdatePosition(int x, int y)
 	{
@@ -202,13 +206,17 @@ class EditorHud: Hud
 		
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
-		mvc_event.MVCOnMouseDown(target, button, x, y);
+		mvc_event.MVCOnMouseDown(target, button, x, y);	
 		
-				
-		if (button == MouseState.LEFT && (target.GetFlags() & WidgetFlags.DRAGGABLE)) {
-			thread ResetDrag(target, x, y);
+		
+		if (button == MouseState.LEFT) {
+			
+			if (target.GetFlags() & WidgetFlags.DRAGGABLE) {
+				thread ResetDrag(target, x, y);
+			}
+			
+			
 		}
-		
 		
 		if (target.IsControlClass()) {
 			OnClick(target, button, x, y);

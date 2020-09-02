@@ -297,24 +297,40 @@ class EditorClientModule: JMModuleBase
 	}
 	
 	
+	
+	
 	// target CAN BE NULL HERE!!
-	void OnMouseDown(Widget target, int button, int x, int y)
+	bool OnMouseDown(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("Editor::OnMouseDown");
 		switch (button) {
 			
 			case MouseState.LEFT: {
-#ifndef COMPONENT_SYSTEM
-				
+
 
 				if (IsPlacing()) {
 					PlaceObject();
-					return;
+					return true;
 				}
 				
 				ClearSelection();
-				
-#endif
+				if (GetBrush() == null) {
+					
+					if (EditorObjectUnderCursor == null) {
+						// delayed dragbox
+						m_EditorHud.GetController().DelayedDragBoxCheck();
+						return false;
+						
+						
+					} else if (EditorObjectUnderCursor != null) {
+						if (!KeyState(KeyCode.KC_LSHIFT)) {
+							ClearSelection();
+						}
+						SelectObject(EditorObjectUnderCursor);
+						return true;
+					}
+				}
+
 				break;
 			}
 			
@@ -326,11 +342,13 @@ class EditorClientModule: JMModuleBase
 				break;
 			}
 		}
+		
+		return false;
 	}
 
-	void OnMouseUp(Widget target, int button, int x, int y)
+	bool OnMouseUp(Widget target, int button, int x, int y)
 	{
-		
+		return false;
 	}
 	
 	// Only use this to handle hardcoded keys (ctrl + z etc...)

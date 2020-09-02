@@ -35,6 +35,8 @@ class EditorHudController: Controller
 	protected Widget LeftbarFrame;
 	protected Widget RightbarFrame;
 	protected ButtonWidget BrushToggleButton;
+	
+	CanvasWidget EditorCanvas;
 
 	
 	void EditorHudController() {
@@ -229,7 +231,42 @@ class EditorHudController: Controller
 	
 	
 	
-	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
+		if (button == MouseState.LEFT) {
+		
+		// Raycast to see if TranslationWidget is under cursor	
+			/*		
+			RaycastRVParams raycast_params = new RaycastRVParams(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * EditorSettings.OBJECT_VIEW_DISTANCE);
+			ref array<ref RaycastRVResult> raycast_result = new array<ref RaycastRVResult>();
+			DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
+			
+
+			if (raycast_result.Count() > 0) {
+				Object obj = raycast_result.Get(0).obj;
+				if ((obj.GetType() == "TranslationWidget" || obj.GetType() == "RotationWidget")) {
+					EditorEvents.DragInvoke(obj, GetEditor().GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
+					return true;
+				}
+				
+				EditorObject editor_object = GetEditor().GetObjectManager().GetEditorObject(obj);
+				if (editor_object != null) {
+					if (input.LocalValue("UAWalkRunTemp")) {
+						EditorObjectManager.ToggleSelection(editor_object);
+					} else if (!input.LocalValue("UATurbo")) {
+						EditorEvents.ClearSelection(this);
+					} else EditorEvents.SelectObject(this, editor_object);
+					return true;
+				}
+			}
+			*/
+			
+			
+		}
+		
+		return false;
+	}
 
 	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
 	{
@@ -378,7 +415,70 @@ class EditorHudController: Controller
 		return 0;
 	}
 	
-
+		
+	ScriptInvoker DragBoxQueue = GetGame().GetUpdateQueue(CALL_CATEGORY_GUI);
+	private int start_x, start_y;
+	void DelayedDragBoxCheck()
+	{
+		GetMousePos(start_x, start_y);
+		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)
+			DragBoxQueue.Insert(_DragBoxUpdater);
+	}
+	
+	private void _DragBoxUpdater()
+	{
+		int current_x, current_y;
+		GetMousePos(current_x, current_y);
+		EditorCanvas.Clear();
+		int selection_box_thickness = 2;
+		int selection_box_color = ARGB(100, 255, 0, 0);
+		EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, selection_box_thickness, selection_box_color);
+		EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, selection_box_thickness, selection_box_color);
+		EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, selection_box_thickness, selection_box_color);
+		EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, selection_box_thickness, selection_box_color);
+		
+		
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+			EditorCanvas.Clear();
+			DragBoxQueue.Remove(_DragBoxUpdater);
+		}
+			
+		int x_low, x_high, y_low, y_high;
+		if (start_x > current_x) {
+			x_high = start_x;
+			x_low = current_x;
+		} else { 
+			x_high = current_x;
+			x_low = start_x;
+		}
+		
+		if (start_y > current_y) {
+			y_high = start_y;
+			y_low = current_y;
+		} else { 
+			y_high = current_y;
+			y_low = start_y;
+		}
+		
+		ref EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
+		foreach (EditorObject editor_object: placed_objects) {
+			
+			float marker_x, marker_y;
+			if (GetEditor().GetEditorHud().IsMapOpen()) {
+				editor_object.GetMapMarkerPosition(marker_x, marker_y);
+			} else {
+				editor_object.GetObjectMarkerPosition(marker_x, marker_y);
+			}
+			
+			
+			if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {		
+				GetEditor().SelectObject(editor_object);
+			}
+		}
+			
+		
+		
+	}
 	
 }
 

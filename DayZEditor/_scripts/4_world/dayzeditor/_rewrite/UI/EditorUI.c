@@ -254,7 +254,7 @@ class EditorUI: UIScriptedMenu
 	
 	EditorMap GetMap() 			{ return m_EditorMap; }
 	MapWidget GetMapWidget() 	{ return m_EditorMapWidget; }
-	bool IsMapOpen() 			{ return m_EditorMapContainer.IsVisible(); }
+	
 		
 	
 	
@@ -336,59 +336,7 @@ class EditorUI: UIScriptedMenu
 		
 		Input input = GetGame().GetInput();	
 		// Left Click
-		if (button == 0) {
-			//SetFocus(null);
-			if (GetEditor().IsPlacing()) {
-				GetEditor().PlaceObject();
-				return true;
-			} 
-			
-			// Raycast to see if TranslationWidget is under cursor			
-			RaycastRVParams raycast_params = new RaycastRVParams(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * EditorSettings.OBJECT_VIEW_DISTANCE);
-			ref array<ref RaycastRVResult> raycast_result = new array<ref RaycastRVResult>();
-			DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
-			
-/*
-			if (raycast_result.Count() > 0) {
-				Object obj = raycast_result.Get(0).obj;
-				if ((obj.GetType() == "TranslationWidget" || obj.GetType() == "RotationWidget")) {
-					EditorEvents.DragInvoke(obj, GetEditor().GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
-					return true;
-				}
-				
-				EditorObject editor_object = GetEditor().GetObjectManager().GetEditorObject(obj);
-				if (editor_object != null) {
-					if (input.LocalValue("UAWalkRunTemp")) {
-						EditorObjectManager.ToggleSelection(editor_object);
-					} else if (!input.LocalValue("UATurbo")) {
-						EditorEvents.ClearSelection(this);
-					} else EditorEvents.SelectObject(this, editor_object);
-					return true;
-				}
-			}
-			*/
-			
-			GetEditor().ClearSelection();
-			if (GetEditor().GetBrush() == null) {
-				
-				if (GetEditor().EditorObjectUnderCursor == null) {
-					// delayed dragbox					
-					GetCursorPos(start_x, start_y);
-					GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DelayedDragBoxCheck, 60);
-					return true;
-					
-					
-				} else if (GetEditor().EditorObjectUnderCursor != null) {
-					if (!input.LocalValue("UATurbo")) {
-						GetEditor().ClearSelection();
-					}
-					GetEditor().SelectObject(GetEditor().EditorObjectUnderCursor);
-					return true;
-				}
-			}
-			
-			
-		}
+		
 		
 		// Right mouse
 		if (button == 1) {
@@ -420,70 +368,6 @@ class EditorUI: UIScriptedMenu
 		
 
 		
-	ScriptInvoker DragBoxQueue = GetGame().GetUpdateQueue(CALL_CATEGORY_GUI);
-	int start_x, start_y;
-	void DelayedDragBoxCheck()
-	{
-		if (GetGame().GetInput().LocalValue("UAFire"))
-			DragBoxQueue.Insert(UpdateDragBox);
-	}
-	
-	void UpdateDragBox()
-	{	
-		int current_x, current_y;
-		GetCursorPos(current_x, current_y);
-		m_EditorCanvas.Clear();
-		int selection_box_thickness = 2;
-		int selection_box_color = ARGB(100, 255, 0, 0);
-		m_EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, selection_box_thickness, selection_box_color);
-		m_EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, selection_box_thickness, selection_box_color);
-		m_EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, selection_box_thickness, selection_box_color);
-		m_EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, selection_box_thickness, selection_box_color);
-		
-	
-		if (GetGame().GetInput().LocalRelease("UAFire")) {
-			m_EditorCanvas.Clear();
-			DragBoxQueue.Remove(UpdateDragBox);
-			
-			int x_low, x_high, y_low, y_high;
-			if (start_x > current_x) {
-				x_high = start_x;
-				x_low = current_x;
-			} else { 
-				x_high = current_x;
-				x_low = start_x;
-			}
-			
-			if (start_y > current_y) {
-				y_high = start_y;
-				y_low = current_y;
-			} else { 
-				y_high = current_y;
-				y_low = start_y;
-			}
-			
-			ref EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
-			foreach (EditorObject editor_object: placed_objects) {
-				
-				float marker_x, marker_y;
-				if (IsMapOpen()) {
-					editor_object.GetMapMarkerPos(marker_x, marker_y);
-				} else {
-					editor_object.GetObjectMarkerPos(marker_x, marker_y);
-				}
-				
-				
-				if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {		
-					GetEditor().SelectObject(editor_object);
-				}
-			}
-			
-			return;
-		}
-		
-
-
-	}
 	
 	
 

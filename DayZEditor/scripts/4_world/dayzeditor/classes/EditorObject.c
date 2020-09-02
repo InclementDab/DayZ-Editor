@@ -42,8 +42,13 @@ class EditorObject
 		return m_Data.DisplayName; 
 	}
 	
-	string GetType() { return m_Data.Type; }
-	int GetID() { return m_Data.GetID(); }
+	string GetType() { 
+		return m_Data.Type; 
+	}
+	
+	int GetID() { 
+		return m_Data.GetID(); 
+	}
 	
 	
 	void EditorObject(ref EditorObjectData data)
@@ -228,6 +233,18 @@ class EditorObject
 
 	bool BoundingBoxEnabled() { 
 		return (m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; 
+	}
+	
+	void GetObjectMarkerPosition(out float x, out float y) {
+		if (ObjectMarkerEnabled()) {
+			m_EditorObjectWorldMarker.GetPos(x, y);
+		}
+	}
+	
+	void GetMapMarkerPosition(out float x, out float y) {
+		if (MapMarkerEnabled()) {
+			m_EditorObjectMapMarker.GetPos(x, y);
+		}
 	}
 	
 
