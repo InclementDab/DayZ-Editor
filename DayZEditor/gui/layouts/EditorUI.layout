@@ -243,10 +243,15 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       scriptclass ""
+       draggable 0
+       scriptclass "ViewBinding"
        style Default
        lines 15
        font "gui/fonts/metron16"
+       {
+        ScriptParamsClass {
+        }
+       }
       }
      }
     }

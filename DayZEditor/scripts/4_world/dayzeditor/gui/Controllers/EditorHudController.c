@@ -55,7 +55,6 @@ class EditorHudController: Controller
 		// Reload Placeables
 		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
 		
-		
 		// Load Brushes
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
 	}

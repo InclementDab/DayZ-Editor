@@ -34,14 +34,13 @@ WrapSpacerWidgetClass EditorListItem {
      ignorepointer 1
      color 0.6549 0.7098 0.8745 1
      position 0 0
-     size 1 1
+     size 1.01 1.12
      halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
      vexactsize 0
-     priority 5
      scriptclass "ViewBinding"
      style Outline
      "no focus" 0

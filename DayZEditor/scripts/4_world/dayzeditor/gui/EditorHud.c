@@ -243,7 +243,6 @@ class EditorHud: Hud
 		if (!mvc_event) return;
 
 		mvc_event.MVCOnMouseWheel(target, direction, x, y);
-			
 	}
 	
 	

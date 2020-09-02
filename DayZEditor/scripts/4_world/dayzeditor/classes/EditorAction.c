@@ -27,8 +27,13 @@ class EditorAction
 		
 	}
 	
-	string GetName() { return name; }
-	bool IsUndone() { return undone; }
+	string GetName() { 
+		return name; 
+	}
+	
+	bool IsUndone() { 
+		return undone; 
+	}
 	
 	void CallUndo()
 	{

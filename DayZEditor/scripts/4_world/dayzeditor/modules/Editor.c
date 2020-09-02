@@ -23,6 +23,36 @@ enum BetterMouseState {
 	MIDDLE = 4
 };
 
+
+class EditorActionStack: set<ref EditorAction>
+{
+	
+	int InsertAction(EditorAction value)
+	{	
+		int count = Count();
+		for (int i = 0; i < count; i++) {
+			if (this[i].IsUndone()) {
+				Remove(i);
+				i--; count--;
+			}
+		}
+
+		// Adds to bottom of stack
+		return InsertAt(value, 0);
+	}
+	
+	void UpdateDebugReadout(out ref ObservableCollection<string> readout)
+	{
+		readout.Clear();
+		foreach (EditorAction action: this) {
+			readout.Insert(action.GetName());
+		}
+	}
+	
+
+	
+}
+
 class EditorClientModule: JMModuleBase
 {
 	/* Private Members */
@@ -100,7 +130,7 @@ class EditorClientModule: JMModuleBase
 	private ref EditorObjectSet 				m_PlacedObjects;
 	private ref EditorObjectSet					m_SelectedObjects;
 	private ref EditorObjectDataSet			 	m_SessionCache;
-	private ref set<ref EditorAction> 			m_ActionStack;
+	private ref EditorActionStack 				m_ActionStack;
 			
 	private ref map<int, int> m_PlacedObjectIndex = new map<int, int>();
 	
@@ -126,7 +156,7 @@ class EditorClientModule: JMModuleBase
 		m_PlacedObjects = new EditorObjectSet();
 		m_SelectedObjects = new EditorObjectSet();
 		m_SessionCache = new EditorObjectDataSet();
-		m_ActionStack = new set<ref EditorAction>();
+		m_ActionStack = new EditorActionStack();
 		
 		// Init UI
 		m_UIManager = GetGame().GetUIManager();
@@ -370,7 +400,50 @@ class EditorClientModule: JMModuleBase
 				case KeyCode.KC_Y: {
 					Redo();
 					return true;
-				}				
+				}
+				
+				case KeyCode.KC_A: {
+					foreach (EditorObject eo: m_PlacedObjects)
+						SelectObject(eo);
+					return true;
+				}
+				
+				case KeyCode.KC_S: {
+					Save();
+					return true;
+				}
+				
+				case KeyCode.KC_O: {
+					Open();
+					return true;
+				}
+				
+				case KeyCode.KC_E: {
+					Export();
+					return true;
+				}
+				
+				case KeyCode.KC_I: {
+					Import();
+					return true;
+				}
+				
+				case KeyCode.KC_X: {
+					Cut(m_SelectedObjects);
+					return true;
+				}
+
+				case KeyCode.KC_C: {
+					Copy(m_SelectedObjects);
+					return true;
+				}
+				
+				case KeyCode.KC_V: {
+					Paste(CurrentMousePosition);
+					return true;
+				}
+				
+
 			}
 		} else {
 			
@@ -428,7 +501,8 @@ class EditorClientModule: JMModuleBase
 		}
 		
 		if (create_undo) {
-			InsertAction(action);
+			m_ActionStack.InsertAction(action);
+			m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
 		} else {
 			delete action;
 		}
@@ -449,7 +523,8 @@ class EditorClientModule: JMModuleBase
 		EditorAction action = new EditorAction("Delete", "Create");;
 		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		InsertAction(action);
+		m_ActionStack.InsertAction(action);
+		m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
 			
 	
 		return editor_object;
@@ -464,7 +539,8 @@ class EditorClientModule: JMModuleBase
 			EditorAction action = new EditorAction("Create", "Delete");
 			action.InsertUndoParameter(target, new Param1<int>(target.GetID()));
 			action.InsertRedoParameter(target, new Param1<int>(target.GetID()));
-			InsertAction(action);
+			m_ActionStack.InsertAction(action);
+			m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
 		}
 		
 		delete target;
@@ -483,8 +559,10 @@ class EditorClientModule: JMModuleBase
 			delete editor_object;
 		}	
 			
-		if (create_undo) 
-			InsertAction(action);
+		if (create_undo) {
+			m_ActionStack.InsertAction(action);
+			m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
+		}
 	}
 	
 	// Call to select an object
@@ -585,27 +663,7 @@ class EditorClientModule: JMModuleBase
 	}
 	
 	
-	void InsertAction(EditorAction target)
-	{
-		int count = m_ActionStack.Count();
-		for (int i = 0; i < count; i++) {
-			if (m_ActionStack[i].IsUndone()) {
-				m_ActionStack.Remove(i);
-				i--; count--;
-			}
-		}
-			
-		// Adds to bottom of stack
-		m_ActionStack.InsertAt(target, 0);
-		
-		// debug
-//		GetEditorHudController().DebugActionStackListbox.Insert(new TStringClassPair(target.GetName(), target));
-	}
-	
 
-	
-
-	
 	void OnObjectCreated(Class context, EditorObject target)
 	{
 		//m_SelectedObjects.InsertEditorObject(target);
@@ -654,20 +712,62 @@ class EditorClientModule: JMModuleBase
 	void Undo()
 	{
 		EditorLog.Trace("Editor::Undo");
-		foreach (EditorAction action: m_ActionStack)
-			if (!action.IsUndone())
+		foreach (EditorAction action: m_ActionStack) {
+			if (!action.IsUndone()) {
 				action.CallUndo();
+				return;
+			}
+		}
 	}
 	
 	void Redo()
 	{
 		EditorLog.Trace("Editor::Redo");
-		for (int i = m_ActionStack.Count() - 1; i >= 0; i--)
-			if (m_ActionStack[i] != null && m_ActionStack[i].IsUndone())
+		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
+			if (m_ActionStack[i] != null && m_ActionStack[i].IsUndone()) {
 				m_ActionStack[i].CallRedo();
-		
+				return;
+			}
+		}
 	}
 	
+	void Save()
+	{
+		EditorLog.Trace("Editor::Save");
+	}
+	
+	void Open()
+	{
+		EditorLog.Trace("Editor::Open");
+	}
+	
+	void Import()
+	{
+		EditorLog.Trace("Editor::Import");
+	}
+	
+	void Export()
+	{
+		EditorLog.Trace("Editor::Export");
+	}
+	
+	void Cut(EditorObjectSet target_objects)
+	{
+		EditorLog.Trace("Editor::Cut");
+		EditorClipboard.Cut(target_objects);
+	}
+	
+	void Copy(EditorObjectSet target_objects) 
+	{
+		EditorLog.Trace("Editor::Copy");
+		EditorClipboard.Copy(target_objects);
+	}
+	
+	void Paste(vector position)
+	{
+		EditorLog.Trace("Editor::Paste");
+		EditorClipboard.Paste(position);
+	}
 	
 	
 	

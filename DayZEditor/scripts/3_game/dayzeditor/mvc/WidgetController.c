@@ -34,6 +34,9 @@ static WidgetController GetWidgetController(Widget widget)
 		case ImageWidget:
 			return new ImageWidgetController(widget);
 		
+		case TextListboxWidget:
+			return new TextListboxController(widget);
+		
 	}
 	
 	
@@ -268,5 +271,20 @@ class ImageWidgetController: WidgetController
 	
 }
 
+
+class TextListboxController: WidgetController
+{
+	override void InsertData(int index, TypeConverter type_converter) {
+		TextListboxWidget.Cast(m_Widget).AddItem(type_converter.GetString(), type_converter.GetParam(), 0, index);
+	}
+	
+	override void RemoveData(int index, TypeConverter type_converter) {
+		TextListboxWidget.Cast(m_Widget).SetItem(index, string.Empty, null, 0);
+	}
+	
+	override void ClearData() {
+		TextListboxWidget.Cast(m_Widget).ClearItems();
+	}
+}
 
 

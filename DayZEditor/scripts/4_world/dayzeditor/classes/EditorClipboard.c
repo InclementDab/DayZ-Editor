@@ -3,7 +3,7 @@
 class EditorClipboard
 {
 	
-	void Cut(EditorObjectSet cut_objects)
+	static void Cut(EditorObjectSet cut_objects)
 	{
 		EditorLog.Trace("EditorObjectManager::CutSelection");
 		Copy(cut_objects);
@@ -11,7 +11,7 @@ class EditorClipboard
 	}
 	
 	
-	void Copy(EditorObjectSet copy_objects)
+	static void Copy(EditorObjectSet copy_objects)
 	{
 		EditorLog.Trace("EditorObjectManager::CopySelection");
 		
@@ -33,30 +33,32 @@ class EditorClipboard
 		GetGame().CopyToClipboard(JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects));
 	}
 	
-	void Paste(vector position)
+	static void Paste(vector cursor_pos)
 	{
 		EditorLog.Trace("EditorObjectManager::PasteSelection");
 		string clipboard_text;
 		GetGame().CopyFromClipboard(clipboard_text);
 		
-		ref array<ref EditorObjectData>> data = new array<ref EditorObjectData>>();
+		ref array<ref EditorObjectData>> data = {};
 		JsonFileLoader<array<ref EditorObjectData>>.JsonLoadData(clipboard_text, data);
-		if (data.Count() == 0) return;
+		if (data.Count() == 0) 
+			return;
+		
 
 		GetEditor().ClearSelection();
 				
 		foreach (ref EditorObjectData pasted_object: data) {
 			
-			/*
+			
 			vector position;
-			if (GetEditor().GetUIManager().GetEditorUI().IsMapOpen()) {
-				MapWidget map_widget = GetEditor().GetUIManager().GetEditorUI().GetMapWidget();
+			if (GetEditor().GetEditorHud().IsMapOpen()) {
+				MapWidget map_widget = GetEditor().GetEditorHud().GetMapWidget();
 				int x, y;
-				GetCursorPos(x, y);
+				GetMousePos(x, y);
 				position = pasted_object.Position + map_widget.ScreenToMap(Vector(x, y, 0));
 			} else {
-				position = pasted_object.Position + Editor.CurrentMousePosition;
-			}*/
+				position = pasted_object.Position + cursor_pos;
+			}
 			
 			vector transform[4] = {
 				"1 0 0",
