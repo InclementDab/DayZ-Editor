@@ -340,6 +340,10 @@ class EditorHud: Hud
 	void ModalSet(EditorDialog w)
 	{
 		EditorLog.Trace("EditorHud::ModalSet: ", w.GetTitle());
+		if (m_CurrentModal) {
+			ModalClose();
+		}
+		
 		m_CurrentModal = w;
 		GetEditor().GetCamera().SetMoveEnabled(false);
 		GetEditor().GetCamera().SetLookEnabled(false);

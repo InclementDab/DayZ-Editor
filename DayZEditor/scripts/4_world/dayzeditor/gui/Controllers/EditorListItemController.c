@@ -9,12 +9,14 @@ class EditorListItemController: Controller
 		m_ListItem = list_item;
 	}
 	
+	protected Widget EditorListItemHighlight;
 	protected Widget EditorListItemContent;
 	protected TextWidget EditorListItemLabel;
 	protected ImageWidget EditorListItemIcon;
 	protected WrapSpacerWidget EditorListItemChildren;
 	
-	protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
+	//protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
+	protected static int COLOR_ON_SELECTED = COLOR_SALMON;
 	protected static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
 
 	
@@ -39,16 +41,13 @@ class EditorListItemController: Controller
 		EditorLog.Trace("EditorListItemController::OnMouseEnter");
 		
 		switch (m_ListItem.Type()) {
-			case EditorPlacedListItem:
-			case EditorPlaceableListItem: {
-				w.SetColor(COLOR_SALMON);
+			default: {
+				//w.SetColor(COLOR_SALMON);
+				EditorListItemHighlight.Show(true);
 				break;
-			}
-			
-			
+			}			
 		}
-		
-		
+				
 		return false;
 	}
 	
@@ -60,9 +59,9 @@ class EditorListItemController: Controller
 		
 		switch (m_ListItem.Type()) {
 			
-			case EditorPlacedListItem:
-			case EditorPlaceableListItem: {
-				w.SetColor(COLOR_EMPTY);
+			default: {
+				//w.SetColor(COLOR_EMPTY);
+				EditorListItemHighlight.Show(false);
 				break;
 			}
 		}
@@ -114,7 +113,24 @@ class EditorListItemController: Controller
 				break;
 			}
 		}
+	}
+	
+	override void MVCOnDoubleClick(Widget target, int button, int x, int y)
+	{
+		EditorLog.Trace("EditorListItemController::MVCOnDoubleClick");
 		
+		switch (m_ListItem.Type()) {
+			
+			
+			case EditorPlacedListItem: {
+				EditorObjectPropertiesDialog dialog(EditorPlacedListItem.Cast(m_ListItem).GetData());
+				dialog.ShowDialog();
+				
+				break;
+			}
+			
+			
+		}
 	}
 	
 	

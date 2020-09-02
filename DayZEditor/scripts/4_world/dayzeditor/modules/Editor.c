@@ -41,8 +41,6 @@ class EditorClientModule: JMModuleBase
 		return m_Active; 
 	}
 	
-	
-
 	/* UI Stuff */
 	EditorHud GetEditorHud() 
 		return m_EditorHud;
@@ -156,7 +154,6 @@ class EditorClientModule: JMModuleBase
 	
 	override void OnUpdate(float timeslice)
 	{
-
 		m_EditorHud.Update(timeslice);
 		
 		if (m_Camera && !IsMissionOffline()) {

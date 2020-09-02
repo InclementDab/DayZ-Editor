@@ -3,8 +3,6 @@
 
 class EditorDialog: MVCEventHandler
 {
-
-	
 	protected ref EditorDialogController m_DialogController;
 	Controller GetController() {
 		return m_DialogController;

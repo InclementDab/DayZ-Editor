@@ -31,7 +31,7 @@ WrapSpacerWidgetClass EditorListItem {
    {
     PanelWidgetClass EditorListItemHighlight {
      visible 0
-     ignorepointer 0
+     ignorepointer 1
      color 0.6549 0.7098 0.8745 1
      position 0 0
      size 1 1
