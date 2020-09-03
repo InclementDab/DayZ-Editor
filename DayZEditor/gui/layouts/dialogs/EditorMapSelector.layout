@@ -1,7 +1,7 @@
 PanelWidgetClass MapHostPanel {
  ignorepointer 1
  color 0.749 0.3725 0.3725 0.6863
- size 480 480
+ size 480 260
  hexactpos 1
  vexactpos 1
  hexactsize 1

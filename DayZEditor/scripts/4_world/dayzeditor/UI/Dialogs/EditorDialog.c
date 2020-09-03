@@ -22,7 +22,7 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		
 		m_Root = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialog.layout", null);
 		m_Root.Show(false);
-			
+		
 		m_TitleBar			= m_Root.FindAnyWidget("TitleBar");
 		m_TitleText 		= TextWidget.Cast(m_Root.FindAnyWidget("TitleText"));
 		m_TitleClose		= ButtonWidget.Cast(m_Root.FindAnyWidget("TitleClose"));
@@ -47,9 +47,20 @@ class EditorDialog extends ScriptedWidgetEventHandler
 	protected ButtonWidget AddButton(string label) 
 	{
 		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", m_ButtonGrid);		
-		TextWidget txt = TextWidget.Cast(panel.FindAnyWidget("ButtonLabel"));
-		txt.SetText(label);
-		return ButtonWidget.Cast(panel.FindAnyWidget("Button"));
+		ButtonWidget btn = ButtonWidget.Cast(panel.FindAnyWidget("Button"));
+		btn.SetText(label);
+		return btn;
+	}
+	
+	protected void AddWidget(Widget target)
+	{
+		m_ButtonGrid.AddChild(target);
+	}
+	
+	
+	protected void SetTitleText(string text)
+	{
+		m_TitleText.SetText(text);
 	}
 	
 	void ShowDialog()
@@ -57,7 +68,7 @@ class EditorDialog extends ScriptedWidgetEventHandler
 		Print("MapSelectDialog::ShowDialog");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		m_Root.Show(true);
-		EditorUIManager.ModalSet(this);
+		EditorUIManager.ModalSet(m_Root);
 	}
 	
 	void CloseDialog()

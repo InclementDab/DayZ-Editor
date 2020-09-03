@@ -34,10 +34,13 @@ class EditorObjectData
 	private int m_Id;
 	int GetID() { return m_Id; }
 	
+
+	string GetModelName() { return GetGame().GetModelName(Type); }
+	
 	string Type;
 	vector Position;
 	vector Orientation;
-	float Scale;
+	float Scale = 1;
 	EditorObjectFlags Flags;
 	
 	private void EditorObjectData(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
@@ -251,7 +254,11 @@ class EditorObject
 	}
 	
 	void GetTransform(out vector mat[4]) { m_WorldObject.GetTransform(mat); }
-	void SetTransform(vector mat[4]) { m_WorldObject.SetTransform(mat); }
+	void SetTransform(vector mat[4]) 
+	{ 
+		m_WorldObject.SetTransform(mat); 
+		m_Data.Position = mat[3];
+	}
 	
 	void Update() { m_WorldObject.Update(); }
 	

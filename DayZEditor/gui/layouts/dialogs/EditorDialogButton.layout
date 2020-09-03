@@ -1,51 +1,31 @@
-PanelWidgetClass EditorDialogButton {
- size 100 32
- hexactpos 1
- vexactpos 1
- hexactsize 1
- vexactsize 1
- scriptclass ""
- style Outline
- {
-  ButtonWidgetClass Button {
-   position 0 0
-   size 1 1
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   priority 1
-   style Empty
-   {
-    TextWidgetClass ButtonLabel {
-     ignorepointer 1
-     position 0 0
-     size 1 1
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
-     priority 1
-     font "gui/fonts/metron16"
-     "size to text h" 0
-     "size to text v" 0
-     "text halign" center
-     "text valign" center
+PanelWidgetClass ButtonPanel {
+clipchildren 1
+ignorepointer 1
+color 1 1 1 0.6667
+size 120 30
+halign center_ref
+valign center_ref
+hexactpos 1
+vexactpos 1
+hexactsize 1
+vexactsize 1
+scaled 1
+style Outline
+"no focus" 0
+  {
+    ButtonWidgetClass Button {
+    visible 1
+    position 0 0
+    size 120 30
+    halign center_ref
+    valign bottom_ref
+    hexactpos 1
+    vexactpos 1
+    hexactsize 1
+    vexactsize 1
+    style Default
+    text "Select"
+    font "gui/fonts/metron"
     }
-    PanelWidgetClass Backround {
-     ignorepointer 1
-     color 0 0 0 0.549
-     position 0 0
-     size 0.95 0.8
-     halign center_ref
-     valign center_ref
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
-     style DayZDefaultPanel
-    }
-   }
   }
- }
 }

@@ -186,9 +186,12 @@ class EditorObjectMarker: UILinkedObject
 		
 		Input input = GetGame().GetInput();
 		
+		
+		if (GetEditor().IsPlacing()) return false;
+		
+
+		
 		if (button == 0) {
-			
-			if (GetEditor().IsPlacing()) return false;
 			
 			// required for multiple objects to be dragged
 			if (m_EditorObject.IsSelected()) 
@@ -207,17 +210,20 @@ class EditorObjectMarker: UILinkedObject
 			
 		} else if (button == 1) {
 			
-			/*
-			m_EditorObjectContextMenu = new UILinkedObject();
-			m_EditorObjectContextWidget = g_Game.GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorContextMenu.layout");
-			m_EditorObjectContextWidget.GetScript(m_EditorObjectContextMenu);
-			m_EditorObjectContextMenu.SetObject(this);
-			m_EditorObjectContextWidget.Show(false);
-			*/
+			EditorEvents.SelectObject(this, m_EditorObject);
+			
+			EditorObjectContextMenu context_menu = new EditorObjectContextMenu();
+			context_menu.Show();
+			
 		} else return false;
 
 
 		return true;
+	}
+	
+	void OnContextPropertiesClick()
+	{
+		GetEditor().GetObjectManager().DeleteObject(m_EditorObject);
 	}
 
 	

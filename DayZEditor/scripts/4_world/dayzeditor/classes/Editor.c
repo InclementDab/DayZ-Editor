@@ -34,7 +34,9 @@ class Editor: Managed
 	private ref EditorBrush					m_EditorBrush;
 	private ref EditorBrushSettingsSet 		m_EditorBrushTypes;
 	private ref map<string, typename> 		m_CustomBrushList = new map<string, typename>();
-	
+
+	private string m_CurrentSaveFile = ".";
+		
 	private ref EditorHologram 				ObjectInHand;
 	static Object							ObjectUnderCursor = null;
 	static EditorObject 					EditorObjectUnderCursor = null;
@@ -320,11 +322,10 @@ class Editor: Managed
 		
 	}
 	
-	private string autosave_file;
 	void AutoSave()
 	{
 		EditorPrint("Editor::Autosave");
-		if (autosave_file == string.Empty) return;
+		if (m_CurrentSaveFile == string.Empty) return;
 		
 		EditorWorldData save_data = new EditorWorldData();
 		
@@ -335,15 +336,16 @@ class Editor: Managed
 		
 		// Save Data
 		foreach (EditorObject save_object: placed_objects)	
-			save_data.EditorObjects.InsertEditorData(save_object.GetData());
+			save_data.EditorObjects.Insert(save_object.GetData());
 		
-		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, autosave_file);
+		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, m_CurrentSaveFile);
 		GetEditor().GetUIManager().NotificationCreate("Autosave " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
 	}
 	
-	void Save(string filename = "editor_save", string filedir = "$profile:Editor/")
+	void Save(string file)
 	{	
 		EditorPrint("Editor::Save");
+		EditorPrint("Saving file to " + file, LogSeverity.INFO);
 		EditorWorldData save_data = new EditorWorldData();
 		
 		// Get Data
@@ -351,19 +353,25 @@ class Editor: Managed
 		GetUIManager().GetEditorCamera().GetTransform(save_data.CameraPosition);
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		
+		
 		// Save Data
 		foreach (EditorObject save_object: placed_objects)	
-			save_data.EditorObjects.InsertEditorData(save_object.GetData());
+			save_data.EditorObjects.Insert(save_object.GetData());
  		
-		string file = filedir + filename + ".dze";
-		autosave_file = file;
 		FileDialogResult loadfile_result = EditorFileManager.Save(save_data, file);
-		GetEditor().GetUIManager().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_GREEN); 
+		
+		if (loadfile_result == FileDialogResult.SUCCESS) {
+			GetEditor().GetUIManager().NotificationCreate("Save Success!", COLOR_GREEN); 
+			m_CurrentSaveFile = file;
+		} else {
+			GetEditor().GetUIManager().NotificationCreate("Save Failed! " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_RED); 
+		}
 	}
 	
-	void Open(string filename = "editor_save", string filedir = "$profile:Editor/")
+	void Open(string file)
 	{
 		EditorPrint("Editor::Open");
+		EditorPrint("Opening file from " + file, LogSeverity.INFO);
 		EditorWorldData load_data = new EditorWorldData();
 		
 		// Reset world data
@@ -375,18 +383,29 @@ class Editor: Managed
 		
 		
 		// Load Data
-		string file = filedir + filename + ".dze";
 		FileDialogResult loadfile_result = EditorFileManager.Open(load_data, file);
 		
 		GetUIManager().GetEditorCamera().SetTransform(load_data.CameraPosition);
-		GetObjectManager().CreateObjects(load_data.EditorObjects, false);
+		// todo temp
+		EditorObjectDataSet a = new EditorObjectDataSet();
+		foreach (EditorObjectData o: load_data.EditorObjects) {
+			a.InsertEditorData(o);
+		}
 		
-		GetEditor().GetUIManager().NotificationCreate("Load " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+		GetObjectManager().CreateObjects(a, false);
+		
+		if (loadfile_result == FileDialogResult.SUCCESS) {
+			GetEditor().GetUIManager().NotificationCreate("Load Success!", COLOR_GREEN);
+			m_CurrentSaveFile = file;
+		} else {
+			GetEditor().GetUIManager().NotificationCreate("Load Failed! " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_RED); 
+		}
 	}
 	
-	void Import(ImportMode import_mode, string filename = "editor_import.txt", string filedir = "$profile:Editor/", bool merge = false)
+	void Import(ImportMode import_mode, string file, bool merge = false)
 	{
 		EditorPrint("Editor::Import");
+		EditorPrint("Importing file from " + file, LogSeverity.INFO);
 		EditorWorldData import_data = new EditorWorldData();
 		
 		if (!merge) {
@@ -398,49 +417,45 @@ class Editor: Managed
 		}
 				
 		
-		FileDialogResult loadfile_result = EditorFileManager.Import(import_data, filename, import_mode);
+		FileDialogResult loadfile_result = EditorFileManager.Import(import_data, file, import_mode);
 		
 		if (import_data.CameraPosition[3] != vector.Zero)
 			GetUIManager().GetEditorCamera().SetTransform(import_data.CameraPosition);
 		
-		GetObjectManager().CreateObjects(import_data.EditorObjects);
-		GetEditor().GetUIManager().NotificationCreate("Import " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+		// todo temp
+		EditorObjectDataSet a = new EditorObjectDataSet();
+		foreach (EditorObjectData o: import_data.EditorObjects) {
+			a.InsertEditorData(o);
+		}
+		
+		GetObjectManager().CreateObjects(a);
+		if (loadfile_result == FileDialogResult.SUCCESS) {
+			GetEditor().GetUIManager().NotificationCreate("Import Success!", COLOR_GREEN);
+		} else {
+			GetEditor().GetUIManager().NotificationCreate("Import Failed! " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_RED); 
+		}
 	}
 	
-	void Export(ExportSettings export_settings, string filename = "editor_export", string filedir = "$profile:Editor/", )
+	void Export(ExportSettings export_settings, string file)
 	{
 		EditorPrint("Editor::Export");
+		EditorPrint("Exporting file to " + file, LogSeverity.INFO);
 		EditorWorldData export_data = new EditorWorldData();
-		
-		string file = filedir + filename;
-		switch (export_settings.ExportFileMode) {
-			
-			case ExportMode.EXPANSION: {
-				file += ".map";
-				break;
-			}
-			
-			case ExportMode.VPP: {
-				file += ".vpp";
-				break;
-			}
-			
-			default: {
-				file += ".txt";
-				break;
-			}
-		}
 		
 		
 		GetUIManager().GetEditorCamera().GetTransform(export_data.CameraPosition);
 		EditorObjectSet placed_objects = GetObjectManager().GetPlacedObjects();
 		
 		foreach (EditorObject save_object: placed_objects)	
-			export_data.EditorObjects.InsertEditorData(save_object.GetData());
+			export_data.EditorObjects.Insert(save_object.GetData());
  
 		FileDialogResult loadfile_result = EditorFileManager.Export(export_data, file, export_settings);
 				
-		GetEditor().GetUIManager().NotificationCreate("Export " + typename.EnumToString(FileDialogResult, loadfile_result)); 
+		if (loadfile_result == FileDialogResult.SUCCESS) {
+			GetEditor().GetUIManager().NotificationCreate("Export Success!", COLOR_GREEN);
+		} else {
+			GetEditor().GetUIManager().NotificationCreate("Export Failed! " + typename.EnumToString(FileDialogResult, loadfile_result), COLOR_RED); 
+		}
 	}
 	
 
@@ -899,10 +914,8 @@ class Editor: Managed
 					//GetUIManager().GetEditorUI().ShowExportWindow();
 					
 					// todo once UI is created, add "Export Selected Only"
-					ExportSettings settings = new ExportSettings();
-					settings.ExportFileMode = ExportMode.EXPANSION;
-					settings.ExportSelectedOnly = true;
-					Export(settings, "ExpansionExport");
+					EditorFileExportDialog export_dialog = new EditorFileExportDialog();
+					export_dialog.ShowDialog();
 					return true;
 				}
 				break;
@@ -918,14 +931,21 @@ class Editor: Managed
 			
 			case KeyCode.KC_I: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					Import(ImportMode.VPP, "GM_Trader.vpp");					
+					EditorFileImportDialog import_dialog = new EditorFileImportDialog();
+					import_dialog.ShowDialog();
 				}
 				break;
 			}
 			
 			case KeyCode.KC_S: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					Save();
+					// if file doesnt exist OR we do CTRL + SHIFT
+					if (!FileExist(m_CurrentSaveFile) || input.LocalValue("UATurbo")) {
+						EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
+						save_dialog.ShowDialog();
+					} else {
+						Save(m_CurrentSaveFile);
+					}
 					return true;
 				}
 				break;
@@ -933,7 +953,8 @@ class Editor: Managed
 			
 			case KeyCode.KC_O: {
 				if (input.LocalValue("UAWalkRunTemp")) {
-					Open();
+					EditorFileOpenDialog open_dialog = new EditorFileOpenDialog();
+					open_dialog.ShowDialog();
 					return true;
 				}
 				break;

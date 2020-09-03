@@ -125,10 +125,6 @@ WrapSpacerWidgetClass EditorListItem {
            }
           }
          }
-         {
-          ScriptParamsClass {
-          }
-         }
         }
         ImageWidgetClass EditorListItemIcon {
          ignorepointer 1
@@ -169,9 +165,24 @@ WrapSpacerWidgetClass EditorListItem {
          vexactsize 1
          style Empty
          "no focus" 1
-         text "V"
          font "gui/fonts/metron-bold"
          switch toggle
+         {
+          ImageWidgetClass EditorListItemCollapseIcon {
+           position 0.03 0
+           size 26 26
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_editor_gui image:eye_open_icon"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+          }
+         }
         }
        }
       }

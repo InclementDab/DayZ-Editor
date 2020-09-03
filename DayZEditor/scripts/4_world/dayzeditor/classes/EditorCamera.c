@@ -6,9 +6,15 @@
 
 class EditorCamera: Camera
 {
+	/*
 	static float CAMERA_SPEED = 3.0;
 	static float CAMERA_BOOST_MULT = 5.0;
 	static float CAMERA_VELDRAG = 0.9;
+	*/
+	
+	static float CAMERA_SPEED = 60;
+	static float CAMERA_BOOST_MULT = 6.5;
+	static float CAMERA_VELDRAG = 0.05;
 	static float CAMERA_MSENS = 35.0;
 	
 	float SendUpdateAccumalator = 0.0;

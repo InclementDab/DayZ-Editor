@@ -10,15 +10,6 @@ GameProjectClass {
 					Name "Game Root"
 					Directory "P:"
 				}
-				FileSystemPathClass {
-					Name "Community Framework"
-					Directory "P:\JM\CF"
-				}				
-				
-				FileSystemPathClass {
-					Name "DayZ Editor"
-					Directory "P:\DayZEditor"
-				}
 			}
 			imageSets {
 				"gui/imagesets/ccgui_enforce.imageset"
@@ -59,6 +50,8 @@ GameProjectClass {
 					Name "game"
 					Paths {
 						"scripts/3_Game"
+						"JM/CF/3_Game"
+						"DayZEditor/3_Game"
 					}
 					EntryPoint "CreateGame"
 				}
@@ -66,6 +59,8 @@ GameProjectClass {
 					Name "world"
 					Paths {
 						"scripts/4_World"
+						"JM/CF/4_World"
+						"DayZEditor/4_World"
 					}
 					EntryPoint ""
 				}
@@ -73,6 +68,8 @@ GameProjectClass {
 					Name "mission"
 					Paths {
 						"scripts/5_Mission"
+						"JM/CF/5_Mission"
+						"DayZEditor/5_Mission"
 					}
 					EntryPoint "CreateMission"
 				}

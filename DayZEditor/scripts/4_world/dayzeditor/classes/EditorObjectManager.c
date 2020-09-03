@@ -5,7 +5,7 @@ class EditorObjectSet: map<int, ref EditorObject>
 	void ~EditorObjectSet()
 	{
 		EditorPrint("~EditorObjectSet", LogSeverity.DEBUG);
-		GetEditor().GetObjectManager().DeleteObjects(this);
+		GetEditor().GetObjectManager().DeleteObjects(this, false);
 	}
 	
 	bool InsertEditorObject(EditorObject target)
@@ -199,7 +199,20 @@ class EditorObjectManager
 	}
 	
 
+	bool CanCut()
+	{
+		return m_SelectedObjects.Count() > 0;
+	}
 	
+	bool CanCopy()
+	{
+		return m_SelectedObjects.Count() > 0;
+	}
+	
+	bool CanPaste()
+	{
+		return true;
+	}
 	
 	void CutSelection()
 	{

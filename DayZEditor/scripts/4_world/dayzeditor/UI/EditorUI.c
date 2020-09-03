@@ -17,6 +17,8 @@ class EditorUI: UIScriptedMenu
 	private ref Widget m_Root;
 	Widget GetRoot() { return m_Root; }
 	
+	private ref Timer m_Timer = new Timer();
+	
 	// UIManager
 	// Maybe use EditorUIViewModel
 	private ref EditorUIManager m_UIManager;
@@ -462,10 +464,16 @@ class EditorUI: UIScriptedMenu
 	}
 	
 	
-	private ref array<ref EditorCollapsibleListItem> test_objects = new array<ref EditorCollapsibleListItem>();
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorPrint("EditorUI::OnMouseButtonDown");
+		
+		
+		if (GetEditor().GetUIManager().IsContextMenuActive()) {
+			EditorContextMenu menu = GetEditor().GetUIManager().GetContextMenu();
+			if (menu.GetRoot() != w)
+				menu.Close();
+		}
 		
 		Input input = GetGame().GetInput();	
 		// Left Click
@@ -525,13 +533,17 @@ class EditorUI: UIScriptedMenu
 		
 		// Right mouse
 		if (button == 1) {
+			// temp
 			if (w.GetName() == "RightbarScroll") {
 				
-				EditorCollapsibleListItem t = new EditorCollapsibleListItem();
-				test_objects.Insert(t);
-				InsertPlacedObject(t);
-				
-			}
+				EditorContextMenu context_menu = new EditorContextMenu();
+				context_menu.AddButton(new EditorContextMenuButton("Create Folder", "CreatePlacedFolder", this));
+				context_menu.Show();
+
+			} else {
+				m_Timer.Continue();
+			}	
+			
 			return true;
 		}
 		
@@ -550,8 +562,21 @@ class EditorUI: UIScriptedMenu
 				
 		return false;
 	}
+	
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{
+		EditorPrint("EditorUI::OnMouseButtonUp");
 		
-
+		if (button == 1) {
+			if (m_Timer.GetTime() < 0.2) {
+				EditorObjectContextMenu object_context_menu = new EditorObjectContextMenu();
+				object_context_menu.Show();
+			}
+		}
+		
+		m_Timer.Stop();
+		return false;
+	}
 		
 	ScriptInvoker DragBoxQueue = GetGame().GetUpdateQueue(CALL_CATEGORY_GUI);
 	int start_x, start_y;
@@ -888,6 +913,12 @@ class EditorUI: UIScriptedMenu
 	void ShowObjPosInfoPanel(bool state)
 	{
 		m_ObjPosInfoPanel.Show(state);
+	}
+	
+	void CreatePlacedFolder()
+	{	
+		EditorCollapsibleListItem t = new EditorCollapsibleListItem();
+		InsertPlacedObject(t);
 	}
 }
 

@@ -77,9 +77,10 @@ modded class MissionGameplay
 			
 			if (input.LocalValue("UAWalkRunTemp"))
 				m_EditorInstance.Redo();
-			else 
+			else {
+				m_EditorInstance.GetUIManager().ContextClose();
 				m_EditorInstance.GetUIManager().SetVisibility(!m_EditorInstance.GetUIManager().GetVisibility());
-			
+			}
 			
 			return;
 		} 
