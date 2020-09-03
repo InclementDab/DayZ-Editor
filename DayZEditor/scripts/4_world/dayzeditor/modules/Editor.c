@@ -23,7 +23,9 @@ enum BetterMouseState {
 	MIDDLE = 4
 };
 
+typedef Stack<ref EditorAction> EditorActionStack;
 
+/*
 class EditorActionStack: set<ref EditorAction>
 {
 	
@@ -51,7 +53,7 @@ class EditorActionStack: set<ref EditorAction>
 	
 
 	
-}
+}*/
 
 class EditorClientModule: JMModuleBase
 {
@@ -517,8 +519,8 @@ class EditorClientModule: JMModuleBase
 		}
 		
 		if (create_undo) {
-			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
+			m_ActionStack.Add(action);
+			//m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
 		} else {
 			delete action;
 		}
@@ -539,8 +541,8 @@ class EditorClientModule: JMModuleBase
 		EditorAction action = new EditorAction("Delete", "Create");;
 		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		m_ActionStack.InsertAction(action);
-		m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
+		m_ActionStack.Add(action);
+		//m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
 			
 	
 		return editor_object;
@@ -555,8 +557,8 @@ class EditorClientModule: JMModuleBase
 			EditorAction action = new EditorAction("Create", "Delete");
 			action.InsertUndoParameter(target, new Param1<int>(target.GetID()));
 			action.InsertRedoParameter(target, new Param1<int>(target.GetID()));
-			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
+			m_ActionStack.Add(action);
+			//m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
 		}
 		
 		delete target;
@@ -576,8 +578,8 @@ class EditorClientModule: JMModuleBase
 		}	
 			
 		if (create_undo) {
-			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
+			m_ActionStack.Add(action);
+			//m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
 		}
 	}
 	
@@ -728,6 +730,7 @@ class EditorClientModule: JMModuleBase
 	void Undo()
 	{
 		EditorLog.Trace("Editor::Undo");
+		
 		foreach (EditorAction action: m_ActionStack) {
 			if (!action.IsUndone()) {
 				action.CallUndo();
@@ -739,12 +742,14 @@ class EditorClientModule: JMModuleBase
 	void Redo()
 	{
 		EditorLog.Trace("Editor::Redo");
+		/*
 		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
 			if (m_ActionStack[i] != null && m_ActionStack[i].IsUndone()) {
 				m_ActionStack[i].CallRedo();
 				return;
 			}
-		}
+		}*/
+		
 	}
 	
 	void Save()

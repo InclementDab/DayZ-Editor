@@ -69,6 +69,7 @@ class WidgetControllerTemplate<Class T>: WidgetController
 {
 	protected T m_Widget;
 	
+	
 	override Widget GetWidget() {
 		return m_Widget;
 	}
