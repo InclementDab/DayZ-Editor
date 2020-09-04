@@ -1,15 +1,11 @@
+//Print(__LINE__);
+//Print(__FILE__); // useful shit // tools.pak?????
+
+
 
 private ref Editor m_EditorInstance;
 Editor GetEditor() 
-{ 	
-	//if (m_EditorInstance == null)
-	//	m_EditorInstance = new Editor();
 	return m_EditorInstance;
-}
-
-bool IsEditor() { 
-	return m_EditorInstance != null; 
-}
 
 
 
