@@ -31,16 +31,14 @@ class EditorWidget
 
 
 class TypeConversionEditorWidget: TypeConversionTemplate<EditorWidget>
-{
-		
+{	
 	override Widget GetWidget() {
 		return m_Value.GetLayoutRoot();
 	}
 	
 	override void SetWidget(Widget value) {
 		m_Value.SetLayoutRoot(value);
-	}
-	
+	}	
 }
 
 

@@ -177,6 +177,7 @@ PanelWidgetClass EditorDialogOptionDropdown {
  }
  {
   ScriptParamsClass {
+   Two_Way_Binding 1
   }
  }
 }

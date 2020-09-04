@@ -5,9 +5,63 @@
 
 class EditorPropertiesPrefabController: Controller
 {
+	
+	protected EditorObject m_EditorObject;
+	
 	string name;
 	vector pos;
 	vector rot;
+	
+	void EditorPropertiesPrefabController(EditorObject editor_object) 
+	{
+		EditorLog.Trace("EditorPropertiesPrefabController");
+		m_EditorObject = editor_object;
+		
+		pos = m_EditorObject.GetPosition();
+		rot = m_EditorObject.GetOrientation();		
+		name = m_EditorObject.GetDisplayName();
+	}
+	
+	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
+	{
+		EditorLog.Trace("EditorPropertiesController::OnMouseWheel %1", target.GetName());
+		string w_name = target.GetName();
+		
+		StringEvaluater w_eval;
+		EnScript.GetClassVar(this, w_name, 0, w_eval);
+		
+		if (KeyState(KeyCode.KC_LCONTROL)) {
+			direction *= 10;
+		}
+		
+		EnScript.SetClassVar(this, w_name, 0, (w_eval.Parse() + direction).ToString());
+		NotifyPropertyChanged(w_name);
+	}
+
+	
+	override void PropertyChanged(string property_name)
+	{
+		EditorLog.Trace("EditorPropertiesPrefabController::PropertyChanged");
+		switch (property_name) {
+			
+			case "pos": {
+				m_EditorObject.SetPosition(pos);
+				break;
+			}
+			
+			case "rot": {
+				m_EditorObject.SetOrientation(rot);
+				break;
+			}
+			
+			case "name": {
+				m_EditorObject.SetDisplayName(name);
+				break;
+			}
+		}
+	}
+	
+
 }
 
 class EditorObjectPropertiesDialog: EditorDialog
@@ -29,28 +83,21 @@ class EditorObjectPropertiesDialog: EditorDialog
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog");
 		m_EditorObject = editor_object;
-		m_EditorPropertiesController = new EditorPropertiesPrefabController();
+		m_EditorPropertiesController = new EditorPropertiesPrefabController(m_EditorObject);
 		
 		EditorPrefabGroup info_group = new EditorPrefabGroup("Object Info");
 		info_group.AddPrefab(new EditorPrefabEditText("Name", "name"));
 		info_group.AddPrefab(new EditorPrefabPosition("Position", "pos"));
 		info_group.AddPrefab(new EditorPrefabPosition("Rotation", "rot"));
-		
-		m_EditorPropertiesController.name = "Test";
-		m_EditorPropertiesController.pos = Vector(50, 69, 2);
 		info_group.SetController(m_EditorPropertiesController);
 		
-		AddContent(info_group);
-		
-		/*
-		m_EditorPropertiesController = AddContent("DayZEditor/gui/Layouts/options/EditorDialogOptionPropertiesPrefab.layout");
-		m_EditorPropertiesController.SetEditorObject(m_EditorObject);
 		m_StartPosition = m_EditorObject.GetPosition();
 		m_StartOrientation = m_EditorObject.GetOrientation();
-		*/
+		
 		SetTitle("Edit: Object Properties");
 		AddButton("Save", "SaveCallback");
 		AddButton("Cancel", "CancelCallback");
+		AddContent(info_group);
 	}
 	
 	void ~EditorObjectPropertiesDialog() {

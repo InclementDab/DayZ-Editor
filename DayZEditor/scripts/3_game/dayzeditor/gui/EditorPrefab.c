@@ -44,8 +44,6 @@ class EditorPrefabGroup: EditorPrefab
 {
 	private ref array<ref EditorPrefab> m_EditorPrefabChildren = {};
 	
-
-
 	void AddPrefab(EditorPrefab child_fab)
 	{
 		m_EditorPrefabChildren.Insert(child_fab);
@@ -57,6 +55,8 @@ class EditorPrefabGroup: EditorPrefab
 		m_EditorPrefabChildren.Remove(m_EditorPrefabChildren.Find(child_fab));
 		m_LayoutRoot.FindAnyWidget("EditorDialogOptionContent").RemoveChild(child_fab.GetLayoutRoot());
 	}
+	
+
 	
 	override void SetController(Controller controller) {
 		super.SetController(controller);

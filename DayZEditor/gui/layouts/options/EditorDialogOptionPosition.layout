@@ -257,6 +257,7 @@ PanelWidgetClass EditorPosElement {
  }
  {
   ScriptParamsClass {
+   Two_Way_Binding 1
   }
  }
 }
