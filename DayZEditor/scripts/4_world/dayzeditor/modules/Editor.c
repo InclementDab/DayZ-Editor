@@ -8,16 +8,13 @@ Editor GetEditor()
 	return m_EditorInstance;
 
 
-
-
-
 class Editor
 {
 	
 	/* Private Members */
 	private Mission m_Mission;
 	private UIManager m_UIManager;
-	private EditorCamera m_Camera;
+	private EditorCamera m_EditorCamera;
 	private PlayerBase m_Player;
 	
 	
@@ -33,10 +30,10 @@ class Editor
 		return m_EditorHud;
 	
 	EditorCamera GetCamera() 
-		return m_Camera;
+		return m_EditorCamera;
 	
 	EditorSettings GetSettings()
-		return GetModuleManager().GetModule(EditorSettings);
+		return m_EditorSettings;
 	
 	EditorObjectSet GetSelectedObjects() 
 		return m_SelectedObjects; 
@@ -47,38 +44,39 @@ class Editor
 	EditorObjectDataSet	 GetSessionCache()
 		return m_SessionCache; 
 	
-	bool IsPlacing() { 
+	bool IsPlacing()
 		return m_ObjectInHand != null; 
-	}
+	
 		
-	EditorObject GetEditorObject(notnull Object world_object) { 
+	EditorObject GetEditorObject(notnull Object world_object)
 		return GetEditorObject(m_PlacedObjectIndex.Get(world_object.GetID())); 
-	}
 	
-	EditorObject GetEditorObject(int id) { 
+	
+	EditorObject GetEditorObject(int id)
 		return m_PlacedObjects.Get(id); 
-	}
 	
-	void DeleteSessionData(int id) { 
+	
+	void DeleteSessionData(int id)
 		m_SessionCache.Remove(id);	
-	}
 	
-	EditorObjectData GetSessionDataById(int id) { 
+	
+	EditorObjectData GetSessionDataById(int id)
 		return m_SessionCache.Get(id); 
-	}
-	
-	EditorObject GetPlacedObjectById(int id) { 
-		return m_PlacedObjects.Get(id); 
-	}
-		
-	void SetBrush(EditorBrush brush) { 
-		m_EditorBrush = brush; 
-	}
-	
-	EditorBrush GetBrush() { 
-		return m_EditorBrush; 
-	}
 
+	
+	EditorObject GetPlacedObjectById(int id)
+		return m_PlacedObjects.Get(id); 
+	
+		
+	void SetBrush(EditorBrush brush)
+		m_EditorBrush = brush; 
+	
+	
+	EditorBrush GetBrush()
+		return m_EditorBrush; 
+	
+
+	private ref EditorSettings 					m_EditorSettings;
 	private ref EditorHud						m_EditorHud;
 	private EditorHudController 				m_EditorHudController;
 	
@@ -103,6 +101,9 @@ class Editor
 		m_SelectedObjects = new EditorObjectSet();
 		m_SessionCache = new EditorObjectDataSet();
 		m_ActionStack = new EditorActionStack();
+		
+		// Init Settings
+		m_EditorSettings = EditorSettings.Load("$profile:Editor\\settings.ini");
 		
 		// Init UI
 		m_UIManager = GetGame().GetUIManager();
@@ -187,8 +188,8 @@ class Editor
 		
 		
 		EditorLog.CurrentLogLevel = EditorLogLevel.WARNING;
-		if (m_Camera) {
-			vector cam_pos = m_Camera.GetPosition();
+		if (m_EditorCamera) {
+			vector cam_pos = m_EditorCamera.GetPosition();
 			
 			m_EditorHudController.cam_x = cam_pos[0];
 			m_EditorHudController.cam_y = cam_pos[2];
@@ -249,8 +250,8 @@ class Editor
 					EditorLog.Info(GetWidgetUnderCursor().GetName());
 				else {
 					vector pos = CurrentMousePosition;
-					pos[1] = m_Camera.GetPosition()[1];
-					m_Camera.SetPosition(pos);
+					pos[1] = m_EditorCamera.GetPosition()[1];
+					m_EditorCamera.SetPosition(pos);
 				}
 				
 				break;
@@ -480,7 +481,7 @@ class Editor
 	{	
 		m_Active = active;
 		
-		if (m_Camera == null) {
+		if (m_EditorCamera == null) {
 
 			EditorLog.Info("Initializing Camera");
 			
@@ -493,7 +494,7 @@ class Editor
 			// Camera Init
 			// todo if singleplayer spawn on center of map, otherwise spawn on character in MP
 			vector pos = m_Player.GetPosition();
-			m_Camera = GetGame().CreateObjectEx("EditorCamera", pos, ECE_LOCAL);
+			m_EditorCamera = GetGame().CreateObjectEx("EditorCamera", pos, ECE_LOCAL);
 			
 			
 			// Init Camera Map Marker
@@ -504,11 +505,16 @@ class Editor
 			CameraMapMarker.SetCamera(m_Camera, m_EditorUI.GetMapWidget());
 			m_EditorUI.InsertMapObject(m_MapMarkerWidget);
 			m_EditorUI.GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));*/
+			
+					
+			
+			GetGame().GetWorld().SetViewDistance(m_EditorSettings.ViewDistance);
+			GetGame().GetWorld().SetObjectViewDistance(m_EditorSettings.ObjectViewDistance);
 		}
 		
-		m_Camera.SetLookEnabled(m_Active);
-		m_Camera.SetMoveEnabled(m_Active);
-		m_Camera.SetActive(m_Active);
+		m_EditorCamera.SetLookEnabled(m_Active);
+		m_EditorCamera.SetMoveEnabled(m_Active);
+		m_EditorCamera.SetActive(m_Active);
 		
 		m_EditorHud.Show(m_Active);
 		m_Mission.GetHud().Show(!m_Active);
@@ -619,7 +625,7 @@ class Editor
 		
 		EditorWorldData world_data();
 		GetGame().GetWorldName(world_data.MapName);
-		m_Camera.GetTransform(world_data.CameraPosition);
+		m_EditorCamera.GetTransform(world_data.CameraPosition);
 		
 		foreach (EditorObject editor_object: m_PlacedObjects) {
 			world_data.EditorObjects.InsertEditorData(editor_object.GetData());
@@ -681,13 +687,14 @@ class Editor
 	{
 		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 1000, 0), ECE_NONE);
 		
-		m_PositionBeforeLootEditMode = m_Camera.GetPosition();
-		m_Camera.SetPosition(Vector(10, 1000, 10));		
+		m_PositionBeforeLootEditMode = m_EditorCamera.GetPosition();
+		m_EditorCamera.SetPosition(Vector(10, 1000, 10));		
 		
 		ref EditorMapGroupProto proto_data = new EditorMapGroupProto(m_LootEditTarget); 
 		EditorXMLManager.LoadMapGroupProto(proto_data);
 		m_LootEditMode = true;
-		EditorSettings.COLLIDE_ON_DRAG = true;
+		// todo
+		//EditorSettings.COLLIDE_ON_DRAG = true;
 	}
 	
 	void PlaceholderRemoveLootMode()
@@ -700,10 +707,11 @@ class Editor
 		
 		GetGame().ObjectDelete(m_LootEditTarget);
 		
-		m_Camera.SetPosition(m_PositionBeforeLootEditMode);
+		m_EditorCamera.SetPosition(m_PositionBeforeLootEditMode);
 		//camera.SelectTarget(null);
 		m_LootEditMode = false;
-		EditorSettings.COLLIDE_ON_DRAG = false;
+		// todo
+		//EditorSettings.COLLIDE_ON_DRAG = false;
 	}
 	
 	bool IsLootEditActive() { 

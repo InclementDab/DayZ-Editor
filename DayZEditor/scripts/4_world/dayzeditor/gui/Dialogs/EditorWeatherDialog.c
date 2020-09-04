@@ -10,8 +10,9 @@ class EditorWeatherDialogController: Controller
 	float overcast;
 	float wind;
 	
-	float view = 3000;
-	float objectview = 1500;
+	// todo just make a settings window
+	float view;
+	float objectview;
 	
 	
 	void SetWorld(World world)
@@ -24,12 +25,15 @@ class EditorWeatherDialogController: Controller
 		m_World.GetDate(year, month, day, hour, minute);
 		time = minute * 60 + hour * 3600;
 		
-		rain = m_Weather.GetRain();
-		fog = m_Weather.GetFog();
-		overcast = m_Weather.GetOvercast();
+		rain = m_Weather.GetRain().GetActual();
+		fog = m_Weather.GetFog().GetActual();
+		overcast = m_Weather.GetOvercast().GetActual();
 		
 		m_Weather.SetWindMaximumSpeed(100);
 		wind = m_Weather.GetWindSpeed();
+		
+		view = GetEditor().GetSettings().ViewDistance;
+		objectview = GetEditor().GetSettings().ObjectViewDistance;
 	}
 	
 	override void NotifyPropertyChanged(string property_name)
@@ -48,7 +52,7 @@ class EditorWeatherDialogController: Controller
 			}
 			
 			case "rain": {
-				m_Weather.GetRain().(rain);				
+				m_Weather.GetRain().Set(rain);				
 				break;
 			}
 			
@@ -68,11 +72,13 @@ class EditorWeatherDialogController: Controller
 			}
 			
 			case "view": {
+				GetEditor().GetSettings().ViewDistance = view;
 				m_World.SetViewDistance(view);
 				break;
 			}
 			
 			case "objectview": {
+				 GetEditor().GetSettings().ObjectViewDistance = objectview;
 				m_World.SetObjectViewDistance(objectview);
 				break;
 			}

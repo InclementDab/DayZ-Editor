@@ -164,7 +164,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		m_EditorObject.GetTransform(object_transform);
 		
 		// Should the position be raycasted on the ground, or locked to the object
-		if (EditorSettings.MAINTAIN_HEIGHT) {
+		if (GetEditor().GetEditorHud().GetController().GroundButton) {
 			set<Object> o;
 			vector ground_dir; int component;
 			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject.GetWorldObject(), false, true); // set to ground only

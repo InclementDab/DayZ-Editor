@@ -1,55 +1,33 @@
 
 
-class EditorSettings: JMModuleBase
+class EditorSettings
 {
 	
 	
 	// shit thats gotta be changed
-	static float VIEW_DISTANCE = 12000;
-	static float OBJECT_VIEW_DISTANCE = 5000;
-	
-	static bool MAGNET_PLACEMENT = false;
-	static bool MAINTAIN_HEIGHT = false;
-	static bool SNAPPING_MODE = false;
-	static bool COLLIDE_ON_DRAG = false;
-	
-	// Autosave timer in SECONDS!!!!!!!!!!!!!!!!
-	static int AUTOSAVE_TIMER = 240;
+	float ViewDistance = 12000;
+	float ObjectViewDistance = 5000;
+		
+	// Autosave timer in seconds
+	int AutosaveTimer = 240;
 
 	
-	
-	
-	void EditorSettings()
-	{
+	void EditorSettings() {
 		EditorLog.Trace("EditorSettings");
 	}
 	
-	
-	override void OnInit()
+	static EditorSettings Load(string filename)
 	{
-		EditorLog.Trace("EditorSettings::OnInit");
-		// uhhh
-		Load();
-
-	}
-	
-	static void Load()
-	{
-		GetGame().GetWorld().SetViewDistance(VIEW_DISTANCE);
-		GetGame().GetWorld().SetObjectViewDistance(OBJECT_VIEW_DISTANCE);
+		// todo load settings from ini or something
+		return new EditorSettings();
 	}
 	
 	
-	static void Save()
+	static void Save(EditorSettings settings, string filename)
 	{
 		// todo save settings to ini or something
 	}
 
-	
-
-	
-	override bool IsServer() { return false; }
-	
 
 }
 

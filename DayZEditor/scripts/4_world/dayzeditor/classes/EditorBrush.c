@@ -61,7 +61,7 @@ class EditorBrush
 		if (GetEditor().IsPlacing()) return;
 		
 		set<Object> o;
-		vector CurrentMousePosition = MousePosToRay(o, null, EditorSettings.OBJECT_VIEW_DISTANCE, 0, true);
+		vector CurrentMousePosition = MousePosToRay(o, null, GetEditor().GetSettings().ObjectViewDistance, 0, true);
 		
 		Input input = GetGame().GetInput();
 

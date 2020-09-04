@@ -75,18 +75,18 @@ class ObjectDragHandler: DragHandler
 			transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
 			vector cursor_delta = cursor_pos - transform[3];
 			float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
-			m_EditorObject.PlaceOnSurfaceRotated(transform, ground_position, surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, EditorSettings.MAGNET_PLACEMENT);			
+			m_EditorObject.PlaceOnSurfaceRotated(transform, ground_position, surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, GetEditor().GetEditorHud().GetController().MagnetButton);			
 		}
 		
 		// Handle regular motion
 		else {
 			
 			transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
-			m_EditorObject.PlaceOnSurfaceRotated(transform, transform[3], surface_normal[0] * -1, surface_normal[2] * -1, m_EditorObject.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
+			m_EditorObject.PlaceOnSurfaceRotated(transform, transform[3], surface_normal[0] * -1, surface_normal[2] * -1, m_EditorObject.LocalAngle * -1, GetEditor().GetEditorHud().GetController().MagnetButton);
 			
 			
 			cursor_pos[1] = cursor_pos[1] - size[1]/2;
-			if (EditorSettings.MAINTAIN_HEIGHT) 
+			if (GetEditor().GetEditorHud().GetController().GroundButton) 
 				transform[3] = cursor_pos + transform[1] * vector.Distance(ground_position, transform[3]);				
 			else {
 				transform[3] = cursor_pos;
@@ -130,8 +130,8 @@ class ObjectDragHandler: DragHandler
 			// Handle regular motion for all children
 			} else {
 				//cursor_position_delta[1] = ground[1];
-				if (EditorSettings.MAINTAIN_HEIGHT) {
-					if (EditorSettings.MAGNET_PLACEMENT) {
+				if (GetEditor().GetEditorHud().GetController().GroundButton) {
+					if (GetEditor().GetEditorHud().GetController().MagnetButton) {
 						selected_transform[3] = cursor_position_delta + surface_normal * vector.Distance(ground_position, selected_transform[3]);
 					} else {
 					
@@ -144,7 +144,7 @@ class ObjectDragHandler: DragHandler
 				selected_transform[0] = "1 0 0";
 				selected_transform[1] = "0 1 0";
 				selected_transform[2] = "0 0 1";
-				selected_object.PlaceOnSurfaceRotated(selected_transform, selected_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, selected_object.LocalAngle * -1, EditorSettings.MAGNET_PLACEMENT);
+				selected_object.PlaceOnSurfaceRotated(selected_transform, selected_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, selected_object.LocalAngle * -1, GetEditor().GetEditorHud().GetController().MagnetButton);
 			}	
 			
 		
