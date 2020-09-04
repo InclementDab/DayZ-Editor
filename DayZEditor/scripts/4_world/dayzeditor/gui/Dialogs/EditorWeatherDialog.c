@@ -5,9 +5,9 @@ class EditorWeatherDialogController: Controller
 	protected Weather m_Weather;
 		
 	float time;
-	Rain rain;
-	Fog fog;
-	Overcast overcast;
+	float rain;
+	float fog;
+	float overcast;
 	float wind;
 	
 	float view = 3000;
