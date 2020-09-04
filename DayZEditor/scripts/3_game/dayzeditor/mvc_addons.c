@@ -72,6 +72,7 @@ modded class MVC
 		widget_controllers.Insert(EditorPrefabGroup, EditorPrefabGroupController);
 		widget_controllers.Insert(EditorPrefabEditText, EditorPrefabEditTextController);
 		widget_controllers.Insert(EditorPrefabPosition, EditorPrefabPositionController);
+		widget_controllers.Insert(EditorPrefabSlider, EditorPrefabSliderController);
 		
 	}
 }

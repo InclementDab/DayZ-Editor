@@ -231,6 +231,11 @@ class EditorHudController: Controller
 		InsertPlacedObject(category);
 	}
 	
+	void WeatherExecute(ButtonCommandArgs args) {
+		EditorWeatherDialog weather_dialog = new EditorWeatherDialog();
+		weather_dialog.ShowDialog();
+	}
+	
 	
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)

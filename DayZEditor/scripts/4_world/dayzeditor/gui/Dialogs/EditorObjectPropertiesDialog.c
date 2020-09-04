@@ -60,8 +60,6 @@ class EditorPropertiesPrefabController: Controller
 			}
 		}
 	}
-	
-
 }
 
 class EditorObjectPropertiesDialog: EditorDialog
