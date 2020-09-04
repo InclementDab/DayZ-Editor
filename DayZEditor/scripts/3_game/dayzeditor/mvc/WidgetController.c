@@ -45,8 +45,6 @@ static WidgetController GetWidgetController(Widget widget)
 
 class WidgetController
 {	
-	Widget GetWidget();
-	
 	bool CanTwoWayBind() {
 		return false;
 	}
@@ -69,11 +67,7 @@ class WidgetControllerTemplate<Class T>: WidgetController
 {
 	protected T m_Widget;
 	
-	override Widget GetWidget() {
-		return m_Widget;
-	}
-	
-	void WidgetControllerTemplate(Widget w)	{
+	void WidgetControllerTemplate(T w)	{
 		Class.CastTo(m_Widget, w);
 	}
 }

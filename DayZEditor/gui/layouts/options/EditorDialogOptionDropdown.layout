@@ -4,7 +4,7 @@ PanelWidgetClass EditorDialogOptionDropdown {
  vexactpos 1
  hexactsize 0
  vexactsize 1
- scriptclass "ViewBinding"
+ scriptclass "EditorPrefabViewBinding"
  {
   WrapSpacerWidgetClass EditorDialogOptionDropdownSpacer {
    ignorepointer 1

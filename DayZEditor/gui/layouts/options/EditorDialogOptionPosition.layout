@@ -4,7 +4,7 @@ PanelWidgetClass EditorPosElement {
  vexactpos 1
  hexactsize 0
  vexactsize 1
- scriptclass "ViewBinding"
+ scriptclass "EditorPrefabViewBinding"
  {
   WrapSpacerWidgetClass PositionSpacer {
    ignorepointer 1

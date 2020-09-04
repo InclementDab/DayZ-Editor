@@ -1,24 +1,26 @@
 
 class EditorPrefab
 {
-	protected ref Controller m_Controller;
-	protected ref ViewBinding m_ViewBinding;
+	protected ref EditorPrefabViewBinding m_ViewBinding;
 	
 	protected Widget m_LayoutRoot;
 	Widget GetLayoutRoot() { 
 		return m_LayoutRoot;
 	}
 	
-	
-	
+	protected string m_BindingName;
+	string GetBindingName() {
+		return m_BindingName;
+	}
 	
 	void EditorPrefab(string caption = "", string binding_name = "") {
 		EditorLog.Trace("EditorPrefab");
 		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets(GetLayoutFile());
+		m_BindingName = binding_name;
 		
-		if (m_LayoutRoot && binding_name != string.Empty) {
+		if (m_LayoutRoot && m_BindingName != string.Empty) {
 			m_LayoutRoot.GetScript(m_ViewBinding);
-			m_ViewBinding.SetBindingName(binding_name);
+			m_ViewBinding.SetPrefab(this);
 		}
 		
 		if (m_LayoutRoot && GetLabelWidget() != string.Empty) {
@@ -28,12 +30,9 @@ class EditorPrefab
 	
 	
 	void SetController(Controller controller) {
-		EditorLog.Trace("EditorPrefab::SetController");
-		m_Controller = controller;
-		
-		if (m_ViewBinding && m_Controller) {
-			m_ViewBinding.SetController(m_Controller);
-			EnScript.SetClassVar(m_Controller, m_ViewBinding.GetBindingName(), 0, this);
+		EditorLog.Trace("EditorPrefab::SetController");		
+		if (m_ViewBinding) {
+			m_ViewBinding.SetController(controller);
 		}
 	}
 	
