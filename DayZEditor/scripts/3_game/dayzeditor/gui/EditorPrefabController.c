@@ -1,24 +1,5 @@
-static WidgetController GetPrefabController(EditorPrefab prefab)
-{
-	
-	switch (prefab.Type()) {
-		
-		case EditorPrefabGroup:
-			return new EditorGroupPrefabController(prefab);
-		
-		case EditorPrefabEditText:
-			return new EditorEditTextPrefabController(prefab);
-		
-		case EditorPrefabPosition:
-			return new EditorPositionPrefabController(prefab);
-		
-		
-	}
-	
-	return null;
-}
 
-class EditorGroupPrefabController: WidgetControllerTemplate<EditorPrefabGroup>
+class EditorPrefabGroupController: WidgetControllerTemplate<EditorPrefabGroup>
 {
 	/*
 	override bool CanTwoWayBind() {
@@ -35,7 +16,7 @@ class EditorGroupPrefabController: WidgetControllerTemplate<EditorPrefabGroup>
 }
 
 
-class EditorEditTextPrefabController: WidgetControllerTemplate<EditorPrefabEditText>
+class EditorPrefabEditTextController: WidgetControllerTemplate<EditorPrefabEditText>
 {
 	override bool CanTwoWayBind() {
 		return true;
@@ -50,7 +31,7 @@ class EditorEditTextPrefabController: WidgetControllerTemplate<EditorPrefabEditT
 	}
 }
 
-class EditorPositionPrefabController: WidgetControllerTemplate<EditorPrefabPosition>
+class EditorPrefabPositionController: WidgetControllerTemplate<EditorPrefabPosition>
 {
 	override bool CanTwoWayBind() {
 		return true;
@@ -64,22 +45,4 @@ class EditorPositionPrefabController: WidgetControllerTemplate<EditorPrefabPosit
 		type_converter.SetVector(m_Widget.GetVector());
 	}
 }
-
-
-
-
-class EditorPrefabViewBinding: ViewBinding
-{
-	
-	protected ref EditorPrefab m_EditorPrefab;
-	
-	void SetPrefab(EditorPrefab prefab) {
-		m_EditorPrefab = prefab;
-		SetBindingName(m_EditorPrefab.GetBindingName());
-		
-		m_WidgetController = GetPrefabController(m_EditorPrefab);
-	}
-}
-
-
 

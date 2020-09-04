@@ -1,25 +1,25 @@
 
 
+typedef map<typename, typename> TypenameHashMap;
 
-class TypeConverterHashMap
+
+class TypeConversionHashMap
 {
-	private ref map<typename, typename> value;
+	private ref map<typename, typename> value = new map<typename, typename>();
 	
-	void TypeConverterHashMap()
-	{
-		EditorLog.Trace("TypeConverterHashMap");
-		value = new map<typename, typename>();
+	void TypeConversionHashMap() {
+		EditorLog.Trace("TypeConversionHashMap");
 	}
 	
-	void ~TypeConverterHashMap() { EditorLog.Trace("~TypeConverterHashMap"); }
+	void ~TypeConversionHashMap() { 
+		EditorLog.Trace("~TypeConversionHashMap"); 
+	}
 	
-	typename Get(typename conversion_type)
-	{
+	typename Get(typename conversion_type) {
 		return value.Get(conversion_type);
 	}
 	
-	void Remove(typename conversion_type)
-	{
+	void Remove(typename conversion_type) {
 		value.Remove(conversion_type);
 	}
 	

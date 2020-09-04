@@ -13,15 +13,12 @@ class Controller: MVCEventHandler
 		return m_PropertyHashMap.Get(property_name);
 	}
 	
-	void Controller() { EditorLog.Trace("Controller"); }
-	void ~Controller() { EditorLog.Trace("~Controller"); }
 	
-	override void OnWidgetScriptInit(Widget w)
+	
+	
+	void Controller()
 	{
-		super.OnWidgetScriptInit(w);
-		
-		EditorLog.Trace("Controller::Init");
-		// User must inherit from controller, not use it in ScriptClass
+		EditorLog.Trace("Controller");
 		if (Type() == Controller) {
 			EditorLog.Error("You cannot bind to data without creating your own controller class!");
 			return;
@@ -29,6 +26,19 @@ class Controller: MVCEventHandler
 		
 		// Load all properties of the inheriting Controller
 		m_PropertyHashMap = PropertyHashMap.FromType(Type());
+	}
+	
+	void ~Controller() { 
+		EditorLog.Trace("~Controller"); 
+	}
+	
+	override void OnWidgetScriptInit(Widget w)
+	{
+		super.OnWidgetScriptInit(w);
+		
+		EditorLog.Trace("Controller::Init");
+		// User must inherit from controller, not use it in ScriptClass
+
 		
 		// Gets rid of properties that only exist in this class
 		//PropertyHashMap controller_hashbrowns = PropertyHashMap.FromType(Controller);

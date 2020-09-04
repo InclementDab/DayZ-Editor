@@ -30,7 +30,6 @@ class ViewBinding: MVCEventHandler
 	
 	void SetBindingName(string binding_name) {
 		Binding_Name = binding_name;
-		UpdateBinding();
 	}
 	
 	typename GetPropertyType(string property_name) {
@@ -52,8 +51,20 @@ class ViewBinding: MVCEventHandler
 	{ 
 		EditorLog.Trace("ViewBinding::SetController: %1", controller.GetLayoutRoot().GetName());
 		m_Controller = controller;
+		m_PropertyType = GetPropertyType(Binding_Name);
+		
+		if (!m_PropertyType) {
+			MVC.PropertyNotFoundError(Binding_Name);
+		}
 
-		UpdateBinding();
+		if (Selected_Item != string.Empty)
+			m_SelectedDataConverter = MVC.GetTypeConversion(GetPropertyType(Selected_Item));
+				
+		if (m_PropertyType.IsInherited(Observable)) {			
+			m_PropertyDataConverter = MVC.GetTypeConversion(Observable.Cast(m_PropertyType.Spawn()).GetType());
+		} else {
+			m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyType);
+		}
 		
 		// Updates the view on first load
 		UpdateView();
@@ -68,7 +79,7 @@ class ViewBinding: MVCEventHandler
 			Binding_Name = m_LayoutRoot.GetName();
 		}
 		
-		m_WidgetController = GetWidgetController(m_LayoutRoot);
+		m_WidgetController = MVC.GetWidgetController(m_LayoutRoot);
 		if (!m_WidgetController) {
 			MVC.UnsupportedTypeError(m_LayoutRoot.Type());
 		}
@@ -134,24 +145,7 @@ class ViewBinding: MVCEventHandler
 		}
 	}
 	
-	private void UpdateBinding()
-	{
-		EditorLog.Trace("ViewBinding::UpdateBinding");
-		m_PropertyType = GetPropertyType(Binding_Name);
-		
-		if (!m_PropertyType) {
-			MVC.PropertyNotFoundError(Binding_Name);
-		}
 
-		if (Selected_Item != string.Empty)
-			m_SelectedDataConverter = MVC.GetTypeConversion(GetPropertyType(Selected_Item));
-				
-		if (m_PropertyType.IsInherited(Observable)) {			
-			m_PropertyDataConverter = MVC.GetTypeConversion(Observable.Cast(m_PropertyType.Spawn()).GetType());
-		} else {
-			m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyType);
-		}
-	}
 	
 	private void UpdateView()
 	{

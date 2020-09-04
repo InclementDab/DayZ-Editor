@@ -3,7 +3,21 @@ static ref MVC _MVC;
 
 class MVC
 {
-	protected static ref TypeConverterHashMap m_TypeConverterHashMap;
+	
+	protected static ref TypenameHashMap m_WidgetControllerHashMap;
+	static WidgetController GetWidgetController(Class data)
+	{
+		if (!_MVC) {
+			_MVC = new MVC();
+		}
+	
+		WidgetController widget_controller = m_WidgetControllerHashMap.Get(data.Type()).Spawn();
+		g_Script.Call(widget_controller, "SetWidget", data);
+		return widget_controller;
+	}
+	
+	
+	protected static ref TypeConversionHashMap m_TypeConverterHashMap;
 	static TypeConverter GetTypeConversion(typename type) 
 	{
 		if (!_MVC) {
@@ -19,8 +33,13 @@ class MVC
 	{
 		EditorLog.Trace("MVC");
 		if (!m_TypeConverterHashMap) {
-			m_TypeConverterHashMap = new TypeConverterHashMap();
+			m_TypeConverterHashMap = new TypeConversionHashMap();
 			RegisterConversionTemplates(m_TypeConverterHashMap);
+		}
+		
+		if (!m_WidgetControllerHashMap) {
+			m_WidgetControllerHashMap = new TypenameHashMap();
+			RegisterWidgetControllers(m_WidgetControllerHashMap);
 		}
 	}
 	
@@ -29,7 +48,7 @@ class MVC
 	}
 	
 	// Override THIS to add your own Custom Conversion Templates
-	void RegisterConversionTemplates(out TypeConverterHashMap type_conversions)
+	void RegisterConversionTemplates(out TypeConversionHashMap type_conversions)
 	{
 		EditorLog.Trace("MVC::RegisterConversionTemplates");
 		type_conversions.Insert(bool, TypeConversionBool);
@@ -39,6 +58,27 @@ class MVC
 		type_conversions.Insert(vector, TypeConversionVector);
 		type_conversions.Insert(Widget, TypeConversionWidget);
 	}
+	
+	void RegisterWidgetControllers(out TypenameHashMap widget_controllers)
+	{
+		EditorLog.Trace("MVC::RegisterWidgetControllers");
+		widget_controllers.Insert(Widget, SpacerWidgetController);
+		widget_controllers.Insert(SpacerWidget, SpacerWidgetController);
+		widget_controllers.Insert(GridSpacerWidget, SpacerWidgetController);
+		widget_controllers.Insert(WrapSpacerWidget, SpacerWidgetController);
+		
+		widget_controllers.Insert(ButtonWidget, ButtonWidgetController);
+		widget_controllers.Insert(CheckBoxWidget, CheckBoxWidgetController);
+		widget_controllers.Insert(EditBoxWidget, EditBoxWidgetController);
+		widget_controllers.Insert(SliderWidget, SliderWidgetController);
+		widget_controllers.Insert(TextWidget, TextWidgetController);
+		widget_controllers.Insert(MultilineEditBoxWidget, MultilineEditBoxWidgetController);
+		widget_controllers.Insert(XComboBoxWidget, XComboBoxWidgetController);
+		widget_controllers.Insert(ImageWidget, ImageWidgetController);
+		widget_controllers.Insert(TextListboxWidget, TextListboxController);		
+	}
+	
+
 	
 	
 	static void PropertyNotFoundError(string property_name)

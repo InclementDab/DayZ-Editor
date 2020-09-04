@@ -1,21 +1,4 @@
 
-modded class MVC
-{
-	override void RegisterConversionTemplates(out TypeConverterHashMap type_conversions)
-	{
-		super.RegisterConversionTemplates(type_conversions);
-		type_conversions.Insert(StringEvaluater, TypeConversionEquation);
-		type_conversions.Insert(EditorWidget, TypeConversionEditorWidget);
-		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
-		
-		type_conversions.Insert(EditorPrefabEditText, TypeConversionPrefabEditText);
-		type_conversions.Insert(EditorPrefabPosition, TypeConversionPrefabPosition);
-		
-	}
-}
-
-
-
 class TypeConversionEquation: TypeConversionTemplate<StringEvaluater>
 {
 	
@@ -73,25 +56,27 @@ class TypeConversionBrush: TypeConversionTemplate<ref EditorBrushData>
 }
 
 
-class TypeConversionPrefabEditText: TypeConversionTemplate<ref EditorPrefabEditText>
+
+modded class MVC
 {
-	override void SetString(string value) {
-		m_Value.SetText(value);
+	override void RegisterConversionTemplates(out TypeConversionHashMap type_conversions)
+	{
+		super.RegisterConversionTemplates(type_conversions);
+		type_conversions.Insert(StringEvaluater, TypeConversionEquation);
+		type_conversions.Insert(EditorWidget, TypeConversionEditorWidget);
+		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
+	
 	}
 	
-	override string GetString() {
-		return m_Value.GetText();
+	override void RegisterWidgetControllers(out TypenameHashMap widget_controllers)
+	{
+		super.RegisterWidgetControllers(widget_controllers);
+		widget_controllers.Insert(EditorPrefabGroup, EditorPrefabGroupController);
+		widget_controllers.Insert(EditorPrefabEditText, EditorPrefabEditTextController);
+		widget_controllers.Insert(EditorPrefabPosition, EditorPrefabPositionController);
+		
 	}
 }
 
-class TypeConversionPrefabPosition: TypeConversionTemplate<ref EditorPrefabPosition>
-{
-	
-	override void SetVector(vector value) {
-		m_Value.SetVector(value);
-	}
-	
-	override vector GetVector() {
-		return m_Value.GetVector();
-	}
-}
+
+

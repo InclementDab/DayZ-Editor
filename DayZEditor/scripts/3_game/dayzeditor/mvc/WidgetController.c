@@ -1,53 +1,11 @@
 
-static WidgetController GetWidgetController(Widget widget)
-{
-	switch (widget.Type())
-	{
-		case ButtonWidget:
-			return new ButtonWidgetController(widget);
-		
-		case CheckBoxWidget:
-			return new CheckBoxWidgetController(widget);
-		
-		case EditBoxWidget:
-			return new EditBoxWidgetController(widget):
-		
-		case SliderWidget:
-			return new SliderWidgetController(widget);
-		
-		case TextWidget:
-			return new TextWidgetController(widget);
-		
-		// Collection Controllers
-		case MultilineEditBoxWidget:
-			return new MultilineEditBoxWidgetController(widget);
-		
-		case Widget:
-		case SpacerWidget:
-		case GridSpacerWidget:
-		case WrapSpacerWidget: 
-			return new SpacerWidgetController(widget);
-		
-		case XComboBoxWidget:
-			return new XComboBoxWidgetController(widget);
-		
-		case ImageWidget:
-			return new ImageWidgetController(widget);
-		
-		case TextListboxWidget:
-			return new TextListboxController(widget);
-		
-	}
-	
-	
-	return null;
-}
 
 class WidgetController
 {	
 	bool CanTwoWayBind() {
 		return false;
 	}
+	
 	
 	// Base Controller Stuff
 	void SetData(TypeConverter type_converter);	
@@ -67,7 +25,7 @@ class WidgetControllerTemplate<Class T>: WidgetController
 {
 	protected T m_Widget;
 	
-	void WidgetControllerTemplate(T w)	{
+	void SetWidget(T w)	{
 		Class.CastTo(m_Widget, w);
 	}
 }
