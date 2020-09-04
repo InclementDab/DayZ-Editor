@@ -624,10 +624,10 @@ class Editor
 			world_data.EditorObjects.InsertEditorData(editor_object.GetData());
 		}
 		
+		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
+		string file = save_dialog.ShowFileDialog();
 		
-		
-		
-		FileDialogResult result = EditorFileManager.Save(world_data, "$profile:test.txt");
+		FileDialogResult result = EditorFileManager.Save(world_data, file);
 		
 		m_EditorHud.GetController().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, result), COLOR_GREEN); 
 		
@@ -646,6 +646,9 @@ class Editor
 	void Export()
 	{
 		EditorLog.Trace("Editor::Export");
+		
+		EditorFileExportDialog export_dialog();
+		export_dialog.ShowFileDialog();
 	}
 	
 	void Cut(EditorObjectSet target_objects)

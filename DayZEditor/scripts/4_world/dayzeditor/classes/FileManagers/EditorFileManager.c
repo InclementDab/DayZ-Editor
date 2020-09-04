@@ -148,6 +148,8 @@ class ExportSettings
 	ExportMode ExportFileMode;
 	HeightType ExportHeightType;
 	bool ExportSelectedOnly;
+	vector ExportOffset;
+	string ExportSetName;
 }
 
 

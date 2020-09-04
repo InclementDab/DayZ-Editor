@@ -26,15 +26,15 @@ class EditorFileDialog: EditorDialog
 	protected string m_StartDirectory;
 	protected TextListboxWidget m_FileHostListbox;
 	
-	void EditorFileDialog(string start_directory = "$profile:\\")
+	void EditorFileDialog()
 	{
 		EditorLog.Trace("EditorFileDialog");
-		m_StartDirectory = start_directory;
+		
 		
 		Widget content = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorFileDialog.layout", null);
 		AddContent(content);
 		
-		m_FileHostListbox = TextListboxWidget.Cast(m_Root.FindAnyWidget("FolderHostListBox"));
+		m_FileHostListbox = TextListboxWidget.Cast(m_LayoutRoot.FindAnyWidget("FolderHostListBox"));
 	}
 	
 	private void LoadFiles(string directory, string filter, out ref array<ref EditorFile> folder_array, FileSearchMode search_mode)
@@ -81,7 +81,7 @@ class EditorFileDialog: EditorDialog
 	
 	void LoadFileDirectory(string directory, string filter)
 	{
-		EditorPrint("EditorFileDialog::LoadFileDirectory");
+		EditorLog.Trace("EditorFileDialog::LoadFileDirectory");
 		m_CurrentDirectory = directory;
 		string filterdir = string.Format("%1%2", directory, filter);
 		Print(directory);
@@ -102,60 +102,51 @@ class EditorFileDialog: EditorDialog
 		foreach (EditorFile sorted_file: editor_file_array) {
 			m_FileHostListbox.AddItem(sorted_file.FileName, sorted_file, 0);
 		}
-		
-		
 	}
+	
+	string ShowFileDialog(string start_directory = "$profile:\\")
+	{
+		m_StartDirectory = start_directory;
+		
+		ShowDialog();
+		
+		// return file directory
+		return "";
+	}
+
 }
 
 
 class EditorFileOpenDialog: EditorFileDialog
 {
-
-	protected ButtonWidget m_OpenButton;
-	protected ButtonWidget m_CloseButton;
 	
 	void EditorFileOpenDialog()
 	{
-		EditorPrint("EditorFileOpenDialog");
+		EditorLog.Trace("EditorFileOpenDialog");
 		
-		
-		m_OpenButton = AddButton("Open");
-		m_CloseButton = AddButton("Cancel");
+		AddButton("Open", "OpenCallback");
+		AddButton("Cancel", "CloseDialog");
 		
 		string filter = "*.dze";
 		
 		LoadFileDirectory(m_StartDirectory, filter);
-		
 	}
 	
 	
 	void ~EditorFileOpenDialog()
 	{
-		EditorPrint("~EditorFileOpenDialog");
+		EditorLog.Trace("~EditorFileOpenDialog");
 	}
 	
-	
-	override bool OnClick(Widget w, int x, int y, int button)
+	void OpenCallback()
 	{
-		Print("EditorFileOpenDialog::OnClick");
-		
-		if (button != 0) return false; 
-		
-		if (w == m_OpenButton) {
-			EditorFile data;
-			m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
-			GetEditor().Open(data.GetFile());
-			CloseDialog();
-			return true;
-		} 
-		
-		if (w == m_CloseButton) {
-			CloseDialog();
-			return true;
-		}
-	
-		return super.OnClick(w, x, y, button);
+		EditorLog.Trace("EditorFileOpenDialog::OpenCallback");
+		EditorFile data;
+		m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
+		CloseDialog();
 	}
+		
+	
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
@@ -169,8 +160,7 @@ class EditorFileOpenDialog: EditorFileDialog
 			return true;
 		}
 		
-		Print(data.GetFile());
-		GetEditor().Open(data.GetFile());
+		//GetEditor().Open(data.GetFile());
 		CloseDialog();
 		
 		return true;
@@ -182,16 +172,12 @@ class EditorFileOpenDialog: EditorFileDialog
 class EditorFileImportDialog: EditorFileDialog
 {
 	
-	protected ButtonWidget m_OpenButton;
-	protected ButtonWidget m_CloseButton;
-	
 	void EditorFileImportDialog()
 	{
-		EditorPrint("EditorFileImportDialog");
+		EditorLog.Trace("EditorFileImportDialog");
 		
-		
-		m_OpenButton = AddButton("Import");
-		m_CloseButton = AddButton("Cancel");
+		AddButton("Import", "ImportCallback");
+		AddButton("Cancel", "CloseDialog");
 		
 		string filter = "*.vpp";
 		//string filter = "*";
@@ -201,33 +187,21 @@ class EditorFileImportDialog: EditorFileDialog
 	}
 	
 	
-	void ~EditorFileImportDialog()
-	{
-		EditorPrint("~EditorFileImportDialog");
+	void ~EditorFileImportDialog() {
+		EditorLog.Trace("~EditorFileImportDialog");
 	}
 	
 	
-	override bool OnClick(Widget w, int x, int y, int button)
+	void ImportCallback()
 	{
-		Print("EditorFileImportDialog::OnClick");
-		
-		if (button != 0) return false; 
-		
-		if (w == m_OpenButton) {
-			EditorFile data;
-			m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
-			GetEditor().Import(ImportMode.VPP, data.GetFile());
-			CloseDialog();
-			return true;
-		} 
-		
-		if (w == m_CloseButton) {
-			CloseDialog();
-			return true;
-		}
-	
-		return super.OnClick(w, x, y, button);
+		EditorLog.Trace("EditorFileImportDialog::ImportCallback");
+		EditorFile data;
+		m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
+		//GetEditor().Import(ImportMode.VPP, data.GetFile());
+		CloseDialog();
 	}
+
+
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
@@ -241,7 +215,7 @@ class EditorFileImportDialog: EditorFileDialog
 			return true;
 		}
 		
-		GetEditor().Import(ImportMode.VPP, data.GetFile());
+		//GetEditor().Import(ImportMode.VPP, data.GetFile());
 		CloseDialog();
 		
 		return true;
@@ -252,14 +226,15 @@ class EditorFileImportDialog: EditorFileDialog
 class EditorFileSaveDialog: EditorFileDialog
 {
 	protected EditBoxWidget m_FileNameBox;
-	protected ButtonWidget m_SaveButton;
-	protected ButtonWidget m_CloseButton;
 	
 	void EditorFileSaveDialog()
 	{
-		EditorPrint("EditorFileSaveDialog");
+		EditorLog.Trace("EditorFileSaveDialog");
+				
+		AddButton("Save", "SaveCallback");
+		AddButton("Cancel", "CloseDialog");
 		
-		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/content/EditorFileNameElement.layout");
+		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/content/EditorFileNameElement.layout", m_DialogController.ButtonGrid);
 		m_FileNameBox = EditBoxWidget.Cast(w.FindAnyWidget("FileNameEditBox"));
 		
 		string default_name = "new";
@@ -271,40 +246,30 @@ class EditorFileSaveDialog: EditorFileDialog
 		
 		m_FileNameBox.SetText(default_name);
 
-		AddWidget(m_FileNameBox);
-		m_SaveButton = AddButton("Save");
-		m_CloseButton = AddButton("Cancel");
-		
-		
 		string filter = "*";
 		LoadFileDirectory(m_StartDirectory, filter);
 		
 	}
 	
 	
-	void ~EditorFileSaveDialog()
+	void ~EditorFileSaveDialog() {
+		EditorLog.Trace("~EditorFileSaveDialog");
+	}
+	
+	void SaveCallback()
 	{
-		EditorPrint("~EditorFileSaveDialog");
+		//GetEditor().Save(m_CurrentDirectory + m_FileNameBox.GetText());
+		CloseDialog();
 	}
 	
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Print("EditorFileSaveDialog::OnClick");
+		EditorLog.Trace("EditorFileSaveDialog::OnClick");
 		
 		if (button != 0) return false; 
 		
-		if (w == m_SaveButton) {
-			GetEditor().Save(m_CurrentDirectory + m_FileNameBox.GetText());
-			CloseDialog();
-			return true;
-		} 
-		
-		if (w == m_CloseButton) {
-			CloseDialog();
-			return true;
-		}
-		
+
 		if (w == m_FileHostListbox) {
 			EditorFile data;
 			m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
@@ -358,10 +323,7 @@ class EditorFileExportDialog: EditorFileDialog
 	protected EditBoxWidget m_FileNameBox;
 	
 	protected ButtonWidget m_EditorDropdownPrefab;
-	
-	protected ButtonWidget m_SaveButton;
-	protected ButtonWidget m_CloseButton;
-	
+		
 	protected WrapSpacerWidget m_EditorDropdownWraper;
 	protected TextListboxWidget m_EditorDropdownListbox;
 	protected ScrollWidget m_EditorDropdownScroller;
@@ -377,13 +339,16 @@ class EditorFileExportDialog: EditorFileDialog
 	
 	void EditorFileExportDialog()
 	{
-		EditorPrint("EditorFileExportDialog");
+		EditorLog.Trace("EditorFileExportDialog");
 		
-		Widget box_prefab = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/content/EditorFileNameElement.layout");
+		Widget box_prefab = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionEditText.layout", m_DialogController.ButtonGrid);
 		m_FileNameBox = EditBoxWidget.Cast(box_prefab.FindAnyWidget("FileNameEditBox"));
 		m_FileNameBox.SetText("Export");
 		
-		m_EditorDropdownPrefab = ButtonWidget.Cast(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorDropdownPrefab.layout"));
+		AddButton("Export", "ExportCallback");
+		AddButton("Cancel", "CloseDialog");
+		
+		m_EditorDropdownPrefab = ButtonWidget.Cast(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionDropdown.layout", m_DialogController.ButtonGrid));
 		m_EditorDropdownWraper = WrapSpacerWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownWraper"));
 	
 		m_EditorDropdownExpandIcon = ImageWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownExpandIcon"));
@@ -409,11 +374,7 @@ class EditorFileExportDialog: EditorFileDialog
 		
 		ShowDropdown(false);
 
-		
-		AddWidget(m_FileNameBox);
-		m_SaveButton = AddButton("Export");
-		m_CloseButton = AddButton("Cancel");
-		AddWidget(m_EditorDropdownPrefab);
+
 		
 		string filter = "*";
 		LoadFileDirectory(m_StartDirectory, filter);
@@ -421,9 +382,24 @@ class EditorFileExportDialog: EditorFileDialog
 	}
 	
 	
-	void ~EditorFileExportDialog()
+	void ~EditorFileExportDialog() {
+		EditorLog.Trace("~EditorFileExportDialog");
+	}
+	
+	void ExportCallback()
 	{
-		EditorPrint("~EditorFileExportDialog");
+		ExportSettings settings = new ExportSettings();
+		settings.ExportFileMode = m_SelectedMode.Mode;
+		
+		// temp until adding more settings to export window
+		if (settings.ExportFileMode == ExportMode.TERRAINBUILDER)
+			settings.ExportOffset = Vector(200000, 0, 0);
+		
+		if (settings.ExportFileMode == ExportMode.VPP)
+			settings.ExportSetName = "DayZ Editor Export";
+		
+		//GetEditor().Export(settings, m_CurrentDirectory + m_FileNameBox.GetText() + "." + m_SelectedMode.Ext);
+		CloseDialog();
 	}
 	
 	private ButtonWidget CreateDropdownPrefabButton(string text, string ext, ExportMode mode)
@@ -456,30 +432,10 @@ class EditorFileExportDialog: EditorFileDialog
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Print("EditorFileExportDialog::OnClick");
+		EditorLog.Trace("EditorFileExportDialog::OnClick");
 		
 		if (button != 0) return false; 
-		Print(w);
-		if (w == m_SaveButton) {
-			ExportSettings settings = new ExportSettings();
-			settings.ExportFileMode = m_SelectedMode.Mode;
-			
-			// temp until adding more settings to export window
-			if (settings.ExportFileMode == ExportMode.TERRAINBUILDER)
-				settings.ExportOffset = Vector(200000, 0, 0);
-			
-			if (settings.ExportFileMode == ExportMode.VPP)
-				settings.ExportSetName = "DayZ Editor Export";
-			
-			GetEditor().Export(settings, m_CurrentDirectory + m_FileNameBox.GetText() + "." + m_SelectedMode.Ext);
-			CloseDialog();
-			return true;
-		} 
-		
-		if (w == m_CloseButton) {
-			CloseDialog();
-			return true;
-		}
+
 		
 		if (w == m_FileHostListbox) {
 			EditorFile data;
