@@ -345,32 +345,15 @@ class EditorHud: Hud
 	
 	// Modal Window Control
 	private ref EditorDialog m_CurrentModal = null;
+	
+	void SetModal(EditorDialog w) {
+		m_CurrentModal = w;
+	}
+	
 	EditorDialog GetModal() {
 		return m_CurrentModal;
 	}
 	
-	void ModalSet(EditorDialog w)
-	{
-		EditorLog.Trace("EditorHud::ModalSet: ", w.GetTitle());
-		if (m_CurrentModal) {
-			ModalClose();
-		}
-		
-		m_CurrentModal = w;
-		GetEditor().GetCamera().SetMoveEnabled(false);
-		GetEditor().GetCamera().SetLookEnabled(false);
-		ShowCursor();
-	}
-	
-	void ModalClose()
-	{
-		EditorLog.Trace("EditorHud::ModalClose");
-		m_CurrentModal.GetLayoutRoot().Unlink();
-		m_CurrentModal = null;
-		GetEditor().GetCamera().SetMoveEnabled(true);
-		GetEditor().GetCamera().SetLookEnabled(true);
-		ShowCursor();
-	}
 
 	bool IsModalActive() {
 		return (m_CurrentModal != null);

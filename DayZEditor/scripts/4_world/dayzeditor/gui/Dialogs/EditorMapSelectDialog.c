@@ -48,12 +48,14 @@ class MapSelectDialog: EditorDialog
 	override void Update()
 	{
 		bool select_state = m_MapSelectDialogController.MapHostListbox.GetSelectedRow() != -1;
-		if (select_state)
+		if (select_state) {
 			m_SelectButton.SetAlpha(1);
-		else m_SelectButton.SetAlpha(0.2); 
+		}
+		else {
+			m_SelectButton.SetAlpha(0.3); 
+		}
 		
 		m_SelectButton.Enable(select_state);
-		
 	}
 	
 	void SelectCallback()
@@ -86,7 +88,7 @@ class MapSelectDialog: EditorDialog
 			return true;
 			
 		}		
-		return super.OnDoubleClick( w, x, y, button );
+		return false;
 	}
 	
 

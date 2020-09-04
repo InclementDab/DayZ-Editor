@@ -3,6 +3,9 @@
 
 class EditorDialog: MVCEventHandler
 {
+	private EditorClientModule m_Editor;
+	private EditorHud m_EditorHud;
+	
 	protected ref EditorDialogController m_DialogController;
 	Controller GetController() {
 		return m_DialogController;
@@ -16,6 +19,9 @@ class EditorDialog: MVCEventHandler
 		
 		EditorLog.Trace("EditorDialog");
 
+		m_Editor = GetEditor();
+		m_EditorHud = m_Editor.GetEditorHud();
+		
 		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialog.layout", null);
 		m_LayoutRoot.GetScript(m_DialogController);
 		m_LayoutRoot.Show(false);
@@ -55,7 +61,7 @@ class EditorDialog: MVCEventHandler
 		panel.GetScript(handler);
 		handler.SetLabel(label);
 		handler.SetCallback(this, callback);
-		return panel;
+		return panel.FindAnyWidget("DialogButton");
 	}
 	
 	
@@ -73,7 +79,16 @@ class EditorDialog: MVCEventHandler
 		EditorLog.Trace("EditorDialog::ShowDialog");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		m_LayoutRoot.Show(true);
-		GetEditor().GetEditorHud().ModalSet(this);
+		
+		if (m_EditorHud.GetModal()) {
+			m_EditorHud.GetModal().CloseDialog();
+		}
+		
+		m_Editor.GetCamera().SetMoveEnabled(false);
+		m_Editor.GetCamera().SetLookEnabled(false);
+		m_EditorHud.ShowCursor();
+		
+		m_EditorHud.SetModal(this);
 		
 		float du, dv, dx, dy;
 		m_LayoutRoot.GetScreenSize(du, dv);		
@@ -86,7 +101,12 @@ class EditorDialog: MVCEventHandler
 		EditorLog.Trace("EditorDialog::CloseDialog");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 		m_LayoutRoot.Show(false);
-		GetEditor().GetEditorHud().ModalClose();
+		m_LayoutRoot.Unlink();
+		
+		m_EditorHud.SetModal(null);
+		m_Editor.GetCamera().SetMoveEnabled(true);
+		m_Editor.GetCamera().SetLookEnabled(true);
+		m_EditorHud.ShowCursor();
 	}
 	
 	void Update();
