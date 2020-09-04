@@ -3,7 +3,7 @@
 
 class EditorDialog: MVCEventHandler
 {
-	private EditorClientModule m_Editor;
+	private Editor m_Editor;
 	private EditorHud m_EditorHud;
 	
 	protected ref EditorDialogController m_DialogController;

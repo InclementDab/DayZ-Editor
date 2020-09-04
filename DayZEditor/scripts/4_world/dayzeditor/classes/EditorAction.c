@@ -1,3 +1,29 @@
+class EditorActionStack: set<ref EditorAction>
+{
+	
+	int InsertAction(EditorAction value)
+	{	
+		int count = Count();
+		for (int i = 0; i < count; i++) {
+			if (this[i].IsUndone()) {
+				Remove(i);
+				i--; count--;
+			}
+		}
+
+		// Adds to bottom of stack
+		return InsertAt(value, 0);
+	}
+	
+	void UpdateDebugReadout(out ref ObservableCollection<string> readout)
+	{
+		readout.Clear();
+		foreach (EditorAction action: this) {
+			readout.Insert(action.GetName());
+		}
+	}	
+}
+
 
 class EditorAction
 {

@@ -1,77 +1,38 @@
 
-private ref EditorClientModule m_EditorInstance;
-EditorClientModule GetEditor() 
+private ref Editor m_EditorInstance;
+Editor GetEditor() 
 { 	
 	//if (m_EditorInstance == null)
 	//	m_EditorInstance = new Editor();
 	return m_EditorInstance;
 }
 
-bool IsEditor() { return m_EditorInstance != null; }
-
-
-enum EditorClientModuleRPC
-{
-	INVALID = 36114,
-	COUNT
-};
-
-
-enum BetterMouseState {
-	LEFT = 1,
-	RIGHT = 2,
-	MIDDLE = 4
-};
-
-
-class EditorActionStack: set<ref EditorAction>
-{
-	
-	int InsertAction(EditorAction value)
-	{	
-		int count = Count();
-		for (int i = 0; i < count; i++) {
-			if (this[i].IsUndone()) {
-				Remove(i);
-				i--; count--;
-			}
-		}
-
-		// Adds to bottom of stack
-		return InsertAt(value, 0);
-	}
-	
-	void UpdateDebugReadout(out ref ObservableCollection<string> readout)
-	{
-		readout.Clear();
-		foreach (EditorAction action: this) {
-			readout.Insert(action.GetName());
-		}
-	}
-	
-
-	
+bool IsEditor() { 
+	return m_EditorInstance != null; 
 }
 
-class EditorClientModule: JMModuleBase
+
+
+
+
+class Editor
 {
+	
 	/* Private Members */
 	private Mission m_Mission;
 	private UIManager m_UIManager;
 	private EditorCamera m_Camera;
 	private PlayerBase m_Player;
-
+	
 	
 	static Object							ObjectUnderCursor = null;
 	static EditorObject 					EditorObjectUnderCursor = null;
 	static vector 							CurrentMousePosition;
 	
-	private bool m_Active = false;
-	bool IsActive() { 
-		return m_Active; 
-	}
 	
-	/* UI Stuff */
+	bool IsActive()
+		return m_Active;
+	
 	EditorHud GetEditorHud() 
 		return m_EditorHud;
 	
@@ -132,27 +93,15 @@ class EditorClientModule: JMModuleBase
 	private ref EditorObjectSet					m_SelectedObjects;
 	private ref EditorObjectDataSet			 	m_SessionCache;
 	private ref EditorActionStack 				m_ActionStack;
+	
+	private bool 								m_Active;
 			
 	private ref map<int, int> m_PlacedObjectIndex = new map<int, int>();
 	
-	// Public Members
-
-	void EditorClientModule()
-	{
-		EditorLog.Info("Editor");
-		m_EditorInstance = this;
-	}
 	
-	void ~EditorClientModule()
+	void Editor() 
 	{
-		EditorLog.Info("~Editor");
-	}
-	
-	
-	// JMModuleBase Overrides
-	override void OnInit()
-	{
-		EditorLog.Trace("Editor::OnInit");
+		EditorLog.Trace("Editor");		
 		
 		m_PlacedObjects = new EditorObjectSet();
 		m_SelectedObjects = new EditorObjectSet();
@@ -167,34 +116,58 @@ class EditorClientModule: JMModuleBase
 		m_EditorHud.Init(null);
 		m_EditorHudController = m_EditorHud.GetController();
 		
+		m_Mission = GetGame().GetMission();
+		
+		if (IsMissionOffline()) {
+			EditorLog.Info("Loading Offline Editor...");
+			
+			// Random cam position smile :)
+			float x = Math.RandomInt(3500, 8500);
+			float z = Math.RandomInt(3500, 8500);
+			float y = GetGame().SurfaceY(x, z);
+			m_Player = CreateDefaultCharacter(Vector(x, y, z));
+			SetActive(true);
+
+		} else {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
+		}
+		
 		// Events
 		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
 		EditorEvents.OnObjectDeleted.Insert(OnObjectDeleted);
-		
-		// Keybinds
-		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
-		RegisterBinding(new JMModuleBinding("OnEditorToggleCursor", "EditorToggleCursor"));
-		RegisterBinding(new JMModuleBinding("OnEditorToggleUI", "EditorToggleUI"));
-		
-		RegisterBinding(new JMModuleBinding("OnEditorToggleMap", "EditorToggleMap"));
-		RegisterBinding(new JMModuleBinding("OnEditorDeleteObject", "EditorDeleteObject"));
+	}
+	
+	void ~Editor() {
+		EditorLog.Trace("~Editor");
+		return;
+		if (!IsMissionOffline()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
+		}
+	}
+	
+	// maybe pass PlayerBase into here?
+	static Editor Create()
+	{
+		EditorLog.Trace("Editor::Create");
+		m_EditorInstance = new Editor();
+		return m_EditorInstance;
+	}
+	
+	static void Destroy()
+	{
+		EditorLog.Trace("Editor::Destroy");
+		delete m_EditorInstance;
 	}
 	
 	private bool exit_condition = false;
 	private float avg_timeslice;
 	private int timeslice_count;
 	
-	override void OnUpdate(float timeslice)
+	void Update(float timeslice)
 	{
 		m_EditorHud.Update(timeslice);
-		
-		if (m_Camera && !IsMissionOffline()) {
-			ScriptRPC update_rpc = new ScriptRPC();
-			update_rpc.Write(m_Camera.GetPosition());
-			update_rpc.Write(m_Camera.GetOrientation());
-			update_rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_UPDATE, true);
-		}
-		
 		
 		set<Object> obj = new set<Object>();
 		int x, y;
@@ -238,112 +211,6 @@ class EditorClientModule: JMModuleBase
 		m_EditorHudController.NotifyPropertyChanged("DebugText1");
 		EditorLog.CurrentLogLevel = EditorLogLevel.TRACE;
 	}
-	
-	override bool IsServer() { return false; }	
-
-	override void OnInvokeConnect(PlayerBase player, PlayerIdentity identity)
-	{
-		EditorLog.Trace("Editor::OnInvokeConnect");		
-		m_Player = player;
-		EditorLog.Debug(m_Player);
-	}
-		
-	override void OnMissionStart()
-	{
-		EditorLog.Trace("Editor::OnMissionStart");
-		m_Mission = GetGame().GetMission();
-		
-		// Only runs in Singleplayer
-		if (IsMissionOffline()) {
-			EditorLog.Info("Loading Offline Editor...");
-			
-			// Random cam position smile :)
-			float x = Math.RandomInt(3500, 8500);
-			float z = Math.RandomInt(3500, 8500);
-			float y = GetGame().SurfaceY(x, z);
-			m_Player = CreateDefaultCharacter(Vector(x, y, z));
-			m_Active = true;
-			SetActive(m_Active);
-			
-
-		} else {
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
-		}
-	}
-	
-	override void OnMissionFinish()
-	{
-		EditorLog.Trace("Editor::OnMissionFinish");
-		if (!IsMissionOffline()) {
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
-		}
-	}
-	
-	override void OnMissionLoaded()
-	{
-		EditorLog.Trace("Editor::OnMissionLoaded");
-	}
-	
-	
-	// Inputs
-	
-	private bool ShouldProcessInput(UAInput input)
-	{
-		// Check if LocalPress, Check if LControl is pressed, Check if game is focused
-		return (input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
-	}
-	
-	private void OnEditorToggleActive(UAInput input)
-	{
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorToggleActive");
-		
-		m_Active = !m_Active;
-		SetActive(m_Active);
-	}	
-	
-	private void OnEditorToggleCursor(UAInput input)
-	{
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorToggleCursor");
-		
-		// Dont want to toggle cursor on map
-		if (m_EditorHud.IsMapVisible()) return;
-		m_EditorHud.ToggleCursor();
-	}	
-	
-
-	private void OnEditorToggleUI(UAInput input)
-	{		
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorToggleUI");
-		
-		m_EditorHud.Show(!m_EditorHud.IsVisible());
-	}
-	
-	private void OnEditorToggleMap(UAInput input)
-	{
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorToggleMap");
-		
-		m_EditorHud.ShowMap(!m_EditorHud.IsMapVisible());
-		m_EditorHud.ShowCursor();
-		
-		EditorEvents.MapToggled(this, m_EditorHud.GetMap(), m_EditorHud.IsMapVisible());
-	}	
-	
-	private void OnEditorDeleteObject(UAInput input)
-	{
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorDeleteObject");
-		
-		DeleteObjects(m_SelectedObjects);
-	}
-	
-	
-	
 	
 	// target CAN BE NULL HERE!!
 	bool OnMouseDown(Widget target, int button, int x, int y)
@@ -484,24 +351,7 @@ class EditorClientModule: JMModuleBase
 		
 		return false;
 	}
-			
 	
-	// RPC stuff
-	override int GetRPCMin() 
-		return EditorClientModuleRPC.INVALID;
-	
-
-	override int GetRPCMax()
-		return EditorClientModuleRPC.COUNT;
-	
-	
-	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ref ParamsReadContext ctx)
-	{
-		switch (rpc_type) {
-			
-		
-		}
-	}
 	
 	// Object Management
 	void CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
@@ -622,6 +472,8 @@ class EditorClientModule: JMModuleBase
 	// Call to enable / disable editor
 	void SetActive(bool active)
 	{	
+		m_Active = active;
+		
 		if (m_Camera == null) {
 
 			EditorLog.Info("Initializing Camera");
@@ -648,22 +500,22 @@ class EditorClientModule: JMModuleBase
 			m_EditorUI.GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));*/
 		}
 		
-		m_Camera.SetLookEnabled(active);
-		m_Camera.SetMoveEnabled(active);
-		m_Camera.SetActive(active);
+		m_Camera.SetLookEnabled(m_Active);
+		m_Camera.SetMoveEnabled(m_Active);
+		m_Camera.SetActive(m_Active);
 		
-		m_EditorHud.Show(active);
-		m_Mission.GetHud().Show(!active);
-		m_Mission.GetHud().ShowHud(!active);
-		m_Mission.GetHud().ShowHudUI(!active);
-		m_Mission.GetHud().SetPermanentCrossHair(!active);
+		m_EditorHud.Show(m_Active);
+		m_Mission.GetHud().Show(!m_Active);
+		m_Mission.GetHud().ShowHud(!m_Active);
+		m_Mission.GetHud().ShowHudUI(!m_Active);
+		m_Mission.GetHud().SetPermanentCrossHair(!m_Active);
 	
 		
-		if (!active) {	
+		if (!m_Active) {	
 			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
 		}
 		
-		m_Player.GetInputController().SetDisabled(active);
+		m_Player.GetInputController().SetDisabled(m_Active);
 			
 		
 	}
@@ -824,4 +676,6 @@ class EditorClientModule: JMModuleBase
 	bool IsLootEditActive() { 
 		return m_LootEditMode; 
 	}
+			
 }
+

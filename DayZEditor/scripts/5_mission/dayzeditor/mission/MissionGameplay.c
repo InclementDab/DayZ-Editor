@@ -1,12 +1,6 @@
 
 modded class MissionGameplay
-{
-
-	void MissionGameplay()
-	{
-		
-	}
-	
+{	
 	
 	override void OnInit()
 	{
@@ -26,7 +20,7 @@ modded class MissionGameplay
 	override void OnKeyPress(int key)
 	{
 		// If Editor is NOT active, just do keypress
-		if (!GetEditor().IsActive()) {
+		if (!GetEditor() || !GetEditor().IsActive()) {
 			super.OnKeyPress(key);
 		// If Editor IS active, and DOESNT handle the key, do keypress
 		} else if (!GetEditor().OnKeyPress(key)) {
@@ -36,36 +30,13 @@ modded class MissionGameplay
 	
 	override void OnUpdate(float timeslice)
 	{
-		if (GetEditor().IsActive()) {
+		if (GetEditor() && GetEditor().IsActive()) {
 			GetModuleManager().OnUpdate(timeslice);
 			//GetEditor().OnUpdate(timeslice);
 		} else { 
 			super.OnUpdate(timeslice);
 		}
 	}
-	
-	
-	void StartEditor()
-	{
-		// Multiplayer case
-		if (GetGame().IsClient() && GetGame().IsMultiplayer()) {
-			EditorLog.Info("Loading Multiplayer Editor...");
-			//m_EditorInstance = new Editor();
-		} 
-		
-		// Singleplayer Case
-		else if (GetGame().IsServer() && !GetGame().IsMultiplayer()) {
-			EditorLog.Info("Loading Singleplayer Editor...");
-			//m_EditorInstance = new Editor();
-		}
-		
-		// Server case
-		else {
-			Print(GetGame().IsClient());
-			Print(GetGame().IsServer());
-			Print(GetGame().IsMultiplayer());
-			EditorLog.Error("Attempted to StartEditor as Server!");
-		}	
-	}
+
 }
 
