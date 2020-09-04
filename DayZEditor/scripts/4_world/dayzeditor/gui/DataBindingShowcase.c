@@ -44,12 +44,6 @@ class DataBindingShowcaseController: Controller
 		ref EditorBrushData data2 = new EditorBrushData();
 		data2.Name = "Test2";
 		WindowListWidgets.Insert(data2);
-		
-		Stack<string> test();
-		test.Add("TestAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		foreach (string s: test) {
-			Print(s);
-		}
 	}
 	
 	override void PropertyChanged(string property_name)
