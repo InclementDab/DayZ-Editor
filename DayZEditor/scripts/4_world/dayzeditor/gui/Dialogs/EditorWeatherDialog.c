@@ -5,9 +5,9 @@ class EditorWeatherDialogController: Controller
 	protected Weather m_Weather;
 		
 	float time;
-	float rain;
-	float fog;
-	float overcast;
+	Rain rain;
+	Fog fog;
+	Overcast overcast;
 	float wind;
 	
 	float view = 3000;
@@ -24,9 +24,9 @@ class EditorWeatherDialogController: Controller
 		m_World.GetDate(year, month, day, hour, minute);
 		time = minute * 60 + hour * 3600;
 		
-		rain = m_Weather.GetRain().GetActual();
-		fog = m_Weather.GetFog().GetActual();
-		overcast = m_Weather.GetOvercast().GetActual();
+		rain = m_Weather.GetRain();
+		fog = m_Weather.GetFog();
+		overcast = m_Weather.GetOvercast();
 		
 		m_Weather.SetWindMaximumSpeed(100);
 		wind = m_Weather.GetWindSpeed();
@@ -48,7 +48,7 @@ class EditorWeatherDialogController: Controller
 			}
 			
 			case "rain": {
-				m_Weather.GetRain().Set(rain);				
+				m_Weather.GetRain().(rain);				
 				break;
 			}
 			
