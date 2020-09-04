@@ -5,9 +5,7 @@ modded class MissionGameplay
 	override void OnInit()
 	{
 		super.OnInit();
-		
-		GetRPCManager().AddRPC("Editor", "StartEditor", this, SingleplayerExecutionType.Client);
-		
+				
 		GetUApi().GetInputByName("UACOTModuleToggleCOT").ForceDisable(true);
 		GetUApi().GetInputByName("UACOTToggleButtons").ForceDisable(true);
 		GetUApi().GetInputByName("UACOTTogglePlayer").ForceDisable(true);

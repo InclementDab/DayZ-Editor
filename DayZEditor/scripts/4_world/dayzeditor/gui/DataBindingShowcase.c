@@ -48,7 +48,10 @@ class DataBindingShowcaseController: Controller
 	
 	override void PropertyChanged(string property_name)
 	{
-		
+		if (WindowSlider < 10) {
+			WindowSlider = 10;
+			NotifyPropertyChanged("WindowSlider");
+		}
 	}
 	
 

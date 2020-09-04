@@ -291,6 +291,11 @@ class Editor
 					return true;
 				}
 				
+				case KeyCode.KC_N: {
+					New();
+					return true;
+				}
+				
 				case KeyCode.KC_S: {
 					Save();
 					return true;
@@ -599,9 +604,33 @@ class Editor
 		}
 	}
 	
+	void New()
+	{
+		EditorLog.Trace("Editor::New");
+		
+		MapSelectDialog select_window = new MapSelectDialog("Create New...");
+		select_window.ShowDialog();
+	}
+	
 	void Save()
 	{
 		EditorLog.Trace("Editor::Save");
+		
+		EditorWorldData world_data();
+		GetGame().GetWorldName(world_data.MapName);
+		m_Camera.GetTransform(world_data.CameraPosition);
+		
+		foreach (EditorObject editor_object: m_PlacedObjects) {
+			world_data.EditorObjects.InsertEditorData(editor_object.GetData());
+		}
+		
+		
+		
+		
+		FileDialogResult result = EditorFileManager.Save(world_data, "$profile:test.txt");
+		
+		m_EditorHud.GetController().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, result), COLOR_GREEN); 
+		
 	}
 	
 	void Open()

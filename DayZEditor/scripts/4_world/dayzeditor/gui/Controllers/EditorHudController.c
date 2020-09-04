@@ -39,6 +39,10 @@ class EditorHudController: Controller
 	protected Widget RightbarFrame;
 	protected ButtonWidget BrushToggleButton;
 	
+	protected Widget NotificationFrame;
+	protected Widget NotificationPanel;
+	protected TextWidget NotificationText;
+	
 	CanvasWidget EditorCanvas;
 
 	
@@ -481,11 +485,69 @@ class EditorHudController: Controller
 			if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {		
 				GetEditor().SelectObject(editor_object);
 			}
-		}
+		}		
+	}
+	
+	private float notification_start_x, notification_start_y;
+	void NotificationCreate(string text, int color = -4301218, float duration = 4)
+	{
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationAnimateFrame);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationDestroy);
+		
+				
+		NotificationPanel.SetColor(color);
+		NotificationText.SetText(text);
+		NotificationFrame.Show(true);
 			
+		float width, height;
+		NotificationFrame.GetSize(width, height);
+		
+		EffectSound notif_sound = SEffectManager.PlaySound("Notification_SoundSet", GetEditor().GetCamera().GetPosition());
+		notif_sound.SetSoundAutodestroy(true);
+		
+		// Animate pulldown
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationAnimateFrame, 0, true, NotificationFrame, GetGame().GetTime(), 0.25, notification_start_x, notification_start_x, notification_start_y, notification_start_y + height);
+		
+		// Call destroy after duration done
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationDestroy, duration * 1000, false, NotificationFrame, notification_start_x, notification_start_y);
+	}
+	
+	
+	
+	
+	private void NotificationAnimateFrame(Widget root, float anim_starttime, float duration, float start_x, float final_x, float start_y, float final_y)
+	{
+				
+		float anim_frametime = GetGame().GetTime() - anim_starttime;
+		anim_frametime /= 1000;
+		
+		float normalized_time = (1 / duration) * anim_frametime;
+		normalized_time = Math.Clamp(normalized_time, 0, 1);
+		
+		float pos_x = Math.Lerp(start_x, final_x, normalized_time);
+		float pos_y = Math.Lerp(start_y, final_y, normalized_time);
+		
+		root.SetPos(pos_x, pos_y);
+		
+		if (normalized_time >= 1)
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationAnimateFrame);
 		
 		
 	}
+	
+	private void NotificationDestroy(Widget root, float start_x, float start_y)
+	{
+		float current_x, current_y;
+		root.GetPos(current_x, current_y);
+		
+		float duration = 0.25;
+		// Animate in reverse
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationAnimateFrame, 0, true, root, GetGame().GetTime(), duration, current_x, start_x, current_y, start_y);
+		
+		// Hide Object
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(root.Show, duration * 1000, false, false);
+	}
+	
 	
 }
 

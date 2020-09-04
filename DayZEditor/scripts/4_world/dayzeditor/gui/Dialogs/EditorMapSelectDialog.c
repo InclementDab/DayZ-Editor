@@ -36,7 +36,7 @@ class MapSelectDialog: EditorDialog
 	
 	protected ref MapSelectDialogController m_MapSelectDialogController;
 		
-	void MapSelectDialog()
+	void MapSelectDialog(string title = "Select Map")
 	{
 		EditorLog.Trace("MapSelectDialog");
 		m_MapSelectDialogController = AddContent("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");

@@ -3,9 +3,7 @@ class EditorWeatherDialogController: Controller
 {
 	protected World m_World;
 	protected Weather m_Weather;
-	
-
-	
+		
 	float time;
 	float rain;
 	float fog;
@@ -32,8 +30,6 @@ class EditorWeatherDialogController: Controller
 		
 		m_Weather.SetWindMaximumSpeed(100);
 		wind = m_Weather.GetWindSpeed();
-		
-		
 	}
 	
 	override void NotifyPropertyChanged(string property_name)
@@ -52,7 +48,7 @@ class EditorWeatherDialogController: Controller
 			}
 			
 			case "rain": {
-				m_Weather.GetRain().Set(rain);
+				m_Weather.GetRain().Set(rain);				
 				break;
 			}
 			
@@ -60,7 +56,6 @@ class EditorWeatherDialogController: Controller
 				m_Weather.GetFog().Set(fog);
 				break;
 			}
-			
 			
 			case "overcast": {
 				m_Weather.GetOvercast().Set(overcast);
@@ -81,10 +76,8 @@ class EditorWeatherDialogController: Controller
 				m_World.SetObjectViewDistance(objectview);
 				break;
 			}
-		}			
+		}	
 	}
-	
-	
 }
 
 

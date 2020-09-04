@@ -447,68 +447,7 @@ class EditorUI: UIScriptedMenu
 		return (cursor_x > size_x + pos_x) || (cursor_x < pos_x) || (cursor_y > size_y + pos_y) || (cursor_y < pos_y);
 	}
 	
-	private float notification_start_x, notification_start_y;
-	void NotificationCreate(string text, int color = -4301218, float duration = 4)
-	{
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationAnimateFrame);
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationDestroy);
-		
-		Widget notif_panel = m_NotificationFrame.FindAnyWidget("NotificationPanel");
-		TextWidget notif_text = TextWidget.Cast(m_NotificationFrame.FindAnyWidget("NotificationText"));
-		
-		notif_panel.SetColor(color);
-		notif_text.SetText(text);
-		m_NotificationFrame.Show(true);
-			
-		float width, height;
-		m_NotificationFrame.GetSize(width, height);
-		
-		EffectSound notif_sound = SEffectManager.PlaySound("Notification_SoundSet", GetEditor().GetCamera().GetPosition());
-		notif_sound.SetSoundAutodestroy(true);
-		
-		// Animate pulldown
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationAnimateFrame, 0, true, m_NotificationFrame, GetGame().GetTime(), 0.25, notification_start_x, notification_start_x, notification_start_y, notification_start_y + height);
-		
-		// Call destroy after duration done
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationDestroy, duration * 1000, false, m_NotificationFrame, notification_start_x, notification_start_y);
-	}
-	
-	
-	
-	
-	private void NotificationAnimateFrame(Widget root, float anim_starttime, float duration, float start_x, float final_x, float start_y, float final_y)
-	{
-				
-		float anim_frametime = GetGame().GetTime() - anim_starttime;
-		anim_frametime /= 1000;
-		
-		float normalized_time = (1 / duration) * anim_frametime;
-		normalized_time = Math.Clamp(normalized_time, 0, 1);
-		
-		float pos_x = Math.Lerp(start_x, final_x, normalized_time);
-		float pos_y = Math.Lerp(start_y, final_y, normalized_time);
-		
-		root.SetPos(pos_x, pos_y);
-		
-		if (normalized_time >= 1)
-			GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationAnimateFrame);
-		
-		
-	}
-	
-	private void NotificationDestroy(Widget root, float start_x, float start_y)
-	{
-		float current_x, current_y;
-		root.GetPos(current_x, current_y);
-		
-		float duration = 0.25;
-		// Animate in reverse
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationAnimateFrame, 0, true, root, GetGame().GetTime(), duration, current_x, start_x, current_y, start_y);
-		
-		// Hide Object
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(root.Show, duration * 1000, false, false);
-	}
-	
+
 	
 
 }

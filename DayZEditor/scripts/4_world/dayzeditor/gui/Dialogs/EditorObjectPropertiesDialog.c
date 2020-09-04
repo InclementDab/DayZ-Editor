@@ -74,6 +74,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 	
 	protected ref EditorPropertiesPrefabController m_EditorPropertiesController;
 	
+	private string m_StartName;
 	private vector m_StartPosition;
 	private vector m_StartOrientation;
 	
@@ -89,6 +90,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 		info_group.AddPrefab(new EditorPrefabPosition("Rotation", "rot"));
 		info_group.SetController(m_EditorPropertiesController);
 		
+		m_StartName = m_EditorObject.GetDisplayName();
 		m_StartPosition = m_EditorObject.GetPosition();
 		m_StartOrientation = m_EditorObject.GetOrientation();
 		
@@ -110,6 +112,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 	
 	void CancelCallback() {
 		EditorLog.Trace("EditorObjectPropertiesDialog::CancelCallback");
+		m_EditorObject.SetDisplayName(m_StartName);
 		m_EditorObject.SetPosition(m_StartPosition);
 		m_EditorObject.SetOrientation(m_StartOrientation);
 		CloseDialog();

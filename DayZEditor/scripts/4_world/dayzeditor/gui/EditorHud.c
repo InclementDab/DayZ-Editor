@@ -11,6 +11,7 @@ class EditorHud: Hud
 	protected ref EditorMap 	m_EditorMap;
 	protected EditBoxWidget 	m_LeftbarSearchBar;	
 	
+		
 	protected ref MVCEventHashMap m_MVCEventHashMap = new MVCEventHashMap();
 	
 	protected ref EditorHudController 	m_EditorHudController;
@@ -387,6 +388,8 @@ class EditorHud: Hud
 		
 		view_binding.InvokeCommand(new ButtonCommandArgs(m_CurrentButton, 0, true));
 	}
+	
+	
 }
 
 
