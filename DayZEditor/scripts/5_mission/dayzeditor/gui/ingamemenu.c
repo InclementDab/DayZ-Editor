@@ -8,6 +8,9 @@ modded class InGameMenu
 	{		
 		layoutRoot = super.Init();
 		
+		if (!IsMissionOffline()) {
+			return layoutRoot;
+		}
 		
 		m_RestartDeadButton.Show(false);
 		ButtonSetText(m_RestartButton, "CHANGE MAP");
@@ -26,16 +29,19 @@ modded class InGameMenu
 	}
 	
 	
-	override void UpdateGUI() {	}
+	override void UpdateGUI() 
+	{
+		if (!IsMissionOffline())
+			super.UpdateGUI();
+	}
 	
 	
 	override void OnClick_Restart()
 	{
+		if (!IsMissionOffline())
+			return;
+		
 		MapSelectDialog select_window = new MapSelectDialog();
 		select_window.ShowDialog();
-		//GetGame().GetUIManager().ShowScriptedMenu(select_window, this);
 	}
-	
-	
-
 }

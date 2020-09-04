@@ -58,8 +58,7 @@ class TypeConversionEditorWidget: TypeConversionTemplate<EditorWidget>
 
 
 class TypeConversionBrush: TypeConversionTemplate<ref EditorBrushData>
-{
-	
+{	
 	override void SetString(string value) {
 		m_Value.Name = value;
 	}

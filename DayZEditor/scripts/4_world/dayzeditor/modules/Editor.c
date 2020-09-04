@@ -468,7 +468,7 @@ class EditorClientModule: JMModuleBase
 				case KeyCode.KC_ESCAPE: {
 				
 					if (m_EditorHud.IsModalActive()) {
-						m_EditorHud.ModalClose();
+						m_EditorHud.GetModal().CloseDialog();
 						return true;
 					// jank
 					} else if (!GetGame().GetMission().IsPaused()) {
@@ -717,7 +717,7 @@ class EditorClientModule: JMModuleBase
 		EditorObject editor_object = CreateObject(EditorObjectData.Create(e.GetType(), e.GetPosition(), e.GetOrientation()));
 		SelectObject(editor_object);
 		
-		if (!input.LocalValue("UATurbo")) { 
+		if (!KeyState(KeyCode.KC_LSHIFT)) { 
 			delete m_ObjectInHand;
 		}
 		

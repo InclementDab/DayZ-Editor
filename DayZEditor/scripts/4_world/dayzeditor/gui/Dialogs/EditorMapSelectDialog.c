@@ -47,12 +47,12 @@ class MapSelectDialog: EditorDialog
 	
 	override void Update()
 	{
-		m_DialogController.TitleBar.SetPos(0, 0);
-		if (m_MapSelectDialogController.MapHostListbox.GetSelectedRow() != -1)
+		bool select_state = m_MapSelectDialogController.MapHostListbox.GetSelectedRow() != -1;
+		if (select_state)
 			m_SelectButton.SetAlpha(1);
-		else m_SelectButton.SetAlpha(0.5); 
+		else m_SelectButton.SetAlpha(0.2); 
 		
-		m_SelectButton.Enable(m_MapSelectDialogController.MapHostListbox.GetSelectedRow() != -1);
+		m_SelectButton.Enable(select_state);
 		
 	}
 	

@@ -87,7 +87,7 @@ class EditorHud: Hud
 		m_LayoutRoot.GetScript(m_EditorHudController);
 		
 		// Showcase UI
-		GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/DataBindingShowcase.layout", m_LayoutRoot);
+		//GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/DataBindingShowcase.layout", m_LayoutRoot);
 		
 		// Misc get ridda this shit too
 		m_EditorMapContainer	= m_LayoutRoot.FindAnyWidget("MapContainer");
@@ -345,6 +345,10 @@ class EditorHud: Hud
 	
 	// Modal Window Control
 	private ref EditorDialog m_CurrentModal = null;
+	EditorDialog GetModal() {
+		return m_CurrentModal;
+	}
+	
 	void ModalSet(EditorDialog w)
 	{
 		EditorLog.Trace("EditorHud::ModalSet: ", w.GetTitle());
