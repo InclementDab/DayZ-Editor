@@ -53,6 +53,14 @@ class EditorDialog: MVCEventHandler
 		return controller;
 	}
 	
+	protected Controller AddContent(EditorPrefab prefab)
+	{
+		m_DialogController.DialogContent.AddChild(prefab.GetLayoutRoot());
+		Controller controller;
+		prefab.GetLayoutRoot().GetScript(controller);
+		return controller;
+	}
+	
 	
 	protected ButtonWidget AddButton(string label, string callback) 
 	{

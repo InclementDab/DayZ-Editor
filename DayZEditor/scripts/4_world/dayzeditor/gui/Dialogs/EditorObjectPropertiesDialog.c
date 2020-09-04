@@ -19,12 +19,17 @@ class EditorObjectPropertiesDialog: EditorDialog
 		EditorLog.Trace("EditorObjectPropertiesDialog");
 		m_EditorObject = editor_object;
 		
+		EditorPrefabGroup title_group = new EditorPrefabGroup("Name");
+		title_group.AddPrefab(new EditorPrefabDropdown());
 		
+		AddContent(title_group);
+		
+		/*
 		m_EditorPropertiesController = AddContent("DayZEditor/gui/Layouts/options/EditorDialogOptionPropertiesPrefab.layout");
 		m_EditorPropertiesController.SetEditorObject(m_EditorObject);
 		m_StartPosition = m_EditorObject.GetPosition();
 		m_StartOrientation = m_EditorObject.GetOrientation();
-		
+		*/
 		SetTitle("Edit: Object Properties");
 		AddButton("Save", "SaveCallback");
 		AddButton("Cancel", "CancelCallback");
