@@ -66,5 +66,16 @@ class TypeConversionBrush: TypeConversionTemplate<ref EditorBrushData>
 	override string GetString() {
 		return m_Value.Name;
 	}
+}
+
+
+class TypeConversionPrefabEditText: TypeConversionTemplate<ref EditorPrefabEditText>
+{
+	override void SetString(string value) {
+		m_Value.SetText(value);
+	}
 	
+	override string GetString() {
+		
+	}
 }

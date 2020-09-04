@@ -22,10 +22,6 @@ class EditorDialogController: Controller
 		EditorLog.Trace("~EditorDialogController");
 	}
 	
-	override void PropertyChanged(string property_name)
-	{
-		Print("PropertyChanged " + property_name);
-	}
 	
 	
 	float m_OffsetX, m_OffsetY;

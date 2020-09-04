@@ -5,6 +5,7 @@ PanelWidgetClass EditorOptionSlider {
  vexactpos 1
  hexactsize 0
  vexactsize 1
+ scriptclass "ViewBinding"
  {
   WrapSpacerWidgetClass EditorOptionSliderSpacer {
    ignorepointer 1
@@ -157,7 +158,7 @@ PanelWidgetClass EditorOptionSlider {
     }
    }
   }
-  TextWidgetClass EditorOptionSliderLable {
+  TextWidgetClass EditorOptionSliderLabel {
    ignorepointer 1
    size 0.3 24
    hexactpos 1
@@ -168,6 +169,10 @@ PanelWidgetClass EditorOptionSlider {
    font "gui/fonts/etelkatextpro"
    "text offset" -5 0
    "text halign" right
+  }
+ }
+ {
+  ScriptParamsClass {
   }
  }
 }

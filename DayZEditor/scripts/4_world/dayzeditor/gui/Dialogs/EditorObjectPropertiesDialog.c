@@ -1,4 +1,14 @@
 
+
+
+class EditorPropertiesPrefabController: Controller
+{
+	EditorPrefabEditText name;
+	
+	EditorPrefabPosition pos;
+	EditorPrefabPosition rot;
+}
+
 class EditorObjectPropertiesDialog: EditorDialog
 {
 	
@@ -9,7 +19,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 	protected ButtonWidget m_CancelButton;
 	protected EditorObject m_Object;
 	
-	protected ref EditorPropertiesController m_EditorPropertiesController;
+	protected ref EditorPropertiesPrefabController m_EditorPropertiesController;
 	
 	private vector m_StartPosition;
 	private vector m_StartOrientation;
@@ -18,11 +28,16 @@ class EditorObjectPropertiesDialog: EditorDialog
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog");
 		m_EditorObject = editor_object;
+		m_EditorPropertiesController = new EditorPropertiesPrefabController();
 		
-		EditorPrefabGroup title_group = new EditorPrefabGroup("Name");
-		title_group.AddPrefab(new EditorPrefabDropdown());
+		EditorPrefabGroup info_group = new EditorPrefabGroup("Object Info");
+		info_group.AddPrefab(new EditorPrefabEditText("Name", "name"));
+		info_group.AddPrefab(new EditorPrefabPosition("Position", "pos"));
+		info_group.AddPrefab(new EditorPrefabPosition("Rotation", "rot"));
 		
-		AddContent(title_group);
+		info_group.SetController(m_EditorPropertiesController);
+		
+		AddContent(info_group);
 		
 		/*
 		m_EditorPropertiesController = AddContent("DayZEditor/gui/Layouts/options/EditorDialogOptionPropertiesPrefab.layout");

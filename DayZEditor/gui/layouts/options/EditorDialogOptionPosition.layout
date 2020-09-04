@@ -4,6 +4,7 @@ PanelWidgetClass EditorPosElement {
  vexactpos 1
  hexactsize 0
  vexactsize 1
+ scriptclass "ViewBinding"
  {
   WrapSpacerWidgetClass PositionSpacer {
    ignorepointer 1
@@ -241,7 +242,7 @@ PanelWidgetClass EditorPosElement {
     }
    }
   }
-  TextWidgetClass EditorPosElementLable {
+  TextWidgetClass EditorPosElementLabel {
    ignorepointer 1
    size 0.3 24
    hexactpos 1
@@ -252,6 +253,10 @@ PanelWidgetClass EditorPosElement {
    font "gui/fonts/etelkatextpro"
    "text offset" -5 0
    "text halign" right
+  }
+ }
+ {
+  ScriptParamsClass {
   }
  }
 }

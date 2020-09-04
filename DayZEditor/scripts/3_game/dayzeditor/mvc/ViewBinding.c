@@ -5,7 +5,7 @@ class ViewBinding: MVCEventHandler
 {
 	
 	// Name of Binding. If blank, uses the Widget name (not advised)
-	reference string Binding_Name;
+	protected reference string Binding_Name;
 	
 	// Function called when type is Clicked, Selected, or Changed
 	reference string Command_Execute;
@@ -28,6 +28,11 @@ class ViewBinding: MVCEventHandler
 		return Binding_Name; 
 	}
 	
+	void SetBindingName(string binding_name) {
+		Binding_Name = binding_name;
+		UpdateBinding();
+	}
+	
 	typename GetPropertyType(string property_name) {
 		return m_Controller.GetPropertyType(property_name);
 	}
@@ -47,21 +52,8 @@ class ViewBinding: MVCEventHandler
 	{ 
 		EditorLog.Trace("ViewBinding::SetController: %1", controller.GetLayoutRoot().GetName());
 		m_Controller = controller;
-		m_PropertyType = GetPropertyType(Binding_Name);
-		
-		if (!m_PropertyType) {
-			MVC.PropertyNotFoundError(Binding_Name);
-		}
 
-		if (Selected_Item != string.Empty)
-			m_SelectedDataConverter = MVC.GetTypeConversion(GetPropertyType(Selected_Item));
-				
-		if (m_PropertyType.IsInherited(Observable)) {			
-			m_PropertyDataConverter = MVC.GetTypeConversion(Observable.Cast(m_PropertyType.Spawn()).GetType());
-		} else {
-			m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyType);
-		}
-		
+		UpdateBinding();
 		
 		// Updates the view on first load
 		UpdateView();
@@ -139,6 +131,25 @@ class ViewBinding: MVCEventHandler
 				m_WidgetController.ClearData();
 				break;
 			}
+		}
+	}
+	
+	private void UpdateBinding()
+	{
+		EditorLog.Trace("ViewBinding::UpdateBinding");
+		m_PropertyType = GetPropertyType(Binding_Name);
+		
+		if (!m_PropertyType) {
+			MVC.PropertyNotFoundError(Binding_Name);
+		}
+
+		if (Selected_Item != string.Empty)
+			m_SelectedDataConverter = MVC.GetTypeConversion(GetPropertyType(Selected_Item));
+				
+		if (m_PropertyType.IsInherited(Observable)) {			
+			m_PropertyDataConverter = MVC.GetTypeConversion(Observable.Cast(m_PropertyType.Spawn()).GetType());
+		} else {
+			m_PropertyDataConverter = MVC.GetTypeConversion(m_PropertyType);
 		}
 	}
 	

@@ -8,6 +8,7 @@ WrapSpacerWidgetClass EditorDialogOption {
  vexactpos 1
  hexactsize 0
  vexactsize 1
+ scriptclass "ViewBinding"
  style Colorable
  Padding 0
  Margin 0
@@ -119,6 +120,10 @@ WrapSpacerWidgetClass EditorDialogOption {
    "Size To Content V" 1
    content_halign center
    content_valign center
+  }
+ }
+ {
+  ScriptParamsClass {
   }
  }
 }

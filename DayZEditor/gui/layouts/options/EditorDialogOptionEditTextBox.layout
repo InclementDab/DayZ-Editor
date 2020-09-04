@@ -4,6 +4,7 @@ PanelWidgetClass EditorEditTextElement {
  vexactpos 1
  hexactsize 0
  vexactsize 1
+ scriptclass "ViewBinding"
  {
   WrapSpacerWidgetClass EditorEditTextElementSpacer {
    ignorepointer 1
@@ -69,6 +70,10 @@ PanelWidgetClass EditorEditTextElement {
      }
     }
    }
+  }
+ }
+ {
+  ScriptParamsClass {
   }
  }
 }

@@ -4,6 +4,7 @@ PanelWidgetClass EditorEditTextElement {
  vexactpos 1
  hexactsize 0
  vexactsize 1
+ scriptclass "ViewBinding"
  {
   WrapSpacerWidgetClass EditorEditTextElementSpacer {
    ignorepointer 1
@@ -72,6 +73,10 @@ PanelWidgetClass EditorEditTextElement {
    font "gui/fonts/etelkatextpro"
    "text offset" -5 0
    "text halign" right
+  }
+ }
+ {
+  ScriptParamsClass {
   }
  }
 }
