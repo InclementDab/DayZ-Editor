@@ -3,10 +3,10 @@
 
 class EditorPropertiesPrefabController: Controller
 {
-	EditorPrefabEditText name;
+	ref EditorPrefabEditText name;
 	
-	EditorPrefabPosition pos;
-	EditorPrefabPosition rot;
+	ref EditorPrefabPosition pos;
+	ref EditorPrefabPosition rot;
 }
 
 class EditorObjectPropertiesDialog: EditorDialog
@@ -31,10 +31,15 @@ class EditorObjectPropertiesDialog: EditorDialog
 		m_EditorPropertiesController = new EditorPropertiesPrefabController();
 		
 		EditorPrefabGroup info_group = new EditorPrefabGroup("Object Info");
-		info_group.AddPrefab(new EditorPrefabEditText("Name", "name"));
-		info_group.AddPrefab(new EditorPrefabPosition("Position", "pos"));
-		info_group.AddPrefab(new EditorPrefabPosition("Rotation", "rot"));
+		m_EditorPropertiesController.name = new EditorPrefabEditText("Name", "name");
+		m_EditorPropertiesController.pos = new EditorPrefabPosition("Position", "pos");
+		m_EditorPropertiesController.rot = new EditorPrefabPosition("Rotation", "rot");
+		info_group.AddPrefab(m_EditorPropertiesController.name);
+		info_group.AddPrefab(m_EditorPropertiesController.pos);
+		info_group.AddPrefab(m_EditorPropertiesController.rot);
 		
+		m_EditorPropertiesController.name.SetText("Test");
+		m_EditorPropertiesController.pos.SetVector(Vector(50, 69, 2));
 		info_group.SetController(m_EditorPropertiesController);
 		
 		AddContent(info_group);

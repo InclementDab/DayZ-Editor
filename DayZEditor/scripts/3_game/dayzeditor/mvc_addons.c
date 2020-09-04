@@ -7,6 +7,10 @@ modded class MVC
 		type_conversions.Insert(StringEvaluater, TypeConversionEquation);
 		type_conversions.Insert(EditorWidget, TypeConversionEditorWidget);
 		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
+		
+		type_conversions.Insert(EditorPrefabEditText, TypeConversionPrefabEditText);
+		type_conversions.Insert(EditorPrefabPosition, TypeConversionPrefabPosition);
+		
 	}
 }
 
@@ -76,6 +80,18 @@ class TypeConversionPrefabEditText: TypeConversionTemplate<ref EditorPrefabEditT
 	}
 	
 	override string GetString() {
-		
+		return m_Value.GetText();
+	}
+}
+
+class TypeConversionPrefabPosition: TypeConversionTemplate<ref EditorPrefabPosition>
+{
+	
+	override void SetVector(vector value) {
+		m_Value.SetVector(value);
+	}
+	
+	override vector GetVector() {
+		return m_Value.GetVector();
 	}
 }
