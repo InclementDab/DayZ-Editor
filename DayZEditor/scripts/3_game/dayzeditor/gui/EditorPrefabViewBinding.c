@@ -26,10 +26,9 @@ class EditorPrefabViewBinding: ViewBinding
 				w.GetSibling().Show(group_state);
 				return true;
 			}
-			
 		}
 		
-		return false;
+		return super.OnClick(w, x, y, button);
 	}
 	
 }

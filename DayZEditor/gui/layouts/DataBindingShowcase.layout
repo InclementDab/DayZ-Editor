@@ -8,7 +8,7 @@ FrameWidgetClass WindowFrame {
  hexactsize 1
  vexactsize 1
  draggable 0
- scriptclass ""
+ scriptclass "DataBindingShowcaseController"
  {
   WrapSpacerWidgetClass WindowContent {
    ignorepointer 1
@@ -20,7 +20,7 @@ FrameWidgetClass WindowFrame {
    vexactpos 1
    hexactsize 0
    vexactsize 0
-   scriptclass "DataBindingShowcaseController"
+   scriptclass ""
    "no focus" 0
    Padding 5
    Margin 5
@@ -144,6 +144,7 @@ FrameWidgetClass WindowFrame {
     }
     XComboBoxWidgetClass WindowListWidgets {
      visible 1
+     disabled 0
      clipchildren 0
      ignorepointer 0
      position 0 0
@@ -155,17 +156,32 @@ FrameWidgetClass WindowFrame {
      scriptclass "ViewBinding"
      {
       ScriptParamsClass {
-       Command_Execute "OnComboBoxChanged"
-       Command_CanExecute "CanComboBoxChange"
-       Selected_Item "SelectedObject"
+       Binding_Name "WindowListWidgetsData"
+       Two_Way_Binding 0
+      }
+     }
+    }
+    WrapSpacerWidgetClass WrapTest {
+     visible 1
+     ignorepointer 1
+     position 0 0
+     size 1 0.5
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scriptclass "ViewBinding"
+     {
+      ScriptParamsClass {
+       Binding_Name "WrapTestData"
       }
      }
     }
    }
-   {
-    ScriptParamsClass {
-    }
-   }
+  }
+ }
+ {
+  ScriptParamsClass {
   }
  }
 }

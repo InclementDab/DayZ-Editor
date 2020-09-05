@@ -59,6 +59,20 @@ class EditorPrefabSliderController: WidgetControllerTemplate<EditorPrefabSlider>
 	override void GetData(out TypeConverter type_converter) {
 		type_converter.SetFloat(m_Widget.GetFloat());
 	}
+}
+
+class EditorPrefabButtonController: WidgetControllerTemplate<EditorPrefabButton>
+{
+	override bool CanTwoWayBind() {
+		return true;
+	}
 	
+	override void SetData(TypeConverter type_converter) {
+		m_Widget.SetBool(type_converter.GetBool());
+	}
+	
+	override void GetData(out TypeConverter type_converter) {
+		type_converter.SetBool(m_Widget.GetBool());
+	}
 }
 

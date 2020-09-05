@@ -2,6 +2,7 @@ typedef ref map<string, ref EditorBrushData> EditorBrushDataSet;
 
 
 typedef ref array<ref EditorBrushObject> EditorBrushObjectArray;
+
 class EditorBrushObject
 {
 	string Name;
@@ -19,8 +20,7 @@ class EditorBrushData
 	string Name;
 	float MinRadius, MaxRadius;
 	
-	int PlaceableObjectTypeCount;
-	ref EditorBrushObject PlaceableObjectTypes[1024];
+	ref EditorBrushObjectArray PlaceableObjectTypes;
 
 	typename BrushClassName;
 	
@@ -32,8 +32,8 @@ class EditorBrushData
 			return false;
 		}
 		
-		PlaceableObjectTypes[PlaceableObjectTypeCount] = placeable_object;
-		PlaceableObjectTypeCount++;
+		PlaceableObjectTypes.Insert(placeable_object);
+
 		
 		return true;
 	}
@@ -43,9 +43,9 @@ class EditorBrushData
 		EditorBrushObjectArray PlaceableObjects = new EditorBrushObjectArray();
 		
 		// This is rly slow
-		for (int i = 0; i < PlaceableObjectTypeCount; i++)
-			for (int j = 0; j < PlaceableObjectTypes[i].Frequency * 100; j++)
-				PlaceableObjects.Insert(PlaceableObjectTypes[i]);
+		foreach (EditorBrushObject placeable_object: PlaceableObjectTypes)
+			for (int j = 0; j < placeable_object.Frequency * 100; j++)
+				PlaceableObjects.Insert(placeable_object);
 		
 		
 		return PlaceableObjects.GetRandomElement();

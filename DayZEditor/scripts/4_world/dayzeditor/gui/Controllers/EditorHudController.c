@@ -233,6 +233,11 @@ class EditorHudController: Controller
 		weather_dialog.ShowDialog();
 	}
 	
+	void CameraExecute(ButtonCommandArgs args) {
+		EditorCameraDialog camera_dialog = new EditorCameraDialog(GetEditor().GetCamera());
+		camera_dialog.ShowDialog();
+	}
+	
 	
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)

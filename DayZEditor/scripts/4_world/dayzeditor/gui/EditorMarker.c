@@ -140,7 +140,7 @@ class EditorObjectMapMarker: EditorObjectMarker
 	
 	override void Update()
 	{
-		if (!GetEditor().GetEditorHud().IsMapVisible()) return;
+		if (!GetEditor().GetEditorHud().IsMapOpen()) return;
 		m_MapWidget = MapWidget.Cast(m_LayoutRoot.GetParent());
 		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());
 		SetPos(pos[0], pos[1]);

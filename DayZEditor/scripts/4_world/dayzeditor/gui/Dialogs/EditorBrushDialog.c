@@ -3,11 +3,13 @@
 class EditorBrushDialogController: Controller
 {
 	string BrushName;
-	
+	bool AddBrushData;
 	
 	protected EditorBrushData m_BrushData;
+
+	ref ObservableCollection<ref EditorBrushObject> BrushObjects;
 	
-	EditorBrushObject BrushObjectArray[1024];
+	ref EditorBrushObjectArray BrushObjectArray;
 	
 	void SetBrushData(EditorBrushData brush_data)
 	{
@@ -15,6 +17,24 @@ class EditorBrushDialogController: Controller
 		
 		BrushName = m_BrushData.Name;
 		BrushObjectArray = m_BrushData.PlaceableObjectTypes;
+		
+		BrushObjects = new ObservableCollection<ref EditorBrushObject>("BrushObjects", this);
+	}
+	
+	override void PropertyChanged(string property_name)
+	{
+		
+		switch (property_name) {
+			
+			case "AddBrushData": {
+				if (AddBrushData) {
+					BrushObjects.Insert(new EditorBrushObject("", 1, 0));
+				}
+				
+				break;
+			}
+			
+		}
 	}
 	
 }
@@ -44,16 +64,19 @@ class EditorBrushDialog: EditorDialog
 		m_BrushObjects = new EditorPrefabGroup("Brush Objects");
 		
 		
-		
-		for (int i = 0; i < m_BrushData.PlaceableObjectTypeCount; i++) {
-			m_BrushObjects.AddPrefab(new EditorPrefabEditText("Brush", "BrushObjectArray", i));
-		}
+
 		
 		m_BrushSettings.SetController(m_EditorBrushDialogController);
 		m_BrushObjects.SetController(m_EditorBrushDialogController);
 		
+		
+		
 		AddContent(m_BrushSettings);
-		AddContent(m_BrushObjects);
+		AddContent(m_BrushObjects); 
+		
+		EditorPrefabButton btn = new EditorPrefabButton("Add Brush...", "AddBrushData");
+		btn.SetController(m_EditorBrushDialogController);
+		AddContent(btn);
 			
 		AddButton("Save", "SaveCallback");
 		AddButton("Export", "ExportCallback");
@@ -64,13 +87,13 @@ class EditorBrushDialog: EditorDialog
 	void SaveCallback()
 	{
 		EditorLog.Trace("EditorBrushDialog::SaveCallback"); 
+		
 	}
 	
 	
 	void ExportCallback()
 	{
 		EditorLog.Trace("EditorBrushDialog::ExportCallback");
-		m_BrushObjects.AddPrefab(new EditorPrefabEditText("Brush", "BrushObjectArray", m_BrushData.PlaceableObjectTypeCount));
 	}
 	
 }

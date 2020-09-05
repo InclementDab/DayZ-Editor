@@ -50,6 +50,16 @@ class EditorPrefabGroup: EditorPrefab
 {
 	private ref array<ref EditorPrefab> m_EditorPrefabChildren = {};
 	
+	void AddPrefab(Widget child_fab)
+	{
+		m_LayoutRoot.FindAnyWidget("EditorDialogOptionContent").AddChild(child_fab);
+	}
+	
+	void RemovePrefab(Widget child_fab)
+	{
+		m_LayoutRoot.FindAnyWidget("EditorDialogOptionContent").RemoveChild(child_fab);
+	}
+	
 	void AddPrefab(EditorPrefab child_fab)
 	{
 		m_EditorPrefabChildren.Insert(child_fab);
@@ -62,7 +72,12 @@ class EditorPrefabGroup: EditorPrefab
 		m_LayoutRoot.FindAnyWidget("EditorDialogOptionContent").RemoveChild(child_fab.GetLayoutRoot());
 	}
 	
-
+	void ClearPrefabs()
+	{
+		foreach (EditorPrefab child_fab: m_EditorPrefabChildren) {
+			RemovePrefab(child_fab);
+		}
+	}
 	
 	override void SetController(Controller controller) {
 		super.SetController(controller);
@@ -183,19 +198,29 @@ class EditorPrefabButton: EditorPrefab
 {
 	EditorPrefabButtonStyle m_Style;
 	
-	void EditorPrefabButton(string caption = "", string binding_name = "", EditorPrefabButtonStyle style = EditorPrefabButtonStyle.BUTTON_90x30) {
+	void EditorPrefabButton(string caption = "", string binding_name = "", int binding_index = 0, EditorPrefabButtonStyle style = 1) {
 		m_Style = style;
+		
+		GetButtonWidgetByStyle(m_Style).GetParent().GetParent().Show(true);
 	}
 	
 	void SetButtonText(string text) {
-		ButtonWidget.Cast(GetButtonWidgetByStyle(m_Style)).SetText(text);
+		GetButtonWidgetByStyle(m_Style).SetText(text);
+	}
+	
+	void SetBool(bool value) {
+		GetButtonWidgetByStyle(m_Style).SetState(value);
+	}
+	
+	bool GetBool() {
+		return GetButtonWidgetByStyle(m_Style).GetState();
 	}
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/options/EditorPrefabButton.layout";
 	}
 	
-	Widget GetButtonWidgetByStyle(EditorPrefabButtonStyle style)
-		return m_LayoutRoot.FindAnyWidget(typename.EnumToString(EditorPrefabButtonStyle, style));
-	
+	ButtonWidget GetButtonWidgetByStyle(EditorPrefabButtonStyle style) {
+		return ButtonWidget.Cast(m_LayoutRoot.FindAnyWidget(typename.EnumToString(EditorPrefabButtonStyle, style)));
+	}
 }

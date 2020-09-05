@@ -64,6 +64,10 @@ class TypeConversionBrushObject: TypeConversionTemplate<ref EditorBrushObject>
 	override string GetString() {
 		return m_Value.Name;
 	}
+	
+	override Widget GetWidget() {
+		return GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionEditBrush.layout");
+	}
 }
 
 
@@ -86,6 +90,8 @@ modded class MVC
 		widget_controllers.Insert(EditorPrefabEditText, EditorPrefabEditTextController);
 		widget_controllers.Insert(EditorPrefabPosition, EditorPrefabPositionController);
 		widget_controllers.Insert(EditorPrefabSlider, EditorPrefabSliderController);
+		widget_controllers.Insert(EditorPrefabButton, EditorPrefabButtonController);
+		
 		
 	}
 }

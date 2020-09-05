@@ -36,9 +36,6 @@ class EditorHud: Hud
 		return m_LayoutRoot; 
 	}
 	
-	bool IsMapVisible() { 
-		return m_EditorMapContainer.IsVisible(); 
-	}
 	
 	override void Show(bool show) {
 		EditorLog.Trace("EditorHud::Show");

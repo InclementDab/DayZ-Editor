@@ -36,7 +36,7 @@ class EditorHologram
 		GetMousePos(x, y);
 		
 		// Handle Building
-		if (GetEditor().GetEditorHud().IsMapVisible()) {
+		if (GetEditor().GetEditorHud().IsMapOpen()) {
 			vector pos = m_MapWidget.ScreenToMap(Vector(x, y, 0));
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]);	
 				

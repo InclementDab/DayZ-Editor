@@ -102,7 +102,7 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnEditorToggleCursor");
 		
 		// Dont want to toggle cursor on map
-		if (!GetEditor().IsActive() || GetEditor().GetEditorHud().IsMapVisible()) 
+		if (!GetEditor().IsActive() || GetEditor().GetEditorHud().IsMapOpen()) 
 			return;
 		
 		GetEditor().GetEditorHud().ToggleCursor();
@@ -123,10 +123,10 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleMap");
 		
-		GetEditor().GetEditorHud().ShowMap(!GetEditor().GetEditorHud().IsMapVisible());
+		GetEditor().GetEditorHud().ShowMap(!GetEditor().GetEditorHud().IsMapOpen());
 		GetEditor().GetEditorHud().ShowCursor();
 		
-		EditorEvents.MapToggled(this, GetEditor().GetEditorHud().GetMap(), GetEditor().GetEditorHud().IsMapVisible());
+		EditorEvents.MapToggled(this, GetEditor().GetEditorHud().GetMap(), GetEditor().GetEditorHud().IsMapOpen());
 	}	
 	
 	private void OnEditorDeleteObject(UAInput input)

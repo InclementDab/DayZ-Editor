@@ -1,6 +1,9 @@
 PanelWidgetClass EditorPrefabButton {
+ visible 1
  clipchildren 0
+ ignorepointer 1
  keepsafezone 1
+ color 1 1 1 0
  position 0 0
  size 120 30
  hexactpos 1
@@ -8,11 +11,12 @@ PanelWidgetClass EditorPrefabButton {
  hexactsize 1
  vexactsize 1
  priority 1
- scriptclass "EditorDialogButtonHandler"
+ scriptclass "EditorPrefabViewBinding"
  style rover_sim_black_2
  {
   PanelWidgetClass EditorPrefabButton_120x30 {
    visible 0
+   ignorepointer 1
    keepsafezone 0
    position 0 0
    size 120 30
@@ -25,6 +29,7 @@ PanelWidgetClass EditorPrefabButton {
    style rover_sim_black_2
    {
     PanelWidgetClass PrefabButtonOutline_120x30 {
+     visible 1
      ignorepointer 1
      position 0 0
      size 1 1
@@ -37,6 +42,7 @@ PanelWidgetClass EditorPrefabButton {
      style Outline
      {
       ButtonWidgetClass BUTTON_120x30 {
+       visible 1
        disabled 0
        position 0 0
        size 1 1
@@ -66,6 +72,7 @@ PanelWidgetClass EditorPrefabButton {
   }
   PanelWidgetClass EditorPrefabButton_69x69 {
    visible 0
+   ignorepointer 1
    keepsafezone 0
    position 0 0
    size 69 69
@@ -120,6 +127,7 @@ PanelWidgetClass EditorPrefabButton {
   }
   PanelWidgetClass EditorPrefabButton_90x30 {
    visible 0
+   ignorepointer 1
    keepsafezone 0
    position 0 0
    size 90 30
@@ -175,6 +183,7 @@ PanelWidgetClass EditorPrefabButton {
  }
  {
   ScriptParamsClass {
+   Two_Way_Binding 1
   }
  }
 }
