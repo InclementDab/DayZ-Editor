@@ -172,4 +172,39 @@ class EditorPrefabSlider: EditorPrefab
 	}
 }
 
+enum EditorPrefabButtonStyle
+{
+	BUTTON_120x30,
+	BUTTON_90x30,
+	BUTTON_69x69,
+}
 
+class EditorPrefabButton: EditorPrefab
+{
+	EditorPrefabButtonStyle m_Style;
+	
+	void EditorPrefabButton(string caption = "", string binding_name = "", EditorPrefabButtonStyle style = EditorPrefabButtonStyle.BUTTON_90x30) {
+		m_Style = style;
+	}
+	
+	void SetButtonText(string text) {
+		ButtonWidget.Cast(GetButtonWidgetByStyle(m_Style)).SetText(text);
+	}
+	
+	override string GetLayoutFile() {
+		return "DayZEditor/gui/Layouts/options/EditorPrefabButton.layout";
+	}
+	
+	Widget GetButtonWidgetByStyle(EditorPrefabButtonStyle style)
+	{
+		Widget w;
+		switch(style)
+		{
+			case EditorPrefabButtonStyle.BUTTON_120x30:
+				w = m_LayoutRoot.FindAnyWidget("PrefabButton_120x30");
+			break;
+		}
+		
+		return w;
+	}
+}
