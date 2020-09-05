@@ -113,7 +113,7 @@ class EditorBrush
 			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			
-			EditorBrushObject object_name = m_BrushData.PlaceableObjects.Get(Math.RandomInt(0, m_BrushData.PlaceableObjects.Count() - 1));
+			EditorBrushObject object_name = m_BrushData.GetRandomObject();
 			data_set.InsertEditorData(EditorObjectData.Create(object_name.Name, pos, vector.Up, EditorObjectFlags.NONE));
 			
 		}
@@ -121,12 +121,16 @@ class EditorBrush
 		ref EditorObjectSet object_set = GetEditor().CreateObjects(data_set);
 		
 		i = 0;
+		
+		
+		
 		foreach (EditorObject editor_object: object_set) {
 			
 			
 			pos = editor_object.GetPosition();			
 			vector size = ObjectGetSize(editor_object.GetWorldObject());			
-			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + m_BrushData.PlaceableObjects.Get(i).ZOffset;
+			//pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + m_BrushData.PlaceableObjectTypes.Get(i).ZOffset;
+
 			
 			vector direction = Math3D.GetRandomDir();
 			direction[1] = Math.RandomFloat(-0.05, 0.05);

@@ -5,10 +5,11 @@ typedef ref array<ref EditorBrushObject> EditorBrushObjectArray;
 class EditorBrushObject
 {
 	string Name;
+	float Frequency;
 	float ZOffset;
 	
-	void EditorBrushObject(string name, float zoffset) {
-		Name = name; ZOffset = zoffset;
+	void EditorBrushObject(string name, float frequency, float zoffset) {
+		Name = name; Frequency = frequency; ZOffset = zoffset;
 	}
 }
 
@@ -17,22 +18,37 @@ class EditorBrushData
 {
 	string Name;
 	float MinRadius, MaxRadius;
-	ref EditorBrushObjectArray PlaceableObjects = new EditorBrushObjectArray();
 	
+	int PlaceableObjectTypeCount;
+	ref EditorBrushObject PlaceableObjectTypes[1024];
+
 	typename BrushClassName;
 	
-	bool InsertPlaceableObject(EditorBrushObject placeable_object, float object_frequency)
+	bool InsertPlaceableObject(EditorBrushObject placeable_object)
 	{
 		string model_name = GetGame().GetModelName(placeable_object.Name);
 		if (model_name == "UNKNOWN_P3D_FILE") {
 			EditorLog.Warning("%1 is not a valid Object Type!", placeable_object.Name);
 			return false;
 		}
-
-		for (int i = 0; i < object_frequency * 100; i++)
-			PlaceableObjects.Insert(placeable_object);
+		
+		PlaceableObjectTypes[PlaceableObjectTypeCount] = placeable_object;
+		PlaceableObjectTypeCount++;
 		
 		return true;
+	}
+	
+	EditorBrushObject GetRandomObject()
+	{
+		EditorBrushObjectArray PlaceableObjects = new EditorBrushObjectArray();
+		
+		// This is rly slow
+		for (int i = 0; i < PlaceableObjectTypeCount; i++)
+			for (int j = 0; j < PlaceableObjectTypes[i].Frequency * 100; j++)
+				PlaceableObjects.Insert(PlaceableObjectTypes[i]);
+		
+		
+		return PlaceableObjects.GetRandomElement();
 	}
 }
 

@@ -357,7 +357,7 @@ class XMLEditorBrushes: XMLCallback
 						object_frequency = 1.0;
 					}
 					
-					brush_settings.InsertPlaceableObject(new EditorBrushObject(object_type, z_offset), object_frequency);
+					brush_settings.InsertPlaceableObject(new EditorBrushObject(object_type, object_frequency, z_offset));
 				}
 			}
 							
