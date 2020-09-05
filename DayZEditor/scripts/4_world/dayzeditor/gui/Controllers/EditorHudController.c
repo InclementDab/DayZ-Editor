@@ -125,7 +125,7 @@ class EditorHudController: Controller
 		return j;
 	}
 	
-
+	
 
 	override void PropertyChanged(string property_name)
 	{
@@ -145,7 +145,11 @@ class EditorHudController: Controller
 			}
 			
 			case "BrushTypeSelection": {
-				SelectBrush(BrushToggleButtonState);
+				if (BrushToggleButtonState) {
+					GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
+				} else {
+					GetEditor().SetBrush(null);
+				}
 				break;
 			}
 			
@@ -190,23 +194,13 @@ class EditorHudController: Controller
 		
 	}
 	
-	void SelectBrush(bool state)
-	{
-#ifndef COMPONENT_SYSTEM
-		if (state) {
-			GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
-		} else {
-			GetEditor().SetBrush(null);
-		}	
-#endif
-	}
 	
-	
+	/*
 	void BrushToggleExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudController::BrushToggleExecute");
 		SelectBrush(args.param3);
-	}
+	}*/
 	
 	
 	void ToggleLeftBar(ButtonCommandArgs args) 
@@ -368,34 +362,57 @@ class EditorHudController: Controller
 	override void MVCOnClick(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::MVCOnClick");
-		if (button != 0) return;
+		
 		
 		Widget icon = target.FindAnyWidget(string.Format("%1_Icon", target.GetName()));
-		switch (target.GetName()) {
+		
+		switch (button) {
 			
-			case "UndoButton": 
-			case "RedoButton": {
-				target.SetColor(COLOR_SALMON_A);
-				int pos = ButtonWidget.Cast(target).GetState() * 1;
-				icon.SetPos(pos, pos);
+			case 0: {
+		
+				switch (target.GetName()) {
+					
+					case "UndoButton": 
+					case "RedoButton": {
+						target.SetColor(COLOR_SALMON_A);
+						int pos = ButtonWidget.Cast(target).GetState() * 1;
+						icon.SetPos(pos, pos);
+						break;
+					}
+					
+					case "SnapButton":
+					case "GroundButton":
+					case "MagnetButton": {
+						bool button_state = ButtonWidget.Cast(target).GetState();
+						icon.SetColor((GetHighlightColor(target.GetName()) * button_state) - 1);
+						icon.SetPos(button_state * 1, button_state * 1);
+						break;
+					}
+					
+					case "EditorListItemButton": {
+						
+						
+						break;
+					}
+				}
+							
 				break;
 			}
 			
-			case "SnapButton":
-			case "GroundButton":
-			case "MagnetButton": {
-				bool button_state = ButtonWidget.Cast(target).GetState();
-				icon.SetColor((GetHighlightColor(target.GetName()) * button_state) - 1);
-				icon.SetPos(button_state * 1, button_state * 1);
-				break;
-			}
-			
-			case "EditorListItemButton": {
+			case 1: {
 				
+				switch (target.GetName()) {
+								
+					case "BrushToggleButton": {
+						EditorBrushDialog brush_dialog(BrushTypeBoxData[BrushTypeSelection]);
+						brush_dialog.ShowDialog();
+						break;
+					}
+				}
 				
 				break;
 			}
-		}		
+		}
 	}
 	
 	
