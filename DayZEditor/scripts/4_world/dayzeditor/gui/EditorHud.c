@@ -40,14 +40,18 @@ class EditorHud: Hud
 		return m_EditorMapContainer.IsVisible(); 
 	}
 	
-	override void Show(bool show) 
-	{
+	override void Show(bool show) {
 		EditorLog.Trace("EditorHud::Show");
 		m_LayoutRoot.Show(show);
+		SetCursor(show);
 	}
 	
 	bool IsVisible() {
 		return m_LayoutRoot.IsVisible();
+	}
+	
+	void SetCursor(bool state) {
+		GetGame().GetUIManager().ShowCursor(state);
 	}
 	
 	void ToggleCursor() {

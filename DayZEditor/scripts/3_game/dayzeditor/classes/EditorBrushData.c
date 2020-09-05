@@ -25,7 +25,7 @@ class EditorBrushData
 	{
 		string model_name = GetGame().GetModelName(placeable_object.Name);
 		if (model_name == "UNKNOWN_P3D_FILE") {
-			Print(string.Format("%1 is not a valid Object Type!", placeable_object.Name));
+			EditorLog.Warning("%1 is not a valid Object Type!", placeable_object.Name);
 			return false;
 		}
 

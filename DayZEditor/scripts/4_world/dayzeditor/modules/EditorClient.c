@@ -93,6 +93,7 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnEditorToggleActive");
 		m_Active = !m_Active;
 		GetEditor().SetActive(m_Active);
+		
 	}	
 	
 	private void OnEditorToggleCursor(UAInput input)
@@ -101,7 +102,7 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnEditorToggleCursor");
 		
 		// Dont want to toggle cursor on map
-		if (GetEditor().GetEditorHud().IsMapVisible()) 
+		if (!GetEditor().IsActive() || GetEditor().GetEditorHud().IsMapVisible()) 
 			return;
 		
 		GetEditor().GetEditorHud().ToggleCursor();
@@ -112,6 +113,7 @@ class EditorClientModule: JMModuleBase
 	{		
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleUI");
+		
 		
 		GetEditor().GetEditorHud().Show(!GetEditor().GetEditorHud().IsVisible());
 	}

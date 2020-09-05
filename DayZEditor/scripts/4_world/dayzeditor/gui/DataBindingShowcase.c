@@ -29,18 +29,6 @@ class DataBindingShowcaseController: Controller
 			NotifyPropertyChanged("WindowSlider");
 		}
 	}
-	
-
-
-	void OnWindowCheckToggle(CheckBoxCommandArgs args)
-	{
-		Print("OnWindowCheckToggle");
-	}
-	
-	void OnComboBoxChanged(XComboBoxCommandArgs args)
-	{
-		Print("OnComboBoxChanged");
-	}
 
 }
 
