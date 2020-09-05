@@ -54,6 +54,18 @@ class TypeConversionBrush: TypeConversionTemplate<ref EditorBrushData>
 }
 
 
+class TypeConversionBrushObject: TypeConversionTemplate<ref EditorBrushObject>
+{
+	
+	override void SetString(string value) {
+		m_Value.Name = value;
+	}
+	
+	override string GetString() {
+		return m_Value.Name;
+	}
+}
+
 
 modded class MVC
 {
@@ -63,6 +75,7 @@ modded class MVC
 		type_conversions.Insert(StringEvaluater, TypeConversionEquation);
 		type_conversions.Insert(EditorWidget, TypeConversionEditorWidget);
 		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
+		type_conversions.Insert(EditorBrushObject, TypeConversionBrushObject);
 	
 	}
 	

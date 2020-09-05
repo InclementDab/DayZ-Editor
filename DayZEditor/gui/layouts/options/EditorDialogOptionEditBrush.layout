@@ -4,7 +4,7 @@ PanelWidgetClass EditorEditBrushElement {
  vexactpos 1
  hexactsize 0
  vexactsize 1
- scriptclass ""
+ scriptclass "EditorPrefabViewBinding"
  {
   WrapSpacerWidgetClass EditorEditBrushElementSpacer {
    ignorepointer 1
@@ -114,6 +114,10 @@ PanelWidgetClass EditorEditBrushElement {
      stretch 1
     }
    }
+  }
+ }
+ {
+  ScriptParamsClass {
   }
  }
 }
