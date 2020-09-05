@@ -213,6 +213,11 @@ class Editor
 	bool OnMouseDown(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("Editor::OnMouseDown");
+		
+		if (!target) {
+			SetFocus(null);
+		}
+		
 		switch (button) {
 			
 			case MouseState.LEFT: {

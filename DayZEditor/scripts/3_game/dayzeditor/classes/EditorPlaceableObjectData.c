@@ -49,7 +49,6 @@ class EditorPlaceableObjectData
 		Type = type; Path = path;
 		// probably really slow
 		m_ModStructure = GetModFromObject(Type);
-				
 		
 		TStringArray path_array = new TStringArray();
 		GetGame().ConfigGetFullPath(Path + " " + Type, path_array);
@@ -70,6 +69,20 @@ class EditorPlaceableObjectData
 		m_Category = PlaceableObjectCategory.UNKNOWN;	
 	}
 	
+	bool FilterType(BetterString filter)
+	{
+		string type_lower = Type;
+		type_lower.ToLower();
+		filter.ToLower();
+		
+		if (filter[0] == "@") {
+			type_lower = m_ModStructure.GetModName();
+			filter[0] = "";
+			type_lower.ToLower();
+		}
+		
+		return type_lower.Contains(filter);
+	}
 	
 	PlaceableObjectCategory GetCategory() { return m_Category; }
 	ModStructure GetModStructure() { return m_ModStructure; }

@@ -1,4 +1,19 @@
 
+// remove this once BI adds set into string
+typedef string BetterString;
+class BetterString: string
+{
+	static string value;
+	void Set(int n, string _value)
+	{
+		string pre = value.Substring(0, n);
+		n += 1;
+		int length = value.Length() - n;
+		string post = value.Substring(n, length);
+		value = pre + _value + post;
+		
+	}	
+}
 
 
 #define EDITORPRINT

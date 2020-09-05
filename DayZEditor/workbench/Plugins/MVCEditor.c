@@ -2,20 +2,7 @@
 
 
 
-typedef string BetterString;
-class BetterString: string
-{
-	static string value;
-	void Set(int n, string _value)
-	{
-		string pre = value.Substring(0, n);
-		n += 1;
-		int length = value.Length() - n;
-		string post = value.Substring(n, length);
-		value = pre + _value + post;
-		
-	}	
-}
+
 
 
 [WorkbenchPluginAttribute("MVC Controller Manager", "Edit MVC Settings", "Alt+3", "", {"ResourceManager", "ScriptEditor", "TestAddon"})]

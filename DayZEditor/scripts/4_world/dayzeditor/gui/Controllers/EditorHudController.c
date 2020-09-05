@@ -10,6 +10,8 @@ class EditorHudController: Controller
 	string DebugText5;
 	string DebugText6;
 	
+	string SearchBarData;
+	
 	int PlaceableCategorySelection = 0;
 	
 	bool LeftbarHide;
@@ -156,6 +158,17 @@ class EditorHudController: Controller
 			case "BrushDensity": {
 				EditorBrush.SetRadius(BrushRadius);
 				EditorBrush.SetDensity(BrushDensity);
+				break;
+			}
+			
+			case "SearchBarData": {
+				
+				for (int j = 0; j < LeftbarSpacer.Count(); j++) {
+					EditorPlaceableListItem placeable_item = LeftbarSpacer.Get(j);
+					
+					placeable_item.GetLayoutRoot().Show(placeable_item.GetData().FilterType(SearchBarData));
+				}
+				
 				break;
 			}
 			

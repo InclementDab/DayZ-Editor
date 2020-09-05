@@ -66,9 +66,7 @@ class MapSelectDialog: EditorDialog
 		GetGame().PlayMission(CreateEditorMission(name));
 		CloseDialog();
 	}
-	
 
-	
 	
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)

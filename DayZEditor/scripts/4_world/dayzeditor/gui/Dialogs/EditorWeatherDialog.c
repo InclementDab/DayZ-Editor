@@ -36,7 +36,7 @@ class EditorWeatherDialogController: Controller
 		objectview = GetEditor().GetSettings().ObjectViewDistance;
 	}
 	
-	override void NotifyPropertyChanged(string property_name)
+	override void PropertyChanged(string property_name)
 	{
 		
 		switch (property_name) {
