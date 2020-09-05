@@ -303,55 +303,61 @@ class XMLEditorBrushes: XMLCallback
 	override void OnSuccess(ref XMLDocument document)
 	{
 		EditorLog.Info("XMLEditorBrushes::OnSuccess");
-		
-		XMLElement brush_types = document.Get(1).GetContent();
-		
+				
 		ref set<string> object_type_list = new set<string>();
+		
 		// <BrushTypes>
-		for (int i = 0; i < brush_types.Count(); i++) {
+		for (int i = 0; i < document.Get(1).GetContent().Count(); i++) {
 			
-			XMLTag brush = brush_types.Get(i);
-			XMLElement brush_objects = brush.GetContent();
+			XMLTag brush = document.Get(1).GetContent().Get(i);
 			
 			EditorBrushData brush_settings = new EditorBrushData();
 			brush_settings.Name = brush.GetAttribute("name").ValueAsString();
 			
-			XMLAttribute class_attribute = brush.GetAttribute("class");
-			if (class_attribute) {
-				EditorLog.Info("XMLEditorBrushes: Code defined brush found!");
-				brush_settings.BrushClassName = class_attribute.ValueAsString().ToType();
+
+			if (brush.GetAttribute("class")) {
+				EditorLog.Info("XMLEditorBrushes:: Code defined brush found!");
+				brush_settings.BrushClassName = brush.GetAttribute("class").ValueAsString().ToType();
+				
 			} else {
 			
 				// <BrushObject>
-				for (int j = 0; j < brush_objects.Count(); j++) {
-					XMLTag brush_object = brush_objects.Get(j);
+				for (int j = 0; j < brush.GetContent().Count(); j++) {
+					XMLTag brush_object = brush.GetContent().Get(j);
 					
 					// attributes
 					string object_type;
+					float z_offset;
 					float object_frequency;
 					
 					// type attribute
 					XMLAttribute object_type_attribute = brush_object.GetAttribute("type");
 					if (object_type_attribute == null) {
-						EditorLog.Trace("XMLEditorBrushes: Object type not specified, skipping...");
+						EditorLog.Trace("XMLEditorBrushes:: Object type not specified, skipping...");
 						continue;
 					}
 					
 					object_type = object_type_attribute.ValueAsString();
 					if (object_type_list.Insert(object_type) == -1) {
-						EditorLog.Trace("XMLEditorBrushes: Duplicate brush name found, skipping...");
+						EditorLog.Trace("XMLEditorBrushes:: Duplicate brush name found, skipping...");
 						continue;
 					}
 					
-					// frequency attribute
-					XMLAttribute object_frequency_attribute = brush_object.GetAttribute("frequency");
-					if (object_frequency_attribute == null) {
-						object_frequency = 1.0;
+					// Z Offset attribute
+					if (brush_object.GetAttribute("zoffset")) {
+						z_offset = brush_object.GetAttribute("zoffset").ValueAsFloat();
 					} else {
-						object_frequency = object_frequency_attribute.ValueAsFloat();
+						z_offset = 0;
 					}
 					
-					brush_settings.InsertPlaceableObject(object_type, object_frequency);
+					// frequency attribute
+					if (brush_object.GetAttribute("frequency")) {
+						object_frequency = brush_object.GetAttribute("frequency").ValueAsFloat();
+					} else {
+						object_frequency = 1.0;
+					}
+					
+					brush_settings.InsertPlaceableObject(new EditorBrushObject(object_type, z_offset), object_frequency);
 				}
 			}
 							
@@ -373,7 +379,5 @@ class EditorXMLManager
 	static void LoadMapGroupProto(out ref EditorMapGroupProto group_proto, string filename = "$profile:Editor/mapgroupproto.xml")
 	{
 		GetXMLApi().Read(filename, group_proto);
-		
-		//return group_proto.GetSuccess();
 	}
 }

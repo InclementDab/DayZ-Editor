@@ -41,7 +41,7 @@ class MapSelectDialog: EditorDialog
 		EditorLog.Trace("MapSelectDialog");
 		m_MapSelectDialogController = AddContent("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");
 		m_SelectButton = AddButton("Select", "SelectCallback");
-		m_CloseButton = AddButton("Close", "CloseCallback");
+		m_CloseButton = AddButton("Close", "CloseDialog");
 	}
 	
 	
@@ -51,9 +51,8 @@ class MapSelectDialog: EditorDialog
 		if (select_state) {
 			m_SelectButton.SetAlpha(1);
 		}
-		else {
-			m_SelectButton.SetAlpha(0.3); 
-		}
+		else m_SelectButton.SetAlpha(0.3); 
+		
 		
 		m_SelectButton.Enable(select_state);
 	}
@@ -68,11 +67,7 @@ class MapSelectDialog: EditorDialog
 		CloseDialog();
 	}
 	
-	void CloseCallback()
-	{
-		EditorLog.Trace("MapSelectDialog::CloseCallback");
-		CloseDialog();
-	}
+
 	
 	
 	

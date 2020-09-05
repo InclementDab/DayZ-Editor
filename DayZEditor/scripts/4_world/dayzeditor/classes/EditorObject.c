@@ -1,12 +1,10 @@
 
 
-class EditorObjectSet: map<int, ref EditorObject>
+class EditorObjectSet: ref map<int, ref EditorObject>
 {
 	
-	void ~EditorObjectSet()
-	{
+	void ~EditorObjectSet() {
 		EditorLog.Trace("~EditorObjectSet");
-		GetEditor().DeleteObjects(this);
 	}
 	
 	bool InsertEditorObject(EditorObject target) { return Insert(target.GetID(), target); }

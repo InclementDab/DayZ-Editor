@@ -23,3 +23,4 @@ static vector ObjectGetSize(notnull Object obj)
 	result[2] = Math.AbsFloat(size[0][2]) + Math.AbsFloat(size[1][2]);
 	return result;
 }
+

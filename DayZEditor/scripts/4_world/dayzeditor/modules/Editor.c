@@ -361,16 +361,18 @@ class Editor
 	
 	
 	// Object Management
-	void CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
+	ref EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
 	{
 		EditorLog.Trace("Editor::CreateObjects");
-
+		EditorObjectSet object_set = new EditorObjectSet();
 		EditorAction action = new EditorAction("Delete", "Create");
 		foreach (EditorObjectData editor_object_data: data_list) {
 			
 			EditorObject editor_object = new EditorObject(editor_object_data);
+			EditorEvents.ObjectCreated(this, editor_object);
 			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));			
+			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));		
+			object_set.InsertEditorObject(editor_object);	
 		}
 		
 		if (create_undo) {
@@ -380,7 +382,7 @@ class Editor
 			delete action;
 		}
 		
-		EditorEvents.ObjectCreated(this, editor_object);
+		return object_set;
 	}
 	
 	
