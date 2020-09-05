@@ -1,15 +1,16 @@
 PanelWidgetClass EditorEditBrushElement {
- size 1 24
+ size 1 48
  hexactpos 1
  vexactpos 1
  hexactsize 0
  vexactsize 1
- scriptclass "EditorPrefabViewBinding"
+ scriptclass ""
  {
   WrapSpacerWidgetClass EditorEditBrushElementSpacer {
    ignorepointer 1
    size 0.7 24
    halign right_ref
+   valign bottom_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -79,6 +80,7 @@ PanelWidgetClass EditorEditBrushElement {
   TextWidgetClass EditorEditBrushElementLabel {
    ignorepointer 1
    size 0.3 24
+   valign bottom_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -87,12 +89,13 @@ PanelWidgetClass EditorEditBrushElement {
    font "gui/fonts/etelkatextpro"
    "text offset" -5 0
    "text halign" right
+   "text valign" center
   }
   ButtonWidgetClass EditorEditBrushElementButton {
    position 25 0
    size 24 24
    halign center_ref
-   valign center_ref
+   valign bottom_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
@@ -115,9 +118,31 @@ PanelWidgetClass EditorEditBrushElement {
     }
    }
   }
- }
- {
-  ScriptParamsClass {
+  TextWidgetClass EditorEditBrushEditLabel {
+   ignorepointer 1
+   position 0.3 0
+   size 262 24
+   hexactpos 0
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "Text"
+   font "gui/fonts/etelkatextpro"
+   "text halign" center
+   "text valign" center
+  }
+  TextWidgetClass EditorEditBrushValLabel {
+   ignorepointer 1
+   position 0.4735 0
+   size 50 24
+   hexactpos 0
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "Text"
+   font "gui/fonts/etelkatextpro"
+   "text halign" center
+   "text valign" center
   }
  }
 }
