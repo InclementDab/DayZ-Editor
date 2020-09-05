@@ -57,8 +57,9 @@ PanelWidgetClass EditorEditBrushElement {
         }
         EditBoxWidgetClass EditorEditBrushElementEditBox_Val {
          visible 1
-         size 262 24
-         halign right_ref
+         position 30 0
+         size 50 24
+         halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -86,6 +87,33 @@ PanelWidgetClass EditorEditBrushElement {
    font "gui/fonts/etelkatextpro"
    "text offset" -5 0
    "text halign" right
+  }
+  ButtonWidgetClass EditorEditBrushElementButton {
+   position 25 0
+   size 24 24
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   {
+    ImageWidgetClass EditorEditBrushElementButtonIcon {
+     ignorepointer 1
+     size 24 24
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     imageTexture "{5A6F839399731FB9}DayZEditor/gui/icons/icon_minus_circle_128x128.edds"
+     mode blend
+     "src alpha" 1
+     "no wrap" 1
+     stretch 1
+    }
+   }
   }
  }
 }
