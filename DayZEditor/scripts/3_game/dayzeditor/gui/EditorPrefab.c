@@ -196,15 +196,6 @@ class EditorPrefabButton: EditorPrefab
 	}
 	
 	Widget GetButtonWidgetByStyle(EditorPrefabButtonStyle style)
-	{
-		Widget w;
-		switch(style)
-		{
-			case EditorPrefabButtonStyle.BUTTON_120x30:
-				w = m_LayoutRoot.FindAnyWidget("PrefabButton_120x30");
-			break;
-		}
-		
-		return w;
-	}
+		return m_LayoutRoot.FindAnyWidget(typename.EnumToString(EditorPrefabButtonStyle, style));
+	
 }
