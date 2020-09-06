@@ -354,6 +354,14 @@ class EditorHud: Hud
 	
 	void SetModal(EditorDialog w) {
 		m_CurrentModal = w;	
+		
+		// todo monday: remove MVCOnXXX completely. just use this to disable
+		// the underlying UI when dialogs are opened!
+		if (m_CurrentModal) {
+			m_LayoutRoot.Enable(false);
+		} else {
+			m_LayoutRoot.Enable(true);
+		}
 	}
 	
 	EditorDialog GetModal() {
@@ -367,6 +375,19 @@ class EditorHud: Hud
 	
 	bool IsModalCommand(Widget w) {
 		return (m_CurrentModal.GetLayoutRoot().FindAnyWidget(w.GetName()) != null);
+	}
+	
+	bool ShouldProcessInput(Widget w) 
+	{
+		if (!IsModalActive()) {
+			return true;
+		}
+		
+		if (IsModalCommand(w)) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	// Current "button" on UI

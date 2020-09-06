@@ -314,6 +314,11 @@ class EditorHudController: Controller
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseEnter %1", w.GetName());		
+		
+		if (GetEditor() && !GetEditor().GetEditorHud().ShouldProcessInput(w)) {
+			return false;
+		}
+		
 		switch (w.GetTypeName()) {
 			
 
@@ -336,6 +341,7 @@ class EditorHudController: Controller
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseLeave %1", w.GetName());
+		
 		
 		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		switch (w.GetTypeName()) {
@@ -378,23 +384,23 @@ class EditorHudController: Controller
 		}
 	}
 		
-	override void MVCOnClick(Widget target, int button, int x, int y)
+	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::MVCOnClick");
 		
 		
-		Widget icon = target.FindAnyWidget(string.Format("%1_Icon", target.GetName()));
+		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		
 		switch (button) {
 			
 			case 0: {
 		
-				switch (target.GetName()) {
+				switch (w.GetName()) {
 					
 					case "UndoButton": 
 					case "RedoButton": {
-						target.SetColor(COLOR_SALMON_A);
-						int pos = ButtonWidget.Cast(target).GetState() * 1;
+						w.SetColor(COLOR_SALMON_A);
+						int pos = ButtonWidget.Cast(w).GetState() * 1;
 						icon.SetPos(pos, pos);
 						break;
 					}
@@ -402,8 +408,8 @@ class EditorHudController: Controller
 					case "SnapButton":
 					case "GroundButton":
 					case "MagnetButton": {
-						bool button_state = ButtonWidget.Cast(target).GetState();
-						icon.SetColor((GetHighlightColor(target.GetName()) * button_state) - 1);
+						bool button_state = ButtonWidget.Cast(w).GetState();
+						icon.SetColor((GetHighlightColor(w.GetName()) * button_state) - 1);
 						icon.SetPos(button_state * 1, button_state * 1);
 						break;
 					}
@@ -421,7 +427,7 @@ class EditorHudController: Controller
 			
 			case 1: {
 				
-				switch (target.GetName()) {
+				switch (w.GetName()) {
 								
 					case "BrushToggleButton": {
 						EditorBrushDialog brush_dialog(BrushTypeBoxData[BrushTypeSelection]);
@@ -433,6 +439,8 @@ class EditorHudController: Controller
 				break;
 			}
 		}
+		
+		return false;
 	}
 	
 	
