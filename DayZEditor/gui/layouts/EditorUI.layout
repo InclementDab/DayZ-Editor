@@ -344,17 +344,19 @@ FrameWidgetClass EditorMainFrame {
              ignorepointer 1
              color 0.9882 0.9882 0.9882 1
              position 0 0
-             size 32 40
+             size 50 50
              halign center_ref
              valign center_ref
              hexactpos 1
              vexactpos 1
              hexactsize 1
              vexactsize 1
-             image0 "set:dayz_gui image:close"
+             image0 ""
+             imageTexture "{2F76D72BD521BBC3}DayZEditor/gui/icons/icon_house_128x128.edds"
              mode blend
              "src alpha" 1
-             stretch 0
+             "no wrap" 1
+             stretch 1
             }
            }
            {
@@ -376,17 +378,19 @@ FrameWidgetClass EditorMainFrame {
              ignorepointer 1
              color 0.9882 0.9882 0.9882 1
              position 2 0
-             size 62 68
+             size 50 50
              halign center_ref
              valign center_ref
              hexactpos 1
              vexactpos 1
              hexactsize 1
              vexactsize 1
-             image0 "set:dayz_inventory image:doorfront"
+             image0 ""
+             imageTexture "{6EB760725FFA8C0D}DayZEditor/gui/icons/icon_car_128x128.edds"
              mode blend
              "src alpha" 1
-             stretch 0
+             "no wrap" 1
+             stretch 1
             }
            }
            {
@@ -410,18 +414,20 @@ FrameWidgetClass EditorMainFrame {
             ImageWidgetClass CategorySelectEntity {
              ignorepointer 1
              color 0.9882 0.9882 0.9882 1
-             position -4 0
-             size 62 62
+             position 0 0
+             size 50 50
              halign center_ref
              valign center_ref
              hexactpos 1
              vexactpos 1
              hexactsize 1
              vexactsize 1
-             image0 "set:dayz_inventory image:magazine2"
+             image0 ""
+             imageTexture "{432381F3C44DBDEC}DayZEditor/gui/icons/icon_person_standing_128x128.edds"
              mode blend
              "src alpha" 1
-             stretch 0
+             "no wrap" 1
+             stretch 1
              "flip u" 1
             }
            }
@@ -445,17 +451,19 @@ FrameWidgetClass EditorMainFrame {
             ImageWidgetClass CategorySelectHuman {
              ignorepointer 1
              position 0 0
-             size 72 72
+             size 50 50
              halign center_ref
              valign center_ref
              hexactpos 1
              vexactpos 1
              hexactsize 1
              vexactsize 1
-             image0 "set:dayz_inventory image:mask"
+             image0 ""
+             imageTexture "{9A1C50C85C0F7122}DayZEditor/gui/icons/icon_face_128x128.edds"
              mode blend
              "src alpha" 1
-             stretch 0
+             "no wrap" 1
+             stretch 1
             }
            }
            {
