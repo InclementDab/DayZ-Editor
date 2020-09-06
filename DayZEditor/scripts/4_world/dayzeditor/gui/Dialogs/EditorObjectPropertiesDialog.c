@@ -12,6 +12,8 @@ class EditorPropertiesPrefabController: Controller
 	vector pos;
 	vector rot;
 	
+	ref ObservableCollection<string> animations;
+	
 	void EditorPropertiesPrefabController(EditorObject editor_object) 
 	{
 		EditorLog.Trace("EditorPropertiesPrefabController");
@@ -20,6 +22,7 @@ class EditorPropertiesPrefabController: Controller
 		pos = m_EditorObject.GetPosition();
 		rot = m_EditorObject.GetOrientation();		
 		name = m_EditorObject.GetDisplayName();
+		animations = new ObservableCollection<string>("animations", this);
 	}
 	
 	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
@@ -27,15 +30,22 @@ class EditorPropertiesPrefabController: Controller
 		EditorLog.Trace("EditorPropertiesController::OnMouseWheel %1", target.GetName());
 		string w_name = target.GetName();
 		
-		StringEvaluater w_eval;
-		EnScript.GetClassVar(this, w_name, 0, w_eval);
-		
-		if (KeyState(KeyCode.KC_LCONTROL)) {
-			direction *= 10;
+		switch (w_name) {
+			
+			case "pos":
+			case "rot": {
+			
+				StringEvaluater w_eval;
+				EnScript.GetClassVar(this, w_name, 0, w_eval);
+				
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					direction *= 10;
+				}
+				
+				EnScript.SetClassVar(this, w_name, 0, (w_eval.Parse() + direction).ToString());
+				NotifyPropertyChanged(w_name);
+			}
 		}
-		
-		EnScript.SetClassVar(this, w_name, 0, (w_eval.Parse() + direction).ToString());
-		NotifyPropertyChanged(w_name);
 	}
 
 	
@@ -98,6 +108,16 @@ class EditorObjectPropertiesDialog: EditorDialog
 		AddButton("Save", "SaveCallback");
 		AddButton("Cancel", "CancelCallback");
 		AddContent(info_group);
+		
+		if (GetGame().ObjectIsKindOf(editor_object.GetWorldObject(), "DZ_LightAI")) {
+			
+			EditorPrefabGroup character_group = new EditorPrefabGroup("Character Control");
+			character_group.AddPrefab(new EditorPrefabDropdown("Animation", "animations"));
+			AddContent(character_group);
+		}
+		
+		
+
 	}
 	
 	void ~EditorObjectPropertiesDialog() {

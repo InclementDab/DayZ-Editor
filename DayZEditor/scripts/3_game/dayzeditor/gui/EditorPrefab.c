@@ -1,4 +1,10 @@
 
+enum EditorPrefabButtonStyle {
+	BUTTON_120x30,
+	BUTTON_90x30,
+	BUTTON_69x69,
+};
+
 class EditorPrefab
 {
 	protected ref EditorPrefabViewBinding m_ViewBinding;
@@ -187,12 +193,7 @@ class EditorPrefabSlider: EditorPrefab
 	}
 }
 
-enum EditorPrefabButtonStyle
-{
-	BUTTON_120x30,
-	BUTTON_90x30,
-	BUTTON_69x69,
-}
+
 
 class EditorPrefabButton: EditorPrefab
 {
@@ -224,3 +225,5 @@ class EditorPrefabButton: EditorPrefab
 		return ButtonWidget.Cast(m_LayoutRoot.FindAnyWidget(typename.EnumToString(EditorPrefabButtonStyle, style)));
 	}
 }
+
+

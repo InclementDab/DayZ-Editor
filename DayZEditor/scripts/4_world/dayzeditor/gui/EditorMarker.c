@@ -90,16 +90,35 @@ class EditorObjectMarker: EditorMarker
 		if (GetEditor().IsPlacing()) return false;
 		
 		// We want to Toggle selection if you are holding control
-		if (KeyState(KeyCode.KC_LCONTROL)) {
-			GetEditor().ToggleSelection(m_EditorObject);
-		} else {
-			if (!KeyState(KeyCode.KC_LSHIFT))
-				GetEditor().ClearSelection();
-			
-			GetEditor().SelectObject(m_EditorObject);
-		}
 		
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(CheckDragBounds, 0, true, x, y);
+		switch (button) {
+			
+			case 0: {
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					GetEditor().ToggleSelection(m_EditorObject);
+				} else {
+					if (!KeyState(KeyCode.KC_LSHIFT))
+						GetEditor().ClearSelection();
+					
+					GetEditor().SelectObject(m_EditorObject);
+				}
+				
+				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(CheckDragBounds, 0, true, x, y);
+				
+				break;
+			}
+			
+			case 2: {
+				EditorCamera camera = GetEditor().GetCamera();
+				
+				vector pos = m_EditorObject.GetPosition();
+				pos[1] = camera.GetPosition()[1];
+				camera.SetPosition(pos);
+				
+				
+				break;
+			}
+		}
 		
 		return true;
 	}
