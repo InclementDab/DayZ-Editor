@@ -15,6 +15,7 @@ class EditorPropertiesPrefabController: Controller
 	ref ObservableCollection<string> animations;
 	string selected_animation;
 	bool apply_animation;
+	bool reset_animation;
 	
 	void EditorPropertiesPrefabController(EditorObject editor_object) 
 	{
@@ -77,7 +78,13 @@ class EditorPropertiesPrefabController: Controller
 			}
 			
 			case "apply_animation": {
-				m_EditorObject.SetAnimation("CMD_Climb");
+				m_EditorObject.ResetAnimation();
+				m_EditorObject.SetAnimation(selected_animation);
+				break;
+			}
+			
+			case "reset_animation": {
+				m_EditorObject.ResetAnimation();
 				break;
 			}
 		}
@@ -123,7 +130,10 @@ class EditorObjectPropertiesDialog: EditorDialog
 			
 			EditorPrefabGroup character_group = new EditorPrefabGroup("Character Control");
 			character_group.AddPrefab(new EditorPrefabDropdown("Animation", "animations", 0, "selected_animation"));
-			character_group.AddPrefab(new EditorPrefabButton("Apply Animation", "apply_animation"));
+			character_group.AddPrefab(new EditorPrefabEditText("Animation Name", "selected_animation"));
+			character_group.AddPrefab(new EditorPrefabButton("Apply", "apply_animation", 0, 0));
+			character_group.AddPrefab(new EditorPrefabButton("Reset", "reset_animation", 0, 0));
+			
 			character_group.SetController(m_EditorPropertiesController);
 			AddContent(character_group);
 		}

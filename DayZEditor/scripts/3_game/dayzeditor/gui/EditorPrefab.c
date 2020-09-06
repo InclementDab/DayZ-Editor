@@ -203,26 +203,33 @@ class EditorPrefabButton: EditorPrefab
 {
 	EditorPrefabButtonStyle m_Style;
 	
-	void EditorPrefabButton(string caption = "", string binding_name = "", int binding_index = 0, EditorPrefabButtonStyle style = 1) {
+	protected ButtonWidget m_ButtonWidget;
+	
+	void EditorPrefabButton(string caption = "", string binding_name = "", int binding_index = 0, EditorPrefabButtonStyle style = 0) {
 		m_Style = style;
 		
-		GetButtonWidgetByStyle(m_Style).GetParent().GetParent().Show(true);
+		m_ButtonWidget = GetButtonWidgetByStyle(m_Style);
+		m_ButtonWidget.GetParent().GetParent().Show(true);
 	}
 	
 	void SetButtonText(string text) {
-		GetButtonWidgetByStyle(m_Style).SetText(text);
+		m_ButtonWidget.SetText(text);
 	}
 	
 	void SetBool(bool value) {
-		GetButtonWidgetByStyle(m_Style).SetState(value);
+		m_ButtonWidget.SetState(value);
 	}
 	
 	bool GetBool() {
-		return GetButtonWidgetByStyle(m_Style).GetState();
+		return m_ButtonWidget.GetState();
 	}
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/options/EditorPrefabButton.layout";
+	}
+	
+	override string GetLabelWidget() {
+		return string.Format("%1_Label", typename.EnumToString(EditorPrefabButtonStyle, m_Style));
 	}
 	
 	ButtonWidget GetButtonWidgetByStyle(EditorPrefabButtonStyle style) {

@@ -55,6 +55,23 @@ PanelWidgetClass EditorPrefabButton {
        scriptclass ""
        style Default
        "no focus" 0
+       {
+        TextWidgetClass BUTTON_120x30_Label {
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         font "gui/fonts/Metron22"
+         "exact text" 1
+         "text halign" center
+         "text valign" center
+        }
+       }
       }
      }
     }
@@ -165,7 +182,7 @@ PanelWidgetClass EditorPrefabButton {
  }
  {
   ScriptParamsClass {
-   Two_Way_Binding 1
+   Two_Way_Binding 0
   }
  }
 }
