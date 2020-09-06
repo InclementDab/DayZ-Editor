@@ -10,12 +10,10 @@ class EditorAnimationManagerTable
 		
 		ref array<string> anim_split = {};
 		
-		
 		anim_name.Split(",", anim_split);
-		
 		CMD_Action = anim_interface.BindCommand(anim_split[0]);
 		
-		if (anim_split[0] == "CMD_Action") {
+		if (anim_split.Count() > 1) {
 			CMD_ActionID = anim_split[1].ToInt();
 		}
 	}
