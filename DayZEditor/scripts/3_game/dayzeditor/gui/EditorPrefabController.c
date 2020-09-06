@@ -76,3 +76,15 @@ class EditorPrefabButtonController: WidgetControllerTemplate<EditorPrefabButton>
 	}
 }
 
+class EditorPrefabDropdownController: WidgetControllerTemplate<EditorPrefabDropdown>
+{
+	
+	override void InsertData(int index, TypeConverter type_converter) {
+		m_Widget.AddChild(type_converter.GetString());
+	}
+	
+	override void RemoveData(int index, TypeConverter type_converter) {
+		m_Widget.RemoveChild(type_converter.GetString());
+	}
+}
+

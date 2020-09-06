@@ -7,6 +7,7 @@ class EditorPrefabViewBinding: ViewBinding
 		m_EditorPrefab = prefab;
 		Binding_Name = m_EditorPrefab.GetBindingName();
 		Binding_Index = m_EditorPrefab.GetBindingIndex();
+		Selected_Item = m_EditorPrefab.GetBindingSelection();
 		
 		m_WidgetController = MVC.GetWidgetController(m_EditorPrefab);
 	}

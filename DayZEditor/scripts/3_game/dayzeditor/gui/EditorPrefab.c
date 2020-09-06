@@ -24,6 +24,11 @@ class EditorPrefab
 		return m_BindingIndex;
 	}
 	
+	protected string m_BindingSelection;
+	string GetBindingSelection() {
+		return m_BindingSelection;
+	}
+	
 	void EditorPrefab(string caption = "", string binding_name = "", int binding_index = 0) {
 		EditorLog.Trace("EditorPrefab");
 		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets(GetLayoutFile());
@@ -104,8 +109,24 @@ class EditorPrefabGroup: EditorPrefab
 class EditorPrefabDropdown: EditorPrefab
 {
 	void EditorPrefabDropdown(string caption = "", string binding_name = "", int binding_index = 0, string binding_selected = "") {
-		 
+		 m_BindingSelection = binding_selected;
 	}
+	
+	void AddChild(string child) {
+		m_LayoutRoot.FindAnyWidget("EditorDialogOptionDropdownContent").AddChild(CreateListItem(child));
+	}		
+	
+	void RemoveChild(string child) {
+		//m_LayoutRoot.FindAnyWidget("EditorDialogOptionDropdownContent").RemoveChild();
+	}
+	
+	private Widget CreateListItem(string text) {
+		Widget list_item = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionDropdownItem.layout");
+		TextWidget.Cast(list_item.FindAnyWidget("EditorDropdownElementLabel")).SetText(text);
+		return list_item;
+	}
+	
+	
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/options/EditorDialogOptionDropdown.layout";
