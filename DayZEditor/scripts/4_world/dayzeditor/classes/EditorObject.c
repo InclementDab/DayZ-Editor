@@ -248,20 +248,24 @@ class EditorObject
 		}
 	}
 	
+	private bool m_Visible = true;
+	bool IsVisible() {
+		return m_Visible;
+	}
+	
 	void Show(bool show) {	
-		if (ObjectMarkerEnabled()) {
-			m_EditorObjectWorldMarker.Show(show);
-		}
+		m_Visible = show;
 		
 		if (MapMarkerEnabled()) {
-			m_EditorObjectMapMarker.Show(show);
+			m_EditorObjectMapMarker.Show(m_Visible);
 		}
 		
 		if (ListItemEnabled()) {
-			m_EditorPlacedListItem.GetLayoutRoot().Show(show);
+			m_EditorPlacedListItem.GetLayoutRoot().Show(m_Visible);
 		}
 	}
 	
+
 
 	vector line_centers[12]; vector line_verticies[8];
 	void CreateBoundingBox()

@@ -88,7 +88,7 @@ modded class DayZPlayerImplement
 		
 				
 		if (m_EditorAnimationStart) {
-			StartCommand_EditorAnimation();
+			StartCommand_Script(new EditorAnimationCommand(this, m_EditorAnimationManagerTable));
 			m_EditorAnimationStart = false;
 			return true;
 		}
@@ -109,11 +109,7 @@ modded class DayZPlayerImplement
 		m_EditorAnimationStart = false;
 		m_EditorAnimationStop = true;
 	}
-	
-	void StartCommand_EditorAnimation()
-	{
-		StartCommand_Script(new EditorAnimationCommand(this, m_EditorAnimationManagerTable));
-	}
+
 	
 	void EditorAnimationReset()
 	{

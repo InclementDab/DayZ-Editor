@@ -152,7 +152,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 		
 		SetTitle("Edit: Object Properties");
 		AddButton("Save", "SaveCallback");
-		AddButton("Cancel", "CancelCallback");
+		AddButton("Close", "CancelCallback");
 	}
 	
 	void ~EditorObjectPropertiesDialog() {

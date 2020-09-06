@@ -80,6 +80,12 @@ class EditorObjectMarker: EditorMarker
 		else 
 			m_LayoutRoot.SetAlpha(ALPHA_ON_HIDE);
 		
+		if (vector.Distance(m_EditorObject.GetPosition(), GetEditor().GetCamera().GetPosition()) > GetEditor().GetSettings().MarkerViewDistance) {
+			Show(false);
+		} else {
+			Show(m_EditorObject.IsVisible());
+		}
+		
 		super.Update();
 	}
 	

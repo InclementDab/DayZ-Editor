@@ -7,6 +7,7 @@ class EditorSettings
 	// shit thats gotta be changed
 	float ViewDistance = 12000;
 	float ObjectViewDistance = 5000;
+	float MarkerViewDistance = 1500;
 		
 	// Autosave timer in seconds
 	int AutosaveTimer = 240;
