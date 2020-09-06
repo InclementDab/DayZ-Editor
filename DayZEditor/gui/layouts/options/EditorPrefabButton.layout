@@ -121,6 +121,24 @@ PanelWidgetClass EditorPrefabButton {
        scriptclass ""
        style Default
        "no focus" 0
+       {
+        TextWidgetClass BUTTON_69x69_Label {
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "Test"
+         font "gui/fonts/Metron22"
+         "exact text" 1
+         "text halign" center
+         "text valign" center
+        }
+       }
       }
      }
     }
@@ -170,6 +188,24 @@ PanelWidgetClass EditorPrefabButton {
        scriptclass ""
        style Default
        "no focus" 0
+       {
+        TextWidgetClass BUTTON_90x30_Label {
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "Test"
+         font "gui/fonts/Metron22"
+         "exact text" 1
+         "text halign" center
+         "text valign" center
+        }
+       }
       }
      }
     }
