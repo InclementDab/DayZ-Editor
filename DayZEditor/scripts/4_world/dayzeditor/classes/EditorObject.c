@@ -49,23 +49,20 @@ class EditorObject
 	}
 	
 	
-	void EditorObject(ref EditorObjectData data)
+	private void EditorObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorLog.Trace("EditorObject");
-		m_Data = data;
-	
-		GetEditor().GetSessionCache().InsertEditorData(m_Data);
-	
+		m_WorldObject = target;
+		
+		m_Data = EditorObjectData.CreateFromExistingObject(target, flags);
+		if (GetEditor()) {
+			GetEditor().GetSessionCache().InsertEditorData(m_Data);
+		}
+		
 		if (m_Data.Flags == EditorObjectFlags.ALL) {
 			m_Data.Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
 		}
-		
-		m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Position, ECE_LOCAL);
-		m_WorldObject.SetOrientation(m_Data.Orientation);
-		m_WorldObject.SetFlags(EntityFlags.STATIC, true);
-		Update();
-		
-		
+
 		
 		// Bounding Box
 		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
@@ -88,10 +85,24 @@ class EditorObject
 			m_EditorPlacedListItem = new EditorPlacedListItem(this);
 			GetEditor().GetEditorHud().GetController().InsertPlacedObject(m_EditorPlacedListItem);
 		}
-		
-		
-	
 	}
+	
+	static EditorObject Create(ref EditorObjectData data)
+	{
+		EditorLog.Trace("EditorObject::Create from EditorObjectData");
+		Object world_object = GetGame().CreateObjectEx(data.Type, data.Position, ECE_LOCAL);
+		world_object.SetOrientation(data.Orientation);
+		world_object.SetFlags(EntityFlags.STATIC, true);
+		
+		return new EditorObject(world_object);
+	}
+	
+	static EditorObject Create(notnull Object target)
+	{
+		EditorLog.Trace("EditorObject::Create from Object");
+		return new EditorObject(target);
+	}
+	
 	
 	void ~EditorObject()
 	{
@@ -116,10 +127,7 @@ class EditorObject
 		
 	
 	
-	static EditorObject CreateFromExistingObject(notnull Object target)	
-	{
-		// todo
-	}
+
 	
 	/*********
 	* Events *

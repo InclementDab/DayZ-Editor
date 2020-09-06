@@ -253,7 +253,11 @@ class Editor
 				
 				if (KeyState(KeyCode.KC_LCONTROL))
 					EditorLog.Info(GetWidgetUnderCursor().GetName());
-				else {
+				else if (KeyState(KeyCode.KC_LSHIFT)) {
+					//EditorLog.Info();
+					if (ObjectUnderCursor)
+						CreateFromObject(ObjectUnderCursor);
+				} else {
 					
 					vector pos = CurrentMousePosition;					
 					pos[1] = m_EditorCamera.GetPosition()[1];
@@ -325,13 +329,11 @@ class Editor
 				}
 				
 				case KeyCode.KC_X: {
-					DayZPlayerImplement.Cast(GetGame().GetPlayer()).EditorAnimationStart("CMD_Vehicle_GetIn");
 					Cut(m_SelectedObjects);
 					return true;
 				}
 
 				case KeyCode.KC_C: {
-					DayZPlayerImplement.Cast(GetGame().GetPlayer()).EditorAnimationReset();
 					Copy(m_SelectedObjects);
 					return true;
 				}
@@ -377,7 +379,7 @@ class Editor
 		EditorAction action = new EditorAction("Delete", "Create");
 		foreach (EditorObjectData editor_object_data: data_list) {
 			
-			EditorObject editor_object = new EditorObject(editor_object_data);
+			EditorObject editor_object = EditorObject.Create(editor_object_data);
 			EditorEvents.ObjectCreated(this, editor_object);
 			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));		
@@ -399,7 +401,7 @@ class Editor
 	{		
 		EditorLog.Trace("Editor::CreateObject");
 		
-		EditorObject editor_object = new EditorObject(editor_object_data);
+		EditorObject editor_object = EditorObject.Create(editor_object_data);
 		EditorEvents.ObjectCreated(this, editor_object);
 		
 		if (!create_undo) return editor_object;
@@ -411,6 +413,15 @@ class Editor
 		m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
 			
 	
+		return editor_object;
+	}
+	
+	EditorObject CreateFromObject(notnull Object target)
+	{
+		EditorLog.Trace("Editor::CreateFromObject");
+		EditorObject editor_object = EditorObject.Create(target);
+		EditorEvents.ObjectCreated(this, editor_object);
+		
 		return editor_object;
 	}
 

@@ -42,6 +42,8 @@ class EditorObjectData
 	EditorObjectFlags Flags;
 	ModStructure ObjectMod;
 	
+
+	
 	void EditorObjectData() {}
 	
 	static EditorObjectData Create(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
@@ -66,12 +68,31 @@ class EditorObjectData
 		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));
 		
 		
+
+		
 		return data;
 	}
 	
 	static EditorObjectData Create(EditorPlaceableObjectData data)
 	{
 		
+	}
+	
+	static EditorObjectData CreateFromExistingObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	{
+		EditorObjectData data = new EditorObjectData();
+		data.Type = target.GetType(); data.Position = target.GetPosition(); data.Orientation = target.GetOrientation(); data.Flags = flags;
+		data.DisplayName = data.Type;
+		data.ObjectMod = GetModFromObject(data.Type);
+		
+
+		if (lowest_id == 0) lowest_id = 200000;
+		lowest_id--;
+		data.m_Id = lowest_id;	
+		
+		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));
+		
+		return data;
 	}
 	
 	void OnSend(Serializer serializer)

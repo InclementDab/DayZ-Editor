@@ -103,6 +103,10 @@ class EditorPrefabGroup: EditorPrefab
 
 class EditorPrefabDropdown: EditorPrefab
 {
+	void EditorPrefabDropdown(string caption = "", string binding_name = "", int binding_index = 0, string binding_selected = "") {
+		 
+	}
+	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/options/EditorDialogOptionDropdown.layout";
 	}

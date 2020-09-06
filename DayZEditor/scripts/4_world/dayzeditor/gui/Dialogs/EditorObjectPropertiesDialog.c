@@ -13,6 +13,8 @@ class EditorPropertiesPrefabController: Controller
 	vector rot;
 	
 	ref ObservableCollection<string> animations;
+	string selected_animation;
+	bool apply_animation;
 	
 	void EditorPropertiesPrefabController(EditorObject editor_object) 
 	{
@@ -23,6 +25,10 @@ class EditorPropertiesPrefabController: Controller
 		rot = m_EditorObject.GetOrientation();		
 		name = m_EditorObject.GetDisplayName();
 		animations = new ObservableCollection<string>("animations", this);
+		
+		string value;
+		GetGame().ConfigGetText("CfgVehicles " + editor_object.GetType() + " enfenimsys graphName", value);
+		EditorLog.Info("EditorPropertiesPrefabController::Loading GraphName %1", value);
 	}
 	
 	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
@@ -68,6 +74,11 @@ class EditorPropertiesPrefabController: Controller
 				m_EditorObject.SetDisplayName(name);
 				break;
 			}
+			
+			case "apply_animation": {
+				
+				break;
+			}
 		}
 	}
 }
@@ -104,20 +115,21 @@ class EditorObjectPropertiesDialog: EditorDialog
 		m_StartPosition = m_EditorObject.GetPosition();
 		m_StartOrientation = m_EditorObject.GetOrientation();
 		
-		SetTitle("Edit: Object Properties");
-		AddButton("Save", "SaveCallback");
-		AddButton("Cancel", "CancelCallback");
+
 		AddContent(info_group);
 		
 		if (GetGame().ObjectIsKindOf(editor_object.GetWorldObject(), "DZ_LightAI")) {
 			
 			EditorPrefabGroup character_group = new EditorPrefabGroup("Character Control");
-			character_group.AddPrefab(new EditorPrefabDropdown("Animation", "animations"));
+			character_group.AddPrefab(new EditorPrefabDropdown("Animation", "animations", 0, "selected_animation"));
+			character_group.AddPrefab(new EditorPrefabButton("Apply Animation", "apply_animation"));
 			AddContent(character_group);
 		}
 		
 		
-
+		SetTitle("Edit: Object Properties");
+		AddButton("Save", "SaveCallback");
+		AddButton("Cancel", "CancelCallback");
 	}
 	
 	void ~EditorObjectPropertiesDialog() {
