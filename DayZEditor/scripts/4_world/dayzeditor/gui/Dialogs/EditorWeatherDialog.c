@@ -78,8 +78,8 @@ class EditorWeatherDialogController: Controller
 			}
 			
 			case "objectview": {
-				 GetEditor().GetSettings().ObjectViewDistance = objectview;
-				m_World.SetObjectViewDistance(objectview);
+				GetEditor().GetSettings().ObjectViewDistance = objectview;
+				m_World.SetPreferredViewDistance(objectview);
 				break;
 			}
 		}	
@@ -100,13 +100,13 @@ class EditorWeatherDialog: EditorDialog
 		
 		EditorPrefabGroup weather_group = new EditorPrefabGroup("Weather");
 		
-		weather_group.AddPrefab(new EditorPrefabSlider("Time", "time", 0, 86400));
-		weather_group.AddPrefab(new EditorPrefabSlider("Rain", "rain", 0, 1));
-		weather_group.AddPrefab(new EditorPrefabSlider("Fog", "fog", 0, 1));
-		weather_group.AddPrefab(new EditorPrefabSlider("Overcast", "overcast", 0, 1));
-		weather_group.AddPrefab(new EditorPrefabSlider("Wind", "wind", 0, 100));
-		weather_group.AddPrefab(new EditorPrefabSlider("View Distance", "view", 0, 20000));
-		weather_group.AddPrefab(new EditorPrefabSlider("Object View Distance", "objectview", 0, 20000));
+		weather_group.AddPrefab(new EditorPrefabSlider("Time", "time", 0, 0, 86400));
+		weather_group.AddPrefab(new EditorPrefabSlider("Rain", "rain", 0, 0, 1));
+		weather_group.AddPrefab(new EditorPrefabSlider("Fog", "fog", 0, 0, 1));
+		weather_group.AddPrefab(new EditorPrefabSlider("Overcast", "overcast", 0, 0, 1));
+		weather_group.AddPrefab(new EditorPrefabSlider("Wind", "wind", 0, 0, 100));
+		weather_group.AddPrefab(new EditorPrefabSlider("View Distance", "view", 0, 0, 20000));
+		weather_group.AddPrefab(new EditorPrefabSlider("Object View Distance", "objectview", 0, 0, 20000));
 		
 		weather_group.SetController(m_EditorWeatherDialogController);
 		AddContent(weather_group);
@@ -114,7 +114,7 @@ class EditorWeatherDialog: EditorDialog
 		
 		SetTitle("World Controller");
 		AddButton("Lighting", "LightingCallback");
-		AddButton("Close", "CloseCallback");
+		AddButton("Close", "CloseDialog");
 	}
 
 	
@@ -132,10 +132,6 @@ class EditorWeatherDialog: EditorDialog
 		
 	}
 	
-	void CloseCallback()
-	{
-		CloseDialog();
-	}	
 	
 }
 

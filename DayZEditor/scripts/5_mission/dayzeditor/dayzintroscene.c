@@ -13,6 +13,7 @@ modded class MissionMainMenu
 
 modded class DayZIntroScene
 {
+	// 😂
 	private Object m_FunnyMeme;
 	
 	void DayZIntroScene()

@@ -349,7 +349,7 @@ class EditorHud: Hud
 	private ref EditorDialog m_CurrentModal = null;
 	
 	void SetModal(EditorDialog w) {
-		m_CurrentModal = w;
+		m_CurrentModal = w;	
 	}
 	
 	EditorDialog GetModal() {

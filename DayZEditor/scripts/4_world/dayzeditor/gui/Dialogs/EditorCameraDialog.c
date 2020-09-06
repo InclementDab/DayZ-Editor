@@ -2,16 +2,30 @@
 static float DEFAULT_FOV = -1;
 static float DEFAULT_NEARPLANE = -1;
 
+
+class EditorCameraDialogControllerData
+{
+	static float DOFDistance;
+	static float DOFBlur;
+	static float Blur;
+	static float Vignette;
+	static float Sharpness;
+}
+
 class EditorCameraDialogController: Controller
 {
 	
 	protected EditorCamera m_EditorCamera;
 	
 	float fov;
+	float blur;
 	float near_plane;
 	
 	float dof_distance;	
 	float dof_blur;
+	
+	float vignette;
+	float sharpness;
 	
 	void SetCamera(EditorCamera editor_camera)
 	{
@@ -21,11 +35,13 @@ class EditorCameraDialogController: Controller
 		fov = m_EditorCamera.GetCurrentFOV();
 		near_plane = m_EditorCamera.GetNearPlane();
 		
-
-		
-
+		blur = EditorCameraDialogControllerData.Blur;
+		dof_distance = EditorCameraDialogControllerData.DOFDistance;
+		dof_blur = EditorCameraDialogControllerData.DOFBlur;
+		vignette = EditorCameraDialogControllerData.Vignette;
+		sharpness = EditorCameraDialogControllerData.Sharpness;
 	}
-	
+		
 	
 	override void PropertyChanged(string property_name)
 	{
@@ -43,7 +59,28 @@ class EditorCameraDialogController: Controller
 			
 			case "dof_blur":
 			case "dof_distance": {
+				EditorCameraDialogControllerData.DOFDistance = dof_distance;
+				EditorCameraDialogControllerData.DOFBlur = dof_blur;
 				m_EditorCamera.SetFocus(dof_distance, dof_blur);
+				break;
+			}
+			
+			case "vignette": {
+				EditorCameraDialogControllerData.Vignette = vignette;
+				PPEffects.SetVignette(EditorCameraDialogControllerData.Vignette, 0, 0, 0);
+				break;
+			}
+			
+			case "blur": {
+				EditorCameraDialogControllerData.Blur = blur;
+				PPEffects.SetBlur(EditorCameraDialogControllerData.Blur);
+				break;
+			}
+			
+			case "sharpness": {
+				
+				EditorCameraDialogControllerData.Sharpness = sharpness;
+				GetGame().GetWorld().GetMaterial("Graphics/Materials/postprocess/filmgrainNV").SetParam("Sharpness", EditorCameraDialogControllerData.Sharpness);
 				break;
 			}
 		}		
@@ -75,10 +112,15 @@ class EditorCameraDialog: EditorDialog
 		
 		EditorPrefabGroup camera_group = new EditorPrefabGroup("Camera");
 		
-		camera_group.AddPrefab(new EditorPrefabSlider("FOV", "fov", 0, 0, 10));
-		camera_group.AddPrefab(new EditorPrefabSlider("Near Plane", "near_plane", 0, 0, 10));
-		camera_group.AddPrefab(new EditorPrefabSlider("DOF Distance", "dof_distance", 0, 0, 10));
+
+		camera_group.AddPrefab(new EditorPrefabSlider("FOV", "fov", 0, 0, 2));
+		camera_group.AddPrefab(new EditorPrefabSlider("Gaussian Blur", "blur", 0, 0, 1));
+		camera_group.AddPrefab(new EditorPrefabSlider("Near Plane", "near_plane", 0, 0, 1));
+		camera_group.AddPrefab(new EditorPrefabSlider("DOF Distance", "dof_distance", 0, 0, 1));
 		camera_group.AddPrefab(new EditorPrefabSlider("DOF Blur", "dof_blur", 0, 0, 1));
+		camera_group.AddPrefab(new EditorPrefabSlider("Vignette", "vignette", 0, 0, 1));
+		camera_group.AddPrefab(new EditorPrefabSlider("Sharpness", "sharpness", 0, 0, 1));
+		
 		camera_group.SetController(m_EditorCameraDialogController);
 		
 		AddContent(camera_group);
@@ -103,6 +145,8 @@ class EditorCameraDialog: EditorDialog
 		m_EditorCameraDialogController.NotifyPropertyChanged("near_plane");
 		m_EditorCameraDialogController.NotifyPropertyChanged("dof_distance");
 		m_EditorCameraDialogController.NotifyPropertyChanged("dof_blur");
+		
+		PPEffects.ResetAll();
 	}
 	
 }
