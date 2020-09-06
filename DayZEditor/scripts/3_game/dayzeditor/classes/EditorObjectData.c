@@ -66,10 +66,7 @@ class EditorObjectData
 		data.m_Id = lowest_id;	
 		
 		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));
-		
-		
-
-		
+				
 		return data;
 	}
 	
@@ -86,9 +83,7 @@ class EditorObjectData
 		data.ObjectMod = GetModFromObject(data.Type);
 		
 
-		if (lowest_id == 0) lowest_id = 200000;
-		lowest_id--;
-		data.m_Id = lowest_id;	
+		data.m_Id = target.GetID();	
 		
 		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));
 		

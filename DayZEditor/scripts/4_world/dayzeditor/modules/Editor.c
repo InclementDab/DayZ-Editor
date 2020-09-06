@@ -419,7 +419,11 @@ class Editor
 	EditorObject CreateFromObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorLog.Trace("Editor::CreateFromObject");
-		EditorObject editor_object = EditorObject.Create(target, flags);
+		EditorObject editor_object = m_PlacedObjects.Get(target.GetID());
+		if (editor_object) 
+			return editor_object;
+		
+		editor_object = EditorObject.Create(target, flags);
 		EditorEvents.ObjectCreated(this, editor_object);
 		
 		return editor_object;
@@ -532,6 +536,9 @@ class Editor
 			
 			GetGame().GetWorld().SetViewDistance(m_EditorSettings.ViewDistance);
 			GetGame().GetWorld().SetObjectViewDistance(m_EditorSettings.ObjectViewDistance);
+			
+			// Registers character as EditorObject
+			//CreateFromObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM | EditorObjectFlags.MAPMARKER);
 		}
 		
 		m_EditorCamera.SetLookEnabled(m_Active);
@@ -547,7 +554,6 @@ class Editor
 		
 		if (!m_Active) {	
 			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
-			CreateFromObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM | EditorObjectFlags.MAPMARKER);
 		}
 		
 		m_Player.GetInputController().SetDisabled(m_Active);
