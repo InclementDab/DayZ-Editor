@@ -110,12 +110,9 @@ class EditorObjectMarker: EditorMarker
 			
 			case 2: {
 				EditorCamera camera = GetEditor().GetCamera();
-				
 				vector pos = m_EditorObject.GetPosition();
 				pos[1] = camera.GetPosition()[1];
 				camera.SetPosition(pos);
-				
-				
 				break;
 			}
 		}

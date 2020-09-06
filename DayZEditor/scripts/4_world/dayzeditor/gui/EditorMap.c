@@ -1,6 +1,9 @@
 class EditorMap: EditorWidgetEventHandler
 {
-
+	MapWidget GetMapWidget() { 
+		return MapWidget.Cast(m_Root); 
+	}
+	
 	void EditorMap()
 	{
 		Print("EditorMap");
@@ -53,5 +56,29 @@ class EditorMap: EditorWidgetEventHandler
 		return false;
 	}*/
 	
-	MapWidget GetMapWidget() { return MapWidget.Cast(m_Root); }
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorMap::OnMouseButtonDown");
+		
+		switch (button) {
+			
+			case MouseState.MIDDLE: {
+				vector pos = GetCursorPosition();
+				pos[1] = GetEditor().GetCamera().GetPosition()[1];
+				GetEditor().GetCamera().SetPosition(pos);
+				break;
+			}
+			
+		}
+		
+		return false;
+	}
+	
+	vector GetCursorPosition()
+	{
+		int x, y;
+		GetMousePos(x, y);
+		return GetMapWidget().ScreenToMap(Vector(x, y, 0));
+	}
+
 }

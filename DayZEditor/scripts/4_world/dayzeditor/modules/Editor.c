@@ -254,7 +254,8 @@ class Editor
 				if (KeyState(KeyCode.KC_LCONTROL))
 					EditorLog.Info(GetWidgetUnderCursor().GetName());
 				else {
-					vector pos = CurrentMousePosition;
+					
+					vector pos = CurrentMousePosition;					
 					pos[1] = m_EditorCamera.GetPosition()[1];
 					m_EditorCamera.SetPosition(pos);
 				}
