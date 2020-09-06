@@ -473,6 +473,11 @@ class EditorObject
 		}
 	}
 	
+	void PauseSimulation(bool pause)
+	{
+		EditorLog.Trace("EditorObject::PauseSimulation");
+		m_WorldObject.DisableSimulation(pause);
+	}
 
 	
 }

@@ -2,15 +2,22 @@
 class EditorAnimationManagerTable
 {
 	int CMD_Action;
-	int t;
+	int CMD_ActionID;
 	
 	void EditorAnimationManagerTable(Human human, string anim_name)
 	{
 		HumanAnimInterface anim_interface = human.GetAnimInterface();
 		
-		CMD_Action = anim_interface.BindCommand(anim_name);
-		t = anim_interface.BindVariableInt("VehicleType");
+		ref array<string> anim_split = {};
 		
+		
+		anim_name.Split(",", anim_split);
+		
+		CMD_Action = anim_interface.BindCommand(anim_split[0]);
+		
+		if (anim_split[0] == "CMD_Action") {
+			CMD_ActionID = anim_split[1].ToInt();
+		}
 	}
 	
 }
@@ -32,8 +39,7 @@ class EditorAnimationCommand: HumanCommandScript
 	
 	override void OnActivate()
 	{
-		PreAnim_CallCommand(m_Table.CMD_Action, 0, 0);
-		PreAnim_SetInt(m_Table.t, 0);
+		PreAnim_CallCommand(m_Table.CMD_Action, m_Table.CMD_ActionID, 0);
 	}
 	
 	override void OnDeactivate()

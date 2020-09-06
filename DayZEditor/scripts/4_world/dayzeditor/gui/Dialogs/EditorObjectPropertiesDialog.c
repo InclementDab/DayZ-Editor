@@ -16,6 +16,7 @@ class EditorPropertiesPrefabController: Controller
 	string selected_animation;
 	bool apply_animation;
 	bool reset_animation;
+	bool pause_simulation;
 	
 	void EditorPropertiesPrefabController(EditorObject editor_object) 
 	{
@@ -26,6 +27,8 @@ class EditorPropertiesPrefabController: Controller
 		rot = m_EditorObject.GetOrientation();		
 		name = m_EditorObject.GetDisplayName();
 		animations = new ObservableCollection<string>("animations", this);
+		animations.Insert("Test1");
+		animations.Insert("Test2");
 		
 		string value;
 		GetGame().ConfigGetText("CfgVehicles " + editor_object.GetType() + " enfenimsys graphName", value);
@@ -87,6 +90,12 @@ class EditorPropertiesPrefabController: Controller
 				m_EditorObject.ResetAnimation();
 				break;
 			}
+			
+			case "pause_simulation": {
+				pause_simulation = !pause_simulation;
+				m_EditorObject.PauseSimulation(pause_simulation);
+				break;
+			}
 		}
 	}
 }
@@ -133,7 +142,9 @@ class EditorObjectPropertiesDialog: EditorDialog
 			character_group.AddPrefab(new EditorPrefabEditText("Animation Name", "selected_animation"));
 			character_group.AddPrefab(new EditorPrefabButton("Apply", "apply_animation", 0, 0));
 			character_group.AddPrefab(new EditorPrefabButton("Reset", "reset_animation", 0, 0));
+			character_group.AddPrefab(new EditorPrefabButton("Pause", "pause_simulation", 0, 0));
 			
+			m_EditorPropertiesController.animations.Insert("Test1");
 			character_group.SetController(m_EditorPropertiesController);
 			AddContent(character_group);
 		}
