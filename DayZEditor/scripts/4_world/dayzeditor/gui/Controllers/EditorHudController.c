@@ -286,9 +286,15 @@ class EditorHudController: Controller
 		return false;
 	}*/
 
+	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
+	{
+		EditorLog.Trace("EditorHudController::OnMouseWheel");
+		return false;
+	}
+	
 	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
 	{
-		//EditorLog.Trace("EditorHudController::MVCOnMouseWheel");
+		EditorLog.Trace("EditorHudController::MVCOnMouseWheel");
 		
 		switch (target.GetName()) {
 			

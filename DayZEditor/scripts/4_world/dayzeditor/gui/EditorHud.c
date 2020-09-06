@@ -249,7 +249,25 @@ class EditorHud: Hud
 		//EditorLog.Trace("EditorHud::OnMouseWheel: %1", target.GetName());
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
-
+		/*
+		string w_name = target.GetName();
+		switch (w_name) {
+			
+			case "pos":
+			case "rot": {
+			
+				StringEvaluater w_eval;
+				EnScript.GetClassVar(this, w_name, 0, w_eval);
+				
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					direction *= 10;
+				}
+				
+				EnScript.SetClassVar(this, w_name, 0, (w_eval.Parse() + direction).ToString());
+				NotifyPropertyChanged(w_name);
+			}
+		}
+*/
 		mvc_event.MVCOnMouseWheel(target, direction, x, y);
 	}
 	

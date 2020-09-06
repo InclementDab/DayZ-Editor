@@ -34,29 +34,6 @@ class EditorPropertiesPrefabController: Controller
 		GetGame().ConfigGetText("CfgVehicles " + editor_object.GetType() + " enfenimsys graphName", value);
 		EditorLog.Info("EditorPropertiesPrefabController::Loading GraphName %1", value);
 	}
-	
-	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
-	{
-		EditorLog.Trace("EditorPropertiesController::OnMouseWheel %1", target.GetName());
-		string w_name = target.GetName();
-		
-		switch (w_name) {
-			
-			case "pos":
-			case "rot": {
-			
-				StringEvaluater w_eval;
-				EnScript.GetClassVar(this, w_name, 0, w_eval);
-				
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					direction *= 10;
-				}
-				
-				EnScript.SetClassVar(this, w_name, 0, (w_eval.Parse() + direction).ToString());
-				NotifyPropertyChanged(w_name);
-			}
-		}
-	}
 
 	
 	override void PropertyChanged(string property_name)
