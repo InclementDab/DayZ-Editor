@@ -372,14 +372,14 @@ class Editor
 	
 	
 	// Object Management
-	ref EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
+	ref EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorLog.Trace("Editor::CreateObjects");
 		EditorObjectSet object_set = new EditorObjectSet();
 		EditorAction action = new EditorAction("Delete", "Create");
 		foreach (EditorObjectData editor_object_data: data_list) {
 			
-			EditorObject editor_object = EditorObject.Create(editor_object_data);
+			EditorObject editor_object = EditorObject.Create(editor_object_data, flags);
 			EditorEvents.ObjectCreated(this, editor_object);
 			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));		
@@ -397,11 +397,11 @@ class Editor
 	}
 	
 	
-	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true)
+	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{		
 		EditorLog.Trace("Editor::CreateObject");
 		
-		EditorObject editor_object = EditorObject.Create(editor_object_data);
+		EditorObject editor_object = EditorObject.Create(editor_object_data, flags);
 		EditorEvents.ObjectCreated(this, editor_object);
 		
 		if (!create_undo) return editor_object;
@@ -416,10 +416,10 @@ class Editor
 		return editor_object;
 	}
 	
-	EditorObject CreateFromObject(notnull Object target)
+	EditorObject CreateFromObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorLog.Trace("Editor::CreateFromObject");
-		EditorObject editor_object = EditorObject.Create(target);
+		EditorObject editor_object = EditorObject.Create(target, flags);
 		EditorEvents.ObjectCreated(this, editor_object);
 		
 		return editor_object;
@@ -547,6 +547,7 @@ class Editor
 		
 		if (!m_Active) {	
 			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
+			CreateFromObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM | EditorObjectFlags.MAPMARKER);
 		}
 		
 		m_Player.GetInputController().SetDisabled(m_Active);
@@ -739,6 +740,7 @@ class Editor
 	bool IsLootEditActive() { 
 		return m_LootEditMode; 
 	}
+
 			
 }
 

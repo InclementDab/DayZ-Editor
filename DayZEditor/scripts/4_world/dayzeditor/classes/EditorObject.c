@@ -49,7 +49,7 @@ class EditorObject
 	}
 	
 	
-	private void EditorObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	private void EditorObject(notnull Object target, EditorObjectFlags flags)
 	{
 		EditorLog.Trace("EditorObject");
 		m_WorldObject = target;
@@ -87,20 +87,20 @@ class EditorObject
 		}
 	}
 	
-	static EditorObject Create(ref EditorObjectData data)
+	static EditorObject Create(ref EditorObjectData data, EditorObjectFlags flags)
 	{
 		EditorLog.Trace("EditorObject::Create from EditorObjectData");
 		Object world_object = GetGame().CreateObjectEx(data.Type, data.Position, ECE_LOCAL);
 		world_object.SetOrientation(data.Orientation);
 		world_object.SetFlags(EntityFlags.STATIC, true);
 		
-		return new EditorObject(world_object);
+		return new EditorObject(world_object, flags);
 	}
 	
-	static EditorObject Create(notnull Object target)
+	static EditorObject Create(notnull Object target, EditorObjectFlags flags)
 	{
 		EditorLog.Trace("EditorObject::Create from Object");
-		return new EditorObject(target);
+		return new EditorObject(target, flags);
 	}
 	
 	
@@ -250,6 +250,20 @@ class EditorObject
 	void GetMapMarkerPosition(out float x, out float y) {
 		if (MapMarkerEnabled()) {
 			m_EditorObjectMapMarker.GetPos(x, y);
+		}
+	}
+	
+	void Show(bool show) {	
+		if (ObjectMarkerEnabled()) {
+			m_EditorObjectWorldMarker.Show(show);
+		}
+		
+		if (MapMarkerEnabled()) {
+			m_EditorObjectMapMarker.Show(show);
+		}
+		
+		if (ListItemEnabled()) {
+			m_EditorPlacedListItem.GetLayoutRoot().Show(show);
 		}
 	}
 	
@@ -450,6 +464,7 @@ class EditorObject
 
 	
 }
+
 
 
 

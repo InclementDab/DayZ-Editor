@@ -41,6 +41,11 @@ class EditorHud: Hud
 		EditorLog.Trace("EditorHud::Show");
 		m_LayoutRoot.Show(show);
 		SetCursor(show);
+		
+		EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
+		foreach (EditorObject editor_object: placed_objects) {
+			editor_object.Show(show);
+		}
 	}
 	
 	bool IsVisible() {
