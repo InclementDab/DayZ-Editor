@@ -59,11 +59,6 @@ class EditorObject
 			GetEditor().GetSessionCache().InsertEditorData(m_Data);
 		}
 		
-		if (m_Data.Flags == EditorObjectFlags.ALL) {
-			m_Data.Flags = EditorObjectFlags.BBOX | EditorObjectFlags.MAPMARKER | EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM;
-		}
-
-		
 		// Bounding Box
 		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
 			CreateBoundingBox();
@@ -458,8 +453,25 @@ class EditorObject
 	}
 	
 
-	
+	bool SetAnimation(string anim_name)
+	{
+		EditorLog.Trace("EditorObject::SetAnimation");
+		if (m_WorldObject.IsMan()) {
+			DayZPlayerImplement.Cast(m_WorldObject).EditorAnimationStart(anim_name);
+			return true;
+		}
+		
+		return false;
+	}
 
+	
+	void ResetAnimation()
+	{
+		EditorLog.Trace("EditorObject::SetAnimation");
+		if (m_WorldObject.IsMan()) {
+			DayZPlayerImplement.Cast(m_WorldObject).EditorAnimationReset();
+		}
+	}
 	
 
 	

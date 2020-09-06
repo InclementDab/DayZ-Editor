@@ -122,8 +122,6 @@ modded class DayZPlayerImplement
 		Sleep(50);
 		EditorAnimationStart("CMD_LandImmediate");
 	}
-	
-	
 }
 
 

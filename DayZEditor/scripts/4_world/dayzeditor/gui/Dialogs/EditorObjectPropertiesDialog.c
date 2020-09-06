@@ -67,6 +67,7 @@ class EditorPropertiesPrefabController: Controller
 			
 			case "rot": {
 				m_EditorObject.SetOrientation(rot);
+				m_EditorObject.ResetAnimation();
 				break;
 			}
 			
@@ -76,7 +77,7 @@ class EditorPropertiesPrefabController: Controller
 			}
 			
 			case "apply_animation": {
-				
+				m_EditorObject.SetAnimation("CMD_Climb");
 				break;
 			}
 		}
@@ -118,11 +119,12 @@ class EditorObjectPropertiesDialog: EditorDialog
 
 		AddContent(info_group);
 		
-		if (GetGame().ObjectIsKindOf(editor_object.GetWorldObject(), "DZ_LightAI")) {
+		if (editor_object.GetWorldObject().IsMan()) {
 			
 			EditorPrefabGroup character_group = new EditorPrefabGroup("Character Control");
 			character_group.AddPrefab(new EditorPrefabDropdown("Animation", "animations", 0, "selected_animation"));
 			character_group.AddPrefab(new EditorPrefabButton("Apply Animation", "apply_animation"));
+			character_group.SetController(m_EditorPropertiesController);
 			AddContent(character_group);
 		}
 		

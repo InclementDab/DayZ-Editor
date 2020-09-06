@@ -1,12 +1,11 @@
 
-enum EditorObjectFlags
-{
+enum EditorObjectFlags {
 	NONE = 0,
 	BBOX = 2,
 	MAPMARKER = 4,
 	OBJECTMARKER = 8,
 	LISTITEM = 16,
-	ALL = 256
+	ALL = 30 // 2 | 4 | 8 | 16
 };
 
 
@@ -70,10 +69,6 @@ class EditorObjectData
 		return data;
 	}
 	
-	static EditorObjectData Create(EditorPlaceableObjectData data)
-	{
-		
-	}
 	
 	static EditorObjectData CreateFromExistingObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
@@ -81,8 +76,6 @@ class EditorObjectData
 		data.Type = target.GetType(); data.Position = target.GetPosition(); data.Orientation = target.GetOrientation(); data.Flags = flags;
 		data.DisplayName = data.Type;
 		data.ObjectMod = GetModFromObject(data.Type);
-		
-
 		data.m_Id = target.GetID();	
 		
 		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));

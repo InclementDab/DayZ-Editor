@@ -404,7 +404,8 @@ class Editor
 		EditorObject editor_object = EditorObject.Create(editor_object_data, flags);
 		EditorEvents.ObjectCreated(this, editor_object);
 		
-		if (!create_undo) return editor_object;
+		if (!create_undo) 
+			return editor_object;
 		
 		EditorAction action = new EditorAction("Delete", "Create");;
 		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
