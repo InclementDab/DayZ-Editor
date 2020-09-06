@@ -10,7 +10,7 @@ class EditorSettings
 	float MarkerViewDistance = 1500;
 		
 	// Autosave timer in seconds
-	int AutosaveTimer = 240;
+	int AutoSaveTimer = 240;
 
 	
 	void EditorSettings() {
@@ -29,6 +29,11 @@ class EditorSettings
 		// todo save settings to ini or something
 	}
 
+	void Reload()
+	{
+		GetGame().GetWorld().SetViewDistance(ViewDistance);
+		GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
+	}
 
 }
 

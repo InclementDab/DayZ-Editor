@@ -232,7 +232,7 @@ class EditorHud: Hud
 	
 	void OnMouseUp(Widget target, int button, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseUp %1", target.GetName());
+		//EditorLog.Trace("EditorHud::OnMouseUp %1", target.GetName());
 		
 		if (target) {
 			MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
@@ -246,7 +246,7 @@ class EditorHud: Hud
 	
 	void OnMouseWheel(Widget target, int direction, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseWheel: %1", target.GetName());
+		//EditorLog.Trace("EditorHud::OnMouseWheel: %1", target.GetName());
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
 
@@ -256,7 +256,7 @@ class EditorHud: Hud
 	
 	void OnClick(Widget target, int button, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnClick %1", target.GetName());
+		//EditorLog.Trace("EditorHud::OnClick %1", target.GetName());
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
 		
@@ -274,7 +274,7 @@ class EditorHud: Hud
 		
 	void OnDoubleClick(Widget target, int button, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnDoubleClick: %1", target.GetName());
+		//EditorLog.Trace("EditorHud::OnDoubleClick: %1", target.GetName());
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
 		mvc_event.MVCOnDoubleClick(target, button, x, y);
@@ -293,7 +293,7 @@ class EditorHud: Hud
 	
 	void OnMouseEnter(Widget target, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseEnter: %1", target.GetName());
+		//EditorLog.Trace("EditorHud::OnMouseEnter: %1", target.GetName());
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
 		
@@ -303,7 +303,7 @@ class EditorHud: Hud
 	
 	void OnMouseLeave(Widget target, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnMouseLeave: %1", target.GetName());
+		//EditorLog.Trace("EditorHud::OnMouseLeave: %1", target.GetName());
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
 		mvc_event.MVCOnMouseLeave(target, x, y);
@@ -311,7 +311,7 @@ class EditorHud: Hud
 	
 	void OnDrag(Widget target, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnDrag: %1", target.GetName());
+		//EditorLog.Trace("EditorHud::OnDrag: %1", target.GetName());
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
 		mvc_event.MVCOnDrag(target, x, y);
@@ -320,7 +320,7 @@ class EditorHud: Hud
 	
 	void OnDrop(Widget target, Widget drop_target, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnDrop: %1 drop_target: %2", target.GetName(), drop_target.GetName());
+		//EditorLog.Trace("EditorHud::OnDrop: %1 drop_target: %2", target.GetName(), drop_target.GetName());
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
 	
@@ -340,14 +340,12 @@ class EditorHud: Hud
 	
 	void OnDropReceived(Widget target, Widget received_target, int x, int y)
 	{
-		EditorLog.Trace("EditorHud::OnDropReceived: %1 received_target: %2 X:%3 Y:%4", target.GetName(), received_target.GetName(), x.ToString(), y.ToString());
+		//EditorLog.Trace("EditorHud::OnDropReceived: %1 received_target: %2 X:%3 Y:%4", target.GetName(), received_target.GetName(), x.ToString(), y.ToString());
 		MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
 		if (!mvc_event) return;
 		mvc_event.MVCOnDropReceived(target, received_target, x, y);
 		
 	}
-	
-	
 	
 	override void SetPermanentCrossHair(bool show); // todo
 	

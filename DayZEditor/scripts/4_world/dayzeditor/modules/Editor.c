@@ -35,6 +35,12 @@ class Editor
 	EditorSettings GetSettings()
 		return m_EditorSettings;
 	
+	void SetSettings(EditorSettings settings) {
+		m_EditorSettings = settings;
+		EditorSettings.Save(m_EditorSettings, m_EditorSettingsFile);
+		m_EditorSettings.Reload();
+	}
+	
 	EditorObjectSet GetSelectedObjects() 
 		return m_SelectedObjects; 
 	
@@ -89,6 +95,7 @@ class Editor
 	private ref EditorActionStack 				m_ActionStack;
 	
 	private bool 								m_Active;
+	private string 								m_EditorSettingsFile = "$profile:Editor\\settings.ini";
 			
 	private ref map<int, int> m_PlacedObjectIndex = new map<int, int>();
 	
@@ -103,7 +110,8 @@ class Editor
 		m_ActionStack = new EditorActionStack();
 		
 		// Init Settings
-		m_EditorSettings = EditorSettings.Load("$profile:Editor\\settings.ini");
+		m_EditorSettings = EditorSettings.Load(m_EditorSettingsFile);
+		m_EditorSettings.Reload();
 		
 		// Init UI
 		m_UIManager = GetGame().GetUIManager();
@@ -533,10 +541,7 @@ class Editor
 			m_EditorUI.InsertMapObject(m_MapMarkerWidget);
 			m_EditorUI.GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));*/
 			
-					
-			
-			GetGame().GetWorld().SetViewDistance(m_EditorSettings.ViewDistance);
-			GetGame().GetWorld().SetObjectViewDistance(m_EditorSettings.ObjectViewDistance);
+				
 			
 			// Registers character as EditorObject
 			//CreateFromObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM | EditorObjectFlags.MAPMARKER);

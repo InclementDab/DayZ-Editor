@@ -1295,7 +1295,6 @@ FrameWidgetClass EditorMainFrame {
           ButtonWidgetClass BrushToggleButton {
            visible 1
            ignorepointer 0
-           color 0.749 0.3725 0.3725 1
            position 0 0
            size 0.7 1
            halign center_ref
@@ -1306,9 +1305,31 @@ FrameWidgetClass EditorMainFrame {
            vexactsize 0
            priority 5
            scriptclass "ViewBinding"
-           style Default
+           style Colorable
            "no focus" 1
+           text " "
            switch toggle
+           {
+            TextWidgetClass BrushToggleButtonText {
+             visible 1
+             ignorepointer 1
+             position 0 0
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "ViewBinding"
+             "text halign" center
+             "text valign" center
+             {
+              ScriptParamsClass {
+              }
+             }
+            }
+           }
            {
             ScriptParamsClass {
              Binding_Name "BrushToggleButtonState"
@@ -1326,6 +1347,7 @@ FrameWidgetClass EditorMainFrame {
          }
         }
         FrameWidgetClass SimcityRadiusFrame {
+         clipchildren 0
          ignorepointer 1
          size 140 32
          valign center_ref
@@ -1334,8 +1356,23 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 1
          vexactsize 1
          {
+          PanelWidgetClass BrushRadiusSliderBackground {
+           visible 1
+           ignorepointer 1
+           color 0.1373 0.1373 0.1373 1
+           position 0 0
+           size 120 32
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style rover_sim_colorable
+          }
           SliderWidgetClass BrushRadiusSlider {
            visible 1
+           color 1 1 1 0.1961
            size 120 32
            halign center_ref
            valign center_ref
@@ -1385,8 +1422,23 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 1
          vexactsize 1
          {
+          PanelWidgetClass BrushDensitySliderBackground {
+           visible 1
+           ignorepointer 1
+           color 0.1373 0.1373 0.1373 1
+           position 0 0
+           size 120 32
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style rover_sim_colorable
+          }
           SliderWidgetClass BrushDensitySlider {
            visible 1
+           color 1 1 1 0.1961
            size 120 32
            halign center_ref
            valign center_ref
@@ -1482,6 +1534,22 @@ FrameWidgetClass EditorMainFrame {
          {
           ScriptParamsClass {
            Command_Execute "CameraExecute"
+          }
+         }
+        }
+        ButtonWidgetClass SettingsButton {
+         position 0 0
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Default
+         text "S"
+         {
+          ScriptParamsClass {
+           Command_Execute "SettingsExecute"
           }
          }
         }

@@ -22,6 +22,7 @@ class EditorHudController: Controller
 	
 	bool BrushToggleButtonState;
 	int BrushTypeSelection;
+	string BrushToggleButtonText;
 	
 	bool MagnetButton;
 	bool GroundButton;
@@ -154,7 +155,8 @@ class EditorHudController: Controller
 			}
 			
 			case "BrushTypeBoxData": {
-				BrushToggleButton.SetText(BrushTypeBoxData.Get(BrushTypeSelection).Name);
+				BrushToggleButtonText = BrushTypeBoxData.Get(BrushTypeSelection).Name;
+				NotifyPropertyChanged("BrushToggleButtonText");
 				break;
 			}
 			
@@ -187,7 +189,8 @@ class EditorHudController: Controller
 		switch (collection_name) {
 			
 			case "BrushTypeBoxData": {
-				BrushToggleButton.SetText(BrushTypeBoxData.Get(BrushTypeSelection).Name);
+				BrushToggleButtonText = BrushTypeBoxData.Get(BrushTypeSelection).Name;
+				NotifyPropertyChanged("BrushToggleButtonText");
 				break;
 			}
 		}
@@ -238,13 +241,19 @@ class EditorHudController: Controller
 		camera_dialog.ShowDialog();
 	}
 	
+	void SettingsExecute(ButtonCommandArgs args) {
+		EditorSettingsDialog settings_dialog = new EditorSettingsDialog(GetEditor().GetSettings());
+		settings_dialog.ShowDialog();
+	}
 	
-	
+	/*
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
 		if (button == MouseState.LEFT) {
 		
+
+			
 		// Raycast to see if TranslationWidget is under cursor	
 			/*		
 			RaycastRVParams raycast_params = new RaycastRVParams(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * EditorSettings.OBJECT_VIEW_DISTANCE);
@@ -269,13 +278,13 @@ class EditorHudController: Controller
 					return true;
 				}
 			}
-			*/
+			
 			
 			
 		}
 		
 		return false;
-	}
+	}*/
 
 	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
 	{
@@ -305,14 +314,16 @@ class EditorHudController: Controller
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseEnter %1", w.GetName());		
-		switch (w.GetName()) {
+		switch (w.GetTypeName()) {
 			
-			case "SnapButton":
-			case "GroundButton":
-			case "MagnetButton":
-			case "UndoButton":
-			case "RedoButton": {
+
+			case "ButtonWidget": {
 				w.SetColor(COLOR_SALMON_A);
+				break;
+			}
+			
+			case "SliderWidget": {
+				w.SetColor(COLOR_SALMON);
 				break;
 			}
 			
@@ -327,22 +338,25 @@ class EditorHudController: Controller
 		EditorLog.Trace("EditorHudController::OnMouseLeave %1", w.GetName());
 		
 		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
-		switch (w.GetName()) {
+		switch (w.GetTypeName()) {
 			
-			case "UndoButton":
-			case "RedoButton":
-			case "MagnetButton":
-			case "GroundButton":
-			case "SnapButton": {
+			
+			case "ButtonWidget": {
 				w.SetColor(COLOR_EMPTY);
 				break;
 			}
 		
+
+			case "SliderWidget": {
+				w.SetColor(COLOR_WHITE_A);
+				break;
+			}
 		}
 		
 		return false;
 			
 	}
+	
 	
 
 	
@@ -393,6 +407,7 @@ class EditorHudController: Controller
 						icon.SetPos(button_state * 1, button_state * 1);
 						break;
 					}
+				
 					
 					case "EditorListItemButton": {
 						

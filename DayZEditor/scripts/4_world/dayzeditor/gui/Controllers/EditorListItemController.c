@@ -16,9 +16,10 @@ class EditorListItemController: Controller
 	protected WrapSpacerWidget EditorListItemChildren;
 	
 	//protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
-	protected static int COLOR_ON_SELECTED = COLOR_SALMON;
+	protected static int COLOR_ON_SELECTED = COLOR_BLUE;
 	protected static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
-
+	protected static int COLOR_ON_HOVER = COLOR_SALMON;
+	
 	
 	ref ObservableCollection<ref EditorListItem> ChildListItems;
 	
@@ -43,7 +44,7 @@ class EditorListItemController: Controller
 		switch (m_ListItem.Type()) {
 			default: {
 				//w.SetColor(COLOR_SALMON);
-				EditorListItemHighlight.Show(true);
+				EditorListItemContent.SetColor(COLOR_ON_HOVER);
 				break;
 			}			
 		}
@@ -61,7 +62,8 @@ class EditorListItemController: Controller
 			
 			default: {
 				//w.SetColor(COLOR_EMPTY);
-				EditorListItemHighlight.Show(false);
+				if (!m_Selected)
+					EditorListItemContent.SetColor(COLOR_ON_DESELECTED);
 				break;
 			}
 		}
@@ -170,14 +172,17 @@ class EditorListItemController: Controller
 		}
 	}
 
+	private bool m_Selected;
 	void Select() {
 		//EditorLog.Trace("EditorListItemController::Select");
+		m_Selected = true;
 		EditorListItemContent.SetColor(COLOR_ON_SELECTED);
 		EditorListItemContent.Update();	
 	}
 	
 	void Deselect() {	
 		//EditorLog.Trace("EditorListItemController::Deselect");
+		m_Selected = false;
 		EditorListItemContent.SetColor(COLOR_ON_DESELECTED);
 		EditorListItemContent.Update();	
 	}

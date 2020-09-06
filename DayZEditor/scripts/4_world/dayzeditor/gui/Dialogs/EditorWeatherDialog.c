@@ -9,11 +9,7 @@ class EditorWeatherDialogController: Controller
 	float fog;
 	float overcast;
 	float wind;
-	
-	// todo just make a settings window
-	float view;
-	float objectview;
-	
+		
 	
 	void SetWorld(World world)
 	{
@@ -32,8 +28,6 @@ class EditorWeatherDialogController: Controller
 		m_Weather.SetWindMaximumSpeed(100);
 		wind = m_Weather.GetWindSpeed();
 		
-		view = GetEditor().GetSettings().ViewDistance;
-		objectview = GetEditor().GetSettings().ObjectViewDistance;
 	}
 	
 	override void PropertyChanged(string property_name)
@@ -70,18 +64,6 @@ class EditorWeatherDialogController: Controller
 				m_Weather.SetWindSpeed(wind);
 				break;
 			}
-			
-			case "view": {
-				GetEditor().GetSettings().ViewDistance = view;
-				m_World.SetViewDistance(view);
-				break;
-			}
-			
-			case "objectview": {
-				GetEditor().GetSettings().ObjectViewDistance = objectview;
-				m_World.SetPreferredViewDistance(objectview);
-				break;
-			}
 		}	
 	}
 }
@@ -105,9 +87,7 @@ class EditorWeatherDialog: EditorDialog
 		weather_group.AddPrefab(new EditorPrefabSlider("Fog", "fog", 0, 0, 1));
 		weather_group.AddPrefab(new EditorPrefabSlider("Overcast", "overcast", 0, 0, 1));
 		weather_group.AddPrefab(new EditorPrefabSlider("Wind", "wind", 0, 0, 100));
-		weather_group.AddPrefab(new EditorPrefabSlider("View Distance", "view", 0, 0, 20000));
-		weather_group.AddPrefab(new EditorPrefabSlider("Object View Distance", "objectview", 0, 0, 20000));
-		
+
 		weather_group.SetController(m_EditorWeatherDialogController);
 		AddContent(weather_group);
 
