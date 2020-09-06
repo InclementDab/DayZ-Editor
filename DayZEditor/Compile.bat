@@ -1,6 +1,6 @@
 @echo off
 
-set QUERY="HKEY_LOCAL_MACHINE\SOFTWARE\Bohemia Interactive\Dayz Tools\AddonBuilder"
+set QUERY="HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\bohemia interactive\addonbuilder"
 
 
 for /f "tokens=2* skip=2" %%a in ('reg query %QUERY%  /V "path"') do ( 

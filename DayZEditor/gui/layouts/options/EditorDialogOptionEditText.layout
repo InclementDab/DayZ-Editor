@@ -51,10 +51,15 @@ PanelWidgetClass EditorEditTextElement {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          style Editor
          text "reee"
          "exact text" 1
          font "gui/fonts/etelkatextpro"
+         {
+          ScriptParamsClass {
+          }
+         }
         }
        }
       }

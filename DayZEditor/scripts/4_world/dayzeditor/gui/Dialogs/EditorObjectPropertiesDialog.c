@@ -35,6 +35,32 @@ class EditorPropertiesPrefabController: Controller
 		EditorLog.Info("EditorPropertiesPrefabController::Loading GraphName %1", value);
 	}
 
+	// this isnt being called due to how we are dynamically generating ViewBindings in the controller
+	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
+	{
+		Print("WEEE");
+		string w_name = w.GetName();
+		float direction = wheel;
+		switch (w_name) {
+			
+			case "pos":
+			case "rot": {
+			
+				StringEvaluater w_eval;
+				EnScript.GetClassVar(this, w_name, 0, w_eval);
+				
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					direction *= 10;
+				} else if (KeyState(KeyCode.KC_LMENU)) {
+					direction /= 10;
+				}
+				
+				EnScript.SetClassVar(this, w_name, 0, (w_eval.Parse() + direction).ToString());
+				NotifyPropertyChanged(w_name);
+			}
+		}
+		return false;
+	}
 	
 	override void PropertyChanged(string property_name)
 	{
