@@ -325,11 +325,13 @@ class Editor
 				}
 				
 				case KeyCode.KC_X: {
+					DayZPlayerImplement.Cast(GetGame().GetPlayer()).EditorAnimationStart("CMD_Vehicle_GetIn");
 					Cut(m_SelectedObjects);
 					return true;
 				}
 
 				case KeyCode.KC_C: {
+					DayZPlayerImplement.Cast(GetGame().GetPlayer()).EditorAnimationReset();
 					Copy(m_SelectedObjects);
 					return true;
 				}
@@ -337,7 +339,8 @@ class Editor
 				case KeyCode.KC_V: {
 					Paste(CurrentMousePosition);
 					return true;
-				}
+				} 
+				
 				
 
 			}
