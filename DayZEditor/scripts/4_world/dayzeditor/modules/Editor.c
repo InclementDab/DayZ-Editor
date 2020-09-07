@@ -258,8 +258,13 @@ class Editor
 					EditorLog.Info(GetWidgetUnderCursor().GetName());
 				else if (KeyState(KeyCode.KC_LSHIFT)) {
 					//EditorLog.Info();
-					if (ObjectUnderCursor)
-						CreateFromObject(ObjectUnderCursor);
+					if (ObjectUnderCursor) {
+						Object obj = ObjectUnderCursor;
+						while (obj.GetParent())
+							obj = obj.GetParent();
+						
+						CreateFromObject(obj);
+					}
 				} else {
 					
 					vector pos = CurrentMousePosition;					
