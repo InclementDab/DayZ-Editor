@@ -1561,6 +1561,23 @@ FrameWidgetClass EditorMainFrame {
           }
          }
         }
+        CheckBoxWidgetClass CinemaMode {
+         size 120 32
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         text "Cinema"
+         {
+          ScriptParamsClass {
+           Binding_Name "CinemaModeState"
+           Two_Way_Binding 1
+          }
+         }
+        }
        }
       }
      }

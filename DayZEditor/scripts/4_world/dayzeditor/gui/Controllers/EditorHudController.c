@@ -31,6 +31,8 @@ class EditorHudController: Controller
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
+	bool CinemaModeState;
+	
 	//ref TextListboxWidgetData DebugActionStackListbox;
 	ref ObservableCollection<ref EditorWidget> LeftbarSpacer;
 	ref ObservableCollection<ref EditorWidget> RightbarSpacer;
@@ -246,6 +248,7 @@ class EditorHudController: Controller
 		settings_dialog.ShowDialog();
 	}
 	
+
 	/*
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
@@ -309,6 +312,15 @@ class EditorHudController: Controller
 				
 				EnScript.SetClassVar(this, w_name, 0, (w_eval.Parse() + direction).ToString());
 				NotifyPropertyChanged(w_name);
+				break;
+			}
+			
+			default: {
+				if (CinemaModeState) {
+					Print("oh it worked");
+					break;
+				}
+				
 			}
 		}
 		return false;
@@ -358,9 +370,7 @@ class EditorHudController: Controller
 			case "SliderWidget": {
 				w.SetColor(COLOR_SALMON);
 				break;
-			}
-			
-		
+			}		
 		}
 		
 		return false;
