@@ -83,6 +83,7 @@ class EditorObjectData
 		return data;
 	}
 	
+	
 	void OnSend(Serializer serializer)
 	{
 		serializer.Write(Type);

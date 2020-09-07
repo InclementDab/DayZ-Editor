@@ -7,8 +7,13 @@ class EditorObjectSet: ref map<int, ref EditorObject>
 		EditorLog.Trace("~EditorObjectSet");
 	}
 	
-	bool InsertEditorObject(EditorObject target) { return Insert(target.GetID(), target); }
-	void RemoveEditorObject(EditorObject target) { Remove(target.GetID()); }
+	bool InsertEditorObject(EditorObject target) { 
+		return Insert(target.GetID(), target); 
+	}
+	
+	void RemoveEditorObject(EditorObject target) { 
+		Remove(target.GetID()); 
+	}
 }
 
 class EditorObject
@@ -52,9 +57,10 @@ class EditorObject
 	private void EditorObject(notnull Object target, EditorObjectFlags flags)
 	{
 		EditorLog.Trace("EditorObject");
-		m_WorldObject = target;
-		
+		m_WorldObject = target;		
 		m_Data = EditorObjectData.CreateFromExistingObject(target, flags);
+		m_Data.Flags = flags;
+		
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().InsertEditorData(m_Data);
 		}
@@ -82,14 +88,14 @@ class EditorObject
 		}
 	}
 	
-	static EditorObject Create(ref EditorObjectData data, EditorObjectFlags flags)
+	static EditorObject Create(ref EditorObjectData data)
 	{
 		EditorLog.Trace("EditorObject::Create from EditorObjectData");
 		Object world_object = GetGame().CreateObjectEx(data.Type, data.Position, ECE_LOCAL);
 		world_object.SetOrientation(data.Orientation);
 		world_object.SetFlags(EntityFlags.STATIC, true);
 		
-		return new EditorObject(world_object, flags);
+		return new EditorObject(world_object, data.Flags);
 	}
 	
 	static EditorObject Create(notnull Object target, EditorObjectFlags flags)
@@ -105,6 +111,7 @@ class EditorObject
 		m_Data.Position = GetPosition();
 		m_Data.Orientation = GetOrientation();
 		
+		
 		delete m_EditorObjectWorldMarker; 
 		delete m_EditorPlacedListItem;
 		delete m_EditorObjectMapMarker;
@@ -115,9 +122,7 @@ class EditorObject
 		
 		GetGame().ObjectDelete(m_WorldObject);
 		GetGame().ObjectDelete(m_BBoxBase);
-		GetGame().ObjectDelete(m_CenterLine);
-		
-		
+		GetGame().ObjectDelete(m_CenterLine);		
 	}
 		
 	
@@ -264,6 +269,7 @@ class EditorObject
 			m_EditorPlacedListItem.GetLayoutRoot().Show(m_Visible);
 		}
 	}
+	
 	
 
 

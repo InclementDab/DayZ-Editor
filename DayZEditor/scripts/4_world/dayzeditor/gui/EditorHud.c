@@ -207,7 +207,6 @@ class EditorHud: Hud
 	{
 		EditorLog.Trace("EditorHud::OnMouseDown: %1", target.GetName());
 		
-		
 		if (target) {
 			
 			MVCEventHandler mvc_event = m_MVCEventHashMap.Get(target);
@@ -227,7 +226,6 @@ class EditorHud: Hud
 		
 			
 		GetEditor().OnMouseDown(target, button, x, y);
-			
 	}
 	
 	void OnMouseUp(Widget target, int button, int x, int y)

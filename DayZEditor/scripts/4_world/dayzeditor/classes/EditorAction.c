@@ -97,22 +97,21 @@ class EditorAction
 	{
 		EditorLog.Trace("EditorAction::Create");
 		Sleep(10);
-		EditorObjectData data = GetEditor().GetSessionDataById(params.param1);
-		GetEditor().CreateObject(data, false);
+		GetEditor().CreateObject(GetEditor().GetSessionDataById(params.param1), false);
 	}
 	
 	void Delete(Param1<int> params)
 	{
 		EditorLog.Trace("EditorAction::Delete");
 		Sleep(10);
-		EditorObject editor_object = GetEditor().GetPlacedObjectById(params.param1);
-		GetEditor().DeleteObject(editor_object, false);
+		GetEditor().DeleteObject(GetEditor().GetPlacedObjectById(params.param1), false);
 	}
 	
 	
 	void SetTransform(Param3<int, vector, vector> params)
 	{
 		EditorLog.Trace("EditorObject::SetTransform");
+		
 		Sleep(10);
 		EditorObject editor_object = GetEditor().GetPlacedObjectById(params.param1);
 		editor_object.SetPosition(params.param2);

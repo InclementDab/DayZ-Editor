@@ -121,7 +121,7 @@ modded class MainMenu
 		Print("Editor::MainMenu");
 		super.Init();
 		
-		m_ChooseServer.Show(false);
+		m_ChooseServer.Show(true);
 		m_CustomizeCharacter.Show(false);
 		m_Stats.HideStats();
 		
@@ -143,7 +143,6 @@ modded class MainMenu
     {
 		MapSelectDialog select_window = new MapSelectDialog();
 		select_window.ShowDialog();
-		//GetGame().GetUIManager().ShowScriptedMenu(select_window, this);
     }
 
     override bool OnMouseEnter(Widget w, int x, int y)

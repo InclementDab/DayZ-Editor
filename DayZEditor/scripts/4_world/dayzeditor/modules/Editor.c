@@ -241,7 +241,9 @@ class Editor
 					
 					if (EditorObjectUnderCursor == null) {
 						// delayed dragbox
-						m_EditorHud.GetController().DelayedDragBoxCheck();
+						if (!target)
+							m_EditorHud.GetController().DelayedDragBoxCheck();
+						
 						return false;
 						
 						
@@ -380,14 +382,14 @@ class Editor
 	
 	
 	// Object Management
-	ref EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	ref EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
 	{
 		EditorLog.Trace("Editor::CreateObjects");
 		EditorObjectSet object_set = new EditorObjectSet();
 		EditorAction action = new EditorAction("Delete", "Create");
 		foreach (EditorObjectData editor_object_data: data_list) {
 			
-			EditorObject editor_object = EditorObject.Create(editor_object_data, flags);
+			EditorObject editor_object = EditorObject.Create(editor_object_data);
 			EditorEvents.ObjectCreated(this, editor_object);
 			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));		
@@ -405,11 +407,11 @@ class Editor
 	}
 	
 	
-	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true)
 	{		
 		EditorLog.Trace("Editor::CreateObject");
 		
-		EditorObject editor_object = EditorObject.Create(editor_object_data, flags);
+		EditorObject editor_object = EditorObject.Create(editor_object_data);
 		EditorEvents.ObjectCreated(this, editor_object);
 		
 		if (!create_undo) 

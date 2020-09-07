@@ -20,12 +20,13 @@ class EditorBrushData
 	string Name;
 	float MinRadius, MaxRadius;
 	
-	ref EditorBrushObjectArray PlaceableObjectTypes;
+	ref EditorBrushObjectArray PlaceableObjectTypes = {};
 
 	typename BrushClassName;
 	
 	bool InsertPlaceableObject(EditorBrushObject placeable_object)
 	{
+		EditorLog.Trace("EditorBrushData::InsertPlaceableObject %1", placeable_object.Name);
 		string model_name = GetGame().GetModelName(placeable_object.Name);
 		if (model_name == "UNKNOWN_P3D_FILE") {
 			EditorLog.Warning("%1 is not a valid Object Type!", placeable_object.Name);
@@ -33,7 +34,6 @@ class EditorBrushData
 		}
 		
 		PlaceableObjectTypes.Insert(placeable_object);
-
 		
 		return true;
 	}
@@ -42,13 +42,13 @@ class EditorBrushData
 	{
 		EditorBrushObjectArray PlaceableObjects = new EditorBrushObjectArray();
 		
-		// This is rly slow
-		foreach (EditorBrushObject placeable_object: PlaceableObjectTypes)
-			for (int j = 0; j < placeable_object.Frequency * 100; j++)
-				PlaceableObjects.Insert(placeable_object);
+		EditorBrushObject brush_object = PlaceableObjectTypes.GetRandomElement();
 		
+		while (Math.RandomFloat01() > brush_object.Frequency)
+			brush_object = PlaceableObjectTypes.GetRandomElement();
 		
-		return PlaceableObjects.GetRandomElement();
+	
+		return brush_object;
 	}
 }
 

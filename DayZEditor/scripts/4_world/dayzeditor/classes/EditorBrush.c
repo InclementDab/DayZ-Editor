@@ -118,11 +118,8 @@ class EditorBrush
 			
 		}
 		
-		ref EditorObjectSet object_set = GetEditor().CreateObjects(data_set);
-		
+		ref EditorObjectSet object_set = GetEditor().CreateObjects(data_set, true);
 		i = 0;
-		
-		
 		
 		foreach (EditorObject editor_object: object_set) {
 			
