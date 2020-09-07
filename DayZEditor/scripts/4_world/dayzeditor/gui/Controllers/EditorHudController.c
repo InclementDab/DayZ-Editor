@@ -576,7 +576,6 @@ class EditorHudController: Controller
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationAnimateFrame);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationDestroy);
 		
-				
 		NotificationPanel.SetColor(color);
 		NotificationText.SetText(text);
 		NotificationFrame.Show(true);

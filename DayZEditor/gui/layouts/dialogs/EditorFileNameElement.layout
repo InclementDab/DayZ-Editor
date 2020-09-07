@@ -1,0 +1,25 @@
+PanelWidgetClass EditorFileNameElement {
+ ignorepointer 1
+ color 0.8627 0.8627 0.8627 1
+ size 250 32
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ style Outline
+ {
+  EditBoxWidgetClass FileNameEditBox {
+   ignorepointer 0
+   size 240 26
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style ServerBrowser
+   "Use default text" 0
+   font "gui/fonts/metron"
+  }
+ }
+}

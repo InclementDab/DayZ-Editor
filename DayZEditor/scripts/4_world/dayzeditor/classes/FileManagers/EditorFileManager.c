@@ -115,9 +115,16 @@ class EditorWorldData
 	vector CameraPosition[4];
 	ref EditorObjectDataSet EditorObjects;
 	
-	void EditorWorldData()
+	void EditorWorldData(Editor editor)
 	{
 		EditorObjects = new EditorObjectDataSet();
+		
+		GetGame().GetWorldName(MapName);
+		editor.GetCamera().GetTransform(CameraPosition);
+		
+		foreach (EditorObject editor_object: editor.GetPlacedObjects()) {
+			EditorObjects.InsertEditorData(editor_object.GetData());
+		}
 	}
 }
 
@@ -169,7 +176,11 @@ class EditorFileManager
 	static FileDialogResult Save(ref EditorWorldData data, string file)
 	{		
 		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(file, data);
-		return FileDialogResult.SUCCESS;
+		if (FileExist(file)) {
+			return FileDialogResult.SUCCESS;
+		} else {
+			return FileDialogResult.UNKNOWN_ERROR;
+		}
 	}
 	
 	static FileDialogResult Open(out EditorWorldData data, string file)

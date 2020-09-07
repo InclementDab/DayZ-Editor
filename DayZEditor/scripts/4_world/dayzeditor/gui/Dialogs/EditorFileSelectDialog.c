@@ -227,14 +227,17 @@ class EditorFileSaveDialog: EditorFileDialog
 {
 	protected EditBoxWidget m_FileNameBox;
 	
-	void EditorFileSaveDialog()
+	protected EditorWorldData m_EditorWorldData;
+	
+	void EditorFileSaveDialog(EditorWorldData world_data)
 	{
 		EditorLog.Trace("EditorFileSaveDialog");
+		m_EditorWorldData = world_data;
 				
 		AddButton("Save", "SaveCallback");
 		AddButton("Cancel", "CloseDialog");
 		
-		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/content/EditorFileNameElement.layout", m_DialogController.ButtonGrid);
+		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorFileNameElement.layout", m_DialogController.ButtonGrid);
 		m_FileNameBox = EditBoxWidget.Cast(w.FindAnyWidget("FileNameEditBox"));
 		
 		string default_name = "new";
@@ -258,7 +261,8 @@ class EditorFileSaveDialog: EditorFileDialog
 	
 	void SaveCallback()
 	{
-		//GetEditor().Save(m_CurrentDirectory + m_FileNameBox.GetText());
+		GetEditor().Save(m_CurrentDirectory + m_FileNameBox.GetText(), m_EditorWorldData);
+		
 		CloseDialog();
 	}
 	

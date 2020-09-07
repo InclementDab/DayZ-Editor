@@ -93,9 +93,6 @@ class EditorHud: Hud
 		m_LayoutRoot 			= GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorUI.layout", hud_panel_widget);		
 		m_LayoutRoot.GetScript(m_EditorHudController);
 		
-		// Showcase UI
-		//GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/layouts/DataBindingShowcase.layout", m_LayoutRoot);
-		
 		// Misc get ridda this shit too
 		m_EditorMapContainer	= m_LayoutRoot.FindAnyWidget("MapContainer");
 		m_EditorMapWidget		= MapWidget.Cast(m_LayoutRoot.FindAnyWidget("Map"));
@@ -180,9 +177,6 @@ class EditorHud: Hud
 		GetMousePos(x, y);
 		OnDragging(m_DragWidget, x, y);
 	}
-	
-
-	
 	
 
 	private ref Widget m_CurrentEnterWidget;

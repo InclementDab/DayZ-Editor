@@ -96,6 +96,7 @@ class Editor
 	
 	private bool 								m_Active;
 	private string 								m_EditorSettingsFile = "$profile:Editor\\settings.ini";
+	private string								m_EditorSaveFile;
 			
 	private ref map<int, int> m_PlacedObjectIndex = new map<int, int>();
 	
@@ -257,7 +258,7 @@ class Editor
 				if (KeyState(KeyCode.KC_LCONTROL))
 					EditorLog.Info(GetWidgetUnderCursor().GetName());
 				else if (KeyState(KeyCode.KC_LSHIFT)) {
-					//EditorLog.Info();
+
 					if (ObjectUnderCursor) {
 						Object obj = ObjectUnderCursor;
 						while (obj.GetParent())
@@ -317,7 +318,15 @@ class Editor
 				}
 				
 				case KeyCode.KC_S: {
-					Save();
+					
+					
+					EditorWorldData world_data(this);
+					
+					if (m_EditorSaveFile == string.Empty || KeyState(KeyCode.KC_LSHIFT)) {
+						EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(world_data);
+						string file = save_dialog.ShowFileDialog();
+					} else Save(m_EditorSaveFile, world_data);
+					
 					return true;
 				}
 				
@@ -654,26 +663,19 @@ class Editor
 		select_window.ShowDialog();
 	}
 	
-	void Save()
+	void Save(string file, EditorWorldData world_data)
 	{
 		EditorLog.Trace("Editor::Save");
 		
-		EditorWorldData world_data();
-		GetGame().GetWorldName(world_data.MapName);
-		m_EditorCamera.GetTransform(world_data.CameraPosition);
-		
-		foreach (EditorObject editor_object: m_PlacedObjects) {
-			world_data.EditorObjects.InsertEditorData(editor_object.GetData());
-		}
-		
-		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
-		string file = save_dialog.ShowFileDialog();
-		
 		FileDialogResult result = EditorFileManager.Save(world_data, file);
-		
 		m_EditorHud.GetController().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, result), COLOR_GREEN); 
 		
+		if (result == FileDialogResult.SUCCESS) {
+			m_EditorSaveFile = file;
+		}		
 	}
+
+	
 	
 	void Open()
 	{
