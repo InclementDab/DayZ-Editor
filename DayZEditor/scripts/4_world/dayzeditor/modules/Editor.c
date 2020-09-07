@@ -100,9 +100,10 @@ class Editor
 	private ref map<int, int> m_PlacedObjectIndex = new map<int, int>();
 	
 	
-	void Editor() 
+	void Editor(PlayerBase player) 
 	{
 		EditorLog.Trace("Editor");		
+		m_Player = player;
 		
 		m_PlacedObjects = new EditorObjectSet();
 		m_SelectedObjects = new EditorObjectSet();
@@ -123,29 +124,21 @@ class Editor
 		
 		m_Mission = GetGame().GetMission();
 		
-		if (IsMissionOffline()) {
-			EditorLog.Info("Loading Offline Editor...");
-			
-			// Random cam position smile :)
-			float x = Math.RandomInt(3500, 8500);
-			float z = Math.RandomInt(3500, 8500);
-			float y = GetGame().SurfaceY(x, z);
-			m_Player = CreateDefaultCharacter(Vector(x, y, z));
-			SetActive(true);
-
-		} else {
+		if (!IsMissionOffline()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
 		}
-		
+				
 		// Events
 		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
 		EditorEvents.OnObjectDeleted.Insert(OnObjectDeleted);
+		
+		SetActive(true);
 	}
 	
 	void ~Editor() {
 		EditorLog.Trace("~Editor");
-		return;
+		SetActive(false);
 		if (!IsMissionOffline()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
@@ -153,10 +146,10 @@ class Editor
 	}
 	
 	// maybe pass PlayerBase into here?
-	static Editor Create()
+	static Editor Create(PlayerBase player)
 	{
 		EditorLog.Trace("Editor::Create");
-		m_EditorInstance = new Editor();
+		m_EditorInstance = new Editor(player);
 		return m_EditorInstance;
 	}
 	

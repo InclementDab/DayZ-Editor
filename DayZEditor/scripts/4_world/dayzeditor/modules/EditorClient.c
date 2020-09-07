@@ -49,22 +49,33 @@ class EditorClientModule: JMModuleBase
 			ScriptRPC update_rpc = new ScriptRPC();
 			update_rpc.Write(GetEditor().GetCamera().GetPosition());
 			update_rpc.Write(GetEditor().GetCamera().GetOrientation());
-			update_rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_UPDATE, true);
+			//update_rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_UPDATE, true);
 		}
 	}
 	
 	override bool IsServer() 
 		return false;
 
-	override void OnInvokeConnect(PlayerBase player, PlayerIdentity identity)
-	{
-		EditorLog.Trace("Editor::OnInvokeConnect");
-	}
+	
 		
 	override void OnMissionStart()
 	{
 		EditorLog.Trace("Editor::OnMissionStart");		
-		Editor.Create();
+		
+		if (IsMissionOffline()) {
+			EditorLog.Info("Loading Offline Editor...");
+			
+			// Random cam position smile :)
+			float x = Math.RandomInt(3500, 8500);
+			float z = Math.RandomInt(3500, 8500);
+			float y = GetGame().SurfaceY(x, z);
+			Editor.Create(CreateDefaultCharacter(Vector(x, y, z)));
+		} else {
+			
+			EditorLog.Info("Loading Online Editor...");
+			Editor.Create(GetGame().GetPlayer());
+		}
+		
 	}
 	
 	override void OnMissionFinish()
