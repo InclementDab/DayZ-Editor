@@ -51,7 +51,7 @@ class Editor
 	EditorObjectSet GetPlacedObjects()
 		return GetObjectManager().GetPlacedObjects(); 
 
-	EditorObjectDataSet	 GetSessionCache()
+	EditorObjectDataSet GetSessionCache()
 		return m_SessionCache; 
 		
 	EditorObject GetEditorObject(int id)
@@ -302,7 +302,8 @@ class Editor
 				}
 				
 				case KeyCode.KC_A: {
-					foreach (EditorObject eo: GetPlacedObjects())
+					EditorObjectSet placed_objects = GetPlacedObjects();
+					foreach (EditorObject eo: placed_objects)
 						SelectObject(eo);
 					return true;
 				}

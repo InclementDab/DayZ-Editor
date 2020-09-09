@@ -67,7 +67,7 @@ class EditorObject
 		
 		// Bounding Box
 		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
-			CreateBoundingBox();
+			ShowBoundingBox();
 		}	
 
 		// Map marker
@@ -111,22 +111,15 @@ class EditorObject
 		m_Data.Position = GetPosition();
 		m_Data.Orientation = GetOrientation();
 		
+		HideBoundingBox();
 		
 		delete m_EditorObjectWorldMarker; 
 		delete m_EditorPlacedListItem;
 		delete m_EditorObjectMapMarker;
-	
-		
-		for (int i = 0; i < 12; i++)
-			GetGame().ObjectDelete(m_BBoxLines[i]);
-		
+			
 		GetGame().ObjectDelete(m_WorldObject);
-		GetGame().ObjectDelete(m_BBoxBase);
-		GetGame().ObjectDelete(m_CenterLine);		
 	}
 		
-	
-	
 
 	
 	/*********
@@ -274,73 +267,6 @@ class EditorObject
 
 
 	vector line_centers[12]; vector line_verticies[8];
-	void CreateBoundingBox()
-	{
-		EditorLog.Trace("EditorObject::CreateBoundingBox");
-		
-		vector size = GetSize();
-			
-		vector clip_info[2];
-		ClippingInfo(clip_info);
-		//clip_info[0][1] = -clip_info[1][1];
-		vector position = AverageVectors(clip_info[0], clip_info[1]);
-		
-		line_verticies[0] = clip_info[0];
-		line_verticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
-		line_verticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
-		line_verticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
-		line_verticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
-		line_verticies[5] = clip_info[1];
-		line_verticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
-		line_verticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
-		
-		line_centers[0] = AverageVectors(line_verticies[0], line_verticies[1]);
-		line_centers[1] = AverageVectors(line_verticies[0], line_verticies[3]);
-		line_centers[2] = AverageVectors(line_verticies[0], line_verticies[7]);
-		line_centers[3] = AverageVectors(line_verticies[4], line_verticies[7]);
-		line_centers[4] = AverageVectors(line_verticies[6], line_verticies[7]);
-		
-		line_centers[5] = AverageVectors(line_verticies[1], line_verticies[2]);
-		line_centers[6] = AverageVectors(line_verticies[1], line_verticies[6]);
-		line_centers[7] = AverageVectors(line_verticies[3], line_verticies[2]);
-		line_centers[8] = AverageVectors(line_verticies[3], line_verticies[4]);
-		
-		line_centers[9] = AverageVectors(line_verticies[5], line_verticies[2]);
-		line_centers[10] = AverageVectors(line_verticies[5], line_verticies[4]);		
-		line_centers[11] = AverageVectors(line_verticies[5], line_verticies[6]);
-		
-		
-		
-		for (int i = 0; i < 12; i++) {
-			
-			vector transform[4];			
-			transform[3] = line_centers[i];
-			
-			for (int j = 0; j < 3; j++) 
-				transform[j][j] = ((position[j] == line_centers[i][j])*size[j]/2) + line_width;						
-			 
-			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_LOCAL));
-			m_BBoxLines[i].SetTransform(transform);			
-			
-			AddChild(m_BBoxLines[i], -1);
-		}
-		
-		
-		vector y_axis_mat[4];
-		vector bottom_center = GetBottomCenter() - GetPosition();
-		y_axis_mat[0][0] = line_width;
-		y_axis_mat[1][1] = 1000;
-		y_axis_mat[2][2] = line_width;
-		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1], bottom_center[2]);
-		
-		m_CenterLine = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_LOCAL));
-		m_CenterLine.SetTransform(y_axis_mat);
-		AddChild(m_CenterLine, -1);
-		
-		HideBoundingBox();
-		Update();
-	}
-	
 	
 	
 	vector GetBottomCenter()
@@ -369,8 +295,7 @@ class EditorObject
 	}
 		
 	ref Param3<int, vector, vector> TransformBeforeDrag;
-	Param3<int, vector, vector> GetTransformArray()
-	{	
+	Param3<int, vector, vector> GetTransformArray() {	
 		return new Param3<int, vector, vector>(GetID(), GetPosition(), GetOrientation());
 	}
 
@@ -434,32 +359,84 @@ class EditorObject
 	private bool BoundingBoxVisible;
 	void ShowBoundingBox()
 	{
-		if (!BoundingBoxEnabled()) return;
-		if (BoundingBoxVisible) return;
+		if (!BoundingBoxEnabled() || BoundingBoxVisible) return;
 		EditorLog.Trace("EditorObject::ShowBoundingBox");
 		BoundingBoxVisible = true;
+		
+		vector size = GetSize();
+			
+		vector clip_info[2];
+		ClippingInfo(clip_info);
+		//clip_info[0][1] = -clip_info[1][1];
+		vector position = AverageVectors(clip_info[0], clip_info[1]);
+		
+		line_verticies[0] = clip_info[0];
+		line_verticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
+		line_verticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
+		line_verticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
+		line_verticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
+		line_verticies[5] = clip_info[1];
+		line_verticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
+		line_verticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
+		
+		line_centers[0] = AverageVectors(line_verticies[0], line_verticies[1]);
+		line_centers[1] = AverageVectors(line_verticies[0], line_verticies[3]);
+		line_centers[2] = AverageVectors(line_verticies[0], line_verticies[7]);
+		line_centers[3] = AverageVectors(line_verticies[4], line_verticies[7]);
+		line_centers[4] = AverageVectors(line_verticies[6], line_verticies[7]);
+		
+		line_centers[5] = AverageVectors(line_verticies[1], line_verticies[2]);
+		line_centers[6] = AverageVectors(line_verticies[1], line_verticies[6]);
+		line_centers[7] = AverageVectors(line_verticies[3], line_verticies[2]);
+		line_centers[8] = AverageVectors(line_verticies[3], line_verticies[4]);
+		
+		line_centers[9] = AverageVectors(line_verticies[5], line_verticies[2]);
+		line_centers[10] = AverageVectors(line_verticies[5], line_verticies[4]);		
+		line_centers[11] = AverageVectors(line_verticies[5], line_verticies[6]);
+		
+		
+		
 		for (int i = 0; i < 12; i++) {
-			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(1,1,0,1,co)");
-			m_BBoxLines[i].Update();
+			
+			vector transform[4];			
+			transform[3] = line_centers[i];
+			
+			for (int j = 0; j < 3; j++) 
+				transform[j][j] = ((position[j] == line_centers[i][j])*size[j]/2) + line_width;						
+			 
+			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_LOCAL));
+			m_BBoxLines[i].SetTransform(transform);			
+			
+			AddChild(m_BBoxLines[i], -1);
 		}
 		
-		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "#(argb,8,8,3)color(1,1,0,1,co)");
-		//m_BBoxBase.SetObjectTexture(m_BBoxBase.GetHiddenSelectionIndex("BoundingBoxBase"), "#(argb,8,8,3)color(1,1,0,1,co)");
+		
+		vector y_axis_mat[4];
+		vector bottom_center = GetBottomCenter() - GetPosition();
+		y_axis_mat[0][0] = line_width;
+		y_axis_mat[1][1] = 1000;
+		y_axis_mat[2][2] = line_width;
+		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1], bottom_center[2]);
+		
+		m_CenterLine = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_LOCAL));
+		m_CenterLine.SetTransform(y_axis_mat);
+		AddChild(m_CenterLine, -1);
+
+		Update();
+		
 	}
 	
 	void HideBoundingBox()
 	{
-		if (!BoundingBoxEnabled()) return;
-		if (!BoundingBoxVisible) return;
+		if (!BoundingBoxEnabled() || !BoundingBoxVisible) return;
 		EditorLog.Trace("EditorObject::HideBoundingBox");
 		BoundingBoxVisible = false;
-		for (int i = 0; i < 12; i++) {
-			m_BBoxLines[i].SetObjectTexture(m_BBoxLines[i].GetHiddenSelectionIndex("BoundingBoxSelection"), "");
-			m_BBoxLines[i].Update();
-		}
 		
+		for (int i = 0; i < 12; i++)
+			GetGame().ObjectDelete(m_BBoxLines[i]);
 		
-		m_CenterLine.SetObjectTexture(m_CenterLine.GetHiddenSelectionIndex("BoundingBoxSelection"), "");
+		GetGame().ObjectDelete(m_BBoxBase);
+		GetGame().ObjectDelete(m_CenterLine);	
 	}
 	
 
