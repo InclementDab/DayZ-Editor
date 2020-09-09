@@ -5,5 +5,6 @@ modded class JMModuleConstructor
 	{
 		modules.Insert(EditorClientModule);
 		modules.Insert(EditorServerModule);
+		modules.Insert(EditorObjectManagerModule);
 	}
 }

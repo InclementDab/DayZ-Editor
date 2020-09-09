@@ -18,6 +18,7 @@ class Editor
 	private PlayerBase m_Player;
 	
 	
+	
 	static Object							ObjectUnderCursor = null;
 	static EditorObject 					EditorObjectUnderCursor = null;
 	static vector 							CurrentMousePosition;
@@ -41,25 +42,27 @@ class Editor
 		m_EditorSettings.Reload();
 	}
 	
+	EditorObjectManagerModule GetObjectManager()
+		return EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
+	
 	EditorObjectSet GetSelectedObjects() 
-		return m_SelectedObjects; 
+		return GetObjectManager().GetSelectedObjects(); 
 	
 	EditorObjectSet GetPlacedObjects()
-		return m_PlacedObjects; 
-	
+		return GetObjectManager().GetPlacedObjects(); 
+
 	EditorObjectDataSet	 GetSessionCache()
 		return m_SessionCache; 
-	
-	bool IsPlacing()
-		return m_ObjectInHand != null; 
-	
 		
-	EditorObject GetEditorObject(notnull Object world_object)
-		return GetEditorObject(m_PlacedObjectIndex.Get(world_object.GetID())); 
-	
-	
 	EditorObject GetEditorObject(int id)
-		return m_PlacedObjects.Get(id); 
+		return GetObjectManager().GetEditorObject(id); 
+	
+	EditorObject GetEditorObject(notnull Object world_object)
+		return GetObjectManager().GetEditorObject(world_object);
+	
+	EditorObject GetPlacedObjectById(int id)
+		return GetObjectManager().GetPlacedObjectById(id); 
+
 	
 	
 	void DeleteSessionData(int id)
@@ -69,9 +72,7 @@ class Editor
 	EditorObjectData GetSessionDataById(int id)
 		return m_SessionCache.Get(id); 
 
-	
-	EditorObject GetPlacedObjectById(int id)
-		return m_PlacedObjects.Get(id); 
+
 	
 		
 	void SetBrush(EditorBrush brush)
@@ -81,6 +82,9 @@ class Editor
 	EditorBrush GetBrush()
 		return m_EditorBrush; 
 	
+	bool IsPlacing()
+		return m_ObjectInHand != null; 
+	
 
 	private ref EditorSettings 					m_EditorSettings;
 	private ref EditorHud						m_EditorHud;
@@ -88,28 +92,22 @@ class Editor
 	
 	private ref EditorHologram 					m_ObjectInHand;
 	private ref EditorBrush						m_EditorBrush;
-	
-	private ref EditorObjectSet 				m_PlacedObjects;
-	private ref EditorObjectSet					m_SelectedObjects;
+
 	private ref EditorObjectDataSet			 	m_SessionCache;
-	private ref EditorActionStack 				m_ActionStack;
+	
 	
 	private bool 								m_Active;
 	private string 								m_EditorSettingsFile = "$profile:Editor\\settings.ini";
 	private string								m_EditorSaveFile;
-			
-	private ref map<int, int> m_PlacedObjectIndex = new map<int, int>();
 	
 	
 	void Editor(PlayerBase player) 
 	{
 		EditorLog.Trace("Editor");		
 		m_Player = player;
-		
-		m_PlacedObjects = new EditorObjectSet();
-		m_SelectedObjects = new EditorObjectSet();
+	
 		m_SessionCache = new EditorObjectDataSet();
-		m_ActionStack = new EditorActionStack();
+		
 		
 		// Init Settings
 		m_EditorSettings = EditorSettings.Load(m_EditorSettingsFile);
@@ -129,10 +127,7 @@ class Editor
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
 		}
-				
-		// Events
-		EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
-		EditorEvents.OnObjectDeleted.Insert(OnObjectDeleted);
+
 		
 		SetActive(true);
 	}
@@ -297,17 +292,17 @@ class Editor
 			
 			switch (key) {
 				case KeyCode.KC_Z: {
-					Undo();
+					GetObjectManager().Undo();
 					return true;
 				}
 				
 				case KeyCode.KC_Y: {
-					Redo();
+					GetObjectManager().Redo();
 					return true;
 				}
 				
 				case KeyCode.KC_A: {
-					foreach (EditorObject eo: m_PlacedObjects)
+					foreach (EditorObject eo: GetPlacedObjects())
 						SelectObject(eo);
 					return true;
 				}
@@ -346,12 +341,12 @@ class Editor
 				}
 				
 				case KeyCode.KC_X: {
-					Cut(m_SelectedObjects);
+					Cut(GetSelectedObjects());
 					return true;
 				}
 
 				case KeyCode.KC_C: {
-					Copy(m_SelectedObjects);
+					Copy(GetSelectedObjects());
 					return true;
 				}
 				
@@ -388,136 +383,51 @@ class Editor
 	}
 	
 	
-	// Object Management
 	ref EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
 	{
-		EditorLog.Trace("Editor::CreateObjects");
-		EditorObjectSet object_set = new EditorObjectSet();
-		EditorAction action = new EditorAction("Delete", "Create");
-		foreach (EditorObjectData editor_object_data: data_list) {
-			
-			EditorObject editor_object = EditorObject.Create(editor_object_data);
-			EditorEvents.ObjectCreated(this, editor_object);
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));		
-			object_set.InsertEditorObject(editor_object);	
-		}
-		
-		if (create_undo) {
-			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
-		} else {
-			delete action;
-		}
-		
-		return object_set;
+		return GetObjectManager().CreateObjects(data_list, create_undo);
 	}
 	
-	
 	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true)
-	{		
-		EditorLog.Trace("Editor::CreateObject");
-		
-		EditorObject editor_object = EditorObject.Create(editor_object_data);
-		EditorEvents.ObjectCreated(this, editor_object);
-		
-		if (!create_undo) 
-			return editor_object;
-		
-		EditorAction action = new EditorAction("Delete", "Create");;
-		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		m_ActionStack.InsertAction(action);
-		m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
-			
-	
-		return editor_object;
+	{
+		return GetObjectManager().CreateObject(editor_object_data, create_undo);
 	}
 	
 	EditorObject CreateFromObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
-		EditorLog.Trace("Editor::CreateFromObject");
-		EditorObject editor_object = m_PlacedObjects.Get(target.GetID());
-		if (editor_object) 
-			return editor_object;
-		
-		editor_object = EditorObject.Create(target, flags);
-		EditorEvents.ObjectCreated(this, editor_object);
-		
-		return editor_object;
+		return GetObjectManager().CreateFromObject(target, flags);
 	}
-
+	
 	void DeleteObject(EditorObject target, bool create_undo = true)
 	{
-		EditorLog.Trace("Editor::DeleteObject");
-		EditorEvents.ObjectDeleted(this, target);
-		
-		if (create_undo) {
-			EditorAction action = new EditorAction("Create", "Delete");
-			action.InsertUndoParameter(target, new Param1<int>(target.GetID()));
-			action.InsertRedoParameter(target, new Param1<int>(target.GetID()));
-			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
-		}
-		
-		delete target;
+		GetObjectManager().DeleteObject(target, create_undo);
 	}
 	
 	void DeleteObjects(EditorObjectSet target, bool create_undo = true)
 	{
-		EditorLog.Trace("Editor::DeleteObjects");
-		
-		EditorAction action = new EditorAction("Create", "Delete");
-		
-		foreach (EditorObject editor_object: target) {
-			EditorEvents.ObjectDeleted(this, editor_object);
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			delete editor_object;
-		}	
-			
-		if (create_undo) {
-			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditorHud().GetController().DebugActionStackListbox);
-		}
+		GetObjectManager().DeleteObjects(target, create_undo);
 	}
 	
-	// Call to select an object
 	void SelectObject(EditorObject target)
 	{
-		EditorLog.Trace("Editor::SelectObject");
-		m_SelectedObjects.InsertEditorObject(target);
-		EditorEvents.ObjectSelected(this, target);
-		target.OnSelected();
+		GetObjectManager().SelectObject(target);
 	}
 	
-	// Call to deselect an object
 	void DeselectObject(EditorObject target)
 	{
-		EditorLog.Trace("Editor::DeselectObject");
-		m_SelectedObjects.RemoveEditorObject(target);
-		EditorEvents.ObjectDeselected(this, target);
-		target.OnDeselected();
-	}	
+		GetObjectManager().DeselectObject(target);
+	}
 	
-	// Call to toggle selection
 	void ToggleSelection(EditorObject target)
 	{
-		EditorLog.Trace("Editor::ToggleSelection");
-		if (target.IsSelected())
-			DeselectObject(target);
-		else
-			SelectObject(target);
-		
+		GetObjectManager().ToggleSelection(target);
 	}
-	
-	// Call to clear selection
+		
 	void ClearSelection()
 	{
-		EditorLog.Trace("Editor::ClearSelection");		
-		foreach (EditorObject editor_object: m_SelectedObjects)
-			DeselectObject(editor_object);
+		GetObjectManager().ClearSelection();
 	}
+	
 	
 	
 	// Call to enable / disable editor
@@ -588,18 +498,6 @@ class Editor
 	
 	
 
-	void OnObjectCreated(Class context, EditorObject target)
-	{
-		//m_SelectedObjects.InsertEditorObject(target);
-		m_PlacedObjects.InsertEditorObject(target);
-		m_PlacedObjectIndex.Insert(target.GetWorldObject().GetID(), target.GetID());
-	}	
-	
-	void OnObjectDeleted(Class context, EditorObject target)
-	{
-		m_SelectedObjects.RemoveEditorObject(target);
-		m_PlacedObjects.RemoveEditorObject(target);
-	}
 		
 	
 	void CreateInHand(ref EditorPlaceableObjectData data)
@@ -633,27 +531,7 @@ class Editor
 	}
 	
 	
-	void Undo()
-	{
-		EditorLog.Trace("Editor::Undo");
-		foreach (EditorAction action: m_ActionStack) {
-			if (!action.IsUndone()) {
-				action.CallUndo();
-				return;
-			}
-		}
-	}
-	
-	void Redo()
-	{
-		EditorLog.Trace("Editor::Redo");
-		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
-			if (m_ActionStack[i] != null && m_ActionStack[i].IsUndone()) {
-				m_ActionStack[i].CallRedo();
-				return;
-			}
-		}
-	}
+
 	
 	void New()
 	{
