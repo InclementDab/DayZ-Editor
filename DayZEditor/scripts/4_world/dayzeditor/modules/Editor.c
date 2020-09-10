@@ -175,7 +175,7 @@ class Editor
 		}
 	}
 	
-	// maybe pass PlayerBase into here?
+
 	static Editor Create(PlayerBase player)
 	{
 		EditorLog.Trace("Editor::Create");
@@ -234,7 +234,7 @@ class Editor
 			
 		// debug
 		timeslice_count++;
-		avg_timeslice = avg_timeslice + ((timeslice - avg_timeslice) / timeslice_count);
+		avg_timeslice = avg_timeslice + ((ftime - avg_timeslice) / timeslice_count);
 		m_EditorHudController.DebugText1 = avg_timeslice.ToString();
 		m_EditorHudController.NotifyPropertyChanged("DebugText1");
 		EditorLog.CurrentLogLevel = EditorLogLevel.TRACE;
