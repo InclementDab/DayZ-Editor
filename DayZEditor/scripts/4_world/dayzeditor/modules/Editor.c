@@ -394,8 +394,10 @@ class Editor
 			switch (key) {
 				
 				case KeyCode.KC_ESCAPE: {
-				
-					if (m_EditorHud.IsModalActive()) {
+					if (IsLootEditActive()) {
+						FinishEditLootSpawns();
+						return true;
+					} else if (m_EditorHud.IsModalActive()) {
 						m_EditorHud.GetModal().CloseDialog();
 						return true;
 					// jank
@@ -589,22 +591,26 @@ class Editor
 	private Object m_LootEditTarget;
 	private bool m_LootEditMode;
 	private vector m_PositionBeforeLootEditMode;
-	void PlaceholderForEditLootSpawns(string name)
+	void EditLootSpawns(string name)
 	{
-		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 1000, 0), ECE_NONE);
+		EditorLog.Trace("Editor::EditLootSpawns %1", name);
+		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 10, 0), ECE_NONE);
 		
+		EditorCamera.CAMERA_SPEED = 10;
 		m_PositionBeforeLootEditMode = m_EditorCamera.GetPosition();
-		m_EditorCamera.SetPosition(Vector(10, 1000, 10));		
+		m_EditorCamera.SetPosition(Vector(10, 10, 10));
+		m_EditorCamera.LookAt(vector.Zero);	
 		
 		ref EditorMapGroupProto proto_data = new EditorMapGroupProto(m_LootEditTarget); 
 		EditorXMLManager.LoadMapGroupProto(proto_data);
+		
 		m_LootEditMode = true;
-		// todo
-		//EditorSettings.COLLIDE_ON_DRAG = true;
+		m_EditorSettings.ObjectDragCollisions = true;
 	}
 	
-	void PlaceholderRemoveLootMode()
+	void FinishEditLootSpawns()
 	{
+		EditorLog.Trace("Editor::FinishEditLootSpawns");
 		IEntity child = m_LootEditTarget.GetChildren();
 		while (child != null) {
 			GetGame().ObjectDelete(Object.Cast(child));
@@ -612,12 +618,12 @@ class Editor
 		}
 		
 		GetGame().ObjectDelete(m_LootEditTarget);
-		
+		EditorCamera.CAMERA_SPEED = 60;
 		m_EditorCamera.SetPosition(m_PositionBeforeLootEditMode);
-		//camera.SelectTarget(null);
+
 		m_LootEditMode = false;
-		// todo
-		//EditorSettings.COLLIDE_ON_DRAG = false;
+		m_EditorSettings.ObjectDragCollisions = false;
+
 	}
 	
 	bool IsLootEditActive() { 

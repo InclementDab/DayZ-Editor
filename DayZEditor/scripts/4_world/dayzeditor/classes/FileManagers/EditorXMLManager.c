@@ -223,14 +223,9 @@ class EditorMapGroupProto: XMLCallback
 					default: {
 						continue;
 					}
-					
 				}
-					
-				
 			}
-			
-			
-			
+						
 			m_MapGroupProto.Insert(group);
 		}
 		
@@ -246,17 +241,13 @@ class EditorMapGroupProto: XMLCallback
 						
 					ref array<ref EditorLootPoint> loot_points = loot_container.GetLootPoints();
 					foreach (EditorLootPoint loot_point: loot_points) {
-						vector loot_pos = loot_point.GetPosition();
-						
-						//Object loot_display = GetGame().CreateObjectEx("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), ECE_NONE);
-						
-						
-						EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("DebugCylinder", Vector(-loot_pos[2], loot_pos[1], loot_pos[0]), vector.Zero, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.BBOX));
+
+						vector loot_pos = loot_point.GetPosition();					
+						loot_pos = Vector(-loot_pos[2], loot_pos[1] + 10, loot_pos[0]);
+						EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("DebugCylinder", loot_pos, vector.Zero, EditorObjectFlags.OBJECTMARKER));
 						
 						// might be bad
-						m_Building.AddChild(loot_display.GetWorldObject(), -1);
-						
-						
+						//m_Building.AddChild(loot_display.GetWorldObject(), -1);
 						
 						vector transform[4] = {
 							Vector(1, 0, 0),

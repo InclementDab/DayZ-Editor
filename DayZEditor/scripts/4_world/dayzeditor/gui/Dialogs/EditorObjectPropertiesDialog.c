@@ -18,6 +18,8 @@ class EditorPropertiesPrefabController: Controller
 	bool reset_animation;
 	bool pause_simulation;
 	
+	bool edit_loot;
+	
 	void EditorPropertiesPrefabController(EditorObject editor_object) 
 	{
 		EditorLog.Trace("EditorPropertiesPrefabController");
@@ -99,6 +101,11 @@ class EditorPropertiesPrefabController: Controller
 				m_EditorObject.PauseSimulation(pause_simulation);
 				break;
 			}
+			
+			case "edit_loot": {
+				GetEditor().EditLootSpawns(m_EditorObject.GetType());
+				break;
+			}
 		}
 	}
 }
@@ -150,6 +157,13 @@ class EditorObjectPropertiesDialog: EditorDialog
 			m_EditorPropertiesController.animations.Insert("Test1");
 			character_group.SetController(m_EditorPropertiesController);
 			AddContent(character_group);
+		} else {
+			
+			EditorPrefabGroup loot_editor = new EditorPrefabGroup("Loot Editor");
+			loot_editor.AddPrefab(new EditorPrefabButton("Edit Loot", "edit_loot"));
+			
+			loot_editor.SetController(m_EditorPropertiesController);
+			AddContent(loot_editor);
 		}
 		
 		

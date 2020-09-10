@@ -11,6 +11,8 @@ class EditorSettings
 		
 	// Autosave timer in seconds
 	int AutoSaveTimer = 240;
+	
+	bool ObjectDragCollisions;
 
 	
 	void EditorSettings() {

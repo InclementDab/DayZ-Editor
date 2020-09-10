@@ -90,6 +90,38 @@ class EditorListItemController: Controller
 		drop_target_item.GetController().ChildListItems.Insert(target_item);
 	}*/
 	
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorListItemController::OnDrag");
+		
+		switch (m_ListItem.Type()) {
+			
+			case EditorPlaceableListItem: {
+				GetEditor().CreateInHand(EditorPlaceableListItem.Cast(m_ListItem).GetData());
+				break;
+			}
+			
+		}
+		
+		
+		return true;
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
+	{
+		EditorLog.Trace("EditorListItemController::OnDrop");
+		
+		switch (m_ListItem.Type()) {
+			
+			case EditorPlaceableListItem: {
+				GetEditor().PlaceObject();
+				break;
+			}
+			
+		}
+		
+		return true;
+	}
 	
 
 	override bool OnClick(Widget w, int x, int y, int button)

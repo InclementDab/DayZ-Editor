@@ -16,6 +16,7 @@ class EditorObjectSet: ref map<int, ref EditorObject>
 	}
 }
 
+
 class EditorObject
 {
 	protected ref EditorObjectData 			m_Data;
@@ -52,6 +53,7 @@ class EditorObject
 	int GetID() { 
 		return m_Data.GetID(); 
 	}
+
 	
 	
 	private void EditorObject(notnull Object target, EditorObjectFlags flags)

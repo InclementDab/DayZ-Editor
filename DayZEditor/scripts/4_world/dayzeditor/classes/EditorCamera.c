@@ -24,8 +24,13 @@ class EditorCamera: Camera
 	
 	
 	// Setters
-	void SetLookEnabled(bool state) { LookEnabled = state; }
-	void SetMoveEnabled(bool state) { MoveEnabled = state; }
+	void SetLookEnabled(bool state) { 
+		LookEnabled = state; 
+	}
+	
+	void SetMoveEnabled(bool state) { 
+		MoveEnabled = state; 
+	}
 	
 	void EditorCamera()
 	{

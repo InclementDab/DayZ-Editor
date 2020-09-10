@@ -53,7 +53,7 @@ class ObjectDragHandler: DragHandler
 		vector cursor_pos, contact_dir;
 		int component;
 		
-		DayZPhysics.RaycastRV(begin_pos, end_pos, cursor_pos, contact_dir, component, null, null, null, false, true);
+		DayZPhysics.RaycastRV(begin_pos, end_pos, cursor_pos, contact_dir, component, null, null, null, false, !GetEditor().GetSettings().ObjectDragCollisions);
 		
 				
 		vector size = m_EditorObject.GetSize();
@@ -63,7 +63,7 @@ class ObjectDragHandler: DragHandler
 		
 		// Handle Z-Only motion
 		if (KeyState(KeyCode.KC_LMENU)) {
-			
+
 			cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground_position);
 			cursor_pos[1] = cursor_pos[1] + size[1]/2;
 			transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos);
@@ -72,7 +72,7 @@ class ObjectDragHandler: DragHandler
 		// Handle XY Rotation
 		else if (KeyState(KeyCode.KC_LSHIFT)) {
 					
-			transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
+			//transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
 			vector cursor_delta = cursor_pos - transform[3];
 			float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
 			m_EditorObject.PlaceOnSurfaceRotated(transform, ground_position, surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, GetEditor().GetEditorHud().GetController().MagnetButton);			
@@ -81,7 +81,7 @@ class ObjectDragHandler: DragHandler
 		// Handle regular motion
 		else {
 			
-			transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
+			//transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
 			m_EditorObject.PlaceOnSurfaceRotated(transform, transform[3], surface_normal[0] * -1, surface_normal[2] * -1, m_EditorObject.LocalAngle * -1, GetEditor().GetEditorHud().GetController().MagnetButton);
 			
 			
@@ -166,5 +166,6 @@ class MapDragHandler: DragHandler
 		
 	}
 }
+
 
 

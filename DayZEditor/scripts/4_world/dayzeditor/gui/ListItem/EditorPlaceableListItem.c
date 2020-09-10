@@ -23,22 +23,6 @@ class EditorPlaceableListItem: EditorListItem
 		EditorEvents.OnStopPlacing.Insert(StopPlacing);
 	}
 	
-
-	/*
-		
-
-	override bool OnDrag(Widget w, int x, int y)
-	{
-		GetEditor().CreateInHand(m_Data);
-		return true;
-	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget reciever)
-	{
-		GetEditor().PlaceObject();
-		return true;
-	}
-	*/
 	
 	
 	void StartPlacing(Class context, EditorPlaceableObjectData type)
