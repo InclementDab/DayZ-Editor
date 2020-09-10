@@ -22,46 +22,56 @@ class EditorDialogController: Controller
 		EditorLog.Trace("~EditorDialogController");
 	}
 	
+
 	
-/*	
 	float m_OffsetX, m_OffsetY;
-	override void MVCOnDrag(Widget target, int x, int y) 
+	override bool OnDrag(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorDialogController::OnDrag");
-		if (target == WindowDragWrapper) {
+		if (w == WindowDragWrapper) {
 			m_LayoutRoot.GetPos(m_OffsetX, m_OffsetY);
-			m_OffsetX -= x; m_OffsetY -= y;
+			m_OffsetX -= x; m_OffsetY -= y;		
+			g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DragUpdate);	
 		}
 		
+		return false;
 	}
 	
-	override void MVCOnDragging(Widget target, int x, int y)
+	override bool OnDragging(Widget w, int x, int y, Widget reciever) { return true; }
+	
+	
+	
+	private bool DragUpdate()
 	{
-		EditorLog.Trace("EditorDialogController::OnDragging: %1 X:%2 Y:%3", target.GetName(), x.ToString(), y.ToString());
+		int x, y;
+		GetMousePos(x, y);
 		m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);
+		return false;
 	}
 	
-	override void MVCOnDrop(Widget target, Widget drop_target, int x, int y)
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
 		EditorLog.Trace("EditorDialogController::OnDrop");
-	    if (target == WindowDragWrapper) {
-			m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);
-			return;
-	    }
+		g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Remove(DragUpdate);
 		
+		if (w == WindowDragWrapper) {
+			m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);
+	    }		
+		
+		return false;
 	}
 	
-	override void MVCOnClick(Widget target, int button, int x, int y)
+	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorDialogController::OnClick");
 		
-		if (button != 0) return; 
+		if (button != 0) return false; 
 		
-		if (target == TitleClose) {
+		if (w == TitleClose) {
 			m_EditorDialog.CloseDialog();
-			return;
 		}
 		
+		return false;
 	}
-	*/
+	
 }

@@ -90,12 +90,12 @@ class EditorListItemController: Controller
 		drop_target_item.GetController().ChildListItems.Insert(target_item);
 	}*/
 	
-	/*
-	override void MVCOnClick(Widget target, int button, int x, int y)
-	{
-		EditorLog.Trace("EditorListItemController::MVCOnClick");
-		
 	
+
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorListItemController::OnClick");
+		
 		switch (m_ListItem.Type()) {
 			
 			case EditorPlaceableListItem: {
@@ -115,25 +115,28 @@ class EditorListItemController: Controller
 				break;
 			}
 		}
+		
+		return false;
 	}
-	
-	override void MVCOnDoubleClick(Widget target, int button, int x, int y)
+		
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		EditorLog.Trace("EditorListItemController::MVCOnDoubleClick");
+		EditorLog.Trace("EditorListItemController::OnDoubleClick");
 		
 		switch (m_ListItem.Type()) {
-			
 			
 			case EditorPlacedListItem: {
 				EditorObjectPropertiesDialog dialog(EditorPlacedListItem.Cast(m_ListItem).GetData());
 				dialog.ShowDialog();
 				break;
 			}
-			
-			
 		}
+		
+		return false;
 	}
-	*/
+	
+	
+	
 	
 	void EditorListItemCollapseExecute(ButtonCommandArgs args)
 	{

@@ -315,23 +315,6 @@ class EditorHudController: Controller
 				break;
 			}
 			
-			default: {
-				if (CinemaModeState) {
-					Print("oh it worked");
-					break;
-				}
-				
-			}
-		}
-		return false;
-	}
-	/*
-	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
-	{
-		EditorLog.Trace("EditorHudController::MVCOnMouseWheel");
-		
-		switch (target.GetName()) {
-			
 			case "BrushRadiusText":
 			case "BrushRadiusSlider": {
 				BrushRadius += direction * 2;
@@ -347,10 +330,20 @@ class EditorHudController: Controller
 				NotifyPropertyChanged("BrushDensity");
 				break;
 			}
+			
+			default: {
+				if (CinemaModeState) {
+					Print("oh it worked");
+					break;
+				}
+				
+			}
 		}
+		return false;
 	}
-
-	*/
+	
+	
+	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseEnter %1", w.GetName());		
@@ -380,16 +373,12 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::OnMouseLeave %1", w.GetName());
 		
-		
-		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		switch (w.GetTypeName()) {
-			
 			
 			case "ButtonWidget": {
 				w.SetColor(COLOR_EMPTY);
 				break;
 			}
-		
 
 			case "SliderWidget": {
 				w.SetColor(COLOR_WHITE_A);
@@ -403,32 +392,31 @@ class EditorHudController: Controller
 	
 	
 
-	/*
-	override void MVCOnMouseUp(Widget target, int button, int x, int y)
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
-		EditorLog.Trace("EditorHudController::MVCOnMouseButtonUp");
-		if (button != 0) return;
+		EditorLog.Trace("EditorHudController::OnMouseButtonUp");
 		
-		Widget icon = target.FindAnyWidget(string.Format("%1_Icon", target.GetName()));
-		switch (target.GetName()) {
+		if (button != 0) return false;
+
+		switch (w.GetName()) {
 			
 			case "UndoButton": 
 			case "RedoButton": {
-				target.SetColor(COLOR_EMPTY);
-				ButtonWidget.Cast(target).SetState(false);
-				icon.SetPos(0, 0);
+				w.SetColor(COLOR_EMPTY);
+				ButtonWidget.Cast(w).SetState(false);
+				GetWidgetIcon(w).SetPos(0, 0);
 				break;
 			}
 		}
-	}*/
 		
+		return false;
+	}
+	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		EditorLog.Trace("EditorHudController::MVCOnClick");
+		EditorLog.Trace("EditorHudController::OnClick");
 		
-		
-		Widget icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
-		
+
 		switch (button) {
 			
 			case 0: {
@@ -439,7 +427,7 @@ class EditorHudController: Controller
 					case "RedoButton": {
 						w.SetColor(COLOR_SALMON_A);
 						int pos = ButtonWidget.Cast(w).GetState() * 1;
-						icon.SetPos(pos, pos);
+						GetWidgetIcon(w).SetPos(pos, pos);
 						break;
 					}
 					
@@ -447,8 +435,8 @@ class EditorHudController: Controller
 					case "GroundButton":
 					case "MagnetButton": {
 						bool button_state = ButtonWidget.Cast(w).GetState();
-						icon.SetColor((GetHighlightColor(w.GetName()) * button_state) - 1);
-						icon.SetPos(button_state * 1, button_state * 1);
+						GetWidgetIcon(w).SetColor((GetHighlightColor(w.GetName()) * button_state) - 1);
+						GetWidgetIcon(w).SetPos(button_state * 1, button_state * 1);
 						break;
 					}
 				
@@ -506,6 +494,10 @@ class EditorHudController: Controller
 		}
 		
 		return 0;
+	}
+	
+	private ImageWidget GetWidgetIcon(Widget w)	{
+		return ImageWidget.Cast(w.FindAnyWidget(string.Format("%1_Icon", w.GetName())));
 	}
 	
 		

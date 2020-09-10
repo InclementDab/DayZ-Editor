@@ -116,10 +116,6 @@ class EditorWeatherDialog: EditorDialog
 		} else {
 			GetGame().GetWorld().LoadNewLightingCfg( "dz\\data\\lighting\\lighting_default.txt" );
 		}
-		
-		
 	}
-	
-	
 }
 
