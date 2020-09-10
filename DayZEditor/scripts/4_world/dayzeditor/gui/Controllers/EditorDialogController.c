@@ -39,8 +39,6 @@ class EditorDialogController: Controller
 	
 	override bool OnDragging(Widget w, int x, int y, Widget reciever) { return true; }
 	
-	
-	
 	private bool DragUpdate()
 	{
 		int x, y;

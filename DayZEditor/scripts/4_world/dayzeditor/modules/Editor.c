@@ -240,11 +240,12 @@ class Editor
 		EditorLog.CurrentLogLevel = EditorLogLevel.TRACE;
 	}
 	
-	// target CAN BE NULL HERE!!
-	bool OnMouseDown(Widget target, int button, int x, int y)
+	
+	bool OnMouseDown(int button)
 	{
 		EditorLog.Trace("Editor::OnMouseDown");
 		
+		Widget target = GetWidgetUnderCursor();
 		if (!target) {
 			SetFocus(null);
 		}
@@ -262,20 +263,15 @@ class Editor
 				ClearSelection();
 				if (GetBrush() == null) {
 					
-					if (EditorObjectUnderCursor == null) {
-						// delayed dragbox
-						if (!target)
-							m_EditorHud.GetController().DelayedDragBoxCheck();
-						
-						return false;
-						
-						
-					} else if (EditorObjectUnderCursor != null) {
+					if (EditorObjectUnderCursor) {
 						if (!KeyState(KeyCode.KC_LSHIFT)) {
 							ClearSelection();
 						}
 						SelectObject(EditorObjectUnderCursor);
 						return true;
+					} else if (!target) {
+						GetEditorHud().GetController().DelayedDragBoxCheck();
+						
 					}
 				}
 
@@ -309,7 +305,7 @@ class Editor
 		return false;
 	}
 
-	bool OnMouseUp(Widget target, int button, int x, int y)
+	bool OnMouseUp(int button)
 	{
 		return false;
 	}
@@ -420,7 +416,10 @@ class Editor
 	
 
 	
-	
+	bool OnKeyRelease(int key)
+	{
+		return false;
+	}
 	
 	// Call to enable / disable editor
 	void SetActive(bool active)

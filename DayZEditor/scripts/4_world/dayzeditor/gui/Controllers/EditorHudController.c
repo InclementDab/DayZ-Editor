@@ -249,7 +249,7 @@ class EditorHudController: Controller
 	}
 	
 
-	/*
+	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
@@ -283,11 +283,11 @@ class EditorHudController: Controller
 			}
 			
 			
-			
+			*/
 		}
 		
 		return false;
-	}*/
+	}
 
 	
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)

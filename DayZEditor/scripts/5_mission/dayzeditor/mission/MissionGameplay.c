@@ -26,6 +26,19 @@ modded class MissionGameplay
 		}		
 	}
 	
+	override void OnMouseButtonPress(int button)
+	{
+		// If Editor is NOT active, just do MouseDown
+		if (!GetEditor() || !GetEditor().IsActive()) {
+			super.OnMouseButtonPress(button);
+			// If Editor IS active, and DOESNT handle the mouse, do mousedown
+		} else if (!GetEditor().OnMouseDown(button)) {
+			super.OnMouseButtonPress(button);
+		}
+	}
+	//override void OnMouseButtonRelease(int button){}
+
+	
 	override void OnUpdate(float timeslice)
 	{
 		if (GetEditor() && GetEditor().IsActive()) {
