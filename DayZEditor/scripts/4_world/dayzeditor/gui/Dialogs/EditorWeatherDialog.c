@@ -9,7 +9,7 @@ class EditorWeatherDialogController: Controller
 	float fog;
 	float overcast;
 	float wind;
-		
+	float exposure;
 	
 	void SetWorld(World world)
 	{
@@ -27,6 +27,8 @@ class EditorWeatherDialogController: Controller
 		
 		m_Weather.SetWindMaximumSpeed(100);
 		wind = m_Weather.GetWindSpeed();
+		
+		exposure = GetGame().GetWorld().GetEyeAccom();
 		
 	}
 	
@@ -64,6 +66,11 @@ class EditorWeatherDialogController: Controller
 				m_Weather.SetWindSpeed(wind);
 				break;
 			}
+			
+			case "exposure": {
+				GetGame().GetWorld().SetEyeAccom(exposure);
+				break;
+			}
 		}	
 	}
 }
@@ -82,11 +89,12 @@ class EditorWeatherDialog: EditorDialog
 		
 		EditorPrefabGroup weather_group = new EditorPrefabGroup("Weather");
 		
-		weather_group.AddPrefab(new EditorPrefabSlider("Time", "time", 0, 0, 86400));
-		weather_group.AddPrefab(new EditorPrefabSlider("Rain", "rain", 0, 0, 1));
-		weather_group.AddPrefab(new EditorPrefabSlider("Fog", "fog", 0, 0, 1));
-		weather_group.AddPrefab(new EditorPrefabSlider("Overcast", "overcast", 0, 0, 1));
-		weather_group.AddPrefab(new EditorPrefabSlider("Wind", "wind", 0, 0, 100));
+		weather_group.AddPrefab(new EditorPrefabSlider("Time", "time", 0, 86400));
+		weather_group.AddPrefab(new EditorPrefabSlider("Rain", "rain", 0, 1));
+		weather_group.AddPrefab(new EditorPrefabSlider("Fog", "fog", 0, 1));
+		weather_group.AddPrefab(new EditorPrefabSlider("Overcast", "overcast", 0, 1));
+		weather_group.AddPrefab(new EditorPrefabSlider("Wind", "wind", 0, 100));
+		weather_group.AddPrefab(new EditorPrefabSlider("Exposure", "exposure", 0, 1));
 
 		weather_group.SetController(m_EditorWeatherDialogController);
 		AddContent(weather_group);

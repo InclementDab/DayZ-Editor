@@ -325,7 +325,7 @@ class EditorHudController: Controller
 		}
 		return false;
 	}
-	
+	/*
 	override void MVCOnMouseWheel(Widget target, int direction, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::MVCOnMouseWheel");
@@ -350,7 +350,7 @@ class EditorHudController: Controller
 		}
 	}
 
-	
+	*/
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseEnter %1", w.GetName());		
@@ -403,7 +403,7 @@ class EditorHudController: Controller
 	
 	
 
-	
+	/*
 	override void MVCOnMouseUp(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHudController::MVCOnMouseButtonUp");
@@ -420,7 +420,7 @@ class EditorHudController: Controller
 				break;
 			}
 		}
-	}
+	}*/
 		
 	override bool OnClick(Widget w, int x, int y, int button)
 	{

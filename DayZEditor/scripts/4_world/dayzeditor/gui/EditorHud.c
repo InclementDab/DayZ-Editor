@@ -10,15 +10,11 @@ class EditorHud: Hud
 	protected MapWidget 		m_EditorMapWidget;
 	protected ref EditorMap 	m_EditorMap;
 	protected EditBoxWidget 	m_LeftbarSearchBar;	
-	
 		
-	protected ref MVCEventHashMap m_MVCEventHashMap = new MVCEventHashMap();
-	
 	protected ref EditorHudController 	m_EditorHudController;
 	ref EditorHudController GetController() { 
 		return m_EditorHudController;
 	}
-
 	
 	// literally track down everything that uses these and DELETE THEM its SHIT CODE TYLER DO IT PUSSY
 	EditorMap GetMap() 			{ 
@@ -72,15 +68,8 @@ class EditorHud: Hud
 		m_EditorMapContainer.Show(show);
 	}
 	
-	void OnMVCEventHandlerCreated(MVCEventHandler mvc_event)
-	{
-		EditorLog.Info("EditorHud::OnMVCEventHandlerCreated");
-		m_MVCEventHashMap.InsertMVCEvent(mvc_event);
-	}
-	
 	void EditorHud() {
 		EditorLog.Info("EditorHud");
-		OnMVCEventHandlerCreated.Insert(OnMVCEventHandlerCreated);
 	}
 	
 	void ~EditorHud() {
@@ -117,18 +106,18 @@ class EditorHud: Hud
 			if (GetMouseState(i) & MB_PRESSED_MASK) {
 				if ((m_ActiveMouseStates & mouse_state) == 0) {
 					m_ActiveMouseStates |= mouse_state;
-					OnMouseDown(target, i, x, y);
+					//OnMouseDown(target, i, x, y);
 				}
 			} else {
 				if ((m_ActiveMouseStates & mouse_state) == mouse_state) {
 					m_ActiveMouseStates &= ~mouse_state;
-					OnMouseUp(target, i, x, y);				
+					//OnMouseUp(target, i, x, y);				
 				}
 			}
 		}
 		
 		if (GetMouseState(MouseState.WHEEL) != 0) {
-			OnMouseWheel(target, GetMouseState(MouseState.WHEEL), x, y);			
+			//OnMouseWheel(target, GetMouseState(MouseState.WHEEL), x, y);			
 		}
 		
 		
@@ -157,7 +146,7 @@ class EditorHud: Hud
 		
 		EditorLog.Trace("EditorHud::ResetDrag");
 		m_DragWidget = target;
-		OnDrag(target, x, y);
+		//OnDrag(target, x, y);
 		
 		g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Insert(_DragUpdater);		
 	}
@@ -169,13 +158,13 @@ class EditorHud: Hud
 			g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Remove(_DragUpdater);
 			
 			GetMousePos(x, y);
-			OnDrop(m_DragWidget, m_DragWidget, x, y);	
+			//OnDrop(m_DragWidget, m_DragWidget, x, y);	
 			return;
 		} 
 		
 		
 		GetMousePos(x, y);
-		OnDragging(m_DragWidget, x, y);
+		//OnDragging(m_DragWidget, x, y);
 	}
 	
 
@@ -187,16 +176,16 @@ class EditorHud: Hud
 		Widget current_widget = GetWidgetUnderCursor();
 		if (current_widget) {
 			if (m_CurrentEnterWidget != current_widget) {
-				OnMouseLeave(m_CurrentEnterWidget, x, y);
+				//OnMouseLeave(m_CurrentEnterWidget, x, y);
 				m_CurrentEnterWidget = current_widget;
-				OnMouseEnter(current_widget, x, y);
+				//OnMouseEnter(current_widget, x, y);
 			} 
 			
 		} else {
 			m_CurrentEnterWidget = null;
 		}
 	}
-	
+	/*
 	void OnMouseDown(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorHud::OnMouseDown: %1", target.GetName());
@@ -280,7 +269,7 @@ class EditorHud: Hud
 		if (!mvc_event) return;
 
 		mvc_event.OnKeyPress(key);
-			*/
+			
 	}
 	
 	void OnMouseEnter(Widget target, int x, int y)
@@ -337,7 +326,7 @@ class EditorHud: Hud
 		if (!mvc_event) return;
 		mvc_event.MVCOnDropReceived(target, received_target, x, y);
 		
-	}
+	}*/
 	
 	override void SetPermanentCrossHair(bool show); // todo
 	

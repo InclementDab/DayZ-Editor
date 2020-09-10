@@ -72,9 +72,6 @@ class Editor
 	EditorObjectData GetSessionDataById(int id)
 		return m_SessionCache.Get(id); 
 
-
-	
-		
 	void SetBrush(EditorBrush brush)
 		m_EditorBrush = brush; 
 	
@@ -84,6 +81,43 @@ class Editor
 	
 	bool IsPlacing()
 		return m_ObjectInHand != null; 
+	
+	
+	ref EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
+		return GetObjectManager().CreateObjects(data_list, create_undo);
+	
+	
+	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true)
+		return GetObjectManager().CreateObject(editor_object_data, create_undo);
+	
+	
+	EditorObject CreateFromObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
+		return GetObjectManager().CreateFromObject(target, flags);
+	
+	
+	void DeleteObject(EditorObject target, bool create_undo = true)
+		GetObjectManager().DeleteObject(target, create_undo);
+	
+	
+	void DeleteObjects(EditorObjectSet target, bool create_undo = true)
+		GetObjectManager().DeleteObjects(target, create_undo);
+	
+	
+	void SelectObject(EditorObject target)
+		GetObjectManager().SelectObject(target);
+	
+	
+	void DeselectObject(EditorObject target)
+		GetObjectManager().DeselectObject(target);
+	
+	
+	void ToggleSelection(EditorObject target)
+		GetObjectManager().ToggleSelection(target);
+	
+		
+	void ClearSelection() 
+		GetObjectManager().ClearSelection();
+	
 	
 
 	private ref EditorSettings 					m_EditorSettings;
@@ -285,7 +319,7 @@ class Editor
 	bool OnKeyPress(int key)
 	{		
 		
-		m_EditorHud.OnKeyPress(key);
+		//m_EditorHud.OnKeyPress(key);
 		
 		// LControl Commands
 		if (KeyState(KeyCode.KC_LCONTROL)) {
@@ -384,50 +418,7 @@ class Editor
 	}
 	
 	
-	ref EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
-	{
-		return GetObjectManager().CreateObjects(data_list, create_undo);
-	}
-	
-	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true)
-	{
-		return GetObjectManager().CreateObject(editor_object_data, create_undo);
-	}
-	
-	EditorObject CreateFromObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
-	{
-		return GetObjectManager().CreateFromObject(target, flags);
-	}
-	
-	void DeleteObject(EditorObject target, bool create_undo = true)
-	{
-		GetObjectManager().DeleteObject(target, create_undo);
-	}
-	
-	void DeleteObjects(EditorObjectSet target, bool create_undo = true)
-	{
-		GetObjectManager().DeleteObjects(target, create_undo);
-	}
-	
-	void SelectObject(EditorObject target)
-	{
-		GetObjectManager().SelectObject(target);
-	}
-	
-	void DeselectObject(EditorObject target)
-	{
-		GetObjectManager().DeselectObject(target);
-	}
-	
-	void ToggleSelection(EditorObject target)
-	{
-		GetObjectManager().ToggleSelection(target);
-	}
-		
-	void ClearSelection()
-	{
-		GetObjectManager().ClearSelection();
-	}
+
 	
 	
 	

@@ -18,22 +18,16 @@ class EditorPrefab
 	string GetBindingName() {
 		return m_BindingName;
 	}
-	
-	protected int m_BindingIndex;
-	int GetBindingIndex() {
-		return m_BindingIndex;
-	}
-	
+
 	protected string m_BindingSelection;
 	string GetBindingSelection() {
 		return m_BindingSelection;
 	}
 	
-	void EditorPrefab(string caption = "", string binding_name = "", int binding_index = 0) {
+	void EditorPrefab(string caption = "", string binding_name = "") {
 		EditorLog.Trace("EditorPrefab");
 		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets(GetLayoutFile());
 		m_BindingName = binding_name;
-		m_BindingIndex = binding_index;
 		
 		if (m_LayoutRoot && m_BindingName != string.Empty) {
 			m_LayoutRoot.GetScript(m_ViewBinding);
@@ -108,7 +102,7 @@ class EditorPrefabGroup: EditorPrefab
 
 class EditorPrefabDropdown: EditorPrefab
 {
-	void EditorPrefabDropdown(string caption = "", string binding_name = "", int binding_index = 0, string binding_selected = "") {
+	void EditorPrefabDropdown(string caption = "", string binding_name = "", string binding_selected = "") {
 		 m_BindingSelection = binding_selected;
 	}
 	
@@ -196,7 +190,7 @@ class EditorPrefabSlider: EditorPrefab
 	
 	float m_Min, m_Max;
 
-	void EditorPrefabSlider(string caption = "", string binding_name = "", int binding_index = 0, float min = 0, float max = 100) {
+	void EditorPrefabSlider(string caption = "", string binding_name = "", float min = 0, float max = 100) {
 		m_Min = min; m_Max = max;
 	}
 
@@ -226,7 +220,7 @@ class EditorPrefabButton: EditorPrefab
 	
 	protected ButtonWidget m_ButtonWidget;
 	
-	void EditorPrefabButton(string caption = "", string binding_name = "", int binding_index = 0, EditorPrefabButtonStyle style = 0) {
+	void EditorPrefabButton(string caption = "", string binding_name = "", EditorPrefabButtonStyle style = 0) {
 		m_Style = style;
 		
 		m_ButtonWidget = GetButtonWidgetByStyle(m_Style);

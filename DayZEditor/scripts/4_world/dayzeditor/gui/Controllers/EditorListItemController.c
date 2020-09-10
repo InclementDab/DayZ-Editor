@@ -70,11 +70,11 @@ class EditorListItemController: Controller
 		
 		return false;
 	}
-	
+	/*
 	override void MVCOnDrag(Widget target, int x, int y)
 	{
 		//EditorLog.Trace("EditorListItemController::OnDrag");
-	}
+	}*/
 	/*
 	override void OnDrop(Widget target, Widget drop_target, int x, int y)
 	{	
@@ -90,7 +90,7 @@ class EditorListItemController: Controller
 		drop_target_item.GetController().ChildListItems.Insert(target_item);
 	}*/
 	
-	
+	/*
 	override void MVCOnClick(Widget target, int button, int x, int y)
 	{
 		EditorLog.Trace("EditorListItemController::MVCOnClick");
@@ -133,7 +133,7 @@ class EditorListItemController: Controller
 			
 		}
 	}
-	
+	*/
 	
 	void EditorListItemCollapseExecute(ButtonCommandArgs args)
 	{

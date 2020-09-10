@@ -113,13 +113,13 @@ class EditorCameraDialog: EditorDialog
 		EditorPrefabGroup camera_group = new EditorPrefabGroup("Camera");
 		
 
-		camera_group.AddPrefab(new EditorPrefabSlider("FOV", "fov", 0, 0, 2));
-		camera_group.AddPrefab(new EditorPrefabSlider("Gaussian Blur", "blur", 0, 0, 1));
-		camera_group.AddPrefab(new EditorPrefabSlider("Near Plane", "near_plane", 0, 0, 1));
-		camera_group.AddPrefab(new EditorPrefabSlider("DOF Distance", "dof_distance", 0, 0, 1));
-		camera_group.AddPrefab(new EditorPrefabSlider("DOF Blur", "dof_blur", 0, 0, 1));
-		camera_group.AddPrefab(new EditorPrefabSlider("Vignette", "vignette", 0, 0, 1));
-		camera_group.AddPrefab(new EditorPrefabSlider("Sharpness", "sharpness", 0, 0, 1));
+		camera_group.AddPrefab(new EditorPrefabSlider("FOV", "fov", 0, 2));
+		camera_group.AddPrefab(new EditorPrefabSlider("Gaussian Blur", "blur", 0, 1));
+		camera_group.AddPrefab(new EditorPrefabSlider("Near Plane", "near_plane", 0, 1));
+		camera_group.AddPrefab(new EditorPrefabSlider("DOF Distance", "dof_distance", 0, 1));
+		camera_group.AddPrefab(new EditorPrefabSlider("DOF Blur", "dof_blur", 0, 1));
+		camera_group.AddPrefab(new EditorPrefabSlider("Vignette", "vignette", 0, 1));
+		camera_group.AddPrefab(new EditorPrefabSlider("Sharpness", "sharpness", 0, 1));
 		
 		camera_group.SetController(m_EditorCameraDialogController);
 		

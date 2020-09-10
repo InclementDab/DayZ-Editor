@@ -141,11 +141,11 @@ class EditorObjectPropertiesDialog: EditorDialog
 		if (editor_object.GetWorldObject().IsMan()) {
 			
 			EditorPrefabGroup character_group = new EditorPrefabGroup("Character Control");
-			character_group.AddPrefab(new EditorPrefabDropdown("Animation", "animations", 0, "selected_animation"));
+			character_group.AddPrefab(new EditorPrefabDropdown("Animation", "animations", "selected_animation"));
 			character_group.AddPrefab(new EditorPrefabEditText("Animation Name", "selected_animation"));
-			character_group.AddPrefab(new EditorPrefabButton("Apply", "apply_animation", 0, 0));
-			character_group.AddPrefab(new EditorPrefabButton("Reset", "reset_animation", 0, 0));
-			character_group.AddPrefab(new EditorPrefabButton("Pause", "pause_simulation", 0, 0));
+			character_group.AddPrefab(new EditorPrefabButton("Apply", "apply_animation", 0));
+			character_group.AddPrefab(new EditorPrefabButton("Reset", "reset_animation", 0));
+			character_group.AddPrefab(new EditorPrefabButton("Pause", "pause_simulation", 0));
 			
 			m_EditorPropertiesController.animations.Insert("Test1");
 			character_group.SetController(m_EditorPropertiesController);

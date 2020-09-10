@@ -1,7 +1,7 @@
 
 
 
-class EditorDialog: MVCEventHandler
+class EditorDialog: MVCWidgetHandler
 {
 	private Editor m_Editor;
 	private EditorHud m_EditorHud;

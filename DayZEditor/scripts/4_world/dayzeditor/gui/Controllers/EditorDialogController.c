@@ -23,7 +23,7 @@ class EditorDialogController: Controller
 	}
 	
 	
-	
+/*	
 	float m_OffsetX, m_OffsetY;
 	override void MVCOnDrag(Widget target, int x, int y) 
 	{
@@ -63,5 +63,5 @@ class EditorDialogController: Controller
 		}
 		
 	}
-	
+	*/
 }

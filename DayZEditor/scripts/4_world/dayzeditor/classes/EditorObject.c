@@ -119,7 +119,8 @@ class EditorObject
 			
 		GetGame().ObjectDelete(m_WorldObject);
 	}
-		
+	
+	
 
 	
 	/*********
@@ -261,6 +262,7 @@ class EditorObject
 		if (ListItemEnabled()) {
 			m_EditorPlacedListItem.GetLayoutRoot().Show(m_Visible);
 		}
+
 	}
 	
 	
