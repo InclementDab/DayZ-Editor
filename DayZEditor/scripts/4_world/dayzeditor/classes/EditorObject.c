@@ -29,6 +29,8 @@ class EditorObject
 	protected EntityAI 		m_BBoxBase;
 	protected EntityAI 		m_CenterLine;
 	
+	protected ref array<ref EditorSnapPoint> m_SnapPoints = {};
+	
 	
 	float LocalAngle; // temp
 	
@@ -54,7 +56,6 @@ class EditorObject
 		return m_Data.GetID(); 
 	}
 
-	
 	
 	private void EditorObject(notnull Object target, EditorObjectFlags flags)
 	{
@@ -87,6 +88,40 @@ class EditorObject
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
 			m_EditorPlacedListItem = new EditorPlacedListItem(this);
 			GetEditor().GetEditorHud().GetController().InsertPlacedObject(m_EditorPlacedListItem);
+		}
+		
+						
+		vector size = GetSize();
+		vector clip_info[2];
+		ClippingInfo(clip_info);
+		vector position = AverageVectors(clip_info[0], clip_info[1]);
+		
+		line_verticies[0] = clip_info[0];
+		line_verticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
+		line_verticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
+		line_verticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
+		line_verticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
+		line_verticies[5] = clip_info[1];
+		line_verticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
+		line_verticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
+		
+		line_centers[0] = AverageVectors(line_verticies[0], line_verticies[1]);
+		line_centers[1] = AverageVectors(line_verticies[0], line_verticies[3]);
+		line_centers[2] = AverageVectors(line_verticies[0], line_verticies[7]);
+		line_centers[3] = AverageVectors(line_verticies[4], line_verticies[7]);
+		line_centers[4] = AverageVectors(line_verticies[6], line_verticies[7]);
+		
+		line_centers[5] = AverageVectors(line_verticies[1], line_verticies[2]);
+		line_centers[6] = AverageVectors(line_verticies[1], line_verticies[6]);
+		line_centers[7] = AverageVectors(line_verticies[3], line_verticies[2]);
+		line_centers[8] = AverageVectors(line_verticies[3], line_verticies[4]);
+		
+		line_centers[9] = AverageVectors(line_verticies[5], line_verticies[2]);
+		line_centers[10] = AverageVectors(line_verticies[5], line_verticies[4]);		
+		line_centers[11] = AverageVectors(line_verticies[5], line_verticies[6]);
+		
+		for (int i = 0; i < 8; i++) {
+			m_SnapPoints.Insert(new EditorSnapPoint(this, line_verticies[i]));
 		}
 	}
 	
@@ -366,39 +401,11 @@ class EditorObject
 		if (!BoundingBoxEnabled() || BoundingBoxVisible) return;
 		EditorLog.Trace("EditorObject::ShowBoundingBox");
 		BoundingBoxVisible = true;
-		
+
 		vector size = GetSize();
-			
 		vector clip_info[2];
 		ClippingInfo(clip_info);
-		//clip_info[0][1] = -clip_info[1][1];
 		vector position = AverageVectors(clip_info[0], clip_info[1]);
-		
-		line_verticies[0] = clip_info[0];
-		line_verticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
-		line_verticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
-		line_verticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
-		line_verticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
-		line_verticies[5] = clip_info[1];
-		line_verticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
-		line_verticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
-		
-		line_centers[0] = AverageVectors(line_verticies[0], line_verticies[1]);
-		line_centers[1] = AverageVectors(line_verticies[0], line_verticies[3]);
-		line_centers[2] = AverageVectors(line_verticies[0], line_verticies[7]);
-		line_centers[3] = AverageVectors(line_verticies[4], line_verticies[7]);
-		line_centers[4] = AverageVectors(line_verticies[6], line_verticies[7]);
-		
-		line_centers[5] = AverageVectors(line_verticies[1], line_verticies[2]);
-		line_centers[6] = AverageVectors(line_verticies[1], line_verticies[6]);
-		line_centers[7] = AverageVectors(line_verticies[3], line_verticies[2]);
-		line_centers[8] = AverageVectors(line_verticies[3], line_verticies[4]);
-		
-		line_centers[9] = AverageVectors(line_verticies[5], line_verticies[2]);
-		line_centers[10] = AverageVectors(line_verticies[5], line_verticies[4]);		
-		line_centers[11] = AverageVectors(line_verticies[5], line_verticies[6]);
-		
-		
 		
 		for (int i = 0; i < 12; i++) {
 			

@@ -48,6 +48,8 @@ class EditorHudController: Controller
 	protected Widget NotificationPanel;
 	protected TextWidget NotificationText;
 	
+	protected ScrollWidget LeftbarScroll;
+	
 	CanvasWidget EditorCanvas;
 
 	
@@ -173,9 +175,10 @@ class EditorHudController: Controller
 				
 				for (int j = 0; j < LeftbarSpacer.Count(); j++) {
 					EditorPlaceableListItem placeable_item = LeftbarSpacer.Get(j);
-					
 					placeable_item.GetLayoutRoot().Show(placeable_item.GetData().FilterType(SearchBarData));
 				}
+				
+				LeftbarScroll.HScrollToPos(0);
 				
 				break;
 			}

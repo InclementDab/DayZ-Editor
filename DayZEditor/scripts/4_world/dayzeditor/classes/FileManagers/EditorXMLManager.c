@@ -270,7 +270,7 @@ class EditorMapGroupProto: XMLCallback
 			}			
 		}
 		
-		Print("Building was not found!");
+		EditorLog.Error("Building was not found!");
 	}
 }
 

@@ -300,6 +300,13 @@ class Editor
 				
 				break;
 			}
+			
+			case MouseState.RIGHT: {
+				
+				
+				
+				break;
+			}
 		}
 		
 		return false;
