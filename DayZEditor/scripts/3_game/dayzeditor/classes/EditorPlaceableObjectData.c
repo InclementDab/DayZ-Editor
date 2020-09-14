@@ -38,7 +38,7 @@ static const ref array<array<string>> AllTypes = {
 
 class EditorPlaceableObjectData
 {
-	// Private members
+
 	string Type, Path, Base;
 	
 	private ModStructure m_ModStructure;

@@ -8,7 +8,7 @@ WrapSpacerWidgetClass EditorListItem {
  vexactpos 1
  hexactsize 1
  vexactsize 1
- draggable 0
+ draggable 1
  scriptclass "EditorListItemController"
  "no focus" 1
  Padding 0
@@ -27,6 +27,7 @@ WrapSpacerWidgetClass EditorListItem {
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   draggable 1
    scriptclass ""
    {
     PanelWidgetClass EditorListItemHighlight {
@@ -41,6 +42,7 @@ WrapSpacerWidgetClass EditorListItem {
      vexactpos 1
      hexactsize 0
      vexactsize 0
+     draggable 1
      scriptclass "ViewBinding"
      style Outline
      "no focus" 0
@@ -62,6 +64,7 @@ WrapSpacerWidgetClass EditorListItem {
      vexactpos 0
      hexactsize 0
      vexactsize 0
+     draggable 1
      scriptclass ""
      style Colorable
      "no focus" 1
@@ -103,6 +106,7 @@ WrapSpacerWidgetClass EditorListItem {
          hexactsize 0
          vexactsize 0
          priority 5
+         draggable 1
          scriptclass "EditableTextWidget"
          {
           TextWidgetClass EditorListItemLabel {
@@ -118,6 +122,7 @@ WrapSpacerWidgetClass EditorListItem {
            vexactpos 0
            hexactsize 0
            vexactsize 0
+           draggable 1
            scriptclass ""
            style Normal
            text "CATEGORY"
@@ -221,6 +226,7 @@ WrapSpacerWidgetClass EditorListItem {
    vexactpos 1
    hexactsize 0
    vexactsize 0
+   draggable 1
    scriptclass ""
    "no focus" 1
    Padding 0

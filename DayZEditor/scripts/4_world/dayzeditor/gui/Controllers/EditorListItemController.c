@@ -101,10 +101,17 @@ class EditorListItemController: Controller
 				break;
 			}
 			
+			case EditorPlacedListItem: {
+				break;
+			}
+			
+			case EditorCollapsibleListItem: {				
+				return false;
+			}
 		}
 		
 		
-		return true;
+		return super.OnDrag(w, x, y);
 	}
 	
 	override bool OnDrop(Widget w, int x, int y, Widget reciever)
@@ -118,11 +125,21 @@ class EditorListItemController: Controller
 				break;
 			}
 			
+			case EditorPlacedListItem: {
+				return false;
+			}
+			
+			case EditorCollapsibleListItem: {				
+				return false;
+			}
+			
+			
 		}
 		
-		return true;
+		return false;
 	}
 	
+
 
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
