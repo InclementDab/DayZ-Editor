@@ -599,11 +599,8 @@ class EditorHudController: Controller
 		
 		float normalized_time = (1 / duration) * anim_frametime;
 		normalized_time = Math.Clamp(normalized_time, 0, 1);
-		
-		float pos_x = Math.Lerp(start_x, final_x, normalized_time);
-		float pos_y = Math.Lerp(start_y, final_y, normalized_time);
-		
-		root.SetPos(pos_x, pos_y);
+				
+		root.SetPos(Math.Lerp(start_x, final_x, normalized_time), Math.Lerp(start_y, final_y, normalized_time));
 		
 		if (normalized_time >= 1)
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(NotificationAnimateFrame);

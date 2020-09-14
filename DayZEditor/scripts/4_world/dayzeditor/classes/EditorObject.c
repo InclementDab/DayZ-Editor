@@ -31,6 +31,9 @@ class EditorObject
 	
 	protected ref array<ref EditorSnapPoint> m_SnapPoints = {};
 	
+	private vector m_LineCenters[12]; 
+	private vector m_LineVerticies[8];
+	
 	
 	float LocalAngle; // temp
 	
@@ -68,6 +71,37 @@ class EditorObject
 			GetEditor().GetSessionCache().InsertEditorData(m_Data);
 		}
 		
+		vector clip_info[2];
+		ClippingInfo(clip_info);
+	
+		m_LineVerticies[0] = clip_info[0];
+		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
+		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
+		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
+		m_LineVerticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
+		m_LineVerticies[5] = clip_info[1];
+		m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
+		m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
+		
+		m_LineCenters[0] = AverageVectors(m_LineVerticies[0], m_LineVerticies[1]);
+		m_LineCenters[1] = AverageVectors(m_LineVerticies[0], m_LineVerticies[3]);
+		m_LineCenters[2] = AverageVectors(m_LineVerticies[0], m_LineVerticies[7]);
+		m_LineCenters[3] = AverageVectors(m_LineVerticies[4], m_LineVerticies[7]);
+		m_LineCenters[4] = AverageVectors(m_LineVerticies[6], m_LineVerticies[7]);
+		
+		m_LineCenters[5] = AverageVectors(m_LineVerticies[1], m_LineVerticies[2]);
+		m_LineCenters[6] = AverageVectors(m_LineVerticies[1], m_LineVerticies[6]);
+		m_LineCenters[7] = AverageVectors(m_LineVerticies[3], m_LineVerticies[2]);
+		m_LineCenters[8] = AverageVectors(m_LineVerticies[3], m_LineVerticies[4]);
+		
+		m_LineCenters[9] = AverageVectors(m_LineVerticies[5], m_LineVerticies[2]);
+		m_LineCenters[10] = AverageVectors(m_LineVerticies[5], m_LineVerticies[4]);		
+		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
+		
+		for (int i = 0; i < 8; i++) {
+			m_SnapPoints.Insert(new EditorSnapPoint(this, m_LineVerticies[i]));
+		}
+		
 		// Bounding Box
 		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
 			ShowBoundingBox();
@@ -88,40 +122,6 @@ class EditorObject
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
 			m_EditorPlacedListItem = new EditorPlacedListItem(this);
 			GetEditor().GetEditorHud().GetController().InsertPlacedObject(m_EditorPlacedListItem);
-		}
-		
-						
-		vector size = GetSize();
-		vector clip_info[2];
-		ClippingInfo(clip_info);
-		vector position = AverageVectors(clip_info[0], clip_info[1]);
-		
-		line_verticies[0] = clip_info[0];
-		line_verticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
-		line_verticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
-		line_verticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
-		line_verticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
-		line_verticies[5] = clip_info[1];
-		line_verticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
-		line_verticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
-		
-		line_centers[0] = AverageVectors(line_verticies[0], line_verticies[1]);
-		line_centers[1] = AverageVectors(line_verticies[0], line_verticies[3]);
-		line_centers[2] = AverageVectors(line_verticies[0], line_verticies[7]);
-		line_centers[3] = AverageVectors(line_verticies[4], line_verticies[7]);
-		line_centers[4] = AverageVectors(line_verticies[6], line_verticies[7]);
-		
-		line_centers[5] = AverageVectors(line_verticies[1], line_verticies[2]);
-		line_centers[6] = AverageVectors(line_verticies[1], line_verticies[6]);
-		line_centers[7] = AverageVectors(line_verticies[3], line_verticies[2]);
-		line_centers[8] = AverageVectors(line_verticies[3], line_verticies[4]);
-		
-		line_centers[9] = AverageVectors(line_verticies[5], line_verticies[2]);
-		line_centers[10] = AverageVectors(line_verticies[5], line_verticies[4]);		
-		line_centers[11] = AverageVectors(line_verticies[5], line_verticies[6]);
-		
-		for (int i = 0; i < 8; i++) {
-			m_SnapPoints.Insert(new EditorSnapPoint(this, line_verticies[i]));
 		}
 	}
 	
@@ -303,16 +303,11 @@ class EditorObject
 	}
 	
 	
-
-
-	vector line_centers[12]; vector line_verticies[8];
-	
 	
 	vector GetBottomCenter()
 	{		
 		vector clip_info[2];
 		ClippingInfo(clip_info);
-		//clip_info[0][1] = -clip_info[1][1];
 		vector result;
 		vector up = GetTransformAxis(1);
 		result = up * -(vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
@@ -325,7 +320,6 @@ class EditorObject
 	{		
 		vector clip_info[2];
 		ClippingInfo(clip_info);
-		//clip_info[0][1] = -clip_info[1][1];
 		vector result;
 		vector up = GetTransformAxis(1);
 		result = up * (vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
@@ -338,12 +332,9 @@ class EditorObject
 		return new Param3<int, vector, vector>(GetID(), GetPosition(), GetOrientation());
 	}
 
-	
-
 	vector GetSize()
 	{
 		vector result;
-
 		vector clip_info[2];
 		ClippingInfo(clip_info);
 		result[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
@@ -352,8 +343,6 @@ class EditorObject
 		
 		return result;
 	}
-	
-	
 
 	void SetTransformWithSnapping(vector transform[4])
 	{	
@@ -381,14 +370,10 @@ class EditorObject
 							SetPosition(pos);
 							Update();
 							return;
-						}
-						
+						}						
 					}
-					
 				}
-				
-			}
-		
+			}		
 		}
 		
 		Update();
@@ -410,12 +395,12 @@ class EditorObject
 		for (int i = 0; i < 12; i++) {
 			
 			vector transform[4];			
-			transform[3] = line_centers[i];
+			transform[3] = m_LineCenters[i];
 			
 			for (int j = 0; j < 3; j++) 
-				transform[j][j] = ((position[j] == line_centers[i][j])*size[j]/2) + line_width;						
+				transform[j][j] = ((position[j] == m_LineCenters[i][j])*size[j]/2) + line_width;						
 			 
-			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_LOCAL));
+			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_LOCAL));
 			m_BBoxLines[i].SetTransform(transform);			
 			
 			AddChild(m_BBoxLines[i], -1);
