@@ -92,10 +92,6 @@ class EditorHudController: Controller
 	
 		GetXMLApi().Read(filename, xml_brushes);
 	}
-
-	
-		
-
 	
 	void InsertPlaceableObject(EditorListItem target)
 	{

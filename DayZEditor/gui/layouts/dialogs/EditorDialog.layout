@@ -10,7 +10,7 @@ WrapSpacerWidgetClass EditorDialog {
  hexactsize 1
  vexactsize 1
  priority 996
- scriptclass "EditorDialogController"
+ scriptclass ""
  style Colorable
  Padding 0
  Margin 0
@@ -27,7 +27,7 @@ WrapSpacerWidgetClass EditorDialog {
    vexactsize 0
    priority 5
    draggable 1
-   scriptclass "ViewBinding"
+   scriptclass ""
    style Colorable
    Padding 0
    Margin 0
@@ -73,14 +73,10 @@ WrapSpacerWidgetClass EditorDialog {
        hexactsize 1
        vexactsize 1
        priority 5
-       scriptclass "ViewBinding"
+       scriptclass ""
        style Default
        text "X"
        font "gui/fonts/Metron-Bold"
-       {
-        ScriptParamsClass {
-        }
-       }
       }
      }
     }
@@ -140,14 +136,6 @@ WrapSpacerWidgetClass EditorDialog {
      }
     }
    }
-   {
-    ScriptParamsClass {
-    }
-   }
-  }
- }
- {
-  ScriptParamsClass {
   }
  }
 }

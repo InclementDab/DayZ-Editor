@@ -1,29 +1,29 @@
 
-
-
 class EditorDialog: EditorMVCLayout
-{
-
+{	
 	protected ref EditorDialogController m_DialogController;
-	Controller GetController() {
-		return m_DialogController;
+	EditorDialogController GetDialogController() {
+		return EditorDialogController.Cast(m_Controller);
 	}
 	
 	string GetTitle() {
 		return m_Title;
 	}
 	
-	void EditorDialog() {
-		
+	void EditorDialog() 
+	{
 		EditorLog.Trace("EditorDialog");
 		
-		m_LayoutRoot.GetScript(m_DialogController);
 		m_LayoutRoot.Show(false);
 		
-		m_DialogController.SetEditorDialog(this);
+		m_DialogController = GetDialogController();
+		if (m_DialogController) {
+			m_DialogController.SetEditorDialog(this);
+		}
 	}
 	
-	void ~EditorDialog() {
+	void ~EditorDialog() 
+	{
 		EditorLog.Trace("~EditorDialog");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 	}
@@ -32,8 +32,13 @@ class EditorDialog: EditorMVCLayout
 		return "DayZEditor/gui/Layouts/dialogs/EditorDialog.layout";
 	}
 	
+	override typename GetControllerType() {
+		return EditorDialogController;
+	}
+	
 	protected Controller AddContent(Widget content)
 	{
+		if (!m_DialogController) return m_DialogController;
 		m_DialogController.DialogContent.AddChild(content);
 		Controller controller;
 		content.GetScript(controller);		
@@ -42,6 +47,7 @@ class EditorDialog: EditorMVCLayout
 	
 	protected Controller AddContent(string layout)
 	{
+		if (!m_DialogController) return m_DialogController;
 		Widget content = GetGame().GetWorkspace().CreateWidgets(layout);
 		m_DialogController.DialogContent.AddChild(content);
 		Controller controller;
@@ -51,6 +57,7 @@ class EditorDialog: EditorMVCLayout
 	
 	protected Controller AddContent(EditorPrefab prefab)
 	{
+		if (!m_DialogController) return m_DialogController;
 		m_DialogController.DialogContent.AddChild(prefab.GetLayoutRoot());
 		Controller controller;
 		prefab.GetLayoutRoot().GetScript(controller);

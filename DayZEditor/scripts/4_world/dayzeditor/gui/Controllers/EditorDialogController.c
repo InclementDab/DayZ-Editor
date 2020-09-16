@@ -8,7 +8,6 @@ class EditorDialogController: Controller
 	GridSpacerWidget ButtonGrid;
 	WrapSpacerWidget WindowDragWrapper;
 	
-	
 	protected ref EditorDialog m_EditorDialog;
 	void SetEditorDialog(EditorDialog editor_dialog) {
 		m_EditorDialog = editor_dialog;
@@ -21,8 +20,6 @@ class EditorDialogController: Controller
 	void ~EditorDialogController() {
 		EditorLog.Trace("~EditorDialogController");
 	}
-	
-
 	
 	float m_OffsetX, m_OffsetY;
 	override bool OnDrag(Widget w, int x, int y)

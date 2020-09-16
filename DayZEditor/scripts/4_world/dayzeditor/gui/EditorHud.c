@@ -105,11 +105,7 @@ class EditorHud: Hud
 	
 	// Modal Window Control
 	private ref EditorDialog m_CurrentModal = null;
-	void SetModal(EditorDialog dialog) {
-		if (m_CurrentModal) {
-			m_CurrentModal.Close();
-		}
-		
+	void SetModal(EditorDialog dialog) {		
 		m_CurrentModal = dialog;
 
 		if (m_CurrentModal) {

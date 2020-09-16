@@ -1,7 +1,4 @@
 
-
-
-
 ref DataBindingShowcaseController m_DataBindingShowcaseController;
 
 class DataBindingShowcaseController: Controller
@@ -13,10 +10,11 @@ class DataBindingShowcaseController: Controller
 	int RadioButtons = 8;
 	int SelectedObject;
 	
-	
-	
+	ref ObservableCollection<string> test_collection = new ObservableCollection<string>("test_collection", this);
 	
 	protected TextWidget WindowTextToggleValue;
+	
+	string test;
 	
 	void DataBindingShowcaseController()
 	{
@@ -27,13 +25,9 @@ class DataBindingShowcaseController: Controller
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
-
-		
-
+		test_collection.Insert("Test");
 	}
 	
-	
-
 	override void PropertyChanged(string property_name)
 	{
 
