@@ -5,24 +5,17 @@ class EditorDialog: EditorMVCLayout
 	EditorDialogController GetDialogController() {
 		return EditorDialogController.Cast(m_Controller);
 	}
-		
-	Widget TitleBar;
-	ButtonWidget TitleClose;
-	
-	WrapSpacerWidget DialogContent;
-	GridSpacerWidget ButtonGrid;
-	WrapSpacerWidget WindowDragWrapper;
+			
+	protected WrapSpacerWidget DialogContent;
+	protected GridSpacerWidget ButtonGrid;
+	protected WrapSpacerWidget WindowDragWrapper;
 	
 	void EditorDialog() 
 	{
 		EditorLog.Trace("EditorDialog");
 		
 		m_LayoutRoot.Show(false);
-		
 		m_DialogController = GetDialogController();
-		if (m_DialogController) {
-			m_DialogController.SetEditorDialog(this);
-		}
 	}
 	
 	void ~EditorDialog() 
@@ -41,7 +34,6 @@ class EditorDialog: EditorMVCLayout
 	
 	protected Controller AddContent(Widget content)
 	{
-		if (!m_DialogController) return m_DialogController;
 		DialogContent.AddChild(content);
 		Controller controller;
 		content.GetScript(controller);		
@@ -111,8 +103,41 @@ class EditorDialog: EditorMVCLayout
 		m_Editor.GetCamera().SetLookEnabled(true);
 		m_EditorHud.ShowCursor();
 	}
+		
+	float m_OffsetX, m_OffsetY;
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorDialog::OnDrag");
+		if (w == WindowDragWrapper) {
+			m_LayoutRoot.GetPos(m_OffsetX, m_OffsetY);
+			m_OffsetX -= x; m_OffsetY -= y;		
+			g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DragUpdate);	
+		}
+		
+		return super.OnDrag(w, x, y);
+	}
 	
-	void Update();
-
+	override bool OnDragging(Widget w, int x, int y, Widget reciever) { 
+		return true; 
+	}
 	
+	private bool DragUpdate()
+	{
+		int x, y;
+		GetMousePos(x, y);
+		m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);
+		return false;
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
+	{
+		EditorLog.Trace("EditorDialog::OnDrop");
+		g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Remove(DragUpdate);
+		
+		if (w == WindowDragWrapper) {
+			m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);
+	    }		
+		
+		return false;
+	}
 }

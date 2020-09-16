@@ -108,11 +108,8 @@ class EditorHud: Hud
 	void SetModal(EditorDialog dialog) {		
 		m_CurrentModal = dialog;
 
-		if (m_CurrentModal) {
-			m_LayoutRoot.Enable(false);
-		} else {
-			m_LayoutRoot.Enable(true);
-		}
+		// Stops layout from accepting input while Modal is active
+		m_LayoutRoot.Enable(!m_CurrentModal);
 	}
 	
 	EditorDialog GetModal() {
