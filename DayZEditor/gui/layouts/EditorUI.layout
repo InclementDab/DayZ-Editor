@@ -275,7 +275,7 @@ FrameWidgetClass EditorMainFrame {
    clipchildren 0
    ignorepointer 1
    color 0.302 0.302 0.302 0.549
-   position 0 32
+   position 0 36
    size 300 0.915
    valign bottom_ref
    hexactpos 1
@@ -451,6 +451,7 @@ FrameWidgetClass EditorMainFrame {
            switch normal
            {
             ImageWidgetClass HumanSelect_Icon {
+             visible 1
              ignorepointer 1
              position 0 0
              size 50 50
