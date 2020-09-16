@@ -1,0 +1,12 @@
+WrapSpacerWidgetClass EditorMenuContent {
+ position 0 0
+ size 0 0
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ scriptclass "EditorMenu"
+ "Size To Content H" 1
+ "Size To Content V" 1
+ content_halign center
+}
