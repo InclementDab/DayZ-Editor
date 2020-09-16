@@ -22,13 +22,21 @@ class OpenLogFiles: DayZTool
 [WorkbenchPluginAttribute("Build Mod", "Builds current mod", "F8", "", {"ResourceManager", "ScriptEditor"})]
 class BuildMod: DayZTool
 {
-
-	
 	override void Run()
 	{
 		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\Exit.bat", true);
 		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\ZBinarizeDeploy.bat", true);
-		//RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\LaunchClient.bat", true);
+	}
+}
+
+[WorkbenchPluginAttribute("Build Mod", "Builds current mod", "Ctrl+F8", "", {"ResourceManager", "ScriptEditor"})]
+class BuildModAndLaunch: DayZTool
+{
+	override void Run()
+	{
+		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\Exit.bat", true);
+		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\ZBinarizeDeploy.bat", true);
+		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\LaunchClient.bat", true);
 	}
 }
 

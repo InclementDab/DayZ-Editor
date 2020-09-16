@@ -39,7 +39,7 @@ class EditorListItemController: Controller
 
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorLog.Trace("EditorListItemController::OnMouseEnter");
+		//EditorLog.Trace("EditorListItemController::OnMouseEnter");
 		
 		switch (m_ListItem.Type()) {
 			default: {
@@ -55,7 +55,7 @@ class EditorListItemController: Controller
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		EditorLog.Trace("EditorListItemController::OnMouseLeave");
+		//EditorLog.Trace("EditorListItemController::OnMouseLeave");
 		
 		
 		switch (m_ListItem.Type()) {

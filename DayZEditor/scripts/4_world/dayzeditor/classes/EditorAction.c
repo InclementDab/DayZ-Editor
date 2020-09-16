@@ -17,9 +17,11 @@ class EditorActionStack: set<ref EditorAction>
 	
 	void UpdateDebugReadout(out ref ObservableCollection<string> readout)
 	{
-		readout.Clear();
-		foreach (EditorAction action: this) {
-			readout.Insert(action.GetName());
+		if (readout) {
+			readout.Clear();
+			foreach (EditorAction action: this) {
+				readout.Insert(action.GetName());
+			}
 		}
 	}	
 }

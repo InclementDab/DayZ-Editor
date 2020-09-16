@@ -41,7 +41,6 @@ class EditorObjectData
 	EditorObjectFlags Flags;
 	ModStructure ObjectMod;
 	
-
 	
 	void EditorObjectData() {}
 	

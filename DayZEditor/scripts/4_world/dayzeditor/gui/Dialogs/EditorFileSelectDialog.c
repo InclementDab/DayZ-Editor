@@ -147,7 +147,7 @@ class EditorFileOpenDialog: EditorFileDialog
 	}
 		
 	
-	
+	/*
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
 		if (button != 0) return false;
@@ -164,7 +164,7 @@ class EditorFileOpenDialog: EditorFileDialog
 		CloseDialog();
 		
 		return true;
-	}
+	}*/
 }
 
 
@@ -202,7 +202,7 @@ class EditorFileImportDialog: EditorFileDialog
 	}
 
 
-	
+	/*
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
 		if (button != 0) return false;
@@ -219,7 +219,7 @@ class EditorFileImportDialog: EditorFileDialog
 		CloseDialog();
 		
 		return true;
-	}
+	}*/
 }
 
 
@@ -266,7 +266,7 @@ class EditorFileSaveDialog: EditorFileDialog
 		CloseDialog();
 	}
 	
-	
+	/*
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorFileSaveDialog::OnClick");
@@ -297,7 +297,7 @@ class EditorFileSaveDialog: EditorFileDialog
 		}
 		
 		return true;
-	}
+	}*/
 }
 
 
@@ -433,7 +433,7 @@ class EditorFileExportDialog: EditorFileDialog
 		
 		return null;
 	}
-	
+	/*
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorFileExportDialog::OnClick");
@@ -481,5 +481,5 @@ class EditorFileExportDialog: EditorFileDialog
 		}
 		
 		return true;
-	}
+	}*/
 }

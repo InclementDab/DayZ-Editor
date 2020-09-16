@@ -68,7 +68,7 @@ class MapSelectDialog: EditorDialog
 	}
 
 	
-	
+	/*
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{		
 		if (button != 0) return false; 
@@ -82,7 +82,7 @@ class MapSelectDialog: EditorDialog
 			
 		}		
 		return false;
-	}
+	}*/
 	
 
 }

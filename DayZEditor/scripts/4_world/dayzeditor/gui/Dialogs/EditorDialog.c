@@ -1,11 +1,9 @@
 
 
 
-class EditorDialog: MVCWidgetHandler
+class EditorDialog: EditorMVCLayout
 {
-	private Editor m_Editor;
-	private EditorHud m_EditorHud;
-	
+
 	protected ref EditorDialogController m_DialogController;
 	Controller GetController() {
 		return m_DialogController;
@@ -18,11 +16,7 @@ class EditorDialog: MVCWidgetHandler
 	void EditorDialog() {
 		
 		EditorLog.Trace("EditorDialog");
-
-		m_Editor = GetEditor();
-		m_EditorHud = m_Editor.GetEditorHud();
 		
-		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialog.layout", null);
 		m_LayoutRoot.GetScript(m_DialogController);
 		m_LayoutRoot.Show(false);
 		
@@ -34,7 +28,9 @@ class EditorDialog: MVCWidgetHandler
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 	}
 
-
+	override string GetLayoutFile() {
+		return "DayZEditor/gui/Layouts/dialogs/EditorDialog.layout";
+	}
 	
 	protected Controller AddContent(Widget content)
 	{
@@ -79,19 +75,24 @@ class EditorDialog: MVCWidgetHandler
 		m_Title = title;
 		m_DialogController.TitleText.SetText(m_Title);
 	}
-	
-
-	
+		
 	void ShowDialog()
 	{
 		EditorLog.Trace("EditorDialog::ShowDialog");
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-		m_LayoutRoot.Show(true);
-		
-		if (m_EditorHud.GetModal()) {
-			m_EditorHud.GetModal().CloseDialog();
-		}
-		
+		Show();
+	}
+	
+	void CloseDialog()
+	{
+		EditorLog.Trace("EditorDialog::CloseDialog");
+		Close();
+	}
+	
+	override void Show()
+	{
+		EditorLog.Trace("EditorDialog::Show");
+		super.Show();
+				
 		m_Editor.GetCamera().SetMoveEnabled(false);
 		m_Editor.GetCamera().SetLookEnabled(false);
 		m_EditorHud.ShowCursor();
@@ -104,12 +105,10 @@ class EditorDialog: MVCWidgetHandler
 		m_LayoutRoot.SetPos(dx, dy - dv / 2);
 	}
 	
-	void CloseDialog()
+	override void Close()
 	{
 		EditorLog.Trace("EditorDialog::CloseDialog");
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-		m_LayoutRoot.Show(false);
-		m_LayoutRoot.Unlink();
+		super.Close();
 		
 		m_EditorHud.SetModal(null);
 		m_Editor.GetCamera().SetMoveEnabled(true);

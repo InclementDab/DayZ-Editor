@@ -246,6 +246,10 @@ class EditorHudController: Controller
 		settings_dialog.ShowDialog();
 	}
 	
+	void MenuBarFileExecute(ButtonCommandArgs args) {
+		EditorMenu file_menu = new EditorMenu();		
+	}
+	
 
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
@@ -337,7 +341,7 @@ class EditorHudController: Controller
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorLog.Trace("EditorHudController::OnMouseEnter %1", w.GetName());		
+		//EditorLog.Trace("EditorHudController::OnMouseEnter %1", w.GetName());		
 		
 		if (GetEditor() && !GetEditor().GetEditorHud().ShouldProcessInput(w)) {
 			return false;
@@ -361,7 +365,7 @@ class EditorHudController: Controller
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		EditorLog.Trace("EditorHudController::OnMouseLeave %1", w.GetName());
+		//EditorLog.Trace("EditorHudController::OnMouseLeave %1", w.GetName());
 		
 		switch (w.GetTypeName()) {
 			
@@ -498,7 +502,6 @@ class EditorHudController: Controller
 			icon.SetPos(x, y);
 		}
 	}
-	
 		
 	ScriptInvoker DragBoxQueue = GetGame().GetUpdateQueue(CALL_CATEGORY_GUI);
 	private int start_x, start_y;

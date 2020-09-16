@@ -105,12 +105,13 @@ class EditorHud: Hud
 	
 	// Modal Window Control
 	private ref EditorDialog m_CurrentModal = null;
-	
-	void SetModal(EditorDialog w) {
-		m_CurrentModal = w;	
+	void SetModal(EditorDialog dialog) {
+		if (m_CurrentModal) {
+			m_CurrentModal.CloseDialog();
+		}
 		
-		// todo monday: remove MVCOnXXX completely. just use this to disable
-		// the underlying UI when dialogs are opened!
+		m_CurrentModal = dialog;
+
 		if (m_CurrentModal) {
 			m_LayoutRoot.Enable(false);
 		} else {
@@ -121,7 +122,6 @@ class EditorHud: Hud
 	EditorDialog GetModal() {
 		return m_CurrentModal;
 	}
-	
 
 	bool IsModalActive() {
 		return (m_CurrentModal != null);
@@ -134,6 +134,24 @@ class EditorHud: Hud
 	bool ShouldProcessInput(Widget w) {
 		return (!IsModalActive() || IsModalCommand(w));
 	}
+	
+	// Modal Menu Control
+	private ref EditorMenu m_CurrentMenu;
+	ref EditorMenu GetMenu() {
+		return m_CurrentMenu;
+	}
+	
+	void SetMenu(EditorMenu menu) {
+		if (m_CurrentMenu)
+			delete m_CurrentMenu;
+		
+		m_CurrentMenu = menu;
+	}
+	
+	bool IsMenuOpen() {
+		return (m_CurrentMenu != null);
+	}
+	
 	
 	// Current "button" on UI
 	private ButtonWidget m_CurrentButton;
