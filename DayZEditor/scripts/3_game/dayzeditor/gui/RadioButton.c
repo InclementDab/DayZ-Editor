@@ -8,8 +8,6 @@
 		NOTE: This also corresponds to the name of the variable in the Controller to store the selected RadioButton
 */
 
-
-
 typedef ref map<int, ref RadioButton> RadioButtonHashMap;
 
 
@@ -20,7 +18,6 @@ class RadioButtonGroup: ViewBinding
 	
 	ref ScriptInvoker OnRadioButtonActivate = new ScriptInvoker();
 	ref ScriptInvoker OnRadioButtonDeactivate = new ScriptInvoker();
-	
 	
 	override void SetController(Controller controller)
 	{

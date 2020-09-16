@@ -143,18 +143,7 @@ class EditorHudController: Controller
 		EditorLog.Trace("EditorHudController::PropertyChanged: " + property_name);
 		
 		switch (property_name) {
-			
-			case "PlaceableCategorySelection": {
-			
-				for (int i = 0; i < LeftbarSpacer.Count(); i++) {
-					Widget list_item = LeftbarSpacer[i].GetLayoutRoot();
-					EditorPlaceableListItem item;
-					list_item.GetUserData(item);
-					list_item.Show(item.GetData().GetCategory() == PlaceableCategorySelection);
-				}
-				break;
-			}
-			
+						
 			case "BrushTypeSelection": {
 				if (BrushToggleButtonState) {
 					GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
@@ -636,9 +625,17 @@ class EditorHudController: Controller
 		root.SetColor(COLOR_SALMON_A);
 		int pos = ButtonWidget.Cast(root).GetState() * 1;
 		SetWidgetIconPosition(root, pos, pos);
+
+		// if you add more radio buttons. put this in a condition :)
+		for (int i = 0; i < LeftbarSpacer.Count(); i++) {
+			Widget list_item = LeftbarSpacer[i].GetLayoutRoot();
+			EditorPlaceableListItem item;
+			list_item.GetUserData(item);
+			if (list_item && item) {
+				list_item.Show(item.GetData().GetCategory() == radio_button.GetID());
+			}
 			
-			
-		
+		}
 	}
 	
 	private void OnRadioButtonDeactivate(RadioButton radio_button)
