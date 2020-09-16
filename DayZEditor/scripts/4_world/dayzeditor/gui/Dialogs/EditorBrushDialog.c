@@ -80,7 +80,7 @@ class EditorBrushDialog: EditorDialog
 			
 		AddButton("Save", "SaveCallback");
 		AddButton("Export", "ExportCallback");
-		AddButton("Close", "CloseDialog");
+		AddButton("Close", "Close");
 		
 	}
 	

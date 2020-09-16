@@ -107,7 +107,7 @@ class EditorHud: Hud
 	private ref EditorDialog m_CurrentModal = null;
 	void SetModal(EditorDialog dialog) {
 		if (m_CurrentModal) {
-			m_CurrentModal.CloseDialog();
+			m_CurrentModal.Close();
 		}
 		
 		m_CurrentModal = dialog;

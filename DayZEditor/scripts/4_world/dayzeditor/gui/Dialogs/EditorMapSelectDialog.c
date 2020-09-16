@@ -41,7 +41,7 @@ class MapSelectDialog: EditorDialog
 		EditorLog.Trace("MapSelectDialog");
 		m_MapSelectDialogController = AddContent("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");
 		m_SelectButton = AddButton("Select", "SelectCallback");
-		m_CloseButton = AddButton("Close", "CloseDialog");
+		m_CloseButton = AddButton("Close", "Close");
 	}
 	
 	
@@ -64,7 +64,7 @@ class MapSelectDialog: EditorDialog
 		string name;
 		m_MapSelectDialogController.MapHostListbox.GetItemText(m_MapSelectDialogController.MapHostListbox.GetSelectedRow(), 0, name);
 		GetGame().PlayMission(CreateEditorMission(name));
-		CloseDialog();
+		Close();
 	}
 
 	
@@ -77,7 +77,7 @@ class MapSelectDialog: EditorDialog
 			string name;
 			m_MapSelectDialogController.MapHostListbox.GetItemText(m_MapSelectDialogController.MapHostListbox.GetSelectedRow(), 0, name);
 			GetGame().PlayMission(CreateEditorMission(name));
-			CloseDialog();
+			Close();
 			return true;
 			
 		}		

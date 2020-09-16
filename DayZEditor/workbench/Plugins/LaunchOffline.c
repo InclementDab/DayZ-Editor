@@ -40,7 +40,7 @@ class BuildModAndLaunch: DayZTool
 	}
 }
 
-[WorkbenchPluginAttribute("Launch Server", "Launches Server", "F6", "", {"ResourceManager", "ScriptEditor"})]
+[WorkbenchPluginAttribute("Launch Server", "Launches Server", "Ctrl+F6", "", {"ResourceManager", "ScriptEditor"})]
 class LaunchServer: DayZTool
 {
 
@@ -48,8 +48,8 @@ class LaunchServer: DayZTool
 	{
 		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\Exit.bat", true);
 		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\ZBinarizeDeploy.bat", true);
-		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\LaunchServer.bat", true);
-		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\LaunchLocalMP.bat", true);
+		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\LaunchServer.bat");
+		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\LaunchLocalMP.bat");
 	}
 
 }

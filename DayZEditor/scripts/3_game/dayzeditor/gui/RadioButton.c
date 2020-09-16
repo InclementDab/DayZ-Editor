@@ -23,8 +23,8 @@ class RadioButtonGroup: ViewBinding
 	{
 		EditorLog.Trace("RadioButtonGroup::SetController");
 		m_Controller = controller;
-		m_PropertyDataConverter = MVC.GetTypeConversion(int);
-		OnPropertyChanged();
+		m_PropertyConverter = MVC.GetTypeConversion(int);
+		UpdateView();
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
@@ -41,25 +41,15 @@ class RadioButtonGroup: ViewBinding
 		EditorLog.Trace("RadioButtonGroup::UpdateModel");		
 		EditorLog.Debug(string.Format("[%1] Updating Model...", m_LayoutRoot.Type()));
 
-		m_PropertyDataConverter.SetInt(m_ActiveButton);
-		m_PropertyDataConverter.SetToController(m_Controller, Binding_Name, 0);
+		m_PropertyConverter.SetInt(m_ActiveButton);
+		m_PropertyConverter.SetToController(m_Controller, Binding_Name, 0);
 		m_Controller.NotifyPropertyChanged(Binding_Name);
 	}
 	
-	override void OnPropertyChanged()
+	override void UpdateView()
 	{
-		EditorLog.Trace("RadioButtonGroup::OnPropertyChanged " + Binding_Name);		
-						
-		
-		if (!m_PropertyDataConverter) {
-			MVC.TypeConversionError(GetPropertyType(Binding_Name));
-			return;
-		}
-
-		m_PropertyDataConverter.GetFromController(m_Controller, Binding_Name, 0);
-		EditorLog.Debug(string.Format("[%1] Updating View...", m_LayoutRoot.Type()));
-		
-		SetActiveRadioButton(m_PropertyDataConverter.GetInt());
+		super.UpdateView();
+		SetActiveRadioButton(m_PropertyConverter.GetInt());
 	}
 	
 	private int LoadChildButtons(Widget w, out RadioButtonHashMap button_hashmap)

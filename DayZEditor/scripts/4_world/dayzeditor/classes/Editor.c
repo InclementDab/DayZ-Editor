@@ -405,7 +405,7 @@ class Editor
 						FinishEditLootSpawns();
 						return true;
 					} else if (m_EditorHud.IsModalActive()) {
-						m_EditorHud.GetModal().CloseDialog();
+						m_EditorHud.GetModal().Close();
 						return true;
 					// jank
 					} else if (!GetGame().GetMission().IsPaused()) {
@@ -534,7 +534,7 @@ class Editor
 		EditorLog.Trace("Editor::New");
 		
 		MapSelectDialog select_window = new MapSelectDialog("Create New...");
-		select_window.ShowDialog();
+		select_window.Show();
 	}
 	
 	void Save(string file, EditorWorldData world_data)

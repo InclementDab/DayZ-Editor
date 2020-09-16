@@ -128,7 +128,7 @@ WrapSpacerWidgetClass EditorProperties {
      {
       ScriptParamsClass {
        Binding_Name "EditorNamePropertiesExpand"
-       Command_Execute "ToggleCategoryButton"
+       Relay_Execute "ToggleCategoryButton"
        Two_Way_Binding 1
       }
      }
@@ -354,7 +354,7 @@ WrapSpacerWidgetClass EditorProperties {
      {
       ScriptParamsClass {
        Binding_Name "EditorPositionPropertiesExpand"
-       Command_Execute "ToggleCategoryButton"
+       Relay_Execute "ToggleCategoryButton"
        Two_Way_Binding 1
       }
      }

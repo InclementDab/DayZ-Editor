@@ -1,9 +1,6 @@
 
-
 static const float ALPHA_ON_SHOW = 1;
 static const float ALPHA_ON_HIDE = 0.25;
-
-
 
 class EditorMarker: ScriptedWidgetEventHandler
 {
@@ -234,7 +231,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{		
 		EditorObjectPropertiesDialog dialog = new EditorObjectPropertiesDialog(m_EditorObject);
-		dialog.ShowDialog();
+		dialog.Show();
 		
 		return true;
 	}

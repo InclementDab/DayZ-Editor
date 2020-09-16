@@ -128,7 +128,7 @@ class EditorCameraDialog: EditorDialog
 		SetTitle("Camera Controller");
 		
 		AddButton("Default", "ResetDefault");
-		AddButton("Close", "CloseDialog");
+		AddButton("Close", "Close");
 	}
 	
 	void ResetDefault()

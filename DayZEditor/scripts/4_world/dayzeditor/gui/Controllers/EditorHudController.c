@@ -1,7 +1,6 @@
 
 class EditorHudController: Controller
 {
-
 	// Data Binding
 	string DebugText1;
 	string DebugText2;
@@ -233,17 +232,17 @@ class EditorHudController: Controller
 	
 	void WeatherExecute(ButtonCommandArgs args) {
 		EditorWeatherDialog weather_dialog = new EditorWeatherDialog();
-		weather_dialog.ShowDialog();
+		weather_dialog.Show();
 	}
 	
 	void CameraExecute(ButtonCommandArgs args) {
 		EditorCameraDialog camera_dialog = new EditorCameraDialog(GetEditor().GetCamera());
-		camera_dialog.ShowDialog();
+		camera_dialog.Show();
 	}
 	
 	void SettingsExecute(ButtonCommandArgs args) {
 		EditorSettingsDialog settings_dialog = new EditorSettingsDialog(GetEditor().GetSettings());
-		settings_dialog.ShowDialog();
+		settings_dialog.Show();
 	}
 	
 	void MenuBarFileExecute(ButtonCommandArgs args) {
@@ -453,7 +452,7 @@ class EditorHudController: Controller
 								
 					case "BrushToggleButton": {
 						EditorBrushDialog brush_dialog(BrushTypeBoxData[BrushTypeSelection]);
-						brush_dialog.ShowDialog();
+						brush_dialog.Show();
 						break;
 					}
 				}

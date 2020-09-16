@@ -104,7 +104,7 @@ WrapSpacerWidgetClass EditorDialogOption {
    }
    {
     ScriptParamsClass {
-     Command_Execute "ToggleCategoryButton"
+     Relay_Execute "ToggleCategoryButton"
      Two_Way_Binding 1
     }
    }

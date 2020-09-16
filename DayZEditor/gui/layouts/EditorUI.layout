@@ -600,7 +600,7 @@ FrameWidgetClass EditorMainFrame {
            "Size To Content V" 1
            {
             ScriptParamsClass {
-             Command_Execute "LeftbarSpacerExecute"
+             Relay_Command "LeftbarSpacerExecute"
             }
            }
           }
@@ -641,7 +641,7 @@ FrameWidgetClass EditorMainFrame {
      }
      {
       ScriptParamsClass {
-       Command_Execute "ToggleLeftBar"
+       Relay_Command "ToggleLeftBar"
       }
      }
     }
@@ -766,7 +766,7 @@ FrameWidgetClass EditorMainFrame {
            }
            {
             ScriptParamsClass {
-             Command_Execute "ButtonCreateFolderExecute"
+             Relay_Command "ButtonCreateFolderExecute"
             }
            }
           }
@@ -838,7 +838,7 @@ FrameWidgetClass EditorMainFrame {
      }
      {
       ScriptParamsClass {
-       Command_Execute "ToggleRightBar"
+       Relay_Command "ToggleRightBar"
       }
      }
     }
@@ -1481,6 +1481,7 @@ FrameWidgetClass EditorMainFrame {
          }
         }
         ButtonWidgetClass WeatherButton {
+         visible 1
          position 0 0
          size 32 32
          hexactpos 1
@@ -1492,7 +1493,7 @@ FrameWidgetClass EditorMainFrame {
          text "W"
          {
           ScriptParamsClass {
-           Command_Execute "WeatherExecute"
+           Relay_Command "WeatherExecute"
           }
          }
         }
@@ -1508,7 +1509,7 @@ FrameWidgetClass EditorMainFrame {
          text "C"
          {
           ScriptParamsClass {
-           Command_Execute "CameraExecute"
+           Relay_Command "CameraExecute"
           }
          }
         }
@@ -1524,7 +1525,7 @@ FrameWidgetClass EditorMainFrame {
          text "S"
          {
           ScriptParamsClass {
-           Command_Execute "SettingsExecute"
+           Relay_Command "SettingsExecute"
           }
          }
         }

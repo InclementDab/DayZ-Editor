@@ -108,7 +108,7 @@ class EditorFileDialog: EditorDialog
 	{
 		m_StartDirectory = start_directory;
 		
-		ShowDialog();
+		Show();
 		
 		// return file directory
 		return "";
@@ -125,7 +125,7 @@ class EditorFileOpenDialog: EditorFileDialog
 		EditorLog.Trace("EditorFileOpenDialog");
 		
 		AddButton("Open", "OpenCallback");
-		AddButton("Cancel", "CloseDialog");
+		AddButton("Cancel", "Close");
 		
 		string filter = "*.dze";
 		
@@ -143,7 +143,7 @@ class EditorFileOpenDialog: EditorFileDialog
 		EditorLog.Trace("EditorFileOpenDialog::OpenCallback");
 		EditorFile data;
 		m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
-		CloseDialog();
+		Close();
 	}
 		
 	
@@ -161,7 +161,7 @@ class EditorFileOpenDialog: EditorFileDialog
 		}
 		
 		//GetEditor().Open(data.GetFile());
-		CloseDialog();
+		Close();
 		
 		return true;
 	}*/
@@ -177,7 +177,7 @@ class EditorFileImportDialog: EditorFileDialog
 		EditorLog.Trace("EditorFileImportDialog");
 		
 		AddButton("Import", "ImportCallback");
-		AddButton("Cancel", "CloseDialog");
+		AddButton("Cancel", "Close");
 		
 		string filter = "*.vpp";
 		//string filter = "*";
@@ -198,7 +198,7 @@ class EditorFileImportDialog: EditorFileDialog
 		EditorFile data;
 		m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
 		//GetEditor().Import(ImportMode.VPP, data.GetFile());
-		CloseDialog();
+		Close();
 	}
 
 
@@ -216,7 +216,7 @@ class EditorFileImportDialog: EditorFileDialog
 		}
 		
 		//GetEditor().Import(ImportMode.VPP, data.GetFile());
-		CloseDialog();
+		Close();
 		
 		return true;
 	}*/
@@ -235,7 +235,7 @@ class EditorFileSaveDialog: EditorFileDialog
 		m_EditorWorldData = world_data;
 				
 		AddButton("Save", "SaveCallback");
-		AddButton("Cancel", "CloseDialog");
+		AddButton("Cancel", "Close");
 		
 		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorFileNameElement.layout", m_DialogController.ButtonGrid);
 		m_FileNameBox = EditBoxWidget.Cast(w.FindAnyWidget("FileNameEditBox"));
@@ -263,7 +263,7 @@ class EditorFileSaveDialog: EditorFileDialog
 	{
 		GetEditor().Save(m_CurrentDirectory + m_FileNameBox.GetText(), m_EditorWorldData);
 		
-		CloseDialog();
+		Close();
 	}
 	
 	/*
@@ -350,7 +350,7 @@ class EditorFileExportDialog: EditorFileDialog
 		m_FileNameBox.SetText("Export");
 		
 		AddButton("Export", "ExportCallback");
-		AddButton("Cancel", "CloseDialog");
+		AddButton("Cancel", "Close");
 		
 		m_EditorDropdownPrefab = ButtonWidget.Cast(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionDropdown.layout", m_DialogController.ButtonGrid));
 		m_EditorDropdownWraper = WrapSpacerWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownWraper"));
@@ -403,7 +403,7 @@ class EditorFileExportDialog: EditorFileDialog
 			settings.ExportSetName = "DayZ Editor Export";
 		
 		//GetEditor().Export(settings, m_CurrentDirectory + m_FileNameBox.GetText() + "." + m_SelectedMode.Ext);
-		CloseDialog();
+		Close();
 	}
 	
 	private ButtonWidget CreateDropdownPrefabButton(string text, string ext, ExportMode mode)

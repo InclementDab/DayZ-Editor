@@ -42,6 +42,6 @@ modded class InGameMenu
 			return;
 		
 		MapSelectDialog select_window = new MapSelectDialog();
-		select_window.ShowDialog();
+		select_window.Show();
 	}
 }

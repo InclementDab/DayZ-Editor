@@ -59,14 +59,14 @@ class EditorSettingsDialog: EditorDialog
 		SetTitle("Editor Settings");
 		AddButton("Save", "SaveCallback");
 		AddButton("Apply", "ApplyCallback");
-		AddButton("Close", "CloseDialog");
+		AddButton("Close", "Close");
 		
 	}
 	
 	void SaveCallback()
 	{
 		ApplyCallback();
-		CloseDialog();
+		Close();
 	}
 	
 	void ApplyCallback()

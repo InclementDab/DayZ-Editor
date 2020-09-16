@@ -102,7 +102,7 @@ class EditorWeatherDialog: EditorDialog
 		
 		SetTitle("World Controller");
 		AddButton("Lighting", "LightingCallback");
-		AddButton("Close", "CloseDialog");
+		AddButton("Close", "Close");
 	}
 
 	

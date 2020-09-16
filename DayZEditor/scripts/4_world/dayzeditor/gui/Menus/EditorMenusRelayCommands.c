@@ -1,8 +1,7 @@
 
+
 class EditorMenuBarFileRelayCommand: RelayCommand
 {
-
-	
 	override void Execute(RelayCommandArgs args)
 	{
 		EditorLog.Trace("EditorMenuBarFileRelayCommand::Execute");

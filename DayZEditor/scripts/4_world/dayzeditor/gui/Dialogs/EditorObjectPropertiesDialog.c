@@ -1,8 +1,5 @@
 
 
-
-
-
 class EditorPropertiesPrefabController: Controller
 {
 	
@@ -179,7 +176,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 	
 	void SaveCallback() {
 		EditorLog.Trace("EditorObjectPropertiesDialog::SaveCallback");
-		CloseDialog();
+		Close();
 	}
 	
 	void CancelCallback() {
@@ -187,7 +184,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 		m_EditorObject.SetDisplayName(m_StartName);
 		m_EditorObject.SetPosition(m_StartPosition);
 		m_EditorObject.SetOrientation(m_StartOrientation);
-		CloseDialog();
+		Close();
 	}
 	
 

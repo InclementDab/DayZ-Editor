@@ -76,17 +76,6 @@ class EditorDialog: EditorMVCLayout
 		m_DialogController.TitleText.SetText(m_Title);
 	}
 		
-	void ShowDialog()
-	{
-		EditorLog.Trace("EditorDialog::ShowDialog");
-		Show();
-	}
-	
-	void CloseDialog()
-	{
-		EditorLog.Trace("EditorDialog::CloseDialog");
-		Close();
-	}
 	
 	override void Show()
 	{
@@ -107,7 +96,7 @@ class EditorDialog: EditorMVCLayout
 	
 	override void Close()
 	{
-		EditorLog.Trace("EditorDialog::CloseDialog");
+		EditorLog.Trace("EditorDialog::Close");
 		super.Close();
 		
 		m_EditorHud.SetModal(null);

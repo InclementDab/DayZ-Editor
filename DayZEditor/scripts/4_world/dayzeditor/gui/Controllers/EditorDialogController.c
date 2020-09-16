@@ -66,7 +66,7 @@ class EditorDialogController: Controller
 		if (button != 0) return false; 
 		
 		if (w == TitleClose) {
-			m_EditorDialog.CloseDialog();
+			m_EditorDialog.Close();
 		}
 		
 		return false;

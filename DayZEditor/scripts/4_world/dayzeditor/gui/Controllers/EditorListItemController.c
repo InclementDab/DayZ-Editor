@@ -176,7 +176,7 @@ class EditorListItemController: Controller
 			
 			case EditorPlacedListItem: {
 				EditorObjectPropertiesDialog dialog(EditorPlacedListItem.Cast(m_ListItem).GetData());
-				dialog.ShowDialog();
+				dialog.Show();
 				break;
 			}
 		}
