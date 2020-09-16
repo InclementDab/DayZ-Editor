@@ -494,11 +494,7 @@ class Editor
 	bool OnMouseExitObject(Object target, int x, int y)
 	{
 
-	}
-	
-	
-
-		
+	}	
 	
 	void CreateInHand(ref EditorPlaceableObjectData data)
 	{

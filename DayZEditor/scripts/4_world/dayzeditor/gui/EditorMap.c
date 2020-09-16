@@ -6,18 +6,18 @@ class EditorMap: EditorWidgetEventHandler
 	
 	void EditorMap()
 	{
-		Print("EditorMap");
+		EditorLog.Trace("EditorMap");
 		//EditorEvents.OnObjectCreated.Insert(OnObjectCreated);
 	}
 	
 	void ~EditorMap()
 	{
-		Print("~EditorMap");
+		EditorLog.Trace("~EditorMap");
 	}
 	
 	void OnObjectCreated(Class context, EditorObject obj)
 	{
-		Print("EditorMap::OnObjectCreated");
+		EditorLog.Trace("EditorMap::OnObjectCreated");
 		//apWidget map_widget = GetMapWidget();
 		//map_widget.AddChild(obj.GetMapMarker());
 	}
@@ -61,6 +61,11 @@ class EditorMap: EditorWidgetEventHandler
 		EditorLog.Trace("EditorMap::OnMouseButtonDown");
 		
 		switch (button) {
+			
+			case MouseState.LEFT: {
+				GetEditor().GetEditorHud().GetController().DelayedDragBoxCheck();
+				return true;
+			}
 			
 			case MouseState.MIDDLE: {
 				vector pos = GetCursorPosition();

@@ -123,12 +123,14 @@ class EditorObject
 			m_EditorPlacedListItem = new EditorPlacedListItem(this);
 			GetEditor().GetEditorHud().GetController().InsertPlacedObject(m_EditorPlacedListItem);
 		}
+		
+		EditorEvents.OnMapToggled.Insert(OnMapToggled);
 	}
 	
 	static EditorObject Create(ref EditorObjectData data)
 	{
 		EditorLog.Trace("EditorObject::Create from EditorObjectData");
-		Object world_object = GetGame().CreateObjectEx(data.Type, data.Position, ECE_LOCAL);
+		Object world_object = GetGame().CreateObjectEx(data.Type, data.Position, ECE_LOCAL | ECE_CREATEPHYSICS);
 		world_object.SetOrientation(data.Orientation);
 		world_object.SetFlags(EntityFlags.STATIC, true);
 		
@@ -163,6 +165,14 @@ class EditorObject
 	/*********
 	* Events *
 	*********/
+	
+	void OnMapToggled(Class context, EditorMap editor_map, bool state)
+	{
+		EditorLog.Trace("EditorObject::OnMapToggled");
+		
+		m_EditorObjectWorldMarker.Show(!state);
+		m_EditorObjectMapMarker.Show(state);		
+	}
 	
 	private bool m_IsSelected;
 	bool IsSelected() return m_IsSelected;

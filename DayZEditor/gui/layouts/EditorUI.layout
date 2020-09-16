@@ -311,6 +311,7 @@ FrameWidgetClass EditorMainFrame {
        style editor_quad_dark
        {
         WrapSpacerWidgetClass LeftbarPanelSelectorWrapper {
+         visible 1
          ignorepointer 1
          color 0.6353 0.6353 0.6353 1
          position 0 0
@@ -340,7 +341,8 @@ FrameWidgetClass EditorMainFrame {
            scriptclass "RadioButton"
            switch normal
            {
-            ImageWidgetClass CategorySelectBuilding {
+            ImageWidgetClass BuildingSelect_Icon {
+             visible 1
              ignorepointer 1
              color 0.9882 0.9882 0.9882 1
              position 0 0
@@ -374,7 +376,7 @@ FrameWidgetClass EditorMainFrame {
            scriptclass "RadioButton"
            switch normal
            {
-            ImageWidgetClass CategorySelectVehicle {
+            ImageWidgetClass VehicleSelect_Icon {
              ignorepointer 1
              color 0.9882 0.9882 0.9882 1
              position 2 0
@@ -411,7 +413,7 @@ FrameWidgetClass EditorMainFrame {
            scriptclass "RadioButton"
            switch normal
            {
-            ImageWidgetClass CategorySelectEntity {
+            ImageWidgetClass EntitySelect_Icon {
              ignorepointer 1
              color 0.9882 0.9882 0.9882 1
              position 0 0
@@ -448,7 +450,7 @@ FrameWidgetClass EditorMainFrame {
            scriptclass "RadioButton"
            switch normal
            {
-            ImageWidgetClass CategorySelectHuman {
+            ImageWidgetClass HumanSelect_Icon {
              ignorepointer 1
              position 0 0
              size 50 50

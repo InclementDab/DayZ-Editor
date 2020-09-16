@@ -51,7 +51,9 @@ class EditorHudController: Controller
 	protected ScrollWidget LeftbarScroll;
 	
 	CanvasWidget EditorCanvas;
-
+	
+	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
+	protected RadioButtonGroup m_RadioButtonGroup;
 	
 	void EditorHudController() {
 		EditorLog.Trace("EditorHudController");
@@ -65,6 +67,10 @@ class EditorHudController: Controller
 		LeftbarSpacer 				= new ObservableCollection<ref EditorWidget>("LeftbarSpacer", this);
 		RightbarSpacer 				= new ObservableCollection<ref EditorWidget>("RightbarSpacer", this);
 		BrushTypeBoxData 			= new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
+		
+		LeftbarPanelSelectorWrapper.GetScript(m_RadioButtonGroup);
+		m_RadioButtonGroup.OnRadioButtonActivate.Insert(OnRadioButtonActivate);
+		m_RadioButtonGroup.OnRadioButtonDeactivate.Insert(OnRadioButtonDeactivate);
 		
 		// Reload Placeables
 		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
@@ -332,16 +338,9 @@ class EditorHudController: Controller
 				BrushDensity = Math.Clamp(BrushDensity, 0, 1);
 				NotifyPropertyChanged("BrushDensity");
 				break;
-			}
-			
-			default: {
-				if (CinemaModeState) {
-					Print("oh it worked");
-					break;
-				}
-				
-			}
+			}			
 		}
+		
 		return false;
 	}
 	
@@ -357,7 +356,6 @@ class EditorHudController: Controller
 		
 		switch (w.GetTypeName()) {
 			
-
 			case "ButtonWidget": {
 				w.SetColor(COLOR_SALMON_A);
 				break;
@@ -366,7 +364,7 @@ class EditorHudController: Controller
 			case "SliderWidget": {
 				w.SetColor(COLOR_SALMON);
 				break;
-			}		
+			}
 		}
 		
 		return false;
@@ -379,7 +377,9 @@ class EditorHudController: Controller
 		switch (w.GetTypeName()) {
 			
 			case "ButtonWidget": {
-				w.SetColor(COLOR_EMPTY);
+				if (!ButtonWidget.Cast(w).GetState())
+					w.SetColor(COLOR_EMPTY);
+				
 				break;
 			}
 
@@ -401,13 +401,12 @@ class EditorHudController: Controller
 		
 		if (button != 0) return false;
 
-		switch (w.GetName()) {
-			
-			case "UndoButton": 
-			case "RedoButton": {
+		switch (w.GetTypeName()) {
+
+			case "ButtonWidget": {
 				w.SetColor(COLOR_EMPTY);
 				ButtonWidget.Cast(w).SetState(false);
-				GetWidgetIcon(w).SetPos(0, 0);
+				SetWidgetIconPosition(w, 0, 0);
 				break;
 			}
 		}
@@ -426,11 +425,12 @@ class EditorHudController: Controller
 		
 				switch (w.GetName()) {
 					
+					
 					case "UndoButton": 
 					case "RedoButton": {
 						w.SetColor(COLOR_SALMON_A);
 						int pos = ButtonWidget.Cast(w).GetState() * 1;
-						GetWidgetIcon(w).SetPos(pos, pos);
+						SetWidgetIconPosition(w, pos, pos);
 						break;
 					}
 					
@@ -501,6 +501,13 @@ class EditorHudController: Controller
 	
 	private ImageWidget GetWidgetIcon(Widget w)	{
 		return ImageWidget.Cast(w.FindAnyWidget(string.Format("%1_Icon", w.GetName())));
+	}
+	
+	private void SetWidgetIconPosition(Widget w, int x, int y) {
+		Widget icon = GetWidgetIcon(w);
+		if (icon) {
+			icon.SetPos(x, y);
+		}
 	}
 	
 		
@@ -622,6 +629,25 @@ class EditorHudController: Controller
 	}
 	
 	
+	private void OnRadioButtonActivate(RadioButton radio_button)
+	{
+		EditorLog.Trace("EditorHudController::OnRadioButtonActivate");
+		Widget root = radio_button.GetRoot();
+		root.SetColor(COLOR_SALMON_A);
+		int pos = ButtonWidget.Cast(root).GetState() * 1;
+		SetWidgetIconPosition(root, pos, pos);
+			
+			
+		
+	}
+	
+	private void OnRadioButtonDeactivate(RadioButton radio_button)
+	{
+		EditorLog.Trace("EditorHudController::OnRadioButtonDeactivate");
+		Widget root = radio_button.GetRoot();
+		root.SetColor(COLOR_EMPTY);
+		SetWidgetIconPosition(root, 0, 0);
+	}
 }
 
 

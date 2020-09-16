@@ -4,6 +4,7 @@ static const float ALPHA_ON_SHOW = 1;
 static const float ALPHA_ON_HIDE = 0.25;
 
 
+
 class EditorMarker: ScriptedWidgetEventHandler
 {
 	protected Widget m_LayoutRoot;
@@ -12,9 +13,10 @@ class EditorMarker: ScriptedWidgetEventHandler
 	void EditorMarker()
 	{
 		EditorLog.Trace("EditorMarker");
-
 		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMarker.layout");
 		m_LayoutRoot.SetHandler(this);
+		
+
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
@@ -27,7 +29,7 @@ class EditorMarker: ScriptedWidgetEventHandler
 	}
 	
 	
-	void Update() {	}
+	void Update();
 	
 	void SetPos(float x, float y) 
 	{
@@ -80,14 +82,7 @@ class EditorObjectMarker: EditorMarker
 		else 
 			m_LayoutRoot.SetAlpha(ALPHA_ON_HIDE);
 		
-		
-		if (GetEditor().GetEditorHud().IsMapOpen() || vector.Distance(m_EditorObject.GetPosition(), GetEditor().GetCamera().GetPosition()) > GetEditor().GetSettings().MarkerViewDistance) {
-			Show(false);
-		} else {
-			Show(m_EditorObject.IsVisible());
-		}
-		
-		super.Update();
+
 	}
 	
 	
@@ -169,14 +164,12 @@ class EditorObjectMapMarker: EditorObjectMarker
 		SetPos(pos[0], pos[1]);
 		super.Update();
 	}
-	
 }
 
 class EditorObjectWorldMarker: EditorObjectMarker
 {
 	void EditorObjectWorldMarker(EditorObject editor_object)
 	{
-		EditorEvents.OnMapToggled.Insert(OnMapToggled);
 		m_DragHandler = new ObjectDragHandler(m_EditorObject);
 	}
 	
@@ -198,6 +191,13 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		
 		if (screen_pos[2] > 0)
 			SetPos(screen_pos[0], screen_pos[1]);
+		/*
+		if (vector.Distance(m_EditorObject.GetPosition(), GetEditor().GetCamera().GetPosition()) > GetEditor().GetSettings().MarkerViewDistance) {
+			Show(false);
+		} else {
+			cant call show on update anymore since its called in EditorObject
+			Show(m_EditorObject.IsVisible());
+		}*/
 		
 		
 		super.Update();
@@ -239,10 +239,6 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		return true;
 	}
 
-	void OnMapToggled(Class context, EditorMap editor_map, bool state)
-	{
-		Show(!state);
-	}
 	
 
 }

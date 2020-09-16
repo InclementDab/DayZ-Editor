@@ -83,8 +83,6 @@ class ObjectDragHandler: DragHandler
 			
 			//transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
 			m_EditorObject.PlaceOnSurfaceRotated(transform, transform[3], surface_normal[0] * -1, surface_normal[2] * -1, m_EditorObject.LocalAngle * -1, GetEditor().GetEditorHud().GetController().MagnetButton);
-			
-			
 			cursor_pos[1] = cursor_pos[1] - size[1]/2;
 			if (GetEditor().GetEditorHud().GetController().GroundButton) 
 				transform[3] = cursor_pos + transform[1] * vector.Distance(ground_position, transform[3]);				
@@ -106,9 +104,9 @@ class ObjectDragHandler: DragHandler
 			
 			vector object_transform[4];
 			target.GetTransform(object_transform);
+			
 			vector pos_delta = selected_transform[3] - transform[3];
 			vector cursor_position_delta = object_transform[3] + selected_transform[3] - transform[3];
-			vector delta2 = transform[3] - selected_transform[3];
 		
 			float angle_delta = Math.Atan2(pos_delta[0], pos_delta[2]) * Math.RAD2DEG;
 			surface_normal = GetGame().SurfaceGetNormal(selected_transform[3][0], selected_transform[3][2]);
@@ -161,6 +159,26 @@ class MapDragHandler: DragHandler
 	
 	override void OnDragging(out vector transform[4], notnull EditorObject target)
 	{
+		int x, y;
+		GetMousePos(x, y);
+		
+		
+		
+		
+		
+		vector pos = GetEditor().GetEditorHud().GetMapWidget().ScreenToMap(Vector(x, y, 0));
+		transform[3] = pos;
+		
+		if (GetEditor().GetEditorHud().GetController().GroundButton) {
+			vector target_pos = target.GetPosition();
+			transform[3][1] = GetGame().SurfaceY(pos[0], pos[2]) + target_pos[1] - GetGame().SurfaceY(target_pos[0], target_pos[2]);
+			
+		} else {
+			transform[3][1] = GetGame().SurfaceY(pos[0], pos[2]) + target.GetSize()[1] / 2;
+		}
+		
+		
+		
 		
 		
 		

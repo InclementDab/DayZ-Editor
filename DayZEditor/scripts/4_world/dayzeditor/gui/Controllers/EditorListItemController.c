@@ -184,9 +184,6 @@ class EditorListItemController: Controller
 		return false;
 	}
 	
-	
-	
-	
 	void EditorListItemCollapseExecute(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorListItemController::EditorListItemCollapseExecute");
@@ -206,7 +203,6 @@ class EditorListItemController: Controller
 				NotifyPropertyChanged("EditorListItemCollapseText");*/
 				break;
 			}
-			
 		}
 	}
 	
@@ -247,8 +243,5 @@ class EditorListItemController: Controller
 		EditorListItemIcon.LoadImageFile(0, icon);
 		EditorListItemIcon.SetImage(0);
 	}
-
-
-	
 }
 

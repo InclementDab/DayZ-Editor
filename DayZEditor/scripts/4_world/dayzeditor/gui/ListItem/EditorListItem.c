@@ -21,10 +21,6 @@ class EditorListItem: EditorWidget
 		EditorLog.Trace("~EditorListItem"); 
 		m_LayoutRoot.Unlink();
 	}
-
-			
-	
-	
 	
 	void SetNestIndex(int index)
 	{
@@ -39,12 +35,4 @@ class EditorListItem: EditorWidget
 	int GetNestIndex() {
 		return m_NestIndex;
 	}
-	
-		
-
-	
-	
-		
-
-	
 }

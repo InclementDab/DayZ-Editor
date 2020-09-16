@@ -23,8 +23,6 @@ class EditorPlaceableListItem: EditorListItem
 		EditorEvents.OnStopPlacing.Insert(StopPlacing);
 	}
 	
-	
-	
 	void StartPlacing(Class context, EditorPlaceableObjectData type)
 	{
 		if (type == m_Data)
@@ -36,8 +34,4 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		m_Controller.Deselect();
 	}
-	
-		
-	
-	
 }

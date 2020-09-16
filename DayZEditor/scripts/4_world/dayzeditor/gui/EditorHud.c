@@ -131,17 +131,8 @@ class EditorHud: Hud
 		return (m_CurrentModal.GetLayoutRoot().FindAnyWidget(w.GetName()) != null);
 	}
 	
-	bool ShouldProcessInput(Widget w) 
-	{
-		if (!IsModalActive()) {
-			return true;
-		}
-		
-		if (IsModalCommand(w)) {
-			return true;
-		}
-		
-		return false;
+	bool ShouldProcessInput(Widget w) {
+		return (!IsModalActive() || IsModalCommand(w));
 	}
 	
 	// Current "button" on UI

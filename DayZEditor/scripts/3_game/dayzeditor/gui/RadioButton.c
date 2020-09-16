@@ -18,6 +18,9 @@ class RadioButtonGroup: ViewBinding
 	protected int m_ActiveButton;
 	protected ref RadioButtonHashMap m_RadioButtonHashMap = new RadioButtonHashMap();
 	
+	ref ScriptInvoker OnRadioButtonActivate = new ScriptInvoker();
+	ref ScriptInvoker OnRadioButtonDeactivate = new ScriptInvoker();
+	
 	
 	override void SetController(Controller controller)
 	{
@@ -83,10 +86,18 @@ class RadioButtonGroup: ViewBinding
 		return button_hashmap.Count();
 	}
 	
+	
+	private int current_id;
+	private RadioButton current_btn;
+	
 	void SetActiveRadioButton(int button_id)
 	{
 		EditorLog.Trace("RadioButtonGroup::SetActiveRadioButton");
+		
+		OnRadioButtonDeactivate.Invoke(m_RadioButtonHashMap.Get(m_ActiveButton));
 		m_ActiveButton = button_id;
+		OnRadioButtonActivate.Invoke(m_RadioButtonHashMap.Get(m_ActiveButton));
+		
 		foreach (int id, ref RadioButton radio_button: m_RadioButtonHashMap) {	
 			
 			switch (radio_button.GetRoot().Type()) {
@@ -107,13 +118,16 @@ class RadioButtonGroup: ViewBinding
 			}
 		}
 	}
+	
+
 }
 
 
 class RadioButton: ScriptedWidgetEventHandler
 {
 	protected Widget m_LayoutRoot;
-	Widget GetRoot() { return m_LayoutRoot; }
+	Widget GetRoot() 
+		return m_LayoutRoot; 
 	
 	protected RadioButtonGroup m_RadioButtonGroup;
 	
