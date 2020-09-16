@@ -2,14 +2,6 @@ class EditorDialogController: Controller
 {
 	string TitleText;
 	
-	
-	Widget TitleBar;
-	ButtonWidget TitleClose;
-	
-	WrapSpacerWidget DialogContent;
-	GridSpacerWidget ButtonGrid;
-	WrapSpacerWidget WindowDragWrapper;
-	
 	protected ref EditorDialog m_EditorDialog;
 	void SetEditorDialog(EditorDialog editor_dialog) {
 		m_EditorDialog = editor_dialog;
@@ -27,7 +19,7 @@ class EditorDialogController: Controller
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorDialogController::OnDrag");
-		if (w == WindowDragWrapper) {
+		if (w == m_EditorDialog.WindowDragWrapper) {
 			m_LayoutRoot.GetPos(m_OffsetX, m_OffsetY);
 			m_OffsetX -= x; m_OffsetY -= y;		
 			g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DragUpdate);	
@@ -51,7 +43,7 @@ class EditorDialogController: Controller
 		EditorLog.Trace("EditorDialogController::OnDrop");
 		g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Remove(DragUpdate);
 		
-		if (w == WindowDragWrapper) {
+		if (w == m_EditorDialog.WindowDragWrapper) {
 			m_LayoutRoot.SetPos(x + m_OffsetX, y + m_OffsetY);
 	    }		
 		

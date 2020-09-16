@@ -5,6 +5,13 @@ class EditorDialog: EditorMVCLayout
 	EditorDialogController GetDialogController() {
 		return EditorDialogController.Cast(m_Controller);
 	}
+		
+	Widget TitleBar;
+	ButtonWidget TitleClose;
+	
+	WrapSpacerWidget DialogContent;
+	GridSpacerWidget ButtonGrid;
+	WrapSpacerWidget WindowDragWrapper;
 	
 	void EditorDialog() 
 	{
@@ -35,7 +42,7 @@ class EditorDialog: EditorMVCLayout
 	protected Controller AddContent(Widget content)
 	{
 		if (!m_DialogController) return m_DialogController;
-		m_DialogController.DialogContent.AddChild(content);
+		DialogContent.AddChild(content);
 		Controller controller;
 		content.GetScript(controller);		
 		return controller;
@@ -43,9 +50,8 @@ class EditorDialog: EditorMVCLayout
 	
 	protected Controller AddContent(string layout)
 	{
-		if (!m_DialogController) return m_DialogController;
 		Widget content = GetGame().GetWorkspace().CreateWidgets(layout);
-		m_DialogController.DialogContent.AddChild(content);
+		DialogContent.AddChild(content);
 		Controller controller;
 		content.GetScript(controller);		
 		return controller;
@@ -53,8 +59,7 @@ class EditorDialog: EditorMVCLayout
 	
 	protected Controller AddContent(EditorPrefab prefab)
 	{
-		if (!m_DialogController) return m_DialogController;
-		m_DialogController.DialogContent.AddChild(prefab.GetLayoutRoot());
+		DialogContent.AddChild(prefab.GetLayoutRoot());
 		Controller controller;
 		prefab.GetLayoutRoot().GetScript(controller);
 		return controller;
@@ -63,7 +68,7 @@ class EditorDialog: EditorMVCLayout
 	
 	protected ButtonWidget AddButton(string label, string callback) 
 	{
-		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", m_DialogController.ButtonGrid);		
+		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", ButtonGrid);		
 		EditorDialogButtonHandler handler;
 		panel.GetScript(handler);
 		handler.SetLabel(label);

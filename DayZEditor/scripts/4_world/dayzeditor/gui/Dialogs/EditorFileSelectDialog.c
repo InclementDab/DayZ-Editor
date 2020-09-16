@@ -237,7 +237,7 @@ class EditorFileSaveDialog: EditorFileDialog
 		AddButton("Save", "SaveCallback");
 		AddButton("Cancel", "Close");
 		
-		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorFileNameElement.layout", m_DialogController.ButtonGrid);
+		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorFileNameElement.layout", ButtonGrid);
 		m_FileNameBox = EditBoxWidget.Cast(w.FindAnyWidget("FileNameEditBox"));
 		
 		string default_name = "new";
@@ -345,14 +345,14 @@ class EditorFileExportDialog: EditorFileDialog
 	{
 		EditorLog.Trace("EditorFileExportDialog");
 		
-		Widget box_prefab = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionEditText.layout", m_DialogController.ButtonGrid);
+		Widget box_prefab = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionEditText.layout", ButtonGrid);
 		m_FileNameBox = EditBoxWidget.Cast(box_prefab.FindAnyWidget("FileNameEditBox"));
 		m_FileNameBox.SetText("Export");
 		
 		AddButton("Export", "ExportCallback");
 		AddButton("Cancel", "Close");
 		
-		m_EditorDropdownPrefab = ButtonWidget.Cast(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionDropdown.layout", m_DialogController.ButtonGrid));
+		m_EditorDropdownPrefab = ButtonWidget.Cast(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionDropdown.layout", ButtonGrid));
 		m_EditorDropdownWraper = WrapSpacerWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownWraper"));
 	
 		m_EditorDropdownExpandIcon = ImageWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownExpandIcon"));
