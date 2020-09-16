@@ -55,12 +55,17 @@ WrapSpacerWidgetClass EditorDialog {
        vexactpos 1
        hexactsize 0
        vexactsize 1
+       scriptclass "ViewBinding"
        text "EditorDialog"
        font "gui/fonts/etelkatextpro16"
        "text offset" 10 0
        "exact text" 1
        "size to text h" 0
        "text valign" center
+       {
+        ScriptParamsClass {
+        }
+       }
       }
       ButtonWidgetClass TitleClose {
        visible 1
@@ -73,10 +78,15 @@ WrapSpacerWidgetClass EditorDialog {
        hexactsize 1
        vexactsize 1
        priority 5
-       scriptclass ""
+       scriptclass "ViewBinding"
        style Default
        text "X"
        font "gui/fonts/Metron-Bold"
+       {
+        ScriptParamsClass {
+         Relay_Command "TitleCloseExecute"
+        }
+       }
       }
      }
     }

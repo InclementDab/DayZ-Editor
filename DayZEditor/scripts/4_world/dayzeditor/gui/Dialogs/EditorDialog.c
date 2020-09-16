@@ -6,10 +6,6 @@ class EditorDialog: EditorMVCLayout
 		return EditorDialogController.Cast(m_Controller);
 	}
 	
-	string GetTitle() {
-		return m_Title;
-	}
-	
 	void EditorDialog() 
 	{
 		EditorLog.Trace("EditorDialog");
@@ -75,12 +71,11 @@ class EditorDialog: EditorMVCLayout
 		return panel.FindAnyWidget("DialogButton");
 	}
 	
-	
-	private string m_Title;
+
 	protected void SetTitle(string title)
 	{
-		m_Title = title;
-		m_DialogController.TitleText.SetText(m_Title);
+		m_DialogController.TitleText = title;
+		m_DialogController.NotifyPropertyChanged("TitleText");
 	}
 		
 	

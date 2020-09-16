@@ -1,7 +1,9 @@
 class EditorDialogController: Controller
 {
+	string TitleText;
+	
+	
 	Widget TitleBar;
-	TextWidget TitleText;
 	ButtonWidget TitleClose;
 	
 	WrapSpacerWidget DialogContent;
@@ -56,17 +58,10 @@ class EditorDialogController: Controller
 		return false;
 	}
 	
-	override bool OnClick(Widget w, int x, int y, int button)
+	void TitleCloseExecute(ButtonCommandArgs args)
 	{
-		EditorLog.Trace("EditorDialogController::OnClick");
-		
-		if (button != 0) return false; 
-		
-		if (w == TitleClose) {
-			m_EditorDialog.Close();
-		}
-		
-		return false;
+		EditorLog.Trace("EditorDialogController::TitleCloseExecute");
+		m_EditorDialog.Close();
 	}
 	
 }
