@@ -269,12 +269,6 @@ class EditorHudController: Controller
 		toolbar_button.GetScreenSize(w, h);
 		y += h;
 		
-		/*
-		if (GetEditor().GetEditorHud().IsMenuActive()) {
-			GetEditor().GetEditorHud().GetMenu().Close();
-			return;
-		}*/
-		
 		EditorMenu toolbar_menu = GetBoundMenu(toolbar_button).Spawn();
 		toolbar_menu.SetPosition(x, y);
 		toolbar_menu.Show();

@@ -151,6 +151,10 @@ class EditorExitCommand: EditorCommand
 
 class EditorUndoCommand: EditorCommand
 {
+	void EditorUndoCommand() {
+		SetCanExecute(m_Editor.GetObjectManager().CanUndo());
+	}
+	
 	override void Call() {
 		m_Editor.GetObjectManager().Undo();
 	}
@@ -166,6 +170,10 @@ class EditorUndoCommand: EditorCommand
 
 class EditorRedoCommand: EditorCommand
 {
+	void EditorRedoCommand() {
+		SetCanExecute(m_Editor.GetObjectManager().CanRedo());
+	}
+	
 	override void Call() {
 		m_Editor.GetObjectManager().Redo();
 	}

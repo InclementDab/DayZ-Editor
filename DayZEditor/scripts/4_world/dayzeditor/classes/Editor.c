@@ -65,8 +65,6 @@ class Editor
 	EditorObject GetPlacedObjectById(int id)
 		return GetObjectManager().GetPlacedObjectById(id); 
 
-	
-	
 	void DeleteSessionData(int id)
 		m_SessionCache.Remove(id);	
 	
@@ -76,7 +74,6 @@ class Editor
 
 	void SetBrush(EditorBrush brush)
 		m_EditorBrush = brush; 
-	
 	
 	EditorBrush GetBrush()
 		return m_EditorBrush; 

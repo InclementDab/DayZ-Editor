@@ -21,6 +21,7 @@ class EditorObjectManagerModule: JMModuleBase
 	EditorObject GetEditorObject(notnull Object world_object)
 		return GetEditorObject(m_PlacedObjectIndex.Get(world_object.GetID())); 
 	
+
 	override void Init()
 	{
 		EditorLog.Trace("EditorObjectManager::CreateObjects");
@@ -193,6 +194,28 @@ class EditorObjectManagerModule: JMModuleBase
 				return;
 			}
 		}
+	}
+	
+	bool CanUndo() 
+	{
+		foreach (EditorAction action: m_ActionStack) {
+			if (!action.IsUndone()) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	bool CanRedo() 
+	{
+		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
+			if (m_ActionStack[i] != null && m_ActionStack[i].IsUndone()) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	
