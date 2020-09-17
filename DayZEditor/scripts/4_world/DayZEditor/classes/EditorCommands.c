@@ -129,11 +129,7 @@ class EditorCloseCommand: EditorCommand
 }
 
 class EditorExitCommand: EditorCommand
-{
-	void EditorExitCommand() {
-		SetCanExecute(false);
-	}
-	
+{	
 	override void Call() {
 		GetGame().LogoutRequestTime();
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(GetGame().GetMission().CreateLogoutMenu, GetGame().GetUIManager().GetMenu());
