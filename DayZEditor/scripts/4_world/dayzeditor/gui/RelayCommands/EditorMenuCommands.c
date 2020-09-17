@@ -25,20 +25,13 @@ class EditorToolbarItemCommand: RelayCommand
 }
 
 
-class EditorToolbarNewCommand: EditorToolbarItemCommand
-{
-	override void Execute(RelayCommandArgs args)
-	{
-		EditorLog.Trace("EditorToolbarNewCommand::Execute");
-		
-		GetEditor().New();
-		
-		super.Execute(args);
-	}
-}
-
 class EditorToolbarOpenCommand: EditorToolbarItemCommand
 {	
+	void EditorToolbarOpenCommand()
+	{
+		SetCanExecute(false);
+	}
+	
 	override void Execute(RelayCommandArgs args)
 	{
 		EditorLog.Trace("EditorToolbarOpenCommand::Execute");

@@ -16,13 +16,11 @@ class Editor
 	private UIManager m_UIManager;
 	private EditorCamera m_EditorCamera;
 	private PlayerBase m_Player;
-	
-	
-	
+		
 	static Object							ObjectUnderCursor = null;
 	static EditorObject 					EditorObjectUnderCursor = null;
 	static vector 							CurrentMousePosition;
-	
+
 	
 	bool IsActive()
 		return m_Active;
@@ -35,6 +33,10 @@ class Editor
 	
 	EditorSettings GetSettings()
 		return m_EditorSettings;
+	
+	string GetSaveFile()
+		return m_EditorSaveFile;
+	
 	
 	void SetSettings(EditorSettings settings) {
 		m_EditorSettings = settings;
@@ -126,9 +128,7 @@ class Editor
 	
 	private ref EditorHologram 					m_ObjectInHand;
 	private ref EditorBrush						m_EditorBrush;
-
 	private ref EditorObjectDataSet			 	m_SessionCache;
-	
 	
 	private bool 								m_Active;
 	private string 								m_EditorSettingsFile = "$profile:Editor\\settings.ini";
@@ -153,6 +153,7 @@ class Editor
 		m_EditorHud = new EditorHud();
 		m_EditorHud.Init(null);
 		m_EditorHudController = m_EditorHud.GetController();
+		
 		
 		m_Mission = GetGame().GetMission();
 		
@@ -323,113 +324,40 @@ class Editor
 	// Return TRUE if handled.
 	bool OnKeyPress(int key)
 	{		
-		
 		//m_EditorHud.OnKeyPress(key);
+		typename command = GetCommandFromHotkeys(key);
+		if (command) {
+			EditorCommand cmd = command.Spawn();
+			cmd.Execute(new RelayCommandArgs(this, null));
+			return true;
+		}
 		
-		// LControl Commands
-		if (KeyState(KeyCode.KC_LCONTROL)) {
-			
-			switch (key) {
-				case KeyCode.KC_Z: {
-					GetObjectManager().Undo();
+		switch (key) {
+				
+			case KeyCode.KC_ESCAPE: {
+				if (IsLootEditActive()) {
+					FinishEditLootSpawns();
 					return true;
+				} else if (m_EditorHud.IsModalActive() || m_EditorHud.IsMenuActive()) {
+					m_EditorHud.GetModal().Close();
+					m_EditorHud.GetMenu().Close();
+					return true;
+				// jank
+				} else if (!GetGame().GetMission().IsPaused()) {
+					GetGame().GetMission().Pause();
+				} else {
+					GetGame().GetMission().Continue();
 				}
 				
-				case KeyCode.KC_Y: {
-					GetObjectManager().Redo();
-					return true;
-				}
-				
-				case KeyCode.KC_A: {
-					EditorObjectSet placed_objects = GetPlacedObjects();
-					foreach (EditorObject eo: placed_objects)
-						SelectObject(eo);
-					return true;
-				}
-				
-				case KeyCode.KC_N: {
-					New();
-					return true;
-				}
-				
-				case KeyCode.KC_S: {
-					
-					
-					EditorWorldData world_data(this);
-					
-					if (m_EditorSaveFile == string.Empty || KeyState(KeyCode.KC_LSHIFT)) {
-						EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(world_data);
-						string file = save_dialog.ShowFileDialog();
-					} else Save(m_EditorSaveFile, world_data);
-					
-					return true;
-				}
-				
-				case KeyCode.KC_O: {
-					Open();
-					return true;
-				}
-				
-				case KeyCode.KC_E: {
-					Export();
-					return true;
-				}
-				
-				case KeyCode.KC_I: {
-					Import();
-					return true;
-				}
-				
-				case KeyCode.KC_X: {
-					Cut(GetSelectedObjects());
-					return true;
-				}
-
-				case KeyCode.KC_C: {
-					Copy(GetSelectedObjects());
-					return true;
-				}
-				
-				case KeyCode.KC_V: {
-					Paste(CurrentMousePosition);
-					return true;
-				} 
-				
-				
-
-			}
-		} else {
-			
-			switch (key) {
-				
-				case KeyCode.KC_ESCAPE: {
-					if (IsLootEditActive()) {
-						FinishEditLootSpawns();
-						return true;
-					} else if (m_EditorHud.IsModalActive() || m_EditorHud.IsMenuActive()) {
-						m_EditorHud.GetModal().Close();
-						m_EditorHud.GetMenu().Close();
-						return true;
-					// jank
-					} else if (!GetGame().GetMission().IsPaused()) {
-						GetGame().GetMission().Pause();
-					} else {
-						GetGame().GetMission().Continue();
-					}
-					
-					break;
-				}				
-			}	
+				break;
+			}				
 		}
 		
 		return false;
 	}
-	
-	
-
-	
+		
 	bool OnKeyRelease(int key)
-	{
+	{		
 		return false;
 	}
 	
@@ -645,6 +573,67 @@ class Editor
 		m_EditorHud.Init(null);
 		m_EditorHudController = m_EditorHud.GetController();
 		return m_EditorHud;
+	}
+	
+	
+	typename GetCommandFromHotkeys(int key)
+	{
+		EditorLog.Trace("Editor::GetCommandFromHotkeys");
+		
+		if (KeyState(KeyCode.KC_LCONTROL)) {
+			
+			switch (key) {
+				case KeyCode.KC_Z: {
+					return EditorUndoCommand;
+				}
+				
+				case KeyCode.KC_Y: {
+					return EditorRedoCommand;
+				}
+				
+				case KeyCode.KC_A: {
+					return EditorSelectAllCommand;
+				}
+				
+				case KeyCode.KC_N: {
+					return EditorNewCommand;
+				}
+				
+				case KeyCode.KC_S: {
+					if (m_EditorSaveFile == string.Empty || KeyState(KeyCode.KC_LSHIFT))
+						return EditorSaveAsCommand;
+					
+					return EditorSaveCommand;
+				}
+				
+				case KeyCode.KC_O: {
+					return EditorOpenCommand;
+				}
+				
+				case KeyCode.KC_E: {
+					return EditorExportCommand;
+				}
+				
+				case KeyCode.KC_I: {
+					return EditorImportCommand;
+				}
+				
+				case KeyCode.KC_X: {
+					return EditorCutCommand;
+				}
+
+				case KeyCode.KC_C: {
+					return EditorCopyCommand;
+				}
+				
+				case KeyCode.KC_V: {
+					return EditorPasteCommand;
+				} 
+			}
+		}
+		
+		typename t;
+		return t;
 	}
 }
 
