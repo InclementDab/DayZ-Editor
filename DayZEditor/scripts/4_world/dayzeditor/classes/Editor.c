@@ -168,7 +168,7 @@ class Editor
 	
 	void ~Editor() {
 		EditorLog.Trace("~Editor");
-		SetActive(false);
+		//SetActive(false);
 		if (!IsMissionOffline()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);

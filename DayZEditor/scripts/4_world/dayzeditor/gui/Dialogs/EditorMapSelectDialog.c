@@ -48,8 +48,8 @@ class MapSelectDialogController: EditorDialogController
 		
 		string name;
 		//m_MapSelectDialogController.MapHostListbox.GetItemText(m_MapSelectDialogController.MapHostListbox.GetSelectedRow(), 0, name);
-		GetGame().PlayMission(CreateEditorMission(MapHostListboxSelection));
 		GetEditor().GetEditorHud().GetModal().Close();
+		GetGame().PlayMission(CreateEditorMission(MapHostListboxSelection));
 	}
 }
 
