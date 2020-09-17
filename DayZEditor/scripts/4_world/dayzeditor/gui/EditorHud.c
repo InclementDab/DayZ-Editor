@@ -120,7 +120,7 @@ class EditorHud: Hud
 	}
 	
 	bool IsModalCommand(Widget w) {
-		return (m_CurrentModal && w && m_CurrentModal.GetLayoutRoot().FindAnyWidget(w.GetName()) != null);
+		return (m_CurrentModal && m_CurrentModal.GetLayoutRoot() && m_CurrentModal.GetLayoutRoot().FindAnyWidget(w.GetName()) );
 	}
 	
 	bool ShouldProcessInput(Widget w) {

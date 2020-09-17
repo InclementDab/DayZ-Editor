@@ -1089,6 +1089,7 @@ FrameWidgetClass EditorMainFrame {
      {
       WrapSpacerWidgetClass ToolbarWrapper {
        ignorepointer 1
+       color 0.0118 0.0118 0.0118 1
        size 1 1
        valign center_ref
        hexactpos 1
