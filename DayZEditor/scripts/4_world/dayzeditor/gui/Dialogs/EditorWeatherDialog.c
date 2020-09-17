@@ -91,9 +91,9 @@ class EditorEnvironmentDialog: EditorDialog
 {
 	protected ref EditorEnvironmentDialogController m_EditorWeatherDialogController;
 	
-	void EditorWeatherDialog()
+	void EditorEnvironmentDialog()
 	{
-		EditorLog.Trace("EditorWeatherDialog");
+		EditorLog.Trace("EditorEnvironmentDialog");
 		
 		m_EditorWeatherDialogController = EditorEnvironmentDialogController.Cast(m_Controller);
 		m_EditorWeatherDialogController.SetWorld(GetGame().GetWorld());
@@ -110,8 +110,6 @@ class EditorEnvironmentDialog: EditorDialog
 		weather_group.SetController(m_EditorWeatherDialogController);
 		
 		AddContent(weather_group);
-
-		
 		SetTitle("World Controller");
 		AddButton("Close", "DialogCloseRelayCommand");
 	}

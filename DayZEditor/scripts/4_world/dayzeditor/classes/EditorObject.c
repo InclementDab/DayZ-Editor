@@ -121,7 +121,7 @@ class EditorObject
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
 			m_EditorPlacedListItem = new EditorPlacedListItem(this);
-			GetEditor().GetEditorHud().GetController().InsertPlacedObject(m_EditorPlacedListItem);
+			GetEditor().GetEditorHud().GetController().RightbarSpacerData.Insert(m_EditorPlacedListItem);
 		}
 		
 		EditorEvents.OnMapToggled.Insert(OnMapToggled);

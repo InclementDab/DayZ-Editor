@@ -36,4 +36,9 @@ class EditorListItem: EditorWidget
 	int GetNestIndex() {
 		return m_NestIndex;
 	}
+	
+		
+	bool IsSelected() {
+		return m_Controller.IsSelected();
+	}
 }

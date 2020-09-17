@@ -827,6 +827,7 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          {
           ImageWidgetClass ButtonDeleteImage {
            ignorepointer 1
@@ -843,6 +844,11 @@ FrameWidgetClass EditorMainFrame {
            "src alpha" 1
            "no wrap" 0
            stretch 1
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "EditorDeleteCommand"
           }
          }
         }
@@ -1561,7 +1567,7 @@ FrameWidgetClass EditorMainFrame {
    style rover_sim_colorable
    {
     GridSpacerWidgetClass InfobarObjPosFrame {
-     visible 1
+     visible 0
      ignorepointer 1
      position 0.02 0
      size 0.2 1

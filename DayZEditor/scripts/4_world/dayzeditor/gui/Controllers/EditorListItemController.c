@@ -235,6 +235,10 @@ class EditorListItemController: Controller
 		EditorListItemContent.Update();	
 	}
 	
+	bool IsSelected() {
+		return m_Selected;
+	}
+	
 	void SetLabel(string label) {
 		EditorListItemLabel.SetText(label);
 	}

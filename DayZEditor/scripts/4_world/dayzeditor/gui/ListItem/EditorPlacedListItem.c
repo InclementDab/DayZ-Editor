@@ -26,7 +26,5 @@ class EditorPlacedListItem: EditorListItem
 	void EditorObjectDeselected(EditorObject data) {
 		m_Controller.Deselect();
 	}
-	
-	
-	
+
 }

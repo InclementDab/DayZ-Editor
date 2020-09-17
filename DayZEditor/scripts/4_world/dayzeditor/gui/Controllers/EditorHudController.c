@@ -118,11 +118,6 @@ class EditorHudController: Controller
 		LeftbarSpacerData.Insert(target);
 	}	
 	
-	void InsertPlacedObject(EditorListItem target)
-	{
-		EditorLog.Trace("EditorHudController::InsertPlacedObject");
-		RightbarSpacerData.Insert(target);
-	}
 	
 	void InsertMapMarker(EditorMarker map_marker)
 	{
@@ -240,7 +235,7 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::ButtonCreateFolderExecute");
 		EditorCollapsibleListItem category();
-		InsertPlacedObject(category);
+		RightbarSpacerData.Insert(category);
 	}
 
 	void MenuBarExecute(ButtonCommandArgs args) 
