@@ -2051,5 +2051,25 @@ FrameWidgetClass EditorMainFrame {
     }
    }
   }
+  TextWidgetClass VersionNumber {
+   ignorepointer 1
+   color 1 1 1 0.7843
+   position 305 30
+   size 250 30
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scriptclass "ViewBinding"
+   text "DayZ Editor Version 0.1.0"
+   font "gui/fonts/MetronBlack-Italic16"
+   "text valign" center
+   {
+    ScriptParamsClass {
+     Binding_Name "VersionNumberData"
+    }
+   }
+  }
  }
 }
