@@ -317,6 +317,10 @@ class EditorPreferencesCommand: EditorCommand
 	override string GetName() {
 		return "Preferences...";
 	}
+	
+	override string GetIcon() {
+		return "set:dayz_gui image:settings";
+	}
 }
 
 class EditorEnvironmentControlCommand: EditorCommand
@@ -327,11 +331,15 @@ class EditorEnvironmentControlCommand: EditorCommand
 	}
 	
 	override string GetName() {
-		return "Environment Settings";
+		return "Environment";
 	}
 	
 	override string GetKeys() {
 		return "Ctrl + Shift + I";
+	}
+	
+	override string GetIcon() {
+		return "set:dayz_gui image:icon_sun";
 	}
 }
 
@@ -343,7 +351,11 @@ class EditorCameraControlsCommand: EditorCommand
 	}
 
 	override string GetName() {
-		return "Camera Settings...";
+		return "Camera";
+	}
+	
+	override string GetKeys() {
+		return "Ctrl + Shift + T";
 	}
 }
 
@@ -354,10 +366,10 @@ class EditorReloadHudCommand: EditorCommand
 	}
 
 	override string GetName() {
-		return "Reload Editor";
+		return "Reload UI";
 	}
 	
 	override string GetKeys() {
-		return "Ctrl + Shift + T";
+		return "Ctrl + Shift + U";
 	}
 }

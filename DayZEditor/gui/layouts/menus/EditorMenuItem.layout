@@ -58,6 +58,7 @@ FrameWidgetClass EditorMenuItem {
      vexactsize 1
      scaled 1
      scriptclass "ViewBinding"
+     image0 ""
      mode blend
      "src alpha" 1
      stretch 1

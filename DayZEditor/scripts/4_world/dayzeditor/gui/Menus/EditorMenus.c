@@ -114,6 +114,7 @@ class EditorEditMenu: EditorMenu
 		AddMenuButton(EditorCopyCommand);
 		AddMenuButton(EditorPasteCommand);
 		AddMenuDivider();
+		AddMenuButton(EditorEnvironmentControlCommand);
 		AddMenuButton(EditorPreferencesCommand);
 		AddMenuDivider();
 	}

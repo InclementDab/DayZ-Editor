@@ -577,7 +577,32 @@ class Editor
 	{
 		EditorLog.Trace("Editor::GetCommandFromHotkeys");
 		
+		
 		if (KeyState(KeyCode.KC_LCONTROL)) {
+			
+			// Ctrl + Shift keybinds
+			if (KeyState(KeyCode.KC_LSHIFT)) {
+				
+				switch (key) {
+					
+					case KeyCode.KC_S: {
+						return EditorSaveAsCommand;
+					}
+					
+					case KeyCode.KC_I: {
+						return EditorEnvironmentControlCommand;
+					}
+					
+					case KeyCode.KC_T: {
+						return EditorCameraControlsCommand;
+					}
+					
+					case KeyCode.KC_U: {
+						return EditorReloadHudCommand;						
+					}
+				}
+			}
+			
 			
 			switch (key) {
 				case KeyCode.KC_Z: {
@@ -597,7 +622,7 @@ class Editor
 				}
 				
 				case KeyCode.KC_S: {
-					if (m_EditorSaveFile == string.Empty || KeyState(KeyCode.KC_LSHIFT))
+					if (m_EditorSaveFile == string.Empty)
 						return EditorSaveAsCommand;
 					
 					return EditorSaveCommand;
@@ -611,10 +636,7 @@ class Editor
 					return EditorExportCommand;
 				}
 				
-				case KeyCode.KC_I: {
-					if (KeyState(KeyCode.KC_LSHIFT))
-						return EditorEnvironmentControlCommand;
-					
+				case KeyCode.KC_I: {					
 					return EditorImportCommand;
 				}
 				
@@ -629,17 +651,10 @@ class Editor
 				case KeyCode.KC_V: {
 					return EditorPasteCommand;
 				} 
-				
-				case KeyCode.KC_T: {
-					if (KeyState(KeyCode.KC_LSHIFT)) {
-						return EditorReloadHudCommand;
-					}
-				}
 			}
 		}
-		
-		typename t;
-		return t;
+
+		return typename;
 	}
 
 }
