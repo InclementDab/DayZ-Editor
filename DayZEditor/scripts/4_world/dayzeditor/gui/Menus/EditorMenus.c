@@ -29,11 +29,10 @@ class EditorMenu: EditorMVCLayout
 	{
 		EditorLog.Trace("EditorMenu::Close");
 		super.Close();
-		m_LayoutRoot.Show(false);
 	}
 	
 	void SetPosition(float x, float y) {
-		EditorMenuContent.SetPos(x, y);
+		m_LayoutRoot.SetPos(x, y);
 	}
 	
 	void AddItem(string title, string icon = "")

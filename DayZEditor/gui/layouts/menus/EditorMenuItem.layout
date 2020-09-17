@@ -5,6 +5,7 @@ FrameWidgetClass EditorMenuItem {
  vexactpos 1
  hexactsize 0
  vexactsize 1
+ priority 999
  scriptclass ""
  {
   ButtonWidgetClass EditorMenuItemButton {

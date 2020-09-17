@@ -13,9 +13,6 @@ class EditorHudController: Controller
 	
 	int PlaceableCategorySelection = 0;
 	
-	bool LeftbarHide;
-	bool RightbarHide;
-	
 	float BrushRadius = 50;
 	float BrushDensity = 0.5;
 	
@@ -40,6 +37,8 @@ class EditorHudController: Controller
 	
 	// View Properties
 	protected Widget LeftbarFrame;
+	protected ScrollWidget LeftbarScroll;
+	
 	protected Widget RightbarFrame;
 	protected ButtonWidget BrushToggleButton;
 	
@@ -47,9 +46,11 @@ class EditorHudController: Controller
 	protected Widget NotificationPanel;
 	protected TextWidget NotificationText;
 	
-	protected ScrollWidget LeftbarScroll;
-	
 	CanvasWidget EditorCanvas;
+	
+	protected ButtonWidget MenuBarFile;
+	protected ButtonWidget MenuBarEdit;
+	protected ButtonWidget MenuBarView;
 	
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected RadioButtonGroup m_RadioButtonGroup;
@@ -201,22 +202,14 @@ class EditorHudController: Controller
 	}*/
 	
 	
-	void ToggleLeftBar(ButtonCommandArgs args) 
+	void LeftbarHideExecute(ButtonCommandArgs args) 
 	{
-		float x, y;
-		LeftbarFrame.GetPos(x, y);
-		LeftbarFrame.SetPos(-300 * args.param3, y);
+		LeftbarFrame.Show(args.GetButtonState());
 	}
 	
-	void ToggleRightBar(ButtonCommandArgs args) 
+	void RightbarHideExecute(ButtonCommandArgs args) 
 	{
-		float x, y;
-		RightbarFrame.GetPos(x, y);
-		RightbarFrame.SetPos(-300 * args.param3, y);
-	}
-	
-	void LeftbarSpacerExecute(WrapSpacerCommandArgs args) {
-		EditorLog.Trace("EditorHudController::LeftbarSpacerExecute");
+		RightbarFrame.Show(args.GetButtonState());
 	}
 	
 	
@@ -241,15 +234,56 @@ class EditorHudController: Controller
 		settings_dialog.Show();
 	}
 	
-	private ref EditorMenu m_FileMenu;
-	void MenuBarFileExecute(ButtonCommandArgs args) {
-		m_FileMenu = new EditorMenu();		
-		m_FileMenu.AddItem("Test");
-		m_FileMenu.AddItem("Test2");
-		m_FileMenu.AddItem("Test3");
-		m_FileMenu.Show();
+
+	void MenuBarFileExecute(ButtonCommandArgs args) 
+	{
+		EditorLog.Trace("EditorHudController::MenuBarFileExecute");
+		float x, y, w, h;
+		MenuBarFile.GetPos(x, y);
+		MenuBarFile.GetScreenSize(w, h);
+		y += h;
+		
+		EditorMenu file_menu = new EditorMenu();		
+		file_menu.AddItem("Test");
+		file_menu.AddItem("Test2");
+		file_menu.AddItem("Test3");
+		file_menu.SetPosition(x, y);
+		file_menu.Show();
 	}
 	
+	void MenuBarEditExecute(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudController::MenuBarEditExecute");
+		
+		float x, y, w, h;
+		MenuBarEdit.GetPos(x, y);
+		MenuBarEdit.GetScreenSize(w, h);
+		y += h;
+		
+		EditorMenu file_menu = new EditorMenu();		
+		file_menu.AddItem("Test");
+		file_menu.AddItem("Test2");
+		file_menu.AddItem("Test3");
+		file_menu.SetPosition(x, y);
+		file_menu.Show();
+	}
+	
+	void MenuBarViewExecute(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudController::MenuBarViewExecute");
+		
+		float x, y, w, h;
+		MenuBarEdit.GetPos(x, y);
+		MenuBarEdit.GetScreenSize(w, h);
+		y += h;
+		
+		EditorMenu file_menu = new EditorMenu();		
+		file_menu.AddItem("Test");
+		file_menu.AddItem("Test2");
+		file_menu.AddItem("Test3");
+		file_menu.SetPosition(x, y);
+		file_menu.Show();
+	}
 
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)

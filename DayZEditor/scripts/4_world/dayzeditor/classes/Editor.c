@@ -247,6 +247,9 @@ class Editor
 		Widget target = GetWidgetUnderCursor();
 		if (!target) {
 			SetFocus(null);
+			if (m_EditorHud.IsMenuActive()) {
+				m_EditorHud.SetMenu(null);
+			}
 		}
 		
 		switch (button) {

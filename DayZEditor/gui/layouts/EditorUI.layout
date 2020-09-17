@@ -136,6 +136,7 @@ FrameWidgetClass EditorMainFrame {
          "text offset" 5 0
          {
           ScriptParamsClass {
+           Binding_Name "DebugText1"
           }
          }
         }
@@ -152,6 +153,7 @@ FrameWidgetClass EditorMainFrame {
          "text offset" 5 0
          {
           ScriptParamsClass {
+           Binding_Name "DebugText2"
           }
          }
         }
@@ -170,6 +172,7 @@ FrameWidgetClass EditorMainFrame {
          "text offset" 5 0
          {
           ScriptParamsClass {
+           Binding_Name "DebugText3"
           }
          }
         }
@@ -186,6 +189,7 @@ FrameWidgetClass EditorMainFrame {
          "text offset" 5 0
          {
           ScriptParamsClass {
+           Binding_Name "DebugText4"
           }
          }
         }
@@ -202,6 +206,7 @@ FrameWidgetClass EditorMainFrame {
          "text offset" 5 0
          {
           ScriptParamsClass {
+           Binding_Name "DebugText5"
           }
          }
         }
@@ -218,6 +223,7 @@ FrameWidgetClass EditorMainFrame {
          "text offset" 5 0
          {
           ScriptParamsClass {
+           Binding_Name "DebugText6"
           }
          }
         }
@@ -251,6 +257,7 @@ FrameWidgetClass EditorMainFrame {
        font "gui/fonts/metron16"
        {
         ScriptParamsClass {
+         Binding_Name "DebugActionStackListbox"
         }
        }
       }
@@ -270,190 +277,158 @@ FrameWidgetClass EditorMainFrame {
    vexactsize 0
    priority 239
   }
-  PanelWidgetClass LeftbarFrame {
-   visible 1
-   clipchildren 0
+  FrameWidgetClass Leftbar {
    ignorepointer 1
-   color 0.302 0.302 0.302 0.549
-   position 0 36
-   size 300 0.915
-   valign bottom_ref
+   size 300 1
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 0
-   priority 240
-   style rover_sim_colorable
-   "no focus" 0
+  }
+  WrapSpacerWidgetClass LeftbarWrapper {
+   clipchildren 0
+   ignorepointer 1
+   position 0 56
+   size 350 0.915
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
+   Padding 0
+   Margin 0
    {
-    WrapSpacerWidgetClass LeftbarFrameWrapSpacer {
+    PanelWidgetClass LeftbarFrame {
+     visible 1
+     clipchildren 0
      ignorepointer 1
-     position 0 0
-     size 1 1
-     halign center_ref
-     valign center_ref
+     keepsafezone 1
+     color 0.302 0.302 0.302 1
+     size 300 1
      hexactpos 1
      vexactpos 1
-     hexactsize 0
+     hexactsize 1
      vexactsize 0
+     priority 1
+     style rover_sim_colorable
+     "no focus" 0
      {
-      PanelWidgetClass LeftbarPanelSelector {
+      WrapSpacerWidgetClass LeftbarFrameWrapSpacer {
        visible 1
-       disabled 0
        ignorepointer 1
        position 0 0
-       size 1 0.06
+       size 1 1
        halign center_ref
+       valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       style editor_quad_dark
        {
-        WrapSpacerWidgetClass LeftbarPanelSelectorWrapper {
+        PanelWidgetClass LeftbarPanelSelector {
          visible 1
+         disabled 0
          ignorepointer 1
-         color 0.6353 0.6353 0.6353 1
          position 0 0
-         size 1 1
+         size 1 0.06
          halign center_ref
-         valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         scriptclass "RadioButtonGroup"
-         style Outline
-         Padding 0
-         Margin 0
-         content_halign center
-         content_valign center
+         style editor_quad_dark
          {
-          ButtonWidgetClass BuildingSelect {
+          WrapSpacerWidgetClass LeftbarPanelSelectorWrapper {
            visible 1
-           size 50 50
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           draggable 0
-           scriptclass "RadioButton"
-           switch normal
-           {
-            ImageWidgetClass BuildingSelect_Icon {
-             visible 1
-             ignorepointer 1
-             color 0.9882 0.9882 0.9882 1
-             position 0 0
-             size 50 50
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 1
-             vexactsize 1
-             image0 ""
-             imageTexture "{2F76D72BD521BBC3}DayZEditor/gui/icons/icon_house_128x128.edds"
-             mode blend
-             "src alpha" 1
-             "no wrap" 1
-             stretch 1
-            }
-           }
-           {
-            ScriptParamsClass {
-            }
-           }
-          }
-          ButtonWidgetClass VehicleSelect {
+           ignorepointer 1
+           color 0.6353 0.6353 0.6353 1
            position 0 0
-           size 50 50
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scriptclass "RadioButton"
-           switch normal
-           {
-            ImageWidgetClass VehicleSelect_Icon {
-             ignorepointer 1
-             color 0.9882 0.9882 0.9882 1
-             position 2 0
-             size 50 50
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 1
-             vexactsize 1
-             image0 ""
-             imageTexture "{6EB760725FFA8C0D}DayZEditor/gui/icons/icon_car_128x128.edds"
-             mode blend
-             "src alpha" 1
-             "no wrap" 1
-             stretch 1
-            }
-           }
-           {
-            ScriptParamsClass {
-             Button_ID 1
-            }
-           }
-          }
-          ButtonWidgetClass EntitySelect {
-           size 50 50
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           draggable 0
-           scriptclass "RadioButton"
-           switch normal
+           hexactsize 0
+           vexactsize 0
+           scriptclass "RadioButtonGroup"
+           style Outline
+           Padding 0
+           Margin 0
+           content_halign center
+           content_valign center
            {
-            ImageWidgetClass EntitySelect_Icon {
-             ignorepointer 1
-             color 0.9882 0.9882 0.9882 1
-             position 0 0
-             size 50 50
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 1
-             vexactsize 1
-             image0 ""
-             imageTexture "{432381F3C44DBDEC}DayZEditor/gui/icons/icon_person_standing_128x128.edds"
-             mode blend
-             "src alpha" 1
-             "no wrap" 1
-             stretch 1
-             "flip u" 1
-            }
-           }
-           {
-            ScriptParamsClass {
-             Button_ID 2
-            }
-           }
-          }
-          ButtonWidgetClass HumanSelect {
-           visible 1
-           position 0 0
-           size 50 50
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scriptclass "RadioButton"
-           switch normal
-           {
-            ImageWidgetClass HumanSelect_Icon {
+            ButtonWidgetClass BuildingSelect {
              visible 1
-             ignorepointer 1
+             size 50 50
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             draggable 0
+             scriptclass "RadioButton"
+             switch normal
+             {
+              ImageWidgetClass BuildingSelect_Icon {
+               visible 1
+               ignorepointer 1
+               color 0.9882 0.9882 0.9882 1
+               position 0 0
+               size 50 50
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               image0 ""
+               imageTexture "{2F76D72BD521BBC3}DayZEditor/gui/icons/icon_house_128x128.edds"
+               mode blend
+               "src alpha" 1
+               "no wrap" 1
+               stretch 1
+              }
+             }
+             {
+              ScriptParamsClass {
+              }
+             }
+            }
+            ButtonWidgetClass VehicleSelect {
              position 0 0
+             size 50 50
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scriptclass "RadioButton"
+             switch normal
+             {
+              ImageWidgetClass VehicleSelect_Icon {
+               ignorepointer 1
+               color 0.9882 0.9882 0.9882 1
+               position 2 0
+               size 50 50
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               image0 ""
+               imageTexture "{6EB760725FFA8C0D}DayZEditor/gui/icons/icon_car_128x128.edds"
+               mode blend
+               "src alpha" 1
+               "no wrap" 1
+               stretch 1
+              }
+             }
+             {
+              ScriptParamsClass {
+               Button_ID 1
+              }
+             }
+            }
+            ButtonWidgetClass EntitySelect {
              size 50 50
              halign center_ref
              valign center_ref
@@ -461,130 +436,163 @@ FrameWidgetClass EditorMainFrame {
              vexactpos 1
              hexactsize 1
              vexactsize 1
-             image0 ""
-             imageTexture "{9A1C50C85C0F7122}DayZEditor/gui/icons/icon_face_128x128.edds"
-             mode blend
-             "src alpha" 1
-             "no wrap" 1
-             stretch 1
+             draggable 0
+             scriptclass "RadioButton"
+             switch normal
+             {
+              ImageWidgetClass EntitySelect_Icon {
+               ignorepointer 1
+               color 0.9882 0.9882 0.9882 1
+               position 0 0
+               size 50 50
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               image0 ""
+               imageTexture "{432381F3C44DBDEC}DayZEditor/gui/icons/icon_person_standing_128x128.edds"
+               mode blend
+               "src alpha" 1
+               "no wrap" 1
+               stretch 1
+               "flip u" 1
+              }
+             }
+             {
+              ScriptParamsClass {
+               Button_ID 2
+              }
+             }
+            }
+            ButtonWidgetClass HumanSelect {
+             visible 1
+             position 0 0
+             size 50 50
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scriptclass "RadioButton"
+             switch normal
+             {
+              ImageWidgetClass HumanSelect_Icon {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 50 50
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               image0 ""
+               imageTexture "{9A1C50C85C0F7122}DayZEditor/gui/icons/icon_face_128x128.edds"
+               mode blend
+               "src alpha" 1
+               "no wrap" 1
+               stretch 1
+              }
+             }
+             {
+              ScriptParamsClass {
+               Button_ID 3
+              }
+             }
             }
            }
            {
             ScriptParamsClass {
-             Button_ID 3
+             Binding_Name "PlaceableCategorySelection"
             }
            }
-          }
-         }
-         {
-          ScriptParamsClass {
-           Binding_Name "PlaceableCategorySelection"
           }
          }
         }
-       }
-      }
-      PanelWidgetClass LeftbarPanelSearchBarPanel {
-       ignorepointer 1
-       color 0.1216 0.1216 0.1216 0.6275
-       position 10 10
-       size 0.99 0.03
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       style rover_sim_colorable
-       {
-        EditBoxWidgetClass LeftbarSearchBar {
-         color 0.6353 0.6353 0.6353 1
-         position 0 0
-         size 0.88 1
+        PanelWidgetClass LeftbarPanelSearchBarPanel {
+         ignorepointer 1
+         color 0.1216 0.1216 0.1216 0.6275
+         position 10 10
+         size 0.99 0.03
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 0
-         priority 1
-         scriptclass "ViewBinding"
-         style EditorProperty
-         text "Search...."
-         "limit visible" 0
-         "Use default text" 1
-         "exact text" 1
-         font "gui/fonts/metron28"
-         {
-          ScriptParamsClass {
-           Binding_Name "SearchBarData"
-           Two_Way_Binding 1
-          }
-         }
-        }
-        PanelWidgetClass LeftbarPanelSearchBarIconSpacer {
-         ignorepointer 1
-         color 0.1216 0.1216 0.1216 0.6275
-         size 32 1
-         halign right_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
          vexactsize 0
          style rover_sim_colorable
          {
-          ImageWidgetClass LeftbarPanelSearchBarIcon {
-           ignorepointer 1
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
+          EditBoxWidgetClass LeftbarSearchBar {
+           color 0.6353 0.6353 0.6353 1
+           position 0 0
+           size 0.88 1
+           hexactpos 1
+           vexactpos 1
            hexactsize 0
            vexactsize 0
-           image0 "set:dayz_editor_gui image:search_icon"
-           mode blend
-           "src alpha" 1
-           "no wrap" 1
-           stretch 1
+           priority 1
+           scriptclass "ViewBinding"
+           style EditorProperty
+           text "Search...."
+           "limit visible" 0
+           "Use default text" 1
+           "exact text" 1
+           font "gui/fonts/metron28"
+           {
+            ScriptParamsClass {
+             Binding_Name "SearchBarData"
+             Two_Way_Binding 1
+            }
+           }
+          }
+          PanelWidgetClass LeftbarPanelSearchBarIconSpacer {
+           ignorepointer 1
+           color 0.1216 0.1216 0.1216 0.6275
+           size 32 1
+           halign right_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 0
+           style rover_sim_colorable
+           {
+            ImageWidgetClass LeftbarPanelSearchBarIcon {
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             image0 "set:dayz_editor_gui image:search_icon"
+             mode blend
+             "src alpha" 1
+             "no wrap" 1
+             stretch 1
+            }
+           }
           }
          }
         }
-       }
-      }
-      PanelWidgetClass LeftbarPanelHost {
-       visible 1
-       disabled 0
-       ignorepointer 0
-       color 0.302 0.302 0.302 0.3059
-       position 0 60
-       size 1 0.91
-       halign right_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       style rover_sim_colorable
-       {
-        ScrollWidgetClass LeftbarScroll {
+        PanelWidgetClass LeftbarPanelHost {
+         visible 1
+         disabled 0
          ignorepointer 0
-         keepsafezone 1
-         color 0.2353 0.2353 0.2353 1
-         position 0 0
-         size 1 1
-         halign center_ref
-         valign center_ref
+         color 0.302 0.302 0.302 0.3059
+         position 0 60
+         size 1 0.91
+         halign right_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         scriptclass ""
-         style blank
-         "Scrollbar V" 1
-         "Scrollbar V Left" 1
+         style rover_sim_colorable
          {
-          WrapSpacerWidgetClass LeftbarSpacer {
-           visible 1
-           disabled 0
-           clipchildren 1
+          ScrollWidgetClass LeftbarScroll {
            ignorepointer 0
            keepsafezone 1
+           color 0.2353 0.2353 0.2353 1
            position 0 0
            size 1 1
            halign center_ref
@@ -593,14 +601,35 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           scriptclass "ViewBinding"
-           Padding 0
-           Margin 0
-           "Size To Content H" 1
-           "Size To Content V" 1
+           scriptclass ""
+           style blank
+           "Scrollbar V" 1
+           "Scrollbar V Left" 1
            {
-            ScriptParamsClass {
-             Relay_Command "LeftbarSpacerExecute"
+            WrapSpacerWidgetClass LeftbarSpacer {
+             visible 1
+             disabled 0
+             clipchildren 1
+             ignorepointer 0
+             keepsafezone 1
+             position 0 0
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "ViewBinding"
+             Padding 0
+             Margin 0
+             "Size To Content H" 1
+             "Size To Content V" 1
+             {
+              ScriptParamsClass {
+               Relay_Command "LeftbarSpacerExecute"
+              }
+             }
             }
            }
           }
@@ -610,50 +639,62 @@ FrameWidgetClass EditorMainFrame {
       }
      }
     }
-    ButtonWidgetClass LeftbarHide {
+    PanelWidgetClass LeftbarCollapsePanel {
      visible 1
-     clipchildren 1
-     color 0.302 0.302 0.302 0.3922
-     position -28 60
-     size 28 44
-     halign right_ref
+     ignorepointer 1
+     position 0 0
+     size 28 1
      hexactpos 1
      vexactpos 1
      hexactsize 1
-     vexactsize 1
-     scriptclass "ViewBinding"
-     style DayZDefaultButtonNoBorder
-     switch toggle
+     vexactsize 0
+     priority 1
      {
-      ImageWidgetClass LeftbarHideIcon {
-       ignorepointer 1
-       position 0 0
-       size 1 1
+      ButtonWidgetClass LeftbarHide {
+       visible 1
+       clipchildren 1
+       color 0.302 0.302 0.302 0.3922
+       position 0 40
+       size 28 44
+       halign right_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       image0 "set:dayz_gui image:arrow_left"
-       imageTexture "{60621763B985C925}dta/gui/gui/imagesets/dayz_gui@2x.edds"
-       mode blend
-       "src alpha" 1
-      }
-     }
-     {
-      ScriptParamsClass {
-       Relay_Command "ToggleLeftBar"
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style DayZDefaultButtonNoBorder
+       switch toggle
+       {
+        ImageWidgetClass LeftbarHideIcon {
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         image0 "set:dayz_gui image:arrow_left"
+         imageTexture "{60621763B985C925}dta/gui/gui/imagesets/dayz_gui@2x.edds"
+         mode blend
+         "src alpha" 1
+        }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "LeftbarHideExecute"
+        }
+       }
       }
      }
     }
    }
   }
-  PanelWidgetClass RightbarFrame {
+  WrapSpacerWidgetClass RightbarWrapper {
    visible 1
    clipchildren 0
    ignorepointer 1
-   color 0.302 0.302 0.302 0.549
    position 0 32
-   size 300 0.92
+   size 350 0.92
    halign right_ref
    valign bottom_ref
    hexactpos 1
@@ -661,19 +702,23 @@ FrameWidgetClass EditorMainFrame {
    hexactsize 1
    vexactsize 0
    priority 240
-   style rover_sim_colorable
+   style Colorable
+   Padding 0
+   Margin 0
+   content_halign right
    {
-    PanelWidgetClass RightbarPanelHost {
+    PanelWidgetClass RightbarFrame {
      visible 1
      disabled 0
      ignorepointer 0
-     color 0.302 0.302 0.302 0.3059
+     color 0.302 0.302 0.302 1
      position 0 0
-     size 1 1
+     size 300 1
      hexactpos 1
      vexactpos 1
-     hexactsize 0
+     hexactsize 1
      vexactsize 0
+     priority 1
      style rover_sim_colorable
      {
       ScrollWidgetClass RightbarScroll {
@@ -802,43 +847,56 @@ FrameWidgetClass EditorMainFrame {
       }
      }
     }
-    ButtonWidgetClass RightbarHide {
+    PanelWidgetClass RightbarCollapsePanel {
      clipchildren 1
-     color 0.302 0.302 0.302 0.3922
-     position -28 60
-     size 28 44
+     ignorepointer 1
+     position 0 0
+     size 28 1
      hexactpos 1
      vexactpos 1
      hexactsize 1
-     vexactsize 1
-     scriptclass "ViewBinding"
-     style DayZDefaultButtonNoBorder
-     switch toggle
+     vexactsize 0
+     priority 1
      {
-      ImageWidgetClass RightbarHideIcon {
-       ignorepointer 1
-       position 0 0
-       size 1 1
-       halign center_ref
-       valign center_ref
+      ButtonWidgetClass RightbarHide {
+       clipchildren 1
+       color 0.302 0.302 0.302 0.3922
+       position 0 60
+       size 28 44
        hexactpos 1
        vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 1
-       image0 "set:dayz_gui image:arrow_right"
-       imageTexture "{26FF075FC9718107}dta/gui/gui/imagesets/dayz_gui.edds"
-       mode blend
-       "src alpha" 1
-       "no wrap" 0
-       stretch 1
-       "flip u" 0
-       "flip v" 0
-      }
-     }
-     {
-      ScriptParamsClass {
-       Relay_Command "ToggleRightBar"
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style DayZDefaultButtonNoBorder
+       switch toggle
+       {
+        ImageWidgetClass RightbarHideIcon {
+         ignorepointer 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 1
+         image0 "set:dayz_gui image:arrow_right"
+         imageTexture "{26FF075FC9718107}dta/gui/gui/imagesets/dayz_gui.edds"
+         mode blend
+         "src alpha" 1
+         "no wrap" 0
+         stretch 1
+         "flip u" 0
+         "flip v" 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "ToggleRightBar"
+        }
+       }
       }
      }
     }
@@ -949,9 +1007,10 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         scriptclass "ViewBinding"
          font "gui/fonts/FiraCodeBold16"
          {
-          TextWidgetClass MenuBarEditLable {
+          TextWidgetClass MenuBarEditLabel {
            clipchildren 1
            ignorepointer 1
            position 0 0
@@ -967,8 +1026,14 @@ FrameWidgetClass EditorMainFrame {
            "text valign" center
           }
          }
+         {
+          ScriptParamsClass {
+           Relay_Command "MenuBarEditExecute"
+          }
+         }
         }
         ButtonWidgetClass MenuBarView {
+         visible 1
          color 0.749 0.3725 0.3725 1
          position 0 0
          size 0.04 1
@@ -978,9 +1043,10 @@ FrameWidgetClass EditorMainFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         scriptclass "ViewBinding"
          font "gui/fonts/FiraCodeBold16"
          {
-          TextWidgetClass MenuBarViewLable {
+          TextWidgetClass MenuBarViewLabel {
            ignorepointer 1
            position 0 0
            size 1 1
@@ -993,6 +1059,11 @@ FrameWidgetClass EditorMainFrame {
            font "gui/fonts/metronbook-bold"
            "text halign" center
            "text valign" center
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "MenuBarViewExecute"
           }
          }
         }
@@ -1999,6 +2070,15 @@ FrameWidgetClass EditorMainFrame {
      }
     }
    }
+  }
+  PanelWidgetClass DELETEME {
+   ignorepointer 1
+   position 0 0
+   size 28 0
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
   }
  }
  {
