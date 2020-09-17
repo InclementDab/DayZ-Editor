@@ -62,6 +62,7 @@ class EditorDialog: EditorMVCLayout
 		EditorDialogButtonViewBinding view_binding;
 		panel.GetScript(view_binding);
 		view_binding.SetLabel(label);
+		view_binding.SetController(m_DialogController);
 		view_binding.SetRelayCommand(command);
 		
 		return panel.FindAnyWidget("DialogButton");
@@ -73,7 +74,6 @@ class EditorDialog: EditorMVCLayout
 		m_DialogController.TitleText = title;
 		m_DialogController.NotifyPropertyChanged("TitleText");
 	}
-		
 	
 	override void Show()
 	{

@@ -10,6 +10,7 @@ class EditorWeatherDialogController: EditorDialogController
 	float overcast;
 	float wind;
 	float exposure;
+	bool lighting;
 	
 	void SetWorld(World world)
 	{
@@ -71,19 +72,18 @@ class EditorWeatherDialogController: EditorDialogController
 				GetGame().GetWorld().SetEyeAccom(exposure);
 				break;
 			}
+			
+			case "lighting": {
+						
+				if (lighting) {
+					GetGame().GetWorld().LoadNewLightingCfg("dz\\data\\lighting\\lighting_darknight.txt");
+				} else {
+					GetGame().GetWorld().LoadNewLightingCfg("dz\\data\\lighting\\lighting_default.txt");
+				}
+				
+				break;
+			}
 		}	
-	}
-	
-	bool _LightingCallback = false;
-	void LightingCallback()
-	{
-		_LightingCallback = !_LightingCallback;
-		
-		if (_LightingCallback) {
-			GetGame().GetWorld().LoadNewLightingCfg( "dz\\data\\lighting\\lighting_darknight.txt" );
-		} else {
-			GetGame().GetWorld().LoadNewLightingCfg( "dz\\data\\lighting\\lighting_default.txt" );
-		}
 	}
 }
 
@@ -109,13 +109,13 @@ class EditorWeatherDialog: EditorDialog
 		weather_group.AddPrefab(new EditorPrefabSlider("Overcast", "overcast", 0, 1));
 		weather_group.AddPrefab(new EditorPrefabSlider("Wind", "wind", 0, 100));
 		weather_group.AddPrefab(new EditorPrefabSlider("Exposure", "exposure", 0, 1));
+		weather_group.AddPrefab(new EditorPrefabButton("Lighting", "lighting"));
 
 		weather_group.SetController(m_EditorWeatherDialogController);
 		AddContent(weather_group);
 
 		
 		SetTitle("World Controller");
-		AddButton("Lighting", "LightingCallback");
 		AddButton("Close", "DialogCloseRelayCommand");
 	}
 	

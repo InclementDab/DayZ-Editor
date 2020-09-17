@@ -1,5 +1,5 @@
 class EditorDialogButtonViewBinding: ViewBinding
-{
+{	
 	protected Widget DialogButtonOutline;
 	protected ButtonWidget DialogButton;
 		

@@ -85,6 +85,25 @@ class EditorCameraDialogController: Controller
 			}
 		}		
 	}
+	
+	
+	void ResetDefaultExecute()
+	{
+		EditorLog.Trace("EditorCameraDialog::ResetDefaultExecute");
+		
+		fov = DEFAULT_FOV;
+		near_plane = DEFAULT_NEARPLANE;
+		
+		dof_distance = 0;
+		dof_blur = 0;
+		
+		NotifyPropertyChanged("fov");
+		NotifyPropertyChanged("near_plane");
+		NotifyPropertyChanged("dof_distance");
+		NotifyPropertyChanged("dof_blur");
+		
+		PPEffects.ResetAll();
+	}
 }
 
 
@@ -127,27 +146,11 @@ class EditorCameraDialog: EditorDialog
 		
 		SetTitle("Camera Controller");
 		
-		AddButton("Default", "ResetDefault");
-		AddButton("Close", "Close");
+		AddButton("Default", "ResetDefaultExecute");
+		AddButton("Close", "DialogCloseRelayCommand");
 	}
 	
-	void ResetDefault()
-	{
-		EditorLog.Trace("EditorCameraDialog::ResetDefault");
-		
-		m_EditorCameraDialogController.fov = DEFAULT_FOV;
-		m_EditorCameraDialogController.near_plane = DEFAULT_NEARPLANE;
-		
-		m_EditorCameraDialogController.dof_distance = 0;
-		m_EditorCameraDialogController.dof_blur = 0;
-		
-		m_EditorCameraDialogController.NotifyPropertyChanged("fov");
-		m_EditorCameraDialogController.NotifyPropertyChanged("near_plane");
-		m_EditorCameraDialogController.NotifyPropertyChanged("dof_distance");
-		m_EditorCameraDialogController.NotifyPropertyChanged("dof_blur");
-		
-		PPEffects.ResetAll();
-	}
+
 	
 }
 
