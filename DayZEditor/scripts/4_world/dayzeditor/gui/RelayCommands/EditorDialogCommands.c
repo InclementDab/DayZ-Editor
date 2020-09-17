@@ -16,8 +16,9 @@ class MapSelectDialogRelayCommand: RelayCommand
 	override void Execute(RelayCommandArgs args)
 	{
 		EditorLog.Trace("MapSelectDialogRelayCommand::Execute");
+		if (GetEditor())
+			GetEditor().GetEditorHud().GetModal().Close();
 		
-		GetEditor().GetEditorHud().GetModal().Close();
 		GetGame().PlayMission(CreateEditorMission(MapSelectDialogController.Cast(m_ViewBinding.GetController()).MapHostListboxSelection));
 	}
 	

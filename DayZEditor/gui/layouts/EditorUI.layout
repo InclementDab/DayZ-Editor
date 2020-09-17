@@ -1119,7 +1119,7 @@ FrameWidgetClass EditorMainFrame {
          style Colorable
          "no focus" 0
          text_offset 0 0
-         switch once
+         switch normal
          {
           ImageWidgetClass UndoButton_Icon {
            ignorepointer 1
@@ -1152,7 +1152,7 @@ FrameWidgetClass EditorMainFrame {
          scriptclass ""
          style Colorable
          "no focus" 0
-         switch once
+         switch normal
          {
           ImageWidgetClass RedoButton_Icon {
            ignorepointer 1

@@ -582,7 +582,7 @@ class Editor
 	
 	typename GetCommandFromHotkeys(int key)
 	{
-		EditorLog.Trace("Editor::GetCommandFromHotkeys");
+		//EditorLog.Trace("Editor::GetCommandFromHotkeys");
 		
 		if (KeyState(KeyCode.KC_LCONTROL)) {
 			
