@@ -58,7 +58,6 @@ FrameWidgetClass EditorMenuItem {
      vexactsize 1
      scaled 1
      scriptclass "ViewBinding"
-     imageTexture ""
      mode blend
      "src alpha" 1
      stretch 1
@@ -73,7 +72,7 @@ FrameWidgetClass EditorMenuItem {
     TextWidgetClass EditorMenuItemShortcut {
      visible 1
      ignorepointer 1
-     position 0 0
+     position 10 0
      size 0.7 1
      halign right_ref
      valign center_ref

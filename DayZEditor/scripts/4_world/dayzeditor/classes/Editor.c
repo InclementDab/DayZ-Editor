@@ -612,6 +612,9 @@ class Editor
 				}
 				
 				case KeyCode.KC_I: {
+					if (KeyState(KeyCode.KC_LSHIFT))
+						return EditorEnvironmentControlCommand;
+					
 					return EditorImportCommand;
 				}
 				

@@ -216,7 +216,7 @@ class EditorHudController: Controller
 	}
 	
 	void WeatherExecute(ButtonCommandArgs args) {
-		EditorWeatherDialog weather_dialog = new EditorWeatherDialog();
+		EditorEnvironmentDialog weather_dialog = new EditorEnvironmentDialog();
 		weather_dialog.Show();
 	}
 	

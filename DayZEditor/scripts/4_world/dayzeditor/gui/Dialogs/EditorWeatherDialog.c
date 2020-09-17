@@ -1,5 +1,5 @@
 
-class EditorWeatherDialogController: EditorDialogController
+class EditorEnvironmentDialogController: EditorDialogController
 {
 	protected World m_World;
 	protected Weather m_Weather;
@@ -14,7 +14,7 @@ class EditorWeatherDialogController: EditorDialogController
 	
 	void SetWorld(World world)
 	{
-		EditorLog.Trace("EditorWeatherDialogController::SetWorld");
+		EditorLog.Trace("EditorEnvironmentDialogController::SetWorld");
 		m_World = world;
 		m_Weather = GetGame().GetWeather();
 		
@@ -87,15 +87,15 @@ class EditorWeatherDialogController: EditorDialogController
 	}
 }
 
-class EditorWeatherDialog: EditorDialog
+class EditorEnvironmentDialog: EditorDialog
 {
-	protected ref EditorWeatherDialogController m_EditorWeatherDialogController;
+	protected ref EditorEnvironmentDialogController m_EditorWeatherDialogController;
 	
 	void EditorWeatherDialog()
 	{
 		EditorLog.Trace("EditorWeatherDialog");
 		
-		m_EditorWeatherDialogController = EditorWeatherDialogController.Cast(m_Controller);
+		m_EditorWeatherDialogController = EditorEnvironmentDialogController.Cast(m_Controller);
 		m_EditorWeatherDialogController.SetWorld(GetGame().GetWorld());
 		
 		EditorPrefabGroup weather_group = new EditorPrefabGroup("Weather");
@@ -117,7 +117,7 @@ class EditorWeatherDialog: EditorDialog
 	}
 	
 	override typename GetControllerType() {
-		return EditorWeatherDialogController;
+		return EditorEnvironmentDialogController;
 	}
 }
 

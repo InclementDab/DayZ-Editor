@@ -319,6 +319,22 @@ class EditorPreferencesCommand: EditorCommand
 	}
 }
 
+class EditorEnvironmentControlCommand: EditorCommand
+{
+	override void Call() {
+		EditorEnvironmentDialog environment_dialog = new EditorEnvironmentDialog();
+		environment_dialog.Show();
+	}
+	
+	override string GetName() {
+		return "Environment Settings";
+	}
+	
+	override string GetKeys() {
+		return "Ctrl + Shift + I";
+	}
+}
+
 class EditorCameraControlsCommand: EditorCommand
 {
 	override void Call() {
