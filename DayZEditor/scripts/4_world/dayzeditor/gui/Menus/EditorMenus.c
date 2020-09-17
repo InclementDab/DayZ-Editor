@@ -21,6 +21,7 @@ class EditorMenu: EditorMVCLayout
 		EditorLog.Trace("EditorMenu::Show");
 		super.Show();
 		
+		m_LayoutRoot.Show(true);
 		m_EditorHud.SetMenu(this);
 	}
 	
@@ -28,8 +29,7 @@ class EditorMenu: EditorMVCLayout
 	{
 		EditorLog.Trace("EditorMenu::Close");
 		super.Close();
-		
-		m_EditorHud.SetMenu(null);
+		m_LayoutRoot.Show(false);
 	}
 	
 	void SetPosition(float x, float y) {
@@ -38,7 +38,7 @@ class EditorMenu: EditorMVCLayout
 	
 	void AddItem(string title, string icon = "")
 	{
-		EditorMenuItem menu_item();
+		EditorMenuItem menu_item = new EditorMenuItem();
 		menu_item.SetText(title);
 		menu_item.SetIcon(icon);
 		AddItem(menu_item);
@@ -50,7 +50,6 @@ class EditorMenu: EditorMVCLayout
 			EditorMenuContent.AddChild(menu_item.GetLayoutRoot());
 			m_MenuItems.Insert(menu_item);
 		}
-		Print(m_MenuItems.Count());
 	}
 		
 	void RemoveItem(ref EditorMenuItem menu_item)
@@ -73,6 +72,9 @@ class EditorMenuItem: EditorMVCLayout
 	
 	void EditorMenuItem() {
 		EditorLog.Trace("EditorMenuItem");
+		if (m_LayoutRoot) {
+			m_LayoutRoot.Show(true);
+		}
 	}
 	
 	void ~EditorMenuItem() {

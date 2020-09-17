@@ -935,7 +935,7 @@ FrameWidgetClass EditorMainFrame {
          }
          {
           ScriptParamsClass {
-           Relay_Command "EditorMenuBarFileRelayCommand"
+           Relay_Command "MenuBarFileExecute"
           }
          }
         }

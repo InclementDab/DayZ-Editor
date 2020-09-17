@@ -403,8 +403,9 @@ class Editor
 					if (IsLootEditActive()) {
 						FinishEditLootSpawns();
 						return true;
-					} else if (m_EditorHud.IsModalActive()) {
+					} else if (m_EditorHud.IsModalActive() || m_EditorHud.IsMenuActive()) {
 						m_EditorHud.GetModal().Close();
+						m_EditorHud.GetMenu().Close();
 						return true;
 					// jank
 					} else if (!GetGame().GetMission().IsPaused()) {

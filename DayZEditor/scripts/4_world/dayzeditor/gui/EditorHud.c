@@ -93,19 +93,16 @@ class EditorHud: Hud
 		EditorLog.Trace("EditorHud::Init::Finished");
 	}
 	
-	override void Update(float timeslice)
-	{
-		
-	}
-	
-	
-	
+	override void Update(float timeslice) {}	
 	
 	override void SetPermanentCrossHair(bool show); // todo
 	
 	// Modal Window Control
 	private ref EditorDialog m_CurrentModal = null;
-	void SetModal(EditorDialog dialog) {		
+	void SetModal(EditorDialog dialog) {	
+		if (m_CurrentModal && m_CurrentModal != dialog)
+			m_CurrentModal.Close();
+		
 		m_CurrentModal = dialog;
 
 		// Stops layout from accepting input while Modal is active
@@ -129,23 +126,22 @@ class EditorHud: Hud
 	}
 	
 	// Modal Menu Control
-	private ref EditorMenu m_CurrentMenu;
-	ref EditorMenu GetMenu() {
-		return m_CurrentMenu;
-	}
-	
+	private ref EditorMenu m_CurrentMenu = null;	
 	void SetMenu(EditorMenu menu) {
-		if (m_CurrentMenu)
-			delete m_CurrentMenu;
+		if (m_CurrentMenu && m_CurrentMenu != menu)
+			m_CurrentMenu.Close();
 		
 		m_CurrentMenu = menu;
 	}
 	
-	bool IsMenuOpen() {
-		return (m_CurrentMenu != null);
+	ref EditorMenu GetMenu() {
+		return m_CurrentMenu;
 	}
 	
-	
+	bool IsMenuActive() {
+		return (m_CurrentMenu != null);
+	}
+		
 	// Current "button" on UI
 	private ButtonWidget m_CurrentButton;
 	void SetCurrentButton(ButtonWidget button)

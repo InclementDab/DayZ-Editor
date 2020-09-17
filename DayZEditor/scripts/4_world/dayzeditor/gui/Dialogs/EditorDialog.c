@@ -81,8 +81,7 @@ class EditorDialog: EditorMVCLayout
 	{
 		EditorLog.Trace("EditorDialog::Close");
 		super.Close();
-		
-		m_EditorHud.SetModal(null);
+	
 		m_Editor.GetCamera().SetMoveEnabled(true);
 		m_Editor.GetCamera().SetLookEnabled(true);
 		m_EditorHud.ShowCursor();

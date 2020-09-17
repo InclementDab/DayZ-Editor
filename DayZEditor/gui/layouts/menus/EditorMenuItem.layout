@@ -1,10 +1,10 @@
 FrameWidgetClass EditorMenuItem {
  position 0 0
- size 0.15 0.02
+ size 1 25
  hexactpos 1
  vexactpos 1
  hexactsize 0
- vexactsize 0
+ vexactsize 1
  scriptclass ""
  {
   ButtonWidgetClass EditorMenuItemButton {

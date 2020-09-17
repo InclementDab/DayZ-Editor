@@ -241,8 +241,13 @@ class EditorHudController: Controller
 		settings_dialog.Show();
 	}
 	
+	private ref EditorMenu m_FileMenu;
 	void MenuBarFileExecute(ButtonCommandArgs args) {
-		EditorMenu file_menu = new EditorMenu();		
+		m_FileMenu = new EditorMenu();		
+		m_FileMenu.AddItem("Test");
+		m_FileMenu.AddItem("Test2");
+		m_FileMenu.AddItem("Test3");
+		m_FileMenu.Show();
 	}
 	
 

@@ -5,7 +5,7 @@ class LaunchOfflineModTool: DayZTool
 	override void Run()
 	{
 		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\Exit.bat", true);
-		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\LaunchClient.bat", true);
+		RunDayZBat("P:\\DayZEditor\\workbench\\Batchfiles\\LaunchOffline.bat", true);
 	}
 }
 
