@@ -194,14 +194,6 @@ class EditorHudController: Controller
 	}
 	
 	
-	/*
-	void BrushToggleExecute(ButtonCommandArgs args) 
-	{
-		EditorLog.Trace("EditorHudController::BrushToggleExecute");
-		SelectBrush(args.param3);
-	}*/
-	
-	
 	void LeftbarHideExecute(ButtonCommandArgs args) 
 	{
 		LeftbarFrame.Show(args.GetButtonState());
@@ -212,6 +204,14 @@ class EditorHudController: Controller
 		RightbarFrame.Show(args.GetButtonState());
 	}
 	
+	void BrushToggleExecute(ButtonCommandArgs args)
+	{
+		if (args.GetButtonState()) {
+			GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
+		} else {
+			GetEditor().SetBrush(null);
+		}
+	}
 	
 	void ButtonCreateFolderExecute(ButtonCommandArgs args) {
 		EditorLog.Trace("EditorHudController::ButtonCreateFolderExecute");
@@ -233,7 +233,6 @@ class EditorHudController: Controller
 		EditorSettingsDialog settings_dialog = new EditorSettingsDialog(GetEditor().GetSettings());
 		settings_dialog.Show();
 	}
-	
 
 	void MenuBarFileExecute(ButtonCommandArgs args) 
 	{

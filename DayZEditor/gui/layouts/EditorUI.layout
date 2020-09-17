@@ -277,14 +277,6 @@ FrameWidgetClass EditorMainFrame {
    vexactsize 0
    priority 239
   }
-  FrameWidgetClass Leftbar {
-   ignorepointer 1
-   size 300 1
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 0
-  }
   WrapSpacerWidgetClass LeftbarWrapper {
    clipchildren 0
    ignorepointer 1
@@ -1219,6 +1211,7 @@ FrameWidgetClass EditorMainFrame {
          }
          {
           ScriptParamsClass {
+           Binding_Name "MagnetButton"
            Two_Way_Binding 1
           }
          }
@@ -1255,6 +1248,7 @@ FrameWidgetClass EditorMainFrame {
          }
          {
           ScriptParamsClass {
+           Binding_Name "GroundButton"
            Two_Way_Binding 1
           }
          }
@@ -1293,6 +1287,7 @@ FrameWidgetClass EditorMainFrame {
          }
          {
           ScriptParamsClass {
+           Binding_Name "SnapButton"
            Two_Way_Binding 1
           }
          }
@@ -1373,6 +1368,7 @@ FrameWidgetClass EditorMainFrame {
              "text valign" center
              {
               ScriptParamsClass {
+               Binding_Name "BrushToggleButtonText"
               }
              }
             }
@@ -1381,6 +1377,7 @@ FrameWidgetClass EditorMainFrame {
             ScriptParamsClass {
              Binding_Name "BrushToggleButtonState"
              Two_Way_Binding 1
+             Relay_Command "BrushToggleExecute"
             }
            }
           }
@@ -2014,19 +2011,6 @@ FrameWidgetClass EditorMainFrame {
     }
    }
   }
-  FrameWidgetClass CenterSpaceFrame {
-   clipchildren 0
-   ignorepointer 1
-   position 0 32
-   size 0.65 0.91
-   halign center_ref
-   valign bottom_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   priority 1000
-  }
   FrameWidgetClass NotificationFrame {
    visible 0
    ignorepointer 1
@@ -2070,15 +2054,6 @@ FrameWidgetClass EditorMainFrame {
      }
     }
    }
-  }
-  PanelWidgetClass DELETEME {
-   ignorepointer 1
-   position 0 0
-   size 28 0
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 0
   }
  }
  {
