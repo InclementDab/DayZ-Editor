@@ -1,7 +1,11 @@
 
 
-class EditorPropertiesPrefabController: Controller
+class EditorPropertiesPrefabController: EditorDialogController
 {
+	private string m_StartName;
+	private vector m_StartPosition;
+	private vector m_StartOrientation;
+	
 	
 	protected EditorObject m_EditorObject;
 	
@@ -17,9 +21,9 @@ class EditorPropertiesPrefabController: Controller
 	
 	bool edit_loot;
 	
-	void EditorPropertiesPrefabController(EditorObject editor_object) 
+	void SetEditorObject(EditorObject editor_object) 
 	{
-		EditorLog.Trace("EditorPropertiesPrefabController");
+		EditorLog.Trace("EditorPropertiesPrefabController::SetEditorObject");
 		m_EditorObject = editor_object;
 		
 		pos = m_EditorObject.GetPosition();
@@ -32,6 +36,10 @@ class EditorPropertiesPrefabController: Controller
 		string value;
 		GetGame().ConfigGetText("CfgVehicles " + editor_object.GetType() + " enfenimsys graphName", value);
 		EditorLog.Info("EditorPropertiesPrefabController::Loading GraphName %1", value);
+		
+		m_StartName = m_EditorObject.GetDisplayName();
+		m_StartPosition = m_EditorObject.GetPosition();
+		m_StartOrientation = m_EditorObject.GetOrientation();
 	}
 
 	// this isnt being called due to how we are dynamically generating ViewBindings in the controller
@@ -105,6 +113,20 @@ class EditorPropertiesPrefabController: Controller
 			}
 		}
 	}
+	
+		
+	void SaveCallback() {
+		EditorLog.Trace("EditorObjectPropertiesDialog::SaveCallback");
+		GetEditor().GetEditorHud().GetModal().Close();
+	}
+	
+	void CancelCallback() {
+		EditorLog.Trace("EditorObjectPropertiesDialog::CancelCallback");
+		m_EditorObject.SetDisplayName(m_StartName);
+		m_EditorObject.SetPosition(m_StartPosition);
+		m_EditorObject.SetOrientation(m_StartOrientation);
+		GetEditor().GetEditorHud().GetModal().Close();
+	}
 }
 
 class EditorObjectPropertiesDialog: EditorDialog
@@ -118,27 +140,19 @@ class EditorObjectPropertiesDialog: EditorDialog
 	protected EditorObject m_Object;
 	
 	protected ref EditorPropertiesPrefabController m_EditorPropertiesController;
-	
-	private string m_StartName;
-	private vector m_StartPosition;
-	private vector m_StartOrientation;
-	
+
 	void EditorObjectPropertiesDialog(EditorObject editor_object)
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog");
 		m_EditorObject = editor_object;
-		m_EditorPropertiesController = new EditorPropertiesPrefabController(m_EditorObject);
+		m_EditorPropertiesController = EditorPropertiesPrefabController.Cast(GetController());
+		m_EditorPropertiesController.SetEditorObject(m_EditorObject);
 		
 		EditorPrefabGroup info_group = new EditorPrefabGroup("Object Info");
 		info_group.AddPrefab(new EditorPrefabEditText("Name", "name"));
 		info_group.AddPrefab(new EditorPrefabPosition("Position", "pos"));
 		info_group.AddPrefab(new EditorPrefabPosition("Rotation", "rot"));
 		info_group.SetController(m_EditorPropertiesController);
-		
-		m_StartName = m_EditorObject.GetDisplayName();
-		m_StartPosition = m_EditorObject.GetPosition();
-		m_StartOrientation = m_EditorObject.GetOrientation();
-		
 
 		AddContent(info_group);
 		
@@ -172,22 +186,8 @@ class EditorObjectPropertiesDialog: EditorDialog
 	void ~EditorObjectPropertiesDialog() {
 		EditorLog.Trace("~EditorObjectPropertiesDialog");
 	}
-		
 	
-	void SaveCallback() {
-		EditorLog.Trace("EditorObjectPropertiesDialog::SaveCallback");
-		Close();
+	override typename GetControllerType() {
+		return EditorPropertiesPrefabController;
 	}
-	
-	void CancelCallback() {
-		EditorLog.Trace("EditorObjectPropertiesDialog::CancelCallback");
-		m_EditorObject.SetDisplayName(m_StartName);
-		m_EditorObject.SetPosition(m_StartPosition);
-		m_EditorObject.SetOrientation(m_StartOrientation);
-		Close();
-	}
-	
-
-	
-
 }
