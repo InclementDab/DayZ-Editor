@@ -87,9 +87,6 @@ class EditorWeatherDialogController: EditorDialogController
 	}
 }
 
-
-
-
 class EditorWeatherDialog: EditorDialog
 {
 	protected ref EditorWeatherDialogController m_EditorWeatherDialogController;
@@ -98,7 +95,7 @@ class EditorWeatherDialog: EditorDialog
 	{
 		EditorLog.Trace("EditorWeatherDialog");
 		
-		m_EditorWeatherDialogController = new EditorWeatherDialogController();		
+		m_EditorWeatherDialogController = EditorWeatherDialogController.Cast(m_Controller);
 		m_EditorWeatherDialogController.SetWorld(GetGame().GetWorld());
 		
 		EditorPrefabGroup weather_group = new EditorPrefabGroup("Weather");

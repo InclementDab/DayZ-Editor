@@ -12,7 +12,7 @@ class EditorCameraDialogControllerData
 	static float Sharpness;
 }
 
-class EditorCameraDialogController: Controller
+class EditorCameraDialogController: EditorDialogController
 {
 	
 	protected EditorCamera m_EditorCamera;
@@ -126,12 +126,10 @@ class EditorCameraDialog: EditorDialog
 			DEFAULT_NEARPLANE = m_EditorCamera.GetNearPlane();
 		}
 		
-		m_EditorCameraDialogController = new EditorCameraDialogController();
+		m_EditorCameraDialogController = EditorCameraDialogController.Cast(m_Controller);
 		m_EditorCameraDialogController.SetCamera(m_EditorCamera);
 		
 		EditorPrefabGroup camera_group = new EditorPrefabGroup("Camera");
-		
-
 		camera_group.AddPrefab(new EditorPrefabSlider("FOV", "fov", 0, 2));
 		camera_group.AddPrefab(new EditorPrefabSlider("Gaussian Blur", "blur", 0, 1));
 		camera_group.AddPrefab(new EditorPrefabSlider("Near Plane", "near_plane", 0, 1));
@@ -150,7 +148,9 @@ class EditorCameraDialog: EditorDialog
 		AddButton("Close", "DialogCloseRelayCommand");
 	}
 	
-
+	override typename GetControllerType() {
+		return EditorCameraDialogController;
+	}
 	
 }
 
