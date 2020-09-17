@@ -979,8 +979,8 @@ FrameWidgetClass EditorMainFrame {
            hexactsize 0
            vexactsize 0
            style Normal
-           text "FILE"
-           font "gui/fonts/metron-bold"
+           text "File"
+           font "gui/fonts/etelkatextpro"
            "exact text" 0
            "text halign" center
            "text valign" center
@@ -1014,9 +1014,9 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 0
            hexactsize 0
            vexactsize 0
-           style Bold
-           text "EDIT"
-           font "gui/fonts/metron-bold"
+           style Normal
+           text "Edit"
+           font "gui/fonts/etelkatextpro"
            "text halign" center
            "text valign" center
           }
@@ -1049,9 +1049,9 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 0
            hexactsize 0
            vexactsize 0
-           style Bold
-           text "VIEW"
-           font "gui/fonts/metronbook-bold"
+           style Normal
+           text "View"
+           font "gui/fonts/etelkatextpro"
            "text halign" center
            "text valign" center
           }

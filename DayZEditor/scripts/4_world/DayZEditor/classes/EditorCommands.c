@@ -8,12 +8,22 @@ class EditorCommand: RelayCommand
 	override void Execute(RelayCommandArgs args) {
 		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(args);
+		
+		m_Editor.GetEditorHud().CloseMenu();
 		Call();
 	}
 	
-	string GetName();
-	string GetIcon();
-	string GetKeys();
+	string GetName() {
+		return string.Empty;
+	}
+	
+	string GetIcon() {
+		return string.Empty;
+	}
+	
+	string GetKeys() {
+		return string.Empty;
+	}
 }
 
 class EditorNewCommand: EditorCommand
@@ -74,7 +84,7 @@ class EditorOpenCommand: EditorCommand
 	}
 		
 	override string GetIcon() {
-		return "dayz_editor_gui:building_icon";
+		return "DayZEditor/gui/icons/icon_folder_128x128.edds";
 	}
 	
 	override string GetKeys() {
@@ -269,5 +279,9 @@ class EditorReloadHudCommand: EditorCommand
 
 	override string GetName() {
 		return "Reload Editor";
+	}
+	
+	override string GetKeys() {
+		return "Ctrl + Shift + T";
 	}
 }

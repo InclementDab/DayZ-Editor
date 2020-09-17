@@ -13,6 +13,8 @@ class EditorMenuItem: EditorMVCLayout
 {
 	protected ref EditorMenuItemController m_EditorMenuItemController;
 	
+	protected ImageWidget EditorMenuItemIcon;
+	
 	void EditorMenuItem() {
 		EditorLog.Trace("EditorMenuItem");
 		if (m_LayoutRoot) {
@@ -39,12 +41,15 @@ class EditorMenuItemButton: EditorMenuItem
 	{
 		m_EditorCommand = editor_command;
 		
-		m_EditorMenuItemController.LabelText = m_EditorCommand.GetName();
-		m_EditorMenuItemController.IconPath = m_EditorCommand.GetIcon();
-		m_EditorMenuItemController.ShortcutText = m_EditorCommand.GetKeys();
+		EditorMenuItemIcon.Show(m_EditorCommand.GetIcon() != string.Empty);
 		
+		m_EditorMenuItemController.LabelText = m_EditorCommand.GetName();
 		m_EditorMenuItemController.NotifyPropertyChanged("LabelText");
+		
+		m_EditorMenuItemController.IconPath = m_EditorCommand.GetIcon();
 		m_EditorMenuItemController.NotifyPropertyChanged("IconPath");
+		
+		m_EditorMenuItemController.ShortcutText = m_EditorCommand.GetKeys();
 		m_EditorMenuItemController.NotifyPropertyChanged("ShortcutText");
 	}
 		

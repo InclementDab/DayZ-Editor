@@ -97,6 +97,7 @@ class EditorFileMenu: EditorMenu
 		AddMenuButton(EditorSaveCommand);
 		AddMenuButton(EditorSaveAsCommand);
 		AddMenuButton(EditorCloseCommand);
+		AddMenuDivider();
 	}
 }
 
@@ -106,12 +107,16 @@ class EditorEditMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorEditMenu");
 			
-		AddMenuDivider();	
-		
+			
 		AddMenuButton(EditorUndoCommand);
 		AddMenuButton(EditorRedoCommand);
 		AddMenuDivider();
+		AddMenuButton(EditorCutCommand);
+		AddMenuButton(EditorCopyCommand);
+		AddMenuButton(EditorPasteCommand);
+		AddMenuDivider();
 		AddMenuButton(EditorPreferencesCommand);
+		AddMenuDivider();
 	}
 }
 
@@ -120,9 +125,9 @@ class EditorViewMenu: EditorMenu
 	void EditorViewMenu()
 	{
 		EditorLog.Trace("EditorViewMenu");
+		
 		AddMenuButton(EditorCameraControlsCommand);
 		AddMenuButton(EditorReloadHudCommand);
-		AddMenuDivider();
 	}
 }
 
