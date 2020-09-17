@@ -49,7 +49,7 @@ class MapSelectDialogController: EditorDialogController
 			}
 		}
 	}
-	
+	/*
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{		
 		if (button != 0) return false; 
@@ -57,11 +57,10 @@ class MapSelectDialogController: EditorDialogController
 		if (w.GetName() == "MapHostListbox") {	
 			GetEditor().GetEditorHud().GetModal().Close();
 			GetGame().PlayMission(CreateEditorMission(MapHostListboxSelection));
-			return true;			
 		}
 		
 		return false;
-	}
+	}*/
 }
 
 
