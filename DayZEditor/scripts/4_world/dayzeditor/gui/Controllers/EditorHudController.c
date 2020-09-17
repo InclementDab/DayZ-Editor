@@ -233,19 +233,32 @@ class EditorHudController: Controller
 	void MenuBarFileExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudController::MenuBarFileExecute");
-		CreateToolbarMenu(MenuBarFile);
+		
+		if (GetEditor().GetEditorHud().GetMenu().Type() != GetBoundMenu(MenuBarFile)) {
+			CreateToolbarMenu(MenuBarFile);
+		} else {
+			GetEditor().GetEditorHud().CloseMenu();
+		}
 	}
 	
 	void MenuBarEditExecute(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudController::MenuBarEditExecute");
-		CreateToolbarMenu(MenuBarEdit);
+		if (GetEditor().GetEditorHud().GetMenu().Type() != GetBoundMenu(MenuBarEdit)) {
+			CreateToolbarMenu(MenuBarEdit);
+		} else {
+			GetEditor().GetEditorHud().CloseMenu();
+		}
 	}
 	
 	void MenuBarViewExecute(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudController::MenuBarViewExecute");
-		CreateToolbarMenu(MenuBarView);
+		if (GetEditor().GetEditorHud().GetMenu().Type() != GetBoundMenu(MenuBarView)) {
+			CreateToolbarMenu(MenuBarView);
+		} else {
+			GetEditor().GetEditorHud().CloseMenu();
+		}
 	}
 	
 	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
@@ -364,19 +377,17 @@ class EditorHudController: Controller
 			return false;
 		}
 		
-		// Specific style handlers
+		// Widget specific styles
 		switch (w) {
 			case MenuBarFile:
 			case MenuBarEdit:
 			case MenuBarView: {
 				w.SetColor(COLOR_SALMON);
-				EditorHud editor_hud = GetEditor().GetEditorHud();
-				if (editor_hud.IsMenuActive() && !editor_hud.GetMenu().IsInherited(EditorContextMenu)) {
-					editor_hud.CloseMenu();
+				if (GetEditor().GetEditorHud().IsMenuActive() && !GetEditor().GetEditorHud().GetMenu().IsInherited(EditorContextMenu)) {
 					CreateToolbarMenu(w);
 				}
 				
-				return false;
+				return true;
 			}
 		}
 		
