@@ -21,6 +21,7 @@ class EditorMenuBarFileRelayCommand: RelayCommand
 	}
 }
 
+
 class EditorMenuItemRelayCommand: RelayCommand
 {
 	private func m_ExecuteFunc;
@@ -34,4 +35,7 @@ class EditorMenuItemRelayCommand: RelayCommand
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(m_ExecuteFunc, args);
 	}
 }
+
+
+
 

@@ -84,7 +84,7 @@ WrapSpacerWidgetClass EditorDialog {
        font "gui/fonts/Metron-Bold"
        {
         ScriptParamsClass {
-         Relay_Command "TitleCloseExecute"
+         Relay_Command "DialogCloseRelayCommand"
         }
        }
       }

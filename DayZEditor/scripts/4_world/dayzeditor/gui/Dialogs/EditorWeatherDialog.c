@@ -1,5 +1,5 @@
 
-class EditorWeatherDialogController: Controller
+class EditorWeatherDialogController: EditorDialogController
 {
 	protected World m_World;
 	protected Weather m_Weather;
@@ -73,7 +73,21 @@ class EditorWeatherDialogController: Controller
 			}
 		}	
 	}
+	
+	bool _LightingCallback = false;
+	void LightingCallback()
+	{
+		_LightingCallback = !_LightingCallback;
+		
+		if (_LightingCallback) {
+			GetGame().GetWorld().LoadNewLightingCfg( "dz\\data\\lighting\\lighting_darknight.txt" );
+		} else {
+			GetGame().GetWorld().LoadNewLightingCfg( "dz\\data\\lighting\\lighting_default.txt" );
+		}
+	}
 }
+
+
 
 
 class EditorWeatherDialog: EditorDialog
@@ -102,20 +116,11 @@ class EditorWeatherDialog: EditorDialog
 		
 		SetTitle("World Controller");
 		AddButton("Lighting", "LightingCallback");
-		AddButton("Close", "Close");
+		AddButton("Close", "DialogCloseRelayCommand");
 	}
-
 	
-	bool _LightingCallback = false;
-	void LightingCallback()
-	{
-		_LightingCallback = !_LightingCallback;
-		
-		if (_LightingCallback) {
-			GetGame().GetWorld().LoadNewLightingCfg( "dz\\data\\lighting\\lighting_darknight.txt" );
-		} else {
-			GetGame().GetWorld().LoadNewLightingCfg( "dz\\data\\lighting\\lighting_default.txt" );
-		}
+	override typename GetControllerType() {
+		return EditorWeatherDialogController;
 	}
 }
 

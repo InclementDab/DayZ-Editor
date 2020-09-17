@@ -6,7 +6,7 @@ PanelWidgetClass EditorDialogButton {
  hexactsize 1
  vexactsize 1
  priority 1
- scriptclass "EditorDialogButtonHandler"
+ scriptclass "EditorDialogButtonViewBinding"
  style rover_sim_black_2
  {
   PanelWidgetClass DialogButtonOutline {
@@ -42,10 +42,6 @@ PanelWidgetClass EditorDialogButton {
      }
     }
    }
-  }
- }
- {
-  ScriptParamsClass {
   }
  }
 }
