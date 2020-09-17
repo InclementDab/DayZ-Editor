@@ -228,6 +228,11 @@ class Editor
 			m_EditorHudController.NotifyPropertyChanged("cam_z");
 			
 		}
+		
+		EditorObjectSet selected_objects = GetSelectedObjects();
+		if (selected_objects.Count() > 0) {
+			m_EditorHud.GetController().SetInfoObjectPosition(selected_objects[0].GetPosition());
+		}
 			
 		// debug
 		timeslice_count++;

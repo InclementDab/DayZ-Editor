@@ -1562,7 +1562,7 @@ FrameWidgetClass EditorMainFrame {
     GridSpacerWidgetClass InfobarObjPosFrame {
      visible 1
      ignorepointer 1
-     position 0 0
+     position 0.02 0
      size 0.2 1
      valign center_ref
      hexactpos 0
@@ -1577,7 +1577,8 @@ FrameWidgetClass EditorMainFrame {
      content_valign center
      Rows 1
      {
-      PanelWidgetClass Info_ObjPos_X {
+      WrapSpacerWidgetClass Info_ObjPos_X {
+       visible 1
        ignorepointer 1
        position 0 0
        size 120 24
@@ -1587,15 +1588,19 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 1
        vexactsize 1
+       Padding 0
+       Margin 0
+       content_halign center
+       content_valign center
        {
         PanelWidgetClass Info_ObjPos_X_Icon {
          ignorepointer 1
          color 0.7529 0.2235 0.1686 1
-         size 24 24
+         size 0.2 1
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          style rover_sim_colorable
          {
           TextWidgetClass Info_ObjPos_X_IconLable {
@@ -1614,20 +1619,29 @@ FrameWidgetClass EditorMainFrame {
           }
          }
         }
-        EditBoxWidgetClass Info_ObjPos_X_Value {
+        TextWidgetClass Info_ObjPos_X_Value {
          ignorepointer 0
-         size 90 24
-         halign right_ref
+         size 0.8 1
+         halign center_ref
+         valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
          text "1000.5"
-         font "gui/fonts/system"
+         font "gui/fonts/MetronBook"
+         "text halign" center
+         "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "obj_x"
+          }
+         }
         }
        }
       }
-      PanelWidgetClass Info_ObjPos_Y {
+      WrapSpacerWidgetClass Info_ObjPos_Y {
        ignorepointer 1
        size 120 24
        halign center_ref
@@ -1637,15 +1651,19 @@ FrameWidgetClass EditorMainFrame {
        hexactsize 1
        vexactsize 1
        scriptclass ""
+       Padding 0
+       Margin 0
+       content_halign center
+       content_valign center
        {
         PanelWidgetClass Info_ObjPos_Y_Icon {
          ignorepointer 1
          color 0.1529 0.6824 0.3765 1
-         size 24 24
+         size 0.2 1
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          style rover_sim_colorable
          {
           TextWidgetClass Info_ObjPos_Y_IconLable {
@@ -1664,16 +1682,25 @@ FrameWidgetClass EditorMainFrame {
           }
          }
         }
-        EditBoxWidgetClass Info_ObjPos_Y_Value {
+        TextWidgetClass Info_ObjPos_Y_Value {
          ignorepointer 0
-         size 90 24
+         size 0.8 1
          halign right_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
          text "1000.5"
-         font "gui/fonts/system"
+         font "gui/fonts/MetronBook"
+         "exact text" 0
+         "text halign" center
+         "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "obj_y"
+          }
+         }
         }
        }
       }
@@ -1691,11 +1718,11 @@ FrameWidgetClass EditorMainFrame {
         PanelWidgetClass Info_ObjPos_Z_Icon {
          ignorepointer 1
          color 0.1608 0.502 0.7255 1
-         size 24 24
+         size 0.2 1
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          style rover_sim_colorable
          {
           TextWidgetClass Info_ObjPos_Z_IconLable {
@@ -1714,25 +1741,50 @@ FrameWidgetClass EditorMainFrame {
           }
          }
         }
-        EditBoxWidgetClass Info_ObjPos_Z_Value {
+        TextWidgetClass Info_ObjPos_Z_Value {
          ignorepointer 0
-         size 90 24
+         size 0.8 1
          halign right_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
          text "1000.5"
-         font "gui/fonts/system"
+         font "gui/fonts/MetronBook"
+         "exact text" 0
+         "text halign" center
+         "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "obj_z"
+          }
+         }
         }
        }
       }
      }
     }
+    ImageWidgetClass InfobarCamIcon {
+     ignorepointer 1
+     position 0.215 0
+     size 24 24
+     halign right_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     image0 "set:dayz_editor_gui image:camera_icon"
+     mode blend
+     "src alpha" 1
+     "no wrap" 1
+     stretch 1
+    }
     GridSpacerWidgetClass InfobarCamPosFrame {
      visible 1
      ignorepointer 1
-     position 0.04 0
+     position 0.02 0
      size 0.24 1
      halign right_ref
      valign center_ref
@@ -1748,7 +1800,7 @@ FrameWidgetClass EditorMainFrame {
      Columns 4
      Rows 1
      {
-      PanelWidgetClass Info_CamPos_X {
+      WrapSpacerWidgetClass Info_CamPos_X {
        ignorepointer 1
        position 5 0
        size 120 24
@@ -1756,15 +1808,17 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 1
        vexactsize 1
+       Padding 0
+       Margin 0
        {
         PanelWidgetClass Info_CamPos_X_Icon {
          ignorepointer 1
          color 0.7529 0.2235 0.1686 1
-         size 24 24
+         size 0.2 1
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          style rover_sim_colorable
          {
           TextWidgetClass Info_CamPos_X_IconLable {
@@ -1785,15 +1839,15 @@ FrameWidgetClass EditorMainFrame {
         }
         TextWidgetClass Info_CamPos_X_Value {
          ignorepointer 1
-         size 90 24
+         size 0.8 1
          halign right_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          scriptclass "ViewBinding"
          text "1000.5"
-         font "gui/fonts/system"
+         font "gui/fonts/MetronBook"
          "text halign" center
          "text valign" center
          {
@@ -1804,7 +1858,7 @@ FrameWidgetClass EditorMainFrame {
         }
        }
       }
-      PanelWidgetClass Info_CamPos_Y {
+      WrapSpacerWidgetClass Info_CamPos_Y {
        ignorepointer 1
        position 130 0
        size 120 24
@@ -1812,15 +1866,17 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 1
        vexactsize 1
+       Padding 0
+       Margin 0
        {
         PanelWidgetClass Info_CamPos_Y_Icon {
          ignorepointer 1
          color 0.1529 0.6824 0.3765 1
-         size 24 24
+         size 0.2 1
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          style rover_sim_colorable
          {
           TextWidgetClass Info_CamPos_Y_IconLable {
@@ -1841,15 +1897,15 @@ FrameWidgetClass EditorMainFrame {
         }
         TextWidgetClass Info_CamPos_Y_Value {
          ignorepointer 1
-         size 90 24
+         size 0.8 1
          halign right_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          scriptclass "ViewBinding"
          text "1000.5"
-         font "gui/fonts/system"
+         font "gui/fonts/MetronBook"
          "text halign" center
          "text valign" center
          {
@@ -1872,11 +1928,11 @@ FrameWidgetClass EditorMainFrame {
         PanelWidgetClass Info_CamPos_Z_Icon {
          ignorepointer 1
          color 0.1608 0.502 0.7255 1
-         size 24 24
+         size 0.2 1
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          style rover_sim_colorable
          {
           TextWidgetClass Info_CamPos_Z_IconLable {
@@ -1897,15 +1953,15 @@ FrameWidgetClass EditorMainFrame {
         }
         TextWidgetClass Info_CamPos_Z_Value {
          ignorepointer 1
-         size 90 24
+         size 0.8 1
          halign right_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          scriptclass "ViewBinding"
          text "1000.5"
-         font "gui/fonts/system"
+         font "gui/fonts/MetronBook"
          "text halign" center
          "text valign" center
          {
@@ -1917,22 +1973,6 @@ FrameWidgetClass EditorMainFrame {
        }
       }
      }
-    }
-    ImageWidgetClass InfobarCamIcon {
-     ignorepointer 1
-     position 0.24 0
-     size 24 24
-     halign right_ref
-     valign center_ref
-     hexactpos 0
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     image0 "set:dayz_editor_gui image:camera_icon"
-     mode blend
-     "src alpha" 1
-     "no wrap" 1
-     stretch 1
     }
    }
   }

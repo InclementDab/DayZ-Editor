@@ -27,7 +27,6 @@ class EditorHudController: Controller
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
-	
 	ref ObservableCollection<ref EditorWidget> LeftbarSpacerData;
 	ref ObservableCollection<ref EditorWidget> RightbarSpacerData;
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
@@ -46,6 +45,8 @@ class EditorHudController: Controller
 	protected Widget NotificationPanel;
 	protected TextWidget NotificationText;
 	
+	protected GridSpacerWidget InfobarObjPosFrame;
+	
 	CanvasWidget EditorCanvas;
 	
 	protected ButtonWidget MenuBarFile;
@@ -55,8 +56,24 @@ class EditorHudController: Controller
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected RadioButtonGroup m_RadioButtonGroup;
 	
-	void EditorHudController() {
+	void EditorHudController() 
+	{
 		EditorLog.Trace("EditorHudController");
+		
+#ifndef COMPONENT_SYSTEM
+		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
+		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
+#endif
+	}
+	
+	void ~EditorHudController() 
+	{
+		EditorLog.Trace("~EditorHudController");
+		
+#ifndef COMPONENT_SYSTEM
+		EditorEvents.OnObjectSelected.Remove(OnObjectSelected);
+		EditorEvents.OnObjectDeselected.Remove(OnObjectDeselected);
+#endif
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
@@ -78,7 +95,6 @@ class EditorHudController: Controller
 		
 		// Load Brushes
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
-
 	}
 	
 		
@@ -133,7 +149,6 @@ class EditorHudController: Controller
 		
 		return j;
 	}
-	
 	
 
 	override void PropertyChanged(string property_name)
@@ -680,6 +695,26 @@ class EditorHudController: Controller
 		}
 		
 		return typename;
+	}
+	
+	private void OnObjectSelected(Class context, EditorObject target)
+	{
+		InfobarObjPosFrame.Show(GetEditor().GetObjectManager().GetSelectedObjects().Count() > 0);
+	}
+	
+	private void OnObjectDeselected(Class context, EditorObject target)
+	{
+		InfobarObjPosFrame.Show(GetEditor().GetObjectManager().GetSelectedObjects().Count() > 0);
+	}
+	
+	void SetInfoObjectPosition(vector position)
+	{
+		obj_x = position[0];
+		obj_y = position[1];
+		obj_z = position[2];
+		NotifyPropertyChanged("obj_x");
+		NotifyPropertyChanged("obj_y");
+		NotifyPropertyChanged("obj_z");
 	}
 
 }
