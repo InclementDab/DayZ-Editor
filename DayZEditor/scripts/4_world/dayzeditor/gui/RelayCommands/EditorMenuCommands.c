@@ -102,5 +102,27 @@ class EditorToolbarRedoCommand: EditorToolbarItemCommand
 	}
 }
 
+class EditorToolbarCameraControlCommand: EditorToolbarItemCommand
+{
+	override void Execute(RelayCommandArgs args)
+	{
+		EditorLog.Trace("EditorToolbarCameraControlCommand::Execute");
+		EditorCameraDialog cam_dialog = new EditorCameraDialog(GetEditor().GetCamera());
+		cam_dialog.Show();
+		
+		super.Execute(args);
+	}
+}
+
+class EditorToolbarReloadUICommand: EditorToolbarItemCommand
+{
+	override void Execute(RelayCommandArgs args)
+	{
+		EditorLog.Trace("EditorToolbarReloadUICommand::Execute");
+		super.Execute(args);
+		GetEditor().ReloadHud();
+	}
+}
+
 
 

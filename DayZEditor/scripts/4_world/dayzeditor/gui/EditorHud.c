@@ -2,8 +2,7 @@
 
 class EditorHud: Hud
 {	
-	
-	protected Widget m_LayoutRoot;
+	protected Widget 			m_LayoutRoot;
 	
 	// Misc get ridda this shit too
 	protected Widget 			m_EditorMapContainer;
@@ -14,6 +13,17 @@ class EditorHud: Hud
 	protected ref EditorHudController 	m_EditorHudController;
 	ref EditorHudController GetController() { 
 		return m_EditorHudController;
+	}
+	
+	void EditorHud() {
+		EditorLog.Info("EditorHud");
+	}
+	
+	void ~EditorHud() {
+		EditorLog.Info("~EditorHud");
+		delete m_EditorHudController;
+		delete m_EditorMap;
+		m_LayoutRoot.Unlink();
 	}
 	
 	// literally track down everything that uses these and DELETE THEM its SHIT CODE TYLER DO IT PUSSY
@@ -31,7 +41,6 @@ class EditorHud: Hud
 	Widget GetRoot() { 
 		return m_LayoutRoot; 
 	}
-	
 	
 	override void Show(bool show) {
 		EditorLog.Trace("EditorHud::Show");
@@ -67,14 +76,7 @@ class EditorHud: Hud
 	void ShowMap(bool show)	{
 		m_EditorMapContainer.Show(show);
 	}
-	
-	void EditorHud() {
-		EditorLog.Info("EditorHud");
-	}
-	
-	void ~EditorHud() {
-		EditorLog.Info("~EditorHud");
-	}
+
 	
 	override void Init(Widget hud_panel_widget) 
 	{

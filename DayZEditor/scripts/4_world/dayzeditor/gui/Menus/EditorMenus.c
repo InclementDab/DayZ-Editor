@@ -102,6 +102,7 @@ class EditorEditMenu: EditorMenu
 		AddMenuButton("Undo", "EditorToolbarUndoCommand", "Ctrl + Z");
 		AddMenuButton("Redo", "EditorToolbarRedoCommand", "Ctrl + Y");
 		AddMenuDivider();
+		AddMenuButton("Preferences...", "EditorToolbarPreferencesCommand");
 	}
 }
 
@@ -111,7 +112,8 @@ class EditorViewMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorViewMenu");
 		
-		AddMenuButton("Camera Controls", "EditorToolbarCameraControlCommand");
+		AddMenuButton("Camera Controls...", "EditorToolbarCameraControlCommand");
+		AddMenuButton("Reload Editor UI", "EditorToolbarReloadUICommand");
 		AddMenuDivider();
 	}
 }

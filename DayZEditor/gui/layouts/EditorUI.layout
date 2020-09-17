@@ -281,7 +281,7 @@ FrameWidgetClass EditorMainFrame {
    clipchildren 0
    ignorepointer 1
    position 0 56
-   size 350 0.915
+   size 350 0.926
    hexactpos 1
    vexactpos 1
    hexactsize 1

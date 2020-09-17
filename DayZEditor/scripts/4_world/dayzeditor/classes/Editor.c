@@ -636,6 +636,15 @@ class Editor
 		return m_LootEditMode; 
 	}
 
-			
+	EditorHud ReloadHud() 
+	{
+		if (m_EditorHud)
+			delete m_EditorHud;
+		
+		m_EditorHud = new EditorHud();
+		m_EditorHud.Init(null);
+		m_EditorHudController = m_EditorHud.GetController();
+		return m_EditorHud;
+	}
 }
 
