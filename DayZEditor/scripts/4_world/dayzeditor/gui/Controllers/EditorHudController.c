@@ -171,10 +171,7 @@ class EditorHudController: Controller
 				LeftbarScroll.HScrollToPos(0);
 				
 				break;
-			}
-			
-			
-
+			}			
 		}
 	}
 	
@@ -236,22 +233,22 @@ class EditorHudController: Controller
 	void MenuBarFileExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudController::MenuBarFileExecute");
-		CreateToolbarMenu(EditorFileMenu, MenuBarFile);
+		CreateToolbarMenu(MenuBarFile);
 	}
 	
 	void MenuBarEditExecute(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudController::MenuBarEditExecute");
-		CreateToolbarMenu(EditorEditMenu, MenuBarEdit);
+		CreateToolbarMenu(MenuBarEdit);
 	}
 	
 	void MenuBarViewExecute(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudController::MenuBarViewExecute");
-		CreateToolbarMenu(EditorViewMenu, MenuBarView);
+		CreateToolbarMenu(MenuBarView);
 	}
 	
-	private EditorMenu CreateToolbarMenu(typename menu_type, Widget toolbar_button)
+	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
 	{
 		EditorLog.Trace("EditorHudController::CreateToolbarMenu");
 		float x, y, w, h;
@@ -265,7 +262,7 @@ class EditorHudController: Controller
 			return;
 		}*/
 		
-		EditorMenu toolbar_menu = menu_type.Spawn();
+		EditorMenu toolbar_menu = GetBoundMenu(toolbar_button).Spawn();
 		toolbar_menu.SetPosition(x, y);
 		toolbar_menu.Show();
 		return toolbar_menu;
@@ -367,10 +364,26 @@ class EditorHudController: Controller
 			return false;
 		}
 		
+		// Specific style handlers
+		switch (w) {
+			case MenuBarFile:
+			case MenuBarEdit:
+			case MenuBarView: {
+				w.SetColor(COLOR_SALMON);
+				EditorHud editor_hud = GetEditor().GetEditorHud();
+				if (editor_hud.IsMenuActive() && !editor_hud.GetMenu().IsInherited(EditorContextMenu)) {
+					editor_hud.CloseMenu();
+					CreateToolbarMenu(w);
+				}
+				
+				return false;
+			}
+		}
+		
 		switch (w.GetTypeName()) {
 			
 			case "ButtonWidget": {
-				w.SetColor(COLOR_SALMON_A);
+				w.SetColor(COLOR_SALMON);				
 				break;
 			}
 			
@@ -668,6 +681,28 @@ class EditorHudController: Controller
 		root.SetColor(COLOR_EMPTY);
 		SetWidgetIconPosition(root, 0, 0);
 	}
+	
+		
+	typename GetBoundMenu(Widget target)
+	{
+		switch (target) {
+			
+			case MenuBarFile: {
+				return EditorFileMenu;
+			}
+			
+			case MenuBarEdit: {
+				return EditorEditMenu;
+			}
+			
+			case MenuBarView: {
+				return EditorViewMenu;
+			}
+		}
+		
+		return typename;
+	}
+
 }
 
 

@@ -340,7 +340,7 @@ class Editor
 					return true;
 				} else if (m_EditorHud.IsModalActive() || m_EditorHud.IsMenuActive()) {
 					m_EditorHud.GetModal().Close();
-					m_EditorHud.GetMenu().Close();
+					m_EditorHud.CloseMenu();
 					return true;
 				// jank
 				} else if (!GetGame().GetMission().IsPaused()) {
@@ -641,5 +641,6 @@ class Editor
 		typename t;
 		return t;
 	}
+
 }
 
