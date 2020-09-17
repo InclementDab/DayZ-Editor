@@ -8,7 +8,6 @@ class EditorDialog: EditorMVCLayout
 	void EditorDialog() 
 	{
 		EditorLog.Trace("EditorDialog");
-		
 		m_LayoutRoot.Show(false);
 	}
 	
@@ -99,7 +98,7 @@ class EditorDialog: EditorMVCLayout
 			g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DragUpdate);	
 		}
 		
-		return super.OnDrag(w, x, y);
+		return false;
 	}
 	
 	override bool OnDragging(Widget w, int x, int y, Widget reciever) { 
