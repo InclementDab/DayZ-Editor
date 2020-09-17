@@ -145,6 +145,11 @@ class EditorObjectPropertiesDialog: EditorDialog
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog");
 		m_EditorObject = editor_object;
+		
+		if (!m_EditorObject) {
+			return;
+		}
+		
 		m_EditorPropertiesController = EditorPropertiesPrefabController.Cast(GetController());
 		m_EditorPropertiesController.SetEditorObject(m_EditorObject);
 		
