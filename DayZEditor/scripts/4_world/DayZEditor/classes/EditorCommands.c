@@ -8,9 +8,22 @@ class EditorCommand: RelayCommand
 	override void Execute(RelayCommandArgs args) {
 		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(args);
-		
 		m_Editor.GetEditorHud().CloseMenu();
 		Call();
+	}
+	
+	override void CanExecuteChanged(bool state) {
+		
+		Widget root = m_ViewBinding.GetLayoutRoot();
+		if (state) {
+			root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(1);
+			root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(1);
+		} else {
+			root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(0.3);
+			root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(0.3);
+		}
+		
+		root.Enable(state);
 	}
 	
 	string GetName() {
@@ -75,6 +88,10 @@ class EditorSaveAsCommand: EditorCommand
 
 class EditorOpenCommand: EditorCommand
 {
+	void EditorOpenCommand() {
+		SetCanExecute(false);
+	}
+	
 	override void Call() {
 		m_Editor.Open();
 	}
@@ -109,6 +126,31 @@ class EditorCloseCommand: EditorCommand
 	override string GetKeys() {
 		return "Ctrl + W";
 	}
+}
+
+class EditorExitCommand: EditorCommand
+{
+	void EditorExitCommand() {
+		SetCanExecute(false);
+	}
+	
+	override void Call() {
+		GetGame().LogoutRequestTime();
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(GetGame().GetMission().CreateLogoutMenu, GetGame().GetUIManager().GetMenu());
+	}
+	
+	override string GetName() {
+		return "Exit";
+	}
+		
+	override string GetIcon() {
+		return "dayz_editor_gui:building_icon";
+	}
+	
+	override string GetKeys() {
+		return "Alt + F4";
+	}
+	
 }
 
 class EditorUndoCommand: EditorCommand
@@ -205,6 +247,10 @@ class EditorImportCommand: EditorCommand
 
 class EditorCutCommand: EditorCommand
 {
+	void EditorCutCommand() {
+		SetCanExecute(m_Editor.GetSelectedObjects().Count() > 0);
+	}
+	
 	override void Call() {
 		m_Editor.Cut(m_Editor.GetSelectedObjects());
 	}
@@ -220,6 +266,10 @@ class EditorCutCommand: EditorCommand
 
 class EditorCopyCommand: EditorCommand
 {
+	void EditorCopyCommand() {
+		SetCanExecute(m_Editor.GetSelectedObjects().Count() > 0);
+	}
+	
 	override void Call() {
 		m_Editor.Copy(m_Editor.GetSelectedObjects());
 	}
@@ -235,6 +285,12 @@ class EditorCopyCommand: EditorCommand
 
 class EditorPasteCommand: EditorCommand
 {
+	void EditorPasteCommand() {
+		string clipboard_text;
+		GetGame().CopyFromClipboard(clipboard_text);
+		SetCanExecute(clipboard_text != string.Empty);
+	}
+	
 	override void Call() {
 		m_Editor.Paste(m_Editor.CurrentMousePosition);
 	}

@@ -78,8 +78,6 @@ class EditorObjectMarker: EditorMarker
 			m_LayoutRoot.SetAlpha(ALPHA_ON_SHOW);
 		else 
 			m_LayoutRoot.SetAlpha(ALPHA_ON_HIDE);
-		
-
 	}
 	
 	
@@ -198,6 +196,28 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		
 		
 		super.Update();
+	}
+	
+	
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorObjectWorldMarker::OnClick: " + button);
+		
+		switch (button) {
+			
+			
+			case 1: {
+				GetEditor().SelectObject(m_EditorObject);
+				EditorContextMenu context_menu = new EditorContextMenu();
+				context_menu.SetPosition(x, y);
+				context_menu.Show();
+				
+				return true;
+			}			
+		}
+		
+		return false;
 	}
 	
 	/*
