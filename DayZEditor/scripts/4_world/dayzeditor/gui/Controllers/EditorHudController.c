@@ -53,6 +53,9 @@ class EditorHudController: Controller
 	protected ButtonWidget MenuBarEdit;
 	protected ButtonWidget MenuBarView;
 	
+	protected Widget BrushRadiusFrame;
+	protected Widget BrushDensityFrame;
+	
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected RadioButtonGroup m_RadioButtonGroup;
 	
@@ -154,6 +157,8 @@ class EditorHudController: Controller
 		
 			case "BrushToggleButtonState":
 			case "BrushTypeSelection": {
+				BrushRadiusFrame.Show(BrushToggleButtonState);
+				BrushDensityFrame.Show(BrushToggleButtonState);
 				if (BrushToggleButtonState) {
 					GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
 				} else {
@@ -241,7 +246,7 @@ class EditorHudController: Controller
 	void MenuBarExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudController::MenuBarExecute");
-		
+
 		if (GetEditor().GetEditorHud().GetMenu().Type() != GetBoundMenu(args.GetButtonWidget())) {
 			CreateToolbarMenu(args.GetButtonWidget());
 		} else {

@@ -1409,7 +1409,8 @@ FrameWidgetClass EditorMainFrame {
           }
          }
         }
-        FrameWidgetClass SimcityRadiusFrame {
+        FrameWidgetClass BrushRadiusFrame {
+         visible 0
          clipchildren 0
          ignorepointer 1
          size 140 30
@@ -1475,7 +1476,8 @@ FrameWidgetClass EditorMainFrame {
           }
          }
         }
-        FrameWidgetClass SimcityDensityFrame {
+        FrameWidgetClass BrushDensityFrame {
+         visible 0
          ignorepointer 1
          position 0 0
          size 140 30
@@ -2048,10 +2050,6 @@ FrameWidgetClass EditorMainFrame {
      }
     }
    }
-  }
- }
- {
-  ScriptParamsClass {
   }
  }
 }

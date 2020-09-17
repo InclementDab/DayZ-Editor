@@ -1,5 +1,4 @@
 
-
 class EditorMenu: EditorMVCLayout
 {
 	private ref array<ref EditorMenuItem> m_MenuItems = {};
@@ -107,6 +106,7 @@ class EditorEditMenu: EditorMenu
 	void EditorEditMenu()
 	{
 		EditorLog.Trace("EditorEditMenu");
+				
 		AddMenuButton(EditorUndoCommand);
 		AddMenuButton(EditorRedoCommand);
 		AddMenuDivider();
@@ -127,6 +127,7 @@ class EditorViewMenu: EditorMenu
 		EditorLog.Trace("EditorViewMenu");
 		AddMenuButton(EditorCameraControlsCommand);
 		AddMenuButton(EditorReloadHudCommand);
+		AddMenuButton(EditorLootEditorCommand);
 	}
 }
 

@@ -1,6 +1,10 @@
 //Print(__LINE__);
 //Print(__FILE__); // useful shit // tools.pak?????
-
+//Print(__void);
+//local string test;
+//Print(FLT_MAX);
+//Print(FLT_MIN);
+//__NULL_FUNCT
 
 
 private ref Editor m_EditorInstance;
@@ -10,7 +14,6 @@ Editor GetEditor()
 
 class Editor
 {
-	
 	/* Private Members */
 	private Mission m_Mission;
 	private UIManager m_UIManager;
@@ -20,7 +23,6 @@ class Editor
 	static Object							ObjectUnderCursor = null;
 	static EditorObject 					EditorObjectUnderCursor = null;
 	static vector 							CurrentMousePosition;
-
 	
 	bool IsActive()
 		return m_Active;
@@ -152,13 +154,13 @@ class Editor
 		m_EditorHudController = m_EditorHud.GetController();
 		
 		
+		
 		m_Mission = GetGame().GetMission();
 		
 		if (!IsMissionOffline()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
 		}
-
 		
 		SetActive(true);
 	}

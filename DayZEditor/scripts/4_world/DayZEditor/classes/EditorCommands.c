@@ -379,3 +379,18 @@ class EditorReloadHudCommand: EditorCommand
 		return "Ctrl + Shift + U";
 	}
 }
+
+class EditorLootEditorCommand: EditorCommand
+{
+	void EditorLootEditorCommand() {
+		SetCanExecute(GetEditor().GetSelectedObjects().Count() > 0);
+	}
+	
+	override void Call() {
+		GetEditor().EditLootSpawns(GetEditor().GetSelectedObjects().GetElement(0).GetType());
+	}
+	
+	override string GetName() {
+		return "Edit Loot Spawns";
+	}
+}
