@@ -619,7 +619,7 @@ FrameWidgetClass EditorMainFrame {
              "Size To Content V" 1
              {
               ScriptParamsClass {
-               Relay_Command "LeftbarSpacerExecute"
+               Binding_Name "LeftbarSpacerData"
               }
              }
             }
@@ -683,7 +683,7 @@ FrameWidgetClass EditorMainFrame {
   }
   WrapSpacerWidgetClass RightbarWrapper {
    visible 1
-   clipchildren 0
+   clipchildren 1
    ignorepointer 1
    position 0 32
    size 350 0.92
@@ -703,6 +703,7 @@ FrameWidgetClass EditorMainFrame {
      visible 1
      disabled 0
      ignorepointer 0
+     keepsafezone 1
      color 0.302 0.302 0.302 1
      position 0 0
      size 300 1
@@ -738,12 +739,14 @@ FrameWidgetClass EditorMainFrame {
          hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
+         style Colorable
          Padding 0
          Margin 0
          "Size To Content V" 1
          content_halign right
          {
           ScriptParamsClass {
+           Binding_Name "RightbarSpacerData"
           }
          }
         }

@@ -10,6 +10,8 @@ WrapSpacerWidgetClass EditorMenuContent {
  priority 998
  scriptclass ""
  style Colorable
+ Padding 4
+ Margin 4
  "Size To Content H" 1
  "Size To Content V" 1
  content_halign center

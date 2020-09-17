@@ -1,4 +1,29 @@
 
+
+class EditorFileMenu: EditorMenu
+{
+	void EditorFileMenu()
+	{
+		EditorLog.Trace("EditorFileMenu");
+		
+		AddItem("New", "EditorFileMenuNewCommand");
+		AddItem("Open", "EditorFileMenuOpenCommand");
+		
+		AddItem("Save", "EditorFileMenuSaveCommand");
+		AddItem("Save As...", "EditorFileMenuSaveAsCommand");
+		AddItem("Close", "EditorFileMenuCloseCommand");
+	}
+}
+
+class EditorEditMenu: EditorMenu
+{
+	void EditorEditMenu()
+	{
+		EditorLog.Trace("EditorEditMenu");
+	}
+}
+
+
 class EditorMenu: EditorMVCLayout
 {
 	private ref array<ref EditorMenuItem> m_MenuItems = {};
@@ -35,11 +60,18 @@ class EditorMenu: EditorMVCLayout
 		m_LayoutRoot.SetPos(x, y);
 	}
 	
-	void AddItem(string title, string icon = "")
+	void AddItem(string title, string relay_command = "", string icon = "")
 	{
 		EditorMenuItem menu_item = new EditorMenuItem();
 		menu_item.SetText(title);
 		menu_item.SetIcon(icon);
+		
+		ViewBinding view_binding;
+		menu_item.GetLayoutRoot().FindAnyWidget("EditorMenuItemButton").GetScript(view_binding);
+		if (view_binding && relay_command != string.Empty) {
+			view_binding.SetRelayCommand(relay_command);
+		}
+		
 		AddItem(menu_item);
 	}
 	
@@ -64,45 +96,45 @@ class EditorMenu: EditorMVCLayout
 }
 
 
+class EditorMenuItemController: Controller
+{
+	string LabelText;
+	string IconPath;
+}
+
 class EditorMenuItem: EditorMVCLayout
 {
-	protected TextWidget EditorMenuItemLabel;
-	protected ImageWidget EditorMenuItemIcon;
+	protected ref EditorMenuItemController m_EditorMenuItemController;
 	
 	void EditorMenuItem() {
 		EditorLog.Trace("EditorMenuItem");
 		if (m_LayoutRoot) {
 			m_LayoutRoot.Show(true);
 		}
+		
+		m_EditorMenuItemController = EditorMenuItemController.Cast(GetController());
 	}
 	
 	void ~EditorMenuItem() {
 		EditorLog.Trace("~EditorMenuItem");
 	}
 	
-	void SetText(string text)
-	{
-		if (EditorMenuItemLabel)
-			EditorMenuItemLabel.SetText(text);
+	void SetText(string text) {
+		m_EditorMenuItemController.LabelText = text;
+		m_EditorMenuItemController.NotifyPropertyChanged("LabelText");
 	}
 	
-	void SetIcon(string icon)
-	{
-		if (EditorMenuItemIcon) {
-			EditorMenuItemIcon.LoadImageFile(0, icon);
-			EditorMenuItemIcon.SetImage(0);
-		}
-	}
-	
-	void SetIcon(int image, RTTextureWidget texture)
-	{
-		if (EditorMenuItemIcon) {
-			EditorMenuItemIcon.SetImageTexture(image, texture);
-		}
+	void SetIcon(string icon) {
+		m_EditorMenuItemController.IconPath = icon;
+		m_EditorMenuItemController.NotifyPropertyChanged("IconPath");
 	}
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/menus/EditorMenuItem.layout";
+	}
+	
+	override typename GetControllerType() {
+		return EditorMenuItemController;
 	}
 	
 }

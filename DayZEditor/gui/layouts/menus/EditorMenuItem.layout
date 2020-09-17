@@ -1,6 +1,7 @@
 FrameWidgetClass EditorMenuItem {
- position 0 0
- size 1 25
+ ignorepointer 1
+ size 0.9 25
+ halign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -10,6 +11,7 @@ FrameWidgetClass EditorMenuItem {
  {
   ButtonWidgetClass EditorMenuItemButton {
    visible 1
+   disabled 0
    position 0 0
    size 1 1
    halign center_ref
@@ -53,14 +55,18 @@ FrameWidgetClass EditorMenuItem {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scriptclass ""
+     scriptclass "ViewBinding"
      mode blend
      "src alpha" 1
+     {
+      ScriptParamsClass {
+       Binding_Name "IconPath"
+      }
+     }
     }
    }
    {
     ScriptParamsClass {
-     Relay_Command "EditorMenuItemRelayCommand"
     }
    }
   }

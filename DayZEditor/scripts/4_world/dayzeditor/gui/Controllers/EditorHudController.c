@@ -29,9 +29,8 @@ class EditorHudController: Controller
 	
 	bool CinemaModeState;
 	
-	//ref TextListboxWidgetData DebugActionStackListbox;
-	ref ObservableCollection<ref EditorWidget> LeftbarSpacer;
-	ref ObservableCollection<ref EditorWidget> RightbarSpacer;
+	ref ObservableCollection<ref EditorWidget> LeftbarSpacerData;
+	ref ObservableCollection<ref EditorWidget> RightbarSpacerData;
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 	ref ObservableCollection<string> DebugActionStackListbox;
 	
@@ -63,10 +62,10 @@ class EditorHudController: Controller
 	{
 		super.OnWidgetScriptInit(w);
 				
-		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
-		LeftbarSpacer 				= new ObservableCollection<ref EditorWidget>("LeftbarSpacer", this);
-		RightbarSpacer 				= new ObservableCollection<ref EditorWidget>("RightbarSpacer", this);
+		LeftbarSpacerData 			= new ObservableCollection<ref EditorWidget>("LeftbarSpacerData", this);
+		RightbarSpacerData 			= new ObservableCollection<ref EditorWidget>("RightbarSpacerData", this);
 		BrushTypeBoxData 			= new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
+		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
 		
 		LeftbarPanelSelectorWrapper.GetScript(m_RadioButtonGroup);
 		m_RadioButtonGroup.OnRadioButtonActivate.Insert(OnRadioButtonActivate);
@@ -97,13 +96,13 @@ class EditorHudController: Controller
 	void InsertPlaceableObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlaceableObject");
-		LeftbarSpacer.Insert(target);
+		LeftbarSpacerData.Insert(target);
 	}	
 	
 	void InsertPlacedObject(EditorListItem target)
 	{
 		EditorLog.Trace("EditorHudController::InsertPlacedObject");
-		RightbarSpacer.Insert(target);
+		RightbarSpacerData.Insert(target);
 	}
 	
 	void InsertMapMarker(EditorMarker map_marker)
@@ -164,8 +163,8 @@ class EditorHudController: Controller
 			
 			case "SearchBarData": {
 				
-				for (int j = 0; j < LeftbarSpacer.Count(); j++) {
-					EditorPlaceableListItem placeable_item = LeftbarSpacer.Get(j);
+				for (int j = 0; j < LeftbarSpacerData.Count(); j++) {
+					EditorPlaceableListItem placeable_item = LeftbarSpacerData.Get(j);
 					placeable_item.GetLayoutRoot().Show(placeable_item.GetData().FilterType(SearchBarData));
 				}
 				
@@ -238,14 +237,16 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::MenuBarFileExecute");
 		float x, y, w, h;
-		MenuBarFile.GetPos(x, y);
+		MenuBarFile.GetScreenPos(x, y);
 		MenuBarFile.GetScreenSize(w, h);
 		y += h;
 		
-		EditorMenu file_menu = new EditorMenu();		
-		file_menu.AddItem("Test");
-		file_menu.AddItem("Test2");
-		file_menu.AddItem("Test3");
+		if (GetEditor().GetEditorHud().IsMenuActive()) {
+			GetEditor().GetEditorHud().GetMenu().Close();
+			return;
+		}
+		
+		EditorFileMenu file_menu();
 		file_menu.SetPosition(x, y);
 		file_menu.Show();
 	}
@@ -255,16 +256,17 @@ class EditorHudController: Controller
 		EditorLog.Trace("EditorHudController::MenuBarEditExecute");
 		
 		float x, y, w, h;
-		MenuBarEdit.GetPos(x, y);
+		MenuBarEdit.GetScreenPos(x, y);
 		MenuBarEdit.GetScreenSize(w, h);
 		y += h;
 		
+		if (GetEditor().GetEditorHud().IsMenuActive()) {
+			GetEditor().GetEditorHud().GetMenu().Close();
+			return;
+		}
+		
 		EditorMenu file_menu = new EditorMenu();		
-		file_menu.AddItem("Test");
-		file_menu.AddItem("Test2");
-		file_menu.AddItem("Test3");
-		file_menu.SetPosition(x, y);
-		file_menu.Show();
+		
 	}
 	
 	void MenuBarViewExecute(ButtonCommandArgs args)
@@ -272,16 +274,12 @@ class EditorHudController: Controller
 		EditorLog.Trace("EditorHudController::MenuBarViewExecute");
 		
 		float x, y, w, h;
-		MenuBarEdit.GetPos(x, y);
+		MenuBarEdit.GetScreenPos(x, y);
 		MenuBarEdit.GetScreenSize(w, h);
 		y += h;
 		
 		EditorMenu file_menu = new EditorMenu();		
-		file_menu.AddItem("Test");
-		file_menu.AddItem("Test2");
-		file_menu.AddItem("Test3");
-		file_menu.SetPosition(x, y);
-		file_menu.Show();
+
 	}
 
 	
@@ -663,8 +661,8 @@ class EditorHudController: Controller
 		SetWidgetIconPosition(root, pos, pos);
 
 		// if you add more radio buttons. put this in a condition :)
-		for (int i = 0; i < LeftbarSpacer.Count(); i++) {
-			Widget list_item = LeftbarSpacer[i].GetLayoutRoot();
+		for (int i = 0; i < LeftbarSpacerData.Count(); i++) {
+			Widget list_item = LeftbarSpacerData[i].GetLayoutRoot();
 			EditorPlaceableListItem item;
 			list_item.GetUserData(item);
 			if (list_item && item) {

@@ -1,38 +1,38 @@
 
 
-class EditorMenuBarFileRelayCommand: RelayCommand
+class EditorFileMenuItemCommand: RelayCommand
 {
-	override void Execute(RelayCommandArgs args)
+	
+	override void CanExecuteChanged(bool state)
 	{
-		EditorLog.Trace("EditorMenuBarFileRelayCommand::Execute");
+		EditorLog.Trace("EditorFileMenuItemCommand::CanExecuteChanged");
+
+		if (state) {
+			m_ViewBinding.GetLayoutRoot().FindAnyWidget("EditorMenuItemLabel").SetAlpha(1);
+			m_ViewBinding.GetLayoutRoot().FindAnyWidget("EditorMenuItemIcon").SetAlpha(1);
+		} else {
+			m_ViewBinding.GetLayoutRoot().FindAnyWidget("EditorMenuItemLabel").SetAlpha(0.3);
+			m_ViewBinding.GetLayoutRoot().FindAnyWidget("EditorMenuItemIcon").SetAlpha(0.3);	
+		}	
 		
-		EditorMenu file_menu();
-		file_menu.AddItem("Test1");
-		ButtonWidget bw = ButtonCommandArgs.Cast(args.CommandArgs).GetButtonWidget();
-		float x, y;
-		bw.GetPos(x, y);
-		file_menu.SetPosition(x, y);
-		file_menu.Show();
-		
-		/*EditorMenuItem item_new();
-		item_new.SetText("New");
-		file_menu.AddItem(item_new);
-		*/
+		m_ViewBinding.GetLayoutRoot().Enable(state);	
 	}
 }
 
 
-class EditorMenuItemRelayCommand: RelayCommand
+class EditorFileMenuNewCommand: EditorFileMenuItemCommand
 {
-	private func m_ExecuteFunc;
-	void SetExecuteFunction(func execute_func) {
-		m_ExecuteFunc = execute_func;
+	override void Execute(RelayCommandArgs args)
+	{
+		EditorLog.Trace("EditorFileMenuNewCommand::Execute");
 	}
-	
-	override void Execute(RelayCommandArgs args) {
-		EditorLog.Trace("EditorMenuItemRelayCommand::Execute");
-		if (m_ExecuteFunc)
-			GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(m_ExecuteFunc, args);
+}
+
+class EditorFileMenuOpenCommand: EditorFileMenuItemCommand
+{	
+	override void Execute(RelayCommandArgs args)
+	{
+		EditorLog.Trace("EditorFileMenuOpenCommand::Execute");
 	}
 }
 
