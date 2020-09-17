@@ -206,7 +206,6 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		
 		switch (button) {
 			
-			
 			case 1: {
 				GetEditor().SelectObject(m_EditorObject);
 				EditorContextMenu context_menu = new EditorContextMenu();

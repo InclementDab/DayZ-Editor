@@ -369,6 +369,10 @@ class EditorReloadHudCommand: EditorCommand
 		return "Reload UI";
 	}
 	
+	override string GetIcon() {
+		return "set:dayz_gui image:icon_refresh";
+	}
+	
 	override string GetKeys() {
 		return "Ctrl + Shift + U";
 	}

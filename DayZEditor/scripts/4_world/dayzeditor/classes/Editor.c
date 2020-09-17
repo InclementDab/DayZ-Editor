@@ -577,7 +577,6 @@ class Editor
 	{
 		EditorLog.Trace("Editor::GetCommandFromHotkeys");
 		
-		
 		if (KeyState(KeyCode.KC_LCONTROL)) {
 			
 			// Ctrl + Shift keybinds
@@ -605,6 +604,7 @@ class Editor
 			
 			
 			switch (key) {
+				
 				case KeyCode.KC_Z: {
 					return EditorUndoCommand;
 				}
@@ -654,7 +654,8 @@ class Editor
 			}
 		}
 
-		return typename;
+		typename t;
+		return t;
 	}
 
 }

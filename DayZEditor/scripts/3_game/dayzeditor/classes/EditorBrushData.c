@@ -2,7 +2,6 @@ typedef ref map<string, ref EditorBrushData> EditorBrushDataSet;
 
 
 typedef ref array<ref EditorBrushObject> EditorBrushObjectArray;
-
 class EditorBrushObject
 {
 	string Name;
@@ -40,13 +39,11 @@ class EditorBrushData
 	
 	EditorBrushObject GetRandomObject()
 	{
-		EditorBrushObjectArray PlaceableObjects = new EditorBrushObjectArray();
-		
 		EditorBrushObject brush_object = PlaceableObjectTypes.GetRandomElement();
 		
+		if (PlaceableObjectTypes.Count() == 0) return null;
 		while (Math.RandomFloat01() > brush_object.Frequency)
 			brush_object = PlaceableObjectTypes.GetRandomElement();
-		
 	
 		return brush_object;
 	}

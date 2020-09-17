@@ -22,7 +22,7 @@ class EditorBrush
 	private vector m_LastMousePosition;
 
 	
-	void EditorBrush(EditorBrushData settings = null)
+	private void EditorBrush(EditorBrushData settings = null)
 	{
 		EditorLog.Trace("EditorBrush");
 		m_BrushData = settings;
@@ -83,6 +83,9 @@ class EditorBrush
 			
 		}*/
 		
+		if (GetWidgetUnderCursor()) 
+			return;
+		
 		if (input.LocalPress("UAFire")) {
 			OnMouseDown(CurrentMousePosition);
 		}
@@ -113,8 +116,10 @@ class EditorBrush
 			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			
-			EditorBrushObject object_name = m_BrushData.GetRandomObject();
-			data_set.InsertEditorData(EditorObjectData.Create(object_name.Name, pos, vector.Up, EditorObjectFlags.NONE));
+			if (m_BrushData) {
+				EditorBrushObject object_name = m_BrushData.GetRandomObject();
+				data_set.InsertEditorData(EditorObjectData.Create(object_name.Name, pos, vector.Up, EditorObjectFlags.NONE));
+			}
 			
 		}
 		
@@ -161,11 +166,6 @@ class EditorBrush
 class DeleteBrush: EditorBrush
 {	
 	
-	void DeleteBrush(EditorBrushData settings = null)
-	{
-		EditorLog.Trace("DeleteBrush");
-		//SetBrushTexture("DayZEditor\\Editor\\data\\BrushDelete.paa");
-	}
 	
 	override void DuringMouseDown(vector position)
 	{

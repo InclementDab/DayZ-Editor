@@ -27,7 +27,6 @@ class EditorHudController: Controller
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
-	bool CinemaModeState;
 	
 	ref ObservableCollection<ref EditorWidget> LeftbarSpacerData;
 	ref ObservableCollection<ref EditorWidget> RightbarSpacerData;
@@ -36,9 +35,11 @@ class EditorHudController: Controller
 	
 	// View Properties
 	protected Widget LeftbarFrame;
+	protected ImageWidget LeftbarHideIcon;
 	protected ScrollWidget LeftbarScroll;
 	
 	protected Widget RightbarFrame;
+	protected ImageWidget RightbarHideIcon;
 	protected ButtonWidget BrushToggleButton;
 	
 	protected Widget NotificationFrame;
@@ -70,12 +71,14 @@ class EditorHudController: Controller
 		LeftbarPanelSelectorWrapper.GetScript(m_RadioButtonGroup);
 		m_RadioButtonGroup.OnRadioButtonActivate.Insert(OnRadioButtonActivate);
 		m_RadioButtonGroup.OnRadioButtonDeactivate.Insert(OnRadioButtonDeactivate);
+
 		
 		// Reload Placeables
-		EditorLog.Info(string.Format("Loaded %1 Placeable Objects", ReloadPlaceableObjects()));
+		EditorLog.Info("Loaded %1 Placeable Objects", ReloadPlaceableObjects().ToString());
 		
 		// Load Brushes
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
+
 	}
 	
 		
@@ -138,7 +141,8 @@ class EditorHudController: Controller
 		EditorLog.Trace("EditorHudController::PropertyChanged: " + property_name);
 		
 		switch (property_name) {
-						
+		
+			case "BrushToggleButtonState":
 			case "BrushTypeSelection": {
 				if (BrushToggleButtonState) {
 					GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
@@ -169,7 +173,6 @@ class EditorHudController: Controller
 				}
 				
 				LeftbarScroll.HScrollToPos(0);
-				
 				break;
 			}			
 		}
@@ -189,73 +192,48 @@ class EditorHudController: Controller
 		
 	}
 	
-	
+	void BrushToggleButtonExecute(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudController::BrushToggleButtonExecute");
+		bool button_state = args.GetButtonState();
+		args.GetButtonWidget().FindAnyWidget("BrushToggleButtonText").SetPos(button_state * 1, button_state * 1);
+	}
+		
 	void LeftbarHideExecute(ButtonCommandArgs args) 
 	{
-		LeftbarFrame.Show(args.GetButtonState());
+		LeftbarFrame.Show(!args.GetButtonState());
+		
+		if (args.GetButtonState()) {
+			LeftbarHideIcon.SetFlags(WidgetFlags.FLIPU);
+		} else {
+			LeftbarHideIcon.ClearFlags(WidgetFlags.FLIPU);
+		}
 	}
 	
 	void RightbarHideExecute(ButtonCommandArgs args) 
 	{
-		RightbarFrame.Show(args.GetButtonState());
-	}
-	
-	void BrushToggleExecute(ButtonCommandArgs args)
-	{
+		RightbarFrame.Show(!args.GetButtonState());
+				
 		if (args.GetButtonState()) {
-			GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
+			RightbarHideIcon.SetFlags(WidgetFlags.FLIPU);
 		} else {
-			GetEditor().SetBrush(null);
+			RightbarHideIcon.ClearFlags(WidgetFlags.FLIPU);
 		}
 	}
-	
-	void ButtonCreateFolderExecute(ButtonCommandArgs args) {
+		
+	void ButtonCreateFolderExecute(ButtonCommandArgs args) 
+	{
 		EditorLog.Trace("EditorHudController::ButtonCreateFolderExecute");
 		EditorCollapsibleListItem category();
 		InsertPlacedObject(category);
 	}
-	
-	void WeatherExecute(ButtonCommandArgs args) {
-		EditorEnvironmentDialog weather_dialog = new EditorEnvironmentDialog();
-		weather_dialog.Show();
-	}
-	
-	void CameraExecute(ButtonCommandArgs args) {
-		EditorCameraDialog camera_dialog = new EditorCameraDialog(GetEditor().GetCamera());
-		camera_dialog.Show();
-	}
-	
-	void SettingsExecute(ButtonCommandArgs args) {
-		EditorSettingsDialog settings_dialog = new EditorSettingsDialog(GetEditor().GetSettings());
-		settings_dialog.Show();
-	}
 
-	void MenuBarFileExecute(ButtonCommandArgs args) 
+	void MenuBarExecute(ButtonCommandArgs args) 
 	{
-		EditorLog.Trace("EditorHudController::MenuBarFileExecute");
+		EditorLog.Trace("EditorHudController::MenuBarExecute");
 		
-		if (GetEditor().GetEditorHud().GetMenu().Type() != GetBoundMenu(MenuBarFile)) {
-			CreateToolbarMenu(MenuBarFile);
-		} else {
-			GetEditor().GetEditorHud().CloseMenu();
-		}
-	}
-	
-	void MenuBarEditExecute(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::MenuBarEditExecute");
-		if (GetEditor().GetEditorHud().GetMenu().Type() != GetBoundMenu(MenuBarEdit)) {
-			CreateToolbarMenu(MenuBarEdit);
-		} else {
-			GetEditor().GetEditorHud().CloseMenu();
-		}
-	}
-	
-	void MenuBarViewExecute(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::MenuBarViewExecute");
-		if (GetEditor().GetEditorHud().GetMenu().Type() != GetBoundMenu(MenuBarView)) {
-			CreateToolbarMenu(MenuBarView);
+		if (GetEditor().GetEditorHud().GetMenu().Type() != GetBoundMenu(args.GetButtonWidget())) {
+			CreateToolbarMenu(args.GetButtonWidget());
 		} else {
 			GetEditor().GetEditorHud().CloseMenu();
 		}
@@ -376,6 +354,7 @@ class EditorHudController: Controller
 			case MenuBarFile:
 			case MenuBarEdit:
 			case MenuBarView: {
+				// Allows you to "Mouse between" toolbars at the top smoothly
 				w.SetColor(COLOR_SALMON);
 				if (GetEditor().GetEditorHud().IsMenuActive() && !GetEditor().GetEditorHud().GetMenu().IsInherited(EditorContextMenu)) {
 					CreateToolbarMenu(w);
@@ -435,9 +414,9 @@ class EditorHudController: Controller
 		switch (w.GetTypeName()) {
 
 			case "ButtonWidget": {
-				w.SetColor(COLOR_EMPTY);
-				ButtonWidget.Cast(w).SetState(false);
-				SetWidgetIconPosition(w, 0, 0);
+				//w.SetColor(COLOR_EMPTY);
+				//ButtonWidget.Cast(w).SetState(false);
+				//SetWidgetIconPosition(w, 0, 0);
 				break;
 			}
 		}
@@ -449,13 +428,11 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::OnClick");
 		
-
 		switch (button) {
 			
 			case 0: {
 		
 				switch (w.GetName()) {
-					
 					
 					case "UndoButton": 
 					case "RedoButton": {
@@ -471,13 +448,6 @@ class EditorHudController: Controller
 						bool button_state = ButtonWidget.Cast(w).GetState();
 						GetWidgetIcon(w).SetColor((GetHighlightColor(w.GetName()) * button_state) - 1);
 						GetWidgetIcon(w).SetPos(button_state * 1, button_state * 1);
-						break;
-					}
-				
-					
-					case "EditorListItemButton": {
-						
-						
 						break;
 					}
 				}
@@ -524,6 +494,10 @@ class EditorHudController: Controller
 			
 			case "SnapButton": {
 				return COLOR_JELLY;
+			}
+			
+			default: {
+				return COLOR_SALMON;
 			}
 		}
 		

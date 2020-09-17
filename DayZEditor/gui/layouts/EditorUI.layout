@@ -291,10 +291,10 @@ FrameWidgetClass EditorMainFrame {
    {
     PanelWidgetClass LeftbarFrame {
      visible 1
-     clipchildren 0
+     clipchildren 1
      ignorepointer 1
      keepsafezone 1
-     color 0.302 0.302 0.302 1
+     color 0.302 0.302 0.302 0.7843
      size 300 1
      hexactpos 1
      vexactpos 1
@@ -315,6 +315,8 @@ FrameWidgetClass EditorMainFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
+       Padding 0
+       Margin 0
        {
         PanelWidgetClass LeftbarPanelSelector {
          visible 1
@@ -506,10 +508,10 @@ FrameWidgetClass EditorMainFrame {
         PanelWidgetClass LeftbarPanelSearchBarPanel {
          ignorepointer 1
          color 0.1216 0.1216 0.1216 0.6275
-         position 10 10
+         position 10 0.01
          size 0.99 0.03
          hexactpos 1
-         vexactpos 1
+         vexactpos 0
          hexactsize 0
          vexactsize 0
          style rover_sim_colorable
@@ -572,11 +574,11 @@ FrameWidgetClass EditorMainFrame {
          disabled 0
          ignorepointer 0
          color 0.302 0.302 0.302 0.3059
-         position 0 60
+         position 0 0.06
          size 1 0.91
          halign right_ref
          hexactpos 1
-         vexactpos 1
+         vexactpos 0
          hexactsize 0
          vexactsize 0
          style rover_sim_colorable
@@ -584,8 +586,7 @@ FrameWidgetClass EditorMainFrame {
           ScrollWidgetClass LeftbarScroll {
            ignorepointer 0
            keepsafezone 1
-           color 0.2353 0.2353 0.2353 1
-           position 0 0
+           color 0.1176 0.1176 0.1176 1
            size 1 1
            halign center_ref
            valign center_ref
@@ -595,6 +596,8 @@ FrameWidgetClass EditorMainFrame {
            vexactsize 0
            scriptclass ""
            style blank
+           "next left" ""
+           "next right" ""
            "Scrollbar V" 1
            "Scrollbar V Left" 1
            {
@@ -685,10 +688,9 @@ FrameWidgetClass EditorMainFrame {
    visible 1
    clipchildren 1
    ignorepointer 1
-   position 0 32
-   size 350 0.92
+   position 0 55
+   size 350 0.927
    halign right_ref
-   valign bottom_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
@@ -704,7 +706,7 @@ FrameWidgetClass EditorMainFrame {
      disabled 0
      ignorepointer 0
      keepsafezone 1
-     color 0.302 0.302 0.302 1
+     color 0.302 0.302 0.302 0.7843
      position 0 0
      size 300 1
      hexactpos 1
@@ -715,9 +717,10 @@ FrameWidgetClass EditorMainFrame {
      style rover_sim_colorable
      {
       ScrollWidgetClass RightbarScroll {
+       visible 1
        ignorepointer 0
        keepsafezone 1
-       color 0.2353 0.2353 0.2353 1
+       color 0.1176 0.1176 0.1176 1
        size 1 0.965
        halign center_ref
        hexactpos 1
@@ -728,6 +731,7 @@ FrameWidgetClass EditorMainFrame {
        "Scrollbar V" 1
        {
         WrapSpacerWidgetClass RightbarSpacer {
+         visible 1
          ignorepointer 1
          keepsafezone 1
          position 0 0
@@ -867,6 +871,7 @@ FrameWidgetClass EditorMainFrame {
        switch toggle
        {
         ImageWidgetClass RightbarHideIcon {
+         visible 1
          ignorepointer 1
          position 0 0
          size 1 1
@@ -889,7 +894,7 @@ FrameWidgetClass EditorMainFrame {
        }
        {
         ScriptParamsClass {
-         Relay_Command "ToggleRightBar"
+         Relay_Command "RightbarHideExecute"
         }
        }
       }
@@ -988,7 +993,7 @@ FrameWidgetClass EditorMainFrame {
          }
          {
           ScriptParamsClass {
-           Relay_Command "MenuBarFileExecute"
+           Relay_Command "MenuBarExecute"
           }
          }
         }
@@ -1023,7 +1028,7 @@ FrameWidgetClass EditorMainFrame {
          }
          {
           ScriptParamsClass {
-           Relay_Command "MenuBarEditExecute"
+           Relay_Command "MenuBarExecute"
           }
          }
         }
@@ -1058,7 +1063,7 @@ FrameWidgetClass EditorMainFrame {
          }
          {
           ScriptParamsClass {
-           Relay_Command "MenuBarViewExecute"
+           Relay_Command "MenuBarExecute"
           }
          }
         }
@@ -1325,7 +1330,7 @@ FrameWidgetClass EditorMainFrame {
          clipchildren 1
          ignorepointer 0
          position 0 0
-         size 200 32
+         size 250 32
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -1341,7 +1346,7 @@ FrameWidgetClass EditorMainFrame {
            visible 1
            ignorepointer 0
            position 0 0
-           size 0.7 1
+           size 0.8 1
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -1380,7 +1385,7 @@ FrameWidgetClass EditorMainFrame {
             ScriptParamsClass {
              Binding_Name "BrushToggleButtonState"
              Two_Way_Binding 1
-             Relay_Command "BrushToggleExecute"
+             Relay_Command "BrushToggleButtonExecute"
             }
            }
           }
@@ -1523,97 +1528,6 @@ FrameWidgetClass EditorMainFrame {
              Binding_Name "BrushDensity"
             }
            }
-          }
-         }
-        }
-        PanelWidgetClass Divider4 {
-         ignorepointer 1
-         position 0 0
-         size 15 32
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         {
-          PanelWidgetClass Divider5 {
-           ignorepointer 1
-           position 0 0
-           size 3 26
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           style rover_sim_colorable
-          }
-         }
-        }
-        ButtonWidgetClass WeatherButton {
-         visible 1
-         position 0 0
-         size 32 32
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style Default
-         text "W"
-         {
-          ScriptParamsClass {
-           Relay_Command "WeatherExecute"
-          }
-         }
-        }
-        ButtonWidgetClass CameraButton {
-         position 0 0
-         size 32 32
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style Default
-         text "C"
-         {
-          ScriptParamsClass {
-           Relay_Command "CameraExecute"
-          }
-         }
-        }
-        ButtonWidgetClass SettingsButton {
-         position 0 0
-         size 32 32
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style Default
-         text "S"
-         {
-          ScriptParamsClass {
-           Relay_Command "SettingsExecute"
-          }
-         }
-        }
-        CheckBoxWidgetClass CinemaMode {
-         size 120 32
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         text "Cinema"
-         {
-          ScriptParamsClass {
-           Binding_Name "CinemaModeState"
-           Two_Way_Binding 1
           }
          }
         }

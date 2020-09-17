@@ -62,7 +62,7 @@ FrameWidgetClass EditorMenuItem {
      mode blend
      "src alpha" 1
      stretch 1
-     filter 0
+     filter 1
      pivot 0.5 0.5
      {
       ScriptParamsClass {
