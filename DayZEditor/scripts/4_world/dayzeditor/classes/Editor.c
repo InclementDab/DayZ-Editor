@@ -551,8 +551,11 @@ class Editor
 			m_EditorSaveFile = file;
 		}		
 	}
-
 	
+	void Close()
+	{
+		EditorLog.Trace("Editor::Close");
+	}	
 	
 	void Open()
 	{

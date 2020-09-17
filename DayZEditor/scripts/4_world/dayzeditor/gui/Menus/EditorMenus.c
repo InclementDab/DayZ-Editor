@@ -1,4 +1,11 @@
 
+class EditorMenuItemController: Controller
+{
+	string LabelText;
+	string IconPath;
+	string ShortcutText;
+}
+
 
 class EditorFileMenu: EditorMenu
 {
@@ -6,12 +13,11 @@ class EditorFileMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorFileMenu");
 		
-		AddItem("New", "EditorFileMenuNewCommand");
-		AddItem("Open", "EditorFileMenuOpenCommand");
-		
-		AddItem("Save", "EditorFileMenuSaveCommand");
-		AddItem("Save As...", "EditorFileMenuSaveAsCommand");
-		AddItem("Close", "EditorFileMenuCloseCommand");
+		AddItem("New", "EditorFileMenuNewCommand", "Ctrl + N");
+		AddItem("Open", "EditorFileMenuOpenCommand", "Ctrl + O");
+		AddItem("Save", "EditorFileMenuSaveCommand", "Ctrl + S");
+		AddItem("Save As...", "EditorFileMenuSaveAsCommand", "Ctrl + Shift + S");
+		AddItem("Close", "EditorFileMenuCloseCommand", "Ctrl + W");
 	}
 }
 
@@ -20,6 +26,10 @@ class EditorEditMenu: EditorMenu
 	void EditorEditMenu()
 	{
 		EditorLog.Trace("EditorEditMenu");
+		
+		AddItem("Undo", "EditorFileMenuUndoCommand", "Ctrl + Z");
+		AddItem("Redo", "EditorFileMenuRedoCommand", "Ctrl + Y");
+		AddDivider();
 	}
 }
 
@@ -60,11 +70,17 @@ class EditorMenu: EditorMVCLayout
 		m_LayoutRoot.SetPos(x, y);
 	}
 	
-	void AddItem(string title, string relay_command = "", string icon = "")
+	void AddDivider()
+	{	
+		AddItem(new EditorMenuItemDivider());
+	}
+	
+	void AddItem(string title, string relay_command = "", string shortcut_text = "", string icon = "")
 	{
 		EditorMenuItem menu_item = new EditorMenuItem();
 		menu_item.SetText(title);
 		menu_item.SetIcon(icon);
+		menu_item.SetShortcut(shortcut_text);
 		
 		ViewBinding view_binding;
 		menu_item.GetLayoutRoot().FindAnyWidget("EditorMenuItemButton").GetScript(view_binding);
@@ -95,13 +111,6 @@ class EditorMenu: EditorMVCLayout
 	}
 }
 
-
-class EditorMenuItemController: Controller
-{
-	string LabelText;
-	string IconPath;
-}
-
 class EditorMenuItem: EditorMVCLayout
 {
 	protected ref EditorMenuItemController m_EditorMenuItemController;
@@ -129,6 +138,11 @@ class EditorMenuItem: EditorMVCLayout
 		m_EditorMenuItemController.NotifyPropertyChanged("IconPath");
 	}
 	
+	void SetShortcut(string shortcut) {
+		m_EditorMenuItemController.ShortcutText = shortcut;
+		m_EditorMenuItemController.NotifyPropertyChanged("ShortcutText");
+	}
+	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/menus/EditorMenuItem.layout";
 	}
@@ -136,5 +150,11 @@ class EditorMenuItem: EditorMVCLayout
 	override typename GetControllerType() {
 		return EditorMenuItemController;
 	}
-	
+}
+
+class EditorMenuItemDivider: EditorMenuItem
+{	
+	override string GetLayoutFile() {
+		return "DayZEditor/gui/Layouts/menus/EditorMenuItemDivider.layout";
+	}
 }

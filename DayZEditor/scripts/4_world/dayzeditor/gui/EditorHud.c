@@ -134,6 +134,12 @@ class EditorHud: Hud
 		m_CurrentMenu = menu;
 	}
 	
+	void CloseMenu() {
+		if (IsMenuActive()) {
+			SetMenu(null);
+		}
+	}
+	
 	ref EditorMenu GetMenu() {
 		return m_CurrentMenu;
 	}
