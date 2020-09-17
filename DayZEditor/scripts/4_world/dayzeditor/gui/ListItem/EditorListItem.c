@@ -1,6 +1,4 @@
 
-
-
 class EditorListItem: EditorWidget
 {
 	private int m_NestIndex;

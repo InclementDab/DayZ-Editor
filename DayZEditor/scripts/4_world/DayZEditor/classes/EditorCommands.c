@@ -382,15 +382,27 @@ class EditorReloadHudCommand: EditorCommand
 
 class EditorLootEditorCommand: EditorCommand
 {
-	void EditorLootEditorCommand() {
-		SetCanExecute(GetEditor().GetSelectedObjects().Count() > 0);
-	}
-	
 	override void Call() {
 		GetEditor().EditLootSpawns(GetEditor().GetSelectedObjects().GetElement(0).GetType());
 	}
 	
 	override string GetName() {
 		return "Edit Loot Spawns";
+	}
+}
+
+class EditorObjectPropertiesCommand: EditorCommand
+{
+	override void Call() {
+		EditorObjectPropertiesDialog properties_dialog(GetEditor().GetObjectManager().GetSelectedObjects().GetElement(0));
+		properties_dialog.Show();
+	}
+	
+	override string GetName() {
+		return "Properties";
+	}
+	
+	override string GetKeys() {
+		return "Ctrl + T";
 	}
 }

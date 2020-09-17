@@ -127,7 +127,6 @@ class EditorViewMenu: EditorMenu
 		EditorLog.Trace("EditorViewMenu");
 		AddMenuButton(EditorCameraControlsCommand);
 		AddMenuButton(EditorReloadHudCommand);
-		AddMenuButton(EditorLootEditorCommand);
 	}
 }
 
@@ -144,5 +143,17 @@ class EditorContextMenu: EditorMenu
 		AddMenuButton(EditorRedoCommand);
 		AddMenuDivider();
 		AddMenuButton(EditorDeleteCommand);
+		AddMenuDivider();
+		AddMenuButton(EditorObjectPropertiesCommand);
 	}
 }
+
+class EditorPlaceableContextMenu: EditorMenu
+{
+	void EditorPlaceableContextMenu()
+	{
+		EditorLog.Trace("EditorPlaceableContextMenu");
+		AddMenuButton(EditorLootEditorCommand);
+	}
+}
+

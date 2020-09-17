@@ -145,25 +145,44 @@ class EditorListItemController: Controller
 	{
 		EditorLog.Trace("EditorListItemController::OnClick");
 		
+
+			
 		switch (m_ListItem.Type()) {
 			
 			case EditorPlaceableListItem: {
-				GetEditor().CreateInHand(EditorPlaceableListItem.Cast(m_ListItem).GetData());
 				Select();
+				if (button == 0) {
+					GetEditor().CreateInHand(EditorPlaceableListItem.Cast(m_ListItem).GetData());	
+				} else if (button == 1) {
+					EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu();
+					placeable_context.SetPosition(x, y);
+					placeable_context.Show();
+				}
+				
 				break;
 			}
 			
 			case EditorPlacedListItem: {
-				EditorPlacedListItem placed_item = EditorPlacedListItem.Cast(m_ListItem);
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					GetEditor().ToggleSelection(placed_item.GetData());
-				} else {
-					GetEditor().ClearSelection();
-					GetEditor().SelectObject(placed_item.GetData());
+				
+				Select();
+				if (button == 0) {
+					EditorPlacedListItem placed_item = EditorPlacedListItem.Cast(m_ListItem);
+					if (KeyState(KeyCode.KC_LCONTROL)) {
+						GetEditor().ToggleSelection(placed_item.GetData());
+					} else {
+						GetEditor().ClearSelection();
+						GetEditor().SelectObject(placed_item.GetData());
+					}
+				} else if (button == 1) {
+					EditorContextMenu context_menu = new EditorContextMenu();
+					context_menu.SetPosition(x, y);
+					context_menu.Show();
 				}
 				break;
 			}
 		}
+			
+		
 		
 		return false;
 	}
