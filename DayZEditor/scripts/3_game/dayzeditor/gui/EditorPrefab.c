@@ -160,7 +160,6 @@ class EditorPrefabEditMultilineText: EditorPrefab
 
 class EditorPrefabPosition: EditorPrefab
 {
-
 	
 	void SetVector(vector value) {
 		EditBoxWidget.Cast(m_LayoutRoot.FindAnyWidget("pos_x")).SetText(value[0].ToString());

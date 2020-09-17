@@ -107,8 +107,8 @@ class EditorWeatherDialog: EditorDialog
 		weather_group.AddPrefab(new EditorPrefabSlider("Wind", "wind", 0, 100));
 		weather_group.AddPrefab(new EditorPrefabSlider("Exposure", "exposure", 0, 1));
 		weather_group.AddPrefab(new EditorPrefabButton("Lighting", "lighting"));
-
 		weather_group.SetController(m_EditorWeatherDialogController);
+		
 		AddContent(weather_group);
 
 		

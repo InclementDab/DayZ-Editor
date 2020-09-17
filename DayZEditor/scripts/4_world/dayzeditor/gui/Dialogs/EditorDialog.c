@@ -1,8 +1,6 @@
 
 class EditorDialog: EditorMVCLayout
-{	
-	protected ref EditorDialogController m_DialogController;
-			
+{				
 	protected WrapSpacerWidget DialogContent;
 	protected GridSpacerWidget ButtonGrid;
 	protected WrapSpacerWidget WindowDragWrapper;
@@ -12,7 +10,6 @@ class EditorDialog: EditorMVCLayout
 		EditorLog.Trace("EditorDialog");
 		
 		m_LayoutRoot.Show(false);
-		m_DialogController = EditorDialogController.Cast(m_Controller);
 	}
 	
 	void ~EditorDialog() 
@@ -28,30 +25,35 @@ class EditorDialog: EditorMVCLayout
 	override typename GetControllerType() {
 		return EditorDialogController;
 	}
-	
-	protected Controller AddContent(Widget content)
-	{
-		DialogContent.AddChild(content);
-		Controller controller;
-		content.GetScript(controller);		
-		return controller;
+
+	protected void AddContent(string layout) {
+		AddContent(GetGame().GetWorkspace().CreateWidgets(layout));
 	}
 	
-	protected Controller AddContent(string layout)
-	{
-		Widget content = GetGame().GetWorkspace().CreateWidgets(layout);
-		DialogContent.AddChild(content);
-		Controller controller;
-		content.GetScript(controller);		
-		return controller;
+	protected void AddContent(EditorPrefab prefab) {
+		AddContent(prefab.GetLayoutRoot());
 	}
 	
-	protected Controller AddContent(EditorPrefab prefab)
+	protected void AddContent(Widget content) {
+		DialogContent.AddChild(content);
+		GetController().LoadDataBindings(DialogContent);
+	}
+	
+	private void SetWidgetController(Widget w, Controller controller)
 	{
-		DialogContent.AddChild(prefab.GetLayoutRoot());
-		Controller controller;
-		prefab.GetLayoutRoot().GetScript(controller);
-		return controller;
+		ViewBinding view_binding;
+		w.GetScript(view_binding);
+		
+		if (view_binding && (view_binding.IsInherited(ViewBinding))) {
+			view_binding.SetController(controller);
+		}
+		
+		if (w.GetChildren() != null)
+			SetWidgetController(w.GetChildren(), controller);
+		
+		
+		if (w.GetSibling() != null) 
+			SetWidgetController(w.GetSibling(), controller);
 	}
 	
 	// Command can either be a Callback function in the Controller OR
@@ -62,7 +64,7 @@ class EditorDialog: EditorMVCLayout
 		EditorDialogButtonViewBinding view_binding;
 		panel.GetScript(view_binding);
 		view_binding.SetLabel(label);
-		view_binding.SetController(m_DialogController);
+		view_binding.SetController(GetController());
 		view_binding.SetRelayCommand(command);
 		
 		return panel.FindAnyWidget("DialogButton");
@@ -71,8 +73,9 @@ class EditorDialog: EditorMVCLayout
 
 	protected void SetTitle(string title)
 	{
-		m_DialogController.TitleText = title;
-		m_DialogController.NotifyPropertyChanged("TitleText");
+		EditorDialogController controller = EditorDialogController.Cast(GetController());
+		controller.TitleText = title;
+		controller.NotifyPropertyChanged("TitleText");
 	}
 	
 	override void Show()

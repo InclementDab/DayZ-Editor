@@ -6,7 +6,7 @@ PanelWidgetClass MapHostPanel {
  vexactpos 1
  hexactsize 1
  vexactsize 1
- scriptclass "MapSelectDialogController"
+ scriptclass ""
  style rover_sim_black
  {
   TextListboxWidgetClass MapHostListbox {
@@ -20,12 +20,19 @@ PanelWidgetClass MapHostPanel {
    vexactpos 1
    hexactsize 0
    vexactsize 0
+   scriptclass "ViewBinding"
    style Editor
    "title visible" 0
    colums "1"
    lines 10
    "highlight row" 1
    font "gui/fonts/metron"
+   {
+    ScriptParamsClass {
+     Binding_Name "MapHostListboxData"
+     Selected_Item "MapHostListboxSelection"
+    }
+   }
   }
  }
 }
