@@ -33,21 +33,21 @@ class EditorMenuItem: EditorMVCLayout
 
 class EditorMenuItemButton: EditorMenuItem
 {	
-	void SetText(string text) {
-		m_EditorMenuItemController.LabelText = text;
+	protected ref EditorCommand m_EditorCommand;
+	
+	void SetCommand(EditorCommand editor_command)
+	{
+		m_EditorCommand = editor_command;
+		
+		m_EditorMenuItemController.LabelText = m_EditorCommand.GetName();
+		m_EditorMenuItemController.IconPath = m_EditorCommand.GetIcon();
+		m_EditorMenuItemController.ShortcutText = m_EditorCommand.GetKeys();
+		
 		m_EditorMenuItemController.NotifyPropertyChanged("LabelText");
-	}
-	
-	void SetIcon(string icon) {
-		m_EditorMenuItemController.IconPath = icon;
 		m_EditorMenuItemController.NotifyPropertyChanged("IconPath");
-	}
-	
-	void SetShortcut(string shortcut) {
-		m_EditorMenuItemController.ShortcutText = shortcut;
 		m_EditorMenuItemController.NotifyPropertyChanged("ShortcutText");
 	}
-	
+		
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/menus/EditorMenuItem.layout";
 	}

@@ -42,22 +42,29 @@ class EditorMenu: EditorMVCLayout
 		AddMenuItem(divider);
 	}
 	
-	void AddMenuButton(string title, string relay_command = "", string shortcut_text = "", string icon = "")
+	void AddMenuButton(typename editor_command)
+	{
+		if (!editor_command.IsInherited(EditorCommand)) {
+			EditorLog.Error("Invalid EditorCommand");
+			return;
+		}
+		
+		AddMenuButton(editor_command.Spawn());
+	}
+	
+	void AddMenuButton(EditorCommand editor_command)
 	{
 		EditorMenuItemButton menu_item = new EditorMenuItemButton();
-		menu_item.SetText(title);
-		menu_item.SetIcon(icon);
-		menu_item.SetShortcut(shortcut_text);
+		Print(menu_item);
+		menu_item.SetCommand(editor_command);
 		
 		ViewBinding view_binding;
 		menu_item.GetLayoutRoot().FindAnyWidget("EditorMenuItemButton").GetScript(view_binding);
-		if (view_binding && relay_command != string.Empty) {
-			view_binding.SetRelayCommand(relay_command);
+		if (view_binding && editor_command) {
+			view_binding.SetRelayCommand(editor_command);
 		}
-		
-		AddMenuItem(menu_item);
 	}
-	
+
 	void AddMenuItem(ref EditorMenuItem menu_item)
 	{
 		if (menu_item) {
@@ -84,11 +91,11 @@ class EditorFileMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorFileMenu");
 		
-		AddMenuButton("New", "EditorToolbarNewCommand", "Ctrl + N");
-		AddMenuButton("Open", "EditorToolbarOpenCommand", "Ctrl + O");
-		AddMenuButton("Save", "EditorToolbarSaveCommand", "Ctrl + S");
-		AddMenuButton("Save As...", "EditorToolbarSaveAsCommand", "Ctrl + Shift + S");
-		AddMenuButton("Close", "EditorToolbarCloseCommand", "Ctrl + W");
+		AddMenuButton(EditorNewCommand);
+		AddMenuButton(EditorOpenCommand);
+		AddMenuButton(EditorSaveCommand);
+		AddMenuButton(EditorSaveAsCommand);
+		AddMenuButton(EditorCloseCommand);
 	}
 }
 
@@ -99,10 +106,11 @@ class EditorEditMenu: EditorMenu
 		EditorLog.Trace("EditorEditMenu");
 			
 		AddMenuDivider();	
-		AddMenuButton("Undo", "EditorToolbarUndoCommand", "Ctrl + Z");
-		AddMenuButton("Redo", "EditorToolbarRedoCommand", "Ctrl + Y");
+		
+		AddMenuButton(EditorUndoCommand);
+		AddMenuButton(EditorRedoCommand);
 		AddMenuDivider();
-		AddMenuButton("Preferences...", "EditorToolbarPreferencesCommand");
+		AddMenuButton(EditorPreferencesCommand);
 	}
 }
 
@@ -111,9 +119,8 @@ class EditorViewMenu: EditorMenu
 	void EditorViewMenu()
 	{
 		EditorLog.Trace("EditorViewMenu");
-		
-		AddMenuButton("Camera Controls...", "EditorToolbarCameraControlCommand");
-		AddMenuButton("Reload Editor UI", "EditorToolbarReloadUICommand");
+		AddMenuButton(EditorCameraControlsCommand);
+		AddMenuButton(EditorReloadHudCommand);
 		AddMenuDivider();
 	}
 }

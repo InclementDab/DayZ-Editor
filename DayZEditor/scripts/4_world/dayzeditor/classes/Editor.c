@@ -629,6 +629,12 @@ class Editor
 				case KeyCode.KC_V: {
 					return EditorPasteCommand;
 				} 
+				
+				case KeyCode.KC_T: {
+					if (KeyState(KeyCode.KC_LSHIFT)) {
+						return EditorReloadHudCommand;
+					}
+				}
 			}
 		}
 		

@@ -82,6 +82,25 @@ class EditorOpenCommand: EditorCommand
 	}
 }
 
+class EditorCloseCommand: EditorCommand
+{
+	override void Call() {
+		m_Editor.Close();
+	}
+			
+	override string GetName() {
+		return "Close";
+	}
+		
+	override string GetIcon() {
+		return "dayz_editor_gui:building_icon";
+	}
+	
+	override string GetKeys() {
+		return "Ctrl + W";
+	}
+}
+
 class EditorUndoCommand: EditorCommand
 {
 	override void Call() {
@@ -216,5 +235,39 @@ class EditorPasteCommand: EditorCommand
 	
 	override string GetKeys() {
 		return "Ctrl + V";
+	}
+}
+
+class EditorPreferencesCommand: EditorCommand
+{
+	override void Call() {
+		
+	}
+
+	override string GetName() {
+		return "Preferences...";
+	}
+}
+
+class EditorCameraControlsCommand: EditorCommand
+{
+	override void Call() {
+		EditorCameraDialog cam_dialog(m_Editor.GetCamera());
+		cam_dialog.Show();
+	}
+
+	override string GetName() {
+		return "Camera Settings...";
+	}
+}
+
+class EditorReloadHudCommand: EditorCommand
+{
+	override void Call() {
+		m_Editor.ReloadHud();
+	}
+
+	override string GetName() {
+		return "Reload Editor";
 	}
 }
