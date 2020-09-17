@@ -82,5 +82,25 @@ class EditorToolbarCloseCommand: EditorToolbarItemCommand
 	}
 }
 
+class EditorToolbarUndoCommand: EditorToolbarItemCommand
+{
+	override void Execute(RelayCommandArgs args)
+	{
+		EditorLog.Trace("EditorToolbarUndoCommand::Execute");
+		GetEditor().GetObjectManager().Undo();
+		super.Execute(args);
+	}
+}
+
+class EditorToolbarRedoCommand: EditorToolbarItemCommand
+{
+	override void Execute(RelayCommandArgs args)
+	{
+		EditorLog.Trace("EditorToolbarRedoCommand::Execute");
+		GetEditor().GetObjectManager().Redo();
+		super.Execute(args);
+	}
+}
+
 
 

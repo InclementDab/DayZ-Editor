@@ -2,19 +2,20 @@ FrameWidgetClass EditorMenuDivider {
  visible 1
  clipchildren 1
  position 0 0
- size 1 25
+ size 0.95 10
  halign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 0
  vexactsize 1
+ priority 252
  scriptclass ""
  {
   PanelWidgetClass EditorMenuDividerLine {
    visible 1
    color 1 1 1 0.1961
    position 0 0
-   size 1 0.5
+   size 1 0.2
    halign center_ref
    valign center_ref
    hexactpos 1

@@ -97,7 +97,8 @@ class EditorEditMenu: EditorMenu
 	void EditorEditMenu()
 	{
 		EditorLog.Trace("EditorEditMenu");
-		
+			
+		AddMenuDivider();	
 		AddMenuButton("Undo", "EditorToolbarUndoCommand", "Ctrl + Z");
 		AddMenuButton("Redo", "EditorToolbarRedoCommand", "Ctrl + Y");
 		AddMenuDivider();
