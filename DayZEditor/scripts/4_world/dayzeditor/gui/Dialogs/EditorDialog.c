@@ -4,7 +4,7 @@ class EditorDialog: EditorMVCLayout
 	protected WrapSpacerWidget DialogContent;
 	protected GridSpacerWidget ButtonGrid;
 	protected WrapSpacerWidget WindowDragWrapper;
-	
+		
 	void EditorDialog() 
 	{
 		EditorLog.Trace("EditorDialog");
@@ -42,16 +42,14 @@ class EditorDialog: EditorMVCLayout
 	// the classname of a RelayCommand
 	protected ButtonWidget AddButton(string label, string command)
 	{		
-		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", ButtonGrid);
 		EditorDialogButtonViewBinding view_binding;
+		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", ButtonGrid);
 		panel.GetScript(view_binding);
 		view_binding.SetLabel(label);
 		view_binding.SetRelayCommand(command);
 		GetController().LoadDataBindings(panel);
-		
 		return panel.FindAnyWidget("DialogButton");
 	}
-	
 
 	protected void SetTitle(string title)
 	{

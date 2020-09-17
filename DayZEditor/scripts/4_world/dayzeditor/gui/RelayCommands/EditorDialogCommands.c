@@ -9,8 +9,7 @@ class DialogCloseRelayCommand: RelayCommand
 
 class MapSelectDialogRelayCommand: RelayCommand
 {
-	void MapSelectDialogRelayCommand()
-	{	
+	void MapSelectDialogRelayCommand() {	
 		SetCanExecute(false);
 	}
 	
@@ -25,7 +24,7 @@ class MapSelectDialogRelayCommand: RelayCommand
 	override void CanExecuteChanged(bool state)
 	{
 		EditorLog.Trace("MapSelectDialogRelayCommand::CanExecuteChanged");
-		Widget btn = m_ViewBinding.GetLayoutRoot().FindAnyWidget("DialogButton");
+		Widget btn = m_ViewBinding.GetLayoutRoot();
 
 		if (state) {
 			btn.SetAlpha(1);

@@ -35,13 +35,16 @@ class MapSelectDialogController: EditorDialogController
 		switch (property_name) {
 			
 			case "MapHostListboxSelection": {
-
-				ViewBindingSet view_set = m_ViewBindingHashMap.Get("EditorDialogButton");
-				m_ViewBindingHashMap.DebugPrint();
-				if (view_set)
-					foreach (ViewBinding view: view_set)
-						if (view.GetRelayCommand())
-							view.GetRelayCommand().SetCanExecute(MapHostListboxSelection != string.Empty);
+				
+				ViewBindingSet view_set = m_ViewBindingHashMap.Get(""); // dont ask. just use DebugPrint
+				if (view_set) {
+					foreach (ViewBinding view: view_set) {
+						RelayCommand relay_command = view.GetRelayCommand();
+						if (relay_command) {
+							relay_command.SetCanExecute(MapHostListboxSelection != string.Empty);
+						}
+					}
+				}
 					
 				
 				
