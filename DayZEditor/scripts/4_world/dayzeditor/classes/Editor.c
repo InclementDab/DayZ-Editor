@@ -142,7 +142,6 @@ class Editor
 	
 		m_SessionCache = new EditorObjectDataSet();
 		
-		
 		// Init Settings
 		m_EditorSettings = EditorSettings.Load(m_EditorSettingsFile);
 		m_EditorSettings.Reload();

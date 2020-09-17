@@ -38,24 +38,7 @@ class EditorDialog: EditorMVCLayout
 		DialogContent.AddChild(content);
 		GetController().LoadDataBindings(DialogContent);
 	}
-	
-	private void SetWidgetController(Widget w, Controller controller)
-	{
-		ViewBinding view_binding;
-		w.GetScript(view_binding);
 		
-		if (view_binding && (view_binding.IsInherited(ViewBinding))) {
-			view_binding.SetController(controller);
-		}
-		
-		if (w.GetChildren() != null)
-			SetWidgetController(w.GetChildren(), controller);
-		
-		
-		if (w.GetSibling() != null) 
-			SetWidgetController(w.GetSibling(), controller);
-	}
-	
 	// Command can either be a Callback function in the Controller OR
 	// the classname of a RelayCommand
 	protected ButtonWidget AddButton(string label, string command)
@@ -64,8 +47,8 @@ class EditorDialog: EditorMVCLayout
 		EditorDialogButtonViewBinding view_binding;
 		panel.GetScript(view_binding);
 		view_binding.SetLabel(label);
-		view_binding.SetController(GetController());
 		view_binding.SetRelayCommand(command);
+		GetController().LoadDataBindings(panel);
 		
 		return panel.FindAnyWidget("DialogButton");
 	}

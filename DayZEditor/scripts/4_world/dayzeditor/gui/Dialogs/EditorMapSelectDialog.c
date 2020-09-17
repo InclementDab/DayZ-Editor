@@ -8,7 +8,6 @@ static const ref array<string> ExcludedMapItems = {
 	"CAWorld"
 };
 
-
 class MapSelectDialogController: EditorDialogController
 {
 	protected TextListboxWidget MapHostListbox;
@@ -36,20 +35,20 @@ class MapSelectDialogController: EditorDialogController
 		switch (property_name) {
 			
 			case "MapHostListboxSelection": {
-				Print(MapHostListboxSelection);
+
+				ViewBindingSet view_set = m_ViewBindingHashMap.Get("EditorDialogButton");
+				m_ViewBindingHashMap.DebugPrint();
+				if (view_set) {
+					foreach (ViewBinding view: view_set) {
+						RelayCommand relay_command = view.GetRelayCommand();
+						if (relay_command)
+							relay_command.SetCanExecute(MapHostListboxSelection != string.Empty);
+					}
+				}
+				
 				break;
 			}
 		}
-	}
-	
-	void SelectExecute()
-	{
-		EditorLog.Trace("MapSelectDialog::SelectExecute");
-		
-		string name;
-		//m_MapSelectDialogController.MapHostListbox.GetItemText(m_MapSelectDialogController.MapHostListbox.GetSelectedRow(), 0, name);
-		GetEditor().GetEditorHud().GetModal().Close();
-		GetGame().PlayMission(CreateEditorMission(MapHostListboxSelection));
 	}
 }
 
@@ -63,26 +62,10 @@ class MapSelectDialog: EditorDialog
 
 		AddContent("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");		
 		SetTitle(title);
-		AddButton("Select", "SelectExecute");
+		AddButton("Select", "MapSelectDialogRelayCommand");
 		AddButton("Close", "DialogCloseRelayCommand");
 		MapSelectDialogController.Cast(GetController()).SetMapSelectDialog(this);
 	}
-	
-	/*
-	override void Update()
-	{
-		bool select_state = m_MapSelectDialogController.MapHostListbox.GetSelectedRow() != -1;
-		if (select_state) {
-			m_SelectButton.SetAlpha(1);
-		}
-		else m_SelectButton.SetAlpha(0.3); 
-		
-		
-		m_SelectButton.Enable(select_state);
-	}*/
-	
-
-
 	
 	/*
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
