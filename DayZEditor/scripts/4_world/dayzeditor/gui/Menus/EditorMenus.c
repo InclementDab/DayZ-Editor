@@ -55,7 +55,6 @@ class EditorMenu: EditorMVCLayout
 	void AddMenuButton(EditorCommand editor_command)
 	{
 		EditorMenuItemButton menu_item = new EditorMenuItemButton();
-		Print(menu_item);
 		menu_item.SetCommand(editor_command);
 		
 		ViewBinding view_binding;
@@ -63,6 +62,8 @@ class EditorMenu: EditorMVCLayout
 		if (view_binding && editor_command) {
 			view_binding.SetRelayCommand(editor_command);
 		}
+		
+		AddMenuItem(menu_item);
 	}
 
 	void AddMenuItem(ref EditorMenuItem menu_item)
