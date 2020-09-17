@@ -120,8 +120,6 @@ class EditorPrefabDropdown: EditorPrefab
 		return list_item;
 	}
 	
-	
-	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/options/EditorDialogOptionDropdown.layout";
 	}
@@ -160,7 +158,6 @@ class EditorPrefabEditMultilineText: EditorPrefab
 
 class EditorPrefabPosition: EditorPrefab
 {
-	
 	void SetVector(vector value) {
 		EditBoxWidget.Cast(m_LayoutRoot.FindAnyWidget("pos_x")).SetText(value[0].ToString());
 		EditBoxWidget.Cast(m_LayoutRoot.FindAnyWidget("pos_y")).SetText(value[1].ToString());
@@ -200,7 +197,6 @@ class EditorPrefabSlider: EditorPrefab
 	float GetFloat() {
 		return SliderWidget.Cast(m_LayoutRoot.FindAnyWidget("EditorOptionSliderSlider")).GetCurrent() * m_Max;
 	}
-	
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/options/EditorDialogOptionSlider.layout";
