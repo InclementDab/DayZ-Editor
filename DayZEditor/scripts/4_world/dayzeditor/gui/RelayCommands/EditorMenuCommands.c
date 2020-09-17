@@ -1,6 +1,6 @@
 
 
-class EditorFileMenuItemCommand: RelayCommand
+class EditorToolbarItemCommand: RelayCommand
 {
 	
 	override void Execute(RelayCommandArgs args)
@@ -10,7 +10,7 @@ class EditorFileMenuItemCommand: RelayCommand
 	
 	override void CanExecuteChanged(bool state)
 	{
-		EditorLog.Trace("EditorFileMenuItemCommand::CanExecuteChanged");
+		EditorLog.Trace("EditorToolbarItemCommand::CanExecuteChanged");
 
 		if (state) {
 			m_ViewBinding.GetLayoutRoot().FindAnyWidget("EditorMenuItemLabel").SetAlpha(1);
@@ -25,11 +25,11 @@ class EditorFileMenuItemCommand: RelayCommand
 }
 
 
-class EditorFileMenuNewCommand: EditorFileMenuItemCommand
+class EditorToolbarNewCommand: EditorToolbarItemCommand
 {
 	override void Execute(RelayCommandArgs args)
 	{
-		EditorLog.Trace("EditorFileMenuNewCommand::Execute");
+		EditorLog.Trace("EditorToolbarNewCommand::Execute");
 		
 		GetEditor().New();
 		
@@ -37,11 +37,11 @@ class EditorFileMenuNewCommand: EditorFileMenuItemCommand
 	}
 }
 
-class EditorFileMenuOpenCommand: EditorFileMenuItemCommand
+class EditorToolbarOpenCommand: EditorToolbarItemCommand
 {	
 	override void Execute(RelayCommandArgs args)
 	{
-		EditorLog.Trace("EditorFileMenuOpenCommand::Execute");
+		EditorLog.Trace("EditorToolbarOpenCommand::Execute");
 		
 		GetEditor().Open();
 		
@@ -49,11 +49,11 @@ class EditorFileMenuOpenCommand: EditorFileMenuItemCommand
 	}
 }
 
-class EditorFileMenuSaveCommand: EditorFileMenuItemCommand
+class EditorToolbarSaveCommand: EditorToolbarItemCommand
 {
 	override void Execute(RelayCommandArgs args)
 	{
-		EditorLog.Trace("EditorFileMenuSaveCommand::Execute");
+		EditorLog.Trace("EditorToolbarSaveCommand::Execute");
 		
 		//GetEditor().Save();
 		
@@ -61,22 +61,22 @@ class EditorFileMenuSaveCommand: EditorFileMenuItemCommand
 	}
 }
 
-class EditorFileMenuSaveAsCommand: EditorFileMenuItemCommand
+class EditorToolbarSaveAsCommand: EditorToolbarItemCommand
 {
 	override void Execute(RelayCommandArgs args)
 	{
-		EditorLog.Trace("EditorFileMenuSaveAsCommand::Execute");
+		EditorLog.Trace("EditorToolbarSaveAsCommand::Execute");
 		
 		
 		super.Execute(args);
 	}
 }
 
-class EditorFileMenuCloseCommand: EditorFileMenuItemCommand
+class EditorToolbarCloseCommand: EditorToolbarItemCommand
 {
 	override void Execute(RelayCommandArgs args)
 	{
-		EditorLog.Trace("EditorFileMenuCloseCommand::Execute");
+		EditorLog.Trace("EditorToolbarCloseCommand::Execute");
 		GetEditor().Close();
 		super.Execute(args);
 	}

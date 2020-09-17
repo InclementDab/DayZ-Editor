@@ -236,50 +236,39 @@ class EditorHudController: Controller
 	void MenuBarFileExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudController::MenuBarFileExecute");
-		float x, y, w, h;
-		MenuBarFile.GetScreenPos(x, y);
-		MenuBarFile.GetScreenSize(w, h);
-		y += h;
-		
-		if (GetEditor().GetEditorHud().IsMenuActive()) {
-			GetEditor().GetEditorHud().GetMenu().Close();
-			return;
-		}
-		
-		EditorFileMenu file_menu();
-		file_menu.SetPosition(x, y);
-		file_menu.Show();
+		CreateToolbarMenu(EditorFileMenu, MenuBarFile);
 	}
 	
 	void MenuBarEditExecute(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudController::MenuBarEditExecute");
-		
-		float x, y, w, h;
-		MenuBarEdit.GetScreenPos(x, y);
-		MenuBarEdit.GetScreenSize(w, h);
-		y += h;
-		
-		if (GetEditor().GetEditorHud().IsMenuActive()) {
-			GetEditor().GetEditorHud().GetMenu().Close();
-			return;
-		}
-		
-		EditorMenu file_menu = new EditorMenu();		
-		
+		CreateToolbarMenu(EditorEditMenu, MenuBarEdit);
 	}
 	
 	void MenuBarViewExecute(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudController::MenuBarViewExecute");
-		
+		CreateToolbarMenu(EditorViewMenu, MenuBarView);
+	}
+	
+	private EditorMenu CreateToolbarMenu(typename menu_type, Widget toolbar_button)
+	{
+		EditorLog.Trace("EditorHudController::CreateToolbarMenu");
 		float x, y, w, h;
-		MenuBarEdit.GetScreenPos(x, y);
-		MenuBarEdit.GetScreenSize(w, h);
+		toolbar_button.GetScreenPos(x, y);
+		toolbar_button.GetScreenSize(w, h);
 		y += h;
 		
-		EditorMenu file_menu = new EditorMenu();		
-
+		/*
+		if (GetEditor().GetEditorHud().IsMenuActive()) {
+			GetEditor().GetEditorHud().GetMenu().Close();
+			return;
+		}*/
+		
+		EditorMenu toolbar_menu = menu_type.Spawn();
+		toolbar_menu.SetPosition(x, y);
+		toolbar_menu.Show();
+		return toolbar_menu;
 	}
 
 	

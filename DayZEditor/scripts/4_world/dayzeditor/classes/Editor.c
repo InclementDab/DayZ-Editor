@@ -529,9 +529,6 @@ class Editor
 		EditorEvents.StopPlacing(this);
 	}
 	
-	
-
-	
 	void New()
 	{
 		EditorLog.Trace("Editor::New");
