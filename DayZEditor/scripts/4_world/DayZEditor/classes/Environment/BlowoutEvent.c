@@ -77,9 +77,10 @@ class BlowoutEvent
 		
 		InitEffects();
 		
-		bool APSI_Enable = true; // m_Player contains an APSI Unit
-		if (APSI_Enable) {
-			//thread StartAPSI();
+		
+		EntityAI headgear = m_Player.GetInventory().FindAttachment(InventorySlots.HEADGEAR);
+		if (headgear.IsInherited(APSI)) {
+			APSI.Cast(headgear).Start();
 		}
 		
 		//Sleep(5000);
@@ -112,25 +113,8 @@ class BlowoutEvent
 		m_MatGlow = new MaterialEffect("graphics/materials/postprocess/glow");
 		m_MatChroma = new MaterialEffect("graphics/materials/postprocess/chromaber");
 	}
-	
-	void GroundShake(float intensity)
-	{
+		
 
-	}
-	
-	void StartAPSI()
-	{
-		PlaySoundOnPlayer(BlowoutSound.APSI_Detect);
-		Sleep(200);
-		PlaySoundOnPlayer(BlowoutSound.APSI_Detect);
-		Sleep(500);
-		PlaySoundOnPlayer(BlowoutSound.APSI_Detect);
-		Sleep(100);
-		PlaySoundOnPlayer(BlowoutSound.APSI_Detect);
-		Sleep(2000);
-		PlaySoundOnPlayer(BlowoutSound.APSI_Enable);
-	}
-	
 	private void PlaySoundOnPlayer(BlowoutSound sound)
 	{
 		EffectSound effect;
