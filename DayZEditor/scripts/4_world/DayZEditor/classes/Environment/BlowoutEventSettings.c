@@ -8,12 +8,12 @@ class BlowoutEventSettings
 	float TimeBetweenWaves = 5;
 	
 	// Time between StartBlowout and actual event in seconds
-	float BlowoutDelay = 20; // 120
+	float BlowoutDelay = 60; // 120
 	
 	float ImpactShockDamage = 15;
 	
 	float BlowoutSize = 10000;
-	float BlowoutCount = 2;
+	float BlowoutCount = 3;
 	
 	static ref array<vector> GetAlarmPositions()
 	{

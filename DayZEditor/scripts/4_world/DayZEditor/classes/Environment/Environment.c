@@ -10,5 +10,10 @@ modded class Environment
 		
 		BlowoutEvent blowout_event = new BlowoutEvent(new BlowoutEventSettings());
 		blowout_event.StartBlowout(Vector(7500, 0, 7500));
-	}	
+	}
+	
+	bool IsSafeFromEVR()
+	{
+		return (IsUnderRoof() || IsInsideBuilding() || IsInsideVehicle());
+	}
 }

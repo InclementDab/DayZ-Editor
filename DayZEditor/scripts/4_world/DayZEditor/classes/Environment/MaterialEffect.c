@@ -11,6 +11,7 @@ class MaterialEffect
 	
 	void ~MaterialEffect()
 	{
+		Print("~MaterialEffects");
 		foreach (string name, float value: param_values) {
 			m_Material.ResetParam(name);
 		}
@@ -19,11 +20,13 @@ class MaterialEffect
 	private void _LerpParam(string param, float start, float finish, float duration)
 	{
 		int i = 0;
+		m_Material.SetParam(param, start);
 		while (i < duration * 1000) {
 			m_Material.SetParam(param, Math.Lerp(start, finish, (1 / duration) * i / 1000));
 			Sleep(1);
 			i += 10;
 		}
+		m_Material.SetParam(param, finish);
 		
 		param_values.Set(param, finish);
 	}
@@ -41,5 +44,10 @@ class MaterialEffect
 		}
 		
 		LerpParam(param, start, finish, duration);
+	}
+	
+	void ResetParam(string param)
+	{
+		m_Material.ResetParam(param);
 	}
 }
