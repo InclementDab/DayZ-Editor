@@ -17,6 +17,14 @@ modded class MissionGameplay
 	
 	override void OnKeyPress(int key)
 	{
+		
+		
+		if (key == KeyCode.KC_GRAVE) {
+			PlayerBase b = PlayerBase.Cast(GetGame().GetPlayer());
+			b.m_Environment.StartEVR();
+		}
+		
+		
 		// If Editor is NOT active, just do keypress
 		if (!GetEditor() || !GetEditor().IsActive()) {
 			super.OnKeyPress(key);

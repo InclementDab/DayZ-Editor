@@ -606,7 +606,7 @@ class EditorHudController: Controller
 		float width, height;
 		NotificationFrame.GetSize(width, height);
 		
-		EffectSound notif_sound = SEffectManager.PlaySound("Notification_SoundSet", GetEditor().GetCamera().GetPosition());
+		EffectSound notif_sound = SEffectManager.PlaySoundOnObject("Notification_SoundSet", GetEditor().GetCamera());
 		notif_sound.SetSoundAutodestroy(true);
 		
 		// Animate pulldown

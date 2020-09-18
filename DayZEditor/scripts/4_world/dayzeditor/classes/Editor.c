@@ -657,7 +657,7 @@ class Editor
 				
 				case KeyCode.KC_V: {
 					return EditorPasteCommand;
-				} 
+				}
 			}
 		}
 
