@@ -31,7 +31,7 @@ class CfgVehicles
         class EnergyManager
 		{
 			hasIcon = 1;
-			energyUsagePerSecond = 0.1;
+			energyUsagePerSecond = 0.3;
 			plugType = 1;
 			attachmentAction = 1;
 		};
@@ -61,7 +61,7 @@ class CfgSoundShaders
 
 	class Namalsk_Item_SoundShader
 	{
-		volume = 0.7;
+		volume = 1;
 		frequency = 1;
 		range = 10;
 		limitation = 0;
