@@ -18,7 +18,6 @@ class CfgVehicles
 		scope = 2;
 		displayName = "$STR_APSI";
         model = "\DayZEditor\namalsk\CameraOld.p3d";
-		picture = "\DayZEditor\namalsk\data\apsi_icon_ca.paa";
 		descriptionShort = "$STR_APSI_DESC";
         inventorySlot[] = {"Headgear"};
         simulation = "clothing";
@@ -27,6 +26,26 @@ class CfgVehicles
 		weight = 1000;
 		itemSize[] = {4,3};
         heatIsolation = 0.13;
+        attachments[] = {"BatteryD"};
+
+        class EnergyManager
+		{
+			hasIcon = 1;
+			energyUsagePerSecond = 0.1;
+			plugType = 1;
+			attachmentAction = 1;
+		};
+
+        class DamageSystem
+		{
+			class GlobalHealth
+			{
+				class Health
+				{
+					hitpoints = 70;
+				};
+			};
+		};
 	};
 };
 

@@ -61,6 +61,7 @@ class MaterialEffect
 class BlowoutEvent
 {
 	protected PlayerBase m_Player;
+	protected APSI m_APSI;
 	
 	protected ref MaterialEffect m_MatGlow;
 	protected ref MaterialEffect m_MatBlur;
@@ -77,15 +78,12 @@ class BlowoutEvent
 		
 		InitEffects();
 		
-		
 		EntityAI headgear = m_Player.GetInventory().FindAttachment(InventorySlots.HEADGEAR);
-		if (headgear.IsInherited(APSI)) {
-			APSI.Cast(headgear).Start();
+		if (Class.CastTo(m_APSI, headgear)) {
+			m_APSI.SwitchOn();
 		}
 		
-		//Sleep(5000);
-		
-	
+		Sleep(5000);
 		
 		// Effects Wave 1
 		PlayEnvironmentSound(BlowoutSound.Blowout_Begin, position);
@@ -103,8 +101,10 @@ class BlowoutEvent
 		m_MatChroma.LerpParamTo("PowerX", -0.05, 0.2);
 		Sleep(500);		
 		m_MatChroma.LerpParamTo("PowerX", 0, 0.2);
-		Sleep(500);
+		Sleep(5000);
 		
+		
+		m_APSI.SwitchOff();
 	}
 	
 	private void InitEffects()
