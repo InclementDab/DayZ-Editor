@@ -32,7 +32,7 @@ class BlowoutEvent
 	
 	protected vector m_Position;
 	
-	protected ref array<ref EffectSound> m_AlarmSounds = {};
+	protected ref array<ref AbstractWave> m_AlarmSounds = {};
 	
 	void BlowoutEvent(BlowoutEventSettings settings)
 	{
@@ -65,8 +65,7 @@ class BlowoutEvent
 		m_MissionWeatherState = m_Weather.GetMissionWeather();
 		m_Weather.MissionWeather(false);
 		
-		PlaySoundOnPlayer(BlowoutSound.Blowout_Begin, 0);
-		return;
+		
 		
 		EntityAI headgear = GetGame().GetPlayer().GetInventory().FindAttachment(InventorySlots.HEADGEAR);
 		if (Class.CastTo(m_APSI, headgear)) {
@@ -75,7 +74,7 @@ class BlowoutEvent
 		
 		ref array<vector> alarm_positions = m_Settings.GetAlarmPositions();
 		foreach (vector pos: alarm_positions) {
-			m_AlarmSounds.Insert(PlayEnvironmentSound(BlowoutSound.Blowout_Alarm, pos, 1, 0, 10));
+			m_AlarmSounds.Insert(PlayEnvironmentSound(BlowoutSound.Blowout_Alarm, pos, 0.4, 1.2));
 		}
 		
 		thread LerpFunction(GetGame().GetWorld(), "SetEyeAccom", 1, 0.07, m_Settings.BlowoutDelay);
@@ -95,13 +94,15 @@ class BlowoutEvent
 			float pregame_phase = 1 / (m_Settings.BlowoutDelay * 1000) * timepassed;
 			//m_Weather.SetStorm(1, 0.4, pregame_phase * 10);
 			PlayEnvironmentSound(BlowoutSound.Blowout_Wave, m_Position, pregame_phase);
-			float _t = 1000 * Math.RandomFloat(2, 10);
+			float _t = 1000 * Math.RandomFloat(0.5, 2);
 			timepassed += _t;
 			Sleep(_t);
 			
-			_t = 1000 * Math.RandomFloat(2, 10);
+			_t = 1000 * Math.RandomFloat(0.5, 2);
 			timepassed += _t;
-			PlayEnvironmentSound(BlowoutSound.Blowout_Voices, RandomizeVector(m_Player.GetPosition(), 100), 0.1, 2, 2);
+			float inverse_phase = Math.AbsFloat(pregame_phase - 1);
+			inverse_phase *= 100;
+			PlayEnvironmentSound(BlowoutSound.Blowout_Voices, RandomizeVector(m_Player.GetPosition(), inverse_phase, inverse_phase + 50), pregame_phase * 0.25, 1.6);
 			Sleep(_t);
 		}
 		
@@ -112,21 +113,27 @@ class BlowoutEvent
 			Sleep(m_Settings.TimeBetweenWaves * 1000 * Math.RandomFloat(0.7, 1.2));
 		}
 
-		// Actual Event		
-		thread CreateBlowout();
+		
+		// Actual Event	
+		PlaySoundOnPlayer(BlowoutSound.Blowout_Begin);
+		thread CreateBlowout(0.2);
 		Sleep(8000);
 		for (int j = 0; j < m_Settings.BlowoutCount; j++) {
 			
+			float phase = (1 / m_Settings.BlowoutCount) * j;
+			phase = Math.Clamp(phase, 0.1, FLT_MAX);
+			
 			for (int k = 0; k < j; k++) {
-				PlaySoundOnPlayer(BlowoutSound.Blowout_Begin);
+				PlaySoundOnPlayer(BlowoutSound.Blowout_Begin, phase);
 			}
 			
-			thread CreateBlowout();
+			PlaySoundOnPlayer(BlowoutSound.Blowout_Begin, phase);
+			thread CreateBlowout(phase);
 			Sleep(3000 * Math.RandomFloat(0.7, 1.2));
 		}
 		
 		thread CreateFinalBlowout();
-		
+		return;
 		// make longer
 		Sleep(3000);
 		if (m_APSI && m_APSI.IsSwitchedOn()) {
@@ -136,15 +143,16 @@ class BlowoutEvent
 		m_Weather.MissionWeather(m_MissionWeatherState);
 		thread LerpFunction(GetGame().GetWorld(), "SetEyeAccom", GetGame().GetWorld().GetEyeAccom(), 1, 10);	
 		
-		Sleep(10000);	
+		Sleep(10000);
 		
-		foreach (EffectSound alarm: m_AlarmSounds) {
+		foreach (AbstractWave alarm: m_AlarmSounds) {
 			if (alarm) {
-				alarm.SoundStop();
+				alarm.Stop();
 			}
 		}
 	}
 	
+	// add min and max to this
 	private vector RandomizeVector(vector in, float rand)
 	{
 		for (int i = 0; i < 3; i++)
@@ -152,16 +160,28 @@ class BlowoutEvent
 		
 		return in;
 	}
+	
+	private vector RandomizeVector(vector in, float min, float max)
+	{
+		for (int i = 0; i < 3; i++) {
+			in[i] = Math.RandomFloat(in[i] + Math.RandomFloat(-min, min), in[i] + Math.RandomFloat(-max, max));
+		}
+		
+		return in;
+	}
+	
 		
 	private void CreateHit(float intensity)
 	{	
 		Print("CreateHit " + intensity);
-		intensity = Math.Clamp(intensity, 0.1, 1);
+		intensity = Math.Clamp(intensity, 0.3, 1);
 		intensity *= CalculateIntensity(vector.Distance(m_Player.GetPosition(), m_Position));
 		
-		vector pos = RandomizeVector(m_Player.GetPosition(), 100);
 		
-		PlayEnvironmentSound(BlowoutSound.Blowout_Hit, pos, intensity);
+		float phase = intensity;
+		phase *= 100;
+		vector pos = RandomizeVector(m_Player.GetPosition(), phase, phase + 25);
+		PlayEnvironmentSound(BlowoutSound.Blowout_Hit, pos, intensity * 1.4);
 		Sleep(vector.Distance(pos, m_Player.GetPosition()) * 0.343);
 		
 		
@@ -176,39 +196,28 @@ class BlowoutEvent
 		}
 	}
 	
-	private void CreateBlowout()
+	private void CreateBlowout(float intensity)
 	{	
-		PlaySoundOnPlayer(BlowoutSound.Blowout_Begin);
-		
 		m_Player.GetStaminaHandler().DepleteStamina(EStaminaModifiers.JUMP);		
 		if (m_APSI && m_APSI.IsSwitchedOn()) {
 			
 		} else {
 			
-			CreateCameraShake(1);
+			CreateCameraShake(intensity);
 			
-			m_MatBlur.LerpParam("Intensity", 0.8, 0.1, 0.75);
-			m_MatGlow.LerpParam("Vignette", 0.9, 0.25, 0.75);
-			m_MatChroma.LerpParam("PowerX", 2.5, 0, 1);
-			/*
-			m_MatBlur.LerpParam("Intensity", 0.8, 0.1, 0.75);
-			m_MatGlow.LerpParam("Vignette", 0.9, 0.25, 0.75);
-			m_MatChroma.LerpParamTo("PowerX", 0.75, 0.5);
-			Sleep(500);
-			m_MatChroma.LerpParamTo("PowerX", -0.3, 0.35);
-			Sleep(500);		
-			m_MatChroma.LerpParamTo("PowerX", -0.2, 0.35);
-			Sleep(500);	
-			m_MatChroma.LerpParamTo("PowerX", 0, 0.5);*/
+			m_MatBlur.LerpParam("Intensity", 0.8 * intensity, m_MatBlur.GetParamValue("Intensity") + 0.12, 0.75);
+			m_MatGlow.LerpParam("Vignette", 1.2 * intensity, m_MatBlur.GetParamValue("Vignette") + 0.25, 0.75);
+			m_MatChroma.LerpParam("PowerX", 0.3 * intensity, m_MatBlur.GetParamValue("Vignette") + 0.02, 2.5);
 		}
 	}
 	
 	private void CreateFinalBlowout()
 	{
 		m_Player.AddHealth("", "Shock", -m_Settings.ImpactShockDamage);
-		PlaySoundOnPlayer(BlowoutSound.Blowout_Begin, 1.5);
-		PlaySoundOnPlayer(BlowoutSound.Blowout_FullWave);
-		CreateBlowout();
+		PlaySoundOnPlayer(BlowoutSound.Blowout_Begin);
+		Sleep(100);
+		PlaySoundOnPlayer(BlowoutSound.Blowout_FullWave, 0.25);
+		thread CreateBlowout(1);
 		
 		if (m_APSI && m_APSI.IsSwitchedOn()) {
 			
@@ -234,41 +243,31 @@ class BlowoutEvent
 	}
 		
 
-	private void PlaySoundOnPlayer(BlowoutSound sound, float volume = 1)
+	private AbstractWave PlaySoundOnPlayer(BlowoutSound sound, float volume = 1)
 	{
-		//EffectSound effect = SEffectManager.CreateSound(typename.EnumToString(BlowoutSound, sound), m_Player.GetPosition());
-		EffectSound effect;
+		SoundObjectBuilder builder = new SoundObjectBuilder(new SoundParams(typename.EnumToString(BlowoutSound, sound)));
+		SoundObject sound_object = builder.BuildSoundObject();
+		sound_object.SetKind(WaveKind.WAVEENVIRONMENTEX);
+		sound_object.SetPosition(m_Player.GetPosition());
 		
-		SoundParams p = new SoundParams(typename.EnumToString(BlowoutSound, sound));
-		Print(p.IsValid());
-		SoundObjectBuilder builder = new SoundObjectBuilder(p);
-		SoundObject so = builder.BuildSoundObject();
-		so.SetKind(WaveKind.WAVEENVIRONMENTEX);
-		so.SetPosition(m_Player.GetPosition());
-		
-		
-		AbstractWave wave = GetGame().GetSoundScene().Play2D(so, builder);
-		
-		wave.SetVolume(1);
+		AbstractWave wave = GetGame().GetSoundScene().Play2D(sound_object, builder);
+		wave.SetVolume(volume);
 		wave.Play();
-		
-		
-		
-		//SoundOnVehicle v = m_Player.PlaySound(typename.EnumToString(BlowoutSound, sound), 1);
-		
-		//effect.SetSoundVolume(volume);
-		//effect.SoundPlay();
-	
-		
+		return wave;
 	}
 	
-	private EffectSound PlayEnvironmentSound(BlowoutSound sound, vector position, float volume = 1, float fadein = 0, float fadeout = 0)
+	private AbstractWave PlayEnvironmentSound(BlowoutSound sound, vector position, float volume = 1, float frequency_random = 0)
 	{
-		EffectSound effect = SEffectManager.CreateSound(typename.EnumToString(BlowoutSound, sound), position, fadein, fadeout, false, true);
-		effect.SetSoundAutodestroy(true);
-		effect.SetVolumeLevel(volume);
-		effect.SoundPlay();
-		return effect;
+		SoundObjectBuilder builder = new SoundObjectBuilder(new SoundParams(typename.EnumToString(BlowoutSound, sound)));
+		SoundObject sound_object = builder.BuildSoundObject();
+		sound_object.SetKind(WaveKind.WAVEENVIRONMENTEX);
+		sound_object.SetPosition(position);
+		
+		AbstractWave wave = GetGame().GetSoundScene().Play3D(sound_object, builder);
+		wave.SetFrequency(wave.GetFrequency() * Math.RandomFloat(1 - frequency_random, 1 + frequency_random));
+		wave.SetVolume(volume);
+		wave.Play();
+		return wave;
 	}
 	
 	

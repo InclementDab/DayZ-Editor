@@ -46,6 +46,11 @@ class MaterialEffect
 		LerpParam(param, start, finish, duration);
 	}
 	
+	float GetParamValue(string param)
+	{
+		return param_values.Get(param);
+	}
+	
 	void ResetParam(string param)
 	{
 		m_Material.ResetParam(param);
