@@ -100,6 +100,22 @@ class CfgSoundShaders
 		};
 	};
 
+    class Blowout_Drone_SoundShader: Namalsk_Environment_SoundShader
+    {
+		samples[] = {
+			{"DayZEditor\namalsk\blowout\blowout_drone1", 1}, 
+			{"DayZEditor\namalsk\blowout\blowout_drone2", 1}
+		};
+    };
+
+    class Blowout_DroneQ_SoundShader: Namalsk_Environment_SoundShader
+    {
+		samples[] = {
+			{"DayZEditor\namalsk\blowout\blowout_drone1r", 1}, 
+			{"DayZEditor\namalsk\blowout\blowout_drone2r", 1}
+		};
+    };
+
 
 	class APSI_Enable_SoundShader: Namalsk_Item_SoundShader
 	{
@@ -152,6 +168,11 @@ class CfgSoundSets
 	{
 		soundShaders[] = {"Blowout_Wave_SoundShader"};
 	};
+
+    class Blowout_Drone: Namalsk_Soundset
+    {
+        soundShaders[] = {"Blowout_Drone_SoundShader", "Blowout_DroneQ_SoundShader"};
+    };
 
 	class APSI_Enable: Namalsk_Soundset
 	{
