@@ -45,7 +45,7 @@ class CfgSoundShaders
 	{
 		volume = 0.7;
 		frequency = 1;
-		range = 1;
+		range = 10;
 		limitation = 0;
 	};
 

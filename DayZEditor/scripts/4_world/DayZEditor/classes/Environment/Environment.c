@@ -20,21 +20,22 @@ modded class Environment
 	{
 		if (!m_Player) return;
 		
-		bool APSI_Enable = true; // todo
-		if (APSI_Enable) {
-			thread StartAPSI();
-		}
+
 		
-		// temp setting blowout to ontop of player
 		thread StartBlowout(m_Player.GetPosition());
 	}
 	
 	private void StartBlowout(vector position)
 	{
-		PlayEnvironmentSound(BlowoutSound.Blowout_Begin, position);
-		SetCameraPostProcessEffect(0, 1, PostProcessEffectType.ChromAber, "");
+
+		bool APSI_Enable = true; // m_Player contains an APSI Unit
+		if (APSI_Enable) {
+			thread StartAPSI();
+		}
 		
+		Sleep(5000);
 	
+		PlayEnvironmentSound(BlowoutSound.Blowout_Begin, position);
 		thread LerpMaterialParam("graphics/materials/postprocess/gauss", "Intensity", 0.8, 0.1, 0.75);
 		thread LerpMaterialParam("graphics/materials/postprocess/glow", "Vignette", 0.9, 0.25, 0.75);
 		Sleep(500);
