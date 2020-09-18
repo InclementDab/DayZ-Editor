@@ -8,7 +8,7 @@ class BlowoutEventSettings
 	float TimeBetweenWaves = 5;
 	
 	// Time between StartBlowout and actual event in seconds
-	float BlowoutDelay = 60; // 120
+	float BlowoutDelay = 30; // 120
 	
 	float ImpactShockDamage = 15;
 	

@@ -51,6 +51,8 @@ class APSI: Clothing
 		PlaySoundOnPlayer(BlowoutSound.APSI_Detect);
 		Sleep(2000);
 		PlaySoundOnPlayer(BlowoutSound.APSI_Enable);	
+		auto x = new MaterialEffect("graphics/materials/postprocess/gauss");
+		x.LerpParam("Intensity", 0.4, 0, 1);
 	}
 	
 	private void PlayShutdownEffect()

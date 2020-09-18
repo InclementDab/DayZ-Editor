@@ -17,7 +17,7 @@ class CfgVehicles
 	{
 		scope = 2;
 		displayName = "$STR_APSI";
-        model = "\DayZEditor\namalsk\CameraOld.p3d";
+        model = "\DZ\characters\glasses\NVG_Headstrap_g.p3d";
 		descriptionShort = "$STR_APSI_DESC";
         inventorySlot[] = {"Headgear"};
         simulation = "clothing";

@@ -12,6 +12,21 @@ enum BlowoutSound
 	APSI_Disable
 }
 
+class BlowoutLight: ScriptedLightBase
+{
+	void BlowoutLight()
+	{
+		SetLightType(LightSourceType.PointLight);
+		SetVisibleDuringDaylight(true);
+		SetRadiusTo(1000);
+		SetBrightnessTo(1);
+		SetCastShadow(true);
+		SetDiffuseColor(1.2, 1.0, 0.7);
+		//SetFlickerSpeed(0.5);
+		//SetFlickerAmplitude(1);
+	}
+}
+
 
 class BlowoutEvent
 {
@@ -33,6 +48,7 @@ class BlowoutEvent
 	protected vector m_Position;
 	
 	protected ref array<ref AbstractWave> m_AlarmSounds = {};
+	protected BlowoutLight m_BlowoutLight;
 	
 	void BlowoutEvent(BlowoutEventSettings settings)
 	{
@@ -64,36 +80,38 @@ class BlowoutEvent
 		m_MatColors = new MaterialEffect("graphics/materials/postprocess/colors");
 		m_MissionWeatherState = m_Weather.GetMissionWeather();
 		m_Weather.MissionWeather(false);
+			//Vector(m_Position[0], m_Position[1] + 500, m_Position[2])
 		
+		m_BlowoutLight = BlowoutLight.Cast(ScriptedLightBase.CreateLight(BlowoutLight, Vector(m_Player.GetPosition()[0], 8000, m_Player.GetPosition()[2])));
 		
-		
+
 		EntityAI headgear = GetGame().GetPlayer().GetInventory().FindAttachment(InventorySlots.HEADGEAR);
+		
 		if (Class.CastTo(m_APSI, headgear)) {
 			m_APSI.SwitchOn();
 		}		
-		
+
 		ref array<vector> alarm_positions = m_Settings.GetAlarmPositions();
 		foreach (vector pos: alarm_positions) {
-			m_AlarmSounds.Insert(PlayEnvironmentSound(BlowoutSound.Blowout_Alarm, pos, 0.4, 1.2));
+			m_AlarmSounds.Insert(PlayEnvironmentSound(BlowoutSound.Blowout_Alarm, pos, 1, 0.3));
 		}
 		
-		thread LerpFunction(GetGame().GetWorld(), "SetEyeAccom", 1, 0.07, m_Settings.BlowoutDelay);
 		
-		Sleep(10000);
+		thread LerpFunction(g_Game, "SetEVValue", 0, -3, m_Settings.BlowoutDelay);
 		
-		m_Weather.SetStorm(0.5, 1, m_Settings.BlowoutDelay);
+		m_Weather.SetStorm(0, 1, 3000);
 		m_Weather.GetFog().Set(0.4, m_Settings.BlowoutDelay, m_Settings.BlowoutDelay);
-		m_Weather.GetOvercast().Set(1, m_Settings.BlowoutDelay, m_Settings.BlowoutDelay);
-			
-		
+		Sleep(10000);
+				
+		m_Weather.GetOvercast().Set(1, m_Settings.BlowoutDelay, m_Settings.BlowoutDelay);		
 		
 		// Pregame Phases
 		float timepassed;
 		while (timepassed < m_Settings.BlowoutDelay * 1000) {
 			
 			float pregame_phase = 1 / (m_Settings.BlowoutDelay * 1000) * timepassed;
-			//m_Weather.SetStorm(1, 0.4, pregame_phase * 10);
-			PlayEnvironmentSound(BlowoutSound.Blowout_Wave, m_Position, pregame_phase);
+			
+			//PlayEnvironmentSound(BlowoutSound.Blowout_Wave, m_Position, pregame_phase);
 			float _t = 1000 * Math.RandomFloat(0.5, 2);
 			timepassed += _t;
 			Sleep(_t);
@@ -121,7 +139,7 @@ class BlowoutEvent
 		for (int j = 0; j < m_Settings.BlowoutCount; j++) {
 			
 			float phase = (1 / m_Settings.BlowoutCount) * j;
-			phase = Math.Clamp(phase, 0.1, FLT_MAX);
+			phase = Math.Clamp(phase, 0.25, FLT_MAX);
 			
 			for (int k = 0; k < j; k++) {
 				PlaySoundOnPlayer(BlowoutSound.Blowout_Begin, phase);
@@ -133,7 +151,7 @@ class BlowoutEvent
 		}
 		
 		thread CreateFinalBlowout();
-		return;
+
 		// make longer
 		Sleep(3000);
 		if (m_APSI && m_APSI.IsSwitchedOn()) {
@@ -141,7 +159,7 @@ class BlowoutEvent
 		}
 		
 		m_Weather.MissionWeather(m_MissionWeatherState);
-		thread LerpFunction(GetGame().GetWorld(), "SetEyeAccom", GetGame().GetWorld().GetEyeAccom(), 1, 10);	
+		thread LerpFunction(g_Game, "SetEVValue", -3, 0, m_Settings.BlowoutDelay);
 		
 		Sleep(10000);
 		
@@ -150,6 +168,8 @@ class BlowoutEvent
 				alarm.Stop();
 			}
 		}
+		
+		m_BlowoutLight.Destroy();
 	}
 	
 	// add min and max to this
@@ -175,39 +195,43 @@ class BlowoutEvent
 	{	
 		Print("CreateHit " + intensity);
 		intensity = Math.Clamp(intensity, 0.3, 1);
-		intensity *= CalculateIntensity(vector.Distance(m_Player.GetPosition(), m_Position));
+		//intensity *= CalculateIntensity(vector.Distance(m_Player.GetPosition(), m_Position));
 		
 		
 		float phase = intensity;
 		phase *= 100;
 		vector pos = RandomizeVector(m_Player.GetPosition(), phase, phase + 25);
-		PlayEnvironmentSound(BlowoutSound.Blowout_Hit, pos, intensity * 1.4);
+		//PlayEnvironmentSound(BlowoutSound.Blowout_Hit, pos, intensity * 1.4);
 		Sleep(vector.Distance(pos, m_Player.GetPosition()) * 0.343);
 		
 		
 		m_Player.GetStaminaHandler().DepleteStamina(EStaminaModifiers.JUMP);
+		CreateCameraShake(intensity * 3);
+		PlayEnvironmentSound(BlowoutSound.Blowout_Hit, pos, 0.2);
+		CreateLightning(pos, intensity * 3);
+		
 		if (m_APSI && m_APSI.IsSwitchedOn()) {
 			
 		} else {
-			CreateCameraShake(intensity * 3);
+			
 			m_MatBlur.LerpParam("Intensity", 0.4 * intensity, 0.1, 0.75);
 			m_MatGlow.LerpParam("Vignette", 0.4 * intensity, 0, 0.75);
-			m_MatChroma.LerpParam("PowerX", 1.5 * intensity, 0, 1);
+			m_MatChroma.LerpParam("PowerX", 0.5 * intensity, 0, 1);
 		}
 	}
 	
 	private void CreateBlowout(float intensity)
 	{	
 		m_Player.GetStaminaHandler().DepleteStamina(EStaminaModifiers.JUMP);		
+		CreateCameraShake(intensity);
 		if (m_APSI && m_APSI.IsSwitchedOn()) {
 			
 		} else {
 			
-			CreateCameraShake(intensity);
-			
-			m_MatBlur.LerpParam("Intensity", 0.8 * intensity, m_MatBlur.GetParamValue("Intensity") + 0.12, 0.75);
-			m_MatGlow.LerpParam("Vignette", 1.2 * intensity, m_MatBlur.GetParamValue("Vignette") + 0.25, 0.75);
-			m_MatChroma.LerpParam("PowerX", 0.3 * intensity, m_MatBlur.GetParamValue("Vignette") + 0.02, 2.5);
+			m_MatBlur.LerpParam("Intensity", 0.8 * intensity, m_MatBlur.GetParamValue("Intensity") + 0.04, 0.75);
+			m_MatGlow.LerpParam("Vignette", 1 * intensity, m_MatBlur.GetParamValue("Vignette") + 0.25, 0.75);
+			m_MatChroma.LerpParam("PowerX", 0.3 * intensity, 0, 2.5);
+			m_MatGlow.LerpParam("Saturation", 0.2, 1, 1);
 		}
 	}
 	
@@ -281,5 +305,29 @@ class BlowoutEvent
 		}
 	}
 	
+
+	void CreateLightning(vector position, int intensity)
+	{
+		for (int i = 0; i < Math.RandomFloat(1, 3) * intensity; i++) {
+			thread CreateBolt(position);
+			Sleep(Math.RandomInt(0, 350));
+		}
+	}
+	
+	void CreateBolt(vector position)
+	{
+		position[0] = position[0] + Math.RandomFloat(-15, 15);
+		position[2] = position[2] + Math.RandomFloat(-15, 15);
+		
+		Object bolt = GetGame().CreateObject(BOLT_TYPES[Math.RandomInt(0, 1)], position);
+		bolt.SetOrientation(Vector(0, Math.RandomFloat(0, 360), 0));
+		//SEffectManager.PlaySound(SOUND_TYPES[Math.RandomInt(0, 3)], position);
+		
+		InclementDabLightning m_Light = InclementDabLightning.Cast(ScriptedLightBase.CreateLight(InclementDabLightning, position));
+		
+		Sleep(Math.RandomInt(15, 150));
+		m_Light.Destroy();
+		GetGame().ObjectDelete(bolt);
+	}
 
 }
