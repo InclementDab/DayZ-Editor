@@ -76,11 +76,13 @@ class CfgSoundShaders
 	class Blowout_FullWave_SoundShader: Namalsk_Environment_SoundShader
 	{
 		samples[] = {{"DayZEditor\namalsk\blowout\blowout_full_wave", 1}};
+        volume = 0.2;
 	};
 
 	class Blowout_Voices_SoundShader: Namalsk_Environment_SoundShader
 	{
 		samples[] = {{"DayZEditor\namalsk\blowout\blowout_psy_voices", 1}};
+        volume = 0.2;
 	};
 
 	class Blowout_Hit_SoundShader: Namalsk_Environment_SoundShader
@@ -120,7 +122,8 @@ class CfgSoundShaders
     class Blowout_Alarm_SoundShader: Namalsk_Environment_SoundShader
     {
 		samples[] = {{"DayZEditor\namalsk\blowout\blowout_alarm", 1}};
-        range = 5000;
+        range = 10000;
+        frequencyRandomizer = 3;
     };
 
 

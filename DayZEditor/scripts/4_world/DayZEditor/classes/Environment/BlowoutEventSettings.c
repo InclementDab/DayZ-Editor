@@ -1,7 +1,5 @@
 class BlowoutEventSettings
 {
-	// 0..1 value
-	float Intensity = 0.5;
 	
 	// Amount of waves
 	int WaveCount = 3;
@@ -10,13 +8,12 @@ class BlowoutEventSettings
 	float TimeBetweenWaves = 5;
 	
 	// Time between StartBlowout and actual event in seconds
-	float BlowoutDelay = 15; // 120
+	float BlowoutDelay = 20; // 120
 	
 	float ImpactShockDamage = 15;
 	
 	float BlowoutSize = 10000;
-	
-	float BlowoutCount = 3;
+	float BlowoutCount = 2;
 	
 	static ref array<vector> GetAlarmPositions()
 	{
