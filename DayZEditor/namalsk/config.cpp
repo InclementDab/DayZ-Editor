@@ -57,6 +57,7 @@ class CfgSoundShaders
 		frequency = 1;
 		range = 15000;
 		limitation = 0;
+        radius = 15000;
 	};
 
 	class Namalsk_Item_SoundShader
@@ -116,6 +117,12 @@ class CfgSoundShaders
 		};
     };
 
+    class Blowout_Alarm_SoundShader: Namalsk_Environment_SoundShader
+    {
+		samples[] = {{"DayZEditor\namalsk\blowout\blowout_alarm", 1}};
+        range = 5000;
+    };
+
 
 	class APSI_Enable_SoundShader: Namalsk_Item_SoundShader
 	{
@@ -142,6 +149,7 @@ class CfgSoundSets
 		spatial = 1;
 		doppler = 0;
 		loop = 0;
+        distanceFilter = "none";
 	};
 
 	class Blowout_Begin: Namalsk_Soundset
@@ -172,6 +180,11 @@ class CfgSoundSets
     class Blowout_Drone: Namalsk_Soundset
     {
         soundShaders[] = {"Blowout_Drone_SoundShader", "Blowout_DroneQ_SoundShader"};
+    };
+
+    class Blowout_Alarm: Namalsk_Soundset
+    {
+        soundShaders[] = {"Blowout_Alarm_SoundShader"};
     };
 
 	class APSI_Enable: Namalsk_Soundset
