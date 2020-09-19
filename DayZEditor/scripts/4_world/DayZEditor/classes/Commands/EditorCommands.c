@@ -1,7 +1,6 @@
 
 class EditorCommand: RelayCommand
 {	
-		
 	override void Execute(RelayCommandArgs args) 
 	{
 		EditorLog.Trace("EditorCommand::Execute");

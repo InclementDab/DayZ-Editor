@@ -4,11 +4,10 @@ class InclementDabLightning: ScriptedLightBase
 {    
     void InclementDabLightning()
     {
-		SetLightType(LightSourceType.PointLight);
+		SetLightType(LightSourceType.SpotLight);
         SetVisibleDuringDaylight( true );
         SetRadius(500);
         SetBrightness(1);
-        SetDiffuseColor( 1, 1, 0.8 );
     }
 }
 

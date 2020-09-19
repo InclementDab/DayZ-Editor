@@ -80,11 +80,10 @@ class BlowoutEvent
 		m_MatColors = new MaterialEffect("graphics/materials/postprocess/colors");
 		m_MissionWeatherState = m_Weather.GetMissionWeather();
 		m_Weather.MissionWeather(false);
-			//Vector(m_Position[0], m_Position[1] + 500, m_Position[2])
-		
+
 		m_BlowoutLight = BlowoutLight.Cast(ScriptedLightBase.CreateLight(BlowoutLight, Vector(m_Player.GetPosition()[0], 8000, m_Player.GetPosition()[2])));
 		
-
+		
 		EntityAI headgear = GetGame().GetPlayer().GetInventory().FindAttachment(InventorySlots.HEADGEAR);
 		
 		if (Class.CastTo(m_APSI, headgear)) {
@@ -95,7 +94,6 @@ class BlowoutEvent
 		foreach (vector pos: alarm_positions) {
 			m_AlarmSounds.Insert(PlayEnvironmentSound(BlowoutSound.Blowout_Alarm, pos, 1, 0.3));
 		}
-		
 		
 		thread LerpFunction(g_Game, "SetEVValue", 0, -3, m_Settings.BlowoutDelay);
 		
@@ -201,14 +199,13 @@ class BlowoutEvent
 		float phase = intensity;
 		phase *= 100;
 		vector pos = RandomizeVector(m_Player.GetPosition(), phase, phase + 25);
-		//PlayEnvironmentSound(BlowoutSound.Blowout_Hit, pos, intensity * 1.4);
 		Sleep(vector.Distance(pos, m_Player.GetPosition()) * 0.343);
 		
 		
 		m_Player.GetStaminaHandler().DepleteStamina(EStaminaModifiers.JUMP);
 		CreateCameraShake(intensity * 3);
-		PlayEnvironmentSound(BlowoutSound.Blowout_Hit, pos, 0.2);
-		CreateLightning(pos, intensity * 3);
+		
+		CreateLightning(m_Player.GetPosition(), intensity * 3);
 		
 		if (m_APSI && m_APSI.IsSwitchedOn()) {
 			
@@ -316,13 +313,13 @@ class BlowoutEvent
 	
 	void CreateBolt(vector position)
 	{
-		position[0] = position[0] + Math.RandomFloat(-15, 15);
-		position[2] = position[2] + Math.RandomFloat(-15, 15);
-		
+		position = RandomizeVector(position, 10, 50);
+		PlayEnvironmentSound(BlowoutSound.Blowout_Hit, position, 0.2);
+		//position[1] = GetGame().SurfaceY(position[0], position[2]);
 		Object bolt = GetGame().CreateObject(BOLT_TYPES[Math.RandomInt(0, 1)], position);
 		bolt.SetOrientation(Vector(0, Math.RandomFloat(0, 360), 0));
-		//SEffectManager.PlaySound(SOUND_TYPES[Math.RandomInt(0, 3)], position);
 		
+		position[1] = position[1] + 50;
 		InclementDabLightning m_Light = InclementDabLightning.Cast(ScriptedLightBase.CreateLight(InclementDabLightning, position));
 		
 		Sleep(Math.RandomInt(15, 150));
