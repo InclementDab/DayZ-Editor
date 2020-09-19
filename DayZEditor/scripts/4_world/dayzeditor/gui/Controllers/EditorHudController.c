@@ -152,7 +152,7 @@ class EditorHudController: Controller
 				InsertPlaceableObject(new EditorPlaceableListItem(placeable_object_data));
 
 #ifdef COMPONENT_SYSTEM
-				if (j > 5) return j; // dont hotload 2360 objects plz
+				//if (j > 5) return j; // dont hotload 2360 objects plz
 #endif
 		    }
 		}

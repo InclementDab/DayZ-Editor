@@ -52,7 +52,7 @@ class EditorListItemController: Controller
 				m_LayoutRoot.GetScreenPos(pos_x, pos_y);
 				m_LayoutRoot.GetScreenSize(size_x, size_y);
 				tooltip.GetLayoutRoot().SetPos(pos_x + size_x, pos_y);
-				//tooltip.SetContent(GetGame().CreateObjectEx(item_type, vector.Zero, ECE_NONE));
+				tooltip.SetContent(GetGame().CreateObjectEx(item_type, vector.Zero, ECE_NONE));
 				tooltip.Show();
 				break;
 			}		

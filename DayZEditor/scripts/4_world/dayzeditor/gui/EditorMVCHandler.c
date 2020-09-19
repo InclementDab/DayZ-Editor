@@ -21,5 +21,9 @@ class EditorMVCLayout: MVCLayout
 	{
 		EditorLog.Trace("~EditorMVCLayout");
 	}
+	
+	void SetPosition(float x, float y) {
+		m_LayoutRoot.SetPos(x, y);
+	}
 }
 

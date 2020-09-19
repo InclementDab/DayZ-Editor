@@ -16,11 +16,7 @@ class EditorMenu: EditorMVCLayout
 		EditorLog.Trace("~EditorMenu");
 		delete m_MenuItems;
 	}
-		
-	void SetPosition(float x, float y) {
-		m_LayoutRoot.SetPos(x, y);
-	}
-	
+			
 	void AddMenuDivider()
 	{	
 		EditorMenuItemDivider divider();
