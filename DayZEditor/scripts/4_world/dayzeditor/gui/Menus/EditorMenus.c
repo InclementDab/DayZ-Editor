@@ -1,9 +1,8 @@
 
 class EditorMenu: EditorMVCLayout
 {
-	private ref array<ref EditorMenuItem> m_MenuItems = new array<ref EditorMenuItem>();
+	protected ref array<ref EditorMenuItem> m_MenuItems = {};
 	protected WrapSpacerWidget EditorMenuContent;
-	
 	
 	void ~EditorMenu() {
 		EditorLog.Trace("~EditorMenu");
@@ -55,8 +54,7 @@ class EditorMenu: EditorMVCLayout
 	}
 
 	void AddMenuItem(ref EditorMenuItem menu_item)
-	{
-		Print(m_MenuItems);
+	{		
 		if (menu_item) {
 			EditorMenuContent.AddChild(menu_item.GetLayoutRoot());
 			m_MenuItems.Insert(menu_item);
