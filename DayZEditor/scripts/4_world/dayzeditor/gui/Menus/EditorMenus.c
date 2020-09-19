@@ -1,13 +1,7 @@
 
 class EditorMenuItemList: ref array<ref EditorMenuItem> 
 {
-	void EditorMenuItemList() {
-		EditorLog.Trace("EditorMenuItemList");
-	}	
-	
-	void ~EditorMenuItemList() {
-		EditorLog.Trace("~EditorMenuItemList");
-	}
+
 }
 
 class EditorMenu: EditorMVCLayout

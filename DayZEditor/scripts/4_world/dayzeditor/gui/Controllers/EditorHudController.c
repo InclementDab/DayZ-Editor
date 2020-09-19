@@ -1,4 +1,9 @@
 
+EditorHudController _EditorHudController;
+EditorHudController GetEditorHudController() {
+	return _EditorHudController;
+}
+
 class EditorHudController: Controller
 {
 	// Data Binding
@@ -62,6 +67,7 @@ class EditorHudController: Controller
 	void EditorHudController() 
 	{
 		EditorLog.Trace("EditorHudController");
+		_EditorHudController = this;
 		
 #ifndef COMPONENT_SYSTEM
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
@@ -167,7 +173,7 @@ class EditorHudController: Controller
 	
 	void CloseMenu() {
 		EditorLog.Trace("EditorHudController::CloseMenu");
-		if (IsMenuActive()) {
+		if (GetMenu()) {
 			SetMenu(null);
 		}
 	}
@@ -176,9 +182,8 @@ class EditorHudController: Controller
 		return m_CurrentMenu;
 	}
 	
-	bool IsMenuActive() {
-		return (m_CurrentMenu != null);
-	}
+	// ToolTip Control
+	EditorTooltip CurrentTooltip;
 	
 
 	override void PropertyChanged(string property_name)
@@ -236,7 +241,6 @@ class EditorHudController: Controller
 				break;
 			}
 		}
-		
 	}
 	
 	void BrushToggleButtonExecute(ButtonCommandArgs args)
@@ -279,7 +283,17 @@ class EditorHudController: Controller
 	void MenuBarExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudController::MenuBarExecute");
-
+		
+		EditorTooltip tt();
+		tt.SetTitle("Test");
+		int x, y;
+		GetMousePos(x, y);
+		tt.GetLayoutRoot().SetPos(x, y);
+		tt.Show();
+		Print(x);
+		Print(y);
+		
+		return;
 		if (!GetMenu()) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
 			CreateToolbarMenu(args.GetButtonWidget());
 		} else {
@@ -423,7 +437,7 @@ class EditorHudController: Controller
 			case MenuBarView: {
 				// Allows you to "Mouse between" toolbars at the top smoothly
 				w.SetColor(COLOR_SALMON);
-				if (IsMenuActive() && !GetMenu().IsInherited(EditorContextMenu)) {
+				if (GetMenu() && !GetMenu().IsInherited(EditorContextMenu)) {
 					CreateToolbarMenu(w);
 				}
 				

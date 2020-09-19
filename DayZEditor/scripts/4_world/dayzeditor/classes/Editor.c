@@ -252,7 +252,7 @@ class Editor
 		Widget target = GetWidgetUnderCursor();
 		if (!target) {
 			SetFocus(null);
-			if (m_EditorHud.GetController().IsMenuActive()) {
+			if (m_EditorHud.GetController().GetMenu()) {
 				m_EditorHud.GetController().SetMenu(null);
 			}
 		}
@@ -342,7 +342,7 @@ class Editor
 				if (IsLootEditActive()) {
 					FinishEditLootSpawns();
 					return true;
-				} else if (m_EditorHud.IsModalActive() || m_EditorHud.GetController().IsMenuActive()) {
+				} else if (m_EditorHud.IsModalActive() || m_EditorHud.GetController().GetMenu()) {
 					m_EditorHud.GetModal().Close();
 					m_EditorHud.GetController().CloseMenu();
 					return true;
