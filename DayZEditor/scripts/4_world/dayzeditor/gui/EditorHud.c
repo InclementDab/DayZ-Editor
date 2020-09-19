@@ -98,34 +98,7 @@ class EditorHud: Hud
 	override void Update(float timeslice) {}	
 	
 	override void SetPermanentCrossHair(bool show); // todo
-	
-	// Modal Window Control
-	private ref EditorDialog m_CurrentModal = null;
-	void SetModal(EditorDialog dialog) {	
-		if (m_CurrentModal && m_CurrentModal != dialog)
-			m_CurrentModal.Close();
-		
-		m_CurrentModal = dialog;
 
-		// Stops layout from accepting input while Modal is active
-		m_LayoutRoot.Enable(!m_CurrentModal);
-	}
-	
-	EditorDialog GetModal() {
-		return m_CurrentModal;
-	}
-
-	bool IsModalActive() {
-		return (m_CurrentModal != null);
-	}
-	
-	bool IsModalCommand(Widget w) {
-		return (m_CurrentModal && m_CurrentModal.GetLayoutRoot() && m_CurrentModal.GetLayoutRoot().FindAnyWidget(w.GetName()) );
-	}
-	
-	bool ShouldProcessInput(Widget w) {
-		return (!IsModalActive() || IsModalCommand(w));
-	}
 			
 	// Current "button" on UI
 	private ButtonWidget m_CurrentButton;

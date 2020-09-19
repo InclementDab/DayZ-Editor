@@ -14,6 +14,7 @@ class EditorListItemController: Controller
 	protected TextWidget EditorListItemLabel;
 	protected ImageWidget EditorListItemIcon;
 	protected WrapSpacerWidget EditorListItemChildren;
+	protected ButtonWidget EditorListItemButton;
 	
 	//protected static int COLOR_ON_SELECTED = ARGB(140,41,128,185);
 	protected static int COLOR_ON_SELECTED = COLOR_BLUE;
@@ -40,23 +41,13 @@ class EditorListItemController: Controller
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		//EditorLog.Trace("EditorListItemController::OnMouseEnter");
-		EditorListItemContent.SetColor(COLOR_ON_HOVER);
 		
-		switch (m_ListItem.Type()) {
-			
-			case EditorPlaceableListItem: {
-				string item_type = EditorPlaceableListItem.Cast(m_ListItem).GetData().Type;
-				EditorTooltip tooltip = new EditorTooltip();			
-				tooltip.SetTitle(item_type);
-				float pos_x, pos_y, size_x, size_y;
-				m_LayoutRoot.GetScreenPos(pos_x, pos_y);
-				m_LayoutRoot.GetScreenSize(size_x, size_y);
-				tooltip.GetLayoutRoot().SetPos(pos_x + size_x, pos_y);
-				tooltip.SetContent(GetGame().CreateObjectEx(item_type, vector.Zero, ECE_NONE));
-				tooltip.Show();
-				break;
-			}		
-		}
+		if (w != EditorListItemButton) 
+			return false;
+		
+		EditorListItemContent.SetColor(COLOR_ON_HOVER);
+				
+		m_ListItem.OnMouseEnter(x, y);
 				
 		return false;
 	}
@@ -66,19 +57,13 @@ class EditorListItemController: Controller
 	{
 		//EditorLog.Trace("EditorListItemController::OnMouseLeave");
 		
+		if (w != EditorListItemButton) return false;
 		
 		if (!m_Selected)
 			EditorListItemContent.SetColor(COLOR_ON_DESELECTED);
 		
-		switch (m_ListItem.Type()) {
-			case EditorPlaceableListItem: {
-				if (GetEditorHudController().CurrentTooltip) {
-					GetEditorHudController().CurrentTooltip.Close();
-				}
-				break;
-			}
-		}
-		
+		m_ListItem.OnMouseLeave(x, y);
+				
 		return false;
 	}
 	/*
@@ -167,7 +152,6 @@ class EditorListItemController: Controller
 				} else if (button == 1) {
 					EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu();
 					placeable_context.SetPosition(x, y);
-					placeable_context.Show();
 				}
 				
 				break;
@@ -187,7 +171,6 @@ class EditorListItemController: Controller
 				} else if (button == 1) {
 					EditorContextMenu context_menu = new EditorContextMenu();
 					context_menu.SetPosition(x, y);
-					context_menu.Show();
 				}
 				break;
 			}
@@ -207,7 +190,7 @@ class EditorListItemController: Controller
 			case EditorPlacedListItem: {
 				EditorObjectPropertiesDialog dialog();
 				dialog.SetEditorObject(EditorPlacedListItem.Cast(m_ListItem).GetData());
-				dialog.Show();
+				dialog.ShowDialog();
 				break;
 			}
 		}

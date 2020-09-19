@@ -124,12 +124,6 @@ class EditorHudController: Controller
 		GetXMLApi().Read(filename, xml_brushes);
 	}
 	
-	void InsertPlaceableObject(EditorListItem target)
-	{
-		EditorLog.Trace("EditorHudController::InsertPlaceableObject");
-		LeftbarSpacerData.Insert(target);
-	}	
-	
 	
 	void InsertMapMarker(EditorMarker map_marker)
 	{
@@ -141,49 +135,46 @@ class EditorHudController: Controller
 	{ 
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
-		for (int i = 0; i < paths.Count(); i++)	{
-			string Config_Path = paths.Get(i);			
+		paths.Insert(CFG_WEAPONSPATH);
+		paths.Insert(CFG_MAGAZINESPATH);
+	
+		foreach (string config_path: paths) {
 			
-		    for (int j = 0; j < GetGame().ConfigGetChildrenCount(Config_Path); j++) {
-				string Config_Name, Base_Name;
-		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name);
-				EditorPlaceableObjectData placeable_object_data = new EditorPlaceableObjectData(Config_Name, Config_Path);
-
-				InsertPlaceableObject(new EditorPlaceableListItem(placeable_object_data));
-
+			for (int j = 0; j < GetGame().ConfigGetChildrenCount(config_path); j++) {
+				string class_name;
+		        GetGame().ConfigGetChildName(config_path, j, class_name);
+				TStringArray full_path = new TStringArray();
+				GetGame().ConfigGetFullPath(config_path + " " + class_name, full_path);
+				
+				if (full_path.Find("HouseNoDestruct") != -1) {
+					EditorPlaceableObjectData data(class_name, config_path);
+					LeftbarSpacerData.Insert(new EditorPlaceableListItem(data));
+					
 #ifdef COMPONENT_SYSTEM
-				//if (j > 5) return j; // dont hotload 2360 objects plz
+					//if (j > 5) return j; // dont hotload 2360 objects plz
 #endif
+				} else {
+					EditorLog.Trace("Not including Base " + full_path.ToString());
+				}
 		    }
 		}
-		
 		return j;
 	}
 	
 	
+	
 	// Modal Menu Control
-	private ref EditorMenu m_CurrentMenu;	
-	void SetMenu(EditorMenu menu) {
-		EditorLog.Trace("EditorHudController::SetMenu");
-		if (m_CurrentMenu && m_CurrentMenu != menu)
-			m_CurrentMenu.Close();
-		
-		m_CurrentMenu = menu;
-	}
-	
-	void CloseMenu() {
-		EditorLog.Trace("EditorHudController::CloseMenu");
-		if (GetMenu()) {
-			SetMenu(null);
-		}
-	}
-	
-	ref EditorMenu GetMenu() {
-		return m_CurrentMenu;
-	}
+	ref EditorMenu CurrentMenu;
 	
 	// ToolTip Control
 	ref EditorTooltip CurrentTooltip;
+		
+	// Dialog Control
+	ref EditorDialog CurrentDialog;
+	
+	bool IsDialogCommand(Widget w) {
+		return (CurrentDialog && CurrentDialog.GetLayoutRoot() && CurrentDialog.GetLayoutRoot().FindAnyWidget(w.GetName()) );
+	}
 	
 
 	override void PropertyChanged(string property_name)
@@ -284,10 +275,10 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::MenuBarExecute");
 		
-		if (!GetMenu()) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
+		if (!CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
 			CreateToolbarMenu(args.GetButtonWidget());
 		} else {
-			CloseMenu();
+			delete CurrentMenu;
 		}
 	}
 	
@@ -319,9 +310,8 @@ class EditorHudController: Controller
 		toolbar_button.GetScreenSize(w, h);
 		toolbar_menu.SetPosition(0, h);
 		
-		toolbar_menu.Show();
-		SetMenu(toolbar_menu);		
-		return toolbar_menu;
+		CurrentMenu = toolbar_menu;
+		return CurrentMenu;
 	}
 
 	
@@ -416,7 +406,7 @@ class EditorHudController: Controller
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseEnter %1", w.GetName());		
 		
-		if (GetEditor() && !GetEditor().GetEditorHud().ShouldProcessInput(w)) {
+		if (CurrentDialog && !IsDialogCommand(w)) {
 			return false;
 		}
 		
@@ -427,7 +417,7 @@ class EditorHudController: Controller
 			case MenuBarView: {
 				// Allows you to "Mouse between" toolbars at the top smoothly
 				w.SetColor(COLOR_SALMON);
-				if (GetMenu() && !GetMenu().IsInherited(EditorContextMenu)) {
+				if (CurrentMenu && !CurrentMenu.IsInherited(EditorContextMenu)) {
 					CreateToolbarMenu(w);
 				}
 				
@@ -533,7 +523,7 @@ class EditorHudController: Controller
 					case "BrushToggleButton": {
 						EditorBrushDialog brush_dialog(null, this);
 						brush_dialog.SetEditorBrushData(BrushTypeBoxData[BrushTypeSelection]);
-						brush_dialog.Show();
+						brush_dialog.ShowDialog();
 						break;
 					}
 				}

@@ -39,4 +39,8 @@ class EditorListItem: EditorWidget
 	bool IsSelected() {
 		return m_Controller.IsSelected();
 	}
+	
+		
+	void OnMouseEnter(int x, int y);
+	void OnMouseLeave(int x, int y);
 }

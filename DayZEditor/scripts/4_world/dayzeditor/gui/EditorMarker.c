@@ -210,7 +210,6 @@ class EditorObjectWorldMarker: EditorObjectMarker
 				GetEditor().SelectObject(m_EditorObject);
 				EditorContextMenu context_menu = new EditorContextMenu();
 				context_menu.SetPosition(x, y);
-				context_menu.Show();
 				
 				return true;
 			}			
@@ -251,7 +250,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	{		
 		EditorObjectPropertiesDialog dialog = new EditorObjectPropertiesDialog();
 		dialog.SetEditorObject(m_EditorObject);
-		dialog.Show();
+		dialog.ShowDialog();
 		
 		return true;
 	}

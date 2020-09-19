@@ -105,7 +105,7 @@ class EditorFileDialog: EditorDialog
 	{
 		m_StartDirectory = start_directory;
 		
-		Show();
+		ShowDialog();
 		
 		// return file directory
 		return "";
@@ -140,7 +140,7 @@ class EditorFileOpenDialog: EditorFileDialog
 		EditorLog.Trace("EditorFileOpenDialog::OpenCallback");
 		EditorFile data;
 		m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
-		Close();
+		delete this;
 	}
 		
 	
@@ -196,7 +196,7 @@ class EditorFileImportDialog: EditorFileDialog
 		EditorFile data;
 		m_FileHostListbox.GetItemData(m_FileHostListbox.GetSelectedRow(), 0, data);
 		//GetEditor().Import(ImportMode.VPP, data.GetFile());
-		Close();
+		delete this;
 	}
 
 
@@ -263,7 +263,7 @@ class EditorFileSaveDialog: EditorFileDialog
 	{
 		GetEditor().Save(m_CurrentDirectory + m_FileNameBox.GetText(), m_EditorWorldData);
 		
-		Close();
+		delete this;
 	}
 	
 	/*
@@ -402,7 +402,7 @@ class EditorFileExportDialog: EditorFileDialog
 			settings.ExportSetName = "DayZ Editor Export";
 		
 		//GetEditor().Export(settings, m_CurrentDirectory + m_FileNameBox.GetText() + "." + m_SelectedMode.Ext);
-		Close();
+		delete this;
 	}
 	
 	private ButtonWidget CreateDropdownPrefabButton(string text, string ext, ExportMode mode)

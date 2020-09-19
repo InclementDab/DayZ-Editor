@@ -117,7 +117,7 @@ class EditorPropertiesPrefabController: EditorDialogController
 		
 	void SaveCallback() {
 		EditorLog.Trace("EditorObjectPropertiesDialog::SaveCallback");
-		GetEditor().GetEditorHud().GetModal().Close();
+		delete this;
 	}
 	
 	void CancelCallback() {
@@ -125,7 +125,7 @@ class EditorPropertiesPrefabController: EditorDialogController
 		m_EditorObject.SetDisplayName(m_StartName);
 		m_EditorObject.SetPosition(m_StartPosition);
 		m_EditorObject.SetOrientation(m_StartOrientation);
-		GetEditor().GetEditorHud().GetModal().Close();
+		delete this;
 	}
 }
 

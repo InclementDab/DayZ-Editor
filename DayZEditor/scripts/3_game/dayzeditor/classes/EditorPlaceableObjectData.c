@@ -47,6 +47,7 @@ class EditorPlaceableObjectData
 	void EditorPlaceableObjectData(string type, string path)
 	{
 		Type = type; Path = path;
+		
 		// probably really slow
 		m_ModStructure = GetModFromObject(Type);
 		

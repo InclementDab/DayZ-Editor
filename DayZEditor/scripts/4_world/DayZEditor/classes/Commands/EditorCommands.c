@@ -16,8 +16,9 @@ class EditorCommand: RelayCommand
 	{
 		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(args);
-		if (GetEditor().GetEditorHud().GetController().GetMenu())
-			GetEditor().GetEditorHud().GetController().CloseMenu();
+		if (GetEditor().GetEditorHud().GetController().CurrentMenu)
+			delete GetEditor().GetEditorHud().GetController().CurrentMenu;
+		
 		Call();
 	}
 	
@@ -340,7 +341,7 @@ class EditorEnvironmentControlCommand: EditorCommand
 {
 	override void Call() {
 		EditorEnvironmentDialog environment_dialog = new EditorEnvironmentDialog(null, m_EditorHudController);
-		environment_dialog.Show();
+		environment_dialog.ShowDialog();
 	}
 	
 	override string GetName() {
@@ -361,7 +362,7 @@ class EditorCameraControlsCommand: EditorCommand
 	override void Call() {
 		EditorCameraDialog cam_dialog(null, m_EditorHudController);
 		cam_dialog.SetEditorCamera(m_Editor.GetCamera());
-		cam_dialog.Show();
+		cam_dialog.ShowDialog();
 	}
 
 	override string GetName() {
@@ -408,7 +409,7 @@ class EditorObjectPropertiesCommand: EditorCommand
 	override void Call() {
 		EditorObjectPropertiesDialog properties_dialog(null, m_EditorHudController);
 		properties_dialog.SetEditorObject(m_Editor.GetSelectedObjects().GetElement(0));
-		properties_dialog.Show();
+		properties_dialog.ShowDialog();
 	}
 	
 	override string GetName() {

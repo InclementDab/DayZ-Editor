@@ -4,60 +4,41 @@ class EditorTooltipController: Controller
 	string ContentTitle = "Testing";
 	string ContentText;
 	
-	Object ContentItemData;
+	//Object ContentItemData;
+	
+	void ~EditorTooltipController()
+	{
+		DumpStack();
+		EditorLog.Trace("~EditorTooltipController");
+		//GetGame().ObjectDelete(ContentItemData);
+	}
 }
 
 class EditorTooltip: MVCLayout
 {
-	protected ref EditorTooltipController m_EditorTooltipController;
-	
-	void EditorTooltip(Widget parent = null)
+	void EditorToolTip(Widget parent = null)
 	{
-		m_EditorTooltipController = EditorTooltipController.Cast(GetController());
+		GetEditorHudController().CurrentTooltip = this;
 	}
-	
-	// Use Close()
-	void ~EditorTooltip() {}
 	
 	void SetTitle(string title)
 	{
-		m_EditorTooltipController.ContentTitle = title;
-		m_EditorTooltipController.NotifyPropertyChanged("ContentTitle");
+		GetEditorTooltipController().ContentTitle = title;
+		GetEditorTooltipController().NotifyPropertyChanged("ContentTitle");
 	}
 	
 	void SetContent(string text)
 	{
-		m_EditorTooltipController.ContentText = text;
-		m_EditorTooltipController.NotifyPropertyChanged("ContentText");
+		GetEditorTooltipController().ContentText = text;
+		GetEditorTooltipController().NotifyPropertyChanged("ContentText");
 	}
 	
 	void SetContent(Object item)
 	{
-		m_EditorTooltipController.ContentItemData = item;
-		m_EditorTooltipController.NotifyPropertyChanged("ContentItemData");
+		//m_EditorTooltipController.ContentItemData = item;
+		//m_EditorTooltipController.NotifyPropertyChanged("ContentItemData");
 	}
-	
-	override void Show()
-	{
-		EditorLog.Trace("EditorTooltip::Show");
-		super.Show();
 		
-
-		if (GetEditorHudController().CurrentTooltip) {
-			GetEditorHudController().CurrentTooltip.Close();
-		}
-		
-		GetEditorHudController().CurrentTooltip = this;
-	}
-	
-	override void Close()
-	{
-		EditorLog.Trace("EditorTooltip::Close");
-		super.Close();
-		GetEditorHudController().CurrentTooltip = null;
-		delete this;
-	}
-	
 	override typename GetControllerType() {
 		return EditorTooltipController;
 	}
@@ -66,4 +47,7 @@ class EditorTooltip: MVCLayout
 		return "DayZEditor/gui/layouts/tooltips/EditorTooltip.layout";
 	}
 	
+	private EditorTooltipController GetEditorTooltipController() {
+		return EditorTooltipController.Cast(GetController());
+	}
 }

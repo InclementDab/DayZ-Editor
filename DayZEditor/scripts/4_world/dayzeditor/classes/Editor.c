@@ -252,8 +252,8 @@ class Editor
 		Widget target = GetWidgetUnderCursor();
 		if (!target) {
 			SetFocus(null);
-			if (m_EditorHud.GetController().GetMenu()) {
-				m_EditorHud.GetController().SetMenu(null);
+			if (GetEditor().GetEditorHud().GetController().CurrentMenu) {
+				delete GetEditor().GetEditorHud().GetController().CurrentMenu;
 			}
 		}
 		
@@ -342,10 +342,14 @@ class Editor
 				if (IsLootEditActive()) {
 					FinishEditLootSpawns();
 					return true;
-				} else if (m_EditorHud.IsModalActive() || m_EditorHud.GetController().GetMenu()) {
-					m_EditorHud.GetModal().Close();
-					m_EditorHud.GetController().CloseMenu();
+				} else if (m_EditorHudController.CurrentDialog) {
+					delete m_EditorHudController.CurrentDialog;
 					return true;
+					
+				} else if (m_EditorHudController.CurrentMenu) {
+					delete m_EditorHudController.CurrentMenu;
+					return true;
+					
 				// jank
 				} else if (!GetGame().GetMission().IsPaused()) {
 					GetGame().GetMission().Pause();
@@ -467,7 +471,7 @@ class Editor
 		
 		MapSelectDialog select_window = new MapSelectDialog(null, m_EditorHudController);
 		select_window.SetTitle("Create New...");
-		select_window.Show();
+		select_window.ShowDialog();
 	}
 	
 	void Save(string file, EditorWorldData world_data)

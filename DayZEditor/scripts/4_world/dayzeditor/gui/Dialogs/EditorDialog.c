@@ -4,14 +4,15 @@ class EditorDialog: EditorMVCLayout
 	protected WrapSpacerWidget DialogContent;
 	protected GridSpacerWidget ButtonGrid;
 	protected WrapSpacerWidget WindowDragWrapper;
-		
 	
-	void ~EditorDialog() 
-	{
-		EditorLog.Trace("~EditorDialog");
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+	void EditorDialog(Widget parent = null, EditorHudController controller = null) {
+		m_LayoutRoot.Show(false);
 	}
-
+	
+	void ~EditorDialog() {
+		CloseDialog();
+	}
+	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/dialogs/EditorDialog.layout";
 	}
@@ -53,27 +54,26 @@ class EditorDialog: EditorMVCLayout
 		controller.NotifyPropertyChanged("TitleText");
 	}
 	
-	override void Show()
+	void ShowDialog()
 	{
 		EditorLog.Trace("EditorDialog::Show");
-		super.Show();
-				
+		
 		m_Editor.GetCamera().SetMoveEnabled(false);
 		m_Editor.GetCamera().SetLookEnabled(false);
 		m_EditorHud.ShowCursor();
 		
-		m_EditorHud.SetModal(this);
+		m_EditorHudController.CurrentDialog = this;
 		
 		float du, dv, dx, dy;
 		m_LayoutRoot.GetScreenSize(du, dv);		
 		m_LayoutRoot.GetPos(dx, dy);
 		m_LayoutRoot.SetPos(dx, dy - dv / 2);
+		m_LayoutRoot.Show(true);
 	}
 	
-	override void Close()
+	void CloseDialog()
 	{
 		EditorLog.Trace("EditorDialog::Close");
-		super.Close();
 	
 		m_Editor.GetCamera().SetMoveEnabled(true);
 		m_Editor.GetCamera().SetLookEnabled(true);

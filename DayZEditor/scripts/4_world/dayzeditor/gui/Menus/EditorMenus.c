@@ -7,12 +7,17 @@ class EditorMenu: EditorMVCLayout
 	protected ref EditorMenuItemList m_MenuItems;
 	protected WrapSpacerWidget EditorMenuContent;
 	
-	void EditorMenu(Widget parent = null, EditorHudController controller = null) {
+	void EditorMenu(Widget parent = null, EditorHudController controller = null) 
+	{
 		EditorLog.Trace("EditorMenu");
 		m_MenuItems = new EditorMenuItemList();
+		
+		if (m_EditorHudController)
+			m_EditorHudController.CurrentMenu = this;
 	}
 		
-	void ~EditorMenu() {
+	void ~EditorMenu() 
+	{
 		EditorLog.Trace("~EditorMenu");
 		delete m_MenuItems;
 	}
@@ -51,10 +56,6 @@ class EditorMenu: EditorMVCLayout
 
 	void AddMenuItem(ref EditorMenuItem menu_item)
 	{
-		/*
-		if (!m_MenuItems) {
-			m_MenuItems = new EditorMenuItemList();
-		}*/
 		
 		if (menu_item) {
 			EditorMenuContent.AddChild(menu_item.GetLayoutRoot());

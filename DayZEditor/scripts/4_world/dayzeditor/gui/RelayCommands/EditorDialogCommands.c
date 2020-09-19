@@ -3,7 +3,7 @@ class DialogCloseRelayCommand: RelayCommand
 	override void Execute(RelayCommandArgs args)
 	{	
 		EditorLog.Trace("DialogCloseRelayCommand::Execute");
-		GetEditor().GetEditorHud().GetModal().Close();
+		delete GetEditorHudController().CurrentDialog;
 	}
 }
 
@@ -16,8 +16,7 @@ class MapSelectDialogRelayCommand: RelayCommand
 	override void Execute(RelayCommandArgs args)
 	{
 		EditorLog.Trace("MapSelectDialogRelayCommand::Execute");
-		if (GetEditor())
-			GetEditor().GetEditorHud().GetModal().Close();
+		delete GetEditorHudController().CurrentDialog;
 		
 		GetGame().PlayMission(CreateEditorMission(MapSelectDialogController.Cast(m_ViewBinding.GetController()).MapHostListboxSelection));
 	}

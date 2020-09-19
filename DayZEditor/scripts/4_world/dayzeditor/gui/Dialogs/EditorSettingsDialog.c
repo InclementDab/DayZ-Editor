@@ -68,7 +68,7 @@ class EditorSettingsDialog: EditorDialog
 	void SaveCallback()
 	{
 		ApplyCallback();
-		Close();
+		delete this;
 	}
 	
 	void ApplyCallback()
