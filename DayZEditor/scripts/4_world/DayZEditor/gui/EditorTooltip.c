@@ -31,7 +31,7 @@ class EditorTooltip: MVCLayout
 		float w, h, lw, lh;
 		HeaderLabel.GetScreenSize(w, h);
 		m_LayoutRoot.GetScreenSize(lw, lh);
-		m_LayoutRoot.SetSize(w + 15, lh);
+		m_LayoutRoot.SetSize(w + 80, lh);
 	}
 	
 	void SetContent(string text)

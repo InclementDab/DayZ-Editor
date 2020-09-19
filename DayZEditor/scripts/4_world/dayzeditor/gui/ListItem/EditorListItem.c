@@ -22,14 +22,13 @@ class EditorListItem: MVCLayout
 	void EditorListItem(Widget parent = null) 
 	{ 
 		EditorLog.Trace("EditorListItem");
-		//GetListItemController().SetListItem(this);
+		GetListItemController().SetListItem(this);
 		m_LayoutRoot.SetUserData(this);
 	}
 	
 	void ~EditorListItem() 
 	{ 
 		EditorLog.Trace("~EditorListItem"); 
-		m_LayoutRoot.Unlink();
 	}
 	
 	void SetNestIndex(int index)

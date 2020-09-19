@@ -25,7 +25,17 @@ class EditorListItemController: Controller
 	}
 	
 
-
+	void ListItemExecute(ButtonCommandArgs args) {
+		m_ListItem.ListItemExecute(args);
+	}
+	
+	void ListItemVisibleExecute(ButtonCommandArgs args) {
+		m_ListItem.ListItemVisibleExecute(args);
+	}
+	
+	void ListItemCollapseExecute(ButtonCommandArgs args) {
+		m_ListItem.ListItemCollapseExecute(args);
+	}
 	/*
 	override void MVCOnDrag(Widget target, int x, int y)
 	{
