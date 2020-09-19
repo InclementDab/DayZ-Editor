@@ -1,8 +1,6 @@
 
-class EditorMenuItemList: ref array<ref EditorMenuItem> 
-{
 
-}
+typedef ref array<ref EditorMenuItem> EditorMenuItemList;
 
 class EditorMenu: EditorMVCLayout
 {

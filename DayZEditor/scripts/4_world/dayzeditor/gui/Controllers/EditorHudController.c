@@ -183,7 +183,7 @@ class EditorHudController: Controller
 	}
 	
 	// ToolTip Control
-	EditorTooltip CurrentTooltip;
+	ref EditorTooltip CurrentTooltip;
 	
 
 	override void PropertyChanged(string property_name)
@@ -284,16 +284,6 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::MenuBarExecute");
 		
-		EditorTooltip tt();
-		tt.SetTitle("Test");
-		int x, y;
-		GetMousePos(x, y);
-		tt.GetLayoutRoot().SetPos(x, y);
-		tt.Show();
-		Print(x);
-		Print(y);
-		
-		return;
 		if (!GetMenu()) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
 			CreateToolbarMenu(args.GetButtonWidget());
 		} else {

@@ -3,7 +3,7 @@ class EditorListItem: EditorWidget
 {
 	private int m_NestIndex;
 	
-	protected EditorListItemController m_Controller;
+	protected ref EditorListItemController m_Controller;
 	EditorListItemController GetController() { return m_Controller; }
 	
 	void EditorListItem() 

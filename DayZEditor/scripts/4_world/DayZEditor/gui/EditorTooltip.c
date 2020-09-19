@@ -1,7 +1,7 @@
 
 class EditorTooltipController: Controller
 {
-	string ContentTitle;
+	string ContentTitle = "Testing";
 	string ContentText;
 	
 	Object ContentItemData;
@@ -17,11 +17,12 @@ class EditorTooltip: MVCLayout
 	}
 	
 	// Use Close()
-	private void ~EditorTooltip() {}
+	void ~EditorTooltip() {}
 	
 	void SetTitle(string title)
 	{
 		m_EditorTooltipController.ContentTitle = title;
+		m_EditorTooltipController.NotifyPropertyChanged("ContentTitle");
 	}
 	
 	void SetContent(string text)
@@ -41,9 +42,9 @@ class EditorTooltip: MVCLayout
 		EditorLog.Trace("EditorTooltip::Show");
 		super.Show();
 		
-		EditorTooltip current = GetEditorHudController().CurrentTooltip;
-		if (current && current != this) {
-			current.Close();
+
+		if (GetEditorHudController().CurrentTooltip) {
+			GetEditorHudController().CurrentTooltip.Close();
 		}
 		
 		GetEditorHudController().CurrentTooltip = this;

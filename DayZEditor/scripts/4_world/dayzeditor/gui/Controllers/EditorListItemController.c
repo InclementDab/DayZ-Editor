@@ -40,6 +40,7 @@ class EditorListItemController: Controller
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		//EditorLog.Trace("EditorListItemController::OnMouseEnter");
+		EditorListItemContent.SetColor(COLOR_ON_HOVER);
 		
 		switch (m_ListItem.Type()) {
 			
@@ -50,16 +51,8 @@ class EditorListItemController: Controller
 				tooltip.GetLayoutRoot().SetPos(x, y);
 				tooltip.Show();
 				//tooltip.SetContent(GetGame().CreateObjectEx(item_type, vector.Zero, ECE_NONE));
-				EditorListItemContent.SetColor(COLOR_ON_HOVER);
 				break;
-			}
-			
-			default: {
-				//w.SetColor(COLOR_SALMON);
-				EditorListItemContent.SetColor(COLOR_ON_HOVER);
-
-				break;
-			}			
+			}		
 		}
 				
 		return false;
@@ -71,12 +64,14 @@ class EditorListItemController: Controller
 		//EditorLog.Trace("EditorListItemController::OnMouseLeave");
 		
 		
+		if (!m_Selected)
+			EditorListItemContent.SetColor(COLOR_ON_DESELECTED);
+		
 		switch (m_ListItem.Type()) {
-			
-			default: {
-				//w.SetColor(COLOR_EMPTY);
-				if (!m_Selected)
-					EditorListItemContent.SetColor(COLOR_ON_DESELECTED);
+			case EditorPlaceableListItem: {
+				if (GetEditorHudController().CurrentTooltip) {
+					GetEditorHudController().CurrentTooltip.Close();
+				}
 				break;
 			}
 		}
