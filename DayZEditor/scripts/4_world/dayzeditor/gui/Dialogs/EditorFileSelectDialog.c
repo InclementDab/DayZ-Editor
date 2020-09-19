@@ -26,7 +26,7 @@ class EditorFileDialog: EditorDialog
 	protected string m_StartDirectory;
 	protected TextListboxWidget m_FileHostListbox;
 	
-	void EditorFileDialog()
+	void EditorFileDialog(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorFileDialog");
 		
@@ -120,7 +120,7 @@ class EditorFileDialog: EditorDialog
 class EditorFileOpenDialog: EditorFileDialog
 {
 	
-	void EditorFileOpenDialog()
+	void EditorFileOpenDialog(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorFileOpenDialog");
 		
@@ -172,7 +172,7 @@ class EditorFileOpenDialog: EditorFileDialog
 class EditorFileImportDialog: EditorFileDialog
 {
 	
-	void EditorFileImportDialog()
+	void EditorFileImportDialog(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorFileImportDialog");
 		
@@ -228,14 +228,17 @@ class EditorFileSaveDialog: EditorFileDialog
 	protected EditBoxWidget m_FileNameBox;
 	
 	protected EditorWorldData m_EditorWorldData;
-	
-	void EditorFileSaveDialog(EditorWorldData world_data)
+
+	void EditorFileSaveDialog(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorFileSaveDialog");
-		m_EditorWorldData = world_data;
-				
 		AddButton("Save", "SaveCallback");
 		AddButton("Cancel", "Close");
+	}
+	
+	void SetWorldData(EditorWorldData world_data)
+	{
+		m_EditorWorldData = world_data;
 		
 		Widget w = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorFileNameElement.layout", ButtonGrid);
 		m_FileNameBox = EditBoxWidget.Cast(w.FindAnyWidget("FileNameEditBox"));
@@ -251,7 +254,6 @@ class EditorFileSaveDialog: EditorFileDialog
 
 		string filter = "*";
 		LoadFileDirectory(m_StartDirectory, filter);
-		
 	}
 	
 	
@@ -341,7 +343,7 @@ class EditorFileExportDialog: EditorFileDialog
 	private ref array<ref ExportListItemData> m_ExportModes = new array<ref ExportListItemData>();
 	private ref ExportListItemData m_SelectedMode;
 	
-	void EditorFileExportDialog()
+	void EditorFileExportDialog(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorFileExportDialog");
 		

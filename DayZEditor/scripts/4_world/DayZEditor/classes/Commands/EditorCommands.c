@@ -1,6 +1,17 @@
 
 class EditorCommand: RelayCommand
 {	
+	protected Editor m_Editor;
+	protected EditorHudController m_EditorHudController;
+	
+	void EditorCommand()
+	{
+		m_Editor = GetEditor();
+		if (m_Editor) {
+			m_EditorHudController = m_Editor.GetEditorHud().GetController();
+		}
+	}
+	
 	override void Execute(RelayCommandArgs args) 
 	{
 		EditorLog.Trace("EditorCommand::Execute");
@@ -73,8 +84,9 @@ class EditorSaveCommand: EditorCommand
 
 class EditorSaveAsCommand: EditorCommand
 {
-	override void Call() {	
-		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(new EditorWorldData(GetEditor()));
+	override void Call() {
+		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(GetEditor().GetEditorHud().GetController());
+		save_dialog.SetWorldData(new EditorWorldData(GetEditor()));
 		string file = save_dialog.ShowFileDialog();
 	}
 		
@@ -327,7 +339,7 @@ class EditorPreferencesCommand: EditorCommand
 class EditorEnvironmentControlCommand: EditorCommand
 {
 	override void Call() {
-		EditorEnvironmentDialog environment_dialog = new EditorEnvironmentDialog();
+		EditorEnvironmentDialog environment_dialog = new EditorEnvironmentDialog(m_EditorHudController);
 		environment_dialog.Show();
 	}
 	
@@ -347,7 +359,8 @@ class EditorEnvironmentControlCommand: EditorCommand
 class EditorCameraControlsCommand: EditorCommand
 {
 	override void Call() {
-		EditorCameraDialog cam_dialog(GetEditor().GetCamera());
+		EditorCameraDialog cam_dialog(m_EditorHudController);
+		cam_dialog.SetEditorCamera(m_Editor.GetCamera());
 		cam_dialog.Show();
 	}
 
@@ -393,7 +406,8 @@ class EditorLootEditorCommand: EditorCommand
 class EditorObjectPropertiesCommand: EditorCommand
 {
 	override void Call() {
-		EditorObjectPropertiesDialog properties_dialog(GetEditor().GetObjectManager().GetSelectedObjects().GetElement(0));
+		EditorObjectPropertiesDialog properties_dialog(m_EditorHudController);
+		properties_dialog.SetEditorObject(m_Editor.GetSelectedObjects().GetElement(0));
 		properties_dialog.Show();
 	}
 	

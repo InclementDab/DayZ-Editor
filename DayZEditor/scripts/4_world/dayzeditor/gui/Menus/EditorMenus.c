@@ -4,7 +4,7 @@ class EditorMenu: EditorMVCLayout
 	private ref array<ref EditorMenuItem> m_MenuItems = {};
 	protected WrapSpacerWidget EditorMenuContent;
 	
-	void EditorMenu() {
+	void EditorMenu(EditorHudController controller = null) {
 		EditorLog.Trace("EditorMenu");
 		if (m_LayoutRoot) {
 			m_LayoutRoot.Show(false);
@@ -21,11 +21,7 @@ class EditorMenu: EditorMVCLayout
 		EditorLog.Trace("EditorMenu::Show");
 		super.Show();
 		
-		m_LayoutRoot.Show(true);
-		
-		if (m_Controller && m_Controller.IsInherited(EditorHudController)) {
-			EditorHudController.Cast(m_Controller).SetMenu(this);
-		}
+		m_EditorHudController.SetMenu(this);
 		
 	}
 	
@@ -91,7 +87,7 @@ class EditorMenu: EditorMVCLayout
 
 class EditorFileMenu: EditorMenu
 {
-	void EditorFileMenu()
+	void EditorFileMenu(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorFileMenu");
 		
@@ -107,7 +103,7 @@ class EditorFileMenu: EditorMenu
 
 class EditorEditMenu: EditorMenu
 {
-	void EditorEditMenu()
+	void EditorEditMenu(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorEditMenu");
 				
@@ -126,7 +122,7 @@ class EditorEditMenu: EditorMenu
 
 class EditorViewMenu: EditorMenu
 {
-	void EditorViewMenu()
+	void EditorViewMenu(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorViewMenu");
 		AddMenuButton(EditorCameraControlsCommand);
@@ -136,7 +132,7 @@ class EditorViewMenu: EditorMenu
 
 class EditorContextMenu: EditorMenu
 {
-	void EditorContextMenu()
+	void EditorContextMenu(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorContextMenu");
 		AddMenuButton(EditorCutCommand);
@@ -154,7 +150,7 @@ class EditorContextMenu: EditorMenu
 
 class EditorPlaceableContextMenu: EditorMenu
 {
-	void EditorPlaceableContextMenu()
+	void EditorPlaceableContextMenu(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorPlaceableContextMenu");
 		AddMenuButton(EditorLootEditorCommand);

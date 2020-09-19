@@ -507,7 +507,8 @@ class EditorHudController: Controller
 				switch (w.GetName()) {
 								
 					case "BrushToggleButton": {
-						EditorBrushDialog brush_dialog(BrushTypeBoxData[BrushTypeSelection]);
+						EditorBrushDialog brush_dialog(this);
+						brush_dialog.SetEditorBrushData(BrushTypeBoxData[BrushTypeSelection]);
 						brush_dialog.Show();
 						break;
 					}

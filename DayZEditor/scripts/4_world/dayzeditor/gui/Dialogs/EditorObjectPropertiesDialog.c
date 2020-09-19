@@ -141,9 +141,16 @@ class EditorObjectPropertiesDialog: EditorDialog
 	
 	protected ref EditorPropertiesPrefabController m_EditorPropertiesController;
 
-	void EditorObjectPropertiesDialog(EditorObject editor_object)
+	void EditorObjectPropertiesDialog(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog");
+		SetTitle("Edit: Object Properties");
+		AddButton("Save", "SaveCallback");
+		AddButton("Close", "CancelCallback");
+	}
+	
+	void SetEditorObject(EditorObject editor_object)
+	{
 		m_EditorObject = editor_object;
 		
 		if (!m_EditorObject) {
@@ -181,11 +188,6 @@ class EditorObjectPropertiesDialog: EditorDialog
 			loot_editor.SetController(m_EditorPropertiesController);
 			AddContent(loot_editor);
 		}
-		
-		
-		SetTitle("Edit: Object Properties");
-		AddButton("Save", "SaveCallback");
-		AddButton("Close", "CancelCallback");
 	}
 	
 	void ~EditorObjectPropertiesDialog() {

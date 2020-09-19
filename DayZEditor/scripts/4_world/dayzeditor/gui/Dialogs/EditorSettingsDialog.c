@@ -39,9 +39,17 @@ class EditorSettingsDialog: EditorDialog
 	protected EditorSettings m_EditorSettings;
 	protected ref EditorSettingsDialogController m_EditorSettingsDialogController;
 	
-	void EditorSettingsDialog(EditorSettings settings)
+	void EditorSettingsDialog(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorSettingsDialog");
+		SetTitle("Editor Settings");
+		AddButton("Save", "SaveCallback");
+		AddButton("Apply", "ApplyCallback");
+		AddButton("Close", "Close");
+	}
+	
+	void SetEditorSettings(EditorSettings settings)
+	{
 		m_EditorSettings = settings;
 		
 		m_EditorSettingsDialogController = new EditorSettingsDialogController();
@@ -55,12 +63,6 @@ class EditorSettingsDialog: EditorDialog
 		settings_group.SetController(m_EditorSettingsDialogController);
 		
 		AddContent(settings_group);
-		
-		SetTitle("Editor Settings");
-		AddButton("Save", "SaveCallback");
-		AddButton("Apply", "ApplyCallback");
-		AddButton("Close", "Close");
-		
 	}
 	
 	void SaveCallback()

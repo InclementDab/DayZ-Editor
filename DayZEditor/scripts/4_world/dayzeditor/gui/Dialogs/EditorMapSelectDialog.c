@@ -69,12 +69,11 @@ class MapSelectDialogController: EditorDialogController
 
 class MapSelectDialog: EditorDialog
 {		
-	void MapSelectDialog(string title = "Select Map")
+	void MapSelectDialog(EditorHudController controller = null)
 	{
 		EditorLog.Trace("MapSelectDialog");
 
-		AddContent("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");		
-		SetTitle(title);
+		AddContent("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");
 		AddButton("Select", "MapSelectDialogRelayCommand");
 		AddButton("Close", "DialogCloseRelayCommand");
 		MapSelectDialogController.Cast(GetController()).SetMapSelectDialog(this);

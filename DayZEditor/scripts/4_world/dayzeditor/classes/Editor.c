@@ -465,7 +465,8 @@ class Editor
 	{
 		EditorLog.Trace("Editor::New");
 		
-		MapSelectDialog select_window = new MapSelectDialog("Create New...");
+		MapSelectDialog select_window = new MapSelectDialog(m_EditorHudController);
+		select_window.SetTitle("Create New...");
 		select_window.Show();
 	}
 	
@@ -500,7 +501,7 @@ class Editor
 	{
 		EditorLog.Trace("Editor::Export");
 		
-		EditorFileExportDialog export_dialog();
+		EditorFileExportDialog export_dialog(m_EditorHudController);
 		export_dialog.ShowFileDialog();
 	}
 	

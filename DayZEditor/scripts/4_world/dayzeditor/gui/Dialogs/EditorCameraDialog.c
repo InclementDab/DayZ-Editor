@@ -113,9 +113,17 @@ class EditorCameraDialog: EditorDialog
 	protected EditorCamera m_EditorCamera;
 	protected ref EditorCameraDialogController m_EditorCameraDialogController;
 	
-	void EditorCameraDialog(EditorCamera editor_camera)
+	void EditorCameraDialog(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorCameraDialog");
+		
+		SetTitle("Camera Controller");
+		AddButton("Default", "ResetDefaultExecute");
+		AddButton("Close", "DialogCloseRelayCommand");
+	}
+	
+	void SetEditorCamera(EditorCamera editor_camera)
+	{
 		m_EditorCamera = editor_camera;
 	
 		if (DEFAULT_FOV == -1) {
@@ -141,11 +149,6 @@ class EditorCameraDialog: EditorDialog
 		camera_group.SetController(m_EditorCameraDialogController);
 		
 		AddContent(camera_group);
-		
-		SetTitle("Camera Controller");
-		
-		AddButton("Default", "ResetDefaultExecute");
-		AddButton("Close", "DialogCloseRelayCommand");
 	}
 	
 	override typename GetControllerType() {

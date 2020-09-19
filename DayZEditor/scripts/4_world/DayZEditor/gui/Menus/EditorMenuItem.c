@@ -15,7 +15,7 @@ class EditorMenuItem: EditorMVCLayout
 	
 	protected ImageWidget EditorMenuItemIcon;
 	
-	void EditorMenuItem() {
+	void EditorMenuItem(EditorHudController controller = null) {
 		EditorLog.Trace("EditorMenuItem");
 		if (m_LayoutRoot) {
 			m_LayoutRoot.Show(true);

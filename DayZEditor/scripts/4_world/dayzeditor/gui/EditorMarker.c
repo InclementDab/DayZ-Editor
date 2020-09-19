@@ -249,7 +249,8 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{		
-		EditorObjectPropertiesDialog dialog = new EditorObjectPropertiesDialog(m_EditorObject);
+		EditorObjectPropertiesDialog dialog = new EditorObjectPropertiesDialog();
+		dialog.SetEditorObject(m_EditorObject);
 		dialog.Show();
 		
 		return true;

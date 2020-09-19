@@ -204,7 +204,8 @@ class EditorListItemController: Controller
 		switch (m_ListItem.Type()) {
 			
 			case EditorPlacedListItem: {
-				EditorObjectPropertiesDialog dialog(EditorPlacedListItem.Cast(m_ListItem).GetData());
+				EditorObjectPropertiesDialog dialog();
+				dialog.SetEditorObject(EditorPlacedListItem.Cast(m_ListItem).GetData());
 				dialog.Show();
 				break;
 			}

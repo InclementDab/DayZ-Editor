@@ -5,11 +5,6 @@ class EditorDialog: EditorMVCLayout
 	protected GridSpacerWidget ButtonGrid;
 	protected WrapSpacerWidget WindowDragWrapper;
 		
-	void EditorDialog() 
-	{
-		EditorLog.Trace("EditorDialog");
-		m_LayoutRoot.Show(false);
-	}
 	
 	void ~EditorDialog() 
 	{
@@ -51,7 +46,7 @@ class EditorDialog: EditorMVCLayout
 		return panel.FindAnyWidget("DialogButton");
 	}
 
-	protected void SetTitle(string title)
+	void SetTitle(string title)
 	{
 		EditorDialogController controller = EditorDialogController.Cast(GetController());
 		controller.TitleText = title;

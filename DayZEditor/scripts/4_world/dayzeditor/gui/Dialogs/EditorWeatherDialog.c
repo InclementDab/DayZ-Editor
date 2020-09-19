@@ -91,7 +91,7 @@ class EditorEnvironmentDialog: EditorDialog
 {
 	protected ref EditorEnvironmentDialogController m_EditorWeatherDialogController;
 	
-	void EditorEnvironmentDialog()
+	void EditorEnvironmentDialog(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorEnvironmentDialog");
 		

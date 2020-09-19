@@ -50,10 +50,17 @@ class EditorBrushDialog: EditorDialog
 	
 	protected EditorBrushData m_BrushData;
 	
-	void EditorBrushDialog(EditorBrushData brush_data)
+	void EditorBrushDialog(EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorBrushDialog"); 
-		
+				
+		AddButton("Save", "SaveCallback");
+		AddButton("Export", "ExportCallback");
+		AddButton("Close", "Close");	
+	}
+	
+	void SetEditorBrushData(EditorBrushData brush_data)
+	{
 		m_BrushData = brush_data;
 		m_EditorBrushDialogController = new EditorBrushDialogController();
 		m_EditorBrushDialogController.SetBrushData(m_BrushData);
@@ -61,11 +68,7 @@ class EditorBrushDialog: EditorDialog
 		m_BrushSettings = new EditorPrefabGroup("Brush Settings");
 		m_BrushSettings.AddPrefab(new EditorPrefabEditText("Name", "BrushName"));
 		
-		m_BrushObjects = new EditorPrefabGroup("Brush Objects");
-		
-		
-
-		
+		m_BrushObjects = new EditorPrefabGroup("Brush Objects");		
 		m_BrushSettings.SetController(m_EditorBrushDialogController);
 		m_BrushObjects.SetController(m_EditorBrushDialogController);
 		
@@ -77,17 +80,11 @@ class EditorBrushDialog: EditorDialog
 		EditorPrefabButton btn = new EditorPrefabButton("Add Brush...", "AddBrushData");
 		btn.SetController(m_EditorBrushDialogController);
 		AddContent(btn);
-			
-		AddButton("Save", "SaveCallback");
-		AddButton("Export", "ExportCallback");
-		AddButton("Close", "Close");
-		
 	}
 	
 	void SaveCallback()
 	{
 		EditorLog.Trace("EditorBrushDialog::SaveCallback"); 
-		
 	}
 	
 	
