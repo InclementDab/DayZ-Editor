@@ -22,7 +22,11 @@ class EditorMenu: EditorMVCLayout
 		super.Show();
 		
 		m_LayoutRoot.Show(true);
-		m_EditorHud.SetMenu(this);
+		
+		if (m_Controller && m_Controller.IsInherited(EditorHudController)) {
+			EditorHudController.Cast(m_Controller).SetMenu(this);
+		}
+		
 	}
 	
 	override void Close()

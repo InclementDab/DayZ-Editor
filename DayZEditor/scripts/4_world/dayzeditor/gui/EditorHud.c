@@ -126,30 +126,7 @@ class EditorHud: Hud
 	bool ShouldProcessInput(Widget w) {
 		return (!IsModalActive() || IsModalCommand(w));
 	}
-	
-	// Modal Menu Control
-	private ref EditorMenu m_CurrentMenu = null;	
-	void SetMenu(EditorMenu menu) {
-		if (m_CurrentMenu && m_CurrentMenu != menu)
-			m_CurrentMenu.Close();
-		
-		m_CurrentMenu = menu;
-	}
-	
-	void CloseMenu() {
-		if (IsMenuActive()) {
-			SetMenu(null);
-		}
-	}
-	
-	ref EditorMenu GetMenu() {
-		return m_CurrentMenu;
-	}
-	
-	bool IsMenuActive() {
-		return (m_CurrentMenu != null);
-	}
-		
+			
 	// Current "button" on UI
 	private ButtonWidget m_CurrentButton;
 	void SetCurrentButton(ButtonWidget button)

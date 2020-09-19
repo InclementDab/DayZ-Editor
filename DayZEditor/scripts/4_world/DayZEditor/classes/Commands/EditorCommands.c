@@ -5,8 +5,8 @@ class EditorCommand: RelayCommand
 	{
 		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(args);
-		if (GetEditor().GetEditorHud().IsMenuActive())
-			GetEditor().GetEditorHud().CloseMenu();
+		if (GetEditor().GetEditorHud().GetController().IsMenuActive())
+			GetEditor().GetEditorHud().GetController().CloseMenu();
 		Call();
 	}
 	

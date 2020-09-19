@@ -1,7 +1,7 @@
 WrapSpacerWidgetClass EditorDialog {
  clipchildren 1
  ignorepointer 1
- color 0.1529 0.1529 0.1529 0.8824
+ color 0.1451 0.1451 0.1451 1
  size 800 0
  halign center_ref
  valign center_ref

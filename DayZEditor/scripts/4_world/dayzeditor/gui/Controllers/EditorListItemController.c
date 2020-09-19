@@ -42,9 +42,19 @@ class EditorListItemController: Controller
 		//EditorLog.Trace("EditorListItemController::OnMouseEnter");
 		
 		switch (m_ListItem.Type()) {
+			
+			case EditorPlaceableListItem: {
+				string item_type = EditorPlaceableListItem.Cast(m_ListItem).GetData().Type;
+				EditorTooltip tooltip = new EditorTooltip(item_type);			
+				//tooltip.SetContent(GetGame().CreateObjectEx(item_type, vector.Zero, ECE_NONE));
+				EditorListItemContent.SetColor(COLOR_ON_HOVER);
+				break;
+			}
+			
 			default: {
 				//w.SetColor(COLOR_SALMON);
 				EditorListItemContent.SetColor(COLOR_ON_HOVER);
+
 				break;
 			}			
 		}

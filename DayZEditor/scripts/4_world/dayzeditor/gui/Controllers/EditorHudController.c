@@ -100,6 +100,9 @@ class EditorHudController: Controller
 		// Load Brushes
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
 #endif
+		
+		EditorTooltip tool_tip = new EditorTooltip("Test");
+		tool_tip.Show();
 	}
 	
 		
@@ -141,13 +144,40 @@ class EditorHudController: Controller
 				string Config_Name, Base_Name;
 		        GetGame().ConfigGetChildName(Config_Path, j, Config_Name);
 				EditorPlaceableObjectData placeable_object_data = new EditorPlaceableObjectData(Config_Name, Config_Path);
-#ifndef COMPONENT_SYSTEM
+
 				InsertPlaceableObject(new EditorPlaceableListItem(placeable_object_data));
+
+#ifdef COMPONENT_SYSTEM
+				if (j > 100) return j; // dont hotload 2360 objects plz
 #endif
 		    }
 		}
 		
 		return j;
+	}
+	
+	
+	// Modal Menu Control
+	private ref EditorMenu m_CurrentMenu = null;	
+	void SetMenu(EditorMenu menu) {
+		if (m_CurrentMenu && m_CurrentMenu != menu)
+			m_CurrentMenu.Close();
+		
+		m_CurrentMenu = menu;
+	}
+	
+	void CloseMenu() {
+		if (IsMenuActive()) {
+			SetMenu(null);
+		}
+	}
+	
+	ref EditorMenu GetMenu() {
+		return m_CurrentMenu;
+	}
+	
+	bool IsMenuActive() {
+		return (m_CurrentMenu != null);
 	}
 	
 
@@ -249,10 +279,10 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::MenuBarExecute");
 
-		if (GetEditor().GetEditorHud().GetMenu().Type() != GetBoundMenu(args.GetButtonWidget())) {
+		if (GetMenu().Type() != GetBoundMenu(args.GetButtonWidget())) {
 			CreateToolbarMenu(args.GetButtonWidget());
 		} else {
-			GetEditor().GetEditorHud().CloseMenu();
+			CloseMenu();
 		}
 	}
 	
@@ -373,7 +403,7 @@ class EditorHudController: Controller
 			case MenuBarView: {
 				// Allows you to "Mouse between" toolbars at the top smoothly
 				w.SetColor(COLOR_SALMON);
-				if (GetEditor().GetEditorHud().IsMenuActive() && !GetEditor().GetEditorHud().GetMenu().IsInherited(EditorContextMenu)) {
+				if (IsMenuActive() && !GetMenu().IsInherited(EditorContextMenu)) {
 					CreateToolbarMenu(w);
 				}
 				

@@ -252,8 +252,8 @@ class Editor
 		Widget target = GetWidgetUnderCursor();
 		if (!target) {
 			SetFocus(null);
-			if (m_EditorHud.IsMenuActive()) {
-				m_EditorHud.SetMenu(null);
+			if (m_EditorHud.GetController().IsMenuActive()) {
+				m_EditorHud.GetController().SetMenu(null);
 			}
 		}
 		
@@ -342,9 +342,9 @@ class Editor
 				if (IsLootEditActive()) {
 					FinishEditLootSpawns();
 					return true;
-				} else if (m_EditorHud.IsModalActive() || m_EditorHud.IsMenuActive()) {
+				} else if (m_EditorHud.IsModalActive() || m_EditorHud.GetController().IsMenuActive()) {
 					m_EditorHud.GetModal().Close();
-					m_EditorHud.CloseMenu();
+					m_EditorHud.GetController().CloseMenu();
 					return true;
 				// jank
 				} else if (!GetGame().GetMission().IsPaused()) {
