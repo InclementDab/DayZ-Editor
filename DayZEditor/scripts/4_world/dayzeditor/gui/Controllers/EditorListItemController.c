@@ -48,9 +48,12 @@ class EditorListItemController: Controller
 				string item_type = EditorPlaceableListItem.Cast(m_ListItem).GetData().Type;
 				EditorTooltip tooltip = new EditorTooltip();			
 				tooltip.SetTitle(item_type);
-				tooltip.GetLayoutRoot().SetPos(x, y);
-				tooltip.Show();
+				float pos_x, pos_y, size_x, size_y;
+				m_LayoutRoot.GetScreenPos(pos_x, pos_y);
+				m_LayoutRoot.GetScreenSize(size_x, size_y);
+				tooltip.GetLayoutRoot().SetPos(pos_x + size_x, pos_y);
 				//tooltip.SetContent(GetGame().CreateObjectEx(item_type, vector.Zero, ECE_NONE));
+				tooltip.Show();
 				break;
 			}		
 		}

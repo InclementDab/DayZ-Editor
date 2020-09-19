@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass EditorListItem {
  visible 1
- clipchildren 1
+ clipchildren 0
  ignorepointer 1
  position 0 0
  size 290 0
