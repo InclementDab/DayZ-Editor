@@ -39,7 +39,7 @@ class EditorSettingsDialog: EditorDialog
 	protected EditorSettings m_EditorSettings;
 	protected ref EditorSettingsDialogController m_EditorSettingsDialogController;
 	
-	override void Init()
+	void EditorSettingsDialog(Widget parent = null, EditorHudController controller = null) 
 	{
 		EditorLog.Trace("EditorSettingsDialog::Init");
 		SetTitle("Editor Settings");

@@ -86,8 +86,7 @@ class EditorMenu: EditorMVCLayout
 
 class EditorFileMenu: EditorMenu
 {
-	
-	override void Init() 
+	void EditorFileMenu(Widget parent = null, EditorHudController controller = null) 
 	{
 		EditorLog.Trace("EditorFileMenu::Init");
 				
@@ -103,10 +102,9 @@ class EditorFileMenu: EditorMenu
 
 class EditorEditMenu: EditorMenu
 {
-	
-	override void Init() 
+	void EditorEditMenu(Widget parent = null, EditorHudController controller = null) 
 	{
-		EditorLog.Trace("EditorEditMenu::Init");
+		EditorLog.Trace("EditorEditMenu");
 				
 		AddMenuButton(EditorUndoCommand);
 		AddMenuButton(EditorRedoCommand);
@@ -123,9 +121,9 @@ class EditorEditMenu: EditorMenu
 
 class EditorViewMenu: EditorMenu
 {	
-	override void Init() 
+	void EditorViewMenu(Widget parent = null, EditorHudController controller = null) 
 	{
-		EditorLog.Trace("EditorViewMenu::Init");
+		EditorLog.Trace("EditorViewMenu");
 				
 		AddMenuButton(EditorCameraControlsCommand);
 		AddMenuButton(EditorReloadHudCommand);
@@ -134,9 +132,9 @@ class EditorViewMenu: EditorMenu
 
 class EditorContextMenu: EditorMenu
 {
-	override void Init() 
+	void EditorContextMenu(Widget parent = null, EditorHudController controller = null) 
 	{
-		EditorLog.Trace("EditorContextMenu::Init");
+		EditorLog.Trace("EditorContextMenu");
 		AddMenuButton(EditorCutCommand);
 		AddMenuButton(EditorCopyCommand);
 		AddMenuButton(EditorPasteCommand);
@@ -153,7 +151,7 @@ class EditorContextMenu: EditorMenu
 class EditorPlaceableContextMenu: EditorMenu
 {
 	
-	override void Init() 
+	void EditorPlaceableContextMenu(Widget parent = null, EditorHudController controller = null) 
 	{
 		AddMenuButton(EditorLootEditorCommand);
 	}

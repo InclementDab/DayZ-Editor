@@ -69,7 +69,7 @@ class MapSelectDialogController: EditorDialogController
 
 class MapSelectDialog: EditorDialog
 {		
-	override void Init()
+	void MapSelectDialog(Widget parent = null, EditorHudController controller = null) 
 	{
 		EditorLog.Trace("MapSelectDialog::Init");
 

@@ -92,9 +92,9 @@ class EditorEnvironmentDialog: EditorDialog
 	protected ref EditorEnvironmentDialogController m_EditorWeatherDialogController;
 	
 	
-	override void Init()
+	void EditorEnvironmentDialog(Widget parent = null, EditorHudController controller = null)
 	{
-		EditorLog.Trace("EditorEnvironmentDialog::Init");
+		EditorLog.Trace("EditorEnvironmentDialog");
 		m_EditorWeatherDialogController = EditorEnvironmentDialogController.Cast(m_Controller);
 		m_EditorWeatherDialogController.SetWorld(GetGame().GetWorld());
 		

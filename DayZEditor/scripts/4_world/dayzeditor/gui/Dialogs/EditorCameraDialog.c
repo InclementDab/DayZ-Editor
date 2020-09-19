@@ -113,7 +113,7 @@ class EditorCameraDialog: EditorDialog
 	protected EditorCamera m_EditorCamera;
 	protected ref EditorCameraDialogController m_EditorCameraDialogController;
 	
-	override void Init()
+	void EditorCameraDialog(Widget parent = null, EditorHudController controller = null) 
 	{
 		EditorLog.Trace("EditorCameraDialog::Init");
 		

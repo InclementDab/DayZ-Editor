@@ -16,16 +16,15 @@ class EditorMenuItem: MVCLayout
 			
 	void EditorMenuItem(Widget parent = null) {
 		EditorLog.Trace("EditorMenuItem");
+		
+		m_LayoutRoot.Show(true);
+		m_EditorMenuItemController = EditorMenuItemController.Cast(GetController());
 	}	
 	
 	void ~EditorMenuItem() {
 		EditorLog.Trace("~EditorMenuItem");
 	}
 	
-	override void Init() {
-		m_LayoutRoot.Show(true);
-		m_EditorMenuItemController = EditorMenuItemController.Cast(GetController());
-	}
 		
 	override typename GetControllerType() {
 		return EditorMenuItemController;
