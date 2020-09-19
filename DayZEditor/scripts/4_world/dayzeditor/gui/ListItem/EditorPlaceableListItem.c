@@ -59,9 +59,10 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override void ListItemExecute(ButtonCommandArgs args)
 	{
-		Select();
+		
 		if (args.GetMouseButton() == 0) {
 			GetEditor().CreateInHand(GetData());
+			Select();
 		} else if (args.GetMouseButton() == 1) {
 			EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu();
 			int x, y;

@@ -30,27 +30,6 @@ WrapSpacerWidgetClass EditorListItem {
    draggable 1
    scriptclass ""
    {
-    PanelWidgetClass EditorListItemHighlight {
-     visible 0
-     ignorepointer 1
-     color 0.6549 0.7098 0.8745 1
-     position 0 0
-     size 1.01 1.12
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     draggable 1
-     scriptclass "ViewBinding"
-     style Outline
-     "no focus" 0
-     {
-      ScriptParamsClass {
-      }
-     }
-    }
     WrapSpacerWidgetClass EditorListItemContent {
      visible 1
      clipchildren 1
@@ -64,6 +43,7 @@ WrapSpacerWidgetClass EditorListItem {
      vexactpos 0
      hexactsize 0
      vexactsize 0
+     priority 1
      draggable 1
      scriptclass ""
      style Colorable
@@ -88,6 +68,7 @@ WrapSpacerWidgetClass EditorListItem {
        vexactpos 0
        hexactsize 0
        vexactsize 0
+       priority 1
        draggable 1
        scriptclass "ViewBinding"
        style Colorable
@@ -188,8 +169,9 @@ WrapSpacerWidgetClass EditorListItem {
          }
         }
         ButtonWidgetClass EditorListItemVisible {
+         ignorepointer 0
          position 0.03 0
-         size 26 26
+         size 18 18
          halign right_ref
          valign center_ref
          hexactpos 0

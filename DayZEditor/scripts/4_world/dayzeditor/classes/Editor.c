@@ -233,7 +233,8 @@ class Editor
 		
 		EditorObjectSet selected_objects = GetSelectedObjects();
 		if (selected_objects.Count() > 0) {
-			m_EditorHud.GetController().SetInfoObjectPosition(selected_objects[0].GetPosition());
+			// Spams errors
+			//m_EditorHud.GetController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
 			
 		// debug

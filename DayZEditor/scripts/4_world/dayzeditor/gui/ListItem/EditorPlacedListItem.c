@@ -32,7 +32,6 @@ class EditorPlacedListItem: EditorListItem
 
 	override void ListItemExecute(ButtonCommandArgs args)
 	{
-		Select();
 		if (args.GetMouseButton() == 0) {
 			if (KeyState(KeyCode.KC_LCONTROL)) {
 				GetEditor().ToggleSelection(GetData());

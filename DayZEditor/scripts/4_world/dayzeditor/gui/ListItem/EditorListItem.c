@@ -11,12 +11,10 @@ class EditorListItem: MVCLayout
 	static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
 	static int COLOR_ON_HOVER = COLOR_SALMON;
 	
-	protected Widget EditorListItemHighlight;
+
 	protected Widget EditorListItemContent;
-	protected TextWidget EditorListItemLabel;
-	protected ImageWidget EditorListItemIcon;
+	
 	protected WrapSpacerWidget EditorListItemChildren;
-	protected ButtonWidget EditorListItemButton;
 	protected ButtonWidget EditorListItemCollapse;
 	
 	void EditorListItem(Widget parent = null) 
@@ -48,19 +46,43 @@ class EditorListItem: MVCLayout
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		//EditorLog.Trace("EditorListItemController::OnMouseEnter");
-		EditorListItemContent.SetColor(COLOR_ON_HOVER);
-		return false;
+		EditorLog.Trace("EditorListItemController::OnMouseEnter");
+		switch (w.GetName()) {
+		
+			case "EditorListItemButton": {
+				if (m_Selected) {
+					EditorListItemContent.SetColor(COLOR_ON_SELECTED);
+				} else {
+					EditorListItemContent.SetColor(COLOR_ON_HOVER);
+				}
+				break;
+			}
+			
+		}
+		
+		return super.OnMouseEnter(w, x, y);
 	}
 	
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		//EditorLog.Trace("EditorListItemController::OnMouseLeave");			
-		if (!m_Selected)
-			EditorListItemContent.SetColor(COLOR_ON_DESELECTED);
+		EditorLog.Trace("EditorListItemController::OnMouseLeave");	
 		
-		return false;
+		switch (w.GetName()) {
+		
+			case "EditorListItemButton": {
+				if (m_Selected) {
+					EditorListItemContent.SetColor(COLOR_ON_SELECTED);
+				} else {
+					EditorListItemContent.SetColor(COLOR_ON_DESELECTED);
+				}
+				break;
+			}
+			
+		}		
+		
+		
+		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
 	void ListItemExecute(ButtonCommandArgs args);
@@ -73,7 +95,7 @@ class EditorListItem: MVCLayout
 		//EditorLog.Trace("EditorListItemController::Select");
 		m_Selected = true;
 		EditorListItemContent.SetColor(COLOR_ON_SELECTED);
-		EditorListItemContent.Update();	
+		EditorListItemContent.Update();
 	}
 	
 	void Deselect() 
@@ -81,7 +103,7 @@ class EditorListItem: MVCLayout
 		//EditorLog.Trace("EditorListItemController::Deselect");
 		m_Selected = false;
 		EditorListItemContent.SetColor(COLOR_ON_DESELECTED);
-		EditorListItemContent.Update();	
+		EditorListItemContent.Update();
 	}
 	
 	bool IsSelected() {
