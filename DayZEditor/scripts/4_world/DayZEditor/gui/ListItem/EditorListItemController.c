@@ -25,20 +25,7 @@ class EditorListItemController: Controller
 	}
 	
 
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		//EditorLog.Trace("EditorListItemController::OnMouseEnter");
-		m_ListItem.OnMouseEnter(x, y);
-		return false;
-	}
-	
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		//EditorLog.Trace("EditorListItemController::OnMouseLeave");			
-		m_ListItem.OnMouseLeave(x, y);
-		return false;
-	}
+
 	/*
 	override void MVCOnDrag(Widget target, int x, int y)
 	{

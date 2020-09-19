@@ -33,7 +33,7 @@ class EditorPlaceableListItem: EditorListItem
 		Deselect();
 	}
 	
-	override void OnMouseEnter(int x, int y)
+	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		EditorTooltip tooltip = new EditorTooltip();			
 		tooltip.SetTitle(m_EditorPlaceableObjectData.Type);
@@ -44,20 +44,24 @@ class EditorPlaceableListItem: EditorListItem
 		tooltip.SetContent(GetGame().CreateObjectEx(m_EditorPlaceableObjectData.Type, vector.Zero, ECE_NONE));
 		
 		GetEditorHudController().CurrentTooltip = tooltip;
+		
+		return super.OnMouseEnter(w, x, y);
 	}
 	
-	override void OnMouseLeave(int x, int y)
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		if (GetEditorHudController().CurrentTooltip) {
 			delete GetEditorHudController().CurrentTooltip;
 		}
+		
+		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
 	override void ListItemExecute(ButtonCommandArgs args)
 	{
 		Select();
 		if (args.GetMouseButton() == 0) {
-			GetEditor().CreateInHand(GetData());	
+			GetEditor().CreateInHand(GetData());
 		} else if (args.GetMouseButton() == 1) {
 			EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu();
 			int x, y;

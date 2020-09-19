@@ -46,18 +46,22 @@ class EditorListItem: MVCLayout
 		return m_NestIndex;
 	}
 		
-	void OnMouseEnter(int x, int y) 
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		/*if (w != EditorListItemButton) 
-			return false;*/
+		//EditorLog.Trace("EditorListItemController::OnMouseEnter");
 		EditorListItemContent.SetColor(COLOR_ON_HOVER);
+		return false;
 	}
 	
-	void OnMouseLeave(int x, int y)
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		//if (w != EditorListItemButton) return false;
+		//EditorLog.Trace("EditorListItemController::OnMouseLeave");			
 		if (!m_Selected)
 			EditorListItemContent.SetColor(COLOR_ON_DESELECTED);
+		
+		return false;
 	}
 	
 	void ListItemExecute(ButtonCommandArgs args);

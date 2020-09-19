@@ -6,10 +6,10 @@ WrapSpacerWidgetClass EditorTooltip {
  ignorepointer 1
  color 0.1529 0.1529 0.1529 0.7059
  position 0 0
- size 0.15 0
+ size 150 0
  hexactpos 1
  vexactpos 1
- hexactsize 0
+ hexactsize 1
  vexactsize 1
  priority 50
  scriptclass ""
@@ -23,27 +23,32 @@ WrapSpacerWidgetClass EditorTooltip {
   WrapSpacerWidgetClass Header {
    ignorepointer 1
    color 0 0 0 0.9412
-   size 1 48
+   position 0 0
+   size 1 0
    halign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 1
+   "Size To Content H" 1
+   "Size To Content V" 1
+   content_halign center
+   content_valign center
    {
-    TextWidgetClass Title {
+    TextWidgetClass HeaderLabel {
      visible 1
      ignorepointer 1
      position 0 0
-     size 1 0
+     size 95 0
      halign center_ref
      hexactpos 1
      vexactpos 1
-     hexactsize 0
+     hexactsize 1
      vexactsize 1
      scriptclass "ViewBinding"
      font "gui/fonts/Metron28"
      "exact text" 1
-     "size to text h" 0
+     "size to text h" 1
      "size to text v" 1
      "text halign" center
      "text valign" center

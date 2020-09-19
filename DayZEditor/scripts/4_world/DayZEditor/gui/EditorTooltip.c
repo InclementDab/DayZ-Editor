@@ -1,7 +1,7 @@
 
 class EditorTooltipController: Controller
 {
-	string ContentTitle = "Testing";
+	string ContentTitle;
 	string ContentText;
 	
 	Object ContentItemData;
@@ -16,6 +16,8 @@ class EditorTooltipController: Controller
 
 class EditorTooltip: MVCLayout
 {
+	protected TextWidget HeaderLabel;
+	
 	void EditorToolTip(Widget parent = null)
 	{
 		GetEditorHudController().CurrentTooltip = this;
@@ -25,6 +27,11 @@ class EditorTooltip: MVCLayout
 	{
 		GetEditorTooltipController().ContentTitle = title;
 		GetEditorTooltipController().NotifyPropertyChanged("ContentTitle");
+		
+		float w, h, lw, lh;
+		HeaderLabel.GetScreenSize(w, h);
+		m_LayoutRoot.GetScreenSize(lw, lh);
+		m_LayoutRoot.SetSize(w + 15, lh);
 	}
 	
 	void SetContent(string text)
@@ -35,8 +42,8 @@ class EditorTooltip: MVCLayout
 	
 	void SetContent(Object item)
 	{
-		//GetEditorTooltipController().ContentItemData = item;
-		//GetEditorTooltipController().NotifyPropertyChanged("ContentItemData");
+		GetEditorTooltipController().ContentItemData = item;
+		GetEditorTooltipController().NotifyPropertyChanged("ContentItemData");
 	}
 		
 	override typename GetControllerType() {
@@ -47,7 +54,7 @@ class EditorTooltip: MVCLayout
 		return "DayZEditor/gui/layouts/tooltips/EditorTooltip.layout";
 	}
 	
-	private EditorTooltipController GetEditorTooltipController() {
+	protected EditorTooltipController GetEditorTooltipController() {
 		return EditorTooltipController.Cast(GetController());
 	}
 }
