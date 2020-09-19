@@ -2,25 +2,22 @@
 static int groupcount = 0;
 class EditorCollapsibleListItem: EditorListItem
 {
-	
-	private ref array<ref EditorListItem> m_CategoryChildren;
-	ref array<ref EditorListItem> GetChildren() { return m_CategoryChildren; }
-	
-	void EditorCollapsibleListItem() 
+
+	void EditorCollapsibleListItem(Widget parent = null) 
 	{ 
 		EditorLog.Trace("EditorCollapsibleListItem");
-		m_CategoryChildren = new array<ref EditorListItem>();
 		
-		m_LayoutRoot.FindAnyWidget("EditorListItemCollapse").Show(true);
-		m_Controller.SetLabel(string.Format("group%1", groupcount));
-		
-		
+		EditorListItemCollapse.Show(true);
+		GetListItemController().ListItemLabel = string.Format("group%1", groupcount);
+		GetListItemController().NotifyPropertyChanged("ListItemLabel");
 		groupcount++;
-		
 	}
 	
-	
-
+	override void ListItemCollapseExecute(ButtonCommandArgs args)
+	{
+		EditorListItemChildren.Show(!args.GetButtonState());
+	}
+/*
 	void RemoveListItem(EditorListItem item)
 	{
 		int index = m_CategoryChildren.Find(item);
@@ -51,7 +48,7 @@ class EditorCollapsibleListItem: EditorListItem
 		foreach (EditorListItem item: m_CategoryChildren) {
 			item.SetNestIndex(index + 1);
 		}
-	}
+	}*/
 
 	
 }

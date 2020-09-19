@@ -1,30 +1,50 @@
 
 class EditorPlacedListItem: EditorListItem
 {
-	private ref EditorObject m_Data;
+	protected ref EditorObject m_EditorObject;
 	EditorObject GetData() { 
-		return m_Data; 
+		return m_EditorObject; 
 	}
 	
-	void EditorPlacedListItem(EditorObject data) 
+	void SetEditorObject(EditorObject data) 
 	{ 
-		EditorLog.Trace("EditorPlacedListItem"); 
-		m_Data = data;
+		EditorLog.Trace("EditorPlacedListItem::SetEditorObject"); 
+		m_EditorObject = data;
 		
-		m_Controller.SetLabel(m_Data.GetDisplayName());
-		m_Controller.SetIcon(GetIconFromMod(m_Data.GetData().ObjectMod));
+		GetListItemController().ListItemLabel = m_EditorObject.GetDisplayName();
+		GetListItemController().NotifyPropertyChanged("ListItemLabel");
 		
-		m_Data.OnObjectSelected.Insert(EditorObjectSelected);
-		m_Data.OnObjectDeselected.Insert(EditorObjectDeselected);	
+		GetListItemController().ListItemIcon = GetIconFromMod(m_EditorObject.GetData().ObjectMod);
+		GetListItemController().NotifyPropertyChanged("ListItemIcon");
+				
+		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
+		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
 	
 	
 	void EditorObjectSelected(EditorObject data) {
-		m_Controller.Select();
+		Select();
 	}
 	
 	void EditorObjectDeselected(EditorObject data) {
-		m_Controller.Deselect();
+		Deselect();
 	}
 
+	override void ListItemExecute(ButtonCommandArgs args)
+	{
+		Select();
+		if (args.GetMouseButton() == 0) {
+			if (KeyState(KeyCode.KC_LCONTROL)) {
+				GetEditor().ToggleSelection(GetData());
+			} else {
+				GetEditor().ClearSelection();
+				GetEditor().SelectObject(GetData());
+			}
+		} else if (args.GetMouseButton() == 1) {
+			EditorContextMenu context_menu = new EditorContextMenu();
+			int x, y;
+			GetMousePos(x, y);
+			context_menu.SetPosition(x, y);
+		}
+	}
 }

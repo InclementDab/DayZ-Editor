@@ -44,7 +44,8 @@ class EditorObject
 
 	void SetDisplayName(string display_name) {
 		m_Data.DisplayName = display_name;
-		m_EditorPlacedListItem.GetController().SetLabel(m_Data.DisplayName);
+		EditorListItemController.Cast(m_EditorPlacedListItem.GetController()).ListItemLabel = m_Data.DisplayName;
+		m_EditorPlacedListItem.GetController().NotifyPropertyChanged("ListItemLabel");
 	}
 	
 	string GetDisplayName() { 
@@ -120,7 +121,8 @@ class EditorObject
 		
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
-			m_EditorPlacedListItem = new EditorPlacedListItem(this);
+			m_EditorPlacedListItem = new EditorPlacedListItem();
+			m_EditorPlacedListItem.SetEditorObject(this);
 			GetEditor().GetEditorHud().GetController().RightbarSpacerData.Insert(m_EditorPlacedListItem);
 		}
 		

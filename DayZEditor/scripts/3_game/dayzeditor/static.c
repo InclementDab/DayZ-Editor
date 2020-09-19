@@ -254,3 +254,13 @@ static bool CreateWidget(out Widget w, string layout_name, Widget parent = null)
 	w = workspace.CreateWidgets(layout_name, parent);
 	return true;
 }
+
+static const int COLOR_SALMON	= -4235425;
+static const int COLOR_SALMON_A	= 2143248223;
+static const int COLOR_CANDY 	= -1618884;
+static const int COLOR_APPLE 	= -9785268;
+static const int COLOR_JELLY 	= -1010901;
+static const int COLOR_BLACK	= -16777216;
+static const int COLOR_WHITE 	= -1;
+static const int COLOR_WHITE_A	= 855638015;
+static const int COLOR_EMPTY 	= 0;

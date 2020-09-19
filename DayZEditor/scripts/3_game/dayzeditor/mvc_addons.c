@@ -1,7 +1,6 @@
 
 class TypeConversionEquation: TypeConversionTemplate<StringEvaluater>
 {
-	
 	override void SetString(string value) {
 		m_Value = string.Empty;
 		for (int i = 0; i < value.Length(); i++) {
@@ -42,7 +41,7 @@ class TypeConversionEditorWidget: TypeConversionTemplate<EditorWidget>
 }
 
 
-class TypeConversionBrush: TypeConversionTemplate<ref EditorBrushData>
+class TypeConversionBrush: TypeConversionTemplate<EditorBrushData>
 {	
 	override void SetString(string value) {
 		m_Value.Name = value;
@@ -54,7 +53,7 @@ class TypeConversionBrush: TypeConversionTemplate<ref EditorBrushData>
 }
 
 
-class TypeConversionBrushObject: TypeConversionTemplate<ref EditorBrushObject>
+class TypeConversionBrushObject: TypeConversionTemplate<EditorBrushObject>
 {
 	
 	override void SetString(string value) {
@@ -80,7 +79,6 @@ modded class MVC
 		type_conversions.Insert(EditorWidget, TypeConversionEditorWidget);
 		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
 		type_conversions.Insert(EditorBrushObject, TypeConversionBrushObject);
-	
 	}
 	
 	override void RegisterWidgetControllers(out TypenameHashMap widget_controllers)

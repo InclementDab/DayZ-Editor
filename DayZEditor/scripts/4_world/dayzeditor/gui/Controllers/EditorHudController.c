@@ -32,8 +32,8 @@ class EditorHudController: Controller
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
-	ref ObservableCollection<ref EditorWidget> LeftbarSpacerData;
-	ref ObservableCollection<ref EditorWidget> RightbarSpacerData;
+	ref ObservableCollection<ref MVCLayout> LeftbarSpacerData;
+	ref ObservableCollection<ref MVCLayout> RightbarSpacerData;
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 	ref ObservableCollection<string> DebugActionStackListbox;
 	
@@ -88,9 +88,9 @@ class EditorHudController: Controller
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
-				
-		LeftbarSpacerData 			= new ObservableCollection<ref EditorWidget>("LeftbarSpacerData", this);
-		RightbarSpacerData 			= new ObservableCollection<ref EditorWidget>("RightbarSpacerData", this);
+		
+		LeftbarSpacerData 			= new ObservableCollection<ref MVCLayout>("LeftbarSpacerData", this);
+		RightbarSpacerData 			= new ObservableCollection<ref MVCLayout>("RightbarSpacerData", this);
 		BrushTypeBoxData 			= new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
 		
@@ -137,7 +137,8 @@ class EditorHudController: Controller
 		paths.Insert(CFG_VEHICLESPATH);
 		paths.Insert(CFG_WEAPONSPATH);
 		paths.Insert(CFG_MAGAZINESPATH);
-	
+		
+		
 		foreach (string config_path: paths) {
 			
 			for (int j = 0; j < GetGame().ConfigGetChildrenCount(config_path); j++) {
@@ -148,11 +149,14 @@ class EditorHudController: Controller
 				
 				if (full_path.Find("HouseNoDestruct") != -1) {
 					EditorPlaceableObjectData data(class_name, config_path);
-					LeftbarSpacerData.Insert(new EditorPlaceableListItem(data));
+					EditorPlaceableListItem item();
+					item.SetPlaceableObjectData(data);
+					LeftbarSpacerData.Insert(item);
 					
 #ifdef COMPONENT_SYSTEM
-					//if (j > 5) return j; // dont hotload 2360 objects plz
+					if (j > 50) return j;
 #endif
+				
 				} else {
 					EditorLog.Trace("Not including Base " + full_path.ToString());
 				}
@@ -747,15 +751,7 @@ class EditorHudController: Controller
 
 
 //static const int COLOR_BLUE 	= -13330213;
-static const int COLOR_SALMON	= -4235425;
-static const int COLOR_SALMON_A	= 2143248223;
-static const int COLOR_CANDY 	= -1618884;
-static const int COLOR_APPLE 	= -9785268;
-static const int COLOR_JELLY 	= -1010901;
-static const int COLOR_BLACK	= -16777216;
-static const int COLOR_WHITE 	= -1;
-static const int COLOR_WHITE_A	= 855638015;
-static const int COLOR_EMPTY 	= 0;
+
 
 
 
