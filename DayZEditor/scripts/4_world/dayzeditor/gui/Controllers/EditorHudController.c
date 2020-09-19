@@ -146,7 +146,7 @@ class EditorHudController: Controller
 				InsertPlaceableObject(new EditorPlaceableListItem(placeable_object_data));
 
 #ifdef COMPONENT_SYSTEM
-				if (j > 100) return j; // dont hotload 2360 objects plz
+				if (j > 5) return j; // dont hotload 2360 objects plz
 #endif
 		    }
 		}
@@ -289,37 +289,34 @@ class EditorHudController: Controller
 	
 	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
 	{
-		EditorLog.Trace("EditorHudController::CreateToolbarMenu");
-		float x, y, w, h;
-		toolbar_button.GetPos(x, y);
-		toolbar_button.GetSize(w, h);
-		y += h;
-		
+		EditorLog.Trace("EditorHudController::CreateToolbarMenu");	
 		
 		ref EditorMenu toolbar_menu;
 		switch (toolbar_button) {
 			
 			case MenuBarFile: {
-				toolbar_menu = new EditorFileMenu(null, this);
+				toolbar_menu = new EditorFileMenu(toolbar_button, this);
 				break;
 			}
 			
 			case MenuBarEdit: {
-				toolbar_menu = new EditorEditMenu(null, this);
+				toolbar_menu = new EditorEditMenu(toolbar_button, this);
 				break;
 			}
 			
 			case MenuBarView: {
-				toolbar_menu = new EditorViewMenu(null, this);
+				toolbar_menu = new EditorViewMenu(toolbar_button, this);
 				break;
 			}
 		}
 		
+		// Sets position to bottom of button
+		float w, h;
+		toolbar_button.GetScreenSize(w, h);
+		toolbar_menu.SetPosition(0, h);
 		
-		//toolbar_menu.SetPosition(x, y);
 		toolbar_menu.Show();
-		SetMenu(toolbar_menu);
-		
+		SetMenu(toolbar_menu);		
 		return toolbar_menu;
 	}
 

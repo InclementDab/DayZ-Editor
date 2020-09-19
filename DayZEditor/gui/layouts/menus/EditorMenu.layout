@@ -1,13 +1,13 @@
 WrapSpacerWidgetClass EditorMenuContent {
  clipchildren 1
  color 0.1451 0.1451 0.1451 1
- position 0 0
- size 0.15 0
+ size 275 0
  hexactpos 1
  vexactpos 1
- hexactsize 0
+ hexactsize 1
  vexactsize 0
- priority 260
+ scaled 0
+ priority 500
  scriptclass ""
  style Colorable
  Padding 4

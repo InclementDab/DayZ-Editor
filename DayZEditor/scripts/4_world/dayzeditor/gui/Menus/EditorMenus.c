@@ -51,10 +51,12 @@ class EditorMenu: EditorMVCLayout
 		menu_item.SetCommand(editor_command);
 		
 		ViewBinding view_binding;
+		if (!menu_item) return;
 		menu_item.GetLayoutRoot().FindAnyWidget("EditorMenuItemButton").GetScript(view_binding);
 		if (view_binding && editor_command) {
 			view_binding.SetRelayCommand(editor_command);
 		}
+		
 		
 		AddMenuItem(menu_item);
 	}
