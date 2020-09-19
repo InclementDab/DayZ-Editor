@@ -9,19 +9,22 @@ class EditorMenuItemController: Controller
 	ref EditorMenu ChildMenu;
 }
 
-class EditorMenuItem: EditorMVCLayout
+class EditorMenuItem: MVCLayout
 {
 	protected ref EditorMenuItemController m_EditorMenuItemController;
 	protected ImageWidget EditorMenuItemIcon;
-		
-	override void Init()
-	{
-		m_LayoutRoot.Show(true);
-		m_EditorMenuItemController = EditorMenuItemController.Cast(GetController());
-	}
+			
+	void EditorMenuItem(Widget parent = null) {
+		EditorLog.Trace("EditorMenuItem");
+	}	
 	
 	void ~EditorMenuItem() {
 		EditorLog.Trace("~EditorMenuItem");
+	}
+	
+	override void Init() {
+		m_LayoutRoot.Show(true);
+		m_EditorMenuItemController = EditorMenuItemController.Cast(GetController());
 	}
 		
 	override typename GetControllerType() {

@@ -156,8 +156,9 @@ class EditorHudController: Controller
 	
 	
 	// Modal Menu Control
-	private ref EditorMenu m_CurrentMenu = null;	
+	private ref EditorMenu m_CurrentMenu;	
 	void SetMenu(EditorMenu menu) {
+		EditorLog.Trace("EditorHudController::SetMenu");
 		if (m_CurrentMenu && m_CurrentMenu != menu)
 			m_CurrentMenu.Close();
 		
@@ -165,6 +166,7 @@ class EditorHudController: Controller
 	}
 	
 	void CloseMenu() {
+		EditorLog.Trace("EditorHudController::CloseMenu");
 		if (IsMenuActive()) {
 			SetMenu(null);
 		}
@@ -273,6 +275,7 @@ class EditorHudController: Controller
 		RightbarSpacerData.Insert(category);
 	}
 
+	
 	void MenuBarExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudController::MenuBarExecute");
@@ -293,7 +296,7 @@ class EditorHudController: Controller
 		y += h;
 		
 		
-		EditorMenu toolbar_menu;
+		ref EditorMenu toolbar_menu;
 		switch (toolbar_button) {
 			
 			case MenuBarFile: {
@@ -315,6 +318,8 @@ class EditorHudController: Controller
 		
 		//toolbar_menu.SetPosition(x, y);
 		toolbar_menu.Show();
+		SetMenu(toolbar_menu);
+		
 		return toolbar_menu;
 	}
 

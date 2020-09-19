@@ -10,10 +10,16 @@ class EditorMVCLayout: MVCLayout
 	{
 		EditorLog.Trace("EditorMVCLayout");
 		m_Editor = GetEditor();
-		if (m_Editor)
+		if (m_Editor) {
 			m_EditorHud = m_Editor.GetEditorHud();	
+		}
 		
 		m_EditorHudController = controller;	
-	}	
+	}
+	
+	void ~EditorMVCLayout()
+	{
+		EditorLog.Trace("~EditorMVCLayout");
+	}
 }
 

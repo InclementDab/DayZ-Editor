@@ -1,22 +1,28 @@
 
+class EditorMenuItemList: ref array<ref EditorMenuItem> 
+{
+	void EditorMenuItemList() {
+		EditorLog.Trace("EditorMenuItemList");
+	}	
+	
+	void ~EditorMenuItemList() {
+		EditorLog.Trace("~EditorMenuItemList");
+	}
+}
+
 class EditorMenu: EditorMVCLayout
 {
-	protected ref array<ref EditorMenuItem> m_MenuItems = {};
+	protected ref EditorMenuItemList m_MenuItems;
 	protected WrapSpacerWidget EditorMenuContent;
 	
+	void EditorMenu(Widget parent = null, EditorHudController controller = null) {
+		EditorLog.Trace("EditorMenu");
+		m_MenuItems = new EditorMenuItemList();
+	}
+		
 	void ~EditorMenu() {
 		EditorLog.Trace("~EditorMenu");
 		delete m_MenuItems;
-	}
-	
-	override void Show()
-	{
-		EditorLog.Trace("EditorMenu::Show");
-		super.Show();
-	
-		if (m_EditorHudController) {
-			m_EditorHudController.SetMenu(this);
-		}
 	}
 		
 	void SetPosition(float x, float y) {
@@ -41,7 +47,7 @@ class EditorMenu: EditorMVCLayout
 	
 	void AddMenuButton(EditorCommand editor_command)
 	{
-		EditorMenuItemButton menu_item = new EditorMenuItemButton();
+		ref EditorMenuItemButton menu_item = new EditorMenuItemButton();
 		menu_item.SetCommand(editor_command);
 		
 		ViewBinding view_binding;
@@ -54,7 +60,12 @@ class EditorMenu: EditorMVCLayout
 	}
 
 	void AddMenuItem(ref EditorMenuItem menu_item)
-	{		
+	{
+		/*
+		if (!m_MenuItems) {
+			m_MenuItems = new EditorMenuItemList();
+		}*/
+		
 		if (menu_item) {
 			EditorMenuContent.AddChild(menu_item.GetLayoutRoot());
 			m_MenuItems.Insert(menu_item);
