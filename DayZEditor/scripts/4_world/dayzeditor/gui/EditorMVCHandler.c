@@ -6,15 +6,14 @@ class EditorMVCLayout: MVCLayout
 	protected EditorHud m_EditorHud;
 	protected EditorHudController m_EditorHudController;
 	
-	void EditorMVCLayout(EditorHudController controller = null)
+	void EditorMVCLayout(Widget parent = null, EditorHudController controller = null)
 	{
 		EditorLog.Trace("EditorMVCLayout");
 		m_Editor = GetEditor();
 		if (m_Editor)
-			m_EditorHud = m_Editor.GetEditorHud();
+			m_EditorHud = m_Editor.GetEditorHud();	
 		
-		m_EditorHudController = controller;
-	}
-	
+		m_EditorHudController = controller;	
+	}	
 }
 

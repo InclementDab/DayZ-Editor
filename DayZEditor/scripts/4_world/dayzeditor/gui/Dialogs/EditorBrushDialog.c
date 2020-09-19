@@ -50,7 +50,7 @@ class EditorBrushDialog: EditorDialog
 	
 	protected EditorBrushData m_BrushData;
 	
-	void EditorBrushDialog(EditorHudController controller = null)
+	override void Init()
 	{
 		EditorLog.Trace("EditorBrushDialog"); 
 				

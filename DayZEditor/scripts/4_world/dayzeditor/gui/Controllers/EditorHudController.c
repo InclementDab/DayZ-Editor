@@ -101,8 +101,6 @@ class EditorHudController: Controller
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
 #endif
 		
-		EditorTooltip tool_tip = new EditorTooltip("Test");
-		tool_tip.Show();
 	}
 	
 		
@@ -279,7 +277,7 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::MenuBarExecute");
 
-		if (GetMenu().Type() != GetBoundMenu(args.GetButtonWidget())) {
+		if (!GetMenu()) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
 			CreateToolbarMenu(args.GetButtonWidget());
 		} else {
 			CloseMenu();
@@ -290,12 +288,32 @@ class EditorHudController: Controller
 	{
 		EditorLog.Trace("EditorHudController::CreateToolbarMenu");
 		float x, y, w, h;
-		toolbar_button.GetScreenPos(x, y);
-		toolbar_button.GetScreenSize(w, h);
+		toolbar_button.GetPos(x, y);
+		toolbar_button.GetSize(w, h);
 		y += h;
 		
-		EditorMenu toolbar_menu = GetBoundMenu(toolbar_button).Spawn();
-		toolbar_menu.SetPosition(x, y);
+		
+		EditorMenu toolbar_menu;
+		switch (toolbar_button) {
+			
+			case MenuBarFile: {
+				toolbar_menu = new EditorFileMenu(null, this);
+				break;
+			}
+			
+			case MenuBarEdit: {
+				toolbar_menu = new EditorEditMenu(null, this);
+				break;
+			}
+			
+			case MenuBarView: {
+				toolbar_menu = new EditorViewMenu(null, this);
+				break;
+			}
+		}
+		
+		
+		//toolbar_menu.SetPosition(x, y);
 		toolbar_menu.Show();
 		return toolbar_menu;
 	}
@@ -507,7 +525,7 @@ class EditorHudController: Controller
 				switch (w.GetName()) {
 								
 					case "BrushToggleButton": {
-						EditorBrushDialog brush_dialog(this);
+						EditorBrushDialog brush_dialog(null, this);
 						brush_dialog.SetEditorBrushData(BrushTypeBoxData[BrushTypeSelection]);
 						brush_dialog.Show();
 						break;
@@ -708,28 +726,7 @@ class EditorHudController: Controller
 		root.SetColor(COLOR_EMPTY);
 		SetWidgetIconPosition(root, 0, 0);
 	}
-	
 		
-	typename GetBoundMenu(Widget target)
-	{
-		switch (target) {
-			
-			case MenuBarFile: {
-				return EditorFileMenu;
-			}
-			
-			case MenuBarEdit: {
-				return EditorEditMenu;
-			}
-			
-			case MenuBarView: {
-				return EditorViewMenu;
-			}
-		}
-		
-		return typename;
-	}
-	
 	private void OnObjectSelected(Class context, EditorObject target)
 	{
 		InfobarObjPosFrame.Show(GetEditor().GetObjectManager().GetSelectedObjects().Count() > 0);

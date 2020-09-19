@@ -11,9 +11,13 @@ class EditorTooltip: MVCLayout
 {
 	protected ref EditorTooltipController m_EditorTooltipController;
 	
-	void EditorTooltip(string title)
+	void EditorTooltip(Widget parent = null)
 	{
 		m_EditorTooltipController = EditorTooltipController.Cast(GetController());
+	}
+	
+	void SetTitle(string title)
+	{
 		m_EditorTooltipController.ContentTitle = title;
 	}
 	

@@ -69,9 +69,9 @@ class MapSelectDialogController: EditorDialogController
 
 class MapSelectDialog: EditorDialog
 {		
-	void MapSelectDialog(EditorHudController controller = null)
+	override void Init()
 	{
-		EditorLog.Trace("MapSelectDialog");
+		EditorLog.Trace("MapSelectDialog::Init");
 
 		AddContent("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");
 		AddButton("Select", "MapSelectDialogRelayCommand");

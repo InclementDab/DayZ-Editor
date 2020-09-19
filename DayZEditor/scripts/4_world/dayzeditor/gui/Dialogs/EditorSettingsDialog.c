@@ -39,9 +39,9 @@ class EditorSettingsDialog: EditorDialog
 	protected EditorSettings m_EditorSettings;
 	protected ref EditorSettingsDialogController m_EditorSettingsDialogController;
 	
-	void EditorSettingsDialog(EditorHudController controller = null)
+	override void Init()
 	{
-		EditorLog.Trace("EditorSettingsDialog");
+		EditorLog.Trace("EditorSettingsDialog::Init");
 		SetTitle("Editor Settings");
 		AddButton("Save", "SaveCallback");
 		AddButton("Apply", "ApplyCallback");

@@ -1,15 +1,9 @@
 
 class EditorMenu: EditorMVCLayout
 {
-	private ref array<ref EditorMenuItem> m_MenuItems = {};
+	private ref array<ref EditorMenuItem> m_MenuItems = new array<ref EditorMenuItem>();
 	protected WrapSpacerWidget EditorMenuContent;
 	
-	void EditorMenu(EditorHudController controller = null) {
-		EditorLog.Trace("EditorMenu");
-		if (m_LayoutRoot) {
-			m_LayoutRoot.Show(false);
-		}
-	}
 	
 	void ~EditorMenu() {
 		EditorLog.Trace("~EditorMenu");
@@ -20,17 +14,12 @@ class EditorMenu: EditorMVCLayout
 	{
 		EditorLog.Trace("EditorMenu::Show");
 		super.Show();
-		
-		m_EditorHudController.SetMenu(this);
-		
-	}
 	
-	override void Close()
-	{
-		EditorLog.Trace("EditorMenu::Close");
-		super.Close();
+		if (m_EditorHudController) {
+			m_EditorHudController.SetMenu(this);
+		}
 	}
-	
+		
 	void SetPosition(float x, float y) {
 		m_LayoutRoot.SetPos(x, y);
 	}
@@ -67,6 +56,7 @@ class EditorMenu: EditorMVCLayout
 
 	void AddMenuItem(ref EditorMenuItem menu_item)
 	{
+		Print(m_MenuItems);
 		if (menu_item) {
 			EditorMenuContent.AddChild(menu_item.GetLayoutRoot());
 			m_MenuItems.Insert(menu_item);
@@ -79,7 +69,7 @@ class EditorMenu: EditorMVCLayout
 		m_MenuItems.Remove(m_MenuItems.Find(menu_item));
 		delete menu_item;
 	}
-		
+			
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/menus/EditorMenu.layout";
 	}
@@ -87,10 +77,11 @@ class EditorMenu: EditorMVCLayout
 
 class EditorFileMenu: EditorMenu
 {
-	void EditorFileMenu(EditorHudController controller = null)
+	
+	override void Init() 
 	{
-		EditorLog.Trace("EditorFileMenu");
-		
+		EditorLog.Trace("EditorFileMenu::Init");
+				
 		AddMenuButton(EditorNewCommand);
 		AddMenuButton(EditorOpenCommand);
 		AddMenuButton(EditorSaveCommand);
@@ -103,9 +94,10 @@ class EditorFileMenu: EditorMenu
 
 class EditorEditMenu: EditorMenu
 {
-	void EditorEditMenu(EditorHudController controller = null)
+	
+	override void Init() 
 	{
-		EditorLog.Trace("EditorEditMenu");
+		EditorLog.Trace("EditorEditMenu::Init");
 				
 		AddMenuButton(EditorUndoCommand);
 		AddMenuButton(EditorRedoCommand);
@@ -121,10 +113,11 @@ class EditorEditMenu: EditorMenu
 }
 
 class EditorViewMenu: EditorMenu
-{
-	void EditorViewMenu(EditorHudController controller = null)
+{	
+	override void Init() 
 	{
-		EditorLog.Trace("EditorViewMenu");
+		EditorLog.Trace("EditorViewMenu::Init");
+				
 		AddMenuButton(EditorCameraControlsCommand);
 		AddMenuButton(EditorReloadHudCommand);
 	}
@@ -132,9 +125,9 @@ class EditorViewMenu: EditorMenu
 
 class EditorContextMenu: EditorMenu
 {
-	void EditorContextMenu(EditorHudController controller = null)
+	override void Init() 
 	{
-		EditorLog.Trace("EditorContextMenu");
+		EditorLog.Trace("EditorContextMenu::Init");
 		AddMenuButton(EditorCutCommand);
 		AddMenuButton(EditorCopyCommand);
 		AddMenuButton(EditorPasteCommand);
@@ -150,9 +143,9 @@ class EditorContextMenu: EditorMenu
 
 class EditorPlaceableContextMenu: EditorMenu
 {
-	void EditorPlaceableContextMenu(EditorHudController controller = null)
+	
+	override void Init() 
 	{
-		EditorLog.Trace("EditorPlaceableContextMenu");
 		AddMenuButton(EditorLootEditorCommand);
 	}
 }

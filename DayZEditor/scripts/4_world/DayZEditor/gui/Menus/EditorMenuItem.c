@@ -12,15 +12,11 @@ class EditorMenuItemController: Controller
 class EditorMenuItem: EditorMVCLayout
 {
 	protected ref EditorMenuItemController m_EditorMenuItemController;
-	
 	protected ImageWidget EditorMenuItemIcon;
-	
-	void EditorMenuItem(EditorHudController controller = null) {
-		EditorLog.Trace("EditorMenuItem");
-		if (m_LayoutRoot) {
-			m_LayoutRoot.Show(true);
-		}
 		
+	override void Init()
+	{
+		m_LayoutRoot.Show(true);
 		m_EditorMenuItemController = EditorMenuItemController.Cast(GetController());
 	}
 	

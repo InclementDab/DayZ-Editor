@@ -26,14 +26,11 @@ class EditorFileDialog: EditorDialog
 	protected string m_StartDirectory;
 	protected TextListboxWidget m_FileHostListbox;
 	
-	void EditorFileDialog(EditorHudController controller = null)
+	
+	override void Init()
 	{
-		EditorLog.Trace("EditorFileDialog");
-		
-		
-		Widget content = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorFileDialog.layout", null);
-		AddContent(content);
-		
+		EditorLog.Trace("EditorFileDialog::Init");
+		AddContent("DayZEditor/gui/Layouts/dialogs/EditorFileDialog.layout");
 		m_FileHostListbox = TextListboxWidget.Cast(m_LayoutRoot.FindAnyWidget("FolderHostListBox"));
 	}
 	
@@ -120,9 +117,9 @@ class EditorFileDialog: EditorDialog
 class EditorFileOpenDialog: EditorFileDialog
 {
 	
-	void EditorFileOpenDialog(EditorHudController controller = null)
+	override void Init()
 	{
-		EditorLog.Trace("EditorFileOpenDialog");
+		EditorLog.Trace("EditorFileOpenDialog::Init");
 		
 		AddButton("Open", "OpenCallback");
 		AddButton("Cancel", "Close");
@@ -172,7 +169,7 @@ class EditorFileOpenDialog: EditorFileDialog
 class EditorFileImportDialog: EditorFileDialog
 {
 	
-	void EditorFileImportDialog(EditorHudController controller = null)
+	override void Init()
 	{
 		EditorLog.Trace("EditorFileImportDialog");
 		
@@ -185,6 +182,7 @@ class EditorFileImportDialog: EditorFileDialog
 		LoadFileDirectory(m_StartDirectory, filter);
 		
 	}
+	
 	
 	
 	void ~EditorFileImportDialog() {
@@ -229,9 +227,9 @@ class EditorFileSaveDialog: EditorFileDialog
 	
 	protected EditorWorldData m_EditorWorldData;
 
-	void EditorFileSaveDialog(EditorHudController controller = null)
+	override void Init()
 	{
-		EditorLog.Trace("EditorFileSaveDialog");
+		EditorLog.Trace("EditorFileSaveDialog::Init");
 		AddButton("Save", "SaveCallback");
 		AddButton("Cancel", "Close");
 	}
@@ -343,9 +341,9 @@ class EditorFileExportDialog: EditorFileDialog
 	private ref array<ref ExportListItemData> m_ExportModes = new array<ref ExportListItemData>();
 	private ref ExportListItemData m_SelectedMode;
 	
-	void EditorFileExportDialog(EditorHudController controller = null)
+	override void Init()
 	{
-		EditorLog.Trace("EditorFileExportDialog");
+		EditorLog.Trace("EditorFileExportDialog::Init");
 		
 		Widget box_prefab = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionEditText.layout", ButtonGrid);
 		m_FileNameBox = EditBoxWidget.Cast(box_prefab.FindAnyWidget("FileNameEditBox"));
@@ -384,7 +382,6 @@ class EditorFileExportDialog: EditorFileDialog
 		
 		string filter = "*";
 		LoadFileDirectory(m_StartDirectory, filter);
-		
 	}
 	
 	

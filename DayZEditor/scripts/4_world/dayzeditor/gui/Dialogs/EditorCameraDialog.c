@@ -113,9 +113,9 @@ class EditorCameraDialog: EditorDialog
 	protected EditorCamera m_EditorCamera;
 	protected ref EditorCameraDialogController m_EditorCameraDialogController;
 	
-	void EditorCameraDialog(EditorHudController controller = null)
+	override void Init()
 	{
-		EditorLog.Trace("EditorCameraDialog");
+		EditorLog.Trace("EditorCameraDialog::Init");
 		
 		SetTitle("Camera Controller");
 		AddButton("Default", "ResetDefaultExecute");

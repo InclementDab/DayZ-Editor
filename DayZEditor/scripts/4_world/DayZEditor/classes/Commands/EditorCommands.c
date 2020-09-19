@@ -85,7 +85,7 @@ class EditorSaveCommand: EditorCommand
 class EditorSaveAsCommand: EditorCommand
 {
 	override void Call() {
-		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(GetEditor().GetEditorHud().GetController());
+		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(null, GetEditor().GetEditorHud().GetController());
 		save_dialog.SetWorldData(new EditorWorldData(GetEditor()));
 		string file = save_dialog.ShowFileDialog();
 	}
@@ -339,7 +339,7 @@ class EditorPreferencesCommand: EditorCommand
 class EditorEnvironmentControlCommand: EditorCommand
 {
 	override void Call() {
-		EditorEnvironmentDialog environment_dialog = new EditorEnvironmentDialog(m_EditorHudController);
+		EditorEnvironmentDialog environment_dialog = new EditorEnvironmentDialog(null, m_EditorHudController);
 		environment_dialog.Show();
 	}
 	
@@ -359,7 +359,7 @@ class EditorEnvironmentControlCommand: EditorCommand
 class EditorCameraControlsCommand: EditorCommand
 {
 	override void Call() {
-		EditorCameraDialog cam_dialog(m_EditorHudController);
+		EditorCameraDialog cam_dialog(null, m_EditorHudController);
 		cam_dialog.SetEditorCamera(m_Editor.GetCamera());
 		cam_dialog.Show();
 	}
@@ -406,7 +406,7 @@ class EditorLootEditorCommand: EditorCommand
 class EditorObjectPropertiesCommand: EditorCommand
 {
 	override void Call() {
-		EditorObjectPropertiesDialog properties_dialog(m_EditorHudController);
+		EditorObjectPropertiesDialog properties_dialog(null, m_EditorHudController);
 		properties_dialog.SetEditorObject(m_Editor.GetSelectedObjects().GetElement(0));
 		properties_dialog.Show();
 	}

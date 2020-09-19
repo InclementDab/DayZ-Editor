@@ -914,7 +914,7 @@ FrameWidgetClass EditorMainFrame {
    }
   }
   WrapSpacerWidgetClass ToolbarFrame {
-   clipchildren 1
+   clipchildren 0
    ignorepointer 1
    position 0 0
    size 1 0.06
@@ -987,6 +987,7 @@ FrameWidgetClass EditorMainFrame {
          font "gui/fonts/FiraCodeBold16"
          {
           TextWidgetClass MenuBarFileLabel {
+           clipchildren 0
            ignorepointer 1
            position 0 0
            size 1 1
@@ -1009,6 +1010,7 @@ FrameWidgetClass EditorMainFrame {
          }
         }
         ButtonWidgetClass MenuBarEdit {
+         clipchildren 0
          color 0.749 0.3725 0.3725 1
          position 0 0
          size 0.045 1
@@ -1045,6 +1047,7 @@ FrameWidgetClass EditorMainFrame {
         }
         ButtonWidgetClass MenuBarView {
          visible 1
+         clipchildren 0
          color 0.749 0.3725 0.3725 1
          position 0 0
          size 0.045 1
