@@ -4,13 +4,13 @@ class EditorTooltipController: Controller
 	string ContentTitle = "Testing";
 	string ContentText;
 	
-	//Object ContentItemData;
+	Object ContentItemData;
 	
 	void ~EditorTooltipController()
 	{
 		DumpStack();
 		EditorLog.Trace("~EditorTooltipController");
-		//GetGame().ObjectDelete(ContentItemData);
+		GetGame().ObjectDelete(ContentItemData);
 	}
 }
 
@@ -35,8 +35,8 @@ class EditorTooltip: MVCLayout
 	
 	void SetContent(Object item)
 	{
-		//m_EditorTooltipController.ContentItemData = item;
-		//m_EditorTooltipController.NotifyPropertyChanged("ContentItemData");
+		GetEditorTooltipController().ContentItemData = item;
+		GetEditorTooltipController().NotifyPropertyChanged("ContentItemData");
 	}
 		
 	override typename GetControllerType() {
