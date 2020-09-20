@@ -293,7 +293,7 @@ FrameWidgetClass EditorMainFrame {
    {
     PanelWidgetClass LeftbarFrame {
      visible 1
-     clipchildren 1
+     clipchildren 0
      ignorepointer 1
      keepsafezone 1
      color 0.302 0.302 0.302 0.7843
@@ -308,6 +308,7 @@ FrameWidgetClass EditorMainFrame {
      {
       WrapSpacerWidgetClass LeftbarFrameWrapSpacer {
        visible 1
+       clipchildren 0
        ignorepointer 1
        position 0 0
        size 1 1
@@ -574,6 +575,7 @@ FrameWidgetClass EditorMainFrame {
         PanelWidgetClass LeftbarPanelHost {
          visible 1
          disabled 0
+         clipchildren 0
          ignorepointer 0
          color 0.302 0.302 0.302 0.3059
          position 0 0.06
@@ -586,6 +588,7 @@ FrameWidgetClass EditorMainFrame {
          style rover_sim_colorable
          {
           ScrollWidgetClass LeftbarScroll {
+           clipchildren 0
            ignorepointer 0
            keepsafezone 1
            color 0.1176 0.1176 0.1176 1
@@ -606,7 +609,7 @@ FrameWidgetClass EditorMainFrame {
             WrapSpacerWidgetClass LeftbarSpacer {
              visible 1
              disabled 0
-             clipchildren 1
+             clipchildren 0
              ignorepointer 0
              keepsafezone 1
              position 0 0

@@ -20,10 +20,18 @@ class EditorUIManager
 }
 
 
+class ITest: IEntity
+{
+	void ITest(IEntitySource src, IEntity parent)
+	{	
+		
+	}
+}
 
 
 class EditorHudController: Controller
 {
+	
 	// Data Binding
 	string DebugText1;
 	string DebugText2;
@@ -117,12 +125,11 @@ class EditorHudController: Controller
 		m_RadioButtonGroup.OnRadioButtonActivate.Insert(OnRadioButtonActivate);
 		m_RadioButtonGroup.OnRadioButtonDeactivate.Insert(OnRadioButtonDeactivate);
 
+
 		
 		// Reload Placeables
 		EditorLog.Info("Loaded %1 Placeable Objects", ReloadPlaceableObjects().ToString());
-		
-						
-#ifndef COMPONENT_SYSTEM
+#ifndef COMPONENT_SYSTEM		
 		// Load Brushes
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
 #endif
@@ -145,7 +152,7 @@ class EditorHudController: Controller
 	
 	void InsertMapMarker(EditorMarker map_marker)
 	{
-		Print("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
+		EditorLog.Trace("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
 		GetEditor().GetEditorHud().GetMapWidget().AddChild(map_marker.GetLayoutRoot());
 	}
 	
@@ -159,25 +166,25 @@ class EditorHudController: Controller
 		
 		foreach (string config_path: paths) {
 			
-			for (int j = 0; j < GetGame().ConfigGetChildrenCount(config_path); j++) {
+			for (int j = 0; j < GetWorkbenchGame().ConfigGetChildrenCount(config_path); j++) {
 				string class_name;
-		        GetGame().ConfigGetChildName(config_path, j, class_name);
+		        GetWorkbenchGame().ConfigGetChildName(config_path, j, class_name);
 				TStringArray full_path = new TStringArray();
-				GetGame().ConfigGetFullPath(config_path + " " + class_name, full_path);
+				GetWorkbenchGame().ConfigGetFullPath(config_path + " " + class_name, full_path);
 				
 				if (full_path.Find("HouseNoDestruct") != -1) {
 					EditorPlaceableObjectData data(class_name, config_path);
 					EditorPlaceableListItem item();
 					item.SetPlaceableObjectData(data);
-					LeftbarSpacerData.Insert(item);
+					LeftbarSpacerData.Insert(item);		
 					
-#ifdef COMPONENT_SYSTEM
-					if (j > 50) return j;
-#endif
-				
+					
+							
 				} else {
-					EditorLog.Trace("Not including Base " + full_path.ToString());
+					//EditorLog.Trace("Not including Base " + full_path.ToString()); find what isnt loading here
 				}
+				
+				if (j > 500) return 500;
 		    }
 		}
 		return j;
@@ -242,6 +249,7 @@ class EditorHudController: Controller
 		}
 	}	
 	
+	
 	void LeftbarHideExecute(ButtonCommandArgs args) 
 	{
 		LeftbarFrame.Show(!args.GetButtonState());
@@ -291,17 +299,17 @@ class EditorHudController: Controller
 			}
 		}
 	}
-
+	
 	void MenuBarExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudController::MenuBarExecute");
-		
 		if (!EditorUIManager.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
 			EditorUIManager.CurrentMenu = CreateToolbarMenu(args.GetButtonWidget());
 		} else {
 			delete EditorUIManager.CurrentMenu;
 		}
 	}
+
 	
 	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
 	{

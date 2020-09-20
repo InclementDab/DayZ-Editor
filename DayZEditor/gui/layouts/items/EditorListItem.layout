@@ -17,6 +17,7 @@ WrapSpacerWidgetClass EditorListItem {
  content_halign right
  {
   FrameWidgetClass EditorListItemButtonFrame {
+   clipchildren 0
    ignorepointer 1
    position 0 0
    size 290 1

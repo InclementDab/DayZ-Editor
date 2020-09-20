@@ -10,7 +10,17 @@ GameProjectClass {
 					Name "Game Root"
 					Directory "P:"
 				}
+				
+				FileSystemPathClass {
+					Name "Packed Editor"
+					Directory "P:/Mods/@DayZ-Editor/Addons"
+				}
 			}
+			
+
+
+			
+			
 			imageSets {
 				"gui/imagesets/ccgui_enforce.imageset"
 				"gui/imagesets/rover_imageset.imageset"

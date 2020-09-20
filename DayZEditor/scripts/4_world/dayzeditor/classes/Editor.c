@@ -7,9 +7,28 @@
 //__NULL_FUNCT
 
 
+/*
+
+
+
+<rootclass name="DefaultWeapon" /> <!-- weapons -->
+<rootclass name="DefaultMagazine" /> <!-- magazines -->
+<rootclass name="Inventory_Base" /> <!-- inventory items -->
+<rootclass name="HouseNoDestruct" reportMemoryLOD="no" /> <!-- houses, wrecks -->
+<rootclass name="SurvivorBase" act="character" reportMemoryLOD="no" /> <!-- player characters -->
+<rootclass name="DZ_LightAI" act="character" reportMemoryLOD="no" /> <!-- infected, animals -->
+<rootclass name="CarScript" act="car" reportMemoryLOD="no" /> <!-- cars (sedan, hatchback, transitBus, V3S, ...) -->
+
+
+
+
+
+*/
+
 private ref Editor m_EditorInstance;
-Editor GetEditor() 
+Editor GetEditor() {
 	return m_EditorInstance;
+}
 
 
 class Editor

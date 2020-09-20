@@ -38,7 +38,28 @@ class EditorPlacedListItem: EditorListItem
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					GetEditor().ToggleSelection(GetData());
 				} else if (KeyState(KeyCode.KC_LSHIFT)) {
-					GetEditor().SelectObject(GetData());
+					
+					
+					bool started_select;
+					
+					for (int i = 0; i < ParentList.Count(); i++) {
+						EditorListItem list_item = ParentList[i];			
+						if (started_select) {
+							
+							if (list_item.IsSelected() || list_item == this) {
+								break;
+							}
+							
+							GetEditor().SelectObject(EditorPlacedListItem.Cast(list_item).GetData());
+							
+						} else if (!started_select && (list_item.IsSelected() || list_item == this)) {
+							started_select = true;
+							continue;
+						}
+						
+						
+					}
+					
 				} else {
 					GetEditor().ClearSelection();
 					GetEditor().SelectObject(GetData());

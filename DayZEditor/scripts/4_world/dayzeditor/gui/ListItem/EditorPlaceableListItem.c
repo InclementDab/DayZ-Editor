@@ -16,9 +16,10 @@ class EditorPlaceableListItem: EditorListItem
 		GetListItemController().ListItemIcon = GetIconFromMod(GetModFromObject(m_EditorPlaceableObjectData.Type));
 		GetListItemController().NotifyPropertyChanged("ListItemIcon");
 		
-		
+#ifndef COMPONENT_SYSTEM
 		EditorEvents.OnStartPlacing.Insert(StartPlacing);
 		EditorEvents.OnStopPlacing.Insert(StopPlacing);
+#endif
 	}
 	
 	void StartPlacing(Class context, EditorPlaceableObjectData type)
@@ -49,13 +50,12 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorTooltip tooltip = new EditorTooltip();			
+		EditorTooltip tooltip = new EditorTooltip(w);			
 		tooltip.SetTitle(m_EditorPlaceableObjectData.Type);
-		float pos_x, pos_y, size_x, size_y;
-		m_LayoutRoot.GetScreenPos(pos_x, pos_y);
+		float size_x, size_y;
 		m_LayoutRoot.GetScreenSize(size_x, size_y);
-		tooltip.GetLayoutRoot().SetPos(pos_x + size_x, pos_y);
-		tooltip.SetContent(GetGame().CreateObjectEx(m_EditorPlaceableObjectData.Type, vector.Zero, ECE_NONE));
+		tooltip.GetLayoutRoot().SetPos(size_x, 0);
+		tooltip.SetContent(GetWorkbenchGame().CreateObjectEx(m_EditorPlaceableObjectData.Type, vector.Zero, ECE_NONE));
 		
 		EditorUIManager.CurrentTooltip = tooltip;
 		
