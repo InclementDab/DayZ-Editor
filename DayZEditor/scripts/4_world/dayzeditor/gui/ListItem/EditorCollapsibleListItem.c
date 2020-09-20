@@ -24,6 +24,17 @@ class EditorCollapsibleListItem: EditorListItem
 		
 		GetListItemController().ChildListItems.Insert(item);
 		item.SetNestIndex(m_NestIndex + 1);
+		/*
+		float width, height;
+		for (int i = 0; i < GetListItemController().ChildListItems.Count(); i++) {
+			float w, h;
+			GetListItemController().ChildListItems[i].GetLayoutRoot().GetScreenSize(w, h);
+			height += h;
+		}
+		
+		width = w;
+		Print(height);
+		m_LayoutRoot.SetSize(width, height);*/
 	}
 	
 /*

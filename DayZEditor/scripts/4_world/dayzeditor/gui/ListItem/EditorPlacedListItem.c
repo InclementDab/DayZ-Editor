@@ -70,7 +70,6 @@ class EditorPlacedListItem: EditorListItem
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
-		Select();
 		
 		return true;
 	}
@@ -92,7 +91,6 @@ class EditorPlacedListItem: EditorListItem
 			}
 			
 			case EditorCollapsibleListItem: {
-				
 				EditorCollapsibleListItem.Cast(target_item).AddListItem(this);
 				break;
 			}			

@@ -22,6 +22,7 @@ class EditorListItem: MVCLayout
 	static int COLOR_ON_DESELECTED = ARGB(140,5,5,5);
 	static int COLOR_ON_HOVER = COLOR_SALMON;
 	
+	protected Widget EditorListItemButtonFrame;
 	protected Widget EditorListItemContent;
 	protected WrapSpacerWidget EditorListItemChildren;
 	protected ButtonWidget EditorListItemCollapse;
@@ -45,8 +46,8 @@ class EditorListItem: MVCLayout
 		EditorLog.Trace("EditorListItem::SetNestIndex " + index);
 		m_NestIndex = index;
 		float x, y;
-		m_LayoutRoot.GetSize(x, y);
-		m_LayoutRoot.SetSize(290 - 15 * m_NestIndex, y);
+		EditorListItemButtonFrame.GetSize(x, y);
+		EditorListItemButtonFrame.SetSize(290 - 15 * m_NestIndex, y);
 	}
 	
 	int GetNestIndex() {
