@@ -921,6 +921,7 @@ FrameWidgetClass EditorMainFrame {
    vexactpos 1
    hexactsize 1
    vexactsize 0
+   scriptclass "EditorHudToolbarController"
    {
     PanelWidgetClass ToolbarMenubar {
      visible 1
@@ -1555,6 +1556,10 @@ FrameWidgetClass EditorMainFrame {
        }
       }
      }
+    }
+   }
+   {
+    ScriptParamsClass {
     }
    }
   }

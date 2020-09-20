@@ -3,6 +3,7 @@
 class EditorHud: Hud
 {	
 	protected Widget 			m_LayoutRoot;
+	protected Widget			ToolbarFrame;
 	
 	// Misc get ridda this shit too
 	protected Widget 			m_EditorMapContainer;
@@ -14,7 +15,7 @@ class EditorHud: Hud
 	ref EditorHudController GetController() { 
 		return m_EditorHudController;
 	}
-	
+		
 	void EditorHud() {
 		EditorLog.Info("EditorHud");
 	}

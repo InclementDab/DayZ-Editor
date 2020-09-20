@@ -36,7 +36,7 @@ class EditorTooltip: MVCLayout
 	
 	void EditorToolTip(Widget parent = null)
 	{
-		GetEditorHudController().CurrentTooltip = this;
+		EditorUIManager.CurrentTooltip = this;
 	}
 	
 	void SetTitle(string title)

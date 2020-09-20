@@ -12,8 +12,7 @@ class EditorMenu: EditorMVCLayout
 		EditorLog.Trace("EditorMenu");
 		m_MenuItems = new EditorMenuItemList();
 		
-		if (m_EditorHudController)
-			m_EditorHudController.CurrentMenu = this;
+		EditorUIManager.CurrentMenu = this;
 	}
 		
 	void ~EditorMenu() 

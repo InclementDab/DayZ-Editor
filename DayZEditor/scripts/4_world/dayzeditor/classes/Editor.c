@@ -253,8 +253,8 @@ class Editor
 		Widget target = GetWidgetUnderCursor();
 		if (!target) {
 			SetFocus(null);
-			if (GetEditor().GetEditorHud().GetController().CurrentMenu) {
-				delete GetEditor().GetEditorHud().GetController().CurrentMenu;
+			if (EditorUIManager.CurrentMenu) {
+				delete EditorUIManager.CurrentMenu;
 			}
 		}
 		
@@ -343,12 +343,12 @@ class Editor
 				if (IsLootEditActive()) {
 					FinishEditLootSpawns();
 					return true;
-				} else if (m_EditorHudController.CurrentDialog) {
-					delete m_EditorHudController.CurrentDialog;
+				} else if (EditorUIManager.CurrentDialog) {
+					delete EditorUIManager.CurrentDialog;
 					return true;
 					
-				} else if (m_EditorHudController.CurrentMenu) {
-					delete m_EditorHudController.CurrentMenu;
+				} else if (EditorUIManager.CurrentMenu) {
+					delete EditorUIManager.CurrentMenu;
 					return true;
 					
 				// jank

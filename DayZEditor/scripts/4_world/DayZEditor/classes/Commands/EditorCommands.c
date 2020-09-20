@@ -16,8 +16,8 @@ class EditorCommand: RelayCommand
 	{
 		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(args);
-		if (GetEditor().GetEditorHud().GetController().CurrentMenu)
-			delete GetEditor().GetEditorHud().GetController().CurrentMenu;
+		if (EditorUIManager.CurrentMenu)
+			delete EditorUIManager.CurrentMenu;
 		
 		Call();
 	}

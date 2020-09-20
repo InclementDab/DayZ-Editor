@@ -1,8 +1,26 @@
 
-EditorHudController _EditorHudController;
-EditorHudController GetEditorHudController() {
-	return _EditorHudController;
+class EditorUIManager
+{
+	// Modal Menu Control
+	static ref EditorMenu CurrentMenu;
+	
+	// ToolTip Control
+	static ref EditorTooltip CurrentTooltip;
+		
+	// Dialog Control
+	static ref EditorDialog CurrentDialog;
+	
+	static 	bool IsDialogCommand(Widget w) {
+		return (CurrentDialog && CurrentDialog.GetLayoutRoot() && CurrentDialog.GetLayoutRoot().FindAnyWidget(w.GetName()) );
+	}
+	
+	static ref EditorHudController CurrentEditorHudController;
+	
+	static ref EditorHudToolbarController CurrentEditorHudToolbarController;
 }
+
+
+
 
 class EditorHudController: Controller
 {
@@ -34,8 +52,8 @@ class EditorHudController: Controller
 	
 	ref ObservableCollection<ref MVCLayout> LeftbarSpacerData;
 	ref ObservableCollection<ref MVCLayout> RightbarSpacerData;
-	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 	ref ObservableCollection<string> DebugActionStackListbox;
+	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 	
 	// View Properties
 	protected Widget LeftbarFrame;
@@ -53,6 +71,9 @@ class EditorHudController: Controller
 	protected GridSpacerWidget InfobarObjPosFrame;
 	
 	CanvasWidget EditorCanvas;
+		
+	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
+	protected RadioButtonGroup m_RadioButtonGroup;
 	
 	protected ButtonWidget MenuBarFile;
 	protected ButtonWidget MenuBarEdit;
@@ -61,13 +82,11 @@ class EditorHudController: Controller
 	protected Widget BrushRadiusFrame;
 	protected Widget BrushDensityFrame;
 	
-	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
-	protected RadioButtonGroup m_RadioButtonGroup;
 	
 	void EditorHudController() 
 	{
 		EditorLog.Trace("EditorHudController");
-		_EditorHudController = this;
+		EditorUIManager.CurrentEditorHudController = this;
 		
 #ifndef COMPONENT_SYSTEM
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
@@ -91,8 +110,8 @@ class EditorHudController: Controller
 		
 		LeftbarSpacerData 			= new ObservableCollection<ref MVCLayout>("LeftbarSpacerData", this);
 		RightbarSpacerData 			= new ObservableCollection<ref MVCLayout>("RightbarSpacerData", this);
-		BrushTypeBoxData 			= new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
+		BrushTypeBoxData 			= new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 		
 		LeftbarPanelSelectorWrapper.GetScript(m_RadioButtonGroup);
 		m_RadioButtonGroup.OnRadioButtonActivate.Insert(OnRadioButtonActivate);
@@ -102,18 +121,18 @@ class EditorHudController: Controller
 		// Reload Placeables
 		EditorLog.Info("Loaded %1 Placeable Objects", ReloadPlaceableObjects().ToString());
 		
+						
 #ifndef COMPONENT_SYSTEM
 		// Load Brushes
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
 #endif
-		
+
 	}
-	
 		
 	// Brush Management
 	void ReloadBrushes(string filename)
 	{
-		EditorLog.Trace("EditorHudController::ReloadBrushes");
+		EditorLog.Trace("EditorHudToolbarController::ReloadBrushes");
 		XMLEditorBrushes xml_brushes(BrushTypeBoxData);
 		
 		if (!FileExist(filename)) {
@@ -123,7 +142,6 @@ class EditorHudController: Controller
 	
 		GetXMLApi().Read(filename, xml_brushes);
 	}
-	
 	
 	void InsertMapMarker(EditorMarker map_marker)
 	{
@@ -165,28 +183,24 @@ class EditorHudController: Controller
 		return j;
 	}
 	
-	
-	
-	// Modal Menu Control
-	ref EditorMenu CurrentMenu;
-	
-	// ToolTip Control
-	ref EditorTooltip CurrentTooltip;
-		
-	// Dialog Control
-	ref EditorDialog CurrentDialog;
-	
-	bool IsDialogCommand(Widget w) {
-		return (CurrentDialog && CurrentDialog.GetLayoutRoot() && CurrentDialog.GetLayoutRoot().FindAnyWidget(w.GetName()) );
-	}
-	
 
 	override void PropertyChanged(string property_name)
 	{
 		EditorLog.Trace("EditorHudController::PropertyChanged: " + property_name);
 		
 		switch (property_name) {
-		
+					
+			case "SearchBarData": {
+				
+				for (int j = 0; j < LeftbarSpacerData.Count(); j++) {
+					EditorPlaceableListItem placeable_item = LeftbarSpacerData.Get(j);
+					placeable_item.GetLayoutRoot().Show(placeable_item.GetData().FilterType(SearchBarData));
+				}
+				
+				LeftbarScroll.HScrollToPos(0);
+				break;
+			}			
+			
 			case "BrushToggleButtonState":
 			case "BrushTypeSelection": {
 				BrushRadiusFrame.Show(BrushToggleButtonState);
@@ -211,23 +225,13 @@ class EditorHudController: Controller
 				EditorBrush.SetDensity(BrushDensity);
 				break;
 			}
-			
-			case "SearchBarData": {
-				
-				for (int j = 0; j < LeftbarSpacerData.Count(); j++) {
-					EditorPlaceableListItem placeable_item = LeftbarSpacerData.Get(j);
-					placeable_item.GetLayoutRoot().Show(placeable_item.GetData().FilterType(SearchBarData));
-				}
-				
-				LeftbarScroll.HScrollToPos(0);
-				break;
-			}			
 		}
 	}
 	
+		
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{
-		EditorLog.Trace("EditorHudController::CollectionChanged: " + collection_name);
+		EditorLog.Trace("EditorHudToolbarController::CollectionChanged: " + collection_name);
 		switch (collection_name) {
 			
 			case "BrushTypeBoxData": {
@@ -236,15 +240,8 @@ class EditorHudController: Controller
 				break;
 			}
 		}
-	}
+	}	
 	
-	void BrushToggleButtonExecute(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::BrushToggleButtonExecute");
-		bool button_state = args.GetButtonState();
-		args.GetButtonWidget().FindAnyWidget("BrushToggleButtonText").SetPos(button_state * 1, button_state * 1);
-	}
-		
 	void LeftbarHideExecute(ButtonCommandArgs args) 
 	{
 		LeftbarFrame.Show(!args.GetButtonState());
@@ -273,16 +270,36 @@ class EditorHudController: Controller
 		EditorCollapsibleListItem category();
 		RightbarSpacerData.Insert(category);
 	}
-
 	
+	void BrushToggleButtonExecute(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudController::BrushToggleButtonExecute");
+		
+		switch (args.GetMouseButton()) {
+			
+			case 0: {
+				bool button_state = args.GetButtonState();
+				args.GetButtonWidget().FindAnyWidget("BrushToggleButtonText").SetPos(button_state * 1, button_state * 1);
+				break;
+			}
+			
+			case 1: {
+				EditorBrushDialog brush_dialog();
+				brush_dialog.SetEditorBrushData(BrushTypeBoxData[BrushTypeSelection]);
+				brush_dialog.ShowDialog();
+				break;
+			}
+		}
+	}
+
 	void MenuBarExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudController::MenuBarExecute");
 		
-		if (!CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
+		if (!EditorUIManager.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
 			CreateToolbarMenu(args.GetButtonWidget());
 		} else {
-			delete CurrentMenu;
+			delete EditorUIManager.CurrentMenu;
 		}
 	}
 	
@@ -294,17 +311,17 @@ class EditorHudController: Controller
 		switch (toolbar_button) {
 			
 			case MenuBarFile: {
-				toolbar_menu = new EditorFileMenu(toolbar_button, this);
+				toolbar_menu = new EditorFileMenu(toolbar_button);
 				break;
 			}
 			
 			case MenuBarEdit: {
-				toolbar_menu = new EditorEditMenu(toolbar_button, this);
+				toolbar_menu = new EditorEditMenu(toolbar_button);
 				break;
 			}
 			
 			case MenuBarView: {
-				toolbar_menu = new EditorViewMenu(toolbar_button, this);
+				toolbar_menu = new EditorViewMenu(toolbar_button);
 				break;
 			}
 		}
@@ -314,10 +331,9 @@ class EditorHudController: Controller
 		toolbar_button.GetScreenSize(w, h);
 		toolbar_menu.SetPosition(0, h);
 		
-		CurrentMenu = toolbar_menu;
-		return CurrentMenu;
+		EditorUIManager.CurrentMenu = toolbar_menu;
+		return EditorUIManager.CurrentMenu;
 	}
-
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
@@ -359,116 +375,7 @@ class EditorHudController: Controller
 	}
 
 	
-	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
-	{
-		EditorLog.Trace("EditorHudController::OnMouseWheel");
-		
-		string w_name = w.GetName();
-		float direction = wheel;
-		switch (w_name) {
-			
-			case "pos":
-			case "rot": {
-			
-				StringEvaluater w_eval;
-				EnScript.GetClassVar(this, w_name, 0, w_eval);
-				
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					direction *= 10;
-				} else if (KeyState(KeyCode.KC_LMENU)) {
-					direction /= 10;
-				}
-				
-				EnScript.SetClassVar(this, w_name, 0, (w_eval.Parse() + direction).ToString());
-				NotifyPropertyChanged(w_name);
-				break;
-			}
-			
-			case "BrushRadiusText":
-			case "BrushRadiusSlider": {
-				BrushRadius += direction * 2;
-				BrushRadius = Math.Clamp(BrushRadius, 0, 100);
-				NotifyPropertyChanged("BrushRadius");
-				break;
-			}
-			
-			case "BrushDensityText":
-			case "BrushDensitySlider": {
-				BrushDensity += direction * 0.05;
-				BrushDensity = Math.Clamp(BrushDensity, 0, 1);
-				NotifyPropertyChanged("BrushDensity");
-				break;
-			}			
-		}
-		
-		return false;
-	}
-	
-	
-	
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		//EditorLog.Trace("EditorHudController::OnMouseEnter %1", w.GetName());		
-		
-		if (CurrentDialog && !IsDialogCommand(w)) {
-			return false;
-		}
-		
-		// Widget specific styles
-		switch (w) {
-			case MenuBarFile:
-			case MenuBarEdit:
-			case MenuBarView: {
-				// Allows you to "Mouse between" toolbars at the top smoothly
-				w.SetColor(COLOR_SALMON);
-				if (CurrentMenu && !CurrentMenu.IsInherited(EditorContextMenu)) {
-					CreateToolbarMenu(w);
-				}
-				
-				return true;
-			}
-		}
-		
-		switch (w.GetTypeName()) {
-			
-			case "ButtonWidget": {
-				w.SetColor(COLOR_SALMON);				
-				break;
-			}
-			
-			case "SliderWidget": {
-				w.SetColor(COLOR_SALMON);
-				break;
-			}
-		}
-		
-		return false;
-	}
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		//EditorLog.Trace("EditorHudController::OnMouseLeave %1", w.GetName());
-		
-		switch (w.GetTypeName()) {
-			
-			case "ButtonWidget": {
-				if (!ButtonWidget.Cast(w).GetState())
-					w.SetColor(COLOR_EMPTY);
-				
-				break;
-			}
 
-			case "SliderWidget": {
-				w.SetColor(COLOR_WHITE_A);
-				break;
-			}
-		}
-		
-		return false;
-			
-	}
-	
-	
 
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
@@ -517,21 +424,6 @@ class EditorHudController: Controller
 					}
 				}
 							
-				break;
-			}
-			
-			case 1: {
-				
-				switch (w.GetName()) {
-								
-					case "BrushToggleButton": {
-						EditorBrushDialog brush_dialog(null, this);
-						brush_dialog.SetEditorBrushData(BrushTypeBoxData[BrushTypeSelection]);
-						brush_dialog.ShowDialog();
-						break;
-					}
-				}
-				
 				break;
 			}
 		}

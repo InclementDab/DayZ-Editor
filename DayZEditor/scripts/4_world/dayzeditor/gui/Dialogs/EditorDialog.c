@@ -5,7 +5,7 @@ class EditorDialog: EditorMVCLayout
 	protected GridSpacerWidget ButtonGrid;
 	protected WrapSpacerWidget WindowDragWrapper;
 	
-	void EditorDialog(Widget parent = null, EditorHudController controller = null) {
+	void EditorDialog(Widget parent = null) {
 		m_LayoutRoot.Show(false);
 	}
 	
@@ -62,7 +62,7 @@ class EditorDialog: EditorMVCLayout
 		m_Editor.GetCamera().SetLookEnabled(false);
 		m_EditorHud.ShowCursor();
 		
-		m_EditorHudController.CurrentDialog = this;
+		EditorUIManager.CurrentDialog = this;
 		
 		float du, dv, dx, dy;
 		m_LayoutRoot.GetScreenSize(du, dv);		
