@@ -33,6 +33,21 @@ class EditorPlaceableListItem: EditorListItem
 		Deselect();
 	}
 	
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
+		GetEditor().CreateInHand(GetData());		
+		return true;
+	}
+	
+	
+	override bool OnDrop(Widget w, int x, int y, Widget receiver)
+	{
+		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
+		GetEditor().PlaceObject();		
+		return true;
+	}
+	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		EditorTooltip tooltip = new EditorTooltip();			

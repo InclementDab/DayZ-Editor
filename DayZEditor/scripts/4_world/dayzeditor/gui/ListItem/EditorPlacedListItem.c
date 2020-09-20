@@ -32,18 +32,37 @@ class EditorPlacedListItem: EditorListItem
 
 	override void ListItemExecute(ButtonCommandArgs args)
 	{
-		if (args.GetMouseButton() == 0) {
-			if (KeyState(KeyCode.KC_LCONTROL)) {
-				GetEditor().ToggleSelection(GetData());
-			} else {
-				GetEditor().ClearSelection();
-				GetEditor().SelectObject(GetData());
+		switch (args.GetMouseButton()) {
+			
+			case 0: {
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					GetEditor().ToggleSelection(GetData());
+				} else {
+					GetEditor().ClearSelection();
+					GetEditor().SelectObject(GetData());
+				}
+				break;
+			} 
+			
+			case 1: {
+				EditorContextMenu context_menu = new EditorContextMenu();
+				int x, y;
+				GetMousePos(x, y);
+				context_menu.SetPosition(x, y);
+				break;
 			}
-		} else if (args.GetMouseButton() == 1) {
-			EditorContextMenu context_menu = new EditorContextMenu();
-			int x, y;
-			GetMousePos(x, y);
-			context_menu.SetPosition(x, y);
+		}
+	}
+	
+	override void ListItemVisibleExecute(ButtonCommandArgs args)
+	{
+		switch (args.GetMouseButton()) {
+			
+			case 0: {
+				m_EditorObject.ShowWorldObject(args.GetButtonState());
+				break;
+			}
+			
 		}
 	}
 }

@@ -546,7 +546,8 @@ class EditorHudController: Controller
 			
 			
 			if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {		
-				GetEditor().SelectObject(editor_object);
+				if (!editor_object.IsSelected())
+					GetEditor().SelectObject(editor_object);
 			}
 		}		
 	}

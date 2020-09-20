@@ -8,12 +8,10 @@ class EditorListItem: MVCLayout
 	}
 	
 	static int COLOR_ON_SELECTED = COLOR_BLUE;
-	static int COLOR_ON_DESELECTED = ARGB(140,35,35,35);
+	static int COLOR_ON_DESELECTED = ARGB(140,5,5,5);
 	static int COLOR_ON_HOVER = COLOR_SALMON;
 	
-
 	protected Widget EditorListItemContent;
-	
 	protected WrapSpacerWidget EditorListItemChildren;
 	protected ButtonWidget EditorListItemCollapse;
 	
@@ -43,6 +41,7 @@ class EditorListItem: MVCLayout
 		return m_NestIndex;
 	}
 		
+	
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
@@ -80,8 +79,30 @@ class EditorListItem: MVCLayout
 			
 		}		
 		
-		
 		return super.OnMouseLeave(w, enterW, x, y);
+	}
+	
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorListItemController::OnDrag");
+		Select();
+		return false;
+	}
+	
+	override bool OnDragging(Widget w, int x, int y, Widget reciever)
+	{
+		EditorLog.Trace("EditorListItemController::OnDragging");
+		
+		
+		
+		return false;
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget receiver)
+	{
+		EditorLog.Trace("EditorListItemController::OnDrop");	
+		Deselect();
+		return false;
 	}
 	
 	void ListItemExecute(ButtonCommandArgs args);

@@ -58,6 +58,17 @@ class EditorHudToolbarController: Controller
 			return false;
 		}
 		
+		switch (w.GetName()) {
+			
+			case "UndoButton": {
+				EditorTooltip tooltip = new EditorTooltip(w);
+				tooltip.SetTitle("Undo");
+				EditorUIManager.CurrentTooltip = tooltip;
+				break;
+			}
+			
+		}
+		
 		switch (w.GetTypeName()) {
 			
 			case "ButtonWidget": {
@@ -77,6 +88,10 @@ class EditorHudToolbarController: Controller
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudToolbarController::OnMouseLeave %1", w.GetName());
+		
+		if (EditorUIManager.CurrentTooltip) {
+			delete EditorUIManager.CurrentTooltip;
+		}
 		
 		switch (w.GetTypeName()) {
 			

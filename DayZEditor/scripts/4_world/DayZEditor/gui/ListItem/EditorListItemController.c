@@ -15,7 +15,6 @@ class EditorListItemController: Controller
 		EditorLog.Trace("EditorListItemController");
 	}
 	
-	
 	override void OnWidgetScriptInit(Widget w)
 	{
 		EditorLog.Trace("EditorListItemController::OnWidgetScriptInit");
@@ -23,7 +22,6 @@ class EditorListItemController: Controller
 		
 		ChildListItems = new ObservableCollection<ref EditorListItem>("ChildListItems", this);
 	}
-	
 
 	void ListItemExecute(ButtonCommandArgs args) {
 		m_ListItem.ListItemExecute(args);

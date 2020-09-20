@@ -311,7 +311,15 @@ class EditorObject
 		if (ListItemEnabled()) {
 			m_EditorPlacedListItem.GetLayoutRoot().Show(m_Visible);
 		}
-
+	}
+	
+	void ShowWorldObject(bool show) { 
+		
+		if (show) {
+			m_WorldObject.SetFlags(EntityFlags.VISIBLE, false);
+		} else {
+			m_WorldObject.ClearFlags(EntityFlags.VISIBLE, false);
+		}
 	}
 	
 	

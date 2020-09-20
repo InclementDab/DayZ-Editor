@@ -1,65 +1,48 @@
-WrapSpacerWidgetClass EditorListItem {
+FrameWidgetClass EditorListItem {
  visible 1
  clipchildren 0
- ignorepointer 1
+ ignorepointer 0
+ color 0.0196 0.0196 0.0196 0
  position 0 0
- size 290 0
+ size 290 22
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
- draggable 1
+ draggable 0
  scriptclass ""
- "no focus" 1
- Padding 0
- Margin 0
- "Size To Content H" 1
- "Size To Content V" 1
- content_halign right
  {
-  FrameWidgetClass EditorListItemFrame {
-   visible 1
-   ignorepointer 1
-   size 290 20
-   halign right_ref
+  ButtonWidgetClass EditorListItemButton {
+   color 1 1 1 0
+   position 0 0
+   size 1 1
+   halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 1
-   vexactsize 1
+   hexactsize 0
+   vexactsize 0
    draggable 1
-   scriptclass ""
+   scriptclass "ViewBinding"
+   "no focus" 1
    {
-    WrapSpacerWidgetClass EditorListItemContent {
-     visible 1
-     clipchildren 1
+    PanelWidgetClass EditorListItemContent {
      ignorepointer 1
-     keepsafezone 0
-     color 0.1373 0.1373 0.1373 0.549
+     color 0.0196 0.0196 0.0196 0.549
      size 1 1
      halign center_ref
      valign center_ref
-     hexactpos 0
-     vexactpos 0
+     hexactpos 1
+     vexactpos 1
      hexactsize 0
      vexactsize 0
-     priority 1
-     draggable 1
-     scriptclass ""
-     style Colorable
-     "no focus" 1
-     Padding 0
-     Margin 0
-     "Size To Content H" 1
-     "Size To Content V" 1
-     content_halign center
-     content_valign center
+     style rover_sim_colorable
      {
-      ButtonWidgetClass EditorListItemButton {
+      TextWidgetClass EditorListItemLabel {
        visible 1
+       disabled 0
        clipchildren 0
-       ignorepointer 0
-       color 0 0 0 0
+       ignorepointer 1
        position 0 0
        size 1 1
        halign center_ref
@@ -68,174 +51,113 @@ WrapSpacerWidgetClass EditorListItem {
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       priority 1
-       draggable 1
+       draggable 0
        scriptclass "ViewBinding"
-       style Colorable
-       "no focus" 1
-       switch normal
-       {
-        FrameWidgetClass EditorListItemLabelFrame {
-         visible 1
-         ignorepointer 1
-         position 0 0
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         priority 5
-         draggable 1
-         scriptclass "EditableTextWidget"
-         {
-          TextWidgetClass EditorListItemLabel {
-           visible 1
-           disabled 0
-           clipchildren 0
-           ignorepointer 1
-           position 0 0
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           draggable 1
-           scriptclass "ViewBinding"
-           style Normal
-           text "CATEGORY"
-           font "gui/fonts/metron14"
-           "exact text" 0
-           "size to text h" 1
-           "size to text v" 0
-           "text halign" center
-           "text valign" center
-           {
-            EditBoxWidgetClass EditorListItemTextEditor {
-             visible 0
-             clipchildren 0
-             ignorepointer 1
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             scriptclass ""
-             style Default
-             "limit visible" 0
-             "Use default text" 0
-             "exact text" 1
-             font "gui/fonts/metron14"
-            }
-           }
-           {
-            ScriptParamsClass {
-             Binding_Name "ListItemLabel"
-            }
-           }
-          }
-         }
-         {
-          ScriptParamsClass {
-          }
-         }
-        }
-        ImageWidgetClass EditorListItemIcon {
-         ignorepointer 1
-         color 0.8627 0.8627 0.8627 1
-         position 0.03 0
-         size 18 18
-         halign right_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         mode blend
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         "flip v" 0
-         {
-          ScriptParamsClass {
-           Binding_Name "ListItemIcon"
-          }
-         }
-        }
-        ButtonWidgetClass EditorListItemVisible {
-         ignorepointer 0
-         position 0.03 0
-         size 18 18
-         halign right_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style Empty
-         "no focus" 1
-         {
-          ScriptParamsClass {
-           Relay_Command "ListItemVisibleExecute"
-          }
-         }
-        }
-        ButtonWidgetClass EditorListItemCollapse {
-         visible 0
-         position 0.03 0
-         size 26 26
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style Empty
-         "no focus" 1
-         text "V"
-         font "gui/fonts/metron-bold"
-         switch toggle
-         {
-          ScriptParamsClass {
-           Relay_Command "ListItemCollapseExecute"
-          }
-         }
-        }
-       }
+       style Normal
+       text "CATEGORY"
+       font "gui/fonts/metron14"
+       "exact text" 0
+       "size to text h" 1
+       "size to text v" 0
+       "text halign" center
+       "text valign" center
        {
         ScriptParamsClass {
-         Relay_Command "ListItemExecute"
+         Binding_Name "ListItemLabel"
+        }
+       }
+      }
+      ImageWidgetClass EditorListItemIcon {
+       ignorepointer 1
+       color 0.8627 0.8627 0.8627 1
+       position 0.03 0
+       size 18 18
+       halign right_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       mode blend
+       "src alpha" 1
+       "no wrap" 1
+       stretch 1
+       "flip v" 0
+       {
+        ScriptParamsClass {
+         Binding_Name "ListItemIcon"
+        }
+       }
+      }
+      ButtonWidgetClass EditorListItemVisible {
+       ignorepointer 0
+       position 0.03 0
+       size 18 18
+       halign right_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Empty
+       "no focus" 1
+       {
+        ScriptParamsClass {
+         Relay_Command "ListItemVisibleExecute"
+        }
+       }
+      }
+      ButtonWidgetClass EditorListItemCollapse {
+       visible 0
+       position 0.03 0
+       size 26 26
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Empty
+       "no focus" 1
+       text "V"
+       font "gui/fonts/metron-bold"
+       switch toggle
+       {
+        ScriptParamsClass {
+         Relay_Command "ListItemCollapseExecute"
         }
        }
       }
      }
     }
+    WrapSpacerWidgetClass EditorListItemChildren {
+     visible 1
+     clipchildren 1
+     ignorepointer 1
+     position 0 0
+     size 1 0
+     halign center_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     draggable 0
+     scriptclass ""
+     "no focus" 1
+     Padding 0
+     Margin 0
+     "Size To Content V" 1
+     content_halign right
+    }
    }
-  }
-  WrapSpacerWidgetClass EditorListItemChildren {
-   visible 1
-   clipchildren 1
-   ignorepointer 1
-   position 0 50
-   size 1 0
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   draggable 1
-   scriptclass ""
-   "no focus" 1
-   Padding 0
-   Margin 0
-   "Size To Content V" 1
-   content_halign right
+   {
+    ScriptParamsClass {
+     Relay_Command "ListItemExecute"
+    }
+   }
   }
  }
 }
