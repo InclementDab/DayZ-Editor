@@ -65,4 +65,40 @@ class EditorPlacedListItem: EditorListItem
 			
 		}
 	}
+	
+		
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
+		Select();
+		
+		return true;
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
+	{
+		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
+		RecursiveGetParent(reciever, "EditorListItem");
+		EditorListItem target_item = GetListItemFromWidget(reciever);
+		if (!target_item) {
+			return false;
+		}
+		
+		switch (target_item.Type()) {
+			
+			case EditorPlacedListItem: {
+				
+				break;
+			}
+			
+			case EditorCollapsibleListItem: {
+				
+				EditorCollapsibleListItem.Cast(target_item).AddListItem(this);
+				break;
+			}			
+		}
+		
+		
+		return true;
+	}
 }

@@ -1,4 +1,4 @@
-FrameWidgetClass EditorListItem {
+WrapSpacerWidgetClass EditorListItem {
  visible 1
  clipchildren 0
  ignorepointer 0
@@ -11,8 +11,12 @@ FrameWidgetClass EditorListItem {
  vexactsize 1
  draggable 0
  scriptclass ""
+ Padding 0
+ Margin 0
+ "Size To Content V" 1
  {
   ButtonWidgetClass EditorListItemButton {
+   clipchildren 0
    color 1 1 1 0
    position 0 0
    size 1 1
@@ -134,7 +138,7 @@ FrameWidgetClass EditorListItem {
     }
     WrapSpacerWidgetClass EditorListItemChildren {
      visible 1
-     clipchildren 1
+     clipchildren 0
      ignorepointer 1
      position 0 0
      size 1 0
@@ -145,12 +149,17 @@ FrameWidgetClass EditorListItem {
      hexactsize 0
      vexactsize 0
      draggable 0
-     scriptclass ""
+     scriptclass "ViewBinding"
      "no focus" 1
      Padding 0
      Margin 0
      "Size To Content V" 1
      content_halign right
+     {
+      ScriptParamsClass {
+       Binding_Name "ChildListItems"
+      }
+     }
     }
    }
    {

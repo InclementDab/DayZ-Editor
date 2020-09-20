@@ -50,8 +50,8 @@ class EditorHudController: Controller
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
-	ref ObservableCollection<ref MVCLayout> LeftbarSpacerData;
-	ref ObservableCollection<ref MVCLayout> RightbarSpacerData;
+	ref EditorListItemSet LeftbarSpacerData;
+	ref EditorListItemSet RightbarSpacerData;
 	ref ObservableCollection<string> DebugActionStackListbox;
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 	
@@ -108,8 +108,8 @@ class EditorHudController: Controller
 	{
 		super.OnWidgetScriptInit(w);
 		
-		LeftbarSpacerData 			= new ObservableCollection<ref MVCLayout>("LeftbarSpacerData", this);
-		RightbarSpacerData 			= new ObservableCollection<ref MVCLayout>("RightbarSpacerData", this);
+		LeftbarSpacerData 			= new EditorListItemSet("LeftbarSpacerData", this);
+		RightbarSpacerData 			= new EditorListItemSet("RightbarSpacerData", this);
 		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
 		BrushTypeBoxData 			= new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 		

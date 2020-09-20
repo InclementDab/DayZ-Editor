@@ -1,11 +1,22 @@
 
+class EditorListItemSet: ref ObservableCollection<ref MVCLayout>
+{
+	override int Insert(MVCLayout value)
+	{
+		EditorListItem.Cast(value).ParentList = this;
+		return super.Insert(value);
+	}
+}
+
+
 class EditorListItem: MVCLayout
 {
-	private int m_NestIndex;
+	protected int m_NestIndex;
 	
 	EditorListItemController GetListItemController() {
 		return EditorListItemController.Cast(GetController());
 	}
+	
 	
 	static int COLOR_ON_SELECTED = COLOR_BLUE;
 	static int COLOR_ON_DESELECTED = ARGB(140,5,5,5);
@@ -14,6 +25,8 @@ class EditorListItem: MVCLayout
 	protected Widget EditorListItemContent;
 	protected WrapSpacerWidget EditorListItemChildren;
 	protected ButtonWidget EditorListItemCollapse;
+	
+	EditorListItemSet ParentList;
 	
 	void EditorListItem(Widget parent = null) 
 	{ 
@@ -32,15 +45,13 @@ class EditorListItem: MVCLayout
 		EditorLog.Trace("EditorListItem::SetNestIndex " + index);
 		m_NestIndex = index;
 		float x, y;
-		Widget frame = m_LayoutRoot.FindAnyWidget("EditorListItemFrame");
-		frame.GetSize(x, y);
-		frame.SetSize(290 - 15 * m_NestIndex, y);
+		m_LayoutRoot.GetSize(x, y);
+		m_LayoutRoot.SetSize(290 - 15 * m_NestIndex, y);
 	}
 	
 	int GetNestIndex() {
 		return m_NestIndex;
 	}
-		
 
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
@@ -79,12 +90,7 @@ class EditorListItem: MVCLayout
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
-	override bool OnDragging(Widget w, int x, int y, Widget receiver)
-	{
-		
-		w.SetPos(x - 10, y - 10);
-		return true;
-	}
+
 	
 	void ListItemExecute(ButtonCommandArgs args);
 	void ListItemVisibleExecute(ButtonCommandArgs args);
@@ -115,5 +121,12 @@ class EditorListItem: MVCLayout
 
 	override typename GetControllerType() {
 		return EditorListItemController;
+	}
+	
+	protected EditorListItem GetListItemFromWidget(Widget w)
+	{
+		EditorListItem target_item;
+		w.GetUserData(target_item);
+		return target_item;
 	}
 }

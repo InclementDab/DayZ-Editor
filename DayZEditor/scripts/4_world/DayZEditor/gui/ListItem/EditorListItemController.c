@@ -9,7 +9,7 @@ class EditorListItemController: Controller
 	string ListItemLabel;
 	string ListItemIcon;
 	
-	ref ObservableCollection<ref EditorListItem> ChildListItems;
+	ref EditorListItemSet ChildListItems;
 	
 	void EditorListItemController()	{
 		EditorLog.Trace("EditorListItemController");
@@ -20,7 +20,7 @@ class EditorListItemController: Controller
 		EditorLog.Trace("EditorListItemController::OnWidgetScriptInit");
 		super.OnWidgetScriptInit(w);
 		
-		ChildListItems = new ObservableCollection<ref EditorListItem>("ChildListItems", this);
+		ChildListItems = new EditorListItemSet("ChildListItems", this);
 	}
 
 	void ListItemExecute(ButtonCommandArgs args) {
@@ -34,6 +34,7 @@ class EditorListItemController: Controller
 	void ListItemCollapseExecute(ButtonCommandArgs args) {
 		m_ListItem.ListItemCollapseExecute(args);
 	}
+	
 	/*
 	override void MVCOnDrag(Widget target, int x, int y)
 	{
