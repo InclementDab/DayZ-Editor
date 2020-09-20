@@ -913,463 +913,220 @@ FrameWidgetClass EditorMainFrame {
     }
    }
   }
-  PanelWidgetClass ToolbarMenubar {
-   visible 1
-   clipchildren 0
+  FrameWidgetClass ToolbarFrame {
    ignorepointer 1
-   color 0.0627 0.0627 0.0627 1
-   position 0 0
-   size 1 0.024
+   size 1920 1
    halign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 0
+   hexactsize 1
    vexactsize 0
-   priority 1
-   style rover_sim_colorable
    {
-    WrapSpacerWidgetClass MenuBarWrapper {
+    PanelWidgetClass ToolbarMenubar {
+     visible 1
      clipchildren 0
      ignorepointer 1
+     color 0.0627 0.0627 0.0627 1
      position 0 0
-     size 1 1
+     size 1 0.024
+     halign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
      vexactsize 0
-     style Empty
-     Padding 0
-     Margin 0
-     content_valign center
+     priority 1
+     style rover_sim_colorable
      {
-      ImageWidgetClass ToolbarIcon {
+      WrapSpacerWidgetClass MenuBarWrapper {
+       clipchildren 0
        ignorepointer 1
        position 0 0
-       size 26 26
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       imageTexture "{1A57E6DE48397D04}DayZEditor/gui/images/dayz_editor_icon_black.edds"
-       mode blend
-       "src alpha" 1
-       "no wrap" 1
-       stretch 1
-      }
-      ButtonWidgetClass MenuBarFile {
-       visible 1
-       clipchildren 0
-       color 0.749 0.3725 0.3725 1
-       position 0 0
-       size 0.045 1
-       halign center_ref
-       valign center_ref
+       size 1 1
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       scriptclass "ViewBinding"
-       text_offset 0 0
-       font "gui/fonts/FiraCodeBold16"
+       style Empty
+       Padding 0
+       Margin 0
+       content_valign center
        {
-        TextWidgetClass MenuBarFileLabel {
+        ImageWidgetClass ToolbarIcon {
+         ignorepointer 1
+         position 0 0
+         size 26 26
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         imageTexture "{1A57E6DE48397D04}DayZEditor/gui/images/dayz_editor_icon_black.edds"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+        }
+        ButtonWidgetClass MenuBarFile {
+         visible 1
          clipchildren 0
-         ignorepointer 1
+         color 0.749 0.3725 0.3725 1
          position 0 0
-         size 1 1
-         hexactpos 0
-         vexactpos 0
+         size 0.045 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
          hexactsize 0
          vexactsize 0
-         style Normal
-         text "File"
-         font "gui/fonts/etelkatextpro"
-         "exact text" 0
-         "text halign" center
-         "text valign" center
+         scriptclass "ViewBinding"
+         text_offset 0 0
+         font "gui/fonts/FiraCodeBold16"
+         {
+          TextWidgetClass MenuBarFileLabel {
+           clipchildren 0
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style Normal
+           text "File"
+           font "gui/fonts/etelkatextpro"
+           "exact text" 0
+           "text halign" center
+           "text valign" center
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "MenuBarExecute"
+          }
+         }
         }
-       }
-       {
-        ScriptParamsClass {
-         Relay_Command "MenuBarExecute"
-        }
-       }
-      }
-      ButtonWidgetClass MenuBarEdit {
-       clipchildren 0
-       color 0.749 0.3725 0.3725 1
-       position 0 0
-       size 0.045 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scriptclass "ViewBinding"
-       font "gui/fonts/FiraCodeBold16"
-       {
-        TextWidgetClass MenuBarEditLabel {
-         clipchildren 1
-         ignorepointer 1
+        ButtonWidgetClass MenuBarEdit {
+         clipchildren 0
+         color 0.749 0.3725 0.3725 1
          position 0 0
-         size 1 1
-         hexactpos 0
-         vexactpos 0
+         size 0.045 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
          hexactsize 0
          vexactsize 0
-         style Normal
-         text "Edit"
-         font "gui/fonts/etelkatextpro"
-         "text halign" center
-         "text valign" center
+         scriptclass "ViewBinding"
+         font "gui/fonts/FiraCodeBold16"
+         {
+          TextWidgetClass MenuBarEditLabel {
+           clipchildren 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style Normal
+           text "Edit"
+           font "gui/fonts/etelkatextpro"
+           "text halign" center
+           "text valign" center
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "MenuBarExecute"
+          }
+         }
         }
-       }
-       {
-        ScriptParamsClass {
-         Relay_Command "MenuBarExecute"
-        }
-       }
-      }
-      ButtonWidgetClass MenuBarView {
-       visible 1
-       clipchildren 0
-       color 0.749 0.3725 0.3725 1
-       position 0 0
-       size 0.045 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scriptclass "ViewBinding"
-       font "gui/fonts/FiraCodeBold16"
-       {
-        TextWidgetClass MenuBarViewLabel {
-         ignorepointer 1
+        ButtonWidgetClass MenuBarView {
+         visible 1
+         clipchildren 0
+         color 0.749 0.3725 0.3725 1
          position 0 0
-         size 1 1
-         hexactpos 0
-         vexactpos 0
+         size 0.045 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
          hexactsize 0
          vexactsize 0
-         style Normal
-         text "View"
-         font "gui/fonts/etelkatextpro"
-         "text halign" center
-         "text valign" center
-        }
-       }
-       {
-        ScriptParamsClass {
-         Relay_Command "MenuBarExecute"
+         scriptclass "ViewBinding"
+         font "gui/fonts/FiraCodeBold16"
+         {
+          TextWidgetClass MenuBarViewLabel {
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style Normal
+           text "View"
+           font "gui/fonts/etelkatextpro"
+           "text halign" center
+           "text valign" center
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "MenuBarExecute"
+          }
+         }
         }
        }
       }
      }
     }
-   }
-  }
-  PanelWidgetClass ToolbarButtons {
-   visible 1
-   clipchildren 1
-   ignorepointer 1
-   color 0.302 0.302 0.302 1
-   position 0 0.024
-   size 1 0.036
-   halign center_ref
-   hexactpos 1
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   scaled 0
-   style rover_sim_colorable
-   "next up" ""
-   {
-    WrapSpacerWidgetClass ToolbarWrapper {
+    PanelWidgetClass ToolbarButtons {
      visible 1
+     clipchildren 1
      ignorepointer 1
-     color 0.0118 0.0118 0.0118 1
-     size 1 1
-     valign center_ref
+     color 0.302 0.302 0.302 1
+     position 0 0.024
+     size 1 0.036
+     halign center_ref
      hexactpos 1
-     vexactpos 1
+     vexactpos 0
      hexactsize 0
      vexactsize 0
-     style Outline
-     Padding 1
-     Margin 5
-     content_valign center
+     scaled 0
+     style rover_sim_colorable
+     "next up" ""
      {
-      ButtonWidgetClass UndoButton {
+      WrapSpacerWidgetClass ToolbarWrapper {
        visible 1
-       clipchildren 0
-       size 30 30
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass ""
-       style Colorable
-       "no focus" 0
-       text_offset 0 0
-       switch normal
-       {
-        ImageWidgetClass UndoButton_Icon {
-         ignorepointer 1
-         position 0 0
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         draggable 0
-         image0 "set:dayz_editor_gui image:arrow_round_icon"
-         mode additive
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-        }
-       }
-      }
-      ButtonWidgetClass RedoButton {
-       clipchildren 0
-       ignorepointer 0
-       position 0 0
-       size 30 30
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass ""
-       style Colorable
-       "no focus" 0
-       switch normal
-       {
-        ImageWidgetClass RedoButton_Icon {
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         image0 "set:dayz_editor_gui image:arrow_round_icon"
-         mode additive
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         "flip u" 1
-         filter 1
-         "Transition width" 0
-        }
-       }
-      }
-      PanelWidgetClass Divider2 {
        ignorepointer 1
-       position 0 0
-       size 15 30
-       halign center_ref
+       color 0.0118 0.0118 0.0118 1
+       size 1 1
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
+       style Outline
+       Padding 1
+       Margin 5
+       content_valign center
        {
-        PanelWidgetClass Divider3 {
-         ignorepointer 1
-         position 0 0
-         size 3 26
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         style rover_sim_colorable
-        }
-       }
-      }
-      ButtonWidgetClass MagnetButton {
-       clipchildren 0
-       position 0 0
-       size 30 30
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       style Colorable
-       font "gui/fonts/metron-bold"
-       switch toggle
-       {
-        ImageWidgetClass MagnetButton_Icon {
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         priority 1
-         image0 "set:dayz_editor_gui image:magnet_icon"
-         mode blend
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-        }
-       }
-       {
-        ScriptParamsClass {
-         Binding_Name "MagnetButton"
-         Two_Way_Binding 1
-        }
-       }
-      }
-      ButtonWidgetClass GroundButton {
-       clipchildren 0
-       size 30 30
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       style Colorable
-       font "gui/fonts/metron-bold"
-       switch toggle
-       {
-        ImageWidgetClass GroundButton_Icon {
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         image0 "set:dayz_editor_gui image:grounding_icon"
-         mode blend
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-        }
-       }
-       {
-        ScriptParamsClass {
-         Binding_Name "GroundButton"
-         Two_Way_Binding 1
-        }
-       }
-      }
-      ButtonWidgetClass SnapButton {
-       clipchildren 0
-       size 30 30
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       style Colorable
-       font "gui/fonts/metron-bold"
-       switch toggle
-       {
-        ImageWidgetClass SnapButton_Icon {
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         draggable 0
-         image0 "set:dayz_editor_gui image:snap_icon"
-         mode blend
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         filter 1
-        }
-       }
-       {
-        ScriptParamsClass {
-         Binding_Name "SnapButton"
-         Two_Way_Binding 1
-        }
-       }
-      }
-      PanelWidgetClass Divider0 {
-       ignorepointer 1
-       position 0 0
-       size 15 30
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       {
-        PanelWidgetClass Divider1 {
-         ignorepointer 1
-         position 0 0
-         size 3 26
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         style rover_sim_colorable
-        }
-       }
-      }
-      XComboBoxWidgetClass BrushTypeBox {
-       visible 1
-       clipchildren 1
-       ignorepointer 0
-       position 0 0
-       size 250 30
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       draggable 0
-       scriptclass "ViewBinding"
-       style debugUI
-       "no focus" 1
-       font "gui/fonts/metron28"
-       "text color" 1 1 1 0
-       {
-        ButtonWidgetClass BrushToggleButton {
+        ButtonWidgetClass UndoButton {
          visible 1
-         ignorepointer 0
-         position 0 0
-         size 0.8 1
-         halign center_ref
+         clipchildren 0
+         size 30 30
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         priority 5
-         scriptclass "ViewBinding"
+         hexactsize 1
+         vexactsize 1
+         scriptclass ""
          style Colorable
-         "no focus" 1
-         text " "
-         switch toggle
+         "no focus" 0
+         text_offset 0 0
+         switch normal
          {
-          TextWidgetClass BrushToggleButtonText {
-           visible 1
+          ImageWidgetClass UndoButton_Icon {
            ignorepointer 1
            position 0 0
            size 1 1
@@ -1379,165 +1136,419 @@ FrameWidgetClass EditorMainFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 0
+           draggable 0
+           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           mode additive
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+          }
+         }
+        }
+        ButtonWidgetClass RedoButton {
+         clipchildren 0
+         ignorepointer 0
+         position 0 0
+         size 30 30
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass ""
+         style Colorable
+         "no focus" 0
+         switch normal
+         {
+          ImageWidgetClass RedoButton_Icon {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           mode additive
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           "flip u" 1
+           filter 1
+           "Transition width" 0
+          }
+         }
+        }
+        PanelWidgetClass Divider2 {
+         ignorepointer 1
+         position 0 0
+         size 15 30
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          PanelWidgetClass Divider3 {
+           ignorepointer 1
+           position 0 0
+           size 3 26
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style rover_sim_colorable
+          }
+         }
+        }
+        ButtonWidgetClass MagnetButton {
+         clipchildren 0
+         position 0 0
+         size 30 30
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Colorable
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass MagnetButton_Icon {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           priority 1
+           image0 "set:dayz_editor_gui image:magnet_icon"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "MagnetButton"
+           Two_Way_Binding 1
+          }
+         }
+        }
+        ButtonWidgetClass GroundButton {
+         clipchildren 0
+         size 30 30
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Colorable
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass GroundButton_Icon {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           image0 "set:dayz_editor_gui image:grounding_icon"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "GroundButton"
+           Two_Way_Binding 1
+          }
+         }
+        }
+        ButtonWidgetClass SnapButton {
+         clipchildren 0
+         size 30 30
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Colorable
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass SnapButton_Icon {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           draggable 0
+           image0 "set:dayz_editor_gui image:snap_icon"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           filter 1
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "SnapButton"
+           Two_Way_Binding 1
+          }
+         }
+        }
+        PanelWidgetClass Divider0 {
+         ignorepointer 1
+         position 0 0
+         size 15 30
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          PanelWidgetClass Divider1 {
+           ignorepointer 1
+           position 0 0
+           size 3 26
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style rover_sim_colorable
+          }
+         }
+        }
+        XComboBoxWidgetClass BrushTypeBox {
+         visible 1
+         clipchildren 1
+         ignorepointer 0
+         position 0 0
+         size 250 30
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         draggable 0
+         scriptclass "ViewBinding"
+         style debugUI
+         "no focus" 1
+         font "gui/fonts/metron28"
+         "text color" 1 1 1 0
+         {
+          ButtonWidgetClass BrushToggleButton {
+           visible 1
+           ignorepointer 0
+           position 0 0
+           size 0.8 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           priority 5
            scriptclass "ViewBinding"
-           "text halign" center
-           "text valign" center
+           style Colorable
+           "no focus" 1
+           text " "
+           switch toggle
+           {
+            TextWidgetClass BrushToggleButtonText {
+             visible 1
+             ignorepointer 1
+             position 0 0
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "ViewBinding"
+             "text halign" center
+             "text valign" center
+             {
+              ScriptParamsClass {
+               Binding_Name "BrushToggleButtonText"
+              }
+             }
+            }
+           }
            {
             ScriptParamsClass {
-             Binding_Name "BrushToggleButtonText"
+             Binding_Name "BrushToggleButtonState"
+             Two_Way_Binding 1
+             Relay_Command "BrushToggleButtonExecute"
             }
            }
           }
          }
          {
           ScriptParamsClass {
-           Binding_Name "BrushToggleButtonState"
-           Two_Way_Binding 1
-           Relay_Command "BrushToggleButtonExecute"
+           Binding_Name "BrushTypeBoxData"
+           Selected_Item "BrushTypeSelection"
           }
          }
         }
-       }
-       {
-        ScriptParamsClass {
-         Binding_Name "BrushTypeBoxData"
-         Selected_Item "BrushTypeSelection"
-        }
-       }
-      }
-      FrameWidgetClass BrushRadiusFrame {
-       visible 0
-       clipchildren 0
-       ignorepointer 1
-       size 140 30
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       {
-        PanelWidgetClass BrushRadiusSliderBackground {
-         visible 1
+        FrameWidgetClass BrushRadiusFrame {
+         visible 0
+         clipchildren 0
          ignorepointer 1
-         color 0.1373 0.1373 0.1373 1
-         position 0 0
-         size 0.857 1
-         halign center_ref
+         size 140 30
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         style rover_sim_colorable
-        }
-        SliderWidgetClass BrushRadiusSlider {
-         visible 1
-         color 1 1 1 0.1961
-         size 0.857 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         current 20
+         hexactsize 1
+         vexactsize 1
          {
-          ScriptParamsClass {
-           Binding_Name "BrushRadius"
-           Two_Way_Binding 1
+          PanelWidgetClass BrushRadiusSliderBackground {
+           visible 1
+           ignorepointer 1
+           color 0.1373 0.1373 0.1373 1
+           position 0 0
+           size 0.857 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           style rover_sim_colorable
+          }
+          SliderWidgetClass BrushRadiusSlider {
+           visible 1
+           color 1 1 1 0.1961
+           size 0.857 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           current 20
+           {
+            ScriptParamsClass {
+             Binding_Name "BrushRadius"
+             Two_Way_Binding 1
+            }
+           }
+          }
+          TextWidgetClass BrushRadiusText {
+           visible 1
+           ignorepointer 1
+           size 0.4 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           text "0"
+           font "gui/fonts/metron"
+           "text halign" center
+           "text valign" center
+           {
+            ScriptParamsClass {
+             Binding_Name "BrushRadius"
+            }
+           }
           }
          }
         }
-        TextWidgetClass BrushRadiusText {
-         visible 1
+        FrameWidgetClass BrushDensityFrame {
+         visible 0
          ignorepointer 1
-         size 0.4 1
-         halign center_ref
+         position 0 0
+         size 140 30
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         text "0"
-         font "gui/fonts/metron"
-         "text halign" center
-         "text valign" center
+         hexactsize 1
+         vexactsize 1
          {
-          ScriptParamsClass {
-           Binding_Name "BrushRadius"
+          PanelWidgetClass BrushDensitySliderBackground {
+           visible 1
+           ignorepointer 1
+           color 0.1373 0.1373 0.1373 1
+           position 0 0
+           size 0.857 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           style rover_sim_colorable
           }
-         }
-        }
-       }
-      }
-      FrameWidgetClass BrushDensityFrame {
-       visible 0
-       ignorepointer 1
-       position 0 0
-       size 140 30
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       {
-        PanelWidgetClass BrushDensitySliderBackground {
-         visible 1
-         ignorepointer 1
-         color 0.1373 0.1373 0.1373 1
-         position 0 0
-         size 0.857 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         style rover_sim_colorable
-        }
-        SliderWidgetClass BrushDensitySlider {
-         visible 1
-         color 1 1 1 0.1961
-         position 0 0
-         size 0.857 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         maximum 1
-         step 0.01
-         current 0.25
-         {
-          ScriptParamsClass {
-           Binding_Name "BrushDensity"
-           Two_Way_Binding 1
+          SliderWidgetClass BrushDensitySlider {
+           visible 1
+           color 1 1 1 0.1961
+           position 0 0
+           size 0.857 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           maximum 1
+           step 0.01
+           current 0.25
+           {
+            ScriptParamsClass {
+             Binding_Name "BrushDensity"
+             Two_Way_Binding 1
+            }
+           }
           }
-         }
-        }
-        TextWidgetClass BrushDensityText {
-         visible 1
-         ignorepointer 1
-         position 0 0
-         size 0.4 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         text "0"
-         font "gui/fonts/metron28"
-         "text halign" center
-         "text valign" center
-         {
-          ScriptParamsClass {
-           Binding_Name "BrushDensity"
+          TextWidgetClass BrushDensityText {
+           visible 1
+           ignorepointer 1
+           position 0 0
+           size 0.4 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           text "0"
+           font "gui/fonts/metron28"
+           "text halign" center
+           "text valign" center
+           {
+            ScriptParamsClass {
+             Binding_Name "BrushDensity"
+            }
+           }
           }
          }
         }

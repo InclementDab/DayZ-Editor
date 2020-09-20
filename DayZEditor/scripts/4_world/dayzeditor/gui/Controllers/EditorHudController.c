@@ -432,7 +432,7 @@ class EditorHudController: Controller
 		switch (w.GetTypeName()) {
 			
 			case "ButtonWidget": {
-				//w.SetColor(COLOR_SALMON);				
+				w.SetColor(COLOR_SALMON);				
 				break;
 			}
 			

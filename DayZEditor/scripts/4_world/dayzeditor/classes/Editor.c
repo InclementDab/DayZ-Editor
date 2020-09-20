@@ -461,9 +461,8 @@ class Editor
 		
 		if (!KeyState(KeyCode.KC_LSHIFT)) { 
 			delete m_ObjectInHand;
-		}
-		
-		EditorEvents.StopPlacing(this);
+			EditorEvents.StopPlacing(this);
+		}	
 	}
 	
 	void New()

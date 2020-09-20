@@ -46,7 +46,7 @@ class EditorListItem: MVCLayout
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorLog.Trace("EditorListItemController::OnMouseEnter");
+		//EditorLog.Trace("EditorListItemController::OnMouseEnter");
 		switch (w.GetName()) {
 		
 			case "EditorListItemButton": {
@@ -66,8 +66,7 @@ class EditorListItem: MVCLayout
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		EditorLog.Trace("EditorListItemController::OnMouseLeave");	
-		
+		//EditorLog.Trace("EditorListItemController::OnMouseLeave");	
 		switch (w.GetName()) {
 		
 			case "EditorListItemButton": {
@@ -95,7 +94,6 @@ class EditorListItem: MVCLayout
 		//EditorLog.Trace("EditorListItemController::Select");
 		m_Selected = true;
 		EditorListItemContent.SetColor(COLOR_ON_SELECTED);
-		EditorListItemContent.Update();
 	}
 	
 	void Deselect() 
@@ -103,7 +101,6 @@ class EditorListItem: MVCLayout
 		//EditorLog.Trace("EditorListItemController::Deselect");
 		m_Selected = false;
 		EditorListItemContent.SetColor(COLOR_ON_DESELECTED);
-		EditorListItemContent.Update();
 	}
 	
 	bool IsSelected() {
