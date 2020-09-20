@@ -40,7 +40,6 @@ class EditorPlaceableListItem: EditorListItem
 		return true;
 	}
 	
-	
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrop");

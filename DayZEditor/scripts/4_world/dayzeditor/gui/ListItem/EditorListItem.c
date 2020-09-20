@@ -41,8 +41,7 @@ class EditorListItem: MVCLayout
 		return m_NestIndex;
 	}
 		
-	
-	
+
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		//EditorLog.Trace("EditorListItemController::OnMouseEnter");
@@ -56,7 +55,6 @@ class EditorListItem: MVCLayout
 				}
 				break;
 			}
-			
 		}
 		
 		return super.OnMouseEnter(w, x, y);
@@ -76,33 +74,16 @@ class EditorListItem: MVCLayout
 				}
 				break;
 			}
-			
 		}		
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
-	override bool OnDrag(Widget w, int x, int y)
+	override bool OnDragging(Widget w, int x, int y, Widget receiver)
 	{
-		EditorLog.Trace("EditorListItemController::OnDrag");
-		Select();
-		return false;
-	}
-	
-	override bool OnDragging(Widget w, int x, int y, Widget reciever)
-	{
-		EditorLog.Trace("EditorListItemController::OnDragging");
 		
-		
-		
-		return false;
-	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget receiver)
-	{
-		EditorLog.Trace("EditorListItemController::OnDrop");	
-		Deselect();
-		return false;
+		w.SetPos(x - 10, y - 10);
+		return true;
 	}
 	
 	void ListItemExecute(ButtonCommandArgs args);
