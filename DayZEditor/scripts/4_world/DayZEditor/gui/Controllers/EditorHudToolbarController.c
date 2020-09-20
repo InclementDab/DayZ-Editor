@@ -1,35 +1,9 @@
 class EditorHudToolbarController: Controller
-{
-
-	
-	
-	
+{	
 	void EditorHudToolbarController()
 	{
 		EditorUIManager.CurrentEditorHudToolbarController = this;
 	}
-	
-	override void OnWidgetScriptInit(Widget w)
-	{
-		super.OnWidgetScriptInit(w);
-		
-		
-		
-
-	}
-	
-	
-	
-	
-	override void PropertyChanged(string property_name)
-	{
-		
-		switch (property_name) {
-			
-		}
-	}
-
-	
 	
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{
@@ -84,7 +58,6 @@ class EditorHudToolbarController: Controller
 			return false;
 		}
 		
-
 		switch (w.GetTypeName()) {
 			
 			case "ButtonWidget": {

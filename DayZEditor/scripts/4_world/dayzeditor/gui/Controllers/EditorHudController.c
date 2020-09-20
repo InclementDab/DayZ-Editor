@@ -297,7 +297,7 @@ class EditorHudController: Controller
 		EditorLog.Trace("EditorHudController::MenuBarExecute");
 		
 		if (!EditorUIManager.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
-			CreateToolbarMenu(args.GetButtonWidget());
+			EditorUIManager.CurrentMenu = CreateToolbarMenu(args.GetButtonWidget());
 		} else {
 			delete EditorUIManager.CurrentMenu;
 		}
@@ -330,8 +330,7 @@ class EditorHudController: Controller
 		float w, h;
 		toolbar_button.GetScreenSize(w, h);
 		toolbar_menu.SetPosition(0, h);
-		
-		EditorUIManager.CurrentMenu = toolbar_menu;
+
 		return EditorUIManager.CurrentMenu;
 	}
 	
@@ -375,8 +374,26 @@ class EditorHudController: Controller
 	}
 
 	
-
-
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		//EditorLog.Trace("EditorHudController::OnMouseEnter");
+		
+		switch (w) {
+			
+			case MenuBarFile:
+			case MenuBarEdit:
+			case MenuBarView: {
+				
+				if (EditorUIManager.CurrentMenu) {
+					EditorUIManager.CurrentMenu = CreateToolbarMenu(w);
+				}
+				break;
+			}	
+		}
+		
+		return false;
+	}
+	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseButtonUp");

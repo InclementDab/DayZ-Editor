@@ -2,8 +2,6 @@
 
 
 // make option Q and E go up and down no matter orientation
-
-
 class EditorCamera: Camera
 {
 	static float CAMERA_SPEED = 60;
@@ -195,7 +193,6 @@ class EditorCamera: Camera
 		d[1] = dir[1] * sin;
 		d[0] = dir[0] * sin;
 	}
-
 }
 
 
