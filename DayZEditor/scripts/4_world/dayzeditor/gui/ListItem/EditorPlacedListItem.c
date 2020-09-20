@@ -29,7 +29,7 @@ class EditorPlacedListItem: EditorListItem
 	void EditorObjectDeselected(EditorObject data) {
 		Deselect();
 	}
-
+	
 	override void ListItemExecute(ButtonCommandArgs args)
 	{
 		switch (args.GetMouseButton()) {
@@ -37,6 +37,8 @@ class EditorPlacedListItem: EditorListItem
 			case 0: {
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					GetEditor().ToggleSelection(GetData());
+				} else if (KeyState(KeyCode.KC_LSHIFT)) {
+					GetEditor().SelectObject(GetData());
 				} else {
 					GetEditor().ClearSelection();
 					GetEditor().SelectObject(GetData());

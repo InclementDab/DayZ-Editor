@@ -1,3 +1,8 @@
+
+
+// todo: create EditorObjectGroup and handle this shit in there
+// cause this isnt 100% working
+
 // temp
 static int groupcount = 0;
 class EditorCollapsibleListItem: EditorListItem
@@ -24,17 +29,64 @@ class EditorCollapsibleListItem: EditorListItem
 		
 		GetListItemController().ChildListItems.Insert(item);
 		item.SetNestIndex(m_NestIndex + 1);
-		/*
-		float width, height;
-		for (int i = 0; i < GetListItemController().ChildListItems.Count(); i++) {
-			float w, h;
-			GetListItemController().ChildListItems[i].GetLayoutRoot().GetScreenSize(w, h);
-			height += h;
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
+	{
+		EditorLog.Trace("EditorCollapsibleListItem::OnDrop");
+		RecursiveGetParent(reciever, "EditorListItem");
+		EditorListItem target_item = GetListItemFromWidget(reciever);
+		if (!target_item) {
+			return false;
 		}
 		
-		width = w;
-		Print(height);
-		m_LayoutRoot.SetSize(width, height);*/
+		switch (target_item.Type()) {
+			
+			case EditorPlacedListItem: {
+				
+				break;
+			}
+			
+			case EditorCollapsibleListItem: {
+				EditorCollapsibleListItem.Cast(target_item).AddListItem(this);
+				break;
+			}			
+		}
+		
+		return true;
+	}
+	
+	
+	override void ListItemExecute(ButtonCommandArgs args)
+	{
+		
+		switch (args.GetMouseButton()) {
+			
+			case 0: {
+				
+				for (int i = 0; i < GetListItemController().ChildListItems.Count(); i++) {
+					
+					MVCLayout list_item = GetListItemController().ChildListItems[i];
+					switch (list_item.Type()) {
+						
+						case EditorPlacedListItem: {
+							GetEditor().SelectObject(EditorPlacedListItem.Cast(list_item).GetData());
+							break;
+						}
+						
+						case EditorCollapsibleListItem: {
+							EditorCollapsibleListItem.Cast(list_item).ListItemExecute(args);
+							break;
+						}
+						
+					}
+					
+				}
+				
+				break;
+			}
+			
+		}
 	}
 	
 /*
