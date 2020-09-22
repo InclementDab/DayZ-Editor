@@ -165,7 +165,7 @@ class Editor
 		
 		// Init Hud
 		m_EditorHud = new EditorHud();
-		m_EditorHud.Init(null);
+		//m_EditorHud.Init(null);
 		m_EditorHudController = m_EditorHud.GetEditorHudController();
 		
 		
@@ -493,7 +493,7 @@ class Editor
 	{
 		EditorLog.Trace("Editor::Save");
 		
-		m_EditorHud.GetEditorHudController().CreateNotification("Test");
+		m_EditorHud.CreateNotification("Test");
 		/*
 		FileDialogResult result = EditorFileManager.Save(world_data, file);
 		//m_EditorHud.GetController().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, result), COLOR_GREEN); 
@@ -597,7 +597,7 @@ class Editor
 			delete m_EditorHud;
 		
 		m_EditorHud = new EditorHud();
-		m_EditorHud.Init(null);
+		//m_EditorHud.Init(null);
 		m_EditorHudController = m_EditorHud.GetEditorHudController();
 		return m_EditorHud;
 	}
