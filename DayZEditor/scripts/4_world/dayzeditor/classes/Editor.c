@@ -493,7 +493,7 @@ class Editor
 	{
 		EditorLog.Trace("Editor::Save");
 		
-		m_EditorHudController.NotificationCreate("Test");
+		m_EditorHud.NotificationCreate("Test");
 		/*
 		FileDialogResult result = EditorFileManager.Save(world_data, file);
 		//m_EditorHud.GetController().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, result), COLOR_GREEN); 
