@@ -305,17 +305,17 @@ class EditorHudController: Controller
 		switch (toolbar_button) {
 			
 			case MenuBarFile: {
-				toolbar_menu = new EditorFileMenu(toolbar_button);
+				toolbar_menu = new EditorFileMenu(GetEditor().GetEditorHud());
 				break;
 			}
 			
 			case MenuBarEdit: {
-				toolbar_menu = new EditorEditMenu(toolbar_button);
+				toolbar_menu = new EditorEditMenu(GetEditor().GetEditorHud());
 				break;
 			}
 			
 			case MenuBarView: {
-				toolbar_menu = new EditorViewMenu(toolbar_button);
+				toolbar_menu = new EditorViewMenu(GetEditor().GetEditorHud());
 				break;
 			}
 		}

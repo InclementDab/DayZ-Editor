@@ -69,7 +69,7 @@ class MapSelectDialogController: EditorDialogController
 
 class MapSelectDialog: EditorDialog
 {		
-	void MapSelectDialog(Widget parent = null, ScriptView parent_view = null) 
+	void MapSelectDialog(ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("MapSelectDialog::Init");
 

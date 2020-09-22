@@ -8,7 +8,7 @@ static int groupcount = 0;
 class EditorCollapsibleListItem: EditorListItem
 {
 
-	void EditorCollapsibleListItem(Widget parent = null) 
+	void EditorCollapsibleListItem(ScriptView parent = null) 
 	{ 
 		EditorLog.Trace("EditorCollapsibleListItem");
 		

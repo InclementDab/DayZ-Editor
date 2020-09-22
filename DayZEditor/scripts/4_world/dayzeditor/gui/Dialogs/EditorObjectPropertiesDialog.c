@@ -141,7 +141,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 	
 	protected ref EditorPropertiesPrefabController m_EditorPropertiesController;
 
-	void EditorObjectPropertiesDialog(Widget parent = null, ScriptView parent_view = null) 
+	void EditorObjectPropertiesDialog(ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog");
 		SetTitle("Edit: Object Properties");

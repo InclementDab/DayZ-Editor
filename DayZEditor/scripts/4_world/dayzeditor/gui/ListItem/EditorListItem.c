@@ -29,7 +29,7 @@ class EditorListItem: ScriptView
 	
 	EditorListItemSet ParentList;
 	
-	void EditorListItem(Widget parent = null) 
+	void EditorListItem(ScriptView parent = null) 
 	{ 
 		EditorLog.Trace("EditorListItem");
 		GetListItemController().SetListItem(this);

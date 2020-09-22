@@ -92,7 +92,7 @@ class EditorEnvironmentDialog: EditorDialog
 	protected ref EditorEnvironmentDialogController m_EditorWeatherDialogController;
 	
 	
-	void EditorEnvironmentDialog(Widget parent = null, ScriptView parent_view = null)
+	void EditorEnvironmentDialog(ScriptView parent_view = null)
 	{
 		EditorLog.Trace("EditorEnvironmentDialog");
 		m_EditorWeatherDialogController = EditorEnvironmentDialogController.Cast(m_Controller);

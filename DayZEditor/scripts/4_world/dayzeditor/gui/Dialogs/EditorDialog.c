@@ -5,7 +5,7 @@ class EditorDialog: EditorScriptView
 	protected GridSpacerWidget ButtonGrid;
 	protected WrapSpacerWidget WindowDragWrapper;
 	
-	void EditorDialog(Widget parent = null, ScriptView script_view = null) {
+	void EditorDialog(ScriptView script_view = null) {
 		m_LayoutRoot.Show(false);
 	}
 	

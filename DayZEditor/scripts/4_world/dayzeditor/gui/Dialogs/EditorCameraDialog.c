@@ -113,7 +113,7 @@ class EditorCameraDialog: EditorDialog
 	protected EditorCamera m_EditorCamera;
 	protected ref EditorCameraDialogController m_EditorCameraDialogController;
 	
-	void EditorCameraDialog(Widget parent = null, ScriptView parent_view = null) 
+	void EditorCameraDialog(ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorCameraDialog::Init");
 		

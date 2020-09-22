@@ -7,7 +7,7 @@ class EditorMenu: EditorScriptView
 	protected ref EditorMenuItemList m_MenuItems;
 	protected WrapSpacerWidget EditorMenuContent;
 	
-	void EditorMenu(Widget parent = null, ScriptView parent_view = null) 
+	void EditorMenu(ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorMenu");
 		m_MenuItems = new EditorMenuItemList();
@@ -67,27 +67,28 @@ class EditorMenu: EditorScriptView
 
 class EditorFileMenu: EditorMenu
 {
-	void EditorFileMenu(Widget parent = null, ScriptView parent_view = null) 
+	void EditorFileMenu(ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorFileMenu::Init");
 		
-		AddMenuButton(m_Parent.);
-		AddMenuButton(EditorOpenCommand);
+		AddMenuButton(m_ParentView.GetCommandManager().Get("NewCommand"));
+		AddMenuButton(m_ParentView.GetCommandManager().Get("OpenCommand"));
+		/*AddMenuButton(EditorOpenCommand);
 		AddMenuButton(EditorSaveCommand);
 		AddMenuButton(EditorSaveAsCommand);
 		AddMenuButton(EditorCloseCommand);
 		AddMenuDivider();
-		AddMenuButton(EditorExitCommand);
+		AddMenuButton(EditorExitCommand);*/
 	}
 }
 
 class EditorEditMenu: EditorMenu
 {
-	void EditorEditMenu(Widget parent = null, ScriptView parent_view = null) 
+	void EditorEditMenu(ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorEditMenu");
 				
-		AddMenuButton(EditorUndoCommand);
+		/*AddMenuButton(EditorUndoCommand);
 		AddMenuButton(EditorRedoCommand);
 		AddMenuDivider();
 		AddMenuButton(EditorCutCommand);
@@ -96,27 +97,27 @@ class EditorEditMenu: EditorMenu
 		AddMenuDivider();
 		AddMenuButton(EditorEnvironmentControlCommand);
 		AddMenuButton(EditorPreferencesCommand);
-		AddMenuDivider();
+		AddMenuDivider();*/
 	}
 }
 
 class EditorViewMenu: EditorMenu
 {	
-	void EditorViewMenu(Widget parent = null, ScriptView parent_view = null) 
+	void EditorViewMenu(ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorViewMenu");
 				
-		AddMenuButton(EditorCameraControlsCommand);
-		AddMenuButton(EditorReloadHudCommand);
+		/*AddMenuButton(EditorCameraControlsCommand);
+		AddMenuButton(EditorReloadHudCommand);*/
 	}
 }
 
 class EditorContextMenu: EditorMenu
 {
-	void EditorContextMenu(Widget parent = null, ScriptView parent_view = null) 
+	void EditorContextMenu(ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorContextMenu");
-		AddMenuButton(EditorCutCommand);
+		/*AddMenuButton(EditorCutCommand);
 		AddMenuButton(EditorCopyCommand);
 		AddMenuButton(EditorPasteCommand);
 		AddMenuDivider();
@@ -125,16 +126,16 @@ class EditorContextMenu: EditorMenu
 		AddMenuDivider();
 		AddMenuButton(EditorDeleteCommand);
 		AddMenuDivider();
-		AddMenuButton(EditorObjectPropertiesCommand);
+		AddMenuButton(EditorObjectPropertiesCommand);*/
 	}
 }
 
 class EditorPlaceableContextMenu: EditorMenu
 {
 	
-	void EditorPlaceableContextMenu(Widget parent = null, ScriptView parent_view = null) 
+	void EditorPlaceableContextMenu(ScriptView parent_view = null) 
 	{
-		AddMenuButton(EditorLootEditorCommand);
+		//AddMenuButton(EditorLootEditorCommand);
 	}
 }
 

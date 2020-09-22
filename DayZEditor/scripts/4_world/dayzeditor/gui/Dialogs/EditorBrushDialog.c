@@ -50,7 +50,7 @@ class EditorBrushDialog: EditorDialog
 	
 	protected EditorBrushData m_BrushData;
 	
-	void EditorBrushDialog(Widget parent = null, ScriptView parent_view = null) 
+	void EditorBrushDialog(ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorBrushDialog"); 
 				

@@ -61,9 +61,9 @@ class EditorHudToolbarController: Controller
 		switch (w.GetName()) {
 			
 			case "UndoButton": {
-				EditorTooltip tooltip = new EditorTooltip(w);
-				tooltip.SetTitle("Undo");
-				EditorUIManager.CurrentTooltip = tooltip;
+				//EditorTooltip tooltip = new EditorTooltip(w);
+				//tooltip.SetTitle("Undo");
+				//EditorUIManager.CurrentTooltip = tooltip;
 				break;
 			}
 			

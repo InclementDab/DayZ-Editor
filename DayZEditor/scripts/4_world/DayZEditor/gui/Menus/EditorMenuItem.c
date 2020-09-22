@@ -14,7 +14,7 @@ class EditorMenuItem: ScriptView
 	protected ref EditorMenuItemController m_EditorMenuItemController;
 	protected ImageWidget EditorMenuItemIcon;
 			
-	void EditorMenuItem(Widget parent = null) {
+	void EditorMenuItem(ScriptView parent = null) {
 		EditorLog.Trace("EditorMenuItem");
 		
 		m_LayoutRoot.Show(true);
