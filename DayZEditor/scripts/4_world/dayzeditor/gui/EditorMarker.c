@@ -153,7 +153,7 @@ class EditorObjectMapMarker: EditorObjectMarker
 	
 	override void Update()
 	{
-		if (!GetEditor().GetEditorHud().IsMapOpen()) return;
+		if (!GetEditor().GetEditorHud().IsMapVisible()) return;
 		m_MapWidget = MapWidget.Cast(m_LayoutRoot.GetParent());
 		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());
 		SetPos(pos[0], pos[1]);
@@ -175,7 +175,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		m_EditorObject.GetTransform(object_transform);
 		
 		// Should the position be raycasted on the ground, or locked to the object
-		if (GetEditor().GetEditorHud().GetController().GroundButton) {
+		if (GetEditor().GetEditorHud().GetEditorHudController().GroundButton) {
 			set<Object> o;
 			vector ground_dir; int component;
 			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject.GetWorldObject(), false, true); // set to ground only

@@ -52,7 +52,7 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		if (create_undo) {
 			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetController().DebugActionStackListbox);
+			m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
 		}
 		
 		return object_set;
@@ -76,7 +76,7 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		if (create_undo) {
 			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetController().DebugActionStackListbox);
+			m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
 		}
 			
 	
@@ -110,7 +110,7 @@ class EditorObjectManagerModule: JMModuleBase
 			action.InsertUndoParameter(target, new Param1<int>(target.GetID()));
 			action.InsertRedoParameter(target, new Param1<int>(target.GetID()));
 			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetController().DebugActionStackListbox);
+			m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
 		}
 		
 		delete target;
@@ -133,7 +133,7 @@ class EditorObjectManagerModule: JMModuleBase
 			
 		if (create_undo) {
 			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetController().DebugActionStackListbox);
+			m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
 		}
 	}
 	

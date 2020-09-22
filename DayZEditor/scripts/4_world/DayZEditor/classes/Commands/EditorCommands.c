@@ -8,7 +8,7 @@ class EditorCommand: RelayCommand
 	{
 		m_Editor = GetEditor();
 		if (m_Editor) {
-			m_EditorHudController = m_Editor.GetEditorHud().GetController();
+			m_EditorHudController = m_Editor.GetEditorHud().GetEditorHudController();
 		}
 	}
 	
@@ -86,7 +86,7 @@ class EditorSaveCommand: EditorCommand
 class EditorSaveAsCommand: EditorCommand
 {
 	override void Call() {
-		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(null, GetEditor().GetEditorHud().GetController());
+		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(null, GetEditor().GetEditorHud().GetEditorHudController());
 		save_dialog.SetWorldData(new EditorWorldData(GetEditor()));
 		string file = save_dialog.ShowFileDialog();
 	}

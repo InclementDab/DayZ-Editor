@@ -51,8 +51,8 @@ class EditorClipboard
 			
 			
 			vector position;
-			if (GetEditor().GetEditorHud().IsMapOpen()) {
-				MapWidget map_widget = GetEditor().GetEditorHud().GetMapWidget();
+			if (GetEditor().GetEditorHud().IsMapVisible()) {
+				MapWidget map_widget = GetEditor().GetEditorHud().GetMap();
 				int x, y;
 				GetMousePos(x, y);
 				position = pasted_object.Position + map_widget.ScreenToMap(Vector(x, y, 0));
@@ -74,13 +74,13 @@ class EditorClipboard
 			editor_object.SetPosition(position);
 			editor_object.Update();
 			
-			if (GetEditor().GetEditorHud().GetController().MagnetButton) {
+			if (GetEditor().GetEditorHud().GetEditorHudController().MagnetButton) {
 				
 				set<Object> o;
 				vector ground, ground_dir; int component;
 				DayZPhysics.RaycastRV(position, position + transform[1] * -1000, ground, ground_dir, component, o, NULL, editor_object.GetWorldObject(), false, true); // set to ground only
 				vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
-				editor_object.PlaceOnSurfaceRotated(transform, position, surface_normal[0] * -1, surface_normal[2] * -1, 0, GetEditor().GetEditorHud().GetController().MagnetButton);
+				editor_object.PlaceOnSurfaceRotated(transform, position, surface_normal[0] * -1, surface_normal[2] * -1, 0, GetEditor().GetEditorHud().GetEditorHudController().MagnetButton);
 				transform[3] = transform[3] - transform[1] * vector.Distance(ground, position);
 				
 				editor_object.SetTransform(transform);

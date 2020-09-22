@@ -63,7 +63,7 @@ class EditorMap: EditorWidgetEventHandler
 		switch (button) {
 			
 			case MouseState.LEFT: {
-				GetEditor().GetEditorHud().GetController().DelayedDragBoxCheck();
+				GetEditor().GetEditorHud().GetEditorHudController().DelayedDragBoxCheck();
 				return true;
 			}
 			

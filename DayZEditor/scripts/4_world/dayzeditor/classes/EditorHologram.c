@@ -12,7 +12,7 @@ class EditorHologram
 	
 	void EditorHologram(string type_name, vector position) 
 	{
-		m_MapWidget = GetEditor().GetEditorHud().GetMapWidget();
+		m_MapWidget = GetEditor().GetEditorHud().GetMap();
 		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout", m_MapWidget);
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
@@ -36,7 +36,7 @@ class EditorHologram
 		GetMousePos(x, y);
 		
 		// Handle Building
-		if (GetEditor().GetEditorHud().IsMapOpen()) {
+		if (GetEditor().GetEditorHud().IsMapVisible()) {
 			vector pos = m_MapWidget.ScreenToMap(Vector(x, y, 0));
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]);	
 				
@@ -54,7 +54,7 @@ class EditorHologram
 		
 		vector surface_normal = GetGame().SurfaceGetNormal(pos[0], pos[2]);
 		float surface_height = GetGame().SurfaceY(pos[0], pos[2]);
-		m_ProjectionEntity.PlaceOnSurfaceRotated(mat, pos, surface_normal[0] * -1, surface_normal[2] * -1, 0, GetEditor().GetEditorHud().GetController().MagnetButton);
+		m_ProjectionEntity.PlaceOnSurfaceRotated(mat, pos, surface_normal[0] * -1, surface_normal[2] * -1, 0, GetEditor().GetEditorHud().GetEditorHudController().MagnetButton);
 		m_ProjectionEntity.SetTransform(mat);
 		
 				

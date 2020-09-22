@@ -165,8 +165,7 @@ class Editor
 		
 		// Init Hud
 		m_EditorHud = new EditorHud();
-		m_EditorHud.Init(null);
-		m_EditorHudController = m_EditorHud.GetController();
+		m_EditorHudController = m_EditorHud.GetEditorHudController();
 		
 		
 		
@@ -293,7 +292,7 @@ class Editor
 						SelectObject(EditorObjectUnderCursor);
 						return true;
 					} else if (!target) {
-						GetEditorHud().GetController().DelayedDragBoxCheck();
+						m_EditorHudController.DelayedDragBoxCheck();
 						
 					}
 				}
@@ -493,7 +492,7 @@ class Editor
 	{
 		EditorLog.Trace("Editor::Save");
 		
-		m_EditorHud.NotificationCreate("Test");
+		m_EditorHud.GetEditorHudController().CreateNotification("Test");
 		/*
 		FileDialogResult result = EditorFileManager.Save(world_data, file);
 		//m_EditorHud.GetController().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, result), COLOR_GREEN); 
@@ -597,8 +596,7 @@ class Editor
 			delete m_EditorHud;
 		
 		m_EditorHud = new EditorHud();
-		m_EditorHud.Init(null);
-		m_EditorHudController = m_EditorHud.GetController();
+		m_EditorHudController = m_EditorHud.GetEditorHudController();
 		return m_EditorHud;
 	}
 	

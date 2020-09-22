@@ -925,6 +925,7 @@ FrameWidgetClass EditorMainFrame {
    vexactpos 1
    hexactsize 1
    vexactsize 0
+   priority 5
    scriptclass "EditorHudToolbarController"
    {
     PanelWidgetClass ToolbarMenubar {
@@ -2024,14 +2025,13 @@ FrameWidgetClass EditorMainFrame {
   FrameWidgetClass NotificationFrame {
    visible 0
    ignorepointer 1
-   position 0 0.06
-   size 1 32
+   position 0 0.03
+   size 1 0.03
    halign center_ref
    hexactpos 1
    vexactpos 0
    hexactsize 0
-   vexactsize 1
-   priority 249
+   vexactsize 0
    {
     PanelWidgetClass NotificationPanel {
      ignorepointer 1
