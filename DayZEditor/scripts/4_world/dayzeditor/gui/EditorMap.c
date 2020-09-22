@@ -9,6 +9,7 @@ class EditorMap: MVCLayout
 	
 	protected MapWidget EditorMapWidget;
 	
+	
 	// Temp hopefully
 	MapWidget GetMapWidget() {
 		return EditorMapWidget;
