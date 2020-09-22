@@ -1,39 +1,4 @@
 
-enum PlaceableObjectCategory {
-	BUILDING = 0,
-	VEHICLE = 1,
-	ENTITY = 2,
-	HUMAN = 3, 
-	UNKNOWN = -1
-};
-
-static const ref array<string> BuildingTypes = {
-	"house"
-};
-
-static const ref array<string> VehicleTypes = {
-	"transport"
-};
-
-static const ref array<string> EntityTypes = {
-	"inventory_base",
-	"edible_base",
-	"clothing_base",
-	"weapon_base"
-};
-
-static const ref array<string> HumanTypes = {
-	"dz_lightai",
-	"survivorbase"
-};
-
-static const ref array<array<string>> AllTypes = {
-	BuildingTypes, 
-	VehicleTypes,
-	EntityTypes,
-	HumanTypes
-};
-
 typedef ref array<ref EditorPlaceableListItem> EditorPlaceableListItemSet;
 
 class EditorPlaceableListItem: EditorListItem
@@ -54,28 +19,36 @@ class EditorPlaceableListItem: EditorListItem
 		TStringArray path_array = new TStringArray();
 		GetGame().ConfigGetFullPath(Path + " " + Type, path_array);
 		int i = 0;
-		foreach (array<string> current_type: AllTypes) {
-			foreach (string base: path_array) {
-				base.ToLower();
-				if (current_type.Find(base) + 1) {
-					Base = base;
-					m_Category = i;	
-					break;
+		
+		if (EditorSettings.AllTypes) {
+			foreach (TStringArray current_type: EditorSettings.AllTypes) {
+				foreach (string base: path_array) {
+					base.ToLower();
+					if (current_type.Find(base) + 1) {
+						Base = base;
+						m_Category = i;	
+						break;
+					}
 				}
+				i++;
 			}
-			i++;
 		}
+		
 		
 		if (m_Category == -1) {
 			EditorLog.Warning(string.Format("%1 has no category!", Type));
 		}
 		
+		
 		GetListItemController().ListItemLabel = Type;
 		GetListItemController().NotifyPropertyChanged("ListItemLabel");
 		
-		
-		GetListItemController().ListItemIcon = GetIconFromMod(GetModFromObject(Type));
-		GetListItemController().NotifyPropertyChanged("ListItemIcon");
+		if (m_ModStructure) {
+			GetListItemController().ListItemIcon = GetIconFromMod(m_ModStructure);
+			GetListItemController().NotifyPropertyChanged("ListItemIcon");
+		} else {
+			EditorLog.Info("Mod not found for %1", Type);
+		}
 		
 #ifndef COMPONENT_SYSTEM
 		EditorEvents.OnStartPlacing.Insert(StartPlacing);
