@@ -19,10 +19,6 @@
 <rootclass name="DZ_LightAI" act="character" reportMemoryLOD="no" /> <!-- infected, animals -->
 <rootclass name="CarScript" act="car" reportMemoryLOD="no" /> <!-- cars (sedan, hatchback, transitBus, V3S, ...) -->
 
-
-
-
-
 */
 
 private ref Editor m_EditorInstance;
@@ -455,7 +451,7 @@ class Editor
 
 	}	
 	
-	void CreateInHand(ref EditorPlaceableObjectData data)
+	void CreateInHand(ref EditorPlaceableListItem data)
 	{
 		EditorLog.Trace("Editor::CreateInHand");
 		
@@ -497,12 +493,15 @@ class Editor
 	{
 		EditorLog.Trace("Editor::Save");
 		
+		m_EditorHudController.NotificationCreate("Test");
+		/*
 		FileDialogResult result = EditorFileManager.Save(world_data, file);
-		m_EditorHud.GetController().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, result), COLOR_GREEN); 
+		//m_EditorHud.GetController().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, result), COLOR_GREEN); 
+		
 		
 		if (result == FileDialogResult.SUCCESS) {
 			m_EditorSaveFile = file;
-		}		
+		}*/		
 	}
 	
 	void Close()
@@ -653,8 +652,8 @@ class Editor
 				}
 				
 				case KeyCode.KC_S: {
-					if (m_EditorSaveFile == string.Empty)
-						return EditorSaveAsCommand;
+					//if (m_EditorSaveFile == string.Empty)
+					//	return EditorSaveAsCommand;
 					
 					return EditorSaveCommand;
 				}

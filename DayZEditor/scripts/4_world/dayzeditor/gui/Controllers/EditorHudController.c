@@ -15,18 +15,9 @@ class EditorUIManager
 	}
 	
 	static ref EditorHudController CurrentEditorHudController;
-	
 	static ref EditorHudToolbarController CurrentEditorHudToolbarController;
 }
 
-
-class ITest: IEntity
-{
-	void ITest(IEntitySource src, IEntity parent)
-	{	
-		
-	}
-}
 
 
 class EditorHudController: Controller
@@ -163,7 +154,6 @@ class EditorHudController: Controller
 		paths.Insert(CFG_WEAPONSPATH);
 		paths.Insert(CFG_MAGAZINESPATH);
 		
-		
 		foreach (string config_path: paths) {
 			
 			for (int j = 0; j < GetWorkbenchGame().ConfigGetChildrenCount(config_path); j++) {
@@ -173,13 +163,10 @@ class EditorHudController: Controller
 				GetWorkbenchGame().ConfigGetFullPath(config_path + " " + class_name, full_path);
 				
 				if (full_path.Find("HouseNoDestruct") != -1) {
-					EditorPlaceableObjectData data(class_name, config_path);
-					EditorPlaceableListItem item();
-					item.SetPlaceableObjectData(data);
+					EditorPlaceableListItem item = new EditorPlaceableListItem(null, class_name, config_path);
 					LeftbarSpacerData.Insert(item);		
 					
-					
-							
+				
 				} else {
 					//EditorLog.Trace("Not including Base " + full_path.ToString()); find what isnt loading here
 				}
@@ -201,7 +188,7 @@ class EditorHudController: Controller
 				
 				for (int j = 0; j < LeftbarSpacerData.Count(); j++) {
 					EditorPlaceableListItem placeable_item = LeftbarSpacerData.Get(j);
-					placeable_item.GetLayoutRoot().Show(placeable_item.GetData().FilterType(SearchBarData));
+					placeable_item.GetLayoutRoot().Show(placeable_item.FilterType(SearchBarData));
 				}
 				
 				LeftbarScroll.HScrollToPos(0);
@@ -300,8 +287,9 @@ class EditorHudController: Controller
 		}
 	}
 	
+	
 	void MenuBarExecute(ButtonCommandArgs args) 
-	{
+	{		
 		EditorLog.Trace("EditorHudController::MenuBarExecute");
 		if (!EditorUIManager.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
 			EditorUIManager.CurrentMenu = CreateToolbarMenu(args.GetButtonWidget());
@@ -631,9 +619,8 @@ class EditorHudController: Controller
 			EditorPlaceableListItem item;
 			list_item.GetUserData(item);
 			if (list_item && item) {
-				list_item.Show(item.GetData().GetCategory() == radio_button.GetID());
+				list_item.Show(item.GetCategory() == radio_button.GetID());
 			}
-			
 		}
 	}
 	

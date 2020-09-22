@@ -9,13 +9,12 @@ class EditorTooltipController: Controller
 	void ~EditorTooltipController()
 	{
 		EditorLog.Trace("~EditorTooltipController");
-		/*if (ContentItemData) // comment this and WB wont crash. still wont load tho
-			GetGame().ObjectDelete(ContentItemData);*/
+		if (ContentItemData) // comment this and WB wont crash. still wont load tho
+			GetGame().ObjectDelete(ContentItemData);
 	}
 	
 	override void PropertyChanged(string property_name)
 	{
-		Print(ContentItemData);
 		switch (property_name) {
 			
 			case "ContentItemData": {

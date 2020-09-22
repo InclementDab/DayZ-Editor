@@ -1,31 +1,113 @@
+
+enum PlaceableObjectCategory {
+	BUILDING = 0,
+	VEHICLE = 1,
+	ENTITY = 2,
+	HUMAN = 3, 
+	UNKNOWN = -1
+};
+
+static const ref array<string> BuildingTypes = {
+	"house"
+};
+
+static const ref array<string> VehicleTypes = {
+	"transport"
+};
+
+static const ref array<string> EntityTypes = {
+	"inventory_base",
+	"edible_base",
+	"clothing_base",
+	"weapon_base"
+};
+
+static const ref array<string> HumanTypes = {
+	"dz_lightai",
+	"survivorbase"
+};
+
+static const ref array<array<string>> AllTypes = {
+	BuildingTypes, 
+	VehicleTypes,
+	EntityTypes,
+	HumanTypes
+};
+
 typedef ref array<ref EditorPlaceableListItem> EditorPlaceableListItemSet;
 
 class EditorPlaceableListItem: EditorListItem
 {
-	protected ref EditorPlaceableObjectData m_EditorPlaceableObjectData;
-	EditorPlaceableObjectData GetData() { 
-		return m_EditorPlaceableObjectData; 
-	}
+	string Type, Path, Base;
 	
-	void SetPlaceableObjectData(EditorPlaceableObjectData data)
+	protected ModStructure m_ModStructure;
+	protected PlaceableObjectCategory m_Category = PlaceableObjectCategory.UNKNOWN;
+	
+	void EditorPlaceableListItem(Widget parent = null, string type = "", string path = "")
 	{
-		m_EditorPlaceableObjectData = data;
-		GetListItemController().ListItemLabel = m_EditorPlaceableObjectData.Type;
+		EditorLog.Trace("EditorPlaceableListItem");
+		Type = type; Path = path;
+		
+		// probably really slow
+		m_ModStructure = GetModFromObject(Type);
+		
+		TStringArray path_array = new TStringArray();
+		GetGame().ConfigGetFullPath(Path + " " + Type, path_array);
+		int i = 0;
+		foreach (array<string> current_type: AllTypes) {
+			foreach (string base: path_array) {
+				base.ToLower();
+				if (current_type.Find(base) + 1) {
+					Base = base;
+					m_Category = i;	
+					break;
+				}
+			}
+			i++;
+		}
+		
+		if (m_Category == -1) {
+			EditorLog.Warning(string.Format("%1 has no category!", Type));
+		}
+		
+		GetListItemController().ListItemLabel = Type;
 		GetListItemController().NotifyPropertyChanged("ListItemLabel");
 		
-		GetListItemController().ListItemIcon = GetIconFromMod(GetModFromObject(m_EditorPlaceableObjectData.Type));
+		
+		GetListItemController().ListItemIcon = GetIconFromMod(GetModFromObject(Type));
 		GetListItemController().NotifyPropertyChanged("ListItemIcon");
 		
 #ifndef COMPONENT_SYSTEM
 		EditorEvents.OnStartPlacing.Insert(StartPlacing);
 		EditorEvents.OnStopPlacing.Insert(StopPlacing);
 #endif
+		
 	}
 	
-	void StartPlacing(Class context, EditorPlaceableObjectData type)
+	bool FilterType(BetterString filter)
 	{
-		if (type == m_EditorPlaceableObjectData)
+		string type_lower = Type;
+		type_lower.ToLower();
+		filter.ToLower();
+		
+		if (filter[0] == "@") {
+			type_lower = m_ModStructure.GetModName();
+			filter[0] = "";
+			type_lower.ToLower();
+		}
+		
+		return type_lower.Contains(filter);
+	}
+	
+	PlaceableObjectCategory GetCategory() { return m_Category; }
+	ModStructure GetModStructure() { return m_ModStructure; }
+	
+	
+	void StartPlacing(Class context, EditorPlaceableListItem type)
+	{
+		if (type == this)
 			Select();
+		
 		else Deselect();
 	}
 	
@@ -37,7 +119,7 @@ class EditorPlaceableListItem: EditorListItem
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
-		GetEditor().CreateInHand(GetData());		
+		GetEditor().CreateInHand(this);
 		return true;
 	}
 	
@@ -51,11 +133,11 @@ class EditorPlaceableListItem: EditorListItem
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		EditorTooltip tooltip = new EditorTooltip(w);			
-		tooltip.SetTitle(m_EditorPlaceableObjectData.Type);
+		tooltip.SetTitle(Type);
 		float size_x, size_y;
 		m_LayoutRoot.GetScreenSize(size_x, size_y);
 		tooltip.GetLayoutRoot().SetPos(size_x, 0);
-		tooltip.SetContent(GetWorkbenchGame().CreateObjectEx(m_EditorPlaceableObjectData.Type, vector.Zero, ECE_NONE));
+		tooltip.SetContent(GetWorkbenchGame().CreateObjectEx(Type, vector.Zero, ECE_NONE));
 		
 		EditorUIManager.CurrentTooltip = tooltip;
 		
@@ -74,7 +156,7 @@ class EditorPlaceableListItem: EditorListItem
 	override void ListItemExecute(ButtonCommandArgs args)
 	{
 		if (args.GetMouseButton() == 0) {
-			GetEditor().CreateInHand(GetData());
+			GetEditor().CreateInHand(this);
 		} else if (args.GetMouseButton() == 1) {
 			EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu();
 			int x, y;

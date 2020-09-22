@@ -41,7 +41,6 @@ class EditorObjectData
 	EditorObjectFlags Flags;
 	ModStructure ObjectMod;
 	
-	
 	void EditorObjectData() {}
 	
 	static EditorObjectData Create(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
