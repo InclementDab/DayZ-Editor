@@ -209,7 +209,8 @@ class Editor
 	
 	void Update(float timeslice)
 	{
-		m_EditorHud.Update(timeslice);
+		// Dont think its needed anymore
+		//m_EditorHud.Update(timeslice);
 		
 		set<Object> obj = new set<Object>();
 		int x, y;
@@ -652,8 +653,8 @@ class Editor
 				}
 				
 				case KeyCode.KC_S: {
-					//if (m_EditorSaveFile == string.Empty)
-					//	return EditorSaveAsCommand;
+					if (m_EditorSaveFile == string.Empty)
+						return EditorSaveAsCommand;
 					
 					return EditorSaveCommand;
 				}

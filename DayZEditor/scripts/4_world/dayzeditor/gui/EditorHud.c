@@ -3,24 +3,21 @@
 
 class EditorHud: MVCLayout
 {
+	protected ref EditorMap m_EditorMap;
 	
+	// Layout Elements
 	protected Widget NotificationFrame;
-	
-	Widget MapContainer;
-	MapWidget Map;
+	protected Widget MapContainer;
 			
 	void EditorHud(Widget parent = null)
 	{	
 		EditorLog.Trace("EditorHud");
 	}
 	
-	void Update(float timeslice);
-	
 	void Show(bool show) 
 	{
 		EditorLog.Trace("EditorHud::Show");
 		m_LayoutRoot.Show(show);
-		SetCursor(show);
 		
 		EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
 		foreach (EditorObject editor_object: placed_objects) {
@@ -32,34 +29,29 @@ class EditorHud: MVCLayout
 		return m_LayoutRoot.IsVisible();
 	}
 	
-	void SetCursor(bool state) {
+	void ToggleCursor() {
+		ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
+	}
+	
+	void ShowCursor(bool state) {
 		GetGame().GetUIManager().ShowCursor(state);
 	}
 	
-	void ToggleCursor() {
-		GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
-	}
-	
-	void ShowCursor() {
-		GetGame().GetUIManager().ShowCursor(true);
-	}
-	
-	void HideCursor() {
-		GetGame().GetUIManager().ShowCursor(false);
-	}
-	
 	void ShowMap(bool show)	{
-		MapContainer.Show(show);
+		if (show) {
+			m_EditorMap = new EditorMap(MapContainer);
+		} else {
+			delete m_EditorMap;
+		}
 	}
 	
 	bool IsMapVisible() { 
-		return MapContainer.IsVisible(); 
+		return (m_EditorMap != null); 
 	}
 		
 	MapWidget GetMap() {
-		return GetEditorHudController().Map;
+		return m_EditorMap.GetMapWidget();
 	}
-	
 	
 	void CreateNotification(string text, int color = -4301218, float duration = 4)
 	{
@@ -68,7 +60,6 @@ class EditorHud: MVCLayout
 		EditorNotification notification = new EditorNotification(NotificationFrame, text, color);
 		notification.Play(duration);
 	}
-	
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/layouts/EditorUI.layout";

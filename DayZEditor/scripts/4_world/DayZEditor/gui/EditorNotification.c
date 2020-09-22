@@ -15,9 +15,7 @@ class EditorNotification: MVCLayout
 	
 	void Play(float duration, string sound = "Notification_SoundSet")
 	{	
-		thread _Animate(duration);
-		
-		
+		thread _Animate(duration);		
 	}
 	
 	private void _Animate(float duration)

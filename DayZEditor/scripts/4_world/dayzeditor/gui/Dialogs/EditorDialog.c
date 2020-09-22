@@ -60,7 +60,7 @@ class EditorDialog: EditorMVCLayout
 		
 		m_Editor.GetCamera().SetMoveEnabled(false);
 		m_Editor.GetCamera().SetLookEnabled(false);
-		m_EditorHud.ShowCursor();
+		m_EditorHud.ShowCursor(true);
 		
 		EditorUIManager.CurrentDialog = this;
 		
@@ -77,7 +77,7 @@ class EditorDialog: EditorMVCLayout
 	
 		m_Editor.GetCamera().SetMoveEnabled(true);
 		m_Editor.GetCamera().SetLookEnabled(true);
-		m_EditorHud.ShowCursor();
+		m_EditorHud.ShowCursor(true);
 	}
 		
 	float m_OffsetX, m_OffsetY;

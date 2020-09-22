@@ -135,7 +135,7 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnEditorToggleMap");
 		
 		GetEditor().GetEditorHud().ShowMap(!GetEditor().GetEditorHud().IsMapVisible());
-		GetEditor().GetEditorHud().ShowCursor();
+		GetEditor().GetEditorHud().ShowCursor(true);
 		
 		// Disabling the map until we use MVCLayout with it
 		//EditorEvents.MapToggled(this, GetEditor().GetEditorHud().GetMap(), GetEditor().GetEditorHud().IsMapVisible());

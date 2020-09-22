@@ -77,12 +77,7 @@ class EditorHudController: Controller
 	protected Widget BrushRadiusFrame;
 	protected Widget BrushDensityFrame;
 	
-	Widget MapContainer;
-	MapWidget Map;	
-	
-	protected Widget NotificationFrame;
-	protected Widget NotificationPanel;
-	protected TextWidget NotificationText;
+
 	
 	void EditorHudController() 
 	{
@@ -598,10 +593,4 @@ class EditorHudController: Controller
 		NotifyPropertyChanged("obj_z");
 	}
 }
-
-
-//static const int COLOR_BLUE 	= -13330213;
-
-
-
 
