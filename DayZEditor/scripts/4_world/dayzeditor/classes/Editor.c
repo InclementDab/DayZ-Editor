@@ -216,7 +216,7 @@ class Editor
 		int x, y;
 		GetMousePos(x, y);
 		
-		if (m_EditorHud && m_EditorHud.GetEditorMap()) {
+		if (m_EditorHud && m_EditorHud.GetEditorMap().EditorMapWidget.IsVisible()) {
 			CurrentMousePosition = m_EditorHud.GetEditorMap().EditorMapWidget.ScreenToMap(Vector(x, y, 0));
 		} else {
 			CurrentMousePosition = MousePosToRay(obj);

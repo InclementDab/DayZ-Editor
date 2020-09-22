@@ -167,12 +167,17 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	void EditorObjectWorldMarker(EditorObject editor_object)
 	{
 		m_DragHandler = new ObjectDragHandler(m_EditorObject);
+		EditorEvents.OnMapToggled.Insert(OnEditorMapToggled);
+	}
+	
+	void OnEditorMapToggled(Class context, EditorMap editor_map, bool state)
+	{
+		m_LayoutRoot.Show(!state);
 	}
 	
 	override void Update()
 	{
-		if (m_EditorMap.EditorMapWidget.IsVisible()) {
-			m_LayoutRoot.Show(false);
+		if (GetEditor().GetEditorHud().GetEditorMap().EditorMapWidget.IsVisible()) {
 			return;
 		}
 		

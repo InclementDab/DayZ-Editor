@@ -15,8 +15,8 @@ class EditorHud: MVCLayout
 	void EditorHud(Widget parent = null)
 	{	
 		EditorLog.Trace("EditorHud");
-		
 		m_EditorMap = new EditorMap(MapContainer);
+		m_EditorMap.EditorMapWidget.Show(false);
 	}
 	
 	void ~EditorHud() 

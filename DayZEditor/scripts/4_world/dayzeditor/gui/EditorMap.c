@@ -1,29 +1,10 @@
 
-class EditorMapController: Controller
-{
-	
-}
-
 class EditorMap: MVCLayout
 {
-	
 	MapWidget EditorMapWidget;
-	
-	
-	void InsertWidget(EditorMarker editor_marker) {
-		
-	}
 		
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/layouts/EditorMap.layout";
-	}
-	
-	override typename GetControllerType() {
-		return EditorMapController;
-	}
-	
-	EditorMapController GetEditorMapController() { 
-		return EditorMapController.Cast(GetController());
 	}
 }
 
