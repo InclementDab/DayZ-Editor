@@ -165,6 +165,7 @@ class Editor
 		
 		// Init Hud
 		m_EditorHud = new EditorHud();
+		m_EditorHud.Init(null);
 		m_EditorHudController = m_EditorHud.GetEditorHudController();
 		
 		
@@ -596,6 +597,7 @@ class Editor
 			delete m_EditorHud;
 		
 		m_EditorHud = new EditorHud();
+		m_EditorHud.Init(null);
 		m_EditorHudController = m_EditorHud.GetEditorHudController();
 		return m_EditorHud;
 	}
