@@ -1563,10 +1563,6 @@ FrameWidgetClass EditorMainFrame {
      }
     }
    }
-   {
-    ScriptParamsClass {
-    }
-   }
   }
   PanelWidgetClass InfobarFrame {
    ignorepointer 1
@@ -2023,47 +2019,15 @@ FrameWidgetClass EditorMainFrame {
    }
   }
   FrameWidgetClass NotificationFrame {
-   visible 0
+   visible 1
    ignorepointer 1
    position 0 0.03
-   size 1 0.03
+   size 1 0.06
    halign center_ref
    hexactpos 1
    vexactpos 0
    hexactsize 0
    vexactsize 0
-   {
-    PanelWidgetClass NotificationPanel {
-     ignorepointer 1
-     color 0.2588 0.6863 0.3647 1
-     position 0 0
-     size 1 1
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     style rover_sim_colorable
-     {
-      TextWidgetClass NotificationText {
-       visible 1
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       text "NotificationText"
-       font "gui/fonts/metron"
-       "text halign" center
-       "text valign" center
-      }
-     }
-    }
-   }
   }
   TextWidgetClass VersionNumber {
    ignorepointer 1

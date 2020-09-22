@@ -5,8 +5,6 @@ class EditorHud: MVCLayout
 {
 	
 	protected Widget NotificationFrame;
-	protected Widget NotificationPanel;
-	protected TextWidget NotificationText;
 	
 	Widget MapContainer;
 	MapWidget Map;
@@ -67,19 +65,10 @@ class EditorHud: MVCLayout
 	{
 		EditorLog.Trace("EditorHud::CreateNotification");
 		
-		NotificationPanel.SetColor(color);
-		NotificationText.SetText(text);
-		NotificationFrame.Show(true);
-		
-		thread _CreateNotification(text);
+		EditorNotification notification = new EditorNotification(NotificationFrame, text, color);
+		notification.Play(duration);
 	}
 	
-	private void _CreateNotification(string text)
-	{
-		
-		Sleep(1000);
-		NotificationFrame.SetPos(0, 6);
-	}
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/layouts/EditorUI.layout";
