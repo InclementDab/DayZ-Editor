@@ -139,8 +139,7 @@ class EditorClientModule: JMModuleBase
 		editor_hud.GetEditorMap().EditorMapWidget.Show(!editor_hud.GetEditorMap().EditorMapWidget.IsVisible());
 		editor_hud.ShowCursor(true);
 		
-		// Disabling the map until we use MVCLayout with it
-		//EditorEvents.MapToggled(this, GetEditor().GetEditorHud().GetMap(), GetEditor().GetEditorHud().IsMapVisible());
+		EditorEvents.MapToggled(this, GetEditor().GetEditorHud().GetEditorMap(), GetEditor().GetEditorHud().GetEditorMap().EditorMapWidget.IsVisible());
 	}	
 	
 	private void OnEditorDeleteObject(UAInput input)

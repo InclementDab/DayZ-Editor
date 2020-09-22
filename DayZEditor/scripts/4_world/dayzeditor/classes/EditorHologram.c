@@ -31,22 +31,8 @@ class EditorHologram
 	{
 		if (m_ProjectionEntity == null) return;
 		if (!m_ProjectionEntity.IsInherited(EntityAI)) return;
-		/*int x, y;
-		GetMousePos(x, y);
-		
-		// Handle Building
-		/*
-		if (GetEditor().GetEditorHud().IsMapVisible()) {
-			vector pos = m_MapWidget.ScreenToMap(Vector(x, y, 0));
-			pos[1] = GetGame().SurfaceY(pos[0], pos[2]);	
-				
-		} else {
-			set<Object> obj;
-			pos = MousePosToRay(obj, m_ProjectionEntity);
-		}*/
 		
 		vector position = Editor.CurrentMousePosition;
-
 		vector mat[4] = {
 			"1 0 0",
 			"0 1 0",
