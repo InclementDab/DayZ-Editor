@@ -1,5 +1,5 @@
 
-class EditorMap: MVCLayout
+class EditorMap: ScriptView
 {
 	MapWidget EditorMapWidget;
 		

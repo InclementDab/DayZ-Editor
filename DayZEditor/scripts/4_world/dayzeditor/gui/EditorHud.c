@@ -1,22 +1,32 @@
 
 
 
-class EditorHud: MVCLayout
+class EditorCommandManager: CommandManager
 {
+	ref RoutedUICommand NewCommand = new RoutedUICommand("New", "New", { KeyCode.KC_LCONTROL, KeyCode.KC_N });
+	ref RoutedUICommand OpenCommand = new RoutedUICommand("Open", "Open", { KeyCode.KC_LCONTROL, KeyCode.KC_O });
+}
+
+class EditorHud: ScriptView
+{	
+	// Layout Elements
+	protected Widget NotificationFrame;
+	protected Widget MapContainer;
+	
+	protected ref EditorMenu m_EditorFileMenu;
+	
 	protected ref EditorMap m_EditorMap;
 	EditorMap GetEditorMap() {
 		return m_EditorMap;
 	}
 	
-	// Layout Elements
-	protected Widget NotificationFrame;
-	protected Widget MapContainer;
-			
 	void EditorHud(Widget parent = null)
 	{	
 		EditorLog.Trace("EditorHud");
 		m_EditorMap = new EditorMap(MapContainer);
 		m_EditorMap.EditorMapWidget.Show(false);
+		
+		m_EditorFileMenu = new EditorFileMenu(m_LayoutRoot, this);
 	}
 	
 	void ~EditorHud() 
@@ -54,6 +64,12 @@ class EditorHud: MVCLayout
 		EditorNotification notification = new EditorNotification(NotificationFrame, text, color);
 		notification.Play(duration);
 	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{		
+		return false;
+	}
+
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/layouts/EditorUI.layout";

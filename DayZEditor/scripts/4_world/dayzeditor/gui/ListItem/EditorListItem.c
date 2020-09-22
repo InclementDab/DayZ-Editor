@@ -1,7 +1,7 @@
 
-class EditorListItemSet: ref ObservableCollection<ref MVCLayout>
+class EditorListItemSet: ref ObservableCollection<ref ScriptView>
 {
-	override int Insert(MVCLayout value)
+	override int Insert(ScriptView value)
 	{
 		EditorListItem.Cast(value).ParentList = this;
 		return super.Insert(value);
@@ -9,7 +9,7 @@ class EditorListItemSet: ref ObservableCollection<ref MVCLayout>
 }
 
 
-class EditorListItem: MVCLayout
+class EditorListItem: ScriptView
 {
 	protected int m_NestIndex;
 	
@@ -91,6 +91,10 @@ class EditorListItem: MVCLayout
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		return false;
+	}
 
 	
 	void ListItemExecute(ButtonCommandArgs args);

@@ -77,6 +77,7 @@ class EditorHudController: Controller
 	protected Widget BrushRadiusFrame;
 	protected Widget BrushDensityFrame;
 	
+	protected EditBoxWidget LeftbarSearchBar;
 
 	
 	void EditorHudController() 
@@ -438,9 +439,39 @@ class EditorHudController: Controller
 			}
 		}
 		
+		return super.OnClick(w, x, y, button);
+	}
+	
+	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorHud::OnFocus");
+		
+		switch (w) {
+			
+			case LeftbarSearchBar: {
+				GetEditor().GetCamera().MoveEnabled = false;
+				break;
+			}
+		}
+		
 		return false;
 	}
 	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorHud::OnFocusLost");
+		
+		switch (w) {
+			
+			case LeftbarSearchBar: {
+				GetEditor().GetCamera().MoveEnabled = true;
+				break;
+			}
+		}
+		
+		return false;
+	}
 	
 		
 	private int GetHighlightColor(string widget_name)

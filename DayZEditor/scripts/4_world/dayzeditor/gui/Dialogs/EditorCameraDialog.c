@@ -113,13 +113,13 @@ class EditorCameraDialog: EditorDialog
 	protected EditorCamera m_EditorCamera;
 	protected ref EditorCameraDialogController m_EditorCameraDialogController;
 	
-	void EditorCameraDialog(Widget parent = null, EditorHudController controller = null) 
+	void EditorCameraDialog(Widget parent = null, ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorCameraDialog::Init");
 		
 		SetTitle("Camera Controller");
 		AddButton("Default", "ResetDefaultExecute");
-		AddButton("Close", "DialogCloseRelayCommand");
+		AddButton("Close", "DialogCloseRoutedUICommand");
 	}
 	
 	void SetEditorCamera(EditorCamera editor_camera)

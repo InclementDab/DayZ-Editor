@@ -2,12 +2,12 @@
 
 typedef ref array<ref EditorMenuItem> EditorMenuItemList;
 
-class EditorMenu: EditorMVCLayout
+class EditorMenu: EditorScriptView
 {
 	protected ref EditorMenuItemList m_MenuItems;
 	protected WrapSpacerWidget EditorMenuContent;
 	
-	void EditorMenu(Widget parent = null, EditorHudController controller = null) 
+	void EditorMenu(Widget parent = null, ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorMenu");
 		m_MenuItems = new EditorMenuItemList();
@@ -27,17 +27,8 @@ class EditorMenu: EditorMVCLayout
 		AddMenuItem(divider);
 	}
 	
-	void AddMenuButton(typename editor_command)
-	{
-		if (!editor_command.IsInherited(EditorCommand)) {
-			EditorLog.Error("Invalid EditorCommand");
-			return;
-		}
-		
-		AddMenuButton(editor_command.Spawn());
-	}
-	
-	void AddMenuButton(EditorCommand editor_command)
+
+	void AddMenuButton(RoutedUICommand editor_command)
 	{
 		ref EditorMenuItemButton menu_item = new EditorMenuItemButton();
 		menu_item.SetCommand(editor_command);
@@ -46,7 +37,7 @@ class EditorMenu: EditorMVCLayout
 		if (!menu_item) return;
 		menu_item.GetLayoutRoot().FindAnyWidget("EditorMenuItemButton").GetScript(view_binding);
 		if (view_binding && editor_command) {
-			view_binding.SetRelayCommand(editor_command);
+			view_binding.SetRoutedUICommand(editor_command);
 		}
 		
 		
@@ -76,11 +67,11 @@ class EditorMenu: EditorMVCLayout
 
 class EditorFileMenu: EditorMenu
 {
-	void EditorFileMenu(Widget parent = null, EditorHudController controller = null) 
+	void EditorFileMenu(Widget parent = null, ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorFileMenu::Init");
-				
-		AddMenuButton(EditorNewCommand);
+		
+		AddMenuButton(m_Parent.);
 		AddMenuButton(EditorOpenCommand);
 		AddMenuButton(EditorSaveCommand);
 		AddMenuButton(EditorSaveAsCommand);
@@ -92,7 +83,7 @@ class EditorFileMenu: EditorMenu
 
 class EditorEditMenu: EditorMenu
 {
-	void EditorEditMenu(Widget parent = null, EditorHudController controller = null) 
+	void EditorEditMenu(Widget parent = null, ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorEditMenu");
 				
@@ -111,7 +102,7 @@ class EditorEditMenu: EditorMenu
 
 class EditorViewMenu: EditorMenu
 {	
-	void EditorViewMenu(Widget parent = null, EditorHudController controller = null) 
+	void EditorViewMenu(Widget parent = null, ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorViewMenu");
 				
@@ -122,7 +113,7 @@ class EditorViewMenu: EditorMenu
 
 class EditorContextMenu: EditorMenu
 {
-	void EditorContextMenu(Widget parent = null, EditorHudController controller = null) 
+	void EditorContextMenu(Widget parent = null, ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("EditorContextMenu");
 		AddMenuButton(EditorCutCommand);
@@ -141,7 +132,7 @@ class EditorContextMenu: EditorMenu
 class EditorPlaceableContextMenu: EditorMenu
 {
 	
-	void EditorPlaceableContextMenu(Widget parent = null, EditorHudController controller = null) 
+	void EditorPlaceableContextMenu(Widget parent = null, ScriptView parent_view = null) 
 	{
 		AddMenuButton(EditorLootEditorCommand);
 	}

@@ -11,8 +11,8 @@ class EditorCamera: Camera
 	
 	float SendUpdateAccumalator = 0.0;
 	
-	private bool LookEnabled = true;
-	private bool MoveEnabled = true;
+	bool LookEnabled = true;
+	bool MoveEnabled = true;
 
 	Object SelectedTarget;
 	vector TargetPosition;
@@ -20,15 +20,6 @@ class EditorCamera: Camera
 	vector angularVelocity;
 	vector orientation;
 	
-	
-	// Setters
-	void SetLookEnabled(bool state) { 
-		LookEnabled = state; 
-	}
-	
-	void SetMoveEnabled(bool state) { 
-		MoveEnabled = state; 
-	}
 	
 	void EditorCamera()
 	{
@@ -74,8 +65,7 @@ class EditorCamera: Camera
 	}
 	
 
-
-	override void EOnFrame( IEntity other, float timeSlice )
+	override void EOnFrame(IEntity other, float timeSlice)
 	{
 		if ( SendUpdateAccumalator > 0.5 ){
 			GetGame().UpdateSpectatorPosition(GetPosition());
@@ -89,7 +79,6 @@ class EditorCamera: Camera
 		GetTransform(transform);
 
 		Input input = GetGame().GetInput();
-		
 		if (!input.LocalValue("UAWalkRunTemp")) {
 			float forward = input.LocalValue("UAMoveForward") - input.LocalValue("UAMoveBack");
 			float strafe = input.LocalValue("UAMoveRight") - input.LocalValue("UAMoveLeft");

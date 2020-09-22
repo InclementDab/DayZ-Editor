@@ -246,10 +246,10 @@ class Editor
 			m_EditorHudController.cam_x = cam_pos[0];
 			m_EditorHudController.cam_y = cam_pos[2];
 			m_EditorHudController.cam_z = cam_pos[1];
-			
+			/*
 			m_EditorHudController.NotifyPropertyChanged("cam_x");
 			m_EditorHudController.NotifyPropertyChanged("cam_y");
-			m_EditorHudController.NotifyPropertyChanged("cam_z");
+			m_EditorHudController.NotifyPropertyChanged("cam_z");*/
 			
 		}
 		
@@ -263,7 +263,7 @@ class Editor
 		timeslice_count++;
 		avg_timeslice = avg_timeslice + ((ftime - avg_timeslice) / timeslice_count);
 		m_EditorHudController.DebugText1 = avg_timeslice.ToString();
-		m_EditorHudController.NotifyPropertyChanged("DebugText1");
+		//m_EditorHudController.NotifyPropertyChanged("DebugText1");
 		EditorLog.CurrentLogLevel = EditorLogLevel.TRACE;
 	}
 	
@@ -350,15 +350,7 @@ class Editor
 	// Only use this to handle hardcoded keys (ctrl + z etc...)
 	// Return TRUE if handled.
 	bool OnKeyPress(int key)
-	{		
-		//m_EditorHud.OnKeyPress(key);
-		typename command = GetCommandFromHotkeys(key);
-		if (command) {
-			EditorCommand cmd = command.Spawn();
-			cmd.Execute(new RelayCommandArgs(this, null));
-			return true;
-		}
-		
+	{				
 		switch (key) {
 				
 			case KeyCode.KC_ESCAPE: {
@@ -428,8 +420,8 @@ class Editor
 			//CreateFromObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM | EditorObjectFlags.MAPMARKER);
 		}
 		
-		m_EditorCamera.SetLookEnabled(m_Active);
-		m_EditorCamera.SetMoveEnabled(m_Active);
+		m_EditorCamera.LookEnabled = m_Active;
+		m_EditorCamera.MoveEnabled = m_Active;
 		m_EditorCamera.SetActive(m_Active);
 		
 		m_EditorHud.Show(m_Active);
@@ -491,7 +483,7 @@ class Editor
 	{
 		EditorLog.Trace("Editor::New");
 		
-		MapSelectDialog select_window = new MapSelectDialog(null, m_EditorHudController);
+		MapSelectDialog select_window = new MapSelectDialog(null, m_EditorHud);
 		select_window.SetTitle("Create New...");
 		select_window.ShowDialog();
 	}
@@ -530,7 +522,7 @@ class Editor
 	{
 		EditorLog.Trace("Editor::Export");
 		
-		EditorFileExportDialog export_dialog(null, m_EditorHudController);
+		EditorFileExportDialog export_dialog(null, m_EditorHud);
 		export_dialog.ShowFileDialog();
 	}
 	
@@ -604,14 +596,15 @@ class Editor
 			delete m_EditorHud;
 		
 		m_EditorHud = new EditorHud();
-		//m_EditorHud.Init(null);
 		m_EditorHudController = m_EditorHud.GetEditorHudController();
 		return m_EditorHud;
 	}
 	
-	
+	/*
 	typename GetCommandFromHotkeys(int key)
 	{
+		typename x;
+		return x;
 		//EditorLog.Trace("Editor::GetCommandFromHotkeys");
 		
 		if (KeyState(KeyCode.KC_LCONTROL)) {
@@ -678,7 +671,8 @@ class Editor
 				}
 				
 				case KeyCode.KC_X: {
-					return EditorCutCommand;
+					//return EditorCutCommand;
+					break;
 				}
 
 				case KeyCode.KC_C: {
@@ -694,6 +688,6 @@ class Editor
 		typename t;
 		return t;
 	}
-
+*/
 }
 

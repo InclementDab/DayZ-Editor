@@ -1,13 +1,14 @@
 
 
-class EditorMVCLayout: MVCLayout
+class EditorScriptView: ScriptView
 {
 	protected Editor m_Editor;
 	protected EditorHud m_EditorHud;
+	protected ScriptView m_ParentView;
 	
-	void EditorMVCLayout(Widget parent = null)
+	void EditorScriptView(Widget parent = null, ScriptView parent_view = null)
 	{
-		EditorLog.Trace("EditorMVCLayout");
+		EditorLog.Trace("EditorScriptView");
 		m_Editor = GetEditor();
 		if (m_Editor) {
 			m_EditorHud = m_Editor.GetEditorHud();	
@@ -15,9 +16,9 @@ class EditorMVCLayout: MVCLayout
 			
 	}
 	
-	void ~EditorMVCLayout()
+	void ~EditorScriptView()
 	{
-		EditorLog.Trace("~EditorMVCLayout");
+		EditorLog.Trace("~EditorScriptView");
 	}
 	
 	void SetPosition(float x, float y) {

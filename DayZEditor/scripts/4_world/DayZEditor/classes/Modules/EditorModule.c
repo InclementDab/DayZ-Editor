@@ -1,7 +1,7 @@
 
 // Base EditorModule class
 // Inherit from this for custom stuff
-class EditorObjectPropertiesModule: MVCLayout
+class EditorObjectPropertiesModule: ScriptView
 {
 	
 	

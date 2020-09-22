@@ -39,9 +39,9 @@ class MapSelectDialogController: EditorDialogController
 				ViewBindingSet view_set = m_ViewBindingHashMap.Get(""); // dont ask. just use DebugPrint
 				if (view_set) {
 					foreach (ViewBinding view: view_set) {
-						RelayCommand relay_command = view.GetRelayCommand();
+						RoutedUICommand relay_command = view.GetRoutedUICommand();
 						if (relay_command) {
-							relay_command.SetCanExecute(MapHostListboxSelection != string.Empty);
+							//relay_command.SetCanExecute(MapHostListboxSelection != string.Empty); todo
 						}
 					}
 				}
@@ -69,13 +69,13 @@ class MapSelectDialogController: EditorDialogController
 
 class MapSelectDialog: EditorDialog
 {		
-	void MapSelectDialog(Widget parent = null, EditorHudController controller = null) 
+	void MapSelectDialog(Widget parent = null, ScriptView parent_view = null) 
 	{
 		EditorLog.Trace("MapSelectDialog::Init");
 
 		AddContent("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");
-		AddButton("Select", "MapSelectDialogRelayCommand");
-		AddButton("Close", "DialogCloseRelayCommand");
+		AddButton("Select", "MapSelectDialogRoutedUICommand");
+		AddButton("Close", "DialogCloseRoutedUICommand");
 		MapSelectDialogController.Cast(GetController()).SetMapSelectDialog(this);
 	}
 	

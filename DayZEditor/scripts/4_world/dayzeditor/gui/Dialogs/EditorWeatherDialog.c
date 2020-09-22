@@ -92,7 +92,7 @@ class EditorEnvironmentDialog: EditorDialog
 	protected ref EditorEnvironmentDialogController m_EditorWeatherDialogController;
 	
 	
-	void EditorEnvironmentDialog(Widget parent = null, EditorHudController controller = null)
+	void EditorEnvironmentDialog(Widget parent = null, ScriptView parent_view = null)
 	{
 		EditorLog.Trace("EditorEnvironmentDialog");
 		m_EditorWeatherDialogController = EditorEnvironmentDialogController.Cast(m_Controller);
@@ -111,7 +111,7 @@ class EditorEnvironmentDialog: EditorDialog
 		
 		AddContent(weather_group);
 		SetTitle("World Controller");
-		AddButton("Close", "DialogCloseRelayCommand");
+		AddButton("Close", "DialogCloseRoutedUICommand");
 	}
 	
 	override typename GetControllerType() {

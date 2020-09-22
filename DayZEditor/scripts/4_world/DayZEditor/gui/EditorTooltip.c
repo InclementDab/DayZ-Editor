@@ -32,7 +32,7 @@ class EditorTooltipController: Controller
 	}
 }
 
-class EditorTooltip: MVCLayout
+class EditorTooltip: ScriptView
 {
 	protected TextWidget HeaderLabel;
 	

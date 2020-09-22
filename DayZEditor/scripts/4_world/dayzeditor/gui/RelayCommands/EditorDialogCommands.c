@@ -1,21 +1,21 @@
-class DialogCloseRelayCommand: RelayCommand
+/*class DialogCloseRoutedUICommand: RoutedUICommand
 {
-	override void Execute(RelayCommandArgs args)
+	override void Execute(RoutedUICommandArgs args)
 	{	
-		EditorLog.Trace("DialogCloseRelayCommand::Execute");
+		EditorLog.Trace("DialogCloseRoutedUICommand::Execute");
 		delete EditorUIManager.CurrentDialog;
 	}
 }
 
-class MapSelectDialogRelayCommand: RelayCommand
+class MapSelectDialogRoutedUICommand: RoutedUICommand
 {
-	void MapSelectDialogRelayCommand() {	
+	void MapSelectDialogRoutedUICommand(ref array<KeyCode> input_gestures = null) {	
 		SetCanExecute(false);
 	}
 	
-	override void Execute(RelayCommandArgs args)
+	override void Execute(RoutedUICommandArgs args)
 	{
-		EditorLog.Trace("MapSelectDialogRelayCommand::Execute");
+		EditorLog.Trace("MapSelectDialogRoutedUICommand::Execute");
 		delete EditorUIManager.CurrentDialog;
 		
 		GetGame().PlayMission(CreateEditorMission(MapSelectDialogController.Cast(m_ViewBinding.GetController()).MapHostListboxSelection));
@@ -23,7 +23,7 @@ class MapSelectDialogRelayCommand: RelayCommand
 	
 	override void CanExecuteChanged(bool state)
 	{
-		EditorLog.Trace("MapSelectDialogRelayCommand::CanExecuteChanged");
+		EditorLog.Trace("MapSelectDialogRoutedUICommand::CanExecuteChanged");
 		Widget btn = m_ViewBinding.GetLayoutRoot();
 
 		if (state) {
@@ -33,4 +33,4 @@ class MapSelectDialogRelayCommand: RelayCommand
 		
 		btn.Enable(state);
 	}
-}
+}*/

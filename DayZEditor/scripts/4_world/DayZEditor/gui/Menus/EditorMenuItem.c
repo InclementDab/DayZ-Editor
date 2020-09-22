@@ -9,7 +9,7 @@ class EditorMenuItemController: Controller
 	ref EditorMenu ChildMenu;
 }
 
-class EditorMenuItem: MVCLayout
+class EditorMenuItem: ScriptView
 {
 	protected ref EditorMenuItemController m_EditorMenuItemController;
 	protected ImageWidget EditorMenuItemIcon;
@@ -33,21 +33,21 @@ class EditorMenuItem: MVCLayout
 
 class EditorMenuItemButton: EditorMenuItem
 {	
-	protected ref EditorCommand m_EditorCommand;
+	protected ref RoutedUICommand m_EditorCommand;
 	
-	void SetCommand(EditorCommand editor_command)
+	void SetCommand(RoutedUICommand editor_command)
 	{
 		m_EditorCommand = editor_command;
 		
-		EditorMenuItemIcon.Show(m_EditorCommand.GetIcon() != string.Empty);
+		//EditorMenuItemIcon.Show(m_EditorCommand.GetIcon() != string.Empty);
 		
-		m_EditorMenuItemController.LabelText = m_EditorCommand.GetName();
+		m_EditorMenuItemController.LabelText = m_EditorCommand.Text;
 		m_EditorMenuItemController.NotifyPropertyChanged("LabelText");
 		
-		m_EditorMenuItemController.IconPath = m_EditorCommand.GetIcon();
-		m_EditorMenuItemController.NotifyPropertyChanged("IconPath");
+		//m_EditorMenuItemController.IconPath = m_EditorCommand.GetIcon();
+		//m_EditorMenuItemController.NotifyPropertyChanged("IconPath");
 		
-		m_EditorMenuItemController.ShortcutText = m_EditorCommand.GetKeys();
+		m_EditorMenuItemController.ShortcutText = m_EditorCommand.GetKeyString();
 		m_EditorMenuItemController.NotifyPropertyChanged("ShortcutText");
 	}
 		

@@ -66,7 +66,7 @@ class EditorCollapsibleListItem: EditorListItem
 				
 				for (int i = 0; i < GetListItemController().ChildListItems.Count(); i++) {
 					
-					MVCLayout list_item = GetListItemController().ChildListItems[i];
+					ScriptView list_item = GetListItemController().ChildListItems[i];
 					switch (list_item.Type()) {
 						
 						case EditorPlacedListItem: {

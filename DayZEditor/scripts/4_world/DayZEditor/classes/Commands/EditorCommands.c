@@ -1,18 +1,11 @@
-
-class EditorCommand: RelayCommand
+/*
+class EditorCommand: RoutedUICommand
 {	
-	protected Editor m_Editor;
-	protected EditorHudController m_EditorHudController;
+	protected Editor m_Editor = GetEditor();
+	protected EditorHudController m_EditorHudController = m_Editor.GetEditorHud().GetEditorHudController();
 	
-	void EditorCommand()
-	{
-		m_Editor = GetEditor();
-		if (m_Editor) {
-			m_EditorHudController = m_Editor.GetEditorHud().GetEditorHudController();
-		}
-	}
 	
-	override void Execute(RelayCommandArgs args) 
+	override void Execute(RoutedUICommandArgs args) 
 	{
 		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(args);
@@ -47,7 +40,7 @@ class EditorCommand: RelayCommand
 		return string.Empty;
 	}
 	
-	string GetKeys() {
+	string GetKeyDisplay() {
 		return string.Empty;
 	}
 }
@@ -62,8 +55,12 @@ class EditorNewCommand: EditorCommand
 		return "New";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + N";
+	}
+	
+	override ref array<KeyCode> GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_X };
 	}
 }
 
@@ -78,7 +75,7 @@ class EditorSaveCommand: EditorCommand
 		return "Save";
 	}
 
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + S";
 	}
 }
@@ -95,14 +92,14 @@ class EditorSaveAsCommand: EditorCommand
 		return "Save As...";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + Shift + S";
 	}
 }
 
 class EditorOpenCommand: EditorCommand
 {
-	void EditorOpenCommand() {
+	void EditorOpenCommand(ref array<KeyCode> input_gestures = null) {
 		SetCanExecute(false);
 	}
 	
@@ -118,7 +115,7 @@ class EditorOpenCommand: EditorCommand
 		return "DayZEditor/gui/icons/icon_folder_128x128.edds";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + O";
 	}
 }
@@ -137,7 +134,7 @@ class EditorCloseCommand: EditorCommand
 		return "dayz_editor_gui:building_icon";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + W";
 	}
 }
@@ -157,7 +154,7 @@ class EditorExitCommand: EditorCommand
 		return "dayz_editor_gui:building_icon";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Alt + F4";
 	}
 	
@@ -165,7 +162,7 @@ class EditorExitCommand: EditorCommand
 
 class EditorUndoCommand: EditorCommand
 {
-	void EditorUndoCommand() {
+	void EditorUndoCommand(ref array<KeyCode> input_gestures = null) {
 		SetCanExecute(GetEditor().GetObjectManager().CanUndo());
 	}
 	
@@ -177,14 +174,14 @@ class EditorUndoCommand: EditorCommand
 		return "Undo";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + Z";
 	}
 }
 
 class EditorRedoCommand: EditorCommand
 {
-	void EditorRedoCommand() {
+	void EditorRedoCommand(ref array<KeyCode> input_gestures = null) {
 		SetCanExecute(GetEditor().GetObjectManager().CanRedo());
 	}
 	
@@ -196,7 +193,7 @@ class EditorRedoCommand: EditorCommand
 		return "Redo";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + Y";
 	}
 }
@@ -213,7 +210,7 @@ class EditorSelectAllCommand: EditorCommand
 		return "Select All...";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + A";
 	}
 }
@@ -228,7 +225,7 @@ class EditorDeleteCommand: EditorCommand
 		return "Delete";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Delete";
 	}
 }
@@ -243,7 +240,7 @@ class EditorExportCommand: EditorCommand
 		return "Export";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + E";
 	}
 }
@@ -258,14 +255,14 @@ class EditorImportCommand: EditorCommand
 		return "Import";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + I";
 	}
 }
 
 class EditorCutCommand: EditorCommand
 {
-	void EditorCutCommand() {
+	void EditorCutCommand(ref array<KeyCode> input_gestures = null) {
 		SetCanExecute(GetEditor().GetSelectedObjects().Count() > 0);
 	}
 	
@@ -277,14 +274,14 @@ class EditorCutCommand: EditorCommand
 		return "Cut";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + X";
 	}
 }
 
 class EditorCopyCommand: EditorCommand
 {
-	void EditorCopyCommand() {
+	void EditorCopyCommand(ref array<KeyCode> input_gestures = null) {
 		SetCanExecute(GetEditor().GetSelectedObjects().Count() > 0);
 	}
 	
@@ -296,14 +293,14 @@ class EditorCopyCommand: EditorCommand
 		return "Copy";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + C";
 	}
 }
 
 class EditorPasteCommand: EditorCommand
 {
-	void EditorPasteCommand() {
+	void EditorPasteCommand(ref array<KeyCode> input_gestures = null) {
 		string clipboard_text;
 		GetGame().CopyFromClipboard(clipboard_text);
 		SetCanExecute(clipboard_text != string.Empty);
@@ -317,7 +314,7 @@ class EditorPasteCommand: EditorCommand
 		return "Paste";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + V";
 	}
 }
@@ -348,7 +345,7 @@ class EditorEnvironmentControlCommand: EditorCommand
 		return "Environment";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + Shift + I";
 	}
 	
@@ -369,7 +366,7 @@ class EditorCameraControlsCommand: EditorCommand
 		return "Camera";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + Shift + T";
 	}
 }
@@ -388,7 +385,7 @@ class EditorReloadHudCommand: EditorCommand
 		return "set:dayz_gui image:icon_refresh";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + Shift + U";
 	}
 }
@@ -416,7 +413,7 @@ class EditorObjectPropertiesCommand: EditorCommand
 		return "Properties";
 	}
 	
-	override string GetKeys() {
+	override string GetKeyDisplay() {
 		return "Ctrl + T";
 	}
-}
+}*/

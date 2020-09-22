@@ -1,11 +1,11 @@
 
-class EditorDialog: EditorMVCLayout
+class EditorDialog: EditorScriptView
 {				
 	protected WrapSpacerWidget DialogContent;
 	protected GridSpacerWidget ButtonGrid;
 	protected WrapSpacerWidget WindowDragWrapper;
 	
-	void EditorDialog(Widget parent = null) {
+	void EditorDialog(Widget parent = null, ScriptView script_view = null) {
 		m_LayoutRoot.Show(false);
 	}
 	
@@ -35,14 +35,14 @@ class EditorDialog: EditorMVCLayout
 	}
 		
 	// Command can either be a Callback function in the Controller OR
-	// the classname of a RelayCommand
+	// the classname of a RoutedUICommand
 	protected ButtonWidget AddButton(string label, string command)
 	{		
 		EditorDialogButtonViewBinding view_binding;
 		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", ButtonGrid);
 		panel.GetScript(view_binding);
 		view_binding.SetLabel(label);
-		view_binding.SetRelayCommand(command);
+		view_binding.SetRoutedUICommand(command);
 		GetController().LoadDataBindings(panel);
 		return panel.FindAnyWidget("DialogButton");
 	}
@@ -57,9 +57,8 @@ class EditorDialog: EditorMVCLayout
 	void ShowDialog()
 	{
 		EditorLog.Trace("EditorDialog::Show");
-		
-		m_Editor.GetCamera().SetMoveEnabled(false);
-		m_Editor.GetCamera().SetLookEnabled(false);
+		m_Editor.GetCamera().MoveEnabled = false;
+		m_Editor.GetCamera().LookEnabled = false;
 		m_EditorHud.ShowCursor(true);
 		
 		EditorUIManager.CurrentDialog = this;
@@ -74,9 +73,8 @@ class EditorDialog: EditorMVCLayout
 	void CloseDialog()
 	{
 		EditorLog.Trace("EditorDialog::Close");
-	
-		m_Editor.GetCamera().SetMoveEnabled(true);
-		m_Editor.GetCamera().SetLookEnabled(true);
+		m_Editor.GetCamera().MoveEnabled = true;
+		m_Editor.GetCamera().LookEnabled = true;
 		m_EditorHud.ShowCursor(true);
 	}
 		

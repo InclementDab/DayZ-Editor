@@ -1,5 +1,5 @@
 
-class EditorNotification: MVCLayout
+class EditorNotification: ScriptView
 {
 	static const float NOTIF_ANIM_TIME = 0.1;
 	
