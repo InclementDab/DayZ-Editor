@@ -7,14 +7,13 @@ class EditorMapController: Controller
 class EditorMap: MVCLayout
 {
 	
-	protected MapWidget EditorMapWidget;
+	MapWidget EditorMapWidget;
 	
 	
-	// Temp hopefully
-	MapWidget GetMapWidget() {
-		return EditorMapWidget;
+	void InsertWidget(EditorMarker editor_marker) {
+		
 	}
-	
+		
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/layouts/EditorMap.layout";
 	}

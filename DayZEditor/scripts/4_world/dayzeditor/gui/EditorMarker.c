@@ -143,20 +143,21 @@ class EditorObjectMarker: EditorMarker
 
 class EditorObjectMapMarker: EditorObjectMarker
 {		
-	private MapWidget m_MapWidget;
-	MapWidget GetMapWidget() { return m_MapWidget; }
+	
+	private EditorMap m_EditorMap;
 	
 	void EditorObjectMapMarker(EditorObject editor_object)
 	{
 		m_DragHandler = new MapDragHandler(m_EditorObject);
+		m_EditorMap = GetEditor().GetEditorHud().GetEditorMap();
 	}
 	
 	override void Update()
 	{
-		if (!GetEditor().GetEditorHud().IsMapVisible()) return;
-		m_MapWidget = MapWidget.Cast(m_LayoutRoot.GetParent());
-		vector pos = m_MapWidget.MapToScreen(m_EditorObject.GetPosition());
-		SetPos(pos[0], pos[1]);
+		if (!m_EditorMap.EditorMapWidget.IsVisible()) return;
+		
+		vector position = m_EditorMap.EditorMapWidget.MapToScreen(m_EditorObject.GetPosition());
+		SetPos(position[0], position[1]);
 		super.Update();
 	}
 }
@@ -170,6 +171,11 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	override void Update()
 	{
+		if (m_EditorMap.EditorMapWidget.IsVisible()) {
+			m_LayoutRoot.Show(false);
+			return;
+		}
+		
 		vector position;
 		vector object_transform[4];
 		m_EditorObject.GetTransform(object_transform);

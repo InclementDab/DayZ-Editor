@@ -158,15 +158,8 @@ class MapDragHandler: DragHandler
 {
 	
 	override void OnDragging(out vector transform[4], notnull EditorObject target)
-	{
-		int x, y;
-		GetMousePos(x, y);
-		
-		
-		
-		
-		
-		vector pos = GetEditor().GetEditorHud().GetMap().ScreenToMap(Vector(x, y, 0));
+	{		
+		vector pos = Editor.CurrentMousePosition;
 		transform[3] = pos;
 		
 		if (GetEditor().GetEditorHud().GetEditorHudController().GroundButton) {

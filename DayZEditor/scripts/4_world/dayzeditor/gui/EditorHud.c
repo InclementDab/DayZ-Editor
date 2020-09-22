@@ -4,6 +4,9 @@
 class EditorHud: MVCLayout
 {
 	protected ref EditorMap m_EditorMap;
+	EditorMap GetEditorMap() {
+		return m_EditorMap;
+	}
 	
 	// Layout Elements
 	protected Widget NotificationFrame;
@@ -12,6 +15,13 @@ class EditorHud: MVCLayout
 	void EditorHud(Widget parent = null)
 	{	
 		EditorLog.Trace("EditorHud");
+		
+		m_EditorMap = new EditorMap(MapContainer);
+	}
+	
+	void ~EditorHud() 
+	{
+		delete m_EditorMap;
 	}
 	
 	void Show(bool show) 
@@ -36,23 +46,7 @@ class EditorHud: MVCLayout
 	void ShowCursor(bool state) {
 		GetGame().GetUIManager().ShowCursor(state);
 	}
-	
-	void ShowMap(bool show)	{
-		if (show) {
-			m_EditorMap = new EditorMap(MapContainer);
-		} else {
-			delete m_EditorMap;
-		}
-	}
-	
-	bool IsMapVisible() { 
-		return (m_EditorMap != null); 
-	}
 		
-	MapWidget GetMap() {
-		return m_EditorMap.GetMapWidget();
-	}
-	
 	void CreateNotification(string text, int color = -4301218, float duration = 4)
 	{
 		EditorLog.Trace("EditorHud::CreateNotification");

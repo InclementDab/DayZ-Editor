@@ -215,7 +215,13 @@ class Editor
 		set<Object> obj = new set<Object>();
 		int x, y;
 		GetMousePos(x, y);
-		CurrentMousePosition = MousePosToRay(obj);
+		
+		if (m_EditorHud && m_EditorHud.GetEditorMap()) {
+			CurrentMousePosition = m_EditorHud.GetEditorMap().EditorMapWidget.ScreenToMap(Vector(x, y, 0));
+		} else {
+			CurrentMousePosition = MousePosToRay(obj);
+		}
+		
 		
 		if (!IsPlacing()) {
 			Object target = obj.Get(0);

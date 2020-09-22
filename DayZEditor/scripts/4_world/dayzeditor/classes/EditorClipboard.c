@@ -50,15 +50,7 @@ class EditorClipboard
 		foreach (ref EditorObjectData pasted_object: data) {
 			
 			
-			vector position;
-			if (GetEditor().GetEditorHud().IsMapVisible()) {
-				MapWidget map_widget = GetEditor().GetEditorHud().GetMap();
-				int x, y;
-				GetMousePos(x, y);
-				position = pasted_object.Position + map_widget.ScreenToMap(Vector(x, y, 0));
-			} else {
-				position = pasted_object.Position + cursor_pos;
-			}
+			vector position = pasted_object.Position + Editor.CurrentMousePosition;
 			
 			vector transform[4] = {
 				"1 0 0",

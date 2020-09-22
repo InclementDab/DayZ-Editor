@@ -141,7 +141,7 @@ class EditorHudController: Controller
 	void InsertMapMarker(EditorMarker map_marker)
 	{
 		EditorLog.Trace("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
-		GetEditor().GetEditorHud().GetMap().AddChild(map_marker.GetLayoutRoot());
+		GetEditor().GetEditorHud().GetEditorMap().EditorMapWidget.AddChild(map_marker.GetLayoutRoot());
 	}
 	
 	int ReloadPlaceableObjects() 
@@ -531,7 +531,8 @@ class EditorHudController: Controller
 		foreach (EditorObject editor_object: placed_objects) {
 			
 			float marker_x, marker_y;
-			if (GetEditor().GetEditorHud().IsMapVisible()) {
+			// this kinda sucks
+			if (GetEditor().GetEditorHud().GetEditorMap().EditorMapWidget.IsVisible()) {
 				editor_object.GetMapMarkerPosition(marker_x, marker_y);
 			} else {
 				editor_object.GetObjectMarkerPosition(marker_x, marker_y);
