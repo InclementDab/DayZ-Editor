@@ -36,8 +36,6 @@ class BlowoutEvent
 	private bool m_MissionWeatherState;
 	private Weather m_Weather;
 	
-	
-	
 	protected autoptr ref MaterialEffect m_MatGlow;
 	protected autoptr ref MaterialEffect m_MatBlur;
 	protected autoptr ref MaterialEffect m_MatChroma;
@@ -210,7 +208,6 @@ class BlowoutEvent
 		if (m_APSI && m_APSI.IsSwitchedOn()) {
 			
 		} else {
-			
 			m_MatBlur.LerpParam("Intensity", 0.4 * intensity, 0.1, 0.75);
 			m_MatGlow.LerpParam("Vignette", 0.4 * intensity, 0, 0.75);
 			m_MatChroma.LerpParam("PowerX", 0.5 * intensity, 0, 1);
@@ -237,7 +234,7 @@ class BlowoutEvent
 		m_Player.AddHealth("", "Shock", -m_Settings.ImpactShockDamage);
 		PlaySoundOnPlayer(BlowoutSound.Blowout_Begin);
 		Sleep(100);
-		PlaySoundOnPlayer(BlowoutSound.Blowout_FullWave, 0.25);
+		
 		thread CreateBlowout(1);
 		
 		if (m_APSI && m_APSI.IsSwitchedOn()) {
@@ -247,6 +244,7 @@ class BlowoutEvent
 				return;
 			}
 			
+			PlaySoundOnPlayer(BlowoutSound.Blowout_FullWave, 0.25);
 			m_Player.StartCommand_Unconscious(0);
 			PPEffects.SetUnconsciousnessVignette(true);
 		}
