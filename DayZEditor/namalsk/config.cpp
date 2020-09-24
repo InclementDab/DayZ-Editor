@@ -70,7 +70,10 @@ class CfgSoundShaders
 
 	class Blowout_Begin_SoundShader: Namalsk_Environment_SoundShader
 	{
-		samples[] = {{"DayZEditor\namalsk\blowout\blowout_begin", 1}};
+		samples[] = {
+			{"DayZEditor\namalsk\blowout\blowout_begin", 1},
+			{"DayZEditor\namalsk\blowout\blowout_begin_02", 1}
+		};
 	};
 
 	class Blowout_FullWave_SoundShader: Namalsk_Environment_SoundShader
@@ -81,8 +84,12 @@ class CfgSoundShaders
 
 	class Blowout_Voices_SoundShader: Namalsk_Environment_SoundShader
 	{
-		samples[] = {{"DayZEditor\namalsk\blowout\blowout_psy_voices", 1}};
-        volume = 0.2;
+		samples[] = 
+		{
+			{"DayZEditor\namalsk\blowout\blowout_psy_voices", 1},
+			{"DayZEditor\namalsk\blowout\sabaoth_psi", 1}
+		};
+        volume = 0.1;
 	};
 
 	class Blowout_Hit_SoundShader: Namalsk_Environment_SoundShader
@@ -123,9 +130,21 @@ class CfgSoundShaders
     {
 		samples[] = {{"DayZEditor\namalsk\blowout\blowout_alarm", 1}};
         range = 10000;
-        frequencyRandomizer = 3;
     };
 
+	class Blowout_Impact_SoundShader: Namalsk_Environment_SoundShader
+	{
+		samples[] = {
+			{"DayZEditor\namalsk\blowout\blowout_wave_01", 1},
+			{"DayZEditor\namalsk\blowout\blowout_wave_02", 1},
+			{"DayZEditor\namalsk\blowout\blowout_impact", 1},
+			{"DayZEditor\namalsk\blowout\blowout_impact_02", 1}};
+	};
+
+	class Blowout_Contact_SoundShader: Namalsk_Environment_SoundShader
+	{
+		samples[] = {{"DayZEditor\namalsk\blowout\blowout_contact", 1}};
+	};
 
 	class APSI_Enable_SoundShader: Namalsk_Item_SoundShader
 	{
@@ -140,6 +159,11 @@ class CfgSoundShaders
 	class APSI_Disable_SoundShader: Namalsk_Item_SoundShader
 	{
 		samples[] = {{"DayZEditor\namalsk\blowout\apsi_disable", 1}};
+	};
+
+	class Blowout_NearImpact_SoundShader: Namalsk_Item_SoundShader
+	{
+		samples[] = {{"DayZEditor\namalsk\blowout\pux_blast", 1}};
 	};
 };
 
@@ -203,5 +227,20 @@ class CfgSoundSets
 	class APSI_Disable: Namalsk_Soundset
 	{
 		soundShaders[] = {"APSI_Disable_SoundShader"};
+	};
+
+	class Blowout_NearImpact: Namalsk_Soundset
+	{
+		soundShaders[] = {"Blowout_NearImpact_SoundShader"};
+	};
+
+	class Blowout_Impact: Namalsk_Soundset
+	{
+		soundShaders[] = {"Blowout_Impact_SoundShader"};
+	};
+	
+	class Blowout_Contact: Namalsk_Soundset
+	{
+		soundShaders[] = {"Blowout_Contact_SoundShader"};
 	};
 };

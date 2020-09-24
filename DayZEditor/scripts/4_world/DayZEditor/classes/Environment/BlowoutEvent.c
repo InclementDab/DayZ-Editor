@@ -9,7 +9,10 @@ enum BlowoutSound
 	Blowout_Alarm,
 	APSI_Enable,
 	APSI_Detect,
-	APSI_Disable
+	APSI_Disable,
+	Blowout_NearImpact,
+	Blowout_Impact,
+	Blowout_Contact
 }
 
 class BlowoutLight: ScriptedLightBase
@@ -78,25 +81,27 @@ class BlowoutEvent
 		m_MatColors = new MaterialEffect("graphics/materials/postprocess/colors");
 		m_MissionWeatherState = m_Weather.GetMissionWeather();
 		m_Weather.MissionWeather(false);
-
-		m_BlowoutLight = BlowoutLight.Cast(ScriptedLightBase.CreateLight(BlowoutLight, Vector(m_Player.GetPosition()[0], 8000, m_Player.GetPosition()[2])));
 		
+		m_Weather.SetStorm(0, 1, 3000);
+		m_Weather.GetFog().Set(0.4, m_Settings.BlowoutDelay, m_Settings.BlowoutDelay);
+		PlayEnvironmentSound(BlowoutSound.Blowout_Begin, m_Position, 1.5);
+		Sleep(10000);
 		
+		//m_BlowoutLight = BlowoutLight.Cast(ScriptedLightBase.CreateLight(BlowoutLight, Vector(m_Player.GetPosition()[0], 8000, m_Player.GetPosition()[2])));
 		EntityAI headgear = GetGame().GetPlayer().GetInventory().FindAttachment(InventorySlots.HEADGEAR);
-		
 		if (Class.CastTo(m_APSI, headgear)) {
 			m_APSI.SwitchOn();
-		}		
+		}
 
 		ref array<vector> alarm_positions = m_Settings.GetAlarmPositions();
 		foreach (vector pos: alarm_positions) {
-			m_AlarmSounds.Insert(PlayEnvironmentSound(BlowoutSound.Blowout_Alarm, pos, 1, 0.3));
+			//m_AlarmSounds.Insert(PlayEnvironmentSound(BlowoutSound.Blowout_Alarm, pos, 1, 0));
 		}
 		
 		thread LerpFunction(g_Game, "SetEVValue", 0, -3, m_Settings.BlowoutDelay);
 		
-		m_Weather.SetStorm(0, 1, 3000);
-		m_Weather.GetFog().Set(0.4, m_Settings.BlowoutDelay, m_Settings.BlowoutDelay);
+		
+		
 		Sleep(10000);
 				
 		m_Weather.GetOvercast().Set(1, m_Settings.BlowoutDelay, m_Settings.BlowoutDelay);		
@@ -106,8 +111,6 @@ class BlowoutEvent
 		while (timepassed < m_Settings.BlowoutDelay * 1000) {
 			
 			float pregame_phase = 1 / (m_Settings.BlowoutDelay * 1000) * timepassed;
-			
-			//PlayEnvironmentSound(BlowoutSound.Blowout_Wave, m_Position, pregame_phase);
 			float _t = 1000 * Math.RandomFloat(0.5, 2);
 			timepassed += _t;
 			Sleep(_t);
@@ -116,7 +119,7 @@ class BlowoutEvent
 			timepassed += _t;
 			float inverse_phase = Math.AbsFloat(pregame_phase - 1);
 			inverse_phase *= 100;
-			PlayEnvironmentSound(BlowoutSound.Blowout_Voices, RandomizeVector(m_Player.GetPosition(), inverse_phase, inverse_phase + 50), pregame_phase * 0.25, 1.6);
+			PlayEnvironmentSound(BlowoutSound.Blowout_Voices, RandomizeVector(m_Player.GetPosition(), inverse_phase, inverse_phase + 50), pregame_phase * 0.05, 1);
 			Sleep(_t);
 		}
 		
@@ -128,20 +131,19 @@ class BlowoutEvent
 		}
 
 		
-		// Actual Event	
-		PlaySoundOnPlayer(BlowoutSound.Blowout_Begin);
+		// Actual Event
+		PlaySoundOnPlayer(BlowoutSound.Blowout_Contact, 1.5);
+		//Sleep(vector.Distance(m_Player.GetPosition(), m_Position) * 0.343);
 		thread CreateBlowout(0.2);
+		
 		Sleep(8000);
 		for (int j = 0; j < m_Settings.BlowoutCount; j++) {
 			
 			float phase = (1 / m_Settings.BlowoutCount) * j;
 			phase = Math.Clamp(phase, 0.25, FLT_MAX);
 			
-			for (int k = 0; k < j; k++) {
-				PlaySoundOnPlayer(BlowoutSound.Blowout_Begin, phase);
-			}
-			
-			PlaySoundOnPlayer(BlowoutSound.Blowout_Begin, phase);
+			PlaySoundOnPlayer(BlowoutSound.Blowout_Contact, phase);
+			//Sleep(vector.Distance(m_Player.GetPosition(), m_Position) * 0.343);
 			thread CreateBlowout(phase);
 			Sleep(3000 * Math.RandomFloat(0.7, 1.2));
 		}
@@ -200,24 +202,23 @@ class BlowoutEvent
 		Sleep(vector.Distance(pos, m_Player.GetPosition()) * 0.343);
 		
 		
-		m_Player.GetStaminaHandler().DepleteStamina(EStaminaModifiers.JUMP);
-		CreateCameraShake(intensity * 3);
-		
-		CreateLightning(m_Player.GetPosition(), intensity * 3);
+		//m_Player.GetStaminaHandler().DepleteStamina(EStaminaModifiers.JUMP);
+		//CreateCameraShake(intensity);
+		CreateLightning(m_Position, intensity * 3);
 		
 		if (m_APSI && m_APSI.IsSwitchedOn()) {
 			
 		} else {
-			m_MatBlur.LerpParam("Intensity", 0.4 * intensity, 0.1, 0.75);
-			m_MatGlow.LerpParam("Vignette", 0.4 * intensity, 0, 0.75);
-			m_MatChroma.LerpParam("PowerX", 0.5 * intensity, 0, 1);
+			//m_MatBlur.LerpParam("Intensity", 0.4 * intensity, 0.1, 0.75);
+			//m_MatGlow.LerpParam("Vignette", 0.4 * intensity, 0, 0.75);
+			//m_MatChroma.LerpParam("PowerX", 0.5 * intensity, 0, 1);
 		}
 	}
 	
 	private void CreateBlowout(float intensity)
 	{	
 		m_Player.GetStaminaHandler().DepleteStamina(EStaminaModifiers.JUMP);		
-		CreateCameraShake(intensity);
+		CreateCameraShake(intensity * 2);
 		if (m_APSI && m_APSI.IsSwitchedOn()) {
 			
 		} else {
@@ -231,8 +232,10 @@ class BlowoutEvent
 	
 	private void CreateFinalBlowout()
 	{
+		PlaySoundOnPlayer(BlowoutSound.Blowout_NearImpact);
+		Sleep(1700);
 		m_Player.AddHealth("", "Shock", -m_Settings.ImpactShockDamage);
-		PlaySoundOnPlayer(BlowoutSound.Blowout_Begin);
+		PlaySoundOnPlayer(BlowoutSound.Blowout_Contact);
 		Sleep(100);
 		
 		thread CreateBlowout(1);
@@ -264,11 +267,12 @@ class BlowoutEvent
 
 	private AbstractWave PlaySoundOnPlayer(BlowoutSound sound, float volume = 1)
 	{
+
 		SoundObjectBuilder builder = new SoundObjectBuilder(new SoundParams(typename.EnumToString(BlowoutSound, sound)));
 		SoundObject sound_object = builder.BuildSoundObject();
+	
 		sound_object.SetKind(WaveKind.WAVEENVIRONMENTEX);
 		sound_object.SetPosition(m_Player.GetPosition());
-		
 		AbstractWave wave = GetGame().GetSoundScene().Play2D(sound_object, builder);
 		wave.SetVolume(volume);
 		wave.Play();
@@ -305,14 +309,14 @@ class BlowoutEvent
 	{
 		for (int i = 0; i < Math.RandomFloat(1, 3) * intensity; i++) {
 			thread CreateBolt(position);
-			Sleep(Math.RandomInt(0, 350));
+			Sleep(Math.RandomInt(0, 100));
 		}
 	}
 	
 	void CreateBolt(vector position)
 	{
 		position = RandomizeVector(position, 10, 50);
-		PlayEnvironmentSound(BlowoutSound.Blowout_Hit, position, 0.2);
+		PlayEnvironmentSound(BlowoutSound.Blowout_Hit, position, 0.35);
 		//position[1] = GetGame().SurfaceY(position[0], position[2]);
 		Object bolt = GetGame().CreateObject(BOLT_TYPES[Math.RandomInt(0, 1)], position);
 		bolt.SetOrientation(Vector(0, Math.RandomFloat(0, 360), 0));

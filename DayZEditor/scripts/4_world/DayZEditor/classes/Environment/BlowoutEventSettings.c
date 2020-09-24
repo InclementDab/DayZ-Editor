@@ -2,10 +2,10 @@ class BlowoutEventSettings
 {
 	
 	// Amount of waves
-	int WaveCount = 3;
+	int WaveCount = 10;
 	
 	// Time between waves in seconds
-	float TimeBetweenWaves = 5;
+	float TimeBetweenWaves = 1;
 	
 	// Time between StartBlowout and actual event in seconds
 	float BlowoutDelay = 30; // 120
