@@ -68,7 +68,7 @@ class EditorHud: ScriptView
 
 	
 	override string GetLayoutFile() {
-		return "DayZEditor/gui/layouts/EditorUI.layout";
+		return "DayZEditor/gui/layouts/EditorHud.layout";
 	}
 	
 	override typename GetControllerType() {

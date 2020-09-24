@@ -80,18 +80,6 @@ modded class MVC
 		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
 		type_conversions.Insert(EditorBrushObject, TypeConversionBrushObject);
 	}
-	
-	override void RegisterWidgetControllers(out TypenameHashMap widget_controllers)
-	{
-		super.RegisterWidgetControllers(widget_controllers);
-		/*widget_controllers.Insert(EditorPrefabGroup, EditorPrefabGroupController);
-		widget_controllers.Insert(EditorPrefabEditText, EditorPrefabEditTextController);
-		widget_controllers.Insert(EditorPrefabPosition, EditorPrefabPositionController);
-		widget_controllers.Insert(EditorPrefabSlider, EditorPrefabSliderController);
-		widget_controllers.Insert(EditorPrefabButton, EditorPrefabButtonController);
-		widget_controllers.Insert(EditorPrefabDropdown, EditorPrefabDropdownController);*/
-			
-	}
 }
 
 

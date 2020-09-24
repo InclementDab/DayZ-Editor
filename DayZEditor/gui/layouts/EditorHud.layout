@@ -338,10 +338,6 @@ FrameWidgetClass EditorFrame {
                  stretch 1
                 }
                }
-               {
-                ScriptParamsClass {
-                }
-               }
               }
               ButtonWidgetClass VehicleSelect {
                position 0 0
@@ -370,11 +366,6 @@ FrameWidgetClass EditorFrame {
                  "src alpha" 1
                  "no wrap" 1
                  stretch 1
-                }
-               }
-               {
-                ScriptParamsClass {
-                 Button_ID 1
                 }
                }
               }
@@ -410,11 +401,6 @@ FrameWidgetClass EditorFrame {
                  "flip u" 1
                 }
                }
-               {
-                ScriptParamsClass {
-                 Button_ID 2
-                }
-               }
               }
               ButtonWidgetClass HumanSelect {
                visible 1
@@ -446,16 +432,6 @@ FrameWidgetClass EditorFrame {
                  stretch 1
                 }
                }
-               {
-                ScriptParamsClass {
-                 Button_ID 3
-                }
-               }
-              }
-             }
-             {
-              ScriptParamsClass {
-               Binding_Name "PlaceableCategorySelection"
               }
              }
             }
@@ -2002,6 +1978,10 @@ FrameWidgetClass EditorFrame {
      }
     }
    }
+  }
+ }
+ {
+  ScriptParamsClass {
   }
  }
 }

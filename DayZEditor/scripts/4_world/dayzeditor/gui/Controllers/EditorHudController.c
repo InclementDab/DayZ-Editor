@@ -158,7 +158,7 @@ class EditorHudController: Controller
 				
 				if (full_path.Find("HouseNoDestruct") != -1) {
 					EditorPlaceableListItem item = new EditorPlaceableListItem(null, class_name, config_path);
-					LeftbarSpacerData.Insert(item);		
+					LeftbarSpacerData.Insert(item);
 					
 				
 				} else {
