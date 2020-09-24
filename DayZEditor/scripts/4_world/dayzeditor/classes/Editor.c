@@ -216,8 +216,8 @@ class Editor
 		int x, y;
 		GetMousePos(x, y);
 		
-		if (m_EditorHud && m_EditorHud.GetEditorMap().EditorMapWidget.IsVisible()) {
-			CurrentMousePosition = m_EditorHud.GetEditorMap().EditorMapWidget.ScreenToMap(Vector(x, y, 0));
+		if (m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible()) {
+			CurrentMousePosition = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(x, y, 0));
 		} else {
 			CurrentMousePosition = MousePosToRay(obj);
 		}
@@ -350,7 +350,13 @@ class Editor
 	// Only use this to handle hardcoded keys (ctrl + z etc...)
 	// Return TRUE if handled.
 	bool OnKeyPress(int key)
-	{				
+	{			
+		EditorCommand command = GetCommandFromHotkeys(key).Spawn();
+		if (command) {
+			command.Call();
+			return true;
+		}
+			
 		switch (key) {
 				
 			case KeyCode.KC_ESCAPE: {
@@ -600,11 +606,9 @@ class Editor
 		return m_EditorHud;
 	}
 	
-	/*
+	
 	typename GetCommandFromHotkeys(int key)
 	{
-		typename x;
-		return x;
 		//EditorLog.Trace("Editor::GetCommandFromHotkeys");
 		
 		if (KeyState(KeyCode.KC_LCONTROL)) {
@@ -671,7 +675,7 @@ class Editor
 				}
 				
 				case KeyCode.KC_X: {
-					//return EditorCutCommand;
+					return EditorCutCommand;
 					break;
 				}
 
@@ -688,6 +692,6 @@ class Editor
 		typename t;
 		return t;
 	}
-*/
+
 }
 

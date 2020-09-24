@@ -7,10 +7,10 @@ class EditorCommand: RelayCommand
 	string Text;
 	
 	
-	override void Execute(CommandArgs args) 
+	override void Execute(Class sender, Param args) 
 	{
 		EditorLog.Trace("EditorCommand::Execute");
-		super.Execute(args);
+		super.Execute(sender, args);
 		if (EditorUIManager.CurrentMenu)
 			delete EditorUIManager.CurrentMenu;
 		

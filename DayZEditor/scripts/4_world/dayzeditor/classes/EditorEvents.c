@@ -51,7 +51,7 @@ class EditorEvents
 	
 	// Called AFTER Map is Toggled!
 	static ref ScriptInvoker OnMapToggled = new ScriptInvoker();
-	static void MapToggled(Class context, EditorMap editor_map, bool state)
+	static void MapToggled(Class context, MapWidget editor_map, bool state)
 	{
 		EditorLog.Trace("EditorEvents::MapToggled");
 		OnMapToggled.Invoke(context, editor_map, state);

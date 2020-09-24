@@ -168,7 +168,7 @@ class EditorObject
 	* Events *
 	*********/
 	
-	void OnMapToggled(Class context, EditorMap editor_map, bool state)
+	void OnMapToggled(Class context, MapWidget editor_map, bool state)
 	{
 		EditorLog.Trace("EditorObject::OnMapToggled");
 		

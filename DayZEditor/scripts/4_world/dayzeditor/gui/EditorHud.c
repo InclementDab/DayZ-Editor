@@ -6,29 +6,15 @@ class EditorHud: ScriptView
 	protected Widget NotificationFrame;
 	protected Widget MapContainer;
 	
-	protected ref EditorMenu m_EditorFileMenu;
+	MapWidget EditorMapWidget;
 	
-	protected ref EditorMap m_EditorMap;
-	EditorMap GetEditorMap() {
-		return m_EditorMap;
-	}
 	
 	void EditorHud(Widget parent = null)
 	{	
 		EditorLog.Trace("EditorHud");
-		m_EditorMap = new EditorMap(parent);
-		m_EditorMap.EditorMapWidget.Show(false);
+		EditorMapWidget.Show(false);
 	}
-	
-	void EditorCommand_NewExecute(CommandArgs args)
-	{
-		GetEditor().New();
-	}
-	
-	void ~EditorHud() 
-	{
-		delete m_EditorMap;
-	}
+
 	
 	void Show(bool show) 
 	{

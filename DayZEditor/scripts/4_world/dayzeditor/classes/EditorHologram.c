@@ -12,7 +12,7 @@ class EditorHologram
 	
 	void EditorHologram(string type_name, vector position) 
 	{
-		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout", GetEditor().GetEditorHud().GetEditorMap().EditorMapWidget);
+		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout", GetEditor().GetEditorHud().EditorMapWidget);
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
 		m_ProjectionEntity = GetGame().CreateObjectEx(type_name, position, ECE_LOCAL);
