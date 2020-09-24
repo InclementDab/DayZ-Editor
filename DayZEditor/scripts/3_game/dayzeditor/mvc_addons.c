@@ -90,8 +90,7 @@ modded class MVC
 		widget_controllers.Insert(EditorPrefabSlider, EditorPrefabSliderController);
 		widget_controllers.Insert(EditorPrefabButton, EditorPrefabButtonController);
 		widget_controllers.Insert(EditorPrefabDropdown, EditorPrefabDropdownController);
-		
-		
+			
 	}
 }
 
