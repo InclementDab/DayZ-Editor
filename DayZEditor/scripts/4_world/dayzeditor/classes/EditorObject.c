@@ -83,7 +83,7 @@ class EditorObject
 		m_LineVerticies[5] = clip_info[1];
 		m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
 		m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
-		
+		/*
 		m_LineCenters[0] = AverageVectors(m_LineVerticies[0], m_LineVerticies[1]);
 		m_LineCenters[1] = AverageVectors(m_LineVerticies[0], m_LineVerticies[3]);
 		m_LineCenters[2] = AverageVectors(m_LineVerticies[0], m_LineVerticies[7]);
@@ -97,7 +97,7 @@ class EditorObject
 		
 		m_LineCenters[9] = AverageVectors(m_LineVerticies[5], m_LineVerticies[2]);
 		m_LineCenters[10] = AverageVectors(m_LineVerticies[5], m_LineVerticies[4]);		
-		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
+		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);*/
 		
 		for (int i = 0; i < 8; i++) {
 			m_SnapPoints.Insert(new EditorSnapPoint(this, m_LineVerticies[i]));
@@ -410,7 +410,7 @@ class EditorObject
 		vector size = GetSize();
 		vector clip_info[2];
 		ClippingInfo(clip_info);
-		vector position = AverageVectors(clip_info[0], clip_info[1]);
+		vector position;// = AverageVectors(clip_info[0], clip_info[1]);
 		
 		for (int i = 0; i < 12; i++) {
 			

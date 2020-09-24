@@ -1,12 +1,5 @@
 
 
-
-class EditorCommandManager: CommandManager
-{
-	ref RoutedUICommand NewCommand = new RoutedUICommand("New", "New", { KeyCode.KC_LCONTROL, KeyCode.KC_X, KeyCode.KC_LMENU, KeyCode.KC_LSHIFT, KeyCode.KC_RSHIFT });
-	ref RoutedUICommand OpenCommand = new RoutedUICommand("Open", "Open", { KeyCode.KC_LCONTROL, KeyCode.KC_O });
-}
-
 class EditorHud: ScriptView
 {	
 	// Layout Elements
@@ -20,18 +13,14 @@ class EditorHud: ScriptView
 		return m_EditorMap;
 	}
 	
-	void EditorHud(ScriptView parent = null)
+	void EditorHud(Widget parent = null)
 	{	
 		EditorLog.Trace("EditorHud");
 		m_EditorMap = new EditorMap(parent);
 		m_EditorMap.EditorMapWidget.Show(false);
-		
-		m_EditorFileMenu = new EditorFileMenu(this);
-		
-		EditorCommandManager.Cast(m_CommandManager).NewCommand.Execute.Insert(EditorCommand_NewExecute);
 	}
 	
-	void EditorCommand_NewExecute(RoutedUICommandArgs args)
+	void EditorCommand_NewExecute(CommandArgs args)
 	{
 		GetEditor().New();
 	}
@@ -88,9 +77,5 @@ class EditorHud: ScriptView
 	
 	EditorHudController GetEditorHudController() { 
 		return EditorHudController.Cast(GetController());
-	}
-	
-	override typename GetCommandManagerType() {
-		return EditorCommandManager;
 	}
 }

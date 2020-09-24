@@ -35,16 +35,16 @@ class MapSelectDialogController: EditorDialogController
 		switch (property_name) {
 			
 			case "MapHostListboxSelection": {
-				
-				ViewBindingSet view_set = m_ViewBindingHashMap.Get(""); // dont ask. just use DebugPrint
+				/*
+				ViewBindingArray view_set = m_DataBindingHashMap.Get(""); // dont ask. just use DebugPrint
 				if (view_set) {
 					foreach (ViewBinding view: view_set) {
-						RoutedUICommand relay_command = view.GetRoutedUICommand();
+						RoutedUICommand relay_command = view.GetRelayCommand();
 						if (relay_command) {
 							//relay_command.SetCanExecute(MapHostListboxSelection != string.Empty); todo
 						}
 					}
-				}
+				}*/
 					
 				
 				
@@ -69,7 +69,7 @@ class MapSelectDialogController: EditorDialogController
 
 class MapSelectDialog: EditorDialog
 {		
-	void MapSelectDialog(ScriptView parent_view = null) 
+	void MapSelectDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("MapSelectDialog::Init");
 

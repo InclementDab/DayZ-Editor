@@ -5,7 +5,7 @@ class EditorDialog: EditorScriptView
 	protected GridSpacerWidget ButtonGrid;
 	protected WrapSpacerWidget WindowDragWrapper;
 	
-	void EditorDialog(ScriptView script_view = null) {
+	void EditorDialog(Widget parent = null) {
 		m_LayoutRoot.Show(false);
 	}
 	
@@ -25,7 +25,8 @@ class EditorDialog: EditorScriptView
 		AddContent(GetGame().GetWorkspace().CreateWidgets(layout));
 	}
 	
-	protected void AddContent(EditorPrefab prefab) {
+	// todo use a collection for this
+	protected void AddContent(ScriptView prefab) {
 		AddContent(prefab.GetLayoutRoot());
 	}
 	
@@ -42,7 +43,7 @@ class EditorDialog: EditorScriptView
 		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", ButtonGrid);
 		panel.GetScript(view_binding);
 		view_binding.SetLabel(label);
-		view_binding.SetRoutedUICommand(command);
+		//view_binding.SetRelayCommand(command); breaking dialog buttons
 		GetController().LoadDataBindings(panel);
 		return panel.FindAnyWidget("DialogButton");
 	}

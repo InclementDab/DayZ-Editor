@@ -39,7 +39,7 @@ class EditorSettingsDialog: EditorDialog
 	protected EditorSettings m_EditorSettings;
 	protected ref EditorSettingsDialogController m_EditorSettingsDialogController;
 	
-	void EditorSettingsDialog(ScriptView parent_view = null) 
+	void EditorSettingsDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorSettingsDialog::Init");
 		SetTitle("Editor Settings");
@@ -54,7 +54,7 @@ class EditorSettingsDialog: EditorDialog
 		
 		m_EditorSettingsDialogController = new EditorSettingsDialogController();
 		m_EditorSettingsDialogController.SetSettings(m_EditorSettings);
-		
+		/*
 		EditorPrefabGroup settings_group = new EditorPrefabGroup();
 		settings_group.AddPrefab(new EditorPrefabEditText("View Distance", "ViewDistance"));
 		settings_group.AddPrefab(new EditorPrefabEditText("Object View Distance", "ObjectViewDistance"));
@@ -62,7 +62,7 @@ class EditorSettingsDialog: EditorDialog
 		settings_group.AddPrefab(new EditorPrefabEditText("Auto Save", "AutoSaveTimer"));
 		settings_group.SetController(m_EditorSettingsDialogController);
 		
-		AddContent(settings_group);
+		AddContent(settings_group);*/
 	}
 	
 	void SaveCallback()

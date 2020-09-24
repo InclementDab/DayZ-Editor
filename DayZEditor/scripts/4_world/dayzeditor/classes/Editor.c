@@ -483,7 +483,7 @@ class Editor
 	{
 		EditorLog.Trace("Editor::New");
 		
-		MapSelectDialog select_window = new MapSelectDialog(m_EditorHud);
+		MapSelectDialog select_window = new MapSelectDialog(m_EditorHud.GetLayoutRoot());
 		select_window.SetTitle("Create New...");
 		select_window.ShowDialog();
 	}
@@ -522,7 +522,7 @@ class Editor
 	{
 		EditorLog.Trace("Editor::Export");
 		
-		EditorFileExportDialog export_dialog(m_EditorHud);
+		EditorFileExportDialog export_dialog(m_EditorHud.GetLayoutRoot());
 		export_dialog.ShowFileDialog();
 	}
 	

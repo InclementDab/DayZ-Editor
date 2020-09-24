@@ -45,12 +45,12 @@ class EditorBrushDialog: EditorDialog
 	
 	protected ref EditorBrushDialogController m_EditorBrushDialogController;
 	
-	protected ref EditorPrefabGroup m_BrushSettings;
-	protected ref EditorPrefabGroup m_BrushObjects;
+	//protected ref EditorPrefabGroup m_BrushSettings;
+	//protected ref EditorPrefabGroup m_BrushObjects;
 	
 	protected EditorBrushData m_BrushData;
 	
-	void EditorBrushDialog(ScriptView parent_view = null) 
+	void EditorBrushDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorBrushDialog"); 
 				
@@ -65,7 +65,7 @@ class EditorBrushDialog: EditorDialog
 		m_EditorBrushDialogController = new EditorBrushDialogController();
 		m_EditorBrushDialogController.SetBrushData(m_BrushData);
 		
-		m_BrushSettings = new EditorPrefabGroup("Brush Settings");
+		/*m_BrushSettings = new EditorPrefabGroup("Brush Settings");
 		m_BrushSettings.AddPrefab(new EditorPrefabEditText("Name", "BrushName"));
 		
 		m_BrushObjects = new EditorPrefabGroup("Brush Objects");		
@@ -76,10 +76,10 @@ class EditorBrushDialog: EditorDialog
 		
 		AddContent(m_BrushSettings);
 		AddContent(m_BrushObjects); 
-		
-		EditorPrefabButton btn = new EditorPrefabButton("Add Brush...", "AddBrushData");
-		btn.SetController(m_EditorBrushDialogController);
-		AddContent(btn);
+		*/
+		//EditorPrefabButton btn = new EditorPrefabButton("Add Brush...", "AddBrushData");
+		//btn.SetController(m_EditorBrushDialogController);
+		//AddContent(btn);
 	}
 	
 	void SaveCallback()

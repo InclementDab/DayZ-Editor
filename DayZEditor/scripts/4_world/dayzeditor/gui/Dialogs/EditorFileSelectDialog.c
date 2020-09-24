@@ -27,7 +27,7 @@ class EditorFileDialog: EditorDialog
 	protected TextListboxWidget m_FileHostListbox;
 	
 	
-	void EditorFileDialog(ScriptView parent_view = null) 
+	void EditorFileDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorFileDialog::Init");
 		AddContent("DayZEditor/gui/Layouts/dialogs/EditorFileDialog.layout");
@@ -117,7 +117,7 @@ class EditorFileDialog: EditorDialog
 class EditorFileOpenDialog: EditorFileDialog
 {
 	
-	void EditorFileOpenDialog(ScriptView parent_view = null) 
+	void EditorFileOpenDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorFileOpenDialog::Init");
 		
@@ -169,7 +169,7 @@ class EditorFileOpenDialog: EditorFileDialog
 class EditorFileImportDialog: EditorFileDialog
 {
 	
-	void EditorFileImportDialog(ScriptView parent_view = null) 
+	void EditorFileImportDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorFileImportDialog");
 		
@@ -227,7 +227,7 @@ class EditorFileSaveDialog: EditorFileDialog
 	
 	protected EditorWorldData m_EditorWorldData;
 
-	void EditorFileSaveDialog(ScriptView parent_view = null) 
+	void EditorFileSaveDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorFileSaveDialog::Init");
 		AddButton("Save", "SaveCallback");
@@ -341,7 +341,7 @@ class EditorFileExportDialog: EditorFileDialog
 	private ref array<ref ExportListItemData> m_ExportModes = new array<ref ExportListItemData>();
 	private ref ExportListItemData m_SelectedMode;
 	
-	void EditorFileExportDialog(ScriptView parent_view = null) 
+	void EditorFileExportDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorFileExportDialog::Init");
 		

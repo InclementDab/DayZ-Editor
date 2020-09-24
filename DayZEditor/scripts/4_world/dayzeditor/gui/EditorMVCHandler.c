@@ -5,7 +5,7 @@ class EditorScriptView: ScriptView
 	protected Editor m_Editor;
 	protected EditorHud m_EditorHud;
 	
-	void EditorScriptView(ScriptView parent = null)
+	void EditorScriptView(Widget parent = null)
 	{
 		EditorLog.Trace("EditorScriptView");
 		m_Editor = GetEditor();

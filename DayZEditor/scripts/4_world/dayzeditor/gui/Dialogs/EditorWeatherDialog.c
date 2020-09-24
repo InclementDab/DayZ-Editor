@@ -92,13 +92,13 @@ class EditorEnvironmentDialog: EditorDialog
 	protected ref EditorEnvironmentDialogController m_EditorWeatherDialogController;
 	
 	
-	void EditorEnvironmentDialog(ScriptView parent_view = null)
+	void EditorEnvironmentDialog(Widget parent = null)
 	{
 		EditorLog.Trace("EditorEnvironmentDialog");
 		m_EditorWeatherDialogController = EditorEnvironmentDialogController.Cast(m_Controller);
 		m_EditorWeatherDialogController.SetWorld(GetGame().GetWorld());
 		
-		EditorPrefabGroup weather_group = new EditorPrefabGroup("Weather");
+		/*EditorPrefabGroup weather_group = new EditorPrefabGroup("Weather");
 		
 		weather_group.AddPrefab(new EditorPrefabSlider("Time", "time", 0, 86400));
 		weather_group.AddPrefab(new EditorPrefabSlider("Rain", "rain", 0, 1));
@@ -111,7 +111,7 @@ class EditorEnvironmentDialog: EditorDialog
 		
 		AddContent(weather_group);
 		SetTitle("World Controller");
-		AddButton("Close", "DialogCloseRoutedUICommand");
+		AddButton("Close", "DialogCloseRoutedUICommand");*/
 	}
 	
 	override typename GetControllerType() {

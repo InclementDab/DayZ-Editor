@@ -1,11 +1,13 @@
-/*
-class EditorCommand: RoutedUICommand
+
+class EditorCommand: RelayCommand
 {	
 	protected Editor m_Editor = GetEditor();
 	protected EditorHudController m_EditorHudController = m_Editor.GetEditorHud().GetEditorHudController();
 	
+	string Text;
 	
-	override void Execute(RoutedUICommandArgs args) 
+	
+	override void Execute(CommandArgs args) 
 	{
 		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(args);
@@ -58,10 +60,6 @@ class EditorNewCommand: EditorCommand
 	override string GetKeyDisplay() {
 		return "Ctrl + N";
 	}
-	
-	override ref array<KeyCode> GetKeys() {
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_X };
-	}
 }
 
 class EditorSaveCommand: EditorCommand
@@ -83,7 +81,7 @@ class EditorSaveCommand: EditorCommand
 class EditorSaveAsCommand: EditorCommand
 {
 	override void Call() {
-		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(null, GetEditor().GetEditorHud().GetEditorHudController());
+		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(null);
 		save_dialog.SetWorldData(new EditorWorldData(GetEditor()));
 		string file = save_dialog.ShowFileDialog();
 	}
@@ -337,7 +335,7 @@ class EditorPreferencesCommand: EditorCommand
 class EditorEnvironmentControlCommand: EditorCommand
 {
 	override void Call() {
-		EditorEnvironmentDialog environment_dialog = new EditorEnvironmentDialog(null, m_EditorHudController);
+		EditorEnvironmentDialog environment_dialog = new EditorEnvironmentDialog(null);
 		environment_dialog.ShowDialog();
 	}
 	
@@ -357,7 +355,7 @@ class EditorEnvironmentControlCommand: EditorCommand
 class EditorCameraControlsCommand: EditorCommand
 {
 	override void Call() {
-		EditorCameraDialog cam_dialog(null, m_EditorHudController);
+		EditorCameraDialog cam_dialog(null);
 		cam_dialog.SetEditorCamera(m_Editor.GetCamera());
 		cam_dialog.ShowDialog();
 	}
@@ -404,7 +402,7 @@ class EditorLootEditorCommand: EditorCommand
 class EditorObjectPropertiesCommand: EditorCommand
 {
 	override void Call() {
-		EditorObjectPropertiesDialog properties_dialog(null, m_EditorHudController);
+		EditorObjectPropertiesDialog properties_dialog(null);
 		properties_dialog.SetEditorObject(m_Editor.GetSelectedObjects().GetElement(0));
 		properties_dialog.ShowDialog();
 	}
@@ -416,4 +414,4 @@ class EditorObjectPropertiesCommand: EditorCommand
 	override string GetKeyDisplay() {
 		return "Ctrl + T";
 	}
-}*/
+}

@@ -7,7 +7,7 @@ class EditorMenu: EditorScriptView
 	protected ref EditorMenuItemList m_MenuItems;
 	protected WrapSpacerWidget EditorMenuContent;
 	
-	void EditorMenu(ScriptView parent_view = null) 
+	void EditorMenu(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorMenu");
 		m_MenuItems = new EditorMenuItemList();
@@ -28,16 +28,17 @@ class EditorMenu: EditorScriptView
 	}
 	
 
-	void AddMenuButton(RoutedUICommand editor_command)
+	void AddMenuButton(EditorCommand editor_command)
 	{
 		ref EditorMenuItemButton menu_item = new EditorMenuItemButton();
 		menu_item.SetCommand(editor_command);
 		
 		ViewBinding view_binding;
 		if (!menu_item) return;
+		
 		menu_item.GetLayoutRoot().FindAnyWidget("EditorMenuItemButton").GetScript(view_binding);
 		if (view_binding && editor_command) {
-			view_binding.SetRoutedUICommand(editor_command);
+			view_binding.SetRelayCommand(editor_command);
 		}
 		
 		
@@ -67,12 +68,10 @@ class EditorMenu: EditorScriptView
 
 class EditorFileMenu: EditorMenu
 {
-	void EditorFileMenu(ScriptView parent_view = null) 
+	void EditorFileMenu(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorFileMenu::Init");
 		
-		AddMenuButton(m_ParentView.GetCommandManager().Get("NewCommand"));
-		AddMenuButton(m_ParentView.GetCommandManager().Get("OpenCommand"));
 		/*AddMenuButton(EditorOpenCommand);
 		AddMenuButton(EditorSaveCommand);
 		AddMenuButton(EditorSaveAsCommand);
@@ -84,7 +83,7 @@ class EditorFileMenu: EditorMenu
 
 class EditorEditMenu: EditorMenu
 {
-	void EditorEditMenu(ScriptView parent_view = null) 
+	void EditorEditMenu(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorEditMenu");
 				
@@ -103,7 +102,7 @@ class EditorEditMenu: EditorMenu
 
 class EditorViewMenu: EditorMenu
 {	
-	void EditorViewMenu(ScriptView parent_view = null) 
+	void EditorViewMenu(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorViewMenu");
 				
@@ -114,7 +113,7 @@ class EditorViewMenu: EditorMenu
 
 class EditorContextMenu: EditorMenu
 {
-	void EditorContextMenu(ScriptView parent_view = null) 
+	void EditorContextMenu(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorContextMenu");
 		/*AddMenuButton(EditorCutCommand);
@@ -133,7 +132,7 @@ class EditorContextMenu: EditorMenu
 class EditorPlaceableContextMenu: EditorMenu
 {
 	
-	void EditorPlaceableContextMenu(ScriptView parent_view = null) 
+	void EditorPlaceableContextMenu(Widget parent = null) 
 	{
 		//AddMenuButton(EditorLootEditorCommand);
 	}

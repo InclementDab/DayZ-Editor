@@ -68,7 +68,7 @@ class EditorHudController: Controller
 	CanvasWidget EditorCanvas;
 		
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
-	protected RadioButtonGroup m_RadioButtonGroup;
+	//protected RadioButtonGroup m_RadioButtonGroup;
 	
 	protected ButtonWidget MenuBarFile;
 	protected ButtonWidget MenuBarEdit;
@@ -109,10 +109,6 @@ class EditorHudController: Controller
 		RightbarSpacerData 			= new EditorListItemSet("RightbarSpacerData", this);
 		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
 		BrushTypeBoxData 			= new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
-		
-		LeftbarPanelSelectorWrapper.GetScript(m_RadioButtonGroup);
-		m_RadioButtonGroup.OnRadioButtonActivate.Insert(OnRadioButtonActivate);
-		m_RadioButtonGroup.OnRadioButtonDeactivate.Insert(OnRadioButtonDeactivate);
 
 
 		
@@ -305,17 +301,17 @@ class EditorHudController: Controller
 		switch (toolbar_button) {
 			
 			case MenuBarFile: {
-				toolbar_menu = new EditorFileMenu(GetEditor().GetEditorHud());
+				toolbar_menu = new EditorFileMenu(toolbar_button);
 				break;
 			}
 			
 			case MenuBarEdit: {
-				toolbar_menu = new EditorEditMenu(GetEditor().GetEditorHud());
+				toolbar_menu = new EditorEditMenu(toolbar_button);
 				break;
 			}
 			
 			case MenuBarView: {
-				toolbar_menu = new EditorViewMenu(GetEditor().GetEditorHud());
+				toolbar_menu = new EditorViewMenu(toolbar_button);
 				break;
 			}
 		}
@@ -576,7 +572,7 @@ class EditorHudController: Controller
 			}
 		}		
 	}
-		
+		/*
 	
 	private void OnRadioButtonActivate(RadioButton radio_button)
 	{
@@ -604,7 +600,7 @@ class EditorHudController: Controller
 		root.SetColor(COLOR_EMPTY);
 		SetWidgetIconPosition(root, 0, 0);
 	}
-		
+		*/
 	private void OnObjectSelected(Class context, EditorObject target)
 	{
 		InfobarObjPosFrame.Show(GetEditor().GetObjectManager().GetSelectedObjects().Count() > 0);

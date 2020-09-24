@@ -113,7 +113,7 @@ class EditorCameraDialog: EditorDialog
 	protected EditorCamera m_EditorCamera;
 	protected ref EditorCameraDialogController m_EditorCameraDialogController;
 	
-	void EditorCameraDialog(ScriptView parent_view = null) 
+	void EditorCameraDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorCameraDialog::Init");
 		
@@ -136,7 +136,7 @@ class EditorCameraDialog: EditorDialog
 		
 		m_EditorCameraDialogController = EditorCameraDialogController.Cast(m_Controller);
 		m_EditorCameraDialogController.SetCamera(m_EditorCamera);
-		
+		/*
 		EditorPrefabGroup camera_group = new EditorPrefabGroup("Camera");
 		camera_group.AddPrefab(new EditorPrefabSlider("FOV", "fov", 0, 2));
 		camera_group.AddPrefab(new EditorPrefabSlider("Gaussian Blur", "blur", 0, 1));
@@ -148,7 +148,7 @@ class EditorCameraDialog: EditorDialog
 		
 		camera_group.SetController(m_EditorCameraDialogController);
 		
-		AddContent(camera_group);
+		AddContent(camera_group);*/
 	}
 	
 	override typename GetControllerType() {

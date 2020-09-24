@@ -141,7 +141,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 	
 	protected ref EditorPropertiesPrefabController m_EditorPropertiesController;
 
-	void EditorObjectPropertiesDialog(ScriptView parent_view = null) 
+	void EditorObjectPropertiesDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorObjectPropertiesDialog");
 		SetTitle("Edit: Object Properties");
@@ -159,7 +159,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 		
 		m_EditorPropertiesController = EditorPropertiesPrefabController.Cast(GetController());
 		m_EditorPropertiesController.SetEditorObject(m_EditorObject);
-		
+		/*
 		EditorPrefabGroup info_group = new EditorPrefabGroup("Object Info");
 		info_group.AddPrefab(new EditorPrefabEditText("Name", "name"));
 		info_group.AddPrefab(new EditorPrefabPosition("Position", "pos"));
@@ -187,7 +187,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 			
 			loot_editor.SetController(m_EditorPropertiesController);
 			AddContent(loot_editor);
-		}
+		}*/
 	}
 	
 	void ~EditorObjectPropertiesDialog() {

@@ -14,7 +14,7 @@ class EditorMenuItem: ScriptView
 	protected ref EditorMenuItemController m_EditorMenuItemController;
 	protected ImageWidget EditorMenuItemIcon;
 			
-	void EditorMenuItem(ScriptView parent = null) {
+	void EditorMenuItem(Widget parent = null) {
 		EditorLog.Trace("EditorMenuItem");
 		
 		m_LayoutRoot.Show(true);
@@ -33,9 +33,9 @@ class EditorMenuItem: ScriptView
 
 class EditorMenuItemButton: EditorMenuItem
 {	
-	protected ref RoutedUICommand m_EditorCommand;
+	protected ref EditorCommand m_EditorCommand;
 	
-	void SetCommand(RoutedUICommand editor_command)
+	void SetCommand(EditorCommand editor_command)
 	{
 		m_EditorCommand = editor_command;
 		
@@ -47,7 +47,7 @@ class EditorMenuItemButton: EditorMenuItem
 		//m_EditorMenuItemController.IconPath = m_EditorCommand.GetIcon();
 		//m_EditorMenuItemController.NotifyPropertyChanged("IconPath");
 		
-		m_EditorMenuItemController.ShortcutText = m_EditorCommand.GetKeyString();
+		m_EditorMenuItemController.ShortcutText = m_EditorCommand.GetKeyDisplay();
 		m_EditorMenuItemController.NotifyPropertyChanged("ShortcutText");
 	}
 		

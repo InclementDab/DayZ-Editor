@@ -8,7 +8,7 @@ class EditorPlaceableListItem: EditorListItem
 	protected ModStructure m_ModStructure;
 	protected PlaceableObjectCategory m_Category = PlaceableObjectCategory.UNKNOWN;
 	
-	void EditorPlaceableListItem(ScriptView parent = null, string type = "", string path = "")
+	void EditorPlaceableListItem(Widget parent = null, string type = "", string path = "")
 	{
 		EditorLog.Trace("EditorPlaceableListItem");
 		Type = type; Path = path;
