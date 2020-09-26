@@ -6,19 +6,15 @@ GameProjectClass {
 			platformHardware PC
 			skeletonDefinitions "DZ/Anims/cfg/skeletons.anim.xml"
 			FileSystem {
-				FileSystemPathClass {
-					Name "Game Root"
-					Directory "P:"
-				}
 				
 				FileSystemPathClass {
 					Name "Community Framework"
-					Directory "P:\JM\CF"
+					Directory "JM/CF"
 				}
 				
 				FileSystemPathClass {
 					Name "DayZ Editor"
-					Directory "P:\DayZEditor"
+					Directory "DayZEditor"
 				}
 			}
 			
@@ -86,7 +82,6 @@ GameProjectClass {
 					Paths {
 						"scripts/editor/Workbench"
 						"scripts/editor/plugins"
-						"DayZEditor/Workbench/Plugins"
 					} 
 					EntryPoint ""
 				} 

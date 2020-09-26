@@ -2,8 +2,6 @@
 
 cd /D "%~dp0"
 
-
-
 IF exist "P:\DayZEditor\" (
 	echo Removing existing link P:\DayZEditor
 	rmdir "P:\DayZEditor\"
