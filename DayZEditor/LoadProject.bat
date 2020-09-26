@@ -3,7 +3,7 @@
 setlocal enableextensions enabledelayedexpansion
 
 cd /D "%~dp0"
-set CURRENT_DIR=%CD%
+set CurrentDir=%CD%
 
 set WorkbenchProfile=P:\profiles\Workbench
 set ProjectFile=DayZ-Editor.gproj
@@ -27,9 +27,12 @@ if "%TOOLS_DIR%"=="" (
 )
 
 set "WORKBENCH_DIR=%TOOLS_DIR%\Bin\Workbench"
+set "GPROJ_FILE=%CurrentDir%\%ProjectFile%
+
+echo Loading %GPROJ_FILE%...
 
 cd /d %WORKBENCH_DIR%
-start workbenchApp.exe -gproj=%CURRENT_DIR%\%ProjectFile% -profiles=%WorkbenchProfile% -noPause -filePatching -checkInstance -debugger -forcedebugger -freezecheck -dologs -showscripterrors
+start workbenchApp.exe -gproj=%GPROJ_FILE% -profiles=%WorkbenchProfile% -noPause -filePatching -checkInstance -debugger -forcedebugger -freezecheck -dologs -showscripterrors
 
 
 
