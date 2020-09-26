@@ -5,8 +5,7 @@ class EditorCommand: RelayCommand
 	protected EditorHudController m_EditorHudController = m_Editor.GetEditorHud().GetEditorHudController();
 	
 	string Text;
-	
-	
+
 	override void Execute(Class sender, Param args) 
 	{
 		EditorLog.Trace("EditorCommand::Execute");

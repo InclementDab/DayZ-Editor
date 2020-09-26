@@ -40,29 +40,20 @@ class EditorMenu: EditorScriptView
 		}
 	}
 
-	void AddMenuButton(EditorCommand editor_command)
+	void AddMenuButton(ref EditorCommand editor_command)
 	{
-		ref EditorMenuItemButton menu_item = new EditorMenuItemButton();
+		Print(editor_command);
+		EditorMenuItemCommand menu_item = new EditorMenuItemCommand(GetLayoutRoot());
 		menu_item.SetCommand(editor_command);
-		
-		ViewBinding view_binding;
-		if (!menu_item) return;
-		
-		menu_item.GetLayoutRoot().FindAnyWidget("EditorMenuItemButton").GetScript(view_binding);
-		if (view_binding && editor_command) {
-			view_binding.SetRelayCommand(editor_command);
-		}
-		
-		
 		AddMenuItem(menu_item);
 	}
 
-	void AddMenuItem(ref EditorMenuItem menu_item)
+	void AddMenuItem(EditorMenuItem menu_item)
 	{		
 		m_EditorMenuController.MenuItems.Insert(menu_item);
 	}
 		
-	void RemoveMenuItem(ref EditorMenuItem menu_item)
+	void RemoveMenuItem(EditorMenuItem menu_item)
 	{
 		m_EditorMenuController.MenuItems.Remove(m_EditorMenuController.MenuItems.Find(menu_item));
 	}
@@ -80,8 +71,9 @@ class EditorFileMenu: EditorMenu
 {
 	void EditorFileMenu(Widget parent = null) 
 	{
-		EditorLog.Trace("EditorFileMenu::Init");
+		EditorLog.Trace("EditorFileMenu");
 		
+		AddMenuButton(EditorNewCommand);
 		AddMenuButton(EditorOpenCommand);
 		AddMenuButton(EditorSaveCommand);
 		AddMenuButton(EditorSaveAsCommand);
