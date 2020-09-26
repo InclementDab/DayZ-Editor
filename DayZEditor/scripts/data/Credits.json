@@ -1,0 +1,21 @@
+{
+    "Departments": [{
+            "DepartmentName": "Example",
+            "Sections": [{
+                    "SectionName": "Developers",
+                    "SectionLines": [
+                        "InclementDab",
+                        "Mango",
+                        "ZeRoY"
+                    },
+                    {
+                        "SectionName": "Testers",
+                        "SectionLines": [
+                            "InclementDab",
+                            "DanceOfJesus"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }

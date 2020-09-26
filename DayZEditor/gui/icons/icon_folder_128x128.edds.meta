@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{3881898DD3AAF39E}DayZEditor/gui/icons/icon_folder_128x128.edds"
+ Author "desktop-9st395p"
+ ChangeDate -522360565
+ Configurations {
+  TGAResourceClass PC {
+   SourceFile "icon_folder_128x128.TGA"
+  }
+  TGAResourceClass XBOX_ONE : PC {
+  }
+  TGAResourceClass PS4 : PC {
+  }
+  TGAResourceClass LINUX : PC {
+  }
+ }
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<modded_inputs>
+    <inputs>
+        <actions>
+            <input name="EditorToggleActive" loc="Enable / Disable" />
+            <input name="EditorToggleUI" loc="Show / Hide UI" />
+            <input name="EditorToggleCursor" loc="Toggle Cursor" />
+			
+			<input name="EditorToggleMap" loc="Map" />
+			<input name="EditorDeleteObject" loc="Delete Object" />
+        </actions>
+    </inputs>
+
+    <preset>
+		<input name="EditorToggleActive">
+            <btn name="kHome">
+            </btn>
+        </input>
+        
+		<input name="EditorToggleUI">
+            <btn name="kY">
+            </btn>
+        </input>
+
+        <input name="EditorToggleCursor">
+            <btn name="kSpace" />
+        </input>
+
+        <input name="EditorToggleMap">
+            <btn name="kM" />
+        </input>        
+		
+		<input name="EditorDeleteObject">
+            <btn name="kDelete" />
+        </input>
+
+    </preset>
+</modded_inputs>

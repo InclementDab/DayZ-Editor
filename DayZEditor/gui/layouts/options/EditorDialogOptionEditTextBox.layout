@@ -1,0 +1,79 @@
+PanelWidgetClass EditorEditTextElement {
+ size 1 150
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ scriptclass "EditorPrefabViewBinding"
+ {
+  WrapSpacerWidgetClass EditorEditTextElementSpacer {
+   ignorepointer 1
+   position 40 0
+   size 725 150
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style Outline
+   "Size To Content H" 1
+   "Size To Content V" 1
+   content_halign center
+   content_valign center
+   {
+    WrapSpacerWidgetClass EditorEditTextElementWraper {
+     ignorepointer 1
+     color 0 0 0 1
+     position 0 0
+     size 725 135
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Colorable
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     "Size To Content V" 1
+     content_valign center
+     {
+      PanelWidgetClass EditorEditTextElementPanel {
+       ignorepointer 1
+       size 725 130
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        MultilineEditBoxWidgetClass EditorEditTextElementEditBox {
+         visible 1
+         size 725 135
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style DayZNormal
+         text "reee"
+         font "gui/fonts/etelkatextpro16"
+         "text offset" 5 10
+         "exact text" 0
+         lines 10
+         "limit visible" 0
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+ {
+  ScriptParamsClass {
+  }
+ }
+}

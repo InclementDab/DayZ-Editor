@@ -1,0 +1,10 @@
+DayZExpansion/Workbench/Batchfiles/FixScripts.bat
+DayZExpansion/Workbench/Batchfiles/SetupFilePatching.bat
+DayZExpansion/Workbench/Batchfiles/Symlink.bat
+DayZExpansion/Workbench/Batchfiles/DeployAndLaunchOffline.bat
+DayZExpansion/Workbench/Batchfiles/DeployAndLaunchServer.bat
+
+*.tga
+source/
+
+*.wrp

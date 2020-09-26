@@ -1,0 +1,24 @@
+FrameWidgetClass cursor_root {
+ position 0 0
+ size 100 100
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ {
+  ImageWidgetClass cursor_image {
+   ignorepointer 1
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   image0 "set:dayz_gui image:icon_twitter"
+   mode additive
+   "src alpha" 1
+   stretch 1
+  }
+ }
+}

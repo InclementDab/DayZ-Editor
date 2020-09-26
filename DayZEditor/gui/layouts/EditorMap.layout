@@ -1,0 +1,8 @@
+MapWidgetClass EditorMapWidget {
+ position 0 0
+ size 1 1
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
+}

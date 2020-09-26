@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{C4D107020AA1C830}DayZEditor/gui/icons/icon_animation_128x128.edds"
+ Author "desktop-9st395p"
+ ChangeDate 1276504358
+ Configurations {
+  TGAResourceClass PC {
+   SourceFile "icon_animation_128x128.tga"
+  }
+  TGAResourceClass XBOX_ONE : PC {
+  }
+  TGAResourceClass PS4 : PC {
+  }
+  TGAResourceClass LINUX : PC {
+  }
+ }
+}

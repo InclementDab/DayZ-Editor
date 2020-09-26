@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{900A8741B5723E36}FiraCode/FiraCode12.edds"
+ Author "wrdg-2019"
+ ChangeDate -1560614669
+ Configurations {
+  TGAResourceClass PC {
+   SourceFile "FiraCode12.tga"
+  }
+  TGAResourceClass XBOX_ONE : PC {
+  }
+  TGAResourceClass PS4 : PC {
+  }
+  TGAResourceClass LINUX : PC {
+  }
+ }
+}
