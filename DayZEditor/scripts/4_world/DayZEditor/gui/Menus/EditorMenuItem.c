@@ -18,7 +18,6 @@ class EditorMenuItem: ScriptView
 	void EditorMenuItem(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorMenuItem");
-		
 		m_EditorMenuItemController = EditorMenuItemController.Cast(GetController());
 	}	
 }
@@ -29,9 +28,7 @@ class EditorMenuItemCommand: EditorMenuItem
 	void SetCommand(ref EditorCommand editor_command)
 	{
 		EditorMenuItemIcon.Show(editor_command.GetIcon() != string.Empty);
-		m_EditorMenuItemController = EditorMenuItemController.Cast(GetController());
-		Print(m_EditorMenuItemController);
-		Print(editor_command);
+
 		m_EditorMenuItemController.LabelText = editor_command.GetName();
 		m_EditorMenuItemController.NotifyPropertyChanged("LabelText");
 		
@@ -46,8 +43,7 @@ class EditorMenuItemCommand: EditorMenuItem
 			view_binding.SetRelayCommand(editor_command);
 		}
 	}
-	
-			
+		
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/menus/EditorMenuItem.layout";
 	}

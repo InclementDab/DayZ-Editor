@@ -61,5 +61,15 @@ class EditorListItemController: Controller
 		
 		return true;
 	}
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		return m_ListItem.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		return m_ListItem.OnMouseLeave(w, enterW, x, y);
+	}
 }
 

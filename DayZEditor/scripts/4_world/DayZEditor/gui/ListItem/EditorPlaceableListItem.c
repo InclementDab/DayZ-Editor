@@ -105,14 +105,14 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		//EditorTooltip tooltip = new EditorTooltip(w);			
-		//tooltip.SetTitle(Type);
-		//float size_x, size_y;
-		//m_LayoutRoot.GetScreenSize(size_x, size_y);
-		//tooltip.GetLayoutRoot().SetPos(size_x, 0);
-		//tooltip.SetContent(GetWorkbenchGame().CreateObjectEx(Type, vector.Zero, ECE_NONE));
+		EditorTooltip tooltip = new EditorTooltip(w);			
+		tooltip.SetTitle(Type);
+		float size_x, size_y;
+		m_LayoutRoot.GetScreenSize(size_x, size_y);
+		tooltip.GetLayoutRoot().SetPos(size_x, 0);
+		tooltip.SetContent(GetWorkbenchGame().CreateObjectEx(Type, vector.Zero, ECE_NONE));
 		
-		//EditorUIManager.CurrentTooltip = tooltip;
+		EditorUIManager.CurrentTooltip = tooltip;
 		
 		return super.OnMouseEnter(w, x, y);
 	}
