@@ -97,7 +97,7 @@ class EditorEditMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorEditMenu");
 				
-		/*AddMenuButton(EditorUndoCommand);
+		AddMenuButton(EditorUndoCommand);
 		AddMenuButton(EditorRedoCommand);
 		AddMenuDivider();
 		AddMenuButton(EditorCutCommand);
@@ -106,7 +106,7 @@ class EditorEditMenu: EditorMenu
 		AddMenuDivider();
 		AddMenuButton(EditorEnvironmentControlCommand);
 		AddMenuButton(EditorPreferencesCommand);
-		AddMenuDivider();*/
+		AddMenuDivider();
 	}
 }
 
@@ -116,8 +116,8 @@ class EditorViewMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorViewMenu");
 				
-		/*AddMenuButton(EditorCameraControlsCommand);
-		AddMenuButton(EditorReloadHudCommand);*/
+		AddMenuButton(EditorCameraControlsCommand);
+		AddMenuButton(EditorReloadHudCommand);
 	}
 }
 
@@ -126,7 +126,7 @@ class EditorContextMenu: EditorMenu
 	void EditorContextMenu(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorContextMenu");
-		/*AddMenuButton(EditorCutCommand);
+		AddMenuButton(EditorCutCommand);
 		AddMenuButton(EditorCopyCommand);
 		AddMenuButton(EditorPasteCommand);
 		AddMenuDivider();
@@ -135,7 +135,7 @@ class EditorContextMenu: EditorMenu
 		AddMenuDivider();
 		AddMenuButton(EditorDeleteCommand);
 		AddMenuDivider();
-		AddMenuButton(EditorObjectPropertiesCommand);*/
+		AddMenuButton(EditorObjectPropertiesCommand);
 	}
 }
 
@@ -144,7 +144,7 @@ class EditorPlaceableContextMenu: EditorMenu
 	
 	void EditorPlaceableContextMenu(Widget parent = null) 
 	{
-		//AddMenuButton(EditorLootEditorCommand);
+		AddMenuButton(EditorLootEditorCommand);
 	}
 }
 
