@@ -34,17 +34,7 @@ class EditorHudController: Controller
 	string SearchBarData;
 	
 	int PlaceableCategorySelection = 0;
-	
-	float BrushRadius = 50;
-	float BrushDensity = 0.5;
-	
-	bool BrushToggleButtonState;
-	int BrushTypeSelection;
-	string BrushToggleButtonText;
-	
-	bool MagnetButton;
-	bool GroundButton;
-	bool SnapButton;
+
 	
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
@@ -52,7 +42,6 @@ class EditorHudController: Controller
 	ref EditorListItemSet LeftbarSpacerData;
 	ref EditorListItemSet RightbarSpacerData;
 	ref ObservableCollection<string> DebugActionStackListbox;
-	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 	
 	// View Properties
 	protected Widget LeftbarFrame;
@@ -71,11 +60,12 @@ class EditorHudController: Controller
 	//protected RadioButtonGroup m_RadioButtonGroup;
 
 	
-	protected Widget BrushRadiusFrame;
-	protected Widget BrushDensityFrame;
-	
 	protected EditBoxWidget LeftbarSearchBar;
 
+	// Temp until sub controllers can be properties of parent controller
+	EditorHudToolbarController GetToolbarController() {
+		return EditorUIManager.CurrentEditorHudToolbarController;
+	}
 	
 	void EditorHudController() 
 	{
@@ -105,33 +95,12 @@ class EditorHudController: Controller
 		LeftbarSpacerData 			= new EditorListItemSet("LeftbarSpacerData", this);
 		RightbarSpacerData 			= new EditorListItemSet("RightbarSpacerData", this);
 		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
-		BrushTypeBoxData 			= new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
-
 
 		
 		// Reload Placeables
 		EditorLog.Info("Loaded %1 Placeable Objects", ReloadPlaceableObjects().ToString());
-#ifndef COMPONENT_SYSTEM		
-		// Load Brushes
-		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
-#endif
-
 	}
-		
-	// Brush Management
-	void ReloadBrushes(string filename)
-	{
-		EditorLog.Trace("EditorHudToolbarController::ReloadBrushes");
-		XMLEditorBrushes xml_brushes(BrushTypeBoxData);
-		
-		if (!FileExist(filename)) {
-			EditorLog.Error("File not found: " + filename);
-			return;
-		}
-	
-		GetXMLApi().Read(filename, xml_brushes);
-	}
-	
+			
 	void InsertMapMarker(EditorMarker map_marker)
 	{
 		EditorLog.Trace("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
@@ -185,49 +154,10 @@ class EditorHudController: Controller
 				LeftbarScroll.HScrollToPos(0);
 				break;
 			}			
-			
-			case "BrushToggleButtonState":
-			case "BrushTypeSelection": {
-				BrushRadiusFrame.Show(BrushToggleButtonState);
-				BrushDensityFrame.Show(BrushToggleButtonState);
-				if (BrushToggleButtonState) {
-					GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
-				} else {
-					GetEditor().SetBrush(null);
-				}
-				break;
-			}
-			
-			case "BrushTypeBoxData": {
-				BrushToggleButtonText = BrushTypeBoxData.Get(BrushTypeSelection).Name;
-				NotifyPropertyChanged("BrushToggleButtonText");
-				break;
-			}
-			
-			case "BrushRadius":
-			case "BrushDensity": {
-				EditorBrush.SetRadius(BrushRadius);
-				EditorBrush.SetDensity(BrushDensity);
-				break;
-			}
 		}
 	}
 	
-		
-	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
-	{
-		EditorLog.Trace("EditorHudController::CollectionChanged: " + collection_name);
-		switch (collection_name) {
 			
-			case "BrushTypeBoxData": {
-				BrushToggleButtonText = BrushTypeBoxData.Get(BrushTypeSelection).Name;
-				NotifyPropertyChanged("BrushToggleButtonText");
-				break;
-			}
-		}
-	}	
-	
-	
 	void LeftbarHideExecute(ButtonCommandArgs args) 
 	{
 		LeftbarFrame.Show(!args.GetButtonState());
@@ -255,29 +185,7 @@ class EditorHudController: Controller
 		EditorLog.Trace("EditorHudController::ButtonCreateFolderExecute");
 		EditorCollapsibleListItem category();
 		RightbarSpacerData.Insert(category);
-	}
-	
-	void BrushToggleButtonExecute(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::BrushToggleButtonExecute");
-		
-		switch (args.GetMouseButton()) {
-			
-			case 0: {
-				bool button_state = args.GetButtonState();
-				args.GetButtonWidget().FindAnyWidget("BrushToggleButtonText").SetPos(button_state * 1, button_state * 1);
-				break;
-			}
-			
-			case 1: {
-				EditorBrushDialog brush_dialog();
-				brush_dialog.SetEditorBrushData(BrushTypeBoxData[BrushTypeSelection]);
-				brush_dialog.ShowDialog();
-				break;
-			}
-		}
-	}
-	
+	}	
 
 
 
