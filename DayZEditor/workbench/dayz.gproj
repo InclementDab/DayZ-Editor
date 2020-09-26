@@ -12,13 +12,15 @@ GameProjectClass {
 				}
 				
 				FileSystemPathClass {
-					Name "Packed Editor"
-					Directory "P:/Mods/@DayZ-Editor/Addons"
+					Name "Community Framework"
+					Directory "P:\JM\CF"
+				}
+				
+				FileSystemPathClass {
+					Name "DayZ Editor"
+					Directory "P:\DayZEditor"
 				}
 			}
-			
-
-
 			
 			
 			imageSets {
@@ -47,7 +49,6 @@ GameProjectClass {
 					Name "core"
 					Paths {
 						"scripts/1_Core"
-						"DayZEditor/scripts/1_Core"
 					}
 					EntryPoint ""
 				}
@@ -62,8 +63,6 @@ GameProjectClass {
 					Name "game"
 					Paths {
 						"scripts/3_Game"
-						"JM/CF/Scripts/3_Game"
-						"DayZEditor/scripts/3_Game"
 					}
 					EntryPoint "CreateGame"
 				}
@@ -71,8 +70,6 @@ GameProjectClass {
 					Name "world"
 					Paths {
 						"scripts/4_World"
-						"JM/CF/Scripts/4_World"
-						"DayZEditor/scripts/4_World"
 					}
 					EntryPoint ""
 				}
@@ -80,8 +77,6 @@ GameProjectClass {
 					Name "mission"
 					Paths {
 						"scripts/5_Mission"
-						"JM/CF/Scripts/5_Mission"
-						"DayZEditor/scripts/5_Mission"
 					}
 					EntryPoint "CreateMission"
 				}

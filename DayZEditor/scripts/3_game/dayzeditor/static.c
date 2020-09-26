@@ -36,17 +36,17 @@ class BetterString: string
 class EditorLog
 {
 	
-	static EditorLogLevel CurrentLogLevel = EditorLogLevel.TRACE;
+	static LogLevel CurrentLogLevel = LogLevel.TRACE;
 	static string ExclusiveLogMode;
 	
 	private static string m_LastCalledType;	
 	
-	static void EditorPrint(string msg, EditorLogLevel level)
+	static void EditorPrint(string msg, LogLevel level)
 	{
 	
 		if (level >= EditorLog.CurrentLogLevel) {
 			
-			if (level == EditorLogLevel.ERROR) {
+			if (level == LogLevel.ERROR) {
 				Error2("Editor Error", msg);
 	#ifdef COMPONENT_SYSTEM
 				Workbench.Dialog("Editor Log Error", msg);		
@@ -56,26 +56,26 @@ class EditorLog
 			
 			string loglevel;
 			switch (level) {
-				case EditorLogLevel.TRACE:
+				case LogLevel.TRACE:
 					loglevel = "trace";
 					break;
 				
-				case EditorLogLevel.DEBUG: {
+				case LogLevel.DEBUG: {
 					loglevel = "debug";
 					break;
 				}			
 				
-				case EditorLogLevel.INFO: {
+				case LogLevel.INFO: {
 					loglevel = "info";
 					break;
 				}
 				
-				case EditorLogLevel.WARNING: {
+				case LogLevel.WARNING: {
 					loglevel = "warning";
 					break;
 				}
 				
-				case EditorLogLevel.ERROR: {
+				case LogLevel.ERROR: {
 					loglevel = "error";
 					break;
 				}
@@ -108,28 +108,28 @@ class EditorLog
 	static void Trace(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
 #ifdef EDITORPRINT		
-		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), EditorLogLevel.TRACE);
+		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.TRACE);
 #endif
 	}
 	
 	static void Debug(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
 #ifdef EDITORPRINT
-		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), EditorLogLevel.DEBUG);
+		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.DEBUG);
 #endif
 	}	
 	
 	static void Info(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
 #ifdef EDITORPRINT
-		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), EditorLogLevel.INFO);
+		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.INFO);
 #endif
 	}	
 	
 	static void Warning(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
 #ifdef EDITORPRINT
-		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), EditorLogLevel.WARNING);
+		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.WARNING);
 #endif
 	}	
 	
@@ -137,7 +137,7 @@ class EditorLog
 	{
 		// Special Case :)
 		// ALWAYS bitch about errors
-		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), EditorLogLevel.ERROR);
+		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.ERROR);
 
 	}
 	
@@ -145,7 +145,7 @@ class EditorLog
 	static void Debug(Class msg)
 	{
 #ifdef EDITORPRINT
-		EditorPrint(msg.ToString(), EditorLogLevel.DEBUG);
+		EditorPrint(msg.ToString(), LogLevel.DEBUG);
 #endif
 	}
 	
@@ -154,7 +154,7 @@ class EditorLog
 	static void Info(Class msg)
 	{
 #ifdef EDITORPRINT
-		EditorPrint(msg.ToString(), EditorLogLevel.INFO);
+		EditorPrint(msg.ToString(), LogLevel.INFO);
 #endif
 	}
 	

@@ -11,7 +11,7 @@ class EditorUIManager
 	static ref EditorDialog CurrentDialog;
 	
 	static 	bool IsDialogCommand(Widget w) {
-		return (CurrentDialog && CurrentDialog.GetLayoutRoot() && CurrentDialog.GetLayoutRoot().FindAnyWidget(w.GetName()) );
+		return (CurrentDialog && CurrentDialog.GetLayoutRoot() && CurrentDialog.GetLayoutRoot().FindAnyWidget(w.GetName()));
 	}
 	
 	static ref EditorHudController CurrentEditorHudController;
@@ -69,10 +69,7 @@ class EditorHudController: Controller
 		
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	//protected RadioButtonGroup m_RadioButtonGroup;
-	
-	protected ButtonWidget MenuBarFile;
-	protected ButtonWidget MenuBarEdit;
-	protected ButtonWidget MenuBarView;
+
 	
 	protected Widget BrushRadiusFrame;
 	protected Widget BrushDensityFrame;
@@ -160,12 +157,12 @@ class EditorHudController: Controller
 					EditorPlaceableListItem item = new EditorPlaceableListItem(null, class_name, config_path);
 					LeftbarSpacerData.Insert(item);
 					
-				
 				} else {
-					//EditorLog.Trace("Not including Base " + full_path.ToString()); find what isnt loading here
+					EditorLog.Trace("Not including Base " + full_path.ToString()); //find what isnt loading here
 				}
-				
+#ifdef COMPONENT_SYSTEM
 				if (j > 500) return 500;
+#endif
 		    }
 		}
 		return j;
@@ -219,7 +216,7 @@ class EditorHudController: Controller
 		
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{
-		EditorLog.Trace("EditorHudToolbarController::CollectionChanged: " + collection_name);
+		EditorLog.Trace("EditorHudController::CollectionChanged: " + collection_name);
 		switch (collection_name) {
 			
 			case "BrushTypeBoxData": {
@@ -281,49 +278,10 @@ class EditorHudController: Controller
 		}
 	}
 	
-	
-	void MenuBarExecute(ButtonCommandArgs args) 
-	{		
-		EditorLog.Trace("EditorHudController::MenuBarExecute");
-		if (!EditorUIManager.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
-			EditorUIManager.CurrentMenu = CreateToolbarMenu(args.GetButtonWidget());
-		} else {
-			delete EditorUIManager.CurrentMenu;
-		}
-	}
 
-	
-	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
-	{
-		EditorLog.Trace("EditorHudController::CreateToolbarMenu");	
-		
-		ref EditorMenu toolbar_menu;
-		switch (toolbar_button) {
-			
-			case MenuBarFile: {
-				toolbar_menu = new EditorFileMenu(toolbar_button);
-				break;
-			}
-			
-			case MenuBarEdit: {
-				toolbar_menu = new EditorEditMenu(toolbar_button);
-				break;
-			}
-			
-			case MenuBarView: {
-				toolbar_menu = new EditorViewMenu(toolbar_button);
-				break;
-			}
-		}
-		
-		// Sets position to bottom of button
-		float w, h;
-		toolbar_button.GetScreenSize(w, h);
-		toolbar_menu.SetPosition(0, h);
 
-		return EditorUIManager.CurrentMenu;
-	}
-	
+
+	/*
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
@@ -357,32 +315,12 @@ class EditorHudController: Controller
 			}
 			
 			
-			*/
-		}
-		
-		return false;
-	}
-
-	
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		//EditorLog.Trace("EditorHudController::OnMouseEnter");
-		
-		switch (w) {
 			
-			case MenuBarFile:
-			case MenuBarEdit:
-			case MenuBarView: {
-				
-				if (EditorUIManager.CurrentMenu) {
-					EditorUIManager.CurrentMenu = CreateToolbarMenu(w);
-				}
-				break;
-			}	
 		}
 		
 		return false;
-	}
+	}*/
+
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{

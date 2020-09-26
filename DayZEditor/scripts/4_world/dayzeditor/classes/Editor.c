@@ -239,7 +239,7 @@ class Editor
 		}
 		
 		
-		EditorLog.CurrentLogLevel = EditorLogLevel.WARNING;
+		EditorLog.CurrentLogLevel = LogLevel.WARNING;
 		if (m_EditorCamera) {
 			vector cam_pos = m_EditorCamera.GetPosition();
 			
@@ -264,7 +264,7 @@ class Editor
 		avg_timeslice = avg_timeslice + ((ftime - avg_timeslice) / timeslice_count);
 		m_EditorHudController.DebugText1 = avg_timeslice.ToString();
 		//m_EditorHudController.NotifyPropertyChanged("DebugText1");
-		EditorLog.CurrentLogLevel = EditorLogLevel.TRACE;
+		EditorLog.CurrentLogLevel = LogLevel.TRACE;
 	}
 	
 	

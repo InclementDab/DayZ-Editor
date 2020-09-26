@@ -1,5 +1,11 @@
 class EditorHudToolbarController: Controller
 {	
+		
+	protected ButtonWidget MenuBarFile;
+	protected ButtonWidget MenuBarEdit;
+	protected ButtonWidget MenuBarView;
+	
+	
 	void EditorHudToolbarController()
 	{
 		EditorUIManager.CurrentEditorHudToolbarController = this;
@@ -82,6 +88,19 @@ class EditorHudToolbarController: Controller
 			}
 		}
 		
+		switch (w) {
+			
+			case MenuBarFile:
+			case MenuBarEdit:
+			case MenuBarView: {
+				
+				if (EditorUIManager.CurrentMenu) {
+					EditorUIManager.CurrentMenu = CreateToolbarMenu(w);
+				}
+				break;
+			}	
+		}
+		
 		return false;
 	}
 	
@@ -112,5 +131,46 @@ class EditorHudToolbarController: Controller
 			
 	}
 	
+		
+	void MenuBarExecute(ButtonCommandArgs args) 
+	{		
+		EditorLog.Trace("EditorHudController::MenuBarExecute");
+		if (!EditorUIManager.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
+			EditorUIManager.CurrentMenu = CreateToolbarMenu(args.GetButtonWidget());
+		} else {
+			delete EditorUIManager.CurrentMenu;
+		}
+	}
+	
+	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
+	{
+		EditorLog.Trace("EditorHudController::CreateToolbarMenu");	
+		
+		ref EditorMenu toolbar_menu;
+		switch (toolbar_button) {
+			
+			case MenuBarFile: {
+				toolbar_menu = new EditorFileMenu(toolbar_button);
+				break;
+			}
+			
+			case MenuBarEdit: {
+				toolbar_menu = new EditorEditMenu(toolbar_button);
+				break;
+			}
+			
+			case MenuBarView: {
+				toolbar_menu = new EditorViewMenu(toolbar_button);
+				break;
+			}
+		}
+		
+		// Sets position to bottom of button
+		float w, h;
+		toolbar_button.GetScreenSize(w, h);
+		toolbar_menu.SetPosition(0, h);
+
+		return EditorUIManager.CurrentMenu;
+	}
 	
 }
