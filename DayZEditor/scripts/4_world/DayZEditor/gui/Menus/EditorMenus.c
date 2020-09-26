@@ -1,24 +1,30 @@
 
 
-typedef ref array<ref EditorMenuItem> EditorMenuItemList;
+class EditorMenuController: Controller
+{
+	ref ObservableCollection<ref EditorMenuItem> MenuItems = new ObservableCollection<ref EditorMenuItem>("MenuItems", this);
+	
+	void ~EditorMenuController()
+	{
+		delete MenuItems;
+	}
+}
 
 class EditorMenu: EditorScriptView
-{
-	protected ref EditorMenuItemList m_MenuItems;
-	protected WrapSpacerWidget EditorMenuContent;
+{	
+	protected EditorMenuController m_EditorMenuController;	
 	
 	void EditorMenu(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorMenu");
-		m_MenuItems = new EditorMenuItemList();
 		
+		m_EditorMenuController = GetController();
 		EditorUIManager.CurrentMenu = this;
 	}
 		
 	void ~EditorMenu() 
 	{
 		EditorLog.Trace("~EditorMenu");
-		delete m_MenuItems;
 	}
 			
 	void AddMenuDivider()
@@ -27,6 +33,12 @@ class EditorMenu: EditorScriptView
 		AddMenuItem(divider);
 	}
 	
+	void AddMenuButton(typename editor_command)
+	{
+		if (editor_command.IsInherited(EditorCommand)) {
+			AddMenuButton(editor_command.Spawn());
+		}
+	}
 
 	void AddMenuButton(EditorCommand editor_command)
 	{
@@ -46,23 +58,21 @@ class EditorMenu: EditorScriptView
 	}
 
 	void AddMenuItem(ref EditorMenuItem menu_item)
-	{
-		
-		if (menu_item) {
-			EditorMenuContent.AddChild(menu_item.GetLayoutRoot());
-			m_MenuItems.Insert(menu_item);
-		}
+	{		
+		m_EditorMenuController.MenuItems.Insert(menu_item);
 	}
 		
 	void RemoveMenuItem(ref EditorMenuItem menu_item)
 	{
-		EditorMenuContent.RemoveChild(menu_item.GetLayoutRoot());
-		m_MenuItems.Remove(m_MenuItems.Find(menu_item));
-		delete menu_item;
+		m_EditorMenuController.MenuItems.Remove(m_EditorMenuController.MenuItems.Find(menu_item));
 	}
 			
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/menus/EditorMenu.layout";
+	}
+	
+	override typename GetControllerType() {
+		return EditorMenuController;
 	}
 }
 
@@ -72,12 +82,12 @@ class EditorFileMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorFileMenu::Init");
 		
-		/*AddMenuButton(EditorOpenCommand);
+		AddMenuButton(EditorOpenCommand);
 		AddMenuButton(EditorSaveCommand);
 		AddMenuButton(EditorSaveAsCommand);
 		AddMenuButton(EditorCloseCommand);
 		AddMenuDivider();
-		AddMenuButton(EditorExitCommand);*/
+		AddMenuButton(EditorExitCommand);
 	}
 }
 

@@ -33,10 +33,10 @@ class EditorHudToolbarController: Controller
 		
 		BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 		
-//#ifndef COMPONENT_SYSTEM		
+#ifndef COMPONENT_SYSTEM		
 		// Load Brushes
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
-//#endif
+#endif
 	}
 	
 	// Brush Management
@@ -257,7 +257,7 @@ class EditorHudToolbarController: Controller
 	{
 		EditorLog.Trace("EditorHudController::CreateToolbarMenu");	
 		
-		ref EditorMenu toolbar_menu;
+		EditorMenu toolbar_menu;
 		switch (toolbar_button) {
 			
 			case MenuBarFile: {

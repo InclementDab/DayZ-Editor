@@ -7,7 +7,8 @@ FrameWidgetClass EditorMenuItem {
  hexactsize 0
  vexactsize 1
  priority 252
- scriptclass ""
+ draggable 0
+ scriptclass "EditorMenuItemController"
  {
   ButtonWidgetClass EditorMenuItemButton {
    visible 1
@@ -99,6 +100,10 @@ FrameWidgetClass EditorMenuItem {
     ScriptParamsClass {
     }
    }
+  }
+ }
+ {
+  ScriptParamsClass {
   }
  }
 }

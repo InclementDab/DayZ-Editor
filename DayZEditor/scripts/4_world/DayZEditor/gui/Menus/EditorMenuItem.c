@@ -17,17 +17,12 @@ class EditorMenuItem: ScriptView
 	void EditorMenuItem(Widget parent = null) {
 		EditorLog.Trace("EditorMenuItem");
 		
-		m_LayoutRoot.Show(true);
 		m_EditorMenuItemController = EditorMenuItemController.Cast(GetController());
+		Print(m_EditorMenuItemController);
 	}	
 	
 	void ~EditorMenuItem() {
 		EditorLog.Trace("~EditorMenuItem");
-	}
-	
-		
-	override typename GetControllerType() {
-		return EditorMenuItemController;
 	}
 }
 
@@ -39,13 +34,13 @@ class EditorMenuItemButton: EditorMenuItem
 	{
 		m_EditorCommand = editor_command;
 		
-		//EditorMenuItemIcon.Show(m_EditorCommand.GetIcon() != string.Empty);
+		EditorMenuItemIcon.Show(m_EditorCommand.GetIcon() != string.Empty);
 		
-		m_EditorMenuItemController.LabelText = m_EditorCommand.Text;
+		m_EditorMenuItemController.LabelText = m_EditorCommand.GetName();
 		m_EditorMenuItemController.NotifyPropertyChanged("LabelText");
 		
-		//m_EditorMenuItemController.IconPath = m_EditorCommand.GetIcon();
-		//m_EditorMenuItemController.NotifyPropertyChanged("IconPath");
+		m_EditorMenuItemController.IconPath = m_EditorCommand.GetIcon();
+		m_EditorMenuItemController.NotifyPropertyChanged("IconPath");
 		
 		m_EditorMenuItemController.ShortcutText = m_EditorCommand.GetKeyDisplay();
 		m_EditorMenuItemController.NotifyPropertyChanged("ShortcutText");
