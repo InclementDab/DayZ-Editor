@@ -176,29 +176,48 @@ enum FileDialogResult
 class EditorFileManager
 {
 
-	static FileDialogResult Save(ref EditorWorldData data, string file)
+	static FileDialogResult Save(ref EditorWorldData data, string file_name)
 	{		
-		JsonFileLoader<ref EditorWorldData>.JsonSaveFile(file, data);
-		if (FileExist(file)) {
-			return FileDialogResult.SUCCESS;
-		} else {
-			return FileDialogResult.UNKNOWN_ERROR;
-		}
-	}
-	
-	static FileDialogResult Open(out EditorWorldData data, string file)
-	{
-		if (!FileExist(file)) {
-			return FileDialogResult.NOT_FOUND;
+		Cerealizer file_serializer = new Cerealizer();
+		if (!file_serializer.Open(file_name, FileMode.APPEND)) {
+			return FileDialogResult.IN_USE;
 		}
 		
-		JsonFileLoader<EditorWorldData>.JsonLoadFile(file, data);
+		if (!file_serializer.Write(data)) {
+			file_serializer.Close();
+			return FileDialogResult.UNKNOWN_ERROR;
+		}
+		
+		file_serializer.Close();
+		
 		return FileDialogResult.SUCCESS;
 	}
 	
-	static FileDialogResult Import(out EditorWorldData data, string file, ImportMode mode)
+	static FileDialogResult Open(out EditorWorldData data, string file_name)
+	{
+		Cerealizer file_serializer = new Cerealizer();
+
+		if (!FileExist(file_name)) {
+			return FileDialogResult.NOT_FOUND;
+		}
+		
+		if (!file_serializer.Open(file_name, FileMode.READ)) {
+			return FileDialogResult.IN_USE;
+		}
+		
+		if (!file_serializer.Read(data)) {
+			file_serializer.Close();
+			return FileDialogResult.UNKNOWN_ERROR;
+		}
+		
+		file_serializer.Close();
+		
+		return FileDialogResult.SUCCESS;
+	}
+	
+	static FileDialogResult Import(out EditorWorldData data, string file_name, ImportMode mode)
 	{		
-		if (!FileExist(file)) {
+		if (!FileExist(file_name)) {
 			return FileDialogResult.NOT_FOUND;
 		}
 		
@@ -207,7 +226,7 @@ class EditorFileManager
 			case (ImportMode.COMFILE): {
 				
 				COMImportData com_data = new COMImportData();
-				JsonFileLoader<COMImportData>.JsonLoadFile(file, com_data);
+				JsonFileLoader<COMImportData>.JsonLoadFile(file_name, com_data);
 				
 				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
 					Print("ImportFromFile::COMFILE::Import " + param.param1);					
@@ -219,14 +238,14 @@ class EditorFileManager
 			
 			case (ImportMode.EXPANSION): {
 				Print("EditorFileManager::Import::EXPANSION");
-				ExpansionImportData.ReadFromFile(data.EditorObjects, file);
+				ExpansionImportData.ReadFromFile(data.EditorObjects, file_name);
 
 				break;
 			}
 			
 			case (ImportMode.VPP): {
 				Print("EditorFileManager::Import::VPP");
-				return ImportVPPData(data.EditorObjects, file);
+				return ImportVPPData(data.EditorObjects, file_name);
 			}
 			
 			default: {
@@ -241,30 +260,30 @@ class EditorFileManager
 		
 	}
 	
-	static FileDialogResult Export(ref EditorWorldData data, string file, ref ExportSettings export_settings)
+	static FileDialogResult Export(ref EditorWorldData data, string file_name, ref ExportSettings export_settings)
 	{
 		Print("EditorFileManager::Export");		
-		DeleteFile(file);
+		DeleteFile(file_name);
 		
 		switch (export_settings.ExportFileMode) {
 			
 			case ExportMode.TERRAINBUILDER: {
-				//return ExportTBData(data.EditorObjects, file);
+				//return ExportTBData(data.EditorObjects, file_name);
 				break;
 			}
 			
 			case ExportMode.EXPANSION: {
-				//return ExportVPPData(data.EditorObjects, file);
+				//return ExportVPPData(data.EditorObjects, file_name);
 				break;
 			}			
 			
 			case ExportMode.COMFILE: {
-				//return ExportVPPData(data.EditorObjects, file);
+				//return ExportVPPData(data.EditorObjects, file_name);
 				break;
 			}			
 			
 			case ExportMode.VPP: {
-				return ExportVPPData(data.EditorObjects, file);
+				return ExportVPPData(data.EditorObjects, file_name);
 			}
 			
 			default: {
