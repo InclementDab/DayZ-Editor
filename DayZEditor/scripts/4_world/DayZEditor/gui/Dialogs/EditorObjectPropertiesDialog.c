@@ -45,7 +45,6 @@ class EditorPropertiesPrefabController: EditorDialogController
 	// this isnt being called due to how we are dynamically generating ViewBindings in the controller
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{
-		Print("WEEE");
 		string w_name = w.GetName();
 		float direction = wheel;
 		switch (w_name) {

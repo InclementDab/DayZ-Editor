@@ -81,7 +81,7 @@ class EditorFileDialog: EditorDialog
 		EditorLog.Trace("EditorFileDialog::LoadFileDirectory");
 		m_CurrentDirectory = directory;
 		string filterdir = string.Format("%1%2", directory, filter);
-		Print(directory);
+		EditorLog.Info("EditorFileDialog::Loading Directory %1", m_CurrentDirectory);
 		m_FileHostListbox.ClearItems();
 		ref array<ref EditorFile> editor_file_array = new array<ref EditorFile>();
 		ref array<ref EditorFile> editor_folder_array = new array<ref EditorFile>();

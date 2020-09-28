@@ -7,13 +7,13 @@ class EditorXMLCallback<Class T>: XMLCallback
 	private bool m_Success = false;
 	override void OnFailure(ref XMLDocument document)
 	{
-		Print("EditorXMLCallback::OnFailure");
+		EditorLog.Trace("EditorXMLCallback::OnFailure");
 		m_Failed = false;
 	}
 	
 	override void OnSuccess(ref XMLDocument document)
 	{
-		Print("EditorXMLCallback::OnSuccess");
+		EditorLog.Trace("EditorXMLCallback::OnSuccess");
 		m_Success = true;
 	}
 	
@@ -124,7 +124,7 @@ class EditorMapGroupProto: XMLCallback
 		
 	override void OnSuccess(ref XMLDocument document)
 	{
-		Print("EditorMapGroupProto::OnSuccess");
+		EditorLog.Trace("EditorMapGroupProto::OnSuccess");
 		m_MapGroupProto = new array<ref EditorMapGroupProtoGroup>();
 		
 		XMLElement prototype = document.Get(1).GetContent();
@@ -234,7 +234,7 @@ class EditorMapGroupProto: XMLCallback
 		foreach (ref EditorMapGroupProtoGroup group_proto: m_MapGroupProto) {
 			
 			if (group_proto.GetName() == m_Building.GetType()) {
-				Print("Building Found!");
+				EditorLog.Info("Building Found!");
 				ref array<ref EditorLootContainer> loot_containers = group_proto.GetLootContainer();
 				
 				foreach (EditorLootContainer loot_container: loot_containers) {

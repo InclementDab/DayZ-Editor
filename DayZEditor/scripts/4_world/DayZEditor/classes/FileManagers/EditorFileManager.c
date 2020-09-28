@@ -66,7 +66,7 @@ class ExpansionImportData
 			
 			string model_name = GetGame().GetModelName(name);
 			if (model_name == "UNKNOWN_P3D_FILE") {
-				Print(string.Format("%1 is not a valid Object Type!", name));
+				EditorLog.Warning("%1 is not a valid Object Type!", name);
 				continue;
 			}
 					
@@ -119,7 +119,8 @@ class EditorWorldData
 	{
 		EditorObjects = new EditorObjectDataSet();
 		
-		GetGame().GetWorldName(MapName);
+		MapName = GetGame().GetWorldName();
+		Print(MapName);
 		editor.GetCamera().GetTransform(CameraPosition);
 		
 		foreach (EditorObject editor_object: editor.GetPlacedObjects()) {
