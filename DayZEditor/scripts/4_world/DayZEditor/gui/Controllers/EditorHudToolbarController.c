@@ -218,7 +218,7 @@ class EditorHudToolbarController: Controller
 	{		
 		EditorLog.Trace("EditorHudToolbarController::MenuBarExecute");
 		if (!EditorUIManager.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
-			EditorUIManager.CurrentMenu = CreateToolbarMenu(args.GetButtonWidget());
+			EditorUIManager.CurrentMenu = CreateToolbarMenu(args.Source);
 		} else {
 			delete EditorUIManager.CurrentMenu;
 		}
@@ -233,7 +233,7 @@ class EditorHudToolbarController: Controller
 			
 			case 0: {
 				bool button_state = args.GetButtonState();
-				args.GetButtonWidget().FindAnyWidget("BrushToggleButtonText").SetPos(button_state * 1, button_state * 1);
+				args.Source.FindAnyWidget("BrushToggleButtonText").SetPos(button_state * 1, button_state * 1);
 				break;
 			}
 			

@@ -1,5 +1,4 @@
 
-
 class EditorDialogButton: EditorScriptView
 {
 	override string GetLayoutFile() {
@@ -63,7 +62,7 @@ class EditorDialog: EditorScriptView
 		controller.NotifyPropertyChanged("TitleText");
 	}
 	
-	void ShowDialog()
+	DialogResult ShowDialog()
 	{
 		EditorLog.Trace("EditorDialog::Show");
 		m_Editor.GetCamera().MoveEnabled = false;
@@ -77,6 +76,9 @@ class EditorDialog: EditorScriptView
 		m_LayoutRoot.GetPos(dx, dy);
 		m_LayoutRoot.SetPos(dx, dy - dv / 2);
 		m_LayoutRoot.Show(true);
+		
+		// todo
+		return DialogResult.OK;
 	}
 	
 	void CloseDialog()

@@ -54,6 +54,9 @@ class Editor
 	string GetSaveFile()
 		return m_EditorSaveFile;
 	
+	void SetSaveFile(string file)
+		m_EditorSaveFile = file;
+	
 	
 	void SetSettings(EditorSettings settings) {
 		m_EditorSettings = settings;
@@ -498,11 +501,21 @@ class Editor
 		select_window.ShowDialog();
 	}
 	
-	void Save(string file, EditorWorldData world_data)
+	// Suspends execution. Should be called with 'thread'
+	void Save()
 	{
 		EditorLog.Trace("Editor::Save");
 		
 		m_EditorHud.CreateNotification("Test");
+		
+		EditorSaveData save_data = EditorSaveData.CreateFromEditor(this);
+		
+		if (m_EditorSaveFile == string.Empty) {
+			EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
+			save_dialog.ShowDialog();
+		}
+		
+		
 		/*
 		FileDialogResult result = EditorFileManager.Save(world_data, file);
 		//m_EditorHud.GetController().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, result), COLOR_GREEN); 
@@ -511,6 +524,11 @@ class Editor
 		if (result == FileDialogResult.SUCCESS) {
 			m_EditorSaveFile = file;
 		}*/		
+	}
+	
+	void SaveAs()
+	{
+		
 	}
 	
 	void Close()

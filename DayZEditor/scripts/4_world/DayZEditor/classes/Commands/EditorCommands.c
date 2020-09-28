@@ -13,7 +13,7 @@ class EditorCommand: RelayCommand
 		}
 	}
 
-	override void Execute(Class sender, Param args) 
+	override bool Execute(Class sender, CommandArgs args) 
 	{
 		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(sender, args);
@@ -21,6 +21,7 @@ class EditorCommand: RelayCommand
 			delete EditorUIManager.CurrentMenu;
 		
 		Call();
+		return true;
 	}
 	
 	override void CanExecuteChanged(bool state) 
@@ -71,8 +72,7 @@ class EditorNewCommand: EditorCommand
 class EditorSaveCommand: EditorCommand
 {
 	override void Call() {
-		EditorWorldData world_data(GetEditor());
-		GetEditor().Save(GetEditor().GetSaveFile(), world_data);
+		GetEditor().Save();
 	}
 		
 	override string GetName() {
@@ -88,7 +88,7 @@ class EditorSaveAsCommand: EditorCommand
 {
 	override void Call() {
 		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(null);
-		save_dialog.SetWorldData(new EditorWorldData(GetEditor()));
+		save_dialog.SetWorldData(EditorSaveData.CreateFromEditor(GetEditor()));
 		string file = save_dialog.ShowFileDialog();
 	}
 		

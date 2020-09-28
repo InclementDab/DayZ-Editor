@@ -109,26 +109,32 @@ class COMImportData
 
 
 
-class EditorWorldData
+class EditorSaveData
 {
+	bool Binarized = 1;
 	string MapName;
 	vector CameraPosition[4];
-	ref EditorObjectDataSet EditorObjects;
+	ref EditorObjectDataSet EditorObjects = new EditorObjectDataSet();
 	
-	void EditorWorldData(Editor editor)
+	static EditorSaveData CreateFromEditor(Editor editor)
 	{
-		EditorObjects = new EditorObjectDataSet();
-		MapName = GetGame().GetWorldName();
-		if (MapName == string.Empty) {
+		EditorSaveData save_data = new EditorSaveData();
+		save_data.MapName = GetGame().GetWorldName();
+		if (save_data.MapName == string.Empty) {
 			// If you accidentally load the empty map. It defaults to this
 			EditorLog.Warning("Map name was empty. Defaulting to ChernarusPlus");
-			MapName = "ChernarusPlus";
+			save_data.MapName = "ChernarusPlus";
 		}
 		
-		editor.GetCamera().GetTransform(CameraPosition);
+		// Save Camera Position
+		editor.GetCamera().GetTransform(save_data.CameraPosition);
+		
+		// Save Objects
 		foreach (EditorObject editor_object: editor.GetPlacedObjects()) {
-			EditorObjects.InsertEditorData(editor_object.GetData());
+			save_data.EditorObjects.InsertEditorData(editor_object.GetData());
 		}
+		
+		return save_data;
 	}
 }
 
@@ -176,7 +182,7 @@ enum FileDialogResult
 class EditorFileManager
 {
 
-	static FileDialogResult Save(ref EditorWorldData data, string file_name)
+	static FileDialogResult Save(ref EditorSaveData data, string file_name)
 	{		
 		Cerealizer file_serializer = new Cerealizer();
 		if (!file_serializer.Open(file_name, FileMode.APPEND)) {
@@ -193,7 +199,7 @@ class EditorFileManager
 		return FileDialogResult.SUCCESS;
 	}
 	
-	static FileDialogResult Open(out EditorWorldData data, string file_name)
+	static FileDialogResult Open(out EditorSaveData data, string file_name)
 	{
 		Cerealizer file_serializer = new Cerealizer();
 
@@ -215,7 +221,7 @@ class EditorFileManager
 		return FileDialogResult.SUCCESS;
 	}
 	
-	static FileDialogResult Import(out EditorWorldData data, string file_name, ImportMode mode)
+	static FileDialogResult Import(out EditorSaveData data, string file_name, ImportMode mode)
 	{		
 		if (!FileExist(file_name)) {
 			return FileDialogResult.NOT_FOUND;
@@ -260,7 +266,7 @@ class EditorFileManager
 		
 	}
 	
-	static FileDialogResult Export(ref EditorWorldData data, string file_name, ref ExportSettings export_settings)
+	static FileDialogResult Export(ref EditorSaveData data, string file_name, ref ExportSettings export_settings)
 	{
 		Print("EditorFileManager::Export");		
 		DeleteFile(file_name);
