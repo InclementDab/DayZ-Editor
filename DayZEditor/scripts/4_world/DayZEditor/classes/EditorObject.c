@@ -385,7 +385,6 @@ class EditorObject
 					
 					for (int i = 0; i < 12; i++) {
 						vector pos = editor_object.m_BBoxLines[i].GetPosition();
-						Print(vector.Distance(pos, current_pos));
 						if (vector.Distance(pos, current_pos) < snap_radius) {
 							SetPosition(pos);
 							Update();

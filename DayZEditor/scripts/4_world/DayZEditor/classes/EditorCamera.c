@@ -37,18 +37,18 @@ class EditorCamera: Camera
 
 	void OnTargetSelected( Object target )
 	{
-		Print("OnTargetSelected");
+		EditorLog.Trace("OnTargetSelected");
 	}
 
 	void OnTargetDeselected(Object target)
 	{
-		Print("OnTargetDeselected");
+		EditorLog.Trace("OnTargetDeselected");
 	}
 
 	private bool IsTargeting = false;
 	void SelectTarget(Object target)
 	{
-		Print("ActiveCamera::SelectTarget");
+		EditorLog.Trace("ActiveCamera::SelectTarget");
 		if (target != SelectedTarget && target != null) {
 			TargetPosition = target.GetPosition();
 			IsTargeting = true;
