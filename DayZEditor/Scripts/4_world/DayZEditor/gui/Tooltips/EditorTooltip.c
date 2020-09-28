@@ -3,15 +3,18 @@ class EditorTooltip: ScriptView
 {
 	protected TextWidget HeaderLabel;
 	
+	protected EditorTooltipController m_EditorTooltipController;
+	
 	void EditorToolTip(Widget parent = null)
 	{
 		EditorUIManager.CurrentTooltip = this;
+		m_EditorTooltipController = EditorTooltipController.Cast(GetController());
 	}
 	
 	void SetTitle(string title)
 	{
-		GetEditorTooltipController().ContentTitle = title;
-		GetEditorTooltipController().NotifyPropertyChanged("ContentTitle");
+		m_EditorTooltipController.ContentTitle = title;
+		m_EditorTooltipController.NotifyPropertyChanged("ContentTitle");
 		
 		float w, h, lw, lh;
 		HeaderLabel.GetScreenSize(w, h);
@@ -21,14 +24,14 @@ class EditorTooltip: ScriptView
 	
 	void SetContent(string text)
 	{
-		GetEditorTooltipController().ContentText = text;
-		GetEditorTooltipController().NotifyPropertyChanged("ContentText");
+		m_EditorTooltipController.ContentText = text;
+		m_EditorTooltipController.NotifyPropertyChanged("ContentText");
 	}
 	
 	void SetContent(Object item)
 	{
-		GetEditorTooltipController().ContentItemData = item;
-		GetEditorTooltipController().NotifyPropertyChanged("ContentItemData");
+		m_EditorTooltipController.ContentItemData = item;
+		m_EditorTooltipController.NotifyPropertyChanged("ContentItemData");
 	}
 		
 	override typename GetControllerType() {
@@ -37,9 +40,5 @@ class EditorTooltip: ScriptView
 
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/layouts/tooltips/EditorTooltip.layout";
-	}
-	
-	protected EditorTooltipController GetEditorTooltipController() {
-		return EditorTooltipController.Cast(GetController());
 	}
 }
