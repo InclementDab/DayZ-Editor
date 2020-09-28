@@ -555,9 +555,6 @@ class Editor
 	}
 	
 	
-	
-	// probably have an EditorMode enum with NORMAL, CHARACTER, LOOTEDITOR or something
-	
 	private Object m_LootEditTarget;
 	private bool m_LootEditMode;
 	private vector m_PositionBeforeLootEditMode;
@@ -680,7 +677,6 @@ class Editor
 				
 				case KeyCode.KC_X: {
 					return EditorCutCommand;
-					break;
 				}
 
 				case KeyCode.KC_C: {

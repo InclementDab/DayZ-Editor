@@ -76,7 +76,8 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		if (create_undo) {
 			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
+			// this crashes smile :)
+			//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
 		}
 			
 	

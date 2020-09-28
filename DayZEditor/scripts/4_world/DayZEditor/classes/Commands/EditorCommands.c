@@ -2,9 +2,16 @@
 class EditorCommand: RelayCommand
 {	
 	protected Editor m_Editor = GetEditor();
-	protected EditorHudController m_EditorHudController = m_Editor.GetEditorHud().GetEditorHudController();
+	protected EditorHudController m_EditorHudController;
 	
 	string Text;
+	
+	void EditorCommand()
+	{
+		if (m_Editor) {
+			m_EditorHudController = m_Editor.GetEditorHud().GetEditorHudController();
+		}
+	}
 
 	override void Execute(Class sender, Param args) 
 	{
@@ -215,7 +222,8 @@ class EditorSelectAllCommand: EditorCommand
 class EditorDeleteCommand: EditorCommand
 {
 	override void Call() {
-		GetEditor().GetObjectManager().DeleteObjects(GetEditor().GetSelectedObjects());
+		if (GetEditor())
+			GetEditor().GetObjectManager().DeleteObjects(GetEditor().GetSelectedObjects());
 	}
 		
 	override string GetName() {

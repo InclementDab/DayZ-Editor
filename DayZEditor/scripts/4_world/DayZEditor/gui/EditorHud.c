@@ -21,9 +21,11 @@ class EditorHud: ScriptView
 		EditorLog.Trace("EditorHud::Show");
 		m_LayoutRoot.Show(show);
 		
-		EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
-		foreach (EditorObject editor_object: placed_objects) {
-			editor_object.Show(show);
+		if (GetEditor()) {
+			EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
+			foreach (EditorObject editor_object: placed_objects) {
+				editor_object.Show(show);
+			}
 		}
 	}
 	
@@ -47,11 +49,6 @@ class EditorHud: ScriptView
 		//notification.Play(duration);
 	}
 	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{		
-		return false;
-	}
-
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/layouts/EditorHud.layout";

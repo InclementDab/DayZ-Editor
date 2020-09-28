@@ -341,7 +341,7 @@ FrameWidgetClass EditorFrame {
                  hexactsize 1
                  vexactsize 1
                  image0 ""
-                 imageTexture "{2F76D72BD521BBC3}DayZEditor/gui/icons/icon_house_128x128.edds"
+                 imageTexture "{2F76D72BD521BBC3}DayZEditor/GUI/icons/icon_house_128x128.edds"
                  mode blend
                  "src alpha" 1
                  "no wrap" 1
@@ -371,7 +371,7 @@ FrameWidgetClass EditorFrame {
                  hexactsize 1
                  vexactsize 1
                  image0 ""
-                 imageTexture "{6EB760725FFA8C0D}DayZEditor/gui/icons/icon_car_128x128.edds"
+                 imageTexture "{6EB760725FFA8C0D}DayZEditor/GUI/icons/icon_car_128x128.edds"
                  mode blend
                  "src alpha" 1
                  "no wrap" 1
@@ -403,7 +403,7 @@ FrameWidgetClass EditorFrame {
                  hexactsize 1
                  vexactsize 1
                  image0 ""
-                 imageTexture "{432381F3C44DBDEC}DayZEditor/gui/icons/icon_person_standing_128x128.edds"
+                 imageTexture "{432381F3C44DBDEC}DayZEditor/GUI/icons/icon_person_standing_128x128.edds"
                  mode blend
                  "src alpha" 1
                  "no wrap" 1
@@ -435,7 +435,7 @@ FrameWidgetClass EditorFrame {
                  hexactsize 1
                  vexactsize 1
                  image0 ""
-                 imageTexture "{9A1C50C85C0F7122}DayZEditor/gui/icons/icon_face_128x128.edds"
+                 imageTexture "{9A1C50C85C0F7122}DayZEditor/GUI/icons/icon_face_128x128.edds"
                  mode blend
                  "src alpha" 1
                  "no wrap" 1
@@ -745,7 +745,7 @@ FrameWidgetClass EditorFrame {
                hexactsize 0
                vexactsize 0
                image0 ""
-               imageTexture "{E15BBF636FDF95DA}DayZEditor/gui/icons/icon_plus_128x128.edds"
+               imageTexture "{E15BBF636FDF95DA}DayZEditor/GUI/icons/icon_plus_128x128.edds"
                mode blend
                "src alpha" 1
                "no wrap" 0
@@ -781,7 +781,7 @@ FrameWidgetClass EditorFrame {
              hexactsize 0
              vexactsize 0
              image0 ""
-             imageTexture "{5A6F839399731FB9}DayZEditor/gui/icons/icon_minus_circle_128x128.edds"
+             imageTexture "{5A6F839399731FB9}DayZEditor/GUI/icons/icon_minus_circle_128x128.edds"
              mode blend
              "src alpha" 1
              "no wrap" 0
@@ -903,7 +903,7 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
-           imageTexture "{1A57E6DE48397D04}DayZEditor/gui/images/dayz_editor_icon_black.edds"
+           imageTexture "{1A57E6DE48397D04}DayZEditor/GUI/images/dayz_editor_icon_black.edds"
            mode blend
            "src alpha" 1
            "no wrap" 1
@@ -1135,6 +1135,162 @@ FrameWidgetClass EditorFrame {
            vexactsize 1
            {
             PanelWidgetClass Divider3 {
+             ignorepointer 1
+             position 0 0
+             size 3 26
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             style rover_sim_colorable
+            }
+           }
+          }
+          ButtonWidgetClass CutButton {
+           clipchildren 0
+           ignorepointer 0
+           position 0 0
+           size 30 30
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           style Colorable
+           "no focus" 0
+           text "X"
+           font "gui/fonts/Metron"
+           switch normal
+           {
+            ImageWidgetClass CutButton_Icon {
+             visible 0
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             image0 "set:dayz_editor_gui image:arrow_round_icon"
+             mode additive
+             "src alpha" 1
+             "no wrap" 1
+             stretch 1
+             "flip u" 1
+             filter 1
+             "Transition width" 0
+            }
+           }
+           {
+            ScriptParamsClass {
+             Debug_Logging 0
+             Relay_Command "CutButtonExecute"
+            }
+           }
+          }
+          ButtonWidgetClass CopyButton {
+           clipchildren 0
+           ignorepointer 0
+           position 0 0
+           size 30 30
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           style Colorable
+           "no focus" 0
+           text "C"
+           font "gui/fonts/Metron"
+           switch normal
+           {
+            ImageWidgetClass CopyButton_Icon {
+             visible 0
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass ""
+             image0 "set:dayz_editor_gui image:arrow_round_icon"
+             mode additive
+             "src alpha" 1
+             "no wrap" 1
+             stretch 1
+             "flip u" 1
+             filter 1
+             "Transition width" 0
+            }
+           }
+           {
+            ScriptParamsClass {
+             Debug_Logging 0
+             Relay_Command "CopyButtonExecute"
+            }
+           }
+          }
+          ButtonWidgetClass PasteButton {
+           clipchildren 0
+           ignorepointer 0
+           position 0 0
+           size 30 30
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           style Colorable
+           "no focus" 0
+           text "V"
+           font "gui/fonts/Metron"
+           switch normal
+           {
+            ImageWidgetClass PasteButton_Icon {
+             visible 0
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass ""
+             image0 "set:dayz_editor_gui image:arrow_round_icon"
+             mode additive
+             "src alpha" 1
+             "no wrap" 1
+             stretch 1
+             "flip u" 1
+             filter 1
+             "Transition width" 0
+            }
+           }
+           {
+            ScriptParamsClass {
+             Debug_Logging 0
+             Relay_Command "PasteButtonExecute"
+            }
+           }
+          }
+          PanelWidgetClass Divider4 {
+           ignorepointer 1
+           position 0 0
+           size 15 30
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            PanelWidgetClass Divider5 {
              ignorepointer 1
              position 0 0
              size 3 26

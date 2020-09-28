@@ -39,9 +39,9 @@ class EditorHudController: Controller
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
-	ref EditorListItemSet LeftbarSpacerData;
-	ref EditorListItemSet RightbarSpacerData;
-	ref ObservableCollection<string> DebugActionStackListbox;
+	ref EditorListItemSet LeftbarSpacerData 					= new EditorListItemSet("LeftbarSpacerData", this);
+	ref EditorListItemSet RightbarSpacerData 					= new EditorListItemSet("RightbarSpacerData", this);
+	ref ObservableCollection<string> DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
 	
 	// View Properties
 	protected Widget LeftbarFrame;
@@ -91,10 +91,6 @@ class EditorHudController: Controller
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
-		
-		LeftbarSpacerData 			= new EditorListItemSet("LeftbarSpacerData", this);
-		RightbarSpacerData 			= new EditorListItemSet("RightbarSpacerData", this);
-		DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
 
 		
 		// Reload Placeables

@@ -5,7 +5,7 @@ class EditorHudToolbarController: Controller
 	protected ButtonWidget MenuBarEdit;
 	protected ButtonWidget MenuBarView;
 	
-	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
+	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 		
 	float BrushRadius = 50;
 	float BrushDensity = 0.5;
@@ -30,9 +30,7 @@ class EditorHudToolbarController: Controller
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
-		
-		BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
-		
+				
 #ifndef COMPONENT_SYSTEM		
 		// Load Brushes
 		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
@@ -62,6 +60,7 @@ class EditorHudToolbarController: Controller
 			case "BrushTypeSelection": {
 				BrushRadiusFrame.Show(BrushToggleButtonState);
 				BrushDensityFrame.Show(BrushToggleButtonState);
+				if (!GetEditor()) break;
 				if (BrushToggleButtonState) {
 					GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
 				} else {
@@ -87,7 +86,7 @@ class EditorHudToolbarController: Controller
 	
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{
-		EditorLog.Trace("EditorHudController::CollectionChanged: " + collection_name);
+		EditorLog.Trace("EditorHudToolbarController::CollectionChanged: " + collection_name);
 		switch (collection_name) {
 			
 			case "BrushTypeBoxData": {
@@ -223,7 +222,7 @@ class EditorHudToolbarController: Controller
 	// Relay Commands
 	void MenuBarExecute(ButtonCommandArgs args) 
 	{		
-		EditorLog.Trace("EditorHudController::MenuBarExecute");
+		EditorLog.Trace("EditorHudToolbarController::MenuBarExecute");
 		if (!EditorUIManager.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
 			EditorUIManager.CurrentMenu = CreateToolbarMenu(args.GetButtonWidget());
 		} else {
@@ -234,7 +233,7 @@ class EditorHudToolbarController: Controller
 		
 	void BrushToggleButtonExecute(ButtonCommandArgs args)
 	{
-		EditorLog.Trace("EditorHudController::BrushToggleButtonExecute");
+		EditorLog.Trace("EditorHudToolbarController::BrushToggleButtonExecute");
 		
 		switch (args.GetMouseButton()) {
 			
@@ -253,9 +252,27 @@ class EditorHudToolbarController: Controller
 		}
 	}
 	
+	void CutButtonExecute(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudToolbarController::CutButtonExecute");
+		GetEditor().Cut(GetEditor().GetObjectManager().GetSelectedObjects());
+	}
+	
+	void CopyButtonExecute(ButtonCommandArgs args) 
+	{
+		EditorLog.Trace("EditorHudToolbarController::CopyButtonExecute");
+		GetEditor().Copy(GetEditor().GetObjectManager().GetSelectedObjects());
+	}
+	
+	void PasteButtonExecute(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudToolbarController::PasteButtonExecute");
+		GetEditor().Paste(Editor.CurrentMousePosition);
+	}
+	
 	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
 	{
-		EditorLog.Trace("EditorHudController::CreateToolbarMenu");	
+		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
 		
 		EditorMenu toolbar_menu;
 		switch (toolbar_button) {
