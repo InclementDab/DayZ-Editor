@@ -1,13 +1,13 @@
 WrapSpacerWidgetClass EditorListItem {
  visible 1
  clipchildren 0
- ignorepointer 0
+ ignorepointer 1
  color 0.0196 0.0196 0.0196 0
- position 0 0
- size 290 22
+ size 0.95 22
+ halign right_ref
  hexactpos 1
  vexactpos 1
- hexactsize 1
+ hexactsize 0
  vexactsize 1
  draggable 0
  scriptclass ""
@@ -17,14 +17,12 @@ WrapSpacerWidgetClass EditorListItem {
  content_halign right
  {
   FrameWidgetClass EditorListItemButtonFrame {
-   clipchildren 0
    ignorepointer 1
    position 0 0
-   size 290 1
-   halign right_ref
+   size 1 1
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 0
    {
     ButtonWidgetClass EditorListItemButton {
@@ -158,8 +156,8 @@ WrapSpacerWidgetClass EditorListItem {
    visible 1
    clipchildren 0
    ignorepointer 1
+   position 0 0
    size 1 0
-   halign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -169,10 +167,14 @@ WrapSpacerWidgetClass EditorListItem {
    "no focus" 1
    Padding 0
    Margin 0
+   "Size To Content H" 1
    "Size To Content V" 1
+   content_halign right
    {
     ScriptParamsClass {
+     Debug_Logging 1
      Binding_Name "ChildListItems"
+     Two_Way_Binding 1
     }
    }
   }

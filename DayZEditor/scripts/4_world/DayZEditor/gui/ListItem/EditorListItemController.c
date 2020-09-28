@@ -10,7 +10,7 @@ class EditorListItemController: Controller
 	string ListItemIcon;
 	
 	ref EditorListItemSet ChildListItems;
-	
+		
 	void EditorListItemController()	{
 		EditorLog.Trace("EditorListItemController");
 	}
@@ -70,6 +70,21 @@ class EditorListItemController: Controller
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		return m_ListItem.OnMouseLeave(w, enterW, x, y);
+	}
+	
+	override bool OnDropReceived(Widget w, int x, int y, Widget reciever)
+	{
+		if (reciever == m_ListItem.EditorListItemButton && m_ListItem.Type() == EditorCollapsibleListItem) {
+			reciever = m_ListItem.EditorListItemChildren;
+			ViewBinding view_binding;
+			reciever.GetScript(view_binding);
+			if (view_binding) {
+				view_binding.OnDropReecived(w, x, y, reciever);
+				return true;
+			}
+		}
+				
+		return false;
 	}
 }
 

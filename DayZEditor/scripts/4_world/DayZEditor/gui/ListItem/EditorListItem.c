@@ -24,8 +24,9 @@ class EditorListItem: ScriptView
 	
 	protected Widget EditorListItemButtonFrame;
 	protected Widget EditorListItemContent;
-	protected WrapSpacerWidget EditorListItemChildren;
-	protected ButtonWidget EditorListItemCollapse;
+	WrapSpacerWidget EditorListItemChildren;
+	ButtonWidget EditorListItemCollapse;
+	ButtonWidget EditorListItemButton;
 	
 	EditorListItemSet ParentList;
 	
