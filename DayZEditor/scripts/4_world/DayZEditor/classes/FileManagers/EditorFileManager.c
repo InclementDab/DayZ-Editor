@@ -118,11 +118,14 @@ class EditorWorldData
 	void EditorWorldData(Editor editor)
 	{
 		EditorObjects = new EditorObjectDataSet();
-		
 		MapName = GetGame().GetWorldName();
-		Print(MapName);
-		editor.GetCamera().GetTransform(CameraPosition);
+		if (MapName == string.Empty) {
+			// If you accidentally load the empty map. It defaults to this
+			EditorLog.Warning("Map name was empty. Defaulting to ChernarusPlus");
+			MapName = "ChernarusPlus";
+		}
 		
+		editor.GetCamera().GetTransform(CameraPosition);
 		foreach (EditorObject editor_object: editor.GetPlacedObjects()) {
 			EditorObjects.InsertEditorData(editor_object.GetData());
 		}
@@ -159,7 +162,6 @@ class ExportSettings
 	vector ExportOffset;
 	string ExportSetName;
 }
-
 
 enum FileDialogResult
 {
