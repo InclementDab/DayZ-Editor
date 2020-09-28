@@ -219,7 +219,11 @@ class Editor
 		if (m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible()) {
 			CurrentMousePosition = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(x, y, 0));
 		} else {
-			CurrentMousePosition = MousePosToRay(obj);
+			if (m_EditorSettings.ObjectDragCollisions) {
+				CurrentMousePosition = MousePosToRay(obj, null, m_EditorSettings.ViewDistance);
+			} else {
+				CurrentMousePosition = MousePosToRay(obj, null, m_EditorSettings.ViewDistance, 0, true);
+			}
 		}
 		
 		
