@@ -697,6 +697,7 @@ FrameWidgetClass EditorFrame {
            {
             ScriptParamsClass {
              Binding_Name "RightbarSpacerData"
+             Two_Way_Binding 1
             }
            }
           }

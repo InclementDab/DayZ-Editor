@@ -8,11 +8,11 @@ class EditorTooltip: ScriptView
 	void EditorToolTip(Widget parent = null)
 	{
 		EditorUIManager.CurrentTooltip = this;
-		m_EditorTooltipController = EditorTooltipController.Cast(GetController());
 	}
 	
 	void SetTitle(string title)
 	{
+		m_EditorTooltipController = EditorTooltipController.Cast(GetController());
 		m_EditorTooltipController.ContentTitle = title;
 		m_EditorTooltipController.NotifyPropertyChanged("ContentTitle");
 		
@@ -24,12 +24,14 @@ class EditorTooltip: ScriptView
 	
 	void SetContent(string text)
 	{
+		m_EditorTooltipController = EditorTooltipController.Cast(GetController());
 		m_EditorTooltipController.ContentText = text;
 		m_EditorTooltipController.NotifyPropertyChanged("ContentText");
 	}
 	
 	void SetContent(Object item)
 	{
+		m_EditorTooltipController = EditorTooltipController.Cast(GetController());
 		m_EditorTooltipController.ContentItemData = item;
 		m_EditorTooltipController.NotifyPropertyChanged("ContentItemData");
 	}

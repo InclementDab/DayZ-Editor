@@ -154,7 +154,7 @@ class EditorObjectMapMarker: EditorObjectMarker
 	
 	override void Update()
 	{
-		if (!m_EditorMap.IsVisible()) return;
+		if (!m_EditorMap || !m_EditorMap.IsVisible()) return;
 		
 		vector position = m_EditorMap.MapToScreen(m_EditorObject.GetPosition());
 		SetPos(position[0], position[1]);
