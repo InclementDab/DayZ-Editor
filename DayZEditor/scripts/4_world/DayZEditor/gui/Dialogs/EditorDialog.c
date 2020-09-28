@@ -1,4 +1,12 @@
 
+
+class EditorDialogButton: EditorScriptView
+{
+	override string GetLayoutFile() {
+		return "DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout";
+	}
+}
+
 class EditorDialog: EditorScriptView
 {				
 	protected WrapSpacerWidget DialogContent;
@@ -43,7 +51,7 @@ class EditorDialog: EditorScriptView
 		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", ButtonGrid);
 		panel.GetScript(view_binding);
 		view_binding.SetLabel(label);
-		//view_binding.SetRelayCommand(command); breaking dialog buttons
+		view_binding.Relay_Command = command;
 		GetController().LoadDataBindings(panel);
 		return panel.FindAnyWidget("DialogButton");
 	}

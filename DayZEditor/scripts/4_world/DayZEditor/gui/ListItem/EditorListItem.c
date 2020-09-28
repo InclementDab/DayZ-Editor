@@ -1,7 +1,7 @@
 
-class EditorListItemSet: ref ObservableCollection<ref ScriptView>
+class EditorListItemSet: ref ObservableCollection<ref EditorListItem>
 {
-	override int Insert(ScriptView value)
+	override int Insert(EditorListItem value)
 	{
 		EditorListItem.Cast(value).ParentList = this;
 		return super.Insert(value);

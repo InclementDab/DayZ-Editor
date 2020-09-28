@@ -69,12 +69,6 @@ class EditorHudToolbarController: Controller
 				break;
 			}
 			
-			case "BrushTypeBoxData": {
-				BrushToggleButtonText = BrushTypeBoxData.Get(BrushTypeSelection).Name;
-				NotifyPropertyChanged("BrushToggleButtonText");
-				break;
-			}
-			
 			case "BrushRadius":
 			case "BrushDensity": {
 				EditorBrush.SetRadius(BrushRadius);
