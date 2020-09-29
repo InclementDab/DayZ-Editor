@@ -74,6 +74,24 @@ ImageSetClass {
    Size 64 64
    Flags 0
   }
+  ImageSetDefClass copy_icon {
+   Name "copy_icon"
+   Pos 801 21
+   Size 64 64
+   Flags 0
+  }
+  ImageSetDefClass cut_icon {
+   Name "cut_icon"
+   Pos 873 21
+   Size 64 64
+   Flags 0
+  }
+  ImageSetDefClass copy2_icon {
+   Name "copy2_icon"
+   Pos 944 21
+   Size 64 64
+   Flags 0
+  }
  }
  Groups {
  }
