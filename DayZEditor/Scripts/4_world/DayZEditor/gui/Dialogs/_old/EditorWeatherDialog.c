@@ -1,5 +1,5 @@
 
-class EditorEnvironmentDialogController: EditorDialogController
+class EditorEnvironmentDialogController: DialogBaseController
 {
 	protected World m_World;
 	protected Weather m_Weather;

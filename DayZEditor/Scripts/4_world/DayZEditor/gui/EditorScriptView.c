@@ -1,5 +1,3 @@
-
-
 class EditorScriptView: ScriptView
 {
 	protected Editor m_Editor;
@@ -12,7 +10,6 @@ class EditorScriptView: ScriptView
 		if (m_Editor) {
 			m_EditorHud = m_Editor.GetEditorHud();	
 		}
-			
 	}
 	
 	void ~EditorScriptView()

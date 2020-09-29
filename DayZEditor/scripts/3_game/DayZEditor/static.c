@@ -138,9 +138,9 @@ class EditorLog
 		// Special Case :)
 		// ALWAYS bitch about errors
 		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.ERROR);
-
+		
+		//thread MessageBox.Show("Error", msg, MessageBoxButtons.OK);
 	}
-	
 	
 	static void Debug(Class msg)
 	{
@@ -148,8 +148,6 @@ class EditorLog
 		EditorPrint(msg.ToString(), LogLevel.DEBUG);
 #endif
 	}
-	
-
 	
 	static void Info(Class msg)
 	{

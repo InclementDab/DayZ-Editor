@@ -8,4 +8,4 @@ enum DialogResult
 	Ignore = 5,
 	Yes = 6,
 	No = 7
-}
+};

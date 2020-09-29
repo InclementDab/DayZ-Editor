@@ -12,7 +12,7 @@ class EditorCameraDialogControllerData
 	static float Sharpness;
 }
 
-class EditorCameraDialogController: EditorDialogController
+class EditorCameraDialogController: DialogBaseController
 {
 	
 	protected EditorCamera m_EditorCamera;

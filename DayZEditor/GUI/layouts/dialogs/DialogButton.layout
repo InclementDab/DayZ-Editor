@@ -1,4 +1,4 @@
-PanelWidgetClass EditorDialogButton {
+PanelWidgetClass ButtonPanel {
  position 0 0
  size 120 30
  hexactpos 1
@@ -10,7 +10,7 @@ PanelWidgetClass EditorDialogButton {
  scriptclass ""
  style rover_sim_black_2
  {
-  PanelWidgetClass DialogButtonOutline {
+  PanelWidgetClass ButtonOutline {
    ignorepointer 1
    position 0 0
    size 1 1
@@ -22,7 +22,7 @@ PanelWidgetClass EditorDialogButton {
    vexactsize 0
    style Outline
    {
-    ButtonWidgetClass DialogButton {
+    ButtonWidgetClass Button {
      disabled 0
      position 0 0
      size 1 1
@@ -37,7 +37,7 @@ PanelWidgetClass EditorDialogButton {
      "no focus" 0
      {
       ScriptParamsClass {
-       Relay_Command "DialogButtonExecute"
+       Relay_Command "ButtonExecute"
       }
      }
     }

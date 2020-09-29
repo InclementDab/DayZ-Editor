@@ -8,7 +8,7 @@ static const ref array<string> ExcludedMapItems = {
 	"CAWorld"
 };
 
-class MapSelectDialogController: EditorDialogController
+class MapSelectDialogController: DialogBaseController
 {
 	protected TextListboxWidget MapHostListbox;
 	

@@ -1,6 +1,6 @@
 
 
-class EditorPropertiesPrefabController: EditorDialogController
+class EditorPropertiesPrefabController: DialogBaseController
 {
 	
 	protected EditorObject m_EditorObject;

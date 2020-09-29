@@ -7,7 +7,7 @@ class EditorDialog: EditorScriptView
 	protected GridSpacerWidget ButtonGrid;
 	protected WrapSpacerWidget WindowDragWrapper;
 	
-	protected ref array<ref EditorDialogButton> m_DialogButtons = {};
+	protected ref array<ref DialogButton> m_DialogButtons = {};
 	
 	void EditorDialog(Widget parent = null) 
 	{
@@ -36,29 +36,29 @@ class EditorDialog: EditorScriptView
 		GetController().LoadDataBindings(DialogContent);
 	}
 
-	protected EditorDialogButton AddButton(string label, func action)
+	protected DialogButton AddButton(string label, func action)
 	{
-		EditorDialogButton dialog_button = new EditorDialogButton(ButtonGrid);
+		DialogButton dialog_button = new DialogButton(ButtonGrid);
 		dialog_button.SetParent(this);
-		dialog_button.SetExecuteFunction(action);
-		dialog_button.SetLabel(label);
+		//dialog_button.SetExecuteFunction(action);
+		//dialog_button.SetLabel(label);
 		m_DialogButtons.Insert(dialog_button);
 		return dialog_button;
 	}
 	
-	protected EditorDialogButton AddButtonStringAction(string label, string action)
+	protected DialogButton AddButtonStringAction(string label, string action)
 	{
-		EditorDialogButton dialog_button = new EditorDialogButton(ButtonGrid);
+		DialogButton dialog_button = new DialogButton(ButtonGrid);
 		dialog_button.SetParent(this);
-		dialog_button.SetExecuteFunctionString(action);
-		dialog_button.SetLabel(label);
+		//dialog_button.SetExecuteFunctionString(action);
+		//dialog_button.SetLabel(label);
 		m_DialogButtons.Insert(dialog_button);
 		return dialog_button;
 	}
 
 	void SetTitle(string title)
 	{
-		EditorDialogController controller = EditorDialogController.Cast(GetController());
+		DialogBaseController controller = DialogBaseController.Cast(GetController());
 		controller.Title = title;
 		controller.NotifyPropertyChanged("Title");
 	}
@@ -93,7 +93,7 @@ class EditorDialog: EditorScriptView
 	}
 	
 	override typename GetControllerType() {
-		return EditorDialogController;
+		return DialogBaseController;
 	}
 }
 

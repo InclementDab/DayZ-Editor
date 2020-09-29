@@ -514,18 +514,16 @@ class Editor
 			//save_dialog.ShowDialog();
 		}
 		
-		EditorMessageBoxResult result = EditorMessageBox.Show("Save", "Are you sure?", EditorMessageBoxButtons.OKCancel);
-		EditorLog.Info("MessageBoxResult: %1", typename.EnumToString(EditorMessageBoxResult, result));
-		
-		switch (result) {
+		DialogResult result = EditorMessageBox.Show("Save", "Are you sure?", MessageBoxButtons.OKCancel);
+		EditorLog.Info("MessageBoxResult: %1", typename.EnumToString(DialogResult, result));
+		if (result != DialogResult.OK) return;
+	
 			
-			case EditorMessageBoxResult.OK: {
-				EditorFileManager.Save(save_data, "$profile:/Editor/SaveData.dze");
-				m_EditorHud.CreateNotification("Saved!", COLOR_GREEN);
-				EditorLog.Info("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
-				break;
-			}
-		}
+			
+		EditorFileManager.Save(save_data, "$profile:/Editor/SaveData.dze");
+		m_EditorHud.CreateNotification("Saved!", COLOR_GREEN);
+		EditorLog.Info("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
+
 	}
 	
 	void SaveAs()
@@ -560,10 +558,10 @@ class Editor
 	
 	// Suspends execution. Should be called with 'thread'
 	private void _Import()
-	{	
-		EditorMessageBoxResult result = EditorMessageBox.Show("Import", "Import file expansion_import.map?", EditorMessageBoxButtons.OKCancel);
-		EditorLog.Info("MessageBoxResult: %1", typename.EnumToString(EditorMessageBoxResult, result));
-		if (result != EditorMessageBoxResult.OK) return;
+	{
+		DialogResult result = EditorMessageBox.Show("Import", "Import file expansion_import.map?", MessageBoxButtons.OKCancel);
+		EditorLog.Info("MessageBoxResult: %1", typename.EnumToString(DialogResult, result));
+		if (result != DialogResult.OK) return;
 		
 
 		EditorSaveData save_data();
