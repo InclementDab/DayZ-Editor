@@ -112,26 +112,26 @@ class COMImportData
 class EditorSaveData
 {
 	bool Binarized = 1;
-	string MapName;
+	string MapName = "ChernarusPlus";
 	vector CameraPosition[4];
 	ref EditorObjectDataSet EditorObjects = new EditorObjectDataSet();
 	
 	static EditorSaveData CreateFromEditor(Editor editor)
 	{
 		EditorSaveData save_data = new EditorSaveData();
+		
+		// Save world name
 		save_data.MapName = GetGame().GetWorldName();
-		if (save_data.MapName == string.Empty) {
-			// If you accidentally load the empty map. It defaults to this
-			EditorLog.Warning("Map name was empty. Defaulting to ChernarusPlus");
-			save_data.MapName = "ChernarusPlus";
-		}
 		
 		// Save Camera Position
 		editor.GetCamera().GetTransform(save_data.CameraPosition);
 		
 		// Save Objects
-		foreach (EditorObject editor_object: editor.GetPlacedObjects()) {
-			save_data.EditorObjects.InsertEditorData(editor_object.GetData());
+		EditorObjectSet placed_objects = editor.GetPlacedObjects();
+		if (placed_objects) {
+			foreach (EditorObject editor_object: placed_objects) {
+				save_data.EditorObjects.InsertEditorData(editor_object.GetData());
+			}
 		}
 		
 		return save_data;

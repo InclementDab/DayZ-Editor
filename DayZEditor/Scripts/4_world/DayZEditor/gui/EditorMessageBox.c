@@ -22,12 +22,49 @@ enum EditorMessageBoxResult
 	No
 };
 
+class EditorMessageBoxButton: EditorScriptView
+{	
+	protected ButtonWidget DialogButton;
+	
+	EditorMessageBoxResult ButtonResult;
+	
+	protected string m_ExecuteAction;
+	
+	void EditorMessageBoxButton(Widget parent = null, EditorMessageBoxResult result = EditorMessageBoxResult.OK)
+	{
+		ButtonResult = result;
+	}
+	
+	bool DialogButtonExecute(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("DialogButtonExecute");
+		
+		g_Script.CallFunction(GetParent(), m_ExecuteAction, null, this);
+		
+		return true;
+	}
+		
+	void SetExecuteFunctionString(string function)
+	{
+		m_ExecuteAction = function;
+	}
+	
+	void SetLabel(string label)
+	{
+		DialogButton.SetText(label);
+	}
+	
+	override string GetLayoutFile() {
+		return "DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout";
+	}
+}
+
 class EditorMessageBoxController: Controller
 {
 	string Title_Text;
 	string Caption_Text;
 	
-	ref ObservableCollection<ref EditorDialogButton> ButtonList = new ObservableCollection<ref EditorDialogButton>("ButtonList", this);
+	ref ObservableCollection<ref EditorMessageBoxButton> ButtonList = new ObservableCollection<ref EditorMessageBoxButton>("ButtonList", this);
 	
 	void ~EditorMessageBoxController()
 	{
@@ -39,12 +76,46 @@ class EditorMessageBox: EditorScriptView
 {
 	protected EditorMessageBoxResult m_CurrentResult = EditorMessageBoxResult.None;
 	
+	protected GridSpacerWidget ButtonGrid;
+	
 	private void EditorMessageBox(Widget parent = null, string title = "", string caption = "", EditorMessageBoxButtons buttons = EditorMessageBoxButtons.OK)
 	{
 		switch (buttons) {
 			
 			case EditorMessageBoxButtons.OK: {
 				AddButton(EditorMessageBoxResult.OK);
+				break;
+			}
+			
+			case EditorMessageBoxButtons.OKCancel: {
+				AddButton(EditorMessageBoxResult.OK);
+				AddButton(EditorMessageBoxResult.Cancel);
+				break;
+			}			
+			
+			case EditorMessageBoxButtons.AbortRetryIgnore: {
+				AddButton(EditorMessageBoxResult.Abort);
+				AddButton(EditorMessageBoxResult.Retry);
+				AddButton(EditorMessageBoxResult.Ignore);
+				break;
+			}			
+			
+			case EditorMessageBoxButtons.YesNoCancel: {
+				AddButton(EditorMessageBoxResult.Yes);
+				AddButton(EditorMessageBoxResult.No);
+				AddButton(EditorMessageBoxResult.Cancel);
+				break;
+			}			
+			
+			case EditorMessageBoxButtons.YesNo: {
+				AddButton(EditorMessageBoxResult.Yes);
+				AddButton(EditorMessageBoxResult.No);
+				break;
+			}			
+			
+			case EditorMessageBoxButtons.RetryCancel: {
+				AddButton(EditorMessageBoxResult.Retry);
+				AddButton(EditorMessageBoxResult.Cancel);
 				break;
 			}
 		}
@@ -67,19 +138,18 @@ class EditorMessageBox: EditorScriptView
 	{
 		return m_CurrentResult;
 	}
-		
-	private void OK()
+	
+	private void OnDialogResult(EditorMessageBoxButton button)
 	{
-		EditorLog.Trace("EditorMessageBox::OK");
-		m_CurrentResult = EditorMessageBoxResult.OK;
+		m_CurrentResult = button.ButtonResult;
 	}
 	
 	private void AddButton(EditorMessageBoxResult result)
 	{
-		EditorDialogButton dialog_button = new EditorDialogButton();
+		EditorMessageBoxButton dialog_button = new EditorMessageBoxButton(ButtonGrid, result);
 		dialog_button.SetParent(this);
 		dialog_button.SetLabel(typename.EnumToString(EditorMessageBoxResult, result));
-		dialog_button.SetExecuteFunctionString(typename.EnumToString(EditorMessageBoxResult, result));
+		dialog_button.SetExecuteFunctionString("OnDialogResult");
 		
 		EditorMessageBoxController controller = EditorMessageBoxController.Cast(m_Controller);
 		controller.ButtonList.Insert(dialog_button);

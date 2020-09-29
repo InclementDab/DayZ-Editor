@@ -517,13 +517,16 @@ class Editor
 			//save_dialog.ShowDialog();
 		}
 		
-		EditorMessageBoxResult result = EditorMessageBox.Show("Save", "Are you sure?");
+		EditorMessageBoxResult result = EditorMessageBox.Show("Save", "Are you sure?", EditorMessageBoxButtons.OKCancel);
+		
+		EditorLog.Info("MessageBoxResult: %1", typename.EnumToString(EditorMessageBoxResult, result));
 		
 		switch (result) {
 			
 			case EditorMessageBoxResult.OK: {
-				EditorFileManager.Save(save_data, "SaveData.bin");
+				EditorFileManager.Save(save_data, "$profile:/Editor/SaveData.dze");
 				m_EditorHud.CreateNotification("Saved!", COLOR_GREEN);
+				EditorLog.Info("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
 				break;
 			}
 		}
