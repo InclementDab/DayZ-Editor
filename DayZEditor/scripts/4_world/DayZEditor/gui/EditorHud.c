@@ -45,8 +45,8 @@ class EditorHud: ScriptView
 	{
 		EditorLog.Trace("EditorHud::CreateNotification");
 		
-		//EditorNotification notification = new EditorNotification(NotificationFrame, text, color);
-		//notification.Play(duration);
+		EditorNotification notification = new EditorNotification(NotificationFrame, text, color);
+		notification.Play(duration);
 	}
 	
 	
