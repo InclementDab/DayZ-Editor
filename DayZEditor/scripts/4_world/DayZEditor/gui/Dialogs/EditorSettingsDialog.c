@@ -43,9 +43,9 @@ class EditorSettingsDialog: EditorDialog
 	{
 		EditorLog.Trace("EditorSettingsDialog::Init");
 		SetTitle("Editor Settings");
-		AddButton("Save", "SaveCallback");
-		AddButton("Apply", "ApplyCallback");
-		AddButton("Close", "Close");
+		AddButton("Save", SaveCallback);
+		AddButton("Apply", ApplyCallback);
+		AddButton("Close", CloseDialog);
 	}
 	
 	void SetEditorSettings(EditorSettings settings)

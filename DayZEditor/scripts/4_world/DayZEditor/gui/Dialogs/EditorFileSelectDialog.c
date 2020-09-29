@@ -121,8 +121,8 @@ class EditorFileOpenDialog: EditorFileDialog
 	{
 		EditorLog.Trace("EditorFileOpenDialog::Init");
 		
-		AddButton("Open", "OpenCallback");
-		AddButton("Cancel", "Close");
+		AddButton("Open", OpenCallback);
+		AddButton("Cancel", CloseDialog);
 		
 		string filter = "*.dze";
 		
@@ -173,8 +173,8 @@ class EditorFileImportDialog: EditorFileDialog
 	{
 		EditorLog.Trace("EditorFileImportDialog");
 		
-		AddButton("Import", "ImportCallback");
-		AddButton("Cancel", "Close");
+		AddButton("Import", ImportCallback);
+		AddButton("Cancel", CloseDialog);
 		
 		string filter = "*.vpp";
 		//string filter = "*";
@@ -230,8 +230,8 @@ class EditorFileSaveDialog: EditorFileDialog
 	void EditorFileSaveDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorFileSaveDialog::Init");
-		AddButton("Save", "SaveCallback");
-		AddButton("Cancel", "Close");
+		AddButton("Save", SaveCallback);
+		AddButton("Cancel", CloseDialog);
 	}
 	
 	void SetWorldData(EditorSaveData world_data)
@@ -264,7 +264,7 @@ class EditorFileSaveDialog: EditorFileDialog
 		GetEditor().SetSaveFile(m_CurrentDirectory + m_FileNameBox.GetText());
 		GetEditor().Save();
 		
-		delete this;
+		CloseDialog();
 	}
 	
 	/*
@@ -350,8 +350,8 @@ class EditorFileExportDialog: EditorFileDialog
 		m_FileNameBox = EditBoxWidget.Cast(box_prefab.FindAnyWidget("FileNameEditBox"));
 		m_FileNameBox.SetText("Export");
 		
-		AddButton("Export", "ExportCallback");
-		AddButton("Cancel", "Close");
+		AddButton("Export", ExportCallback);
+		AddButton("Cancel", CloseDialog);
 		
 		m_EditorDropdownPrefab = ButtonWidget.Cast(GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionDropdown.layout", ButtonGrid));
 		m_EditorDropdownWraper = WrapSpacerWidget.Cast(m_EditorDropdownPrefab.FindAnyWidget("EditorDropdownWraper"));

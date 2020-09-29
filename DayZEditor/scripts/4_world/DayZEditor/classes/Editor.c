@@ -168,10 +168,7 @@ class Editor
 		
 		// Init Hud
 		m_EditorHud = new EditorHud();
-		//m_EditorHud.Init(null);
-		m_EditorHudController = m_EditorHud.GetEditorHudController();
-		
-		
+		m_EditorHudController = m_EditorHud.GetEditorHudController();		
 		
 		m_Mission = GetGame().GetMission();
 		

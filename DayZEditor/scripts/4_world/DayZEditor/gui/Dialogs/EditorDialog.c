@@ -1,6 +1,29 @@
 
 class EditorDialogButton: EditorScriptView
 {
+	private func m_ExecuteFunction;
+	
+	protected ButtonWidget DialogButton;
+	
+	void DialogButtonExecute(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("DialogButtonExecute");
+		
+		if (m_ExecuteFunction != __NULL_FUNCT) {
+			g_Game.GetCallQueue(CALL_CATEGORY_GUI).Call(m_ExecuteFunction);
+		}
+	}
+	
+	void SetExecuteFunction(func function)
+	{
+		m_ExecuteFunction = function;
+	}
+	
+	void SetLabel(string label)
+	{
+		DialogButton.SetText(label);
+	}
+	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout";
 	}
@@ -12,12 +35,19 @@ class EditorDialog: EditorScriptView
 	protected GridSpacerWidget ButtonGrid;
 	protected WrapSpacerWidget WindowDragWrapper;
 	
-	void EditorDialog(Widget parent = null) {
+	protected ref array<ref EditorDialogButton> m_DialogButtons = {};
+	
+	void EditorDialog(Widget parent = null) 
+	{
 		m_LayoutRoot.Show(false);
 	}
 	
-	void ~EditorDialog() {
-		CloseDialog();
+	void ~EditorDialog() 
+	{
+		delete m_DialogButtons;
+		m_Editor.GetCamera().MoveEnabled = true;
+		m_Editor.GetCamera().LookEnabled = true;
+		m_EditorHud.ShowCursor(true);
 	}
 	
 	override string GetLayoutFile() {
@@ -41,18 +71,23 @@ class EditorDialog: EditorScriptView
 		DialogContent.AddChild(content);
 		GetController().LoadDataBindings(DialogContent);
 	}
-		
-	// Command can either be a Callback function in the Controller OR
-	// the classname of a RoutedUICommand
-	protected ButtonWidget AddButton(string label, string command)
-	{		
+
+	protected EditorDialogButton AddButton(string label, func action)
+	{
+		EditorDialogButton dialog_button = new EditorDialogButton(ButtonGrid);
+		dialog_button.SetParent(this);
+		dialog_button.SetExecuteFunction(action);
+		dialog_button.SetLabel(label);
+		m_DialogButtons.Insert(dialog_button);
+		return dialog_button;
+		/*
 		EditorDialogButtonViewBinding view_binding;
 		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", ButtonGrid);
 		panel.GetScript(view_binding);
 		view_binding.SetLabel(label);
 		view_binding.Relay_Command = command;
 		GetController().LoadDataBindings(panel);
-		return panel.FindAnyWidget("DialogButton");
+		return panel.FindAnyWidget("DialogButton");*/
 	}
 
 	void SetTitle(string title)
@@ -84,9 +119,12 @@ class EditorDialog: EditorScriptView
 	void CloseDialog()
 	{
 		EditorLog.Trace("EditorDialog::Close");
-		m_Editor.GetCamera().MoveEnabled = true;
-		m_Editor.GetCamera().LookEnabled = true;
-		m_EditorHud.ShowCursor(true);
+		delete this;
+	}
+	
+	void CloseDialogExecute(ButtonCommandArgs args)
+	{
+		CloseDialog();
 	}
 		
 	float m_OffsetX, m_OffsetY;

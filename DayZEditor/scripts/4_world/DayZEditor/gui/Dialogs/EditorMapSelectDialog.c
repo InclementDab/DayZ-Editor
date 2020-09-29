@@ -74,8 +74,8 @@ class MapSelectDialog: EditorDialog
 		EditorLog.Trace("MapSelectDialog::Init");
 
 		AddContent("DayZEditor/gui/Layouts/dialogs/EditorMapSelector.layout");
-		AddButton("Select", "MapSelectDialogRoutedUICommand");
-		AddButton("Close", "DialogCloseRoutedUICommand");
+		//AddButton("Select", "MapSelectDialogRoutedUICommand"); // add functionality for RelayCommand
+		AddButton("Close", CloseDialog);
 		MapSelectDialogController.Cast(GetController()).SetMapSelectDialog(this);
 	}
 	

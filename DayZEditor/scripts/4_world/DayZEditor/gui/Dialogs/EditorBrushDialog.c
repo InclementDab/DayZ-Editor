@@ -54,9 +54,9 @@ class EditorBrushDialog: EditorDialog
 	{
 		EditorLog.Trace("EditorBrushDialog"); 
 				
-		AddButton("Save", "SaveCallback");
-		AddButton("Export", "ExportCallback");
-		AddButton("Close", "Close");	
+		AddButton("Save", SaveCallback);
+		AddButton("Export", ExportCallback);
+		AddButton("Close", CloseDialog);	
 	}
 	
 	void SetEditorBrushData(EditorBrushData brush_data)
