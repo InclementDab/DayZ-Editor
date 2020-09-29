@@ -1,53 +1,5 @@
 
-class EditorDialogButton: EditorScriptView
-{	
-	protected ButtonWidget DialogButton;
-	protected ref ScriptInvoker m_ExecuteInvoker = new ScriptInvoker();
-	
-	protected string m_ExecuteAction;
-	
-	void EditorDialogButton(Widget parent = null)
-	{
-		EditorLog.Trace("EditorDialogButton"); 
-	}
-	
-	void ~EditorDialogButton()
-	{
-		EditorLog.Trace("~EditorDialogButton");
-		delete m_ExecuteInvoker;
-	}
-	
-	bool DialogButtonExecute(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("DialogButtonExecute");
-		
-		if (m_ExecuteAction == string.Empty) {
-			m_ExecuteInvoker.Invoke();
-		} else {
-			g_Script.Call(GetParent(), m_ExecuteAction, args);
-		}
-		return true;
-	}
-	
-	void SetExecuteFunction(func function)
-	{
-		m_ExecuteInvoker.Insert(function);
-	}
-	
-	void SetExecuteFunctionString(string function)
-	{
-		m_ExecuteAction = function;
-	}
-	
-	void SetLabel(string label)
-	{
-		DialogButton.SetText(label);
-	}
-	
-	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout";
-	}
-}
+
 
 class EditorDialog: EditorScriptView
 {				
@@ -107,8 +59,8 @@ class EditorDialog: EditorScriptView
 	void SetTitle(string title)
 	{
 		EditorDialogController controller = EditorDialogController.Cast(GetController());
-		controller.TitleText = title;
-		controller.NotifyPropertyChanged("TitleText");
+		controller.Title = title;
+		controller.NotifyPropertyChanged("Title");
 	}
 	
 	DialogResult ShowDialog()
@@ -134,8 +86,20 @@ class EditorDialog: EditorScriptView
 	{
 		EditorLog.Trace("EditorDialog::Close");
 		delete this;
-	}
+	}	
 		
+	override string GetLayoutFile() {
+		return "DayZEditor/gui/Layouts/dialogs/EditorDialog.layout";
+	}
+	
+	override typename GetControllerType() {
+		return EditorDialogController;
+	}
+}
+
+
+/*
+
 	float m_OffsetX, m_OffsetY;
 	override bool OnDrag(Widget w, int x, int y)
 	{
@@ -172,13 +136,5 @@ class EditorDialog: EditorScriptView
 		
 		return false;
 	}
-	
-		
-	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/dialogs/EditorDialog.layout";
-	}
-	
-	override typename GetControllerType() {
-		return EditorDialogController;
-	}
-}
+
+*/

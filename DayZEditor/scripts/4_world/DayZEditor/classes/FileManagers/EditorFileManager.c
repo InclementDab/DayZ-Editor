@@ -235,7 +235,7 @@ class EditorFileManager
 				JsonFileLoader<COMImportData>.JsonLoadFile(file_name, com_data);
 				
 				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
-					Print("ImportFromFile::COMFILE::Import " + param.param1);					
+					EditorLog.Debug("ImportFromFile::COMFILE::Import " + param.param1);					
 					data.EditorObjects.InsertEditorData(EditorObjectData.Create(param.param1, param.param2, param.param3));
 				}
 				
@@ -243,20 +243,19 @@ class EditorFileManager
 			}
 			
 			case (ImportMode.EXPANSION): {
-				Print("EditorFileManager::Import::EXPANSION");
+				EditorLog.Debug("EditorFileManager::Import::EXPANSION");
 				ExpansionImportData.ReadFromFile(data.EditorObjects, file_name);
-
 				break;
 			}
 			
 			case (ImportMode.VPP): {
-				Print("EditorFileManager::Import::VPP");
+				EditorLog.Debug("EditorFileManager::Import::VPP");
 				return ImportVPPData(data.EditorObjects, file_name);
 			}
 			
 			default: {
 				
-				Print(string.Format("%1 not implemented!", typename.EnumToString(ImportMode, mode)));
+				EditorLog.Debug(string.Format("%1 not implemented!", typename.EnumToString(ImportMode, mode)));
 				break;
 			}
 		}

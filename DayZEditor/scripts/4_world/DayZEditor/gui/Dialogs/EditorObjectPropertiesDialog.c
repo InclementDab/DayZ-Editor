@@ -177,12 +177,14 @@ class EditorObjectPropertiesDialog: EditorDialog
 		}*/
 	}
 	
-	void SaveCallback() {
+	void SaveCallback() 
+	{
 		EditorLog.Trace("EditorObjectPropertiesDialog::SaveCallback");
 		CloseDialog();
 	}
 	
-	void CancelCallback() {
+	void CancelCallback() 
+	{
 		EditorLog.Trace("EditorObjectPropertiesDialog::CancelCallback");
 		m_EditorObject.SetDisplayName(m_StartName);
 		m_EditorObject.SetPosition(m_StartPosition);

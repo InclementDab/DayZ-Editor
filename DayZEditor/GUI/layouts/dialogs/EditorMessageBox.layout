@@ -69,7 +69,7 @@ WrapSpacerWidgetClass EditorMessageBox {
        "text valign" center
        {
         ScriptParamsClass {
-         Binding_Name "Title_Text"
+         Binding_Name "Title"
         }
        }
       }
@@ -159,7 +159,7 @@ WrapSpacerWidgetClass EditorMessageBox {
        wrap 1
        {
         ScriptParamsClass {
-         Binding_Name "Caption_Text"
+         Binding_Name "Caption"
         }
        }
       }

@@ -507,9 +507,6 @@ class Editor
 	private void _Save()
 	{
 		EditorLog.Trace("Editor::Save");
-		
-		
-		
 		EditorSaveData save_data = EditorSaveData.CreateFromEditor(this);
 		
 		if (m_EditorSaveFile == string.Empty) {
@@ -518,7 +515,6 @@ class Editor
 		}
 		
 		EditorMessageBoxResult result = EditorMessageBox.Show("Save", "Are you sure?", EditorMessageBoxButtons.OKCancel);
-		
 		EditorLog.Info("MessageBoxResult: %1", typename.EnumToString(EditorMessageBoxResult, result));
 		
 		switch (result) {
@@ -530,23 +526,11 @@ class Editor
 				break;
 			}
 		}
-		
-		
-		
-		
-		/*
-		FileDialogResult result = EditorFileManager.Save(world_data, file);
-		//m_EditorHud.GetController().NotificationCreate("Save " + typename.EnumToString(FileDialogResult, result), COLOR_GREEN); 
-		
-		
-		if (result == FileDialogResult.SUCCESS) {
-			m_EditorSaveFile = file;
-		}*/		
 	}
 	
 	void SaveAs()
 	{
-		
+		EditorLog.Trace("Editor::SaveAs");
 	}
 	
 	void Close()
@@ -562,6 +546,24 @@ class Editor
 	void Import()
 	{
 		EditorLog.Trace("Editor::Import");
+		thread _Import();
+	}
+	
+	// Suspends execution. Should be called with 'thread'
+	private void _Import()
+	{	
+		EditorMessageBoxResult result = EditorMessageBox.Show("Import", "Import file expansion_import.map?", EditorMessageBoxButtons.OKCancel);
+		EditorLog.Info("MessageBoxResult: %1", typename.EnumToString(EditorMessageBoxResult, result));
+		if (result != EditorMessageBoxResult.OK) return;
+		
+
+		EditorSaveData save_data();
+		EditorFileManager.Import(save_data, "$profile:/Editor/expansion_import.map", ImportMode.EXPANSION);
+		string message = string.Format("Imported %1 objects!", save_data.EditorObjects.Count().ToString());
+		m_EditorHud.CreateNotification(message, COLOR_GREEN);
+		EditorLog.Info(message);
+		
+		CreateObjects(save_data.EditorObjects);
 	}
 	
 	void Export()

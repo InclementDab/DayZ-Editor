@@ -1,0 +1,23 @@
+RichTextWidgetClass CaptionText {
+ size 0.75 1
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ scriptclass "ViewBinding"
+ text "Are you sure?"
+ font "gui/fonts/sdf_MetronBook24"
+ "exact text" 1
+ "size to text h" 0
+ "size to text v" 1
+ "text halign" center
+ "text valign" center
+ wrap 1
+ {
+  ScriptParamsClass {
+   Binding_Name "Caption"
+  }
+ }
+}

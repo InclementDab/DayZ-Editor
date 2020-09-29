@@ -24,10 +24,8 @@ enum EditorMessageBoxResult
 
 class EditorMessageBoxButton: EditorScriptView
 {	
-	protected ButtonWidget DialogButton;
-	
+	protected ButtonWidget DialogButton;	
 	EditorMessageBoxResult ButtonResult;
-	
 	protected string m_ExecuteAction;
 	
 	void EditorMessageBoxButton(Widget parent = null, EditorMessageBoxResult result = EditorMessageBoxResult.OK)
@@ -43,7 +41,7 @@ class EditorMessageBoxButton: EditorScriptView
 		
 		return true;
 	}
-		
+	
 	void SetExecuteFunctionString(string function)
 	{
 		m_ExecuteAction = function;
@@ -59,27 +57,90 @@ class EditorMessageBoxButton: EditorScriptView
 	}
 }
 
-class EditorMessageBoxController: Controller
+class EditorDialogController: Controller
 {
-	string Title_Text;
-	string Caption_Text;
+	string Title;
+	string Caption;
 	
-	ref ObservableCollection<ref EditorMessageBoxButton> ButtonList = new ObservableCollection<ref EditorMessageBoxButton>("ButtonList", this);
+	ref ObservableCollection<ref ScriptView> DialogContentData = new ObservableCollection<ref ScriptView>("DialogContentData", this);
+	ref ObservableCollection<ref ScriptView> DialogButtonData = new ObservableCollection<ref ScriptView>("DialogButtonData", this);
 	
-	void ~EditorMessageBoxController()
+	void ~EditorDialogController()
 	{
-		delete ButtonList;
+		delete DialogContentData;
+		delete DialogButtonData;
 	}
 }
 
-class EditorMessageBox: EditorScriptView
+class EditorDialogBase: EditorScriptView
+{
+	protected EditorDialogController m_EditorDialogController;
+	
+	void EditorDialogBase(Widget parent = null)
+	{
+		EditorLog.Trace("EditorDialog");
+
+		m_EditorDialogController = EditorDialogController.Cast(m_Controller);
+
+		m_Editor.GetCamera().MoveEnabled = false;
+		m_Editor.GetCamera().LookEnabled = false;
+		m_EditorHud.ShowCursor(true);
+		
+		EditorUIManager.CurrentDialog = this;
+		
+		float du, dv, dx, dy;
+		m_LayoutRoot.GetScreenSize(du, dv);		
+		m_LayoutRoot.GetPos(dx, dy);
+		m_LayoutRoot.SetPos(dx, dy - dv / 2);
+	}
+	
+	private void ~EditorDialogBase()
+	{
+		EditorLog.Trace("~EditorDialog");
+		m_Editor.GetCamera().MoveEnabled = true;
+		m_Editor.GetCamera().LookEnabled = true;
+		m_EditorHud.ShowCursor(true);
+	}
+	
+	void CloseDialog()
+	{
+		EditorLog.Trace("EditorDialog::CloseDialog");
+		delete this;
+	}
+	
+	void AddContent(ScriptView content)
+	{
+		m_EditorDialogController.DialogContentData.Insert(content);
+	}
+	
+	void AddButton(ScriptView button)
+	{
+		m_EditorDialogController.DialogButtonData.Insert(button);
+	}
+		
+	override typename GetControllerType() {
+		return EditorDialogController;
+	}	
+		
+	override string GetLayoutFile() {
+		return "DayZEditor/gui/Layouts/dialogs/EditorDialog.layout";
+	}
+}
+
+// todo: move this to 3_Game and add it to the EditorLog.Error so dialogs show :)
+class EditorMessageBox: EditorDialogBase
 {
 	protected EditorMessageBoxResult m_CurrentResult = EditorMessageBoxResult.None;
-	
 	protected GridSpacerWidget ButtonGrid;
+	
 	
 	private void EditorMessageBox(Widget parent = null, string title = "", string caption = "", EditorMessageBoxButtons buttons = EditorMessageBoxButtons.OK)
 	{
+		m_EditorDialogController.Title = title;
+		m_EditorDialogController.NotifyPropertyChanged("Title");
+		m_EditorDialogController.Caption = caption;
+		m_EditorDialogController.NotifyPropertyChanged("Caption");
+		
 		switch (buttons) {
 			
 			case EditorMessageBoxButtons.OK: {
@@ -119,12 +180,7 @@ class EditorMessageBox: EditorScriptView
 				break;
 			}
 		}
-		
-		EditorMessageBoxController controller = EditorMessageBoxController.Cast(m_Controller);
-		controller.Title_Text = title;
-		controller.NotifyPropertyChanged("Title_Text");
-		controller.Caption_Text = caption;
-		controller.NotifyPropertyChanged("Caption_Text");
+
 	}
 	
 	private void ~EditorMessageBox()
@@ -151,15 +207,12 @@ class EditorMessageBox: EditorScriptView
 		dialog_button.SetLabel(typename.EnumToString(EditorMessageBoxResult, result));
 		dialog_button.SetExecuteFunctionString("OnDialogResult");
 		
-		EditorMessageBoxController controller = EditorMessageBoxController.Cast(m_Controller);
-		controller.ButtonList.Insert(dialog_button);
+		AddButton(dialog_button);
 	}
 
-	
 	static EditorMessageBoxResult Show(string title, string caption, EditorMessageBoxButtons buttons = EditorMessageBoxButtons.OK)
 	{
 		EditorMessageBox message_box = new EditorMessageBox(null, title, caption, buttons);
-		message_box.ShowDialog();
 		
 		EditorMessageBoxResult result = EditorMessageBoxResult.None;
 		while (message_box && message_box.GetResult() == EditorMessageBoxResult.None) {
@@ -174,38 +227,8 @@ class EditorMessageBox: EditorScriptView
 		message_box.CloseDialog();
 		return result;
 	}
-	
-	DialogResult ShowDialog()
-	{
-		EditorLog.Trace("EditorDialog::Show");
-		m_Editor.GetCamera().MoveEnabled = false;
-		m_Editor.GetCamera().LookEnabled = false;
-		m_EditorHud.ShowCursor(true);
-		
-		EditorUIManager.CurrentDialog = this;
-		
-		float du, dv, dx, dy;
-		m_LayoutRoot.GetScreenSize(du, dv);		
-		m_LayoutRoot.GetPos(dx, dy);
-		m_LayoutRoot.SetPos(dx, dy - dv / 2);
-		m_LayoutRoot.Show(true);
-		
-		// todo
-		return DialogResult.OK;
-	}
-	
-	void CloseDialog()
-	{
-		EditorLog.Trace("EditorDialog::Close");
-		delete this;
-	}
-	
-	override typename GetControllerType() {
-		return EditorMessageBoxController;
-	}
-	
+			
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/dialogs/EditorMessageBox.layout";
 	}
-	
 }
