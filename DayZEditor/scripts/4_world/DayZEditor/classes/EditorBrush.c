@@ -103,7 +103,6 @@ class EditorBrush
 	
 	void DuringMouseDown(vector position) 
 	{ 
-		//if (m_BrushSettings.PlaceableObjects.Count() == 0) return;
 		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
@@ -120,18 +119,18 @@ class EditorBrush
 				EditorBrushObject object_name = m_BrushData.GetRandomObject();
 				data_set.InsertEditorData(EditorObjectData.Create(object_name.Name, pos, vector.Up, EditorObjectFlags.NONE));
 			}
-			
 		}
 		
-		ref EditorObjectSet object_set = GetEditor().CreateObjects(data_set, true);
+
+		EditorObjectSet object_set = GetEditor().CreateObjects(data_set, true);
 		i = 0;
 		
 		foreach (EditorObject editor_object: object_set) {
 			
 			
 			pos = editor_object.GetPosition();			
-			vector size = ObjectGetSize(editor_object.GetWorldObject());			
-			//pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + m_BrushData.PlaceableObjectTypes.Get(i).ZOffset;
+			vector size = ObjectGetSize(editor_object.GetWorldObject());
+			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2.35; //+ m_BrushData.PlaceableObjectTypes[i].ZOffset;
 
 			
 			vector direction = Math3D.GetRandomDir();
@@ -140,8 +139,6 @@ class EditorBrush
 			editor_object.SetPosition(pos);
 			i++;
 		}
-		
-		delete data_set;	
 	}
 	
 	void OnMouseUp(vector position)

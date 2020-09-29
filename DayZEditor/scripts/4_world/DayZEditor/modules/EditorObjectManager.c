@@ -32,7 +32,7 @@ class EditorObjectManagerModule: JMModuleBase
 		m_ActionStack 		= new EditorActionStack();
 	}
 	
-	ref EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
+	EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
 	{
 		EditorLog.Trace("EditorObjectManager::CreateObjects");
 		EditorObjectSet object_set = new EditorObjectSet();
@@ -52,7 +52,7 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		if (create_undo) {
 			m_ActionStack.InsertAction(action);
-			m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
+			//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
 		}
 		
 		return object_set;
