@@ -536,7 +536,16 @@ class Editor
 	void Close()
 	{
 		EditorLog.Trace("Editor::Close");
-	}	
+		thread _Close();
+	}
+	
+	// Suspends execution. Should be called with 'thread'
+	private void _Close()
+	{
+		EditorDialogBase dialog = new EditorDialogBase();
+		DialogResult result = dialog.ShowDialog();
+		Print(result);
+	}
 	
 	void Open()
 	{
@@ -723,6 +732,10 @@ class Editor
 				
 				case KeyCode.KC_V: {
 					return EditorPasteCommand;
+				}
+				
+				case KeyCode.KC_W: {
+					return EditorCloseCommand;
 				}
 			}
 		}
