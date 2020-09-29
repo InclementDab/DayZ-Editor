@@ -3,7 +3,7 @@ WrapSpacerWidgetClass EditorListItem {
  clipchildren 0
  ignorepointer 1
  color 0.0196 0.0196 0.0196 0
- size 0.95 22
+ size 1 22
  halign right_ref
  hexactpos 1
  vexactpos 1

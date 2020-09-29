@@ -9,7 +9,7 @@ class EditorListItemController: Controller
 	string ListItemLabel;
 	string ListItemIcon;
 	
-	ref EditorListItemSet ChildListItems;
+	ref ObservableCollection<ref EditorListItem> ChildListItems = new ObservableCollection<ref EditorListItem>("ChildListItems", this);
 		
 	void EditorListItemController()	{
 		EditorLog.Trace("EditorListItemController");
@@ -19,8 +19,6 @@ class EditorListItemController: Controller
 	{
 		EditorLog.Trace("EditorListItemController::OnWidgetScriptInit");
 		super.OnWidgetScriptInit(w);
-		
-		ChildListItems = new EditorListItemSet("ChildListItems", this);
 	}
 
 	void ListItemExecute(ButtonCommandArgs args) {
@@ -75,15 +73,47 @@ class EditorListItemController: Controller
 	override bool OnDropReceived(Widget w, int x, int y, Widget reciever)
 	{
 		if (reciever == m_ListItem.EditorListItemButton && m_ListItem.Type() == EditorCollapsibleListItem) {
+			ScriptedViewBase scripted_view;
+			w.GetScript(scripted_view);
+			ScriptedViewBase.FindScriptedRoot(scripted_view);
+			
 			reciever = m_ListItem.EditorListItemChildren;
 			ViewBinding view_binding;
 			reciever.GetScript(view_binding);
+			
 			if (view_binding) {
-				view_binding.OnDropReecived(w, x, y, reciever);
+				Print(ChildListItems.Count());
+				Print(m_ListItem.GetListItemController().ChildListItems.Count());
+				Print(EditorListItem.Cast(scripted_view).GetListItemController().ChildListItems.Count());
+				//Print(EditorListItem.Cast().GetListItemController().ChildListItems.Count());
+				
+				// Checks for the child-in-parent deal
+				if (!RecursiveCheckChildren(m_ListItem, ChildListItems)) {
+					view_binding.OnDropReceived(w, x, y, reciever);
+				}
 				return true;
 			}
 		}
 				
+		return false;
+	}
+	
+	private bool RecursiveCheckChildren(EditorListItem target, out ObservableCollection<ref EditorListItem> check_list)
+	{	
+		Print(check_list.Count());
+		for (int i = 0; i < check_list.Count(); i++) {
+			Print(check_list[i]);
+			/*if (check_list[i] == target) {
+				return true;
+			}
+			
+			if (check_list[i].Type() == EditorCollapsibleListItem) {
+				if (RecursiveCheckChildren(target, check_list[i].GetListItemController().ChildListItems)) {
+					return true;
+				}
+			}*/
+		}
+		
 		return false;
 	}
 }

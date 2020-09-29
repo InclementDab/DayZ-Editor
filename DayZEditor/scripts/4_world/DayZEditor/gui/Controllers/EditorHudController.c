@@ -39,9 +39,9 @@ class EditorHudController: Controller
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
-	ref EditorListItemSet LeftbarSpacerData 					= new EditorListItemSet("LeftbarSpacerData", this);
-	ref EditorListItemSet RightbarSpacerData 					= new EditorListItemSet("RightbarSpacerData", this);
-	ref ObservableCollection<string> DebugActionStackListbox 	= new ObservableCollection<string>("DebugActionStackListbox", this);
+	ref ObservableCollection<ref EditorListItem> LeftbarSpacerData 		= new ObservableCollection<ref EditorListItem>("LeftbarSpacerData", this);
+	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 	= new ObservableCollection<ref EditorListItem>("RightbarSpacerData", this);
+	ref ObservableCollection<string> DebugActionStackListbox 			= new ObservableCollection<string>("DebugActionStackListbox", this);
 	
 	// View Properties
 	protected Widget LeftbarFrame;

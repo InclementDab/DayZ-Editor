@@ -1,14 +1,4 @@
 
-class EditorListItemSet: ref ObservableCollection<ref EditorListItem>
-{
-	override int Insert(EditorListItem value)
-	{
-		EditorListItem.Cast(value).ParentList = this;
-		return super.Insert(value);
-	}
-}
-
-
 class EditorListItem: ScriptView
 {
 	protected int m_NestIndex;
@@ -27,9 +17,7 @@ class EditorListItem: ScriptView
 	WrapSpacerWidget EditorListItemChildren;
 	ButtonWidget EditorListItemCollapse;
 	ButtonWidget EditorListItemButton;
-	
-	EditorListItemSet ParentList;
-	
+		
 	void EditorListItem(Widget parent = null) 
 	{ 
 		EditorLog.Trace("EditorListItem");

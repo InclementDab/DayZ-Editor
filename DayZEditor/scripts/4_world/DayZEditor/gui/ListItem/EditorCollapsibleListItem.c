@@ -22,15 +22,7 @@ class EditorCollapsibleListItem: EditorListItem
 	{
 		EditorListItemChildren.Show(!args.GetButtonState());
 	}
-	
-	void AddListItem(EditorListItem item)
-	{
-		EditorLog.Trace("EditorCollapsibleListItem::AddListItem");
-		
-		GetListItemController().ChildListItems.Insert(item);
-		item.SetNestIndex(m_NestIndex + 1);
-	}
-		
+			
 	
 	override void ListItemExecute(ButtonCommandArgs args)
 	{

@@ -39,9 +39,12 @@ class EditorPlacedListItem: EditorListItem
 					GetEditor().ToggleSelection(GetData());
 				} else if (KeyState(KeyCode.KC_LSHIFT)) {
 					
+					/*
+					
+					Select every list item between start selection and current click
+					except i deleted ParentList ;)
 					
 					bool started_select;
-					
 					for (int i = 0; i < ParentList.Count(); i++) {
 						EditorListItem list_item = ParentList[i];			
 						if (started_select) {
@@ -58,7 +61,7 @@ class EditorPlacedListItem: EditorListItem
 						}
 						
 						
-					}
+					}*/
 					
 				} else {
 					GetEditor().ClearSelection();
@@ -87,39 +90,5 @@ class EditorPlacedListItem: EditorListItem
 			}
 			
 		}
-	}
-	
-		
-	override bool OnDrag(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
-		
-		return true;
-	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget reciever)
-	{
-		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
-		RecursiveGetParent(reciever, "EditorListItem");
-		EditorListItem target_item = GetListItemFromWidget(reciever);
-		if (!target_item) {
-			return false;
-		}
-		
-		switch (target_item.Type()) {
-			
-			case EditorPlacedListItem: {
-				
-				break;
-			}
-			
-			case EditorCollapsibleListItem: {
-				EditorCollapsibleListItem.Cast(target_item).AddListItem(this);
-				break;
-			}			
-		}
-		
-		
-		return true;
 	}
 }
