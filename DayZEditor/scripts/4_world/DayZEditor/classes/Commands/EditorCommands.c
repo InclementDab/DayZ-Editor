@@ -72,7 +72,8 @@ class EditorNewCommand: EditorCommand
 class EditorSaveCommand: EditorCommand
 {
 	override void Call() {
-		GetEditor().Save();
+		//g_Script.Call(m_Editor, "Save", null);
+		m_Editor.Save();
 	}
 		
 	override string GetName() {

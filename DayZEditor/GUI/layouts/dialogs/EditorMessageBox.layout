@@ -1,8 +1,8 @@
-WrapSpacerWidgetClass EditorDialog {
+WrapSpacerWidgetClass EditorMessageBox {
  clipchildren 1
  ignorepointer 1
  color 0.1451 0.1451 0.1451 1
- size 800 0
+ size 400 0
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -49,21 +49,22 @@ WrapSpacerWidgetClass EditorDialog {
      {
       TextWidgetClass TitleText {
        ignorepointer 1
-       position 0 0
        size 1 24
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 1
        scriptclass "ViewBinding"
-       text "EditorDialog"
+       text "MessageBox"
        font "gui/fonts/etelkatextpro16"
        "text offset" 10 0
        "exact text" 1
        "size to text h" 0
+       "text halign" center
        "text valign" center
        {
         ScriptParamsClass {
+         Binding_Name "Title_Text"
         }
        }
       }
@@ -103,15 +104,14 @@ WrapSpacerWidgetClass EditorDialog {
      style Empty
      Padding 0
      Margin 0
-     "Size To Content H" 1
      "Size To Content V" 1
      content_halign center
      content_valign bottom
      {
       WrapSpacerWidgetClass ButtonGrid {
        ignorepointer 1
-       color 0.1373 0.1373 0.1373 0.549
-       size 1 80
+       color 0.0667 0.0667 0.0667 0.549
+       size 1 50
        halign center_ref
        valign bottom_ref
        hexactpos 1
@@ -119,29 +119,42 @@ WrapSpacerWidgetClass EditorDialog {
        hexactsize 0
        vexactsize 1
        scaled 1
+       scriptclass "ViewBinding"
        style Colorable
        Padding 5
        Margin 5
        content_halign center
        content_valign center
+       {
+        ScriptParamsClass {
+         Binding_Name "ButtonList"
+        }
+       }
       }
-      WrapSpacerWidgetClass DialogContent {
+      RichTextWidgetClass CaptionText {
        visible 1
        ignorepointer 1
-       color 0.1373 0.1373 0.1373 0.549
        position 0 0
-       size 1 0
+       size 0.75 100
        halign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
-       vexactsize 0
-       scriptclass ""
-       style Colorable
-       "Size To Content H" 1
-       "Size To Content V" 1
-       content_halign center
-       content_valign center
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style DayZNormal
+       font "gui/fonts/Metron16"
+       "exact text" 1
+       "size to text h" 0
+       "size to text v" 0
+       "text halign" center
+       "text valign" center
+       wrap 1
+       {
+        ScriptParamsClass {
+         Binding_Name "Caption_Text"
+        }
+       }
       }
      }
     }

@@ -498,19 +498,37 @@ class Editor
 		select_window.ShowDialog();
 	}
 	
-	// Suspends execution. Should be called with 'thread'
 	void Save()
+	{
+		thread _Save();
+	}
+	
+	// Suspends execution. Should be called with 'thread'
+	private void _Save()
 	{
 		EditorLog.Trace("Editor::Save");
 		
-		m_EditorHud.CreateNotification("Test");
+		
 		
 		EditorSaveData save_data = EditorSaveData.CreateFromEditor(this);
 		
 		if (m_EditorSaveFile == string.Empty) {
-			EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
-			save_dialog.ShowDialog();
+			//EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
+			//save_dialog.ShowDialog();
 		}
+		
+		EditorMessageBoxResult result = EditorMessageBox.Show("Save", "Are you sure?");
+		
+		switch (result) {
+			
+			case EditorMessageBoxResult.OK: {
+				EditorFileManager.Save(save_data, "SaveData.bin");
+				m_EditorHud.CreateNotification("Saved!", COLOR_GREEN);
+				break;
+			}
+		}
+		
+		
 		
 		
 		/*
@@ -672,8 +690,8 @@ class Editor
 				}
 				
 				case KeyCode.KC_S: {
-					if (m_EditorSaveFile == string.Empty)
-						return EditorSaveAsCommand;
+					//if (m_EditorSaveFile == string.Empty)
+					//	return EditorSaveAsCommand;
 					
 					return EditorSaveCommand;
 				}

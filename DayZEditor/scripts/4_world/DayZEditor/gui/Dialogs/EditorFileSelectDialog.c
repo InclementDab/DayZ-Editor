@@ -230,8 +230,8 @@ class EditorFileSaveDialog: EditorFileDialog
 	void EditorFileSaveDialog(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorFileSaveDialog::Init");
-		AddButton("Save", SaveCallback);
-		AddButton("Cancel", CloseDialog);
+		AddButton("Save", this.SaveCallback);
+		AddButton("Cancel", this.CloseDialog);
 	}
 	
 	void SetWorldData(EditorSaveData world_data)
@@ -261,6 +261,7 @@ class EditorFileSaveDialog: EditorFileDialog
 	
 	void SaveCallback()
 	{
+		EditorLog.Trace("EditorFileSaveDialog::SaveCallback");
 		GetEditor().SetSaveFile(m_CurrentDirectory + m_FileNameBox.GetText());
 		GetEditor().Save();
 		

@@ -1,22 +1,42 @@
 
 class EditorDialogButton: EditorScriptView
-{
-	private func m_ExecuteFunction;
-	
+{	
 	protected ButtonWidget DialogButton;
+	protected ref ScriptInvoker m_ExecuteInvoker = new ScriptInvoker();
 	
-	void DialogButtonExecute(ButtonCommandArgs args)
+	protected string m_ExecuteAction;
+	
+	void EditorDialogButton(Widget parent = null)
+	{
+		EditorLog.Trace("EditorDialogButton"); 
+	}
+	
+	void ~EditorDialogButton()
+	{
+		EditorLog.Trace("~EditorDialogButton");
+		delete m_ExecuteInvoker;
+	}
+	
+	bool DialogButtonExecute(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("DialogButtonExecute");
 		
-		if (m_ExecuteFunction != __NULL_FUNCT) {
-			g_Game.GetCallQueue(CALL_CATEGORY_GUI).Call(m_ExecuteFunction);
+		if (m_ExecuteAction == string.Empty) {
+			m_ExecuteInvoker.Invoke();
+		} else {
+			g_Script.Call(GetParent(), m_ExecuteAction, args);
 		}
+		return true;
 	}
 	
 	void SetExecuteFunction(func function)
 	{
-		m_ExecuteFunction = function;
+		m_ExecuteInvoker.Insert(function);
+	}
+	
+	void SetExecuteFunctionString(string function)
+	{
+		m_ExecuteAction = function;
 	}
 	
 	void SetLabel(string label)
@@ -49,14 +69,6 @@ class EditorDialog: EditorScriptView
 		m_Editor.GetCamera().LookEnabled = true;
 		m_EditorHud.ShowCursor(true);
 	}
-	
-	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/dialogs/EditorDialog.layout";
-	}
-	
-	override typename GetControllerType() {
-		return EditorDialogController;
-	}
 
 	protected void AddContent(string layout) {
 		AddContent(GetGame().GetWorkspace().CreateWidgets(layout));
@@ -80,14 +92,16 @@ class EditorDialog: EditorScriptView
 		dialog_button.SetLabel(label);
 		m_DialogButtons.Insert(dialog_button);
 		return dialog_button;
-		/*
-		EditorDialogButtonViewBinding view_binding;
-		Widget panel = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/dialogs/EditorDialogButton.layout", ButtonGrid);
-		panel.GetScript(view_binding);
-		view_binding.SetLabel(label);
-		view_binding.Relay_Command = command;
-		GetController().LoadDataBindings(panel);
-		return panel.FindAnyWidget("DialogButton");*/
+	}
+	
+	protected EditorDialogButton AddButtonStringAction(string label, string action)
+	{
+		EditorDialogButton dialog_button = new EditorDialogButton(ButtonGrid);
+		dialog_button.SetParent(this);
+		dialog_button.SetExecuteFunctionString(action);
+		dialog_button.SetLabel(label);
+		m_DialogButtons.Insert(dialog_button);
+		return dialog_button;
 	}
 
 	void SetTitle(string title)
@@ -120,11 +134,6 @@ class EditorDialog: EditorScriptView
 	{
 		EditorLog.Trace("EditorDialog::Close");
 		delete this;
-	}
-	
-	void CloseDialogExecute(ButtonCommandArgs args)
-	{
-		CloseDialog();
 	}
 		
 	float m_OffsetX, m_OffsetY;
@@ -162,5 +171,14 @@ class EditorDialog: EditorScriptView
 	    }		
 		
 		return false;
+	}
+	
+		
+	override string GetLayoutFile() {
+		return "DayZEditor/gui/Layouts/dialogs/EditorDialog.layout";
+	}
+	
+	override typename GetControllerType() {
+		return EditorDialogController;
 	}
 }

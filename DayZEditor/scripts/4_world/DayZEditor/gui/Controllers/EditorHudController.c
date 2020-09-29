@@ -8,7 +8,7 @@ class EditorUIManager
 	static ref EditorTooltip CurrentTooltip;
 		
 	// Dialog Control
-	static ref EditorDialog CurrentDialog;
+	static ref EditorScriptView CurrentDialog;
 	
 	static 	bool IsDialogCommand(Widget w) {
 		return (CurrentDialog && CurrentDialog.GetLayoutRoot() && CurrentDialog.GetLayoutRoot().FindAnyWidget(w.GetName()));
