@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{DF9EC861AF6DA13A}DayZEditor/gui/images/dayz_editor_splash0.edds"
+ Author "tyler-pc"
+ ChangeDate 780003595
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "dayz_editor_splash0.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}
