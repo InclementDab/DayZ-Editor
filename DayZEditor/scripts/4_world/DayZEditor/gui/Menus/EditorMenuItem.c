@@ -1,23 +1,11 @@
-
-class EditorMenuItemController: Controller
-{
-	string LabelText;
-	string IconPath;
-	string ShortcutText;
-	
-	// todo use on category menu
-	ref EditorMenu ChildMenu;
-}
-
 class EditorMenuItem: ScriptView
 {
-	protected ref EditorMenuItemController m_EditorMenuItemController;
+	protected EditorMenuItemController m_EditorMenuItemController;
 	protected ImageWidget EditorMenuItemIcon;
 	protected ButtonWidget EditorMenuItemButton;
 			
 	void EditorMenuItem(Widget parent = null) 
 	{
-		EditorLog.Trace("EditorMenuItem");
 		m_EditorMenuItemController = EditorMenuItemController.Cast(GetController());
 	}	
 }

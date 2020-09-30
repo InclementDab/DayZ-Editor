@@ -342,7 +342,7 @@ FrameWidgetClass EditorFrame {
                  hexactsize 1
                  vexactsize 1
                  image0 ""
-                 imageTexture "{2F76D72BD521BBC3}DayZEditor/GUI/icons/icon_house_128x128.edds"
+                 imageTexture "{2F76D72BD521BBC3}DayZEditor/GUI/icons/icon_house.edds"
                  mode blend
                  "src alpha" 1
                  "no wrap" 1
@@ -372,7 +372,7 @@ FrameWidgetClass EditorFrame {
                  hexactsize 1
                  vexactsize 1
                  image0 ""
-                 imageTexture "{6EB760725FFA8C0D}DayZEditor/GUI/icons/icon_car_128x128.edds"
+                 imageTexture "{B57BE19160ED7718}DayZEditor/GUI/icons/icon_car.edds"
                  mode blend
                  "src alpha" 1
                  "no wrap" 1
@@ -404,7 +404,7 @@ FrameWidgetClass EditorFrame {
                  hexactsize 1
                  vexactsize 1
                  image0 ""
-                 imageTexture "{432381F3C44DBDEC}DayZEditor/GUI/icons/icon_person_standing_128x128.edds"
+                 imageTexture "{432381F3C44DBDEC}DayZEditor/GUI/icons/icon_person_standing.edds"
                  mode blend
                  "src alpha" 1
                  "no wrap" 1
@@ -436,7 +436,7 @@ FrameWidgetClass EditorFrame {
                  hexactsize 1
                  vexactsize 1
                  image0 ""
-                 imageTexture "{9A1C50C85C0F7122}DayZEditor/GUI/icons/icon_face_128x128.edds"
+                 imageTexture "{9A1C50C85C0F7122}DayZEditor/GUI/icons/icon_face.edds"
                  mode blend
                  "src alpha" 1
                  "no wrap" 1
@@ -749,7 +749,7 @@ FrameWidgetClass EditorFrame {
                hexactsize 0
                vexactsize 0
                image0 ""
-               imageTexture "{E15BBF636FDF95DA}DayZEditor/GUI/icons/icon_plus_128x128.edds"
+               imageTexture "{E15BBF636FDF95DA}DayZEditor/GUI/icons/icon_plus.edds"
                mode blend
                "src alpha" 1
                "no wrap" 0
@@ -785,7 +785,7 @@ FrameWidgetClass EditorFrame {
              hexactsize 0
              vexactsize 0
              image0 ""
-             imageTexture "{5A6F839399731FB9}DayZEditor/GUI/icons/icon_minus_circle_128x128.edds"
+             imageTexture "{5A6F839399731FB9}DayZEditor/GUI/icons/icon_minus_circle.edds"
              mode blend
              "src alpha" 1
              "no wrap" 0

@@ -176,6 +176,7 @@ class EditorHudToolbarController: Controller
 			case MenuBarView: {
 				
 				if (EditorUIManager.CurrentMenu) {
+					delete EditorUIManager.CurrentMenu;
 					EditorUIManager.CurrentMenu = CreateToolbarMenu(w);
 				}
 				break;

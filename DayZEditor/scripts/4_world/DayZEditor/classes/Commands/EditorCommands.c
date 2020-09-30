@@ -72,7 +72,6 @@ class EditorNewCommand: EditorCommand
 class EditorSaveCommand: EditorCommand
 {
 	override void Call() {
-		//g_Script.Call(m_Editor, "Save", null);
 		m_Editor.Save();
 	}
 		
@@ -85,7 +84,7 @@ class EditorSaveCommand: EditorCommand
 	}
 	
 	override string GetIcon() {
-		return "DayZEditor/gui/icons/icon_save_128x128.edds";
+		return "DayZEditor/gui/icons/icon_save.edds";
 	}
 }
 
@@ -121,7 +120,7 @@ class EditorOpenCommand: EditorCommand
 	}
 		
 	override string GetIcon() {
-		return "DayZEditor/gui/icons/icon_folder_128x128.edds";
+		return "DayZEditor/gui/icons/icon_folder.edds";
 	}
 	
 	override string GetKeyDisplay() {
@@ -185,6 +184,10 @@ class EditorUndoCommand: EditorCommand
 	
 	override string GetKeyDisplay() {
 		return "Ctrl + Z";
+	}
+	
+	override string GetIcon() {
+		
 	}
 }
 
@@ -287,6 +290,10 @@ class EditorCutCommand: EditorCommand
 	override string GetKeyDisplay() {
 		return "Ctrl + X";
 	}
+	
+	override string GetIcon() {
+		return "set:dayz_editor_gui image:cut_icon";
+	}
 }
 
 class EditorCopyCommand: EditorCommand
@@ -305,6 +312,10 @@ class EditorCopyCommand: EditorCommand
 	
 	override string GetKeyDisplay() {
 		return "Ctrl + C";
+	}
+	
+	override string GetIcon() {
+		return "set:dayz_editor_gui image:copy_icon";
 	}
 }
 
@@ -326,6 +337,10 @@ class EditorPasteCommand: EditorCommand
 	
 	override string GetKeyDisplay() {
 		return "Ctrl + V";
+	}
+	
+	override string GetIcon() {
+		return "set:dayz_editor_gui image:paste_icon";
 	}
 }
 

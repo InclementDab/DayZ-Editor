@@ -93,6 +93,7 @@ WrapSpacerWidgetClass EditorDialog {
        font "gui/fonts/Metron-Bold"
        {
         ScriptParamsClass {
+         Debug_Logging 1
          Relay_Command "CloseDialog"
         }
        }

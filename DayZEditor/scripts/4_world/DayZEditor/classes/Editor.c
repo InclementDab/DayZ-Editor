@@ -497,10 +497,24 @@ class Editor
 	void New()
 	{
 		EditorLog.Trace("Editor::New");
-		
+
+		thread _New();
+		/*
 		MapSelectDialog select_window = new MapSelectDialog(m_EditorHud.GetLayoutRoot());
 		select_window.SetTitle("Create New...");
-		select_window.ShowDialog();
+		select_window.ShowDialog();*/
+	}
+	
+	private void _New()
+	{
+		EditorEditBoxDialog edit_dialog = new EditorEditBoxDialog(null, "New File...");
+		string edit_data;
+		DialogResult result = edit_dialog.ShowDialog(edit_data);
+		
+		Print(edit_data);
+		if (result != DialogResult.OK) return;
+		
+		
 	}
 	
 	void Save()

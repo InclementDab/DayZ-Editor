@@ -12,6 +12,7 @@ class DialogBase: ScriptView
 	
 	void DialogBase(Widget parent = null, string title = "")
 	{
+		Debug_Logging = true;
 		m_DialogBaseController = DialogBaseController.Cast(GetController());
 		
 		m_DialogBaseController.Title = title;
@@ -38,16 +39,32 @@ class DialogBase: ScriptView
 		delete this;
 	}
 	
-	void AddContent(ref ScriptView content)
+	void AddContent(ScriptView content)
 	{
 		content.SetParent(this);
 		m_DialogBaseController.DialogContentData.Insert(content);
 	}
 	
-	void AddButton(ref DialogButton button)
+	void AddButton(DialogResult result)
+	{
+		AddButton(typename.EnumToString(DialogResult, result), result);
+	}
+	
+	void AddButton(string label, DialogResult result)
+	{
+		DialogExitButton button = new DialogExitButton(null, label, "DialogExitButtonCallback", result);
+		AddButton(button);
+	}
+		
+	void AddButton(DialogButton button)
 	{
 		button.SetParent(this);
 		m_DialogBaseController.DialogButtonData.Insert(button);
+	}
+	
+	private void DialogExitButtonCallback(DialogExitButton button)
+	{
+		CloseDialog(button.ButtonResult);
 	}
 	
 	private float m_OffsetX, m_OffsetY;
