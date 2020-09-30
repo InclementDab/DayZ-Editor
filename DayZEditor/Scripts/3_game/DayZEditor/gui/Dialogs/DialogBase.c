@@ -1,3 +1,4 @@
+
 class DialogBase: ScriptView
 {
 	// Private members
@@ -5,21 +6,19 @@ class DialogBase: ScriptView
 	
 	protected DialogBaseController m_DialogBaseController;
 	
-	void DialogBase(Widget parent = null, string title = "", string caption = "")
+	void DialogBase(Widget parent = null, string title = "")
 	{
-		Class.CastTo(m_DialogBaseController, m_Controller);
+		m_DialogBaseController = DialogBaseController.Cast(GetController());
 		
 		m_DialogBaseController.Title = title;
-		m_DialogBaseController.Caption = caption;
-		
-		// Update all properties
-		m_DialogBaseController.NotifyPropertyChanged();
+		m_DialogBaseController.NotifyPropertyChanged("Title");
+		m_LayoutRoot.Show(false);
 	}
 	
 	DialogResult ShowDialog()
 	{
 		Trace("ShowDialog");
-		//m_LayoutRoot.Show(true);
+		m_LayoutRoot.Show(true);
 		while (m_DialogResult == DialogResult.None) {
 			Sleep(1);
 		}
@@ -35,13 +34,15 @@ class DialogBase: ScriptView
 		delete this;
 	}
 	
-	void AddContent(ScriptView content)
+	void AddContent(ref ScriptView content)
 	{
+		content.SetParent(this);
 		m_DialogBaseController.DialogContentData.Insert(content);
 	}
 	
-	void AddButton(ScriptView button)
+	void AddButton(ref DialogButton button)
 	{
+		button.SetParent(this);
 		m_DialogBaseController.DialogButtonData.Insert(button);
 	}
 	

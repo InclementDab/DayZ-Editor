@@ -6,7 +6,7 @@ RichTextWidgetClass CaptionText {
  vexactpos 1
  hexactsize 0
  vexactsize 0
- scriptclass "ViewBinding"
+ scriptclass ""
  text "Are you sure?"
  font "gui/fonts/sdf_MetronBook24"
  "exact text" 1
@@ -15,9 +15,4 @@ RichTextWidgetClass CaptionText {
  "text halign" center
  "text valign" center
  wrap 1
- {
-  ScriptParamsClass {
-   Binding_Name "Caption"
-  }
- }
 }

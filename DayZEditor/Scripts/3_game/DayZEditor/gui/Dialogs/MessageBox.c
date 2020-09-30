@@ -4,6 +4,8 @@ class MessageBox: DialogBase
 	
 	void MessageBox(Widget parent = null, string title = "", string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
 	{
+		Debug_Logging = 1;
+		
 		AddContent(new MessageBoxContent(null, caption));
 		
 		switch (buttons) {
@@ -17,14 +19,14 @@ class MessageBox: DialogBase
 				AddButton(DialogResult.OK);
 				AddButton(DialogResult.Cancel);
 				break;
-			}			
+			}
 			
 			case MessageBoxButtons.AbortRetryIgnore: {
 				AddButton(DialogResult.Abort);
 				AddButton(DialogResult.Retry);
 				AddButton(DialogResult.Ignore);
 				break;
-			}			
+			}
 			
 			case MessageBoxButtons.YesNoCancel: {
 				AddButton(DialogResult.Yes);
@@ -47,10 +49,16 @@ class MessageBox: DialogBase
 		}
 	}
 	
+	
 	private void AddButton(DialogResult result)
 	{
-		MessageBoxButton dialog_button = new MessageBoxButton(null, typename.EnumToString(DialogResult, result), "OnDialogResult", result);		
-		AddButton(dialog_button);
+		MessageBoxButton button = new MessageBoxButton(null, typename.EnumToString(DialogResult, result), "OnButtonPress", result);
+		AddButton(button);
+	}
+	
+	private void OnButtonPress(MessageBoxButton button)
+	{
+		CloseDialog(button.ButtonResult);
 	}
 
 	static DialogResult Show(string title, string caption, MessageBoxButtons buttons)

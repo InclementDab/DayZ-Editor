@@ -37,6 +37,7 @@ PanelWidgetClass ButtonPanel {
      "no focus" 0
      {
       ScriptParamsClass {
+       Debug_Logging 0
        Relay_Command "ButtonExecute"
       }
      }

@@ -529,6 +529,12 @@ class Editor
 	void SaveAs()
 	{
 		EditorLog.Trace("Editor::SaveAs");
+
+	}
+	
+	private void _SaveAs()
+	{
+		
 	}
 	
 	void Close()

@@ -1,27 +1,21 @@
 class DialogButton: ScriptView
 {	
 	protected ButtonWidget Button;	
-	protected string m_ExecuteAction;
+	protected string m_Callback;
 	
 	void DialogButton(Widget parent = null, string label = "", string callback = "")
 	{
-		Trace("DialogButton"); 
 		Button.SetText(label);
-		m_ExecuteAction = callback;
+		m_Callback = callback;
 	}
-	
-	void ~DialogButton()
-	{
-		Trace("~DialogButton");
-	}
-	
+		
 	bool ButtonExecute(ButtonCommandArgs args)
 	{
 		Trace("ButtonExecute");
-		g_Script.CallFunction(GetParent(), m_ExecuteAction, null, this);
+		g_Script.CallFunction(GetParent(), m_Callback, null, this);
 		return true;
 	}
-		
+			
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/dialogs/DialogButton.layout";
 	}
