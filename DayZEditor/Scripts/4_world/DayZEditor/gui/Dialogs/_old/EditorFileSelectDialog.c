@@ -263,7 +263,7 @@ class EditorFileSaveDialog: EditorFileDialog
 	{
 		EditorLog.Trace("EditorFileSaveDialog::SaveCallback");
 		GetEditor().SetSaveFile(m_CurrentDirectory + m_FileNameBox.GetText());
-		GetEditor().Save();
+		//GetEditor().Save();
 		
 		CloseDialog();
 	}

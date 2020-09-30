@@ -142,8 +142,8 @@ modded class MainMenu
 
     override void Play()
     {
-		MapSelectDialog select_window = new MapSelectDialog();
-		select_window.ShowDialog();
+		EditorLoadMapCommand cmd = new EditorLoadMapCommand();
+		cmd.Execute(this, null);
     }
 
     override bool OnMouseEnter(Widget w, int x, int y)

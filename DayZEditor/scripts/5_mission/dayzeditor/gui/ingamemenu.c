@@ -40,8 +40,9 @@ modded class InGameMenu
 	{
 		if (!IsMissionOffline())
 			return;
+
 		
-		MapSelectDialog select_window = new MapSelectDialog();
-		select_window.ShowDialog();
+		EditorLoadMapCommand cmd = new EditorLoadMapCommand();
+		cmd.Execute(this, null);
 	}
 }

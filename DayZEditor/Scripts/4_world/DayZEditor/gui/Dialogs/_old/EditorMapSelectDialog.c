@@ -1,12 +1,6 @@
 
 
-static const ref array<string> ExcludedMapItems = {
-	"access",
-	"DefaultLighting",
-	"DefaultWorld",
-	"initWorld",
-	"CAWorld"
-};
+/*
 
 class MapSelectDialogController: DialogBaseController
 {
@@ -47,7 +41,7 @@ class MapSelectDialogController: DialogBaseController
 				}*/
 					
 				
-				
+				/*
 				break;
 			}
 		}
@@ -63,7 +57,7 @@ class MapSelectDialogController: DialogBaseController
 		}
 		
 		return false;
-	}*/
+	}
 }
 
 
@@ -85,4 +79,4 @@ class MapSelectDialog: EditorDialog
 	}
 	
 
-}
+}*/

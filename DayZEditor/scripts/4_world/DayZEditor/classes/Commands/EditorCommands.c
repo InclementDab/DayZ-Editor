@@ -1,15 +1,20 @@
 
 class EditorCommand: RelayCommand
 {	
-	protected Editor m_Editor = GetEditor();
+	protected Editor m_Editor;
+	protected EditorHud m_EditorHud;
 	protected EditorHudController m_EditorHudController;
 	
 	string Text;
 	
 	void EditorCommand()
 	{
+		m_Editor = GetEditor();
 		if (m_Editor) {
-			m_EditorHudController = m_Editor.GetEditorHud().GetEditorHudController();
+			m_EditorHud = m_Editor.GetEditorHud();
+			if (m_EditorHud) {
+				m_EditorHudController = m_EditorHud.GetEditorHudController();
+			}
 		}
 	}
 
@@ -20,7 +25,8 @@ class EditorCommand: RelayCommand
 		if (EditorUIManager.CurrentMenu)
 			delete EditorUIManager.CurrentMenu;
 		
-		Call();
+		// Needs to be since we do ShowDialog alot
+		thread Call();
 		return true;
 	}
 	
@@ -39,7 +45,7 @@ class EditorCommand: RelayCommand
 	}
 	
 	
-	void Call();
+	protected void Call();
 	
 	string GetName() {
 		return string.Empty;
@@ -56,7 +62,7 @@ class EditorCommand: RelayCommand
 
 class EditorNewCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		GetEditor().New();
 	}
 		
@@ -71,8 +77,23 @@ class EditorNewCommand: EditorCommand
 
 class EditorSaveCommand: EditorCommand
 {
-	override void Call() {
-		m_Editor.Save();
+	protected override void Call() 
+	{
+		EditorLog.Trace("EditorSaveCommand");
+		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
+		
+		if (m_Editor.GetSaveFile() == string.Empty) {
+			//EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
+			//save_dialog.ShowDialog();
+		}
+		
+		DialogResult result = EditorMessageBox.Show("Save", "Are you sure?", MessageBoxButtons.OKCancel);
+		EditorLog.Info("MessageBoxResult: %1", typename.EnumToString(DialogResult, result));
+		if (result != DialogResult.OK) return;			
+			
+		EditorFileManager.Save(save_data, "$profile:/Editor/SaveData.dze");
+		m_EditorHud.CreateNotification("Saved!", COLOR_GREEN);
+		EditorLog.Info("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
 	}
 		
 	override string GetName() {
@@ -90,7 +111,7 @@ class EditorSaveCommand: EditorCommand
 
 class EditorSaveAsCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(null);
 		save_dialog.SetWorldData(EditorSaveData.CreateFromEditor(GetEditor()));
 		string file = save_dialog.ShowFileDialog();
@@ -111,7 +132,7 @@ class EditorOpenCommand: EditorCommand
 		SetCanExecute(false);
 	}
 	
-	override void Call() {
+	protected override void Call() {
 		GetEditor().Open();
 	}
 			
@@ -130,7 +151,7 @@ class EditorOpenCommand: EditorCommand
 
 class EditorCloseCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		GetEditor().Close();
 	}
 			
@@ -149,7 +170,7 @@ class EditorCloseCommand: EditorCommand
 
 class EditorExitCommand: EditorCommand
 {	
-	override void Call() {
+	protected override void Call() {
 		GetGame().LogoutRequestTime();
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(GetGame().GetMission().CreateLogoutMenu, GetGame().GetUIManager().GetMenu());
 	}
@@ -174,7 +195,7 @@ class EditorUndoCommand: EditorCommand
 		SetCanExecute(GetEditor().GetObjectManager().CanUndo());
 	}
 	
-	override void Call() {
+	protected override void Call() {
 		GetEditor().GetObjectManager().Undo();
 	}
 	
@@ -197,7 +218,7 @@ class EditorRedoCommand: EditorCommand
 		SetCanExecute(GetEditor().GetObjectManager().CanRedo());
 	}
 	
-	override void Call() {
+	protected override void Call() {
 		GetEditor().GetObjectManager().Redo();
 	}
 		
@@ -212,7 +233,7 @@ class EditorRedoCommand: EditorCommand
 
 class EditorSelectAllCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
 		foreach (EditorObject eo: placed_objects)
 			GetEditor().SelectObject(eo);
@@ -229,7 +250,7 @@ class EditorSelectAllCommand: EditorCommand
 
 class EditorDeleteCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		if (GetEditor())
 			GetEditor().GetObjectManager().DeleteObjects(GetEditor().GetSelectedObjects());
 	}
@@ -245,7 +266,7 @@ class EditorDeleteCommand: EditorCommand
 
 class EditorExportCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		GetEditor().Export();
 	}
 
@@ -260,7 +281,7 @@ class EditorExportCommand: EditorCommand
 
 class EditorImportCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		GetEditor().Import();
 	}
 
@@ -279,7 +300,7 @@ class EditorCutCommand: EditorCommand
 		SetCanExecute(GetEditor().GetSelectedObjects().Count() > 0);
 	}
 	
-	override void Call() {
+	protected override void Call() {
 		GetEditor().Cut(GetEditor().GetSelectedObjects());
 	}
 
@@ -302,7 +323,7 @@ class EditorCopyCommand: EditorCommand
 		SetCanExecute(GetEditor().GetSelectedObjects().Count() > 0);
 	}
 	
-	override void Call() {
+	protected override void Call() {
 		GetEditor().Copy(GetEditor().GetSelectedObjects());
 	}
 
@@ -327,7 +348,7 @@ class EditorPasteCommand: EditorCommand
 		SetCanExecute(clipboard_text != string.Empty);
 	}
 	
-	override void Call() {
+	protected override void Call() {
 		GetEditor().Paste(GetEditor().CurrentMousePosition);
 	}
 
@@ -346,7 +367,7 @@ class EditorPasteCommand: EditorCommand
 
 class EditorPreferencesCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		
 	}
 
@@ -361,7 +382,7 @@ class EditorPreferencesCommand: EditorCommand
 
 class EditorEnvironmentControlCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		EditorEnvironmentDialog environment_dialog = new EditorEnvironmentDialog(null);
 		environment_dialog.ShowDialog();
 	}
@@ -381,7 +402,7 @@ class EditorEnvironmentControlCommand: EditorCommand
 
 class EditorCameraControlsCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		EditorCameraDialog cam_dialog(null);
 		cam_dialog.SetEditorCamera(m_Editor.GetCamera());
 		cam_dialog.ShowDialog();
@@ -398,7 +419,7 @@ class EditorCameraControlsCommand: EditorCommand
 
 class EditorReloadHudCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		GetEditor().ReloadHud();
 	}
 
@@ -417,7 +438,7 @@ class EditorReloadHudCommand: EditorCommand
 
 class EditorLootEditorCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		GetEditor().EditLootSpawns(GetEditor().GetSelectedObjects().GetElement(0).GetType());
 	}
 	
@@ -428,7 +449,7 @@ class EditorLootEditorCommand: EditorCommand
 
 class EditorObjectPropertiesCommand: EditorCommand
 {
-	override void Call() {
+	protected override void Call() {
 		EditorObjectPropertiesDialog properties_dialog(null);
 		properties_dialog.SetEditorObject(m_Editor.GetSelectedObjects().GetElement(0));
 		properties_dialog.ShowDialog();
@@ -440,5 +461,23 @@ class EditorObjectPropertiesCommand: EditorCommand
 	
 	override string GetKeyDisplay() {
 		return "Ctrl + T";
+	}
+}
+
+class EditorLoadMapCommand: EditorCommand
+{
+	protected override void Call()
+	{
+		EditorMapSelectDialog select_window = new EditorMapSelectDialog(null, GetName());
+		string selected_map;
+		select_window.ShowDialog(selected_map);
+		if (selected_map != string.Empty) {
+			EditorLog.Info("Loading Map %1", selected_map);
+			GetGame().PlayMission(CreateEditorMission(selected_map));
+		}
+	}
+	
+	override string GetName() {
+		return "Load Map";
 	}
 }

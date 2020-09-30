@@ -357,7 +357,9 @@ class Editor
 	{			
 		EditorCommand command = GetCommandFromHotkeys(key).Spawn();
 		if (command) {
-			command.Call();
+			CommandArgs args = new CommandArgs();
+			args.Context = m_EditorHud;
+			command.Execute(this, args);
 			return true;
 		}
 			
@@ -499,10 +501,6 @@ class Editor
 		EditorLog.Trace("Editor::New");
 
 		thread _New();
-		/*
-		MapSelectDialog select_window = new MapSelectDialog(m_EditorHud.GetLayoutRoot());
-		select_window.SetTitle("Create New...");
-		select_window.ShowDialog();*/
 	}
 	
 	private void _New()
@@ -511,39 +509,11 @@ class Editor
 		string edit_data;
 		DialogResult result = edit_dialog.ShowDialog(edit_data);
 		
-		Print(edit_data);
 		if (result != DialogResult.OK) return;
 		
 		
 	}
 	
-	void Save()
-	{
-		thread _Save();
-	}
-	
-	// Suspends execution. Should be called with 'thread'
-	private void _Save()
-	{
-		EditorLog.Trace("Editor::Save");
-		EditorSaveData save_data = EditorSaveData.CreateFromEditor(this);
-		
-		if (m_EditorSaveFile == string.Empty) {
-			//EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
-			//save_dialog.ShowDialog();
-		}
-		
-		DialogResult result = EditorMessageBox.Show("Save", "Are you sure?", MessageBoxButtons.OKCancel);
-		EditorLog.Info("MessageBoxResult: %1", typename.EnumToString(DialogResult, result));
-		if (result != DialogResult.OK) return;
-	
-			
-			
-		EditorFileManager.Save(save_data, "$profile:/Editor/SaveData.dze");
-		m_EditorHud.CreateNotification("Saved!", COLOR_GREEN);
-		EditorLog.Info("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
-
-	}
 	
 	void SaveAs()
 	{
