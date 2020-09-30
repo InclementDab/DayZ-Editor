@@ -277,10 +277,10 @@ class EditorMapGroupProto: XMLCallback
 // abstract to EditorXMLCallback
 class XMLEditorBrushes: XMLCallback
 {
-	private ref ObservableCollection<ref EditorBrushData> m_Data;
+	private ObservableCollection<ref EditorBrushData> m_Data;
 	
 
-	void XMLEditorBrushes(ref ObservableCollection<ref EditorBrushData> data) 
+	void XMLEditorBrushes(ObservableCollection<ref EditorBrushData> data) 
 	{
 		EditorLog.Trace("XMLEditorBrushes");
 		m_Data = data;
@@ -294,7 +294,6 @@ class XMLEditorBrushes: XMLCallback
 	override void OnSuccess(ref XMLDocument document)
 	{
 		EditorLog.Info("XMLEditorBrushes::OnSuccess");
-				
 		ref set<string> object_type_list = new set<string>();
 		
 		// <BrushTypes>

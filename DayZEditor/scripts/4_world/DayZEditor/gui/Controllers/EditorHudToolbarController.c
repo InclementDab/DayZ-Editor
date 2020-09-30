@@ -33,7 +33,7 @@ class EditorHudToolbarController: Controller
 				
 #ifndef COMPONENT_SYSTEM		
 		// Load Brushes
-		ReloadBrushes(GetEditor().GetBrushFile());
+		ReloadBrushes(GetEditor().EditorBrushFile);
 #endif
 	}
 	
@@ -41,7 +41,7 @@ class EditorHudToolbarController: Controller
 	void ReloadBrushes(string filename)
 	{
 		EditorLog.Trace("EditorHudToolbarController::ReloadBrushes");
-		//BrushTypeBoxData.Clear();
+		BrushTypeBoxData.Clear();
 		XMLEditorBrushes xml_brushes(BrushTypeBoxData);
 		
 		if (!FileExist(filename)) {
@@ -61,10 +61,11 @@ class EditorHudToolbarController: Controller
 			case "BrushTypeSelection": {
 				BrushRadiusFrame.Show(BrushToggleButtonState);
 				BrushDensityFrame.Show(BrushToggleButtonState);
+			
 				BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
 				NotifyPropertyChanged("BrushToggleButtonText");
 
-				if (BrushToggleButtonState) {
+				if (BrushToggleButtonState && GetEditor()) {
 					GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
 				} else {
 					GetEditor().SetBrush(null);
