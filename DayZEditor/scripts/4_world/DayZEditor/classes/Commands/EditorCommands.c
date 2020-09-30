@@ -465,13 +465,14 @@ class EditorObjectPropertiesCommand: EditorCommand
 }
 
 class EditorLoadMapCommand: EditorCommand
-{
+{	
 	protected override void Call()
 	{
-		EditorMapSelectDialog select_window = new EditorMapSelectDialog(null, GetName());
+		EditorMapSelectDialog select_dialog = new EditorMapSelectDialog(null, GetName());
 		string selected_map;
-		select_window.ShowDialog(selected_map);
-		if (selected_map != string.Empty) {
+		DialogResult result = select_dialog.ShowDialog(selected_map);
+		
+		if (selected_map != string.Empty && result == DialogResult.OK) {
 			EditorLog.Info("Loading Map %1", selected_map);
 			GetGame().PlayMission(CreateEditorMission(selected_map));
 		}

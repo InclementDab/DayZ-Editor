@@ -1,4 +1,5 @@
-static const ref array<string> ExcludedMapItems = {
+static const ref array<string> ExcludedMapItems = 
+{
 	"access",
 	"DefaultLighting",
 	"DefaultWorld",
@@ -9,6 +10,7 @@ static const ref array<string> ExcludedMapItems = {
 class EditorMapSelectDialog: EditorDialogBase
 {
 	protected autoptr ListBoxPrefab m_ListBoxPrefab;
+	protected DialogButton m_SelectButton;
 	
 	void EditorMapSelectDialog(Widget parent = null, string title = "")
 	{
@@ -23,7 +25,7 @@ class EditorMapSelectDialog: EditorDialogBase
 			}
 		}
 		
-		AddButton("Select", DialogResult.OK);
+		m_SelectButton = AddButton("Select", DialogResult.OK);
 		AddButton("Cancel", DialogResult.Cancel);
 	}
 	
@@ -33,5 +35,16 @@ class EditorMapSelectDialog: EditorDialogBase
 		DialogResult result = ShowDialog();
 		selected_map = controller.SelectedListBoxItem;
 		return result;
+	}
+	
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		Print(w);
+		if (w == m_ListBoxPrefab.ListBox && button == 0) {
+			CloseDialog(DialogResult.OK);
+			return true;
+		}
+		
+		return super.OnDoubleClick(w, x, y, button);
 	}
 }

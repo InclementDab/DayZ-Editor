@@ -45,21 +45,21 @@ class DialogBase: ScriptView
 		m_DialogBaseController.DialogContentData.Insert(content);
 	}
 	
-	void AddButton(DialogResult result)
+	DialogButton AddButton(DialogResult result)
 	{
-		AddButton(typename.EnumToString(DialogResult, result), result);
+		return AddButton(typename.EnumToString(DialogResult, result), result);
 	}
 	
-	void AddButton(string label, DialogResult result)
+	DialogButton AddButton(string label, DialogResult result)
 	{
-		DialogExitButton button = new DialogExitButton(null, label, "DialogExitButtonCallback", result);
-		AddButton(button);
+		return AddButton(new DialogExitButton(null, label, "DialogExitButtonCallback", result));
 	}
 		
-	void AddButton(DialogButton button)
+	DialogButton AddButton(DialogButton button)
 	{
 		button.SetParent(this);
 		m_DialogBaseController.DialogButtonData.Insert(button);
+		return button;
 	}
 	
 	private void DialogExitButtonCallback(DialogExitButton button)
