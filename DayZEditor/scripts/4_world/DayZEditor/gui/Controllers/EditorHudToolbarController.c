@@ -33,7 +33,7 @@ class EditorHudToolbarController: Controller
 				
 #ifndef COMPONENT_SYSTEM		
 		// Load Brushes
-		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
+		ReloadBrushes(GetEditor().GetBrushFile());
 #endif
 	}
 	
@@ -41,6 +41,7 @@ class EditorHudToolbarController: Controller
 	void ReloadBrushes(string filename)
 	{
 		EditorLog.Trace("EditorHudToolbarController::ReloadBrushes");
+		BrushTypeBoxData.Clear();
 		XMLEditorBrushes xml_brushes(BrushTypeBoxData);
 		
 		if (!FileExist(filename)) {

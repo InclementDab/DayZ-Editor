@@ -537,3 +537,15 @@ class EditorLoadMapCommand: EditorCommand
 		return "Select Map...";
 	}
 }
+
+class EditorReloadBrushesCommand: EditorCommand
+{
+	protected override void Call()
+	{
+		m_EditorHudController.GetToolbarController().ReloadBrushes(m_Editor.GetBrushFile());
+	}
+	
+	override string GetName() {
+		return "Reload Brushes";
+	}
+}

@@ -54,6 +54,9 @@ class Editor
 	string GetSaveFile()
 		return m_EditorSaveFile;
 	
+	string GetBrushFile()
+		return m_EditorBrushFile;
+	
 	void SetSaveFile(string file)
 		m_EditorSaveFile = file;
 	
@@ -94,6 +97,9 @@ class Editor
 
 	void SetBrush(EditorBrush brush)
 		m_EditorBrush = brush; 
+	
+	void SetBrushFile(string file)
+		m_EditorBrushFile = file;
 	
 	EditorBrush GetBrush()
 		return m_EditorBrush; 
@@ -148,8 +154,10 @@ class Editor
 	private ref EditorObjectDataSet			 	m_SessionCache;
 	
 	private bool 								m_Active;
-	private string 								m_EditorSettingsFile = "$profile:Editor\\settings.ini";
+	private string 								m_EditorSettingsFile = "$profile:Editor/settings.ini";
 	private string								m_EditorSaveFile;
+	// todo move to settings
+	private string								m_EditorBrushFile = "$profile:Editor/EditorBrushes.xml";
 	
 	
 	void Editor(PlayerBase player) 

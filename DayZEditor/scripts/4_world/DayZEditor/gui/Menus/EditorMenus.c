@@ -107,9 +107,10 @@ class EditorViewMenu: EditorMenu
 	void EditorViewMenu(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorViewMenu");
-				
+
 		AddMenuButton(EditorCameraControlsCommand);
 		AddMenuButton(EditorReloadHudCommand);
+		AddMenuButton(EditorReloadBrushesCommand);
 	}
 }
 
