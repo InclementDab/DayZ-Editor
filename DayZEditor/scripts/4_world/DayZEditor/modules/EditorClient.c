@@ -146,7 +146,11 @@ class EditorClientModule: JMModuleBase
 	{
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorDeleteObject");
-		GetEditor().DeleteObjects(GetEditor().GetSelectedObjects());
+		
+		EditorDeleteCommand command();
+		CommandArgs args();
+		args.Context = GetEditor().GetEditorHud();
+		command.Execute(this, args);
 	}
 	
 	

@@ -251,8 +251,7 @@ class EditorSelectAllCommand: EditorCommand
 class EditorDeleteCommand: EditorCommand
 {
 	protected override void Call() {
-		if (GetEditor())
-			GetEditor().GetObjectManager().DeleteObjects(GetEditor().GetSelectedObjects());
+		m_Editor.DeleteObjects(m_Editor.GetSelectedObjects());		
 	}
 		
 	override string GetName() {

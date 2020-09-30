@@ -289,7 +289,6 @@ class Editor
 			
 			case MouseState.LEFT: {
 
-
 				if (IsPlacing()) {
 					PlaceObject();
 					return true;
@@ -432,7 +431,7 @@ class Editor
 			m_EditorUI.InsertMapObject(m_MapMarkerWidget);
 			m_EditorUI.GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));*/
 			
-				
+
 			
 			// Registers character as EditorObject
 			//CreateFromObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM | EditorObjectFlags.MAPMARKER);
