@@ -1,5 +1,5 @@
 
-
+/*
 class EditorPropertiesPrefabController: DialogBaseController
 {
 	
@@ -174,7 +174,7 @@ class EditorObjectPropertiesDialog: EditorDialog
 			
 			loot_editor.SetController(m_EditorPropertiesController);
 			AddContent(loot_editor);
-		}*/
+		}
 	}
 	
 	void SaveCallback() 
@@ -199,4 +199,4 @@ class EditorObjectPropertiesDialog: EditorDialog
 	override typename GetControllerType() {
 		return EditorPropertiesPrefabController;
 	}
-}
+}*/

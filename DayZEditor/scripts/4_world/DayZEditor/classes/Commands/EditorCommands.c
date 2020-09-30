@@ -179,8 +179,7 @@ class EditorCloseCommand: EditorCommand
 {
 	protected override void Call() 
 	{
-		EditorEnvironmentDialog dialog = new EditorEnvironmentDialog(null, "Weather Controller");
-		DialogResult result = dialog.ShowDialog();
+
 	}
 			
 	override string GetName() {
@@ -437,9 +436,10 @@ class EditorPreferencesCommand: EditorCommand
 
 class EditorEnvironmentControlCommand: EditorCommand
 {
-	protected override void Call() {
-		EditorEnvironmentDialog environment_dialog = new EditorEnvironmentDialog(null);
-		environment_dialog.ShowDialog();
+	protected override void Call() 
+	{
+		EditorEnvironmentDialog dialog = new EditorEnvironmentDialog(null, "Weather Controller");
+		DialogResult result = dialog.ShowDialog();
 	}
 	
 	override string GetName() {
@@ -493,7 +493,8 @@ class EditorReloadHudCommand: EditorCommand
 
 class EditorLootEditorCommand: EditorCommand
 {
-	protected override void Call() {
+	protected override void Call() 
+	{
 		GetEditor().EditLootSpawns(GetEditor().GetSelectedObjects().GetElement(0).GetType());
 	}
 	
@@ -505,8 +506,7 @@ class EditorLootEditorCommand: EditorCommand
 class EditorObjectPropertiesCommand: EditorCommand
 {
 	protected override void Call() {
-		EditorObjectPropertiesDialog properties_dialog(null);
-		properties_dialog.SetEditorObject(m_Editor.GetSelectedObjects().GetElement(0));
+		EditorObjectPropertiesDialog properties_dialog(null, "Edit Properties", m_Editor.GetSelectedObjects().GetElement(0));
 		properties_dialog.ShowDialog();
 	}
 	

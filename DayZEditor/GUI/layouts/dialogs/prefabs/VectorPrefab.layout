@@ -4,7 +4,7 @@ PanelWidgetClass EditorPosElement {
  vexactpos 1
  hexactsize 0
  vexactsize 1
- scriptclass "EditorPrefabViewBinding"
+ scriptclass ""
  {
   WrapSpacerWidgetClass PositionSpacer {
    ignorepointer 1
@@ -84,10 +84,17 @@ PanelWidgetClass EditorPosElement {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scriptclass "ViewBinding"
          style Editor
          text "reee"
          "exact text" 1
          font "gui/fonts/etelkatextpro"
+         {
+          ScriptParamsClass {
+           Binding_Name "X"
+           Two_Way_Binding 1
+          }
+         }
         }
        }
       }
@@ -130,6 +137,7 @@ PanelWidgetClass EditorPosElement {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         scriptclass ""
          text "Y"
          font "gui/fonts/etelkatextpro"
          "exact text" 0
@@ -158,10 +166,17 @@ PanelWidgetClass EditorPosElement {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scriptclass "ViewBinding"
          style Editor
          text "reee"
          "exact text" 1
          font "gui/fonts/etelkatextpro"
+         {
+          ScriptParamsClass {
+           Binding_Name "Y"
+           Two_Way_Binding 1
+          }
+         }
         }
        }
       }
@@ -231,10 +246,17 @@ PanelWidgetClass EditorPosElement {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scriptclass "ViewBinding"
          style Editor
          text "reee"
          "exact text" 1
          font "gui/fonts/etelkatextpro"
+         {
+          ScriptParamsClass {
+           Binding_Name "Z"
+           Two_Way_Binding 1
+          }
+         }
         }
        }
       }
@@ -253,11 +275,6 @@ PanelWidgetClass EditorPosElement {
    font "gui/fonts/etelkatextpro"
    "text offset" -5 0
    "text halign" right
-  }
- }
- {
-  ScriptParamsClass {
-   Two_Way_Binding 1
   }
  }
 }

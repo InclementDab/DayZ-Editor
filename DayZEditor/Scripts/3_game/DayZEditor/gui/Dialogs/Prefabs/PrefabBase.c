@@ -33,7 +33,11 @@ class PrefabBase<Class TValue>: ScriptView
 		//m_PrefabBaseController.NotifyPropertyChanged("Value");
 	}
 	
-	void PrefabPropertyChanged(string property_name);
+	void PrefabPropertyChanged(string property_name)
+	{
+		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, m_PrefabBaseController.Value);
+		m_BindingContext.PropertyChanged(m_BindingName);
+	}
 
 	override typename GetControllerType() {
 		return (new PrefabBaseController<TValue>()).Type();
