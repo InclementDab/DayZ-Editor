@@ -46,7 +46,7 @@ class EditorEnvironmentDialogController: DialogBaseController
 			}
 			
 			case "exposure": {
-				GetGame().GetWorld().SetEyeAccom(exposure);
+				m_World.SetEyeAccom(exposure);
 				break;
 			}
 			

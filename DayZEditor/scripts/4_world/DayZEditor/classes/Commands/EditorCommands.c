@@ -62,8 +62,12 @@ class EditorCommand: RelayCommand
 
 class EditorNewCommand: EditorCommand
 {
-	protected override void Call() {
-		GetEditor().New();
+	protected override void Call() 
+	{
+		EditorEditBoxDialog edit_dialog = new EditorEditBoxDialog(null, "New File...");
+		string edit_data;
+		DialogResult result = edit_dialog.ShowDialog(edit_data);
+		if (result != DialogResult.OK) return;
 	}
 		
 	override string GetName() {
@@ -88,10 +92,14 @@ class EditorSaveCommand: EditorCommand
 		}
 		
 		DialogResult result = EditorMessageBox.Show("Save", "Are you sure?", MessageBoxButtons.OKCancel);
-		EditorLog.Info("MessageBoxResult: %1", typename.EnumToString(DialogResult, result));
 		if (result != DialogResult.OK) return;			
 			
-		EditorFileManager.Save(save_data, "$profile:/Editor/SaveData.dze");
+		FileDialogResult file_result = EditorFileManager.Save(save_data, "$profile:/Editor/SaveData.dze");
+		if (file_result != FileDialogResult.SUCCESS) {
+			m_EditorHud.CreateNotification(typename.EnumToString(FileDialogResult, file_result), COLOR_RED);
+			return;
+		} 
+		
 		m_EditorHud.CreateNotification("Saved!", COLOR_GREEN);
 		EditorLog.Info("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
 	}
@@ -111,7 +119,8 @@ class EditorSaveCommand: EditorCommand
 
 class EditorSaveAsCommand: EditorCommand
 {
-	protected override void Call() {
+	protected override void Call() 
+	{
 		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(null);
 		save_dialog.SetWorldData(EditorSaveData.CreateFromEditor(GetEditor()));
 		string file = save_dialog.ShowFileDialog();
@@ -135,7 +144,22 @@ class EditorOpenCommand: EditorCommand
 	
 	protected override void Call() 
 	{
-		GetEditor().Open();
+		DialogResult result = EditorMessageBox.Show("Open", "Are you sure?", MessageBoxButtons.OKCancel);
+		if (result != DialogResult.OK) return;
+		
+		EditorSaveData save_data;
+		EditorFileManager.Open(save_data, "$profile:/Editor/SaveData.dze");
+		
+		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
+			EditorLog.Info("Loading Map %1", save_data.MapName);
+			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
+		}
+		
+		m_Editor.DeleteObjects(m_Editor.GetPlacedObjects(), false);
+		m_Editor.CreateObjects(save_data.EditorObjects, false);
+		string msg = string.Format("Loaded %1 objects!", save_data.EditorObjects.Count().ToString());
+		m_EditorHud.CreateNotification(msg, COLOR_GREEN);
+		EditorLog.Info(msg);
 	}
 			
 	override string GetName() {
@@ -155,9 +179,8 @@ class EditorCloseCommand: EditorCommand
 {
 	protected override void Call() 
 	{
-		EditorEnvironmentDialog dialog = new EditorEnvironmentDialog();
+		EditorEnvironmentDialog dialog = new EditorEnvironmentDialog(null, "Weather Controller");
 		DialogResult result = dialog.ShowDialog();
-		Print(result);
 	}
 			
 	override string GetName() {
@@ -238,7 +261,8 @@ class EditorRedoCommand: EditorCommand
 
 class EditorSelectAllCommand: EditorCommand
 {
-	protected override void Call() {
+	protected override void Call() 
+	{
 		EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
 		foreach (EditorObject eo: placed_objects)
 			GetEditor().SelectObject(eo);
@@ -270,8 +294,19 @@ class EditorDeleteCommand: EditorCommand
 
 class EditorExportCommand: EditorCommand
 {
-	protected override void Call() {
-		GetEditor().Export();
+	protected override void Call() 
+	{
+		DialogResult result = EditorMessageBox.Show("Import", "Export file expansion_export.map?", MessageBoxButtons.OKCancel);
+		if (result != DialogResult.OK) return;
+		
+		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
+		
+		ExportSettings settings = new ExportSettings();
+		settings.ExportFileMode = ExportMode.EXPANSION;
+		EditorFileManager.Export(save_data, "$profile:/Editor/expansion_export.map", settings);
+		string message = string.Format("Exported %1 objects!", save_data.EditorObjects.Count().ToString());
+		m_EditorHud.CreateNotification(message, COLOR_GREEN);
+		EditorLog.Info(message);
 	}
 
 	override string GetName() {
@@ -285,8 +320,19 @@ class EditorExportCommand: EditorCommand
 
 class EditorImportCommand: EditorCommand
 {
-	protected override void Call() {
-		GetEditor().Import();
+	protected override void Call() 
+	{
+		DialogResult result = EditorMessageBox.Show("Import", "Import file expansion_import.map?", MessageBoxButtons.OKCancel);
+		if (result != DialogResult.OK) return;
+		
+
+		EditorSaveData save_data();
+		EditorFileManager.Import(save_data, "$profile:/Editor/expansion_import.map", ImportMode.EXPANSION);
+		string message = string.Format("Imported %1 objects!", save_data.EditorObjects.Count().ToString());
+		m_EditorHud.CreateNotification(message, COLOR_GREEN);
+		EditorLog.Info(message);
+		
+		m_Editor.CreateObjects(save_data.EditorObjects);
 	}
 
 	override string GetName() {

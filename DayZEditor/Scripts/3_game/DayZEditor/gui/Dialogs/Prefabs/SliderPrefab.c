@@ -20,5 +20,4 @@ class SliderPrefab: PrefabBase<float>
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/dialogs/prefabs/SliderPrefab.layout";
 	}
-
 }

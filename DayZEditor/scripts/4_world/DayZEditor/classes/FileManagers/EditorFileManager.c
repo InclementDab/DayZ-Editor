@@ -184,8 +184,12 @@ class EditorFileManager
 
 	static FileDialogResult Save(ref EditorSaveData data, string file_name)
 	{		
+		if (FileExist(file_name) && !DeleteFile(file_name)) {
+			return FileDialogResult.IN_USE;
+		}
+		
 		Cerealizer file_serializer = new Cerealizer();
-		if (!file_serializer.Open(file_name, FileMode.APPEND)) {
+		if (!file_serializer.Open(file_name, FileMode.WRITE)) {
 			return FileDialogResult.IN_USE;
 		}
 		

@@ -8,7 +8,7 @@ WrapSpacerWidgetClass EditorDialogOption {
  vexactpos 1
  hexactsize 0
  vexactsize 1
- scriptclass "EditorPrefabViewBinding"
+ scriptclass ""
  style Colorable
  Padding 0
  Margin 0
@@ -86,9 +86,15 @@ WrapSpacerWidgetClass EditorDialogOption {
      vexactpos 1
      hexactsize 0
      vexactsize 1
+     scriptclass "ViewBinding"
      text "Test Me"
      font "gui/fonts/etelkatextpro"
      "text valign" center
+     {
+      ScriptParamsClass {
+       Binding_Name "Caption"
+      }
+     }
     }
     PanelWidgetClass Spacer {
      visible 1
@@ -104,7 +110,6 @@ WrapSpacerWidgetClass EditorDialogOption {
    }
    {
     ScriptParamsClass {
-     Relay_Execute "ToggleCategoryButton"
      Two_Way_Binding 1
     }
    }
@@ -121,16 +126,18 @@ WrapSpacerWidgetClass EditorDialogOption {
    vexactpos 0
    hexactsize 0
    vexactsize 1
+   scriptclass "ViewBinding"
    style Colorable
    Padding 0
    Margin 0
    "Size To Content V" 1
    content_halign center
    content_valign center
-  }
- }
- {
-  ScriptParamsClass {
+   {
+    ScriptParamsClass {
+     Binding_Name "Value"
+    }
+   }
   }
  }
 }
