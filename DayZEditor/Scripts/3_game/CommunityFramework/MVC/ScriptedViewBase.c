@@ -1,5 +1,8 @@
 
-
+class ScriptedViewBaseTemplate: Managed
+{
+	
+}
 
 class ScriptedViewBase: Managed
 {

@@ -1,32 +1,39 @@
-class PrefabBaseController: Controller
+class PrefabBaseController<Class TValue>: Controller
 {
 	string Caption;
+	TValue Value;
 	
 	override void PropertyChanged(string property_name)
 	{
 		if (GetParent() && GetParent().IsInherited(PrefabBase)) {
-			PrefabBase.Cast(GetParent()).PrefabPropertyChanged(property_name);
+			g_Script.Call(GetParent(), "PrefabPropertyChanged", property_name);
 		}
 	}
 }
 
 
-class PrefabBase: ScriptView
+class PrefabBase<Class TValue>: ScriptView
 {
-	protected PrefabBaseController m_PrefabBaseController;
-	
+	protected PrefabBaseController<TValue> m_PrefabBaseController;
 	protected Controller m_BindingContext;
 	protected string m_BindingName;
 	
-	void PrefabBase(Widget parent = null, string caption = "", Controller binding_context = null, string binding_name = "")
+	void PrefabBase(Widget parent = null, string caption = "", Controller binding_context = null, string binding_name = "", TValue default_value = 0)
 	{
 		m_BindingName = binding_name;
 		m_BindingContext = binding_context;
-		
-		m_PrefabBaseController = PrefabBaseController.Cast(GetController());
+	
+		Class.CastTo(m_PrefabBaseController, m_Controller);
 		m_PrefabBaseController.Caption = caption;
 		m_PrefabBaseController.NotifyPropertyChanged("Caption");
+
+		m_PrefabBaseController.Value = default_value;
+		m_PrefabBaseController.NotifyPropertyChanged("Value");
 	}
 	
 	void PrefabPropertyChanged(string property_name);
+
+	override typename GetControllerType() {
+		return (new PrefabBaseController<TValue>()).Type();
+	}
 }
