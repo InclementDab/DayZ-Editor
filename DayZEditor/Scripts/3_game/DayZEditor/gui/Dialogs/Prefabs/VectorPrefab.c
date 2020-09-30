@@ -38,4 +38,42 @@ class VectorPrefab: PrefabBase<vector>
 	override typename GetControllerType() {
 		return VectorPrefabController;
 	}
+	
+	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
+	{
+		float motion = wheel;
+		motion *= 0.5;
+		
+		if (KeyState(KeyCode.KC_LCONTROL)) {
+			motion *= 10;
+		}
+		
+		if (KeyState(KeyCode.KC_LSHIFT)) {
+			motion *= 0.1;
+		}
+		
+		switch (w.GetName()) {
+			
+			case "x_value": {
+				m_VectorPrefabController.X += motion;
+				m_VectorPrefabController.NotifyPropertyChanged("X");
+				break;
+			}
+			
+			case "y_value": {
+				m_VectorPrefabController.Y += motion;
+				m_VectorPrefabController.NotifyPropertyChanged("Y");
+				break;
+			}
+			
+			case "z_value": {
+				m_VectorPrefabController.Z += motion;
+				m_VectorPrefabController.NotifyPropertyChanged("Z");
+				break;
+			}
+			
+		}
+		
+		return false;
+	}
 }

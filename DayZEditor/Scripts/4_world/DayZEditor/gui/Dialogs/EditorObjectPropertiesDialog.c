@@ -2,6 +2,7 @@
 class EditorObjectPropertiesDialogController: DialogBaseController
 {
 	vector position;
+	vector orientation;
 	
 	protected EditorObject m_EditorObject;
 	
@@ -16,6 +17,11 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 			
 			case "position": {				
 				m_EditorObject.SetPosition(position);
+				break;
+			}			
+			
+			case "orientation": {				
+				m_EditorObject.SetOrientation(orientation);
 				break;
 			}
 		}
@@ -35,6 +41,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		GroupPrefab group_prefab = new GroupPrefab(null, "Position", m_Controller);
 		group_prefab.Insert(new VectorPrefab(null, "Position", m_Controller, "position", editor_object.GetPosition()));
+		group_prefab.Insert(new VectorPrefab(null, "Orientation", m_Controller, "orientation", editor_object.GetOrientation()));
 		
 		AddContent(group_prefab);
 		
