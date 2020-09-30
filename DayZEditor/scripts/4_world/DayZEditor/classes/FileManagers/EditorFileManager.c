@@ -1,4 +1,42 @@
+enum ExportMode 
+{
+	TERRAINBUILDER,
+	EXPANSION,
+	COMFILE,
+	VPP
+}
 
+enum ImportMode
+{
+	TERRAINBUILDER,
+	EXPANSION, 
+	COMFILE,
+	VPP
+}
+
+enum HeightType 
+{
+	ABSOLUTE,
+	RELATIVE
+}
+
+class ExportSettings
+{
+	ExportMode ExportFileMode;
+	HeightType ExportHeightType;
+	bool ExportSelectedOnly;
+	vector ExportOffset;
+	string ExportSetName;
+}
+
+enum FileDialogResult
+{
+	SUCCESS = 0,
+	NOT_FOUND = 1,
+	IN_USE = 2,
+	NOT_SUPPORTED = 3,
+	UNKNOWN_ERROR = 100
+}
 
 
 
@@ -193,46 +231,6 @@ class EditorSaveData
 		
 		return save_data;
 	}
-}
-
-enum ExportMode 
-{
-	TERRAINBUILDER,
-	EXPANSION,
-	COMFILE,
-	VPP
-}
-
-enum ImportMode
-{
-	TERRAINBUILDER,
-	EXPANSION, 
-	COMFILE,
-	VPP
-}
-
-enum HeightType 
-{
-	ABSOLUTE,
-	RELATIVE
-}
-
-class ExportSettings
-{
-	ExportMode ExportFileMode;
-	HeightType ExportHeightType;
-	bool ExportSelectedOnly;
-	vector ExportOffset;
-	string ExportSetName;
-}
-
-enum FileDialogResult
-{
-	SUCCESS = 0,
-	NOT_FOUND = 1,
-	IN_USE = 2,
-	NOT_SUPPORTED = 3,
-	UNKNOWN_ERROR = 100
 }
 
 
