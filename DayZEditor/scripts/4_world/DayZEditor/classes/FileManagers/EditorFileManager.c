@@ -1,159 +1,3 @@
-
-
-
-
-typedef FileSerializer Cerealizer;
-
-static FileDialogResult ImportVPPData(out ref EditorObjectDataSet data, string filename)
-{
-	Cerealizer file = new Cerealizer();
-	if (!FileExist(filename)) {
-		return FileDialogResult.NOT_FOUND;
-	}
-	
-	ref VPPToEditorBuildingSet bSet;
-	if (file.Open(filename, FileMode.READ)) {
-		file.Read(bSet);
-		file.Close();
-		
-	} else return FileDialogResult.UNKNOWN_ERROR;
-	
-	if (!bSet) return FileDialogResult.UNKNOWN_ERROR;
-	
-	ref array<ref VPPToEditorSpawnedBuilding> spawned_buildings = new array<ref VPPToEditorSpawnedBuilding>();
-	bSet.GetSpawnedBuildings(spawned_buildings);
-	foreach (ref VPPToEditorSpawnedBuilding building: spawned_buildings) {
-		string name = building.GetName();
-		TStringArray name_split = new TStringArray();
-		name.Split("-", name_split);
-		data.InsertEditorData(EditorObjectData.Create(name_split.Get(0), building.GetPosition(), building.GetOrientation(), EditorObjectFlags.ALL));
-	}
-	
-	return FileDialogResult.SUCCESS;
-}
-
-static FileDialogResult ExportVPPData(ref EditorObjectDataSet data, string filename, string set_name = "DayZEditor Export")
-{
-	Cerealizer file = new Cerealizer();
-	
-	ref VPPToEditorBuildingSet bSet = new VPPToEditorBuildingSet(set_name);
-	
-	foreach (EditorObjectData object_data: data) {
-		bSet.AddBuilding(object_data.Type, object_data.Position, object_data.Orientation, true);
-		bSet.SetActive(true);
-	}
-	
-	
-	if (file.Open(filename, FileMode.APPEND)) {
-		file.Write(bSet);
-		file.Close();	
-	}
-	
-	return FileDialogResult.SUCCESS;
-}
-
-static FileDialogResult ExportExpansionData(ref EditorObjectDataSet data, string filename)
-{
-	FileHandle handle = OpenFile(filename, FileMode.WRITE);
-	
-	if (!handle) {
-		return FileDialogResult.IN_USE;
-	}
-	
-	foreach (EditorObjectData editor_object: data) {
-		// Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
-		string line = string.Format("%1|%2 %3 %4|%5 %6 %7", editor_object.Type, editor_object.Position[0], editor_object.Position[1], editor_object.Position[2], editor_object.Orientation[0], editor_object.Orientation[1], editor_object.Orientation[2]);
-		FPrintln(handle, line);
-	}
-	
-	return FileDialogResult.SUCCESS;
-}
-
-class ExpansionImportData
-{
-
-	static void ReadFromFile(out ref EditorObjectDataSet data, string filename)
-	{
-		FileHandle handler = OpenFile(filename, FileMode.READ);
-		
-		string name;
-		vector position, rotation;
-		while (GetObjectFromFile(handler, name, position, rotation)) {	
-			
-			string model_name = GetGame().GetModelName(name);
-			if (model_name == "UNKNOWN_P3D_FILE") {
-				EditorLog.Warning("%1 is not a valid Object Type!", name);
-				continue;
-			}
-					
-			data.InsertEditorData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
-		}
-		
-		CloseFile(handler);
-	}
-	
-    private static bool GetObjectFromFile(FileHandle file, out string name, out vector position, out vector rotation, out string special = "false")
-    {                
-        string line;
-        int lineSize = FGets( file, line );
-        
-        if ( lineSize < 1 )
-            return false;
-        
-        ref TStringArray tokens = new TStringArray;
-        line.Split( "|", tokens );
-
-        name = tokens.Get( 0 );        
-        position = tokens.Get( 1 ).ToVector();
-        rotation = tokens.Get( 2 ).ToVector();    
-        special = tokens.Get( 3 );
-
-        return true;
-    }
-}
-
-class COMImportData
-{
-	string name;
-	ref array<ref Param3<string, vector, vector>> m_SceneObjects;
-	
-	void COMImportData()
-	{
-		m_SceneObjects = new array<ref Param3<string, vector, vector>>();
-	}
-}
-
-
-
-class EditorSaveData
-{
-	bool Binarized = 1;
-	string MapName = "ChernarusPlus";
-	vector CameraPosition[4];
-	ref EditorObjectDataSet EditorObjects = new EditorObjectDataSet();
-	
-	static EditorSaveData CreateFromEditor(Editor editor)
-	{
-		EditorSaveData save_data = new EditorSaveData();
-		
-		// Save world name
-		save_data.MapName = GetGame().GetWorldName();
-		
-		// Save Camera Position
-		editor.GetCamera().GetTransform(save_data.CameraPosition);
-		
-		// Save Objects
-		EditorObjectSet placed_objects = editor.GetPlacedObjects();
-		if (placed_objects) {
-			foreach (EditorObject editor_object: placed_objects) {
-				save_data.EditorObjects.InsertEditorData(editor_object.GetData());
-			}
-		}
-		
-		return save_data;
-	}
-}
-
 enum ExportMode 
 {
 	TERRAINBUILDER,
@@ -192,6 +36,36 @@ enum FileDialogResult
 	IN_USE = 2,
 	NOT_SUPPORTED = 3,
 	UNKNOWN_ERROR = 100
+}
+
+
+class EditorSaveData
+{
+	bool Binarized = 1;
+	string MapName = "ChernarusPlus";
+	vector CameraPosition[4];
+	ref EditorObjectDataSet EditorObjects = new EditorObjectDataSet();
+	
+	static EditorSaveData CreateFromEditor(Editor editor)
+	{
+		EditorSaveData save_data = new EditorSaveData();
+		
+		// Save world name
+		save_data.MapName = GetGame().GetWorldName();
+		
+		// Save Camera Position
+		editor.GetCamera().GetTransform(save_data.CameraPosition);
+		
+		// Save Objects
+		EditorObjectSet placed_objects = editor.GetPlacedObjects();
+		if (placed_objects) {
+			foreach (EditorObject editor_object: placed_objects) {
+				save_data.EditorObjects.InsertEditorData(editor_object.GetData());
+			}
+		}
+		
+		return save_data;
+	}
 }
 
 
@@ -293,8 +167,7 @@ class EditorFileManager
 		switch (export_settings.ExportFileMode) {
 			
 			case ExportMode.TERRAINBUILDER: {
-				//return ExportTBData(data.EditorObjects, file_name);
-				break;
+				return ExportTBData(data.EditorObjects, file_name, export_settings);
 			}
 			
 			case ExportMode.EXPANSION: {
@@ -302,8 +175,7 @@ class EditorFileManager
 			}			
 			
 			case ExportMode.COMFILE: {
-				//return ExportVPPData(data.EditorObjects, file_name);
-				break;
+				return ExportCOMData(data.EditorObjects, file_name);
 			}			
 			
 			case ExportMode.VPP: {
@@ -316,74 +188,6 @@ class EditorFileManager
 			}
 		}
 		
-		return FileDialogResult.NOT_SUPPORTED;
-		
-		/*
-		//FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
-		if (handle == 0) {
-			return FileDialogResult.IN_USE;
-		}
-		
-		foreach (EditorObject editor_object: export_objects) {
-						
-			vector position = editor_object.GetPosition();
-			vector orientation = editor_object.GetOrientation();
-			orientation = orientation.VectorToAngles();
-			float scale = 1;//editor_object.GetScale();
-	
-			vector terrainbuilder_offset = Vector(200000, 0, 0);
-			string line;
-			switch (export_settings.ExportFileMode) {
-				
-				case ExportMode.TERRAINBUILDER: {
-					// "construction_house2";206638.935547;6076.024414;146.000015;0.000000;0.000000;1.000000;
-					// Name, X, Y, Yaw, Pitch, Roll, Scale, Relative Height
-					array<LOD> testlods = new array<LOD>();
-					editor_object.GetWorldObject().GetLODS(testlods);
-					
-					foreach (LOD lod: testlods) {
-						//Print(editor_object.GetWorldObject().GetLODName(lod));
-						array<Selection> selections = new array<Selection>();
-						lod.GetSelections(selections);
-						foreach (Selection s: selections) {
-							
-							//Print(s.GetName());
-							for (int fff = 0; fff < s.GetVertexCount(); fff++) {
-								//Print(s.GetVertexPosition(lod, fff));
-							}
-						}
-					}
-					
-					//if (height_type == HeightType.RELATIVE)
-						//position[1] = position[1] - GetGame().SurfaceY(position[0], position[2]);
-					
-					position = position + terrainbuilder_offset;
-					line = string.Format("\"%1\";%2;%3;%4;%5;%6;%7;%8;", editor_object.GetModelName(), position[0], position[2], orientation[0], orientation[1], orientation[2], scale, position[1]);
-					FPrintln(handle, line);
-					break;
-				}
-					
-				case ExportMode.COMFILE: {
-					// SpawnObject("Land_Construction_House2", "6638.935547 7.190318 6076.024414", "146.000015 0.000000 0.000000")
-					line = string.Format("SpawnObject(\"%1\", \"%2\", \"%3\");", editor_object.GetType(), position.ToString(false), orientation.ToString(false));
-					FPrintln(handle, line);
-					break;
-				}
-				
-
-				
-				default: {
-					FPrintln(handle, "Line Export Failure");
-					break;
-				}
-				
-				
-				
-			} 
-		}*/
-		
-		
-
-		
+		return FileDialogResult.NOT_SUPPORTED;		
 	}
 }
