@@ -128,11 +128,13 @@ class EditorSaveAsCommand: EditorCommand
 
 class EditorOpenCommand: EditorCommand
 {
-	void EditorOpenCommand(ref array<KeyCode> input_gestures = null) {
+	void EditorOpenCommand() 
+	{
 		SetCanExecute(false);
 	}
 	
-	protected override void Call() {
+	protected override void Call() 
+	{
 		GetEditor().Open();
 	}
 			
@@ -151,8 +153,11 @@ class EditorOpenCommand: EditorCommand
 
 class EditorCloseCommand: EditorCommand
 {
-	protected override void Call() {
-		GetEditor().Close();
+	protected override void Call() 
+	{
+		EditorEnvironmentDialog dialog = new EditorEnvironmentDialog();
+		DialogResult result = dialog.ShowDialog();
+		Print(result);
 	}
 			
 	override string GetName() {

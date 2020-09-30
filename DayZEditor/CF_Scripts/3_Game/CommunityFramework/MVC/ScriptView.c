@@ -26,7 +26,7 @@ class ScriptView: ScriptedViewBase
 	Controller GetController() {
 		return m_Controller;
 	}
-	
+		
 	void ScriptView(Widget parent = null)
 	{
 		//Debug_Logging = true;

@@ -5,7 +5,7 @@ PanelWidgetClass EditorOptionSlider {
  vexactpos 1
  hexactsize 0
  vexactsize 1
- scriptclass "EditorPrefabViewBinding"
+ scriptclass ""
  {
   WrapSpacerWidgetClass EditorOptionSliderSpacer {
    ignorepointer 1
@@ -147,10 +147,17 @@ PanelWidgetClass EditorOptionSlider {
              vexactpos 1
              hexactsize 0
              vexactsize 1
+             scriptclass "ViewBinding"
              maximum 1
              step 0.001
              current 0.5
              vertical 0
+             {
+              ScriptParamsClass {
+               Binding_Name "Value"
+               Two_Way_Binding 1
+              }
+             }
             }
            }
           }
@@ -169,15 +176,16 @@ PanelWidgetClass EditorOptionSlider {
    vexactpos 1
    hexactsize 0
    vexactsize 1
+   scriptclass "ViewBinding"
    text "Text"
    font "gui/fonts/etelkatextpro"
    "text offset" -5 0
    "text halign" right
-  }
- }
- {
-  ScriptParamsClass {
-   Two_Way_Binding 1
+   {
+    ScriptParamsClass {
+     Binding_Name "Caption"
+    }
+   }
   }
  }
 }

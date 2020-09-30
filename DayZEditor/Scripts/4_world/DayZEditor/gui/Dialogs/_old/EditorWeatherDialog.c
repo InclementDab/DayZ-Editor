@@ -1,4 +1,4 @@
-
+/*
 class EditorEnvironmentDialogController: DialogBaseController
 {
 	protected World m_World;
@@ -111,11 +111,11 @@ class EditorEnvironmentDialog: EditorDialog
 		
 		AddContent(weather_group);
 		SetTitle("World Controller");
-		AddButton("Close", "DialogCloseRoutedUICommand");*/
+		AddButton("Close", "DialogCloseRoutedUICommand");
 	}
 	
 	override typename GetControllerType() {
 		return EditorEnvironmentDialogController;
 	}
 }
-
+*/
