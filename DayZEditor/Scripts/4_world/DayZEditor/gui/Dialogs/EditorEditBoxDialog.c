@@ -1,7 +1,7 @@
 
 class EditorEditBoxDialog: EditorDialogBase
 {
-	protected ref EditBoxPrefab m_EditBoxPrefab;
+	protected autoptr EditBoxPrefab m_EditBoxPrefab;
 	
 	void EditorEditBoxDialog(Widget parent = null, string title = "")
 	{
@@ -12,16 +12,14 @@ class EditorEditBoxDialog: EditorDialogBase
 		AddButton("Cancel", DialogResult.Cancel);
 	}
 	
-	void ~EditorEditBoxDialog()
-	{
-		//delete m_EditBoxPrefab;
-	}
-	
+		
 	DialogResult ShowDialog(out string edit_data)
 	{
+		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
+		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
+		
 		DialogResult result = ShowDialog();
-		Print(m_EditBoxPrefab);
-		edit_data = m_EditBoxPrefab.GetEditBoxDialogController().Text;
+		edit_data = edit_box.GetText();
 		return result;
 	}	
 }

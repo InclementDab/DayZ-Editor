@@ -35,9 +35,6 @@ class EditorHudController: Controller
 	CanvasWidget EditorCanvas;
 		
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
-	//protected RadioButtonGroup m_RadioButtonGroup;
-
-	
 	protected EditBoxWidget LeftbarSearchBar;
 
 	// Temp until sub controllers can be properties of parent controller
