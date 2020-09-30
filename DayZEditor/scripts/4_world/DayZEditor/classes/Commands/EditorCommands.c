@@ -153,14 +153,17 @@ class EditorOpenCommand: EditorCommand
 		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
 			EditorLog.Info("Loading Map %1", save_data.MapName);
 			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
+			while (!GetEditor()) {
+				Sleep(1);
+			}
 		}
 		
-		m_Editor.DeleteObjects(m_Editor.GetPlacedObjects(), false);
-		m_Editor.CreateObjects(save_data.EditorObjects, false);
+		GetEditor().DeleteObjects(GetEditor().GetPlacedObjects(), false);
+		GetEditor().CreateObjects(save_data.EditorObjects, false);
 		
-		m_Editor.GetCamera().SetTransform(save_data.CameraPosition);
+		GetEditor().GetCamera().SetTransform(save_data.CameraPosition);
 		string msg = string.Format("Loaded %1 objects!", save_data.EditorObjects.Count().ToString());
-		m_EditorHud.CreateNotification(msg, COLOR_GREEN);
+		GetEditor().GetEditorHud().CreateNotification(msg, COLOR_GREEN);
 		EditorLog.Info(msg);
 	}
 			
