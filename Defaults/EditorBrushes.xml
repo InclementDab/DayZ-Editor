@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <BrushTypes>
+
+	<Brush name="Pinus_young">
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_2s" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_sb" frequency="0.7" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_2fb" frequency="0.45" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_2f" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_1f" frequency="0.2" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_1fs" frequency="0.2" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_b_prunusSpinosa_2s" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3f" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3f" frequency="0.3" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3fc" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3d" frequency="0.1" zoffset="-2"/>
+	</Brush>
+
+	<Brush name="Pinus_mature">
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3f" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3f" frequency="0.3" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3fc" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3d" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_1f" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_1fs" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_b_prunusSpinosa_2s" frequency="0.1" zoffset="-2"/>
+	</Brush>
+
 	<Brush name="Picea_mature">
 		<BrushObject type="bldr_plnt_t_PiceaAbies_1f" frequency="0.2" zoffset="-2"/>
 		<BrushObject type="bldr_plnt_t_piceaabies_1s" frequency="0.07" zoffset="-2"/>
