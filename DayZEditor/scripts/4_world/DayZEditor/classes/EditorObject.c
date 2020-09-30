@@ -238,7 +238,7 @@ class EditorObject
 	void SetTransform(vector mat[4]) { 
 		m_WorldObject.SetTransform(mat); 
 		m_Data.Position = mat[3];
-		m_Data.Orientation.RotationMatrixFromAngles(mat);
+		m_Data.Orientation = m_WorldObject.GetOrientation();
 		Update();
 	}
 	
