@@ -226,7 +226,8 @@ class Editor
 			}
 		}
 		
-		
+		// Temporary extra raycast since CurrentMousePosition uses groundonly
+		MousePosToRay(obj, null, m_EditorSettings.ViewDistance);
 		if (!IsPlacing()) {
 			Object target = obj.Get(0);
 			if (target != null) {
