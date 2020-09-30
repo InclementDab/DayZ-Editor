@@ -6,7 +6,7 @@ class SliderPrefabController: PrefabBaseController
 class SliderPrefab: PrefabBase
 {
 	protected SliderPrefabController m_SliderPrefabController;
-	protected int m_Min, m_Max;
+	protected float m_Min, m_Max;
 	
 	void SliderPrefab(Widget parent = null, string caption = "", Controller binding_context = null, string binding_name = "", float default_value = 0, float min = 0, float max = 100)
 	{
