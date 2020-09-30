@@ -364,14 +364,19 @@ class Editor
 		switch (key) {
 				
 			case KeyCode.KC_ESCAPE: {
+				
 				if (IsLootEditActive()) {
 					FinishEditLootSpawns();
 					return true;
-				} else if (EditorUIManager.CurrentDialog) {
-					delete EditorUIManager.CurrentDialog;
+				} 
+				
+				else if (EditorUIManager.CurrentDialog) {	
+					EditorUIManager.CurrentDialog.CloseDialog();
 					return true;
 					
-				} else if (EditorUIManager.CurrentMenu) {
+				} 
+				
+				else if (EditorUIManager.CurrentMenu) {
 					delete EditorUIManager.CurrentMenu;
 					return true;
 					

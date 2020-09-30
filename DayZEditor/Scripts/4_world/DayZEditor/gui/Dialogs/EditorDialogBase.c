@@ -5,15 +5,18 @@ class EditorDialogBase: DialogBase
 	
 	void EditorDialogBase(Widget parent = null, string title = "", string caption = "")
 	{
-		EditorLog.Trace("EditorDialog");
-
 		m_Editor = GetEditor();
 		if (m_Editor) {
 			m_EditorHud = m_Editor.GetEditorHud();	
 		}
+		
 		m_Editor.GetCamera().MoveEnabled = false;
 		m_Editor.GetCamera().LookEnabled = false;
 		m_EditorHud.ShowCursor(true);
+		
+		if (EditorUIManager.CurrentDialog) {
+			EditorUIManager.CurrentDialog.CloseDialog();
+		}
 		
 		EditorUIManager.CurrentDialog = this;
 		
@@ -25,10 +28,8 @@ class EditorDialogBase: DialogBase
 	
 	private void ~EditorDialogBase()
 	{
-		EditorLog.Trace("~EditorDialog");
 		m_Editor.GetCamera().MoveEnabled = true;
 		m_Editor.GetCamera().LookEnabled = true;
 		m_EditorHud.ShowCursor(true);
 	}
-
 }

@@ -49,7 +49,6 @@ class MessageBox: DialogBase
 		}
 	}
 	
-	
 	private void AddButton(DialogResult result)
 	{
 		MessageBoxButton button = new MessageBoxButton(null, typename.EnumToString(DialogResult, result), "OnButtonPress", result);

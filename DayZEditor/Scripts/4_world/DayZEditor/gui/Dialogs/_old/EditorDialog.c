@@ -1,6 +1,4 @@
 
-
-
 class EditorDialog: EditorScriptView
 {				
 	protected WrapSpacerWidget DialogContent;
@@ -70,7 +68,7 @@ class EditorDialog: EditorScriptView
 		m_Editor.GetCamera().LookEnabled = false;
 		m_EditorHud.ShowCursor(true);
 		
-		EditorUIManager.CurrentDialog = this;
+		//EditorUIManager.CurrentDialog = this;
 		
 		float du, dv, dx, dy;
 		m_LayoutRoot.GetScreenSize(du, dv);		

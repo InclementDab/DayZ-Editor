@@ -1,5 +1,4 @@
 
-
 class EditorMessageBox: MessageBox
 {
 	protected Editor m_Editor;
@@ -16,6 +15,10 @@ class EditorMessageBox: MessageBox
 		m_Editor.GetCamera().MoveEnabled = false;
 		m_Editor.GetCamera().LookEnabled = false;
 		m_EditorHud.ShowCursor(true);
+		
+		if (EditorUIManager.CurrentDialog) {
+			EditorUIManager.CurrentDialog.CloseDialog();
+		}
 		
 		EditorUIManager.CurrentDialog = this;
 		
