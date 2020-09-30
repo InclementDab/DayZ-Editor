@@ -26,6 +26,9 @@ class EditorMapSelectDialog: EditorDialogBase
 		}
 		
 		m_SelectButton = AddButton("Select", DialogResult.OK);
+		//m_SelectButton.Button.Enable(false);
+		//m_SelectButton.Button.SetAlpha(150);
+		
 		AddButton("Cancel", DialogResult.Cancel);
 	}
 	
@@ -39,7 +42,6 @@ class EditorMapSelectDialog: EditorDialogBase
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		Print(w);
 		if (w == m_ListBoxPrefab.ListBox && button == 0) {
 			CloseDialog(DialogResult.OK);
 			return true;

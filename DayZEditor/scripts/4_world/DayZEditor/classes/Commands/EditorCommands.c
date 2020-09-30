@@ -479,6 +479,6 @@ class EditorLoadMapCommand: EditorCommand
 	}
 	
 	override string GetName() {
-		return "Load Map";
+		return "Select Map...";
 	}
 }

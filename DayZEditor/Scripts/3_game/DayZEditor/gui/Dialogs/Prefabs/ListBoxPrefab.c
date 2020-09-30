@@ -3,6 +3,11 @@ class ListBoxPrefabController: Controller
 {
 	autoptr ObservableCollection<string> ListBoxData = new ObservableCollection<string>("ListBoxData", this);
 	string SelectedListBoxItem;
+	
+	override void PropertyChanged(string property_name)
+	{
+		ScriptedViewBase view_base = GetScriptedRoot();
+	}
 }
 
 class ListBoxPrefab: ScriptView

@@ -1,6 +1,6 @@
 class DialogButton: ScriptView
 {	
-	protected ButtonWidget Button;	
+	ButtonWidget Button;	
 	protected string m_Callback;
 	
 	void DialogButton(Widget parent = null, string label = "", string callback = "")
