@@ -41,7 +41,7 @@ class EditorHudToolbarController: Controller
 	void ReloadBrushes(string filename)
 	{
 		EditorLog.Trace("EditorHudToolbarController::ReloadBrushes");
-		BrushTypeBoxData.Clear();
+		//BrushTypeBoxData.Clear();
 		XMLEditorBrushes xml_brushes(BrushTypeBoxData);
 		
 		if (!FileExist(filename)) {

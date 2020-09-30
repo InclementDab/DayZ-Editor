@@ -139,7 +139,12 @@ class EditorLog
 		// ALWAYS bitch about errors
 		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.ERROR);
 		
-		//thread MessageBox.Show("Error", msg, MessageBoxButtons.OK);
+		thread ErrorDialog(msg);
+	}
+	
+	private static void ErrorDialog(string message)
+	{
+		MessageBox.Show("Error", message, MessageBoxButtons.OK);
 	}
 	
 	static void Debug(Class msg)
