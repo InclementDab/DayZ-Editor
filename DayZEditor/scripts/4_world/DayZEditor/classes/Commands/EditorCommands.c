@@ -296,14 +296,19 @@ class EditorExportCommand: EditorCommand
 {
 	protected override void Call() 
 	{
-		DialogResult result = EditorMessageBox.Show("Import", "Export file expansion_export.map?", MessageBoxButtons.OKCancel);
+		DialogResult result = EditorMessageBox.Show("Export", "Export file expansion_export.map?", MessageBoxButtons.OKCancel);
 		if (result != DialogResult.OK) return;
 		
 		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
 		
 		ExportSettings settings = new ExportSettings();
 		settings.ExportFileMode = ExportMode.EXPANSION;
-		EditorFileManager.Export(save_data, "$profile:/Editor/expansion_export.map", settings);
+		FileDialogResult file_result = EditorFileManager.Export(save_data, "$profile:/Editor/expansion_export.map", settings);
+		if (file_result != FileDialogResult.SUCCESS) {
+			m_EditorHud.CreateNotification(typename.EnumToString(FileDialogResult, file_result), COLOR_RED);
+			return;
+		}
+		
 		string message = string.Format("Exported %1 objects!", save_data.EditorObjects.Count().ToString());
 		m_EditorHud.CreateNotification(message, COLOR_GREEN);
 		EditorLog.Info(message);

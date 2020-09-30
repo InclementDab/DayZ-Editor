@@ -34,7 +34,6 @@ static FileDialogResult ImportVPPData(out ref EditorObjectDataSet data, string f
 
 static FileDialogResult ExportVPPData(ref EditorObjectDataSet data, string filename, string set_name = "DayZEditor Export")
 {
-
 	Cerealizer file = new Cerealizer();
 	
 	ref VPPToEditorBuildingSet bSet = new VPPToEditorBuildingSet(set_name);
@@ -48,6 +47,23 @@ static FileDialogResult ExportVPPData(ref EditorObjectDataSet data, string filen
 	if (file.Open(filename, FileMode.APPEND)) {
 		file.Write(bSet);
 		file.Close();	
+	}
+	
+	return FileDialogResult.SUCCESS;
+}
+
+static FileDialogResult ExportExpansionData(ref EditorObjectDataSet data, string filename)
+{
+	FileHandle handle = OpenFile(filename, FileMode.WRITE);
+	
+	if (!handle) {
+		return FileDialogResult.IN_USE;
+	}
+	
+	foreach (EditorObjectData editor_object: data) {
+		// Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
+		string line = string.Format("%1|%2 %3 %4|%5 %6 %7", editor_object.Type, editor_object.Position[0], editor_object.Position[1], editor_object.Position[2], editor_object.Orientation[0], editor_object.Orientation[1], editor_object.Orientation[2]);
+		FPrintln(handle, line);
 	}
 	
 	return FileDialogResult.SUCCESS;
@@ -282,8 +298,7 @@ class EditorFileManager
 			}
 			
 			case ExportMode.EXPANSION: {
-				//return ExportVPPData(data.EditorObjects, file_name);
-				break;
+				return ExportExpansionData(data.EditorObjects, file_name);
 			}			
 			
 			case ExportMode.COMFILE: {
@@ -301,7 +316,7 @@ class EditorFileManager
 			}
 		}
 		
-		return FileDialogResult.UNKNOWN_ERROR;
+		return FileDialogResult.NOT_SUPPORTED;
 		
 		/*
 		//FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
@@ -355,14 +370,7 @@ class EditorFileManager
 					break;
 				}
 				
-				case ExportMode.EXPANSION: {
-					// Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
-					//orientation = orientation.VectorToAngles();
-					line = string.Format("%1|%2 %3 %4|%5 %6 %7", editor_object.GetType(), position[0], position[1], position[2], orientation[0], orientation[1], orientation[2]);
-					FPrintln(handle, line);
-					break;
-				}
-				
+
 				
 				default: {
 					FPrintln(handle, "Line Export Failure");
