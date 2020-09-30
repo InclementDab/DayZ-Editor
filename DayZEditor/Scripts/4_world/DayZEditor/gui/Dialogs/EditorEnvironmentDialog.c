@@ -8,10 +8,6 @@ class EditorEnvironmentDialogController: DialogBaseController
 	void EditorEnvironmentDialogController()
 	{
 		m_World = GetGame().GetWorld();
-		
-		int year, month, day, hour, minute;
-		m_World.GetDate(year, month, day, hour, minute);
-		Time = minute * 60 + hour * 3600;
 	}
 	
 	override void PropertyChanged(string property_name)
@@ -35,7 +31,11 @@ class EditorEnvironmentDialog: EditorDialogBase
 {	
 	void EditorEnvironmentDialog(Widget parent = null, string title = "")
 	{
-		AddContent(new SliderPrefab(null, "Time", m_Controller, "Time", 0, 86400));
+		int year, month, day, hour, minute;
+		GetGame().GetWorld().GetDate(year, month, day, hour, minute);
+		float time = minute * 60 + hour * 3600;
+		
+		AddContent(new SliderPrefab(null, "Time", m_Controller, "Time", time, 0, 86400));
 
 		AddButton(DialogResult.OK);
 	}
