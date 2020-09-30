@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{BA5E1E7D3921FE2E}DayZEditor/GUI/icons/icon_copy_128x128.edds"
+ Author "tyler-pc"
+ ChangeDate 250472765
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "icon_copy_128x128.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

@@ -83,6 +83,10 @@ class EditorSaveCommand: EditorCommand
 	override string GetKeyDisplay() {
 		return "Ctrl + S";
 	}
+	
+	override string GetIcon() {
+		return "DayZEditor/gui/icons/icon_save_128x128.edds";
+	}
 }
 
 class EditorSaveAsCommand: EditorCommand

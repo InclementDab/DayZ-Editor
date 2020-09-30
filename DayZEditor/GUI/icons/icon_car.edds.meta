@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{B57BE19160ED7718}DayZEditor/GUI/icons/icon_car.edds"
+ Author "tyler-pc"
+ ChangeDate 424012093
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "icon_car.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}
