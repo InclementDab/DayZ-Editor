@@ -1169,7 +1169,7 @@ FrameWidgetClass EditorFrame {
            switch normal
            {
             ImageWidgetClass CutButton_Icon {
-             visible 0
+             visible 1
              ignorepointer 1
              size 1 1
              halign center_ref
@@ -1178,7 +1178,7 @@ FrameWidgetClass EditorFrame {
              vexactpos 1
              hexactsize 0
              vexactsize 0
-             image0 "set:dayz_editor_gui image:arrow_round_icon"
+             image0 "set:dayz_editor_gui image:cut_icon"
              mode additive
              "src alpha" 1
              "no wrap" 1
@@ -1212,7 +1212,7 @@ FrameWidgetClass EditorFrame {
            switch normal
            {
             ImageWidgetClass CopyButton_Icon {
-             visible 0
+             visible 1
              ignorepointer 1
              size 1 1
              halign center_ref
@@ -1222,7 +1222,7 @@ FrameWidgetClass EditorFrame {
              hexactsize 0
              vexactsize 0
              scriptclass ""
-             image0 "set:dayz_editor_gui image:arrow_round_icon"
+             image0 "set:dayz_editor_gui image:copy_icon"
              mode additive
              "src alpha" 1
              "no wrap" 1
@@ -1256,7 +1256,7 @@ FrameWidgetClass EditorFrame {
            switch normal
            {
             ImageWidgetClass PasteButton_Icon {
-             visible 0
+             visible 1
              ignorepointer 1
              size 1 1
              halign center_ref
@@ -1266,7 +1266,7 @@ FrameWidgetClass EditorFrame {
              hexactsize 0
              vexactsize 0
              scriptclass ""
-             image0 "set:dayz_editor_gui image:arrow_round_icon"
+             image0 "set:dayz_editor_gui image:paste_icon"
              mode additive
              "src alpha" 1
              "no wrap" 1
