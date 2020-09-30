@@ -326,7 +326,7 @@ FrameWidgetClass EditorFrame {
                hexactsize 1
                vexactsize 1
                draggable 0
-               scriptclass ""
+               scriptclass "ViewBinding"
                switch normal
                {
                 ImageWidgetClass BuildingSelect_Icon {
@@ -349,6 +349,12 @@ FrameWidgetClass EditorFrame {
                  stretch 1
                 }
                }
+               {
+                ScriptParamsClass {
+                 Binding_Name "BuildingSelectData"
+                 Two_Way_Binding 1
+                }
+               }
               }
               ButtonWidgetClass VehicleSelect {
                position 0 0
@@ -357,7 +363,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               scriptclass ""
+               scriptclass "ViewBinding"
                switch normal
                {
                 ImageWidgetClass VehicleSelect_Icon {
@@ -379,6 +385,12 @@ FrameWidgetClass EditorFrame {
                  stretch 1
                 }
                }
+               {
+                ScriptParamsClass {
+                 Binding_Name "VehicleSelectData"
+                 Two_Way_Binding 1
+                }
+               }
               }
               ButtonWidgetClass EntitySelect {
                size 50 50
@@ -389,7 +401,7 @@ FrameWidgetClass EditorFrame {
                hexactsize 1
                vexactsize 1
                draggable 0
-               scriptclass ""
+               scriptclass "ViewBinding"
                switch normal
                {
                 ImageWidgetClass EntitySelect_Icon {
@@ -412,6 +424,12 @@ FrameWidgetClass EditorFrame {
                  "flip u" 1
                 }
                }
+               {
+                ScriptParamsClass {
+                 Binding_Name "EntitySelectData"
+                 Two_Way_Binding 1
+                }
+               }
               }
               ButtonWidgetClass HumanSelect {
                visible 1
@@ -421,7 +439,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               scriptclass ""
+               scriptclass "ViewBinding"
                switch normal
                {
                 ImageWidgetClass HumanSelect_Icon {
@@ -441,6 +459,12 @@ FrameWidgetClass EditorFrame {
                  "src alpha" 1
                  "no wrap" 1
                  stretch 1
+                }
+               }
+               {
+                ScriptParamsClass {
+                 Binding_Name "HumanSelectData"
+                 Two_Way_Binding 1
                 }
                }
               }

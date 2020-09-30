@@ -13,6 +13,10 @@ class EditorHudController: Controller
 	
 	int PlaceableCategorySelection = 0;
 
+	bool BuildingSelectData = true;
+	bool VehicleSelectData;
+	bool EntitySelectData;
+	bool HumanSelectData;
 	
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
@@ -125,6 +129,35 @@ class EditorHudController: Controller
 				LeftbarScroll.HScrollToPos(0);
 				break;
 			}			
+			
+			case "BuildingSelectData": 
+			case "VehicleSelectData": 
+			case "HumanSelectData": 
+			case "EntitySelectData": {
+				
+				TStringArray select_data = {"BuildingSelectData", "VehicleSelectData", "EntitySelectData", "HumanSelectData"};
+				
+				// Radio Button esque
+				foreach (string data: select_data) {
+					if (data != property_name) {
+						bool result;
+						EnScript.GetClassVar(this, data, 0, result);
+						if (result) {
+							EnScript.SetClassVar(this, data, 0, false);
+							NotifyPropertyChanged(data, false);
+						}
+					}
+				}
+				
+				for (int i = 0; i < LeftbarSpacerData.Count(); i++) {
+					EditorPlaceableListItem list_item = LeftbarSpacerData[i];
+					if (list_item) {
+						list_item.GetLayoutRoot().Show(list_item.GetCategory() == select_data.Find(property_name));
+					}
+				}
+				
+				break;
+			}
 		}
 	}
 	
@@ -389,35 +422,8 @@ class EditorHudController: Controller
 			}
 		}		
 	}
-		/*
-	
-	private void OnRadioButtonActivate(RadioButton radio_button)
-	{
-		EditorLog.Trace("EditorHudController::OnRadioButtonActivate");
-		Widget root = radio_button.GetRoot();
-		root.SetColor(COLOR_SALMON_A);
-		int pos = ButtonWidget.Cast(root).GetState() * 1;
-		SetWidgetIconPosition(root, pos, pos);
 
-		// if you add more radio buttons. put this in a condition :)
-		for (int i = 0; i < LeftbarSpacerData.Count(); i++) {
-			Widget list_item = LeftbarSpacerData[i].GetLayoutRoot();
-			EditorPlaceableListItem item;
-			list_item.GetUserData(item);
-			if (list_item && item) {
-				list_item.Show(item.GetCategory() == radio_button.GetID());
-			}
-		}
-	}
 	
-	private void OnRadioButtonDeactivate(RadioButton radio_button)
-	{
-		EditorLog.Trace("EditorHudController::OnRadioButtonDeactivate");
-		Widget root = radio_button.GetRoot();
-		root.SetColor(COLOR_EMPTY);
-		SetWidgetIconPosition(root, 0, 0);
-	}
-		*/
 	private void OnObjectSelected(Class context, EditorObject target)
 	{
 		InfobarObjPosFrame.Show(GetEditor().GetObjectManager().GetSelectedObjects().Count() > 0);
