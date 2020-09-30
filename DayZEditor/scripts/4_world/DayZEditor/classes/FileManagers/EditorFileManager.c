@@ -69,6 +69,47 @@ static FileDialogResult ExportExpansionData(ref EditorObjectDataSet data, string
 	return FileDialogResult.SUCCESS;
 }
 
+static FileDialogResult ExportCOMData(ref EditorObjectDataSet data, string filename)
+{
+	FileHandle handle = OpenFile(filename, FileMode.WRITE);
+	
+	if (!handle) {
+		return FileDialogResult.IN_USE;
+	}
+	
+	foreach (EditorObjectData editor_object: data) {
+		// SpawnObject("Land_Construction_House2", "6638.935547 7.190318 6076.024414", "146.000015 0.000000 0.000000")
+		string line = string.Format("SpawnObject(\"%1\", \"%2\", \"%3\");", editor_object.Type, editor_object.Position.ToString(false), editor_object.Orientation.ToString(false));
+		FPrintln(handle, line);
+	}
+	
+	return FileDialogResult.SUCCESS;
+}
+
+static FileDialogResult ExportTBData(ref EditorObjectDataSet data, string filename, ExportSettings export_settings)
+{
+	FileHandle handle = OpenFile(filename, FileMode.WRITE);
+	
+	if (!handle) {
+		return FileDialogResult.IN_USE;
+	}
+	
+	vector terrainbuilder_offset = Vector(200000, 0, 0);
+	foreach (EditorObjectData editor_object: data) {
+		// "construction_house2";206638.935547;6076.024414;146.000015;0.000000;0.000000;1.000000;
+		// Name, X, Y, Yaw, Pitch, Roll, Scale, Relative Height										
+		//if (height_type == HeightType.RELATIVE)
+		//position[1] = position[1] - GetGame().SurfaceY(position[0], position[2]);
+
+		vector position = editor_object.Position + terrainbuilder_offset;
+		vector orientation = editor_object.Orientation;
+		string line = string.Format("\"%1\";%2;%3;%4;%5;%6;%7;%8;", GetGame().GetModelName(editor_object.Type), position[0], position[2], orientation[0], orientation[1], orientation[2], editor_object.Scale, position[1]);
+		FPrintln(handle, line);
+	}
+	
+	return FileDialogResult.SUCCESS;
+}
+
 class ExpansionImportData
 {
 
@@ -293,8 +334,7 @@ class EditorFileManager
 		switch (export_settings.ExportFileMode) {
 			
 			case ExportMode.TERRAINBUILDER: {
-				//return ExportTBData(data.EditorObjects, file_name);
-				break;
+				return ExportTBData(data.EditorObjects, file_name, export_settings);
 			}
 			
 			case ExportMode.EXPANSION: {
@@ -302,8 +342,7 @@ class EditorFileManager
 			}			
 			
 			case ExportMode.COMFILE: {
-				//return ExportVPPData(data.EditorObjects, file_name);
-				break;
+				return ExportCOMData(data.EditorObjects, file_name);
 			}			
 			
 			case ExportMode.VPP: {
@@ -316,74 +355,6 @@ class EditorFileManager
 			}
 		}
 		
-		return FileDialogResult.NOT_SUPPORTED;
-		
-		/*
-		//FileHandle handle = OpenFile(filename, FileMode.WRITE | FileMode.APPEND);
-		if (handle == 0) {
-			return FileDialogResult.IN_USE;
-		}
-		
-		foreach (EditorObject editor_object: export_objects) {
-						
-			vector position = editor_object.GetPosition();
-			vector orientation = editor_object.GetOrientation();
-			orientation = orientation.VectorToAngles();
-			float scale = 1;//editor_object.GetScale();
-	
-			vector terrainbuilder_offset = Vector(200000, 0, 0);
-			string line;
-			switch (export_settings.ExportFileMode) {
-				
-				case ExportMode.TERRAINBUILDER: {
-					// "construction_house2";206638.935547;6076.024414;146.000015;0.000000;0.000000;1.000000;
-					// Name, X, Y, Yaw, Pitch, Roll, Scale, Relative Height
-					array<LOD> testlods = new array<LOD>();
-					editor_object.GetWorldObject().GetLODS(testlods);
-					
-					foreach (LOD lod: testlods) {
-						//Print(editor_object.GetWorldObject().GetLODName(lod));
-						array<Selection> selections = new array<Selection>();
-						lod.GetSelections(selections);
-						foreach (Selection s: selections) {
-							
-							//Print(s.GetName());
-							for (int fff = 0; fff < s.GetVertexCount(); fff++) {
-								//Print(s.GetVertexPosition(lod, fff));
-							}
-						}
-					}
-					
-					//if (height_type == HeightType.RELATIVE)
-						//position[1] = position[1] - GetGame().SurfaceY(position[0], position[2]);
-					
-					position = position + terrainbuilder_offset;
-					line = string.Format("\"%1\";%2;%3;%4;%5;%6;%7;%8;", editor_object.GetModelName(), position[0], position[2], orientation[0], orientation[1], orientation[2], scale, position[1]);
-					FPrintln(handle, line);
-					break;
-				}
-					
-				case ExportMode.COMFILE: {
-					// SpawnObject("Land_Construction_House2", "6638.935547 7.190318 6076.024414", "146.000015 0.000000 0.000000")
-					line = string.Format("SpawnObject(\"%1\", \"%2\", \"%3\");", editor_object.GetType(), position.ToString(false), orientation.ToString(false));
-					FPrintln(handle, line);
-					break;
-				}
-				
-
-				
-				default: {
-					FPrintln(handle, "Line Export Failure");
-					break;
-				}
-				
-				
-				
-			} 
-		}*/
-		
-		
-
-		
+		return FileDialogResult.NOT_SUPPORTED;		
 	}
 }
