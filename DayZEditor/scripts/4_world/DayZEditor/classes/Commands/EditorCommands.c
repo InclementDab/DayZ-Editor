@@ -157,6 +157,8 @@ class EditorOpenCommand: EditorCommand
 		
 		m_Editor.DeleteObjects(m_Editor.GetPlacedObjects(), false);
 		m_Editor.CreateObjects(save_data.EditorObjects, false);
+		
+		m_Editor.GetCamera().SetTransform(save_data.CameraPosition);
 		string msg = string.Format("Loaded %1 objects!", save_data.EditorObjects.Count().ToString());
 		m_EditorHud.CreateNotification(msg, COLOR_GREEN);
 		EditorLog.Info(msg);
