@@ -61,7 +61,7 @@ class EditorHudToolbarController: Controller
 			case "BrushTypeSelection": {
 				BrushRadiusFrame.Show(BrushToggleButtonState);
 				BrushDensityFrame.Show(BrushToggleButtonState);
-				BrushToggleButtonText = BrushTypeBoxData.Get(BrushTypeSelection).Name;
+				BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
 				NotifyPropertyChanged("BrushToggleButtonText");
 
 				if (BrushToggleButtonState) {
@@ -87,7 +87,7 @@ class EditorHudToolbarController: Controller
 		switch (collection_name) {
 			
 			case "BrushTypeBoxData": {
-				BrushToggleButtonText = BrushTypeBoxData.Get(BrushTypeSelection).Name;
+				BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
 				NotifyPropertyChanged("BrushToggleButtonText");
 				break;
 			}
