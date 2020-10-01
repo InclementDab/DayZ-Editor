@@ -21,6 +21,7 @@
 
 */
 
+
 private ref Editor m_EditorInstance;
 Editor GetEditor() {
 	return m_EditorInstance;
@@ -238,7 +239,7 @@ class Editor
 					if (ObjectUnderCursor != null) OnMouseExitObject(ObjectUnderCursor, x, y);
 					OnMouseEnterObject(target, x, y);
 					ObjectUnderCursor = target;
-				}
+				} 
 				
 			} else if (ObjectUnderCursor != null) {
 				exit_condition = OnMouseExitObject(ObjectUnderCursor, x, y);
@@ -499,26 +500,8 @@ class Editor
 		}	
 	}
 	
-	
-	void Cut(EditorObjectSet target_objects)
-	{
-		EditorLog.Trace("Editor::Cut");
-		EditorClipboard.Cut(target_objects);
-	}
-	
-	void Copy(EditorObjectSet target_objects) 
-	{
-		EditorLog.Trace("Editor::Copy");
-		EditorClipboard.Copy(target_objects);
-	}
-	
-	void Paste(vector position)
-	{
-		EditorLog.Trace("Editor::Paste");
-		EditorClipboard.Paste(position);
-	}
-	
-	
+		
+		
 	private Object m_LootEditTarget;
 	private bool m_LootEditMode;
 	private vector m_PositionBeforeLootEditMode;

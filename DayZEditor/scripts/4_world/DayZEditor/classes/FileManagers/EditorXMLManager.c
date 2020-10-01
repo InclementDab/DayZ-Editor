@@ -233,7 +233,7 @@ class EditorMapGroupProto: XMLCallback
 		// Draw objects 
 		foreach (ref EditorMapGroupProtoGroup group_proto: m_MapGroupProto) {
 			
-			if (group_proto.GetName() == m_Building.GetType()) {
+			if (group_proto && m_Building && group_proto.GetName() == m_Building.GetType()) {
 				EditorLog.Info("Building Found!");
 				ref array<ref EditorLootContainer> loot_containers = group_proto.GetLootContainer();
 				

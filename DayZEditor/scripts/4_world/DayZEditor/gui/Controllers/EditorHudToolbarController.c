@@ -254,19 +254,22 @@ class EditorHudToolbarController: Controller
 	void CutButtonExecute(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudToolbarController::CutButtonExecute");
-		GetEditor().Cut(GetEditor().GetObjectManager().GetSelectedObjects());
+		EditorCutCommand cmd = new EditorCutCommand();
+		cmd.Execute(this, null);
 	}
 	
 	void CopyButtonExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudToolbarController::CopyButtonExecute");
-		GetEditor().Copy(GetEditor().GetObjectManager().GetSelectedObjects());
+		EditorCopyCommand cmd = new EditorCopyCommand();
+		cmd.Execute(this, null);
 	}
 	
 	void PasteButtonExecute(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudToolbarController::PasteButtonExecute");
-		GetEditor().Paste(Editor.CurrentMousePosition);
+		EditorPasteCommand cmd = new EditorPasteCommand();
+		cmd.Execute(this, null);
 	}
 	
 	private EditorMenu CreateToolbarMenu(Widget toolbar_button)

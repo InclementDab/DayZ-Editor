@@ -166,11 +166,11 @@ class EditorOpenCommand: EditorCommand
 		GetEditor().GetEditorHud().CreateNotification(msg, COLOR_GREEN);
 		EditorLog.Info(msg);
 	}
-			
+
 	override string GetName() {
 		return "Open";
 	}
-		
+
 	override string GetIcon() {
 		return "DayZEditor/gui/icons/icon_folder.edds";
 	}
@@ -202,7 +202,8 @@ class EditorCloseCommand: EditorCommand
 
 class EditorExitCommand: EditorCommand
 {	
-	protected override void Call() {
+	protected override void Call() 
+	{
 		GetGame().LogoutRequestTime();
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(GetGame().GetMission().CreateLogoutMenu, GetGame().GetUIManager().GetMenu());
 	}
@@ -223,11 +224,13 @@ class EditorExitCommand: EditorCommand
 
 class EditorUndoCommand: EditorCommand
 {
-	void EditorUndoCommand(ref array<KeyCode> input_gestures = null) {
+	void EditorUndoCommand(ref array<KeyCode> input_gestures = null) 
+	{
 		SetCanExecute(GetEditor().GetObjectManager().CanUndo());
 	}
 	
-	protected override void Call() {
+	protected override void Call() 
+	{
 		GetEditor().GetObjectManager().Undo();
 	}
 	
@@ -355,17 +358,19 @@ class EditorImportCommand: EditorCommand
 
 class EditorCutCommand: EditorCommand
 {
-	void EditorCutCommand(ref array<KeyCode> input_gestures = null) {
-		SetCanExecute(GetEditor().GetSelectedObjects().Count() > 0);
+	void EditorCutCommand() 
+	{
+		SetCanExecute(m_Editor.GetSelectedObjects().Count() > 0);
 	}
 	
-	protected override void Call() {
-		GetEditor().Cut(GetEditor().GetSelectedObjects());
+	protected override void Call() 
+	{
+		EditorClipboard.Cut(m_Editor.GetSelectedObjects());
 	}
 
 	override string GetName() {
 		return "Cut";
-	}
+	} 
 	
 	override string GetKeyDisplay() {
 		return "Ctrl + X";
@@ -375,15 +380,17 @@ class EditorCutCommand: EditorCommand
 		return "set:dayz_editor_gui image:cut_icon";
 	}
 }
-
+	
 class EditorCopyCommand: EditorCommand
 {
-	void EditorCopyCommand(ref array<KeyCode> input_gestures = null) {
+	void EditorCopyCommand() 
+	{
 		SetCanExecute(GetEditor().GetSelectedObjects().Count() > 0);
 	}
 	
-	protected override void Call() {
-		GetEditor().Copy(GetEditor().GetSelectedObjects());
+	protected override void Call() 
+	{
+		EditorClipboard.Copy(m_Editor.GetSelectedObjects());
 	}
 
 	override string GetName() {
@@ -401,14 +408,16 @@ class EditorCopyCommand: EditorCommand
 
 class EditorPasteCommand: EditorCommand
 {
-	void EditorPasteCommand(ref array<KeyCode> input_gestures = null) {
+	void EditorPasteCommand() 
+	{
 		string clipboard_text;
 		GetGame().CopyFromClipboard(clipboard_text);
 		SetCanExecute(clipboard_text != string.Empty);
 	}
 	
-	protected override void Call() {
-		GetEditor().Paste(GetEditor().CurrentMousePosition);
+	protected override void Call() 
+	{		
+		EditorClipboard.Paste(Editor.CurrentMousePosition);
 	}
 
 	override string GetName() {
@@ -426,7 +435,8 @@ class EditorPasteCommand: EditorCommand
 
 class EditorPreferencesCommand: EditorCommand
 {
-	protected override void Call() {
+	protected override void Call() 
+	{
 		
 	}
 
