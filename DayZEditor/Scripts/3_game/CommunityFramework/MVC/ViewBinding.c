@@ -158,7 +158,7 @@ class ViewBinding: ScriptedViewBase
 			
 			case NotifyCollectionChangedAction.Swap: {
 				CollectionSwapArgs swap_args = CollectionSwapArgs.Cast(args.ChangedValue);
-				m_WidgetController.Swap(swap_args.StartIndex, swap_args.FinishIndex);
+				m_WidgetController.Swap(swap_args.param1, swap_args.param2);
 				break;
 			}
 			

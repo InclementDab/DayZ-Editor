@@ -32,7 +32,7 @@ class MVC
 	{
 		CheckMVC();
 	
-		WidgetController widget_controller = m_WidgetControllerHashMap.Get(data.Type()).Spawn();
+		WidgetController widget_controller = WidgetController.Cast(m_WidgetControllerHashMap.Get(data.Type()).Spawn());
 		g_Script.Call(widget_controller, "SetWidget", data);
 		return widget_controller;
 	}	
@@ -46,7 +46,7 @@ class MVC
 			type = Observable.Cast(type.Spawn()).GetType();
 		}
 		
-		return m_TypeConverterHashMap.Get(type).Spawn(); 
+		return TypeConverter.Cast(m_TypeConverterHashMap[type].Spawn()); 
 	}
 	
 	void MVC()

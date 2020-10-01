@@ -156,7 +156,7 @@ class Controller: ScriptedViewBase
 			if (view_binding.Relay_Command != string.Empty) {
 				typename relay_command = view_binding.Relay_Command.ToType();
 				if (relay_command && relay_command.IsInherited(RelayCommand)) {
-					RelayCommand command = relay_command.Spawn();
+					RelayCommand command = RelayCommand.Cast(relay_command.Spawn());
 					command.SetController(this);
 					command.SetViewBinding(view_binding);
 					view_binding.SetRelayCommand(command);

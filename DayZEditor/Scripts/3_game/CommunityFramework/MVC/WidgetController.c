@@ -390,7 +390,7 @@ class TextListboxController: WidgetControllerTemplate<TextListboxWidget>
 	}
 	
 	override void Insert(TypeConverter type_converter) {
-		m_Widget.AddItem(type_converter.GetString(), type_converter.GetParam(), 0);
+		m_Widget.AddItem(type_converter.GetString(), type_converter.Get(), 0);
 	}
 		
 	override void InsertAt(int index, TypeConverter type_converter) {
@@ -418,7 +418,7 @@ class ItemPreviewWidgetController: WidgetControllerTemplate<ItemPreviewWidget>
 	}
 	
 	override void Get(out TypeConverter type_converter) {
-		type_converter.SetParam(new Param1<EntityAI>(m_Widget.GetItem()));
+		type_converter.Set(m_Widget.GetItem());
 	}
 }
 
