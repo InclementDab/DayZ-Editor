@@ -9,7 +9,7 @@ class EditorCommand: RelayCommand
 	
 	void EditorCommand()
 	{
-		m_Editor = GetEditor();
+		m_Editor = m_Editor;
 		if (m_Editor) {
 			m_EditorHud = m_Editor.GetEditorHud();
 			if (m_EditorHud) {
@@ -26,7 +26,8 @@ class EditorCommand: RelayCommand
 			delete EditorUIManager.CurrentMenu;
 		
 		// Needs to be since we do ShowDialog alot
-		thread Call();
+		if (m_Editor)
+			thread Call();
 		return true;
 	}
 	
@@ -38,14 +39,9 @@ class EditorCommand: RelayCommand
 			
 			Widget root = m_ViewBinding.GetLayoutRoot();
 			if (state) {
-				//root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(1);
-				//root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(1);
 				root.SetAlpha(1);
-				
 			} else {
-				//root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(0.3);
-				//root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(0.3);
-				root.SetAlpha(0.3);
+				root.SetAlpha(0.25);
 			}
 			
 			root.Enable(state);			
@@ -119,10 +115,6 @@ class EditorSaveCommand: EditorCommand
 	override string GetKeyDisplay() {
 		return "Ctrl + S";
 	}
-	
-	override string GetIcon() {
-		return "DayZEditor/gui/icons/icon_save.edds";
-	}
 }
 
 class EditorSaveAsCommand: EditorCommand
@@ -159,17 +151,17 @@ class EditorOpenCommand: EditorCommand
 		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
 			EditorLog.Info("Loading Map %1", save_data.MapName);
 			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
-			while (!GetEditor()) {
+			while (!m_Editor) {
 				Sleep(1);
 			}
 		}
 		
-		GetEditor().DeleteObjects(GetEditor().GetPlacedObjects(), false);
-		GetEditor().CreateObjects(save_data.EditorObjects, false);
+		m_Editor.DeleteObjects(m_Editor.GetPlacedObjects(), false);
+		m_Editor.CreateObjects(save_data.EditorObjects, false);
 		
-		GetEditor().GetCamera().SetTransform(save_data.CameraPosition);
+		m_Editor.GetCamera().SetTransform(save_data.CameraPosition);
 		string msg = string.Format("Loaded %1 objects!", save_data.EditorObjects.Count().ToString());
-		GetEditor().GetEditorHud().CreateNotification(msg, COLOR_GREEN);
+		m_Editor.GetEditorHud().CreateNotification(msg, COLOR_GREEN);
 		EditorLog.Info(msg);
 	}
 
@@ -196,10 +188,6 @@ class EditorCloseCommand: EditorCommand
 	override string GetName() {
 		return "Close";
 	}
-		
-	override string GetIcon() {
-		return "dayz_editor_gui:building_icon";
-	}
 	
 	override string GetKeyDisplay() {
 		return "Ctrl + W";
@@ -217,10 +205,6 @@ class EditorExitCommand: EditorCommand
 	override string GetName() {
 		return "Exit";
 	}
-		
-	override string GetIcon() {
-		return "dayz_editor_gui:building_icon";
-	}
 	
 	override string GetKeyDisplay() {
 		return "Alt + F4";
@@ -229,15 +213,10 @@ class EditorExitCommand: EditorCommand
 }
 
 class EditorUndoCommand: EditorCommand
-{
-	void EditorUndoCommand(ref array<KeyCode> input_gestures = null) 
-	{
-		SetCanExecute(GetEditor().GetObjectManager().CanUndo());
-	}
-	
+{	
 	protected override void Call() 
 	{
-		GetEditor().GetObjectManager().Undo();
+		m_Editor.GetObjectManager().Undo();
 	}
 	
 	override string GetName() {
@@ -254,13 +233,9 @@ class EditorUndoCommand: EditorCommand
 }
 
 class EditorRedoCommand: EditorCommand
-{
-	void EditorRedoCommand(ref array<KeyCode> input_gestures = null) {
-		SetCanExecute(GetEditor().GetObjectManager().CanRedo());
-	}
-	
+{	
 	protected override void Call() {
-		GetEditor().GetObjectManager().Redo();
+		m_Editor.GetObjectManager().Redo();
 	}
 		
 	override string GetName() {
@@ -276,9 +251,9 @@ class EditorSelectAllCommand: EditorCommand
 {
 	protected override void Call() 
 	{
-		EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
+		EditorObjectSet placed_objects = m_Editor.GetPlacedObjects();
 		foreach (EditorObject eo: placed_objects)
-			GetEditor().SelectObject(eo);
+			m_Editor.SelectObject(eo);
 	}
 		
 	override string GetName() {
@@ -364,14 +339,6 @@ class EditorImportCommand: EditorCommand
 
 class EditorCutCommand: EditorCommand
 {
-	void EditorCutCommand() 
-	{
-		if (m_Editor) {
-			SetCanExecute(m_Editor.GetSelectedObjects().Count() > 0);
-		}
-		
-		SetCanExecute(false);
-	}
 	
 	protected override void Call() 
 	{
@@ -392,12 +359,7 @@ class EditorCutCommand: EditorCommand
 }
 	
 class EditorCopyCommand: EditorCommand
-{
-	void EditorCopyCommand() 
-	{
-		SetCanExecute(GetEditor().GetSelectedObjects().Count() > 0);
-	}
-	
+{	
 	protected override void Call() 
 	{
 		EditorClipboard.Copy(m_Editor.GetSelectedObjects());
@@ -418,12 +380,6 @@ class EditorCopyCommand: EditorCommand
 
 class EditorPasteCommand: EditorCommand
 {
-	void EditorPasteCommand() 
-	{
-		string clipboard_text;
-		GetGame().CopyFromClipboard(clipboard_text);
-		SetCanExecute(clipboard_text != string.Empty);
-	}
 	
 	protected override void Call() 
 	{		
@@ -499,7 +455,7 @@ class EditorCameraControlsCommand: EditorCommand
 class EditorReloadHudCommand: EditorCommand
 {
 	protected override void Call() {
-		GetEditor().ReloadHud();
+		m_Editor.ReloadHud();
 	}
 
 	override string GetName() {
@@ -519,7 +475,7 @@ class EditorLootEditorCommand: EditorCommand
 {
 	protected override void Call() 
 	{
-		GetEditor().EditLootSpawns(GetEditor().GetSelectedObjects().GetElement(0).GetType());
+		m_Editor.EditLootSpawns(m_Editor.GetSelectedObjects().GetElement(0).GetType());
 	}
 	
 	override string GetName() {
@@ -529,7 +485,8 @@ class EditorLootEditorCommand: EditorCommand
 
 class EditorObjectPropertiesCommand: EditorCommand
 {
-	protected override void Call() {
+	protected override void Call() 
+	{
 		EditorObjectPropertiesDialog properties_dialog(null, "Edit Properties", m_Editor.GetSelectedObjects().GetElement(0));
 		properties_dialog.ShowDialog();
 	}

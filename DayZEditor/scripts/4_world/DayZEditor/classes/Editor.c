@@ -138,7 +138,19 @@ class Editor
 	void ClearSelection() 
 		GetObjectManager().ClearSelection();
 	
+	// Editor Commands
+	ref EditorNewCommand NewCommand = new EditorNewCommand();
+	ref EditorOpenCommand OpenCommand = new EditorOpenCommand();
+	ref EditorSaveCommand SaveCommand = new EditorSaveCommand();
+	ref EditorSaveAsCommand SaveAsCommand = new EditorSaveAsCommand();
+	ref EditorCloseCommand CloseCommand = new EditorCloseCommand();
+	ref EditorExitCommand ExitCommand = new EditorExitCommand();
+	ref EditorUndoCommand UndoCommand = new EditorUndoCommand();
+	ref EditorRedoCommand RedoCommand = new EditorRedoCommand();
 	
+	ref EditorCutCommand CutCommand = new EditorCutCommand();
+	ref EditorCopyCommand CopyCommand = new EditorCopyCommand();
+	ref EditorPasteCommand PasteCommand = new EditorPasteCommand();
 
 	private ref EditorSettings 					m_EditorSettings;
 	private ref EditorHud						m_EditorHud;
@@ -267,13 +279,16 @@ class Editor
 			// Spams errors
 			//m_EditorHud.GetController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
+		
+		CutCommand.SetCanExecute(selected_objects.Count() > 0);
+		CopyCommand.SetCanExecute(selected_objects.Count() > 0);
 			
 		// debug
 		timeslice_count++;
 		avg_timeslice = avg_timeslice + ((ftime - avg_timeslice) / timeslice_count);
 		m_EditorHudController.DebugText1 = avg_timeslice.ToString();
 		//m_EditorHudController.NotifyPropertyChanged("DebugText1");
-		EditorLog.CurrentLogLevel = LogLevel.TRACE;
+		EditorLog.CurrentLogLevel = LogLevel.TRACE;		
 	}
 	
 	

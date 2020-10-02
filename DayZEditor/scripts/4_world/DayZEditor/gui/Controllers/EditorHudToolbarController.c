@@ -1,4 +1,4 @@
-class EditorHudToolbarController: Controller
+class EditorHudToolbarController: EditorControllerBase
 {	
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 
@@ -13,7 +13,12 @@ class EditorHudToolbarController: Controller
 	bool GroundButton;
 	bool SnapButton;
 	
-	protected ref EditorCutCommand m_EditorCutCommand = new EditorCutCommand();
+	protected EditorUndoCommand m_UndoCommand;
+	protected EditorRedoCommand m_RedoCommand;
+	
+	protected EditorCutCommand m_CutCommand;
+	protected EditorCopyCommand m_CopyCommand;
+	protected EditorPasteCommand m_PasteCommand;
 	
 	// View Properties
 	protected ButtonWidget MenuBarFile;
@@ -26,6 +31,14 @@ class EditorHudToolbarController: Controller
 	void EditorHudToolbarController()
 	{
 		EditorUIManager.CurrentEditorHudToolbarController = this;
+		
+		if (m_Editor) {
+			m_UndoCommand = m_Editor.UndoCommand;
+			m_RedoCommand = m_Editor.RedoCommand;
+			m_CutCommand = m_Editor.CutCommand;
+			m_CopyCommand = m_Editor.CopyCommand;
+			m_PasteCommand = m_Editor.PasteCommand;
+		}
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
@@ -34,10 +47,8 @@ class EditorHudToolbarController: Controller
 
 #ifndef COMPONENT_SYSTEM
 		// Load Brushes
-		ReloadBrushes(GetEditor().EditorBrushFile);
+		ReloadBrushes(m_Editor.EditorBrushFile);
 #endif
-		
-		m_EditorCutCommand.SetCanExecute(false);
 	}
 	
 	// Brush Management
@@ -248,26 +259,6 @@ class EditorHudToolbarController: Controller
 		}
 	}
 	
-	void CutButtonExecute(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudToolbarController::CutButtonExecute");
-		EditorCutCommand cmd = new EditorCutCommand();
-		cmd.Execute(this, null);
-	}
-	
-	void CopyButtonExecute(ButtonCommandArgs args) 
-	{
-		EditorLog.Trace("EditorHudToolbarController::CopyButtonExecute");
-		EditorCopyCommand cmd = new EditorCopyCommand();
-		cmd.Execute(this, null);
-	}
-	
-	void PasteButtonExecute(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudToolbarController::PasteButtonExecute");
-		EditorPasteCommand cmd = new EditorPasteCommand();
-		cmd.Execute(this, null);
-	}
 	
 	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
 	{

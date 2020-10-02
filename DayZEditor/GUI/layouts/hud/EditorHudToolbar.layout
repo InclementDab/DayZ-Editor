@@ -177,9 +177,9 @@ WrapSpacerWidgetClass ToolbarWrapper {
    visible 1
    clipchildren 1
    ignorepointer 1
-   color 0.302 0.302 0.302 1
+   color 0.1569 0.1569 0.1569 1
    position 0 0
-   size 1 0.036
+   size 1 0.03
    halign center_ref
    hexactpos 1
    vexactpos 0
@@ -192,8 +192,9 @@ WrapSpacerWidgetClass ToolbarWrapper {
     WrapSpacerWidgetClass ToolsWrapper {
      visible 1
      ignorepointer 1
-     color 0.0118 0.0118 0.0118 1
+     color 0.0118 0.0118 0.0118 0.3922
      size 1 1
+     halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -204,402 +205,685 @@ WrapSpacerWidgetClass ToolbarWrapper {
      Margin 5
      content_valign center
      {
-      ButtonWidgetClass UndoButton {
-       visible 1
-       clipchildren 0
-       color 0.7529 0.3686 0.3255 1
-       size 30 30
+      PanelWidgetClass Divider8 {
+       ignorepointer 1
+       position 0 0
+       size 15 1
+       halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 1
-       vexactsize 1
-       scriptclass ""
-       style Default
-       "no focus" 0
-       text_offset 0 0
-       switch normal
+       vexactsize 0
        {
-        ImageWidgetClass UndoButton_Icon {
-         inheritalpha 1
+        PanelWidgetClass Divider9 {
          ignorepointer 1
+         color 0 0 0 0.5882
          position 0 0
-         size 1 1
+         size 1 0.6
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
+         hexactsize 1
          vexactsize 0
-         draggable 0
-         image0 "set:dayz_editor_gui image:arrow_round_icon"
-         mode additive
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
+         style rover_sim_colorable
         }
        }
       }
-      ButtonWidgetClass RedoButton {
-       clipchildren 0
-       ignorepointer 0
-       color 0.7529 0.3686 0.3255 1
+      GridSpacerWidgetClass Section0 {
+       ignorepointer 1
        position 0 0
-       size 30 30
+       size 0 0
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       scriptclass ""
-       style Default
-       "no focus" 0
-       switch normal
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Rows 1
        {
-        ImageWidgetClass RedoButton_Icon {
-         inheritalpha 1
+        ButtonWidgetClass NewButton {
+         visible 1
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 30 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 0
+         text "N"
+         text_offset 0 0
+         switch normal
+         {
+          ImageWidgetClass NewButton_Icon {
+           visible 0
+           clipchildren 1
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           draggable 0
+           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           mode additive
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_NewCommand"
+          }
+         }
+        }
+        ButtonWidgetClass OpenButton {
+         visible 1
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         size 30 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 0
+         text "O"
+         text_offset 0 0
+         switch normal
+         {
+          ImageWidgetClass OpenButton_Icon {
+           visible 0
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 0.9 0.9
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           draggable 0
+           image0 ""
+           imageTexture "{F60B1EEFA69CEB68}DayZEditor/GUI/icons/icon_folder.edds"
+           mode additive
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_OpenCommand"
+          }
+         }
+        }
+        ButtonWidgetClass SaveButton {
+         visible 1
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         size 30 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 0
+         text "S"
+         text_offset 0 0
+         switch normal
+         {
+          ImageWidgetClass SaveButton_Icon {
+           visible 0
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           draggable 0
+           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           mode additive
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_SaveCommand"
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider6 {
+       ignorepointer 1
+       position 0 0
+       size 15 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       {
+        PanelWidgetClass Divider7 {
          ignorepointer 1
-         size 1 1
+         color 0 0 0 0.5882
+         position 0 0
+         size 1 0.6
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
+         hexactsize 1
          vexactsize 0
-         image0 "set:dayz_editor_gui image:arrow_round_icon"
-         mode additive
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         "flip u" 1
-         filter 1
-         "Transition width" 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass Section1 {
+       ignorepointer 1
+       position 0 0
+       size 0 0
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Columns 2
+       Rows 1
+       {
+        ButtonWidgetClass UndoButton {
+         visible 1
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         size 30 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 0
+         text_offset 0 0
+         switch normal
+         {
+          ImageWidgetClass UndoButton_Icon {
+           disabled 0
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 0.9 0.9
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           draggable 0
+           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           mode additive
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_EditorUndoCommand"
+          }
+         }
+        }
+        ButtonWidgetClass RedoButton {
+         clipchildren 0
+         ignorepointer 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 30 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 0
+         switch normal
+         {
+          ImageWidgetClass RedoButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 0.9 0.9
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           mode additive
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           "flip u" 1
+           filter 0
+           "Transition width" 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_EditorRedoCommand"
+          }
+         }
         }
        }
       }
       PanelWidgetClass Divider2 {
        ignorepointer 1
        position 0 0
-       size 15 30
+       size 15 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 1
-       vexactsize 1
+       vexactsize 0
        {
         PanelWidgetClass Divider3 {
          ignorepointer 1
+         color 0 0 0 0.5882
          position 0 0
-         size 3 26
+         size 1 0.6
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
-         vexactsize 1
+         vexactsize 0
          style rover_sim_colorable
         }
        }
       }
-      ButtonWidgetClass CutButton {
-       clipchildren 0
-       ignorepointer 0
-       color 0.7529 0.3686 0.3255 1
+      GridSpacerWidgetClass Section2 {
+       ignorepointer 1
        position 0 0
-       size 30 30
+       size 0 0
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       scriptclass "ViewBinding"
-       style Default
-       "no focus" 0
-       font "gui/fonts/Metron"
-       switch normal
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Rows 1
        {
-        ImageWidgetClass CutButton_Icon {
-         visible 1
-         inheritalpha 1
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
+        ButtonWidgetClass CutButton {
+         clipchildren 0
+         ignorepointer 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 30 1
          hexactpos 1
          vexactpos 1
-         hexactsize 0
+         hexactsize 1
          vexactsize 0
-         image0 "set:dayz_editor_gui image:cut_icon"
-         mode additive
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         "flip u" 1
-         filter 1
-         "Transition width" 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 0
+         font "gui/fonts/Metron"
+         switch normal
+         {
+          ImageWidgetClass CutButton_Icon {
+           visible 1
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           image0 "set:dayz_editor_gui image:cut_icon"
+           mode additive
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           "flip u" 1
+           filter 0
+           "Transition width" 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Debug_Logging 0
+           Relay_Command "m_EditorCutCommand"
+          }
+         }
         }
-       }
-       {
-        ScriptParamsClass {
-         Debug_Logging 0
-         Relay_Command "m_EditorCutCommand"
-        }
-       }
-      }
-      ButtonWidgetClass CopyButton {
-       clipchildren 0
-       ignorepointer 0
-       color 0.7529 0.3686 0.3255 1
-       position 0 0
-       size 30 30
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       style Default
-       "no focus" 0
-       font "gui/fonts/Metron"
-       switch normal
-       {
-        ImageWidgetClass CopyButton_Icon {
-         visible 1
-         inheritalpha 1
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
+        ButtonWidgetClass CopyButton {
+         clipchildren 0
+         ignorepointer 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 30 1
          hexactpos 1
          vexactpos 1
-         hexactsize 0
+         hexactsize 1
          vexactsize 0
-         scriptclass ""
-         image0 "set:dayz_editor_gui image:copy_icon"
-         mode additive
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         "flip u" 1
-         filter 1
-         "Transition width" 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 0
+         font "gui/fonts/Metron"
+         switch normal
+         {
+          ImageWidgetClass CopyButton_Icon {
+           visible 1
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 1
+           scriptclass ""
+           image0 "set:dayz_editor_gui image:copy_icon"
+           mode additive
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           "flip u" 1
+           filter 0
+           pivot 0.5 0.5
+           "Transition width" 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Debug_Logging 0
+           Relay_Command "m_EditorCopyCommand"
+          }
+         }
         }
-       }
-       {
-        ScriptParamsClass {
-         Debug_Logging 0
-         Relay_Command "CopyButtonExecute"
-        }
-       }
-      }
-      ButtonWidgetClass PasteButton {
-       clipchildren 0
-       ignorepointer 0
-       color 0.7529 0.3686 0.3255 1
-       position 0 0
-       size 30 30
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       style Default
-       "no focus" 0
-       font "gui/fonts/Metron"
-       switch normal
-       {
-        ImageWidgetClass PasteButton_Icon {
-         visible 1
-         inheritalpha 1
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
+        ButtonWidgetClass PasteButton {
+         clipchildren 0
+         ignorepointer 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 30 1
          hexactpos 1
          vexactpos 1
-         hexactsize 0
+         hexactsize 1
          vexactsize 0
-         scriptclass ""
-         image0 "set:dayz_editor_gui image:paste_icon"
-         mode additive
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         "flip u" 1
-         filter 1
-         "Transition width" 0
-        }
-       }
-       {
-        ScriptParamsClass {
-         Debug_Logging 0
-         Relay_Command "PasteButtonExecute"
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 0
+         font "gui/fonts/Metron"
+         switch normal
+         {
+          ImageWidgetClass PasteButton_Icon {
+           visible 1
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass ""
+           image0 "set:dayz_editor_gui image:paste_icon"
+           mode additive
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           "flip u" 1
+           filter 0
+           "Transition width" 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Debug_Logging 0
+           Relay_Command "m_EditorRedoCommand"
+          }
+         }
         }
        }
       }
       PanelWidgetClass Divider4 {
        ignorepointer 1
        position 0 0
-       size 15 30
+       size 15 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 1
-       vexactsize 1
+       vexactsize 0
        {
         PanelWidgetClass Divider5 {
          ignorepointer 1
+         color 0 0 0 0.5882
          position 0 0
-         size 3 26
+         size 1 0.6
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
-         vexactsize 1
+         vexactsize 0
          style rover_sim_colorable
         }
        }
       }
-      ButtonWidgetClass MagnetButton {
-       clipchildren 0
-       color 0.7529 0.3686 0.3255 1
+      GridSpacerWidgetClass Section3 {
+       ignorepointer 1
        position 0 0
-       size 30 30
+       size 0 0
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       scriptclass "ViewBinding"
-       style Default
-       font "gui/fonts/metron-bold"
-       switch toggle
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Rows 1
        {
-        ImageWidgetClass MagnetButton_Icon {
-         inheritalpha 1
-         ignorepointer 1
-         size 1 1
+        ButtonWidgetClass MagnetButton {
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 30 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scriptclass "ViewBinding"
+         style Default
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass MagnetButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           priority 1
+           image0 "set:dayz_editor_gui image:magnet_icon"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "MagnetButton"
+           Two_Way_Binding 1
+          }
+         }
+        }
+        ButtonWidgetClass GroundButton {
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         size 30 1
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
+         hexactsize 1
          vexactsize 0
-         priority 1
-         image0 "set:dayz_editor_gui image:magnet_icon"
-         mode blend
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
+         scriptclass "ViewBinding"
+         style Default
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass GroundButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           image0 "set:dayz_editor_gui image:grounding_icon"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "GroundButton"
+           Two_Way_Binding 1
+          }
+         }
         }
-       }
-       {
-        ScriptParamsClass {
-         Binding_Name "MagnetButton"
-         Two_Way_Binding 1
-        }
-       }
-      }
-      ButtonWidgetClass GroundButton {
-       clipchildren 0
-       color 0.7529 0.3686 0.3255 1
-       size 30 30
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       style Default
-       font "gui/fonts/metron-bold"
-       switch toggle
-       {
-        ImageWidgetClass GroundButton_Icon {
-         inheritalpha 1
-         ignorepointer 1
-         size 1 1
+        ButtonWidgetClass SnapButton {
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         size 30 1
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
+         hexactsize 1
          vexactsize 0
-         image0 "set:dayz_editor_gui image:grounding_icon"
-         mode blend
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-        }
-       }
-       {
-        ScriptParamsClass {
-         Binding_Name "GroundButton"
-         Two_Way_Binding 1
-        }
-       }
-      }
-      ButtonWidgetClass SnapButton {
-       clipchildren 0
-       color 0.7529 0.3686 0.3255 1
-       size 30 30
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       style Default
-       font "gui/fonts/metron-bold"
-       switch toggle
-       {
-        ImageWidgetClass SnapButton_Icon {
-         inheritalpha 1
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         draggable 0
-         image0 "set:dayz_editor_gui image:snap_icon"
-         mode blend
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         filter 1
-        }
-       }
-       {
-        ScriptParamsClass {
-         Binding_Name "SnapButton"
-         Two_Way_Binding 1
+         scriptclass "ViewBinding"
+         style Default
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass SnapButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           draggable 0
+           image0 "set:dayz_editor_gui image:snap_icon"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "SnapButton"
+           Two_Way_Binding 1
+          }
+         }
         }
        }
       }
       PanelWidgetClass Divider0 {
        ignorepointer 1
        position 0 0
-       size 15 30
+       size 15 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 1
-       vexactsize 1
+       vexactsize 0
        {
         PanelWidgetClass Divider1 {
          ignorepointer 1
+         color 0 0 0 0.5882
          position 0 0
-         size 3 26
+         size 1 0.6
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
-         vexactsize 1
+         vexactsize 0
          style rover_sim_colorable
         }
        }
