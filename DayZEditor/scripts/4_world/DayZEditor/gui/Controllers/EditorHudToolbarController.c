@@ -20,7 +20,7 @@ class EditorHudToolbarController: EditorControllerBase
 	
 	void EditorHudToolbarController()
 	{
-		Debug_Logging = true;
+		//Debug_Logging = true;
 		EditorUIManager.CurrentEditorHudToolbarController = this;
 	}
 	
@@ -109,24 +109,7 @@ class EditorHudToolbarController: EditorControllerBase
 		string w_name = w.GetName();
 		float direction = wheel;
 		switch (w_name) {
-			
-			case "pos":
-			case "rot": {
-			
-				StringEvaluater w_eval;
-				EnScript.GetClassVar(this, w_name, 0, w_eval);
-				
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					direction *= 10;
-				} else if (KeyState(KeyCode.KC_LMENU)) {
-					direction /= 10;
-				}
-				
-				EnScript.SetClassVar(this, w_name, 0, (w_eval.Parse() + direction).ToString());
-				NotifyPropertyChanged(w_name);
-				break;
-			}
-			
+						
 			case "BrushRadiusText":
 			case "BrushRadiusSlider": {
 				BrushRadius += direction * 2;
@@ -147,7 +130,6 @@ class EditorHudToolbarController: EditorControllerBase
 		return false;
 	}
 	
-	private int BUTTON_COLOR = -4235425;
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudToolbarController::OnMouseEnter %1", w.GetName());		

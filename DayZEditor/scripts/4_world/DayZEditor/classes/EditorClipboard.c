@@ -6,7 +6,7 @@ class EditorClipboard
 	static void Cut(EditorObjectSet cut_objects)
 	{
 		EditorLog.Trace("EditorObjectManager::CutSelection");
-		if (cut_objects.Count() >= 0)
+		if (cut_objects.Count() == 0)
 			return;
 		
 		Copy(cut_objects);
@@ -16,7 +16,7 @@ class EditorClipboard
 	static void Copy(EditorObjectSet copy_objects)
 	{
 		EditorLog.Trace("EditorObjectManager::CopySelection");
-		if (copy_objects.Count() >= 0) 
+		if (copy_objects.Count() == 0) 
 			return;
 		
 		ref array<ref EditorObjectData>> world_objects = {};

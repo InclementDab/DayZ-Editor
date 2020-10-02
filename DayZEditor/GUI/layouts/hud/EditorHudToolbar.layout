@@ -68,6 +68,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        hexactsize 0
        vexactsize 0
        scriptclass "ViewBinding"
+       "no focus" 1
        text_offset 0 0
        font "gui/fonts/FiraCodeBold16"
        {
@@ -106,6 +107,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        hexactsize 0
        vexactsize 0
        scriptclass "ViewBinding"
+       "no focus" 1
        font "gui/fonts/FiraCodeBold16"
        {
         TextWidgetClass MenuBarEditLabel {
@@ -143,6 +145,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        hexactsize 0
        vexactsize 0
        scriptclass "ViewBinding"
+       "no focus" 1
        font "gui/fonts/FiraCodeBold16"
        {
         TextWidgetClass MenuBarViewLabel {
@@ -259,7 +262,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
-         "no focus" 0
+         "no focus" 1
          text "N"
          text_offset 0 0
          switch normal
@@ -304,7 +307,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
-         "no focus" 0
+         "no focus" 1
          text "O"
          text_offset 0 0
          switch normal
@@ -349,7 +352,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
-         "no focus" 0
+         "no focus" 1
          text "S"
          text_offset 0 0
          switch normal
@@ -437,7 +440,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
-         "no focus" 0
+         "no focus" 1
          text_offset 0 0
          switch normal
          {
@@ -480,7 +483,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
-         "no focus" 0
+         "no focus" 1
          switch normal
          {
           ImageWidgetClass RedoButton_Icon {
@@ -565,7 +568,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
-         "no focus" 0
+         "no focus" 1
          font "gui/fonts/Metron"
          switch normal
          {
@@ -610,7 +613,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
-         "no focus" 0
+         "no focus" 1
          font "gui/fonts/Metron"
          switch normal
          {
@@ -658,7 +661,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
-         "no focus" 0
+         "no focus" 1
          font "gui/fonts/Metron"
          switch normal
          {
@@ -746,6 +749,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
+         "no focus" 1
          font "gui/fonts/metron-bold"
          switch toggle
          {
@@ -788,6 +792,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
+         "no focus" 1
          font "gui/fonts/metron-bold"
          switch toggle
          {
@@ -828,6 +833,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
+         "no focus" 1
          font "gui/fonts/metron-bold"
          switch toggle
          {

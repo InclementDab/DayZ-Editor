@@ -39,6 +39,8 @@ class EditorObjectData
 	vector Orientation;
 	float Scale;
 	EditorObjectFlags Flags;
+	
+	[NonSerialized()]
 	ModStructure ObjectMod;
 	
 	void EditorObjectData() {}

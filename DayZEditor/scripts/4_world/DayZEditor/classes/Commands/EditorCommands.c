@@ -547,7 +547,15 @@ class EditorMagnetCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{
-		
+		// These 3 commands are really ugly plz fix tyler
+		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
+		if (m_ViewBinding && button_args) {
+			if (button_args.GetButtonState()) {
+				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_CANDY);
+			} else {
+				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_WHITE);
+			}
+		}
 	}
 	
 	override string GetName() {
@@ -557,6 +565,18 @@ class EditorMagnetCommand: EditorCommand
 
 class EditorGroundCommand: EditorCommand
 {
+	protected override void Call(Class sender, CommandArgs args)
+	{
+		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
+		if (m_ViewBinding && button_args) {
+			if (button_args.GetButtonState()) {
+				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_APPLE);
+			} else {
+				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_WHITE);
+			}
+		}
+	}
+	
 	override string GetName() {
 		return "Toggle Ground Mode";
 	}
@@ -564,6 +584,18 @@ class EditorGroundCommand: EditorCommand
 
 class EditorSnapCommand: EditorCommand
 {
+	protected override void Call(Class sender, CommandArgs args)
+	{
+		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
+		if (m_ViewBinding && button_args) {
+			if (button_args.GetButtonState()) {
+				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_JELLY);
+			} else {
+				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_WHITE);
+			}
+		}
+	}
+	
 	override string GetName() {
 		return "Toggle Snapping";
 	}

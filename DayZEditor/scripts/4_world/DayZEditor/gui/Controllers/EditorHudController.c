@@ -259,7 +259,7 @@ class EditorHudController: EditorControllerBase
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::OnClick");
-		
+		/*
 		switch (button) {
 			
 			case 0: {
@@ -287,7 +287,7 @@ class EditorHudController: EditorControllerBase
 				break;
 			}
 		}
-		
+		*/
 		return super.OnClick(w, x, y, button);
 	}
 	
