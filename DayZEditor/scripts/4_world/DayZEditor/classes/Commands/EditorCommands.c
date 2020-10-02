@@ -32,13 +32,17 @@ class EditorCommand: RelayCommand
 	
 	override void CanExecuteChanged(bool state) 
 	{
+		EditorLog.Trace("CanExecuteChanged: %1 - %2", state.ToString(), m_ViewBinding.GetLayoutRoot().GetName());
+		
 		Widget root = m_ViewBinding.GetLayoutRoot();
 		if (state) {
-			root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(1);
-			root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(1);
+			//root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(1);
+			//root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(1);
+			root.GetChildren().SetAlpha(1);
 		} else {
-			root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(0.3);
-			root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(0.3);
+			//root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(0.3);
+			//root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(0.3);
+			root.GetChildren().SetAlpha(0.3);
 		}
 		
 		root.Enable(state);
@@ -121,9 +125,7 @@ class EditorSaveAsCommand: EditorCommand
 {
 	protected override void Call() 
 	{
-		EditorFileSaveDialog save_dialog = new EditorFileSaveDialog(null);
-		save_dialog.SetWorldData(EditorSaveData.CreateFromEditor(GetEditor()));
-		string file = save_dialog.ShowFileDialog();
+		
 	}
 		
 	override string GetName() {
@@ -360,7 +362,11 @@ class EditorCutCommand: EditorCommand
 {
 	void EditorCutCommand() 
 	{
-		SetCanExecute(m_Editor.GetSelectedObjects().Count() > 0);
+		if (m_Editor) {
+			SetCanExecute(m_Editor.GetSelectedObjects().Count() > 0);
+		}
+		
+		SetCanExecute(false);
 	}
 	
 	protected override void Call() 
@@ -472,10 +478,9 @@ class EditorEnvironmentControlCommand: EditorCommand
 
 class EditorCameraControlsCommand: EditorCommand
 {
-	protected override void Call() {
-		EditorCameraDialog cam_dialog(null);
-		cam_dialog.SetEditorCamera(m_Editor.GetCamera());
-		cam_dialog.ShowDialog();
+	protected override void Call() 
+	{
+
 	}
 
 	override string GetName() {
@@ -563,5 +568,17 @@ class EditorReloadBrushesCommand: EditorCommand
 	
 	override string GetName() {
 		return "Reload Brushes";
+	}
+}
+
+class EditorBrushPropertiesCommand: EditorCommand
+{
+	protected override void Call()
+	{
+
+	}
+	
+	override string GetName() {
+		return "Edit Brush Properties";
 	}
 }
