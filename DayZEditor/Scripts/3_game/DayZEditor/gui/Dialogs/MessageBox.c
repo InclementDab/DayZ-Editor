@@ -3,9 +3,7 @@ class MessageBox: DialogBase
 	protected DialogResult m_CurrentResult = DialogResult.None;
 	
 	void MessageBox(Widget parent = null, string title = "", string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
-	{
-		Debug_Logging = 1;
-		
+	{		
 		AddContent(new MessageBoxPrefab(null, caption));
 		
 		switch (buttons) {
@@ -47,6 +45,11 @@ class MessageBox: DialogBase
 				break;
 			}
 		}
+				
+		float du, dv, dx, dy;
+		m_LayoutRoot.GetScreenSize(du, dv);		
+		m_LayoutRoot.GetPos(dx, dy);
+		m_LayoutRoot.SetPos(dx, dy - dv / 2);
 	}
 	
 
@@ -54,5 +57,12 @@ class MessageBox: DialogBase
 	{
 		MessageBox message_box = new MessageBox(null, title, caption, buttons);
 		return message_box.ShowDialog();
+	}
+	
+	static MessageBox ShowSynchronous(string title, string caption, MessageBoxButtons buttons)
+	{
+		MessageBox message_box = new MessageBox(null, title, caption, buttons);
+		message_box.GetLayoutRoot().Show(true);
+		return message_box;
 	}
 }

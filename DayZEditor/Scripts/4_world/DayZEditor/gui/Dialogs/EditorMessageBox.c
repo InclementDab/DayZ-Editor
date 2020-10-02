@@ -21,11 +21,6 @@ class EditorMessageBox: MessageBox
 		}
 		
 		EditorUIManager.CurrentDialog = this;
-		
-		float du, dv, dx, dy;
-		m_LayoutRoot.GetScreenSize(du, dv);		
-		m_LayoutRoot.GetPos(dx, dy);
-		m_LayoutRoot.SetPos(dx, dy - dv / 2);
 	}
 	
 	private void ~EditorMessageBox()
