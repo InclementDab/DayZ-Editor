@@ -2,7 +2,7 @@ WrapSpacerWidgetClass EditorCommandTooltip {
  ignorepointer 1
  color 0.098 0.098 0.098 1
  position 0 0
- size 175 0
+ size 225 0
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -28,7 +28,7 @@ WrapSpacerWidgetClass EditorCommandTooltip {
    hexactsize 1
    vexactsize 1
    scriptclass "ViewBinding"
-   font "gui/fonts/Metron22"
+   font "gui/fonts/Metron16"
    "exact text" 1
    "size to text h" 1
    "size to text v" 1
@@ -51,7 +51,7 @@ WrapSpacerWidgetClass EditorCommandTooltip {
    hexactsize 1
    vexactsize 1
    scriptclass "ViewBinding"
-   font "gui/fonts/MetronBook22"
+   font "gui/fonts/MetronBook16"
    "text offset" 5 0
    "exact text" 1
    "size to text h" 1
