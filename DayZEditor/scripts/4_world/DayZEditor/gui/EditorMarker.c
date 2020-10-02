@@ -2,19 +2,11 @@
 static const float ALPHA_ON_SHOW = 1;
 static const float ALPHA_ON_HIDE = 0.25;
 
-class EditorMarker: ScriptedWidgetEventHandler
+class EditorMarker: ScriptView
 {
-	protected Widget m_LayoutRoot;
-	Widget GetLayoutRoot() { return m_LayoutRoot; }
-
 	void EditorMarker()
 	{
 		EditorLog.Trace("EditorMarker");
-		m_LayoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMarker.layout");
-		m_LayoutRoot.SetHandler(this);
-		
-
-		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
@@ -22,7 +14,6 @@ class EditorMarker: ScriptedWidgetEventHandler
 	{
 		EditorLog.Trace("~EditorMarker");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-		m_LayoutRoot.Unlink();
 	}
 	
 	
@@ -43,7 +34,8 @@ class EditorMarker: ScriptedWidgetEventHandler
 	
 	void Show(bool show)
 	{
-		m_LayoutRoot.Show(show);
+		if (m_LayoutRoot)
+			m_LayoutRoot.Show(show);
 	}
 	
 	protected bool IsMouseInside(int c_x, int c_y)
@@ -53,16 +45,24 @@ class EditorMarker: ScriptedWidgetEventHandler
 		m_LayoutRoot.GetSize(w, h);
 		return (c_x < x + h && c_x > x - h) && (c_y < y + h && c_y > y - h);
 	}
+	
+	override string GetLayoutFile() {
+		return "DayZEditor/gui/Layouts/EditorMarker.layout";
+	}
 
 }
 
 class EditorObjectMarker: EditorMarker
 {	
 	protected EditorObject m_EditorObject;
-	EditorObject GetEditorObject() { return m_EditorObject; }
+	EditorObject GetEditorObject() { 
+		return m_EditorObject; 
+	}
 	
 	protected ref DragHandler m_DragHandler;
-	DragHandler GetDragHandler() { return m_DragHandler; }
+	DragHandler GetDragHandler() { 
+		return m_DragHandler; 
+	}
 	
 	void EditorObjectMarker(EditorObject editor_object)
 	{

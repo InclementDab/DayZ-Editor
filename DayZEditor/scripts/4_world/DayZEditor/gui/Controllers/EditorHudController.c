@@ -44,7 +44,7 @@ class EditorHudController: EditorControllerBase
 	
 	// Temp until sub controllers can be properties of parent controller
 	EditorHudToolbarController GetToolbarController() {
-		return EditorUIManager.CurrentEditorHudToolbarController;
+		return EditorHudToolbarController.Cast(EditorHudToolbarView.GetController());
 	}
 	
 	void EditorHudController() 

@@ -19,8 +19,10 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		
 		if (GetEditor()) {
 			EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
-			foreach (EditorObject editor_object: placed_objects) {
-				editor_object.Show(show);
+			if (placed_objects) {
+				foreach (EditorObject editor_object: placed_objects) {
+					editor_object.Show(show);
+				}
 			}
 		}
 	}

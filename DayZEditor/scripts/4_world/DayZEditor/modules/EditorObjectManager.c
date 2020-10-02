@@ -21,11 +21,10 @@ class EditorObjectManagerModule: JMModuleBase
 	EditorObject GetEditorObject(notnull Object world_object)
 		return GetEditorObject(m_PlacedObjectIndex.Get(world_object.GetID())); 
 	
-
+	
 	override void Init()
 	{
 		EditorLog.Trace("EditorObjectManager::CreateObjects");
-		
 		m_PlacedObjectIndex = new map<int, int>();
 		m_PlacedObjects 	= new EditorObjectSet();
 		m_SelectedObjects 	= new EditorObjectSet();
@@ -219,6 +218,19 @@ class EditorObjectManagerModule: JMModuleBase
 		return false;
 	}
 	
+
+	override void OnMissionFinish()
+	{
+		delete m_PlacedObjects;
+		delete m_SelectedObjects;
+		delete m_ActionStack;
+		delete m_PlacedObjectIndex;
+		
+		m_PlacedObjectIndex = new map<int, int>();
+		m_PlacedObjects 	= new EditorObjectSet();
+		m_SelectedObjects 	= new EditorObjectSet();
+		m_ActionStack 		= new EditorActionStack();
+	}
 	
 	override bool IsClient() 
 		return true;

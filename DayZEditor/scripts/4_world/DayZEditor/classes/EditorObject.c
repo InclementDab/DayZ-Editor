@@ -19,7 +19,7 @@ class EditorObjectSet: ref map<int, ref EditorObject>
 
 class EditorObject
 {
-	protected ref EditorObjectData 			m_Data;
+	protected autoptr EditorObjectData 		m_Data;
 	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem 		m_EditorPlacedListItem;
@@ -60,7 +60,6 @@ class EditorObject
 		return m_Data.GetID(); 
 	}
 
-	
 	private void EditorObject(notnull Object target, EditorObjectFlags flags)
 	{
 		EditorLog.Trace("EditorObject");
@@ -129,6 +128,24 @@ class EditorObject
 		EditorEvents.OnMapToggled.Insert(OnMapToggled);
 	}
 	
+		
+	void ~EditorObject()
+	{
+		EditorLog.Trace("~EditorObject");
+		GetTransform(m_Data.Transform);
+		
+		HideBoundingBox();
+		
+		delete m_EditorObjectWorldMarker; 
+		delete m_EditorPlacedListItem;
+		delete m_EditorObjectMapMarker;
+		
+		delete OnObjectSelected;
+		delete OnObjectDeselected;
+			
+		GetGame().ObjectDelete(m_WorldObject);
+	}
+	
 	static EditorObject Create(ref EditorObjectData data)
 	{
 		EditorLog.Trace("EditorObject::Create from EditorObjectData");
@@ -143,24 +160,7 @@ class EditorObject
 	{
 		EditorLog.Trace("EditorObject::Create from Object");
 		return new EditorObject(target, flags);
-	}
-	
-	
-	void ~EditorObject()
-	{
-		EditorLog.Trace("~EditorObject");
-		GetTransform(m_Data.Transform);
-		
-		HideBoundingBox();
-		
-		delete m_EditorObjectWorldMarker; 
-		delete m_EditorPlacedListItem;
-		delete m_EditorObjectMapMarker;
-			
-		GetGame().ObjectDelete(m_WorldObject);
-	}
-	
-	
+	}	
 
 	
 	/*********
@@ -307,14 +307,14 @@ class EditorObject
 		return m_Visible;
 	}
 	
-	void Show(bool show) {	
+	void Show(bool show) {
 		m_Visible = show;
 		
 		if (MapMarkerEnabled()) {
 			m_EditorObjectMapMarker.Show(m_Visible);
 		}
 		
-		if (ListItemEnabled()) {
+		if (ListItemEnabled() && m_EditorPlacedListItem.GetLayoutRoot()) {
 			m_EditorPlacedListItem.GetLayoutRoot().Show(m_Visible);
 		}
 	}

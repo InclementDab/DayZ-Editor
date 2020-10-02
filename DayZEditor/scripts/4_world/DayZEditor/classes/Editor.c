@@ -91,7 +91,6 @@ class Editor
 	void DeleteSessionData(int id)
 		m_SessionCache.Remove(id);	
 	
-	
 	EditorObjectData GetSessionDataById(int id)
 		return m_SessionCache.Get(id); 
 
@@ -196,6 +195,12 @@ class Editor
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
 		}
+		
+		delete m_EditorHud;
+		delete m_EditorSettings;
+		delete m_EditorBrush;
+		delete m_SessionCache;
+		delete ObjectInHand;
 	}
 	
 
@@ -269,7 +274,7 @@ class Editor
 		}
 		
 		EditorObjectSet selected_objects = GetSelectedObjects();
-		if (selected_objects.Count() > 0) {
+		if (selected_objects.Count() > 0 && selected_objects[0]) {
 			// Spams errors
 			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
