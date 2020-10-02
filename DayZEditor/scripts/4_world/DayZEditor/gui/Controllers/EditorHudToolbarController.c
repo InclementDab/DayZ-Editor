@@ -1,7 +1,5 @@
-class EditorHudToolbarController: Controller
+class EditorHudToolbarController: EditorControllerBase
 {	
-	protected Editor m_Editor;
-	
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 
 	float BrushRadius = 50;

@@ -1,6 +1,5 @@
-class EditorHudController: Controller
+class EditorHudController: EditorControllerBase
 {
-	
 	// Data Binding
 	string DebugText1;
 	string DebugText2;
@@ -83,7 +82,7 @@ class EditorHudController: Controller
 	void InsertMapMarker(EditorMarker map_marker)
 	{
 		EditorLog.Trace("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
-		GetEditor().GetEditorHud().EditorMapWidget.AddChild(map_marker.GetLayoutRoot());
+		m_Editor.GetEditorHud().EditorMapWidget.AddChild(map_marker.GetLayoutRoot());
 	}
 	
 	int ReloadPlaceableObjects() 
@@ -215,11 +214,11 @@ class EditorHudController: Controller
 			if (raycast_result.Count() > 0) {
 				Object obj = raycast_result.Get(0).obj;
 				if ((obj.GetType() == "TranslationWidget" || obj.GetType() == "RotationWidget")) {
-					EditorEvents.DragInvoke(obj, GetEditor().GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
+					EditorEvents.DragInvoke(obj, m_Editor.GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
 					return true;
 				}
 				
-				EditorObject editor_object = GetEditor().GetObjectManager().GetEditorObject(obj);
+				EditorObject editor_object = m_Editor.GetObjectManager().GetEditorObject(obj);
 				if (editor_object != null) {
 					if (input.LocalValue("UAWalkRunTemp")) {
 						EditorObjectManager.ToggleSelection(editor_object);
@@ -300,7 +299,7 @@ class EditorHudController: Controller
 		switch (w) {
 			
 			case LeftbarSearchBar: {
-				GetEditor().GetCamera().MoveEnabled = false;
+				m_Editor.GetCamera().MoveEnabled = false;
 				break;
 			}
 		}
@@ -315,7 +314,7 @@ class EditorHudController: Controller
 		switch (w) {
 			
 			case LeftbarSearchBar: {
-				GetEditor().GetCamera().MoveEnabled = true;
+				m_Editor.GetCamera().MoveEnabled = true;
 				break;
 			}
 		}
@@ -408,12 +407,12 @@ class EditorHudController: Controller
 			y_low = start_y;
 		}
 		
-		ref EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
+		ref EditorObjectSet placed_objects = m_Editor.GetPlacedObjects();
 		foreach (EditorObject editor_object: placed_objects) {
 			
 			float marker_x, marker_y;
 			// this kinda sucks
-			if (GetEditor().GetEditorHud().EditorMapWidget.IsVisible()) {
+			if (m_Editor.GetEditorHud().EditorMapWidget.IsVisible()) {
 				editor_object.GetMapMarkerPosition(marker_x, marker_y);
 			} else {
 				editor_object.GetObjectMarkerPosition(marker_x, marker_y);
@@ -422,7 +421,7 @@ class EditorHudController: Controller
 			
 			if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {		
 				if (!editor_object.IsSelected())
-					GetEditor().SelectObject(editor_object);
+					m_Editor.SelectObject(editor_object);
 			}
 		}		
 	}
@@ -430,12 +429,12 @@ class EditorHudController: Controller
 	
 	private void OnObjectSelected(Class context, EditorObject target)
 	{
-		InfobarObjPosFrame.Show(GetEditor().GetObjectManager().GetSelectedObjects().Count() > 0);
+		InfobarObjPosFrame.Show(m_Editor.GetObjectManager().GetSelectedObjects().Count() > 0);
 	}
 	
 	private void OnObjectDeselected(Class context, EditorObject target)
 	{
-		InfobarObjPosFrame.Show(GetEditor().GetObjectManager().GetSelectedObjects().Count() > 0);
+		InfobarObjPosFrame.Show(m_Editor.GetObjectManager().GetSelectedObjects().Count() > 0);
 	}
 	
 	void SetInfoObjectPosition(vector position)
