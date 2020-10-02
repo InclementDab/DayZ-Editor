@@ -63,13 +63,13 @@ class EditorFileMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorFileMenu");
 		
-		AddMenuButton(m_Editor.NewCommand);
-		AddMenuButton(m_Editor.OpenCommand);
-		AddMenuButton(m_Editor.SaveCommand);
-		AddMenuButton(m_Editor.SaveAsCommand);
-		AddMenuButton(m_Editor.CloseCommand);
+		AddMenuButton(m_Editor.CommandManager.NewCommand);
+		AddMenuButton(m_Editor.CommandManager.OpenCommand);
+		AddMenuButton(m_Editor.CommandManager.SaveCommand);
+		AddMenuButton(m_Editor.CommandManager.SaveAsCommand);
+		AddMenuButton(m_Editor.CommandManager.CloseCommand);
 		AddMenuDivider();
-		AddMenuButton(m_Editor.ExitCommand);
+		AddMenuButton(m_Editor.CommandManager.ExitCommand);
 	}
 }
 
@@ -79,15 +79,15 @@ class EditorEditMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorEditMenu");
 				
-		AddMenuButton(m_Editor.UndoCommand);
-		AddMenuButton(m_Editor.RedoCommand);
+		AddMenuButton(m_Editor.CommandManager.UndoCommand);
+		AddMenuButton(m_Editor.CommandManager.RedoCommand);
 		AddMenuDivider();
-		AddMenuButton(m_Editor.CutCommand);
-		AddMenuButton(m_Editor.CopyCommand);
-		AddMenuButton(m_Editor.PasteCommand);
+		AddMenuButton(m_Editor.CommandManager.CutCommand);
+		AddMenuButton(m_Editor.CommandManager.CopyCommand);
+		AddMenuButton(m_Editor.CommandManager.PasteCommand);
 		AddMenuDivider();
-		AddMenuButton(m_Editor.EnvironmentControlCommand);
-		AddMenuButton(m_Editor.PreferencesCommand);
+		AddMenuButton(m_Editor.CommandManager.EnvironmentControlCommand);
+		AddMenuButton(m_Editor.CommandManager.PreferencesCommand);
 		AddMenuDivider();
 	}
 }
@@ -98,9 +98,9 @@ class EditorViewMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorViewMenu");
 
-		AddMenuButton(m_Editor.CameraControlsCommand);
-		AddMenuButton(m_Editor.ReloadHudCommand);
-		AddMenuButton(m_Editor.ReloadBrushesCommand);
+		AddMenuButton(m_Editor.CommandManager.CameraControlsCommand);
+		AddMenuButton(m_Editor.CommandManager.ReloadHudCommand);
+		AddMenuButton(m_Editor.CommandManager.ReloadBrushesCommand);
 	}
 }
 
@@ -109,16 +109,16 @@ class EditorContextMenu: EditorMenu
 	void EditorContextMenu() 
 	{
 		EditorLog.Trace("EditorContextMenu");
-		AddMenuButton(m_Editor.CutCommand);
-		AddMenuButton(m_Editor.CopyCommand);
-		AddMenuButton(m_Editor.PasteCommand);
+		AddMenuButton(m_Editor.CommandManager.CutCommand);
+		AddMenuButton(m_Editor.CommandManager.CopyCommand);
+		AddMenuButton(m_Editor.CommandManager.PasteCommand);
 		AddMenuDivider();
-		AddMenuButton(m_Editor.UndoCommand);
-		AddMenuButton(m_Editor.RedoCommand);
+		AddMenuButton(m_Editor.CommandManager.UndoCommand);
+		AddMenuButton(m_Editor.CommandManager.RedoCommand);
 		AddMenuDivider();
-		AddMenuButton(m_Editor.DeleteCommand);
+		AddMenuButton(m_Editor.CommandManager.DeleteCommand);
 		AddMenuDivider();
-		AddMenuButton(m_Editor.ObjectPropertiesCommand);
+		AddMenuButton(m_Editor.CommandManager.ObjectPropertiesCommand);
 	}
 }
 
@@ -126,7 +126,7 @@ class EditorPlaceableContextMenu: EditorMenu
 {
 	void EditorPlaceableContextMenu()
 	{
-		AddMenuButton(m_Editor.LootEditorCommand);
+		AddMenuButton(m_Editor.CommandManager.LootEditorCommand);
 	}
 }
 

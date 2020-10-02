@@ -18,11 +18,9 @@ class EditorHudToolbarController: EditorControllerBase
 	protected ButtonWidget MenuBarEdit;
 	protected ButtonWidget MenuBarView;
 	
-	protected Widget BrushRadiusFrame;
-	protected Widget BrushDensityFrame;
-	
 	void EditorHudToolbarController()
 	{
+		Debug_Logging = true;
 		EditorUIManager.CurrentEditorHudToolbarController = this;
 	}
 	
@@ -65,21 +63,14 @@ class EditorHudToolbarController: EditorControllerBase
 			
 			case "BrushToggleButtonState":
 			case "BrushTypeSelection": {
-				BrushRadiusFrame.Show(BrushToggleButtonState);
-				BrushDensityFrame.Show(BrushToggleButtonState);
 				
 				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
 					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
 					NotifyPropertyChanged("BrushToggleButtonText", false);
 				}
 				
-				if (m_Editor) {
-					if (BrushToggleButtonState) {
-						m_Editor.SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
-					} else {
-						m_Editor.SetBrush(null);
-					}
-				}
+				//m_Editor.BrushToggleCommand.Execute(this, null);
+
 				break;
 			}
 			
@@ -99,7 +90,7 @@ class EditorHudToolbarController: EditorControllerBase
 			
 			case "BrushTypeBoxData": {
 				
-				m_Editor.BrushToggleCommand.SetCanExecute(args.Source.Count() > 0);
+				m_Editor.CommandManager.BrushToggleCommand.SetCanExecute(args.Source.Count() > 0);
 				
 				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
 					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;

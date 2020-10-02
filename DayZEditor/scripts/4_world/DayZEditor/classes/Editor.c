@@ -140,43 +140,10 @@ class Editor
 	void ClearSelection() 
 		GetObjectManager().ClearSelection();
 	
-	// Editor Commands
-	ref EditorNewCommand NewCommand = new EditorNewCommand();
-	ref EditorOpenCommand OpenCommand = new EditorOpenCommand();
-	ref EditorSaveCommand SaveCommand = new EditorSaveCommand();
-	ref EditorSaveAsCommand SaveAsCommand = new EditorSaveAsCommand();
-	ref EditorCloseCommand CloseCommand = new EditorCloseCommand();
-	ref EditorExportCommand ExportCommand = new EditorExportCommand();
-	ref EditorImportCommand ImportCommand = new EditorImportCommand();
-	ref EditorExitCommand ExitCommand = new EditorExitCommand();
 	
-	ref EditorUndoCommand UndoCommand = new EditorUndoCommand();
-	ref EditorRedoCommand RedoCommand = new EditorRedoCommand();
-	ref EditorSelectAllCommand SelectAllCommand = new EditorSelectAllCommand();
-	ref EditorDeleteCommand DeleteCommand = new EditorDeleteCommand();
+	ref EditorCommandManager CommandManager;
 	
-	ref EditorCutCommand CutCommand = new EditorCutCommand();
-	ref EditorCopyCommand CopyCommand = new EditorCopyCommand();
-	ref EditorPasteCommand PasteCommand = new EditorPasteCommand();
 	
-	ref EditorMagnetCommand MagnetCommand = new EditorMagnetCommand();
-	ref EditorGroundCommand GroundCommand = new EditorGroundCommand();
-	ref EditorSnapCommand SnapCommand = new EditorSnapCommand();
-	
-	ref EditorEnvironmentControlCommand EnvironmentControlCommand = new EditorEnvironmentControlCommand();
-	ref EditorPreferencesCommand PreferencesCommand = new EditorPreferencesCommand();
-	ref EditorCameraControlsCommand CameraControlsCommand = new EditorCameraControlsCommand();
-	ref EditorReloadHudCommand ReloadHudCommand = new EditorReloadHudCommand();
-	ref EditorReloadBrushesCommand ReloadBrushesCommand = new EditorReloadBrushesCommand();
-	ref EditorLootEditorCommand LootEditorCommand = new EditorLootEditorCommand();
-	
-	ref EditorBrushPropertiesCommand BrushPropertiesCommand = new EditorBrushPropertiesCommand();
-	ref EditorBrushToggleCommand BrushToggleCommand = new EditorBrushToggleCommand();
-	ref EditorPlaceObjectCommand PlaceObjectCommand = new EditorPlaceObjectCommand();
-	
-	// I think this one should be generated on the EditorObject
-	ref EditorObjectPropertiesCommand ObjectPropertiesCommand = new EditorObjectPropertiesCommand();
-
 	private ref EditorSettings 					m_EditorSettings;
 	private ref EditorHud						m_EditorHud;
 	private EditorHudController 				m_EditorHudController;
@@ -196,7 +163,9 @@ class Editor
 		EditorLog.Trace("Editor");		
 		m_EditorInstance = this;
 		m_Player = player;
-	
+		
+		CommandManager = new EditorCommandManager();
+		
 		m_SessionCache = new EditorObjectDataSet();
 		
 		// Init Settings
@@ -306,8 +275,8 @@ class Editor
 			//m_EditorHud.GetController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
 		
-		CutCommand.SetCanExecute(selected_objects.Count() > 0);
-		CopyCommand.SetCanExecute(selected_objects.Count() > 0);
+		CommandManager.CutCommand.SetCanExecute(selected_objects.Count() > 0);
+		CommandManager.CopyCommand.SetCanExecute(selected_objects.Count() > 0);
 		//PasteCommand.SetCanExecute(EditorClipboard.IsClipboardValid());
 			
 		// debug
@@ -336,7 +305,7 @@ class Editor
 			case MouseState.LEFT: {
 
 				if (IsPlacing()) {
-					PlaceObjectCommand.Execute(this, null);
+					CommandManager.PlaceObjectCommand.Execute(this, null);
 					return true;
 				}
 				
@@ -402,7 +371,7 @@ class Editor
 	// Return TRUE if handled.
 	bool OnKeyPress(int key)
 	{			
-		EditorCommand command = GetCommandFromHotkeys(key);
+		EditorCommand command = CommandManager.GetCommandFromHotkeys(key);
 		if (command) {
 			EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
 			CommandArgs args = new CommandArgs();
@@ -581,95 +550,5 @@ class Editor
 		m_EditorHudController = m_EditorHud.GetTemplateController();
 		return m_EditorHud;
 	}
-	
-	
-	EditorCommand GetCommandFromHotkeys(int key)
-	{
-		//EditorLog.Trace("Editor::GetCommandFromHotkeys");
-		
-		if (KeyState(KeyCode.KC_LCONTROL)) {
-			
-			// Ctrl + Shift keybinds
-			if (KeyState(KeyCode.KC_LSHIFT)) {
-				
-				switch (key) {
-					
-					case KeyCode.KC_S: {
-						return SaveAsCommand;
-					}
-					
-					case KeyCode.KC_I: {
-						return EnvironmentControlCommand;
-					}
-					
-					case KeyCode.KC_T: {
-						return CameraControlsCommand;
-					}
-					
-					case KeyCode.KC_U: {
-						return ReloadHudCommand;						
-					}
-				}
-			}
-			
-			
-			switch (key) {
-				
-				case KeyCode.KC_Z: {
-					return UndoCommand;
-				}
-				
-				case KeyCode.KC_Y: {
-					return RedoCommand;
-				}
-				
-				case KeyCode.KC_A: {
-					return SelectAllCommand;
-				}
-				
-				case KeyCode.KC_N: {
-					return NewCommand;
-				}
-				
-				case KeyCode.KC_S: {
-					//if (m_EditorSaveFile == string.Empty)
-					//	return SaveAsCommand;
-					
-					return SaveCommand;
-				}
-				
-				case KeyCode.KC_O: {
-					return OpenCommand;
-				}
-				
-				case KeyCode.KC_E: {
-					return ExportCommand;
-				}
-				
-				case KeyCode.KC_I: {					
-					return ImportCommand;
-				}
-				
-				case KeyCode.KC_X: {
-					return CutCommand;
-				}
-
-				case KeyCode.KC_C: {
-					return CopyCommand;
-				}
-				
-				case KeyCode.KC_V: {
-					return PasteCommand;
-				}
-				
-				case KeyCode.KC_W: {
-					return CloseCommand;
-				}
-			}
-		}
-
-		return null;
-	}
-
 }
 

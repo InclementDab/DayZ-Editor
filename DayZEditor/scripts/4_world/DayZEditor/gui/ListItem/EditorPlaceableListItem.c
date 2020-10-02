@@ -101,7 +101,7 @@ class EditorPlaceableListItem: EditorListItem
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
-		GetEditor().PlaceObjectCommand.Execute(this, null);
+		GetEditor().CommandManager.PlaceObjectCommand.Execute(this, null);
 		return true;
 	}
 	

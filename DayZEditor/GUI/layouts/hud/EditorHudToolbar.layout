@@ -205,7 +205,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
      content_valign center
      {
       PanelWidgetClass Divider8 {
-       visible 0
+       visible 1
        ignorepointer 1
        position 0 0
        size 15 1
@@ -288,7 +288,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_Editor.NewCommand"
+           Relay_Command "m_Editor.CommandManager.NewCommand"
           }
          }
         }
@@ -333,7 +333,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_Editor.OpenCommand"
+           Relay_Command "m_Editor.CommandManager.OpenCommand"
           }
          }
         }
@@ -377,7 +377,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_Editor.SaveCommand"
+           Relay_Command "m_Editor.CommandManager.SaveCommand"
           }
          }
         }
@@ -464,7 +464,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_Editor.UndoCommand"
+           Relay_Command "m_Editor.CommandManager.UndoCommand"
           }
          }
         }
@@ -506,7 +506,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_Editor.RedoCommand"
+           Relay_Command "m_Editor.CommandManager.RedoCommand"
           }
          }
         }
@@ -594,7 +594,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Debug_Logging 0
-           Relay_Command "m_Editor.CutCommand"
+           Relay_Command "m_Editor.CommandManager.CutCommand"
           }
          }
         }
@@ -642,7 +642,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Debug_Logging 0
-           Relay_Command "m_Editor.CopyCommand"
+           Relay_Command "m_Editor.CommandManager.CopyCommand"
           }
          }
         }
@@ -688,7 +688,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Debug_Logging 0
-           Relay_Command "m_Editor.PasteCommand"
+           Relay_Command "m_Editor.CommandManager.PasteCommand"
           }
          }
         }
@@ -772,7 +772,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Two_Way_Binding 0
-           Relay_Command "m_Editor.MagnetCommand"
+           Relay_Command "m_Editor.CommandManager.MagnetCommand"
           }
          }
         }
@@ -812,7 +812,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Two_Way_Binding 0
-           Relay_Command "m_Editor.GroundCommand"
+           Relay_Command "m_Editor.CommandManager.GroundCommand"
           }
          }
         }
@@ -853,7 +853,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Two_Way_Binding 0
-           Relay_Command "m_Editor.SnapCommand"
+           Relay_Command "m_Editor.CommandManager.SnapCommand"
           }
          }
         }
@@ -946,7 +946,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
           ScriptParamsClass {
            Binding_Name "BrushToggleButtonState"
            Two_Way_Binding 1
-           Relay_Command "m_Editor.BrushToggleCommand"
+           Relay_Command "m_Editor.CommandManager.BrushToggleCommand"
           }
          }
         }
@@ -959,7 +959,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
        }
       }
       FrameWidgetClass BrushRadiusFrame {
-       visible 1
+       visible 0
+       disabled 0
        clipchildren 0
        ignorepointer 1
        size 140 1
@@ -998,6 +999,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
           ScriptParamsClass {
            Binding_Name "BrushRadius"
            Two_Way_Binding 1
+           Relay_Command "m_Editor.CommandManager.BrushRadiusCommand"
           }
          }
         }
@@ -1025,7 +1027,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        }
       }
       PanelWidgetClass BrushDensityFrame {
-       visible 1
+       visible 0
        ignorepointer 1
        position 0 0
        size 140 1
@@ -1067,6 +1069,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
           ScriptParamsClass {
            Binding_Name "BrushDensity"
            Two_Way_Binding 1
+           Relay_Command "m_Editor.CommandManager.BrushDensityCommand"
           }
          }
         }

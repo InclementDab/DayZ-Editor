@@ -32,7 +32,6 @@ class EditorCommand: RelayCommand
 		//EditorLog.Trace("CanExecuteChanged: %1 - %2", state.ToString(), m_ViewBinding.GetLayoutRoot().GetName());
 		
 		if (m_ViewBinding) {
-			
 			Widget root = m_ViewBinding.GetLayoutRoot();
 			if (state) {
 				root.SetAlpha(1);
@@ -579,13 +578,25 @@ class EditorBrushToggleCommand: EditorCommand
 		switch (button_args.GetMouseButton()) {
 			
 			case 0: {
+				EditorHudToolbarController toolbar_controller = m_Editor.GetEditorHud().GetTemplateController().GetToolbarController();
 				bool button_state = button_args.GetButtonState();
 				button_args.Source.FindAnyWidget("BrushToggleButtonText").SetPos(button_state * 1, button_state * 1);
+				
+				
+				if (button_state) {
+					m_Editor.SetBrush(EditorBrush.Create(toolbar_controller.BrushTypeBoxData[toolbar_controller.BrushTypeSelection]));
+				} else {
+					m_Editor.SetBrush(null);
+				}
+				
+				m_Editor.CommandManager.BrushRadiusCommand.SetCanExecute(button_state);
+				m_Editor.CommandManager.BrushDensityCommand.SetCanExecute(button_state);
+				
 				break;
 			}
 			
 			case 1: {
-				m_Editor.BrushPropertiesCommand.Execute(this, args);
+				m_Editor.CommandManager.BrushPropertiesCommand.Execute(this, args);
 				break;
 			}
 		}
@@ -614,5 +625,39 @@ class EditorPlaceObjectCommand: EditorCommand
 		} else {
 			m_Editor.ObjectInHand = new EditorHologram(type, m_Editor.CurrentMousePosition);
 		}
+	}
+}
+
+class EditorBrushDensityCommand: EditorCommand
+{
+	override void CanExecuteChanged(bool state)
+	{
+		if (m_ViewBinding) {
+			Widget root = m_ViewBinding.GetLayoutRoot().GetParent();
+			root.Show(state);
+			root.Enable(state);			
+		}
+	}
+	
+	override string GetName() {
+		return "Brush Density";
+	}
+}
+
+class EditorBrushRadiusCommand: EditorCommand
+{
+	override void CanExecuteChanged(bool state)
+	{
+		Print(m_Controller);
+		if (m_ViewBinding) {
+			Widget root = m_ViewBinding.GetLayoutRoot().GetParent();
+			Print(root.GetName());
+			root.Show(state);
+			root.Enable(state);	
+		}
+	}
+	
+	override string GetName() {
+		return "Brush Radius";
 	}
 }
