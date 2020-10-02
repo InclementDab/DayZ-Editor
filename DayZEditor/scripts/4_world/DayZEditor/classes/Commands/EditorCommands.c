@@ -509,7 +509,7 @@ class EditorLoadMapCommand: EditorCommand
 		
 		if (selected_map != string.Empty && result == DialogResult.OK) {
 			EditorLog.Info("Loading Map %1", selected_map);
-			delete m_EditorInstance;
+			m_Editor.GetObjectManager().Clear();
 			GetGame().PlayMission(CreateEditorMission(selected_map));
 		}
 	}

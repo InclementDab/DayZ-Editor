@@ -104,11 +104,11 @@ class Editor
 		return ObjectInHand != null; 
 	
 	
-	ref EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
+	EditorObjectSet CreateObjects(EditorObjectDataSet data_list, bool create_undo = true)
 		return GetObjectManager().CreateObjects(data_list, create_undo);
 	
 	
-	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true)
+	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true)
 		return GetObjectManager().CreateObject(editor_object_data, create_undo);
 	
 	

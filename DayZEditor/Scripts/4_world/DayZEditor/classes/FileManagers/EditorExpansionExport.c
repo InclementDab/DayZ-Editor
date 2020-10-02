@@ -1,5 +1,5 @@
 
-static FileDialogResult ExportExpansionData(ref EditorObjectDataSet data, string filename)
+static FileDialogResult ExportExpansionData(EditorObjectDataSet data, string filename)
 {
 	FileHandle handle = OpenFile(filename, FileMode.WRITE);
 	
@@ -21,7 +21,7 @@ static FileDialogResult ExportExpansionData(ref EditorObjectDataSet data, string
 class ExpansionImportData
 {
 
-	static void ReadFromFile(out ref EditorObjectDataSet data, string filename)
+	static void ReadFromFile(out EditorObjectDataSet data, string filename)
 	{
 		FileHandle handler = OpenFile(filename, FileMode.READ);
 		

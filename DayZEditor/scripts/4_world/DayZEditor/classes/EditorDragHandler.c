@@ -1,7 +1,7 @@
 
 class DragHandler
 {
-	protected ref EditorObject m_EditorObject;
+	protected EditorObject m_EditorObject;
 	void DragHandler(EditorObject target)
 	{
 		m_EditorObject = target;

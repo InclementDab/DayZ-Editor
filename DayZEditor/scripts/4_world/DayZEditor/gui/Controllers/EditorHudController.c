@@ -407,7 +407,7 @@ class EditorHudController: EditorControllerBase
 			y_low = start_y;
 		}
 		
-		ref EditorObjectSet placed_objects = m_Editor.GetPlacedObjects();
+		EditorObjectSet placed_objects = m_Editor.GetPlacedObjects();
 		foreach (EditorObject editor_object: placed_objects) {
 			
 			float marker_x, marker_y;

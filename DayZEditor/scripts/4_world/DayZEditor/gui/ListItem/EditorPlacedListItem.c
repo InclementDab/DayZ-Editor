@@ -1,7 +1,7 @@
 
 class EditorPlacedListItem: EditorListItem
 {
-	protected ref EditorObject m_EditorObject;
+	protected EditorObject m_EditorObject;
 	EditorObject GetData() { 
 		return m_EditorObject; 
 	}

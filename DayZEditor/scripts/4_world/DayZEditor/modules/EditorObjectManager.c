@@ -31,7 +31,7 @@ class EditorObjectManagerModule: JMModuleBase
 		m_ActionStack 		= new EditorActionStack();
 	}
 	
-	EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
+	EditorObjectSet CreateObjects(EditorObjectDataSet data_list, bool create_undo = true)
 	{
 		EditorLog.Trace("EditorObjectManager::CreateObjects");
 		EditorObjectSet object_set = new EditorObjectSet();
@@ -58,7 +58,7 @@ class EditorObjectManagerModule: JMModuleBase
 	}
 	
 	
-	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true)
+	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true)
 	{		
 		EditorLog.Trace("EditorObjectManager::CreateObject");
 		
@@ -218,20 +218,14 @@ class EditorObjectManagerModule: JMModuleBase
 		return false;
 	}
 	
-
-	override void OnMissionFinish()
+	void Clear()
 	{
-		delete m_PlacedObjects;
-		delete m_SelectedObjects;
-		delete m_ActionStack;
-		delete m_PlacedObjectIndex;
-		
-		m_PlacedObjectIndex = new map<int, int>();
-		m_PlacedObjects 	= new EditorObjectSet();
-		m_SelectedObjects 	= new EditorObjectSet();
-		m_ActionStack 		= new EditorActionStack();
+		m_PlacedObjectIndex.Clear();
+		m_PlacedObjects.Clear();
+		m_SelectedObjects.Clear();
+		m_ActionStack.Clear();
 	}
-	
+		
 	override bool IsClient() 
 		return true;
 	

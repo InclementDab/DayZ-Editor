@@ -9,7 +9,7 @@ class COMImportData
 	}
 }
 
-static FileDialogResult ExportCOMData(ref EditorObjectDataSet data, string filename)
+static FileDialogResult ExportCOMData(EditorObjectDataSet data, string filename)
 {
 	FileHandle handle = OpenFile(filename, FileMode.WRITE);
 	

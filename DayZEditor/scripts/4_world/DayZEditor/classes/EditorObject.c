@@ -146,7 +146,7 @@ class EditorObject
 		GetGame().ObjectDelete(m_WorldObject);
 	}
 	
-	static EditorObject Create(ref EditorObjectData data)
+	static EditorObject Create(EditorObjectData data)
 	{
 		EditorLog.Trace("EditorObject::Create from EditorObjectData");
 		Object world_object = GetGame().CreateObjectEx(data.Type, data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
