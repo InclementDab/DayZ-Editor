@@ -5,8 +5,7 @@ class EditorHud: ScriptView
 	protected Widget MapContainer;
 	
 	MapWidget EditorMapWidget;
-	
-	
+
 	void EditorHud(Widget parent = null)
 	{	
 		EditorLog.Trace("EditorHud");

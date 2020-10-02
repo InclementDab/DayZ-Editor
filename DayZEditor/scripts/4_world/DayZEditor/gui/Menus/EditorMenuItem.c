@@ -12,7 +12,6 @@ class EditorMenuItem: ScriptView
 
 class EditorMenuItemCommand: EditorMenuItem
 {	
-	
 	void SetCommand(ref EditorCommand editor_command)
 	{
 		EditorMenuItemIcon.Show(editor_command.GetIcon() != string.Empty);

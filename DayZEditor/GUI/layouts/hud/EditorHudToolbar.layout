@@ -9,7 +9,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
  vexactpos 1
  hexactsize 0
  vexactsize 0
- scriptclass ""
+ scriptclass "EditorHudToolbarController"
  Padding 0
  Margin 0
  "Size To Content V" 1
@@ -207,6 +207,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
       ButtonWidgetClass UndoButton {
        visible 1
        clipchildren 0
+       color 0.7529 0.3686 0.3255 1
        size 30 30
        valign center_ref
        hexactpos 1
@@ -214,12 +215,13 @@ WrapSpacerWidgetClass ToolbarWrapper {
        hexactsize 1
        vexactsize 1
        scriptclass ""
-       style Colorable
+       style Default
        "no focus" 0
        text_offset 0 0
        switch normal
        {
         ImageWidgetClass UndoButton_Icon {
+         inheritalpha 1
          ignorepointer 1
          position 0 0
          size 1 1
@@ -241,6 +243,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
       ButtonWidgetClass RedoButton {
        clipchildren 0
        ignorepointer 0
+       color 0.7529 0.3686 0.3255 1
        position 0 0
        size 30 30
        hexactpos 1
@@ -248,11 +251,12 @@ WrapSpacerWidgetClass ToolbarWrapper {
        hexactsize 1
        vexactsize 1
        scriptclass ""
-       style Colorable
+       style Default
        "no focus" 0
        switch normal
        {
         ImageWidgetClass RedoButton_Icon {
+         inheritalpha 1
          ignorepointer 1
          size 1 1
          halign center_ref
@@ -300,6 +304,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
       ButtonWidgetClass CutButton {
        clipchildren 0
        ignorepointer 0
+       color 0.7529 0.3686 0.3255 1
        position 0 0
        size 30 30
        hexactpos 1
@@ -307,13 +312,14 @@ WrapSpacerWidgetClass ToolbarWrapper {
        hexactsize 1
        vexactsize 1
        scriptclass "ViewBinding"
-       style Colorable
+       style Default
        "no focus" 0
        font "gui/fonts/Metron"
        switch normal
        {
         ImageWidgetClass CutButton_Icon {
          visible 1
+         inheritalpha 1
          ignorepointer 1
          size 1 1
          halign center_ref
@@ -335,13 +341,14 @@ WrapSpacerWidgetClass ToolbarWrapper {
        {
         ScriptParamsClass {
          Debug_Logging 0
-         Relay_Command "CutButtonExecute"
+         Relay_Command "m_EditorCutCommand"
         }
        }
       }
       ButtonWidgetClass CopyButton {
        clipchildren 0
        ignorepointer 0
+       color 0.7529 0.3686 0.3255 1
        position 0 0
        size 30 30
        hexactpos 1
@@ -349,13 +356,14 @@ WrapSpacerWidgetClass ToolbarWrapper {
        hexactsize 1
        vexactsize 1
        scriptclass "ViewBinding"
-       style Colorable
+       style Default
        "no focus" 0
        font "gui/fonts/Metron"
        switch normal
        {
         ImageWidgetClass CopyButton_Icon {
          visible 1
+         inheritalpha 1
          ignorepointer 1
          size 1 1
          halign center_ref
@@ -385,6 +393,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
       ButtonWidgetClass PasteButton {
        clipchildren 0
        ignorepointer 0
+       color 0.7529 0.3686 0.3255 1
        position 0 0
        size 30 30
        hexactpos 1
@@ -392,13 +401,14 @@ WrapSpacerWidgetClass ToolbarWrapper {
        hexactsize 1
        vexactsize 1
        scriptclass "ViewBinding"
-       style Colorable
+       style Default
        "no focus" 0
        font "gui/fonts/Metron"
        switch normal
        {
         ImageWidgetClass PasteButton_Icon {
          visible 1
+         inheritalpha 1
          ignorepointer 1
          size 1 1
          halign center_ref
@@ -452,6 +462,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
       }
       ButtonWidgetClass MagnetButton {
        clipchildren 0
+       color 0.7529 0.3686 0.3255 1
        position 0 0
        size 30 30
        hexactpos 1
@@ -459,11 +470,12 @@ WrapSpacerWidgetClass ToolbarWrapper {
        hexactsize 1
        vexactsize 1
        scriptclass "ViewBinding"
-       style Colorable
+       style Default
        font "gui/fonts/metron-bold"
        switch toggle
        {
         ImageWidgetClass MagnetButton_Icon {
+         inheritalpha 1
          ignorepointer 1
          size 1 1
          halign center_ref
@@ -489,6 +501,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
       }
       ButtonWidgetClass GroundButton {
        clipchildren 0
+       color 0.7529 0.3686 0.3255 1
        size 30 30
        halign center_ref
        valign center_ref
@@ -497,11 +510,12 @@ WrapSpacerWidgetClass ToolbarWrapper {
        hexactsize 1
        vexactsize 1
        scriptclass "ViewBinding"
-       style Colorable
+       style Default
        font "gui/fonts/metron-bold"
        switch toggle
        {
         ImageWidgetClass GroundButton_Icon {
+         inheritalpha 1
          ignorepointer 1
          size 1 1
          halign center_ref
@@ -526,6 +540,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
       }
       ButtonWidgetClass SnapButton {
        clipchildren 0
+       color 0.7529 0.3686 0.3255 1
        size 30 30
        halign center_ref
        valign center_ref
@@ -534,11 +549,12 @@ WrapSpacerWidgetClass ToolbarWrapper {
        hexactsize 1
        vexactsize 1
        scriptclass "ViewBinding"
-       style Colorable
+       style Default
        font "gui/fonts/metron-bold"
        switch toggle
        {
         ImageWidgetClass SnapButton_Icon {
+         inheritalpha 1
          ignorepointer 1
          size 1 1
          halign center_ref
@@ -608,6 +624,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
         ButtonWidgetClass BrushToggleButton {
          visible 1
          ignorepointer 0
+         color 0.7529 0.3686 0.3255 1
          position 0 0
          size 0.8 1
          halign center_ref
@@ -618,7 +635,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          priority 5
          scriptclass "ViewBinding"
-         style Colorable
+         style Default
          "no focus" 1
          text " "
          switch toggle
@@ -801,6 +818,11 @@ WrapSpacerWidgetClass ToolbarWrapper {
      }
     }
    }
+  }
+ }
+ {
+  ScriptParamsClass {
+   Debug_Logging 1
   }
  }
 }

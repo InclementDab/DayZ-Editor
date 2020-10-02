@@ -32,20 +32,24 @@ class EditorCommand: RelayCommand
 	
 	override void CanExecuteChanged(bool state) 
 	{
-		EditorLog.Trace("CanExecuteChanged: %1 - %2", state.ToString(), m_ViewBinding.GetLayoutRoot().GetName());
+		//EditorLog.Trace("CanExecuteChanged: %1 - %2", state.ToString(), m_ViewBinding.GetLayoutRoot().GetName());
 		
-		Widget root = m_ViewBinding.GetLayoutRoot();
-		if (state) {
-			//root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(1);
-			//root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(1);
-			root.GetChildren().SetAlpha(1);
-		} else {
-			//root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(0.3);
-			//root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(0.3);
-			root.GetChildren().SetAlpha(0.3);
-		}
-		
-		root.Enable(state);
+		if (m_ViewBinding) {
+			
+			Widget root = m_ViewBinding.GetLayoutRoot();
+			if (state) {
+				//root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(1);
+				//root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(1);
+				root.SetAlpha(1);
+				
+			} else {
+				//root.FindAnyWidget("EditorMenuItemLabel").SetAlpha(0.3);
+				//root.FindAnyWidget("EditorMenuItemIcon").SetAlpha(0.3);
+				root.SetAlpha(0.3);
+			}
+			
+			root.Enable(state);			
+		}		
 	}
 	
 	

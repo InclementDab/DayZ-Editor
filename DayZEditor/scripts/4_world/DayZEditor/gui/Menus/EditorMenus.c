@@ -18,7 +18,7 @@ class EditorMenu: EditorScriptView
 	{
 		EditorLog.Trace("EditorMenu");
 		
-		m_EditorMenuController = GetController();
+		m_EditorMenuController = EditorMenuController.Cast(GetController());
 		EditorUIManager.CurrentMenu = this;
 	}
 		
@@ -42,8 +42,7 @@ class EditorMenu: EditorScriptView
 
 	void AddMenuButton(ref EditorCommand editor_command)
 	{
-		Print(editor_command);
-		EditorMenuItemCommand menu_item = new EditorMenuItemCommand(GetLayoutRoot());
+		EditorMenuItemCommand menu_item = new EditorMenuItemCommand();
 		menu_item.SetCommand(editor_command);
 		AddMenuItem(menu_item);
 	}
