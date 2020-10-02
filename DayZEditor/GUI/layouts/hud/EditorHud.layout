@@ -1390,7 +1390,6 @@ FrameWidgetClass EditorFrame {
  }
  {
   ScriptParamsClass {
-   Debug_Logging 0
   }
  }
 }

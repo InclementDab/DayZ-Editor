@@ -172,7 +172,6 @@ WrapSpacerWidgetClass EditorListItem {
    content_halign right
    {
     ScriptParamsClass {
-     Debug_Logging 1
      Binding_Name "ChildListItems"
      Two_Way_Binding 1
     }

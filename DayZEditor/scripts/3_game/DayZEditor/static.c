@@ -1,5 +1,3 @@
-
-
 static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
 {
 	DayZPlayer player;
@@ -15,28 +13,8 @@ static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
     return player;
 }
 
-// remove this once BI adds set into string
-typedef string BetterString;
-class BetterString: string
-{
-	static string value;
-	void Set(int n, string _value)
-	{
-		string pre = value.Substring(0, n);
-		n += 1;
-		int length = value.Length() - n;
-		string post = value.Substring(n, length);
-		value = pre + _value + post;
-		
-	}	
-}
-
-
-#define EDITORPRINT
-
 class EditorLog
 {
-	
 	static LogLevel CurrentLogLevel = LogLevel.TRACE;
 	static string ExclusiveLogMode;
 	
@@ -44,44 +22,14 @@ class EditorLog
 	
 	static void EditorPrint(string msg, LogLevel level)
 	{
-	
 		if (level >= EditorLog.CurrentLogLevel) {
 			
 			if (level == LogLevel.ERROR) {
-				Error2("Editor Error", msg);
-	#ifdef COMPONENT_SYSTEM
-				Workbench.Dialog("Editor Log Error", msg);		
-	#endif
+				//Error(msg);
 				return;
 			}
 			
-			string loglevel;
-			switch (level) {
-				case LogLevel.TRACE:
-					loglevel = "trace";
-					break;
-				
-				case LogLevel.DEBUG: {
-					loglevel = "debug";
-					break;
-				}			
-				
-				case LogLevel.INFO: {
-					loglevel = "info";
-					break;
-				}
-				
-				case LogLevel.WARNING: {
-					loglevel = "warning";
-					break;
-				}
-				
-				case LogLevel.ERROR: {
-					loglevel = "error";
-					break;
-				}
-			}
-	
+			string loglevel = typename.EnumToString(LogLevel, level);
 			
 			if (msg.Contains("::")) {
 				TStringArray msg_split();
@@ -108,61 +56,48 @@ class EditorLog
 	
 	static void Trace(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
-#ifdef EDITORPRINT		
+#ifdef EDITOR_PRINT		
 		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.TRACE);
 #endif
 	}
 	
 	static void Debug(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
-#ifdef EDITORPRINT
+#ifdef EDITOR_PRINT
 		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.DEBUG);
 #endif
 	}	
 	
 	static void Info(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
-#ifdef EDITORPRINT
+#ifdef EDITOR_PRINT
 		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.INFO);
 #endif
 	}	
 	
 	static void Warning(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
-#ifdef EDITORPRINT
+#ifdef EDITOR_PRINT
 		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.WARNING);
 #endif
 	}	
 	
 	static void Error(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
-		// Special Case :)
-		// ALWAYS bitch about errors
-		EditorPrint(string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9), LogLevel.ERROR);
+		msg = string.Format(msg, param1, param2, param3, param4, param5, param6, param7, param8, param9);
+		EditorPrint(msg, LogLevel.ERROR);
 		
-		thread ErrorDialog(msg);
+		ErrorDialog(msg);
 	}
 	
 	private static void ErrorDialog(string message)
 	{
-		MessageBox.Show("Error", message, MessageBoxButtons.OK);
-	}
-	
-	static void Debug(Class msg)
-	{
-#ifdef EDITORPRINT
-		EditorPrint(msg.ToString(), LogLevel.DEBUG);
+#ifdef COMPONENT_SYSTEM
+		Workbench.Dialog("Editor Log Error", message);
+#else
+		MessageBox.ShowSynchronous("Error", message, MessageBoxButtons.OK);
 #endif
 	}
-	
-	static void Info(Class msg)
-	{
-#ifdef EDITORPRINT
-		EditorPrint(msg.ToString(), LogLevel.INFO);
-#endif
-	}
-	
-
 }
 
 
@@ -254,8 +189,6 @@ static void _GetWidgetRoot(out ref Widget w)
 	_GetWidgetRoot(w);
 }
 
-
-
 static bool CreateWidget(out Widget w, string layout_name, Widget parent = null)
 {
 	CGame game = GetGame();
@@ -272,6 +205,22 @@ static bool CreateWidget(out Widget w, string layout_name, Widget parent = null)
 	
 	w = workspace.CreateWidgets(layout_name, parent);
 	return true;
+}
+
+// remove this once BI adds set into string
+typedef string BetterString;
+class BetterString: string
+{
+	static string value;
+	void Set(int n, string _value)
+	{
+		string pre = value.Substring(0, n);
+		n += 1;
+		int length = value.Length() - n;
+		string post = value.Substring(n, length);
+		value = pre + _value + post;
+		
+	}	
 }
 
 static const int COLOR_SALMON	= -4235425;

@@ -595,7 +595,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Debug_Logging 0
            Relay_Command "m_CutCommand"
           }
          }
@@ -643,7 +642,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Debug_Logging 0
            Relay_Command "m_CopyCommand"
           }
          }
@@ -689,7 +687,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Debug_Logging 0
            Relay_Command "m_PasteCommand"
           }
          }
@@ -1103,7 +1100,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
  }
  {
   ScriptParamsClass {
-   Debug_Logging 1
   }
  }
 }

@@ -1,7 +1,7 @@
 
 class EditorCommand: RelayCommand
 {	
-	protected Editor editor;
+	protected Editor m_Editor;
 	
 	string Text;
 
@@ -11,12 +11,19 @@ class EditorCommand: RelayCommand
 		super.Execute(sender, args);
 		if (EditorUIManager.CurrentMenu)
 			delete EditorUIManager.CurrentMenu;		
-		// Needs to be since we do ShowDialog alot
-		if (GetEditor()) {
-			thread Call(GetEditor());
-		} else {
-			EditorLog.Error("EditorCommand::Editor was null!");
+		
+		if (!m_Editor) {
+			m_Editor = GetEditor();
 		}
+		
+		// Needs to be since we do ShowDialog alot
+		if (!m_Editor) {
+			EditorLog.Error("EditorCommand::Editor was null!");
+			return true;
+		} 
+		
+		thread Call(sender, args);
+		
 		return true;
 	}
 	
@@ -38,7 +45,7 @@ class EditorCommand: RelayCommand
 	}
 	
 	
-	protected void Call(Editor editor);
+	protected void Call(Class sender, CommandArgs args);
 	
 	string GetName() {
 		return string.Empty;
@@ -55,7 +62,7 @@ class EditorCommand: RelayCommand
 
 class EditorNewCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
 		EditorEditBoxDialog edit_dialog = new EditorEditBoxDialog(null, "New File...");
 		string edit_data;
@@ -74,12 +81,12 @@ class EditorNewCommand: EditorCommand
 
 class EditorSaveCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
 		EditorLog.Trace("EditorSaveCommand");
-		EditorSaveData save_data = EditorSaveData.CreateFromEditor(editor);
+		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
 		
-		if (editor.GetSaveFile() == string.Empty) {
+		if (m_Editor.GetSaveFile() == string.Empty) {
 			//EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
 			//save_dialog.ShowDialog();
 		}
@@ -89,11 +96,11 @@ class EditorSaveCommand: EditorCommand
 			
 		FileDialogResult file_result = EditorFileManager.Save(save_data, "$profile:/Editor/SaveData.dze");
 		if (file_result != FileDialogResult.SUCCESS) {
-			editor.GetEditorHud().CreateNotification(typename.EnumToString(FileDialogResult, file_result), COLOR_RED);
+			m_Editor.GetEditorHud().CreateNotification(typename.EnumToString(FileDialogResult, file_result), COLOR_RED);
 			return;
 		} 
 		
-		editor.GetEditorHud().CreateNotification("Saved!", COLOR_GREEN);
+		m_Editor.GetEditorHud().CreateNotification("Saved!", COLOR_GREEN);
 		EditorLog.Info("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
 	}
 		
@@ -108,7 +115,7 @@ class EditorSaveCommand: EditorCommand
 
 class EditorSaveAsCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
 		
 	}
@@ -129,7 +136,7 @@ class EditorOpenCommand: EditorCommand
 		SetCanExecute(false);
 	}
 	
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
 		DialogResult result = EditorMessageBox.Show("Open", "Are you sure?", MessageBoxButtons.OKCancel);
 		if (result != DialogResult.OK) return;
@@ -139,18 +146,22 @@ class EditorOpenCommand: EditorCommand
 		
 		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
 			EditorLog.Info("Loading Map %1", save_data.MapName);
+			//delete m_EditorInstance;
+			
 			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
-			while (!editor) {
+		
+			// Scuffed way of waiting for new Editor to be created. It doesnt work (obv)
+			/*while (!m_EditorInstance) {
 				Sleep(1);
-			}
+			}*/
 		}
 		
-		editor.DeleteObjects(editor.GetPlacedObjects(), false);
-		editor.CreateObjects(save_data.EditorObjects, false);
+		m_Editor.DeleteObjects(m_Editor.GetPlacedObjects(), false);
+		m_Editor.CreateObjects(save_data.EditorObjects, false);
 		
-		editor.GetCamera().SetTransform(save_data.CameraPosition);
+		m_Editor.GetCamera().SetTransform(save_data.CameraPosition);
 		string msg = string.Format("Loaded %1 objects!", save_data.EditorObjects.Count().ToString());
-		editor.GetEditorHud().CreateNotification(msg, COLOR_GREEN);
+		m_Editor.GetEditorHud().CreateNotification(msg, COLOR_GREEN);
 		EditorLog.Info(msg);
 	}
 
@@ -169,7 +180,7 @@ class EditorOpenCommand: EditorCommand
 
 class EditorCloseCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
 
 	}
@@ -185,7 +196,7 @@ class EditorCloseCommand: EditorCommand
 
 class EditorExitCommand: EditorCommand
 {	
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
 		GetGame().LogoutRequestTime();
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(GetGame().GetMission().CreateLogoutMenu, GetGame().GetUIManager().GetMenu());
@@ -203,9 +214,9 @@ class EditorExitCommand: EditorCommand
 
 class EditorUndoCommand: EditorCommand
 {	
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
-		editor.GetObjectManager().Undo();
+		m_Editor.GetObjectManager().Undo();
 	}
 	
 	override string GetName() {
@@ -223,8 +234,8 @@ class EditorUndoCommand: EditorCommand
 
 class EditorRedoCommand: EditorCommand
 {	
-	protected override void Call(Editor editor) {
-		editor.GetObjectManager().Redo();
+	protected override void Call(Class sender, CommandArgs args) {
+		m_Editor.GetObjectManager().Redo();
 	}
 		
 	override string GetName() {
@@ -238,11 +249,11 @@ class EditorRedoCommand: EditorCommand
 
 class EditorSelectAllCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorObjectSet placed_objects = editor.GetPlacedObjects();
+		EditorObjectSet placed_objects = m_Editor.GetPlacedObjects();
 		foreach (EditorObject eo: placed_objects)
-			editor.SelectObject(eo);
+			m_Editor.SelectObject(eo);
 	}
 		
 	override string GetName() {
@@ -256,8 +267,9 @@ class EditorSelectAllCommand: EditorCommand
 
 class EditorDeleteCommand: EditorCommand
 {
-	protected override void Call(Editor editor) {
-		editor.DeleteObjects(editor.GetSelectedObjects());		
+	protected override void Call(Class sender, CommandArgs args) 
+	{
+		m_Editor.DeleteObjects(m_Editor.GetSelectedObjects());		
 	}
 		
 	override string GetName() {
@@ -271,23 +283,23 @@ class EditorDeleteCommand: EditorCommand
 
 class EditorExportCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
 		DialogResult result = EditorMessageBox.Show("Export", "Export file expansion_export.map?", MessageBoxButtons.OKCancel);
 		if (result != DialogResult.OK) return;
 		
-		EditorSaveData save_data = EditorSaveData.CreateFromEditor(editor);
+		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
 		
 		ExportSettings settings = new ExportSettings();
 		settings.ExportFileMode = ExportMode.EXPANSION;
 		FileDialogResult file_result = EditorFileManager.Export(save_data, "$profile:/Editor/expansion_export.map", settings);
 		if (file_result != FileDialogResult.SUCCESS) {
-			editor.GetEditorHud().CreateNotification(typename.EnumToString(FileDialogResult, file_result), COLOR_RED);
+			m_Editor.GetEditorHud().CreateNotification(typename.EnumToString(FileDialogResult, file_result), COLOR_RED);
 			return;
 		}
 		
 		string message = string.Format("Exported %1 objects!", save_data.EditorObjects.Count().ToString());
-		editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
+		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
 		EditorLog.Info(message);
 	}
 
@@ -302,7 +314,7 @@ class EditorExportCommand: EditorCommand
 
 class EditorImportCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
 		DialogResult result = EditorMessageBox.Show("Import", "Import file expansion_import.map?", MessageBoxButtons.OKCancel);
 		if (result != DialogResult.OK) return;
@@ -311,10 +323,10 @@ class EditorImportCommand: EditorCommand
 		EditorSaveData save_data();
 		EditorFileManager.Import(save_data, "$profile:/Editor/expansion_import.map", ImportMode.EXPANSION);
 		string message = string.Format("Imported %1 objects!", save_data.EditorObjects.Count().ToString());
-		editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
+		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
 		EditorLog.Info(message);
 		
-		editor.CreateObjects(save_data.EditorObjects);
+		m_Editor.CreateObjects(save_data.EditorObjects);
 	}
 
 	override string GetName() {
@@ -328,9 +340,9 @@ class EditorImportCommand: EditorCommand
 
 class EditorCutCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorClipboard.Cut(editor.GetSelectedObjects());
+		EditorClipboard.Cut(m_Editor.GetSelectedObjects());
 	}
 
 	override string GetName() {
@@ -348,9 +360,9 @@ class EditorCutCommand: EditorCommand
 	
 class EditorCopyCommand: EditorCommand
 {	
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorClipboard.Copy(editor.GetSelectedObjects());
+		EditorClipboard.Copy(m_Editor.GetSelectedObjects());
 	}
 
 	override string GetName() {
@@ -368,9 +380,9 @@ class EditorCopyCommand: EditorCommand
 
 class EditorPasteCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{		
-		EditorClipboard.Paste(Editor.CurrentMousePosition);
+		EditorClipboard.Paste(m_Editor.CurrentMousePosition);
 	}
 
 	override string GetName() {
@@ -388,7 +400,7 @@ class EditorPasteCommand: EditorCommand
 
 class EditorPreferencesCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
 		
 	}
@@ -404,7 +416,7 @@ class EditorPreferencesCommand: EditorCommand
 
 class EditorEnvironmentControlCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
 		EditorEnvironmentDialog dialog = new EditorEnvironmentDialog(null, "Weather Controller");
 		DialogResult result = dialog.ShowDialog();
@@ -425,7 +437,7 @@ class EditorEnvironmentControlCommand: EditorCommand
 
 class EditorCameraControlsCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
 
 	}
@@ -441,8 +453,8 @@ class EditorCameraControlsCommand: EditorCommand
 
 class EditorReloadHudCommand: EditorCommand
 {
-	protected override void Call(Editor editor) {
-		editor.ReloadHud();
+	protected override void Call(Class sender, CommandArgs args) {
+		m_Editor.ReloadHud();
 	}
 
 	override string GetName() {
@@ -460,9 +472,9 @@ class EditorReloadHudCommand: EditorCommand
 
 class EditorLootEditorCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
-		editor.EditLootSpawns(editor.GetSelectedObjects().GetElement(0).GetType());
+		m_Editor.EditLootSpawns(m_Editor.GetSelectedObjects().GetElement(0).GetType());
 	}
 	
 	override string GetName() {
@@ -472,9 +484,9 @@ class EditorLootEditorCommand: EditorCommand
 
 class EditorObjectPropertiesCommand: EditorCommand
 {
-	protected override void Call(Editor editor) 
+	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorObjectPropertiesDialog properties_dialog(null, "Edit Properties", editor.GetSelectedObjects().GetElement(0));
+		EditorObjectPropertiesDialog properties_dialog(null, "Edit Properties", m_Editor.GetSelectedObjects().GetElement(0));
 		properties_dialog.ShowDialog();
 	}
 	
@@ -489,7 +501,7 @@ class EditorObjectPropertiesCommand: EditorCommand
 
 class EditorLoadMapCommand: EditorCommand
 {	
-	protected override void Call(Editor editor)
+	protected override void Call(Class sender, CommandArgs args)
 	{
 		EditorMapSelectDialog select_dialog = new EditorMapSelectDialog(null, GetName());
 		string selected_map;
@@ -508,10 +520,10 @@ class EditorLoadMapCommand: EditorCommand
 
 class EditorReloadBrushesCommand: EditorCommand
 {
-	protected override void Call(Editor editor)
+	protected override void Call(Class sender, CommandArgs args)
 	{
-		editor.GetEditorHud().GetEditorHudController().GetToolbarController().BrushTypeBoxData.Clear();
-		editor.GetEditorHud().GetEditorHudController().GetToolbarController().ReloadBrushes(editor.EditorBrushFile);
+		m_Editor.GetEditorHud().GetEditorHudController().GetToolbarController().BrushTypeBoxData.Clear();
+		m_Editor.GetEditorHud().GetEditorHudController().GetToolbarController().ReloadBrushes(m_Editor.EditorBrushFile);
 	}
 	
 	override string GetName() {
@@ -521,7 +533,7 @@ class EditorReloadBrushesCommand: EditorCommand
 
 class EditorBrushPropertiesCommand: EditorCommand
 {
-	protected override void Call(Editor editor)
+	protected override void Call(Class sender, CommandArgs args)
 	{
 
 	}
@@ -533,7 +545,7 @@ class EditorBrushPropertiesCommand: EditorCommand
 
 class EditorMagnetCommand: EditorCommand
 {
-	protected override void Call(Editor editor)
+	protected override void Call(Class sender, CommandArgs args)
 	{
 		
 	}
@@ -550,21 +562,21 @@ class EditorSnapCommand: EditorCommand
 
 class EditorPlaceObjectCommand: EditorCommand
 {
-	protected override void Call(Editor editor)
+	protected override void Call(Class sender, CommandArgs args)
 	{
-		if (!editor.ObjectInHand) return;
+		if (!m_Editor.ObjectInHand) return;
 
-		EditorObject editor_object = editor.CreateFromObject(editor.ObjectInHand.GetProjectionEntity());
+		EditorObject editor_object = m_Editor.CreateFromObject(m_Editor.ObjectInHand.GetProjectionEntity());
 		EditorEvents.ObjectPlaced(this, editor_object);
-		editor.SelectObject(editor_object);
+		m_Editor.SelectObject(editor_object);
 		
-		string type = editor.ObjectInHand.GetProjectionEntity().GetType();
-		delete editor.ObjectInHand;
+		string type = m_Editor.ObjectInHand.GetProjectionEntity().GetType();
+		delete m_Editor.ObjectInHand;
 		
 		if (!KeyState(KeyCode.KC_LSHIFT)) { 
 			EditorEvents.StopPlacing(this);
 		} else {
-			editor.ObjectInHand = new EditorHologram(type, editor.CurrentMousePosition);
+			m_Editor.ObjectInHand = new EditorHologram(type, m_Editor.CurrentMousePosition);
 		}
 	}
 }
