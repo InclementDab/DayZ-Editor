@@ -1,13 +1,10 @@
 
-class EditorListItem: ScriptView
+
+
+class EditorListItem: ScriptViewTemplate<EditorListItemController>
 {
 	protected int m_NestIndex;
-	
-	EditorListItemController GetListItemController() {
-		return EditorListItemController.Cast(GetController());
-	}
-	
-	
+		
 	static int COLOR_ON_SELECTED = COLOR_BLUE;
 	static int COLOR_ON_DESELECTED = ARGB(140,5,5,5);
 	static int COLOR_ON_HOVER = COLOR_SALMON;
@@ -21,7 +18,7 @@ class EditorListItem: ScriptView
 	void EditorListItem(Widget parent = null) 
 	{ 
 		EditorLog.Trace("EditorListItem");
-		GetListItemController().SetListItem(this);
+		m_Controller.SetListItem(this);
 		m_LayoutRoot.SetUserData(this);
 	}
 	
@@ -112,10 +109,10 @@ class EditorListItem: ScriptView
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/items/EditorListItem.layout";
 	}
-
+/*
 	override typename GetControllerType() {
 		return EditorListItemController;
-	}
+	}*/
 	
 	protected EditorListItem GetListItemFromWidget(Widget w)
 	{

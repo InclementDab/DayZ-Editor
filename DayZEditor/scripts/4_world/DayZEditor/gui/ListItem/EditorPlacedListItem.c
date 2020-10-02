@@ -11,11 +11,11 @@ class EditorPlacedListItem: EditorListItem
 		EditorLog.Trace("EditorPlacedListItem::SetEditorObject"); 
 		m_EditorObject = data;
 		
-		GetListItemController().ListItemLabel = m_EditorObject.GetDisplayName();
-		GetListItemController().NotifyPropertyChanged("ListItemLabel");
+		m_Controller.ListItemLabel = m_EditorObject.GetDisplayName();
+		m_Controller.NotifyPropertyChanged("ListItemLabel");
 		
-		GetListItemController().ListItemIcon = GetIconFromMod(m_EditorObject.GetData().ObjectMod);
-		GetListItemController().NotifyPropertyChanged("ListItemIcon");
+		m_Controller.ListItemIcon = GetIconFromMod(m_EditorObject.GetData().ObjectMod);
+		m_Controller.NotifyPropertyChanged("ListItemIcon");
 				
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	

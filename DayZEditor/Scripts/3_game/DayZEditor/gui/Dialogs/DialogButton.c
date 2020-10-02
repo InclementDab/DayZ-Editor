@@ -1,5 +1,5 @@
 class DialogButton: ScriptView
-{	
+{
 	ButtonWidget Button;	
 	protected string m_Callback;
 	

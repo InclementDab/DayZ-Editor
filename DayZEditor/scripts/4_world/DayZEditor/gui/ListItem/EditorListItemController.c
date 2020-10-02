@@ -82,9 +82,9 @@ class EditorListItemController: Controller
 			reciever.GetScript(view_binding);
 			
 			if (view_binding) {
-				Print(ChildListItems.Count());
-				Print(m_ListItem.GetListItemController().ChildListItems.Count());
-				Print(EditorListItem.Cast(scripted_view).GetListItemController().ChildListItems.Count());
+				//Print(ChildListItems.Count());
+				//Print(m_ListItem.GetListItemController().ChildListItems.Count());
+				//Print(EditorListItem.Cast(scripted_view).GetListItemController().ChildListItems.Count());
 				//Print(EditorListItem.Cast().GetListItemController().ChildListItems.Count());
 				
 				// Checks for the child-in-parent deal

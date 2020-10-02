@@ -13,8 +13,8 @@ class EditorCollapsibleListItem: EditorListItem
 		EditorLog.Trace("EditorCollapsibleListItem");
 		
 		EditorListItemCollapse.Show(true);
-		GetListItemController().ListItemLabel = string.Format("group%1", groupcount);
-		GetListItemController().NotifyPropertyChanged("ListItemLabel");
+		m_Controller.ListItemLabel = string.Format("group%1", groupcount);
+		m_Controller.NotifyPropertyChanged("ListItemLabel");
 		groupcount++;
 	}
 	
@@ -31,9 +31,9 @@ class EditorCollapsibleListItem: EditorListItem
 			
 			case 0: {
 				
-				for (int i = 0; i < GetListItemController().ChildListItems.Count(); i++) {
+				for (int i = 0; i < m_Controller.ChildListItems.Count(); i++) {
 					
-					ScriptView list_item = GetListItemController().ChildListItems[i];
+					EditorListItem list_item = m_Controller.ChildListItems[i];
 					switch (list_item.Type()) {
 						
 						case EditorPlacedListItem: {

@@ -23,9 +23,9 @@ class EditorHudController: Controller
 	
 	ref EditorHudToolbar EditorHudToolbarView;
 	
-	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData 		= new ObservableCollection<ref EditorPlaceableListItem>("LeftbarSpacerData", this);
-	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 	= new ObservableCollection<ref EditorListItem>("RightbarSpacerData", this);
-	ref ObservableCollection<string> DebugActionStackListbox 			= new ObservableCollection<string>("DebugActionStackListbox", this);
+	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>("LeftbarSpacerData", this);
+	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 		= new ObservableCollection<ref EditorListItem>("RightbarSpacerData", this);
+	ref ObservableCollection<string> DebugActionStackListbox 				= new ObservableCollection<string>("DebugActionStackListbox", this);
 	
 	// View Properties
 	protected Widget LeftbarFrame;

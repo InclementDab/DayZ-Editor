@@ -40,14 +40,14 @@ class EditorPlaceableListItem: EditorListItem
 		}
 		
 		
-		GetListItemController().ListItemLabel = Type;
-		GetListItemController().NotifyPropertyChanged("ListItemLabel");
+		m_Controller.ListItemLabel = Type;
+		m_Controller.NotifyPropertyChanged("ListItemLabel");
 		
 		if (m_ModStructure) {
-			GetListItemController().ListItemIcon = GetIconFromMod(m_ModStructure);
-			GetListItemController().NotifyPropertyChanged("ListItemIcon");
+			m_Controller.ListItemIcon = GetIconFromMod(m_ModStructure);
+			m_Controller.NotifyPropertyChanged("ListItemIcon");
 		} else {
-			EditorLog.Info("Mod not found for %1", Type);
+			EditorLog.Debug("Mod not found for %1", Type);
 		}
 		
 #ifndef COMPONENT_SYSTEM
@@ -59,6 +59,8 @@ class EditorPlaceableListItem: EditorListItem
 	
 	bool FilterType(BetterString filter)
 	{
+		if (filter == string.Empty) return true;
+		
 		string type_lower = Type;
 		type_lower.ToLower();
 		filter.ToLower();
@@ -74,8 +76,7 @@ class EditorPlaceableListItem: EditorListItem
 	
 	PlaceableObjectCategory GetCategory() { return m_Category; }
 	ModStructure GetModStructure() { return m_ModStructure; }
-	
-	
+
 	void StartPlacing(Class context, EditorPlaceableListItem type)
 	{
 		if (type == this) {

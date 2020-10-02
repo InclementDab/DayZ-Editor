@@ -25,7 +25,7 @@ class EditorLog
 		if (level >= EditorLog.CurrentLogLevel) {
 			
 			if (level == LogLevel.ERROR) {
-				//Error(msg);
+				Error2("Editor Error", msg);
 				return;
 			}
 			
