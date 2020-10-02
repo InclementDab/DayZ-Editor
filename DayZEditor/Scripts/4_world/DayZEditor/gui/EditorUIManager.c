@@ -4,7 +4,7 @@ class EditorUIManager
 	static ref EditorMenu CurrentMenu;
 	
 	// ToolTip Control
-	static ref EditorTooltip CurrentTooltip;
+	static ref ScriptView CurrentTooltip;
 		
 	// Dialog Control
 	static ref DialogBase CurrentDialog;

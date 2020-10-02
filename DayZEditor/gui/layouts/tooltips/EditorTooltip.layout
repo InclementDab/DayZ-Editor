@@ -1,4 +1,4 @@
-WrapSpacerWidgetClass EditorTooltip {
+WrapSpacerWidgetClass EditorTooltipRoot {
  visible 1
  disabled 0
  clipchildren 1

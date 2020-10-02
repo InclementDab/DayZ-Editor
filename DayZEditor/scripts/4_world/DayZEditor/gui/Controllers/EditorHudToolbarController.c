@@ -13,18 +13,18 @@ class EditorHudToolbarController: EditorControllerBase
 	bool GroundButton;
 	bool SnapButton;
 	
-	protected EditorCommand m_NewCommand;
-	protected EditorCommand m_OpenCommand;
-	protected EditorCommand m_SaveCommand;
-	protected EditorCommand m_SaveAsCommand;
-	protected EditorCommand m_CloseCommand;
+	protected EditorNewCommand m_NewCommand;
+	protected EditorOpenCommand m_OpenCommand;
+	protected EditorSaveCommand m_SaveCommand;
+	protected EditorSaveAsCommand m_SaveAsCommand;
+	protected EditorCloseCommand m_CloseCommand;
 	
-	protected EditorCommand m_UndoCommand;
-	protected EditorCommand m_RedoCommand;
+	protected EditorUndoCommand m_UndoCommand;
+	protected EditorRedoCommand m_RedoCommand;
 	
-	protected EditorCommand m_CutCommand;
-	protected EditorCommand m_CopyCommand;
-	protected EditorCommand m_PasteCommand;
+	protected EditorCutCommand m_CutCommand;
+	protected EditorCopyCommand m_CopyCommand;
+	protected EditorPasteCommand m_PasteCommand;
 	
 	// View Properties
 	protected ButtonWidget MenuBarFile;
@@ -189,16 +189,6 @@ class EditorHudToolbarController: EditorControllerBase
 			return super.OnMouseEnter(w, x, y);
 		}
 		
-		switch (w.GetName()) {
-			
-			case "UndoButton": {
-				//EditorTooltip tooltip = new EditorTooltip(w);
-				//tooltip.SetTitle("Undo");
-				//EditorUIManager.CurrentTooltip = tooltip;
-				break;
-			}
-			
-		}
 		
 		switch (w.GetTypeName()) {
 			
@@ -207,6 +197,26 @@ class EditorHudToolbarController: EditorControllerBase
 				break;
 			}
 		}
+		
+		ViewBinding view_binding = GetViewBinding(w);
+		if (view_binding) {
+			EditorCommand editor_command;
+			if (Class.CastTo(editor_command, view_binding.GetRelayCommand())) {
+				
+				float pos_x, pos_y, size_x, size_y;
+				w.GetScreenPos(pos_x, pos_y);
+				w.GetScreenSize(size_x, size_y);
+				
+				EditorCommandTooltip tooltip = new EditorCommandTooltip(editor_command, pos_x, pos_y + size_y);
+				
+				if (EditorUIManager.CurrentTooltip) {
+					delete EditorUIManager.CurrentTooltip;
+				}
+				
+				EditorUIManager.CurrentTooltip = tooltip;
+			}
+		}
+		
 		
 		switch (w) {
 			
@@ -235,8 +245,7 @@ class EditorHudToolbarController: EditorControllerBase
 		}
 		
 		switch (w.GetTypeName()) {
-			
-
+		
 			case "SliderWidget": {
 				w.SetColor(COLOR_WHITE_A);
 				break;

@@ -117,6 +117,10 @@ class EditorPlaceableListItem: EditorListItem
 		tooltip.GetLayoutRoot().SetPos(pos_x + size_x, pos_y);
 		tooltip.SetContent(GetWorkbenchGame().CreateObjectEx(Type, vector.Zero, ECE_NONE));
 		
+		if (EditorUIManager.CurrentTooltip) {
+			delete EditorUIManager.CurrentTooltip;
+		}
+		
 		EditorUIManager.CurrentTooltip = tooltip;
 		
 		return super.OnMouseEnter(w, x, y);

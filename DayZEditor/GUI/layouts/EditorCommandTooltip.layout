@@ -1,0 +1,68 @@
+WrapSpacerWidgetClass EditorCommandTooltip {
+ ignorepointer 1
+ color 0.098 0.098 0.098 1
+ position 0 0
+ size 175 0
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ priority 500
+ style Colorable
+ Padding 0
+ Margin 5
+ "Size To Content H" 1
+ "Size To Content V" 1
+ content_halign center
+ content_valign center
+ {
+  TextWidgetClass EditorCommandText {
+   clipchildren 0
+   ignorepointer 1
+   position 0 0
+   size 48 48
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scriptclass "ViewBinding"
+   font "gui/fonts/Metron22"
+   "exact text" 1
+   "size to text h" 1
+   "size to text v" 1
+   "text halign" center
+   "text valign" center
+   {
+    ScriptParamsClass {
+     Binding_Name "Name"
+    }
+   }
+  }
+  TextWidgetClass EditorCommandShortcut {
+   clipchildren 0
+   ignorepointer 1
+   size 48 48
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scriptclass "ViewBinding"
+   font "gui/fonts/MetronBook22"
+   "text offset" 5 0
+   "exact text" 1
+   "size to text h" 1
+   "size to text v" 1
+   "text halign" center
+   "text valign" center
+   {
+    ScriptParamsClass {
+     Binding_Name "Shortcut"
+    }
+   }
+  }
+ }
+}
