@@ -545,4 +545,26 @@ class EditorGroundCommand: EditorCommand
 
 class EditorSnapCommand: EditorCommand
 {
+	
+}
+
+class EditorPlaceObjectCommand: EditorCommand
+{
+	protected override void Call(Editor editor)
+	{
+		if (!editor.ObjectInHand) return;
+
+		EditorObject editor_object = editor.CreateFromObject(editor.ObjectInHand.GetProjectionEntity());
+		EditorEvents.ObjectPlaced(this, editor_object);
+		editor.SelectObject(editor_object);
+		
+		string type = editor.ObjectInHand.GetProjectionEntity().GetType();
+		delete editor.ObjectInHand;
+		
+		if (!KeyState(KeyCode.KC_LSHIFT)) { 
+			EditorEvents.StopPlacing(this);
+		} else {
+			editor.ObjectInHand = new EditorHologram(type, editor.CurrentMousePosition);
+		}
+	}
 }

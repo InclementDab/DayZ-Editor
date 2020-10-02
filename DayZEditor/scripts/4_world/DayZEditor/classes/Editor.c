@@ -36,9 +36,11 @@ class Editor
 	private EditorCamera m_EditorCamera;
 	private PlayerBase m_Player;
 		
-	static Object							ObjectUnderCursor = null;
-	static EditorObject 					EditorObjectUnderCursor = null;
-	static vector 							CurrentMousePosition;
+	static Object			ObjectUnderCursor;
+	static EditorObject 	EditorObjectUnderCursor;
+	static vector 			CurrentMousePosition;
+	
+	ref EditorHologram 		ObjectInHand;
 	
 	bool IsActive()
 		return m_Active;
@@ -100,7 +102,7 @@ class Editor
 		return m_EditorBrush; 
 	
 	bool IsPlacing()
-		return m_ObjectInHand != null; 
+		return ObjectInHand != null; 
 	
 	
 	ref EditorObjectSet CreateObjects(ref EditorObjectDataSet data_list, bool create_undo = true)
@@ -168,6 +170,8 @@ class Editor
 	ref EditorReloadBrushesCommand ReloadBrushesCommand = new EditorReloadBrushesCommand();
 	ref EditorLootEditorCommand LootEditorCommand = new EditorLootEditorCommand();
 	
+	ref EditorPlaceObjectCommand PlaceObjectCommand = new EditorPlaceObjectCommand();
+	
 	// I think this one should be generated on the EditorObject
 	ref EditorObjectPropertiesCommand ObjectPropertiesCommand = new EditorObjectPropertiesCommand();
 
@@ -175,7 +179,6 @@ class Editor
 	private ref EditorHud						m_EditorHud;
 	private EditorHudController 				m_EditorHudController;
 	
-	private ref EditorHologram 					m_ObjectInHand;
 	private ref EditorBrush						m_EditorBrush;
 	private ref EditorObjectDataSet			 	m_SessionCache;
 	
@@ -331,7 +334,7 @@ class Editor
 			case MouseState.LEFT: {
 
 				if (IsPlacing()) {
-					PlaceObject();
+					PlaceObjectCommand.Execute(this, null);
 					return true;
 				}
 				
@@ -519,28 +522,10 @@ class Editor
 			SetBrush(null);
 		
 		ClearSelection();
-		m_ObjectInHand = new EditorHologram(data.Type, CurrentMousePosition);
+		ObjectInHand = new EditorHologram(data.Type, CurrentMousePosition);
 		
 		EditorEvents.StartPlacing(this, data);		
-	}
-	
-	void PlaceObject()
-	{
-		if (!m_ObjectInHand) return;
-
-		EditorObject editor_object = CreateFromObject(m_ObjectInHand.GetProjectionEntity());
-		SelectObject(editor_object);
-		
-		string type = m_ObjectInHand.GetProjectionEntity().GetType();
-		delete m_ObjectInHand;
-		
-		if (!KeyState(KeyCode.KC_LSHIFT)) { 
-			EditorEvents.StopPlacing(this);
-		} else {
-			m_ObjectInHand = new EditorHologram(type, CurrentMousePosition);
-		}
-	}
-	
+	}	
 		
 		
 	private Object m_LootEditTarget;

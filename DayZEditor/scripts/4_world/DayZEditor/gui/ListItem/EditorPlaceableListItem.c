@@ -78,8 +78,9 @@ class EditorPlaceableListItem: EditorListItem
 	
 	void StartPlacing(Class context, EditorPlaceableListItem type)
 	{
-		if (type == this)
+		if (type == this) {
 			Select();
+		}
 		
 		else Deselect();
 	}
@@ -99,7 +100,7 @@ class EditorPlaceableListItem: EditorListItem
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
-		GetEditor().PlaceObject();	
+		GetEditor().PlaceObjectCommand.Execute(this, null);
 		return true;
 	}
 	

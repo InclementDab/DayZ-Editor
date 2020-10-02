@@ -41,6 +41,14 @@ class EditorEvents
 		OnStartPlacing.Invoke(context, target);
 	}
 	
+	// Called AFTER Editor places object
+	static ref ScriptInvoker OnObjectPlaced = new ScriptInvoker();
+	static void ObjectPlaced(Class context, EditorObject target)
+	{
+		EditorLog.Trace("EditorEvents::ObjectPlaced");
+		OnObjectPlaced.Invoke(context, target);
+	}
+	
 	// Called AFTER Editor stops
 	static ref ScriptInvoker OnStopPlacing = new ScriptInvoker();
 	static void StopPlacing(Class context)
