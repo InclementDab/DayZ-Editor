@@ -147,6 +147,7 @@ class Editor
 	ref EditorExitCommand ExitCommand = new EditorExitCommand();
 	ref EditorUndoCommand UndoCommand = new EditorUndoCommand();
 	ref EditorRedoCommand RedoCommand = new EditorRedoCommand();
+	ref EditorDeleteCommand DeleteCommand = new EditorDeleteCommand();
 	
 	ref EditorCutCommand CutCommand = new EditorCutCommand();
 	ref EditorCopyCommand CopyCommand = new EditorCopyCommand();
@@ -156,6 +157,15 @@ class Editor
 	ref EditorGroundCommand GroundCommand = new EditorGroundCommand();
 	ref EditorSnapCommand SnapCommand = new EditorSnapCommand();
 	
+	ref EditorEnvironmentControlCommand EnvironmentControlCommand = new EditorEnvironmentControlCommand();
+	ref EditorPreferencesCommand PreferencesCommand = new EditorPreferencesCommand();
+	ref EditorCameraControlsCommand CameraControlsCommand = new EditorCameraControlsCommand();
+	ref EditorReloadHudCommand ReloadHudCommand = new EditorReloadHudCommand();
+	ref EditorReloadBrushesCommand ReloadBrushesCommand = new EditorReloadBrushesCommand();
+	ref EditorLootEditorCommand LootEditorCommand = new EditorLootEditorCommand();
+	
+	// I think this one should be generated on the EditorObject
+	ref EditorObjectPropertiesCommand ObjectPropertiesCommand = new EditorObjectPropertiesCommand();
 
 	private ref EditorSettings 					m_EditorSettings;
 	private ref EditorHud						m_EditorHud;

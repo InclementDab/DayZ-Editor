@@ -13,12 +13,18 @@ class EditorHudToolbarController: EditorControllerBase
 	bool GroundButton;
 	bool SnapButton;
 	
-	protected EditorUndoCommand m_UndoCommand;
-	protected EditorRedoCommand m_RedoCommand;
+	protected EditorCommand m_NewCommand;
+	protected EditorCommand m_OpenCommand;
+	protected EditorCommand m_SaveCommand;
+	protected EditorCommand m_SaveAsCommand;
+	protected EditorCommand m_CloseCommand;
 	
-	protected EditorCutCommand m_CutCommand;
-	protected EditorCopyCommand m_CopyCommand;
-	protected EditorPasteCommand m_PasteCommand;
+	protected EditorCommand m_UndoCommand;
+	protected EditorCommand m_RedoCommand;
+	
+	protected EditorCommand m_CutCommand;
+	protected EditorCommand m_CopyCommand;
+	protected EditorCommand m_PasteCommand;
 	
 	// View Properties
 	protected ButtonWidget MenuBarFile;
@@ -33,8 +39,15 @@ class EditorHudToolbarController: EditorControllerBase
 		EditorUIManager.CurrentEditorHudToolbarController = this;
 		
 		if (m_Editor) {
+			m_NewCommand = m_Editor.NewCommand;
+			m_NewCommand = m_Editor.OpenCommand;
+			m_NewCommand = m_Editor.SaveCommand;
+			m_NewCommand = m_Editor.SaveAsCommand;
+			m_NewCommand = m_Editor.CloseCommand;
+			
 			m_UndoCommand = m_Editor.UndoCommand;
 			m_RedoCommand = m_Editor.RedoCommand;
+			
 			m_CutCommand = m_Editor.CutCommand;
 			m_CopyCommand = m_Editor.CopyCommand;
 			m_PasteCommand = m_Editor.PasteCommand;

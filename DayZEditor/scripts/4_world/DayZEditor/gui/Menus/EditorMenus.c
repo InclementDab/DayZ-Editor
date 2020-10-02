@@ -32,13 +32,6 @@ class EditorMenu: EditorScriptView
 		EditorMenuItemDivider divider();
 		AddMenuItem(divider);
 	}
-	
-	void AddMenuButton(typename editor_command)
-	{
-		if (editor_command.IsInherited(EditorCommand)) {
-			AddMenuButton(editor_command.Spawn());
-		}
-	}
 
 	void AddMenuButton(ref EditorCommand editor_command)
 	{
@@ -72,13 +65,13 @@ class EditorFileMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorFileMenu");
 		
-		AddMenuButton(EditorNewCommand);
-		AddMenuButton(EditorOpenCommand);
-		AddMenuButton(EditorSaveCommand);
-		AddMenuButton(EditorSaveAsCommand);
-		AddMenuButton(EditorCloseCommand);
+		AddMenuButton(m_Editor.NewCommand);
+		AddMenuButton(m_Editor.OpenCommand);
+		AddMenuButton(m_Editor.SaveCommand);
+		AddMenuButton(m_Editor.SaveAsCommand);
+		AddMenuButton(m_Editor.CloseCommand);
 		AddMenuDivider();
-		AddMenuButton(EditorExitCommand);
+		AddMenuButton(m_Editor.ExitCommand);
 	}
 }
 
@@ -88,15 +81,15 @@ class EditorEditMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorEditMenu");
 				
-		AddMenuButton(EditorUndoCommand);
-		AddMenuButton(EditorRedoCommand);
+		AddMenuButton(m_Editor.UndoCommand);
+		AddMenuButton(m_Editor.RedoCommand);
 		AddMenuDivider();
-		AddMenuButton(EditorCutCommand);
-		AddMenuButton(EditorCopyCommand);
-		AddMenuButton(EditorPasteCommand);
+		AddMenuButton(m_Editor.CutCommand);
+		AddMenuButton(m_Editor.CopyCommand);
+		AddMenuButton(m_Editor.PasteCommand);
 		AddMenuDivider();
-		AddMenuButton(EditorEnvironmentControlCommand);
-		AddMenuButton(EditorPreferencesCommand);
+		AddMenuButton(m_Editor.EnvironmentControlCommand);
+		AddMenuButton(m_Editor.PreferencesCommand);
 		AddMenuDivider();
 	}
 }
@@ -107,9 +100,9 @@ class EditorViewMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorViewMenu");
 
-		AddMenuButton(EditorCameraControlsCommand);
-		AddMenuButton(EditorReloadHudCommand);
-		AddMenuButton(EditorReloadBrushesCommand);
+		AddMenuButton(m_Editor.CameraControlsCommand);
+		AddMenuButton(m_Editor.ReloadHudCommand);
+		AddMenuButton(m_Editor.ReloadBrushesCommand);
 	}
 }
 
@@ -118,16 +111,16 @@ class EditorContextMenu: EditorMenu
 	void EditorContextMenu(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorContextMenu");
-		AddMenuButton(EditorCutCommand);
-		AddMenuButton(EditorCopyCommand);
-		AddMenuButton(EditorPasteCommand);
+		AddMenuButton(m_Editor.CutCommand);
+		AddMenuButton(m_Editor.CopyCommand);
+		AddMenuButton(m_Editor.PasteCommand);
 		AddMenuDivider();
-		AddMenuButton(EditorUndoCommand);
-		AddMenuButton(EditorRedoCommand);
+		AddMenuButton(m_Editor.UndoCommand);
+		AddMenuButton(m_Editor.RedoCommand);
 		AddMenuDivider();
-		AddMenuButton(EditorDeleteCommand);
+		AddMenuButton(m_Editor.DeleteCommand);
 		AddMenuDivider();
-		AddMenuButton(EditorObjectPropertiesCommand);
+		AddMenuButton(m_Editor.ObjectPropertiesCommand);
 	}
 }
 
@@ -136,7 +129,7 @@ class EditorPlaceableContextMenu: EditorMenu
 	
 	void EditorPlaceableContextMenu(Widget parent = null) 
 	{
-		AddMenuButton(EditorLootEditorCommand);
+		AddMenuButton(m_Editor.LootEditorCommand);
 	}
 }
 
