@@ -772,7 +772,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Two_Way_Binding 0
-           Relay_Command "m_MagnetCommand"
+           Relay_Command "m_Editor.MagnetCommand"
           }
          }
         }
@@ -812,7 +812,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Two_Way_Binding 0
-           Relay_Command "m_GroundCommand"
+           Relay_Command "m_Editor.GroundCommand"
           }
          }
         }
@@ -853,7 +853,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Two_Way_Binding 0
-           Relay_Command "m_SnapCommand"
+           Relay_Command "m_Editor.SnapCommand"
           }
          }
         }
@@ -946,7 +946,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
           ScriptParamsClass {
            Binding_Name "BrushToggleButtonState"
            Two_Way_Binding 1
-           Relay_Command "m_BrushToggleCommand"
+           Relay_Command "m_Editor.BrushToggleCommand"
           }
          }
         }
