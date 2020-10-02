@@ -6,4 +6,10 @@ class EditorControllerBase: Controller
 	{
 		m_Editor = GetEditor();
 	}
+	
+	override void OnWidgetScriptInit(Widget w)
+	{
+		m_Editor = GetEditor();
+		super.OnWidgetScriptInit(w);
+	}
 }

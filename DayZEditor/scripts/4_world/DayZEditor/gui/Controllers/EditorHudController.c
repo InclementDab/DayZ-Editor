@@ -23,7 +23,7 @@ class EditorHudController: Controller
 	
 	ref EditorHudToolbar EditorHudToolbarView;
 	
-	ref ObservableCollection<ref EditorListItem> LeftbarSpacerData 		= new ObservableCollection<ref EditorListItem>("LeftbarSpacerData", this);
+	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData 		= new ObservableCollection<ref EditorPlaceableListItem>("LeftbarSpacerData", this);
 	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 	= new ObservableCollection<ref EditorListItem>("RightbarSpacerData", this);
 	ref ObservableCollection<string> DebugActionStackListbox 			= new ObservableCollection<string>("DebugActionStackListbox", this);
 	
@@ -128,7 +128,7 @@ class EditorHudController: Controller
 			case "SearchBarData": {
 				
 				for (int j = 0; j < LeftbarSpacerData.Count(); j++) {
-					EditorPlaceableListItem placeable_item = LeftbarSpacerData.Get(j);
+					EditorPlaceableListItem placeable_item = LeftbarSpacerData[j];
 					placeable_item.GetLayoutRoot().Show(placeable_item.FilterType(SearchBarData));
 				}
 				

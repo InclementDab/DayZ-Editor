@@ -36,7 +36,7 @@ class Editor
 	private EditorCamera m_EditorCamera;
 	private PlayerBase m_Player;
 		
-	static Object							ObjectUnderCursor = null;
+	static IEntity							ObjectUnderCursor = null;
 	static EditorObject 					EditorObjectUnderCursor = null;
 	static vector 							CurrentMousePosition;
 	
@@ -301,7 +301,7 @@ class Editor
 		
 		CutCommand.SetCanExecute(selected_objects.Count() > 0);
 		CopyCommand.SetCanExecute(selected_objects.Count() > 0);
-		PasteCommand.SetCanExecute(EditorClipboard.IsClipboardValid());
+		//PasteCommand.SetCanExecute(EditorClipboard.IsClipboardValid());
 			
 		// debug
 		timeslice_count++;
@@ -358,7 +358,7 @@ class Editor
 				else if (KeyState(KeyCode.KC_LSHIFT)) {
 
 					if (ObjectUnderCursor) {
-						Object obj = ObjectUnderCursor;
+						IEntity obj = ObjectUnderCursor;
 						while (obj.GetParent())
 							obj = obj.GetParent();
 						
@@ -396,6 +396,7 @@ class Editor
 	{			
 		EditorCommand command = GetCommandFromHotkeys(key);
 		if (command) {
+			EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
 			CommandArgs args = new CommandArgs();
 			args.Context = m_EditorHud;
 			command.Execute(this, args);

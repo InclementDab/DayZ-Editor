@@ -37,21 +37,6 @@ class EditorHudToolbarController: EditorControllerBase
 	void EditorHudToolbarController()
 	{
 		EditorUIManager.CurrentEditorHudToolbarController = this;
-		
-		if (m_Editor) {
-			m_NewCommand = m_Editor.NewCommand;
-			m_NewCommand = m_Editor.OpenCommand;
-			m_NewCommand = m_Editor.SaveCommand;
-			m_NewCommand = m_Editor.SaveAsCommand;
-			m_NewCommand = m_Editor.CloseCommand;
-			
-			m_UndoCommand = m_Editor.UndoCommand;
-			m_RedoCommand = m_Editor.RedoCommand;
-			
-			m_CutCommand = m_Editor.CutCommand;
-			m_CopyCommand = m_Editor.CopyCommand;
-			m_PasteCommand = m_Editor.PasteCommand;
-		}
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
@@ -62,6 +47,25 @@ class EditorHudToolbarController: EditorControllerBase
 		// Load Brushes
 		ReloadBrushes(m_Editor.EditorBrushFile);
 #endif
+		
+		if (!m_Editor) {
+			m_Editor = GetEditor();
+		}
+		
+		if (m_Editor) {
+			m_NewCommand = m_Editor.NewCommand;
+			m_OpenCommand = m_Editor.OpenCommand;
+			m_SaveCommand = m_Editor.SaveCommand;
+			m_SaveAsCommand = m_Editor.SaveAsCommand;
+			m_CloseCommand = m_Editor.CloseCommand;
+			
+			m_UndoCommand = m_Editor.UndoCommand;
+			m_RedoCommand = m_Editor.RedoCommand;
+			
+			m_CutCommand = m_Editor.CutCommand;
+			m_CopyCommand = m_Editor.CopyCommand;
+			m_PasteCommand = m_Editor.PasteCommand;
+		}
 	}
 	
 	// Brush Management

@@ -2,10 +2,13 @@
 
 class EditorClipboard
 {
+	
 	static void Cut(EditorObjectSet cut_objects)
 	{
 		EditorLog.Trace("EditorObjectManager::CutSelection");
-		if (cut_objects.Count() >= 0) return;
+		if (cut_objects.Count() >= 0)
+			return;
+		
 		Copy(cut_objects);
 		GetEditor().DeleteObjects(cut_objects);
 	}
@@ -13,8 +16,10 @@ class EditorClipboard
 	static void Copy(EditorObjectSet copy_objects)
 	{
 		EditorLog.Trace("EditorObjectManager::CopySelection");
-		if (copy_objects.Count() >= 0) return;
-		ref array<ref EditorObjectData>> world_objects = new ref array<ref EditorObjectData>>();
+		if (copy_objects.Count() >= 0) 
+			return;
+		
+		ref array<ref EditorObjectData>> world_objects = {};
 		
 		vector avg_position;
 		foreach (int id, EditorObject copy_object: copy_objects)
@@ -35,11 +40,12 @@ class EditorClipboard
 	static void Paste(vector cursor_pos)
 	{
 		EditorLog.Trace("EditorObjectManager::PasteSelection");		
+		string error;
 		ref array<ref EditorObjectData>> data = {};
-		if (!LoadFromClipboard(data)) {
+		if (!LoadFromClipboard(data, error)) {
+			EditorLog.Error("Paste Error: %1", error);
 			return;
 		}
-		
 		
 		GetEditor().ClearSelection();
 				
@@ -88,10 +94,13 @@ class EditorClipboard
 		return json_serializer.ReadFromString(clipboard_data, clipboard_text, error);
 	}
 	
-	static bool IsClipboardValid()
+	static bool LoadFromClipboard(out array<ref EditorObjectData> clipboard_data, out string error)
 	{
-		ref array<ref EditorObjectData>> data = {};
-		return LoadFromClipboard(data);
-	}	
+		string clipboard_text;
+		GetGame().CopyFromClipboard(clipboard_text);
+		
+		JsonSerializer json_serializer = new JsonSerializer();
+		return json_serializer.ReadFromString(clipboard_data, clipboard_text, error);
+	}
 }
 

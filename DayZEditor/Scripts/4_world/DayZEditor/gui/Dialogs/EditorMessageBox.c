@@ -36,7 +36,7 @@ class EditorMessageBox: MessageBox
 		m_EditorHud.ShowCursor(true);
 	}
 	
-	static DialogResult Show(string title, string caption, MessageBoxButtons buttons)
+	override static DialogResult Show(string title, string caption, MessageBoxButtons buttons)
 	{
 		EditorMessageBox message_box = new EditorMessageBox(null, title, caption, buttons);
 		return message_box.ShowDialog();
