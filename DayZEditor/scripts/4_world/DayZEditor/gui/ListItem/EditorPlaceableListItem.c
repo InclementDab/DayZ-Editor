@@ -107,11 +107,14 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorTooltip tooltip = new EditorTooltip(w);			
-		tooltip.SetTitle(Type);
-		float size_x, size_y;
+		EditorTooltip tooltip = new EditorTooltip();
+		
+		float size_x, size_y, pos_x, pos_y;
+		m_LayoutRoot.GetScreenPos(pos_x, pos_y);
 		m_LayoutRoot.GetScreenSize(size_x, size_y);
-		tooltip.GetLayoutRoot().SetPos(size_x, 0);
+		
+		tooltip.SetTitle(Type);
+		tooltip.GetLayoutRoot().SetPos(pos_x + size_x, pos_y);
 		tooltip.SetContent(GetWorkbenchGame().CreateObjectEx(Type, vector.Zero, ECE_NONE));
 		
 		EditorUIManager.CurrentTooltip = tooltip;
@@ -133,7 +136,7 @@ class EditorPlaceableListItem: EditorListItem
 		if (args.GetMouseButton() == 0) {
 			GetEditor().CreateInHand(this);
 		} else if (args.GetMouseButton() == 1) {
-			EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu(null);
+			EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu();
 			int x, y;
 			GetMousePos(x, y);
 			placeable_context.SetPosition(x, y);

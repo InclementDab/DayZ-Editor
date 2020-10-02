@@ -2,14 +2,8 @@
 class EditorTooltip: ScriptView
 {
 	protected TextWidget HeaderLabel;
-	
 	protected EditorTooltipController m_EditorTooltipController;
-	
-	void EditorToolTip(Widget parent = null)
-	{
-		EditorUIManager.CurrentTooltip = this;
-	}
-	
+		
 	void SetTitle(string title)
 	{
 		m_EditorTooltipController = EditorTooltipController.Cast(GetController());

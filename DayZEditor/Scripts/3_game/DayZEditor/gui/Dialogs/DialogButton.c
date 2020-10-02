@@ -3,7 +3,7 @@ class DialogButton: ScriptView
 	ButtonWidget Button;	
 	protected string m_Callback;
 	
-	void DialogButton(Widget parent, string label, string callback)
+	void DialogButton(string label, string callback)
 	{
 		Button.SetText(label);
 		m_Callback = callback;

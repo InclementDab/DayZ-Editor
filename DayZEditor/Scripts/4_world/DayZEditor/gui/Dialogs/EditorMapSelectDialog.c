@@ -12,9 +12,9 @@ class EditorMapSelectDialog: EditorDialogBase
 	protected autoptr ListBoxPrefab m_ListBoxPrefab;
 	protected DialogButton m_SelectButton;
 	
-	void EditorMapSelectDialog(Widget parent, string title)
+	void EditorMapSelectDialog(string title)
 	{
-		m_ListBoxPrefab = new ListBoxPrefab(null);
+		m_ListBoxPrefab = new ListBoxPrefab();
 		AddContent(m_ListBoxPrefab);
 		
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgWorlds"); i++) {

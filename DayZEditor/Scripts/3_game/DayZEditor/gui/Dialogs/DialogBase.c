@@ -10,7 +10,7 @@ class DialogBase: ScriptView
 	// View Properties	
 	protected WrapSpacerWidget WindowDragWrapper;
 	
-	void DialogBase(Widget parent, string title)
+	void DialogBase(string title)
 	{
 		m_DialogBaseController = DialogBaseController.Cast(GetController());
 		
@@ -51,7 +51,7 @@ class DialogBase: ScriptView
 	
 	DialogButton AddButton(string label, DialogResult result)
 	{
-		return AddButton(new DialogExitButton(null, label, "DialogExitButtonCallback", result));
+		return AddButton(new DialogExitButton(label, "DialogExitButtonCallback", result));
 	}
 		
 	DialogButton AddButton(DialogButton button)

@@ -287,20 +287,22 @@ class EditorHudToolbarController: EditorControllerBase
 		switch (toolbar_button) {
 			
 			case MenuBarFile: {
-				toolbar_menu = new EditorFileMenu(toolbar_button);
+				toolbar_menu = new EditorFileMenu();
 				break;
 			}
 			
 			case MenuBarEdit: {
-				toolbar_menu = new EditorEditMenu(toolbar_button);
+				toolbar_menu = new EditorEditMenu();
 				break;
 			}
 			
 			case MenuBarView: {
-				toolbar_menu = new EditorViewMenu(toolbar_button);
+				toolbar_menu = new EditorViewMenu();
 				break;
 			}
 		}
+		
+		toolbar_menu.SetParent(toolbar_button);
 		
 		// Sets position to bottom of button
 		float w, h;

@@ -4,7 +4,7 @@ class EditorMessageBox: MessageBox
 	protected Editor m_Editor;
 	protected EditorHud m_EditorHud;
 	
-	void EditorMessageBox(Widget parent, string title, string caption, MessageBoxButtons buttons)
+	void EditorMessageBox(string title, string caption, MessageBoxButtons buttons)
 	{
 		EditorLog.Trace("EditorMessageBox");
 
@@ -33,7 +33,7 @@ class EditorMessageBox: MessageBox
 	
 	override static DialogResult Show(string title, string caption, MessageBoxButtons buttons)
 	{
-		EditorMessageBox message_box = new EditorMessageBox(null, title, caption, buttons);
+		EditorMessageBox message_box = new EditorMessageBox(title, caption, buttons);
 		return message_box.ShowDialog();
 	}
 }

@@ -34,14 +34,14 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 {
 	protected EditorObjectPropertiesDialogController m_EditorObjectPropertiesDialogController;
 	
-	void EditorObjectPropertiesDialog(Widget parent, string title, EditorObject editor_object)
+	void EditorObjectPropertiesDialog(string title, EditorObject editor_object)
 	{		
 		m_EditorObjectPropertiesDialogController = EditorObjectPropertiesDialogController.Cast(GetController());
 		m_EditorObjectPropertiesDialogController.SetEditorObject(editor_object);
 		
-		GroupPrefab group_prefab = new GroupPrefab(null, "Position", m_Controller, string.Empty);
-		group_prefab.Insert(new VectorPrefab(null, "Position", m_Controller, "position", editor_object.GetPosition()));
-		group_prefab.Insert(new VectorPrefab(null, "Orientation", m_Controller, "orientation", editor_object.GetOrientation()));
+		GroupPrefab group_prefab = new GroupPrefab("Position", m_Controller, string.Empty);
+		group_prefab.Insert(new VectorPrefab("Position", m_Controller, "position", editor_object.GetPosition()));
+		group_prefab.Insert(new VectorPrefab("Orientation", m_Controller, "orientation", editor_object.GetOrientation()));
 		
 		AddContent(group_prefab);
 		

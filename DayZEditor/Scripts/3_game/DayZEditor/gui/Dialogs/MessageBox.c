@@ -2,9 +2,9 @@ class MessageBox: DialogBase
 {
 	protected DialogResult m_CurrentResult = DialogResult.None;
 	
-	void MessageBox(Widget parent, string title, string caption, MessageBoxButtons buttons)
+	void MessageBox(string title, string caption, MessageBoxButtons buttons)
 	{		
-		AddContent(new MessageBoxPrefab(null, caption));
+		AddContent(new MessageBoxPrefab(caption));
 		
 		switch (buttons) {
 			
@@ -55,13 +55,13 @@ class MessageBox: DialogBase
 
 	static DialogResult Show(string title, string caption, MessageBoxButtons buttons)
 	{
-		MessageBox message_box = new MessageBox(null, title, caption, buttons);
+		MessageBox message_box = new MessageBox(title, caption, buttons);
 		return message_box.ShowDialog();
 	}
 	
 	static MessageBox ShowSynchronous(string title, string caption, MessageBoxButtons buttons)
 	{
-		MessageBox message_box = new MessageBox(null, title, caption, buttons);
+		MessageBox message_box = new MessageBox(title, caption, buttons);
 		message_box.GetLayoutRoot().Show(true);
 		return message_box;
 	}

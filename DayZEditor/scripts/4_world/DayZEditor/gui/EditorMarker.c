@@ -219,7 +219,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			
 			case 1: {
 				GetEditor().SelectObject(m_EditorObject);
-				EditorContextMenu context_menu = new EditorContextMenu(null);
+				EditorContextMenu context_menu = new EditorContextMenu();
 				context_menu.SetPosition(x, y);
 				
 				return true;

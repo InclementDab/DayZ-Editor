@@ -20,7 +20,7 @@ class PrefabBase<Class TValue>: ScriptView
 	protected Controller m_BindingContext;
 	protected string m_BindingName;
 	
-	void PrefabBase(Widget parent, string caption, Controller binding_context, string binding_name, TValue default_value = DEFAULT_VALUE)
+	void PrefabBase(string caption, Controller binding_context, string binding_name, TValue default_value = DEFAULT_VALUE)
 	{
 		m_BindingName = binding_name;
 		m_BindingContext = binding_context;

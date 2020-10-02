@@ -55,7 +55,7 @@ class EditorEnvironmentDialogController: DialogBaseController
 
 class EditorEnvironmentDialog: EditorDialogBase
 {	
-	void EditorEnvironmentDialog(Widget parent, string title)
+	void EditorEnvironmentDialog(string title)
 	{
 		int year, month, day, hour, minute;
 		GetGame().GetWorld().GetDate(year, month, day, hour, minute);
@@ -70,13 +70,13 @@ class EditorEnvironmentDialog: EditorDialogBase
 		
 		float exposure = GetGame().GetWorld().GetEyeAccom();
 		
-		GroupPrefab group_prefab = new GroupPrefab(null, "Group1", m_Controller, string.Empty);
-		group_prefab.Insert(new SliderPrefab(null, "Time", m_Controller, "time", time, 0, 86400));
-		group_prefab.Insert(new SliderPrefab(null, "Rain", m_Controller, "rain", rain, 0, 1));
-		group_prefab.Insert(new SliderPrefab(null, "Fog", m_Controller, "fog", fog, 0, 1));
-		group_prefab.Insert(new SliderPrefab(null, "Overcast", m_Controller, "overcast", overcast, 0, 1));
-		group_prefab.Insert(new SliderPrefab(null, "Wind", m_Controller, "wind", wind, 0, 1));
-		group_prefab.Insert(new SliderPrefab(null, "Exposure", m_Controller, "exposure", exposure, 0, 1));
+		GroupPrefab group_prefab = new GroupPrefab("Group1", m_Controller, string.Empty);
+		group_prefab.Insert(new SliderPrefab("Time", m_Controller, "time", time, 0, 86400));
+		group_prefab.Insert(new SliderPrefab("Rain", m_Controller, "rain", rain, 0, 1));
+		group_prefab.Insert(new SliderPrefab("Fog", m_Controller, "fog", fog, 0, 1));
+		group_prefab.Insert(new SliderPrefab("Overcast", m_Controller, "overcast", overcast, 0, 1));
+		group_prefab.Insert(new SliderPrefab("Wind", m_Controller, "wind", wind, 0, 1));
+		group_prefab.Insert(new SliderPrefab("Exposure", m_Controller, "exposure", exposure, 0, 1));
 		
 		AddContent(group_prefab);
 		

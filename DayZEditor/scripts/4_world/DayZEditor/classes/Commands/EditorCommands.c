@@ -64,7 +64,7 @@ class EditorNewCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorEditBoxDialog edit_dialog = new EditorEditBoxDialog(null, "New File...");
+		EditorEditBoxDialog edit_dialog = new EditorEditBoxDialog("New File...");
 		string edit_data;
 		DialogResult result = edit_dialog.ShowDialog(edit_data);
 		if (result != DialogResult.OK) return;
@@ -418,7 +418,7 @@ class EditorEnvironmentControlCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorEnvironmentDialog dialog = new EditorEnvironmentDialog(null, "Weather Controller");
+		EditorEnvironmentDialog dialog = new EditorEnvironmentDialog("Weather Controller");
 		DialogResult result = dialog.ShowDialog();
 	}
 	
@@ -487,7 +487,7 @@ class EditorObjectPropertiesCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorObjectPropertiesDialog properties_dialog(null, "Edit Properties", m_Editor.GetSelectedObjects().GetElement(0));
+		EditorObjectPropertiesDialog properties_dialog("Edit Properties", m_Editor.GetSelectedObjects().GetElement(0));
 		properties_dialog.ShowDialog();
 	}
 	
@@ -504,7 +504,7 @@ class EditorLoadMapCommand: EditorCommand
 {	
 	protected override void Call(Class sender, CommandArgs args)
 	{
-		EditorMapSelectDialog select_dialog = new EditorMapSelectDialog(null, GetName());
+		EditorMapSelectDialog select_dialog = new EditorMapSelectDialog(GetName());
 		string selected_map;
 		DialogResult result = select_dialog.ShowDialog(selected_map);
 		

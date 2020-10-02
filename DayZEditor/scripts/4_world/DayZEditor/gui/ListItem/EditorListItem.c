@@ -15,7 +15,7 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 	ButtonWidget EditorListItemCollapse;
 	ButtonWidget EditorListItemButton;
 		
-	void EditorListItem(Widget parent) 
+	void EditorListItem() 
 	{ 
 		EditorLog.Trace("EditorListItem");
 		m_TemplateController.SetListItem(this);

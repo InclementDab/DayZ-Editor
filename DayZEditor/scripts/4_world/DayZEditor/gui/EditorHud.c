@@ -6,7 +6,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	
 	MapWidget EditorMapWidget;
 
-	void EditorHud(Widget parent)
+	void EditorHud()
 	{	
 		EditorLog.Trace("EditorHud");
 		EditorMapWidget.Show(false);
@@ -41,7 +41,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	{
 		EditorLog.Trace("EditorHud::CreateNotification");
 		
-		EditorNotification notification = new EditorNotification(NotificationFrame, text, color);
+		EditorNotification notification = new EditorNotification(text, color);
+		notification.SetParent(NotificationFrame);
 		notification.Play(duration);
 	}
 	
