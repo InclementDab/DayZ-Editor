@@ -17,6 +17,6 @@ class EditorCommandTooltip: ScriptViewTemplate<EditorCommandTooltipController>
 	}
 	
 	override string GetLayoutFile() {
-		return "DayZEditor/gui/layouts/EditorCommandTooltip.layout";
+		return "DayZEditor/gui/layouts/tooltips/EditorCommandTooltip.layout";
 	}
 }
