@@ -20,10 +20,10 @@ class EditorNotification: ScriptView
 	
 	private void _Animate(float duration)
 	{		
-		LerpMotion(0, 0.5);
+		LerpMotion(0, 0.06);
 		SEffectManager.PlaySoundOnObject("Notification_SoundSet", GetEditor().GetCamera());
 		Sleep(duration * 1000);
-		LerpMotion(0.5, 0);
+		LerpMotion(0.06, 0);
 	}
 	
 	private void LerpMotion(float start, float finish)

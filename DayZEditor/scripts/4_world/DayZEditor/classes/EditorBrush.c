@@ -117,7 +117,10 @@ class EditorBrush
 			
 			if (m_BrushData) {
 				EditorBrushObject object_name = m_BrushData.GetRandomObject();
-				data_set.InsertEditorData(EditorObjectData.Create(object_name.Name, pos, vector.Up, EditorObjectFlags.NONE));
+				vector transform[4];
+				Math3D.MatrixIdentity4(transform);
+				transform[3] = pos;
+				data_set.InsertEditorData(EditorObjectData.Create(object_name.Name, transform, EditorObjectFlags.NONE));
 			}
 		}
 		

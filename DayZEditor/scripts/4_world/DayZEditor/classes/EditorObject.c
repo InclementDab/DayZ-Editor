@@ -65,7 +65,7 @@ class EditorObject
 	{
 		EditorLog.Trace("EditorObject");
 		m_WorldObject = target;		
-		m_Data = EditorObjectData.CreateFromExistingObject(target, flags);
+		m_Data = EditorObjectData.Create(target, flags);
 		m_Data.Flags = flags;
 		
 		if (GetEditor()) {
@@ -132,8 +132,8 @@ class EditorObject
 	static EditorObject Create(ref EditorObjectData data)
 	{
 		EditorLog.Trace("EditorObject::Create from EditorObjectData");
-		Object world_object = GetGame().CreateObjectEx(data.Type, data.Position, ECE_LOCAL | ECE_CREATEPHYSICS);
-		world_object.SetOrientation(data.Orientation);
+		Object world_object = GetGame().CreateObjectEx(data.Type, data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
+		world_object.SetTransform(data.Transform);
 		world_object.SetFlags(EntityFlags.STATIC, true);
 		
 		return new EditorObject(world_object, data.Flags);
@@ -149,8 +149,7 @@ class EditorObject
 	void ~EditorObject()
 	{
 		EditorLog.Trace("~EditorObject");
-		m_Data.Position = GetPosition();
-		m_Data.Orientation = GetOrientation();
+		GetTransform(m_Data.Transform);
 		
 		HideBoundingBox();
 		
@@ -219,7 +218,7 @@ class EditorObject
 	void SetPosition(vector pos) 
 	{ 
 		m_WorldObject.SetPosition(pos); 
-		m_Data.Position = pos;
+		GetTransform(m_Data.Transform);
 		Update();
 	}
 	
@@ -227,7 +226,7 @@ class EditorObject
 	void SetOrientation(vector pos) 
 	{ 
 		m_WorldObject.SetOrientation(pos);
-		m_Data.Orientation = pos; 
+		GetTransform(m_Data.Transform);
 		Update();
 	}
 	
@@ -239,8 +238,7 @@ class EditorObject
 	void SetTransform(vector mat[4]) 
 	{ 
 		m_WorldObject.SetTransform(mat); 
-		m_Data.Position = mat[3];
-		m_Data.Orientation = m_WorldObject.GetOrientation();
+		m_Data.Transform = mat;
 		Update();
 	}
 	

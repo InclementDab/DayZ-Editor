@@ -30,11 +30,16 @@ class EditorClipboard
 		
 		foreach (int idx, EditorObject selected_object: copy_objects) {
 			EditorObjectData data = selected_object.GetData();
-			data.Position = selected_object.GetPosition() - avg_position;
+			data.Transform[3] = selected_object.GetPosition() - avg_position;
 			world_objects.Insert(data);
 		}
 	
-		GetGame().CopyToClipboard(JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects));
+		string clipboard_data = JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects);
+		
+		clipboard_data.Replace("\n", "");
+		clipboard_data.Replace(" ", "");
+		
+		GetGame().CopyToClipboard(clipboard_data);
 	}
 	
 	static void Paste(vector cursor_pos)
@@ -51,7 +56,7 @@ class EditorClipboard
 				
 		foreach (ref EditorObjectData pasted_object: data) {
 			
-			vector position = pasted_object.Position + Editor.CurrentMousePosition;
+			vector position = pasted_object.Transform[3] + Editor.CurrentMousePosition;
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",
@@ -59,7 +64,7 @@ class EditorClipboard
 				position
 			};
 			
-			EditorObject editor_object = GetEditor().CreateObject(EditorObjectData.Create(pasted_object.Type, position, pasted_object.Orientation, pasted_object.Flags));
+			EditorObject editor_object = GetEditor().CreateObject(EditorObjectData.Create(pasted_object.Type, transform, pasted_object.Flags));
 			float surfacey = GetGame().SurfaceY(position[0], position[2]);
 			vector size = editor_object.GetSize();
 			position[1] = surfacey + size[1] / 2;

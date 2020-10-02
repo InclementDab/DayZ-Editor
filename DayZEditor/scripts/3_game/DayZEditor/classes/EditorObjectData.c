@@ -35,17 +35,25 @@ class EditorObjectData
 	
 	string Type;
 	string DisplayName;
-	vector Position;
-	vector Orientation;
-	float Scale;
+	vector Transform[4];
+
 	EditorObjectFlags Flags;
 	
 	[NonSerialized()]
 	ModStructure ObjectMod;
 	
 	void EditorObjectData() {}
+		
+	static EditorObjectData Create(string type, vector position, vector orientation, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	{
+		vector transform[4];
+		
+		Math3D.YawPitchRollMatrix(orientation, transform);
+		transform[3] = position;
+		return Create(type, transform, flags);
+	}
 	
-	static EditorObjectData Create(string type, vector position, vector orientation = "0 0 0", EditorObjectFlags flags = EditorObjectFlags.ALL)
+	static EditorObjectData Create(string type, vector transform[4], EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorLog.Trace("EditorObjectData::Create");
 		
@@ -55,7 +63,9 @@ class EditorObjectData
 		}
 		
 		EditorObjectData data = new EditorObjectData();
-		data.Type = type; data.Position = position; data.Orientation = orientation; data.Flags = flags;
+		data.Type = type; 
+		data.Transform = transform; 
+		data.Flags = flags;
 		data.DisplayName = data.Type;
 		data.ObjectMod = GetModFromObject(data.Type);
 		
@@ -70,10 +80,12 @@ class EditorObjectData
 	}
 	
 	
-	static EditorObjectData CreateFromExistingObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	static EditorObjectData Create(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorObjectData data = new EditorObjectData();
-		data.Type = target.GetType(); data.Position = target.GetPosition(); data.Orientation = target.GetOrientation(); data.Flags = flags;
+		data.Type = target.GetType(); 
+		target.GetTransform(data.Transform); 
+		data.Flags = flags;
 		data.DisplayName = data.Type;
 		data.ObjectMod = GetModFromObject(data.Type);
 		data.m_Id = target.GetID();	
@@ -83,22 +95,29 @@ class EditorObjectData
 		return data;
 	}
 	
+	vector GetPosition() {
+		return Transform[3];
+	}
+	
+	vector GetOrientation() {
+		return Math3D.MatrixToAngles(Transform);
+	}
+	
+	float GetScale() {
+		return 1; // not supported yet
+	}
 	
 	void OnSend(Serializer serializer)
 	{
 		serializer.Write(Type);
-		serializer.Write(Position);
-		serializer.Write(Orientation);
-		serializer.Write(Scale);
+		serializer.Write(Transform);
 		serializer.Write(Flags);
 	}
 	
 	void OnRead(Serializer serializer)
 	{
 		serializer.Read(Type);
-		serializer.Read(Position);
-		serializer.Read(Orientation);
-		serializer.Read(Scale);
+		serializer.Read(Transform);
 		serializer.Read(Flags);
 	}
 }
