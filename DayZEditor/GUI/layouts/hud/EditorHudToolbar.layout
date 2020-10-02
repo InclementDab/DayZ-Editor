@@ -288,7 +288,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_NewCommand"
+           Relay_Command "m_Editor.NewCommand"
           }
          }
         }
@@ -333,7 +333,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_OpenCommand"
+           Relay_Command "m_Editor.OpenCommand"
           }
          }
         }
@@ -377,7 +377,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_SaveCommand"
+           Relay_Command "m_Editor.SaveCommand"
           }
          }
         }
@@ -464,7 +464,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_UndoCommand"
+           Relay_Command "m_Editor.UndoCommand"
           }
          }
         }
@@ -506,7 +506,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_RedoCommand"
+           Relay_Command "m_Editor.RedoCommand"
           }
          }
         }
@@ -594,7 +594,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Debug_Logging 0
-           Relay_Command "m_CutCommand"
+           Relay_Command "m_Editor.CutCommand"
           }
          }
         }
@@ -642,7 +642,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Debug_Logging 0
-           Relay_Command "m_CopyCommand"
+           Relay_Command "m_Editor.CopyCommand"
           }
          }
         }
@@ -688,7 +688,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Debug_Logging 0
-           Relay_Command "m_PasteCommand"
+           Relay_Command "m_Editor.PasteCommand"
           }
          }
         }

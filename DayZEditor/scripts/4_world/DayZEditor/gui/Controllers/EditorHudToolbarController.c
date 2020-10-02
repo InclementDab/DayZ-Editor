@@ -12,26 +12,7 @@ class EditorHudToolbarController: EditorControllerBase
 	bool MagnetButton;
 	bool GroundButton;
 	bool SnapButton;
-	
-	protected EditorNewCommand m_NewCommand;
-	protected EditorOpenCommand m_OpenCommand;
-	protected EditorSaveCommand m_SaveCommand;
-	protected EditorSaveAsCommand m_SaveAsCommand;
-	protected EditorCloseCommand m_CloseCommand;
-	
-	protected EditorUndoCommand m_UndoCommand;
-	protected EditorRedoCommand m_RedoCommand;
-	
-	protected EditorCutCommand m_CutCommand;
-	protected EditorCopyCommand m_CopyCommand;
-	protected EditorPasteCommand m_PasteCommand;
-	
-	protected EditorMagnetCommand m_MagnetCommand;
-	protected EditorGroundCommand m_GroundCommand;
-	protected EditorSnapCommand m_SnapCommand;
-	
-	protected EditorBrushToggleCommand m_BrushToggleCommand;
-	
+		
 	// View Properties
 	protected ButtonWidget MenuBarFile;
 	protected ButtonWidget MenuBarEdit;
@@ -51,35 +32,15 @@ class EditorHudToolbarController: EditorControllerBase
 		
 		BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 
-//#ifndef COMPONENT_SYSTEM
-		// Load Brushes
-		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
-//#endif
-		
 		if (!m_Editor) {
 			m_Editor = GetEditor();
 		}
 		
-		if (m_Editor) {
-			m_NewCommand = m_Editor.NewCommand;
-			m_OpenCommand = m_Editor.OpenCommand;
-			m_SaveCommand = m_Editor.SaveCommand;
-			m_SaveAsCommand = m_Editor.SaveAsCommand;
-			m_CloseCommand = m_Editor.CloseCommand;
-			
-			m_UndoCommand = m_Editor.UndoCommand;
-			m_RedoCommand = m_Editor.RedoCommand;
-			
-			m_CutCommand = m_Editor.CutCommand;
-			m_CopyCommand = m_Editor.CopyCommand;
-			m_PasteCommand = m_Editor.PasteCommand;
-			
-			m_MagnetCommand = m_Editor.MagnetCommand;
-			m_GroundCommand = m_Editor.GroundCommand;
-			m_SnapCommand = m_Editor.SnapCommand;
-			
-			m_BrushToggleCommand = m_Editor.BrushToggleCommand;
-		}
+#ifndef COMPONENT_SYSTEM
+		// Load Brushes
+		ReloadBrushes(m_Editor.EditorBrushFile);
+#endif
+		
 	}
 	
 	// Brush Management
@@ -138,7 +99,7 @@ class EditorHudToolbarController: EditorControllerBase
 			
 			case "BrushTypeBoxData": {
 				
-				m_BrushToggleCommand.SetCanExecute(args.Source.Count() > 0);
+				m_Editor.BrushToggleCommand.SetCanExecute(args.Source.Count() > 0);
 				
 				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
 					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
