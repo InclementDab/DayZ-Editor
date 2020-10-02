@@ -32,7 +32,7 @@ class EditorSettingsDialogController: Controller
 		
 }
 
-
+/*
 class EditorSettingsDialog: EditorDialog
 {
 	
@@ -62,7 +62,7 @@ class EditorSettingsDialog: EditorDialog
 		settings_group.AddPrefab(new EditorPrefabEditText("Auto Save", "AutoSaveTimer"));
 		settings_group.SetController(m_EditorSettingsDialogController);
 		
-		AddContent(settings_group);*/
+		AddContent(settings_group);
 	}
 	
 	void SaveCallback()
@@ -75,4 +75,4 @@ class EditorSettingsDialog: EditorDialog
 	{
 		GetEditor().SetSettings(m_EditorSettingsDialogController.GetSettings());
 	}
-}
+}*/

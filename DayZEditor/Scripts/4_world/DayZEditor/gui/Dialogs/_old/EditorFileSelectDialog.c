@@ -19,7 +19,7 @@ enum FileSearchMode {
 	FOLDERS,
 	FILES
 };
-
+/*
 class EditorFileDialog: EditorDialog
 {
 	protected string m_CurrentDirectory;
@@ -161,7 +161,7 @@ class EditorFileOpenDialog: EditorFileDialog
 		Close();
 		
 		return true;
-	}*/
+	}
 }
 
 
@@ -217,7 +217,7 @@ class EditorFileImportDialog: EditorFileDialog
 		Close();
 		
 		return true;
-	}*/
+	}
 }
 
 
@@ -299,7 +299,7 @@ class EditorFileSaveDialog: EditorFileDialog
 		}
 		
 		return true;
-	}*/
+	}
 }
 
 
@@ -482,5 +482,5 @@ class EditorFileExportDialog: EditorFileDialog
 		}
 		
 		return true;
-	}*/
-}
+	}
+}*/

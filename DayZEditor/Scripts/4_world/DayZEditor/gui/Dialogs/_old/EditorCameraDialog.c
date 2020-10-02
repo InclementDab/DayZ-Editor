@@ -88,7 +88,7 @@ class EditorCameraDialogController: DialogBaseController
 }
 
 
-
+/*
 class EditorCameraDialog: EditorDialog
 {
 	protected EditorCamera m_EditorCamera;
@@ -129,7 +129,7 @@ class EditorCameraDialog: EditorDialog
 		
 		camera_group.SetController(m_EditorCameraDialogController);
 		
-		AddContent(camera_group);*/
+		AddContent(camera_group);
 	}
 	
 	void ResetDefaultExecute()
@@ -154,5 +154,5 @@ class EditorCameraDialog: EditorDialog
 		return EditorCameraDialogController;
 	}
 	
-}
+}*/
 

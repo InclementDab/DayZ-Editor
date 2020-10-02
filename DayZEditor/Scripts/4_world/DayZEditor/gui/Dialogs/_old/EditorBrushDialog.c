@@ -39,7 +39,7 @@ class EditorBrushDialogController: Controller
 	
 }
 
-
+/*
 class EditorBrushDialog: EditorDialog
 {
 	
@@ -76,7 +76,7 @@ class EditorBrushDialog: EditorDialog
 		
 		AddContent(m_BrushSettings);
 		AddContent(m_BrushObjects); 
-		*/
+		
 		//EditorPrefabButton btn = new EditorPrefabButton("Add Brush...", "AddBrushData");
 		//btn.SetController(m_EditorBrushDialogController);
 		//AddContent(btn);
@@ -93,5 +93,5 @@ class EditorBrushDialog: EditorDialog
 		EditorLog.Trace("EditorBrushDialog::ExportCallback");
 	}
 	
-}
+}*/
 
