@@ -15,8 +15,10 @@ class EditorHologram
 		m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout", GetEditor().GetEditorHud().EditorMapWidget);
 		m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
-		m_ProjectionEntity = GetGame().CreateObjectEx(type_name, position, ECE_LOCAL);
-		
+		if (!Class.CastTo(m_ProjectionEntity, GetGame().CreateObjectEx(type_name, position, ECE_LOCAL))) {
+			EditorLog.Error("EditorHologram: Invalid Object %1", type_name);
+			delete this;
+		}
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
@@ -24,14 +26,11 @@ class EditorHologram
 	void ~EditorHologram()
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-		GetGame().ObjectDelete(m_ProjectionEntity);
+		//GetGame().ObjectDelete(m_ProjectionEntity);
 	}
 	
 	void Update(float timeslice)
 	{
-		if (m_ProjectionEntity == null) return;
-		if (!m_ProjectionEntity.IsInherited(EntityAI)) return;
-		
 		vector position = Editor.CurrentMousePosition;
 		vector mat[4] = {
 			"1 0 0",

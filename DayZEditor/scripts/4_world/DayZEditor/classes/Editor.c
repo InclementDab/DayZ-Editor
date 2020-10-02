@@ -36,7 +36,7 @@ class Editor
 	private EditorCamera m_EditorCamera;
 	private PlayerBase m_Player;
 		
-	static IEntity							ObjectUnderCursor = null;
+	static Object							ObjectUnderCursor = null;
 	static EditorObject 					EditorObjectUnderCursor = null;
 	static vector 							CurrentMousePosition;
 	
@@ -267,7 +267,9 @@ class Editor
 			Object target = obj.Get(0);
 			if (target != null) {
 				if (target != ObjectUnderCursor) {
-					if (ObjectUnderCursor != null) OnMouseExitObject(ObjectUnderCursor, x, y);
+					if (ObjectUnderCursor != null) { 
+						OnMouseExitObject(ObjectUnderCursor, x, y);
+					}
 					OnMouseEnterObject(target, x, y);
 					ObjectUnderCursor = target;
 				} 
@@ -357,12 +359,13 @@ class Editor
 					EditorLog.Info(GetWidgetUnderCursor().GetName());
 				else if (KeyState(KeyCode.KC_LSHIFT)) {
 
-					if (ObjectUnderCursor) {
-						IEntity obj = ObjectUnderCursor;
-						while (obj.GetParent())
-							obj = obj.GetParent();
+					if (ObjectUnderCursor) {						
+						/* attempt at getting proxies to work. Failed
+						while (ObjectUnderCursor.GetParent()) {
+							ObjectUnderCursor = Object.Cast(ObjectUnderCursor.GetParent());
+						}*/
 						
-						CreateFromObject(obj);
+						CreateFromObject(ObjectUnderCursor);
 					}
 				} else {
 					
@@ -459,7 +462,7 @@ class Editor
 			// Camera Init
 			// todo if singleplayer spawn on center of map, otherwise spawn on character in MP
 			vector pos = m_Player.GetPosition();
-			m_EditorCamera = GetGame().CreateObjectEx("EditorCamera", pos, ECE_LOCAL);
+			m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", pos, ECE_LOCAL));
 			
 			
 			// Init Camera Map Marker
@@ -497,12 +500,12 @@ class Editor
 		
 	}
 	
-	bool OnMouseEnterObject(Object target, int x, int y)
+	bool OnMouseEnterObject(IEntity target, int x, int y)
 	{
 
 	}
 	
-	bool OnMouseExitObject(Object target, int x, int y)
+	bool OnMouseExitObject(IEntity target, int x, int y)
 	{
 
 	}	
@@ -523,17 +526,19 @@ class Editor
 	
 	void PlaceObject()
 	{
-		Input input = GetGame().GetInput();
-		EntityAI e = m_ObjectInHand.GetProjectionEntity();
-		vector mat[4];
-	
-		EditorObject editor_object = CreateObject(EditorObjectData.Create(e.GetType(), e.GetPosition(), e.GetOrientation()));
+		if (!m_ObjectInHand) return;
+
+		EditorObject editor_object = CreateFromObject(m_ObjectInHand.GetProjectionEntity());
 		SelectObject(editor_object);
 		
+		string type = m_ObjectInHand.GetProjectionEntity().GetType();
+		delete m_ObjectInHand;
+		
 		if (!KeyState(KeyCode.KC_LSHIFT)) { 
-			delete m_ObjectInHand;
 			EditorEvents.StopPlacing(this);
-		}	
+		} else {
+			m_ObjectInHand = new EditorHologram(type, CurrentMousePosition);
+		}
 	}
 	
 		

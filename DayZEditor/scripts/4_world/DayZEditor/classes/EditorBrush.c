@@ -26,7 +26,7 @@ class EditorBrush
 	{
 		EditorLog.Trace("EditorBrush");
 		m_BrushData = settings;
-		m_BrushDecal = GetGame().CreateObject("BrushBase", vector.Zero);
+		m_BrushDecal = EntityAI.Cast(GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_NONE));
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
 
@@ -43,7 +43,7 @@ class EditorBrush
 		EditorLog.Trace("EditorBrush::Create " + settings.Name);
 
 		if (settings.BrushClassName) {
-			return settings.BrushClassName.Spawn();
+			return EditorBrush.Cast(settings.BrushClassName.Spawn());
 		}
 	
 		return new EditorBrush(settings);

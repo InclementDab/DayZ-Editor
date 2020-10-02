@@ -24,10 +24,10 @@ class EditorObject
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem 		m_EditorPlacedListItem;
 	
-	protected EntityAI 		m_WorldObject;
-	protected EntityAI		m_BBoxLines[12];	
-	protected EntityAI 		m_BBoxBase;
-	protected EntityAI 		m_CenterLine;
+	protected Object 		m_WorldObject;
+	protected Object		m_BBoxLines[12];	
+	protected Object 		m_BBoxBase;
+	protected Object 		m_CenterLine;
 	
 	protected ref array<ref EditorSnapPoint> m_SnapPoints = {};
 	
@@ -249,7 +249,11 @@ class EditorObject
 	}
 	
 	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) {
-		m_WorldObject.PlaceOnSurfaceRotated(trans, pos, dx, dz, fAngle, align); 
+		
+		EntityAI ent;
+		if (Class.CastTo(ent, m_WorldObject)) {
+			ent.PlaceOnSurfaceRotated(trans, pos, dx, dz, fAngle, align); 
+		}
 	}
 	
 	void ClippingInfo(out vector clip_info[2]) { 
@@ -482,7 +486,13 @@ class EditorObject
 	void PauseSimulation(bool pause)
 	{
 		EditorLog.Trace("EditorObject::PauseSimulation");
-		m_WorldObject.DisableSimulation(pause);
+		
+		EntityAI ent;
+		if (Class.CastTo(ent, m_WorldObject)) {
+			ent.DisableSimulation(pause);
+		}
+		
+		
 	}
 
 	

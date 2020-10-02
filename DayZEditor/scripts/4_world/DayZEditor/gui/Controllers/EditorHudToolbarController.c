@@ -98,11 +98,11 @@ class EditorHudToolbarController: EditorControllerBase
 					NotifyPropertyChanged("BrushToggleButtonText");
 				}
 				
-				if (GetEditor()) {
+				if (m_Editor) {
 					if (BrushToggleButtonState) {
-						GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
+						m_Editor.SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
 					} else {
-						GetEditor().SetBrush(null);
+						m_Editor.SetBrush(null);
 					}
 				}
 				break;
