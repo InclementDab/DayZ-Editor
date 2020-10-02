@@ -191,6 +191,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
    {
     WrapSpacerWidgetClass ToolsWrapper {
      visible 1
+     clipchildren 1
      ignorepointer 1
      color 0.0118 0.0118 0.0118 0.3922
      size 1 1
@@ -206,6 +207,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
      content_valign center
      {
       PanelWidgetClass Divider8 {
+       visible 0
        ignorepointer 1
        position 0 0
        size 15 1
@@ -417,7 +419,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       Padding 0
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
@@ -465,7 +466,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_EditorUndoCommand"
+           Relay_Command "m_UndoCommand"
           }
          }
         }
@@ -507,7 +508,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Relay_Command "m_EditorRedoCommand"
+           Relay_Command "m_RedoCommand"
           }
          }
         }
@@ -547,7 +548,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       Padding 0
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
@@ -596,7 +596,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Debug_Logging 0
-           Relay_Command "m_EditorCutCommand"
+           Relay_Command "m_CutCommand"
           }
          }
         }
@@ -644,7 +644,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Debug_Logging 0
-           Relay_Command "m_EditorCopyCommand"
+           Relay_Command "m_CopyCommand"
           }
          }
         }
@@ -690,7 +690,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          {
           ScriptParamsClass {
            Debug_Logging 0
-           Relay_Command "m_EditorRedoCommand"
+           Relay_Command "m_RedoCommand"
           }
          }
         }
@@ -730,7 +730,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       Padding 0
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
@@ -774,8 +773,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Binding_Name "MagnetButton"
-           Two_Way_Binding 1
+           Two_Way_Binding 0
+           Relay_Command "m_MagnetCommand"
           }
          }
         }
@@ -814,8 +813,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Binding_Name "GroundButton"
-           Two_Way_Binding 1
+           Two_Way_Binding 0
+           Relay_Command "m_GroundCommand"
           }
          }
         }
@@ -855,8 +854,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Binding_Name "SnapButton"
-           Two_Way_Binding 1
+           Two_Way_Binding 0
+           Relay_Command "m_SnapCommand"
           }
          }
         }
@@ -892,12 +891,12 @@ WrapSpacerWidgetClass ToolbarWrapper {
        visible 1
        clipchildren 1
        ignorepointer 0
-       position 0 0
-       size 250 30
+       size 250 1
+       valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 1
-       vexactsize 1
+       vexactsize 0
        draggable 0
        scriptclass "ViewBinding"
        style debugUI
@@ -962,15 +961,14 @@ WrapSpacerWidgetClass ToolbarWrapper {
        }
       }
       FrameWidgetClass BrushRadiusFrame {
-       visible 0
+       visible 1
        clipchildren 0
        ignorepointer 1
-       size 140 30
-       valign center_ref
+       size 140 1
        hexactpos 1
        vexactpos 1
        hexactsize 1
-       vexactsize 1
+       vexactsize 0
        {
         PanelWidgetClass BrushRadiusSliderBackground {
          visible 1
@@ -1028,16 +1026,15 @@ WrapSpacerWidgetClass ToolbarWrapper {
         }
        }
       }
-      FrameWidgetClass BrushDensityFrame {
-       visible 0
+      PanelWidgetClass BrushDensityFrame {
+       visible 1
        ignorepointer 1
        position 0 0
-       size 140 30
-       valign center_ref
+       size 140 1
        hexactpos 1
        vexactpos 1
        hexactsize 1
-       vexactsize 1
+       vexactsize 0
        {
         PanelWidgetClass BrushDensitySliderBackground {
          visible 1
