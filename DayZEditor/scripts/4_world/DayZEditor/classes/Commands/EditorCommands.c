@@ -453,7 +453,8 @@ class EditorCameraControlsCommand: EditorCommand
 
 class EditorReloadHudCommand: EditorCommand
 {
-	protected override void Call(Class sender, CommandArgs args) {
+	protected override void Call(Class sender, CommandArgs args) 
+	{
 		m_Editor.ReloadHud();
 	}
 

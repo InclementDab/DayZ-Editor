@@ -17,9 +17,7 @@ class EditorMenu: EditorScriptView
 	void EditorMenu(Widget parent = null) 
 	{
 		EditorLog.Trace("EditorMenu");
-		
 		m_EditorMenuController = EditorMenuController.Cast(GetController());
-		EditorUIManager.CurrentMenu = this;
 	}
 		
 	void ~EditorMenu() 

@@ -1,6 +1,8 @@
-class EditorHudToolbarController: EditorControllerBase
+class EditorHudToolbarController: Controller
 {	
-	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
+	protected Editor m_Editor;
+	
+	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 
 	float BrushRadius = 50;
 	float BrushDensity = 0.5;
@@ -42,11 +44,13 @@ class EditorHudToolbarController: EditorControllerBase
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
+		
+		BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
 
-#ifndef COMPONENT_SYSTEM
+//#ifndef COMPONENT_SYSTEM
 		// Load Brushes
-		ReloadBrushes(m_Editor.EditorBrushFile);
-#endif
+		ReloadBrushes("$profile:Editor/EditorBrushes.xml");
+//#endif
 		
 		if (!m_Editor) {
 			m_Editor = GetEditor();
@@ -73,7 +77,7 @@ class EditorHudToolbarController: EditorControllerBase
 	{
 		EditorLog.Trace("EditorHudToolbarController::ReloadBrushes");
 		BrushTypeBoxData.Clear();
-		XMLEditorBrushes xml_brushes(BrushTypeBoxData);
+		XMLEditorBrushes xml_brushes = new XMLEditorBrushes(BrushTypeBoxData);
 		
 		if (!FileExist(filename)) {
 			EditorLog.Error("File not found: " + filename);
@@ -93,9 +97,9 @@ class EditorHudToolbarController: EditorControllerBase
 				BrushRadiusFrame.Show(BrushToggleButtonState);
 				BrushDensityFrame.Show(BrushToggleButtonState);
 				
-				if (BrushTypeBoxData[BrushTypeSelection]) {
+				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
 					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
-					NotifyPropertyChanged("BrushToggleButtonText");
+					NotifyPropertyChanged("BrushToggleButtonText", false);
 				}
 				
 				if (m_Editor) {
@@ -123,9 +127,9 @@ class EditorHudToolbarController: EditorControllerBase
 		switch (collection_name) {
 			
 			case "BrushTypeBoxData": {
-				if (BrushTypeBoxData[BrushTypeSelection]) {
+				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
 					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
-					NotifyPropertyChanged("BrushToggleButtonText");
+					NotifyPropertyChanged("BrushToggleButtonText", false);
 				}
 				break;
 			}
@@ -199,8 +203,6 @@ class EditorHudToolbarController: EditorControllerBase
 		}
 		
 		switch (w.GetTypeName()) {
-			
-			
 			
 			case "SliderWidget": {
 				w.SetColor(COLOR_SALMON);
@@ -307,7 +309,7 @@ class EditorHudToolbarController: EditorControllerBase
 		toolbar_button.GetScreenSize(w, h);
 		toolbar_menu.SetPosition(0, h);
 
-		return EditorUIManager.CurrentMenu;
+		return toolbar_menu;
 	}
 		
 }

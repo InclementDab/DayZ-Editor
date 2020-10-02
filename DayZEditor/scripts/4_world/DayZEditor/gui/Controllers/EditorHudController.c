@@ -76,8 +76,6 @@ class EditorHudController: Controller
 		// Reload Placeables
 		EditorLog.Info("Loaded %1 Placeable Objects", ReloadPlaceableObjects().ToString());
 		
-		//DebugPrint();
-		
 		EditorHudToolbarView = new EditorHudToolbar();
 		NotifyPropertyChanged("EditorHudToolbarView");
 	}
@@ -121,7 +119,7 @@ class EditorHudController: Controller
 
 	override void PropertyChanged(string property_name)
 	{
-		EditorLog.Trace("EditorHudController::PropertyChanged: " + property_name);
+		EditorLog.Trace("EditorHudController::PropertyChanged: %1", property_name);
 		
 		switch (property_name) {
 					

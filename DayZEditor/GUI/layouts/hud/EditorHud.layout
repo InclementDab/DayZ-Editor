@@ -245,8 +245,8 @@ FrameWidgetClass EditorFrame {
      visible 1
      clipchildren 0
      ignorepointer 1
-     position 0 0.06
-     size 328 0.915
+     position 0 0.054
+     size 328 0.921
      hexactpos 1
      vexactpos 0
      hexactsize 1
@@ -659,8 +659,8 @@ FrameWidgetClass EditorFrame {
      visible 1
      clipchildren 1
      ignorepointer 0
-     position 0 0.06
-     size 328 0.915
+     position 0 0.054
+     size 328 0.921
      halign right_ref
      hexactpos 1
      vexactpos 0
@@ -883,10 +883,11 @@ FrameWidgetClass EditorFrame {
      }
     }
     FrameWidgetClass ToolbarFrame {
+     visible 1
      clipchildren 0
      ignorepointer 1
      position 0 0
-     size 1 0.06
+     size 1 0.054
      halign center_ref
      hexactpos 1
      vexactpos 1
@@ -1390,6 +1391,7 @@ FrameWidgetClass EditorFrame {
  }
  {
   ScriptParamsClass {
+   Debug_Logging 0
   }
  }
 }

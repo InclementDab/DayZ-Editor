@@ -277,9 +277,8 @@ class EditorMapGroupProto: XMLCallback
 // abstract to EditorXMLCallback
 class XMLEditorBrushes: XMLCallback
 {
-	private ObservableCollection<ref EditorBrushData> m_Data;
+	private autoptr ObservableCollection<ref EditorBrushData> m_Data;
 	
-
 	void XMLEditorBrushes(ObservableCollection<ref EditorBrushData> data) 
 	{
 		EditorLog.Trace("XMLEditorBrushes");
@@ -350,7 +349,7 @@ class XMLEditorBrushes: XMLCallback
 					brush_settings.InsertPlaceableObject(new EditorBrushObject(object_type, object_frequency, z_offset));
 				}
 			}
-							
+				
 			m_Data.Insert(brush_settings);
 		}
 	}
