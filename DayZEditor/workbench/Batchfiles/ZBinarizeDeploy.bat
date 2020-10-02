@@ -205,4 +205,5 @@ for /R %%D in ( config.cpp ) do (
 goto end
 
 :end
+exit /b 0
 endlocal
