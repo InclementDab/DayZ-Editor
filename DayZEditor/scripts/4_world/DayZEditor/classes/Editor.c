@@ -213,8 +213,6 @@ class Editor
 	}
 	
 	private bool exit_condition = false;
-	private float avg_timeslice;
-	private int timeslice_count;
 	
 	void Update(float timeslice)
 	{
@@ -255,6 +253,7 @@ class Editor
 		}
 		
 		
+		int log_lvl = EditorLog.CurrentLogLevel;
 		EditorLog.CurrentLogLevel = LogLevel.WARNING;
 		if (m_EditorCamera) {
 			vector cam_pos = m_EditorCamera.GetPosition();
@@ -262,29 +261,24 @@ class Editor
 			m_EditorHudController.cam_x = cam_pos[0];
 			m_EditorHudController.cam_y = cam_pos[2];
 			m_EditorHudController.cam_z = cam_pos[1];
-			/*
+			
 			m_EditorHudController.NotifyPropertyChanged("cam_x");
 			m_EditorHudController.NotifyPropertyChanged("cam_y");
-			m_EditorHudController.NotifyPropertyChanged("cam_z");*/
+			m_EditorHudController.NotifyPropertyChanged("cam_z");
 			
 		}
 		
 		EditorObjectSet selected_objects = GetSelectedObjects();
 		if (selected_objects.Count() > 0) {
 			// Spams errors
-			//m_EditorHud.GetController().SetInfoObjectPosition(selected_objects[0].GetPosition());
+			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
 		
 		CommandManager.CutCommand.SetCanExecute(selected_objects.Count() > 0);
 		CommandManager.CopyCommand.SetCanExecute(selected_objects.Count() > 0);
 		//PasteCommand.SetCanExecute(EditorClipboard.IsClipboardValid());
-			
-		// debug
-		timeslice_count++;
-		avg_timeslice = avg_timeslice + ((ftime - avg_timeslice) / timeslice_count);
-		m_EditorHudController.DebugText1 = avg_timeslice.ToString();
-		//m_EditorHudController.NotifyPropertyChanged("DebugText1");
-		EditorLog.CurrentLogLevel = LogLevel.TRACE;		
+
+		EditorLog.CurrentLogLevel = log_lvl;		
 	}
 	
 	
