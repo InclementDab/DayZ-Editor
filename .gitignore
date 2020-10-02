@@ -1,3 +1,6 @@
+# DayZ Editor Specific files
+DeveloperDefines.c
+
 # DayZ packed files
 *.pbo
 
