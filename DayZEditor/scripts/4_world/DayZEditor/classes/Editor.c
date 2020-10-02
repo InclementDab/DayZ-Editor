@@ -170,6 +170,8 @@ class Editor
 	ref EditorReloadBrushesCommand ReloadBrushesCommand = new EditorReloadBrushesCommand();
 	ref EditorLootEditorCommand LootEditorCommand = new EditorLootEditorCommand();
 	
+	ref EditorBrushPropertiesCommand BrushPropertiesCommand = new EditorBrushPropertiesCommand();
+	ref EditorBrushToggleCommand BrushToggleCommand = new EditorBrushToggleCommand();
 	ref EditorPlaceObjectCommand PlaceObjectCommand = new EditorPlaceObjectCommand();
 	
 	// I think this one should be generated on the EditorObject

@@ -10,7 +10,11 @@ class EditorCommandTooltip: ScriptViewTemplate<EditorCommandTooltipController>
 	void EditorCommandTooltip(EditorCommand editor_command, float x, float y)
 	{
 		m_TemplateController.Name = editor_command.GetName();
-		m_TemplateController.Shortcut = string.Format("(%1)", editor_command.GetKeyDisplay());
+		
+		if (editor_command.GetShortcut() != string.Empty) {
+			m_TemplateController.Shortcut = string.Format("(%1)", editor_command.GetShortcut());
+		}
+		
 		m_TemplateController.NotifyPropertyChanged();
 		
 		m_LayoutRoot.SetPos(x, y);

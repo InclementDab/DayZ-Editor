@@ -55,7 +55,7 @@ class EditorCommand: RelayCommand
 		return string.Empty;
 	}
 	
-	string GetKeyDisplay() {
+	string GetShortcut() {
 		return string.Empty;
 	}
 }
@@ -74,7 +74,7 @@ class EditorNewCommand: EditorCommand
 		return "New";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + N";
 	}
 }
@@ -108,7 +108,7 @@ class EditorSaveCommand: EditorCommand
 		return "Save";
 	}
 
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + S";
 	}
 }
@@ -124,7 +124,7 @@ class EditorSaveAsCommand: EditorCommand
 		return "Save As...";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + Shift + S";
 	}
 }
@@ -173,7 +173,7 @@ class EditorOpenCommand: EditorCommand
 		return "DayZEditor/gui/icons/icon_folder.edds";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + O";
 	}
 }
@@ -189,7 +189,7 @@ class EditorCloseCommand: EditorCommand
 		return "Close";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + W";
 	}
 }
@@ -206,7 +206,7 @@ class EditorExitCommand: EditorCommand
 		return "Exit";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Alt + F4";
 	}
 	
@@ -223,7 +223,7 @@ class EditorUndoCommand: EditorCommand
 		return "Undo";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + Z";
 	}
 	
@@ -242,7 +242,7 @@ class EditorRedoCommand: EditorCommand
 		return "Redo";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + Y";
 	}
 }
@@ -260,7 +260,7 @@ class EditorSelectAllCommand: EditorCommand
 		return "Select All...";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + A";
 	}
 }
@@ -276,7 +276,7 @@ class EditorDeleteCommand: EditorCommand
 		return "Delete";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Delete";
 	}
 }
@@ -307,7 +307,7 @@ class EditorExportCommand: EditorCommand
 		return "Export";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + E";
 	}
 }
@@ -333,7 +333,7 @@ class EditorImportCommand: EditorCommand
 		return "Import";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + I";
 	}
 }
@@ -349,7 +349,7 @@ class EditorCutCommand: EditorCommand
 		return "Cut";
 	} 
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + X";
 	}
 	
@@ -369,7 +369,7 @@ class EditorCopyCommand: EditorCommand
 		return "Copy";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + C";
 	}
 	
@@ -389,7 +389,7 @@ class EditorPasteCommand: EditorCommand
 		return "Paste";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + V";
 	}
 	
@@ -426,7 +426,7 @@ class EditorEnvironmentControlCommand: EditorCommand
 		return "Environment";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + Shift + I";
 	}
 	
@@ -446,7 +446,7 @@ class EditorCameraControlsCommand: EditorCommand
 		return "Camera";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + Shift + T";
 	}
 }
@@ -466,7 +466,7 @@ class EditorReloadHudCommand: EditorCommand
 		return "set:dayz_gui image:icon_refresh";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + Shift + U";
 	}
 }
@@ -495,7 +495,7 @@ class EditorObjectPropertiesCommand: EditorCommand
 		return "Properties";
 	}
 	
-	override string GetKeyDisplay() {
+	override string GetShortcut() {
 		return "Ctrl + T";
 	}
 }
@@ -550,15 +550,50 @@ class EditorMagnetCommand: EditorCommand
 	{
 		
 	}
+	
+	override string GetName() {
+		return "Toggle Magnet Mode";
+	}
 }
 
 class EditorGroundCommand: EditorCommand
 {
+	override string GetName() {
+		return "Toggle Ground Mode";
+	}
 }
 
 class EditorSnapCommand: EditorCommand
 {
+	override string GetName() {
+		return "Toggle Snapping";
+	}
+}
+
+class EditorBrushToggleCommand: EditorCommand
+{
+	protected override void Call(Class sender, CommandArgs args)
+	{
+		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
+		
+		switch (button_args.GetMouseButton()) {
+			
+			case 0: {
+				bool button_state = button_args.GetButtonState();
+				button_args.Source.FindAnyWidget("BrushToggleButtonText").SetPos(button_state * 1, button_state * 1);
+				break;
+			}
+			
+			case 1: {
+				m_Editor.BrushPropertiesCommand.Execute(this, args);
+				break;
+			}
+		}
+	}
 	
+	override string GetName() {
+		return "Toggle Brush";
+	}
 }
 
 class EditorPlaceObjectCommand: EditorCommand

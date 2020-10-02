@@ -946,7 +946,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
           ScriptParamsClass {
            Binding_Name "BrushToggleButtonState"
            Two_Way_Binding 1
-           Relay_Command "BrushToggleButtonExecute"
+           Relay_Command "m_BrushToggleCommand"
           }
          }
         }

@@ -26,6 +26,12 @@ class EditorHudToolbarController: EditorControllerBase
 	protected EditorCopyCommand m_CopyCommand;
 	protected EditorPasteCommand m_PasteCommand;
 	
+	protected EditorMagnetCommand m_MagnetCommand;
+	protected EditorGroundCommand m_GroundCommand;
+	protected EditorSnapCommand m_SnapCommand;
+	
+	protected EditorBrushToggleCommand m_BrushToggleCommand;
+	
 	// View Properties
 	protected ButtonWidget MenuBarFile;
 	protected ButtonWidget MenuBarEdit;
@@ -67,6 +73,12 @@ class EditorHudToolbarController: EditorControllerBase
 			m_CutCommand = m_Editor.CutCommand;
 			m_CopyCommand = m_Editor.CopyCommand;
 			m_PasteCommand = m_Editor.PasteCommand;
+			
+			m_MagnetCommand = m_Editor.MagnetCommand;
+			m_GroundCommand = m_Editor.GroundCommand;
+			m_SnapCommand = m_Editor.SnapCommand;
+			
+			m_BrushToggleCommand = m_Editor.BrushToggleCommand;
 		}
 	}
 	
@@ -125,6 +137,9 @@ class EditorHudToolbarController: EditorControllerBase
 		switch (collection_name) {
 			
 			case "BrushTypeBoxData": {
+				
+				m_BrushToggleCommand.SetCanExecute(args.Source.Count() > 0);
+				
 				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
 					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
 					NotifyPropertyChanged("BrushToggleButtonText", false);
@@ -265,28 +280,7 @@ class EditorHudToolbarController: EditorControllerBase
 		} else {
 			delete EditorUIManager.CurrentMenu;
 		}
-	}
-	
-	void BrushToggleButtonExecute(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudToolbarController::BrushToggleButtonExecute");
-		
-		switch (args.GetMouseButton()) {
-			
-			case 0: {
-				bool button_state = args.GetButtonState();
-				args.Source.FindAnyWidget("BrushToggleButtonText").SetPos(button_state * 1, button_state * 1);
-				break;
-			}
-			
-			case 1: {
-				EditorBrushPropertiesCommand cmd = new EditorBrushPropertiesCommand();
-				cmd.Execute(this, null);
-				break;
-			}
-		}
-	}
-	
+	}	
 	
 	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
 	{
