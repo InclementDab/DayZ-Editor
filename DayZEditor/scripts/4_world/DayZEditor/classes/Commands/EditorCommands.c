@@ -543,3 +543,19 @@ class EditorBrushPropertiesCommand: EditorCommand
 		return "Edit Brush Properties";
 	}
 }
+
+class EditorMagnetCommand: EditorCommand
+{
+	protected override void Call()
+	{
+		
+	}
+}
+
+class EditorGroundCommand: EditorCommand
+{
+}
+
+class EditorSnapCommand: EditorCommand
+{
+}

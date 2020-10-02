@@ -151,6 +151,11 @@ class Editor
 	ref EditorCutCommand CutCommand = new EditorCutCommand();
 	ref EditorCopyCommand CopyCommand = new EditorCopyCommand();
 	ref EditorPasteCommand PasteCommand = new EditorPasteCommand();
+	
+	ref EditorMagnetCommand MagnetCommand = new EditorMagnetCommand();
+	ref EditorGroundCommand GroundCommand = new EditorGroundCommand();
+	ref EditorSnapCommand SnapCommand = new EditorSnapCommand();
+	
 
 	private ref EditorSettings 					m_EditorSettings;
 	private ref EditorHud						m_EditorHud;
