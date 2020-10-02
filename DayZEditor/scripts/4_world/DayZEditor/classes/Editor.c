@@ -144,9 +144,13 @@ class Editor
 	ref EditorSaveCommand SaveCommand = new EditorSaveCommand();
 	ref EditorSaveAsCommand SaveAsCommand = new EditorSaveAsCommand();
 	ref EditorCloseCommand CloseCommand = new EditorCloseCommand();
+	ref EditorExportCommand ExportCommand = new EditorExportCommand();
+	ref EditorImportCommand ImportCommand = new EditorImportCommand();
 	ref EditorExitCommand ExitCommand = new EditorExitCommand();
+	
 	ref EditorUndoCommand UndoCommand = new EditorUndoCommand();
 	ref EditorRedoCommand RedoCommand = new EditorRedoCommand();
+	ref EditorSelectAllCommand SelectAllCommand = new EditorSelectAllCommand();
 	ref EditorDeleteCommand DeleteCommand = new EditorDeleteCommand();
 	
 	ref EditorCutCommand CutCommand = new EditorCutCommand();
@@ -297,6 +301,7 @@ class Editor
 		
 		CutCommand.SetCanExecute(selected_objects.Count() > 0);
 		CopyCommand.SetCanExecute(selected_objects.Count() > 0);
+		PasteCommand.SetCanExecute(EditorClipboard.IsClipboardValid());
 			
 		// debug
 		timeslice_count++;
@@ -389,7 +394,7 @@ class Editor
 	// Return TRUE if handled.
 	bool OnKeyPress(int key)
 	{			
-		EditorCommand command = GetCommandFromHotkeys(key).Spawn();
+		EditorCommand command = GetCommandFromHotkeys(key);
 		if (command) {
 			CommandArgs args = new CommandArgs();
 			args.Context = m_EditorHud;
@@ -585,7 +590,7 @@ class Editor
 	}
 	
 	
-	typename GetCommandFromHotkeys(int key)
+	EditorCommand GetCommandFromHotkeys(int key)
 	{
 		//EditorLog.Trace("Editor::GetCommandFromHotkeys");
 		
@@ -597,19 +602,19 @@ class Editor
 				switch (key) {
 					
 					case KeyCode.KC_S: {
-						return EditorSaveAsCommand;
+						return SaveAsCommand;
 					}
 					
 					case KeyCode.KC_I: {
-						return EditorEnvironmentControlCommand;
+						return EnvironmentControlCommand;
 					}
 					
 					case KeyCode.KC_T: {
-						return EditorCameraControlsCommand;
+						return CameraControlsCommand;
 					}
 					
 					case KeyCode.KC_U: {
-						return EditorReloadHudCommand;						
+						return ReloadHudCommand;						
 					}
 				}
 			}
@@ -618,60 +623,59 @@ class Editor
 			switch (key) {
 				
 				case KeyCode.KC_Z: {
-					return EditorUndoCommand;
+					return UndoCommand;
 				}
 				
 				case KeyCode.KC_Y: {
-					return EditorRedoCommand;
+					return RedoCommand;
 				}
 				
 				case KeyCode.KC_A: {
-					return EditorSelectAllCommand;
+					return SelectAllCommand;
 				}
 				
 				case KeyCode.KC_N: {
-					return EditorNewCommand;
+					return NewCommand;
 				}
 				
 				case KeyCode.KC_S: {
 					//if (m_EditorSaveFile == string.Empty)
-					//	return EditorSaveAsCommand;
+					//	return SaveAsCommand;
 					
-					return EditorSaveCommand;
+					return SaveCommand;
 				}
 				
 				case KeyCode.KC_O: {
-					return EditorOpenCommand;
+					return OpenCommand;
 				}
 				
 				case KeyCode.KC_E: {
-					return EditorExportCommand;
+					return ExportCommand;
 				}
 				
 				case KeyCode.KC_I: {					
-					return EditorImportCommand;
+					return ImportCommand;
 				}
 				
 				case KeyCode.KC_X: {
-					return EditorCutCommand;
+					return CutCommand;
 				}
 
 				case KeyCode.KC_C: {
-					return EditorCopyCommand;
+					return CopyCommand;
 				}
 				
 				case KeyCode.KC_V: {
-					return EditorPasteCommand;
+					return PasteCommand;
 				}
 				
 				case KeyCode.KC_W: {
-					return EditorCloseCommand;
+					return CloseCommand;
 				}
 			}
 		}
 
-		typename t;
-		return t;
+		return null;
 	}
 
 }

@@ -34,23 +34,18 @@ class EditorClipboard
 	
 	static void Paste(vector cursor_pos)
 	{
-		EditorLog.Trace("EditorObjectManager::PasteSelection");
-		string clipboard_text;
-		GetGame().CopyFromClipboard(clipboard_text);
-		
+		EditorLog.Trace("EditorObjectManager::PasteSelection");		
 		ref array<ref EditorObjectData>> data = {};
-		JsonFileLoader<array<ref EditorObjectData>>.JsonLoadData(clipboard_text, data);
-		if (data.Count() == 0) 
+		if (!LoadFromClipboard(data)) {
 			return;
+		}
 		
-
+		
 		GetEditor().ClearSelection();
 				
 		foreach (ref EditorObjectData pasted_object: data) {
 			
-			
 			vector position = pasted_object.Position + Editor.CurrentMousePosition;
-			
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",
@@ -84,6 +79,19 @@ class EditorClipboard
 	}
 	
 	
+	static bool LoadFromClipboard(out array<ref EditorObjectData> clipboard_data)
+	{
+		string clipboard_text, error;
+		GetGame().CopyFromClipboard(clipboard_text);
+		
+		JsonSerializer json_serializer = new JsonSerializer();
+		return json_serializer.ReadFromString(clipboard_data, clipboard_text, error);
+	}
 	
+	static bool IsClipboardValid()
+	{
+		ref array<ref EditorObjectData>> data = {};
+		return LoadFromClipboard(data);
+	}	
 }
 
