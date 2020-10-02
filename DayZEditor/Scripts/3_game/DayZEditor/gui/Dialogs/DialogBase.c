@@ -10,7 +10,7 @@ class DialogBase: ScriptView
 	// View Properties	
 	protected WrapSpacerWidget WindowDragWrapper;
 	
-	void DialogBase(Widget parent = null, string title = "")
+	void DialogBase(Widget parent, string title)
 	{
 		m_DialogBaseController = DialogBaseController.Cast(GetController());
 		

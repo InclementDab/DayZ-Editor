@@ -11,11 +11,11 @@ class EditorPlacedListItem: EditorListItem
 		EditorLog.Trace("EditorPlacedListItem::SetEditorObject"); 
 		m_EditorObject = data;
 		
-		m_Controller.ListItemLabel = m_EditorObject.GetDisplayName();
-		m_Controller.NotifyPropertyChanged("ListItemLabel");
+		m_TemplateController.ListItemLabel = m_EditorObject.GetDisplayName();
+		m_TemplateController.NotifyPropertyChanged("ListItemLabel");
 		
-		m_Controller.ListItemIcon = GetIconFromMod(m_EditorObject.GetData().ObjectMod);
-		m_Controller.NotifyPropertyChanged("ListItemIcon");
+		m_TemplateController.ListItemIcon = GetIconFromMod(m_EditorObject.GetData().ObjectMod);
+		m_TemplateController.NotifyPropertyChanged("ListItemIcon");
 				
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
@@ -71,7 +71,7 @@ class EditorPlacedListItem: EditorListItem
 			} 
 			
 			case 1: {
-				EditorContextMenu context_menu = new EditorContextMenu();
+				EditorContextMenu context_menu = new EditorContextMenu(null);
 				int x, y;
 				GetMousePos(x, y);
 				context_menu.SetPosition(x, y);

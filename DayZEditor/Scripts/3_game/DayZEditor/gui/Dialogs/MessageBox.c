@@ -2,7 +2,7 @@ class MessageBox: DialogBase
 {
 	protected DialogResult m_CurrentResult = DialogResult.None;
 	
-	void MessageBox(Widget parent = null, string title = "", string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
+	void MessageBox(Widget parent, string title, string caption, MessageBoxButtons buttons)
 	{		
 		AddContent(new MessageBoxPrefab(null, caption));
 		

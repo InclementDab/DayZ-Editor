@@ -3,7 +3,7 @@ class SliderPrefab: PrefabBase<float>
 {
 	protected float m_Min, m_Max;
 	
-	void SliderPrefab(Widget parent = null, string caption = "", Controller binding_context = null, string binding_name = "", float default_value = 0, float min = 0, float max = 100)
+	void SliderPrefab(Widget parent, string caption, Controller binding_context, string binding_name, float default_value = DEFAULT_VALUE, float min = 0, float max = 100)
 	{
 		m_Min = min; m_Max = max;
 		

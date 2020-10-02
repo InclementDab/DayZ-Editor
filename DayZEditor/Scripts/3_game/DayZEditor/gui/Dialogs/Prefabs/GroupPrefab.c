@@ -4,7 +4,7 @@ class GroupPrefab: PrefabBase<ref ObservableCollection<ref ScriptedViewBase>>
 	
 	protected WrapSpacerWidget EditorDialogOptionContent;
 	
-	void GroupPrefab(Widget parent = null, string caption = "", Controller binding_context = null, string binding_name = "")
+	void GroupPrefab(Widget parent, string caption, Controller binding_context, string binding_name, ObservableCollection<ref ScriptedViewBase> default_value = DEFAULT_VALUE)
 	{
 		collection_ref = new ObservableCollection<ref ScriptedViewBase>("Value", m_PrefabBaseController);
 		m_PrefabBaseController.Value = collection_ref;

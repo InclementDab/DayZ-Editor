@@ -3,7 +3,7 @@ class EditorDialogBase: DialogBase
 	protected Editor m_Editor;
 	protected EditorHud m_EditorHud;
 	
-	void EditorDialogBase(Widget parent = null, string title = "")
+	void EditorDialogBase(Widget parent, string title)
 	{
 		m_Editor = GetEditor();
 		if (m_Editor) {

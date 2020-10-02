@@ -1,4 +1,4 @@
-class EditorHud: ScriptView
+class EditorHud: ScriptViewTemplate<EditorHudController>
 {	
 	// Layout Elements
 	protected Widget NotificationFrame;
@@ -6,13 +6,12 @@ class EditorHud: ScriptView
 	
 	MapWidget EditorMapWidget;
 
-	void EditorHud(Widget parent = null)
+	void EditorHud(Widget parent)
 	{	
 		EditorLog.Trace("EditorHud");
 		EditorMapWidget.Show(false);
 	}
 
-	
 	void Show(bool show) 
 	{
 		EditorLog.Trace("EditorHud::Show");
@@ -49,13 +48,5 @@ class EditorHud: ScriptView
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/layouts/hud/EditorHud.layout";
-	}
-	
-	override typename GetControllerType() {
-		return EditorHudController;
-	}
-	
-	EditorHudController GetEditorHudController() { 
-		return EditorHudController.Cast(GetController());
 	}
 }

@@ -4,7 +4,7 @@ class EditorMessageBox: MessageBox
 	protected Editor m_Editor;
 	protected EditorHud m_EditorHud;
 	
-	void EditorMessageBox(Widget parent = null, string title = "", string caption = "", MessageBoxButtons buttons = MessageBoxButtons.OK)
+	void EditorMessageBox(Widget parent, string title, string caption, MessageBoxButtons buttons)
 	{
 		EditorLog.Trace("EditorMessageBox");
 

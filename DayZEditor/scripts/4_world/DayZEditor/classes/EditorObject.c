@@ -111,7 +111,7 @@ class EditorObject
 		// Map marker
 		if ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
 			m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
-			GetEditor().GetEditorHud().GetEditorHudController().InsertMapMarker(m_EditorObjectMapMarker);
+			GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
 		}	
 		
 		// World Object base marker
@@ -121,9 +121,9 @@ class EditorObject
 		
 		// Browser item
 		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
-			m_EditorPlacedListItem = new EditorPlacedListItem();
+			m_EditorPlacedListItem = new EditorPlacedListItem(null);
 			m_EditorPlacedListItem.SetEditorObject(this);
-			GetEditor().GetEditorHud().GetEditorHudController().RightbarSpacerData.Insert(m_EditorPlacedListItem);
+			GetEditor().GetEditorHud().GetTemplateController().RightbarSpacerData.Insert(m_EditorPlacedListItem);
 		}
 		
 		EditorEvents.OnMapToggled.Insert(OnMapToggled);
@@ -378,7 +378,7 @@ class EditorObject
 		
 
 		// I cant wait to delete this... but not yet
-		if (GetEditor().GetEditorHud().GetEditorHudController().GetToolbarController().SnapButton) {
+		if (GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().SnapButton) {
 			vector current_size = GetSize();
 			vector current_pos = GetPosition();
 			float snap_radius = 5;

@@ -8,13 +8,13 @@ static int groupcount = 0;
 class EditorCollapsibleListItem: EditorListItem
 {
 
-	void EditorCollapsibleListItem(Widget parent = null) 
+	void EditorCollapsibleListItem(Widget parent) 
 	{ 
 		EditorLog.Trace("EditorCollapsibleListItem");
 		
 		EditorListItemCollapse.Show(true);
-		m_Controller.ListItemLabel = string.Format("group%1", groupcount);
-		m_Controller.NotifyPropertyChanged("ListItemLabel");
+		m_TemplateController.ListItemLabel = string.Format("group%1", groupcount);
+		m_TemplateController.NotifyPropertyChanged("ListItemLabel");
 		groupcount++;
 	}
 	
@@ -31,9 +31,9 @@ class EditorCollapsibleListItem: EditorListItem
 			
 			case 0: {
 				
-				for (int i = 0; i < m_Controller.ChildListItems.Count(); i++) {
+				for (int i = 0; i < m_TemplateController.ChildListItems.Count(); i++) {
 					
-					EditorListItem list_item = m_Controller.ChildListItems[i];
+					EditorListItem list_item = m_TemplateController.ChildListItems[i];
 					switch (list_item.Type()) {
 						
 						case EditorPlacedListItem: {

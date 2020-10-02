@@ -8,7 +8,7 @@ class EditorPlaceableListItem: EditorListItem
 	protected ModStructure m_ModStructure;
 	protected PlaceableObjectCategory m_Category = PlaceableObjectCategory.UNKNOWN;
 	
-	void EditorPlaceableListItem(Widget parent = null, string type = "", string path = "")
+	void EditorPlaceableListItem(Widget parent, string type, string path)
 	{
 		EditorLog.Trace("EditorPlaceableListItem");
 		Type = type; Path = path;
@@ -40,12 +40,12 @@ class EditorPlaceableListItem: EditorListItem
 		}
 		
 		
-		m_Controller.ListItemLabel = Type;
-		m_Controller.NotifyPropertyChanged("ListItemLabel");
+		m_TemplateController.ListItemLabel = Type;
+		m_TemplateController.NotifyPropertyChanged("ListItemLabel");
 		
 		if (m_ModStructure) {
-			m_Controller.ListItemIcon = GetIconFromMod(m_ModStructure);
-			m_Controller.NotifyPropertyChanged("ListItemIcon");
+			m_TemplateController.ListItemIcon = GetIconFromMod(m_ModStructure);
+			m_TemplateController.NotifyPropertyChanged("ListItemIcon");
 		} else {
 			EditorLog.Debug("Mod not found for %1", Type);
 		}
@@ -133,7 +133,7 @@ class EditorPlaceableListItem: EditorListItem
 		if (args.GetMouseButton() == 0) {
 			GetEditor().CreateInHand(this);
 		} else if (args.GetMouseButton() == 1) {
-			EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu();
+			EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu(null);
 			int x, y;
 			GetMousePos(x, y);
 			placeable_context.SetPosition(x, y);

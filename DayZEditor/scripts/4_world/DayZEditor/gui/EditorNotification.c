@@ -6,7 +6,7 @@ class EditorNotification: ScriptView
 	protected Widget NotificationPanel;
 	protected TextWidget NotificationText;
 	
-	void EditorNotification(Widget parent = null, string text = "", int color = -4301218)
+	void EditorNotification(Widget parent, string text, int color = -4301218)
 	{
 		EditorLog.Trace("EditorNotification::CreateNotification");
 		NotificationText.SetText(text);

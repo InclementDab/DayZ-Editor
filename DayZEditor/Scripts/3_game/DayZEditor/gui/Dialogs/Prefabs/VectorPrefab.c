@@ -21,7 +21,7 @@ class VectorPrefab: PrefabBase<vector>
 {
 	protected VectorPrefabController m_VectorPrefabController;
 	
-	void VectorPrefab(Widget parent = null, string caption = "", Controller binding_context = null, string binding_name = "", vector default_value = "0 0 0")
+	void VectorPrefab(Widget parent, string caption, Controller binding_context, string binding_name, vector default_value = DEFAULT_VALUE)
 	{
 		m_VectorPrefabController = VectorPrefabController.Cast(GetController());
 		

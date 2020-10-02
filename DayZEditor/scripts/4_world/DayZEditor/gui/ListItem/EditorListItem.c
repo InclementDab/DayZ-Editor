@@ -15,10 +15,10 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 	ButtonWidget EditorListItemCollapse;
 	ButtonWidget EditorListItemButton;
 		
-	void EditorListItem(Widget parent = null) 
+	void EditorListItem(Widget parent) 
 	{ 
 		EditorLog.Trace("EditorListItem");
-		m_Controller.SetListItem(this);
+		m_TemplateController.SetListItem(this);
 		m_LayoutRoot.SetUserData(this);
 	}
 	

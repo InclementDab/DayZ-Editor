@@ -1,13 +1,7 @@
-class EditorMenuItem: ScriptView
+class EditorMenuItem: ScriptViewTemplate<EditorMenuItemController>
 {
-	protected EditorMenuItemController m_EditorMenuItemController;
 	protected ImageWidget EditorMenuItemIcon;
 	protected ButtonWidget EditorMenuItemButton;
-			
-	void EditorMenuItem(Widget parent = null) 
-	{
-		m_EditorMenuItemController = EditorMenuItemController.Cast(GetController());
-	}	
 }
 
 class EditorMenuItemCommand: EditorMenuItem
@@ -16,16 +10,16 @@ class EditorMenuItemCommand: EditorMenuItem
 	{
 		EditorMenuItemIcon.Show(editor_command.GetIcon() != string.Empty);
 
-		m_EditorMenuItemController.LabelText = editor_command.GetName();
-		m_EditorMenuItemController.NotifyPropertyChanged("LabelText");
+		m_TemplateController.LabelText = editor_command.GetName();
+		m_TemplateController.NotifyPropertyChanged("LabelText");
 		
-		m_EditorMenuItemController.IconPath = editor_command.GetIcon();
-		m_EditorMenuItemController.NotifyPropertyChanged("IconPath");
+		m_TemplateController.IconPath = editor_command.GetIcon();
+		m_TemplateController.NotifyPropertyChanged("IconPath");
 		
-		m_EditorMenuItemController.ShortcutText = editor_command.GetKeyDisplay();
-		m_EditorMenuItemController.NotifyPropertyChanged("ShortcutText");
+		m_TemplateController.ShortcutText = editor_command.GetKeyDisplay();
+		m_TemplateController.NotifyPropertyChanged("ShortcutText");
 		
-		ViewBinding view_binding = m_EditorMenuItemController.GetViewBinding(EditorMenuItemButton);
+		ViewBinding view_binding = m_TemplateController.GetViewBinding(EditorMenuItemButton);
 		if (view_binding) {
 			view_binding.SetRelayCommand(editor_command);
 		}

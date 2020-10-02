@@ -14,7 +14,7 @@ class EditorMenu: EditorScriptView
 {	
 	protected EditorMenuController m_EditorMenuController;	
 	
-	void EditorMenu(Widget parent = null) 
+	void EditorMenu(Widget parent) 
 	{
 		EditorLog.Trace("EditorMenu");
 		m_EditorMenuController = EditorMenuController.Cast(GetController());
@@ -27,13 +27,13 @@ class EditorMenu: EditorScriptView
 			
 	void AddMenuDivider()
 	{	
-		EditorMenuItemDivider divider();
+		EditorMenuItemDivider divider(null);
 		AddMenuItem(divider);
 	}
 
 	void AddMenuButton(ref EditorCommand editor_command)
 	{
-		EditorMenuItemCommand menu_item = new EditorMenuItemCommand();
+		EditorMenuItemCommand menu_item = new EditorMenuItemCommand(null);
 		menu_item.SetCommand(editor_command);
 		AddMenuItem(menu_item);
 	}
@@ -59,7 +59,7 @@ class EditorMenu: EditorScriptView
 
 class EditorFileMenu: EditorMenu
 {
-	void EditorFileMenu(Widget parent = null) 
+	void EditorFileMenu(Widget parent)
 	{
 		EditorLog.Trace("EditorFileMenu");
 		
@@ -75,7 +75,7 @@ class EditorFileMenu: EditorMenu
 
 class EditorEditMenu: EditorMenu
 {
-	void EditorEditMenu(Widget parent = null) 
+	void EditorEditMenu(Widget parent)
 	{
 		EditorLog.Trace("EditorEditMenu");
 				
@@ -94,7 +94,7 @@ class EditorEditMenu: EditorMenu
 
 class EditorViewMenu: EditorMenu
 {	
-	void EditorViewMenu(Widget parent = null) 
+	void EditorViewMenu(Widget parent)
 	{
 		EditorLog.Trace("EditorViewMenu");
 
@@ -106,7 +106,7 @@ class EditorViewMenu: EditorMenu
 
 class EditorContextMenu: EditorMenu
 {
-	void EditorContextMenu(Widget parent = null) 
+	void EditorContextMenu(Widget parent) 
 	{
 		EditorLog.Trace("EditorContextMenu");
 		AddMenuButton(m_Editor.CutCommand);
@@ -125,7 +125,7 @@ class EditorContextMenu: EditorMenu
 class EditorPlaceableContextMenu: EditorMenu
 {
 	
-	void EditorPlaceableContextMenu(Widget parent = null) 
+	void EditorPlaceableContextMenu(Widget parent)
 	{
 		AddMenuButton(m_Editor.LootEditorCommand);
 	}

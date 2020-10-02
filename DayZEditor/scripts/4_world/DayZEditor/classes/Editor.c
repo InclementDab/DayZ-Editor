@@ -205,8 +205,8 @@ class Editor
 		m_UIManager = GetGame().GetUIManager();
 		
 		// Init Hud
-		m_EditorHud = new EditorHud();
-		m_EditorHudController = m_EditorHud.GetEditorHudController();		
+		m_EditorHud = new EditorHud(null);
+		m_EditorHudController = m_EditorHud.GetTemplateController();		
 		
 		m_Mission = GetGame().GetMission();
 		
@@ -575,8 +575,8 @@ class Editor
 		if (m_EditorHud)
 			delete m_EditorHud;
 		
-		m_EditorHud = new EditorHud();
-		m_EditorHudController = m_EditorHud.GetEditorHudController();
+		m_EditorHud = new EditorHud(null);
+		m_EditorHudController = m_EditorHud.GetTemplateController();
 		return m_EditorHud;
 	}
 	

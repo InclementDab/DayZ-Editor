@@ -14,11 +14,13 @@ class PrefabBaseController<Class TValue>: Controller
 
 class PrefabBase<Class TValue>: ScriptView
 {
+	private static const TValue DEFAULT_VALUE;
+	
 	protected PrefabBaseController<TValue> m_PrefabBaseController;
 	protected Controller m_BindingContext;
 	protected string m_BindingName;
 	
-	void PrefabBase(Widget parent = null, string caption = "", Controller binding_context = null, string binding_name = "")
+	void PrefabBase(Widget parent, string caption, Controller binding_context, string binding_name, TValue default_value = DEFAULT_VALUE)
 	{
 		m_BindingName = binding_name;
 		m_BindingContext = binding_context;
@@ -27,10 +29,8 @@ class PrefabBase<Class TValue>: ScriptView
 		m_PrefabBaseController.Caption = caption;
 		m_PrefabBaseController.NotifyPropertyChanged("Caption");
 		
-		
-		// todo once you remove the Widget parent = null crap
-		//m_PrefabBaseController.Value = default_value;
-		//m_PrefabBaseController.NotifyPropertyChanged("Value");
+		m_PrefabBaseController.Value = default_value;
+		m_PrefabBaseController.NotifyPropertyChanged("Value");
 	}
 	
 	void PrefabPropertyChanged(string property_name)
@@ -38,6 +38,7 @@ class PrefabBase<Class TValue>: ScriptView
 		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, m_PrefabBaseController.Value);
 		m_BindingContext.PropertyChanged(m_BindingName);
 	}
+
 
 	override typename GetControllerType() {
 		return (new PrefabBaseController<TValue>()).Type();

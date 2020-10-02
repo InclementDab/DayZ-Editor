@@ -2,7 +2,7 @@ class MessageBoxPrefab: ScriptView
 {
 	protected RichTextWidget CaptionText;
 	
-	void MessageBoxPrefab(Widget parent = null, string content = "")
+	void MessageBoxPrefab(Widget parent, string content)
 	{
 		CaptionText.SetText(content);
 	}

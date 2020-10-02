@@ -523,8 +523,8 @@ class EditorReloadBrushesCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{
-		m_Editor.GetEditorHud().GetEditorHudController().GetToolbarController().BrushTypeBoxData.Clear();
-		m_Editor.GetEditorHud().GetEditorHudController().GetToolbarController().ReloadBrushes(m_Editor.EditorBrushFile);
+		m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().BrushTypeBoxData.Clear();
+		m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().ReloadBrushes(m_Editor.EditorBrushFile);
 	}
 	
 	override string GetName() {

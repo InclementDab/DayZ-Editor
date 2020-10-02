@@ -75,7 +75,7 @@ class EditorHudController: EditorControllerBase
 		// Reload Placeables
 		EditorLog.Info("Loaded %1 Placeable Objects", ReloadPlaceableObjects().ToString());
 		
-		EditorHudToolbarView = new EditorHudToolbar();
+		EditorHudToolbarView = new EditorHudToolbar(null);
 		NotifyPropertyChanged("EditorHudToolbarView");
 	}
 			
@@ -190,7 +190,7 @@ class EditorHudController: EditorControllerBase
 	void ButtonCreateFolderExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudController::ButtonCreateFolderExecute");
-		EditorCollapsibleListItem category();
+		EditorCollapsibleListItem category(null);
 		RightbarSpacerData.Insert(category);
 	}	
 

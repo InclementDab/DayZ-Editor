@@ -55,7 +55,7 @@ class EditorEnvironmentDialogController: DialogBaseController
 
 class EditorEnvironmentDialog: EditorDialogBase
 {	
-	void EditorEnvironmentDialog(Widget parent = null, string title = "")
+	void EditorEnvironmentDialog(Widget parent, string title)
 	{
 		int year, month, day, hour, minute;
 		GetGame().GetWorld().GetDate(year, month, day, hour, minute);
@@ -70,7 +70,7 @@ class EditorEnvironmentDialog: EditorDialogBase
 		
 		float exposure = GetGame().GetWorld().GetEyeAccom();
 		
-		GroupPrefab group_prefab = new GroupPrefab(null, "Group1", m_Controller);
+		GroupPrefab group_prefab = new GroupPrefab(null, "Group1", m_Controller, string.Empty);
 		group_prefab.Insert(new SliderPrefab(null, "Time", m_Controller, "time", time, 0, 86400));
 		group_prefab.Insert(new SliderPrefab(null, "Rain", m_Controller, "rain", rain, 0, 1));
 		group_prefab.Insert(new SliderPrefab(null, "Fog", m_Controller, "fog", fog, 0, 1));
