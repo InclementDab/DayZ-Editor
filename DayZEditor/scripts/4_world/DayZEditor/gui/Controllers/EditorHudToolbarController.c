@@ -1,19 +1,18 @@
 class EditorHudToolbarController: Controller
-{	
+{
 	// View Properties
 	protected ButtonWidget MenuBarFile;
 	protected ButtonWidget MenuBarEdit;
 	protected ButtonWidget MenuBarView;
 	
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
-		
+
 	float BrushRadius = 50;
 	float BrushDensity = 0.5;
 	
 	bool BrushToggleButtonState;
 	int BrushTypeSelection;
 	string BrushToggleButtonText;
-	
 	
 	protected Widget BrushRadiusFrame;
 	protected Widget BrushDensityFrame;
@@ -64,11 +63,12 @@ class EditorHudToolbarController: Controller
 			
 				BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
 				NotifyPropertyChanged("BrushToggleButtonText");
-
-				if (BrushToggleButtonState && GetEditor()) {
-					GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
-				} else {
-					GetEditor().SetBrush(null);
+				if (GetEditor()) {
+					if (BrushToggleButtonState) {
+						GetEditor().SetBrush(EditorBrush.Create(BrushTypeBoxData[BrushTypeSelection]));
+					} else {
+						GetEditor().SetBrush(null);
+					}
 				}
 				break;
 			}
@@ -146,7 +146,7 @@ class EditorHudToolbarController: Controller
 		//EditorLog.Trace("EditorHudToolbarController::OnMouseEnter %1", w.GetName());		
 		
 		if (EditorUIManager.CurrentDialog && !EditorUIManager.IsDialogCommand(w)) {
-			return false;
+			return super.OnMouseEnter(w, x, y);
 		}
 		
 		switch (w.GetName()) {
@@ -172,22 +172,8 @@ class EditorHudToolbarController: Controller
 				break;
 			}
 		}
-		
-		switch (w) {
-			
-			case MenuBarFile:
-			case MenuBarEdit:
-			case MenuBarView: {
 				
-				if (EditorUIManager.CurrentMenu) {
-					delete EditorUIManager.CurrentMenu;
-					EditorUIManager.CurrentMenu = CreateToolbarMenu(w);
-				}
-				break;
-			}	
-		}
-		
-		return false;
+		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
@@ -213,20 +199,7 @@ class EditorHudToolbarController: Controller
 			}
 		}
 		
-		return false;
-			
-	}
-	
-	
-	// Relay Commands
-	void MenuBarExecute(ButtonCommandArgs args) 
-	{		
-		EditorLog.Trace("EditorHudToolbarController::MenuBarExecute");
-		if (!EditorUIManager.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
-			EditorUIManager.CurrentMenu = CreateToolbarMenu(args.Source);
-		} else {
-			delete EditorUIManager.CurrentMenu;
-		}
+		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
 		
@@ -271,36 +244,4 @@ class EditorHudToolbarController: Controller
 		EditorPasteCommand cmd = new EditorPasteCommand();
 		cmd.Execute(this, null);
 	}
-	
-	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
-	{
-		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
-		
-		EditorMenu toolbar_menu;
-		switch (toolbar_button) {
-			
-			case MenuBarFile: {
-				toolbar_menu = new EditorFileMenu(toolbar_button);
-				break;
-			}
-			
-			case MenuBarEdit: {
-				toolbar_menu = new EditorEditMenu(toolbar_button);
-				break;
-			}
-			
-			case MenuBarView: {
-				toolbar_menu = new EditorViewMenu(toolbar_button);
-				break;
-			}
-		}
-		
-		// Sets position to bottom of button
-		float w, h;
-		toolbar_button.GetScreenSize(w, h);
-		toolbar_menu.SetPosition(0, h);
-
-		return EditorUIManager.CurrentMenu;
-	}
-	
 }

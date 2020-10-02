@@ -1,5 +1,3 @@
-
-
 class EditorHud: ScriptView
 {	
 	// Layout Elements
@@ -51,7 +49,7 @@ class EditorHud: ScriptView
 	
 	
 	override string GetLayoutFile() {
-		return "DayZEditor/gui/layouts/EditorHud.layout";
+		return "DayZEditor/gui/layouts/hud/EditorHud.layout";
 	}
 	
 	override typename GetControllerType() {

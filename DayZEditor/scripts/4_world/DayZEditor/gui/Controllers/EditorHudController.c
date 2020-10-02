@@ -21,6 +21,8 @@ class EditorHudController: Controller
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
+	ref EditorHudToolbar EditorHudToolbarView;
+	
 	ref ObservableCollection<ref EditorListItem> LeftbarSpacerData 		= new ObservableCollection<ref EditorListItem>("LeftbarSpacerData", this);
 	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 	= new ObservableCollection<ref EditorListItem>("RightbarSpacerData", this);
 	ref ObservableCollection<string> DebugActionStackListbox 			= new ObservableCollection<string>("DebugActionStackListbox", this);
@@ -40,7 +42,7 @@ class EditorHudController: Controller
 		
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected EditBoxWidget LeftbarSearchBar;
-
+	
 	// Temp until sub controllers can be properties of parent controller
 	EditorHudToolbarController GetToolbarController() {
 		return EditorUIManager.CurrentEditorHudToolbarController;
@@ -70,10 +72,14 @@ class EditorHudController: Controller
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
-
 		
 		// Reload Placeables
 		EditorLog.Info("Loaded %1 Placeable Objects", ReloadPlaceableObjects().ToString());
+		
+		//DebugPrint();
+		
+		EditorHudToolbarView = new EditorHudToolbar();
+		NotifyPropertyChanged("EditorHudToolbarView");
 	}
 			
 	void InsertMapMarker(EditorMarker map_marker)
