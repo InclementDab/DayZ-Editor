@@ -45,7 +45,7 @@ class MessageBox: DialogBase
 				break;
 			}
 		}
-				
+
 		float du, dv, dx, dy;
 		m_LayoutRoot.GetScreenSize(du, dv);		
 		m_LayoutRoot.GetPos(dx, dy);

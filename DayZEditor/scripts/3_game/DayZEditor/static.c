@@ -15,7 +15,7 @@ static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
 
 class EditorLog
 {
-	static LogLevel CurrentLogLevel = LogLevel.TRACE;
+	static LogLevel CurrentLogLevel = LogLevel.DEBUG;
 	static string ExclusiveLogMode;
 	
 	private static string m_LastCalledType;	

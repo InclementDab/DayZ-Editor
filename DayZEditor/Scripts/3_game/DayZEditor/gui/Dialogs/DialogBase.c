@@ -12,7 +12,6 @@ class DialogBase: ScriptView
 	
 	void DialogBase(Widget parent = null, string title = "")
 	{
-		Debug_Logging = true;
 		m_DialogBaseController = DialogBaseController.Cast(GetController());
 		
 		m_DialogBaseController.Title = title;
