@@ -148,7 +148,7 @@ class EditorHudToolbarController: EditorControllerBase
 		}
 		
 		ViewBinding view_binding = GetViewBinding(w);
-		if (view_binding) {
+		if (view_binding && !EditorUIManager.CurrentMenu) {
 			EditorCommand editor_command;
 			if (Class.CastTo(editor_command, view_binding.GetRelayCommand())) {
 				
@@ -216,7 +216,7 @@ class EditorHudToolbarController: EditorControllerBase
 		}
 	}	
 	
-	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
+	private ref EditorMenu CreateToolbarMenu(Widget toolbar_button)
 	{
 		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
 		
@@ -239,12 +239,13 @@ class EditorHudToolbarController: EditorControllerBase
 			}
 		}
 		
-		toolbar_menu.SetParent(toolbar_button);
+		
 		
 		// Sets position to bottom of button
-		float w, h;
+		float x, y, w, h;
+		toolbar_button.GetScreenPos(x, y);
 		toolbar_button.GetScreenSize(w, h);
-		toolbar_menu.SetPosition(0, h);
+		toolbar_menu.SetPosition(x, y + h);
 
 		return toolbar_menu;
 	}

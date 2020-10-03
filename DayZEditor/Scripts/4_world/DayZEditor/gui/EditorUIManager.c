@@ -1,18 +1,18 @@
 class EditorUIManager
 {
 	// Modal Menu Control
-	static autoptr EditorMenu CurrentMenu;
+	static ref EditorMenu CurrentMenu;
 	
 	// ToolTip Control
-	static autoptr ScriptView CurrentTooltip;
+	static ref ScriptView CurrentTooltip;
 		
 	// Dialog Control
-	static autoptr DialogBase CurrentDialog;
+	static ref DialogBase CurrentDialog;
 	
 	static bool IsDialogCommand(Widget w) {
 		return (CurrentDialog && CurrentDialog.GetLayoutRoot() && CurrentDialog.GetLayoutRoot().FindAnyWidget(w.GetName()));
 	}
 	
-	static autoptr EditorHudController CurrentEditorHudController;
-	static autoptr EditorHudToolbarController CurrentEditorHudToolbarController;
+	static ref EditorHudController CurrentEditorHudController;
+	static ref EditorHudToolbarController CurrentEditorHudToolbarController;
 }
