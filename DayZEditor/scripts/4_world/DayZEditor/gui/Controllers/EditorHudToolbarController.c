@@ -150,7 +150,7 @@ class EditorHudToolbarController: EditorControllerBase
 		ViewBinding view_binding = GetViewBinding(w);
 		if (view_binding && !EditorUIManager.CurrentMenu) {
 			EditorCommand editor_command;
-			if (Class.CastTo(editor_command, view_binding.GetRelayCommand())) {
+			if (Class.CastTo(editor_command, view_binding.GetRelayCommand()) && editor_command.CanExecute()) {
 				
 				float pos_x, pos_y, size_x, size_y;
 				w.GetScreenPos(pos_x, pos_y);
@@ -163,6 +163,7 @@ class EditorHudToolbarController: EditorControllerBase
 				}
 				
 				EditorUIManager.CurrentTooltip = tooltip;
+				
 			}
 		}
 		
