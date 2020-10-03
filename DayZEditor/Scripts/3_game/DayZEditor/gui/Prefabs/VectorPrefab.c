@@ -32,7 +32,7 @@ class VectorPrefab: PrefabBase<vector>
 	}
 		
 	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/dialogs/prefabs/VectorPrefab.layout";
+		return "DayZEditor/gui/Layouts/prefabs/VectorPrefab.layout";
 	}
 	
 	override typename GetControllerType() {

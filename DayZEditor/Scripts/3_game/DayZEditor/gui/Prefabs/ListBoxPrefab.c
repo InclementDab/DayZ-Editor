@@ -19,7 +19,7 @@ class ListBoxPrefab: ScriptView
 	}
 	
 	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/dialogs/prefabs/ListBoxPrefab.layout";
+		return "DayZEditor/gui/Layouts/prefabs/ListBoxPrefab.layout";
 	}
 	
 	override typename GetControllerType() {

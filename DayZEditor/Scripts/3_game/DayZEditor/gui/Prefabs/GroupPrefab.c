@@ -26,6 +26,6 @@ class GroupPrefab: PrefabBase<ref ObservableCollection<ref ScriptedViewBase>>
 	}
 	
 	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/dialogs/prefabs/GroupPrefab.layout";
+		return "DayZEditor/gui/Layouts/prefabs/GroupPrefab.layout";
 	}
 }

@@ -8,7 +8,7 @@ class MessageBoxPrefab: ScriptView
 	}
 	
 	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/dialogs/prefabs/MessageBoxPrefab.layout";
+		return "DayZEditor/gui/Layouts/prefabs/MessageBoxPrefab.layout";
 	}
 }
 
