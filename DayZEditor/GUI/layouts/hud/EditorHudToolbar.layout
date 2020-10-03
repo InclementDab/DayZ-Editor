@@ -756,7 +756,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            inheritalpha 1
            ignorepointer 1
            position 0 0
-           size 1 1
+           size 0.95 0.95
            halign center_ref
            valign center_ref
            hexactpos 1

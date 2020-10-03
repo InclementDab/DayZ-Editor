@@ -46,6 +46,7 @@ class EditorCommand: RelayCommand
 	
 	protected void Call(Class sender, CommandArgs args);
 	
+	// Abstracts
 	string GetName() {
 		return string.Empty;
 	}
@@ -53,6 +54,8 @@ class EditorCommand: RelayCommand
 	string GetIcon() {
 		return string.Empty;
 	}
+	
+	int GetIconFlags();
 	
 	string GetShortcut() {
 		return string.Empty;
@@ -256,6 +259,10 @@ class EditorRedoCommand: EditorCommand
 	
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:arrow_round_icon";
+	}
+	
+	override int GetIconFlags() {
+		return WidgetFlags.FLIPU;
 	}
 }
 
