@@ -263,12 +263,11 @@ WrapSpacerWidgetClass ToolbarWrapper {
          scriptclass "ViewBinding"
          style Default
          "no focus" 1
-         text "N"
          text_offset 0 0
          switch normal
          {
           ImageWidgetClass NewButton_Icon {
-           visible 0
+           visible 1
            clipchildren 1
            inheritalpha 1
            ignorepointer 1
@@ -281,7 +280,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            draggable 0
-           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           image0 ""
+           imageTexture "{9D99EDE9BFE0A0F4}DayZEditor/GUI/icons/icon_new2.edds"
            mode additive
            "src alpha" 1
            "no wrap" 1
@@ -308,16 +308,15 @@ WrapSpacerWidgetClass ToolbarWrapper {
          scriptclass "ViewBinding"
          style Default
          "no focus" 1
-         text "O"
          text_offset 0 0
          switch normal
          {
           ImageWidgetClass OpenButton_Icon {
-           visible 0
+           visible 1
            inheritalpha 1
            ignorepointer 1
            position 0 0
-           size 0.9 0.9
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -353,12 +352,11 @@ WrapSpacerWidgetClass ToolbarWrapper {
          scriptclass "ViewBinding"
          style Default
          "no focus" 1
-         text "S"
          text_offset 0 0
          switch normal
          {
           ImageWidgetClass SaveButton_Icon {
-           visible 0
+           visible 1
            inheritalpha 1
            ignorepointer 1
            position 0 0
@@ -370,7 +368,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            draggable 0
-           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           image0 ""
+           imageTexture "{5E2BA9CFCF99DFE0}DayZEditor/GUI/icons/icon_save.edds"
            mode additive
            "src alpha" 1
            "no wrap" 1

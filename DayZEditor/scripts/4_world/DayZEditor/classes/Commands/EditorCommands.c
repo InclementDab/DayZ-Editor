@@ -76,6 +76,10 @@ class EditorNewCommand: EditorCommand
 	override string GetShortcut() {
 		return "Ctrl + N";
 	}
+	
+	override string GetIcon() {
+		return "DayZEditor/gui/icons/icon_new2.edds";
+	}
 }
 
 class EditorSaveCommand: EditorCommand
@@ -110,6 +114,11 @@ class EditorSaveCommand: EditorCommand
 	override string GetShortcut() {
 		return "Ctrl + S";
 	}
+	
+	override string GetIcon() {
+		return "DayZEditor/gui/icons/icon_save.edds";
+	}
+	
 }
 
 class EditorSaveAsCommand: EditorCommand
