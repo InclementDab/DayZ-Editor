@@ -1,6 +1,6 @@
 class GroupPrefab: PrefabBase<ref ObservableCollection<ref ScriptedViewBase>>
 {
-	ref ObservableCollection<ref ScriptedViewBase> collection_ref;
+	autoptr ObservableCollection<ref ScriptedViewBase> collection_ref;
 	
 	protected WrapSpacerWidget EditorDialogOptionContent;
 	
