@@ -20,18 +20,6 @@ class EditorListItemController: Controller
 		EditorLog.Trace("EditorListItemController::OnWidgetScriptInit");
 		super.OnWidgetScriptInit(w);
 	}
-
-	void ListItemExecute(ButtonCommandArgs args) {
-		m_ListItem.ListItemExecute(args);
-	}
-	
-	void ListItemVisibleExecute(ButtonCommandArgs args) {
-		m_ListItem.ListItemVisibleExecute(args);
-	}
-	
-	void ListItemCollapseExecute(ButtonCommandArgs args) {
-		m_ListItem.ListItemCollapseExecute(args);
-	}
 	
 	// janky way to try to get the group head to select
 	/*

@@ -30,7 +30,7 @@ class EditorPlacedListItem: EditorListItem
 		Deselect();
 	}
 	
-	override void ListItemExecute(ButtonCommandArgs args)
+	bool ListItemExecute(ButtonCommandArgs args)
 	{
 		switch (args.GetMouseButton()) {
 			
@@ -78,9 +78,11 @@ class EditorPlacedListItem: EditorListItem
 				break;
 			}
 		}
+		
+		return true;
 	}
 	
-	override void ListItemVisibleExecute(ButtonCommandArgs args)
+	bool ListItemVisibleExecute(ButtonCommandArgs args)
 	{
 		switch (args.GetMouseButton()) {
 			
@@ -90,5 +92,7 @@ class EditorPlacedListItem: EditorListItem
 			}
 			
 		}
+		
+		return true;
 	}
 }

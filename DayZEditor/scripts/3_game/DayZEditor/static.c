@@ -1,3 +1,5 @@
+#define EDITOR_PRINT
+
 static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
 {
 	DayZPlayer player;
@@ -15,7 +17,7 @@ static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
 
 class EditorLog
 {
-	static LogLevel CurrentLogLevel = LogLevel.DEBUG;
+	static LogLevel CurrentLogLevel = LogLevel.TRACE;
 	static string ExclusiveLogMode;
 	
 	private static string m_LastCalledType;	

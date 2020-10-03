@@ -94,14 +94,19 @@ class EditorPlaceableListItem: EditorListItem
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
-		GetEditor().CreateInHand(this);
+		if (!GetEditor().IsPlacing()) {
+			GetEditor().CreateInHand(this);
+		}
 		return true;
 	}
 	
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
-		GetEditor().CommandManager.PlaceObjectCommand.Execute(this, null);
+		
+		if (GetEditor().IsPlacing()) {
+			GetEditor().CommandManager.PlaceObjectCommand.Execute(this, null);
+		}
 		return true;
 	}
 	
@@ -135,15 +140,21 @@ class EditorPlaceableListItem: EditorListItem
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
-	override void ListItemExecute(ButtonCommandArgs args)
+	bool ListItemExecute(ButtonCommandArgs args)
 	{
-		if (args.GetMouseButton() == 0) {
+		EditorLog.Trace("EditorPlaceableListItem::ListItemExecute");
+		
+		if (args.GetMouseButton() == 0 && !GetEditor().IsPlacing()) {
 			GetEditor().CreateInHand(this);
-		} else if (args.GetMouseButton() == 1) {
+		} 
+		
+		else if (args.GetMouseButton() == 1) {
 			EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu();
 			int x, y;
 			GetMousePos(x, y);
 			placeable_context.SetPosition(x, y);
 		}
+		
+		return true;
 	}
 }

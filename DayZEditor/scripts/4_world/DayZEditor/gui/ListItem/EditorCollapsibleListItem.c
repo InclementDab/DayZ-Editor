@@ -18,13 +18,14 @@ class EditorCollapsibleListItem: EditorListItem
 		groupcount++;
 	}
 	
-	override void ListItemCollapseExecute(ButtonCommandArgs args)
+	bool ListItemCollapseExecute(ButtonCommandArgs args)
 	{
 		EditorListItemChildren.Show(!args.GetButtonState());
+		return true;
 	}
 			
 	
-	override void ListItemExecute(ButtonCommandArgs args)
+	bool ListItemExecute(ButtonCommandArgs args)
 	{
 		
 		switch (args.GetMouseButton()) {
@@ -54,6 +55,8 @@ class EditorCollapsibleListItem: EditorListItem
 			}
 			
 		}
+		
+		return true;
 	}
 	
 /*

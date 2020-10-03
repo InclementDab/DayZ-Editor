@@ -26,7 +26,6 @@ class EditorHologram
 	void ~EditorHologram()
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-		//GetGame().ObjectDelete(m_ProjectionEntity);
 	}
 	
 	void Update(float timeslice)

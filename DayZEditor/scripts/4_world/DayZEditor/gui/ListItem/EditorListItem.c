@@ -81,10 +81,6 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 	{
 		return false;
 	}
-
-	void ListItemExecute(ButtonCommandArgs args);
-	void ListItemVisibleExecute(ButtonCommandArgs args);
-	void ListItemCollapseExecute(ButtonCommandArgs args);
 	
 	private bool m_Selected;
 	void Select() 
