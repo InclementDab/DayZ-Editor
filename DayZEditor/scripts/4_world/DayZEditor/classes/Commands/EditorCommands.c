@@ -622,6 +622,25 @@ class EditorSnapCommand: EditorCommand
 	}
 }
 
+class EditorCollisionCommand: EditorCommand
+{
+	protected override void Call(Class sender, CommandArgs args)
+	{
+		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
+		if (m_ViewBinding && button_args) {
+			if (button_args.GetButtonState()) {
+				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_PALE_B);
+			} else {
+				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_WHITE);
+			}
+		}
+	}
+	
+	override string GetName() {
+		return "Toggle Placement Collision";
+	}
+}
+
 class EditorBrushToggleCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args)

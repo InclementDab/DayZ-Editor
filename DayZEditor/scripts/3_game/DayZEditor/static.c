@@ -228,6 +228,7 @@ static const int COLOR_SALMON_A	= 2143248223;
 static const int COLOR_CANDY 	= -1618884;
 static const int COLOR_APPLE 	= -9785268;
 static const int COLOR_JELLY 	= -1010901;
+static const int COLOR_PALE_B   = ARGB(255, 50, 100, 200);
 static const int COLOR_BLACK	= -16777216;
 static const int COLOR_WHITE 	= -1;
 static const int COLOR_WHITE_A	= 855638015;

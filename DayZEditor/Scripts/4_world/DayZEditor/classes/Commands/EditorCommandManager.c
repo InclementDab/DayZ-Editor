@@ -22,6 +22,7 @@ class EditorCommandManager
 	ref EditorMagnetCommand MagnetCommand;
 	ref EditorGroundCommand GroundCommand;
 	ref EditorSnapCommand SnapCommand;
+	ref EditorCollisionCommand CollisionCommand;
 	
 	ref EditorEnvironmentControlCommand EnvironmentControlCommand;
 	ref EditorPreferencesCommand PreferencesCommand;

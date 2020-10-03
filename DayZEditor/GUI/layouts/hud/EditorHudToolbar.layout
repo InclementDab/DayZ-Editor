@@ -448,7 +448,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            inheritalpha 1
            ignorepointer 1
            position 0 0
-           size 0.9 0.9
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -456,7 +456,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            draggable 0
-           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           image0 "set:dayz_editor_gui image:undo"
            mode additive
            "src alpha" 1
            "no wrap" 1
@@ -489,19 +489,19 @@ WrapSpacerWidgetClass ToolbarWrapper {
            inheritalpha 1
            ignorepointer 1
            position 0 0
-           size 0.9 0.9
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           image0 "set:dayz_editor_gui image:arrow_round_icon"
+           image0 "set:dayz_editor_gui image:redo"
            mode additive
            "src alpha" 1
            "no wrap" 1
            stretch 1
-           "flip u" 1
+           "flip u" 0
            filter 0
            "Transition width" 0
           }
@@ -583,12 +583,12 @@ WrapSpacerWidgetClass ToolbarWrapper {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           image0 "set:dayz_editor_gui image:cut_icon"
+           image0 "set:dayz_editor_gui image:cut"
            mode additive
            "src alpha" 1
            "no wrap" 1
            stretch 1
-           "flip u" 1
+           "flip u" 0
            filter 0
            "Transition width" 0
           }
@@ -630,7 +630,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            vexactsize 0
            scaled 1
            scriptclass ""
-           image0 "set:dayz_editor_gui image:copy_icon"
+           image0 "set:dayz_editor_gui image:copy"
            mode additive
            "src alpha" 1
            "no wrap" 1
@@ -677,7 +677,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            scriptclass ""
-           image0 "set:dayz_editor_gui image:paste_icon"
+           image0 "set:dayz_editor_gui image:paste"
            mode additive
            "src alpha" 1
            "no wrap" 1
@@ -735,6 +735,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        "Size To Content V" 1
        content_halign center
        content_valign center
+       Columns 4
        Rows 1
        {
         ButtonWidgetClass MagnetButton {
@@ -756,7 +757,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            inheritalpha 1
            ignorepointer 1
            position 0 0
-           size 0.95 0.95
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -764,7 +765,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            priority 1
-           image0 "set:dayz_editor_gui image:magnet_icon"
+           image0 "set:dayz_editor_gui image:magnet"
            mode blend
            "src alpha" 1
            "no wrap" 1
@@ -805,7 +806,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           image0 "set:dayz_editor_gui image:grounding_icon"
+           image0 "set:dayz_editor_gui image:ground"
            mode blend
            "src alpha" 1
            "no wrap" 1
@@ -847,7 +848,49 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            draggable 0
-           image0 "set:dayz_editor_gui image:snap_icon"
+           image0 "set:dayz_editor_gui image:snapping"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Two_Way_Binding 0
+           Relay_Command "m_Editor.CommandManager.SnapCommand"
+          }
+         }
+        }
+        ButtonWidgetClass CollisionButton {
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         size 30 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass CollisionButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           draggable 0
+           image0 "set:dayz_editor_gui image:collision"
            mode blend
            "src alpha" 1
            "no wrap" 1
