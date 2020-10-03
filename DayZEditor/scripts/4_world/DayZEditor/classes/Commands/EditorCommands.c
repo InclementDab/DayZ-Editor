@@ -227,7 +227,7 @@ class EditorUndoCommand: EditorCommand
 	}
 	
 	override string GetIcon() {
-		
+		return "set:dayz_editor_gui image:arrow_round_icon";
 	}
 }
 
@@ -243,6 +243,10 @@ class EditorRedoCommand: EditorCommand
 	
 	override string GetShortcut() {
 		return "Ctrl + Y";
+	}
+	
+	override string GetIcon() {
+		return "set:dayz_editor_gui image:arrow_round_icon";
 	}
 }
 

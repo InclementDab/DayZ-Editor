@@ -411,3 +411,4 @@ FodyWeavers.xsd
 
 # Developer tokens
 DevData.cs
+*.png

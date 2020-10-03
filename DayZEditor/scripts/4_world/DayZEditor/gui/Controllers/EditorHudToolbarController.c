@@ -150,16 +150,21 @@ class EditorHudToolbarController: EditorControllerBase
 		ViewBinding view_binding = GetViewBinding(w);
 		if (view_binding && !EditorUIManager.CurrentMenu) {
 			EditorCommand editor_command;
-			if (Class.CastTo(editor_command, view_binding.GetRelayCommand()) && editor_command.CanExecute()) {
+			if (Class.CastTo(editor_command, view_binding.GetRelayCommand())) {
 				
 				float pos_x, pos_y, size_x, size_y;
 				w.GetScreenPos(pos_x, pos_y);
 				w.GetScreenSize(size_x, size_y);
 				
-				EditorCommandTooltip tooltip = new EditorCommandTooltip(editor_command, pos_x, pos_y + size_y);
+				
 				
 				if (EditorUIManager.CurrentTooltip) {
 					delete EditorUIManager.CurrentTooltip;
+				}
+				
+				EditorCommandTooltip tooltip = new EditorCommandTooltip(editor_command, pos_x, pos_y + size_y);
+				if (!editor_command.CanExecute()) {
+					tooltip.GetLayoutRoot().SetAlpha(100);
 				}
 				
 				EditorUIManager.CurrentTooltip = tooltip;

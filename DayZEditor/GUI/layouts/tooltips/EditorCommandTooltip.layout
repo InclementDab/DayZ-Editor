@@ -18,6 +18,7 @@ WrapSpacerWidgetClass EditorCommandTooltip {
  {
   TextWidgetClass EditorCommandText {
    clipchildren 0
+   inheritalpha 1
    ignorepointer 1
    position 0 0
    size 48 48
@@ -42,6 +43,7 @@ WrapSpacerWidgetClass EditorCommandTooltip {
   }
   TextWidgetClass EditorCommandShortcut {
    clipchildren 0
+   inheritalpha 1
    ignorepointer 1
    size 48 48
    halign center_ref
