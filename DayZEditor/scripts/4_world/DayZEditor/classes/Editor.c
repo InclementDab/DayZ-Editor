@@ -40,9 +40,9 @@ class Editor
 	private UIManager m_UIManager;
 	private EditorCamera m_EditorCamera;
 	private PlayerBase m_Player;
+	private EditorObjectManagerModule m_ObjectManager;
 		
 	static Object			ObjectUnderCursor;
-	static EditorObject 	EditorObjectUnderCursor;
 	static vector 			CurrentMousePosition;
 	
 	ref EditorHologram 		ObjectInHand;
@@ -72,8 +72,14 @@ class Editor
 		m_EditorSettings.Reload();
 	}
 	
-	EditorObjectManagerModule GetObjectManager()
-		return EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
+	EditorObjectManagerModule GetObjectManager() 
+	{
+		if (!m_ObjectManager) {
+			m_ObjectManager = EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
+		}
+		
+		return m_ObjectManager;
+	}
 	
 	EditorObjectSet GetSelectedObjects() 
 		return GetObjectManager().GetSelectedObjects(); 
@@ -322,19 +328,23 @@ class Editor
 					return true;
 				}
 				
-				if (!target)
-					ClearSelection();	
+				if (!target) {
+					ClearSelection();
+				}
 				
 				
 				if (GetBrush() == null) {
 					
-					if (EditorObjectUnderCursor) {
+					if (GetObjectManager().GetEditorObject(ObjectUnderCursor)) {
 						if (!KeyState(KeyCode.KC_LSHIFT)) {
 							ClearSelection();
 						}
-						SelectObject(EditorObjectUnderCursor);
+						
+						SelectObject(GetObjectManager().GetEditorObject(ObjectUnderCursor));
 						return true;
-					} else if (!target) {
+					} 
+					
+					else if (!target) {
 						m_EditorHudController.DelayedDragBoxCheck();
 						
 					}
