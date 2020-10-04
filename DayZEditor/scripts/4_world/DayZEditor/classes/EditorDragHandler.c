@@ -109,18 +109,6 @@ class ObjectDragHandler: DragHandler
 				transform[3] = cursor_pos[1] - size[1]/2;
 				transform[3][1] = transform[3][1] + size[1];					
 			} 
-			return;
-			
-			vector delta_ = transform[1] * vector.Distance(ground_position, transform[3]);
-			transform = { "1 0 0", "0 1 0", "0 0 1", cursor_pos };
-			m_EditorObject.PlaceOnSurfaceRotated(transform, transform[3], surface_normal[0] * -1, surface_normal[2] * -1, m_EditorObject.LocalAngle * -1, m_Editor.MagnetMode);
-			//cursor_pos[1] = cursor_pos[1] - size[1]/2;
-			if (m_Editor.GroundMode) 
-				transform[3] = transform[3] + delta_;	
-			else {
-				//transform[3] = cursor_pos;
-				//transform[3][1] = transform[3][1] + size[1];		
-			} 
 		}
 		
 		
