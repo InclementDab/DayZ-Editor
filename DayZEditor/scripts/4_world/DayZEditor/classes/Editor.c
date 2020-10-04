@@ -37,15 +37,7 @@ class Editor
 {
 	/* Private Members */
 	private Mission m_Mission;
-	private UIManager m_UIManager;
-	private EditorCamera m_EditorCamera;
 	private PlayerBase m_Player;
-	private EditorObjectManagerModule m_ObjectManager;
-		
-	static Object			ObjectUnderCursor;
-	static vector 			CurrentMousePosition;
-	
-	ref EditorHologram 		ObjectInHand;
 	
 	bool IsActive()
 		return m_Active;
@@ -74,7 +66,7 @@ class Editor
 	EditorObjectManagerModule GetObjectManager() {
 		return m_ObjectManager;
 	}
-	
+		
 	EditorObjectSet GetSelectedObjects() 
 		return m_ObjectManager.GetSelectedObjects(); 
 	
@@ -145,15 +137,26 @@ class Editor
 		m_ObjectManager.ClearSelection();
 	
 	
-	ref EditorCommandManager CommandManager;
 	
 	
+	// statics (updated in Update())
+	static Object								ObjectUnderCursor;
+	static vector 								CurrentMousePosition;
+	
+	// public properties
+	ref EditorHologram 							ObjectInHand;
+	ref EditorCommandManager 					CommandManager;
+	
+	// private Editor Members
 	private ref EditorSettings 					m_EditorSettings;
 	private ref EditorHud						m_EditorHud;
-	private EditorHudController 				m_EditorHudController;
-	
 	private ref EditorBrush						m_EditorBrush;
 	private ref EditorObjectDataSet			 	m_SessionCache;
+	private EditorCamera 						m_EditorCamera;
+	
+	// private references
+	private EditorHudController 				m_EditorHudController;
+	private EditorObjectManagerModule 			m_ObjectManager;	
 	
 	private bool 								m_Active;
 	private string 								m_EditorSettingsFile = "$profile:Editor/settings.ini";
@@ -161,6 +164,7 @@ class Editor
 	// todo move to settings
 	string										EditorBrushFile = "$profile:Editor/EditorBrushes.xml";
 	
+	// modes
 	bool 										MagnetMode;
 	bool 										GroundMode;
 	bool 										SnappingMode;
@@ -184,9 +188,6 @@ class Editor
 		// Init Settings
 		m_EditorSettings = EditorSettings.Load(m_EditorSettingsFile);
 		m_EditorSettings.Reload();
-		
-		// Init UI
-		m_UIManager = GetGame().GetUIManager();
 		
 		// Init Hud
 		m_EditorHud = new EditorHud();

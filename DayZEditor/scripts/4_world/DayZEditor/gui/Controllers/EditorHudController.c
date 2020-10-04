@@ -322,73 +322,46 @@ class EditorHudController: EditorControllerBase
 		return false;
 	}
 	
-		
-	private int GetHighlightColor(string widget_name)
-	{
-		switch (widget_name) {
-			
-			case "UndoButton": 
-			case "RedoButton": {
-				return COLOR_SALMON_A;
-			}
-			
-			case "MagnetButton": {
-				return COLOR_CANDY;
-			}
-			
-			case "GroundButton": {
-				return COLOR_APPLE;
-			}
-			
-			case "SnapButton": {
-				return COLOR_JELLY;
-			}
-			
-			default: {
-				return COLOR_SALMON;
-			}
-		}
-		
-		return 0;
-	}
-	
-	private ImageWidget GetWidgetIcon(Widget w)	{
-		return ImageWidget.Cast(w.FindAnyWidget(string.Format("%1_Icon", w.GetName())));
-	}
-	
-	private void SetWidgetIconPosition(Widget w, int x, int y) {
-		Widget icon = GetWidgetIcon(w);
-		if (icon) {
-			icon.SetPos(x, y);
-		}
-	}
-		
+
 	ScriptInvoker DragBoxQueue = GetGame().GetUpdateQueue(CALL_CATEGORY_GUI);
-	private int start_x, start_y;
+		
+	
+	static const int DRAG_THRESHOLD = 15;
+	static const int DRAG_BOX_THICKNESS = 2;
+	static const int DRAG_BOX_COLOR = ARGB(100, 255, 0, 0);
+	
 	void DelayedDragBoxCheck()
 	{
-		GetMousePos(start_x, start_y);
-		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)
-			DragBoxQueue.Insert(_DragBoxUpdater);
+		int x, y;
+		GetMousePos(x, y);
+		thread _DelayedDragBoxCheck(x, y);
 	}
 	
-	private void _DragBoxUpdater()
+	private void _DelayedDragBoxCheck(int start_x, int start_y)
 	{
 		int current_x, current_y;
-		GetMousePos(current_x, current_y);
-		EditorCanvas.Clear();
-		int selection_box_thickness = 2;
-		int selection_box_color = ARGB(100, 255, 0, 0);
-		EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, selection_box_thickness, selection_box_color);
-		EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, selection_box_thickness, selection_box_color);
-		EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, selection_box_thickness, selection_box_color);
-		EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, selection_box_thickness, selection_box_color);
-		
-		
-		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+		while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
+			GetMousePos(current_x, current_y);
+			
+			
 			EditorCanvas.Clear();
-			DragBoxQueue.Remove(_DragBoxUpdater);
+			// Start Drawing Drag Box
+			if (Math.AbsInt(start_x - current_x) > DRAG_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_THRESHOLD) {
+				DrawDragBox(start_x, start_y, current_x, current_y);
+			}
+			
+			Sleep(10);
 		}
+		
+		EditorCanvas.Clear();
+	}
+	
+	private void DrawDragBox(int start_x, int start_y, int current_x, int current_y)
+	{		
+		EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
+		EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
+		EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
+		EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
 			
 		int x_low, x_high, y_low, y_high;
 		if (start_x > current_x) {
