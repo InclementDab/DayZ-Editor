@@ -1,10 +1,12 @@
 
 class DragHandler
 {
+	protected Editor m_Editor;
 	protected EditorObject m_EditorObject;
 	void DragHandler(EditorObject target)
 	{
 		m_EditorObject = target;
+		m_Editor = GetEditor();
 	}
 	
 	void OnDragStart()
@@ -48,12 +50,14 @@ class ObjectDragHandler: DragHandler
 {
 	override void OnDragging(out vector transform[4], notnull EditorObject target)
 	{
+		
+		//GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().
 		vector begin_pos = GetGame().GetCurrentCameraPosition();
 		vector end_pos = begin_pos + GetGame().GetPointerDirection() * 3000;
 		vector cursor_pos, contact_dir;
 		int component;
 		
-		DayZPhysics.RaycastRV(begin_pos, end_pos, cursor_pos, contact_dir, component, null, null, null, false, !GetEditor().GetSettings().ObjectDragCollisions);
+		DayZPhysics.RaycastRV(begin_pos, end_pos, cursor_pos, contact_dir, component, null, null, null, false, !GetEditor().CollisionMode);
 		
 				
 		vector size = m_EditorObject.GetSize();
@@ -76,16 +80,16 @@ class ObjectDragHandler: DragHandler
 			transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
 			vector cursor_delta = Editor.CurrentMousePosition - transform[3];
 			float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
-			m_EditorObject.PlaceOnSurfaceRotated(transform, ground_position, surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().MagnetButton);			
+			m_EditorObject.PlaceOnSurfaceRotated(transform, ground_position, surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, GetEditor().MagnetMode);			
 		}
 		
 		// Handle regular motion
 		else {
 			
 			//transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
-			m_EditorObject.PlaceOnSurfaceRotated(transform, transform[3], surface_normal[0] * -1, surface_normal[2] * -1, m_EditorObject.LocalAngle * -1, GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().MagnetButton);
+			m_EditorObject.PlaceOnSurfaceRotated(transform, transform[3], surface_normal[0] * -1, surface_normal[2] * -1, m_EditorObject.LocalAngle * -1, GetEditor().MagnetMode);
 			cursor_pos[1] = cursor_pos[1] - size[1]/2;
-			if (GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().GroundButton) 
+			if (GetEditor().GroundMode) 
 				transform[3] = cursor_pos + transform[1] * vector.Distance(ground_position, transform[3]);				
 			else {
 				transform[3] = cursor_pos;
@@ -132,8 +136,8 @@ class ObjectDragHandler: DragHandler
 			// Handle regular motion for all children
 			} else {
 				//cursor_position_delta[1] = ground[1];
-				if (GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().GroundButton) {
-					if (GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().MagnetButton) {
+				if (GetEditor().GroundMode) {
+					if (GetEditor().MagnetMode) {
 						selected_transform[3] = cursor_position_delta + surface_normal * vector.Distance(ground_position, selected_transform[3]);
 					} else {
 					
@@ -146,7 +150,7 @@ class ObjectDragHandler: DragHandler
 				selected_transform[0] = "1 0 0";
 				selected_transform[1] = "0 1 0";
 				selected_transform[2] = "0 0 1";
-				selected_object.PlaceOnSurfaceRotated(selected_transform, selected_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, selected_object.LocalAngle * -1, GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().MagnetButton);
+				selected_object.PlaceOnSurfaceRotated(selected_transform, selected_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, selected_object.LocalAngle * -1, m_Editor.MagnetMode);
 			}	
 			
 		
@@ -308,7 +312,7 @@ class MapDragHandler: DragHandler
 		vector pos = Editor.CurrentMousePosition;
 		transform[3] = pos;
 		
-		if (GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().GroundButton) {
+		if (GetEditor().GroundMode) {
 			vector target_pos = target.GetPosition();
 			transform[3][1] = GetGame().SurfaceY(pos[0], pos[2]) + target_pos[1] - GetGame().SurfaceY(target_pos[0], target_pos[2]);
 			

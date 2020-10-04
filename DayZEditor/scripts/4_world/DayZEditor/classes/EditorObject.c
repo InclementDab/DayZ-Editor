@@ -376,7 +376,7 @@ class EditorObject
 		
 
 		// I cant wait to delete this... but not yet
-		if (GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().SnapButton) {
+		if (GetEditor().SnappingMode) {
 			vector current_size = GetSize();
 			vector current_pos = GetPosition();
 			float snap_radius = 5;

@@ -10,10 +10,6 @@ class EditorHudToolbarController: EditorControllerBase
 	int BrushTypeSelection;
 	string BrushToggleButtonText;
 	
-	bool MagnetButton;
-	bool GroundButton;
-	bool SnapButton;
-		
 	// View Properties
 	protected ButtonWidget MenuBarFile;
 	protected ButtonWidget MenuBarEdit;
@@ -21,7 +17,7 @@ class EditorHudToolbarController: EditorControllerBase
 			
 	void EditorHudToolbarController()
 	{
-		//Debug_Logging = true;
+		Debug_Logging = true;
 		EditorUIManager.CurrentEditorHudToolbarController = this;
 	}
 	

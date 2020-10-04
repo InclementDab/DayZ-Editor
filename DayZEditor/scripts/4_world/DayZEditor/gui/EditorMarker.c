@@ -54,6 +54,8 @@ class EditorMarker: ScriptView
 
 class EditorObjectMarker: EditorMarker
 {	
+	protected Editor m_Editor;
+	
 	protected EditorObject m_EditorObject;
 	EditorObject GetEditorObject() { 
 		return m_EditorObject; 
@@ -68,6 +70,7 @@ class EditorObjectMarker: EditorMarker
 	{
 		EditorLog.Trace("EditorObjectMarker");
 		m_EditorObject = editor_object;
+		m_Editor = GetEditor();
 	}
 	
 	override void Update()
@@ -84,24 +87,23 @@ class EditorObjectMarker: EditorMarker
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		// ignores the object if you are placing
-		if (GetEditor().IsPlacing()) return false;
-		
-
+		if (m_Editor.IsPlacing()) return false;
+	
 		switch (button) {
 			
 			case MouseState.LEFT: {
 				
 				// We want to Toggle selection if you are holding control
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					GetEditor().ToggleSelection(m_EditorObject);
+					m_Editor.ToggleSelection(m_EditorObject);
 					return true;
 				} 
 				
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					GetEditor().ClearSelection();
+					m_Editor.ClearSelection();
 				}
 				
-				GetEditor().SelectObject(m_EditorObject);
+				m_Editor.SelectObject(m_EditorObject);
 				
 				thread CheckDragBounds(x, y);
 				return true;
@@ -149,7 +151,7 @@ class EditorObjectMapMarker: EditorObjectMarker
 	void EditorObjectMapMarker(EditorObject editor_object)
 	{
 		m_DragHandler = new MapDragHandler(m_EditorObject);
-		m_EditorMap = GetEditor().GetEditorHud().EditorMapWidget;
+		m_EditorMap = m_Editor.GetEditorHud().EditorMapWidget;
 	}
 	
 	override void Update()
@@ -177,7 +179,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	override void Update()
 	{
-		if (GetEditor().GetEditorHud().EditorMapWidget.IsVisible()) {
+		if (m_Editor.GetEditorHud().EditorMapWidget.IsVisible()) {
 			return;
 		}
 		
@@ -186,7 +188,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		m_EditorObject.GetTransform(object_transform);
 		
 		// Should the position be raycasted on the ground, or locked to the object
-		if (GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().GroundButton) {
+		if (m_Editor.GroundMode) {
 			set<Object> o;
 			vector ground_dir; int component;
 			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject.GetWorldObject(), false, true); // set to ground only

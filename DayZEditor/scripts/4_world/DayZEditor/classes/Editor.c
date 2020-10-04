@@ -161,6 +161,10 @@ class Editor
 	// todo move to settings
 	string										EditorBrushFile = "$profile:Editor/EditorBrushes.xml";
 	
+	bool 										MagnetMode;
+	bool 										GroundMode;
+	bool 										SnappingMode;
+	bool 										CollisionMode;
 	
 	void Editor(PlayerBase player) 
 	{
@@ -236,10 +240,10 @@ class Editor
 		if (m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible()) {
 			CurrentMousePosition = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(x, y, 0));
 		} else {
-			if (m_EditorSettings.ObjectDragCollisions) {
-				CurrentMousePosition = MousePosToRay(obj, null, m_EditorSettings.ViewDistance);
+			if (CollisionMode) {
+				CurrentMousePosition = MousePosToRay(obj, ObjectInHand.GetProjectionEntity(), m_EditorSettings.ViewDistance);
 			} else {
-				CurrentMousePosition = MousePosToRay(obj, null, m_EditorSettings.ViewDistance, 0, true);
+				CurrentMousePosition = MousePosToRay(obj, ObjectInHand.GetProjectionEntity(), m_EditorSettings.ViewDistance, 0, true);
 			}
 		}
 		
@@ -523,7 +527,7 @@ class Editor
 		EditorXMLManager.LoadMapGroupProto(proto_data);
 		
 		m_LootEditMode = true;
-		m_EditorSettings.ObjectDragCollisions = true;
+		CollisionMode = true;
 	}
 	
 	void FinishEditLootSpawns()
@@ -540,7 +544,7 @@ class Editor
 		m_EditorCamera.SetPosition(m_PositionBeforeLootEditMode);
 
 		m_LootEditMode = false;
-		m_EditorSettings.ObjectDragCollisions = false;
+		CollisionMode = false;
 
 	}
 	

@@ -775,7 +775,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Two_Way_Binding 0
+           Binding_Name "m_Editor.MagnetMode"
+           Two_Way_Binding 1
            Relay_Command "m_Editor.CommandManager.MagnetCommand"
           }
          }
@@ -816,7 +817,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Two_Way_Binding 0
+           Binding_Name "m_Editor.GroundMode"
+           Two_Way_Binding 1
            Relay_Command "m_Editor.CommandManager.GroundCommand"
           }
          }
@@ -858,7 +860,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Two_Way_Binding 0
+           Binding_Name "m_Editor.SnappingMode"
+           Two_Way_Binding 1
            Relay_Command "m_Editor.CommandManager.SnapCommand"
           }
          }
@@ -900,7 +903,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
          {
           ScriptParamsClass {
-           Two_Way_Binding 0
+           Binding_Name "m_Editor.CollisionMode"
+           Two_Way_Binding 1
            Relay_Command "m_Editor.CommandManager.CollisionCommand"
           }
          }
@@ -1152,6 +1156,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
  }
  {
   ScriptParamsClass {
+   Debug_Logging 1
   }
  }
 }
