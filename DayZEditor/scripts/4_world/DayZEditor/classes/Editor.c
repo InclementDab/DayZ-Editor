@@ -66,7 +66,7 @@ class Editor
 	EditorObjectManagerModule GetObjectManager() {
 		return m_ObjectManager;
 	}
-		
+	
 	EditorObjectSet GetSelectedObjects() 
 		return m_ObjectManager.GetSelectedObjects(); 
 	

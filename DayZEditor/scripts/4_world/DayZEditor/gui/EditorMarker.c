@@ -1,7 +1,4 @@
 
-static const float ALPHA_ON_SHOW = 1;
-static const float ALPHA_ON_HIDE = 0.25;
-
 class EditorMarker: ScriptView
 {
 	void EditorMarker()
@@ -73,14 +70,19 @@ class EditorObjectMarker: EditorMarker
 		m_Editor = GetEditor();
 	}
 	
+	void ~EditorObjectMarker()
+	{
+		delete m_DragHandler;
+	}
+	
 	override void Update()
 	{
 		int x, y;
 		GetMousePos(x, y);
 		if (m_EditorObject.IsSelected() || IsMouseInside(x, y)) {
-			m_LayoutRoot.SetAlpha(ALPHA_ON_SHOW);
+			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
 		} else {
-			m_LayoutRoot.SetAlpha(ALPHA_ON_HIDE);
+			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
 		}
 	}
 	

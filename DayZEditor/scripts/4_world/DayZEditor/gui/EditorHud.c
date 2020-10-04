@@ -48,6 +48,10 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		notification.Play(duration);
 	}
 	
+	bool IsMapVisible()
+	{
+		return EditorMapWidget.IsVisible();
+	}
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/layouts/hud/EditorHud.layout";

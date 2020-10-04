@@ -6,6 +6,7 @@ class EditorObjectManagerModule: JMModuleBase
 	private ref EditorActionStack 				m_ActionStack;
 	private ref map<int, int> 					m_PlacedObjectIndex;
 	
+	
 	EditorObjectSet GetSelectedObjects() 
 		return m_SelectedObjects; 
 	
@@ -63,8 +64,7 @@ class EditorObjectManagerModule: JMModuleBase
 		EditorLog.Trace("EditorObjectManager::CreateObject");
 		
 		EditorObject editor_object = EditorObject.Create(editor_object_data);
-		
-		
+
 		EditorAction action = new EditorAction("Delete", "Create");;
 		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));

@@ -322,14 +322,7 @@ class EditorHudController: EditorControllerBase
 		return false;
 	}
 	
-
-	ScriptInvoker DragBoxQueue = GetGame().GetUpdateQueue(CALL_CATEGORY_GUI);
-		
-	
-	static const int DRAG_THRESHOLD = 15;
-	static const int DRAG_BOX_THICKNESS = 2;
-	static const int DRAG_BOX_COLOR = ARGB(100, 255, 0, 0);
-	
+			
 	void DelayedDragBoxCheck()
 	{
 		int x, y;
@@ -346,7 +339,7 @@ class EditorHudController: EditorControllerBase
 			
 			EditorCanvas.Clear();
 			// Start Drawing Drag Box
-			if (Math.AbsInt(start_x - current_x) > DRAG_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_THRESHOLD) {
+			if (Math.AbsInt(start_x - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_BOX_THRESHOLD) {
 				DrawDragBox(start_x, start_y, current_x, current_y);
 			}
 			
@@ -362,39 +355,20 @@ class EditorHudController: EditorControllerBase
 		EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
 		EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
 		EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
-			
-		int x_low, x_high, y_low, y_high;
-		if (start_x > current_x) {
-			x_high = start_x;
-			x_low = current_x;
-		} else { 
-			x_high = current_x;
-			x_low = start_x;
-		}
-		
-		if (start_y > current_y) {
-			y_high = start_y;
-			y_low = current_y;
-		} else { 
-			y_high = current_y;
-			y_low = start_y;
-		}
-		
+					
 		EditorObjectSet placed_objects = m_Editor.GetPlacedObjects();
 		foreach (EditorObject editor_object: placed_objects) {
 			
+			if (editor_object.IsSelected()) continue;
+			
 			float marker_x, marker_y;
-			// this kinda sucks
-			if (m_Editor.GetEditorHud().EditorMapWidget.IsVisible()) {
-				editor_object.GetMapMarkerPosition(marker_x, marker_y);
-			} else {
-				editor_object.GetObjectMarkerPosition(marker_x, marker_y);
-			}
-			
-			
-			if ((marker_x < x_high && marker_x > x_low) && (marker_y < y_high && marker_y > y_low)) {		
-				if (!editor_object.IsSelected())
+			EditorObjectMarker object_marker = editor_object.GetMarker();
+			if (object_marker) {
+				object_marker.GetPos(marker_x, marker_y);
+				
+				if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {		
 					m_Editor.SelectObject(editor_object);
+				}
 			}
 		}		
 	}

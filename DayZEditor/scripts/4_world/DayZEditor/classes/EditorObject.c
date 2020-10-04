@@ -290,18 +290,6 @@ class EditorObject
 		return (m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; 
 	}
 	
-	void GetObjectMarkerPosition(out float x, out float y) {
-		if (ObjectMarkerEnabled()) {
-			m_EditorObjectWorldMarker.GetPos(x, y);
-		}
-	}
-	
-	void GetMapMarkerPosition(out float x, out float y) {
-		if (MapMarkerEnabled()) {
-			m_EditorObjectMapMarker.GetPos(x, y);
-		}
-	}
-	
 	private bool m_Visible = true;
 	bool IsVisible() {
 		return m_Visible;
@@ -327,9 +315,7 @@ class EditorObject
 			m_WorldObject.ClearFlags(EntityFlags.VISIBLE, false);
 		}
 	}
-	
-	
-	
+		
 	vector GetBottomCenter()
 	{		
 		vector clip_info[2];
@@ -488,9 +474,20 @@ class EditorObject
 		EntityAI ent;
 		if (Class.CastTo(ent, m_WorldObject)) {
 			ent.DisableSimulation(pause);
+		}		
+	}
+	
+	// Returns active Marker, either World or Map marker
+	// Can return null
+	EditorObjectMarker GetMarker()
+	{
+		EditorLog.Trace("EditorObject::GetMarker");
+		
+		if (g_Editor.GetEditorHud().IsMapVisible()) {
+			return m_EditorObjectMapMarker;
 		}
 		
-		
+		return m_EditorObjectWorldMarker;
 	}
 
 	
