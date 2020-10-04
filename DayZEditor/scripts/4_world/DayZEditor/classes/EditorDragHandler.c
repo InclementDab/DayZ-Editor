@@ -58,12 +58,82 @@ class ObjectDragHandler: DragHandler
 		int component;
 		
 		DayZPhysics.RaycastRV(begin_pos, end_pos, cursor_pos, contact_dir, component, null, null, null, false, !GetEditor().CollisionMode);
-		
 				
-		vector size = m_EditorObject.GetSize();
-		vector ground_position = GetGroundPosition(transform);
-		vector surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
+		vector size;
+		vector ground_position;
+		vector surface_normal;
 		
+		
+		// Calcuate position of all selected objects
+		// this is done first to avoid confusion with an already affected transformation
+		EditorObjectSet selected_objects = GetEditor().GetSelectedObjects();
+		foreach (EditorObject selected_object: selected_objects) {
+			
+			if (selected_object == target) continue;			
+			vector selected_transform[4];
+			selected_object.GetTransform(selected_transform);
+			
+			size = selected_object.GetSize();
+			ground_position = GetGroundPosition(selected_transform);
+			surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
+			
+			vector pos_delta = selected_transform[3] - transform[3];
+
+			// Handle Z-Only motion
+			if (KeyState(KeyCode.KC_LMENU)) {
+				//selected_transform[3] = ground_position + selected_transform[1] * vector.Distance(cursor_pos + pos_delta, ground_position);
+				//selected_transform[3] = ground_position + selected_transform[1] * vector.Distance(GetGroundPosition(transform), transform[3]); // - vector.Distance(GetGroundPosition(selected_transform), selected_transform[3])
+
+			// Handle XY Rotation
+			} else if (KeyState(KeyCode.KC_LSHIFT)) {
+				
+				vector rot_pos;
+				//angle -= angle_delta;				
+				//float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
+
+				if (m_Editor.MagnetMode) {
+					vector local_dir = vector.Direction(ground_position, cursor_pos + pos_delta);
+					local_dir.Normalize();
+					selected_transform[0] = surface_normal * local_dir;
+					selected_transform[1] = surface_normal;
+					selected_transform[2] = surface_normal * (local_dir * vector.Up);
+				} else {
+					if (m_Editor.GroundMode) {
+						selected_transform[3] = ground_position + selected_transform[1] * vector.Distance(ground_position, selected_transform[3]);
+					}
+				}
+			
+			// Handle regular motion for all children
+			} else {
+
+				if (!m_Editor.MagnetMode) {
+					surface_normal = vector.Up;
+				}
+				
+				vector local_ori = selected_object.GetWorldObject().GetDirection();
+				selected_transform[0] = surface_normal * local_ori;
+				selected_transform[1] = surface_normal;
+				selected_transform[2] = surface_normal * (local_ori * vector.Up);
+				
+				if (m_Editor.GroundMode) {
+					if (m_Editor.MagnetMode) {
+						selected_transform[3] = cursor_pos + pos_delta + surface_normal * vector.Distance(ground_position, selected_transform[3]);
+					} else {
+						selected_transform[3] = cursor_pos + pos_delta + selected_transform[1] * vector.Distance(ground_position, selected_transform[3]);
+					}
+				} else {						
+					selected_transform[3] = cursor_pos + pos_delta;
+					selected_transform[3][1] = cursor_pos[1] + size[1]/2;		
+				} 
+			}	
+			
+		
+			selected_object.SetTransform(selected_transform);			
+		}
+		
+		size = m_EditorObject.GetSize();
+		ground_position = GetGroundPosition(transform);
+		surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
 		
 		// Handle Z-Only motion
 		// Todo will people want this as a keybind?
@@ -84,7 +154,7 @@ class ObjectDragHandler: DragHandler
 			delta.RotationMatrixFromAngles(transform);
 			
 			if (m_Editor.MagnetMode) {
-				vector local_dir = vector.Direction(ground_position, cursor_pos);
+				local_dir = vector.Direction(ground_position, cursor_pos);
 				local_dir.Normalize();
 				transform[0] = surface_normal * local_dir;
 				transform[1] = surface_normal;
@@ -103,7 +173,7 @@ class ObjectDragHandler: DragHandler
 				surface_normal = vector.Up;
 			}
 			
-			vector local_ori = m_EditorObject.GetWorldObject().GetDirection();
+			local_ori = m_EditorObject.GetWorldObject().GetDirection();
 			transform[0] = surface_normal * local_ori;
 			transform[1] = surface_normal;
 			transform[2] = surface_normal * (local_ori * vector.Up);
@@ -118,71 +188,11 @@ class ObjectDragHandler: DragHandler
 			} else {
 				transform[3] = cursor_pos;
 				transform[3][1] = cursor_pos[1] + size[1]/2;				
-			} 
-			
-			
+			} 			
 		}
 		
 		
-		// This handles all other selected objects
-		EditorObjectSet selected_objects = GetEditor().GetSelectedObjects();
-		foreach (EditorObject selected_object: selected_objects) {
-			
-			if (selected_object == target) continue;
-			
-			vector selected_transform[4];	
-			selected_object.GetTransform(selected_transform);
-			
-			vector object_transform[4];
-			target.GetTransform(object_transform);
-			
-			vector pos_delta = selected_transform[3] - transform[3];
-			vector cursor_position_delta = object_transform[3] + selected_transform[3] - transform[3];
 		
-			float angle_delta = Math.Atan2(pos_delta[0], pos_delta[2]) * Math.RAD2DEG;
-			surface_normal = GetGame().SurfaceGetNormal(selected_transform[3][0], selected_transform[3][2]);
-			ground_position = GetGroundPosition(selected_transform);
-			
-			// Handle Z-Only motion
-			if (KeyState(KeyCode.KC_LMENU)) {
-				// Source object position + delta
-				//selected_transform[3][1] = object_transform[3][1] + pos_delta[1];
-				selected_transform[3] = ground_position + selected_transform[1] * vector.Distance(cursor_position_delta, ground_position);
-				
-			// Handle XY Rotation
-			} else if (KeyState(KeyCode.KC_LSHIFT)) {
-				
-				vector rot_pos;
-				//angle -= angle_delta;				
-				//float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
-
-			
-			
-			// Handle regular motion for all children
-			} else {
-				//cursor_position_delta[1] = ground[1];
-				if (GetEditor().GroundMode) {
-					if (GetEditor().MagnetMode) {
-						selected_transform[3] = cursor_position_delta + surface_normal * vector.Distance(ground_position, selected_transform[3]);
-					} else {
-					
-						selected_transform[3] = cursor_position_delta + selected_transform[1] * vector.Distance(ground_position, selected_transform[3]);
-					}
-				} else {
-					selected_transform[3] = cursor_position_delta;				
-				} 
-				
-				selected_transform[0] = "1 0 0";
-				selected_transform[1] = "0 1 0";
-				selected_transform[2] = "0 0 1";
-				selected_object.PlaceOnSurfaceRotated(selected_transform, selected_transform[3], surface_normal[0] * -1, surface_normal[2] * -1, selected_object.LocalAngle * -1, m_Editor.MagnetMode);
-			}	
-			
-		
-			selected_object.SetTransform(selected_transform);
-			selected_object.Update();
-			
-		}
 	}
 }
 

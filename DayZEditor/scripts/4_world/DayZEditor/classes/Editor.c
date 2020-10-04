@@ -240,8 +240,9 @@ class Editor
 		if (m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible()) {
 			CurrentMousePosition = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(x, y, 0));
 		} else {
+			EntityAI collision_ignore;
 			if (ObjectInHand) {
-				Object collision_ignore = ObjectInHand.GetProjectionEntity();
+				collision_ignore = ObjectInHand.GetProjectionEntity();
 			}
 			
 			if (CollisionMode) {
