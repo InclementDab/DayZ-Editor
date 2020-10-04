@@ -80,21 +80,46 @@ class ObjectDragHandler: DragHandler
 			vector cursor_delta = transform[3] - Editor.CurrentMousePosition;
 			vector delta = m_EditorObject.GetOrientation();
 			delta[0] = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;
-			m_EditorObject.SetOrientation(delta);
-			return;
+			delta.RotationMatrixFromAngles(transform);
+
+			// Todo: when Editor.GroundMode is enabled, rotate about the ground_position vector
 		}
 		
 		// Handle regular motion
 		else {
 			
-			//transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
-			m_EditorObject.PlaceOnSurfaceRotated(transform, transform[3], surface_normal[0] * -1, surface_normal[2] * -1, m_EditorObject.LocalAngle * -1, GetEditor().MagnetMode);
-			cursor_pos[1] = cursor_pos[1] - size[1]/2;
-			if (GetEditor().GroundMode) 
-				transform[3] = cursor_pos + transform[1] * vector.Distance(ground_position, transform[3]);				
+			//transform = { "1 0 0", "0 1 0", "0 0 1" };
+			
+			if (m_Editor.MagnetMode) {
+				transform[0] = "1 0 0" * surface_normal;
+				transform[1] = surface_normal;
+				transform[2] = "0 0 1" * surface_normal;				
+			} else {
+				Math3D.MatrixIdentity3(transform);
+			}
+			
+			if (m_Editor.GroundMode) {
+				if (m_Editor.MagnetMode) {
+					transform[3] = cursor_pos + surface_normal * vector.Distance(ground_position, transform[3]);				
+				} else {
+					transform[3] = cursor_pos + transform[1] * vector.Distance(ground_position, transform[3]);
+				}
+				
+			} else {
+				transform[3] = cursor_pos[1] - size[1]/2;
+				transform[3][1] = transform[3][1] + size[1];					
+			} 
+			return;
+			
+			vector delta_ = transform[1] * vector.Distance(ground_position, transform[3]);
+			transform = { "1 0 0", "0 1 0", "0 0 1", cursor_pos };
+			m_EditorObject.PlaceOnSurfaceRotated(transform, transform[3], surface_normal[0] * -1, surface_normal[2] * -1, m_EditorObject.LocalAngle * -1, m_Editor.MagnetMode);
+			//cursor_pos[1] = cursor_pos[1] - size[1]/2;
+			if (m_Editor.GroundMode) 
+				transform[3] = transform[3] + delta_;	
 			else {
-				transform[3] = cursor_pos;
-				transform[3][1] = transform[3][1] + size[1];		
+				//transform[3] = cursor_pos;
+				//transform[3][1] = transform[3][1] + size[1];		
 			} 
 		}
 		
