@@ -1,18 +1,4 @@
 
-class ArraysAreLeakingBro
-{	
-	void ArraysAreLeakingBro()
-	{
-		Print("ArraysAreLeakingBro");
-	}
-	
-	void ~ArraysAreLeakingBro()
-	{
-		Print("~ArraysAreLeakingBro");
-	}
-}
-
-
 class EditorHudToolbarController: EditorControllerBase
 {	
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;

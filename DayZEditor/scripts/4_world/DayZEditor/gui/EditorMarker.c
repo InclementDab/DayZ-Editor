@@ -74,53 +74,55 @@ class EditorObjectMarker: EditorMarker
 	{
 		int x, y;
 		GetMousePos(x, y);
-		if (m_EditorObject.IsSelected() || IsMouseInside(x, y)) 
+		if (m_EditorObject.IsSelected() || IsMouseInside(x, y)) {
 			m_LayoutRoot.SetAlpha(ALPHA_ON_SHOW);
-		else 
+		} else {
 			m_LayoutRoot.SetAlpha(ALPHA_ON_HIDE);
+		}
 	}
 	
-	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{		
+	{
 		// ignores the object if you are placing
 		if (GetEditor().IsPlacing()) return false;
 		
-		// We want to Toggle selection if you are holding control
-		
+
 		switch (button) {
 			
-			case 0: {
+			case MouseState.LEFT: {
+				
+				// We want to Toggle selection if you are holding control
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					GetEditor().ToggleSelection(m_EditorObject);
-				} else {
-					if (!KeyState(KeyCode.KC_LSHIFT))
-						GetEditor().ClearSelection();
-					
-					GetEditor().SelectObject(m_EditorObject);
+					return true;
+				} 
+				
+				if (!KeyState(KeyCode.KC_LSHIFT)) {
+					GetEditor().ClearSelection();
 				}
 				
-				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(CheckDragBounds, 0, true, x, y);
+				GetEditor().SelectObject(m_EditorObject);
 				
-				break;
+				thread CheckDragBounds(x, y);
+				return true;
 			}
 			
-			case 2: {
+			case MouseState.MIDDLE: {
 				EditorCamera camera = GetEditor().GetCamera();
 				vector pos = m_EditorObject.GetPosition();
 				pos[1] = camera.GetPosition()[1];
 				camera.SetPosition(pos);
-				break;
+				return true;
 			}
 		}
 		
-		return true;
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	
-	private const int DRAG_THRESHOLD = 10;
+	private const int DRAG_THRESHOLD = 5;
 	private void CheckDragBounds(int x, int y)
 	{
-		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
+		while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
 			int c_x, c_y;
 			GetMousePos(c_x, c_y);
 			
@@ -130,12 +132,10 @@ class EditorObjectMarker: EditorMarker
 			if (dist_x + dist_y > DRAG_THRESHOLD) {
 				GetEditor().SelectObject(m_EditorObject);
 				m_DragHandler.OnDragStart();
-				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(CheckDragBounds);
+				return;
 			}
 			
-			
-		} else {
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(CheckDragBounds);
+			Sleep(10);
 		}
 	}
 }
@@ -210,14 +210,14 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	}
 	
 	
-	
+	/*
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorObjectWorldMarker::OnClick: " + button);
 		
 		switch (button) {
 			
-			case 1: {
+			case MouseState.RIGHT: {
 				GetEditor().SelectObject(m_EditorObject);
 				EditorContextMenu context_menu = new EditorContextMenu();
 				context_menu.SetPosition(x, y);
@@ -254,7 +254,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		}
 		
 		return super.OnClick(w, x, y, button);
-	}*/
+	}
 
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
@@ -263,7 +263,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		command.Execute(this, null);
 		
 		return true;
-	}
+	}*/
 
 	
 

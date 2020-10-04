@@ -73,7 +73,7 @@ class EditorHudController: EditorControllerBase
 		super.OnWidgetScriptInit(w);
 		
 		// Reload Placeables
-		//EditorLog.Info("Loaded %1 Placeable Objects", ReloadPlaceableObjects().ToString());
+		EditorLog.Info("Loaded %1 Placeable Objects", ReloadPlaceableObjects().ToString());
 		
 		EditorHudToolbarView = new EditorHudToolbar();
 		NotifyPropertyChanged("EditorHudToolbarView");
