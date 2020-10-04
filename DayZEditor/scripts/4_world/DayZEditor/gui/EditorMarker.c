@@ -88,7 +88,8 @@ class EditorObjectMarker: EditorMarker
 	{
 		// ignores the object if you are placing
 		if (m_Editor.IsPlacing()) return false;
-	
+		
+		
 		switch (button) {
 			
 			case MouseState.LEFT: {
@@ -99,6 +100,12 @@ class EditorObjectMarker: EditorMarker
 					return true;
 				} 
 				
+				// allows multiple objects to be dragged
+				if (m_EditorObject.IsSelected()) {
+					thread CheckDragBounds(x, y);
+					return true;
+				}
+				
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
 					m_Editor.ClearSelection();
 				}
@@ -106,7 +113,7 @@ class EditorObjectMarker: EditorMarker
 				m_Editor.SelectObject(m_EditorObject);
 				
 				thread CheckDragBounds(x, y);
-				return true;
+				return false;
 			}
 			
 			case MouseState.MIDDLE: {
@@ -120,6 +127,8 @@ class EditorObjectMarker: EditorMarker
 		
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
+	
+
 	
 	private const int DRAG_THRESHOLD = 5;
 	private void CheckDragBounds(int x, int y)

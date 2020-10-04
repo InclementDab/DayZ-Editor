@@ -93,10 +93,7 @@ class ObjectDragHandler: DragHandler
 				if (m_Editor.GroundMode) {
 					transform[3] = ground_position + transform[1] * vector.Distance(ground_position, transform[3]);
 				}
-			}
-			
-				
-			
+			}			
 		}
 		
 		// Handle regular motion
@@ -126,7 +123,7 @@ class ObjectDragHandler: DragHandler
 			
 		}
 		
-		return;
+		
 		// This handles all other selected objects
 		EditorObjectSet selected_objects = GetEditor().GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {
