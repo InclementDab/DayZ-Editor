@@ -210,8 +210,8 @@ class BetterString: string
 	}	
 }
 
-static const int COLOR_SALMON	= -4235425;
-static const int COLOR_SALMON_A	= 2143248223;
+static const int COLOR_SALMON	= ARGB(255, 192, 94, 83);
+static const int COLOR_SALMON_A	= ARGB(128, 50, 100, 100);
 static const int COLOR_CANDY 	= -1618884;
 static const int COLOR_APPLE 	= -9785268;
 static const int COLOR_JELLY 	= -1010901;
