@@ -73,13 +73,21 @@ class EditorEnvironmentDialog: EditorDialogBase
 		
 		
 		DropdownListPrefab dropdown = new DropdownListPrefab("Test", m_Controller, "na");
-		AddContent(dropdown);
 		
 		dropdown.InsertItem("Test1");
 		dropdown.InsertItem("Test2");
 		dropdown.InsertItem("Test3");
 		dropdown.Toggle();
-				
+		
+		AddContent(dropdown);
+		
+
+		float x, y;
+		GetLayoutRoot().GetScreenPos(x, y);
+		Print(x);
+		Print(y);
+
+						
 		GroupPrefab group_prefab = new GroupPrefab("Group1", m_Controller, string.Empty);
 		
 		

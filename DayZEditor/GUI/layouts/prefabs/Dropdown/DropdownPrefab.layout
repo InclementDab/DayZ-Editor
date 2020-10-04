@@ -8,6 +8,7 @@ WrapSpacerWidgetClass DropdownPrefab {
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ priority 899
  Padding 0
  Margin 0
  "Size To Content H" 1
@@ -158,6 +159,7 @@ WrapSpacerWidgetClass DropdownPrefab {
        {
         ScriptParamsClass {
          Debug_Logging 0
+         Binding_Name "Value"
         }
        }
       }

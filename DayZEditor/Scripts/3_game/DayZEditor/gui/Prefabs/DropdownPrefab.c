@@ -19,23 +19,22 @@ class DropdownElementPrefab: ScriptViewTemplate<DropdownElementPrefabController>
 }
 
 
-class DropdownListPrefab: PrefabBase<string>
+class DropdownListPrefab: PrefabBase<ObservableCollection<ref ScriptedViewBase>>
 {
 	ref ObservableCollection<ref ScriptedViewBase> collection_ref;
 			
 	private WrapSpacerWidget DropdownWrapper;
 	
-	void DropdownListPrefab(string caption, Controller binding_context, string binding_name, string default_value = DEFAULT_VALUE)
+	void DropdownListPrefab(string caption, Controller binding_context, string binding_name, ObservableCollection<ref ScriptedViewBase> default_value = DEFAULT_VALUE)
 	{
 		Debug_Logging = true;
 		collection_ref = new ObservableCollection<ref ScriptedViewBase>("Value", m_PrefabBaseController);
-		//m_PrefabBaseController.Value = collection_ref;
+		m_PrefabBaseController.Value = collection_ref;
 	}
 	
 	void ~DropdownListPrefab()
 	{
 		Print("~DropdownListPrefab");
-		
 		delete collection_ref;
 	}
 	
@@ -54,10 +53,10 @@ class DropdownListPrefab: PrefabBase<string>
 		m_LayoutRoot.Update();
 		m_LayoutRoot.GetScreenPos(x, y);
 		m_LayoutRoot.GetScreenSize(w, h);
-
 		element.GetLayoutRoot().GetScreenSize(x1, y1);
-		element.GetLayoutRoot().SetPos(x, y1 + (y1 * (collection_ref.Count() + 1)));
-		element.GetLayoutRoot().SetSize(w, h);
+		/*
+		element.GetLayoutRoot().SetPos(x, y + (y1 * (collection_ref.Count() + 1)));
+		element.GetLayoutRoot().SetSize(w, h);*/
 	}
 	
 	void Toggle()
