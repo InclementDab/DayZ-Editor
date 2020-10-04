@@ -77,40 +77,31 @@ class ObjectDragHandler: DragHandler
 		// Handle XY Rotation
 		else if (KeyState(KeyCode.KC_LSHIFT)) {
 
-			vector cursor_delta = transform[3] - Editor.CurrentMousePosition;
+			vector cursor_delta = ground_position - Editor.CurrentMousePosition;
 			vector delta = m_EditorObject.GetOrientation();
 			float ang = Math.Atan2(cursor_delta[0], cursor_delta[2]);
 			delta[0] = ang * Math.RAD2DEG;
 			
 			delta.RotationMatrixFromAngles(transform);
-
-			// Todo: when Editor.GroundMode is enabled, rotate about the ground_position vector
+			
 			if (m_Editor.GroundMode) {
-				//transform[3] = vector.RotateAroundPoint(ground_position, transform[3], vector.Up, Math.Cos(ang), Math.Sin(ang));
+				transform[3] = ground_position + transform[1] * vector.Distance(ground_position, transform[3]);
 			}
 		}
 		
 		// Handle regular motion
 		else {
-
 			
 			if (!m_Editor.MagnetMode) {
 				surface_normal = vector.Up;
 			}
 			
-			vector local_ori;
-			local_ori = m_EditorObject.GetWorldObject().GetDirection();
-			
-			Print((vector.Up * local_ori) * surface_normal);
-			Print(vector.Aside * surface_normal);
+			vector local_ori = m_EditorObject.GetWorldObject().GetDirection();
+
 			transform[0] = surface_normal * local_ori;
 			transform[1] = surface_normal;
 			transform[2] = surface_normal * (local_ori * vector.Up);
-			
-			//Print(transform[0]);
-			//Print(transform[1]);
-			//Print(transform[2]);
-		
+
 			if (m_Editor.GroundMode) {
 				if (m_Editor.MagnetMode) {
 					transform[3] = cursor_pos + surface_normal * vector.Distance(ground_position, transform[3]);				
@@ -123,10 +114,10 @@ class ObjectDragHandler: DragHandler
 				transform[3][1] = cursor_pos[1] + size[1]/2;				
 			} 
 			
-			return;
+			
 		}
 		
-		
+		return;
 		// This handles all other selected objects
 		EditorObjectSet selected_objects = GetEditor().GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {
