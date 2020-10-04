@@ -72,7 +72,10 @@ class TypeConversionBrushObject: TypeConversionTemplate<EditorBrushObject>
 class DropdownElementPrefabConverter: TypeConversionTemplate<DropdownElementPrefab>
 {
 	override string GetString() {
-		return m_Value.GetTemplateController().Text;
+		if (m_Value)
+			return m_Value.GetTemplateController().Text;
+		
+		return string.Empty;
 	}
 	
 	override Widget GetWidget() {

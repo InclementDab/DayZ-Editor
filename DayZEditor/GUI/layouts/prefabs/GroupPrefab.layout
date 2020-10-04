@@ -138,7 +138,7 @@ WrapSpacerWidgetClass EditorDialogOption {
    Padding 5
    Margin 0
    "Size To Content V" 1
-   content_halign center
+   content_halign right
    content_valign center
    {
     ScriptParamsClass {

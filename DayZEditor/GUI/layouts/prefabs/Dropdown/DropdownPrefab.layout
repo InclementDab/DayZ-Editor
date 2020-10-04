@@ -1,9 +1,8 @@
 GridSpacerWidgetClass DropdownPrefab {
  clipchildren 0
  ignorepointer 1
- position 0 0
- size 450 32
- halign center_ref
+ size 400 32
+ halign right_ref
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -17,16 +16,21 @@ GridSpacerWidgetClass DropdownPrefab {
  Rows 1
  {
   TextWidgetClass DropdownPrefabCaption {
+   clipchildren 0
    ignorepointer 1
    position 0 0
-   size 150 1
+   size 0 32
    hexactpos 1
    vexactpos 1
    hexactsize 1
-   vexactsize 0
+   vexactsize 1
    scriptclass "ViewBinding"
    text "Caption!"
-   "text halign" center
+   "text offset" -5 0
+   "exact text" 0
+   "size to text h" 1
+   "size to text v" 0
+   "text halign" right
    "text valign" center
    {
     ScriptParamsClass {

@@ -7,7 +7,7 @@ class DropdownElementPrefabController: Controller
 
 class DropdownElementPrefab: ScriptViewTemplate<DropdownElementPrefabController>
 {
-	void DropdownElementPrefab(string text, Class user_data)
+	void DropdownElementPrefab(string text, Class user_data = null)
 	{
 		m_TemplateController.Text = text;
 		m_TemplateController.NotifyPropertyChanged("Text");
