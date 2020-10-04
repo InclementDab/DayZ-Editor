@@ -8,37 +8,38 @@ class DropdownElementPrefab: ScriptViewTemplate<DropdownElementPrefabController>
 {
 	void DropdownElementPrefab(string text)
 	{
-		Debug_Logging = true;
 		m_TemplateController.Text = text;
 		m_TemplateController.NotifyPropertyChanged("Text");
 	}
-	
+		
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/prefabs/Dropdown/DropdownElementPrefab.layout";
 	}
 }
 
-
-class DropdownListPrefab: PrefabBase<ObservableCollection<ref ScriptedViewBase>>
+class DropdownListPrefabController: PrefabBaseController<DropdownElementPrefab>
 {
-	ref ObservableCollection<ref ScriptedViewBase> collection_ref;
-			
+	ref ObservableCollection<ref DropdownElementPrefab> DropdownElementList = new ObservableCollection<ref DropdownElementPrefab>("DropdownElementList", this);
+	
+	void ~DropdownListPrefabController()
+	{
+		delete DropdownElementList;
+	}
+}
+
+
+class DropdownListPrefab: PrefabBase<DropdownElementPrefab>
+{
+	DropdownListPrefabController m_DropdownListController;
+
 	private WrapSpacerWidget DropdownWrapper;
 	
-	void DropdownListPrefab(string caption, Controller binding_context, string binding_name, ObservableCollection<ref ScriptedViewBase> default_value = DEFAULT_VALUE)
+	void DropdownListPrefab(string caption, Controller binding_context, string binding_name, DropdownElementPrefab default_value = DEFAULT_VALUE)
 	{
-		Debug_Logging = true;
-		collection_ref = new ObservableCollection<ref ScriptedViewBase>("Value", m_PrefabBaseController);
-		m_PrefabBaseController.Value = collection_ref;
+		Class.CastTo(m_DropdownListController, m_Controller);
 	}
 	
-	void ~DropdownListPrefab()
-	{
-		Print("~DropdownListPrefab");
-		delete collection_ref;
-	}
 	
-		
 	void InsertItem(string item_text)
 	{
 		InsertItem(new DropdownElementPrefab(item_text));
@@ -46,40 +47,35 @@ class DropdownListPrefab: PrefabBase<ObservableCollection<ref ScriptedViewBase>>
 	
 	void InsertItem(DropdownElementPrefab element)
 	{
-		collection_ref.Insert(element);
+		element.SetParent(this);
+		m_DropdownListController.DropdownElementList.Insert(element);
+	}
 		
-		// Doing this because our buttons need to be set on TOP of the render
-		float x, y, w, h, x1, y1;
-		m_LayoutRoot.Update();
-		m_LayoutRoot.GetScreenPos(x, y);
-		m_LayoutRoot.GetScreenSize(w, h);
-		element.GetLayoutRoot().GetScreenSize(x1, y1);
-		/*
-		element.GetLayoutRoot().SetPos(x, y + (y1 * (collection_ref.Count() + 1)));
-		element.GetLayoutRoot().SetSize(w, h);*/
-	}
-	
-	void Toggle()
-	{
-		for (int i = 0; i < collection_ref.Count(); i++) {
-			collection_ref[i].GetLayoutRoot().Show(collection_ref[i].GetLayoutRoot().IsVisible());
-		}
-	}
-	
 	bool DropdownPrefabExecute(ButtonCommandArgs args)
 	{
-		Toggle();
+		DropdownWrapper.Show(!DropdownWrapper.IsVisible());
 		return true;
 	}
 	
-	override void PrefabPropertyChanged(string property_name)
+	bool DropdownElementExecute(ButtonCommandArgs args)
 	{
-		//EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, m_PrefabBaseController.Value);
-		//m_BindingContext.PropertyChanged(m_BindingName);
+		for (int i = 0; i < m_DropdownListController.DropdownElementList.Count(); i++) {
+			if (m_DropdownListController.DropdownElementList[i].GetLayoutRoot().FindAnyWidget(args.Source.GetName()) == args.Source) {
+				m_DropdownListController.Value = m_DropdownListController.DropdownElementList[i];
+				m_DropdownListController.NotifyPropertyChanged("Value");
+				DropdownWrapper.Show(false);
+				return true;
+			}
+		}
+
+		return true;
 	}
 	
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/prefabs/Dropdown/DropdownPrefab.layout";
 	}
 	
+	override typename GetControllerType() {
+		return DropdownListPrefabController;
+	}
 }

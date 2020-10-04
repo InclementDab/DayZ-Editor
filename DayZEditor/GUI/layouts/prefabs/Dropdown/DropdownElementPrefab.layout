@@ -1,10 +1,10 @@
 PanelWidgetClass DropdownElement {
  color 0.0588 0.0588 0.0588 1
  position 0 0
- size 100 30
+ size 1 30
  hexactpos 1
  vexactpos 1
- hexactsize 1
+ hexactsize 0
  vexactsize 1
  style rover_sim_colorable
  "no focus" 0
@@ -17,6 +17,7 @@ PanelWidgetClass DropdownElement {
    vexactpos 1
    hexactsize 0
    vexactsize 1
+   scriptclass "ViewBinding"
    style Default
    "no focus" 0
    text_proportion 0.55
@@ -25,7 +26,6 @@ PanelWidgetClass DropdownElement {
     TextWidgetClass DropdownElementText {
      ignorepointer 1
      size 1 1
-     halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -33,13 +33,18 @@ PanelWidgetClass DropdownElement {
      vexactsize 0
      scriptclass "ViewBinding"
      font "gui/fonts/metron16"
-     "text halign" center
+     "text offset" 10 0
      "text valign" center
      {
       ScriptParamsClass {
        Binding_Name "Text"
       }
      }
+    }
+   }
+   {
+    ScriptParamsClass {
+     Relay_Command "DropdownElementExecute"
     }
    }
   }

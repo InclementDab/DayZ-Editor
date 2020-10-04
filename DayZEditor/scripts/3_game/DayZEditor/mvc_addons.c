@@ -69,6 +69,26 @@ class TypeConversionBrushObject: TypeConversionTemplate<EditorBrushObject>
 	}
 }
 
+class DropdownElementPrefabConverter: TypeConversionTemplate<DropdownElementPrefab>
+{
+	override string GetString() {
+		return m_Value.GetTemplateController().Text;
+	}
+	
+	override Widget GetWidget() {
+		// Todo: why can this be null? not sure
+		if (m_Value) {
+			return m_Value.GetLayoutRoot();
+		}
+		
+		return null;
+	}
+	
+	override void SetWidget(Widget value) {
+		m_Value.OnWidgetScriptInit(value);
+	}
+}
+
 
 modded class MVC
 {
@@ -79,6 +99,7 @@ modded class MVC
 		type_conversions.Insert(EditorWidget, TypeConversionEditorWidget);
 		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
 		type_conversions.Insert(EditorBrushObject, TypeConversionBrushObject);
+		type_conversions.Insert(DropdownElementPrefab, DropdownElementPrefabConverter);
 	}
 }
 

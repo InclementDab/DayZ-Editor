@@ -2,13 +2,12 @@ WrapSpacerWidgetClass DropdownPrefab {
  clipchildren 0
  ignorepointer 1
  position 0 0
- size 250 32
+ size 350 32
  halign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
- priority 899
  Padding 0
  Margin 0
  "Size To Content H" 1
@@ -30,6 +29,19 @@ WrapSpacerWidgetClass DropdownPrefab {
    style Empty
    switch toggle
    {
+    PanelWidgetClass DropdownPrefabPanel {
+     ignorepointer 1
+     color 0.0588 0.0588 0.0588 1
+     position 0 0
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+    }
     TextWidgetClass DropdownText {
      clipchildren 0
      ignorepointer 1
@@ -39,10 +51,16 @@ WrapSpacerWidgetClass DropdownPrefab {
      vexactpos 1
      hexactsize 0
      vexactsize 0
+     scriptclass "ViewBinding"
      font "gui/fonts/etelkatextpro16"
      "text offset" 10 0
      text_proportion 0.55
      "text valign" center
+     {
+      ScriptParamsClass {
+       Binding_Name "Value"
+      }
+     }
     }
     FrameWidgetClass DropdownIconFrame {
      clipchildren 0
@@ -107,63 +125,25 @@ WrapSpacerWidgetClass DropdownPrefab {
    }
   }
   WrapSpacerWidgetClass DropdownWrapper {
-   visible 1
+   visible 0
    clipchildren 0
-   ignorepointer 1
-   position 0 1
-   size 0.5 0
-   halign center_ref
-   hexactpos 1
+   ignorepointer 0
+   size 1 1
+   hexactpos 0
    vexactpos 0
    hexactsize 0
-   vexactsize 1
-   priority 900
-   scriptclass ""
+   vexactsize 0
+   scriptclass "ViewBinding"
    style Empty
    Padding 0
    Margin 0
    "Size To Content H" 1
    "Size To Content V" 1
+   content_halign center
    {
-    ScrollWidgetClass DropdownScroller {
-     visible 1
-     clipchildren 0
-     ignorepointer 0
-     position 0 1
-     size 1 1
-     halign center_ref
-     hexactpos 1
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
-     priority 901
-     style blank
-     {
-      GridSpacerWidgetClass DropdownScrollerContent {
-       clipchildren 0
-       ignorepointer 0
-       size 1 1
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       priority 902
-       scriptclass "ViewBinding"
-       style Empty
-       Padding 0
-       Margin 0
-       "Size To Content H" 1
-       "Size To Content V" 1
-       Columns 1
-       Rows 100
-       {
-        ScriptParamsClass {
-         Debug_Logging 0
-         Binding_Name "Value"
-        }
-       }
-      }
-     }
+    ScriptParamsClass {
+     Debug_Logging 0
+     Binding_Name "DropdownElementList"
     }
    }
   }

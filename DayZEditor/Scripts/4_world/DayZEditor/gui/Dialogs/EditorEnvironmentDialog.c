@@ -57,7 +57,7 @@ class EditorEnvironmentDialog: EditorDialogBase
 {	
 	void EditorEnvironmentDialog(string title)
 	{
-		Debug_Logging = true;
+		//Debug_Logging = true;
 		int year, month, day, hour, minute;
 		GetGame().GetWorld().GetDate(year, month, day, hour, minute);
 		float time = minute * 60 + hour * 3600;
@@ -72,21 +72,15 @@ class EditorEnvironmentDialog: EditorDialogBase
 		float exposure = GetGame().GetWorld().GetEyeAccom();
 		
 		
-		DropdownListPrefab dropdown = new DropdownListPrefab("Test", m_Controller, "na");
 		
-		dropdown.InsertItem("Test1");
+		
+		DropdownElementPrefab list_prefab = new DropdownElementPrefab("Test1");
+		DropdownListPrefab dropdown = new DropdownListPrefab("Test", m_Controller, "na", list_prefab);
+		dropdown.InsertItem(list_prefab);
 		dropdown.InsertItem("Test2");
 		dropdown.InsertItem("Test3");
-		dropdown.Toggle();
 		
 		AddContent(dropdown);
-		
-
-		float x, y;
-		GetLayoutRoot().GetScreenPos(x, y);
-		Print(x);
-		Print(y);
-
 						
 		GroupPrefab group_prefab = new GroupPrefab("Group1", m_Controller, string.Empty);
 		
