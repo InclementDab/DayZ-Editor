@@ -27,9 +27,9 @@
 // and message me your feedback on discord :)
 
 
-private ref Editor m_EditorInstance;
+ref Editor g_Editor;
 Editor GetEditor() {
-	return m_EditorInstance;
+	return g_Editor;
 }
 
 
@@ -65,39 +65,33 @@ class Editor
 	void SetSaveFile(string file)
 		m_EditorSaveFile = file;
 	
-	
 	void SetSettings(EditorSettings settings) {
 		m_EditorSettings = settings;
 		EditorSettings.Save(m_EditorSettings, m_EditorSettingsFile);
 		m_EditorSettings.Reload();
 	}
 	
-	EditorObjectManagerModule GetObjectManager() 
-	{
-		if (!m_ObjectManager) {
-			m_ObjectManager = EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
-		}
-		
+	EditorObjectManagerModule GetObjectManager() {
 		return m_ObjectManager;
 	}
 	
 	EditorObjectSet GetSelectedObjects() 
-		return GetObjectManager().GetSelectedObjects(); 
+		return m_ObjectManager.GetSelectedObjects(); 
 	
 	EditorObjectSet GetPlacedObjects()
-		return GetObjectManager().GetPlacedObjects(); 
+		return m_ObjectManager.GetPlacedObjects(); 
 
 	EditorObjectDataSet GetSessionCache()
 		return m_SessionCache; 
 		
 	EditorObject GetEditorObject(int id)
-		return GetObjectManager().GetEditorObject(id); 
+		return m_ObjectManager.GetEditorObject(id); 
 	
 	EditorObject GetEditorObject(notnull Object world_object)
-		return GetObjectManager().GetEditorObject(world_object);
+		return m_ObjectManager.GetEditorObject(world_object);
 	
 	EditorObject GetPlacedObjectById(int id)
-		return GetObjectManager().GetPlacedObjectById(id); 
+		return m_ObjectManager.GetPlacedObjectById(id); 
 
 	void DeleteSessionData(int id)
 		m_SessionCache.Remove(id);	
@@ -116,39 +110,39 @@ class Editor
 	
 	
 	EditorObjectSet CreateObjects(EditorObjectDataSet data_list, bool create_undo = true)
-		return GetObjectManager().CreateObjects(data_list, create_undo);
+		return m_ObjectManager.CreateObjects(data_list, create_undo);
 	
 	
 	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true)
-		return GetObjectManager().CreateObject(editor_object_data, create_undo);
+		return m_ObjectManager.CreateObject(editor_object_data, create_undo);
 	
 	
 	EditorObject CreateFromObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
-		return GetObjectManager().CreateFromObject(target, flags);
+		return m_ObjectManager.CreateFromObject(target, flags);
 	
 	
 	void DeleteObject(EditorObject target, bool create_undo = true)
-		GetObjectManager().DeleteObject(target, create_undo);
+		m_ObjectManager.DeleteObject(target, create_undo);
 	
 	
 	void DeleteObjects(EditorObjectSet target, bool create_undo = true)
-		GetObjectManager().DeleteObjects(target, create_undo);
+		m_ObjectManager.DeleteObjects(target, create_undo);
 	
 	
 	void SelectObject(EditorObject target)
-		GetObjectManager().SelectObject(target);
+		m_ObjectManager.SelectObject(target);
 	
 	
 	void DeselectObject(EditorObject target)
-		GetObjectManager().DeselectObject(target);
+		m_ObjectManager.DeselectObject(target);
 	
 	
 	void ToggleSelection(EditorObject target)
-		GetObjectManager().ToggleSelection(target);
+		m_ObjectManager.ToggleSelection(target);
 	
 		
 	void ClearSelection() 
-		GetObjectManager().ClearSelection();
+		m_ObjectManager.ClearSelection();
 	
 	
 	ref EditorCommandManager CommandManager;
@@ -172,14 +166,19 @@ class Editor
 	bool 										SnappingMode;
 	bool 										CollisionMode;
 	
-	void Editor(PlayerBase player) 
+	private void Editor(PlayerBase player) 
 	{
 		EditorLog.Trace("Editor");		
-		m_EditorInstance = this;
+		g_Editor = this;
 		m_Player = player;
 		
+		// Object Manager
+		m_ObjectManager = EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
+		
+		// Command Manager
 		CommandManager = new EditorCommandManager();
 		
+		// Idk delete me?
 		m_SessionCache = new EditorObjectDataSet();
 		
 		// Init Settings
@@ -203,7 +202,7 @@ class Editor
 		SetActive(true);
 	}
 	
-	void ~Editor() 
+	private void ~Editor() 
 	{
 		EditorLog.Trace("~Editor");
 		if (!IsMissionOffline()) {
@@ -222,14 +221,14 @@ class Editor
 	static Editor Create(PlayerBase player)
 	{
 		EditorLog.Trace("Editor::Create");
-		m_EditorInstance = new Editor(player);
-		return m_EditorInstance;
+		g_Editor = new Editor(player);
+		return g_Editor;
 	}
 	
 	static void Destroy()
 	{
 		EditorLog.Trace("Editor::Destroy");
-		delete m_EditorInstance;
+		delete g_Editor;
 	}
 	
 	private bool exit_condition = false;
@@ -335,12 +334,12 @@ class Editor
 				
 				if (GetBrush() == null) {
 					
-					if (GetObjectManager().GetEditorObject(ObjectUnderCursor)) {
+					if (m_ObjectManager.GetEditorObject(ObjectUnderCursor)) {
 						if (!KeyState(KeyCode.KC_LSHIFT)) {
 							ClearSelection();
 						}
 						
-						SelectObject(GetObjectManager().GetEditorObject(ObjectUnderCursor));
+						SelectObject(m_ObjectManager.GetEditorObject(ObjectUnderCursor));
 						return true;
 					} 
 					
