@@ -81,20 +81,22 @@ class ObjectDragHandler: DragHandler
 			vector delta = m_EditorObject.GetOrientation();
 			float ang = Math.Atan2(cursor_delta[0], cursor_delta[2]);
 			delta[0] = ang * Math.RAD2DEG;
-			
 			delta.RotationMatrixFromAngles(transform);
 			
-			if (m_Editor.GroundMode) {
-				if (m_Editor.MagnetMode) {
-					vector local_dir = vector.Direction(ground_position, cursor_pos);
-					local_dir.Normalize();
-					transform[0] = surface_normal * local_dir;
-					transform[1] = surface_normal;
-					transform[2] = surface_normal * (local_dir * vector.Up);
-				} else {
+			if (m_Editor.MagnetMode) {
+				vector local_dir = vector.Direction(ground_position, cursor_pos);
+				local_dir.Normalize();
+				transform[0] = surface_normal * local_dir;
+				transform[1] = surface_normal;
+				transform[2] = surface_normal * (local_dir * vector.Up);
+			} else {
+				if (m_Editor.GroundMode) {
 					transform[3] = ground_position + transform[1] * vector.Distance(ground_position, transform[3]);
 				}
 			}
+			
+				
+			
 		}
 		
 		// Handle regular motion
