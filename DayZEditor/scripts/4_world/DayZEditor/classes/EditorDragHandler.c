@@ -85,7 +85,15 @@ class ObjectDragHandler: DragHandler
 			delta.RotationMatrixFromAngles(transform);
 			
 			if (m_Editor.GroundMode) {
-				transform[3] = ground_position + transform[1] * vector.Distance(ground_position, transform[3]);
+				if (m_Editor.MagnetMode) {
+					vector local_dir = vector.Direction(ground_position, cursor_pos);
+					local_dir.Normalize();
+					transform[0] = surface_normal * local_dir;
+					transform[1] = surface_normal;
+					transform[2] = surface_normal * (local_dir * vector.Up);
+				} else {
+					transform[3] = ground_position + transform[1] * vector.Distance(ground_position, transform[3]);
+				}
 			}
 		}
 		
@@ -97,7 +105,6 @@ class ObjectDragHandler: DragHandler
 			}
 			
 			vector local_ori = m_EditorObject.GetWorldObject().GetDirection();
-
 			transform[0] = surface_normal * local_ori;
 			transform[1] = surface_normal;
 			transform[2] = surface_normal * (local_ori * vector.Up);
