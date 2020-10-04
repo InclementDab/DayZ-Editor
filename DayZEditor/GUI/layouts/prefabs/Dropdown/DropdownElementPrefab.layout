@@ -1,11 +1,12 @@
 ButtonWidgetClass DropdownElement {
- color 0.1373 0.1373 0.1373 0.3922
+ color 0.1373 0.1373 0.1373 1
  position 0 0
  size 1 30
  hexactpos 1
  vexactpos 1
  hexactsize 0
  vexactsize 1
+ priority 900
  style Colorable
  "no focus" 1
  text_proportion 0.55
@@ -20,6 +21,7 @@ ButtonWidgetClass DropdownElement {
    vexactpos 1
    hexactsize 0
    vexactsize 1
+   priority 901
    scriptclass "ViewBinding"
    font "gui/fonts/metron16"
    "text halign" center

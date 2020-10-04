@@ -13,18 +13,21 @@ class DropdownElementPrefab: ScriptViewTemplate<DropdownElementPrefabController>
 	}
 	
 	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/prefabs/DropdownElementPrefab.layout";
+		return "DayZEditor/gui/Layouts/prefabs/Dropdown/DropdownElementPrefab.layout";
 	}
 }
 
 
-class DropdownListPrefab: PrefabBase<ref ObservableCollection<ref DropdownElementPrefab>>
+class DropdownListPrefab: PrefabBase<ref ObservableCollection<ref ScriptedViewBase>>
 {
-	autoptr ObservableCollection<ref DropdownElementPrefab> collection_ref;
+	ref ObservableCollection<ref ScriptedViewBase> collection_ref;
 	
-	void DropdownListPrefab(string caption, Controller binding_context, string binding_name, ObservableCollection<ref DropdownElementPrefab> default_value = DEFAULT_VALUE)
+	private WrapSpacerWidget DropdownWrapper;
+	
+	void DropdownListPrefab(string caption, Controller binding_context, string binding_name, ObservableCollection<ref ScriptedViewBase> default_value = DEFAULT_VALUE)
 	{
-		collection_ref = new ref ObservableCollection<ref DropdownElementPrefab>("Value", m_PrefabBaseController);
+		Debug_Logging = true;
+		collection_ref = new ref ObservableCollection<ref ScriptedViewBase>("Value", m_PrefabBaseController);
 		m_PrefabBaseController.Value = collection_ref;
 	}
 	
@@ -36,10 +39,32 @@ class DropdownListPrefab: PrefabBase<ref ObservableCollection<ref DropdownElemen
 	void InsertItem(DropdownElementPrefab element)
 	{
 		m_PrefabBaseController.Value.Insert(element);
+		
+		Print(m_PrefabBaseController.Value);
+	}
+	
+	void Open(bool open)
+	{
+		DropdownWrapper.Show(open);
+	}
+	
+	bool DropdownPrefabExecute(ButtonCommandArgs args)
+	{
+		Print(m_PrefabBaseController.Value.Count());
+		Print("hi");
+		DropdownWrapper.Show(!DropdownWrapper.IsVisible());		
+		return true;
+	}
+	
+		
+	override void PrefabPropertyChanged(string property_name)
+	{
+		//EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, m_PrefabBaseController.Value);
+		//m_BindingContext.PropertyChanged(m_BindingName);
 	}
 	
 	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/prefabs/DropdownPrefab.layout";
+		return "DayZEditor/gui/Layouts/prefabs/Dropdown/DropdownPrefab.layout";
 	}
 	
 }

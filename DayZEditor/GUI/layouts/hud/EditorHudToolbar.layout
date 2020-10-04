@@ -176,7 +176,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
   }
   PanelWidgetClass ToolsPanel {
    visible 1
-   clipchildren 1
+   clipchildren 0
    ignorepointer 1
    color 0.1569 0.1569 0.1569 1
    position 0 0
@@ -192,7 +192,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
    {
     WrapSpacerWidgetClass ToolsWrapper {
      visible 1
-     clipchildren 1
+     clipchildren 0
      ignorepointer 1
      color 0.0118 0.0118 0.0118 0.3922
      size 1 1

@@ -1,149 +1,177 @@
-ButtonWidgetClass DropdownPrefab {
+WrapSpacerWidgetClass DropdownPrefab {
  clipchildren 0
- inheritalpha 0
- ignorepointer 0
- size 1 32
+ ignorepointer 1
+ size 0.6 32
  halign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 0
  vexactsize 1
- style Empty
+ Padding 0
+ Margin 0
+ "Size To Content H" 1
+ "Size To Content V" 1
+ content_halign center
  {
-  TextWidgetClass DropdownText {
+  ButtonWidgetClass DropdownPrefabButton {
    clipchildren 0
-   ignorepointer 1
+   inheritalpha 0
+   ignorepointer 0
    position 0 0
    size 1 1
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   font "gui/fonts/etelkatextpro16"
-   "text offset" 10 0
-   text_proportion 0.55
-   "text valign" center
-  }
-  FrameWidgetClass DropdownIconFrame {
-   clipchildren 0
-   ignorepointer 1
-   position 0 0
-   size 1 1
-   halign right_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   fixaspect inside
-   {
-    ImageWidgetClass DropdownExpandIcon {
-     visible 1
-     clipchildren 0
-     inheritalpha 1
-     ignorepointer 1
-     size 24 18
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     image0 "set:dayz_gui image:icon_arrow"
-     mode blend
-     "src alpha" 1
-     "no wrap" 1
-     stretch 1
-     "flip v" 0
-     filter 1
-    }
-    ImageWidgetClass DropdownCollapseIcon {
-     visible 0
-     clipchildren 0
-     inheritalpha 1
-     ignorepointer 1
-     size 24 18
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     image0 "set:dayz_gui image:icon_arrow"
-     mode additive
-     "src alpha" 1
-     "no wrap" 1
-     stretch 1
-     "flip u" 0
-     "flip v" 0
-     filter 1
-    }
-   }
-  }
-  WrapSpacerWidgetClass DropdownWrapper {
-   visible 1
-   ignorepointer 1
-   position 0 1
-   size 1 500
    halign center_ref
    hexactpos 1
-   vexactpos 0
+   vexactpos 1
    hexactsize 0
-   vexactsize 1
-   scriptclass ""
-   style Outline
-   Padding 0
-   Margin 0
-   "Size To Content H" 1
-   "Size To Content V" 1
+   vexactsize 0
+   scriptclass "ViewBinding"
+   style Empty
+   switch toggle
    {
-    TextListboxWidgetClass DropdownListbox {
-     visible 0
+    TextWidgetClass DropdownText {
+     clipchildren 0
+     ignorepointer 1
      position 0 0
      size 1 1
-     hexactpos 0
-     vexactpos 0
+     hexactpos 1
+     vexactpos 1
      hexactsize 0
      vexactsize 0
-     style NoScrollBar
-     lines 0
-     font "gui/fonts/metron14"
+     font "gui/fonts/etelkatextpro16"
+     "text offset" 10 0
+     text_proportion 0.55
+     "text valign" center
     }
-    ScrollWidgetClass DropdownScroller {
-     visible 1
+    FrameWidgetClass DropdownIconFrame {
      clipchildren 0
-     ignorepointer 0
-     color 0.1373 0.1373 0.1373 0.549
-     position 0 1
+     ignorepointer 1
+     position 0 0
      size 1 1
+     halign right_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     fixaspect inside
+     {
+      ImageWidgetClass DropdownExpandIcon {
+       visible 1
+       clipchildren 0
+       inheritalpha 1
+       ignorepointer 1
+       size 24 18
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       image0 "set:dayz_gui image:icon_arrow"
+       mode blend
+       "src alpha" 1
+       "no wrap" 1
+       stretch 1
+       "flip v" 0
+       filter 1
+      }
+      ImageWidgetClass DropdownCollapseIcon {
+       visible 0
+       clipchildren 0
+       inheritalpha 1
+       ignorepointer 1
+       size 24 18
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       image0 "set:dayz_gui image:icon_arrow"
+       mode additive
+       "src alpha" 1
+       "no wrap" 1
+       stretch 1
+       "flip u" 0
+       "flip v" 0
+       filter 1
+      }
+     }
+    }
+    WrapSpacerWidgetClass DropdownWrapper {
+     visible 1
+     ignorepointer 1
+     position 0 1
+     size 1 500
      halign center_ref
      hexactpos 1
      vexactpos 0
      hexactsize 0
-     vexactsize 0
-     style blank
+     vexactsize 1
+     priority 900
+     scriptclass ""
+     style Empty
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     "Size To Content V" 1
      {
-      GridSpacerWidgetClass DropdownScrollerContent {
-       ignorepointer 0
-       color 0 0 0 0
+      TextListboxWidgetClass DropdownListbox {
+       visible 0
+       position 0 0
        size 1 1
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       scriptclass "ViewBinding"
-       Padding 0
-       Margin 0
-       "Size To Content H" 1
-       "Size To Content V" 1
-       Columns 1
-       Rows 100
+       style NoScrollBar
+       lines 0
+       font "gui/fonts/metron14"
+      }
+      ScrollWidgetClass DropdownScroller {
+       visible 1
+       clipchildren 1
+       ignorepointer 0
+       color 0.0588 0.0588 0.0588 1
+       position 0 1
+       size 1 1
+       halign center_ref
+       hexactpos 1
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       style blank
        {
-        ScriptParamsClass {
-         Binding_Name "Value"
+        GridSpacerWidgetClass DropdownScrollerContent {
+         ignorepointer 0
+         color 0.0588 0.0588 0.0588 1
+         size 1 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         style Empty
+         Padding 0
+         Margin 0
+         "Size To Content H" 1
+         "Size To Content V" 1
+         Columns 1
+         Rows 100
+         {
+          ScriptParamsClass {
+           Debug_Logging 1
+           Binding_Name "Value"
+          }
+         }
         }
        }
       }
      }
+    }
+   }
+   {
+    ScriptParamsClass {
+     Relay_Command "DropdownPrefabExecute"
     }
    }
   }

@@ -17,7 +17,7 @@ class EditorHudToolbarController: EditorControllerBase
 	protected ButtonWidget MenuBarFile;
 	protected ButtonWidget MenuBarEdit;
 	protected ButtonWidget MenuBarView;
-	
+			
 	void EditorHudToolbarController()
 	{
 		//Debug_Logging = true;
@@ -37,8 +37,7 @@ class EditorHudToolbarController: EditorControllerBase
 #ifndef COMPONENT_SYSTEM
 		// Load Brushes
 		ReloadBrushes(m_Editor.EditorBrushFile);
-#endif
-		
+#endif		
 	}
 	
 	// Brush Management
