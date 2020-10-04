@@ -2,14 +2,18 @@
 class DropdownElementPrefabController: Controller
 {
 	string Text;
+	Class UserData;
 }
 
 class DropdownElementPrefab: ScriptViewTemplate<DropdownElementPrefabController>
 {
-	void DropdownElementPrefab(string text)
+	void DropdownElementPrefab(string text, Class user_data)
 	{
 		m_TemplateController.Text = text;
 		m_TemplateController.NotifyPropertyChanged("Text");
+		
+		m_TemplateController.UserData = user_data;
+		m_TemplateController.NotifyPropertyChanged("UserData");
 	}
 		
 	override string GetLayoutFile() {

@@ -75,7 +75,7 @@ class EditorEnvironmentDialog: EditorDialogBase
 		
 		
 		DropdownElementPrefab list_prefab = new DropdownElementPrefab("Test1");
-		DropdownListPrefab dropdown = new DropdownListPrefab("Test", m_Controller, "na", list_prefab);
+		DropdownListPrefab dropdown = new DropdownListPrefab("This is a caption that is way too long", m_Controller, "na", list_prefab);
 		dropdown.InsertItem(list_prefab);
 		dropdown.InsertItem("Test2");
 		dropdown.InsertItem("Test3");
