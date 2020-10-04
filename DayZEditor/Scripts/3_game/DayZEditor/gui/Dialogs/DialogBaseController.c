@@ -6,7 +6,7 @@ class DialogBaseController: Controller
 	ref ObservableCollection<ref DialogButton> DialogButtonData = new ObservableCollection<ref DialogButton>("DialogButtonData", this);
 		
 	void ~DialogBaseController()
-	{
+	{		
 		delete DialogContentData;
 		delete DialogButtonData;
 	}

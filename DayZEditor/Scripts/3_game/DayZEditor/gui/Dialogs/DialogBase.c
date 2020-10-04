@@ -18,7 +18,7 @@ class DialogBase: ScriptView
 		m_DialogBaseController.NotifyPropertyChanged("Title");
 		m_LayoutRoot.Show(false);
 	}
-	
+		
 	DialogResult ShowDialog()
 	{
 		Trace("ShowDialog");

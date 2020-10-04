@@ -1,11 +1,12 @@
 WrapSpacerWidgetClass DropdownPrefab {
  clipchildren 0
  ignorepointer 1
- size 0.6 32
+ position 0 0
+ size 250 32
  halign center_ref
  hexactpos 1
  vexactpos 1
- hexactsize 0
+ hexactsize 1
  vexactsize 1
  Padding 0
  Margin 0
@@ -18,12 +19,12 @@ WrapSpacerWidgetClass DropdownPrefab {
    inheritalpha 0
    ignorepointer 0
    position 0 0
-   size 1 1
+   size 1 32
    halign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 0
+   vexactsize 1
    scriptclass "ViewBinding"
    style Empty
    switch toggle
@@ -97,81 +98,70 @@ WrapSpacerWidgetClass DropdownPrefab {
       }
      }
     }
-    WrapSpacerWidgetClass DropdownWrapper {
+   }
+   {
+    ScriptParamsClass {
+     Relay_Command "DropdownPrefabExecute"
+    }
+   }
+  }
+  WrapSpacerWidgetClass DropdownWrapper {
+   visible 1
+   clipchildren 0
+   ignorepointer 1
+   position 0 1
+   size 0.5 0
+   halign center_ref
+   hexactpos 1
+   vexactpos 0
+   hexactsize 0
+   vexactsize 1
+   priority 900
+   scriptclass ""
+   style Empty
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   {
+    ScrollWidgetClass DropdownScroller {
      visible 1
-     ignorepointer 1
+     clipchildren 0
+     ignorepointer 0
      position 0 1
-     size 1 500
+     size 1 1
      halign center_ref
      hexactpos 1
      vexactpos 0
      hexactsize 0
-     vexactsize 1
-     priority 900
-     scriptclass ""
-     style Empty
-     Padding 0
-     Margin 0
-     "Size To Content H" 1
-     "Size To Content V" 1
+     vexactsize 0
+     priority 901
+     style blank
      {
-      TextListboxWidgetClass DropdownListbox {
-       visible 0
-       position 0 0
+      GridSpacerWidgetClass DropdownScrollerContent {
+       clipchildren 0
+       ignorepointer 0
        size 1 1
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 0
-       style NoScrollBar
-       lines 0
-       font "gui/fonts/metron14"
-      }
-      ScrollWidgetClass DropdownScroller {
-       visible 1
-       clipchildren 1
-       ignorepointer 0
-       color 0.0588 0.0588 0.0588 1
-       position 0 1
-       size 1 1
-       halign center_ref
-       hexactpos 1
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       style blank
+       priority 902
+       scriptclass "ViewBinding"
+       style Empty
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 1
+       Rows 100
        {
-        GridSpacerWidgetClass DropdownScrollerContent {
-         ignorepointer 0
-         color 0.0588 0.0588 0.0588 1
-         size 1 1
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         style Empty
-         Padding 0
-         Margin 0
-         "Size To Content H" 1
-         "Size To Content V" 1
-         Columns 1
-         Rows 100
-         {
-          ScriptParamsClass {
-           Debug_Logging 1
-           Binding_Name "Value"
-          }
-         }
+        ScriptParamsClass {
+         Debug_Logging 0
         }
        }
       }
      }
-    }
-   }
-   {
-    ScriptParamsClass {
-     Relay_Command "DropdownPrefabExecute"
     }
    }
   }

@@ -1,4 +1,4 @@
-class GroupPrefab: PrefabBase<ref ObservableCollection<ref ScriptedViewBase>>
+class GroupPrefab: PrefabBase<ObservableCollection<ref ScriptedViewBase>>
 {
 	ref ObservableCollection<ref ScriptedViewBase> collection_ref;
 	
@@ -8,6 +8,11 @@ class GroupPrefab: PrefabBase<ref ObservableCollection<ref ScriptedViewBase>>
 	{
 		collection_ref = new ObservableCollection<ref ScriptedViewBase>("Value", m_PrefabBaseController);
 		m_PrefabBaseController.Value = collection_ref;
+	}
+	
+	void ~GroupPrefab()
+	{
+		delete collection_ref;
 	}
 	
 	void Insert(ScriptedViewBase content)

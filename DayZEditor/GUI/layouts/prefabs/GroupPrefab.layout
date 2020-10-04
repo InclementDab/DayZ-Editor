@@ -125,9 +125,9 @@ WrapSpacerWidgetClass EditorDialogOption {
    visible 1
    clipchildren 0
    ignorepointer 0
-   color 1 1 1 0
+   color 0.1569 0.1569 0.1569 0.5882
    position 0 1
-   size 1 2400
+   size 1 0
    halign center_ref
    hexactpos 1
    vexactpos 0

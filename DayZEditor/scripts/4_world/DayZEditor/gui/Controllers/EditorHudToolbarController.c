@@ -1,3 +1,18 @@
+
+class ArraysAreLeakingBro
+{	
+	void ArraysAreLeakingBro()
+	{
+		Print("ArraysAreLeakingBro");
+	}
+	
+	void ~ArraysAreLeakingBro()
+	{
+		Print("~ArraysAreLeakingBro");
+	}
+}
+
+
 class EditorHudToolbarController: EditorControllerBase
 {	
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
@@ -22,6 +37,11 @@ class EditorHudToolbarController: EditorControllerBase
 	{
 		//Debug_Logging = true;
 		EditorUIManager.CurrentEditorHudToolbarController = this;
+	}
+	
+	void ~EditorHudToolbarController()
+	{
+		delete BrushTypeBoxData;
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
