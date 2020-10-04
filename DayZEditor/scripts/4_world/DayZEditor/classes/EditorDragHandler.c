@@ -79,25 +79,38 @@ class ObjectDragHandler: DragHandler
 
 			vector cursor_delta = transform[3] - Editor.CurrentMousePosition;
 			vector delta = m_EditorObject.GetOrientation();
-			delta[0] = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;
+			float ang = Math.Atan2(cursor_delta[0], cursor_delta[2]);
+			delta[0] = ang * Math.RAD2DEG;
+			
 			delta.RotationMatrixFromAngles(transform);
 
 			// Todo: when Editor.GroundMode is enabled, rotate about the ground_position vector
+			if (m_Editor.GroundMode) {
+				//transform[3] = vector.RotateAroundPoint(ground_position, transform[3], vector.Up, Math.Cos(ang), Math.Sin(ang));
+			}
 		}
 		
 		// Handle regular motion
 		else {
+
 			
-			//transform = { "1 0 0", "0 1 0", "0 0 1" };
-			
-			if (m_Editor.MagnetMode) {
-				transform[0] = "1 0 0" * surface_normal;
-				transform[1] = surface_normal;
-				transform[2] = "0 0 1" * surface_normal;				
-			} else {
-				Math3D.MatrixIdentity3(transform);
+			if (!m_Editor.MagnetMode) {
+				surface_normal = vector.Up;
 			}
 			
+			vector local_ori;
+			local_ori = m_EditorObject.GetWorldObject().GetDirection();
+			
+			Print((vector.Up * local_ori) * surface_normal);
+			Print(vector.Aside * surface_normal);
+			transform[0] = surface_normal * local_ori;
+			transform[1] = surface_normal;
+			transform[2] = surface_normal * (local_ori * vector.Up);
+			
+			//Print(transform[0]);
+			//Print(transform[1]);
+			//Print(transform[2]);
+		
 			if (m_Editor.GroundMode) {
 				if (m_Editor.MagnetMode) {
 					transform[3] = cursor_pos + surface_normal * vector.Distance(ground_position, transform[3]);				
@@ -106,9 +119,11 @@ class ObjectDragHandler: DragHandler
 				}
 				
 			} else {
-				transform[3] = cursor_pos[1] - size[1]/2;
-				transform[3][1] = transform[3][1] + size[1];					
+				transform[3] = cursor_pos;
+				transform[3][1] = cursor_pos[1] + size[1]/2;				
 			} 
+			
+			return;
 		}
 		
 		
