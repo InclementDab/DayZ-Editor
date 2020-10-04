@@ -346,8 +346,10 @@ class Editor
 			case MouseState.MIDDLE: {
 				
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					EditorLog.Info(GetWidgetUnderCursor().GetName());
-				} else if (KeyState(KeyCode.KC_LSHIFT)) {
+					EditorLog.Info(GetWidgetUnderCursor().ToString());						
+				} 
+				
+				else if (KeyState(KeyCode.KC_LSHIFT)) {
 
 					if (ObjectUnderCursor) {						
 						/* attempt at getting proxies to work. Failed
@@ -485,6 +487,14 @@ class Editor
 		m_Mission.GetHud().ShowHud(!m_Active);
 		m_Mission.GetHud().ShowHudUI(!m_Active);
 		m_Mission.GetHud().SetPermanentCrossHair(!m_Active);
+		
+		
+		// we are in 4_world and this game is bad :)
+		Widget hud_root;
+		EnScript.GetClassVar(GetGame().GetMission(), "m_HudRootWidget", 0, hud_root);
+		if (hud_root) {
+			hud_root.Show(!m_Active);
+		}
 	
 		
 		if (!m_Active) {	
