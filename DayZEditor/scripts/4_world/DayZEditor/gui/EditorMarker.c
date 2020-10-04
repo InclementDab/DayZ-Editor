@@ -140,6 +140,14 @@ class EditorObjectMarker: EditorMarker
 			Sleep(10);
 		}
 	}
+	
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		m_Editor.CommandManager.ObjectPropertiesCommand.Execute(this, null);
+		
+		return true;
+	}
+
 }
 
 
@@ -258,14 +266,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		return super.OnClick(w, x, y, button);
 	}
 
-	
-	override bool OnDoubleClick(Widget w, int x, int y, int button)
-	{		
-		EditorObjectPropertiesCommand command = new EditorObjectPropertiesCommand();
-		command.Execute(this, null);
-		
-		return true;
-	}*/
+	*/
 
 	
 

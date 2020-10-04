@@ -240,10 +240,14 @@ class Editor
 		if (m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible()) {
 			CurrentMousePosition = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(x, y, 0));
 		} else {
+			if (ObjectInHand) {
+				Object collision_ignore = ObjectInHand.GetProjectionEntity();
+			}
+			
 			if (CollisionMode) {
-				CurrentMousePosition = MousePosToRay(obj, ObjectInHand.GetProjectionEntity(), m_EditorSettings.ViewDistance);
+				CurrentMousePosition = MousePosToRay(obj, collision_ignore, m_EditorSettings.ViewDistance);
 			} else {
-				CurrentMousePosition = MousePosToRay(obj, ObjectInHand.GetProjectionEntity(), m_EditorSettings.ViewDistance, 0, true);
+				CurrentMousePosition = MousePosToRay(obj, collision_ignore, m_EditorSettings.ViewDistance, 0, true);
 			}
 		}
 		

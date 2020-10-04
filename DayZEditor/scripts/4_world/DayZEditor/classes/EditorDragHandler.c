@@ -76,11 +76,12 @@ class ObjectDragHandler: DragHandler
 		
 		// Handle XY Rotation
 		else if (KeyState(KeyCode.KC_LSHIFT)) {
-					
-			transform = { "1 0 0", "0 1 0", "0 0 1", transform[3] };
-			vector cursor_delta = Editor.CurrentMousePosition - transform[3];
-			float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
-			m_EditorObject.PlaceOnSurfaceRotated(transform, ground_position, surface_normal[0] * -1, surface_normal[2] * -1, angle * -1, GetEditor().MagnetMode);			
+
+			vector cursor_delta = transform[3] - Editor.CurrentMousePosition;
+			vector delta = m_EditorObject.GetOrientation();
+			delta[0] = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;
+			m_EditorObject.SetOrientation(delta);
+			return;
 		}
 		
 		// Handle regular motion
@@ -129,8 +130,7 @@ class ObjectDragHandler: DragHandler
 				vector rot_pos;
 				//angle -= angle_delta;				
 				//float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
-				vector new_postion = vector.RotateAroundZero(pos_delta, vector.Up, Math.Sin(angle) * Math.DEG2RAD, Math.Cos(angle) * Math.DEG2RAD);
-				selected_object.SetPosition(new_postion + object_transform[3]);
+
 			
 			
 			// Handle regular motion for all children
