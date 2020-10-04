@@ -345,9 +345,9 @@ class Editor
 			
 			case MouseState.MIDDLE: {
 				
-				if (KeyState(KeyCode.KC_LCONTROL))
+				if (KeyState(KeyCode.KC_LCONTROL)) {
 					EditorLog.Info(GetWidgetUnderCursor().GetName());
-				else if (KeyState(KeyCode.KC_LSHIFT)) {
+				} else if (KeyState(KeyCode.KC_LSHIFT)) {
 
 					if (ObjectUnderCursor) {						
 						/* attempt at getting proxies to work. Failed
@@ -400,23 +400,29 @@ class Editor
 				
 			case KeyCode.KC_ESCAPE: {
 				
+				if (GetSelectedObjects().Count() > 0) {
+					ClearSelection();
+					return true;
+				}
+				
 				if (IsLootEditActive()) {
 					FinishEditLootSpawns();
 					return true;
 				} 
 				
-				else if (EditorUIManager.CurrentDialog) {	
+				if (EditorUIManager.CurrentDialog) {	
 					EditorUIManager.CurrentDialog.CloseDialog();
 					return true;
 					
 				} 
 				
-				else if (EditorUIManager.CurrentMenu) {
+				if (EditorUIManager.CurrentMenu) {
 					delete EditorUIManager.CurrentMenu;
 					return true;
-					
+				} 
+				
 				// jank
-				} else if (!GetGame().GetMission().IsPaused()) {
+				if (!GetGame().GetMission().IsPaused()) {
 					GetGame().GetMission().Pause();
 				} else {
 					GetGame().GetMission().Continue();
