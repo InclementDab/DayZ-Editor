@@ -334,7 +334,7 @@ class Editor
 				
 				if (GetBrush() == null) {
 					
-					if (m_ObjectManager.GetEditorObject(ObjectUnderCursor)) {
+					if (ObjectUnderCursor && m_ObjectManager.GetEditorObject(ObjectUnderCursor)) {
 						if (!KeyState(KeyCode.KC_LSHIFT)) {
 							ClearSelection();
 						}
