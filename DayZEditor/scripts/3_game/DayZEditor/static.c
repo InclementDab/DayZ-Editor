@@ -1,23 +1,8 @@
 #define EDITOR_PRINT
 
-static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
-{
-	DayZPlayer player;
-	if (GetWorkbenchGame().GetPlayer() != null) {
-		player = GetWorkbenchGame().GetPlayer();
-	} 
-	
-	else if (Class.CastTo(player, GetWorkbenchGame().CreatePlayer(NULL, GetWorkbenchGame().CreateRandomPlayer(), position, 0, "NONE"))) {
-		player.GetInventory().CreateInInventory("AviatorGlasses");
-    	player.GetInventory().CreateInInventory("AliceBag_Black");
-	}
-
-    return player;
-}
-
 class EditorLog
 {
-	static LogLevel CurrentLogLevel = LogLevel.TRACE;
+	static LogLevel CurrentLogLevel = LogLevel.DEBUG;
 	static string ExclusiveLogMode;
 	
 	private static string m_LastCalledType;	

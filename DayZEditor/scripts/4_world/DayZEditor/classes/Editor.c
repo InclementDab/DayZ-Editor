@@ -345,7 +345,7 @@ class Editor
 					} 
 					
 					else if (!target) {
-						m_EditorHudController.DelayedDragBoxCheck();
+						m_EditorHud.DelayedDragBoxCheck();
 						
 					}
 				}

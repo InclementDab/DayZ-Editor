@@ -36,8 +36,6 @@ class EditorHudController: EditorControllerBase
 	protected ButtonWidget BrushToggleButton;
 		
 	protected GridSpacerWidget InfobarObjPosFrame;
-	
-	CanvasWidget EditorCanvas;
 		
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected EditBoxWidget LeftbarSearchBar;
@@ -322,57 +320,6 @@ class EditorHudController: EditorControllerBase
 		return false;
 	}
 	
-			
-	void DelayedDragBoxCheck()
-	{
-		int x, y;
-		GetMousePos(x, y);
-		thread _DelayedDragBoxCheck(x, y);
-	}
-	
-	private void _DelayedDragBoxCheck(int start_x, int start_y)
-	{
-		int current_x, current_y;
-		while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
-			GetMousePos(current_x, current_y);
-			
-			
-			EditorCanvas.Clear();
-			// Start Drawing Drag Box
-			if (Math.AbsInt(start_x - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_BOX_THRESHOLD) {
-				DrawDragBox(start_x, start_y, current_x, current_y);
-			}
-			
-			Sleep(10);
-		}
-		
-		EditorCanvas.Clear();
-	}
-	
-	private void DrawDragBox(int start_x, int start_y, int current_x, int current_y)
-	{		
-		EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
-		EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
-		EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
-		EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
-					
-		EditorObjectSet placed_objects = m_Editor.GetPlacedObjects();
-		foreach (EditorObject editor_object: placed_objects) {
-			
-			if (editor_object.IsSelected()) continue;
-			
-			float marker_x, marker_y;
-			EditorObjectMarker object_marker = editor_object.GetMarker();
-			if (object_marker) {
-				object_marker.GetPos(marker_x, marker_y);
-				
-				if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {		
-					m_Editor.SelectObject(editor_object);
-				}
-			}
-		}		
-	}
-
 	
 	private void OnObjectSelected(Class context, EditorObject target)
 	{
