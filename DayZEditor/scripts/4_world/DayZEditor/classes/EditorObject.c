@@ -10,6 +10,7 @@ class EditorObject
 	protected Object		m_BBoxLines[12];	
 	protected Object 		m_BBoxBase;
 	protected Object 		m_CenterLine;
+	protected Object		m_BasePoint;
 	
 	protected ref array<ref EditorSnapPoint> m_SnapPoints = {};
 	
@@ -56,6 +57,7 @@ class EditorObject
 		vector clip_info[2];
 		ClippingInfo(clip_info);
 	
+		
 		m_LineVerticies[0] = clip_info[0];
 		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
 		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
@@ -64,7 +66,7 @@ class EditorObject
 		m_LineVerticies[5] = clip_info[1];
 		m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
 		m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
-		
+				
 		m_LineCenters[0] = AverageVectors(m_LineVerticies[0], m_LineVerticies[1]);
 		m_LineCenters[1] = AverageVectors(m_LineVerticies[0], m_LineVerticies[3]);
 		m_LineCenters[2] = AverageVectors(m_LineVerticies[0], m_LineVerticies[7]);
@@ -79,6 +81,12 @@ class EditorObject
 		m_LineCenters[9] = AverageVectors(m_LineVerticies[5], m_LineVerticies[2]);
 		m_LineCenters[10] = AverageVectors(m_LineVerticies[5], m_LineVerticies[4]);		
 		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
+		
+		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
+		m_BasePoint = GetGame().CreateObjectEx("BoundingBoxBase", base_point, ECE_NONE);
+		m_BasePoint.SetScale(0.001);
+		
+		AddChild(m_BasePoint, 0);
 		
 		for (int i = 0; i < 8; i++) {
 			m_SnapPoints.Insert(new EditorSnapPoint(this, m_LineVerticies[i]));
@@ -300,14 +308,7 @@ class EditorObject
 		
 	vector GetBottomCenter()
 	{		
-		vector clip_info[2];
-		ClippingInfo(clip_info);
-		vector result;
-		vector up = GetTransformAxis(1);
-		result = up * -(vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
-		result += GetPosition();
-	
-		return result;
+		return m_BasePoint.GetWorldPosition();
 	}
 	
 	vector GetTopCenter()
