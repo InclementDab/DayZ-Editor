@@ -259,7 +259,7 @@ FrameWidgetClass EditorFrame {
        clipchildren 0
        ignorepointer 1
        keepsafezone 1
-       color 0.302 0.302 0.302 0.7843
+       color 0.0196 0.0196 0.0196 0.4706
        size 300 1
        hexactpos 1
        vexactpos 1
@@ -681,7 +681,7 @@ FrameWidgetClass EditorFrame {
        disabled 0
        ignorepointer 0
        keepsafezone 1
-       color 0.302 0.302 0.302 0.7843
+       color 0.0196 0.0196 0.0196 0.4706
        position 0 0
        size 300 1
        hexactpos 1
@@ -695,7 +695,7 @@ FrameWidgetClass EditorFrame {
          visible 1
          ignorepointer 0
          keepsafezone 1
-         color 0.1176 0.1176 0.1176 1
+         color 0.0196 0.0196 0.0196 1
          size 1 0.965
          halign center_ref
          hexactpos 1

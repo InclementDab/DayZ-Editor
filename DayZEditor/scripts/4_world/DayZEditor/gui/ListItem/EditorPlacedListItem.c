@@ -31,43 +31,28 @@ class EditorPlacedListItem: EditorListItem
 		Deselect();
 	}
 	
+	override bool IsSelected() {
+		return m_EditorObject.IsSelected();
+	}
+	
 	bool ListItemExecute(ButtonCommandArgs args)
 	{
 		switch (args.GetMouseButton()) {
 			
 			case 0: {
+				// We want to Toggle selection if you are holding control
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					GetEditor().ToggleSelection(GetData());
-				} else if (KeyState(KeyCode.KC_LSHIFT)) {
-					
-					/*
-					
-					Select every list item between start selection and current click
-					except i deleted ParentList ;)
-					
-					bool started_select;
-					for (int i = 0; i < ParentList.Count(); i++) {
-						EditorListItem list_item = ParentList[i];			
-						if (started_select) {
-							
-							if (list_item.IsSelected() || list_item == this) {
-								break;
-							}
-							
-							GetEditor().SelectObject(EditorPlacedListItem.Cast(list_item).GetData());
-							
-						} else if (!started_select && (list_item.IsSelected() || list_item == this)) {
-							started_select = true;
-							continue;
-						}
-						
-						
-					}*/
-					
-				} else {
+					GetEditor().ToggleSelection(m_EditorObject);
+					return true;
+				} 
+				
+				if (!KeyState(KeyCode.KC_LSHIFT)) {
 					GetEditor().ClearSelection();
-					GetEditor().SelectObject(GetData());
 				}
+				
+				GetEditor().SelectObject(m_EditorObject);
+				
+				
 				break;
 			} 
 			
