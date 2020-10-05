@@ -39,7 +39,12 @@ class EditorObjectManagerModule: JMModuleBase
 		EditorAction action = new EditorAction("Delete", "Create");
 		foreach (EditorObjectData editor_object_data: data_list) {
 			
-			EditorObject editor_object = EditorObject.Create(editor_object_data);
+			EditorLog.Trace("EditorObject::Create from EditorObjectData");
+			Object world_object = GetGame().CreateObjectEx(editor_object_data.Type, editor_object_data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
+			world_object.SetTransform(editor_object_data.Transform);
+			world_object.SetFlags(EntityFlags.STATIC, true);
+			
+			EditorObject editor_object = new EditorObject(world_object, editor_object_data.Flags);
 			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));		
 			
@@ -63,7 +68,11 @@ class EditorObjectManagerModule: JMModuleBase
 	{		
 		EditorLog.Trace("EditorObjectManager::CreateObject");
 		
-		EditorObject editor_object = EditorObject.Create(editor_object_data);
+		Object world_object = GetGame().CreateObjectEx(editor_object_data.Type, editor_object_data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
+		world_object.SetTransform(editor_object_data.Transform);
+		world_object.SetFlags(EntityFlags.STATIC, true);
+		
+		EditorObject editor_object = new EditorObject(world_object, editor_object_data.Flags);
 
 		EditorAction action = new EditorAction("Delete", "Create");;
 		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
@@ -90,7 +99,7 @@ class EditorObjectManagerModule: JMModuleBase
 		if (m_PlacedObjects.Get(target.GetID())) 
 			return m_PlacedObjects.Get(target.GetID());
 		
-		EditorObject editor_object = EditorObject.Create(target, flags);
+		EditorObject editor_object = new EditorObject(target, flags);
 		m_PlacedObjects.InsertEditorObject(editor_object);
 		m_PlacedObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object.GetID());
 		EditorEvents.ObjectCreated(this, editor_object);

@@ -44,7 +44,7 @@ class EditorSaveData
 	bool Binarized = 1;
 	string MapName = "ChernarusPlus";
 	vector CameraPosition[4];
-	autoptr EditorObjectDataSet EditorObjects = new EditorObjectDataSet();
+	ref EditorObjectDataSet EditorObjects = new EditorObjectDataSet();
 	
 	static EditorSaveData CreateFromEditor(Editor editor)
 	{
@@ -115,7 +115,7 @@ class EditorFileManager
 		return FileDialogResult.SUCCESS;
 	}
 	
-	static FileDialogResult Import(out EditorSaveData data, string file_name, ImportMode mode)
+	static FileDialogResult Import(out ref EditorSaveData data, string file_name, ImportMode mode)
 	{		
 		if (!FileExist(file_name)) {
 			return FileDialogResult.NOT_FOUND;

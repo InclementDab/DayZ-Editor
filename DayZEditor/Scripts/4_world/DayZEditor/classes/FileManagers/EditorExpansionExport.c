@@ -25,7 +25,7 @@ static FileDialogResult ExportExpansionData(EditorObjectDataSet data, string fil
 class ExpansionImportData
 {
 
-	static void ReadFromFile(out EditorObjectDataSet data, string filename)
+	static void ReadFromFile(out ref EditorObjectDataSet data, string filename)
 	{
 		FileHandle handler = OpenFile(filename, FileMode.READ);
 		
@@ -39,8 +39,12 @@ class ExpansionImportData
 				continue;
 			}
 			
+			Object world_object = GetGame().CreateObjectEx(name, position, ECE_LOCAL);
+			world_object.SetOrientation(rotation);
 			
-			data.InsertEditorData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
+			GetEditor().CreateFromObject(world_object);
+			
+			//data.InsertEditorData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
 		}
 		
 		if (handler) {

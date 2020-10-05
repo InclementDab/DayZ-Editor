@@ -43,7 +43,7 @@ class EditorObject
 		return m_Data.GetID(); 
 	}
 
-	private void EditorObject(notnull Object target, EditorObjectFlags flags)
+	void EditorObject(notnull Object target, EditorObjectFlags flags)
 	{
 		EditorLog.Trace("EditorObject");
 		m_WorldObject = target;		
@@ -114,8 +114,6 @@ class EditorObject
 			m_EditorPlacedListItem.SetEditorObject(this);
 			GetEditor().GetEditorHud().GetTemplateController().RightbarSpacerData.Insert(m_EditorPlacedListItem);
 		}
-		
-		EditorEvents.OnMapToggled.Insert(OnMapToggled);
 	}
 	
 		
@@ -135,35 +133,10 @@ class EditorObject
 			
 		GetGame().ObjectDelete(m_WorldObject);
 	}
-	
-	static EditorObject Create(EditorObjectData data)
-	{
-		EditorLog.Trace("EditorObject::Create from EditorObjectData");
-		Object world_object = GetGame().CreateObjectEx(data.Type, data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
-		world_object.SetTransform(data.Transform);
-		world_object.SetFlags(EntityFlags.STATIC, true);
-		
-		return new EditorObject(world_object, data.Flags);
-	}
-	
-	static EditorObject Create(notnull Object target, EditorObjectFlags flags)
-	{
-		EditorLog.Trace("EditorObject::Create from Object");
-		return new EditorObject(target, flags);
-	}	
-
-	
+			
 	/*********
 	* Events *
 	*********/
-	
-	void OnMapToggled(Class context, MapWidget editor_map, bool state)
-	{
-		EditorLog.Trace("EditorObject::OnMapToggled");
-		
-		m_EditorObjectWorldMarker.Show(!state);
-		m_EditorObjectMapMarker.Show(state);		
-	}
 	
 	private bool m_IsSelected;
 	bool IsSelected() return m_IsSelected;

@@ -12,14 +12,18 @@ class EditorImportCommandBase: EditorCommand
 				return;
 			}
 			
-			EditorSaveData save_data();
+			EditorSaveData save_data = new EditorSaveData();
 			EditorFileManager.Import(save_data, file_name, GetImportMode());
 			
 			string message = string.Format("Imported %1 objects!", save_data.EditorObjects.Count().ToString());
 			m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
 			EditorLog.Info(message);
 			
-			m_Editor.CreateObjects(save_data.EditorObjects);
+			Print(save_data.EditorObjects.Count());
+			foreach (EditorObjectData eo: save_data.EditorObjects) {
+				GetEditor().CreateObject(eo, false);
+			}
+			
 		}
 	}
 	
