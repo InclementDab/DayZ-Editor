@@ -110,6 +110,7 @@ class EditorExportMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager.ExportToInitFile);
 		AddMenuButton(m_Editor.CommandManager.ExportToExpansion);
 		AddMenuButton(m_Editor.CommandManager.ExportToTerrainBuilder);
+		AddMenuButton(m_Editor.CommandManager.ExportToVPP);
 	}
 }
 

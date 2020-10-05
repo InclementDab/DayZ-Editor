@@ -822,25 +822,6 @@ class EditorHideCommand: EditorCommand
 }
 
 
-class EditorExportToInitFile: EditorCommand
-{
-	override string GetName() {
-		return "Export to init.c";
-	}
-}
 
-class EditorExportToExpansion: EditorCommand
-{
-	override string GetName() {
-		return "Export to .map";
-	}
-}
-
-class EditorExportToTerrainBuilder: EditorCommand
-{
-	override string GetName() {
-		return "Export to Terrain Builder";
-	}
-}
 
 

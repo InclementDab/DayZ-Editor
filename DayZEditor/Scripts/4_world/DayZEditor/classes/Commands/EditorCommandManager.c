@@ -49,6 +49,7 @@ class EditorCommandManager
 	ref EditorExportToInitFile ExportToInitFile;
 	ref EditorExportToExpansion ExportToExpansion;
 	ref EditorExportToTerrainBuilder ExportToTerrainBuilder;
+	ref EditorExportToVPP ExportToVPP;
 	
 	void EditorCommandManager()
 	{			

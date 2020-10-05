@@ -159,7 +159,7 @@ class EditorFileManager
 		
 	}
 	
-	static FileDialogResult Export(ref EditorSaveData data, string file_name, ref ExportSettings export_settings)
+	static FileDialogResult Export(EditorSaveData data, string file_name, ExportSettings export_settings)
 	{
 		Print("EditorFileManager::Export");		
 		DeleteFile(file_name);
