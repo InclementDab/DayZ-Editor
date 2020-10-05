@@ -1,6 +1,6 @@
 EditBoxWidgetClass ContentText {
  visible 1
- size 0.8 24
+ size 0.8 30
  halign center_ref
  valign center_ref
  hexactpos 1
