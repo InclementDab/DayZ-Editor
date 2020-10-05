@@ -2,10 +2,10 @@
 
 class EditorListItemController: Controller
 {
-	string Label;
+	string Label = "IF_YOU_SEE_THIS_ITS_BROKEN";
 	string Icon;
 	
-	string CollapseIcon;
+	string CollapseIcon = "set:dayz_editor_gui image:eye_open";
 
 	ref ObservableCollection<ref EditorListItem> ChildListItems = new ObservableCollection<ref EditorListItem>(this);
 }
@@ -13,16 +13,35 @@ class EditorListItemController: Controller
 
 class EditorListItem: ScriptViewTemplate<EditorListItemController>
 {
-	protected Widget EditorListItemContent;
-		
+	protected Widget ListItemContent;
+	
 	void Select() 
 	{
-		EditorListItemContent.SetColor(LIST_ITEM_COLOR_ON_SELECTED);
+		ListItemContent.SetColor(LIST_ITEM_COLOR_ON_SELECTED);
 	}
 	
 	void Deselect() 
 	{	
-		EditorListItemContent.SetColor(LIST_ITEM_COLOR_ON_DESELECTED);
+		ListItemContent.SetColor(LIST_ITEM_COLOR_ON_DESELECTED);
+	}
+	
+	// Abstract
+	bool IsSelected();
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		ListItemContent.SetColor(LIST_ITEM_COLOR_ON_HOVER);
+		
+		return super.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		if (!IsSelected()) {
+			ListItemContent.SetColor(LIST_ITEM_COLOR_ON_DESELECTED);
+		}
+		
+		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
 	override string GetLayoutFile() {

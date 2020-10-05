@@ -4,7 +4,7 @@ ImageSetClass {
  Textures {
   ImageSetTextureClass {
    mpix 1
-   path "DayZEditor/GUI/imagesets/dayz_editor_gui.edds"
+   path "{572C6B626921F3CC}DayZEditor/GUI/imagesets/dayz_editor_gui.edds"
   }
  }
  Images {
@@ -152,5 +152,31 @@ ImageSetClass {
    Size 128 128
    Flags 0
   }
+  ImageSetDefClass eye_disabled {
+   Name "eye_disabled"
+   Pos 0 384
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass tree {
+   Name "tree"
+   Pos 128 384
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass camera {
+   Name "camera"
+   Pos 256 384
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass camera_alt {
+   Name "camera_alt"
+   Pos 384 384
+   Size 128 128
+   Flags 0
+  }
+ }
+ Groups {
  }
 }

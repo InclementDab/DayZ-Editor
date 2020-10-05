@@ -9,6 +9,56 @@ class EditorPlaceableListItem: EditorListItem
 		
 		m_TemplateController.Label = placeable_item.Type;
 		m_TemplateController.NotifyPropertyChanged("Label");
+		
+#ifndef COMPONENT_SYSTEM
+		EditorEvents.OnStartPlacing.Insert(OnStartPlacing);
+		EditorEvents.OnStopPlacing.Insert(OnStopPlacing);
+#endif
+	}
+	
+	override bool IsSelected() {
+		
+		if (GetEditor().ObjectInHand) {
+			return (GetEditor().ObjectInHand.GetPlaceableItem() == m_PlaceableItem);
+		}
+		
+		return false;
+	}
+	
+	bool ListItemExecute(ButtonCommandArgs args)
+	{
+		switch (args.GetMouseButton()) {
+
+			case 0: {
+				GetEditor().CreateInHand(m_PlaceableItem);
+				Select();
+				break;
+			}
+			
+			case 1: {
+				EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu();
+				int x, y;
+				GetMousePos(x, y);
+				placeable_context.SetPosition(x, y);
+				EditorUIManager.CurrentMenu = placeable_context;
+				break;
+			}	
+		}
+				
+		return true;
+	}
+	
+	void OnStartPlacing(Class context, EditorPlaceableItem placeable_item)
+	{
+		if (placeable_item == m_PlaceableItem) {
+			Select();
+		}
+		else Deselect();
+	}
+	
+	void OnStopPlacing(Class context)
+	{
+		Deselect();
 	}
 }
 

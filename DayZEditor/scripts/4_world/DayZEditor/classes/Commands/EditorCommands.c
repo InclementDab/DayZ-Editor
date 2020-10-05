@@ -80,9 +80,9 @@ class EditorNewCommand: EditorCommand
 	override string GetName() {
 		return "New";
 	}
-	
+
 	override string GetIcon() {
-		return "DayZEditor/gui/icons/icon_new2.edds";
+		return "set:dayz_editor_gui image:new_alt";
 	}
 	
 	override ShortcutKeys GetShortcut() {
@@ -120,7 +120,7 @@ class EditorSaveCommand: EditorCommand
 	}
 	
 	override string GetIcon() {
-		return "DayZEditor/gui/icons/icon_save.edds";
+		return "set:dayz_editor_gui image:save";
 	}
 	
 	override ShortcutKeys GetShortcut() {
@@ -185,7 +185,7 @@ class EditorOpenCommand: EditorCommand
 	}
 
 	override string GetIcon() {
-		return "DayZEditor/gui/icons/icon_folder.edds";
+		return "set:dayz_editor_gui image:open";
 	}
 	
 	override ShortcutKeys GetShortcut() {
@@ -238,7 +238,7 @@ class EditorUndoCommand: EditorCommand
 	}
 	
 	override string GetIcon() {
-		return "set:dayz_editor_gui image:arrow_round_icon";
+		return "set:dayz_editor_gui image:undo";
 	}
 	
 	override ShortcutKeys GetShortcut() {
@@ -257,7 +257,7 @@ class EditorRedoCommand: EditorCommand
 	}
 	
 	override string GetIcon() {
-		return "set:dayz_editor_gui image:arrow_round_icon";
+		return "set:dayz_editor_gui image:redo";
 	}
 	
 	override ShortcutKeys GetShortcut() {
@@ -463,6 +463,10 @@ class EditorCameraControlsCommand: EditorCommand
 
 	override string GetName() {
 		return "Camera";
+	}
+	
+	override string GetIcon() {
+		return "set:dayz_editor_gui image:camera_alt";
 	}
 	
 	override ShortcutKeys GetShortcut() {
@@ -689,13 +693,13 @@ class EditorPlaceObjectCommand: EditorCommand
 		EditorEvents.ObjectPlaced(this, editor_object);
 		m_Editor.SelectObject(editor_object);
 		
-		string type = m_Editor.ObjectInHand.GetProjectionEntity().GetType();
+		EditorPlaceableItem item = m_Editor.ObjectInHand.GetPlaceableItem();
 		delete m_Editor.ObjectInHand;
 		
 		if (!KeyState(KeyCode.KC_LSHIFT)) { 
-			EditorEvents.StopPlacing(this);
+			EditorEvents.StopPlacing(this); // todo why do i gotta remake?
 		} else {
-			m_Editor.ObjectInHand = new EditorHologram(type, m_Editor.CurrentMousePosition);
+			m_Editor.ObjectInHand = new EditorHologram(item);
 		}
 	}
 }
@@ -774,5 +778,16 @@ class EditorEscapeCommand: EditorCommand
 	
 	override string GetName() {
 		return "Escape";
+	}
+}
+
+class EditorHideCommand: EditorCommand
+{
+	override ShortcutKeys GetShortcut() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_H };
+	}
+	
+	override string GetName() {
+		return "Hide";
 	}
 }

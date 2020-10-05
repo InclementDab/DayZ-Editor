@@ -42,6 +42,7 @@ class EditorCommandManager
 	ref EditorBrushRadiusCommand BrushRadiusCommand;
 	
 	ref EditorObjectPropertiesCommand ObjectPropertiesCommand;
+	ref EditorHideCommand HideCommand;
 	
 	void EditorCommandManager()
 	{			

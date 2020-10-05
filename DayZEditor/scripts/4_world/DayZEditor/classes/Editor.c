@@ -506,7 +506,7 @@ class Editor
 			SetBrush(null);
 		
 		ClearSelection();
-		ObjectInHand = new EditorHologram(item.Type, CurrentMousePosition);
+		ObjectInHand = new EditorHologram(item);
 		
 		EditorEvents.StartPlacing(this, item);		
 	}	
