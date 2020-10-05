@@ -17,7 +17,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
    visible 1
    clipchildren 0
    ignorepointer 1
-   color 0.0627 0.0627 0.0627 1
+   color 0.0588 0.0588 0.0588 1
    position 0 0
    size 1 0.45
    halign center_ref

@@ -256,7 +256,7 @@ FrameWidgetClass EditorFrame {
      {
       PanelWidgetClass LeftbarFrame {
        visible 1
-       clipchildren 0
+       clipchildren 1
        ignorepointer 1
        keepsafezone 1
        color 0.0196 0.0196 0.0196 0.4706
@@ -281,6 +281,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         style Empty
          Padding 0
          Margin 0
          content_halign center
@@ -562,7 +563,7 @@ FrameWidgetClass EditorFrame {
              clipchildren 1
              ignorepointer 0
              keepsafezone 1
-             color 0.1176 0.1176 0.1176 1
+             color 0.0196 0.0196 0.0196 0.4706
              size 1 1
              halign center_ref
              valign center_ref
