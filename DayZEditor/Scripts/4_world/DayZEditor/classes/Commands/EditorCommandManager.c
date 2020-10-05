@@ -11,6 +11,7 @@ class EditorCommandManager
 	ref EditorExportCommand ExportCommand;
 	ref EditorImportCommand ImportCommand;
 	ref EditorExitCommand ExitCommand;
+	ref EditorEscapeCommand EscapeCommand;
 	
 	ref EditorUndoCommand UndoCommand;
 	ref EditorRedoCommand RedoCommand;

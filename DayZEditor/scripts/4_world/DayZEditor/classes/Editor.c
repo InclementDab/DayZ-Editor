@@ -406,49 +406,12 @@ class Editor
 			
 			EditorCommand command = CommandManager.CommandShortcutMap[m_CurrentKeys.GetMask()];
 			if (command) {
-
+							
 				EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
 				CommandArgs args = new CommandArgs();
 				args.Context = m_EditorHud;
 				command.Execute(this, args);
 				return true;
-			}
-		}
-
-			
-		switch (key) {
-				
-			case KeyCode.KC_ESCAPE: {
-				
-				if (GetSelectedObjects().Count() > 0) {
-					ClearSelection();
-					return true;
-				}
-				
-				if (IsLootEditActive()) {
-					FinishEditLootSpawns();
-					return true;
-				} 
-				
-				if (EditorUIManager.CurrentDialog) {	
-					EditorUIManager.CurrentDialog.CloseDialog();
-					return true;
-					
-				} 
-				
-				if (EditorUIManager.CurrentMenu) {
-					delete EditorUIManager.CurrentMenu;
-					return true;
-				} 
-				
-				// jank
-				if (!GetGame().GetMission().IsPaused()) {
-					GetGame().GetMission().Pause();
-				} else {
-					GetGame().GetMission().Continue();
-				}
-				
-				break;
 			}
 		}
 		

@@ -739,3 +739,46 @@ class EditorBrushRadiusCommand: EditorCommand
 		return "Brush Radius";
 	}
 }
+
+class EditorEscapeCommand: EditorCommand
+{
+	protected override void Call(Class sender, CommandArgs args)
+	{
+		if (m_Editor.GetSelectedObjects().Count() > 0) {
+			m_Editor.ClearSelection();
+			return;
+		}
+		
+		if (m_Editor.IsLootEditActive()) {
+			m_Editor.FinishEditLootSpawns();
+			return;
+		} 
+		
+		if (EditorUIManager.CurrentDialog) {	
+			EditorUIManager.CurrentDialog.CloseDialog();
+			return;
+			
+		} 
+		
+		if (EditorUIManager.CurrentMenu) {
+			delete EditorUIManager.CurrentMenu;
+			return;
+		} 
+		
+
+		if (GetGame().GetMission().IsPaused()) {
+			GetGame().GetMission().Continue();
+			return;
+		} 
+		
+		GetGame().GetMission().Pause();
+	}
+	
+	override ShortcutKeys GetShortcut() {
+		return { KeyCode.KC_ESCAPE };
+	}
+	
+	override string GetName() {
+		return "Escape";
+	}
+}
