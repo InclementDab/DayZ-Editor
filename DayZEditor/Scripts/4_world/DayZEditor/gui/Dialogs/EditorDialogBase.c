@@ -8,11 +8,11 @@ class EditorDialogBase: DialogBase
 		m_Editor = GetEditor();
 		if (m_Editor) {
 			m_EditorHud = m_Editor.GetEditorHud();	
+			
+			m_Editor.GetCamera().MoveEnabled = false;
+			m_Editor.GetCamera().LookEnabled = false;
+			m_EditorHud.ShowCursor(true);
 		}
-		
-		m_Editor.GetCamera().MoveEnabled = false;
-		m_Editor.GetCamera().LookEnabled = false;
-		m_EditorHud.ShowCursor(true);
 		
 		if (EditorUIManager.CurrentDialog) {
 			EditorUIManager.CurrentDialog.CloseDialog();
@@ -28,8 +28,10 @@ class EditorDialogBase: DialogBase
 	
 	private void ~EditorDialogBase()
 	{
-		m_Editor.GetCamera().MoveEnabled = true;
-		m_Editor.GetCamera().LookEnabled = true;
-		m_EditorHud.ShowCursor(true);
+		if (m_Editor) {
+			m_Editor.GetCamera().MoveEnabled = true;
+			m_Editor.GetCamera().LookEnabled = true;
+			m_EditorHud.ShowCursor(true);
+		}
 	}
 }
