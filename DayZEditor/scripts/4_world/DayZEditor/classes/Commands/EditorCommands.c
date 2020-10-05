@@ -640,7 +640,7 @@ class EditorCollisionCommand: EditorCommand
 	}
 	
 	override string GetName() {
-		return "Toggle Placement Collision";
+		return "Toggle Collision";
 	}
 	
 	override ShortcutKeys GetShortcut() {

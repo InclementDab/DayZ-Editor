@@ -48,9 +48,8 @@ FrameWidgetClass EditorMenuItem {
        visible 1
        inheritalpha 1
        ignorepointer 1
-       position 0 0
+       position 30 0
        size 0.7 1
-       halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
