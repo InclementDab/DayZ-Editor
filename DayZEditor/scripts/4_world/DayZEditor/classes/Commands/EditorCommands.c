@@ -586,6 +586,10 @@ class EditorMagnetCommand: EditorCommand
 	override string GetName() {
 		return "Toggle Magnet Mode";
 	}
+	
+	override ShortcutKeys GetShortcut() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_1 };
+	}
 }
 
 class EditorGroundCommand: EditorCommand
@@ -604,6 +608,10 @@ class EditorGroundCommand: EditorCommand
 	
 	override string GetName() {
 		return "Toggle Ground Mode";
+	}
+	
+	override ShortcutKeys GetShortcut() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_2 };
 	}
 }
 
@@ -624,6 +632,10 @@ class EditorSnapCommand: EditorCommand
 	override string GetName() {
 		return "Toggle Snapping";
 	}
+
+	override ShortcutKeys GetShortcut() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_3 };
+	}
 }
 
 class EditorCollisionCommand: EditorCommand
@@ -642,6 +654,10 @@ class EditorCollisionCommand: EditorCommand
 	
 	override string GetName() {
 		return "Toggle Placement Collision";
+	}
+	
+	override ShortcutKeys GetShortcut() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_4 };
 	}
 }
 

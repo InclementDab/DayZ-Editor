@@ -94,10 +94,24 @@ class EditorEditMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager.RedoCommand);
 		AddMenuDivider();
 		AddMenuCategory("Edit", EditorClipboardMenu);
+		AddMenuCategory("Transform Mode", EditorTransformModeMenu);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager.EnvironmentControlCommand);
 		AddMenuButton(m_Editor.CommandManager.PreferencesCommand);
 		AddMenuDivider();
+	}
+}
+
+class EditorTransformModeMenu: EditorMenu
+{
+	void EditorTransformModeMenu()
+	{
+		EditorLog.Trace("EditorTransformModeMenu");
+		
+		AddMenuButton(m_Editor.CommandManager.MagnetCommand);
+		AddMenuButton(m_Editor.CommandManager.GroundCommand);
+		AddMenuButton(m_Editor.CommandManager.SnapCommand);
+		AddMenuButton(m_Editor.CommandManager.CollisionCommand);
 	}
 }
 
