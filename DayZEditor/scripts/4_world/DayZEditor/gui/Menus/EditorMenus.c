@@ -14,7 +14,7 @@ class EditorMenu: EditorScriptView
 {	
 	protected EditorMenuController m_EditorMenuController;	
 	
-	void EditorMenu() 
+	void EditorMenu()
 	{
 		EditorLog.Trace("EditorMenu");
 		m_EditorMenuController = EditorMenuController.Cast(GetController());
@@ -24,18 +24,27 @@ class EditorMenu: EditorScriptView
 	{
 		EditorLog.Trace("~EditorMenu");
 	}
+	
+	void AddMenuCategory(string label, typename child_menu)
+	{
+		if (child_menu.IsInherited(EditorMenu)) {
+			AddMenuCategory(label, child_menu.Spawn());
+		}
+	}
+	
+	void AddMenuCategory(string label, EditorMenu child_menu)
+	{
+		AddMenuItem(new EditorMenuItemCategory(label, child_menu));
+	}
 			
 	void AddMenuDivider()
 	{	
-		EditorMenuItemDivider divider();
-		AddMenuItem(divider);
+		AddMenuItem(new EditorMenuItemDivider());
 	}
 
-	void AddMenuButton(ref EditorCommand editor_command)
+	void AddMenuButton(EditorCommand editor_command)
 	{
-		EditorMenuItemCommand menu_item = new EditorMenuItemCommand();
-		menu_item.SetCommand(editor_command);
-		AddMenuItem(menu_item);
+		AddMenuItem(new EditorMenuItemCommand(editor_command));
 	}
 
 	void AddMenuItem(EditorMenuItem menu_item)
@@ -82,13 +91,32 @@ class EditorEditMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager.UndoCommand);
 		AddMenuButton(m_Editor.CommandManager.RedoCommand);
 		AddMenuDivider();
-		AddMenuButton(m_Editor.CommandManager.CutCommand);
-		AddMenuButton(m_Editor.CommandManager.CopyCommand);
-		AddMenuButton(m_Editor.CommandManager.PasteCommand);
+		AddMenuCategory("Edit", EditorClipboardMenu);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager.EnvironmentControlCommand);
 		AddMenuButton(m_Editor.CommandManager.PreferencesCommand);
 		AddMenuDivider();
+	}
+}
+
+class EditorExportMenu: EditorMenu
+{
+	void EditorExportMenu()
+	{
+		EditorLog.Trace("EditorExportMenu");
+		
+	}
+}
+
+class EditorClipboardMenu: EditorMenu
+{
+	void EditorClipboardMenu()
+	{
+		EditorLog.Trace("EditorClipboardMenu");
+		
+		AddMenuButton(m_Editor.CommandManager.CutCommand);
+		AddMenuButton(m_Editor.CommandManager.CopyCommand);
+		AddMenuButton(m_Editor.CommandManager.PasteCommand);	
 	}
 }
 
@@ -149,5 +177,7 @@ class EditorPlaceableContextMenu: EditorContextMenu
 		AddMenuButton(m_Editor.CommandManager.LootEditorCommand);
 	}
 }
+
+
 
 

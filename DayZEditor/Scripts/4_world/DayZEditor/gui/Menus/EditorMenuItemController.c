@@ -4,6 +4,10 @@ class EditorMenuItemController: Controller
 	string IconPath;
 	string ShortcutText;
 	
-	// todo use on category menu
 	ref EditorMenu ChildMenu;
+	
+	void ~EditorMenuItemController()
+	{
+		delete ChildMenu;
+	}
 }

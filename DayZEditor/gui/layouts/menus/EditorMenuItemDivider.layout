@@ -15,13 +15,13 @@ FrameWidgetClass EditorMenuDivider {
    visible 1
    color 1 1 1 0.1961
    position 0 0
-   size 1 0.2
+   size 1 1
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 0
+   vexactsize 1
    scriptclass ""
    style rover_sim_colorable
   }

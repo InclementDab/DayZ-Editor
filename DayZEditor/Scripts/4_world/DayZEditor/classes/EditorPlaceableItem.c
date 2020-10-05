@@ -8,8 +8,8 @@ enum EditorPlaceableItemCategory {
 
 class EditorPlaceableItem
 {
-	static const autoptr map<string, EditorPlaceableItemCategory> LOADED_TYPES = GetTypes();
-	static const autoptr array<ref ModStructure> LOADED_MODS = ModLoader.GetMods();
+	static autoptr map<string, EditorPlaceableItemCategory> LOADED_TYPES = GetTypes();
+	static autoptr array<ref ModStructure> LOADED_MODS = ModLoader.GetMods();
 	
 	string Type;
 	string Path;
@@ -76,14 +76,17 @@ class EditorPlaceableItem
 	
 	private ModStructure LoadModData(string type, string cfg_path)
 	{	
-#ifndef COMPONENT_SYSTEM
+		if (!LOADED_MODS) {
+			LOADED_MODS = ModLoader.GetMods();
+		}
+		
 		foreach (ModStructure mod: LOADED_MODS) {
 			string dir;
 			GetGame().ConfigGetText(string.Format("%1 dir", mod.GetModPath()), dir);			
 			if (Model.Contains(dir))
 				return mod;
 		}
-#endif		
+		
 		return null;
 	}
 	
@@ -91,13 +94,16 @@ class EditorPlaceableItem
 	private EditorPlaceableItemCategory LoadItemCategory()
 	{
 		string path = GetGame().ConfigPathToString(FullPath);
-#ifndef COMPONENT_SYSTEM		
+		if (!LOADED_TYPES) {
+			LOADED_TYPES = GetTypes();
+		}
+		
 		foreach (string name, EditorPlaceableItemCategory category: LOADED_TYPES) {
 			if (path.Contains(name)) {
 				return category;
 			}
 		}
-#endif		
+
 		return -1;
 	}
 	

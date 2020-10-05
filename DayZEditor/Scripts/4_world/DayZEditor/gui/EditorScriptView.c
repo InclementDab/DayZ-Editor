@@ -17,7 +17,7 @@ class EditorScriptView: ScriptView
 		EditorLog.Trace("~EditorScriptView");
 	}
 	
-	void SetPosition(float x, float y) {
+	void SetPos(float x, float y) {
 		m_LayoutRoot.SetPos(x, y);
 	}
 }

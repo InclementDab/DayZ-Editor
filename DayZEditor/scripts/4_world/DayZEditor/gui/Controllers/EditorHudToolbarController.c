@@ -220,6 +220,8 @@ class EditorHudToolbarController: EditorControllerBase
 	{
 		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
 		
+
+		
 		EditorMenu toolbar_menu;
 		switch (toolbar_button) {
 			
@@ -239,14 +241,12 @@ class EditorHudToolbarController: EditorControllerBase
 			}
 		}
 		
-		
-		
 		// Sets position to bottom of button
 		float x, y, w, h;
 		toolbar_button.GetScreenPos(x, y);
 		toolbar_button.GetScreenSize(w, h);
-		toolbar_menu.SetPosition(x, y + h);
-
+		toolbar_menu.SetPos(x, y + h);
+		
 		return toolbar_menu;
 	}
 		

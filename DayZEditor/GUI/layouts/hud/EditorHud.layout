@@ -909,7 +909,7 @@ FrameWidgetClass EditorFrame {
     }
     PanelWidgetClass InfobarFrame {
      ignorepointer 1
-     color 0.1961 0.1961 0.1961 1
+     color 0.0588 0.0588 0.0588 1
      position 0 0
      size 1 0.025
      halign center_ref
