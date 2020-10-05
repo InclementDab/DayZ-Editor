@@ -1,4 +1,4 @@
-class EditBoxPrefab: ScriptView
+class EditBoxPrefab: PrefabBase<string>
 {	
 	EditBoxWidget ContentText;
 		

@@ -232,6 +232,24 @@ class EditorObject
 		Update();
 	}
 	
+	void SetScale(float scale)
+	{
+		vector mat[4];
+		GetTransform(mat);
+		mat[0][0] = scale;
+		mat[1][1] = scale;
+		mat[2][2] = scale;
+		SetTransform(mat);
+		
+		//m_WorldObject.SetScale(scale);
+		//m_WorldObject.Update();
+	}
+	
+	float GetScale()
+	{
+		return m_WorldObject.GetScale();
+	}
+	
 	void Update() { 
 		m_WorldObject.Update(); 
 	}

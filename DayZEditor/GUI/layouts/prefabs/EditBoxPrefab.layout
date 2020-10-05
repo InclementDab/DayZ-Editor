@@ -7,9 +7,15 @@ EditBoxWidgetClass ContentText {
  vexactpos 1
  hexactsize 0
  vexactsize 1
- scriptclass ""
+ scriptclass "ViewBinding"
  style Editor
  "Use default text" 0
  "exact text" 1
  font "gui/fonts/sdf_MetronBook24"
+ {
+  ScriptParamsClass {
+   Binding_Name "Value"
+   Two_Way_Binding 1
+  }
+ }
 }

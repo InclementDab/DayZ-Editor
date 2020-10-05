@@ -3,9 +3,9 @@ class EditorEditBoxDialog: EditorDialogBase
 {
 	protected autoptr EditBoxPrefab m_EditBoxPrefab;
 	
-	void EditorEditBoxDialog(string title)
+	void EditorEditBoxDialog(string title, string caption = "", string default_value = "")
 	{
-		m_EditBoxPrefab = new EditBoxPrefab();
+		m_EditBoxPrefab = new EditBoxPrefab(caption, m_Controller, default_value);
 		AddContent(m_EditBoxPrefab);
 		
 		AddButton("Create", DialogResult.OK);

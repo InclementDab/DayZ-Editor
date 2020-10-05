@@ -1,3 +1,26 @@
-# DayZEditor
+# DayZ Editor
 
-i have completely forgotten how to read(me)
+The DayZ Editor is a 3D Map editing tool. Designed for creating environments, playing with mechanics, or just general fooling around (we even have a paint brush for trees!)
+
+# How to join
+
+[Download](https://github.com/InclementDab/DayZ-Editor/releases)
+
+1.) Drag @DayZ-Editor into your DayZ directory
+
+2.) Open DayZ Launcher, go to "Mods" tab, click "Add Local Mod"
+
+3.) Navigate to your @DayZ-Editor folder, and select folder
+
+4.) Run game!
+
+
+
+# Links
+Discord: https://discord.com/invite/5g742yH
+
+Twitter: https://twitter.com/InclementDab
+
+Patreon: https://www.patreon.com/inclementdab
+
+Twitch: https://www.twitch.tv/inclementdab

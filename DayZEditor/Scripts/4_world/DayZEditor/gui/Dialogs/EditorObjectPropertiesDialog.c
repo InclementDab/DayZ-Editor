@@ -3,6 +3,7 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 {
 	vector position;
 	vector orientation;
+	string scale;
 	
 	protected EditorObject m_EditorObject;
 	
@@ -24,6 +25,11 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 				m_EditorObject.SetOrientation(orientation);
 				break;
 			}
+			
+			case "scale": {
+				m_EditorObject.SetScale(scale.ToFloat());
+				break;
+			}
 		}
 	}
 }
@@ -38,10 +44,11 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	{		
 		m_EditorObjectPropertiesDialogController = EditorObjectPropertiesDialogController.Cast(GetController());
 		m_EditorObjectPropertiesDialogController.SetEditorObject(editor_object);
-		
+	
 		GroupPrefab group_prefab = new GroupPrefab("Position", m_Controller, string.Empty);
 		group_prefab.Insert(new VectorPrefab("Position", m_Controller, "position", editor_object.GetPosition()));
 		group_prefab.Insert(new VectorPrefab("Orientation", m_Controller, "orientation", editor_object.GetOrientation()));
+		group_prefab.Insert(new EditBoxPrefab("Scale", m_Controller, "scale", editor_object.GetScale().ToString()));
 		
 		AddContent(group_prefab);
 		
