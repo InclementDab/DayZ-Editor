@@ -397,10 +397,11 @@ class Editor
 	
 	private ref ShortcutKeys m_CurrentKeys = new ShortcutKeys();
 	
-
 	// Return TRUE if handled.	
 	bool OnKeyPress(int key)
 	{
+		if (EditorUIManager.CurrentDialog) return true;
+		
 		if (m_CurrentKeys.Find(key) != -1) return false;
 		
 		m_CurrentKeys.Insert(key);
