@@ -94,10 +94,11 @@ FrameWidgetClass EditorMenuItem {
       }
       TextWidgetClass EditorMenuItemShortcut {
        visible 1
+       clipchildren 0
        inheritalpha 0
        ignorepointer 1
        position 0 0
-       size 0.2 1
+       size 0.3 1
        halign right_ref
        valign center_ref
        hexactpos 1

@@ -824,7 +824,22 @@ class EditorHideCommand: EditorCommand
 	}
 }
 
-
+class EditorScriptEditorCommand: EditorCommand
+{
+	override void Call(Class sender, CommandArgs args)
+	{
+		EditorEditBoxDialog edit_dialog = new EditorEditBoxDialog();
+		
+		string script_test;
+		edit_dialog.ShowDialog(script_test);
+		
+		
+	}
+	
+	override string GetName() {
+		return "Script Editor";
+	}
+}
 
 
 

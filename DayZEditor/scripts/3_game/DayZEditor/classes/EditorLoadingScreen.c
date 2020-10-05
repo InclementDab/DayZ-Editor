@@ -14,7 +14,7 @@ modded class LoadingScreen
 		m_ImageLogoMid.Show(false);
 		m_ImageLogoCorner.Show(false);
 		
-		m_ImageWidgetBackground.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_splash1.edds");
+		m_ImageWidgetBackground.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_splash0.edds");
 		m_ImageWidgetBackground.SetImage(0);
 		m_ImageWidgetBackground.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		m_ImageWidgetBackground.GetPos(back_x, back_y);
