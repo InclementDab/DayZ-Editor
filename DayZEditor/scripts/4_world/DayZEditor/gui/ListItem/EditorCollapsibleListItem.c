@@ -7,22 +7,22 @@
 static int groupcount = 0;
 class EditorCollapsibleListItem: EditorListItem
 {
-	protected ButtonWidget EditorListItemCollapse;
-	protected WrapSpacerWidget EditorListItemChildren;
+	protected ButtonWidget ListItemCollapse;
+	protected WrapSpacerWidget ListItemChildren;
 	
 	void EditorCollapsibleListItem(Widget parent) 
 	{ 
 		EditorLog.Trace("EditorCollapsibleListItem");
 		
-		EditorListItemCollapse.Show(true);
-		m_TemplateController.ListItemLabel = string.Format("group%1", groupcount);
-		m_TemplateController.NotifyPropertyChanged("ListItemLabel");
+		ListItemCollapse.Show(true);
+		m_TemplateController.Label = string.Format("group%1", groupcount);
+		m_TemplateController.NotifyPropertyChanged("Label");
 		groupcount++;
 	}
 	
 	bool ListItemCollapseExecute(ButtonCommandArgs args)
 	{
-		EditorListItemChildren.Show(!args.GetButtonState());
+		ListItemChildren.Show(!args.GetButtonState());
 		return true;
 	}
 			

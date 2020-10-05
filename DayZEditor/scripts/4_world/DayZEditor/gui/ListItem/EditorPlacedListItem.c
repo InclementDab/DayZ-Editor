@@ -12,8 +12,8 @@ class EditorPlacedListItem: EditorListItem
 		EditorLog.Trace("EditorPlacedListItem::SetEditorObject"); 
 		m_EditorObject = data;
 		
-		m_TemplateController.ListItemLabel = m_EditorObject.GetDisplayName();
-		m_TemplateController.NotifyPropertyChanged("ListItemLabel");
+		m_TemplateController.Label = m_EditorObject.GetDisplayName();
+		m_TemplateController.NotifyPropertyChanged("Label");
 		
 		//m_TemplateController.ListItemIcon = GetIconFromMod(m_EditorObject.GetData().ObjectMod);
 		//m_TemplateController.NotifyPropertyChanged("ListItemIcon");

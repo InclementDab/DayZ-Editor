@@ -2,8 +2,10 @@
 
 class EditorListItemController: Controller
 {
-	string ListItemLabel;
-	string ListItemIcon;
+	string Label;
+	string Icon;
+	
+	string CollapseIcon;
 
 	ref ObservableCollection<ref EditorListItem> ChildListItems = new ObservableCollection<ref EditorListItem>(this);
 }
