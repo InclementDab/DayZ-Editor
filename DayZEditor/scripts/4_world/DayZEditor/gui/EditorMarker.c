@@ -154,6 +154,11 @@ class EditorObjectMarker: EditorMarker
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
 	}
 	
+	void Highlight()
+	{
+		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
+	}
+	
 	void Deselect() 
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
@@ -167,9 +172,9 @@ class EditorObjectMarker: EditorMarker
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		if (!IsSelected()) {
-			Select();
+			Highlight();
 			if (m_EditorObject.GetListItem()) {
-				m_EditorObject.GetListItem().Select();
+				m_EditorObject.GetListItem().Highlight();
 			}
 		}
 		

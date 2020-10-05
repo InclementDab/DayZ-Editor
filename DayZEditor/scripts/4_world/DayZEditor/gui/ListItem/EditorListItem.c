@@ -20,6 +20,11 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 		ListItemContent.SetColor(LIST_ITEM_COLOR_ON_SELECTED);
 	}
 	
+	void Highlight()
+	{
+		ListItemContent.SetColor(LIST_ITEM_COLOR_ON_HOVER);
+	}
+	
 	void Deselect() 
 	{	
 		ListItemContent.SetColor(COLOR_EMPTY);
@@ -31,7 +36,7 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		if (!IsSelected()) {
-			ListItemContent.SetColor(LIST_ITEM_COLOR_ON_HOVER);
+			Highlight();
 		}
 		
 		return super.OnMouseEnter(w, x, y);
@@ -40,7 +45,7 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		if (!IsSelected()) {
-			ListItemContent.SetColor(COLOR_EMPTY);
+			Deselect();
 		}
 		
 		return super.OnMouseLeave(w, enterW, x, y);
