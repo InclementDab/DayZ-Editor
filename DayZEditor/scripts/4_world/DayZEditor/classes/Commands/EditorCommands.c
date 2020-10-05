@@ -750,6 +750,11 @@ class EditorEscapeCommand: EditorCommand
 			return;
 		}
 		
+		if (m_Editor.GetEditorHud().IsMapVisible()) {
+			m_Editor.GetEditorHud().EditorMapWidget.Show(false);
+			return;
+		}
+		
 		if (m_Editor.IsLootEditActive()) {
 			m_Editor.FinishEditLootSpawns();
 			return;
