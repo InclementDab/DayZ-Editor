@@ -397,9 +397,17 @@ class Editor
 	
 	// Only use this to handle hardcoded keys (ctrl + z etc...)
 	// Return TRUE if handled.
+	
+	private ref set<int> current_keys = new set<int>();
+	
 	bool OnKeyPress(int key)
-	{			
-		EditorCommand command = CommandManager.GetCommandFromHotkeys(key);
+	{
+		
+		current_keys.Insert(key);
+		
+		Print(current_keys);
+		
+		EditorCommand command = CommandManager.GetCommandFromHotkeys(current_keys);
 		if (command) {
 			EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
 			CommandArgs args = new CommandArgs();
@@ -449,6 +457,7 @@ class Editor
 		
 	bool OnKeyRelease(int key)
 	{		
+		current_keys.Clear();
 		return false;
 	}
 	

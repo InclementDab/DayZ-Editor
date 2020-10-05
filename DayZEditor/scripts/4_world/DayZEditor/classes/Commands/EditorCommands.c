@@ -55,10 +55,23 @@ class EditorCommand: RelayCommand
 		return string.Empty;
 	}
 	
-	int GetIconFlags();
-	
 	string GetShortcut() {
 		return string.Empty;
+	}
+	
+	array<KeyCode> GetKeys();
+	
+	int GetKeyMask() 
+	{
+		if (!GetKeys()) return 0;
+		int mask, offset;
+		array<KeyCode> keys = GetKeys();
+		foreach (int key: keys) {
+			mask |= key << offset;
+			offset += 8;
+		}
+		
+		return mask;
 	}
 }
 
@@ -260,10 +273,6 @@ class EditorRedoCommand: EditorCommand
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:arrow_round_icon";
 	}
-	
-	override int GetIconFlags() {
-		return WidgetFlags.FLIPU;
-	}
 }
 
 class EditorSelectAllCommand: EditorCommand
@@ -281,6 +290,10 @@ class EditorSelectAllCommand: EditorCommand
 	
 	override string GetShortcut() {
 		return "Ctrl + A";
+	}
+		
+	array<KeyCode> GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_A };
 	}
 }
 

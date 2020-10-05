@@ -21,10 +21,25 @@ modded class MissionGameplay
 		// If Editor is NOT active, just do keypress
 		if (!GetEditor() || !GetEditor().IsActive()) {
 			super.OnKeyPress(key);
+		} 
+		
 		// If Editor IS active, and DOESNT handle the key, do keypress
-		} else if (!GetEditor().OnKeyPress(key)) {
+		else if (!GetEditor().OnKeyPress(key)) {
 			super.OnKeyPress(key);
 		}		
+	}
+	
+	override void OnKeyRelease(int key)
+	{
+		// If Editor is NOT active, just do keypress
+		if (!GetEditor() || !GetEditor().IsActive()) {
+			super.OnKeyRelease(key);
+		} 
+		
+		// If Editor IS active, and DOESNT handle the key, do keypress
+		else if (!GetEditor().OnKeyRelease(key)) {
+			super.OnKeyRelease(key);
+		}	
 	}
 	
 	override void OnMouseButtonPress(int button)

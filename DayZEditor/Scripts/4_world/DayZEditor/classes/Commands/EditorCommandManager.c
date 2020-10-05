@@ -1,5 +1,7 @@
 class EditorCommandManager
 {
+	protected ref map<string, EditorCommand> RegisteredCommandMap = new map<string, EditorCommand>();
+	
 	// Editor Commands
 	ref EditorNewCommand NewCommand;
 	ref EditorOpenCommand OpenCommand;
@@ -41,12 +43,43 @@ class EditorCommandManager
 	ref EditorObjectPropertiesCommand ObjectPropertiesCommand;
 	
 	void EditorCommandManager()
-	{	
+	{			
 		for (int i = 0; i < Type().GetVariableCount(); i++) {
 			string variable_name = Type().GetVariableName(i);
 			typename variable_type = Type().GetVariableType(i);
-			EnScript.SetClassVar(this, variable_name, 0, variable_type.Spawn());
+			if (variable_type.IsInherited(EditorCommand)) {
+				EditorCommand command = variable_type.Spawn();
+				EnScript.SetClassVar(this, variable_name, 0, command);
+				RegisteredCommandMap.Insert(variable_name, command);
+			}
 		}
+	}
+	
+	EditorCommand GetCommandFromHotkeys(set<KeyCode> keys)
+	{
+
+		foreach (string command_name, EditorCommand command: RegisteredCommandMap) {
+			
+
+			
+			int mask = command.GetKeyMask();
+			if (mask == 0) continue;
+			Print("mask found checking");
+			foreach (KeyCode key_to_check: keys) {
+				int j = 0;
+				Print(key_to_check);
+				while (j <= 32) { // sizeof(int)
+					if ((mask & key_to_check << j) == key_to_check << j) {
+						Print("found");
+						return command;
+					}
+					
+					j += 8;
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	EditorCommand GetCommandFromHotkeys(int key)

@@ -9,8 +9,7 @@ class EditorMenuItemCommand: EditorMenuItem
 	void SetCommand(ref EditorCommand editor_command)
 	{
 		EditorMenuItemIcon.Show(editor_command.GetIcon() != string.Empty);
-		EditorMenuItemIcon.SetFlags(editor_command.GetIconFlags());
-
+		
 		m_TemplateController.LabelText = editor_command.GetName();
 		m_TemplateController.NotifyPropertyChanged("LabelText");
 		
