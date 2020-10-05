@@ -5,6 +5,8 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 	vector orientation;
 	string scale;
 	
+	bool button;
+	
 	protected EditorObject m_EditorObject;
 	
 	void SetEditorObject(EditorObject editor_object)
@@ -30,6 +32,12 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 				m_EditorObject.SetScale(scale.ToFloat());
 				break;
 			}
+			
+			case "button": {
+				
+				Print("AAA");
+				break;
+			}
 		}
 	}
 }
@@ -51,6 +59,13 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		group_prefab.Insert(new EditBoxPrefab("Scale", m_Controller, "scale", editor_object.GetScale().ToString()));
 		
 		AddContent(group_prefab);
+		
+		
+		if (editor_object.GetWorldObject().IsMan()) {
+			GroupPrefab human_controller = new GroupPrefab("Human Controller", m_Controller, string.Empty);
+			human_controller.Insert(new ButtonPrefab("Button1", m_Controller, "button"));
+			AddContent(human_controller);
+		}
 		
 		AddButton(DialogResult.OK);
 		AddButton(DialogResult.Cancel);

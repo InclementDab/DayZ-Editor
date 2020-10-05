@@ -1,0 +1,49 @@
+PanelWidgetClass ButtonPanel {
+ position 0 0
+ size 120 30
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ priority 1
+ draggable 0
+ scriptclass ""
+ style rover_sim_black_2
+ {
+  PanelWidgetClass ButtonOutline {
+   ignorepointer 1
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   style Outline
+   {
+    ButtonWidgetClass Button {
+     disabled 0
+     position 0 0
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scriptclass "ViewBinding"
+     style Default
+     "no focus" 0
+     {
+      ScriptParamsClass {
+       Binding_Name "Value"
+       Selected_Item "Caption"
+       Two_Way_Binding 1
+      }
+     }
+    }
+   }
+  }
+ }
+}

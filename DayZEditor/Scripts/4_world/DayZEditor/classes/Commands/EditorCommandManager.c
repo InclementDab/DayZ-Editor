@@ -51,6 +51,10 @@ class EditorCommandManager
 	ref EditorExportToTerrainBuilder ExportToTerrainBuilder;
 	ref EditorExportToVPP ExportToVPP;
 	
+	ref EditorImportFromExpansion ImportFromExpansionCommand;
+	ref EditorImportFromTerrainBuilder ImportFromTerrainBuilderCommand;
+	ref EditorImportFromVPP ImportFromVPPCommand;
+	
 	ref EditorScriptEditorCommand ScriptEditorCommand;
 	
 	void EditorCommandManager()

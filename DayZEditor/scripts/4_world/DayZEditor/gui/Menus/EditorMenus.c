@@ -78,6 +78,7 @@ class EditorFileMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager.SaveAsCommand);
 		AddMenuButton(m_Editor.CommandManager.CloseCommand);
 		AddMenuDivider();
+		AddMenuCategory("Import", EditorImportMenu);
 		AddMenuCategory("Export", EditorExportMenu);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager.ExitCommand);
@@ -127,6 +128,18 @@ class EditorExportMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager.ExportToExpansion);
 		AddMenuButton(m_Editor.CommandManager.ExportToTerrainBuilder);
 		AddMenuButton(m_Editor.CommandManager.ExportToVPP);
+	}
+}
+
+class EditorImportMenu: EditorMenu
+{
+	void EditorImportMenu()
+	{
+		EditorLog.Trace("EditorExportMenu");
+		
+		AddMenuButton(m_Editor.CommandManager.ImportFromExpansionCommand);
+		AddMenuButton(m_Editor.CommandManager.ImportFromTerrainBuilderCommand);
+		AddMenuButton(m_Editor.CommandManager.ImportFromVPPCommand);
 	}
 }
 
