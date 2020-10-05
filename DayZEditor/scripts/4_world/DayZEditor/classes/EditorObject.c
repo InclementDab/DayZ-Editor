@@ -471,6 +471,12 @@ class EditorObject
 		
 		return m_EditorObjectWorldMarker;
 	}
+	
+	EditorPlacedListItem GetListItem()
+	{
+		EditorLog.Trace("EditorObject::GetListItem");
+		return m_EditorPlacedListItem;
+	}
 
 	
 }

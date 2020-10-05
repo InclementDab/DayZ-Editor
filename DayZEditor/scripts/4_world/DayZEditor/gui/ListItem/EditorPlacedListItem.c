@@ -23,11 +23,13 @@ class EditorPlacedListItem: EditorListItem
 	}
 	
 	
-	void EditorObjectSelected(EditorObject data) {
+	void EditorObjectSelected(EditorObject data) 
+	{
 		Select();
 	}
 	
-	void EditorObjectDeselected(EditorObject data) {
+	void EditorObjectDeselected(EditorObject data) 
+	{
 		Deselect();
 	}
 	
@@ -79,5 +81,23 @@ class EditorPlacedListItem: EditorListItem
 		}
 		
 		return true;
+	}
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		if (m_EditorObject.GetMarker()) {
+			m_EditorObject.GetMarker().Select();
+		}
+		
+		return super.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		if (m_EditorObject.GetMarker()) {
+			m_EditorObject.GetMarker().Deselect();
+		}
+		
+		return super.OnMouseLeave(w, enterW, x, y);
 	}
 }

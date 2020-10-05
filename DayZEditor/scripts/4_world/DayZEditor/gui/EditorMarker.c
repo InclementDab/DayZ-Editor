@@ -1,6 +1,7 @@
 
 class EditorMarker: ScriptView
 {
+	
 	void EditorMarker()
 	{
 		EditorLog.Trace("EditorMarker");
@@ -12,7 +13,6 @@ class EditorMarker: ScriptView
 		EditorLog.Trace("~EditorMarker");
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 	}
-	
 	
 	void Update();
 	
@@ -68,6 +68,9 @@ class EditorObjectMarker: EditorMarker
 		EditorLog.Trace("EditorObjectMarker");
 		m_EditorObject = editor_object;
 		m_Editor = GetEditor();
+		
+		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
+		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
 	
 	void ~EditorObjectMarker()
@@ -75,17 +78,16 @@ class EditorObjectMarker: EditorMarker
 		delete m_DragHandler;
 	}
 	
-	override void Update()
+	void EditorObjectSelected(EditorObject data) 
 	{
-		int x, y;
-		GetMousePos(x, y);
-		if (m_EditorObject.IsSelected() || IsMouseInside(x, y)) {
-			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
-		} else {
-			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
-		}
+		Select();
 	}
 	
+	void EditorObjectDeselected(EditorObject data) 
+	{
+		Deselect();
+	}
+		
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		// ignores the object if you are placing
@@ -138,9 +140,7 @@ class EditorObjectMarker: EditorMarker
 					delete EditorUIManager.CurrentMenu;
 				}
 				
-				EditorPlacedContextMenu context_menu = new EditorPlacedContextMenu(x, y);
-				
-				EditorUIManager.CurrentMenu = context_menu;
+				EditorUIManager.CurrentMenu = new EditorPlacedContextMenu(x, y);
 				
 				return true;
 			}
@@ -149,7 +149,44 @@ class EditorObjectMarker: EditorMarker
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	
-
+	void Select() 
+	{
+		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
+	}
+	
+	void Deselect() 
+	{
+		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
+	}
+	
+	bool IsSelected() 
+	{
+		return m_EditorObject.IsSelected();
+	}
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		if (!IsSelected()) {
+			Select();
+			if (m_EditorObject.GetListItem()) {
+				m_EditorObject.GetListItem().Select();
+			}
+		}
+		
+		return super.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		if (!IsSelected()) {
+			Deselect();
+			if (m_EditorObject.GetListItem()) {
+				m_EditorObject.GetListItem().Deselect();
+			}
+		}
+		
+		return super.OnMouseLeave(w, enterW, x, y);
+	}
 	
 	private const int DRAG_THRESHOLD = 5;
 	private void CheckDragBounds(int x, int y)
