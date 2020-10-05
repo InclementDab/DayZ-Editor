@@ -2,9 +2,16 @@
 class EditorCommand: RelayCommand
 {	
 	protected Editor m_Editor;
+	protected ShortcutKeys m_ShortcutKeys;
 	
 	string Text;
 
+	void EditorCommand()
+	{
+		m_Editor = GetEditor();
+		m_ShortcutKeys = GetShortcut();
+	}
+	
 	override bool Execute(Class sender, CommandArgs args) 
 	{
 		EditorLog.Trace("EditorCommand::Execute");
@@ -54,20 +61,17 @@ class EditorCommand: RelayCommand
 	string GetIcon() {
 		return string.Empty;
 	}
-	
-	private string GetShortcut() {
-		return string.Empty;
-	}
-	
-	string GetShortcutString() {
-		if (GetKeys()) {
-			return GetKeys().GetString();
+		
+	string GetShortcutString() 
+	{
+		if (m_ShortcutKeys) {
+			return m_ShortcutKeys.GetString();
 		}
 		
 		return string.Empty;
 	}
 	
-	ShortcutKeys GetKeys();
+	ShortcutKeys GetShortcut();
 }
 
 class EditorNewCommand: EditorCommand
@@ -84,15 +88,11 @@ class EditorNewCommand: EditorCommand
 		return "New";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + N";
-	}
-	
 	override string GetIcon() {
 		return "DayZEditor/gui/icons/icon_new2.edds";
 	}
 	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_N };
 	}
 }
@@ -125,16 +125,12 @@ class EditorSaveCommand: EditorCommand
 	override string GetName() {
 		return "Save";
 	}
-
-	override string GetShortcut() {
-		return "Ctrl + S";
-	}
 	
 	override string GetIcon() {
 		return "DayZEditor/gui/icons/icon_save.edds";
 	}
 	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_S };
 	}
 }
@@ -150,11 +146,7 @@ class EditorSaveAsCommand: EditorCommand
 		return "Save As...";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + Shift + S";
-	}
-	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_S };
 	}
 }
@@ -203,11 +195,7 @@ class EditorOpenCommand: EditorCommand
 		return "DayZEditor/gui/icons/icon_folder.edds";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + O";
-	}
-	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_O };
 	}
 }
@@ -223,11 +211,7 @@ class EditorCloseCommand: EditorCommand
 		return "Close";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + W";
-	}
-	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_W };
 	}
 }
@@ -244,11 +228,7 @@ class EditorExitCommand: EditorCommand
 		return "Exit";
 	}
 	
-	override string GetShortcut() {
-		return "Alt + F4";
-	}
-	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LWIN, KeyCode.KC_F4 }; // lol
 	}
 }
@@ -264,15 +244,11 @@ class EditorUndoCommand: EditorCommand
 		return "Undo";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + Z";
-	}
-	
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:arrow_round_icon";
 	}
 	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_Z };
 	}
 }
@@ -287,15 +263,11 @@ class EditorRedoCommand: EditorCommand
 		return "Redo";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + Y";
-	}
-	
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:arrow_round_icon";
 	}
 	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_Y };
 	}
 }
@@ -312,12 +284,8 @@ class EditorSelectAllCommand: EditorCommand
 	override string GetName() {
 		return "Select All...";
 	}
-	
-	override string GetShortcut() {
-		return "Ctrl + A";
-	}
 		
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_A };
 	}
 }
@@ -333,11 +301,7 @@ class EditorDeleteCommand: EditorCommand
 		return "Delete";
 	}
 	
-	override string GetShortcut() {
-		return "Delete";
-	}
-	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_DELETE };
 	}
 }
@@ -368,11 +332,7 @@ class EditorExportCommand: EditorCommand
 		return "Export";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + E";
-	}
-	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_E };
 	}
 }
@@ -398,11 +358,7 @@ class EditorImportCommand: EditorCommand
 		return "Import";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + I";
-	}
-	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_I };
 	}
 }
@@ -418,15 +374,11 @@ class EditorCutCommand: EditorCommand
 		return "Cut";
 	} 
 	
-	override string GetShortcut() {
-		return "Ctrl + X";
-	}
-	
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:cut_icon";
 	}
 	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_X };
 	}
 }
@@ -442,15 +394,11 @@ class EditorCopyCommand: EditorCommand
 		return "Copy";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + C";
-	}
-	
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:copy_icon";
 	}
 	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_C };
 	}
 }
@@ -466,15 +414,11 @@ class EditorPasteCommand: EditorCommand
 		return "Paste";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + V";
-	}
-	
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:paste_icon";
 	}
 	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_V };
 	}
 }
@@ -507,15 +451,11 @@ class EditorEnvironmentControlCommand: EditorCommand
 		return "Environment";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + Shift + I";
-	}
-	
 	override string GetIcon() {
 		return "set:dayz_gui image:icon_sun";
 	}
 	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_I };
 	}
 }
@@ -531,11 +471,7 @@ class EditorCameraControlsCommand: EditorCommand
 		return "Camera";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + Shift + T";
-	}
-	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_T };
 	}
 }
@@ -555,11 +491,7 @@ class EditorReloadHudCommand: EditorCommand
 		return "set:dayz_gui image:icon_refresh";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + Shift + U";
-	}
-	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_U };
 	}
 }
@@ -588,11 +520,7 @@ class EditorObjectPropertiesCommand: EditorCommand
 		return "Properties";
 	}
 	
-	override string GetShortcut() {
-		return "Ctrl + T";
-	}
-	
-	override ShortcutKeys GetKeys() {
+	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_T };
 	}
 }

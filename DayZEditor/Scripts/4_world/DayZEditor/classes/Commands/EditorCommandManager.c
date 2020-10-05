@@ -50,8 +50,8 @@ class EditorCommandManager
 			if (variable_type.IsInherited(EditorCommand)) {
 				EditorCommand command = variable_type.Spawn();
 				EnScript.SetClassVar(this, variable_name, 0, command);
-				if (command.GetKeys()) {
-					CommandShortcutMap.Insert(command.GetKeys().GetMask(), command);
+				if (command.GetShortcut()) {
+					CommandShortcutMap.Insert(command.GetShortcut().GetMask(), command);
 				}
 			}
 		}
