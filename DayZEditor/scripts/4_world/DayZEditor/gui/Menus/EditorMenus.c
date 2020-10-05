@@ -99,6 +99,8 @@ class EditorEditMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager.EnvironmentControlCommand);
 		AddMenuButton(m_Editor.CommandManager.PreferencesCommand);
 		AddMenuDivider();
+		
+		AddMenuButton(m_Editor.CommandManager.ScriptEditorCommand);
 	}
 }
 

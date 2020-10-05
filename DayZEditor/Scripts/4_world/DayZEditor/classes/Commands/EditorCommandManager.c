@@ -51,6 +51,8 @@ class EditorCommandManager
 	ref EditorExportToTerrainBuilder ExportToTerrainBuilder;
 	ref EditorExportToVPP ExportToVPP;
 	
+	ref EditorScriptEditorCommand ScriptEditorCommand;
+	
 	void EditorCommandManager()
 	{			
 		for (int i = 0; i < Type().GetVariableCount(); i++) {
