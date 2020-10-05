@@ -7,32 +7,70 @@ enum EditorPlaceableItemCategory {
 	UNKNOWN = -1
 };
 
+static const ref TStringArray ITEM_BLACKLIST = 
+{
+	"access"	
+};
+
 class EditorPlaceableItem
 {
-	static const map<string, EditorPlaceableItemCategory> LOADED_TYPES = GetTypes();
-	static const array<ref ModStructure> LOADED_MODS = ModLoader.GetMods();
+	static const autoptr map<string, EditorPlaceableItemCategory> LOADED_TYPES = GetTypes();
+	static const autoptr array<ref ModStructure> LOADED_MODS = ModLoader.GetMods();
 	
 	string Type;
+	string Path;
+	
 	string Icon;
-	string ModelName;
-	TStringArray Path;
+	string Model;
+	
+	ref TStringArray FullPath = {};
 	
 	ModStructure Mod;
 	EditorPlaceableItemCategory Category;
 	
 	protected Object m_Object;
 	
-	private void EditorPlaceableItem(string type)
+	void EditorPlaceableItem(string path, string type)
 	{
-		Type = type;				
+		Path = path; Type = type;
 		
-		m_Object = GetGame().CreateObjectEx(Type, vector.Zero, ECE_NONE);
+		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", Path, Type), Model);
+		GetWorkbenchGame().ConfigGetFullPath(string.Format("%1 %2", Path, Type), FullPath);
+		
+		//m_Object = GetGame().CreateObjectEx(Type, vector.Zero, ECE_NONE);
+		//Print(m_Object);
+	}
+	
+	void ~EditorPlaceableItem()
+	{
+		delete FullPath;
+		
+		/*if (m_Object) {
+			GetGame().ObjectDelete(m_Object);
+		}*/
+	}
+	
+	// CAN RETURN NULL
+	static EditorPlaceableItem Create(string path, string type)
+	{		
+		if (ITEM_BLACKLIST.Find(type) != -1) {
+			return null;
+		}
 
-		if (!IsValidObject(m_Object)) {
-			delete this;
+		EditorPlaceableItem placeable_item = new EditorPlaceableItem(path, type);
+		
+		// No .p3d was specified
+		if (placeable_item.Model == string.Empty || placeable_item.Model.Length() <= 4) {
+			return null;
 		}
 		
-		m_Object.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, false);	
+		
+		/*
+		if (!placeable_item.m_Object || !IsValidObject(placeable_item.m_Object)) {
+			return null;
+		}*/
+		
+		//placeable_item.m_Object.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, false);	
 		
 		
 		//GetGame().ConfigGetObjectFullPath(m_Object, Path);
@@ -40,21 +78,17 @@ class EditorPlaceableItem
 		//Mod = LoadModData(Type, CfgPath);
 		//Category = LoadItemCategory();
 		
-		if (Category == EditorPlaceableItemCategory.UNKNOWN) {
-			EditorLog.Warning(string.Format("%1 has no category!", Type));
+		/*if (placeable_item && placeable_item.Category == EditorPlaceableItemCategory.UNKNOWN) {
+			EditorLog.Warning(string.Format("%1 has no category!", placeable_item.Type));
 		}
-	}
-	
-	// CAN RETURN NULL
-	static EditorPlaceableItem Create(string type)
-	{
-		return new EditorPlaceableItem(type);
+		*/
+		return placeable_item;
 	}
 	
 	// If model volume is 0, return false
 	private static bool IsValidObject(Object target)
 	{
-		vector size[2];		
+		vector size[2];
 		target.ClippingInfo(size);
 		return (Math.AbsFloat(size[0][0]) + Math.AbsFloat(size[1][0]) + Math.AbsFloat(size[0][1]) + Math.AbsFloat(size[1][1]) + Math.AbsFloat(size[0][2]) + Math.AbsFloat(size[1][2]) > 0);
 	}
@@ -117,17 +151,17 @@ class EditorPlaceableItem
 	}
 	
 	// todo refactor
-	static string GetIconFromMod(ref ModStructure m_ModInfo)
+	static string GetIcon(ModStructure mod_info)
 	{
-		EditorLog.Trace("GetIconFromMod");
-		if (m_ModInfo != null) {
-			string logo = m_ModInfo.GetModLogo();
+		EditorLog.Trace("GetIcon");
+		if (mod_info != null) {
+			string logo = mod_info.GetModLogo();
 			if (logo == string.Empty)
-				logo = m_ModInfo.GetModLogoSmall();
+				logo = mod_info.GetModLogoSmall();
 			if (logo == string.Empty)
-				logo = m_ModInfo.GetModLogoOver();
+				logo = mod_info.GetModLogoOver();
 			if (logo == string.Empty)
-				logo = m_ModInfo.GetModActionURL();
+				logo = mod_info.GetModActionURL();
 			if (logo != string.Empty)
 				return logo;	
 		}

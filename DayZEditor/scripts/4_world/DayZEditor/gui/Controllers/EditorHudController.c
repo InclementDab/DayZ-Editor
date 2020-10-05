@@ -84,33 +84,28 @@ class EditorHudController: EditorControllerBase
 	
 	int ReloadPlaceableObjects() 
 	{ 
-		TStringArray paths = new TStringArray;
-		paths.Insert(CFG_VEHICLESPATH);
+		TStringArray config_paths = {};
+		config_paths.Insert(CFG_VEHICLESPATH);
+		config_paths.Insert(CFG_WEAPONSPATH);
+		config_paths.Insert(CFG_MAGAZINESPATH);
 		
-		foreach (string config_path: paths) {
+		foreach (string path: config_paths) {
 			
-			for (int j = 0; j < GetWorkbenchGame().ConfigGetChildrenCount(config_path); j++) {
-				string class_name;
-		        GetWorkbenchGame().ConfigGetChildName(config_path, j, class_name);
-				TStringArray full_path = new TStringArray();
-				GetWorkbenchGame().ConfigGetFullPath(config_path + " " + class_name, full_path);
+			for (int i = 0; i < GetWorkbenchGame().ConfigGetChildrenCount(path); i++) {
+				string type;
+		        GetWorkbenchGame().ConfigGetChildName(path, i, type);
 				
-				if (full_path.Find("HouseNoDestruct") != -1) {
-					EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(class_name);
-					if (placeable_item) {
-						EditorPlaceableListItem item = new EditorPlaceableListItem(placeable_item);
-						LeftbarSpacerData.Insert(item);
-					}
-					
-				} else {
-					EditorLog.Trace("Not including Base " + full_path.ToString()); //find what isnt loading here
+				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
+				if (placeable_item) {
+					LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
 				}
+					
 #ifdef COMPONENT_SYSTEM
-				if (j > 500) return 500;
+				if (i > 500) return 500;
 #endif
 		    }
 		}
-		return j;
+		return i;
 	}
 	
 

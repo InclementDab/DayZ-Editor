@@ -64,7 +64,7 @@ WrapSpacerWidgetClass EditorListItem {
          clipchildren 0
          ignorepointer 1
          position 0 0
-         size 1 0.85
+         size 1 1
          halign center_ref
          valign center_ref
          hexactpos 0
@@ -75,7 +75,6 @@ WrapSpacerWidgetClass EditorListItem {
          scriptclass "ViewBinding"
          style Normal
          text "CATEGORY"
-         font "gui/fonts/sdf_MetronBook24"
          "exact text" 0
          "size to text h" 1
          "size to text v" 0
