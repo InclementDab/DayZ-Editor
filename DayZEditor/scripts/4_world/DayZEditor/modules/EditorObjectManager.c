@@ -104,6 +104,7 @@ class EditorObjectManagerModule: JMModuleBase
 		m_PlacedObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object.GetID());
 		EditorEvents.ObjectCreated(this, editor_object);
 		
+		
 		return editor_object;
 	}
 

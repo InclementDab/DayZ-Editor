@@ -8,8 +8,6 @@ class EditorCommandManager
 	ref EditorSaveCommand SaveCommand;
 	ref EditorSaveAsCommand SaveAsCommand;
 	ref EditorCloseCommand CloseCommand;
-	ref EditorExportCommand ExportCommand;
-	ref EditorImportCommand ImportCommand;
 	ref EditorExitCommand ExitCommand;
 	ref EditorEscapeCommand EscapeCommand;
 	

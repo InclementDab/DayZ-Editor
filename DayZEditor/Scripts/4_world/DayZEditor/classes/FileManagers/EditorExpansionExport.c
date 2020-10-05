@@ -39,13 +39,20 @@ class ExpansionImportData
 				continue;
 			}
 			
+			// todo this is NOT RIGHT wtf is going on
 			Object world_object = GetGame().CreateObjectEx(name, position, ECE_LOCAL);
 			world_object.SetOrientation(rotation);
-			
 			GetEditor().CreateFromObject(world_object);
-			
+						
 			//data.InsertEditorData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
 		}
+		
+		// another stupid fix
+		EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();		
+		foreach (EditorObject eo: placed_objects) {
+			GetEditor().SelectObject(eo);
+		}
+		GetEditor().ClearSelection();
 		
 		if (handler) {
 			CloseFile(handler);

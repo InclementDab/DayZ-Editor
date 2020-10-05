@@ -57,7 +57,6 @@ class EditorObject
 		vector clip_info[2];
 		ClippingInfo(clip_info);
 	
-		
 		m_LineVerticies[0] = clip_info[0];
 		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
 		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);

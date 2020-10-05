@@ -299,63 +299,6 @@ class EditorDeleteCommand: EditorCommand
 	}
 }
 
-class EditorExportCommand: EditorCommand
-{
-	protected override void Call(Class sender, CommandArgs args) 
-	{
-		DialogResult result = EditorMessageBox.Show("Export", "Export file expansion_export.map?", MessageBoxButtons.OKCancel);
-		if (result != DialogResult.OK) return;
-		
-		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
-		
-		ExportSettings settings = new ExportSettings();
-		settings.ExportFileMode = ExportMode.EXPANSION;
-		FileDialogResult file_result = EditorFileManager.Export(save_data, "$profile:/Editor/expansion_export.map", settings);
-		if (file_result != FileDialogResult.SUCCESS) {
-			m_Editor.GetEditorHud().CreateNotification(typename.EnumToString(FileDialogResult, file_result), COLOR_RED);
-			return;
-		}
-		
-		string message = string.Format("Exported %1 objects!", save_data.EditorObjects.Count().ToString());
-		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
-		EditorLog.Info(message);
-	}
-
-	override string GetName() {
-		return "Export";
-	}
-	
-	override ShortcutKeys GetShortcut() {
-		return { KeyCode.KC_E };
-	}
-}
-
-class EditorImportCommand: EditorCommand
-{
-	protected override void Call(Class sender, CommandArgs args) 
-	{
-		DialogResult result = EditorMessageBox.Show("Import", "Import file expansion_import.map?", MessageBoxButtons.OKCancel);
-		if (result != DialogResult.OK) return;
-		
-
-		EditorSaveData save_data();
-		EditorFileManager.Import(save_data, "$profile:/Editor/expansion_import.map", ImportMode.EXPANSION);
-		string message = string.Format("Imported %1 objects!", save_data.EditorObjects.Count().ToString());
-		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
-		EditorLog.Info(message);
-		
-		m_Editor.CreateObjects(save_data.EditorObjects);
-	}
-
-	override string GetName() {
-		return "Import";
-	}
-	
-	override ShortcutKeys GetShortcut() {
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_I };
-	}
-}
-
 class EditorCutCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
