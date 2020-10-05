@@ -25,7 +25,7 @@ class ShortcutKeys: array<KeyCode>
 		return shortcut;
 	}
 	
-	private string GetKeyString(int key)
+	static string GetKeyString(int key)
 	{
 		// Special Cases
 		switch (key) {
