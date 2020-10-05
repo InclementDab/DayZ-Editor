@@ -766,12 +766,12 @@ class EditorEscapeCommand: EditorCommand
 		} 
 		
 
-		if (GetGame().GetMission().IsPaused()) {
-			GetGame().GetMission().Continue();
+		if (g_Game.GetMission().IsPaused()) {
+			g_Game.GetMission().Continue();
 			return;
 		} 
 		
-		GetGame().GetMission().Pause();
+		g_Game.GetMission().Pause();
 	}
 	
 	override ShortcutKeys GetShortcut() {
