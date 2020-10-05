@@ -142,9 +142,21 @@ modded class MainMenu
 
     override void Play()
     {
-		EditorLoadMapCommand cmd = new EditorLoadMapCommand();
-		cmd.Execute(this, null);
+		thread CreateLoadDialog();
     }
+	
+	// Copy pasted from EditorLoadMapCommand
+	// but since editor isnt loaded, cant run it
+	private void CreateLoadDialog()
+	{
+		EditorMapSelectDialog select_dialog = new EditorMapSelectDialog("Select Map...");
+		string selected_map;
+		DialogResult result = select_dialog.ShowDialog(selected_map);
+		
+		if (selected_map != string.Empty && result == DialogResult.OK) {
+			GetGame().PlayMission(CreateEditorMission(selected_map));
+		}
+	}
 
     override bool OnMouseEnter(Widget w, int x, int y)
     {

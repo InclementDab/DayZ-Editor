@@ -57,9 +57,10 @@ GridSpacerWidgetClass EditorDialog {
        scaled 1
        scriptclass "ViewBinding"
        text "DialogBox"
-       font "gui/fonts/sdf_MetronBook24"
+       font "gui/fonts/MetronLight22"
        "italic text" 0
        "bold text" 0
+       "text sharpness" 0.9
        "exact text" 1
        "size to text h" 0
        "text halign" center
