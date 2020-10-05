@@ -1,29 +1,7 @@
 
-class DropdownElementPrefabController: Controller
+class DropdownListPrefabController: PrefabBaseController<DropdownListPrefabItem>
 {
-	string Text;
-	Class UserData;
-}
-
-class DropdownElementPrefab: ScriptViewTemplate<DropdownElementPrefabController>
-{
-	void DropdownElementPrefab(string text, Class user_data = null)
-	{
-		m_TemplateController.Text = text;
-		m_TemplateController.NotifyPropertyChanged("Text");
-		
-		m_TemplateController.UserData = user_data;
-		m_TemplateController.NotifyPropertyChanged("UserData");
-	}
-		
-	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/prefabs/Dropdown/DropdownElementPrefab.layout";
-	}
-}
-
-class DropdownListPrefabController: PrefabBaseController<DropdownElementPrefab>
-{
-	ref ObservableCollection<ref DropdownElementPrefab> DropdownElementList = new ObservableCollection<ref DropdownElementPrefab>(this);
+	ref ObservableCollection<ref DropdownListPrefabItem> DropdownElementList = new ObservableCollection<ref DropdownListPrefabItem>(this);
 	
 	void ~DropdownListPrefabController()
 	{
@@ -31,14 +9,13 @@ class DropdownListPrefabController: PrefabBaseController<DropdownElementPrefab>
 	}
 }
 
-
-class DropdownListPrefab: PrefabBase<DropdownElementPrefab>
+class DropdownListPrefab: PrefabBase<DropdownListPrefabItem>
 {
 	DropdownListPrefabController m_DropdownListController;
 
 	private WrapSpacerWidget DropdownWrapper;
 	
-	void DropdownListPrefab(string caption, Controller binding_context, string binding_name, DropdownElementPrefab default_value = DEFAULT_VALUE)
+	void DropdownListPrefab(string caption, Controller binding_context, string binding_name, DropdownListPrefabItem default_value = DEFAULT_VALUE)
 	{
 		Class.CastTo(m_DropdownListController, m_Controller);
 	}
@@ -46,10 +23,10 @@ class DropdownListPrefab: PrefabBase<DropdownElementPrefab>
 	
 	void InsertItem(string item_text)
 	{
-		InsertItem(new DropdownElementPrefab(item_text));
+		InsertItem(new DropdownListPrefabItem(item_text));
 	}
 	
-	void InsertItem(DropdownElementPrefab element)
+	void InsertItem(DropdownListPrefabItem element)
 	{
 		element.SetParent(this);
 		m_DropdownListController.DropdownElementList.Insert(element);

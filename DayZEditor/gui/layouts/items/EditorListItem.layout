@@ -34,7 +34,7 @@ WrapSpacerWidgetClass EditorListItem {
      visible 1
      clipchildren 0
      ignorepointer 0
-     color 0.0196 0.0196 0.0196 0
+     color 0.7529 0.3686 0.3255 1
      size 1 1
      halign center_ref
      valign center_ref
@@ -44,7 +44,7 @@ WrapSpacerWidgetClass EditorListItem {
      vexactsize 0
      draggable 1
      scriptclass "ViewBinding"
-     style Default
+     style Empty
      {
       PanelWidgetClass EditorListItemContent {
        ignorepointer 1

@@ -71,7 +71,7 @@ class EditorEnvironmentDialog: EditorDialogBase
 		
 		float exposure = GetGame().GetWorld().GetEyeAccom();
 		
-		DropdownElementPrefab list_prefab = new DropdownElementPrefab("Test1");
+		DropdownListPrefabItem list_prefab = new DropdownListPrefabItem("Test1");
 		DropdownListPrefab dropdown = new DropdownListPrefab("This is a caption", m_Controller, "na", list_prefab);
 		dropdown.InsertItem(list_prefab);
 		dropdown.InsertItem("Test2");

@@ -32,47 +32,48 @@ class EditorPlaceableItem
 	
 	void EditorPlaceableItem(string path, string type)
 	{
+		EditorLog.Trace("EditorPlaceableItem");
 		Path = path; Type = type;
 		
 		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", Path, Type), Model);
 		GetWorkbenchGame().ConfigGetFullPath(string.Format("%1 %2", Path, Type), FullPath);
-		
+	}
+	
+	void Init()
+	{
+		EditorLog.Trace("EditorPlaceableItem::Init");
 		//m_Object = GetGame().CreateObjectEx(Type, vector.Zero, ECE_NONE);
-		//Print(m_Object);
+		
+		// No .p3d was specified
+		if (Model == string.Empty || Model.Length() <= 4) {
+			delete this;
+		}
+		
+		
+		//m_Object.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, false);
 	}
 	
 	void ~EditorPlaceableItem()
 	{
+		EditorLog.Trace("~EditorPlaceableItem");
 		delete FullPath;
 		
-		/*if (m_Object) {
+		if (m_Object) {
 			GetGame().ObjectDelete(m_Object);
-		}*/
+		}
 	}
 	
 	// CAN RETURN NULL
 	static EditorPlaceableItem Create(string path, string type)
-	{		
-		if (ITEM_BLACKLIST.Find(type) != -1) {
+	{
+		if (type == string.Empty || ITEM_BLACKLIST.Find(type) != -1) {
 			return null;
 		}
 
-		EditorPlaceableItem placeable_item = new EditorPlaceableItem(path, type);
-		
-		// No .p3d was specified
-		if (placeable_item.Model == string.Empty || placeable_item.Model.Length() <= 4) {
-			return null;
-		}
-		
-		
-		/*
-		if (!placeable_item.m_Object || !IsValidObject(placeable_item.m_Object)) {
-			return null;
-		}*/
-		
-		//placeable_item.m_Object.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, false);	
-		
-		
+		EditorPlaceableItem placeable_item = new EditorPlaceableItem(path, type);		
+		placeable_item.Init();
+
+
 		//GetGame().ConfigGetObjectFullPath(m_Object, Path);
 		
 		//Mod = LoadModData(Type, CfgPath);

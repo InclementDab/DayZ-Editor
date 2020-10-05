@@ -1,16 +1,9 @@
 
 class EditorCommand: RelayCommand
 {	
-	protected Editor m_Editor;
-	protected ShortcutKeys m_ShortcutKeys;
-	
+	protected Editor m_Editor;	
 	string Text;
 
-	void EditorCommand()
-	{
-		m_Editor = GetEditor();
-		m_ShortcutKeys = GetShortcut();
-	}
 	
 	override bool Execute(Class sender, CommandArgs args) 
 	{
@@ -64,8 +57,8 @@ class EditorCommand: RelayCommand
 		
 	string GetShortcutString() 
 	{
-		if (m_ShortcutKeys) {
-			return m_ShortcutKeys.GetString();
+		if (GetShortcut()) {
+			return GetShortcut().GetString();
 		}
 		
 		return string.Empty;
@@ -229,7 +222,7 @@ class EditorExitCommand: EditorCommand
 	}
 	
 	override ShortcutKeys GetShortcut() {
-		return { KeyCode.KC_LWIN, KeyCode.KC_F4 }; // lol
+		return { KeyCode.KC_LMENU, KeyCode.KC_F4 }; // lol
 	}
 }
 
@@ -427,7 +420,8 @@ class EditorPreferencesCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		
+		EditorPreferencesDialog dialog = new EditorPreferencesDialog("Editor Preferences");
+		DialogResult result = dialog.ShowDialog();
 	}
 
 	override string GetName() {

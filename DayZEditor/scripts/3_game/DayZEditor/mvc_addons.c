@@ -69,7 +69,7 @@ class TypeConversionBrushObject: TypeConversionTemplate<EditorBrushObject>
 	}
 }
 
-class DropdownElementPrefabConverter: TypeConversionTemplate<DropdownElementPrefab>
+class DropdownListPrefabItemConverter: TypeConversionTemplate<DropdownListPrefabItem>
 {
 	override string GetString() {
 		if (m_Value)
@@ -102,7 +102,7 @@ modded class MVC
 		type_conversions.Insert(EditorWidget, TypeConversionEditorWidget);
 		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
 		type_conversions.Insert(EditorBrushObject, TypeConversionBrushObject);
-		type_conversions.Insert(DropdownElementPrefab, DropdownElementPrefabConverter);
+		type_conversions.Insert(DropdownListPrefabItem, DropdownListPrefabItemConverter);
 	}
 }
 
