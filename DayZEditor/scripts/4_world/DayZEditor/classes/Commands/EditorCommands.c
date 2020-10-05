@@ -197,7 +197,8 @@ class EditorCloseCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-
+		
+		
 	}
 			
 	override string GetName() {
@@ -213,16 +214,15 @@ class EditorExitCommand: EditorCommand
 {	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
+		DialogResult result = EditorMessageBox.Show("Confirm", "Exit now?", MessageBoxButtons.OKCancel);
+		if (result != DialogResult.OK) return;
+		
 		GetGame().LogoutRequestTime();
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(GetGame().GetMission().CreateLogoutMenu, GetGame().GetUIManager().GetMenu());
 	}
 	
 	override string GetName() {
 		return "Exit";
-	}
-	
-	override ShortcutKeys GetShortcut() {
-		return { KeyCode.KC_LMENU, KeyCode.KC_F4 }; // lol
 	}
 }
 
