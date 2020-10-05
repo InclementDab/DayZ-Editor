@@ -395,26 +395,25 @@ class Editor
 		return false;
 	}
 	
+	private ref ShortcutKeys m_CurrentKeys = new ShortcutKeys();
+	
 	// Only use this to handle hardcoded keys (ctrl + z etc...)
-	// Return TRUE if handled.
-	
-	private ref set<int> current_keys = new set<int>();
-	
+	// Return TRUE if handled.	
 	bool OnKeyPress(int key)
 	{
-		
-		current_keys.Insert(key);
-		
-		Print(current_keys);
-		
-		EditorCommand command = CommandManager.GetCommandFromHotkeys(current_keys);
-		if (command) {
-			EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
-			CommandArgs args = new CommandArgs();
-			args.Context = m_EditorHud;
-			command.Execute(this, args);
-			return true;
+		if (m_CurrentKeys.Find(key) == -1) {
+			m_CurrentKeys.Insert(key);
+			
+			EditorCommand command = CommandManager.CommandShortcutMap[m_CurrentKeys.GetMask()];
+			if (command) {
+				EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
+				CommandArgs args = new CommandArgs();
+				args.Context = m_EditorHud;
+				command.Execute(this, args);
+				return true;
+			}
 		}
+
 			
 		switch (key) {
 				
@@ -449,7 +448,7 @@ class Editor
 				}
 				
 				break;
-			}				
+			}
 		}
 		
 		return false;
@@ -457,7 +456,7 @@ class Editor
 		
 	bool OnKeyRelease(int key)
 	{		
-		current_keys.Clear();
+		m_CurrentKeys.Clear();
 		return false;
 	}
 	

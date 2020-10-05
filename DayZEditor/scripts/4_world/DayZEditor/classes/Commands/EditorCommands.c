@@ -59,20 +59,7 @@ class EditorCommand: RelayCommand
 		return string.Empty;
 	}
 	
-	array<KeyCode> GetKeys();
-	
-	int GetKeyMask() 
-	{
-		if (!GetKeys()) return 0;
-		int mask, offset;
-		array<KeyCode> keys = GetKeys();
-		foreach (int key: keys) {
-			mask |= key << offset;
-			offset += 8;
-		}
-		
-		return mask;
-	}
+	ShortcutKeys GetKeys();
 }
 
 class EditorNewCommand: EditorCommand
@@ -292,7 +279,7 @@ class EditorSelectAllCommand: EditorCommand
 		return "Ctrl + A";
 	}
 		
-	array<KeyCode> GetKeys() {
+	override ShortcutKeys GetKeys() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_A };
 	}
 }

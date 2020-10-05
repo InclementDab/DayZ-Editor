@@ -1,6 +1,6 @@
 class EditorCommandManager
 {
-	protected ref map<string, EditorCommand> RegisteredCommandMap = new map<string, EditorCommand>();
+	ref map<int, EditorCommand> CommandShortcutMap = new map<int, EditorCommand>();
 	
 	// Editor Commands
 	ref EditorNewCommand NewCommand;
@@ -50,38 +50,13 @@ class EditorCommandManager
 			if (variable_type.IsInherited(EditorCommand)) {
 				EditorCommand command = variable_type.Spawn();
 				EnScript.SetClassVar(this, variable_name, 0, command);
-				RegisteredCommandMap.Insert(variable_name, command);
-			}
-		}
-	}
-	
-	EditorCommand GetCommandFromHotkeys(set<KeyCode> keys)
-	{
-
-		foreach (string command_name, EditorCommand command: RegisteredCommandMap) {
-			
-
-			
-			int mask = command.GetKeyMask();
-			if (mask == 0) continue;
-			Print("mask found checking");
-			foreach (KeyCode key_to_check: keys) {
-				int j = 0;
-				Print(key_to_check);
-				while (j <= 32) { // sizeof(int)
-					if ((mask & key_to_check << j) == key_to_check << j) {
-						Print("found");
-						return command;
-					}
-					
-					j += 8;
+				if (command.GetKeys()) {
+					CommandShortcutMap.Insert(command.GetKeys().GetMask(), command);
 				}
 			}
 		}
-		
-		return null;
 	}
-	
+		
 	EditorCommand GetCommandFromHotkeys(int key)
 	{
 		//EditorLog.Trace("Editor::GetCommandFromHotkeys");
