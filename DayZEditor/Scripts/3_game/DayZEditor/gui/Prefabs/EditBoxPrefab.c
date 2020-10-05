@@ -1,4 +1,3 @@
-
 class EditBoxPrefab: ScriptView
 {	
 	EditBoxWidget ContentText;

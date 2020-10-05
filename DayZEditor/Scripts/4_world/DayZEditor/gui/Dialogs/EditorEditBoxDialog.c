@@ -23,3 +23,26 @@ class EditorEditBoxDialog: EditorDialogBase
 		return result;
 	}	
 }
+
+class EditorMultilineEditBoxDialog: EditorDialogBase
+{
+	protected autoptr MultilineEditBoxPrefab m_MultilineEditBoxPrefab;
+		
+	void EditorMultilineEditBoxDialog(string title)
+	{
+		m_MultilineEditBoxPrefab = new MultilineEditBoxPrefab();
+		AddContent(m_MultilineEditBoxPrefab);
+		
+		AddButton(DialogResult.OK);
+		AddButton(DialogResult.Cancel);
+	}
+	
+	DialogResult ShowDialog(out string text)
+	{
+		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
+		MultilineEditBoxWidget edit_box = m_MultilineEditBoxPrefab.ContentText;
+		DialogResult result = ShowDialog();
+		edit_box.GetText(text);
+		return result;
+	}	
+}
