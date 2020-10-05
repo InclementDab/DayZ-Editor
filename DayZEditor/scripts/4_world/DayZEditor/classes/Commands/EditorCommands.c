@@ -83,6 +83,10 @@ class EditorNewCommand: EditorCommand
 	override string GetIcon() {
 		return "DayZEditor/gui/icons/icon_new2.edds";
 	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_N };
+	}
 }
 
 class EditorSaveCommand: EditorCommand
@@ -122,6 +126,9 @@ class EditorSaveCommand: EditorCommand
 		return "DayZEditor/gui/icons/icon_save.edds";
 	}
 	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_S };
+	}
 }
 
 class EditorSaveAsCommand: EditorCommand
@@ -137,6 +144,10 @@ class EditorSaveAsCommand: EditorCommand
 	
 	override string GetShortcut() {
 		return "Ctrl + Shift + S";
+	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_S };
 	}
 }
 
@@ -187,6 +198,10 @@ class EditorOpenCommand: EditorCommand
 	override string GetShortcut() {
 		return "Ctrl + O";
 	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_O };
+	}
 }
 
 class EditorCloseCommand: EditorCommand
@@ -202,6 +217,10 @@ class EditorCloseCommand: EditorCommand
 	
 	override string GetShortcut() {
 		return "Ctrl + W";
+	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_W };
 	}
 }
 
@@ -221,6 +240,9 @@ class EditorExitCommand: EditorCommand
 		return "Alt + F4";
 	}
 	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LWIN, KeyCode.KC_F4 }; // lol
+	}
 }
 
 class EditorUndoCommand: EditorCommand
@@ -241,6 +263,10 @@ class EditorUndoCommand: EditorCommand
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:arrow_round_icon";
 	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_Z };
+	}
 }
 
 class EditorRedoCommand: EditorCommand
@@ -259,6 +285,10 @@ class EditorRedoCommand: EditorCommand
 	
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:arrow_round_icon";
+	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_Y };
 	}
 }
 
@@ -298,6 +328,10 @@ class EditorDeleteCommand: EditorCommand
 	override string GetShortcut() {
 		return "Delete";
 	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_DELETE };
+	}
 }
 
 class EditorExportCommand: EditorCommand
@@ -329,6 +363,10 @@ class EditorExportCommand: EditorCommand
 	override string GetShortcut() {
 		return "Ctrl + E";
 	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_E };
+	}
 }
 
 class EditorImportCommand: EditorCommand
@@ -355,6 +393,10 @@ class EditorImportCommand: EditorCommand
 	override string GetShortcut() {
 		return "Ctrl + I";
 	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_I };
+	}
 }
 
 class EditorCutCommand: EditorCommand
@@ -374,6 +416,10 @@ class EditorCutCommand: EditorCommand
 	
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:cut_icon";
+	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_X };
 	}
 }
 	
@@ -395,6 +441,10 @@ class EditorCopyCommand: EditorCommand
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:copy_icon";
 	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_C };
+	}
 }
 
 class EditorPasteCommand: EditorCommand
@@ -414,6 +464,10 @@ class EditorPasteCommand: EditorCommand
 	
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:paste_icon";
+	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_V };
 	}
 }
 
@@ -452,6 +506,10 @@ class EditorEnvironmentControlCommand: EditorCommand
 	override string GetIcon() {
 		return "set:dayz_gui image:icon_sun";
 	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_I };
+	}
 }
 
 class EditorCameraControlsCommand: EditorCommand
@@ -467,6 +525,10 @@ class EditorCameraControlsCommand: EditorCommand
 	
 	override string GetShortcut() {
 		return "Ctrl + Shift + T";
+	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_T };
 	}
 }
 
@@ -487,6 +549,10 @@ class EditorReloadHudCommand: EditorCommand
 	
 	override string GetShortcut() {
 		return "Ctrl + Shift + U";
+	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_U };
 	}
 }
 
@@ -516,6 +582,10 @@ class EditorObjectPropertiesCommand: EditorCommand
 	
 	override string GetShortcut() {
 		return "Ctrl + T";
+	}
+	
+	override ShortcutKeys GetKeys() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_T };
 	}
 }
 

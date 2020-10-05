@@ -56,7 +56,7 @@ class EditorCommandManager
 			}
 		}
 	}
-		
+	
 	EditorCommand GetCommandFromHotkeys(int key)
 	{
 		//EditorLog.Trace("Editor::GetCommandFromHotkeys");
