@@ -13,7 +13,7 @@ FrameWidgetClass EditorMenuDivider {
  {
   PanelWidgetClass EditorMenuDividerLine {
    visible 1
-   color 1 1 1 0.1961
+   color 1 1 1 0.0588
    position 0 0
    size 1 1
    halign center_ref

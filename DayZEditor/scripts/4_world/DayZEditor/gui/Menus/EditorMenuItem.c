@@ -66,7 +66,9 @@ class EditorMenuItemCategory: EditorMenuItem
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		m_TemplateController.ChildMenu.GetLayoutRoot().Show(false);
+		if (enterW != m_TemplateController.ChildMenu.GetLayoutRoot().FindAnyWidget(enterW.GetName())) {
+			m_TemplateController.ChildMenu.GetLayoutRoot().Show(false);
+		}
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 }

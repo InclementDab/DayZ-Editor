@@ -28,96 +28,115 @@ FrameWidgetClass EditorMenuItem {
    "no focus" 0
    "text color" 0.7529 0.3686 0.3255 1
    {
-    TextWidgetClass EditorMenuItemLabel {
-     visible 1
+    PanelWidgetClass EditorMenuItemContent {
      inheritalpha 1
      ignorepointer 1
      position 0 0
-     size 0.7 1
+     size 0.9 1
      halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
      vexactsize 0
-     scriptclass "ViewBinding"
-     text "label"
-     font "gui/fonts/Metron16"
-     "exact text" 1
-     "size to text h" 0
-     "text valign" center
      {
-      ScriptParamsClass {
-       Binding_Name "LabelText"
+      TextWidgetClass EditorMenuItemLabel {
+       visible 1
+       inheritalpha 1
+       ignorepointer 1
+       position 0 0
+       size 0.7 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scriptclass "ViewBinding"
+       text "label"
+       font "gui/fonts/Metron16"
+       "exact text" 1
+       "size to text h" 0
+       "text valign" center
+       {
+        ScriptParamsClass {
+         Binding_Name "LabelText"
+        }
+       }
+      }
+      ImageWidgetClass EditorMenuItemIcon {
+       visible 0
+       inheritalpha 1
+       ignorepointer 1
+       position 0 0
+       size 25 25
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 1
+       scriptclass "ViewBinding"
+       image0 ""
+       mode blend
+       "src alpha" 1
+       stretch 1
+       filter 1
+       pivot 0.5 0.5
+       {
+        ScriptParamsClass {
+         Binding_Name "IconPath"
+        }
+       }
+      }
+      TextWidgetClass EditorMenuItemShortcut {
+       visible 1
+       inheritalpha 1
+       ignorepointer 1
+       position 25 0
+       size 0.65 1
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scriptclass "ViewBinding"
+       text "shortcut"
+       font "gui/fonts/Metron14"
+       "exact text" 1
+       "size to text h" 0
+       "text halign" right
+       "text valign" center
+       {
+        ScriptParamsClass {
+         Binding_Name "ShortcutText"
+        }
+       }
+      }
+      ImageWidgetClass EditorMenuItemCategoryIcon {
+       visible 0
+       clipchildren 0
+       inheritalpha 1
+       ignorepointer 1
+       position 0 0
+       size 20 25
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       image0 "set:dayz_gui image:arrow_right"
+       imageTexture ""
+       mode blend
+       "src alpha" 1
+       stretch 0
+       filter 1
+       nocache 0
+       pivot 0.5 0.5
       }
      }
-    }
-    ImageWidgetClass EditorMenuItemIcon {
-     visible 0
-     inheritalpha 1
-     ignorepointer 1
-     position 0 0
-     size 25 25
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 1
-     scriptclass "ViewBinding"
-     image0 ""
-     mode blend
-     "src alpha" 1
-     stretch 1
-     filter 1
-     pivot 0.5 0.5
-     {
-      ScriptParamsClass {
-       Binding_Name "IconPath"
-      }
-     }
-    }
-    TextWidgetClass EditorMenuItemShortcut {
-     visible 1
-     inheritalpha 1
-     ignorepointer 1
-     position 25 0
-     size 0.65 1
-     halign right_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     scriptclass "ViewBinding"
-     text "shortcut"
-     font "gui/fonts/Metron14"
-     "exact text" 1
-     "size to text h" 0
-     "text halign" right
-     "text valign" center
-     {
-      ScriptParamsClass {
-       Binding_Name "ShortcutText"
-      }
-     }
-    }
-    ImageWidgetClass EditorMenuItemCategoryIcon {
-     visible 0
-     inheritalpha 1
-     ignorepointer 1
-     position 0 0
-     size 25 25
-     halign right_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     image0 "set:dayz_gui image:icon_arrow"
-     mode blend
-     "src alpha" 1
-     rotation 0 0 -90
     }
    }
    {
