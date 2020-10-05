@@ -9,7 +9,7 @@ static const ref array<string> ExcludedMapItems =
 
 class EditorMapSelectDialog: EditorDialogBase
 {
-	protected ref ListBoxPrefab m_ListBoxPrefab;
+	protected autoptr ListBoxPrefab m_ListBoxPrefab;
 	protected DialogButton m_SelectButton;
 	
 	void EditorMapSelectDialog(string title)
@@ -34,14 +34,10 @@ class EditorMapSelectDialog: EditorDialogBase
 	
 	DialogResult ShowDialog(out string selected_map)
 	{
-		ListBoxPrefab list_box = m_ListBoxPrefab;
-		ListBoxPrefabController controller = m_ListBoxPrefab.GetListBoxPrefabController();
+		ListBoxPrefab list_box = m_ListBoxPrefab; // controller is ref'd inside this
 		DialogResult result = ShowDialog();
-		Print(controller);
-		Print(m_ListBoxPrefab);
-		Print(list_box);
-		selected_map = controller.SelectedListBoxItem;
-		delete controller;
+		selected_map = list_box.GetListBoxPrefabController().SelectedListBoxItem;
+		delete m_ListBoxPrefab;
 		return result;
 	}
 	
