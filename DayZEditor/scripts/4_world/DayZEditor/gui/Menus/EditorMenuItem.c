@@ -16,7 +16,7 @@ class EditorMenuItemCommand: EditorMenuItem
 		m_TemplateController.IconPath = editor_command.GetIcon();
 		m_TemplateController.NotifyPropertyChanged("IconPath");
 		
-		m_TemplateController.ShortcutText = editor_command.GetShortcut();
+		m_TemplateController.ShortcutText = editor_command.GetShortcutString();
 		m_TemplateController.NotifyPropertyChanged("ShortcutText");
 		
 		ViewBinding view_binding = m_TemplateController.GetViewBinding(EditorMenuItemButton);

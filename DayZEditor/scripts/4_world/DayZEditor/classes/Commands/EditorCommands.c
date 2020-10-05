@@ -55,7 +55,15 @@ class EditorCommand: RelayCommand
 		return string.Empty;
 	}
 	
-	string GetShortcut() {
+	private string GetShortcut() {
+		return string.Empty;
+	}
+	
+	string GetShortcutString() {
+		if (GetKeys()) {
+			return GetKeys().GetString();
+		}
+		
 		return string.Empty;
 	}
 	

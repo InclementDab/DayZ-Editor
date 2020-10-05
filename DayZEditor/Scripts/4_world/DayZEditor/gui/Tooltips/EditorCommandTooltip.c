@@ -11,8 +11,8 @@ class EditorCommandTooltip: ScriptViewTemplate<EditorCommandTooltipController>
 	{
 		m_TemplateController.Name = editor_command.GetName();
 		
-		if (editor_command.GetShortcut() != string.Empty) {
-			m_TemplateController.Shortcut = string.Format("(%1)", editor_command.GetShortcut());
+		if (editor_command.GetShortcutString() != string.Empty) {
+			m_TemplateController.Shortcut = string.Format("(%1)", editor_command.GetShortcutString());
 		}
 		
 		m_TemplateController.NotifyPropertyChanged();
