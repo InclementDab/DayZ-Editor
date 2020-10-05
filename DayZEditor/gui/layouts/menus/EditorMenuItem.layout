@@ -26,9 +26,12 @@ FrameWidgetClass EditorMenuItem {
    vexactsize 0
    scriptclass "ViewBinding"
    "no focus" 0
-   "text color" 0.7529 0.3686 0.3255 1
+   text_offset 0 0
+   text_halign left
    {
     PanelWidgetClass EditorMenuItemContent {
+     visible 1
+     clipchildren 1
      inheritalpha 1
      ignorepointer 1
      position 0 0
@@ -39,6 +42,7 @@ FrameWidgetClass EditorMenuItem {
      vexactpos 1
      hexactsize 0
      vexactsize 0
+     style blank
      {
       TextWidgetClass EditorMenuItemLabel {
        visible 1
@@ -53,7 +57,6 @@ FrameWidgetClass EditorMenuItem {
        hexactsize 0
        vexactsize 0
        scriptclass "ViewBinding"
-       text "label"
        font "gui/fonts/Metron16"
        "exact text" 1
        "size to text h" 0
@@ -66,10 +69,10 @@ FrameWidgetClass EditorMenuItem {
       }
       ImageWidgetClass EditorMenuItemIcon {
        visible 0
-       inheritalpha 1
+       inheritalpha 0
        ignorepointer 1
        position 0 0
-       size 25 25
+       size 22 22
        valign center_ref
        hexactpos 1
        vexactpos 1
@@ -91,10 +94,10 @@ FrameWidgetClass EditorMenuItem {
       }
       TextWidgetClass EditorMenuItemShortcut {
        visible 1
-       inheritalpha 1
+       inheritalpha 0
        ignorepointer 1
-       position 25 0
-       size 0.65 1
+       position 0 0
+       size 0.2 1
        halign right_ref
        valign center_ref
        hexactpos 1
@@ -114,29 +117,28 @@ FrameWidgetClass EditorMenuItem {
         }
        }
       }
-      ImageWidgetClass EditorMenuItemCategoryIcon {
-       visible 0
-       clipchildren 0
-       inheritalpha 1
-       ignorepointer 1
-       position 0 0
-       size 20 25
-       halign right_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       image0 "set:dayz_gui image:arrow_right"
-       imageTexture ""
-       mode blend
-       "src alpha" 1
-       stretch 0
-       filter 1
-       nocache 0
-       pivot 0.5 0.5
-      }
      }
+    }
+    ImageWidgetClass EditorMenuItemCategoryIcon {
+     visible 0
+     clipchildren 0
+     inheritalpha 1
+     ignorepointer 1
+     position 0 0
+     size 20 25
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     image0 "set:dayz_gui image:arrow_right"
+     mode blend
+     "src alpha" 1
+     stretch 0
+     filter 1
+     nocache 0
+     pivot 0.5 0.5
     }
    }
    {
