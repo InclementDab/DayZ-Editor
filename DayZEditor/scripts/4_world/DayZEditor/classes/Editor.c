@@ -497,7 +497,7 @@ class Editor
 
 	}	
 	
-	void CreateInHand(ref EditorPlaceableListItem data)
+	void CreateInHand(EditorPlaceableItem item)
 	{
 		EditorLog.Trace("Editor::CreateInHand");
 		
@@ -506,9 +506,9 @@ class Editor
 			SetBrush(null);
 		
 		ClearSelection();
-		ObjectInHand = new EditorHologram(data.Type, CurrentMousePosition);
+		ObjectInHand = new EditorHologram(item.Type, CurrentMousePosition);
 		
-		EditorEvents.StartPlacing(this, data);		
+		EditorEvents.StartPlacing(this, item);		
 	}	
 		
 		

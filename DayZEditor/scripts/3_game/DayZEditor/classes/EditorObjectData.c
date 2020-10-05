@@ -67,7 +67,7 @@ class EditorObjectData
 		data.Transform = transform; 
 		data.Flags = flags;
 		data.DisplayName = data.Type;
-		data.ObjectMod = GetModFromObject(data.Type);
+		//data.ObjectMod = GetModFromObject(data.Type); todo refactor.
 		
 
 		if (lowest_id == 0) lowest_id = 200000;
@@ -87,7 +87,7 @@ class EditorObjectData
 		target.GetTransform(data.Transform); 
 		data.Flags = flags;
 		data.DisplayName = data.Type;
-		data.ObjectMod = GetModFromObject(data.Type);
+		//data.ObjectMod = GetModFromObject(data.Type);
 		data.m_Id = target.GetID();	
 		
 		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));

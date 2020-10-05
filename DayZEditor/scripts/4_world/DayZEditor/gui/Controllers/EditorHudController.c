@@ -86,8 +86,6 @@ class EditorHudController: EditorControllerBase
 	{ 
 		TStringArray paths = new TStringArray;
 		paths.Insert(CFG_VEHICLESPATH);
-		paths.Insert(CFG_WEAPONSPATH);
-		paths.Insert(CFG_MAGAZINESPATH);
 		
 		foreach (string config_path: paths) {
 			
@@ -98,8 +96,11 @@ class EditorHudController: EditorControllerBase
 				GetWorkbenchGame().ConfigGetFullPath(config_path + " " + class_name, full_path);
 				
 				if (full_path.Find("HouseNoDestruct") != -1) {
-					EditorPlaceableListItem item = new EditorPlaceableListItem(null, class_name, config_path);
-					LeftbarSpacerData.Insert(item);
+					EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(class_name);
+					if (placeable_item) {
+						EditorPlaceableListItem item = new EditorPlaceableListItem(placeable_item);
+						LeftbarSpacerData.Insert(item);
+					}
 					
 				} else {
 					EditorLog.Trace("Not including Base " + full_path.ToString()); //find what isnt loading here
@@ -123,7 +124,7 @@ class EditorHudController: EditorControllerBase
 				
 				for (int j = 0; j < LeftbarSpacerData.Count(); j++) {
 					EditorPlaceableListItem placeable_item = LeftbarSpacerData[j];
-					placeable_item.GetLayoutRoot().Show(placeable_item.FilterType(SearchBarData));
+					//placeable_item.GetLayoutRoot().Show(placeable_item.FilterType(SearchBarData)); todo refactor
 				}
 				
 				LeftbarScroll.HScrollToPos(0);
@@ -134,7 +135,7 @@ class EditorHudController: EditorControllerBase
 			case "VehicleSelectData": 
 			case "HumanSelectData": 
 			case "EntitySelectData": {
-				
+				/*
 				TStringArray select_data = {"BuildingSelectData", "VehicleSelectData", "EntitySelectData", "HumanSelectData"};
 				
 				// Radio Button esque
@@ -155,7 +156,7 @@ class EditorHudController: EditorControllerBase
 						list_item.GetLayoutRoot().Show(list_item.GetCategory() == select_data.Find(property_name));
 					}
 				}
-				
+				*/
 				break;
 			}
 		}

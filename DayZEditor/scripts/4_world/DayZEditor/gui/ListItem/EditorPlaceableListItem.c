@@ -1,44 +1,161 @@
 
-typedef ref array<ref EditorPlaceableListItem> EditorPlaceableListItemSet;
+enum EditorPlaceableItemCategory {
+	BUILDING = 0,
+	VEHICLE = 1,
+	ENTITY = 2,
+	HUMAN = 3, 
+	UNKNOWN = -1
+};
+
+class EditorPlaceableItem
+{
+	static const map<string, EditorPlaceableItemCategory> LOADED_TYPES = GetTypes();
+	static const array<ref ModStructure> LOADED_MODS = ModLoader.GetMods();
+	
+	string Type;
+	string Icon;
+	string ModelName;
+	TStringArray Path;
+	
+	ModStructure Mod;
+	EditorPlaceableItemCategory Category;
+	
+	protected Object m_Object;
+	
+	private void EditorPlaceableItem(string type)
+	{
+		Type = type;				
+		
+		m_Object = GetGame().CreateObjectEx(Type, vector.Zero, ECE_NONE);
+
+		if (!IsValidObject(m_Object)) {
+			delete this;
+		}
+		
+		m_Object.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, false);	
+		
+		
+		//GetGame().ConfigGetObjectFullPath(m_Object, Path);
+		
+		//Mod = LoadModData(Type, CfgPath);
+		//Category = LoadItemCategory();
+		
+		if (Category == EditorPlaceableItemCategory.UNKNOWN) {
+			EditorLog.Warning(string.Format("%1 has no category!", Type));
+		}
+	}
+	
+	// CAN RETURN NULL
+	static EditorPlaceableItem Create(string type)
+	{
+		return new EditorPlaceableItem(type);
+	}
+	
+	// If model volume is 0, return false
+	private static bool IsValidObject(Object target)
+	{
+		vector size[2];		
+		target.ClippingInfo(size);
+		return (Math.AbsFloat(size[0][0]) + Math.AbsFloat(size[1][0]) + Math.AbsFloat(size[0][1]) + Math.AbsFloat(size[1][1]) + Math.AbsFloat(size[0][2]) + Math.AbsFloat(size[1][2]) > 0);
+	}
+	
+	private ModStructure LoadModData(string type, string cfg_path)
+	{
+		string model_path = GetGame().ConfigGetTextOut("CfgVehicles " + type + " model");
+		if (model_path == "UNKNOWN_P3D_FILE") {
+			EditorLog.Debug("Not loading mod data for %1", type);
+			return null;
+		}
+	
+		foreach (ModStructure mod: LOADED_MODS) {
+			string dir;
+			GetGame().ConfigGetText(string.Format("%1 dir", mod.GetModPath()), dir);
+			Print(string.Format("%1 dir", mod.GetModPath()));
+			dir.ToLower(); 
+			model_path.ToLower();
+			
+			if (model_path.Contains(dir))
+				return mod;
+		}
+		
+		return null;
+	}
+	
+	
+	private EditorPlaceableItemCategory LoadItemCategory(string type, string cfg_path)
+	{
+		TStringArray path_array = {};
+		GetGame().ConfigGetFullPath(string.Format("%1 %2", cfg_path, type), path_array);	
+		/*
+		foreach (string base: path_array) {
+			base.ToLower();
+			if (current_type.Find(base) + 1) {
+				m_Category = i;	
+
+			}
+		}*/
+	
+		
+		return -1;
+	}
+	
+	
+	static map<string, EditorPlaceableItemCategory> GetTypes()
+	{
+		map<string, EditorPlaceableItemCategory> types_map = new map<string, EditorPlaceableItemCategory>();
+		
+		types_map.Insert("house", 				EditorPlaceableItemCategory.BUILDING);
+		types_map.Insert("transport", 			EditorPlaceableItemCategory.VEHICLE);
+		types_map.Insert("inventory_base", 		EditorPlaceableItemCategory.ENTITY);
+		types_map.Insert("edible_base", 		EditorPlaceableItemCategory.ENTITY);
+		types_map.Insert("clothing_base", 		EditorPlaceableItemCategory.ENTITY);
+		types_map.Insert("weapon_base", 		EditorPlaceableItemCategory.ENTITY);
+		types_map.Insert("dz_lightai", 			EditorPlaceableItemCategory.HUMAN);
+		types_map.Insert("survivorbase", 		EditorPlaceableItemCategory.HUMAN);
+		
+		return types_map;
+	}
+	
+	// todo refactor
+	static string GetIconFromMod(ref ModStructure m_ModInfo)
+	{
+		EditorLog.Trace("GetIconFromMod");
+		if (m_ModInfo != null) {
+			string logo = m_ModInfo.GetModLogo();
+			if (logo == string.Empty)
+				logo = m_ModInfo.GetModLogoSmall();
+			if (logo == string.Empty)
+				logo = m_ModInfo.GetModLogoOver();
+			if (logo == string.Empty)
+				logo = m_ModInfo.GetModActionURL();
+			if (logo != string.Empty)
+				return logo;	
+		}
+		// default
+		return "DayZEditor/gui/images/dayz_editor_icon_black.edds";
+	}
+}
 
 class EditorPlaceableListItem: EditorListItem
 {
-	string Type, Path, Base;
+	protected ref EditorPlaceableItem m_PlaceableItem;
 	
-	protected ModStructure m_ModStructure;
-	protected PlaceableObjectCategory m_Category = PlaceableObjectCategory.UNKNOWN;
+	void EditorPlaceableListItem(EditorPlaceableItem placeable_item)
+	{
+		m_PlaceableItem = placeable_item;
+		
+		m_TemplateController.ListItemLabel = placeable_item.Type;
+		m_TemplateController.NotifyPropertyChanged("ListItemLabel");
+	}
+}
+
+/*
+class EditorPlaceableListItem: EditorListItem
+{
 	
 	void EditorPlaceableListItem(Widget parent, string type, string path)
 	{
 		EditorLog.Trace("EditorPlaceableListItem");
-		Type = type; Path = path;
-		
-		// probably really slow
-		m_ModStructure = GetModFromObject(Type);
-		
-		TStringArray path_array = new TStringArray();
-		GetGame().ConfigGetFullPath(Path + " " + Type, path_array);
-		int i = 0;
-		
-		if (EditorSettings.AllTypes) {
-			foreach (TStringArray current_type: EditorSettings.AllTypes) {
-				foreach (string base: path_array) {
-					base.ToLower();
-					if (current_type.Find(base) + 1) {
-						Base = base;
-						m_Category = i;	
-						break;
-					}
-				}
-				i++;
-			}
-		}
-		
-		
-		if (m_Category == -1) {
-			EditorLog.Warning(string.Format("%1 has no category!", Type));
-		}
-		
 		
 		m_TemplateController.ListItemLabel = Type;
 		m_TemplateController.NotifyPropertyChanged("ListItemLabel");
@@ -73,9 +190,6 @@ class EditorPlaceableListItem: EditorListItem
 		
 		return type_lower.Contains(filter);
 	}
-	
-	PlaceableObjectCategory GetCategory() { return m_Category; }
-	ModStructure GetModStructure() { return m_ModStructure; }
 
 	void StartPlacing(Class context, EditorPlaceableListItem type)
 	{
@@ -97,6 +211,7 @@ class EditorPlaceableListItem: EditorListItem
 		if (!GetEditor().IsPlacing()) {
 			GetEditor().CreateInHand(this);
 		}
+		
 		return true;
 	}
 	
@@ -107,6 +222,7 @@ class EditorPlaceableListItem: EditorListItem
 		if (GetEditor().IsPlacing()) {
 			GetEditor().CommandManager.PlaceObjectCommand.Execute(this, null);
 		}
+		
 		return true;
 	}
 	

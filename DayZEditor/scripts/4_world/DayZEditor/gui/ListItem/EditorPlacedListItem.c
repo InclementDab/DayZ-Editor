@@ -1,4 +1,5 @@
 
+// on refactor, editor object in constructor
 class EditorPlacedListItem: EditorListItem
 {
 	protected EditorObject m_EditorObject;
@@ -14,8 +15,8 @@ class EditorPlacedListItem: EditorListItem
 		m_TemplateController.ListItemLabel = m_EditorObject.GetDisplayName();
 		m_TemplateController.NotifyPropertyChanged("ListItemLabel");
 		
-		m_TemplateController.ListItemIcon = GetIconFromMod(m_EditorObject.GetData().ObjectMod);
-		m_TemplateController.NotifyPropertyChanged("ListItemIcon");
+		//m_TemplateController.ListItemIcon = GetIconFromMod(m_EditorObject.GetData().ObjectMod);
+		//m_TemplateController.NotifyPropertyChanged("ListItemIcon");
 				
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	

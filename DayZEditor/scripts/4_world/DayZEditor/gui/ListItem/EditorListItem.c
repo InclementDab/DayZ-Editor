@@ -12,13 +12,7 @@ class EditorListItemController: Controller
 class EditorListItem: ScriptViewTemplate<EditorListItemController>
 {
 	protected Widget EditorListItemContent;
-	
-	bool ListItemExecute(ButtonCommandArgs args)
-	{
-		Print("WEEEEEEE");
-		return true;
-	}	
-	
+		
 	void Select() 
 	{
 		EditorListItemContent.SetColor(LIST_ITEM_COLOR_ON_SELECTED);

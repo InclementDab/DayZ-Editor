@@ -35,7 +35,7 @@ class EditorEvents
 	
 	// Called AFTER Editor starts placing
 	static ref ScriptInvoker OnStartPlacing = new ScriptInvoker();
-	static void StartPlacing(Class context, EditorPlaceableListItem target)
+	static void StartPlacing(Class context, EditorPlaceableItem target)
 	{
 		EditorLog.Trace("EditorEvents::StartPlacing");
 		OnStartPlacing.Invoke(context, target);

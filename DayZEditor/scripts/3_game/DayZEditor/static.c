@@ -111,45 +111,6 @@ static string CreateEditorMission(string map_name = "ChernarusPlus")
 	return mission;
 }
 
-static ref ModStructure GetModFromObject(string object_name)
-{
-	EditorLog.Trace("GetModFromObject");
-	ref array<ref ModStructure> mods = ModLoader.GetMods();
-	string model_path = GetGame().ConfigGetTextOut("CfgVehicles " + object_name + " model");
-	if (model_path == "UNKNOWN_P3D_FILE") return null;
-
-	
-	foreach (ModStructure mod: mods) {
-		string dir;
-		string path = mod.GetModPath();
-		GetGame().ConfigGetText(string.Format("%1 dir", path), dir);
-		dir.ToLower(); model_path.ToLower();
-		if (model_path.Contains(dir))
-			return mod;
-		
-	}
-	
-	return null;
-}
-
-static string GetIconFromMod(ref ModStructure m_ModInfo)
-{
-	EditorLog.Trace("GetIconFromMod");
-	if (m_ModInfo != null) {
-		string logo = m_ModInfo.GetModLogo();
-		if (logo == string.Empty)
-			logo = m_ModInfo.GetModLogoSmall();
-		if (logo == string.Empty)
-			logo = m_ModInfo.GetModLogoOver();
-		if (logo == string.Empty)
-			logo = m_ModInfo.GetModActionURL();
-		if (logo != string.Empty)
-			return logo;	
-	}
-	// default
-	return "DayZEditor/gui/images/dayz_editor_icon_black.edds";
-}
-
 static void RecursiveGetParent(out ref Widget w, string name)
 {
 	if (w.GetName() == name) 
