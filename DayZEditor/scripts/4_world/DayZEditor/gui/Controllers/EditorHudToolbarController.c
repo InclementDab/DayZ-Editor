@@ -30,7 +30,7 @@ class EditorHudToolbarController: EditorControllerBase
 	{
 		super.OnWidgetScriptInit(w);
 		
-		BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>("BrushTypeBoxData", this);
+		BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>(this);
 
 		if (!m_Editor) {
 			m_Editor = GetEditor();

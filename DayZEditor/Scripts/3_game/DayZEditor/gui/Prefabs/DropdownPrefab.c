@@ -23,7 +23,7 @@ class DropdownElementPrefab: ScriptViewTemplate<DropdownElementPrefabController>
 
 class DropdownListPrefabController: PrefabBaseController<DropdownElementPrefab>
 {
-	ref ObservableCollection<ref DropdownElementPrefab> DropdownElementList = new ObservableCollection<ref DropdownElementPrefab>("DropdownElementList", this);
+	ref ObservableCollection<ref DropdownElementPrefab> DropdownElementList = new ObservableCollection<ref DropdownElementPrefab>(this);
 	
 	void ~DropdownListPrefabController()
 	{

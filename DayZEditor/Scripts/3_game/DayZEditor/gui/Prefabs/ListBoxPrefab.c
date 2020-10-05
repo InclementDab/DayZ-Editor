@@ -1,7 +1,7 @@
 
 class ListBoxPrefabController: Controller
 {
-	autoptr ObservableCollection<string> ListBoxData = new ObservableCollection<string>("ListBoxData", this);
+	autoptr ObservableCollection<string> ListBoxData = new ObservableCollection<string>(this);
 	string SelectedListBoxItem;
 	
 	override void PropertyChanged(string property_name)

@@ -1,13 +1,44 @@
 
 
+class EditorListItemController: Controller
+{
+	string ListItemLabel;
+	string ListItemIcon;
+
+	ref ObservableCollection<ref EditorListItem> ChildListItems = new ObservableCollection<ref EditorListItem>(this);
+}
+
 
 class EditorListItem: ScriptViewTemplate<EditorListItemController>
 {
+	protected Widget EditorListItemContent;
+	
+	bool ListItemExecute(ButtonCommandArgs args)
+	{
+		Print("WEEEEEEE");
+		return true;
+	}	
+	
+	void Select() 
+	{
+		EditorListItemContent.SetColor(LIST_ITEM_COLOR_ON_SELECTED);
+	}
+	
+	void Deselect() 
+	{	
+		EditorListItemContent.SetColor(LIST_ITEM_COLOR_ON_DESELECTED);
+	}
+	
+	override string GetLayoutFile() {
+		return "DayZEditor/gui/Layouts/items/EditorListItem.layout";
+	}
+}
+
+
+/*
+class EditorListItem: ScriptViewTemplate<EditorListItemController>
+{
 	protected int m_NestIndex;
-		
-	static int COLOR_ON_SELECTED = COLOR_BLUE;
-	static int COLOR_ON_DESELECTED = ARGB(140,5,5,5);
-	static int COLOR_ON_HOVER = COLOR_SALMON;
 	
 	protected Widget EditorListItemButtonFrame;
 	protected Widget EditorListItemContent;
@@ -104,10 +135,7 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/items/EditorListItem.layout";
 	}
-/*
-	override typename GetControllerType() {
-		return EditorListItemController;
-	}*/
+
 	
 	protected EditorListItem GetListItemFromWidget(Widget w)
 	{
@@ -116,3 +144,59 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 		return target_item;
 	}
 }
+
+	override bool OnDropReceived(Widget w, int x, int y, Widget reciever)
+	{
+		if (reciever == m_ListItem.EditorListItemButton && m_ListItem.Type() == EditorCollapsibleListItem) {
+			ScriptedViewBase scripted_view;
+			w.GetScript(scripted_view);
+			ScriptedViewBase.FindScriptedRoot(scripted_view);
+			
+			reciever = m_ListItem.EditorListItemChildren;
+			ViewBinding view_binding;
+			reciever.GetScript(view_binding);
+			
+			if (view_binding) {
+				
+				// Checks for the child-in-parent deal
+				if (!RecursiveCheckChildren(m_ListItem, ChildListItems)) {
+					view_binding.OnDropReceived(w, x, y, reciever);
+				}
+				return true;
+			}
+		}
+				
+		return false;
+	}
+	
+	private bool RecursiveCheckChildren(EditorListItem target, out ObservableCollection<ref EditorListItem> check_list)
+	{	
+		Print(check_list.Count());
+		for (int i = 0; i < check_list.Count(); i++) {
+			Print(check_list[i]);
+			/*if (check_list[i] == target) {
+				return true;
+			}
+			
+			if (check_list[i].Type() == EditorCollapsibleListItem) {
+				if (RecursiveCheckChildren(target, check_list[i].GetListItemController().ChildListItems)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+
+	private bool AllChildrenSelected()
+	{
+		for (int i = 0; i < ChildListItems.Count(); i++) {
+			EditorListItem list_item = EditorListItem.Cast(ChildListItems[i]);
+			if (!list_item.IsSelected()) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+*/

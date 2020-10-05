@@ -1,152 +1,118 @@
-WrapSpacerWidgetClass EditorListItem {
+ButtonWidgetClass EditorListItem {
  visible 1
  clipchildren 0
- ignorepointer 1
+ ignorepointer 0
  color 0.0196 0.0196 0.0196 0
  size 1 22
- halign right_ref
  hexactpos 1
  vexactpos 1
  hexactsize 0
  vexactsize 1
- draggable 0
- scriptclass ""
- Padding 0
- Margin 0
- "Size To Content V" 1
- content_halign right
+ draggable 1
+ scriptclass "ViewBinding"
+ style Default
  {
-  FrameWidgetClass EditorListItemButtonFrame {
+  PanelWidgetClass EditorListItemContent {
    ignorepointer 1
-   position 0 0
+   color 0.0196 0.0196 0.0196 0.549
    size 1 1
+   halign center_ref
+   valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 0
+   style rover_sim_colorable
    {
-    ButtonWidgetClass EditorListItemButton {
+    TextWidgetClass EditorListItemLabel {
+     visible 1
+     disabled 0
      clipchildren 0
-     color 1 1 1 0
-     size 1 22
-     hexactpos 1
-     vexactpos 1
+     ignorepointer 1
+     position 0 0
+     size 1 0.85
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
      hexactsize 0
-     vexactsize 1
-     draggable 1
+     vexactsize 0
+     draggable 0
      scriptclass "ViewBinding"
-     "no focus" 1
-     {
-      PanelWidgetClass EditorListItemContent {
-       ignorepointer 1
-       color 0.0196 0.0196 0.0196 0.549
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       style rover_sim_colorable
-       {
-        TextWidgetClass EditorListItemLabel {
-         visible 1
-         disabled 0
-         clipchildren 0
-         ignorepointer 1
-         position 0 0
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         draggable 0
-         scriptclass "ViewBinding"
-         style Normal
-         text "CATEGORY"
-         font "gui/fonts/metron14"
-         "exact text" 0
-         "size to text h" 1
-         "size to text v" 0
-         "text halign" center
-         "text valign" center
-         {
-          ScriptParamsClass {
-           Binding_Name "ListItemLabel"
-          }
-         }
-        }
-        ImageWidgetClass EditorListItemIcon {
-         ignorepointer 1
-         color 0.8627 0.8627 0.8627 1
-         position 0.03 0
-         size 18 18
-         halign right_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         mode blend
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         "flip v" 0
-         {
-          ScriptParamsClass {
-           Binding_Name "ListItemIcon"
-          }
-         }
-        }
-        ButtonWidgetClass EditorListItemVisible {
-         ignorepointer 0
-         position 0.03 0
-         size 18 18
-         halign right_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style Empty
-         "no focus" 1
-         {
-          ScriptParamsClass {
-           Relay_Command "ListItemVisibleExecute"
-          }
-         }
-        }
-        ButtonWidgetClass EditorListItemCollapse {
-         visible 0
-         position 0.03 0
-         size 26 26
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style Empty
-         "no focus" 1
-         text "V"
-         font "gui/fonts/metron-bold"
-         switch toggle
-         {
-          ScriptParamsClass {
-           Relay_Command "ListItemCollapseExecute"
-          }
-         }
-        }
-       }
-      }
-     }
+     style Normal
+     text "CATEGORY"
+     font "gui/fonts/sdf_MetronBook24"
+     "exact text" 0
+     "size to text h" 1
+     "size to text v" 0
+     "text halign" center
+     "text valign" center
      {
       ScriptParamsClass {
-       Relay_Command "ListItemExecute"
+       Binding_Name "ListItemLabel"
+      }
+     }
+    }
+    ImageWidgetClass EditorListItemIcon {
+     ignorepointer 1
+     color 0.8627 0.8627 0.8627 1
+     position 0.03 0
+     size 18 18
+     halign right_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     mode blend
+     "src alpha" 1
+     "no wrap" 1
+     stretch 1
+     "flip v" 0
+     {
+      ScriptParamsClass {
+       Binding_Name "ListItemIcon"
+      }
+     }
+    }
+    ButtonWidgetClass EditorListItemVisible {
+     ignorepointer 0
+     position 0.03 0
+     size 18 18
+     halign right_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     style Empty
+     "no focus" 1
+     {
+      ScriptParamsClass {
+       Relay_Command "ListItemVisibleExecute"
+      }
+     }
+    }
+    ButtonWidgetClass EditorListItemCollapse {
+     visible 0
+     position 0.03 0
+     size 26 26
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     style Empty
+     "no focus" 1
+     text "V"
+     font "gui/fonts/metron-bold"
+     switch toggle
+     {
+      ScriptParamsClass {
+       Relay_Command "ListItemCollapseExecute"
       }
      }
     }
@@ -176,6 +142,11 @@ WrapSpacerWidgetClass EditorListItem {
      Two_Way_Binding 1
     }
    }
+  }
+ }
+ {
+  ScriptParamsClass {
+   Relay_Command "ListItemExecute"
   }
  }
 }

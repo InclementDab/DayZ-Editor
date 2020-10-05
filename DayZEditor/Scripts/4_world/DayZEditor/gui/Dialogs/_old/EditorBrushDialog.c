@@ -18,7 +18,7 @@ class EditorBrushDialogController: Controller
 		BrushName = m_BrushData.Name;
 		BrushObjectArray = m_BrushData.PlaceableObjectTypes;
 		
-		BrushObjects = new ObservableCollection<ref EditorBrushObject>("BrushObjects", this);
+		BrushObjects = new ObservableCollection<ref EditorBrushObject>(this);
 	}
 	
 	override void PropertyChanged(string property_name)

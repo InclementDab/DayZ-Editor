@@ -6,7 +6,7 @@ class GroupPrefab: PrefabBase<ObservableCollection<ref ScriptedViewBase>>
 	
 	void GroupPrefab(string caption, Controller binding_context, string binding_name, ObservableCollection<ref ScriptedViewBase> default_value = DEFAULT_VALUE)
 	{
-		collection_ref = new ObservableCollection<ref ScriptedViewBase>("Value", m_PrefabBaseController);
+		collection_ref = new ObservableCollection<ref ScriptedViewBase>(m_PrefabBaseController);
 		m_PrefabBaseController.Value = collection_ref;
 	}
 	

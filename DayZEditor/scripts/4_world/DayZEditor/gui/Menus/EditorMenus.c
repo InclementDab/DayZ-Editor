@@ -2,7 +2,7 @@
 
 class EditorMenuController: Controller
 {
-	ref ObservableCollection<ref EditorMenuItem> MenuItems = new ObservableCollection<ref EditorMenuItem>("MenuItems", this);
+	ref ObservableCollection<ref EditorMenuItem> MenuItems = new ObservableCollection<ref EditorMenuItem>(this);
 	
 	void ~EditorMenuController()
 	{

@@ -6,6 +6,10 @@ static const int DRAG_BOX_THRESHOLD = 15;
 static const int DRAG_BOX_THICKNESS = 2;
 static const int DRAG_BOX_COLOR = ARGB(100, 255, 0, 0);
 
+static const int LIST_ITEM_COLOR_ON_SELECTED = COLOR_BLUE;
+static const int LIST_ITEM_COLOR_ON_DESELECTED = ARGB(140,5,5,5);
+static const int LIST_ITEM_COLOR_ON_HOVER = COLOR_SALMON;
+
 
 static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
 {
