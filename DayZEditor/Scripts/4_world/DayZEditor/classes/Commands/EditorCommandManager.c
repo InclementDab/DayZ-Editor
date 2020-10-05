@@ -45,6 +45,11 @@ class EditorCommandManager
 	ref EditorShowCommand ShowCommand;
 	ref EditorHideCommand HideCommand;
 	
+	
+	ref EditorExportToInitFile ExportToInitFile;
+	ref EditorExportToExpansion ExportToExpansion;
+	ref EditorExportToTerrainBuilder ExportToTerrainBuilder;
+	
 	void EditorCommandManager()
 	{			
 		for (int i = 0; i < Type().GetVariableCount(); i++) {

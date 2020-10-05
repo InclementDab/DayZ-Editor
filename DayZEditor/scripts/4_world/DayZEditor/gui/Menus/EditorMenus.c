@@ -78,6 +78,8 @@ class EditorFileMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager.SaveAsCommand);
 		AddMenuButton(m_Editor.CommandManager.CloseCommand);
 		AddMenuDivider();
+		AddMenuCategory("Export", EditorExportMenu);
+		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager.ExitCommand);
 	}
 }
@@ -105,6 +107,9 @@ class EditorExportMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorExportMenu");
 		
+		AddMenuButton(m_Editor.CommandManager.ExportToInitFile);
+		AddMenuButton(m_Editor.CommandManager.ExportToExpansion);
+		AddMenuButton(m_Editor.CommandManager.ExportToTerrainBuilder);
 	}
 }
 
