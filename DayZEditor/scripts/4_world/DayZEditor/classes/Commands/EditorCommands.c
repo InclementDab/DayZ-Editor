@@ -781,10 +781,39 @@ class EditorEscapeCommand: EditorCommand
 	}
 }
 
-class EditorHideCommand: EditorCommand
+class EditorShowCommand: EditorCommand
 {
+	override void Call(Class sender, CommandArgs args)
+	{
+		EditorObjectSet selected_objects = m_Editor.GetSelectedObjects();
+		foreach (EditorObject selected_object: selected_objects) {		
+			
+			selected_object.GetWorldObject().SetFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
+		}
+	}
+	
 	override ShortcutKeys GetShortcut() {
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_H };
+	}
+	
+	override string GetName() {
+		return "Show";
+	}
+}
+
+class EditorHideCommand: EditorCommand
+{
+	override void Call(Class sender, CommandArgs args)
+	{
+		EditorObjectSet selected_objects = m_Editor.GetSelectedObjects();
+		foreach (EditorObject selected_object: selected_objects) {
+			
+			selected_object.GetWorldObject().ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
+		}
+	}
+	
+	override ShortcutKeys GetShortcut() {
+		return { KeyCode.KC_H };
 	}
 	
 	override string GetName() {

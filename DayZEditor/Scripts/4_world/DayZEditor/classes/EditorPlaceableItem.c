@@ -27,8 +27,6 @@ class EditorPlaceableItem
 	ModStructure Mod;
 	EditorPlaceableItemCategory Category;
 	
-	protected Object m_Object;
-	
 	private void EditorPlaceableItem(string path, string type)
 	{
 		EditorLog.Trace("EditorPlaceableItem");
@@ -42,24 +40,16 @@ class EditorPlaceableItem
 	{
 		EditorLog.Trace("EditorPlaceableItem::Init");
 		
-		
 		// No .p3d was specified
 		if (Model == string.Empty || Model.Length() <= 4) {
 			delete this;
 		}
-		
-		//m_Object = GetGame().CreateObjectEx(Type, vector.Zero, ECE_NONE);
-		//m_Object.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, false);
 	}
 	
 	void ~EditorPlaceableItem()
 	{
 		EditorLog.Trace("~EditorPlaceableItem");
 		delete FullPath;
-		
-		if (m_Object) {
-			GetGame().ObjectDelete(m_Object);
-		}
 	}
 	
 	// CAN RETURN NULL
