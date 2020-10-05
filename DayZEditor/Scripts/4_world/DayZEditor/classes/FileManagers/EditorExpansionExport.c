@@ -15,6 +15,10 @@ static FileDialogResult ExportExpansionData(EditorObjectDataSet data, string fil
 		FPrintln(handle, line);
 	}
 	
+	if (handle) {
+		CloseFile(handle);
+	}
+	
 	return FileDialogResult.SUCCESS;
 }
 
@@ -39,7 +43,9 @@ class ExpansionImportData
 			data.InsertEditorData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
 		}
 		
-		CloseFile(handler);
+		if (handler) {
+			CloseFile(handler);
+		}
 	}
 	
     private static bool GetObjectFromFile(FileHandle file, out string name, out vector position, out vector rotation, out string special = "false")

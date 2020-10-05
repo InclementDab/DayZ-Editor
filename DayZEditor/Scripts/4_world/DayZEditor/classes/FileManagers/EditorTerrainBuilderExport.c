@@ -19,5 +19,8 @@ static FileDialogResult ExportTBData(ref EditorObjectDataSet data, string filena
 		FPrintln(handle, line);
 	}
 	
+	if (handle) {
+		CloseFile(handle);
+	}
 	return FileDialogResult.SUCCESS;
 }

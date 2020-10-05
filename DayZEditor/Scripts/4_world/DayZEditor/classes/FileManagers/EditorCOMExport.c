@@ -23,5 +23,8 @@ static FileDialogResult ExportCOMData(EditorObjectDataSet data, string filename)
 		FPrintln(handle, line);
 	}
 	
+	if (handle) {
+		CloseFile(handle);
+	}
 	return FileDialogResult.SUCCESS;
 }
