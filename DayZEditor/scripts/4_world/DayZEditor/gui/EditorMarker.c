@@ -125,6 +125,25 @@ class EditorObjectMarker: EditorMarker
 				camera.SetPosition(pos);
 				return true;
 			}
+			
+			case MouseState.RIGHT: {
+				
+				if (!m_EditorObject.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
+					m_Editor.ClearSelection();
+				}
+				
+				m_Editor.SelectObject(m_EditorObject);
+				
+				if (EditorUIManager.CurrentMenu) {
+					delete EditorUIManager.CurrentMenu;
+				}
+				
+				EditorPlacedContextMenu context_menu = new EditorPlacedContextMenu(x, y);
+				
+				EditorUIManager.CurrentMenu = context_menu;
+				
+				return true;
+			}
 		}
 		
 		return super.OnMouseButtonDown(w, x, y, button);

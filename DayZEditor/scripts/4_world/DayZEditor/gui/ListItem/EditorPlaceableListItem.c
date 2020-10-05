@@ -36,10 +36,9 @@ class EditorPlaceableListItem: EditorListItem
 			}
 			
 			case 1: {
-				EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu();
 				int x, y;
 				GetMousePos(x, y);
-				placeable_context.SetPosition(x, y);
+				EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu(x, y);
 				EditorUIManager.CurrentMenu = placeable_context;
 				break;
 			}	

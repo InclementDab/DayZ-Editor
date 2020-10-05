@@ -72,10 +72,9 @@ class EditorPlacedListItem: EditorListItem
 			} 
 			
 			case 1: {
-				EditorContextMenu context_menu = new EditorContextMenu();
 				int x, y;
 				GetMousePos(x, y);
-				context_menu.SetPosition(x, y);
+				EditorPlacedContextMenu context_menu = new EditorPlacedContextMenu(x, y);
 				break;
 			}
 		}

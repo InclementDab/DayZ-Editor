@@ -106,9 +106,29 @@ class EditorViewMenu: EditorMenu
 
 class EditorContextMenu: EditorMenu
 {
-	void EditorContextMenu() 
+	
+	void EditorContextMenu(float x, float y)
 	{
-		EditorLog.Trace("EditorContextMenu");
+		m_Editor.GetCamera().MoveEnabled = false;
+		m_Editor.GetCamera().LookEnabled = false;
+		m_EditorHud.ShowCursor(true);
+		
+		m_LayoutRoot.SetPos(x, y);
+	}
+	
+	void ~EditorContextMenu()
+	{
+		m_Editor.GetCamera().MoveEnabled = true;
+		m_Editor.GetCamera().LookEnabled = true;
+		m_EditorHud.ShowCursor(true);
+	}
+}
+
+class EditorPlacedContextMenu: EditorContextMenu
+{
+	void EditorPlacedContextMenu(float x, float y) 
+	{
+		EditorLog.Trace("EditorPlacedContextMenu");
 		AddMenuButton(m_Editor.CommandManager.CutCommand);
 		AddMenuButton(m_Editor.CommandManager.CopyCommand);
 		AddMenuButton(m_Editor.CommandManager.PasteCommand);
@@ -122,9 +142,9 @@ class EditorContextMenu: EditorMenu
 	}
 }
 
-class EditorPlaceableContextMenu: EditorMenu
+class EditorPlaceableContextMenu: EditorContextMenu
 {
-	void EditorPlaceableContextMenu()
+	void EditorPlaceableContextMenu(float x, float y)
 	{
 		AddMenuButton(m_Editor.CommandManager.LootEditorCommand);
 	}

@@ -368,7 +368,7 @@ class EditorCutCommand: EditorCommand
 	} 
 	
 	override string GetIcon() {
-		return "set:dayz_editor_gui image:cut_icon";
+		return "set:dayz_editor_gui image:cut";
 	}
 	
 	override ShortcutKeys GetShortcut() {
@@ -388,7 +388,7 @@ class EditorCopyCommand: EditorCommand
 	}
 	
 	override string GetIcon() {
-		return "set:dayz_editor_gui image:copy_icon";
+		return "set:dayz_editor_gui image:copy";
 	}
 	
 	override ShortcutKeys GetShortcut() {
@@ -408,7 +408,7 @@ class EditorPasteCommand: EditorCommand
 	}
 	
 	override string GetIcon() {
-		return "set:dayz_editor_gui image:paste_icon";
+		return "set:dayz_editor_gui image:paste";
 	}
 	
 	override ShortcutKeys GetShortcut() {
