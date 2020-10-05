@@ -1,0 +1,29 @@
+FrameWidgetClass EditorLoadingScreen {
+ position 0 0
+ size 1 1
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ {
+  ImageWidgetClass Background {
+   ignorepointer 1
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   imageTexture "{2B968FF9A2B0C94E}DayZEditor/GUI/images/dayz_editor_splash1.edds"
+   mode blend
+   "src alpha" 1
+   "no wrap" 0
+   Mask ""
+   "Transition width" 0
+  }
+ }
+}

@@ -1,24 +1,29 @@
 modded class LoadingScreen
 {
-	private Timer m_Timer;
+	protected Widget m_EditorLogo;
+	
 	void LoadingScreen(DayZGame game)
 	{
 		m_ImageLogoMid.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
 		m_ImageLogoMid.SetImage(0);
-		m_ImageLogoMid.SetFlags(m_ImageLogoMid.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
+		m_ImageLogoMid.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		m_ImageLogoCorner.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
 		m_ImageLogoCorner.SetImage(0);
-		m_ImageLogoCorner.SetFlags(m_ImageLogoCorner.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
-		
+		m_ImageLogoCorner.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
+				
 		m_ImageLogoMid.Show(false);
 		m_ImageLogoCorner.Show(false);
 		
-		m_ImageWidgetBackground.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_splash0.edds");
+		m_ImageWidgetBackground.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_splash1.edds");
 		m_ImageWidgetBackground.SetImage(0);
-		m_ImageWidgetBackground.SetFlags(m_ImageWidgetBackground.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
+		m_ImageWidgetBackground.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		m_ImageWidgetBackground.GetPos(back_x, back_y);
+	
+		//m_EditorLogo = game.GetLoadingWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorLogo.layout", m_ImageWidgetBackground);
+				
+		//thread AnimateEditorLogo();
 		
-		
+		// e a s t e r e g g
 		m_ModdedWarning.SetText("WARNING! You are running a modded version of the game. If shits fucked? Deal with it.");	
 		
 		if (Math.RandomInt(0, 100) != 69)
@@ -36,9 +41,21 @@ modded class LoadingScreen
 	
 	override void Show()
 	{
+		super.Show();
 		m_ImageLogoMid.Show(false);
 		m_ImageLogoCorner.Show(false);
 	}
+	
+	private void AnimateEditorLogo()
+	{
+		while (m_ProgressLoading && m_ProgressLoading.GetCurrent() < 99) {
+			m_EditorLogo.SetAlpha(1 / m_ProgressLoading.GetCurrent());
+			Print(1 / m_ProgressLoading.GetCurrent());
+			Sleep(10);
+		}
+	}
+	
+	
 
 	float back_x, back_y;
 

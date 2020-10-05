@@ -1,25 +1,33 @@
-FrameWidgetClass EditorLogo {
+FrameWidgetClass EditorLogoFrame {
+ clipchildren 1
  ignorepointer 1
- size 444 208
+ color 1 1 1 0
+ position 0 0
+ size 0.25 0.25
+ halign center_ref
+ valign center_ref
  hexactpos 1
  vexactpos 1
- hexactsize 1
- vexactsize 1
+ hexactsize 0
+ vexactsize 0
  {
-  ImageWidgetClass EditorLogoImage {
+  ImageWidgetClass EditorLogo {
    visible 1
+   clipchildren 1
+   inheritalpha 1
    ignorepointer 1
-   size 444 208
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   priority 2
-   image0 ""
-   imageTexture "{03CB7ABB090B7555}DayZEditor/gui/images/dayz_editor_logo.edds"
+   hexactsize 0
+   vexactsize 0
+   imageTexture "{588A23A1674F418A}DayZEditor/GUI/images/logo_editor_big.edds"
    mode blend
    "src alpha" 1
-   "no wrap" 0
+   "no wrap" 1
    stretch 1
   }
  }
