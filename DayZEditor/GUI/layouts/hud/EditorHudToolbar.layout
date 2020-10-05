@@ -893,6 +893,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            draggable 0
+           scriptclass ""
            image0 "set:dayz_editor_gui image:collision"
            mode blend
            "src alpha" 1

@@ -14,6 +14,11 @@ class EditorHudToolbarController: EditorControllerBase
 	protected ButtonWidget MenuBarFile;
 	protected ButtonWidget MenuBarEdit;
 	protected ButtonWidget MenuBarView;
+	
+	protected ImageWidget MagnetButton_Icon;
+	protected ImageWidget GroundButton_Icon;
+	protected ImageWidget SnapButton_Icon;
+	protected ImageWidget CollisionButton_Icon;
 			
 	void EditorHudToolbarController()
 	{
@@ -81,7 +86,49 @@ class EditorHudToolbarController: EditorControllerBase
 				EditorBrush.SetDensity(BrushDensity);
 				break;
 			}
+			
+			case "m_Editor.MagnetMode": {
+				
+				if (m_Editor.MagnetMode) {
+					MagnetButton_Icon.SetColor(COLOR_CANDY);
+				} else {
+					MagnetButton_Icon.SetColor(COLOR_WHITE);
+				}
+				break;
+			}
+			case "m_Editor.GroundMode": {
+				if (m_Editor.GroundMode) {
+					GroundButton_Icon.SetColor(COLOR_APPLE);
+				} else {
+					GroundButton_Icon.SetColor(COLOR_WHITE);
+				}
+				
+				break;
+			}
+			case "m_Editor.SnappingMode": {
+				if (m_Editor.SnappingMode) {
+					SnapButton_Icon.SetColor(COLOR_JELLY);
+				} else {
+					SnapButton_Icon.SetColor(COLOR_WHITE);
+				}
+				
+				break;
+			}
+			case "m_Editor.CollisionMode": {
+				if (m_Editor.CollisionMode) {
+					CollisionButton_Icon.SetColor(COLOR_PALE_B);
+				} else {
+					CollisionButton_Icon.SetColor(COLOR_WHITE);
+				}
+					
+				break;
+			}
 		}
+	}
+	
+	private int GetHighlightColor()
+	{
+		
 	}
 	
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
@@ -219,9 +266,7 @@ class EditorHudToolbarController: EditorControllerBase
 	private ref EditorMenu CreateToolbarMenu(Widget toolbar_button)
 	{
 		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
-		
-
-		
+				
 		EditorMenu toolbar_menu;
 		switch (toolbar_button) {
 			

@@ -572,14 +572,10 @@ class EditorMagnetCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{
-		// These 3 commands are really ugly plz fix tyler
 		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
-		if (m_ViewBinding && button_args) {
-			if (button_args.GetButtonState()) {
-				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_CANDY);
-			} else {
-				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_WHITE);
-			}
+		if (!button_args || button_args.Source.GetName() != "MagnetButton") {
+			m_Editor.MagnetMode = !m_Editor.MagnetMode;
+			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("m_Editor.MagnetMode");
 		}
 	}
 	
@@ -597,12 +593,9 @@ class EditorGroundCommand: EditorCommand
 	protected override void Call(Class sender, CommandArgs args)
 	{
 		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
-		if (m_ViewBinding && button_args) {
-			if (button_args.GetButtonState()) {
-				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_APPLE);
-			} else {
-				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_WHITE);
-			}
+		if (!button_args || button_args.Source.GetName() != "GroundButton") {
+			m_Editor.GroundMode = !m_Editor.GroundMode;
+			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("m_Editor.GroundMode");
 		}
 	}
 	
@@ -620,12 +613,9 @@ class EditorSnapCommand: EditorCommand
 	protected override void Call(Class sender, CommandArgs args)
 	{
 		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
-		if (m_ViewBinding && button_args) {
-			if (button_args.GetButtonState()) {
-				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_JELLY);
-			} else {
-				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_WHITE);
-			}
+		if (!button_args || button_args.Source.GetName() != "SnapButton") {
+			m_Editor.SnappingMode = !m_Editor.SnappingMode;
+			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("m_Editor.SnappingMode");
 		}
 	}
 	
@@ -643,12 +633,9 @@ class EditorCollisionCommand: EditorCommand
 	protected override void Call(Class sender, CommandArgs args)
 	{
 		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
-		if (m_ViewBinding && button_args) {
-			if (button_args.GetButtonState()) {
-				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_PALE_B);
-			} else {
-				m_ViewBinding.GetLayoutRoot().GetChildren().SetColor(COLOR_WHITE);
-			}
+		if (!button_args || button_args.Source.GetName() != "CollisionButton") {
+			m_Editor.CollisionMode = !m_Editor.CollisionMode;
+			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("m_Editor.CollisionMode");
 		}
 	}
 	
