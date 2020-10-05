@@ -6,11 +6,6 @@ enum EditorPlaceableItemCategory {
 	UNKNOWN = -1
 };
 
-static const ref TStringArray ITEM_BLACKLIST = 
-{
-	"access"	
-};
-
 class EditorPlaceableItem
 {
 	static const autoptr map<string, EditorPlaceableItemCategory> LOADED_TYPES = GetTypes();
@@ -34,6 +29,7 @@ class EditorPlaceableItem
 		
 		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", Path, Type), Model);
 		GetWorkbenchGame().ConfigGetFullPath(string.Format("%1 %2", Path, Type), FullPath);
+		
 	}
 	
 	void Init()
@@ -44,6 +40,11 @@ class EditorPlaceableItem
 		if (Model == string.Empty || Model.Length() <= 4) {
 			delete this;
 		}
+		
+		Mod = LoadModData(Type, Path);
+		Category = LoadItemCategory();
+		
+		Icon = GetIcon(Mod);
 	}
 	
 	void ~EditorPlaceableItem()
@@ -57,15 +58,11 @@ class EditorPlaceableItem
 	{
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem(path, type);		
 		placeable_item.Init();
-
 		
-		//Mod = LoadModData(Type, CfgPath);
-		//Category = LoadItemCategory();
-		
-		/*if (placeable_item && placeable_item.Category == EditorPlaceableItemCategory.UNKNOWN) {
+		if (placeable_item && placeable_item.Category == EditorPlaceableItemCategory.UNKNOWN) {
 			EditorLog.Warning(string.Format("%1 has no category!", placeable_item.Type));
 		}
-		*/
+		
 		return placeable_item;
 	}
 	
@@ -78,21 +75,11 @@ class EditorPlaceableItem
 	}
 	
 	private ModStructure LoadModData(string type, string cfg_path)
-	{
-		string model_path = GetGame().ConfigGetTextOut("CfgVehicles " + type + " model");
-		if (model_path == "UNKNOWN_P3D_FILE") {
-			EditorLog.Debug("Not loading mod data for %1", type);
-			return null;
-		}
-	
+	{	
 		foreach (ModStructure mod: LOADED_MODS) {
 			string dir;
-			GetGame().ConfigGetText(string.Format("%1 dir", mod.GetModPath()), dir);
-			Print(string.Format("%1 dir", mod.GetModPath()));
-			dir.ToLower(); 
-			model_path.ToLower();
-			
-			if (model_path.Contains(dir))
+			GetGame().ConfigGetText(string.Format("%1 dir", mod.GetModPath()), dir);			
+			if (Model.Contains(dir))
 				return mod;
 		}
 		
@@ -100,19 +87,15 @@ class EditorPlaceableItem
 	}
 	
 	
-	private EditorPlaceableItemCategory LoadItemCategory(string type, string cfg_path)
+	private EditorPlaceableItemCategory LoadItemCategory()
 	{
-		TStringArray path_array = {};
-		GetGame().ConfigGetFullPath(string.Format("%1 %2", cfg_path, type), path_array);	
-		/*
-		foreach (string base: path_array) {
-			base.ToLower();
-			if (current_type.Find(base) + 1) {
-				m_Category = i;	
-
+		string path = GetGame().ConfigPathToString(FullPath);
+		
+		foreach (string name, EditorPlaceableItemCategory category: LOADED_TYPES) {
+			if (path.Contains(name)) {
+				return category;
 			}
-		}*/
-	
+		}
 		
 		return -1;
 	}
@@ -134,11 +117,11 @@ class EditorPlaceableItem
 		return types_map;
 	}
 	
-	// todo refactor
+
 	static string GetIcon(ModStructure mod_info)
 	{
-		EditorLog.Trace("GetIcon");
-		if (mod_info != null) {
+		EditorLog.Trace("EditorPlaceableItem::GetIcon");
+		if (mod_info) {
 			string logo = mod_info.GetModLogo();
 			if (logo == string.Empty)
 				logo = mod_info.GetModLogoSmall();
@@ -150,6 +133,6 @@ class EditorPlaceableItem
 				return logo;	
 		}
 		// default
-		return "DayZEditor/gui/images/dayz_editor_icon_black.edds";
+		return LIST_ITEM_DEFAULT_ICON;
 	}
 }

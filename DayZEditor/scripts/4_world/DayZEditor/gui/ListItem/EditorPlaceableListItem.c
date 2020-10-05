@@ -60,6 +60,30 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		Deselect();
 	}
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		EditorTooltip tooltip = new EditorTooltip();
+		
+		float size_x, size_y, pos_x, pos_y;
+		m_LayoutRoot.GetScreenPos(pos_x, pos_y);
+		m_LayoutRoot.GetScreenSize(size_x, size_y);
+		
+		tooltip.SetTitle(m_PlaceableItem.Type);
+		tooltip.GetLayoutRoot().SetPos(pos_x + size_x, pos_y);
+		tooltip.SetContent(GetWorkbenchGame().CreateObjectEx(m_PlaceableItem.Type, vector.Zero, ECE_NONE));
+		
+		EditorUIManager.SetCurrentTooltip(tooltip);
+		
+		return super.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		EditorUIManager.SetCurrentTooltip(null);
+		
+		return super.OnMouseLeave(w, enterW, x, y);
+	}
 }
 
 /*
@@ -104,20 +128,7 @@ class EditorPlaceableListItem: EditorListItem
 		return type_lower.Contains(filter);
 	}
 
-	void StartPlacing(Class context, EditorPlaceableListItem type)
-	{
-		if (type == this) {
-			Select();
-		}
-		
-		else Deselect();
-	}
-	
-	void StopPlacing(Class context)
-	{
-		Deselect();
-	}
-	
+
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	

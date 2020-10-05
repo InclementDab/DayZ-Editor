@@ -4,7 +4,14 @@ class EditorUIManager
 	static ref EditorMenu CurrentMenu;
 	
 	// ToolTip Control
-	static ref ScriptView CurrentTooltip;
+	private static ref ScriptView CurrentTooltip;
+	static void SetCurrentTooltip(ScriptView current_tooltip) {
+		if (CurrentTooltip) {
+			delete CurrentTooltip;
+		}
+		
+		CurrentTooltip = current_tooltip;
+	}
 		
 	// Dialog Control
 	static ref DialogBase CurrentDialog;

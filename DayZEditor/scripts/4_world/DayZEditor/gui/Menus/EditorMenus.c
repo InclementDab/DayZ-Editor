@@ -113,6 +113,7 @@ class EditorContextMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager.CopyCommand);
 		AddMenuButton(m_Editor.CommandManager.PasteCommand);
 		AddMenuDivider();
+		AddMenuButton(m_Editor.CommandManager.ShowCommand);
 		AddMenuButton(m_Editor.CommandManager.HideCommand);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager.DeleteCommand);

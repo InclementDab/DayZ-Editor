@@ -156,19 +156,13 @@ class EditorHudToolbarController: EditorControllerBase
 				float pos_x, pos_y, size_x, size_y;
 				w.GetScreenPos(pos_x, pos_y);
 				w.GetScreenSize(size_x, size_y);
-				
-				
-				
-				if (EditorUIManager.CurrentTooltip) {
-					delete EditorUIManager.CurrentTooltip;
-				}
-				
+								
 				EditorCommandTooltip tooltip = new EditorCommandTooltip(editor_command, pos_x, pos_y + size_y);
 				if (!editor_command.CanExecute()) {
 					tooltip.GetLayoutRoot().SetAlpha(100);
 				}
 				
-				EditorUIManager.CurrentTooltip = tooltip;
+				EditorUIManager.SetCurrentTooltip(tooltip);
 				
 			}
 		}
@@ -184,6 +178,7 @@ class EditorHudToolbarController: EditorControllerBase
 					delete EditorUIManager.CurrentMenu;
 					EditorUIManager.CurrentMenu = CreateToolbarMenu(w);
 				}
+				
 				break;
 			}	
 			
@@ -196,9 +191,7 @@ class EditorHudToolbarController: EditorControllerBase
 	{
 		//EditorLog.Trace("EditorHudToolbarController::OnMouseLeave %1", w.GetName());
 		
-		if (EditorUIManager.CurrentTooltip) {
-			delete EditorUIManager.CurrentTooltip;
-		}
+		EditorUIManager.SetCurrentTooltip(null);
 		
 		switch (w.GetTypeName()) {
 		
