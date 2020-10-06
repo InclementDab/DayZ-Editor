@@ -93,7 +93,7 @@ class DropdownListPrefabItemConverter: TypeConversionTemplate<DropdownListPrefab
 }
 
 
-modded class MVC
+modded class LayoutBindingManager
 {
 	override void RegisterConversionTemplates(out TypeConversionHashMap type_conversions)
 	{
