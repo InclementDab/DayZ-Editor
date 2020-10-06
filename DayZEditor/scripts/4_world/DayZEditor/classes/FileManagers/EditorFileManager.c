@@ -71,9 +71,20 @@ class EditorSaveData
 
 class EditorFileManager
 {
+	static void GetSafeFileName(string file_name, string extension)
+	{
+		TStringArray file_split = {};
+		file_name.Split(".", file_split);
+		if (file_split.Count() == 1 || file_split[1] != extension) {
+			file_name = file_split[0] + extension;
+		}
+	}
+	
 
 	static FileDialogResult Save(ref EditorSaveData data, string file_name)
 	{		
+		GetSafeFileName(file_name, ".dze");
+		
 		if (FileExist(file_name) && !DeleteFile(file_name)) {
 			return FileDialogResult.IN_USE;
 		}
@@ -95,6 +106,8 @@ class EditorFileManager
 	
 	static FileDialogResult Open(out EditorSaveData data, string file_name)
 	{
+		GetSafeFileName(file_name, ".dze");
+		
 		Cerealizer file_serializer = new Cerealizer();
 
 		if (!FileExist(file_name)) {
