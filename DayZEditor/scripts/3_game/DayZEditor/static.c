@@ -13,7 +13,7 @@ enum LogLevel {
 
 class EditorLog
 {
-	static LogLevel CurrentLogLevel = LogLevel.DEBUG;
+	static LogLevel CurrentLogLevel = LogLevel.TRACE;
 	static string ExclusiveLogMode;
 	
 	private static string m_LastCalledType;	

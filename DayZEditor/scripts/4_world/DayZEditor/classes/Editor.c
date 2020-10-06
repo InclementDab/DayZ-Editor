@@ -173,7 +173,7 @@ class Editor
 		// Command Manager
 		CommandManager = new EditorCommandManager();
 		
-		// Idk delete me?
+		// Needs to exist on clients for Undo / Redo syncing
 		m_SessionCache = new EditorObjectDataSet();
 		
 		// Init Settings
@@ -501,8 +501,28 @@ class Editor
 		ObjectInHand = new EditorHologram(item);
 		
 		EditorEvents.StartPlacing(this, item);		
-	}	
+	}
+	
+	EditorObject PlaceObject()
+	{
+		if (!ObjectInHand) return null;	
 		
+		EditorObject editor_object = CreateFromObject(ObjectInHand.GetProjectionEntity());
+		EditorEvents.ObjectPlaced(this, editor_object);
+		SelectObject(editor_object);
+		
+		EditorPlaceableItem item = ObjectInHand.GetPlaceableItem();
+		delete ObjectInHand;
+		
+		if (!KeyState(KeyCode.KC_LSHIFT)) { 
+			EditorEvents.StopPlacing(this); // todo why do i gotta remake?
+		} else {
+			ObjectInHand = new EditorHologram(item);
+		}
+		
+		return editor_object;
+	}
+	
 		
 	private Object m_LootEditTarget;
 	private bool m_LootEditMode;

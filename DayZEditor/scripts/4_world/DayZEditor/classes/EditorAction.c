@@ -65,16 +65,16 @@ class EditorAction
 	
 	void CallUndo()
 	{
-		EditorLog.Trace("EditorAction::CallUndo");		
+		EditorLog.Trace("EditorAction::CallUndo %1", name);		
 		undone = true;
-		foreach (int id, ref Param param: UndoParameters) {			
+		foreach (int id, ref Param param: UndoParameters) {
 			GetGame().GameScript.Call(this, m_UndoAction, param);
 		}
 	}
 	
 	void CallRedo()
 	{
-		EditorLog.Trace("EditorAction::CallRedo");
+		EditorLog.Trace("EditorAction::CallRedo %1", name);
 		undone = false;
 		foreach (int id, ref Param param: RedoParameters) {
 			GetGame().GameScript.Call(this, m_RedoAction, param);
@@ -93,20 +93,29 @@ class EditorAction
 		EditorLog.Trace("InsertRedoParameter");
 		RedoParameters.Insert(source.GetID(), params);
 	}
-	
-	
+
 	void Create(Param1<int> params)
 	{
 		EditorLog.Trace("EditorAction::Create");
-		Sleep(10);
-		GetEditor().CreateObject(GetEditor().GetSessionDataById(params.param1), false);
+		EditorObjectData data = GetEditor().GetSessionDataById(params.param1);
+		if (!data) {
+			EditorLog.Error("EditorAction::Create Data was null!");
+			return;
+		}
+		
+		GetEditor().CreateObject(data, false);
 	}
 	
 	void Delete(Param1<int> params)
 	{
 		EditorLog.Trace("EditorAction::Delete");
-		Sleep(10);
-		GetEditor().DeleteObject(GetEditor().GetPlacedObjectById(params.param1), false);
+		EditorObject object = GetEditor().GetPlacedObjectById(params.param1);
+		if (!object) {
+			EditorLog.Error("EditorAction::Delete Object was null!");
+			return;
+		}
+		
+		GetEditor().DeleteObject(object, false);
 	}
 	
 	
@@ -119,6 +128,5 @@ class EditorAction
 		editor_object.SetPosition(params.param2);
 		editor_object.SetOrientation(params.param3);
 		editor_object.Update();
-		
 	}	
 }

@@ -6,7 +6,6 @@ class EditorObjectManagerModule: JMModuleBase
 	private ref EditorActionStack 				m_ActionStack;
 	private ref map<int, int> 					m_PlacedObjectIndex;
 	
-	
 	EditorObjectSet GetSelectedObjects() 
 		return m_SelectedObjects; 
 	
@@ -22,6 +21,12 @@ class EditorObjectManagerModule: JMModuleBase
 	EditorObject GetEditorObject(notnull Object world_object)
 		return GetEditorObject(m_PlacedObjectIndex.Get(world_object.GetID())); 
 	
+	void InsertAction(EditorAction action) 
+	{
+		m_ActionStack.InsertAction(action);
+		// this crashes smile :)
+		//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
+	}
 	
 	override void Init()
 	{
@@ -38,13 +43,8 @@ class EditorObjectManagerModule: JMModuleBase
 		EditorObjectSet object_set = new EditorObjectSet();
 		EditorAction action = new EditorAction("Delete", "Create");
 		foreach (EditorObjectData editor_object_data: data_list) {
-			
-			EditorLog.Trace("EditorObject::Create from EditorObjectData");
-			Object world_object = GetGame().CreateObjectEx(editor_object_data.Type, editor_object_data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
-			world_object.SetTransform(editor_object_data.Transform);
-			world_object.SetFlags(EntityFlags.STATIC, true);
-			
-			EditorObject editor_object = new EditorObject(world_object, editor_object_data.Flags);
+						
+			EditorObject editor_object = new EditorObject(editor_object_data);
 			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));		
 			
@@ -56,8 +56,7 @@ class EditorObjectManagerModule: JMModuleBase
 		}
 		
 		if (create_undo) {
-			m_ActionStack.InsertAction(action);
-			//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
+			InsertAction(action);
 		}
 		
 		return object_set;
@@ -67,12 +66,8 @@ class EditorObjectManagerModule: JMModuleBase
 	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true)
 	{		
 		EditorLog.Trace("EditorObjectManager::CreateObject");
-		
-		Object world_object = GetGame().CreateObjectEx(editor_object_data.Type, editor_object_data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
-		world_object.SetTransform(editor_object_data.Transform);
-		world_object.SetFlags(EntityFlags.STATIC, true);
-		
-		EditorObject editor_object = new EditorObject(world_object, editor_object_data.Flags);
+
+		EditorObject editor_object = new EditorObject(editor_object_data);
 
 		EditorAction action = new EditorAction("Delete", "Create");;
 		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
@@ -83,27 +78,34 @@ class EditorObjectManagerModule: JMModuleBase
 		EditorEvents.ObjectCreated(this, editor_object);
 		
 		if (create_undo) {
-			m_ActionStack.InsertAction(action);
-			// this crashes smile :)
-			//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
+			InsertAction(action);
 		}
 			
 	
 		return editor_object;
 	}
 	
-	EditorObject CreateFromObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	EditorObject CreateFromObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true)
 	{
 		EditorLog.Trace("EditorObjectManager::CreateFromObject");
-		// If object already exists
-		if (m_PlacedObjects.Get(target.GetID())) 
-			return m_PlacedObjects.Get(target.GetID());
+		// If object already exists 
+		// todo: might be broken
+		if (m_PlacedObjectIndex.Get(target.GetID()))
+			return m_PlacedObjects[m_PlacedObjectIndex.Get(target.GetID())];
 		
-		EditorObject editor_object = new EditorObject(target, flags);
+		EditorObject editor_object = new EditorObject(EditorObjectData.Create(target, flags));
+		
+		EditorAction action = new EditorAction("Delete", "Create");;
+		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+		
 		m_PlacedObjects.InsertEditorObject(editor_object);
 		m_PlacedObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object.GetID());
 		EditorEvents.ObjectCreated(this, editor_object);
 		
+		if (create_undo) {
+			InsertAction(action);
+		}
 		
 		return editor_object;
 	}
@@ -119,8 +121,7 @@ class EditorObjectManagerModule: JMModuleBase
 			EditorAction action = new EditorAction("Create", "Delete");
 			action.InsertUndoParameter(target, new Param1<int>(target.GetID()));
 			action.InsertRedoParameter(target, new Param1<int>(target.GetID()));
-			m_ActionStack.InsertAction(action);
-			//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
+			InsertAction(action);
 		}
 		
 		delete target;
@@ -142,8 +143,7 @@ class EditorObjectManagerModule: JMModuleBase
 		}	
 			
 		if (create_undo) {
-			m_ActionStack.InsertAction(action);
-			//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
+			InsertAction(action);
 		}
 	}
 	

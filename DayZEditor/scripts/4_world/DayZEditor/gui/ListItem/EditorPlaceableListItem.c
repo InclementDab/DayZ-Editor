@@ -88,7 +88,7 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
 		if (!GetEditor().IsPlacing()) {
-			GetEditor().CreateInHand(this);
+			GetEditor().CreateInHand(m_PlaceableItem);
 		}
 		
 		return true;

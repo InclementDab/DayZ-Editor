@@ -42,7 +42,16 @@ class EditorObjectData
 	[NonSerialized()]
 	ModStructure ObjectMod;
 	
-	void EditorObjectData() {}
+	[NonSerialized()]
+	Object WorldObject;
+	
+	void EditorObjectData() 
+	{
+		// Item limit is 2000000
+		if (lowest_id == 0) lowest_id = 2000000;
+		lowest_id--;
+		m_Id = lowest_id;	
+	}
 		
 	static EditorObjectData Create(string type, vector position, vector orientation, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
@@ -68,11 +77,10 @@ class EditorObjectData
 		data.Flags = flags;
 		data.DisplayName = data.Type;
 		//data.ObjectMod = GetModFromObject(data.Type); todo refactor.
-		
 
-		if (lowest_id == 0) lowest_id = 200000;
-		lowest_id--;
-		data.m_Id = lowest_id;	
+		data.WorldObject = GetGame().CreateObjectEx(data.Type, data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
+		data.WorldObject.SetTransform(data.Transform);
+		data.WorldObject.SetFlags(EntityFlags.STATIC, true);
 		
 		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));
 				
@@ -83,12 +91,11 @@ class EditorObjectData
 	static EditorObjectData Create(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorObjectData data = new EditorObjectData();
-		data.Type = target.GetType(); 
-		target.GetTransform(data.Transform); 
+		data.Type = target.GetType();
+		data.WorldObject = target;
+		data.WorldObject.GetTransform(data.Transform); 
 		data.Flags = flags;
 		data.DisplayName = data.Type;
-		//data.ObjectMod = GetModFromObject(data.Type);
-		data.m_Id = target.GetID();	
 		
 		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));
 		

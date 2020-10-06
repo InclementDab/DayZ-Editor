@@ -11,25 +11,29 @@ class DragHandler
 	
 	void OnDragStart()
 	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(_OnDragging);
+		thread _OnDragging();
 	}
 	
-	void OnDragFinish()
-	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Remove(_OnDragging);
-	}
+	void OnDragFinish();
 	
 	private void _OnDragging()
 	{
-		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
-			vector transform[4];
-			m_EditorObject.GetTransform(transform);
+		EditorAction drag_undo = new EditorAction("SetTransform", "SetTransform");
+		drag_undo.InsertUndoParameter(m_EditorObject, new Param3<int, vector, vector>(m_EditorObject.GetID(), m_EditorObject.GetPosition(), m_EditorObject.GetOrientation()));
+		
+		vector transform[4];
+		m_EditorObject.GetTransform(transform);
+		
+		while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
 			OnDragging(transform, m_EditorObject);
 			m_EditorObject.SetTransform(transform);
-			m_EditorObject.Update();
-		} else {
-			OnDragFinish();
-		}
+			Sleep(10);
+		} 
+		
+		drag_undo.InsertRedoParameter(m_EditorObject, new Param3<int, vector, vector>(m_EditorObject.GetID(), m_EditorObject.GetPosition(), m_EditorObject.GetOrientation()));
+		GetEditor().GetObjectManager().InsertAction(drag_undo);
+		
+		OnDragFinish();
 	}
 	
 	void OnDragging(out vector transform[4], notnull EditorObject target);

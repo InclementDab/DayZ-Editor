@@ -669,20 +669,7 @@ class EditorPlaceObjectCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{
-		if (!m_Editor.ObjectInHand) return;
-
-		EditorObject editor_object = m_Editor.CreateFromObject(m_Editor.ObjectInHand.GetProjectionEntity());
-		EditorEvents.ObjectPlaced(this, editor_object);
-		m_Editor.SelectObject(editor_object);
-		
-		EditorPlaceableItem item = m_Editor.ObjectInHand.GetPlaceableItem();
-		delete m_Editor.ObjectInHand;
-		
-		if (!KeyState(KeyCode.KC_LSHIFT)) { 
-			EditorEvents.StopPlacing(this); // todo why do i gotta remake?
-		} else {
-			m_Editor.ObjectInHand = new EditorHologram(item);
-		}
+		m_Editor.PlaceObject();
 	}
 }
 

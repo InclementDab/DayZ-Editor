@@ -6,7 +6,7 @@ class EditorObject
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem 		m_EditorPlacedListItem;
 	
-	protected Object 		m_WorldObject;
+	protected Object		m_WorldObject;
 	protected Object		m_BBoxLines[12];	
 	protected Object 		m_BBoxBase;
 	protected Object 		m_CenterLine;
@@ -42,12 +42,11 @@ class EditorObject
 		return m_Data.GetID(); 
 	}
 
-	void EditorObject(notnull Object target, EditorObjectFlags flags)
+	void EditorObject(EditorObjectData data)
 	{
 		EditorLog.Trace("EditorObject");
-		m_WorldObject = target;		
-		m_Data = EditorObjectData.Create(target, flags);
-		m_Data.Flags = flags;
+		m_Data = data;
+		m_WorldObject = m_Data.WorldObject;
 		
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().InsertEditorData(m_Data);
