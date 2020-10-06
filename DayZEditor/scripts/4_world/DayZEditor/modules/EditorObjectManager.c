@@ -85,7 +85,7 @@ class EditorObjectManagerModule: JMModuleBase
 		return editor_object;
 	}
 	
-	EditorObject CreateFromObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true)
+	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true)
 	{
 		EditorLog.Trace("EditorObjectManager::CreateFromObject");
 		// If object already exists 

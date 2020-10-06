@@ -96,7 +96,7 @@ class EditorAction
 
 	void Create(Param1<int> params)
 	{
-		EditorLog.Trace("EditorAction::Create");
+		EditorLog.Trace("EditorAction::Create %1", params.param1.ToString());
 		EditorObjectData data = GetEditor().GetSessionDataById(params.param1);
 		if (!data) {
 			EditorLog.Error("EditorAction::Create Data was null!");
@@ -108,7 +108,7 @@ class EditorAction
 	
 	void Delete(Param1<int> params)
 	{
-		EditorLog.Trace("EditorAction::Delete");
+		EditorLog.Trace("EditorAction::Delete %1", params.param1.ToString());
 		EditorObject object = GetEditor().GetPlacedObjectById(params.param1);
 		if (!object) {
 			EditorLog.Error("EditorAction::Delete Object was null!");

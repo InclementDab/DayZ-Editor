@@ -54,11 +54,6 @@ class EditorObject
 			m_WorldObject.SetFlags(EntityFlags.STATIC, true);
 		}
 		
-		// dont do this lol
-		if (GetEditor()) {
-			GetEditor().GetSessionCache().InsertEditorData(m_Data);
-		}
-		
 		vector clip_info[2];
 		ClippingInfo(clip_info);
 	

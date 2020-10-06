@@ -94,18 +94,28 @@ class Editor
 	bool IsPlacing()
 		return ObjectInHand != null; 
 	
+		
 	
-	EditorObjectSet CreateObjects(EditorObjectDataSet data_list, bool create_undo = true)
+	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true) 
+	{		
+		EditorObject editor_object = m_ObjectManager.CreateObject(editor_object_data, create_undo);
+		m_SessionCache.InsertEditorData(editor_object.GetData());
+		return editor_object;
+	}
+	
+	
+	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 
+	{
+		EditorObject editor_object = m_ObjectManager.CreateObject(target, flags, create_undo);
+		m_SessionCache.InsertEditorData(editor_object.GetData());
+		return editor_object;
+	}
+	
+	EditorObjectSet CreateObjects(EditorObjectDataSet data_list, bool create_undo = true) 
+	{
+		m_SessionCache.InsertEditorData(data_list);
 		return m_ObjectManager.CreateObjects(data_list, create_undo);
-	
-	
-	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true)
-		return m_ObjectManager.CreateObject(editor_object_data, create_undo);
-	
-	
-	EditorObject CreateFromObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
-		return m_ObjectManager.CreateFromObject(target, flags);
-	
+	}
 	
 	void DeleteObject(EditorObject target, bool create_undo = true)
 		m_ObjectManager.DeleteObject(target, create_undo);
@@ -358,7 +368,7 @@ class Editor
 							ObjectUnderCursor = Object.Cast(ObjectUnderCursor.GetParent());
 						}*/
 						
-						CreateFromObject(ObjectUnderCursor);
+						CreateObject(ObjectUnderCursor);
 					}
 				} else {
 					
@@ -507,7 +517,7 @@ class Editor
 	{
 		if (!ObjectInHand) return null;	
 		
-		EditorObject editor_object = CreateFromObject(ObjectInHand.GetProjectionEntity());
+		EditorObject editor_object = CreateObject(ObjectInHand.GetProjectionEntity());
 		EditorEvents.ObjectPlaced(this, editor_object);
 		SelectObject(editor_object);
 		

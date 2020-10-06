@@ -14,14 +14,19 @@ class EditorObjectDataSet: map<int, ref EditorObjectData>
 	
 	bool InsertEditorData(EditorObjectData data)
 	{		
-		Insert(data.GetID(), data);
-		return true;
+		return Insert(data.GetID(), data);
 	}
 	
-	bool RemoveEditorData(EditorObjectData data)
+	void InsertEditorData(EditorObjectDataSet data_set)
+	{
+		foreach (EditorObjectData data: data_set) {
+			InsertEditorData(data);
+		}
+	}
+	
+	void RemoveEditorData(EditorObjectData data)
 	{
 		Remove(data.GetID());
-		return true;
 	}
 	
 }
@@ -50,7 +55,7 @@ class EditorObjectData
 		// Item limit is 2000000
 		if (lowest_id == 0) lowest_id = 2000000;
 		lowest_id--;
-		m_Id = lowest_id;	
+		m_Id = lowest_id;
 	}
 		
 	static EditorObjectData Create(string type, vector position, vector orientation, EditorObjectFlags flags = EditorObjectFlags.ALL)
