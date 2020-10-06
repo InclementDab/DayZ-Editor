@@ -320,7 +320,8 @@ class EditorDeleteCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		m_Editor.DeleteObjects(m_Editor.GetSelectedObjects());		
+		EditorObjectSet objects = m_Editor.GetSelectedObjects();
+		m_Editor.DeleteObjects(objects);		
 	}
 		
 	override string GetName() {

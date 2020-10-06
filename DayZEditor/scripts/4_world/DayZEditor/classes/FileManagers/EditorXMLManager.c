@@ -291,7 +291,7 @@ class XMLEditorBrushes: XMLCallback
 	}
 	
 	override void OnSuccess(ref XMLDocument document)
-	{
+	{		
 		EditorLog.Info("XMLEditorBrushes::OnSuccess");
 		ref set<string> object_type_list = new set<string>();
 		
