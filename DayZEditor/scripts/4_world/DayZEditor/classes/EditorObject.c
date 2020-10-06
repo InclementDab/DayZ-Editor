@@ -17,7 +17,6 @@ class EditorObject
 	private vector m_LineCenters[12]; 
 	private vector m_LineVerticies[8];
 	
-	
 	float LocalAngle; // temp
 	
 	static float line_width = 0.02;
