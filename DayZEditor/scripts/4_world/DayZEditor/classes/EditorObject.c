@@ -48,6 +48,13 @@ class EditorObject
 		m_Data = data;
 		m_WorldObject = m_Data.WorldObject;
 		
+		if (!m_WorldObject) {
+			m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
+			m_WorldObject.SetTransform(m_Data.Transform);
+			m_WorldObject.SetFlags(EntityFlags.STATIC, true);
+		}
+		
+		// dont do this lol
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().InsertEditorData(m_Data);
 		}

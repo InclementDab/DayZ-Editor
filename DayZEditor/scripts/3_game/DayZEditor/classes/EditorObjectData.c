@@ -77,10 +77,6 @@ class EditorObjectData
 		data.Flags = flags;
 		data.DisplayName = data.Type;
 		//data.ObjectMod = GetModFromObject(data.Type); todo refactor.
-
-		data.WorldObject = GetGame().CreateObjectEx(data.Type, data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
-		data.WorldObject.SetTransform(data.Transform);
-		data.WorldObject.SetFlags(EntityFlags.STATIC, true);
 		
 		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));
 				
