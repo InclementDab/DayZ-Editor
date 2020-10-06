@@ -336,7 +336,8 @@ class EditorCutCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorClipboard.Cut(m_Editor.GetSelectedObjects());
+		EditorObjectSet objects = m_Editor.GetSelectedObjects();
+		EditorClipboard.Cut(objects);
 	}
 
 	override string GetName() {
@@ -356,7 +357,8 @@ class EditorCopyCommand: EditorCommand
 {	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorClipboard.Copy(m_Editor.GetSelectedObjects());
+		EditorObjectSet objects = m_Editor.GetSelectedObjects();
+		EditorClipboard.Copy(objects);
 	}
 
 	override string GetName() {

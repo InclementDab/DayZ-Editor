@@ -111,23 +111,28 @@ static string CreateEditorMission(string map_name = "ChernarusPlus")
 	return mission;
 }
 
-static void RecursiveGetParent(out ref Widget w, string name)
+static bool RecursiveGetParent(out Widget w, string name)
 {
 	if (w.GetName() == name) 
-		return;
+		return true;
 	
 	w = w.GetParent();
-	RecursiveGetParent(w, name);
+	
+	if (w) {
+		return RecursiveGetParent(w, name);
+	}
+	
+	return false;
 }
 
-static Widget GetWidgetRoot(ref Widget w)
+static Widget GetWidgetRoot(Widget w)
 {
 	Widget parent = w;
 	_GetWidgetRoot(parent);
 	return parent;
 }
 
-static void _GetWidgetRoot(out ref Widget w)
+static void _GetWidgetRoot(out Widget w)
 {
 	if (w.GetParent() == null) {
 		return;	
@@ -137,23 +142,6 @@ static void _GetWidgetRoot(out ref Widget w)
 	_GetWidgetRoot(w);
 }
 
-static bool CreateWidget(out Widget w, string layout_name, Widget parent = null)
-{
-	CGame game = GetGame();
-	if (!game) {
-		Error("CreateWidget: Game is null!");
-		return false;
-	}
-	
-	WorkspaceWidget workspace = game.GetWorkspace();
-	if (!workspace) {
-		Error("CreateWidget: Workspace is null! Try restarting Workbench!");
-		return false;
-	}
-	
-	w = workspace.CreateWidgets(layout_name, parent);
-	return true;
-}
 
 // remove this once BI adds set into string
 typedef string BetterString;

@@ -284,6 +284,16 @@ class EditorHudController: EditorControllerBase
 		return super.OnClick(w, x, y, button);
 	}
 	
+	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
+	{
+		if (RecursiveGetParent(w, "LeftbarScroll") || RecursiveGetParent(w, "RightbarScroll")) {
+			if (KeyState(KeyCode.KC_LCONTROL)) {
+				ScrollWidget.Cast(w).VScrollStep(wheel * 10);
+			}
+		}
+
+		return false;
+	}
 	
 	override bool OnFocus(Widget w, int x, int y)
 	{
