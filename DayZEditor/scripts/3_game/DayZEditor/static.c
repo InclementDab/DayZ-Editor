@@ -106,7 +106,9 @@ static string CreateEditorMission(string map_name = "ChernarusPlus")
 	FPrint(init, "	return new MissionGameplay();");
 	FPrint(init, "}");
 		
-	CloseFile(init);
+	if (init) {
+		CloseFile(init);
+	}
 	
 	return mission;
 }

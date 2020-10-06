@@ -1,8 +1,5 @@
-
-
 class EditorClipboard
 {
-	
 	static void Cut(EditorObjectSet cut_objects)
 	{
 		EditorLog.Trace("EditorObjectManager::CutSelection");
