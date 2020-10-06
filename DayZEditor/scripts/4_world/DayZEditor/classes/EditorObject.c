@@ -275,15 +275,22 @@ class EditorObject
 		return m_Visible;
 	}
 	
-	void Show(bool show) {
+	void Show(bool show) 
+	{
 		m_Visible = show;
 		
 		if (MapMarkerEnabled()) {
 			m_EditorObjectMapMarker.Show(m_Visible);
 		}
 		
-		if (ListItemEnabled() && m_EditorPlacedListItem.GetLayoutRoot()) {
-			m_EditorPlacedListItem.GetLayoutRoot().Show(m_Visible);
+		if (ObjectMarkerEnabled()) {
+			m_EditorObjectWorldMarker.Show(m_Visible);
+		}
+		
+		if (m_Visible) {
+			m_WorldObject.SetFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
+		} else {
+			m_WorldObject.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
 		}
 	}
 	

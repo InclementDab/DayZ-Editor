@@ -277,8 +277,9 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 		vector screen_pos = GetGame().GetScreenPos(position);
 		
-		if (screen_pos[2] > 0)
+		if (screen_pos[2] > 0) {
 			SetPos(screen_pos[0], screen_pos[1]);
+		}
 		/*
 		if (vector.Distance(m_EditorObject.GetPosition(), GetEditor().GetCamera().GetPosition()) > GetEditor().GetSettings().MarkerViewDistance) {
 			Show(false);

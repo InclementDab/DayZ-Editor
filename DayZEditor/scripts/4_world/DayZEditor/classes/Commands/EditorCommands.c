@@ -774,8 +774,7 @@ class EditorShowCommand: EditorCommand
 	{
 		EditorObjectSet selected_objects = m_Editor.GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {		
-			
-			selected_object.GetWorldObject().SetFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
+			selected_object.Show(true);
 		}
 	}
 	
@@ -794,8 +793,7 @@ class EditorHideCommand: EditorCommand
 	{
 		EditorObjectSet selected_objects = m_Editor.GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {
-			
-			selected_object.GetWorldObject().ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
+			selected_object.Show(false);
 		}
 	}
 	

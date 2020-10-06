@@ -248,42 +248,7 @@ class EditorHudController: EditorControllerBase
 		
 		return false;
 	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorHudController::OnClick");
-		/*
-		switch (button) {
-			
-			case 0: {
 		
-				switch (w.GetName()) {
-					
-					case "UndoButton": 
-					case "RedoButton": {
-						w.SetColor(COLOR_SALMON_A);
-						int pos = ButtonWidget.Cast(w).GetState() * 1;
-						SetWidgetIconPosition(w, pos, pos);
-						break;
-					}
-					
-					case "SnapButton":
-					case "GroundButton":
-					case "MagnetButton": {
-						bool button_state = ButtonWidget.Cast(w).GetState();
-						GetWidgetIcon(w).SetColor((GetHighlightColor(w.GetName()) * button_state) - 1);
-						GetWidgetIcon(w).SetPos(button_state * 1, button_state * 1);
-						break;
-					}
-				}
-							
-				break;
-			}
-		}
-		*/
-		return super.OnClick(w, x, y, button);
-	}
-	
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{
 		if (RecursiveGetParent(w, "LeftbarScroll") || RecursiveGetParent(w, "RightbarScroll")) {
