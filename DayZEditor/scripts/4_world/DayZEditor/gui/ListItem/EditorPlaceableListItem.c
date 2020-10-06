@@ -83,6 +83,24 @@ class EditorPlaceableListItem: EditorListItem
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
+	
+	bool FilterType(BetterString filter)
+	{
+		if (filter == string.Empty) return true;
+		
+		string type_lower = m_PlaceableItem.Type;
+		type_lower.ToLower();
+		filter.ToLower();
+		
+		if (filter[0] == "@") {
+			type_lower = m_PlaceableItem.Mod.GetModName();
+			filter[0] = "";
+			type_lower.ToLower();
+		}
+		
+		return type_lower.Contains(filter);
+	}
+
 }
 
 /*

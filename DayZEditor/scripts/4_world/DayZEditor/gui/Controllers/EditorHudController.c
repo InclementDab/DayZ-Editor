@@ -119,10 +119,10 @@ class EditorHudController: EditorControllerBase
 				
 				for (int j = 0; j < LeftbarSpacerData.Count(); j++) {
 					EditorPlaceableListItem placeable_item = LeftbarSpacerData[j];
-					//placeable_item.GetLayoutRoot().Show(placeable_item.FilterType(SearchBarData)); todo refactor
+					placeable_item.GetLayoutRoot().Show(placeable_item.FilterType(SearchBarData)); 
 				}
 				
-				LeftbarScroll.HScrollToPos(0);
+				LeftbarScroll.VScrollToPos(0);
 				break;
 			}			
 			
