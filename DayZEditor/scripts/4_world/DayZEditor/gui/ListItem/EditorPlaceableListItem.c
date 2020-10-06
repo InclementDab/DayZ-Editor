@@ -84,6 +84,27 @@ class EditorPlaceableListItem: EditorListItem
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
+		if (!GetEditor().IsPlacing()) {
+			GetEditor().CreateInHand(this);
+		}
+		
+		return true;
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget receiver)
+	{
+		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
+		
+		if (GetEditor().IsPlacing()) {
+			GetEditor().CommandManager.PlaceObjectCommand.Execute(this, null);
+		}
+		
+		return true;
+	}
+		
 	bool FilterType(BetterString filter)
 	{
 		if (filter == string.Empty) return true;
@@ -146,26 +167,7 @@ class EditorPlaceableListItem: EditorListItem
 	}
 
 
-	override bool OnDrag(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
-		if (!GetEditor().IsPlacing()) {
-			GetEditor().CreateInHand(this);
-		}
-		
-		return true;
-	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget receiver)
-	{
-		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
-		
-		if (GetEditor().IsPlacing()) {
-			GetEditor().CommandManager.PlaceObjectCommand.Execute(this, null);
-		}
-		
-		return true;
-	}
+
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
