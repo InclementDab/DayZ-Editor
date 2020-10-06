@@ -95,17 +95,19 @@ class EditorSaveCommand: EditorCommand
 	protected override void Call(Class sender, CommandArgs args) 
 	{
 		EditorLog.Trace("EditorSaveCommand");
-		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
 		
-		if (m_Editor.GetSaveFile() == string.Empty) {
-			//EditorFileSaveDialog save_dialog = new EditorFileSaveDialog();
-			//save_dialog.ShowDialog();
+		if (m_Editor.EditorSaveFile == string.Empty) {
+			EditorEditBoxDialog file_dialog(GetName());
+			string file_name;
+			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
+				return;
+			}
+			
+			m_Editor.EditorSaveFile = "$profile:Editor/" + file_name;
 		}
 		
-		DialogResult result = EditorMessageBox.Show("Save", "Are you sure?", MessageBoxButtons.OKCancel);
-		if (result != DialogResult.OK) return;			
-			
-		FileDialogResult file_result = EditorFileManager.Save(save_data, "$profile:/Editor/SaveData.dze");
+		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
+		FileDialogResult file_result = EditorFileManager.Save(save_data, m_Editor.EditorSaveFile);
 		if (file_result != FileDialogResult.SUCCESS) {
 			m_Editor.GetEditorHud().CreateNotification(typename.EnumToString(FileDialogResult, file_result), COLOR_RED);
 			return;
@@ -132,6 +134,23 @@ class EditorSaveAsCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
+		EditorEditBoxDialog file_dialog(GetName());
+		string file_name;
+		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
+			return;
+		}
+		
+		m_Editor.EditorSaveFile = "$profile:Editor/" + file_name;
+		
+		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
+		FileDialogResult file_result = EditorFileManager.Save(save_data, m_Editor.EditorSaveFile);
+		if (file_result != FileDialogResult.SUCCESS) {
+			m_Editor.GetEditorHud().CreateNotification(typename.EnumToString(FileDialogResult, file_result), COLOR_RED);
+			return;
+		} 
+		
+		m_Editor.GetEditorHud().CreateNotification("Saved!", COLOR_GREEN);
+		EditorLog.Info("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
 		
 	}
 		
@@ -145,19 +164,26 @@ class EditorSaveAsCommand: EditorCommand
 }
 
 class EditorOpenCommand: EditorCommand
-{
-	void EditorOpenCommand() 
-	{
-		SetCanExecute(false);
-	}
-	
+{	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		DialogResult result = EditorMessageBox.Show("Open", "Are you sure?", MessageBoxButtons.OKCancel);
-		if (result != DialogResult.OK) return;
+		EditorEditBoxDialog file_dialog(GetName());
+		string file_name;
+		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
+			return;
+		}
+		
+		file_name = "$profile:Editor/" + file_name;
+		
+		if (!FileExist(file_name)) {
+			MessageBox.Show("File not found", "Could not find file " + file_name, MessageBoxButtons.OK);
+			return;
+		}
+		
+		m_Editor.EditorSaveFile = file_name;
 		
 		EditorSaveData save_data;
-		EditorFileManager.Open(save_data, "$profile:/Editor/SaveData.dze");
+		EditorFileManager.Open(save_data, m_Editor.EditorSaveFile);
 		
 		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
 			EditorLog.Info("Loading Map %1", save_data.MapName);
@@ -173,8 +199,8 @@ class EditorOpenCommand: EditorCommand
 		
 		m_Editor.DeleteObjects(m_Editor.GetPlacedObjects(), false);
 		m_Editor.CreateObjects(save_data.EditorObjects, false);
-		
 		m_Editor.GetCamera().SetTransform(save_data.CameraPosition);
+		
 		string msg = string.Format("Loaded %1 objects!", save_data.EditorObjects.Count().ToString());
 		m_Editor.GetEditorHud().CreateNotification(msg, COLOR_GREEN);
 		EditorLog.Info(msg);
@@ -197,8 +223,15 @@ class EditorCloseCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
+		DialogResult result = MessageBox.Show("Close", "Are you sure?", MessageBoxButtons.OKCancel);
 		
+		if (result != DialogResult.OK) {
+			return;
+		}
 		
+		EditorObjectSet placed_objects = m_Editor.GetPlacedObjects();
+		m_Editor.DeleteObjects(placed_objects, false);
+		m_Editor.EditorSaveFile = string.Empty;		
 	}
 			
 	override string GetName() {

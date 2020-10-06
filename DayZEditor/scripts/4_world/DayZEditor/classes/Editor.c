@@ -51,12 +51,6 @@ class Editor
 	EditorSettings GetSettings()
 		return m_EditorSettings;
 	
-	string GetSaveFile()
-		return m_EditorSaveFile;
-	
-	void SetSaveFile(string file)
-		m_EditorSaveFile = file;
-	
 	void SetSettings(EditorSettings settings) {
 		m_EditorSettings = settings;
 		EditorSettings.Save(m_EditorSettings, m_EditorSettingsFile);
@@ -136,9 +130,6 @@ class Editor
 	void ClearSelection() 
 		m_ObjectManager.ClearSelection();
 	
-	
-	
-	
 	// statics (updated in Update())
 	static Object								ObjectUnderCursor;
 	static vector 								CurrentMousePosition;
@@ -160,7 +151,7 @@ class Editor
 	
 	private bool 								m_Active;
 	private string 								m_EditorSettingsFile = "$profile:Editor/settings.ini";
-	private string								m_EditorSaveFile;
+	string										EditorSaveFile;
 	// todo move to settings
 	string										EditorBrushFile = "$profile:Editor/EditorBrushes.xml";
 	
@@ -485,7 +476,7 @@ class Editor
 		
 		m_Player.GetInputController().SetDisabled(m_Active);
 			
-		
+		EditorUIManager.SetCurrentTooltip(null);
 	}
 	
 	bool OnMouseEnterObject(IEntity target, int x, int y)
