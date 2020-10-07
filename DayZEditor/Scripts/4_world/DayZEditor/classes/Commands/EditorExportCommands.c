@@ -6,22 +6,31 @@ class EditorExportCommandBase: EditorCommand
 		EditorEditBoxDialog file_dialog(GetName());
 		
 		string file_name;
-		if (file_dialog.ShowDialog(file_name) == DialogResult.OK) {
-			file_name = "$profile:Editor/" + file_name;
-			EditorFileManager.Export(EditorSaveData.CreateFromEditor(m_Editor), file_name, GetExportSettings());
+		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
+			return;
 		}
+						
+		EditorFileType file_type = GetFileType().Spawn();
+		
+		if (!file_type) {
+			EditorLog.Error("Invalid FileType in Export");
+			return;
+		}		
+		
+		file_name = "$profile:Editor/" + file_name;
+		EditorSaveData save_data = new EditorSaveData();
+		ExportSettings settings = new ExportSettings(); // todo
+		file_type.Export(EditorSaveData.CreateFromEditor(m_Editor), file_name, settings);		
 	}
 	
-	ExportSettings GetExportSettings();
+	typename GetFileType();
 }
 
 
 class EditorExportToInitFile: EditorExportCommandBase
 {	
-	override ExportSettings GetExportSettings() {
-		ExportSettings export_settings();
-		export_settings.ExportFileMode = ExportMode.COMFILE;
-		return export_settings;
+	override typename GetFileType() {
+		return EditorExpansionFile;
 	}
 	
 	override string GetName() {
@@ -31,10 +40,8 @@ class EditorExportToInitFile: EditorExportCommandBase
 
 class EditorExportToExpansion: EditorExportCommandBase
 {	
-	override ExportSettings GetExportSettings() {
-		ExportSettings export_settings();
-		export_settings.ExportFileMode = ExportMode.TERRAINBUILDER;
-		return export_settings;
+	override typename GetFileType() {
+		return EditorExpansionFile;
 	}
 	
 	override string GetName() {
@@ -44,10 +51,8 @@ class EditorExportToExpansion: EditorExportCommandBase
 
 class EditorExportToTerrainBuilder: EditorExportCommandBase
 {	
-	override ExportSettings GetExportSettings() {
-		ExportSettings export_settings();
-		export_settings.ExportFileMode = ExportMode.TERRAINBUILDER;
-		return export_settings;
+	override typename GetFileType() {
+		return EditorExpansionFile;
 	}
 	
 	override string GetName() {
@@ -57,10 +62,8 @@ class EditorExportToTerrainBuilder: EditorExportCommandBase
 
 class EditorExportToVPP: EditorExportCommandBase
 {
-	override ExportSettings GetExportSettings() {
-		ExportSettings export_settings();
-		export_settings.ExportFileMode = ExportMode.VPP;
-		return export_settings;
+	override typename GetFileType() {
+		return EditorExpansionFile;
 	}
 	
 	override string GetName() {

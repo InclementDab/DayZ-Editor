@@ -12,8 +12,18 @@ class EditorImportCommandBase: EditorCommand
 				return;
 			}
 			
+					
+			EditorFileType file_type = GetFileType().Spawn();
+			
+			if (!file_type) {
+				EditorLog.Error("Invalid FileType in Import");
+				return;
+			}
+			
 			EditorSaveData save_data = new EditorSaveData();
-			EditorFileManager.Import(save_data, file_name, GetImportMode());
+			ImportSettings settings = new ImportSettings(); // todo
+			file_type.Import(save_data, file_name, settings);
+			
 			
 			string message = string.Format("Imported %1 objects!", save_data.EditorObjects.Count().ToString());
 			m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
@@ -26,7 +36,7 @@ class EditorImportCommandBase: EditorCommand
 		}
 	}
 	
-	ImportMode GetImportMode();
+	typename GetFileType();
 }
 
 class EditorImportFromExpansion: EditorImportCommandBase
@@ -35,9 +45,10 @@ class EditorImportFromExpansion: EditorImportCommandBase
 		return "Import from .map";
 	}
 	
-	override ImportMode GetImportMode() {
-		return ImportMode.EXPANSION;
+	override typename GetFileType() {
+		return EditorExpansionFile;
 	}
+	
 }
 
 class EditorImportFromTerrainBuilder: EditorImportCommandBase
@@ -46,8 +57,8 @@ class EditorImportFromTerrainBuilder: EditorImportCommandBase
 		return "Import from Terrain Builder";
 	}
 	
-	override ImportMode GetImportMode() {
-		return ImportMode.TERRAINBUILDER;
+	override typename GetFileType() {
+		return EditorExpansionFile;
 	}
 }
 
@@ -57,7 +68,7 @@ class EditorImportFromVPP: EditorImportCommandBase
 		return "Import from .VPP";
 	}
 	
-	override ImportMode GetImportMode() {
-		return ImportMode.VPP;
+	override typename GetFileType() {
+		return EditorExpansionFile;
 	}
 }

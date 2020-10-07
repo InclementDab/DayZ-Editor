@@ -1,9 +1,10 @@
 
 class EditorFileType
 {
-	
+	EditorFileResult Import(out EditorSaveData data, string file_name, ImportSettings settings);
+	EditorFileResult Export(EditorSaveData data, string file_name, ExportSettings settings);
 }
-
+/*
 enum ExportMode 
 {
 	TERRAINBUILDER,
@@ -19,7 +20,7 @@ enum ImportMode
 	COMFILE,
 	VPP
 }
-
+*/
 enum HeightType 
 {
 	ABSOLUTE,
@@ -28,11 +29,15 @@ enum HeightType
 
 class ExportSettings
 {
-	ExportMode ExportFileMode;
 	HeightType ExportHeightType;
 	bool ExportSelectedOnly;
 	vector ExportOffset;
 	string ExportSetName;
+}
+
+class ImportSettings
+{
+
 }
 
 enum EditorFileResult
@@ -138,7 +143,7 @@ class EditorFileManager
 		
 		return EditorFileResult.SUCCESS;
 	}
-	
+	/*
 	static EditorFileResult Import(out ref EditorSaveData data, string file_name, ImportMode mode)
 	{		
 		if (!FileExist(file_name)) {
@@ -214,5 +219,5 @@ class EditorFileManager
 		}
 		
 		return EditorFileResult.NOT_SUPPORTED;		
-	}
+	}*/
 }
