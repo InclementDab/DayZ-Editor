@@ -128,7 +128,7 @@ class EditorCameraDialog: EditorDialogBase
 		
 		AddButton(DialogResult.OK);
 		AddButton(new DialogButton("Default", "ResetDefaultExecute"));
-		AddButton(DialogResult.Cancel);
+		//AddButton(DialogResult.Cancel);
 	}
 
 	
