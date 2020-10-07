@@ -40,9 +40,10 @@ class EditorPlacedListItem: EditorListItem
 	bool ListItemExecute(ButtonCommandArgs args)
 	{
 		switch (args.GetMouseButton()) {
+
 			
-			case 0: {
-				// We want to Toggle selection if you are holding control
+			case MouseState.LEFT: {
+
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					GetEditor().ToggleSelection(m_EditorObject);
 					return true;
@@ -53,17 +54,36 @@ class EditorPlacedListItem: EditorListItem
 				}
 				
 				GetEditor().SelectObject(m_EditorObject);
-				
-				
-				break;
-			} 
+				return true;
+			}
 			
-			case 1: {
+			case MouseState.MIDDLE: {
+				EditorCamera camera = GetEditor().GetCamera();
+				vector pos = m_EditorObject.GetPosition();
+				pos[1] = camera.GetPosition()[1];
+				camera.SetPosition(pos);
+				return true;
+			}
+			
+			case MouseState.RIGHT: {
+				
+				if (!m_EditorObject.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
+					GetEditor().ClearSelection();
+				}
+				
+				GetEditor().SelectObject(m_EditorObject);
+				
+				if (EditorUIManager.CurrentMenu) {
+					delete EditorUIManager.CurrentMenu;
+				}
+				
 				int x, y;
 				GetMousePos(x, y);
-				EditorPlacedContextMenu context_menu = new EditorPlacedContextMenu(x, y);
-				break;
+				EditorUIManager.CurrentMenu = new EditorPlacedContextMenu(x, y);
+				
+				return true;
 			}
+			
 		}
 		
 		return true;

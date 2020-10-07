@@ -67,7 +67,7 @@ class EditorEnvironmentDialog: EditorDialogBase
 		float exposure = GetGame().GetWorld().GetEyeAccom();
 		
 
-		GroupPrefab group_prefab = new GroupPrefab("Group1", m_Controller, string.Empty);		
+		GroupPrefab group_prefab = new GroupPrefab("Weather", m_Controller, string.Empty);		
 		group_prefab.Insert(new SliderPrefab("Time", m_Controller, "time", time, 0, 86400));
 		group_prefab.Insert(new SliderPrefab("Rain", m_Controller, "rain", rain, 0, 1));
 		group_prefab.Insert(new SliderPrefab("Fog", m_Controller, "fog", fog, 0, 1));
