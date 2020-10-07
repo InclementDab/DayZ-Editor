@@ -461,12 +461,7 @@ class EditorGroundCommand: EditorCommand
 }
 
 class EditorSnapCommand: EditorCommand
-{
-	void EditorSnapCommand()
-	{
-		SetCanExecute(false); // Not implemented yet
-	}
-	
+{	
 	protected override void Call(Class sender, CommandArgs args)
 	{
 		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
