@@ -267,7 +267,7 @@ class EditorMapGroupProto: XMLCallback
 					foreach (EditorLootPoint loot_point: loot_points) {
 
 						vector loot_pos = loot_point.GetPosition();					
-						loot_pos = Vector(loot_pos[2], loot_pos[1] + 10, loot_pos[0]);
+						loot_pos = Vector(loot_pos[2], loot_pos[1], loot_pos[0]);
 						EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("DebugCylinder", loot_pos, vector.Zero, EditorObjectFlags.OBJECTMARKER));
 						
 						// might be bad
@@ -277,12 +277,12 @@ class EditorMapGroupProto: XMLCallback
 							Vector(1, 0, 0),
 							Vector(0, 1, 0),
 							Vector(0, 0, 1),
-							Vector(-loot_pos[2], loot_pos[1], loot_pos[0])
+							Vector(loot_pos[2], loot_pos[1], loot_pos[0]) + m_Building.GetPosition()
 						};
 						
-						transform[0][0] = loot_point.GetRange() * 2.0;
-						transform[1][1] = loot_point.GetHeight() * 2.0;
-						transform[2][2] = loot_point.GetRange() * 2.0;
+						transform[0][0] = loot_point.GetRange();
+						transform[1][1] = loot_point.GetHeight();
+						transform[2][2] = loot_point.GetRange();
 						
 						loot_display.SetTransform(transform);
 						m_LootPositions.Insert(loot_display);

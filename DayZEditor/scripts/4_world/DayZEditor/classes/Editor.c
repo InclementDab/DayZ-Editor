@@ -650,15 +650,17 @@ class Editor
 	void EditLootSpawns(string name)
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", name);
-		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 10, 0), ECE_NONE);
+		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 0, 0), ECE_NONE);
+		vector size = ObjectGetSize(m_LootEditTarget);
+		m_LootEditTarget.SetPosition(Vector(0, size[1] / 2, 0));
 		
 		if (!m_LootEditTarget) return;
-		m_LootEditTarget.SetOrientation(Vector(-90, 0, 0));
+		m_LootEditTarget.SetOrientation(Vector(90, 0, 0));
 		
 		EditorCamera.CAMERA_SPEED = 10;
 		m_PositionBeforeLootEditMode = m_EditorCamera.GetPosition();
 		m_EditorCamera.SetPosition(Vector(10, 10, 10));
-		m_EditorCamera.LookAt(Vector(0, 10, 0));	
+		m_EditorCamera.LookAt(Vector(0, 0, 0));	
 		
 		if (!FileExist(EditorProtoFile)) {
 			CopyFile("DayZEditor/scripts/data/MapGroupProto.xml", EditorProtoFile);
