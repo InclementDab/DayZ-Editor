@@ -68,7 +68,7 @@ class EditorAction
 		EditorLog.Trace("EditorAction::CallUndo %1", name);		
 		undone = true;
 		foreach (int id, ref Param param: UndoParameters) {
-			GetGame().GameScript.Call(this, m_UndoAction, param);
+			g_Script.Call(this, m_UndoAction, param);
 		}
 	}
 	
@@ -77,20 +77,20 @@ class EditorAction
 		EditorLog.Trace("EditorAction::CallRedo %1", name);
 		undone = false;
 		foreach (int id, ref Param param: RedoParameters) {
-			GetGame().GameScript.Call(this, m_RedoAction, param);
+			g_Script.Call(this, m_RedoAction, param);
 		}
 		
 	}
 	
 	void InsertUndoParameter(EditorObject source, ref Param params)
 	{
-		EditorLog.Trace("InsertUndoParameter");
+		EditorLog.Trace("InsertUndoParameter %1", source.GetID().ToString());
 		UndoParameters.Insert(source.GetID(), params);
 	}	
 	
 	void InsertRedoParameter(EditorObject source, ref Param params)
 	{
-		EditorLog.Trace("InsertRedoParameter");
+		EditorLog.Trace("InsertRedoParameter %1", source.GetID().ToString());
 		RedoParameters.Insert(source.GetID(), params);
 	}
 
@@ -121,13 +121,20 @@ class EditorAction
 	
 	void SetTransform(Param3<int, vector, vector> params)
 	{
-		EditorLog.Trace("EditorObject::SetTransform");
+		EditorLog.Trace("EditorAction::SetTransform");
 		EditorObjectData editor_object_data = GetEditor().GetSessionDataById(params.param1);
-		Print(editor_object_data);
+		if (!editor_object_data) {
+			EditorLog.Error("EditorAction::SetTransform EditorObjectData was null!");
+			return;
+		}
+		
 		EditorObject editor_object = GetEditor().GetPlacedObjectById(editor_object_data.GetID());
-		Print(editor_object);
+		if (!editor_object) {
+			EditorLog.Error("EditorAction::SetTransform EditorObject was null!");
+			return;
+		}
+
 		editor_object.SetPosition(params.param2);
 		editor_object.SetOrientation(params.param3);
-		editor_object.Update();
 	}	
 }

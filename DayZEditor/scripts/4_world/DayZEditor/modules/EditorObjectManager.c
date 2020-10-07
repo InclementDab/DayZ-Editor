@@ -190,11 +190,10 @@ class EditorObjectManagerModule: JMModuleBase
 		foreach (EditorAction action: m_ActionStack) {
 			if (!action.IsUndone()) {
 				action.CallUndo();
+				EditorLog.Debug("Undo complete");
 				return;
 			}
 		}
-		
-		Print("Undo complete");
 	}
 	
 	void Redo()
@@ -203,11 +202,10 @@ class EditorObjectManagerModule: JMModuleBase
 		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
 			if (m_ActionStack[i] != null && m_ActionStack[i].IsUndone()) {
 				m_ActionStack[i].CallRedo();
+				EditorLog.Debug("Redo complete");
 				return;
 			}
 		}
-		
-		Print("Redo complete");
 	}
 	
 	bool CanUndo() 

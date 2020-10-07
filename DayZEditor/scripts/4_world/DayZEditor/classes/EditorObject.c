@@ -43,6 +43,15 @@ class EditorObject
 		return m_Data.GetID(); 
 	}
 
+	Object GetWorldObject() {
+		if (!m_WorldObject) {
+			EditorLog.Error("World Object was null! ID: %1", GetID().ToString());
+			return null;
+		}
+		
+		return m_WorldObject;
+	}
+	
 	void EditorObject(EditorObjectData data)
 	{
 		EditorLog.Trace("EditorObject " + data);
@@ -164,10 +173,6 @@ class EditorObject
 		return m_Data;
 	}
 	
-	EntityAI GetWorldObject() {
-		return m_WorldObject;
-	}
-	
 	bool OnMouseEnter(int x, int y)	{
 		return true;
 	}
@@ -177,32 +182,30 @@ class EditorObject
 	}
 
 	vector GetPosition() { 
-		return m_WorldObject.GetPosition(); 
+		return GetWorldObject().GetPosition(); 
 	}
 	
 	void SetPosition(vector pos) 
 	{ 
-		m_WorldObject.SetPosition(pos); 
-		GetTransform(m_Data.Transform);
+		GetWorldObject().SetPosition(pos);
 		Update();
 	}
 	
-	vector GetOrientation() { return m_WorldObject.GetOrientation(); }
+	vector GetOrientation() { return GetWorldObject().GetOrientation(); }
 	void SetOrientation(vector pos) 
 	{ 
-		m_WorldObject.SetOrientation(pos);
-		GetTransform(m_Data.Transform);
+		GetWorldObject().SetOrientation(pos);
 		Update();
 	}
 	
 	void GetTransform(out vector mat[4]) 
 	{ 
-		m_WorldObject.GetTransform(mat); 
+		GetWorldObject().GetTransform(mat); 
 	}
 	
 	void SetTransform(vector mat[4]) 
-	{ 
-		m_WorldObject.SetTransform(mat); 
+	{ 		
+		GetWorldObject().SetTransform(mat); 
 		m_Data.Transform = mat;
 		Update();
 	}
@@ -222,39 +225,46 @@ class EditorObject
 	
 	float GetScale()
 	{
-		return m_WorldObject.GetScale();
+		return GetWorldObject().GetScale();
 	}
 	
-	void Update() { 
-		m_WorldObject.Update(); 
+	void Update() 
+	{ 
+		GetWorldObject().Update(); 
+		
+		if (m_Data) {
+			vector mat[4];
+			GetTransform(mat);
+			m_Data.Transform = mat;
+		}
 	}
 	
 	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) {
 		
 		EntityAI ent;
-		if (Class.CastTo(ent, m_WorldObject)) {
+		if (Class.CastTo(ent, GetWorldObject())) {
 			ent.PlaceOnSurfaceRotated(trans, pos, dx, dz, fAngle, align); 
 		}
 	}
 	
 	void ClippingInfo(out vector clip_info[2]) { 
-		m_WorldObject.ClippingInfo(clip_info); 
+		GetWorldObject().ClippingInfo(clip_info); 
 	}
 	
 	void SetDirection(vector direction) { 
-		m_WorldObject.SetDirection(direction); 
+		GetWorldObject().SetDirection(direction); 
 	}
 	
 	void AddChild(notnull IEntity child, int pivot, bool position_only = false) { 
-		m_WorldObject.AddChild(child, pivot, position_only); 
+		GetWorldObject().AddChild(child, pivot, position_only); 
 	}
 	
 	vector GetTransformAxis(int axis) { 
-		return m_WorldObject.GetTransformAxis(axis); 
+		return GetWorldObject().GetTransformAxis(axis); 
 	}
 	
 	string GetModelName() { 
-		return m_WorldObject.GetModelName(); 
+		return GetWorldObject().GetModelName(); 
 	}
 	
 	bool ListItemEnabled() { 
@@ -291,18 +301,18 @@ class EditorObject
 		}
 		
 		if (m_Visible) {
-			m_WorldObject.SetFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
+			GetWorldObject().SetFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
 		} else {
-			m_WorldObject.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
+			GetWorldObject().ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
 		}
 	}
 	
 	void ShowWorldObject(bool show) { 
 		
 		if (show) {
-			m_WorldObject.SetFlags(EntityFlags.VISIBLE, false);
+			GetWorldObject().SetFlags(EntityFlags.VISIBLE, false);
 		} else {
-			m_WorldObject.ClearFlags(EntityFlags.VISIBLE, false);
+			GetWorldObject().ClearFlags(EntityFlags.VISIBLE, false);
 		}
 	}
 		
@@ -445,8 +455,8 @@ class EditorObject
 	void ResetAnimation()
 	{
 		EditorLog.Trace("EditorObject::SetAnimation");
-		if (m_WorldObject.IsMan()) {
-			DayZPlayerImplement.Cast(m_WorldObject).EditorAnimationReset();
+		if (GetWorldObject().IsMan()) {
+			DayZPlayerImplement.Cast(GetWorldObject()).EditorAnimationReset();
 		}
 	}
 	
@@ -455,7 +465,7 @@ class EditorObject
 		EditorLog.Trace("EditorObject::PauseSimulation");
 		
 		EntityAI ent;
-		if (Class.CastTo(ent, m_WorldObject)) {
+		if (Class.CastTo(ent, GetWorldObject())) {
 			ent.DisableSimulation(pause);
 		}		
 	}
