@@ -671,7 +671,7 @@ class EditorScriptEditorCommand: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorMultilineEditBoxDialog edit_dialog = new EditorMultilineEditBoxDialog("Script Dialog Test");
+		EditorMultilineEditBoxDialog edit_dialog = new EditorMultilineEditBoxDialog("Script Console");
 		
 		string script_test;
 		edit_dialog.ShowDialog(script_test);

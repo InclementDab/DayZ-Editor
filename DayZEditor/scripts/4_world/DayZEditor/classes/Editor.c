@@ -282,8 +282,11 @@ class Editor
 		}
 		
 		SetActive(true);
+		
+		thread AutoSaveThread();
 	}
 	
+
 	private void ~Editor() 
 	{
 		EditorLog.Trace("~Editor");
@@ -736,6 +739,16 @@ class Editor
 		}
 		
 		return false;
+	}
+	
+	private void AutoSaveThread()
+	{
+		while (g_Editor) {
+			Sleep(m_EditorSettings.AutoSaveTimer * 1000);
+			if (EditorSaveFile != string.Empty) {
+				CommandManager.SaveCommand.Execute(this, null);
+			}
+		}
 	}
 }
 
