@@ -32,14 +32,10 @@ class ExpansionImportData
 		string name;
 		vector position, rotation;
 		while (GetObjectFromFile(handler, name, position, rotation)) {	
-			
-			string model_name = GetGame().GetModelName(name);
-			if (model_name == "UNKNOWN_P3D_FILE") {
-				EditorLog.Warning("%1 is not a valid Object Type!", name);
-				continue;
-			}
-			
-			data.InsertData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
+					
+			EditorObjectData dta = EditorObjectData.Create(name, position, rotation, EditorObjectFlags.ALL);
+			Print(dta);
+			data.InsertData(dta);
 		}
 		
 		// another stupid fix

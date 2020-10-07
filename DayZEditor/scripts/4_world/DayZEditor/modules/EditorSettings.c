@@ -10,7 +10,7 @@ class EditorSettings
 	// Autosave timer in seconds
 	int AutoSaveTimer = 240;
 
-	bool LockCameraDuringDialogs = false;
+	bool LockCameraDuringDialogs = true;
 	
 	void EditorSettings() 
 	{

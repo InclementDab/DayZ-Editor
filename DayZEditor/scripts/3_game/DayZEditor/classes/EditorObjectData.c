@@ -102,50 +102,14 @@ class EditorObjectData
 	void OnSend(Serializer serializer)
 	{
 		serializer.Write(Type);
-		//serializer.Write(Transform);
+		serializer.Write(Transform);
 		serializer.Write(Flags);
 	}
 	
 	void OnRead(Serializer serializer)
 	{
 		serializer.Read(Type);
-		//serializer.Read(Transform);
+		serializer.Read(Transform);
 		serializer.Read(Flags);
 	}
 }
-
-/*
-class EditorObjectDataMap
-{
-	private ref map<int, ref EditorObjectData> _data = new map<int, ref EditorObjectData>();
-
-	void ~EditorObjectDataMap()
-	{
-		delete _data;
-	}
-	
-	bool Insert(EditorObjectData data)
-	{		
-		return _data.Insert(data.GetID(), data);
-	}
-	/*
-	void Insert(EditorObjectDataMap data_set)
-	{
-		
-
-		for (int i = 0; i < data_set.Count(); i++) {
-			Insert(data_set.Get(i));
-		}
-	}
-	
-	void Remove(EditorObjectData data)
-	{
-		_data.Remove(data.GetID());
-	}
-	
-	EditorObjectData Get(int index)
-	{
-		return _data[index];
-	}
-}
-*/

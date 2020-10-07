@@ -46,6 +46,11 @@ class EditorSaveData
 	vector CameraPosition[4];
 	ref EditorObjectDataMap EditorObjects = new EditorObjectDataMap();
 	
+	void ~EditorSaveData()
+	{
+		delete EditorObjects;
+	}
+	
 	static EditorSaveData CreateFromEditor(Editor editor)
 	{
 		EditorSaveData save_data = new EditorSaveData();

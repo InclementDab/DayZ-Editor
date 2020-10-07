@@ -438,7 +438,7 @@ class EditorCameraControlsCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-
+		
 	}
 
 	override string GetName() {

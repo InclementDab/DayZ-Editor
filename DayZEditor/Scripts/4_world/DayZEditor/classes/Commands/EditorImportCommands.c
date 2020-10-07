@@ -19,7 +19,6 @@ class EditorImportCommandBase: EditorCommand
 			m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
 			EditorLog.Info(message);
 			
-			Print(save_data.EditorObjects.Count());
 			foreach (EditorObjectData eo: save_data.EditorObjects) {
 				GetEditor().CreateObject(eo, false);
 			}
