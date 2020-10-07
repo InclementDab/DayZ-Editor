@@ -495,7 +495,7 @@ class EditorObject: EditorWorldObject
 	
 	EditorPlacedListItem GetListItem()
 	{
-		EditorLog.Trace("EditorObject::GetListItem");
+		//EditorLog.Trace("EditorObject::GetListItem");
 		return m_EditorPlacedListItem;
 	}
 

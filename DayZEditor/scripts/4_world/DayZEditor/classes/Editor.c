@@ -360,9 +360,9 @@ class Editor
 			m_EditorHudController.cam_y = cam_pos[2];
 			m_EditorHudController.cam_z = cam_pos[1];
 			
-			/*m_EditorHudController.NotifyPropertyChanged("cam_x");
+			m_EditorHudController.NotifyPropertyChanged("cam_x");
 			m_EditorHudController.NotifyPropertyChanged("cam_y");
-			m_EditorHudController.NotifyPropertyChanged("cam_z");*/
+			m_EditorHudController.NotifyPropertyChanged("cam_z");
 			
 		}
 		

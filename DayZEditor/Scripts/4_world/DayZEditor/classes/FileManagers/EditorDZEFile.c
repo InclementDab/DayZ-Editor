@@ -25,7 +25,16 @@ class EditorDZEFile: EditorFileType
 		
 		file_serializer.Close();
 		
-		return save_data;
+		// bugfix
+		EditorSaveData bug_fix_save_data = new EditorSaveData();
+		foreach (EditorObjectData object_data: save_data.EditorObjects) {
+			bug_fix_save_data.EditorObjects.InsertData(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Flags));
+		}
+		
+		bug_fix_save_data.MapName = save_data.MapName;
+		bug_fix_save_data.CameraPosition = save_data.CameraPosition;
+		
+		return bug_fix_save_data;
 	}
 	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)

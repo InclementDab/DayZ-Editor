@@ -41,7 +41,7 @@ class EditorSaveData
 {
 
 	string MapName = "ChernarusPlus";
-	vector CameraPosition[4];
+	vector CameraPosition;
 	ref EditorObjectDataMap EditorObjects = new EditorObjectDataMap();
 	
 	void ~EditorSaveData()
@@ -57,7 +57,7 @@ class EditorSaveData
 		save_data.MapName = GetGame().GetWorldName();
 		
 		// Save Camera Position
-		editor.GetCamera().GetTransform(save_data.CameraPosition);
+		save_data.CameraPosition = editor.GetCamera().GetPosition();
 		
 		// Save Objects
 		EditorObjectMap placed_objects = editor.GetPlacedObjects();

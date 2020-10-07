@@ -126,7 +126,7 @@ static string CreateEditorMission(string map_name = "ChernarusPlus")
 
 static bool RecursiveGetParent(out Widget w, string name)
 {
-	if (w.GetName() == name) 
+	if (w && w.GetName() == name) 
 		return true;
 	
 	w = w.GetParent();
