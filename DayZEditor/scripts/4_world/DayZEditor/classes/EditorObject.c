@@ -1,8 +1,7 @@
 
 class EditorObject
 {
-	// DO NOT DELETE THIS. NEEDS TO BE REF IN EDITOR
-	protected ref EditorObjectData 			m_Data;
+	protected autoptr EditorObjectData 		m_Data;
 	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem 		m_EditorPlacedListItem;
@@ -17,8 +16,6 @@ class EditorObject
 	
 	private vector m_LineCenters[12]; 
 	private vector m_LineVerticies[8];
-	
-	float LocalAngle; // temp
 	
 	static float line_width = 0.02;
 	
@@ -43,10 +40,10 @@ class EditorObject
 		return m_Data.GetID(); 
 	}
 
-	Object GetWorldObject() {
+	Object GetWorldObject() 
+	{
 		if (!m_WorldObject) {
 			EditorLog.Error("World Object was null! ID: %1", GetID().ToString());
-			return null;
 		}
 		
 		return m_WorldObject;
@@ -58,11 +55,16 @@ class EditorObject
 		m_Data = data;
 		
 		if (!m_Data.WorldObject) {
+			
 			m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
 			m_WorldObject.SetTransform(m_Data.Transform);
 			m_WorldObject.SetFlags(EntityFlags.STATIC, true);
 		} else {
 			m_WorldObject = m_Data.WorldObject;
+		}
+		
+		if (GetEditor()) {
+			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
 		}
 		
 		
@@ -131,7 +133,7 @@ class EditorObject
 	void ~EditorObject()
 	{
 		EditorLog.Trace("~EditorObject");
-		GetTransform(m_Data.Transform);
+		Update();
 		
 		HideBoundingBox();
 		
@@ -206,7 +208,6 @@ class EditorObject
 	void SetTransform(vector mat[4]) 
 	{ 		
 		GetWorldObject().SetTransform(mat); 
-		m_Data.Transform = mat;
 		Update();
 	}
 	
@@ -234,7 +235,7 @@ class EditorObject
 		
 		if (m_Data) {
 			vector mat[4];
-			GetTransform(mat);
+			GetWorldObject().GetTransform(mat);
 			m_Data.Transform = mat;
 		}
 	}
@@ -332,8 +333,9 @@ class EditorObject
 		return result;
 	}
 		
-	ref Param3<int, vector, vector> TransformBeforeDrag;
-	Param3<int, vector, vector> GetTransformArray() {	
+
+	Param3<int, vector, vector> GetTransformArray() 
+	{
 		return new Param3<int, vector, vector>(GetID(), GetPosition(), GetOrientation());
 	}
 

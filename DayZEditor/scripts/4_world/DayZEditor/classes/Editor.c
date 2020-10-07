@@ -95,18 +95,17 @@ class Editor
 		return ObjectInHand != null; 
 	
 		
-	EditorObject CreateObject(ref EditorObjectData editor_object_data, bool create_undo = true) 
-	{		
+	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true) 
+	{			
 		EditorObject editor_object = m_ObjectManager.CreateObject(editor_object_data, create_undo);
-		m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
 		return editor_object;
 	}
 	
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 
 	{
-		EditorObject editor_object = m_ObjectManager.CreateObject(target, flags, create_undo);
-		m_SessionCache.Insert(editor_object.GetData().GetID(), editor_object.GetData());
+		EditorObjectData data = EditorObjectData.Create(target, flags);
+		EditorObject editor_object = m_ObjectManager.CreateObject(data, create_undo);
 		return editor_object;
 	}
 	

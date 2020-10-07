@@ -50,8 +50,8 @@ class EditorAction
 	{
 		EditorLog.Trace("~EditorAction");
 		
-		foreach (int i, ref Param p: UndoParameters)
-			GetEditor().DeleteSessionData(i);
+		/*foreach (int i, ref Param p: UndoParameters)
+			GetEditor().DeleteSessionData(i);*/
 		
 	}
 	

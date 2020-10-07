@@ -30,7 +30,6 @@ class DragHandler
 			Sleep(10);
 		} 
 		
-		
 		drag_undo.InsertRedoParameter(m_EditorObject, m_EditorObject.GetTransformArray());
 		GetEditor().GetObjectManager().InsertAction(drag_undo);
 		
