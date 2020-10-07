@@ -4,23 +4,7 @@ class EditorFileType
 	EditorFileResult Import(out EditorSaveData data, string file_name, ImportSettings settings);
 	EditorFileResult Export(EditorSaveData data, string file_name, ExportSettings settings);
 }
-/*
-enum ExportMode 
-{
-	TERRAINBUILDER,
-	EXPANSION,
-	COMFILE,
-	VPP
-}
 
-enum ImportMode
-{
-	TERRAINBUILDER,
-	EXPANSION, 
-	COMFILE,
-	VPP
-}
-*/
 enum HeightType 
 {
 	ABSOLUTE,

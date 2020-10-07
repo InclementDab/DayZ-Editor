@@ -13,14 +13,6 @@ class EditorExpansionFile: EditorFileType
 			data.EditorObjects.InsertData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.ALL));
 		}
 		
-		// another stupid fix
-		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();		
-		foreach (EditorObject eo: placed_objects) {
-			GetEditor().SelectObject(eo);
-		}
-		
-		GetEditor().ClearSelection();
-		
 		if (handler) {
 			CloseFile(handler);
 		}

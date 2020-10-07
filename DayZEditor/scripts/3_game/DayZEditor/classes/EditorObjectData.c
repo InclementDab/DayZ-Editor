@@ -29,9 +29,7 @@ class EditorObjectData
 	
 	void EditorObjectData() 
 	{
-		// Item limit is 2000000
-		if (lowest_id == 0) lowest_id = 2000000;
-		lowest_id--;
+		lowest_id++;
 		m_Id = lowest_id;
 	}
 	
@@ -47,7 +45,9 @@ class EditorObjectData
 		vector transform[4];
 		
 		Math3D.YawPitchRollMatrix(orientation, transform);
+		
 		transform[3] = position;
+		Print(transform);
 		return Create(type, transform, flags);
 	}
 	
