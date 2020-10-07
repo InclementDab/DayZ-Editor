@@ -8,21 +8,19 @@ class EditorImportCommandBase: EditorCommand
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 			return;
 		}
-		
-		file_name = "$profile:Editor/" + file_name;
-	
-		if (!FileExist(file_name)) {
-			MessageBox.Show("File Not Found", "Could not find file " + file_name, MessageBoxButtons.OK);
-			return;
-		}
-				
+					
 		EditorFileType file_type = GetFileType().Spawn();
 		if (!file_type) {
 			EditorLog.Error("Invalid FileType in Import");
 			return;
 		}
 		
+		file_name = "$profile:Editor/" + file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
+		if (!FileExist(file_name)) {
+			MessageBox.Show("File Not Found", "Could not find file " + file_name, MessageBoxButtons.OK);
+			return;
+		}
 		
 		EditorSaveData save_data = new EditorSaveData();
 		ImportSettings settings = new ImportSettings(); // todo
