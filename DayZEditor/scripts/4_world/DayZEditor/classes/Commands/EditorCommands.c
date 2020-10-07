@@ -310,7 +310,8 @@ class EditorCameraControlsCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		
+		EditorCameraDialog camera_dialog("Camera Properties");
+		camera_dialog.ShowDialog();
 	}
 
 	override string GetName() {

@@ -4,7 +4,7 @@ class EditorEnvironmentDialogController: DialogBaseController
 	protected World m_World;
 	protected Weather m_Weather;
 	
-	float time, rain, fog, overcast, wind, exposure;
+	float time, rain, fog, overcast, wind;
 		
 	void EditorEnvironmentDialogController()
 	{
@@ -44,11 +44,6 @@ class EditorEnvironmentDialogController: DialogBaseController
 				m_Weather.SetWindSpeed(wind);
 				break;
 			}
-			
-			case "exposure": {
-				m_World.SetEyeAccom(exposure);
-				break;
-			}
 		}
 	}
 }
@@ -78,7 +73,6 @@ class EditorEnvironmentDialog: EditorDialogBase
 		group_prefab.Insert(new SliderPrefab("Fog", m_Controller, "fog", fog, 0, 1));
 		group_prefab.Insert(new SliderPrefab("Overcast", m_Controller, "overcast", overcast, 0, 1));
 		group_prefab.Insert(new SliderPrefab("Wind", m_Controller, "wind", wind, 0, 1));
-		group_prefab.Insert(new SliderPrefab("Exposure", m_Controller, "exposure", exposure, 0, 1));
 				
 		AddContent(group_prefab);
 			

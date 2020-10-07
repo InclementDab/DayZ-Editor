@@ -1,7 +1,5 @@
-
 static float DEFAULT_FOV = -1;
 static float DEFAULT_NEARPLANE = -1;
-
 
 class EditorCameraDialogControllerData
 {
@@ -13,10 +11,7 @@ class EditorCameraDialogControllerData
 }
 
 class EditorCameraDialogController: DialogBaseController
-{
-	
-	protected EditorCamera m_EditorCamera;
-	
+{	
 	float fov;
 	float blur;
 	float near_plane;
@@ -26,14 +21,14 @@ class EditorCameraDialogController: DialogBaseController
 	
 	float vignette;
 	float sharpness;
+	float exposure;
 	
-	void SetCamera(EditorCamera editor_camera)
+	void EditorCameraDialogController()
 	{
 		EditorLog.Trace("EditorCameraDialogController");
-		m_EditorCamera = editor_camera;
 		
-		fov = m_EditorCamera.GetCurrentFOV();
-		near_plane = m_EditorCamera.GetNearPlane();
+		fov = GetEditor().GetCamera().GetCurrentFOV();
+		near_plane = GetEditor().GetCamera().GetNearPlane();
 		
 		blur = EditorCameraDialogControllerData.Blur;
 		dof_distance = EditorCameraDialogControllerData.DOFDistance;
@@ -48,12 +43,12 @@ class EditorCameraDialogController: DialogBaseController
 		switch (property_name) {
 			
 			case "fov": {
-				m_EditorCamera.SetFOV(fov);
+				GetEditor().GetCamera().SetFOV(fov);
 				break;
 			}			
 			
 			case "near_plane": {
-				m_EditorCamera.SetNearPlane(near_plane);
+				GetEditor().GetCamera().SetNearPlane(near_plane);
 				break;
 			}			
 			
@@ -61,7 +56,7 @@ class EditorCameraDialogController: DialogBaseController
 			case "dof_distance": {
 				EditorCameraDialogControllerData.DOFDistance = dof_distance;
 				EditorCameraDialogControllerData.DOFBlur = dof_blur;
-				m_EditorCamera.SetFocus(dof_distance, dof_blur);
+				GetEditor().GetCamera().SetFocus(dof_distance, dof_blur);
 				break;
 			}
 			
@@ -77,10 +72,14 @@ class EditorCameraDialogController: DialogBaseController
 				break;
 			}
 			
-			case "sharpness": {
-				
+			case "sharpness": {	
 				EditorCameraDialogControllerData.Sharpness = sharpness;
 				GetGame().GetWorld().GetMaterial("Graphics/Materials/postprocess/filmgrainNV").SetParam("Sharpness", EditorCameraDialogControllerData.Sharpness);
+				break;
+			}
+			
+			case "exposure": {
+				GetGame().GetWorld().SetEyeAccom(exposure);
 				break;
 			}
 		}		
@@ -88,49 +87,43 @@ class EditorCameraDialogController: DialogBaseController
 }
 
 
-/*
-class EditorCameraDialog: EditorDialog
+
+class EditorCameraDialog: EditorDialogBase
 {
-	protected EditorCamera m_EditorCamera;
-	protected ref EditorCameraDialogController m_EditorCameraDialogController;
+	protected EditorCameraDialogController m_EditorCameraDialogController;
 	
-	void EditorCameraDialog(Widget parent = null) 
+	void EditorCameraDialog(string title) 
 	{
-		EditorLog.Trace("EditorCameraDialog::Init");
+		EditorLog.Trace("EditorCameraDialog");
 		
-		SetTitle("Camera Controller");
-		AddButton("Default", ResetDefaultExecute);
-		AddButton("Close", CloseDialog);
-	}
-	
-	void SetEditorCamera(EditorCamera editor_camera)
-	{
-		m_EditorCamera = editor_camera;
-	
+		m_EditorCameraDialogController = EditorCameraDialogController.Cast(m_Controller);
+		
+			
 		if (DEFAULT_FOV == -1) {
-			DEFAULT_FOV = m_EditorCamera.GetCurrentFOV();
+			DEFAULT_FOV = GetEditor().GetCamera().GetCurrentFOV();
 		}
 		
 		if (DEFAULT_NEARPLANE == -1) {
-			DEFAULT_NEARPLANE = m_EditorCamera.GetNearPlane();
+			DEFAULT_NEARPLANE = GetEditor().GetCamera().GetNearPlane();
 		}
-		
-		m_EditorCameraDialogController = EditorCameraDialogController.Cast(m_Controller);
-		m_EditorCameraDialogController.SetCamera(m_EditorCamera);
-		/*
-		EditorPrefabGroup camera_group = new EditorPrefabGroup("Camera");
-		camera_group.AddPrefab(new EditorPrefabSlider("FOV", "fov", 0, 2));
-		camera_group.AddPrefab(new EditorPrefabSlider("Gaussian Blur", "blur", 0, 1));
-		camera_group.AddPrefab(new EditorPrefabSlider("Near Plane", "near_plane", 0, 1));
-		camera_group.AddPrefab(new EditorPrefabSlider("DOF Distance", "dof_distance", 0, 1));
-		camera_group.AddPrefab(new EditorPrefabSlider("DOF Blur", "dof_blur", 0, 1));
-		camera_group.AddPrefab(new EditorPrefabSlider("Vignette", "vignette", 0, 1));
-		camera_group.AddPrefab(new EditorPrefabSlider("Sharpness", "sharpness", 0, 1));
-		
-		camera_group.SetController(m_EditorCameraDialogController);
+				
+		GroupPrefab camera_group = new GroupPrefab("Camera", m_Controller, string.Empty);
+		camera_group.Insert(new SliderPrefab("FOV", m_Controller, "fov",  GetEditor().GetCamera().GetCurrentFOV(), 0, 2));
+		camera_group.Insert(new SliderPrefab("Gaussian Blur", m_Controller, "blur", EditorCameraDialogControllerData.Blur, 0, 1));
+		camera_group.Insert(new SliderPrefab("Near Plane", m_Controller, "near_plane",  GetEditor().GetCamera().GetNearPlane(), 0, 1));
+		camera_group.Insert(new SliderPrefab("DOF Distance", m_Controller, "dof_distance", EditorCameraDialogControllerData.DOFDistance, 0, 1));
+		camera_group.Insert(new SliderPrefab("DOF Blur", m_Controller, "dof_blur", EditorCameraDialogControllerData.DOFBlur, 0, 1));
+		camera_group.Insert(new SliderPrefab("Vignette", m_Controller, "vignette", EditorCameraDialogControllerData.Vignette, 0, 1));
+		camera_group.Insert(new SliderPrefab("Sharpness", m_Controller, "sharpness", EditorCameraDialogControllerData.Sharpness, 0, 1));
+		camera_group.Insert(new SliderPrefab("Exposure", m_Controller, "exposure", GetGame().GetWorld().GetEyeAccom(), 0, 1));
 		
 		AddContent(camera_group);
+		
+		AddButton(DialogResult.OK);
+		AddButton(new DialogButton("Default", "ResetDefaultExecute"));
+		AddButton(DialogResult.Cancel);
 	}
+
 	
 	void ResetDefaultExecute()
 	{
@@ -154,5 +147,4 @@ class EditorCameraDialog: EditorDialog
 		return EditorCameraDialogController;
 	}
 	
-}*/
-
+}
