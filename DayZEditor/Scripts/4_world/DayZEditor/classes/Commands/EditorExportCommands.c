@@ -35,7 +35,7 @@ class EditorExportCommandBase: EditorCommand
 class EditorExportToInitFile: EditorExportCommandBase
 {	
 	override typename GetFileType() {
-		return EditorExpansionFile;
+		return EditorCOMFile;
 	}
 	
 	override string GetName() {
@@ -57,7 +57,7 @@ class EditorExportToExpansion: EditorExportCommandBase
 class EditorExportToTerrainBuilder: EditorExportCommandBase
 {	
 	override typename GetFileType() {
-		return EditorExpansionFile;
+		return EditorTerrainBuilderFile;
 	}
 	
 	override string GetName() {
@@ -68,7 +68,7 @@ class EditorExportToTerrainBuilder: EditorExportCommandBase
 class EditorExportToVPP: EditorExportCommandBase
 {
 	override typename GetFileType() {
-		return EditorExpansionFile;
+		return EditorVPPFile;
 	}
 	
 	override string GetName() {

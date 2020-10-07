@@ -24,6 +24,10 @@ class EditorTerrainBuilderFile: EditorFileType
 		
 		CloseFile(handle);
 	}
+	
+	override string GetExtension() {
+		return ".txt";
+	}
 }
 
 

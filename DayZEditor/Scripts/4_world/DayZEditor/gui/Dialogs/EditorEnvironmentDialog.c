@@ -71,16 +71,8 @@ class EditorEnvironmentDialog: EditorDialogBase
 		
 		float exposure = GetGame().GetWorld().GetEyeAccom();
 		
-		DropdownListPrefabItem list_prefab = new DropdownListPrefabItem("Test1");
-		DropdownListPrefab dropdown = new DropdownListPrefab("This is a caption", m_Controller, "na", list_prefab);
-		dropdown.InsertItem(list_prefab);
-		dropdown.InsertItem("Test2");
-		dropdown.InsertItem("Test3");
-	
-		GroupPrefab group_prefab = new GroupPrefab("Group1", m_Controller, string.Empty);
-		
-		
-		group_prefab.Insert(dropdown);
+
+		GroupPrefab group_prefab = new GroupPrefab("Group1", m_Controller, string.Empty);		
 		group_prefab.Insert(new SliderPrefab("Time", m_Controller, "time", time, 0, 86400));
 		group_prefab.Insert(new SliderPrefab("Rain", m_Controller, "rain", rain, 0, 1));
 		group_prefab.Insert(new SliderPrefab("Fog", m_Controller, "fog", fog, 0, 1));

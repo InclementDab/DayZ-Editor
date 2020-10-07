@@ -57,7 +57,7 @@ class EditorImportFromTerrainBuilder: EditorImportCommandBase
 	}
 	
 	override typename GetFileType() {
-		return EditorExpansionFile;
+		return EditorTerrainBuilderFile;
 	}
 }
 
@@ -68,6 +68,6 @@ class EditorImportFromVPP: EditorImportCommandBase
 	}
 	
 	override typename GetFileType() {
-		return EditorExpansionFile;
+		return EditorVPPFile;
 	}
 }

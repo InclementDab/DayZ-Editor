@@ -44,4 +44,7 @@ class EditorExpansionFile: EditorFileType
 		CloseFile(handle);
 	}
 	
+	override string GetExtension() {
+		return ".map";
+	}
 }
