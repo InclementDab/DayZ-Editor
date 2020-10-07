@@ -330,6 +330,11 @@ class EditorObject: EditorWorldObject
 		return m_BasePoint.GetWorldPosition();
 	}
 	
+	float GetYDistance()
+	{
+		return ((GetPosition() - m_BasePoint.GetPosition())[1]);
+	}
+	
 	vector GetTopCenter()
 	{		
 		vector clip_info[2];

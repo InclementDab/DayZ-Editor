@@ -191,7 +191,8 @@ class ObjectDragHandler: DragHandler
 				
 			} else {
 				transform[3] = cursor_pos;
-				transform[3][1] = cursor_pos[1] + size[1]/2;				
+				transform[3][1] = transform[3][1] + m_EditorObject.GetYDistance();				
+				
 			} 			
 		}
 		
