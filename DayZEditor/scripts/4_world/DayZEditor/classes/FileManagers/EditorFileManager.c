@@ -1,8 +1,8 @@
 
 class EditorFileType
 {
-	EditorFileResult Import(out EditorSaveData data, string file_name, ImportSettings settings);
-	EditorFileResult Export(EditorSaveData data, string file_name, ExportSettings settings);
+	EditorSaveData Import(FileHandle handle, ImportSettings settings);
+	void Export(EditorSaveData data, FileHandle handle, ExportSettings settings);
 }
 
 enum HeightType 

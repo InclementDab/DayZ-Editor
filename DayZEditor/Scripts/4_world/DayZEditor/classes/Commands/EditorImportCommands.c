@@ -17,25 +17,28 @@ class EditorImportCommandBase: EditorCommand
 		}
 				
 		EditorFileType file_type = GetFileType().Spawn();
-		
 		if (!file_type) {
 			EditorLog.Error("Invalid FileType in Import");
 			return;
 		}
 		
+		FileHandle handle = OpenFile(file_name, FileMode.READ);
+		if (!handle) {
+			EditorLog.Error("File in use %1", file_name);
+			return;
+		}
+		
 		EditorSaveData save_data = new EditorSaveData();
 		ImportSettings settings = new ImportSettings(); // todo
-		file_type.Import(save_data, file_name, settings);
+		save_data = file_type.Import(handle, settings);
+				
+		EditorObjectMap result = GetEditor().CreateObjects(save_data.EditorObjects, false);
 		
-		
-		string message = string.Format("Imported %1 objects!", save_data.EditorObjects.Count().ToString());
+		string message = string.Format("Imported %1 objects!", result.Count().ToString());
 		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
 		EditorLog.Info(message);
 		
-		foreach (EditorObjectData eo: save_data.EditorObjects) {
-			Print(eo.Transform);
-			GetEditor().CreateObject(eo, false);
-		}
+		CloseFile(handle);
 	}
 	
 	typename GetFileType();

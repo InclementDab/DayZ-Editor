@@ -66,7 +66,7 @@ class EditorObjectData
 		data.Flags = flags;
 		data.DisplayName = data.Type;
 		//data.ObjectMod = GetModFromObject(data.Type); todo refactor.
-		
+
 		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));
 				
 		return data;

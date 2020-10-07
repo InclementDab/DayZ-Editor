@@ -56,6 +56,7 @@ class EditorObject
 		
 		if (!m_Data.WorldObject) {
 			m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
+			Print(m_Data.Transform);
 			m_WorldObject.SetTransform(m_Data.Transform);
 			m_WorldObject.SetFlags(EntityFlags.STATIC, true);
 			m_Data.WorldObject = m_WorldObject;
