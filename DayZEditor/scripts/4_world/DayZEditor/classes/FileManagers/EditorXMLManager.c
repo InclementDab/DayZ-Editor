@@ -296,6 +296,14 @@ class EditorMapGroupProto: XMLCallback
 		}
 		
 		EditorLog.Error("Building was not found!");
+		
+		thread ErrorMessage(string.Format("%1 not found in MapGroupProto.xml", m_Building.GetType()));
+		GetEditor().FinishEditLootSpawns();
+	}
+	
+	private void ErrorMessage(string message)
+	{	
+		MessageBox.Show("Error", message, MessageBoxButtons.OK);
 	}
 }
 

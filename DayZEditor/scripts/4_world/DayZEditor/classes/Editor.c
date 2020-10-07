@@ -657,7 +657,7 @@ class Editor
 	void EditLootSpawns(string name)
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", name);
-		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 0, 0), ECE_NONE);
+		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 0, 0), ECE_LOCAL | ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 		vector size = ObjectGetSize(m_LootEditTarget);
 		m_LootEditTarget.SetPosition(Vector(0, size[1] / 2, 0));
 		
