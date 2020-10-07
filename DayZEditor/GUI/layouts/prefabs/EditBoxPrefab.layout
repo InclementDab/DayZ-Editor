@@ -1,4 +1,4 @@
-EditBoxWidgetClass ContentText {
+WrapSpacerWidgetClass EditBoxPrefab {
  visible 1
  size 0.8 30
  halign center_ref
@@ -7,15 +7,50 @@ EditBoxWidgetClass ContentText {
  vexactpos 1
  hexactsize 0
  vexactsize 1
- scriptclass "ViewBinding"
- style Editor
- "Use default text" 0
- "exact text" 1
- font "gui/fonts/sdf_MetronBook24"
+ scriptclass ""
+ style Colorable
+ Padding 0
+ Margin 0
+ content_halign center
+ content_valign center
  {
-  ScriptParamsClass {
-   Binding_Name "Value"
-   Two_Way_Binding 1
+  TextWidgetClass Caption {
+   ignorepointer 1
+   position 0 0
+   size 0.2 1
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scriptclass "ViewBinding"
+   "text halign" right
+   {
+    ScriptParamsClass {
+     Binding_Name "Caption"
+    }
+   }
+  }
+  EditBoxWidgetClass TextBox {
+   visible 1
+   size 0.5 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scriptclass "ViewBinding"
+   style Editor
+   "Use default text" 0
+   "exact text" 1
+   font "gui/fonts/sdf_MetronBook24"
+   {
+    ScriptParamsClass {
+     Binding_Name "Value"
+     Two_Way_Binding 1
+    }
+   }
   }
  }
 }
