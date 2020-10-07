@@ -1383,7 +1383,6 @@ FrameWidgetClass EditorFrame {
      hexactsize 1
      vexactsize 1
      scriptclass "ViewBinding"
-     text "DayZ Editor Version 0.1.0"
      font "gui/fonts/MetronBlack-Italic16"
      "text valign" center
      {

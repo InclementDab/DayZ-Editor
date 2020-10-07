@@ -2,7 +2,7 @@ GridSpacerWidgetClass EditorDialog {
  clipchildren 1
  ignorepointer 1
  color 0.1451 0.1451 0.1451 1
- size 0.5 0.3
+ size 0.4 0.3
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -99,6 +99,7 @@ GridSpacerWidgetClass EditorDialog {
   WrapSpacerWidgetClass DialogContent {
    visible 1
    ignorepointer 1
+   position 0 0
    size 1 0.8
    halign center_ref
    valign center_ref
@@ -134,7 +135,7 @@ GridSpacerWidgetClass EditorDialog {
    scaled 1
    scriptclass "ViewBinding"
    style Colorable
-   Padding 0
+   Padding 5
    Margin 0
    content_halign center
    content_valign center

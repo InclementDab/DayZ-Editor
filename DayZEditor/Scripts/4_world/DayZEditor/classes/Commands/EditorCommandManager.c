@@ -55,6 +55,8 @@ class EditorCommandManager
 	
 	ref EditorScriptEditorCommand ScriptEditorCommand;
 	
+	ref EditorDonateCommand DonateCommand;
+	
 	void EditorCommandManager()
 	{			
 		for (int i = 0; i < Type().GetVariableCount(); i++) {

@@ -49,6 +49,11 @@ class DialogBase: ScriptView
 		return AddButton(typename.EnumToString(DialogResult, result), result);
 	}
 	
+	DialogButton AddButton(string label, string callback)
+	{
+		return AddButton(new DialogButton(label, callback));
+	}
+	
 	DialogButton AddButton(string label, DialogResult result)
 	{
 		return AddButton(new DialogExitButton(label, "DialogExitButtonCallback", result));
