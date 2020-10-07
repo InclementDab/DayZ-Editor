@@ -1,7 +1,8 @@
 
 class EditorObject
 {
-	protected autoptr EditorObjectData 		m_Data;
+	// DO NOT DELETE THIS. NEEDS TO BE REF IN EDITOR
+	protected ref EditorObjectData 			m_Data;
 	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem 		m_EditorPlacedListItem;
@@ -44,15 +45,17 @@ class EditorObject
 
 	void EditorObject(EditorObjectData data)
 	{
-		EditorLog.Trace("EditorObject");
+		EditorLog.Trace("EditorObject " + data);
 		m_Data = data;
-		m_WorldObject = m_Data.WorldObject;
 		
-		if (!m_WorldObject) {
+		if (!m_Data.WorldObject) {
 			m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
 			m_WorldObject.SetTransform(m_Data.Transform);
 			m_WorldObject.SetFlags(EntityFlags.STATIC, true);
+		} else {
+			m_WorldObject = m_Data.WorldObject;
 		}
+		
 		
 		vector clip_info[2];
 		ClippingInfo(clip_info);

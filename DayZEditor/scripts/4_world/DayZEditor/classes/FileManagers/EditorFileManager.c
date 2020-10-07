@@ -60,7 +60,7 @@ class EditorSaveData
 		EditorObjectSet placed_objects = editor.GetPlacedObjects();
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
-				save_data.EditorObjects.InsertEditorData(editor_object.GetData());
+				save_data.EditorObjects.Insert(editor_object.GetData().GetID(), editor_object.GetData());
 			}
 		}
 		
@@ -143,7 +143,8 @@ class EditorFileManager
 				
 				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
 					EditorLog.Debug("ImportFromFile::COMFILE::Import " + param.param1);					
-					data.EditorObjects.InsertEditorData(EditorObjectData.Create(param.param1, param.param2, param.param3));
+					EditorObjectData d = EditorObjectData.Create(param.param1, param.param2, param.param3);
+					data.EditorObjects.Insert(d.GetID(), d);
 				}
 				
 				break;

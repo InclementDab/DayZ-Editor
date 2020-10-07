@@ -8,29 +8,6 @@ enum EditorObjectFlags {
 	ALL = 30 // 2 | 4 | 8 | 16
 };
 
-
-class EditorObjectDataSet: map<int, ref EditorObjectData>
-{
-	
-	bool InsertEditorData(EditorObjectData data)
-	{		
-		return Insert(data.GetID(), data);
-	}
-	
-	void InsertEditorData(EditorObjectDataSet data_set)
-	{
-		foreach (EditorObjectData data: data_set) {
-			InsertEditorData(data);
-		}
-	}
-	
-	void RemoveEditorData(EditorObjectData data)
-	{
-		Remove(data.GetID());
-	}
-	
-}
-
 // temp until i can find a better way to find "First" in a map that doesnt blow the software up
 static int lowest_id;
 class EditorObjectData
@@ -129,3 +106,43 @@ class EditorObjectData
 		serializer.Read(Flags);
 	}
 }
+
+
+
+typedef map<int, ref EditorObjectData> EditorObjectDataSet;
+
+/*
+class EditorObjectDataSet
+{
+	private ref map<int, ref EditorObjectData> _data = new map<int, ref EditorObjectData>();
+
+	void ~EditorObjectDataSet()
+	{
+		delete _data;
+	}
+	
+	bool Insert(EditorObjectData data)
+	{		
+		return _data.Insert(data.GetID(), data);
+	}
+	/*
+	void Insert(EditorObjectDataSet data_set)
+	{
+		
+
+		for (int i = 0; i < data_set.Count(); i++) {
+			Insert(data_set.Get(i));
+		}
+	}
+	
+	void Remove(EditorObjectData data)
+	{
+		_data.Remove(data.GetID());
+	}
+	
+	EditorObjectData Get(int index)
+	{
+		return _data[index];
+	}
+}
+*/

@@ -22,7 +22,8 @@ static FileDialogResult ImportVPPData(out EditorObjectDataSet data, string filen
 		string name = building.GetName();
 		TStringArray name_split = new TStringArray();
 		name.Split("-", name_split);
-		data.InsertEditorData(EditorObjectData.Create(name_split.Get(0), building.GetPosition(), building.GetOrientation(), EditorObjectFlags.ALL));
+		EditorObjectData dta = EditorObjectData.Create(name_split.Get(0), building.GetPosition(), building.GetOrientation(), EditorObjectFlags.ALL);
+		data.Insert(dta.GetID(), dta);
 	}
 	
 	return FileDialogResult.SUCCESS;

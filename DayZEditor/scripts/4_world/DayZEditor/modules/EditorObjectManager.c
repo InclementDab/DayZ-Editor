@@ -193,6 +193,8 @@ class EditorObjectManagerModule: JMModuleBase
 				return;
 			}
 		}
+		
+		Print("Undo complete");
 	}
 	
 	void Redo()
@@ -204,6 +206,8 @@ class EditorObjectManagerModule: JMModuleBase
 				return;
 			}
 		}
+		
+		Print("Redo complete");
 	}
 	
 	bool CanUndo() 
@@ -220,7 +224,7 @@ class EditorObjectManagerModule: JMModuleBase
 	bool CanRedo() 
 	{
 		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
-			if (m_ActionStack[i] != null && m_ActionStack[i].IsUndone()) {
+			if (m_ActionStack[i] && m_ActionStack[i].IsUndone()) {
 				return true;
 			}
 		}

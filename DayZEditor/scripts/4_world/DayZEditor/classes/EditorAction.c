@@ -122,9 +122,10 @@ class EditorAction
 	void SetTransform(Param3<int, vector, vector> params)
 	{
 		EditorLog.Trace("EditorObject::SetTransform");
-		
-		Sleep(10);
-		EditorObject editor_object = GetEditor().GetPlacedObjectById(params.param1);
+		EditorObjectData editor_object_data = GetEditor().GetSessionDataById(params.param1);
+		Print(editor_object_data);
+		EditorObject editor_object = GetEditor().GetPlacedObjectById(editor_object_data.GetID());
+		Print(editor_object);
 		editor_object.SetPosition(params.param2);
 		editor_object.SetOrientation(params.param3);
 		editor_object.Update();
