@@ -67,7 +67,7 @@ class Editor
 	map<int, ref EditorObject> GetPlacedObjects()
 		return m_ObjectManager.GetPlacedObjects(); 
 
-	EditorObjectDataSet GetSessionCache()
+	EditorObjectDataMap GetSessionCache()
 		return m_SessionCache; 
 		
 	EditorObject GetEditorObject(int id)
@@ -122,7 +122,7 @@ class Editor
 		return editor_object;
 	}
 	
-	EditorObjectMap CreateObjects(notnull EditorObjectDataSet data_list, bool create_undo = true) 
+	EditorObjectMap CreateObjects(notnull EditorObjectDataMap data_list, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject");
 		
@@ -214,7 +214,7 @@ class Editor
 	private ref EditorSettings 					m_EditorSettings;
 	private ref EditorHud						m_EditorHud;
 	private ref EditorBrush						m_EditorBrush;
-	private ref EditorObjectDataSet			 	m_SessionCache;
+	private ref EditorObjectDataMap			 	m_SessionCache;
 	private EditorCamera 						m_EditorCamera;
 	
 	// Stack of Undo / Redo Actions
@@ -249,7 +249,7 @@ class Editor
 		CommandManager = new EditorCommandManager();
 		
 		// Needs to exist on clients for Undo / Redo syncing
-		m_SessionCache 		= new EditorObjectDataSet();
+		m_SessionCache 		= new EditorObjectDataMap();
 		m_ActionStack 		= new EditorActionStack();
 		
 		// Init Settings

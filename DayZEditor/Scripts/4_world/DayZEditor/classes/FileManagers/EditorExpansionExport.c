@@ -1,5 +1,5 @@
 
-static FileDialogResult ExportExpansionData(EditorObjectDataSet data, string filename)
+static FileDialogResult ExportExpansionData(EditorObjectDataMap data, string filename)
 {
 	FileHandle handle = OpenFile(filename, FileMode.WRITE);
 	
@@ -25,7 +25,7 @@ static FileDialogResult ExportExpansionData(EditorObjectDataSet data, string fil
 class ExpansionImportData
 {
 
-	static void ReadFromFile(out ref EditorObjectDataSet data, string filename)
+	static void ReadFromFile(out EditorObjectDataMap data, string filename)
 	{
 		FileHandle handler = OpenFile(filename, FileMode.READ);
 		
@@ -39,7 +39,7 @@ class ExpansionImportData
 				continue;
 			}
 			
-			data.InsertEditorData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
+			data.InsertData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM));
 		}
 		
 		// another stupid fix

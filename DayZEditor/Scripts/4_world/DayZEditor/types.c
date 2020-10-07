@@ -11,3 +11,16 @@ class EditorObjectMap: map<int, ref EditorObject>
 		Remove(editor_object.GetID());
 	}
 }
+
+class EditorObjectDataMap: map<int, ref EditorObjectData>
+{
+	int InsertData(EditorObjectData data)
+	{
+		return Insert(data.GetID(), data);
+	}
+	
+	void RemoveData(EditorObjectData data)
+	{
+		Remove(data.GetID());
+	}
+}

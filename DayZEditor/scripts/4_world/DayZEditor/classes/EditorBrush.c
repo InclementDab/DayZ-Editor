@@ -106,7 +106,7 @@ class EditorBrush
 		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
-		EditorObjectDataSet data_set = new EditorObjectDataSet();
+		EditorObjectDataMap data_set = new EditorObjectDataMap();
 		
 		for (int i = 0; i < m_BrushDensity * 100; i++) {
 			

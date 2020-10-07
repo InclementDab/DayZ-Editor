@@ -114,16 +114,12 @@ class EditorObjectData
 	}
 }
 
-
-
-typedef map<int, ref EditorObjectData> EditorObjectDataSet;
-
 /*
-class EditorObjectDataSet
+class EditorObjectDataMap
 {
 	private ref map<int, ref EditorObjectData> _data = new map<int, ref EditorObjectData>();
 
-	void ~EditorObjectDataSet()
+	void ~EditorObjectDataMap()
 	{
 		delete _data;
 	}
@@ -133,7 +129,7 @@ class EditorObjectDataSet
 		return _data.Insert(data.GetID(), data);
 	}
 	/*
-	void Insert(EditorObjectDataSet data_set)
+	void Insert(EditorObjectDataMap data_set)
 	{
 		
 

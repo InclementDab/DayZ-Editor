@@ -1,4 +1,4 @@
-static FileDialogResult ExportTBData(ref EditorObjectDataSet data, string filename, ExportSettings export_settings)
+static FileDialogResult ExportTBData(ref EditorObjectDataMap data, string filename, ExportSettings export_settings)
 {
 	FileHandle handle = OpenFile(filename, FileMode.WRITE);
 	

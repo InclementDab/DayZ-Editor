@@ -44,7 +44,7 @@ class EditorSaveData
 	bool Binarized = 1;
 	string MapName = "ChernarusPlus";
 	vector CameraPosition[4];
-	ref EditorObjectDataSet EditorObjects = new EditorObjectDataSet();
+	ref EditorObjectDataMap EditorObjects = new EditorObjectDataMap();
 	
 	static EditorSaveData CreateFromEditor(Editor editor)
 	{

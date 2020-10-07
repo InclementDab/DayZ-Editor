@@ -1,6 +1,6 @@
 typedef FileSerializer Cerealizer;
 
-static FileDialogResult ImportVPPData(out EditorObjectDataSet data, string filename)
+static FileDialogResult ImportVPPData(out EditorObjectDataMap data, string filename)
 {
 	Cerealizer file = new Cerealizer();
 	if (!FileExist(filename)) {
@@ -29,7 +29,7 @@ static FileDialogResult ImportVPPData(out EditorObjectDataSet data, string filen
 	return FileDialogResult.SUCCESS;
 }
 
-static FileDialogResult ExportVPPData(EditorObjectDataSet data, string filename, string set_name = "DayZEditor Export")
+static FileDialogResult ExportVPPData(EditorObjectDataMap data, string filename, string set_name = "DayZEditor Export")
 {
 	Cerealizer file = new Cerealizer();
 	
