@@ -72,6 +72,11 @@ class ScriptView : ScriptedViewBase
 		{
 			Print("~" + m_LayoutRoot.GetName());
 			m_LayoutRoot.Unlink();
+			
+			if (m_LayoutRoot) 
+			{
+				delete m_LayoutRoot;
+			}
 		}
 	}
 

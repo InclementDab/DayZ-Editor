@@ -47,7 +47,6 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		return EditorMapWidget.IsVisible();
 	}
 	
-				
 	void DelayedDragBoxCheck()
 	{
 		int x, y;

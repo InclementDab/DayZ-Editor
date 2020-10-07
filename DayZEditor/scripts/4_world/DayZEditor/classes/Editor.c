@@ -445,7 +445,8 @@ class Editor
 			case MouseState.MIDDLE: {
 				
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					EditorLog.Info(GetWidgetUnderCursor().ToString());						
+					if (GetWidgetUnderCursor())
+						EditorLog.Info(GetWidgetUnderCursor().GetName());						
 				} 
 				
 				else if (KeyState(KeyCode.KC_LSHIFT)) {

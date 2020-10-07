@@ -1,4 +1,5 @@
 PanelWidgetClass NotificationPanel {
+ ignorepointer 1
  color 0.2588 0.6863 0.3647 1
  position 0 0
  size 1 0.03
