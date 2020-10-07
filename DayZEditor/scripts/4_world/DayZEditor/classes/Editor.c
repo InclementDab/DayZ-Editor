@@ -110,7 +110,7 @@ class Editor
 		m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
 		
 		// Create Object
-		EditorObject editor_object = m_ObjectManager.CreateObject(editor_object_data);
+		EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
 		
 		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
@@ -128,13 +128,13 @@ class Editor
 		
 		EditorObjectMap object_set = new EditorObjectMap();
 		EditorAction action = new EditorAction("Delete", "Create");
-		foreach (int id, EditorObjectData editor_object_data: data_list) {
+		foreach (int id, ref EditorObjectData editor_object_data: data_list) {
 			
 			// Cache Data (for undo / redo)
 			m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
 			
 			// Create Object
-			EditorObject editor_object = m_ObjectManager.CreateObject(editor_object_data);
+			EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
 			
 			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));

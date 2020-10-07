@@ -3,18 +3,23 @@ class EditorExportCommandBase: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorEditBoxDialog file_dialog(GetName());
+		EditorEditBoxDialog file_dialog(GetName(), "File");
 		
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 			return;
 		}
-						
+
+		ExportFile(file_name);
+	}
+	
+	protected void ExportFile(string file_name)
+	{
 		EditorFileType file_type = GetFileType().Spawn();
 		if (!file_type) {
 			EditorLog.Error("Invalid FileType in Export");
 			return;
-		}		
+		}
 		
 		file_name = "$profile:Editor/" + file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
@@ -23,13 +28,66 @@ class EditorExportCommandBase: EditorCommand
 		ExportSettings settings = new ExportSettings(); // todo
 		file_type.Export(save_data, file_name, settings);		
 		
-		string message = string.Format("Exported %1 objects!", save_data.EditorObjects.Count().ToString());
+		string message = string.Format("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
 		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
 		EditorLog.Info(message);
 	}
 	
 	typename GetFileType();
 }
+
+class EditorSaveCommand: EditorExportCommandBase
+{		
+	override void Call(Class sender, CommandArgs args)
+	{
+		EditorLog.Trace("EditorSaveCommand");
+		
+		if (m_Editor.EditorSaveFile == string.Empty) {
+			EditorEditBoxDialog file_dialog(GetName(), "File");
+			string file_name;
+			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
+				return;
+			}
+			
+			m_Editor.EditorSaveFile = "$profile:Editor/" + file_name;
+			EditorFileManager.GetSafeFileName(m_Editor.EditorSaveFile, ".dze");
+		}
+		
+		ExportFile(m_Editor.EditorSaveFile);
+	}
+	
+	override string GetName() {
+		return "Save";
+	}
+	
+	override string GetIcon() {
+		return "set:dayz_editor_gui image:save";
+	}
+	
+	override ShortcutKeys GetShortcut() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_S };
+	}
+	
+	override typename GetFileType() {
+		return EditorDZEFile;
+	}
+}
+
+class EditorSaveAsCommand: EditorExportCommandBase
+{		
+	override string GetName() {
+		return "Save As...";
+	}
+	
+	override ShortcutKeys GetShortcut() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_S };
+	}
+	
+	override typename GetFileType() {
+		return EditorDZEFile;
+	}
+}
+
 
 
 class EditorExportToInitFile: EditorExportCommandBase

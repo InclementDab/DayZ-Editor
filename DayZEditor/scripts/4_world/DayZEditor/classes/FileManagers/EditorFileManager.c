@@ -15,6 +15,7 @@ enum HeightType
 
 class ExportSettings
 {
+	bool Binarized = false;
 	HeightType ExportHeightType;
 	bool ExportSelectedOnly;
 	vector ExportOffset;
@@ -38,7 +39,7 @@ enum EditorFileResult
 
 class EditorSaveData
 {
-	bool Binarized = 1;
+
 	string MapName = "ChernarusPlus";
 	vector CameraPosition[4];
 	ref EditorObjectDataMap EditorObjects = new EditorObjectDataMap();
@@ -81,129 +82,4 @@ class EditorFileManager
 			file_name = file_split[0] + extension;
 		}
 	}
-	
-
-	static void Save(EditorSaveData data, string file_name)
-	{		
-	
-		if (FileExist(file_name) && !DeleteFile(file_name)) {
-			return;
-		}
-		
-		FileSerializer file_serializer = new FileSerializer();
-		if (!file_serializer.Open(file_name, FileMode.WRITE)) {
-			return;
-		}
-		
-		if (!file_serializer.Write(data)) {
-			file_serializer.Close();
-			return;
-		}
-		
-		file_serializer.Close();
-	}
-	
-	static EditorSaveData Open(string file_name)
-	{
-		EditorSaveData save_data = new EditorSaveData();
-		
-		FileSerializer file_serializer = new FileSerializer();
-
-		if (!FileExist(file_name)) {
-			EditorLog.Error("File not found %1", file_name);
-			return save_data;
-		}
-		
-		if (!file_serializer.Open(file_name, FileMode.READ)) {
-			EditorLog.Error("File in use %1", file_name);
-			return save_data;
-		}
-		
-		if (!file_serializer.Read(save_data)) {
-			file_serializer.Close();
-			EditorLog.Error("Unknown File Error %1", file_name);
-			return save_data;
-		}
-		
-		file_serializer.Close();
-		
-		return save_data;
-	}
-	/*
-	static EditorFileResult Import(out ref EditorSaveData data, string file_name, ImportMode mode)
-	{		
-		if (!FileExist(file_name)) {
-			return EditorFileResult.NOT_FOUND;
-		}
-		
-		switch (mode) {
-			
-			case (ImportMode.COMFILE): {
-				
-				COMImportData com_data = new COMImportData();
-				JsonFileLoader<COMImportData>.JsonLoadFile(file_name, com_data);
-				
-				foreach (ref Param3<string, vector, vector> param: com_data.m_SceneObjects) {
-					EditorLog.Debug("ImportFromFile::COMFILE::Import " + param.param1);					
-					EditorObjectData d = EditorObjectData.Create(param.param1, param.param2, param.param3);
-					data.EditorObjects.Insert(d.GetID(), d);
-				}
-				
-				break;
-			}
-			
-			case (ImportMode.EXPANSION): {
-				EditorLog.Debug("EditorFileManager::Import::EXPANSION");
-				ExpansionImportData.ReadFromFile(data.EditorObjects, file_name);
-				break;
-			}
-			
-			case (ImportMode.VPP): {
-				EditorLog.Debug("EditorFileManager::Import::VPP");
-				return ImportVPPData(data.EditorObjects, file_name);
-			}
-			
-			default: {
-				
-				EditorLog.Debug(string.Format("%1 not implemented!", typename.EnumToString(ImportMode, mode)));
-				break;
-			}
-		}
-
-		
-		return EditorFileResult.SUCCESS;
-		
-	}
-	
-	static EditorFileResult Export(EditorSaveData data, string file_name, ExportSettings export_settings)
-	{
-		Print("EditorFileManager::Export");		
-		DeleteFile(file_name);
-		
-		switch (export_settings.ExportFileMode) {
-			
-			case ExportMode.TERRAINBUILDER: {
-				return ExportTBData(data.EditorObjects, file_name, export_settings);
-			}
-			
-			case ExportMode.EXPANSION: {
-				return ExportExpansionData(data.EditorObjects, file_name);
-			}			
-			
-			case ExportMode.COMFILE: {
-				return ExportCOMData(data.EditorObjects, file_name);
-			}			
-			
-			case ExportMode.VPP: {
-				return ExportVPPData(data.EditorObjects, file_name);
-			}
-			
-			default: {
-				EditorLog.Error("ExportMode not supported! " + export_settings.ExportFileMode);
-				return EditorFileResult.NOT_SUPPORTED;
-			}
-		}
-		
-		return EditorFileResult.NOT_SUPPORTED;		
-	}*/
 }
