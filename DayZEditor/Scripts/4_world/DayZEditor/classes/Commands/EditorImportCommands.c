@@ -22,24 +22,17 @@ class EditorImportCommandBase: EditorCommand
 			return;
 		}
 		
-		FileHandle handle = OpenFile(file_name, FileMode.READ);
-		if (!handle) {
-			EditorLog.Error("File in use %1", file_name);
-			return;
-		}
+		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 		
 		EditorSaveData save_data = new EditorSaveData();
 		ImportSettings settings = new ImportSettings(); // todo
-		save_data = file_type.Import(handle, settings);
-		
+		save_data = file_type.Import(file_name, settings);
 		
 		EditorObjectMap result = GetEditor().CreateObjects(save_data.EditorObjects, false);
 		
 		string message = string.Format("Imported %1 objects!", result.Count().ToString());
 		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
 		EditorLog.Info(message);
-		
-		CloseFile(handle);
 	}
 	
 	typename GetFileType();

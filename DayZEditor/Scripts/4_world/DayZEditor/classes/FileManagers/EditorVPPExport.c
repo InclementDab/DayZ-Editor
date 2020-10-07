@@ -3,9 +3,6 @@ typedef FileSerializer Cerealizer;
 static EditorFileResult ImportVPPData(out EditorObjectDataMap data, string filename)
 {
 	Cerealizer file = new Cerealizer();
-	if (!FileExist(filename)) {
-		return EditorFileResult.NOT_FOUND;
-	}
 	
 	ref VPPToEditorBuildingSet bSet;
 	if (file.Open(filename, FileMode.READ)) {
