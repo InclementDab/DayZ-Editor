@@ -2,6 +2,7 @@ class PrefabBaseController<Class TValue>: Controller
 {
 	string Caption;
 	TValue Value;
+	TValue CalculatedValue; // Used for things like SliderWidget output
 	
 	override void PropertyChanged(string property_name)
 	{

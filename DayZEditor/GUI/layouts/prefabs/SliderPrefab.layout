@@ -153,6 +153,36 @@ PanelWidgetClass EditorOptionSlider {
              current 0.5
              vertical 0
              {
+              TextWidgetClass EditorOptionSliderReadout {
+               ignorepointer 1
+               position 0 0
+               size 1 0.8
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               scriptclass "ViewBinding"
+               text "test"
+               font "gui/fonts/sdf_MetronBook24"
+               "outline size" 1
+               "outline color" 0 0 0 1
+               "shadow size" 2
+               "shadow color" 0 0 0 1
+               "shadow offset" 1 1
+               "bold text" 0
+               "exact text" 0
+               "text halign" center
+               "text valign" center
+               {
+                ScriptParamsClass {
+                 Binding_Name "CalculatedValue"
+                }
+               }
+              }
+             }
+             {
               ScriptParamsClass {
                Binding_Name "Value"
                Two_Way_Binding 1

@@ -111,7 +111,7 @@ class EditorCameraDialog: EditorDialogBase
 		camera_group.Insert(new SliderPrefab("FOV", m_Controller, "fov",  GetEditor().GetCamera().GetCurrentFOV(), 0, 2));
 		camera_group.Insert(new SliderPrefab("Gaussian Blur", m_Controller, "blur", EditorCameraDialogControllerData.Blur, 0, 1));
 		camera_group.Insert(new SliderPrefab("Near Plane", m_Controller, "near_plane",  GetEditor().GetCamera().GetNearPlane(), 0, 1));
-		camera_group.Insert(new SliderPrefab("DOF Distance", m_Controller, "dof_distance", EditorCameraDialogControllerData.DOFDistance, 0, 1));
+		camera_group.Insert(new SliderPrefab("DOF Distance", m_Controller, "dof_distance", EditorCameraDialogControllerData.DOFDistance, 0, 100));
 		camera_group.Insert(new SliderPrefab("DOF Blur", m_Controller, "dof_blur", EditorCameraDialogControllerData.DOFBlur, 0, 1));
 		camera_group.Insert(new SliderPrefab("Vignette", m_Controller, "vignette", EditorCameraDialogControllerData.Vignette, 0, 1));
 		camera_group.Insert(new SliderPrefab("Sharpness", m_Controller, "sharpness", EditorCameraDialogControllerData.Sharpness, 0, 1));
