@@ -1387,7 +1387,7 @@ FrameWidgetClass EditorFrame {
      "text valign" center
      {
       ScriptParamsClass {
-       Binding_Name "VersionNumberData"
+       Binding_Name "m_Editor.Version"
       }
      }
     }

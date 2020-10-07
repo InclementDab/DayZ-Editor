@@ -71,7 +71,7 @@ FrameWidgetClass EditorMenuItem {
        inheritalpha 0
        ignorepointer 1
        position 0 0
-       size 22 22
+       size 25 25
        valign center_ref
        hexactpos 1
        vexactpos 1
@@ -83,7 +83,7 @@ FrameWidgetClass EditorMenuItem {
        mode blend
        "src alpha" 1
        stretch 1
-       filter 1
+       filter 0
        pivot 0.5 0.5
        {
         ScriptParamsClass {
