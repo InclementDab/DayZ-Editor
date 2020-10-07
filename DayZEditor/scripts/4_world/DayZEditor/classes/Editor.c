@@ -290,6 +290,8 @@ class Editor
 	{
 		EditorLog.Trace("Editor::Create");
 		g_Editor = new Editor(player);
+		g_Editor.SetActive(false);
+		g_Editor.SetActive(true);
 		return g_Editor;
 	}
 	
