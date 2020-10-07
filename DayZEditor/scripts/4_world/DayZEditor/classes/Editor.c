@@ -346,11 +346,8 @@ class Editor
 		}
 		
 		
-		
-		
-		Debug.DestroyAllShapes();
-		Debug.DrawSphere(CurrentMousePosition, 0.25, COLOR_GREEN_A);
-		
+		//Debug.DestroyAllShapes();
+		//Debug.DrawSphere(CurrentMousePosition, 0.25, COLOR_GREEN_A);
 		
 		// Temporary extra raycast since CurrentMousePosition uses groundonly
 		MousePosToRay(obj, null, m_EditorSettings.ViewDistance);

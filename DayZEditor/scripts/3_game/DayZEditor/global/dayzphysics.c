@@ -9,7 +9,7 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 	
 	Object hit_object;
 	float hit_else;
-	if (DayZPhysics.RayCastBullet(ray_start, ray_end, PhxInteractionLayers.BUILDING, null, hit_object, hitPos, hitNormal, hit_else)) {
+	if (!groundonly && DayZPhysics.RayCastBullet(ray_start, ray_end, PhxInteractionLayers.BUILDING, null, hit_object, hitPos, hitNormal, hit_else)) {
 		return hitPos;
 	}
 
