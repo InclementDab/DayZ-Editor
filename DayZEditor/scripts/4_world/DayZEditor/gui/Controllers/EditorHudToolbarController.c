@@ -221,7 +221,8 @@ class EditorHudToolbarController: EditorControllerBase
 			
 			case MenuBarFile:
 			case MenuBarEdit:
-			case MenuBarView: {
+			case MenuBarView:
+			case MenuBarEditor: {
 				
 				if (EditorUIManager.CurrentMenu) {
 					delete EditorUIManager.CurrentMenu;

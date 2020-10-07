@@ -384,6 +384,8 @@ class Editor
 		CommandManager.CopyCommand.SetCanExecute(selected_objects.Count() > 0);
 		//PasteCommand.SetCanExecute(EditorClipboard.IsClipboardValid());
 
+		CommandManager.SnapCommand.SetCanExecute(false); // not implemented
+		
 		EditorLog.CurrentLogLevel = log_lvl;		
 	}
 	
@@ -433,7 +435,7 @@ class Editor
 						} 
 					} 
 					
-					else if (!target) {
+					if (!target) {
 						m_EditorHud.DelayedDragBoxCheck();
 							
 					}
