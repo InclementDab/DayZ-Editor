@@ -76,7 +76,7 @@ class EditorPlacedListItem: EditorListItem
 				if (EditorUIManager.CurrentMenu) {
 					delete EditorUIManager.CurrentMenu;
 				}
-				
+					
 				int x, y;
 				GetMousePos(x, y);
 				EditorUIManager.CurrentMenu = new EditorPlacedContextMenu(x, y);
@@ -119,5 +119,12 @@ class EditorPlacedListItem: EditorListItem
 		}
 		
 		return super.OnMouseLeave(w, enterW, x, y);
+	}
+	
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		GetEditor().CommandManager.ObjectPropertiesCommand.Execute(this, null);
+		
+		return true;
 	}
 }

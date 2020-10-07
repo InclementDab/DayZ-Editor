@@ -1,5 +1,4 @@
 /**
- * filename.c
  *
  * DayZ Editor Mod
  * www.dayz-editor.com
@@ -9,9 +8,3 @@
  * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/4.0/.
  *
 */
-
-
-
-todo: make a macro that updates all the files with this
-this is a change
-another change
