@@ -23,4 +23,6 @@ Twitter: https://twitter.com/InclementDab
 
 Patreon: https://www.patreon.com/inclementdab
 
+Paypal: https://www.paypal.me/InclementDab
+
 Twitch: https://www.twitch.tv/inclementdab
