@@ -229,6 +229,7 @@ class Editor
 	string										EditorSaveFile;
 	// todo move to settings
 	string										EditorBrushFile = "$profile:Editor/EditorBrushes.xml";
+	string										EditorDirectory = "$profile:Editor/";
 	
 	// modes
 	bool 										MagnetMode;
@@ -238,9 +239,12 @@ class Editor
 	
 	private void Editor(PlayerBase player) 
 	{
-		EditorLog.Trace("Editor");		
+		EditorLog.Trace("Editor");
 		g_Editor = this;
 		m_Player = player;
+
+		// Initialize the profiles/editor directory;		
+		MakeDirectory(EditorDirectory);
 		
 		// Object Manager
 		m_ObjectManager = EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
