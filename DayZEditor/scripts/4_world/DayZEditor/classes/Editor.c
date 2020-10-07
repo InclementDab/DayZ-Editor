@@ -105,6 +105,11 @@ class Editor
 	{			
 		EditorLog.Trace("Editor::CreateObject " + editor_object_data);
 		EditorAction action = new EditorAction("Delete", "Create");
+		
+		// Cache Data (for undo / redo)
+		m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
+		
+		// Create Object
 		EditorObject editor_object = m_ObjectManager.CreateObject(editor_object_data);
 		
 		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
