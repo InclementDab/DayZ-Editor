@@ -59,6 +59,13 @@ class EditorLootContainer
 		m_LootPoints = new array<ref EditorLootPoint>();
 	}
 	
+	void ~EditorLootContainer()
+	{
+		delete m_LootPoints;
+		delete m_Category;
+		delete m_Tag;
+	}
+	
 	int InsertCategory(string category)
 	{
 		m_Category.Insert(category);
@@ -97,6 +104,12 @@ class EditorMapGroupProtoGroup
 		m_LootContainer = new array<ref EditorLootContainer>();
 	}
 	
+	void ~EditorMapGroupProtoGroup()
+	{
+		delete m_LootContainer;
+		delete m_Usage;
+	}
+	
 	int InsertUsage(string usage)
 	{
 		m_Usage.Insert(usage);
@@ -116,10 +129,18 @@ class EditorMapGroupProto: XMLCallback
 	ref array<ref EditorMapGroupProtoGroup> m_MapGroupProto;
 	ref array<ref EditorMapGroupProtoGroup> GetData() { return m_MapGroupProto; }
 	
+	ref array<ref EditorObject> m_LootPositions = {};
+	
 	private Object m_Building;
 	void EditorMapGroupProto(Object building)
 	{
 		m_Building = building;
+	}
+	
+	void ~EditorMapGroupProto()
+	{
+		delete m_LootPositions;
+		delete m_MapGroupProto;
 	}
 		
 	override void OnSuccess(ref XMLDocument document)
@@ -243,7 +264,7 @@ class EditorMapGroupProto: XMLCallback
 					foreach (EditorLootPoint loot_point: loot_points) {
 
 						vector loot_pos = loot_point.GetPosition();					
-						loot_pos = Vector(-loot_pos[2], loot_pos[1] + 10, loot_pos[0]);
+						loot_pos = Vector(loot_pos[2], loot_pos[1] + 10, loot_pos[0]);
 						EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("DebugCylinder", loot_pos, vector.Zero, EditorObjectFlags.OBJECTMARKER));
 						
 						// might be bad
@@ -261,6 +282,7 @@ class EditorMapGroupProto: XMLCallback
 						transform[2][2] = loot_point.GetRange() * 2.0;
 						
 						loot_display.SetTransform(transform);
+						m_LootPositions.Insert(loot_display);
 						
 						m_Building.Update();
 					}
@@ -280,7 +302,7 @@ class EditorMapGroupProto: XMLCallback
 class EditorXMLManager
 {
 
-	static void LoadMapGroupProto(out ref EditorMapGroupProto group_proto, string filename = "$profile:Editor/mapgroupproto.xml")
+	static void LoadMapGroupProto(out EditorMapGroupProto group_proto, string filename = "$profile:Editor/mapgroupproto.xml")
 	{
 		GetXMLApi().Read(filename, group_proto);
 	}

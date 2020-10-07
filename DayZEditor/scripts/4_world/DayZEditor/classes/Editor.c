@@ -236,6 +236,7 @@ class Editor
 	private string 								m_EditorSettingsFile = "$profile:Editor/Settings.ini";
 	string										EditorSaveFile;
 	// todo move to settings
+	string										EditorProtoFile = "$profile:Editor/MapGroupProto.xml";
 	string										EditorBrushFile = "$profile:Editor/EditorBrushes.xml";
 	string										EditorDirectory = "$profile:Editor/";
 	
@@ -644,20 +645,27 @@ class Editor
 	private Object m_LootEditTarget;
 	private bool m_LootEditMode;
 	private vector m_PositionBeforeLootEditMode;
+	private ref EditorMapGroupProto m_EditorMapGroupProto;
+	
 	void EditLootSpawns(string name)
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", name);
 		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 10, 0), ECE_NONE);
 		
 		if (!m_LootEditTarget) return;
+		m_LootEditTarget.SetOrientation(Vector(-90, 0, 0));
 		
 		EditorCamera.CAMERA_SPEED = 10;
 		m_PositionBeforeLootEditMode = m_EditorCamera.GetPosition();
 		m_EditorCamera.SetPosition(Vector(10, 10, 10));
-		m_EditorCamera.LookAt(vector.Zero);	
+		m_EditorCamera.LookAt(Vector(0, 10, 0));	
 		
-		ref EditorMapGroupProto proto_data = new EditorMapGroupProto(m_LootEditTarget); 
-		EditorXMLManager.LoadMapGroupProto(proto_data);
+		if (!FileExist(EditorProtoFile)) {
+			CopyFile("DayZEditor/scripts/data/MapGroupProto.xml", EditorProtoFile);
+		}
+		
+		m_EditorMapGroupProto = new EditorMapGroupProto(m_LootEditTarget); 
+		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, EditorProtoFile);
 		
 		m_LootEditMode = true;
 		CollisionMode = true;
@@ -666,11 +674,7 @@ class Editor
 	void FinishEditLootSpawns()
 	{
 		EditorLog.Trace("Editor::FinishEditLootSpawns");
-		IEntity child = m_LootEditTarget.GetChildren();
-		while (child != null) {
-			GetGame().ObjectDelete(Object.Cast(child));
-			child = child.GetSibling();
-		}
+		delete m_EditorMapGroupProto;
 		
 		GetGame().ObjectDelete(m_LootEditTarget);
 		EditorCamera.CAMERA_SPEED = 60;
@@ -678,7 +682,6 @@ class Editor
 
 		m_LootEditMode = false;
 		CollisionMode = false;
-
 	}
 	
 	bool IsLootEditActive() { 
