@@ -97,9 +97,6 @@ class EditorEditMenu: EditorMenu
 		AddMenuCategory("Edit", EditorClipboardMenu);
 		AddMenuCategory("Transform Mode", EditorTransformModeMenu);
 		AddMenuDivider();
-		AddMenuButton(m_Editor.CommandManager.EnvironmentControlCommand);
-		AddMenuButton(m_Editor.CommandManager.PreferencesCommand);
-		AddMenuDivider();
 		
 		AddMenuButton(m_Editor.CommandManager.ScriptEditorCommand);
 	}
