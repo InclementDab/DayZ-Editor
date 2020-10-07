@@ -423,11 +423,11 @@ class Editor
 							SelectObject(editor_object);
 							return true;
 						} 
-						
-						else if (!target) {
-							m_EditorHud.DelayedDragBoxCheck();
+					} 
+					
+					else if (!target) {
+						m_EditorHud.DelayedDragBoxCheck();
 							
-						}
 					}
 				}
 

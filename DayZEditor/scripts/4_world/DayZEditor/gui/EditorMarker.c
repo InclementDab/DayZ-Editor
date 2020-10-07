@@ -5,6 +5,7 @@ class EditorMarker: ScriptView
 	void EditorMarker()
 	{
 		EditorLog.Trace("EditorMarker");
+		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
