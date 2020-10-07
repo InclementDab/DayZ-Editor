@@ -225,7 +225,7 @@ class Editor
 	private EditorObjectManagerModule 			m_ObjectManager;	
 	
 	private bool 								m_Active;
-	private string 								m_EditorSettingsFile = "$profile:Editor/settings.ini";
+	private string 								m_EditorSettingsFile = "$profile:Editor/Settings.ini";
 	string										EditorSaveFile;
 	// todo move to settings
 	string										EditorBrushFile = "$profile:Editor/EditorBrushes.xml";
@@ -408,24 +408,26 @@ class Editor
 				
 				if (GetBrush() == null) {
 					
-					EditorObject editor_object = m_ObjectManager.GetEditorObject(ObjectUnderCursor);
-					if (ObjectUnderCursor && editor_object) {
-						// Allows multiple objects to be dragged with selection
-						if (editor_object.IsSelected()) {
+					if (ObjectUnderCursor) {
+						EditorObject editor_object = m_ObjectManager.GetEditorObject(ObjectUnderCursor);
+						if (editor_object) {
+							// Allows multiple objects to be dragged with selection
+							if (editor_object.IsSelected()) {
+								return true;
+							}
+							
+							if (!KeyState(KeyCode.KC_LSHIFT)) {
+								ClearSelection();
+							}
+							
+							SelectObject(editor_object);
 							return true;
+						} 
+						
+						else if (!target) {
+							m_EditorHud.DelayedDragBoxCheck();
+							
 						}
-						
-						if (!KeyState(KeyCode.KC_LSHIFT)) {
-							ClearSelection();
-						}
-						
-						SelectObject(editor_object);
-						return true;
-					} 
-					
-					else if (!target) {
-						m_EditorHud.DelayedDragBoxCheck();
-						
 					}
 				}
 

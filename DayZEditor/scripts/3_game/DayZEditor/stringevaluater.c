@@ -1,86 +1,85 @@
 
-
-typedef string StringEvaluater;
-class StringEvaluater: string
+class StringEvaluaterEvaluater
 {
-	static int pos;
-	static int ch;
+	private string m_Value;
 	
-	float Parse()
+	float Parse(string value)
 	{
-		pos = -1;
-		ch = 0;
-		NextChar();
-		float x = ParseExpression();
+		m_Value = value;
+		int pos = -1;
+		int ch = 0;
+		NextChar(pos, ch);
+		float x = ParseExpression(pos, ch);
 		if (pos < value.Length()) {
 			Error("Unexpected: " + ch);
 		}
+		
 		return x;
 	}
 	
-	private void NextChar() 
+	private void NextChar(out int pos, out int ch) 
 	{
 		pos++;
-		if (pos < value.Length()) {
-			ch = value.Get(pos).Hash();
+		if (pos < m_Value.Length()) {
+			ch = m_Value[pos].Hash();
 		} else {
 			ch = -1;
 		}
 	}
 	
-	private bool Eat(int charToEat) 
+	private bool Eat(int charToEat, out int pos, out int ch) 
 	{
-	    while (ch == 32) NextChar();
+	    while (ch == 32) NextChar(pos, ch);
 	    if (ch == charToEat) {
-	        NextChar();
+	        NextChar(pos, ch);
 	        return true;
 	    }
 	    return false;
 	}
 	
-	private float ParseExpression() 
+	private float ParseExpression(out int pos, out int ch) 
 	{
-	    float x = ParseTerm();
+	    float x = ParseTerm(pos, ch);
 	    while (!false) {
-	        if      (Eat("+".Hash())) x += ParseTerm(); // addition
-	        else if (Eat("-".Hash())) x -= ParseTerm(); // subtraction
+	        if      (Eat("+".Hash(), pos, ch)) x += ParseTerm(pos, ch); // addition
+	        else if (Eat("-".Hash(), pos, ch)) x -= ParseTerm(pos, ch); // subtraction
 	        else return x;
 	    }
 		
 		return x;
 	}
 	
-	private float ParseTerm() 
+	private float ParseTerm(out int pos, out int ch) 
 	{
-	    float x = ParseFactor();
+	    float x = ParseFactor(pos, ch);
 	    while (true) {
-	        if      (Eat("*".Hash())) x *= ParseFactor(); // multiplication
-	        else if (Eat("/".Hash())) x /= ParseFactor(); // division
+	        if      (Eat("*".Hash(), pos, ch)) x *= ParseFactor(pos, ch); // multiplication
+	        else if (Eat("/".Hash(), pos, ch)) x /= ParseFactor(pos, ch); // division
 	        else return x;
 	    }
 		
 		return x;
 	}
 	
-	private float ParseFactor() 
+	private float ParseFactor(out int pos, out int ch) 
 	{
-	    if (Eat("+".Hash())) return ParseFactor(); // unary plus
-	    if (Eat("-".Hash())) return -ParseFactor(); // unary minus
+	    if (Eat("+".Hash(), pos, ch)) return ParseFactor(pos, ch); // unary plus
+	    if (Eat("-".Hash(), pos, ch)) return -ParseFactor(pos, ch); // unary minus
 	
 	    float x;
 	    int startPos = pos;
-	    if (Eat("(".Hash())) { // parentheses
-	        x = ParseExpression();
-	        Eat(")".Hash());
+	    if (Eat("(".Hash(), pos, ch)) { // parentheses
+	        x = ParseExpression(pos, ch);
+	        Eat(")".Hash(), pos, ch);
 	    } else if ((ch >= "0".Hash() && ch <= "9".Hash()) || ch == ".".Hash()) { // numbers
 	        while ((ch >= "0".Hash() && ch <= "9".Hash()) || ch == ".".Hash()) 
-				NextChar();
+				NextChar(pos, ch);
 
-	        x = (value.Substring(startPos, pos - startPos)).ToFloat();
+	        x = (m_Value.Substring(startPos, pos - startPos)).ToFloat();
 	    } else if (ch >= "a".Hash() && ch <= "z".Hash()) { // functions
-	        while (ch >= "a".Hash() && ch <= "z".Hash()) NextChar();
-	        string fnc = value.Substring(startPos, pos - startPos);
-	        x = ParseFactor();
+	        while (ch >= "a".Hash() && ch <= "z".Hash()) NextChar(pos, ch);
+	        string fnc = m_Value.Substring(startPos, pos - startPos);
+	        x = ParseFactor(pos, ch);
 	        if (fnc == "sqrt") x = Math.Sqrt(x);
 	        else if (fnc == "sin") x = Math.Sin(x * Math.DEG2RAD);
 	        else if (fnc == "cos") x = Math.Cos(x * Math.DEG2RAD);
@@ -90,8 +89,19 @@ class StringEvaluater: string
 	        //Error("Unexpected: " + ch);
 	    }
 	
-	    if (Eat("^".Hash())) x = Math.Pow(x, ParseFactor()); // exponentiation
+	    if (Eat("^".Hash(), pos, ch)) x = Math.Pow(x, ParseFactor(pos, ch)); // exponentiation
 	
 	    return x;
 	}
+}
+
+
+typedef string StringEvaluater;
+class StringEvaluater: string
+{	
+	float Parse()
+	{
+		StringEvaluaterEvaluater evaluater = new StringEvaluaterEvaluater();
+		return evaluater.Parse(value);
+	}	
 }

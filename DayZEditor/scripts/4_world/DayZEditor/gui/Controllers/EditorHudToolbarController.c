@@ -14,6 +14,7 @@ class EditorHudToolbarController: EditorControllerBase
 	protected ButtonWidget MenuBarFile;
 	protected ButtonWidget MenuBarEdit;
 	protected ButtonWidget MenuBarView;
+	protected ButtonWidget MenuBarEditor;
 	
 	protected ImageWidget MagnetButton_Icon;
 	protected ImageWidget GroundButton_Icon;
@@ -283,6 +284,11 @@ class EditorHudToolbarController: EditorControllerBase
 			
 			case MenuBarView: {
 				toolbar_menu = new EditorViewMenu();
+				break;
+			}
+			
+			case MenuBarEditor: {
+				toolbar_menu = new EditorEditorMenu();
 				break;
 			}
 		}

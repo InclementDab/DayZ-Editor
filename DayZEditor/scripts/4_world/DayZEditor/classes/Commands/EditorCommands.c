@@ -804,7 +804,6 @@ class EditorScriptEditorCommand: EditorCommand
 		edit_dialog.ShowDialog(script_test);
 		
 		string file_name = "$profile:Editor/test.c";
-		
 		FileHandle handle = OpenFile(file_name, FileMode.WRITE);
 		FPrintln(handle, "static void main() {");
 		FPrintln(handle, script_test);

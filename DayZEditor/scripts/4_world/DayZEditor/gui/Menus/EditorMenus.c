@@ -162,8 +162,20 @@ class EditorViewMenu: EditorMenu
 		EditorLog.Trace("EditorViewMenu");
 
 		AddMenuButton(m_Editor.CommandManager.CameraControlsCommand);
+	}
+}
+
+class EditorEditorMenu: EditorMenu
+{
+	void EditorEditorMenu()
+	{
+		EditorLog.Trace("EditorEditorMenu");
+		
 		AddMenuButton(m_Editor.CommandManager.ReloadHudCommand);
 		AddMenuButton(m_Editor.CommandManager.ReloadBrushesCommand);
+		AddMenuDivider();
+		AddMenuButton(m_Editor.CommandManager.EnvironmentControlCommand);
+		AddMenuButton(m_Editor.CommandManager.PreferencesCommand);
 	}
 }
 

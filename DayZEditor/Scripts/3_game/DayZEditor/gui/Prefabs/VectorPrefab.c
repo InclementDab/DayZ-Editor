@@ -1,15 +1,15 @@
 class VectorPrefabController: PrefabBaseController<vector>
 {
-	float X, Y, Z;
+	StringEvaluater X, Y, Z;
 	
 	override void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
-			
+						
 			case "X":
 			case "Y":
 			case "Z": {
-				Value = Vector(X, Y, Z);
+				Value = string.Format("%1 %2 %3", X.Parse(), Y.Parse(), Z.Parse()).ToVector();
 				super.PropertyChanged("Value");
 				break;
 			}
@@ -25,10 +25,12 @@ class VectorPrefab: PrefabBase<vector>
 	{
 		m_VectorPrefabController = VectorPrefabController.Cast(GetController());
 		
-		m_VectorPrefabController.X = default_value[0];
-		m_VectorPrefabController.Y = default_value[1];
-		m_VectorPrefabController.Z = default_value[2];
-		m_VectorPrefabController.NotifyPropertyChanged();
+		m_VectorPrefabController.X = default_value[0].ToString();
+		m_VectorPrefabController.Y = default_value[1].ToString();
+		m_VectorPrefabController.Z = default_value[2].ToString();
+		m_VectorPrefabController.NotifyPropertyChanged("X");
+		m_VectorPrefabController.NotifyPropertyChanged("Y");
+		m_VectorPrefabController.NotifyPropertyChanged("Z");
 	}
 		
 	override string GetLayoutFile() {
@@ -55,23 +57,22 @@ class VectorPrefab: PrefabBase<vector>
 		switch (w.GetName()) {
 			
 			case "x_value": {
-				m_VectorPrefabController.X += motion;
+				m_VectorPrefabController.X = string.ToString(m_VectorPrefabController.X.Parse() + motion);
 				m_VectorPrefabController.NotifyPropertyChanged("X");
 				break;
 			}
 			
 			case "y_value": {
-				m_VectorPrefabController.Y += motion;
+				m_VectorPrefabController.Y = string.ToString(m_VectorPrefabController.Y.Parse() + motion);
 				m_VectorPrefabController.NotifyPropertyChanged("Y");
 				break;
 			}
 			
 			case "z_value": {
-				m_VectorPrefabController.Z += motion;
+				m_VectorPrefabController.Z = string.ToString(m_VectorPrefabController.Z.Parse() + motion);
 				m_VectorPrefabController.NotifyPropertyChanged("Z");
 				break;
 			}
-			
 		}
 		
 		return false;

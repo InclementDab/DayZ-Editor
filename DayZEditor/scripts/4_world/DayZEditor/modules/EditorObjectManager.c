@@ -22,8 +22,11 @@ class EditorObjectManagerModule: JMModuleBase
 	EditorObject GetEditorObject(int id)
 		return m_PlacedObjects.Get(id); 
 	
-	EditorObject GetEditorObject(notnull Object world_object)
+	EditorObject GetEditorObject(notnull Object world_object) 
 		return m_WorldObjectIndex.Get(world_object.GetID()); 
+		
+
+		
 	
 	override void Init()
 	{
@@ -46,31 +49,6 @@ class EditorObjectManagerModule: JMModuleBase
 		EditorEvents.ObjectCreated(this, editor_object);
 		return editor_object;
 	}
-	
-	/*EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
-	{
-		EditorLog.Trace("EditorObjectManager::CreateFromObject");
-		// If object already exists 
-		// todo: might be broken
-		if (m_PlacedObjectIndex.Get(target.GetID()))
-			return m_PlacedObjects[m_PlacedObjectIndex.Get(target.GetID())];
-		
-		EditorObject editor_object = new EditorObject(EditorObjectData.Create(target, flags));
-		
-		EditorAction action = new EditorAction("Delete", "Create");;
-		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		
-		m_PlacedObjects.InsertEditorObject(editor_object);
-		m_PlacedObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object);
-		EditorEvents.ObjectCreated(this, editor_object);
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
-		
-		return editor_object;
-	}*/
 
 	void DeleteObject(EditorObject target)
 	{
