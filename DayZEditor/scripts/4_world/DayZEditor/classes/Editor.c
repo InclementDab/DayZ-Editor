@@ -496,9 +496,7 @@ class Editor
 	
 	// Return TRUE if handled.	
 	bool OnKeyPress(int key)
-	{
-		if (EditorUIManager.CurrentDialog) return true;
-		
+	{		
 		if (m_CurrentKeys.Find(key) != -1) return false;
 		
 		m_CurrentKeys.Insert(key);
@@ -650,6 +648,8 @@ class Editor
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", name);
 		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 10, 0), ECE_NONE);
+		
+		if (!m_LootEditTarget) return;
 		
 		EditorCamera.CAMERA_SPEED = 10;
 		m_PositionBeforeLootEditMode = m_EditorCamera.GetPosition();

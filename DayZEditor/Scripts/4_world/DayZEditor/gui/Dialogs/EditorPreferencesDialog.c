@@ -15,6 +15,11 @@ class EditorPreferencesDialogController: DialogBaseController
 				break;
 			}
 			
+			case "SelectedLogLevel": {
+				EditorLog.CurrentLogLevel = Param1<LogLevel>.Cast(SelectedLogLevel.GetTemplateController().UserData).param1;
+				break;
+			}
+			
 		}
 		
 	}
@@ -30,9 +35,13 @@ class EditorPreferencesDialog: EditorDialogBase
 		m_EditorPreferencesDialogController = EditorPreferencesDialogController.Cast(m_Controller);
 		GroupPrefab general_group = new GroupPrefab("General", m_Controller, string.Empty);
 		
-		DropdownListPrefab log_level = new DropdownListPrefab("Log Level", m_Controller, "SelectedLogLevel");
-		log_level.InsertItem("Trace");
-		log_level.InsertItem("Debug");
+		DropdownListPrefabItem trace_item = new DropdownListPrefabItem("Trace", new Param1<LogLevel>(LogLevel.TRACE));
+		DropdownListPrefab log_level = new DropdownListPrefab("Log Level", m_Controller, "SelectedLogLevel", trace_item);
+		log_level.InsertItem(trace_item);
+		log_level.InsertItem("Debug", new Param1<LogLevel>(LogLevel.DEBUG));
+		log_level.InsertItem("Info", new Param1<LogLevel>(LogLevel.INFO));
+		log_level.InsertItem("Warning", new Param1<LogLevel>(LogLevel.WARNING));
+		log_level.InsertItem("Error", new Param1<LogLevel>(LogLevel.ERROR));
 		general_group.Insert(log_level);
 		
 		general_group.Insert(new EditBoxNumberPrefab("Auto Save", m_Controller, "auto_save", GetEditor().GetSettings().AutoSaveTimer.ToString()));

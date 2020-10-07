@@ -212,6 +212,7 @@ class EditorPlacedContextMenu: EditorContextMenu
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager.DeleteCommand);
 		AddMenuDivider();
+		AddMenuButton(m_Editor.CommandManager.LootEditorCommand);
 		AddMenuButton(m_Editor.CommandManager.ObjectPropertiesCommand);
 	}
 }

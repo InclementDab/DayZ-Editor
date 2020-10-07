@@ -585,6 +585,16 @@ class EditorEscapeCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{
+		if (EditorUIManager.CurrentDialog) {	
+			EditorUIManager.CurrentDialog.CloseDialog();
+			return;
+		} 
+		
+		if (EditorUIManager.CurrentMenu) {
+			delete EditorUIManager.CurrentMenu;
+			return;
+		} 
+		
 		if (m_Editor.GetSelectedObjects().Count() > 0) {
 			m_Editor.ClearSelection();
 			return;
@@ -599,18 +609,6 @@ class EditorEscapeCommand: EditorCommand
 			m_Editor.FinishEditLootSpawns();
 			return;
 		} 
-		
-		if (EditorUIManager.CurrentDialog) {	
-			EditorUIManager.CurrentDialog.CloseDialog();
-			return;
-			
-		} 
-		
-		if (EditorUIManager.CurrentMenu) {
-			delete EditorUIManager.CurrentMenu;
-			return;
-		} 
-		
 
 		if (g_Game.GetMission().IsPaused()) {
 			g_Game.GetMission().Continue();

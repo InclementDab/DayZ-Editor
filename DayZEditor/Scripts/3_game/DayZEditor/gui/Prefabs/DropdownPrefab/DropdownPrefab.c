@@ -20,9 +20,9 @@ class DropdownListPrefab: PrefabBase<DropdownListPrefabItem>
 		Class.CastTo(m_DropdownListController, m_Controller);
 	}
 	
-	void InsertItem(string item_text)
+	void InsertItem(string item_text, Class user_data = null)
 	{
-		InsertItem(new DropdownListPrefabItem(item_text));
+		InsertItem(new DropdownListPrefabItem(item_text, user_data));
 	}
 	
 	void InsertItem(DropdownListPrefabItem element)

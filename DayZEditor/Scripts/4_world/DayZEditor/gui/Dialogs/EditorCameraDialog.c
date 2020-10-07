@@ -12,6 +12,7 @@ class EditorCameraDialogControllerData
 
 class EditorCameraDialogController: DialogBaseController
 {	
+	float speed;
 	float fov;
 	float blur;
 	float near_plane;
@@ -41,6 +42,11 @@ class EditorCameraDialogController: DialogBaseController
 	override void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
+			
+			case "speed": {
+				EditorCamera.CAMERA_SPEED = speed;
+				break;
+			}
 			
 			case "fov": {
 				GetEditor().GetCamera().SetFOV(fov);
@@ -108,6 +114,7 @@ class EditorCameraDialog: EditorDialogBase
 		}
 				
 		GroupPrefab camera_group = new GroupPrefab("Camera", m_Controller, string.Empty);
+		camera_group.Insert(new SliderPrefab("Speed", m_Controller, "speed",  EditorCamera.CAMERA_SPEED, 0, 100));
 		camera_group.Insert(new SliderPrefab("FOV", m_Controller, "fov",  GetEditor().GetCamera().GetCurrentFOV(), 0, 2));
 		camera_group.Insert(new SliderPrefab("Gaussian Blur", m_Controller, "blur", EditorCameraDialogControllerData.Blur, 0, 1));
 		camera_group.Insert(new SliderPrefab("Near Plane", m_Controller, "near_plane",  GetEditor().GetCamera().GetNearPlane(), 0, 1));
