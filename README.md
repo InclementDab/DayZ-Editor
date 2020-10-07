@@ -6,7 +6,9 @@ The DayZ Editor is a 3D Map editing tool. Designed for creating environments, pl
 
 # How to join
 
-[Download](https://github.com/InclementDab/DayZ-Editor/releases)
+[Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2250764298)
+
+[Direct Download](https://github.com/InclementDab/DayZ-Editor/releases)
 
 1.) Drag @DayZ-Editor into your DayZ directory
 
