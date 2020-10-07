@@ -103,9 +103,7 @@ class EditorCloseCommand: EditorCommand
 			return;
 		}
 		
-		EditorObjectMap placed_objects = m_Editor.GetPlacedObjects();
-		m_Editor.DeleteObjects(placed_objects, false);
-		m_Editor.EditorSaveFile = string.Empty;		
+		m_Editor.Clear();
 	}
 			
 	override string GetName() {

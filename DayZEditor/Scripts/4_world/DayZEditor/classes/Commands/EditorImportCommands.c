@@ -78,7 +78,6 @@ class EditorOpenCommand: EditorImportCommandBase
 		}
 */
 		if (save_data) {
-			Print(save_data.CameraPosition);
 			m_Editor.GetCamera().SetPosition(save_data.CameraPosition);
 		}
 	}

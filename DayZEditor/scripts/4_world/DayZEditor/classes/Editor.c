@@ -194,6 +194,14 @@ class Editor
 	
 	EditorActionStack GetActionStack()
 		return m_ActionStack;
+	
+	void Clear()
+	{
+		EditorSaveFile = string.Empty;	
+		m_ActionStack.Clear();
+		m_SessionCache.Clear();
+		m_ObjectManager.Clear();
+	}
 		
 	void InsertAction(EditorAction action) 
 	{
