@@ -129,7 +129,7 @@ class EditorMapGroupProto: XMLCallback
 	ref array<ref EditorMapGroupProtoGroup> m_MapGroupProto;
 	ref array<ref EditorMapGroupProtoGroup> GetData() { return m_MapGroupProto; }
 	
-	ref array<ref EditorObject> m_LootPositions = {};
+	ref array<EditorObject> m_LootPositions = {};
 	
 	private Object m_Building;
 	void EditorMapGroupProto(Object building)
@@ -139,7 +139,10 @@ class EditorMapGroupProto: XMLCallback
 	
 	void ~EditorMapGroupProto()
 	{
-		delete m_LootPositions;
+		foreach (EditorObject editor_object: m_LootPositions) {
+			GetEditor().DeleteObject(editor_object, false);
+		}
+		
 		delete m_MapGroupProto;
 	}
 		
