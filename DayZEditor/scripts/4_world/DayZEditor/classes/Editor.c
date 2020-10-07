@@ -404,12 +404,18 @@ class Editor
 				
 				if (GetBrush() == null) {
 					
-					if (ObjectUnderCursor && m_ObjectManager.GetEditorObject(ObjectUnderCursor)) {
+					EditorObject editor_object = m_ObjectManager.GetEditorObject(ObjectUnderCursor);
+					if (ObjectUnderCursor && editor_object) {
+						// Allows multiple objects to be dragged with selection
+						if (editor_object.IsSelected()) {
+							return true;
+						}
+						
 						if (!KeyState(KeyCode.KC_LSHIFT)) {
 							ClearSelection();
 						}
 						
-						SelectObject(m_ObjectManager.GetEditorObject(ObjectUnderCursor));
+						SelectObject(editor_object);
 						return true;
 					} 
 					
