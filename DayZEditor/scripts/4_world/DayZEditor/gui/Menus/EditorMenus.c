@@ -217,14 +217,5 @@ class EditorPlacedContextMenu: EditorContextMenu
 	}
 }
 
-class EditorPlaceableContextMenu: EditorContextMenu
-{
-	void EditorPlaceableContextMenu(float x, float y)
-	{
-		AddMenuButton(m_Editor.CommandManager.LootEditorCommand);
-	}
-}
-
-
 
 

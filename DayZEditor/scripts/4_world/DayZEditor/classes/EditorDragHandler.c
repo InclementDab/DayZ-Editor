@@ -195,9 +195,6 @@ class ObjectDragHandler: DragHandler
 				
 			} 			
 		}
-		
-		
-		
 	}
 }
 

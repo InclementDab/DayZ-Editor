@@ -34,14 +34,6 @@ class EditorPlaceableListItem: EditorListItem
 				Select();
 				break;
 			}
-			
-			case 1: {
-				int x, y;
-				GetMousePos(x, y);
-				EditorPlaceableContextMenu placeable_context = new EditorPlaceableContextMenu(x, y);
-				EditorUIManager.CurrentMenu = placeable_context;
-				break;
-			}	
 		}
 				
 		return true;
