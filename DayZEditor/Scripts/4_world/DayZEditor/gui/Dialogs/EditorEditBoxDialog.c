@@ -5,13 +5,11 @@ class EditorEditBoxDialog: EditorDialogBase
 	
 	void EditorEditBoxDialog(string title, string caption = "", string default_value = "")
 	{
-		m_EditBoxPrefab = new EditBoxPrefab(caption, m_Controller, default_value);
-		AddContent(m_EditBoxPrefab);
+		AddContent(new EditBoxPrefab(caption, m_Controller, default_value));
 		
-		AddButton("Create", DialogResult.OK);
-		AddButton("Cancel", DialogResult.Cancel);
+		AddButton(DialogResult.OK);
+		AddButton(DialogResult.Cancel);
 	}
-	
 		
 	DialogResult ShowDialog(out string edit_data)
 	{
@@ -23,6 +21,30 @@ class EditorEditBoxDialog: EditorDialogBase
 		return result;
 	}	
 }
+
+class EditorFileDialog: EditorDialogBase
+{
+	protected autoptr EditBoxPrefab m_EditBoxPrefab;
+	
+	void EditorFileDialog(string title, string caption = "", string default_value = "", string button_name = "OK")
+	{
+		AddContent(new EditBoxPrefab(caption, m_Controller, default_value));
+		
+		AddButton(button_name, DialogResult.OK);
+		AddButton(DialogResult.Cancel);
+	}
+		
+	DialogResult ShowDialog(out string edit_data)
+	{
+		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
+		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
+		
+		DialogResult result = ShowDialog();
+		edit_data = edit_box.GetText();
+		return result;
+	}	
+}
+
 
 class EditorMultilineEditBoxDialog: EditorDialogBase
 {

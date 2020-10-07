@@ -3,7 +3,7 @@ class EditorExportCommandBase: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorEditBoxDialog file_dialog(GetName(), "File");
+		EditorFileDialog file_dialog(GetName(), "File", "", GetDialogButtonName());
 		
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
@@ -34,6 +34,10 @@ class EditorExportCommandBase: EditorCommand
 	}
 	
 	typename GetFileType();
+	
+	string GetDialogButtonName() {
+		return "Import";
+	}
 }
 
 class EditorSaveCommand: EditorExportCommandBase
@@ -43,14 +47,8 @@ class EditorSaveCommand: EditorExportCommandBase
 		EditorLog.Trace("EditorSaveCommand");
 		
 		if (m_Editor.EditorSaveFile == string.Empty) {
-			EditorEditBoxDialog file_dialog(GetName(), "File");
-			string file_name;
-			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
-				return;
-			}
-			
-			m_Editor.EditorSaveFile = "$profile:Editor/" + file_name;
-			EditorFileManager.GetSafeFileName(m_Editor.EditorSaveFile, ".dze");
+			super.Call(sender, args);
+			return;
 		}
 		
 		ExportFile(m_Editor.EditorSaveFile);
@@ -71,6 +69,10 @@ class EditorSaveCommand: EditorExportCommandBase
 	override typename GetFileType() {
 		return EditorDZEFile;
 	}
+	
+	override string GetDialogButtonName() {
+		return "Save";
+	}
 }
 
 class EditorSaveAsCommand: EditorExportCommandBase
@@ -85,6 +87,10 @@ class EditorSaveAsCommand: EditorExportCommandBase
 	
 	override typename GetFileType() {
 		return EditorDZEFile;
+	}
+	
+	override string GetDialogButtonName() {
+		return "Save";
 	}
 }
 
