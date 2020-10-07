@@ -4,11 +4,11 @@ The DayZ Editor is a 3D Map editing tool. Designed for creating environments, pl
 
 **REUPLOAD / REPACKING WITHOUT EXPLICIT PERMISSION IS STRICTLY PROHIBITED. ALL VERSIONS FOUND ON THE WORKSHOP WILL BE ACTIONED AND YOUR STEAM ACCOUNT WILL BE BLACKLISTED FROM EDITOR USAGE**
 
-[Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2250764298)
-
 # How to join
 
-[Download](https://github.com/InclementDab/DayZ-Editor/releases)
+[Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2250764298)
+
+[Direct Download](https://github.com/InclementDab/DayZ-Editor/releases)
 
 1.) Drag @DayZ-Editor into your DayZ directory
 
