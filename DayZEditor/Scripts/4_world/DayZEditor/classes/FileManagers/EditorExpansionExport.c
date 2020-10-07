@@ -48,7 +48,7 @@ class ExpansionImportData
 		}
 		
 		// another stupid fix
-		EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();		
+		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();		
 		foreach (EditorObject eo: placed_objects) {
 			GetEditor().SelectObject(eo);
 		}

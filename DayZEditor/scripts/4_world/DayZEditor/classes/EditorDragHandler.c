@@ -31,7 +31,7 @@ class DragHandler
 		} 
 		
 		drag_undo.InsertRedoParameter(m_EditorObject, m_EditorObject.GetTransformArray());
-		GetEditor().GetObjectManager().InsertAction(drag_undo);
+		GetEditor().InsertAction(drag_undo);
 		
 		OnDragFinish();
 	}
@@ -70,7 +70,7 @@ class ObjectDragHandler: DragHandler
 		
 		// Calcuate position of all selected objects
 		// this is done first to avoid confusion with an already affected transformation
-		EditorObjectSet selected_objects = GetEditor().GetSelectedObjects();
+		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {
 			
 			if (selected_object == target) continue;			
@@ -279,7 +279,7 @@ void ObjectDragUpdate(notnull EditorObject target)
 	target.Update();
 	
 	// This handles all other selected objects
-	EditorObjectSet selected_objects = GetObjectManager().GetSelectedObjects();
+	EditorObjectMap selected_objects = GetObjectManager().GetSelectedObjects();
 	foreach (EditorObject selected_object: selected_objects) {
 		
 		if (selected_object == target) continue;

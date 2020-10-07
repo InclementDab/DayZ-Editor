@@ -57,7 +57,7 @@ class EditorSaveData
 		editor.GetCamera().GetTransform(save_data.CameraPosition);
 		
 		// Save Objects
-		EditorObjectSet placed_objects = editor.GetPlacedObjects();
+		EditorObjectMap placed_objects = editor.GetPlacedObjects();
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
 				save_data.EditorObjects.Insert(editor_object.GetData().GetID(), editor_object.GetData());

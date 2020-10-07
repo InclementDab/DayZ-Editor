@@ -21,7 +21,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		m_LayoutRoot.Show(show);
 		
 		if (GetEditor()) {
-			EditorObjectSet placed_objects = GetEditor().GetPlacedObjects();
+			EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
 			if (placed_objects) {
 				foreach (EditorObject editor_object: placed_objects) {
 					editor_object.Show(show);
@@ -82,7 +82,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 				EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
 				EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
 							
-				EditorObjectSet placed_objects = g_Editor.GetPlacedObjects();
+				EditorObjectMap placed_objects = g_Editor.GetPlacedObjects();
 				foreach (EditorObject editor_object: placed_objects) {
 					
 					if (editor_object.IsSelected()) continue;

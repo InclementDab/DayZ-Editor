@@ -1,15 +1,13 @@
-class EditorObjectSet: ref map<int, ref EditorObject>
+
+class EditorObjectMap: map<int, ref EditorObject>
 {
-	
-	void ~EditorObjectSet() {
-		EditorLog.Trace("~EditorObjectSet");
+	int InsertEditorObject(EditorObject editor_object)
+	{
+		return Insert(editor_object.GetID(), editor_object);
 	}
 	
-	bool InsertEditorObject(EditorObject target) { 
-		return Insert(target.GetID(), target); 
-	}
-	
-	void RemoveEditorObject(EditorObject target) { 
-		Remove(target.GetID()); 
+	void RemoveEditorObject(EditorObject editor_object)
+	{
+		Remove(editor_object.GetID());
 	}
 }

@@ -10,8 +10,10 @@ class EditorSettings
 	// Autosave timer in seconds
 	int AutoSaveTimer = 240;
 
+	bool LockCameraDuringDialogs = false;
 	
-	void EditorSettings() {
+	void EditorSettings() 
+	{
 		EditorLog.Trace("EditorSettings");
 	}
 	

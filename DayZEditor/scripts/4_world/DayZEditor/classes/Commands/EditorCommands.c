@@ -229,7 +229,7 @@ class EditorCloseCommand: EditorCommand
 			return;
 		}
 		
-		EditorObjectSet placed_objects = m_Editor.GetPlacedObjects();
+		EditorObjectMap placed_objects = m_Editor.GetPlacedObjects();
 		m_Editor.DeleteObjects(placed_objects, false);
 		m_Editor.EditorSaveFile = string.Empty;		
 	}
@@ -263,7 +263,7 @@ class EditorUndoCommand: EditorCommand
 {	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		m_Editor.GetObjectManager().Undo();
+		m_Editor.Undo();
 	}
 	
 	override string GetName() {
@@ -281,8 +281,9 @@ class EditorUndoCommand: EditorCommand
 
 class EditorRedoCommand: EditorCommand
 {	
-	protected override void Call(Class sender, CommandArgs args) {
-		m_Editor.GetObjectManager().Redo();
+	protected override void Call(Class sender, CommandArgs args) 
+	{
+		m_Editor.Redo();
 	}
 		
 	override string GetName() {
@@ -302,7 +303,7 @@ class EditorSelectAllCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorObjectSet placed_objects = m_Editor.GetPlacedObjects();
+		EditorObjectMap placed_objects = m_Editor.GetPlacedObjects();
 		foreach (EditorObject eo: placed_objects)
 			m_Editor.SelectObject(eo);
 	}
@@ -320,7 +321,7 @@ class EditorDeleteCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorObjectSet objects = m_Editor.GetSelectedObjects();
+		EditorObjectMap objects = m_Editor.GetSelectedObjects();
 		m_Editor.DeleteObjects(objects);		
 	}
 		
@@ -337,7 +338,7 @@ class EditorCutCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorObjectSet objects = m_Editor.GetSelectedObjects();
+		EditorObjectMap objects = m_Editor.GetSelectedObjects();
 		EditorClipboard.Cut(objects);
 	}
 
@@ -358,7 +359,7 @@ class EditorCopyCommand: EditorCommand
 {	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorObjectSet objects = m_Editor.GetSelectedObjects();
+		EditorObjectMap objects = m_Editor.GetSelectedObjects();
 		EditorClipboard.Copy(objects);
 	}
 
@@ -759,7 +760,7 @@ class EditorShowCommand: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorObjectSet selected_objects = m_Editor.GetSelectedObjects();
+		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {		
 			selected_object.Show(true);
 		}
@@ -778,7 +779,7 @@ class EditorHideCommand: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorObjectSet selected_objects = m_Editor.GetSelectedObjects();
+		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {
 			selected_object.Show(false);
 		}

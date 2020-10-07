@@ -1,15 +1,19 @@
 
 class EditorObjectManagerModule: JMModuleBase
 {
-	private ref EditorObjectSet 				m_PlacedObjects;
-	private ref EditorObjectSet					m_SelectedObjects;
-	private ref EditorActionStack 				m_ActionStack;
-	private ref map<int, int> 					m_PlacedObjectIndex;
+	// strong reference of Placed Objects
+	private ref EditorObjectMap					m_PlacedObjects;
 	
-	EditorObjectSet GetSelectedObjects() 
+	// Stored list of all selected Objects
+	private ref EditorObjectMap					m_SelectedObjects;
+	
+	// Stored list of all Placed Objects, indexed by their WorldObject ID
+	private ref EditorObjectMap					m_WorldObjectIndex;
+	
+	EditorObjectMap GetSelectedObjects() 
 		return m_SelectedObjects; 
 	
-	EditorObjectSet GetPlacedObjects()
+	EditorObjectMap GetPlacedObjects()
 		return m_PlacedObjects; 
 		
 	EditorObject GetPlacedObjectById(int id)
@@ -19,73 +23,31 @@ class EditorObjectManagerModule: JMModuleBase
 		return m_PlacedObjects.Get(id); 
 	
 	EditorObject GetEditorObject(notnull Object world_object)
-		return GetEditorObject(m_PlacedObjectIndex.Get(world_object.GetID())); 
-	
-	void InsertAction(EditorAction action) 
-	{
-		m_ActionStack.InsertAction(action);
-		// this crashes smile :)
-		//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
-	}
+		return m_WorldObjectIndex.Get(world_object.GetID()); 
 	
 	override void Init()
 	{
 		EditorLog.Trace("EditorObjectManager::CreateObjects");
-		m_PlacedObjectIndex = new map<int, int>();
-		m_PlacedObjects 	= new EditorObjectSet();
-		m_SelectedObjects 	= new EditorObjectSet();
-		m_ActionStack 		= new EditorActionStack();
-	}
-	
-	EditorObjectSet CreateObjects(EditorObjectDataSet data_list, bool create_undo = true)
-	{
-		EditorLog.Trace("EditorObjectManager::CreateObjects");
-		EditorObjectSet object_set = new EditorObjectSet();
-		EditorAction action = new EditorAction("Delete", "Create");
-		foreach (EditorObjectData editor_object_data: data_list) {
-						
-			EditorObject editor_object = new EditorObject(editor_object_data);
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));		
-			
-			// Register object trigger events
-			object_set.InsertEditorObject(editor_object);	
-			m_PlacedObjects.InsertEditorObject(editor_object);
-			m_PlacedObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object.GetID());
-			EditorEvents.ObjectCreated(this, editor_object);
-		}
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
-		
-		return object_set;
+		m_WorldObjectIndex 	= new EditorObjectMap();
+		m_PlacedObjects 	= new EditorObjectMap();
+		m_SelectedObjects 	= new EditorObjectMap();
 	}
 	
 	
-	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true)
+	EditorObject CreateObject(EditorObjectData editor_object_data)
 	{		
 		EditorLog.Trace("EditorObjectManager::CreateObject");
 
 		EditorObject editor_object = new EditorObject(editor_object_data);
 
-		EditorAction action = new EditorAction("Delete", "Create");;
-		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		
 		m_PlacedObjects.InsertEditorObject(editor_object);
-		m_PlacedObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object.GetID());
-		EditorEvents.ObjectCreated(this, editor_object);
+		m_WorldObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object);
 		
-		if (create_undo) {
-			InsertAction(action);
-		}
-			
-	
+		EditorEvents.ObjectCreated(this, editor_object);
 		return editor_object;
 	}
 	
-	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true)
+	/*EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorLog.Trace("EditorObjectManager::CreateFromObject");
 		// If object already exists 
@@ -100,7 +62,7 @@ class EditorObjectManagerModule: JMModuleBase
 		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 		
 		m_PlacedObjects.InsertEditorObject(editor_object);
-		m_PlacedObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object.GetID());
+		m_PlacedObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object);
 		EditorEvents.ObjectCreated(this, editor_object);
 		
 		if (create_undo) {
@@ -108,44 +70,17 @@ class EditorObjectManagerModule: JMModuleBase
 		}
 		
 		return editor_object;
-	}
+	}*/
 
-	void DeleteObject(EditorObject target, bool create_undo = true)
+	void DeleteObject(EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::DeleteObject");
 		m_SelectedObjects.RemoveEditorObject(target);
 		m_PlacedObjects.RemoveEditorObject(target);
-		EditorEvents.ObjectDeleted(this, target);
-		
-		if (create_undo) {
-			EditorAction action = new EditorAction("Create", "Delete");
-			action.InsertUndoParameter(target, new Param1<int>(target.GetID()));
-			action.InsertRedoParameter(target, new Param1<int>(target.GetID()));
-			InsertAction(action);
-		}
-		
+		EditorEvents.ObjectDeleted(this, target);		
 		delete target;
 	}
 	
-	void DeleteObjects(EditorObjectSet target, bool create_undo = true)
-	{
-		EditorLog.Trace("EditorObjectManager::DeleteObjects");
-		
-		EditorAction action = new EditorAction("Create", "Delete");
-		
-		foreach (EditorObject editor_object: target) {
-			m_SelectedObjects.RemoveEditorObject(editor_object);
-			m_PlacedObjects.RemoveEditorObject(editor_object);
-			EditorEvents.ObjectDeleted(this, editor_object);
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			delete editor_object;
-		}	
-			
-		if (create_undo) {
-			InsertAction(action);
-		}
-	}
 	
 	// Call to select an object
 	void SelectObject(EditorObject target)
@@ -184,58 +119,11 @@ class EditorObjectManagerModule: JMModuleBase
 			DeselectObject(editor_object);
 	}
 	
-	void Undo()
-	{
-		EditorLog.Trace("EditorObjectManager::Undo");
-		foreach (EditorAction action: m_ActionStack) {
-			if (!action.IsUndone()) {
-				action.CallUndo();
-				EditorLog.Debug("Undo complete");
-				return;
-			}
-		}
-	}
-	
-	void Redo()
-	{
-		EditorLog.Trace("EditorObjectManager::Redo");
-		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
-			if (m_ActionStack[i] != null && m_ActionStack[i].IsUndone()) {
-				m_ActionStack[i].CallRedo();
-				EditorLog.Debug("Redo complete");
-				return;
-			}
-		}
-	}
-	
-	bool CanUndo() 
-	{
-		foreach (EditorAction action: m_ActionStack) {
-			if (!action.IsUndone()) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	bool CanRedo() 
-	{
-		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
-			if (m_ActionStack[i] && m_ActionStack[i].IsUndone()) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
 	void Clear()
 	{
-		m_PlacedObjectIndex.Clear();
+		m_WorldObjectIndex.Clear();
 		m_PlacedObjects.Clear();
 		m_SelectedObjects.Clear();
-		m_ActionStack.Clear();
 	}
 		
 	override bool IsClient() 
