@@ -39,7 +39,6 @@ class PrefabBase<Class TValue>: ScriptView
 		m_BindingContext.PropertyChanged(m_BindingName);
 	}
 
-
 	override typename GetControllerType() {
 		return (new PrefabBaseController<TValue>()).Type();
 	}

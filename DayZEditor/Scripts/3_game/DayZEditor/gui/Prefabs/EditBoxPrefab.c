@@ -6,3 +6,7 @@ class EditBoxPrefab: PrefabBase<string>
 		return "DayZEditor/gui/Layouts/prefabs/EditBoxPrefab.layout";
 	}
 }
+
+
+
+

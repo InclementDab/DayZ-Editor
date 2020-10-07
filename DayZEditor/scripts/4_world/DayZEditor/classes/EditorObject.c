@@ -211,8 +211,11 @@ class EditorObject
 		Update();
 	}
 	
+	// temp bc GetScale doesnt work
+	private float _scale = 1;
 	void SetScale(float scale)
 	{
+		_scale = scale;
 		vector mat[4];
 		GetTransform(mat);
 		mat[0][0] = scale;
@@ -226,7 +229,7 @@ class EditorObject
 	
 	float GetScale()
 	{
-		return GetWorldObject().GetScale();
+		return _scale;
 	}
 	
 	void Update() 

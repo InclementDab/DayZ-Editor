@@ -4,7 +4,7 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 	string name;
 	vector position;
 	vector orientation;
-	string scale;
+	float scale;
 	
 	bool button;
 	
@@ -35,7 +35,7 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 			}
 			
 			case "scale": {
-				m_EditorObject.SetScale(scale.ToFloat());
+				m_EditorObject.SetScale(scale);
 				break;
 			}
 			
@@ -63,7 +63,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		general_group.Insert(new EditBoxPrefab("Name", m_Controller, "name", editor_object.GetDisplayName()));
 		general_group.Insert(new VectorPrefab("Position", m_Controller, "position", editor_object.GetPosition()));
 		general_group.Insert(new VectorPrefab("Orientation", m_Controller, "orientation", editor_object.GetOrientation()));
-		general_group.Insert(new EditBoxPrefab("Scale", m_Controller, "scale", editor_object.GetScale().ToString()));
+		general_group.Insert(new EditBoxNumberPrefab("Scale", m_Controller, "scale", editor_object.GetScale().ToString(), 0.01));
 		
 		AddContent(general_group);
 		
