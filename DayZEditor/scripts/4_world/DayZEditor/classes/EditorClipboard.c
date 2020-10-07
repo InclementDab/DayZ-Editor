@@ -27,7 +27,7 @@ class EditorClipboard
 		
 		foreach (int idx, EditorObject selected_object: copy_objects) {
 			EditorObjectData data = selected_object.GetData();
-			data.Transform[3] = selected_object.GetPosition() - avg_position;
+			data.Position = selected_object.GetPosition() - avg_position;
 			world_objects.Insert(data);
 		}
 	
@@ -53,7 +53,7 @@ class EditorClipboard
 				
 		foreach (ref EditorObjectData pasted_object: data) {
 			
-			vector position = pasted_object.Transform[3] + Editor.CurrentMousePosition;
+			vector position = pasted_object.Position + Editor.CurrentMousePosition;
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",

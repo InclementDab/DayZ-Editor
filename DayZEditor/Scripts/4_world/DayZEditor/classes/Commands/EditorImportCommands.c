@@ -31,7 +31,8 @@ class EditorImportCommandBase: EditorCommand
 		EditorSaveData save_data = new EditorSaveData();
 		ImportSettings settings = new ImportSettings(); // todo
 		save_data = file_type.Import(handle, settings);
-				
+		
+		
 		EditorObjectMap result = GetEditor().CreateObjects(save_data.EditorObjects, false);
 		
 		string message = string.Format("Imported %1 objects!", result.Count().ToString());

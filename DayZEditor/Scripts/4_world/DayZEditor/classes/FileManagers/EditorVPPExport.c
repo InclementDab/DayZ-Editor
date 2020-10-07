@@ -36,7 +36,7 @@ static EditorFileResult ExportVPPData(EditorObjectDataMap data, string filename,
 	ref VPPToEditorBuildingSet bSet = new VPPToEditorBuildingSet(set_name);
 	
 	foreach (EditorObjectData object_data: data) {
-		bSet.AddBuilding(object_data.Type, object_data.GetPosition(), object_data.GetOrientation(), true);
+		bSet.AddBuilding(object_data.Type, object_data.Position, object_data.Orientation, true);
 		bSet.SetActive(true);
 	}
 	

@@ -25,10 +25,7 @@ class EditorExpansionFile: EditorFileType
 	{		
 		foreach (EditorObjectData editor_object: data.EditorObjects) {
 			// Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
-			vector position = editor_object.GetPosition();
-			vector orientation = editor_object.GetOrientation();
-			Print(editor_object.Type);
-			string line = string.Format("%1|%2 %3 %4|%5 %6 %7", editor_object.Type, position[0], position[1], position[2], orientation[0], orientation[1], orientation[2]);
+			string line = string.Format("%1|%2 %3 %4|%5 %6 %7", editor_object.Type, editor_object.Position[0], editor_object.Position[1], editor_object.Position[2], editor_object.Orientation[0], editor_object.Orientation[1], editor_object.Orientation[2]);
 			FPrintln(handle, line);
 		}		
 	}

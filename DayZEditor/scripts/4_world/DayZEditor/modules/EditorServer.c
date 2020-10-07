@@ -77,7 +77,7 @@ class EditorServerModule: JMModuleBase
 		EditorObjectData data = new EditorObjectData();
 		data.OnRead(ctx);
 		
-		GetGame().CreateObjectEx(data.Type, data.GetPosition(), ECE_NONE);
+		GetGame().CreateObjectEx(data.Type, data.Position, ECE_NONE);
 	}
 	
 	private void RPC_CreateCamera(ref ParamsReadContext ctx, PlayerIdentity senderRPC, Object target)

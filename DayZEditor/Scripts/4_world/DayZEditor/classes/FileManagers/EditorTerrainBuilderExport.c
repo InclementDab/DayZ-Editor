@@ -13,8 +13,8 @@ static EditorFileResult ExportTBData(ref EditorObjectDataMap data, string filena
 		//if (height_type == HeightType.RELATIVE)
 		//position[1] = position[1] - GetGame().SurfaceY(position[0], position[2]);
 
-		vector position = editor_object.GetPosition() + terrainbuilder_offset;
-		vector orientation = editor_object.GetOrientation();
+		vector position = editor_object.Position + terrainbuilder_offset;
+		vector orientation = editor_object.Orientation;
 		string line = string.Format("\"%1\";%2;%3;%4;%5;%6;%7;%8;", GetGame().GetModelName(editor_object.Type), position[0], position[2], orientation[0], orientation[1], orientation[2], editor_object.GetScale(), position[1]);
 		FPrintln(handle, line);
 	}

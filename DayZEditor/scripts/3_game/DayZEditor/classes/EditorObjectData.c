@@ -17,7 +17,8 @@ class EditorObjectData
 	
 	string Type;
 	string DisplayName;
-	vector Transform[4];
+	vector Position;
+	vector Orientation;
 
 	EditorObjectFlags Flags;
 	
@@ -33,25 +34,12 @@ class EditorObjectData
 		m_Id = lowest_id;
 	}
 	
-	void Update()
-	{
-		// THis is because calling GetTransform(m_Data.Transform) from EditorObject
-		// Is broken. pointer offsets? i dont fucking know but i hate it here
-		WorldObject.GetTransform(Transform);
-	}
-		
-	static EditorObjectData Create(string type, vector position, vector orientation, EditorObjectFlags flags = EditorObjectFlags.ALL)
-	{
-		vector transform[4];
-		
-		Math3D.YawPitchRollMatrix(orientation, transform);
-		
-		transform[3] = position;
-		Print(transform);
-		return Create(type, transform, flags);
+	static EditorObjectData Create(string type, vector transform[4], EditorObjectFlags flags = EditorObjectFlags.ALL)
+	{	
+		return Create(type, transform[3], Math3D.MatrixToAngles(transform), flags);
 	}
 	
-	static EditorObjectData Create(string type, vector transform[4], EditorObjectFlags flags = EditorObjectFlags.ALL)
+	static EditorObjectData Create(string type, vector position, vector orientation, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorLog.Trace("EditorObjectData::Create");
 		
@@ -62,7 +50,8 @@ class EditorObjectData
 		
 		EditorObjectData data = new EditorObjectData();
 		data.Type = type; 
-		data.Transform = transform; 
+		data.Position = position; 
+		data.Orientation = orientation;
 		data.Flags = flags;
 		data.DisplayName = data.Type;
 		//data.ObjectMod = GetModFromObject(data.Type); todo refactor.
@@ -78,7 +67,8 @@ class EditorObjectData
 		EditorObjectData data = new EditorObjectData();
 		data.Type = target.GetType();
 		data.WorldObject = target;
-		data.WorldObject.GetTransform(data.Transform); 
+		data.Position = data.WorldObject.GetPosition(); 
+		data.Orientation = data.WorldObject.GetOrientation(); 
 		data.Flags = flags;
 		data.DisplayName = data.Type;
 		
@@ -87,13 +77,6 @@ class EditorObjectData
 		return data;
 	}
 	
-	vector GetPosition() {
-		return Transform[3];
-	}
-	
-	vector GetOrientation() {
-		return Math3D.MatrixToAngles(Transform);
-	}
 	
 	float GetScale() {
 		return 1; // not supported yet
@@ -102,14 +85,16 @@ class EditorObjectData
 	void OnSend(Serializer serializer)
 	{
 		serializer.Write(Type);
-		serializer.Write(Transform);
+		serializer.Write(Position);
+		serializer.Write(Orientation);
 		serializer.Write(Flags);
 	}
 	
 	void OnRead(Serializer serializer)
 	{
 		serializer.Read(Type);
-		serializer.Read(Transform);
+		serializer.Read(Position);
+		serializer.Read(Orientation);
 		serializer.Read(Flags);
 	}
 }
