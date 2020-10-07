@@ -1,12 +1,19 @@
+class EditorWorldObject
+{
+	protected EntityAI m_WorldObject;
+	EntityAI GetWorldObject() {
+		return m_WorldObject;
+	}
+}
 
-class EditorObject
+
+class EditorObject: EditorWorldObject
 {
 	protected EditorObjectData 				m_Data;
 	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem 		m_EditorPlacedListItem;
 	
-	protected Object		m_WorldObject;
 	protected Object		m_BBoxLines[12];	
 	protected Object 		m_BBoxBase;
 	protected Object 		m_CenterLine;
@@ -104,12 +111,11 @@ class EditorObject
 		for (int i = 0; i < 8; i++) {
 			m_SnapPoints.Insert(new EditorSnapPoint(this, m_LineVerticies[i]));
 		}
-		
-		// Bounding Box
-		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
-			ShowBoundingBox();
-		}	
 
+		if ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX) {
+			//ShowBoundingBox();
+		}
+		
 		// Map marker
 		if ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
 			m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
@@ -478,7 +484,7 @@ class EditorObject
 	// Can return null
 	EditorObjectMarker GetMarker()
 	{
-		EditorLog.Trace("EditorObject::GetMarker");
+		//EditorLog.Trace("EditorObject::GetMarker");
 		
 		if (g_Editor.GetEditorHud().IsMapVisible()) {
 			return m_EditorObjectMapMarker;

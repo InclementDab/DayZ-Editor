@@ -83,51 +83,51 @@ class EditorFileManager
 	}
 	
 
-	static EditorFileResult Save(ref EditorSaveData data, string file_name)
+	static void Save(EditorSaveData data, string file_name)
 	{		
-		GetSafeFileName(file_name, ".dze");
-		
+	
 		if (FileExist(file_name) && !DeleteFile(file_name)) {
-			return EditorFileResult.IN_USE;
+			return;
 		}
 		
 		FileSerializer file_serializer = new FileSerializer();
 		if (!file_serializer.Open(file_name, FileMode.WRITE)) {
-			return EditorFileResult.IN_USE;
+			return;
 		}
 		
 		if (!file_serializer.Write(data)) {
 			file_serializer.Close();
-			return EditorFileResult.UNKNOWN_ERROR;
+			return;
 		}
 		
 		file_serializer.Close();
-		
-		return EditorFileResult.SUCCESS;
 	}
 	
-	static EditorFileResult Open(out EditorSaveData data, string file_name)
+	static EditorSaveData Open(string file_name)
 	{
-		GetSafeFileName(file_name, ".dze");
+		EditorSaveData save_data = new EditorSaveData();
 		
 		FileSerializer file_serializer = new FileSerializer();
 
 		if (!FileExist(file_name)) {
-			return EditorFileResult.NOT_FOUND;
+			EditorLog.Error("File not found %1", file_name);
+			return save_data;
 		}
 		
 		if (!file_serializer.Open(file_name, FileMode.READ)) {
-			return EditorFileResult.IN_USE;
+			EditorLog.Error("File in use %1", file_name);
+			return save_data;
 		}
 		
-		if (!file_serializer.Read(data)) {
+		if (!file_serializer.Read(save_data)) {
 			file_serializer.Close();
-			return EditorFileResult.UNKNOWN_ERROR;
+			EditorLog.Error("Unknown File Error %1", file_name);
+			return save_data;
 		}
 		
 		file_serializer.Close();
 		
-		return EditorFileResult.SUCCESS;
+		return save_data;
 	}
 	/*
 	static EditorFileResult Import(out ref EditorSaveData data, string file_name, ImportMode mode)

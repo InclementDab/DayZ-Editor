@@ -23,6 +23,7 @@ class DragHandler
 		
 		vector transform[4];
 		m_EditorObject.GetTransform(transform);
+		m_Editor.ObjectInHand = m_EditorObject;
 		
 		while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
 			OnDragging(transform, m_EditorObject);
@@ -33,6 +34,7 @@ class DragHandler
 		drag_undo.InsertRedoParameter(m_EditorObject, m_EditorObject.GetTransformArray());
 		GetEditor().InsertAction(drag_undo);
 		
+		m_Editor.ObjectInHand = null;
 		OnDragFinish();
 	}
 	
@@ -55,14 +57,12 @@ class ObjectDragHandler: DragHandler
 	override void OnDragging(out vector transform[4], notnull EditorObject target)
 	{
 		
-		//GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().
 		vector begin_pos = GetGame().GetCurrentCameraPosition();
 		vector end_pos = begin_pos + GetGame().GetPointerDirection() * 3000;
-		vector cursor_pos, contact_dir;
 		int component;
 		
-		DayZPhysics.RaycastRV(begin_pos, end_pos, cursor_pos, contact_dir, component, null, null, null, false, !GetEditor().CollisionMode);
-				
+		vector cursor_pos = Editor.CurrentMousePosition;
+		
 		vector size;
 		vector ground_position;
 		vector surface_normal;

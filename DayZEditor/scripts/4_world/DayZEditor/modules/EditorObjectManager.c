@@ -37,7 +37,7 @@ class EditorObjectManagerModule: JMModuleBase
 	}
 	
 	
-	EditorObject CreateObject(EditorObjectData editor_object_data)
+	EditorObject CreateObject(ref EditorObjectData editor_object_data)
 	{		
 		EditorLog.Trace("EditorObjectManager::CreateObject");
 

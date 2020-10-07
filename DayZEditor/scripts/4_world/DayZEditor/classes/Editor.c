@@ -207,7 +207,7 @@ class Editor
 	static vector 								CurrentMousePosition;
 	
 	// public properties
-	ref EditorHologram 							ObjectInHand;
+	ref EditorWorldObject 						ObjectInHand;
 	ref EditorCommandManager 					CommandManager;
 	
 	// private Editor Members
@@ -321,7 +321,7 @@ class Editor
 		} else {
 			EntityAI collision_ignore;
 			if (ObjectInHand) {
-				collision_ignore = ObjectInHand.GetProjectionEntity();
+				collision_ignore = ObjectInHand.GetWorldObject();
 			}
 			
 			if (CollisionMode) {
@@ -551,6 +551,13 @@ class Editor
 		m_Mission.GetHud().ShowHudUI(!m_Active);
 		m_Mission.GetHud().SetPermanentCrossHair(!m_Active);
 		
+
+		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
+		if (placed_objects) {
+			foreach (EditorObject editor_object: placed_objects) {
+				editor_object.GetMarker().Show(m_Active);
+			}
+		}
 		
 		// we are in 4_world and this game is bad :)
 		Widget hud_root;
@@ -597,11 +604,17 @@ class Editor
 	{
 		if (!ObjectInHand) return null;	
 		
-		EditorObject editor_object = CreateObject(ObjectInHand.GetProjectionEntity());
+		EditorHologram editor_hologram;
+		if (!Class.CastTo(editor_hologram, ObjectInHand)) {
+			return null;
+		}
+		
+		EditorObject editor_object = CreateObject(editor_hologram.GetWorldObject());
 		EditorEvents.ObjectPlaced(this, editor_object);
 		SelectObject(editor_object);
 		
-		EditorPlaceableItem item = ObjectInHand.GetPlaceableItem();
+		
+		EditorPlaceableItem item = editor_hologram.GetPlaceableItem();
 		delete ObjectInHand;
 		
 		if (!KeyState(KeyCode.KC_LSHIFT)) { 

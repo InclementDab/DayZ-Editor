@@ -104,14 +104,11 @@ class EditorSaveCommand: EditorCommand
 			}
 			
 			m_Editor.EditorSaveFile = "$profile:Editor/" + file_name;
+			EditorFileManager.GetSafeFileName(m_Editor.EditorSaveFile, ".dze");
 		}
 		
 		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
-		EditorFileResult file_result = EditorFileManager.Save(save_data, m_Editor.EditorSaveFile);
-		if (file_result != EditorFileResult.SUCCESS) {
-			m_Editor.GetEditorHud().CreateNotification(typename.EnumToString(EditorFileResult, file_result), COLOR_RED);
-			return;
-		} 
+		EditorFileManager.Save(save_data, m_Editor.EditorSaveFile);
 		
 		m_Editor.GetEditorHud().CreateNotification("Saved!", COLOR_GREEN);
 		EditorLog.Info("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
@@ -141,13 +138,10 @@ class EditorSaveAsCommand: EditorCommand
 		}
 		
 		m_Editor.EditorSaveFile = "$profile:Editor/" + file_name;
+		EditorFileManager.GetSafeFileName(m_Editor.EditorSaveFile, ".dze");
 		
 		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
-		EditorFileResult file_result = EditorFileManager.Save(save_data, m_Editor.EditorSaveFile);
-		if (file_result != EditorFileResult.SUCCESS) {
-			m_Editor.GetEditorHud().CreateNotification(typename.EnumToString(EditorFileResult, file_result), COLOR_RED);
-			return;
-		} 
+		EditorFileManager.Save(save_data, m_Editor.EditorSaveFile);
 		
 		m_Editor.GetEditorHud().CreateNotification("Saved!", COLOR_GREEN);
 		EditorLog.Info("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
@@ -174,16 +168,16 @@ class EditorOpenCommand: EditorCommand
 		}
 		
 		file_name = "$profile:Editor/" + file_name;
-		
+		EditorFileManager.GetSafeFileName(file_name, ".dze");
 		if (!FileExist(file_name)) {
 			MessageBox.Show("File not found", "Could not find file " + file_name, MessageBoxButtons.OK);
 			return;
 		}
 		
+		// set this after checking if it exists
 		m_Editor.EditorSaveFile = file_name;
 		
-		EditorSaveData save_data;
-		EditorFileManager.Open(save_data, m_Editor.EditorSaveFile);
+		EditorSaveData save_data = EditorFileManager.Open(m_Editor.EditorSaveFile);
 		
 		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
 			EditorLog.Info("Loading Map %1", save_data.MapName);
@@ -198,7 +192,12 @@ class EditorOpenCommand: EditorCommand
 		}
 		
 		m_Editor.DeleteObjects(m_Editor.GetPlacedObjects(), false);
-		m_Editor.CreateObjects(save_data.EditorObjects, false);
+		
+		foreach (int id, EditorObjectData data: save_data.EditorObjects) {
+			m_Editor.CreateObject(data, false);
+		}
+		
+		
 		m_Editor.GetCamera().SetTransform(save_data.CameraPosition);
 		
 		string msg = string.Format("Loaded %1 objects!", save_data.EditorObjects.Count().ToString());

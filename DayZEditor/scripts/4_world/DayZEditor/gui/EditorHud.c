@@ -19,15 +19,6 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	{
 		EditorLog.Trace("EditorHud::Show");
 		m_LayoutRoot.Show(show);
-		
-		if (GetEditor()) {
-			EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
-			if (placed_objects) {
-				foreach (EditorObject editor_object: placed_objects) {
-					editor_object.Show(show);
-				}
-			}
-		}
 	}
 	
 	bool IsVisible() {
