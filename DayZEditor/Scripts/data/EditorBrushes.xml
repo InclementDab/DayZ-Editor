@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<BrushTypes>
+
+	<Brush name="Pinus_young">
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_2s" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_sb" frequency="0.7" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_2fb" frequency="0.45" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_2f" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_1f" frequency="0.2" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_1fs" frequency="0.2" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_b_prunusSpinosa_2s" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3f" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3f" frequency="0.3" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3fc" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3d" frequency="0.1" zoffset="-2"/>
+	</Brush>
+
+	<Brush name="Pinus_mature">
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3f" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3f" frequency="0.3" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3fc" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_3d" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_1f" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PinusSylvestris_1fs" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_b_prunusSpinosa_2s" frequency="0.1" zoffset="-2"/>
+	</Brush>
+
+	<Brush name="Picea_mature">
+		<BrushObject type="bldr_plnt_t_PiceaAbies_1f" frequency="0.2" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_piceaabies_1s" frequency="0.07" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_piceaabies_1sb" frequency="0.07" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_2s" frequency="0.07" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_2sb" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_3f" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_piceaabies_3d" frequency="0.05" zoffset="-2"/>
+	</Brush>
+
+	<Brush name="Picea_young1">
+		<BrushObject type="bldr_plnt_t_PiceaAbies_1f" frequency="0.2" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_piceaabies_1s" frequency="0.07" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_piceaabies_1sb" frequency="0.07" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_2s" frequency="0.07" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_2fb" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_2f" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_piceaabies_2d" frequency="0.05" zoffset="-2"/>
+	</Brush>
+
+	<Brush name="Picea_young2">
+		<BrushObject type="bldr_plnt_t_PiceaAbies_2sb" frequency="0.7" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_2s" frequency="0.7" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_1f" frequency="0.7" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_1sb" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_1s" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_1f" frequency="0.5" zoffset="-2"/>
+	</Brush>
+
+	<Brush name="Picea_fresh">
+		<BrushObject type="bldr_plnt_t_PiceaAbies_1sb" frequency="0.8" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_1fb" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_1s" frequency="0.8" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_PiceaAbies_1f" frequency="0.08" zoffset="-2"/>
+	</Brush>
+
+	<Brush name="Betula_Mature">
+		<BrushObject type="bldr_plnt_b_corylusAvellana_2s" frequency="0.01" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_b_prunusSpinosa_2s" frequency="0.01" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_b_BetulaPendula_1s" frequency="0.2" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_BetulaPendula_1f" frequency="0.2" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_BetulaPendula_1fb" frequency="0.3" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_BetulaPendula_2s" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_BetulaPendula_2f" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_BetulaPendula_3s" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_BetulaPendula_3fc" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_BetulaPendula_2fc" frequency="1.0" zoffset="-2"/>
+	</Brush>
+
+	<Brush name="FagusSylvatica">
+		<BrushObject type="bldr_plnt_t_FagusSylvatica_3f" frequency="0.8" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_FagusSylvatica_3fb" frequency="0.8" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_FagusSylvatica_2f" frequency="0.4" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_FagusSylvatica_2fb" frequency="0.4" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_FagusSylvatica_2sb" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_FagusSylvatica_1fd" frequency="0.1" zoffset="-2"/>
+	</Brush>
+
+	<Brush name="FagusDecidua">
+		<BrushObject type="bldr_plnt_t_LarixDecidua_2fb" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_LarixDecidua_2fb" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_LarixDecidua_3fb" frequency="0.1" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_LarixDecidua_1f" frequency="0.04" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_LarixDecidua_1f" frequency="0.04" zoffset="-2"/>
+	</Brush>
+
+	<Brush name="Quercus">
+		<BrushObject type="bldr_t_quercusRobur_2s" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="bldr_t_quercusRobur_2sb" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="bldr_t_quercusRobur_1fc" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_t_FagusSylvatica_1d" frequency="0.03" zoffset="-2"/>
+		<BrushObject type="bldr_b_prunusSpinosa_1s" frequency="0.05" zoffset="-2"/>
+		<BrushObject type="bldr_b_crataegusLaevigata_1s" frequency="0.05" zoffset="-2"/>
+		<BrushObject type="bldr_b_BetulaPendula_1s" frequency="0.01" zoffset="-2"/>
+		<BrushObject type="bldr_b_rosaCanina_1s" frequency="0.03" zoffset="-2"/>
+		<BrushObject type="bldr_t_populusAlba_2s" frequency="0.05" zoffset="-2"/>
+		<BrushObject type="bldr_t_malusDomestica_3s" frequency="0.07" zoffset="-2"/>
+		<BrushObject type="bldr_t_robiniaPseudoacacia_1f" frequency="0.07" zoffset="-2"/>
+	</Brush>
+
+	<Brush name="Grass">
+		<BrushObject type="bldr_plnt_c_grassdry2_summer" frequency="1.0"/>
+		<BrushObject type="bldr_plnt_c_grassdry3_summer" frequency="0.2"/>
+		<BrushObject type="bldr_plnt_c_grassdrytall2_summer" frequency="0.2"/>
+		<BrushObject type="bldr_plnt_c_grassdrytall3_summer" frequency="0.1"/>
+		<BrushObject type="bldr_plnt_c_grassdrytall_summer" frequency="0.1"/>
+		<BrushObject type="bldr_plnt_c_grassdry_summer" frequency="1.0"/>
+	</Brush>
+
+
+	<Brush name="Explosion">
+		<BrushObject type="ExplosionTest" frequency="0.2"/>
+	</Brush>
+
+	<!-- Delete Brush is handled in Code -->
+	<Brush name="Delete" class="DeleteBrush"/>
+</BrushTypes>

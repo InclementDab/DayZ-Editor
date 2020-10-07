@@ -42,7 +42,14 @@ class EditorHudToolbarController: EditorControllerBase
 		}
 		
 #ifndef COMPONENT_SYSTEM
-		// Load Brushes
+		// Load Brushes		
+		if (!FileExist(m_Editor.EditorBrushFile)) {
+			if (!CopyFile("DayZEditor/scripts/data/EditorBrushes.xml", m_Editor.EditorBrushFile)) {
+				EditorLog.Error("Could not copy brush data to %1", m_Editor.EditorBrushFile);
+				return;
+			}
+		}
+		
 		ReloadBrushes(m_Editor.EditorBrushFile);
 #endif		
 	}
@@ -53,12 +60,6 @@ class EditorHudToolbarController: EditorControllerBase
 		EditorLog.Trace("EditorHudToolbarController::ReloadBrushes");
 		BrushTypeBoxData.Clear();
 		XMLEditorBrushes xml_brushes = new XMLEditorBrushes(BrushTypeBoxData);
-		
-		if (!FileExist(filename)) {
-			EditorLog.Error("File not found: " + filename);
-			return;
-		}
-	
 		GetXMLApi().Read(filename, xml_brushes);
 	}
 	
