@@ -47,8 +47,13 @@ class EditorSaveCommand: EditorExportCommandBase
 		EditorLog.Trace("EditorSaveCommand");
 		
 		if (m_Editor.EditorSaveFile == string.Empty) {
-			super.Call(sender, args);
-			return;
+			EditorFileDialog file_dialog(GetName(), "File", "", GetDialogButtonName());
+			string file_name;
+			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
+				return;
+			}
+			
+			m_Editor.EditorSaveFile = file_name;
 		}
 		
 		ExportFile(m_Editor.EditorSaveFile);
