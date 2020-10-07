@@ -107,9 +107,9 @@ class EditorSaveCommand: EditorCommand
 		}
 		
 		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
-		FileDialogResult file_result = EditorFileManager.Save(save_data, m_Editor.EditorSaveFile);
-		if (file_result != FileDialogResult.SUCCESS) {
-			m_Editor.GetEditorHud().CreateNotification(typename.EnumToString(FileDialogResult, file_result), COLOR_RED);
+		EditorFileResult file_result = EditorFileManager.Save(save_data, m_Editor.EditorSaveFile);
+		if (file_result != EditorFileResult.SUCCESS) {
+			m_Editor.GetEditorHud().CreateNotification(typename.EnumToString(EditorFileResult, file_result), COLOR_RED);
 			return;
 		} 
 		
@@ -143,9 +143,9 @@ class EditorSaveAsCommand: EditorCommand
 		m_Editor.EditorSaveFile = "$profile:Editor/" + file_name;
 		
 		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
-		FileDialogResult file_result = EditorFileManager.Save(save_data, m_Editor.EditorSaveFile);
-		if (file_result != FileDialogResult.SUCCESS) {
-			m_Editor.GetEditorHud().CreateNotification(typename.EnumToString(FileDialogResult, file_result), COLOR_RED);
+		EditorFileResult file_result = EditorFileManager.Save(save_data, m_Editor.EditorSaveFile);
+		if (file_result != EditorFileResult.SUCCESS) {
+			m_Editor.GetEditorHud().CreateNotification(typename.EnumToString(EditorFileResult, file_result), COLOR_RED);
 			return;
 		} 
 		

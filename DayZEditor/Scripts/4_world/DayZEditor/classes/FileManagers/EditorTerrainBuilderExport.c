@@ -1,9 +1,9 @@
-static FileDialogResult ExportTBData(ref EditorObjectDataMap data, string filename, ExportSettings export_settings)
+static EditorFileResult ExportTBData(ref EditorObjectDataMap data, string filename, ExportSettings export_settings)
 {
 	FileHandle handle = OpenFile(filename, FileMode.WRITE);
 	
 	if (!handle) {
-		return FileDialogResult.IN_USE;
+		return EditorFileResult.IN_USE;
 	}
 	
 	vector terrainbuilder_offset = Vector(200000, 0, 0);
@@ -22,5 +22,5 @@ static FileDialogResult ExportTBData(ref EditorObjectDataMap data, string filena
 	if (handle) {
 		CloseFile(handle);
 	}
-	return FileDialogResult.SUCCESS;
+	return EditorFileResult.SUCCESS;
 }

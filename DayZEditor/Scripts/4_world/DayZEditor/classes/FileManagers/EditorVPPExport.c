@@ -1,10 +1,10 @@
 typedef FileSerializer Cerealizer;
 
-static FileDialogResult ImportVPPData(out EditorObjectDataMap data, string filename)
+static EditorFileResult ImportVPPData(out EditorObjectDataMap data, string filename)
 {
 	Cerealizer file = new Cerealizer();
 	if (!FileExist(filename)) {
-		return FileDialogResult.NOT_FOUND;
+		return EditorFileResult.NOT_FOUND;
 	}
 	
 	ref VPPToEditorBuildingSet bSet;
@@ -12,9 +12,9 @@ static FileDialogResult ImportVPPData(out EditorObjectDataMap data, string filen
 		file.Read(bSet);
 		file.Close();
 		
-	} else return FileDialogResult.UNKNOWN_ERROR;
+	} else return EditorFileResult.UNKNOWN_ERROR;
 	
-	if (!bSet) return FileDialogResult.UNKNOWN_ERROR;
+	if (!bSet) return EditorFileResult.UNKNOWN_ERROR;
 	
 	ref array<ref VPPToEditorSpawnedBuilding> spawned_buildings = new array<ref VPPToEditorSpawnedBuilding>();
 	bSet.GetSpawnedBuildings(spawned_buildings);
@@ -26,10 +26,10 @@ static FileDialogResult ImportVPPData(out EditorObjectDataMap data, string filen
 		data.Insert(dta.GetID(), dta);
 	}
 	
-	return FileDialogResult.SUCCESS;
+	return EditorFileResult.SUCCESS;
 }
 
-static FileDialogResult ExportVPPData(EditorObjectDataMap data, string filename, string set_name = "DayZEditor Export")
+static EditorFileResult ExportVPPData(EditorObjectDataMap data, string filename, string set_name = "DayZEditor Export")
 {
 	Cerealizer file = new Cerealizer();
 	
@@ -46,5 +46,5 @@ static FileDialogResult ExportVPPData(EditorObjectDataMap data, string filename,
 		file.Close();	
 	}
 	
-	return FileDialogResult.SUCCESS;
+	return EditorFileResult.SUCCESS;
 }

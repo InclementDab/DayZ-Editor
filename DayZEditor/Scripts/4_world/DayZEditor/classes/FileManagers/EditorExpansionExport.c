@@ -1,16 +1,17 @@
 
-static FileDialogResult ExportExpansionData(EditorObjectDataMap data, string filename)
+static EditorFileResult ExportExpansionData(EditorObjectDataMap data, string filename)
 {
 	FileHandle handle = OpenFile(filename, FileMode.WRITE);
 	
 	if (!handle) {
-		return FileDialogResult.IN_USE;
+		return EditorFileResult.IN_USE;
 	}
 	
 	foreach (EditorObjectData editor_object: data) {
 		// Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
 		vector position = editor_object.GetPosition();
 		vector orientation = editor_object.GetOrientation();
+		Print(editor_object.Type);
 		string line = string.Format("%1|%2 %3 %4|%5 %6 %7", editor_object.Type, position[0], position[1], position[2], orientation[0], orientation[1], orientation[2]);
 		FPrintln(handle, line);
 	}
@@ -19,7 +20,7 @@ static FileDialogResult ExportExpansionData(EditorObjectDataMap data, string fil
 		CloseFile(handle);
 	}
 	
-	return FileDialogResult.SUCCESS;
+	return EditorFileResult.SUCCESS;
 }
 
 class ExpansionImportData
@@ -32,10 +33,8 @@ class ExpansionImportData
 		string name;
 		vector position, rotation;
 		while (GetObjectFromFile(handler, name, position, rotation)) {	
-					
-			EditorObjectData dta = EditorObjectData.Create(name, position, rotation, EditorObjectFlags.ALL);
-			Print(dta);
-			data.InsertData(dta);
+				
+			data.InsertData(EditorObjectData.Create(name, position, rotation, EditorObjectFlags.ALL));
 		}
 		
 		// another stupid fix
@@ -43,6 +42,7 @@ class ExpansionImportData
 		foreach (EditorObject eo: placed_objects) {
 			GetEditor().SelectObject(eo);
 		}
+		
 		GetEditor().ClearSelection();
 		
 		if (handler) {

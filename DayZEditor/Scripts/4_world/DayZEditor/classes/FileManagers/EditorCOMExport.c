@@ -9,12 +9,12 @@ class COMImportData
 	}
 }
 
-static FileDialogResult ExportCOMData(EditorObjectDataMap data, string filename)
+static EditorFileResult ExportCOMData(EditorObjectDataMap data, string filename)
 {
 	FileHandle handle = OpenFile(filename, FileMode.WRITE);
 	
 	if (!handle) {
-		return FileDialogResult.IN_USE;
+		return EditorFileResult.IN_USE;
 	}
 	
 	foreach (EditorObjectData editor_object: data) {
@@ -26,5 +26,5 @@ static FileDialogResult ExportCOMData(EditorObjectDataMap data, string filename)
 	if (handle) {
 		CloseFile(handle);
 	}
-	return FileDialogResult.SUCCESS;
+	return EditorFileResult.SUCCESS;
 }

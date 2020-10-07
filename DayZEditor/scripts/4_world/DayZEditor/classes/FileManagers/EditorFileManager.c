@@ -1,3 +1,9 @@
+
+class EditorFileType
+{
+	
+}
+
 enum ExportMode 
 {
 	TERRAINBUILDER,
@@ -29,7 +35,7 @@ class ExportSettings
 	string ExportSetName;
 }
 
-enum FileDialogResult
+enum EditorFileResult
 {
 	SUCCESS = 0,
 	NOT_FOUND = 1,
@@ -86,57 +92,57 @@ class EditorFileManager
 	}
 	
 
-	static FileDialogResult Save(ref EditorSaveData data, string file_name)
+	static EditorFileResult Save(ref EditorSaveData data, string file_name)
 	{		
 		GetSafeFileName(file_name, ".dze");
 		
 		if (FileExist(file_name) && !DeleteFile(file_name)) {
-			return FileDialogResult.IN_USE;
+			return EditorFileResult.IN_USE;
 		}
 		
 		Cerealizer file_serializer = new Cerealizer();
 		if (!file_serializer.Open(file_name, FileMode.WRITE)) {
-			return FileDialogResult.IN_USE;
+			return EditorFileResult.IN_USE;
 		}
 		
 		if (!file_serializer.Write(data)) {
 			file_serializer.Close();
-			return FileDialogResult.UNKNOWN_ERROR;
+			return EditorFileResult.UNKNOWN_ERROR;
 		}
 		
 		file_serializer.Close();
 		
-		return FileDialogResult.SUCCESS;
+		return EditorFileResult.SUCCESS;
 	}
 	
-	static FileDialogResult Open(out EditorSaveData data, string file_name)
+	static EditorFileResult Open(out EditorSaveData data, string file_name)
 	{
 		GetSafeFileName(file_name, ".dze");
 		
 		Cerealizer file_serializer = new Cerealizer();
 
 		if (!FileExist(file_name)) {
-			return FileDialogResult.NOT_FOUND;
+			return EditorFileResult.NOT_FOUND;
 		}
 		
 		if (!file_serializer.Open(file_name, FileMode.READ)) {
-			return FileDialogResult.IN_USE;
+			return EditorFileResult.IN_USE;
 		}
 		
 		if (!file_serializer.Read(data)) {
 			file_serializer.Close();
-			return FileDialogResult.UNKNOWN_ERROR;
+			return EditorFileResult.UNKNOWN_ERROR;
 		}
 		
 		file_serializer.Close();
 		
-		return FileDialogResult.SUCCESS;
+		return EditorFileResult.SUCCESS;
 	}
 	
-	static FileDialogResult Import(out ref EditorSaveData data, string file_name, ImportMode mode)
+	static EditorFileResult Import(out ref EditorSaveData data, string file_name, ImportMode mode)
 	{		
 		if (!FileExist(file_name)) {
-			return FileDialogResult.NOT_FOUND;
+			return EditorFileResult.NOT_FOUND;
 		}
 		
 		switch (mode) {
@@ -174,11 +180,11 @@ class EditorFileManager
 		}
 
 		
-		return FileDialogResult.SUCCESS;
+		return EditorFileResult.SUCCESS;
 		
 	}
 	
-	static FileDialogResult Export(EditorSaveData data, string file_name, ExportSettings export_settings)
+	static EditorFileResult Export(EditorSaveData data, string file_name, ExportSettings export_settings)
 	{
 		Print("EditorFileManager::Export");		
 		DeleteFile(file_name);
@@ -203,10 +209,10 @@ class EditorFileManager
 			
 			default: {
 				EditorLog.Error("ExportMode not supported! " + export_settings.ExportFileMode);
-				return FileDialogResult.NOT_SUPPORTED;
+				return EditorFileResult.NOT_SUPPORTED;
 			}
 		}
 		
-		return FileDialogResult.NOT_SUPPORTED;		
+		return EditorFileResult.NOT_SUPPORTED;		
 	}
 }
