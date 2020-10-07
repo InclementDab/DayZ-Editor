@@ -1,7 +1,7 @@
 
 class EditorObject
 {
-	protected autoptr EditorObjectData 		m_Data;
+	protected EditorObjectData 				m_Data;
 	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem 		m_EditorPlacedListItem;
@@ -55,10 +55,10 @@ class EditorObject
 		m_Data = data;
 		
 		if (!m_Data.WorldObject) {
-			
 			m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Transform[3], ECE_LOCAL | ECE_CREATEPHYSICS);
 			m_WorldObject.SetTransform(m_Data.Transform);
 			m_WorldObject.SetFlags(EntityFlags.STATIC, true);
+			m_Data.WorldObject = m_WorldObject;
 		} else {
 			m_WorldObject = m_Data.WorldObject;
 		}
@@ -234,9 +234,7 @@ class EditorObject
 		GetWorldObject().Update(); 
 		
 		if (m_Data) {
-			vector mat[4];
-			GetWorldObject().GetTransform(mat);
-			m_Data.Transform = mat;
+			m_Data.Update();
 		}
 	}
 	

@@ -34,6 +34,13 @@ class EditorObjectData
 		lowest_id--;
 		m_Id = lowest_id;
 	}
+	
+	void Update()
+	{
+		// THis is because calling GetTransform(m_Data.Transform) from EditorObject
+		// Is broken. pointer offsets? i dont fucking know but i hate it here
+		WorldObject.GetTransform(Transform);
+	}
 		
 	static EditorObjectData Create(string type, vector position, vector orientation, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
@@ -95,14 +102,14 @@ class EditorObjectData
 	void OnSend(Serializer serializer)
 	{
 		serializer.Write(Type);
-		serializer.Write(Transform);
+		//serializer.Write(Transform);
 		serializer.Write(Flags);
 	}
 	
 	void OnRead(Serializer serializer)
 	{
 		serializer.Read(Type);
-		serializer.Read(Transform);
+		//serializer.Read(Transform);
 		serializer.Read(Flags);
 	}
 }
