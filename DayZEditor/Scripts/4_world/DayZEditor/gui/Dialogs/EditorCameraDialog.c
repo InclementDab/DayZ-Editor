@@ -114,7 +114,7 @@ class EditorCameraDialog: EditorDialogBase
 		}
 				
 		GroupPrefab camera_group = new GroupPrefab("Camera", m_Controller, string.Empty);
-		camera_group.Insert(new SliderPrefab("Speed", m_Controller, "speed",  EditorCamera.CAMERA_SPEED, 0, 100));
+		camera_group.Insert(new SliderPrefab("Speed", m_Controller, "speed",  60, 0, 500));
 		camera_group.Insert(new SliderPrefab("FOV", m_Controller, "fov",  GetEditor().GetCamera().GetCurrentFOV(), 0, 2));
 		camera_group.Insert(new SliderPrefab("Gaussian Blur", m_Controller, "blur", EditorCameraDialogControllerData.Blur, 0, 1));
 		camera_group.Insert(new SliderPrefab("Near Plane", m_Controller, "near_plane",  GetEditor().GetCamera().GetNearPlane(), 0, 1));
