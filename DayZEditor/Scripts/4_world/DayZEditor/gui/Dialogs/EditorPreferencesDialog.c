@@ -35,7 +35,7 @@ class EditorPreferencesDialog: EditorDialogBase
 		log_level.InsertItem("Debug");
 		general_group.Insert(log_level);
 		
-		general_group.Insert(new EditBoxNumberPrefab("Auto Save Delay", m_Controller, "auto_save", GetEditor().GetSettings().AutoSaveTimer.ToString()));
+		general_group.Insert(new EditBoxNumberPrefab("Auto Save", m_Controller, "auto_save", GetEditor().GetSettings().AutoSaveTimer.ToString()));
 		
 		AddContent(general_group);
 		

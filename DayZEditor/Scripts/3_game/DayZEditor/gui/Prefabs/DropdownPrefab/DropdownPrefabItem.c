@@ -16,6 +16,6 @@ class DropdownListPrefabItem: ScriptViewTemplate<DropdownListPrefabItemControlle
 	}
 		
 	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/prefabs/Dropdown/DropdownListPrefabItem.layout";
+		return "DayZEditor/gui/Layouts/prefabs/Dropdown/DropdownElementPrefab.layout";
 	}
 }
