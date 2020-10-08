@@ -96,9 +96,14 @@ class EditorHudController: EditorControllerBase
 		        GetWorkbenchGame().ConfigGetChildName(path, i, type);
 				
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
-				if (placeable_item) {
-					LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
+
+				if ( !IsForbiddenItem(placeable_item.Type) ) {
+					if (placeable_item) {
+						LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
+					}
 				}
+
+
 					
 #ifdef COMPONENT_SYSTEM
 				if (i > 500) return 500;
@@ -106,6 +111,29 @@ class EditorHudController: EditorControllerBase
 		    }
 		}
 		return i;
+	}
+	
+	bool IsForbiddenItem(string Model)
+	{
+		//! In theory should be safe but just in case
+		if ( Model.Contains("Fx") ) return true;
+		if ( Model == "ItemOptics" ) return true;
+
+		//! Animals and Zombies
+		if ( GetGame().IsKindOf( Model, "DZ_LightAI" ) ) return true;
+
+		//! Players "survivors"
+		if ( GetGame().IsKindOf( Model, "Man" ) ) return true;
+
+		//! Cursed items
+		if ( Model == "Red9") return true;
+		if ( Model == "QuickieBow") return true;
+		if ( Model == "LargeTentBackPack") return true;
+		if ( GetGame().IsKindOf( Model, "GP25Base" ) ) return true;
+		if ( GetGame().IsKindOf( Model, "M203Base" ) ) return true;
+
+		//! Everything is fine... I hope... :pain:
+		return false;
 	}
 	
 
