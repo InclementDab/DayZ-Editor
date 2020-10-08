@@ -132,7 +132,7 @@ class EditorImportMenu: EditorMenu
 {
 	void EditorImportMenu()
 	{
-		EditorLog.Trace("EditorExportMenu");
+		EditorLog.Trace("EditorImportMenu");
 		
 		AddMenuButton(m_Editor.CommandManager.ImportFromExpansionCommand);
 		AddMenuButton(m_Editor.CommandManager.ImportFromTerrainBuilderCommand);

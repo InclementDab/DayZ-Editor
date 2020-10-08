@@ -36,7 +36,7 @@ class EditorExportCommandBase: EditorCommand
 	typename GetFileType();
 	
 	string GetDialogButtonName() {
-		return "Import";
+		return "Export";
 	}
 }
 
