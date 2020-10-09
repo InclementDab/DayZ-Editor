@@ -654,6 +654,8 @@ class Editor
 	void EditLootSpawns(string name)
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", name);
+		thread EditLootSpawnsDialog();
+		
 		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 0, 0), ECE_LOCAL | ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 		vector size = ObjectGetSize(m_LootEditTarget);
 		m_LootEditTarget.SetPosition(Vector(0, size[1] / 2, 0));
@@ -675,6 +677,11 @@ class Editor
 		
 		m_LootEditMode = true;
 		CollisionMode = true;
+	}
+	
+	private void EditLootSpawnsDialog()
+	{
+		MessageBox.Show("Beta!", "Please know that Edit Loot spawns is just a demo and has NO WAY of saving / Exporting your changes (yet)", MessageBoxButtons.OK);
 	}
 	
 	void FinishEditLootSpawns()

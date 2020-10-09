@@ -74,7 +74,7 @@ class XMLEditorBrushes: XMLCallback
 				}
 			}
 				
-			m_Data.Insert(brush_settings);
+			GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().BrushTypeBoxData.Insert(brush_settings);
 		}
 	}
 	
