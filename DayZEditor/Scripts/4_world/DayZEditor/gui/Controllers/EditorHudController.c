@@ -97,10 +97,8 @@ class EditorHudController: EditorControllerBase
 				
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
 
-				if ( !IsForbiddenItem(placeable_item.Type) ) {
-					if (placeable_item) {
-						LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
-					}
+				if (placeable_item && !IsForbiddenItem(placeable_item.Type)) {
+					LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
 				}
 
 
