@@ -54,6 +54,8 @@ class DragHandler
 
 class ObjectDragHandler: DragHandler
 {
+	protected bool m_RightMouseDown;
+
 	override void OnDragging(out vector transform[4], notnull EditorObject target)
 	{
 		
@@ -66,6 +68,20 @@ class ObjectDragHandler: DragHandler
 		vector size;
 		vector ground_position;
 		vector surface_normal;
+
+		if ( m_RightMouseDown )
+		{
+			if ( ( GetMouseState( MouseState.RIGHT ) & MB_PRESSED_MASK ) == 0 )
+			{
+				m_RightMouseDown = false;
+			}
+		} else
+		{
+			if ( ( GetMouseState( MouseState.RIGHT ) & MB_PRESSED_MASK ) != 0 )
+			{
+				m_RightMouseDown = true;
+			}
+		}
 		
 		
 		// Calcuate position of all selected objects
@@ -84,12 +100,12 @@ class ObjectDragHandler: DragHandler
 			vector pos_delta = selected_transform[3] - transform[3];
 
 			// Handle Z-Only motion
-			if (KeyState(KeyCode.KC_LMENU)) {
+			if (KeyState(KeyCode.KC_LMENU) && !m_RightMouseDown ) {
 				//selected_transform[3] = ground_position + selected_transform[1] * vector.Distance(cursor_pos + pos_delta, ground_position);
 				//selected_transform[3] = ground_position + selected_transform[1] * vector.Distance(GetGroundPosition(transform), transform[3]); // - vector.Distance(GetGroundPosition(selected_transform), selected_transform[3])
 
 			// Handle XY Rotation
-			} else if (KeyState(KeyCode.KC_LSHIFT)) {
+			} else if (KeyState(KeyCode.KC_LSHIFT) && !m_RightMouseDown ) {
 				
 				vector rot_pos;
 				//angle -= angle_delta;				
@@ -141,16 +157,14 @@ class ObjectDragHandler: DragHandler
 		
 		// Handle Z-Only motion
 		// Todo will people want this as a keybind?
-		if (KeyState(KeyCode.KC_LMENU)) {
-
+		if (KeyState(KeyCode.KC_LMENU) && !m_RightMouseDown ) {
 			cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground_position);
 			cursor_pos[1] = cursor_pos[1] + size[1]/2;
 			transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos);
 		}
 		
 		// Handle XY Rotation
-		else if (KeyState(KeyCode.KC_LSHIFT)) {
-
+		else if (KeyState(KeyCode.KC_LSHIFT) && !m_RightMouseDown ) {
 			vector cursor_delta = ground_position - Editor.CurrentMousePosition;
 			vector delta = m_EditorObject.GetOrientation();
 			float ang = Math.Atan2(cursor_delta[0], cursor_delta[2]);
@@ -167,7 +181,7 @@ class ObjectDragHandler: DragHandler
 				if (m_Editor.GroundMode) {
 					transform[3] = ground_position + transform[1] * vector.Distance(ground_position, transform[3]);
 				}
-			}			
+			}
 		}
 		
 		// Handle regular motion
