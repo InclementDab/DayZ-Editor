@@ -654,7 +654,6 @@ class Editor
 	void EditLootSpawns(string name)
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", name);
-		thread EditLootSpawnsDialog();
 		
 		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 0, 0), ECE_LOCAL | ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 		vector size = ObjectGetSize(m_LootEditTarget);
@@ -677,6 +676,8 @@ class Editor
 		
 		m_LootEditMode = true;
 		CollisionMode = true;
+		
+		thread EditLootSpawnsDialog();
 	}
 	
 	private void EditLootSpawnsDialog()
