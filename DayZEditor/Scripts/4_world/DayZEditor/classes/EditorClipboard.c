@@ -33,8 +33,8 @@ class EditorClipboard
 	
 		string clipboard_data = JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects);
 		
-		clipboard_data.Replace("\n", "");
-		clipboard_data.Replace(" ", "");
+		//clipboard_data.Replace("\n", "");
+		//clipboard_data.Replace(" ", "");
 		
 		GetGame().CopyToClipboard(clipboard_data);
 	}
@@ -42,13 +42,16 @@ class EditorClipboard
 	static void Paste(vector cursor_pos)
 	{
 		EditorLog.Trace("EditorObjectManager::PasteSelection");		
-		string error;
+		string error, clipboard_text;
+		GetGame().CopyFromClipboard(clipboard_text);
+		
+		JsonSerializer json_serializer = new JsonSerializer();
 		ref array<ref EditorObjectData>> data = {};
-		if (!LoadFromClipboard(data, error)) {
+		if (!json_serializer.ReadFromString(data, clipboard_text, error)) {
 			EditorLog.Error("Paste Error: %1", error);
 			return;
 		}
-		
+
 		GetEditor().ClearSelection();
 				
 		foreach (ref EditorObjectData pasted_object: data) {
@@ -66,7 +69,6 @@ class EditorClipboard
 			vector size = editor_object.GetSize();
 			position[1] = surfacey + size[1] / 2;
 			editor_object.SetPosition(position);
-			editor_object.Update();
 			
 			if (GetEditor().MagnetMode) {
 				
@@ -78,30 +80,11 @@ class EditorClipboard
 				transform[3] = transform[3] - transform[1] * vector.Distance(ground, position);
 				
 				editor_object.SetTransform(transform);
-				editor_object.Update();
 				
 			}
 			
 			GetEditor().SelectObject(editor_object);
 		}	
-	}
-	
-	static bool LoadFromClipboard(array<ref EditorObjectData> clipboard_data)
-	{
-		string clipboard_text, error;
-		GetGame().CopyFromClipboard(clipboard_text);
-		
-		JsonSerializer json_serializer = new JsonSerializer();
-		return json_serializer.ReadFromString(clipboard_data, clipboard_text, error);
-	}
-	
-	static bool LoadFromClipboard(array<ref EditorObjectData> clipboard_data, out string error)
-	{
-		string clipboard_text;
-		GetGame().CopyFromClipboard(clipboard_text);
-		
-		JsonSerializer json_serializer = new JsonSerializer();
-		return json_serializer.ReadFromString(clipboard_data, clipboard_text, error);
 	}
 }
 

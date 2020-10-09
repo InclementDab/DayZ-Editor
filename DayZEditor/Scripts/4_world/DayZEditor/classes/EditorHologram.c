@@ -17,7 +17,7 @@ class EditorHologram: EditorWorldObject
 		//m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout", GetEditor().GetEditorHud().EditorMapWidget);
 		//m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
-		if (!Class.CastTo(m_WorldObject, GetGame().CreateObjectEx(m_PlaceableItem.Type, Editor.CurrentMousePosition, ECE_LOCAL))) {
+		if (!Class.CastTo(m_WorldObject, GetGame().CreateObjectEx(m_PlaceableItem.Type, Editor.CurrentMousePosition, ECE_LOCAL | ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH))) {
 			EditorLog.Error("EditorHologram: Invalid Object %1", m_PlaceableItem.Type);
 			return;
 		}

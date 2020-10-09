@@ -32,7 +32,7 @@ class EditorImportCommandBase: EditorCommand
 		save_data = file_type.Import(file_name, settings);
 		
 		if (clear_before) {
-			m_Editor.DeleteObjects(m_Editor.GetPlacedObjects(), false);
+			m_Editor.Clear();
 		}
 		
 		EditorObjectMap result = GetEditor().CreateObjects(save_data.EditorObjects, false);

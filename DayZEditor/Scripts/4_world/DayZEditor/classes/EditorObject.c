@@ -62,7 +62,7 @@ class EditorObject: EditorWorldObject
 		m_Data = data;
 		
 		if (!m_Data.WorldObject) {
-			m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Position, ECE_LOCAL | ECE_CREATEPHYSICS);
+			m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Position, ECE_LOCAL | ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 			m_WorldObject.SetOrientation(m_Data.Orientation);
 			m_WorldObject.SetFlags(EntityFlags.STATIC, true);
 			m_Data.WorldObject = m_WorldObject;

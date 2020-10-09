@@ -210,6 +210,8 @@ class EditorCutCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
+		MessageBox.Show(":(", "Cut / Copy / Paste has been temporarily disabled due to a bug with it breaking EVERYTHING (fix in the works ASAP)", MessageBoxButtons.OK);
+		return;
 		EditorObjectMap objects = m_Editor.GetSelectedObjects();
 		EditorClipboard.Cut(objects);
 	}
@@ -231,6 +233,8 @@ class EditorCopyCommand: EditorCommand
 {	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
+		MessageBox.Show(":(", "Cut / Copy / Paste has been temporarily disabled due to a bug with it breaking EVERYTHING (fix in the works ASAP)", MessageBoxButtons.OK);
+		return;
 		EditorObjectMap objects = m_Editor.GetSelectedObjects();
 		EditorClipboard.Copy(objects);
 	}
@@ -251,7 +255,9 @@ class EditorCopyCommand: EditorCommand
 class EditorPasteCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
-	{		
+	{	
+		MessageBox.Show(":(", "Cut / Copy / Paste has been temporarily disabled due to a bug with it breaking EVERYTHING (fix in the works ASAP)", MessageBoxButtons.OK);
+		return;	
 		EditorClipboard.Paste(m_Editor.CurrentMousePosition);
 	}
 
