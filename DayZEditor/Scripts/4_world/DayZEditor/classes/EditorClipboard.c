@@ -86,8 +86,7 @@ class EditorClipboard
 		}	
 	}
 	
-	
-	static bool LoadFromClipboard(out array<ref EditorObjectData> clipboard_data)
+	static bool LoadFromClipboard(EditorObjectMap clipboard_data)
 	{
 		string clipboard_text, error;
 		GetGame().CopyFromClipboard(clipboard_text);
@@ -96,7 +95,7 @@ class EditorClipboard
 		return json_serializer.ReadFromString(clipboard_data, clipboard_text, error);
 	}
 	
-	static bool LoadFromClipboard(out array<ref EditorObjectData> clipboard_data, out string error)
+	static bool LoadFromClipboard(EditorObjectMap clipboard_data, out string error)
 	{
 		string clipboard_text;
 		GetGame().CopyFromClipboard(clipboard_text);
