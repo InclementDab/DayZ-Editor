@@ -126,6 +126,15 @@ class EditorClientModule: JMModuleBase
 		
 		
 		GetEditor().GetEditorHud().Show(!GetEditor().GetEditorHud().IsVisible());
+		
+		EditorObjectMap placed_objects =  GetEditor().GetPlacedObjects();
+		foreach (int id, EditorObject editor_object: placed_objects) {
+			EditorObjectMarker marker = editor_object.GetMarker();
+			if (marker) {
+				marker.Show(GetEditor().GetEditorHud().IsVisible());
+			}
+		}
+		
 	}
 	
 	private void OnEditorToggleMap(UAInput input)

@@ -49,6 +49,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	
 	void DelayedDragBoxCheck()
 	{
+		if (!IsVisible()) return;
+		
 		int x, y;
 		x += 6;
 		GetMousePos(x, y);

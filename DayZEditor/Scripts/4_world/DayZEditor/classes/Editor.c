@@ -64,7 +64,7 @@ class Editor
 	EditorObjectMap GetSelectedObjects() 
 		return m_ObjectManager.GetSelectedObjects(); 
 	
-	map<int, ref EditorObject> GetPlacedObjects()
+	EditorObjectMap GetPlacedObjects()
 		return m_ObjectManager.GetPlacedObjects(); 
 
 	EditorObjectDataMap GetSessionCache()
