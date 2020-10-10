@@ -19,6 +19,7 @@ class EditorObjectData
 	string DisplayName;
 	vector Position;
 	vector Orientation;
+	float Scale = 1;
 
 	EditorObjectFlags Flags;
 	
@@ -69,6 +70,7 @@ class EditorObjectData
 		data.WorldObject = target;
 		data.Position = data.WorldObject.GetPosition(); 
 		data.Orientation = data.WorldObject.GetOrientation(); 
+		data.Scale = data.WorldObject.GetScale();
 		data.Flags = flags;
 		data.DisplayName = data.Type;
 		
@@ -77,10 +79,6 @@ class EditorObjectData
 		return data;
 	}
 	
-	
-	float GetScale() {
-		return 1; // not supported yet
-	}
 	
 	void OnSend(Serializer serializer)
 	{
