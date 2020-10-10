@@ -20,6 +20,8 @@ class EditorHudToolbarController: EditorControllerBase
 	protected ImageWidget GroundButton_Icon;
 	protected ImageWidget SnapButton_Icon;
 	protected ImageWidget CollisionButton_Icon;
+	
+	protected ButtonWidget BrushToggleButton;
 			
 	void EditorHudToolbarController()
 	{
@@ -76,8 +78,8 @@ class EditorHudToolbarController: EditorControllerBase
 					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
 					NotifyPropertyChanged("BrushToggleButtonText", false);
 				}
-				
-				//m_Editor.BrushToggleCommand.Execute(this, null);
+								
+				m_Editor.CommandManager.BrushToggleCommand.Execute(this, new ButtonCommandArgs(BrushToggleButton, 0));
 
 				break;
 			}
