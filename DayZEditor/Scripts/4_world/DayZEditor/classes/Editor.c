@@ -36,7 +36,101 @@ class Editor
 	/* Private Members */
 	private Mission m_Mission;
 	private PlayerBase m_Player;
+		
+	// statics (updated in Update())
+	static Object								ObjectUnderCursor;
+	static vector 								CurrentMousePosition;
 	
+	// public properties
+	ref EditorWorldObject 						ObjectInHand;
+	ref EditorCommandManager 					CommandManager;
+	
+	// private Editor Members
+	private ref EditorSettings 					m_EditorSettings;
+	private ref EditorHud						m_EditorHud;
+	private ref EditorBrush						m_EditorBrush;
+	private ref EditorObjectDataMap			 	m_SessionCache;
+	private EditorCamera 						m_EditorCamera;
+	
+	// Stack of Undo / Redo Actions
+	private ref EditorActionStack 				m_ActionStack;
+	
+	// private references
+	private EditorHudController 				m_EditorHudController;
+	private EditorObjectManagerModule 			m_ObjectManager;	
+	
+	private bool 								m_Active;
+	private string 								m_EditorSettingsFile = "$profile:Editor/Settings.ini";
+	string										EditorSaveFile;
+	// todo move to settings
+	string										EditorProtoFile = "$profile:Editor/MapGroupProto.xml";
+	string										EditorBrushFile = "$profile:Editor/EditorBrushes.xml";
+	string										EditorDirectory = "$profile:Editor/";
+	
+	// modes
+	bool 										MagnetMode;
+	bool 										GroundMode;
+	bool 										SnappingMode;
+	bool 										CollisionMode;
+	
+	string										Version = "DayZ Editor Beta 1.0.26"; 
+
+	private void Editor(PlayerBase player) 
+	{
+		EditorLog.Trace("Editor");
+		g_Editor = this;
+		m_Player = player;
+
+		// Initialize the profiles/editor directory;		
+		MakeDirectory(EditorDirectory);
+		
+		// Object Manager
+		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
+		
+		// Command Manager
+		CommandManager 		= new EditorCommandManager();
+		
+		// Needs to exist on clients for Undo / Redo syncing
+		m_SessionCache 		= new EditorObjectDataMap();
+		m_ActionStack 		= new EditorActionStack();
+		
+		// Init Settings
+		m_EditorSettings 	= EditorSettings.Load(m_EditorSettingsFile);
+		m_EditorSettings.Reload();
+		
+		// Init Hud
+		m_EditorHud 		= new EditorHud();
+		m_EditorHudController = m_EditorHud.GetTemplateController();		
+		
+		m_Mission = GetGame().GetMission();
+		
+		if (!IsMissionOffline()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
+		}
+		
+		SetActive(true);
+		
+		thread AutoSaveThread();
+	}
+	
+
+	private void ~Editor() 
+	{
+		EditorLog.Trace("~Editor");
+		if (!IsMissionOffline()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
+		}
+		
+		delete m_EditorHud;
+		delete m_EditorSettings;
+		delete m_EditorBrush;
+		delete m_SessionCache;
+		delete ObjectInHand;
+	}
+	
+
 	bool IsActive()
 		return m_Active;
 	
@@ -208,100 +302,7 @@ class Editor
 		//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
 	}
 	
-	// statics (updated in Update())
-	static Object								ObjectUnderCursor;
-	static vector 								CurrentMousePosition;
 	
-	// public properties
-	ref EditorWorldObject 						ObjectInHand;
-	ref EditorCommandManager 					CommandManager;
-	
-	// private Editor Members
-	private ref EditorSettings 					m_EditorSettings;
-	private ref EditorHud						m_EditorHud;
-	private ref EditorBrush						m_EditorBrush;
-	private ref EditorObjectDataMap			 	m_SessionCache;
-	private EditorCamera 						m_EditorCamera;
-	
-	// Stack of Undo / Redo Actions
-	private ref EditorActionStack 				m_ActionStack;
-	
-	// private references
-	private EditorHudController 				m_EditorHudController;
-	private EditorObjectManagerModule 			m_ObjectManager;	
-	
-	private bool 								m_Active;
-	private string 								m_EditorSettingsFile = "$profile:Editor/Settings.ini";
-	string										EditorSaveFile;
-	// todo move to settings
-	string										EditorProtoFile = "$profile:Editor/MapGroupProto.xml";
-	string										EditorBrushFile = "$profile:Editor/EditorBrushes.xml";
-	string										EditorDirectory = "$profile:Editor/";
-	
-	// modes
-	bool 										MagnetMode;
-	bool 										GroundMode;
-	bool 										SnappingMode;
-	bool 										CollisionMode;
-	
-	string										Version = "DayZ Editor Beta 1.0.26"; 
-	
-	private void Editor(PlayerBase player) 
-	{
-		EditorLog.Trace("Editor");
-		g_Editor = this;
-		m_Player = player;
-
-		// Initialize the profiles/editor directory;		
-		MakeDirectory(EditorDirectory);
-		
-		// Object Manager
-		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
-		
-		// Command Manager
-		CommandManager 		= new EditorCommandManager();
-		
-		// Needs to exist on clients for Undo / Redo syncing
-		m_SessionCache 		= new EditorObjectDataMap();
-		m_ActionStack 		= new EditorActionStack();
-		
-		// Init Settings
-		m_EditorSettings 	= EditorSettings.Load(m_EditorSettingsFile);
-		m_EditorSettings.Reload();
-		
-		// Init Hud
-		m_EditorHud 		= new EditorHud();
-		m_EditorHudController = m_EditorHud.GetTemplateController();		
-		
-		m_Mission = GetGame().GetMission();
-		
-		if (!IsMissionOffline()) {
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
-		}
-		
-		SetActive(true);
-		
-		thread AutoSaveThread();
-	}
-	
-
-	private void ~Editor() 
-	{
-		EditorLog.Trace("~Editor");
-		if (!IsMissionOffline()) {
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
-		}
-		
-		delete m_EditorHud;
-		delete m_EditorSettings;
-		delete m_EditorBrush;
-		delete m_SessionCache;
-		delete ObjectInHand;
-	}
-	
-
 	static Editor Create(PlayerBase player)
 	{
 		EditorLog.Trace("Editor::Create");

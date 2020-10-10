@@ -28,6 +28,8 @@ class EditorCOMFile: EditorFileType
 			spawn_method.Insert(string.Format("	SpawnObject(\"%1\", \"%2\", \"%3\");", editor_object.Type, editor_object.Position.ToString(false), editor_object.Orientation.ToString(false)));
 		}
 			
+		spawn_method.Insert("\/\/Position, Radius (increase if you have a larger map than Chernarus)");
+		spawn_method.Insert("GetCEApi().ExportProxyData(\"7500 0 7500\", 20000);");
 		spawn_method.Insert("}");
 		
 		PrintLines(handle, spawn_method);
