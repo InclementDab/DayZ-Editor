@@ -15,6 +15,8 @@ class EditorSettings
 	void EditorSettings() 
 	{
 		EditorLog.Trace("EditorSettings");
+		
+		Reload();
 	}
 	
 	static EditorSettings Load(string filename)

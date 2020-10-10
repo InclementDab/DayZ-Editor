@@ -5,6 +5,8 @@ class EditorPreferencesDialogController: DialogBaseController
 	
 	float auto_save;
 	
+	float view_distance;
+	float object_view_distance;
 	
 	override void PropertyChanged(string property_name)
 	{
@@ -20,10 +22,19 @@ class EditorPreferencesDialogController: DialogBaseController
 				break;
 			}
 			
+			case "view_distance": {
+				GetEditor().GetSettings().ViewDistance = view_distance;
+				GetGame().GetWorld().SetViewDistance(view_distance);
+				break;
+			}
+			
+			case "object_view_distance": {
+				GetEditor().GetSettings().ObjectViewDistance = view_distance;
+				GetGame().GetWorld().SetObjectViewDistance(object_view_distance);
+				break;
+			}
 		}
-		
-	}
-	
+	}	
 }
 
 class EditorPreferencesDialog: EditorDialogBase
@@ -48,6 +59,11 @@ class EditorPreferencesDialog: EditorDialogBase
 		
 		AddContent(general_group);
 		
+		GroupPrefab game_group = new GroupPrefab("Game", m_Controller, string.Empty);
+		game_group.Insert(new SliderPrefab("View Distance", m_Controller, "view_distance", GetEditor().GetSettings().ViewDistance, 0, 20000));
+		game_group.Insert(new SliderPrefab("Object View Distance", m_Controller, "object_view_distance", GetEditor().GetSettings().ObjectViewDistance, 0, 8000));
+		
+		AddContent(game_group);
 		AddButton(DialogResult.OK);
 		AddButton(DialogResult.Cancel);
 	}
