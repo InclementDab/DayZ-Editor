@@ -16,7 +16,6 @@ modded class DayZIntroScene
 	// 😂
 	private Object m_FunnyMeme;
 		
-	
 	void DayZIntroScene()
 	{
 		delete m_Character;
@@ -25,8 +24,6 @@ modded class DayZIntroScene
 		m_FunnyMeme.SetOrientation(m_CharacterRot);
 		m_FunnyMeme.SetPosition(m_FunnyMeme.GetPosition() + Vector(0, 1, 0));
 	}
-
-
 	
 	float offset;
 	int hour, minute;
@@ -160,7 +157,7 @@ modded class MainMenu
 
     override bool OnMouseEnter(Widget w, int x, int y)
     {
-		if(IsFocusable(w)) {
+		if (IsFocusable(w)) {
 			ColorHighlight(w);
 			return true;
 		}

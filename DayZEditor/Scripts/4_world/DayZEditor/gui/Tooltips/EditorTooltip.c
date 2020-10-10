@@ -6,6 +6,7 @@ class EditorTooltip: ScriptView
 		
 	void SetTitle(string title)
 	{
+		EditorLog.Trace("EditorTooltip::SetTitle %1", title);
 		m_EditorTooltipController = EditorTooltipController.Cast(GetController());
 		m_EditorTooltipController.ContentTitle = title;
 		m_EditorTooltipController.NotifyPropertyChanged("ContentTitle");
@@ -18,6 +19,7 @@ class EditorTooltip: ScriptView
 	
 	void SetContent(string text)
 	{
+		EditorLog.Trace("EditorTooltip::SetContent %1", text);
 		m_EditorTooltipController = EditorTooltipController.Cast(GetController());
 		m_EditorTooltipController.ContentText = text;
 		m_EditorTooltipController.NotifyPropertyChanged("ContentText");
@@ -25,6 +27,7 @@ class EditorTooltip: ScriptView
 	
 	void SetContent(Object item)
 	{
+		EditorLog.Trace("EditorTooltip::SetContent %1", item.ToString());
 		m_EditorTooltipController = EditorTooltipController.Cast(GetController());
 		m_EditorTooltipController.ContentItemData = item;
 		m_EditorTooltipController.NotifyPropertyChanged("ContentItemData");
