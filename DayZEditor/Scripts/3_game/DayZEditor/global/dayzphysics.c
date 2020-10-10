@@ -21,7 +21,6 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 	return hitPos;
 }
 
-
 static vector ObjectGetSize(notnull Object obj)
 {
 	vector size[2];

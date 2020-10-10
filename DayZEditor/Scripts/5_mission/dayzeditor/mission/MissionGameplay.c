@@ -17,7 +17,6 @@ modded class MissionGameplay
 	
 	override void OnKeyPress(int key)
 	{	
-		
 		// If Editor is NOT active, just do keypress
 		if (!GetEditor() || !GetEditor().IsActive()) {
 			super.OnKeyPress(key);
@@ -32,7 +31,7 @@ modded class MissionGameplay
 	override void OnKeyRelease(int key)
 	{
 		// If Editor is NOT active, just do keypress
-		if (!GetEditor() || !GetEditor().IsActive()) {
+		if (!GetEditor() || !GetEditor().IsActive()) {			
 			super.OnKeyRelease(key);
 		} 
 		
@@ -46,6 +45,23 @@ modded class MissionGameplay
 	{
 		// If Editor is NOT active, just do MouseDown
 		if (!GetEditor() || !GetEditor().IsActive()) {
+			
+			switch (button) {
+				
+				// Middle Mouse Player Teleport
+				case MouseState.MIDDLE: {
+					
+					if (GetGame().GetPlayer()) {
+						vector pos = Editor.CurrentMousePosition;
+						pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
+						
+						GetGame().GetPlayer().SetPosition(pos);
+					}
+					break;
+				}
+				
+			}
+			
 			super.OnMouseButtonPress(button);
 			// If Editor IS active, and DOESNT handle the mouse, do mousedown
 		} else if (!GetEditor().OnMouseDown(button)) {

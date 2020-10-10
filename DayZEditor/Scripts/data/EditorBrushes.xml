@@ -68,7 +68,7 @@
 		<BrushObject type="bldr_plnt_t_BetulaPendula_1f" frequency="0.2" zoffset="-2"/>
 		<BrushObject type="bldr_plnt_t_BetulaPendula_1fb" frequency="0.3" zoffset="-2"/>
 		<BrushObject type="bldr_plnt_t_BetulaPendula_2s" frequency="0.5" zoffset="-2"/>
-		<BrushObject type="bldr_plnt_t_BetulaPendula_2f" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_BetulaPendula_2f" frequency="0.5" zoffset="-4.2"/>
 		<BrushObject type="bldr_plnt_t_BetulaPendula_3s" frequency="1.0" zoffset="-2"/>
 		<BrushObject type="bldr_plnt_t_BetulaPendula_3fc" frequency="0.1" zoffset="-2"/>
 		<BrushObject type="bldr_plnt_t_BetulaPendula_2fc" frequency="1.0" zoffset="-2"/>
