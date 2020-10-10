@@ -29,7 +29,7 @@ class EditorCOMFile: EditorFileType
 		}
 			
 		spawn_method.Insert("\/\/Position, Radius (increase if you have a larger map than Chernarus)");
-		spawn_method.Insert("GetCEApi().ExportProxyData(\"7500 0 7500\", 20000);");
+		spawn_method.Insert("	GetCEApi().ExportProxyData(\"7500 0 7500\", 20000);");
 		spawn_method.Insert("}");
 		
 		PrintLines(handle, spawn_method);
