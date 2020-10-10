@@ -8,6 +8,11 @@ class EditorImportCommandBase: EditorCommand
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 			return;
 		}
+		
+		if (file_name == string.Empty) {
+			MessageBox.Show("Error", "No file name specified!", MessageBoxButtons.OK);
+			return;
+		}
 					
 		ImportFile(file_name);
 	}
