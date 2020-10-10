@@ -84,11 +84,11 @@
 	</Brush>
 
 	<Brush name="FagusDecidua">
-		<BrushObject type="bldr_plnt_t_LarixDecidua_2fb" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="bldr_plnt_t_LarixDecidua_2fb" frequency="0.1" zoffset="-2"/>
-		<BrushObject type="bldr_plnt_t_LarixDecidua_3fb" frequency="0.1" zoffset="-2"/>
-		<BrushObject type="bldr_plnt_t_LarixDecidua_1f" frequency="0.04" zoffset="-2"/>
-		<BrushObject type="bldr_plnt_t_LarixDecidua_1f" frequency="0.04" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_LarixDecidua_2fb" frequency="1.0" zoffset="-3.5"/>
+		<BrushObject type="bldr_plnt_t_LarixDecidua_2fb" frequency="0.1" zoffset="-3.5"/>
+		<BrushObject type="bldr_plnt_t_LarixDecidua_3fb" frequency="0.1" zoffset="-3.5"/>
+		<BrushObject type="bldr_plnt_t_LarixDecidua_1f" frequency="0.04" zoffset="-3.5"/>
+		<BrushObject type="bldr_plnt_t_LarixDecidua_1f" frequency="0.04" zoffset="-3.5"/>
 	</Brush>
 
 	<Brush name="Quercus">
