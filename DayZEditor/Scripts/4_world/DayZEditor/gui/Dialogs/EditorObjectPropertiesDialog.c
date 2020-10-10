@@ -35,7 +35,7 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 			}
 			
 			case "scale": {
-				m_EditorObject.SetScale(scale);
+				//m_EditorObject.SetScale(scale);
 				break;
 			}
 			
