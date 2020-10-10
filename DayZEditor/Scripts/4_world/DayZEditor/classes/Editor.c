@@ -9,8 +9,6 @@
 
 /*
 
-
-
 <rootclass name="DefaultWeapon" /> <!-- weapons -->
 <rootclass name="DefaultMagazine" /> <!-- magazines -->
 <rootclass name="Inventory_Base" /> <!-- inventory items -->
