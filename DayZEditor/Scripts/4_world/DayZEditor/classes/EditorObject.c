@@ -215,13 +215,14 @@ class EditorObject: EditorWorldObject
 	
 	void SetScale(float scale)
 	{		
-		GetWorldObject().SetScale(scale);
+		//GetWorldObject().SetScale(scale);
 		Update();
 	}
 	
 	float GetScale()
 	{
-		return GetWorldObject().GetScale();
+		//return GetWorldObject().GetScale();
+		return 1;
 	}
 	
 	void Update() 
