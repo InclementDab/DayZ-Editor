@@ -29,7 +29,6 @@ class EditorPlaceableItem
 		
 		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", Path, Type), Model);
 		GetWorkbenchGame().ConfigGetFullPath(string.Format("%1 %2", Path, Type), FullPath);
-		
 	}
 	
 	void Init()

@@ -256,21 +256,21 @@ class Editor
 		MakeDirectory(EditorDirectory);
 		
 		// Object Manager
-		m_ObjectManager = EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
+		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
 		
 		// Command Manager
-		CommandManager = new EditorCommandManager();
+		CommandManager 		= new EditorCommandManager();
 		
 		// Needs to exist on clients for Undo / Redo syncing
 		m_SessionCache 		= new EditorObjectDataMap();
 		m_ActionStack 		= new EditorActionStack();
 		
 		// Init Settings
-		m_EditorSettings = EditorSettings.Load(m_EditorSettingsFile);
+		m_EditorSettings 	= EditorSettings.Load(m_EditorSettingsFile);
 		m_EditorSettings.Reload();
 		
 		// Init Hud
-		m_EditorHud = new EditorHud();
+		m_EditorHud 		= new EditorHud();
 		m_EditorHudController = m_EditorHud.GetTemplateController();		
 		
 		m_Mission = GetGame().GetMission();
@@ -445,7 +445,6 @@ class Editor
 					
 					if (!target) {
 						m_EditorHud.DelayedDragBoxCheck();
-							
 					}
 				}
 

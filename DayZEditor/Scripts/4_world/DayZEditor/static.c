@@ -27,13 +27,11 @@ static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
 }
 
 
-static void SpawnStaticObject( string type, vector position, vector orientation )
+static void SpawnStaticObject(string type, vector position, vector orientation)
 {
-    auto obj = GetGame().CreateObject( type, position );
-    obj.SetPosition( position );
-    obj.SetOrientation( orientation );
-    obj.SetOrientation( obj.GetOrientation() ); //Collision fix
+    auto obj = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_LOCAL | ECE_CREATEPHYSICS);
+    obj.SetPosition(position);
+    obj.SetOrientation(orientation);
+    obj.SetOrientation(obj.GetOrientation());
     obj.Update();
-    obj.SetAffectPathgraph( true, false );
-    if (obj.CanAffectPathgraph()) GetGame().GetCallQueue( CALL_CATEGORY_SYSTEM ).CallLater( GetGame().UpdatePathgraphRegionByObject, 100, false, obj );
 }

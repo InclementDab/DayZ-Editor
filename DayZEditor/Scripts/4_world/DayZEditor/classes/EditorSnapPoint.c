@@ -1,4 +1,9 @@
-
+// Maybe create an EditorPoint abstraction and use that as the BottomCenter, Center, Top center, and 
+// all other bounding points for the bboxes. Could be useful? PauseChamp
+class EditorPoint
+{
+	
+}
 
 
 class EditorSnapPoint
