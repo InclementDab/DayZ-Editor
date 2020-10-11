@@ -47,6 +47,10 @@ class EditorObject: EditorWorldObject
 		return m_Data.GetID(); 
 	}
 
+	EditorObjectFlags GetFlags() {
+		return m_Data.Flags;
+	}
+	
 	Object GetWorldObject() 
 	{
 		if (!m_WorldObject) {
@@ -233,6 +237,7 @@ class EditorObject: EditorWorldObject
 			m_Data.Position = GetPosition();
 			m_Data.Orientation = GetOrientation();
 			m_Data.Scale = GetScale();
+			m_Data.BottomCenter = GetBottomCenter();
 		}
 	}
 	

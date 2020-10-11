@@ -20,6 +20,8 @@ class EditorObjectData
 	vector Position;
 	vector Orientation;
 	float Scale = 1;
+	
+	vector BottomCenter;
 
 	EditorObjectFlags Flags;
 	
@@ -35,12 +37,12 @@ class EditorObjectData
 		m_Id = lowest_id;
 	}
 	
-	static EditorObjectData Create(string type, vector transform[4], EditorObjectFlags flags = EditorObjectFlags.ALL)
+	static ref EditorObjectData Create(string type, vector transform[4], EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{	
 		return Create(type, transform[3], Math3D.MatrixToAngles(transform), flags);
 	}
 	
-	static EditorObjectData Create(string type, vector position, vector orientation, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	static ref EditorObjectData Create(string type, vector position, vector orientation, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorLog.Trace("EditorObjectData::Create");
 		
@@ -49,7 +51,9 @@ class EditorObjectData
 			return null;
 		}
 		
-		EditorObjectData data = new EditorObjectData();
+		Print(position);
+		
+		ref EditorObjectData data = new EditorObjectData();
 		data.Type = type; 
 		data.Position = position; 
 		data.Orientation = orientation;
@@ -63,7 +67,7 @@ class EditorObjectData
 	}
 	
 	
-	static EditorObjectData Create(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	static ref EditorObjectData Create(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		EditorObjectData data = new EditorObjectData();
 		data.Type = target.GetType();

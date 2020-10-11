@@ -23,6 +23,7 @@ class EditorNotification: ScriptView
 		LerpMotion(0, 0.06);
 		SEffectManager.PlaySoundOnObject("Notification_SoundSet", GetEditor().GetCamera());
 		Sleep(duration * 1000);
+		m_LayoutRoot.Show(false);
 		LerpMotion(0.06, 0);
 	}
 	

@@ -1,18 +1,21 @@
 class EditorClipboard
 {
-	static void Cut(EditorObjectMap cut_objects)
+	static void Cut()
 	{
 		EditorLog.Trace("EditorObjectManager::CutSelection");
+		
+		EditorObjectMap cut_objects = GetEditor().GetSelectedObjects();
 		if (cut_objects.Count() == 0)
 			return;
 		
-		Copy(cut_objects);
+		Copy();
 		GetEditor().DeleteObjects(cut_objects);
 	}
 	
-	static void Copy(EditorObjectMap copy_objects)
+	static void Copy()
 	{
 		EditorLog.Trace("EditorObjectManager::CopySelection");
+		EditorObjectMap copy_objects = GetEditor().GetSelectedObjects();
 		if (copy_objects.Count() == 0) 
 			return;
 		
@@ -26,13 +29,15 @@ class EditorClipboard
 			avg_position[i] = avg_position[i] / copy_objects.Count();
 		
 		foreach (int idx, EditorObject selected_object: copy_objects) {
-			EditorObjectData data = selected_object.GetData();
+ 			EditorObjectData data = EditorObjectData.Create(selected_object.GetType(), selected_object.GetPosition(), selected_object.GetOrientation(), selected_object.GetFlags());
 			data.Position = selected_object.GetPosition() - avg_position;
+			data.Orientation = selected_object.GetOrientation();
+			data.Flags = selected_object.GetFlags();
+			data.BottomCenter = selected_object.GetBottomCenter();
 			world_objects.Insert(data);
 		}
 	
 		string clipboard_data = JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects);
-		
 		//clipboard_data.Replace("\n", "");
 		//clipboard_data.Replace(" ", "");
 		
@@ -53,8 +58,8 @@ class EditorClipboard
 		}
 
 		GetEditor().ClearSelection();
-				
-		foreach (ref EditorObjectData pasted_object: data) {
+		
+		foreach (EditorObjectData pasted_object: data) {
 			
 			vector position = pasted_object.Position + Editor.CurrentMousePosition;
 			vector transform[4] = {
@@ -63,8 +68,8 @@ class EditorClipboard
 				"0 0 1",
 				position
 			};
-			
-			EditorObject editor_object = GetEditor().CreateObject(EditorObjectData.Create(pasted_object.Type, transform, pasted_object.Flags));
+						
+			EditorObject editor_object = GetEditor().CreateObject(pasted_object);
 			float surfacey = GetGame().SurfaceY(position[0], position[2]);
 			vector size = editor_object.GetSize();
 			position[1] = surfacey + size[1] / 2;
