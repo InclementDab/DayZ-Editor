@@ -36,7 +36,6 @@ GameProjectClass {
 					Paths {
 						"scripts/1_Core"
 						"JM/CF/scripts/1_Core"
-						
 						"DayZExpansion/Scripts/Common"
 						"DayZExpansion/Scripts/1_Core"
 						"DayZEditor/scripts/1_Core"
@@ -55,11 +54,10 @@ GameProjectClass {
 					Paths {
 						"scripts/3_Game"
 						"JM/CF/scripts/3_Game"
-						"DayZEditor/scripts/3_Game"
-						
 						"JM/COT/scripts/3_Game"
 						"DayZExpansion/Scripts/Common"
 						"DayZExpansion/Scripts/3_Game"
+						"DayZEditor/scripts/3_Game"
 					}
 					EntryPoint "CreateGame"
 				}
@@ -71,7 +69,6 @@ GameProjectClass {
 						"JM/COT/scripts/4_World"
 						"DayZExpansion/Scripts/Common"
 						"DayZExpansion/Scripts/4_World"
-						
 						"DayZEditor/scripts/4_World"
 					}
 					EntryPoint ""
@@ -81,11 +78,8 @@ GameProjectClass {
 					Paths {
 						"scripts/5_Mission"
 						"JM/CF/scripts/5_Mission"
-						"DayZEditor/scripts/5_Mission"
-						
 						"JM/COT/scripts/5_Mission"
-						"DayZExpansion/Scripts/Common"
-						"DayZExpansion/Scripts/5_Mission"
+						"DayZEditor/scripts/5_Mission"
 					}
 					EntryPoint "CreateMission"
 				}
