@@ -16,7 +16,7 @@ enum HeightType
 class ExportSettings
 {
 	bool Binarized = false;
-	HeightType ExportHeightType;
+	HeightType ExportHeightType = HeightType.ABSOLUTE;
 	bool ExportSelectedOnly;
 	vector ExportOffset;
 	string ExportSetName;

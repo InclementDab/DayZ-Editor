@@ -15,8 +15,9 @@ class EditorTerrainBuilderFile: EditorFileType
 			// Name, X, Y, Yaw, Pitch, Roll, Scale, Relative Height			
 			vector position = editor_object.Position + terrainbuilder_offset;
 			
-			//if (height_type == HeightType.RELATIVE)
-			position[1] = position[1] - GetGame().SurfaceY(position[0], position[2]);
+			if (settings.ExportHeightType == HeightType.RELATIVE)
+				position[1] = position[1] - GetGame().SurfaceY(position[0], position[2]);
+			
 			vector orientation = editor_object.Orientation;
 			string line = string.Format("\"%1\";%2;%3;%4;%5;%6;%7;%8;", GetGame().GetModelName(editor_object.Type), position[0], position[2], orientation[0], orientation[1], orientation[2], editor_object.Scale, position[1]);
 			FPrintln(handle, line);
