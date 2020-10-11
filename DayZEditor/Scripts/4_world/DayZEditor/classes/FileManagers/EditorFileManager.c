@@ -16,7 +16,7 @@ enum HeightType
 class ExportSettings
 {
 	bool Binarized = false;
-	HeightType ExportHeightType = HeightType.ABSOLUTE;
+	HeightType ExportHeightType;
 	bool ExportSelectedOnly;
 	vector ExportOffset;
 	string ExportSetName;
@@ -39,7 +39,6 @@ enum EditorFileResult
 
 class EditorSaveData
 {
-
 	string MapName = "ChernarusPlus";
 	vector CameraPosition;
 	ref EditorObjectDataMap EditorObjects = new EditorObjectDataMap();
