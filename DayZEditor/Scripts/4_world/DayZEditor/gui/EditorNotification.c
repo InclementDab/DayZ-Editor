@@ -8,9 +8,14 @@ class EditorNotification: ScriptView
 	
 	void EditorNotification(string text, int color = -4301218)
 	{
-		EditorLog.Trace("EditorNotification::CreateNotification");
+		EditorLog.Trace("EditorNotification");
 		NotificationText.SetText(text);
 		NotificationPanel.SetColor(color);
+	}
+	
+	void ~EditorNotification()
+	{
+		EditorLog.Trace("~EditorNotification");
 	}
 	
 	void Play(float duration, string sound = "Notification_SoundSet")
@@ -23,8 +28,8 @@ class EditorNotification: ScriptView
 		LerpMotion(0, 0.06);
 		SEffectManager.PlaySoundOnObject("Notification_SoundSet", GetEditor().GetCamera());
 		Sleep(duration * 1000);
-		m_LayoutRoot.Show(false);
 		LerpMotion(0.06, 0);
+		NotificationPanel.Show(false);
 	}
 	
 	private void LerpMotion(float start, float finish)
