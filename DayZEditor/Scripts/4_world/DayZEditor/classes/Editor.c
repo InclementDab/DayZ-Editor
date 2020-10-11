@@ -73,7 +73,7 @@ class Editor
 	bool 										SnappingMode;
 	bool 										CollisionMode;
 	
-	string										Version = "DayZ Editor Beta 1.0.281"; 
+	string										Version = "DayZ Editor Beta 1.0.29"; 
 
 	private void Editor(PlayerBase player) 
 	{
