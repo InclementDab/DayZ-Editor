@@ -10,6 +10,10 @@ class EditorDZEFile: EditorFileType
 			return save_data;
 		}
 		
+		// Temporary fix, Binarize always = 0
+		JsonFileLoader<EditorSaveData>.JsonLoadFile(file, save_data);
+		return save_data;
+		
 		FileSerializer file_serializer = new FileSerializer();
 		if (!file_serializer.Open(file, FileMode.READ)) {
 			EditorLog.Error("File in use %1", file);
@@ -41,7 +45,12 @@ class EditorDZEFile: EditorFileType
 		if (FileExist(file) && !DeleteFile(file)) {
 			return;
 		}
-	
+
+		// Temporary fix, Binarize always = 0
+		JsonFileLoader<EditorSaveData>.JsonSaveFile(file, data);
+		return;		
+
+		
 		FileSerializer file_serializer = new FileSerializer();
 		if (!file_serializer.Open(file, FileMode.WRITE)) {
 			return;
