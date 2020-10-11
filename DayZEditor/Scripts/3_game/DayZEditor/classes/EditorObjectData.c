@@ -21,6 +21,7 @@ class EditorObjectData
 	vector Orientation;
 	float Scale = 1;
 	
+	[NonSerialized()]
 	vector BottomCenter;
 
 	EditorObjectFlags Flags;
