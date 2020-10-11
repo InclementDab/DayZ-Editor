@@ -48,9 +48,9 @@ class EditorDZEFile: EditorFileType
 
 		// Temporary fix, Binarize always = 0
 		JsonFileLoader<EditorSaveData>.JsonSaveFile(file, data);
-		return;		
-
+		return;
 		
+				
 		FileSerializer file_serializer = new FileSerializer();
 		if (!file_serializer.Open(file, FileMode.WRITE)) {
 			return;
