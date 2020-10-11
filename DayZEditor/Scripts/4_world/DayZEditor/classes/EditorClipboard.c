@@ -69,7 +69,7 @@ class EditorClipboard
 				position
 			};
 						
-			EditorObject editor_object = GetEditor().CreateObject(pasted_object);
+			EditorObject editor_object = GetEditor().CreateObject(EditorObjectData.Create(pasted_object.Type, pasted_object.Position, pasted_object.Orientation, pasted_object.Flags));
 			float surfacey = GetGame().SurfaceY(position[0], position[2]);
 			vector size = editor_object.GetSize();
 			position[1] = surfacey + size[1] / 2;
