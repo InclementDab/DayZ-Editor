@@ -41,8 +41,10 @@ class EditorSaveData
 {
 	string MapName = "ChernarusPlus";
 	vector CameraPosition;
-	ref EditorObjectDataMap EditorObjects = new EditorObjectDataMap();
 	
+	// Do NOT use a map here. ID is stored in EditorObjectData anyway
+	ref array<ref EditorObjectData> EditorObjects = {};
+		
 	void ~EditorSaveData()
 	{
 		delete EditorObjects;
@@ -62,7 +64,7 @@ class EditorSaveData
 		EditorObjectMap placed_objects = editor.GetPlacedObjects();
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
-				save_data.EditorObjects.Insert(editor_object.GetData().GetID(), editor_object.GetData());
+				save_data.EditorObjects.Insert(editor_object.GetData());
 			}
 		}
 		

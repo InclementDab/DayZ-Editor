@@ -5,13 +5,12 @@ class EditorDZEFile: EditorFileType
 	{
 		EditorSaveData save_data = new EditorSaveData();
 		
-		FileSerializer file_serializer = new FileSerializer();
-
 		if (!FileExist(file)) {
 			EditorLog.Error("File not found %1", file);
 			return save_data;
 		}
 		
+		FileSerializer file_serializer = new FileSerializer();
 		if (!file_serializer.Open(file, FileMode.READ)) {
 			EditorLog.Error("File in use %1", file);
 			return save_data;
@@ -28,7 +27,7 @@ class EditorDZEFile: EditorFileType
 		// bugfix
 		EditorSaveData bug_fix_save_data = new EditorSaveData();
 		foreach (EditorObjectData object_data: save_data.EditorObjects) {
-			bug_fix_save_data.EditorObjects.InsertData(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Flags));
+			bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Flags));
 		}
 		
 		bug_fix_save_data.MapName = save_data.MapName;
@@ -42,7 +41,7 @@ class EditorDZEFile: EditorFileType
 		if (FileExist(file) && !DeleteFile(file)) {
 			return;
 		}
-		
+	
 		FileSerializer file_serializer = new FileSerializer();
 		if (!file_serializer.Open(file, FileMode.WRITE)) {
 			return;

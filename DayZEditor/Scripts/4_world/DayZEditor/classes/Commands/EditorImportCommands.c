@@ -40,9 +40,12 @@ class EditorImportCommandBase: EditorCommand
 			m_Editor.Clear();
 		}
 		
-		EditorObjectMap result = GetEditor().CreateObjects(save_data.EditorObjects, false);
+		foreach (EditorObjectData data: save_data.EditorObjects) {
+			GetEditor().CreateObject(data, false);
+		}
 		
-		string message = string.Format("Loaded %1 objects!", result.Count().ToString());
+		
+		string message = string.Format("Loaded %1 objects!", save_data.EditorObjects.Count().ToString());
 		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
 		EditorLog.Info(message);
 		

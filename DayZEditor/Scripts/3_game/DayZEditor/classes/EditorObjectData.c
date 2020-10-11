@@ -70,7 +70,7 @@ class EditorObjectData
 	
 	static ref EditorObjectData Create(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
-		EditorObjectData data = new EditorObjectData();
+		ref EditorObjectData data = new EditorObjectData();
 		data.Type = target.GetType();
 		data.WorldObject = target;
 		data.Position = data.WorldObject.GetPosition(); 
