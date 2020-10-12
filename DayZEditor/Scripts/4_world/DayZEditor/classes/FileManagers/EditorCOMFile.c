@@ -1,6 +1,13 @@
 
 class EditorCOMFile: EditorFileType
 {
+	override EditorSaveData Import(string file, ImportSettings settings)
+	{
+		
+		return null;
+	}
+	
+	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
 	{
 		FileHandle handle = OpenFile(file, FileMode.WRITE);
