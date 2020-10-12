@@ -7,6 +7,12 @@
 //__NULL_FUNCT
 
 
+///
+///
+/// SYNC JUNCTURES?!?!?!?
+///
+///
+
 /*
 
 <rootclass name="DefaultWeapon" /> <!-- weapons -->
