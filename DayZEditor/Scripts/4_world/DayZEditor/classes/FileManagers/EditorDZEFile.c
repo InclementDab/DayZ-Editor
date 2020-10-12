@@ -12,7 +12,18 @@ class EditorDZEFile: EditorFileType
 		
 		// Temporary fix, Binarize always = 0
 		JsonFileLoader<EditorSaveData>.JsonLoadFile(file, save_data);
-		return save_data;
+		
+		// bugfix to fix the id not incrementing
+		EditorSaveData bug_fix_save_data = new EditorSaveData();
+		foreach (EditorObjectData object_data: save_data.EditorObjects) {
+			bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Flags));
+		}
+		
+		bug_fix_save_data.MapName = save_data.MapName;
+		bug_fix_save_data.CameraPosition = save_data.CameraPosition;
+		
+		return bug_fix_save_data;
+		
 		
 		FileSerializer file_serializer = new FileSerializer();
 		if (!file_serializer.Open(file, FileMode.READ)) {
@@ -28,16 +39,7 @@ class EditorDZEFile: EditorFileType
 		
 		file_serializer.Close();
 		
-		// bugfix
-		EditorSaveData bug_fix_save_data = new EditorSaveData();
-		foreach (EditorObjectData object_data: save_data.EditorObjects) {
-			bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Flags));
-		}
-		
-		bug_fix_save_data.MapName = save_data.MapName;
-		bug_fix_save_data.CameraPosition = save_data.CameraPosition;
-		
-		return bug_fix_save_data;
+
 	}
 	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
