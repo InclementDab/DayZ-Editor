@@ -23,11 +23,12 @@ class EditorCOMFile: EditorFileType
 			"    obj.SetOrientation(orientation);",
 			"    obj.SetOrientation(obj.GetOrientation());",
 			"    obj.Update();",
+			"	 obj.SetAffectPathgraph(true, false);",
+    		"	 if (obj.CanAffectPathgraph()) GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetGame().UpdatePathgraphRegionByObject, 100, false, obj);",
 			"}\n\n",
 			"void main()",
 			"{"
 		};
-
 		
 			
 		foreach (EditorObjectData editor_object: data.EditorObjects) {
