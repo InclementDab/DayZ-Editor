@@ -662,6 +662,7 @@ class Editor
 	private bool m_LootEditMode;
 	private vector m_PositionBeforeLootEditMode;
 	private ref EditorMapGroupProto m_EditorMapGroupProto;
+	private string m_LootPositionData;
 	
 	void EditLootSpawns(string name)
 	{
@@ -707,12 +708,14 @@ class Editor
 	{
 		EditorLog.Trace("Editor::FinishEditLootSpawns");
 		
+
 		array<EditorObject> loot_spawns = m_EditorMapGroupProto.GetLootSpawns();
 		
-		foreach (EditorObject loot_spawn: loot_spawns) {
-			Print(loot_spawn.GetPosition().ToString(false));
+		foreach (EditorObject loot_spawn: loot_spawns) {			
+			m_LootPositionData += loot_spawn.GetPosition().ToString(false) + "\n";
 		}
 		
+		GetGame().CopyToClipboard(m_LootPositionData);
 		
 		delete m_EditorMapGroupProto;
 		

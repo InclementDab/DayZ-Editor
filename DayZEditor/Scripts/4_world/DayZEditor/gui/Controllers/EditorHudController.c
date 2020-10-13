@@ -127,6 +127,7 @@ class EditorHudController: EditorControllerBase
 		if (Model == "LargeTentBackPack") return true;
 		if (GetGame().IsKindOf(Model, "GP25Base")) return true;
 		if (GetGame().IsKindOf(Model, "M203Base")) return true;
+		
 
 		//! Everything is fine... I hope... :pain:
 		return false;
