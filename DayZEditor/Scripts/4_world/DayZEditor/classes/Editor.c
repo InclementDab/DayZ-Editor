@@ -343,6 +343,7 @@ class Editor
 				collision_ignore = ObjectInHand.GetWorldObject();
 			}
 			
+			Print(collision_ignore);
 			if (CollisionMode) {
 				CurrentMousePosition = MousePosToRay(obj, collision_ignore, m_EditorSettings.ViewDistance);
 			} else {

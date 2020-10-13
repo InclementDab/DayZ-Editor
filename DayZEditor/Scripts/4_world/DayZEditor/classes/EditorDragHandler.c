@@ -61,6 +61,7 @@ class ObjectDragHandler: DragHandler
 		vector end_pos = begin_pos + GetGame().GetPointerDirection() * 3000;
 		int component;
 		
+		m_Editor.ObjectInHand = target;
 		vector cursor_pos = Editor.CurrentMousePosition;
 		
 		vector size;
