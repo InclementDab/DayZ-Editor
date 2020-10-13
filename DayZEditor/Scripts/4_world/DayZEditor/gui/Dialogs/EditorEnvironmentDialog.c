@@ -4,7 +4,7 @@ class EditorEnvironmentDialogController: DialogBaseController
 	protected World m_World;
 	protected Weather m_Weather;
 	
-	float time, rain, fog, overcast, wind;
+	float date, time, rain, fog, overcast, wind;
 		
 	void EditorEnvironmentDialogController()
 	{
@@ -15,12 +15,16 @@ class EditorEnvironmentDialogController: DialogBaseController
 	override void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
-			
+						
+			case "date":
 			case "time": {
 				int year, month, day, hour, minute;
 				m_World.GetDate(year, month, day, hour, minute);
 				hour = Math.Floor(time / 3600); 
 				minute = time / 60 - hour * 60;
+				
+				month = Math.Floor(date / 30);
+				day = date - month * 30;
 				m_World.SetDate(year, month, day, hour, minute);
 				break;
 			}
@@ -56,6 +60,7 @@ class EditorEnvironmentDialog: EditorDialogBase
 		int year, month, day, hour, minute;
 		GetGame().GetWorld().GetDate(year, month, day, hour, minute);
 		float time = minute * 60 + hour * 3600;
+		float date = month * 30 + day;
 		
 		float rain = GetGame().GetWeather().GetRain().GetActual();
 		float fog = GetGame().GetWeather().GetFog().GetActual();
@@ -68,6 +73,7 @@ class EditorEnvironmentDialog: EditorDialogBase
 		
 
 		GroupPrefab group_prefab = new GroupPrefab("Weather", m_Controller, string.Empty);		
+		group_prefab.Insert(new SliderPrefab("Date", m_Controller, "date", date, 1, 365));
 		group_prefab.Insert(new SliderPrefab("Time", m_Controller, "time", time, 0, 86400));
 		group_prefab.Insert(new SliderPrefab("Rain", m_Controller, "rain", rain, 0, 1));
 		group_prefab.Insert(new SliderPrefab("Fog", m_Controller, "fog", fog, 0, 1));
