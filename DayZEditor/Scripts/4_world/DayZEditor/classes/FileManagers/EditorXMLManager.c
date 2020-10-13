@@ -126,10 +126,13 @@ class EditorMapGroupProtoGroup
 class EditorMapGroupProto: XMLCallback
 {
 	
-	ref array<ref EditorMapGroupProtoGroup> m_MapGroupProto;
-	ref array<ref EditorMapGroupProtoGroup> GetData() { return m_MapGroupProto; }
+	ref array<ref EditorMapGroupProtoGroup> m_MapGroupProto = {};
 	
 	ref array<EditorObject> m_LootPositions = {};
+	
+	array<EditorObject> GetLootSpawns() {
+		return m_LootPositions;
+	}
 	
 	private Object m_Building;
 	void EditorMapGroupProto(Object building)
@@ -143,13 +146,13 @@ class EditorMapGroupProto: XMLCallback
 			GetEditor().DeleteObject(editor_object, false);
 		}
 		
+		delete m_LootPositions;
 		delete m_MapGroupProto;
 	}
 		
 	override void OnSuccess(ref XMLDocument document)
 	{
-		EditorLog.Trace("EditorMapGroupProto::OnSuccess");
-		m_MapGroupProto = new array<ref EditorMapGroupProtoGroup>();
+		EditorLog.Trace("EditorMapGroupProto::OnSuccess"); 
 		
 		XMLElement prototype = document.Get(1).GetContent();
 		
@@ -255,7 +258,7 @@ class EditorMapGroupProto: XMLCallback
 		
 		
 		// Draw objects 
-		foreach (ref EditorMapGroupProtoGroup group_proto: m_MapGroupProto) {
+		foreach (EditorMapGroupProtoGroup group_proto: m_MapGroupProto) {
 			
 			if (group_proto && m_Building && group_proto.GetName() == m_Building.GetType()) {
 				EditorLog.Info("Building Found!");
@@ -266,28 +269,7 @@ class EditorMapGroupProto: XMLCallback
 					ref array<ref EditorLootPoint> loot_points = loot_container.GetLootPoints();
 					foreach (EditorLootPoint loot_point: loot_points) {
 
-						vector loot_pos = loot_point.GetPosition();					
-						loot_pos = Vector(loot_pos[2], loot_pos[1], loot_pos[0]);
-						EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("DebugCylinder", loot_pos, vector.Zero, EditorObjectFlags.OBJECTMARKER));
 						
-						// might be bad
-						//m_Building.AddChild(loot_display.GetWorldObject(), -1);
-						
-						vector transform[4] = {
-							Vector(1, 0, 0),
-							Vector(0, 1, 0),
-							Vector(0, 0, 1),
-							Vector(loot_pos[2], loot_pos[1], loot_pos[0]) + m_Building.GetPosition()
-						};
-						
-						transform[0][0] = loot_point.GetRange();
-						transform[1][1] = loot_point.GetHeight();
-						transform[2][2] = loot_point.GetRange();
-						
-						loot_display.SetTransform(transform);
-						m_LootPositions.Insert(loot_display);
-						
-						m_Building.Update();
 					}
 				}
 								
@@ -299,6 +281,32 @@ class EditorMapGroupProto: XMLCallback
 		
 		thread ErrorMessage(string.Format("%1 not found in MapGroupProto.xml", m_Building.GetType()));
 		GetEditor().FinishEditLootSpawns();
+	}
+	
+	void InsertLootPoint(EditorLootPoint loot_point)
+	{
+		vector loot_pos = loot_point.GetPosition();					
+		loot_pos = Vector(loot_pos[2], loot_pos[1], loot_pos[0]);
+		EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("DebugCylinder", loot_pos, vector.Zero, EditorObjectFlags.OBJECTMARKER));
+		
+		// might be bad
+		//m_Building.AddChild(loot_display.GetWorldObject(), -1);
+		
+		vector transform[4] = {
+			Vector(1, 0, 0),
+			Vector(0, 1, 0),
+			Vector(0, 0, 1),
+			Vector(loot_pos[2], loot_pos[1], loot_pos[0]) + m_Building.GetPosition()
+		};
+		
+		transform[0][0] = loot_point.GetRange();
+		transform[1][1] = loot_point.GetHeight();
+		transform[2][2] = loot_point.GetRange();
+		
+		loot_display.SetTransform(transform);
+		m_LootPositions.Insert(loot_display);
+		
+		m_Building.Update();
 	}
 	
 	private void ErrorMessage(string message)

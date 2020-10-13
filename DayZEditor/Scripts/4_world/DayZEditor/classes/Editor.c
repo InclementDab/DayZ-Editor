@@ -487,7 +487,15 @@ class Editor
 			
 			case MouseState.RIGHT: {
 				
-				
+				// Create context menu for adding loot positions
+				if (m_LootEditMode) {
+					int x, y;
+					GetMousePos(x, y);
+					EditorLootEditorContextMenu context_menu(x, y);
+					
+					delete EditorUIManager.CurrentMenu;
+					EditorUIManager.CurrentMenu = context_menu;
+				}
 				
 				break;
 			}
@@ -689,9 +697,23 @@ class Editor
 		MessageBox.Show("Beta!", "Please know that Edit Loot spawns is just a demo and has NO WAY of saving / Exporting your changes (yet)", MessageBoxButtons.OK);
 	}
 	
+	// Kinda very jank i think
+	void InsertLootPosition(vector position)
+	{
+		m_EditorMapGroupProto.InsertLootPoint(new EditorLootPoint(position, 1, 1, 0));
+	}
+	
 	void FinishEditLootSpawns()
 	{
 		EditorLog.Trace("Editor::FinishEditLootSpawns");
+		
+		array<EditorObject> loot_spawns = m_EditorMapGroupProto.GetLootSpawns();
+		
+		foreach (EditorObject loot_spawn: loot_spawns) {
+			Print(loot_spawn.GetPosition().ToString(false));
+		}
+		
+		
 		delete m_EditorMapGroupProto;
 		
 		GetGame().ObjectDelete(m_LootEditTarget);

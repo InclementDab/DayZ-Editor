@@ -57,6 +57,9 @@ class EditorCommandManager
 	
 	ref EditorDonateCommand DonateCommand;
 	
+	// Loot Editor
+	ref EditorInsertLootPositionCommand InsertLootPositionCommand;
+	
 	void EditorCommandManager()
 	{			
 		for (int i = 0; i < Type().GetVariableCount(); i++) {
