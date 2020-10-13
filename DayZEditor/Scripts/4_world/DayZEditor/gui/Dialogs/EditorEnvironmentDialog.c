@@ -22,7 +22,6 @@ class EditorEnvironmentDialogController: DialogBaseController
 				m_World.GetDate(year, month, day, hour, minute);
 				hour = Math.Floor(time / 3600); 
 				minute = time / 60 - hour * 60;
-				
 				month = Math.Floor(date / 30);
 				day = date - month * 30;
 				m_World.SetDate(year, month, day, hour, minute);
