@@ -46,4 +46,8 @@ class EditorVPPFile: EditorFileType
 		file_serializer.Write(building_set);
 		file_serializer.Close();
 	}
+	
+	string GetExtension() {
+		return ".vpp";
+	}
 }

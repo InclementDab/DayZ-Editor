@@ -54,7 +54,6 @@ modded class MissionGameplay
 					if (GetGame().GetPlayer()) {
 						vector pos = Editor.CurrentMousePosition;
 						pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
-						
 						GetGame().GetPlayer().SetPosition(pos);
 					}
 					break;
