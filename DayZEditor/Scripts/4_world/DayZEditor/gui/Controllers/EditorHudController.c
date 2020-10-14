@@ -115,12 +115,6 @@ class EditorHudController: EditorControllerBase
 		if (Model.Contains("Fx")) return true;
 		if (Model == "ItemOptics") return true;
 
-		//! Animals and Zombies
-		if (GetGame().IsKindOf(Model, "DZ_LightAI")) return true;
-
-		//! Players "survivors"
-		if (GetGame().IsKindOf(Model, "Man")) return true;
-
 		//! Cursed items
 		if (Model == "Red9") return true;
 		if (Model == "QuickieBow") return true;

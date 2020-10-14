@@ -62,7 +62,11 @@ class EditorPlaceableListItem: EditorListItem
 		
 		tooltip.SetTitle(m_PlaceableItem.Type);
 		tooltip.GetLayoutRoot().SetPos(pos_x + size_x, pos_y);
-		tooltip.SetContent(GetWorkbenchGame().CreateObjectEx(m_PlaceableItem.Type, vector.Zero, ECE_NONE));
+		
+		//! Animals and Zombies / Players "survivors"
+		if (!GetGame().IsKindOf(m_PlaceableItem.Type, "Man") && !GetGame().IsKindOf(m_PlaceableItem.Type, "DZ_LightAI")) {
+			tooltip.SetContent(GetWorkbenchGame().CreateObjectEx(m_PlaceableItem.Type, vector.Zero, ECE_NONE));
+		}		
 		
 		EditorUIManager.SetCurrentTooltip(tooltip);
 		

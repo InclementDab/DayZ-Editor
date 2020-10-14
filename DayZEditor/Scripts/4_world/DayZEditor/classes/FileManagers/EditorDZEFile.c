@@ -38,8 +38,6 @@ class EditorDZEFile: EditorFileType
 		}
 		
 		file_serializer.Close();
-		
-
 	}
 	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)

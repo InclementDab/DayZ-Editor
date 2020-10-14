@@ -66,7 +66,7 @@ class EditorObject: EditorWorldObject
 		m_Data = data;
 		
 		if (!m_Data.WorldObject) {
-			m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Position, ECE_LOCAL | ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
+			m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Position, ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 			m_WorldObject.SetOrientation(m_Data.Orientation);
 			m_WorldObject.SetFlags(EntityFlags.STATIC, true);
 			m_Data.WorldObject = m_WorldObject;
@@ -410,7 +410,7 @@ class EditorObject: EditorWorldObject
 			transform[3] = m_LineCenters[i];
 			
 			for (int j = 0; j < 3; j++) 
-				transform[j][j] = ((position[j] == m_LineCenters[i][j])*size[j]/2) + line_width;						
+				transform[j][j] = ((position[j] == m_LineCenters[i][j]) * size[j]/2) + line_width;						
 			 
 			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_LOCAL));
 			m_BBoxLines[i].SetTransform(transform);			
