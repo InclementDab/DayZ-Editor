@@ -4,6 +4,24 @@ class EditorWorldObject
 	EntityAI GetWorldObject() {
 		return m_WorldObject;
 	}
+	
+	protected EntityAI CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0")
+	{
+		// Set to ECE_SETUP for AI compat. DONT ADD ECE_LOCAL
+		EntityAI obj; 
+		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP))) { // ECE_CREATEPHYSICS, ECE_UPDATEPATHGRAPH
+			EditorLog.Error("EditorHologram: Invalid Object %1", type);
+			return null;
+		}
+		
+		obj.SetOrientation(orientation);
+		obj.SetFlags(EntityFlags.STATIC, true);
+		
+		// Needed for AI Placement		
+		obj.DisableSimulation(true);
+		
+		return obj;
+	}
 }
 
 
@@ -66,9 +84,7 @@ class EditorObject: EditorWorldObject
 		m_Data = data;
 		
 		if (!m_Data.WorldObject) {
-			m_WorldObject = GetGame().CreateObjectEx(m_Data.Type, m_Data.Position, ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
-			m_WorldObject.SetOrientation(m_Data.Orientation);
-			m_WorldObject.SetFlags(EntityFlags.STATIC, true);
+			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation);
 			m_Data.WorldObject = m_WorldObject;
 		} else {
 			m_WorldObject = m_Data.WorldObject;
