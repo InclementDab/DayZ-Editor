@@ -19,8 +19,6 @@ class EditorHologram: EditorWorldObject
 		
 		m_WorldObject = CreateObject(placeable_item.Type);
 
-		// Needed for AI Placement		
-		m_WorldObject.DisableSimulation(true);
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
