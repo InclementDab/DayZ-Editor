@@ -355,19 +355,18 @@ class Editor
 		//Debug.DrawSphere(CurrentMousePosition, 0.25, COLOR_GREEN_A);
 		
 		// Temporary extra raycast since CurrentMousePosition uses groundonly
-		MousePosToRay(obj, null, m_EditorSettings.ViewDistance);
 		if (!IsPlacing()) {
-			Object target = obj.Get(0);
-			if (target != null) {
+			Object target = GetObjectUnderCursor(m_EditorSettings.ViewDistance);
+			if (target) {
 				if (target != ObjectUnderCursor) {
-					if (ObjectUnderCursor != null) { 
+					if (ObjectUnderCursor) { 
 						OnMouseExitObject(ObjectUnderCursor, x, y);
 					}
 					OnMouseEnterObject(target, x, y);
 					ObjectUnderCursor = target;
 				} 
 				
-			} else if (ObjectUnderCursor != null) {
+			} else if (ObjectUnderCursor) {
 				exit_condition = OnMouseExitObject(ObjectUnderCursor, x, y);
 				ObjectUnderCursor = null;
 			}
@@ -467,13 +466,14 @@ class Editor
 				
 				else if (KeyState(KeyCode.KC_LSHIFT)) {
 
+
 					if (ObjectUnderCursor) {						
 						/* attempt at getting proxies to work. Failed
 						while (ObjectUnderCursor.GetParent()) {
 							ObjectUnderCursor = Object.Cast(ObjectUnderCursor.GetParent());
 						}*/
-						
-						CreateObject(ObjectUnderCursor);
+						ClearSelection();
+						SelectObject(CreateObject(ObjectUnderCursor));
 					}
 				} else {
 					
