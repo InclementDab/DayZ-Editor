@@ -538,5 +538,10 @@ class EditorObject: EditorWorldObject
 	
 	void SetLocked(bool locked) {
 		m_Locked = locked;
+		
+		/*EditorObjectMarker marker = GetMarker();
+		if (marker) {
+			marker.GetLayoutRoot().Show(!m_Locked);
+		}*/
 	}
 }

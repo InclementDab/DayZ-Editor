@@ -14,6 +14,7 @@ class EditorListItemController: Controller
 class EditorListItem: ScriptViewTemplate<EditorListItemController>
 {
 	protected Widget ListItemContent;
+	protected ButtonWidget ListItemShow;
 	
 	void Select() 
 	{

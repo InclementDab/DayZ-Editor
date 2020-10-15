@@ -149,8 +149,8 @@ WrapSpacerWidgetClass ListItem {
           }
          }
         }
-        ButtonWidgetClass ListItemCollapse {
-         visible 0
+        ButtonWidgetClass ListItemShow {
+         visible 1
          position 0.03 0
          size 22 22
          valign center_ref
@@ -164,7 +164,7 @@ WrapSpacerWidgetClass ListItem {
          font "gui/fonts/metron-bold"
          switch toggle
          {
-          ImageWidgetClass ListItemCollapse_Icon {
+          ImageWidgetClass ListItemShow_Icon {
            ignorepointer 1
            position 0 0
            size 1 1

@@ -33,6 +33,12 @@ class EditorPlacedListItem: EditorListItem
 		Deselect();
 	}
 	
+	bool ListItemShowExecute(ButtonCommandArgs args)
+	{
+		m_EditorObject.Show(!args.GetButtonState());
+		return true;
+	}
+	
 	override bool IsSelected() {
 		return m_EditorObject.IsSelected();
 	}

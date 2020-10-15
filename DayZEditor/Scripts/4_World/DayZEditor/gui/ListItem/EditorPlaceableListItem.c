@@ -7,6 +7,7 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		m_PlaceableItem = placeable_item;
 		
+		ListItemShow.Show(false);
 		m_TemplateController.Label = placeable_item.Type;
 		m_TemplateController.NotifyPropertyChanged("Label");
 		
