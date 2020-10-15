@@ -640,18 +640,15 @@ class Editor
 			return null;
 		}
 		
-		EditorObject editor_object = CreateObject(editor_hologram.GetWorldObject());
-		EditorEvents.ObjectPlaced(this, editor_object);
+		EntityAI entity = editor_hologram.GetWorldObject();
+		EditorObject editor_object = CreateObject(EditorObjectData.Create(entity.GetType(), entity.GetPosition(), entity.GetOrientation()));
 		SelectObject(editor_object);
 		
-		
-		EditorPlaceableItem item = editor_hologram.GetPlaceableItem();
-		delete ObjectInHand;
+		EditorEvents.ObjectPlaced(this, editor_object);
 		
 		if (!KeyState(KeyCode.KC_LSHIFT)) { 
-			EditorEvents.StopPlacing(this); // todo why do i gotta remake?
-		} else {
-			ObjectInHand = new EditorHologram(item);
+			delete ObjectInHand;
+			EditorEvents.StopPlacing(this); 
 		}
 		
 		return editor_object;
