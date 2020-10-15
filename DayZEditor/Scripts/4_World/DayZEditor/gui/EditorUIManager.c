@@ -1,5 +1,9 @@
 class EditorUIManager
 {
+	
+	static float DialogLastX = -1;
+	static float DialogLastY = -1;
+	
 	// Modal Menu Control
 	static ref EditorMenu CurrentMenu;
 	

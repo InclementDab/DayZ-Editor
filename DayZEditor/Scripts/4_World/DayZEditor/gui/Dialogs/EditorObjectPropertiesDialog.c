@@ -87,8 +87,6 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 	}
 }
 
-
-
 class EditorObjectPropertiesDialog: EditorDialogBase
 {
 	protected EditorObjectPropertiesDialogController m_EditorObjectPropertiesDialogController;
