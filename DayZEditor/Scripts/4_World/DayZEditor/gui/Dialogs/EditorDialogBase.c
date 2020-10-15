@@ -21,7 +21,7 @@ class EditorDialogBase: DialogBase
 		
 		//! Set Dialog to last saved position
 		if (EditorUIManager.DialogLastX != -1 && EditorUIManager.DialogLastY != -1) {
-			m_LayoutRoot.SetPos(EditorUIManager.DialogLastX, EditorUIManager.DialogLast);
+			m_LayoutRoot.SetPos(EditorUIManager.DialogLastX, EditorUIManager.DialogLastY);
 			return;
 		}
 		
