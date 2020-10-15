@@ -294,18 +294,34 @@ class EditorObject: EditorWorldObject
 		return GetWorldObject().GetModelName(); 
 	}
 	
+	void EnableListItem(bool enable) {
+		
+	}
+	
 	bool ListItemEnabled() { 
 		return (m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM; 
+	}
+	
+	void EnableObjectMarker(bool enable) {
+		
 	}
 	
 	bool ObjectMarkerEnabled() { 
 		return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; 
 	}
 	
+	void EnableMapMarker(bool enable) {
+		
+	}
+	
 	bool MapMarkerEnabled() { 
 		return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER;
 	}
 
+	void EnableBoundingBox(bool enable) {
+		
+	}
+	
 	bool BoundingBoxEnabled() { 
 		return (m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; 
 	}

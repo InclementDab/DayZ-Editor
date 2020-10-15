@@ -13,7 +13,10 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 	bool static_object;
 	bool locked;
 	
-	bool button;
+	bool bounding_box;
+	bool world_marker;
+	bool map_marker;
+	bool list_item;
 	
 	protected EditorObject m_EditorObject;
 	
@@ -61,9 +64,23 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 				break;
 			}
 			
-			case "button": {
-				
-				Print("AAA");
+			case "bounding_box": {
+				m_EditorObject.EnableBoundingBox(bounding_box);
+				break;
+			}	
+					
+			case "world_marker": {
+				m_EditorObject.EnableObjectMarker(world_marker);
+				break;
+			}	
+							
+			case "map_marker": {
+				m_EditorObject.EnableMapMarker(map_marker);
+				break;
+			}
+			
+			case "list_item": {
+				m_EditorObject.EnableListItem(list_item);
 				break;
 			}
 		}
@@ -92,8 +109,16 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		object_group.Insert(new CheckBoxPrefab("Lock", m_Controller, "locked", editor_object.IsLocked()));
 		object_group.Insert(new CheckBoxPrefab("Static Object", m_Controller, "static_object", editor_object.IsStaticObject()));
 		
+		GroupPrefab flags_Group = new GroupPrefab("Object Flags", m_Controller, string.Empty);
+		flags_Group.Insert(new CheckBoxPrefab("Bounding Box", m_Controller, "bounding_box", editor_object.BoundingBoxEnabled()));
+		flags_Group.Insert(new CheckBoxPrefab("World Marker", m_Controller, "world_marker", editor_object.ObjectMarkerEnabled()));
+		flags_Group.Insert(new CheckBoxPrefab("Map Marker", m_Controller, "map_marker", editor_object.MapMarkerEnabled()));
+		flags_Group.Insert(new CheckBoxPrefab("List Item", m_Controller, "list_item", editor_object.ListItemEnabled()));
+		
+		
 		AddContent(general_group);
 		AddContent(object_group);
+		AddContent(flags_Group);
 		
 		if (editor_object.GetWorldObject().IsMan()) {
 			GroupPrefab human_controller = new GroupPrefab("Human Controller", m_Controller, string.Empty);
