@@ -5,6 +5,7 @@
             <input name="EditorToggleActive" loc="Enable / Disable" />
             <input name="EditorToggleUI" loc="Show / Hide UI" />
             <input name="EditorToggleCursor" loc="Toggle Cursor" />
+            <input name="EditorTeleportPlayerToCursor" loc="Teleport Player to Cursor" />
 			
 			<input name="EditorToggleMap" loc="Map" />
 			<input name="EditorDeleteObject" loc="Delete Object" />
@@ -33,6 +34,12 @@
 		<input name="EditorDeleteObject">
             <btn name="kDelete" />
         </input>
+		
+		<input name="EditorTeleportPlayerToCursor">
+            <btn name="kH" />
+        </input>
+		
+		
 
     </preset>
 </modded_inputs>

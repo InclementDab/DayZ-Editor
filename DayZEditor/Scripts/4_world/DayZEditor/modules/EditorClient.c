@@ -34,6 +34,7 @@ class EditorClientModule: JMModuleBase
 		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
 		RegisterBinding(new JMModuleBinding("OnEditorToggleCursor", "EditorToggleCursor"));
 		RegisterBinding(new JMModuleBinding("OnEditorToggleUI", "EditorToggleUI"));
+		RegisterBinding(new JMModuleBinding("OnEditorTeleportPlayerToCursor", "EditorTeleportPlayerToCursor"));
 		
 		RegisterBinding(new JMModuleBinding("OnEditorToggleMap", "EditorToggleMap"));
 		RegisterBinding(new JMModuleBinding("OnEditorDeleteObject", "EditorDeleteObject"));
@@ -158,6 +159,14 @@ class EditorClientModule: JMModuleBase
 		CommandArgs args();
 		args.Context = GetEditor().GetEditorHud();
 		command.Execute(this, args);
+	}
+	
+	private void OnEditorTeleportPlayerToCursor(UAInput input)
+	{		
+		if (!ShouldProcessInput(input)) return;
+		EditorLog.Trace("Editor::OnEditorTeleportPlayerToCursor");
+		
+		GetEditor().TeleportPlayerToCursor();
 	}
 	
 	

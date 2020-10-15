@@ -56,6 +56,7 @@ modded class MissionGameplay
 						pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
 						GetGame().GetPlayer().SetPosition(pos);
 					}
+					
 					break;
 				}
 				
