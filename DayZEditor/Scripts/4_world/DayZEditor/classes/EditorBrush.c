@@ -8,7 +8,7 @@ class EditorBrush
 	protected EntityAI m_BrushDecal;
 	protected ref EditorBrushData m_BrushData;
 
-	protected static float m_BrushRadius = 20;
+	protected static float m_BrushRadius = 10;
 	static void SetRadius(float radius) { m_BrushRadius = radius; }
 	static float GetRadius() 
 		return m_BrushRadius;
@@ -166,14 +166,15 @@ class EditorBrush
 
 class DeleteBrush: EditorBrush
 {	
-	
-	
 	override void DuringMouseDown(vector position)
 	{
 		vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
 		vector contact_pos, contact_dir;
 		int component;
 		set<Object> results = new set<Object>();
+		
+		Debug.DestroyAllShapes();
+		Debug.DrawCylinder(position, EditorBrush.GetRadius() / 2);
 		DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, EditorBrush.GetRadius() / 2, CollisionFlags.ALLOBJECTS);
 		GetEditor().ClearSelection();
 		
@@ -188,5 +189,4 @@ class DeleteBrush: EditorBrush
 			}
 		}		
 	}
-
 }
