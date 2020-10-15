@@ -74,11 +74,6 @@ class EditorPlaceableListItem: EditorListItem
 			pos_y = screen_y - 300;
 		}
 		
-		Print(screen_y);
-		
-		Print(pos_y);
-		Print(size_y);
-		
 		tooltip.GetLayoutRoot().SetPos(pos_x + size_x, pos_y);
 		
 		//! Animals and Zombies / Players "survivors"
