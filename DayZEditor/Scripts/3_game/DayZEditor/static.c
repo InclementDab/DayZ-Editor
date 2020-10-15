@@ -162,7 +162,6 @@ class BetterString: string
 		int length = value.Length() - n;
 		string post = value.Substring(n, length);
 		value = pre + _value + post;
-		
 	}	
 }
 

@@ -36,7 +36,6 @@ Editor GetEditor() {
 	return g_Editor;
 }
 
-
 class Editor
 {
 	/* Private Members */
@@ -120,7 +119,6 @@ class Editor
 		thread AutoSaveThread();
 	}
 	
-
 	private void ~Editor() 
 	{
 		EditorLog.Trace("~Editor");

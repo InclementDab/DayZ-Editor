@@ -85,8 +85,7 @@ class ObjectDragHandler: DragHandler
 
 			// Handle Z-Only motion
 			if (KeyState(KeyCode.KC_LMENU)) {
-				//selected_transform[3] = ground_position + selected_transform[1] * vector.Distance(cursor_pos + pos_delta, ground_position);
-				selected_transform[3] = ground_position + selected_transform[1] * vector.Distance(GetGroundPosition(transform), transform[3]); // - vector.Distance(GetGroundPosition(selected_transform), selected_transform[3])
+				//selected_transform[3] = ground_position + selected_transform[1] * vector.Distance(GetGroundPosition(transform), transform[3]); // - vector.Distance(GetGroundPosition(selected_transform), selected_transform[3])
 
 			// Handle XY Rotation
 			} else if (KeyState(KeyCode.KC_LSHIFT)) {

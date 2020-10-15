@@ -1,5 +1,3 @@
-
-
 class EditorSettings
 {	
 	// shit thats gotta be changed
@@ -35,6 +33,4 @@ class EditorSettings
 		GetGame().GetWorld().SetViewDistance(ViewDistance);
 		GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
 	}
-
 }
-

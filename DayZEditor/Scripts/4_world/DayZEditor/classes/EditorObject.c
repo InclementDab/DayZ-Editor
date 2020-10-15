@@ -16,7 +16,7 @@ class EditorWorldObject
 	{
 		// Set to ECE_SETUP for AI compat. DONT ADD ECE_LOCAL
 		EntityAI obj; 
-		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP))) { // ECE_CREATEPHYSICS, ECE_UPDATEPATHGRAPH
+		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS | ECE_UPDATEPATHGRAPH))) { // ECE_CREATEPHYSICS, ECE_UPDATEPATHGRAPH
 			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}

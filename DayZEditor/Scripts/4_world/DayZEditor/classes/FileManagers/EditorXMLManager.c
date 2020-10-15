@@ -3,6 +3,7 @@ class EditorXMLCallback<Class T>: XMLCallback
 {
 	private T m_Data;
 	T GetData() { return m_Data; }
+	
 
 	private bool m_Success = false;
 	override void OnFailure(ref XMLDocument document)
@@ -18,6 +19,16 @@ class EditorXMLCallback<Class T>: XMLCallback
 	}
 	
 	bool GetSuccess() { return m_Success; }
+	
+	void LoadData(out Class data, XMLDocument document)
+	{
+		typename type = data.Type();
+				
+		for (int i = 0; i < type.GetVariableCount(); i++) {
+			typename var_type = type.GetVariableType(i);
+			
+		}
+	}
 }
 
 
@@ -175,12 +186,11 @@ class EditorMapGroupProto: XMLCallback
 			XMLElement group_children = group_tag.GetContent();
 			
 			for (int j = 0; j < group_children.Count(); j++) {
-				XMLTag group_child = group_children.Get(j);
 				
-				
+				XMLTag group_child = group_children.Get(j);				
 				switch (group_child.GetName()) {
 				
-					case "usage": {						
+					case "usage": {
 						XMLAttribute usage_name = group_child.GetAttribute("name");
 						group.InsertUsage(usage_name.ValueAsString());
 						break;

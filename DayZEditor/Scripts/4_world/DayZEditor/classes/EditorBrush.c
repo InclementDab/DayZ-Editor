@@ -180,8 +180,8 @@ class DeleteBrush: EditorBrush
 		// todo this is deleting one at a time. use DeleteObjects smile :)
 		foreach (Object r: results) {
 					
-			EditorObject eo = GetEditor().GetPlacedObjectById(r.GetID());
-			if (eo != null) {
+			EditorObject eo = GetEditor().GetEditorObject(r);
+			if (eo) {
 				GetEditor().DeleteObject(eo);
 			} else {
 				GetGame().ObjectDelete(r);
