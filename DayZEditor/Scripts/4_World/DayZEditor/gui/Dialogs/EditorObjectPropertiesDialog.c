@@ -7,6 +7,7 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 	float scale;
 	
 	bool static_object;
+	bool locked;
 	bool button;
 	
 	protected EditorObject m_EditorObject;
@@ -45,6 +46,11 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 				break;
 			}
 			
+			case "locked": {
+				m_EditorObject.SetLocked(locked);
+				break;
+			}
+			
 			case "button": {
 				
 				Print("AAA");
@@ -72,6 +78,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		general_group.Insert(new EditBoxNumberPrefab("Scale", m_Controller, "scale", editor_object.GetScale().ToString(), 0.01));
 		
 		GroupPrefab object_group = new GroupPrefab("Object Settings", m_Controller, string.Empty);
+		object_group.Insert(new CheckBoxPrefab("Lock", m_Controller, "locked", editor_object.IsLocked()));
 		object_group.Insert(new CheckBoxPrefab("Static Object", m_Controller, "static_object", editor_object.IsStaticObject()));
 		
 		AddContent(general_group);

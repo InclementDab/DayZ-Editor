@@ -526,11 +526,13 @@ class EditorObject: EditorWorldObject
 	void SetStaticObject(bool static_object) {
 		m_StaticObject = static_object;
 	}
+	
+	protected bool m_Locked;
+	bool IsLocked() {
+		return m_Locked;
+	}
+	
+	void SetLocked(bool locked) {
+		m_Locked = locked;
+	}
 }
-
-
-
-
-
-
-
