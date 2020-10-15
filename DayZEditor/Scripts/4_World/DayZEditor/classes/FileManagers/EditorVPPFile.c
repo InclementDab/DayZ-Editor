@@ -39,7 +39,10 @@ class EditorVPPFile: EditorFileType
 			building_set.SetActive(true);
 		}
 		
-		if (!file_serializer.Open(file, FileMode.APPEND | FileMode.WRITE)) {
+		Print(building_set);
+		
+		if (!file_serializer.Open(file, FileMode.APPEND)) {
+			EditorLog.Error("VPPFile::Export: Error Opening File Serializer");
 			return;
 		}
 		

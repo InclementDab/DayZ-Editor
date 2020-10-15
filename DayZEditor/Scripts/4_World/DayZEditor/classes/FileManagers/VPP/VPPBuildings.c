@@ -3,22 +3,19 @@ class VPPToEditorBuildingSet
 {
    private string m_Name;
    private bool   m_IsActive;
-   private ref array<ref VPPToEditorSpawnedBuilding> m_Buildings;
+   private ref array<ref VPPToEditorSpawnedBuilding> m_Buildings = {};
 
    void VPPToEditorBuildingSet(string name, bool isAlive = false)
    {
       m_IsActive = isAlive;
       m_Name = name;
-      m_Buildings = new array<ref VPPToEditorSpawnedBuilding>;
    }
 
    void ~VPPToEditorBuildingSet()
    {
-      foreach (VPPToEditorSpawnedBuilding building : m_Buildings)
-      {
-		if (building != null)
-         	delete building;
-      }
+		foreach (VPPToEditorSpawnedBuilding building : m_Buildings)
+			if (building)
+         		delete building;
    }
 
    string GetName()
@@ -232,6 +229,7 @@ class VPPToEditorSpawnedBuilding
 	private vector m_Direction;
 	private vector m_Orientation;
 	private bool   m_IsActive;
+	
 	[NonSerialized()]
 	private Object m_Building;
 	private string m_NetWorkId;
@@ -256,21 +254,19 @@ class VPPToEditorSpawnedBuilding
 	{
 		if (GetGame().IsServer() && GetGame().IsMultiplayer())
 		{
-			if (m_Building != null){
-			DestroySpawnedEntity();
-			}else{
+			if (m_Building) {
+				DestroySpawnedEntity();
+			} else {
 				TStringArray strs = new TStringArray;
 				m_NetWorkId.Split( ",",strs );
 				autoptr Object netWrkObj = GetGame().GetObjectByNetworkId(strs[1].ToInt(), strs[0].ToInt()); //low,high
 				GetGame().ObjectDelete(netWrkObj);
-				//if (netWrkObj != null)
-					//VPPRPCManager.SendRPC(VPPATRPCs.RemoteQuickDeleteObject, new Param1<Object>(netWrkObj),true,null);
 			}
 		}
 
-		if(GetGame().IsClient())
+		if (GetGame().IsClient())
 		{
-			if(m_Building != null)
+			if (m_Building)
 				GetGame().ObjectDeleteOnClient(m_Building);
 		}
 	}
@@ -338,14 +334,14 @@ class VPPToEditorSpawnedBuilding
 	{
 		m_IsActive = active;
 
-		if(!m_IsActive)
+		if( !m_IsActive)
 		{
 			DestroySpawnedEntity();
 		}
 
-		if(m_IsActive)
+		if (m_IsActive)
 		{
-			if(m_Building == null)
+			if (!m_Building)
 			{
 				SpawnObject();
 			}
@@ -360,7 +356,7 @@ class VPPToEditorSpawnedBuilding
 	
 	bool IsObject(Object obj)
 	{
-		if(m_Building)
+		if (m_Building)
 			return m_Building == obj;
 		
 		return m_ObjectName == obj.GetDisplayName();
@@ -368,12 +364,12 @@ class VPPToEditorSpawnedBuilding
 	
 	string GetNetworkId(bool clean = false)
 	{
-		if (clean)
-		{
+		if (clean) {
 			string edited = m_NetWorkId;
 			edited.Replace(",", "");
 			return edited;
 		}
+		
 		return m_NetWorkId;
 	}
 
