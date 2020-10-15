@@ -98,9 +98,7 @@ class EditorBrush
 			OnMouseUp(CurrentMousePosition);
 		}
 	}
-	
-	
-	
+
 	void DuringMouseDown(vector position) 
 	{ 
 		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
@@ -159,7 +157,6 @@ class EditorBrush
 	string GetName() { 
 		return m_BrushData.Name; 
 	}
-	
 }
 
 

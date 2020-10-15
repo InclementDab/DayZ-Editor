@@ -218,7 +218,6 @@ class EditorHudToolbarController: EditorControllerBase
 			}
 		}
 		
-		
 		switch (w) {
 			
 			case MenuBarFile:
