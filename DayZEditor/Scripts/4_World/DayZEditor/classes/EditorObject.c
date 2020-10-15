@@ -216,6 +216,7 @@ class EditorObject: EditorWorldObject
 	
 	void SetPosition(vector pos) 
 	{ 
+		if (m_Locked) return;
 		GetWorldObject().SetPosition(pos);
 		Update();
 	}
@@ -223,6 +224,7 @@ class EditorObject: EditorWorldObject
 	vector GetOrientation() { return GetWorldObject().GetOrientation(); }
 	void SetOrientation(vector pos) 
 	{ 
+		if (m_Locked) return;
 		GetWorldObject().SetOrientation(pos);
 		Update();
 	}
@@ -233,13 +235,15 @@ class EditorObject: EditorWorldObject
 	}
 	
 	void SetTransform(vector mat[4]) 
-	{ 		
+	{ 	
+		if (m_Locked) return;	
 		GetWorldObject().SetTransform(mat); 
 		Update();
 	}
 	
 	void SetScale(float scale)
 	{		
+		if (m_Locked) return;
 		//GetWorldObject().SetScale(scale);
 		Update();
 	}

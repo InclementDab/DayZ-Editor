@@ -45,6 +45,7 @@ WrapSpacerWidgetClass CheckBoxPrefab {
    {
     ScriptParamsClass {
      Binding_Name "Value"
+     Two_Way_Binding 1
     }
    }
   }
