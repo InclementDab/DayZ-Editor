@@ -122,8 +122,7 @@ class EditorExitCommand: EditorCommand
 		DialogResult result = EditorMessageBox.Show("Exit to main menu", "Do you want to close the DayZ Editor?", MessageBoxButtons.OKCancel);
 		if (result != DialogResult.OK) return;
 		
-		GetGame().LogoutRequestTime();
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(GetGame().GetMission().CreateLogoutMenu, GetGame().GetUIManager().GetMenu());
+		GetGame().AbortMission();
 	}
 	
 	override string GetName() {
