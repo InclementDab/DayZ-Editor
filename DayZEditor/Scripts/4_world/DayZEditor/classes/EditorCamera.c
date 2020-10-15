@@ -182,6 +182,10 @@ class EditorCamera: Camera
 		d[1] = dir[1] * sin;
 		d[0] = dir[0] * sin;
 	}
+	
+	float GetCameraSpeed() {
+		return CAMERA_SPEED;
+	}
 }
 
 
