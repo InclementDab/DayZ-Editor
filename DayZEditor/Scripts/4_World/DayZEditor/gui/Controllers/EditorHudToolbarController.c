@@ -47,7 +47,7 @@ class EditorHudToolbarController: EditorControllerBase
 #ifndef COMPONENT_SYSTEM
 		// Load Brushes		
 		if (!FileExist(m_Editor.EditorBrushFile)) {
-			if (!CopyFile("DayZEditor/scripts/data/EditorBrushes.xml", m_Editor.EditorBrushFile)) {
+			if (!CopyFile("DayZEditor/scripts/data/Defaults/EditorBrushes.xml", m_Editor.EditorBrushFile)) {
 				EditorLog.Error("Could not copy brush data to %1", m_Editor.EditorBrushFile);
 				return;
 			}

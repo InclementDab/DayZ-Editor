@@ -681,7 +681,7 @@ class Editor
 		m_EditorCamera.LookAt(Vector(0, 0, 0));	
 		
 		if (!FileExist(EditorProtoFile)) {
-			CopyFile("DayZEditor/scripts/data/MapGroupProto.xml", EditorProtoFile);
+			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", EditorProtoFile);
 		}
 		
 		m_EditorMapGroupProto = new EditorMapGroupProto(m_LootEditTarget); 
