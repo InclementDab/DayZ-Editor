@@ -1,4 +1,7 @@
-
+//! TODO: remove this controller and directly connect with EditorObject
+//! (maybe add a NotifyPropertyChanged to EditorObject to handle once things get changed?)
+//! This would be another step closer to removing EditorObjectData since Scale, Position, and Orientation would 
+//! become public variables, with a Notify once things get changed? (Along with SetPosition methods etc..)
 class EditorObjectPropertiesDialogController: DialogBaseController
 {
 	string name;
