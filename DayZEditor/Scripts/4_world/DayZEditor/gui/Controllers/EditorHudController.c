@@ -122,6 +122,9 @@ class EditorHudController: EditorControllerBase
 		if (GetGame().IsKindOf(Model, "GP25Base")) return true;
 		if (GetGame().IsKindOf(Model, "M203Base")) return true;
 		
+		//! temporary
+		if (GetGame().IsKindOf(Model, "Man")) return true;
+		if (GetGame().IsKindOf(Model, "DZ_LightAI")) return true;
 
 		//! Everything is fine... I hope... :pain:
 		return false;
