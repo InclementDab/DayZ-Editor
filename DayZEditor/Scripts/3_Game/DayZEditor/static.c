@@ -90,31 +90,6 @@ class EditorLog
 }
 
 
-/* Used for Offline Editor Mission Creation */
-static string CreateEditorMission(string map_name = "ChernarusPlus")
-{
-	EditorLog.Trace("EditorMissionGameplay::CreateEditorMission");
-	string mission = "$saves:DayZEditor." + map_name;
-	
-	if (!FileExist(mission)) {
-		EditorLog.Info("Editor Mission not found, creating....");
-		MakeDirectory(mission);
-	}
-	
-	FileHandle init = OpenFile(mission + "/init.c", FileMode.WRITE);
-	FPrint(init, "\/\/ Returns Offline Editor Mission");
-	FPrint(init, "Mission CreateCustomMission(string path)");
-	FPrint(init, "{");
-	FPrint(init, "	return new MissionGameplay();");
-	FPrint(init, "}");
-		
-	if (init) {
-		CloseFile(init);
-	}
-	
-	return mission;
-}
-
 static bool RecursiveGetParent(out Widget w, string name)
 {
 	if (!w) 
