@@ -352,7 +352,7 @@ class Editor
 		//Debug.DestroyAllShapes();
 		//Debug.DrawSphere(CurrentMousePosition, 0.25, COLOR_GREEN_A);
 		
-		// Temporary extra raycast since CurrentMousePosition uses groundonly
+
 		if (!IsPlacing()) {
 			Object target = GetObjectUnderCursor(m_EditorSettings.ViewDistance);
 			if (target) {
@@ -397,6 +397,11 @@ class Editor
 		//PasteCommand.SetCanExecute(EditorClipboard.IsClipboardValid());
 
 		CommandManager.SnapCommand.SetCanExecute(false); // not implemented
+		
+		// Shit code. Theres better ways to do this CanUndo and CanRedo are slow
+		CommandManager.UndoCommand.SetCanExecute(CanUndo());
+		CommandManager.RedoCommand.SetCanExecute(CanRedo());
+		
 		
 		EditorLog.CurrentLogLevel = log_lvl;		
 	}
