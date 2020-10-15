@@ -44,24 +44,7 @@ modded class MissionGameplay
 	override void OnMouseButtonPress(int button)
 	{
 		// If Editor is NOT active, just do MouseDown
-		if (!GetEditor() || !GetEditor().IsActive()) {
-			
-			switch (button) {
-				
-				// Middle Mouse Player Teleport
-				case MouseState.MIDDLE: {
-					
-					if (GetGame().GetPlayer()) {
-						vector pos = Editor.CurrentMousePosition;
-						pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
-						GetGame().GetPlayer().SetPosition(pos);
-					}
-					
-					break;
-				}
-				
-			}
-			
+		if (!GetEditor() || !GetEditor().IsActive()) {			
 			super.OnMouseButtonPress(button);
 			// If Editor IS active, and DOESNT handle the mouse, do mousedown
 		} else if (!GetEditor().OnMouseDown(button)) {

@@ -786,11 +786,12 @@ class Editor
 	
 	void TeleportPlayerToCursor()
 	{
-		if (m_Player) {
-			vector pos = CurrentMousePosition;
-			pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
-			m_Player.SetPosition(pos);
-		}
+		if (!m_Player) return;
+		
+		vector pos = CurrentMousePosition;
+		pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
+		m_Player.SetPosition(pos);
+		
 	}
 	
 	private void AutoSaveThread()
