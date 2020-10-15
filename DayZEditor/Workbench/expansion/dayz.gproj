@@ -1,0 +1,108 @@
+GameProjectClass {
+ ID "DayZ"
+ TITLE "DayZ"
+ Configurations {
+  GameProjectConfigClass PC {
+   platformHardware PC
+   skeletonDefinitions "DZ/Anims/cfg/skeletons.anim.xml"
+   FileSystem {
+
+   }
+   
+   imageSets {
+    "gui/imagesets/ccgui_enforce.imageset"
+    "gui/imagesets/rover_imageset.imageset"
+    "gui/imagesets/dayz_gui.imageset"
+    "gui/imagesets/dayz_crosshairs.imageset"
+    "gui/imagesets/dayz_inventory.imageset"
+    "gui/imagesets/inventory_icons.imageset"
+    "gui/imagesets/main_menu_newsfeed.imageset"
+    "gui/imagesets/smart_panel.imageset"
+    "gui/imagesets/GUI_back_alpha.imageset"
+    "gui/imagesets/GUI_back_alpha_icon.imageset"
+    "gui/imagesets/xbox_buttons.imageset"
+    "gui/imagesets/playstation_buttons.imageset"
+    "gui/imagesets/selection.imageset"
+    "gui/imagesets/console_toolbar.imageset"
+    "DayZEditor/gui/imagesets/dayz_editor_gui.imageset"
+   }
+   widgetStyles {
+    "gui/looknfeel/dayzwidgets.styles" 
+    "gui/looknfeel/widgets.styles"
+   }
+   ScriptModules {
+    ScriptModulePathClass {
+     Name "core"
+     Paths {
+      "Scripts/1_Core"
+      "JM/CF/Scripts/1_Core"
+      "DayZExpansion/Scripts/Common"
+      "DayZExpansion/Scripts/1_Core"
+      "DayZEditor/Scripts/1_Core"
+     }
+     EntryPoint ""
+    }
+    ScriptModulePathClass {
+     Name "gameLib"
+     Paths {
+      "Scripts/2_GameLib"
+     }
+     EntryPoint ""
+    }
+    ScriptModulePathClass {
+     Name "game"
+     Paths {
+      "Scripts/3_Game"
+      "JM/CF/Scripts/3_Game"
+      "JM/COT/Scripts/3_Game"
+      "DayZExpansion/Scripts/Common"
+      "DayZExpansion/Scripts/3_Game"
+      "DayZEditor/Scripts/3_Game"
+     }
+     EntryPoint "CreateGame"
+    }
+    ScriptModulePathClass {
+     Name "world"
+     Paths {
+      "Scripts/4_World"
+      "JM/CF/Scripts/4_World"
+      "JM/COT/Scripts/4_World"
+      "DayZExpansion/Scripts/Common"
+      "DayZExpansion/Scripts/4_World"
+      "DayZEditor/Scripts/4_World"
+     }
+     EntryPoint ""
+    }
+    ScriptModulePathClass {
+     Name "mission"
+     Paths {
+      "Scripts/5_Mission"
+      "JM/CF/Scripts/5_Mission"
+      "JM/COT/Scripts/5_Mission"
+      "DayZEditor/Scripts/5_Mission"
+     }
+     EntryPoint "CreateMission"
+    }
+    
+    ScriptModulePathClass {
+    Name "workbench"
+     Paths {
+      "Scripts/editor/Workbench"
+      "Scripts/editor/plugins"
+      "DayZEditor/Scripts/editor/plugins"
+     } 
+     EntryPoint ""
+    } 
+   }
+  }
+  GameProjectConfigClass XBOX_ONE {
+   platformHardware XBOX_ONE
+  }
+  GameProjectConfigClass PS4 {
+   platformHardware PS4
+  }
+  GameProjectConfigClass LINUX {
+   platformHardware LINUX
+  }
+ }
+}
