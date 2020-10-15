@@ -5,12 +5,19 @@ class EditorWorldObject
 		return m_WorldObject;
 	}
 	
+	void ~EditorWorldObject()
+	{
+		if (m_WorldObject) {
+			GetGame().ObjectDelete(m_WorldObject);
+		}
+	}
+	
 	protected EntityAI CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0")
 	{
 		// Set to ECE_SETUP for AI compat. DONT ADD ECE_LOCAL
 		EntityAI obj; 
 		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP))) { // ECE_CREATEPHYSICS, ECE_UPDATEPATHGRAPH
-			EditorLog.Error("EditorHologram: Invalid Object %1", type);
+			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
 		
@@ -165,8 +172,6 @@ class EditorObject: EditorWorldObject
 		
 		delete OnObjectSelected;
 		delete OnObjectDeselected;
-			
-		GetGame().ObjectDelete(m_WorldObject);
 	}
 			
 	/*********

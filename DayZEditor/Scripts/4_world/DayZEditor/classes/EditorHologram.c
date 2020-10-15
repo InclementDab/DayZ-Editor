@@ -30,6 +30,7 @@ class EditorHologram: EditorWorldObject
 	
 	void Update(float timeslice)
 	{
+		if (!m_WorldObject) return;
 		vector position = Editor.CurrentMousePosition;
 		vector mat[4] = {
 			"1 0 0",
@@ -42,13 +43,6 @@ class EditorHologram: EditorWorldObject
 		float surface_height = GetGame().SurfaceY(position[0], position[2]);
 		m_WorldObject.PlaceOnSurfaceRotated(mat, position, surface_normal[0] * -1, surface_normal[2] * -1, 0, GetEditor().MagnetMode);
 		m_WorldObject.SetTransform(mat);
-		
-		
-		// -5 for cursor offset
-		// -10 to put cursor on center
-		//m_EditorMapMarkerWidget.SetPos(map_pos[0] - 15, map_pos[1] - 15);
-		
-
 	}
 	
 	
