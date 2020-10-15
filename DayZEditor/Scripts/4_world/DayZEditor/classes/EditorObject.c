@@ -518,7 +518,14 @@ class EditorObject: EditorWorldObject
 		return m_EditorPlacedListItem;
 	}
 
+	protected bool m_StaticObject;
+	bool IsStaticObject() {
+		return m_StaticObject;
+	}
 	
+	void SetStaticObject(bool static_object) {
+		m_StaticObject = static_object;
+	}
 }
 
 

@@ -6,6 +6,7 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 	vector orientation;
 	float scale;
 	
+	bool static_object;
 	bool button;
 	
 	protected EditorObject m_EditorObject;
@@ -39,6 +40,11 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 				break;
 			}
 			
+			case "static_object": {
+				m_EditorObject.SetStaticObject(static_object);
+				break;
+			}
+			
 			case "button": {
 				
 				Print("AAA");
@@ -65,8 +71,11 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		general_group.Insert(new VectorPrefab("Orientation", m_Controller, "orientation", editor_object.GetOrientation()));
 		general_group.Insert(new EditBoxNumberPrefab("Scale", m_Controller, "scale", editor_object.GetScale().ToString(), 0.01));
 		
-		AddContent(general_group);
+		GroupPrefab object_group = new GroupPrefab("Object Settings", m_Controller, string.Empty);
+		object_group.Insert(new CheckBoxPrefab("Static Object", m_Controller, "static_object", editor_object.IsStaticObject()));
 		
+		AddContent(general_group);
+		AddContent(object_group);
 		
 		if (editor_object.GetWorldObject().IsMan()) {
 			GroupPrefab human_controller = new GroupPrefab("Human Controller", m_Controller, string.Empty);
