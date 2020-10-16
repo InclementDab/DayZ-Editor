@@ -22,8 +22,18 @@ class GroupPrefab: PrefabBase<ObservableCollection<ref ScriptedViewBase>>
 	
 	bool GroupCollapseExecute(ButtonCommandArgs args)
 	{
-		EditorDialogOptionContent.Show(!args.GetButtonState()); 
+		Open(!args.GetButtonState()); 
 		return true;		
+	}
+	
+	bool IsOpen()
+	{
+		return EditorDialogOptionContent.IsVisible();
+	}
+	
+	void Open(bool state)
+	{
+		EditorDialogOptionContent.Show(state);
 	}
 	
 	override void PrefabPropertyChanged(string property_name)

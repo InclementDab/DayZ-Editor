@@ -87,36 +87,51 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 	}
 }
 
+
+// Stores state of the Collapse data
+class EditorObjectPropertiesDialogState
+{
+	static bool GeneralGroup = true;
+	static bool ObjectGroup = true;
+	static bool FlagsGroup = true;
+}
+
 class EditorObjectPropertiesDialog: EditorDialogBase
 {
 	protected EditorObjectPropertiesDialogController m_EditorObjectPropertiesDialogController;
+	
+	protected ref GroupPrefab m_GeneralGroup;
+	protected ref GroupPrefab m_ObjectGroup;
+	protected ref GroupPrefab m_FlagsGroup;
 	
 	void EditorObjectPropertiesDialog(string title, EditorObject editor_object)
 	{		
 		m_EditorObjectPropertiesDialogController = EditorObjectPropertiesDialogController.Cast(GetController());
 		m_EditorObjectPropertiesDialogController.SetEditorObject(editor_object);
 	
-		GroupPrefab general_group = new GroupPrefab("General", m_Controller, string.Empty);
-		general_group.Insert(new CheckBoxPrefab("Show", m_Controller, "show", editor_object.IsVisible()));
-		general_group.Insert(new EditBoxPrefab("Name", m_Controller, "name", editor_object.GetDisplayName()));
-		general_group.Insert(new VectorPrefab("Position", m_Controller, "position", editor_object.GetPosition()));
-		general_group.Insert(new VectorPrefab("Orientation", m_Controller, "orientation", editor_object.GetOrientation()));
-		general_group.Insert(new EditBoxNumberPrefab("Scale", m_Controller, "scale", editor_object.GetScale().ToString(), 0.01));
+		m_GeneralGroup = new GroupPrefab("General", m_Controller, string.Empty);
+		m_GeneralGroup.Insert(new CheckBoxPrefab("Show", m_Controller, "show", editor_object.IsVisible()));
+		m_GeneralGroup.Insert(new EditBoxPrefab("Name", m_Controller, "name", editor_object.GetDisplayName()));
+		m_GeneralGroup.Insert(new VectorPrefab("Position", m_Controller, "position", editor_object.GetPosition()));
+		m_GeneralGroup.Insert(new VectorPrefab("Orientation", m_Controller, "orientation", editor_object.GetOrientation()));
+		m_GeneralGroup.Insert(new EditBoxNumberPrefab("Scale", m_Controller, "scale", editor_object.GetScale().ToString(), 0.01));
+		m_GeneralGroup.Open(EditorObjectPropertiesDialogState.GeneralGroup);
 		
-		GroupPrefab object_group = new GroupPrefab("Object Settings", m_Controller, string.Empty);
-		object_group.Insert(new CheckBoxPrefab("Lock", m_Controller, "locked", editor_object.IsLocked()));
-		object_group.Insert(new CheckBoxPrefab("Static Object", m_Controller, "static_object", editor_object.IsStaticObject()));
+		m_ObjectGroup = new GroupPrefab("Object Settings", m_Controller, string.Empty);
+		m_ObjectGroup.Insert(new CheckBoxPrefab("Lock", m_Controller, "locked", editor_object.IsLocked()));
+		m_ObjectGroup.Insert(new CheckBoxPrefab("Static Object", m_Controller, "static_object", editor_object.IsStaticObject()));
+		m_ObjectGroup.Open(EditorObjectPropertiesDialogState.ObjectGroup);
 		
-		GroupPrefab flags_Group = new GroupPrefab("Object Flags", m_Controller, string.Empty);
-		flags_Group.Insert(new CheckBoxPrefab("Bounding Box", m_Controller, "bounding_box", editor_object.BoundingBoxEnabled()));
-		flags_Group.Insert(new CheckBoxPrefab("World Marker", m_Controller, "world_marker", editor_object.ObjectMarkerEnabled()));
-		flags_Group.Insert(new CheckBoxPrefab("Map Marker", m_Controller, "map_marker", editor_object.MapMarkerEnabled()));
-		flags_Group.Insert(new CheckBoxPrefab("List Item", m_Controller, "list_item", editor_object.ListItemEnabled()));
+		m_FlagsGroup = new GroupPrefab("Object Flags", m_Controller, string.Empty);
+		m_FlagsGroup.Insert(new CheckBoxPrefab("Bounding Box", m_Controller, "bounding_box", editor_object.BoundingBoxEnabled()));
+		m_FlagsGroup.Insert(new CheckBoxPrefab("World Marker", m_Controller, "world_marker", editor_object.ObjectMarkerEnabled()));
+		m_FlagsGroup.Insert(new CheckBoxPrefab("Map Marker", m_Controller, "map_marker", editor_object.MapMarkerEnabled()));
+		m_FlagsGroup.Insert(new CheckBoxPrefab("List Item", m_Controller, "list_item", editor_object.ListItemEnabled()));
+		m_FlagsGroup.Open(EditorObjectPropertiesDialogState.FlagsGroup);
 		
-		
-		AddContent(general_group);
-		AddContent(object_group);
-		AddContent(flags_Group);
+		AddContent(m_GeneralGroup);
+		AddContent(m_ObjectGroup);
+		AddContent(m_FlagsGroup);
 		
 		if (editor_object.GetWorldObject().IsMan()) {
 			GroupPrefab human_controller = new GroupPrefab("Human Controller", m_Controller, string.Empty);
@@ -126,6 +141,17 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		AddButton(DialogResult.OK);
 		AddButton(DialogResult.Cancel);
+	}
+	
+	void ~EditorObjectPropertiesDialog()
+	{
+		EditorObjectPropertiesDialogState.GeneralGroup = m_GeneralGroup.IsOpen();
+		EditorObjectPropertiesDialogState.ObjectGroup = m_ObjectGroup.IsOpen();
+		EditorObjectPropertiesDialogState.FlagsGroup = m_FlagsGroup.IsOpen();
+		
+		delete m_GeneralGroup;
+		delete m_ObjectGroup;
+		delete m_FlagsGroup;
 	}
 	
 	override typename GetControllerType() {

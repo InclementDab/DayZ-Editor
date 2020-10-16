@@ -1,7 +1,7 @@
 
 class EditorPreferencesDialogController: DialogBaseController
 {
-	DropdownListPrefabItem SelectedLogLevel;
+	ref DropdownListPrefabItem SelectedLogLevel;
 	
 	float auto_save;
 	
@@ -22,7 +22,7 @@ class EditorPreferencesDialogController: DialogBaseController
 			
 			case "SelectedLogLevel": {
 				
-				if (SelectedLogLevel.GetTemplateController().UserData) {
+				if (SelectedLogLevel.GetTemplateController() && SelectedLogLevel.GetTemplateController().UserData) {
 					Param1<LogLevel> p = Param1<LogLevel>.Cast(SelectedLogLevel.GetTemplateController().UserData);
 					if (p) {
 						EditorLog.CurrentLogLevel = p.param1;
