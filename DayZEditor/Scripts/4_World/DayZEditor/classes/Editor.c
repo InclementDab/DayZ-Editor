@@ -596,15 +596,7 @@ class Editor
 			foreach (EditorObject editor_object: placed_objects) {
 				editor_object.GetMarker().Show(m_Active);
 			}
-		}
-		
-		// we are in 4_world and this game is bad :)
-		Widget hud_root;
-		EnScript.GetClassVar(GetGame().GetMission(), "m_HudRootWidget", 0, hud_root);
-		if (hud_root) {
-			hud_root.Show(!m_Active);
-		}
-	
+		}	
 		
 		if (!m_Active) {	
 			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);

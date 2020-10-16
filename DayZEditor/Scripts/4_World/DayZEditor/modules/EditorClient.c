@@ -136,12 +136,24 @@ class EditorClientModule: JMModuleBase
 			}
 		}
 		
+		// If player is active
+		if (!GetEditor().IsActive()) {
+			GetEditor().GetEditorHud().ShowCursor(GetEditor().GetEditorHud().IsVisible());
+			
+			// A wacky way to disable motion while the UI is enabled
+			if (GetGame().GetPlayer()) {
+				GetGame().GetPlayer().DisableSimulation(GetEditor().GetEditorHud().IsVisible());
+			}
+		}
+		
 	}
 	
 	private void OnEditorToggleMap(UAInput input)
 	{
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleMap");
+		
+		if (!GetEditor().GetEditorHud().IsVisible()) return;
 		
 		EditorHud editor_hud = GetEditor().GetEditorHud();
 		editor_hud.EditorMapWidget.Show(!editor_hud.EditorMapWidget.IsVisible());
