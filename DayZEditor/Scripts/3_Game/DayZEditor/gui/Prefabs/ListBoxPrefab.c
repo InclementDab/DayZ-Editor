@@ -1,16 +1,16 @@
 
-class ListBoxPrefabController: Controller
+class ListBoxPrefabController<Class T>: Controller
 {
-	autoptr ObservableCollection<string> ListBoxData = new ObservableCollection<string>(this);
-	string SelectedListBoxItem;
+	autoptr ObservableCollection<T> ListBoxData = new ObservableCollection<T>(this);
+	T SelectedListBoxItem;
 }
 
-class ListBoxPrefab: ScriptView
+class ListBoxPrefab<Class T>: ScriptView
 {	
 	TextListboxWidget ListBox;
 	
-	ListBoxPrefabController GetListBoxPrefabController() {
-		return ListBoxPrefabController.Cast(GetController());
+	ListBoxPrefabController<T> GetListBoxPrefabController() {
+		return ListBoxPrefabController<T>.Cast(GetController());
 	}
 	
 	override string GetLayoutFile() {
@@ -18,6 +18,6 @@ class ListBoxPrefab: ScriptView
 	}
 	
 	override typename GetControllerType() {
-		return ListBoxPrefabController;
+		return (new ListBoxPrefabController<T>()).Type();
 	}
 }

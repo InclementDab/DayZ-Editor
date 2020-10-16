@@ -9,12 +9,12 @@ static const ref array<string> ExcludedMapItems =
 
 class EditorMapSelectDialog: EditorDialogBase
 {
-	protected autoptr ListBoxPrefab m_ListBoxPrefab;
+	protected autoptr ListBoxPrefab<string> m_ListBoxPrefab;
 	protected DialogButton m_SelectButton;
 	
 	void EditorMapSelectDialog(string title)
 	{
-		m_ListBoxPrefab = new ListBoxPrefab();
+		m_ListBoxPrefab = new ListBoxPrefab<string>();
 		AddContent(m_ListBoxPrefab);
 		
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgWorlds"); i++) {
@@ -34,7 +34,7 @@ class EditorMapSelectDialog: EditorDialogBase
 	
 	DialogResult ShowDialog(out string selected_map)
 	{
-		ListBoxPrefab list_box = m_ListBoxPrefab; // controller is ref'd inside this
+		ListBoxPrefab<string> list_box = m_ListBoxPrefab; // controller is ref'd inside this
 		DialogResult result = ShowDialog();
 		selected_map = list_box.GetListBoxPrefabController().SelectedListBoxItem;
 		delete m_ListBoxPrefab;

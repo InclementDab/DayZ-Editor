@@ -8,14 +8,14 @@ static void SyncThread()
 
 class EditorFileSelectDialog: EditorDialogBase
 {
-	protected autoptr ListBoxPrefab m_ListBoxPrefab;
+	protected autoptr ListBoxPrefab<EditorFile> m_ListBoxPrefab;
 	protected string m_CurrentDirectory;
 	
 	protected string m_Filter;
 	
 	void EditorFileSelectDialog(string title)
 	{
-		m_ListBoxPrefab = new ListBoxPrefab();		
+		m_ListBoxPrefab = new ListBoxPrefab<EditorFile>();		
 		AddContent(m_ListBoxPrefab);
 		
 		m_Filter = "*";
@@ -71,20 +71,20 @@ class EditorFileSelectDialog: EditorDialogBase
 		string filterdir = string.Format("%1%2", directory, filter);
 		EditorLog.Info("EditorFileDialog::Loading Directory %1", m_CurrentDirectory);
 		m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Clear();
-		array<ref EditorFile> editor_file_array = {};
-		array<ref EditorFile> editor_folder_array = {};
-		TStringArray file_array = new TStringArray();
-		TStringArray folder_array = new TStringArray();
+		ref	array<ref EditorFile> editor_file_array = {};
+		ref array<ref EditorFile> editor_folder_array = {};
+		ref TStringArray file_array = {};
+		ref TStringArray folder_array = {};
 		
 		LoadFiles(directory, filter, editor_folder_array, FileSearchMode.FOLDERS);
 		LoadFiles(directory, filter, editor_file_array, FileSearchMode.FILES);
 
 		foreach (EditorFile sorted_folder: editor_folder_array) {
-			m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Insert(sorted_folder.FileName);
+			m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Insert(sorted_folder);
 		}
 		
 		foreach (EditorFile sorted_file: editor_file_array) {
-			m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Insert(sorted_file.FileName);
+			m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Insert(sorted_file);
 		}
 	}
 	

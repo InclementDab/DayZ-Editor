@@ -69,6 +69,17 @@ class TypeConversionBrushObject: TypeConversionTemplate<EditorBrushObject>
 	}
 }
 
+class TypeConversionEditorFile: TypeConversionTemplate<EditorFile>
+{
+	override void SetString(string value) {
+		m_Value.FileName = value;
+	}
+	
+	override string GetString() {
+		return m_Value.FileName;
+	}
+}
+
 class DropdownListPrefabItemConverter: TypeConversionTemplate<DropdownListPrefabItem>
 {
 	override string GetString() {
