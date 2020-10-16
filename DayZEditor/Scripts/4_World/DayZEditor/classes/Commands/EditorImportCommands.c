@@ -122,7 +122,6 @@ class EditorImportFromExpansion: EditorImportCommandBase
 	override typename GetFileType() {
 		return EditorExpansionFile;
 	}
-	
 }
 
 class EditorImportFromTerrainBuilder: EditorImportCommandBase
