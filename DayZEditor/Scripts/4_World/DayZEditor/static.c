@@ -22,6 +22,8 @@ static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
 		player.GetInventory().CreateInInventory("AviatorGlasses");
     	player.GetInventory().CreateInInventory("MilitaryBoots_Black");
     	player.GetInventory().CreateInInventory("AliceBag_Black");
+    	player.GetInventory().CreateInInventory("LeatherGloves_Black");
+		
 	}
 
     return player;
