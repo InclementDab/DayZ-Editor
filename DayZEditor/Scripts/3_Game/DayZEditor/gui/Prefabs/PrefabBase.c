@@ -29,10 +29,10 @@ class PrefabBase<Class TValue>: ScriptView
 	
 		Class.CastTo(m_PrefabBaseController, m_Controller);
 		m_PrefabBaseController.Caption = caption;
-		m_PrefabBaseController.NotifyPropertyChanged("Caption");
+		m_PrefabBaseController.NotifyPropertyChanged("Caption", false);
 		
 		m_PrefabBaseController.Value = default_value;
-		m_PrefabBaseController.NotifyPropertyChanged("Value");
+		m_PrefabBaseController.NotifyPropertyChanged("Value", false);
 	}
 	
 	void PrefabPropertyChanged(string property_name)

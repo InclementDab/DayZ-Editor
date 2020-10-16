@@ -375,7 +375,11 @@ class EditorObject: EditorWorldObject
 	
 	void EnableListItem(bool enable) 
 	{
-		delete m_EditorPlacedListItem;
+		EditorLog.Trace("EditorObject::EnableListItem");
+		
+		if (m_EditorPlacedListItem)
+			delete m_EditorPlacedListItem;
+		
 		if (!enable) {
 			return;
 		}
@@ -385,13 +389,13 @@ class EditorObject: EditorWorldObject
 		GetEditor().GetEditorHud().GetTemplateController().RightbarSpacerData.Insert(m_EditorPlacedListItem);
 	}
 	
-	bool ListItemEnabled() { 
-		return (m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM; 
-	}
-	
 	void EnableObjectMarker(bool enable) 
 	{
-		delete m_EditorObjectWorldMarker;
+		EditorLog.Trace("EditorObject::EnableObjectMarker");
+		
+		if (m_EditorObjectWorldMarker)
+			delete m_EditorObjectWorldMarker;
+		
 		if (!enable) {
 			return;
 		}
@@ -399,13 +403,12 @@ class EditorObject: EditorWorldObject
 		m_EditorObjectWorldMarker = new EditorObjectWorldMarker(this);
 	}
 	
-	bool ObjectMarkerEnabled() { 
-		return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; 
-	}
-	
 	void EnableMapMarker(bool enable) 
 	{
-		delete m_EditorObjectMapMarker;
+		EditorLog.Trace("EditorObject::EnableMapMarker");
+		if (m_EditorObjectMapMarker)
+			delete m_EditorObjectMapMarker;
+		
 		if (!enable) {
 			return;
 		}
@@ -413,13 +416,10 @@ class EditorObject: EditorWorldObject
 		m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
 		GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
 	}
-	
-	bool MapMarkerEnabled() { 
-		return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER;
-	}
 
 	void EnableBoundingBox(bool enable) 
 	{
+		EditorLog.Trace("EditorObject::EnableBoundingBox");
 		DestroyBoundingBox();
 		if (!enable) {
 			return;
@@ -471,10 +471,6 @@ class EditorObject: EditorWorldObject
 			GetGame().ObjectDelete(m_CenterLine);	
 	}
 	
-	bool BoundingBoxEnabled() { 
-		return (m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX; 
-	}
-	
 	private bool m_Visible = true;
 	bool IsVisible() {
 		return m_Visible;
@@ -484,11 +480,11 @@ class EditorObject: EditorWorldObject
 	{
 		m_Visible = show;
 		
-		if (MapMarkerEnabled()) {
+		if (m_EditorObjectMapMarker) {
 			m_EditorObjectMapMarker.Show(m_Visible);
 		}
 		
-		if (ObjectMarkerEnabled()) {
+		if (m_EditorObjectWorldMarker) {
 			m_EditorObjectWorldMarker.Show(m_Visible);
 		}
 		
