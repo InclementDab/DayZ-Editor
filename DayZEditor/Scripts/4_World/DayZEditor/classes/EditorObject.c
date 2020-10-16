@@ -54,6 +54,16 @@ class EditorObject: EditorWorldObject
 	string Name;
 	vector Position;
 	vector Orientation;
+	float Scale;
+	
+	bool Show;
+	bool Locked;
+	bool StaticObject;
+	
+	bool BoundingBoxEnabled;
+	bool WorldMarkerEnabled;
+	bool MapMarkerEnabled;
+	bool ListItemEnabled;
 	
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
@@ -292,6 +302,42 @@ class EditorObject: EditorWorldObject
 			
 			case "Orientation": {
 				SetOrientation(Orientation);
+				break;
+			}
+			
+			case "Scale": {
+				SetScale(Scale);
+				break;
+			}
+			
+			case "Show": {
+				Show(Show);
+				break;
+			}
+			
+			case "Locked": {
+				Lock(Locked);
+				break;
+			}
+			
+			case "StaticObject": {
+				SetStaticObject(StaticObject);
+				break;
+			}			
+			
+			case "BoundingBoxEnabled": {
+				break;
+			}
+			
+			case "WorldMarkerEnabled": {
+				break;
+			}
+			
+			case "MapMarkerEnabled": {
+				break;
+			}
+			
+			case "ListItemEnabled": {
 				break;
 			}
 		}
@@ -583,7 +629,7 @@ class EditorObject: EditorWorldObject
 		return m_Locked;
 	}
 	
-	void SetLocked(bool locked) {
+	void Lock(bool locked) {
 		m_Locked = locked;
 		
 		/*EditorObjectMarker marker = GetMarker();

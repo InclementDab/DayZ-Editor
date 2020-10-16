@@ -21,6 +21,7 @@ class PrefabBase<Class TValue>: ScriptView
 	protected Class m_BindingContext;
 	protected string m_BindingName;
 	
+	// With Direct Binding, I think we can depreciate the default_value
 	void PrefabBase(string caption, Class binding_context, string binding_name, TValue default_value = DEFAULT_VALUE)
 	{
 		m_BindingName = binding_name;
