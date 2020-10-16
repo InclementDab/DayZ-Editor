@@ -47,6 +47,10 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	{
 		m_EditorObject = editor_object;
 		
+		EditorObjectPropertiesDialogState.GeneralGroup = m_GeneralGroup.IsOpen();
+		EditorObjectPropertiesDialogState.ObjectGroup = m_ObjectGroup.IsOpen();
+		EditorObjectPropertiesDialogState.FlagsGroup = m_FlagsGroup.IsOpen();
+		
 		delete m_GeneralGroup;
 		delete m_ObjectGroup;
 		delete m_FlagsGroup;
