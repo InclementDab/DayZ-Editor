@@ -326,18 +326,22 @@ class EditorObject: EditorWorldObject
 			}			
 			
 			case "BoundingBoxEnabled": {
+				EnableBoundingBox(BoundingBoxEnabled);
 				break;
 			}
 			
 			case "WorldMarkerEnabled": {
+				EnableObjectMarker(WorldMarkerEnabled);
 				break;
 			}
 			
 			case "MapMarkerEnabled": {
+				EnableMapMarker(MapMarkerEnabled);
 				break;
 			}
 			
 			case "ListItemEnabled": {
+				EnableListItem(ListItemEnabled);
 				break;
 			}
 		}
@@ -427,8 +431,8 @@ class EditorObject: EditorWorldObject
 		}
 	}
 	
-	void ShowWorldObject(bool show) { 
-		
+	void ShowWorldObject(bool show) 
+	{
 		if (show) {
 			GetWorldObject().SetFlags(EntityFlags.VISIBLE, false);
 		} else {
