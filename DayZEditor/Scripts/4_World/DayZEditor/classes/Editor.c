@@ -30,6 +30,35 @@
 // if today is that day. fix it.
 // and message me your feedback on discord :)
 
+class GizmoTest: ScriptedEntity
+{
+	void GizmoTest()
+	{
+		SetFlags(EntityFlags.VISIBLE, true);
+		SetEventMask(EntityEvent.INIT);
+		SetEventMask(EntityEvent.FRAME);
+	}
+	
+	Object m_ParticleSource;
+	
+	vobject src_obj = null;
+	
+	void CreateGizmo()
+	{
+		m_ParticleSource = GetGame().CreateObject("#particlesourceenf", Vector(0, 0, 0), true);
+		
+		AddChild(m_ParticleSource, -1, true);
+		src_obj = GetObject("system\\wbdata\\Gizmo3D\\axisX.xob");
+		
+		Print("Loading object " + vtoa(src_obj));
+		
+		m_ParticleSource.SetObject(src_obj, "");
+		ReleaseObject(src_obj);
+
+	}
+}
+
+ref GizmoTest m_GizmoTest;
 
 ref Editor g_Editor;
 Editor GetEditor() {
@@ -329,6 +358,7 @@ class Editor
 		// Dont think its needed anymore
 		//m_EditorHud.Update(timeslice);
 		
+
 		set<Object> obj = new set<Object>();
 		int x, y;
 		GetMousePos(x, y);
