@@ -324,22 +324,22 @@ class EditorObject: EditorWorldObject
 			}			
 			
 			case "BoundingBoxEnabled": {
-				EnableBoundingBox(BoundingBoxEnabled);
+				//EnableBoundingBox(BoundingBoxEnabled);
 				break;
 			}
 			
 			case "WorldMarkerEnabled": {
-				EnableObjectMarker(WorldMarkerEnabled);
+				//EnableObjectMarker(WorldMarkerEnabled);
 				break;
 			}
 			
 			case "MapMarkerEnabled": {
-				EnableMapMarker(MapMarkerEnabled);
+				//EnableMapMarker(MapMarkerEnabled);
 				break;
 			}
 			
 			case "ListItemEnabled": {
-				EnableListItem(ListItemEnabled);
+				//EnableListItem(ListItemEnabled);
 				break;
 			}
 		}
