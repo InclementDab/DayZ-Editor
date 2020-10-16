@@ -9,7 +9,7 @@ class ListBoxPrefab: ScriptView
 {	
 	TextListboxWidget ListBox;
 	
-	ref ListBoxPrefabController GetListBoxPrefabController() {
+	ListBoxPrefabController GetListBoxPrefabController() {
 		return ListBoxPrefabController.Cast(GetController());
 	}
 	
