@@ -1,5 +1,5 @@
 class EditorHud: ScriptViewTemplate<EditorHudController>
-{	
+{
 	// Layout Elements
 	protected Widget NotificationFrame;
 	protected Widget MapContainer;

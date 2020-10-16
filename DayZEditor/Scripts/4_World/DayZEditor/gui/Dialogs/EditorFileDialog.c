@@ -1,7 +1,8 @@
 
+
 static void SyncThread()
 {
-	EditorFileSelectDialog file_select("");
+	EditorFileSelectDialog file_select("File Select");
 	file_select.ShowDialog();
 }
 
@@ -22,7 +23,7 @@ class EditorFileSelectDialog: EditorDialogBase
 		LoadFileDirectory("$profile:\\", m_Filter);
 	}
 	
-	private void LoadFiles(string directory, string filter, out ref array<ref EditorFile> folder_array, FileSearchMode search_mode)
+	private void LoadFiles(string directory, string filter, inout ref array<ref EditorFile> folder_array, FileSearchMode search_mode)
 	{
 		TStringArray name_array = new TStringArray();
 		string filename;
@@ -72,17 +73,10 @@ class EditorFileSelectDialog: EditorDialogBase
 		EditorLog.Info("EditorFileDialog::Loading Directory %1", m_CurrentDirectory);
 		m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Clear();
 		ref	array<ref EditorFile> editor_file_array = {};
-		ref array<ref EditorFile> editor_folder_array = {};
-		ref TStringArray file_array = {};
-		ref TStringArray folder_array = {};
-		
-		LoadFiles(directory, filter, editor_folder_array, FileSearchMode.FOLDERS);
+				
+		LoadFiles(directory, filter, editor_file_array, FileSearchMode.FOLDERS);
 		LoadFiles(directory, filter, editor_file_array, FileSearchMode.FILES);
 
-		foreach (EditorFile sorted_folder: editor_folder_array) {
-			m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Insert(sorted_folder);
-		}
-		
 		foreach (EditorFile sorted_file: editor_file_array) {
 			m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Insert(sorted_file);
 		}
