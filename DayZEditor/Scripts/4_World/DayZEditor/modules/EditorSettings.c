@@ -10,6 +10,8 @@ class EditorSettings
 
 	bool LockCameraDuringDialogs = true;
 	
+	bool DebugMode;
+	
 	void EditorSettings() 
 	{
 		EditorLog.Trace("EditorSettings");

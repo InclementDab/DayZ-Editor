@@ -8,6 +8,9 @@ class EditorPreferencesDialogController: DialogBaseController
 	float view_distance;
 	float object_view_distance;
 	
+	bool modal_dialogs;
+	bool debug_mode;
+	
 	override void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
@@ -18,7 +21,13 @@ class EditorPreferencesDialogController: DialogBaseController
 			}
 			
 			case "SelectedLogLevel": {
-				EditorLog.CurrentLogLevel = Param1<LogLevel>.Cast(SelectedLogLevel.GetTemplateController().UserData).param1;
+				
+				if (SelectedLogLevel.GetTemplateController().UserData) {
+					Param1<LogLevel> p = Param1<LogLevel>.Cast(SelectedLogLevel.GetTemplateController().UserData);
+					if (p) {
+						EditorLog.CurrentLogLevel = p.param1;
+					}
+				}
 				break;
 			}
 			
@@ -31,6 +40,16 @@ class EditorPreferencesDialogController: DialogBaseController
 			case "object_view_distance": {
 				GetEditor().GetSettings().ObjectViewDistance = view_distance;
 				GetGame().GetWorld().SetObjectViewDistance(object_view_distance);
+				break;
+			}
+					
+			case "modal_dialogs": {
+				GetEditor().GetSettings().LockCameraDuringDialogs = modal_dialogs;
+				break;
+			}
+			
+			case "debug_mode": {
+				GetEditor().GetSettings().DebugMode = debug_mode;
 				break;
 			}
 		}
@@ -63,7 +82,12 @@ class EditorPreferencesDialog: EditorDialogBase
 		game_group.Insert(new SliderPrefab("View Distance", m_Controller, "view_distance", GetEditor().GetSettings().ViewDistance, 0, 20000));
 		game_group.Insert(new SliderPrefab("Object View Distance", m_Controller, "object_view_distance", GetEditor().GetSettings().ObjectViewDistance, 0, 8000));
 		
+		GroupPrefab debug_group = new GroupPrefab("Editor", m_Controller, string.Empty);
+		debug_group.Insert(new CheckBoxPrefab("Modal Dialogs", m_Controller, "modal_dialogs", GetEditor().GetSettings().LockCameraDuringDialogs));
+		debug_group.Insert(new CheckBoxPrefab("Debug Mode", m_Controller, "debug_mode", GetEditor().GetSettings().DebugMode));
+		
 		AddContent(game_group);
+		AddContent(debug_group);
 		AddButton(DialogResult.OK);
 		AddButton(DialogResult.Cancel);
 	}

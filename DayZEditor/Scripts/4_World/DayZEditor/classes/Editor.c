@@ -348,9 +348,10 @@ class Editor
 			}
 		}
 		
-		
-		//Debug.DestroyAllShapes();
-		//Debug.DrawSphere(CurrentMousePosition, 0.25, COLOR_GREEN_A);
+		if (m_EditorSettings.DebugMode) {
+			Debug.DestroyAllShapes();
+			Debug.DrawSphere(CurrentMousePosition, 0.25, COLOR_GREEN_A);
+		}
 		
 
 		if (!IsPlacing()) {
