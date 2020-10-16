@@ -401,9 +401,14 @@ class Editor
 		// Shit code. Theres better ways to do this CanUndo and CanRedo are slow
 		CommandManager.UndoCommand.SetCanExecute(CanUndo());
 		CommandManager.RedoCommand.SetCanExecute(CanRedo());
-		
-		
+				
 		EditorLog.CurrentLogLevel = log_lvl;		
+		
+		// God Mode
+		if (m_Player) {
+			m_Player.SetHealth("", "Health", 100);
+			m_Player.SetHealth("", "Shock", 100);
+		}
 	}
 	
 	
