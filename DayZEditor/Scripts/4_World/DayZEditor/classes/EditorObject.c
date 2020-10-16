@@ -158,22 +158,16 @@ class EditorObject: EditorWorldObject
 		EnableBoundingBox(BoundingBoxEnabled);
 		
 		// Map marker
-		if ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER) {
-			m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
-			GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
-		}	
+		MapMarkerEnabled = ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER);
+		EnableMapMarker(MapMarkerEnabled);
 		
-		// World Object base marker
-		if ((m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER) {
-			m_EditorObjectWorldMarker = new EditorObjectWorldMarker(this);
-		}
+		// World marker
+		WorldMarkerEnabled = ((m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER);
+		EnableObjectMarker(WorldMarkerEnabled);
 		
 		// Browser item
-		if ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM) {
-			m_EditorPlacedListItem = new EditorPlacedListItem();
-			m_EditorPlacedListItem.SetEditorObject(this);
-			GetEditor().GetEditorHud().GetTemplateController().RightbarSpacerData.Insert(m_EditorPlacedListItem);
-		}
+		ListItemEnabled = ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM);
+		EnableListItem(ListItemEnabled);
 	}
 	
 		
@@ -379,24 +373,45 @@ class EditorObject: EditorWorldObject
 		return GetWorldObject().GetModelName(); 
 	}
 	
-	void EnableListItem(bool enable) {
+	void EnableListItem(bool enable) 
+	{
+		delete m_EditorPlacedListItem;
+		if (!enable) {
+			return;
+		}
 		
+		m_EditorPlacedListItem = new EditorPlacedListItem();
+		m_EditorPlacedListItem.SetEditorObject(this);
+		GetEditor().GetEditorHud().GetTemplateController().RightbarSpacerData.Insert(m_EditorPlacedListItem);
 	}
 	
 	bool ListItemEnabled() { 
 		return (m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM; 
 	}
 	
-	void EnableObjectMarker(bool enable) {
+	void EnableObjectMarker(bool enable) 
+	{
+		delete m_EditorObjectWorldMarker;
+		if (!enable) {
+			return;
+		}
 		
+		m_EditorObjectWorldMarker = new EditorObjectWorldMarker(this);
 	}
 	
 	bool ObjectMarkerEnabled() { 
 		return (m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER; 
 	}
 	
-	void EnableMapMarker(bool enable) {
+	void EnableMapMarker(bool enable) 
+	{
+		delete m_EditorObjectMapMarker;
+		if (!enable) {
+			return;
+		}
 		
+		m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
+		GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
 	}
 	
 	bool MapMarkerEnabled() { 
