@@ -16,7 +16,7 @@ class SliderPrefab: PrefabBase<float>
 		m_PrefabBaseController.CalculatedValue = m_PrefabBaseController.Value * m_Max;
 		m_PrefabBaseController.NotifyPropertyChanged("CalculatedValue", false);
 		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, m_PrefabBaseController.CalculatedValue);
-		m_BindingContext.PropertyChanged(m_BindingName);
+		g_Script.CallFunction(m_BindingContext, "PropertyChanged", null, m_BindingName);
 	}
 	
 	override string GetLayoutFile() {

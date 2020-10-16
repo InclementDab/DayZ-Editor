@@ -23,6 +23,10 @@ class EditorObjectPropertiesDialogController: DialogBaseController
 	void SetEditorObject(EditorObject editor_object)
 	{
 		m_EditorObject = editor_object;
+		
+		name = m_EditorObject.GetDisplayName();
+		position = m_EditorObject.GetPosition();
+		orientation = m_EditorObject.GetOrientation();
 	}
 	
 	override void PropertyChanged(string property_name)
@@ -104,17 +108,21 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	protected ref GroupPrefab m_ObjectGroup;
 	protected ref GroupPrefab m_FlagsGroup;
 	
+	protected EditorObject m_EditorObject;
+	
 	void EditorObjectPropertiesDialog(string title, EditorObject editor_object)
 	{		
 		m_EditorObjectPropertiesDialogController = EditorObjectPropertiesDialogController.Cast(GetController());
 		m_EditorObjectPropertiesDialogController.SetEditorObject(editor_object);
+		
+		m_EditorObject = editor_object;
 	
 		m_GeneralGroup = new GroupPrefab("General", m_Controller, string.Empty);
 		m_GeneralGroup.Insert(new CheckBoxPrefab("Show", m_Controller, "show", editor_object.IsVisible()));
-		m_GeneralGroup.Insert(new EditBoxPrefab("Name", m_Controller, "name", editor_object.GetDisplayName()));
-		m_GeneralGroup.Insert(new VectorPrefab("Position", m_Controller, "position", editor_object.GetPosition()));
-		m_GeneralGroup.Insert(new VectorPrefab("Orientation", m_Controller, "orientation", editor_object.GetOrientation()));
-		m_GeneralGroup.Insert(new EditBoxNumberPrefab("Scale", m_Controller, "scale", editor_object.GetScale().ToString(), 0.01));
+		m_GeneralGroup.Insert(new EditBoxPrefab("Name", m_EditorObject, "Name", editor_object.GetDisplayName()));
+		m_GeneralGroup.Insert(new VectorPrefab("Position", m_EditorObject, "Position", editor_object.GetPosition()));
+		m_GeneralGroup.Insert(new VectorPrefab("Orientation", m_EditorObject, "Orientation", editor_object.GetOrientation()));
+		m_GeneralGroup.Insert(new EditBoxNumberPrefab("Scale", m_EditorObject, "scale", editor_object.GetScale().ToString(), 0.01));
 		m_GeneralGroup.Open(EditorObjectPropertiesDialogState.GeneralGroup);
 		
 		m_ObjectGroup = new GroupPrefab("Object Settings", m_Controller, string.Empty);
@@ -141,6 +149,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		AddButton(DialogResult.OK);
 		AddButton(DialogResult.Cancel);
+		
+		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 	}
 	
 	void ~EditorObjectPropertiesDialog()
@@ -152,6 +162,16 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		delete m_GeneralGroup;
 		delete m_ObjectGroup;
 		delete m_FlagsGroup;
+	}
+	
+	private void OnObjectSelected(Class context, EditorObject editor_object)
+	{
+		SetEditorObject(editor_object);
+	}
+	
+	void SetEditorObject(EditorObject editor_object)
+	{
+		m_EditorObject = editor_object;
 	}
 	
 	override typename GetControllerType() {

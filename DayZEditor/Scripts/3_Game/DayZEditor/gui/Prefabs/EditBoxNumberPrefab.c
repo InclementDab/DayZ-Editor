@@ -38,7 +38,7 @@ class EditBoxNumberPrefab: PrefabBase<StringEvaluater>
 	override void PrefabPropertyChanged(string property_name)
 	{
 		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, m_PrefabBaseController.Value.Parse());
-		m_BindingContext.PropertyChanged(m_BindingName);
+		g_Script.CallFunction(m_BindingContext, "PropertyChanged", null, m_BindingName);
 	}
 	
 	override string GetLayoutFile() {

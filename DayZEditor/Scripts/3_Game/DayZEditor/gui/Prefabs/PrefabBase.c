@@ -18,10 +18,10 @@ class PrefabBase<Class TValue>: ScriptView
 	private static const TValue DEFAULT_VALUE;
 	
 	protected PrefabBaseController<TValue> m_PrefabBaseController;
-	protected Controller m_BindingContext;
+	protected Class m_BindingContext;
 	protected string m_BindingName;
 	
-	void PrefabBase(string caption, Controller binding_context, string binding_name, TValue default_value = DEFAULT_VALUE)
+	void PrefabBase(string caption, Class binding_context, string binding_name, TValue default_value = DEFAULT_VALUE)
 	{
 		m_BindingName = binding_name;
 		m_BindingContext = binding_context;
@@ -36,8 +36,8 @@ class PrefabBase<Class TValue>: ScriptView
 	
 	void PrefabPropertyChanged(string property_name)
 	{
-		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, m_PrefabBaseController.Value);
-		m_BindingContext.PropertyChanged(m_BindingName);
+		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, m_PrefabBaseController.Value);		
+		g_Script.CallFunction(m_BindingContext, "PropertyChanged", null, m_BindingName);
 	}
 
 	override typename GetControllerType() {

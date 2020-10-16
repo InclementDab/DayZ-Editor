@@ -51,6 +51,10 @@ class EditorObject: EditorWorldObject
 	
 	static float line_width = 0.02;
 	
+	string Name;
+	vector Position;
+	vector Orientation;
+	
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 
@@ -263,6 +267,33 @@ class EditorObject: EditorWorldObject
 			m_Data.Orientation = GetOrientation();
 			m_Data.Scale = GetScale();
 			m_Data.BottomCenter = GetBottomCenter();
+			
+			Name = GetDisplayName();
+			Position = GetPosition();
+			Orientation = GetOrientation();
+		}
+	}
+	
+	// EditorObjects can also be psuedo-controllers
+	void PropertyChanged(string property_name)
+	{
+		EditorLog.Trace("EditorObject::PropertyChanged %1", property_name);
+		switch (property_name) {
+			
+			case "Name": {
+				SetDisplayName(Name);
+				break;
+			}
+			
+			case "Position": {
+				SetPosition(Position);
+				break;
+			}
+			
+			case "Orientation": {
+				SetOrientation(Orientation);
+				break;
+			}
 		}
 	}
 	
