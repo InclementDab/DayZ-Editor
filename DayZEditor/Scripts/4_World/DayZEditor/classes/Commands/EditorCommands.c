@@ -624,6 +624,46 @@ class EditorEscapeCommand: EditorCommand
 	}
 }
 
+class EditorLockCommand: EditorCommand
+{
+	override void Call(Class sender, CommandArgs args)
+	{
+		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
+		foreach (EditorObject selected_object: selected_objects) {		
+			selected_object.Lock(true);
+		}
+	}
+	
+	override ShortcutKeys GetShortcut() {
+		return { KeyCode.KC_L };
+	}
+	
+	override string GetName() {
+		return "Lock";
+	}
+}
+
+class EditorUnlockCommand: EditorCommand
+{
+	
+	override void Call(Class sender, CommandArgs args)
+	{
+		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
+		foreach (EditorObject selected_object: selected_objects) {		
+			selected_object.Lock(false);
+		}
+	}
+		
+	override ShortcutKeys GetShortcut() {
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_L };
+	}
+	
+	override string GetName() {
+		return "Unlock";
+	}
+}
+
+
 class EditorShowCommand: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
