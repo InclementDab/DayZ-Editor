@@ -42,7 +42,8 @@ class EditorCommandManager
 	ref EditorObjectPropertiesCommand ObjectPropertiesCommand;
 	ref EditorShowCommand ShowCommand;
 	ref EditorHideCommand HideCommand;
-	
+	ref EditorLockCommand LockCommand;
+	ref EditorUnlockCommand UnlockCommand;
 	
 	ref EditorExportToInitFile ExportToInitFile;
 	ref EditorExportToExpansion ExportToExpansion;

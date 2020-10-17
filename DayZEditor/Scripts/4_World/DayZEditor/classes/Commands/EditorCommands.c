@@ -645,7 +645,6 @@ class EditorLockCommand: EditorCommand
 
 class EditorUnlockCommand: EditorCommand
 {
-	
 	override void Call(Class sender, CommandArgs args)
 	{
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
