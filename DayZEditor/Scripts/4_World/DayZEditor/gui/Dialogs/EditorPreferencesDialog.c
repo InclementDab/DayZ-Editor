@@ -9,6 +9,7 @@ class EditorPreferencesDialogController: DialogBaseController
 	float object_view_distance;
 	
 	bool modal_dialogs;
+	bool bounding_boxes;
 	bool debug_mode;
 	
 	override void PropertyChanged(string property_name)
@@ -48,6 +49,11 @@ class EditorPreferencesDialogController: DialogBaseController
 				break;
 			}
 			
+			case "bounding_boxes": {
+				GetEditor().GetSettings().ShowBoundingBoxes = bounding_boxes;
+				break;
+			}
+			
 			case "debug_mode": {
 				GetEditor().GetSettings().DebugMode = debug_mode;
 				break;
@@ -72,11 +78,9 @@ class EditorPreferencesDialog: EditorDialogBase
 		log_level.InsertItem("Info", new Param1<LogLevel>(LogLevel.INFO));
 		log_level.InsertItem("Warning", new Param1<LogLevel>(LogLevel.WARNING));
 		log_level.InsertItem("Error", new Param1<LogLevel>(LogLevel.ERROR));
-		general_group.Insert(log_level);
-		
+		general_group.Insert(log_level);		
 		general_group.Insert(new EditBoxNumberPrefab("Auto Save", m_Controller, "auto_save", GetEditor().GetSettings().AutoSaveTimer.ToString()));
 		
-		AddContent(general_group);
 		
 		GroupPrefab game_group = new GroupPrefab("Game", m_Controller, string.Empty);
 		game_group.Insert(new SliderPrefab("View Distance", m_Controller, "view_distance", GetEditor().GetSettings().ViewDistance, 0, 20000));
@@ -84,8 +88,10 @@ class EditorPreferencesDialog: EditorDialogBase
 		
 		GroupPrefab debug_group = new GroupPrefab("Editor", m_Controller, string.Empty);
 		debug_group.Insert(new CheckBoxPrefab("Modal Dialogs", m_Controller, "modal_dialogs", GetEditor().GetSettings().LockCameraDuringDialogs));
+		debug_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", m_Controller, "bounding_boxes", GetEditor().GetSettings().ShowBoundingBoxes));
 		debug_group.Insert(new CheckBoxPrefab("Debug Mode", m_Controller, "debug_mode", GetEditor().GetSettings().DebugMode));
 		
+		AddContent(general_group);
 		AddContent(game_group);
 		AddContent(debug_group);
 		AddButton(DialogResult.OK);

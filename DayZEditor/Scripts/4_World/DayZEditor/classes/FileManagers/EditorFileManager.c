@@ -50,7 +50,7 @@ class EditorSaveData
 		delete EditorObjects;
 	}
 	
-	static EditorSaveData CreateFromEditor(Editor editor)
+	static EditorSaveData CreateFromEditor(Editor editor, bool selected_only = false)
 	{
 		EditorSaveData save_data = new EditorSaveData();
 		
@@ -62,6 +62,10 @@ class EditorSaveData
 		
 		// Save Objects
 		EditorObjectMap placed_objects = editor.GetPlacedObjects();
+		if (selected_only) {
+			placed_objects = editor.GetSelectedObjects();
+		}
+		
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
 				save_data.EditorObjects.Insert(editor_object.GetData());

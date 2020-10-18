@@ -9,7 +9,7 @@ class EditorSettings
 	int AutoSaveTimer = 240;
 
 	bool LockCameraDuringDialogs = true;
-	
+	bool ShowBoundingBoxes = true;
 	bool DebugMode;
 	
 	void EditorSettings() 
