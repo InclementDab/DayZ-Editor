@@ -68,7 +68,7 @@ FrameWidgetClass EditorMenuItem {
       }
       ImageWidgetClass EditorMenuItemIcon {
        visible 0
-       inheritalpha 0
+       inheritalpha 1
        ignorepointer 1
        position 0 0
        size 25 25
