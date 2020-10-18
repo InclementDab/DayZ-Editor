@@ -50,27 +50,35 @@ class EditorExportDialogController: DialogBaseController
 	bool export_selected;
 }
 
-class EditorExportDialog: EditorFileDialog
+class EditorExportDialog: EditorDialogBase
 {
+	protected autoptr EditBoxPrefab m_EditBoxPrefab;
+	
 	void EditorExportDialog(string title, string caption = "", string default_value = "", string button_name = "OK")
 	{
+		AddContent(new EditBoxPrefab(caption, m_Controller, default_value));
 		AddContent(new CheckBoxPrefab("Export Selected Objects", m_Controller, "export_selected", false));
+		
+		
+		AddButton(DialogResult.OK);
+		AddButton(DialogResult.Cancel);
 	}
 	
 	DialogResult ShowDialog(out string edit_data, inout ExportSettings export_settings)
 	{
 		Trace("ShowDialog");
-		ref EditorExportDialogController controller = EditorExportDialogController.Cast(m_Controller);
+		
+		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
+		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
 		
 		m_LayoutRoot.Show(true);
 		while (m_DialogResult == DialogResult.None) {
+			edit_data = edit_box.GetText();
+			export_settings.ExportSelectedOnly = EditorExportDialogController.Cast(m_Controller).export_selected;
 			Sleep(1);
 		}
 		
-		Log("DialogResult: %1", typename.EnumToString(DialogResult, m_DialogResult));
-
-		export_settings.ExportSelectedOnly = controller.export_selected;
-		
+		Log("DialogResult: %1", typename.EnumToString(DialogResult, m_DialogResult));		
 		return m_DialogResult;
 	}
 	

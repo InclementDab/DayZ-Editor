@@ -579,7 +579,10 @@ class EditorObject: EditorWorldObject
 	void ShowBoundingBox()
 	{
 		EditorLog.Trace("EditorObject::ShowBoundingBox");
-
+		
+		// Global Settings Check
+		if (!GetEditor().GetSettings().ShowBoundingBoxes) return;
+		
 		for (int i = 0; i < 12; i++) {
 			if (m_BBoxLines[i]) {
 				m_BBoxLines[i].SetFlags(EntityFlags.VISIBLE, false);

@@ -10,18 +10,16 @@ class EditorExportCommandBase: EditorCommand
 		if (file_dialog.ShowDialog(file_name, export_settings) != DialogResult.OK) {
 			return;
 		}
-		
-		Print(export_settings.ExportSelectedOnly);
-		
+				
 		if (file_name == string.Empty) {
 			MessageBox.Show("Error", "No file name specified!", MessageBoxButtons.OK);
 			return;
 		}
 
-		ExportFile(file_name);
+		ExportFile(file_name, export_settings);
 	}
 	
-	protected void ExportFile(string file_name)
+	protected void ExportFile(string file_name, ExportSettings export_settings)
 	{
 		EditorFileType file_type = GetFileType().Spawn();
 		if (!file_type) {
@@ -32,9 +30,9 @@ class EditorExportCommandBase: EditorCommand
 		file_name = "$profile:Editor/" + file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 		
-		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor);
-		ExportSettings settings = new ExportSettings(); // todo
-		file_type.Export(save_data, file_name, settings);		
+		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor, export_settings.ExportSelectedOnly);
+		
+		file_type.Export(save_data, file_name, export_settings);		
 		
 		string message = string.Format("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
 		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
@@ -64,7 +62,7 @@ class EditorSaveCommand: EditorExportCommandBase
 			m_Editor.EditorSaveFile = file_name;
 		}
 		
-		ExportFile(m_Editor.EditorSaveFile);
+		ExportFile(m_Editor.EditorSaveFile, new ExportSettings());
 	}
 	
 	override string GetName() {

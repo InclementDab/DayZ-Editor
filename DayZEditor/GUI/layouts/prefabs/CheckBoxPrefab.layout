@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass CheckBoxPrefab {
  visible 1
- size 0.8 24
+ size 0.5 24
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -17,7 +17,7 @@ WrapSpacerWidgetClass CheckBoxPrefab {
   TextWidgetClass Caption {
    ignorepointer 1
    position 0 0
-   size 0.2 1
+   size 0.5 1
    valign center_ref
    hexactpos 1
    vexactpos 1
