@@ -20,7 +20,9 @@ class EditorFileSelectDialog: EditorDialogBase
 		AddContent(m_ListBoxPrefab);
 		
 		m_Filter = "*";
-		LoadFileDirectory("$profile:/", m_Filter);
+		LoadFileDirectory("$profile:\\", m_Filter);
+		
+		AddButton("Back", "BackDirectory");
 	}
 	
 	private void LoadFiles(string directory, string filter, inout ref array<ref EditorFile> folder_array, FileSearchMode search_mode)
@@ -36,7 +38,7 @@ class EditorFileSelectDialog: EditorDialogBase
 		FindFileHandle filehandle = FindFile(directory + filter, filename, fileattr, FindFileFlags.ALL);
 		if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
 			if (search_mode == FileSearchMode.FOLDERS) {
-				name_array.Insert(filename + "/");
+				name_array.Insert(filename + "\\");
 			}
 		} else {
 			if (search_mode == FileSearchMode.FILES) {
@@ -47,7 +49,7 @@ class EditorFileSelectDialog: EditorDialogBase
 		while (FindNextFile(filehandle, filename, fileattr)) {
 			if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
 				if (search_mode == FileSearchMode.FOLDERS) {
-					name_array.Insert(filename + "/");
+					name_array.Insert(filename + "\\");
 				}
 			} else {
 				if (search_mode == FileSearchMode.FILES) {
@@ -80,6 +82,15 @@ class EditorFileSelectDialog: EditorDialogBase
 		foreach (EditorFile sorted_file: editor_file_array) {
 			m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Insert(sorted_file);
 		}
+	}
+	
+	void BackDirectory()
+	{		
+		TStringArray file_array = {};
+		string file_directory = m_CurrentDirectory;
+		file_directory.Split("\\", file_array);		
+		file_directory.Replace(file_array[file_array.Count() - 1] + "\\", "");		
+		LoadFileDirectory(file_directory, m_Filter);
 	}
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
