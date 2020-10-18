@@ -39,7 +39,7 @@ class EditorPreferencesDialogController: DialogBaseController
 			}
 			
 			case "object_view_distance": {
-				GetEditor().GetSettings().ObjectViewDistance = view_distance;
+				GetEditor().GetSettings().ObjectViewDistance = object_view_distance;
 				GetGame().GetWorld().SetObjectViewDistance(object_view_distance);
 				break;
 			}
