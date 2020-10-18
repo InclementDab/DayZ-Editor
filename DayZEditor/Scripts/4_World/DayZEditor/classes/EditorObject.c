@@ -12,7 +12,7 @@ class EditorWorldObject
 		}
 	}
 	
-	protected EntityAI CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0")
+	static EntityAI CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0")
 	{
 		// Set to ECE_SETUP for AI compat. DONT ADD ECE_LOCAL
 		EntityAI obj; 

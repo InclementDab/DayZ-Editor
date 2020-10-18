@@ -115,31 +115,26 @@ class EditorBrush
 			
 			if (m_BrushData) {
 				EditorBrushObject object_name = m_BrushData.GetRandomObject();
-				vector transform[4];
-				Math3D.MatrixIdentity4(transform);
-				transform[3] = pos;
-				EditorObjectData data = EditorObjectData.Create(object_name.Name, transform, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.BBOX);
+				Object brushed_object = EditorWorldObject.CreateObject(object_name.Name, pos);
+				
+				vector size = ObjectGetSize(brushed_object);
+				vector direction = Math3D.GetRandomDir();
+				
+				pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] + object_name.ZOffset;
+				direction[1] = Math.RandomFloat(-0.05, 0.05);
+				
+				brushed_object.SetPosition(pos);
+				brushed_object.SetDirection(direction);
+
+				EditorObjectData data = EditorObjectData.Create(brushed_object, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.BBOX);
 				data_set.Insert(data.GetID(), data);
 			}
 		}
 		
 
-		EditorObjectMap object_set = GetEditor().CreateObjects(data_set, true);
-		i = 0;
-		
+		EditorObjectMap object_set = GetEditor().CreateObjects(data_set, true);		
 		foreach (EditorObject editor_object: object_set) {
-			
-			pos = editor_object.GetPosition();
-			vector size = ObjectGetSize(editor_object.GetWorldObject());
-			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] + m_BrushData.PlaceableObjectTypes[i].ZOffset;
-
-			
-			vector direction = Math3D.GetRandomDir();
-			direction[1] = Math.RandomFloat(-0.05, 0.05);
-			editor_object.SetDirection(direction);
-			editor_object.SetPosition(pos);
 			editor_object.Lock(true);
-			i++;
 		}
 	}
 	
