@@ -118,7 +118,7 @@ class EditorBrush
 				vector transform[4];
 				Math3D.MatrixIdentity4(transform);
 				transform[3] = pos;
-				EditorObjectData data = EditorObjectData.Create(object_name.Name, transform, EditorObjectFlags.OBJECTMARKER);
+				EditorObjectData data = EditorObjectData.Create(object_name.Name, transform, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.BBOX);
 				data_set.Insert(data.GetID(), data);
 			}
 		}
@@ -129,16 +129,16 @@ class EditorBrush
 		
 		foreach (EditorObject editor_object: object_set) {
 			
-			
-			pos = editor_object.GetPosition();			
+			pos = editor_object.GetPosition();
 			vector size = ObjectGetSize(editor_object.GetWorldObject());
-			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2.35; //+ m_BrushData.PlaceableObjectTypes[i].ZOffset;
+			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] + m_BrushData.PlaceableObjectTypes[i].ZOffset;
 
 			
 			vector direction = Math3D.GetRandomDir();
 			direction[1] = Math.RandomFloat(-0.05, 0.05);
 			editor_object.SetDirection(direction);
 			editor_object.SetPosition(pos);
+			editor_object.Lock(true);
 			i++;
 		}
 	}

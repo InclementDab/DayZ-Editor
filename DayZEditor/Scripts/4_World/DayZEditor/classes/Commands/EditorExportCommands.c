@@ -53,7 +53,7 @@ class EditorSaveCommand: EditorExportCommandBase
 		EditorLog.Trace("EditorSaveCommand");
 		
 		if (m_Editor.EditorSaveFile == string.Empty) {
-			EditorFileDialog file_dialog(GetName(), "File", "", GetDialogButtonName());
+			EditorFileDialog file_dialog(GetName(), "File", "*", GetDialogButtonName());
 			string file_name;
 			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 				return;

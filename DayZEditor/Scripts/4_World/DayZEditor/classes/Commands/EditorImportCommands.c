@@ -2,7 +2,7 @@ class EditorImportCommandBase: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorFileDialog file_dialog(GetName(), "File", "", GetDialogButtonName());
+		EditorFileDialog file_dialog(GetName(), "File", EditorFileType.Cast(GetFileType().Spawn()).GetExtension(), GetDialogButtonName());
 		
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
@@ -64,7 +64,7 @@ class EditorOpenCommand: EditorImportCommandBase
 {	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorFileDialog file_dialog(GetName(), "File", "", GetDialogButtonName());
+		EditorFileDialog file_dialog(GetName(), "File", "*.dze", GetDialogButtonName());
 		
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {

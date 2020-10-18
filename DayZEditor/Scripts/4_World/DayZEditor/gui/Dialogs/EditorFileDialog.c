@@ -7,14 +7,16 @@ class EditorFileDialog: EditorDialogBase
 	
 	protected string m_Filter;
 	
-	void EditorFileDialog(string title, string caption = "", string default_value = "", string button_name = "")
+	void EditorFileDialog(string title, string filter = "*", string default_value = "", string button_name = "")
 	{
-		m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();		
+		m_Filter = filter;
+		
+		m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();
+		m_EditBoxPrefab = new EditBoxPrefab("File", m_Controller, default_value);
+		
 		AddContent(m_ListBoxPrefab);
-		m_EditBoxPrefab = new EditBoxPrefab(caption, m_Controller, default_value);
 		AddContent(m_EditBoxPrefab);
 		
-		m_Filter = "*";
 		LoadFileDirectory("$profile:\\", m_Filter);
 		
 		AddButton(button_name, DialogResult.OK);
