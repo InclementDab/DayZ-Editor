@@ -19,7 +19,11 @@ class DragHandler
 	private void _OnDragging()
 	{
 		EditorAction drag_undo = new EditorAction("SetTransform", "SetTransform");
-		drag_undo.InsertUndoParameter(m_EditorObject, m_EditorObject.GetTransformArray());
+		
+		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
+		foreach (EditorObject selected_object: selected_objects) {
+			drag_undo.InsertUndoParameter(selected_object, selected_object.GetTransformArray());
+		}
 		
 		vector transform[4];
 		m_EditorObject.GetTransform(transform);
@@ -31,7 +35,10 @@ class DragHandler
 			Sleep(10);
 		} 
 		
-		drag_undo.InsertRedoParameter(m_EditorObject, m_EditorObject.GetTransformArray());
+		foreach (EditorObject selected_object_post: selected_objects) {
+			drag_undo.InsertRedoParameter(selected_object_post, selected_object_post.GetTransformArray());
+		}
+		
 		GetEditor().InsertAction(drag_undo);
 		
 		m_Editor.ObjectInHand = null;
