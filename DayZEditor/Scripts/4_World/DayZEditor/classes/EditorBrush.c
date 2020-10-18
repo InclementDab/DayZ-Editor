@@ -118,7 +118,7 @@ class EditorBrush
 				vector transform[4];
 				Math3D.MatrixIdentity4(transform);
 				transform[3] = pos;
-				EditorObjectData data = EditorObjectData.Create(object_name.Name, transform, EditorObjectFlags.NONE);
+				EditorObjectData data = EditorObjectData.Create(object_name.Name, transform, EditorObjectFlags.OBJECTMARKER);
 				data_set.Insert(data.GetID(), data);
 			}
 		}
