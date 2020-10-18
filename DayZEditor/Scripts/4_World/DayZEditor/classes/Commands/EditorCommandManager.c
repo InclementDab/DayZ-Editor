@@ -58,8 +58,6 @@ class EditorCommandManager
 	
 	ref EditorDonateCommand DonateCommand;
 	
-	// Loot Editor
-	ref EditorInsertLootPositionCommand InsertLootPositionCommand;
 	
 	void EditorCommandManager()
 	{			

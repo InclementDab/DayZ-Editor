@@ -343,17 +343,7 @@ class Editor
 			}
 			
 			case MouseState.RIGHT: {
-				
-				// Create context menu for adding loot positions
-				if (m_LootEditMode) {
-					int x, y;
-					GetMousePos(x, y);
-					EditorLootEditorContextMenu context_menu(x, y);
-					
-					delete EditorUIManager.CurrentMenu;
-					EditorUIManager.CurrentMenu = context_menu;
-				}
-				
+								
 				break;
 			}
 		}

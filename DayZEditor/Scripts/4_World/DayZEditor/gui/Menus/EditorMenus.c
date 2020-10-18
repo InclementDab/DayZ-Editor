@@ -217,14 +217,6 @@ class EditorPlacedContextMenu: EditorContextMenu
 	}
 }
 
-class EditorLootEditorContextMenu: EditorContextMenu
-{
-	void EditorLootEditorContextMenu(float x, float y)
-	{
-		EditorLog.Trace("EditorLootEditorContextMenu");
-		AddMenuButton(m_Editor.CommandManager.InsertLootPositionCommand);
-	}
-}
 
 
 
