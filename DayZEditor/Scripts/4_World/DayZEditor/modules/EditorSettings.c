@@ -1,8 +1,8 @@
 class EditorSettings
 {	
 	// shit thats gotta be changed
-	float ViewDistance = 12000;
-	float ObjectViewDistance = 5000;
+	float ViewDistance = 8000;
+	float ObjectViewDistance = 1500;
 	float MarkerViewDistance = 1500;
 		
 	// Autosave timer in seconds
@@ -15,19 +15,24 @@ class EditorSettings
 	void EditorSettings() 
 	{
 		EditorLog.Trace("EditorSettings");
-		Reload();
 	}
 	
 	static EditorSettings Load(string filename)
 	{
-		// todo load settings from ini or something
-		return new EditorSettings();
+		EditorSettings settings = new EditorSettings();
+		if (!FileExist(filename)) {
+			JsonFileLoader<EditorSettings>.JsonSaveFile(filename, settings);
+			return settings;
+		}
+				
+		JsonFileLoader<EditorSettings>.JsonLoadFile(filename, settings);		
+		return settings;
 	}
 	
 	
 	static void Save(EditorSettings settings, string filename)
 	{
-		// todo save settings to ini or something
+		JsonFileLoader<EditorSettings>.JsonSaveFile(filename, settings);
 	}
 
 	void Reload()

@@ -64,7 +64,7 @@ class Editor
 	private EditorObjectManagerModule 			m_ObjectManager;	
 	
 	private bool 								m_Active;
-	private string 								m_EditorSettingsFile = "$profile:Editor/Settings.ini";
+	string 										EditorSettingsFile = "$profile:Editor/Settings.json";
 	string										EditorSaveFile;
 	// todo move to settings
 	string										EditorProtoFile = "$profile:Editor/MapGroupProto.xml";
@@ -99,7 +99,7 @@ class Editor
 		m_ActionStack 		= new EditorActionStack();
 		
 		// Init Settings
-		m_EditorSettings 	= EditorSettings.Load(m_EditorSettingsFile);
+		m_EditorSettings 	= EditorSettings.Load(EditorSettingsFile);
 		m_EditorSettings.Reload();
 		
 		// Init Hud
@@ -125,6 +125,8 @@ class Editor
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
 		}
+		
+		EditorSettings.Save(m_EditorSettings, EditorSettingsFile);
 		
 		delete m_EditorHud;
 		delete m_EditorSettings;
@@ -654,7 +656,7 @@ class Editor
 	
 	void SetSettings(EditorSettings settings) {
 		m_EditorSettings = settings;
-		EditorSettings.Save(m_EditorSettings, m_EditorSettingsFile);
+		EditorSettings.Save(m_EditorSettings, EditorSettingsFile);
 		m_EditorSettings.Reload();
 	}
 	
