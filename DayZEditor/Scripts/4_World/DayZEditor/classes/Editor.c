@@ -365,6 +365,7 @@ class Editor
 		
 		if (m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible()) {
 			CurrentMousePosition = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(x, y, 0));
+			CurrentMousePosition[1] = GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]);
 		} else {
 			EntityAI collision_ignore;
 			if (ObjectInHand) {

@@ -16,9 +16,10 @@ FrameWidgetClass EditorFrame {
   FrameWidgetClass MapContainer {
    clipchildren 0
    ignorepointer 1
-   size 1 0.946
+   position 0 0
+   size 1 1
    halign center_ref
-   valign bottom_ref
+   valign center_ref
    hexactpos 0
    vexactpos 0
    hexactsize 0
@@ -27,6 +28,8 @@ FrameWidgetClass EditorFrame {
     MapWidgetClass EditorMapWidget {
      position 0 0
      size 1 1
+     halign center_ref
+     valign center_ref
      hexactpos 0
      vexactpos 0
      hexactsize 0
@@ -35,6 +38,7 @@ FrameWidgetClass EditorFrame {
    }
   }
   FrameWidgetClass EditorHudFrame {
+   visible 1
    ignorepointer 1
    size 1 1
    halign center_ref
@@ -230,7 +234,7 @@ FrameWidgetClass EditorFrame {
     }
     CanvasWidgetClass EditorCanvas {
      ignorepointer 1
-     position 0 -0.212
+     position 0 0
      size 1 1
      halign center_ref
      valign center_ref
