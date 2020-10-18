@@ -4,7 +4,6 @@ class EditorCommand: RelayCommand
 	protected Editor m_Editor;	
 	string Text;
 
-	
 	override bool Execute(Class sender, CommandArgs args) 
 	{
 		EditorLog.Trace("EditorCommand::Execute");

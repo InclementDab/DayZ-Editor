@@ -29,22 +29,27 @@ class EditorEnvironmentDialogController: DialogBaseController
 			}
 			
 			case "rain": {
-				m_Weather.GetRain().Set(rain);				
+				m_Weather.GetRain().Set(rain);	
+				m_Weather.GetRain().SetLimits(rain, rain);			
 				break;
 			}
 			
 			case "fog": {
 				m_Weather.GetFog().Set(fog);
+				m_Weather.GetFog().SetLimits(fog, fog);
 				break;
 			}
 			
 			case "overcast": {
 				m_Weather.GetOvercast().Set(overcast);
+				m_Weather.GetOvercast().SetLimits(overcast, overcast);
 				break;
 			}
 			
 			case "wind": {
+				//m_Weather.SetWindFunctionParams(wind, wind, wind);
 				m_Weather.SetWindSpeed(wind);
+				m_Weather.SetWindMaximumSpeed(wind);
 				break;
 			}
 		}
@@ -65,7 +70,6 @@ class EditorEnvironmentDialog: EditorDialogBase
 		float fog = GetGame().GetWeather().GetFog().GetActual();
 		float overcast = GetGame().GetWeather().GetOvercast().GetActual();
 		
-		GetGame().GetWeather().SetWindMaximumSpeed(100);
 		float wind = GetGame().GetWeather().GetWindSpeed();
 		
 		float exposure = GetGame().GetWorld().GetEyeAccom();
