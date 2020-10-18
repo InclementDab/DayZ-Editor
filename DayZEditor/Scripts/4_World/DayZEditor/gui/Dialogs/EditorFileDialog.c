@@ -100,12 +100,18 @@ class EditorFileSelectDialog: EditorDialogBase
 		string file;
 		m_ListBoxPrefab.ListBox.GetItemText(m_ListBoxPrefab.ListBox.GetSelectedRow(), 0, file);
 		
-		TStringArray file_check = {};
-		file.Split(".", file_check);
+		// Is that shit a folder?
+		if (file.Contains("\\")) {
+			LoadFileDirectory(m_CurrentDirectory + file, m_Filter);
+		} else {
+			LoadFile(m_CurrentDirectory + file);
+		}
 		
-		LoadFileDirectory(m_CurrentDirectory + file, m_Filter);
 		return true;
 	}
+	
+	// Abstracterino
+	void LoadFile(string file);
 	
 	// IDK why but this is crashing if we dont?!
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
