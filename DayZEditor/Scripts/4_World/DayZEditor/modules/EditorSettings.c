@@ -1,26 +1,24 @@
 class EditorSettings: Controller
 {	
+	
 	float ViewDistance;
 	float ObjectViewDistance;
-	float MarkerViewDistance;
 		
-	// Autosave timer in seconds
 	int AutoSaveTimer;
 
 	bool LockCameraDuringDialogs;
 	bool ShowBoundingBoxes;
 	bool DebugMode;
 	
-
 	[NonSerialized()]
 	ref DropdownListPrefabItem SelectedLogLevel;
 	
 	void EditorSettings() 
 	{
 		EditorLog.Trace("EditorSettings");
+		
 		ViewDistance = 8000;
 		ObjectViewDistance = 1500;
-		MarkerViewDistance = 1500;
 		AutoSaveTimer = 240;
 		LockCameraDuringDialogs = true;
 		ShowBoundingBoxes = true;
@@ -31,13 +29,17 @@ class EditorSettings: Controller
 	{
 		EditorLog.Trace("EditorSettings::Load");
 		EditorSettings settings = new EditorSettings();
+		
+		// Generate Initial File
 		if (!FileExist(filename)) {
 			Save(settings, filename);
 			return settings;
 		}
 		
 		EditorLog.Info("Loading EditorSettings from %1", filename);
-		JsonFileLoader<EditorSettings>.JsonLoadFile(filename, settings);		
+		// Why the fuck doesnt this load when i RELOAD the editor?!?!?!??!?!?!?!?!!
+		// B R U H
+		JsonFileLoader<EditorSettings>.JsonLoadFile(filename, settings);
 		return settings;
 	}
 	
@@ -56,7 +58,7 @@ class EditorSettings: Controller
 						
 			case "SelectedLogLevel": {
 				
-				if (SelectedLogLevel.GetTemplateController() && SelectedLogLevel.GetTemplateController().UserData) {
+				if (SelectedLogLevel && SelectedLogLevel.GetTemplateController() && SelectedLogLevel.GetTemplateController().UserData) {
 					Param1<LogLevel> p = Param1<LogLevel>.Cast(SelectedLogLevel.GetTemplateController().UserData);
 					if (p) {
 						EditorLog.CurrentLogLevel = p.param1;

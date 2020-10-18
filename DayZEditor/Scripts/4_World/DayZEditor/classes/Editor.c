@@ -48,7 +48,7 @@ class Editor
 	// public properties
 	ref EditorWorldObject 						ObjectInHand;
 	ref EditorCommandManager 					CommandManager;
-	ref EditorSettings 							Settings;
+	static ref EditorSettings 					Settings;
 	
 	// private Editor Members
 	private ref EditorHud						m_EditorHud;
@@ -99,7 +99,8 @@ class Editor
 		m_ActionStack 		= new EditorActionStack();
 		
 		// Init Settings
-		Settings 			= EditorSettings.Load(EditorSettingsFile);
+		if (!Settings)
+			Settings 			= EditorSettings.Load(EditorSettingsFile);
 		
 		// Init Hud
 		m_EditorHud 		= new EditorHud();
@@ -127,8 +128,9 @@ class Editor
 		
 		EditorSettings.Save(Settings, EditorSettingsFile);
 		
+		// science
+		// delete Settings;
 		delete m_EditorHud;
-		delete Settings;
 		delete m_EditorBrush;
 		delete m_SessionCache;
 		delete ObjectInHand;
