@@ -162,179 +162,7 @@ class Editor
 		delete m_SessionCache;
 		delete ObjectInHand;
 	}
-	
 
-	bool IsActive()
-		return m_Active;
-	
-	EditorHud GetEditorHud() 
-		return m_EditorHud;
-	
-	EditorCamera GetCamera() 
-		return m_EditorCamera;
-	
-	EditorSettings GetSettings()
-		return m_EditorSettings;
-	
-	void SetSettings(EditorSettings settings) {
-		m_EditorSettings = settings;
-		EditorSettings.Save(m_EditorSettings, m_EditorSettingsFile);
-		m_EditorSettings.Reload();
-	}
-	
-	EditorObjectManagerModule GetObjectManager() {
-		return m_ObjectManager;
-	}
-	
-	EditorObjectMap GetSelectedObjects() 
-		return m_ObjectManager.GetSelectedObjects(); 
-	
-	EditorObjectMap GetPlacedObjects()
-		return m_ObjectManager.GetPlacedObjects(); 
-
-	EditorObjectDataMap GetSessionCache()
-		return m_SessionCache; 
-		
-	EditorObject GetEditorObject(int id)
-		return m_ObjectManager.GetEditorObject(id); 
-	
-	EditorObject GetEditorObject(notnull Object world_object)
-		return m_ObjectManager.GetEditorObject(world_object);
-	
-	EditorObject GetPlacedObjectById(int id)
-		return m_ObjectManager.GetPlacedObjectById(id); 
-
-	void DeleteSessionData(int id)
-		m_SessionCache.Remove(id);	
-	
-	EditorObjectData GetSessionDataById(int id)
-		return m_SessionCache.Get(id); 
-
-	void SetBrush(EditorBrush brush)
-		m_EditorBrush = brush; 
-	
-	EditorBrush GetBrush()
-		return m_EditorBrush; 
-	
-	bool IsPlacing()
-		return ObjectInHand != null; 
-	
-	
-	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 
-	{
-		EditorLog.Trace("Editor::CreateObject " + target);	
-		return CreateObject(EditorObjectData.Create(target, flags), create_undo);
-	}
-	
-	EditorObject CreateObject(notnull EditorObjectData editor_object_data, bool create_undo = true) 
-	{			
-		EditorLog.Trace("Editor::CreateObject " + editor_object_data);
-		EditorAction action = new EditorAction("Delete", "Create");
-		
-		// Cache Data (for undo / redo)
-		m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
-		
-		// Create Object
-		EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
-		
-		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
-		
-		return editor_object;
-	}
-	
-	EditorObjectMap CreateObjects(notnull EditorObjectDataMap data_list, bool create_undo = true) 
-	{
-		EditorLog.Trace("Editor::CreateObject");
-		
-		EditorObjectMap object_set = new EditorObjectMap();
-		EditorAction action = new EditorAction("Delete", "Create");
-		foreach (int id, ref EditorObjectData editor_object_data: data_list) {
-			
-			// Cache Data (for undo / redo)
-			m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
-			
-			// Create Object
-			EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
-			
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			
-			object_set.Insert(editor_object.GetID(), editor_object);
-		}
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
-		
-		return object_set;
-	}
-	
-	void DeleteObject(EditorObject editor_object, bool create_undo = true) 
-	{
-		EditorAction action = new EditorAction("Create", "Delete");
-		
-		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		m_ObjectManager.DeleteObject(editor_object);
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
-	}
-	
-	
-	void DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true)
-	{
-		EditorAction action = new EditorAction("Create", "Delete");
-
-		foreach (int id, EditorObject editor_object: editor_object_map) {
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			m_ObjectManager.DeleteObject(editor_object);
-		}
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
-	}
-	
-	void SelectObject(EditorObject target)
-		m_ObjectManager.SelectObject(target);
-	
-	
-	void DeselectObject(EditorObject target)
-		m_ObjectManager.DeselectObject(target);
-	
-	
-	void ToggleSelection(EditorObject target)
-		m_ObjectManager.ToggleSelection(target);
-		
-	void ClearSelection() 
-		m_ObjectManager.ClearSelection();
-	
-	EditorActionStack GetActionStack()
-		return m_ActionStack;
-	
-	void Clear()
-	{
-		EditorSaveFile = string.Empty;	
-		m_ActionStack.Clear();
-		m_SessionCache.Clear();
-		m_ObjectManager.Clear();
-	}
-		
-	void InsertAction(EditorAction action) 
-	{
-		m_ActionStack.InsertAction(action);
-		// this crashes smile :)
-		//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
-	}
-	
 	
 	static Editor Create(PlayerBase player)
 	{
@@ -350,9 +178,7 @@ class Editor
 		EditorLog.Trace("Editor::Destroy");
 		delete g_Editor;
 	}
-	
-	private bool exit_condition = false;
-	
+		
 	void Update(float timeslice)
 	{
 		// Dont think its needed anymore
@@ -397,7 +223,7 @@ class Editor
 				} 
 				
 			} else if (ObjectUnderCursor) {
-				exit_condition = OnMouseExitObject(ObjectUnderCursor, x, y);
+				OnMouseExitObject(ObjectUnderCursor, x, y);
 				ObjectUnderCursor = null;
 			}
 		}
@@ -841,5 +667,195 @@ class Editor
 			}
 		}
 	}
+	
+		
+
+	bool IsActive()
+		return m_Active;
+	
+	EditorHud GetEditorHud() 
+		return m_EditorHud;
+	
+	EditorCamera GetCamera() 
+		return m_EditorCamera;
+	
+	EditorSettings GetSettings()
+		return m_EditorSettings;
+	
+	void SetSettings(EditorSettings settings) {
+		m_EditorSettings = settings;
+		EditorSettings.Save(m_EditorSettings, m_EditorSettingsFile);
+		m_EditorSettings.Reload();
+	}
+	
+	EditorObjectManagerModule GetObjectManager() {
+		return m_ObjectManager;
+	}
+	
+	EditorObjectMap GetSelectedObjects() {
+		return m_ObjectManager.GetSelectedObjects(); 
+	}
+	
+	EditorObjectMap GetPlacedObjects() {
+		return m_ObjectManager.GetPlacedObjects(); 
+	}
+
+	EditorObjectDataMap GetSessionCache() {
+		return m_SessionCache; 
+	}
+		
+	EditorObject GetEditorObject(int id) {
+		return m_ObjectManager.GetEditorObject(id); 
+	}
+	
+	EditorObject GetEditorObject(notnull Object world_object) {
+		return m_ObjectManager.GetEditorObject(world_object);
+	}
+	
+	EditorObject GetPlacedObjectById(int id) {
+		return m_ObjectManager.GetPlacedObjectById(id); 
+	}
+
+	void DeleteSessionData(int id) {
+		m_SessionCache.Remove(id);	
+	}
+	
+	EditorObjectData GetSessionDataById(int id) {
+		return m_SessionCache.Get(id); 
+	}
+
+	void SetBrush(EditorBrush brush) {
+		m_EditorBrush = brush; 
+	}
+	
+	EditorBrush GetBrush() {
+		return m_EditorBrush; 
+	}
+	
+	bool IsPlacing() {
+		return ObjectInHand != null; 
+	}
+	
+	
+	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 
+	{
+		EditorLog.Trace("Editor::CreateObject " + target);	
+		return CreateObject(EditorObjectData.Create(target, flags), create_undo);
+	}
+	
+	EditorObject CreateObject(notnull EditorObjectData editor_object_data, bool create_undo = true) 
+	{			
+		EditorLog.Trace("Editor::CreateObject " + editor_object_data);
+		EditorAction action = new EditorAction("Delete", "Create");
+		
+		// Cache Data (for undo / redo)
+		m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
+		
+		// Create Object
+		EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
+		
+		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+		
+		return editor_object;
+	}
+	
+	EditorObjectMap CreateObjects(notnull EditorObjectDataMap data_list, bool create_undo = true) 
+	{
+		EditorLog.Trace("Editor::CreateObject");
+		
+		EditorObjectMap object_set = new EditorObjectMap();
+		EditorAction action = new EditorAction("Delete", "Create");
+		foreach (int id, ref EditorObjectData editor_object_data: data_list) {
+			
+			// Cache Data (for undo / redo)
+			m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
+			
+			// Create Object
+			EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
+			
+			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			
+			object_set.Insert(editor_object.GetID(), editor_object);
+		}
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+		
+		return object_set;
+	}
+	
+	void DeleteObject(EditorObject editor_object, bool create_undo = true) 
+	{
+		EditorAction action = new EditorAction("Create", "Delete");
+		
+		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+		m_ObjectManager.DeleteObject(editor_object);
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
+	
+	
+	void DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Create", "Delete");
+
+		foreach (int id, EditorObject editor_object: editor_object_map) {
+			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			m_ObjectManager.DeleteObject(editor_object);
+		}
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
+	
+	void SelectObject(EditorObject target) {
+		m_ObjectManager.SelectObject(target);
+	}
+	
+	
+	void DeselectObject(EditorObject target) {
+		m_ObjectManager.DeselectObject(target);
+	}
+	
+	
+	void ToggleSelection(EditorObject target) {
+		m_ObjectManager.ToggleSelection(target);
+	}
+		
+	void ClearSelection() {
+		m_ObjectManager.ClearSelection();
+	}
+	
+	EditorActionStack GetActionStack() {
+		return m_ActionStack;
+	}
+	
+	void Clear()
+	{
+		EditorSaveFile = string.Empty;	
+		m_ActionStack.Clear();
+		m_SessionCache.Clear();
+		m_ObjectManager.Clear();
+	}
+		
+	void InsertAction(EditorAction action) 
+	{
+		m_ActionStack.InsertAction(action);
+		// this crashes smile :)
+		//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
+	}
+	
 }
 
