@@ -99,8 +99,7 @@ class Editor
 		m_ActionStack 		= new EditorActionStack();
 		
 		// Init Settings
-		if (!Settings)
-			Settings 			= EditorSettings.Load(EditorSettingsFile);
+		EditorSettings.Load(Settings, EditorSettingsFile);
 		
 		// Init Hud
 		m_EditorHud 		= new EditorHud();

@@ -25,22 +25,20 @@ class EditorSettings: Controller
 		DebugMode = false;
 	}
 	
-	static EditorSettings Load(string filename)
+	static void Load(out EditorSettings settings, string filename)
 	{
 		EditorLog.Trace("EditorSettings::Load");
-		EditorSettings settings = new EditorSettings();
 		
 		// Generate Initial File
 		if (!FileExist(filename)) {
 			Save(settings, filename);
-			return settings;
+			return;
 		}
 		
 		EditorLog.Info("Loading EditorSettings from %1", filename);
 		// Why the fuck doesnt this load when i RELOAD the editor?!?!?!??!?!?!?!?!!
 		// B R U H
 		JsonFileLoader<EditorSettings>.JsonLoadFile(filename, settings);
-		return settings;
 	}
 	
 	
