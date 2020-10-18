@@ -54,11 +54,6 @@ class DialogBase: ScriptView
 		return AddButton(new DialogButton(label, callback));
 	}
 	
-	DialogButton AddButton(string label, inout func callback)
-	{
-		return null;
-	}
-	
 	DialogButton AddButton(string label, DialogResult result)
 	{
 		return AddButton(new DialogExitButton(label, "DialogExitButtonCallback", result));
