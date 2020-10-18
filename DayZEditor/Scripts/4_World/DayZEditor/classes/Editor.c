@@ -48,7 +48,7 @@ class Editor
 	// public properties
 	ref EditorWorldObject 						ObjectInHand;
 	ref EditorCommandManager 					CommandManager;
-	static ref EditorSettings 					Settings;
+	ref EditorSettings 							Settings;
 	
 	// private Editor Members
 	private ref EditorHud						m_EditorHud;
@@ -128,8 +128,7 @@ class Editor
 		
 		EditorSettings.Save(Settings, EditorSettingsFile);
 		
-		// science
-		// delete Settings;
+		delete Settings;
 		delete m_EditorHud;
 		delete m_EditorBrush;
 		delete m_SessionCache;
