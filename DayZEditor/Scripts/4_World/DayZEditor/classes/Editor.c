@@ -639,12 +639,12 @@ class Editor
 		vector pos = CurrentMousePosition;
 		pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
 		m_Player.SetPosition(pos);
-		
 	}
 	
 	private void AutoSaveThread()
 	{
 		while (g_Editor) {
+			Settings.AutoSaveTimer = Math.Clamp(Settings.AutoSaveTimer, 10, FLT_MAX);
 			Sleep(Settings.AutoSaveTimer * 1000);
 			if (EditorSaveFile != string.Empty) {
 				CommandManager.SaveCommand.Execute(this, null);

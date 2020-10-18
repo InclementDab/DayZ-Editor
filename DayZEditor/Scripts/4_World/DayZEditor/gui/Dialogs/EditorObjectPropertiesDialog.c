@@ -68,16 +68,9 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Static Object", m_EditorObject, "StaticObject", m_EditorObject.IsStaticObject()));
 		m_ObjectGroup.Open(EditorObjectPropertiesDialogState.ObjectGroup);
 		
-		m_FlagsGroup = new GroupPrefab("Object Flags", m_EditorObject, string.Empty);
-		m_FlagsGroup.Insert(new CheckBoxPrefab("Bounding Box", m_EditorObject, "BoundingBoxEnabled", m_EditorObject.BoundingBoxEnabled));
-		m_FlagsGroup.Insert(new CheckBoxPrefab("World Marker", m_EditorObject, "WorldMarkerEnabled", m_EditorObject.WorldMarkerEnabled));
-		m_FlagsGroup.Insert(new CheckBoxPrefab("Map Marker", m_EditorObject, "MapMarkerEnabled", m_EditorObject.MapMarkerEnabled));
-		m_FlagsGroup.Insert(new CheckBoxPrefab("List Item", m_EditorObject, "ListItemEnabled", m_EditorObject.ListItemEnabled));
-		m_FlagsGroup.Open(EditorObjectPropertiesDialogState.FlagsGroup);
 		
 		AddContent(m_GeneralGroup);
 		AddContent(m_ObjectGroup);
-		AddContent(m_FlagsGroup);
 		
 		if (editor_object.GetWorldObject().IsMan()) {
 			GroupPrefab human_controller = new GroupPrefab("Human Controller", m_EditorObject, string.Empty);

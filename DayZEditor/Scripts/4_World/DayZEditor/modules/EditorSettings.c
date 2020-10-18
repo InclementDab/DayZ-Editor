@@ -1,6 +1,5 @@
 class EditorSettings: Controller
 {	
-	
 	float ViewDistance = 8000;
 	float ObjectViewDistance = 1500;
 		
