@@ -1,44 +1,35 @@
 class EditorSettings: Controller
 {	
 	
-	float ViewDistance;
-	float ObjectViewDistance;
+	float ViewDistance = 8000;
+	float ObjectViewDistance = 1500;
 		
-	int AutoSaveTimer;
+	int AutoSaveTimer = 240;
 
-	bool LockCameraDuringDialogs;
-	bool ShowBoundingBoxes;
+	bool LockCameraDuringDialogs = true;
+	bool ShowBoundingBoxes = true;
 	bool DebugMode;
 	
 	[NonSerialized()]
 	ref DropdownListPrefabItem SelectedLogLevel;
-	
-	void EditorSettings() 
-	{
-		EditorLog.Trace("EditorSettings");
 		
-		ViewDistance = 8000;
-		ObjectViewDistance = 1500;
-		AutoSaveTimer = 240;
-		LockCameraDuringDialogs = true;
-		ShowBoundingBoxes = true;
-		DebugMode = false;
-	}
-	
-	static void Load(out EditorSettings settings, string filename)
+	static EditorSettings Load(string filename)
 	{
 		EditorLog.Trace("EditorSettings::Load");
+		
+		EditorSettings settings = new EditorSettings();
 		
 		// Generate Initial File
 		if (!FileExist(filename)) {
 			Save(settings, filename);
-			return;
+			return settings;
 		}
 		
 		EditorLog.Info("Loading EditorSettings from %1", filename);
 		// Why the fuck doesnt this load when i RELOAD the editor?!?!?!??!?!?!?!?!!
 		// B R U H
 		JsonFileLoader<EditorSettings>.JsonLoadFile(filename, settings);
+		return settings;
 	}
 	
 	

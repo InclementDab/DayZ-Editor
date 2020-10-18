@@ -99,7 +99,7 @@ class Editor
 		m_ActionStack 		= new EditorActionStack();
 		
 		// Init Settings
-		EditorSettings.Load(Settings, EditorSettingsFile);
+		Settings 			= EditorSettings.Load(EditorSettingsFile);
 		
 		// Init Hud
 		m_EditorHud 		= new EditorHud();
@@ -122,7 +122,7 @@ class Editor
 		EditorLog.Trace("~Editor");
 		if (!IsMissionOffline()) {
 			ScriptRPC rpc = new ScriptRPC();
-			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
+			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true); 
 		}
 		
 		EditorSettings.Save(Settings, EditorSettingsFile);

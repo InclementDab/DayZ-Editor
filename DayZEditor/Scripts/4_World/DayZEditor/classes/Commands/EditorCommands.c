@@ -754,7 +754,6 @@ class EditorDonateCommand: EditorCommand
 
 class EditorInsertLootPositionCommand: EditorCommand
 {
-	
 	override void Call(Class sender, CommandArgs args)
 	{
 		GetEditor().InsertLootPosition(Editor.CurrentMousePosition);

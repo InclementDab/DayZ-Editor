@@ -242,6 +242,7 @@ class EditorMapGroupProto: XMLCallback
 									if (point_flags != null)
 										int flags = point_flags.ValueAsInt();
 									
+									pos = Vector(pos[2], pos[1], pos[0]) + m_Building.GetPosition();
 									container.InsertLootPoint(new EditorLootPoint(pos, range, height, flags));
 									break;
 								}
@@ -296,17 +297,16 @@ class EditorMapGroupProto: XMLCallback
 	void InsertLootPoint(EditorLootPoint loot_point)
 	{
 		vector loot_pos = loot_point.GetPosition();					
-		loot_pos = Vector(loot_pos[2], loot_pos[1], loot_pos[0]);
 		EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("DebugCylinder", loot_pos, vector.Zero, EditorObjectFlags.OBJECTMARKER));
 		
 		// might be bad
 		//m_Building.AddChild(loot_display.GetWorldObject(), -1);
-		
+				
 		vector transform[4] = {
 			Vector(1, 0, 0),
 			Vector(0, 1, 0),
 			Vector(0, 0, 1),
-			Vector(loot_pos[2], loot_pos[1], loot_pos[0]) + m_Building.GetPosition()
+			loot_pos
 		};
 		
 		transform[0][0] = loot_point.GetRange();
