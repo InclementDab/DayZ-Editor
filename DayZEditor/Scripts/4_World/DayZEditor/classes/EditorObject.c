@@ -456,6 +456,8 @@ class EditorObject: EditorWorldObject
 		m_CenterLine.SetTransform(y_axis_mat);
 		AddChild(m_CenterLine, -1);
 		Update();
+		
+		HideBoundingBox();
 	}
 	
 	void DestroyBoundingBox()
