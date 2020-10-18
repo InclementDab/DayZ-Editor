@@ -241,6 +241,26 @@ class Editor
 	}
 	
 	
+	
+	
+	bool OnDoubleClick(int button)
+	{
+		switch (button) {
+			
+			case MouseState.LEFT: {
+				
+				if (m_LootEditMode) {
+					InsertLootPosition(CurrentMousePosition);
+				}
+				
+				break;
+			}
+			
+		}
+		
+		return false;
+	}
+	
 	bool OnMouseDown(int button)
 	{
 		EditorLog.Trace("Editor::OnMouseDown");
@@ -513,6 +533,7 @@ class Editor
 		m_EditorCamera.LookAt(Vector(0, 0, 0));	
 		
 		if (!FileExist(EditorProtoFile)) {
+			EditorLog.Info("EditorProtoFile not found! Copying...");
 			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", EditorProtoFile);
 		}
 		
@@ -527,7 +548,7 @@ class Editor
 	
 	private void EditLootSpawnsDialog()
 	{
-		MessageBox.Show("Beta!", "Please know that Edit Loot spawns is just a demo and has NO WAY of saving / Exporting your changes (yet)", MessageBoxButtons.OK);
+		MessageBox.Show("Beta!", "Please know that Edit Loot spawns is just a demo and has NO WAY of saving / Exporting your changes (yet)\n\nDouble Click: Add new Loot Position\nEscape: Exit Loot Editor (Copies loot positions to clipboard)", MessageBoxButtons.OK);
 	}
 	
 	// Kinda very jank i think

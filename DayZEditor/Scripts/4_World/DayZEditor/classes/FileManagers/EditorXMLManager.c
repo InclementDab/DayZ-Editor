@@ -272,24 +272,12 @@ class EditorMapGroupProto: XMLCallback
 		foreach (EditorMapGroupProtoGroup group_proto: m_MapGroupProto) {
 			
 			if (group_proto && m_Building && group_proto.GetName() == m_Building.GetType()) {
-				EditorLog.Info("Building Found!");
-				ref array<ref EditorLootContainer> loot_containers = group_proto.GetLootContainer();
-				
-				foreach (EditorLootContainer loot_container: loot_containers) {
-						
-					ref array<ref EditorLootPoint> loot_points = loot_container.GetLootPoints();
-					foreach (EditorLootPoint loot_point: loot_points) {
-
-						
-					}
-				}
-								
+				EditorLog.Info("Building Found!");								
 				return;
 			}			
 		}
 		
 		EditorLog.Error("Building was not found!");
-		
 		thread ErrorMessage(string.Format("%1 not found in MapGroupProto.xml", m_Building.GetType()));
 		GetEditor().FinishEditLootSpawns();
 	}
