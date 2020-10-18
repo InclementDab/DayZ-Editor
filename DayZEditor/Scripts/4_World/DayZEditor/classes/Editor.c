@@ -245,15 +245,17 @@ class Editor
 	
 	bool OnDoubleClick(int button)
 	{
+		EditorLog.Trace("Editor::OnDoubleClick");
+		Widget target = GetWidgetUnderCursor();
 		switch (button) {
 			
 			case MouseState.LEFT: {
 				
-				if (m_LootEditMode) {
+				if (m_LootEditMode && !target) {
 					InsertLootPosition(CurrentMousePosition);
 				}
 				
-				break;
+				return true;
 			}
 			
 		}
