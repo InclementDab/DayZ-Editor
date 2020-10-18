@@ -2,7 +2,7 @@
 class DialogBase: ScriptView
 {
 	// Private members
-	private DialogResult m_DialogResult = DialogResult.None;
+	protected DialogResult m_DialogResult = DialogResult.None;
 
 	// Controller
 	protected DialogBaseController m_DialogBaseController;

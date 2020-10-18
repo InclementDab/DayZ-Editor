@@ -3,12 +3,15 @@ class EditorExportCommandBase: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorFileDialog file_dialog(GetName(), "File", "", GetDialogButtonName());
+		EditorExportDialog file_dialog(GetName(), "File", "", GetDialogButtonName());
 		
 		string file_name;
-		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
+		ExportSettings export_settings = new ExportSettings();
+		if (file_dialog.ShowDialog(file_name, export_settings) != DialogResult.OK) {
 			return;
 		}
+		
+		Print(export_settings.ExportSelectedOnly);
 		
 		if (file_name == string.Empty) {
 			MessageBox.Show("Error", "No file name specified!", MessageBoxButtons.OK);

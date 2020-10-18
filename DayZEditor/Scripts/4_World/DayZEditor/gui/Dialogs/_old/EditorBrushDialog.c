@@ -33,7 +33,6 @@ class EditorBrushDialogController: Controller
 				
 				break;
 			}
-			
 		}
 	}
 	

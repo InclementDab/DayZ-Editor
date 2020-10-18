@@ -45,6 +45,40 @@ class EditorFileDialog: EditorDialogBase
 	}	
 }
 
+class EditorExportDialogController: DialogBaseController
+{
+	bool export_selected;
+}
+
+class EditorExportDialog: EditorFileDialog
+{
+	void EditorExportDialog(string title, string caption = "", string default_value = "", string button_name = "OK")
+	{
+		AddContent(new CheckBoxPrefab("Export Selected Objects", m_Controller, "export_selected", false));
+	}
+	
+	DialogResult ShowDialog(out string edit_data, inout ExportSettings export_settings)
+	{
+		Trace("ShowDialog");
+		ref EditorExportDialogController controller = EditorExportDialogController.Cast(m_Controller);
+		
+		m_LayoutRoot.Show(true);
+		while (m_DialogResult == DialogResult.None) {
+			Sleep(1);
+		}
+		
+		Log("DialogResult: %1", typename.EnumToString(DialogResult, m_DialogResult));
+
+		export_settings.ExportSelectedOnly = controller.export_selected;
+		
+		return m_DialogResult;
+	}
+	
+	override typename GetControllerType() {
+		return EditorExportDialogController;
+	}
+}
+
 
 class EditorMultilineEditBoxDialog: EditorDialogBase
 {
