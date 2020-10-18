@@ -48,9 +48,9 @@ class Editor
 	// public properties
 	ref EditorWorldObject 						ObjectInHand;
 	ref EditorCommandManager 					CommandManager;
+	ref EditorSettings 							Settings;
 	
 	// private Editor Members
-	private ref EditorSettings 					m_EditorSettings;
 	private ref EditorHud						m_EditorHud;
 	private ref EditorBrush						m_EditorBrush;
 	private ref EditorObjectDataMap			 	m_SessionCache;
@@ -64,12 +64,12 @@ class Editor
 	private EditorObjectManagerModule 			m_ObjectManager;	
 	
 	private bool 								m_Active;
-	string 										EditorSettingsFile = "$profile:Editor/Settings.json";
+	string 										EditorSettingsFile = "$profile:/Editor/Settings.json";
 	string										EditorSaveFile;
 	// todo move to settings
-	string										EditorProtoFile = "$profile:Editor/MapGroupProto.xml";
-	string										EditorBrushFile = "$profile:Editor/EditorBrushes.xml";
-	string										EditorDirectory = "$profile:Editor/";
+	string										EditorProtoFile = "$profile:/Editor/MapGroupProto.xml";
+	string										EditorBrushFile = "$profile:/Editor/EditorBrushes.xml";
+	string										EditorDirectory = "$profile:/Editor/";
 	
 	// modes
 	bool 										MagnetMode;
@@ -99,8 +99,7 @@ class Editor
 		m_ActionStack 		= new EditorActionStack();
 		
 		// Init Settings
-		m_EditorSettings 	= EditorSettings.Load(EditorSettingsFile);
-		m_EditorSettings.Reload();
+		Settings 			= EditorSettings.Load(EditorSettingsFile);
 		
 		// Init Hud
 		m_EditorHud 		= new EditorHud();
@@ -126,10 +125,10 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true);
 		}
 		
-		EditorSettings.Save(m_EditorSettings, EditorSettingsFile);
+		EditorSettings.Save(Settings, EditorSettingsFile);
 		
 		delete m_EditorHud;
-		delete m_EditorSettings;
+		delete Settings;
 		delete m_EditorBrush;
 		delete m_SessionCache;
 		delete ObjectInHand;
@@ -171,20 +170,20 @@ class Editor
 			}
 			
 			if (CollisionMode) {
-				CurrentMousePosition = MousePosToRay(obj, collision_ignore, m_EditorSettings.ViewDistance);
+				CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance);
 			} else {
-				CurrentMousePosition = MousePosToRay(obj, collision_ignore, m_EditorSettings.ViewDistance, 0, true);
+				CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance, 0, true);
 			}
 		}
 		
-		if (m_EditorSettings.DebugMode) {
+		if (Settings.DebugMode) {
 			Debug.DestroyAllShapes();
 			Debug.DrawSphere(CurrentMousePosition, 0.25, COLOR_GREEN_A);
 		}
 		
 
 		if (!IsPlacing()) {
-			Object target = GetObjectUnderCursor(m_EditorSettings.ViewDistance);
+			Object target = GetObjectUnderCursor(Settings.ViewDistance);
 			if (target) {
 				if (target != ObjectUnderCursor) {
 					if (ObjectUnderCursor) { 
@@ -633,7 +632,7 @@ class Editor
 	private void AutoSaveThread()
 	{
 		while (g_Editor) {
-			Sleep(m_EditorSettings.AutoSaveTimer * 1000);
+			Sleep(Settings.AutoSaveTimer * 1000);
 			if (EditorSaveFile != string.Empty) {
 				CommandManager.SaveCommand.Execute(this, null);
 			}
@@ -650,15 +649,6 @@ class Editor
 	
 	EditorCamera GetCamera() 
 		return m_EditorCamera;
-	
-	EditorSettings GetSettings()
-		return m_EditorSettings;
-	
-	void SetSettings(EditorSettings settings) {
-		m_EditorSettings = settings;
-		EditorSettings.Save(m_EditorSettings, EditorSettingsFile);
-		m_EditorSettings.Reload();
-	}
 	
 	EditorObjectManagerModule GetObjectManager() {
 		return m_ObjectManager;

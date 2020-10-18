@@ -270,6 +270,12 @@ class EditorPreferencesCommand: EditorCommand
 	{
 		EditorPreferencesDialog dialog = new EditorPreferencesDialog("Editor Preferences");
 		DialogResult result = dialog.ShowDialog();
+		
+		if (result != DialogResult.OK) {
+			return;
+		}
+		
+		EditorSettings.Save(m_Editor.Settings, m_Editor.EditorSettingsFile);
 	}
 
 	override string GetName() {

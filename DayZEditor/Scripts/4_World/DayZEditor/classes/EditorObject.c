@@ -583,7 +583,7 @@ class EditorObject: EditorWorldObject
 		EditorLog.Trace("EditorObject::ShowBoundingBox");
 		
 		// Global Settings Check
-		if (!GetEditor().GetSettings().ShowBoundingBoxes) return;
+		if (!GetEditor().Settings.ShowBoundingBoxes) return;
 		
 		for (int i = 0; i < 12; i++) {
 			if (m_BBoxLines[i]) {

@@ -27,6 +27,10 @@ class PrefabBase<Class TValue>: ScriptView
 		m_BindingName = binding_name;
 		m_BindingContext = binding_context;
 	
+		if (default_value == DEFAULT_VALUE) {
+			EnScript.GetClassVar(m_BindingContext, m_BindingName, 0, default_value);
+		}
+		
 		Class.CastTo(m_PrefabBaseController, m_Controller);
 		m_PrefabBaseController.Caption = caption;
 		m_PrefabBaseController.NotifyPropertyChanged("Caption", false);
