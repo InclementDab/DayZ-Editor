@@ -155,19 +155,19 @@ class EditorObject: EditorWorldObject
 		
 		// Bounding Box
 		BoundingBoxEnabled = ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX);
-		EnableBoundingBox(BoundingBoxEnabled);
+		thread EnableBoundingBox(BoundingBoxEnabled);
 		
 		// Map marker
 		MapMarkerEnabled = ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER);
-		EnableMapMarker(MapMarkerEnabled);
+		thread EnableMapMarker(MapMarkerEnabled);
 		
 		// World marker
 		WorldMarkerEnabled = ((m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER);
-		EnableObjectMarker(WorldMarkerEnabled);
+		thread EnableObjectMarker(WorldMarkerEnabled);
 		
 		// Browser item
 		ListItemEnabled = ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM);
-		EnableListItem(ListItemEnabled);
+		thread EnableListItem(ListItemEnabled);
 	}
 	
 		

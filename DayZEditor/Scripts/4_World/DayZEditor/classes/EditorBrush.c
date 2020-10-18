@@ -126,7 +126,7 @@ class EditorBrush
 				brushed_object.SetPosition(pos);
 				brushed_object.SetDirection(direction);
 
-				EditorObjectData data = EditorObjectData.Create(brushed_object, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.BBOX);
+				EditorObjectData data = EditorObjectData.Create(brushed_object, EditorObjectFlags.OBJECTMARKER);
 				data_set.Insert(data.GetID(), data);
 			}
 		}
