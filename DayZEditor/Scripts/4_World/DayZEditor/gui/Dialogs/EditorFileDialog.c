@@ -1,27 +1,23 @@
 
-
-static void SyncThread()
+class EditorFileDialog: EditorDialogBase
 {
-	EditorFileSelectDialog file_select("File Select");
-	file_select.ShowDialog();
-}
-
-
-class EditorFileSelectDialog: EditorDialogBase
-{
+	protected autoptr EditBoxPrefab m_EditBoxPrefab;
 	protected autoptr ListBoxPrefab<ref EditorFile> m_ListBoxPrefab;
 	protected string m_CurrentDirectory;
 	
 	protected string m_Filter;
 	
-	void EditorFileSelectDialog(string title)
+	void EditorFileDialog(string title, string caption = "", string default_value = "", string button_name = "")
 	{
 		m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();		
 		AddContent(m_ListBoxPrefab);
+		m_EditBoxPrefab = new EditBoxPrefab(caption, m_Controller, default_value);
+		AddContent(m_EditBoxPrefab);
 		
 		m_Filter = "*";
 		LoadFileDirectory("$profile:\\", m_Filter);
 		
+		AddButton(button_name, DialogResult.OK);
 		AddButton("Back", "BackDirectory");
 	}
 	
@@ -65,7 +61,16 @@ class EditorFileSelectDialog: EditorDialogBase
 			folder_array.Insert(new EditorFile(sorted_name, directory, search_mode));
 		}
 	}
-	
+		
+			
+	DialogResult ShowDialog(out string edit_data)
+	{
+		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
+		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
+		DialogResult result = ShowDialog();
+		edit_data = edit_box.GetText();
+		return result;
+	}
 	
 	void LoadFileDirectory(string directory, string filter)
 	{
@@ -85,10 +90,13 @@ class EditorFileSelectDialog: EditorDialogBase
 	}
 	
 	void BackDirectory()
-	{		
+	{				
 		TStringArray file_array = {};
 		string file_directory = m_CurrentDirectory;
-		file_directory.Split("\\", file_array);		
+		file_directory.Split("\\", file_array);
+		
+		if (file_array.Count() == 1) return;
+		
 		file_directory.Replace(file_array[file_array.Count() - 1] + "\\", "");		
 		LoadFileDirectory(file_directory, m_Filter);
 	}
@@ -97,9 +105,7 @@ class EditorFileSelectDialog: EditorDialogBase
 	{
 		EditorLog.Trace("EditorFileDialog::OnDoubleClick");
 		
-		string file;
-		m_ListBoxPrefab.ListBox.GetItemText(m_ListBoxPrefab.ListBox.GetSelectedRow(), 0, file);
-		
+		string file = GetCurrentSelectedFile();
 		// Is that shit a folder?
 		if (file.Contains("\\")) {
 			LoadFileDirectory(m_CurrentDirectory + file, m_Filter);
@@ -110,12 +116,42 @@ class EditorFileSelectDialog: EditorDialogBase
 		return true;
 	}
 	
+	/*
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		switch (w.GetName()) {
+			
+			case "ListBox": {
+				m_EditBoxPrefab.GetPrefabController().Value = GetCurrentSelectedFile();
+				m_EditBoxPrefab.GetPrefabController().NotifyPropertyChanged("Value");
+				return true;
+			}			
+		}
+		
+		return false;
+	}
+	*/
+	
+	
 	// Abstracterino
-	void LoadFile(string file);
+	void LoadFile(string file)
+	{
+		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
+		edit_box.SetText(file);
+		CloseDialog(DialogResult.OK);
+	}
 	
 	// IDK why but this is crashing if we dont?!
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
 		return (w.GetName() == "ListBox");
+	}
+	
+	// Helper Method
+	private string GetCurrentSelectedFile()
+	{
+		string file;
+		m_ListBoxPrefab.ListBox.GetItemText(m_ListBoxPrefab.ListBox.GetSelectedRow(), 0, file);
+		return file;
 	}
 }

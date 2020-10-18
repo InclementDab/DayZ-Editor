@@ -22,29 +22,6 @@ class EditorEditBoxDialog: EditorDialogBase
 	}	
 }
 
-class EditorFileDialog: EditorDialogBase
-{
-	protected autoptr EditBoxPrefab m_EditBoxPrefab;
-	
-	void EditorFileDialog(string title, string caption = "", string default_value = "", string button_name = "OK")
-	{
-		AddContent(new EditBoxPrefab(caption, m_Controller, default_value));
-		
-		AddButton(button_name, DialogResult.OK);
-		AddButton(DialogResult.Cancel);
-	}
-		
-	DialogResult ShowDialog(out string edit_data)
-	{
-		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
-		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
-		
-		DialogResult result = ShowDialog();
-		edit_data = edit_box.GetText();
-		return result;
-	}	
-}
-
 class EditorExportDialogController: DialogBaseController
 {
 	bool export_selected;

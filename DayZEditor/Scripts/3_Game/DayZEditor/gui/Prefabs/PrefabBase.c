@@ -44,4 +44,8 @@ class PrefabBase<Class TValue>: ScriptView
 	override typename GetControllerType() {
 		return (new PrefabBaseController<TValue>()).Type();
 	}
+	
+	PrefabBaseController<TValue> GetPrefabController() {
+		return m_PrefabBaseController;
+	}
 }
