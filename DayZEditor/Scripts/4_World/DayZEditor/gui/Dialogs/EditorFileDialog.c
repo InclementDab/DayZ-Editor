@@ -9,18 +9,18 @@ static void SyncThread()
 
 class EditorFileSelectDialog: EditorDialogBase
 {
-	protected autoptr ListBoxPrefab<EditorFile> m_ListBoxPrefab;
+	protected autoptr ListBoxPrefab<ref EditorFile> m_ListBoxPrefab;
 	protected string m_CurrentDirectory;
 	
 	protected string m_Filter;
 	
 	void EditorFileSelectDialog(string title)
 	{
-		m_ListBoxPrefab = new ListBoxPrefab<EditorFile>();		
+		m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();		
 		AddContent(m_ListBoxPrefab);
 		
 		m_Filter = "*";
-		LoadFileDirectory("$profile:\\", m_Filter);
+		LoadFileDirectory("$profile:/", m_Filter);
 	}
 	
 	private void LoadFiles(string directory, string filter, inout ref array<ref EditorFile> folder_array, FileSearchMode search_mode)
@@ -36,7 +36,7 @@ class EditorFileSelectDialog: EditorDialogBase
 		FindFileHandle filehandle = FindFile(directory + filter, filename, fileattr, FindFileFlags.ALL);
 		if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
 			if (search_mode == FileSearchMode.FOLDERS) {
-				name_array.Insert(filename + "\\");
+				name_array.Insert(filename + "/");
 			}
 		} else {
 			if (search_mode == FileSearchMode.FILES) {
@@ -47,7 +47,7 @@ class EditorFileSelectDialog: EditorDialogBase
 		while (FindNextFile(filehandle, filename, fileattr)) {
 			if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
 				if (search_mode == FileSearchMode.FOLDERS) {
-					name_array.Insert(filename + "\\");
+					name_array.Insert(filename + "/");
 				}
 			} else {
 				if (search_mode == FileSearchMode.FILES) {
@@ -57,8 +57,8 @@ class EditorFileSelectDialog: EditorDialogBase
 		}
 		
 		CloseFindFile(filehandle);
-		name_array.Sort();
 		
+		name_array.Sort();
 		foreach (string sorted_name: name_array) {
 			folder_array.Insert(new EditorFile(sorted_name, directory, search_mode));
 		}
@@ -92,8 +92,13 @@ class EditorFileSelectDialog: EditorDialogBase
 		TStringArray file_check = {};
 		file.Split(".", file_check);
 		
-		LoadFileDirectory(m_CurrentDirectory + "\\" + file, m_Filter);
-		
+		LoadFileDirectory(m_CurrentDirectory + file, m_Filter);
 		return true;
+	}
+	
+	// IDK why but this is crashing if we dont?!
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{
+		return (w.GetName() == "ListBox");
 	}
 }
