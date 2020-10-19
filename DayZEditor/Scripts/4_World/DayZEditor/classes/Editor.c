@@ -77,7 +77,7 @@ class Editor
 	bool 										SnappingMode;
 	bool 										CollisionMode;
 	
-	string										Version = "DayZ Editor Beta 1.0.35"; 
+	string										Version = "DayZ Editor Beta 1.0.36"; 
 
 	private void Editor(PlayerBase player) 
 	{
@@ -99,8 +99,7 @@ class Editor
 		m_ActionStack 		= new EditorActionStack();
 		
 		// Init Settings
-		if (!Settings)
-			Settings 		= EditorSettings.Load(EditorSettingsFile);
+		Settings 			= EditorSettings.Load(EditorSettingsFile);
 		
 		// Init Hud
 		m_EditorHud 		= new EditorHud();
