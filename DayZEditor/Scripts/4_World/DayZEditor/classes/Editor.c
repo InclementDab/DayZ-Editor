@@ -99,7 +99,8 @@ class Editor
 		m_ActionStack 		= new EditorActionStack();
 		
 		// Init Settings
-		Settings 			= EditorSettings.Load(EditorSettingsFile);
+		if (!Settings)
+			Settings 		= EditorSettings.Load(EditorSettingsFile);
 		
 		// Init Hud
 		m_EditorHud 		= new EditorHud();
@@ -127,7 +128,7 @@ class Editor
 		
 		EditorSettings.Save(Settings, EditorSettingsFile);
 		
-		delete Settings;
+		//delete Settings;
 		delete m_EditorHud;
 		delete m_EditorBrush;
 		delete m_SessionCache;
@@ -402,7 +403,7 @@ class Editor
 			
 			// Camera Init
 			// todo if singleplayer spawn on center of map, otherwise spawn on character in MP
-			vector pos = m_Player.GetPosition();
+			vector pos = m_Player.GetPosition() + Vector(0, 5, 0);
 			m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", pos, ECE_LOCAL));
 			
 			
