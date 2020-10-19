@@ -120,8 +120,8 @@ class EditorBrush
 				vector size = ObjectGetSize(brushed_object);
 				vector direction = Math3D.GetRandomDir();
 				
-				pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] + object_name.ZOffset;
-				direction[1] = Math.RandomFloat(-0.05, 0.05);
+				pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + object_name.ZOffset;
+				direction[1] = Math.RandomFloat(-0.02, 0.02);
 				
 				brushed_object.SetPosition(pos);
 				brushed_object.SetDirection(direction);
