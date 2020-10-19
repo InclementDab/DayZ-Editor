@@ -11,16 +11,21 @@ class EditorFileDialog: EditorDialogBase
 	{
 		m_Filter = filter;
 		
-		//m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();
+		
 		m_EditBoxPrefab = new EditBoxPrefab("File", m_Controller, default_value);
 		
-		//AddContent(m_ListBoxPrefab);
+		// If people want to play around
+		if (GetEditor().Settings.DebugMode) {
+			m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();
+			AddContent(m_ListBoxPrefab);
+			LoadFileDirectory("$profile:\\", m_Filter);
+			AddButton("Back", "BackDirectory");
+		}
+		
+		
+		
 		AddContent(m_EditBoxPrefab);
-		
-		//LoadFileDirectory("$profile:\\", m_Filter);
-		
 		AddButton(button_name, DialogResult.OK);
-		//AddButton("Back", "BackDirectory");
 		AddButton(DialogResult.Cancel);
 	}
 	
