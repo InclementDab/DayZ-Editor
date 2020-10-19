@@ -2,6 +2,16 @@
 <modded_inputs>
     <inputs>
         <actions>
+			<input name="EditorCameraForward" loc="Camera Forward" />
+			<input name="EditorCameraBack" loc="Camera Back" />
+			<input name="EditorCameraLeft" loc="Camera Left" />
+			<input name="EditorCameraRight" loc="Camera Right" />
+			<input name="EditorCameraUp" loc="Camera Up" />
+			<input name="EditorCameraDown" loc="Camera Down" />
+			<input name="EditorCameraTurbo" loc="Camera Turbo" />
+			<input name="EditorCameraSlow" loc="Camera Slow" />
+	
+		
             <input name="EditorToggleActive" loc="Enable / Disable" />
             <input name="EditorToggleUI" loc="Show / Hide UI" />
             <input name="EditorToggleCursor" loc="Toggle Cursor" />
@@ -13,18 +23,48 @@
     </inputs>
 
     <preset>
+		<input name="EditorCameraForward">
+            <btn name="kW"/>
+        </input>
+		
+		<input name="EditorCameraBack">
+            <btn name="kS"/>
+        </input>
+		
+		<input name="EditorCameraLeft">
+            <btn name="kA"/>
+        </input>
+		
+		<input name="EditorCameraRight">
+            <btn name="kD"/>
+        </input>
+		
+		<input name="EditorCameraUp">
+            <btn name="kQ"/>
+        </input>
+		
+		<input name="EditorCameraDown">
+            <btn name="kZ"/>
+        </input>
+		
+		<input name="EditorCameraTurbo">
+            <btn name="kLShift"/>
+        </input>
+		
+		<input name="EditorCameraSlow">
+            <btn name="kLMenu"/>
+        </input>
+		
 		<input name="EditorToggleActive">
-            <btn name="kHome">
-            </btn>
+            <btn name="kHome"/>
         </input>
         
 		<input name="EditorToggleUI">
-            <btn name="kY">
-            </btn>
+            <btn name="kY"/>
         </input>
 
         <input name="EditorToggleCursor">
-            <btn name="kSpace" />
+            <btn name="kSpace"/>
         </input>
 
         <input name="EditorToggleMap">

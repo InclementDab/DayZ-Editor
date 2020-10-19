@@ -79,10 +79,10 @@ class EditorCamera: Camera
 		GetTransform(transform);
 
 		Input input = GetGame().GetInput();
-		if (!input.LocalValue("UAWalkRunTemp")) {
-			float forward = input.LocalValue("UAMoveForward") - input.LocalValue("UAMoveBack");
-			float strafe = input.LocalValue("UAMoveRight") - input.LocalValue("UAMoveLeft");
-			float altitude = input.LocalValue("UAMoveUp") - input.LocalValue("UAMoveDown");
+		if (!KeyState(KeyCode.KC_LCONTROL)) {
+			float forward = input.LocalValue("EditorCameraForward") - input.LocalValue("EditorCameraBack");
+			float strafe = input.LocalValue("EditorCameraRight") - input.LocalValue("EditorCameraLeft");
+			float altitude = input.LocalValue("EditorCameraUp") - input.LocalValue("EditorCameraDown");
 		}
 		
 		float yawDiff = input.LocalValue("UAAimLeft") - input.LocalValue("UAAimRight");
@@ -98,9 +98,9 @@ class EditorCamera: Camera
 		if (zoomAmt != 0)
 			speedInc = 0;
 
-		bool shouldRoll = false; //input.LocalValue("UALookAround");
-		bool decreaseSpeeds = input.LocalValue("UALookAround");
-		bool increaseSpeeds = input.LocalValue("UATurbo");
+		bool shouldRoll = false;
+		bool decreaseSpeeds = input.LocalValue("EditorCameraSlow");
+		bool increaseSpeeds = input.LocalValue("EditorCameraTurbo");
 		
 
 		if (MoveEnabled) {
