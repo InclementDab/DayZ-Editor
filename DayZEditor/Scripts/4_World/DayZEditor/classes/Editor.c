@@ -99,7 +99,9 @@ class Editor
 		m_ActionStack 		= new EditorActionStack();
 		
 		// Init Settings
-		Settings 			= EditorSettings.Load(EditorSettingsFile);
+		//Settings 			= EditorSettings.Load(EditorSettingsFile);
+		// temp until cf test updates
+		Settings = new EditorSettings();
 		
 		// Init Hud
 		m_EditorHud 		= new EditorHud();
@@ -125,7 +127,7 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true); 
 		}
 		
-		EditorSettings.Save(Settings, EditorSettingsFile);
+		//EditorSettings.Save(Settings, EditorSettingsFile);
 		
 		//delete Settings;
 		delete m_EditorHud;
