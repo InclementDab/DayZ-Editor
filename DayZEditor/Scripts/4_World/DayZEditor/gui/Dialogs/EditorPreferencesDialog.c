@@ -21,6 +21,8 @@ class EditorPreferencesDialog: EditorDialogBase
 		game_group.Insert(new SliderPrefab("Object View Distance", GetEditor().Settings, "ObjectViewDistance", GetEditor().Settings.ObjectViewDistance, 0, 8000));
 		
 		GroupPrefab debug_group = new GroupPrefab("Editor", GetEditor().Settings, string.Empty);
+		debug_group.Insert(new EditBoxPrefab("Loot Spawns File", GetEditor().Settings, "EditorProtoFile", GetEditor().Settings.EditorProtoFile));
+		debug_group.Insert(new EditBoxPrefab("Brush File", GetEditor().Settings, "EditorBrushFile", GetEditor().Settings.EditorBrushFile));
 		debug_group.Insert(new CheckBoxPrefab("Modal Dialogs", GetEditor().Settings, "LockCameraDuringDialogs", GetEditor().Settings.LockCameraDuringDialogs));
 		debug_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", GetEditor().Settings, "ShowBoundingBoxes", GetEditor().Settings.ShowBoundingBoxes));
 		debug_group.Insert(new CheckBoxPrefab("Debug Mode", GetEditor().Settings, "DebugMode", GetEditor().Settings.DebugMode));
@@ -29,6 +31,6 @@ class EditorPreferencesDialog: EditorDialogBase
 		AddContent(game_group);
 		AddContent(debug_group);
 		AddButton(DialogResult.OK);
-		AddButton(DialogResult.Cancel);
+		AddButton("Close", DialogResult.Cancel);
 	}
 }

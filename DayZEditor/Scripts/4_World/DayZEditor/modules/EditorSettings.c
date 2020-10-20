@@ -9,6 +9,9 @@ class EditorSettings: Controller
 	bool ShowBoundingBoxes = true;
 	bool DebugMode;
 	
+	string EditorProtoFile = "$profile:/Editor/MapGroupProto.xml";
+	string EditorBrushFile = "$profile:/Editor/EditorBrushes.xml";
+	
 	[NonSerialized()]
 	ref DropdownListPrefabItem SelectedLogLevel;
 		

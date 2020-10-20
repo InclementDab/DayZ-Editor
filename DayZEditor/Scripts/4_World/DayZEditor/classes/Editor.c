@@ -66,9 +66,6 @@ class Editor
 	private bool 								m_Active;
 	string 										EditorSettingsFile = "$profile:/Editor/Settings.json";
 	string										EditorSaveFile;
-	// todo move to settings
-	string										EditorProtoFile = "$profile:/Editor/MapGroupProto.xml";
-	string										EditorBrushFile = "$profile:/Editor/EditorBrushes.xml";
 	string										EditorDirectory = "$profile:/Editor/";
 	
 	// modes
@@ -88,6 +85,11 @@ class Editor
 		// Initialize the profiles/editor directory;		
 		MakeDirectory(EditorDirectory);
 		
+		// Init Settings
+		//Settings 			= EditorSettings.Load(EditorSettingsFile);
+		// temp until cf test updates
+		Settings 			= new EditorSettings();
+		
 		// Object Manager
 		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
 		
@@ -97,11 +99,6 @@ class Editor
 		// Needs to exist on clients for Undo / Redo syncing
 		m_SessionCache 		= new EditorObjectDataMap();
 		m_ActionStack 		= new EditorActionStack();
-		
-		// Init Settings
-		//Settings 			= EditorSettings.Load(EditorSettingsFile);
-		// temp until cf test updates
-		Settings = new EditorSettings();
 		
 		// Init Hud
 		m_EditorHud 		= new EditorHud();
@@ -527,13 +524,13 @@ class Editor
 		m_EditorCamera.SetPosition(Vector(10, 10, 10));
 		m_EditorCamera.LookAt(Vector(0, 0, 0));	
 		
-		if (!FileExist(EditorProtoFile)) {
+		if (!FileExist(Settings.EditorProtoFile)) {
 			EditorLog.Info("EditorProtoFile not found! Copying...");
-			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", EditorProtoFile);
+			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", Settings.EditorProtoFile);
 		}
 		
 		m_EditorMapGroupProto = new EditorMapGroupProto(m_LootEditTarget); 
-		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, EditorProtoFile);
+		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, Settings.EditorProtoFile);
 		
 		m_LootEditMode = true;
 		CollisionMode = true;
