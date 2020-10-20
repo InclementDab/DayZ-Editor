@@ -204,8 +204,8 @@ class Editor
 			vector cam_pos = m_EditorCamera.GetPosition();
 			
 			m_EditorHudController.cam_x = cam_pos[0];
-			m_EditorHudController.cam_y = cam_pos[2];
-			m_EditorHudController.cam_z = cam_pos[1];
+			m_EditorHudController.cam_y = cam_pos[1];
+			m_EditorHudController.cam_z = cam_pos[2];
 			
 			m_EditorHudController.NotifyPropertyChanged("cam_x");
 			m_EditorHudController.NotifyPropertyChanged("cam_y");
