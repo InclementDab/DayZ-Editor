@@ -168,6 +168,9 @@ class EditorObject: EditorWorldObject
 		// Browser item
 		ListItemEnabled = ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM);
 		thread EnableListItem(ListItemEnabled);
+		
+
+		m_SnapPoints.Insert(new EditorSnapPoint(this, Vector(0, -GetYDistance(), 5)));
 	}
 	
 		
@@ -279,6 +282,15 @@ class EditorObject: EditorWorldObject
 			Name = GetDisplayName();
 			Position = GetPosition();
 			Orientation = GetOrientation();
+		}
+		
+		
+		Debug.DestroyAllShapes();
+		
+		if (GetEditor().Settings.DebugMode) {
+			foreach (EditorSnapPoint point: m_SnapPoints) {
+				Debug.DrawSphere(point.GetWorldObject().GetWorldPosition());
+			}
 		}
 	}
 	
@@ -543,40 +555,7 @@ class EditorObject: EditorWorldObject
 		result[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
 		
 		return result;
-	}
-
-	void SetTransformWithSnapping(vector transform[4])
-	{	
-		SetTransform(transform);
-		// I cant wait to delete this... but not yet
-		if (GetEditor().SnappingMode) {
-			vector current_size = GetSize();
-			vector current_pos = GetPosition();
-			float snap_radius = 5;
-
-			foreach (EditorObject editor_object: GetEditor().GetPlacedObjects()) {
-				if (editor_object == this) continue;
-				
-				vector size = editor_object.GetSize();
-				vector position = editor_object.GetPosition();
-				
-				if (vector.Distance(current_pos, position) < 100) {
-					
-					for (int i = 0; i < 12; i++) {
-						vector pos = editor_object.m_BBoxLines[i].GetPosition();
-						if (vector.Distance(pos, current_pos) < snap_radius) {
-							SetPosition(pos);
-							Update();
-							return;
-						}						
-					}
-				}
-			}		
-		}
-		
-		Update();
-	}
-		
+	}	
 
 	void ShowBoundingBox()
 	{
