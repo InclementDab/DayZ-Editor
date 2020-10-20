@@ -458,7 +458,7 @@ class Editor
 	
 	bool OnMouseEnterObject(IEntity target, int x, int y)
 	{
-
+		
 	}
 	
 	bool OnMouseExitObject(IEntity target, int x, int y)
@@ -482,6 +482,7 @@ class Editor
 	
 	EditorObject PlaceObject()
 	{
+		EditorLog.Trace("Editor::PlaceObject");
 		if (!ObjectInHand) return null;	
 		
 		EditorHologram editor_hologram;
@@ -580,8 +581,8 @@ class Editor
 
 	EditorHud ReloadHud() 
 	{
-		if (m_EditorHud)
-			delete m_EditorHud;
+		EditorLog.Trace("Editor::ReloadHud");
+		delete m_EditorHud;
 		
 		m_EditorHud = new EditorHud();
 		m_EditorHudController = m_EditorHud.GetTemplateController();
