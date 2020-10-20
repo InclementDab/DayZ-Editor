@@ -154,7 +154,6 @@ class Editor
 		// Dont think its needed anymore
 		//m_EditorHud.Update(timeslice);
 		
-
 		set<Object> obj = new set<Object>();
 		int x, y;
 		GetMousePos(x, y);
@@ -367,7 +366,6 @@ class Editor
 		m_CurrentKeys.Insert(key);
 		EditorCommand command = CommandManager.CommandShortcutMap[m_CurrentKeys.GetMask()];
 		if (command) {
-						
 			EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
 			CommandArgs args = new CommandArgs();
 			args.Context = m_EditorHud;

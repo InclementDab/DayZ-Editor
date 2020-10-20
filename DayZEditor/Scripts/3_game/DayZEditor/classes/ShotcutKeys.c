@@ -1,5 +1,5 @@
 class ShortcutKeys: array<KeyCode>
-{	
+{
 	int GetMask() 
 	{
 		int mask, offset;		

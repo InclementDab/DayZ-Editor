@@ -290,7 +290,7 @@ class EditorHudToolbarController: EditorControllerBase
 			}
 			
 			case MenuBarEditor: {
-				toolbar_menu = new EditorEditorMenu();
+				toolbar_menu = new EditorEditorMenu(); // lol
 				break;
 			}
 		}
