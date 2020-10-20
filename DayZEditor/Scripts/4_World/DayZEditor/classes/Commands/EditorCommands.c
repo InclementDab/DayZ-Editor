@@ -275,8 +275,7 @@ class EditorPreferencesCommand: EditorCommand
 			return;
 		}
 		
-		// cf test
-		//EditorSettings.Save(m_Editor.Settings, m_Editor.EditorSettingsFile);
+		EditorSettings.Save(m_Editor.Settings, m_Editor.EditorSettingsFile);
 	}
 
 	override string GetName() {
