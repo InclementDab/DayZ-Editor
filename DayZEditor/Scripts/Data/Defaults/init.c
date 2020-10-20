@@ -6,7 +6,7 @@ static void SpawnObject(string type, vector position, vector orientation)
     obj.SetOrientation(obj.GetOrientation());
     obj.SetFlags(EntityFlags.STATIC, false);
     obj.Update();
-	obj.SetAffectPathgraph(true false);
+	obj.SetAffectPathgraph(true, false);
 	if (obj.CanAffectPathgraph()) GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetGame().UpdatePathgraphRegionByObject, 100, false, obj);
 }
 
