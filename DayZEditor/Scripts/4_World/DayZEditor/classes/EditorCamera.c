@@ -90,7 +90,16 @@ class EditorCamera: Camera
 
 		float speedInc = input.LocalValue("UACameraToolSpeedIncrease" ) - input.LocalValue("UACameraToolSpeedDecrease");
 
-		float zoomAmt = input.LocalValue("UANextAction") - input.LocalValue("UAPrevAction");
+		float zoomAmt = input.LocalValue("EditorCameraZoomIn") - input.LocalValue("EditorCameraZoomOut");
+		
+
+		
+		if (KeyState(KeyCode.KC_LSHIFT)) {
+			zoomAmt *= 0.1;
+		} else {
+			zoomAmt *= 0.01;
+		}
+		
 		
 		vector current_position = GetPosition();
 		float current_altitude = current_position[1] - GetGame().SurfaceY(current_position[0], current_position[2]);
@@ -102,19 +111,19 @@ class EditorCamera: Camera
 		bool decreaseSpeeds = input.LocalValue("EditorCameraSlow");
 		bool increaseSpeeds = input.LocalValue("EditorCameraTurbo");
 		
-
+		SetFOV(Math.Clamp(GetCurrentFOV() + zoomAmt, 0.01, 5));
+		
+		if (input.LocalValue("EditorCameraZoomReset")) {
+			SetFOV(1);
+		}
+		
+		Math.Clamp(CAMERA_SPEED, 0.001, FLT_MAX);
 		if (MoveEnabled) {
-			
-			float cam_speed = CAMERA_SPEED;
-			
+						
 			if (CAMERA_BOOST_MULT > 0) {
-				CAMERA_SPEED += Math.Clamp( timeSlice * 40.0 * CAMERA_SPEED * speedInc / CAMERA_BOOST_MULT, -CAMERA_BOOST_MULT, CAMERA_BOOST_MULT );
+				CAMERA_SPEED += Math.Clamp(timeSlice * 40.0 * CAMERA_SPEED * speedInc / CAMERA_BOOST_MULT, -CAMERA_BOOST_MULT, CAMERA_BOOST_MULT);
 				
-				if ( CAMERA_SPEED < 0.001 ) {
-					CAMERA_SPEED = 0.001;
-				}
-				
-				cam_speed = CAMERA_SPEED;// + Math.Clamp(current_altitude - 50, -10, 250);
+				float cam_speed = CAMERA_SPEED;
 				if (decreaseSpeeds) {
 					cam_speed = cam_speed * 0.1;	
 				}
@@ -126,9 +135,9 @@ class EditorCamera: Camera
 			
 			linearVelocity = linearVelocity * CAMERA_VELDRAG;
 
-			linearVelocity = linearVelocity + ( transform[0] * strafe * cam_speed );
-			linearVelocity = linearVelocity + ( transform[1] * altitude * cam_speed );
-			linearVelocity = linearVelocity + ( transform[2] * forward * cam_speed );
+			linearVelocity = linearVelocity + (transform[0] * strafe * cam_speed);
+			linearVelocity = linearVelocity + (transform[1] * altitude * cam_speed);
+			linearVelocity = linearVelocity + (transform[2] * forward * cam_speed);
 
 			transform[3] = transform[3] + ( linearVelocity * timeSlice );
 
@@ -136,7 +145,7 @@ class EditorCamera: Camera
 
 		SetTransform(transform);
 		
-		orientation = GetOrientation();
+	
 		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
 			//SelectTarget(null);
 			angularVelocity = vector.Zero;
@@ -146,23 +155,17 @@ class EditorCamera: Camera
 			if (shouldRoll) {
 				angularVelocity[2] = angularVelocity[2] + ( speedInc * CAMERA_MSENS * 10);
 			}
+			
+			orientation = GetOrientation();
+			orientation[0] = orientation[0] - (angularVelocity[0] * timeSlice);
+			orientation[1] = orientation[1] - (angularVelocity[1] * timeSlice);
+			orientation[2] = orientation[2] - (angularVelocity[2] * timeSlice);
 
-			orientation[0] = orientation[0] - ( angularVelocity[0] * timeSlice );
-			orientation[1] = orientation[1] - ( angularVelocity[1] * timeSlice );
-			orientation[2] = orientation[2] - ( angularVelocity[2] * timeSlice );
+			orientation[0] = Math.NormalizeAngle(orientation[0]);
+			orientation[1] = Math.Clamp(orientation[1], -90, 90);
+			orientation[2] = Math.NormalizeAngle(orientation[2]);
 
-			if ( orientation[1] <= -90 ) {
-				angularVelocity[1] = Math.Min( angularVelocity[1], 0 );
-				orientation[1] = -89.9;
-			} else if ( orientation[1] >= 90 ) {
-				orientation[1] = 89.9; // lazy
-				angularVelocity[1] = Math.Max( angularVelocity[1], 0 );
-			}
-
-			orientation[0] = Math.NormalizeAngle( orientation[0] );
-			orientation[2] = Math.NormalizeAngle( orientation[2] );
-
-			SetOrientation( orientation );
+			SetOrientation(orientation);
 		}
 
 		if (IsTargeting) {
