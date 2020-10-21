@@ -591,12 +591,17 @@ class EditorEscapeCommand: EditorCommand
 		if (EditorUIManager.CurrentDialog) {	
 			EditorUIManager.CurrentDialog.CloseDialog();
 			return;
-		} 
+		}
 		
 		if (EditorUIManager.CurrentMenu) {
 			delete EditorUIManager.CurrentMenu;
 			return;
 		} 
+		
+		if (m_Editor.IsPlacing()) {
+			delete m_Editor.ObjectInHand;
+			return;
+		}
 		
 		if (m_Editor.GetSelectedObjects().Count() > 0) {
 			m_Editor.ClearSelection();
