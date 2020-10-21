@@ -508,7 +508,7 @@ FrameWidgetClass EditorFrame {
              "limit visible" 0
              "Use default text" 1
              "exact text" 1
-             font "gui/fonts/metron28"
+             font "gui/fonts/sdf_MetronBook24"
              {
               ScriptParamsClass {
                Binding_Name "SearchBarData"
