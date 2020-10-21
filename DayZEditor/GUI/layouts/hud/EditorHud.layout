@@ -738,6 +738,7 @@ FrameWidgetClass EditorFrame {
         }
         PanelWidgetClass RightbarCreatePanel {
          ignorepointer 1
+         color 0.1569 0.1569 0.1569 1
          size 1 0.035
          halign center_ref
          valign bottom_ref
@@ -745,7 +746,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         style rover_sim_blackbox
+         style rover_sim_colorable
          {
           WrapSpacerWidgetClass RightbarCreateButtonHost {
            visible 1
