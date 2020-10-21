@@ -10,7 +10,10 @@
 			<input name="EditorCameraDown" loc="Camera Down" />
 			<input name="EditorCameraTurbo" loc="Camera Turbo" />
 			<input name="EditorCameraSlow" loc="Camera Slow" />
-	
+			<input name="EditorCameraZoomIn" loc="Camera Zoom In" />
+			<input name="EditorCameraZoomOut" loc="Camera Zoom Out" />
+			<input name="EditorCameraZoomReset" loc="Camera Zoom Reset" />
+			
 		
             <input name="EditorToggleActive" loc="Enable / Disable" />
             <input name="EditorToggleUI" loc="Show / Hide UI" />
@@ -53,6 +56,24 @@
 		
 		<input name="EditorCameraSlow">
             <btn name="kLMenu"/>
+        </input>		
+		
+		<input name="EditorCameraZoomIn">
+            <btn name="kLControl">
+				<btn name="mWheelDown"/>
+			</btn>
+        </input>		
+		
+		<input name="EditorCameraZoomOut">
+            <btn name="kLControl">
+				<btn name="mWheelUp"/>
+			</btn>
+        </input>		
+		
+		<input name="EditorCameraZoomReset">
+            <btn name="kLControl">
+				<btn name="mBMiddle"/>
+			</btn>
         </input>
 		
 		<input name="EditorToggleActive">
