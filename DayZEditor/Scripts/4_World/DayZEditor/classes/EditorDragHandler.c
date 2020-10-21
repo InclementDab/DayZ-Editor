@@ -127,9 +127,9 @@ class ObjectDragHandler: DragHandler
 				
 				if (m_Editor.GroundMode) {
 					if (m_Editor.MagnetMode) {
-						selected_transform[3] = cursor_pos + pos_delta + surface_normal * vector.Distance(ground_position, selected_transform[3]);
+						selected_transform[3] = cursor_pos - pos_delta + surface_normal * vector.Distance(ground_position, selected_transform[3]);
 					} else {
-						selected_transform[3] = cursor_pos + pos_delta + selected_transform[1] * vector.Distance(ground_position, selected_transform[3]);
+						selected_transform[3] = cursor_pos - pos_delta + selected_transform[1] * vector.Distance(ground_position, selected_transform[3]);
 					}
 				} else {						
 					selected_transform[3] = cursor_pos + pos_delta;
