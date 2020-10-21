@@ -1,7 +1,5 @@
 #define EDITOR_PRINT
 
-
-
 class EditorLog
 {
 	static LogLevel CurrentLogLevel = LogLevel.TRACE;
