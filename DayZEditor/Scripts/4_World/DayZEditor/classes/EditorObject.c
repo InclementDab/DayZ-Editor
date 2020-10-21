@@ -298,6 +298,9 @@ class EditorObject: EditorWorldObject
 	void PropertyChanged(string property_name)
 	{
 		EditorLog.Trace("EditorObject::PropertyChanged %1", property_name);
+		
+		
+		
 		switch (property_name) {
 			
 			case "Name": {
@@ -305,13 +308,14 @@ class EditorObject: EditorWorldObject
 				break;
 			}
 			
-			case "Position": {
-				SetPosition(Position);
-				break;
-			}
-			
+			case "Position": 
 			case "Orientation": {
+				EditorAction property_undo = new EditorAction("SetTransform", "SetTransform");
+				property_undo.InsertUndoParameter(this, GetTransformArray());
+				SetPosition(Position);
 				SetOrientation(Orientation);
+				property_undo.InsertRedoParameter(this, GetTransformArray());
+				GetEditor().InsertAction(property_undo);
 				break;
 			}
 			
