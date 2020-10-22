@@ -59,19 +59,19 @@
         </input>		
 		
 		<input name="EditorCameraZoomIn">
-            <btn name="kLControl">
+            <btn name="mBRight">
 				<btn name="mWheelDown"/>
 			</btn>
         </input>		
 		
 		<input name="EditorCameraZoomOut">
-            <btn name="kLControl">
+            <btn name="mBRight">
 				<btn name="mWheelUp"/>
 			</btn>
         </input>		
 		
 		<input name="EditorCameraZoomReset">
-            <btn name="kLControl">
+            <btn name="mBRight">
 				<btn name="mBMiddle"/>
 			</btn>
         </input>
