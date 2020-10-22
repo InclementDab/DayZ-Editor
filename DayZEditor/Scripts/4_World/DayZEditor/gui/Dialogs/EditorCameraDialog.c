@@ -68,8 +68,9 @@ class EditorCameraDialogController: DialogBaseController
 			
 			case "vignette": {
 				EditorCameraDialogControllerData.Vignette = vignette;
-				// todo: Broken until 1.10 releases
-				//PPEffects.SetVignette(EditorCameraDialogControllerData.Vignette, 0, 0, 0);
+#ifdef DAYZ_1_10
+				PPEffects.SetVignette(EditorCameraDialogControllerData.Vignette, 0, 0, 0, 255);
+#endif
 				break;
 			}
 			
