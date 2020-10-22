@@ -492,11 +492,17 @@ class Editor
 		EditorEvents.ObjectPlaced(this, editor_object);
 		
 		if (!KeyState(KeyCode.KC_LSHIFT)) { 
-			delete ObjectInHand;
-			EditorEvents.StopPlacing(this); 
+			StopPlacing(); 
 		}
 		
 		return editor_object;
+	}
+	
+	void StopPlacing()
+	{
+		EditorLog.Trace("Editor::StopPlacing");
+		delete ObjectInHand;
+		EditorEvents.StopPlacing(this);
 	}
 	
 		

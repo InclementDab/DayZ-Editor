@@ -599,7 +599,7 @@ class EditorEscapeCommand: EditorCommand
 		} 
 		
 		if (m_Editor.IsPlacing()) {
-			delete m_Editor.ObjectInHand;
+			m_Editor.StopPlacing();
 			return;
 		}
 		
