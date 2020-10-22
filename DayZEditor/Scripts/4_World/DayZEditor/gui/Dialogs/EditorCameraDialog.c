@@ -68,7 +68,8 @@ class EditorCameraDialogController: DialogBaseController
 			
 			case "vignette": {
 				EditorCameraDialogControllerData.Vignette = vignette;
-				PPEffects.SetVignette(EditorCameraDialogControllerData.Vignette, 0, 0, 0);
+				// todo: Broken until 1.10 releases
+				//PPEffects.SetVignette(EditorCameraDialogControllerData.Vignette, 0, 0, 0);
 				break;
 			}
 			
