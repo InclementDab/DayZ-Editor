@@ -110,7 +110,7 @@ class EditorSaveAsCommand: EditorExportCommandBase
 class EditorExportToInitFile: EditorExportCommandBase
 {	
 	override typename GetFileType() {
-		return EditorCOMFile;
+		return EditorInitFile;
 	}
 	
 	override string GetName() {

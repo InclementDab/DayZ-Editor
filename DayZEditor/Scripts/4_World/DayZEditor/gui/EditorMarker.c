@@ -90,7 +90,7 @@ class EditorObjectMarker: EditorMarker
 	}
 		
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
+	{		
 		// ignores the object if you are placing
 		if (m_Editor.IsPlacing()) return false;
 		

@@ -113,6 +113,17 @@ class EditorOpenCommand: EditorImportCommandBase
 	}
 }
 
+class EditorImportFromCOM: EditorImportCommandBase
+{
+	override string GetName() {
+		return "Import from COM";
+	}
+	
+	override typename GetFileType() {
+		return EditorCOMFile;
+	}
+}
+
 class EditorImportFromExpansion: EditorImportCommandBase
 {
 	override string GetName() {

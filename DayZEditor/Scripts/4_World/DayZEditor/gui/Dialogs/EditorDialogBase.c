@@ -45,4 +45,10 @@ class EditorDialogBase: DialogBase
 			m_EditorHud.ShowCursor(true);
 		}
 	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		super.OnClick(w, x, y, button);
+		return true; // Dialogs should consume the event whenever you click within
+	}
 }

@@ -53,6 +53,7 @@ class EditorCommandManager
 	ref EditorImportFromExpansion ImportFromExpansionCommand;
 	ref EditorImportFromTerrainBuilder ImportFromTerrainBuilderCommand;
 	ref EditorImportFromVPP ImportFromVPPCommand;
+	ref EditorImportFromCOM ImportFromCOM;
 	
 	ref EditorScriptEditorCommand ScriptEditorCommand;
 	
