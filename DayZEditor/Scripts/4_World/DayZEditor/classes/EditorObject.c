@@ -178,8 +178,11 @@ class EditorObject: EditorWorldObject
 	{
 		EditorLog.Trace("~EditorObject");
 		Update();
-
 		DestroyBoundingBox();
+		
+		if (m_WorldObject) {
+			CF__ObjectManager.RemoveObject(m_WorldObject);
+		}
 		
 		delete m_EditorObjectWorldMarker; 
 		delete m_EditorPlacedListItem;

@@ -1387,7 +1387,8 @@ FrameWidgetClass EditorFrame {
      hexactsize 1
      vexactsize 1
      scriptclass "ViewBinding"
-     font "gui/fonts/MetronBlack-Italic16"
+     font "gui/fonts/etelkatextpro"
+     "bold text" 1
      "text valign" center
      {
       ScriptParamsClass {
