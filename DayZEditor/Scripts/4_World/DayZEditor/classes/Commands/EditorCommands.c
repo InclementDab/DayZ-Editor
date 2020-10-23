@@ -570,7 +570,6 @@ class EditorBrushRadiusCommand: EditorCommand
 {
 	override void CanExecuteChanged(bool state)
 	{
-		Print(m_Controller);
 		if (m_ViewBinding) {
 			Widget root = m_ViewBinding.GetLayoutRoot().GetParent();
 			Print(root.GetName());
