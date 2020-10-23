@@ -57,6 +57,7 @@ class EditorCommandManager
 	ref EditorScriptEditorCommand ScriptEditorCommand;
 	
 	ref EditorDonateCommand DonateCommand;
+	ref EditorHelpCommand HelpCommand;
 	
 	
 	void EditorCommandManager()

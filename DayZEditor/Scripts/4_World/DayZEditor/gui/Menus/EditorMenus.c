@@ -175,6 +175,7 @@ class EditorEditorMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager.PreferencesCommand);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager.DonateCommand);
+		AddMenuButton(m_Editor.CommandManager.HelpCommand);
 	}
 }
 

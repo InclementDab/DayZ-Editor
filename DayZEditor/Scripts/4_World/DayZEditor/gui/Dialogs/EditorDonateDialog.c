@@ -18,5 +18,4 @@ class EditorDonateDialog: EditorDialogBase
 	{
 		GetGame().OpenURL("patreon.com/InclementDab");
 	}
-	
 }
