@@ -73,9 +73,8 @@ class Editor
 	bool 										GroundMode;
 	bool 										SnappingMode;
 	bool 										CollisionMode;
-	
-	string										Version = "DayZ Editor Beta 1.0.36"; 
 
+	string 										Version = "DayZ Editor Beta " + GetVersionNumber();
 	private void Editor(PlayerBase player) 
 	{
 		EditorLog.Trace("Editor");
@@ -835,6 +834,21 @@ class Editor
 		// this crashes smile :)
 		//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
 	}
+	
+	static string GetVersionNumber()
+    {
+        ref array<ref ModInfo> mods = new array<ref ModInfo>;
+        
+        GetDayZGame().GetModInfos(mods);
+		
+        for (int i = 0; i < mods.Count(); i++) {
+            if (mods[i].GetName().IndexOf("DayZ") == 0 && mods[i].GetName().IndexOf("Editor") == 5) {
+                return mods[i].GetVersion();
+            }
+        }
+
+        return string.Empty;
+    }
 	
 }
 
