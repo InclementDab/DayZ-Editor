@@ -21,12 +21,12 @@ The DayZ Editor is a 3D Map editing tool. Designed for creating environments, pl
 
 
 # Links
-Discord: https://discord.com/invite/5g742yH
+[Discord](https://discord.com/invite/5g742yH)
 
-Twitter: https://twitter.com/InclementDab
+[Twitter](https://twitter.com/InclementDab)
 
-Patreon: https://www.patreon.com/inclementdab
+[Patreon](https://www.patreon.com/inclementdab)
 
-Paypal: https://www.paypal.me/InclementDab
+[Paypal](https://www.paypal.me/InclementDab)
 
-Twitch: https://www.twitch.tv/inclementdab
+[Twitch](https://www.twitch.tv/inclementdab)
