@@ -160,7 +160,7 @@ class EditorCamera: Camera
 			orientation[2] = orientation[2] - (angularVelocity[2] * timeSlice);
 
 			orientation[0] = Math.NormalizeAngle(orientation[0]);
-			orientation[1] = Math.Clamp(orientation[1], -90, 90);
+			orientation[1] = Math.Clamp(orientation[1], -89.9, 89.9);
 			orientation[2] = Math.NormalizeAngle(orientation[2]);
 
 			SetOrientation(orientation);
