@@ -286,13 +286,15 @@ class Editor
 				}
 				
 				
-				if (GetBrush() == null) {
+				if (!GetBrush() && GetSelectedObjects().Count() == 0) {
 					
 					if (ObjectUnderCursor) {
 						EditorObject editor_object = m_ObjectManager.GetEditorObject(ObjectUnderCursor);
 						if (editor_object) {
+							
+							// Removed due to bug with inside selection being weird
 							// Allows multiple objects to be dragged with selection
-							if (editor_object.IsSelected()) {
+							/*if (editor_object.IsSelected()) {
 								return true;
 							}
 							
@@ -300,7 +302,7 @@ class Editor
 								ClearSelection();
 							}
 							
-							SelectObject(editor_object);
+							SelectObject(editor_object);*/
 							return true;
 						} 
 					} 
