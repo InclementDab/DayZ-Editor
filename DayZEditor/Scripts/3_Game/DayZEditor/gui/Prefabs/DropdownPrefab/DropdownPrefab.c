@@ -15,7 +15,7 @@ class DropdownListPrefab: PrefabBase<DropdownListPrefabItem>
 
 	private WrapSpacerWidget DropdownWrapper;
 	
-	void DropdownListPrefab(string caption, Controller binding_context, string binding_name, DropdownListPrefabItem default_value = DEFAULT_VALUE)
+	void DropdownListPrefab(string caption, Controller binding_context, string binding_name)
 	{
 		Class.CastTo(m_DropdownListController, m_Controller);
 	}

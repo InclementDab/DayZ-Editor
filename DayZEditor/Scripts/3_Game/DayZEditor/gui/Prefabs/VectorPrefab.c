@@ -21,13 +21,13 @@ class VectorPrefab: PrefabBase<vector>
 {
 	protected VectorPrefabController m_VectorPrefabController;
 	
-	void VectorPrefab(string caption, Controller binding_context, string binding_name, vector default_value = DEFAULT_VALUE)
+	void VectorPrefab(string caption, Controller binding_context, string binding_name)
 	{
 		m_VectorPrefabController = VectorPrefabController.Cast(GetController());
 		
-		m_VectorPrefabController.X = default_value[0].ToString();
-		m_VectorPrefabController.Y = default_value[1].ToString();
-		m_VectorPrefabController.Z = default_value[2].ToString();
+		m_VectorPrefabController.X = m_PrefabBaseController.Value[0].ToString();
+		m_VectorPrefabController.Y = m_PrefabBaseController.Value[1].ToString();
+		m_VectorPrefabController.Z = m_PrefabBaseController.Value[2].ToString();
 		m_VectorPrefabController.NotifyPropertyChanged("X");
 		m_VectorPrefabController.NotifyPropertyChanged("Y");
 		m_VectorPrefabController.NotifyPropertyChanged("Z");

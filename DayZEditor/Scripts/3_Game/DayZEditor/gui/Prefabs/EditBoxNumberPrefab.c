@@ -4,7 +4,7 @@ class EditBoxNumberPrefab: PrefabBase<StringEvaluater>
 	
 	protected float m_StepSize;
 	
-	void EditBoxNumberPrefab(string caption, Controller binding_context, string binding_name, StringEvaluater default_value = DEFAULT_VALUE, float step_size = 1)
+	void EditBoxNumberPrefab(string caption, Controller binding_context, string binding_name, float step_size = 1)
 	{
 		m_StepSize = step_size;
 	}
