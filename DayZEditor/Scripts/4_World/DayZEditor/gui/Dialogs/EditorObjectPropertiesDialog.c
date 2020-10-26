@@ -24,17 +24,12 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		AddButton(DialogResult.Cancel);
 		
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
+		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
 	}
 	
 	void ~EditorObjectPropertiesDialog()
 	{
-		EditorObjectPropertiesDialogState.GeneralGroup = m_GeneralGroup.IsOpen();
-		EditorObjectPropertiesDialogState.ObjectGroup = m_ObjectGroup.IsOpen();
-		EditorObjectPropertiesDialogState.FlagsGroup = m_FlagsGroup.IsOpen();
-		
-		delete m_GeneralGroup;
-		delete m_ObjectGroup;
-		delete m_FlagsGroup;
+		UpdateViewContext();
 	}
 	
 	private void OnObjectSelected(Class context, EditorObject editor_object)
@@ -42,18 +37,18 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		SetEditorObject(editor_object);
 	}
 	
+	private void OnObjectDeselected(Class context, EditorObject editor_object)
+	{
+		UpdateViewContext();
+	}
+	
+	
 	// Maximum Elegance
 	void SetEditorObject(EditorObject editor_object)
 	{
 		m_EditorObject = editor_object;
 		
-		EditorObjectPropertiesDialogState.GeneralGroup = m_GeneralGroup.IsOpen();
-		EditorObjectPropertiesDialogState.ObjectGroup = m_ObjectGroup.IsOpen();
-		EditorObjectPropertiesDialogState.FlagsGroup = m_FlagsGroup.IsOpen();
-		
-		delete m_GeneralGroup;
-		delete m_ObjectGroup;
-		delete m_FlagsGroup;
+		UpdateViewContext();
 		
 		m_GeneralGroup = new GroupPrefab("General", m_EditorObject, string.Empty);
 		m_GeneralGroup.Insert(new CheckBoxPrefab("Show", m_EditorObject, "Show", m_EditorObject.IsVisible()));
@@ -77,5 +72,16 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			human_controller.Insert(new ButtonPrefab("Button1", m_EditorObject, "button"));
 			AddContent(human_controller);
 		}
+	}
+	
+	private void UpdateViewContext()
+	{
+		EditorObjectPropertiesDialogState.GeneralGroup = m_GeneralGroup.IsOpen();
+		EditorObjectPropertiesDialogState.ObjectGroup = m_ObjectGroup.IsOpen();
+		EditorObjectPropertiesDialogState.FlagsGroup = m_FlagsGroup.IsOpen();
+		
+		delete m_GeneralGroup;
+		delete m_ObjectGroup;
+		delete m_FlagsGroup;
 	}
 }
