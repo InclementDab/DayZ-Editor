@@ -15,24 +15,27 @@ class PrefabBaseController<Class TValue>: Controller
 
 class PrefabBase<Class TValue>: ScriptView
 {
+	private static const TValue DEFAULT_VALUE;
 	
 	protected PrefabBaseController<TValue> m_PrefabBaseController;
 	protected Class m_BindingContext;
 	protected string m_BindingName;
 	
 	// With Direct Binding, I think we can depreciate the default_value
-	void PrefabBase(string caption, Class binding_context, string binding_name)
+	void PrefabBase(string caption, Class binding_context, string binding_name, TValue default_value = DEFAULT_VALUE)
 	{
 		m_BindingName = binding_name;
 		m_BindingContext = binding_context;
 	
-		
+		if (default_value == DEFAULT_VALUE) {
+			EnScript.GetClassVar(m_BindingContext, m_BindingName, 0, default_value);
+		}
 		
 		Class.CastTo(m_PrefabBaseController, m_Controller);
 		m_PrefabBaseController.Caption = caption;
 		m_PrefabBaseController.NotifyPropertyChanged("Caption", false);
 		
-		EnScript.GetClassVar(m_BindingContext, m_BindingName, 0, m_PrefabBaseController.Value);
+		m_PrefabBaseController.Value = default_value;
 		m_PrefabBaseController.NotifyPropertyChanged("Value", false);
 	}
 	
