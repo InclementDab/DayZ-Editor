@@ -40,6 +40,7 @@ FrameWidgetClass EditorFrame {
   FrameWidgetClass EditorHudFrame {
    visible 1
    ignorepointer 1
+   position 0 0
    size 1 1
    halign center_ref
    valign center_ref
