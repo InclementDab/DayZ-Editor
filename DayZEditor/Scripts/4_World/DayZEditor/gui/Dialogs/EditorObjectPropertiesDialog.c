@@ -55,7 +55,6 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Static Object", m_EditorObject, "StaticObject", m_EditorObject.IsStaticObject()));
 		m_ObjectGroup.Open(ObjectGroup);
 		
-		
 		AddContent(m_GeneralGroup);
 		AddContent(m_ObjectGroup);
 		
