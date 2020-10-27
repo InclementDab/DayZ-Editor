@@ -1,23 +1,15 @@
-
-// Stores state of the Collapse data
-class EditorObjectPropertiesDialogState
+class EditorObjectPropertiesDialog: EditorDialogBase
 {
 	static bool GeneralGroup = true;
 	static bool ObjectGroup = true;
-	static bool FlagsGroup = true;
-}
-
-class EditorObjectPropertiesDialog: EditorDialogBase
-{
 	
 	protected ref GroupPrefab m_GeneralGroup;
 	protected ref GroupPrefab m_ObjectGroup;
-	protected ref GroupPrefab m_FlagsGroup;
 	
 	protected EditorObject m_EditorObject;
 	
 	void EditorObjectPropertiesDialog(string title, EditorObject editor_object)
-	{
+	{		
 		SetEditorObject(editor_object);
 				
 		AddButton(DialogResult.OK);
@@ -56,12 +48,12 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_GeneralGroup.Insert(new VectorPrefab("Position", m_EditorObject, "Position", m_EditorObject.GetPosition()));
 		m_GeneralGroup.Insert(new VectorPrefab("Orientation", m_EditorObject, "Orientation", m_EditorObject.GetOrientation()));
 		m_GeneralGroup.Insert(new EditBoxNumberPrefab("Scale", m_EditorObject, "Scale", m_EditorObject.GetScale().ToString(), 0.01));
-		m_GeneralGroup.Open(EditorObjectPropertiesDialogState.GeneralGroup);
+		m_GeneralGroup.Open(GeneralGroup);
 		
 		m_ObjectGroup = new GroupPrefab("Object Settings", m_EditorObject, string.Empty);
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Lock", m_EditorObject, "Locked", m_EditorObject.IsLocked()));
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Static Object", m_EditorObject, "StaticObject", m_EditorObject.IsStaticObject()));
-		m_ObjectGroup.Open(EditorObjectPropertiesDialogState.ObjectGroup);
+		m_ObjectGroup.Open(ObjectGroup);
 		
 		
 		AddContent(m_GeneralGroup);
@@ -76,12 +68,13 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	
 	private void UpdateViewContext()
 	{
-		EditorObjectPropertiesDialogState.GeneralGroup = m_GeneralGroup.IsOpen();
-		EditorObjectPropertiesDialogState.ObjectGroup = m_ObjectGroup.IsOpen();
-		EditorObjectPropertiesDialogState.FlagsGroup = m_FlagsGroup.IsOpen();
+		if (m_GeneralGroup)
+			GeneralGroup = m_GeneralGroup.IsOpen();
+		
+		if (m_ObjectGroup)
+			ObjectGroup = m_ObjectGroup.IsOpen();
 		
 		delete m_GeneralGroup;
 		delete m_ObjectGroup;
-		delete m_FlagsGroup;
 	}
 }
