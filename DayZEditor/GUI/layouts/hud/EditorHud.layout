@@ -494,36 +494,14 @@ FrameWidgetClass EditorFrame {
            priority 1
            style rover_sim_colorable
            {
-            EditBoxWidgetClass LeftbarSearchBar {
-             color 0.6353 0.6353 0.6353 1
-             position 0 0
-             size 0.88 1
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scriptclass "ViewBinding"
-             style EditorProperty
-             text "Search...."
-             "limit visible" 0
-             "Use default text" 1
-             "exact text" 1
-             font "gui/fonts/sdf_MetronBook24"
-             {
-              ScriptParamsClass {
-               Binding_Name "SearchBarData"
-               Two_Way_Binding 1
-              }
-             }
-            }
             PanelWidgetClass LeftbarPanelSearchBarIconSpacer {
              ignorepointer 1
              color 0.1216 0.1216 0.1216 0.6275
-             size 32 1
+             size 0.1 1
              halign right_ref
              hexactpos 1
              vexactpos 1
-             hexactsize 1
+             hexactsize 0
              vexactsize 0
              style rover_sim_colorable
              {
@@ -540,7 +518,29 @@ FrameWidgetClass EditorFrame {
                mode blend
                "src alpha" 1
                "no wrap" 1
-               stretch 1
+               stretch 0
+              }
+             }
+            }
+            EditBoxWidgetClass LeftbarSearchBar {
+             color 0.6353 0.6353 0.6353 1
+             position 0.02 0
+             size 0.88 1
+             hexactpos 0
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "ViewBinding"
+             style Default
+             text "Search...."
+             "limit visible" 0
+             "Use default text" 1
+             "exact text" 1
+             font "gui/fonts/sdf_MetronBook24"
+             {
+              ScriptParamsClass {
+               Binding_Name "SearchBarData"
+               Two_Way_Binding 1
               }
              }
             }

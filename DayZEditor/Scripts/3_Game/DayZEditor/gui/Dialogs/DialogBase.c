@@ -74,7 +74,7 @@ class DialogBase: ScriptView
 	private float m_OffsetX, m_OffsetY;
 	override bool OnDrag(Widget w, int x, int y)
 	{
-		Trace("EditorDialog::OnDrag");
+		Trace("OnDrag");
 		if (w == WindowDragWrapper) {
 			m_LayoutRoot.GetPos(m_OffsetX, m_OffsetY);
 			m_OffsetX -= x; m_OffsetY -= y;		
@@ -99,7 +99,7 @@ class DialogBase: ScriptView
 	
 	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
-		Trace("EditorDialog::OnDrop");
+		Trace("OnDrop");
 		g_Game.GetUpdateQueue(CALL_CATEGORY_GUI).Remove(DragUpdate);
 		
 		if (w == WindowDragWrapper) {

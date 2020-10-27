@@ -102,7 +102,7 @@ class EditorHudController: EditorControllerBase
 				}
 
 #ifdef COMPONENT_SYSTEM
-				if (i > 500) return 500;
+				return i;
 #endif
 		    }
 		}
