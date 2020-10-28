@@ -1,3 +1,33 @@
+static EditorSettings LoadSettings(string filename)
+{
+	EditorLog.Trace("EditorSettings::Load");
+	
+	EditorSettings settings = new EditorSettings();
+	
+	// Generate Initial File
+	if (!FileExist(filename)) {
+		SaveSettings(settings, filename);
+		return settings;
+	}
+	
+	EditorLog.Info("Loading EditorSettings from %1", filename);
+	// Why the fuck doesnt this load when i RELOAD the editor?!?!?!??!?!?!?!?!!
+	// B R U H
+	JsonFileLoader<EditorSettings>.JsonLoadFile(filename, settings);
+	return settings;
+}
+
+
+static void SaveSettings(EditorSettings settings, string filename)
+{
+	EditorLog.Trace("EditorSettings::Save");
+	
+	EditorLog.Info("Saving EditorSettings to %1", filename);
+	JsonFileLoader<EditorSettings>.JsonSaveFile(filename, settings);
+}
+	
+
+
 class EditorSettings: Controller
 {	
 	float ViewDistance = 8000;
@@ -14,34 +44,6 @@ class EditorSettings: Controller
 	
 	[NonSerialized()]
 	ref DropdownListPrefabItem SelectedLogLevel;
-		
-	static EditorSettings Load(string filename)
-	{
-		EditorLog.Trace("EditorSettings::Load");
-		
-		EditorSettings settings = new EditorSettings();
-		
-		// Generate Initial File
-		if (!FileExist(filename)) {
-			Save(settings, filename);
-			return settings;
-		}
-		
-		EditorLog.Info("Loading EditorSettings from %1", filename);
-		// Why the fuck doesnt this load when i RELOAD the editor?!?!?!??!?!?!?!?!!
-		// B R U H
-		JsonFileLoader<EditorSettings>.JsonLoadFile(filename, settings);
-		return settings;
-	}
-	
-	
-	static void Save(EditorSettings settings, string filename)
-	{
-		EditorLog.Trace("EditorSettings::Save");
-		
-		EditorLog.Info("Saving EditorSettings to %1", filename);
-		JsonFileLoader<EditorSettings>.JsonSaveFile(filename, settings);
-	}
 	
 	override void PropertyChanged(string property_name)
 	{

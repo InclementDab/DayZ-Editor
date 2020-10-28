@@ -85,9 +85,7 @@ class Editor
 		MakeDirectory(EditorDirectory);
 		
 		// Init Settings
-		//Settings 			= EditorSettings.Load(EditorSettingsFile);
-		// temp until cf test updates
-		Settings 			= new EditorSettings();
+		Settings 			= LoadSettings(EditorSettingsFile);
 		
 		// Object Manager
 		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
@@ -123,9 +121,9 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true); 
 		}
 		
-		//EditorSettings.Save(Settings, EditorSettingsFile);
+		SaveSettings(Settings, EditorSettingsFile);
 		
-		//delete Settings;
+		delete Settings;
 		delete m_EditorHud;
 		delete m_EditorBrush;
 		delete m_SessionCache;
