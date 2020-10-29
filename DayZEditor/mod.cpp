@@ -8,4 +8,4 @@ overview = "";
 action = "";
 author = "";
 authorID = "";
-version = "1.0.1039";
+version = "1.0.1040";
