@@ -27,7 +27,10 @@ class EditorObjectData
 	EditorObjectFlags Flags;
 	
 	[NonSerialized()]
-	ModStructure ObjectMod;
+	ModStructure Mod;
+	
+	[NonSerialized()]
+	string Icon;
 	
 	[NonSerialized()]
 	Object WorldObject;
@@ -36,6 +39,9 @@ class EditorObjectData
 	{
 		lowest_id++;
 		m_Id = lowest_id;
+		
+		//Mod = LoadModData(Type, Path); todo idk
+		//Icon = EditorPlaceableItem.GetIcon(Mod);
 	}
 	
 	static ref EditorObjectData Create(string type, vector transform[4], EditorObjectFlags flags = EditorObjectFlags.ALL)
@@ -52,7 +58,6 @@ class EditorObjectData
 			return null;
 		}
 		
-		Print(position);
 		
 		ref EditorObjectData data = new EditorObjectData();
 		data.Type = type; 
@@ -60,7 +65,7 @@ class EditorObjectData
 		data.Orientation = orientation;
 		data.Flags = flags;
 		data.DisplayName = data.Type;
-		//data.ObjectMod = GetModFromObject(data.Type); todo refactor.
+		//data.Mod = GetModFromObject(data.Type); todo refactor.
 
 		EditorLog.Debug(string.Format("EditorObjectData::Create ID: %1", data.m_Id));
 				
