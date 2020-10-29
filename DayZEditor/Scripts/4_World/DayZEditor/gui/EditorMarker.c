@@ -1,7 +1,7 @@
 
 class EditorMarker: ScriptView
 {
-	
+	protected bool m_Show = true;
 	void EditorMarker()
 	{
 		EditorLog.Trace("EditorMarker");
@@ -32,8 +32,9 @@ class EditorMarker: ScriptView
 	
 	void Show(bool show)
 	{
+		m_Show = show;
 		if (m_LayoutRoot)
-			m_LayoutRoot.Show(show);
+			m_LayoutRoot.Show(m_Show);
 	}
 	
 	protected bool IsMouseInside(int c_x, int c_y)
@@ -286,17 +287,19 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		} else position = m_EditorObject.GetBottomCenter();
 	
 		vector screen_pos = GetGame().GetScreenPos(position);
-		
-		if (screen_pos[2] > 0) {
+
+		int screen_x, screen_y;
+		GetScreenSize(screen_x, screen_y);
+		if (screen_pos[0] != 0 && screen_pos[0] != screen_x && screen_pos[1] != 0 && screen_pos[1] != screen_y && screen_pos[2] > 0) {
+			Show(m_Show);
 			SetPos(screen_pos[0], screen_pos[1]);
-		}
-		/*
-		if (vector.Distance(m_EditorObject.GetPosition(), GetEditor().GetCamera().GetPosition()) > GetEditor().GetSettings().MarkerViewDistance) {
-			Show(false);
-		} else {
-			cant call show on update anymore since its called in EditorObject
-			Show(m_EditorObject.IsVisible());
-		}*/
+		} 
+		
+		// Overrides the hide if the camera isnt looking at the marker
+		else if (m_LayoutRoot)
+			m_LayoutRoot.Show(false);
+			
+			
 		
 		
 		super.Update();
