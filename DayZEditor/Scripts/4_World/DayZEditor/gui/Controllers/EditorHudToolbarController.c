@@ -26,7 +26,7 @@ class EditorHudToolbarController: EditorControllerBase
 	void EditorHudToolbarController()
 	{
 		Debug_Logging = true;
-		EditorUIManager.CurrentEditorHudToolbarController = this;
+		EditorHud.CurrentEditorHudToolbarController = this;
 	}
 	
 	void ~EditorHudToolbarController()
@@ -186,7 +186,7 @@ class EditorHudToolbarController: EditorControllerBase
 	{
 		//EditorLog.Trace("EditorHudToolbarController::OnMouseEnter %1", w.GetName());		
 		
-		if (EditorUIManager.CurrentDialog && !EditorUIManager.IsDialogCommand(w)) {
+		if (EditorHud.CurrentDialog && !EditorHud.IsDialogCommand(w)) {
 			return super.OnMouseEnter(w, x, y);
 		}
 		
@@ -200,7 +200,7 @@ class EditorHudToolbarController: EditorControllerBase
 		}
 		
 		ViewBinding view_binding = GetViewBinding(w);
-		if (view_binding && !EditorUIManager.CurrentMenu) {
+		if (view_binding && !EditorHud.CurrentMenu) {
 			EditorCommand editor_command;
 			if (Class.CastTo(editor_command, view_binding.GetRelayCommand())) {
 				
@@ -213,7 +213,7 @@ class EditorHudToolbarController: EditorControllerBase
 					tooltip.GetLayoutRoot().SetAlpha(100);
 				}
 				
-				EditorUIManager.SetCurrentTooltip(tooltip);
+				EditorHud.SetCurrentTooltip(tooltip);
 				
 			}
 		}
@@ -225,9 +225,9 @@ class EditorHudToolbarController: EditorControllerBase
 			case MenuBarView:
 			case MenuBarEditor: {
 				
-				if (EditorUIManager.CurrentMenu) {
-					delete EditorUIManager.CurrentMenu;
-					EditorUIManager.CurrentMenu = CreateToolbarMenu(w);
+				if (EditorHud.CurrentMenu) {
+					delete EditorHud.CurrentMenu;
+					EditorHud.CurrentMenu = CreateToolbarMenu(w);
 				}
 				
 				break;
@@ -242,7 +242,7 @@ class EditorHudToolbarController: EditorControllerBase
 	{
 		//EditorLog.Trace("EditorHudToolbarController::OnMouseLeave %1", w.GetName());
 		
-		EditorUIManager.SetCurrentTooltip(null);
+		EditorHud.SetCurrentTooltip(null);
 		
 		switch (w.GetTypeName()) {
 		
@@ -260,10 +260,10 @@ class EditorHudToolbarController: EditorControllerBase
 	void MenuBarExecute(ButtonCommandArgs args) 
 	{		
 		EditorLog.Trace("EditorHudToolbarController::MenuBarExecute");
-		if (!EditorUIManager.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
-			EditorUIManager.CurrentMenu = CreateToolbarMenu(args.Source);
+		if (!EditorHud.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
+			EditorHud.CurrentMenu = CreateToolbarMenu(args.Source);
 		} else {
-			delete EditorUIManager.CurrentMenu;
+			delete EditorHud.CurrentMenu;
 		}
 	}	
 	

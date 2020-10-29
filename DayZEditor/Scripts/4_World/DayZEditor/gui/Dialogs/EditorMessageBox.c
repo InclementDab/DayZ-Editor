@@ -16,11 +16,11 @@ class EditorMessageBox: MessageBox
 		m_Editor.GetCamera().LookEnabled = false;
 		m_EditorHud.ShowCursor(true);
 		
-		if (EditorUIManager.CurrentDialog) {
-			EditorUIManager.CurrentDialog.CloseDialog();
+		if (EditorHud.CurrentDialog) {
+			EditorHud.CurrentDialog.CloseDialog();
 		}
 		
-		EditorUIManager.CurrentDialog = this;
+		EditorHud.CurrentDialog = this;
 	}
 	
 	private void ~EditorMessageBox()

@@ -47,7 +47,7 @@ class EditorHudController: EditorControllerBase
 	void EditorHudController() 
 	{
 		EditorLog.Trace("EditorHudController");
-		EditorUIManager.CurrentEditorHudController = this;
+		EditorHud.CurrentEditorHudController = this;
 		
 #ifndef COMPONENT_SYSTEM
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);

@@ -265,8 +265,8 @@ class Editor
 		Widget target = GetWidgetUnderCursor();
 		if (!target) {
 			SetFocus(null);
-			if (EditorUIManager.CurrentMenu) {
-				delete EditorUIManager.CurrentMenu;
+			if (EditorHud.CurrentMenu) {
+				delete EditorHud.CurrentMenu;
 			}
 		}
 		
@@ -447,7 +447,7 @@ class Editor
 		
 		m_Player.GetInputController().SetDisabled(m_Active);
 			
-		EditorUIManager.SetCurrentTooltip(null);
+		EditorHud.SetCurrentTooltip(null);
 	}
 	
 	bool OnMouseEnterObject(IEntity target, int x, int y)

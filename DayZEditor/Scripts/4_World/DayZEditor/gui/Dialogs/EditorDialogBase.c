@@ -13,15 +13,15 @@ class EditorDialogBase: DialogBase
 			m_EditorHud.ShowCursor(true);
 		}
 		
-		if (EditorUIManager.CurrentDialog) {
-			EditorUIManager.CurrentDialog.CloseDialog();
+		if (EditorHud.CurrentDialog) {
+			EditorHud.CurrentDialog.CloseDialog();
 		}
 		
-		EditorUIManager.CurrentDialog = this;
+		EditorHud.CurrentDialog = this;
 		
 		//! Set Dialog to last saved position
-		if (EditorUIManager.DialogLastX != -1 && EditorUIManager.DialogLastY != -1) {
-			m_LayoutRoot.SetPos(EditorUIManager.DialogLastX, EditorUIManager.DialogLastY);
+		if (EditorHud.DialogLastX != -1 && EditorHud.DialogLastY != -1) {
+			m_LayoutRoot.SetPos(EditorHud.DialogLastX, EditorHud.DialogLastY);
 			return;
 		}
 		
@@ -36,8 +36,8 @@ class EditorDialogBase: DialogBase
 		//! Save last Dialog position
 		float dx, dy;
 		m_LayoutRoot.GetPos(dx, dy);
-		EditorUIManager.DialogLastX = dx;
-		EditorUIManager.DialogLastY = dy;
+		EditorHud.DialogLastX = dx;
+		EditorHud.DialogLastY = dy;
 		
 		if (m_Editor) {
 			m_Editor.GetCamera().MoveEnabled = true;

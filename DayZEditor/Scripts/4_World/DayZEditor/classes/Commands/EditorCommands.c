@@ -8,8 +8,8 @@ class EditorCommand: RelayCommand
 	{
 		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(sender, args);
-		if (EditorUIManager.CurrentMenu)
-			delete EditorUIManager.CurrentMenu;		
+		if (EditorHud.CurrentMenu)
+			delete EditorHud.CurrentMenu;		
 		
 		if (!m_Editor) {
 			m_Editor = GetEditor();
@@ -587,13 +587,13 @@ class EditorEscapeCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{
-		if (EditorUIManager.CurrentDialog) {	
-			EditorUIManager.CurrentDialog.CloseDialog();
+		if (EditorHud.CurrentDialog) {	
+			EditorHud.CurrentDialog.CloseDialog();
 			return;
 		}
 		
-		if (EditorUIManager.CurrentMenu) {
-			delete EditorUIManager.CurrentMenu;
+		if (EditorHud.CurrentMenu) {
+			delete EditorHud.CurrentMenu;
 			return;
 		} 
 		

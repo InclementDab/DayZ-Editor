@@ -79,13 +79,13 @@ class EditorPlacedListItem: EditorListItem
 				
 				GetEditor().SelectObject(m_EditorObject);
 				
-				if (EditorUIManager.CurrentMenu) {
-					delete EditorUIManager.CurrentMenu;
+				if (EditorHud.CurrentMenu) {
+					delete EditorHud.CurrentMenu;
 				}
 					
 				int x, y;
 				GetMousePos(x, y);
-				EditorUIManager.CurrentMenu = new EditorPlacedContextMenu(x, y);
+				EditorHud.CurrentMenu = new EditorPlacedContextMenu(x, y);
 				
 				return true;
 			}
