@@ -42,7 +42,8 @@ class EditorDialogBase: DialogBase
 		if (m_Editor) {
 			m_Editor.GetCamera().MoveEnabled = true;
 			m_Editor.GetCamera().LookEnabled = true;
-			m_EditorHud.ShowCursor(true);
+			if (m_EditorHud)
+				m_EditorHud.ShowCursor(true);
 		}
 	}
 	

@@ -19,6 +19,9 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	{
 		EditorLog.Trace("EditorHud::Show");
 		m_LayoutRoot.Show(show);
+		
+		if (EditorUIManager.CurrentDialog)
+			EditorUIManager.CurrentDialog.GetLayoutRoot().Show(show);
 	}
 	
 	bool IsVisible() {
