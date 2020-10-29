@@ -58,7 +58,6 @@ class EditorObjectData
 			return null;
 		}
 		
-		
 		ref EditorObjectData data = new EditorObjectData();
 		data.Type = type; 
 		data.Position = position; 
