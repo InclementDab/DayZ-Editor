@@ -26,8 +26,6 @@ static void SaveSettings(EditorSettings settings, string filename)
 	JsonFileLoader<EditorSettings>.JsonSaveFile(filename, settings);
 }
 	
-
-
 class EditorSettings: Controller
 {	
 	float ViewDistance = 8000;

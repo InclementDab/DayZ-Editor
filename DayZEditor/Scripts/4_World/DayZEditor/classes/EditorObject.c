@@ -180,9 +180,13 @@ class EditorObject: EditorWorldObject
 		Update();
 		DestroyBoundingBox();
 		
-		//if (m_WorldObject) {
-		//	CF__ObjectManager.RemoveObject(m_WorldObject);
-		//}
+		GetGame().ObjectDelete(m_WorldObject);
+				
+		// Store map objects
+		if (m_WorldObject) {
+			EditorLog.Debug("Removing world object ", m_WorldObject.ToString());
+			CF__ObjectManager.RemoveObject(m_WorldObject);
+		}
 		
 		delete m_EditorObjectWorldMarker; 
 		delete m_EditorPlacedListItem;
