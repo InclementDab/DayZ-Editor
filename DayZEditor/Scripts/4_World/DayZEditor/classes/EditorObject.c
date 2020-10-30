@@ -253,13 +253,16 @@ class EditorObject: EditorWorldObject
 	
 	void GetTransform(out vector mat[4]) 
 	{ 
-		GetWorldObject().GetTransform(mat); 
+		if (m_WorldObject)
+			m_WorldObject.GetTransform(mat); 
 	}
 	
 	void SetTransform(vector mat[4]) 
 	{ 	
-		if (m_Locked) return;	
-		GetWorldObject().SetTransform(mat); 
+		if (m_Locked) return;
+		if (m_WorldObject)
+			m_WorldObject.SetTransform(mat); 
+		
 		Update();
 	}
 	
