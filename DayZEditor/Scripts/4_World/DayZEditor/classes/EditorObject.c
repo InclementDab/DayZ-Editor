@@ -32,6 +32,17 @@ class EditorWorldObject
 }
 
 
+modded class BuildingBase
+{
+	override void EEOnAfterLoad()
+	{
+		Print("test");
+		Print(GetGame().GetEntityByPersitentID(1967116182, -448041388, 1604468897, -528646263));
+		super.EEOnAfterLoad();
+	}
+}
+
+
 class EditorObject: EditorWorldObject
 {
 	protected EditorObjectData 				m_Data;
@@ -171,6 +182,16 @@ class EditorObject: EditorWorldObject
 		
 
 		m_SnapPoints.Insert(new EditorSnapPoint(this, Vector(0, -GetYDistance(), 5)));
+		
+		
+		
+		int low, high;
+		Print(m_WorldObject);
+		m_WorldObject.GetNetworkID(low, high);
+		
+		if (IsMissionClient()) {
+			Print(GetGame().GetObjectByNetworkId(low, high));
+		}
 	}
 	
 		
@@ -180,10 +201,16 @@ class EditorObject: EditorWorldObject
 		Update();
 		DestroyBoundingBox();
 		
-		GetGame().ObjectDelete(m_WorldObject);
+		//GetGame().ObjectDelete(m_WorldObject);
 				
 		// Store map objects
 		if (m_WorldObject) {
+			
+			int low, high;
+			m_WorldObject.GetNetworkID(low, high);
+			Print(low);
+			Print(high);
+			
 			EditorLog.Debug("Removing world object ", m_WorldObject.ToString());
 			CF__ObjectManager.RemoveObject(m_WorldObject);
 		}

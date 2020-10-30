@@ -24,7 +24,7 @@ class EditorInitFile: EditorFileType
 		spawn_method.Insert("	\/\/Position, Radius (increase if you have a larger map than Chernarus)");
     	spawn_method.Insert("	GetCEApi().ExportProxyData(Vector(7500, GetGame().SurfaceY(7500, 7500), 7500), 20000);");
 			
-		spawn_method.Insert("	\/\/ Deleted Objects");
+		spawn_method.Insert("	\n\n\/\/ Deleted Objects");
 		
 		foreach (int deleted_object: data.DeletedObjects) {
 			spawn_method.Insert(string.Format("	DeleteObject(%1);", deleted_object));

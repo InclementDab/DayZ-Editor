@@ -319,6 +319,13 @@ class Editor
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					if (GetWidgetUnderCursor())
 						EditorLog.Info(GetWidgetUnderCursor().GetName());						
+					
+					if (ObjectUnderCursor) {
+						int low, high;
+						ObjectUnderCursor.GetNetworkID(low, high);
+						EditorLog.Info(low.ToString());
+						EditorLog.Info(high.ToString());
+					}
 				} 
 				
 				else if (KeyState(KeyCode.KC_LSHIFT)) {
