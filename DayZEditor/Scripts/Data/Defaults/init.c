@@ -10,6 +10,11 @@ static void SpawnObject(string type, vector position, vector orientation)
 	if (obj.CanAffectPathgraph()) GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(GetGame().UpdatePathgraphRegionByObject, 100, false, obj);
 }
 
+static void DeleteObject(int object_id)
+{
+    // todo
+}
+
 // Expansion Compatibility
 class CustomMission: MissionServer
 {

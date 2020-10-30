@@ -186,6 +186,11 @@ class EditorObject: EditorWorldObject
 		if (m_WorldObject) {
 			EditorLog.Debug("Removing world object ", m_WorldObject.ToString());
 			CF__ObjectManager.RemoveObject(m_WorldObject);
+			
+			array<Object> registered = CF__ObjectManager.GetRegisteredObjects();
+			foreach (Object obj: registered) {
+				Print(obj.GetID());
+			}
 		}
 		
 		delete m_EditorObjectWorldMarker; 

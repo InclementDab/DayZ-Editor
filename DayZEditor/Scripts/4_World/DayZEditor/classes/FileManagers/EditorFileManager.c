@@ -44,10 +44,13 @@ class EditorSaveData
 	
 	// Do NOT use a map here. ID is stored in EditorObjectData anyway
 	ref array<ref EditorObjectData> EditorObjects = {};
+	
+	ref array<int> DeletedObjects = {};
 		
 	void ~EditorSaveData()
 	{
 		delete EditorObjects;
+		delete DeletedObjects;
 	}
 	
 	static EditorSaveData CreateFromEditor(Editor editor, bool selected_only = false)
@@ -71,6 +74,9 @@ class EditorSaveData
 				save_data.EditorObjects.Insert(editor_object.GetData());
 			}
 		}
+		
+		save_data.DeletedObjects = editor.GetObjectManager().GetDeletedObjects();
+		Print(save_data.DeletedObjects.Count());
 		
 		return save_data;
 	}

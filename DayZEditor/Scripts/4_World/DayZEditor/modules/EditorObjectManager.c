@@ -103,6 +103,19 @@ class EditorObjectManagerModule: JMModuleBase
 		m_PlacedObjects.Clear();
 		m_SelectedObjects.Clear();
 	}
+	
+	array<int> GetDeletedObjects()
+	{		
+		array<int> deleted_objects = {};
+		array<Object> registered = CF__ObjectManager.GetRegisteredObjects();
+		foreach (Object obj: registered) {
+			if (obj) {
+				deleted_objects.Insert(obj.GetID());
+			}
+		}
+		
+		return deleted_objects;
+	}
 		
 	override bool IsClient() 
 		return true;
