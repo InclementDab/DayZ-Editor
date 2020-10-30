@@ -85,7 +85,8 @@ class Editor
 		MakeDirectory(EditorDirectory);
 		
 		// Init Settings
-		Settings 			= LoadSettings(EditorSettingsFile);
+		//Settings 			= LoadSettings(EditorSettingsFile);
+		Settings = new EditorSettings();
 		
 		// Object Manager
 		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
