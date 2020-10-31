@@ -1,6 +1,17 @@
 
 class EditorCOMFile: EditorFileType
 {
+	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	{
+		COMImportData export_data = new COMImportData();
+		export_data.name = "DayZ Editor Export";
+		foreach (EditorObjectData object_data: data.EditorObjects) {
+			export_data.m_SceneObjects.Insert(new Param3<string, vector, vector>(object_data.Type, object_data.Position, object_data.Orientation));
+		}
+		
+		JsonFileLoader<COMImportData>.JsonSaveFile(file, export_data);
+	}
+	
 	override EditorSaveData Import(string file, ImportSettings settings)
 	{
 		EditorSaveData save_data = new EditorSaveData();
@@ -10,7 +21,6 @@ class EditorCOMFile: EditorFileType
 		
 		
 		foreach (Param3<string, vector, vector> scene_object: import_data.m_SceneObjects) {
-			Print(scene_object);
 			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.param1, scene_object.param2, scene_object.param3, EditorObjectFlags.ALL));
 		}
 		

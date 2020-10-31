@@ -49,6 +49,7 @@ class EditorCommandManager
 	ref EditorExportToExpansion ExportToExpansion;
 	ref EditorExportToTerrainBuilder ExportToTerrainBuilder;
 	ref EditorExportToVPP ExportToVPP;
+	ref EditorExportToCOM ExportToCOM;
 	
 	ref EditorImportFromExpansion ImportFromExpansionCommand;
 	ref EditorImportFromTerrainBuilder ImportFromTerrainBuilderCommand;
