@@ -3,6 +3,8 @@ class EditorVPPFile: EditorFileType
 {
 	override EditorSaveData Import(string file, ImportSettings settings)
 	{
+		EditorLog.Trace("EditorVPPFile::Import");
+		
 		EditorSaveData save_data = new EditorSaveData();
 		FileSerializer file_serializer = new FileSerializer();
 	
@@ -30,6 +32,8 @@ class EditorVPPFile: EditorFileType
 	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
 	{
+		EditorLog.Trace("EditorVPPFile::Export");
+		
 		FileSerializer file_serializer = new FileSerializer();
 	
 		VPPToEditorBuildingSet building_set = new VPPToEditorBuildingSet(settings.ExportSetName);

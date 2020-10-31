@@ -1,7 +1,48 @@
 class EditorInitFile: EditorFileType
 {
+	override EditorSaveData Import(string file, ImportSettings settings)
+	{
+		EditorLog.Trace("EditorInitFile::Import");
+		
+		FileHandle handle = OpenFile(file, FileMode.READ);
+		if (!handle) {
+			EditorLog.Error("File in use %1", file);
+			return null;
+		}
+		
+		EditorSaveData save_data = new EditorSaveData();
+	
+        string line;
+        int line_size = FGets(handle, line);
+		while (line_size >= 1) {
+
+			// Bit of a hacky way of doing this
+			// Other idea is to actually run the 'main' script and then enumerate all the spawned objects,
+			// then add them to the Editor
+			if (line.Contains("SpawnObject(\"")) {
+				TStringArray tokens = {};
+		        line.Split("\"", tokens);
+	        	/*
+				tokens[1]; // Building
+	        	tokens[3]; // Position
+	        	tokens[5]; // Orientation
+	        	*/
+				
+				save_data.EditorObjects.Insert(EditorObjectData.Create(tokens[1], tokens[3].ToVector(), tokens[5].ToVector(), EditorObjectFlags.ALL));
+			}
+			
+			line_size = FGets(handle, line);
+		}        
+
+		CloseFile(handle);
+		
+		return save_data;
+	}
+	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
 	{
+		EditorLog.Trace("EditorInitFile::Export");
+		
 		if (!CopyFile("DayZEditor/scripts/data/Defaults/init.c", file)) {
 			EditorLog.Error("Failed to copy file %1", file);
 			return;

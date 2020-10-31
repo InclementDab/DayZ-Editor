@@ -3,6 +3,8 @@ class EditorTerrainBuilderFile: EditorFileType
 {
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
 	{
+		EditorLog.Trace("EditorTerrainBuilderFile::Export");
+		
 		FileHandle handle = OpenFile(file, FileMode.WRITE);
 		if (!handle) {
 			EditorLog.Error("File in use %1", file);

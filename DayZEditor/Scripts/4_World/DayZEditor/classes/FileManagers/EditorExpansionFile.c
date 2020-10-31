@@ -3,6 +3,8 @@ class EditorExpansionFile: EditorFileType
 {
 	override EditorSaveData Import(string file, ImportSettings settings) 
 	{
+		EditorLog.Trace("EditorExpansionFile::Import");
+		
 		FileHandle handle = OpenFile(file, FileMode.READ);
 		if (!handle) {
 			EditorLog.Error("File in use %1", file);
@@ -28,6 +30,8 @@ class EditorExpansionFile: EditorFileType
 	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
 	{
+		EditorLog.Trace("EditorExpansionFile::Export");
+		
 		FileHandle handle = OpenFile(file, FileMode.WRITE);
 		if (!handle) {
 			EditorLog.Error("File in use %1", file);

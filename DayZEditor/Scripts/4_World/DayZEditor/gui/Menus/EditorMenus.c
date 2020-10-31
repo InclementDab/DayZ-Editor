@@ -135,6 +135,7 @@ class EditorImportMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorImportMenu");
 		
+		AddMenuButton(m_Editor.CommandManager.ImportFromInitFile);
 		AddMenuButton(m_Editor.CommandManager.ImportFromExpansionCommand);
 		AddMenuButton(m_Editor.CommandManager.ImportFromTerrainBuilderCommand);
 		AddMenuButton(m_Editor.CommandManager.ImportFromVPPCommand);

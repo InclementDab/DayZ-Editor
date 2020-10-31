@@ -3,6 +3,8 @@ class EditorCOMFile: EditorFileType
 {
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
 	{
+		EditorLog.Trace("EditorCOMFile::Export");
+		
 		COMImportData export_data = new COMImportData();
 		export_data.name = "DayZ Editor Export";
 		foreach (EditorObjectData object_data: data.EditorObjects) {
@@ -14,6 +16,8 @@ class EditorCOMFile: EditorFileType
 	
 	override EditorSaveData Import(string file, ImportSettings settings)
 	{
+		EditorLog.Trace("EditorCOMFile::Import");
+		
 		EditorSaveData save_data = new EditorSaveData();
 		COMImportData import_data = new COMImportData();
 		
