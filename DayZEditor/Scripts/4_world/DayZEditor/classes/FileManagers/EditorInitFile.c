@@ -22,6 +22,11 @@ class EditorInitFile: EditorFileType
 			if (line.Contains("SpawnObject(\"")) {
 				TStringArray tokens = {};
 		        line.Split("\"", tokens);
+				
+				if (line.Length() < 5) {
+					EditorLog.Error("Invalid SpawnObject data found! %1", line);
+				}
+				
 	        	/*
 				tokens[1]; // Building
 	        	tokens[3]; // Position
