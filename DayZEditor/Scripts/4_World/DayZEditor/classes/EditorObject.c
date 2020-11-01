@@ -61,7 +61,6 @@ class EditorObject: EditorWorldObject
 	// Object Properties
 	bool Show;
 	bool Locked;
-	bool StaticObject;
 	bool Physics;
 	bool Simulate = true;
 	
@@ -196,12 +195,6 @@ class EditorObject: EditorWorldObject
 				
 		// Store map objects
 		if (m_WorldObject) {
-			
-			int low, high;
-			m_WorldObject.GetNetworkID(low, high);
-			Print(low);
-			Print(high);
-			
 			EditorLog.Debug("Removing world object ", m_WorldObject.ToString());
 			CF__ObjectManager.RemoveObject(m_WorldObject);
 		}
@@ -256,7 +249,7 @@ class EditorObject: EditorWorldObject
 	
 	void SetPosition(vector pos) 
 	{ 
-		if (m_Locked) return;
+		if (Locked) return;
 		GetWorldObject().SetPosition(pos);
 		Update();
 	}
@@ -264,7 +257,7 @@ class EditorObject: EditorWorldObject
 	vector GetOrientation() { return GetWorldObject().GetOrientation(); }
 	void SetOrientation(vector pos) 
 	{ 
-		if (m_Locked) return;
+		if (Locked) return;
 		GetWorldObject().SetOrientation(pos);
 		Update();
 	}
@@ -277,7 +270,7 @@ class EditorObject: EditorWorldObject
 	
 	void SetTransform(vector mat[4]) 
 	{ 	
-		if (m_Locked) return;
+		if (Locked) return;
 		if (m_WorldObject)
 			m_WorldObject.SetTransform(mat); 
 		
@@ -286,7 +279,7 @@ class EditorObject: EditorWorldObject
 	
 	void SetScale(float scale)
 	{		
-		if (m_Locked) return;
+		if (Locked) return;
 		//GetWorldObject().SetScale(scale);
 		Update();
 	}
@@ -364,11 +357,6 @@ class EditorObject: EditorWorldObject
 			
 			case "Locked": {
 				Lock(Locked);
-				break;
-			}
-			
-			case "StaticObject": {
-				SetStaticObject(StaticObject);
 				break;
 			}
 			
@@ -704,27 +692,14 @@ class EditorObject: EditorWorldObject
 		//EditorLog.Trace("EditorObject::GetListItem");
 		return m_EditorPlacedListItem;
 	}
-
-	protected bool m_StaticObject;
-	bool IsStaticObject() {
-		return m_StaticObject;
-	}
-	
-	void SetStaticObject(bool static_object) {
-		m_StaticObject = static_object;
-	}
-	
-	protected bool m_Locked;
-	bool IsLocked() {
-		return m_Locked;
-	}
-	
-	void Lock(bool locked) {
-		m_Locked = locked;
+		
+	void Lock(bool locked) 
+	{
+		Locked = locked;
 		
 		EditorObjectMarker marker = GetMarker();
 		if (marker) {
-			marker.GetLayoutRoot().Show(!m_Locked);
+			marker.GetLayoutRoot().Show(!Locked);
 		}
 	}
 	
