@@ -54,6 +54,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_GeneralGroup.Open(GeneralGroup);
 		
 		m_ObjectGroup = new GroupPrefab("Object Settings", m_EditorObject, string.Empty);
+		m_ObjectGroup.Insert(new CheckBoxPrefab("Enable Simulation", m_EditorObject, "Simulate", m_EditorObject.Simulate));
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Lock", m_EditorObject, "Locked", m_EditorObject.IsLocked()));
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Static Object", m_EditorObject, "StaticObject", m_EditorObject.IsStaticObject()));
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Enable Physics", m_EditorObject, "Physics", m_EditorObject.Physics));
@@ -64,7 +65,9 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		if (editor_object.GetWorldObject().IsMan()) {
 			m_HumanGroup = new GroupPrefab("Human Controller", m_EditorObject, string.Empty);
-			m_HumanGroup.Insert(new ButtonPrefab("Control Player", m_EditorObject, "Control"));
+			m_HumanGroup.Insert(new ButtonPrefab("Control", m_EditorObject, "Control"));
+			m_HumanGroup.Insert(new EditBoxPrefab("Animation", m_EditorObject, "CurrentAnimation"));
+			m_HumanGroup.Insert(new ButtonPrefab("Animate", m_EditorObject, "Animate"));
 			m_HumanGroup.Open(HumanGroup);
 			AddContent(m_HumanGroup);
 		}

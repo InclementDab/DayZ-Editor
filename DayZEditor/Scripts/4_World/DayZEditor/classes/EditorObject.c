@@ -63,9 +63,12 @@ class EditorObject: EditorWorldObject
 	bool Locked;
 	bool StaticObject;
 	bool Physics;
+	bool Simulate = true;
 	
 	// Human Properties
 	bool Control;
+	string CurrentAnimation;
+	bool Animate;
 	
 	// Object Flags
 	bool BoundingBoxEnabled;
@@ -381,6 +384,20 @@ class EditorObject: EditorWorldObject
 				break;
 			}
 			
+			case "Simulate": {
+				m_WorldObject.DisableSimulation(!Simulate);
+				break;
+			}
+			
+			case "Animate": {
+				if (Animate) {
+					SetAnimation(CurrentAnimation);
+				} else {
+					ResetAnimation();
+				}
+				break;
+			}
+			
 			case "BoundingBoxEnabled": {
 				//EnableBoundingBox(BoundingBoxEnabled);
 				break;
@@ -656,7 +673,7 @@ class EditorObject: EditorWorldObject
 	void ResetAnimation()
 	{
 		EditorLog.Trace("EditorObject::SetAnimation");
-		if (GetWorldObject().IsMan()) {
+		if (m_WorldObject.IsMan()) {
 			DayZPlayerImplement.Cast(GetWorldObject()).EditorAnimationReset();
 		}
 	}
