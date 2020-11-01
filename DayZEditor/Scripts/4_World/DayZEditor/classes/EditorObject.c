@@ -15,12 +15,13 @@ class EditorWorldObject
 	static EntityAI CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0")
 	{
 		// Set to ECE_SETUP for AI compat. DONT ADD ECE_LOCAL
-		EntityAI obj; 
-		if (!Class.CastTo(obj, GetGame().CreateObject(type, position, true, true))) { //GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS | ECE_UPDATEPATHGRAPH)
+		EntityAI obj;
+		
+		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS | ECE_UPDATEPATHGRAPH))) {
 			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
-		
+	
 		obj.SetOrientation(orientation);
 		obj.SetFlags(EntityFlags.STATIC, true);
 		
