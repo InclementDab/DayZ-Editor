@@ -70,6 +70,7 @@ class EditorObject: EditorWorldObject
 	bool Show;
 	bool Locked;
 	bool StaticObject;
+	bool Physics;
 	
 	bool BoundingBoxEnabled;
 	bool WorldMarkerEnabled;
@@ -379,7 +380,12 @@ class EditorObject: EditorWorldObject
 			case "StaticObject": {
 				SetStaticObject(StaticObject);
 				break;
-			}			
+			}
+			
+			case "Physics": {
+				EnablePhysics(Physics);
+				break;
+			}
 			
 			case "BoundingBoxEnabled": {
 				//EnableBoundingBox(BoundingBoxEnabled);
@@ -711,5 +717,21 @@ class EditorObject: EditorWorldObject
 		if (marker) {
 			marker.GetLayoutRoot().Show(!m_Locked);
 		}
+	}
+	
+	void EnablePhysics(bool enable)
+	{
+		Physics = enable;
+		
+		if (m_WorldObject) {
+			if (enable) {
+				m_WorldObject.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
+				m_WorldObject.SetDynamicPhysicsLifeTime(-1);
+				dBodySetMass(m_WorldObject, 100);
+			} else {
+				m_WorldObject.SetDynamicPhysicsLifeTime(0);
+			}
+		}
+		
 	}
 }

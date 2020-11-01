@@ -53,6 +53,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_ObjectGroup = new GroupPrefab("Object Settings", m_EditorObject, string.Empty);
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Lock", m_EditorObject, "Locked", m_EditorObject.IsLocked()));
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Static Object", m_EditorObject, "StaticObject", m_EditorObject.IsStaticObject()));
+		m_ObjectGroup.Insert(new CheckBoxPrefab("Enable Physics", m_EditorObject, "Physics", m_EditorObject.Physics));
 		m_ObjectGroup.Open(ObjectGroup);
 		
 		AddContent(m_GeneralGroup);
