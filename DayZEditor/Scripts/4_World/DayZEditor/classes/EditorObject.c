@@ -122,11 +122,9 @@ class EditorObject: EditorWorldObject
 			m_WorldObject = m_Data.WorldObject;
 		}
 		
-		Print("here");
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
 		}
-		
 		
 		vector clip_info[2];
 		ClippingInfo(clip_info);
