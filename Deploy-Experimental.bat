@@ -5,5 +5,5 @@ pause
 
 start /W "Build PBO" "%CD%/DayZEditor/Workbench/Batchfiles/ZBinarizeDeploy.bat"
 echo Uploading to Workshop
-start /W "Upload to Workshop" "%CD%/DayZEditor/Workbench/Deployment/Deployment.exe" experimental
-pause
+cd "%CD%/DayZEditor/Workbench/Deployment"
+start /W "Upload to Workshop" Deployment.exe experimental
