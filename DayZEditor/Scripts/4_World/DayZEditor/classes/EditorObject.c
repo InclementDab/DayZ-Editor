@@ -16,7 +16,7 @@ class EditorWorldObject
 	{
 		// Set to ECE_SETUP for AI compat. DONT ADD ECE_LOCAL
 		EntityAI obj; 
-		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS | ECE_UPDATEPATHGRAPH))) { // ECE_CREATEPHYSICS, ECE_UPDATEPATHGRAPH
+		if (!Class.CastTo(obj, GetGame().CreateObject(type, position, true, true))) { //GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS | ECE_UPDATEPATHGRAPH)
 			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
@@ -28,17 +28,6 @@ class EditorWorldObject
 		obj.DisableSimulation(true);
 		
 		return obj;
-	}
-}
-
-
-modded class BuildingBase
-{
-	override void EEOnAfterLoad()
-	{
-		Print("test");
-		Print(GetGame().GetEntityByPersitentID(1967116182, -448041388, 1604468897, -528646263));
-		super.EEOnAfterLoad();
 	}
 }
 
@@ -62,16 +51,22 @@ class EditorObject: EditorWorldObject
 	
 	static float line_width = 0.02;
 	
+	// Object Data
 	string Name;
 	vector Position;
 	vector Orientation;
 	float Scale;
 	
+	// Object Properties
 	bool Show;
 	bool Locked;
 	bool StaticObject;
 	bool Physics;
 	
+	// Human Properties
+	bool Control;
+	
+	// Object Flags
 	bool BoundingBoxEnabled;
 	bool WorldMarkerEnabled;
 	bool MapMarkerEnabled;
@@ -123,6 +118,7 @@ class EditorObject: EditorWorldObject
 			m_WorldObject = m_Data.WorldObject;
 		}
 		
+		Print("here");
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
 		}
@@ -158,41 +154,33 @@ class EditorObject: EditorWorldObject
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		m_BasePoint = GetGame().CreateObjectEx("BoundingBoxBase", base_point, ECE_NONE);
 		m_BasePoint.SetScale(0.001);
+
 		
-		AddChild(m_BasePoint, 0);
-		
+		AddChild(m_BasePoint, -1, true);
+
 		for (int i = 0; i < 8; i++) {
 			m_SnapPoints.Insert(new EditorSnapPoint(this, m_LineVerticies[i]));
 		}
+
 		
 		// Bounding Box
 		BoundingBoxEnabled = ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX);
 		thread EnableBoundingBox(BoundingBoxEnabled);
-		
+
 		// Map marker
 		MapMarkerEnabled = ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER);
 		thread EnableMapMarker(MapMarkerEnabled);
-		
+
 		// World marker
 		WorldMarkerEnabled = ((m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER);
 		thread EnableObjectMarker(WorldMarkerEnabled);
-		
+
 		// Browser item
 		ListItemEnabled = ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM);
 		thread EnableListItem(ListItemEnabled);
-		
 
 		m_SnapPoints.Insert(new EditorSnapPoint(this, Vector(0, -GetYDistance(), 5)));
-		
-		
-		
-		int low, high;
-		Print(m_WorldObject);
-		m_WorldObject.GetNetworkID(low, high);
-		
-		if (IsMissionClient()) {
-			Print(GetGame().GetObjectByNetworkId(low, high));
-		}
+	
 	}
 	
 		
@@ -384,6 +372,11 @@ class EditorObject: EditorWorldObject
 			
 			case "Physics": {
 				EnablePhysics(Physics);
+				break;
+			}
+			
+			case "Control": {
+				ControlPlayer(Control);
 				break;
 			}
 			
@@ -732,6 +725,17 @@ class EditorObject: EditorWorldObject
 				m_WorldObject.SetDynamicPhysicsLifeTime(0);
 			}
 		}
+	}
+	
+	void ControlPlayer(bool enable)
+	{
+		Control = enable;
 		
+		if (m_WorldObject && m_WorldObject.IsMan()) {
+			PlayerBase pb = PlayerBase.Cast(m_WorldObject);
+			GetGame().SelectPlayer(pb.GetIdentity(), pb);
+			pb.DisableSimulation(!Control);
+			GetEditor().GetEditorHud().Show(!Control);
+		}
 	}
 }

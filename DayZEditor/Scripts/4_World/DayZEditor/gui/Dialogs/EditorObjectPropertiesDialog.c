@@ -3,8 +3,11 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	static bool GeneralGroup = true;
 	static bool ObjectGroup = true;
 	
+	static bool HumanGroup = true;
+	
 	protected ref GroupPrefab m_GeneralGroup;
 	protected ref GroupPrefab m_ObjectGroup;
+	protected ref GroupPrefab m_HumanGroup;
 	
 	protected EditorObject m_EditorObject;
 	
@@ -60,9 +63,10 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		AddContent(m_ObjectGroup);
 		
 		if (editor_object.GetWorldObject().IsMan()) {
-			GroupPrefab human_controller = new GroupPrefab("Human Controller", m_EditorObject, string.Empty);
-			human_controller.Insert(new ButtonPrefab("Button1", m_EditorObject, "button"));
-			AddContent(human_controller);
+			m_HumanGroup = new GroupPrefab("Human Controller", m_EditorObject, string.Empty);
+			m_HumanGroup.Insert(new ButtonPrefab("Control Player", m_EditorObject, "Control"));
+			m_HumanGroup.Open(HumanGroup);
+			AddContent(m_HumanGroup);
 		}
 	}
 	
@@ -74,7 +78,11 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		if (m_ObjectGroup)
 			ObjectGroup = m_ObjectGroup.IsOpen();
 		
+		if (m_HumanGroup)
+			HumanGroup = m_HumanGroup.IsOpen();
+		
 		delete m_GeneralGroup;
 		delete m_ObjectGroup;
+		delete m_HumanGroup;
 	}
 }

@@ -19,7 +19,7 @@ class EditorSnapPoint: EditorWorldObject
 		
 		m_WorldObject = GetGame().CreateObjectEx("BoundingBoxBase", vector.Zero, ECE_NONE);
 		m_WorldObject.SetScale(0.001);
-		m_EditorObject.GetWorldObject().AddChild(m_WorldObject, 0);
+		m_EditorObject.GetWorldObject().AddChild(m_WorldObject, -1, true);
 		m_WorldObject.SetPosition(m_SnapPosition);
 		m_WorldObject.Update();
 	}
