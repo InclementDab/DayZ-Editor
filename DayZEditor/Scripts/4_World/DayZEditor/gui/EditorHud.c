@@ -6,6 +6,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	
 	protected CanvasWidget EditorCanvas;
 	
+	
+	
 	// todo protect this and move all Map logic in here?
 	MapWidget EditorMapWidget;
 

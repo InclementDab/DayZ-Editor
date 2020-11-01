@@ -121,11 +121,7 @@ class EditorHudController: EditorControllerBase
 		if (Model == "LargeTentBackPack") return true;
 		if (GetGame().IsKindOf(Model, "GP25Base")) return true;
 		if (GetGame().IsKindOf(Model, "M203Base")) return true;
-		
-		//! temporary
-		//if (GetGame().IsKindOf(Model, "Man")) return true;
-		//if (GetGame().IsKindOf(Model, "DZ_LightAI")) return true;
-
+	
 		//! Everything is fine... I hope... :pain:
 		return false;
 	}
@@ -211,47 +207,53 @@ class EditorHudController: EditorControllerBase
 
 
 
-	/*
+	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
-		if (button == MouseState.LEFT) {
 		
+		if (button == MouseState.RIGHT) {
+		
+			switch (w) {
 
-			
-		// Raycast to see if TranslationWidget is under cursor	
-			/*		
-			RaycastRVParams raycast_params = new RaycastRVParams(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * EditorSettings.OBJECT_VIEW_DISTANCE);
-			ref array<ref RaycastRVResult> raycast_result = new array<ref RaycastRVResult>();
-			DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
-			
-
-			if (raycast_result.Count() > 0) {
-				Object obj = raycast_result.Get(0).obj;
-				if ((obj.GetType() == "TranslationWidget" || obj.GetType() == "RotationWidget")) {
-					EditorEvents.DragInvoke(obj, m_Editor.GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
-					return true;
+				case LeftbarSearchBar: {
+					SearchBarData = string.Empty;
+					NotifyPropertyChanged("SearchBarData");
+					break;
 				}
-				
-				EditorObject editor_object = m_Editor.GetObjectManager().GetEditorObject(obj);
-				if (editor_object != null) {
-					if (input.LocalValue("UAWalkRunTemp")) {
-						EditorObjectManager.ToggleSelection(editor_object);
-					} else if (!input.LocalValue("UATurbo")) {
-						EditorEvents.ClearSelection(this);
-					} else EditorEvents.SelectObject(this, editor_object);
-					return true;
-				}
-			}
-			
-			
-			
+			}	
 		}
 		
-		return false;
-	}*/
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
 
+	// Raycast to see if TranslationWidget is under cursor	
+	/*		
+	RaycastRVParams raycast_params = new RaycastRVParams(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * EditorSettings.OBJECT_VIEW_DISTANCE);
+	ref array<ref RaycastRVResult> raycast_result = new array<ref RaycastRVResult>();
+	DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
+	
+
+	if (raycast_result.Count() > 0) {
+		Object obj = raycast_result.Get(0).obj;
+		if ((obj.GetType() == "TranslationWidget" || obj.GetType() == "RotationWidget")) {
+			EditorEvents.DragInvoke(obj, m_Editor.GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
+			return true;
+		}
 		
+		EditorObject editor_object = m_Editor.GetObjectManager().GetEditorObject(obj);
+		if (editor_object != null) {
+			if (input.LocalValue("UAWalkRunTemp")) {
+				EditorObjectManager.ToggleSelection(editor_object);
+			} else if (!input.LocalValue("UATurbo")) {
+				EditorEvents.ClearSelection(this);
+			} else EditorEvents.SelectObject(this, editor_object);
+			return true;
+		}
+	}
+	*/
+	
+	
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{
 		if (RecursiveGetParent(w, "LeftbarScroll") || RecursiveGetParent(w, "RightbarScroll")) {
