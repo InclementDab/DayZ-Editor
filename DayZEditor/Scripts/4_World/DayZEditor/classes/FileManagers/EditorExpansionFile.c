@@ -16,6 +16,10 @@ class EditorExpansionFile: EditorFileType
         string line;
         int line_size = FGets(handle, line);
 		while (line_size > 1) {
+			line.TrimInPlace();
+			if (line.Substring(0, 2) == "\/\/") {
+				continue;
+			}
 			
 			TStringArray tokens = {};
 	        line.Split("|", tokens); 
