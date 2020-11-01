@@ -96,7 +96,7 @@ class EditorCloseCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		DialogResult result = MessageBox.Show("Close", "Are you sure?", MessageBoxButtons.OKCancel);
+		DialogResult result = EditorMessageBox.Show("Close", "Are you sure?", MessageBoxButtons.OKCancel);
 		
 		if (result != DialogResult.OK) {
 			return;

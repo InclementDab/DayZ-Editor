@@ -55,7 +55,7 @@ class MessageBox: DialogBase
 
 	static DialogResult Show(string title, string caption, MessageBoxButtons buttons)
 	{
-		MessageBox message_box = new MessageBox(title, caption, buttons);
+		MessageBox message_box = new MessageBox(title, caption, buttons);		
 		return message_box.ShowDialog();
 	}
 	

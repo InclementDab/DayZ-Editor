@@ -47,9 +47,22 @@ modded class InGameMenu
 	
 	override void OnClick_Respawn()
 	{
-		if (GetEditor()) {
-			GetEditor().CommandManager.OpenCommand.Execute(this, null);
+		if (!GetEditor()) {
+			super.OnClick_Respawn();
+			return;
 		}
+		
+		GetEditor().CommandManager.OpenCommand.Execute(this, null);
+	}
+	
+	override void OnClick_Exit()
+	{
+		if (!GetEditor()) {
+			super.OnClick_Exit();
+			return;
+		}
+		
+		GetEditor().CommandManager.ExitCommand.Execute(this, null);
 	}
 	
 	
