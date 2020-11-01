@@ -46,10 +46,10 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		UpdateViewContext();
 		
 		m_GeneralGroup = new GroupPrefab("General", m_EditorObject, string.Empty);
-		m_GeneralGroup.Insert(new CheckBoxPrefab("Show", m_EditorObject, "Show", m_EditorObject.IsVisible()));
-		m_GeneralGroup.Insert(new EditBoxPrefab("Name", m_EditorObject, "Name", m_EditorObject.GetDisplayName()));
-		m_GeneralGroup.Insert(new VectorPrefab("Position", m_EditorObject, "Position", m_EditorObject.GetPosition()));
-		m_GeneralGroup.Insert(new VectorPrefab("Orientation", m_EditorObject, "Orientation", m_EditorObject.GetOrientation()));
+		m_GeneralGroup.Insert(new CheckBoxPrefab("Show", m_EditorObject, "Show", m_EditorObject.Show));
+		m_GeneralGroup.Insert(new EditBoxPrefab("Name", m_EditorObject, "Name", m_EditorObject.Name));
+		m_GeneralGroup.Insert(new VectorPrefab("Position", m_EditorObject, "Position", m_EditorObject.Position));
+		m_GeneralGroup.Insert(new VectorPrefab("Orientation", m_EditorObject, "Orientation", m_EditorObject.Orientation));
 		m_GeneralGroup.Insert(new EditBoxNumberPrefab("Scale", m_EditorObject, "Scale", m_EditorObject.GetScale().ToString(), 0.01));
 		m_GeneralGroup.Open(GeneralGroup);
 		

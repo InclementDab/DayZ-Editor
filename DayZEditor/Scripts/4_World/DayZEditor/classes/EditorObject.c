@@ -50,7 +50,7 @@ class EditorObject: EditorWorldObject
 	private vector m_LineCenters[12]; 
 	private vector m_LineVerticies[8];
 	
-	static float line_width = 0.02;
+	
 	
 	// Object Data
 	string Name;
@@ -59,7 +59,7 @@ class EditorObject: EditorWorldObject
 	float Scale;
 	
 	// Object Properties
-	bool Show;
+	bool Show = true;
 	bool Locked;
 	bool Physics;
 	bool Simulate = true;
@@ -497,7 +497,7 @@ class EditorObject: EditorWorldObject
 			transform[3] = m_LineCenters[i];
 			
 			for (int j = 0; j < 3; j++) 
-				transform[j][j] = ((position[j] == m_LineCenters[i][j]) * size[j]/2) + line_width;						
+				transform[j][j] = ((position[j] == m_LineCenters[i][j]) * size[j]/2) + BOUNDING_BOX_THICKNESS;						
 			 
 			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_LOCAL));
 			m_BBoxLines[i].SetTransform(transform);			
@@ -508,9 +508,9 @@ class EditorObject: EditorWorldObject
 		
 		vector y_axis_mat[4];
 		vector bottom_center = GetBottomCenter() - GetPosition();
-		y_axis_mat[0][0] = line_width;
+		y_axis_mat[0][0] = BOUNDING_BOX_THICKNESS;
 		y_axis_mat[1][1] = 1000;
-		y_axis_mat[2][2] = line_width;
+		y_axis_mat[2][2] = BOUNDING_BOX_THICKNESS;
 		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1], bottom_center[2]);
 		
 		m_CenterLine = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_LOCAL));
@@ -534,24 +534,19 @@ class EditorObject: EditorWorldObject
 			GetGame().ObjectDelete(m_CenterLine);	
 	}
 	
-	private bool m_Visible = true;
-	bool IsVisible() {
-		return m_Visible;
-	}
-	
 	void Show(bool show) 
 	{
-		m_Visible = show;
+		Show = show;
 		
 		if (m_EditorObjectMapMarker) {
-			m_EditorObjectMapMarker.Show(m_Visible);
+			m_EditorObjectMapMarker.Show(Show);
 		}
 		
 		if (m_EditorObjectWorldMarker) {
-			m_EditorObjectWorldMarker.Show(m_Visible);
+			m_EditorObjectWorldMarker.Show(Show);
 		}
 		
-		if (m_Visible) {
+		if (Show) {
 			GetWorldObject().SetFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
 		} else {
 			GetWorldObject().ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
