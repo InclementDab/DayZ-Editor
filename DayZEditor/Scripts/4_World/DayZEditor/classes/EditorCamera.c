@@ -4,10 +4,19 @@
 // make option Q and E go up and down no matter orientation
 class EditorCamera: Camera
 {
-	static float CAMERA_SPEED = 60;
-	static float CAMERA_BOOST_MULT = 6.5;
-	static float CAMERA_VELDRAG = 0.05;
-	static float CAMERA_MSENS = 35.0;
+	float FOV;
+	float DOFDistance;
+	float DOFBlur;
+	float Blur;
+	float Vignette;
+	float Sharpness;
+	float NearPlane;
+	float Exposure;
+	
+	float Speed = 60;
+	float Boost_Multiplier = 6.5;
+	float Drag = 0.05;
+	float Mouse_Sens = 35.0;
 	
 	float SendUpdateAccumalator = 0.0;
 	
@@ -26,7 +35,10 @@ class EditorCamera: Camera
 		EditorLog.Trace("EditorCamera");
 		SetEventMask(EntityEvent.FRAME);
 		SelectTarget(null);
-
+		
+		FOV = GetCurrentFOV();
+		NearPlane = GetNearPlane();
+		Exposure = GetGame().GetWorld().GetEyeAccom();
 	}
 
 	void ~EditorCamera()
@@ -115,23 +127,23 @@ class EditorCamera: Camera
 			SetFOV(1);
 		}
 		
-		Math.Clamp(CAMERA_SPEED, 0.001, FLT_MAX);
+		Math.Clamp(Speed, 0.001, FLT_MAX);
 		if (MoveEnabled) {
 						
-			if (CAMERA_BOOST_MULT > 0) {
-				CAMERA_SPEED += Math.Clamp(timeSlice * 40.0 * CAMERA_SPEED * speedInc / CAMERA_BOOST_MULT, -CAMERA_BOOST_MULT, CAMERA_BOOST_MULT);
+			if (Boost_Multiplier > 0) {
+				Speed += Math.Clamp(timeSlice * 40.0 * Speed * speedInc / Boost_Multiplier, -Boost_Multiplier, Boost_Multiplier);
 				
-				float cam_speed = CAMERA_SPEED;
+				float cam_speed = Speed;
 				if (decreaseSpeeds) {
 					cam_speed = cam_speed * 0.1;	
 				}
 
 				if (increaseSpeeds) {
-					cam_speed = (cam_speed * CAMERA_BOOST_MULT) * (0.2 + (transform[3][1])/600) ;
+					cam_speed = (cam_speed * Boost_Multiplier) * (0.2 + (transform[3][1])/600) ;
 				}
 			}
 			
-			linearVelocity = linearVelocity * CAMERA_VELDRAG;
+			linearVelocity = linearVelocity * Drag;
 
 			linearVelocity = linearVelocity + (transform[0] * strafe * cam_speed);
 			linearVelocity = linearVelocity + (transform[1] * altitude * cam_speed);
@@ -147,11 +159,11 @@ class EditorCamera: Camera
 		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
 			//SelectTarget(null);
 			angularVelocity = vector.Zero;
-			angularVelocity[0] = angularVelocity[0] + ( yawDiff * CAMERA_MSENS * 10 );
-			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * CAMERA_MSENS * 10);
+			angularVelocity[0] = angularVelocity[0] + ( yawDiff * Mouse_Sens * 10 );
+			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * Mouse_Sens * 10);
 			
 			if (shouldRoll) {
-				angularVelocity[2] = angularVelocity[2] + ( speedInc * CAMERA_MSENS * 10);
+				angularVelocity[2] = angularVelocity[2] + ( speedInc * Mouse_Sens * 10);
 			}
 			
 			orientation = GetOrientation();
@@ -184,8 +196,46 @@ class EditorCamera: Camera
 		d[0] = dir[0] * sin;
 	}
 	
-	float GetCameraSpeed() {
-		return CAMERA_SPEED;
+	void PropertyChanged(string property_name)
+	{
+		switch (property_name) {
+						
+			case "FOV": {
+				SetFOV(FOV);
+				break;
+			}			
+			
+			case "NearPlane": {
+				SetNearPlane(NearPlane);
+				break;
+			}			
+			
+			case "DOFBlur":
+			case "DOFDistance": {
+				SetFocus(DOFDistance, DOFBlur);
+				break;
+			}
+			
+			case "Vignette": {
+				PPEffects.SetVignette(Vignette, 0, 0, 0, 255);
+				break;
+			}
+			
+			case "Blur": {
+				PPEffects.SetBlur(Blur);
+				break;
+			}
+			
+			case "Sharpness": {	
+				GetGame().GetWorld().GetMaterial("Graphics/Materials/postprocess/filmgrainNV").SetParam("Sharpness", Sharpness);
+				break;
+			}
+			
+			case "Exposure": {
+				GetGame().GetWorld().SetEyeAccom(Exposure);
+				break;
+			}
+		}		
 	}
 }
 

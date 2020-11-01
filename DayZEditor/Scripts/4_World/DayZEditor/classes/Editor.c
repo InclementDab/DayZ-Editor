@@ -530,7 +530,7 @@ class Editor
 		if (!m_LootEditTarget) return;
 		m_LootEditTarget.SetOrientation(Vector(90, 0, 0));
 		
-		EditorCamera.CAMERA_SPEED = 10;
+		GetCamera().Speed = 10;
 		m_PositionBeforeLootEditMode = m_EditorCamera.GetPosition();
 		m_EditorCamera.SetPosition(Vector(10, 10, 10));
 		m_EditorCamera.LookAt(Vector(0, 0, 0));	
@@ -576,7 +576,7 @@ class Editor
 		delete m_EditorMapGroupProto;
 		
 		GetGame().ObjectDelete(m_LootEditTarget);
-		EditorCamera.CAMERA_SPEED = 60;
+		GetCamera().Speed = 60;
 		m_EditorCamera.SetPosition(m_PositionBeforeLootEditMode);
 
 		m_LootEditMode = false;
