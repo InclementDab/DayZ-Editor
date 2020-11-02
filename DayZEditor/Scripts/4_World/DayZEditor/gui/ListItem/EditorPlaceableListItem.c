@@ -64,18 +64,8 @@ class EditorPlaceableListItem: EditorListItem
 		m_LayoutRoot.GetScreenPos(pos_x, pos_y);
 		m_LayoutRoot.GetScreenSize(size_x, size_y);
 		
-		tooltip.SetTitle(m_PlaceableItem.Type);
-		
-		int screen_x, screen_y;
-		GetScreenSize(screen_x, screen_y);
-		
-		// bounds Y height to screen size
-		// 150 is static height of tooltip
-		if (pos_y + 300 > screen_y) {
-			pos_y = screen_y - 300;
-		}
-		
-		tooltip.GetLayoutRoot().SetPos(pos_x + size_x, pos_y);
+		tooltip.SetTitle(m_PlaceableItem.Type);	
+		tooltip.SetPosition(pos_x + size_x, pos_y);
 		
 		//! Animals and Zombies / Players "survivors"
 		if (!GetGame().IsKindOf(m_PlaceableItem.Type, "Man") && !GetGame().IsKindOf(m_PlaceableItem.Type, "DZ_LightAI")) {

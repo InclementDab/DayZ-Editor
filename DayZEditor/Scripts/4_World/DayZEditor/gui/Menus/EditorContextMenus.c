@@ -6,7 +6,23 @@ class EditorContextMenu: EditorMenu
 		m_Editor.GetCamera().LookEnabled = false;
 		m_EditorHud.ShowCursor(true);
 		
-		m_LayoutRoot.SetPos(x, y);
+		int sx, sy;
+		GetScreenSize(sx, sy);
+		
+		float lw, lh;
+		m_LayoutRoot.GetScreenSize(lw, lh);
+		
+		// bounds XY to size of screen
+		if (x > sx - lw) {
+			x -= lw;
+		}
+		
+		// 300 is a dummy number since i cant get the full size of the context menu
+		if (y > sy - 300) {
+			y -= 300;
+		}
+				
+		m_LayoutRoot.SetPos(Math.Clamp(x, 0, sx - lw), Math.Clamp(y, 0, sy - lh));
 	}
 	
 	void ~EditorContextMenu()
