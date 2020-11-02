@@ -31,6 +31,7 @@ class EditorCommandManager
 	ref EditorReloadHudCommand ReloadHudCommand;
 	ref EditorReloadBrushesCommand ReloadBrushesCommand;
 	ref EditorLootEditorCommand LootEditorCommand;
+	ref EditorAddToFavoritesCommand AddToFavoritesCommand;
 	
 	ref EditorPlaceObjectCommand PlaceObjectCommand;
 	

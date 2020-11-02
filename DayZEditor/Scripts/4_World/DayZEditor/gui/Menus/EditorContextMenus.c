@@ -47,12 +47,16 @@ class EditorPlacedContextMenu: EditorContextMenu
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager.DeleteCommand);
 		AddMenuDivider();
-		AddMenuButton(m_Editor.CommandManager.LootEditorCommand);
 		AddMenuButton(m_Editor.CommandManager.ObjectPropertiesCommand);
 	}
 }
 
 class EditorPlaceableContextMenu: EditorContextMenu
 {
-	
+	void EditorPlaceableContextMenu(float x, float y)
+	{
+		EditorLog.Trace("EditorPlacedContextMenu");
+		AddMenuButton(m_Editor.CommandManager.AddToFavoritesCommand);
+		AddMenuButton(m_Editor.CommandManager.LootEditorCommand);
+	}
 }
