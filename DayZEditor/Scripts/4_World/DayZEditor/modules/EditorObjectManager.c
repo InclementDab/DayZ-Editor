@@ -24,9 +24,9 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	EditorObject GetEditorObject(notnull Object world_object) 
 		return m_WorldObjectIndex.Get(world_object.GetID()); 
-		
-
-		
+	
+	// Current Selected PlaceableListItem
+	EditorPlaceableItem CurrentSelectedItem;
 	
 	override void Init()
 	{

@@ -1,4 +1,5 @@
 
+
 class EditorPlaceableListItem: EditorListItem
 {
 	protected ref EditorPlaceableItem m_PlaceableItem;
@@ -38,6 +39,14 @@ class EditorPlaceableListItem: EditorListItem
 				Select();
 				break;
 			}
+			
+			case 1: {
+				Select();
+				int x, y;
+				GetMousePos(x, y);
+				EditorHud.CurrentMenu = new EditorPlaceableContextMenu(x, y);
+				break;
+			}
 		}
 				
 		return true;
@@ -48,12 +57,24 @@ class EditorPlaceableListItem: EditorListItem
 		if (placeable_item == m_PlaceableItem) {
 			Select();
 		}
-		else Deselect();
+		//else Deselect();
 	}
 	
 	void OnStopPlacing(Class context)
 	{
 		Deselect();
+	}
+	
+	override void Select()
+	{
+		super.Select();
+		GetEditor().GetObjectManager().CurrentSelectedItem = m_PlaceableItem;
+	}
+	
+	override void Deselect()
+	{
+		super.Deselect();
+		delete GetEditor().GetObjectManager().CurrentSelectedItem;
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)

@@ -354,7 +354,7 @@ class EditorLootEditorCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		m_Editor.EditLootSpawns(m_Editor.GetSelectedObjects().GetElement(0).GetType());
+		m_Editor.EditLootSpawns(GetEditor().GetObjectManager().CurrentSelectedItem);
 	}
 	
 	override string GetName() {

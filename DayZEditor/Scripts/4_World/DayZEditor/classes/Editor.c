@@ -518,11 +518,11 @@ class Editor
 	private vector m_PositionBeforeLootEditMode;
 	private ref EditorMapGroupProto m_EditorMapGroupProto;
 	
-	void EditLootSpawns(string name)
+	void EditLootSpawns(EditorPlaceableItem placeable_item)
 	{
-		EditorLog.Trace("Editor::EditLootSpawns %1", name);
-		
-		m_LootEditTarget = GetGame().CreateObjectEx(name, Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
+		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.Type);
+		 
+		m_LootEditTarget = GetGame().CreateObjectEx(placeable_item.Type, Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 		vector size = ObjectGetSize(m_LootEditTarget);
 		m_LootEditTarget.SetPosition(Vector(0, size[1] / 2, 0));
 		
