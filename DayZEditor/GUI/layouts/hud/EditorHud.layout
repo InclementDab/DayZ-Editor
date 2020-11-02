@@ -1153,7 +1153,7 @@ FrameWidgetClass EditorFrame {
        visible 1
        ignorepointer 1
        position 0.02 0
-       size 0.24 1
+       size 0.3 1
        halign right_ref
        valign center_ref
        hexactpos 0
@@ -1170,14 +1170,16 @@ FrameWidgetClass EditorFrame {
        {
         WrapSpacerWidgetClass Info_CamPos_X {
          ignorepointer 1
-         position 5 0
-         size 120 24
+         position 0 0
+         size 0.3333 24
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
          Padding 0
          Margin 0
+         content_halign center
+         content_valign center
          {
           PanelWidgetClass Info_CamPos_X_Icon {
            ignorepointer 1
@@ -1205,22 +1207,36 @@ FrameWidgetClass EditorFrame {
             }
            }
           }
-          TextWidgetClass Info_CamPos_X_Value {
+          FrameWidgetClass Info_CamPos_X_Spacer {
            ignorepointer 1
-           size 0.8 1
+           position 0 0
+           size 0.05 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+          }
+          EditBoxWidgetClass Info_CamPos_X_Value {
+           visible 1
+           ignorepointer 0
+           position 0 0
+           size 0.75 1
            halign right_ref
+           valign center_ref
            hexactpos 1
            vexactpos 1
            hexactsize 0
            vexactsize 0
            scriptclass "ViewBinding"
-           text "1000.5"
-           font "gui/fonts/MetronBook"
-           "text halign" center
-           "text valign" center
+           style Default
+           text "0"
+           "limit visible" 0
+           "exact text" 1
+           font "gui/fonts/MetronBook22"
            {
             ScriptParamsClass {
              Binding_Name "cam_x"
+             Two_Way_Binding 1
             }
            }
           }
@@ -1263,9 +1279,18 @@ FrameWidgetClass EditorFrame {
             }
            }
           }
-          TextWidgetClass Info_CamPos_Y_Value {
+          FrameWidgetClass Info_CamPos_Y_Spacer {
            ignorepointer 1
-           size 0.8 1
+           position 0 0
+           size 0.05 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+          }
+          EditBoxWidgetClass Info_CamPos_Y_Value {
+           ignorepointer 0
+           size 0.75 1
            halign right_ref
            hexactpos 1
            vexactpos 1
@@ -1273,12 +1298,12 @@ FrameWidgetClass EditorFrame {
            vexactsize 0
            scriptclass "ViewBinding"
            text "1000.5"
+           "exact text" 1
            font "gui/fonts/MetronBook"
-           "text halign" center
-           "text valign" center
            {
             ScriptParamsClass {
              Binding_Name "cam_y"
+             Two_Way_Binding 1
             }
            }
           }
@@ -1319,9 +1344,19 @@ FrameWidgetClass EditorFrame {
             }
            }
           }
-          TextWidgetClass Info_CamPos_Z_Value {
+          FrameWidgetClass Info_CamPos_Z_Spacer {
            ignorepointer 1
-           size 0.8 1
+           position 0 0
+           size 0.05 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+          }
+          EditBoxWidgetClass Info_CamPos_Z_Value {
+           ignorepointer 0
+           position 0 0
+           size 0.75 1
            halign right_ref
            hexactpos 1
            vexactpos 1
@@ -1329,12 +1364,12 @@ FrameWidgetClass EditorFrame {
            vexactsize 0
            scriptclass "ViewBinding"
            text "1000.5"
+           "exact text" 1
            font "gui/fonts/MetronBook"
-           "text halign" center
-           "text valign" center
            {
             ScriptParamsClass {
              Binding_Name "cam_z"
+             Two_Way_Binding 1
             }
            }
           }

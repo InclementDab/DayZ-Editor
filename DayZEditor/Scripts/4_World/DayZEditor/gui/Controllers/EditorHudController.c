@@ -172,6 +172,13 @@ class EditorHudController: EditorControllerBase
 				*/
 				break;
 			}
+			
+			case "cam_x":
+			case "cam_y":
+			case "cam_z": {				
+				GetEditor().GetCamera().SetPosition(Vector(cam_x, cam_y, cam_z));
+				break;
+			}
 		}
 	}
 	
