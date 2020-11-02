@@ -50,8 +50,6 @@ class EditorObject: EditorWorldObject
 	private vector m_LineCenters[12]; 
 	private vector m_LineVerticies[8];
 	
-	
-	
 	// Object Data
 	string Name;
 	vector Position;
@@ -80,8 +78,8 @@ class EditorObject: EditorWorldObject
 
 	void SetDisplayName(string display_name) {
 		m_Data.DisplayName = display_name;
-		EditorListItemController.Cast(m_EditorPlacedListItem.GetController()).Label = m_Data.DisplayName;
-		m_EditorPlacedListItem.GetController().NotifyPropertyChanged("Label");
+		m_EditorPlacedListItem.GetTemplateController().Label = m_Data.DisplayName;
+		m_EditorPlacedListItem.GetTemplateController().NotifyPropertyChanged("Label");
 	}
 	
 	string GetDisplayName() { 
@@ -154,7 +152,7 @@ class EditorObject: EditorWorldObject
 		
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		m_BasePoint = GetGame().CreateObjectEx("BoundingBoxBase", base_point, ECE_NONE);
-		m_BasePoint.SetScale(0.001);
+		m_BasePoint.SetScale(0);
 
 		
 		AddChild(m_BasePoint, -1, true);
@@ -235,15 +233,18 @@ class EditorObject: EditorWorldObject
 		return m_Data;
 	}
 	
-	bool OnMouseEnter(int x, int y)	{
+	bool OnMouseEnter(int x, int y)	
+	{
 		return true;
 	}
 	
-	bool OnMouseLeave(int x, int y) {
+	bool OnMouseLeave(int x, int y) 
+	{
 		return true;
 	}
 
-	vector GetPosition() { 
+	vector GetPosition() 
+	{ 
 		return GetWorldObject().GetPosition(); 
 	}
 	
