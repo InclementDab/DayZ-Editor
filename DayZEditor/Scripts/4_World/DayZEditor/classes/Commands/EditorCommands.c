@@ -320,7 +320,7 @@ class EditorCameraControlsCommand: EditorCommand
 	override string GetName() {
 		return "Camera";
 	}
-	
+		
 	override string GetIcon() {
 		return "set:dayz_editor_gui image:camera_alt";
 	}
@@ -354,7 +354,8 @@ class EditorLootEditorCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		m_Editor.EditLootSpawns(GetEditor().GetObjectManager().CurrentSelectedItem);
+		if (GetEditor().GetObjectManager().CurrentSelectedItem)
+			m_Editor.EditLootSpawns(GetEditor().GetObjectManager().CurrentSelectedItem);
 	}
 	
 	override string GetName() {
