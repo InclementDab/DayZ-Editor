@@ -29,6 +29,9 @@ class EditorCamera: Camera
 	vector angularVelocity;
 	vector orientation;
 	
+	float ColorizeRed;
+	float ColorizeGreen;
+	float ColorizeBlue;
 	
 	void EditorCamera()
 	{
@@ -233,6 +236,13 @@ class EditorCamera: Camera
 			
 			case "Exposure": {
 				GetGame().GetWorld().SetEyeAccom(Exposure);
+				break;
+			}
+			
+			case "ColorizeRed":
+			case "ColorizeGreen":
+			case "ColorizeBlue": {
+				PPEffects.SetColorizationNV(ColorizeRed, ColorizeGreen, ColorizeBlue);
 				break;
 			}
 		}		
