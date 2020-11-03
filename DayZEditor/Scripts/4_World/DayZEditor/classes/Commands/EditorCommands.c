@@ -35,7 +35,7 @@ class EditorCommand: RelayCommand
 			if (state) {
 				root.SetAlpha(1);
 			} else {
-				root.SetAlpha(0.25);
+				root.SetAlpha(0.15);
 			}
 			
 			root.Enable(state);			
