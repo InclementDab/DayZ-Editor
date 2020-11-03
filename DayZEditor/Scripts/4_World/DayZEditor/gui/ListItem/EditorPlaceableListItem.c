@@ -90,7 +90,7 @@ class EditorPlaceableListItem: EditorListItem
 		
 		//! Animals and Zombies / Players "survivors"
 		if (!GetGame().IsKindOf(m_PlaceableItem.Type, "Man") && !GetGame().IsKindOf(m_PlaceableItem.Type, "DZ_LightAI")) {
-			tooltip.SetContent(GetGame().CreateObjectEx(m_PlaceableItem.Type, vector.Zero, ECE_NONE));
+			tooltip.SetContent(GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE));
 		}		
 		
 		EditorHud.SetCurrentTooltip(tooltip);
