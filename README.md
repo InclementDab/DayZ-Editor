@@ -6,7 +6,7 @@ The DayZ Editor is a 3D Map editing tool. Designed for creating environments, pl
 
 ![Why are you reading this? GO USE IT!](https://i.imgur.com/UsYQXZz.jpg)
 
-# How to join
+## How to join
 
 [Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2250764298)
 
@@ -20,13 +20,13 @@ The DayZ Editor is a 3D Map editing tool. Designed for creating environments, pl
 
 4.) Run game!
 
-# Want to load your files in a server?
+## Want to load your edits in a server?
 
 [DayZ Editor Loader](https://github.com/InclementDab/DayZ-Editor-Loader) Mod makes that very easy!
 
 
 
-# Links
+## Links
 [Discord](https://discord.com/invite/5g742yH)
 
 [Twitter](https://twitter.com/InclementDab)
