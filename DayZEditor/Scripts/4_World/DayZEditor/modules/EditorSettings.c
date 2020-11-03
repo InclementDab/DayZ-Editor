@@ -35,6 +35,7 @@ class EditorSettings: Controller
 
 	bool LockCameraDuringDialogs = true;
 	bool ShowBoundingBoxes = true;
+	bool BrushedObjectMarkers;
 	bool DebugMode;
 	
 	string EditorProtoFile = "$profile:/Editor/MapGroupProto.xml";

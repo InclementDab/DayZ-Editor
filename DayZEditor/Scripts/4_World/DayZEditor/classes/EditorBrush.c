@@ -106,9 +106,13 @@ class EditorBrush
 		
 		EditorObjectDataMap data_set = new EditorObjectDataMap();
 		
+		int flags;
+		if (GetEditor().Settings.BrushedObjectMarkers) {
+			flags = EditorObjectFlags.OBJECTMARKER;
+		}
+		
 		for (int i = 0; i < m_BrushDensity * 100; i++) {
-			
-			
+						
 			vector pos = position;
 			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
 			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
@@ -125,19 +129,14 @@ class EditorBrush
 				
 				brushed_object.SetPosition(pos);
 				brushed_object.SetDirection(direction);
-
-				EditorObjectData data = EditorObjectData.Create(brushed_object, EditorObjectFlags.NONE);
+				
+				EditorObjectData data = EditorObjectData.Create(brushed_object, flags);
 				data_set.Insert(data.GetID(), data);
 			}
 		}
 		
 
 		EditorObjectMap object_set = GetEditor().CreateObjects(data_set, true);		
-		
-		// Uncomment if you bring back ObjectMarkers
-		/*foreach (EditorObject editor_object: object_set) {
-			editor_object.Lock(true);
-		}*/
 	}
 	
 	void OnMouseUp(vector position)
