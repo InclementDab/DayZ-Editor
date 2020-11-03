@@ -49,6 +49,7 @@ class EditorCameraDialog: EditorDialogBase
 		
 		m_AdvancedGroup = new GroupPrefab("Advanced", m_EditorCamera, string.Empty);
 		m_AdvancedGroup.Insert(new CheckBoxPrefab("Hide Cursor On Drag", m_EditorCamera, "HideCursorOnDrag"));
+		m_AdvancedGroup.Open(OpenAdvancedGroup);
 		
 		AddContent(m_CameraGroup);
 		AddContent(m_ColorCorrectionGroup);
