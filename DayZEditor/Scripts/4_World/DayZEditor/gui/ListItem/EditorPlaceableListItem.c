@@ -57,7 +57,6 @@ class EditorPlaceableListItem: EditorListItem
 		if (placeable_item == m_PlaceableItem) {
 			Select();
 		}
-		//else Deselect();
 	}
 	
 	void OnStopPlacing(Class context)
