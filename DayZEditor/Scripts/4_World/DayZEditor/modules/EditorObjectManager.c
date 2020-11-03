@@ -42,7 +42,6 @@ class EditorObjectManagerModule: JMModuleBase
 		EditorLog.Trace("EditorObjectManager::CreateObject");
 
 		EditorObject editor_object = new EditorObject(editor_object_data);
-
 		m_PlacedObjects.InsertEditorObject(editor_object);
 		m_WorldObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object);
 		

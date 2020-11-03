@@ -126,16 +126,18 @@ class EditorBrush
 				brushed_object.SetPosition(pos);
 				brushed_object.SetDirection(direction);
 
-				EditorObjectData data = EditorObjectData.Create(brushed_object, EditorObjectFlags.OBJECTMARKER);
+				EditorObjectData data = EditorObjectData.Create(brushed_object, EditorObjectFlags.NONE);
 				data_set.Insert(data.GetID(), data);
 			}
 		}
 		
 
 		EditorObjectMap object_set = GetEditor().CreateObjects(data_set, true);		
-		foreach (EditorObject editor_object: object_set) {
+		
+		// Uncomment if you bring back ObjectMarkers
+		/*foreach (EditorObject editor_object: object_set) {
 			editor_object.Lock(true);
-		}
+		}*/
 	}
 	
 	void OnMouseUp(vector position)
