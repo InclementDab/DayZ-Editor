@@ -26,15 +26,18 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 			CurrentDialog.GetLayoutRoot().Show(show);
 	}
 	
-	bool IsVisible() {
+	bool IsVisible() 
+	{
 		return m_LayoutRoot.IsVisible();
 	}
 	
-	void ToggleCursor() {
+	void ToggleCursor() 
+	{
 		ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
 	}
 	
-	void ShowCursor(bool state) {
+	void ShowCursor(bool state) 
+	{
 		GetGame().GetUIManager().ShowCursor(state);
 	}
 		

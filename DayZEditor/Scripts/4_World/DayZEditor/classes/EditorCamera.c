@@ -33,6 +33,8 @@ class EditorCamera: Camera
 	float ColorizeGreen;
 	float ColorizeBlue;
 	
+	bool HideCursorOnDrag;
+	
 	void EditorCamera()
 	{
 		EditorLog.Trace("EditorCamera");
@@ -79,7 +81,8 @@ class EditorCamera: Camera
 		SelectedTarget = target;
 	}
 	
-
+	private float cursor_store_x, cursor_store_y;
+	
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
 		if ( SendUpdateAccumalator > 0.5 ){
@@ -131,6 +134,8 @@ class EditorCamera: Camera
 		}
 		
 		Math.Clamp(Speed, 0.001, FLT_MAX);
+		
+		
 		if (MoveEnabled) {
 						
 			if (Boost_Multiplier > 0) {
@@ -158,9 +163,21 @@ class EditorCamera: Camera
 
 		SetTransform(transform);
 		
-	
+		if (HideCursorOnDrag) {
+			if (input.LocalPress("UATempRaiseWeapon")) {
+				GetEditor().GetEditorHud().ShowCursor(false);
+				
+			}
+			
+			if (input.LocalRelease("UATempRaiseWeapon")) {
+				GetEditor().GetEditorHud().ShowCursor(true);
+			}
+		}
+		
+		
 		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
 			//SelectTarget(null);
+			
 			angularVelocity = vector.Zero;
 			angularVelocity[0] = angularVelocity[0] + ( yawDiff * Mouse_Sens * 10 );
 			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * Mouse_Sens * 10);

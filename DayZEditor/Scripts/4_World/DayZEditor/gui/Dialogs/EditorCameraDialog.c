@@ -7,11 +7,13 @@ class EditorCameraDialog: EditorDialogBase
 
 	static bool OpenCameraGroup = true;
 	static bool OpenColorCorrectionGroup;
+	static bool OpenAdvancedGroup;
 	
 	private EditorCamera m_EditorCamera;
 	
 	protected ref GroupPrefab m_CameraGroup;
 	protected ref GroupPrefab m_ColorCorrectionGroup;
+	protected ref GroupPrefab m_AdvancedGroup;
 	
 	void EditorCameraDialog(string title) 
 	{
@@ -45,8 +47,12 @@ class EditorCameraDialog: EditorDialogBase
 		m_ColorCorrectionGroup.Insert(new SliderPrefab("Blue", m_EditorCamera, "ColorizeBlue", m_EditorCamera.ColorizeBlue));
 		m_ColorCorrectionGroup.Open(OpenColorCorrectionGroup);
 		
+		m_AdvancedGroup = new GroupPrefab("Advanced", m_EditorCamera, string.Empty);
+		m_AdvancedGroup.Insert(new CheckBoxPrefab("Hide Cursor On Drag", m_EditorCamera, "HideCursorOnDrag"));
+		
 		AddContent(m_CameraGroup);
 		AddContent(m_ColorCorrectionGroup);
+		AddContent(m_AdvancedGroup);
 		
 		AddButton(DialogResult.OK);
 		AddButton(new DialogButton("Default", "ResetDefaultExecute"));
@@ -57,9 +63,11 @@ class EditorCameraDialog: EditorDialogBase
 	{
 		OpenCameraGroup = m_CameraGroup.IsOpen();
 		OpenColorCorrectionGroup = m_ColorCorrectionGroup.IsOpen();
+		OpenAdvancedGroup = m_AdvancedGroup.IsOpen();
 		
 		delete m_CameraGroup;
 		delete m_ColorCorrectionGroup;
+		delete m_AdvancedGroup;
 	}
 
 	
