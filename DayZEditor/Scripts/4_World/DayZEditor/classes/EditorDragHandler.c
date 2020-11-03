@@ -116,14 +116,14 @@ class ObjectDragHandler: DragHandler
 			// Handle regular motion for all children
 			} else {
 
-				if (!m_Editor.MagnetMode) {
-					surface_normal = vector.Up;
+				if (m_Editor.MagnetMode) {
+					vector local_ori = selected_object.GetWorldObject().GetDirection();
+					selected_transform[0] = surface_normal * local_ori;
+					selected_transform[1] = surface_normal;
+					selected_transform[2] = surface_normal * (local_ori * vector.Up);
 				}
 				
-				vector local_ori = selected_object.GetWorldObject().GetDirection();
-				selected_transform[0] = surface_normal * local_ori;
-				selected_transform[1] = surface_normal;
-				selected_transform[2] = surface_normal * (local_ori * vector.Up);
+
 				
 				if (m_Editor.GroundMode) {
 					if (m_Editor.MagnetMode) {
@@ -148,9 +148,16 @@ class ObjectDragHandler: DragHandler
 		// Handle Z-Only motion
 		// Todo will people want this as a keybind?
 		if (KeyState(KeyCode.KC_LMENU)) {
-			cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ground_position);
+			cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), transform[3]);
 			cursor_pos[1] = cursor_pos[1] + size[1]/2;
-			transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos);
+			
+			if (m_Editor.MagnetMode) {
+				transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos);
+			} else {
+				transform[3][1] = cursor_pos[1];
+			}
+			
+			
 		}
 		
 		// Handle XY Rotation
@@ -177,14 +184,14 @@ class ObjectDragHandler: DragHandler
 		// Handle regular motion
 		else {
 			
-			if (!m_Editor.MagnetMode) {
-				surface_normal = vector.Up;
+			if (m_Editor.MagnetMode) {
+				local_ori = m_EditorObject.GetWorldObject().GetDirection();
+				transform[0] = surface_normal * local_ori;
+				transform[1] = surface_normal;
+				transform[2] = surface_normal * (local_ori * vector.Up);
 			}
 			
-			local_ori = m_EditorObject.GetWorldObject().GetDirection();
-			transform[0] = surface_normal * local_ori;
-			transform[1] = surface_normal;
-			transform[2] = surface_normal * (local_ori * vector.Up);
+
 
 			if (m_Editor.GroundMode) {
 				if (m_Editor.MagnetMode) {
