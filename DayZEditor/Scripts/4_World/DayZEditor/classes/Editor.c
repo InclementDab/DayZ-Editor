@@ -405,9 +405,7 @@ class Editor
 			GetGame().ConfigGetIntArray(string.Format("CfgWorlds %1 centerPosition", world_name), center_pos);
 			
 			// Camera Init
-			vector pos = m_Player.GetPosition() + Vector(0, 5, 0);
-			m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", pos, ECE_LOCAL));
-			
+			m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
 			m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
 			
 			// Registers character as EditorObject
