@@ -405,24 +405,13 @@ class Editor
 			GetGame().ConfigGetIntArray(string.Format("CfgWorlds %1 centerPosition", world_name), center_pos);
 			
 			// Camera Init
-			// todo if singleplayer spawn on center of map, otherwise spawn on character in MP
 			vector pos = m_Player.GetPosition() + Vector(0, 5, 0);
 			m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", pos, ECE_LOCAL));
 			
-			
-			// Init Camera Map Marker
-			/*
-			EditorCameraMapMarker CameraMapMarker = new EditorCameraMapMarker();
-			Widget m_MapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorCameraMapMarker.layout");
-			m_MapMarkerWidget.GetScript(CameraMapMarker);
-			CameraMapMarker.SetCamera(m_Camera, m_EditorUI.GetMapWidget());
-			m_EditorUI.InsertMapObject(m_MapMarkerWidget);
-			m_EditorUI.GetMapWidget().SetMapPos(Vector(center_pos[0], y_level, center_pos[1]));*/
-			
-
+			m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
 			
 			// Registers character as EditorObject
-			//CreateFromObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM | EditorObjectFlags.MAPMARKER);
+			CreateObject(m_Player);
 		}
 		
 		m_EditorCamera.LookEnabled = m_Active;
