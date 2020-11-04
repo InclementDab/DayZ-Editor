@@ -6,7 +6,7 @@ class EditorPlacedListItem: EditorListItem
 	EditorObject GetData() { 
 		return m_EditorObject; 
 	}
-	
+		
 	void SetEditorObject(EditorObject data) 
 	{ 
 		EditorLog.Trace("EditorPlacedListItem::SetEditorObject"); 

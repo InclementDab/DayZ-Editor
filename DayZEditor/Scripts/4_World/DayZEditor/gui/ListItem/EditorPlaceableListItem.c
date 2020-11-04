@@ -19,10 +19,12 @@ class EditorPlaceableListItem: EditorListItem
 		EditorEvents.OnStartPlacing.Insert(OnStartPlacing);
 		EditorEvents.OnStopPlacing.Insert(OnStopPlacing);
 #endif
+		
+		GetLayoutRoot().ClearFlags(WidgetFlags.DRAGGABLE);
 	}
 	
-	override bool IsSelected() {
-		
+	override bool IsSelected() 
+	{
 		if (GetEditor().ObjectInHand) {
 			return (EditorHologram.Cast(GetEditor().ObjectInHand).GetPlaceableItem() == m_PlaceableItem);
 		}
@@ -107,6 +109,7 @@ class EditorPlaceableListItem: EditorListItem
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
+		return true;
 		if (!GetEditor().IsPlacing()) {
 			GetEditor().CreateInHand(m_PlaceableItem);
 		}
@@ -117,7 +120,7 @@ class EditorPlaceableListItem: EditorListItem
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
-		
+		return true;
 		if (GetEditor().IsPlacing()) {
 			GetEditor().CommandManager.PlaceObjectCommand.Execute(this, null);
 		}

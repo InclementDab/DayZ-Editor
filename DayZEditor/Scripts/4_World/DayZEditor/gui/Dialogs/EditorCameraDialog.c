@@ -1,7 +1,3 @@
-static float DEFAULT_FOV = -1;
-static float DEFAULT_NEARPLANE = -1;
-
-
 class EditorCameraDialog: EditorDialogBase
 {
 
@@ -20,15 +16,7 @@ class EditorCameraDialog: EditorDialogBase
 		EditorLog.Trace("EditorCameraDialog");
 			
 		m_EditorCamera = GetEditor().GetCamera();
-		
-		if (DEFAULT_FOV == -1) {
-			DEFAULT_FOV = m_EditorCamera.FOV;
-		}
-		
-		if (DEFAULT_NEARPLANE == -1) {
-			DEFAULT_NEARPLANE = m_EditorCamera.NearPlane;
-		}
-				
+						
 		m_CameraGroup = new GroupPrefab("Camera", m_EditorCamera, string.Empty);
 		m_CameraGroup.Insert(new SliderPrefab("Speed", m_EditorCamera, "Speed", m_EditorCamera.Speed, 0, 500));
 		m_CameraGroup.Insert(new SliderPrefab("FOV", m_EditorCamera, "FOV",  m_EditorCamera.FOV, 0, 2));
@@ -76,9 +64,13 @@ class EditorCameraDialog: EditorDialogBase
 	{
 		EditorLog.Trace("EditorCameraDialog::ResetDefaultExecute");
 		
-		m_EditorCamera.FOV = DEFAULT_FOV;
-		m_EditorCamera.NearPlane = DEFAULT_NEARPLANE;
+		m_EditorCamera.Speed = 60;
+		m_EditorCamera.Blur = 0;
+		m_EditorCamera.FOV = 1;
+		m_EditorCamera.NearPlane = 0;
 		
+		m_EditorCamera.PropertyChanged("Speed");
+		m_EditorCamera.PropertyChanged("Blur");
 		m_EditorCamera.PropertyChanged("FOV");
 		m_EditorCamera.PropertyChanged("NearPlane");
 		
