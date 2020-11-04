@@ -407,6 +407,7 @@ class Editor
 			// Camera Init
 			m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
 			m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
+			m_EditorHud.GetTemplateController().InsertMapMarker(m_EditorHud.CameraMapMarker);
 			
 			// Registers character as EditorObject
 			CreateObject(m_Player);

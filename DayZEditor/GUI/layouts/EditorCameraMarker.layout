@@ -1,0 +1,31 @@
+FrameWidgetClass CameraMarkerRoot {
+ visible 1
+ color 0.502 0 0.3765 1
+ position 0 0
+ size 50 50
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ priority 98
+ {
+  ImageWidgetClass CameraMarkerImage {
+   visible 1
+   ignorepointer 1
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   priority 101
+   imageTexture "{C46FDF47A15CB6BE}DayZEditor/GUI/icons/icon_adam.edds"
+   mode blend
+   "src alpha" 1
+   "no wrap" 1
+   stretch 1
+   filter 1
+  }
+ }
+}

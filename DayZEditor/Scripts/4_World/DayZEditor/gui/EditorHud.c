@@ -16,6 +16,11 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		EditorLog.Trace("EditorHud");
 		EditorMapWidget.Show(false);
 	}
+	
+	void ~EditorHud()
+	{
+		delete CameraMapMarker;
+	}
 
 	void Show(bool show) 
 	{

@@ -70,9 +70,13 @@ class EditorCameraMapMarker: EditorMarker
 		}
 		
 		Show(true);
-		
+				
 		vector position = m_EditorMap.MapToScreen(m_Camera.GetPosition());
 		SetPos(position[0], position[1]);
+	}
+	
+	override string GetLayoutFile() {
+		return "DayZEditor/gui/Layouts/EditorCameraMarker.layout";
 	}
 }
 
@@ -322,10 +326,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		
 		// Overrides the hide if the camera isnt looking at the marker
 		else if (m_LayoutRoot)
-			m_LayoutRoot.Show(false);
-			
-			
-		
+			m_LayoutRoot.Show(false);		
 		
 		super.Update();
 	}
