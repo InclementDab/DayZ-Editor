@@ -43,7 +43,7 @@ class ShortcutKeys: array<KeyCode>
 			
 		}
 		
-		BetterString key_string = typename.EnumToString(KeyCode, key);
+		string key_string = typename.EnumToString(KeyCode, key);
 		key_string.ToLower();
 		key_string.Replace("kc_", "");
 		

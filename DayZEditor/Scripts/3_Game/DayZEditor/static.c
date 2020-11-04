@@ -122,22 +122,6 @@ static void _GetWidgetRoot(out Widget w)
 	_GetWidgetRoot(w);
 }
 
-
-// remove this once BI adds set into string
-typedef string BetterString;
-class BetterString: string
-{
-	static string value;
-	void Set(int n, string _value)
-	{
-		string pre = value.Substring(0, n);
-		n += 1;
-		int length = value.Length() - n;
-		string post = value.Substring(n, length);
-		value = pre + _value + post;
-	}	
-}
-
 static const int COLOR_SALMON	= ARGB(255, 192, 94, 83);
 static const int COLOR_SALMON_A	= ARGB(128, 50, 100, 100);
 static const int COLOR_CANDY 	= -1618884;

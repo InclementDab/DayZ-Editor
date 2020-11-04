@@ -128,7 +128,7 @@ class EditorPlaceableListItem: EditorListItem
 		return true;
 	}
 		
-	bool FilterType(BetterString filter)
+	bool FilterType(string filter)
 	{
 		if (filter == string.Empty) return true;
 		
