@@ -699,7 +699,7 @@ class EditorObject: EditorWorldObject
 		
 		EditorObjectMarker marker = GetMarker();
 		if (marker) {
-			marker.GetLayoutRoot().Show(!Locked);
+			marker.Show(!Locked);
 		}
 	}
 	
