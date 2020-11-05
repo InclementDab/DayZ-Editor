@@ -19,7 +19,10 @@ class EditorDZEFile: EditorFileType
 			bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Flags));
 		}
 			
-		bug_fix_save_data.DeletedObjects = save_data.DeletedObjects;
+		foreach (int id: save_data.DeletedObjects) {
+			bug_fix_save_data.DeletedObjects.Insert(id);
+		}
+				
 		bug_fix_save_data.MapName = save_data.MapName;
 		bug_fix_save_data.CameraPosition = save_data.CameraPosition;
 		

@@ -40,18 +40,20 @@ class EditorImportCommandBase: EditorCommand
 			m_Editor.Clear();
 		}
 		
+		EditorLog.Info("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
 		foreach (EditorObjectData data: save_data.EditorObjects) {
 			GetEditor().CreateObject(data, false);
 		}
 		
+		EditorLog.Info("Deleting %1 Objects", save_data.DeletedObjects.Count().ToString());
 		foreach (int id: save_data.DeletedObjects) {
+			Print(id);
 			GetEditor().DeleteMapObject(id);
 		}
 		
 		
-		string message = string.Format("Loaded %1 objects!", save_data.EditorObjects.Count().ToString());
-		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
-		EditorLog.Info(message);
+		m_Editor.GetEditorHud().CreateNotification(string.Format("Loaded %1 objects!", save_data.EditorObjects.Count()), COLOR_GREEN);
+		
 		
 		return save_data;
 	}
