@@ -37,6 +37,17 @@ class EditorObjectManagerModule: JMModuleBase
 		m_PlacedObjects 	= new EditorObjectMap();
 		m_SelectedObjects 	= new EditorObjectMap();
 		m_MapObjects 		= new map<int, Object>();
+		
+		// Loads all world objects into a map
+		ref array<Object> objects = {};
+		ref array<CargoBase> cargos = {};
+		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 20000, objects, cargos);
+		
+		foreach (Object o: objects) {
+			m_MapObjects.Insert(o.GetID(), o);
+		}
+		
+		EditorLog.Info("Loaded %1 map objects", m_MapObjects.Count().ToString());
 	}
 	
 	
@@ -118,12 +129,7 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		return deleted_objects;
 	}
-	
-	Object GetWorldObject(int id)
-	{
-		return m_MapObjects[id];
-	}
-		
+			
 	override bool IsClient() 
 		return true;
 	
@@ -132,13 +138,17 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	override void OnMissionLoaded()
 	{
-		ref array<Object> objects = {};
-		ref array<CargoBase> cargos = {};
-		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 20000, objects, cargos);
-		
-		foreach (Object o: objects) {
-			m_MapObjects.Insert(o.GetID(), o);
-		}
+
+	}
+	
+	Object GetWorldObject(int id)
+	{
+		return m_MapObjects[id];
+	}
+	
+	ref map<int, Object> GetWorldObjects()
+	{
+		return m_MapObjects;
 	}
 }
 
