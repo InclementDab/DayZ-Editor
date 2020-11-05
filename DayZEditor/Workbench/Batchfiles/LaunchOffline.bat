@@ -121,8 +121,6 @@ if %failed%==1 (
     goto:eof
 )
 
-CALL Exit.bat
-
 for %%a in ("%mods:;=" "%") do (
     set mod=%%~a
     if not defined modList (
