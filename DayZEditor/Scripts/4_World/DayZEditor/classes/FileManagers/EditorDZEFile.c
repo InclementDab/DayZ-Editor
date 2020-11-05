@@ -24,8 +24,8 @@ class EditorDZEFile: EditorFileType
 		bug_fix_save_data.CameraPosition = save_data.CameraPosition;
 		
 		return bug_fix_save_data;
-		/*
 		
+		/*
 		FileSerializer file_serializer = new FileSerializer();
 		if (!file_serializer.Open(file, FileMode.READ)) {
 			EditorLog.Error("File in use %1", file);

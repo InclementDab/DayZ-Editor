@@ -37,17 +37,16 @@ class EditorObjectManagerModule: JMModuleBase
 		m_PlacedObjects 	= new EditorObjectMap();
 		m_SelectedObjects 	= new EditorObjectMap();
 		m_MapObjects 		= new map<int, Object>();
-		
+
 		// Loads all world objects into a map
 		ref array<Object> objects = {};
 		ref array<CargoBase> cargos = {};
 		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 20000, objects, cargos);
 		
+		EditorLog.Info("Loaded %1 map objects", m_MapObjects.Count().ToString());
 		foreach (Object o: objects) {
 			m_MapObjects.Insert(o.GetID(), o);
-		}
-		
-		EditorLog.Info("Loaded %1 map objects", m_MapObjects.Count().ToString());
+		}	
 	}
 	
 	
