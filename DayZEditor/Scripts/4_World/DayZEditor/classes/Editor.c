@@ -411,7 +411,7 @@ class Editor
 			m_EditorHud.GetTemplateController().InsertMapMarker(m_EditorHud.CameraMapMarker);
 			
 			// Registers character as EditorObject
-			CreateObject(m_Player);
+			//CreateObject(m_Player);
 		}
 		
 		m_EditorCamera.LookEnabled = m_Active;
