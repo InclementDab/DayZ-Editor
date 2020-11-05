@@ -10,7 +10,7 @@ class EditorObjectManagerModule: JMModuleBase
 	// Stored list of all Placed Objects, indexed by their WorldObject ID
 	private ref EditorObjectMap					m_WorldObjectIndex;
 	
-	private ref map<int, Object> 				m_MapObjects;
+	static ref map<int, Object> WorldObjects = new map<int, Object>();
 	
 	EditorObjectMap GetSelectedObjects() 
 		return m_SelectedObjects; 
@@ -36,7 +36,6 @@ class EditorObjectManagerModule: JMModuleBase
 		m_WorldObjectIndex 	= new EditorObjectMap();
 		m_PlacedObjects 	= new EditorObjectMap();
 		m_SelectedObjects 	= new EditorObjectMap();
-		m_MapObjects 		= new map<int, Object>();
 	}
 	
 	
@@ -137,20 +136,22 @@ class EditorObjectManagerModule: JMModuleBase
 		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 20000, objects, cargos);
 
 		foreach (Object o: objects) {
-			m_MapObjects.Insert(o.GetID(), o);
+			WorldObjects.Insert(o.GetID(), o);
 		}
 		
-		EditorLog.Info("Loaded %1 map objects", m_MapObjects.Count().ToString());
+		EditorLog.Info("Loaded %1 map objects", WorldObjects.Count().ToString());
 	}
 	
 	Object GetWorldObject(int id)
 	{
-		return m_MapObjects[id];
+		Print(WorldObjects.Count());
+		Print(WorldObjects.Get(id));
+		return WorldObjects[id];
 	}
 	
 	ref map<int, Object> GetWorldObjects()
 	{
-		return m_MapObjects;
+		return WorldObjects;
 	}
 }
 

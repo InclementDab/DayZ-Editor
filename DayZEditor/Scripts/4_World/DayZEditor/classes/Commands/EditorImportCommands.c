@@ -47,14 +47,10 @@ class EditorImportCommandBase: EditorCommand
 		
 		EditorLog.Info("Deleting %1 Objects", save_data.DeletedObjects.Count().ToString());
 		foreach (int id: save_data.DeletedObjects) {
-			Print(id);
 			GetEditor().DeleteMapObject(id);
 		}
 		
-		
 		m_Editor.GetEditorHud().CreateNotification(string.Format("Loaded %1 objects!", save_data.EditorObjects.Count()), COLOR_GREEN);
-		
-		
 		return save_data;
 	}
 	

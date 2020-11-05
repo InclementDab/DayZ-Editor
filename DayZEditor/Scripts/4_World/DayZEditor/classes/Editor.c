@@ -849,9 +849,7 @@ class Editor
 	static string GetVersionNumber()
     {
         ref array<ref ModInfo> mods = new array<ref ModInfo>;
-        
         GetDayZGame().GetModInfos(mods);
-		
         for (int i = 0; i < mods.Count(); i++) {
             if (mods[i].GetName().IndexOf("DayZ") == 0 && mods[i].GetName().IndexOf("Editor") == 5) {
                 return mods[i].GetVersion();
