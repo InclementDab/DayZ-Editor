@@ -75,6 +75,7 @@ class Editor
 	bool 										CollisionMode;
 
 	string 										Version = "v" + GetVersionNumber();
+	
 	private void Editor(PlayerBase player) 
 	{
 		EditorLog.Trace("Editor");
@@ -797,6 +798,14 @@ class Editor
 		
 		if (create_undo) {
 			InsertAction(action);
+		}
+	}
+	
+	void DeleteMapObject(int id)
+	{
+		Object obj = m_ObjectManager.GetWorldObject(id);
+		if (obj) {
+			CF__ObjectManager.RemoveObject(obj);
 		}
 	}
 	

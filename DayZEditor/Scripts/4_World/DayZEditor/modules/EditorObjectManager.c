@@ -10,6 +10,8 @@ class EditorObjectManagerModule: JMModuleBase
 	// Stored list of all Placed Objects, indexed by their WorldObject ID
 	private ref EditorObjectMap					m_WorldObjectIndex;
 	
+	private ref map<int, Object> 				m_MapObjects;
+	
 	EditorObjectMap GetSelectedObjects() 
 		return m_SelectedObjects; 
 	
@@ -34,6 +36,7 @@ class EditorObjectManagerModule: JMModuleBase
 		m_WorldObjectIndex 	= new EditorObjectMap();
 		m_PlacedObjects 	= new EditorObjectMap();
 		m_SelectedObjects 	= new EditorObjectMap();
+		m_MapObjects 		= new map<int, Object>();
 	}
 	
 	
@@ -115,6 +118,11 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		return deleted_objects;
 	}
+	
+	Object GetWorldObject(int id)
+	{
+		return m_MapObjects[id];
+	}
 		
 	override bool IsClient() 
 		return true;
@@ -122,5 +130,15 @@ class EditorObjectManagerModule: JMModuleBase
 	override bool IsServer() 
 		return true;
 	
+	override void OnMissionLoaded()
+	{
+		ref array<Object> objects = {};
+		ref array<CargoBase> cargos = {};
+		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 20000, objects, cargos);
+		
+		foreach (Object o: objects) {
+			m_MapObjects.Insert(o.GetID(), o);
+		}
+	}
 }
 

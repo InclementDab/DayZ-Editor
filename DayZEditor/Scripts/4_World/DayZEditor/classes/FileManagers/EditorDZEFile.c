@@ -18,12 +18,13 @@ class EditorDZEFile: EditorFileType
 		foreach (EditorObjectData object_data: save_data.EditorObjects) {
 			bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Flags));
 		}
-		
+			
+		bug_fix_save_data.DeletedObjects = save_data.DeletedObjects;
 		bug_fix_save_data.MapName = save_data.MapName;
 		bug_fix_save_data.CameraPosition = save_data.CameraPosition;
 		
 		return bug_fix_save_data;
-		
+		/*
 		
 		FileSerializer file_serializer = new FileSerializer();
 		if (!file_serializer.Open(file, FileMode.READ)) {
@@ -37,7 +38,7 @@ class EditorDZEFile: EditorFileType
 			return save_data;
 		}
 		
-		file_serializer.Close();
+		file_serializer.Close();*/
 	}
 	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
