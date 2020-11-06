@@ -73,6 +73,9 @@ class EditorObjectData
 	
 	static ref EditorObjectData Create(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
+		// We do this because all 'baked' objects are ID'd to 3. cant store a bunch of 3's can we?
+		if (target.GetID() == 3) return null;
+		
 		ref EditorObjectData data = new EditorObjectData();
 		data.Type = target.GetType();
 		data.WorldObject = target;
