@@ -18,25 +18,25 @@ class EditorJsonLoader<Class T>
 		if (!m_Serializer)
 			m_Serializer = new JsonSerializer;
 
-		m_Serializer.WriteToString( data, true, string_data );
+		m_Serializer.WriteToString(data, true, string_data);
 		return string_data;
 	}
 
 	static void SaveToFile(string path, T data)
 	{
-		FileHandle fh = OpenFile( path, FileMode.WRITE );
+		FileHandle fh = OpenFile(path, FileMode.WRITE);
 			
-		if (fh == 0) {
+		if (!fh) {
 			EditorLog.Error("EditorJsonLoader::SaveToFile File could not be created at %1", path);
 			return;
 		} 
 		
-		
 		string jsonData;
 		bool success = m_Serializer.WriteToString(data, true, jsonData);
 
-		if (success && jsonData != string.Empty)
+		if (success && jsonData != string.Empty) {
 			FPrintln(fh, jsonData);
+		}
 
 		EditorLog.Info("EditorJsonLoader::SaveToFile Complete: " + path);
 		CloseFile(fh);
