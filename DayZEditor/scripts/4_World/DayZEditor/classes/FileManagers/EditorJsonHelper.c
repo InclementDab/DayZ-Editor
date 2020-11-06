@@ -8,8 +8,9 @@ class EditorJsonLoader<Class T>
 		if (!m_Serializer)
 			m_Serializer = new JsonSerializer;
 		
-		if (!m_Serializer.ReadFromString(data, string_data, error))
+		if (!m_Serializer.ReadFromString(data, string_data, error)) {
 			EditorLog.Error(error);
+		}
 	}
 	
 	static string ObjectToString(T data)
@@ -18,7 +19,11 @@ class EditorJsonLoader<Class T>
 		if (!m_Serializer)
 			m_Serializer = new JsonSerializer;
 
-		m_Serializer.WriteToString(data, true, string_data);
+		if (!m_Serializer.WriteToString(data, true, string_data)) {
+			EditorLog.Error("EditorJsonLoader::ObjectToString Could not stringify %1", data.ToString());
+			return string.Empty;
+		}
+		
 		return string_data;
 	}
 
@@ -66,11 +71,11 @@ class EditorJsonLoader<Class T>
 		bool success = m_Serializer.ReadFromString(data, jsonData, error);
 		
 		if (error != string.Empty || !success) {
-			EditorLog.Error("EditorJsonLoader::LoadFromFile ERROR Parsing --> %1", error);
-		} else {
-			EditorLog.Info("EditorJsonLoader::LoadFromFile Loaded file: " + path + " ( Files over 500MB~ might have issues sometimes )");
+			EditorLog.Error("EditorJsonLoader::LoadFromFile ERROR Parsing %1", error);
+			return;
 		}
 		
+		EditorLog.Info("EditorJsonLoader::LoadFromFile Loaded file: " + path + " ( Files over 500MB~ might have issues sometimes )");
 		CloseFile(fh);
 	}
 };
