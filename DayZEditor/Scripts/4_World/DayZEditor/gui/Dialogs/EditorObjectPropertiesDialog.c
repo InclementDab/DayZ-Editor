@@ -60,8 +60,9 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Enable Physics", m_EditorObject, "Physics", m_EditorObject.Physics));
 		m_ObjectGroup.Open(ObjectGroup);
 		
-		m_AdvancedGroup = new GroupPrefab("Advanced", m_EditorObject, string.Empty);
-		m_AdvancedGroup.Insert(new TextBoxPrefab("Model:", m_EditorObject, "", m_EditorObject.GetWorldObject().ConfigGetString("model")));
+		m_AdvancedGroup = new GroupPrefab("Debug", m_EditorObject, string.Empty);
+		m_AdvancedGroup.Insert(new TextBoxPrefab("ID", m_EditorObject, "", m_EditorObject.GetWorldObject().GetID().ToString()));
+		m_AdvancedGroup.Insert(new TextBoxPrefab("Model", m_EditorObject, "", m_EditorObject.GetWorldObject().ToString()));
 		m_AdvancedGroup.Open(AdvancedGroup);
 		
 		AddContent(m_GeneralGroup);

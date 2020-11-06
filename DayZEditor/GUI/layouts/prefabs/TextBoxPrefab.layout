@@ -11,11 +11,11 @@ WrapSpacerWidgetClass EditBoxPrefab {
  style Colorable
  Padding 0
  Margin 5
- content_halign center
+ content_halign right
  content_valign center
  {
   TextWidgetClass Caption {
-   ignorepointer 1
+   ignorepointer 0
    position 0 0
    size 0.2 1
    valign center_ref
@@ -23,6 +23,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
    vexactpos 1
    hexactsize 0
    vexactsize 0
+   priority 1
    scriptclass "ViewBinding"
    "text offset" -10 0
    "text halign" right
@@ -34,9 +35,8 @@ WrapSpacerWidgetClass EditBoxPrefab {
   }
   TextWidgetClass ContentText {
    visible 1
-   position 0 0
-   size 0.5 1
-   halign center_ref
+   size 0.7 1
+   halign right_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
