@@ -1,21 +1,21 @@
-class EditorJsonHelper<Class T>
+class EditorJsonLoader<Class T>
 {
 	protected static ref JsonSerializer m_Serializer = new JsonSerializer;
 	
-	static void StringToObject( string string_data, out T data )
+	static void StringToObject(string string_data, out T data)
 	{
 		string error;
-		if( !m_Serializer )
+		if (!m_Serializer)
 			m_Serializer = new JsonSerializer;
 		
-		if( !m_Serializer.ReadFromString( data, string_data, error ) )
-			Error( error );
+		if (!m_Serializer.ReadFromString(data, string_data, error))
+			EditorLog.Error(error);
 	}
 	
-	static string ObjectToString( T data )
+	static string ObjectToString(T data)
 	{
 		string string_data;
-		if( !m_Serializer )
+		if (!m_Serializer)
 			m_Serializer = new JsonSerializer;
 
 		m_Serializer.WriteToString( data, true, string_data );
@@ -26,49 +26,51 @@ class EditorJsonHelper<Class T>
 	{
 		FileHandle fh = OpenFile( path, FileMode.WRITE );
 			
-		if (fh != 0)
-		{
-			string jsonData;
-			bool success = m_Serializer.WriteToString(data, true, jsonData);
+		if (fh == 0) {
+			EditorLog.Error("EditorJsonLoader::SaveToFile File could not be created at %1", path);
+			return;
+		} 
+		
+		
+		string jsonData;
+		bool success = m_Serializer.WriteToString(data, true, jsonData);
 
-			if( success && jsonData != string.Empty )
-				FPrintln( fh, jsonData );
+		if (success && jsonData != string.Empty)
+			FPrintln(fh, jsonData);
 
-			Print("[EditorJsonHelper] SaveToFile() DONE --> " + path);
-			CloseFile( fh );
-		}else{
-			EditorLog.Error("[EditorJsonHelper] SaveToFile() File could not be created at %1", path);
-		}
+		EditorLog.Info("EditorJsonLoader::SaveToFile Complete: " + path);
+		CloseFile(fh);
 	}
 
 	static void LoadFromFile(string path, out T data)
 	{
-		if ( !FileExist(path) )
-		{
-			EditorLog.Error("File not found %1", path);
+		if (!FileExist(path)) {
+			EditorLog.Error("EditorJsonLoader::LoadFromFile File not found %1", path);
 			return;
 		}
 
-		FileHandle fh = OpenFile( path, FileMode.READ );
+		FileHandle fh = OpenFile(path, FileMode.READ);
 		string jsonData;
 		string error;
 
-		if (fh != 0)
-		{
-			string line;
-			while( FGets(fh, line) > 0 )
-			{
-				jsonData = jsonData + "\n" + line;
-			}
-
-			bool success = m_Serializer.ReadFromString(data, jsonData, error);
-			if(error != string.Empty || !success)
-			{
-				EditorLog.Error("[EditorJsonHelper] ERROR Parsing --> %1", error);
-			}else{
-				Print("[EditorJsonHelper] Loaded file: " + path + " ( Files over 500MB~ might have issues sometimes )");
-			}
-			CloseFile(fh);
+		if (!fh) {
+			EditorLog.Error("EditorJsonLoader::LoadFromFile File could not be opened %1", path);
+			return;
 		}
+		
+		string line;
+		while (FGets(fh, line) > 0) {
+			jsonData = jsonData + "\n" + line;
+		}
+
+		bool success = m_Serializer.ReadFromString(data, jsonData, error);
+		
+		if (error != string.Empty || !success) {
+			EditorLog.Error("EditorJsonLoader::LoadFromFile ERROR Parsing --> %1", error);
+		} else {
+			EditorLog.Info("EditorJsonLoader::LoadFromFile Loaded file: " + path + " ( Files over 500MB~ might have issues sometimes )");
+		}
+		
+		CloseFile(fh);
 	}
 };
