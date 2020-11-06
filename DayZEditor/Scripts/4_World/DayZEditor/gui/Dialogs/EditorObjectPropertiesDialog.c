@@ -2,12 +2,13 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 {
 	static bool GeneralGroup = true;
 	static bool ObjectGroup = true;
-	
 	static bool HumanGroup = true;
+	static bool AdvancedGroup = false;
 	
 	protected ref GroupPrefab m_GeneralGroup;
 	protected ref GroupPrefab m_ObjectGroup;
 	protected ref GroupPrefab m_HumanGroup;
+	protected ref GroupPrefab m_AdvancedGroup;
 	
 	protected EditorObject m_EditorObject;
 	
@@ -59,8 +60,13 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Enable Physics", m_EditorObject, "Physics", m_EditorObject.Physics));
 		m_ObjectGroup.Open(ObjectGroup);
 		
+		m_AdvancedGroup = new GroupPrefab("Advanced", m_EditorObject, string.Empty);
+		m_AdvancedGroup.Insert(new TextBoxPrefab("Model:", m_EditorObject, "", m_EditorObject.GetWorldObject().ConfigGetString("model")));
+		m_AdvancedGroup.Open(AdvancedGroup);
+		
 		AddContent(m_GeneralGroup);
 		AddContent(m_ObjectGroup);
+		AddContent(m_AdvancedGroup);
 		
 		if (editor_object.GetWorldObject().IsMan()) {
 			m_HumanGroup = new GroupPrefab("Human Controller", m_EditorObject, string.Empty);
@@ -80,11 +86,15 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		if (m_ObjectGroup)
 			ObjectGroup = m_ObjectGroup.IsOpen();
 		
+		if (m_AdvancedGroup)
+			AdvancedGroup = m_AdvancedGroup.IsOpen();
+		
 		if (m_HumanGroup)
 			HumanGroup = m_HumanGroup.IsOpen();
 		
 		delete m_GeneralGroup;
 		delete m_ObjectGroup;
+		delete m_AdvancedGroup;
 		delete m_HumanGroup;
 	}
 }
