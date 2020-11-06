@@ -11,7 +11,8 @@ class EditorDZEFile: EditorFileType
 		}
 		
 		// Temporary fix, Binarize always = 0
-		JsonFileLoader<EditorSaveData>.JsonLoadFile(file, save_data);
+		//JsonFileLoader<EditorSaveData>.JsonLoadFile(file, save_data);
+		EditorJsonLoader<EditorSaveData>.LoadFromFile(file, save_data);
 		
 		// bugfix to fix the id not incrementing
 		EditorSaveData bug_fix_save_data = new EditorSaveData();
@@ -51,7 +52,8 @@ class EditorDZEFile: EditorFileType
 		}
 
 		// Temporary fix, Binarize always = 0
-		JsonFileLoader<EditorSaveData>.JsonSaveFile(file, data);
+		//JsonFileLoader<EditorSaveData>.JsonSaveFile(file, data);
+		EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
 		return;
 		
 				
