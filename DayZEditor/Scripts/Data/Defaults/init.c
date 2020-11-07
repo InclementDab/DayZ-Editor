@@ -14,9 +14,3 @@ static void DeleteObject(int object_id)
 {
     // todo
 }
-
-// Expansion Compatibility
-class CustomMission: MissionServer
-{
-
-}
