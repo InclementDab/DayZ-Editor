@@ -1,18 +1,6 @@
 typedef ref map<string, ref EditorBrushData> EditorBrushDataSet;
 
 
-typedef ref array<ref EditorBrushObject> EditorBrushObjectArray;
-class EditorBrushObject
-{
-	string Name;
-	float Frequency;
-	float ZOffset;
-	
-	void EditorBrushObject(string name, float frequency, float zoffset) {
-		Name = name; Frequency = frequency; ZOffset = zoffset;
-	}
-}
-
 // This is the data that will be loaded from XML
 class EditorBrushData
 {
