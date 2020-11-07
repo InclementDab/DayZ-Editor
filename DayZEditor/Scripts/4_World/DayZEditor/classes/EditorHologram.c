@@ -18,7 +18,7 @@ class EditorHologram: EditorWorldObject
 		//m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
 		m_WorldObject = CreateObject(placeable_item.Type);
-
+		m_WorldObject.SetOrientation(vector.Zero); // some objects dont like to orient correctly
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
@@ -32,7 +32,7 @@ class EditorHologram: EditorWorldObject
 	{
 		if (!m_WorldObject) return;
 		vector position = Editor.CurrentMousePosition;
-		vector mat[4] = {
+		vector transform[4] = {
 			"1 0 0",
 			"0 1 0",
 			"0 0 1",
@@ -41,8 +41,14 @@ class EditorHologram: EditorWorldObject
 		
 		vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
 		float surface_height = GetGame().SurfaceY(position[0], position[2]);
-		m_WorldObject.PlaceOnSurfaceRotated(mat, position, surface_normal[0] * -1, surface_normal[2] * -1, 0, GetEditor().MagnetMode);
-		m_WorldObject.SetTransform(mat);
+		if (GetEditor().MagnetMode) {
+			vector local_ori = m_WorldObject.GetDirection();
+			transform[0] = surface_normal * local_ori;
+			transform[1] = surface_normal;
+			transform[2] = surface_normal * (local_ori * vector.Up);
+		}
+		
+		m_WorldObject.SetTransform(transform);
 	}
 	
 	
