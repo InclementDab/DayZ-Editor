@@ -65,12 +65,7 @@ class EditorClientModule: JMModuleBase
 		
 		if (IsMissionOffline()) {
 			EditorLog.Info("Loading Offline Editor...");
-			
-			// Random cam position smile :)
-			float x = Math.RandomInt(3500, 8500);
-			float z = Math.RandomInt(3500, 8500);
-			float y = GetGame().SurfaceY(x, z);
-			Editor.Create(CreateDefaultCharacter(Vector(x, y, z)));
+			Editor.Create(CreateDefaultCharacter(Editor.GetRandomTeleportPosition()));
 		} else {
 			
 			EditorLog.Info("Loading Online Editor...");

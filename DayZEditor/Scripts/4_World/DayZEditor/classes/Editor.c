@@ -859,5 +859,38 @@ class Editor
         return string.Empty;
     }
 	
+	static vector GetRandomTeleportPosition()
+	{		
+		float x, z, radius;
+		
+		x = 5467;
+		z = 8660;
+		radius = 500;
+		
+		vector position;
+		position[0] = Math.RandomInt(x - radius, x + radius);
+		position[2] = Math.RandomInt(z - radius, z + radius);
+		position[1] = GetGame().SurfaceY(position[0], position[2]) + 1;
+		
+		if (GetGame().SurfaceIsSea(position[0], position[2])) {
+			// try again
+			EditorLog.Debug("Landed in water, trying again");
+			return GetRandomTeleportPosition(); 
+		}
+		
+		
+		array<Object> position_objects = {};
+		array<CargoBase> position_cargos = {};
+		GetGame().GetObjectsAtPosition(position, 2, position_objects, position_cargos);
+		if (position_objects.Count() > 0) {
+			// try again
+			EditorLog.Debug("Landed in building, trying again");
+			return GetRandomTeleportPosition();
+		}
+		
+		return position;
+	}
+	
+	
 }
 
