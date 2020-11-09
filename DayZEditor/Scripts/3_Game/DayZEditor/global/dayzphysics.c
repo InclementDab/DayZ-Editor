@@ -1,4 +1,4 @@
-static vector MousePosToRay(out set<Object> collisions, Object ignore = null, float raycast_distance = 3000/*EditorSettings.OBJECT_VIEW_DISTANCE*/, float radius = 0, bool groundonly = false)
+static vector MousePosToRay(out set<Object> collisions, Object ignore = null, float raycast_distance = 3000, float radius = 0, bool groundonly = false)
 {
 	vector ray_start = GetGame().GetCurrentCameraPosition();
 	vector ray_end = ray_start + GetGame().GetPointerDirection() * raycast_distance;
@@ -6,14 +6,19 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 	vector hitPos, hitNormal;
 	int hitComponentIndex;		
 	collisions = new set<Object>;
-	
-	Object hit_object;
-	float hit_else;
-	if (!groundonly && DayZPhysics.RayCastBullet(ray_start, ray_end, PhxInteractionLayers.BUILDING, ignore, hit_object, hitPos, hitNormal, hit_else)) {
-		return hitPos;
-	}
 
+	
+	// todo: collision mode is very inaccurate atm due to RayCastBullet crashing when dragging dynamic objects
+	// find a way to check if the object is dynamic, then bop it
+	//Object hit_object;
+	//float hit_else;
+	//if (!groundonly && DayZPhysics.RayCastBullet(ray_start, ray_end, PhxInteractionLayers.DYNAMICITEM | PhxInteractionLayers.BUILDING | PhxInteractionLayers.CHARACTER, ignore, hit_object, hitPos, hitNormal, hit_else)) {
+	//	collisions.Insert(hit_object);
+	//	return hitPos;
+	//}
+	
 	DayZPhysics.RaycastRV(ray_start, ray_end, hitPos, hitNormal, hitComponentIndex, collisions, null, ignore, false, groundonly, 1, radius, CollisionFlags.ALLOBJECTS);
+	
 	
 	return hitPos;
 }

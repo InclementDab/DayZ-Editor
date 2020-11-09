@@ -63,18 +63,7 @@ class CfgVehicles
 		model = "\DayZEditor\Editor\BoundingBoxBase.p3d";
 		hiddenSelections[] = {"BoundingBoxSelection"};
 	};
-	class ThunderboltNorm: HouseNoDestruct
-	{
-		model = "\DZ\Data\data\blesk1.p3d";
-		soundSetNear = "ThunderNorm_Near_SoundSet";
-		soundSetFar = "ThunderNorm_Far_SoundSet";
-	};
-	class ThunderboltHeavy: HouseNoDestruct
-	{
-		model = "\DZ\Data\data\blesk2.p3d";
-		soundSetNear = "ThunderHeavy_Near_SoundSet";
-		soundSetFar = "ThunderHeavy_Far_SoundSet";
-	};
+
 	
 	class DebugCylinder: HouseNoDestruct
 	{

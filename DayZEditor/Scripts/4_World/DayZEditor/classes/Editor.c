@@ -30,6 +30,8 @@
 // if today is that day. fix it.
 // and message me your feedback on discord :)
 
+
+
 ref Editor g_Editor;
 Editor GetEditor() {
 	return g_Editor;
@@ -149,11 +151,8 @@ class Editor
 	}
 		
 	void Update(float timeslice)
-	{
-		// Dont think its needed anymore
-		//m_EditorHud.Update(timeslice);
-		
-		set<Object> obj = new set<Object>();
+	{		
+		ref set<Object> obj = new set<Object>();
 		int x, y;
 		GetMousePos(x, y);
 		
@@ -161,16 +160,12 @@ class Editor
 			CurrentMousePosition = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(x, y, 0));
 			CurrentMousePosition[1] = GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]);
 		} else {
-			EntityAI collision_ignore;
+			Object collision_ignore;
 			if (ObjectInHand) {
 				collision_ignore = ObjectInHand.GetWorldObject();
 			}
 			
-			if (CollisionMode) {
-				CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance);
-			} else {
-				CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance, 0, true);
-			}
+			CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance, 0, !CollisionMode);
 		}
 		
 		if (Settings.DebugMode) {

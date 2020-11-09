@@ -58,7 +58,10 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		if (placeable_item == m_PlaceableItem) {
 			Select();
+			return;
 		}
+
+		Deselect();
 	}
 	
 	void OnStopPlacing(Class context)
@@ -75,7 +78,7 @@ class EditorPlaceableListItem: EditorListItem
 	override void Deselect()
 	{
 		super.Deselect();
-		delete GetEditor().GetObjectManager().CurrentSelectedItem;
+		//delete GetEditor().GetObjectManager().CurrentSelectedItem;
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
@@ -89,8 +92,11 @@ class EditorPlaceableListItem: EditorListItem
 		tooltip.SetTitle(m_PlaceableItem.Type);	
 		tooltip.SetPosition(pos_x + size_x, pos_y);
 		
+		//! bugfix
+		GetEditor().GetObjectManager().CurrentSelectedItem = m_PlaceableItem;
+		
 		//! Animals and Zombies / Players "survivors"
-		if (!GetGame().IsKindOf(m_PlaceableItem.Type, "Man") && !GetGame().IsKindOf(m_PlaceableItem.Type, "DZ_LightAI")) {
+		if (m_PlaceableItem && !GetGame().IsKindOf(m_PlaceableItem.Type, "Man") && !GetGame().IsKindOf(m_PlaceableItem.Type, "DZ_LightAI")) {
 			tooltip.SetContent(GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE));
 		}		
 		
