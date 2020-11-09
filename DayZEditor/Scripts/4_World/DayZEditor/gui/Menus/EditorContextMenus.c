@@ -18,9 +18,9 @@ class EditorContextMenu: EditorMenu
 		}
 		
 		// 300 is a dummy number since i cant get the full size of the context menu
-		if (y > sy - 300) {
-			y -= 300;
-		}
+		//if (y > sy - 300) {
+		//	y -= 300;
+		//}
 				
 		m_LayoutRoot.SetPos(Math.Clamp(x, 0, sx - lw), Math.Clamp(y, 0, sy - lh));
 	}
