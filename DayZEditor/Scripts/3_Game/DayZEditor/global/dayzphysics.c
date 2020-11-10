@@ -7,9 +7,6 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 	int hitComponentIndex;		
 	collisions = new set<Object>;
 
-	
-	// todo: collision mode is very inaccurate atm due to RayCastBullet crashing when dragging dynamic objects
-	// find a way to check if the object is dynamic, then bop it
 	Object hit_object;
 	float hit_else;
 	int interaction_layers = PhxInteractionLayers.BUILDING;
