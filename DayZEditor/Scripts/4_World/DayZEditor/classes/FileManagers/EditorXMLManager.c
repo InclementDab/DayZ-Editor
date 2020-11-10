@@ -145,7 +145,12 @@ class EditorMapGroupProto: XMLCallback
 		return m_LootPositions;
 	}
 	
-	private Object m_Building;
+	Object GetBuilding() {
+		return m_Building;
+	}
+	
+	protected Object m_Building;
+	
 	void EditorMapGroupProto(Object building)
 	{
 		m_Building = building;

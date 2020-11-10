@@ -550,7 +550,9 @@ class Editor
 
 		array<EditorObject> loot_spawns = m_EditorMapGroupProto.GetLootSpawns();
 		
+		Object building = m_EditorMapGroupProto.GetBuilding();
 		string loot_position_data;
+		loot_position_data += building.GetType() + "\n";
 		foreach (EditorObject loot_spawn: loot_spawns) {			
 			loot_position_data += loot_spawn.GetPosition().ToString(false) + "\n";
 		}
