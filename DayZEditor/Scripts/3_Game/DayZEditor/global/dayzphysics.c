@@ -10,12 +10,17 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 	
 	// todo: collision mode is very inaccurate atm due to RayCastBullet crashing when dragging dynamic objects
 	// find a way to check if the object is dynamic, then bop it
-	//Object hit_object;
-	//float hit_else;
-	//if (!groundonly && DayZPhysics.RayCastBullet(ray_start, ray_end, PhxInteractionLayers.DYNAMICITEM | PhxInteractionLayers.BUILDING | PhxInteractionLayers.CHARACTER, ignore, hit_object, hitPos, hitNormal, hit_else)) {
-	//	collisions.Insert(hit_object);
-	//	return hitPos;
-	//}
+	Object hit_object;
+	float hit_else;
+	int interaction_layers = PhxInteractionLayers.BUILDING;
+	if (ignore && dBodyIsDynamic(ignore)) {
+		interaction_layers = dBodyGetInteractionLayer(ignore);
+	}
+	
+	if (!groundonly && ignore && dBodyIsDynamic(ignore) && DayZPhysics.RayCastBullet(ray_start, ray_end, interaction_layers, ignore, hit_object, hitPos, hitNormal, hit_else)) {
+		collisions.Insert(hit_object);
+		return hitPos;
+	}
 	
 	DayZPhysics.RaycastRV(ray_start, ray_end, hitPos, hitNormal, hitComponentIndex, collisions, null, ignore, false, groundonly, 1, radius, CollisionFlags.ALLOBJECTS);
 	
