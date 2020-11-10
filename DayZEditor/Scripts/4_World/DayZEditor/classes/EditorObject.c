@@ -102,6 +102,12 @@ class EditorObject: EditorWorldObject
 	{
 		if (!m_WorldObject) {
 			EditorLog.Error("World Object was null! ID: %1", GetID().ToString());
+			if (!m_Data.WorldObject) {
+				m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation);
+				m_Data.WorldObject = m_WorldObject;
+			} else {
+				m_WorldObject = m_Data.WorldObject;
+			}
 		}
 		
 		return m_WorldObject;
