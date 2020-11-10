@@ -11,7 +11,8 @@ class StringEvaluaterEvaluater
 		NextChar(pos, ch);
 		float x = ParseExpression(pos, ch);
 		if (pos < value.Length()) {
-			Error("Unexpected: " + ch);
+			Error("Unexpected: " + ch + " " + value);
+			return -1;
 		}
 		
 		return x;
