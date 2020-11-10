@@ -165,11 +165,12 @@ class EditorMapGroupProto: XMLCallback
 	{
 		EditorLog.Trace("EditorMapGroupProto::OnSuccess"); 
 		
-		XMLElement prototype = document.Get(1).GetContent();
+		if (document[1] == null) return;
+		XMLElement prototype = document[1].GetContent();
 		
 		for (int i = 0; i < prototype.Count(); i++) {
 			
-			XMLTag group_tag = prototype.Get(i);
+			XMLTag group_tag = prototype[i];
 			if (group_tag.GetName() != "group") 
 				continue;
 			
