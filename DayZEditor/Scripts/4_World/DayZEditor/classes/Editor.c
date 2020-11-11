@@ -477,8 +477,18 @@ class Editor
 		}
 		
 		EntityAI entity = editor_hologram.GetWorldObject();
-		EditorObject editor_object = CreateObject(EditorObjectData.Create(entity.GetType(), entity.GetPosition(), entity.GetOrientation()));
-		SelectObject(editor_object);
+		if (!entity) {
+			return null;
+		}
+		
+		EditorObjectData editor_object_data = EditorObjectData.Create(entity.GetType(), entity.GetPosition(), entity.GetOrientation());
+		if (editor_object_data) {
+			EditorObject editor_object = CreateObject(editor_object_data);
+		}
+		
+		if (editor_object) {
+			SelectObject(editor_object);
+		}
 		
 		EditorEvents.ObjectPlaced(this, editor_object);
 		
@@ -895,7 +905,5 @@ class Editor
 		
 		return position;
 	}
-	
-	
 }
 
