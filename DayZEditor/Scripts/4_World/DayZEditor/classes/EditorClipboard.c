@@ -25,8 +25,11 @@ class EditorClipboard
 		foreach (int id, EditorObject copy_object: copy_objects)
 			avg_position += copy_object.GetPosition();
 		
+		
 		for (int i = 0; i < 3; i++)
 			avg_position[i] = avg_position[i] / copy_objects.Count();
+		
+		avg_position[1] = GetGame().SurfaceY(avg_position[0], avg_position[2]);
 		
 		foreach (int idx, EditorObject selected_object: copy_objects) {
  			EditorObjectData data = EditorObjectData.Create(selected_object.GetType(), selected_object.GetPosition(), selected_object.GetOrientation(), selected_object.GetFlags());
@@ -70,9 +73,9 @@ class EditorClipboard
 			};
 						
 			EditorObject editor_object = GetEditor().CreateObject(EditorObjectData.Create(pasted_object.Type, pasted_object.Position, pasted_object.Orientation, pasted_object.Flags));
-			float surfacey = GetGame().SurfaceY(position[0], position[2]);
-			vector size = editor_object.GetSize();
-			position[1] = surfacey + size[1] / 2;
+			//float surfacey = GetGame().SurfaceY(position[0], position[2]);
+			//vector size = editor_object.GetSize();
+			//position[1] = surfacey + size[1] / 2;
 			editor_object.SetPosition(position);
 			
 			if (GetEditor().MagnetMode) {
