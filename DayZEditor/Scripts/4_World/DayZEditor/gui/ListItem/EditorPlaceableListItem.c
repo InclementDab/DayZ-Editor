@@ -115,7 +115,6 @@ class EditorPlaceableListItem: EditorListItem
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
-		return true;
 		if (!GetEditor().IsPlacing()) {
 			GetEditor().CreateInHand(m_PlaceableItem);
 		}
@@ -126,7 +125,6 @@ class EditorPlaceableListItem: EditorListItem
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
-		return true;
 		if (GetEditor().IsPlacing()) {
 			GetEditor().CommandManager.PlaceObjectCommand.Execute(this, null);
 		}
