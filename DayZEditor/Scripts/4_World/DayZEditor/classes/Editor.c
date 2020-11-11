@@ -556,7 +556,7 @@ class Editor
 		loot_position_data += "	<usage name=\"Industrial\" />\n";
 		loot_position_data += "	<usage name=\"Farm\" />\n";
 		loot_position_data += "	<usage name=\"Military\" />\n";
-		loot_position_data += "	<container name=\"lootFloor\ lootmax=\"4\">\n";
+		loot_position_data += "	<container name=\"lootFloor\" lootmax=\"4\">\n";
 		
 		foreach (EditorObject loot_spawn: loot_spawns) {
 			loot_position_data += string.Format("		<point pos=\"%1\" range=\"0.5\" height=\"1.5\" /> \n", loot_spawn.GetPosition().ToString(false));
