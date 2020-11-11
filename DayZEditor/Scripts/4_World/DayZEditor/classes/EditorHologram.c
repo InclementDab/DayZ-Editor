@@ -32,6 +32,7 @@ class EditorHologram: EditorWorldObject
 	{
 		if (!m_WorldObject) return;
 		vector position = Editor.CurrentMousePosition;
+		position[1] = position[1] + ObjectGetSize(m_WorldObject)[1] / 2;
 		vector transform[4] = {
 			"1 0 0",
 			"0 1 0",
@@ -43,6 +44,7 @@ class EditorHologram: EditorWorldObject
 		float surface_height = GetGame().SurfaceY(position[0], position[2]);
 		if (GetEditor().MagnetMode) {
 			vector local_ori = m_WorldObject.GetDirection();
+			local_ori.Normalize();
 			transform[0] = surface_normal * local_ori;
 			transform[1] = surface_normal;
 			transform[2] = surface_normal * (local_ori * vector.Up);
