@@ -52,6 +52,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_GeneralGroup.Insert(new VectorPrefab("Position", m_EditorObject, "Position", m_EditorObject.Position));
 		m_GeneralGroup.Insert(new VectorPrefab("Orientation", m_EditorObject, "Orientation", m_EditorObject.Orientation));
 		m_GeneralGroup.Insert(new EditBoxNumberPrefab("Scale", m_EditorObject, "Scale", m_EditorObject.GetScale().ToString(), 0.01));
+		m_GeneralGroup.Insert(new CheckBoxPrefab("Editor Only", m_EditorObject, "EditorOnly", m_EditorObject.EditorOnly));
 		m_GeneralGroup.Open(GeneralGroup);
 		
 		m_ObjectGroup = new GroupPrefab("Object Settings", m_EditorObject, string.Empty);

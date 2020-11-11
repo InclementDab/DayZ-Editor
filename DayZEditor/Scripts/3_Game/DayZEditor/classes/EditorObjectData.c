@@ -21,6 +21,8 @@ class EditorObjectData
 	vector Orientation;
 	float Scale = 1;
 	
+	bool EditorOnly = false;
+	
 	[NonSerialized()]
 	vector BottomCenter;
 
