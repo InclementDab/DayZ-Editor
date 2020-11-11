@@ -21,7 +21,8 @@ class EditorObjectData
 	vector Orientation;
 	float Scale = 1;
 	
-	bool EditorOnly = false;
+	// Re-enable this once we get versioned serializing working :)
+	//bool EditorOnly = false;
 	
 	[NonSerialized()]
 	vector BottomCenter;
