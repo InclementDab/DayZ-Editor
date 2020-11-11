@@ -129,12 +129,7 @@ class EditorHudToolbarController: EditorControllerBase
 			}
 		}
 	}
-	
-	private int GetHighlightColor()
-	{
 		
-	}
-	
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{
 		EditorLog.Trace("EditorHudToolbarController::CollectionChanged: " + collection_name);
