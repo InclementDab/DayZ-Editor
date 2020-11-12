@@ -50,7 +50,7 @@ class EditorHologram: EditorWorldObject
 			transform[2] = surface_normal * (local_ori * vector.Up);
 		}
 		
-		m_WorldObject.SetTransform(transform);
+		m_WorldObject.SetPosition(position);
 	}
 	
 	

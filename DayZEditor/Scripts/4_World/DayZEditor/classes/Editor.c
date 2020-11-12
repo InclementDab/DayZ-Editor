@@ -152,6 +152,8 @@ class Editor
 		
 	void Update(float timeslice)
 	{		
+		ProcessInput(GetGame().GetInput());
+		
 		ref set<Object> obj = new set<Object>();
 		int x, y;
 		GetMousePos(x, y);
@@ -172,8 +174,7 @@ class Editor
 			//Debug.DestroyAllShapes();
 			//Debug.DrawSphere(CurrentMousePosition, 0.25, COLOR_GREEN_A);
 		}
-		
-
+	
 		if (!IsPlacing()) {
 			Object target = GetObjectUnderCursor(Settings.ViewDistance);
 			if (target) {
@@ -233,7 +234,26 @@ class Editor
 	}
 	
 	
-	
+	void ProcessInput(Input input)
+	{
+		if (input.LocalValue("UAZoomInOptics")) {
+			if (IsPlacing()) {
+				// Todo: this will need to be more complex cause it doesnt work for magnet mode atm
+				vector in_ori = ObjectInHand.GetWorldObject().GetOrientation();
+				in_ori[0] = in_ori[0] - 10;
+				ObjectInHand.GetWorldObject().SetOrientation(in_ori);
+			}
+		}
+		
+		if (input.LocalValue("UAZoomOutOptics")) {
+			if (IsPlacing()) {
+				// Todo: this will need to be more complex cause it doesnt work for magnet mode atm
+				vector out_ori = ObjectInHand.GetWorldObject().GetOrientation();
+				out_ori[0] = out_ori[0] + 10;
+				ObjectInHand.GetWorldObject().SetOrientation(out_ori);
+			}
+		}
+	}
 	
 	bool OnDoubleClick(int button)
 	{
