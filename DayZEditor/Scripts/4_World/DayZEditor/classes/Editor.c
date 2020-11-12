@@ -766,6 +766,7 @@ class Editor
 		
 		// Create Object
 		EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
+		if (!editor_object) return null;
 		
 		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
@@ -794,6 +795,7 @@ class Editor
 			
 			// Create Object
 			EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
+			if (!editor_object) continue;
 			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			
