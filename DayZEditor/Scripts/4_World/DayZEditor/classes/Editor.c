@@ -236,21 +236,26 @@ class Editor
 	
 	void ProcessInput(Input input)
 	{
-		if (input.LocalValue("UAZoomInOptics")) {
-			if (IsPlacing()) {
-				// Todo: this will need to be more complex cause it doesnt work for magnet mode atm
-				vector in_ori = ObjectInHand.GetWorldObject().GetOrientation();
-				in_ori[0] = in_ori[0] - 10;
-				ObjectInHand.GetWorldObject().SetOrientation(in_ori);
-			}
-		}
 		
-		if (input.LocalValue("UAZoomOutOptics")) {
-			if (IsPlacing()) {
-				// Todo: this will need to be more complex cause it doesnt work for magnet mode atm
-				vector out_ori = ObjectInHand.GetWorldObject().GetOrientation();
-				out_ori[0] = out_ori[0] + 10;
-				ObjectInHand.GetWorldObject().SetOrientation(out_ori);
+		if (IsPlacing()) {
+			vector hand_ori = ObjectInHand.GetWorldObject().GetOrientation();
+			float factor = 9;
+			if (KeyState(KeyCode.KC_LSHIFT)) {
+				factor /= 5;
+			}
+			
+			if (KeyState(KeyCode.KC_LCONTROL)) {
+				factor *= 5;
+			}
+			
+			if (input.LocalValue("UAZoomInOptics")) {				
+				hand_ori[0] = hand_ori[0] - factor;
+				ObjectInHand.GetWorldObject().SetOrientation(hand_ori);			
+			}
+			
+			if (input.LocalValue("UAZoomOutOptics")) {
+				hand_ori[0] = hand_ori[0] + factor;
+				ObjectInHand.GetWorldObject().SetOrientation(hand_ori);			
 			}
 		}
 	}
