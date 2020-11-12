@@ -71,12 +71,13 @@ class EditorSaveData
 		
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
-				save_data.EditorObjects.Insert(editor_object.GetData());
+				if (editor_object.GetType() != string.Empty) {
+					save_data.EditorObjects.Insert(editor_object.GetData());
+				}
 			}
 		}
 		
 		save_data.DeletedObjects = editor.GetObjectManager().GetDeletedObjects();
-		Print(save_data.DeletedObjects.Count());
 		
 		return save_data;
 	}
