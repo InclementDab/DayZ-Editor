@@ -171,8 +171,8 @@ class Editor
 		}
 		
 		if (Settings.DebugMode) {
-			//Debug.DestroyAllShapes();
-			//Debug.DrawSphere(CurrentMousePosition, 0.25, COLOR_GREEN_A);
+			Debug.DestroyAllShapes();
+			Debug.DrawSphere(CurrentMousePosition, 0.25, COLOR_GREEN_A);
 		}
 	
 		if (!IsPlacing()) {
