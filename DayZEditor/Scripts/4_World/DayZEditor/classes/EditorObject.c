@@ -172,7 +172,7 @@ class EditorObject: EditorWorldObject
 		// Store map objects
 		if (m_WorldObject) {
 			EditorLog.Debug("Removing world object ", m_WorldObject.ToString());
-			CF__ObjectManager.RemoveObject(m_WorldObject);
+			CF.ObjectManager.HideMapObject(m_WorldObject);
 		}
 		
 		delete m_EditorObjectWorldMarker; 
@@ -183,9 +183,6 @@ class EditorObject: EditorWorldObject
 		delete OnObjectDeselected;
 	}
 			
-	/*********
-	* Events *
-	*********/
 	
 	private bool m_IsSelected;
 	bool IsSelected() return m_IsSelected;
@@ -207,7 +204,8 @@ class EditorObject: EditorWorldObject
 		OnObjectDeselected.Invoke(this);
 	}
 	
-	EditorObjectData GetData() {
+	EditorObjectData GetData() 
+	{
 		return m_Data;
 	}
 	
@@ -243,16 +241,13 @@ class EditorObject: EditorWorldObject
 	
 	void GetTransform(out vector mat[4]) 
 	{ 
-		if (m_WorldObject)
-			m_WorldObject.GetTransform(mat); 
+		GetWorldObject().GetTransform(mat); 
 	}
 	
 	void SetTransform(vector mat[4]) 
 	{ 	
 		if (Locked) return;
-		if (m_WorldObject)
-			m_WorldObject.SetTransform(mat); 
-		
+		GetWorldObject().SetTransform(mat); 
 		Update();
 	}
 	

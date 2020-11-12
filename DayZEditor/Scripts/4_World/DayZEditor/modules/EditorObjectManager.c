@@ -108,7 +108,7 @@ class EditorObjectManagerModule: JMModuleBase
 	array<int> GetDeletedObjects()
 	{		
 		array<int> deleted_objects = {};
-		array<Object> registered = CF__ObjectManager.GetRegisteredObjects();
+		array<Object> registered = CF.ObjectManager.GetHiddenMapObjects();
 		foreach (Object obj: registered) {
 			if (obj) {
 				deleted_objects.Insert(obj.GetID());

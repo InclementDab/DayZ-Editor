@@ -820,7 +820,7 @@ class Editor
 	{
 		Object obj = m_ObjectManager.GetWorldObject(id);
 		if (obj) {
-			CF__ObjectManager.RemoveObject(obj);
+			CF.ObjectManager.HideMapObject(obj);
 		}
 	}
 	

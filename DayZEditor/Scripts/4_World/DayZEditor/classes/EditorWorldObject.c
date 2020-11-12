@@ -19,8 +19,7 @@ class EditorWorldObject
 		if (type == string.Empty) return null;
 		
 		EntityAI obj;
-		Print(type);
-		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_NONE))) {
+		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS))) {
 			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
