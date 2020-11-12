@@ -3,8 +3,8 @@ class EditorHudToolbarController: EditorControllerBase
 {
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 
-	float BrushRadius = 50;
-	float BrushDensity = 0.5;
+	float BrushRadius = 65;
+	float BrushDensity = 0.25;
 	
 	bool BrushToggleButtonState;
 	int BrushTypeSelection;

@@ -57,6 +57,7 @@ GameProjectClass {
 						"scripts/3_Game"
 						"JM/CF/defines"
 						"JM/CF/XML/3_Game"
+						"JM/CF/LayoutBindingManager/3_Game"
 						"JM/CF/Permissions/3_Game"
 						"JM/CF/scripts/3_Game"
 						"DayZEditor/scripts/3_Game"
@@ -80,6 +81,7 @@ GameProjectClass {
 						"scripts/5_Mission"
 						"JM/CF/defines"
 						"JM/CF/scripts/5_Mission"
+						"JM/CF/LayoutBindingManager/5_Mission"
 						"JM/CF/Permissions/5_Mission"
 						"DayZEditor/scripts/5_Mission"
 					}
