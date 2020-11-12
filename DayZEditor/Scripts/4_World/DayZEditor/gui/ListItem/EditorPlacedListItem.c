@@ -6,11 +6,15 @@ class EditorPlacedListItem: EditorListItem
 	EditorObject GetData() { 
 		return m_EditorObject; 
 	}
-		
-	void SetEditorObject(EditorObject data) 
-	{ 
+	
+	protected ref DragHandler m_DragHandler;
+	
+	void EditorPlacedListItem(EditorObject editor_object)
+	{
 		EditorLog.Trace("EditorPlacedListItem::SetEditorObject"); 
-		m_EditorObject = data;
+		m_EditorObject = editor_object;
+		
+		m_DragHandler = new DragHandler(m_EditorObject);
 		
 		m_TemplateController.Label = m_EditorObject.GetDisplayName();
 		m_TemplateController.NotifyPropertyChanged("Label");
@@ -22,6 +26,10 @@ class EditorPlacedListItem: EditorListItem
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
 	
+	void ~EditorPlacedListItem()
+	{
+		delete m_DragHandler;
+	}	
 	
 	void EditorObjectSelected(EditorObject data) 
 	{
@@ -105,6 +113,23 @@ class EditorPlacedListItem: EditorListItem
 			}
 			
 		}
+		
+		return true;
+	}
+	
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		EditorLog.Trace("EditorPlacedListItem::OnDrag");	
+		GetEditor().SelectObject(m_EditorObject);
+		m_DragHandler.OnDragStart();
+		
+		return true;
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget receiver)
+	{
+		EditorLog.Trace("EditorPlacedListItem::OnDrop");
+		m_DragHandler.OnDragFinish();
 		
 		return true;
 	}

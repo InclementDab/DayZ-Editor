@@ -424,8 +424,7 @@ class EditorObject: EditorWorldObject
 			return;
 		}
 		
-		m_EditorPlacedListItem = new EditorPlacedListItem();
-		m_EditorPlacedListItem.SetEditorObject(this);
+		m_EditorPlacedListItem = new EditorPlacedListItem(this);
 		GetEditor().GetEditorHud().GetTemplateController().RightbarSpacerData.Insert(m_EditorPlacedListItem);
 	}
 	
