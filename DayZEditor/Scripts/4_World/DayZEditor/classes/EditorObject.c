@@ -68,13 +68,13 @@ class EditorObject: EditorWorldObject
 	Object GetWorldObject() 
 	{
 		if (!m_WorldObject) {
-			EditorLog.Error("World Object was null! ID: %1", GetID().ToString());
-			if (!m_Data.WorldObject) {
+			//EditorLog.Error("World Object was null! ID: %1", GetID().ToString());
+			if (m_Data && !m_Data.WorldObject) {
 				m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation);
-				m_Data.WorldObject = m_WorldObject;
-			} else {
-				m_WorldObject = m_Data.WorldObject;
+				//m_Data.WorldObject = m_WorldObject;
 			}
+			
+			//m_WorldObject = m_Data.WorldObject;
 		}
 		
 		return m_WorldObject;
@@ -87,11 +87,15 @@ class EditorObject: EditorWorldObject
 		//EditorOnly = m_Data.EditorOnly;
 		
 		if (!m_Data.WorldObject) {
-			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation);
+			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation);			
 			m_Data.WorldObject = m_WorldObject;
-		} else {
-			m_WorldObject = m_Data.WorldObject;
 		}
+		
+		m_WorldObject = m_Data.WorldObject;
+		
+		// Trash the object because its uncreatable
+		if (!m_WorldObject) delete this;
+		return;
 		
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
@@ -267,6 +271,13 @@ class EditorObject: EditorWorldObject
 	void Update() 
 	{ 
 		GetWorldObject().Update(); 
+		
+		// Trash the object because its uncreatable
+		// Doesnt solve the issue but atleast it doesnt loop endlessly
+		if (!m_WorldObject) {
+			delete this;
+			return;
+		}
 		
 		if (m_Data) {
 			m_Data.Position = GetPosition();
