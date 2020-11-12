@@ -131,21 +131,21 @@ class EditorObjectManagerModule: JMModuleBase
 	override void OnMissionStart()
 	{
 		// Loads all world objects into a map
+		EditorLog.Info("Caching Map Objects");
+		
 		ref array<Object> objects = {};
 		ref array<CargoBase> cargos = {};
-		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 20000, objects, cargos);
+		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 100000, objects, cargos);
 
 		foreach (Object o: objects) {
 			WorldObjects.Insert(o.GetID(), o);
 		}
 		
-		EditorLog.Info("Loaded %1 map objects", WorldObjects.Count().ToString());
+		EditorLog.Info("Cached %1 map objects", WorldObjects.Count().ToString());
 	}
 	
 	Object GetWorldObject(int id)
 	{
-		Print(WorldObjects.Count());
-		Print(WorldObjects.Get(id));
 		return WorldObjects[id];
 	}
 	

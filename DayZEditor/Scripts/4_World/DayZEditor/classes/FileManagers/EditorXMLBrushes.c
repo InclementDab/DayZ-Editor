@@ -1,7 +1,8 @@
 // abstract to EditorXMLCallback
 class XMLEditorBrushes: XMLCallback
 {
-	private autoptr ObservableCollection<ref EditorBrushData> m_Data;
+	private ObservableCollection<ref EditorBrushData> m_Data;
+
 	
 	void XMLEditorBrushes(ObservableCollection<ref EditorBrushData> data) 
 	{
@@ -73,8 +74,8 @@ class XMLEditorBrushes: XMLCallback
 					brush_settings.InsertPlaceableObject(new EditorBrushObject(object_type, object_frequency, z_offset));
 				}
 			}
-				
-			GetEditor().GetEditorHud().GetTemplateController().GetToolbarController().BrushTypeBoxData.Insert(brush_settings);
+			
+			m_Data.Insert(brush_settings);
 		}
 	}
 	
