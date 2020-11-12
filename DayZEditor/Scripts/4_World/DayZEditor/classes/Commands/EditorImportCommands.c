@@ -40,6 +40,8 @@ class EditorImportCommandBase: EditorCommand
 			m_Editor.Clear();
 		}
 		
+		CF_ObjectManager.UnhideAllMapObjects();
+		
 		EditorLog.Info("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
 		foreach (EditorObjectData data: save_data.EditorObjects) {
 			GetEditor().CreateObject(data, false);
