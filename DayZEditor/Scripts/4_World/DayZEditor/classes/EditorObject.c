@@ -94,8 +94,10 @@ class EditorObject: EditorWorldObject
 		m_WorldObject = m_Data.WorldObject;
 		
 		// Trash the object because its uncreatable
-		if (!m_WorldObject) delete this;
-		return;
+		if (!m_WorldObject) { 
+			delete this;
+			return;
+		}
 		
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
@@ -130,7 +132,7 @@ class EditorObject: EditorWorldObject
 		
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		m_BasePoint = GetGame().CreateObjectEx("BoundingBoxBase", base_point, ECE_NONE);
-		m_BasePoint.SetScale(0);
+		m_BasePoint.SetScale(0.001);
 
 		
 		AddChild(m_BasePoint, -1, true);
