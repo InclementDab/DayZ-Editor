@@ -236,7 +236,6 @@ class Editor
 	
 	void ProcessInput(Input input)
 	{
-		
 		if (IsPlacing()) {
 			vector hand_ori = ObjectInHand.GetWorldObject().GetOrientation();
 			float factor = 9;

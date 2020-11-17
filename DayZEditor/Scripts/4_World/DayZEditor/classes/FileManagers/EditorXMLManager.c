@@ -205,6 +205,7 @@ class EditorMapGroupProto: XMLCallback
 					case "container": {
 						XMLAttribute container_name = group_child.GetAttribute("name");
 						XMLAttribute container_lootmax = group_child.GetAttribute("lootmax");
+						
 						if (container_name != null)
 							string cont_name = container_name.ValueAsString();
 						if (container_lootmax != null)
@@ -276,20 +277,18 @@ class EditorMapGroupProto: XMLCallback
 		
 		// Draw objects 
 		foreach (EditorMapGroupProtoGroup group_proto: m_MapGroupProto) {
-			
 			if (group_proto && m_Building && group_proto.GetName() == m_Building.GetType()) {
 				EditorLog.Info("Building Found!");								
 				return;
 			}			
 		}
 		
-		EditorLog.Error("Building was not found!");
-		thread ErrorMessage(string.Format("%1 not found in MapGroupProto.xml", m_Building.GetType()));
-		GetEditor().FinishEditLootSpawns();
+		EditorLog.Warning("Building was not found!");
 	}
 	
 	void InsertLootPoint(EditorLootPoint loot_point)
 	{
+		EditorLog.Info("Inserting Loot Point %1", loot_point.GetPosition().ToString());
 		vector loot_pos = loot_point.GetPosition();					
 		EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("DebugCylinder", loot_pos, vector.Zero, EditorObjectFlags.OBJECTMARKER));
 		
