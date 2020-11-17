@@ -596,8 +596,8 @@ class Editor
 			loot_position_data += string.Format("		<point pos=\"%1\" range=\"0.5\" height=\"1.5\" /> \n", loot_spawn.GetPosition().ToString(false));
 		}
 		
-		loot_position_data += "	<container/>\n";
-		loot_position_data += "<group/>\n";
+		loot_position_data += "	</container>\n";
+		loot_position_data += "</group>\n";
 		
 		GetGame().CopyToClipboard(loot_position_data);
 		
