@@ -574,7 +574,6 @@ class EditorBrushRadiusCommand: EditorCommand
 	{
 		if (m_ViewBinding) {
 			Widget root = m_ViewBinding.GetLayoutRoot().GetParent();
-			Print(root.GetName());
 			root.Show(state);
 			root.Enable(state);	
 		}

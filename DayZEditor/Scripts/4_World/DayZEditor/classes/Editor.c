@@ -387,7 +387,10 @@ class Editor
 	
 	// Return TRUE if handled.	
 	bool OnKeyPress(int key)
-	{		
+	{
+		// Dont process hotkeys if dialog is open
+		if (m_EditorHud.CurrentDialog) return false;
+		
 		if (m_CurrentKeys.Find(key) != -1) return false;
 		
 		m_CurrentKeys.Insert(key);
@@ -510,14 +513,14 @@ class Editor
 			EditorObject editor_object = CreateObject(editor_object_data);
 		}
 		
-		if (editor_object) {
-			SelectObject(editor_object);
-		}
-		
 		EditorEvents.ObjectPlaced(this, editor_object);
 		
 		if (!KeyState(KeyCode.KC_LSHIFT)) { 
 			StopPlacing(); 
+		}
+		
+		if (editor_object) {
+			SelectObject(editor_object);
 		}
 		
 		return editor_object;

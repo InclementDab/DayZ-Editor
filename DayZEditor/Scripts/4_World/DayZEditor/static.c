@@ -16,11 +16,11 @@ static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
 {
 	EditorLog.Trace("CreateDefaultCharacter");
 	DayZPlayer player;
-	if (GetWorkbenchGame().GetPlayer() != null) {
-		player = GetWorkbenchGame().GetPlayer();
+	if (GetWorkbenchGame().GetPlayer()) {
+		return GetWorkbenchGame().GetPlayer();
 	} 
 	
-	else if (Class.CastTo(player, GetWorkbenchGame().CreatePlayer(NULL, GetWorkbenchGame().CreateRandomPlayer(), position, 0, "NONE"))) {
+	if (Class.CastTo(player, GetWorkbenchGame().CreatePlayer(null, GetWorkbenchGame().CreateRandomPlayer(), position, 0, "NONE"))) {
 		player.GetInventory().CreateInInventory("AviatorGlasses");
     	player.GetInventory().CreateInInventory("MilitaryBoots_Black");
     	player.GetInventory().CreateInInventory("AliceBag_Black");
