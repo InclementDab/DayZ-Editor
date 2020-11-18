@@ -578,7 +578,7 @@ class Editor
 	// Kinda very jank i think
 	void InsertLootPosition(vector position)
 	{
-		m_EditorMapGroupProto.InsertLootPoint(new EditorLootPoint(position, 1, 1, 0));
+		m_EditorMapGroupProto.InsertLootPoint(new EditorLootPoint(position, 1, 1, 32));
 	}
 	
 	void FinishEditLootSpawns()
