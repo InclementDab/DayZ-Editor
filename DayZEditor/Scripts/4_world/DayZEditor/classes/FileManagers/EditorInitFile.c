@@ -58,25 +58,27 @@ class EditorInitFile: EditorFileType
 			return;
 		}
 		
-		TStringArray spawn_method = {
-			"\n\nvoid main()",
-			"{"
-		};
+		TStringArray spawn_method = {};
+		spawn_method.Insert("\n\n\/\/ Paste anything below this line into the bottom of your 'void main()' function");
+		
+		if (data.EditorObjects.Count() > 0) {
+			spawn_method.Insert("\n\n\/\/ Created Objects");
+		}
 		foreach (EditorObjectData editor_object: data.EditorObjects) {
-			// SpawnObject("Land_Construction_House2", "6638.935547 7.190318 6076.024414", "146.000015 0.000000 0.000000")
-			spawn_method.Insert(string.Format("	SpawnObject(\"%1\", \"%2\", \"%3\");", editor_object.Type, editor_object.Position.ToString(false), editor_object.Orientation.ToString(false)));
+			spawn_method.Insert(string.Format("SpawnObject(\"%1\", \"%2\", \"%3\");", editor_object.Type, editor_object.Position.ToString(false), editor_object.Orientation.ToString(false)));
 		}
 		
-		spawn_method.Insert("	\/\/Position, Radius (increase if you have a larger map than Chernarus)");
-    	spawn_method.Insert("	GetCEApi().ExportProxyData(Vector(7500, GetGame().SurfaceY(7500, 7500), 7500), 20000);");
-			
-		spawn_method.Insert("	\n\n\/\/ Deleted Objects");
-		
+		if (data.DeletedObjects.Count() > 0) {
+			spawn_method.Insert("\n\n\/\/ Deleted Objects");
+		}
 		foreach (int deleted_object: data.DeletedObjects) {
-			spawn_method.Insert(string.Format("	DeleteObject(%1);", deleted_object));
+			spawn_method.Insert(string.Format("DeleteObject(%1);", deleted_object));
 		}
+		
+		spawn_method.Insert("\n\n\/\/ Uncomment if you want to export loot from newly added buildings");
+		spawn_method.Insert("\/\/ Position, Radius (increase if you have a larger map than Chernarus)");
+    	spawn_method.Insert("\/\/ GetCEApi().ExportProxyData(Vector(7500, GetGame().SurfaceY(7500, 7500), 7500), 20000);");
 			
-		spawn_method.Insert("}");
 				
 		foreach (string line: spawn_method) {
 			FPrintln(handle, line);	
