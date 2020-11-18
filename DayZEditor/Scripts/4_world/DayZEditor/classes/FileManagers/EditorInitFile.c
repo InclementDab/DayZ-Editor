@@ -68,13 +68,6 @@ class EditorInitFile: EditorFileType
 			spawn_method.Insert(string.Format("SpawnObject(\"%1\", \"%2\", \"%3\");", editor_object.Type, editor_object.Position.ToString(false), editor_object.Orientation.ToString(false)));
 		}
 		
-		if (data.DeletedObjects.Count() > 0) {
-			spawn_method.Insert("\n\n\/\/ Deleted Objects");
-		}
-		foreach (int deleted_object: data.DeletedObjects) {
-			spawn_method.Insert(string.Format("DeleteObject(%1);", deleted_object));
-		}
-		
 		spawn_method.Insert("\n\n\/\/ Uncomment if you want to export loot from newly added buildings");
 		spawn_method.Insert("\/\/ Position, Radius (increase if you have a larger map than Chernarus)");
     	spawn_method.Insert("\/\/ GetCEApi().ExportProxyData(Vector(7500, GetGame().SurfaceY(7500, 7500), 7500), 20000);");
