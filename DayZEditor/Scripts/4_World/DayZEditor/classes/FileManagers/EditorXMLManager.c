@@ -249,7 +249,7 @@ class EditorMapGroupProto: XMLCallback
 									if (point_flags != null)
 										int flags = point_flags.ValueAsInt();
 									
-									pos = Vector(pos[2], pos[1], pos[0]) + m_Building.GetPosition();
+									pos = pos + m_Building.GetPosition();
 									container.InsertLootPoint(new EditorLootPoint(pos, range, height, flags));
 									break;
 								}
@@ -278,7 +278,16 @@ class EditorMapGroupProto: XMLCallback
 		// Draw objects 
 		foreach (EditorMapGroupProtoGroup group_proto: m_MapGroupProto) {
 			if (group_proto && m_Building && group_proto.GetName() == m_Building.GetType()) {
-				EditorLog.Info("Building Found!");								
+				EditorLog.Info("Building Found!");	
+				array<ref EditorLootContainer> containers = group_proto.GetLootContainer();
+				foreach (EditorLootContainer cont: containers) {
+					array<ref EditorLootPoint> loot_points = cont.GetLootPoints();
+					foreach (EditorLootPoint loot_point: loot_points) {
+						InsertLootPoint(loot_point);
+					}
+					
+					EditorLog.Info("Loading %1 loot points for %2", loot_points.Count().ToString(), m_Building.GetType());
+				}
 				return;
 			}			
 		}
@@ -290,9 +299,8 @@ class EditorMapGroupProto: XMLCallback
 	{
 		EditorLog.Info("Inserting Loot Point %1", loot_point.GetPosition().ToString());
 		vector loot_pos = loot_point.GetPosition();	
-		loot_pos[1] = loot_pos[1] + Editor.LootYOffset;
 		EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("DebugCylinder", loot_pos, vector.Zero, EditorObjectFlags.OBJECTMARKER));
-		
+
 		// might be bad
 		//m_Building.AddChild(loot_display.GetWorldObject(), -1);
 				

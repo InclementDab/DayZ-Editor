@@ -548,9 +548,7 @@ class Editor
 		m_LootEditTarget = GetGame().CreateObjectEx(placeable_item.Type, Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 		vector size = ObjectGetSize(m_LootEditTarget);
 		LootYOffset = size[1] / 2;
-		m_LootEditTarget.SetPosition(Vector(0, LootYOffset, LootYOffset));
-		
-		if (!m_LootEditTarget) return;
+		m_LootEditTarget.SetPosition(Vector(0, LootYOffset, 0));
 		m_LootEditTarget.SetOrientation(Vector(90, 0, 0));
 		
 		GetCamera().Speed = 10;
