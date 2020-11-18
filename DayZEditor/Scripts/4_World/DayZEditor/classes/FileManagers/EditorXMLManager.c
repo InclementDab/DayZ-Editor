@@ -289,7 +289,8 @@ class EditorMapGroupProto: XMLCallback
 	void InsertLootPoint(EditorLootPoint loot_point)
 	{
 		EditorLog.Info("Inserting Loot Point %1", loot_point.GetPosition().ToString());
-		vector loot_pos = loot_point.GetPosition();					
+		vector loot_pos = loot_point.GetPosition();	
+		loot_pos[1] = loot_pos[1] + Editor.LootYOffset;
 		EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("DebugCylinder", loot_pos, vector.Zero, EditorObjectFlags.OBJECTMARKER));
 		
 		// might be bad

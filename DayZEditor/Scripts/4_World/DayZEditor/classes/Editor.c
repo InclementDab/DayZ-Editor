@@ -539,21 +539,24 @@ class Editor
 	private vector m_PositionBeforeLootEditMode;
 	private ref EditorMapGroupProto m_EditorMapGroupProto;
 	
+	static float LootYOffset;
+	
 	void EditLootSpawns(EditorPlaceableItem placeable_item)
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.Type);
 		 
 		m_LootEditTarget = GetGame().CreateObjectEx(placeable_item.Type, Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 		vector size = ObjectGetSize(m_LootEditTarget);
-		m_LootEditTarget.SetPosition(Vector(0, size[1] / 2, 0));
+		LootYOffset = size[1] / 2;
+		m_LootEditTarget.SetPosition(Vector(0, LootYOffset, LootYOffset));
 		
 		if (!m_LootEditTarget) return;
 		m_LootEditTarget.SetOrientation(Vector(90, 0, 0));
 		
 		GetCamera().Speed = 10;
 		m_PositionBeforeLootEditMode = m_EditorCamera.GetPosition();
-		m_EditorCamera.SetPosition(Vector(10, 10, 10));
-		m_EditorCamera.LookAt(Vector(0, 0, 0));	
+		m_EditorCamera.SetPosition(Vector(10, LootYOffset, 10));
+		m_EditorCamera.LookAt(Vector(0, LootYOffset, 0));	
 		
 		if (!FileExist(Settings.EditorProtoFile)) {
 			EditorLog.Info("EditorProtoFile not found! Copying...");
@@ -596,7 +599,9 @@ class Editor
 		loot_position_data += "	<container name=\"lootFloor\" lootmax=\"4\">\n";
 		
 		foreach (EditorObject loot_spawn: loot_spawns) {
-			loot_position_data += string.Format("		<point pos=\"%1\" range=\"0.5\" height=\"1.5\" /> \n", loot_spawn.GetPosition().ToString(false));
+			vector loot_pos = loot_spawn.GetPosition();
+			loot_pos[1] = loot_pos[1] - LootYOffset;
+			loot_position_data += string.Format("		<point pos=\"%1\" range=\"0.5\" height=\"1.5\" /> \n", loot_pos.ToString(false));
 		}
 		
 		loot_position_data += "	</container>\n";
