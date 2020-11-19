@@ -163,7 +163,8 @@ class EditorObject: EditorWorldObject
 			thread EnableListItem(ListItemEnabled);
 
 		m_SnapPoints.Insert(new EditorSnapPoint(this, Vector(0, -GetYDistance(), 5)));
-	
+
+		Update();
 	}
 	
 		
@@ -293,9 +294,8 @@ class EditorObject: EditorWorldObject
 		}
 		
 		
-		Debug.DestroyAllShapes();
-		
 		if (GetEditor().Settings.DebugMode) {
+			Debug.DestroyAllShapes();
 			foreach (EditorSnapPoint point: m_SnapPoints) {
 				Debug.DrawSphere(point.GetWorldObject().GetWorldPosition());
 			}

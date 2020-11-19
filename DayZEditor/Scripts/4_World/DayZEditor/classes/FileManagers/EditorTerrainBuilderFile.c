@@ -15,7 +15,7 @@ class EditorTerrainBuilderFile: EditorFileType
 		foreach (EditorObjectData editor_object: data.EditorObjects) {
 			// "construction_house2";206638.935547;6076.024414;146.000015;0.000000;0.000000;1.000000;
 			// Name, X, Y, Yaw, Pitch, Roll, Scale, Relative Height			
-			vector position = editor_object.BottomCenter;			
+			vector position = editor_object.BottomCenter;		
 			//if (height_type == HeightType.RELATIVE)
 			position[1] = position[1] - GetGame().SurfaceY(position[0], position[2]);
 			
