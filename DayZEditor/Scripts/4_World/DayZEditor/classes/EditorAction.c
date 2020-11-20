@@ -136,5 +136,17 @@ class EditorAction
 
 		editor_object.SetPosition(params.param2);
 		editor_object.SetOrientation(params.param3);
-	}	
+	}
+	
+	void Hide(Param1<Object> param)
+	{
+		EditorLog.Trace("EditorAction::Hide");
+		CF.ObjectManager.HideMapObject(param.param1);
+	}
+	
+	void Unhide(Param1<Object> param)
+	{
+		EditorLog.Trace("EditorAction::Unhide");
+		CF.ObjectManager.UnhideMapObject(param.param1);
+	}
 }

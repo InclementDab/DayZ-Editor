@@ -177,8 +177,9 @@ class DeleteBrush: EditorBrush
 			EditorObject eo = GetEditor().GetEditorObject(r);
 			if (eo) {
 				GetEditor().DeleteObject(eo);
-			} else {
-				CF.ObjectManager.HideMapObject(r);
+			} else if (r) {
+				GetEditor().HideMapObject(r);
+				//CF.ObjectManager.HideMapObject(r);
 			}
 		}		
 	}

@@ -849,7 +849,7 @@ class Editor
 			InsertAction(action);
 		}
 	}
-	
+	// dep
 	void DeleteMapObject(int id)
 	{
 		Object obj = m_ObjectManager.GetWorldObject(id);
@@ -858,21 +858,49 @@ class Editor
 		}
 	}
 	
-	void SelectObject(EditorObject target) {
+	void HideMapObject(int id, bool create_undo = true)
+	{
+		HideMapObject(m_ObjectManager.GetWorldObject(id), create_undo);
+	}
+	
+	void HideMapObject(Object map_object, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Unhide", "Hide");
+		
+		action.InsertUndoParameter(null, new Param1<Object>(map_object));
+		action.InsertRedoParameter(null, new Param1<Object>(map_object));
+		
+		CF.ObjectManager.HideMapObject(map_object);
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
+	
+	void HideMapObjects(array<Object> map_objects)
+	{
+		
+	}
+	
+	void SelectObject(EditorObject target) 
+	{
 		m_ObjectManager.SelectObject(target);
 	}
 	
 	
-	void DeselectObject(EditorObject target) {
+	void DeselectObject(EditorObject target) 
+	{
 		m_ObjectManager.DeselectObject(target);
 	}
 	
 	
-	void ToggleSelection(EditorObject target) {
+	void ToggleSelection(EditorObject target) 
+	{
 		m_ObjectManager.ToggleSelection(target);
 	}
 		
-	void ClearSelection() {
+	void ClearSelection() 
+	{
 		m_ObjectManager.ClearSelection();
 	}
 	
