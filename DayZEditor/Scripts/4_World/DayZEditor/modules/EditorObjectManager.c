@@ -133,6 +133,7 @@ class EditorObjectManagerModule: JMModuleBase
 	override void OnMissionStart()
 	{
 		// Loads all world objects into a map
+		WorldObjects.Clear();
 		EditorLog.Info("Caching Map Objects");
 		
 		ref array<Object> objects = {};

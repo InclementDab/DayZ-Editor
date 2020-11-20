@@ -850,12 +850,11 @@ class Editor
 		}
 	}
 	// dep
-	void DeleteMapObject(int id)
+	bool DeleteMapObject(int id)
 	{
-		Object obj = m_ObjectManager.GetWorldObject(id);
-		if (obj) {
-			CF.ObjectManager.HideMapObject(obj);
-		}
+		EditorLog.Trace("Editor::DeleteMapObject %1", id.ToString());
+		Object obj = CF.ObjectManager.HideMapObject(m_ObjectManager.GetWorldObject(id));
+		return (obj != null);
 	}
 	
 	void HideMapObject(int id, bool create_undo = true)
