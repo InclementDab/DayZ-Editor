@@ -762,19 +762,19 @@ class Editor
 		return CreateObject(EditorObjectData.Create(target, flags), create_undo);
 	}
 	
-	EditorObject CreateObject(notnull EditorObjectData editor_object_data, bool create_undo = true) 
+	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true) 
 	{
-
 		EditorLog.Trace("Editor::CreateObject " + editor_object_data);
-		EditorAction action = new EditorAction("Delete", "Create");
 		
 		// Cache Data (for undo / redo)
+		if (!editor_object_data) return null;
 		m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
 		
 		// Create Object
 		EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
 		if (!editor_object) return null;
 		
+		EditorAction action = new EditorAction("Delete", "Create");
 		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 		
@@ -786,7 +786,7 @@ class Editor
 		return editor_object;
 	}
 	
-	EditorObjectMap CreateObjects(notnull EditorObjectDataMap data_list, bool create_undo = true) 
+	EditorObjectMap CreateObjects(EditorObjectDataMap data_list, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject");
 		
@@ -796,6 +796,7 @@ class Editor
 		foreach (int id, ref EditorObjectData editor_object_data: data_list) {
 			
 			// Cache Data (for undo / redo)
+			if (!editor_object_data) continue;
 			m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
 			
 			// Create Object
