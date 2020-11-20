@@ -695,22 +695,8 @@ class Editor
 			}
 		}
 	}
+
 	
-		
-
-	bool IsActive() return m_Active;
-	EditorHud GetEditorHud() return m_EditorHud;
-	EditorCamera GetCamera() return m_EditorCamera;
-	EditorObjectManagerModule GetObjectManager() return m_ObjectManager;
-	EditorObjectMap GetSelectedObjects() return m_ObjectManager.GetSelectedObjects(); 
-	EditorObjectMap GetPlacedObjects() return m_ObjectManager.GetPlacedObjects(); 
-	EditorObjectDataMap GetSessionCache() return m_SessionCache; 		
-	EditorObject GetEditorObject(int id) return m_ObjectManager.GetEditorObject(id); 	
-	EditorObject GetEditorObject(notnull Object world_object) return m_ObjectManager.GetEditorObject(world_object);	
-	EditorObject GetPlacedObjectById(int id) return m_ObjectManager.GetPlacedObjectById(id); 	
-	EditorObjectData GetSessionDataById(int id) return m_SessionCache.Get(id); 
-	EditorBrush GetBrush() return m_EditorBrush;
-
 	void SetBrush(EditorBrush brush) 
 	{
 		m_EditorBrush = brush; 
@@ -871,10 +857,6 @@ class Editor
 		m_ObjectManager.ClearSelection();
 	}
 	
-	EditorActionStack GetActionStack() {
-		return m_ActionStack;
-	}
-	
 	void Clear()
 	{
 		EditorSaveFile = string.Empty;	
@@ -932,5 +914,19 @@ class Editor
 		
 		return position;
 	}
+	
+	bool IsActive() return m_Active;
+	EditorHud GetEditorHud() return m_EditorHud;
+	EditorCamera GetCamera() return m_EditorCamera;
+	EditorObjectManagerModule GetObjectManager() return m_ObjectManager;
+	EditorObjectMap GetSelectedObjects() return m_ObjectManager.GetSelectedObjects(); 
+	EditorObjectMap GetPlacedObjects() return m_ObjectManager.GetPlacedObjects(); 
+	EditorObjectDataMap GetSessionCache() return m_SessionCache; 		
+	EditorObject GetEditorObject(int id) return m_ObjectManager.GetEditorObject(id); 	
+	EditorObject GetEditorObject(notnull Object world_object) return m_ObjectManager.GetEditorObject(world_object);	
+	EditorObject GetPlacedObjectById(int id) return m_ObjectManager.GetPlacedObjectById(id); 	
+	EditorObjectData GetSessionDataById(int id) return m_SessionCache.Get(id); 
+	EditorBrush GetBrush() return m_EditorBrush;
+	EditorActionStack GetActionStack() return m_ActionStack;
 }
 
