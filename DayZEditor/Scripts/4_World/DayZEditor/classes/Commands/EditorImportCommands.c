@@ -49,7 +49,7 @@ class EditorImportCommandBase: EditorCommand
 		
 		EditorLog.Info("Deleting %1 Objects", save_data.DeletedObjects.Count().ToString());
 		foreach (int id: save_data.DeletedObjects) {
-			if (!GetEditor().DeleteMapObject(id)) {
+			if (!GetEditor().HideMapObject(id)) {
 				EditorLog.Warning("Failed to delete building: %1", id.ToString());
 				EditorMessageBox.ShowSynchronous("Error", string.Format("There was an error deleting object %1\nTry restarting the game and reloading the file", id), MessageBoxButtons.OK);
 			}

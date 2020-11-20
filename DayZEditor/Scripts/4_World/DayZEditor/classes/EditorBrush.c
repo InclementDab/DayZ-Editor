@@ -173,13 +173,12 @@ class DeleteBrush: EditorBrush
 		
 		// todo this is deleting one at a time. use DeleteObjects smile :)
 		foreach (Object r: objects) {
-					
+			
 			EditorObject eo = GetEditor().GetEditorObject(r);
 			if (eo) {
 				GetEditor().DeleteObject(eo);
-			} else if (r) {
+			} else {
 				GetEditor().HideMapObject(r);
-				//CF.ObjectManager.HideMapObject(r);
 			}
 		}		
 	}

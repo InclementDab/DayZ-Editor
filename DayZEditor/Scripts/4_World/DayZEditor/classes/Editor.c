@@ -647,7 +647,7 @@ class Editor
 	{
 		EditorLog.Trace("EditorObjectManager::Redo");
 		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
-			if (m_ActionStack[i] != null && m_ActionStack[i].IsUndone()) {
+			if (m_ActionStack[i] && m_ActionStack[i].IsUndone()) {
 				m_ActionStack[i].CallRedo();
 				EditorLog.Debug("Redo complete");
 				return;
@@ -658,7 +658,7 @@ class Editor
 	bool CanUndo() 
 	{
 		foreach (EditorAction action: m_ActionStack) {
-			if (!action.IsUndone()) {
+			if (action && !action.IsUndone()) {
 				return true;
 			}
 		}
@@ -698,60 +698,31 @@ class Editor
 	
 		
 
-	bool IsActive()
-		return m_Active;
-	
-	EditorHud GetEditorHud() 
-		return m_EditorHud;
-	
-	EditorCamera GetCamera() 
-		return m_EditorCamera;
-	
-	EditorObjectManagerModule GetObjectManager() {
-		return m_ObjectManager;
-	}
-	
-	EditorObjectMap GetSelectedObjects() {
-		return m_ObjectManager.GetSelectedObjects(); 
-	}
-	
-	EditorObjectMap GetPlacedObjects() {
-		return m_ObjectManager.GetPlacedObjects(); 
-	}
+	bool IsActive() return m_Active;
+	EditorHud GetEditorHud() return m_EditorHud;
+	EditorCamera GetCamera() return m_EditorCamera;
+	EditorObjectManagerModule GetObjectManager() return m_ObjectManager;
+	EditorObjectMap GetSelectedObjects() return m_ObjectManager.GetSelectedObjects(); 
+	EditorObjectMap GetPlacedObjects() return m_ObjectManager.GetPlacedObjects(); 
+	EditorObjectDataMap GetSessionCache() return m_SessionCache; 		
+	EditorObject GetEditorObject(int id) return m_ObjectManager.GetEditorObject(id); 	
+	EditorObject GetEditorObject(notnull Object world_object) return m_ObjectManager.GetEditorObject(world_object);	
+	EditorObject GetPlacedObjectById(int id) return m_ObjectManager.GetPlacedObjectById(id); 	
+	EditorObjectData GetSessionDataById(int id) return m_SessionCache.Get(id); 
+	EditorBrush GetBrush() return m_EditorBrush;
 
-	EditorObjectDataMap GetSessionCache() {
-		return m_SessionCache; 
-	}
-		
-	EditorObject GetEditorObject(int id) {
-		return m_ObjectManager.GetEditorObject(id); 
-	}
-	
-	EditorObject GetEditorObject(notnull Object world_object) {
-		return m_ObjectManager.GetEditorObject(world_object);
-	}
-	
-	EditorObject GetPlacedObjectById(int id) {
-		return m_ObjectManager.GetPlacedObjectById(id); 
-	}
-
-	void DeleteSessionData(int id) {
-		m_SessionCache.Remove(id);	
-	}
-	
-	EditorObjectData GetSessionDataById(int id) {
-		return m_SessionCache.Get(id); 
-	}
-
-	void SetBrush(EditorBrush brush) {
+	void SetBrush(EditorBrush brush) 
+	{
 		m_EditorBrush = brush; 
 	}
 	
-	EditorBrush GetBrush() {
-		return m_EditorBrush; 
+	void DeleteSessionData(int id) 
+	{
+		m_SessionCache.Remove(id);	
 	}
 	
-	bool IsPlacing() {
+	bool IsPlacing() 
+	{
 		return ObjectInHand != null; 
 	}
 	
@@ -849,31 +820,28 @@ class Editor
 			InsertAction(action);
 		}
 	}
-	// dep
-	bool DeleteMapObject(int id)
+	
+	bool HideMapObject(int id, bool create_undo = true)
 	{
-		EditorLog.Trace("Editor::DeleteMapObject %1", id.ToString());
-		Object obj = CF.ObjectManager.HideMapObject(m_ObjectManager.GetWorldObject(id));
-		return (obj != null);
+		return HideMapObject(m_ObjectManager.GetWorldObject(id), create_undo);
 	}
 	
-	void HideMapObject(int id, bool create_undo = true)
+	// Is CF.ObjectManager.IsMapObjectHidden busted?
+	bool HideMapObject(Object map_object, bool create_undo = true)
 	{
-		HideMapObject(m_ObjectManager.GetWorldObject(id), create_undo);
-	}
-	
-	void HideMapObject(Object map_object, bool create_undo = true)
-	{
+		if (!map_object) return false;
+		if (CF.ObjectManager.IsMapObjectHidden(map_object)) return false;
 		EditorAction action = new EditorAction("Unhide", "Hide");
-		
-		action.InsertUndoParameter(null, new Param1<Object>(map_object));
-		action.InsertRedoParameter(null, new Param1<Object>(map_object));
+		action.InsertUndoParameter(map_object, new Param1<Object>(map_object));
+		action.InsertRedoParameter(map_object, new Param1<Object>(map_object));
 		
 		CF.ObjectManager.HideMapObject(map_object);
-		
+
 		if (create_undo) {
 			InsertAction(action);
 		}
+		
+		return true;
 	}
 	
 	void HideMapObjects(array<Object> map_objects)
@@ -918,8 +886,6 @@ class Editor
 	void InsertAction(EditorAction action) 
 	{
 		m_ActionStack.InsertAction(action);
-		// this crashes smile :)
-		//m_ActionStack.UpdateDebugReadout(GetEditor().GetEditorHud().GetEditorHudController().DebugActionStackListbox);
 	}
 	
 	static string GetVersionNumber()

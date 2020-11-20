@@ -1,29 +1,20 @@
 class EditorActionStack: set<ref EditorAction>
 {
-	
 	int InsertAction(EditorAction value)
 	{	
 		int count = Count();
 		for (int i = 0; i < count; i++) {
-			if (this[i].IsUndone()) {
-				Remove(i);
-				i--; count--;
+			if (!this[i].IsUndone()) {
+				break;
 			}
+			
+			Remove(i);
+			i--; count--;
 		}
 
 		// Adds to bottom of stack
 		return InsertAt(value, 0);
 	}
-	
-	void UpdateDebugReadout(out ref ObservableCollection<string> readout)
-	{
-		if (readout) {
-			readout.Clear();
-			foreach (EditorAction action: this) {
-				readout.Insert(action.GetName());
-			}
-		}
-	}	
 }
 
 
@@ -82,21 +73,33 @@ class EditorAction
 		
 	}
 	
-	void InsertUndoParameter(EditorObject source, ref Param params)
+	void InsertUndoParameter(Object source, ref Param params)
 	{
-		EditorLog.Trace("InsertUndoParameter %1", source.GetID().ToString());
+		//EditorLog.Trace("InsertUndoParameter %1", source.GetID().ToString());		
 		UndoParameters.Insert(source.GetID(), params);
 	}	
 	
+	void InsertUndoParameter(EditorObject source, ref Param params)
+	{
+		//EditorLog.Trace("InsertUndoParameter %1", source.GetID().ToString());
+		UndoParameters.Insert(source.GetID(), params);
+	}	
+		
+	void InsertRedoParameter(Object source, ref Param params)
+	{
+		//EditorLog.Trace("InsertRedoParameter %1", source.GetID().ToString());		
+		RedoParameters.Insert(source.GetID(), params);
+	}
+	
 	void InsertRedoParameter(EditorObject source, ref Param params)
 	{
-		EditorLog.Trace("InsertRedoParameter %1", source.GetID().ToString());
+		//EditorLog.Trace("InsertRedoParameter %1", source.GetID().ToString());		
 		RedoParameters.Insert(source.GetID(), params);
 	}
 
 	void Create(Param1<int> params)
 	{
-		EditorLog.Trace("EditorAction::Create %1", params.param1.ToString());
+		//EditorLog.Trace("EditorAction::Create %1", params.param1.ToString());
 		EditorObjectData data = GetEditor().GetSessionDataById(params.param1);
 		if (!data) {
 			EditorLog.Error("EditorAction::Create Data was null!");
@@ -108,7 +111,7 @@ class EditorAction
 	
 	void Delete(Param1<int> params)
 	{
-		EditorLog.Trace("EditorAction::Delete %1", params.param1.ToString());
+		//EditorLog.Trace("EditorAction::Delete %1", params.param1.ToString());
 		EditorObject object = GetEditor().GetPlacedObjectById(params.param1);
 		if (!object) {
 			EditorLog.Error("EditorAction::Delete Object was null!");
@@ -121,7 +124,7 @@ class EditorAction
 	
 	void SetTransform(Param3<int, vector, vector> params)
 	{
-		EditorLog.Trace("EditorAction::SetTransform");
+		//EditorLog.Trace("EditorAction::SetTransform");
 		EditorObjectData editor_object_data = GetEditor().GetSessionDataById(params.param1);
 		if (!editor_object_data) {
 			EditorLog.Error("EditorAction::SetTransform EditorObjectData was null!");
@@ -140,13 +143,13 @@ class EditorAction
 	
 	void Hide(Param1<Object> param)
 	{
-		EditorLog.Trace("EditorAction::Hide");
+		//EditorLog.Trace("EditorAction::Hide %1", param.param1.ToString());
 		CF.ObjectManager.HideMapObject(param.param1);
 	}
 	
 	void Unhide(Param1<Object> param)
 	{
-		EditorLog.Trace("EditorAction::Unhide");
+		//EditorLog.Trace("EditorAction::Unhide %1", param.param1.ToString());
 		CF.ObjectManager.UnhideMapObject(param.param1);
 	}
 }
