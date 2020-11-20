@@ -686,6 +686,8 @@ class Editor
 	private void AutoSaveThread()
 	{
 		while (g_Editor) {
+			if (!Settings) continue;
+			
 			Settings.AutoSaveTimer = Math.Clamp(Settings.AutoSaveTimer, 10, FLT_MAX);
 			Sleep(Settings.AutoSaveTimer * 1000);
 			if (EditorSaveFile != string.Empty) {
