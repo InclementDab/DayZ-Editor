@@ -4,7 +4,7 @@
 // make option Q and E go up and down no matter orientation
 class EditorCamera: Camera
 {
-	float FOV;
+	float FOV = 1;
 	float DOFDistance;
 	float DOFBlur;
 	float Blur;
@@ -41,7 +41,6 @@ class EditorCamera: Camera
 		SetEventMask(EntityEvent.FRAME);
 		SelectTarget(null);
 		
-		FOV = GetCurrentFOV();
 		NearPlane = GetNearPlane();
 		Exposure = GetGame().GetWorld().GetEyeAccom();
 	}
