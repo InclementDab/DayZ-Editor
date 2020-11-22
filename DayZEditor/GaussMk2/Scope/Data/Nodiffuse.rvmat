@@ -1,0 +1,99 @@
+ambient[] = {1, 1, 1, 1};
+diffuse[] = {0, 0, 0, 0};
+forcedDiffuse[] = {1, 1, 1, 1};
+emmisive[] = {1, 1, 1, 1};
+specular[] = {0, 0, 0, 1};
+specularPower = 100.0;
+PixelShaderID = "Super";
+VertexShaderID = "Super";
+RenderFlags[] = {"NoReceiveShadow"};
+
+class Stage0 {
+	texture = "#(rgb,8,8,3)color(0,0,0,1,CA)";
+	uvSource = "tex";
+	
+	class uvTransform {
+		aside[] = {1.0, 0.0, 0.0};
+		up[] = {0.0, 1.0, 0.0};
+		dir[] = {0.0, 0.0, 0.0};
+		pos[] = {0.0, 0.0, 0.0};
+	};
+};
+
+class Stage1 {
+	texture = "#(rgb,8,8,3)color(0.5,0.5,1,1,NOHQ)";
+	uvSource = "tex";
+	
+	class uvTransform {
+		aside[] = {1.0, 0.0, 0.0};
+		up[] = {0.0, 1.0, 0.0};
+		dir[] = {0.0, 0.0, 0.0};
+		pos[] = {0.0, 0.0, 0.0};
+	};
+};
+
+class Stage2 {
+	texture = "#(argb,8,8,3)color(0.5,0.5,0.5,0.5,DT)";
+	uvSource = "tex";
+	
+	class uvTransform {
+		aside[] = {1.0, 0.0, 0.0};
+		up[] = {0.0, 1.0, 0.0};
+		dir[] = {0.0, 0.0, 0.0};
+		pos[] = {0.0, 0.0, 0.0};
+	};
+};
+
+class Stage3 {
+	texture = "#(argb,8,8,3)color(1,1,1,0.0,MC)";
+	uvSource = "tex";
+	
+	class uvTransform {
+		aside[] = {1.0, 0.0, 0.0};
+		up[] = {0.0, 1.0, 0.0};
+		dir[] = {0.0, 0.0, 0.0};
+		pos[] = {0.0, 0.0, 0.0};
+	};
+};
+
+class Stage4 {
+	texture = "#(argb,8,8,3)color(1,1,1,1,AS)";
+	uvSource = "tex";
+	
+	class uvTransform {
+		aside[] = {1.0, 0.0, 0.0};
+		up[] = {0.0, 1.0, 0.0};
+		dir[] = {0.0, 0.0, 0.0};
+		pos[] = {0.0, 0.0, 0.0};
+	};
+};
+
+class Stage5 {
+	texture = "#(rgb,8,8,3)color(0,0,0,1,SMDI)";
+	uvSource = "tex";
+	
+	class uvTransform {
+		aside[] = {1.0, 0.0, 0.0};
+		up[] = {0.0, 1.0, 0.0};
+		dir[] = {0.0, 0.0, 0.0};
+		pos[] = {0.0, 0.0, 0.0};
+	};
+};
+
+class Stage6 {
+	texture = "#(ai,64,64,1)fresnel(1.4,0.1)";
+	uvSource = "none";
+};
+
+class Stage7 {
+	texture = "#(rgb,8,8,3)color(0,0,0,1,CO)";
+	useWorldEnvMap = "false";
+	uvSource = "tex";
+	
+	class uvTransform {
+		aside[] = {1.0, 0.0, 0.0};
+		up[] = {0.0, 1.0, 0.0};
+		dir[] = {0.0, 0.0, 0.0};
+		pos[] = {0.0, 0.0, 0.0};
+	};
+};
