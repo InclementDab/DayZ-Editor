@@ -132,6 +132,9 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	override void OnMissionStart()
 	{
+		// On Load unhide em all
+		CF.ObjectManager.UnhideAllMapObjects();
+		
 		// Loads all world objects into a map
 		WorldObjects.Clear();
 		EditorLog.Info("Caching Map Objects");
