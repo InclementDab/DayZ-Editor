@@ -10,7 +10,7 @@ class EditorObjectManagerModule: JMModuleBase
 	// Stored list of all Placed Objects, indexed by their WorldObject ID
 	private ref EditorObjectMap					m_WorldObjectIndex;
 	
-	static ref map<int, Object> WorldObjects = new map<int, Object>();
+	static ref map<int, ref OLinkT> WorldObjects = new map<int, ref OLinkT>();
 	
 	EditorObjectMap GetSelectedObjects() 
 		return m_SelectedObjects; 
@@ -141,7 +141,7 @@ class EditorObjectManagerModule: JMModuleBase
 		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 100000, objects, cargos);
 
 		foreach (Object o: objects) {
-			WorldObjects.Insert(o.GetID(), o);
+			WorldObjects.Insert(o.GetID(), new OLinkT(o));
 		}
 		
 		EditorLog.Info("Cached %1 map objects", WorldObjects.Count().ToString());
@@ -149,10 +149,10 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	Object GetWorldObject(int id)
 	{
-		return WorldObjects[id];
+		return WorldObjects[id].Ptr();
 	}
 	
-	ref map<int, Object> GetWorldObjects()
+	map<int, ref OLinkT> GetWorldObjects()
 	{
 		return WorldObjects;
 	}
