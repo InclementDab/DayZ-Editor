@@ -38,10 +38,11 @@ class DialogBase: ScriptView
 		delete this;
 	}
 	
-	void AddContent(ScriptView content)
+	ScriptView AddContent(ScriptView content)
 	{
 		content.SetParent(this);
 		m_DialogBaseController.DialogContentData.Insert(content);
+		return content;
 	}
 	
 	DialogButton AddButton(DialogResult result)
