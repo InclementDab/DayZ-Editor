@@ -236,7 +236,7 @@ class Editor
 	
 	void ProcessInput(Input input)
 	{
-		if (IsPlacing()) {
+		if (ObjectInHand && ObjectInHand.GetWorldObject()) {
 			vector hand_ori = ObjectInHand.GetWorldObject().GetOrientation();
 			float factor = 9;
 			if (KeyState(KeyCode.KC_LSHIFT)) {
