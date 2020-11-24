@@ -12,6 +12,7 @@ class EditorMessageBox: MessageBox
 		if (m_Editor) {
 			m_EditorHud = m_Editor.GetEditorHud();	
 		}
+		
 		m_Editor.GetCamera().MoveEnabled = false;
 		m_Editor.GetCamera().LookEnabled = false;
 		m_EditorHud.ShowCursor(true);

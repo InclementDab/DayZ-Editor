@@ -17,7 +17,12 @@ class EditorDZEFile: EditorFileType
 		// bugfix to fix the id not incrementing
 		EditorSaveData bug_fix_save_data = new EditorSaveData();
 		foreach (EditorObjectData object_data: save_data.EditorObjects) {
-			bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Flags));
+			
+			if (GetGame().GetModelName(object_data.Type) != "UNKNOWN_P3D_FILE") {
+				bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Flags));
+			} else {
+				EditorLog.Warning("Ignoring %1 on import. Invalid type, possible for crash", object_data.Type);
+			}
 		}
 			
 		foreach (int id: save_data.DeletedObjects) {

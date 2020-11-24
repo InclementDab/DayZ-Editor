@@ -41,12 +41,7 @@ class EditorImportCommandBase: EditorCommand
 		}
 		
 		CF_ObjectManager.UnhideAllMapObjects();
-		
-		EditorLog.Info("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
-		foreach (EditorObjectData data: save_data.EditorObjects) {
-			GetEditor().CreateObject(data, false);
-		}
-		
+				
 		EditorLog.Info("Deleting %1 Objects", save_data.DeletedObjects.Count().ToString());
 		foreach (int id: save_data.DeletedObjects) {
 			if (!GetEditor().HideMapObject(id)) {
@@ -54,6 +49,12 @@ class EditorImportCommandBase: EditorCommand
 				EditorMessageBox.ShowSynchronous("Error", string.Format("There was an error deleting object %1\nTry restarting the game and reloading the file", id), MessageBoxButtons.OK);
 			}
 		}
+		
+		EditorLog.Info("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
+		foreach (EditorObjectData data: save_data.EditorObjects) {
+			GetEditor().CreateObject(data, false);
+		}
+
 		
 		m_Editor.GetEditorHud().CreateNotification(string.Format("Loaded %1 objects!", save_data.EditorObjects.Count()), COLOR_GREEN);
 		return save_data;

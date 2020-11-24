@@ -35,8 +35,7 @@ class EditorExportDialog: EditorDialogBase
 	{
 		AddContent(new EditBoxPrefab(caption, m_Controller, default_value));
 		AddContent(new CheckBoxPrefab("Export Selected Objects", m_Controller, "export_selected", false));
-		
-		
+				
 		AddButton(DialogResult.OK);
 		AddButton(DialogResult.Cancel);
 	}

@@ -236,7 +236,7 @@ class Editor
 	
 	void ProcessInput(Input input)
 	{
-		if (IsPlacing()) {
+		if (ObjectInHand && ObjectInHand.GetWorldObject()) {
 			vector hand_ori = ObjectInHand.GetWorldObject().GetOrientation();
 			float factor = 9;
 			if (KeyState(KeyCode.KC_LSHIFT)) {
@@ -509,8 +509,14 @@ class Editor
 		}
 		
 		EditorObjectData editor_object_data = EditorObjectData.Create(entity.GetType(), entity.GetPosition(), entity.GetOrientation());
-		if (editor_object_data) {
-			EditorObject editor_object = CreateObject(editor_object_data);
+		if (!editor_object_data) {
+			return null;
+		}
+		
+		EditorObject editor_object = CreateObject(editor_object_data);
+		
+		if (!editor_object) { 
+			return null;
 		}
 		
 		EditorEvents.ObjectPlaced(this, editor_object);
