@@ -1,4 +1,3 @@
-
 class EditorObject: EditorWorldObject
 {
 	protected EditorObjectData 				m_Data;
