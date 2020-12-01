@@ -20,12 +20,32 @@ modded class DayZIntroScene
 	float offset, totaltime;
 	int hour, minute;	
 	
+	private static const ref array<string> XmasGiftTypes = {
+		"XmasGiftRed1",
+		"XmasGiftRed2",
+		"XmasGiftBlue1",
+		"XmasGiftBlue2",
+		"XmasGiftGreen1",
+		"XmasGiftGreen2"
+	};
 		
 	void DayZIntroScene()
 	{
 		delete m_Character;
 		
-		GetGame().CreateObject("ChristmasTree", m_CharacterPos - Vector(5, 0, 2));
+		// Christmas time :widepeepoHappy:
+		GetGame().GetWeather().GetRain().Set(1, 0, 1000);
+		vector tree_pos = m_CharacterPos - Vector(6, 0, 2);
+		GetGame().CreateObject("ChristmasTree", tree_pos);
+		
+		for (int i = 0; i < 10; i++) {
+			vector gift_pos;
+			gift_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
+			gift_pos[1] = tree_pos[1];
+			gift_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
+			
+			GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos);
+		}
 		
 		
 		m_CharacterPos = Vector(0.685547, 50, 5.68823).Multiply4(m_CameraTrans);
@@ -93,7 +113,8 @@ modded class DayZIntroScene
 	
 			vector newcam_pos = contact_pos;
 			newcam_pos[1] = newcam_pos[1] + 50;
-			Object new_camera = GetGame().CreateObjectEx("DSLRCamera", newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
+			//Object new_camera = GetGame().CreateObjectEx("DSLRCamera", newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
+			Object new_camera = GetGame().CreateObjectEx(XmasGiftTypes.GetRandomElement(), newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
 			
 			float scale = vector.Distance(contact_pos, start) * 0.25;
 
