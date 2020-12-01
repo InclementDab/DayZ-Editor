@@ -33,19 +33,15 @@ modded class DayZIntroScene
 	{
 		delete m_Character;
 		
-		// Christmas time :widepeepoHappy:
-		GetGame().GetWeather().GetRain().SetLimits(0, 1);
-		GetGame().GetWeather().GetRain().Set(1);
-		
 		m_CharacterPos = Vector(0.685547, 50, 5.68823).Multiply4(m_CameraTrans);
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
 		m_FunnyMeme.SetOrientation(m_CharacterRot);
 		vector pos = m_FunnyMeme.GetPosition() + Vector(0, 1, 0);
 		m_FunnyMeme.SetPosition(pos);
 		
-		Snow snow = new Snow();
-		pos[1] = pos[1] + 10;
-		SEffectManager.PlayInWorld(snow, pos);
+		//Snow snow = new Snow();
+		//pos[1] = pos[1] + 10;
+		//SEffectManager.PlayInWorld(snow, pos);
 	}
 	
 	protected ref array<Object> m_ChristmasObjects = {};
@@ -54,10 +50,10 @@ modded class DayZIntroScene
 		foreach (Object o: m_ChristmasObjects) {
 			GetGame().ObjectDelete(o);
 		}
-		
+		/*
 		foreach (Object meme: m_FunnyMemes) {
 			GetGame().ObjectDelete(meme);
-		}
+		}*/
 	}
 	
 
@@ -68,12 +64,14 @@ modded class DayZIntroScene
 		
 		Input input = GetGame().GetInput();
 		
+		// Christmas time :widepeepoHappy:
 		if (!m_ChristmasSetup) {
-			vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
+			vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 15;
 			tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
 			tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
 			tree_pos[1] = GetGame().SurfaceY(tree_pos[0], tree_pos[2]);
-			m_ChristmasObjects.Insert(GetGame().CreateObject("ChristmasTree_Green", tree_pos));
+			Object tree = GetGame().CreateObject("ChristmasTree_Green", tree_pos);
+			m_ChristmasObjects.Insert(tree);
 			
 			for (int i = 0; i < 10; i++) {
 				vector gift_pos;
@@ -84,6 +82,7 @@ modded class DayZIntroScene
 				m_ChristmasObjects.Insert(GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos));
 			}
 			
+			Particle.Play(ParticleList.SNOW, tree, Vector(0, 10, 0));
 			m_ChristmasSetup = true;
 		}
 		
