@@ -93,6 +93,7 @@ class EditorClientModule: JMModuleBase
 		return (input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
 	}
 	
+	private bool m_IsActive;
 	private void OnEditorToggleActive(UAInput input)
 	{
 		if (!ShouldProcessInput(input)) return;
@@ -104,7 +105,8 @@ class EditorClientModule: JMModuleBase
 			return;
 		}
 				
-		GetEditor().SetActive(!GetEditor().IsActive());
+		m_IsActive = !m_IsActive;
+		GetEditor().SetActive(m_IsActive);
 	}	
 	
 	private void OnEditorToggleCursor(UAInput input)
