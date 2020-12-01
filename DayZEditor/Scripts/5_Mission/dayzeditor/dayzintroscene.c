@@ -58,6 +58,7 @@ modded class DayZIntroScene
 	
 
 	private bool m_ChristmasSetup = false;
+		
 	void OnUpdate(float timeslice)
 	{
 		totaltime += timeslice / 2;
@@ -66,23 +67,23 @@ modded class DayZIntroScene
 		
 		// Christmas time :widepeepoHappy:
 		if (!m_ChristmasSetup) {
-			vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 15;
+			vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
 			tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
 			tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
 			tree_pos[1] = GetGame().SurfaceY(tree_pos[0], tree_pos[2]);
-			Object tree = GetGame().CreateObject("ChristmasTree_Green", tree_pos);
-			m_ChristmasObjects.Insert(tree);
+			m_ChristmasObjects.Insert(GetGame().CreateObject("ChristmasTree_Green", tree_pos));
 			
+			vector meme_pos = m_FunnyMeme.GetPosition();
 			for (int i = 0; i < 10; i++) {
 				vector gift_pos;
-				gift_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
-				gift_pos[1] = tree_pos[1];
-				gift_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
+				gift_pos[0] = meme_pos[0] + Math.RandomFloat(-5, 5);
+				gift_pos[2] = meme_pos[2] + Math.RandomFloat(-5, 5);
+				gift_pos[1] = GetGame().SurfaceY(meme_pos[0], meme_pos[2]);
 				
 				m_ChristmasObjects.Insert(GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos));
 			}
 			
-			Particle.Play(ParticleList.SNOW, tree, Vector(0, 10, 0));
+			Particle.Play(ParticleList.SNOW, m_FunnyMeme, Vector(0, 10, 0));
 			m_ChristmasSetup = true;
 		}
 		
