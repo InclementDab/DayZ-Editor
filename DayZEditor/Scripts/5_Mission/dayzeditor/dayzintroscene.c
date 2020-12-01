@@ -40,7 +40,12 @@ modded class DayZIntroScene
 		m_CharacterPos = Vector(0.685547, 50, 5.68823).Multiply4(m_CameraTrans);
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
 		m_FunnyMeme.SetOrientation(m_CharacterRot);
-		m_FunnyMeme.SetPosition(m_FunnyMeme.GetPosition() + Vector(0, 1, 0));
+		vector pos = m_FunnyMeme.GetPosition() + Vector(0, 1, 0);
+		m_FunnyMeme.SetPosition(pos);
+		
+		Snow snow = new Snow();
+		pos[1] = pos[1] + 10;
+		SEffectManager.PlayInWorld(snow, pos);
 	}
 	
 	protected ref array<Object> m_ChristmasObjects = {};
@@ -48,6 +53,10 @@ modded class DayZIntroScene
 	{
 		foreach (Object o: m_ChristmasObjects) {
 			GetGame().ObjectDelete(o);
+		}
+		
+		foreach (Object meme: m_FunnyMemes) {
+			GetGame().ObjectDelete(meme);
 		}
 	}
 	
