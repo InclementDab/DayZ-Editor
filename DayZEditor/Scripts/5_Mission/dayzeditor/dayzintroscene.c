@@ -24,6 +24,10 @@ modded class DayZIntroScene
 	void DayZIntroScene()
 	{
 		delete m_Character;
+		
+		GetGame().CreateObject("ChristmasTree", m_CharacterPos - Vector(5, 0, 2));
+		
+		
 		m_CharacterPos = Vector(0.685547, 50, 5.68823).Multiply4(m_CameraTrans);
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
 		m_FunnyMeme.SetOrientation(m_CharacterRot);

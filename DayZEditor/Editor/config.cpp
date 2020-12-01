@@ -27,7 +27,7 @@ class CfgVehicles
 	class DSLRCamera: HouseNoDestruct
 	{
 		scope = 1;
-		model = "\DayZEditor\Editor\Camera.p3d";
+		model = "\DayZEditor\Editor\Camera_xmas.p3d";
 	};
 
 	class Inventory_Base;
