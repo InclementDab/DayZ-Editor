@@ -105,8 +105,8 @@ class EditorClientModule: JMModuleBase
 			return;
 		}
 				
-		m_IsActive = !m_IsActive;
 		GetEditor().SetActive(m_IsActive);
+		m_IsActive = !m_IsActive;
 	}	
 	
 	private void OnEditorToggleCursor(UAInput input)
