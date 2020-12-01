@@ -20,7 +20,7 @@ class EditorInitFile: EditorFileType
 			// Other idea is to actually run the 'main' script and then enumerate all the spawned objects,
 			// then add them to the Editor
 			line.TrimInPlace();
-			if (line.Contains("SpawnObject")) {
+			if (line.Contains("SpawnObject") && !line.Contains("void") && !line.Contains("static")) {
 				
 				TStringArray tokens = {};
 		        line.Split("\"", tokens);

@@ -93,13 +93,18 @@ class EditorClientModule: JMModuleBase
 		return (input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
 	}
 	
-	private bool m_Active;
 	private void OnEditorToggleActive(UAInput input)
 	{
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleActive");
-		m_Active = !m_Active;
-		GetEditor().SetActive(m_Active);
+		
+		if (GetEditor().IsBannedClient()) {
+			EditorLog.Warning("Banned Client Detected! Exiting...");
+			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", "You have been banned from using the DayZ Editor. If you believe this was in error, please contact InclementDab \# 0001 on Discord", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
+			return;
+		}
+				
+		GetEditor().SetActive(!GetEditor().IsActive());
 	}	
 	
 	private void OnEditorToggleCursor(UAInput input)
@@ -120,6 +125,11 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleUI");
 		
+		if (GetEditor().IsBannedClient()) {
+			EditorLog.Warning("Banned Client Detected! Exiting...");
+			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", "You have been banned from using the DayZ Editor. If you believe this was in error, please contact InclementDab \# 0001 on Discord", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
+			return;
+		}
 		
 		GetEditor().GetEditorHud().Show(!GetEditor().GetEditorHud().IsVisible());
 		
