@@ -24,7 +24,7 @@ class EditorPlaceableItem
 	
 	private void EditorPlaceableItem(string path, string type)
 	{
-		EditorLog.Trace("EditorPlaceableItem");
+		//EditorLog.Trace("EditorPlaceableItem");
 		Path = path; Type = type;
 		
 		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", Path, Type), Model);
@@ -33,7 +33,7 @@ class EditorPlaceableItem
 	
 	void Init()
 	{
-		EditorLog.Trace("EditorPlaceableItem::Init");
+		//EditorLog.Trace("EditorPlaceableItem::Init");
 		
 		// No .p3d was specified
 		if (Model == string.Empty || Model.Length() <= 4) {
@@ -48,7 +48,7 @@ class EditorPlaceableItem
 	
 	void ~EditorPlaceableItem()
 	{
-		EditorLog.Trace("~EditorPlaceableItem");
+		//EditorLog.Trace("~EditorPlaceableItem");
 		delete FullPath;
 	}
 	
@@ -59,7 +59,8 @@ class EditorPlaceableItem
 		placeable_item.Init();
 		
 		if (placeable_item && placeable_item.Category == EditorPlaceableItemCategory.UNKNOWN) {
-			EditorLog.Warning(string.Format("%1 has no category!", placeable_item.Type));
+			// Todo: categories
+			//EditorLog.Warning(string.Format("%1 has no category!", placeable_item.Type));
 		}
 		
 		return placeable_item;

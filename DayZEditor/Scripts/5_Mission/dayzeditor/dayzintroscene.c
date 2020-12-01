@@ -34,19 +34,8 @@ modded class DayZIntroScene
 		delete m_Character;
 		
 		// Christmas time :widepeepoHappy:
-		GetGame().GetWeather().GetRain().Set(1, 0, 1000);
-		vector tree_pos = m_CharacterPos - Vector(6, 0, 2);
-		GetGame().CreateObject("ChristmasTree", tree_pos);
-		
-		for (int i = 0; i < 10; i++) {
-			vector gift_pos;
-			gift_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
-			gift_pos[1] = tree_pos[1];
-			gift_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
-			
-			GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos);
-		}
-		
+		GetGame().GetWeather().GetRain().SetLimits(0, 1);
+		GetGame().GetWeather().GetRain().Set(1);
 		
 		m_CharacterPos = Vector(0.685547, 50, 5.68823).Multiply4(m_CameraTrans);
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
@@ -54,12 +43,41 @@ modded class DayZIntroScene
 		m_FunnyMeme.SetPosition(m_FunnyMeme.GetPosition() + Vector(0, 1, 0));
 	}
 	
+	protected ref array<Object> m_ChristmasObjects = {};
+	void ~DayZIntroScene()
+	{
+		foreach (Object o: m_ChristmasObjects) {
+			GetGame().ObjectDelete(o);
+		}
+	}
+	
 
+	private bool m_ChristmasSetup = false;
 	void OnUpdate(float timeslice)
 	{
 		totaltime += timeslice / 2;
 		
 		Input input = GetGame().GetInput();
+		
+		if (!m_ChristmasSetup) {
+			vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
+			tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
+			tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
+			tree_pos[1] = GetGame().SurfaceY(tree_pos[0], tree_pos[2]);
+			m_ChristmasObjects.Insert(GetGame().CreateObject("ChristmasTree_Green", tree_pos));
+			
+			for (int i = 0; i < 10; i++) {
+				vector gift_pos;
+				gift_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
+				gift_pos[1] = tree_pos[1];
+				gift_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
+				
+				m_ChristmasObjects.Insert(GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos));
+			}
+			
+			m_ChristmasSetup = true;
+		}
+		
 		
 		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
 		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);
@@ -72,7 +90,7 @@ modded class DayZIntroScene
 		m_FunnyMeme.Update();
 		
 		// easter egg
-		if (input.LocalValue("UAPersonView")) {
+		if (KeyState(KeyCode.KC_NUMPADENTER)) {
 			vector ori = m_FunnyMeme.GetOrientation();
 			offset += 10;
 			if (offset > 360) offset = 0;
@@ -98,11 +116,11 @@ modded class DayZIntroScene
 			}
 			
 			GetGame().GetWorld().SetDate(2018, 10, 1, hour, minute);
-			return;
 		}
 		
+
 		// another easter egg
-		if (input.LocalPress("UAFire")) {
+		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
 			
 			vector start = GetGame().GetCurrentCameraPosition();
 			vector end = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * 5000;
@@ -116,18 +134,19 @@ modded class DayZIntroScene
 			//Object new_camera = GetGame().CreateObjectEx("DSLRCamera", newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
 			Object new_camera = GetGame().CreateObjectEx(XmasGiftTypes.GetRandomElement(), newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
 			
-			float scale = vector.Distance(contact_pos, start) * 0.25;
-
-	        vector mins, maxs;
-	        new_camera.GetBounds(mins, maxs);
-	        vector center = (mins + maxs) * 0.5;
-	        vector size = maxs - mins;
-	        
-			
-	        new_camera.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
-			new_camera.SetDynamicPhysicsLifeTime(-1);
-			dBodySetMass(new_camera, 100);
-			m_FunnyMemes.Insert(new_camera);
+			float scale = vector.Distance(contact_pos, start) * 0.25;	        
+			if (new_camera) {
+				vector mins, maxs;
+		        new_camera.GetBounds(mins, maxs);
+		        vector center = (mins + maxs) * 0.5;
+		        vector size = maxs - mins;
+		        
+				
+		        new_camera.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
+				new_camera.SetDynamicPhysicsLifeTime(-1);
+				dBodySetMass(new_camera, 100);
+				m_FunnyMemes.Insert(new_camera);
+			}
 		}
 	}
 }
