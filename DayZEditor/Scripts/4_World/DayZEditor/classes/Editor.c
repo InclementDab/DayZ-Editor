@@ -917,12 +917,19 @@ class Editor
 	
 	private static const ref array<string> BANNED_CLIENTS = {
 		"76561198262506069" // MsterLovec caught stealing files
-		//"76561198247958888" // me :)
+		//"76561198247958888", // me :)
 		//"76561198076050559" // Chainsaw
 	};
 	
 	bool IsBannedClient()
 	{
+		array<ref BiosUser> users = {};
+		GetGame().GetUserManager().GetUserList(users);
+		foreach (BiosUser user: users) {
+			Print(user.GetName());
+			Print(user.GetUid());
+		}
+		
 		return (BANNED_CLIENTS.Find(GetGame().GetUserManager().GetSelectedUser().GetUid()) != -1);
 	}
 	
