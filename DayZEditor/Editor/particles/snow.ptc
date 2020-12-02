@@ -1,0 +1,48 @@
+EffectDef {
+ Emitors {
+  EmitorDef emitor1 {
+   ShapeType Box
+   ShapeSize 20 0 20
+   MaxNum 1000
+   BirthRate 100
+   Offset 0 20 0
+   Material "{735D641EB0FC5209}system/wbdata/particleeditor/defaultmaterial.emat"
+   ScaleX 0.1
+   ScaleY 0.1
+   SizeMultiplier 0.3
+   SizeRND 0.1
+   Velocity 0
+   VelocityRND 0.1
+   AirResistance 0.8
+   AirResistanceRND 0.1
+   GravityMultiply 1
+   Wind 1
+   LifeTime 20
+   EffectTime 10
+  }
+  EmitorDef emitor2 {
+   ShapeType Box
+   ShapeSize 20 0 20
+   MaxNum 1000
+   BirthRate 200
+   Offset 0 20 0
+   Material "{735D641EB0FC5209}system/wbdata/particleeditor/defaultmaterial.emat"
+   ScaleX 0.1
+   ScaleY 0.1
+   SizeMultiplier 0.3
+   SizeRND 0.1
+   RandomRotDir 0
+   Velocity 0
+   VelocityRND 0.1
+   VelAffect 0.25
+   AirResistance 1
+   AirResistanceRND 0.25
+   GravityMultiply 1
+   GravityMultiplyRND 0.25
+   Wind 1
+   LifeTime 7
+   EffectTime 7
+   Repeat 1
+  }
+ }
+}

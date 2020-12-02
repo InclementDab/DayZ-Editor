@@ -106,7 +106,7 @@ class Editor
 		m_EditorHudController = m_EditorHud.GetTemplateController();		
 		
 		m_Mission = GetGame().GetMission();
-		
+				
 		if (!IsMissionOffline()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
@@ -337,25 +337,13 @@ class Editor
 			case MouseState.MIDDLE: {
 				
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					if (GetWidgetUnderCursor())
+					if (GetWidgetUnderCursor()) {
 						EditorLog.Info(GetWidgetUnderCursor().GetName());						
-					
-					if (ObjectUnderCursor) {
-						int low, high;
-						ObjectUnderCursor.GetNetworkID(low, high);
-						EditorLog.Info(low.ToString());
-						EditorLog.Info(high.ToString());
 					}
 				} 
 				
 				else if (KeyState(KeyCode.KC_LSHIFT)) {
-
-
 					if (ObjectUnderCursor) {						
-						/* attempt at getting proxies to work. Failed
-						while (ObjectUnderCursor.GetParent()) {
-							ObjectUnderCursor = Object.Cast(ObjectUnderCursor.GetParent());
-						}*/
 						ClearSelection();
 						SelectObject(CreateObject(ObjectUnderCursor));
 					}
@@ -415,6 +403,12 @@ class Editor
 	// Call to enable / disable editor
 	void SetActive(bool active)
 	{	
+		if (IsBannedClient() && active) {
+			EditorLog.Warning("Banned Client Detected! Exiting...");
+			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", "You have been banned from using the DayZ Editor. If you believe this was in error, please contact InclementDab \# 0001 on Discord", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
+			return;
+		}
+		
 		m_Active = active;
 		
 		if (m_EditorCamera == null) {
@@ -919,6 +913,24 @@ class Editor
 		}
 		
 		return position;
+	}
+	
+	private static const ref array<string> BANNED_CLIENTS = {
+		"76561198262506069" // MsterLovec caught stealing files
+		//"76561198247958888", // me :)
+		//"76561198076050559" // Chainsaw
+	};
+	
+	bool IsBannedClient()
+	{
+		array<ref BiosUser> users = {};
+		GetGame().GetUserManager().GetUserList(users);
+		foreach (BiosUser user: users) {
+			Print(user.GetName());
+			Print(user.GetUid());
+		}
+		
+		return (BANNED_CLIENTS.Find(GetGame().GetUserManager().GetSelectedUser().GetUid()) != -1);
 	}
 	
 	bool IsActive() return m_Active;

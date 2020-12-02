@@ -1,12 +1,3 @@
-////////////////////////////////////////////////////////////////////
-//DeRap: editor\config.bin
-//Produced from mikero's Dos Tools Dll version 6.44
-//'now' is Tue Jul 21 08:06:58 2020 : 'file' last modified on Tue Jul 21 07:35:07 2020
-//http://dev-heaven.net/projects/list_files/mikero-pbodll
-////////////////////////////////////////////////////////////////////
-
-#define _ARMA_
-
 class CfgPatches
 {
 	class Editor
@@ -27,7 +18,38 @@ class CfgVehicles
 	class DSLRCamera: HouseNoDestruct
 	{
 		scope = 1;
-		model = "\DayZEditor\Editor\Camera.p3d";
+		model = "\DayZEditor\Editor\Camera_xmas.p3d";
+	};
+
+	class XmasGiftRed1: HouseNoDestruct
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\xmas_gift_red1.p3d";
+	};
+	class XmasGiftRed2: HouseNoDestruct
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\xmas_gift_red2.p3d";
+	};
+	class XmasGiftGreen1: HouseNoDestruct
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\xmas_gift_green1.p3d";
+	};
+	class XmasGiftGreen2: HouseNoDestruct
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\xmas_gift_green2.p3d";
+	};
+	class XmasGiftBlue1: HouseNoDestruct
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\xmas_gift_blue1.p3d";
+	};
+	class XmasGiftBlue2: HouseNoDestruct
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\xmas_gift_blue2.p3d";
 	};
 
 	class Inventory_Base;

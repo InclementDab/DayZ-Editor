@@ -22,6 +22,11 @@ modded class MainMenu
 		m_Logo.SetImage(0);
 		m_Logo.SetFlags(m_Logo.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		
+		
+		string version;
+		GetGame().GetVersion(version);
+		m_Version.SetText(string.Format("#main_menu_version %1 - DayZ Editor Version %2", version, GetEditor().GetVersionNumber()));
+		
 		return layoutRoot;
 	}
 
