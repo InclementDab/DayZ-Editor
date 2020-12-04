@@ -56,12 +56,12 @@ GameProjectClass {
 					Paths {
 						"scripts/3_Game"
 						"JM/CF/defines"
-						"JM/CF/scripts/3_Game"
 						"JM/CF/XML/3_Game"
-						"JM/CF/ModStorage/3_Game"
 						"JM/CF/LayoutBindingManager/3_Game"
 						"JM/CF/Permissions/3_Game"
+						"JM/CF/scripts/3_Game"
 						"DayZEditor/scripts/3_Game"
+						"Namalsk_Weapon/GaussMk2/scripts/3_Game"
 					}
 					EntryPoint "CreateGame"
 				}
@@ -71,9 +71,9 @@ GameProjectClass {
 						"scripts/4_World"
 						"JM/CF/defines"
 						"JM/CF/scripts/4_World"
-						"JM/CF/ModStorage/4_World"
 						"JM/CF/Permissions/4_World"
 						"DayZEditor/scripts/4_World"
+						"Namalsk_Weapon/GaussMk2/scripts/4_World"
 					}
 					EntryPoint ""
 				}
@@ -86,6 +86,7 @@ GameProjectClass {
 						"JM/CF/LayoutBindingManager/5_Mission"
 						"JM/CF/Permissions/5_Mission"
 						"DayZEditor/scripts/5_Mission"
+						"Namalsk_Weapon/GaussMk2/scripts/5_Mission"
 					}
 					EntryPoint "CreateMission"
 				}

@@ -17,7 +17,7 @@ class EditorHologram: EditorWorldObject
 		//m_EditorMapMarkerWidget = GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/EditorMapMarker.layout", GetEditor().GetEditorHud().EditorMapWidget);
 		//m_EditorMapMarkerWidget.GetScript(m_EditorMapMarker);
 		
-		m_WorldObject = CreateObject(placeable_item.Type);
+		m_WorldObject = CreateObject(placeable_item.Type, Editor.CurrentMousePosition);
 		m_WorldObject.SetOrientation(vector.Zero); // some objects dont like to orient correctly
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);

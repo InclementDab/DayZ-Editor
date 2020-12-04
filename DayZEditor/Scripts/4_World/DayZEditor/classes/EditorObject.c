@@ -1,4 +1,3 @@
-
 class EditorObject: EditorWorldObject
 {
 	protected EditorObjectData 				m_Data;
@@ -144,23 +143,19 @@ class EditorObject: EditorWorldObject
 		
 		// Bounding Box
 		BoundingBoxEnabled = ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX);
-		if (BoundingBoxEnabled)
-			thread EnableBoundingBox(BoundingBoxEnabled);
+		if (BoundingBoxEnabled) thread EnableBoundingBox(BoundingBoxEnabled);
 
 		// Map marker
 		MapMarkerEnabled = ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER);
-		if (MapMarkerEnabled)
-			thread EnableMapMarker(MapMarkerEnabled);
+		if (MapMarkerEnabled) thread EnableMapMarker(MapMarkerEnabled);
 
 		// World marker
 		WorldMarkerEnabled = ((m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER);
-		if (WorldMarkerEnabled)
-			thread EnableObjectMarker(WorldMarkerEnabled);
+		if (WorldMarkerEnabled) thread EnableObjectMarker(WorldMarkerEnabled);
 
 		// Browser item
 		ListItemEnabled = ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM);
-		if (ListItemEnabled)
-			thread EnableListItem(ListItemEnabled);
+		if (ListItemEnabled) thread EnableListItem(ListItemEnabled);
 
 		m_SnapPoints.Insert(new EditorSnapPoint(this, Vector(0, -GetYDistance(), 5)));
 

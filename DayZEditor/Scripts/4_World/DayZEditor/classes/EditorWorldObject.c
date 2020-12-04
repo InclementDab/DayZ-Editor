@@ -18,18 +18,28 @@ class EditorWorldObject
 		type = type.Trim();
 		if (type == string.Empty) return null;
 		
-		EntityAI obj;
+		EntityAI obj;	
 		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS))) {
 			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
-			
+/*
+		if (obj.IsInherited(DayZCreatureAI)) {
+			DayZCreatureAI creature;
+			if (Class.CastTo(creature, obj)) {
+				Print(creature.GetAIAgent());
+				obj.DisableSimulation(true);
+				obj.DisableSimulation(false);
+				Print(creature.GetAIAgent());
+				
+				creature.InitAIAgent(null);
+			}
+		}
+		*/
+		// Needed for AI Placement			
+		obj.DisableSimulation(true);
 		obj.SetOrientation(orientation);
 		//obj.SetFlags(EntityFlags.STATIC, true);
-		
-		// Needed for AI Placement		
-		obj.DisableSimulation(true);
-		
 		return obj;
 	}
 }
