@@ -24,7 +24,9 @@ The DayZ Editor is a 3D Map editing tool. Designed for creating environments, pl
 
 [DayZ Editor Loader](https://github.com/InclementDab/DayZ-Editor-Loader) Mod makes that very easy!
 
+## Need a full tutorial?
 
+[Full Video Tutorial](https://www.twitch.tv/videos/763263892?t=00h19m42s)
 
 ## Links
 [Discord](https://discord.com/invite/5g742yH)
