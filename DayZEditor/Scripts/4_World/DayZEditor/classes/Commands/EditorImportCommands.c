@@ -56,7 +56,7 @@ class EditorImportCommandBase: EditorCommand
 		}
 
 		
-		m_Editor.GetEditorHud().CreateNotification(string.Format("Loaded %1 objects!", save_data.EditorObjects.Count()), COLOR_GREEN);
+		m_Editor.GetEditorHud().CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.DeletedObjects.Count()), COLOR_GREEN);
 		return save_data;
 	}
 	

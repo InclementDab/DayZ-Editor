@@ -34,7 +34,7 @@ class EditorExportCommandBase: EditorCommand
 		
 		file_type.Export(save_data, file_name, export_settings);		
 		
-		string message = string.Format("Saved %1 objects!", save_data.EditorObjects.Count().ToString());
+		string message = string.Format("Saved %1 objects! (%2 deletions)", save_data.EditorObjects.Count().ToString(), CF.ObjectManager.GetHiddenMapObjects().Count());
 		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
 		EditorLog.Info(message);
 	}
