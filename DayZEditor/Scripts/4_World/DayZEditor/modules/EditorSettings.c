@@ -1,4 +1,4 @@
-static EditorSettings LoadSettings(string filename)
+/*static EditorSettings LoadSettings(string filename)
 {
 	EditorLog.Trace("EditorSettings::Load");
 	
@@ -25,7 +25,7 @@ static void SaveSettings(EditorSettings settings, string filename)
 	EditorLog.Info("Saving EditorSettings to %1", filename);
 	JsonFileLoader<EditorSettings>.JsonSaveFile(filename, settings);
 }
-	
+	*/
 class EditorSettings: Controller
 {	
 	float ViewDistance = 8000;

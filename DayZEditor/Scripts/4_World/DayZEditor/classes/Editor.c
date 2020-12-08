@@ -125,7 +125,7 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true); 
 		}
 		
-		SaveSettings(Settings, EditorSettingsFile);
+		//SaveSettings(Settings, EditorSettingsFile);
 		
 		delete Settings;
 		delete m_EditorHud;
