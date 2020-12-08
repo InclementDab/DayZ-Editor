@@ -152,4 +152,14 @@ class EditorAction
 		//EditorLog.Trace("EditorAction::Unhide %1", param.param1.ToString());
 		CF.ObjectManager.UnhideMapObject(param.param1);
 	}
+	
+	void Lock(Param1<EditorObject> param)
+	{
+		param.param1.Lock(true);
+	}
+	
+	void Unlock(Param1<EditorObject> param)
+	{
+		param.param1.Lock(false);
+	}
 }

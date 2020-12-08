@@ -835,6 +835,28 @@ class Editor
 		
 	}
 	
+	void LockObject(EditorObject editor_object)
+	{
+		EditorAction action = new EditorAction("Unlock", "Lock");
+		action.InsertUndoParameter(editor_object, new Param1<EditorObject>(editor_object));
+		action.InsertRedoParameter(editor_object, new Param1<EditorObject>(editor_object));
+		
+		editor_object.Lock(true);
+		
+		InsertAction(action);
+	}
+	
+	void UnlockObject(EditorObject editor_object)
+	{
+		EditorAction action = new EditorAction("Lock", "Unlock");
+		action.InsertUndoParameter(editor_object, new Param1<EditorObject>(editor_object));
+		action.InsertRedoParameter(editor_object, new Param1<EditorObject>(editor_object));
+		
+		editor_object.Lock(false);
+		
+		InsertAction(action);
+	}
+	
 	void SelectObject(EditorObject target) 
 	{
 		m_ObjectManager.SelectObject(target);
