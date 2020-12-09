@@ -208,6 +208,7 @@ class EditorCutCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
+		GetEditor().GetEditorHud().CreateNotification(string.Format("Cut %1 items to clipboard!", GetEditor().GetSelectedObjects().Count()), COLOR_SALMON);
 		EditorClipboard.Cut();
 	}
 
@@ -228,6 +229,7 @@ class EditorCopyCommand: EditorCommand
 {	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
+		GetEditor().GetEditorHud().CreateNotification(string.Format("Copied %1 items to clipboard!", GetEditor().GetSelectedObjects().Count()), COLOR_SALMON);
 		EditorClipboard.Copy();
 	}
 
