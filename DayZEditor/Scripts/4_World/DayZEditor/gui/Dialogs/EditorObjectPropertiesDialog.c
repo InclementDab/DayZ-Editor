@@ -63,7 +63,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		m_AdvancedGroup = new GroupPrefab("Debug", m_EditorObject, string.Empty);
 		m_AdvancedGroup.Insert(new TextBoxPrefab("Classname", m_EditorObject, "", m_EditorObject.GetWorldObject().GetType()));
-		m_AdvancedGroup.Insert(new TextBoxPrefab("ID", m_EditorObject, "", m_EditorObject.GetWorldObject().GetID().ToString()));
+		string id = "" + m_EditorObject.GetWorldObject().GetID();
+		m_AdvancedGroup.Insert(new TextBoxPrefab("ID", m_EditorObject, "", id));
 		m_AdvancedGroup.Insert(new TextBoxPrefab("Model", m_EditorObject, "", m_EditorObject.GetWorldObject().ConfigGetString("model")));
 		m_AdvancedGroup.Open(AdvancedGroup);
 		
