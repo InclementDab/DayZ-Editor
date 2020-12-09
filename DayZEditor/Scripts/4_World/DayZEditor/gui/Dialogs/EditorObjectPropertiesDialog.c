@@ -38,7 +38,6 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		UpdateViewContext();
 	}
 	
-	
 	// Maximum Elegance
 	void SetEditorObject(EditorObject editor_object)
 	{
@@ -100,5 +99,34 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		delete m_ObjectGroup;
 		delete m_AdvancedGroup;
 		delete m_HumanGroup;
+	}
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		if (w.IsInherited(TextWidget)) {
+			string text = TextBoxPrefabGetString(w);
+			
+			if (text != string.Empty) {
+				GetGame().CopyToClipboard(text);
+			}
+		}
+		
+		
+		
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+	
+	string TextBoxPrefabGetString(Widget text_widget)
+	{
+		TextBoxPrefab prefab;
+		while (!prefab) {
+			text_widget.GetUserData(prefab);
+			text_widget = text_widget.GetParent();
+			if (!text_widget) {
+				return string.Empty;
+			}
+		}
+		
+		return prefab.GetPrefabController().Value;
 	}
 }
