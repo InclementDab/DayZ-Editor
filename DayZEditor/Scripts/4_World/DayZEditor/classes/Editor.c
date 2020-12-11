@@ -938,7 +938,7 @@ class Editor
 	}
 	
 	private static const ref array<string> BANNED_CLIENTS = {
-		"76561198262506069", 	// MsterLovec caught stealing files
+		//"76561198262506069", 	// MsterLovec caught stealing files, perma-ban if he is found stealing again
 		"76561198817726503",  	// Douche-canoe cheater
 		"76561198826843004"  	// Douche-canoe cheater
 		

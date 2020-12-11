@@ -54,8 +54,7 @@ modded class LoadingScreen
 			Sleep(10);
 		}
 	}
-	
-	
+		
 
 	float back_x, back_y;
 
