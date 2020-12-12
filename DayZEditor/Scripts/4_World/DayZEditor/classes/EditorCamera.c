@@ -83,7 +83,7 @@ class EditorCamera: Camera
 	private float cursor_store_x, cursor_store_y;
 	
 	override void EOnFrame(IEntity other, float timeSlice)
-	{
+	{		
 		if ( SendUpdateAccumalator > 0.5 ){
 			GetGame().UpdateSpectatorPosition(GetPosition());
 
