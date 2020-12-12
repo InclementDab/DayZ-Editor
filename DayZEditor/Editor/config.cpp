@@ -53,14 +53,21 @@ class CfgVehicles
 	};
 
 	class Inventory_Base;
-	class TranslationWidget: Inventory_Base
+	class GizmoBase: Inventory_Base
+	{
+		scope = 1;
+		hiddenSelections[] = {"main"};
+	};
+	class GizmoArrow: GizmoBase
 	{
 		scope = 2;
-		itemSize[]={16,16};
 		model = "\DayZEditor\Editor\TranslationWidget.p3d";
-		hiddenSelections[] = {"TranslateX", "TranslateY", "TranslateZ"};
-		hiddenSelectionsMaterials[] = {"\DayZEditor\Editor\data\TranslationWidget.rvmat"};
-		hiddenSelectionsTextures[] = {"\DayZEditor\Editor\data\TranslationWidget.paa"};
+	};
+
+	class GizmoCenter: GizmoBase
+	{
+		scope = 2;
+		model = "\DayZEditor\Editor\TranslationCenter.p3d";
 	};
 
 	class RotationWidget: Inventory_Base
