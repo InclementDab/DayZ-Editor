@@ -30,6 +30,7 @@ class EditorSettings: Controller
 {	
 	float ViewDistance = 8000;
 	float ObjectViewDistance = 1500;
+	float MarkerViewDistance = 1000;
 		
 	int AutoSaveTimer = 240;
 

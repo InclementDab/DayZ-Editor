@@ -302,7 +302,27 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		if (m_Editor.GetEditorHud().EditorMapWidget.IsVisible()) {
 			return;
 		}
+				
+		vector screen_pos = GetGame().GetScreenPos(GetPosition());
+						
+		int screen_x, screen_y;
+		GetScreenSize(screen_x, screen_y);
+		// Is the marker in bounds?
+		if (screen_pos[0] != 0 && screen_pos[0] != screen_x && screen_pos[1] != 0 && screen_pos[1] != screen_y && screen_pos[2] > 0) {
+			SetPos(screen_pos[0], screen_pos[1]);
+			Show(m_Show);
+		} 
 		
+		// Overrides the hide if the camera isnt looking at the marker
+		else if (m_LayoutRoot)
+			m_LayoutRoot.Show(false);		
+
+		
+		super.Update();
+	}
+	
+	protected vector GetPosition()
+	{
 		vector position;
 		vector object_transform[4];
 		m_EditorObject.GetTransform(object_transform);
@@ -312,25 +332,21 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			set<Object> o;
 			vector ground_dir; int component;
 			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject.GetWorldObject(), false, true); // set to ground only
-			
-		} else position = m_EditorObject.GetBottomCenter();
-	
-		vector screen_pos = GetGame().GetScreenPos(position);
-
-		int screen_x, screen_y;
-		GetScreenSize(screen_x, screen_y);
-		if (screen_pos[0] != 0 && screen_pos[0] != screen_x && screen_pos[1] != 0 && screen_pos[1] != screen_y && screen_pos[2] > 0) {
-			Show(m_Show);
-			SetPos(screen_pos[0], screen_pos[1]);
+			return position;
 		} 
 		
-		// Overrides the hide if the camera isnt looking at the marker
-		else if (m_LayoutRoot)
-			m_LayoutRoot.Show(false);		
-		
-		super.Update();
+		return m_EditorObject.GetBottomCenter();
 	}
 	
+	override void Show(bool show)
+	{
+		if (vector.Distance(m_Editor.GetCamera().GetPosition(), GetPosition()) > m_Editor.Settings.MarkerViewDistance) {
+			m_LayoutRoot.Show(false);
+			return;
+		}
+		
+		super.Show(show);
+	}
 	
 	/*
 	override bool OnClick(Widget w, int x, int y, int button)

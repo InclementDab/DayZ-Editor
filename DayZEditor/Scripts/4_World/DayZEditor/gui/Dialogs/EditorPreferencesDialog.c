@@ -19,6 +19,7 @@ class EditorPreferencesDialog: EditorDialogBase
 		GroupPrefab game_group = new GroupPrefab("Game", m_Editor.Settings, string.Empty);
 		game_group.Insert(new SliderPrefab("View Distance", m_Editor.Settings, "ViewDistance", m_Editor.Settings.ViewDistance, 0, 20000));
 		game_group.Insert(new SliderPrefab("Object View Distance", m_Editor.Settings, "ObjectViewDistance", m_Editor.Settings.ObjectViewDistance, 0, 8000));
+		game_group.Insert(new SliderPrefab("Marker View Distance", m_Editor.Settings, "MarkerViewDistance", m_Editor.Settings.MarkerViewDistance, 100, 5000));
 		
 		GroupPrefab debug_group = new GroupPrefab("Editor", m_Editor.Settings, string.Empty);
 		debug_group.Insert(new EditBoxPrefab("Loot Spawns File", m_Editor.Settings, "EditorProtoFile"));
