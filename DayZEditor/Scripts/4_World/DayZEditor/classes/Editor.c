@@ -83,6 +83,9 @@ class Editor
 		EditorLog.Trace("Editor");
 		g_Editor = this;
 		m_Player = player;
+		
+		// Player god mode
+		m_Player.SetAllowDamage(false);
 
 		// Initialize the profiles/editor directory;		
 		MakeDirectory(EditorDirectory);
