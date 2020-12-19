@@ -953,6 +953,9 @@ class Editor
 	bool IsBannedClient()
 	{
 		array<ref BiosUser> users = {};
+		// Weird bug
+		if (!GetGame() || !GetGame().GetUserManager()) return false;
+		
 		GetGame().GetUserManager().GetUserList(users);
 		foreach (BiosUser user: users) {
 			Print(user.GetName());

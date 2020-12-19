@@ -72,6 +72,7 @@ GameProjectClass {
 						"JM/CF/scripts/4_World"
 						"JM/CF/Permissions/4_World"
 						"DayZEditor/scripts/4_World"
+						"DayZEditorLoader/scripts/4_World"
 					}
 					EntryPoint ""
 				}
