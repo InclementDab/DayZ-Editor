@@ -944,7 +944,8 @@ class Editor
 		//"76561198262506069", 	// MsterLovec caught stealing files, perma-ban if he is found stealing again
 		"76561198817726503",  	// Douche-canoe cheater
 		"76561198826843004",  	// Douche-canoe cheater
-		"76561198170386749"		// Koniii, repacker
+		"76561198170386749",	// Koniii, repacker
+		"76561198247958888"		// Niphoria, simp
 		
 		//"76561198247958888", // me :)
 		//"76561198076050559" // Chainsaw
