@@ -99,9 +99,10 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleActive");
 		
-		if (GetEditor().IsBannedClient()) {
+		string ban_reason;
+		if (GetEditor().IsBannedClient(ban_reason)) {
 			EditorLog.Warning("Banned Client Detected! Exiting...");
-			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", "You have been banned from using the DayZ Editor. If you believe this was in error, please contact InclementDab \# 0001 on Discord", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
+			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", string.Format("You have been banned from using the DayZ Editor.\n%1\n If you believe this was in error, please contact InclementDab \# 0001 on Discord", ban_reason), 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
 			return;
 		}
 				
@@ -127,9 +128,10 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleUI");
 		
-		if (GetEditor().IsBannedClient()) {
+		string ban_reason;
+		if (GetEditor().IsBannedClient(ban_reason)) {
 			EditorLog.Warning("Banned Client Detected! Exiting...");
-			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", "You have been banned from using the DayZ Editor. If you believe this was in error, please contact InclementDab \# 0001 on Discord", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
+			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", string.Format("You have been banned from using the DayZ Editor.\n%1\n If you believe this was in error, please contact InclementDab \# 0001 on Discord", ban_reason), 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
 			return;
 		}
 		

@@ -84,6 +84,9 @@ class Editor
 		g_Editor = this;
 		m_Player = player;
 		
+		// Load ban data
+		LoadBanData();
+		
 		// Player god mode
 		m_Player.SetAllowDamage(false);
 
@@ -406,9 +409,10 @@ class Editor
 	// Call to enable / disable editor
 	void SetActive(bool active)
 	{	
-		if (IsBannedClient() && active) {
+		string ban_reason;
+		if (IsBannedClient(ban_reason) && active) {
 			EditorLog.Warning("Banned Client Detected! Exiting...");
-			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", "You have been banned from using the DayZ Editor. If you believe this was in error, please contact InclementDab \# 0001 on Discord", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
+			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", string.Format("You have been banned from using the DayZ Editor.\n%1\n If you believe this was in error, please contact InclementDab \# 0001 on Discord", ban_reason), 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
 			return;
 		}
 		
@@ -939,22 +943,21 @@ class Editor
 		
 		return position;
 	}
-	
-	private static const ref array<string> BANNED_CLIENTS = {
-		//"76561198262506069", 	// MsterLovec caught stealing files, perma-ban if he is found stealing again
-		"76561198817726503",  	// Douche-canoe cheater
-		"76561198826843004",  	// Douche-canoe cheater
-		"76561198170386749"		// Koniii, repacker
 		
-		//"76561198247958888", // me :)
-		//"76561198076050559" // Chainsaw
-	};
 	
-	bool IsBannedClient()
+	private string m_BanReason = "null";
+	bool IsBannedClient(out string reason)
+	{
+		reason = m_BanReason;
+		return reason != "null";
+	}
+	
+	// This is a bit of a dodgy / hacky solution
+	void LoadBanData()
 	{
 		array<ref BiosUser> users = {};
 		// Weird bug
-		if (!GetGame() || !GetGame().GetUserManager()) return false;
+		if (!GetGame() || !GetGame().GetUserManager()) return;
 		
 		GetGame().GetUserManager().GetUserList(users);
 		foreach (BiosUser user: users) {
@@ -962,7 +965,8 @@ class Editor
 			Print(user.GetUid());
 		}
 		
-		return (BANNED_CLIENTS.Find(GetGame().GetUserManager().GetSelectedUser().GetUid()) != -1);
+		RestContext rest = GetRestApi().GetRestContext("https:\/\/dayz-editor-default-rtdb.firebaseio.com\/");
+		m_BanReason = rest.GET_now(string.Format("bans/%1.json", GetGame().GetUserManager().GetSelectedUser().GetUid()));
 	}
 	
 	bool IsActive() return m_Active;
