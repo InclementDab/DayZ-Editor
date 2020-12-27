@@ -411,8 +411,7 @@ class Editor
 	{	
 		string ban_reason;
 		if (IsBannedClient(ban_reason) && active) {
-			EditorLog.Warning("Banned Client Detected! Exiting...");
-			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", string.Format("You have been banned from using the DayZ Editor.\n%1\n If you believe this was in error, please contact InclementDab \# 0001 on Discord", ban_reason), 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
+			ShowBanDialog(ban_reason);
 			return;
 		}
 		
@@ -967,6 +966,16 @@ class Editor
 		
 		RestContext rest = GetRestApi().GetRestContext("https:\/\/dayz-editor-default-rtdb.firebaseio.com\/");
 		m_BanReason = rest.GET_now(string.Format("bans/%1.json", GetGame().GetUserManager().GetSelectedUser().GetUid()));
+	}
+	
+	static void ShowBanDialog(string reason)
+	{
+		EditorLog.Warning("Banned Client Detected! Exiting...");
+		if (reason == "App Error") {
+			GetGame().GetUIManager().ShowDialog("Network Error", "Could not load network data, please check your internet connection and restart the DayZ Editor", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
+		} else {
+			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", string.Format("You have been banned from using the DayZ Editor.\n%1\n If you believe this was in error, please contact InclementDab \# 0001 on Discord", reason), 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
+		}		
 	}
 	
 	bool IsActive() return m_Active;
