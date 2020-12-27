@@ -27,6 +27,13 @@ class EditorExportCommandBase: EditorCommand
 			return;
 		}
 		
+		// Warn the user if they are exporting with deleted objects
+		if (GetEditor().GetObjectManager().GetDeletedObjects().Count() > 0 && !file_type.IsInherited(EditorDZEFile)) {
+			if (EditorMessageBox.Show("Export Warning!", "NOTE: Exporting with this format does NOT support Object Deletion! You need to use .dze file format for this (File > Save)", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
+				return;
+			}
+		}
+		
 		file_name = "$profile:Editor/" + file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 		
