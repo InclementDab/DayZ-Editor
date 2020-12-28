@@ -966,6 +966,12 @@ class Editor
 		
 		RestContext rest = GetRestApi().GetRestContext("https:\/\/dayz-editor-default-rtdb.firebaseio.com\/");
 		m_BanReason = rest.GET_now(string.Format("bans/%1.json", GetGame().GetUserManager().GetSelectedUser().GetUid()));
+		
+		// Temporary hotfix until we can re-implement the old system
+		// dont really like it but it will have to do
+		if (m_BanReason == "App Error") {
+			m_BanReason = "null";
+		}
 	}
 	
 	static void ShowBanDialog(string reason)
