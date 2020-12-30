@@ -78,4 +78,17 @@ class EditorCommandManager
 			}
 		}
 	}
+	
+	void ~EditorCommandManager()
+	{
+		for (int i = 0; i < Type().GetVariableCount(); i++) {
+			string variable_name = Type().GetVariableName(i);
+			typename variable_type = Type().GetVariableType(i);
+			if (variable_type.IsInherited(EditorCommand)) {
+				EditorCommand command;
+				EnScript.GetClassVar(this, variable_name, 0, command);
+				delete command;
+			}
+		}
+	}
 }
