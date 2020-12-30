@@ -177,8 +177,9 @@ class EditorEditorMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager.EnvironmentControlCommand);
 		AddMenuButton(m_Editor.CommandManager.PreferencesCommand);
 		AddMenuDivider();
+		AddMenuButton(m_Editor.CommandManager.JoinDiscordCommand);
+		AddMenuButton(m_Editor.CommandManager.OpenWikiCommand);
 		AddMenuButton(m_Editor.CommandManager.DonateCommand);
-		AddMenuButton(m_Editor.CommandManager.HelpCommand);
 	}
 }
 

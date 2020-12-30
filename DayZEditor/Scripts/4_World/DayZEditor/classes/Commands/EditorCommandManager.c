@@ -60,6 +60,9 @@ class EditorCommandManager
 	
 	ref EditorScriptEditorCommand ScriptEditorCommand;
 	
+	ref EditorJoinDiscordCommand JoinDiscordCommand;
+	ref EditorOpenWikiCommand OpenWikiCommand;
+	
 	ref EditorDonateCommand DonateCommand;
 	ref EditorHelpCommand HelpCommand;
 	

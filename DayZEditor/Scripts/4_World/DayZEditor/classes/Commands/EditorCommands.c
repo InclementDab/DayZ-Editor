@@ -747,6 +747,30 @@ class EditorScriptEditorCommand: EditorCommand
 	}
 }
 
+class EditorJoinDiscordCommand: EditorCommand
+{
+	override void Call(Class sender, CommandArgs args)
+	{
+		GetGame().OpenURL("discord.com/invite/5g742yH");
+	}
+	
+	override string GetName() {
+		return "Join our Discord...";
+	}
+}
+
+class EditorOpenWikiCommand: EditorCommand
+{
+	override void Call(Class sender, CommandArgs args)
+	{
+		GetGame().OpenURL("github.com/InclementDab/DayZ-Editor/wiki");
+	}
+	
+	override string GetName() {
+		return "Wiki";
+	}
+}
+
 class EditorDonateCommand: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
