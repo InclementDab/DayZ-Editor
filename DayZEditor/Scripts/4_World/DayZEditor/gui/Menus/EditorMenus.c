@@ -179,6 +179,8 @@ class EditorEditorMenu: EditorMenu
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager.JoinDiscordCommand);
 		AddMenuButton(m_Editor.CommandManager.OpenWikiCommand);
+		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager.DonateCommand);
+		AddMenuButton(m_Editor.CommandManager.HelpCommand);
 	}
 }
