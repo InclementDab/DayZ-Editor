@@ -26,7 +26,7 @@ The DayZ Editor is a 3D Map editing tool. Designed for creating environments, pl
 
 ## Need a full tutorial?
 
-[Full Video Tutorial](https://www.twitch.tv/videos/763263892?t=00h19m42s)
+[Full Video Tutorial](https://youtu.be/uAytoN0lntY)
 
 ## Links
 [Discord](https://discord.com/invite/5g742yH)
