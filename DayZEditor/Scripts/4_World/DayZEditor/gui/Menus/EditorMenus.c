@@ -182,9 +182,3 @@ class EditorEditorMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager.DonateCommand);
 	}
 }
-
-
-
-
-
-
