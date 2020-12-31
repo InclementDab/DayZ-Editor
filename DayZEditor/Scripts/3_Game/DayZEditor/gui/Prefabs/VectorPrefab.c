@@ -9,7 +9,8 @@ class VectorPrefabController: PrefabBaseController<vector>
 			case "X":
 			case "Y":
 			case "Z": {
-				Value = string.Format("%1 %2 %3", X.Parse(), Y.Parse(), Z.Parse()).ToVector();
+				Value = Vector(X.ToFloat(), Y.ToFloat(), Z.ToFloat());
+				//Value = string.Format("%1 %2 %3", X.Parse(), Y.Parse(), Z.Parse()).ToVector();
 				super.PropertyChanged("Value");
 				break;
 			}
@@ -51,30 +52,38 @@ class VectorPrefab: PrefabBase<vector>
 		}
 		
 		if (KeyState(KeyCode.KC_LSHIFT)) {
-			motion *= 0.1;
+			//motion *= 0.1;
+			if (wheel == 1) {
+				motion = 0.1;
+			} else {
+				motion = -0.1;
+			}
 		}
-		
+				
 		switch (w.GetName()) {
 			
 			case "x_value": {
-				m_VectorPrefabController.X = string.ToString(m_VectorPrefabController.X.Parse() + motion);
+				//m_VectorPrefabController.X = string.ToString(m_VectorPrefabController.X.Parse() + motion);
+				m_VectorPrefabController.X = string.ToString(m_VectorPrefabController.X.ToFloat() + motion);
 				m_VectorPrefabController.NotifyPropertyChanged("X");
 				break;
 			}
 			
 			case "y_value": {
-				m_VectorPrefabController.Y = string.ToString(m_VectorPrefabController.Y.Parse() + motion);
+				//m_VectorPrefabController.Y = string.ToString(m_VectorPrefabController.Y.Parse() + motion);
+				m_VectorPrefabController.Y = string.ToString(m_VectorPrefabController.Y.ToFloat() + motion);
 				m_VectorPrefabController.NotifyPropertyChanged("Y");
 				break;
 			}
 			
 			case "z_value": {
-				m_VectorPrefabController.Z = string.ToString(m_VectorPrefabController.Z.Parse() + motion);
+				//m_VectorPrefabController.Z = string.ToString(m_VectorPrefabController.Z.Parse() + motion);
+				m_VectorPrefabController.Z = string.ToString(m_VectorPrefabController.Z.ToFloat() + motion);
 				m_VectorPrefabController.NotifyPropertyChanged("Z");
 				break;
 			}
 		}
 		
-		return false;
+		return true;
 	}
 }
