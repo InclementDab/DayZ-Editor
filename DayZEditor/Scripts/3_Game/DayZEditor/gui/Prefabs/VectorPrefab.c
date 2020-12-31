@@ -51,7 +51,6 @@ class VectorPrefab: PrefabBase<vector>
 		}
 		
 		if (KeyState(KeyCode.KC_LSHIFT)) {
-			//motion *= 0.1;
 			// code sucks because it needs to be perfectly accurate, since floats get cut off at high numbers
 			if (wheel == 1) { 
 				motion = 0.1;
