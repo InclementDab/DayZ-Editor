@@ -32,7 +32,7 @@ class EditorClipboard
 		avg_position[1] = GetGame().SurfaceY(avg_position[0], avg_position[2]);
 		
 		foreach (int idx, EditorObject selected_object: copy_objects) {
- 			EditorObjectData data = EditorObjectData.Create(selected_object.GetType(), selected_object.GetPosition(), selected_object.GetOrientation(), selected_object.GetFlags());
+ 			EditorObjectData data = EditorObjectData.Create(selected_object.GetType(), selected_object.GetPosition(), selected_object.GetOrientation(), selected_object.GetScale(), selected_object.GetFlags());
 			data.Position = selected_object.GetPosition() - avg_position;
 			data.Orientation = selected_object.GetOrientation();
 			data.Flags = selected_object.GetFlags();
@@ -72,7 +72,7 @@ class EditorClipboard
 				position
 			};
 						
-			EditorObject editor_object = GetEditor().CreateObject(EditorObjectData.Create(pasted_object.Type, pasted_object.Position, pasted_object.Orientation, pasted_object.Flags));
+			EditorObject editor_object = GetEditor().CreateObject(EditorObjectData.Create(pasted_object.Type, pasted_object.Position, pasted_object.Orientation, pasted_object.Scale, pasted_object.Flags));
 			//float surfacey = GetGame().SurfaceY(position[0], position[2]);
 			//vector size = editor_object.GetSize();
 			//position[1] = surfacey + size[1] / 2;

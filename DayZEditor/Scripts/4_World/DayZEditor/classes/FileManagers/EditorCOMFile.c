@@ -25,7 +25,7 @@ class EditorCOMFile: EditorFileType
 		
 		
 		foreach (Param3<string, vector, vector> scene_object: import_data.m_SceneObjects) {
-			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.param1, scene_object.param2, scene_object.param3, EditorObjectFlags.ALL));
+			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.param1, scene_object.param2, scene_object.param3, 1, EditorObjectFlags.ALL));
 		}
 		
 		return save_data;

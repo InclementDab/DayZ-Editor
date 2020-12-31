@@ -35,7 +35,7 @@ class EditorInitFile: EditorFileType
 	        	tokens[5]; // Orientation
 	        	*/
 				
-				save_data.EditorObjects.Insert(EditorObjectData.Create(tokens[1], tokens[3].ToVector(), tokens[5].ToVector(), EditorObjectFlags.ALL));
+				save_data.EditorObjects.Insert(EditorObjectData.Create(tokens[1], tokens[3].ToVector(), tokens[5].ToVector(), 1, EditorObjectFlags.ALL));
 			}
 			
 			line_size = FGets(handle, line);

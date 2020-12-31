@@ -508,7 +508,7 @@ class Editor
 			return null;
 		}
 		
-		EditorObjectData editor_object_data = EditorObjectData.Create(entity.GetType(), entity.GetPosition(), entity.GetOrientation());
+		EditorObjectData editor_object_data = EditorObjectData.Create(entity.GetType(), entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EditorObjectFlags.ALL);
 		if (!editor_object_data) {
 			return null;
 		}

@@ -49,10 +49,10 @@ class EditorObjectData
 	
 	static ref EditorObjectData Create(string type, vector transform[4], EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{	
-		return Create(type, transform[3], Math3D.MatrixToAngles(transform), flags);
+		return Create(type, transform[3], Math3D.MatrixToAngles(transform), 1, flags);
 	}
 	
-	static ref EditorObjectData Create(string type, vector position, vector orientation, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	static ref EditorObjectData Create(string type, vector position, vector orientation, float scale, EditorObjectFlags flags)
 	{
 		EditorLog.Trace("EditorObjectData::Create");
 				
@@ -65,6 +65,7 @@ class EditorObjectData
 		data.Type = type; 
 		data.Position = position; 
 		data.Orientation = orientation;
+		data.Scale = scale;
 		data.Flags = flags;
 		data.DisplayName = data.Type;
 		//data.Mod = GetModFromObject(data.Type); todo refactor.

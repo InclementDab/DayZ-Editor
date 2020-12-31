@@ -69,7 +69,7 @@ class EditorObject: EditorWorldObject
 		if (!m_WorldObject) {
 			//EditorLog.Error("World Object was null! ID: %1", GetID().ToString());
 			if (m_Data && !m_Data.WorldObject) {
-				m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation);
+				m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale);
 				//m_Data.WorldObject = m_WorldObject;
 			}
 			
@@ -86,7 +86,7 @@ class EditorObject: EditorWorldObject
 		//EditorOnly = m_Data.EditorOnly;
 		
 		if (!m_Data.WorldObject) {
-			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation);			
+			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale);			
 			m_Data.WorldObject = m_WorldObject;
 		}
 		
@@ -132,8 +132,8 @@ class EditorObject: EditorWorldObject
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		m_BasePoint = GetGame().CreateObjectEx("BoundingBoxBase", base_point, ECE_NONE);
 		m_BasePoint.SetScale(0.001);
+		m_BasePoint.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
 
-		
 		AddChild(m_BasePoint, -1, true);
 
 		for (int i = 0; i < 8; i++) {
@@ -256,13 +256,13 @@ class EditorObject: EditorWorldObject
 	void SetScale(float scale)
 	{		
 		if (Locked) return;
-		//GetWorldObject().SetScale(scale);
+		GetWorldObject().SetScale(scale);
 		Update();
 	}
 	
 	float GetScale()
 	{
-		//return GetWorldObject().GetScale();
+		return GetWorldObject().GetScale();
 		return 1;
 	}
 	
@@ -328,6 +328,9 @@ class EditorObject: EditorWorldObject
 			}
 			
 			case "Scale": {
+				if (Scale < 0.001) {
+					Scale = 0.001;
+				}
 				SetScale(Scale);
 				break;
 			}

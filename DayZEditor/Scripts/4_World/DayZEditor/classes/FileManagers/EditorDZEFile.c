@@ -19,7 +19,7 @@ class EditorDZEFile: EditorFileType
 		foreach (EditorObjectData object_data: save_data.EditorObjects) {
 			
 			if (GetGame().GetModelName(object_data.Type) != "UNKNOWN_P3D_FILE") {
-				bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Flags));
+				bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Scale, object_data.Flags));
 			} else {
 				EditorLog.Warning("Ignoring %1 on import. Invalid type, possible for crash", object_data.Type);
 			}

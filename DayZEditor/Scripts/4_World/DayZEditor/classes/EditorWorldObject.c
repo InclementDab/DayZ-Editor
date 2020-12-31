@@ -12,7 +12,7 @@ class EditorWorldObject
 		}
 	}
 	
-	static EntityAI CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0")
+	static EntityAI CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)
 	{
 		// Set to ECE_SETUP for AI compat. DONT ADD ECE_LOCAL
 		type = type.Trim();
@@ -39,6 +39,8 @@ class EditorWorldObject
 		// Needed for AI Placement			
 		obj.DisableSimulation(true);
 		obj.SetOrientation(orientation);
+		obj.SetScale(scale);
+		obj.Update();
 		//obj.SetFlags(EntityFlags.STATIC, true);
 		return obj;
 	}

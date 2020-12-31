@@ -23,7 +23,7 @@ class EditorExpansionFile: EditorFileType
 			
 			TStringArray tokens = {};
 	        line.Split("|", tokens);  
-	        save_data.EditorObjects.Insert(EditorObjectData.Create(tokens[0], tokens[1].ToVector(), tokens[2].ToVector(), EditorObjectFlags.ALL));
+	        save_data.EditorObjects.Insert(EditorObjectData.Create(tokens[0], tokens[1].ToVector(), tokens[2].ToVector(), 1, EditorObjectFlags.ALL));
 			line_size = FGets(handle, line);
 		}        
 
