@@ -38,6 +38,13 @@ class EditorClientModule: JMModuleBase
 		
 		RegisterBinding(new JMModuleBinding("OnEditorToggleMap", "EditorToggleMap"));
 		RegisterBinding(new JMModuleBinding("OnEditorDeleteObject", "EditorDeleteObject"));
+		
+		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectForward", "EditorMoveObjectForward"));
+		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectBackward", "EditorMoveObjectBackward"));
+		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectLeft", "EditorMoveObjectLeft"));
+		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectRight", "EditorMoveObjectRight"));
+		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectUp", "EditorMoveObjectUp"));
+		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectDown", "EditorMoveObjectDown"));
 	}
 		
 	override void OnUpdate(float timeslice)
@@ -91,6 +98,11 @@ class EditorClientModule: JMModuleBase
 	{
 		// Check if LocalPress, Check if LControl is pressed, Check if game is focused
 		return (input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
+	}
+	
+	private bool ShouldProcessQuickInput(UAInput input)
+	{
+		return (input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
 	}
 	
 	private bool m_IsActive;
@@ -187,7 +199,69 @@ class EditorClientModule: JMModuleBase
 		
 		GetEditor().TeleportPlayerToCursor();
 	}
+		
+	private void QuickTransformObjects(vector relative_position)
+	{
+		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
+		foreach (int id, EditorObject editor_object: selected_objects) {
+			editor_object.Position = relative_position + editor_object.GetPosition();
+			editor_object.PropertyChanged("Position");
+		}
+	}
 	
+	private void OnEditorMoveObjectForward(UAInput input)
+	{
+		if (!ShouldProcessQuickInput(input)) return;
+		EditorLog.Trace("Editor::OnEditorMoveObjectForward");
+		
+		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		QuickTransformObjects(Vector(0, 0, value));
+	}
+
+	private void OnEditorMoveObjectBackward(UAInput input)
+	{
+		if (!ShouldProcessQuickInput(input)) return;
+		EditorLog.Trace("Editor::OnEditorMoveObjectBackward");
+		
+		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		QuickTransformObjects(Vector(0, 0, -value));
+	}
+	
+	private void OnEditorMoveObjectLeft(UAInput input)
+	{
+		if (!ShouldProcessQuickInput(input)) return;
+		EditorLog.Trace("Editor::OnEditorMoveObjectLeft");
+		
+		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		QuickTransformObjects(Vector(-value, 0, 0));
+	}	
+	
+	private void OnEditorMoveObjectRight(UAInput input)
+	{
+		if (!ShouldProcessQuickInput(input)) return;
+		EditorLog.Trace("Editor::OnEditorMoveObjectRight");
+		
+		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		QuickTransformObjects(Vector(value, 0, 0));
+	}
+	
+	private void OnEditorMoveObjectUp(UAInput input)
+	{
+		if (!ShouldProcessQuickInput(input)) return;
+		EditorLog.Trace("Editor::OnEditorMoveObjectUp");
+		
+		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		QuickTransformObjects(Vector(0, value, 0));
+	}	
+	
+	private void OnEditorMoveObjectDown(UAInput input)
+	{
+		if (!ShouldProcessQuickInput(input)) return;
+		EditorLog.Trace("Editor::OnEditorMoveObjectDown");
+		
+		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		QuickTransformObjects(Vector(0, -value, 0));
+	}
 	
 	// RPC stuff
 	override int GetRPCMin() 

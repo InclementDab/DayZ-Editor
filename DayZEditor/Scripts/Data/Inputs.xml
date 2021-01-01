@@ -22,6 +22,13 @@
 			
 			<input name="EditorToggleMap" loc="Map" />
 			<input name="EditorDeleteObject" loc="Delete Object" />
+
+			<input name="EditorMoveObjectForward" loc="Move Object Forward" />
+			<input name="EditorMoveObjectBackward" loc="Move Object Backward" />
+			<input name="EditorMoveObjectLeft" loc="Move Object Left" />
+			<input name="EditorMoveObjectRight" loc="Move Object Right" />
+			<input name="EditorMoveObjectUp" loc="Move Object Up" />
+			<input name="EditorMoveObjectDown" loc="Move Object Down" />
         </actions>
     </inputs>
 
@@ -100,7 +107,29 @@
             <btn name="kH" />
         </input>
 		
-		
+        <input name="EditorMoveObjectForward">
+            <btn name="kUp" />
+        </input>
+        
+        <input name="EditorMoveObjectBackward">
+            <btn name="kDown" />
+        </input>
+
+        <input name="EditorMoveObjectLeft">
+            <btn name="kLeft" />
+        </input>
+        
+        <input name="EditorMoveObjectRight">
+            <btn name="kRight" />
+        </input>
+
+        <input name="EditorMoveObjectUp">
+            <btn name="kPrior" />
+        </input>
+
+        <input name="EditorMoveObjectDown">
+            <btn name="kNext" />
+        </input>
 
     </preset>
 </modded_inputs>
