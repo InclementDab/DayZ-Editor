@@ -214,7 +214,11 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorMoveObjectForward");
 		
-		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		float value = 0.1;
+		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
+			value = 0.001;
+		}
+		
 		QuickTransformObjects(Vector(0, 0, value));
 	}
 
@@ -223,7 +227,11 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorMoveObjectBackward");
 		
-		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		float value = 0.1;
+		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
+			value = 0.001;
+		}
+		
 		QuickTransformObjects(Vector(0, 0, -value));
 	}
 	
@@ -232,7 +240,11 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorMoveObjectLeft");
 		
-		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		float value = 0.1;
+		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
+			value = 0.001;
+		}
+		
 		QuickTransformObjects(Vector(-value, 0, 0));
 	}	
 	
@@ -241,7 +253,11 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorMoveObjectRight");
 		
-		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		float value = 0.1;
+		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
+			value = 0.001;
+		}
+		
 		QuickTransformObjects(Vector(value, 0, 0));
 	}
 	
@@ -250,7 +266,11 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorMoveObjectUp");
 		
-		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		float value = 0.1;
+		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
+			value = 0.001;
+		}
+		
 		QuickTransformObjects(Vector(0, value, 0));
 	}	
 	
@@ -259,7 +279,11 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorMoveObjectDown");
 		
-		float value = 0.1 + GetGame().GetInput().LocalValue("EditorCameraTurbo");		
+		float value = 0.1;
+		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
+			value = 0.001;
+		}
+		
 		QuickTransformObjects(Vector(0, -value, 0));
 	}
 	

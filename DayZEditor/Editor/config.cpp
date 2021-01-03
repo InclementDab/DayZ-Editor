@@ -99,4 +99,10 @@ class CfgVehicles
 		scope=2;
 		model="DayZEditor\editor\DebugCylinder.p3d";
 	};
+
+	class EGG: HouseNoDestruct
+	{
+		scope=2;
+		model="DZ\gear\food\eeg.p3d";
+	};
 };

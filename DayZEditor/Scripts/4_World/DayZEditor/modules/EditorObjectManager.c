@@ -152,7 +152,10 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	Object GetWorldObject(int id)
 	{
-		return WorldObjects[id].Ptr();
+		if (WorldObjects[id])
+			return WorldObjects[id].Ptr();
+		
+		return null;
 	}
 	
 	map<int, ref OLinkT> GetWorldObjects()

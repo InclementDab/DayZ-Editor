@@ -32,6 +32,11 @@ class EditorPlaceableListItem: EditorListItem
 		return false;
 	}
 	
+	EditorPlaceableItem GetPlaceableItem()
+	{
+		return m_PlaceableItem;
+	}
+	
 	bool ListItemExecute(ButtonCommandArgs args)
 	{
 		switch (args.GetMouseButton()) {
