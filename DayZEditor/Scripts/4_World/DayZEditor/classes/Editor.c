@@ -998,17 +998,3 @@ class Editor
 	EditorBrush GetBrush() return m_EditorBrush;
 	EditorActionStack GetActionStack() return m_ActionStack;
 }
-
-modded class AnimalBase
-{
-    void AnimalBase()
-    {
-        SetEventMask(EntityEvent.POSTFRAME);
-    }
-        
-    override void EOnPostFrame(IEntity other, int extra)
-    {        
-        SetScale(15);
-        Update();
-    }
-}

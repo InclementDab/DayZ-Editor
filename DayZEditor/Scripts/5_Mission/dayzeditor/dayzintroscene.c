@@ -50,10 +50,10 @@ modded class DayZIntroScene
 		foreach (Object o: m_ChristmasObjects) {
 			GetGame().ObjectDelete(o);
 		}
-		/*
+		
 		foreach (Object meme: m_FunnyMemes) {
 			GetGame().ObjectDelete(meme);
-		}*/
+		}
 	}
 	
 
@@ -64,9 +64,9 @@ modded class DayZIntroScene
 		totaltime += timeslice / 2;
 		
 		Input input = GetGame().GetInput();
-		
+		GetCEApi().ExportProxyData(vector.Zero, 10000);
 		// Christmas time :widepeepoHappy:
-		if (!m_ChristmasSetup) {
+		/*if (!m_ChristmasSetup) {
 			vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
 			tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
 			tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
@@ -85,7 +85,7 @@ modded class DayZIntroScene
 			
 			Particle.Play(ParticleList.SNOW, m_FunnyMeme, Vector(0, 10, 0));
 			m_ChristmasSetup = true;
-		}
+		}*/
 		
 		
 		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
@@ -140,8 +140,8 @@ modded class DayZIntroScene
 	
 			vector newcam_pos = contact_pos;
 			newcam_pos[1] = newcam_pos[1] + 50;
-			//Object new_camera = GetGame().CreateObjectEx("DSLRCamera", newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
-			Object new_camera = GetGame().CreateObjectEx(XmasGiftTypes.GetRandomElement(), newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
+			Object new_camera = GetGame().CreateObjectEx("DSLRCamera", newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
+			//Object new_camera = GetGame().CreateObjectEx(XmasGiftTypes.GetRandomElement(), newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
 			
 			float scale = vector.Distance(contact_pos, start) * 0.25;	        
 			if (new_camera) {
