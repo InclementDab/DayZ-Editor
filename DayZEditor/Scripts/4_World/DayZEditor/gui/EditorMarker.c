@@ -286,8 +286,10 @@ class EditorObjectMapMarker: EditorObjectMarker
 
 class EditorObjectWorldMarker: EditorObjectMarker
 {
+	protected MapWidget m_MapWidget;
 	void EditorObjectWorldMarker(EditorObject editor_object)
 	{
+		m_MapWidget = m_Editor.GetEditorHud().EditorMapWidget;
 		m_DragHandler = new ObjectDragHandler(m_EditorObject);
 		EditorEvents.OnMapToggled.Insert(OnEditorMapToggled);
 	}
@@ -299,7 +301,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	override void Update()
 	{
-		if (m_Editor.GetEditorHud().EditorMapWidget.IsVisible()) {
+		if (m_MapWidget && m_MapWidget.IsVisible()) {
 			return;
 		}
 				
