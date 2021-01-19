@@ -63,11 +63,6 @@ class ObjectDragHandler: DragHandler
 {
 	override void OnDragging(out vector transform[4], notnull EditorObject target)
 	{
-		
-		vector begin_pos = GetGame().GetCurrentCameraPosition();
-		vector end_pos = begin_pos + GetGame().GetPointerDirection() * 3000;
-		int component;
-		
 		m_Editor.ObjectInHand = target;
 		vector cursor_pos = Editor.CurrentMousePosition;
 		
@@ -138,7 +133,7 @@ class ObjectDragHandler: DragHandler
 			}	
 			
 		
-			selected_object.SetTransform(selected_transform);			
+			selected_object.SetTransform(selected_transform);
 		}
 		
 		size = m_EditorObject.GetSize();
@@ -156,8 +151,6 @@ class ObjectDragHandler: DragHandler
 			} else {
 				transform[3][1] = cursor_pos[1];
 			}
-			
-			
 		}
 		
 		// Handle XY Rotation
@@ -191,8 +184,6 @@ class ObjectDragHandler: DragHandler
 				transform[2] = surface_normal * (local_ori * vector.Up);
 			}
 			
-
-
 			if (m_Editor.GroundMode) {
 				if (m_Editor.MagnetMode) {
 					transform[3] = cursor_pos + surface_normal * vector.Distance(ground_position, transform[3]);				
@@ -202,8 +193,7 @@ class ObjectDragHandler: DragHandler
 				
 			} else {
 				transform[3] = cursor_pos;
-				transform[3][1] = transform[3][1] + m_EditorObject.GetYDistance();				
-				
+				transform[3][1] = transform[3][1] + m_EditorObject.GetYDistance();
 			} 			
 		}
 	}
