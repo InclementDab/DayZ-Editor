@@ -64,6 +64,9 @@ class EditorClipboard
 		
 		foreach (EditorObjectData pasted_object: data) {
 			
+			if (pasted_object.Type == string.Empty) 
+				continue;
+			
 			vector position = pasted_object.Position + Editor.CurrentMousePosition;
 			vector transform[4] = {
 				"1 0 0",
