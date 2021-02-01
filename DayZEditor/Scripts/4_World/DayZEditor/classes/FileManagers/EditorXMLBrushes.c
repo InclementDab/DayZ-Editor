@@ -41,8 +41,8 @@ class XMLEditorBrushes: XMLCallback
 					
 					// attributes
 					string object_type;
-					float z_offset;
-					float object_frequency;
+					float z_offset = 0;
+					float object_frequency = 1.0;
 					
 					// type attribute
 					XMLAttribute object_type_attribute = brush_object.GetAttribute("type");
@@ -60,15 +60,11 @@ class XMLEditorBrushes: XMLCallback
 					// Z Offset attribute
 					if (brush_object.GetAttribute("zoffset")) {
 						z_offset = brush_object.GetAttribute("zoffset").ValueAsFloat();
-					} else {
-						z_offset = 0;
 					}
 					
 					// frequency attribute
 					if (brush_object.GetAttribute("frequency")) {
 						object_frequency = brush_object.GetAttribute("frequency").ValueAsFloat();
-					} else {
-						object_frequency = 1.0;
 					}
 					
 					brush_settings.InsertPlaceableObject(new EditorBrushObject(object_type, object_frequency, z_offset));

@@ -10,6 +10,8 @@ class EditorHudToolbarController: EditorControllerBase
 	int BrushTypeSelection;
 	string BrushToggleButtonText;
 	
+	bool ControlPlayerState;
+	
 	// View Properties
 	protected ButtonWidget MenuBarFile;
 	protected ButtonWidget MenuBarEdit;
@@ -125,6 +127,11 @@ class EditorHudToolbarController: EditorControllerBase
 					CollisionButton_Icon.SetColor(COLOR_WHITE);
 				}
 					
+				break;
+			}
+			case "ControlPlayerState": {
+				GetGame().GetPlayer().GetInputController().SetDisabled(!ControlPlayerState);
+				Camera.GetCurrentCamera().DisableSimulation(ControlPlayerState);
 				break;
 			}
 		}

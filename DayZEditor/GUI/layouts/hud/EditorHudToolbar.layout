@@ -1188,6 +1188,42 @@ WrapSpacerWidgetClass ToolbarWrapper {
         }
        }
       }
+      GridSpacerWidgetClass Section4 {
+       ignorepointer 1
+       position 0 0
+       size 0 0
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Columns 1
+       Rows 1
+       {
+        CheckBoxWidgetClass LockPlayer {
+         position 0 0
+         size 250 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scriptclass "ViewBinding"
+         style Default
+         text "Control Player"
+         checked 0
+         {
+          ScriptParamsClass {
+           Binding_Name "ControlPlayerState"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
      }
     }
    }
