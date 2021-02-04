@@ -9,12 +9,13 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 
 	Object hit_object;
 	float hit_else;
-	int interaction_layers = PhxInteractionLayers.BUILDING;
+	int interaction_layers = PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.TERRAIN;
 	if (ignore && dBodyIsDynamic(ignore)) {
 		interaction_layers = dBodyGetInteractionLayer(ignore);
 	}
 	
-	if (!groundonly && ignore && dBodyIsDynamic(ignore) && DayZPhysics.RayCastBullet(ray_start, ray_end, interaction_layers, ignore, hit_object, hitPos, hitNormal, hit_else)) {
+	// groundonly && ignore && dBodyIsDynamic(ignore) &&
+	if (DayZPhysics.RayCastBullet(ray_start, ray_end, interaction_layers, ignore, hit_object, hitPos, hitNormal, hit_else)) {
 		collisions.Insert(hit_object);
 		return hitPos;
 	}
