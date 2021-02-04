@@ -28,9 +28,15 @@ class EditorTerrainBuilderFile: EditorFileType
 				model_name = GetGame().GetModelName(type);
 			}
 			
+			if (model_name == "UNKNOWN_P3D_FILE") {
+				continue;
+			}
+			
+			
 			EditorLog.Debug("Exporting %1 with model of %2", editor_object.Type, model_name);
 			
 			vector orientation = editor_object.Orientation;
+			orientation = orientation.VectorToAngles();
 			position += terrainbuilder_offset;
 			string line = string.Format("\"%1\";%2;%3;%4;%5;%6;%7;%8;", model_name, position[0], position[2], orientation[0], orientation[2], orientation[1], editor_object.Scale, position[1]);
 			FPrintln(handle, line);
