@@ -31,13 +31,15 @@ class EditorDialogBase: DialogBase
 		m_LayoutRoot.SetPos(dx, dy - dv / 2);
 	}
 	
-	private void ~EditorDialogBase()
+	void ~EditorDialogBase()
 	{
 		//! Save last Dialog position
 		float dx, dy;
-		m_LayoutRoot.GetPos(dx, dy);
-		EditorHud.DialogLastX = dx;
-		EditorHud.DialogLastY = dy;
+		if (m_LayoutRoot) {
+			m_LayoutRoot.GetPos(dx, dy);
+			EditorHud.DialogLastX = dx;
+			EditorHud.DialogLastY = dy;
+		}
 		
 		if (m_Editor) {
 			m_Editor.GetCamera().MoveEnabled = true;
