@@ -9,13 +9,14 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 
 	Object hit_object;
 	float hit_else;
-	int interaction_layers = PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.TERRAIN;
-	if (ignore && dBodyIsDynamic(ignore)) {
+	int interaction_layers = PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.TERRAIN | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.DYNAMICITEM;
+	//int interaction_layers = PhxInteractionLayers.NOCOLLISION | PhxInteractionLayers.DEFAULT | PhxInteractionLayers.BUILDING | PhxInteractionLayers.CHARACTER | PhxInteractionLayers.VEHICLE | PhxInteractionLayers.DYNAMICITEM | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.VEHICLE_NOTERRAIN | PhxInteractionLayers.CHARACTER_NO_GRAVITY | PhxInteractionLayers.FIREGEOM | PhxInteractionLayers.DOOR | PhxInteractionLayers.RAGDOLL | PhxInteractionLayers.WATERLAYER | PhxInteractionLayers.TERRAIN | PhxInteractionLayers.GHOST | PhxInteractionLayers.WORLDBOUNDS | PhxInteractionLayers.FENCE | PhxInteractionLayers.AI | PhxInteractionLayers.AI_NO_COLLISION | PhxInteractionLayers.AI_COMPLEX | PhxInteractionLayers.TINYCAPSULE | PhxInteractionLayers.TRIGGER | PhxInteractionLayers.TRIGGER_NOTERRAIN | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.ITEM_LARGE | PhxInteractionLayers.CAMERA | PhxInteractionLayers.TEMP;
+	/*if (ignore && dBodyIsDynamic(ignore)) {
 		interaction_layers = dBodyGetInteractionLayer(ignore);
-	}
+	}*/
 	
 	// groundonly && ignore && dBodyIsDynamic(ignore) &&
-	if (DayZPhysics.RayCastBullet(ray_start, ray_end, interaction_layers, ignore, hit_object, hitPos, hitNormal, hit_else)) {
+	if (!groundonly && DayZPhysics.RayCastBullet(ray_start, ray_end, interaction_layers, ignore, hit_object, hitPos, hitNormal, hit_else)) {
 		collisions.Insert(hit_object);
 		return hitPos;
 	}
