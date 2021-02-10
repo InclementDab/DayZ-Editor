@@ -64,7 +64,6 @@ modded class DayZIntroScene
 		totaltime += timeslice / 2;
 		
 		Input input = GetGame().GetInput();
-		GetCEApi().ExportProxyData(vector.Zero, 10000);
 		// Christmas time :widepeepoHappy:
 		/*if (!m_ChristmasSetup) {
 			vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
