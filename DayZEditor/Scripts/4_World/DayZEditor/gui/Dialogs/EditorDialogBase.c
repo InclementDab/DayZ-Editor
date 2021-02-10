@@ -31,7 +31,7 @@ class EditorDialogBase: DialogBase
 		m_LayoutRoot.SetPos(dx, dy - dv / 2);
 	}
 	
-	void ~EditorDialogBase()
+	protected void ~EditorDialogBase()
 	{
 		//! Save last Dialog position
 		float dx, dy;
