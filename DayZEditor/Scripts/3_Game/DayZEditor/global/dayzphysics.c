@@ -14,6 +14,16 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 	/*if (ignore && dBodyIsDynamic(ignore)) {
 		interaction_layers = dBodyGetInteractionLayer(ignore);
 	}*/
+	/*
+	if (!groundonly && ignore) {
+		PrintFormat("Testing %1 - Dynamic: %2", ignore, dBodyIsDynamic(ignore));
+		
+		for (int i = PhxInteractionLayers.NOCOLLISION; i <= PhxInteractionLayers.TEMP; i++) {
+			if ((dBodyGetInteractionLayer(ignore) & i) == i) {
+				PrintFormat("	%1 has interaction layer %2", ignore, typename.EnumToString(PhxInteractionLayers, i));
+			}
+		}
+	}*/
 	
 	// groundonly && ignore && dBodyIsDynamic(ignore) &&
 	if (!groundonly && DayZPhysics.RayCastBullet(ray_start, ray_end, interaction_layers, ignore, hit_object, hitPos, hitNormal, hit_else)) {
