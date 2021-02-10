@@ -572,6 +572,7 @@ class Editor
 		
 		m_LootEditMode = true;
 		CollisionMode = true;
+		GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("CollisionMode");
 		
 		thread EditLootSpawnsDialog();
 	}
