@@ -785,7 +785,7 @@ class Editor
 	void DeleteObject(EditorObject editor_object, bool create_undo = true) 
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
-		if (!editor_object.Locked) {
+		if (!editor_object.Locked && editor_object.Show) {
 			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 			m_ObjectManager.DeleteObject(editor_object);
@@ -802,7 +802,7 @@ class Editor
 		EditorAction action = new EditorAction("Create", "Delete");
 
 		foreach (int id, EditorObject editor_object: editor_object_map) {
-			if (!editor_object.Locked) {
+			if (!editor_object.Locked && editor_object.Show) {
 				action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 				action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);

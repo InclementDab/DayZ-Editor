@@ -111,7 +111,7 @@ class EditorObjectMarker: EditorMarker
 	}
 	
 	void EditorObjectSelected(EditorObject data) 
-	{
+	{		
 		Select();
 	}
 	
