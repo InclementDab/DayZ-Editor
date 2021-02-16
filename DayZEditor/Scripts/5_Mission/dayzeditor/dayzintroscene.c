@@ -58,7 +58,7 @@ modded class DayZIntroScene
 	
 
 	private bool m_ChristmasSetup = false;
-		
+	private float m_CameraTimer;
 	void OnUpdate(float timeslice)
 	{
 		totaltime += timeslice / 2;
@@ -128,8 +128,9 @@ modded class DayZIntroScene
 		
 
 		// another easter egg
-		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
-			
+		m_CameraTimer += timeslice;
+		if (m_CameraTimer > 1 && (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+			m_CameraTimer = 0;
 			vector start = GetGame().GetCurrentCameraPosition();
 			vector end = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * 5000;
 			vector contact_pos, contact_dir;
