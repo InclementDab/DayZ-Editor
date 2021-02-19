@@ -90,7 +90,7 @@ class EditorObject: EditorWorldObject
 			m_Data.WorldObject = m_WorldObject;
 		}
 		
-		m_WorldObject = m_Data.WorldObject;
+		m_WorldObject = EntityAI.Cast(m_Data.WorldObject);
 		
 		// Trash the object because its uncreatable
 		if (!m_WorldObject) { 

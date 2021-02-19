@@ -19,7 +19,7 @@ class EditorImportCommandBase: EditorCommand
 	
 	protected EditorSaveData ImportFile(string file_name, bool clear_before = false)
 	{
-		EditorFileType file_type = GetFileType().Spawn();
+		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
 		if (!file_type) {
 			EditorLog.Error("Invalid FileType in Import");
 			return null;

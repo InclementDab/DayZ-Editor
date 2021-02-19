@@ -21,7 +21,7 @@ class EditorExportCommandBase: EditorCommand
 	
 	protected void ExportFile(string file_name, ExportSettings export_settings)
 	{
-		EditorFileType file_type = GetFileType().Spawn();
+		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
 		if (!file_type) {
 			EditorLog.Error("Invalid FileType in Export");
 			return;

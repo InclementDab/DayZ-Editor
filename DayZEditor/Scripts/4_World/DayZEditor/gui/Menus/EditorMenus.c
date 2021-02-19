@@ -28,7 +28,7 @@ class EditorMenu: EditorScriptView
 	void AddMenuCategory(string label, typename child_menu)
 	{
 		if (child_menu.IsInherited(EditorMenu)) {
-			AddMenuCategory(label, child_menu.Spawn());
+			AddMenuCategory(label, EditorMenu.Cast(child_menu.Spawn()));
 		}
 	}
 	

@@ -51,7 +51,7 @@ class EditorCommandManager
 	ref EditorExportToTerrainBuilder ExportToTerrainBuilder;
 	ref EditorExportToVPP ExportToVPP;
 	ref EditorExportToCOM ExportToCOM;
-	ref EditorExportToCOM ExportToEvents;
+	ref EditorExportToEvents ExportToEvents;
 	
 	ref EditorImportFromInit ImportFromInitFile;
 	ref EditorImportFromExpansion ImportFromExpansionCommand;
@@ -74,7 +74,7 @@ class EditorCommandManager
 			string variable_name = Type().GetVariableName(i);
 			typename variable_type = Type().GetVariableType(i);
 			if (variable_type.IsInherited(EditorCommand)) {
-				EditorCommand command = variable_type.Spawn();
+				EditorCommand command = EditorCommand.Cast(variable_type.Spawn());
 				EnScript.SetClassVar(this, variable_name, 0, command);
 				if (command.GetShortcut()) {
 					CommandShortcutMap.Insert(command.GetShortcut().GetMask(), command);
