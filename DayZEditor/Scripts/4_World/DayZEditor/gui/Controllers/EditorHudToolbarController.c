@@ -1,4 +1,3 @@
-
 class EditorHudToolbarController: EditorControllerBase
 {
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
@@ -305,5 +304,4 @@ class EditorHudToolbarController: EditorControllerBase
 		
 		return toolbar_menu;
 	}
-		
 }

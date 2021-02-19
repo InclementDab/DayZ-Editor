@@ -125,7 +125,6 @@ class EditorHudController: EditorControllerBase
 		//! Everything is fine... I hope... :pain:
 		return false;
 	}
-	
 
 	override void PropertyChanged(string property_name)
 	{
@@ -323,4 +322,3 @@ class EditorHudController: EditorControllerBase
 		NotifyPropertyChanged("obj_z");
 	}
 }
-

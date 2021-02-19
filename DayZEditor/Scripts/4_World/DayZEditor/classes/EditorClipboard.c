@@ -5,8 +5,9 @@ class EditorClipboard
 		EditorLog.Trace("EditorObjectManager::CutSelection");
 		
 		EditorObjectMap cut_objects = GetEditor().GetSelectedObjects();
-		if (cut_objects.Count() == 0)
+		if (cut_objects.Count() == 0) {
 			return;
+		}
 		
 		Copy();
 		GetEditor().DeleteObjects(cut_objects);
@@ -16,18 +17,20 @@ class EditorClipboard
 	{
 		EditorLog.Trace("EditorObjectManager::CopySelection");
 		EditorObjectMap copy_objects = GetEditor().GetSelectedObjects();
-		if (copy_objects.Count() == 0) 
+		if (copy_objects.Count() == 0) {
 			return;
+		}
 		
-		ref array<ref EditorObjectData>> world_objects = {};
+		array<ref EditorObjectData>> world_objects = {};
 		
 		vector avg_position;
-		foreach (int id, EditorObject copy_object: copy_objects)
+		foreach (int id, EditorObject copy_object: copy_objects) {
 			avg_position += copy_object.GetPosition();
+		}
 		
-		
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 3; i++) {
 			avg_position[i] = avg_position[i] / copy_objects.Count();
+		}
 		
 		avg_position[1] = GetGame().SurfaceY(avg_position[0], avg_position[2]);
 		
@@ -64,8 +67,9 @@ class EditorClipboard
 		
 		foreach (EditorObjectData pasted_object: data) {
 			
-			if (pasted_object.Type == string.Empty) 
+			if (pasted_object.Type == string.Empty) {
 				continue;
+			}
 			
 			vector position = pasted_object.Position + Editor.CurrentMousePosition;
 			vector transform[4] = {
@@ -98,4 +102,3 @@ class EditorClipboard
 		}	
 	}
 }
-
