@@ -554,7 +554,7 @@ FrameWidgetClass EditorFrame {
            ignorepointer 0
            color 0.302 0.302 0.302 0.3059
            position 0 0.06
-           size 1 0.91
+           size 1 0.97
            halign right_ref
            hexactpos 1
            vexactpos 0

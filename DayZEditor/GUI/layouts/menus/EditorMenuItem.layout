@@ -49,15 +49,16 @@ FrameWidgetClass EditorMenuItem {
        inheritalpha 1
        ignorepointer 1
        position 30 0
-       size 0.7 1
+       size 0.8 0.8
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 0
        scriptclass "ViewBinding"
-       font "gui/fonts/Metron16"
-       "exact text" 1
+       text "test"
+       font "gui/fonts/MetronBook"
+       "exact text" 0
        "size to text h" 0
        "text valign" center
        {
@@ -83,7 +84,7 @@ FrameWidgetClass EditorMenuItem {
        mode blend
        "src alpha" 1
        stretch 1
-       filter 0
+       filter 1
        pivot 0.5 0.5
        {
         ScriptParamsClass {
