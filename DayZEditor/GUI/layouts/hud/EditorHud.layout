@@ -291,7 +291,7 @@ FrameWidgetClass EditorFrame {
          content_halign center
          {
           PanelWidgetClass LeftbarPanelSelector {
-           visible 1
+           visible 0
            disabled 0
            ignorepointer 1
            color 0.0588 0.0588 0.0588 1
