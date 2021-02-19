@@ -1,6 +1,5 @@
 class EditorDZEFile: EditorFileType
 {
-	
 	override EditorSaveData Import(string file, ImportSettings settings)
 	{
 		EditorSaveData save_data = new EditorSaveData();

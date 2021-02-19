@@ -1,4 +1,3 @@
-
 class EditorExpansionFile: EditorFileType
 {
 	override EditorSaveData Import(string file, ImportSettings settings) 

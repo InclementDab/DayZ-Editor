@@ -168,3 +168,14 @@ class EditorExportToCOM: EditorExportCommandBase
 		return "Export to COM File";
 	}
 }
+
+class EditorExportToEvents: EditorExportCommandBase
+{
+	override typename GetFileType() {
+		return EditorEventsFile;
+	}
+	
+	override string GetName() {
+		return "Export to Events File";
+	}
+}
