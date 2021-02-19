@@ -87,10 +87,10 @@ class EditorGizmo
 	void EditorGizmo(vector position)
 	{	
 		Print("EditorGizmo");
-		m_GizmoBaseParts.Insert(GetGame().CreateObjectEx("GizmoCenter", position, ECE_LOCAL));
-		m_GizmoBaseParts.Insert(GetGame().CreateObjectEx("GizmoX", position, ECE_LOCAL));
-		m_GizmoBaseParts.Insert(GetGame().CreateObjectEx("GizmoY", position, ECE_LOCAL));
-		m_GizmoBaseParts.Insert(GetGame().CreateObjectEx("GizmoZ", position, ECE_LOCAL));
+		m_GizmoBaseParts.Insert(GizmoBase.Cast(GetGame().CreateObjectEx("GizmoCenter", position, ECE_LOCAL)));
+		m_GizmoBaseParts.Insert(GizmoBase.Cast(GetGame().CreateObjectEx("GizmoX", position, ECE_LOCAL)));
+		m_GizmoBaseParts.Insert(GizmoBase.Cast(GetGame().CreateObjectEx("GizmoY", position, ECE_LOCAL)));
+		m_GizmoBaseParts.Insert(GizmoBase.Cast(GetGame().CreateObjectEx("GizmoZ", position, ECE_LOCAL)));
 		
 		foreach (GizmoBase gb: m_GizmoBaseParts) {
 			gb.ResetColor();

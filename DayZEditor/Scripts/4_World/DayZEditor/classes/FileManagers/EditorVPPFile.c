@@ -52,7 +52,7 @@ class EditorVPPFile: EditorFileType
 		file_serializer.Close();
 	}
 	
-	string GetExtension() {
+	override string GetExtension() {
 		return ".vpp";
 	}
 }

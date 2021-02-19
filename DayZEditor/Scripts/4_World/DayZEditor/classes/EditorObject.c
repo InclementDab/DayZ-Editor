@@ -64,7 +64,7 @@ class EditorObject: EditorWorldObject
 		return m_Data.Flags;
 	}
 	
-	Object GetWorldObject() 
+	override Object GetWorldObject() 
 	{
 		if (!m_WorldObject) {
 			//EditorLog.Error("World Object was null! ID: %1", GetID().ToString());

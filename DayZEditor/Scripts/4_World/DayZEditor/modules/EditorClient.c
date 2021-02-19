@@ -62,9 +62,9 @@ class EditorClientModule: JMModuleBase
 	}
 	
 	override bool IsServer() 
+	{
 		return false;
-
-	
+	}	
 		
 	override void OnMissionStart()
 	{
@@ -72,11 +72,10 @@ class EditorClientModule: JMModuleBase
 		
 		if (IsMissionOffline()) {
 			EditorLog.Info("Loading Offline Editor...");
-			Editor.Create(CreateDefaultCharacter(Editor.GetRandomTeleportPosition()));
+			Editor.Create(PlayerBase.Cast(CreateDefaultCharacter(Editor.GetRandomTeleportPosition())));
 		} else {
-			
 			EditorLog.Info("Loading Online Editor...");
-			Editor.Create(GetGame().GetPlayer());
+			Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
 		}
 		
 	}
@@ -289,11 +288,15 @@ class EditorClientModule: JMModuleBase
 	
 	// RPC stuff
 	override int GetRPCMin() 
+	{
 		return EditorClientModuleRPC.INVALID;
+	}
 	
 
 	override int GetRPCMax()
+	{
 		return EditorClientModuleRPC.COUNT;
+	}
 	
 	
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ref ParamsReadContext ctx)
@@ -303,7 +306,4 @@ class EditorClientModule: JMModuleBase
 		
 		}
 	}
-	
-	
 }
-

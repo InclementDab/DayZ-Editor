@@ -42,7 +42,7 @@ class EditorServerModule: JMModuleBase
 			
 			case EditorServerModuleRPC.EDITOR_CLIENT_CREATED: {
 				EditorLog.Debug("EditorServerModule::EDITOR_CLIENT_CREATED");
-				m_EditorClientModels.Insert(sender.GetPlayerId(), GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_NONE));
+				m_EditorClientModels.Insert(sender.GetPlayerId(), EntityAI.Cast(GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_NONE)));
 				break;
 			}
 			
