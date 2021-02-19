@@ -17,7 +17,6 @@ class EditorActionStack: set<ref EditorAction>
 	}
 }
 
-
 class EditorAction
 {
 	private string name;
@@ -43,14 +42,15 @@ class EditorAction
 		
 		/*foreach (int i, ref Param p: UndoParameters)
 			GetEditor().DeleteSessionData(i);*/
-		
 	}
 	
-	string GetName() { 
+	string GetName() 
+	{ 
 		return name; 
 	}
 	
-	bool IsUndone() { 
+	bool IsUndone() 
+	{ 
 		return undone; 
 	}
 	

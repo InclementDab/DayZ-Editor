@@ -383,21 +383,25 @@ class Editor
 	bool OnKeyPress(int key)
 	{
 		// Dont process hotkeys if dialog is open
-		if (m_EditorHud.CurrentDialog) return false;
+		if (m_EditorHud.CurrentDialog) {
+			return false;
+		}
 		
-		if (m_CurrentKeys.Find(key) != -1) return false;
+		if (m_CurrentKeys.Find(key) != -1) {
+			return false;
+		}
 		
 		m_CurrentKeys.Insert(key);
 		EditorCommand command = CommandManager.CommandShortcutMap[m_CurrentKeys.GetMask()];
-		if (command) {
-			EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
-			CommandArgs args = new CommandArgs();
-			args.Context = m_EditorHud;
-			command.Execute(this, args);
-			return true;
+		if (!command) {
+			return false;
 		}
 			
-		return false;
+		EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
+		CommandArgs args = new CommandArgs();
+		args.Context = m_EditorHud;
+		command.Execute(this, args);
+		return true;
 	}
 		
 	bool OnKeyRelease(int key)

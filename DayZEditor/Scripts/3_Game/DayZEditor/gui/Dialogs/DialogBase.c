@@ -24,7 +24,7 @@ class DialogBase: ScriptView
 		Trace("ShowDialog");
 		m_LayoutRoot.Show(true);
 		while (m_DialogResult == DialogResult.None) {
-			Sleep(1);
+			Sleep(10);
 		}
 		
 		Log("DialogResult: %1", typename.EnumToString(DialogResult, m_DialogResult));
@@ -110,11 +110,13 @@ class DialogBase: ScriptView
 		return false;
 	}
 	
-	override typename GetControllerType() {
+	override typename GetControllerType() 
+	{
 		return DialogBaseController;
 	}	
 		
-	override string GetLayoutFile() {
+	override string GetLayoutFile() 
+	{
 		return "DayZEditor/gui/Layouts/dialogs/DialogBase.layout";
 	}
 }

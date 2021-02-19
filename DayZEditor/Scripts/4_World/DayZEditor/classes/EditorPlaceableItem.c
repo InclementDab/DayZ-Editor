@@ -107,7 +107,6 @@ class EditorPlaceableItem
 		return -1;
 	}
 	
-	
 	static map<string, EditorPlaceableItemCategory> GetTypes()
 	{
 		map<string, EditorPlaceableItemCategory> types_map = new map<string, EditorPlaceableItemCategory>();
@@ -124,7 +123,6 @@ class EditorPlaceableItem
 		return types_map;
 	}
 	
-
 	static string GetIcon(ModStructure mod_info)
 	{
 		EditorLog.Trace("EditorPlaceableItem::GetIcon");

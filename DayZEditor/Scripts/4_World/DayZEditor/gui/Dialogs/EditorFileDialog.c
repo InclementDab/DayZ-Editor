@@ -1,4 +1,3 @@
-
 class EditorFileDialog: EditorDialogBase
 {
 	protected autoptr EditBoxPrefab m_EditBoxPrefab;
@@ -9,9 +8,7 @@ class EditorFileDialog: EditorDialogBase
 	
 	void EditorFileDialog(string title, string filter = "*", string default_value = "", string button_name = "")
 	{
-		m_Filter = filter;
-		
-		
+		m_Filter = filter;		
 		m_EditBoxPrefab = new EditBoxPrefab("File", m_Controller, default_value);
 		
 		// If people want to play around
@@ -21,9 +18,7 @@ class EditorFileDialog: EditorDialogBase
 			LoadFileDirectory("$profile:\\", m_Filter);
 			AddButton("Back", "BackDirectory");
 		}
-		
-		
-		
+				
 		AddContent(m_EditBoxPrefab);
 		AddButton(button_name, DialogResult.OK);
 		AddButton(DialogResult.Cancel);

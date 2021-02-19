@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass EditBoxPrefab {
  visible 1
- size 0.8 24
+ size 1 24
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -35,7 +35,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
   EditBoxWidgetClass ContentText {
    visible 1
    position 0 0
-   size 0.5 1
+   size 0.7 1
    halign center_ref
    valign center_ref
    hexactpos 1
@@ -44,9 +44,10 @@ WrapSpacerWidgetClass EditBoxPrefab {
    vexactsize 0
    scriptclass "ViewBinding"
    style Editor
+   text "test"
    "Use default text" 0
    "exact text" 1
-   font "gui/fonts/etelkatextpro"
+   font "gui/fonts/MetronLight"
    {
     ScriptParamsClass {
      Binding_Name "Value"

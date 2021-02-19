@@ -16,11 +16,13 @@ class EditorVPPFile: EditorFileType
 		file_serializer.Read(building_set);
 		file_serializer.Close();
 		
-		if (!building_set) return save_data;
+		if (!building_set) {
+			return save_data;
+		}
 		
-		ref array<ref VPPToEditorSpawnedBuilding> spawned_buildings = new array<ref VPPToEditorSpawnedBuilding>();
+		array<ref VPPToEditorSpawnedBuilding> spawned_buildings = new array<ref VPPToEditorSpawnedBuilding>();
 		building_set.GetSpawnedBuildings(spawned_buildings);
-		foreach (ref VPPToEditorSpawnedBuilding building: spawned_buildings) {
+		foreach (VPPToEditorSpawnedBuilding building: spawned_buildings) {
 			string name = building.GetName();
 			TStringArray name_split = new TStringArray();
 			name.Split("-", name_split);
@@ -52,7 +54,8 @@ class EditorVPPFile: EditorFileType
 		file_serializer.Close();
 	}
 	
-	override string GetExtension() {
+	override string GetExtension() 
+	{
 		return ".vpp";
 	}
 }

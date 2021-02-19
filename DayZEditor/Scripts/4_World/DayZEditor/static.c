@@ -31,7 +31,6 @@ static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
     return player;
 }
 
-
 static void SpawnStaticObject(string type, vector position, vector orientation)
 {
 	EditorLog.Trace("SpawnStaticObject %1", type);

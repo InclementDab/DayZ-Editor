@@ -1,16 +1,10 @@
-
-
 class EditorHologram: EditorWorldObject
 {
 	protected EditorPlaceableItem		m_PlaceableItem;
 	protected Widget 					m_EditorMapMarkerWidget;
 	protected EditorObjectMapMarker 	m_EditorMapMarker;
 	protected MapWidget					m_MapWidget;
-		
-	EditorPlaceableItem GetPlaceableItem() {
-		return m_PlaceableItem;
-	}
-	
+			
 	void EditorHologram(EditorPlaceableItem placeable_item) 
 	{
 		m_PlaceableItem = placeable_item;
@@ -39,7 +33,6 @@ class EditorHologram: EditorWorldObject
 			"0 0 1",
 			position
 		};
-
 				
 		vector surface_normal = vector.Up;
 		float surface_height = GetGame().SurfaceY(position[0], position[2]);
@@ -54,7 +47,10 @@ class EditorHologram: EditorWorldObject
 		transform[2] = surface_normal * (local_ori * vector.Up);
 		
 		m_WorldObject.SetTransform(transform);
+	}	
+	
+	EditorPlaceableItem GetPlaceableItem() 
+	{
+		return m_PlaceableItem;
 	}
-	
-	
 }

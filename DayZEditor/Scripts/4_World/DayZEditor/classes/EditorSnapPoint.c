@@ -6,7 +6,6 @@ class EditorPoint: vector
 
 }
 
-
 class EditorSnapPoint: EditorWorldObject
 {
 	protected float m_Range;
@@ -34,7 +33,5 @@ class EditorSnapPoint: EditorWorldObject
 	
 	vector GetPosition() {
 		return m_SnapPosition;
-	}
-	
+	}	
 }
-

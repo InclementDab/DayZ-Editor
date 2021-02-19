@@ -1,4 +1,3 @@
-
 class EditorAnimationManagerTable
 {
 	int CMD_Action;
@@ -123,6 +122,3 @@ modded class DayZPlayerImplement
 		EditorAnimationStart("CMD_LandImmediate");
 	}
 }
-
-
-
