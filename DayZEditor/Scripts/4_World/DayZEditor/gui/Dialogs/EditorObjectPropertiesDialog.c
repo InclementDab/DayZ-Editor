@@ -17,7 +17,6 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		SetEditorObject(editor_object);
 				
 		AddButton(DialogResult.OK);
-		AddButton(DialogResult.Cancel);
 		
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
@@ -111,8 +110,6 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 				GetGame().CopyToClipboard(text);
 			}
 		}
-		
-		
 		
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
