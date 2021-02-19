@@ -7,8 +7,9 @@ class EditorCommand: RelayCommand
 	{
 		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(sender, args);
-		if (EditorHud.CurrentMenu)
+		if (EditorHud.CurrentMenu) {
 			delete EditorHud.CurrentMenu;		
+		}
 		
 		if (!m_Editor) {
 			m_Editor = GetEditor();
