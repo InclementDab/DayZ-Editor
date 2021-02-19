@@ -1,4 +1,3 @@
-
 class EditorTooltipController: Controller
 {
 	string ContentTitle;
@@ -10,8 +9,9 @@ class EditorTooltipController: Controller
 	{
 		EditorLog.Trace("~EditorTooltipController");
 #ifndef COMPONENT_SYSTEM
-		if (ContentItemData) 
+		if (ContentItemData) {
 			GetWorkbenchGame().ObjectDelete(ContentItemData);
+		}
 #endif
 	}
 	
@@ -27,7 +27,6 @@ class EditorTooltipController: Controller
 				
 				break;
 			}
-			
 		}
 	}
 }

@@ -1,4 +1,3 @@
-
 class EditorTooltip: ScriptViewTemplate<EditorTooltipController>
 {
 	protected TextWidget HeaderLabel;
@@ -45,11 +44,13 @@ class EditorTooltip: ScriptViewTemplate<EditorTooltipController>
 		m_LayoutRoot.SetPos(x, y);
 	}
 		
-	override typename GetControllerType() {
+	override typename GetControllerType() 
+	{
 		return EditorTooltipController;
 	}
 
-	override string GetLayoutFile() {
+	override string GetLayoutFile() 
+	{
 		return "DayZEditor/gui/layouts/tooltips/EditorTooltip.layout";
 	}
 }

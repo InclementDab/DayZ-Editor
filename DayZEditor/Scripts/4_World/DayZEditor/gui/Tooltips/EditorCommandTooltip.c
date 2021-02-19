@@ -1,10 +1,3 @@
-
-class EditorCommandTooltipController: Controller
-{
-	string Name;
-	string Shortcut;
-}
-
 class EditorCommandTooltip: ScriptViewTemplate<EditorCommandTooltipController>
 {
 	void EditorCommandTooltip(EditorCommand editor_command, float x, float y)
@@ -20,7 +13,8 @@ class EditorCommandTooltip: ScriptViewTemplate<EditorCommandTooltipController>
 		m_LayoutRoot.SetPos(x, y);
 	}
 	
-	override string GetLayoutFile() {
+	override string GetLayoutFile() 
+	{
 		return "DayZEditor/gui/layouts/tooltips/EditorCommandTooltip.layout";
 	}
 }
