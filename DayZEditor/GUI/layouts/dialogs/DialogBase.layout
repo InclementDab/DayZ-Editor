@@ -34,7 +34,7 @@ GridSpacerWidgetClass EditorDialog {
    {
     PanelWidgetClass TitleBar {
      ignorepointer 1
-     color 0.7529 0.3686 0.3255 1
+     color 0.4196 0.6471 1 1
      size 1 32
      halign center_ref
      hexactpos 1
@@ -47,7 +47,7 @@ GridSpacerWidgetClass EditorDialog {
       TextWidgetClass TitleText {
        clipchildren 1
        ignorepointer 1
-       size 1 1
+       size 1 0.8
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -57,7 +57,7 @@ GridSpacerWidgetClass EditorDialog {
        scaled 1
        scriptclass "ViewBinding"
        text "DialogBox"
-       font "gui/fonts/MetronLight22"
+       font "gui/fonts/Metron"
        "italic text" 0
        "bold text" 0
        "text sharpness" 0.9
@@ -71,24 +71,39 @@ GridSpacerWidgetClass EditorDialog {
         }
        }
       }
-      ButtonWidgetClass TitleClose {
-       visible 1
-       ignorepointer 0
-       position 0 0
-       size 32 1
+      PanelWidgetClass TitleClosePanel {
+       ignorepointer 1
+       color 0.5137 0.2118 0.1804 1
+       position 5 0
+       size 25 25
        halign right_ref
+       valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 1
-       vexactsize 0
-       priority 5
-       scriptclass "ViewBinding"
-       style Default
-       text "X"
-       font "gui/fonts/Metron-Bold"
+       vexactsize 1
+       style rover_sim_colorable
        {
-        ScriptParamsClass {
-         Relay_Command "CloseDialog"
+        ButtonWidgetClass TitleClose {
+         visible 1
+         ignorepointer 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         priority 5
+         scriptclass "ViewBinding"
+         style Default
+         text "X"
+         font "gui/fonts/Metron-Bold"
+         {
+          ScriptParamsClass {
+           Relay_Command "CloseDialog"
+          }
+         }
         }
        }
       }
@@ -123,7 +138,7 @@ GridSpacerWidgetClass EditorDialog {
   }
   WrapSpacerWidgetClass DialogButtons {
    ignorepointer 1
-   color 0 0 0 1
+   color 0.0588 0.0588 0.0588 1
    position 0 0
    size 1 0.2
    halign center_ref
