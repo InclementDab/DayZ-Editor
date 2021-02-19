@@ -27,15 +27,10 @@ WrapSpacerWidgetClass EditBoxPrefab {
    scriptclass "ViewBinding"
    "text offset" -10 0
    "text halign" right
-   {
-    ScriptParamsClass {
-     Binding_Name "Caption"
-    }
-   }
   }
   TextWidgetClass ContentText {
    visible 1
-   size 0.7 1
+   size 0.7 0.9
    halign right_ref
    valign center_ref
    hexactpos 1
@@ -45,13 +40,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
    scriptclass "ViewBinding"
    style Normal
    font "gui/fonts/etelkatextpro"
-   "exact text" 1
-   {
-    ScriptParamsClass {
-     Binding_Name "Value"
-     Two_Way_Binding 0
-    }
-   }
+   "exact text" 0
   }
  }
 }
