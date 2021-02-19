@@ -1,5 +1,3 @@
-
-
 modded class InGameMenu
 {
 	override Widget Init()
@@ -27,13 +25,11 @@ modded class InGameMenu
 		return layoutRoot;
 	}
 	
-	
 	override void UpdateGUI() 
 	{
 		if (!IsMissionOffline())
 			super.UpdateGUI();
 	}
-	
 	
 	override void OnClick_Restart()
 	{
@@ -64,6 +60,4 @@ modded class InGameMenu
 		
 		GetEditor().CommandManager.ExitCommand.Execute(this, null);
 	}
-	
-	
 }

@@ -11,22 +11,7 @@ class EditorObjectManagerModule: JMModuleBase
 	private ref EditorObjectMap					m_WorldObjectIndex;
 	
 	static ref map<int, ref OLinkT> WorldObjects = new map<int, ref OLinkT>();
-	
-	EditorObjectMap GetSelectedObjects() 
-		return m_SelectedObjects; 
-	
-	EditorObjectMap GetPlacedObjects()
-		return m_PlacedObjects; 
 		
-	EditorObject GetPlacedObjectById(int id)
-		return m_PlacedObjects.Get(id); 
-	
-	EditorObject GetEditorObject(int id)
-		return m_PlacedObjects.Get(id); 
-	
-	EditorObject GetEditorObject(notnull Object world_object) 
-		return m_WorldObjectIndex.Get(world_object.GetID()); 
-	
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
 	
@@ -37,7 +22,6 @@ class EditorObjectManagerModule: JMModuleBase
 		m_PlacedObjects 	= new EditorObjectMap();
 		m_SelectedObjects 	= new EditorObjectMap();
 	}
-	
 	
 	EditorObject CreateObject(EditorObjectData editor_object_data)
 	{		
@@ -61,7 +45,6 @@ class EditorObjectManagerModule: JMModuleBase
 		EditorEvents.ObjectDeleted(this, target);		
 		delete target;
 	}
-	
 	
 	// Call to select an object
 	void SelectObject(EditorObject target)
@@ -120,16 +103,6 @@ class EditorObjectManagerModule: JMModuleBase
 		return deleted_objects;
 	}
 			
-	override bool IsClient() 
-	{	
-		return true;
-	}
-	
-	override bool IsServer() 
-	{
-		return true;
-	}
-	
 	override void OnMissionStart()
 	{
 		// On Load unhide em all
@@ -162,5 +135,41 @@ class EditorObjectManagerModule: JMModuleBase
 	{
 		return WorldObjects;
 	}
+	
+	EditorObjectMap GetSelectedObjects() 
+	{
+		return m_SelectedObjects; 
+	}
+	
+	EditorObjectMap GetPlacedObjects()
+	{
+		return m_PlacedObjects; 
+	}
+		
+	EditorObject GetPlacedObjectById(int id)
+	{
+		return m_PlacedObjects.Get(id); 
+	}
+	
+	EditorObject GetEditorObject(int id)
+	{
+		return m_PlacedObjects.Get(id); 
+	}
+	
+	EditorObject GetEditorObject(notnull Object world_object) 
+	{
+		return m_WorldObjectIndex.Get(world_object.GetID()); 
+	}
+	
+	override bool IsClient() 
+	{	
+		return true;
+	}
+	
+	override bool IsServer() 
+	{
+		return true;
+	}
+	
 }
 

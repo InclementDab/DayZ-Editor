@@ -1,10 +1,8 @@
-
 enum EditorClientModuleRPC
 {
 	INVALID = 36114,
 	COUNT
 };
-
 
 enum BetterMouseState {
 	LEFT = 1,
@@ -16,14 +14,15 @@ class EditorClientModule: JMModuleBase
 {
 	
 	// Public Members
-	void EditorClientModule() {
+	void EditorClientModule() 
+	{
 		EditorLog.Info("EditorClientModule");
 	}
 	
-	void ~EditorClientModule() {
+	void ~EditorClientModule() 
+	{
 		EditorLog.Info("~EditorClientModule");
 	}
-	
 	
 	// JMModuleBase Overrides
 	override void OnInit()
@@ -291,13 +290,11 @@ class EditorClientModule: JMModuleBase
 	{
 		return EditorClientModuleRPC.INVALID;
 	}
-	
 
 	override int GetRPCMax()
 	{
 		return EditorClientModuleRPC.COUNT;
 	}
-	
 	
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ref ParamsReadContext ctx)
 	{

@@ -7,7 +7,6 @@
 static int groupcount = 0;
 class EditorCollapsibleListItem: EditorListItem
 {
-
 	protected WrapSpacerWidget ListItemChildren;
 	
 	void EditorCollapsibleListItem(Widget parent) 
@@ -24,11 +23,9 @@ class EditorCollapsibleListItem: EditorListItem
 		ListItemChildren.Show(!args.GetButtonState());
 		return true;
 	}
-			
 	
 	bool ListItemExecute(ButtonCommandArgs args)
 	{
-		
 		switch (args.GetMouseButton()) {
 			
 			case 0: {
@@ -92,6 +89,4 @@ class EditorCollapsibleListItem: EditorListItem
 			item.SetNestIndex(index + 1);
 		}
 	}*/
-
-	
 }
