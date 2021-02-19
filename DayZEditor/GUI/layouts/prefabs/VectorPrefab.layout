@@ -43,7 +43,7 @@ PanelWidgetClass EditorPosElement {
     WrapSpacerWidgetClass frame_x {
      ignorepointer 1
      position 0 0
-     size 0.2 1
+     size 0.25 1
      hexactpos 1
      vexactpos 1
      hexactsize 0
@@ -95,21 +95,25 @@ PanelWidgetClass EditorPosElement {
        vexactpos 1
        hexactsize 1
        vexactsize 1
+       style blank
        {
-        EditBoxWidgetClass x_value {
+        MultilineEditBoxWidgetClass x_value {
          visible 1
-         size 1 24
+         size 0.9 0.9
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 1
+         vexactsize 0
          scriptclass "ViewBinding"
-         style Editor
+         style DayZNormal
          text "reee"
+         font "gui/fonts/MetronLight22"
          "exact text" 1
-         font "gui/fonts/etelkatextpro"
+         "text valign" center
+         lines 1
+         "limit visible" 0
          {
           ScriptParamsClass {
            Binding_Name "X"
@@ -124,7 +128,7 @@ PanelWidgetClass EditorPosElement {
     WrapSpacerWidgetClass frame_y {
      ignorepointer 1
      position 0 0
-     size 0.2 1
+     size 0.25 1
      hexactpos 1
      vexactpos 1
      hexactsize 0
@@ -178,20 +182,20 @@ PanelWidgetClass EditorPosElement {
        hexactsize 1
        vexactsize 1
        {
-        EditBoxWidgetClass y_value {
+        MultilineEditBoxWidgetClass y_value {
          visible 1
-         size 1 24
+         size 0.9 0.9
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 1
+         vexactsize 0
          scriptclass "ViewBinding"
-         style Editor
+         style DayZNormal
          text "reee"
+         font "gui/fonts/MetronLight22"
          "exact text" 1
-         font "gui/fonts/etelkatextpro"
          {
           ScriptParamsClass {
            Binding_Name "Y"
@@ -206,7 +210,7 @@ PanelWidgetClass EditorPosElement {
     WrapSpacerWidgetClass frame_z {
      ignorepointer 1
      position 0 0
-     size 0.2 1
+     size 0.25 1
      hexactpos 1
      vexactpos 1
      hexactsize 0
@@ -258,20 +262,20 @@ PanelWidgetClass EditorPosElement {
        hexactsize 1
        vexactsize 1
        {
-        EditBoxWidgetClass z_value {
+        MultilineEditBoxWidgetClass z_value {
          visible 1
-         size 1 24
+         size 0.9 0.9
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 1
+         vexactsize 0
          scriptclass "ViewBinding"
-         style Editor
+         style DayZNormal
          text "reee"
+         font "gui/fonts/MetronLight22"
          "exact text" 1
-         font "gui/fonts/etelkatextpro"
          {
           ScriptParamsClass {
            Binding_Name "Z"

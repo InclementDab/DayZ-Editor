@@ -19,7 +19,7 @@ WrapSpacerWidgetClass EditorDialogOption {
  content_valign center
  {
   ButtonWidgetClass EditorDialogOptionButton {
-   size 0.9 1
+   size 1 1
    halign center_ref
    hexactpos 1
    vexactpos 1
@@ -125,7 +125,7 @@ WrapSpacerWidgetClass EditorDialogOption {
    visible 1
    clipchildren 0
    ignorepointer 0
-   color 0.1569 0.1569 0.1569 0.5882
+   color 0 0 0 1
    position 0 1
    size 1 0
    halign center_ref
@@ -134,7 +134,7 @@ WrapSpacerWidgetClass EditorDialogOption {
    hexactsize 0
    vexactsize 1
    scriptclass "ViewBinding"
-   style Colorable
+   style Outline
    Padding 5
    Margin 0
    "Size To Content V" 1

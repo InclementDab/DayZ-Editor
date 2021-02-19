@@ -11,7 +11,6 @@ WrapSpacerWidgetClass EditBoxPrefab {
  style Colorable
  Padding 0
  Margin 5
- content_halign center
  content_valign center
  {
   TextWidgetClass Caption {
@@ -25,6 +24,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
    vexactsize 0
    scriptclass "ViewBinding"
    "text offset" -10 0
+   "size to text h" 0
    "text halign" right
    {
     ScriptParamsClass {
@@ -32,10 +32,10 @@ WrapSpacerWidgetClass EditBoxPrefab {
     }
    }
   }
-  EditBoxWidgetClass ContentText {
+  MultilineEditBoxWidgetClass ContentText {
    visible 1
    position 0 0
-   size 0.7 1
+   size 0.7 0.9
    halign center_ref
    valign center_ref
    hexactpos 1
@@ -43,11 +43,9 @@ WrapSpacerWidgetClass EditBoxPrefab {
    hexactsize 0
    vexactsize 0
    scriptclass "ViewBinding"
-   style Editor
-   text "test"
-   "Use default text" 0
+   style DayZNormal
+   font "gui/fonts/MetronLight22"
    "exact text" 1
-   font "gui/fonts/MetronLight"
    {
     ScriptParamsClass {
      Binding_Name "Value"

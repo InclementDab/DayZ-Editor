@@ -42,25 +42,30 @@ class EditorObject: EditorWorldObject
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 
-	void SetDisplayName(string display_name) {
+	void SetDisplayName(string display_name) 
+	{
 		m_Data.DisplayName = display_name;
 		m_EditorPlacedListItem.GetTemplateController().Label = m_Data.DisplayName;
 		m_EditorPlacedListItem.GetTemplateController().NotifyPropertyChanged("Label");
 	}
 	
-	string GetDisplayName() { 
+	string GetDisplayName() 
+	{
 		return m_Data.DisplayName; 
 	}
 	
-	string GetType() { 
+	string GetType() 
+	{
 		return m_Data.Type; 
 	}
 	
-	int GetID() { 
+	int GetID() 
+	{
 		return m_Data.GetID(); 
 	}
 
-	EditorObjectFlags GetFlags() {
+	EditorObjectFlags GetFlags() 
+	{
 		return m_Data.Flags;
 	}
 	
@@ -697,7 +702,7 @@ class EditorObject: EditorWorldObject
 				m_WorldObject.SetDynamicPhysicsLifeTime(-1);
 				dBodySetMass(m_WorldObject, 100);
 			} else {
-				m_WorldObject.SetDynamicPhysicsLifeTime(0);
+				m_WorldObject.SetDynamicPhysicsLifeTime(0.001);
 			}
 		}
 	}
