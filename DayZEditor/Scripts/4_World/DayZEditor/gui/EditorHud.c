@@ -86,6 +86,9 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 				EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
 				EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
 				EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
+				
+				int x_avg = (start_x + current_x) / 2;
+				EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, DRAG_BOX_FILL);
 							
 				EditorObjectMap placed_objects = g_Editor.GetPlacedObjects();
 				foreach (EditorObject editor_object: placed_objects) {
