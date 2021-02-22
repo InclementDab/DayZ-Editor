@@ -10,7 +10,7 @@ static const int LIST_ITEM_COLOR_ON_SELECTED = COLOR_BLUE;
 static const int LIST_ITEM_COLOR_ON_HOVER = COLOR_SALMON;
 static const string LIST_ITEM_DEFAULT_ICON = "DayZEditor/gui/images/dayz_editor_icon_black.edds";
 
-static const float BOUNDING_BOX_THICKNESS = 0.02;
+static const float BOUNDING_BOX_THICKNESS = 0.015;
 
 static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
 {
