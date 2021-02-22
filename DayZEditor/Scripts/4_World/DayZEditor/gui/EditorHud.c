@@ -114,7 +114,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		EditorCanvas.Clear();
 	}
 	
-	override string GetLayoutFile() {
+	override string GetLayoutFile() 
+	{
 		return "DayZEditor/gui/layouts/hud/EditorHud.layout";
 	}
 	
@@ -135,7 +136,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	// Dialog Control
 	static ref DialogBase CurrentDialog;
 	
-	static bool IsDialogCommand(Widget w) {
+	static bool IsDialogCommand(Widget w) 
+	{
 		return (CurrentDialog && CurrentDialog.GetLayoutRoot() && CurrentDialog.GetLayoutRoot().FindAnyWidget(w.GetName()));
 	}
 	
