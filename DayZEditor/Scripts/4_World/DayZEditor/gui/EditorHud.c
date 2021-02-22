@@ -73,7 +73,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	private void _DelayedDragBoxCheck(int start_x, int start_y)
 	{
 		int current_x, current_y;
-		while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
+		while ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && GetGame().GetInput().HasGameFocus()) {
 			GetMousePos(current_x, current_y);
 			// @Sumrak :ANGERY:
 			current_x += 6;
@@ -87,6 +87,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 				EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
 				EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
 				
+				// Handles the fill operation
 				int x_avg = (start_x + current_x) / 2;
 				EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, DRAG_BOX_FILL);
 							
