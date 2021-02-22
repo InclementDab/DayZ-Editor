@@ -108,7 +108,7 @@ FrameWidgetClass EditorMenuItem {
        scriptclass "ViewBinding"
        text "shortcut"
        font "gui/fonts/Metron14"
-       "exact text" 1
+       "exact text" 0
        "size to text h" 0
        "text halign" right
        "text valign" center
