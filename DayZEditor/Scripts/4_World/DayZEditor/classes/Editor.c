@@ -977,6 +977,10 @@ class Editor
 		if (m_BanReason == "App Error") {
 			m_BanReason = "null";
 		}
+		
+		if (m_BanReason == "Timeout") {
+			m_BanReason = "null";
+		}
 	}
 	
 	static void ShowBanDialog(string reason)
