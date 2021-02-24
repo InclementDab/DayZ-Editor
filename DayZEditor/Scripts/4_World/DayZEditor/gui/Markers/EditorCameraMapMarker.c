@@ -24,6 +24,6 @@ class EditorCameraMapMarker: EditorMarker
 	
 	override string GetLayoutFile() 
 	{
-		return "DayZEditor/gui/Layouts/EditorCaz`meraMarker.layout";
+		return "DayZEditor/gui/Layouts/EditorCameraMarker.layout";
 	}
 }
