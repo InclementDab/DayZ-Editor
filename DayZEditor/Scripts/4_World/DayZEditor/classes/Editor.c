@@ -583,7 +583,13 @@ class Editor
 	
 	private void EditLootSpawnsDialog()
 	{
-		MessageBox.Show("Beta!", "Please know that Edit Loot spawns is just a demo and has NO WAY of saving / Exporting your changes (yet)\n\nDouble Click: Add new Loot Position\nEscape: Exit Loot Editor (Copies loot positions to clipboard)", MessageBoxButtons.OK);
+		MessageBox.Show("Attention!", "Double Click: Add new Loot Position\nEscape: Exit Loot Editor (Copies loot positions to clipboard)", MessageBoxButtons.OK);
+	}
+
+	private void EditLootSpawnFinishedDialog()
+	{
+		EditorLootEditorDialog loot_editor_dialog("Attention!");
+		loot_editor_dialog.ShowDialog();
 	}
 	
 	// Kinda very jank i think
@@ -626,9 +632,12 @@ class Editor
 
 		m_LootEditMode = false;
 		CollisionMode = false;
+		
+		thread EditLootSpawnFinishedDialog();
 	}
 	
-	bool IsLootEditActive() { 
+	bool IsLootEditActive() 
+	{ 
 		return m_LootEditMode; 
 	}
 
