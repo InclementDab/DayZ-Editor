@@ -92,17 +92,17 @@
 	</Brush>
 
 	<Brush name="Quercus">
-		<BrushObject type="bldr_t_quercusRobur_2s" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="bldr_t_quercusRobur_2sb" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="bldr_t_quercusRobur_1fc" frequency="0.5" zoffset="-2"/>
-		<BrushObject type="bldr_t_FagusSylvatica_1d" frequency="0.03" zoffset="-2"/>
-		<BrushObject type="bldr_b_prunusSpinosa_1s" frequency="0.05" zoffset="-2"/>
-		<BrushObject type="bldr_b_crataegusLaevigata_1s" frequency="0.05" zoffset="-2"/>
-		<BrushObject type="bldr_b_BetulaPendula_1s" frequency="0.01" zoffset="-2"/>
-		<BrushObject type="bldr_b_rosaCanina_1s" frequency="0.03" zoffset="-2"/>
-		<BrushObject type="bldr_t_populusAlba_2s" frequency="0.05" zoffset="-2"/>
-		<BrushObject type="bldr_t_malusDomestica_3s" frequency="0.07" zoffset="-2"/>
-		<BrushObject type="bldr_t_robiniaPseudoacacia_1f" frequency="0.07" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_quercusRobur_2s" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_quercusRobur_2sb" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_quercusRobur_1fc" frequency="0.5" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_FagusSylvatica_1d" frequency="0.03" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_b_prunusSpinosa_1s" frequency="0.05" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_b_crataegusLaevigata_1s" frequency="0.05" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_b_BetulaPendula_1s" frequency="0.01" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_b_rosaCanina_1s" frequency="0.03" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_populusAlba_2s" frequency="0.05" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_malusDomestica_3s" frequency="0.07" zoffset="-2"/>
+		<BrushObject type="bldr_plnt_t_robiniaPseudoacacia_1f" frequency="0.07" zoffset="-2"/>
 	</Brush>
 
 	<Brush name="Grass">
