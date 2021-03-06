@@ -12,7 +12,8 @@ enum EditorObjectFlags {
 static int lowest_id;
 class EditorObjectData
 {	
-	private int m_Id;
+	[NonSerialized()]
+	int m_Id;
 	int GetID() { return m_Id; }
 	
 	string Type;
