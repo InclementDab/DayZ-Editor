@@ -45,7 +45,10 @@ class EditorSaveData
 	// Do NOT use a map here. ID is stored in EditorObjectData anyway
 	ref array<ref EditorObjectData> EditorObjects = {};
 	
+	// Depreciated
 	ref array<int> DeletedObjects = {};
+	
+	ref array<ref EditorDeletedObjectData> EditorDeletedObjects = {}; 
 		
 	void ~EditorSaveData()
 	{
@@ -76,8 +79,11 @@ class EditorSaveData
 				}
 			}
 		}
-		
-		save_data.DeletedObjects = editor.GetObjectManager().GetDeletedObjects();
+				
+		array<Object> deleted_objects = CF.ObjectManager.GetHiddenMapObjects();
+		foreach (Object deleted_object: deleted_objects) {
+			save_data.EditorDeletedObjects.Insert(new EditorDeletedObjectData(deleted_object.GetType(), deleted_object.GetPosition()));
+		}
 		
 		return save_data;
 	}
