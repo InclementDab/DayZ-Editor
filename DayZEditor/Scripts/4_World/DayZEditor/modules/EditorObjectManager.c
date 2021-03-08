@@ -121,27 +121,24 @@ class EditorObjectManagerModule: JMModuleBase
 	{
 		// On Load unhide em all
 		CF.ObjectManager.UnhideAllMapObjects();
+		
+		// Loads all world objects into a map
+		WorldObjects.Clear();
+		EditorLog.Info("Caching Map Objects");
+		
+		ref array<Object> objects = {};
+		ref array<CargoBase> cargos = {};
+		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 100000, objects, cargos);
+
+		foreach (Object o: objects) {
+			WorldObjects.Insert(o.GetID(), new OLinkT(o));
+		}
+		
+		EditorLog.Info("Cached %1 map objects", WorldObjects.Count().ToString());
 	}
 	
 	Object GetWorldObject(int id)
 	{
-		if (!WorldObjects) {
-			EditorLog.Error("Using old world object caching. This is slow, why are you using this?");
-			// Loads all world objects into a map
-			WorldObjects.Clear();
-			EditorLog.Info("Caching Map Objects");
-			
-			array<Object> objects = {};
-			array<CargoBase> cargos = {};
-			GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 100000, objects, cargos);
-	
-			foreach (Object o: objects) {
-				WorldObjects.Insert(o.GetID(), new OLinkT(o));
-			}
-			
-			EditorLog.Info("Cached %1 map objects", WorldObjects.Count().ToString());
-		}
-		
 		if (WorldObjects[id])
 			return WorldObjects[id].Ptr();
 		

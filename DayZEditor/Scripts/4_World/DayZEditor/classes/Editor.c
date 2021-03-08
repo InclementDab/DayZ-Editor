@@ -1021,6 +1021,7 @@ class Editor
 		GetGame().GetObjectsAtPosition3D(position, radius, objects, cargos);
 		
 		foreach (Object building: objects) {
+			Print(building.GetType());
 			if (building.GetType() == name) {
 				return building;
 			}
