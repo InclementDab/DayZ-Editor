@@ -82,7 +82,7 @@ class EditorSaveData
 				
 		array<Object> deleted_objects = CF.ObjectManager.GetHiddenMapObjects();
 		foreach (Object deleted_object: deleted_objects) {
-			save_data.EditorDeletedObjects.Insert(new EditorDeletedObjectData(deleted_object.GetType(), deleted_object.GetPosition() + "10000 10000 10000")); // thanks arkensor
+			save_data.EditorDeletedObjects.Insert(new EditorDeletedObjectData(deleted_object.GetType(), deleted_object.GetPosition()));
 		}
 		
 		return save_data;
