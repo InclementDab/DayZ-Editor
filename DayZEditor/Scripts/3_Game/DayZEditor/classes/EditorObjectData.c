@@ -1,3 +1,13 @@
+
+enum EditorObjectFlags {
+	NONE = 0,
+	BBOX = 2,
+	MAPMARKER = 4,
+	OBJECTMARKER = 8,
+	LISTITEM = 16,
+	ALL = 30 // 2 | 4 | 8 | 16
+};
+
 // temp until i can find a better way to find "First" in a map that doesnt blow the software up
 static int lowest_id;
 class EditorObjectData

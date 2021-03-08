@@ -7,7 +7,7 @@ class EditorTooltipController: Controller
 	
 	void ~EditorTooltipController()
 	{
-		//EditorLog.Trace("~EditorTooltipController");
+		EditorLog.Trace("~EditorTooltipController");
 #ifndef COMPONENT_SYSTEM
 		if (ContentItemData) {
 			GetWorkbenchGame().ObjectDelete(ContentItemData);

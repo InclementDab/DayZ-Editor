@@ -827,15 +827,9 @@ class Editor
 		}
 	}
 	
-	// Depreciated
 	bool HideMapObject(int id, bool create_undo = true)
 	{
 		return HideMapObject(m_ObjectManager.GetWorldObject(id), create_undo);
-	}
-	
-	bool HideMapObject(EditorDeletedObjectData deleted_object, bool create_undo = true)
-	{
-		return HideMapObject(FindObjectAtPosition(deleted_object.Name, deleted_object.Position, 0.1), create_undo);
 	}
 	
 	// Is CF.ObjectManager.IsMapObjectHidden busted?
@@ -1006,27 +1000,6 @@ class Editor
 		} else {
 			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", string.Format("You have been banned from using the DayZ Editor.\n%1\n If you believe this was in error, please contact InclementDab \# 0001 on Discord", reason), 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
 		}		
-	}
-	
-	static Object FindObjectAtPosition(string name, vector position, float radius)
-	{
-		// Radius was too big, building couldnt be found
-		if (radius > 10) {
-			EditorLog.Error("Could not find building %1", name);
-			return null;
-		}
-		
-		array<Object> objects = {};
-		array<CargoBase> cargos = {};
-		GetGame().GetObjectsAtPosition3D(position, radius, objects, cargos);
-		
-		foreach (Object building: objects) {
-			if (building.GetType() == name) {
-				return building;
-			}
-		}
-		
-		return FindObjectAtPosition(name, position, radius * 2);
 	}
 	
 	bool IsActive() return m_Active;

@@ -90,7 +90,6 @@ class EditorObjectManagerModule: JMModuleBase
 		m_SelectedObjects.Clear();
 	}
 	
-	/*
 	array<int> GetDeletedObjects()
 	{		
 		array<int> deleted_objects = {};
@@ -98,19 +97,6 @@ class EditorObjectManagerModule: JMModuleBase
 		foreach (Object obj: registered) {
 			if (obj) {
 				deleted_objects.Insert(obj.GetID());
-			}
-		}
-		
-		return deleted_objects;
-	}*/
-	
-	array<ref EditorDeletedObjectData> GetDeletedObjects()
-	{
-		array<ref EditorDeletedObjectData> deleted_objects = {};
-		array<Object> registered = CF.ObjectManager.GetHiddenMapObjects();
-		foreach (Object object: registered) {
-			if (object) {
-				deleted_objects.Insert(new EditorDeletedObjectData(object.GetType(), object.GetPosition()));
 			}
 		}
 		

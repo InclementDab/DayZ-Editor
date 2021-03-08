@@ -1,8 +1,7 @@
 class EditorWorldObject
 {
 	protected EntityAI m_WorldObject;
-	EntityAI GetWorldObject() 
-	{
+	EntityAI GetWorldObject() {
 		return m_WorldObject;
 	}
 	
