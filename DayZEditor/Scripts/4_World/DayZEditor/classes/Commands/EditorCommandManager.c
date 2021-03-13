@@ -52,6 +52,7 @@ class EditorCommandManager
 	ref EditorExportToVPP ExportToVPP;
 	ref EditorExportToCOM ExportToCOM;
 	ref EditorExportToEvents ExportToEvents;
+	ref EditorExportToMapGroupPos ExportToMapGroupPos;
 	
 	ref EditorImportFromInit ImportFromInitFile;
 	ref EditorImportFromExpansion ImportFromExpansionCommand;
