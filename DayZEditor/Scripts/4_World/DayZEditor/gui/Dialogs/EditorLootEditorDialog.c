@@ -10,6 +10,6 @@ class EditorLootEditorDialog: EditorDialogBase
 	
 	void OpenWiki()
 	{
-		GetGame().OpenURL("github.com/InclementDab/DayZ-Editor/wiki");
+		GetGame().OpenURL("github.com/InclementDab/DayZ-Editor/wiki/%5B8.1%5D-Manual-Loot-Editing-of-MapGroupProto.xml");
 	}
 }
