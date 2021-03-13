@@ -15,6 +15,7 @@ WrapSpacerWidgetClass CheckBoxPrefab {
  content_valign center
  {
   TextWidgetClass Caption {
+   clipchildren 0
    ignorepointer 1
    position 0 0
    size 0.4 1
