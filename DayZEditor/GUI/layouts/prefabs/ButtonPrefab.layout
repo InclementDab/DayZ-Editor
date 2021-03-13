@@ -41,6 +41,7 @@ PanelWidgetClass ButtonPanel {
        Binding_Name "Value"
        Selected_Item "Caption"
        Two_Way_Binding 1
+       Relay_Command "ButtonExecute"
       }
      }
     }

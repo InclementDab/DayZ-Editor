@@ -17,6 +17,6 @@ class DialogButton: ScriptView
 	}
 			
 	override string GetLayoutFile() {
-		return "DayZEditor/gui/Layouts/dialogs/DialogButton.layout";
+		return "DayZEditor/gui/Layouts/prefabs/ButtonPrefab.layout";
 	}
 }
