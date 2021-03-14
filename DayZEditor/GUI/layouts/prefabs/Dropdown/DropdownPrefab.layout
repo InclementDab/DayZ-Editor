@@ -69,16 +69,16 @@ GridSpacerWidgetClass DropdownPrefab {
      {
       PanelWidgetClass DropdownPrefabPanel {
        ignorepointer 1
-       color 0.0588 0.0588 0.0588 1
-       position 0 0
-       size 1 1
+       color 0.5098 0.5098 0.5098 1
+       position 0 0.5
+       size 0.9975 1.08
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       style rover_sim_colorable
+       style Outline
       }
       TextWidgetClass DropdownText {
        clipchildren 0
@@ -103,7 +103,7 @@ GridSpacerWidgetClass DropdownPrefab {
       FrameWidgetClass DropdownIconFrame {
        clipchildren 0
        ignorepointer 1
-       position 0 0
+       position 6 0
        size 1 1
        halign right_ref
        hexactpos 1
@@ -117,6 +117,7 @@ GridSpacerWidgetClass DropdownPrefab {
          clipchildren 0
          inheritalpha 1
          ignorepointer 1
+         position 0 0
          size 24 18
          halign center_ref
          valign center_ref

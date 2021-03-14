@@ -9,6 +9,7 @@ PanelWidgetClass EditorOptionSlider {
  {
   WrapSpacerWidgetClass EditorOptionSliderSpacer {
    ignorepointer 1
+   position -60 0
    size 0.8 24
    halign right_ref
    hexactpos 1
@@ -37,7 +38,7 @@ PanelWidgetClass EditorOptionSlider {
       PanelWidgetClass EditorOptionSliderPanel {
        ignorepointer 1
        position 0 0
-       size 525 24
+       size 525 20
        hexactpos 1
        vexactpos 1
        hexactsize 1
@@ -62,7 +63,7 @@ PanelWidgetClass EditorOptionSlider {
          {
           PanelWidgetClass EditorOptionSliderWraperPanel {
            color 0 0 0 1
-           size 1 24
+           size 1 21
            hexactpos 1
            vexactpos 1
            hexactsize 0
@@ -73,6 +74,7 @@ PanelWidgetClass EditorOptionSlider {
              clipchildren 0
              ignorepointer 1
              color 0.2667 0.2667 0.2667 1
+             position 4.4 -0.2
              size 1 1
              halign right_ref
              hexactpos 1
@@ -110,6 +112,7 @@ PanelWidgetClass EditorOptionSlider {
              clipchildren 0
              ignorepointer 1
              color 0.2667 0.2667 0.2667 1
+             position 4.032 0.124
              size 1 1
              hexactpos 1
              vexactpos 1
@@ -123,6 +126,7 @@ PanelWidgetClass EditorOptionSlider {
                clipchildren 0
                inheritalpha 1
                ignorepointer 1
+               position 0 0
                size 0.7 0.7
                halign center_ref
                valign center_ref
@@ -141,7 +145,9 @@ PanelWidgetClass EditorOptionSlider {
              }
             }
             SliderWidgetClass EditorOptionSliderSlider {
-             size 0.9 24
+             visible 1
+             color 0.3922 0.3922 0.3922 1
+             size 0.9 20
              halign center_ref
              hexactpos 1
              vexactpos 1
@@ -155,8 +161,8 @@ PanelWidgetClass EditorOptionSlider {
              {
               TextWidgetClass EditorOptionSliderReadout {
                ignorepointer 1
-               position 0 0
-               size 1 0.8
+               position -0.392 -0.384
+               size 1 0.96
                halign center_ref
                valign center_ref
                hexactpos 1
@@ -201,7 +207,8 @@ PanelWidgetClass EditorOptionSlider {
   }
   TextWidgetClass EditorOptionSliderLabel {
    ignorepointer 1
-   size 0.2 24
+   position 77.456 0
+   size 0.15966 24
    hexactpos 1
    vexactpos 1
    hexactsize 0

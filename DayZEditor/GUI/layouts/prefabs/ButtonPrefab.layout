@@ -1,6 +1,6 @@
 PanelWidgetClass ButtonPanel {
  position 0 0
- size 140 30
+ size 108 36
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -8,30 +8,32 @@ PanelWidgetClass ButtonPanel {
  priority 1
  draggable 0
  scriptclass ""
- style rover_sim_black_2
+ style blank
  {
   PanelWidgetClass ButtonOutline {
    ignorepointer 1
+   color 0.5294 0.5294 0.5294 1
    position 0 0
-   size 1 1
+   size 112 40
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 0
-   vexactsize 0
+   hexactsize 1
+   vexactsize 1
    style Outline
    {
     ButtonWidgetClass Button {
      disabled 0
      position 0 0
-     size 1 1
+     size 108 36
      halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
-     hexactsize 0
-     vexactsize 0
+     hexactsize 1
+     vexactsize 1
+     scaled 1
      scriptclass "ViewBinding"
      style Default
      "no focus" 0

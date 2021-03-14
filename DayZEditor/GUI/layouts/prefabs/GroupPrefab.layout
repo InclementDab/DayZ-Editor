@@ -103,8 +103,9 @@ WrapSpacerWidgetClass EditorDialogOption {
     }
     PanelWidgetClass EditorDialogOptionSpacer {
      ignorepointer 1
+     color 0.5882 0.5882 0.5882 1
      position 0 0
-     size 1 2
+     size 1 1
      halign center_ref
      valign bottom_ref
      hexactpos 1
