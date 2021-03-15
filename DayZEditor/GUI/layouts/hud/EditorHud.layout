@@ -1136,14 +1136,14 @@ FrameWidgetClass EditorFrame {
       ImageWidgetClass InfobarCamIcon {
        ignorepointer 1
        position 0.215 0
-       size 24 24
+       size 32 32
        halign right_ref
        valign center_ref
        hexactpos 0
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       image0 "set:dayz_editor_gui image:camera_icon"
+       image0 "set:dayz_editor_gui image:camera_alt"
        mode blend
        "src alpha" 1
        "no wrap" 1
@@ -1152,8 +1152,8 @@ FrameWidgetClass EditorFrame {
       GridSpacerWidgetClass InfobarCamPosFrame {
        visible 1
        ignorepointer 1
-       position 0.02 0
-       size 0.3 1
+       position 0.0015 0
+       size 1.2 1
        halign right_ref
        valign center_ref
        hexactpos 0
@@ -1168,208 +1168,318 @@ FrameWidgetClass EditorFrame {
        Columns 4
        Rows 1
        {
-        WrapSpacerWidgetClass Info_CamPos_X {
+        PanelWidgetClass Info_CamPos_X_Main {
          ignorepointer 1
-         position 0 0
-         size 0.3333 24
+         size 0.05 1
+         valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 1
-         Padding 0
-         Margin 0
-         content_halign center
-         content_valign center
+         vexactsize 0
          {
-          PanelWidgetClass Info_CamPos_X_Icon {
-           ignorepointer 1
-           color 0.7529 0.2235 0.1686 1
-           size 0.2 1
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           style rover_sim_colorable
-           {
-            TextWidgetClass Info_CamPos_X_IconLable {
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             text "X"
-             "text halign" center
-             "text valign" center
-            }
-           }
-          }
-          FrameWidgetClass Info_CamPos_X_Spacer {
-           ignorepointer 1
-           position 0 0
-           size 0.05 1
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-          }
-          EditBoxWidgetClass Info_CamPos_X_Value {
+          PanelWidgetClass Info_CamPos_X_Outline {
            visible 1
-           ignorepointer 0
-           position 0 0
-           size 0.75 1
+           clipchildren 0
+           ignorepointer 1
+           position -1.5 0.5
+           size 1.01 1.14
            halign right_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           scriptclass "ViewBinding"
-           style Default
-           text "0"
-           "limit visible" 0
-           "exact text" 1
-           font "gui/fonts/MetronBook22"
-           {
-            ScriptParamsClass {
-             Binding_Name "cam_x"
-             Two_Way_Binding 1
-            }
-           }
+           style Outline
           }
-         }
-        }
-        WrapSpacerWidgetClass Info_CamPos_Y {
-         ignorepointer 1
-         position 130 0
-         size 120 24
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         Padding 0
-         Margin 0
-         {
-          PanelWidgetClass Info_CamPos_Y_Icon {
+          WrapSpacerWidgetClass Info_CamPos_X {
            ignorepointer 1
-           color 0.1529 0.6824 0.3765 1
-           size 0.2 1
-           hexactpos 1
-           vexactpos 1
+           position -0.08 0.04
+           size 1.2 1
+           hexactpos 0
+           vexactpos 0
            hexactsize 0
            vexactsize 0
-           style rover_sim_colorable
+           Padding 0
+           Margin 0
+           content_halign center
+           content_valign center
            {
-            TextWidgetClass Info_CamPos_Y_IconLable {
+            PanelWidgetClass Info_CamPos_X_Icon {
              ignorepointer 1
+             color 0.7529 0.2235 0.1686 1
              position 0 0
-             size 1 1
+             size 0.17 0.95
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             style rover_sim_colorable
+             {
+              TextWidgetClass Info_CamPos_X_IconLable {
+               ignorepointer 1
+               position 0 0
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               text "X"
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+            FrameWidgetClass Info_CamPos_X_Spacer {
+             ignorepointer 1
+             size 0.03 1
              halign center_ref
              valign center_ref
              hexactpos 0
              vexactpos 0
              hexactsize 0
              vexactsize 0
-             text "Y"
-             "text halign" center
-             "text valign" center
             }
-           }
-          }
-          FrameWidgetClass Info_CamPos_Y_Spacer {
-           ignorepointer 1
-           position 0 0
-           size 0.05 1
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-          }
-          EditBoxWidgetClass Info_CamPos_Y_Value {
-           ignorepointer 0
-           size 0.75 1
-           halign right_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scriptclass "ViewBinding"
-           text "1000.5"
-           "exact text" 1
-           font "gui/fonts/MetronBook"
-           {
-            ScriptParamsClass {
-             Binding_Name "cam_y"
-             Two_Way_Binding 1
+            EditBoxWidgetClass Info_CamPos_X_Value {
+             visible 1
+             ignorepointer 0
+             position 0 0
+             size 0.65 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "ViewBinding"
+             style Default
+             text "0"
+             "limit visible" 0
+             "Use default text" 0
+             "exact text" 1
+             font "gui/fonts/MetronBook22"
+             {
+              ScriptParamsClass {
+               Binding_Name "cam_x"
+               Two_Way_Binding 1
+              }
+             }
             }
            }
           }
          }
         }
-        PanelWidgetClass Info_CamPos_Z {
+        PanelWidgetClass Info_CamPos_Y_Main {
          ignorepointer 1
-         position 255 0
-         size 120 24
+         size 0.05 1
+         valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          {
-          PanelWidgetClass Info_CamPos_Z_Icon {
+          PanelWidgetClass Info_CamPos_Y_Outline {
+           visible 1
+           clipchildren 0
            ignorepointer 1
-           color 0.1608 0.502 0.7255 1
-           size 0.2 1
+           position -2 0.5
+           size 1.0025 1.14
+           halign right_ref
+           valign center_ref
            hexactpos 1
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           style rover_sim_colorable
+           style Outline
+          }
+          WrapSpacerWidgetClass Info_CamPos_Y {
+           ignorepointer 1
+           position -0.06 0.04
+           size 1.2 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           Padding 0
+           Margin 0
+           content_halign center
+           content_valign center
            {
-            TextWidgetClass Info_CamPos_Z_IconLable {
+            PanelWidgetClass Info_CamPos_Y_Icon {
              ignorepointer 1
+             color 0.1529 0.6824 0.3765 1
              position 0 0
-             size 1 1
+             size 0.18 0.94
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             style rover_sim_colorable
+             {
+              TextWidgetClass Info_CamPos_Y_IconLable {
+               ignorepointer 1
+               position 0 0
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               text "Y"
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+            FrameWidgetClass Info_CamPos_Y_Spacer {
+             ignorepointer 1
+             size 0.03 1
              halign center_ref
              valign center_ref
              hexactpos 0
              vexactpos 0
              hexactsize 0
              vexactsize 0
-             text "Z"
-             "text halign" center
-             "text valign" center
+            }
+            EditBoxWidgetClass Info_CamPos_Y_Value {
+             visible 1
+             ignorepointer 0
+             position 0 0
+             size 0.65 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "ViewBinding"
+             style Default
+             text "0"
+             "limit visible" 0
+             "Use default text" 0
+             "exact text" 1
+             font "gui/fonts/MetronBook22"
+             {
+              ScriptParamsClass {
+               Binding_Name "cam_y"
+               Two_Way_Binding 1
+              }
+             }
             }
            }
           }
-          FrameWidgetClass Info_CamPos_Z_Spacer {
+         }
+        }
+        FrameWidgetClass Y_Z_Spacer {
+         clipchildren 0
+         ignorepointer 1
+         size 0.0005 1
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+        }
+        PanelWidgetClass Info_CamPos_Z_Main {
+         ignorepointer 1
+         size 0.05 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         {
+          PanelWidgetClass Info_CamPos_Z_Outline {
+           visible 1
+           clipchildren 0
            ignorepointer 1
-           position 0 0
-           size 0.05 1
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-          }
-          EditBoxWidgetClass Info_CamPos_Z_Value {
-           ignorepointer 0
-           position 0 0
-           size 0.75 1
+           position -2 0.5
+           size 1.01 1.14
            halign right_ref
+           valign center_ref
            hexactpos 1
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           scriptclass "ViewBinding"
-           text "1000.5"
-           "exact text" 1
-           font "gui/fonts/MetronBook"
+           style Outline
+          }
+          WrapSpacerWidgetClass Info_CamPos_Z {
+           ignorepointer 1
+           position 0 -0.03
+           size 1.2 1.01
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
            {
-            ScriptParamsClass {
-             Binding_Name "cam_z"
-             Two_Way_Binding 1
+            PanelWidgetClass Info_CamPos_Z_Icon {
+             ignorepointer 1
+             color 0.1608 0.502 0.7255 1
+             position 0 0
+             size 0.2 1.05
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             style rover_sim_colorable
+             {
+              TextWidgetClass Info_CamPos_Z_IconLable {
+               ignorepointer 1
+               position 0.03 -0.06
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               text "Z"
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+            FrameWidgetClass Info_CamPos_Z_Spacer {
+             ignorepointer 1
+             position 0 0
+             size 0.015 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+            }
+            EditBoxWidgetClass Info_CamPos_Z_Value {
+             visible 1
+             ignorepointer 0
+             position 0 0
+             size 0.65 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             scriptclass "ViewBinding"
+             style Default
+             text "0"
+             "limit visible" 0
+             "Use default text" 0
+             "exact text" 1
+             font "gui/fonts/MetronBook22"
+             {
+              ScriptParamsClass {
+               Binding_Name "cam_z"
+               Two_Way_Binding 1
+              }
+             }
             }
            }
           }

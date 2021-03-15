@@ -130,7 +130,7 @@ ImageSetClass {
   }
   ImageSetDefClass human {
    Name "human"
-   Pos 513 256
+   Pos 512 256
    Size 128 128
    Flags 0
   }
@@ -173,6 +173,36 @@ ImageSetClass {
   ImageSetDefClass camera_alt {
    Name "camera_alt"
    Pos 384 384
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass checkbox_1 {
+   Name "checkbox_1"
+   Pos 512 384
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass checkbox_mrk_1 {
+   Name "checkbox_mrk_1"
+   Pos 640 384
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass checkbox_2 {
+   Name "checkbox_2"
+   Pos 768 384
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass checkbox_mark_green {
+   Name "checkbox_mark_green"
+   Pos 896 384
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass checkbox_mark_white {
+   Name "checkbox_mark_white"
+   Pos 896 512
    Size 128 128
    Flags 0
   }

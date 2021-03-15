@@ -15,7 +15,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
  {
   TextWidgetClass Caption {
    ignorepointer 1
-   size 0.2 1
+   size 0.25 1
    halign center_ref
    valign center_ref
    hexactpos 1
@@ -35,8 +35,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
   }
   EditBoxWidgetClass ContentText {
    visible 1
-   position -1.4908 1.07669
-   size 0.59895 0.98972
+   size 0.59 1
    halign center_ref
    valign center_ref
    hexactpos 1

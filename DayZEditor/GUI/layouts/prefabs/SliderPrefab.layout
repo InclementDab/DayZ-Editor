@@ -9,8 +9,8 @@ PanelWidgetClass EditorOptionSlider {
  {
   WrapSpacerWidgetClass EditorOptionSliderSpacer {
    ignorepointer 1
-   position -60 0
-   size 0.8 24
+   position -28 0
+   size 0.75 24
    halign right_ref
    hexactpos 1
    vexactpos 1
@@ -207,8 +207,8 @@ PanelWidgetClass EditorOptionSlider {
   }
   TextWidgetClass EditorOptionSliderLabel {
    ignorepointer 1
-   position 77.456 0
-   size 0.15966 24
+   position 0 0
+   size 0.29 24
    hexactpos 1
    vexactpos 1
    hexactsize 0

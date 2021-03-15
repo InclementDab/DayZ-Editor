@@ -17,7 +17,6 @@ WrapSpacerWidgetClass CheckBoxPrefab {
   TextWidgetClass Caption {
    clipchildren 0
    ignorepointer 1
-   position 0 0
    size 0.4 1
    valign center_ref
    hexactpos 1
@@ -49,6 +48,33 @@ WrapSpacerWidgetClass CheckBoxPrefab {
      Two_Way_Binding 1
     }
    }
+  }
+  ImageWidgetClass NewCheckboxWhite {
+   position 10 10
+   size 24 24
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   image0 "set:dayz_editor_gui image:checkbox_2"
+  }
+  ImageWidgetClass CheckBoxWidget1 {
+   position 10 10
+   size 24 24
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   image0 "set:dayz_editor_gui image:checkbox_mark_green"
+  }
+  ImageWidgetClass CheckBoxWidget2 {
+   position 10 10
+   size 24 24
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   image0 "set:dayz_editor_gui image:checkbox_mark_white"
   }
  }
 }

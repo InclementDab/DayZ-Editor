@@ -50,8 +50,6 @@ PanelWidgetClass EditorPosElement {
      vexactsize 0
      Padding 0
      Margin 0
-     "Size To Content H" 1
-     "Size To Content V" 1
      content_valign center
      {
       PanelWidgetClass lbl_x0 {
@@ -59,13 +57,13 @@ PanelWidgetClass EditorPosElement {
        keepsafezone 0
        color 0.7647 0.1804 0.102 1
        position 0 0
-       size 24 24
+       size 0.18 1.01
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        style rover_sim_colorable
        {
         TextWidgetClass x0 {
@@ -89,16 +87,17 @@ PanelWidgetClass EditorPosElement {
       }
       PanelWidgetClass txt_x0 {
        ignorepointer 1
-       position 0 0
-       size 150 24
+       color 0.3529 0.3529 0.3529 0.0588
+       size 0.8 1
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       style blank
+       hexactsize 0
+       vexactsize 0
+       style editor_selection
        {
         MultilineEditBoxWidgetClass x_value {
          visible 1
+         clipchildren 1
          size 0.9 0.9
          halign center_ref
          valign center_ref
@@ -110,7 +109,11 @@ PanelWidgetClass EditorPosElement {
          style DayZNormal
          text "reee"
          font "gui/fonts/MetronLight22"
+         "text spacing" 0.5 0
          "exact text" 1
+         text_proportion 0
+         "size to text h" 1
+         "size to text v" 1
          "text valign" center
          lines 1
          "limit visible" 0
@@ -144,13 +147,13 @@ PanelWidgetClass EditorPosElement {
        keepsafezone 0
        color 0.5765 0.8157 0.2196 1
        position 0 0
-       size 24 24
+       size 0.18 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        style rover_sim_colorable
        {
         TextWidgetClass y {
@@ -175,12 +178,14 @@ PanelWidgetClass EditorPosElement {
       }
       PanelWidgetClass txt_y {
        ignorepointer 1
+       color 0.3529 0.3529 0.3529 0.0588
        position 0 0
-       size 150 24
+       size 0.8 1
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
+       style editor_selection
        {
         MultilineEditBoxWidgetClass y_value {
          visible 1
@@ -226,13 +231,13 @@ PanelWidgetClass EditorPosElement {
        keepsafezone 0
        color 0.2588 0.5176 0.9176 1
        position 0 0
-       size 24 24
+       size 0.18 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        style rover_sim_colorable
        {
         TextWidgetClass z {
@@ -255,12 +260,14 @@ PanelWidgetClass EditorPosElement {
       }
       PanelWidgetClass txt_z {
        ignorepointer 1
+       color 0.3529 0.3529 0.3529 0.0588
        position 0 0
-       size 150 24
+       size 0.8 1
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
+       style editor_selection
        {
         MultilineEditBoxWidgetClass z_value {
          visible 1
