@@ -29,6 +29,10 @@ class EditorOpenCommand: EditorImportCommandBase
 		}
 	}
 
+	override bool UnhideMapObjects()
+	{
+		return true;
+	}
 
 	override string GetName() 
 	{

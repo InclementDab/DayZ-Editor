@@ -40,7 +40,9 @@ class EditorImportCommandBase: EditorCommand
 			m_Editor.Clear();
 		}
 		
-		CF_ObjectManager.UnhideAllMapObjects();
+		if (UnhideMapObjects()) {
+			CF_ObjectManager.UnhideAllMapObjects();
+		}
 				
 		EditorLog.Info("Deleting %1 Objects", save_data.DeletedObjects.Count().ToString());
 		foreach (int id: save_data.DeletedObjects) {
@@ -58,6 +60,11 @@ class EditorImportCommandBase: EditorCommand
 		
 		m_Editor.GetEditorHud().CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.DeletedObjects.Count()), COLOR_GREEN);
 		return save_data;
+	}
+	
+	bool UnhideMapObjects()
+	{
+		return false;
 	}
 	
 	typename GetFileType();

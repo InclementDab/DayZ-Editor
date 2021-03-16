@@ -49,7 +49,9 @@ class EditorExportDialog: EditorDialogBase
 		
 		m_LayoutRoot.Show(true);
 		while (m_DialogResult == DialogResult.None) {
-			edit_data = edit_box.GetText();
+			if (edit_box) {
+				edit_data = edit_box.GetText();
+			}
 			export_settings.ExportSelectedOnly = EditorExportDialogController.Cast(m_Controller).export_selected;
 			Sleep(1);
 		}
