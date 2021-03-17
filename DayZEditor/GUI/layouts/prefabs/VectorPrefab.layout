@@ -98,7 +98,7 @@ PanelWidgetClass EditorPosElement {
         MultilineEditBoxWidgetClass x_value {
          visible 1
          clipchildren 1
-         size 0.9 0.9
+         size 0.89 0.9
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -116,7 +116,7 @@ PanelWidgetClass EditorPosElement {
          "size to text v" 1
          "text valign" center
          lines 1
-         "limit visible" 0
+         "limit visible" 1
          {
           ScriptParamsClass {
            Binding_Name "X"
@@ -201,6 +201,7 @@ PanelWidgetClass EditorPosElement {
          text "reee"
          font "gui/fonts/MetronLight22"
          "exact text" 1
+         "limit visible" 1
          {
           ScriptParamsClass {
            Binding_Name "Y"
@@ -283,6 +284,7 @@ PanelWidgetClass EditorPosElement {
          text "reee"
          font "gui/fonts/MetronLight22"
          "exact text" 1
+         "limit visible" 1
          {
           ScriptParamsClass {
            Binding_Name "Z"

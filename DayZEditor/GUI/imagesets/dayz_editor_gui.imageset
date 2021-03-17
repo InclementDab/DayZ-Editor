@@ -176,20 +176,20 @@ ImageSetClass {
    Size 128 128
    Flags 0
   }
-  ImageSetDefClass dze_checkbox_green {
-   Name "dze_checkbox_green"
+  ImageSetDefClass dzecheckboxgreen {
+   Name "dzecheckboxgreen"
    Pos 384 512
    Size 128 128
    Flags 0
   }
-  ImageSetDefClass dze_checkbox_blue {
-   Name "dze_checkbox_blue"
+  ImageSetDefClass dzecheckboxblue {
+   Name "dzecheckboxblue"
    Pos 384 640
    Size 128 128
    Flags 0
   }
-  ImageSetDefClass dze_checkbox_yellow {
-   Name "dze_checkbox_yellow"
+  ImageSetDefClass dzecheckboxyellow {
+   Name "dzecheckboxyellow"
    Pos 384 767
    Size 128 128
    Flags 0
