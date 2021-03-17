@@ -32,6 +32,7 @@ GameProjectClass {
 			widgetStyles {
 				"gui/looknfeel/dayzwidgets.styles" 
 				"gui/looknfeel/widgets.styles"
+				"DayZEditor/gui/looknfeel/editorwidgets.styles"
 			}
 			ScriptModules {
 				ScriptModulePathClass {

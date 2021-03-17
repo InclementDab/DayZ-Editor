@@ -35,6 +35,15 @@ class CfgMods
 					"DayZEditor/gui/imagesets/dayz_editor_gui.imageset"
 				};
 			};
+
+			class widgetStyles
+			{
+				files[]=
+				{
+					"DayZEditor/gui/looknfeel/editorwidgets.styles"
+				};
+			};
+
 			class engineScriptModule
 			{
 				value = "";

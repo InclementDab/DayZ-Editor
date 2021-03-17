@@ -41,7 +41,7 @@ WrapSpacerWidgetClass CheckBoxPrefab {
    hexactsize 1
    vexactsize 1
    scriptclass "ViewBinding"
-   style Default
+   style dze_checkbox_blue
    {
     ScriptParamsClass {
      Binding_Name "Value"
