@@ -115,4 +115,20 @@
             </State>
         </Style>
     </Widget>
+    <Widget Name="CheckBoxWidget">
+        <Style Name="dze_checkbox_blue" Font="gui/fonts/amorserifpro-bold" ImageSet="dayz_editor_gui" Color="4286578688">
+            <State Name="Disabled">
+                <Item Name="CheckBox" Image="dze_checkbox_darkgray" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="CheckBox" Image="dze_checkbox_blue" />
+            </State>
+            <State Name="Mark">
+                <Item Name="CheckBox" Image="dze_checkbox_mark_lightgray" />
+            </State>
+            <State Name="Normal">
+                <Item Name="CheckBox" Image="dze_checkbox_lightgray" />
+            </State>
+        </Style>
+    </Widget>
 </WidgetStyles>

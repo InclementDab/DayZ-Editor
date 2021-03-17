@@ -176,33 +176,93 @@ ImageSetClass {
    Size 128 128
    Flags 0
   }
-  ImageSetDefClass checkbox_1 {
-   Name "checkbox_1"
-   Pos 512 384
+  ImageSetDefClass dze_checkbox_green {
+   Name "dze_checkbox_green"
+   Pos 384 512
    Size 128 128
    Flags 0
   }
-  ImageSetDefClass checkbox_mrk_1 {
-   Name "checkbox_mrk_1"
-   Pos 640 384
+  ImageSetDefClass dze_checkbox_blue {
+   Name "dze_checkbox_blue"
+   Pos 384 640
    Size 128 128
    Flags 0
   }
-  ImageSetDefClass checkbox_2 {
-   Name "checkbox_2"
-   Pos 768 384
+  ImageSetDefClass dze_checkbox_yellow {
+   Name "dze_checkbox_yellow"
+   Pos 384 767
    Size 128 128
    Flags 0
   }
-  ImageSetDefClass checkbox_mark_green {
-   Name "checkbox_mark_green"
-   Pos 896 384
+  ImageSetDefClass dze_checkbox_white {
+   Name "dze_checkbox_white"
+   Pos 512 512
    Size 128 128
    Flags 0
   }
-  ImageSetDefClass checkbox_mark_white {
-   Name "checkbox_mark_white"
+  ImageSetDefClass dze_checkbox_lightgray {
+   Name "dze_checkbox_lightgray"
+   Pos 640 512
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass dze_checkbox_mediumgray {
+   Name "dze_checkbox_mediumgray"
+   Pos 768 512
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass dze_checkbox_darkgray {
+   Name "dze_checkbox_darkgray"
    Pos 896 512
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass dze_checkmark_white {
+   Name "dze_checkmark_white"
+   Pos 512 639
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass dze_checkmark_lightgray {
+   Name "dze_checkmark_lightgray"
+   Pos 640 639
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass dze_checkmark_mediumgray {
+   Name "dze_checkmark_mediumgray"
+   Pos 768 639
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass dze_checkmark_darkgray {
+   Name "dze_checkmark_darkgray"
+   Pos 896 639
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass dze_checkbox_mark_white {
+   Name "dze_checkbox_mark_white"
+   Pos 512 767
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass dze_checkbox_mark_lightgray {
+   Name "dze_checkbox_mark_lightgray"
+   Pos 640 767
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass dze_checkbox_mark_mediumgray {
+   Name "dze_checkbox_mark_mediumgray"
+   Pos 768 767
+   Size 128 128
+   Flags 0
+  }
+  ImageSetDefClass dze_checkbox_mark_darkgray {
+   Name "dze_checkbox_mark_darkgray"
+   Pos 896 767
    Size 128 128
    Flags 0
   }

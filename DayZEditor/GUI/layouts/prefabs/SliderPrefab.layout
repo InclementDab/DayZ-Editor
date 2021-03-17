@@ -146,8 +146,10 @@ PanelWidgetClass EditorOptionSlider {
             }
             SliderWidgetClass EditorOptionSliderSlider {
              visible 1
+             clipchildren 0
              color 0.3922 0.3922 0.3922 1
-             size 0.9 20
+             position 0 0
+             size 0.85 20
              halign center_ref
              hexactpos 1
              vexactpos 1
@@ -159,31 +161,58 @@ PanelWidgetClass EditorOptionSlider {
              current 0.5
              vertical 0
              {
-              TextWidgetClass EditorOptionSliderReadout {
-               ignorepointer 1
-               position -0.392 -0.384
-               size 1 0.96
+              EditBoxWidgetClass EditBoxWidget0 {
+               clipchildren 1
+               inheritalpha 0
+               size 0.1 1
                halign center_ref
                valign center_ref
-               hexactpos 1
-               vexactpos 1
+               hexactpos 0
+               vexactpos 0
                hexactsize 0
                vexactsize 0
+               scaled 1
                scriptclass "ViewBinding"
-               text "test"
-               font "gui/fonts/sdf_MetronBook24"
-               "outline size" 1
-               "outline color" 0 0 0 1
-               "shadow size" 2
-               "shadow color" 0 0 0 1
-               "shadow offset" 1 1
-               "bold text" 0
-               "exact text" 0
-               "text halign" center
-               "text valign" center
+               text "view dist"
+               "limit visible" 0
+               "exact text" 1
+               {
+                TextWidgetClass EditorOptionSliderReadout {
+                 visible 0
+                 clipchildren 0
+                 inheritalpha 0
+                 ignorepointer 1
+                 position 0 0
+                 size 1 1
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                 scriptclass "ViewBinding"
+                 text "test"
+                 font "gui/fonts/sdf_MetronBook24"
+                 "outline size" 1
+                 "outline color" 0 0 0 1
+                 "shadow size" 2
+                 "shadow color" 0 0 0 1
+                 "shadow offset" 1 1
+                 "bold text" 0
+                 "exact text" 0
+                 "text halign" center
+                 "text valign" center
+                 {
+                  ScriptParamsClass {
+                   Binding_Name "CalculatedValue"
+                  }
+                 }
+                }
+               }
                {
                 ScriptParamsClass {
-                 Binding_Name "CalculatedValue"
+                 Binding_Name "Value"
+                 Two_Way_Binding 1
                 }
                }
               }
