@@ -235,7 +235,7 @@ FrameWidgetClass EditorFrame {
     }
     CanvasWidgetClass EditorCanvas {
      ignorepointer 1
-     position 0.00001 0.00187
+     position 0 0
      size 1 1
      halign center_ref
      valign center_ref
@@ -250,7 +250,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 1
      ignorepointer 1
      position -0.001 0.06
-     size 0.25 0.91
+     size 0.18 0.91
      hexactpos 0
      vexactpos 0
      hexactsize 0
@@ -264,7 +264,7 @@ FrameWidgetClass EditorFrame {
        ignorepointer 1
        keepsafezone 1
        color 0.0196 0.0196 0.0196 0.6275
-       size 0.68 1.02
+       size 0.935 1.02
        hexactpos 0
        vexactpos 0
        hexactsize 0
@@ -554,7 +554,7 @@ FrameWidgetClass EditorFrame {
              ignorepointer 1
              color 0.1216 0.1216 0.1216 0.6275
              position 0 0
-             size 0.1 0.9
+             size 0.13 0.9
              halign right_ref
              hexactpos 0
              vexactpos 0
@@ -583,7 +583,7 @@ FrameWidgetClass EditorFrame {
              visible 1
              color 0.6353 0.6353 0.6353 1
              position 0.02 0
-             size 0.88 0.9
+             size 0.85 0.9
              hexactpos 0
              vexactpos 0
              hexactsize 0
@@ -624,7 +624,7 @@ FrameWidgetClass EditorFrame {
              ignorepointer 0
              keepsafezone 0
              color 0.3137 0.3137 0.3137 1
-             position 0.001 0.00339
+             position 0 0.0034
              size 1 0.94
              halign center_ref
              hexactpos 0
@@ -645,8 +645,8 @@ FrameWidgetClass EditorFrame {
                clipchildren 1
                ignorepointer 0
                keepsafezone 1
-               position -0.05 0
-               size 1.1 1
+               position 0.005 0
+               size 0.97 1
                halign center_ref
                hexactpos 0
                vexactpos 0
@@ -724,10 +724,10 @@ FrameWidgetClass EditorFrame {
     }
     WrapSpacerWidgetClass RightbarWrapper {
      visible 1
-     clipchildren 1
+     clipchildren 0
      ignorepointer 0
      position -0.002 0.054
-     size 0.25 0.92
+     size 0.19 0.92
      halign right_ref
      hexactpos 0
      vexactpos 0
@@ -745,7 +745,7 @@ FrameWidgetClass EditorFrame {
        keepsafezone 1
        color 0.0196 0.0196 0.0196 0.6275
        position 0 0
-       size 0.69 1
+       size 0.93 1
        hexactpos 0
        vexactpos 0
        hexactsize 0
@@ -773,12 +773,12 @@ FrameWidgetClass EditorFrame {
            visible 1
            ignorepointer 0
            keepsafezone 0
-           position 0 0
-           size 1 1
+           position -0.01 0
+           size 0.96 1
            halign center_ref
            valign center_ref
-           hexactpos 1
-           vexactpos 1
+           hexactpos 0
+           vexactpos 0
            hexactsize 0
            vexactsize 0
            scriptclass "ViewBinding"
@@ -903,7 +903,7 @@ FrameWidgetClass EditorFrame {
        clipchildren 1
        ignorepointer 1
        position 0 0
-       size 0.06 1
+       size 0.06 0.999
        hexactpos 0
        vexactpos 0
        hexactsize 0
@@ -913,7 +913,7 @@ FrameWidgetClass EditorFrame {
         ButtonWidgetClass RightbarHide {
          clipchildren 1
          color 0.2353 0.2353 0.2353 0.6667
-         position 0 0.946
+         position 0 0.948
          size 1 0.05
          hexactpos 0
          vexactpos 0
@@ -1093,7 +1093,7 @@ FrameWidgetClass EditorFrame {
                {
                 PanelWidgetClass Info_CamPos_X_Icon {
                  ignorepointer 1
-                 color 0.7529 0.2235 0.1686 1
+                 color 0.7647 0.1804 0.102 1
                  position 0 0
                  size 0.18 0.95
                  valign center_ref
@@ -1206,7 +1206,7 @@ FrameWidgetClass EditorFrame {
                {
                 PanelWidgetClass Info_CamPos_Y_Icon {
                  ignorepointer 1
-                 color 0.1529 0.6824 0.3765 1
+                 color 0.5765 0.8157 0.2196 1
                  position 0 0
                  size 0.18 0.95
                  valign center_ref
@@ -1319,7 +1319,7 @@ FrameWidgetClass EditorFrame {
                {
                 PanelWidgetClass Info_CamPos_Z_Icon {
                  ignorepointer 1
-                 color 0.1608 0.502 0.7255 1
+                 color 0.2588 0.4824 0.9176 1
                  position 0 0
                  size 0.18 0.95
                  valign center_ref

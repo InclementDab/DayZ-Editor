@@ -70,13 +70,42 @@ GridSpacerWidgetClass EditorMenuItem {
         }
        }
       }
+      ImageWidgetClass EditorMenuItemIcon {
+       visible 0
+       disabled 1
+       clipchildren 0
+       inheritalpha 1
+       ignorepointer 1
+       position 0.02 0
+       size 0.09 0.6
+       halign right_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       scriptclass "ViewBinding"
+       image0 ""
+       mode additive
+       "src alpha" 1
+       stretch 1
+       filter 0
+       nocache 0
+       pivot 0.5 0.5
+       {
+        ScriptParamsClass {
+         Binding_Name "IconPath"
+        }
+       }
+      }
       TextWidgetClass EditorMenuItemShortcut {
        visible 1
        clipchildren 0
        inheritalpha 0
        ignorepointer 1
-       position 0.03 0
-       size 0.3 1
+       position 0.2 0
+       size 0.85 1.3
        halign right_ref
        valign center_ref
        hexactpos 0
@@ -97,6 +126,28 @@ GridSpacerWidgetClass EditorMenuItem {
        }
       }
      }
+    }
+    ImageWidgetClass EditorMenuItemCategoryIcon {
+     visible 0
+     clipchildren 0
+     inheritalpha 0
+     ignorepointer 1
+     position 0 0
+     size 0.05 0.65
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     image0 "set:dayz_gui image:arrow_right"
+     mode additive
+     "src alpha" 1
+     "no wrap" 0
+     stretch 0
+     filter 1
+     nocache 0
+     pivot 0.5 0.5
     }
    }
    {

@@ -209,28 +209,41 @@ WrapSpacerWidgetClass ToolbarWrapper {
       }
       TextWidgetClass MenuCurrentFileNameCaption {
        ignorepointer 1
+       color 1 1 1 0.3922
        position 0 0
-       size 0.4 1
+       size 0.54 1
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 0
        text "Current File : "
+       font "gui/fonts/etelkatextpro"
        "exact text" 0
        "size to text v" 0
        "text halign" right
        "text valign" center
       }
+      PanelWidgetClass PanelWidget0 {
+       ignorepointer 1
+       position 568.38098 -124.28
+       size 0.005 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+      }
       TextWidgetClass MenuCurrentFileNameText {
        clipchildren 1
        ignorepointer 1
+       color 1 1 1 0.5098
        position 0 0
-       size 0.36 0.9
+       size 0.2 0.95
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 0
        style None
+       text "This is a file name"
        font "gui/fonts/etelkatextpro"
        "text offset" 0 2
        "exact text" 0
@@ -1056,7 +1069,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            scriptclass "ViewBinding"
-           font "gui/fonts/metron"
+           font "gui/fonts/etelkatextpro"
            "size to text h" 0
            "size to text v" 0
            "text halign" center
@@ -1066,19 +1079,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
              Binding_Name "BrushToggleButtonText"
             }
            }
-          }
-          PanelWidgetClass BrushButtonOutline {
-           visible 1
-           ignorepointer 1
-           position -0.001 0
-           size 1.015 1.12
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           style Outline
           }
          }
          {
@@ -1258,7 +1258,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        vexactsize 0
        {
         CheckBoxWidgetClass LockPlayer {
-         position 0 0
+         position 0 0.01
          size 1 0.85
          halign center_ref
          valign center_ref
@@ -1269,7 +1269,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          scriptclass "ViewBinding"
          style dze_checkbox_white
          text "Control Player"
-         font "gui/fonts/metron"
+         font "gui/fonts/etelkatextpro"
          checked 0
          {
           ScriptParamsClass {
