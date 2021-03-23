@@ -19,7 +19,7 @@ WrapSpacerWidgetClass EditorDialogOption {
  content_valign center
  {
   ButtonWidgetClass EditorDialogOptionButton {
-   size 1 1
+   size 0.99 1
    halign center_ref
    hexactpos 1
    vexactpos 1
@@ -85,6 +85,7 @@ WrapSpacerWidgetClass EditorDialogOption {
      clipchildren 0
      ignorepointer 1
      color 1 1 1 0.7843
+     position 0 0
      size 0.96 24
      halign right_ref
      hexactpos 1

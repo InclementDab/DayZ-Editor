@@ -1,15 +1,18 @@
 TextListboxWidgetClass ListBox {
+ color 1 1 1 0.9412
  position 0 0
- size 450 200
+ size 1 0.8
  halign center_ref
  valign center_ref
- hexactpos 1
- vexactpos 1
- hexactsize 1
- vexactsize 1
- scaled 0
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
+ scaled 1
  scriptclass "ViewBinding"
  style Editor
+ "title visible" 0
+ colums ""
  font "gui/fonts/MetronLight22"
  {
   ScriptParamsClass {

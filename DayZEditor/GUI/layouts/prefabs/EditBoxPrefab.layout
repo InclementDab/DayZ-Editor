@@ -1,10 +1,11 @@
 WrapSpacerWidgetClass EditBoxPrefab {
  visible 1
- size 1 24
+ position 0 0
+ size 0.9 28
  halign center_ref
  valign center_ref
- hexactpos 1
- vexactpos 1
+ hexactpos 0
+ vexactpos 0
  hexactsize 0
  vexactsize 1
  scriptclass ""
@@ -15,45 +16,69 @@ WrapSpacerWidgetClass EditBoxPrefab {
  {
   TextWidgetClass Caption {
    ignorepointer 1
-   size 0.25 1
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
+   size 0.22 1
+   hexactpos 0
+   vexactpos 0
    hexactsize 0
    vexactsize 0
    scriptclass "ViewBinding"
    text "test"
-   "text offset" -10 0
+   "text offset" 3 0
    "size to text h" 0
+   "size to text v" 1
    "text halign" right
+   "text valign" center
    {
     ScriptParamsClass {
      Binding_Name "Caption"
     }
    }
   }
-  EditBoxWidgetClass ContentText {
-   visible 1
-   size 0.59 1
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
+  PanelWidgetClass EditBoxSpacer {
+   ignorepointer 1
+   position 0 0
+   size 0.02 1
+   hexactpos 0
+   vexactpos 0
    hexactsize 0
    vexactsize 0
-   scriptclass "ViewBinding"
-   style Default
-   "exact text" 1
-   font "gui/fonts/MetronLight"
+  }
+  PanelWidgetClass Textthing {
+   ignorepointer 1
+   size 0.7 1
+   valign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
    {
+    EditBoxWidgetClass ContentText {
+     visible 1
+     position 0 0
+     size 0.98 0.84
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     scaled 1
+     scriptclass "ViewBinding"
+     font "gui/fonts/etelkatextpro"
+     {
+      ScriptParamsClass {
+       Binding_Name "Value"
+       Two_Way_Binding 1
+      }
+     }
+    }
     PanelWidgetClass EditBoxOutline {
-     clipchildren 0
+     clipchildren 1
      ignorepointer 1
      keepsafezone 0
-     color 0.4706 0.4706 0.4706 1
-     position 0.00038 0.00328
-     size 1.00946 1.17313
+     color 0.7059 0.7059 0.7059 1
+     position 0 0
+     size 1.006 1.06
      halign center_ref
      valign center_ref
      hexactpos 0
@@ -62,12 +87,6 @@ WrapSpacerWidgetClass EditBoxPrefab {
      vexactsize 0
      draggable 0
      style Outline
-    }
-   }
-   {
-    ScriptParamsClass {
-     Binding_Name "Value"
-     Two_Way_Binding 1
     }
    }
   }

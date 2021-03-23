@@ -1,49 +1,70 @@
 PanelWidgetClass ButtonPanel {
- position 0 0
- size 108 36
- hexactpos 1
- vexactpos 1
- hexactsize 1
- vexactsize 1
+ clipchildren 1
+ ignorepointer 1
+ size 0.21 0.52
+ halign center_ref
+ valign bottom_ref
+ hexactpos 0
+ vexactpos 0
+ hexactsize 0
+ vexactsize 0
  priority 1
  draggable 0
  scriptclass ""
  style blank
  {
-  PanelWidgetClass ButtonOutline {
+  PanelWidgetClass ButtonOutlineCutter {
+   visible 1
+   clipchildren 1
    ignorepointer 1
-   color 0.5294 0.5294 0.5294 1
-   position 0 0
-   size 112 40
+   size 1.057 1.14
    halign center_ref
    valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
    style Outline
    {
-    ButtonWidgetClass Button {
-     disabled 0
+    PanelWidgetClass ButtonOutline {
+     ignorepointer 1
+     color 0.8627 0.8627 0.8627 1
      position 0 0
-     size 108 36
+     size 0.964 0.94
      halign center_ref
      valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 1
-     scriptclass "ViewBinding"
-     style Default
-     "no focus" 0
-     font "gui/fonts/MetronLight"
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     style Outline
      {
-      ScriptParamsClass {
-       Binding_Name "Value"
-       Selected_Item "Caption"
-       Two_Way_Binding 1
-       Relay_Command "ButtonExecute"
+      ButtonWidgetClass Button {
+       disabled 0
+       clipchildren 1
+       color 0.1176 0.1176 0.1176 0.9412
+       position 0 0
+       size 1.01 1
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       scriptclass "ViewBinding"
+       style Default
+       "no focus" 0
+       text_proportion 0.7
+       font "gui/fonts/metron"
+       {
+        ScriptParamsClass {
+         Binding_Name "Value"
+         Selected_Item "Caption"
+         Two_Way_Binding 1
+         Relay_Command "ButtonExecute"
+        }
+       }
       }
      }
     }

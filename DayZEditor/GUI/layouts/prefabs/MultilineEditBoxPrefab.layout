@@ -1,29 +1,51 @@
 PanelWidgetClass ContentPanel {
  visible 1
- size 0.8 0.6
+ color 0.5882 0.5882 0.5882 0.1961
+ position 0 0
+ size 1 1
  halign center_ref
  valign center_ref
- hexactpos 1
- vexactpos 1
+ hexactpos 0
+ vexactpos 0
  hexactsize 0
  vexactsize 0
  scriptclass ""
- style rover_sim_blackbox
+ style Outline
  {
-  MultilineEditBoxWidgetClass ContentText {
-   visible 1
-   position 0 0
+  PanelWidgetClass ComtentBoxColor {
+   ignorepointer 1
+   color 0.2745 0.2745 0.2745 0.8235
    size 1 1
    halign center_ref
    valign center_ref
-   hexactpos 1
-   vexactpos 1
+   hexactpos 0
+   vexactpos 0
    hexactsize 0
    vexactsize 0
-   scriptclass ""
-   style DayZNormal
-   font "gui/fonts/sdf_MetronBook24"
-   "exact text" 1
+   style editor_selection
+   {
+    MultilineEditBoxWidgetClass ContentText {
+     visible 1
+     color 0.902 0.902 0.902 0.7843
+     position 0 0
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     scriptclass ""
+     style DayZNormal
+     font "gui/fonts/sdf_MetronBook24"
+     "exact text" 0
+     text_proportion 0
+     "size to text h" 0
+     "size to text v" 0
+     lines 100
+     "limit visible" 1
+    }
+   }
   }
  }
 }

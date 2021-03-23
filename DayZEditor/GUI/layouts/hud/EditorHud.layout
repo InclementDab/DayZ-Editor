@@ -4,12 +4,12 @@ FrameWidgetClass EditorFrame {
  clipchildren 0
  inheritalpha 0
  ignorepointer 1
- position 0 0
  size 1 1
  hexactpos 0
  vexactpos 0
  hexactsize 0
  vexactsize 0
+ scaled 0
  draggable 0
  scriptclass "EditorHudController"
  {
@@ -53,14 +53,14 @@ FrameWidgetClass EditorFrame {
     FrameWidgetClass DebugFrame {
      visible 0
      ignorepointer 1
-     position 300 32
-     size 600 150
+     position 0.2 0.03
+     size 0.34 0.18
      halign right_ref
      valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
      priority 250
      scriptclass ""
      {
@@ -235,25 +235,25 @@ FrameWidgetClass EditorFrame {
     }
     CanvasWidgetClass EditorCanvas {
      ignorepointer 1
-     position 0 0
+     position 0.00001 0.00187
      size 1 1
      halign center_ref
      valign center_ref
-     hexactpos 1
-     vexactpos 1
+     hexactpos 0
+     vexactpos 0
      hexactsize 0
      vexactsize 0
      priority 239
     }
     WrapSpacerWidgetClass LeftbarWrapper {
      visible 1
-     clipchildren 0
+     clipchildren 1
      ignorepointer 1
-     position 0 0.054
-     size 328 0.921
-     hexactpos 1
+     position -0.001 0.06
+     size 0.25 0.91
+     hexactpos 0
      vexactpos 0
-     hexactsize 1
+     hexactsize 0
      vexactsize 0
      Padding 0
      Margin 0
@@ -264,10 +264,10 @@ FrameWidgetClass EditorFrame {
        ignorepointer 1
        keepsafezone 1
        color 0.0196 0.0196 0.0196 0.6275
-       size 300 1
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
+       size 0.68 1.02
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
        vexactsize 0
        priority 1
        style rover_sim_colorable
@@ -275,14 +275,14 @@ FrameWidgetClass EditorFrame {
        {
         WrapSpacerWidgetClass LeftbarFrameWrapSpacer {
          visible 1
-         clipchildren 0
+         clipchildren 1
          ignorepointer 1
-         position 0 0
+         position 0.003 0
          size 1 1
          halign center_ref
          valign center_ref
-         hexactpos 1
-         vexactpos 1
+         hexactpos 0
+         vexactpos 0
          hexactsize 0
          vexactsize 0
          style Empty
@@ -296,10 +296,10 @@ FrameWidgetClass EditorFrame {
            ignorepointer 1
            color 0.0588 0.0588 0.0588 1
            position 0 0
-           size 1 0.06
+           size 1 0.05
            halign center_ref
-           hexactpos 1
-           vexactpos 1
+           hexactpos 0
+           vexactpos 0
            hexactsize 0
            vexactsize 0
            style rover_sim_colorable
@@ -308,173 +308,227 @@ FrameWidgetClass EditorFrame {
              visible 1
              ignorepointer 1
              color 0.6353 0.6353 0.6353 1
-             position 0 0
              size 1 1
              halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
+             hexactpos 0
+             vexactpos 0
              hexactsize 0
              vexactsize 0
              scriptclass ""
              style Empty
              Padding 0
              Margin 0
+             "Size To Content V" 1
              content_halign center
              content_valign center
              {
-              ButtonWidgetClass BuildingSelect {
+              WrapSpacerWidgetClass LeftBarFilterPanel {
                visible 1
-               color 0.7529 0.3686 0.3255 1
-               size 50 50
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 1
-               vexactsize 1
-               draggable 0
-               scriptclass "ViewBinding"
-               "no focus" 1
-               switch normal
-               {
-                ImageWidgetClass BuildingSelect_Icon {
-                 visible 1
-                 ignorepointer 1
-                 color 0.9882 0.9882 0.9882 1
-                 position 0 0
-                 size 50 50
-                 halign center_ref
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 image0 "set:dayz_editor_gui image:house"
-                 mode blend
-                 "src alpha" 1
-                 "no wrap" 1
-                 stretch 1
-                }
-               }
-               {
-                ScriptParamsClass {
-                 Binding_Name "BuildingSelectData"
-                 Two_Way_Binding 1
-                }
-               }
-              }
-              ButtonWidgetClass VehicleSelect {
-               color 0.7529 0.3686 0.3255 1
+               ignorepointer 1
                position 0 0
-               size 50 50
-               hexactpos 1
-               vexactpos 1
-               hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
-               "no focus" 1
-               switch normal
-               {
-                ImageWidgetClass VehicleSelect_Icon {
-                 ignorepointer 1
-                 color 0.9882 0.9882 0.9882 1
-                 position 2 0
-                 size 50 50
-                 halign center_ref
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 image0 "set:dayz_editor_gui image:car_front"
-                 mode blend
-                 "src alpha" 1
-                 "no wrap" 1
-                 stretch 1
-                }
-               }
-               {
-                ScriptParamsClass {
-                 Binding_Name "VehicleSelectData"
-                 Two_Way_Binding 1
-                }
-               }
-              }
-              ButtonWidgetClass EntitySelect {
-               color 0.7529 0.3686 0.3255 1
-               size 50 50
+               size 0.99 1
                halign center_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 1
-               vexactsize 1
-               draggable 0
-               scriptclass "ViewBinding"
-               "no focus" 1
-               switch normal
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
                {
-                ImageWidgetClass EntitySelect_Icon {
+                FrameWidgetClass FrameWidget3 {
                  ignorepointer 1
-                 color 0.9882 0.9882 0.9882 1
                  position 0 0
-                 size 50 50
-                 halign center_ref
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 image0 "set:dayz_editor_gui image:human"
-                 mode blend
-                 "src alpha" 1
-                 "no wrap" 1
-                 stretch 1
-                 "flip u" 1
+                 size 0.135 0.9
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
                 }
-               }
-               {
-                ScriptParamsClass {
-                 Binding_Name "EntitySelectData"
-                 Two_Way_Binding 1
-                }
-               }
-              }
-              ButtonWidgetClass HumanSelect {
-               visible 1
-               color 0.7529 0.3686 0.3255 1
-               position 0 0
-               size 50 50
-               hexactpos 1
-               vexactpos 1
-               hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
-               "no focus" 1
-               switch normal
-               {
-                ImageWidgetClass HumanSelect_Icon {
+                ButtonWidgetClass BuildingSelect {
                  visible 1
+                 color 0.7529 0.3686 0.3255 1
+                 position 0 0
+                 size 0.15 0.9
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                 draggable 0
+                 scriptclass "ViewBinding"
+                 "no focus" 1
+                 switch normal
+                 {
+                  ImageWidgetClass BuildingSelect_Icon {
+                   visible 1
+                   ignorepointer 1
+                   color 0.9882 0.9882 0.9882 1
+                   position 0 0
+                   size 1 0.95
+                   halign center_ref
+                   valign center_ref
+                   hexactpos 0
+                   vexactpos 0
+                   hexactsize 0
+                   vexactsize 0
+                   image0 "set:dayz_editor_gui image:house"
+                   mode blend
+                   "src alpha" 1
+                   "no wrap" 1
+                   stretch 1
+                  }
+                 }
+                 {
+                  ScriptParamsClass {
+                   Binding_Name "BuildingSelectData"
+                   Two_Way_Binding 1
+                  }
+                 }
+                }
+                FrameWidgetClass FrameWidget4 {
+                 ignorepointer 1
+                 size 0.02 0.9
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                }
+                ButtonWidgetClass VehicleSelect {
+                 visible 1
+                 color 0.7529 0.3686 0.3255 1
+                 size 0.15 0.9
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                 scriptclass "ViewBinding"
+                 "no focus" 1
+                 switch normal
+                 {
+                  ImageWidgetClass VehicleSelect_Icon {
+                   ignorepointer 1
+                   color 0.9882 0.9882 0.9882 1
+                   position 0 0
+                   size 1 1
+                   halign center_ref
+                   valign center_ref
+                   hexactpos 0
+                   vexactpos 0
+                   hexactsize 0
+                   vexactsize 0
+                   image0 "set:dayz_editor_gui image:car_front"
+                   mode blend
+                   "src alpha" 1
+                   "no wrap" 1
+                   stretch 1
+                  }
+                 }
+                 {
+                  ScriptParamsClass {
+                   Binding_Name "VehicleSelectData"
+                   Two_Way_Binding 1
+                  }
+                 }
+                }
+                FrameWidgetClass FrameWidget5 {
+                 ignorepointer 1
+                 size 0.02 0.9
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                }
+                ButtonWidgetClass EntitySelect {
+                 visible 1
+                 color 0.7529 0.3686 0.3255 1
+                 size 0.15 0.9
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                 draggable 0
+                 scriptclass "ViewBinding"
+                 "no focus" 1
+                 switch normal
+                 {
+                  ImageWidgetClass EntitySelect_Icon {
+                   ignorepointer 1
+                   color 0.9882 0.9882 0.9882 1
+                   position 0 0
+                   size 1 1
+                   halign center_ref
+                   valign center_ref
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 0
+                   vexactsize 0
+                   image0 "set:dayz_editor_gui image:human"
+                   mode blend
+                   "src alpha" 1
+                   "no wrap" 1
+                   stretch 1
+                   "flip u" 1
+                  }
+                 }
+                 {
+                  ScriptParamsClass {
+                   Binding_Name "EntitySelectData"
+                   Two_Way_Binding 1
+                  }
+                 }
+                }
+                FrameWidgetClass FrameWidget0 {
                  ignorepointer 1
                  position 0 0
-                 size 50 50
-                 halign center_ref
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 image0 "set:dayz_editor_gui image:human_head"
-                 mode blend
-                 "src alpha" 1
-                 "no wrap" 1
-                 stretch 1
+                 size 0.02 0.9
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
                 }
-               }
-               {
-                ScriptParamsClass {
-                 Binding_Name "HumanSelectData"
-                 Two_Way_Binding 1
+                ButtonWidgetClass HumanSelect {
+                 visible 1
+                 color 0.7529 0.3686 0.3255 1
+                 position 0 0
+                 size 0.15 0.9
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                 scriptclass "ViewBinding"
+                 "no focus" 1
+                 switch normal
+                 {
+                  ImageWidgetClass HumanSelect_Icon {
+                   visible 1
+                   ignorepointer 1
+                   position 0 0
+                   size 1 1
+                   halign center_ref
+                   valign center_ref
+                   hexactpos 0
+                   vexactpos 0
+                   hexactsize 0
+                   vexactsize 0
+                   image0 "set:dayz_editor_gui image:human_head"
+                   mode blend
+                   "src alpha" 1
+                   "no wrap" 1
+                   stretch 1
+                  }
+                 }
+                 {
+                  ScriptParamsClass {
+                   Binding_Name "HumanSelectData"
+                   Two_Way_Binding 1
+                  }
+                 }
+                }
+                FrameWidgetClass FrameWidget2 {
+                 ignorepointer 1
+                 position 0 0
+                 size 0.135 0.9
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
                 }
                }
               }
@@ -483,25 +537,27 @@ FrameWidgetClass EditorFrame {
            }
           }
           PanelWidgetClass LeftbarPanelSearchBarPanel {
+           visible 1
            ignorepointer 1
            color 0.098 0.098 0.098 1
-           position 0 0
-           size 1 0.03
+           position 0 0.18
+           size 1 0.045
            halign center_ref
-           hexactpos 1
+           hexactpos 0
            vexactpos 0
            hexactsize 0
            vexactsize 0
-           priority 1
            style rover_sim_colorable
            {
             PanelWidgetClass LeftbarPanelSearchBarIconSpacer {
+             visible 1
              ignorepointer 1
              color 0.1216 0.1216 0.1216 0.6275
-             size 0.1 1
+             position 0 0
+             size 0.1 0.9
              halign right_ref
-             hexactpos 1
-             vexactpos 1
+             hexactpos 0
+             vexactpos 0
              hexactsize 0
              vexactsize 0
              style rover_sim_colorable
@@ -524,11 +580,12 @@ FrameWidgetClass EditorFrame {
              }
             }
             EditBoxWidgetClass LeftbarSearchBar {
+             visible 1
              color 0.6353 0.6353 0.6353 1
              position 0.02 0
-             size 0.88 1
+             size 0.88 0.9
              hexactpos 0
-             vexactpos 1
+             vexactpos 0
              hexactsize 0
              vexactsize 0
              scriptclass "ViewBinding"
@@ -537,7 +594,7 @@ FrameWidgetClass EditorFrame {
              "limit visible" 0
              "Use default text" 1
              "exact text" 1
-             font "gui/fonts/sdf_MetronBook24"
+             font "gui/fonts/metronbook"
              {
               ScriptParamsClass {
                Binding_Name "SearchBarData"
@@ -550,35 +607,35 @@ FrameWidgetClass EditorFrame {
           PanelWidgetClass LeftbarPanelHost {
            visible 1
            disabled 0
-           clipchildren 0
+           clipchildren 1
+           inheritalpha 0
            ignorepointer 0
            color 0.302 0.302 0.302 0.3059
-           position 0 0.06
-           size 1 0.97
-           halign right_ref
-           hexactpos 1
+           size 1 1
+           halign center_ref
+           hexactpos 0
            vexactpos 0
            hexactsize 0
            vexactsize 0
-           priority 2
            style rover_sim_colorable
            {
             ScrollWidgetClass LeftbarScroll {
              clipchildren 1
              ignorepointer 0
-             keepsafezone 1
-             color 0.0196 0.0196 0.0196 0.6275
-             size 1 1
+             keepsafezone 0
+             color 0.3137 0.3137 0.3137 1
+             position 0.001 0.00339
+             size 1 0.94
              halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
+             hexactpos 0
+             vexactpos 0
              hexactsize 0
              vexactsize 0
              scriptclass ""
              style blank
              "next left" ""
              "next right" ""
+             "Ignore invisible" 0
              "Scrollbar V" 1
              "Scrollbar V Left" 1
              {
@@ -588,19 +645,19 @@ FrameWidgetClass EditorFrame {
                clipchildren 1
                ignorepointer 0
                keepsafezone 1
-               position 0 0
-               size 1 1
+               position -0.05 0
+               size 1.1 1
                halign center_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
+               hexactpos 0
+               vexactpos 0
                hexactsize 0
                vexactsize 0
                scriptclass "ViewBinding"
                Padding 0
                Margin 0
-               "Size To Content H" 1
                "Size To Content V" 1
+               content_halign center
+               content_valign center
                {
                 ScriptParamsClass {
                  Binding_Name "LeftbarSpacerData"
@@ -619,24 +676,24 @@ FrameWidgetClass EditorFrame {
        visible 1
        ignorepointer 1
        position 0 0
-       size 28 1
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
+       size 0.06 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
        vexactsize 0
        priority 1
        {
         ButtonWidgetClass LeftbarHide {
          visible 1
          clipchildren 1
-         color 0.302 0.302 0.302 0.3922
-         position 0 40
-         size 28 44
+         color 0.2353 0.2353 0.2353 0.6667
+         position 0 0.95
+         size 1 0.05
          halign right_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
          scriptclass "ViewBinding"
          style DayZDefaultButtonNoBorder
          switch toggle
@@ -645,8 +702,8 @@ FrameWidgetClass EditorFrame {
            ignorepointer 1
            position 0 0
            size 1 1
-           hexactpos 1
-           vexactpos 1
+           hexactpos 0
+           vexactpos 0
            hexactsize 0
            vexactsize 0
            image0 "set:dayz_gui image:arrow_left"
@@ -669,12 +726,12 @@ FrameWidgetClass EditorFrame {
      visible 1
      clipchildren 1
      ignorepointer 0
-     position 0 0.054
-     size 328 0.921
+     position -0.002 0.054
+     size 0.25 0.92
      halign right_ref
-     hexactpos 1
+     hexactpos 0
      vexactpos 0
-     hexactsize 1
+     hexactsize 0
      vexactsize 0
      style Colorable
      Padding 0
@@ -688,10 +745,10 @@ FrameWidgetClass EditorFrame {
        keepsafezone 1
        color 0.0196 0.0196 0.0196 0.6275
        position 0 0
-       size 300 1
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
+       size 0.69 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
        vexactsize 0
        priority 1
        style rover_sim_colorable
@@ -699,12 +756,14 @@ FrameWidgetClass EditorFrame {
         ScrollWidgetClass RightbarScroll {
          visible 1
          ignorepointer 0
-         keepsafezone 1
-         color 0.0196 0.0196 0.0196 1
-         size 1 0.965
-         halign center_ref
-         hexactpos 1
-         vexactpos 1
+         keepsafezone 0
+         color 0.3137 0.3137 0.3137 1
+         position 0.011 -0.016
+         size 1 0.953
+         halign right_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
          hexactsize 0
          vexactsize 0
          style blank
@@ -740,11 +799,12 @@ FrameWidgetClass EditorFrame {
         PanelWidgetClass RightbarCreatePanel {
          ignorepointer 1
          color 0.1569 0.1569 0.1569 1
+         position 0 0.0025
          size 1 0.035
          halign center_ref
          valign bottom_ref
-         hexactpos 1
-         vexactpos 1
+         hexactpos 0
+         vexactpos 0
          hexactsize 0
          vexactsize 0
          style rover_sim_colorable
@@ -765,12 +825,13 @@ FrameWidgetClass EditorFrame {
            content_valign center
            {
             ButtonWidgetClass ButtonCreateFolder {
-             size 30 30
+             position 0 0
+             size 0.075 0.8
              valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 1
-             vexactsize 1
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
              scriptclass "ViewBinding"
              {
               ImageWidgetClass ButtonCreateFolderImage {
@@ -779,8 +840,8 @@ FrameWidgetClass EditorFrame {
                size 1 1
                halign center_ref
                valign center_ref
-               hexactpos 1
-               vexactpos 1
+               hexactpos 0
+               vexactpos 0
                hexactsize 0
                vexactsize 0
                image0 ""
@@ -800,23 +861,24 @@ FrameWidgetClass EditorFrame {
            }
           }
           ButtonWidgetClass ButtonDelete {
-           position 15 0
-           size 30 30
+           position 0.06 0
+           size 0.07 0.8
            halign right_ref
            valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
            scriptclass "ViewBinding"
            {
             ImageWidgetClass ButtonDeleteImage {
              ignorepointer 1
+             position 0 0
              size 1 1
              halign right_ref
              valign center_ref
-             hexactpos 1
-             vexactpos 1
+             hexactpos 0
+             vexactpos 0
              hexactsize 0
              vexactsize 0
              image0 ""
@@ -841,35 +903,36 @@ FrameWidgetClass EditorFrame {
        clipchildren 1
        ignorepointer 1
        position 0 0
-       size 28 1
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
+       size 0.06 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
        vexactsize 0
        priority 1
        {
         ButtonWidgetClass RightbarHide {
          clipchildren 1
-         color 0.302 0.302 0.302 0.3922
-         position 0 60
-         size 28 44
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         color 0.2353 0.2353 0.2353 0.6667
+         position 0 0.946
+         size 1 0.05
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
          scriptclass "ViewBinding"
          style DayZDefaultButtonNoBorder
          switch toggle
          {
           ImageWidgetClass RightbarHideIcon {
            visible 1
+           clipchildren 0
            ignorepointer 1
            position 0 0
            size 1 1
            halign center_ref
            valign center_ref
-           hexactpos 1
-           vexactpos 1
+           hexactpos 0
+           vexactpos 0
            hexactsize 0
            vexactsize 0
            scaled 1
@@ -878,9 +941,11 @@ FrameWidgetClass EditorFrame {
            mode blend
            "src alpha" 1
            "no wrap" 0
-           stretch 1
+           stretch 0
            "flip u" 0
            "flip v" 0
+           nocache 1
+           pivot 0 0
           }
          }
          {
@@ -915,23 +980,489 @@ FrameWidgetClass EditorFrame {
     PanelWidgetClass InfobarFrame {
      ignorepointer 1
      color 0.0588 0.0588 0.0588 1
-     position 0 0
-     size 1 0.025
-     halign center_ref
+     size 1 0.03
+     halign right_ref
      valign bottom_ref
      hexactpos 0
-     vexactpos 1
+     vexactpos 0
      hexactsize 0
      vexactsize 0
      scaled 1
      priority 1
      style rover_sim_colorable
      {
+      WrapSpacerWidgetClass INFOBARWRAPPERKEEPSHITIN {
+       ignorepointer 1
+       position 0 0.07
+       size 1 1
+       halign right_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       content_halign right
+       content_valign bottom
+       {
+        FrameWidgetClass NotificationFrame {
+         visible 1
+         ignorepointer 1
+         position 0 0.03
+         size 1 0.06
+         halign center_ref
+         hexactpos 1
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+        }
+        FrameWidgetClass CameraTextVectorSpacer {
+         ignorepointer 1
+         position 0 0
+         size 0.005 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+        }
+        FrameWidgetClass InfobarCamPosFrame {
+         visible 1
+         ignorepointer 1
+         position 0 0
+         size 0.21 1
+         halign right_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         {
+          WrapSpacerWidgetClass FrameWidget1 {
+           ignorepointer 1
+           position 0.08 -0.03
+           size 1 0.96
+           halign center_ref
+           valign bottom_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           Padding 0
+           Margin 0
+           {
+            PanelWidgetClass Info_CamPos_X_Main {
+             ignorepointer 1
+             position 0 0
+             size 0.3 0.9
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             {
+              PanelWidgetClass Info_CamPos_X_Outline {
+               visible 1
+               clipchildren 1
+               ignorepointer 1
+               position 0 0.01
+               size 1.01 1.1
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               style Outline
+              }
+              WrapSpacerWidgetClass Info_CamPos_X {
+               clipchildren 0
+               ignorepointer 1
+               position -0.07 0.03
+               size 1.1 0.98
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               Padding 0
+               Margin 0
+               "Size To Content H" 1
+               content_halign center
+               content_valign center
+               {
+                PanelWidgetClass Info_CamPos_X_Icon {
+                 ignorepointer 1
+                 color 0.7529 0.2235 0.1686 1
+                 position 0 0
+                 size 0.18 0.95
+                 valign center_ref
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                 style rover_sim_colorable
+                 {
+                  TextWidgetClass Info_CamPos_X_IconLable {
+                   ignorepointer 1
+                   position 0 0
+                   size 1 1
+                   halign center_ref
+                   valign center_ref
+                   hexactpos 0
+                   vexactpos 0
+                   hexactsize 0
+                   vexactsize 0
+                   text "X"
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+                FrameWidgetClass Info_CamPos_X_Spacer {
+                 ignorepointer 1
+                 size 0.03 1
+                 valign center_ref
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                }
+                EditBoxWidgetClass Info_CamPos_X_Value {
+                 visible 1
+                 clipchildren 1
+                 ignorepointer 0
+                 size 0.65 0.9
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                 scaled 1
+                 scriptclass "ViewBinding"
+                 style Default
+                 "limit visible" 1
+                 "Use default text" 0
+                 "exact text" 0
+                 font "gui/fonts/etelkatextpro"
+                 {
+                  ScriptParamsClass {
+                   Binding_Name "cam_x"
+                   Two_Way_Binding 1
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+            FrameWidgetClass X_Y_Spacer {
+             ignorepointer 1
+             position 0 0
+             size 0.01 1
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+            }
+            PanelWidgetClass Info_CamPos_Y_Main {
+             ignorepointer 1
+             position 0 0
+             size 0.3 0.9
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             {
+              PanelWidgetClass Info_CamPos_Y_Outline {
+               visible 1
+               clipchildren 0
+               ignorepointer 1
+               position -0.01 0.01
+               size 1.01 1.1
+               halign right_ref
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               style Outline
+              }
+              WrapSpacerWidgetClass Info_CamPos_Y {
+               ignorepointer 1
+               position -0.07 0.03
+               size 1.1 0.98
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               Padding 0
+               Margin 0
+               content_halign center
+               content_valign center
+               {
+                PanelWidgetClass Info_CamPos_Y_Icon {
+                 ignorepointer 1
+                 color 0.1529 0.6824 0.3765 1
+                 position 0 0
+                 size 0.18 0.95
+                 valign center_ref
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                 style rover_sim_colorable
+                 {
+                  TextWidgetClass Info_CamPos_Y_IconLable {
+                   ignorepointer 1
+                   position 0 0
+                   size 1 1
+                   halign center_ref
+                   valign center_ref
+                   hexactpos 0
+                   vexactpos 0
+                   hexactsize 0
+                   vexactsize 0
+                   text "Y"
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+                FrameWidgetClass Info_CamPos_Y_Spacer {
+                 ignorepointer 1
+                 size 0.03 1
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                }
+                EditBoxWidgetClass Info_CamPos_Y_Value {
+                 visible 1
+                 ignorepointer 0
+                 position 0 0
+                 size 0.65 0.9
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 scriptclass "ViewBinding"
+                 style Default
+                 text "0"
+                 "limit visible" 1
+                 "Use default text" 0
+                 "exact text" 0
+                 font "gui/fonts/MetronBook22"
+                 {
+                  ScriptParamsClass {
+                   Binding_Name "cam_y"
+                   Two_Way_Binding 1
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+            FrameWidgetClass Y_Z_Spacer {
+             clipchildren 0
+             ignorepointer 1
+             position 0 0
+             size 0.01 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+            }
+            PanelWidgetClass Info_CamPos_Z_Main {
+             ignorepointer 1
+             position 0 0
+             size 0.3 0.9
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             {
+              PanelWidgetClass Info_CamPos_Z_Outline {
+               visible 1
+               clipchildren 0
+               ignorepointer 1
+               position -0.01 0.01
+               size 1.01 1.1
+               halign right_ref
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               style Outline
+              }
+              WrapSpacerWidgetClass Info_CamPos_Z {
+               ignorepointer 1
+               position 0 -0.03
+               size 1.1 0.98
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               {
+                PanelWidgetClass Info_CamPos_Z_Icon {
+                 ignorepointer 1
+                 color 0.1608 0.502 0.7255 1
+                 position 0 0
+                 size 0.18 0.95
+                 valign center_ref
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                 style rover_sim_colorable
+                 {
+                  TextWidgetClass Info_CamPos_Z_IconLable {
+                   ignorepointer 1
+                   position 0 0
+                   size 1 1
+                   halign center_ref
+                   valign center_ref
+                   hexactpos 0
+                   vexactpos 0
+                   hexactsize 0
+                   vexactsize 0
+                   text "Z"
+                   "text halign" center
+                   "text valign" center
+                  }
+                 }
+                }
+                FrameWidgetClass Info_CamPos_Z_Spacer {
+                 ignorepointer 1
+                 position 0 0
+                 size 0.01 1
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                }
+                EditBoxWidgetClass Info_CamPos_Z_Value {
+                 visible 1
+                 ignorepointer 0
+                 position 0 0
+                 size 0.65 0.9
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 0
+                 vexactpos 0
+                 hexactsize 0
+                 vexactsize 0
+                 scriptclass "ViewBinding"
+                 style Default
+                 text "0"
+                 "limit visible" 1
+                 "Use default text" 0
+                 "exact text" 0
+                 font "gui/fonts/MetronBook22"
+                 {
+                  ScriptParamsClass {
+                   Binding_Name "cam_z"
+                   Two_Way_Binding 1
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+        TextWidgetClass InfobarCameraPositionText {
+         clipchildren 1
+         ignorepointer 1
+         position 0 0
+         size 0.08 0.95
+         halign right_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "Camera Position"
+         font "gui/fonts/etelkatextpro"
+         "exact text" 0
+         "size to text h" 1
+         "size to text v" 0
+         "text halign" right
+         "text valign" center
+        }
+        FrameWidgetClass CameraIconTextSpacer {
+         ignorepointer 1
+         position 0 0
+         size 0.005 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+        }
+        ImageWidgetClass InfobarCamIcon {
+         ignorepointer 1
+         position 0 0
+         size 0.02 1
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         image0 "set:dayz_editor_gui image:camera_alt"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         pivot 0 0
+        }
+        TextWidgetClass VersionNumber {
+         ignorepointer 1
+         color 1 1 1 0.7843
+         size 0.26 1
+         halign right_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         font "gui/fonts/etelkatextpro"
+         "bold text" 1
+         "size to text h" 0
+         "size to text v" 1
+         "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "m_Editor.Version"
+          }
+         }
+        }
+       }
+      }
       GridSpacerWidgetClass InfobarObjPosFrame {
        visible 0
+       disabled 0
        ignorepointer 1
-       position 0.02 0
-       size 0.2 1
+       position 0.01 0
+       size 0.35 1
        valign center_ref
        hexactpos 0
        vexactpos 0
@@ -940,13 +1471,14 @@ FrameWidgetClass EditorFrame {
        style Colorable
        Padding 0
        Margin 0
+       "Size To Content H" 1
        "Size To Content V" 1
        content_halign center
-       content_valign center
+       content_valign bottom
        Rows 1
        {
         WrapSpacerWidgetClass Info_ObjPos_X {
-         visible 1
+         visible 0
          ignorepointer 1
          position 0 0
          size 120 24
@@ -1010,6 +1542,7 @@ FrameWidgetClass EditorFrame {
          }
         }
         WrapSpacerWidgetClass Info_ObjPos_Y {
+         visible 0
          ignorepointer 1
          size 120 24
          halign center_ref
@@ -1073,6 +1606,7 @@ FrameWidgetClass EditorFrame {
          }
         }
         PanelWidgetClass Info_ObjPos_Z {
+         visible 0
          ignorepointer 1
          size 120 24
          halign center_ref
@@ -1121,365 +1655,9 @@ FrameWidgetClass EditorFrame {
            text "1000.5"
            font "gui/fonts/MetronBook"
            "exact text" 0
-           "text halign" center
-           "text valign" center
            {
             ScriptParamsClass {
              Binding_Name "obj_z"
-            }
-           }
-          }
-         }
-        }
-       }
-      }
-      ImageWidgetClass InfobarCamIcon {
-       ignorepointer 1
-       position 0.215 0
-       size 32 32
-       halign right_ref
-       valign center_ref
-       hexactpos 0
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       image0 "set:dayz_editor_gui image:camera_alt"
-       mode blend
-       "src alpha" 1
-       "no wrap" 1
-       stretch 1
-      }
-      GridSpacerWidgetClass InfobarCamPosFrame {
-       visible 1
-       ignorepointer 1
-       position 0.0015 0
-       size 1.2 1
-       halign right_ref
-       valign center_ref
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       Padding 0
-       Margin 0
-       "Size To Content H" 1
-       content_halign center
-       content_valign center
-       Columns 4
-       Rows 1
-       {
-        PanelWidgetClass Info_CamPos_X_Main {
-         ignorepointer 1
-         size 0.05 1
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         {
-          PanelWidgetClass Info_CamPos_X_Outline {
-           visible 1
-           clipchildren 0
-           ignorepointer 1
-           position -1.5 0.5
-           size 1.01 1.14
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           style Outline
-          }
-          WrapSpacerWidgetClass Info_CamPos_X {
-           ignorepointer 1
-           position -0.08 0.04
-           size 1.2 1
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           Padding 0
-           Margin 0
-           content_halign center
-           content_valign center
-           {
-            PanelWidgetClass Info_CamPos_X_Icon {
-             ignorepointer 1
-             color 0.7529 0.2235 0.1686 1
-             position 0 0
-             size 0.17 0.95
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             style rover_sim_colorable
-             {
-              TextWidgetClass Info_CamPos_X_IconLable {
-               ignorepointer 1
-               position 0 0
-               size 1 1
-               halign center_ref
-               valign center_ref
-               hexactpos 0
-               vexactpos 0
-               hexactsize 0
-               vexactsize 0
-               text "X"
-               "text halign" center
-               "text valign" center
-              }
-             }
-            }
-            FrameWidgetClass Info_CamPos_X_Spacer {
-             ignorepointer 1
-             size 0.03 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-            }
-            EditBoxWidgetClass Info_CamPos_X_Value {
-             visible 1
-             ignorepointer 0
-             position 0 0
-             size 0.65 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scriptclass "ViewBinding"
-             style Default
-             text "0"
-             "limit visible" 0
-             "Use default text" 0
-             "exact text" 1
-             font "gui/fonts/MetronBook22"
-             {
-              ScriptParamsClass {
-               Binding_Name "cam_x"
-               Two_Way_Binding 1
-              }
-             }
-            }
-           }
-          }
-         }
-        }
-        PanelWidgetClass Info_CamPos_Y_Main {
-         ignorepointer 1
-         size 0.05 1
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         {
-          PanelWidgetClass Info_CamPos_Y_Outline {
-           visible 1
-           clipchildren 0
-           ignorepointer 1
-           position -2 0.5
-           size 1.0025 1.14
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           style Outline
-          }
-          WrapSpacerWidgetClass Info_CamPos_Y {
-           ignorepointer 1
-           position -0.06 0.04
-           size 1.2 1
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           Padding 0
-           Margin 0
-           content_halign center
-           content_valign center
-           {
-            PanelWidgetClass Info_CamPos_Y_Icon {
-             ignorepointer 1
-             color 0.1529 0.6824 0.3765 1
-             position 0 0
-             size 0.18 0.94
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             style rover_sim_colorable
-             {
-              TextWidgetClass Info_CamPos_Y_IconLable {
-               ignorepointer 1
-               position 0 0
-               size 1 1
-               halign center_ref
-               valign center_ref
-               hexactpos 0
-               vexactpos 0
-               hexactsize 0
-               vexactsize 0
-               text "Y"
-               "text halign" center
-               "text valign" center
-              }
-             }
-            }
-            FrameWidgetClass Info_CamPos_Y_Spacer {
-             ignorepointer 1
-             size 0.03 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-            }
-            EditBoxWidgetClass Info_CamPos_Y_Value {
-             visible 1
-             ignorepointer 0
-             position 0 0
-             size 0.65 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scriptclass "ViewBinding"
-             style Default
-             text "0"
-             "limit visible" 0
-             "Use default text" 0
-             "exact text" 1
-             font "gui/fonts/MetronBook22"
-             {
-              ScriptParamsClass {
-               Binding_Name "cam_y"
-               Two_Way_Binding 1
-              }
-             }
-            }
-           }
-          }
-         }
-        }
-        FrameWidgetClass Y_Z_Spacer {
-         clipchildren 0
-         ignorepointer 1
-         size 0.0005 1
-         halign center_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-        }
-        PanelWidgetClass Info_CamPos_Z_Main {
-         ignorepointer 1
-         size 0.05 1
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         {
-          PanelWidgetClass Info_CamPos_Z_Outline {
-           visible 1
-           clipchildren 0
-           ignorepointer 1
-           position -2 0.5
-           size 1.01 1.14
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           style Outline
-          }
-          WrapSpacerWidgetClass Info_CamPos_Z {
-           ignorepointer 1
-           position 0 -0.03
-           size 1.2 1.01
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           {
-            PanelWidgetClass Info_CamPos_Z_Icon {
-             ignorepointer 1
-             color 0.1608 0.502 0.7255 1
-             position 0 0
-             size 0.2 1.05
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             style rover_sim_colorable
-             {
-              TextWidgetClass Info_CamPos_Z_IconLable {
-               ignorepointer 1
-               position 0.03 -0.06
-               size 1 1
-               halign center_ref
-               valign center_ref
-               hexactpos 0
-               vexactpos 0
-               hexactsize 0
-               vexactsize 0
-               text "Z"
-               "text halign" center
-               "text valign" center
-              }
-             }
-            }
-            FrameWidgetClass Info_CamPos_Z_Spacer {
-             ignorepointer 1
-             position 0 0
-             size 0.015 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-            }
-            EditBoxWidgetClass Info_CamPos_Z_Value {
-             visible 1
-             ignorepointer 0
-             position 0 0
-             size 0.65 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             scriptclass "ViewBinding"
-             style Default
-             text "0"
-             "limit visible" 0
-             "Use default text" 0
-             "exact text" 1
-             font "gui/fonts/MetronBook22"
-             {
-              ScriptParamsClass {
-               Binding_Name "cam_z"
-               Two_Way_Binding 1
-              }
-             }
             }
            }
           }
@@ -1501,6 +1679,7 @@ FrameWidgetClass EditorFrame {
      {
       ItemPreviewWidgetClass OrientationView {
        ignorepointer 1
+       position 0 0
        size 1 1
        halign center_ref
        valign center_ref
@@ -1508,37 +1687,6 @@ FrameWidgetClass EditorFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-      }
-     }
-    }
-    FrameWidgetClass NotificationFrame {
-     visible 1
-     ignorepointer 1
-     position 0 0.03
-     size 1 0.06
-     halign center_ref
-     hexactpos 1
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
-    }
-    TextWidgetClass VersionNumber {
-     ignorepointer 1
-     color 1 1 1 0.7843
-     position 310 30
-     size 500 30
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scriptclass "ViewBinding"
-     font "gui/fonts/etelkatextpro"
-     "bold text" 1
-     "text valign" center
-     {
-      ScriptParamsClass {
-       Binding_Name "m_Editor.Version"
       }
      }
     }

@@ -1,7 +1,8 @@
 RichTextWidgetClass CaptionText {
  visible 1
+ color 0.8235 0.8235 0.8235 1
  position 0 0
- size 0.75 1
+ size 1 0.7
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -14,7 +15,7 @@ RichTextWidgetClass CaptionText {
  text "MessageBoxText"
  font "gui/fonts/etelkatextpro28"
  "exact text" 1
- "size to text h" 0
+ "size to text h" 1
  "size to text v" 0
  "text halign" center
  "text valign" center

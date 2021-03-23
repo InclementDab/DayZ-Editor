@@ -1,6 +1,6 @@
 PanelWidgetClass EditorPosElement {
  clipchildren 0
- size 1 24
+ size 1 28
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -10,7 +10,7 @@ PanelWidgetClass EditorPosElement {
   WrapSpacerWidgetClass PositionSpacer {
    clipchildren 1
    ignorepointer 1
-   size 1 24
+   size 1 28
    halign right_ref
    hexactpos 1
    vexactpos 1
@@ -87,15 +87,15 @@ PanelWidgetClass EditorPosElement {
       }
       PanelWidgetClass txt_x0 {
        ignorepointer 1
-       color 0.3529 0.3529 0.3529 0.0588
-       size 0.8 1
+       color 0.7647 0.1804 0.102 0.0392
+       size 0.6 1
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       style editor_selection
+       style rover_sim_colorable
        {
-        MultilineEditBoxWidgetClass x_value {
+        EditBoxWidgetClass x_value {
          visible 1
          clipchildren 1
          size 0.89 0.9
@@ -106,17 +106,11 @@ PanelWidgetClass EditorPosElement {
          hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
-         style DayZNormal
+         style Default
          text "reee"
-         font "gui/fonts/MetronLight22"
-         "text spacing" 0.5 0
-         "exact text" 1
-         text_proportion 0
-         "size to text h" 1
-         "size to text v" 1
-         "text valign" center
-         lines 1
          "limit visible" 1
+         "exact text" 0
+         font "gui/fonts/metronbook"
          {
           ScriptParamsClass {
            Binding_Name "X"
@@ -178,16 +172,16 @@ PanelWidgetClass EditorPosElement {
       }
       PanelWidgetClass txt_y {
        ignorepointer 1
-       color 0.3529 0.3529 0.3529 0.0588
+       color 0.5765 0.8157 0.2196 0.0392
        position 0 0
-       size 0.8 1
+       size 0.6 1
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       style editor_selection
+       style rover_sim_colorable
        {
-        MultilineEditBoxWidgetClass y_value {
+        EditBoxWidgetClass y_value {
          visible 1
          size 0.9 0.9
          halign center_ref
@@ -197,11 +191,11 @@ PanelWidgetClass EditorPosElement {
          hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
-         style DayZNormal
+         style Default
          text "reee"
-         font "gui/fonts/MetronLight22"
-         "exact text" 1
          "limit visible" 1
+         "exact text" 0
+         font "gui/fonts/metronbook"
          {
           ScriptParamsClass {
            Binding_Name "Y"
@@ -214,6 +208,7 @@ PanelWidgetClass EditorPosElement {
      }
     }
     WrapSpacerWidgetClass frame_z {
+     clipchildren 0
      ignorepointer 1
      position 0 0
      size 0.25 1
@@ -228,6 +223,7 @@ PanelWidgetClass EditorPosElement {
      content_valign center
      {
       PanelWidgetClass lbl_z {
+       clipchildren 0
        ignorepointer 1
        keepsafezone 0
        color 0.2588 0.5176 0.9176 1
@@ -260,18 +256,21 @@ PanelWidgetClass EditorPosElement {
        }
       }
       PanelWidgetClass txt_z {
-       ignorepointer 1
-       color 0.3529 0.3529 0.3529 0.0588
+       clipchildren 1
+       ignorepointer 0
+       color 0.2588 0.5176 0.9176 0.0392
        position 0 0
-       size 0.8 1
+       size 0.6 1
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       style editor_selection
+       style rover_sim_colorable
        {
-        MultilineEditBoxWidgetClass z_value {
+        EditBoxWidgetClass z_value {
          visible 1
+         clipchildren 0
+         keepsafezone 1
          size 0.9 0.9
          halign center_ref
          valign center_ref
@@ -280,11 +279,11 @@ PanelWidgetClass EditorPosElement {
          hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
-         style DayZNormal
+         style Default
          text "reee"
-         font "gui/fonts/MetronLight22"
-         "exact text" 1
          "limit visible" 1
+         "exact text" 0
+         font "gui/fonts/metronbook"
          {
           ScriptParamsClass {
            Binding_Name "Z"

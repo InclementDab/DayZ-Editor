@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass EditBoxPrefab {
  visible 1
- size 0.8 24
+ size 0.8 30
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -17,7 +17,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
   TextWidgetClass Caption {
    ignorepointer 0
    position 0 0
-   size 0.2 1
+   size 0.4 1
    valign center_ref
    hexactpos 1
    vexactpos 1
@@ -25,6 +25,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
    vexactsize 0
    priority 1
    scriptclass "ViewBinding"
+   style Bold
    "text offset" -10 0
    "text halign" right
   }
@@ -41,6 +42,8 @@ WrapSpacerWidgetClass EditBoxPrefab {
    style Normal
    font "gui/fonts/etelkatextpro"
    "exact text" 0
+   "size to text h" 1
+   "size to text v" 1
   }
  }
 }

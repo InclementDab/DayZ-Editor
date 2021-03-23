@@ -76,7 +76,7 @@ class Editor
 	bool 										SnappingMode;
 	bool 										CollisionMode;
 
-	string 										Version = "v" + GetVersionNumber();
+	string 										Version = "Version#: " + GetVersionNumber();
 	
 	private void Editor(PlayerBase player) 
 	{

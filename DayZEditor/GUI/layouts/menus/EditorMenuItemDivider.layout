@@ -2,28 +2,24 @@ FrameWidgetClass EditorMenuDivider {
  visible 1
  clipchildren 1
  position 0 0
- size 0.95 10
+ size 1 0.01
  halign center_ref
- hexactpos 1
- vexactpos 1
+ hexactpos 0
+ vexactpos 0
  hexactsize 0
- vexactsize 1
+ vexactsize 0
  priority 252
  scriptclass ""
  {
-  PanelWidgetClass EditorMenuDividerLine {
-   visible 1
-   color 1 1 1 0.0588
+  PanelWidgetClass PanelWidget0 {
+   ignorepointer 1
    position 0 0
    size 1 1
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
+   hexactpos 0
+   vexactpos 0
    hexactsize 0
-   vexactsize 1
-   scriptclass ""
-   style rover_sim_colorable
+   vexactsize 0
+   style editor_quad_dark
   }
  }
 }

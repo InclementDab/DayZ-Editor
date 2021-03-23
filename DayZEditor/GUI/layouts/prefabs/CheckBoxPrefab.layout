@@ -1,47 +1,55 @@
-WrapSpacerWidgetClass CheckBoxPrefab {
+FrameWidgetClass CheckBoxPrefab {
  visible 1
- size 0.9 24
+ clipchildren 0
+ position 0 0
+ size 0.9 28
  halign center_ref
  valign center_ref
- hexactpos 1
- vexactpos 1
+ hexactpos 0
+ vexactpos 0
  hexactsize 0
  vexactsize 1
+ scaled 1
  scriptclass ""
- style Colorable
- Padding 0
- Margin 5
- content_halign center
- content_valign center
  {
   TextWidgetClass Caption {
+   visible 1
    clipchildren 0
    ignorepointer 1
+   position -0.15 0
    size 0.45 1
+   halign center_ref
    valign center_ref
-   hexactpos 1
-   vexactpos 1
+   hexactpos 0
+   vexactpos 0
    hexactsize 0
    vexactsize 0
    scriptclass "ViewBinding"
-   "text offset" -10 0
-   "text halign" right
+   "text halign" center
+   "text valign" center
    {
     ScriptParamsClass {
      Binding_Name "Caption"
+     Two_Way_Binding 0
     }
    }
   }
   CheckBoxWidgetClass CheckBox {
+   visible 1
+   clipchildren 0
    inheritalpha 0
-   size 0.035 1
+   keepsafezone 0
+   color 0.902 0.902 0.902 1
+   position 0.2 0
+   size 0.03 1
+   halign right_ref
    valign center_ref
-   hexactpos 1
-   vexactpos 1
+   hexactpos 0
+   vexactpos 0
    hexactsize 0
    vexactsize 0
    scriptclass "ViewBinding"
-   style dze_checkbox_blue
+   style dze_checkbox_white
    checked 0
    {
     ScriptParamsClass {
@@ -49,37 +57,6 @@ WrapSpacerWidgetClass CheckBoxPrefab {
      Two_Way_Binding 1
     }
    }
-  }
-  CheckBoxWidgetClass CheckBoxWidget0 {
-   position 0 0
-   size 0.03437 1
-   halign right_ref
-   valign center_ref
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   style dze_checkbox_green
-  }
-  CheckBoxWidgetClass CheckBoxWidget1 {
-   size 0.035 1
-   halign right_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   style dze_checkbox_yellow
-  }
-  CheckBoxWidgetClass CheckBoxWidget2 {
-   size 0.035 1
-   halign right_ref
-   valign center_ref
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   style dze_checkbox_white
   }
  }
 }

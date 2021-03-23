@@ -1,9 +1,12 @@
 PanelWidgetClass FolderHostPanel {
+ clipchildren 0
  ignorepointer 1
  color 0.749 0.3725 0.3725 0.6863
- size 480 260
- hexactpos 1
- vexactpos 1
+ size 600 400
+ halign center_ref
+ valign center_ref
+ hexactpos 0
+ vexactpos 0
  hexactsize 1
  vexactsize 1
  style rover_sim_black

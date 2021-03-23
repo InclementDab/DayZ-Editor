@@ -1,6 +1,7 @@
 GridSpacerWidgetClass DropdownPrefab {
  clipchildren 0
  ignorepointer 1
+ position 0 0
  size 400 32
  halign right_ref
  hexactpos 1
@@ -15,36 +16,21 @@ GridSpacerWidgetClass DropdownPrefab {
  Columns 2
  Rows 1
  {
-  TextWidgetClass DropdownPrefabCaption {
-   clipchildren 0
+  PanelWidgetClass DropdownSpacer {
    ignorepointer 1
    position 0 0
-   size 0 0.8
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
+   size 0.15 1
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
    vexactsize 0
-   scriptclass "ViewBinding"
-   text "Caption!"
-   font "gui/fonts/etelkatextpro"
-   "text offset" -5 0
-   "exact text" 0
-   "size to text h" 1
-   "size to text v" 0
-   "text halign" right
-   "text valign" center
-   {
-    ScriptParamsClass {
-     Binding_Name "Caption"
-    }
-   }
   }
   WrapSpacerWidgetClass DropdownPrefabContent {
    ignorepointer 1
-   position 10 10
-   size 1 1
-   hexactpos 1
-   vexactpos 1
+   position -0.04 0
+   size 0.8 1
+   hexactpos 0
+   vexactpos 0
    hexactsize 0
    vexactsize 0
    Padding 0
@@ -57,25 +43,26 @@ GridSpacerWidgetClass DropdownPrefab {
      inheritalpha 0
      ignorepointer 0
      position 0 0
-     size 1 32
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
+     size 1 0.9
+     halign right_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
      hexactsize 0
-     vexactsize 1
+     vexactsize 0
      scriptclass "ViewBinding"
      style Empty
      switch toggle
      {
       PanelWidgetClass DropdownPrefabPanel {
        ignorepointer 1
-       color 0.5098 0.5098 0.5098 1
-       position 0 0.5
-       size 0.9975 1.08
+       color 0.7059 0.7059 0.7059 1
+       position 0 0.05
+       size 1.005 1.2
        halign center_ref
        valign center_ref
-       hexactpos 1
-       vexactpos 1
+       hexactpos 0
+       vexactpos 0
        hexactsize 0
        vexactsize 0
        style Outline
@@ -83,16 +70,18 @@ GridSpacerWidgetClass DropdownPrefab {
       TextWidgetClass DropdownText {
        clipchildren 0
        ignorepointer 1
-       position 0 0
-       size 1 1
-       hexactpos 1
-       vexactpos 1
+       position 0.02 -0.2
+       size 0.7 1.4
+       hexactpos 0
+       vexactpos 0
        hexactsize 0
        vexactsize 0
        scriptclass "ViewBinding"
        font "gui/fonts/etelkatextpro16"
-       "text offset" 10 0
-       text_proportion 0.55
+       "exact text" 1
+       text_proportion 0
+       "size to text h" 0
+       "size to text v" 0
        "text valign" center
        {
         ScriptParamsClass {
@@ -153,6 +142,30 @@ GridSpacerWidgetClass DropdownPrefab {
          "flip u" 0
          "flip v" 0
          filter 1
+        }
+       }
+      }
+      TextWidgetClass DropdownPrefabCaption {
+       clipchildren 0
+       ignorepointer 1
+       position -0.18 0
+       size 0.155 0.8
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       scriptclass "ViewBinding"
+       text "Caption!"
+       font "gui/fonts/etelkatextpro"
+       "exact text" 0
+       "size to text h" 0
+       "size to text v" 0
+       "text halign" right
+       "text valign" center
+       {
+        ScriptParamsClass {
+         Binding_Name "Caption"
         }
        }
       }

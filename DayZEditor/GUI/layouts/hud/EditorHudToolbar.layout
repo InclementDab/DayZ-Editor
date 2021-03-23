@@ -1,8 +1,7 @@
 WrapSpacerWidgetClass ToolbarWrapper {
  visible 1
  clipchildren 0
- size 1 0.054
- halign center_ref
+ size 1 0.06
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -44,11 +43,11 @@ WrapSpacerWidgetClass ToolbarWrapper {
       ImageWidgetClass ToolbarIcon {
        ignorepointer 1
        position 0 0
-       size 26 26
+       size 0.0175 1
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        imageTexture "{1A57E6DE48397D04}DayZEditor/GUI/images/dayz_editor_icon_black.edds"
        mode blend
        "src alpha" 1
@@ -208,6 +207,37 @@ WrapSpacerWidgetClass ToolbarWrapper {
         }
        }
       }
+      TextWidgetClass MenuCurrentFileNameCaption {
+       ignorepointer 1
+       position 0 0
+       size 0.4 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       text "Current File : "
+       "exact text" 0
+       "size to text v" 0
+       "text halign" right
+       "text valign" center
+      }
+      TextWidgetClass MenuCurrentFileNameText {
+       clipchildren 1
+       ignorepointer 1
+       position 0 0
+       size 0.36 0.9
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       style None
+       font "gui/fonts/etelkatextpro"
+       "text offset" 0 2
+       "exact text" 0
+       "size to text h" 0
+       "size to text v" 0
+       "text valign" center
+      }
      }
     }
    }
@@ -249,24 +279,24 @@ WrapSpacerWidgetClass ToolbarWrapper {
        visible 1
        ignorepointer 1
        position 0 0
-       size 15 1
+       size 0.01 1
        halign center_ref
        valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
        vexactsize 0
        {
         PanelWidgetClass Divider9 {
          ignorepointer 1
          color 0 0 0 0.5882
          position 0 0
-         size 1 0.6
+         size 0.1 0.6
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          style rover_sim_colorable
         }
@@ -292,11 +322,11 @@ WrapSpacerWidgetClass ToolbarWrapper {
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 30 1
+         size 0.02 1
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -310,7 +340,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            inheritalpha 1
            ignorepointer 1
            position 0 0
-           size 1.1 1
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -337,11 +367,11 @@ WrapSpacerWidgetClass ToolbarWrapper {
          visible 1
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 30 1
+         size 0.02 1
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -381,11 +411,11 @@ WrapSpacerWidgetClass ToolbarWrapper {
          visible 1
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 30 1
+         size 0.02 1
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -426,24 +456,24 @@ WrapSpacerWidgetClass ToolbarWrapper {
       PanelWidgetClass Divider6 {
        ignorepointer 1
        position 0 0
-       size 15 1
+       size 0.01 1
        halign center_ref
        valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
        vexactsize 0
        {
         PanelWidgetClass Divider7 {
          ignorepointer 1
          color 0 0 0 0.5882
          position 0 0
-         size 1 0.6
+         size 0.1 0.6
          halign center_ref
          valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
          vexactsize 0
          style rover_sim_colorable
         }
@@ -469,11 +499,11 @@ WrapSpacerWidgetClass ToolbarWrapper {
          visible 1
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 30 1
+         size 0.02 1
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -513,10 +543,10 @@ WrapSpacerWidgetClass ToolbarWrapper {
          ignorepointer 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 30 1
+         size 0.02 1
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -555,24 +585,24 @@ WrapSpacerWidgetClass ToolbarWrapper {
       PanelWidgetClass Divider2 {
        ignorepointer 1
        position 0 0
-       size 15 1
+       size 0.01 1
        halign center_ref
        valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
        vexactsize 0
        {
         PanelWidgetClass Divider3 {
          ignorepointer 1
          color 0 0 0 0.5882
          position 0 0
-         size 1 0.6
+         size 0.1 0.6
          halign center_ref
          valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
          vexactsize 0
          style rover_sim_colorable
         }
@@ -584,8 +614,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
        size 0 0
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
@@ -598,10 +628,10 @@ WrapSpacerWidgetClass ToolbarWrapper {
          ignorepointer 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 30 1
+         size 0.02 1
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -643,10 +673,10 @@ WrapSpacerWidgetClass ToolbarWrapper {
          ignorepointer 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 30 1
+         size 0.02 1
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -691,10 +721,10 @@ WrapSpacerWidgetClass ToolbarWrapper {
          ignorepointer 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 30 1
+         size 0.02 1
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -737,24 +767,24 @@ WrapSpacerWidgetClass ToolbarWrapper {
       PanelWidgetClass Divider4 {
        ignorepointer 1
        position 0 0
-       size 15 1
+       size 0.01 1
        halign center_ref
        valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
        vexactsize 0
        {
         PanelWidgetClass Divider5 {
          ignorepointer 1
          color 0 0 0 0.5882
          position 0 0
-         size 1 0.6
+         size 0.1 0.6
          halign center_ref
          valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
          vexactsize 0
          style rover_sim_colorable
         }
@@ -780,10 +810,10 @@ WrapSpacerWidgetClass ToolbarWrapper {
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 30 1
+         size 0.02 1
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -822,12 +852,12 @@ WrapSpacerWidgetClass ToolbarWrapper {
         ButtonWidgetClass GroundButton {
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 30 1
+         size 0.02 1
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -864,12 +894,12 @@ WrapSpacerWidgetClass ToolbarWrapper {
         ButtonWidgetClass SnapButton {
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 30 1
+         size 0.02 1
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -907,12 +937,12 @@ WrapSpacerWidgetClass ToolbarWrapper {
         ButtonWidgetClass CollisionButton {
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 30 1
+         size 0.02 1
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style Default
@@ -953,24 +983,24 @@ WrapSpacerWidgetClass ToolbarWrapper {
       PanelWidgetClass Divider0 {
        ignorepointer 1
        position 0 0
-       size 15 1
+       size 0.01 1
        halign center_ref
        valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
        vexactsize 0
        {
         PanelWidgetClass Divider1 {
          ignorepointer 1
          color 0 0 0 0.5882
          position 0 0
-         size 1 0.6
+         size 0.1 0.6
          halign center_ref
          valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
          vexactsize 0
          style rover_sim_colorable
         }
@@ -980,50 +1010,55 @@ WrapSpacerWidgetClass ToolbarWrapper {
        visible 1
        clipchildren 1
        ignorepointer 0
-       size 250 1
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
+       size 0.14 0.98
+       halign center_ref
+       valign bottom_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
        vexactsize 0
        draggable 0
        scriptclass "ViewBinding"
        style debugUI
-       "no focus" 1
-       font "gui/fonts/metron28"
-       "text color" 1 1 1 0
+       "no focus" 0
+       font "gui/fonts/metron"
+       "text color" 1 1 1 0.9412
        {
         ButtonWidgetClass BrushToggleButton {
          visible 1
+         clipchildren 1
          ignorepointer 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 0.8 1
+         size 0.74 0.93
          halign center_ref
          valign center_ref
-         hexactpos 1
-         vexactpos 1
+         hexactpos 0
+         vexactpos 0
          hexactsize 0
          vexactsize 0
          priority 5
          scriptclass "ViewBinding"
          style Default
-         "no focus" 1
-         text " "
+         "no focus" 0
+         text_offset 0 0
          switch toggle
          {
           TextWidgetClass BrushToggleButtonText {
-           visible 1
+           visible 0
            ignorepointer 1
            position 0 0
            size 1 1
            halign center_ref
            valign center_ref
-           hexactpos 1
-           vexactpos 1
+           hexactpos 0
+           vexactpos 0
            hexactsize 0
            vexactsize 0
            scriptclass "ViewBinding"
+           font "gui/fonts/metron"
+           "size to text h" 0
+           "size to text v" 0
            "text halign" center
            "text valign" center
            {
@@ -1033,13 +1068,16 @@ WrapSpacerWidgetClass ToolbarWrapper {
            }
           }
           PanelWidgetClass BrushButtonOutline {
+           visible 1
            ignorepointer 1
-           position -2 -2
-           size 204 36
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
+           position -0.001 0
+           size 1.015 1.12
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
            style Outline
           }
          }
@@ -1059,12 +1097,14 @@ WrapSpacerWidgetClass ToolbarWrapper {
         }
        }
       }
-      FrameWidgetClass FrameWidget0 {
+      FrameWidgetClass BrushControlPlayerSpacer {
+       clipchildren 0
        ignorepointer 1
-       position 10 10
-       size 0.005 1
-       hexactpos 1
-       vexactpos 1
+       size 0.01 1
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
        hexactsize 0
        vexactsize 0
       }
@@ -1196,7 +1236,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          text "0"
-         font "gui/fonts/metron28"
+         font "gui/fonts/metron"
          "text halign" center
          "text valign" center
          {
@@ -1207,33 +1247,29 @@ WrapSpacerWidgetClass ToolbarWrapper {
         }
        }
       }
-      GridSpacerWidgetClass Section4 {
+      FrameWidgetClass Section4 {
        ignorepointer 1
-       position 0 0
-       size 0 0
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       Margin 0
-       "Size To Content H" 1
-       "Size To Content V" 1
-       content_halign center
-       content_valign center
-       Columns 1
-       Rows 1
+       size 0.13 1
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
        {
         CheckBoxWidgetClass LockPlayer {
-         size 0.1 1
+         position 0 0
+         size 1 0.85
          halign center_ref
          valign center_ref
-         hexactpos 1
-         vexactpos 1
+         hexactpos 0
+         vexactpos 0
          hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
          style dze_checkbox_white
          text "Control Player"
+         font "gui/fonts/metron"
          checked 0
          {
           ScriptParamsClass {
