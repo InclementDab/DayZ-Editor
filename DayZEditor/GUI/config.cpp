@@ -1,12 +1,3 @@
-////////////////////////////////////////////////////////////////////
-//DeRap: gui\config.bin
-//Produced from mikero's Dos Tools Dll version 6.44
-//'now' is Tue Jul 21 08:06:59 2020 : 'file' last modified on Tue Jul 21 07:35:07 2020
-//http://dev-heaven.net/projects/list_files/mikero-pbodll
-////////////////////////////////////////////////////////////////////
-
-#define _ARMA_
-
 class CfgPatches
 {
 	class Editor_GUI
