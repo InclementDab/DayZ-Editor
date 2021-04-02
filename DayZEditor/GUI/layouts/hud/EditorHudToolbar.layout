@@ -1,7 +1,7 @@
 WrapSpacerWidgetClass ToolbarWrapper {
  visible 1
  clipchildren 0
- size 1 0.06
+ size 1 0.055
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -43,7 +43,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
       ImageWidgetClass ToolbarIcon {
        ignorepointer 1
        position 0 0
-       size 0.0175 1
+       size 0.016 1
        hexactpos 1
        vexactpos 1
        hexactsize 0
@@ -59,7 +59,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        clipchildren 0
        color 0.749 0.3725 0.3725 1
        position 0 0
-       size 0.045 1
+       size 0.037 1
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -74,8 +74,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
         TextWidgetClass MenuBarFileLabel {
          clipchildren 0
          ignorepointer 1
-         position 0 0
-         size 1 1
+         position 0 0.02
+         size 1 0.95
          hexactpos 0
          vexactpos 0
          hexactsize 0
@@ -98,7 +98,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        clipchildren 0
        color 0.749 0.3725 0.3725 1
        position 0 0
-       size 0.045 1
+       size 0.037 1
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -112,8 +112,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
         TextWidgetClass MenuBarEditLabel {
          clipchildren 1
          ignorepointer 1
-         position 0 0
-         size 1 1
+         position 0 0.02
+         size 1 0.95
          hexactpos 0
          vexactpos 0
          hexactsize 0
@@ -136,7 +136,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        clipchildren 0
        color 0.749 0.3725 0.3725 1
        position 0 0
-       size 0.045 1
+       size 0.037 1
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -149,8 +149,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
        {
         TextWidgetClass MenuBarViewLabel {
          ignorepointer 1
-         position 0 0
-         size 1 1
+         position 0 0.02
+         size 1 0.95
          hexactpos 0
          vexactpos 0
          hexactsize 0
@@ -174,7 +174,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        clipchildren 0
        color 0.749 0.3725 0.3725 1
        position 0 0
-       size 0.045 1
+       size 0.04 1
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -187,8 +187,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
        {
         TextWidgetClass MenuBarEditorLabel {
          ignorepointer 1
-         position 0 0
-         size 1 1
+         position 0 0.02
+         size 1 0.95
          hexactpos 0
          vexactpos 0
          hexactsize 0
@@ -207,50 +207,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
         }
        }
       }
-      TextWidgetClass MenuCurrentFileNameCaption {
-       ignorepointer 1
-       color 1 1 1 0.3922
-       position 0 0
-       size 0.54 1
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       text "Current File : "
-       font "gui/fonts/etelkatextpro"
-       "exact text" 0
-       "size to text v" 0
-       "text halign" right
-       "text valign" center
-      }
-      PanelWidgetClass PanelWidget0 {
-       ignorepointer 1
-       position 568.38098 -124.28
-       size 0.005 1
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-      }
-      TextWidgetClass MenuCurrentFileNameText {
-       clipchildren 1
-       ignorepointer 1
-       color 1 1 1 0.5098
-       position 0 0
-       size 0.2 0.95
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       style None
-       text "This is a file name"
-       font "gui/fonts/etelkatextpro"
-       "text offset" 0 2
-       "exact text" 0
-       "size to text h" 0
-       "size to text v" 0
-       "text valign" center
-      }
      }
     }
    }
@@ -260,8 +216,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
    clipchildren 0
    ignorepointer 1
    color 0.1176 0.1176 0.1176 1
-   position 0 0
-   size 1 0.55
+   size 1 0.6
    halign center_ref
    hexactpos 1
    vexactpos 0
@@ -276,7 +231,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
      clipchildren 0
      ignorepointer 1
      color 0.0118 0.0118 0.0118 0.3922
-     size 1 1
+     size 1 0.95
      halign center_ref
      valign center_ref
      hexactpos 1
@@ -291,7 +246,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
       PanelWidgetClass Divider8 {
        visible 1
        ignorepointer 1
-       position 0 0
        size 0.01 1
        halign center_ref
        valign center_ref
@@ -335,7 +289,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 0.02 1
+         size 0.017 1
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -380,7 +334,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
          visible 1
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 0.02 1
+         position 0 0
+         size 0.017 1
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -424,7 +379,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
          visible 1
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 0.02 1
+         position 0 0
+         size 0.017 1
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -468,7 +424,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
       }
       PanelWidgetClass Divider6 {
        ignorepointer 1
-       position 0 0
        size 0.01 1
        halign center_ref
        valign center_ref
@@ -512,7 +467,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          visible 1
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 0.02 1
+         size 0.017 1
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -556,7 +511,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          ignorepointer 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 0.02 1
+         size 0.017 1
          hexactpos 1
          vexactpos 1
          hexactsize 0
@@ -641,7 +596,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          ignorepointer 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 0.02 1
+         size 0.017 1
          hexactpos 1
          vexactpos 1
          hexactsize 0
@@ -686,7 +641,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          ignorepointer 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 0.02 1
+         size 0.017 1
          hexactpos 1
          vexactpos 1
          hexactsize 0
@@ -734,7 +689,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          ignorepointer 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 0.02 1
+         size 0.017 1
          hexactpos 1
          vexactpos 1
          hexactsize 0
@@ -823,7 +778,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 0.02 1
+         size 0.017 1
          hexactpos 1
          vexactpos 1
          hexactsize 0
@@ -865,7 +820,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
         ButtonWidgetClass GroundButton {
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 0.02 1
+         position 0 0
+         size 0.017 1
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -907,7 +863,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
         ButtonWidgetClass SnapButton {
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 0.02 1
+         position 0 0
+         size 0.017 1
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -950,7 +907,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
         ButtonWidgetClass CollisionButton {
          clipchildren 0
          color 0.7529 0.3686 0.3255 1
-         size 0.02 1
+         position 0 0
+         size 0.017 1
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -1023,19 +981,20 @@ WrapSpacerWidgetClass ToolbarWrapper {
        visible 1
        clipchildren 1
        ignorepointer 0
-       size 0.14 0.98
+       position 0 0
+       size 0.14 1
        halign center_ref
        valign bottom_ref
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 0
+       scaled 1
        draggable 0
        scriptclass "ViewBinding"
        style debugUI
        "no focus" 0
-       font "gui/fonts/metron"
-       "text color" 1 1 1 0.9412
+       font "gui/fonts/etelkatextpro"
        {
         ButtonWidgetClass BrushToggleButton {
          visible 1
@@ -1058,7 +1017,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          switch toggle
          {
           TextWidgetClass BrushToggleButtonText {
-           visible 0
+           visible 1
            ignorepointer 1
            position 0 0
            size 1 1
@@ -1100,6 +1059,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
       FrameWidgetClass BrushControlPlayerSpacer {
        clipchildren 0
        ignorepointer 1
+       position 0 0
        size 0.01 1
        halign center_ref
        valign center_ref
@@ -1249,7 +1209,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
       }
       FrameWidgetClass Section4 {
        ignorepointer 1
-       size 0.13 1
+       size 0.016 1
        halign center_ref
        valign center_ref
        hexactpos 0
@@ -1258,9 +1218,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
        vexactsize 0
        {
         CheckBoxWidgetClass LockPlayer {
-         position 0 0.01
-         size 1 0.85
-         halign center_ref
+         clipchildren 0
+         size 1 0.73
          valign center_ref
          hexactpos 0
          vexactpos 0
@@ -1268,7 +1227,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          style dze_checkbox_white
-         text "Control Player"
          font "gui/fonts/etelkatextpro"
          checked 0
          {
@@ -1279,6 +1237,29 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
         }
        }
+      }
+      FrameWidgetClass ControlPlayerSpacer {
+       ignorepointer 1
+       position 0 0
+       size 0.004 1
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+      }
+      TextWidgetClass ControlPlayerText {
+       ignorepointer 1
+       size 0.07 1
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Control Player"
+       font "gui/fonts/etelkatextpro"
+       "size to text h" 1
+       "size to text v" 0
+       "text valign" center
       }
      }
     }
