@@ -102,6 +102,7 @@ class Editor
 		
 		// Command Manager
 		CommandManager 		= new EditorCommandManager();
+		CommandManager.Init();
 		
 		// Needs to exist on clients for Undo / Redo syncing
 		m_SessionCache 		= new EditorObjectDataMap();
@@ -220,15 +221,15 @@ class Editor
 			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
 		
-		CommandManager.CutCommand.SetCanExecute(selected_objects.Count() > 0);
-		CommandManager.CopyCommand.SetCanExecute(selected_objects.Count() > 0);
+		CommandManager[EditorCutCommand].SetCanExecute(selected_objects.Count() > 0);
+		CommandManager[EditorCopyCommand].SetCanExecute(selected_objects.Count() > 0);
 		//PasteCommand.SetCanExecute(EditorClipboard.IsClipboardValid());
 
-		CommandManager.SnapCommand.SetCanExecute(false); // not implemented
+		CommandManager[EditorSnapCommand].SetCanExecute(false); // not implemented
 		
 		// Shit code. Theres better ways to do this CanUndo and CanRedo are slow
-		CommandManager.UndoCommand.SetCanExecute(CanUndo());
-		CommandManager.RedoCommand.SetCanExecute(CanRedo());
+		CommandManager[EditorUndoCommand].SetCanExecute(CanUndo());
+		CommandManager[EditorRedoCommand].SetCanExecute(CanRedo());
 				
 		EditorLog.CurrentLogLevel = log_lvl;		
 		
@@ -302,7 +303,7 @@ class Editor
 			case MouseState.LEFT: {
 
 				if (IsPlacing()) {
-					CommandManager.PlaceObjectCommand.Execute(this, null);
+					CommandManager[EditorPlaceObjectCommand].Execute(this, null);
 					return true;
 				}
 				
@@ -711,7 +712,7 @@ class Editor
 			Settings.AutoSaveTimer = Math.Clamp(Settings.AutoSaveTimer, 10, FLT_MAX);
 			Sleep(Settings.AutoSaveTimer * 1000);
 			if (EditorSaveFile != string.Empty) {
-				CommandManager.SaveCommand.Execute(this, null);
+				CommandManager[EditorSaveCommand].Execute(this, null);
 			}
 		}
 	}

@@ -166,7 +166,7 @@ class EditorObjectMarker: EditorMarker
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		m_Editor.CommandManager.ObjectPropertiesCommand.Execute(this, null);
+		m_Editor.CommandManager[EditorObjectPropertiesCommand].Execute(this, null);
 		
 		return true;
 	}

@@ -4,6 +4,6 @@ class EditorViewMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorViewMenu");
 
-		AddMenuButton(m_Editor.CommandManager.CameraControlsCommand);
+		AddMenuButton(m_Editor.CommandManager[EditorCameraControlsCommand]);
 	}
 }

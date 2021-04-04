@@ -90,7 +90,7 @@ GridSpacerWidgetClass EditorMenuItem {
        mode additive
        "src alpha" 1
        stretch 1
-       filter 0
+       filter 1
        nocache 0
        pivot 0.5 0.5
        {

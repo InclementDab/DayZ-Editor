@@ -4,13 +4,13 @@ class EditorFileMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorFileMenu");
 		
-		AddMenuButton(m_Editor.CommandManager.NewCommand);
-		AddMenuButton(m_Editor.CommandManager.OpenCommand);
-		AddMenuButton(m_Editor.CommandManager.SaveCommand);
-		AddMenuButton(m_Editor.CommandManager.SaveAsCommand);
-		AddMenuButton(m_Editor.CommandManager.CloseCommand);
+		AddMenuButton(m_Editor.CommandManager[EditorNewCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorOpenCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorSaveCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorSaveAsCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorCloseCommand]);
 		AddMenuCategory("Import", EditorImportMenu);
 		AddMenuCategory("Export", EditorExportMenu);
-		AddMenuButton(m_Editor.CommandManager.ExitCommand);
+		AddMenuButton(m_Editor.CommandManager[EditorExitCommand]);
 	}
 }

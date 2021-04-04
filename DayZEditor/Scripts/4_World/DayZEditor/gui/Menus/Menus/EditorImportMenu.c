@@ -4,10 +4,10 @@ class EditorImportMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorImportMenu");
 		
-		AddMenuButton(m_Editor.CommandManager.ImportFromInitFile);
-		AddMenuButton(m_Editor.CommandManager.ImportFromExpansionCommand);
-		AddMenuButton(m_Editor.CommandManager.ImportFromTerrainBuilderCommand);
-		AddMenuButton(m_Editor.CommandManager.ImportFromVPPCommand);
-		AddMenuButton(m_Editor.CommandManager.ImportFromCOM);
+		AddMenuButton(m_Editor.CommandManager[EditorImportFromInit]);
+		AddMenuButton(m_Editor.CommandManager[EditorImportFromExpansion]);
+		AddMenuButton(m_Editor.CommandManager[EditorImportFromTerrainBuilder]);
+		AddMenuButton(m_Editor.CommandManager[EditorImportFromVPP]);
+		AddMenuButton(m_Editor.CommandManager[EditorImportFromCOM]);
 	}
 }

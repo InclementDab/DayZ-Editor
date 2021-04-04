@@ -4,13 +4,13 @@ class EditorEditorMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorEditorMenu");
 		
-		AddMenuButton(m_Editor.CommandManager.ReloadHudCommand);
-		AddMenuButton(m_Editor.CommandManager.ReloadBrushesCommand);
-		AddMenuButton(m_Editor.CommandManager.EnvironmentControlCommand);
-		AddMenuButton(m_Editor.CommandManager.PreferencesCommand);
-		AddMenuButton(m_Editor.CommandManager.JoinDiscordCommand);
-		AddMenuButton(m_Editor.CommandManager.OpenWikiCommand);
-		AddMenuButton(m_Editor.CommandManager.DonateCommand);
-		AddMenuButton(m_Editor.CommandManager.HelpCommand);
+		AddMenuButton(m_Editor.CommandManager[EditorReloadHudCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorReloadBrushesCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorEnvironmentControlCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorPreferencesCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorJoinDiscordCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorOpenWikiCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorDonateCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorHelpCommand]);
 	}
 }

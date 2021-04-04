@@ -131,7 +131,7 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
 		if (GetEditor().IsPlacing()) {
-			GetEditor().CommandManager.PlaceObjectCommand.Execute(this, null);
+			GetEditor().CommandManager[EditorPlaceObjectCommand].Execute(this, null);
 		}
 		
 		return true;

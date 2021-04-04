@@ -154,7 +154,7 @@ class EditorPlacedListItem: EditorListItem
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		GetEditor().CommandManager.ObjectPropertiesCommand.Execute(this, null);
+		GetEditor().CommandManager[EditorObjectPropertiesCommand].Execute(this, null);
 		
 		return true;
 	}

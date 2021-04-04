@@ -4,9 +4,9 @@ class EditorTransformModeMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorTransformModeMenu");
 		
-		AddMenuButton(m_Editor.CommandManager.MagnetCommand);
-		AddMenuButton(m_Editor.CommandManager.GroundCommand);
-		AddMenuButton(m_Editor.CommandManager.SnapCommand);
-		AddMenuButton(m_Editor.CommandManager.CollisionCommand);
+		AddMenuButton(m_Editor.CommandManager[EditorMagnetCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorGroundCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorSnapCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorCollisionCommand]);
 	}
 }

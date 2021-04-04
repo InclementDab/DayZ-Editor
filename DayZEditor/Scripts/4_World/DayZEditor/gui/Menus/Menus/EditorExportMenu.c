@@ -4,12 +4,12 @@ class EditorExportMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorExportMenu");
 		
-		AddMenuButton(m_Editor.CommandManager.ExportToInitFile);
-		AddMenuButton(m_Editor.CommandManager.ExportToExpansion);
-		AddMenuButton(m_Editor.CommandManager.ExportToTerrainBuilder);
-		AddMenuButton(m_Editor.CommandManager.ExportToVPP);
-		AddMenuButton(m_Editor.CommandManager.ExportToCOM);
-		AddMenuButton(m_Editor.CommandManager.ExportToEvents);
-		AddMenuButton(m_Editor.CommandManager.ExportToMapGroupPos);
+		AddMenuButton(m_Editor.CommandManager[EditorExportToInitFile]);
+		AddMenuButton(m_Editor.CommandManager[EditorExportToExpansion]);
+		AddMenuButton(m_Editor.CommandManager[EditorExportToTerrainBuilder]);
+		AddMenuButton(m_Editor.CommandManager[EditorExportToVPP]);
+		AddMenuButton(m_Editor.CommandManager[EditorExportToCOM]);
+		AddMenuButton(m_Editor.CommandManager[EditorExportToEvents]);
+		AddMenuButton(m_Editor.CommandManager[EditorExportToMapGroupPos]);
 	}
 }

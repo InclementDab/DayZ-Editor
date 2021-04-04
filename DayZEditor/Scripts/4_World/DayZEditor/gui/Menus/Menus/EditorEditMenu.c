@@ -4,11 +4,11 @@ class EditorEditMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorEditMenu");
 				
-		AddMenuButton(m_Editor.CommandManager.UndoCommand);
-		AddMenuButton(m_Editor.CommandManager.RedoCommand);
+		AddMenuButton(m_Editor.CommandManager[EditorUndoCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorRedoCommand]);
 		AddMenuCategory("Edit", EditorClipboardMenu);
 		AddMenuCategory("Transform Mode", EditorTransformModeMenu);
 		
-		AddMenuButton(m_Editor.CommandManager.ScriptEditorCommand);
+		AddMenuButton(m_Editor.CommandManager[EditorScriptEditorCommand]);
 	}
 }

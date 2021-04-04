@@ -3,14 +3,14 @@ class EditorPlacedContextMenu: EditorContextMenu
 	void EditorPlacedContextMenu(float x, float y) 
 	{
 		EditorLog.Trace("EditorPlacedContextMenu");
-		AddMenuButton(m_Editor.CommandManager.CutCommand);
-		AddMenuButton(m_Editor.CommandManager.CopyCommand);
-		AddMenuButton(m_Editor.CommandManager.PasteCommand);
-		AddMenuButton(m_Editor.CommandManager.DeleteCommand);
-		AddMenuButton(m_Editor.CommandManager.ShowCommand);
-		AddMenuButton(m_Editor.CommandManager.HideCommand);
-		AddMenuButton(m_Editor.CommandManager.LockCommand);
-		AddMenuButton(m_Editor.CommandManager.UnlockCommand);		
-		AddMenuButton(m_Editor.CommandManager.ObjectPropertiesCommand);
+		AddMenuButton(m_Editor.CommandManager[EditorCutCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorCopyCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorPasteCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorDeleteCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorShowCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorHideCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorLockCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorUnlockCommand]);		
+		AddMenuButton(m_Editor.CommandManager[EditorObjectPropertiesCommand]);
 	}
 }

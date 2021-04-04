@@ -1,99 +1,109 @@
 class EditorCommandManager
 {
 	ref map<int, EditorCommand> CommandShortcutMap = new map<int, EditorCommand>();
-	
-	// Editor Commands
-	ref EditorNewCommand NewCommand;
-	ref EditorOpenCommand OpenCommand;
-	ref EditorSaveCommand SaveCommand;
-	ref EditorSaveAsCommand SaveAsCommand;
-	ref EditorCloseCommand CloseCommand;
-	ref EditorExitCommand ExitCommand;
-	ref EditorEscapeCommand EscapeCommand;
-	
-	ref EditorUndoCommand UndoCommand;
-	ref EditorRedoCommand RedoCommand;
-	ref EditorSelectAllCommand SelectAllCommand;
-	ref EditorDeleteCommand DeleteCommand;
-	
-	ref EditorCutCommand CutCommand;
-	ref EditorCopyCommand CopyCommand;
-	ref EditorPasteCommand PasteCommand;
-	
-	ref EditorMagnetCommand MagnetCommand;
-	ref EditorGroundCommand GroundCommand;
-	ref EditorSnapCommand SnapCommand;
-	ref EditorCollisionCommand CollisionCommand;
-	
-	ref EditorEnvironmentControlCommand EnvironmentControlCommand;
-	ref EditorPreferencesCommand PreferencesCommand;
-	ref EditorCameraControlsCommand CameraControlsCommand;
-	ref EditorReloadHudCommand ReloadHudCommand;
-	ref EditorReloadBrushesCommand ReloadBrushesCommand;
-	ref EditorLootEditorCommand LootEditorCommand;
-	ref EditorAddToFavoritesCommand AddToFavoritesCommand;
-	
-	ref EditorPlaceObjectCommand PlaceObjectCommand;
-	
-	ref EditorBrushPropertiesCommand BrushPropertiesCommand;
-	ref EditorBrushToggleCommand BrushToggleCommand;	
-	ref EditorBrushDensityCommand BrushDensityCommand;
-	ref EditorBrushRadiusCommand BrushRadiusCommand;
-	
-	ref EditorObjectPropertiesCommand ObjectPropertiesCommand;
-	ref EditorShowCommand ShowCommand;
-	ref EditorHideCommand HideCommand;
-	ref EditorLockCommand LockCommand;
-	ref EditorUnlockCommand UnlockCommand;
-	
-	ref EditorExportToInitFile ExportToInitFile;
-	ref EditorExportToExpansion ExportToExpansion;
-	ref EditorExportToTerrainBuilder ExportToTerrainBuilder;
-	ref EditorExportToVPP ExportToVPP;
-	ref EditorExportToCOM ExportToCOM;
-	ref EditorExportToEvents ExportToEvents;
-	ref EditorExportToMapGroupPos ExportToMapGroupPos;
-	
-	ref EditorImportFromInit ImportFromInitFile;
-	ref EditorImportFromExpansion ImportFromExpansionCommand;
-	ref EditorImportFromTerrainBuilder ImportFromTerrainBuilderCommand;
-	ref EditorImportFromVPP ImportFromVPPCommand;
-	ref EditorImportFromCOM ImportFromCOM;
-	
-	ref EditorScriptEditorCommand ScriptEditorCommand;
-	
-	ref EditorJoinDiscordCommand JoinDiscordCommand;
-	ref EditorOpenWikiCommand OpenWikiCommand;
-	
-	ref EditorDonateCommand DonateCommand;
-	ref EditorHelpCommand HelpCommand;
-	
-	
-	void EditorCommandManager()
-	{			
-		for (int i = 0; i < Type().GetVariableCount(); i++) {
-			string variable_name = Type().GetVariableName(i);
-			typename variable_type = Type().GetVariableType(i);
-			if (variable_type.IsInherited(EditorCommand)) {
-				EditorCommand command = EditorCommand.Cast(variable_type.Spawn());
-				EnScript.SetClassVar(this, variable_name, 0, command);
-				if (command.GetShortcut()) {
-					CommandShortcutMap.Insert(command.GetShortcut().GetMask(), command);
-				}
-			}
-		}
+		
+	protected ref map<typename, ref EditorCommand> m_Commands = new map<typename, ref EditorCommand>();
+
+	void ~EditorCommandManager()
+	{		
+		delete m_Commands;
 	}
 	
-	void ~EditorCommandManager()
+	void Init()
 	{
-		for (int i = 0; i < Type().GetVariableCount(); i++) {
-			string variable_name = Type().GetVariableName(i);
-			typename variable_type = Type().GetVariableType(i);
-			if (variable_type.IsInherited(EditorCommand)) {
-				EditorCommand command;
-				EnScript.GetClassVar(this, variable_name, 0, command);
-				delete command;
-			}
+		RegisterCommand(EditorNewCommand);
+		RegisterCommand(EditorOpenCommand);
+		RegisterCommand(EditorSaveCommand);
+		RegisterCommand(EditorSaveAsCommand);
+		RegisterCommand(EditorCloseCommand);
+		RegisterCommand(EditorExitCommand);
+		RegisterCommand(EditorEscapeCommand);
+	
+		RegisterCommand(EditorUndoCommand);
+		RegisterCommand(EditorRedoCommand);
+		RegisterCommand(EditorSelectAllCommand);
+		RegisterCommand(EditorDeleteCommand);
+	
+		RegisterCommand(EditorCutCommand);
+		RegisterCommand(EditorCopyCommand);
+		RegisterCommand(EditorPasteCommand);
+	
+		RegisterCommand(EditorMagnetCommand);
+		RegisterCommand(EditorGroundCommand);
+		RegisterCommand(EditorSnapCommand);
+		RegisterCommand(EditorCollisionCommand);
+	
+		RegisterCommand(EditorEnvironmentControlCommand);
+		RegisterCommand(EditorPreferencesCommand);
+		RegisterCommand(EditorCameraControlsCommand);
+		RegisterCommand(EditorReloadHudCommand);
+		RegisterCommand(EditorReloadBrushesCommand);
+		RegisterCommand(EditorLootEditorCommand);
+		RegisterCommand(EditorAddToFavoritesCommand);
+	
+		RegisterCommand(EditorPlaceObjectCommand);
+	
+		RegisterCommand(EditorBrushPropertiesCommand);
+		RegisterCommand(EditorBrushToggleCommand);
+		RegisterCommand(EditorBrushDensityCommand);
+		RegisterCommand(EditorBrushRadiusCommand);
+	
+		RegisterCommand(EditorObjectPropertiesCommand);
+		RegisterCommand(EditorShowCommand);
+		RegisterCommand(EditorHideCommand);
+		RegisterCommand(EditorLockCommand);
+		RegisterCommand(EditorUnlockCommand);
+	
+		RegisterCommand(EditorExportToInitFile);
+		RegisterCommand(EditorExportToExpansion);
+		RegisterCommand(EditorExportToTerrainBuilder);
+		RegisterCommand(EditorExportToVPP);
+		RegisterCommand(EditorExportToCOM);
+		RegisterCommand(EditorExportToEvents);
+		RegisterCommand(EditorExportToMapGroupPos);
+	
+		RegisterCommand(EditorImportFromInit);
+		RegisterCommand(EditorImportFromExpansion);
+		RegisterCommand(EditorImportFromTerrainBuilder);
+		RegisterCommand(EditorImportFromVPP);
+		RegisterCommand(EditorImportFromCOM);
+	
+		RegisterCommand(EditorScriptEditorCommand);
+	
+		RegisterCommand(EditorJoinDiscordCommand);
+		RegisterCommand(EditorOpenWikiCommand);
+	
+		RegisterCommand(EditorDonateCommand);
+		RegisterCommand(EditorHelpCommand);
+	}
+	
+	void RegisterCommand(typename command_type)
+	{
+		if (!command_type.IsInherited(EditorCommand)) {
+			EditorLog.Error("Command must inherit from EditorCommand");
+			return;
 		}
+		
+		EditorCommand command = EditorCommand.Cast(command_type.Spawn());
+		if (!command) {
+			EditorLog.Error("Invalid command");
+			return;
+		}
+		
+		this[command_type] = command;
+		
+		if (command.GetShortcut()) {
+			CommandShortcutMap.Insert(command.GetShortcut().GetMask(), command);
+		}		
+	}
+	
+	void Set(typename command_type, EditorCommand command)
+	{
+		m_Commands.Insert(command_type, command);
+	}
+	
+	EditorCommand Get(typename command_type)
+	{
+		return m_Commands[command_type];
 	}
 }

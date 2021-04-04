@@ -4,8 +4,8 @@ class EditorClipboardMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorClipboardMenu");
 		
-		AddMenuButton(m_Editor.CommandManager.CutCommand);
-		AddMenuButton(m_Editor.CommandManager.CopyCommand);
-		AddMenuButton(m_Editor.CommandManager.PasteCommand);	
+		AddMenuButton(m_Editor.CommandManager[EditorCutCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorCopyCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorPasteCommand]);	
 	}
 }
