@@ -393,7 +393,7 @@ class Editor
 		}
 		
 		m_CurrentKeys.Insert(key);
-		EditorCommand command = CommandManager.CommandShortcutMap[m_CurrentKeys.GetMask()];
+		EditorCommand command = CommandManager.GetCommandFromShortcut(m_CurrentKeys.GetMask());
 		if (!command) {
 			return false;
 		}
@@ -883,12 +883,10 @@ class Editor
 		m_ObjectManager.SelectObject(target);
 	}
 	
-	
 	void DeselectObject(EditorObject target) 
 	{
 		m_ObjectManager.DeselectObject(target);
 	}
-	
 	
 	void ToggleSelection(EditorObject target) 
 	{

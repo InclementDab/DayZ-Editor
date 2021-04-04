@@ -1,12 +1,12 @@
 class EditorCommandManager
 {
-	ref map<int, EditorCommand> CommandShortcutMap = new map<int, EditorCommand>();
-		
 	protected ref map<typename, ref EditorCommand> m_Commands = new map<typename, ref EditorCommand>();
+	protected ref map<int, EditorCommand> m_CommandShortcutMap = new map<int, EditorCommand>();
 
 	void ~EditorCommandManager()
 	{		
 		delete m_Commands;
+		delete m_CommandShortcutMap;
 	}
 	
 	void Init()
@@ -94,7 +94,7 @@ class EditorCommandManager
 		this[command_type] = command;
 		
 		if (command.GetShortcut()) {
-			CommandShortcutMap.Insert(command.GetShortcut().GetMask(), command);
+			m_CommandShortcutMap.Insert(command.GetShortcut().GetMask(), command);
 		}		
 	}
 	
@@ -106,5 +106,15 @@ class EditorCommandManager
 	EditorCommand Get(typename command_type)
 	{
 		return m_Commands[command_type];
+	}
+	
+	array<EditorCommand> GetCommands()
+	{
+		return m_Commands.GetValueArray();
+	}
+	
+	EditorCommand GetCommandFromShortcut(int shortcut)
+	{
+		return m_CommandShortcutMap[shortcut];
 	}
 }
