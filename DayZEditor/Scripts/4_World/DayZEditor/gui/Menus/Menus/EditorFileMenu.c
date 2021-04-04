@@ -9,8 +9,10 @@ class EditorFileMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager[EditorSaveCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorSaveAsCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorCloseCommand]);
+		AddMenuDivider();
 		AddMenuCategory("Import", EditorImportMenu);
 		AddMenuCategory("Export", EditorExportMenu);
+		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorExitCommand]);
 	}
 }

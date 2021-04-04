@@ -231,7 +231,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
      clipchildren 0
      ignorepointer 1
      color 0.0118 0.0118 0.0118 0.3922
-     size 1 0.95
+     size 1 1
      halign center_ref
      valign center_ref
      hexactpos 1
@@ -1017,8 +1017,9 @@ WrapSpacerWidgetClass ToolbarWrapper {
          switch toggle
          {
           TextWidgetClass BrushToggleButtonText {
-           visible 1
+           visible 0
            ignorepointer 1
+           color 0 1 1 0
            position 0 0
            size 1 1
            halign center_ref

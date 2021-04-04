@@ -250,7 +250,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 1
      ignorepointer 1
      position -0.001 0.056
-     size 0.155 0.92
+     size 0.16 0.92
      hexactpos 0
      vexactpos 0
      hexactsize 0
@@ -626,8 +626,8 @@ FrameWidgetClass EditorFrame {
              ignorepointer 0
              keepsafezone 0
              color 0.3137 0.3137 0.3137 1
-             position 0 0.0034
-             size 1 0.94
+             position 0 0
+             size 1 0.934
              halign center_ref
              hexactpos 0
              vexactpos 0
@@ -647,8 +647,8 @@ FrameWidgetClass EditorFrame {
                clipchildren 1
                ignorepointer 0
                keepsafezone 1
-               position 0.005 0
-               size 0.97 1
+               position 0 0
+               size 1 1
                halign center_ref
                hexactpos 0
                vexactpos 0
@@ -678,7 +678,7 @@ FrameWidgetClass EditorFrame {
        visible 1
        ignorepointer 1
        position 0 0
-       size 0.08 1
+       size 0.075 1
        hexactpos 0
        vexactpos 0
        hexactsize 0
@@ -689,8 +689,8 @@ FrameWidgetClass EditorFrame {
          visible 1
          clipchildren 1
          color 0.2353 0.2353 0.2353 0.6667
-         position 0 0.045
-         size 1 0.05
+         position 0 0.04
+         size 1 0.04
          halign right_ref
          hexactpos 0
          vexactpos 0
@@ -728,8 +728,8 @@ FrameWidgetClass EditorFrame {
      visible 1
      clipchildren 0
      ignorepointer 0
-     position -0.002 0.054
-     size 0.155 0.92
+     position -0.002 0.057
+     size 0.16 0.913
      halign right_ref
      hexactpos 0
      vexactpos 0
@@ -747,7 +747,7 @@ FrameWidgetClass EditorFrame {
        keepsafezone 1
        color 0.0196 0.0196 0.0196 0.7843
        position 0 0
-       size 0.919 1
+       size 0.92 1
        hexactpos 0
        vexactpos 0
        hexactsize 0
@@ -757,6 +757,7 @@ FrameWidgetClass EditorFrame {
        {
         ScrollWidgetClass RightbarScroll {
          visible 1
+         clipchildren 0
          ignorepointer 0
          keepsafezone 0
          color 0.3137 0.3137 0.3137 1
@@ -775,8 +776,8 @@ FrameWidgetClass EditorFrame {
            visible 1
            ignorepointer 0
            keepsafezone 0
-           position -0.01 0
-           size 0.96 1
+           position 0 0
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 0
@@ -906,7 +907,7 @@ FrameWidgetClass EditorFrame {
        clipchildren 1
        ignorepointer 1
        position 0 0
-       size 0.08 0.999
+       size 0.075 1
        hexactpos 0
        vexactpos 0
        hexactsize 0
@@ -916,8 +917,8 @@ FrameWidgetClass EditorFrame {
         ButtonWidgetClass RightbarHide {
          clipchildren 1
          color 0.2353 0.2353 0.2353 0.6667
-         position 0 0.045
-         size 1 0.05
+         position 0 0.04
+         size 1 0.04
          hexactpos 0
          vexactpos 0
          hexactsize 0
@@ -1438,7 +1439,6 @@ FrameWidgetClass EditorFrame {
         }
         TextWidgetClass VersionNumber {
          ignorepointer 1
-         color 1 1 1 0.7843
          size 0.3 1
          halign right_ref
          valign center_ref
@@ -1461,7 +1461,6 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass MenuCurrentFileNameText {
          clipchildren 1
          ignorepointer 1
-         color 1 1 1 0.7843
          position 0 0
          size 0.25 1
          hexactpos 0
@@ -1484,7 +1483,6 @@ FrameWidgetClass EditorFrame {
         }
         TextWidgetClass MenuCurrentFileNameCaption {
          ignorepointer 1
-         color 1 1 1 0.7843
          position 0 0
          size 0.1 1
          valign center_ref

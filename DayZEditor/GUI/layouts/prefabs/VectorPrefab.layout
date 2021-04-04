@@ -98,11 +98,11 @@ PanelWidgetClass EditorPosElement {
         EditBoxWidgetClass x_value {
          visible 1
          clipchildren 1
-         size 0.89 0.9
-         halign center_ref
+         size 0.95 0.95
+         halign right_ref
          valign center_ref
-         hexactpos 1
-         vexactpos 1
+         hexactpos 0
+         vexactpos 0
          hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
@@ -183,8 +183,9 @@ PanelWidgetClass EditorPosElement {
        {
         EditBoxWidgetClass y_value {
          visible 1
-         size 0.9 0.9
-         halign center_ref
+         keepsafezone 0
+         size 0.95 0.95
+         halign right_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -269,10 +270,10 @@ PanelWidgetClass EditorPosElement {
        {
         EditBoxWidgetClass z_value {
          visible 1
-         clipchildren 0
-         keepsafezone 1
-         size 0.9 0.9
-         halign center_ref
+         clipchildren 1
+         keepsafezone 0
+         size 0.95 0.95
+         halign right_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
