@@ -1015,3 +1015,47 @@ class Editor
 	EditorBrush GetBrush() return m_EditorBrush;
 	EditorActionStack GetActionStack() return m_ActionStack;
 }
+/*
+class AreaScan
+{
+	static const int STEP_COUNT = 4;
+	
+	static void Run(vector position, float radius)
+	{
+		Debug.DestroyAllShapes();
+		
+		// Main Cylinder
+		Debug.DrawCylinder(position, radius);
+		
+		float search_radius = (radius / STEP_COUNT) / 2;
+			
+		float theta = Math.PI * (3 - Math.Sqrt(5));
+		
+		for (int i = 0; i < 26; i++) {
+			float r = (radius / 2) * Math.Sqrt(i) / Math.Sqrt(
+		}
+		
+		/*			
+		for (int i = 0; i < STEP_COUNT; i++) {
+			float radius_at_step = radius - (search_radius * i);
+			int count = Math.Floor((2 * Math.PI * radius_at_step) / (2 * search_radius));
+			
+			
+			
+			for (int j = 0; j < count; j++) {
+			
+				
+				float x = radius_at_step * Math.Cos(Math.Pow(Math.PI, 2) * j);
+				float y = radius_at_step * Math.Sin(Math.Pow(Math.PI, 2) * j);
+				
+				
+				vector search_position = position;
+				//search_position[0] = search_position[0] + (search_radius * 2 * i) + search_radius;
+				search_position[0] = search_position[0] + x;
+				search_position[2] = search_position[2] + y;
+				Debug.DrawCylinder(search_position, search_radius, 1.1, COLOR_GREEN);
+
+			}
+		}	
+	}
+}*/

@@ -33,7 +33,8 @@ class EditorExportDialog: EditorDialogBase
 	
 	void EditorExportDialog(string title, string caption = "", string default_value = "", string button_name = "OK")
 	{
-		AddContent(new EditBoxPrefab(caption, m_Controller, default_value));
+		m_EditBoxPrefab = new EditBoxPrefab(caption, m_Controller, default_value);
+		AddContent(m_EditBoxPrefab);
 		AddContent(new CheckBoxPrefab("Export Selected Objects", m_Controller, "export_selected", false));
 				
 		AddButton(DialogResult.OK);

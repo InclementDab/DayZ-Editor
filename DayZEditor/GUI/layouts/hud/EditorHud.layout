@@ -760,8 +760,8 @@ FrameWidgetClass EditorFrame {
          ignorepointer 0
          keepsafezone 0
          color 0.3137 0.3137 0.3137 1
-         position 0.011 -0.016
-         size 1 0.953
+         position 0.01 0
+         size 1 1
          halign right_ref
          valign center_ref
          hexactpos 0
@@ -799,6 +799,7 @@ FrameWidgetClass EditorFrame {
          }
         }
         PanelWidgetClass RightbarCreatePanel {
+         visible 0
          ignorepointer 1
          color 0.1569 0.1569 0.1569 1
          position 0 0.0025
@@ -1467,6 +1468,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 0
          hexactsize 0
          vexactsize 0
+         scriptclass "ViewBinding"
          style None
          font "gui/fonts/etelkatextpro"
          "text offset" 7 0
@@ -1474,6 +1476,11 @@ FrameWidgetClass EditorFrame {
          "size to text h" 0
          "size to text v" 0
          "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "m_Editor.EditorSaveFile"
+          }
+         }
         }
         TextWidgetClass MenuCurrentFileNameCaption {
          ignorepointer 1

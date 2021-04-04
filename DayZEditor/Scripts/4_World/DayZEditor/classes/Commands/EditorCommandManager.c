@@ -3,6 +3,26 @@ class EditorCommandManager
 	protected ref map<typename, ref EditorCommand> m_Commands = new map<typename, ref EditorCommand>();
 	protected ref map<int, EditorCommand> m_CommandShortcutMap = new map<int, EditorCommand>();
 
+	// This is done specifically for the ViewBindings that bind to these on the toolbar
+	// if you adapt ViewBinding to call a function, to acquire a delegate. ill give you $30
+	EditorCommand NewCommand;
+	EditorCommand OpenCommand;
+	EditorCommand SaveCommand;
+	EditorCommand SaveAsCommand;
+	EditorCommand CloseCommand;
+	EditorCommand ExitCommand;
+	EditorCommand EscapeCommand;
+	EditorCommand UndoCommand;
+	EditorCommand RedoCommand;
+	EditorCommand SelectAllCommand;
+	EditorCommand CutCommand;
+	EditorCommand CopyCommmand;
+	EditorCommand PasteCommand;
+	EditorCommand MagnetCommand;
+	EditorCommand GroundCommand;
+	EditorCommand SnapCommand;
+	EditorCommand CollisionCommand;
+	
 	void ~EditorCommandManager()
 	{		
 		delete m_Commands;
@@ -11,27 +31,27 @@ class EditorCommandManager
 	
 	void Init()
 	{
-		RegisterCommand(EditorNewCommand);
-		RegisterCommand(EditorOpenCommand);
-		RegisterCommand(EditorSaveCommand);
-		RegisterCommand(EditorSaveAsCommand);
-		RegisterCommand(EditorCloseCommand);
-		RegisterCommand(EditorExitCommand);
-		RegisterCommand(EditorEscapeCommand);
+		NewCommand = RegisterCommand(EditorNewCommand);
+		OpenCommand = RegisterCommand(EditorOpenCommand);
+		SaveCommand = RegisterCommand(EditorSaveCommand);
+		SaveAsCommand = RegisterCommand(EditorSaveAsCommand);
+		CloseCommand = RegisterCommand(EditorCloseCommand);
+		ExitCommand = RegisterCommand(EditorExitCommand);
+		EscapeCommand = RegisterCommand(EditorEscapeCommand);
 	
-		RegisterCommand(EditorUndoCommand);
-		RegisterCommand(EditorRedoCommand);
-		RegisterCommand(EditorSelectAllCommand);
-		RegisterCommand(EditorDeleteCommand);
+		UndoCommand = RegisterCommand(EditorUndoCommand);
+		RedoCommand = RegisterCommand(EditorRedoCommand);
+		SelectAllCommand = RegisterCommand(EditorSelectAllCommand);
+		DeleteCommand = RegisterCommand(EditorDeleteCommand);
 	
-		RegisterCommand(EditorCutCommand);
-		RegisterCommand(EditorCopyCommand);
-		RegisterCommand(EditorPasteCommand);
+		CutCommand = RegisterCommand(EditorCutCommand);
+		CopyCommand = RegisterCommand(EditorCopyCommand);
+		PasteCommand = RegisterCommand(EditorPasteCommand);
 	
-		RegisterCommand(EditorMagnetCommand);
-		RegisterCommand(EditorGroundCommand);
-		RegisterCommand(EditorSnapCommand);
-		RegisterCommand(EditorCollisionCommand);
+		MagnetCommand = RegisterCommand(EditorMagnetCommand);
+		GroundCommand = RegisterCommand(EditorGroundCommand);
+		SnapCommand = RegisterCommand(EditorSnapCommand);
+		CollisionCommand = RegisterCommand(EditorCollisionCommand);
 	
 		RegisterCommand(EditorDumpSceneCommand);
 		RegisterCommand(EditorEnvironmentControlCommand);
@@ -78,24 +98,26 @@ class EditorCommandManager
 		RegisterCommand(EditorHelpCommand);
 	}
 	
-	void RegisterCommand(typename command_type)
+	EditorCommand RegisterCommand(typename command_type)
 	{
 		if (!command_type.IsInherited(EditorCommand)) {
 			EditorLog.Error("Command must inherit from EditorCommand");
-			return;
+			return null;
 		}
 		
 		EditorCommand command = EditorCommand.Cast(command_type.Spawn());
 		if (!command) {
 			EditorLog.Error("Invalid command");
-			return;
+			return null;
 		}
 		
 		this[command_type] = command;
 		
 		if (command.GetShortcut()) {
 			m_CommandShortcutMap.Insert(command.GetShortcut().GetMask(), command);
-		}		
+		}	
+		
+		return command;	
 	}
 	
 	void Set(typename command_type, EditorCommand command)
