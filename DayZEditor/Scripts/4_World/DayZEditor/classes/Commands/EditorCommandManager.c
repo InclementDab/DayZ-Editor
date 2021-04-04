@@ -33,6 +33,7 @@ class EditorCommandManager
 		RegisterCommand(EditorSnapCommand);
 		RegisterCommand(EditorCollisionCommand);
 	
+		RegisterCommand(EditorDumpSceneCommand);
 		RegisterCommand(EditorEnvironmentControlCommand);
 		RegisterCommand(EditorPreferencesCommand);
 		RegisterCommand(EditorCameraControlsCommand);
