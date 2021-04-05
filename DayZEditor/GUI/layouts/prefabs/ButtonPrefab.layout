@@ -17,7 +17,7 @@ PanelWidgetClass ButtonPanel {
    visible 1
    clipchildren 1
    ignorepointer 1
-   size 1.057 1.14
+   size 1.05 1.05
    halign center_ref
    valign center_ref
    hexactpos 0
@@ -30,7 +30,7 @@ PanelWidgetClass ButtonPanel {
      ignorepointer 1
      color 0.8627 0.8627 0.8627 1
      position 0 0
-     size 0.964 0.94
+     size 1 1
      halign center_ref
      valign center_ref
      hexactpos 0
@@ -44,7 +44,7 @@ PanelWidgetClass ButtonPanel {
        clipchildren 1
        color 0.3137 0.3137 0.3137 0.9412
        position 0 0
-       size 1.01 1
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 0

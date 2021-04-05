@@ -10,13 +10,14 @@ class EditorCommandManager
 	EditorCommand SaveCommand;
 	EditorCommand SaveAsCommand;
 	EditorCommand CloseCommand;
+	EditorCommand DeleteCommand;
 	EditorCommand ExitCommand;
 	EditorCommand EscapeCommand;
 	EditorCommand UndoCommand;
 	EditorCommand RedoCommand;
 	EditorCommand SelectAllCommand;
 	EditorCommand CutCommand;
-	EditorCommand CopyCommmand;
+	EditorCommand CopyCommand;
 	EditorCommand PasteCommand;
 	EditorCommand MagnetCommand;
 	EditorCommand GroundCommand;

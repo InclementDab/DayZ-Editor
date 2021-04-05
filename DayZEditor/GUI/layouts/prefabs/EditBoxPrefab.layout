@@ -55,7 +55,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
     EditBoxWidgetClass ContentText {
      visible 1
      position 0 0
-     size 0.98 0.84
+     size 1 1
      halign center_ref
      valign center_ref
      hexactpos 0
@@ -78,7 +78,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
      keepsafezone 0
      color 0.7059 0.7059 0.7059 1
      position 0 0
-     size 1.006 1.06
+     size 1 1
      halign center_ref
      valign center_ref
      hexactpos 0

@@ -4,17 +4,17 @@ class EditorSaveCommand: EditorExportCommandBase
 	{
 		EditorLog.Trace("EditorSaveCommand");
 		
-		if (m_Editor.EditorSaveFile == string.Empty) {
+		if (m_Editor.GetSaveFile() == string.Empty) {
 			EditorFileDialog file_dialog(GetName(), "File", "*", GetDialogButtonName());
 			string file_name;
 			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 				return;
 			}
 			
-			m_Editor.EditorSaveFile = file_name;
+			m_Editor.SetSaveFile(file_name);
 		}
 		
-		ExportFile(m_Editor.EditorSaveFile, new ExportSettings());
+		ExportFile(m_Editor.GetSaveFile(), new ExportSettings());
 	}
 	
 	override string GetName() 

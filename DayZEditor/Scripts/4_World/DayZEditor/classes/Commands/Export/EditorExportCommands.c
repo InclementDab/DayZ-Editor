@@ -18,18 +18,18 @@ class EditorExportCommandBase: EditorCommand
 		ExportFile(file_name, export_settings);
 	}
 	
-	protected void ExportFile(string file_name, ExportSettings export_settings)
+	protected bool ExportFile(string file_name, ExportSettings export_settings)
 	{
 		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
 		if (!file_type) {
 			EditorLog.Error("Invalid FileType in Export");
-			return;
+			return false;
 		}
 		
 		// Warn the user if they are exporting with deleted objects
 		if (GetEditor().GetObjectManager().GetDeletedObjects().Count() > 0 && !file_type.IsInherited(EditorDZEFile)) {
 			if (EditorMessageBox.Show("Export Warning!", "NOTE: Exporting with this format does NOT support Object Deletion! You need to use .dze file format for this (File > Save)", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
-				return;
+				return false;
 			}
 		}
 		
@@ -43,6 +43,7 @@ class EditorExportCommandBase: EditorCommand
 		string message = string.Format("Saved %1 objects! (%2 deletions)", save_data.EditorObjects.Count().ToString(), CF.ObjectManager.GetHiddenMapObjects().Count());
 		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
 		EditorLog.Info(message);
+		return true;
 	}
 	
 	typename GetFileType();

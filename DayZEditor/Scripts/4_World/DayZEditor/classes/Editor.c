@@ -67,7 +67,7 @@ class Editor
 	
 	private bool 								m_Active;
 	string 										EditorSettingsFile = "$profile:/Editor/Settings.json";
-	string										EditorSaveFile;
+	protected string							EditorSaveFile;
 	string										EditorDirectory = "$profile:/Editor/";
 	
 	// modes
@@ -717,6 +717,16 @@ class Editor
 		}
 	}
 
+	void SetSaveFile(string save_file)
+	{
+		EditorSaveFile = save_file;
+		GetEditorHud().GetController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
+	}
+	
+	string GetSaveFile()
+	{
+		return EditorSaveFile;
+	}
 	
 	void SetBrush(EditorBrush brush) 
 	{
