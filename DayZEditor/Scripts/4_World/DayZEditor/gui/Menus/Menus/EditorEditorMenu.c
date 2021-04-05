@@ -6,6 +6,7 @@ class EditorEditorMenu: EditorMenu
 		
 		AddMenuButton(m_Editor.CommandManager[EditorReloadHudCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorReloadBrushesCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorExportLoaderCache]);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorEnvironmentControlCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorPreferencesCommand]);

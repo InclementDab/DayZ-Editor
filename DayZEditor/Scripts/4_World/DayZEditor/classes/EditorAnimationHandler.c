@@ -7,7 +7,7 @@ class EditorAnimationManagerTable
 	{
 		HumanAnimInterface anim_interface = human.GetAnimInterface();
 		
-		ref array<string> anim_split = {};
+		array<string> anim_split = {};
 		
 		anim_name.Split(",", anim_split);
 		CMD_Action = anim_interface.BindCommand(anim_split[0]);

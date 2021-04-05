@@ -83,6 +83,7 @@ class EditorCommandManager
 		RegisterCommand(EditorExportToCOM);
 		RegisterCommand(EditorExportToEvents);
 		RegisterCommand(EditorExportToMapGroupPos);
+		RegisterCommand(EditorExportLoaderCache);
 	
 		RegisterCommand(EditorImportFromInit);
 		RegisterCommand(EditorImportFromExpansion);
