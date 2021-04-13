@@ -13,6 +13,8 @@ class EditorCamera: Camera
 	float NearPlane;
 	float Exposure;
 	
+	float Smoothing = 0;
+	
 	float Speed = 60;
 	float Boost_Multiplier = 6.5;
 	float Drag = 0.05;
@@ -49,7 +51,6 @@ class EditorCamera: Camera
 	{
 		SelectTarget(null);
 	}
-		
 
 	void OnTargetSelected( Object target )
 	{
@@ -132,9 +133,6 @@ class EditorCamera: Camera
 			SetFOV(1);
 		}
 		
-		Math.Clamp(Speed, 0.001, FLT_MAX);
-		
-		
 		if (MoveEnabled) {
 						
 			if (Boost_Multiplier > 0) {
@@ -150,7 +148,7 @@ class EditorCamera: Camera
 				}
 			}
 			
-			linearVelocity = linearVelocity * Drag;
+			linearVelocity = linearVelocity * Smoothing;
 
 			linearVelocity = linearVelocity + (transform[0] * strafe * cam_speed);
 			linearVelocity = linearVelocity + (transform[1] * altitude * cam_speed);
@@ -175,9 +173,8 @@ class EditorCamera: Camera
 		
 		
 		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
-			//SelectTarget(null);
 			
-			angularVelocity = vector.Zero;
+			angularVelocity = angularVelocity * Math.Pow(Smoothing, -2);
 			angularVelocity[0] = angularVelocity[0] + ( yawDiff * Mouse_Sens * 10 );
 			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * Mouse_Sens * 10);
 			

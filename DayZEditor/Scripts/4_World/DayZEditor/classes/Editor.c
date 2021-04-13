@@ -781,7 +781,7 @@ class Editor
 		EditorObjectMap object_set = new EditorObjectMap();
 		EditorAction action = new EditorAction("Delete", "Create");
 		
-		foreach (int id, ref EditorObjectData editor_object_data: data_list) {
+		foreach (int id, EditorObjectData editor_object_data: data_list) {
 			
 			// Cache Data (for undo / redo)
 			if (!editor_object_data) continue;
