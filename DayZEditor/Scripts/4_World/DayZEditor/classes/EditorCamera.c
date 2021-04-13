@@ -149,10 +149,10 @@ class EditorCamera: Camera
 			}
 			
 			linearVelocity = linearVelocity * Smoothing;
-
-			linearVelocity = linearVelocity + (transform[0] * strafe * cam_speed);
-			linearVelocity = linearVelocity + (transform[1] * altitude * cam_speed);
-			linearVelocity = linearVelocity + (transform[2] * forward * cam_speed);
+			float temp_cam_speed = Math.Lerp(cam_speed, cam_speed * 0.01, Smoothing);
+			linearVelocity = linearVelocity + (transform[0] * strafe * temp_cam_speed);
+			linearVelocity = linearVelocity + (transform[1] * altitude * temp_cam_speed);
+			linearVelocity = linearVelocity + (transform[2] * forward * temp_cam_speed);
 
 			transform[3] = transform[3] + ( linearVelocity * timeSlice );
 
@@ -175,12 +175,12 @@ class EditorCamera: Camera
 		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
 			
 			angularVelocity = angularVelocity * Smoothing;			
-			// Math.Lerp(Mouse_Sens, Mouse_Sens * 0.25, Smoothing) is a counter to the smoothing sens increase set above
-			angularVelocity[0] = angularVelocity[0] + ( yawDiff * Math.Lerp(Mouse_Sens, Mouse_Sens * 0.25, Smoothing) * 10 );
-			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * Math.Lerp(Mouse_Sens, Mouse_Sens * 0.25, Smoothing) * 10);
+			float temp_cam_rot_speed = Math.Lerp(Mouse_Sens, Mouse_Sens * 0.01, Smoothing);
+			angularVelocity[0] = angularVelocity[0] + ( yawDiff * temp_cam_rot_speed * 10 );
+			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * temp_cam_rot_speed * 10);
 			
 			if (shouldRoll) {
-				angularVelocity[2] = angularVelocity[2] + ( speedInc * Math.Lerp(Mouse_Sens, Mouse_Sens * 0.25, Smoothing) * 10);
+				angularVelocity[2] = angularVelocity[2] + ( speedInc * temp_cam_rot_speed * 10);
 			}
 			
 			orientation = GetOrientation();
