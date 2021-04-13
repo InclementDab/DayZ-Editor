@@ -174,12 +174,13 @@ class EditorCamera: Camera
 		
 		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
 			
-			angularVelocity = angularVelocity * Math.Pow(Smoothing, -2);
-			angularVelocity[0] = angularVelocity[0] + ( yawDiff * Mouse_Sens * 10 );
-			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * Mouse_Sens * 10);
+			angularVelocity = angularVelocity * Smoothing;			
+			// Math.Lerp(Mouse_Sens, Mouse_Sens * 0.25, Smoothing) is a counter to the smoothing sens increase set above
+			angularVelocity[0] = angularVelocity[0] + ( yawDiff * Math.Lerp(Mouse_Sens, Mouse_Sens * 0.25, Smoothing) * 10 );
+			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * Math.Lerp(Mouse_Sens, Mouse_Sens * 0.25, Smoothing) * 10);
 			
 			if (shouldRoll) {
-				angularVelocity[2] = angularVelocity[2] + ( speedInc * Mouse_Sens * 10);
+				angularVelocity[2] = angularVelocity[2] + ( speedInc * Math.Lerp(Mouse_Sens, Mouse_Sens * 0.25, Smoothing) * 10);
 			}
 			
 			orientation = GetOrientation();
