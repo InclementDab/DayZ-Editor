@@ -1,10 +1,7 @@
-
-
 class EditorServerPermissions
 {
 	ref set<string> Players = new set<string>();
 }
-
 
 modded class MissionServer
 {
@@ -15,7 +12,6 @@ modded class MissionServer
 		m_ServerPermissions = new EditorServerPermissions();
 		JsonFileLoader<ref EditorServerPermissions>.JsonLoadFile("$profile:Editor/players.json", m_ServerPermissions);
 	}
-		
 	
 	override void InvokeOnConnect(PlayerBase player, PlayerIdentity identity)
 	{

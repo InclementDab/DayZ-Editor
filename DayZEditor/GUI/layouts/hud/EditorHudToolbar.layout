@@ -317,7 +317,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            draggable 0
            image0 ""
            imageTexture "{9D99EDE9BFE0A0F4}DayZEditor/GUI/icons/icon_new2.edds"
-           mode additive
+           mode blend
            "src alpha" 1
            "no wrap" 1
            stretch 1
@@ -496,7 +496,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            mode additive
            "src alpha" 1
            "no wrap" 1
-           stretch 1
+           stretch 0
            filter 0
           }
          }
@@ -536,7 +536,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            mode additive
            "src alpha" 1
            "no wrap" 1
-           stretch 1
+           stretch 0
            "flip u" 0
            filter 0
            "Transition width" 0
@@ -623,7 +623,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            mode additive
            "src alpha" 1
            "no wrap" 1
-           stretch 1
+           stretch 0
            "flip u" 0
            filter 0
            "Transition width" 0
@@ -670,7 +670,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            mode additive
            "src alpha" 1
            "no wrap" 1
-           stretch 1
+           stretch 0
            "flip u" 1
            filter 0
            pivot 0.5 0.5
@@ -717,7 +717,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            mode additive
            "src alpha" 1
            "no wrap" 1
-           stretch 1
+           stretch 0
            "flip u" 1
            filter 0
            "Transition width" 0
@@ -805,7 +805,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            mode blend
            "src alpha" 1
            "no wrap" 1
-           stretch 1
+           stretch 0
            filter 0
           }
          }
@@ -848,7 +848,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            mode blend
            "src alpha" 1
            "no wrap" 1
-           stretch 1
+           stretch 0
            filter 0
           }
          }
@@ -892,7 +892,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            mode blend
            "src alpha" 1
            "no wrap" 1
-           stretch 1
+           stretch 0
            filter 0
           }
          }
@@ -937,7 +937,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            mode blend
            "src alpha" 1
            "no wrap" 1
-           stretch 1
+           stretch 0
            filter 0
           }
          }

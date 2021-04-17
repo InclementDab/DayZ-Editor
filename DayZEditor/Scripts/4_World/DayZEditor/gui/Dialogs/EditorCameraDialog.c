@@ -1,6 +1,5 @@
 class EditorCameraDialog: EditorDialogBase
 {
-
 	static bool OpenCameraGroup = true;
 	static bool OpenColorCorrectionGroup;
 	static bool OpenAdvancedGroup;

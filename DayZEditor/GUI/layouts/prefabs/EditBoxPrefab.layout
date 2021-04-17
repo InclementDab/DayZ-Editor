@@ -55,7 +55,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
     EditBoxWidgetClass ContentText {
      visible 1
      position 0 0
-     size 1 1
+     size 0.97 1
      halign center_ref
      valign center_ref
      hexactpos 0
@@ -64,7 +64,8 @@ WrapSpacerWidgetClass EditBoxPrefab {
      vexactsize 0
      scaled 1
      scriptclass "ViewBinding"
-     font "gui/fonts/etelkatextpro"
+     style ServerBrowser
+     font "gui/fonts/MetronLight"
      {
       ScriptParamsClass {
        Binding_Name "Value"

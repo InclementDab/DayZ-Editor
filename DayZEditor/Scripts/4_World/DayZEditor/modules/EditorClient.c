@@ -90,7 +90,6 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnMissionLoaded");
 	}
 	
-	
 	// Inputs
 	private bool ShouldProcessInput(UAInput input)
 	{
@@ -162,7 +161,6 @@ class EditorClientModule: JMModuleBase
 				GetGame().GetPlayer().DisableSimulation(GetEditor().GetEditorHud().IsVisible());
 			}
 		}
-		
 	}
 	
 	private void OnEditorToggleMap(UAInput input)

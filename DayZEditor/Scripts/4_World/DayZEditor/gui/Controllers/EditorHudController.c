@@ -181,7 +181,6 @@ class EditorHudController: EditorControllerBase
 		}
 	}
 	
-			
 	void LeftbarHideExecute(ButtonCommandArgs args) 
 	{
 		LeftbarFrame.Show(!args.GetButtonState());
@@ -211,9 +210,6 @@ class EditorHudController: EditorControllerBase
 		RightbarSpacerData.Insert(category);
 	}	
 
-
-
-	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
@@ -259,7 +255,6 @@ class EditorHudController: EditorControllerBase
 	}
 	*/
 	
-	
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{
 		if (RecursiveGetParent(w, "LeftbarScroll") || RecursiveGetParent(w, "RightbarScroll")) {
@@ -300,7 +295,6 @@ class EditorHudController: EditorControllerBase
 		
 		return false;
 	}
-	
 	
 	private void OnObjectSelected(Class context, EditorObject target)
 	{

@@ -81,10 +81,12 @@ FrameWidgetClass EditorMenuItem {
        scaled 1
        scriptclass "ViewBinding"
        image0 ""
+       imageTexture "{5E2BA9CFCF99DFE0}DayZEditor/GUI/icons/icon_save.edds"
        mode blend
        "src alpha" 1
-       stretch 1
+       stretch 0
        filter 1
+       nocache 0
        pivot 0.5 0.5
        {
         ScriptParamsClass {
