@@ -6,7 +6,7 @@ WrapSpacerWidgetClass EditorMenuContent {
  vexactpos 1
  hexactsize 1
  vexactsize 0
- scaled 0
+ scaled 1
  priority 500
  scriptclass "ViewBinding"
  style Colorable

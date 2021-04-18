@@ -201,6 +201,7 @@ PanelWidgetClass EditorOptionSlider {
               TextWidgetClass EditorOptionSliderReadout {
                clipchildren 1
                inheritalpha 0
+               ignorepointer 1
                color 0.7843 0.7843 0.7843 1
                position 0 0
                size 0.2 1

@@ -95,6 +95,7 @@ WrapSpacerWidgetClass EditorDialogOption {
      scriptclass "ViewBinding"
      text "Test Me"
      font "gui/fonts/etelkatextpro"
+     "size to text v" 1
      "text valign" center
      {
       ScriptParamsClass {

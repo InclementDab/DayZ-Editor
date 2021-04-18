@@ -266,6 +266,156 @@ ImageSetClass {
    Size 128 128
    Flags 0
   }
+  ImageSetDefClass outline_top {
+   Name "outline_top"
+   Pos 576 397
+   Size 1 2
+   Flags 0
+  }
+  ImageSetDefClass outline_left {
+   Name "outline_left"
+   Pos 526 447
+   Size 2 1
+   Flags 0
+  }
+  ImageSetDefClass outline_right {
+   Name "outline_right"
+   Pos 625 447
+   Size 2 1
+   Flags 0
+  }
+  ImageSetDefClass outline_bottom {
+   Name "outline_bottom"
+   Pos 575 497
+   Size 1 2
+   Flags 0
+  }
+  ImageSetDefClass outline_top_left {
+   Name "outline_top_left"
+   Pos 525 397
+   Size 3 3
+   Flags 0
+  }
+  ImageSetDefClass outline_top_right {
+   Name "outline_top_right"
+   Pos 624 397
+   Size 3 3
+   Flags 0
+  }
+  ImageSetDefClass outline_bottom_left {
+   Name "outline_bottom_left"
+   Pos 525 496
+   Size 3 3
+   Flags 0
+  }
+  ImageSetDefClass outline_bottom_right {
+   Name "outline_bottom_right"
+   Pos 624 496
+   Size 3 3
+   Flags 0
+  }
+  ImageSetDefClass highlight_green {
+   Name "highlight_green"
+   Pos 529 401
+   Size 1 1
+   Flags 0
+  }
+  ImageSetDefClass highlight_blue {
+   Name "highlight_blue"
+   Pos 533 401
+   Size 1 1
+   Flags 0
+  }
+  ImageSetDefClass outline_center {
+   Name "outline_center"
+   Pos 542 403
+   Size 2 2
+   Flags 0
+  }
+  ImageSetDefClass outline_top_s {
+   Name "outline_top_s"
+   Pos 542 401
+   Size 2 2
+   Flags 0
+  }
+  ImageSetDefClass outline_bottom_s {
+   Name "outline_bottom_s"
+   Pos 542 405
+   Size 2 2
+   Flags 0
+  }
+  ImageSetDefClass outline_right_s {
+   Name "outline_right_s"
+   Pos 544 403
+   Size 2 2
+   Flags 0
+  }
+  ImageSetDefClass outline_left_s {
+   Name "outline_left_s"
+   Pos 540 403
+   Size 2 2
+   Flags 0
+  }
+  ImageSetDefClass outline_topleft_s {
+   Name "outline_topleft_s"
+   Pos 540 401
+   Size 2 2
+   Flags 0
+  }
+  ImageSetDefClass outline_topright_s {
+   Name "outline_topright_s"
+   Pos 544 401
+   Size 2 2
+   Flags 0
+  }
+  ImageSetDefClass outline_bottomleft_s {
+   Name "outline_bottomleft_s"
+   Pos 540 405
+   Size 2 2
+   Flags 0
+  }
+  ImageSetDefClass outline_bottomright_s {
+   Name "outline_bottomright_s"
+   Pos 544 405
+   Size 2 2
+   Flags 0
+  }
+  ImageSetDefClass highlight_green_3 {
+   Name "highlight_green_3"
+   Pos 529 404
+   Size 1 1
+   Flags 0
+  }
+  ImageSetDefClass highlight_green_1 {
+   Name "highlight_green_1"
+   Pos 529 402
+   Size 1 1
+   Flags 0
+  }
+  ImageSetDefClass highlight_blue_3 {
+   Name "highlight_blue_3"
+   Pos 533 404
+   Size 1 1
+   Flags 0
+  }
+  ImageSetDefClass highlight_blue_2 {
+   Name "highlight_blue_2"
+   Pos 533 403
+   Size 1 1
+   Flags 0
+  }
+  ImageSetDefClass highlight_blue_1 {
+   Name "highlight_blue_1"
+   Pos 533 402
+   Size 1 1
+   Flags 0
+  }
+  ImageSetDefClass highlight_green_2 {
+   Name "highlight_green_2"
+   Pos 529 403
+   Size 1 1
+   Flags 0
+  }
  }
  Groups {
  }
