@@ -129,7 +129,7 @@ class EditorHudToolbarController: EditorControllerBase
 				break;
 			}
 			case "ControlPlayerState": {
-				GetGame().GetPlayer().GetInputController().SetDisabled(!ControlPlayerState);
+				GetEditor().GetPlayer().GetInputController().SetDisabled(!ControlPlayerState);
 				Camera.GetCurrentCamera().DisableSimulation(ControlPlayerState);
 				break;
 			}

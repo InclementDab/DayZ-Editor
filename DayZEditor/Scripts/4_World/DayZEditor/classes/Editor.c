@@ -240,6 +240,25 @@ class Editor
 		}
 	}
 	
+	// Get Selected player in Editor
+	PlayerBase GetPlayer()
+	{
+		return m_Player;
+	}
+	
+	void SetPlayer(PlayerBase player)
+	{
+		// You can only control one player, this is how
+		EditorObjectMap placed_objects = GetPlacedObjects();
+		foreach (int id, EditorObject placed_object: placed_objects) {
+			PlayerBase loop_player = PlayerBase.Cast(placed_object.GetWorldObject());
+			if (loop_player && loop_player != player) {
+				placed_object.Control = false;
+			}
+		}
+		
+		m_Player = player;
+	}
 	
 	void ProcessInput(Input input)
 	{

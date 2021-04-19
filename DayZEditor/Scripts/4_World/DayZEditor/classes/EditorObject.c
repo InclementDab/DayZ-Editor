@@ -300,6 +300,11 @@ class EditorObject: EditorWorldObject
 				Debug.DrawSphere(point.GetWorldObject().GetWorldPosition());
 			}
 		}
+		
+		PlayerBase player = PlayerBase.Cast(m_WorldObject);
+		if (player && player == GetEditor().GetPlayer()) {
+			Control = true;
+		}	
 	}
 	
 	// EditorObjects can also be psuedo-controllers
@@ -356,7 +361,12 @@ class EditorObject: EditorWorldObject
 			}
 			
 			case "Control": {
-				ControlPlayer(Control);
+				PlayerBase player = PlayerBase.Cast(m_WorldObject);
+				if (player) {
+					GetEditor().SetPlayer(player);
+				}				
+				
+				GetEditor().GetEditorHud().GetController().PropertyChanged("ControlPlayerState");
 				break;
 			}
 			
