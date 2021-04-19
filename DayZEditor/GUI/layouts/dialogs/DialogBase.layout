@@ -64,7 +64,7 @@ WrapSpacerWidgetClass EditorDialog {
        "italic text" 0
        "bold text" 0
        "text sharpness" 0.9
-       "exact text" 1
+       "exact text" 0
        "size to text h" 0
        "text halign" center
        "text valign" center
@@ -77,12 +77,12 @@ WrapSpacerWidgetClass EditorDialog {
       PanelWidgetClass TitleClosePanel {
        ignorepointer 1
        color 0.7843 0.2941 0.2745 1
-       position 0.005 0
-       size 0.035 0.7
+       position 2 0
+       size 0.05 0.9
        halign right_ref
        valign center_ref
-       hexactpos 0
-       vexactpos 0
+       hexactpos 1
+       vexactpos 1
        hexactsize 0
        vexactsize 0
        style rover_sim_colorable

@@ -87,7 +87,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
      hexactsize 0
      vexactsize 0
      draggable 0
-     style Outline
+     style Slim_Outline2
     }
    }
   }
