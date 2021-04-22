@@ -58,8 +58,10 @@ class EditorMenuItemCategory: EditorMenuItem
 	{
 		// Setting this here because menu root needs to be moved before we know where we are
 		float x1, y1;
+		float sx1, sy1;
 		m_LayoutRoot.GetScreenPos(x1, y1);
-		m_TemplateController.ChildMenu.GetLayoutRoot().SetPos(x1 + 275, y1); // 275 is menu width
+		m_LayoutRoot.GetScreenSize(sx1, sy1);
+		m_TemplateController.ChildMenu.GetLayoutRoot().SetPos(x1 + sx1, y1); // 275 is menu width
 		m_TemplateController.ChildMenu.GetLayoutRoot().Show(true);
 		return super.OnMouseEnter(w, x, y);
 	}	
