@@ -23,6 +23,9 @@ class EditorCommandManager
 	EditorCommand GroundCommand;
 	EditorCommand SnapCommand;
 	EditorCommand CollisionCommand;
+	EditorCommand BrushToggleCommand;
+	EditorCommand BrushDensityCommand;
+	EditorCommand BrushRadiusCommand;
 	
 	void ~EditorCommandManager()
 	{		
@@ -66,9 +69,9 @@ class EditorCommandManager
 		RegisterCommand(EditorPlaceObjectCommand);
 	
 		RegisterCommand(EditorBrushPropertiesCommand);
-		RegisterCommand(EditorBrushToggleCommand);
-		RegisterCommand(EditorBrushDensityCommand);
-		RegisterCommand(EditorBrushRadiusCommand);
+		BrushToggleCommand = RegisterCommand(EditorBrushToggleCommand);
+		BrushDensityCommand = RegisterCommand(EditorBrushDensityCommand);
+		BrushRadiusCommand = RegisterCommand(EditorBrushRadiusCommand);
 	
 		RegisterCommand(EditorObjectPropertiesCommand);
 		RegisterCommand(EditorShowCommand);

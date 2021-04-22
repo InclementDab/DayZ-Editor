@@ -1080,6 +1080,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        vexactpos 1
        hexactsize 1
        vexactsize 0
+       scriptclass "ViewBinding"
        {
         PanelWidgetClass BrushRadiusSliderBackground {
          visible 1
@@ -1137,6 +1138,11 @@ WrapSpacerWidgetClass ToolbarWrapper {
          }
         }
        }
+       {
+        ScriptParamsClass {
+         Relay_Command "m_Editor.CommandManager.BrushRadiusCommand"
+        }
+       }
       }
       PanelWidgetClass BrushDensityFrame {
        visible 0
@@ -1147,6 +1153,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        vexactpos 1
        hexactsize 1
        vexactsize 0
+       scriptclass "ViewBinding"
        {
         PanelWidgetClass BrushDensitySliderBackground {
          visible 1
@@ -1206,6 +1213,11 @@ WrapSpacerWidgetClass ToolbarWrapper {
            Binding_Name "BrushDensity"
           }
          }
+        }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "m_Editor.CommandManager.BrushDensityCommand"
         }
        }
       }
