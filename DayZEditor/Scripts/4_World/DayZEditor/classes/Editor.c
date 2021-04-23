@@ -118,9 +118,7 @@ class Editor
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
 		}
-		
-		SetActive(true);
-		
+				
 		thread AutoSaveThread();
 	}
 	
@@ -140,14 +138,11 @@ class Editor
 		delete m_SessionCache;
 		delete ObjectInHand;
 	}
-
 	
 	static Editor Create(PlayerBase player)
 	{
 		EditorLog.Trace("Editor::Create");
 		g_Editor = new Editor(player);
-		g_Editor.SetActive(false);
-		g_Editor.SetActive(true);
 		return g_Editor;
 	}
 	
