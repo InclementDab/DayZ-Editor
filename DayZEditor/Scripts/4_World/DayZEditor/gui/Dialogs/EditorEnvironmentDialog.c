@@ -84,12 +84,11 @@ class EditorEnvironmentDialog: EditorDialogBase
 		group_prefab.Insert(new SliderPrefab("Wind", m_Controller, "wind", wind, 0, 1));
 				
 		AddContent(group_prefab);
-			
-
 		AddButton(DialogResult.OK);
 	}
 	
-	override typename GetControllerType() {
+	override typename GetControllerType() 
+	{
 		return EditorEnvironmentDialogController;
 	}
 }

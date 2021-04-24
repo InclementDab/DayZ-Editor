@@ -30,13 +30,13 @@ class EditorExportDialogController: DialogBaseController
 class EditorExportDialog: EditorDialogBase
 {
 	protected autoptr EditBoxPrefab m_EditBoxPrefab;
-	
+		
 	void EditorExportDialog(string title, string caption = "", string default_value = "", string button_name = "OK")
 	{
 		m_EditBoxPrefab = new EditBoxPrefab(caption, m_Controller, default_value);
 		AddContent(m_EditBoxPrefab);
-		AddContent(new CheckBoxPrefab("Export Selected Objects", m_Controller, "export_selected", false));
-				
+		AddContent(new CheckBoxPrefab("Export Selected Objects", m_Controller, "export_selected"));
+		
 		AddButton(DialogResult.OK);
 		AddButton(DialogResult.Cancel);
 	}
@@ -53,15 +53,17 @@ class EditorExportDialog: EditorDialogBase
 			if (edit_box) {
 				edit_data = edit_box.GetText();
 			}
+			
 			export_settings.ExportSelectedOnly = EditorExportDialogController.Cast(m_Controller).export_selected;
-			Sleep(1);
+			Sleep(10);
 		}
 		
 		Log("DialogResult: %1", typename.EnumToString(DialogResult, m_DialogResult));		
 		return m_DialogResult;
 	}
 	
-	override typename GetControllerType() {
+	override typename GetControllerType() 
+	{
 		return EditorExportDialogController;
 	}
 }

@@ -45,11 +45,13 @@ class PrefabBase<Class TValue>: ScriptView
 		g_Script.CallFunction(m_BindingContext, "PropertyChanged", null, m_BindingName);
 	}
 
-	override typename GetControllerType() {
+	override typename GetControllerType() 
+	{
 		return (new PrefabBaseController<TValue>()).Type();
 	}
 	
-	PrefabBaseController<TValue> GetPrefabController() {
+	PrefabBaseController<TValue> GetPrefabController() 
+	{
 		return m_PrefabBaseController;
 	}
 }
