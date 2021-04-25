@@ -31,19 +31,16 @@ class EditorExportDialog: EditorDialogBase
 {
 	protected autoptr EditBoxPrefab m_EditBoxPrefab;
 	protected ref GroupPrefab m_CheckBoxExport;
-	
-	static bool Object_Group = true;
-		
+			
 	void EditorExportDialog(string title, string caption = "", string default_value = "", string button_name = "OK")
 	{
 		m_EditBoxPrefab = new EditBoxPrefab(caption, m_Controller, default_value);
 		AddContent(m_EditBoxPrefab);
 
-		m_CheckBoxExport = new GroupPrefab("Advanced", m_Controller, string.Empty);
-		m_CheckBoxExport.Insert(new CheckBoxPrefab("Export Selected Objects", m_Controller, "export_selected", false));
-		m_CheckBoxExport.Open(Object_Group);
+		GroupPrefab advanced_group = new GroupPrefab("Advanced", m_Controller, string.Empty);
+		advanced_group.Insert(new CheckBoxPrefab("Export Selected Objects", m_Controller, "export_selected", false));
 
-		AddContent(m_CheckBoxExport);
+		AddContent(advanced_group);
 		
 		AddButton(DialogResult.OK);
 		AddButton(DialogResult.Cancel);
