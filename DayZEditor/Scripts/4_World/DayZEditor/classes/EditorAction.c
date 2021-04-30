@@ -22,8 +22,8 @@ class EditorAction
 	private string name;
 	private bool undone = false;
 	
-	ref map<int, ref Param> UndoParameters = null;
-	ref map<int, ref Param> RedoParameters = null;
+	ref map<int, ref Param> UndoParameters = new map<int, ref Param>();
+	ref map<int, ref Param> RedoParameters = new map<int, ref Param>();
 	
 	string m_UndoAction, m_RedoAction;
 			
@@ -32,15 +32,13 @@ class EditorAction
 		name = undo_action;
 		m_UndoAction = undo_action;
 		m_RedoAction = redo_action;
-		UndoParameters = new map<int, ref Param>();
-		RedoParameters = new map<int, ref Param>();
 	}
 	
 	void ~EditorAction()
 	{
 		EditorLog.Trace("~EditorAction");
 		
-		/*foreach (int i, ref Param p: UndoParameters)
+		/*foreach (int i, Param p: UndoParameters)
 			GetEditor().DeleteSessionData(i);*/
 	}
 	
@@ -58,7 +56,7 @@ class EditorAction
 	{
 		EditorLog.Trace("EditorAction::CallUndo %1", name);		
 		undone = true;
-		foreach (int id, ref Param param: UndoParameters) {
+		foreach (int id, Param param: UndoParameters) {
 			g_Script.Call(this, m_UndoAction, param);
 		}
 	}
@@ -67,31 +65,31 @@ class EditorAction
 	{
 		EditorLog.Trace("EditorAction::CallRedo %1", name);
 		undone = false;
-		foreach (int id, ref Param param: RedoParameters) {
+		foreach (int id, Param param: RedoParameters) {
 			g_Script.Call(this, m_RedoAction, param);
 		}
 		
 	}
 	
-	void InsertUndoParameter(Object source, ref Param params)
+	void InsertUndoParameter(Object source, Param params)
 	{
 		//EditorLog.Trace("InsertUndoParameter %1", source.GetID().ToString());		
 		UndoParameters.Insert(source.GetID(), params);
 	}	
 	
-	void InsertUndoParameter(EditorObject source, ref Param params)
+	void InsertUndoParameter(EditorObject source, Param params)
 	{
 		//EditorLog.Trace("InsertUndoParameter %1", source.GetID().ToString());
 		UndoParameters.Insert(source.GetID(), params);
 	}	
 		
-	void InsertRedoParameter(Object source, ref Param params)
+	void InsertRedoParameter(Object source, Param params)
 	{
 		//EditorLog.Trace("InsertRedoParameter %1", source.GetID().ToString());		
 		RedoParameters.Insert(source.GetID(), params);
 	}
 	
-	void InsertRedoParameter(EditorObject source, ref Param params)
+	void InsertRedoParameter(EditorObject source, Param params)
 	{
 		//EditorLog.Trace("InsertRedoParameter %1", source.GetID().ToString());		
 		RedoParameters.Insert(source.GetID(), params);
@@ -120,7 +118,6 @@ class EditorAction
 		
 		GetEditor().DeleteObject(object, false);
 	}
-	
 	
 	void SetTransform(Param3<int, vector, vector> params)
 	{
