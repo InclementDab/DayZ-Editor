@@ -757,7 +757,6 @@ class Editor
 		return ObjectInHand != null; 
 	}
 	
-	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject " + target);	

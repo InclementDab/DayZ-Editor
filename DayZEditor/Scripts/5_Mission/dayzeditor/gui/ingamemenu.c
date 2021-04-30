@@ -35,7 +35,6 @@ modded class InGameMenu
 	{
 		if (!IsMissionOffline())
 			return;
-
 		
 		EditorLoadMapCommand cmd = new EditorLoadMapCommand();
 		cmd.Execute(this, null);

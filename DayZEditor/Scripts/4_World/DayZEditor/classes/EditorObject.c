@@ -175,7 +175,7 @@ class EditorObject: EditorWorldObject
 		Update();
 		DestroyBoundingBox();
 		
-		//GetGame().ObjectDelete(m_WorldObject);
+		GetGame().ObjectDelete(m_WorldObject);
 				
 		// Store map objects
 		if (m_WorldObject) {
