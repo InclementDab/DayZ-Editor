@@ -522,7 +522,7 @@ class Editor
 			return null;
 		}
 		
-		EntityAI entity = editor_hologram.GetWorldObject();
+		Object entity = editor_hologram.GetWorldObject();
 		if (!entity) {
 			return null;
 		}
@@ -783,7 +783,6 @@ class Editor
 		if (create_undo) {
 			InsertAction(action);
 		}
-
 		
 		return editor_object;
 	}

@@ -95,7 +95,7 @@ class EditorObject: EditorWorldObject
 			m_Data.WorldObject = m_WorldObject;
 		}
 		
-		m_WorldObject = EntityAI.Cast(m_Data.WorldObject);
+		m_WorldObject = m_Data.WorldObject;
 		
 		// Trash the object because its uncreatable
 		if (!m_WorldObject) { 
@@ -371,7 +371,10 @@ class EditorObject: EditorWorldObject
 			}
 			
 			case "Simulate": {
-				m_WorldObject.DisableSimulation(!Simulate);
+				EntityAI ai = EntityAI.Cast(m_WorldObject);
+				if (ai) {
+					ai.DisableSimulation(!Simulate);
+				}
 				break;
 			}
 			

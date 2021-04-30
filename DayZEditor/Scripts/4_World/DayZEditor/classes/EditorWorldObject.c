@@ -1,7 +1,7 @@
 class EditorWorldObject
 {
-	protected EntityAI m_WorldObject;
-	EntityAI GetWorldObject() {
+	protected Object m_WorldObject;
+	Object GetWorldObject() {
 		return m_WorldObject;
 	}
 	
@@ -12,13 +12,13 @@ class EditorWorldObject
 		}
 	}
 	
-	static EntityAI CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)
+	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)
 	{
 		// Set to ECE_SETUP for AI compat. DONT ADD ECE_LOCAL
 		type = type.Trim();
 		if (type == string.Empty) return null;
 		
-		EntityAI obj;	
+		Object obj;	
 		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS))) {
 			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
 			return null;
@@ -37,7 +37,9 @@ class EditorWorldObject
 		}
 		*/
 		// Needed for AI Placement			
-		obj.DisableSimulation(true);
+		if (EntityAI.Cast(obj)) {
+			EntityAI.Cast(obj).DisableSimulation(true);
+		}
 		obj.SetOrientation(orientation);
 		obj.SetScale(scale);
 		obj.Update();
