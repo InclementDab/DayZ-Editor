@@ -22,7 +22,7 @@ class EditorOpenCommand: EditorImportCommandBase
 				Sleep(1);
 			}
 		}
-*/
+*/		
 		if (save_data) {
 			m_Editor.SetSaveFile(file_name);
 			m_Editor.GetCamera().SetPosition(save_data.CameraPosition);
