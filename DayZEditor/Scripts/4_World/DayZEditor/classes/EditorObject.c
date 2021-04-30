@@ -175,6 +175,7 @@ class EditorObject: EditorWorldObject
 		Update();
 		DestroyBoundingBox();
 		
+		// this was commented out for a while and im not sure why
 		GetGame().ObjectDelete(m_WorldObject);
 				
 		// Store map objects
@@ -191,7 +192,6 @@ class EditorObject: EditorWorldObject
 		delete OnObjectDeselected;
 	}
 			
-	
 	private bool m_IsSelected;
 	bool IsSelected() return m_IsSelected;
 	void OnSelected()
@@ -269,7 +269,6 @@ class EditorObject: EditorWorldObject
 	float GetScale()
 	{
 		return GetWorldObject().GetScale();
-		return 1;
 	}
 	
 	void Update() 

@@ -104,7 +104,7 @@
         </input>
 		
 		<input name="EditorTeleportPlayerToCursor">
-            <btn name="kH" />
+            <btn name="kT" />
         </input>
 		
         <input name="EditorMoveObjectForward">
