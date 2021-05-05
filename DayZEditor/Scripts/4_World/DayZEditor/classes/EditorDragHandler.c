@@ -87,15 +87,11 @@ class ObjectDragHandler: DragHandler
 			surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
 			
 			vector pos_delta = selected_transform[3] - transform[3];
-
-			// Handle Z-Only motion
-			if (KeyState(KeyCode.KC_LMENU)) {
-				//selected_transform[3] = ground_position + selected_transform[1] * vector.Distance(GetGroundPosition(transform), transform[3]); // - vector.Distance(GetGroundPosition(selected_transform), selected_transform[3])
-
+			vector local_dir;
 			// Handle XY Rotation
-			} else if (KeyState(KeyCode.KC_LSHIFT)) {
+			if (KeyState(KeyCode.KC_LSHIFT)) {
 				
-				vector rot_pos;
+				/*vector rot_pos;
 				//angle -= angle_delta;				
 				//float angle = Math.Atan2(cursor_delta[0], cursor_delta[2]) * Math.RAD2DEG;	
 
@@ -110,9 +106,9 @@ class ObjectDragHandler: DragHandler
 						selected_transform[3] = ground_position + selected_transform[1] * vector.Distance(ground_position, selected_transform[3]);
 					}
 				}
-			
+			*/
 			// Handle regular motion for all children
-			} else {
+			} else if (!KeyState(KeyCode.KC_LMENU)) {
 
 				if (m_Editor.MagnetMode) {
 					vector local_ori = selected_object.GetWorldObject().GetDirection();
@@ -120,8 +116,6 @@ class ObjectDragHandler: DragHandler
 					selected_transform[1] = surface_normal;
 					selected_transform[2] = surface_normal * (local_ori * vector.Up);
 				}
-				
-
 				
 				if (m_Editor.GroundMode) {
 					if (m_Editor.MagnetMode) {
@@ -210,6 +204,10 @@ class ObjectDragHandler: DragHandler
 			// Handle Z-Only motion
 			if (KeyState(KeyCode.KC_LMENU)) {
 				selected_object2.SetPosition(selected_object2.GetPosition() + deltapos);
+			}
+			
+			else if (KeyState(KeyCode.KC_LSHIFT)) {
+				//EditorMath.RotateAroundPoint();
 			}
 		}
 	}
