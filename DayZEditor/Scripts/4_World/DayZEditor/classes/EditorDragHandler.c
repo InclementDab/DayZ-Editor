@@ -75,7 +75,10 @@ class ObjectDragHandler: DragHandler
 		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {
 			
-			if (selected_object == target) continue;			
+			if (selected_object == target) { 
+				continue; 
+			}
+			
 			vector selected_transform[4];
 			selected_object.GetTransform(selected_transform);
 			
@@ -136,6 +139,7 @@ class ObjectDragHandler: DragHandler
 			selected_object.SetTransform(selected_transform);
 		}
 		
+		vector deltapos = m_EditorObject.GetPosition();
 		size = m_EditorObject.GetSize();
 		ground_position = GetGroundPosition(transform);
 		surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
@@ -176,7 +180,6 @@ class ObjectDragHandler: DragHandler
 		
 		// Handle regular motion
 		else {
-			
 			if (m_Editor.MagnetMode) {
 				local_ori = m_EditorObject.GetWorldObject().GetDirection();
 				transform[0] = surface_normal * local_ori;
@@ -195,6 +198,19 @@ class ObjectDragHandler: DragHandler
 				transform[3] = cursor_pos;
 				transform[3][1] = transform[3][1] + m_EditorObject.GetYDistance();
 			} 			
+		}
+		
+		deltapos = transform[3] - deltapos;
+		
+		foreach (EditorObject selected_object2: selected_objects) {
+			if (selected_object == target) { 
+				continue; 
+			}
+			
+			// Handle Z-Only motion
+			if (KeyState(KeyCode.KC_LMENU)) {
+				selected_object2.SetPosition(selected_object2.GetPosition() + deltapos);
+			}
 		}
 	}
 }
