@@ -1,8 +1,8 @@
 class EditorSaveAsCommand: EditorExportCommandBase
 {		
-	protected override bool ExportFile(string file_name, ExportSettings export_settings)
+	protected override bool ExportFile(string file_name, ExportSettings export_settings, bool warn_on_overwrite)
 	{
-		if (!super.ExportFile(file_name, export_settings)) {
+		if (!super.ExportFile(file_name, export_settings, warn_on_overwrite)) {
 			return false;
 		}
 		

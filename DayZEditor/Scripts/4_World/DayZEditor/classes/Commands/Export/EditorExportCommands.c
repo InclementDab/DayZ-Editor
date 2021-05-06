@@ -9,16 +9,16 @@ class EditorExportCommandBase: EditorCommand
 		if (file_dialog.ShowDialog(file_name, export_settings) != DialogResult.OK) {
 			return;
 		}
-				
+		
 		if (file_name == string.Empty) {
 			MessageBox.Show("Error", "No file name specified!", MessageBoxButtons.OK);
 			return;
 		}
-
-		ExportFile(file_name, export_settings);
+		
+		ExportFile(file_name, export_settings, true);
 	}
 	
-	protected bool ExportFile(string file_name, ExportSettings export_settings)
+	protected bool ExportFile(string file_name, ExportSettings export_settings, bool warn_on_overwrite)
 	{
 		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
 		if (!file_type) {
@@ -36,8 +36,13 @@ class EditorExportCommandBase: EditorCommand
 		file_name = "$profile:Editor/" + file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 		
-		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor, export_settings.ExportSelectedOnly);
+		if (FileExist(file_name) && warn_on_overwrite) {
+			if (MessageBox.Show("Are you sure?", "File " + file_name + " already exists. Overwrite?", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
+				return false;
+			}
+		}
 		
+		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor, export_settings.ExportSelectedOnly);
 		file_type.Export(save_data, file_name, export_settings);		
 		
 		string message = string.Format("Saved %1 objects! (%2 deletions)", save_data.EditorObjects.Count().ToString(), CF.ObjectManager.GetHiddenMapObjects().Count());
@@ -48,7 +53,8 @@ class EditorExportCommandBase: EditorCommand
 	
 	typename GetFileType();
 	
-	string GetDialogButtonName() {
+	string GetDialogButtonName() 
+	{
 		return "Export";
 	}
 }

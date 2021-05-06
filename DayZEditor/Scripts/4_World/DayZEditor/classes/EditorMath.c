@@ -83,7 +83,7 @@ class EditorMath
 		int i = 0;
 		
 		Camera old = Camera.GetCurrentCamera();
-		Camera c = GetGame().CreateObject("staticcamera", p0);
+		Camera c = Camera.Cast(GetGame().CreateObject("staticcamera", p0));
 		c.SetActive(true);
 		
 		while (i < duration * 1000) {
