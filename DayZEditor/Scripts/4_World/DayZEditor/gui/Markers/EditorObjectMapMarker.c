@@ -4,7 +4,7 @@ class EditorObjectMapMarker: EditorObjectMarker
 	
 	void EditorObjectMapMarker(EditorObject editor_object)
 	{
-		m_DragHandler = new MapDragHandler(m_EditorObject);
+		m_DragHandler = new EditorMapDragHandler(m_EditorObject);
 		m_EditorMap = m_Editor.GetEditorHud().EditorMapWidget;
 	}
 	

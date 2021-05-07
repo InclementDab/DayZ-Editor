@@ -36,7 +36,7 @@ class EditorCollapsibleListItem: EditorListItem
 					switch (list_item.Type()) {
 						
 						case EditorPlacedListItem: {
-							GetEditor().SelectObject(EditorPlacedListItem.Cast(list_item).GetData());
+							GetEditor().SelectObject(EditorPlacedListItem.Cast(list_item).GetEditorObject());
 							break;
 						}
 						

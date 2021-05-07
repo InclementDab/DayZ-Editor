@@ -3,7 +3,7 @@ class EditorObjectMarker: EditorMarker
 	protected Editor m_Editor;
 	protected EditorObject m_EditorObject;
 
-	protected ref DragHandler m_DragHandler;
+	protected ref EditorDragHandler m_DragHandler;
 	
 	void EditorObjectMarker(EditorObject editor_object)
 	{
@@ -176,7 +176,7 @@ class EditorObjectMarker: EditorMarker
 		return m_EditorObject; 
 	}
 	
-	DragHandler GetDragHandler() 
+	EditorDragHandler GetDragHandler() 
 	{
 		return m_DragHandler; 
 	}

@@ -4,7 +4,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	void EditorObjectWorldMarker(EditorObject editor_object)
 	{
 		m_MapWidget = m_Editor.GetEditorHud().EditorMapWidget;
-		m_DragHandler = new ObjectDragHandler(m_EditorObject);
+		m_DragHandler = new EditorObjectDragHandler(m_EditorObject);
 		EditorEvents.OnMapToggled.Insert(OnEditorMapToggled);
 	}
 	

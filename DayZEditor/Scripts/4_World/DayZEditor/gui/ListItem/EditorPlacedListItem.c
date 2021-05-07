@@ -1,20 +1,19 @@
-
-// on refactor, editor object in constructor
 class EditorPlacedListItem: EditorListItem
 {
 	protected EditorObject m_EditorObject;
-	EditorObject GetData() { 
+	EditorObject GetEditorObject() 
+	{ 
 		return m_EditorObject; 
 	}
 	
-	protected ref DragHandler m_DragHandler;
+	protected ref EditorDragHandler m_DragHandler;
 	
 	void EditorPlacedListItem(EditorObject editor_object)
 	{
 		EditorLog.Trace("EditorPlacedListItem::SetEditorObject"); 
 		m_EditorObject = editor_object;
 		
-		m_DragHandler = new DragHandler(m_EditorObject);
+		m_DragHandler = new EditorDragHandler(m_EditorObject);
 		
 		m_TemplateController.Label = m_EditorObject.GetDisplayName();
 		m_TemplateController.NotifyPropertyChanged("Label");
