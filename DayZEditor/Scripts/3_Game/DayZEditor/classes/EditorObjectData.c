@@ -48,12 +48,12 @@ class EditorObjectData
 		//Icon = EditorPlaceableItem.GetIcon(Mod);
 	}
 	
-	static ref EditorObjectData Create(string type, vector transform[4], EditorObjectFlags flags = EditorObjectFlags.ALL)
+	static EditorObjectData Create(string type, vector transform[4], EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{	
 		return Create(type, transform[3], Math3D.MatrixToAngles(transform), 1, flags);
 	}
 	
-	static ref EditorObjectData Create(string type, vector position, vector orientation, float scale, EditorObjectFlags flags)
+	static EditorObjectData Create(string type, vector position, vector orientation, float scale, EditorObjectFlags flags)
 	{
 		EditorLog.Trace("EditorObjectData::Create");
 				
@@ -62,7 +62,7 @@ class EditorObjectData
 			//return null;
 		}
 		
-		ref EditorObjectData data = new EditorObjectData();
+		EditorObjectData data = new EditorObjectData();
 		data.Type = type; 
 		data.Position = position; 
 		data.Orientation = orientation;
@@ -77,12 +77,12 @@ class EditorObjectData
 	}
 	
 	
-	static ref EditorObjectData Create(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
+	static EditorObjectData Create(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		// We do this because all 'baked' objects are ID'd to 3. cant store a bunch of 3's can we?
 		if (target.GetID() == 3) return null;
 		
-		ref EditorObjectData data = new EditorObjectData();
+		EditorObjectData data = new EditorObjectData();
 		data.Type = target.GetType();
 		data.WorldObject = target;
 		data.Position = data.WorldObject.GetPosition(); 

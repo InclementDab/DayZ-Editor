@@ -539,7 +539,6 @@ class Editor
 		}
 		
 		EditorObject editor_object = CreateObject(editor_object_data);
-		
 		if (!editor_object) { 
 			return null;
 		}
