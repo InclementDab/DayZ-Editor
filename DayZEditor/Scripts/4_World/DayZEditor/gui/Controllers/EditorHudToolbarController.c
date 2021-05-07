@@ -268,7 +268,7 @@ class EditorHudToolbarController: EditorControllerBase
 		}
 	}	
 	
-	private ref EditorMenu CreateToolbarMenu(Widget toolbar_button)
+	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
 	{
 		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
 				

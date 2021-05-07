@@ -60,6 +60,7 @@ class Editor
 	
 	// Stack of Undo / Redo Actions
 	private ref EditorActionStack 				m_ActionStack;
+	private ref ShortcutKeys 					m_CurrentKeys = new ShortcutKeys();
 	
 	// private references
 	private EditorHudController 				m_EditorHudController;
@@ -76,7 +77,15 @@ class Editor
 	bool 										SnappingMode;
 	bool 										CollisionMode;
 
+	string 										BanReason = "null";
 	string 										Version = "Version#: " + GetVersionNumber();
+	
+	// Loot Editing
+	private Object 								m_LootEditTarget;
+	private bool 								m_LootEditMode;
+	private vector 								m_PositionBeforeLootEditMode;
+	private ref EditorMapGroupProto 			m_EditorMapGroupProto;
+	static float 								LootYOffset;
 	
 	private void Editor(PlayerBase player) 
 	{
@@ -230,8 +239,7 @@ class Editor
 		
 		// God Mode
 		if (m_Player) {
-			m_Player.SetHealth("", "Health", 100);
-			m_Player.SetHealth("", "Shock", 100);
+			m_Player.SetAllowDamage(false);
 		}
 	}
 	
@@ -391,9 +399,7 @@ class Editor
 	{
 		return false;
 	}
-	
-	private ref ShortcutKeys m_CurrentKeys = new ShortcutKeys();
-	
+		
 	// Return TRUE if handled.	
 	bool OnKeyPress(int key)
 	{
@@ -557,15 +563,7 @@ class Editor
 		delete ObjectInHand;
 		EditorEvents.StopPlacing(this);
 	}
-	
 		
-	private Object m_LootEditTarget;
-	private bool m_LootEditMode;
-	private vector m_PositionBeforeLootEditMode;
-	private ref EditorMapGroupProto m_EditorMapGroupProto;
-	
-	static float LootYOffset;
-	
 	void EditLootSpawns(EditorPlaceableItem placeable_item)
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.Type);
@@ -978,11 +976,9 @@ class Editor
 		return position;
 	}
 		
-	
-	private string m_BanReason = "null";
 	bool IsBannedClient(out string reason)
 	{
-		reason = m_BanReason;
+		reason = BanReason;
 		return reason != "null";
 	}
 	
@@ -1000,16 +996,16 @@ class Editor
 		}
 		
 		RestContext rest = GetRestApi().GetRestContext("https:\/\/dayz-editor-default-rtdb.firebaseio.com\/");
-		m_BanReason = rest.GET_now(string.Format("bans/%1.json", GetGame().GetUserManager().GetSelectedUser().GetUid()));
+		BanReason = rest.GET_now(string.Format("bans/%1.json", GetGame().GetUserManager().GetSelectedUser().GetUid()));
 		
 		// Temporary hotfix until we can re-implement the old system
 		// dont really like it but it will have to do
-		if (m_BanReason == "App Error") {
-			m_BanReason = "null";
+		if (BanReason == "App Error") {
+			BanReason = "null";
 		}
 		
-		if (m_BanReason == "Timeout") {
-			m_BanReason = "null";
+		if (BanReason == "Timeout") {
+			BanReason = "null";
 		}
 	}
 	
@@ -1037,47 +1033,3 @@ class Editor
 	EditorBrush GetBrush() return m_EditorBrush;
 	EditorActionStack GetActionStack() return m_ActionStack;
 }
-/*
-class AreaScan
-{
-	static const int STEP_COUNT = 4;
-	
-	static void Run(vector position, float radius)
-	{
-		Debug.DestroyAllShapes();
-		
-		// Main Cylinder
-		Debug.DrawCylinder(position, radius);
-		
-		float search_radius = (radius / STEP_COUNT) / 2;
-			
-		float theta = Math.PI * (3 - Math.Sqrt(5));
-		
-		for (int i = 0; i < 26; i++) {
-			float r = (radius / 2) * Math.Sqrt(i) / Math.Sqrt(
-		}
-		
-		/*			
-		for (int i = 0; i < STEP_COUNT; i++) {
-			float radius_at_step = radius - (search_radius * i);
-			int count = Math.Floor((2 * Math.PI * radius_at_step) / (2 * search_radius));
-			
-			
-			
-			for (int j = 0; j < count; j++) {
-			
-				
-				float x = radius_at_step * Math.Cos(Math.Pow(Math.PI, 2) * j);
-				float y = radius_at_step * Math.Sin(Math.Pow(Math.PI, 2) * j);
-				
-				
-				vector search_position = position;
-				//search_position[0] = search_position[0] + (search_radius * 2 * i) + search_radius;
-				search_position[0] = search_position[0] + x;
-				search_position[2] = search_position[2] + y;
-				Debug.DrawCylinder(search_position, search_radius, 1.1, COLOR_GREEN);
-
-			}
-		}	
-	}
-}*/

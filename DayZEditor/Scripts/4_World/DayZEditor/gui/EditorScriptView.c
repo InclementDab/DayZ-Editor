@@ -21,4 +21,3 @@ class EditorScriptView: ScriptView
 		m_LayoutRoot.SetPos(x, y);
 	}
 }
-
