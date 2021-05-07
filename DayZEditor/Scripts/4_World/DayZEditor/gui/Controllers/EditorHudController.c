@@ -119,6 +119,7 @@ class EditorHudController: EditorControllerBase
 		if (Model == "Red9") return true;
 		if (Model == "QuickieBow") return true;
 		if (Model == "LargeTentBackPack") return true;
+		if (Model == "SurvivorMale_Base" || Model == "SurvivorFemale_Base") return true;
 		if (GetGame().IsKindOf(Model, "GP25Base")) return true;
 		if (GetGame().IsKindOf(Model, "M203Base")) return true;
 	

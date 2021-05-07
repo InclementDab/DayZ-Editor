@@ -90,7 +90,6 @@ class EditorPlaceableItem
 		return null;
 	}
 	
-	
 	private EditorPlaceableItemCategory LoadItemCategory()
 	{
 		string path = GetGame().ConfigPathToString(FullPath);
@@ -125,7 +124,7 @@ class EditorPlaceableItem
 	
 	static string GetIcon(ModStructure mod_info)
 	{
-		EditorLog.Trace("EditorPlaceableItem::GetIcon");
+		//EditorLog.Trace("EditorPlaceableItem::GetIcon");
 		if (mod_info) {
 			string logo = mod_info.GetModLogo();
 			if (logo == string.Empty)
