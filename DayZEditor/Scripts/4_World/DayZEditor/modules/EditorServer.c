@@ -1,4 +1,3 @@
-
 enum EditorServerModuleRPC
 {
 	INVALID = 35114,
@@ -7,7 +6,6 @@ enum EditorServerModuleRPC
 	EDITOR_CLIENT_DESTROYED,
 	COUNT
 };
-
 
 class EditorServerModule: JMModuleBase
 {

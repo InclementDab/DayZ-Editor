@@ -80,9 +80,7 @@ class EditorCamera: Camera
 
 		SelectedTarget = target;
 	}
-	
-	private float cursor_store_x, cursor_store_y;
-	
+		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{		
 		if ( SendUpdateAccumalator > 0.5 ){
@@ -107,15 +105,12 @@ class EditorCamera: Camera
 		float pitchDiff = input.LocalValue("UAAimDown") - input.LocalValue("UAAimUp");
 		float speedInc = input.LocalValue("UACameraToolSpeedIncrease" ) - input.LocalValue("UACameraToolSpeedDecrease");
 		float zoomAmt = input.LocalValue("EditorCameraZoomIn") - input.LocalValue("EditorCameraZoomOut");
-		
-
-		
+				
 		if (KeyState(KeyCode.KC_LSHIFT)) {
 			zoomAmt *= 0.1;
 		} else {
 			zoomAmt *= 0.01;
 		}
-		
 		
 		vector current_position = GetPosition();
 		float current_altitude = current_position[1] - GetGame().SurfaceY(current_position[0], current_position[2]);
