@@ -51,13 +51,13 @@ class EditorClientModule: JMModuleBase
 		if (GetEditor()) {
 			GetEditor().Update(timeslice);
 		}
-				
+		/*
 		if (GetEditor() && GetEditor().GetCamera() && !IsMissionOffline()) {
 			ScriptRPC update_rpc = new ScriptRPC();
 			update_rpc.Write(GetEditor().GetCamera().GetPosition());
 			update_rpc.Write(GetEditor().GetCamera().GetOrientation());
 			//update_rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_UPDATE, true);
-		}
+		}*/
 	}
 	
 	override bool IsServer() 

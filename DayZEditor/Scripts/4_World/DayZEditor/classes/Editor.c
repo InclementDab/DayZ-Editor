@@ -235,12 +235,7 @@ class Editor
 		CommandManager[EditorUndoCommand].SetCanExecute(CanUndo());
 		CommandManager[EditorRedoCommand].SetCanExecute(CanRedo());
 				
-		EditorLog.CurrentLogLevel = log_lvl;		
-		
-		// God Mode
-		if (m_Player) {
-			m_Player.SetAllowDamage(false);
-		}
+		EditorLog.CurrentLogLevel = log_lvl;
 	}
 	
 	// Get Selected player in Editor

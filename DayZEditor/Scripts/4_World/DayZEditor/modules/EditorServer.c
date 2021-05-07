@@ -11,14 +11,12 @@ enum EditorServerModuleRPC
 
 class EditorServerModule: JMModuleBase
 {
-	
 	private ref map<int, EntityAI> m_EditorClientModels;
 	
 	override void OnInit()
 	{
 		m_EditorClientModels = new map<int, EntityAI>();
 	}
-	
 	
 	override int GetRPCMin()
 	{

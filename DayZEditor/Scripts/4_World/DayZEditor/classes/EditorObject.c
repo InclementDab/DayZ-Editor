@@ -100,7 +100,6 @@ class EditorObject: EditorWorldObject
 		// Trash the object because its uncreatable
 		if (!m_WorldObject) { 
 			EditorLog.Error("Object failed to create! If there was a crash, this item caused it: %1", m_Data.Type);
-			delete this;
 			return;
 		}
 		
@@ -145,7 +144,6 @@ class EditorObject: EditorWorldObject
 		for (int i = 0; i < 8; i++) {
 			m_SnapPoints.Insert(new EditorSnapPoint(this, m_LineVerticies[i]));
 		}
-
 		
 		// Bounding Box
 		BoundingBoxEnabled = ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX);
