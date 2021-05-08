@@ -193,11 +193,7 @@ class EditorClientModule: JMModuleBase
 	{		
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorTeleportPlayerToCursor");
-		
-		if (GetEditor().GetSelectedObjects().Count() != 0) {
-			return;
-		}
-		
+				
 		GetEditor().TeleportPlayerToCursor();
 	}
 		
