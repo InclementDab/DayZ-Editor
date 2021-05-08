@@ -1,7 +1,12 @@
-
-
 class EditorPlaceableListItem: EditorListItem
 {
+	//! Animals and Zombies / Players "survivors"
+	static const ref TStringArray TOOLTIP_BLACKLIST = {
+		"DZ_LightAI",
+		"Man",
+		"Car"
+	};
+	
 	protected ref EditorPlaceableItem m_PlaceableItem;
 	
 	void EditorPlaceableListItem(EditorPlaceableItem placeable_item)
@@ -100,8 +105,7 @@ class EditorPlaceableListItem: EditorListItem
 		//! bugfix
 		GetEditor().GetObjectManager().CurrentSelectedItem = m_PlaceableItem;
 		
-		//! Animals and Zombies / Players "survivors"
-		if (m_PlaceableItem && !GetGame().IsKindOf(m_PlaceableItem.Type, "Man") && !GetGame().IsKindOf(m_PlaceableItem.Type, "DZ_LightAI") && !GetGame().IsKindOf(m_PlaceableItem.Type, "Car")) {
+		if (m_PlaceableItem && !IsBlacklistedItem(m_PlaceableItem.Type)) {
 			tooltip.SetContent(GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE));
 		}		
 		
@@ -152,5 +156,16 @@ class EditorPlaceableListItem: EditorListItem
 		}
 		
 		return type_lower.Contains(filter);
+	}
+	
+	bool IsBlacklistedItem(string item_type)
+	{
+		foreach (string blacklist_check: TOOLTIP_BLACKLIST) {
+			if (GetGame().IsKindOf(item_type, blacklist_check)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
