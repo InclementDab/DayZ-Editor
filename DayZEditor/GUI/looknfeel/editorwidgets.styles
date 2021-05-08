@@ -172,6 +172,20 @@
                 <Item Name="CheckBox" Image="dze_checkbox_white" />
             </State>
         </Style>
+        <Style Name="dze_checkbox_eye_icon" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="dayz_editor_gui" Color="0">
+            <State Name="Disabled">
+                <Item Name="CheckBox" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="CheckBox" Image="eye_closed" />
+            </State>
+            <State Name="Mark">
+                <Item Name="CheckBox" Image="eye_closed" />
+            </State>
+            <State Name="Normal">
+                <Item Name="CheckBox" Image="" />
+            </State>
+        </Style>
     </Widget>
     <Widget Name="EditBoxWidget">
         <Style Name="highlight_green" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="dayz_editor_gui" Color="0">
