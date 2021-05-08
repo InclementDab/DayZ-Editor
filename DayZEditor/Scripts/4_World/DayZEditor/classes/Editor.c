@@ -305,7 +305,7 @@ class Editor
 	
 	bool OnMouseDown(int button)
 	{
-		EditorLog.Trace("Editor::OnMouseDown");
+		EditorLog.Trace("Editor::OnMouseDown " + button);
 		
 		Widget target = GetWidgetUnderCursor();
 		if (!target) {
@@ -320,7 +320,7 @@ class Editor
 			case MouseState.LEFT: {
 
 				if (IsPlacing()) {
-					CommandManager[EditorPlaceObjectCommand].Execute(this, null);
+					PlaceObject();
 					return true;
 				}
 				
