@@ -46,7 +46,8 @@ class EditorPlacedListItem: EditorListItem
 		return true;
 	}
 	
-	override bool IsSelected() {
+	override bool IsSelected() 
+	{
 		return m_EditorObject.IsSelected();
 	}
 	
@@ -54,7 +55,6 @@ class EditorPlacedListItem: EditorListItem
 	{
 		switch (args.GetMouseButton()) {
 
-			
 			case MouseState.LEFT: {
 
 				if (KeyState(KeyCode.KC_LCONTROL)) {
@@ -110,7 +110,6 @@ class EditorPlacedListItem: EditorListItem
 				m_EditorObject.ShowWorldObject(args.GetButtonState());
 				break;
 			}
-			
 		}
 		
 		return true;
