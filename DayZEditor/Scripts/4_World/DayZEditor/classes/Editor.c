@@ -324,10 +324,9 @@ class Editor
 					return true;
 				}
 				
-				if (!target) {
+				if (!target || target == m_EditorHud.EditorMapWidget) {
 					ClearSelection();
 				}
-				
 				
 				if (!GetBrush() && GetSelectedObjects().Count() == 0) {
 					

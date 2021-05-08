@@ -218,7 +218,6 @@ class EditorHudController: EditorControllerBase
 		if (button == MouseState.RIGHT) {
 		
 			switch (w) {
-
 				case LeftbarSearchBar: {
 					SearchBarData = string.Empty;
 					NotifyPropertyChanged("SearchBarData");
@@ -226,10 +225,10 @@ class EditorHudController: EditorControllerBase
 				}
 			}	
 		}
-		
+	
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
-
+	
 	// Raycast to see if TranslationWidget is under cursor	
 	/*		
 	RaycastRVParams raycast_params = new RaycastRVParams(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * EditorSettings.OBJECT_VIEW_DISTANCE);
