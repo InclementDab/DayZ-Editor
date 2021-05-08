@@ -309,7 +309,7 @@ class EditorObject: EditorWorldObject
 	void PropertyChanged(string property_name)
 	{
 		EditorLog.Trace("EditorObject::PropertyChanged %1", property_name);
-		
+
 		switch (property_name) {
 			
 			case "Name": {

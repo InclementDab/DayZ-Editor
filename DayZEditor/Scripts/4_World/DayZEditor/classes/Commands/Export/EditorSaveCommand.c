@@ -15,7 +15,7 @@ class EditorSaveCommand: EditorExportCommandBase
 			warn_on_overwrite = true;
 		}
 		
-		if (ExportFile(m_Editor.GetSaveFile(), new ExportSettings(), warn_on_overwrite)) {
+		if (ExportFile(file_name, new ExportSettings(), warn_on_overwrite)) {
 			m_Editor.SetSaveFile(file_name);
 		}
 	}
