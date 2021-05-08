@@ -28,7 +28,7 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 			Highlight();
 		}
 		
-		return super.OnMouseEnter(w, x, y);
+		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
@@ -37,7 +37,7 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 			Deselect();
 		}
 		
-		return super.OnMouseLeave(w, enterW, x, y);
+		return true;
 	}
 	
 	override string GetLayoutFile() {

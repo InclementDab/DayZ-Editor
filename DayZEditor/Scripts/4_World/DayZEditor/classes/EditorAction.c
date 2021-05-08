@@ -68,7 +68,6 @@ class EditorAction
 		foreach (int id, Param param: RedoParameters) {
 			g_Script.Call(this, m_RedoAction, param);
 		}
-		
 	}
 	
 	void InsertUndoParameter(Object source, Param params)
