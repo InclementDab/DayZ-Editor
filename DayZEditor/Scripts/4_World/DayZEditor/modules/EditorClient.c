@@ -4,16 +4,8 @@ enum EditorClientModuleRPC
 	COUNT
 };
 
-enum BetterMouseState {
-	LEFT = 1,
-	RIGHT = 2,
-	MIDDLE = 4
-};
-
 class EditorClientModule: JMModuleBase
 {
-	
-	// Public Members
 	void EditorClientModule() 
 	{
 		EditorLog.Info("EditorClientModule");
