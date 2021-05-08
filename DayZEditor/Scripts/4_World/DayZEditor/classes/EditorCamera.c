@@ -1,6 +1,4 @@
 
-
-
 // make option Q and E go up and down no matter orientation
 class EditorCamera: Camera
 {
@@ -194,8 +192,6 @@ class EditorCamera: Camera
 			LookAt(TargetPosition);
 		}
 	}
-
-
 
 	void AngleToQuat( float angle, vector dir, out float d[4] )
 	{
