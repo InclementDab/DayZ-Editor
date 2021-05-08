@@ -157,4 +157,9 @@ class EditorPlacedListItem: EditorListItem
 		
 		return true;
 	}
+	
+	override string GetLayoutFile()
+	{
+		return "DayZEditor/gui/Layouts/items/EditorPlacedListItem.layout";
+	}
 }

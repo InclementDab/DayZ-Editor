@@ -146,7 +146,8 @@ class EditorBrush
 		
 	}
 	
-	string GetName() { 
+	string GetName() 
+	{ 
 		return m_BrushData.Name; 
 	}
 }
