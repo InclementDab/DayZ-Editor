@@ -643,24 +643,22 @@ class EditorObject: EditorWorldObject
 			m_CenterLine.ClearFlags(EntityFlags.VISIBLE, false);
 	}
 	
-
 	bool SetAnimation(string anim_name)
 	{
 		EditorLog.Trace("EditorObject::SetAnimation");
 		if (m_WorldObject.IsMan()) {
-			DayZPlayerImplement.Cast(m_WorldObject).EditorAnimationStart(anim_name);
+			//DayZPlayerImplement.Cast(m_WorldObject).EditorAnimationStart(anim_name);
 			return true;
 		}
 		
 		return false;
 	}
-
 	
 	void ResetAnimation()
 	{
 		EditorLog.Trace("EditorObject::SetAnimation");
 		if (m_WorldObject.IsMan()) {
-			DayZPlayerImplement.Cast(GetWorldObject()).EditorAnimationReset();
+			//DayZPlayerImplement.Cast(GetWorldObject()).EditorAnimationReset();
 		}
 	}
 	

@@ -1,4 +1,4 @@
-class EditorAnimationManagerTable
+/*class EditorAnimationManagerTable
 {
 	int CMD_Action;
 	int CMD_ActionID;
@@ -54,8 +54,7 @@ class EditorAnimationCommand: HumanCommandScript
 		m_NeedFinish = true;
 	}
 }
-
-
+/*
 modded class DayZPlayerImplement
 {
 	protected bool m_EditorAnimationStart;
@@ -109,7 +108,6 @@ modded class DayZPlayerImplement
 		m_EditorAnimationStop = true;
 	}
 
-	
 	void EditorAnimationReset()
 	{
 		thread _EditorAnimationReset();
@@ -121,4 +119,4 @@ modded class DayZPlayerImplement
 		Sleep(50);
 		EditorAnimationStart("CMD_LandImmediate");
 	}
-}
+}*/
