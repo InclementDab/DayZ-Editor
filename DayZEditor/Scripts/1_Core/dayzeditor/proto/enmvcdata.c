@@ -6,7 +6,6 @@ EditorViewProjectData GetEditorViewProjectData() { return m_EditorViewProjectDat
 typedef ref array<ref ControllerData> TControllerDataArray;
 typedef ref array<ref DataBindingData> TDataBindingDataArray;
 
-
 // Serialized Data for a full project
 class EditorViewProjectData
 {
@@ -17,8 +16,6 @@ class EditorViewProjectData
 	{
 		Print("EditorViewProjectData");
 	}
-
-
 		
 	static void Save(string file, notnull ref EditorViewProjectData data)
 	{

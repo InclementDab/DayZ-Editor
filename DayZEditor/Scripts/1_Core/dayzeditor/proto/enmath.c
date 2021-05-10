@@ -1,5 +1,3 @@
-
-
 vector AverageVectors(vector v1, vector v2)
 {
 	vector result;
@@ -22,7 +20,6 @@ vector DivideVectorByNumber(vector v1, float v2)
 	return result;
 }
 
-
 vector DivideVector(vector v1, vector v2)
 {
 	vector result;
@@ -36,8 +33,6 @@ vector DivideVector(vector v1, vector v2)
 
 modded class Math3D 
 {
-	
-
 	static vector CrossProduct(vector a, vector b)
 	{
 		vector result;
@@ -48,5 +43,4 @@ modded class Math3D
 		
 		return result;
 	}
-	
 }

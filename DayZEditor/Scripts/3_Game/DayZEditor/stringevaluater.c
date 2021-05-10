@@ -1,4 +1,3 @@
-
 class StringEvaluaterEvaluater
 {
 	private string m_Value;

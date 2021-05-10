@@ -1,7 +1,8 @@
 
 class TypeConversionEquation: TypeConversionTemplate<StringEvaluater>
 {
-	override void SetString(string value) {
+	override void SetString(string value) 
+	{
 		m_Value = string.Empty;
 		for (int i = 0; i < value.Length(); i++) {
 			int ascii = value[i].Hash();
@@ -10,7 +11,8 @@ class TypeConversionEquation: TypeConversionTemplate<StringEvaluater>
 		}
 	}
 	
-	override string GetString() {
+	override string GetString() 
+	{
 		return m_Value;
 	}	
 }
@@ -19,11 +21,13 @@ class TypeConversionEquation: TypeConversionTemplate<StringEvaluater>
 class EditorWidget
 {
 	protected Widget m_LayoutRoot;
-	Widget GetLayoutRoot() { 
+	Widget GetLayoutRoot() 
+	{
 		return m_LayoutRoot; 
 	}
 	
-	void SetLayoutRoot(Widget layout_root) {
+	void SetLayoutRoot(Widget layout_root) 
+	{
 		m_LayoutRoot = layout_root;
 	}
 }
@@ -31,11 +35,13 @@ class EditorWidget
 
 class TypeConversionEditorWidget: TypeConversionTemplate<EditorWidget>
 {	
-	override Widget GetWidget() {
+	override Widget GetWidget() 
+	{
 		return m_Value.GetLayoutRoot();
 	}
 	
-	override void SetWidget(Widget value) {
+	override void SetWidget(Widget value) 
+	{
 		m_Value.SetLayoutRoot(value);
 	}	
 }
@@ -43,11 +49,13 @@ class TypeConversionEditorWidget: TypeConversionTemplate<EditorWidget>
 
 class TypeConversionBrush: TypeConversionTemplate<EditorBrushData>
 {	
-	override void SetString(string value) {
+	override void SetString(string value) 
+	{
 		m_Value.Name = value;
 	}
 	
-	override string GetString() {
+	override string GetString() 
+	{
 		return m_Value.Name;
 	}
 }
@@ -55,28 +63,32 @@ class TypeConversionBrush: TypeConversionTemplate<EditorBrushData>
 
 class TypeConversionBrushObject: TypeConversionTemplate<EditorBrushObject>
 {
-	
-	override void SetString(string value) {
+	override void SetString(string value) 
+	{
 		m_Value.Name = value;
 	}
 	
-	override string GetString() {
+	override string GetString() 
+	{
 		return m_Value.Name;
 	}
 	
-	override Widget GetWidget() {
+	override Widget GetWidget() 
+	{
 		return GetGame().GetWorkspace().CreateWidgets("DayZEditor/gui/Layouts/options/EditorDialogOptionEditBrush.layout");
 	}
 }
 
 class TypeConversionEditorFile: TypeConversionTemplate<EditorFile>
 {
-	override void SetString(string value) {
+	override void SetString(string value) 
+	{
 		if (m_Value)
 			m_Value.FileName = value;
 	}
 	
-	override string GetString() {
+	override string GetString() 
+	{
 		if (m_Value)
 			return m_Value.FileName;
 		
@@ -86,14 +98,16 @@ class TypeConversionEditorFile: TypeConversionTemplate<EditorFile>
 
 class DropdownListPrefabItemConverter: TypeConversionTemplate<DropdownListPrefabItem>
 {
-	override string GetString() {
+	override string GetString() 
+	{
 		if (m_Value)
 			return m_Value.GetTemplateController().Text;
 		
 		return string.Empty;
 	}
 	
-	override Widget GetWidget() {
+	override Widget GetWidget() 
+	{
 		// Todo: why can this be null? not sure
 		if (m_Value) {
 			return m_Value.GetLayoutRoot();
@@ -102,11 +116,11 @@ class DropdownListPrefabItemConverter: TypeConversionTemplate<DropdownListPrefab
 		return null;
 	}
 	
-	override void SetWidget(Widget value) {
+	override void SetWidget(Widget value) 
+	{
 		m_Value.OnWidgetScriptInit(value);
 	}
 }
-
 
 modded class LayoutBindingManager
 {
@@ -121,6 +135,3 @@ modded class LayoutBindingManager
 		type_conversions.Insert(EditorFile, TypeConversionEditorFile);
 	}
 }
-
-
-

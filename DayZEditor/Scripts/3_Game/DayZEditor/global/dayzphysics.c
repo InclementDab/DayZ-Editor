@@ -64,5 +64,3 @@ static vector ObjectGetSize(notnull Object obj)
 	
 	return result;
 }
-
-
