@@ -81,6 +81,8 @@ class EditorClientModule: JMModuleBase
 	{
 		EditorLog.Trace("Editor::OnMissionLoaded");
 		GetEditor().SetActive(true);
+		GetEditor().SetActive(false);
+		GetEditor().SetActive(true);
 	}
 	
 	// Inputs
