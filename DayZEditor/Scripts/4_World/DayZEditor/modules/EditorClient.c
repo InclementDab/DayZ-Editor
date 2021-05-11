@@ -81,6 +81,8 @@ class EditorClientModule: JMModuleBase
 	{
 		EditorLog.Trace("Editor::OnMissionLoaded");
 		GetEditor().SetActive(true);
+		
+		// Just resolves like 37 different issues surrounding DayZ and DayZ related titles
 		GetEditor().SetActive(false);
 		GetEditor().SetActive(true);
 	}
