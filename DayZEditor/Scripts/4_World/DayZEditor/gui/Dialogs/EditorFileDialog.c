@@ -59,7 +59,6 @@ class EditorFileDialog: EditorDialogBase
 		CloseFindFile(filehandle);
 		
 		name_array.Sort();
-		folder_array.Insert(new EditorFile("...", "", search_mode));
 		foreach (string sorted_name: name_array) {
 			folder_array.Insert(new EditorFile(sorted_name, directory, search_mode));
 		}
@@ -83,7 +82,8 @@ class EditorFileDialog: EditorDialogBase
 		EditorLog.Info("EditorFileDialog::Loading Directory %1", m_CurrentDirectory);
 		m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Clear();
 		ref	array<ref EditorFile> editor_file_array = {};
-				
+		
+		editor_file_array.Insert(new EditorFile("...", "", FileSearchMode.FOLDERS));
 		LoadFiles(directory, filter, editor_file_array, FileSearchMode.FOLDERS);
 		LoadFiles(directory, filter, editor_file_array, FileSearchMode.FILES);
 
@@ -102,6 +102,19 @@ class EditorFileDialog: EditorDialogBase
 		
 		file_directory.Replace(file_array[file_array.Count() - 1] + "\\", "");		
 		LoadFileDirectory(file_directory, m_Filter);
+	}
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorFileDialog::OnMouseButtonDown");
+		
+		string file = GetCurrentSelectedFile();
+		if (file != string.Empty) {
+			m_EditBoxPrefab.GetPrefabController().Value = file;
+			m_EditBoxPrefab.GetPrefabController().NotifyPropertyChanged("Value");
+		}
+		
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
@@ -128,22 +141,6 @@ class EditorFileDialog: EditorDialogBase
 		return true;
 	}
 	
-	/*
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		switch (w.GetName()) {
-			
-			case "ListBox": {
-				m_EditBoxPrefab.GetPrefabController().Value = GetCurrentSelectedFile();
-				m_EditBoxPrefab.GetPrefabController().NotifyPropertyChanged("Value");
-				return true;
-			}			
-		}
-		
-		return false;
-	}
-	*/
-	
 	
 	// Abstracterino
 	void LoadFile(string file)
@@ -163,6 +160,7 @@ class EditorFileDialog: EditorDialogBase
 	private string GetCurrentSelectedFile()
 	{
 		string file;
+		if (m_ListBoxPrefab.ListBox.GetSelectedRow() == -1) return string.Empty;
 		m_ListBoxPrefab.ListBox.GetItemText(m_ListBoxPrefab.ListBox.GetSelectedRow(), 0, file);
 		return file;
 	}
