@@ -68,7 +68,8 @@ class EditorImportCommandBase: EditorCommand
 	
 	typename GetFileType();
 	
-	string GetDialogButtonName() {
+	string GetDialogButtonName() 
+	{
 		return "Import";
 	}
 }
