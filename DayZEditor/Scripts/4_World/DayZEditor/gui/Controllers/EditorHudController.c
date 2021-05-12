@@ -247,12 +247,30 @@ class EditorHudController: EditorControllerBase
 		EditorCamera camera = GetEditor().GetCamera();
 		for (int i = 0; i < CameraTrackData.Count(); i++) {
 			EditorCameraTrackListItemController ctrl = CameraTrackData[i].GetData();
-			camera.SetPosition(ctrl.GetPosition());
-			camera.SetOrientation(ctrl.GetOrientation());
+			if (!CameraTrackData[i + 1]) {
+				continue;
+			}
+			
+			EditorCameraTrackListItemController next_pos = CameraTrackData[i + 1].GetData();
+			vector start_position = ctrl.GetPosition();
+			vector start_orientation = ctrl.GetOrientation();
+			camera.SetPosition(start_position);
+			camera.SetOrientation(start_orientation);
+			
 			int td = 0;
 			while (td < ctrl.Time * 1000) {
 				float time_value = 1 / (ctrl.Time * 1000) * td;
-				Print(time_value);
+				vector position;
+				position[0] = Math.Lerp(start_position[0], next_pos.pX, time_value);
+				position[1] = Math.Lerp(start_position[1], next_pos.pY, time_value);
+				position[2] = Math.Lerp(start_position[2], next_pos.pZ, time_value);
+				camera.SetPosition(position);
+				
+				vector orientation;
+				orientation[0] = Math.Lerp(start_orientation[0], next_pos.oX, time_value);
+				orientation[1] = Math.Lerp(start_orientation[1], next_pos.oY, time_value);
+				orientation[2] = Math.Lerp(start_orientation[2], next_pos.oZ, time_value);
+				camera.SetOrientation(orientation);
 				
 				td += 10;
 				Sleep(10);
