@@ -22,6 +22,6 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	
 	override string GetLayoutFile()
 	{
-		return "DayZEditor/GUI/layouts/cameratrack/CameraTrackListItem.layout";
+		return "DayZEditor/GUI/layouts/cameratrack/CameraTrackGroup.layout";
 	}
 }

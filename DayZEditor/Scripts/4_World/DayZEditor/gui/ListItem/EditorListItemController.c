@@ -5,7 +5,6 @@ class EditorListItemController: Controller
 	string Icon;
 	
 	string CollapseIcon = "set:dayz_editor_gui image:eye_open";
-	// gormirns too dumb to implement this right now : Gormirn hide eye
 	string ExpandIcon = "set:dayz_editor_gui image:eye_disabled";
 
 	ref ObservableCollection<ref EditorListItem> ChildListItems = new ObservableCollection<ref EditorListItem>(this);

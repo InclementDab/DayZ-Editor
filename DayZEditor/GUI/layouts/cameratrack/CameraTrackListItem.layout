@@ -1,38 +1,41 @@
 WrapSpacerWidgetClass CameraTrackListItemWrapper {
  position 0 0
- size 1 20
+ size 580 56
  hexactpos 1
  vexactpos 1
- hexactsize 0
+ hexactsize 1
  vexactsize 1
+ Padding 0
+ Margin 0
  {
-  TextWidgetClass CaptionNodeName {
-   ignorepointer 1
+  EditBoxWidgetClass CaptionNodeName {
+   ignorepointer 0
    position 0 0
-   size 175 18
+   size 110 18
    valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   text "Camera Start/ End Nodes"
-   "size to text h" 0
-   "size to text v" 0
-   "text halign" center
+   text "Camera Start"
+   font "gui/fonts/etelkatextpro"
   }
-  FrameWidgetClass CaptionCameraSmoothingSpacer {
+  TextWidgetClass CameraPositionText {
    ignorepointer 1
    position 10 10
-   size 5 18
+   size 55 18
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   text "Position"
+   "text halign" center
+   "text valign" center
   }
   FrameWidgetClass CameraTrackPositionFrame {
    ignorepointer 1
-   position 10 10
-   size 350 18
+   position 0 10
+   size 410 20
    hexactpos 1
    vexactpos 1
    hexactsize 1
@@ -41,9 +44,8 @@ WrapSpacerWidgetClass CameraTrackListItemWrapper {
     WrapSpacerWidgetClass InfoBarVectorWrapSpacer2 {
      clipchildren 0
      ignorepointer 1
-     position 0 0.02
-     size 1 18
-     halign right_ref
+     size 1 20
+     valign center_ref
      hexactpos 0
      vexactpos 0
      hexactsize 0
@@ -53,7 +55,7 @@ WrapSpacerWidgetClass CameraTrackListItemWrapper {
       PanelWidgetClass InfoBarCam_X_Main {
        ignorepointer 1
        color 1 1 1 0.9412
-       size 0.32 16
+       size 0.25 16
        valign center_ref
        hexactpos 0
        vexactpos 0
@@ -126,7 +128,7 @@ WrapSpacerWidgetClass CameraTrackListItemWrapper {
        ignorepointer 1
        color 1 1 1 0.9412
        position 0 0
-       size 0.32 16
+       size 0.25 16
        valign center_ref
        hexactpos 0
        vexactpos 0
@@ -198,7 +200,7 @@ WrapSpacerWidgetClass CameraTrackListItemWrapper {
        ignorepointer 1
        color 1 1 1 0.9412
        position 0 0
-       size 0.32 16
+       size 0.25 16
        valign center_ref
        hexactpos 0
        vexactpos 0
@@ -270,22 +272,276 @@ WrapSpacerWidgetClass CameraTrackListItemWrapper {
    hexactsize 1
    vexactsize 1
   }
-  TextWidgetClass CameraTimeText {
+  TextWidgetClass TextWidget0 {
    ignorepointer 1
-   size 150 18
-   halign center_ref
+   position 10 10
+   size 165 18
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   text "Camera Segment Time"
-   font "gui/fonts/etelkatextpro"
+   text "Orientation"
    "text halign" center
    "text valign" center
   }
+  FrameWidgetClass FrameWidget1 {
+   ignorepointer 1
+   position 10 10
+   size 410 18
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   {
+    WrapSpacerWidgetClass InfoBarVectorWrapSpacer0 {
+     clipchildren 0
+     ignorepointer 1
+     size 1.05 20
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 1
+     style Empty
+     {
+      PanelWidgetClass InfoBarCam_X_Main0 {
+       ignorepointer 1
+       color 1 1 1 0.9412
+       size 0.3 16
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 1
+       style Slim_Outline2
+       {
+        PanelWidgetClass InfoBar_X_Background0 {
+         clipchildren 1
+         ignorepointer 1
+         color 0.7647 0.1804 0.102 1
+         position 1 0
+         size 26 14
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass InfoBar_X_Label0 {
+           ignorepointer 1
+           position 0 0
+           size 26 16
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "X"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        EditBoxWidgetClass InfoBar_X_Value0 {
+         inheritalpha 0
+         position -4 -1
+         size 0.8 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style ServerBrowser
+         "limit visible" 1
+         {
+          ScriptParamsClass {
+           Binding_Name "pX"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
+      FrameWidgetClass x_y_spacer0 {
+       ignorepointer 1
+       position 0 0
+       size 0 0.9
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+      }
+      PanelWidgetClass InfoBarCam_Y_Main0 {
+       ignorepointer 1
+       color 1 1 1 0.9412
+       position 0 0
+       size 0.3 16
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 1
+       style Slim_Outline2
+       {
+        PanelWidgetClass InfoBar_Y_Background0 {
+         clipchildren 1
+         ignorepointer 1
+         color 0.6157 0.8157 0.2196 1
+         position 1 0
+         size 26 14
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass InfoBar_Y_Label0 {
+           ignorepointer 1
+           position 0 0
+           size 26 16
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "Y"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        EditBoxWidgetClass InfoBar_Y_Value0 {
+         inheritalpha 0
+         position -4 -1
+         size 0.8 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style ServerBrowser
+         "limit visible" 1
+         {
+          ScriptParamsClass {
+           Binding_Name "pY"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
+      FrameWidgetClass y_z_spacer0 {
+       ignorepointer 1
+       size 0 0.9
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+      }
+      PanelWidgetClass InfoBarCam_Z_Main0 {
+       ignorepointer 1
+       color 1 1 1 0.9412
+       position 0 0
+       size 0.3 16
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 1
+       style Slim_Outline2
+       {
+        PanelWidgetClass InfoBar_Z_Background0 {
+         clipchildren 1
+         ignorepointer 1
+         color 0.2588 0.4824 0.9176 1
+         position 1 0
+         size 26 14
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass InfoBar_Z_Label0 {
+           ignorepointer 1
+           position 0 0
+           size 26 16
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "Z"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        EditBoxWidgetClass InfoBar_Z_Value0 {
+         inheritalpha 0
+         position -4 -1
+         size 0.8 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style ServerBrowser
+         "limit visible" 1
+         {
+          ScriptParamsClass {
+           Binding_Name "pZ"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  TextWidgetClass CameraSegmentTimeText {
+   ignorepointer 1
+   position 0 0
+   size 0.26 18
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   text "Camera Segment Time"
+   font "gui/fonts/etelkatextpro"
+   "size to text h" 0
+   "text halign" center
+   "text valign" center
+  }
+  FrameWidgetClass CameraTimeSpacer {
+   ignorepointer 1
+   position 10 10
+   size 5 18
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+  }
   EditBoxWidgetClass CameraTimeTime {
    ignorepointer 1
-   size 34 18
+   size 35 18
    valign center_ref
    hexactpos 1
    vexactpos 1
@@ -298,6 +554,42 @@ WrapSpacerWidgetClass CameraTrackListItemWrapper {
     ScriptParamsClass {
      Binding_Name "Time"
      Two_Way_Binding 1
+    }
+   }
+  }
+  FrameWidgetClass TimeButtonSpacer {
+   ignorepointer 1
+   position 10 10
+   size 190 18
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+  }
+  ButtonWidgetClass DeleteButton {
+   size 46 18
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scriptclass "ViewBinding"
+   text "Delete"
+   {
+    PanelWidgetClass PanelWidget0 {
+     ignorepointer 1
+     color 1 0.7059 0.7059 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style Slim_Outline2
+    }
+   }
+   {
+    ScriptParamsClass {
     }
    }
   }
