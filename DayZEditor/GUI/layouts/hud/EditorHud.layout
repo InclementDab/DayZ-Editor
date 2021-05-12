@@ -1597,6 +1597,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 0
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          style MenuDefault
          {
           ImageWidgetClass InfobarCameraIcon {
@@ -1654,6 +1655,11 @@ FrameWidgetClass EditorFrame {
            hexactsize 1
            vexactsize 1
            style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "CameraTrackToggleExecute"
           }
          }
         }
@@ -1955,7 +1961,7 @@ FrameWidgetClass EditorFrame {
      }
     }
     WrapSpacerWidgetClass CameraTrackWrapper {
-     visible 1
+     visible 0
      ignorepointer 1
      color 0.0196 0.0196 0.0196 0.7843
      position 279 400
@@ -2100,6 +2106,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          text "Add Node"
          {
           PanelWidgetClass ButtonOutline2 {
@@ -2115,6 +2122,11 @@ FrameWidgetClass EditorFrame {
            style Slim_Outline2
           }
          }
+         {
+          ScriptParamsClass {
+           Relay_Command "CameraTrackInsertNode"
+          }
+         }
         }
         ButtonWidgetClass DeleteNodeButton {
          position 92 1
@@ -2123,6 +2135,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          text "Delete Node"
          {
           PanelWidgetClass ButtonOutline1 {
@@ -2136,6 +2149,11 @@ FrameWidgetClass EditorFrame {
            hexactsize 0
            vexactsize 0
            style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "CameraTrackDeleteNode"
           }
          }
         }

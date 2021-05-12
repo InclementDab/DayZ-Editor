@@ -105,7 +105,7 @@ WrapSpacerWidgetClass CameraTrackListItemWrapper {
          "limit visible" 1
          {
           ScriptParamsClass {
-           Binding_Name "cam_x"
+           Binding_Name "pX"
            Two_Way_Binding 1
           }
          }
@@ -178,7 +178,7 @@ WrapSpacerWidgetClass CameraTrackListItemWrapper {
          "limit visible" 1
          {
           ScriptParamsClass {
-           Binding_Name "cam_y"
+           Binding_Name "pY"
            Two_Way_Binding 1
           }
          }
@@ -250,7 +250,7 @@ WrapSpacerWidgetClass CameraTrackListItemWrapper {
          "limit visible" 1
          {
           ScriptParamsClass {
-           Binding_Name "cam_z"
+           Binding_Name "pZ"
            Two_Way_Binding 1
           }
          }
@@ -283,7 +283,7 @@ WrapSpacerWidgetClass CameraTrackListItemWrapper {
    "text halign" center
    "text valign" center
   }
-  TextWidgetClass CameraTimeTime {
+  EditBoxWidgetClass CameraTimeTime {
    ignorepointer 1
    size 34 18
    valign center_ref
@@ -291,10 +291,15 @@ WrapSpacerWidgetClass CameraTrackListItemWrapper {
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   scriptclass "ViewBinding"
    text "0.00"
    font "gui/fonts/etelkatextpro"
-   "text halign" center
-   "text valign" center
+   {
+    ScriptParamsClass {
+     Binding_Name "Time"
+     Two_Way_Binding 1
+    }
+   }
   }
  }
 }

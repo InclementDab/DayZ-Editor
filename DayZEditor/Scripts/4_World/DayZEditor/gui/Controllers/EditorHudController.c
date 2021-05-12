@@ -25,6 +25,8 @@ class EditorHudController: EditorControllerBase
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 		= new ObservableCollection<ref EditorListItem>(this);
 	
+	ref ObservableCollection<ref EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<ref EditorCameraTrackListItem>(this);
+	
 	// View Properties
 	protected Widget LeftbarFrame;
 	protected ImageWidget LeftbarHideIcon;
@@ -39,8 +41,11 @@ class EditorHudController: EditorControllerBase
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected EditBoxWidget LeftbarSearchBar;
 	
+	protected Widget CameraTrackWrapper;
+	
 	// Temp until sub controllers can be properties of parent controller
-	EditorHudToolbarController GetToolbarController() {
+	EditorHudToolbarController GetToolbarController() 
+	{
 		return EditorHudToolbarController.Cast(EditorHudToolbarView.GetController());
 	}
 	
@@ -210,6 +215,33 @@ class EditorHudController: EditorControllerBase
 		EditorCollapsibleListItem category(null);
 		RightbarSpacerData.Insert(category);
 	}	
+	
+	void CameraTrackToggleExecute(ButtonCommandArgs args) 
+	{
+		EditorLog.Trace("EditorHudController::CameraTrackToggleExecute");
+		CameraTrackWrapper.Show(!CameraTrackWrapper.IsVisible());
+	}
+	
+	void CameraTrackInsertNode(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
+		InsertCameraTrack(GetEditor().GetCamera(), 1.0);
+	}
+	
+	void CameraTrackDeleteNode(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudController::CameraTrackDeleteNode");
+	}
+	
+	void InsertCameraTrack(EditorCamera current_camera, float time)
+	{
+		InsertCameraTrack(new EditorCameraTrackListItem(current_camera.GetPosition(), current_camera.GetOrientation(), time));
+	}
+	
+	void InsertCameraTrack(EditorCameraTrackListItem camera_track_item)
+	{
+		CameraTrackData.Insert(camera_track_item);
+	}
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
