@@ -1961,7 +1961,7 @@ FrameWidgetClass EditorFrame {
      }
     }
     WrapSpacerWidgetClass CameraTrackWrapper {
-     visible 0
+     visible 1
      ignorepointer 1
      color 0.0196 0.0196 0.0196 0.7843
      position 279 400
@@ -2007,30 +2007,37 @@ FrameWidgetClass EditorFrame {
         }
        }
       }
-      WrapSpacerWidgetClass CameraNodeList {
+      ScrollWidgetClass CameraNodeScrollBar {
        ignorepointer 1
-       size 1 1
+       color 0.3137 0.3137 0.3137 1
+       position 0 0
+       size 1 300
        halign center_ref
+       valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
-       vexactsize 0
-       Padding 1
-       Margin 1
-       "Size To Content V" 1
+       vexactsize 1
+       "Scrollbar V" 1
        {
-        ScrollWidgetClass CameraNodeScrollBar {
+        WrapSpacerWidgetClass CameraNodeList {
          ignorepointer 1
-         color 0.3137 0.3137 0.3137 1
-         position 0 0
-         size 1 300
+         size 1 1
          halign center_ref
-         valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 1
-         "Scrollbar V" 1
+         vexactsize 0
+         scriptclass "ViewBinding"
+         Padding 1
+         Margin 1
+         "Size To Content V" 1
+         {
+          ScriptParamsClass {
+           Binding_Name "CameraTrackData"
+           Two_Way_Binding 1
+          }
+         }
         }
        }
       }
