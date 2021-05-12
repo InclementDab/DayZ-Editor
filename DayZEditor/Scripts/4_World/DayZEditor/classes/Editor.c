@@ -914,6 +914,7 @@ class Editor
 	void Clear()
 	{
 		EditorSaveFile = string.Empty;	
+		m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
 		m_ActionStack.Clear();
 		m_SessionCache.Clear();
 		m_ObjectManager.Clear();
