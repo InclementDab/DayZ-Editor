@@ -235,6 +235,31 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Trace("EditorHudController::CameraTrackDeleteNode");
 	}
 	
+	void CameraTrackRunExecute(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudController::CameraTrackRunExecute");
+		
+		thread _RunCameraTrack();
+	}
+	
+	private void _RunCameraTrack()
+	{
+		EditorCamera camera = GetEditor().GetCamera();
+		for (int i = 0; i < CameraTrackData.Count(); i++) {
+			EditorCameraTrackListItemController ctrl = CameraTrackData[i].GetData();
+			camera.SetPosition(ctrl.GetPosition());
+			camera.SetOrientation(ctrl.GetOrientation());
+			int td = 0;
+			while (td < ctrl.Time * 1000) {
+				float time_value = 1 / (ctrl.Time * 1000) * td;
+				Print(time_value);
+				
+				td += 10;
+				Sleep(10);
+			}
+		}
+	}
+	
 	void InsertCameraTrack(EditorCamera current_camera, float time)
 	{
 		InsertCameraTrack(new EditorCameraTrackListItem(current_camera.GetPosition(), current_camera.GetOrientation(), time));

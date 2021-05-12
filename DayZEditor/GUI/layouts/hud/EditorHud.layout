@@ -2194,6 +2194,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          text "Run"
          {
           PanelWidgetClass ButtonOutline {
@@ -2207,6 +2208,11 @@ FrameWidgetClass EditorFrame {
            hexactsize 0
            vexactsize 0
            style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "CameraTrackRunExecute"
           }
          }
         }

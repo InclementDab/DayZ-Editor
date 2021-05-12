@@ -3,6 +3,16 @@ class EditorCameraTrackListItemController: Controller
 	float pX, pY, pZ;
 	float oX, oY, oZ;
 	float Time;
+	
+	vector GetPosition()
+	{
+		return Vector(pX, pY, pZ);
+	}
+	
+	vector GetOrientation()
+	{
+		return Vector(oX, oY, oZ);
+	}
 }
 
 class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemController>
