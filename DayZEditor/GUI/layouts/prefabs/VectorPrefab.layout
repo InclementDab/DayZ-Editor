@@ -1,6 +1,6 @@
 PanelWidgetClass EditorPosElement {
  clipchildren 0
- size 1 28
+ size 1 18
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -10,7 +10,7 @@ PanelWidgetClass EditorPosElement {
   WrapSpacerWidgetClass PositionSpacer {
    clipchildren 1
    ignorepointer 1
-   size 1 28
+   size 1 18
    halign right_ref
    hexactpos 1
    vexactpos 1
@@ -25,7 +25,7 @@ PanelWidgetClass EditorPosElement {
     TextWidgetClass EditorPosElementLabel {
      ignorepointer 1
      position 0 0
-     size 0.2 24
+     size 0.2 18
      hexactpos 1
      vexactpos 1
      hexactsize 0

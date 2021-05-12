@@ -1,7 +1,7 @@
 WrapSpacerWidgetClass EditBoxPrefab {
  visible 1
  position 0 0
- size 0.9 28
+ size 0.95 16
  halign center_ref
  valign center_ref
  hexactpos 0
@@ -25,8 +25,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
    text "test"
    "text offset" 3 0
    "size to text h" 0
-   "size to text v" 1
-   "text halign" right
+   "size to text v" 0
    "text valign" center
    {
     ScriptParamsClass {
@@ -37,13 +36,13 @@ WrapSpacerWidgetClass EditBoxPrefab {
   PanelWidgetClass EditBoxSpacer {
    ignorepointer 1
    position 0 0
-   size 0.02 1
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
+   size 10 16
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
   }
-  PanelWidgetClass Textthing {
+  PanelWidgetClass EditBoxPanel {
    ignorepointer 1
    size 0.7 1
    valign center_ref
@@ -55,7 +54,7 @@ WrapSpacerWidgetClass EditBoxPrefab {
     EditBoxWidgetClass ContentText {
      visible 1
      position 0 0
-     size 0.97 1
+     size 0.99 1
      halign center_ref
      valign center_ref
      hexactpos 0

@@ -1,263 +1,259 @@
-PanelWidgetClass EditorOptionSlider {
+WrapSpacerWidgetClass EditorOptionSlider {
  visible 1
  position 0 0
- size 1 28
- hexactpos 0
- vexactpos 0
+ size 0.85 18
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
  hexactsize 0
  vexactsize 1
  scriptclass ""
+ Padding 0
+ Margin 0
  {
-  WrapSpacerWidgetClass EditorOptionSliderSpacer {
+  FrameWidgetClass FrameWidget2 {
    ignorepointer 1
-   position 0.15 0
-   size 0.7 0.9
-   halign center_ref
-   valign center_ref
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   Padding 0
-   Margin 0
-   content_halign center
-   content_valign center
-   {
-    WrapSpacerWidgetClass EditorOptionSliderWraper {
-     ignorepointer 1
-     position 0 0
-     size 1 1
-     halign center_ref
-     valign center_ref
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
-     Padding 0
-     Margin 0
-     "Size To Content H" 1
-     "Size To Content V" 1
-     content_valign center
-     {
-      PanelWidgetClass EditorOptionSliderPanel {
-       ignorepointer 1
-       position 0 0
-       size 1.2 1.2
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       {
-        WrapSpacerWidgetClass EditorOptionSliderPanelWraper {
-         clipchildren 0
-         inheritalpha 0
-         ignorepointer 0
-         color 0 0 0 0.3529
-         position 0 0
-         size 0.87 1
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         style DayZDefaultPanel
-         Padding 0
-         Margin 0
-         content_valign center
-         {
-          PanelWidgetClass EditorOptionSliderWraperPanel {
-           color 0 0 0 0
-           position 0 0
-           size 1 0.8
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           style blank
-           {
-            PanelWidgetClass EditorOptionSliderUpPanel {
-             clipchildren 0
-             ignorepointer 1
-             color 0.3922 0.3922 0.3922 0.5882
-             position 0.0425 0
-             size 1 1
-             halign right_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             fixaspect inside
-             style rover_sim_colorable
-             {
-              ImageWidgetClass EditorOptionSliderUpIcon {
-               visible 1
-               clipchildren 0
-               inheritalpha 1
-               ignorepointer 1
-               size 0.7 0.7
-               halign center_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 0
-               image0 "set:dayz_gui image:icon_collapse"
-               mode blend
-               "src alpha" 1
-               "no wrap" 1
-               stretch 1
-               "flip u" 0
-               "flip v" 0
-               filter 1
-               rotation 0 0 270
-              }
-              ButtonWidgetClass EditorOptionSliderUpButton {
-               color 1 1 1 0.1961
-               position 0 0
-               size 0.95 1
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 0
-               scriptclass "ViewBinding"
-               {
-                ScriptParamsClass {
-                 Relay_Command "OnButtonUp"
-                }
-               }
-              }
-             }
-            }
-            PanelWidgetClass EditorOptionSliderDownPanel {
-             clipchildren 0
-             ignorepointer 1
-             color 0.3922 0.3922 0.3922 0.5882
-             position 0 0
-             size 1 1
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             fixaspect inside
-             style rover_sim_colorable
-             {
-              ImageWidgetClass EditorOptionSliderDownIcon {
-               visible 1
-               clipchildren 0
-               inheritalpha 1
-               ignorepointer 1
-               position 0 0
-               size 0.7 0.7
-               halign center_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 0
-               image0 "set:dayz_gui image:icon_collapse"
-               mode blend
-               "src alpha" 1
-               "no wrap" 1
-               stretch 1
-               filter 1
-               rotation 0 0 90
-              }
-              ButtonWidgetClass EditorOptionSliderDownButton {
-               color 1 1 1 0.1961
-               position 1 0
-               size 0.95 1
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 0
-               scriptclass "ViewBinding"
-               {
-                ScriptParamsClass {
-                 Relay_Command "OnButtonDown"
-                }
-               }
-              }
-             }
-            }
-            SliderWidgetClass EditorOptionSliderSlider {
-             visible 1
-             clipchildren 0
-             color 0.3922 0.3922 0.3922 0.5882
-             position -0.021 0
-             size 0.85 1
-             halign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             scriptclass "ViewBinding"
-             maximum 1
-             step 0.001
-             current 0.5
-             vertical 0
-             {
-              TextWidgetClass EditorOptionSliderReadout {
-               clipchildren 1
-               inheritalpha 0
-               ignorepointer 1
-               color 0.7843 0.7843 0.7843 1
-               position 0 0
-               size 0.2 1
-               halign center_ref
-               valign center_ref
-               hexactpos 0
-               vexactpos 0
-               hexactsize 0
-               vexactsize 0
-               scaled 0
-               scriptclass "ViewBinding"
-               text "view dist"
-               font "gui/fonts/MetronBook"
-               "exact text" 0
-               "text halign" center
-               "text valign" center
-               {
-                ScriptParamsClass {
-                 Binding_Name "CalculatedValue"
-                 Two_Way_Binding 0
-                }
-               }
-              }
-             }
-             {
-              ScriptParamsClass {
-               Binding_Name "Value"
-               Two_Way_Binding 1
-              }
-             }
-            }
-           }
-          }
-         }
-        }
-       }
-      }
-     }
-    }
-   }
+   position 0 0
+   size 7 18
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
   }
   TextWidgetClass EditorOptionSliderLabel {
    ignorepointer 1
-   position 0.01 0
-   size 0.3 1
+   position 0 0
+   size 0.28 0.9
    hexactpos 0
    vexactpos 0
    hexactsize 0
    vexactsize 0
    scriptclass "ViewBinding"
+   text "Words and stuff"
    font "gui/fonts/etelkatextpro"
    "size to text h" 0
    "size to text v" 0
+   "text valign" center
    {
     ScriptParamsClass {
      Binding_Name "Caption"
+    }
+   }
+  }
+  PanelWidgetClass EditorOptionSliderPanel {
+   ignorepointer 1
+   size 0.7 1
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   {
+    WrapSpacerWidgetClass EditorOptionSliderPanelWraper {
+     clipchildren 1
+     inheritalpha 0
+     ignorepointer 0
+     color 0 0 0 0
+     position 0 0
+     size 1.02 18
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style Colorable
+     Padding 0
+     Margin 0
+     content_valign center
+     {
+      PanelWidgetClass EditorOptionSliderDownPanel {
+       clipchildren 1
+       ignorepointer 1
+       color 0.3922 0.3922 0.3922 0.5882
+       position 0 0
+       size 18 18
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       fixaspect inside
+       style rover_sim_colorable
+       {
+        ImageWidgetClass EditorOptionSliderDownIcon {
+         visible 1
+         clipchildren 1
+         inheritalpha 1
+         ignorepointer 1
+         position 0 0
+         size 0.9 0.9
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         image0 "set:dayz_gui image:icon_collapse"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 1
+         rotation 0 0 90
+        }
+        ButtonWidgetClass EditorOptionSliderDownButton {
+         color 1 1 1 0.1961
+         position 0 0
+         size 1 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         {
+          ScriptParamsClass {
+           Relay_Command "OnButtonDown"
+          }
+         }
+        }
+       }
+      }
+      SliderWidgetClass EditorOptionSliderSlider {
+       visible 1
+       clipchildren 1
+       inheritalpha 0
+       color 0.3922 0.3922 0.3922 0.5882
+       position 0 0
+       size 0.85 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       scriptclass "ViewBinding"
+       style dze_Slider_Outline1
+       maximum 1
+       step 0.001
+       current 0.5
+       vertical 0
+       {
+        TextWidgetClass EditorOptionSliderReadout {
+         clipchildren 1
+         inheritalpha 0
+         ignorepointer 1
+         color 0.7843 0.7843 0.7843 1
+         position 0 0
+         size 0.2 1
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         scriptclass "ViewBinding"
+         text "view dist"
+         font "gui/fonts/MetronBook"
+         "exact text" 0
+         "text halign" center
+         "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "CalculatedValue"
+           Two_Way_Binding 0
+          }
+         }
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "Value"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      PanelWidgetClass EditorOptionSliderUpPanel {
+       clipchildren 1
+       ignorepointer 1
+       color 0.3922 0.3922 0.3922 0.5882
+       position 0 0
+       size 18 18
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       fixaspect inside
+       priority 4
+       style rover_sim_colorable
+       {
+        ImageWidgetClass EditorOptionSliderUpIcon {
+         visible 1
+         clipchildren 1
+         inheritalpha 1
+         ignorepointer 1
+         position 0 0
+         size 0.9 0.9
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         image0 "set:dayz_gui image:icon_collapse"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         "flip u" 0
+         "flip v" 0
+         filter 1
+         rotation 0 0 270
+        }
+        ButtonWidgetClass EditorOptionSliderUpButton {
+         color 1 1 1 0.1961
+         position 0 0
+         size 1 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         {
+          ScriptParamsClass {
+           Relay_Command "OnButtonUp"
+          }
+         }
+        }
+       }
+      }
+      FrameWidgetClass FrameWidget0 {
+       ignorepointer 1
+       size 3 16
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       priority 1
+      }
+      FrameWidgetClass FrameWidget1 {
+       ignorepointer 1
+       size 3 16
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       priority 3
+      }
+     }
     }
    }
   }

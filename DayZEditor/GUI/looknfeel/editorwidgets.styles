@@ -545,4 +545,68 @@
             </State>
         </Style>
     </Widget>
+    <Widget Name="SliderWidget">
+        <Style Name="dze_Slider_Outline1" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="dayz_editor_gui" Color="7209061">
+            <State Name="Disabled">
+                <Item Name="BarBottom" Image="" />
+                <Item Name="BarCenter" Image="" />
+                <Item Name="BarLeft" Image="" />
+                <Item Name="BarLeftBottom" Image="" />
+                <Item Name="BarLeftTop" Image="" />
+                <Item Name="BarRight" Image="" />
+                <Item Name="BarRightBottom" Image="" />
+                <Item Name="BarRightTop" Image="" />
+                <Item Name="BarTop" Image="" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="BarBottom" Image="" />
+                <Item Name="BarCenter" Image="" />
+                <Item Name="BarLeft" Image="" />
+                <Item Name="BarLeftBottom" Image="" />
+                <Item Name="BarLeftTop" Image="" />
+                <Item Name="BarRight" Image="" />
+                <Item Name="BarRightBottom" Image="" />
+                <Item Name="BarRightTop" Image="" />
+                <Item Name="BarTop" Image="" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="BarBottom" Image="" />
+                <Item Name="BarCenter" Image="Center_Slider" />
+                <Item Name="BarLeft" Image="" />
+                <Item Name="BarLeftBottom" Image="" />
+                <Item Name="BarLeftTop" Image="" />
+                <Item Name="BarRight" Image="" />
+                <Item Name="BarRightBottom" Image="" />
+                <Item Name="BarRightTop" Image="" />
+                <Item Name="BarTop" Image="" />
+                <Item Name="Bottom" Image="outline_bottom_s" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="outline_left_s" />
+                <Item Name="LeftBottom" Image="outline_bottomleft_s" />
+                <Item Name="LeftTop" Image="outline_topleft_s" />
+                <Item Name="Right" Image="outline_right_s" />
+                <Item Name="RightBottom" Image="outline_bottomright_s" />
+                <Item Name="RightTop" Image="outline_topright_s" />
+                <Item Name="Top" Image="outline_top_s" />
+            </State>
+        </Style>
+    </Widget>
 </WidgetStyles>

@@ -1,0 +1,101 @@
+WrapSpacerWidgetClass CameraTrackGroupWrapper {
+ size 1 20
+ halign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ {
+  FrameWidgetClass CameraTrackOptionPanel {
+   clipchildren 0
+   ignorepointer 1
+   size 18 18
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   fixaspect inside
+   {
+    ImageWidgetClass expand_image {
+     visible 1
+     clipchildren 0
+     inheritalpha 1
+     ignorepointer 1
+     color 1 1 1 0.549
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     image0 "set:dayz_editor_gui image:camera"
+     mode blend
+     "src alpha" 1
+     "no wrap" 1
+     stretch 1
+     "flip u" 0
+     "flip v" 0
+     filter 1
+    }
+    ButtonWidgetClass CameraTrackOptionButton {
+     size 1 1
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scriptclass "ViewBinding"
+     style Empty
+     switch toggle
+     {
+      ScriptParamsClass {
+       Two_Way_Binding 1
+       Relay_Command "CameraTrackCollapseExecute"
+      }
+     }
+    }
+   }
+  }
+  TextWidgetClass CameraTrackNodeTitle {
+   clipchildren 0
+   ignorepointer 1
+   color 1 1 1 0.7843
+   position 0 0
+   size 160 18
+   halign right_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scriptclass "ViewBinding"
+   text "Camera Node Start/End or Number maybe?"
+   font "gui/fonts/etelkatextpro"
+   "size to text v" 1
+   "text valign" center
+   {
+    ScriptParamsClass {
+     Binding_Name "Caption"
+    }
+   }
+  }
+  WrapSpacerWidgetClass CameraTrackContent {
+   ignorepointer 1
+   position 0 0
+   size 1 0
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 1
+   scriptclass "ViewBinding"
+   Padding 5
+   Margin 0
+   "Size To Content V" 1
+   {
+    ScriptParamsClass {
+     Binding_Name "Value"
+    }
+   }
+  }
+ }
+}

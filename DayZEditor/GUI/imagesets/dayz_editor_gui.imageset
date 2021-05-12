@@ -296,12 +296,6 @@ ImageSetClass {
    Size 3 3
    Flags 0
   }
-  ImageSetDefClass outline_top_right {
-   Name "outline_top_right"
-   Pos 624 397
-   Size 3 3
-   Flags 0
-  }
   ImageSetDefClass outline_bottom_left {
    Name "outline_bottom_left"
    Pos 525 496
@@ -413,6 +407,12 @@ ImageSetClass {
   ImageSetDefClass highlight_green_2 {
    Name "highlight_green_2"
    Pos 529 403
+   Size 1 1
+   Flags 0
+  }
+  ImageSetDefClass Center_Slider {
+   Name "Center_Slider"
+   Pos 624 407
    Size 1 1
    Flags 0
   }

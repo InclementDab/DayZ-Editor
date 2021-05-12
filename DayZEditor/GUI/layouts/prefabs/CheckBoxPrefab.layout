@@ -2,7 +2,7 @@ FrameWidgetClass CheckBoxPrefab {
  visible 1
  clipchildren 0
  position 0 0
- size 0.9 28
+ size 0.9 16
  halign center_ref
  valign center_ref
  hexactpos 0
@@ -41,7 +41,7 @@ FrameWidgetClass CheckBoxPrefab {
    keepsafezone 0
    color 0.902 0.902 0.902 1
    position 0.2 0
-   size 28 28
+   size 16 16
    halign right_ref
    valign center_ref
    hexactpos 0

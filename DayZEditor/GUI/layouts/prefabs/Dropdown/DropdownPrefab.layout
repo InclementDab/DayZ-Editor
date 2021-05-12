@@ -2,7 +2,7 @@ GridSpacerWidgetClass DropdownPrefab {
  clipchildren 0
  ignorepointer 1
  position 0 0
- size 400 32
+ size 395 20
  halign right_ref
  hexactpos 1
  vexactpos 1
@@ -27,8 +27,9 @@ GridSpacerWidgetClass DropdownPrefab {
   }
   WrapSpacerWidgetClass DropdownPrefabContent {
    ignorepointer 1
-   position -0.04 0
-   size 0.8 1
+   size 0.84 1
+   halign right_ref
+   valign center_ref
    hexactpos 0
    vexactpos 0
    hexactsize 0
@@ -54,7 +55,7 @@ GridSpacerWidgetClass DropdownPrefab {
      style Empty
      switch toggle
      {
-      PanelWidgetClass DropdownPrefabPanel {
+      PanelWidgetClass DropdownPrefabOutlinePanel {
        ignorepointer 1
        color 0.7059 0.7059 0.7059 1
        position 0 0
@@ -70,8 +71,8 @@ GridSpacerWidgetClass DropdownPrefab {
       TextWidgetClass DropdownText {
        clipchildren 0
        ignorepointer 1
-       position 0.02 -0.2
-       size 0.7 1.4
+       size 0.95 1
+       halign center_ref
        hexactpos 0
        vexactpos 0
        hexactsize 0
@@ -107,7 +108,7 @@ GridSpacerWidgetClass DropdownPrefab {
          inheritalpha 1
          ignorepointer 1
          position 0 0
-         size 24 18
+         size 16 12
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -127,7 +128,8 @@ GridSpacerWidgetClass DropdownPrefab {
          clipchildren 0
          inheritalpha 1
          ignorepointer 1
-         size 24 18
+         position 0 0
+         size 16 12
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -148,13 +150,13 @@ GridSpacerWidgetClass DropdownPrefab {
       TextWidgetClass DropdownPrefabCaption {
        clipchildren 0
        ignorepointer 1
-       position -0.18 0
-       size 0.155 0.8
+       position -62 0
+       size 55 16
        valign center_ref
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
        scriptclass "ViewBinding"
        text "Caption!"
        font "gui/fonts/etelkatextpro"
