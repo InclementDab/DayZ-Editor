@@ -140,7 +140,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      style ServerBrowser
      text "0.00"
      "limit visible" 1
-     "Use default text" 0
+     "Use default text" 1
      font "gui/fonts/Metron"
      {
       PanelWidgetClass PanelWidget2 {
@@ -244,17 +244,28 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
    Padding 0
    Margin 0
    {
-    TextWidgetClass PositionText {
+    FrameWidgetClass FrameWidget5 {
      ignorepointer 1
-     position 10 10
-     size 90 16
+     size 90 22
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     text "Position"
-     "text halign" center
-     "text valign" center
+     {
+      TextWidgetClass PositionText {
+       ignorepointer 1
+       size 90 16
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "Position"
+       "text halign" center
+       "text valign" center
+      }
+     }
     }
     FrameWidgetClass CameraTrackPositionFrame {
      visible 1
@@ -280,7 +291,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
         FrameWidgetClass FrameWidget3 {
          ignorepointer 1
          position 10 10
-         size 25 18
+         size 20 18
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -289,7 +300,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
         PanelWidgetClass InfoBarCam_X_Main {
          ignorepointer 1
          color 0.7647 0.1804 0.102 0.0784
-         size 0.25 16
+         size 0.24 16
          valign center_ref
          hexactpos 0
          vexactpos 0
@@ -300,7 +311,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
           EditBoxWidgetClass InfoBar_X_Value {
            inheritalpha 0
            position 0 0
-           size 1 14
+           size 1 16
            halign right_ref
            valign center_ref
            hexactpos 1
@@ -308,9 +319,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            hexactsize 0
            vexactsize 1
            scriptclass "ViewBinding"
-           style ServerBrowser
+           style Default
            text "99999.99"
            "limit visible" 1
+           "exact text" 1
+           font "gui/fonts/Metron"
            {
             ScriptParamsClass {
              Binding_Name "pX"
@@ -323,7 +336,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
         FrameWidgetClass x_y_spacer {
          ignorepointer 1
          position 0 0
-         size 25 18
+         size 20 18
          valign center_ref
          hexactpos 0
          vexactpos 0
@@ -334,7 +347,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          ignorepointer 1
          color 0.5765 0.8157 0.2196 0.0784
          position 0 0
-         size 0.25 16
+         size 0.24 16
          valign center_ref
          hexactpos 0
          vexactpos 0
@@ -344,8 +357,9 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          {
           EditBoxWidgetClass InfoBar_Y_Value {
            inheritalpha 0
+           color 1 1 1 0.9961
            position 0 0
-           size 1 14
+           size 1 16
            halign right_ref
            valign center_ref
            hexactpos 1
@@ -353,8 +367,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            hexactsize 0
            vexactsize 1
            scriptclass "ViewBinding"
-           style ServerBrowser
+           style highlight_green_1
+           text "99999.99"
            "limit visible" 1
+           "exact text" 1
+           font "gui/fonts/Metron"
            {
             ScriptParamsClass {
              Binding_Name "pY"
@@ -366,7 +383,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
         }
         FrameWidgetClass y_z_spacer {
          ignorepointer 1
-         size 25 18
+         size 20 18
          valign center_ref
          hexactpos 0
          vexactpos 0
@@ -377,7 +394,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          ignorepointer 1
          color 0.2588 0.5176 0.9176 0.0784
          position 0 0
-         size 0.25 16
+         size 0.24 16
          valign center_ref
          hexactpos 0
          vexactpos 0
@@ -387,8 +404,9 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          {
           EditBoxWidgetClass InfoBar_Z_Value {
            inheritalpha 0
+           color 1 1 1 0.9961
            position 0 0
-           size 1 14
+           size 1 16
            halign right_ref
            valign center_ref
            hexactpos 1
@@ -396,8 +414,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            hexactsize 0
            vexactsize 1
            scriptclass "ViewBinding"
-           style ServerBrowser
+           style highlight_blue_1
+           text "99999.99"
            "limit visible" 1
+           "exact text" 1
+           font "gui/fonts/Metron"
            {
             ScriptParamsClass {
              Binding_Name "pZ"
@@ -433,17 +454,29 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
    Margin 0
    "Size To Content V" 1
    {
-    TextWidgetClass TextWidget1 {
+    FrameWidgetClass FrameWidget6 {
      ignorepointer 1
-     position 0 0
-     size 90 16
+     position 10 10
+     size 90 22
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     text "Orientation"
-     "text halign" center
-     "text valign" center
+     {
+      TextWidgetClass TextWidget1 {
+       ignorepointer 1
+       size 90 16
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "Orientation"
+       "text halign" center
+       "text valign" center
+      }
+     }
     }
     FrameWidgetClass CameraTrackPositionFrame0 {
      ignorepointer 1
@@ -489,7 +522,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
           EditBoxWidgetClass InfoBar_X_Value0 {
            inheritalpha 0
            position 0 0
-           size 1 14
+           size 1 16
            halign right_ref
            valign center_ref
            hexactpos 1
@@ -497,9 +530,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            hexactsize 0
            vexactsize 1
            scriptclass "ViewBinding"
-           style ServerBrowser
+           style Default
            text "99999.99"
            "limit visible" 1
+           "exact text" 1
+           font "gui/fonts/Metron"
            {
             ScriptParamsClass {
              Binding_Name "pX"
@@ -533,8 +568,9 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          {
           EditBoxWidgetClass InfoBar_Y_Value0 {
            inheritalpha 0
+           color 1 1 1 0.9961
            position 0 0
-           size 1 14
+           size 1 16
            halign right_ref
            valign center_ref
            hexactpos 1
@@ -542,8 +578,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            hexactsize 0
            vexactsize 1
            scriptclass "ViewBinding"
-           style ServerBrowser
+           style highlight_green_1
+           text "99999.99"
            "limit visible" 1
+           "exact text" 1
+           font "gui/fonts/Metron"
            {
             ScriptParamsClass {
              Binding_Name "pY"
@@ -576,8 +615,9 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          {
           EditBoxWidgetClass InfoBar_Z_Value0 {
            inheritalpha 0
+           color 1 1 1 0.9961
            position 0 0
-           size 1 14
+           size 1 16
            halign right_ref
            valign center_ref
            hexactpos 1
@@ -585,8 +625,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            hexactsize 0
            vexactsize 1
            scriptclass "ViewBinding"
-           style ServerBrowser
+           style highlight_blue_2
+           text "99999.99"
            "limit visible" 1
+           "exact text" 1
+           font "gui/fonts/Metron"
            {
             ScriptParamsClass {
              Binding_Name "pZ"
