@@ -2079,13 +2079,15 @@ FrameWidgetClass EditorFrame {
         SliderWidgetClass CameraTrackSmoothingSlider {
          color 0.3922 0.3922 0.3922 1
          position 150 0
-         size 330 16
+         size 0.6 16
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
+         scriptclass "ViewBinding"
          style Editor
+         step 0.1
          {
           TextWidgetClass CameraTrackSmoothingReadout {
            ignorepointer 1
@@ -2096,9 +2098,21 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 1
            vexactsize 1
+           scriptclass "ViewBinding"
            text "0.05"
            "text halign" center
            "text valign" center
+           {
+            ScriptParamsClass {
+             Binding_Name "CameraTrackSmoothing"
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "CameraTrackSmoothing"
+           Two_Way_Binding 1
           }
          }
         }

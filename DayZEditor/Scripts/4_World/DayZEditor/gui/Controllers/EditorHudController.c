@@ -20,6 +20,8 @@ class EditorHudController: EditorControllerBase
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
+	float CameraTrackSmoothing;
+	
 	ref EditorHudToolbar EditorHudToolbarView;
 	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);

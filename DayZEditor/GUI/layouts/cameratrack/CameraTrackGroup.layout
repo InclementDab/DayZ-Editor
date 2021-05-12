@@ -137,6 +137,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scriptclass "ViewBinding"
      style ServerBrowser
      text "0.00"
      "limit visible" 1
@@ -155,6 +156,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        hexactsize 1
        vexactsize 1
        style Slim_Outline2
+      }
+     }
+     {
+      ScriptParamsClass {
+       Relay_Command "Time"
       }
      }
     }
@@ -190,11 +196,18 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        vexactpos 1
        hexactsize 0
        vexactsize 0
+       scriptclass "ViewBinding"
        style Slim_Outline2
+       {
+        ScriptParamsClass {
+         Relay_Command "OnSetExecute"
+        }
+       }
       }
      }
      {
       ScriptParamsClass {
+       Relay_Command "OnSetExecute"
       }
      }
     }
@@ -221,11 +234,13 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        vexactpos 1
        hexactsize 0
        vexactsize 0
+       scriptclass ""
        style Slim_Outline2
       }
      }
      {
       ScriptParamsClass {
+       Relay_Command "OnDeleteExecute"
       }
      }
     }
@@ -537,7 +552,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            font "gui/fonts/Metron"
            {
             ScriptParamsClass {
-             Binding_Name "pX"
+             Binding_Name "oX"
              Two_Way_Binding 1
             }
            }
@@ -585,7 +600,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            font "gui/fonts/Metron"
            {
             ScriptParamsClass {
-             Binding_Name "pY"
+             Binding_Name "oY"
              Two_Way_Binding 1
             }
            }
@@ -632,7 +647,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            font "gui/fonts/Metron"
            {
             ScriptParamsClass {
-             Binding_Name "pZ"
+             Binding_Name "oZ"
              Two_Way_Binding 1
             }
            }
