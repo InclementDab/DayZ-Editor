@@ -12,12 +12,11 @@ class EditorFileDialog: EditorDialogBase
 		m_EditBoxPrefab = new EditBoxPrefab("File", m_Controller, default_value);
 		
 		// If people want to play around
-		if (GetEditor().Settings.DebugMode) {
-			m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();
-			AddContent(m_ListBoxPrefab);
-			LoadFileDirectory("$profile:\\", m_Filter);
-			AddButton("Back", "BackDirectory");
-		}
+
+		m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();
+		AddContent(m_ListBoxPrefab);
+		LoadFileDirectory("$profile:\\", m_Filter);
+		
 				
 		AddContent(m_EditBoxPrefab);
 		AddButton(button_name, DialogResult.OK);
@@ -60,6 +59,7 @@ class EditorFileDialog: EditorDialogBase
 		CloseFindFile(filehandle);
 		
 		name_array.Sort();
+		folder_array.Insert(new EditorFile("...", "", search_mode));
 		foreach (string sorted_name: name_array) {
 			folder_array.Insert(new EditorFile(sorted_name, directory, search_mode));
 		}
@@ -112,6 +112,15 @@ class EditorFileDialog: EditorDialogBase
 		// Is that shit a folder?
 		if (file.Contains("\\")) {
 			LoadFileDirectory(m_CurrentDirectory + file, m_Filter);
+		} else if (file.Contains("...")) {
+			TStringArray arry = {};
+			m_CurrentDirectory.Split("\\", arry);
+			m_CurrentDirectory = string.Empty;
+			for (int i = 0; i < arry.Count() - 1; i++) {
+				m_CurrentDirectory += arry[i];
+			}
+			
+			LoadFileDirectory(m_CurrentDirectory, m_Filter);
 		} else {
 			LoadFile(m_CurrentDirectory + file);
 		}
