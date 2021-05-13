@@ -21,7 +21,7 @@ class EditorClipboard
 			return;
 		}
 		
-		array<ref EditorObjectData> world_objects = {};
+		array<EditorObjectData> world_objects = {};
 		
 		vector avg_position;
 		foreach (int id, EditorObject copy_object: copy_objects) {
@@ -43,7 +43,7 @@ class EditorClipboard
 			world_objects.Insert(data);
 		}
 	
-		string clipboard_data = JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects);
+		string clipboard_data = JsonFileLoader<array<EditorObjectData>>.JsonMakeData(world_objects);
 		//clipboard_data.Replace("\n", "");
 		//clipboard_data.Replace(" ", "");
 		
