@@ -2156,7 +2156,7 @@ FrameWidgetClass EditorFrame {
          }
          {
           ScriptParamsClass {
-           Relay_Command "CameraTrackInsertNode"
+           Relay_Command "m_Editor.CommandManager.CameraTrackAddNode"
           }
          }
         }
@@ -2188,7 +2188,7 @@ FrameWidgetClass EditorFrame {
          }
          {
           ScriptParamsClass {
-           Relay_Command "CameraTrackRunExecute"
+           Relay_Command "m_Editor.CommandManager.CameraTrackRun"
           }
          }
         }

@@ -160,10 +160,22 @@ class Editor
 		EditorLog.Trace("Editor::Destroy");
 		delete g_Editor;
 	}
-		
+			
 	void Update(float timeslice)
 	{		
 		ProcessInput(GetGame().GetInput());
+		
+		// Dont process hotkeys if dialog is open
+		// turbo undo redo
+		/*if (!m_EditorHud.CurrentDialog) {
+			EditorCommand command = CommandManager.GetCommandFromShortcut(m_CurrentKeys.GetMask());
+			if (command) {
+				EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
+				CommandArgs args = new CommandArgs();
+				args.Context = m_EditorHud;
+				command.Execute(this, args);
+			}
+		}*/
 		
 		ref set<Object> obj = new set<Object>();
 		int x, y;
