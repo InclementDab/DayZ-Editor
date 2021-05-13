@@ -78,22 +78,17 @@ class EditorHudController: EditorControllerBase
 	
 	void Update()
 	{
-		Debug.DestroyAllShapes();
-		array<EditorCameraTrackListItem> dta = {};
-		for (int i = 0; i < CameraTrackData.Count(); i++) {
-			if (CameraTrackData[i]) {
-				dta.Insert(CameraTrackData[i]);
-			}
-		}		
+		Debug.DestroyAllShapes();		
 		
-		for (int k = 0; k < dta.Count(); k++) {
+		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
+		for (int i = 0; i < camera_tracks.Count(); i++) {
 
-			EditorCameraTrackListItemController ctrl = dta[k].GetData();
-			if (!dta[k + 1]) {
+			EditorCameraTrackListItemController ctrl = camera_tracks[i].GetData();
+			if (!camera_tracks[i + 1]) {
 				continue;
 			}
 			
-			EditorCameraTrackListItemController next_ctrl = dta[k + 1].GetData();
+			EditorCameraTrackListItemController next_ctrl = camera_tracks[i + 1].GetData();
 			
 			float j;
 			vector point = ctrl.GetPosition();
@@ -102,7 +97,6 @@ class EditorHudController: EditorControllerBase
 				
 				old_point = point;
 				vector center_point = AverageVectors(ctrl.GetPosition(), next_ctrl.GetPosition()) + vector.Up * ((CameraTrackSmoothing / 100) * vector.Distance(ctrl.GetPosition(), next_ctrl.GetPosition()));
-				
 				point = EditorMath.CalculateQuadraticBezierPoint(j + 0.1, ctrl.GetPosition(), center_point, next_ctrl.GetPosition());
 				
 				Debug.DrawLine(old_point, point, COLOR_WHITE, ShapeFlags.NOZBUFFER);
@@ -113,7 +107,7 @@ class EditorHudController: EditorControllerBase
 			j = 0;
 		}
 	}
-	
+		
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
@@ -288,19 +282,41 @@ class EditorHudController: EditorControllerBase
 	private void _RunCameraTrack()
 	{
 		EditorCamera camera = GetEditor().GetCamera();
-		for (int i = 0; i < CameraTrackData.Count(); i++) {
-			EditorCameraTrackListItemController ctrl = CameraTrackData[i].GetData();
-			if (!CameraTrackData[i + 1]) {
+		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
+		for (int i = 0; i < camera_tracks.Count(); i++) {
+			EditorCameraTrackListItemController ctrl = camera_tracks[i].GetData();
+			if (!camera_tracks[i + 1]) {
 				continue;
 			}
 			
-			EditorCameraTrackListItemController next_pos = CameraTrackData[i + 1].GetData();
+			EditorCameraTrackListItemController next_ctrl = camera_tracks[i + 1].GetData();
 			vector start_position = ctrl.GetPosition();
 			vector start_orientation = ctrl.GetOrientation();
 			camera.SetPosition(start_position);
 			camera.SetOrientation(start_orientation);
 			
 			int td = 0;
+			vector point = ctrl.GetPosition();
+			Print(ctrl.Time);
+			while (td <= ctrl.Time * 1000) {
+				float time_value = 1 / (ctrl.Time * 1000) * td;
+				vector center_point = AverageVectors(ctrl.GetPosition(), next_ctrl.GetPosition()) + vector.Up * ((CameraTrackSmoothing / 100) * vector.Distance(ctrl.GetPosition(), next_ctrl.GetPosition()));
+				point = EditorMath.CalculateQuadraticBezierPoint(time_value, ctrl.GetPosition(), center_point, next_ctrl.GetPosition());
+				
+				camera.SetPosition(point);
+				
+				vector orientation;
+				orientation[0] = EditorMath.SmoothLerp(start_orientation[0], next_ctrl.oX.Parse(), time_value);
+				orientation[1] = EditorMath.SmoothLerp(start_orientation[1], next_ctrl.oY.Parse(), time_value);
+				orientation[2] = EditorMath.SmoothLerp(start_orientation[2], next_ctrl.oZ.Parse(), time_value);
+				camera.SetOrientation(orientation);
+
+				td += 10;
+				Sleep(10);
+			}
+						
+			
+			/*int td = 0;
 			while (td < ctrl.Time * 1000) {
 				float time_value = 1 / (ctrl.Time * 1000) * td;
 				vector position;
@@ -317,7 +333,7 @@ class EditorHudController: EditorControllerBase
 				
 				td += 10;
 				Sleep(10);
-			}
+			}*/
 		}
 	}
 	
@@ -424,6 +440,18 @@ class EditorHudController: EditorControllerBase
 	private void OnObjectDeselected(Class context, EditorObject target)
 	{
 		InfobarObjPosFrame.Show(m_Editor.GetObjectManager().GetSelectedObjects().Count() > 0);
+	}
+	
+	array<EditorCameraTrackListItem> GetCameraTracks()
+	{
+		array<EditorCameraTrackListItem> dta = {};
+		for (int i = 0; i < CameraTrackData.Count(); i++) {
+			if (CameraTrackData[i]) {
+				dta.Insert(CameraTrackData[i]);
+			}
+		}		
+		
+		return dta;
 	}
 	
 	void SetInfoObjectPosition(vector position)
