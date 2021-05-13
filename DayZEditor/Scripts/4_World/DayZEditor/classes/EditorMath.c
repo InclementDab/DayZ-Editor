@@ -1,5 +1,5 @@
 class EditorMath
-{
+{	
 	static float SmoothLerp(float a, float b, float t)
 	{
 		return (b - a) * SmoothTime(t) + a;

@@ -56,6 +56,8 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Trace("EditorHudController");
 		EditorHud.CurrentEditorHudController = this;
 		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(Update);
+		
 #ifndef COMPONENT_SYSTEM
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
@@ -66,10 +68,50 @@ class EditorHudController: EditorControllerBase
 	{
 		EditorLog.Trace("~EditorHudController");
 		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Remove(Update);
+		
 #ifndef COMPONENT_SYSTEM
 		EditorEvents.OnObjectSelected.Remove(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Remove(OnObjectDeselected);
 #endif
+	}
+	
+	void Update()
+	{
+		Debug.DestroyAllShapes();
+		array<EditorCameraTrackListItem> dta = {};
+		for (int i = 0; i < CameraTrackData.Count(); i++) {
+			if (CameraTrackData[i]) {
+				dta.Insert(CameraTrackData[i]);
+			}
+		}		
+		
+		for (int k = 0; k < dta.Count(); k++) {
+
+			EditorCameraTrackListItemController ctrl = dta[k].GetData();
+			if (!dta[k + 1]) {
+				continue;
+			}
+			
+			EditorCameraTrackListItemController next_ctrl = dta[k + 1].GetData();
+			
+			float j;
+			vector point = ctrl.GetPosition();
+			vector old_point;
+			while (j <= 1.0) {
+				
+				old_point = point;
+				vector center_point = AverageVectors(ctrl.GetPosition(), next_ctrl.GetPosition()) + vector.Up * ((CameraTrackSmoothing / 100) * vector.Distance(ctrl.GetPosition(), next_ctrl.GetPosition()));
+				
+				point = EditorMath.CalculateQuadraticBezierPoint(j + 0.1, ctrl.GetPosition(), center_point, next_ctrl.GetPosition());
+				
+				Debug.DrawLine(old_point, point, COLOR_WHITE, ShapeFlags.NOZBUFFER);
+
+				j += 0.1;
+			}
+			
+			j = 0;
+		}
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
