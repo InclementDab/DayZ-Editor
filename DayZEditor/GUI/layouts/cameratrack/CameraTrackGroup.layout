@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass CameraTrackGroupWrapper {
- color 0.1176 0.1176 0.1176 0.9804
- size 0.25 0
+ color 0.0784 0.0784 0.0784 0.3137
+ size 0.2 0
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -137,7 +137,6 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scriptclass "ViewBinding"
      style ServerBrowser
      text "0.00"
      "limit visible" 1
@@ -158,60 +157,18 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        style Slim_Outline2
       }
      }
-     {
-      ScriptParamsClass {
-       Binding_Name "Time"
-       Two_Way_Binding 1
-      }
-     }
     }
    }
   }
   FrameWidgetClass FrameWidget1 {
    ignorepointer 1
    position 10 10
-   size 155 24
+   size 0.25 24
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
    {
-    ButtonWidgetClass SetButton {
-     position 10 0
-     size 50 18
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scriptclass "ViewBinding"
-     text "Set"
-     {
-      PanelWidgetClass PanelWidget1 {
-       ignorepointer 1
-       color 0.9412 0.9412 0.9412 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scriptclass "ViewBinding"
-       style Slim_Outline2
-       {
-        ScriptParamsClass {
-         Relay_Command "OnSetExecute"
-        }
-       }
-      }
-     }
-     {
-      ScriptParamsClass {
-       Relay_Command "OnSetExecute"
-      }
-     }
-    }
     ButtonWidgetClass DeleteButton {
      size 50 18
      halign right_ref
@@ -235,13 +192,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       scriptclass ""
        style Slim_Outline2
       }
      }
      {
       ScriptParamsClass {
-       Relay_Command "OnDeleteExecute"
       }
      }
     }
@@ -287,7 +242,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      visible 1
      ignorepointer 1
      position 0 10
-     size 0.65 20
+     size 0.73 20
      hexactpos 1
      vexactpos 1
      hexactsize 0
@@ -497,7 +452,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
     FrameWidgetClass CameraTrackPositionFrame0 {
      ignorepointer 1
      position 0 0
-     size 0.65 20
+     size 0.73 20
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -553,7 +508,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            font "gui/fonts/Metron"
            {
             ScriptParamsClass {
-             Binding_Name "oX"
+             Binding_Name "pX"
              Two_Way_Binding 1
             }
            }
@@ -601,7 +556,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            font "gui/fonts/Metron"
            {
             ScriptParamsClass {
-             Binding_Name "oY"
+             Binding_Name "pY"
              Two_Way_Binding 1
             }
            }
@@ -648,7 +603,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            font "gui/fonts/Metron"
            {
             ScriptParamsClass {
-             Binding_Name "oZ"
+             Binding_Name "pZ"
              Two_Way_Binding 1
             }
            }
@@ -665,6 +620,113 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      Binding_Name "Value"
     }
    }
+  }
+  PanelWidgetClass PanelWidget4 {
+   ignorepointer 1
+   size 1 20
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   {
+    CheckBoxWidgetClass CheckBoxWidget0 {
+     position 115 0
+     size 16 16
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style dze_checkbox_white
+    }
+    TextWidgetClass TextWidget0 {
+     ignorepointer 1
+     position 0 0
+     size 115 16
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "Flip Orientation"
+     "text halign" center
+     "text valign" center
+    }
+    FrameWidgetClass FrameWidget7 {
+     ignorepointer 1
+     position 0.035 0
+     size 0.6 1
+     halign right_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+    }
+    ButtonWidgetClass ButtonWidget0 {
+     position 0.035 0
+     size 0.35 18
+     halign right_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 1
+     text "Set from Current"
+     {
+      PanelWidgetClass PanelWidget6 {
+       ignorepointer 1
+       color 0.9412 0.9412 0.9412 1
+       position 0 0
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style Slim_Outline2
+      }
+     }
+    }
+    ButtonWidgetClass ButtonWidget1 {
+     position 0.5 0
+     size 0.12 18
+     halign right_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 1
+     text "Fly To"
+     {
+      PanelWidgetClass PanelWidget1 {
+       ignorepointer 1
+       color 0.9412 0.9412 0.9412 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style Slim_Outline2
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass PanelWidget3 {
+   ignorepointer 1
+   color 1 1 1 0.7843
+   size 1 2
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style rover_sim_colorable
   }
  }
 }
