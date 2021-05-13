@@ -55,8 +55,8 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      switch toggle
      {
       ScriptParamsClass {
+       Binding_Name "CollapseTab"
        Two_Way_Binding 1
-       Relay_Command "CameraTrackCollapseExecute"
       }
      }
     }
@@ -210,550 +210,568 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
     }
    }
   }
-  WrapSpacerWidgetClass CameraTrackPositionWrapper {
+  WrapSpacerWidgetClass CollapsePanel {
    visible 1
+   clipchildren 0
    ignorepointer 1
-   position 0 0
-   size 1 20
-   hexactpos 0
-   vexactpos 0
+   size 1 0
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
    hexactsize 0
    vexactsize 1
-   scriptclass "ViewBinding"
    Padding 0
    Margin 0
+   "Size To Content V" 1
+   content_halign center
    {
-    FrameWidgetClass FrameWidget5 {
+    WrapSpacerWidgetClass CameraTrackPositionWrapper {
+     visible 1
      ignorepointer 1
-     size 90 22
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
+     position 0 0
+     size 1 20
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
      vexactsize 1
+     scriptclass "ViewBinding"
+     Padding 0
+     Margin 0
      {
-      TextWidgetClass PositionText {
+      FrameWidgetClass FrameWidget5 {
        ignorepointer 1
-       size 90 16
-       halign center_ref
-       valign center_ref
+       size 90 22
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       text "Position"
-       "text halign" center
-       "text valign" center
+       {
+        TextWidgetClass PositionText {
+         ignorepointer 1
+         size 90 16
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Position"
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass CameraTrackPositionFrame {
+       visible 1
+       ignorepointer 1
+       position 0 10
+       size 0.73 20
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        WrapSpacerWidgetClass InfoBarVectorWrapSpacer2 {
+         clipchildren 0
+         ignorepointer 1
+         size 1 20
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 1
+         style Empty
+         {
+          FrameWidgetClass FrameWidget3 {
+           ignorepointer 1
+           position 10 10
+           size 20 18
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+          }
+          PanelWidgetClass InfoBarCam_X_Main {
+           ignorepointer 1
+           color 0.7647 0.1804 0.102 0.0784
+           size 0.24 16
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+           {
+            EditBoxWidgetClass InfoBar_X_Value {
+             inheritalpha 0
+             position 0 0
+             size 1 16
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scriptclass "ViewBinding"
+             style Default
+             text "99999.99"
+             "limit visible" 1
+             "exact text" 1
+             font "gui/fonts/Metron"
+             {
+              ScriptParamsClass {
+               Binding_Name "pX"
+               Two_Way_Binding 1
+              }
+             }
+            }
+           }
+          }
+          FrameWidgetClass x_y_spacer {
+           ignorepointer 1
+           position 0 0
+           size 20 18
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 1
+           vexactsize 1
+          }
+          PanelWidgetClass InfoBarCam_Y_Main {
+           ignorepointer 1
+           color 0.5765 0.8157 0.2196 0.0784
+           position 0 0
+           size 0.24 16
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+           {
+            EditBoxWidgetClass InfoBar_Y_Value {
+             inheritalpha 0
+             color 1 1 1 0.9961
+             position 0 0
+             size 1 16
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scriptclass "ViewBinding"
+             style highlight_green_1
+             text "99999.99"
+             "limit visible" 1
+             "exact text" 1
+             font "gui/fonts/Metron"
+             {
+              ScriptParamsClass {
+               Binding_Name "pY"
+               Two_Way_Binding 1
+              }
+             }
+            }
+           }
+          }
+          FrameWidgetClass y_z_spacer {
+           ignorepointer 1
+           size 20 18
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 1
+           vexactsize 1
+          }
+          PanelWidgetClass InfoBarCam_Z_Main {
+           ignorepointer 1
+           color 0.2588 0.5176 0.9176 0.0784
+           position 0 0
+           size 0.24 16
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+           {
+            EditBoxWidgetClass InfoBar_Z_Value {
+             inheritalpha 0
+             color 1 1 1 0.9961
+             position 0 0
+             size 1 16
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scriptclass "ViewBinding"
+             style highlight_blue_1
+             text "99999.99"
+             "limit visible" 1
+             "exact text" 1
+             font "gui/fonts/Metron"
+             {
+              ScriptParamsClass {
+               Binding_Name "pZ"
+               Two_Way_Binding 1
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+     {
+      ScriptParamsClass {
+       Binding_Name "Value"
       }
      }
     }
-    FrameWidgetClass CameraTrackPositionFrame {
+    WrapSpacerWidgetClass CameraTrackOrientationWrapper {
      visible 1
      ignorepointer 1
-     position 0 10
-     size 0.73 20
+     position 0 0
+     size 1 20
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 1
+     scriptclass "ViewBinding"
+     "Ignore invisible" 0
+     Padding 0
+     Margin 0
+     "Size To Content V" 1
+     {
+      FrameWidgetClass FrameWidget6 {
+       ignorepointer 1
+       position 10 10
+       size 90 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        TextWidgetClass TextWidget1 {
+         ignorepointer 1
+         size 90 16
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Orientation"
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass CameraTrackPositionFrame0 {
+       ignorepointer 1
+       position 0 0
+       size 0.73 20
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        WrapSpacerWidgetClass InfoBarVectorWrapSpacer0 {
+         clipchildren 0
+         ignorepointer 1
+         size 1 20
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style Empty
+         {
+          FrameWidgetClass FrameWidget4 {
+           ignorepointer 1
+           position 10 10
+           size 20 18
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+          }
+          PanelWidgetClass InfoBarCam_X_Main0 {
+           ignorepointer 1
+           color 0.7647 0.1804 0.102 0.0784
+           size 0.24 16
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+           {
+            EditBoxWidgetClass InfoBar_X_Value0 {
+             inheritalpha 0
+             position 0 0
+             size 1 16
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scriptclass "ViewBinding"
+             style Default
+             text "99999.99"
+             "limit visible" 1
+             "exact text" 1
+             font "gui/fonts/Metron"
+             {
+              ScriptParamsClass {
+               Binding_Name "oX"
+               Two_Way_Binding 1
+              }
+             }
+            }
+           }
+          }
+          FrameWidgetClass x_y_spacer0 {
+           ignorepointer 1
+           position 0 0
+           size 20 18
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 1
+           vexactsize 1
+          }
+          PanelWidgetClass InfoBarCam_Y_Main0 {
+           ignorepointer 1
+           color 0.5765 0.8157 0.2196 0.0784
+           position 0 0
+           size 0.24 16
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+           {
+            EditBoxWidgetClass InfoBar_Y_Value0 {
+             inheritalpha 0
+             color 1 1 1 0.9961
+             position 0 0
+             size 1 16
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scriptclass "ViewBinding"
+             style highlight_green_1
+             text "99999.99"
+             "limit visible" 1
+             "exact text" 1
+             font "gui/fonts/Metron"
+             {
+              ScriptParamsClass {
+               Binding_Name "oY"
+               Two_Way_Binding 1
+              }
+             }
+            }
+           }
+          }
+          FrameWidgetClass y_z_spacer0 {
+           ignorepointer 1
+           size 20 18
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 1
+           vexactsize 1
+          }
+          PanelWidgetClass InfoBarCam_Z_Main0 {
+           ignorepointer 1
+           color 0.2588 0.5176 0.9176 0.0784
+           position 0 0
+           size 0.24 16
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+           {
+            EditBoxWidgetClass InfoBar_Z_Value0 {
+             inheritalpha 0
+             color 1 1 1 0.9961
+             position 0 0
+             size 1 16
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scriptclass "ViewBinding"
+             style highlight_blue_2
+             text "99999.99"
+             "limit visible" 1
+             "exact text" 1
+             font "gui/fonts/Metron"
+             {
+              ScriptParamsClass {
+               Binding_Name "oZ"
+               Two_Way_Binding 1
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+     {
+      ScriptParamsClass {
+       Binding_Name "Value"
+      }
+     }
+    }
+    PanelWidgetClass PanelWidget4 {
+     ignorepointer 1
+     size 1 20
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
      vexactsize 1
      {
-      WrapSpacerWidgetClass InfoBarVectorWrapSpacer2 {
-       clipchildren 0
+      CheckBoxWidgetClass CheckBoxWidget0 {
+       position 115 0
+       size 16 16
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style dze_checkbox_white
+       {
+        ScriptParamsClass {
+         Binding_Name "FlipOrientation"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      TextWidgetClass TextWidget0 {
        ignorepointer 1
-       size 1 20
+       position 0 0
+       size 115 16
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "Flip Orientation"
+       "text halign" center
+       "text valign" center
+      }
+      FrameWidgetClass FrameWidget7 {
+       ignorepointer 1
+       position 0.035 0
+       size 0.6 1
+       halign right_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+      }
+      ButtonWidgetClass ButtonWidget0 {
+       position 0.035 0
+       size 0.35 18
+       halign right_ref
        valign center_ref
        hexactpos 0
        vexactpos 0
        hexactsize 0
        vexactsize 1
-       style Empty
+       scriptclass "ViewBinding"
+       text "Set from Current"
        {
-        FrameWidgetClass FrameWidget3 {
+        PanelWidgetClass PanelWidget6 {
          ignorepointer 1
-         position 10 10
-         size 20 18
+         color 0.9412 0.9412 0.9412 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
-        }
-        PanelWidgetClass InfoBarCam_X_Main {
-         ignorepointer 1
-         color 0.7647 0.1804 0.102 0.0784
-         size 0.24 16
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
          hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-         {
-          EditBoxWidgetClass InfoBar_X_Value {
-           inheritalpha 0
-           position 0 0
-           size 1 16
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           style Default
-           text "99999.99"
-           "limit visible" 1
-           "exact text" 1
-           font "gui/fonts/Metron"
-           {
-            ScriptParamsClass {
-             Binding_Name "pX"
-             Two_Way_Binding 1
-            }
-           }
-          }
-         }
+         vexactsize 0
+         style Slim_Outline2
         }
-        FrameWidgetClass x_y_spacer {
-         ignorepointer 1
-         position 0 0
-         size 20 18
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "OnSetExecute"
         }
-        PanelWidgetClass InfoBarCam_Y_Main {
+       }
+      }
+      ButtonWidgetClass ButtonWidget1 {
+       position 0.5 0
+       size 0.12 18
+       halign right_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       text "Fly To"
+       {
+        PanelWidgetClass PanelWidget1 {
          ignorepointer 1
-         color 0.5765 0.8157 0.2196 0.0784
-         position 0 0
-         size 0.24 16
+         color 0.9412 0.9412 0.9412 1
+         size 1 1
+         halign center_ref
          valign center_ref
-         hexactpos 0
-         vexactpos 0
+         hexactpos 1
+         vexactpos 1
          hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-         {
-          EditBoxWidgetClass InfoBar_Y_Value {
-           inheritalpha 0
-           color 1 1 1 0.9961
-           position 0 0
-           size 1 16
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           style highlight_green_1
-           text "99999.99"
-           "limit visible" 1
-           "exact text" 1
-           font "gui/fonts/Metron"
-           {
-            ScriptParamsClass {
-             Binding_Name "pY"
-             Two_Way_Binding 1
-            }
-           }
-          }
-         }
+         vexactsize 0
+         style Slim_Outline2
         }
-        FrameWidgetClass y_z_spacer {
-         ignorepointer 1
-         size 20 18
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-        }
-        PanelWidgetClass InfoBarCam_Z_Main {
-         ignorepointer 1
-         color 0.2588 0.5176 0.9176 0.0784
-         position 0 0
-         size 0.24 16
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-         {
-          EditBoxWidgetClass InfoBar_Z_Value {
-           inheritalpha 0
-           color 1 1 1 0.9961
-           position 0 0
-           size 1 16
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           style highlight_blue_1
-           text "99999.99"
-           "limit visible" 1
-           "exact text" 1
-           font "gui/fonts/Metron"
-           {
-            ScriptParamsClass {
-             Binding_Name "pZ"
-             Two_Way_Binding 1
-            }
-           }
-          }
-         }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "OnFlyToExecute"
         }
        }
       }
      }
     }
-   }
-   {
-    ScriptParamsClass {
-     Binding_Name "Value"
-    }
-   }
-  }
-  WrapSpacerWidgetClass CameraTrackOrientationWrapper {
-   visible 1
-   ignorepointer 1
-   position 0 0
-   size 1 20
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 1
-   scriptclass "ViewBinding"
-   "Ignore invisible" 0
-   Padding 0
-   Margin 0
-   "Size To Content V" 1
-   {
-    FrameWidgetClass FrameWidget6 {
+    PanelWidgetClass PanelWidget3 {
      ignorepointer 1
-     position 10 10
-     size 90 22
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     {
-      TextWidgetClass TextWidget1 {
-       ignorepointer 1
-       size 90 16
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       text "Orientation"
-       "text halign" center
-       "text valign" center
-      }
-     }
-    }
-    FrameWidgetClass CameraTrackPositionFrame0 {
-     ignorepointer 1
-     position 0 0
-     size 0.73 20
+     color 1 1 1 0.7843
+     size 1 2
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
      vexactsize 1
-     {
-      WrapSpacerWidgetClass InfoBarVectorWrapSpacer0 {
-       clipchildren 0
-       ignorepointer 1
-       size 1 20
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       style Empty
-       {
-        FrameWidgetClass FrameWidget4 {
-         ignorepointer 1
-         position 10 10
-         size 20 18
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-        }
-        PanelWidgetClass InfoBarCam_X_Main0 {
-         ignorepointer 1
-         color 0.7647 0.1804 0.102 0.0784
-         size 0.24 16
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-         {
-          EditBoxWidgetClass InfoBar_X_Value0 {
-           inheritalpha 0
-           position 0 0
-           size 1 16
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           style Default
-           text "99999.99"
-           "limit visible" 1
-           "exact text" 1
-           font "gui/fonts/Metron"
-           {
-            ScriptParamsClass {
-             Binding_Name "oX"
-             Two_Way_Binding 1
-            }
-           }
-          }
-         }
-        }
-        FrameWidgetClass x_y_spacer0 {
-         ignorepointer 1
-         position 0 0
-         size 20 18
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-        }
-        PanelWidgetClass InfoBarCam_Y_Main0 {
-         ignorepointer 1
-         color 0.5765 0.8157 0.2196 0.0784
-         position 0 0
-         size 0.24 16
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-         {
-          EditBoxWidgetClass InfoBar_Y_Value0 {
-           inheritalpha 0
-           color 1 1 1 0.9961
-           position 0 0
-           size 1 16
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           style highlight_green_1
-           text "99999.99"
-           "limit visible" 1
-           "exact text" 1
-           font "gui/fonts/Metron"
-           {
-            ScriptParamsClass {
-             Binding_Name "oY"
-             Two_Way_Binding 1
-            }
-           }
-          }
-         }
-        }
-        FrameWidgetClass y_z_spacer0 {
-         ignorepointer 1
-         size 20 18
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-        }
-        PanelWidgetClass InfoBarCam_Z_Main0 {
-         ignorepointer 1
-         color 0.2588 0.5176 0.9176 0.0784
-         position 0 0
-         size 0.24 16
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-         {
-          EditBoxWidgetClass InfoBar_Z_Value0 {
-           inheritalpha 0
-           color 1 1 1 0.9961
-           position 0 0
-           size 1 16
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           style highlight_blue_2
-           text "99999.99"
-           "limit visible" 1
-           "exact text" 1
-           font "gui/fonts/Metron"
-           {
-            ScriptParamsClass {
-             Binding_Name "oZ"
-             Two_Way_Binding 1
-            }
-           }
-          }
-         }
-        }
-       }
-      }
-     }
+     style rover_sim_colorable
     }
    }
-   {
-    ScriptParamsClass {
-     Binding_Name "Value"
-    }
-   }
-  }
-  PanelWidgetClass PanelWidget4 {
-   ignorepointer 1
-   size 1 20
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 1
-   {
-    CheckBoxWidgetClass CheckBoxWidget0 {
-     position 115 0
-     size 16 16
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scriptclass "ViewBinding"
-     style dze_checkbox_white
-     {
-      ScriptParamsClass {
-       Binding_Name "FlipOrientation"
-       Two_Way_Binding 1
-      }
-     }
-    }
-    TextWidgetClass TextWidget0 {
-     ignorepointer 1
-     position 0 0
-     size 115 16
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     text "Flip Orientation"
-     "text halign" center
-     "text valign" center
-    }
-    FrameWidgetClass FrameWidget7 {
-     ignorepointer 1
-     position 0.035 0
-     size 0.6 1
-     halign right_ref
-     valign center_ref
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
-    }
-    ButtonWidgetClass ButtonWidget0 {
-     position 0.035 0
-     size 0.35 18
-     halign right_ref
-     valign center_ref
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 1
-     scriptclass "ViewBinding"
-     text "Set from Current"
-     {
-      PanelWidgetClass PanelWidget6 {
-       ignorepointer 1
-       color 0.9412 0.9412 0.9412 1
-       position 0 0
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       style Slim_Outline2
-      }
-     }
-     {
-      ScriptParamsClass {
-       Relay_Command "OnSetExecute"
-      }
-     }
-    }
-    ButtonWidgetClass ButtonWidget1 {
-     position 0.5 0
-     size 0.12 18
-     halign right_ref
-     valign center_ref
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 1
-     scriptclass "ViewBinding"
-     text "Fly To"
-     {
-      PanelWidgetClass PanelWidget1 {
-       ignorepointer 1
-       color 0.9412 0.9412 0.9412 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       style Slim_Outline2
-      }
-     }
-     {
-      ScriptParamsClass {
-       Relay_Command "OnFlyToExecute"
-      }
-     }
-    }
-   }
-  }
-  PanelWidgetClass PanelWidget3 {
-   ignorepointer 1
-   color 1 1 1 0.7843
-   size 1 2
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 1
-   style rover_sim_colorable
   }
  }
 }
