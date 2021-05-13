@@ -21,7 +21,7 @@ class EditorClipboard
 			return;
 		}
 		
-		array<ref EditorObjectData>> world_objects = {};
+		array<ref EditorObjectData> world_objects = {};
 		
 		vector avg_position;
 		foreach (int id, EditorObject copy_object: copy_objects) {
