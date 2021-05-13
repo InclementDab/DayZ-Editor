@@ -2016,6 +2016,40 @@ FrameWidgetClass EditorFrame {
          "text halign" center
          "text valign" center
         }
+        PanelWidgetClass CameraTrackMinimizePanel {
+         ignorepointer 1
+         color 0.7843 0.2941 0.2745 1
+         size 26 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass CameraTrackMinimizeText {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           text "_"
+           "text halign" center
+          }
+          ButtonWidgetClass CameraTrackMinimizeButton {
+           color 1 1 1 0.1961
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+          }
+         }
+        }
        }
       }
       ScrollWidgetClass CameraNodeScrollBar {
@@ -2141,7 +2175,7 @@ FrameWidgetClass EditorFrame {
          scriptclass "ViewBinding"
          text "Add Node"
          {
-          PanelWidgetClass ButtonOutline2 {
+          PanelWidgetClass AddButtonOutline {
            ignorepointer 1
            color 0.2745 0.8627 0.2745 0.9961
            size 1 1
