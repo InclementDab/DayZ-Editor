@@ -17,7 +17,7 @@ class DialogBase: ScriptView
 		m_DialogBaseController.NotifyPropertyChanged("Title");
 		m_LayoutRoot.Show(false);
 	}
-		
+			
 	DialogResult ShowDialog()
 	{
 		Trace("ShowDialog");
@@ -26,8 +26,7 @@ class DialogBase: ScriptView
 			Sleep(10);
 		}
 		
-		Log("DialogResult: %1", typename.EnumToString(DialogResult, m_DialogResult));
-		delete this;
+		Log("DialogResult: %1", typename.EnumToString(DialogResult, m_DialogResult));		
 		return m_DialogResult;
 	}
 	
@@ -35,8 +34,15 @@ class DialogBase: ScriptView
 	{
 		Trace("CloseDialog");
 		m_DialogResult = dialog_result;
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Delete, 15);
 	}
 	
+	private void Delete()
+	{
+		delete this;
+	}
+		
 	ScriptView AddContent(ScriptView content)
 	{
 		content.SetParent(this);

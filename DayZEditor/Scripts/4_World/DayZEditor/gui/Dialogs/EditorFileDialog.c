@@ -60,7 +60,6 @@ class EditorFileDialog: EditorDialogBase
 		}
 	}
 		
-			
 	DialogResult ShowDialog(out string edit_data)
 	{
 		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
@@ -124,12 +123,12 @@ class EditorFileDialog: EditorDialogBase
 		} else if (file.Contains("...")) {
 			BackDirectory();
 		} else {
-			LoadFile(file);
+			CloseDialog(DialogResult.OK);
+			//LoadFile(file);
 		}
 		
 		return true;
 	}
-	
 	
 	// Abstracterino
 	void LoadFile(string file)
