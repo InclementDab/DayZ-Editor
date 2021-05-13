@@ -1,4 +1,3 @@
-
 class DialogBase: ScriptView
 {
 	// Private members
@@ -28,6 +27,7 @@ class DialogBase: ScriptView
 		}
 		
 		Log("DialogResult: %1", typename.EnumToString(DialogResult, m_DialogResult));
+		delete this;
 		return m_DialogResult;
 	}
 	
@@ -35,7 +35,6 @@ class DialogBase: ScriptView
 	{
 		Trace("CloseDialog");
 		m_DialogResult = dialog_result;
-		delete this;
 	}
 	
 	ScriptView AddContent(ScriptView content)

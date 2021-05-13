@@ -66,10 +66,7 @@ class EditorFileDialog: EditorDialogBase
 		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
 		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
 		DialogResult result = ShowDialog();
-		Print("Boom");
-		Print(edit_box);
 		edit_data = edit_box.GetText();
-		Print("Bang");
 		return result;
 	}
 	
@@ -127,8 +124,7 @@ class EditorFileDialog: EditorDialogBase
 		} else if (file.Contains("...")) {
 			BackDirectory();
 		} else {
-			CloseDialog(DialogResult.OK);
-			//LoadFile(file);
+			LoadFile(file);
 		}
 		
 		return true;
