@@ -1,3 +1,17 @@
+class CameraTrackPointBlockInformation
+{
+	vector param1;
+	float param2;
+	ref array<vector> param3 = {};
+	
+	void CameraTrackPointBlockInformation(vector p1, float p2, array<vector> p3)
+	{
+		param1 = p1;
+		param2 = p2;
+		param3 = p3;
+	}
+}
+
 class EditorHudController: EditorControllerBase
 {
 	// Data Binding
@@ -21,7 +35,7 @@ class EditorHudController: EditorControllerBase
 	float obj_x, obj_y, obj_z;
 	
 	float CameraTrackSmoothing;
-	
+		
 	ref EditorHudToolbar EditorHudToolbarView;
 	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
@@ -43,7 +57,13 @@ class EditorHudController: EditorControllerBase
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected EditBoxWidget LeftbarSearchBar;
 	
+	// Camera Track
 	protected Widget CameraTrackWrapper;
+	protected ButtonWidget CameraTrackRunButton;
+	protected Widget CameraTrackButtonOutline;
+	protected bool m_CameraTrackRunning;
+	protected vector m_CameraTrackStartPosition;
+	protected vector m_CameraTrackStartOrientation;
 	
 	// Temp until sub controllers can be properties of parent controller
 	EditorHudToolbarController GetToolbarController() 
@@ -75,38 +95,101 @@ class EditorHudController: EditorControllerBase
 		EditorEvents.OnObjectDeselected.Remove(OnObjectDeselected);
 #endif
 	}
+		
+	void GetCameraTrackPositions(out array<vector> positions)
+	{
+		array<EditorCameraTrackListItemController> camera_tracks = GetCameraTrackControllers();
+		int count = camera_tracks.Count();
+		camera_tracks[0].Position0 = camera_tracks[0].GetPosition();
+		camera_tracks[count - 1].Position0 = camera_tracks[count - 1].GetPosition();
+		
+		EditorCameraTrackListItemController previous;
+		EditorCameraTrackListItemController current;
+		EditorCameraTrackListItemController next;
+	
+		array<ref CameraTrackPointBlockInformation> blocks();
+		
+		float t = 0.0;
+		float norm_dist = 1.0;
+	
+		vector point0;
+		vector point1 = camera_tracks[0].Position0;
+	
+		vector dir0;
+		vector dir1;
+	
+		for (int i = 1; i < count; i++)
+		{
+		    previous = camera_tracks[i - 1];
+		    current = camera_tracks[i];
+		
+		    if (i < count - 1)
+		    {
+		        next = camera_tracks[i + 1];
+		        current.Position0 = current.GetPosition();
+		    }
+	
+			dir0 = vector.Direction(previous.Position0, current.Position0);
+			float len = dir0.Normalize();
+			dir1 = -dir0.Perpend();
+	
+			float len_scale = len * CameraTrackSmoothing / 100.0;
+	
+			norm_dist = 1.0;
+			if (len_scale != 0.0) norm_dist = Math.Clamp(1.0 / len_scale, 0.0, 1.0);
+	
+			CameraTrackPointBlockInformation block = new CameraTrackPointBlockInformation(dir1, norm_dist, new array<vector>());
+			blocks.Insert(block);
+	
+			t = 0.0;
+			while (t <= 1.0)
+			{
+				point0 = point1;
+				point1 = previous.Position0 + (dir0 * len * t);
+	
+				block.param3.Insert(point1);
+	
+				t += norm_dist;
+			}
+		}
+	
+		count = blocks.Count();
+	
+		if (count < 2) return;
+		
+		for (i = 1; i < count; i++)
+		{
+			dir0 = blocks[i - 1].param1;
+			dir1 = blocks[i].param1;
+	
+			norm_dist = blocks[i].param2;
+	
+			array<vector> points = blocks[i].param3;
+			int midPoint = points.Count() / 2;
+			for (int j = 0; j < midPoint; j++)
+			{
+				vector norm_dir = (dir0 * (1.0 - norm_dist)) + (dir1 * norm_dist);
+				norm_dir.Normalize();
+	
+				positions.Insert(points[j] + (norm_dir * (CameraTrackSmoothing / 100.0)));
+			}
+		}
+	}
 	
 	void Update()
 	{
-		Debug.DestroyAllShapes();		
-		
-		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
-		for (int i = 0; i < camera_tracks.Count(); i++) {
+		Debug.DestroyAllShapes();
+	
+		array<vector> positions();
+		GetCameraTrackPositions(positions);
 
-			EditorCameraTrackListItemController ctrl = camera_tracks[i].GetData();
-			if (!camera_tracks[i + 1]) {
-				continue;
-			}
-			
-			EditorCameraTrackListItemController next_ctrl = camera_tracks[i + 1].GetData();
-			
-			float j;
-			vector point = ctrl.GetPosition();
-			vector old_point;
-			while (j <= 1.0) {
-				
-				old_point = point;
-				vector center_point = AverageVectors(ctrl.GetPosition(), next_ctrl.GetPosition()) + vector.Up * ((CameraTrackSmoothing / 100) * vector.Distance(ctrl.GetPosition(), next_ctrl.GetPosition()));
-				point = EditorMath.CalculateQuadraticBezierPoint(j + 0.1, ctrl.GetPosition(), center_point, next_ctrl.GetPosition());
-				
-				Debug.DrawLine(old_point, point, COLOR_WHITE, ShapeFlags.NOZBUFFER);
-
-				j += 0.1;
-			}
-			
-			j = 0;
+		for (int i = 1; i < positions.Count(); i++)
+		{
+			Debug.DrawLine(positions[i - 1], positions[i], COLOR_WHITE, ShapeFlags.NOZBUFFER);
 		}
 	}
+
+
 		
 	override void OnWidgetScriptInit(Widget w)
 	{
@@ -259,37 +342,27 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Trace("EditorHudController::CameraTrackToggleExecute");
 		CameraTrackWrapper.Show(!CameraTrackWrapper.IsVisible());
 	}
-	
-	void CameraTrackInsertNode(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
-		string name = "CameraTrack" + CameraTrackData.Count();
-		InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
-	}
-	
-	void CameraTrackDeleteNode(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::CameraTrackDeleteNode");
-	}
-	
-	void CameraTrackRunExecute(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::CameraTrackRunExecute");
-		
-		thread _RunCameraTrack();
-	}
-	
+			
 	private void _RunCameraTrack()
 	{
+		m_CameraTrackRunning = true;
 		EditorCamera camera = GetEditor().GetCamera();
 		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
 		for (int i = 0; i < camera_tracks.Count(); i++) {
+			if (!m_CameraTrackRunning) return; // cancel
 			EditorCameraTrackListItemController ctrl = camera_tracks[i].GetData();
+			
 			if (!camera_tracks[i + 1]) {
 				continue;
 			}
 			
-			EditorCameraTrackListItemController next_ctrl = camera_tracks[i + 1].GetData();
+			EditorCameraTrackListItemController center_ctrl = camera_tracks[i + 1].GetData();
+			
+			if (!camera_tracks[i + 2]) {
+				continue;
+			}
+			
+			EditorCameraTrackListItemController next_ctrl = camera_tracks[i + 2].GetData();
 			vector start_position = ctrl.GetPosition();
 			vector start_orientation = ctrl.GetOrientation();
 			camera.SetPosition(start_position);
@@ -297,11 +370,11 @@ class EditorHudController: EditorControllerBase
 			
 			int td = 0;
 			vector point = ctrl.GetPosition();
-			Print(ctrl.Time);
 			while (td <= ctrl.Time * 1000) {
+				if (!m_CameraTrackRunning) return; // cancel
 				float time_value = 1 / (ctrl.Time * 1000) * td;
-				vector center_point = AverageVectors(ctrl.GetPosition(), next_ctrl.GetPosition()) + vector.Up * ((CameraTrackSmoothing / 100) * vector.Distance(ctrl.GetPosition(), next_ctrl.GetPosition()));
-				point = EditorMath.CalculateQuadraticBezierPoint(time_value, ctrl.GetPosition(), center_point, next_ctrl.GetPosition());
+				//vector center_point = AverageVectors(ctrl.GetPosition(), next_ctrl.GetPosition()) + vector.Up * ((CameraTrackSmoothing / 100) * vector.Distance(ctrl.GetPosition(), next_ctrl.GetPosition()));
+				point = EditorMath.CalculateQuadraticBezierPoint(time_value, ctrl.GetPosition(), center_ctrl.GetPosition(), next_ctrl.GetPosition());
 				
 				camera.SetPosition(point);
 				
@@ -335,6 +408,37 @@ class EditorHudController: EditorControllerBase
 				Sleep(10);
 			}*/
 		}
+		
+		CameraTrackStop();
+	}
+		
+	void CameraTrackStart()
+	{
+		m_CameraTrackStartPosition = GetEditor().GetCamera().GetPosition();
+		m_CameraTrackStartOrientation = GetEditor().GetCamera().GetOrientation();
+		
+		m_CameraTrackRunning = true;
+		CameraTrackRunButton.SetText("Stop");
+		CameraTrackRunButton.SetColor(COLOR_RED);
+		CameraTrackButtonOutline.SetColor(COLOR_RED);
+		thread _RunCameraTrack();
+	}
+	
+	void CameraTrackStop()
+	{
+		GetEditor().GetCamera().SetPosition(m_CameraTrackStartPosition);
+		GetEditor().GetCamera().SetPosition(m_CameraTrackStartOrientation);
+		
+		m_CameraTrackRunning = false;
+		CameraTrackRunButton.SetText("Start");
+		CameraTrackRunButton.SetColor(COLOR_WHITE_A);
+		CameraTrackButtonOutline.SetColor(COLOR_WHITE);
+		CameraTrackRunButton.SetState(1);
+	}
+	
+	bool IsCameraTrackRunning()
+	{
+		return m_CameraTrackRunning;
 	}
 	
 	void InsertCameraTrack(EditorCamera current_camera, float time, string name)
@@ -448,6 +552,18 @@ class EditorHudController: EditorControllerBase
 		for (int i = 0; i < CameraTrackData.Count(); i++) {
 			if (CameraTrackData[i]) {
 				dta.Insert(CameraTrackData[i]);
+			}
+		}		
+		
+		return dta;
+	}
+	
+	array<EditorCameraTrackListItemController> GetCameraTrackControllers()
+	{
+		array<EditorCameraTrackListItemController> dta = {};
+		for (int i = 0; i < CameraTrackData.Count(); i++) {
+			if (CameraTrackData[i]) {
+				dta.Insert(CameraTrackData[i].GetTemplateController());
 			}
 		}		
 		
