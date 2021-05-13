@@ -21,7 +21,7 @@ class EditorClipboard
 			return;
 		}
 		
-		array<ref EditorObjectData>> world_objects = {};
+		array<ref EditorObjectData> world_objects = {};
 		
 		vector avg_position;
 		foreach (int id, EditorObject copy_object: copy_objects) {
@@ -57,7 +57,7 @@ class EditorClipboard
 		GetGame().CopyFromClipboard(clipboard_text);
 		
 		JsonSerializer json_serializer = new JsonSerializer();
-		ref array<ref EditorObjectData>> data = {};
+		array<ref EditorObjectData> data = {};
 		if (!json_serializer.ReadFromString(data, clipboard_text, error)) {
 			EditorLog.Error("Paste Error: %1", error);
 			return;
@@ -66,7 +66,6 @@ class EditorClipboard
 		GetEditor().ClearSelection();
 		
 		foreach (EditorObjectData pasted_object: data) {
-			
 			if (pasted_object.Type == string.Empty) {
 				continue;
 			}
@@ -86,16 +85,13 @@ class EditorClipboard
 			editor_object.SetPosition(position);
 			
 			if (GetEditor().MagnetMode) {
-				
 				set<Object> o;
 				vector ground, ground_dir; int component;
 				DayZPhysics.RaycastRV(position, position + transform[1] * -1000, ground, ground_dir, component, o, NULL, editor_object.GetWorldObject(), false, true); // set to ground only
 				vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
 				editor_object.PlaceOnSurfaceRotated(transform, position, surface_normal[0] * -1, surface_normal[2] * -1, 0, GetEditor().MagnetMode);
 				transform[3] = transform[3] - transform[1] * vector.Distance(ground, position);
-				
-				editor_object.SetTransform(transform);
-				
+				editor_object.SetTransform(transform);				
 			}
 			
 			GetEditor().SelectObject(editor_object);

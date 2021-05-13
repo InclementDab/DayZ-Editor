@@ -299,6 +299,7 @@ class EditorObject: EditorWorldObject
 			}
 		}
 		
+		// what is this stuff?
 		PlayerBase player = PlayerBase.Cast(m_WorldObject);
 		if (player && player == GetEditor().GetPlayer()) {
 			Control = true;

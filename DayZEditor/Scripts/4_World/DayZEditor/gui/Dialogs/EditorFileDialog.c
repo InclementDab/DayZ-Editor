@@ -1,7 +1,7 @@
 class EditorFileDialog: EditorDialogBase
 {
 	protected autoptr EditBoxPrefab m_EditBoxPrefab;
-	protected autoptr ListBoxPrefab<ref EditorFile> m_ListBoxPrefab;
+	protected autoptr ListBoxPrefab<ref EditorFile> m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();
 	protected string m_CurrentDirectory;
 	
 	protected string m_Filter;
@@ -10,21 +10,16 @@ class EditorFileDialog: EditorDialogBase
 	{
 		m_Filter = filter;		
 		m_EditBoxPrefab = new EditBoxPrefab("File", m_Controller, default_value);
-		
-		// If people want to play around
-		if (GetEditor().Settings.DebugMode) {
-			m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();
-			AddContent(m_ListBoxPrefab);
-			LoadFileDirectory("$profile:\\", m_Filter);
-			AddButton("Back", "BackDirectory");
-		}
+	 
+		AddContent(m_ListBoxPrefab);
+		LoadFileDirectory("$profile:\\Editor\\", m_Filter);
 				
 		AddContent(m_EditBoxPrefab);
 		AddButton(button_name, DialogResult.OK);
 		AddButton(DialogResult.Cancel);
 	}
 	
-	private void LoadFiles(string directory, string filter, inout ref array<ref EditorFile> folder_array, FileSearchMode search_mode)
+	private void LoadFiles(string directory, string filter, inout array<ref EditorFile> folder_array, FileSearchMode search_mode)
 	{
 		TStringArray name_array = new TStringArray();
 		string filename;
@@ -65,7 +60,6 @@ class EditorFileDialog: EditorDialogBase
 		}
 	}
 		
-			
 	DialogResult ShowDialog(out string edit_data)
 	{
 		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
@@ -83,7 +77,8 @@ class EditorFileDialog: EditorDialogBase
 		EditorLog.Info("EditorFileDialog::Loading Directory %1", m_CurrentDirectory);
 		m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Clear();
 		ref	array<ref EditorFile> editor_file_array = {};
-				
+		
+		editor_file_array.Insert(new EditorFile("...", "", FileSearchMode.FOLDERS));
 		LoadFiles(directory, filter, editor_file_array, FileSearchMode.FOLDERS);
 		LoadFiles(directory, filter, editor_file_array, FileSearchMode.FILES);
 
@@ -104,6 +99,19 @@ class EditorFileDialog: EditorDialogBase
 		LoadFileDirectory(file_directory, m_Filter);
 	}
 	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorFileDialog::OnMouseButtonDown");
+		
+		string file = GetCurrentSelectedFile();
+		if (file != string.Empty) {
+			m_EditBoxPrefab.GetPrefabController().Value = file;
+			m_EditBoxPrefab.GetPrefabController().NotifyPropertyChanged("Value");
+		}
+		
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorFileDialog::OnDoubleClick");
@@ -112,33 +120,20 @@ class EditorFileDialog: EditorDialogBase
 		// Is that shit a folder?
 		if (file.Contains("\\")) {
 			LoadFileDirectory(m_CurrentDirectory + file, m_Filter);
+		} else if (file.Contains("...")) {
+			BackDirectory();
 		} else {
-			LoadFile(m_CurrentDirectory + file);
+			CloseDialog(DialogResult.OK);
+			//LoadFile(file);
 		}
 		
 		return true;
 	}
 	
-	/*
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		switch (w.GetName()) {
-			
-			case "ListBox": {
-				m_EditBoxPrefab.GetPrefabController().Value = GetCurrentSelectedFile();
-				m_EditBoxPrefab.GetPrefabController().NotifyPropertyChanged("Value");
-				return true;
-			}			
-		}
-		
-		return false;
-	}
-	*/
-	
-	
 	// Abstracterino
 	void LoadFile(string file)
 	{
+		EditorLog.Trace("EditorFileDialog::LoadFile");
 		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
 		edit_box.SetText(file);
 		CloseDialog(DialogResult.OK);
@@ -154,6 +149,7 @@ class EditorFileDialog: EditorDialogBase
 	private string GetCurrentSelectedFile()
 	{
 		string file;
+		if (m_ListBoxPrefab.ListBox.GetSelectedRow() == -1) return string.Empty;
 		m_ListBoxPrefab.ListBox.GetItemText(m_ListBoxPrefab.ListBox.GetSelectedRow(), 0, file);
 		return file;
 	}

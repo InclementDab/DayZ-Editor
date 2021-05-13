@@ -1,14 +1,18 @@
 class EditorSaveAsCommand: EditorExportCommandBase
 {		
-	protected override bool ExportFile(string file_name, ExportSettings export_settings, bool warn_on_overwrite)
+	override void Call(Class sender, CommandArgs args)
 	{
-		if (!super.ExportFile(file_name, export_settings, warn_on_overwrite)) {
-			return false;
-		}
+		EditorLog.Trace("EditorSaveAsCommand");
 		
-		// only export that does this
-		m_Editor.SetSaveFile(file_name);
-		return true;
+		string file_name = m_Editor.GetSaveFile();
+		EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName());
+		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
+			return;
+		}
+			
+		if (ExportFile(file_name, new ExportSettings(), true)) {
+			m_Editor.SetSaveFile(file_name);
+		}
 	}
 	
 	override string GetName() 
