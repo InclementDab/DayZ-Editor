@@ -57,7 +57,7 @@ class EditorClipboard
 		GetGame().CopyFromClipboard(clipboard_text);
 		
 		JsonSerializer json_serializer = new JsonSerializer();
-		ref array<ref EditorObjectData>> data = {};
+		array<EditorObjectData>> data = {};
 		if (!json_serializer.ReadFromString(data, clipboard_text, error)) {
 			EditorLog.Error("Paste Error: %1", error);
 			return;
