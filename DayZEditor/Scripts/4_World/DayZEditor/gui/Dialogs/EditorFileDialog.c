@@ -1,7 +1,7 @@
 class EditorFileDialog: EditorDialogBase
 {
 	protected autoptr EditBoxPrefab m_EditBoxPrefab;
-	protected autoptr ListBoxPrefab<ref EditorFile> m_ListBoxPrefab;
+	protected autoptr ListBoxPrefab<ref EditorFile> m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();
 	protected string m_CurrentDirectory;
 	
 	protected string m_Filter;
@@ -10,20 +10,16 @@ class EditorFileDialog: EditorDialogBase
 	{
 		m_Filter = filter;		
 		m_EditBoxPrefab = new EditBoxPrefab("File", m_Controller, default_value);
-		
-		// If people want to play around
-
-		m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();
+	 
 		AddContent(m_ListBoxPrefab);
-		LoadFileDirectory("$profile:\\", m_Filter);
-		
+		LoadFileDirectory("$profile:\\Editor\\", m_Filter);
 				
 		AddContent(m_EditBoxPrefab);
 		AddButton(button_name, DialogResult.OK);
 		AddButton(DialogResult.Cancel);
 	}
 	
-	private void LoadFiles(string directory, string filter, inout ref array<ref EditorFile> folder_array, FileSearchMode search_mode)
+	private void LoadFiles(string directory, string filter, inout array<ref EditorFile> folder_array, FileSearchMode search_mode)
 	{
 		TStringArray name_array = new TStringArray();
 		string filename;
@@ -70,7 +66,10 @@ class EditorFileDialog: EditorDialogBase
 		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
 		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
 		DialogResult result = ShowDialog();
+		Print("Boom");
+		Print(edit_box);
 		edit_data = edit_box.GetText();
+		Print("Bang");
 		return result;
 	}
 	
@@ -126,16 +125,10 @@ class EditorFileDialog: EditorDialogBase
 		if (file.Contains("\\")) {
 			LoadFileDirectory(m_CurrentDirectory + file, m_Filter);
 		} else if (file.Contains("...")) {
-			TStringArray arry = {};
-			m_CurrentDirectory.Split("\\", arry);
-			m_CurrentDirectory = string.Empty;
-			for (int i = 0; i < arry.Count() - 1; i++) {
-				m_CurrentDirectory += arry[i];
-			}
-			
-			LoadFileDirectory(m_CurrentDirectory, m_Filter);
+			BackDirectory();
 		} else {
-			LoadFile(m_CurrentDirectory + file);
+			CloseDialog(DialogResult.OK);
+			//LoadFile(file);
 		}
 		
 		return true;
@@ -145,6 +138,7 @@ class EditorFileDialog: EditorDialogBase
 	// Abstracterino
 	void LoadFile(string file)
 	{
+		EditorLog.Trace("EditorFileDialog::LoadFile");
 		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
 		edit_box.SetText(file);
 		CloseDialog(DialogResult.OK);
