@@ -2160,7 +2160,7 @@ FrameWidgetClass EditorFrame {
           }
          }
         }
-        ButtonWidgetClass RunButton {
+        ButtonWidgetClass CameraTrackRunButton {
          position 20 1
          size 80 20
          halign right_ref
@@ -2171,8 +2171,9 @@ FrameWidgetClass EditorFrame {
          vexactsize 1
          scriptclass "ViewBinding"
          text "Run"
+         switch toggle
          {
-          PanelWidgetClass ButtonOutline {
+          PanelWidgetClass CameraTrackButtonOutline {
            ignorepointer 1
            color 1 1 1 0.9961
            size 1 1
