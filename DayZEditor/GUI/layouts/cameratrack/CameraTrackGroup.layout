@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass CameraTrackGroupWrapper {
  color 0.0784 0.0784 0.0784 0.3137
- size 0.2 0
+ size 1 0
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -91,7 +91,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      "text valign" center
      {
       ScriptParamsClass {
-       Binding_Name "Caption"
+       Binding_Name "Name"
       }
      }
     }
@@ -137,6 +137,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scriptclass "ViewBinding"
      style ServerBrowser
      text "0.00"
      "limit visible" 1
@@ -155,6 +156,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        hexactsize 1
        vexactsize 1
        style Slim_Outline2
+      }
+     }
+     {
+      ScriptParamsClass {
+       Binding_Name "Time"
       }
      }
     }
@@ -197,6 +203,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      }
      {
       ScriptParamsClass {
+       Relay_Command "OnDeleteExecute"
       }
      }
     }
@@ -508,7 +515,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            font "gui/fonts/Metron"
            {
             ScriptParamsClass {
-             Binding_Name "pX"
+             Binding_Name "oX"
              Two_Way_Binding 1
             }
            }
@@ -556,7 +563,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            font "gui/fonts/Metron"
            {
             ScriptParamsClass {
-             Binding_Name "pY"
+             Binding_Name "oY"
              Two_Way_Binding 1
             }
            }
@@ -603,7 +610,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            font "gui/fonts/Metron"
            {
             ScriptParamsClass {
-             Binding_Name "pZ"
+             Binding_Name "oZ"
              Two_Way_Binding 1
             }
            }
@@ -638,7 +645,14 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scriptclass "ViewBinding"
      style dze_checkbox_white
+     {
+      ScriptParamsClass {
+       Binding_Name "FlipOrientation"
+       Two_Way_Binding 1
+      }
+     }
     }
     TextWidgetClass TextWidget0 {
      ignorepointer 1
@@ -673,6 +687,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      vexactpos 0
      hexactsize 0
      vexactsize 1
+     scriptclass "ViewBinding"
      text "Set from Current"
      {
       PanelWidgetClass PanelWidget6 {
@@ -689,6 +704,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        style Slim_Outline2
       }
      }
+     {
+      ScriptParamsClass {
+       Relay_Command "OnSetExecute"
+      }
+     }
     }
     ButtonWidgetClass ButtonWidget1 {
      position 0.5 0
@@ -699,6 +719,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      vexactpos 0
      hexactsize 0
      vexactsize 1
+     scriptclass "ViewBinding"
      text "Fly To"
      {
       PanelWidgetClass PanelWidget1 {
@@ -712,6 +733,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        hexactsize 0
        vexactsize 0
        style Slim_Outline2
+      }
+     }
+     {
+      ScriptParamsClass {
+       Relay_Command "OnFlyToExecute"
       }
      }
     }

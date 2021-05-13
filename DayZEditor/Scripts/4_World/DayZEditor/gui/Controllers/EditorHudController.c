@@ -227,7 +227,8 @@ class EditorHudController: EditorControllerBase
 	void CameraTrackInsertNode(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
-		InsertCameraTrack(GetEditor().GetCamera(), 1.0);
+		string name = "CameraTrack" + CameraTrackData.Count();
+		InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
 	}
 	
 	void CameraTrackDeleteNode(ButtonCommandArgs args)
@@ -261,15 +262,15 @@ class EditorHudController: EditorControllerBase
 			while (td < ctrl.Time * 1000) {
 				float time_value = 1 / (ctrl.Time * 1000) * td;
 				vector position;
-				position[0] = Math.Lerp(start_position[0], next_pos.pX, time_value);
-				position[1] = Math.Lerp(start_position[1], next_pos.pY, time_value);
-				position[2] = Math.Lerp(start_position[2], next_pos.pZ, time_value);
+				position[0] = EditorMath.SmoothLerp(start_position[0], next_pos.pX.Parse(), time_value);
+				position[1] = EditorMath.SmoothLerp(start_position[1], next_pos.pY.Parse(), time_value);
+				position[2] = EditorMath.SmoothLerp(start_position[2], next_pos.pZ.Parse(), time_value);
 				camera.SetPosition(position);
 				
 				vector orientation;
-				orientation[0] = Math.Lerp(start_orientation[0], next_pos.oX, time_value);
-				orientation[1] = Math.Lerp(start_orientation[1], next_pos.oY, time_value);
-				orientation[2] = Math.Lerp(start_orientation[2], next_pos.oZ, time_value);
+				orientation[0] = EditorMath.SmoothLerp(start_orientation[0], next_pos.oX.Parse(), time_value);
+				orientation[1] = EditorMath.SmoothLerp(start_orientation[1], next_pos.oY.Parse(), time_value);
+				orientation[2] = EditorMath.SmoothLerp(start_orientation[2], next_pos.oZ.Parse(), time_value);
 				camera.SetOrientation(orientation);
 				
 				td += 10;
@@ -278,9 +279,9 @@ class EditorHudController: EditorControllerBase
 		}
 	}
 	
-	void InsertCameraTrack(EditorCamera current_camera, float time)
+	void InsertCameraTrack(EditorCamera current_camera, float time, string name)
 	{
-		InsertCameraTrack(new EditorCameraTrackListItem(current_camera.GetPosition(), current_camera.GetOrientation(), time));
+		InsertCameraTrack(new EditorCameraTrackListItem(current_camera.GetPosition(), current_camera.GetOrientation(), time, name));
 	}
 	
 	void InsertCameraTrack(EditorCameraTrackListItem camera_track_item)
