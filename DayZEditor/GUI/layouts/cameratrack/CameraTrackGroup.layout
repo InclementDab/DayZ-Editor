@@ -12,19 +12,19 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
   FrameWidgetClass CameraTrackOptionPanel {
    clipchildren 0
    ignorepointer 1
-   size 26 26
+   size 30 26
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
    fixaspect inside
    {
-    ImageWidgetClass expand_image {
+    ImageWidgetClass CameraImage {
      visible 1
      clipchildren 0
      inheritalpha 1
      ignorepointer 1
-     color 1 1 1 0.549
+     color 1 1 1 0.8235
      position 0 0
      size 1.1 1.1
      halign center_ref
@@ -43,7 +43,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      filter 1
     }
     ButtonWidgetClass CameraTrackOptionButton {
-     color 1 1 1 0.2353
+     color 0.4196 0.6471 1 0.5882
      size 1 1
      halign center_ref
      hexactpos 1
@@ -62,26 +62,26 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
     }
    }
   }
-  FrameWidgetClass FrameWidget0 {
+  FrameWidgetClass CameraTrackNodeFrame {
    ignorepointer 1
    position 0 0
-   size 120 24
+   size 0.25 26
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
    {
     TextWidgetClass CameraTrackNodeTitle {
      clipchildren 0
      ignorepointer 0
-     color 1 1 1 0.7843
-     position 0 4
-     size 120 18
+     color 1 1 1 0.9804
+     position 0.25 0.18
+     size 0.5 18
      halign right_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
      vexactsize 1
      scriptclass "ViewBinding"
      text "Camera Node 10"
@@ -99,43 +99,43 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
   }
   FrameWidgetClass NodeTimeSpacer {
    ignorepointer 1
-   size 4 24
+   size 0.01 26
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
   }
-  FrameWidgetClass FrameWidget2 {
+  FrameWidgetClass SegmentTimeFrame {
    ignorepointer 1
-   position 10 10
-   size 125 24
+   size 0.35 24
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
    {
-    TextWidgetClass TextWidget2 {
+    TextWidgetClass CameraSegmentTimeText {
      ignorepointer 1
-     size 80 14
+     position 0.05 0
+     size 0.65 14
      valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
      vexactsize 1
      text "Segment Time"
-     "text halign" right
+     "text halign" center
      "text valign" center
     }
-    EditBoxWidgetClass EditBoxWidget0 {
+    EditBoxWidgetClass CameraSegmentTimeEditBox {
      clipchildren 0
      position 2 0
-     size 36 14
+     size 0.25 14
      halign right_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
-     hexactsize 1
+     hexactsize 0
      vexactsize 1
      scriptclass "ViewBinding"
      style ServerBrowser
@@ -144,16 +144,16 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      "Use default text" 1
      font "gui/fonts/Metron"
      {
-      PanelWidgetClass PanelWidget2 {
+      PanelWidgetClass CameraSegmentTimeOutline {
        ignorepointer 1
        color 1 1 1 0.9961
        position -2 0
-       size 40 18
+       size 1 18
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
+       hexactsize 0
        vexactsize 1
        style Slim_Outline2
       }
@@ -167,28 +167,29 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
     }
    }
   }
-  FrameWidgetClass FrameWidget1 {
+  FrameWidgetClass DeleteFrame {
    ignorepointer 1
    position 10 10
-   size 0.25 24
+   size 0.3 24
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 1
    {
     ButtonWidgetClass DeleteButton {
-     size 50 18
+     position 0 0
+     size 0.5 0.75
      halign right_ref
      valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
      scriptclass "ViewBinding"
      text "Delete"
      "text color" 0.9412 0.6275 0.6275 1
      {
-      PanelWidgetClass PanelWidget0 {
+      PanelWidgetClass DeleteOutline {
        ignorepointer 1
        color 1 0.4706 0.4706 1
        position 0 0
@@ -239,12 +240,13 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      Padding 0
      Margin 0
      {
-      FrameWidgetClass FrameWidget5 {
+      FrameWidgetClass PositionFrame {
        ignorepointer 1
-       size 90 22
+       position 0 0
+       size 0.24 22
        hexactpos 1
        vexactpos 1
-       hexactsize 1
+       hexactsize 0
        vexactsize 1
        {
         TextWidgetClass PositionText {
@@ -257,7 +259,6 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          hexactsize 1
          vexactsize 1
          text "Position"
-         "text halign" center
          "text valign" center
         }
        }
@@ -283,10 +284,10 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          vexactsize 1
          style Empty
          {
-          FrameWidgetClass FrameWidget3 {
+          FrameWidgetClass PositionVectorSpacer {
            ignorepointer 1
            position 10 10
-           size 20 18
+           size 15 18
            hexactpos 1
            vexactpos 1
            hexactsize 1
@@ -295,7 +296,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
           PanelWidgetClass InfoBarCam_X_Main {
            ignorepointer 1
            color 0.7647 0.1804 0.102 0.0784
-           size 0.24 16
+           size 0.25 16
            valign center_ref
            hexactpos 0
            vexactpos 0
@@ -342,7 +343,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            ignorepointer 1
            color 0.5765 0.8157 0.2196 0.0784
            position 0 0
-           size 0.24 16
+           size 0.25 16
            valign center_ref
            hexactpos 0
            vexactpos 0
@@ -389,7 +390,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            ignorepointer 1
            color 0.2588 0.5176 0.9176 0.0784
            position 0 0
-           size 0.24 16
+           size 0.25 16
            valign center_ref
            hexactpos 0
            vexactpos 0
@@ -449,17 +450,17 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      Margin 0
      "Size To Content V" 1
      {
-      FrameWidgetClass FrameWidget6 {
+      FrameWidgetClass OrientationFrame {
        ignorepointer 1
-       position 10 10
-       size 90 22
+       size 0.24 22
        hexactpos 1
        vexactpos 1
-       hexactsize 1
+       hexactsize 0
        vexactsize 1
        {
-        TextWidgetClass TextWidget1 {
+        TextWidgetClass OrientationText {
          ignorepointer 1
+         position -1 0
          size 90 16
          halign center_ref
          valign center_ref
@@ -468,12 +469,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          hexactsize 1
          vexactsize 1
          text "Orientation"
-         "text halign" center
          "text valign" center
         }
        }
       }
-      FrameWidgetClass CameraTrackPositionFrame0 {
+      FrameWidgetClass CameraTrackOrientationFrame {
        ignorepointer 1
        position 0 0
        size 0.73 20
@@ -494,10 +494,10 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          vexactsize 1
          style Empty
          {
-          FrameWidgetClass FrameWidget4 {
+          FrameWidgetClass OrientationSpacer {
            ignorepointer 1
            position 10 10
-           size 20 18
+           size 15 18
            hexactpos 1
            vexactpos 1
            hexactsize 1
@@ -506,7 +506,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
           PanelWidgetClass InfoBarCam_X_Main0 {
            ignorepointer 1
            color 0.7647 0.1804 0.102 0.0784
-           size 0.24 16
+           size 0.25 16
            valign center_ref
            hexactpos 0
            vexactpos 0
@@ -553,7 +553,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            ignorepointer 1
            color 0.5765 0.8157 0.2196 0.0784
            position 0 0
-           size 0.24 16
+           size 0.25 16
            valign center_ref
            hexactpos 0
            vexactpos 0
@@ -600,7 +600,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            ignorepointer 1
            color 0.2588 0.5176 0.9176 0.0784
            position 0 0
-           size 0.24 16
+           size 0.25 16
            valign center_ref
            hexactpos 0
            vexactpos 0
@@ -645,7 +645,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
       }
      }
     }
-    PanelWidgetClass PanelWidget4 {
+    PanelWidgetClass FlipOrientationPanel {
      ignorepointer 1
      size 1 20
      valign center_ref
@@ -654,12 +654,12 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      hexactsize 0
      vexactsize 1
      {
-      CheckBoxWidgetClass CheckBoxWidget0 {
-       position 115 0
+      CheckBoxWidgetClass FlipOrientationCheckbox {
+       position 0.25 0
        size 16 16
        valign center_ref
-       hexactpos 1
-       vexactpos 1
+       hexactpos 0
+       vexactpos 0
        hexactsize 1
        vexactsize 1
        scriptclass "ViewBinding"
@@ -671,20 +671,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
         }
        }
       }
-      TextWidgetClass TextWidget0 {
-       ignorepointer 1
-       position 0 0
-       size 115 16
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       text "Flip Orientation"
-       "text halign" center
-       "text valign" center
-      }
-      FrameWidgetClass FrameWidget7 {
+      FrameWidgetClass ButtonFrame {
        ignorepointer 1
        position 0.035 0
        size 0.6 1
@@ -695,9 +682,9 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        hexactsize 0
        vexactsize 0
       }
-      ButtonWidgetClass ButtonWidget0 {
-       position 0.035 0
-       size 0.35 18
+      ButtonWidgetClass SetFromCurrentButton {
+       position 0.005 0
+       size 0.4 18
        halign right_ref
        valign center_ref
        hexactpos 0
@@ -727,9 +714,9 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
         }
        }
       }
-      ButtonWidgetClass ButtonWidget1 {
-       position 0.5 0
-       size 0.12 18
+      ButtonWidgetClass FlyToButton {
+       position 0.45 0
+       size 0.2 18
        halign right_ref
        valign center_ref
        hexactpos 0
@@ -739,9 +726,10 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        scriptclass "ViewBinding"
        text "Fly To"
        {
-        PanelWidgetClass PanelWidget1 {
+        PanelWidgetClass FlyToOutline {
          ignorepointer 1
          color 0.9412 0.9412 0.9412 1
+         position 0 0
          size 1 1
          halign center_ref
          valign center_ref
@@ -758,11 +746,34 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
         }
        }
       }
+      FrameWidgetClass FrameWidget0 {
+       ignorepointer 1
+       position 0 0
+       size 0.25 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass FlipOrientationText {
+         ignorepointer 1
+         position 0 0
+         size 0.95 16
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 1
+         text "Flip Orientation"
+         "text halign" center
+        }
+       }
+      }
      }
     }
-    PanelWidgetClass PanelWidget3 {
+    PanelWidgetClass CameraTrackDivider {
      ignorepointer 1
-     color 1 1 1 0.7843
+     color 0.7059 0.7059 0.7059 0.902
      size 1 2
      valign center_ref
      hexactpos 1
