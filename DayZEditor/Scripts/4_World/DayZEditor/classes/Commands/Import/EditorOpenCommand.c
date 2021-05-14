@@ -8,7 +8,6 @@ class EditorOpenCommand: EditorImportCommandBase
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 			return;
 		}
-		Print(file_name);
 		
 		EditorSaveData save_data = ImportFile(file_name, true);
 		/*
