@@ -2,19 +2,19 @@ PanelWidgetClass ContentPanel {
  visible 1
  color 0.5882 0.5882 0.5882 0.1961
  position 0 0
- size 1 1
+ size 1 640
  halign center_ref
  valign center_ref
  hexactpos 0
  vexactpos 0
  hexactsize 0
- vexactsize 0
+ vexactsize 1
  scriptclass ""
  style Outline
  {
   PanelWidgetClass ComtentBoxColor {
    ignorepointer 1
-   color 0.2745 0.2745 0.2745 0.8235
+   color 0.1961 0.1961 0.1961 0.5882
    size 1 1
    halign center_ref
    valign center_ref
@@ -37,12 +37,11 @@ PanelWidgetClass ContentPanel {
      vexactsize 0
      scriptclass ""
      style DayZNormal
-     font "gui/fonts/sdf_MetronBook24"
+     font "gui/fonts/Metron16"
      "exact text" 0
-     text_proportion 0
      "size to text h" 0
      "size to text v" 0
-     lines 100
+     lines 40
      "limit visible" 1
     }
    }

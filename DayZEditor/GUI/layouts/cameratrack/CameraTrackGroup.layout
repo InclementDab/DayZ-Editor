@@ -152,8 +152,9 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
       }
       EditBoxWidgetClass CameraSegmentTimeEditBox {
        clipchildren 0
-       position 2 2
-       size 0.25 14
+       inheritalpha 0
+       position 2 1
+       size 0.25 16
        halign right_ref
        valign center_ref
        hexactpos 1
@@ -162,15 +163,16 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        vexactsize 1
        scriptclass "ViewBinding"
        style ServerBrowser
-       text "0.00"
+       text "1"
        "limit visible" 1
-       "Use default text" 1
-       font "gui/fonts/Metron"
+       "Use default text" 0
+       "exact text" 1
+       font "gui/fonts/MetronLight"
        {
         PanelWidgetClass CameraSegmentTimeOutline {
          ignorepointer 1
          color 1 1 1 0.9961
-         position -2 0
+         position -3 0
          size 1 18
          halign center_ref
          valign center_ref
@@ -199,7 +201,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
      vexactsize 1
      {
       ButtonWidgetClass DeleteButton {
-       position 0 2
+       position 0 1
        size 0.5 0.75
        halign right_ref
        valign center_ref
