@@ -1976,7 +1976,7 @@ FrameWidgetClass EditorFrame {
      ignorepointer 1
      color 0.0196 0.0196 0.0196 0.7843
      position 279 448
-     size 0.2 0.006
+     size 0.22 0.006
      halign right_ref
      valign bottom_ref
      hexactpos 1
@@ -2047,6 +2047,12 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 0
+           scriptclass "ViewBinding"
+           {
+            ScriptParamsClass {
+             Relay_Command "CameraTrackToggleExecute"
+            }
+           }
           }
          }
         }
