@@ -67,6 +67,27 @@ class EditorPlacedListItem: EditorListItem
 				}
 				
 				GetEditor().SelectObject(m_EditorObject);
+				
+				// Multi select handling
+				if (KeyState(KeyCode.KC_LSHIFT)) {
+					int this_index, that_index;
+					EditorListItem tertiary_item;
+					ObservableCollection<ref EditorListItem> list_items = GetEditor().GetEditorHud().GetTemplateController().RightbarSpacerData;
+					for (int i = 0; i <= list_items.Count(); i++) {
+						if (list_items[i] == this) {
+							this_index = i;
+							continue;
+						}
+						
+						if (list_items[i] && list_items[i].IsSelected()) {
+							that_index = i;
+							continue;
+						}
+					}
+						
+					GetEditor().GetEditorHud().GetTemplateController().DoMultiSelect(this_index, that_index, list_items);
+				}
+				
 				return true;
 			}
 			
@@ -101,7 +122,7 @@ class EditorPlacedListItem: EditorListItem
 		
 		return true;
 	}
-	
+		
 	bool ListItemVisibleExecute(ButtonCommandArgs args)
 	{
 		switch (args.GetMouseButton()) {

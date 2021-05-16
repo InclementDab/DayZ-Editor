@@ -40,7 +40,8 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 		return true;
 	}
 	
-	override string GetLayoutFile() {
+	override string GetLayoutFile() 
+	{
 		return "DayZEditor/gui/Layouts/items/EditorListItem.layout";
 	}
 }
