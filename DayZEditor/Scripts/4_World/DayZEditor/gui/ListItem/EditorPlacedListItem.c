@@ -143,7 +143,7 @@ class EditorPlacedListItem: EditorListItem
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		if (m_EditorObject.GetMarker()) {
+		if (m_EditorObject.GetMarker() && !m_EditorObject.GetMarker().IsSelected()) {
 			m_EditorObject.GetMarker().Deselect();
 		}
 		
