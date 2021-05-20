@@ -63,12 +63,12 @@ class EditorClientModule: JMModuleBase
 		
 		if (IsMissionOffline()) {
 			EditorLog.Info("Loading Offline Editor...");
-			Editor.Create(PlayerBase.Cast(CreateDefaultCharacter(Editor.GetRandomTeleportPosition())));
+			vector center_pos = Editor.GetMapCenterPosition();
+			Editor.Create(PlayerBase.Cast(CreateDefaultCharacter(Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500))));
 		} else {
 			EditorLog.Info("Loading Online Editor...");
 			Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
 		}
-		
 	}
 	
 	override void OnMissionFinish()
