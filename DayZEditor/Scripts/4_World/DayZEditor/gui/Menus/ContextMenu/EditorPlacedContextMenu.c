@@ -14,6 +14,7 @@ class EditorPlacedContextMenu: EditorContextMenu
 		AddMenuButton(m_Editor.CommandManager[EditorLockCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorUnlockCommand]);
 		AddMenuDivider();		
+		AddMenuButton(m_Editor.CommandManager[EditorDuplicateCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorObjectPropertiesCommand]);
 	}
 }

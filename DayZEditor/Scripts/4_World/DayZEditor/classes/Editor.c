@@ -776,7 +776,7 @@ class Editor
 		
 		return editor_object;
 	}
-	
+		
 	EditorObjectMap CreateObjects(EditorObjectDataMap data_list, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject");
