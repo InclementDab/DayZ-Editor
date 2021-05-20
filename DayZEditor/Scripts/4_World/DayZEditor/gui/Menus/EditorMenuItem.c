@@ -3,7 +3,8 @@ class EditorMenuItem: ScriptViewTemplate<EditorMenuItemController>
 	protected ImageWidget EditorMenuItemIcon;
 	protected ButtonWidget EditorMenuItemButton;
 	
-	override string GetLayoutFile() {
+	override string GetLayoutFile() 
+	{
 		return "DayZEditor/gui/Layouts/menus/EditorMenuItem.layout";
 	}
 }
@@ -32,7 +33,8 @@ class EditorMenuItemCommand: EditorMenuItem
 
 class EditorMenuItemDivider: EditorMenuItem
 {	
-	override string GetLayoutFile() {
+	override string GetLayoutFile() 
+	{
 		return "DayZEditor/gui/Layouts/menus/EditorMenuItemDivider.layout";
 	}
 }
