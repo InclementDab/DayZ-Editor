@@ -1,7 +1,7 @@
 class DropdownListPrefabItemController: Controller
 {
 	string Text;
-	Param UserData;
+	ref Param UserData;
 }
 
 class DropdownListPrefabItem: ScriptViewTemplate<DropdownListPrefabItemController>
@@ -13,6 +13,11 @@ class DropdownListPrefabItem: ScriptViewTemplate<DropdownListPrefabItemControlle
 		
 		m_TemplateController.UserData = user_data;
 		m_TemplateController.NotifyPropertyChanged("UserData");
+	}
+	
+	string GetText()
+	{
+		return m_TemplateController.Text;
 	}
 	
 	Param GetValue()
