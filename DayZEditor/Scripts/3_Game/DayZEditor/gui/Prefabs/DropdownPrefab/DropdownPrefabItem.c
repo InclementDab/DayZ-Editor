@@ -30,7 +30,9 @@ class DropdownListPrefabItem<Class TValue>: DropdownListPrefabItemBase
 	void DropdownElementExecute(ButtonCommandArgs args)
 	{
 		DropdownListPrefab<TValue> dropdown = DropdownListPrefab<TValue>.Cast(GetParent());
-		dropdown.DropdownElementExecute(this);
+		if (dropdown) {
+			dropdown.DropdownElement(this);
+		}
 	}
 	
 	override string GetText()

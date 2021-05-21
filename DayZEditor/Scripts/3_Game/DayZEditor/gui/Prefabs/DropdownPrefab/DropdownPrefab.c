@@ -68,7 +68,7 @@ class DropdownListPrefab<Class TValue>: ScriptView
 		return true;
 	}
 	
-	bool DropdownElementExecute(DropdownListPrefabItemBase item)
+	bool DropdownElement(DropdownListPrefabItemBase item)
 	{
 		SetActiveListItem(item);
 		ShowList(false);
@@ -99,7 +99,6 @@ class DropdownListPrefab<Class TValue>: ScriptView
 		for (int i = 0; i < m_ItemList.Count(); i++) {
 			float s_x, s_y, s_l, s_h;
 			GetLayoutRoot().GetScreenPos(s_x, s_y);
-			
 			m_ItemList[i].GetLayoutRoot().GetScreenSize(s_l, s_h);
 			m_ItemList[i].GetLayoutRoot().SetPos(s_x, s_y + (s_h * (i + 1)));
 			m_ItemList[i].GetLayoutRoot().Show(state);
