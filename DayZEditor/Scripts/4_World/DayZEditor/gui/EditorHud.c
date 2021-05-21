@@ -10,6 +10,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	
 	// todo protect this and move all Map logic in here?
 	MapWidget EditorMapWidget;
+	
+	ref array<EditorCameraTrackListItem> SelectedCameraTracks = {};
 
 	void EditorHud()
 	{	

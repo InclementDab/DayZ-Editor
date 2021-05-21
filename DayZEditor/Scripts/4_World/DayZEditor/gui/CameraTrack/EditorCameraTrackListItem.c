@@ -28,6 +28,11 @@ class EditorCameraTrackListItemController: Controller
 			}
 		}
 	}
+	
+	SerializedCameraTrack GetSerializedData()
+	{
+		return new SerializedCameraTrack(GetPosition(), GetOrientation(), Time, FlipOrientation, Name);
+	}
 }
 
 class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemController>
@@ -41,10 +46,10 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	// Abstract
 	bool IsSelected;
 	
-	void EditorCameraTrackListItem(vector position, vector orientation, float time, string name)
+	void EditorCameraTrackListItem(vector position, vector orientation, float time, string name, bool flip = false)
 	{
 		GetTemplateController().Name = name;
-		SetData(position, orientation, time);
+		SetData(position, orientation, time, flip);
 	}
 	
 	//Gorm add highlight on mouse enter
@@ -54,6 +59,9 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 		CameraTrackGroupWrapper.SetColor(COLOR_BLUE);
 		MainContainerWrapper.SetColor(COLOR_SALMON);
 		CameraTrackOptionButton.SetColor(COLOR_BLUE);
+		
+		// not a fan
+		GetEditor().GetEditorHud().SelectedCameraTracks.Insert(this);
 	}
 	
 	void Highlight()
@@ -69,6 +77,9 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 		CameraTrackGroupWrapper.SetColor(COLOR_DEFAULT_PANEL);
 		MainContainerWrapper.SetColor(COLOR_DEFAULT_OUTLINE);
 		CameraTrackOptionButton.SetColor(COLOR_DEFAULT_ICON);
+		
+		// not a fan
+		GetEditor().GetEditorHud().SelectedCameraTracks.RemoveItem(this);
 	}
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
@@ -111,12 +122,12 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	
 	void OnSetExecute(ButtonCommandArgs args)
 	{
-		SetData(GetEditor().GetCamera().GetPosition(), GetEditor().GetCamera().GetOrientation(), GetTemplateController().Time);
+		SetData(GetEditor().GetCamera().GetPosition(), GetEditor().GetCamera().GetOrientation(), GetTemplateController().Time, false);
 	}
 	
 	void OnDeleteExecute(ButtonCommandArgs args)
 	{
-		delete this;
+		GetEditor().DeleteCameraTrack(this);
 	}
 	
 	void OnFlyToExecute(ButtonCommandArgs args)
@@ -125,7 +136,7 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 		GetEditor().GetCamera().SetOrientation(m_TemplateController.GetOrientation());
 	}
 	
-	void SetData(vector position, vector orientation, float time)
+	void SetData(vector position, vector orientation, float time, bool flip)
 	{
 		m_TemplateController.pX = position[0].ToString();
 		m_TemplateController.pY = position[1].ToString();
@@ -134,7 +145,13 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 		m_TemplateController.oY = orientation[1].ToString();
 		m_TemplateController.oZ = orientation[2].ToString();
 		m_TemplateController.Time = time;
+		m_TemplateController.FlipOrientation = flip;
 		m_TemplateController.NotifyPropertyChanged();
+	}
+	
+	SerializedCameraTrack GetSerializedData()
+	{
+		return m_TemplateController.GetSerializedData();
 	}
 		
 	EditorCameraTrackListItemController GetData()

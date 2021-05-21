@@ -933,6 +933,43 @@ class Editor
 		m_ActionStack.InsertAction(action);
 	}
 	
+	void InsertCameraTrack(EditorCamera current_camera, float time, string name)
+	{
+		InsertCameraTrack(new EditorCameraTrackListItem(current_camera.GetPosition(), current_camera.GetOrientation(), time, name));
+	}
+	
+	void InsertCameraTrack(EditorCameraTrackListItem list_item)
+	{
+		EditorAction action = new EditorAction("DeleteCameraTrack", "CreateCameraTrack");
+		action.InsertUndoParameter(0, new Param1<EditorCameraTrackListItem>(list_item));
+		action.InsertRedoParameter(0, list_item.GetSerializedData());
+		
+		GetEditorHud().GetTemplateController().InsertCameraTrack(list_item);
+		
+		InsertAction(action);
+	}
+	
+	void InsertCameraTracks(array<EditorCameraTrackListItem> list_items)
+	{
+		
+	}
+	
+	void DeleteCameraTrack(EditorCameraTrackListItem list_item)
+	{
+		EditorAction action = new EditorAction("CreateCameraTrack", "DeleteCameraTrack");
+		action.InsertUndoParameter(0, list_item.GetSerializedData());
+		action.InsertRedoParameter(0, new Param1<EditorCameraTrackListItem>(list_item));
+		
+		GetEditorHud().GetTemplateController().RemoveCameraTrack(list_item);
+		
+		InsertAction(action);
+	}
+	
+	void DeleteCameraTracks(array<EditorCameraTrackListItem> list_items)
+	{
+		
+	}
+	
 	// Just annoying
 	static string GetWorldName()
 	{

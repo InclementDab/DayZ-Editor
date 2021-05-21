@@ -70,6 +70,11 @@ class EditorAction
 		}
 	}
 	
+	void InsertUndoParameter(int source, Param params)
+	{
+		UndoParameters.Insert(source, params);
+	}
+	
 	void InsertUndoParameter(Object source, Param params)
 	{
 		//EditorLog.Trace("InsertUndoParameter %1", source.GetID().ToString());		
@@ -82,6 +87,11 @@ class EditorAction
 		UndoParameters.Insert(source.GetID(), params);
 	}	
 		
+	void InsertRedoParameter(int source, Param params)
+	{
+		RedoParameters.Insert(source, params);
+	}
+	
 	void InsertRedoParameter(Object source, Param params)
 	{
 		//EditorLog.Trace("InsertRedoParameter %1", source.GetID().ToString());		
@@ -157,5 +167,20 @@ class EditorAction
 	void Unlock(Param1<EditorObject> param)
 	{
 		param.param1.Lock(false);
+	}
+	
+	void CreateCameraTrack(SerializedCameraTrack params)
+	{
+		EditorLog.Trace("EditorAction::CreateCameraTrack %1", params.param5);
+		EditorCameraTrackListItem list_item(params.param1, params.param2, params.param3, params.param5, params.param4);
+		
+		GetEditor().InsertCameraTrack(list_item);
+	}
+	
+	void DeleteCameraTrack(Param1<EditorCameraTrackListItem> params)
+	{
+		//EditorLog.Trace("EditorAction::DeleteCameraTrack %1", params.param5);
+		
+		GetEditor().DeleteCameraTrack(params.param1);	
 	}
 }

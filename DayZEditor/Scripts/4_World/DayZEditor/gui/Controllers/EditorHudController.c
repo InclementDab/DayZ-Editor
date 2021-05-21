@@ -239,15 +239,13 @@ class EditorHudController: EditorControllerBase
 	{
 		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
 		string name = "CameraTrack" + CameraTrackData.Count();
-		InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
+		GetEditor().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
 	}
 
 	void CameraTrackDeleteNode(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudController::CameraTrackDeleteNode");
-	}
-	
-	
+	}	
 	
 	//
 	// Gorm adding stuff to see if it works for testing.
@@ -362,17 +360,14 @@ class EditorHudController: EditorControllerBase
 		return dta;
 	}
 	
-	//
-	//
-	// end gorm added stuff
-	void InsertCameraTrack(EditorCamera current_camera, float time, string name)
-	{
-		InsertCameraTrack(new EditorCameraTrackListItem(current_camera.GetPosition(), current_camera.GetOrientation(), time, name));
-	}
-
 	void InsertCameraTrack(EditorCameraTrackListItem camera_track_item)
 	{
 		CameraTrackData.Insert(camera_track_item);
+	}
+	
+	void RemoveCameraTrack(EditorCameraTrackListItem camera_track_item)
+	{
+		CameraTrackData.Remove(CameraTrackData.Find(camera_track_item));
 	}
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
