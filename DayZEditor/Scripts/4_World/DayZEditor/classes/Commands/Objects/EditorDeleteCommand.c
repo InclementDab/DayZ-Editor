@@ -4,10 +4,7 @@ class EditorDeleteCommand: EditorCommand
 	{
 		if (m_Editor.GetEditorHud().SelectedCameraTracks.Count() > 0) {
 			EditorLog.Info("Deleting %1 Camera Tracks", m_Editor.GetEditorHud().SelectedCameraTracks.Count().ToString());
-			foreach (EditorCameraTrackListItem camera_track: m_Editor.GetEditorHud().SelectedCameraTracks) {
-				camera_track.OnDeleteExecute(null);
-			}
-			
+			GetEditor().DeleteCameraTracks(m_Editor.GetEditorHud().SelectedCameraTracks);
 			return;
 		}
 		

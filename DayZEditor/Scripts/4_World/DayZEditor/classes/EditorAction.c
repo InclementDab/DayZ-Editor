@@ -22,8 +22,8 @@ class EditorAction
 	private string name;
 	private bool undone = false;
 	
-	ref map<int, ref Param> UndoParameters = new map<int, ref Param>();
-	ref map<int, ref Param> RedoParameters = new map<int, ref Param>();
+	ref array<ref Param> UndoParameters = {};
+	ref array<ref Param> RedoParameters = {};
 	
 	string m_UndoAction, m_RedoAction;
 			
@@ -56,7 +56,7 @@ class EditorAction
 	{
 		EditorLog.Trace("EditorAction::CallUndo %1", name);		
 		undone = true;
-		foreach (int id, Param param: UndoParameters) {
+		foreach (Param param: UndoParameters) {
 			g_Script.Call(this, m_UndoAction, param);
 		}
 	}
@@ -65,45 +65,21 @@ class EditorAction
 	{
 		EditorLog.Trace("EditorAction::CallRedo %1", name);
 		undone = false;
-		foreach (int id, Param param: RedoParameters) {
+		foreach (Param param: RedoParameters) {
 			g_Script.Call(this, m_RedoAction, param);
 		}
 	}
 	
-	void InsertUndoParameter(int source, Param params)
+	void InsertUndoParameter(Param params)
 	{
-		UndoParameters.Insert(source, params);
+		UndoParameters.Insert(params);
+	}
+			
+	void InsertRedoParameter(Param params)
+	{
+		RedoParameters.Insert(params);
 	}
 	
-	void InsertUndoParameter(Object source, Param params)
-	{
-		//EditorLog.Trace("InsertUndoParameter %1", source.GetID().ToString());		
-		UndoParameters.Insert(source.GetID(), params);
-	}	
-	
-	void InsertUndoParameter(EditorObject source, Param params)
-	{
-		//EditorLog.Trace("InsertUndoParameter %1", source.GetID().ToString());
-		UndoParameters.Insert(source.GetID(), params);
-	}	
-		
-	void InsertRedoParameter(int source, Param params)
-	{
-		RedoParameters.Insert(source, params);
-	}
-	
-	void InsertRedoParameter(Object source, Param params)
-	{
-		//EditorLog.Trace("InsertRedoParameter %1", source.GetID().ToString());		
-		RedoParameters.Insert(source.GetID(), params);
-	}
-	
-	void InsertRedoParameter(EditorObject source, Param params)
-	{
-		//EditorLog.Trace("InsertRedoParameter %1", source.GetID().ToString());		
-		RedoParameters.Insert(source.GetID(), params);
-	}
-
 	void Create(Param1<int> params)
 	{
 		//EditorLog.Trace("EditorAction::Create %1", params.param1.ToString());
@@ -173,14 +149,13 @@ class EditorAction
 	{
 		EditorLog.Trace("EditorAction::CreateCameraTrack %1", params.param5);
 		EditorCameraTrackListItem list_item(params.param1, params.param2, params.param3, params.param5, params.param4);
-		
-		GetEditor().InsertCameraTrack(list_item);
+		GetEditor().GetEditorHud().GetTemplateController().InsertCameraTrack(list_item);
 	}
 	
 	void DeleteCameraTrack(Param1<EditorCameraTrackListItem> params)
 	{
 		//EditorLog.Trace("EditorAction::DeleteCameraTrack %1", params.param5);
 		
-		GetEditor().DeleteCameraTrack(params.param1);	
+		GetEditor().GetEditorHud().GetTemplateController().RemoveCameraTrack(params.param1);	
 	}
 }

@@ -776,8 +776,8 @@ class Editor
 		if (!editor_object) return null;
 		
 		EditorAction action = new EditorAction("Delete", "Create");
-		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+		action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+		action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 		
 		if (create_undo) {
 			InsertAction(action);
@@ -803,8 +803,8 @@ class Editor
 			EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
 			if (!editor_object) continue;
 			
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 			
 			object_set.Insert(editor_object.GetID(), editor_object);
 
@@ -822,8 +822,8 @@ class Editor
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
 		if (!editor_object.Locked && editor_object.Show) {
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 			m_ObjectManager.DeleteObject(editor_object);
 		}
 		
@@ -838,8 +838,8 @@ class Editor
 
 		foreach (int id, EditorObject editor_object: editor_object_map) {
 			if (!editor_object.Locked && editor_object.Show) {
-				action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-				action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);
 			}
 		}
@@ -860,8 +860,8 @@ class Editor
 		if (!map_object) return false;
 		if (CF.ObjectManager.IsMapObjectHidden(map_object)) return false;
 		EditorAction action = new EditorAction("Unhide", "Hide");
-		action.InsertUndoParameter(map_object, new Param1<Object>(map_object));
-		action.InsertRedoParameter(map_object, new Param1<Object>(map_object));
+		action.InsertUndoParameter(new Param1<Object>(map_object));
+		action.InsertRedoParameter(new Param1<Object>(map_object));
 		
 		CF.ObjectManager.HideMapObject(map_object);
 
@@ -880,8 +880,8 @@ class Editor
 	void LockObject(EditorObject editor_object)
 	{
 		EditorAction action = new EditorAction("Unlock", "Lock");
-		action.InsertUndoParameter(editor_object, new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(editor_object, new Param1<EditorObject>(editor_object));
+		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
+		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));
 		
 		editor_object.Lock(true);
 		
@@ -891,8 +891,8 @@ class Editor
 	void UnlockObject(EditorObject editor_object)
 	{
 		EditorAction action = new EditorAction("Lock", "Unlock");
-		action.InsertUndoParameter(editor_object, new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(editor_object, new Param1<EditorObject>(editor_object));
+		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
+		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));
 		
 		editor_object.Lock(false);
 		
@@ -941,8 +941,8 @@ class Editor
 	void InsertCameraTrack(EditorCameraTrackListItem list_item)
 	{
 		EditorAction action = new EditorAction("DeleteCameraTrack", "CreateCameraTrack");
-		action.InsertUndoParameter(0, new Param1<EditorCameraTrackListItem>(list_item));
-		action.InsertRedoParameter(0, list_item.GetSerializedData());
+		action.InsertUndoParameter(new Param1<EditorCameraTrackListItem>(list_item));
+		action.InsertRedoParameter(list_item.GetSerializedData());
 		
 		GetEditorHud().GetTemplateController().InsertCameraTrack(list_item);
 		
@@ -957,8 +957,8 @@ class Editor
 	void DeleteCameraTrack(EditorCameraTrackListItem list_item)
 	{
 		EditorAction action = new EditorAction("CreateCameraTrack", "DeleteCameraTrack");
-		action.InsertUndoParameter(0, list_item.GetSerializedData());
-		action.InsertRedoParameter(0, new Param1<EditorCameraTrackListItem>(list_item));
+		action.InsertUndoParameter(list_item.GetSerializedData());
+		action.InsertRedoParameter(new Param1<EditorCameraTrackListItem>(list_item));
 		
 		GetEditorHud().GetTemplateController().RemoveCameraTrack(list_item);
 		
