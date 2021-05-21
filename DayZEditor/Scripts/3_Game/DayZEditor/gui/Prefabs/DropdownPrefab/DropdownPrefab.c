@@ -1,10 +1,10 @@
 
 class DropdownListPrefabController<Class TValue>: Controller
 {
-	ref ObservableCollection<ref DropdownListPrefabItem> DropdownElementList = new ObservableCollection<ref DropdownListPrefabItem>(this);
+	ref ObservableCollection<ref DropdownListPrefabItem<TValue>> DropdownElementList = new ObservableCollection<ref DropdownListPrefabItem<TValue>>(this);
 	
 	string Caption;
-	DropdownListPrefabItem Value;
+	DropdownListPrefabItem<TValue> Value;
 	TValue CalculatedValue; // Used for things like SliderWidget output
 	
 	void ~DropdownListPrefabController()
@@ -50,12 +50,12 @@ class DropdownListPrefab<Class TValue>: ScriptView
 		m_DefaultValue = default_value;
 	}
 	
-	DropdownListPrefabItem InsertItem(string item_text, TValue user_data)
+	DropdownListPrefabItem<TValue> InsertItem(string item_text, TValue user_data)
 	{
-		return InsertItem(new DropdownListPrefabItem(item_text, new Param1<TValue>(user_data)));
+		return InsertItem(new DropdownListPrefabItem<TValue>(item_text, user_data));
 	}
 	
-	DropdownListPrefabItem InsertItem(DropdownListPrefabItem element)
+	DropdownListPrefabItem<TValue> InsertItem(DropdownListPrefabItem<TValue> element)
 	{
 		element.SetParent(this);
 		m_DropdownPrefabController.DropdownElementList.Insert(element);
@@ -86,21 +86,22 @@ class DropdownListPrefab<Class TValue>: ScriptView
 		return true;
 	}
 	
-	void SetActiveListItem(DropdownListPrefabItem item)
+	void SetActiveListItem(DropdownListPrefabItem<TValue> item)
 	{
+		Print(item);
 		m_DropdownPrefabController.Value = item;
 		m_DropdownPrefabController.NotifyPropertyChanged("Value");
 	}
 	
-	DropdownListPrefabItem GetListItem(TValue value)
+	DropdownListPrefabItem<TValue> GetListItem(TValue value)
 	{
 		for (int i = 0; i < m_DropdownPrefabController.DropdownElementList.Count(); i++) {
-			Param1<TValue> list_item_value = Param1<TValue>.Cast(m_DropdownPrefabController.DropdownElementList[i].GetValue());
+			TValue list_item_value = m_DropdownPrefabController.DropdownElementList[i].GetValue();
 			if (!list_item_value) {
 				continue;
 			}
 			
-			if (list_item_value.param1 == value) {
+			if (list_item_value == value) {
 				return m_DropdownPrefabController.DropdownElementList[i];
 			}
 		}

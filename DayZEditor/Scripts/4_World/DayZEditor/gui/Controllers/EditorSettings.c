@@ -42,8 +42,8 @@ class EditorSettings: Controller
 	string EditorProtoFile = "$profile:/Editor/MapGroupProto.xml";
 	string EditorBrushFile = "$profile:/Editor/EditorBrushes.xml";
 	
-	[NonSerialized()]
-	ref DropdownListPrefabItem SelectedLogLevel;
+	//[NonSerialized()]
+	//DropdownListPrefabItem SelectedLogLevel;
 	
 	override void PropertyChanged(string property_name)
 	{
@@ -51,13 +51,13 @@ class EditorSettings: Controller
 						
 			case "SelectedLogLevel": {
 				
-				if (SelectedLogLevel && SelectedLogLevel.GetTemplateController() && SelectedLogLevel.GetTemplateController().UserData) {
+				/*if (SelectedLogLevel && SelectedLogLevel.GetTemplateController() && SelectedLogLevel.GetTemplateController().UserData) {
 					Param1<LogLevel> p = Param1<LogLevel>.Cast(SelectedLogLevel.GetTemplateController().UserData);
 					if (p) {
 						EditorLog.CurrentLogLevel = p.param1;
 						GetEditor().GetEditorHud().GetTemplateController().CurrentLogLevel = p.param1;
 					}
-				}
+				}*/
 				break;
 			}
 			
