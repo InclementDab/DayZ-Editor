@@ -49,7 +49,7 @@ class EditorSettings: Controller
 		switch (property_name) {
 						
 			case "SelectedLogLevel": {
-				EditorLog.Info("Changed log level to %1", typename.EnumToString(LogLevel, SelectedLogLevel));
+				EditorLog.Warning("Changed log level to %1", typename.EnumToString(LogLevel, SelectedLogLevel));
 				GetEditor().GetEditorHud().GetTemplateController().CurrentLogLevel = SelectedLogLevel;
 				break;
 			}

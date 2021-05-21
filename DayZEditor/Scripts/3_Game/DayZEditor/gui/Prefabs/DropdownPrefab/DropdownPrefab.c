@@ -95,12 +95,7 @@ class DropdownListPrefab<Class TValue>: ScriptView
 	DropdownListPrefabItem<TValue> GetListItem(TValue value)
 	{
 		for (int i = 0; i < m_DropdownPrefabController.DropdownElementList.Count(); i++) {
-			TValue list_item_value = m_DropdownPrefabController.DropdownElementList[i].GetValue();
-			if (!list_item_value) {
-				continue;
-			}
-			
-			if (list_item_value == value) {
+			if (m_DropdownPrefabController.DropdownElementList[i].GetValue() == value) {
 				return m_DropdownPrefabController.DropdownElementList[i];
 			}
 		}
@@ -110,9 +105,9 @@ class DropdownListPrefab<Class TValue>: ScriptView
 	
 	void PrefabPropertyChanged(string property_name)
 	{
-		TValue v;
-		g_Script.CallFunction(m_DropdownPrefabController.Value, "GetValue", v, null);
-		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, v);		
+		TValue value;
+		g_Script.CallFunction(m_DropdownPrefabController.Value, "GetValue", value, null);
+		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, value);		
 		g_Script.CallFunction(m_BindingContext, "PropertyChanged", null, m_BindingName);
 	}
 	
