@@ -18,7 +18,20 @@ class EditorCameraTrackListItemController: Controller
 	{
 		return Vector(oX.Parse(), oY.Parse(), oZ.Parse());
 	}
-	
+		
+	override void PropertyChanged(string property_name)
+	{
+		switch (property_name) {
+			case "CollapseTab": {
+				CollapsePanel.Show(CollapseTab);
+				break;
+			}
+		}
+	}
+}
+
+class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemController>
+{
 	//PanelColor
 	Widget CameraTrackGroupWrapper;
 	//OutlineColor
@@ -27,6 +40,12 @@ class EditorCameraTrackListItemController: Controller
 	Widget CameraTrackOptionButton;
 	// Abstract
 	bool IsSelected;
+	
+	void EditorCameraTrackListItem(vector position, vector orientation, float time, string name)
+	{
+		GetTemplateController().Name = name;
+		SetData(position, orientation, time);
+	}
 	
 	//Gorm add highlight on mouse enter
 	void Select() 
@@ -83,25 +102,6 @@ class EditorCameraTrackListItemController: Controller
 		}
 		
 		return true;
-	}
-	
-	override void PropertyChanged(string property_name)
-	{
-		switch (property_name) {
-			case "CollapseTab": {
-				CollapsePanel.Show(CollapseTab);
-				break;
-			}
-		}
-	}
-}
-
-class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemController>
-{
-	void EditorCameraTrackListItem(vector position, vector orientation, float time, string name)
-	{
-		GetTemplateController().Name = name;
-		SetData(position, orientation, time);
 	}
 	
 	void OnSetExecute(ButtonCommandArgs args)
