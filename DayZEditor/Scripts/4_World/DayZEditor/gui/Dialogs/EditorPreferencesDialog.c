@@ -5,7 +5,8 @@ class EditorPreferencesDialog: EditorDialogBase
 	{
 		GroupPrefab general_group = new GroupPrefab("General", m_Editor.Settings, string.Empty);
 		
-		DropdownListPrefab<LogLevel> log_level("Log Level", m_Editor.Settings, "SelectedLogLevel", LogLevel.INFO);
+		DropdownListPrefab<LogLevel> log_level("Log Level", m_Editor.Settings, "SelectedLogLevel");
+		log_level.InsertItem("Trace", LogLevel.TRACE);
 		log_level.InsertItem("Debug", LogLevel.DEBUG);
 		log_level.InsertItem("Info", LogLevel.INFO);
 		log_level.InsertItem("Warning", LogLevel.WARNING);

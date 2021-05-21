@@ -14,7 +14,7 @@ class DropdownListPrefabController<Class TValue>: Controller
 	
 	override void PropertyChanged(string property_name)
 	{
-		if (GetParent() && GetParent().IsInherited(PrefabBase)) {
+		if (GetParent()) {
 			g_Script.Call(GetParent(), "PrefabPropertyChanged", property_name);
 		}
 	}
@@ -111,7 +111,7 @@ class DropdownListPrefab<Class TValue>: ScriptView
 	
 	void PrefabPropertyChanged(string property_name)
 	{
-		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, m_DropdownPrefabController.Value);		
+		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, m_DropdownPrefabController.Value.GetValue());		
 		g_Script.CallFunction(m_BindingContext, "PropertyChanged", null, m_BindingName);
 	}
 	
