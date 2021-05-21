@@ -55,6 +55,7 @@ class EditorSettings: Controller
 					Param1<LogLevel> p = Param1<LogLevel>.Cast(SelectedLogLevel.GetTemplateController().UserData);
 					if (p) {
 						EditorLog.CurrentLogLevel = p.param1;
+						GetEditor().GetEditorHud().GetTemplateController().CurrentLogLevel = p.param1;
 					}
 				}
 				break;
@@ -68,6 +69,14 @@ class EditorSettings: Controller
 			case "ObjectViewDistance": {
 				GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
 				break;
+			}
+			
+			case "DebugMode": {
+				if (DebugMode) { 
+					GetEditor().GetEditorHud().GetTemplateController().CurrentLogLevel = LogLevel.TRACE;
+				} else {
+					GetEditor().GetEditorHud().GetTemplateController().CurrentLogLevel = LogLevel.DEBUG;
+				}
 			}
 		}
 	}	

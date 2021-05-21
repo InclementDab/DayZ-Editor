@@ -25,6 +25,7 @@ class EditorHudController: EditorControllerBase
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 		= new ObservableCollection<ref EditorListItem>(this);
 	
+	LogLevel CurrentLogLevel = LogLevel.DEBUG;
 	static const int MAX_LOG_ENTRIES = 15;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
 	
@@ -258,11 +259,15 @@ class EditorHudController: EditorControllerBase
 	// im not adding a trace to this lol
 	void OnEditorLog(LogLevel level, string message)
 	{
+		if (level < CurrentLogLevel) {
+			return;
+		}
+		
 		EditorLogEntries.Insert(new EditorLogEntry(level, message));
 		if (EditorLogEntries.Count() > MAX_LOG_ENTRIES) {
-			Print(EditorLogEntries.Count());
-			Print(EditorLogEntries[0]);
-			//EditorLogEntries.Remove(0);
+			// todo: this is booming my mind for whatever reason
+			//delete EditorLogEntries[1];
+			//EditorLogEntries.Remove(1);
 		}
 	}
 	
