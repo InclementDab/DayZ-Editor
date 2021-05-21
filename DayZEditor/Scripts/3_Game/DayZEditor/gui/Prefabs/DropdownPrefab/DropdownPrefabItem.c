@@ -1,21 +1,49 @@
-class DropdownListPrefabItemController: Controller
+class DropdownListPrefabItemController<Class TValue>: Controller
 {
 	string Text;
-	Class UserData;
+	TValue UserData;
 }
 
-class DropdownListPrefabItem: ScriptViewTemplate<DropdownListPrefabItemController>
+class DropdownListPrefabItemBase: ScriptView
 {
-	void DropdownListPrefabItem(string text, Class user_data = null)
+	string GetText()
 	{
-		m_TemplateController.Text = text;
-		m_TemplateController.NotifyPropertyChanged("Text");
+		return string.Empty;
+	}
+}
+
+class DropdownListPrefabItem<Class TValue>: DropdownListPrefabItemBase
+{
+	protected DropdownListPrefabItemController<TValue> m_DropdownListPrefabItemController;
+	
+	void DropdownListPrefabItem(string text, TValue user_data)
+	{
+		Class.CastTo(m_DropdownListPrefabItemController, m_Controller);
 		
-		m_TemplateController.UserData = user_data;
-		m_TemplateController.NotifyPropertyChanged("UserData");
+		m_DropdownListPrefabItemController.Text = text;
+		m_DropdownListPrefabItemController.NotifyPropertyChanged("Text");
+		
+		m_DropdownListPrefabItemController.UserData = user_data;
+		m_DropdownListPrefabItemController.NotifyPropertyChanged("UserData");
+	}
+	
+	override string GetText()
+	{
+		return m_DropdownListPrefabItemController.Text;
+	}
+	
+	TValue GetValue()
+	{
+		return m_DropdownListPrefabItemController.UserData;
 	}
 		
-	override string GetLayoutFile() {
+	override typename GetControllerType()
+	{
+		return (new DropdownListPrefabItemController<TValue>()).Type();
+	}
+	
+	override string GetLayoutFile() 
+	{
 		return "DayZEditor/gui/Layouts/prefabs/Dropdown/DropdownElementPrefab.layout";
 	}
 }

@@ -5,16 +5,15 @@ class EditorPreferencesDialog: EditorDialogBase
 	{
 		GroupPrefab general_group = new GroupPrefab("General", m_Editor.Settings, string.Empty);
 		
-		DropdownListPrefabItem trace_item = new DropdownListPrefabItem("Trace", new Param1<LogLevel>(LogLevel.TRACE));
-		DropdownListPrefab log_level = new DropdownListPrefab("Log Level", m_Editor.Settings, "SelectedLogLevel", trace_item);
-		log_level.InsertItem(trace_item);
-		log_level.InsertItem("Debug", new Param1<LogLevel>(LogLevel.DEBUG));
-		log_level.InsertItem("Info", new Param1<LogLevel>(LogLevel.INFO));
-		log_level.InsertItem("Warning", new Param1<LogLevel>(LogLevel.WARNING));
-		log_level.InsertItem("Error", new Param1<LogLevel>(LogLevel.ERROR));
-		general_group.Insert(log_level);		
-		general_group.Insert(new EditBoxNumberPrefab("Auto Save", m_Editor.Settings, "AutoSaveTimer", m_Editor.Settings.AutoSaveTimer.ToString()));
+		DropdownListPrefab<LogLevel> log_level("Log Level", m_Editor.Settings, "SelectedLogLevel");
+		log_level.InsertItem("Trace", LogLevel.TRACE);
+		log_level.InsertItem("Debug", LogLevel.DEBUG);
+		log_level.InsertItem("Info", LogLevel.INFO);
+		log_level.InsertItem("Warning", LogLevel.WARNING);
+		log_level.InsertItem("Error", LogLevel.ERROR);
+		general_group.Insert(log_level);
 		
+		general_group.Insert(new EditBoxNumberPrefab("Auto Save", m_Editor.Settings, "AutoSaveTimer", m_Editor.Settings.AutoSaveTimer.ToString()));
 		
 		GroupPrefab game_group = new GroupPrefab("Game", m_Editor.Settings, string.Empty);
 		game_group.Insert(new SliderPrefab("View Distance", m_Editor.Settings, "ViewDistance", m_Editor.Settings.ViewDistance, 0, 20000));
