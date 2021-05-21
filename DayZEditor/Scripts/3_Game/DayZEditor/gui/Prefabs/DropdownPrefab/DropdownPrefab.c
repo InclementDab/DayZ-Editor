@@ -51,11 +51,13 @@ class DropdownListPrefab: PrefabBase<DropdownListPrefabItem>
 		return true;
 	}
 	
-	override string GetLayoutFile() {
+	override string GetLayoutFile() 
+	{
 		return "DayZEditor/gui/Layouts/prefabs/Dropdown/DropdownPrefab.layout";
 	}
 	
-	override typename GetControllerType() {
+	override typename GetControllerType() 
+	{
 		return DropdownListPrefabController;
 	}
 }
