@@ -255,11 +255,14 @@ class EditorHudController: EditorControllerBase
 		}
 	}
 	
+	// im not adding a trace to this lol
 	void OnEditorLog(LogLevel level, string message)
 	{
 		EditorLogEntries.Insert(new EditorLogEntry(level, message));
 		if (EditorLogEntries.Count() > MAX_LOG_ENTRIES) {
-			EditorLogEntries.Remove(0);
+			Print(EditorLogEntries.Count());
+			Print(EditorLogEntries[0]);
+			//EditorLogEntries.Remove(0);
 		}
 	}
 	

@@ -5,9 +5,7 @@ class EditorLogEntry: ScriptViewTemplate<EditorLogEntryController>
 	static const int INFO 		= ARGB(255, 73, 128, 255);
 	static const int WARNING 	= ARGB(255, 239, 239, 0);
 	static const int ERROR 		= ARGB(255, 239, 0, 0);
-	
-	MultilineTextWidget LogEntryText;
-	
+		
 	void EditorLogEntry(LogLevel level, string message)
 	{
 		m_TemplateController.Message = message;
@@ -15,27 +13,27 @@ class EditorLogEntry: ScriptViewTemplate<EditorLogEntryController>
 		
 		switch (level) {
 			case LogLevel.TRACE: {
-				LogEntryText.SetColor(TRACE);
+				GetLayoutRoot().SetColor(TRACE);
 				break;
 			}
 			
 			case LogLevel.DEBUG: {
-				LogEntryText.SetColor(DEBUG);
+				GetLayoutRoot().SetColor(DEBUG);
 				break;
 			}
 			
 			case LogLevel.INFO: {
-				LogEntryText.SetColor(INFO);
+				GetLayoutRoot().SetColor(INFO);
 				break;
 			}
 			
 			case LogLevel.WARNING: {
-				LogEntryText.SetColor(WARNING);
+				GetLayoutRoot().SetColor(WARNING);
 				break;
 			}
 			
 			case LogLevel.ERROR: {
-				LogEntryText.SetColor(ERROR);
+				GetLayoutRoot().SetColor(ERROR);
 				break;
 			}
 		}

@@ -1,28 +1,21 @@
-PanelWidgetClass LogEntryPanel {
- size 1 0.1
+MultilineTextWidgetClass LogEntryText {
+ ignorepointer 1
+ position 0 0
+ size 1 10
  halign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 0
- vexactsize 0
+ vexactsize 1
+ scriptclass "ViewBinding"
+ text "test"
+ font "gui/fonts/Metron12"
+ "exact text" 1
+ "size to text v" 1
+ wrap 1
  {
-  MultilineTextWidgetClass LogEntryText {
-   ignorepointer 1
-   size 1 1
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   scriptclass "ViewBinding"
-   "size to text h" 1
-   wrap 1
-   {
-    ScriptParamsClass {
-     Binding_Name "Message"
-    }
-   }
+  ScriptParamsClass {
+   Binding_Name "Message"
   }
  }
 }
