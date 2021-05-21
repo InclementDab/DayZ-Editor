@@ -431,6 +431,7 @@ class Editor
 	// Call to enable / disable editor
 	void SetActive(bool active)
 	{	
+		EditorLog.Info("Set Active %1", active.ToString());
 		string ban_reason;
 		if (IsBannedClient(ban_reason) && active) {
 			ShowBanDialog(ban_reason);
@@ -527,16 +528,19 @@ class Editor
 		
 		Object entity = editor_hologram.GetWorldObject();
 		if (!entity) {
+			EditorLog.Warning("Invalid Entity from %1", editor_hologram.GetPlaceableItem().Type);
 			return null;
 		}
 		
 		EditorObjectData editor_object_data = EditorObjectData.Create(entity.GetType(), entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EditorObjectFlags.ALL);
 		if (!editor_object_data) {
+			EditorLog.Warning("Invalid Object data from %1", entity.GetType());
 			return null;
 		}
 		
 		EditorObject editor_object = CreateObject(editor_object_data);
 		if (!editor_object) { 
+			EditorLog.Warning("Invalid Editor Object from %1", entity.GetType());
 			return null;
 		}
 		
@@ -564,6 +568,7 @@ class Editor
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.Type);
 		 
+		EditorLog.Info("Launching Loot Editor...");
 		m_LootEditTarget = GetGame().CreateObjectEx(placeable_item.Type, Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 		vector size = ObjectGetSize(m_LootEditTarget);
 		LootYOffset = size[1] / 2;
@@ -611,6 +616,7 @@ class Editor
 	{
 		EditorLog.Trace("Editor::FinishEditLootSpawns");
 		
+		EditorLog.Info("Closing Loot Editor");
 		array<EditorObject> loot_spawns = m_EditorMapGroupProto.GetLootSpawns();
 		Object building = m_EditorMapGroupProto.GetBuilding();
 		string loot_position_data;
