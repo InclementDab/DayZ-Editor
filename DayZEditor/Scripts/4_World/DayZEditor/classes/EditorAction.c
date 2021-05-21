@@ -152,10 +152,14 @@ class EditorAction
 		GetEditor().GetEditorHud().GetTemplateController().InsertCameraTrack(list_item);
 	}
 	
-	void DeleteCameraTrack(Param1<EditorCameraTrackListItem> params)
+	void DeleteCameraTrack(SerializedCameraTrack params)
 	{
-		//EditorLog.Trace("EditorAction::DeleteCameraTrack %1", params.param5);
+		EditorLog.Trace("EditorAction::DeleteCameraTrack %1", params.param1.ToString());
 		
-		GetEditor().GetEditorHud().GetTemplateController().RemoveCameraTrack(params.param1);	
+		/*foreach (EditorCameraTrackListItem list_item: GetEditor().GetEditorHud().GetTemplateController().CameraTrackItems) {
+			
+		}*/
+		
+		//GetEditor().GetEditorHud().GetTemplateController().RemoveCameraTrack(params.param1);	
 	}
 }

@@ -148,7 +148,7 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 		m_TemplateController.FlipOrientation = flip;
 		m_TemplateController.NotifyPropertyChanged();
 	}
-	
+		
 	SerializedCameraTrack GetSerializedData()
 	{
 		return m_TemplateController.GetSerializedData();

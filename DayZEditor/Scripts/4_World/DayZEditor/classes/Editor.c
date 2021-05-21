@@ -941,7 +941,7 @@ class Editor
 	void InsertCameraTrack(EditorCameraTrackListItem list_item)
 	{
 		EditorAction action = new EditorAction("DeleteCameraTrack", "CreateCameraTrack");
-		action.InsertUndoParameter(new Param1<EditorCameraTrackListItem>(list_item));
+		action.InsertUndoParameter(list_item.GetSerializedData());
 		action.InsertRedoParameter(list_item.GetSerializedData());
 		
 		GetEditorHud().GetTemplateController().InsertCameraTrack(list_item);
@@ -958,7 +958,7 @@ class Editor
 	{
 		EditorAction action = new EditorAction("CreateCameraTrack", "DeleteCameraTrack");
 		action.InsertUndoParameter(list_item.GetSerializedData());
-		action.InsertRedoParameter(new Param1<EditorCameraTrackListItem>(list_item));
+		action.InsertRedoParameter(list_item.GetSerializedData());
 		
 		GetEditorHud().GetTemplateController().RemoveCameraTrack(list_item);
 		
