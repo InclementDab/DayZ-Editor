@@ -107,9 +107,11 @@ class Editor
 		Settings 			= new EditorSettings();
 		
 		// Object Manager
+		EditorLog.Info("Initializing Object Manager");
 		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
 		
 		// Command Manager
+		EditorLog.Info("Initializing Command Manager");
 		CommandManager 		= new EditorCommandManager();
 		CommandManager.Init();
 		
@@ -119,6 +121,7 @@ class Editor
 		
 		// Init Hud
 		m_EditorHud 		= new EditorHud();
+		EditorLog.Info("Initializing Hud");
 		m_EditorHudController = m_EditorHud.GetTemplateController();		
 		
 		m_Mission = GetGame().GetMission();

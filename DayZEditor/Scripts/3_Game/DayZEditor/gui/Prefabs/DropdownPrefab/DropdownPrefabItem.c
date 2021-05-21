@@ -15,7 +15,8 @@ class DropdownListPrefabItem: ScriptViewTemplate<DropdownListPrefabItemControlle
 		m_TemplateController.NotifyPropertyChanged("UserData");
 	}
 		
-	override string GetLayoutFile() {
+	override string GetLayoutFile() 
+	{
 		return "DayZEditor/gui/Layouts/prefabs/Dropdown/DropdownElementPrefab.layout";
 	}
 }
