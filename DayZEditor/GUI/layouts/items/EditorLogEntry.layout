@@ -2,7 +2,6 @@ MultilineTextWidgetClass LogEntryText {
  ignorepointer 1
  position 0 0
  size 1 10
- halign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -11,6 +10,7 @@ MultilineTextWidgetClass LogEntryText {
  text "test"
  font "gui/fonts/Metron12"
  "exact text" 1
+ "size to text h" 0
  "size to text v" 1
  wrap 1
  {

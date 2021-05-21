@@ -1,4 +1,3 @@
-
 class DropdownListPrefabController<Class TValue>: Controller
 {
 	ref ObservableCollection<ref DropdownListPrefabItem<TValue>> DropdownElementList = new ObservableCollection<ref DropdownListPrefabItem<TValue>>(this);
@@ -60,6 +59,7 @@ class DropdownListPrefab<Class TValue>: ScriptView
 		element.SetParent(this);
 		m_DropdownPrefabController.DropdownElementList.Insert(element);
 		
+		// Assign default item when you find it (cant assign something that doesnt exist)
 		if (GetListItem(m_DefaultValue) == element) {
 			SetActiveListItem(element);
 		}
