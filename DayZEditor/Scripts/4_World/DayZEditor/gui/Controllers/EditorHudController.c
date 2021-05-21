@@ -78,7 +78,9 @@ class EditorHudController: EditorControllerBase
 		super.OnWidgetScriptInit(w);
 		
 		// Reload Placeables
+#ifndef COMPONENT_SYSTEM
 		EditorLog.Info("Loaded %1 Placeable Objects", ReloadPlaceableObjects().ToString());
+#endif
 		
 		EditorHudToolbarView = new EditorHudToolbar();
 		NotifyPropertyChanged("EditorHudToolbarView");
@@ -108,13 +110,10 @@ class EditorHudController: EditorControllerBase
 				if (placeable_item && !IsForbiddenItem(placeable_item.Type)) {
 					LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
 				}
-
-#ifdef COMPONENT_SYSTEM
-				return i;
-#endif
 		    }
 		}
-		return i;
+		
+		return LeftbarSpacerData.Count();
 	}
 	
 	bool IsForbiddenItem(string Model)

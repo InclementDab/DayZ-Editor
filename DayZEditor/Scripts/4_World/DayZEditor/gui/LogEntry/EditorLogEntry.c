@@ -2,7 +2,7 @@ class EditorLogEntry: ScriptViewTemplate<EditorLogEntryController>
 {
 	static const int TRACE 		= ARGB(255, 255, 255, 255);
 	static const int DEBUG 		= ARGB(255, 255, 255, 255);
-	static const int INFO 		= ARGB(255, 73, 128, 255);
+	static const int INFO 		= ARGB(255, 73, 170, 255);
 	static const int WARNING 	= ARGB(255, 239, 239, 0);
 	static const int ERROR 		= ARGB(255, 239, 0, 0);
 		
@@ -37,6 +37,13 @@ class EditorLogEntry: ScriptViewTemplate<EditorLogEntryController>
 				break;
 			}
 		}
+		
+		//GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(Delete, 15000);
+	}
+	
+	void Delete()
+	{
+		delete this;
 	}
 	
 	override string GetLayoutFile()
