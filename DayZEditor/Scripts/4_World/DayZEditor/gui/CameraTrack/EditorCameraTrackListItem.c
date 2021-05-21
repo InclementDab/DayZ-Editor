@@ -30,7 +30,7 @@ class EditorCameraTrackListItemController: Controller
 	
 	//Gorm add highlight on mouse enter
 	void Select() 
-	{
+	{	// couldnt manage to select stuff so they arent setup yet
 		CameraTrackGroupWrapper.SetColor(COLOR_EMPTY);
 		MainContainerWrapper.SetColor(COLOR_EMPTY);
 		CameraTrackOptionButton.SetColor(COLOR_EMPTY);
@@ -47,7 +47,7 @@ class EditorCameraTrackListItemController: Controller
 	{	
 		CameraTrackGroupWrapper.SetColor(COLOR_DEFAULT_PANEL);
 		MainContainerWrapper.SetColor(COLOR_DEFAULT_OUTLINE);
-		CameraTrackOptionButton.SetColor(COLOR_DEFAULT_OUTLINE);
+		CameraTrackOptionButton.SetColor(COLOR_DEFAULT_ICON);
 	}
 	
 	

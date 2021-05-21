@@ -41,7 +41,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        clipchildren 0
        inheritalpha 1
        ignorepointer 1
-       position 0 0
+       position 2 2
        size 1.1 1.1
        halign center_ref
        valign center_ref
@@ -57,37 +57,40 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        "flip u" 0
        "flip v" 0
        filter 1
-      }
-      ButtonWidgetClass CameraTrackOptionButton {
-       color 0.4196 0.6471 1 0.5882
-       position 0 0
-       size 1 1
-       halign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scriptclass "ViewBinding"
-       style Empty
-       switch toggle
        {
-        PanelWidgetClass CameraTrackOptionOutline {
-         ignorepointer 1
-         color 1 1 1 0.2353
+        ButtonWidgetClass CameraTrackOptionButton {
+         color 1 1 1 0.2745
+         position 0 0
          size 1 1
          halign center_ref
-         valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         style Slim_Outline2
-        }
-       }
-       {
-        ScriptParamsClass {
-         Binding_Name "CollapseTab"
-         Two_Way_Binding 1
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 0
+         switch toggle
+         {
+          PanelWidgetClass CameraTrackOptionOutline {
+           ignorepointer 1
+           color 1 1 1 0.3529
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "CollapseTab"
+           Two_Way_Binding 1
+          }
+         }
         }
        }
       }
@@ -328,7 +331,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
             }
             PanelWidgetClass InfoBarCam_X_Main {
              ignorepointer 1
-             color 0.7647 0.1804 0.102 0.3922
+             color 0.7647 0.1804 0.102 0.549
              size 0.25 18
              valign center_ref
              hexactpos 0
@@ -374,7 +377,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
             }
             PanelWidgetClass InfoBarCam_Y_Main {
              ignorepointer 1
-             color 0.5765 0.8157 0.2196 0.3922
+             color 0.5765 0.8157 0.2196 0.549
              size 0.25 18
              valign center_ref
              hexactpos 0
@@ -420,7 +423,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
             }
             PanelWidgetClass InfoBarCam_Z_Main {
              ignorepointer 1
-             color 0.2588 0.5176 0.9176 0.3922
+             color 0.2588 0.5176 0.9176 0.549
              position 0 0
              size 0.25 18
              valign center_ref
@@ -537,7 +540,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
             }
             PanelWidgetClass InfoBarCam_X_Main0 {
              ignorepointer 1
-             color 0.7647 0.1804 0.102 0.0784
+             color 0.7647 0.1804 0.102 0.549
              size 0.25 18
              valign center_ref
              hexactpos 0
@@ -583,7 +586,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
             }
             PanelWidgetClass InfoBarCam_Y_Main0 {
              ignorepointer 1
-             color 0.5765 0.8157 0.2196 0.0784
+             color 0.5765 0.8157 0.2196 0.549
              position 0 0
              size 0.25 18
              valign center_ref
@@ -630,7 +633,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
             }
             PanelWidgetClass InfoBarCam_Z_Main0 {
              ignorepointer 1
-             color 0.2588 0.5176 0.9176 0.0784
+             color 0.2588 0.5176 0.9176 0.549
              position 0 0
              size 0.25 18
              valign center_ref

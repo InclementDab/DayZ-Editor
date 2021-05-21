@@ -2153,9 +2153,9 @@ FrameWidgetClass EditorFrame {
          "text valign" center
         }
         SliderWidgetClass CameraTrackSmoothingSlider {
-         color 0.3922 0.3922 0.3922 1
+         color 0.5882 0.5882 0.5882 0.7451
          position 150 0
-         size 0.6 16
+         size 0.6 18
          valign center_ref
          hexactpos 1
          vexactpos 1
