@@ -27,6 +27,12 @@ class DropdownListPrefabItem<Class TValue>: DropdownListPrefabItemBase
 		m_DropdownListPrefabItemController.NotifyPropertyChanged("UserData");
 	}
 	
+	void DropdownElementExecute(ButtonCommandArgs args)
+	{
+		DropdownListPrefab<TValue> dropdown = DropdownListPrefab<TValue>.Cast(GetParent());
+		dropdown.DropdownElementExecute(this);
+	}
+	
 	override string GetText()
 	{
 		return m_DropdownListPrefabItemController.Text;

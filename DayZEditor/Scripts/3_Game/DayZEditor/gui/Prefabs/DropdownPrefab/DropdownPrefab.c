@@ -1,16 +1,9 @@
 class DropdownListPrefabController<Class TValue>: Controller
 {
-	ref ObservableCollection<ref DropdownListPrefabItem<TValue>> DropdownElementList = new ObservableCollection<ref DropdownListPrefabItem<TValue>>(this);
-	
 	string Caption;
 	DropdownListPrefabItemBase Value;
 	TValue CalculatedValue; // Used for things like SliderWidget output
-	
-	void ~DropdownListPrefabController()
-	{
-		delete DropdownElementList;
-	}
-	
+		
 	override void PropertyChanged(string property_name)
 	{
 		if (GetParent()) {
@@ -20,14 +13,16 @@ class DropdownListPrefabController<Class TValue>: Controller
 }
 
 class DropdownListPrefab<Class TValue>: ScriptView
-{
-	private WrapSpacerWidget DropdownWrapper;
-	
+{	
 	private static const TValue EMPTY_VALUE;
 	
 	protected TValue m_DefaultValue;
 	
 	protected DropdownListPrefabController<TValue> m_DropdownPrefabController;
+	
+	protected ref array<ref DropdownListPrefabItem<TValue>> m_ItemList = {};
+	
+	protected bool m_IsListVisible;
 	
 	protected Class m_BindingContext;
 	protected string m_BindingName;
@@ -49,44 +44,38 @@ class DropdownListPrefab<Class TValue>: ScriptView
 		m_DefaultValue = default_value;
 	}
 	
-	DropdownListPrefabItem<TValue> InsertItem(string item_text, TValue user_data)
+	void ~DropdownListPrefab()
 	{
-		return InsertItem(new DropdownListPrefabItem<TValue>(item_text, user_data));
+		delete m_ItemList;
 	}
 	
-	DropdownListPrefabItem<TValue> InsertItem(DropdownListPrefabItem<TValue> element)
+	void InsertItem(string item_text, TValue user_data)
 	{
-		element.SetParent(this);
-		m_DropdownPrefabController.DropdownElementList.Insert(element);
-		
+		DropdownListPrefabItem<TValue> element = new DropdownListPrefabItem<TValue>(item_text, user_data);
+		element.SetParent(this);			
+
 		// Assign default item when you find it (cant assign something that doesnt exist)
-		if (GetListItem(m_DefaultValue) == element) {
+		if (user_data == m_DefaultValue) {
 			SetActiveListItem(element);
 		}
 		
-		return element;
+		m_ItemList.Insert(element);
 	}
-		
+			
 	bool DropdownPrefabExecute(ButtonCommandArgs args)
 	{
-		DropdownWrapper.Show(!DropdownWrapper.IsVisible());
+		ShowList(!m_IsListVisible);
 		return true;
 	}
 	
-	bool DropdownElementExecute(ButtonCommandArgs args)
+	bool DropdownElementExecute(DropdownListPrefabItemBase item)
 	{
-		for (int i = 0; i < m_DropdownPrefabController.DropdownElementList.Count(); i++) {
-			if (m_DropdownPrefabController.DropdownElementList[i].GetLayoutRoot().FindAnyWidget(args.Source.GetName()) == args.Source) {				
-				SetActiveListItem(m_DropdownPrefabController.DropdownElementList[i]);
-				DropdownWrapper.Show(false);
-				return true;
-			}
-		}
-
+		SetActiveListItem(item);
+		ShowList(false);
 		return true;
 	}
 	
-	void SetActiveListItem(DropdownListPrefabItem<TValue> item)
+	void SetActiveListItem(DropdownListPrefabItemBase item)
 	{
 		m_DropdownPrefabController.Value = item;
 		m_DropdownPrefabController.NotifyPropertyChanged("Value");
@@ -94,13 +83,27 @@ class DropdownListPrefab<Class TValue>: ScriptView
 	
 	DropdownListPrefabItem<TValue> GetListItem(TValue value)
 	{
-		for (int i = 0; i < m_DropdownPrefabController.DropdownElementList.Count(); i++) {
-			if (m_DropdownPrefabController.DropdownElementList[i].GetValue() == value) {
-				return m_DropdownPrefabController.DropdownElementList[i];
+		foreach (DropdownListPrefabItem<TValue> list_item: m_ItemList) {
+			if (list_item.GetValue() == value) {
+				return list_item;
 			}
 		}
-		
+				
 		return null;
+	}
+	
+	void ShowList(bool state)
+	{
+		m_IsListVisible = state;
+
+		for (int i = 0; i < m_ItemList.Count(); i++) {
+			float s_x, s_y, s_l, s_h;
+			GetLayoutRoot().GetScreenPos(s_x, s_y);
+			
+			m_ItemList[i].GetLayoutRoot().GetScreenSize(s_l, s_h);
+			m_ItemList[i].GetLayoutRoot().SetPos(s_x, s_y + (s_h * (i + 1)));
+			m_ItemList[i].GetLayoutRoot().Show(state);
+		}
 	}
 	
 	void PrefabPropertyChanged(string property_name)
