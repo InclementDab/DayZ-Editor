@@ -1,4 +1,3 @@
-
 class EditorPreferencesDialog: EditorDialogBase
 {	
 	void EditorPreferencesDialog(string title)
