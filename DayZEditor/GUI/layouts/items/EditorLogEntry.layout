@@ -1,0 +1,28 @@
+PanelWidgetClass LogEntryPanel {
+ size 1 0.1
+ halign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ {
+  MultilineTextWidgetClass LogEntryText {
+   ignorepointer 1
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scriptclass "ViewBinding"
+   "size to text h" 1
+   wrap 1
+   {
+    ScriptParamsClass {
+     Binding_Name "Message"
+    }
+   }
+  }
+ }
+}

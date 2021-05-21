@@ -25,6 +25,9 @@ class EditorHudController: EditorControllerBase
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 		= new ObservableCollection<ref EditorListItem>(this);
 	
+	static const int MAX_LOG_ENTRIES = 15;
+	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
+	
 	// View Properties
 	protected Widget LeftbarFrame;
 	protected ImageWidget LeftbarHideIcon;
@@ -52,6 +55,8 @@ class EditorHudController: EditorControllerBase
 #ifndef COMPONENT_SYSTEM
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
+		
+		EditorLog.OnLog.Insert(OnEditorLog);
 #endif
 	}
 	
@@ -62,6 +67,8 @@ class EditorHudController: EditorControllerBase
 #ifndef COMPONENT_SYSTEM
 		EditorEvents.OnObjectSelected.Remove(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Remove(OnObjectDeselected);
+		
+		EditorLog.OnLog.Remove(OnEditorLog);
 #endif
 	}
 	
@@ -245,6 +252,14 @@ class EditorHudController: EditorControllerBase
 			if (Class.CastTo(placed_list_item, list[i])) {
 				GetEditor().SelectObject(placed_list_item.GetEditorObject());
 			}
+		}
+	}
+	
+	void OnEditorLog(LogLevel level, string message)
+	{
+		EditorLogEntries.Insert(new EditorLogEntry(level, message));
+		if (EditorLogEntries.Count() > MAX_LOG_ENTRIES) {
+			EditorLogEntries.Remove(0);
 		}
 	}
 	
