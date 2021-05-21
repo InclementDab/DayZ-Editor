@@ -44,6 +44,11 @@ class EditorMenu: EditorScriptView
 	{
 		m_EditorMenuController.MenuItems.Remove(m_EditorMenuController.MenuItems.Find(menu_item));
 	}
+	
+	ObservableCollection<ref EditorMenuItem> GetMenuItems()
+	{
+		return m_EditorMenuController.MenuItems;
+	}
 			
 	override string GetLayoutFile() 
 	{

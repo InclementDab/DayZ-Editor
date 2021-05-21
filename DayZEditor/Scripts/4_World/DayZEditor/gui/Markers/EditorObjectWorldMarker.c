@@ -1,11 +1,14 @@
 class EditorObjectWorldMarker: EditorObjectMarker
 {
+	protected int m_ScreenX, m_ScreenY;
 	protected MapWidget m_MapWidget;
 	void EditorObjectWorldMarker(EditorObject editor_object)
 	{
 		m_MapWidget = m_Editor.GetEditorHud().EditorMapWidget;
 		m_DragHandler = new EditorObjectDragHandler(m_EditorObject);
 		EditorEvents.OnMapToggled.Insert(OnEditorMapToggled);
+		
+		GetScreenSize(m_ScreenX, m_ScreenY);
 	}
 	
 	void OnEditorMapToggled(Class context, MapWidget editor_map, bool state)
@@ -15,36 +18,34 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	override void Update()
 	{
+		if (!m_LayoutRoot) {
+			return;
+		}
+		
 		if (m_MapWidget && m_MapWidget.IsVisible()) {
 			return;
 		}
-				
-		vector screen_pos = GetGame().GetScreenPos(GetPosition());
-						
-		int screen_x, screen_y;
-		GetScreenSize(screen_x, screen_y);
+			
 		// Is the marker in bounds?
-		if (screen_pos[0] != 0 && screen_pos[0] != screen_x && screen_pos[1] != 0 && screen_pos[1] != screen_y && screen_pos[2] > 0) {
+		vector screen_pos = GetGame().GetScreenPos(GetPosition());
+		if (screen_pos[0] != 0 && screen_pos[0] != m_ScreenX && screen_pos[1] != 0 && screen_pos[1] != m_ScreenY && screen_pos[2] > 0) {
 			SetPos(screen_pos[0], screen_pos[1]);
 			Show(m_Show);
 		} 
 		
 		// Overrides the hide if the camera isnt looking at the marker
-		else if (m_LayoutRoot)
-			m_LayoutRoot.Show(false);		
-
-		
-		super.Update();
+		else { 
+			m_LayoutRoot.Show(false);
+		}
 	}
 	
 	protected vector GetPosition()
-	{
-		vector position;
-		vector object_transform[4];
-		m_EditorObject.GetTransform(object_transform);
-		
+	{		
 		// Should the position be raycasted on the ground, or locked to the object
 		if (m_Editor.GroundMode) {
+			vector position;
+			vector object_transform[4];
+			m_EditorObject.GetTransform(object_transform);
 			set<Object> o;
 			vector ground_dir; int component;
 			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject.GetWorldObject(), false, true); // set to ground only

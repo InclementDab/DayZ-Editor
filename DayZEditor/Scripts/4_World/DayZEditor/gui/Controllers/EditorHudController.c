@@ -467,6 +467,25 @@ class EditorHudController: EditorControllerBase
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	
+	void DoMultiSelect(int index_0, int index_1, ObservableCollection<ref EditorListItem> list)
+	{
+		int bottom, top;
+		bottom = Math.Min(index_0, index_1);
+		top = Math.Max(index_0, index_1);
+		
+		if (list.Count() < top) {
+			EditorLog.Error("Could not multi select, top was out of range of list array");
+			return;
+		}
+		
+		for (int i = bottom; i < top; i++) {
+			EditorPlacedListItem placed_list_item;
+			if (Class.CastTo(placed_list_item, list[i])) {
+				GetEditor().SelectObject(placed_list_item.GetEditorObject());
+			}
+		}
+	}
+	
 	// Raycast to see if TranslationWidget is under cursor	
 	/*		
 	RaycastRVParams raycast_params = new RaycastRVParams(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * EditorSettings.OBJECT_VIEW_DISTANCE);

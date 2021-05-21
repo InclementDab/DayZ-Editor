@@ -788,7 +788,7 @@ class Editor
 		
 		return editor_object;
 	}
-	
+		
 	EditorObjectMap CreateObjects(EditorObjectDataMap data_list, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject");
@@ -937,9 +937,17 @@ class Editor
 		m_ActionStack.InsertAction(action);
 	}
 	
+	// Just annoying
+	static string GetWorldName()
+	{
+		string world_name;
+		GetGame().GetWorldName(world_name);
+		return world_name;
+	}
+	
 	static string GetVersionNumber()
     {
-        ref array<ref ModInfo> mods = new array<ref ModInfo>;
+        array<ref ModInfo> mods = new array<ref ModInfo>;
         GetDayZGame().GetModInfos(mods);
         for (int i = 0; i < mods.Count(); i++) {
             if (mods[i].GetName().IndexOf("DayZ") == 0 && mods[i].GetName().IndexOf("Editor") == 5) {
@@ -950,25 +958,27 @@ class Editor
         return string.Empty;
     }
 	
-	static vector GetRandomTeleportPosition()
-	{		
-		float x, z, radius;
-		
-		x = 5467;
-		z = 8660;
-		radius = 500;
-		
+	static vector GetMapCenterPosition()
+	{
+		TIntArray values();
+		GetGame().ConfigGetIntArray(string.Format("CfgWorlds %1 centerPosition", GetWorldName()), values);
+				
+		// they were playing the wrong game when they thought of this one
+		return Vector(values[0], values[2], values[1]);
+	}
+	
+	static vector GetSafeStartPosition(float x, float z, float radius)
+	{
 		vector position;
-		position[0] = Math.RandomInt(x - radius, x + radius);
-		position[2] = Math.RandomInt(z - radius, z + radius);
+		position[0] = Math.RandomFloat(x - radius, x + radius);
+		position[2] = Math.RandomFloat(z - radius, z + radius);
 		position[1] = GetGame().SurfaceY(position[0], position[2]) + 1;
 		
-		if (GetGame().SurfaceIsSea(position[0], position[2])) {
+		//if (GetGame().SurfaceIsSea(position[0], position[2])) {
 			// try again
-			EditorLog.Debug("Landed in water, trying again");
-			return GetRandomTeleportPosition(); 
-		}
-		
+			//EditorLog.Debug("Landed in water, trying again");
+			//return GetSafeStartPosition(x, z, radius + 50); 
+		//}
 		
 		array<Object> position_objects = {};
 		array<CargoBase> position_cargos = {};
@@ -976,7 +986,7 @@ class Editor
 		if (position_objects.Count() > 0) {
 			// try again
 			EditorLog.Debug("Landed in building, trying again");
-			return GetRandomTeleportPosition();
+			return GetSafeStartPosition(x, z, radius + 50);
 		}
 		
 		return position;

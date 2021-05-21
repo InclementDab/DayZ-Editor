@@ -19,9 +19,7 @@ class EditorMarker: ScriptView
 	void SetPos(float x, float y) 
 	{
 		// Offset to center of marker
-		x -= 10; y -= 10;
-		m_LayoutRoot.SetPos(x, y);
-		m_LayoutRoot.Update();
+		m_LayoutRoot.SetPos(x - 10, y - 10);
 	}
 	
 	void GetPos(out float x, out float y)
@@ -32,7 +30,7 @@ class EditorMarker: ScriptView
 	void Show(bool show)
 	{
 		m_Show = show;
-		if (m_LayoutRoot) {
+		if (m_LayoutRoot && m_LayoutRoot.IsVisible() != show) {
 			m_LayoutRoot.Show(m_Show);
 		}
 	}
