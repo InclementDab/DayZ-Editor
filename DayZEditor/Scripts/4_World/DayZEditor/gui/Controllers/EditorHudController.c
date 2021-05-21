@@ -232,7 +232,8 @@ class EditorHudController: EditorControllerBase
 	void CameraTrackInsertNode(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
-		InsertCameraTrack(GetEditor().GetCamera(), 1.0);
+		string name = "CameraTrack" + CameraTrackData.Count();
+		InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
 	}
 
 	void CameraTrackDeleteNode(ButtonCommandArgs args)
@@ -240,9 +241,9 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Trace("EditorHudController::CameraTrackDeleteNode");
 	}
 
-	void InsertCameraTrack(EditorCamera current_camera, float time)
+	void InsertCameraTrack(EditorCamera current_camera, float time, string name)
 	{
-		InsertCameraTrack(new EditorCameraTrackListItem(current_camera.GetPosition(), current_camera.GetOrientation(), time));
+		InsertCameraTrack(new EditorCameraTrackListItem(current_camera.GetPosition(), current_camera.GetOrientation(), time, name));
 	}
 
 	void InsertCameraTrack(EditorCameraTrackListItem camera_track_item)
