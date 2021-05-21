@@ -4,7 +4,7 @@ class DropdownListPrefabController<Class TValue>: Controller
 	ref ObservableCollection<ref DropdownListPrefabItem<TValue>> DropdownElementList = new ObservableCollection<ref DropdownListPrefabItem<TValue>>(this);
 	
 	string Caption;
-	DropdownListPrefabItem<TValue> Value;
+	DropdownListPrefabItemBase Value;
 	TValue CalculatedValue; // Used for things like SliderWidget output
 	
 	void ~DropdownListPrefabController()
@@ -88,7 +88,6 @@ class DropdownListPrefab<Class TValue>: ScriptView
 	
 	void SetActiveListItem(DropdownListPrefabItem<TValue> item)
 	{
-		Print(item);
 		m_DropdownPrefabController.Value = item;
 		m_DropdownPrefabController.NotifyPropertyChanged("Value");
 	}
@@ -111,7 +110,9 @@ class DropdownListPrefab<Class TValue>: ScriptView
 	
 	void PrefabPropertyChanged(string property_name)
 	{
-		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, m_DropdownPrefabController.Value.GetValue());		
+		TValue v;
+		g_Script.CallFunction(m_DropdownPrefabController.Value, "GetValue", v, null);
+		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, v);		
 		g_Script.CallFunction(m_BindingContext, "PropertyChanged", null, m_BindingName);
 	}
 	

@@ -12,16 +12,6 @@ class EditorPreferencesDialog: EditorDialogBase
 		log_level.InsertItem("Warning", LogLevel.WARNING);
 		log_level.InsertItem("Error", LogLevel.ERROR);
 		general_group.Insert(log_level);
-		/*DropdownListPrefabItem trace_item = new DropdownListPrefabItem("Trace", new Param1<LogLevel>(LogLevel.TRACE));
-		DropdownListPrefab<LogLevel> log_level("Log Level", m_Editor.Settings, "SelectedLogLevel", LogLevel.TRACE);
-		log_level.InsertItem(trace_item);
-		log_level.InsertItem("Debug", new Param1<LogLevel>(LogLevel.DEBUG));
-		log_level.InsertItem("Info", new Param1<LogLevel>(LogLevel.INFO));
-		log_level.InsertItem("Warning", new Param1<LogLevel>(LogLevel.WARNING));
-		log_level.InsertItem("Error", new Param1<LogLevel>(LogLevel.ERROR));
-		general_group.Insert(log_level);		
-
-		*/
 		
 		general_group.Insert(new EditBoxNumberPrefab("Auto Save", m_Editor.Settings, "AutoSaveTimer", m_Editor.Settings.AutoSaveTimer.ToString()));
 		
