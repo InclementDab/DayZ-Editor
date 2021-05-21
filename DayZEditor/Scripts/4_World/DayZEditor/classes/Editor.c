@@ -832,7 +832,6 @@ class Editor
 		}
 	}
 	
-	
 	void DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
