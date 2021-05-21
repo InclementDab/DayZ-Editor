@@ -26,6 +26,8 @@ class EditorCommandManager
 	EditorCommand BrushToggleCommand;
 	EditorCommand BrushDensityCommand;
 	EditorCommand BrushRadiusCommand;
+	EditorCommand CameraTrackAddNode;
+	EditorCommand CameraTrackRun;
 	
 	void ~EditorCommandManager()
 	{		
@@ -102,6 +104,10 @@ class EditorCommandManager
 	
 		RegisterCommand(EditorDonateCommand);
 		RegisterCommand(EditorHelpCommand);
+		
+		// Camera Track
+		CameraTrackAddNode = RegisterCommand(EditorCameraTrackAddNode);
+		CameraTrackRun = RegisterCommand(EditorCameraTrackRun);
 	}
 	
 	EditorCommand RegisterCommand(typename command_type)

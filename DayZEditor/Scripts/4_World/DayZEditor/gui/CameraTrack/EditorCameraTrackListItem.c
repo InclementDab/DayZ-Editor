@@ -19,6 +19,59 @@ class EditorCameraTrackListItemController: Controller
 		return Vector(oX.Parse(), oY.Parse(), oZ.Parse());
 	}
 	
+	//PanelColor
+	Widget CameraTrackGroupWrapper;
+	//OutlineColor
+	Widget MainContainerWrapper;
+	//CameraIconColor
+	Widget CameraTrackOptionButton;
+	// Abstract
+	bool IsSelected;
+	
+	//Gorm add highlight on mouse enter
+	void Select() 
+	{
+		CameraTrackGroupWrapper.SetColor(COLOR_EMPTY);
+		MainContainerWrapper.SetColor(COLOR_EMPTY);
+		CameraTrackOptionButton.SetColor(COLOR_EMPTY);
+	}
+	
+	void Highlight()
+	{
+		CameraTrackGroupWrapper.SetColor(COLOR_BLUE_HIGHLIGHT);
+		MainContainerWrapper.SetColor(COLOR_BLUE_HIGHLIGHT_OUTLINE);
+		CameraTrackOptionButton.SetColor(COLOR_BLUE_LIGHT);
+	}
+	
+	void Deselect() 
+	{	
+		CameraTrackGroupWrapper.SetColor(COLOR_DEFAULT_PANEL);
+		MainContainerWrapper.SetColor(COLOR_DEFAULT_OUTLINE);
+		CameraTrackOptionButton.SetColor(COLOR_DEFAULT_OUTLINE);
+	}
+	
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		if (!IsSelected) 
+		{
+			Highlight();
+		}
+		return true;
+	}
+	
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		if (!IsSelected) 
+		{
+			Deselect();
+		}
+		
+		return true;
+	}
+	// Gorm highlight on mouse enter
+	
 	override void PropertyChanged(string property_name)
 	{
 		switch (property_name) {

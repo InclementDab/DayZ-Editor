@@ -45,7 +45,13 @@ class EditorHudController: EditorControllerBase
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected EditBoxWidget LeftbarSearchBar;
 	
+	// Camera Track
 	protected Widget CameraTrackWrapper;
+	protected ButtonWidget CameraTrackRunButton;
+	protected Widget CameraTrackButtonOutline;
+	protected bool m_CameraTrackRunning;
+	protected vector m_CameraTrackStartPosition;
+	protected vector m_CameraTrackStartOrientation;
 	
 	// Temp until sub controllers can be properties of parent controller
 	EditorHudToolbarController GetToolbarController() 
@@ -240,7 +246,125 @@ class EditorHudController: EditorControllerBase
 	{
 		EditorLog.Trace("EditorHudController::CameraTrackDeleteNode");
 	}
+	
+	
+	
+	//
+	// Gorm adding stuff to see if it works for testing.
+	void CameraTrackStart()
+	{
+		m_CameraTrackStartPosition = GetEditor().GetCamera().GetPosition();
+		m_CameraTrackStartOrientation = GetEditor().GetCamera().GetOrientation();
+		
+		m_CameraTrackRunning = true;
+		CameraTrackRunButton.SetText("Stop");
+		CameraTrackRunButton.SetColor(COLOR_RED);
+		CameraTrackButtonOutline.SetColor(COLOR_RED);
+		thread _RunCameraTrack();
+	}
+	
+	void CameraTrackStop()
+	{
+		GetEditor().GetCamera().SetPosition(m_CameraTrackStartPosition);
+		GetEditor().GetCamera().SetPosition(m_CameraTrackStartOrientation);
+		
+		m_CameraTrackRunning = false;
+		CameraTrackRunButton.SetText("Start");
+		CameraTrackRunButton.SetColor(COLOR_WHITE_A);
+		CameraTrackButtonOutline.SetColor(COLOR_WHITE);
+		CameraTrackRunButton.SetState(1);
+	}
+	
+	bool IsCameraTrackRunning()
+	{
+		return m_CameraTrackRunning;
+	}
+	
+	private void _RunCameraTrack()
+	{
+		m_CameraTrackRunning = true;
+		EditorCamera camera = GetEditor().GetCamera();
+		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
+		for (int i = 0; i < camera_tracks.Count(); i++) {
+			if (!m_CameraTrackRunning) return; // cancel
+			EditorCameraTrackListItemController ctrl = camera_tracks[i].GetData();
+			
+			if (!camera_tracks[i + 1]) {
+				continue;
+			}
+			
+			EditorCameraTrackListItemController center_ctrl = camera_tracks[i + 1].GetData();
+			
+			if (!camera_tracks[i + 2]) {
+				continue;
+			}
+			
+			EditorCameraTrackListItemController next_ctrl = camera_tracks[i + 2].GetData();
+			vector start_position = ctrl.GetPosition();
+			vector start_orientation = ctrl.GetOrientation();
+			camera.SetPosition(start_position);
+			camera.SetOrientation(start_orientation);
+			
+			int td = 0;
+			vector point = ctrl.GetPosition();
+			while (td <= ctrl.Time * 1000) {
+				if (!m_CameraTrackRunning) return; // cancel
+				float time_value = 1 / (ctrl.Time * 1000) * td;
+				//vector center_point = AverageVectors(ctrl.GetPosition(), next_ctrl.GetPosition()) + vector.Up * ((CameraTrackSmoothing / 100) * vector.Distance(ctrl.GetPosition(), next_ctrl.GetPosition()));
+				point = EditorMath.CalculateQuadraticBezierPoint(time_value, ctrl.GetPosition(), center_ctrl.GetPosition(), next_ctrl.GetPosition());
+				
+				camera.SetPosition(point);
+				
+				vector orientation;
+				orientation[0] = EditorMath.SmoothLerp(start_orientation[0], next_ctrl.oX.Parse(), time_value);
+				orientation[1] = EditorMath.SmoothLerp(start_orientation[1], next_ctrl.oY.Parse(), time_value);
+				orientation[2] = EditorMath.SmoothLerp(start_orientation[2], next_ctrl.oZ.Parse(), time_value);
+				camera.SetOrientation(orientation);
 
+				td += 10;
+				Sleep(10);
+			}
+						
+			
+			/*int td = 0;
+			while (td < ctrl.Time * 1000) {
+				float time_value = 1 / (ctrl.Time * 1000) * td;
+				vector position;
+				position[0] = EditorMath.SmoothLerp(start_position[0], next_pos.pX.Parse(), time_value);
+				position[1] = EditorMath.SmoothLerp(start_position[1], next_pos.pY.Parse(), time_value);
+				position[2] = EditorMath.SmoothLerp(start_position[2], next_pos.pZ.Parse(), time_value);
+				camera.SetPosition(position);
+				
+				vector orientation;
+				orientation[0] = EditorMath.SmoothLerp(start_orientation[0], next_pos.oX.Parse(), time_value);
+				orientation[1] = EditorMath.SmoothLerp(start_orientation[1], next_pos.oY.Parse(), time_value);
+				orientation[2] = EditorMath.SmoothLerp(start_orientation[2], next_pos.oZ.Parse(), time_value);
+				camera.SetOrientation(orientation);
+				
+				td += 10;
+				Sleep(10);
+			}*/
+		}
+		
+		CameraTrackStop();
+	}
+	
+	
+	array<EditorCameraTrackListItem> GetCameraTracks()
+	{
+		array<EditorCameraTrackListItem> dta = {};
+		for (int i = 0; i < CameraTrackData.Count(); i++) {
+			if (CameraTrackData[i]) {
+				dta.Insert(CameraTrackData[i]);
+			}
+		}		
+		
+		return dta;
+	}
+	
+	//
+	//
+	// end gorm added stuff
 	void InsertCameraTrack(EditorCamera current_camera, float time, string name)
 	{
 		InsertCameraTrack(new EditorCameraTrackListItem(current_camera.GetPosition(), current_camera.GetOrientation(), time, name));

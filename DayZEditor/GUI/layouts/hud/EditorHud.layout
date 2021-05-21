@@ -1578,30 +1578,92 @@ FrameWidgetClass EditorFrame {
          "text halign" right
          "text valign" center
         }
-        FrameWidgetClass CameraIconTextSpacer {
+        FrameWidgetClass FrameWidget1 {
          ignorepointer 1
-         position 0 0
-         size 0.005 1
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
+         size 26 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
          vexactsize 0
         }
-        ImageWidgetClass InfobarCamIcon {
-         ignorepointer 1
+        ButtonWidgetClass InfobarCameraButton {
+         ignorepointer 0
+         color 1 1 1 0.1961
          position 0 0
-         size 0.02 1
+         size 38 32
          valign center_ref
          hexactpos 0
          vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         image0 "set:dayz_editor_gui image:camera_alt"
-         mode blend
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         pivot 0 0
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style MenuDefault
+         {
+          ImageWidgetClass InfobarCameraIcon {
+           visible 0
+           ignorepointer 1
+           position 0 0
+           size 40 40
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_editor_gui image:camera_alt"
+           mode additive
+           "src alpha" 0
+           "no wrap" 0
+           stretch 0
+           "flip u" 0
+           "flip v" 0
+           filter 1
+           nocache 0
+           pivot 0 0
+          }
+          ImageWidgetClass InfobarCinematicCameraIcon {
+           visible 1
+           ignorepointer 1
+           position 0 0
+           size 38 36
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_editor_gui image:camera"
+           mode additive
+           "src alpha" 1
+           "no wrap" 0
+           stretch 0
+           "flip u" 0
+           "flip v" 0
+           filter 1
+           nocache 0
+           pivot 0 0
+          }
+          PanelWidgetClass InfoBarCameraOutline {
+           ignorepointer 1
+           color 1 1 1 0.9961
+           position 0 1
+           size 38 30
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "CameraTrackToggleExecute"
+          }
+         }
         }
         TextWidgetClass VersionNumber {
          ignorepointer 1
@@ -1938,6 +2000,271 @@ FrameWidgetClass EditorFrame {
          {
           ScriptParamsClass {
            Binding_Name "EditorLogEntries"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    WrapSpacerWidgetClass CameraTrackWrapper {
+     visible 1
+     ignorepointer 1
+     color 0.0196 0.0196 0.0196 0.7843
+     position 279 448
+     size 0.235 0.006
+     halign right_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style Colorable
+     Padding 1
+     Margin 1
+     "Size To Content V" 1
+     {
+      PanelWidgetClass CameraTrackPanel {
+       ignorepointer 1
+       color 0.0784 0.0784 0.0784 1
+       position 0 0
+       size 1 24
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass CameraTrackPanelText {
+         ignorepointer 1
+         size 1 1.15
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "Cinematic Camera"
+         font "gui/fonts/etelkatextpro"
+         "size to text v" 0
+         "text halign" center
+         "text valign" center
+        }
+        PanelWidgetClass CameraTrackMinimizePanel {
+         ignorepointer 1
+         color 0.7843 0.2941 0.2745 1
+         size 26 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass CameraTrackMinimizeText {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           text "_"
+           "text halign" center
+          }
+          ButtonWidgetClass CameraTrackMinimizeButton {
+           color 1 1 1 0.1961
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           {
+            ScriptParamsClass {
+             Relay_Command "CameraTrackToggleExecute"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      ScrollWidgetClass CameraNodeScrollBar {
+       ignorepointer 1
+       color 0.3137 0.3137 0.3137 1
+       position 0 0
+       size 1 350
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       "Scrollbar V" 1
+       {
+        WrapSpacerWidgetClass CameraNodeList {
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         Padding 1
+         Margin 1
+         "Size To Content V" 1
+         {
+          ScriptParamsClass {
+           Binding_Name "CameraTrackData"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass CameraTrackSliderPanel {
+       ignorepointer 1
+       color 0.0784 0.0784 0.0784 1
+       position 0 0
+       size 1 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass CameraTrackSmoothingText {
+         ignorepointer 1
+         position 2 0
+         size 135 20
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Camera Smoothing"
+         "text offset" 2 0
+         "text valign" center
+        }
+        SliderWidgetClass CameraTrackSmoothingSlider {
+         color 0.3922 0.3922 0.3922 1
+         position 150 0
+         size 0.6 16
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Editor
+         step 0.1
+         {
+          TextWidgetClass CameraTrackSmoothingReadout {
+           ignorepointer 1
+           size 35 16
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           text "0.05"
+           "text halign" center
+           "text valign" center
+           {
+            ScriptParamsClass {
+             Binding_Name "CameraTrackSmoothing"
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "CameraTrackSmoothing"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass CameraTrackButtonPanel {
+       ignorepointer 1
+       color 0.0784 0.0784 0.0784 1
+       position 0 0
+       size 1 22
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        ButtonWidgetClass AddNodeButton {
+         position 20 1
+         size 90 20
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         text "Add Node"
+         {
+          PanelWidgetClass AddButtonOutline {
+           ignorepointer 1
+           color 0.2745 0.8627 0.2745 0.9961
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.CameraTrackAddNode"
+          }
+         }
+        }
+        ButtonWidgetClass CameraTrackRunButton {
+         position 20 1
+         size 80 20
+         halign right_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         text "Run"
+         switch toggle
+         {
+          PanelWidgetClass CameraTrackButtonOutline {
+           ignorepointer 1
+           color 1 1 1 0.9961
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.CameraTrackRun"
           }
          }
         }
