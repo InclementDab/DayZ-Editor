@@ -30,47 +30,60 @@ class EditorCameraTrackListItemController: Controller
 	
 	//Gorm add highlight on mouse enter
 	void Select() 
-	{	// couldnt manage to select stuff so they arent setup yet
-		CameraTrackGroupWrapper.SetColor(COLOR_EMPTY);
-		MainContainerWrapper.SetColor(COLOR_EMPTY);
-		CameraTrackOptionButton.SetColor(COLOR_EMPTY);
+	{
+		IsSelected = true;
+		CameraTrackGroupWrapper.SetColor(COLOR_BLUE);
+		MainContainerWrapper.SetColor(COLOR_SALMON);
+		CameraTrackOptionButton.SetColor(COLOR_BLUE);
 	}
 	
 	void Highlight()
 	{
-		CameraTrackGroupWrapper.SetColor(COLOR_BLUE_HIGHLIGHT);
+		//CameraTrackGroupWrapper.SetColor(COLOR_BLUE_HIGHLIGHT);
 		MainContainerWrapper.SetColor(COLOR_BLUE_HIGHLIGHT_OUTLINE);
-		CameraTrackOptionButton.SetColor(COLOR_BLUE_LIGHT);
+		//CameraTrackOptionButton.SetColor(COLOR_BLUE_LIGHT);
 	}
 	
 	void Deselect() 
 	{	
+		IsSelected = false;
 		CameraTrackGroupWrapper.SetColor(COLOR_DEFAULT_PANEL);
 		MainContainerWrapper.SetColor(COLOR_DEFAULT_OUTLINE);
 		CameraTrackOptionButton.SetColor(COLOR_DEFAULT_ICON);
 	}
 	
-	
-	override bool OnMouseEnter(Widget w, int x, int y)
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
-		if (!IsSelected) 
-		{
-			Highlight();
-		}
-		return true;
-	}
-	
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		if (!IsSelected) 
-		{
+		if (w.IsInherited(ButtonWidget) || w.IsInherited(EditBoxWidget)) {
+			return super.OnMouseButtonUp(w, x, y, button);
+		} 
+		
+		if (!IsSelected) {
+			Select();
+		} else {
 			Deselect();
 		}
 		
 		return true;
 	}
-	// Gorm highlight on mouse enter
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		if (!IsSelected) {
+			Highlight();
+		}
+		
+		return true;
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		if (!IsSelected) {
+			Deselect();
+		}
+		
+		return true;
+	}
 	
 	override void PropertyChanged(string property_name)
 	{
