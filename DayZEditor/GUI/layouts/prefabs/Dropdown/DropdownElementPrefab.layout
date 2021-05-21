@@ -1,14 +1,12 @@
 PanelWidgetClass DropdownElement {
- ignorepointer 1
- color 0.0588 0.0588 0.0588 1
+ color 0.5882 0.5882 0.5882 0.8235
  position 0 0
- size 250 25
+ size 1 1
  hexactpos 1
  vexactpos 1
- hexactsize 1
- vexactsize 1
- priority 999
- style rover_sim_colorable
+ hexactsize 0
+ vexactsize 0
+ style Slim_Outline2
  "no focus" 0
  {
   ButtonWidgetClass DropdownElementButton {
@@ -21,9 +19,9 @@ PanelWidgetClass DropdownElement {
    hexactsize 0
    vexactsize 0
    scriptclass "ViewBinding"
-   style Default
+   style OldStyle
    "no focus" 0
-   text_proportion 0.7
+   text_proportion 0.55
    text_halign left
    text_valign top
    font "gui/fonts/etelkatextpro16"
@@ -45,7 +43,6 @@ PanelWidgetClass DropdownElement {
      "size to text v" 1
      {
       ScriptParamsClass {
-       Debug_Logging 1
        Binding_Name "Text"
       }
      }
