@@ -75,7 +75,12 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	{
 		if (w.IsInherited(ButtonWidget) || w.IsInherited(EditBoxWidget)) {
 			return super.OnMouseButtonUp(w, x, y, button);
-		} 
+		}
+		
+		if (!m_TemplateController.CollapseTab) {
+			m_TemplateController.CollapseTab = true;
+			m_TemplateController.NotifyPropertyChanged("CollapseTab");
+		}
 		
 		if (!IsSelected) {
 			Select();
