@@ -96,12 +96,12 @@ class TypeConversionEditorFile: TypeConversionTemplate<EditorFile>
 	}
 }
 
-class DropdownListPrefabItemConverter: TypeConversionTemplate<DropdownListPrefabItemBase>
+class DropdownListPrefabItemConverter: TypeConversionTemplate<DropdownListPrefabItem>
 {
 	override string GetString() 
 	{
 		if (m_Value)
-			return m_Value.GetText();
+			return m_Value.GetTemplateController().Text;
 		
 		return string.Empty;
 	}
@@ -131,7 +131,7 @@ modded class LayoutBindingManager
 		type_conversions.Insert(EditorWidget, TypeConversionEditorWidget);
 		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
 		type_conversions.Insert(EditorBrushObject, TypeConversionBrushObject);
-		type_conversions.Insert(DropdownListPrefabItemBase, DropdownListPrefabItemConverter);
+		type_conversions.Insert(DropdownListPrefabItem, DropdownListPrefabItemConverter);
 		type_conversions.Insert(EditorFile, TypeConversionEditorFile);
 	}
 }

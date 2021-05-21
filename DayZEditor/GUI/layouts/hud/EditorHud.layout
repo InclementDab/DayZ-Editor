@@ -249,7 +249,7 @@ FrameWidgetClass EditorFrame {
      visible 1
      clipchildren 1
      ignorepointer 1
-     position 0 0.055
+     position -0.001 0.055
      size 0.16 0.93
      hexactpos 0
      vexactpos 0
@@ -976,8 +976,9 @@ FrameWidgetClass EditorFrame {
      style rover_sim_colorable
      {
       WrapSpacerWidgetClass InfobarWrapper {
+       clipchildren 0
        ignorepointer 1
-       position 0 0.07
+       position 0 0
        size 1 1
        halign right_ref
        valign center_ref
@@ -1015,12 +1016,12 @@ FrameWidgetClass EditorFrame {
          visible 1
          ignorepointer 1
          position 0 0
-         size 0.25 1
+         size 435 32
          valign center_ref
          hexactpos 0
          vexactpos 0
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          {
           WrapSpacerWidgetClass InfoBarVectorWrapSpacer {
            visible 0
@@ -1339,12 +1340,12 @@ FrameWidgetClass EditorFrame {
           WrapSpacerWidgetClass InfoBarVectorWrapSpacer2 {
            clipchildren 0
            ignorepointer 1
-           position 0 0.02
-           size 0.9 28
+           position 0 3
+           size 435 28
            halign right_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
            vexactsize 1
            style Empty
            {
@@ -1364,7 +1365,7 @@ FrameWidgetClass EditorFrame {
                ignorepointer 1
                color 0.7647 0.1804 0.102 1
                position 1 0
-               size 26 24.5
+               size 26 24
                valign center_ref
                hexactpos 1
                vexactpos 1
@@ -1437,7 +1438,7 @@ FrameWidgetClass EditorFrame {
                ignorepointer 1
                color 0.6157 0.8157 0.2196 1
                position 1 0
-               size 26 24.5
+               size 26 24
                valign center_ref
                hexactpos 1
                vexactpos 1
@@ -1509,7 +1510,7 @@ FrameWidgetClass EditorFrame {
                ignorepointer 1
                color 0.2588 0.4824 0.9176 1
                position 1 0
-               size 26 24.5
+               size 26 24
                valign center_ref
                hexactpos 1
                vexactpos 1
@@ -1559,60 +1560,130 @@ FrameWidgetClass EditorFrame {
           }
          }
         }
+        FrameWidgetClass CameraIconTextSpacer {
+         ignorepointer 1
+         size 10 30
+         hexactpos 0
+         vexactpos 0
+         hexactsize 1
+         vexactsize 1
+        }
         TextWidgetClass InfobarCameraPositionText {
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 0.08 0.95
+         size 215 32
          halign right_ref
          valign center_ref
          hexactpos 0
          vexactpos 0
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          text "Camera Position"
          font "gui/fonts/etelkatextpro"
          "exact text" 0
-         "size to text h" 1
+         "size to text h" 0
          "size to text v" 0
-         "text halign" right
+         "text halign" center
          "text valign" center
         }
-        FrameWidgetClass CameraIconTextSpacer {
-         ignorepointer 1
+        ButtonWidgetClass InfobarCameraButton {
+         ignorepointer 0
+         color 1 1 1 0.1961
          position 0 0
-         size 0.005 1
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-        }
-        ImageWidgetClass InfobarCamIcon {
-         ignorepointer 1
-         position 0 0
-         size 0.02 1
+         size 38 32
          valign center_ref
          hexactpos 0
          vexactpos 0
-         hexactsize 0
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style MenuDefault
+         {
+          ImageWidgetClass InfobarCameraIcon {
+           visible 0
+           ignorepointer 1
+           position 0 0
+           size 40 40
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_editor_gui image:camera_alt"
+           mode additive
+           "src alpha" 0
+           "no wrap" 0
+           stretch 0
+           "flip u" 0
+           "flip v" 0
+           filter 1
+           nocache 0
+           pivot 0 0
+          }
+          ImageWidgetClass InfobarCinematicCameraIcon {
+           visible 1
+           ignorepointer 1
+           position 0 0
+           size 38 36
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_editor_gui image:camera"
+           mode additive
+           "src alpha" 1
+           "no wrap" 0
+           stretch 0
+           "flip u" 0
+           "flip v" 0
+           filter 1
+           nocache 0
+           pivot 0 0
+          }
+          PanelWidgetClass PanelWidget0 {
+           ignorepointer 1
+           color 1 1 1 0.9961
+           position 0 1
+           size 38 30
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "CameraTrackToggleExecute"
+          }
+         }
+        }
+        FrameWidgetClass FrameWidget1 {
+         ignorepointer 1
+         size 26 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
          vexactsize 0
-         image0 "set:dayz_editor_gui image:camera_alt"
-         mode blend
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         pivot 0 0
         }
         TextWidgetClass VersionNumber {
          ignorepointer 1
          position 0 0
-         size 0.25 1
+         size 480 32
          halign right_ref
          valign center_ref
          hexactpos 0
          vexactpos 0
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          scriptclass "ViewBinding"
          font "gui/fonts/etelkatextpro"
          "bold text" 1
@@ -1628,13 +1699,13 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass MenuCurrentFileNameText {
          clipchildren 1
          ignorepointer 1
-         size 0.26 1
+         size 490 32
          halign right_ref
          valign center_ref
          hexactpos 0
          vexactpos 0
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          scriptclass "ViewBinding"
          style None
          font "gui/fonts/etelkatextpro"
@@ -1652,12 +1723,12 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass MenuCurrentFileNameCaption {
          ignorepointer 1
          position 0 0
-         size 0.1 1
+         size 150 32
          valign center_ref
          hexactpos 0
          vexactpos 0
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          text "Current File : "
          font "gui/fonts/etelkatextpro"
          "exact text" 0
@@ -1878,7 +1949,6 @@ FrameWidgetClass EditorFrame {
      }
     }
     FrameWidgetClass OrientationFrame {
-     visible 0
      ignorepointer 1
      position 300 32
      size 150 150
@@ -1901,43 +1971,264 @@ FrameWidgetClass EditorFrame {
       }
      }
     }
-    FrameWidgetClass LoggerFrame {
+    WrapSpacerWidgetClass CameraTrackWrapper {
+     visible 1
      ignorepointer 1
-     position 0.15 0.03
-     size 0.17 0.2
+     color 0.0196 0.0196 0.0196 0.7843
+     position 279 448
+     size 0.22 0.006
+     halign right_ref
      valign bottom_ref
-     hexactpos 0
-     vexactpos 0
+     hexactpos 1
+     vexactpos 1
      hexactsize 0
      vexactsize 0
+     style Colorable
+     Padding 1
+     Margin 1
+     "Size To Content V" 1
      {
-      ScrollWidgetClass LoggerScroll {
-       ignorepointer 0
-       size 1 1
+      PanelWidgetClass CameraTrackPanel {
+       ignorepointer 1
+       color 0.0784 0.0784 0.0784 1
+       position 0 0
+       size 1 24
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass CameraTrackPanelText {
+         ignorepointer 1
+         size 1 1.15
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "Cinematic Camera"
+         font "gui/fonts/etelkatextpro"
+         "size to text v" 0
+         "text halign" center
+         "text valign" center
+        }
+        PanelWidgetClass CameraTrackMinimizePanel {
+         ignorepointer 1
+         color 0.7843 0.2941 0.2745 1
+         size 26 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass CameraTrackMinimizeText {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           text "_"
+           "text halign" center
+          }
+          ButtonWidgetClass CameraTrackMinimizeButton {
+           color 1 1 1 0.1961
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           {
+            ScriptParamsClass {
+             Relay_Command "CameraTrackToggleExecute"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      ScrollWidgetClass CameraNodeScrollBar {
+       ignorepointer 1
+       color 0.3137 0.3137 0.3137 1
+       position 0 0
+       size 1 350
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
-       vexactsize 0
+       vexactsize 1
+       "Scrollbar V" 1
        {
-        WrapSpacerWidgetClass LoggerSpacer {
+        WrapSpacerWidgetClass CameraNodeList {
          ignorepointer 1
          size 1 1
          halign center_ref
-         valign bottom_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
-         Padding 0
-         Margin 0
+         Padding 1
+         Margin 1
          "Size To Content V" 1
-         content_valign bottom
          {
           ScriptParamsClass {
-           Binding_Name "EditorLogEntries"
+           Binding_Name "CameraTrackData"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass CameraTrackSliderPanel {
+       ignorepointer 1
+       color 0.0784 0.0784 0.0784 1
+       position 0 0
+       size 1 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass CameraTrackSmoothingText {
+         ignorepointer 1
+         position 2 0
+         size 135 20
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Camera Smoothing"
+         "text offset" 2 0
+         "text valign" center
+        }
+        SliderWidgetClass CameraTrackSmoothingSlider {
+         color 0.3922 0.3922 0.3922 1
+         position 150 0
+         size 0.6 16
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Editor
+         step 0.1
+         {
+          TextWidgetClass CameraTrackSmoothingReadout {
+           ignorepointer 1
+           size 35 16
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           text "0.05"
+           "text halign" center
+           "text valign" center
+           {
+            ScriptParamsClass {
+             Binding_Name "CameraTrackSmoothing"
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "CameraTrackSmoothing"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass CameraTrackButtonPanel {
+       ignorepointer 1
+       color 0.0784 0.0784 0.0784 1
+       position 0 0
+       size 1 22
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        ButtonWidgetClass AddNodeButton {
+         position 20 1
+         size 90 20
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         text "Add Node"
+         {
+          PanelWidgetClass AddButtonOutline {
+           ignorepointer 1
+           color 0.2745 0.8627 0.2745 0.9961
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.CameraTrackAddNode"
+          }
+         }
+        }
+        ButtonWidgetClass CameraTrackRunButton {
+         position 20 1
+         size 80 20
+         halign right_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         text "Run"
+         switch toggle
+         {
+          PanelWidgetClass CameraTrackButtonOutline {
+           ignorepointer 1
+           color 1 1 1 0.9961
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.CameraTrackRun"
           }
          }
         }

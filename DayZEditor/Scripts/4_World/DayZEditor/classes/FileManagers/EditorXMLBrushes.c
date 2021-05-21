@@ -3,6 +3,7 @@ class XMLEditorBrushes: XMLCallback
 {
 	private ObservableCollection<ref EditorBrushData> m_Data;
 
+	
 	void XMLEditorBrushes(ObservableCollection<ref EditorBrushData> data) 
 	{
 		EditorLog.Trace("XMLEditorBrushes");
@@ -12,13 +13,11 @@ class XMLEditorBrushes: XMLCallback
 	override void OnStart(ref XMLDocument document)
 	{
 		EditorLog.Trace("XMLEditorBrushes::OnStart");
-		EditorLog.Info("Loading Brushes...");
 	}
 	
 	override void OnSuccess(ref XMLDocument document)
 	{		
-		EditorLog.Trace("XMLEditorBrushes::OnSuccess");
-		
+		EditorLog.Info("XMLEditorBrushes::OnSuccess");
 		ref set<string> object_type_list = new set<string>();
 		
 		// <BrushTypes>
@@ -29,11 +28,10 @@ class XMLEditorBrushes: XMLCallback
 			EditorBrushData brush_settings = new EditorBrushData();
 			brush_settings.Name = brush.GetAttribute("name").ValueAsString();
 			
+
 			if (brush.GetAttribute("class")) {
+				EditorLog.Info("XMLEditorBrushes:: Code defined brush found!");
 				brush_settings.BrushClassName = brush.GetAttribute("class").ValueAsString().ToType();
-				if (brush_settings.BrushClassName) {
-					EditorLog.Info("Code Defined brush loaded: %1", brush_settings.BrushClassName.ToString());
-				}
 				
 			} else {
 			
@@ -75,8 +73,6 @@ class XMLEditorBrushes: XMLCallback
 			
 			m_Data.Insert(brush_settings);
 		}
-		
-		EditorLog.Info("Loaded %1 Brushes!", m_Data.Count().ToString());
 	}
 	
 	override void OnFailure(ref XMLDocument document)

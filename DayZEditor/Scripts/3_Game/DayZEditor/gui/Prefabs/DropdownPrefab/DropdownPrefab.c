@@ -1,70 +1,34 @@
 
-class DropdownListPrefabController<Class TValue>: Controller
+class DropdownListPrefabController: PrefabBaseController<DropdownListPrefabItem>
 {
-	ref ObservableCollection<ref DropdownListPrefabItem<TValue>> DropdownElementList = new ObservableCollection<ref DropdownListPrefabItem<TValue>>(this);
-	
-	string Caption;
-	DropdownListPrefabItemBase Value;
-	TValue CalculatedValue; // Used for things like SliderWidget output
+	ref ObservableCollection<ref DropdownListPrefabItem> DropdownElementList = new ObservableCollection<ref DropdownListPrefabItem>(this);
 	
 	void ~DropdownListPrefabController()
 	{
 		delete DropdownElementList;
 	}
-	
-	override void PropertyChanged(string property_name)
-	{
-		if (GetParent()) {
-			g_Script.Call(GetParent(), "PrefabPropertyChanged", property_name);
-		}
-	}
 }
 
-class DropdownListPrefab<Class TValue>: ScriptView
+class DropdownListPrefab: PrefabBase<DropdownListPrefabItem>
 {
+	DropdownListPrefabController m_DropdownListController;
+
 	private WrapSpacerWidget DropdownWrapper;
 	
-	private static const TValue EMPTY_VALUE;
-	
-	protected TValue m_DefaultValue;
-	
-	protected DropdownListPrefabController<TValue> m_DropdownPrefabController;
-	
-	protected Class m_BindingContext;
-	protected string m_BindingName;
-	
-	// With Direct Binding, I think we can depreciate the default_value
-	void DropdownListPrefab(string caption, Class binding_context, string binding_name, TValue default_value = EMPTY_VALUE)
+	void DropdownListPrefab(string caption, Controller binding_context, string binding_name, DropdownListPrefabItem default_value = DEFAULT_VALUE)
 	{
-		m_BindingName = binding_name;
-		m_BindingContext = binding_context;
-			
-		if (default_value == EMPTY_VALUE) {
-			EnScript.GetClassVar(m_BindingContext, m_BindingName, 0, default_value);
-		}
-		
-		Class.CastTo(m_DropdownPrefabController, m_Controller);
-		m_DropdownPrefabController.Caption = caption;
-		m_DropdownPrefabController.NotifyPropertyChanged("Caption", false);
-		
-		m_DefaultValue = default_value;
+		Class.CastTo(m_DropdownListController, m_Controller);
 	}
 	
-	DropdownListPrefabItem<TValue> InsertItem(string item_text, TValue user_data)
+	void InsertItem(string item_text, Class user_data = null)
 	{
-		return InsertItem(new DropdownListPrefabItem<TValue>(item_text, user_data));
+		InsertItem(new DropdownListPrefabItem(item_text, user_data));
 	}
 	
-	DropdownListPrefabItem<TValue> InsertItem(DropdownListPrefabItem<TValue> element)
+	void InsertItem(DropdownListPrefabItem element)
 	{
 		element.SetParent(this);
-		m_DropdownPrefabController.DropdownElementList.Insert(element);
-		
-		if (GetListItem(m_DefaultValue) == element) {
-			SetActiveListItem(element);
-		}
-		
-		return element;
+		m_DropdownListController.DropdownElementList.Insert(element);
 	}
 		
 	bool DropdownPrefabExecute(ButtonCommandArgs args)
@@ -75,9 +39,10 @@ class DropdownListPrefab<Class TValue>: ScriptView
 	
 	bool DropdownElementExecute(ButtonCommandArgs args)
 	{
-		for (int i = 0; i < m_DropdownPrefabController.DropdownElementList.Count(); i++) {
-			if (m_DropdownPrefabController.DropdownElementList[i].GetLayoutRoot().FindAnyWidget(args.Source.GetName()) == args.Source) {				
-				SetActiveListItem(m_DropdownPrefabController.DropdownElementList[i]);
+		for (int i = 0; i < m_DropdownListController.DropdownElementList.Count(); i++) {
+			if (m_DropdownListController.DropdownElementList[i].GetLayoutRoot().FindAnyWidget(args.Source.GetName()) == args.Source) {
+				m_DropdownListController.Value = m_DropdownListController.DropdownElementList[i];
+				m_DropdownListController.NotifyPropertyChanged("Value");
 				DropdownWrapper.Show(false);
 				return true;
 			}
@@ -86,38 +51,11 @@ class DropdownListPrefab<Class TValue>: ScriptView
 		return true;
 	}
 	
-	void SetActiveListItem(DropdownListPrefabItem<TValue> item)
-	{
-		m_DropdownPrefabController.Value = item;
-		m_DropdownPrefabController.NotifyPropertyChanged("Value");
-	}
-	
-	DropdownListPrefabItem<TValue> GetListItem(TValue value)
-	{
-		for (int i = 0; i < m_DropdownPrefabController.DropdownElementList.Count(); i++) {
-			if (m_DropdownPrefabController.DropdownElementList[i].GetValue() == value) {
-				return m_DropdownPrefabController.DropdownElementList[i];
-			}
-		}
-		
-		return null;
-	}
-	
-	void PrefabPropertyChanged(string property_name)
-	{
-		TValue value;
-		g_Script.CallFunction(m_DropdownPrefabController.Value, "GetValue", value, null);
-		EnScript.SetClassVar(m_BindingContext, m_BindingName, 0, value);		
-		g_Script.CallFunction(m_BindingContext, "PropertyChanged", null, m_BindingName);
-	}
-	
-	override typename GetControllerType() 
-	{
-		return (new DropdownListPrefabController<TValue>()).Type();
-	}
-	
-	override string GetLayoutFile() 
-	{
+	override string GetLayoutFile() {
 		return "DayZEditor/gui/Layouts/prefabs/Dropdown/DropdownPrefab.layout";
+	}
+	
+	override typename GetControllerType() {
+		return DropdownListPrefabController;
 	}
 }

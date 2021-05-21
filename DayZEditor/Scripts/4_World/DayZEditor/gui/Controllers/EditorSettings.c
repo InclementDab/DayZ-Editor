@@ -42,15 +42,21 @@ class EditorSettings: Controller
 	string EditorProtoFile = "$profile:/Editor/MapGroupProto.xml";
 	string EditorBrushFile = "$profile:/Editor/EditorBrushes.xml";
 	
-	LogLevel SelectedLogLevel = LogLevel.DEBUG;
+	[NonSerialized()]
+	ref DropdownListPrefabItem SelectedLogLevel;
 	
 	override void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
 						
 			case "SelectedLogLevel": {
-				EditorLog.Warning("Changed log level to %1", typename.EnumToString(LogLevel, SelectedLogLevel));
-				GetEditor().GetEditorHud().GetTemplateController().CurrentLogLevel = SelectedLogLevel;
+				
+				if (SelectedLogLevel && SelectedLogLevel.GetTemplateController() && SelectedLogLevel.GetTemplateController().UserData) {
+					Param1<LogLevel> p = Param1<LogLevel>.Cast(SelectedLogLevel.GetTemplateController().UserData);
+					if (p) {
+						EditorLog.CurrentLogLevel = p.param1;
+					}
+				}
 				break;
 			}
 			
@@ -62,14 +68,6 @@ class EditorSettings: Controller
 			case "ObjectViewDistance": {
 				GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
 				break;
-			}
-			
-			case "DebugMode": {
-				if (DebugMode) { 
-					GetEditor().GetEditorHud().GetTemplateController().CurrentLogLevel = LogLevel.TRACE;
-				} else {
-					GetEditor().GetEditorHud().GetTemplateController().CurrentLogLevel = LogLevel.DEBUG;
-				}
 			}
 		}
 	}	

@@ -2,8 +2,6 @@
 
 class EditorLog
 {
-	static ref ScriptInvoker OnLog = new ScriptInvoker();
-	
 	static LogLevel CurrentLogLevel = LogLevel.TRACE;
 	static string ExclusiveLogMode;
 	
@@ -12,12 +10,6 @@ class EditorLog
 	static void EditorPrint(string msg, LogLevel level)
 	{
 		if (level >= EditorLog.CurrentLogLevel) {
-			
-			if (!OnLog) {
-				OnLog = new ScriptInvoker();
-			}
-			
-			OnLog.Invoke(level, msg);
 			
 			if (level == LogLevel.ERROR) {
 				Error2("Editor Error", msg);
@@ -47,6 +39,7 @@ class EditorLog
 			}
 		}
 	}
+	
 	
 	static void Trace(string msg, string param1 = "", string param2 = "", string param3 = "", string param4 = "", string param5 = "", string param6 = "", string param7 = "", string param8 = "", string param9 = "")
 	{
