@@ -69,6 +69,8 @@ class EditorHudController: EditorControllerBase
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
 		
 		EditorLog.OnLog.Insert(OnEditorLog);
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 #endif
 	}
 	
@@ -81,6 +83,8 @@ class EditorHudController: EditorControllerBase
 		EditorEvents.OnObjectDeselected.Remove(OnObjectDeselected);
 		
 		EditorLog.OnLog.Remove(OnEditorLog);
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 #endif
 	}
 	
@@ -95,6 +99,100 @@ class EditorHudController: EditorControllerBase
 		
 		EditorHudToolbarView = new EditorHudToolbar();
 		NotifyPropertyChanged("EditorHudToolbarView");
+	}
+	
+	array<vector> GetCameraTrackPositions()
+	{
+		array<vector> positions = {};
+		array<EditorCameraTrackListItemController> camera_tracks = GetCameraTrackControllers();
+		/*int count = camera_tracks.Count();
+		camera_tracks[0].Position0 = camera_tracks[0].GetPosition();
+		camera_tracks[count - 1].Position0 = camera_tracks[count - 1].GetPosition();
+		
+		EditorCameraTrackListItemController previous;
+		EditorCameraTrackListItemController current;
+		EditorCameraTrackListItemController next;
+	
+		array<ref CameraTrackPointBlockInformation> blocks();
+		
+		float t = 0.0;
+		float norm_dist = 1.0;
+	
+		vector point0;
+		vector point1 = camera_tracks[0].Position0;
+	
+		vector dir0;
+		vector dir1;
+	
+		for (int i = 1; i < count; i++)
+		{
+		    previous = camera_tracks[i - 1];
+		    current = camera_tracks[i];
+		
+		    if (i < count - 1)
+		    {
+		        next = camera_tracks[i + 1];
+		        current.Position0 = current.GetPosition();
+		    }
+	
+			dir0 = vector.Direction(previous.Position0, current.Position0);
+			float len = dir0.Normalize();
+			dir1 = -dir0.Perpend();
+	
+			float len_scale = len * CameraTrackSmoothing / 100.0;
+	
+			norm_dist = 1.0;
+			if (len_scale != 0.0) norm_dist = Math.Clamp(1.0 / len_scale, 0.0, 1.0);
+	
+			CameraTrackPointBlockInformation block = new CameraTrackPointBlockInformation(dir1, norm_dist, new array<vector>());
+			blocks.Insert(block);
+	
+			t = 0.0;
+			while (t <= 1.0)
+			{
+				point0 = point1;
+				point1 = previous.Position0 + (dir0 * len * t);
+	
+				block.param3.Insert(point1);
+	
+				t += norm_dist;
+			}
+		}
+	
+		count = blocks.Count();
+	
+		if (count < 2) return;
+		
+		for (i = 1; i < count; i++)
+		{
+			dir0 = blocks[i - 1].param1;
+			dir1 = blocks[i].param1;
+	
+			norm_dist = blocks[i].param2;
+	
+			array<vector> points = blocks[i].param3;
+			int midPoint = points.Count() / 2;
+			for (int j = 0; j < midPoint; j++)
+			{
+				vector norm_dir = (dir0 * (1.0 - norm_dist)) + (dir1 * norm_dist);
+				norm_dir.Normalize();
+	
+				positions.Insert(points[j] + (norm_dir * (CameraTrackSmoothing / 100.0)));
+			}
+		}
+		*/
+		return positions;
+	}
+	
+	void Update()
+	{
+		Debug.DestroyAllShapes();
+	
+		array<vector> positions = GetCameraTrackPositions();
+
+		for (int i = 1; i < positions.Count(); i++) {
+			Debug.DrawLine(positions[i - 1], positions[i], COLOR_WHITE, ShapeFlags.NOZBUFFER);
+		}
 	}
 			
 	void InsertMapMarker(EditorMarker map_marker)
@@ -497,6 +595,18 @@ class EditorHudController: EditorControllerBase
 	private void OnObjectDeselected(Class context, EditorObject target)
 	{
 		InfobarObjPosFrame.Show(m_Editor.GetObjectManager().GetSelectedObjects().Count() > 0);
+	}
+	
+	array<EditorCameraTrackListItemController> GetCameraTrackControllers()
+	{
+		array<EditorCameraTrackListItemController> dta = {};
+		for (int i = 0; i < CameraTrackData.Count(); i++) {
+			if (CameraTrackData[i]) {
+				dta.Insert(CameraTrackData[i].GetTemplateController());
+			}
+		}		
+		
+		return dta;
 	}
 	
 	void SetInfoObjectPosition(vector position)
