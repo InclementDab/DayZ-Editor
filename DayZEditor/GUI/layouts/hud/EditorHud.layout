@@ -2117,7 +2117,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
-         Padding 0
+         Padding 4
          Margin 0
          "Size To Content V" 1
          {
