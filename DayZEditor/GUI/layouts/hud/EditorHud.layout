@@ -2028,7 +2028,7 @@ FrameWidgetClass EditorFrame {
        ignorepointer 1
        color 0.0784 0.0784 0.0784 1
        position 0 0
-       size 1 24
+       size 1 25
        halign center_ref
        valign bottom_ref
        hexactpos 1
@@ -2055,7 +2055,7 @@ FrameWidgetClass EditorFrame {
         PanelWidgetClass CameraTrackMinimizePanel {
          ignorepointer 1
          color 0.7843 0.2941 0.2745 1
-         size 26 24
+         size 25 25
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -2071,7 +2071,8 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           text "_"
+           text "-"
+           "exact text" 0
            "text halign" center
           }
           ButtonWidgetClass CameraTrackMinimizeButton {
@@ -2180,14 +2181,14 @@ FrameWidgetClass EditorFrame {
            "text valign" center
            {
             ScriptParamsClass {
-             Binding_Name "CameraTrackSmoothing"
+             Binding_Name "CameraSmoothing"
             }
            }
           }
          }
          {
           ScriptParamsClass {
-           Binding_Name "CameraTrackSmoothing"
+           Binding_Name "CameraSmoothing"
            Two_Way_Binding 1
           }
          }

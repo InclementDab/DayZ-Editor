@@ -20,15 +20,19 @@ class EditorHudController: EditorControllerBase
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
+	// Main data
 	ref EditorHudToolbar EditorHudToolbarView;
 	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 		= new ObservableCollection<ref EditorListItem>(this);
 	
+	// Logger
 	LogLevel CurrentLogLevel = LogLevel.DEBUG;
 	static const int MAX_LOG_ENTRIES = 15;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
 	
+	// Camera Tools
+	float CameraSmoothing = 50.0;
 	ref ObservableCollection<ref EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<ref EditorCameraTrackListItem>(this);
 
 	// View Properties
