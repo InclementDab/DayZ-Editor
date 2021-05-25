@@ -398,7 +398,7 @@ class EditorHudController: EditorControllerBase
 			camera.SetOrientation(start_ctrl.GetOrientation());
 			
 			int td = 0;
-			while (td < start_ctrl.Time * 1000) {
+			while (td <= start_ctrl.Time * 1000) {
 				if (!m_CameraTrackRunning) return; // cancel
 				float time_value = 1 / (start_ctrl.Time * 1000) * td;
 				//vector center_point = AverageVectors(ctrl.GetPosition(), next_ctrl.GetPosition()) + vector.Up * ((CameraTrackSmoothing / 100) * vector.Distance(ctrl.GetPosition(), next_ctrl.GetPosition()));
