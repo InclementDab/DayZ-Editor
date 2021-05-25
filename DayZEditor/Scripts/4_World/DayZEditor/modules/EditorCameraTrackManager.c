@@ -189,4 +189,14 @@ class EditorCameraTrackManagerModule: JMModuleBase
 	{
 		
 	}
+	
+	override bool IsClient() 
+	{	
+		return true;
+	}
+	
+	override bool IsServer() 
+	{
+		return false;
+	}
 }

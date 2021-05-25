@@ -169,6 +169,4 @@ class EditorObjectManagerModule: JMModuleBase
 	{
 		return true;
 	}
-	
 }
-

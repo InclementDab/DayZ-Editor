@@ -334,6 +334,7 @@ class Editor
 				
 				if (!target || target == m_EditorHud.EditorMapWidget) {
 					ClearSelection();
+					GetCameraTrackManager().ClearSelection();
 				}
 				
 				if (!GetBrush() && GetSelectedObjects().Count() == 0) {
