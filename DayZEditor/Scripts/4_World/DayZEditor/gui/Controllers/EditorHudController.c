@@ -11,11 +11,6 @@ class EditorHudController: EditorControllerBase
 	string SearchBarData;
 	
 	int PlaceableCategorySelection = 0;
-
-	bool BuildingSelectData = true;
-	bool VehicleSelectData;
-	bool EntitySelectData;
-	bool HumanSelectData;
 	
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
