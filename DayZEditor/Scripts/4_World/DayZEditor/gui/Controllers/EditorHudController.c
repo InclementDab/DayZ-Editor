@@ -18,9 +18,6 @@ class EditorHudController: EditorControllerBase
 	// Main data
 	ref EditorHudToolbar EditorHudToolbarView;
 	
-	// todo: move to JMModule
-	protected ref EditorCameraTrackManager m_EditorCameraTrackManager 		= new EditorCameraTrackManager();
-	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 		= new ObservableCollection<ref EditorListItem>(this);
 	
@@ -237,7 +234,7 @@ class EditorHudController: EditorControllerBase
 	{
 		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
 		string name = "CameraTrack" + CameraTrackData.Count();
-		m_EditorCameraTrackManager.InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
+		GetEditor().GetCameraTrackManager().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
 	}
 
 	void OnCameraTrackStart()
@@ -392,10 +389,5 @@ class EditorHudController: EditorControllerBase
 		NotifyPropertyChanged("obj_x");
 		NotifyPropertyChanged("obj_y");
 		NotifyPropertyChanged("obj_z");
-	}
-	
-	EditorCameraTrackManager GetCameraTrackManager()
-	{
-		return m_EditorCameraTrackManager;
 	}
 }

@@ -65,6 +65,7 @@ class Editor
 	// private references
 	private EditorHudController 				m_EditorHudController;
 	private EditorObjectManagerModule 			m_ObjectManager;	
+	private EditorCameraTrackManagerModule		m_CameraTrackManager;
 	
 	private bool 								m_Active;
 	string 										EditorSettingsFile = "$profile:/Editor/Settings.json";
@@ -109,6 +110,10 @@ class Editor
 		// Object Manager
 		EditorLog.Info("Initializing Object Manager");
 		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
+		
+		// Camera Track Manager
+		EditorLog.Info("Initializing Camera Track Manager");
+		m_CameraTrackManager = EditorCameraTrackManagerModule.Cast(GetModuleManager().GetModule(EditorCameraTrackManagerModule));
 		
 		// Command Manager
 		EditorLog.Info("Initializing Command Manager");
@@ -932,12 +937,7 @@ class Editor
 	{
 		m_ActionStack.InsertAction(action);
 	}
-	
-	EditorCameraTrackManager GetCameraTrackManager()
-	{
-		return GetEditorHud().GetTemplateController().GetCameraTrackManager();
-	}
-		
+			
 	// Just annoying
 	static string GetWorldName()
 	{
@@ -1040,6 +1040,7 @@ class Editor
 	EditorHud GetEditorHud() return m_EditorHud;
 	EditorCamera GetCamera() return m_EditorCamera;
 	EditorObjectManagerModule GetObjectManager() return m_ObjectManager;
+	EditorCameraTrackManagerModule GetCameraTrackManager() return m_CameraTrackManager;
 	EditorObjectMap GetSelectedObjects() return m_ObjectManager.GetSelectedObjects(); 
 	EditorObjectMap GetPlacedObjects() return m_ObjectManager.GetPlacedObjects(); 
 	EditorObjectDataMap GetSessionCache() return m_SessionCache; 		

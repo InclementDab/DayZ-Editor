@@ -1,14 +1,23 @@
-class EditorCameraTrackManager
+class EditorCameraTrackManagerModule: JMModuleBase
 {
-	ref ScriptInvoker OnTrackStart = new ScriptInvoker;
-	ref ScriptInvoker OnTrackStop = new ScriptInvoker;
+	ref ScriptInvoker OnTrackStart;
+	ref ScriptInvoker OnTrackStop;
 	
-	ref array<ref EditorCameraTrackListItem> CameraTracks = {};
-	ref array<EditorCameraTrackListItem> SelectedCameraTracks = {};
+	ref array<ref EditorCameraTrackListItem> CameraTracks;
+	ref array<EditorCameraTrackListItem> SelectedCameraTracks;
 	
 	protected bool m_CameraTrackRunning;
 	protected vector m_CameraTrackStartPosition;
 	protected vector m_CameraTrackStartOrientation;
+	
+	override void Init()
+	{
+		OnTrackStart = new ScriptInvoker();
+		OnTrackStop = new ScriptInvoker();
+		
+		CameraTracks = {};
+		SelectedCameraTracks = {};
+	}
 	
 	void InsertCameraTrack(EditorCamera camera, float time, string name)
 	{
