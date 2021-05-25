@@ -3,9 +3,6 @@ class EditorCameraTrackManager
 	ref ScriptInvoker OnTrackStart = new ScriptInvoker;
 	ref ScriptInvoker OnTrackStop = new ScriptInvoker;
 	
-	// Binding
-	float CameraSmoothing = 50.0;
-	
 	ref array<ref EditorCameraTrackListItem> CameraTracks = {};
 	ref array<EditorCameraTrackListItem> SelectedCameraTracks = {};
 	
@@ -63,6 +60,7 @@ class EditorCameraTrackManager
 	{
 		EditorLog.Trace("EditorCameraTrackManager::InsertCameraTrack");
 		SelectedCameraTracks.RemoveItem(camera_track_item);
+		camera_track_item.OnDeselected();
 	}
 	
 	void ClearSelection()

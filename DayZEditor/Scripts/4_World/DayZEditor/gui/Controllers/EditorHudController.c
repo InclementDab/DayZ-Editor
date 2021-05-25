@@ -18,6 +18,7 @@ class EditorHudController: EditorControllerBase
 	// Main data
 	ref EditorHudToolbar EditorHudToolbarView;
 	
+	// todo: move to JMModule
 	protected ref EditorCameraTrackManager m_EditorCameraTrackManager 		= new EditorCameraTrackManager();
 	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
@@ -28,6 +29,8 @@ class EditorHudController: EditorControllerBase
 	static const int MAX_LOG_ENTRIES = 15;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
 	
+	// Camera bindings
+	float CameraSmoothing = 50.0;
 	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
 
 	// View Properties
@@ -234,7 +237,7 @@ class EditorHudController: EditorControllerBase
 	{
 		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
 		string name = "CameraTrack" + CameraTrackData.Count();
-		GetEditor().GetCameraTrackManager().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
+		m_EditorCameraTrackManager.InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
 	}
 
 	void OnCameraTrackStart()
@@ -379,18 +382,6 @@ class EditorHudController: EditorControllerBase
 	private void OnObjectDeselected(Class context, EditorObject target)
 	{
 		InfobarObjPosFrame.Show(m_Editor.GetObjectManager().GetSelectedObjects().Count() > 0);
-	}
-	
-	array<EditorCameraTrackListItemController> GetCameraTrackControllers()
-	{
-		array<EditorCameraTrackListItemController> dta = {};
-		for (int i = 0; i < CameraTrackData.Count(); i++) {
-			if (CameraTrackData[i]) {
-				dta.Insert(CameraTrackData[i].GetTemplateController());
-			}
-		}		
-		
-		return dta;
 	}
 	
 	void SetInfoObjectPosition(vector position)
