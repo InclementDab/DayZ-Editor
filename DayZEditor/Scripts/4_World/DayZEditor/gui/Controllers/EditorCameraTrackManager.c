@@ -59,8 +59,8 @@ class EditorCameraTrackManager
 	void DeselectCameraTrack(EditorCameraTrackListItem camera_track_item)
 	{
 		EditorLog.Trace("EditorCameraTrackManager::InsertCameraTrack");
-		SelectedCameraTracks.RemoveItem(camera_track_item);
 		camera_track_item.OnDeselected();
+		SelectedCameraTracks.RemoveOrdered(SelectedCameraTracks.Find(camera_track_item));
 	}
 	
 	void ClearSelection()
@@ -78,7 +78,12 @@ class EditorCameraTrackManager
 	
 	array<EditorCameraTrackListItem> GetSelectedTracks()
 	{
-		return SelectedCameraTracks;
+		array<EditorCameraTrackListItem> result = {};
+		foreach (EditorCameraTrackListItem selected: SelectedCameraTracks) {
+			result.Insert(selected);
+		}
+		
+		return result;
 	}
 	
 	int CameraTrackCount()
