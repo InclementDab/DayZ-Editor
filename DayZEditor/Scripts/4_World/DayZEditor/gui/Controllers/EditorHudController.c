@@ -103,11 +103,24 @@ class EditorHudController: EditorControllerBase
 	void Update()
 	{
 		Debug.DestroyAllShapes();
-	
-		array<vector> positions = GetCameraTrackPositions();
 
-		for (int i = 1; i < positions.Count(); i++) {
-			Debug.DrawLine(positions[i - 1], positions[i], COLOR_WHITE, ShapeFlags.NOZBUFFER);
+		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
+		for (int i = 0; i < camera_tracks.Count(); i++) {
+			EditorCameraTrackListItemController start_ctrl = camera_tracks[i].GetData();
+			if (!camera_tracks[i + 1]) {
+				continue;
+			}
+			
+			EditorCameraTrackListItemController end_ctrl = camera_tracks[i + 1].GetData();
+			
+			float value = 0;
+			vector last_position = start_ctrl.GetPosition();
+			while (value <= 1.0) {
+				vector position = EditorMath.LerpVector(start_ctrl.GetPosition(), end_ctrl.GetPosition(), value);
+				Debug.DrawLine(last_position, position, COLOR_WHITE);
+				last_position = position;
+				value += 0.05;
+			}
 		}
 	}
 			

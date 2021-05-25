@@ -1,5 +1,7 @@
 class EditorCameraTrackListItemController: Controller
 {	
+	protected Object m_WorldObject;
+	
 	string Name;
 	StringEvaluater pX, pY, pZ;
 	StringEvaluater oX, oY, oZ;
@@ -8,6 +10,16 @@ class EditorCameraTrackListItemController: Controller
 	
 	bool CollapseTab = false;
 	Widget CollapsePanel;
+	
+	void EditorCameraTrackListItemController()
+	{
+		m_WorldObject = GetGame().CreateObject("CinematicCamera", vector.Zero, true);
+	}
+	
+	void ~EditorCameraTrackListItemController()
+	{
+		GetGame().ObjectDelete(m_WorldObject);
+	}
 	
 	vector GetPosition()
 	{
@@ -24,6 +36,26 @@ class EditorCameraTrackListItemController: Controller
 		switch (property_name) {
 			case "CollapseTab": {
 				CollapsePanel.Show(CollapseTab);
+				break;
+			}
+			
+			case "pX":
+			case "pY":
+			case "pZ": {
+				if (m_WorldObject) {
+					m_WorldObject.SetPosition(GetPosition());
+					m_WorldObject.Update();
+				}
+				break;
+			}
+			
+			case "oX": 
+			case "oY":
+			case "oZ": {
+				if (m_WorldObject) {
+					m_WorldObject.SetOrientation(GetOrientation());
+					m_WorldObject.Update();
+				}
 				break;
 			}
 		}
