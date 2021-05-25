@@ -938,12 +938,12 @@ class Editor
 		m_ActionStack.InsertAction(action);
 	}
 	
-	static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
+	static PlayerBase CreateDefaultCharacter(vector position = "0 0 0")
 	{
 		EditorLog.Trace("Editor::CreateDefaultCharacter");
-		DayZPlayer player;
+		PlayerBase player;
 		if (GetWorkbenchGame().GetPlayer()) {
-			return GetWorkbenchGame().GetPlayer();
+			return PlayerBase.Cast(GetWorkbenchGame().GetPlayer());
 		} 
 		
 		if (Class.CastTo(player, GetWorkbenchGame().CreatePlayer(null, GetWorkbenchGame().CreateRandomPlayer(), position, 0, "NONE"))) {
