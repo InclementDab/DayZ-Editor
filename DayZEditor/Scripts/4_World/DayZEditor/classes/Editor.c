@@ -937,6 +937,27 @@ class Editor
 	{
 		m_ActionStack.InsertAction(action);
 	}
+	
+	static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
+	{
+		EditorLog.Trace("Editor::CreateDefaultCharacter");
+		DayZPlayer player;
+		if (GetWorkbenchGame().GetPlayer()) {
+			return GetWorkbenchGame().GetPlayer();
+		} 
+		
+		if (Class.CastTo(player, GetWorkbenchGame().CreatePlayer(null, GetWorkbenchGame().CreateRandomPlayer(), position, 0, "NONE"))) {
+			player.GetInventory().CreateInInventory("AviatorGlasses");
+	    	player.GetInventory().CreateInInventory("Shirt_RedCheck");
+	    	player.GetInventory().CreateInInventory("Jeans_Blue");
+	    	player.GetInventory().CreateInInventory("WorkingBoots_Brown");
+	    	player.GetInventory().CreateInInventory("ConstructionHelmet_Yellow");
+	    	player.GetInventory().CreateInInventory("CivilianBelt");
+	    	player.GetInventory().CreateInInventory("TaloonBag_Blue");
+		}
+	
+	    return player;
+	}
 			
 	// Just annoying
 	static string GetWorldName()

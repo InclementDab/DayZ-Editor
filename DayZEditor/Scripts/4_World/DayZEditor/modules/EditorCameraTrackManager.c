@@ -1,3 +1,17 @@
+class EditorCameraTrack
+{
+	vector Position;
+	vector Orientation;
+	float Time;
+	bool Flip;
+	string Name;
+	
+	EditorCameraTrackListItem GetEditorCameraTrackListItem()
+	{
+		return new EditorCameraTrackListItem(Position, Orientation, Time, Name, Flip);
+	}
+}
+
 class EditorCameraTrackManagerModule: JMModuleBase
 {
 	ref ScriptInvoker OnTrackStart;

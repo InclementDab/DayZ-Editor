@@ -13,25 +13,6 @@ static const string LIST_ITEM_DEFAULT_ICON = "DayZEditor/gui/images/dayz_editor_
 
 static const float BOUNDING_BOX_THICKNESS = 0.015;
 
-static DayZPlayer CreateDefaultCharacter(vector position = "0 0 0")
-{
-	EditorLog.Trace("CreateDefaultCharacter");
-	DayZPlayer player;
-	if (GetWorkbenchGame().GetPlayer()) {
-		return GetWorkbenchGame().GetPlayer();
-	} 
-	
-	if (Class.CastTo(player, GetWorkbenchGame().CreatePlayer(null, GetWorkbenchGame().CreateRandomPlayer(), position, 0, "NONE"))) {
-		player.GetInventory().CreateInInventory("AviatorGlasses");
-    	player.GetInventory().CreateInInventory("MilitaryBoots_Black");
-    	player.GetInventory().CreateInInventory("AliceBag_Black");
-    	player.GetInventory().CreateInInventory("LeatherGloves_Black");
-		
-	}
-
-    return player;
-}
-
 static void SpawnStaticObject(string type, vector position, vector orientation)
 {
 	EditorLog.Trace("SpawnStaticObject %1", type);
