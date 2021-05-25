@@ -43,10 +43,21 @@ class EditorCameraTrackManager
 		GetEditor().InsertAction(action);
 	}
 	
-	void DeleteCameraTracks(array<EditorCameraTrackListItem> camera_track_item)
+	void DeleteCameraTracks(array<EditorCameraTrackListItem> camera_track_list, bool create_undo = true)
 	{
 		EditorLog.Trace("EditorCameraTrackManager::RemoveCameraTrack");
 		
+		EditorAction action = new EditorAction("CreateCameraTrack", "DeleteCameraTrack");
+		foreach (EditorCameraTrackListItem camera_track_item: camera_track_list) {
+			action.InsertUndoParameter(camera_track_item.GetSerializedData());
+			action.InsertRedoParameter(camera_track_item.GetSerializedData());
+			CameraTracks.Remove(CameraTracks.Find(camera_track_item));
+			delete camera_track_item;
+		}
+		
+		if (create_undo) {
+			GetEditor().InsertAction(action);
+		}
 	}
 	
 	void SelectCameraTrack(EditorCameraTrackListItem camera_track_item)
