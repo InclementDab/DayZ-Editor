@@ -954,6 +954,7 @@ class Editor
 	    	player.GetInventory().CreateInInventory("ConstructionHelmet_Yellow");
 	    	player.GetInventory().CreateInInventory("CivilianBelt");
 	    	player.GetInventory().CreateInInventory("TaloonBag_Blue");
+			player.GetHumanInventory().CreateInHands("SledgeHammer");
 		}
 	
 	    return player;
