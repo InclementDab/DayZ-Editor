@@ -387,63 +387,32 @@ class EditorHudController: EditorControllerBase
 		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
 		for (int i = 0; i < camera_tracks.Count(); i++) {
 			if (!m_CameraTrackRunning) return; // cancel
-			EditorCameraTrackListItemController ctrl = camera_tracks[i].GetData();
-			
+			EditorCameraTrackListItemController start_ctrl = camera_tracks[i].GetData();
 			if (!camera_tracks[i + 1]) {
 				continue;
 			}
 			
-			EditorCameraTrackListItemController center_ctrl = camera_tracks[i + 1].GetData();
+			EditorCameraTrackListItemController end_ctrl = camera_tracks[i + 1].GetData();			
 			
-			if (!camera_tracks[i + 2]) {
-				continue;
-			}
-			
-			EditorCameraTrackListItemController next_ctrl = camera_tracks[i + 2].GetData();
-			vector start_position = ctrl.GetPosition();
-			vector start_orientation = ctrl.GetOrientation();
-			camera.SetPosition(start_position);
-			camera.SetOrientation(start_orientation);
+			camera.SetPosition(start_ctrl.GetPosition());
+			camera.SetOrientation(start_ctrl.GetOrientation());
 			
 			int td = 0;
-			vector point = ctrl.GetPosition();
-			while (td <= ctrl.Time * 1000) {
+			while (td <= start_ctrl.Time * 1000) {
 				if (!m_CameraTrackRunning) return; // cancel
-				float time_value = 1 / (ctrl.Time * 1000) * td;
+				float time_value = 1 / (start_ctrl.Time * 1000) * td;
 				//vector center_point = AverageVectors(ctrl.GetPosition(), next_ctrl.GetPosition()) + vector.Up * ((CameraTrackSmoothing / 100) * vector.Distance(ctrl.GetPosition(), next_ctrl.GetPosition()));
-				point = EditorMath.CalculateQuadraticBezierPoint(time_value, ctrl.GetPosition(), center_ctrl.GetPosition(), next_ctrl.GetPosition());
+				//point = EditorMath.CalculateQuadraticBezierPoint(time_value, start_ctrl.GetPosition(), center_ctrl.GetPosition(), next_ctrl.GetPosition());
 				
-				camera.SetPosition(point);
+				vector position = EditorMath.LerpVector(start_ctrl.GetPosition(), end_ctrl.GetPosition(), time_value);
+				camera.SetPosition(position);
 				
-				vector orientation;
-				orientation[0] = EditorMath.SmoothLerp(start_orientation[0], next_ctrl.oX.Parse(), time_value);
-				orientation[1] = EditorMath.SmoothLerp(start_orientation[1], next_ctrl.oY.Parse(), time_value);
-				orientation[2] = EditorMath.SmoothLerp(start_orientation[2], next_ctrl.oZ.Parse(), time_value);
+				vector orientation = EditorMath.SmoothLerpVector(start_ctrl.GetOrientation(), end_ctrl.GetOrientation(), time_value);
 				camera.SetOrientation(orientation);
 
 				td += 10;
 				Sleep(10);
 			}
-						
-			
-			/*int td = 0;
-			while (td < ctrl.Time * 1000) {
-				float time_value = 1 / (ctrl.Time * 1000) * td;
-				vector position;
-				position[0] = EditorMath.SmoothLerp(start_position[0], next_pos.pX.Parse(), time_value);
-				position[1] = EditorMath.SmoothLerp(start_position[1], next_pos.pY.Parse(), time_value);
-				position[2] = EditorMath.SmoothLerp(start_position[2], next_pos.pZ.Parse(), time_value);
-				camera.SetPosition(position);
-				
-				vector orientation;
-				orientation[0] = EditorMath.SmoothLerp(start_orientation[0], next_pos.oX.Parse(), time_value);
-				orientation[1] = EditorMath.SmoothLerp(start_orientation[1], next_pos.oY.Parse(), time_value);
-				orientation[2] = EditorMath.SmoothLerp(start_orientation[2], next_pos.oZ.Parse(), time_value);
-				camera.SetOrientation(orientation);
-				
-				td += 10;
-				Sleep(10);
-			}*/
 		}
 		
 		CameraTrackStop();
