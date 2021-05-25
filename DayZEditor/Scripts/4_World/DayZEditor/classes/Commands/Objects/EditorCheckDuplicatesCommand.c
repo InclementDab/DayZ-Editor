@@ -34,15 +34,15 @@ class EditorCheckDuplicatesCommand: EditorCommand
 		}
 		
 		if (duplicate_objects.Count() == 0) {
-			EditorMessageBox.Show("Duplicate Checker", "No duplicate objects found in search", MessageBoxButtons.OK);
+			EditorMessageBox.Show(GetName(), "No duplicate objects found in search", MessageBoxButtons.OK);
 			EditorLog.Info("No duplicate objects found!");
 			return;
 		}
 		
 		EditorLog.Info("%1 duplicate objects found in search", duplicate_objects.Count().ToString());
 		
-		DialogResult result = EditorMessageBox.Show("Duplicate Checker", string.Format("%1 duplicate objects found in search, delete?", duplicate_objects.Count()), MessageBoxButtons.YesNo);
-		if (result == DialogResult.No) {
+		DialogResult result = EditorMessageBox.Show(GetName(), string.Format("%1 duplicate objects found in search, delete?", duplicate_objects.Count()), MessageBoxButtons.YesNo);
+		if (result != DialogResult.Yes) {
 			return;
 		}
 		
@@ -51,6 +51,6 @@ class EditorCheckDuplicatesCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Check Duplicates";
+		return "Check for Duplicates";
 	}
 }
