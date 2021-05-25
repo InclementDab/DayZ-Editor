@@ -84,34 +84,20 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 		SetData(position, orientation, time, flip);
 	}
 	
-	//Gorm add highlight on mouse enter
-	void Select() 
+	void OnSelected() 
 	{
 		IsSelected = true;
 		CameraTrackGroupWrapper.SetColor(COLOR_BLUE);
 		MainContainerWrapper.SetColor(COLOR_SALMON);
 		CameraTrackOptionButton.SetColor(COLOR_BLUE);
+	}
 		
-		// not a fan
-		GetEditor().GetEditorHud().SelectedCameraTracks.Insert(this);
-	}
-	
-	void Highlight()
-	{
-		//CameraTrackGroupWrapper.SetColor(COLOR_BLUE_HIGHLIGHT);
-		MainContainerWrapper.SetColor(COLOR_BLUE_HIGHLIGHT_OUTLINE);
-		//CameraTrackOptionButton.SetColor(COLOR_BLUE_LIGHT);
-	}
-	
-	void Deselect() 
+	void OnDeselected() 
 	{	
 		IsSelected = false;
 		CameraTrackGroupWrapper.SetColor(COLOR_DEFAULT_PANEL);
 		MainContainerWrapper.SetColor(COLOR_DEFAULT_OUTLINE);
 		CameraTrackOptionButton.SetColor(COLOR_DEFAULT_ICON);
-		
-		// not a fan
-		GetEditor().GetEditorHud().SelectedCameraTracks.RemoveItem(this);
 	}
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
@@ -126,9 +112,9 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 		}
 		
 		if (!IsSelected) {
-			Select();
+			GetEditor().GetCameraTrackManager().SelectCameraTrack(this);
 		} else {
-			Deselect();
+			GetEditor().GetCameraTrackManager().DeselectCameraTrack(this);
 		}
 		
 		return true;
@@ -137,7 +123,7 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		if (!IsSelected) {
-			Highlight();
+			MainContainerWrapper.SetColor(COLOR_BLUE_HIGHLIGHT_OUTLINE);
 		}
 		
 		return true;
@@ -146,7 +132,7 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		if (!IsSelected) {
-			Deselect();
+			MainContainerWrapper.SetColor(COLOR_DEFAULT_OUTLINE);
 		}
 		
 		return true;
@@ -159,7 +145,7 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	
 	void OnDeleteExecute(ButtonCommandArgs args)
 	{
-		GetEditor().DeleteCameraTrack(this);
+		GetEditor().GetCameraTrackManager().DeleteCameraTrack(this);
 	}
 	
 	void OnFlyToExecute(ButtonCommandArgs args)

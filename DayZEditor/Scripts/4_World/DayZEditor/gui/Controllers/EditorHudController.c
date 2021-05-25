@@ -27,6 +27,8 @@ class EditorHudController: EditorControllerBase
 	LogLevel CurrentLogLevel = LogLevel.DEBUG;
 	static const int MAX_LOG_ENTRIES = 15;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
+	
+	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
 
 	// View Properties
 	protected Widget LeftbarFrame;
@@ -46,9 +48,6 @@ class EditorHudController: EditorControllerBase
 	protected Widget CameraTrackWrapper;
 	protected ButtonWidget CameraTrackRunButton;
 	protected Widget CameraTrackButtonOutline;
-	protected bool m_CameraTrackRunning;
-	protected vector m_CameraTrackStartPosition;
-	protected vector m_CameraTrackStartOrientation;
 	
 	// Temp until sub controllers can be properties of parent controller
 	EditorHudToolbarController GetToolbarController() 
@@ -101,7 +100,7 @@ class EditorHudController: EditorControllerBase
 	void Update()
 	{
 		Debug.DestroyAllShapes();
-
+/*
 		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
 		for (int i = 0; i < camera_tracks.Count(); i++) {
 			EditorCameraTrackListItemController start_ctrl = camera_tracks[i].GetData();
@@ -119,7 +118,7 @@ class EditorHudController: EditorControllerBase
 				last_position = position;
 				value += 0.05;
 			}
-		}
+		}*/
 	}
 			
 	void InsertMapMarker(EditorMarker map_marker)
@@ -235,12 +234,11 @@ class EditorHudController: EditorControllerBase
 	{
 		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
 		string name = "CameraTrack" + CameraTrackData.Count();
-		GetEditor().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
+		GetEditor().GetCameraTrackManager().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
 	}
 
 	void OnCameraTrackStart()
 	{
-		m_CameraTrackRunning = true;
 		CameraTrackRunButton.SetText("Stop");
 		CameraTrackRunButton.SetColor(COLOR_RED);
 		CameraTrackButtonOutline.SetColor(COLOR_RED);
@@ -248,69 +246,12 @@ class EditorHudController: EditorControllerBase
 	
 	void OnCameraTrackStop()
 	{
-		m_CameraTrackRunning = false;
 		CameraTrackRunButton.SetText("Start");
 		CameraTrackRunButton.SetColor(COLOR_WHITE_A);
 		CameraTrackButtonOutline.SetColor(COLOR_WHITE);
 		CameraTrackRunButton.SetState(1);
 	}
 	
-	bool IsCameraTrackRunning()
-	{
-		return m_CameraTrackRunning;
-	}
-	
-	private void _RunCameraTrack()
-	{
-		m_CameraTrackRunning = true;
-		EditorCamera camera = GetEditor().GetCamera();
-		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
-		for (int i = 0; i < camera_tracks.Count(); i++) {
-			if (!m_CameraTrackRunning) return; // cancel
-			EditorCameraTrackListItemController start_ctrl = camera_tracks[i].GetData();
-			if (!camera_tracks[i + 1]) {
-				continue;
-			}
-			
-			EditorCameraTrackListItemController end_ctrl = camera_tracks[i + 1].GetData();			
-			
-			camera.SetPosition(start_ctrl.GetPosition());
-			camera.SetOrientation(start_ctrl.GetOrientation());
-			
-			int td = 0;
-			while (td <= start_ctrl.Time * 1000) {
-				if (!m_CameraTrackRunning) return; // cancel
-				float time_value = 1 / (start_ctrl.Time * 1000) * td;
-				//vector center_point = AverageVectors(ctrl.GetPosition(), next_ctrl.GetPosition()) + vector.Up * ((CameraTrackSmoothing / 100) * vector.Distance(ctrl.GetPosition(), next_ctrl.GetPosition()));
-				//point = EditorMath.CalculateQuadraticBezierPoint(time_value, start_ctrl.GetPosition(), center_ctrl.GetPosition(), next_ctrl.GetPosition());
-				
-				vector position = EditorMath.LerpVector(start_ctrl.GetPosition(), end_ctrl.GetPosition(), time_value);
-				camera.SetPosition(position);
-				
-				vector orientation = EditorMath.SmoothLerpVector(start_ctrl.GetOrientation(), end_ctrl.GetOrientation(), time_value);
-				camera.SetOrientation(orientation);
-
-				td += 10;
-				Sleep(10);
-			}
-		}
-		
-		CameraTrackStop();
-	}
-	
-	
-	array<EditorCameraTrackListItem> GetCameraTracks()
-	{
-		array<EditorCameraTrackListItem> dta = {};
-		for (int i = 0; i < CameraTrackData.Count(); i++) {
-			if (CameraTrackData[i]) {
-				dta.Insert(CameraTrackData[i]);
-			}
-		}		
-		
-		return dta;
-	}
-
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseButtonDown");

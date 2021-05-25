@@ -149,7 +149,7 @@ class EditorAction
 	{
 		EditorLog.Trace("EditorAction::CreateCameraTrack %1", params.param5);
 		EditorCameraTrackListItem list_item(params.param1, params.param2, params.param3, params.param5, params.param4);
-		GetEditor().GetEditorHud().GetTemplateController().InsertCameraTrack(list_item);
+		GetEditor().GetEditorHud().GetTemplateController().GetCameraTrackManager().InsertCameraTrack(list_item);
 	}
 	
 	void DeleteCameraTrack(SerializedCameraTrack params)

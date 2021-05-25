@@ -2,9 +2,8 @@ class EditorCameraTrackAddNode: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorHudController hud_controller = m_Editor.GetEditorHud().GetTemplateController();
-		string name = "CameraTrack" + hud_controller.GetCameraTrackManager().CameraTrackCount();
-		m_Editor.InsertCameraTrack(m_Editor.GetCamera(), 1.0, name);
+		string name = "CameraTrack" + m_Editor.GetCameraTrackManager().CameraTrackCount();
+		m_Editor.GetCameraTrackManager().InsertCameraTrack(m_Editor.GetCamera(), 1.0, name);
 	}
 	
 	override string GetName() 

@@ -2,9 +2,10 @@ class EditorDeleteCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		if (m_Editor.GetEditorHud().SelectedCameraTracks.Count() > 0) {
-			EditorLog.Info("Deleting %1 Camera Tracks", m_Editor.GetEditorHud().SelectedCameraTracks.Count().ToString());
-			GetEditor().DeleteCameraTracks(m_Editor.GetEditorHud().SelectedCameraTracks);
+		EditorCameraTrackManager manager = m_Editor.GetEditorHud().GetTemplateController().GetCameraTrackManager();
+		if (manager.GetSelectedTracks().Count() > 0) {
+			EditorLog.Info("Deleting %1 Camera Tracks", manager.GetSelectedTracks().Count().ToString());
+			manager.DeleteCameraTracks(manager.GetSelectedTracks());
 			return;
 		}
 		
