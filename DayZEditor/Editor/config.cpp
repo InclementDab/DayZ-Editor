@@ -110,5 +110,6 @@ class CfgVehicles
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\CinematicCamera.p3d";
+		hiddenSelections[] = {"CinematicCameraHighlight"};
 	};
 };
