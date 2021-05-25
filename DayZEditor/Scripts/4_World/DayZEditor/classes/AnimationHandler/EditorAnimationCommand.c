@@ -1,4 +1,4 @@
-class EditorAnimationCommand: HumanCommandScript
+/*class EditorAnimationCommand: HumanCommandScript
 {
 	protected DayZPlayer m_Player;
 	protected EditorAnimationManagerTable m_Table;
@@ -32,4 +32,4 @@ class EditorAnimationCommand: HumanCommandScript
 	{
 		m_NeedFinish = true;
 	}
-}
+}*/

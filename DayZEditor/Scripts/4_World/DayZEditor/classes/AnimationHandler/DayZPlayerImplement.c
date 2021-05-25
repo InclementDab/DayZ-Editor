@@ -1,4 +1,4 @@
-modded class DayZPlayerImplement
+/*modded class DayZPlayerImplement
 {
 	protected bool m_EditorAnimationStart;
 	protected bool m_EditorAnimationStop;
@@ -53,4 +53,4 @@ modded class DayZPlayerImplement
 		EditorAnimationStart("CMD_Jump");
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(EditorAnimationStart, 50, false, "CMD_LandImmediate");
 	}
-}
+}*/
