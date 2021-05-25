@@ -90,6 +90,8 @@ class EditorCommandManager
 		RegisterCommand(EditorExportToEvents);
 		RegisterCommand(EditorExportToMapGroupPos);
 		RegisterCommand(EditorExportLoaderCache);
+		
+		RegisterCommand(EditorCheckDuplicatesCommand);
 	
 		RegisterCommand(EditorImportFromInit);
 		RegisterCommand(EditorImportFromExpansion);

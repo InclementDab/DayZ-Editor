@@ -1,4 +1,4 @@
-class EditorAnimationManagerTable
+/*class EditorAnimationManagerTable
 {
 	int CMD_Action;
 	int CMD_ActionID;
@@ -16,4 +16,4 @@ class EditorAnimationManagerTable
 			CMD_ActionID = anim_split[1].ToInt();
 		}
 	}
-}
+}*/
