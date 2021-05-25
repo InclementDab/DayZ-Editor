@@ -181,35 +181,6 @@ class EditorHudController: EditorControllerBase
 				break;
 			}			
 			
-			case "BuildingSelectData": 
-			case "VehicleSelectData": 
-			case "HumanSelectData": 
-			case "EntitySelectData": {
-				/*
-				TStringArray select_data = {"BuildingSelectData", "VehicleSelectData", "EntitySelectData", "HumanSelectData"};
-				
-				// Radio Button esque
-				foreach (string data: select_data) {
-					if (data != property_name) {
-						bool result;
-						EnScript.GetClassVar(this, data, 0, result);
-						if (result) {
-							EnScript.SetClassVar(this, data, 0, false);
-							NotifyPropertyChanged(data, false);
-						}
-					}
-				}
-				
-				for (int i = 0; i < LeftbarSpacerData.Count(); i++) {
-					EditorPlaceableListItem list_item = LeftbarSpacerData[i];
-					if (list_item) {
-						list_item.GetLayoutRoot().Show(list_item.GetCategory() == select_data.Find(property_name));
-					}
-				}
-				*/
-				break;
-			}
-			
 			case "cam_x":
 			case "cam_y":
 			case "cam_z": {				
