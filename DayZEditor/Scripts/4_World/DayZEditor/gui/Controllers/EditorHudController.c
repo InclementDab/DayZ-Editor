@@ -18,6 +18,8 @@ class EditorHudController: EditorControllerBase
 	// Main data
 	ref EditorHudToolbar EditorHudToolbarView;
 	
+	protected ref EditorCameraTrackManager m_EditorCameraTrackManager 		= new EditorCameraTrackManager();
+	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 		= new ObservableCollection<ref EditorListItem>(this);
 	
@@ -25,10 +27,6 @@ class EditorHudController: EditorControllerBase
 	LogLevel CurrentLogLevel = LogLevel.DEBUG;
 	static const int MAX_LOG_ENTRIES = 15;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
-	
-	// Camera Tools
-	float CameraSmoothing = 50.0;
-	ref ObservableCollection<ref EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<ref EditorCameraTrackListItem>(this);
 
 	// View Properties
 	protected Widget LeftbarFrame;
@@ -240,30 +238,16 @@ class EditorHudController: EditorControllerBase
 		GetEditor().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
 	}
 
-	void CameraTrackDeleteNode(ButtonCommandArgs args)
+	void OnCameraTrackStart()
 	{
-		EditorLog.Trace("EditorHudController::CameraTrackDeleteNode");
-	}	
-	
-	//
-	// Gorm adding stuff to see if it works for testing.
-	void CameraTrackStart()
-	{
-		m_CameraTrackStartPosition = GetEditor().GetCamera().GetPosition();
-		m_CameraTrackStartOrientation = GetEditor().GetCamera().GetOrientation();
-				
 		m_CameraTrackRunning = true;
 		CameraTrackRunButton.SetText("Stop");
 		CameraTrackRunButton.SetColor(COLOR_RED);
 		CameraTrackButtonOutline.SetColor(COLOR_RED);
-		thread _RunCameraTrack();
 	}
 	
-	void CameraTrackStop()
+	void OnCameraTrackStop()
 	{
-		GetEditor().GetCamera().SetPosition(m_CameraTrackStartPosition);
-		GetEditor().GetCamera().SetPosition(m_CameraTrackStartOrientation);
-		
 		m_CameraTrackRunning = false;
 		CameraTrackRunButton.SetText("Start");
 		CameraTrackRunButton.SetColor(COLOR_WHITE_A);
@@ -325,16 +309,6 @@ class EditorHudController: EditorControllerBase
 		}		
 		
 		return dta;
-	}
-	
-	void InsertCameraTrack(EditorCameraTrackListItem camera_track_item)
-	{
-		CameraTrackData.Insert(camera_track_item);
-	}
-	
-	void RemoveCameraTrack(EditorCameraTrackListItem camera_track_item)
-	{
-		CameraTrackData.Remove(CameraTrackData.Find(camera_track_item));
 	}
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
@@ -486,5 +460,10 @@ class EditorHudController: EditorControllerBase
 		NotifyPropertyChanged("obj_x");
 		NotifyPropertyChanged("obj_y");
 		NotifyPropertyChanged("obj_z");
+	}
+	
+	EditorCameraTrackManager GetCameraTrackManager()
+	{
+		return m_EditorCameraTrackManager;
 	}
 }
