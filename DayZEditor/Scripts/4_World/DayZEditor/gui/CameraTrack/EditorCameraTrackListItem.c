@@ -111,7 +111,7 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 			m_TemplateController.NotifyPropertyChanged("CollapseTab");
 		}
 		
-		if (!IsSelected) {
+		if (!IsSelected && button == 0) {
 			GetEditor().GetCameraTrackManager().SelectCameraTrack(this);
 		} else {
 			GetEditor().GetCameraTrackManager().DeselectCameraTrack(this);
