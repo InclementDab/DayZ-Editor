@@ -1,5 +1,7 @@
+typedef Param2<vector, vector> EventDataPair;
+
 class EditorEventsFile: EditorFileType
-{
+{	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
 	{
 		if (FileExist(file) && !DeleteFile(file)) {
@@ -12,12 +14,27 @@ class EditorEventsFile: EditorFileType
 			return;
 		}
 		
+		// type
+		//			array of position, orientation
+		map<string, ref array<ref EventDataPair>> optimized_positions();
+		
+		foreach (EditorObjectData editor_object: data.EditorObjects) {
+			if (!optimized_positions[editor_object.Type]) {
+				optimized_positions[editor_object.Type] = new array<ref EventDataPair>();
+			}
+			
+			optimized_positions[editor_object.Type].Insert(new EventDataPair(editor_object.Position, editor_object.Orientation));
+		}
+		
 		FPrintln(handle, "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
 		FPrintln(handle, "<events>");
 		
-		foreach (EditorObjectData editor_object: data.EditorObjects) {
-			FPrintln(handle, string.Format("	<event name=\"%1\">", editor_object.Type));			
-			FPrintln(handle, string.Format("		<pos x=\"%1\" y=\"%2\" z=\"%3\" a=\"%4\"/>", editor_object.Position[0], editor_object.Position[1], editor_object.Position[2], editor_object.Orientation[1] + 180));
+		foreach (string type, ref array<ref EventDataPair> event_datas: optimized_positions) {
+			FPrintln(handle, string.Format("	<event name=\"%1\">", type));			
+			foreach (EventDataPair event_data: event_datas) {
+				FPrintln(handle, string.Format("		<pos x=\"%1\" y=\"%2\" z=\"%3\" a=\"%4\"/>", event_data.param1[0], event_data.param1[1], event_data.param1[2], event_data.param2[0]));
+			}
+			
 			FPrintln(handle, string.Format("	</event>"));
 		}
 		
