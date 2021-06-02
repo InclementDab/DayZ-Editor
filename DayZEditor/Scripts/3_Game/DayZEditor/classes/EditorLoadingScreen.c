@@ -16,11 +16,8 @@ modded class LoadingScreen
 		m_ImageLogoMid.Show(false);
 		m_ImageLogoCorner.Show(false);
 		
-		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", Math.RandomIntInclusive(0, LOADING_SCREEN_COUNT)));
-		m_ImageWidgetBackground.SetImage(0);
 		m_ImageWidgetBackground.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		m_ImageWidgetBackground.GetPos(back_x, back_y);
-	
 		//m_EditorLogo = game.GetLoadingWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorLogo.layout", m_ImageWidgetBackground);
 				
 		//thread AnimateEditorLogo();
@@ -46,6 +43,9 @@ modded class LoadingScreen
 		super.Show();
 		m_ImageLogoMid.Show(false);
 		m_ImageLogoCorner.Show(false);
+		
+		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", Math.RandomIntInclusive(0, LOADING_SCREEN_COUNT)));
+		m_ImageWidgetBackground.SetImage(0);
 	}
 	
 	private void AnimateEditorLogo()
