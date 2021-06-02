@@ -2,21 +2,24 @@ modded class LoadingScreen
 {
 	static const int LOADING_SCREEN_COUNT = 12;
 	
+	protected bool m_EditorImagePicked;
 	protected Widget m_EditorLogo;
 	
 	void LoadingScreen(DayZGame game)
 	{		
-		m_ImageLogoMid.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_icon_black.edds");
+		m_ImageLogoMid.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
 		m_ImageLogoMid.SetImage(0);
 		m_ImageLogoMid.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
-		m_ImageLogoCorner.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_icon_black.edds");
+
+		
+		m_ImageLogoCorner.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
 		m_ImageLogoCorner.SetImage(0);
-		m_ImageLogoCorner.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
+		m_ImageLogoCorner.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND);
 		
 		m_ImageLogoMid.Show(true);
 		m_ImageLogoCorner.Show(true);
 		
-		m_ImageWidgetBackground.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
+		m_ImageWidgetBackground.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND);
 		m_ImageWidgetBackground.GetPos(back_x, back_y);
 		//m_EditorLogo = game.GetLoadingWorkspace().CreateWidgets("DayZEditor/gui/layouts/EditorLogo.layout", m_ImageWidgetBackground);
 				
@@ -41,11 +44,15 @@ modded class LoadingScreen
 	override void Show()
 	{
 		super.Show();
-		m_ImageLogoMid.Show(false);
-		m_ImageLogoCorner.Show(false);
+		//m_ImageLogoMid.Show(false);
+		//m_ImageLogoCorner.Show(false);
 		
-		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", Math.RandomIntInclusive(0, LOADING_SCREEN_COUNT)));
-		m_ImageWidgetBackground.SetImage(0);
+		// this solution is hacky, but Math.Random doesnt work in the constructor of this
+		if (!m_EditorImagePicked) {
+			m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", Math.RandomIntInclusive(0, LOADING_SCREEN_COUNT)));
+			m_ImageWidgetBackground.SetImage(0);
+			m_EditorImagePicked = true;
+		}
 	}
 	
 	private void AnimateEditorLogo()
