@@ -411,6 +411,5 @@ FodyWeavers.xsd
 
 # Developer tokens
 DevData.cs
-*.png
 .key/InclementDab.txt
 .key/InclementDab.bikey
