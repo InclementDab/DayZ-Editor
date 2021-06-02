@@ -6,15 +6,15 @@ modded class LoadingScreen
 	
 	void LoadingScreen(DayZGame game)
 	{		
-		m_ImageLogoMid.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
+		m_ImageLogoMid.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_icon_black.edds");
 		m_ImageLogoMid.SetImage(0);
 		m_ImageLogoMid.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
-		m_ImageLogoCorner.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
+		m_ImageLogoCorner.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_icon_black.edds");
 		m_ImageLogoCorner.SetImage(0);
 		m_ImageLogoCorner.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
-				
-		m_ImageLogoMid.Show(false);
-		m_ImageLogoCorner.Show(false);
+		
+		m_ImageLogoMid.Show(true);
+		m_ImageLogoCorner.Show(true);
 		
 		m_ImageWidgetBackground.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		m_ImageWidgetBackground.GetPos(back_x, back_y);
