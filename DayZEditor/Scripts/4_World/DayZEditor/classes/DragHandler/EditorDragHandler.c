@@ -20,7 +20,7 @@ class EditorDragHandler
 		EditorAction drag_undo = new EditorAction("SetTransform", "SetTransform");
 		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {
-			drag_undo.InsertUndoParameter(selected_object, selected_object.GetTransformArray());
+			drag_undo.InsertUndoParameter(selected_object.GetTransformArray());
 			
 			if (EntityAI.Cast(selected_object.GetWorldObject())) {
 				EntityAI.Cast(selected_object.GetWorldObject()).DisableSimulation(true);
@@ -38,7 +38,7 @@ class EditorDragHandler
 		} 
 		
 		foreach (EditorObject selected_object_post: selected_objects) {
-			drag_undo.InsertRedoParameter(selected_object_post, selected_object_post.GetTransformArray());
+			drag_undo.InsertRedoParameter(selected_object_post.GetTransformArray());
 			
 			if (EntityAI.Cast(selected_object.GetWorldObject())) {
 				EntityAI.Cast(selected_object.GetWorldObject()).DisableSimulation(false);

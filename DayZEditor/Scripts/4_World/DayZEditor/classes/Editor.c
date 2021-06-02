@@ -65,6 +65,7 @@ class Editor
 	// private references
 	private EditorHudController 				m_EditorHudController;
 	private EditorObjectManagerModule 			m_ObjectManager;	
+	private EditorCameraTrackManagerModule		m_CameraTrackManager;
 	
 	private bool 								m_Active;
 	string 										EditorSettingsFile = "$profile:/Editor/Settings.json";
@@ -109,6 +110,10 @@ class Editor
 		// Object Manager
 		EditorLog.Info("Initializing Object Manager");
 		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
+		
+		// Camera Track Manager
+		EditorLog.Info("Initializing Camera Track Manager");
+		m_CameraTrackManager = EditorCameraTrackManagerModule.Cast(GetModuleManager().GetModule(EditorCameraTrackManagerModule));
 		
 		// Command Manager
 		EditorLog.Info("Initializing Command Manager");
@@ -329,6 +334,7 @@ class Editor
 				
 				if (!target || target == m_EditorHud.EditorMapWidget) {
 					ClearSelection();
+					GetCameraTrackManager().ClearSelection();
 				}
 				
 				if (!GetBrush() && GetSelectedObjects().Count() == 0) {
@@ -776,8 +782,8 @@ class Editor
 		if (!editor_object) return null;
 		
 		EditorAction action = new EditorAction("Delete", "Create");
-		action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-		action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+		action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+		action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 		
 		if (create_undo) {
 			InsertAction(action);
@@ -803,8 +809,8 @@ class Editor
 			EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
 			if (!editor_object) continue;
 			
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 			
 			object_set.Insert(editor_object.GetID(), editor_object);
 
@@ -822,8 +828,8 @@ class Editor
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
 		if (!editor_object.Locked && editor_object.Show) {
-			action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 			m_ObjectManager.DeleteObject(editor_object);
 		}
 		
@@ -838,8 +844,8 @@ class Editor
 
 		foreach (int id, EditorObject editor_object: editor_object_map) {
 			if (!editor_object.Locked && editor_object.Show) {
-				action.InsertUndoParameter(editor_object, new Param1<int>(editor_object.GetID()));
-				action.InsertRedoParameter(editor_object, new Param1<int>(editor_object.GetID()));
+				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);
 			}
 		}
@@ -860,8 +866,8 @@ class Editor
 		if (!map_object) return false;
 		if (CF.ObjectManager.IsMapObjectHidden(map_object)) return false;
 		EditorAction action = new EditorAction("Unhide", "Hide");
-		action.InsertUndoParameter(map_object, new Param1<Object>(map_object));
-		action.InsertRedoParameter(map_object, new Param1<Object>(map_object));
+		action.InsertUndoParameter(new Param1<Object>(map_object));
+		action.InsertRedoParameter(new Param1<Object>(map_object));
 		
 		CF.ObjectManager.HideMapObject(map_object);
 
@@ -880,8 +886,8 @@ class Editor
 	void LockObject(EditorObject editor_object)
 	{
 		EditorAction action = new EditorAction("Unlock", "Lock");
-		action.InsertUndoParameter(editor_object, new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(editor_object, new Param1<EditorObject>(editor_object));
+		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
+		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));
 		
 		editor_object.Lock(true);
 		
@@ -891,8 +897,8 @@ class Editor
 	void UnlockObject(EditorObject editor_object)
 	{
 		EditorAction action = new EditorAction("Lock", "Unlock");
-		action.InsertUndoParameter(editor_object, new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(editor_object, new Param1<EditorObject>(editor_object));
+		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
+		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));
 		
 		editor_object.Lock(false);
 		
@@ -933,6 +939,28 @@ class Editor
 		m_ActionStack.InsertAction(action);
 	}
 	
+	static PlayerBase CreateDefaultCharacter(vector position = "0 0 0")
+	{
+		EditorLog.Trace("Editor::CreateDefaultCharacter");
+		PlayerBase player;
+		if (GetWorkbenchGame().GetPlayer()) {
+			return PlayerBase.Cast(GetWorkbenchGame().GetPlayer());
+		} 
+		
+		if (Class.CastTo(player, GetWorkbenchGame().CreatePlayer(null, GetWorkbenchGame().CreateRandomPlayer(), position, 0, "NONE"))) {
+			player.GetInventory().CreateInInventory("AviatorGlasses");
+	    	player.GetInventory().CreateInInventory("Shirt_RedCheck");
+	    	player.GetInventory().CreateInInventory("Jeans_Blue");
+	    	player.GetInventory().CreateInInventory("WorkingBoots_Brown");
+	    	player.GetInventory().CreateInInventory("ConstructionHelmet_Yellow");
+	    	player.GetInventory().CreateInInventory("CivilianBelt");
+	    	player.GetInventory().CreateInInventory("TaloonBag_Blue");
+			player.GetHumanInventory().CreateInHands("SledgeHammer");
+		}
+	
+	    return player;
+	}
+			
 	// Just annoying
 	static string GetWorldName()
 	{
@@ -1035,6 +1063,7 @@ class Editor
 	EditorHud GetEditorHud() return m_EditorHud;
 	EditorCamera GetCamera() return m_EditorCamera;
 	EditorObjectManagerModule GetObjectManager() return m_ObjectManager;
+	EditorCameraTrackManagerModule GetCameraTrackManager() return m_CameraTrackManager;
 	EditorObjectMap GetSelectedObjects() return m_ObjectManager.GetSelectedObjects(); 
 	EditorObjectMap GetPlacedObjects() return m_ObjectManager.GetPlacedObjects(); 
 	EditorObjectDataMap GetSessionCache() return m_SessionCache; 		

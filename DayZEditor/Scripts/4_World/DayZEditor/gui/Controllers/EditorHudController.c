@@ -11,24 +11,25 @@ class EditorHudController: EditorControllerBase
 	string SearchBarData;
 	
 	int PlaceableCategorySelection = 0;
-
-	bool BuildingSelectData = true;
-	bool VehicleSelectData;
-	bool EntitySelectData;
-	bool HumanSelectData;
 	
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
+	// Main data
 	ref EditorHudToolbar EditorHudToolbarView;
 	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 		= new ObservableCollection<ref EditorListItem>(this);
 	
+	// Logger
 	LogLevel CurrentLogLevel = LogLevel.DEBUG;
 	static const int MAX_LOG_ENTRIES = 15;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
 	
+	// Camera bindings
+	float CameraSmoothing = 50.0;
+	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
+
 	// View Properties
 	protected Widget LeftbarFrame;
 	protected ImageWidget LeftbarHideIcon;
@@ -43,8 +44,14 @@ class EditorHudController: EditorControllerBase
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected EditBoxWidget LeftbarSearchBar;
 	
+	// Camera Track
+	protected Widget CameraTrackWrapper;
+	protected ButtonWidget CameraTrackRunButton;
+	protected Widget CameraTrackButtonOutline;
+	
 	// Temp until sub controllers can be properties of parent controller
-	EditorHudToolbarController GetToolbarController() {
+	EditorHudToolbarController GetToolbarController() 
+	{
 		return EditorHudToolbarController.Cast(EditorHudToolbarView.GetController());
 	}
 	
@@ -58,6 +65,8 @@ class EditorHudController: EditorControllerBase
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
 		
 		EditorLog.OnLog.Insert(OnEditorLog);
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 #endif
 	}
 	
@@ -70,6 +79,8 @@ class EditorHudController: EditorControllerBase
 		EditorEvents.OnObjectDeselected.Remove(OnObjectDeselected);
 		
 		EditorLog.OnLog.Remove(OnEditorLog);
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 #endif
 	}
 	
@@ -84,6 +95,30 @@ class EditorHudController: EditorControllerBase
 		
 		EditorHudToolbarView = new EditorHudToolbar();
 		NotifyPropertyChanged("EditorHudToolbarView");
+	}
+		
+	void Update()
+	{
+		Debug.DestroyAllShapes();
+/*
+		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
+		for (int i = 0; i < camera_tracks.Count(); i++) {
+			EditorCameraTrackListItemController start_ctrl = camera_tracks[i].GetData();
+			if (!camera_tracks[i + 1]) {
+				continue;
+			}
+			
+			EditorCameraTrackListItemController end_ctrl = camera_tracks[i + 1].GetData();
+			
+			float value = 0;
+			vector last_position = start_ctrl.GetPosition();
+			while (value <= 1.0) {
+				vector position = EditorMath.LerpVector(start_ctrl.GetPosition(), end_ctrl.GetPosition(), value);
+				Debug.DrawLine(last_position, position, COLOR_WHITE);
+				last_position = position;
+				value += 0.05;
+			}
+		}*/
 	}
 			
 	void InsertMapMarker(EditorMarker map_marker)
@@ -151,35 +186,6 @@ class EditorHudController: EditorControllerBase
 				break;
 			}			
 			
-			case "BuildingSelectData": 
-			case "VehicleSelectData": 
-			case "HumanSelectData": 
-			case "EntitySelectData": {
-				/*
-				TStringArray select_data = {"BuildingSelectData", "VehicleSelectData", "EntitySelectData", "HumanSelectData"};
-				
-				// Radio Button esque
-				foreach (string data: select_data) {
-					if (data != property_name) {
-						bool result;
-						EnScript.GetClassVar(this, data, 0, result);
-						if (result) {
-							EnScript.SetClassVar(this, data, 0, false);
-							NotifyPropertyChanged(data, false);
-						}
-					}
-				}
-				
-				for (int i = 0; i < LeftbarSpacerData.Count(); i++) {
-					EditorPlaceableListItem list_item = LeftbarSpacerData[i];
-					if (list_item) {
-						list_item.GetLayoutRoot().Show(list_item.GetCategory() == select_data.Find(property_name));
-					}
-				}
-				*/
-				break;
-			}
-			
 			case "cam_x":
 			case "cam_y":
 			case "cam_z": {				
@@ -217,7 +223,35 @@ class EditorHudController: EditorControllerBase
 		EditorCollapsibleListItem category(null);
 		RightbarSpacerData.Insert(category);
 	}	
+	
+	void CameraTrackToggleExecute(ButtonCommandArgs args) 
+	{
+		EditorLog.Trace("EditorHudController::CameraTrackToggleExecute");
+		CameraTrackWrapper.Show(!CameraTrackWrapper.IsVisible());
+	}
 
+	void CameraTrackInsertNode(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
+		string name = "CameraTrack" + CameraTrackData.Count();
+		GetEditor().GetCameraTrackManager().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
+	}
+
+	void OnCameraTrackStart()
+	{
+		CameraTrackRunButton.SetText("Stop");
+		CameraTrackRunButton.SetColor(COLOR_RED);
+		CameraTrackButtonOutline.SetColor(COLOR_RED);
+	}
+	
+	void OnCameraTrackStop()
+	{
+		CameraTrackRunButton.SetText("Start");
+		CameraTrackRunButton.SetColor(COLOR_WHITE_A);
+		CameraTrackButtonOutline.SetColor(COLOR_WHITE);
+		CameraTrackRunButton.SetState(1);
+	}
+	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseButtonDown");

@@ -107,6 +107,26 @@ class EditorMath
 		c.SetActive(false);
 	}
 	
+	static vector LerpVector(vector p1, vector p2, float time)
+	{
+		vector v1;
+		for (int i = 0; i < 3; i++) {
+			v1[i] = Math.Lerp(p1[i], p2[i], time);
+		}
+		
+		return v1;
+	}
+	
+	static vector SmoothLerpVector(vector p1, vector p2, float time)
+	{
+		vector v1;
+		for (int i = 0; i < 3; i++) {
+			v1[i] = SmoothLerp(p1[i], p2[i], time);
+		}
+		
+		return v1;
+	}
+	
 	// vector::RotateAroundPoint is broken
 	static vector RotateAroundPoint(vector point, vector pos, vector axis, float cosAngle, float sinAngle)
     {

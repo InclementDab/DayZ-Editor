@@ -22,8 +22,8 @@ class EditorAction
 	private string name;
 	private bool undone = false;
 	
-	ref map<int, ref Param> UndoParameters = new map<int, ref Param>();
-	ref map<int, ref Param> RedoParameters = new map<int, ref Param>();
+	ref array<ref Param> UndoParameters = {};
+	ref array<ref Param> RedoParameters = {};
 	
 	string m_UndoAction, m_RedoAction;
 			
@@ -56,7 +56,7 @@ class EditorAction
 	{
 		EditorLog.Trace("EditorAction::CallUndo %1", name);		
 		undone = true;
-		foreach (int id, Param param: UndoParameters) {
+		foreach (Param param: UndoParameters) {
 			g_Script.Call(this, m_UndoAction, param);
 		}
 	}
@@ -65,35 +65,21 @@ class EditorAction
 	{
 		EditorLog.Trace("EditorAction::CallRedo %1", name);
 		undone = false;
-		foreach (int id, Param param: RedoParameters) {
+		foreach (Param param: RedoParameters) {
 			g_Script.Call(this, m_RedoAction, param);
 		}
 	}
 	
-	void InsertUndoParameter(Object source, Param params)
+	void InsertUndoParameter(Param params)
 	{
-		//EditorLog.Trace("InsertUndoParameter %1", source.GetID().ToString());		
-		UndoParameters.Insert(source.GetID(), params);
-	}	
-	
-	void InsertUndoParameter(EditorObject source, Param params)
+		UndoParameters.Insert(params);
+	}
+			
+	void InsertRedoParameter(Param params)
 	{
-		//EditorLog.Trace("InsertUndoParameter %1", source.GetID().ToString());
-		UndoParameters.Insert(source.GetID(), params);
-	}	
-		
-	void InsertRedoParameter(Object source, Param params)
-	{
-		//EditorLog.Trace("InsertRedoParameter %1", source.GetID().ToString());		
-		RedoParameters.Insert(source.GetID(), params);
+		RedoParameters.Insert(params);
 	}
 	
-	void InsertRedoParameter(EditorObject source, Param params)
-	{
-		//EditorLog.Trace("InsertRedoParameter %1", source.GetID().ToString());		
-		RedoParameters.Insert(source.GetID(), params);
-	}
-
 	void Create(Param1<int> params)
 	{
 		//EditorLog.Trace("EditorAction::Create %1", params.param1.ToString());
@@ -157,5 +143,23 @@ class EditorAction
 	void Unlock(Param1<EditorObject> param)
 	{
 		param.param1.Lock(false);
+	}
+	
+	void CreateCameraTrack(SerializedCameraTrack params)
+	{
+		EditorLog.Trace("EditorAction::CreateCameraTrack %1", params.param5);
+		EditorCameraTrackListItem list_item(params.param1, params.param2, params.param3, params.param5, params.param4);
+		GetEditor().GetCameraTrackManager().InsertCameraTrack(list_item);
+	}
+	
+	void DeleteCameraTrack(SerializedCameraTrack params)
+	{
+		EditorLog.Trace("EditorAction::DeleteCameraTrack %1", params.param1.ToString());
+		
+		/*foreach (EditorCameraTrackListItem list_item: GetEditor().GetEditorHud().GetTemplateController().CameraTrackItems) {
+			
+		}*/
+		
+		//GetEditor().GetEditorHud().GetTemplateController().RemoveCameraTrack(params.param1);	
 	}
 }

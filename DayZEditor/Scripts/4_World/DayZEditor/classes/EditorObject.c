@@ -320,18 +320,18 @@ class EditorObject: EditorWorldObject
 			
 			case "Position": {
 				EditorAction position_undo = new EditorAction("SetTransform", "SetTransform");
-				position_undo.InsertUndoParameter(this, GetTransformArray());
+				position_undo.InsertUndoParameter(GetTransformArray());
 				SetPosition(Position);
-				position_undo.InsertRedoParameter(this, GetTransformArray());
+				position_undo.InsertRedoParameter(GetTransformArray());
 				GetEditor().InsertAction(position_undo);
 				break;
 			}
 			
 			case "Orientation": {
 				EditorAction orientation_undo = new EditorAction("SetTransform", "SetTransform");
-				orientation_undo.InsertUndoParameter(this, GetTransformArray());
+				orientation_undo.InsertUndoParameter(GetTransformArray());
 				SetOrientation(Orientation);
-				orientation_undo.InsertRedoParameter(this, GetTransformArray());
+				orientation_undo.InsertRedoParameter(GetTransformArray());
 				GetEditor().InsertAction(orientation_undo);
 				break;
 			}

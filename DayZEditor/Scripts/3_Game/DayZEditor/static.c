@@ -139,3 +139,10 @@ static const int COLOR_BLACK	= -16777216;
 static const int COLOR_WHITE 	= -1;
 static const int COLOR_WHITE_A	= 855638015;
 static const int COLOR_EMPTY 	= 0;
+//CameraTrackColors
+static const int COLOR_BLUE_LIGHT	= ARGB(120, 57, 148, 230);
+static const int COLOR_BLUE_HIGHLIGHT 	= ARGB(245, 10, 10, 40);
+static const int COLOR_BLUE_HIGHLIGHT_OUTLINE 	= ARGB(255, 73, 170, 255);
+static const int COLOR_DEFAULT_OUTLINE 	= ARGB(225, 255, 255, 255);
+static const int COLOR_DEFAULT_PANEL 	= ARGB(245, 45, 45, 45);
+static const int COLOR_DEFAULT_ICON     = ARGB(70,255,255,255);

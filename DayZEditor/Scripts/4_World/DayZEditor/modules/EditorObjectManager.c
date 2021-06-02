@@ -1,4 +1,3 @@
-
 class EditorObjectManagerModule: JMModuleBase
 {
 	// strong reference of Placed Objects
@@ -170,6 +169,4 @@ class EditorObjectManagerModule: JMModuleBase
 	{
 		return true;
 	}
-	
 }
-

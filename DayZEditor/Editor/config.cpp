@@ -105,4 +105,11 @@ class CfgVehicles
 		scope=2;
 		model="DZ\gear\food\eeg.p3d";
 	};
+
+	class CinematicCamera: HouseNoDestruct
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\CinematicCamera.p3d";
+		hiddenSelections[] = {"CinematicCameraHighlight"};
+	};
 };

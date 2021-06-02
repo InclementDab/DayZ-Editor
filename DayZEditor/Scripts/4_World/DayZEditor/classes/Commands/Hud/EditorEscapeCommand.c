@@ -22,6 +22,11 @@ class EditorEscapeCommand: EditorCommand
 			return;
 		}
 		
+		if (m_Editor.GetCameraTrackManager().GetSelectedTracks().Count() > 0) {
+			m_Editor.GetCameraTrackManager().ClearSelection();
+			return;
+		}
+		
 		if (m_Editor.GetEditorHud().IsMapVisible()) {
 			m_Editor.GetEditorHud().EditorMapWidget.Show(false);
 			return;
