@@ -1,7 +1,8 @@
 modded class LoadingScreen
 {
-	static const int LOADING_SCREEN_COUNT = 12;
-		
+	static const int LOADING_SCREEN_COUNT = 13;
+	protected bool m_ShownImageLoaded;
+	
 	void LoadingScreen(DayZGame game)
 	{		
 		m_ImageLogoMid.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
@@ -17,6 +18,8 @@ modded class LoadingScreen
 		
 		float x, y, w, h;
 		m_ImageLogoMid.GetPos(x, y);
+		x -= 60; // i just dont like the original position
+		m_ImageLogoMid.SetPos(x, y);
 		m_ImageLogoMid.GetSize(w, h);
 		m_ImageLogoMid.SetColor(ARGB(150, 30, 30, 30));
 		m_ImageLogoCorner.Show(true);
@@ -35,14 +38,12 @@ modded class LoadingScreen
 		m_ModdedWarning.Show(false);
 		
 		// nice
-		string str = game.GetTime().ToString();
-		int val;
-		for (int i = 0; i < str.Length(); i++) {
-			val += str[i].ToInt();
-		}
-		
+		int val = TickCount(0);
+		val = val + (val << 7);
+		val = val + (val << 19);
+		val = val + (val << 37);
+		val = Math.AbsInt(val);
 		val = val % LOADING_SCREEN_COUNT;
-		
 		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", val));
 		m_ImageWidgetBackground.SetImage(0);
 	}
@@ -51,7 +52,10 @@ modded class LoadingScreen
 	{
 		super.Show();
 		
-		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", Math.RandomIntInclusive(0, LOADING_SCREEN_COUNT)));
-		m_ImageWidgetBackground.SetImage(0);
+		if (!m_ShownImageLoaded) { 
+			//m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", Math.RandomIntInclusive(0, LOADING_SCREEN_COUNT)));
+			//m_ImageWidgetBackground.SetImage(0);
+			//m_ShownImageLoaded = true;
+		}
 	}
 }
