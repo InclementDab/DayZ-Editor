@@ -1,6 +1,6 @@
 modded class LoadingScreen
 {
-	static const int LOADING_SCREEN_COUNT = 14;
+	static const int LOADING_SCREEN_COUNT = 15;
 	
 	void LoadingScreen(DayZGame game)
 	{		
@@ -26,6 +26,7 @@ modded class LoadingScreen
 		m_ImageLogoCorner.SetSize(w, h);
 		m_ImageLogoCorner.SetColor(ARGB(220, 255, 255, 255));
 		
+		m_ImageWidgetBackground.LoadMaskTexture("");
 		m_ImageWidgetBackground.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND);
 		
 		int s_x, s_y;
