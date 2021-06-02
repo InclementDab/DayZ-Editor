@@ -1,9 +1,11 @@
 modded class LoadingScreen
 {
+	static const int LOADING_SCREEN_COUNT = 12;
+	
 	protected Widget m_EditorLogo;
 	
 	void LoadingScreen(DayZGame game)
-	{
+	{		
 		m_ImageLogoMid.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
 		m_ImageLogoMid.SetImage(0);
 		m_ImageLogoMid.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
@@ -14,7 +16,7 @@ modded class LoadingScreen
 		m_ImageLogoMid.Show(false);
 		m_ImageLogoCorner.Show(false);
 		
-		m_ImageWidgetBackground.LoadImageFile(0, "DayZEditor/gui/images/dayz_editor_splash0.edds");
+		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", Math.RandomIntInclusive(0, LOADING_SCREEN_COUNT)));
 		m_ImageWidgetBackground.SetImage(0);
 		m_ImageWidgetBackground.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
 		m_ImageWidgetBackground.GetPos(back_x, back_y);
