@@ -1,7 +1,6 @@
 modded class LoadingScreen
 {
 	static const int LOADING_SCREEN_COUNT = 13;
-	protected bool m_ShownImageLoaded;
 	
 	void LoadingScreen(DayZGame game)
 	{		
@@ -46,16 +45,5 @@ modded class LoadingScreen
 		val = val % LOADING_SCREEN_COUNT + 1;
 		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", val));
 		m_ImageWidgetBackground.SetImage(0);
-	}
-	
-	override void Show()
-	{
-		super.Show();
-		
-		if (!m_ShownImageLoaded) { 
-			//m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", Math.RandomIntInclusive(0, LOADING_SCREEN_COUNT)));
-			//m_ImageWidgetBackground.SetImage(0);
-			//m_ShownImageLoaded = true;
-		}
 	}
 }
