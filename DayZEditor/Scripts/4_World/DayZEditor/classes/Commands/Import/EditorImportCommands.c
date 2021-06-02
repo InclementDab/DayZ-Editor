@@ -1,8 +1,10 @@
 class EditorImportCommandBase: EditorCommand
 {
-	override void Call(Class sender, CommandArgs args)
+	protected override void Call(Class sender, CommandArgs args)
 	{
-		EditorFileDialog file_dialog(GetName(), "*" + EditorFileType.Cast(GetFileType().Spawn()).GetExtension(), "", GetDialogButtonName());
+		string extension = "*" + EditorFileType.Cast(GetFileType().Spawn()).GetExtension();
+		EditorLog.Info("Using filter %1", extension);
+		EditorFileDialog file_dialog(GetName(), extension, "", GetDialogButtonName());
 		
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {

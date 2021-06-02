@@ -7,6 +7,7 @@ class EditorSaveCommand: EditorExportCommandBase
 		bool warn_on_overwrite = false;
 		string file_name = m_Editor.GetSaveFile();
 		if (file_name == string.Empty) {
+			EditorLog.Info("Using filter %1", "*.dze");
 			EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName());
 			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 				return;

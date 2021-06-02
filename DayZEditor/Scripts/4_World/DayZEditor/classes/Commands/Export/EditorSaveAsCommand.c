@@ -5,6 +5,7 @@ class EditorSaveAsCommand: EditorExportCommandBase
 		EditorLog.Trace("EditorSaveAsCommand");
 		
 		string file_name = m_Editor.GetSaveFile();
+		EditorLog.Info("Using filter %1", "*.dze");
 		EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName());
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 			return;

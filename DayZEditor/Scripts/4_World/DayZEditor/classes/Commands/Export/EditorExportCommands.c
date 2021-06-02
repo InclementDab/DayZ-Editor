@@ -1,12 +1,12 @@
 class EditorExportCommandBase: EditorCommand
 {
-	override void Call(Class sender, CommandArgs args)
+	protected override void Call(Class sender, CommandArgs args)
 	{
-		EditorExportDialog file_dialog(GetName(), "File", "", GetDialogButtonName());
+		EditorFileDialog file_dialog(GetName(), "*", "", GetDialogButtonName());
 		
 		string file_name;
 		ExportSettings export_settings = new ExportSettings();
-		if (file_dialog.ShowDialog(file_name, export_settings) != DialogResult.OK) {
+		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 			return;
 		}
 		
