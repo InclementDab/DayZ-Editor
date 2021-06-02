@@ -2008,7 +2008,7 @@ FrameWidgetClass EditorFrame {
      }
     }
     WrapSpacerWidgetClass CameraTrackWrapper {
-     visible 1
+     visible 0
      ignorepointer 1
      color 0.0196 0.0196 0.0196 0.7843
      position 279 448

@@ -207,6 +207,23 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorMoveObjectForward");
 		
+		// nothing is selected and we are actively placing
+		if (GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing()) {
+			ObservableCollection<ref EditorPlaceableListItem> placeables = GetEditor().GetEditorHud().GetTemplateController().LeftbarSpacerData;
+			for (int i = 0; i < placeables.Count(); i++) {
+				if (placeables[i].IsSelected()) {
+					if (!placeables[i - 1]) {
+						return;
+					}
+					
+					placeables[i].Deselect();
+					GetEditor().CreateInHand(placeables[i - 1].GetPlaceableItem());
+					placeables[i - 1].Select();
+					return;
+				}
+			}
+		}
+		
 		float value = 0.1;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
 			value = 0.001;
@@ -219,6 +236,23 @@ class EditorClientModule: JMModuleBase
 	{
 		if (!ShouldProcessQuickInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorMoveObjectBackward");
+		
+		// nothing is selected and we are actively placing
+		if (GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing()) {
+			ObservableCollection<ref EditorPlaceableListItem> placeables = GetEditor().GetEditorHud().GetTemplateController().LeftbarSpacerData;
+			for (int i = 0; i < placeables.Count(); i++) {
+				if (placeables[i].IsSelected()) {
+					if (!placeables[i + 1]) {
+						return;
+					}
+					
+					placeables[i].Deselect();
+					GetEditor().CreateInHand(placeables[i + 1].GetPlaceableItem());
+					placeables[i + 1].Select();
+					return;
+				}
+			}
+		}
 		
 		float value = 0.1;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {

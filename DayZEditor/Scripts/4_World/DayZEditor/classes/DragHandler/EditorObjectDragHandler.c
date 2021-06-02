@@ -16,10 +16,8 @@ class EditorObjectDragHandler: EditorDragHandler
 		// Handle Z-Only motion
 		// Todo will people want this as a keybind?
 		if (KeyState(KeyCode.KC_LMENU)) {
-			vector ppos = transform[3];
-			ppos[1] = ppos[1] + size[1]/2;
-			cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), ppos);
-			
+			cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), m_EditorObject.GetBottomCenter());
+			cursor_pos[1] = cursor_pos[1] + size[1] / 2;
 			if (m_Editor.MagnetMode) {
 				transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos + GetGame().GetCurrentCameraDirection() * 1);
 			} else {
