@@ -20,7 +20,7 @@ modded class LoadingScreen
 		x -= 60; // i just dont like the original position
 		m_ImageLogoMid.SetPos(x, y);
 		m_ImageLogoMid.GetSize(w, h);
-		m_ImageLogoMid.SetColor(ARGB(150, 30, 30, 30));
+		m_ImageLogoMid.SetColor(ARGB(200, 30, 30, 30));
 		m_ImageLogoCorner.Show(true);
 		m_ImageLogoCorner.SetPos(x - 3, y - 3);
 		m_ImageLogoCorner.SetSize(w, h);
@@ -37,8 +37,6 @@ modded class LoadingScreen
 		
 		// nice
 		int val = TickCount(0);
-		val = val + (val << 7);
-		val = val + (val << 19);
 		val = val + (val << 37);
 		val = Math.AbsInt(val);
 		val = val % LOADING_SCREEN_COUNT + 1;
