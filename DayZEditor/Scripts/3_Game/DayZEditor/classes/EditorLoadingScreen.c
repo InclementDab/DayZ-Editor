@@ -43,7 +43,7 @@ modded class LoadingScreen
 		val = val + (val << 19);
 		val = val + (val << 37);
 		val = Math.AbsInt(val);
-		val = val % LOADING_SCREEN_COUNT;
+		val = val % LOADING_SCREEN_COUNT + 1;
 		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", val));
 		m_ImageWidgetBackground.SetImage(0);
 	}
