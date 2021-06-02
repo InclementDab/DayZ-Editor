@@ -31,7 +31,7 @@ modded class LoadingScreen
 		
 		int s_x, s_y;
 		GetScreenSize(s_x, s_y);
-		m_ProgressLoading.SetSize(s_x, 8);
+		m_ProgressLoading.SetSize(s_x, 6);
 				
 		m_ModdedWarning.SetText("WARNING! The DayZ Editor is currently in BETA. Please report all bugs you find to our Discord");	
 		m_ModdedWarning.Show(false);
