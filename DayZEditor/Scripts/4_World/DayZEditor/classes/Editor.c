@@ -525,6 +525,10 @@ class Editor
 	EditorObject PlaceObject()
 	{
 		EditorLog.Trace("Editor::PlaceObject");
+		if (GetWidgetUnderCursor()) {
+			return null;
+		}
+		
 		if (!ObjectInHand) return null;	
 		
 		EditorHologram editor_hologram;
