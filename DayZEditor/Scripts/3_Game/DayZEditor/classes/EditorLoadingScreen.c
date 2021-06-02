@@ -37,9 +37,11 @@ modded class LoadingScreen
 		m_ModdedWarning.Show(false);
 		
 		// nice
-		Math.Randomize(-1);
-		int index = Math.RandomInt(0, 100) % LOADING_SCREEN_COUNT + 1;
-		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", index));
+		int val = TickCount(0);
+		val = val + (val << 37);
+		val = Math.AbsInt(val);
+		val = val % LOADING_SCREEN_COUNT + 1;
+		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", val));
 		m_ImageWidgetBackground.SetImage(0);
 	}
 }
