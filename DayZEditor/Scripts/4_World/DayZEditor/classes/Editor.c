@@ -49,6 +49,7 @@ class Editor
 	ref EditorWorldObject 						ObjectInHand;
 	ref EditorCommandManager 					CommandManager;
 	ref EditorSettings 							Settings;
+	EditorStatistics							Statistics;
 	
 	// private Editor Members
 	private ref EditorHud						m_EditorHud;
@@ -110,6 +111,9 @@ class Editor
 		Settings 			= new EditorSettings();
 		Settings.Load();
 		
+		// Init Statistics
+		Statistics			= EditorStatistics.GetInstance();
+		
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
 		EditorLog.Info("Initializing Object Manager");
@@ -145,6 +149,8 @@ class Editor
 		
 		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
 		
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
+		
 		thread AutoSaveThread();
 	}
 	
@@ -156,7 +162,10 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true); 
 		}
 		
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(UpdateStatTime);
+		
 		Settings.Save();
+		Statistics.Save();
 		
 		delete Settings;
 		delete m_EditorHud;
@@ -566,6 +575,7 @@ class Editor
 			return null;
 		}
 		
+		Statistics.PlacedObjects++;
 		EditorEvents.ObjectPlaced(this, editor_object);
 		
 		if (!KeyState(KeyCode.KC_LSHIFT)) { 
@@ -897,6 +907,7 @@ class Editor
 		action.InsertUndoParameter(new Param1<Object>(map_object));
 		action.InsertRedoParameter(new Param1<Object>(map_object));
 		
+		Statistics.RemovedObjects++;
 		CF.ObjectManager.HideMapObject(map_object);
 
 		if (create_undo) {
@@ -1077,6 +1088,11 @@ class Editor
 		} else {
 			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", string.Format("You have been banned from using the DayZ Editor.\n%1\n If you believe this was in error, please contact InclementDab \# 0001 on Discord", reason), 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
 		}		
+	}
+	
+	void UpdateStatTime(int passed_time)
+	{
+		Statistics.PlayTime += passed_time;
 	}
 	
 	bool IsActive() return m_Active;

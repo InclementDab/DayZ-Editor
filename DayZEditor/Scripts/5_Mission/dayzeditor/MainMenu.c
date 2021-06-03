@@ -1,36 +1,78 @@
 modded class MainMenu 
 {
-	protected ImageWidget m_Logo;
+	protected ref EditorMainMenuStats m_EditorMainMenuStats;
 	
 	override Widget Init()
 	{
-		Print("Editor::MainMenu");
-		super.Init();
+		layoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/GUI/layouts/EditorMainMenu.layout");
 		
+		m_Play						= layoutRoot.FindAnyWidget("play");
+		m_ChooseServer				= layoutRoot.FindAnyWidget("choose_server");
+		m_CustomizeCharacter		= layoutRoot.FindAnyWidget("customize_character");
+		m_PlayVideo					= layoutRoot.FindAnyWidget("play_video");
+		m_Tutorials					= layoutRoot.FindAnyWidget("tutorials");
+		m_TutorialButton			= layoutRoot.FindAnyWidget("tutorial_button");
+		m_MessageButton				= layoutRoot.FindAnyWidget("message_button");
+		m_SettingsButton			= layoutRoot.FindAnyWidget("settings_button");
+		m_Exit						= layoutRoot.FindAnyWidget("exit_button");
+		m_PrevCharacter				= layoutRoot.FindAnyWidget("prev_character");
+		m_NextCharacter				= layoutRoot.FindAnyWidget("next_character");
+
+		m_Version					= TextWidget.Cast( layoutRoot.FindAnyWidget( "version" ) );
+		m_ModdedWarning				= TextWidget.Cast( layoutRoot.FindAnyWidget( "ModdedWarning" ) );
+		m_CharacterRotationFrame	= layoutRoot.FindAnyWidget( "character_rotation_frame" );
+		
+		m_LastPlayedTooltip			= layoutRoot.FindAnyWidget( "last_server_info" );
+		m_LastPlayedTooltip.Show(false);
+		m_LastPlayedTooltipLabel	= m_LastPlayedTooltip.FindAnyWidget( "last_server_info_label" );
+		m_LastPlayedTooltipName 	= TextWidget.Cast( m_LastPlayedTooltip.FindAnyWidget( "last_server_info_name" ) );
+		m_LastPlayedTooltipIP		= TextWidget.Cast( m_LastPlayedTooltip.FindAnyWidget( "last_server_info_ip" ) );
+		m_LastPlayedTooltipPort		= TextWidget.Cast( m_LastPlayedTooltip.FindAnyWidget( "last_server_info_port" ) );
+		
+		m_LastPlayedTooltipTimer	= new WidgetFadeTimer();
+		
+		m_EditorMainMenuStats		= new EditorMainMenuStats( layoutRoot.FindAnyWidget( "character_stats_root" ) );
+		
+		m_Mission					= MissionMainMenu.Cast( GetGame().GetMission() );
+		
+		m_LastFocusedButton = 		m_Play;
+
+		m_ScenePC					= m_Mission.GetIntroScenePC();
+		
+		//if (m_ScenePC) {
+		//	m_ScenePC.ResetIntroCamera();
+		//}
+		
+		m_PlayVideo.Show( false );
+		
+		m_PlayerName				= TextWidget.Cast( layoutRoot.FindAnyWidget("character_name_text") );
+			
+		GetGame().GetUIManager().ScreenFadeOut(0);
+
+		SetFocus( null );
+		
+		Refresh();
+		
+		LoadMods();
+		
+		GetDayZGame().GetBacklit().MainMenu_OnShow();
+	
+		g_Game.SetLoadState( DayZLoadState.MAIN_MENU_CONTROLLER_SELECT );
+		
+		
+		// Editor additions
 		m_ChooseServer.Show(true);
-		m_CustomizeCharacter.Show(false);
-		m_Stats.HideStats();
+		//m_CustomizeCharacter.Show(false);
+		//m_Stats.HideStats();
 		
-		Widget c = layoutRoot.FindAnyWidget("character");
-		c.Show(false);
-		
-		TextWidget tw = TextWidget.Cast(layoutRoot.FindAnyWidget("play_label"));
-		tw.SetText("Open Editor");
-		
-		m_Logo = ImageWidget.Cast(layoutRoot.FindAnyWidget("dayz_logo"));
-		m_Logo.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
-		m_Logo.SetImage(0);
-		m_Logo.SetFlags(m_Logo.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
-		m_Logo.SetSize(480, 270);
-		
-		
+
 		string version;
 		GetGame().GetVersion(version);
 		m_Version.SetText(string.Format("#main_menu_version %1 - DayZ Editor Version %2", version, GetEditor().Version));
 		
 		return layoutRoot;
 	}
-
+	
     override void Play()
     {
 		thread CreateLoadDialog();
@@ -56,5 +98,11 @@ modded class MainMenu
 			return true;
 		}
 		return false;
+	}
+	
+	override void OnChangeCharacter(bool create_character = true)
+	{
+		super.OnChangeCharacter(create_character);
+		m_EditorMainMenuStats.UpdateStats();
 	}
 }
