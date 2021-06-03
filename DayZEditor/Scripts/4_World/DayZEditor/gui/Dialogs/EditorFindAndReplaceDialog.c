@@ -17,7 +17,7 @@ class EditorFindAndReplaceDialog: EditorDialogBase
 		
 		AddButton("Find", "OnFind");
 		AddButton("Find + Replace", "OnFindAndReplace");
-		AddButton(DialogResult.Cancel);
+		AddButton(DialogResult.Cancel, "Close");
 	}
 	
 	void OnFind(ButtonCommandArgs args)
@@ -35,7 +35,13 @@ class EditorFindAndReplaceDialog: EditorDialogBase
 	void OnFindAndReplace(ButtonCommandArgs args)
 	{
 		EditorFindAndReplaceCommand cmd = EditorFindAndReplaceCommand.Cast(GetEditor().CommandManager[EditorFindAndReplaceCommand]);
-		cmd.FindAndReplaceObjects(m_EditorFindAndReplaceDialogController.Find, m_EditorFindAndReplaceDialogController.Replace);
+		EditorObjectMap replaced_objects = cmd.FindAndReplaceObjects(m_EditorFindAndReplaceDialogController.Find, m_EditorFindAndReplaceDialogController.Replace);
+		
+		foreach (int _, EditorObject editor_object: replaced_objects) {
+			GetEditor().SelectObject(editor_object);
+		}
+		
+		EditorLog.Info("Found and Replaced %1 objects", replaced_objects.Count().ToString());
 	}
 	
 	override typename GetControllerType()
