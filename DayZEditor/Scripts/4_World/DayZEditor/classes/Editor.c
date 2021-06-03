@@ -432,6 +432,10 @@ class Editor
 			return false;
 		}
 		
+		if (GetFocus()) {
+			return false;
+		}
+		
 		if (m_CurrentKeys.Find(key) != -1) {
 			return false;
 		}
