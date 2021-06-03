@@ -6,13 +6,14 @@ class EditorMessageBox: MessageBox
 	
 	void EditorMessageBox(string title, string caption, MessageBoxButtons buttons)
 	{
-		EditorLog.Trace("EditorMessageBox");
+		//EditorLog.Trace("EditorMessageBox");
 
 		m_Editor = GetEditor();
-		if (m_Editor) {
-			m_EditorHud = m_Editor.GetEditorHud();	
+		if (!m_Editor) {
+			return;
 		}
 		
+		m_EditorHud = m_Editor.GetEditorHud();			
 		m_Editor.GetCamera().MoveEnabled = false;
 		m_Editor.GetCamera().LookEnabled = false;
 		m_EditorHud.ShowCursor(true);
@@ -26,7 +27,12 @@ class EditorMessageBox: MessageBox
 	
 	private void ~EditorMessageBox()
 	{
-		EditorLog.Trace("~EditorMessageBox");
+		//EditorLog.Trace("~EditorMessageBox");
+		
+		if (!m_Editor) {
+			return;
+		}
+		
 		m_Editor.GetCamera().MoveEnabled = true;
 		m_Editor.GetCamera().LookEnabled = true;
 		m_EditorHud.ShowCursor(true);
