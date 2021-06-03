@@ -66,7 +66,6 @@ class Editor
 	private EditorCameraTrackManagerModule		m_CameraTrackManager;
 	
 	private bool 								m_Active;
-	string 										EditorSettingsFile = "$profile:/Editor/Settings.json";
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
 	protected string							EditorSaveFile;
