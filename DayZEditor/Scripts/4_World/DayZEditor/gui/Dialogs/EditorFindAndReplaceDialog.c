@@ -29,6 +29,10 @@ class EditorFindAndReplaceDialog: EditorDialogBase
 			GetEditor().SelectObject(editor_object);
 		}
 		
+		if (found_objects.Count() == 0) {
+			EditorLog.Warning("Found 0 objects");
+		}
+		
 		EditorLog.Info("Found %1 objects", found_objects.Count().ToString());
 	}
 	
@@ -39,6 +43,10 @@ class EditorFindAndReplaceDialog: EditorDialogBase
 		
 		foreach (int _, EditorObject editor_object: replaced_objects) {
 			GetEditor().SelectObject(editor_object);
+		}
+		
+		if (replaced_objects.Count() == 0) {
+			EditorLog.Warning("Found 0 objects");
 		}
 		
 		EditorLog.Info("Found and Replaced %1 objects", replaced_objects.Count().ToString());
