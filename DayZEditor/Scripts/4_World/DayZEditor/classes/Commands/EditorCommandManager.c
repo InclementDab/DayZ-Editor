@@ -45,6 +45,8 @@ class EditorCommandManager
 		CloseCommand = RegisterCommand(EditorCloseCommand);
 		ExitCommand = RegisterCommand(EditorExitCommand);
 		EscapeCommand = RegisterCommand(EditorEscapeCommand);
+		
+		RegisterCommand(EditorLoadMapCommand);
 	
 		UndoCommand = RegisterCommand(EditorUndoCommand);
 		RedoCommand = RegisterCommand(EditorRedoCommand);
