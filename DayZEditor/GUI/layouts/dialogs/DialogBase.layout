@@ -154,6 +154,8 @@ WrapSpacerWidgetClass EditorDialog {
    vexactsize 0
    priority 2
    scriptclass "ViewBinding"
+   Padding 3
+   Margin 3
    "Size To Content V" 1
    {
     ScriptParamsClass {
