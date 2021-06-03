@@ -1,4 +1,5 @@
 typedef Param2<vector, vector> EventDataPair;
+typedef array<ref EventDataPair> EventDataArray;
 
 class EditorEventsFile: EditorFileType
 {	
@@ -16,11 +17,11 @@ class EditorEventsFile: EditorFileType
 		
 		// type
 		//			array of position, orientation
-		map<string, ref array<ref EventDataPair>> optimized_positions();
+		map<string, ref EventDataArray> optimized_positions();
 		
 		foreach (EditorObjectData editor_object: data.EditorObjects) {
 			if (!optimized_positions[editor_object.Type]) {
-				optimized_positions[editor_object.Type] = new array<ref EventDataPair>();
+				optimized_positions[editor_object.Type] = new EventDataArray();
 			}
 			
 			optimized_positions[editor_object.Type].Insert(new EventDataPair(editor_object.Position, editor_object.Orientation));
