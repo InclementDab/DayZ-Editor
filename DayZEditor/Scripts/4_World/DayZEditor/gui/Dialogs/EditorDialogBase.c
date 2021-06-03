@@ -6,7 +6,6 @@ class EditorDialogBase: DialogBase
 	void EditorDialogBase(string title)
 	{
 		m_Editor = GetEditor();
-		
 		if (m_Editor) {
 			m_EditorHud = m_Editor.GetEditorHud();	
 		}

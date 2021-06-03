@@ -300,7 +300,7 @@ class EditorHudToolbarController: EditorControllerBase
 		float x, y, w, h;
 		toolbar_button.GetScreenPos(x, y);
 		toolbar_button.GetScreenSize(w, h);
-		toolbar_menu.SetPos(x, y + h);
+		toolbar_menu.GetLayoutRoot().SetPos(x, y + h);
 		
 		return toolbar_menu;
 	}

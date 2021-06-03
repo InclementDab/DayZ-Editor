@@ -1,14 +1,19 @@
-class EditorMenu: EditorScriptView
-{	
-	protected EditorMenuController m_EditorMenuController;	
+class EditorMenu: ScriptViewTemplate<EditorMenuController>
+{			
+	protected Editor m_Editor;
+	protected EditorHud m_EditorHud;
 	
 	void EditorMenu()
 	{
 		EditorLog.Trace("EditorMenu");
-		m_EditorMenuController = EditorMenuController.Cast(GetController());
-	}
 		
-	void ~EditorMenu() 
+		m_Editor = GetEditor();
+		if (m_Editor) {
+			m_EditorHud = m_Editor.GetEditorHud();	
+		}
+	}
+	
+	void ~EditorMenu()
 	{
 		EditorLog.Trace("~EditorMenu");
 	}
@@ -30,6 +35,16 @@ class EditorMenu: EditorScriptView
 		AddMenuItem(new EditorMenuItemDivider());
 	}
 
+	void AddMenuButton(typename editor_command_type)
+	{
+		if (!editor_command_type.IsInherited(EditorCommand)) {
+			EditorLog.Error("EditorMenuCommand did not inherit from EditorCommand");
+			return;
+		}
+		
+		AddMenuButton(GetEditor().CommandManager[editor_command_type]);
+	}
+	
 	void AddMenuButton(EditorCommand editor_command)
 	{
 		AddMenuItem(new EditorMenuItemCommand(editor_command));
@@ -37,26 +52,21 @@ class EditorMenu: EditorScriptView
 
 	void AddMenuItem(EditorMenuItem menu_item)
 	{		
-		m_EditorMenuController.MenuItems.Insert(menu_item);
+		m_TemplateController.MenuItems.Insert(menu_item);
 	}
 		
 	void RemoveMenuItem(EditorMenuItem menu_item)
 	{
-		m_EditorMenuController.MenuItems.Remove(m_EditorMenuController.MenuItems.Find(menu_item));
+		m_TemplateController.MenuItems.Remove(m_TemplateController.MenuItems.Find(menu_item));
 	}
 	
 	ObservableCollection<ref EditorMenuItem> GetMenuItems()
 	{
-		return m_EditorMenuController.MenuItems;
+		return m_TemplateController.MenuItems;
 	}
 			
 	override string GetLayoutFile() 
 	{
 		return "DayZEditor/gui/Layouts/menus/EditorMenu.layout";
-	}
-	
-	override typename GetControllerType() 
-	{
-		return EditorMenuController;
 	}
 }

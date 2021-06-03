@@ -1,13 +1,20 @@
 class EditorContextMenu: EditorMenu
 {
 	protected float m_X, m_Y;
-	
+		
 	void EditorContextMenu(float x, float y)
 	{
 		m_X = x; m_Y = y;
-		
+				
 		m_Editor.GetCamera().MoveEnabled = false;
 		m_Editor.GetCamera().LookEnabled = false;
+		m_EditorHud.ShowCursor(true);
+	}
+	
+	void ~EditorContextMenu()
+	{
+		m_Editor.GetCamera().MoveEnabled = true;
+		m_Editor.GetCamera().LookEnabled = true;
 		m_EditorHud.ShowCursor(true);
 	}
 	
@@ -28,13 +35,13 @@ class EditorContextMenu: EditorMenu
 		
 		// I have to do this shit because of Race conditions.... wowzers
 		float menu_height;
-		for (int i = 0; i < m_EditorMenuController.MenuItems.Count(); i++) {
-			if (!m_EditorMenuController.MenuItems[i]) {
+		for (int i = 0; i < m_TemplateController.MenuItems.Count(); i++) {
+			if (!m_TemplateController.MenuItems[i]) {
 				continue;
 			}
 			
 			float llw, llh;
-			m_EditorMenuController.MenuItems[i].GetLayoutRoot().GetScreenSize(llw, llh);
+			m_TemplateController.MenuItems[i].GetLayoutRoot().GetScreenSize(llw, llh);
 			menu_height += llh;
 		}	
 		
@@ -49,12 +56,5 @@ class EditorContextMenu: EditorMenu
 	{
 		super.AddMenuItem(menu_item);
 		UpdatePosition();
-	}
-	
-	void ~EditorContextMenu()
-	{
-		m_Editor.GetCamera().MoveEnabled = true;
-		m_Editor.GetCamera().LookEnabled = true;
-		m_EditorHud.ShowCursor(true);
 	}
 }
