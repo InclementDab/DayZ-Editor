@@ -8,7 +8,8 @@ class EditorLoadMapCommand: EditorCommand
 		
 		if (selected_map != string.Empty && result == DialogResult.OK) {
 			EditorLog.Info("Loading Map %1", selected_map);
-			m_Editor.GetObjectManager().Clear();
+			m_Editor.Clear();
+			g_Game.ReportProgress("Loading " + selected_map);
 			GetGame().PlayMission(CreateEditorMission(selected_map));
 		}
 	}
