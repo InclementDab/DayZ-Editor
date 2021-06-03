@@ -75,6 +75,4 @@ modded class MissionGameplay
 			super.OnUpdate(timeslice);
 		}
 	}
-
 }
-

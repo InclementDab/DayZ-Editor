@@ -514,6 +514,7 @@ class Editor
 			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
 		}
 		
+		m_Player.DisableSimulation(m_Active);
 		m_Player.GetInputController().SetDisabled(m_Active);
 			
 		EditorHud.SetCurrentTooltip(null);
