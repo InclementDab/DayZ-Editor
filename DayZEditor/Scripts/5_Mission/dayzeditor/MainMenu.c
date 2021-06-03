@@ -21,6 +21,7 @@ modded class MainMenu
 		m_Logo.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
 		m_Logo.SetImage(0);
 		m_Logo.SetFlags(m_Logo.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
+		m_Logo.SetSize(480, 270);
 		
 		
 		string version;

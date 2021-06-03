@@ -1683,7 +1683,7 @@ FrameWidgetClass EditorFrame {
          "text valign" center
          {
           ScriptParamsClass {
-           Binding_Name "m_Editor.Version"
+           Binding_Name "Version"
           }
          }
         }

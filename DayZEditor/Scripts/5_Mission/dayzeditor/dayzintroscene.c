@@ -1,6 +1,3 @@
-
-
-
 modded class MissionMainMenu
 {
 	override void OnUpdate(float timeslice)

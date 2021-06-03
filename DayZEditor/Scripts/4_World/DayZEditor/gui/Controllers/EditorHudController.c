@@ -1,14 +1,7 @@
 class EditorHudController: EditorControllerBase
 {
-	// Data Binding
-	string DebugText1;
-	string DebugText2;
-	string DebugText3;
-	string DebugText4;
-	string DebugText5;
-	string DebugText6;
-	
 	string SearchBarData;
+	string Version = Editor.Version;
 	
 	int PlaceableCategorySelection = 0;
 	

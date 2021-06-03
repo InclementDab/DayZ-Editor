@@ -57,6 +57,8 @@ modded class LoadingScreen
 		ProgressAsync.SetUserData(lIcon);
 	}
 	
+	override void SetTitle(string title) {}
+	
 	void OnGameProgressReport(string report)
 	{
 		m_ProgressText.SetText(report);

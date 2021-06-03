@@ -4,11 +4,13 @@ class EditorFile
 	string FileDirectory;
 	FileSearchMode FileAtrributes;
 	
-	void EditorFile(string name, string directory, FileSearchMode attributes) {
+	void EditorFile(string name, string directory, FileSearchMode attributes) 
+	{
 		FileName = name; FileDirectory = directory; FileAtrributes = attributes;
 	}
 	
-	string GetFile() {
+	string GetFile() 
+	{
 		return string.Format("%1\\%2", FileDirectory, FileName);
     }
 }

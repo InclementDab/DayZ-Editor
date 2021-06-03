@@ -21,6 +21,7 @@ modded class InGameMenu
 		dayz_logo.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
 		dayz_logo.SetImage(0);
 		dayz_logo.SetFlags(dayz_logo.GetFlags() | WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
+		dayz_logo.SetSize(480, 270);
 		
 		return layoutRoot;
 	}
@@ -36,8 +37,7 @@ modded class InGameMenu
 		if (!IsMissionOffline())
 			return;
 		
-		EditorLoadMapCommand cmd = new EditorLoadMapCommand();
-		cmd.Execute(this, null);
+		GetEditor().CommandManager[EditorLoadMapCommand].Execute(this, null);
 	}
 	
 	override void OnClick_Respawn()
