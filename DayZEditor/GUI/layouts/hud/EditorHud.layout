@@ -838,35 +838,87 @@ FrameWidgetClass EditorFrame {
         }
        }
       }
+      PanelWidgetClass PanelWidget0 {
+       ignorepointer 1
+       color 0.1176 0.1176 0.1176 1
+       size 12 22
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+      }
       PanelWidgetClass TabPanel {
        ignorepointer 1
        color 0.1176 0.1176 0.1176 1
        position 0 0
-       size 0.92 22
+       size 0.88 22
+       valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 1
        style rover_sim_colorable
        {
-        ButtonWidgetClass PlacementsTabButton {
-         size 0.5 1
+        ButtonWidgetClass DeletionsTabButton {
+         position 0 0
+         size 0.49 20
          halign right_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
          text "Deletions"
+         {
+          PanelWidgetClass PanelWidget1 {
+           ignorepointer 1
+           color 1 1 1 0.9961
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+          }
+         }
         }
-        ButtonWidgetClass DeletionsTabButton {
-         size 0.5 1
+        ButtonWidgetClass PlacementsTabButton {
+         position 1 0
+         size 0.49 20
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
          text "Placements"
+         {
+          PanelWidgetClass PanelWidget2 {
+           ignorepointer 1
+           color 1 1 1 0.9961
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+          }
+         }
         }
        }
       }
@@ -1155,7 +1207,7 @@ FrameWidgetClass EditorFrame {
               }
               EditBoxWidgetClass InfoBar_Z_Value {
                inheritalpha 0
-               position -2 -1
+               position -1 -1
                size 0.8 16
                halign right_ref
                valign center_ref
