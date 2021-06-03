@@ -164,8 +164,6 @@ class Editor
 		delete m_EditorBrush;
 		delete m_SessionCache;
 		delete ObjectInHand;
-		
-		GetGame().SetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
 		delete m_RecentlyOpenedFiles;
 	}
 	
@@ -771,6 +769,7 @@ class Editor
 		}
 		
 		GetGame().SetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
+		GetGame().SaveProfile();
 	}
 		
 	string GetSaveFile()
