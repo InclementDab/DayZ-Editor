@@ -79,7 +79,7 @@ class Editor
 	bool 										CollisionMode;
 
 	string 										BanReason = "null";
-	string 										Version = "Version#: " + GetVersionNumber();
+	static const string 						Version = "1.1.2050pre";
 	
 	// Loot Editing
 	private Object 								m_LootEditTarget;
@@ -972,20 +972,7 @@ class Editor
 		GetGame().GetWorldName(world_name);
 		return world_name;
 	}
-	
-	static string GetVersionNumber()
-    {
-        array<ref ModInfo> mods = new array<ref ModInfo>;
-        GetDayZGame().GetModInfos(mods);
-        for (int i = 0; i < mods.Count(); i++) {
-            if (mods[i].GetName().IndexOf("DayZ") == 0 && mods[i].GetName().IndexOf("Editor") == 5) {
-                return mods[i].GetVersion();
-            }
-        }
-
-        return string.Empty;
-    }
-	
+		
 	static vector GetMapCenterPosition()
 	{
 		TIntArray values();
