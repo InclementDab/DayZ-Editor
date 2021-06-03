@@ -22,17 +22,6 @@ FrameWidgetClass LoadingFrame {
    vexactsize 0
    style rover_sim_colorable
    {
-    TextWidgetClass TextWidget {
-     visible 0
-     position 0 0.05
-     size 0.7438 0.06
-     halign center_ref
-     valign bottom_ref
-     text "#layout_loading_loadingtext"
-     "exact text" 1
-     "text halign" center
-     "text valign" center
-    }
     ImageWidgetClass ImageBackground {
      visible 1
      position 0 0
@@ -45,52 +34,45 @@ FrameWidgetClass LoadingFrame {
      vexactsize 0
      fixaspect outside
      image0 ""
-     imageTexture "{0DBE2630AF5047FD}Gui/textures/loading_screens/loading_screen_3_co.edds"
+     imageTexture "{0DBE2630AF5047FD}gui/textures/loading_screens/loading_screen_3_co.edds"
      mode blend
      "src alpha" 0
      stretch 1
-     Mask "{F2CEA7E35B785FB7}Gui/textures/loading_screens/loading_screen_3_mask.edds"
+     Mask ""
      "Transition width" 1
      Progress 0
-    }
-    TextWidgetClass StatusText {
-     position 0 0.024
-     size 0.7438 0.03
-     halign center_ref
-     valign bottom_ref
-     "exact text" 1
-     "text halign" center
-     "text valign" center
     }
     ImageWidgetClass ImageLogoMid {
      visible 1
      inheritalpha 1
-     position 100 78
-     size 444 208
+     color 0.1176 0.1176 0.1176 0.7843
+     position 40 78
+     size 480 270
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      fixaspect outside
-     image0 "set:dayz_gui image:DayZLogo"
+     image0 "DayZEditor/gui/images/logo_editor_big.edds"
      mode blend
      "src alpha" 1
      "no wrap" 1
      stretch 1
-     filter 1
+     filter 0
      nocache 0
     }
     ImageWidgetClass ImageLogoCorner {
      visible 1
      inheritalpha 1
-     position 100 78
-     size 444 208
+     color 1 1 1 0.8627
+     position 37 75
+     size 480 270
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      fixaspect outside
-     image0 "set:dayz_gui image:DayZLogo"
+     image0 "DayZEditor/gui/images/logo_editor_big.edds"
      mode blend
      "src alpha" 1
      "no wrap" 1
@@ -119,26 +101,11 @@ FrameWidgetClass LoadingFrame {
      filter 1
      nocache 0
     }
-    TextWidgetClass ProgressText {
-     visible 0
-     clipchildren 0
-     ignorepointer 1
-     position 0 200
-     size 100 30
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     text "100%"
-     font "gui/fonts/sdf_MetronLight24"
-     "text halign" center
-    }
     PanelWidgetClass BottomPanel {
      ignorepointer 1
      color 0 0 0 0.549
-     size 1 0.1
+     position 0.00105 0
+     size 1 0.13
      halign center_ref
      valign bottom_ref
      hexactpos 0
@@ -150,14 +117,23 @@ FrameWidgetClass LoadingFrame {
       ProgressBarWidgetClass LoadingBar {
        ignorepointer 1
        position 0 25
-       size 600 3
+       size 1 6
        halign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
+       hexactsize 0
        vexactsize 1
        style Loading
        current 45
+      }
+      TextWidgetClass ProgressText {
+       size 1 0.3
+       halign center_ref
+       valign center_ref
+       font "gui/fonts/system"
+       "exact text" 0
+       "text halign" center
+       "text valign" center
       }
      }
     }

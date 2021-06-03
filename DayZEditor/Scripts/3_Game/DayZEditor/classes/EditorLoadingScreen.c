@@ -16,7 +16,6 @@ modded class LoadingScreen
 		Class.CastTo(m_ImageLogoMid, m_WidgetRoot.FindAnyWidget("ImageLogoMid"));
 		Class.CastTo(m_ImageLogoCorner, m_WidgetRoot.FindAnyWidget("ImageLogoCorner"));
 		
-		Class.CastTo(m_TextWidgetTitle, m_WidgetRoot.FindAnyWidget("TextWidget"));
 		Class.CastTo(m_TextWidgetStatus, m_WidgetRoot.FindAnyWidget("StatusText"));
 		Class.CastTo(m_ImageWidgetBackground, m_WidgetRoot.FindAnyWidget("ImageBackground"));
 		Class.CastTo(m_ImageLoadingIcon, m_WidgetRoot.FindAnyWidget("ImageLoadingIcon"));
@@ -24,39 +23,9 @@ modded class LoadingScreen
 		
 		m_ImageBackground = ImageWidget.Cast( m_WidgetRoot.FindAnyWidget("ImageBackground") );
 		m_ProgressLoading = ProgressBarWidget.Cast( m_WidgetRoot.FindAnyWidget("LoadingBar") );
-		
-		string tmp;
+
 		m_ProgressText = TextWidget.Cast(m_WidgetRoot.FindAnyWidget("ProgressText"));
-		
-		m_ImageLogoMid.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
-		m_ImageLogoMid.SetImage(0);
-		m_ImageLogoMid.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
-		
-		m_ImageLogoCorner.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
-		m_ImageLogoCorner.SetImage(0);
-		m_ImageLogoCorner.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND);
-		
-		m_ImageLogoMid.Show(true);
-		m_ImageLogoMid.SetSize(480, 270);
-		
-		float x, y, w, h;
-		m_ImageLogoMid.GetPos(x, y);
-		x -= 60; // i just dont like the original position
-		m_ImageLogoMid.SetPos(x, y);
-		m_ImageLogoMid.GetSize(w, h);
-		m_ImageLogoMid.SetColor(ARGB(200, 30, 30, 30));
-		m_ImageLogoCorner.Show(true);
-		m_ImageLogoCorner.SetPos(x - 3, y - 3);
-		m_ImageLogoCorner.SetSize(w, h);
-		m_ImageLogoCorner.SetColor(ARGB(220, 255, 255, 255));
-		
-		m_ImageWidgetBackground.LoadMaskTexture("");
-		m_ImageWidgetBackground.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND);
-		
-		int s_x, s_y;
-		GetScreenSize(s_x, s_y);
-		m_ProgressLoading.SetSize(s_x, 6);
-				
+
 		m_ModdedWarning.SetText("WARNING! The DayZ Editor is currently in BETA. Please report all bugs you find to our Discord");	
 		m_ModdedWarning.Show(false);
 		
@@ -75,7 +44,6 @@ modded class LoadingScreen
 		Widget pText = m_ProgressLoading;
 		m_ProgressText.Show(true);
 		m_ProgressLoading.SetCurrent(0.0);
-		m_ImageBackground.SetMaskProgress(0.0);
 		
 		if (!m_WidgetRoot.IsVisible()) {
 			if (m_DayZGame.GetUIManager().IsDialogVisible()) {
@@ -83,8 +51,6 @@ modded class LoadingScreen
 			}
 						
 			m_WidgetRoot.Show(true);
-			m_TextWidgetTitle.SetText("");
-			m_TextWidgetStatus.SetText("");
 		}
 		
 		ProgressAsync.SetProgressData(pText);
