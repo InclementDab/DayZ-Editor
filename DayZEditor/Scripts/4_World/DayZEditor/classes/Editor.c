@@ -81,7 +81,7 @@ class Editor
 	string 										BanReason = "null";
 	string 										Version = "1.1.2050pre";
 	
-	protected ref array<string>					m_RecentlyOpenedFiles = {};
+	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
 	// Loot Editing
 	private Object 								m_LootEditTarget;
@@ -144,6 +144,8 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
 		}
 		
+		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
+		
 		thread AutoSaveThread();
 	}
 	
@@ -162,6 +164,9 @@ class Editor
 		delete m_EditorBrush;
 		delete m_SessionCache;
 		delete ObjectInHand;
+		
+		GetGame().SetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
+		delete m_RecentlyOpenedFiles;
 	}
 	
 	static Editor Create(PlayerBase player)
@@ -764,6 +769,8 @@ class Editor
 		if (m_RecentlyOpenedFiles.Count() > 3) {
 			m_RecentlyOpenedFiles.RemoveOrdered(0);
 		}
+		
+		GetGame().SetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
 	}
 		
 	string GetSaveFile()
