@@ -726,8 +726,9 @@ FrameWidgetClass EditorFrame {
        ignorepointer 0
        keepsafezone 1
        color 0.0196 0.0196 0.0196 0.7843
-       position 0 0
-       size 0.92 1
+       size 0.92 0.98
+       halign center_ref
+       valign bottom_ref
        hexactpos 0
        vexactpos 0
        hexactsize 0
@@ -837,6 +838,38 @@ FrameWidgetClass EditorFrame {
         }
        }
       }
+      PanelWidgetClass TabPanel {
+       ignorepointer 1
+       color 0.1176 0.1176 0.1176 1
+       position 0 0
+       size 0.92 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        ButtonWidgetClass PlacementsTabButton {
+         size 0.5 1
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "Deletions"
+        }
+        ButtonWidgetClass DeletionsTabButton {
+         size 0.5 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "Placements"
+        }
+       }
+      }
      }
     }
     FrameWidgetClass ToolbarFrame {
@@ -863,7 +896,7 @@ FrameWidgetClass EditorFrame {
      ignorepointer 1
      color 0.0588 0.0588 0.0588 1
      position 0 0
-     size 1 24
+     size 1 18
      halign right_ref
      valign bottom_ref
      hexactpos 0
@@ -878,7 +911,7 @@ FrameWidgetClass EditorFrame {
        clipchildren 1
        ignorepointer 1
        position 0 1
-       size 1 24
+       size 1 18
        halign right_ref
        valign center_ref
        hexactpos 1
@@ -915,7 +948,7 @@ FrameWidgetClass EditorFrame {
          visible 1
          ignorepointer 1
          position 0 0
-         size 0.25 1
+         size 0.16 1
          valign center_ref
          hexactpos 0
          vexactpos 0
@@ -923,324 +956,10 @@ FrameWidgetClass EditorFrame {
          vexactsize 0
          {
           WrapSpacerWidgetClass InfoBarVectorWrapSpacer {
-           visible 0
-           ignorepointer 1
-           position 0.08 -0.06
-           size 1 1
-           halign center_ref
-           valign bottom_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           Padding 0
-           Margin 0
-           {
-            PanelWidgetClass Info_CamPos_X_Main {
-             ignorepointer 1
-             color 1 1 1 0.9961
-             position 0 0
-             size 0.3 0.9
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             style Slim_Outline2
-             {
-              WrapSpacerWidgetClass Info_CamPos_X {
-               clipchildren 1
-               ignorepointer 1
-               position -0.07 0.02
-               size 1.1 0.96
-               valign center_ref
-               hexactpos 0
-               vexactpos 0
-               hexactsize 0
-               vexactsize 0
-               Padding 0
-               Margin 0
-               "Size To Content H" 1
-               content_halign center
-               content_valign center
-               {
-                PanelWidgetClass Info_CamPos_X_Icon {
-                 ignorepointer 1
-                 color 0.7647 0.1804 0.102 1
-                 position 0 0
-                 size 0.18 0.95
-                 valign center_ref
-                 hexactpos 0
-                 vexactpos 0
-                 hexactsize 0
-                 vexactsize 0
-                 style rover_sim_colorable
-                 {
-                  TextWidgetClass Info_CamPos_X_IconLable {
-                   ignorepointer 1
-                   position 0 0
-                   size 1 1
-                   halign center_ref
-                   valign center_ref
-                   hexactpos 0
-                   vexactpos 0
-                   hexactsize 0
-                   vexactsize 0
-                   text "X"
-                   "text halign" center
-                   "text valign" center
-                  }
-                 }
-                }
-                FrameWidgetClass Info_CamPos_X_Spacer {
-                 ignorepointer 1
-                 size 0.03 1
-                 valign center_ref
-                 hexactpos 0
-                 vexactpos 0
-                 hexactsize 0
-                 vexactsize 0
-                }
-                EditBoxWidgetClass Info_CamPos_X_Value {
-                 visible 1
-                 clipchildren 1
-                 ignorepointer 0
-                 size 0.65 0.9
-                 halign center_ref
-                 valign center_ref
-                 hexactpos 0
-                 vexactpos 0
-                 hexactsize 0
-                 vexactsize 0
-                 scaled 1
-                 scriptclass "ViewBinding"
-                 style Default
-                 "limit visible" 1
-                 "Use default text" 0
-                 "exact text" 0
-                 font "gui/fonts/MetronBook22"
-                 {
-                  ScriptParamsClass {
-                   Binding_Name "cam_x"
-                   Two_Way_Binding 1
-                  }
-                 }
-                }
-               }
-              }
-             }
-            }
-            FrameWidgetClass X_Y_Spacer {
-             ignorepointer 1
-             position 0 0
-             size 0.01 1
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-            }
-            PanelWidgetClass Info_CamPos_Y_Main {
-             ignorepointer 1
-             color 1 1 1 0.9961
-             position 0 0
-             size 0.3 0.9
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             style Slim_Outline2
-             {
-              WrapSpacerWidgetClass Info_CamPos_Y {
-               ignorepointer 1
-               position -0.07 0.02
-               size 1.1 0.96
-               valign center_ref
-               hexactpos 0
-               vexactpos 0
-               hexactsize 0
-               vexactsize 0
-               Padding 0
-               Margin 0
-               content_halign center
-               content_valign center
-               {
-                PanelWidgetClass Info_CamPos_Y_Icon {
-                 ignorepointer 1
-                 color 0.5765 0.8157 0.2196 1
-                 position 0 0
-                 size 0.18 0.95
-                 valign center_ref
-                 hexactpos 0
-                 vexactpos 0
-                 hexactsize 0
-                 vexactsize 0
-                 style rover_sim_colorable
-                 {
-                  TextWidgetClass Info_CamPos_Y_IconLable {
-                   ignorepointer 1
-                   position 0 0
-                   size 1 1
-                   halign center_ref
-                   valign center_ref
-                   hexactpos 0
-                   vexactpos 0
-                   hexactsize 0
-                   vexactsize 0
-                   text "Y"
-                   "text halign" center
-                   "text valign" center
-                  }
-                 }
-                }
-                FrameWidgetClass Info_CamPos_Y_Spacer {
-                 ignorepointer 1
-                 size 0.03 1
-                 halign center_ref
-                 valign center_ref
-                 hexactpos 0
-                 vexactpos 0
-                 hexactsize 0
-                 vexactsize 0
-                }
-                EditBoxWidgetClass Info_CamPos_Y_Value {
-                 visible 1
-                 ignorepointer 0
-                 position 0 0
-                 size 0.65 0.9
-                 halign center_ref
-                 valign center_ref
-                 hexactpos 0
-                 vexactpos 0
-                 hexactsize 0
-                 vexactsize 0
-                 scriptclass "ViewBinding"
-                 style Default
-                 text "0"
-                 "limit visible" 1
-                 "Use default text" 0
-                 "exact text" 0
-                 font "gui/fonts/MetronBook22"
-                 {
-                  ScriptParamsClass {
-                   Binding_Name "cam_y"
-                   Two_Way_Binding 1
-                  }
-                 }
-                }
-               }
-              }
-             }
-            }
-            FrameWidgetClass Y_Z_Spacer {
-             clipchildren 0
-             ignorepointer 1
-             position 0 0
-             size 0.01 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-            }
-            PanelWidgetClass Info_CamPos_Z_Main {
-             ignorepointer 1
-             color 1 1 1 0.9961
-             position 0 0
-             size 0.3 0.9
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             style Slim_Outline2
-             {
-              WrapSpacerWidgetClass Info_CamPos_Z {
-               ignorepointer 1
-               position -0.01 -0.04
-               size 1.1 0.98
-               valign center_ref
-               hexactpos 0
-               vexactpos 0
-               hexactsize 0
-               vexactsize 0
-               {
-                PanelWidgetClass Info_CamPos_Z_Icon {
-                 ignorepointer 1
-                 color 0.2588 0.4824 0.9176 1
-                 position 0 0
-                 size 0.18 0.95
-                 valign center_ref
-                 hexactpos 0
-                 vexactpos 0
-                 hexactsize 0
-                 vexactsize 0
-                 style rover_sim_colorable
-                 {
-                  TextWidgetClass Info_CamPos_Z_IconLable {
-                   ignorepointer 1
-                   position 0 0
-                   size 1 1
-                   halign center_ref
-                   valign center_ref
-                   hexactpos 0
-                   vexactpos 0
-                   hexactsize 0
-                   vexactsize 0
-                   text "Z"
-                   "text halign" center
-                   "text valign" center
-                  }
-                 }
-                }
-                FrameWidgetClass Info_CamPos_Z_Spacer {
-                 ignorepointer 1
-                 position 0 0
-                 size 0.01 1
-                 halign center_ref
-                 valign center_ref
-                 hexactpos 0
-                 vexactpos 0
-                 hexactsize 0
-                 vexactsize 0
-                }
-                EditBoxWidgetClass Info_CamPos_Z_Value {
-                 visible 1
-                 ignorepointer 0
-                 position 0 0
-                 size 0.65 0.9
-                 halign center_ref
-                 valign center_ref
-                 hexactpos 0
-                 vexactpos 0
-                 hexactsize 0
-                 vexactsize 0
-                 scriptclass "ViewBinding"
-                 style Default
-                 text "0"
-                 "limit visible" 1
-                 "Use default text" 0
-                 "exact text" 0
-                 font "gui/fonts/MetronBook22"
-                 {
-                  ScriptParamsClass {
-                   Binding_Name "cam_z"
-                   Two_Way_Binding 1
-                  }
-                 }
-                }
-               }
-              }
-             }
-            }
-           }
-          }
-          WrapSpacerWidgetClass InfoBarVectorWrapSpacer2 {
            clipchildren 0
            ignorepointer 1
-           position 0 2
-           size 0.9 22
+           position -2 1.5
+           size 0.9 16
            halign right_ref
            hexactpos 1
            vexactpos 1
@@ -1265,7 +984,7 @@ FrameWidgetClass EditorFrame {
                ignorepointer 1
                color 0.7647 0.1804 0.102 1
                position 1 0
-               size 26 20
+               size 16 14
                valign center_ref
                hexactpos 1
                vexactpos 1
@@ -1276,7 +995,7 @@ FrameWidgetClass EditorFrame {
                 TextWidgetClass InfoBar_X_Label {
                  ignorepointer 1
                  position 0 0
-                 size 26 24
+                 size 16 16
                  halign right_ref
                  valign center_ref
                  hexactpos 1
@@ -1291,8 +1010,8 @@ FrameWidgetClass EditorFrame {
               }
               EditBoxWidgetClass InfoBar_X_Value {
                inheritalpha 0
-               position -4 -1
-               size 0.8 22
+               position -2 -1
+               size 0.8 16
                halign right_ref
                valign center_ref
                hexactpos 1
@@ -1338,7 +1057,7 @@ FrameWidgetClass EditorFrame {
                ignorepointer 1
                color 0.6157 0.8157 0.2196 1
                position 1 0
-               size 26 20
+               size 16 14
                valign center_ref
                hexactpos 1
                vexactpos 1
@@ -1348,8 +1067,8 @@ FrameWidgetClass EditorFrame {
                {
                 TextWidgetClass InfoBar_Y_Label {
                  ignorepointer 1
-                 position 0 0
-                 size 26 24
+                 position 1 0
+                 size 16 16
                  halign right_ref
                  valign center_ref
                  hexactpos 1
@@ -1364,8 +1083,8 @@ FrameWidgetClass EditorFrame {
               }
               EditBoxWidgetClass InfoBar_Y_Value {
                inheritalpha 0
-               position -4 -1
-               size 0.8 22
+               position -2 -1
+               size 0.8 16
                halign right_ref
                valign center_ref
                hexactpos 1
@@ -1410,7 +1129,7 @@ FrameWidgetClass EditorFrame {
                ignorepointer 1
                color 0.2588 0.4824 0.9176 1
                position 1 0
-               size 26 20
+               size 16 14
                valign center_ref
                hexactpos 1
                vexactpos 1
@@ -1421,7 +1140,7 @@ FrameWidgetClass EditorFrame {
                 TextWidgetClass InfoBar_Z_Label {
                  ignorepointer 1
                  position 0 0
-                 size 26 24
+                 size 16 17
                  halign right_ref
                  valign center_ref
                  hexactpos 1
@@ -1436,8 +1155,8 @@ FrameWidgetClass EditorFrame {
               }
               EditBoxWidgetClass InfoBar_Z_Value {
                inheritalpha 0
-               position -4 -1
-               size 0.8 22
+               position -2 -1
+               size 0.8 16
                halign right_ref
                valign center_ref
                hexactpos 1
@@ -1482,7 +1201,7 @@ FrameWidgetClass EditorFrame {
         FrameWidgetClass FrameWidget1 {
          ignorepointer 1
          position 0 0
-         size 26 1
+         size 201 1
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -1494,7 +1213,7 @@ FrameWidgetClass EditorFrame {
          clipchildren 0
          ignorepointer 1
          position 0 0
-         size 28 22
+         size 28 18
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -1505,7 +1224,7 @@ FrameWidgetClass EditorFrame {
            ignorepointer 0
            color 1 1 1 0.1961
            position 0 0
-           size 36 23
+           size 30 16
            valign center_ref
            hexactpos 1
            vexactpos 1
@@ -1541,7 +1260,7 @@ FrameWidgetClass EditorFrame {
              inheritalpha 0
              ignorepointer 1
              position -1 -1
-             size 26 26
+             size 20 20
              halign center_ref
              valign center_ref
              hexactpos 1
@@ -1942,10 +1661,10 @@ FrameWidgetClass EditorFrame {
      }
     }
     WrapSpacerWidgetClass CameraTrackWrapper {
-     visible 1
+     visible 0
      ignorepointer 1
      color 0.0196 0.0196 0.0196 0.7843
-     position 279 448
+     position 280 442
      size 0.235 0
      halign right_ref
      valign bottom_ref
