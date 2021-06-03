@@ -1698,7 +1698,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 0
          scriptclass ""
-         text "Version:"
+         text "Version: "
          font "gui/fonts/etelkatextpro"
          "bold text" 1
          "size to text h" 1

@@ -25,7 +25,7 @@ modded class MainMenu
 		
 		string version;
 		GetGame().GetVersion(version);
-		m_Version.SetText(string.Format("#main_menu_version %1 - DayZ Editor Version %2", version, Editor.Version));
+		m_Version.SetText(string.Format("#main_menu_version %1 - DayZ Editor Version %2", version, GetEditor().Version));
 		
 		return layoutRoot;
 	}

@@ -79,7 +79,7 @@ class Editor
 	bool 										CollisionMode;
 
 	string 										BanReason = "null";
-	static const string 						Version = "1.1.2050pre";
+	string 										Version = "1.1.2050pre";
 	
 	// Loot Editing
 	private Object 								m_LootEditTarget;
