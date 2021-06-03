@@ -5,14 +5,14 @@ modded class LoadingScreen
 {
 	static const ref array<ref LoadingScreenEntry> LOADING_SCREENS = {
 		new LoadingScreenEntry("0.edds", "Lad"),
-		new LoadingScreenEntry("1.edds", "Suvi"),
-		new LoadingScreenEntry("2.edds", "Suvi"), //
+		new LoadingScreenEntry("1.edds", "Unknown"),
+		new LoadingScreenEntry("2.edds", "Suvi"), 
 		new LoadingScreenEntry("3.edds", "DanceOfJesus"),
-		new LoadingScreenEntry("4.edds", "Suvi"), //
+		new LoadingScreenEntry("4.edds", "Suvi"), 
 		new LoadingScreenEntry("5.edds", "Lavo"),
-		new LoadingScreenEntry("6.edds", "Suvi"),
-		new LoadingScreenEntry("7.edds", "Suvi"),
-		new LoadingScreenEntry("8.edds", "Suvi"),
+		new LoadingScreenEntry("6.edds", "Lavo"),
+		new LoadingScreenEntry("7.edds", "Unknown"),
+		new LoadingScreenEntry("8.edds", "Unknown"),
 		new LoadingScreenEntry("9.edds", "Jonas"),
 		new LoadingScreenEntry("10.edds", "Fluzoo"),
 		new LoadingScreenEntry("11.edds", "Mihalych"),
