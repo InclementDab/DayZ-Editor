@@ -59,13 +59,6 @@ modded class MainMenu
 	
 		g_Game.SetLoadState( DayZLoadState.MAIN_MENU_CONTROLLER_SELECT );
 		
-		
-		// Editor additions
-		m_ChooseServer.Show(true);
-		//m_CustomizeCharacter.Show(false);
-		//m_Stats.HideStats();
-		
-
 		string version;
 		GetGame().GetVersion(version);
 		m_Version.SetText(string.Format("#main_menu_version %1 - DayZ Editor Version %2", version, GetEditor().Version));
