@@ -16,26 +16,23 @@ class EditorSettings: Controller
 	
 	LogLevel SelectedLogLevel 		= LogLevel.INFO;
 	
-	static EditorSettings Load()
-	{
-		EditorSettings settings();
+	void Load()
+	{		
+		ViewDistance = GetProfileFloat("ViewDistance", ViewDistance);
+		ObjectViewDistance = GetProfileFloat("ObjectViewDistance", ObjectViewDistance);
+		MarkerViewDistance = GetProfileFloat("MarkerViewDistance", MarkerViewDistance);
+		AutoSaveTimer = GetProfileInt("AutoSaveTimer", AutoSaveTimer);
 		
-		settings.ViewDistance = GetProfileFloat("ViewDistance", settings.ViewDistance);
-		settings.ObjectViewDistance = GetProfileFloat("ObjectViewDistance", settings.ObjectViewDistance);
-		settings.MarkerViewDistance = GetProfileFloat("MarkerViewDistance", settings.MarkerViewDistance);
-		settings.AutoSaveTimer = GetProfileInt("AutoSaveTimer", settings.AutoSaveTimer);
+		LockCameraDuringDialogs = GetProfileBool("LockCameraDuringDialogs", LockCameraDuringDialogs);
+		ShowBoundingBoxes = GetProfileBool("ShowBoundingBoxes", ShowBoundingBoxes);
+		BrushedObjectMarkers = GetProfileBool("BrushedObjectMarkers", BrushedObjectMarkers);
+		DebugMode = GetProfileBool("DebugMode", DebugMode);
 		
-		settings.LockCameraDuringDialogs = GetProfileBool("LockCameraDuringDialogs", settings.LockCameraDuringDialogs);
-		settings.ShowBoundingBoxes = GetProfileBool("ShowBoundingBoxes", settings.ShowBoundingBoxes);
-		settings.BrushedObjectMarkers = GetProfileBool("BrushedObjectMarkers", settings.BrushedObjectMarkers);
-		settings.DebugMode = GetProfileBool("DebugMode", settings.DebugMode);
+		EditorProtoFile = GetProfileString("EditorProtoFile", EditorProtoFile);
+		EditorBrushFile = GetProfileString("EditorBrushFile", EditorBrushFile);
 		
-		settings.EditorProtoFile = GetProfileString("EditorProtoFile", settings.EditorProtoFile);
-		settings.EditorBrushFile = GetProfileString("EditorBrushFile", settings.EditorBrushFile);
-		
-		settings.SelectedLogLevel = GetProfileInt("SelectedLogLevel", settings.SelectedLogLevel);
-		
-		return settings;
+		SelectedLogLevel = GetProfileInt("SelectedLogLevel", SelectedLogLevel);
+		NotifyPropertyChanged();
 	}
 	
 	void Save()

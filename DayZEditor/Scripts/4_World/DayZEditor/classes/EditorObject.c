@@ -178,7 +178,7 @@ class EditorObject: EditorWorldObject
 				
 		// Store map objects
 		if (m_WorldObject) {
-			EditorLog.Debug("Removing world object ", m_WorldObject.ToString());
+			EditorLog.Debug("Removing world object %1", m_WorldObject.ToString());
 			CF.ObjectManager.HideMapObject(m_WorldObject);
 		}
 		

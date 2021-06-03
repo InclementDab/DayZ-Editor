@@ -108,7 +108,8 @@ class Editor
 		MakeDirectory(EditorDirectory);
 		
 		// Init Settings
-		Settings 			= EditorSettings.Load();
+		Settings 			= new EditorSettings();
+		Settings.Load();
 		
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
