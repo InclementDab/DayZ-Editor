@@ -39,6 +39,7 @@ class EditorCommandManager
 	{
 		NewCommand = RegisterCommand(EditorNewCommand);
 		OpenCommand = RegisterCommand(EditorOpenCommand);
+		RegisterCommand(EditorOpenRecentCommand);
 		SaveCommand = RegisterCommand(EditorSaveCommand);
 		SaveAsCommand = RegisterCommand(EditorSaveAsCommand);
 		CloseCommand = RegisterCommand(EditorCloseCommand);

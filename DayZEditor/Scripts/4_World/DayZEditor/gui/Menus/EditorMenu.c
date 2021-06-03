@@ -13,16 +13,16 @@ class EditorMenu: EditorScriptView
 		EditorLog.Trace("~EditorMenu");
 	}
 	
-	void AddMenuCategory(string label, typename child_menu)
+	void AddMenuCategory(string label, typename child_menu, EditorCommand editor_command = null)
 	{
 		if (child_menu.IsInherited(EditorMenu)) {
-			AddMenuCategory(label, EditorMenu.Cast(child_menu.Spawn()));
+			AddMenuCategory(label, EditorMenu.Cast(child_menu.Spawn()), editor_command);
 		}
 	}
 	
-	void AddMenuCategory(string label, EditorMenu child_menu)
+	void AddMenuCategory(string label, EditorMenu child_menu, EditorCommand editor_command = null)
 	{
-		AddMenuItem(new EditorMenuItemCategory(label, child_menu));
+		AddMenuItem(new EditorMenuItemCategory(label, child_menu, editor_command));
 	}
 			
 	void AddMenuDivider()

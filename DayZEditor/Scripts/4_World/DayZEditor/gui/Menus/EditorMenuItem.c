@@ -41,10 +41,12 @@ class EditorMenuItemDivider: EditorMenuItem
 
 class EditorMenuItemCategory: EditorMenuItem
 {
+	protected EditorCommand m_EditorCommand;
 	protected ImageWidget EditorMenuItemCategoryIcon;
 	
-	void EditorMenuItemCategory(string label, EditorMenu child_menu)
+	void EditorMenuItemCategory(string label, EditorMenu child_menu, EditorCommand editor_command = null)
 	{
+		m_EditorCommand = editor_command;
 		EditorMenuItemCategoryIcon.Show(true);
 		
 		m_TemplateController.LabelText = label;
@@ -54,10 +56,19 @@ class EditorMenuItemCategory: EditorMenuItem
 		m_TemplateController.NotifyPropertyChanged("ChildMenu");
 		
 		m_TemplateController.ChildMenu.GetLayoutRoot().Show(false);
+		
+		ViewBinding view_binding = m_TemplateController.GetViewBinding(EditorMenuItemButton);
+		if (view_binding && editor_command) {
+			view_binding.SetRelayCommand(editor_command);
+		}
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
+		if (!m_EditorCommand.CanExecute()) {
+			return super.OnMouseEnter(w, x, y);
+		}
+		
 		// Setting this here because menu root needs to be moved before we know where we are
 		float x1, y1;
 		float sx1, sy1;
@@ -73,6 +84,7 @@ class EditorMenuItemCategory: EditorMenuItem
 		if (enterW != m_TemplateController.ChildMenu.GetLayoutRoot().FindAnyWidget(enterW.GetName())) {
 			m_TemplateController.ChildMenu.GetLayoutRoot().Show(false);
 		}
+		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 }

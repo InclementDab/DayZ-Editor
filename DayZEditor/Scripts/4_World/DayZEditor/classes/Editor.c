@@ -144,7 +144,6 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
 		}
 		
-		
 		thread AutoSaveThread();
 	}
 	
@@ -251,7 +250,9 @@ class Editor
 		// Shit code. Theres better ways to do this CanUndo and CanRedo are slow
 		CommandManager[EditorUndoCommand].SetCanExecute(CanUndo());
 		CommandManager[EditorRedoCommand].SetCanExecute(CanRedo());
-				
+		
+		CommandManager[EditorOpenRecentCommand].SetCanExecute(m_RecentlyOpenedFiles.Count() > 0);
+		
 		EditorLog.CurrentLogLevel = log_lvl;
 	}
 	
