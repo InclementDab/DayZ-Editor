@@ -15,19 +15,7 @@ class EditorOpenCommand: EditorImportCommandBase
 	EditorSaveData OpenFile(string file_name)
 	{
 		EditorSaveData save_data = ImportFile(file_name, true);
-		/*
-		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
-			EditorLog.Info("Loading Map %1", save_data.MapName);
-			//delete m_EditorInstance;
-			
-			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
 		
-			// Scuffed way of waiting for new Editor to be created. It doesnt work (obv)
-			/*while (!m_EditorInstance) {
-				Sleep(1);
-			}
-		}
-*/		
 		if (save_data) {
 			m_Editor.SetSaveFile(file_name);
 			m_Editor.GetCamera().SetPosition(save_data.CameraPosition);
