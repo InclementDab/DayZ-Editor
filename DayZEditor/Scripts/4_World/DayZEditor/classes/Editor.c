@@ -264,6 +264,8 @@ class Editor
 		
 		CommandManager[EditorOpenRecentCommand].SetCanExecute(m_RecentlyOpenedFiles.Count() > 0);
 		
+		CommandManager[EditorCameraTrackRun].SetCanExecute(m_CameraTrackManager.GetCameraTracks().Count() > 0);
+		
 		EditorLog.CurrentLogLevel = log_lvl;
 	}
 	
