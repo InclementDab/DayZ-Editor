@@ -1,8 +1,8 @@
 class EditorSettings: Controller
 {	
-	int ViewDistance 				= 8000;
-	int ObjectViewDistance 			= 1500;
-	int MarkerViewDistance 			= 1000;
+	float ViewDistance 				= 8000;
+	float ObjectViewDistance 		= 1500;
+	float MarkerViewDistance 		= 1000;
 		
 	int AutoSaveTimer 				= 240;
 
@@ -20,9 +20,9 @@ class EditorSettings: Controller
 	{
 		EditorSettings settings();
 		
-		settings.ViewDistance = GetProfileInt("ViewDistance", settings.ViewDistance);
-		settings.ObjectViewDistance = GetProfileInt("ObjectViewDistance", settings.ObjectViewDistance);
-		settings.MarkerViewDistance = GetProfileInt("MarkerViewDistance", settings.MarkerViewDistance);
+		settings.ViewDistance = GetProfileFloat("ViewDistance", settings.ViewDistance);
+		settings.ObjectViewDistance = GetProfileFloat("ObjectViewDistance", settings.ObjectViewDistance);
+		settings.MarkerViewDistance = GetProfileFloat("MarkerViewDistance", settings.MarkerViewDistance);
 		settings.AutoSaveTimer = GetProfileInt("AutoSaveTimer", settings.AutoSaveTimer);
 		
 		settings.LockCameraDuringDialogs = GetProfileBool("LockCameraDuringDialogs", settings.LockCameraDuringDialogs);
