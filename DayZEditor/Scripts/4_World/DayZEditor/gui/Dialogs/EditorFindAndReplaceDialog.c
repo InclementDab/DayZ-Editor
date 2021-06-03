@@ -17,7 +17,7 @@ class EditorFindAndReplaceDialog: EditorDialogBase
 		
 		AddButton("Find", "OnFind");
 		AddButton("Find + Replace", "OnFindAndReplace");
-		AddButton(DialogResult.Cancel, "Close");
+		AddButton("Close", DialogResult.Cancel);
 	}
 	
 	void OnFind(ButtonCommandArgs args)
