@@ -2,7 +2,7 @@
 
 class EditorLog
 {
-	static ref ScriptInvoker OnLog = new ScriptInvoker();
+	static ref ScriptInvoker OnLog;
 	
 	static LogLevel CurrentLogLevel = LogLevel.TRACE;
 	static string ExclusiveLogMode;
