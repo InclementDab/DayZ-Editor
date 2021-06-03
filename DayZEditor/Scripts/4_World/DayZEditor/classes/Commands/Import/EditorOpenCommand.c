@@ -9,6 +9,11 @@ class EditorOpenCommand: EditorImportCommandBase
 			return;
 		}
 		
+		OpenFile(file_name);
+	}
+	
+	EditorSaveData OpenFile(string file_name)
+	{
 		EditorSaveData save_data = ImportFile(file_name, true);
 		/*
 		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
@@ -27,6 +32,8 @@ class EditorOpenCommand: EditorImportCommandBase
 			m_Editor.SetSaveFile(file_name);
 			m_Editor.GetCamera().SetPosition(save_data.CameraPosition);
 		}
+		
+		return save_data;
 	}
 
 	override bool UnhideMapObjects()

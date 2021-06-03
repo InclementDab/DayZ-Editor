@@ -76,3 +76,25 @@ class EditorMenuItemCategory: EditorMenuItem
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 }
+
+class EditorOpenRecentListItem: EditorMenuItem
+{
+	protected string m_FilePath;
+	
+	// todo: EditorFile struct like in EditorSaveFile
+	void EditorOpenRecentListItem(string file_path)
+	{		
+		m_FilePath = file_path;
+		m_TemplateController.LabelText = m_FilePath;
+		m_TemplateController.NotifyPropertyChanged("LabelText");
+		
+		ViewBinding view_binding = m_TemplateController.GetViewBinding(EditorMenuItemButton);
+		view_binding.Relay_Command = "OnExecute";
+	}
+	
+	void OnExecute(ButtonCommandArgs args)
+	{
+		EditorOpenCommand open_command = EditorOpenCommand.Cast(GetEditor().CommandManager[EditorOpenCommand]);
+		open_command.OpenFile(m_FilePath);
+	}
+}

@@ -6,6 +6,7 @@ class EditorFileMenu: EditorMenu
 		
 		AddMenuButton(m_Editor.CommandManager[EditorNewCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorOpenCommand]);
+		AddMenuCategory("Open Recent", EditorOpenRecentMenu);
 		AddMenuButton(m_Editor.CommandManager[EditorSaveCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorSaveAsCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorCloseCommand]);

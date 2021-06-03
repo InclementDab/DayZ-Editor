@@ -67,6 +67,8 @@ class Editor
 	
 	private bool 								m_Active;
 	string 										EditorSettingsFile = "$profile:/Editor/Settings.json";
+	// todo: change this to some EditorFile struct that manages this better
+	// bouncing around strings is a PAIN... i think it also breaks directories
 	protected string							EditorSaveFile;
 	string										EditorDirectory = "$profile:/Editor/";
 	
@@ -78,6 +80,8 @@ class Editor
 
 	string 										BanReason = "null";
 	string 										Version = "1.1.2050pre";
+	
+	protected ref array<string>					m_RecentlyOpenedFiles = {};
 	
 	// Loot Editing
 	private Object 								m_LootEditTarget;
@@ -134,7 +138,7 @@ class Editor
 		m_EditorHudController = m_EditorHud.GetTemplateController();		
 		
 		m_Mission = GetGame().GetMission();
-				
+		
 		if (!IsMissionOffline()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
@@ -750,8 +754,17 @@ class Editor
 	{
 		EditorSaveFile = save_file;
 		GetEditorHud().GetController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
+		
+		if (m_RecentlyOpenedFiles.Find(EditorSaveFile) != -1) {
+			m_RecentlyOpenedFiles.RemoveOrdered(m_RecentlyOpenedFiles.Find(EditorSaveFile));
+		}
+		
+		m_RecentlyOpenedFiles.Insert(EditorSaveFile);
+		if (m_RecentlyOpenedFiles.Count() > 3) {
+			m_RecentlyOpenedFiles.RemoveOrdered(0);
+		}
 	}
-	
+		
 	string GetSaveFile()
 	{
 		return EditorSaveFile;
@@ -946,6 +959,11 @@ class Editor
 	void InsertAction(EditorAction action) 
 	{
 		m_ActionStack.InsertAction(action);
+	}
+	
+	array<string> GetRecentFiles()
+	{
+		return m_RecentlyOpenedFiles;
 	}
 	
 	static PlayerBase CreateDefaultCharacter(vector position = "0 0 0")
