@@ -44,4 +44,26 @@ modded class LoadingScreen
 		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", val));
 		m_ImageWidgetBackground.SetImage(0);
 	}
+	
+	override void Show()
+	{
+		Widget lIcon = m_ImageBackground;
+		Widget pText = m_ProgressLoading;
+		m_ProgressText.SetText("");
+		m_ProgressLoading.SetCurrent(0.0);
+		m_ImageBackground.SetMaskProgress(0.0);
+		
+		if (!m_WidgetRoot.IsVisible()) {
+			if (m_DayZGame.GetUIManager().IsDialogVisible()) {
+				m_DayZGame.GetUIManager().HideDialog();
+			}
+						
+			m_WidgetRoot.Show(true);
+			m_TextWidgetTitle.SetText( "" );
+			m_TextWidgetStatus.SetText( "" );
+		}
+		
+		ProgressAsync.SetProgressData(pText);
+		ProgressAsync.SetUserData(lIcon);
+	}
 }
