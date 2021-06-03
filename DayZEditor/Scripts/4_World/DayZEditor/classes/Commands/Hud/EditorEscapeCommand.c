@@ -39,10 +39,12 @@ class EditorEscapeCommand: EditorCommand
 
 		if (g_Game.GetMission().IsPaused()) {
 			g_Game.GetMission().Continue();
+			GetEditor().GetEditorHud().Show(true);
 			return;
 		} 
 		
 		g_Game.GetMission().Pause();
+		GetEditor().GetEditorHud().Show(false);
 	}
 	
 	override ShortcutKeys GetShortcut() 

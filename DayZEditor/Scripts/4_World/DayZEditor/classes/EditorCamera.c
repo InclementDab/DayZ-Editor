@@ -126,7 +126,7 @@ class EditorCamera: Camera
 			SetFOV(1);
 		}
 		
-		if (MoveEnabled) {
+		if (MoveEnabled && !g_Game.GetMission().IsPaused()) {
 						
 			if (Boost_Multiplier > 0) {
 				Speed += Math.Clamp(timeSlice * 40.0 * Speed * speedInc / Boost_Multiplier, -Boost_Multiplier, Boost_Multiplier);
