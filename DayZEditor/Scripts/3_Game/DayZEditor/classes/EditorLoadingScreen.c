@@ -3,7 +3,15 @@ modded class LoadingScreen
 	static const int LOADING_SCREEN_COUNT = 15;
 	
 	void LoadingScreen(DayZGame game)
-	{		
+	{
+		Print(game);
+		
+		if (!game.OnProgressReport) {
+			game.OnProgressReport = new ScriptInvoker();
+		}
+		
+		game.OnProgressReport.Insert(OnGameProgressReport);
+		
 		m_ImageLogoMid.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
 		m_ImageLogoMid.SetImage(0);
 		m_ImageLogoMid.SetFlags(WidgetFlags.SOURCEALPHA | WidgetFlags.BLEND | WidgetFlags.STRETCH);
@@ -49,7 +57,7 @@ modded class LoadingScreen
 	{
 		Widget lIcon = m_ImageBackground;
 		Widget pText = m_ProgressLoading;
-		m_ProgressText.SetText("");
+		m_ProgressText.Show(true);
 		m_ProgressLoading.SetCurrent(0.0);
 		m_ImageBackground.SetMaskProgress(0.0);
 		
@@ -59,11 +67,17 @@ modded class LoadingScreen
 			}
 						
 			m_WidgetRoot.Show(true);
-			m_TextWidgetTitle.SetText( "" );
-			m_TextWidgetStatus.SetText( "" );
+			m_TextWidgetTitle.SetText("");
+			m_TextWidgetStatus.SetText("");
 		}
 		
 		ProgressAsync.SetProgressData(pText);
 		ProgressAsync.SetUserData(lIcon);
+	}
+	
+	void OnGameProgressReport(string report)
+	{
+		Print(report);
+		m_ProgressText.SetText(report);
 	}
 }

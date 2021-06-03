@@ -30,8 +30,6 @@
 // if today is that day. fix it.
 // and message me your feedback on discord :)
 
-
-
 ref Editor g_Editor;
 Editor GetEditor() {
 	return g_Editor;
@@ -91,6 +89,8 @@ class Editor
 	private void Editor(PlayerBase player) 
 	{
 		EditorLog.Trace("Editor");
+		g_Game.ReportProgress("Loading Loading Screen");
+
 		g_Editor = this;
 		m_Player = player;
 		
@@ -135,7 +135,8 @@ class Editor
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
 		}
-				
+		
+		
 		thread AutoSaveThread();
 	}
 	

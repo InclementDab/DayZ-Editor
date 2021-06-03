@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass EditorMenuContent {
  clipchildren 1
- color 0.098 0.098 0.098 1
+ color 0.0588 0.0588 0.0588 1
  size 275 0
  hexactpos 1
  vexactpos 1

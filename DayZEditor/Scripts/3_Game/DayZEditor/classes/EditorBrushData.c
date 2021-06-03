@@ -1,6 +1,5 @@
 typedef ref map<string, ref EditorBrushData> EditorBrushDataSet;
 
-
 // This is the data that will be loaded from XML
 class EditorBrushData
 {
