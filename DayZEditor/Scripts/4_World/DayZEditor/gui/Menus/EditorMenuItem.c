@@ -41,12 +41,10 @@ class EditorMenuItemDivider: EditorMenuItem
 
 class EditorMenuItemCategory: EditorMenuItem
 {
-	protected EditorCommand m_EditorCommand;
 	protected ImageWidget EditorMenuItemCategoryIcon;
 	
 	void EditorMenuItemCategory(string label, EditorMenu child_menu, EditorCommand editor_command = null)
 	{
-		m_EditorCommand = editor_command;
 		EditorMenuItemCategoryIcon.Show(true);
 		
 		m_TemplateController.LabelText = label;
@@ -65,7 +63,9 @@ class EditorMenuItemCategory: EditorMenuItem
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		if (!m_EditorCommand.CanExecute()) {
+		// Dont show the child menu when the command execute is false
+		EditorCommand editor_command = EditorCommand.Cast(m_TemplateController.GetViewBinding(EditorMenuItemButton).GetRelayCommand());
+		if (editor_command && !editor_command.CanExecute()) {
 			return super.OnMouseEnter(w, x, y);
 		}
 		
