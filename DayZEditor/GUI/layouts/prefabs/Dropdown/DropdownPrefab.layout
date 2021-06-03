@@ -149,7 +149,7 @@ GridSpacerWidgetClass DropdownPrefab {
        clipchildren 0
        ignorepointer 1
        position -0.18 0
-       size 0.155 0.8
+       size 0.25 0.8
        valign center_ref
        hexactpos 0
        vexactpos 0
@@ -161,7 +161,7 @@ GridSpacerWidgetClass DropdownPrefab {
        "exact text" 0
        "size to text h" 0
        "size to text v" 0
-       "text halign" right
+       "text halign" center
        "text valign" center
        {
         ScriptParamsClass {

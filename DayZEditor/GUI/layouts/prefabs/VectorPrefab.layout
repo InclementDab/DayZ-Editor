@@ -1,6 +1,6 @@
 PanelWidgetClass EditorPosElement {
  clipchildren 0
- size 1 28
+ size 1 20
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -10,33 +10,40 @@ PanelWidgetClass EditorPosElement {
   WrapSpacerWidgetClass PositionSpacer {
    clipchildren 1
    ignorepointer 1
-   size 1 28
-   halign right_ref
+   size 1 20
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 1
    Padding 0
    Margin 0
-   "Size To Content H" 1
-   "Size To Content V" 1
-   content_halign center
    {
-    TextWidgetClass EditorPosElementLabel {
+    FrameWidgetClass LabelFrame {
      ignorepointer 1
-     position 0 0
-     size 0.2 24
+     position 10 10
+     size 0.23 1
      hexactpos 1
      vexactpos 1
      hexactsize 0
-     vexactsize 1
-     scriptclass "ViewBinding"
-     font "gui/fonts/etelkatextpro"
-     "text offset" -10 0
-     "text halign" right
+     vexactsize 0
      {
-      ScriptParamsClass {
-       Binding_Name "Caption"
+      TextWidgetClass EditorPosElementLabel {
+       ignorepointer 1
+       position 16 2
+       size 1 16
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       text "lslslslsl"
+       font "gui/fonts/etelkatextpro"
+       "text valign" center
+       {
+        ScriptParamsClass {
+         Binding_Name "Caption"
+        }
+       }
       }
      }
     }
@@ -44,7 +51,7 @@ PanelWidgetClass EditorPosElement {
      clipchildren 1
      ignorepointer 1
      color 1 1 1 0.9961
-     size 0.25 1
+     size 0.24 1
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -57,12 +64,12 @@ PanelWidgetClass EditorPosElement {
        keepsafezone 0
        color 0.7647 0.1804 0.102 1
        position 1 0
-       size 0.18 0.95
+       size 0.18 18
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
-       vexactsize 0
+       vexactsize 1
        style rover_sim_colorable
        {
         TextWidgetClass x0 {
@@ -88,8 +95,8 @@ PanelWidgetClass EditorPosElement {
        clipchildren 1
        ignorepointer 1
        color 0.7647 0.1804 0.102 0.0784
-       position 20 0
-       size 1 1
+       position 24 0
+       size 0.88 1
        valign center_ref
        hexactpos 1
        vexactpos 1
@@ -101,8 +108,8 @@ PanelWidgetClass EditorPosElement {
          visible 1
          clipchildren 1
          color 1 1 1 0.9608
-         position 14 0
-         size 0.93 0.9
+         position 0 0
+         size 1 0.9
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -127,17 +134,17 @@ PanelWidgetClass EditorPosElement {
     }
     FrameWidgetClass x_y_spacer {
      ignorepointer 1
-     position 10 10
-     size 4 1
-     hexactpos 1
+     position 0 10
+     size 0.01 20
+     hexactpos 0
      vexactpos 1
-     hexactsize 1
-     vexactsize 0
+     hexactsize 0
+     vexactsize 1
     }
     PanelWidgetClass frame_y {
      ignorepointer 1
      color 1 1 1 0.9961
-     size 0.25 1
+     size 0.24 1
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -150,12 +157,12 @@ PanelWidgetClass EditorPosElement {
        keepsafezone 0
        color 0.5765 0.8157 0.2196 1
        position 1 0
-       size 0.18 0.95
+       size 0.18 18
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
-       vexactsize 0
+       vexactsize 1
        style rover_sim_colorable
        {
         TextWidgetClass y {
@@ -181,7 +188,7 @@ PanelWidgetClass EditorPosElement {
       PanelWidgetClass txt_y {
        ignorepointer 1
        color 0.5765 0.8157 0.2196 0.0784
-       position 20 0
+       position 23 0
        size 0.88 1
        valign center_ref
        hexactpos 1
@@ -194,7 +201,7 @@ PanelWidgetClass EditorPosElement {
          visible 1
          keepsafezone 0
          color 1 1 1 0.9961
-         position 14 0
+         position 0 0
          size 1 0.9
          valign center_ref
          hexactpos 1
@@ -220,18 +227,18 @@ PanelWidgetClass EditorPosElement {
     }
     FrameWidgetClass y_z_spacer {
      ignorepointer 1
-     position 10 10
-     size 4 1
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 0
+     position 0 0
+     size 0.01 20
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 1
     }
     PanelWidgetClass frame_z {
      clipchildren 1
      ignorepointer 1
      color 1 1 1 0.9961
-     size 0.25 1
+     size 0.24 1
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -245,12 +252,12 @@ PanelWidgetClass EditorPosElement {
        keepsafezone 0
        color 0.2588 0.5176 0.9176 1
        position 1 0
-       size 0.18 0.95
+       size 0.18 18
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
-       vexactsize 0
+       vexactsize 1
        style rover_sim_colorable
        {
         TextWidgetClass z {
@@ -275,7 +282,7 @@ PanelWidgetClass EditorPosElement {
        clipchildren 1
        ignorepointer 1
        color 0.2588 0.5176 0.9176 0.0784
-       position 20 0
+       position 23 0
        size 0.88 1
        valign center_ref
        hexactpos 1
@@ -289,7 +296,7 @@ PanelWidgetClass EditorPosElement {
          clipchildren 1
          keepsafezone 0
          color 1 1 1 0.9961
-         position 14 0
+         position 0 0
          size 1 0.9
          valign center_ref
          hexactpos 1

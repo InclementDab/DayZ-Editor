@@ -15,7 +15,7 @@ PanelWidgetClass DropdownElement {
    clipchildren 0
    color 0.7529 0.3686 0.3255 0.902
    position 0 0
-   size 1.5 0.95
+   size 1 0.95
    hexactpos 0
    vexactpos 0
    hexactsize 0
@@ -31,8 +31,7 @@ PanelWidgetClass DropdownElement {
     TextWidgetClass DropdownElementText {
      ignorepointer 1
      color 0.9412 0.9412 0.9412 0.9412
-     position 0.015 0
-     size 0.8 0.9
+     size 1 0.9
      valign center_ref
      hexactpos 0
      vexactpos 0
