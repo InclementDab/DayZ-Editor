@@ -63,7 +63,7 @@ class EditorMenuItemCategory: EditorMenuItem
 		float sx1, sy1;
 		m_LayoutRoot.GetScreenPos(x1, y1);
 		m_LayoutRoot.GetScreenSize(sx1, sy1);
-		m_TemplateController.ChildMenu.GetLayoutRoot().SetPos(x1 + sx1, y1); // 275 is menu width
+		m_TemplateController.ChildMenu.GetLayoutRoot().SetPos(x1 + sx1, y1);
 		m_TemplateController.ChildMenu.GetLayoutRoot().Show(true);
 		return super.OnMouseEnter(w, x, y);
 	}	
@@ -78,14 +78,11 @@ class EditorMenuItemCategory: EditorMenuItem
 }
 
 class EditorOpenRecentListItem: EditorMenuItem
-{
-	protected string m_FilePath;
-	
+{	
 	// todo: EditorFile struct like in EditorSaveFile
 	void EditorOpenRecentListItem(string file_path)
 	{		
-		m_FilePath = file_path;
-		m_TemplateController.LabelText = m_FilePath;
+		m_TemplateController.LabelText = file_path;
 		m_TemplateController.NotifyPropertyChanged("LabelText");
 		
 		ViewBinding view_binding = m_TemplateController.GetViewBinding(EditorMenuItemButton);
@@ -95,6 +92,6 @@ class EditorOpenRecentListItem: EditorMenuItem
 	void OnExecute(ButtonCommandArgs args)
 	{
 		EditorOpenCommand open_command = EditorOpenCommand.Cast(GetEditor().CommandManager[EditorOpenCommand]);
-		open_command.OpenFile(m_FilePath);
+		open_command.OpenFile(m_TemplateController.LabelText);
 	}
 }
