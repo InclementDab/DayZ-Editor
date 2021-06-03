@@ -30,7 +30,7 @@ class EditorImportCommandBase: EditorCommand
 		file_name = "$profile:Editor/" + file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 		if (!FileExist(file_name)) {
-			MessageBox.Show("File Not Found", "Could not find file " + file_name, MessageBoxButtons.OK);
+			EditorLog.Error("Could not find file %1", file_name);
 			return null;
 		}
 		
@@ -38,8 +38,23 @@ class EditorImportCommandBase: EditorCommand
 		ImportSettings settings = new ImportSettings(); // todo
 		save_data = file_type.Import(file_name, settings);
 		
+		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
+			EditorLog.Warning("Different map detected");
+			/*if (MessageBox.Show("Different Map Detected", string.Format("Switch map to %1?"), MessageBoxButtons.OKCancel) != DialogResult.OK) {
+				return null;
+			}
+			
+			EditorLog.Info("Loading Map %1", save_data.MapName);
+			g_Game.ReportProgress(string.Format("Loading Map %1", save_data.MapName));
+			
+			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
+			
+			m_Editor = GetEditor();
+			*/
+		}
+		
 		if (clear_before) {
-			m_Editor.Clear();
+			GetEditor().Clear();
 		}
 		
 		if (UnhideMapObjects()) {
@@ -50,7 +65,6 @@ class EditorImportCommandBase: EditorCommand
 		foreach (int id: save_data.DeletedObjects) {
 			if (!GetEditor().HideMapObject(id)) {
 				EditorLog.Warning("Failed to delete building: %1", id.ToString());
-				EditorMessageBox.ShowSynchronous("Error", string.Format("There was an error deleting object %1\nTry restarting the game and reloading the file", id), MessageBoxButtons.OK);
 			}
 		}
 		
@@ -59,7 +73,7 @@ class EditorImportCommandBase: EditorCommand
 			GetEditor().CreateObject(data, false);
 		}
 		
-		m_Editor.GetEditorHud().CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.DeletedObjects.Count()), COLOR_GREEN);
+		GetEditor().GetEditorHud().CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.DeletedObjects.Count()), COLOR_GREEN);
 		return save_data;
 	}
 	
