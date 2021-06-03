@@ -98,7 +98,9 @@ class EditorOpenRecentListItem: EditorMenuItem
 		m_TemplateController.NotifyPropertyChanged("LabelText");
 		
 		ViewBinding view_binding = m_TemplateController.GetViewBinding(EditorMenuItemButton);
-		view_binding.Relay_Command = "OnExecute";
+		if (view_binding) {
+			view_binding.Relay_Command = "OnExecute";
+		}
 	}
 	
 	void OnExecute(ButtonCommandArgs args)
