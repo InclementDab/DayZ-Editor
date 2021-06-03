@@ -108,8 +108,7 @@ class Editor
 		MakeDirectory(EditorDirectory);
 		
 		// Init Settings
-		//Settings 			= LoadSettings(EditorSettingsFile);
-		Settings 			= new EditorSettings();
+		Settings 			= EditorSettings.Load();
 		
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
@@ -157,7 +156,7 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true); 
 		}
 		
-		//SaveSettings(Settings, EditorSettingsFile);
+		Settings.Save();
 		
 		delete Settings;
 		delete m_EditorHud;

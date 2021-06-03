@@ -72,7 +72,7 @@ class DialogBase: ScriptView
 		return button;
 	}
 	
-	private void DialogExitButtonCallback(DialogExitButton button)
+	protected void DialogExitButtonCallback(DialogExitButton button)
 	{
 		CloseDialog(button.ButtonResult);
 	}

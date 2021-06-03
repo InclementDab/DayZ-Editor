@@ -1,36 +1,8 @@
-/*static EditorSettings LoadSettings(string filename)
-{
-	EditorLog.Trace("EditorSettings::Load");
-	
-	EditorSettings settings = new EditorSettings();
-	
-	// Generate Initial File
-	if (!FileExist(filename)) {
-		SaveSettings(settings, filename);
-		return settings;
-	}
-	
-	EditorLog.Info("Loading EditorSettings from %1", filename);
-	// Why the fuck doesnt this load when i RELOAD the editor?!?!?!??!?!?!?!?!!
-	// B R U H
-	JsonFileLoader<EditorSettings>.JsonLoadFile(filename, settings);
-	return settings;
-}
-
-
-static void SaveSettings(EditorSettings settings, string filename)
-{
-	EditorLog.Trace("EditorSettings::Save");
-	
-	EditorLog.Info("Saving EditorSettings to %1", filename);
-	JsonFileLoader<EditorSettings>.JsonSaveFile(filename, settings);
-}
-	*/
 class EditorSettings: Controller
 {	
-	float ViewDistance 				= 8000;
-	float ObjectViewDistance 		= 1500;
-	float MarkerViewDistance 		= 1000;
+	int ViewDistance 				= 8000;
+	int ObjectViewDistance 			= 1500;
+	int MarkerViewDistance 			= 1000;
 		
 	int AutoSaveTimer 				= 240;
 
@@ -43,6 +15,108 @@ class EditorSettings: Controller
 	string EditorBrushFile 			= "$profile:/Editor/EditorBrushes.xml";
 	
 	LogLevel SelectedLogLevel 		= LogLevel.DEBUG;
+	
+	static EditorSettings Load()
+	{
+		EditorSettings settings();
+		
+		settings.ViewDistance = GetProfileInt("ViewDistance", settings.ViewDistance);
+		settings.ObjectViewDistance = GetProfileInt("ObjectViewDistance", settings.ObjectViewDistance);
+		settings.MarkerViewDistance = GetProfileInt("MarkerViewDistance", settings.MarkerViewDistance);
+		settings.AutoSaveTimer = GetProfileInt("AutoSaveTimer", settings.AutoSaveTimer);
+		
+		settings.LockCameraDuringDialogs = GetProfileBool("LockCameraDuringDialogs", settings.LockCameraDuringDialogs);
+		settings.ShowBoundingBoxes = GetProfileBool("ShowBoundingBoxes", settings.ShowBoundingBoxes);
+		settings.BrushedObjectMarkers = GetProfileBool("BrushedObjectMarkers", settings.BrushedObjectMarkers);
+		settings.DebugMode = GetProfileBool("DebugMode", settings.DebugMode);
+		
+		settings.EditorProtoFile = GetProfileString("EditorProtoFile", settings.EditorProtoFile);
+		settings.EditorBrushFile = GetProfileString("EditorBrushFile", settings.EditorBrushFile);
+		
+		settings.SelectedLogLevel = GetProfileInt("SelectedLogLevel", settings.SelectedLogLevel);
+		
+		return settings;
+	}
+	
+	void Save()
+	{
+		SetProfileInt("ViewDistance", ViewDistance);
+		SetProfileInt("ObjectViewDistance", ObjectViewDistance);
+		SetProfileInt("MarkerViewDistance", MarkerViewDistance);
+		SetProfileInt("AutoSaveTimer", AutoSaveTimer);
+		
+		SetProfileBool("LockCameraDuringDialogs", LockCameraDuringDialogs);
+		SetProfileBool("ShowBoundingBoxes", ShowBoundingBoxes);
+		SetProfileBool("BrushedObjectMarkers", BrushedObjectMarkers);
+		SetProfileBool("DebugMode", DebugMode);
+		
+		SetProfileString("EditorProtoFile", EditorProtoFile);
+		SetProfileString("EditorBrushFile", EditorBrushFile);
+		
+		SetProfileInt("SelectedLogLevel", SelectedLogLevel);
+		
+		GetGame().SaveProfile();
+	}
+	
+	static void SetProfileBool(string variable, bool value)
+	{
+		GetGame().SetProfileString(variable, value.ToString());	
+	}
+	
+	static void SetProfileInt(string variable, int value)
+	{
+		GetGame().SetProfileString(variable, value.ToString());
+	}
+	
+	static void SetProfileFloat(string variable, float value)
+	{
+		GetGame().SetProfileString(variable, value.ToString());
+	}
+	
+	static void SetProfileString(string variable, string value)
+	{
+		GetGame().SetProfileString(variable, value);
+	}
+	
+	static bool GetProfileBool(string variable, bool default = false)
+	{
+		string value;
+		if (GetGame().GetProfileString(variable, value)) {
+			return (value == "true" || value == "1");
+		}
+		
+		return default;
+	}
+	
+	static float GetProfileFloat(string variable, float default = 0)
+	{
+		string value;
+		if (GetGame().GetProfileString(variable, value)) {
+			return value.ToFloat();
+		}
+		
+		return default;
+	}
+	
+	static int GetProfileInt(string variable, int default = 0)
+	{
+		string value;
+		if (GetGame().GetProfileString(variable, value)) {
+			return value.ToInt();
+		}
+		
+		return default;
+	}
+	
+	static string GetProfileString(string variable, string default = "")
+	{
+		string value;
+		if (GetGame().GetProfileString(variable, value)) {
+			return value;
+		}
+		
+		return default;
+	}
 	
 	override void PropertyChanged(string property_name)
 	{

@@ -33,4 +33,13 @@ class EditorPreferencesDialog: EditorDialogBase
 		AddButton(DialogResult.OK);
 		AddButton("Close", DialogResult.Cancel);
 	}
+	
+	protected override void DialogExitButtonCallback(DialogExitButton button)
+	{
+		if (button.ButtonResult == DialogResult.OK) {
+			m_Editor.Settings.Save();
+		}
+		
+		super.DialogExitButtonCallback(button);
+	}
 }
