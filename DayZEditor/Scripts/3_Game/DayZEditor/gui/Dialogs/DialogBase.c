@@ -38,6 +38,11 @@ class DialogBase: ScriptView
 		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Delete, 15);
 	}
 	
+	void ExitDialogExecute()
+	{	
+		CloseDialog(DialogResult.Cancel);
+	}
+	
 	private void Delete()
 	{
 		delete this;
