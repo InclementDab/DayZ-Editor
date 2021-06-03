@@ -129,6 +129,7 @@ class EditorHudController: EditorControllerBase
 	
 	int ReloadPlaceableObjects() 
 	{ 
+		g_Game.ReportProgress("Loading Placeable Objects");
 		TStringArray config_paths = {};
 		config_paths.Insert(CFG_VEHICLESPATH);
 		config_paths.Insert(CFG_WEAPONSPATH);

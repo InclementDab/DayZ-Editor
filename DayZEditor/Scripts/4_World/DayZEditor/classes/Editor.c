@@ -89,7 +89,7 @@ class Editor
 	private void Editor(PlayerBase player) 
 	{
 		EditorLog.Trace("Editor");
-		g_Game.ReportProgress("Loading Loading Screen");
+		g_Game.ReportProgress("Loading Editor");
 
 		g_Editor = this;
 		m_Player = player;
@@ -108,14 +108,17 @@ class Editor
 		Settings 			= new EditorSettings();
 		
 		// Object Manager
+		g_Game.ReportProgress("Initializing Object Manager");
 		EditorLog.Info("Initializing Object Manager");
 		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
 		
 		// Camera Track Manager
+		g_Game.ReportProgress("Initializing Camera Track Manager");
 		EditorLog.Info("Initializing Camera Track Manager");
 		m_CameraTrackManager = EditorCameraTrackManagerModule.Cast(GetModuleManager().GetModule(EditorCameraTrackManagerModule));
 		
 		// Command Manager
+		g_Game.ReportProgress("Initializing Command Manager");
 		EditorLog.Info("Initializing Command Manager");
 		CommandManager 		= new EditorCommandManager();
 		CommandManager.Init();
@@ -125,6 +128,7 @@ class Editor
 		m_ActionStack 		= new EditorActionStack();
 		
 		// Init Hud
+		g_Game.ReportProgress("Initializing Hud");
 		m_EditorHud 		= new EditorHud();
 		EditorLog.Info("Initializing Hud");
 		m_EditorHudController = m_EditorHud.GetTemplateController();		

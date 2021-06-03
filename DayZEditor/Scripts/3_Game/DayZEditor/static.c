@@ -10,11 +10,7 @@ class EditorLog
 	private static string m_LastCalledType;	
 	
 	static void EditorPrint(string msg, LogLevel level)
-	{
-		if (g_Game) {
-			g_Game.ReportProgress(msg);
-		}
-		
+	{		
 		if (level >= EditorLog.CurrentLogLevel) {
 			
 			if (!OnLog) {

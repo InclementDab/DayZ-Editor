@@ -109,6 +109,7 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		// Loads all world objects into a map
 		WorldObjects.Clear();
+		g_Game.ReportProgress("Caching Map Objects");
 		EditorLog.Info("Caching Map Objects");
 		
 		ref array<Object> objects = {};
@@ -119,6 +120,7 @@ class EditorObjectManagerModule: JMModuleBase
 			WorldObjects.Insert(o.GetID(), new OLinkT(o));
 		}
 		
+		g_Game.ReportProgress(string.Format("Cached %1 map objects", WorldObjects.Count().ToString()));
 		EditorLog.Info("Cached %1 map objects", WorldObjects.Count().ToString());
 	}
 	
