@@ -77,7 +77,6 @@ modded class LoadingScreen
 	
 	void OnGameProgressReport(string report)
 	{
-		Print(report);
 		m_ProgressText.SetText(report);
 	}
 }
