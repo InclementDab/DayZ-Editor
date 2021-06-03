@@ -50,6 +50,7 @@ class EditorCommandManager
 		SelectAllCommand = RegisterCommand(EditorSelectAllCommand);
 		DeleteCommand = RegisterCommand(EditorDeleteCommand);
 		RegisterCommand(EditorDuplicateCommand);
+		RegisterCommand(EditorFindAndReplaceCommand);
 	
 		CutCommand = RegisterCommand(EditorCutCommand);
 		CopyCommand = RegisterCommand(EditorCopyCommand);

@@ -105,7 +105,7 @@ FrameWidgetClass LoadingFrame {
      ignorepointer 1
      color 0 0 0 0.549
      position 0.00105 0
-     size 1 0.13
+     size 1 0.12
      halign center_ref
      valign bottom_ref
      hexactpos 0
