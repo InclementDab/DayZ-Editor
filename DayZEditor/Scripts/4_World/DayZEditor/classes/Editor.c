@@ -184,7 +184,7 @@ class Editor
 	{		
 		ProcessInput(GetGame().GetInput());
 		
-		ref set<Object> obj = new set<Object>();
+		set<Object> obj();
 		int x, y;
 		GetMousePos(x, y);
 		
