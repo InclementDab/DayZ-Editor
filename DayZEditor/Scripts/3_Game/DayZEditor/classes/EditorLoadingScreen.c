@@ -3,9 +3,7 @@ modded class LoadingScreen
 	static const int LOADING_SCREEN_COUNT = 15;
 	
 	void LoadingScreen(DayZGame game)
-	{
-		Print(game);
-		
+	{		
 		if (!game.OnProgressReport) {
 			game.OnProgressReport = new ScriptInvoker();
 		}
