@@ -59,6 +59,7 @@ class DropdownListPrefab<Class TValue>: ScriptView
 			SetActiveListItem(element);
 		}
 		
+		element.GetLayoutRoot().Show(false);
 		m_ItemList.Insert(element);
 	}
 			
