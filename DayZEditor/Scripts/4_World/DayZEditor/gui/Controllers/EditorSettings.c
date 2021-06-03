@@ -14,7 +14,7 @@ class EditorSettings: Controller
 	string EditorProtoFile 			= "$profile:/Editor/MapGroupProto.xml";
 	string EditorBrushFile 			= "$profile:/Editor/EditorBrushes.xml";
 	
-	LogLevel SelectedLogLevel 		= LogLevel.DEBUG;
+	LogLevel SelectedLogLevel 		= LogLevel.INFO;
 	
 	static EditorSettings Load()
 	{
