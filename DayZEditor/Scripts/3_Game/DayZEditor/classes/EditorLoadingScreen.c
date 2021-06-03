@@ -4,11 +4,29 @@ modded class LoadingScreen
 	
 	void LoadingScreen(DayZGame game)
 	{		
-		if (!game.OnProgressReport) {
-			game.OnProgressReport = new ScriptInvoker();
+		m_DayZGame = game;
+		
+		if (!m_DayZGame.OnProgressReport) {
+			m_DayZGame.OnProgressReport = new ScriptInvoker();
 		}
 		
-		game.OnProgressReport.Insert(OnGameProgressReport);
+		m_DayZGame.OnProgressReport.Insert(OnGameProgressReport);
+				
+		m_WidgetRoot = game.GetLoadingWorkspace().CreateWidgets("DayZEditor/GUI/layouts/EditorLoadingScreen.layout");
+		Class.CastTo(m_ImageLogoMid, m_WidgetRoot.FindAnyWidget("ImageLogoMid"));
+		Class.CastTo(m_ImageLogoCorner, m_WidgetRoot.FindAnyWidget("ImageLogoCorner"));
+		
+		Class.CastTo(m_TextWidgetTitle, m_WidgetRoot.FindAnyWidget("TextWidget"));
+		Class.CastTo(m_TextWidgetStatus, m_WidgetRoot.FindAnyWidget("StatusText"));
+		Class.CastTo(m_ImageWidgetBackground, m_WidgetRoot.FindAnyWidget("ImageBackground"));
+		Class.CastTo(m_ImageLoadingIcon, m_WidgetRoot.FindAnyWidget("ImageLoadingIcon"));
+		Class.CastTo(m_ModdedWarning, m_WidgetRoot.FindAnyWidget("ModdedWarning"));
+		
+		m_ImageBackground = ImageWidget.Cast( m_WidgetRoot.FindAnyWidget("ImageBackground") );
+		m_ProgressLoading = ProgressBarWidget.Cast( m_WidgetRoot.FindAnyWidget("LoadingBar") );
+		
+		string tmp;
+		m_ProgressText = TextWidget.Cast(m_WidgetRoot.FindAnyWidget("ProgressText"));
 		
 		m_ImageLogoMid.LoadImageFile(0, "DayZEditor/gui/images/logo_editor_big.edds");
 		m_ImageLogoMid.SetImage(0);
