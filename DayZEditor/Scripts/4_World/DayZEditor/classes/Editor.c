@@ -264,6 +264,8 @@ class Editor
 		
 		CommandManager[EditorOpenRecentCommand].SetCanExecute(m_RecentlyOpenedFiles.Count() > 0);
 		
+		CommandManager[EditorCameraTrackRun].SetCanExecute(m_CameraTrackManager.GetCameraTracks().Count() > 0);
+		
 		EditorLog.CurrentLogLevel = log_lvl;
 	}
 	
@@ -429,6 +431,10 @@ class Editor
 	{
 		// Dont process hotkeys if dialog is open
 		if (m_EditorHud.CurrentDialog) {
+			return false;
+		}
+		
+		if (GetFocus()) {
 			return false;
 		}
 		

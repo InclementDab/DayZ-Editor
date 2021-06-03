@@ -1016,7 +1016,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          priority 5
          scriptclass "ViewBinding"
          style Default
-         "no focus" 0
+         "no focus" 1
          text_offset 0 0
          switch toggle
          {
