@@ -5,7 +5,7 @@ class EditorContextMenu: EditorMenu
 	void EditorContextMenu(float x, float y)
 	{
 		m_X = x; m_Y = y;
-				
+		
 		m_Editor.GetCamera().MoveEnabled = false;
 		m_Editor.GetCamera().LookEnabled = false;
 		m_EditorHud.ShowCursor(true);
