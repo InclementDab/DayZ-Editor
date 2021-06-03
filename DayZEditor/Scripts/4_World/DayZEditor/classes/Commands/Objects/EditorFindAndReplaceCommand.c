@@ -14,9 +14,11 @@ class EditorFindAndReplaceCommand: EditorCommand
 		foreach (int _, EditorObject editor_object: editor_objects) {
 			string t1 = editor_object.GetType();
 			t1.ToLower();
-			if (t1 == query) {
-				found_objects.InsertEditorObject(editor_object);
+			if (t1 != query) {
+				continue;
 			}
+			
+			found_objects.InsertEditorObject(editor_object);
 		}
 		
 		return found_objects;
