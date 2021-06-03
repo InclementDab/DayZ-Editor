@@ -14,8 +14,8 @@ class EditorCameraTrackRun: EditorCommand
 		return "Run Track";
 	}
 	
-	override ShortcutKeys GetShortcut() 
+	/*override ShortcutKeys GetShortcut() 
 	{
 		return { KeyCode.KC_O };
-	}
+	}*/
 }
