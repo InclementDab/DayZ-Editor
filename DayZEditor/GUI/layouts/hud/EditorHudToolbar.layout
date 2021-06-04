@@ -1282,6 +1282,115 @@ WrapSpacerWidgetClass ToolbarWrapper {
       }
      }
     }
+    PanelWidgetClass TabPanel {
+     ignorepointer 1
+     color 0.1176 0.1176 0.1176 0
+     size 0.145 50
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      ButtonWidgetClass DeletionsTabButton {
+       position 0 0
+       size 0.32 32
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       text "Deletions"
+       text_proportion 0.5
+       switch toggle
+       {
+        PanelWidgetClass PanelWidget1 {
+         ignorepointer 1
+         color 0.1961 0.1961 0.1961 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         style Slim_Outline2
+        }
+       }
+       {
+        ScriptParamsClass {
+        }
+       }
+      }
+      ButtonWidgetClass PlacementsTabButton {
+       position 1 0
+       size 0.32 32
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       text "Placements"
+       text_proportion 0.5
+       switch toggle
+       {
+        PanelWidgetClass PanelWidget2 {
+         ignorepointer 1
+         color 0.1961 0.1961 0.1961 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         style Slim_Outline2
+        }
+       }
+       {
+        ScriptParamsClass {
+        }
+       }
+      }
+      ButtonWidgetClass CinematicCameraTabButton {
+       position 1 0
+       size 0.35 32
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       text "Cinematics"
+       text_proportion 0.5
+       switch toggle
+       {
+        PanelWidgetClass PanelWidget3 {
+         ignorepointer 1
+         color 0.1961 0.1961 0.1961 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         style Slim_Outline2
+        }
+       }
+       {
+        ScriptParamsClass {
+        }
+       }
+      }
+     }
+    }
    }
   }
  }

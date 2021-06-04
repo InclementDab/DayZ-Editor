@@ -777,6 +777,31 @@ FrameWidgetClass EditorFrame {
             }
            }
           }
+          WrapSpacerWidgetClass RightbarDeletionsList {
+           visible 0
+           ignorepointer 0
+           keepsafezone 0
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           style Colorable
+           Padding 0
+           Margin 0
+           "Size To Content V" 1
+           content_halign right
+           {
+            ScriptParamsClass {
+             Binding_Name "RightbarDeletionData"
+             Two_Way_Binding 1
+            }
+           }
+          }
          }
         }
        }
@@ -863,7 +888,7 @@ FrameWidgetClass EditorFrame {
        {
         ButtonWidgetClass DeletionsTabButton {
          position 0 0
-         size 0.49 20
+         size 0.32 20
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -872,6 +897,7 @@ FrameWidgetClass EditorFrame {
          vexactsize 1
          scriptclass "ViewBinding"
          text "Deletions"
+         switch toggle
          {
           PanelWidgetClass PanelWidget1 {
            ignorepointer 1
@@ -893,7 +919,7 @@ FrameWidgetClass EditorFrame {
         }
         ButtonWidgetClass PlacementsTabButton {
          position 1 0
-         size 0.49 20
+         size 0.32 20
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -901,8 +927,39 @@ FrameWidgetClass EditorFrame {
          vexactsize 1
          scriptclass "ViewBinding"
          text "Placements"
+         switch toggle
          {
           PanelWidgetClass PanelWidget2 {
+           ignorepointer 1
+           color 1 1 1 0.9961
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           style Slim_Outline2
+          }
+         }
+         {
+          ScriptParamsClass {
+          }
+         }
+        }
+        ButtonWidgetClass CinematicCameraTabButton {
+         position 0 1
+         size 0.35 20
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         text "Cinematics"
+         switch toggle
+         {
+          PanelWidgetClass PanelWidget3 {
            ignorepointer 1
            color 1 1 1 0.9961
            size 1 1
@@ -1250,17 +1307,6 @@ FrameWidgetClass EditorFrame {
          "text halign" right
          "text valign" center
         }
-        FrameWidgetClass FrameWidget1 {
-         ignorepointer 1
-         position 0 0
-         size 201 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 0
-        }
         FrameWidgetClass FrameWidget6 {
          clipchildren 0
          ignorepointer 1
@@ -1347,6 +1393,40 @@ FrameWidgetClass EditorFrame {
            {
             ScriptParamsClass {
              Relay_Command "CameraTrackToggleExecute"
+            }
+           }
+          }
+         }
+        }
+        TextWidgetClass ObjectHoverSelectText {
+         ignorepointer 1
+         size 275 18
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Object :"
+         font "gui/fonts/etelkatextpro"
+         text_proportion 0.9
+         "text valign" center
+         {
+          TextWidgetClass ObjectHoverSelectObjectReadout {
+           ignorepointer 1
+           size 230 17
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           text "Super_Huge_Classname_Prob_Streams"
+           font "gui/fonts/etelkatextpro"
+           "text offset" 3 0
+           text_proportion 0.9
+           "text valign" center
+           {
+            ScriptParamsClass {
             }
            }
           }
