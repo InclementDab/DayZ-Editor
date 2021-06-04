@@ -25,6 +25,7 @@ class EditorPreferencesDialog: EditorDialogBase
 		debug_group.Insert(new CheckBoxPrefab("Modal Dialogs", m_Editor.Settings, "LockCameraDuringDialogs"));
 		debug_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", m_Editor.Settings, "ShowBoundingBoxes"));
 		debug_group.Insert(new CheckBoxPrefab("Brushed Object Markers", m_Editor.Settings, "BrushedObjectMarkers"));
+		debug_group.Insert(new CheckBoxPrefab("Preload Objects", m_Editor.Settings, "PreloadObjects"));
 		debug_group.Insert(new CheckBoxPrefab("Debug Mode", m_Editor.Settings, "DebugMode", m_Editor.Settings.DebugMode));
 		
 		AddContent(general_group);

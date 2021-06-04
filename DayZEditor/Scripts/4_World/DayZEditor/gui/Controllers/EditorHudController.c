@@ -133,12 +133,18 @@ class EditorHudController: EditorControllerBase
 			for (int i = 0; i < GetWorkbenchGame().ConfigGetChildrenCount(path); i++) {
 				string type;
 		        GetWorkbenchGame().ConfigGetChildName(path, i, type);
-				
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
 
-				if (placeable_item && !IsForbiddenItem(placeable_item.Type)) {
-					LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
+				if (!placeable_item || IsForbiddenItem(placeable_item.Type)) {
+					continue;
 				}
+				
+				// Makes stuff look good when first loading
+				if (GetEditor().Settings.PreloadObjects) {
+					GetGame().ObjectDelete(GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_LOCAL));				
+				}
+				
+				LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
 		    }
 		}
 		

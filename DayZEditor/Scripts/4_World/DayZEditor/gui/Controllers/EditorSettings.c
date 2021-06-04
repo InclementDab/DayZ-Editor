@@ -48,6 +48,7 @@ class EditorSettings: Controller
 	bool LockCameraDuringDialogs 	= true;
 	bool ShowBoundingBoxes 			= true;
 	bool BrushedObjectMarkers 		= false;
+	bool PreloadObjects				= false;
 	bool DebugMode 					= false;
 	
 	string EditorProtoFile 			= "$profile:/Editor/MapGroupProto.xml";
@@ -65,6 +66,7 @@ class EditorSettings: Controller
 		LockCameraDuringDialogs = GetProfileBool("LockCameraDuringDialogs", LockCameraDuringDialogs);
 		ShowBoundingBoxes = GetProfileBool("ShowBoundingBoxes", ShowBoundingBoxes);
 		BrushedObjectMarkers = GetProfileBool("BrushedObjectMarkers", BrushedObjectMarkers);
+		PreloadObjects = GetProfileBool("PreloadObjects", PreloadObjects);
 		DebugMode = GetProfileBool("DebugMode", DebugMode);
 		
 		EditorProtoFile = GetProfileString("EditorProtoFile", EditorProtoFile);
