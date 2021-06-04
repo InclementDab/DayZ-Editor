@@ -611,7 +611,7 @@ FrameWidgetClass EditorFrame {
            ignorepointer 0
            color 0.3137 0.3137 0.3137 1
            position 0 0
-           size 1 0.95
+           size 1 0.965
            halign center_ref
            hexactpos 0
            vexactpos 0
@@ -709,7 +709,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 0
      ignorepointer 0
      position -0.002 0.055
-     size 0.16 0.923
+     size 0.16 0.927
      halign right_ref
      hexactpos 0
      vexactpos 0
@@ -887,15 +887,15 @@ FrameWidgetClass EditorFrame {
        style rover_sim_colorable
        {
         ButtonWidgetClass DeletionsTabButton {
-         position 0 0
          size 0.32 20
-         halign right_ref
+         halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 1
          scriptclass "ViewBinding"
+         style Default
          text "Deletions"
          switch toggle
          {
@@ -948,9 +948,10 @@ FrameWidgetClass EditorFrame {
          }
         }
         ButtonWidgetClass CinematicCameraTabButton {
-         position 0 1
-         size 0.35 20
-         halign center_ref
+         position 0 0
+         size 0.32 20
+         halign right_ref
+         valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
@@ -974,6 +975,7 @@ FrameWidgetClass EditorFrame {
          }
          {
           ScriptParamsClass {
+           Relay_Command "CameraTrackToggleExecute"
           }
          }
         }
@@ -1292,7 +1294,7 @@ FrameWidgetClass EditorFrame {
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 0.1 1
+         size 0.075 1
          halign right_ref
          valign center_ref
          hexactpos 0
@@ -1306,8 +1308,23 @@ FrameWidgetClass EditorFrame {
          "size to text v" 0
          "text halign" right
          "text valign" center
+         {
+          ImageWidgetClass ImageWidget0 {
+           ignorepointer 1
+           position -2 -1
+           size 32 28
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_editor_gui image:camera_alt"
+           mode additive
+          }
+         }
         }
         FrameWidgetClass FrameWidget6 {
+         visible 0
          clipchildren 0
          ignorepointer 1
          position 0 0
@@ -1400,10 +1417,10 @@ FrameWidgetClass EditorFrame {
         }
         TextWidgetClass ObjectHoverSelectText {
          ignorepointer 1
-         size 355 19
+         size 0.28 19
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
          text "Object :"
          font "gui/fonts/etelkatextpro"
@@ -1412,12 +1429,12 @@ FrameWidgetClass EditorFrame {
          {
           TextWidgetClass ObjectHoverSelectObjectReadout {
            ignorepointer 1
-           size 300 19
+           size 0.9 19
            halign right_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
-           hexactsize 1
+           hexactsize 0
            vexactsize 1
            scriptclass "ViewBinding"
            text "Super_Huge_Classname_Prob_Streams"
@@ -1435,7 +1452,7 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass VersionNumber {
          ignorepointer 1
          position 0 0
-         size 0.22 1
+         size 0.233 1
          halign right_ref
          valign center_ref
          hexactpos 0
@@ -1475,7 +1492,7 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass MenuCurrentFileNameText {
          clipchildren 1
          ignorepointer 1
-         size 0.22 1
+         size 0.16 1
          halign right_ref
          valign center_ref
          hexactpos 0
