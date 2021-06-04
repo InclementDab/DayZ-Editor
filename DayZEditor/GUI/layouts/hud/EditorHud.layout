@@ -1400,7 +1400,7 @@ FrameWidgetClass EditorFrame {
         }
         TextWidgetClass ObjectHoverSelectText {
          ignorepointer 1
-         size 275 18
+         size 355 19
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -1412,7 +1412,7 @@ FrameWidgetClass EditorFrame {
          {
           TextWidgetClass ObjectHoverSelectObjectReadout {
            ignorepointer 1
-           size 230 17
+           size 300 19
            halign right_ref
            valign center_ref
            hexactpos 1
@@ -1435,7 +1435,7 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass VersionNumber {
          ignorepointer 1
          position 0 0
-         size 0.25 1
+         size 0.22 1
          halign right_ref
          valign center_ref
          hexactpos 0
@@ -1499,7 +1499,7 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass MenuCurrentFileNameCaption {
          ignorepointer 1
          position 0 0
-         size 0.08 1
+         size 0.06 1
          valign center_ref
          hexactpos 0
          vexactpos 0
