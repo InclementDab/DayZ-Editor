@@ -141,7 +141,7 @@ class EditorHudController: EditorControllerBase
 				
 				// Makes stuff look good when first loading
 				if (GetEditor().Settings.PreloadObjects) {
-					GetGame().ObjectDelete(GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_LOCAL));				
+					GetGame().ObjectDelete(GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_NONE));				
 				}
 				
 				LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
