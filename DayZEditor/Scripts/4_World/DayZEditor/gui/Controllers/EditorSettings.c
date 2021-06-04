@@ -173,14 +173,6 @@ class EditorSettings: Controller
 				GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
 				break;
 			}
-			
-			case "DebugMode": {
-				if (DebugMode) { 
-					GetEditor().GetEditorHud().GetTemplateController().CurrentLogLevel = LogLevel.TRACE;
-				} else {
-					GetEditor().GetEditorHud().GetTemplateController().CurrentLogLevel = LogLevel.DEBUG;
-				}
-			}
 		}
 	}	
 }
