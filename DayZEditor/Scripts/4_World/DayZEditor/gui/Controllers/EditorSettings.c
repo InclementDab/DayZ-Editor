@@ -86,6 +86,7 @@ class EditorSettings: Controller
 		SetProfileBool("LockCameraDuringDialogs", LockCameraDuringDialogs);
 		SetProfileBool("ShowBoundingBoxes", ShowBoundingBoxes);
 		SetProfileBool("BrushedObjectMarkers", BrushedObjectMarkers);
+		SetProfileBool("PreloadObjects", PreloadObjects);
 		SetProfileBool("DebugMode", DebugMode);
 		
 		SetProfileString("EditorProtoFile", EditorProtoFile);
