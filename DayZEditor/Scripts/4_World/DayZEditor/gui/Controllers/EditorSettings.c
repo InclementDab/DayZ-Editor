@@ -1,3 +1,42 @@
+/*class ProfileVar<Class T> // commented because string doesnt work on Get, otherwise really good :Okay:
+{	
+	static const T DEFAULT_VALUE;
+	
+	static void Set(string variable, T value)
+	{		
+		GetGame().SetProfileString(variable, string.ToString(value));
+		GetGame().SaveProfile();
+	}
+	
+	static T Get(string variable, T default_value = DEFAULT_VALUE)
+	{
+		string value;
+		if (!GetGame().GetProfileString(variable, value)) {
+			return default_value;
+		}
+		
+		switch (T) {
+			case bool: {
+				return (value == "true" || value == "1");
+			}
+			
+			case int: {
+				return value.ToInt();
+			}
+			
+			case float: {
+				return value.ToFloat();
+			}
+			
+			case string: {
+				//return value;
+			}
+		}
+		
+		return DEFAULT_VALUE;
+	}
+}*/
+
 class EditorSettings: Controller
 {	
 	float ViewDistance 				= 8000;
@@ -17,7 +56,7 @@ class EditorSettings: Controller
 	LogLevel SelectedLogLevel 		= LogLevel.INFO;
 	
 	void Load()
-	{		
+	{						
 		ViewDistance = GetProfileFloat("ViewDistance", ViewDistance);
 		ObjectViewDistance = GetProfileFloat("ObjectViewDistance", ObjectViewDistance);
 		MarkerViewDistance = GetProfileFloat("MarkerViewDistance", MarkerViewDistance);
@@ -114,7 +153,7 @@ class EditorSettings: Controller
 		
 		return default;
 	}
-	
+		
 	override void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
