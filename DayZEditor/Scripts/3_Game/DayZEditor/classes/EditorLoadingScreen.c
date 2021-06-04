@@ -1,6 +1,30 @@
+// filename, author
+typedef Param2<string, string> LoadingScreenEntry;
+
 modded class LoadingScreen
 {
-	static const int LOADING_SCREEN_COUNT = 15;
+	static const ref array<ref LoadingScreenEntry> LOADING_SCREENS = {
+		new LoadingScreenEntry("0.edds", "Lad"),
+		new LoadingScreenEntry("1.edds", "Unknown"),
+		new LoadingScreenEntry("2.edds", "Suvi"), 
+		new LoadingScreenEntry("3.edds", "DanceOfJesus"),
+		new LoadingScreenEntry("4.edds", "Suvi"), 
+		new LoadingScreenEntry("5.edds", "Lavo"),
+		new LoadingScreenEntry("6.edds", "Lavo"),
+		new LoadingScreenEntry("7.edds", "Unknown"),
+		new LoadingScreenEntry("8.edds", "Unknown"),
+		new LoadingScreenEntry("9.edds", "Jonas"),
+		new LoadingScreenEntry("10.edds", "Fluzoo"),
+		new LoadingScreenEntry("11.edds", "Mihalych"),
+		new LoadingScreenEntry("12.edds", "TerrorisedCookie"),
+		new LoadingScreenEntry("13.edds", "DayZ"),
+		new LoadingScreenEntry("14.edds", "DanceOfJesus"),
+		new LoadingScreenEntry("15.edds", "DanceOfJesus"),		
+		new LoadingScreenEntry("16.edds", "ZoD1Ac"),		
+		new LoadingScreenEntry("17.edds", "ollie"),		
+	};
+	
+	protected TextWidget m_ImageCredit;
 	
 	void LoadingScreen(DayZGame game)
 	{		
@@ -29,12 +53,15 @@ modded class LoadingScreen
 		m_ModdedWarning.SetText("WARNING! The DayZ Editor is currently in BETA. Please report all bugs you find to our Discord");	
 		m_ModdedWarning.Show(false);
 		
+		m_ImageCredit = TextWidget.Cast(m_WidgetRoot.FindAnyWidget("ImageCredit"));
+		
 		// nice
 		int val = TickCount(0);
 		val = val + (val << 37);
 		val = Math.AbsInt(val);
-		val = val % LOADING_SCREEN_COUNT + 1;
-		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1.edds", val));
+		val = val % LOADING_SCREENS.Count();
+		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1", LOADING_SCREENS[val].param1));
+		m_ImageCredit.SetText("Image by: " + LOADING_SCREENS[val].param2);
 		m_ImageWidgetBackground.SetImage(0);
 	}
 	

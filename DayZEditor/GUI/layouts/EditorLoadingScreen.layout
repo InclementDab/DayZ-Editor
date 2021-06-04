@@ -38,7 +38,6 @@ FrameWidgetClass LoadingFrame {
      mode blend
      "src alpha" 0
      stretch 1
-     Mask ""
      "Transition width" 1
      Progress 0
     }
@@ -153,6 +152,21 @@ FrameWidgetClass LoadingFrame {
      "size to text h" 1
      "size to text v" 1
      wrap 1
+    }
+    TextWidgetClass ImageCredit {
+     ignorepointer 1
+     position 37 350
+     size 480 40
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "credit"
+     font "gui/fonts/etelkatextpro"
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+     "text valign" center
     }
    }
   }
