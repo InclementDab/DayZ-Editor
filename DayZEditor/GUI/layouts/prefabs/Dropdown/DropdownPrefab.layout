@@ -17,7 +17,7 @@ GridSpacerWidgetClass DropdownPrefab {
   PanelWidgetClass DropdownSpacer {
    ignorepointer 1
    position 0 0
-   size 0.15 1
+   size 0.26 1
    hexactpos 0
    vexactpos 0
    hexactsize 0
@@ -27,7 +27,7 @@ GridSpacerWidgetClass DropdownPrefab {
    ignorepointer 1
    color 0.7059 0.7059 0.7059 1
    position 0 0
-   size 0.85 1
+   size 0.74 1
    hexactpos 0
    vexactpos 0
    hexactsize 0
@@ -42,7 +42,7 @@ GridSpacerWidgetClass DropdownPrefab {
      clipchildren 0
      inheritalpha 0
      ignorepointer 0
-     position 0 0
+     position 0.01 0
      size 1 0.99
      halign right_ref
      valign center_ref
@@ -57,7 +57,7 @@ GridSpacerWidgetClass DropdownPrefab {
       TextWidgetClass DropdownText {
        clipchildren 0
        ignorepointer 1
-       position 0.04 1
+       position 0.03 1
        size 0.7 1
        hexactpos 0
        vexactpos 1
@@ -80,7 +80,7 @@ GridSpacerWidgetClass DropdownPrefab {
       FrameWidgetClass DropdownIconFrame {
        clipchildren 0
        ignorepointer 1
-       position 0.045 0.069
+       position 0.055 0.069
        size 14 14
        halign right_ref
        valign center_ref
@@ -137,7 +137,7 @@ GridSpacerWidgetClass DropdownPrefab {
       TextWidgetClass DropdownPrefabCaption {
        clipchildren 0
        ignorepointer 1
-       position -0.17 0
+       position -0.34 0
        size 0.1 16
        valign center_ref
        hexactpos 0
@@ -162,8 +162,8 @@ GridSpacerWidgetClass DropdownPrefab {
        visible 1
        ignorepointer 1
        color 0.5882 0.5882 0.5882 1
-       position 0 0
-       size 0.93 1
+       position -4 0
+       size 0.945 1
        halign center_ref
        valign center_ref
        hexactpos 1
