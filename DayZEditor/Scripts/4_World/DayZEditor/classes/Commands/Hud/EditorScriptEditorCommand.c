@@ -16,7 +16,7 @@ class EditorScriptEditorCommand: EditorCommand
 			sanitized_content += script_content[i];
 		}
 		
-		string file_name = "$profile:Editor/temp.c";
+		string file_name = "$saves:Editor/_discard.c";
 		FileHandle handle = OpenFile(file_name, FileMode.WRITE);
 		FPrintln(handle, "static void main() {");
 		FPrintln(handle, sanitized_content);
