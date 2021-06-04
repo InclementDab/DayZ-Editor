@@ -1,6 +1,6 @@
 modded class LoadingScreen
 {
-	static const int LOADING_SCREEN_COUNT = 16;
+	static const int LOADING_SCREEN_COUNT = 15;
 	
 	void LoadingScreen(DayZGame game)
 	{		
