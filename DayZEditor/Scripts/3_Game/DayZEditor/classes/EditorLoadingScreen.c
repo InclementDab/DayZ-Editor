@@ -12,7 +12,7 @@ modded class LoadingScreen
 		new LoadingScreenEntry("5.edds", "Lavo"),
 		new LoadingScreenEntry("6.edds", "Lavo"),
 		new LoadingScreenEntry("7.edds", "Unknown"),
-		new LoadingScreenEntry("8.edds", "Unknown"),
+		new LoadingScreenEntry("8.edds", "Boba Fetish"),
 		new LoadingScreenEntry("9.edds", "Jonas"),
 		new LoadingScreenEntry("10.edds", "Fluzoo"),
 		new LoadingScreenEntry("11.edds", "Mihalych"),
@@ -61,7 +61,7 @@ modded class LoadingScreen
 		val = Math.AbsInt(val);
 		val = val % LOADING_SCREENS.Count();
 		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1", LOADING_SCREENS[val].param1));
-		m_ImageCredit.SetText("Image by: " + LOADING_SCREENS[val].param2);
+		m_ImageCredit.SetText("Image by " + LOADING_SCREENS[val].param2);
 		m_ImageWidgetBackground.SetImage(0);
 	}
 	

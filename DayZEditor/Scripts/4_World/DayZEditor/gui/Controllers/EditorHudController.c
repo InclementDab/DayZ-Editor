@@ -83,7 +83,17 @@ class EditorHudController: EditorControllerBase
 		
 		// Reload Placeables
 #ifndef COMPONENT_SYSTEM
-		EditorLog.Info("Loaded %1 Placeable Objects", ReloadPlaceableObjects().ToString());
+		array<ref EditorPlaceableItem> placeable_items = LoadPlaceableObjects();
+		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
+			// Makes stuff look good when first loading
+			if (GetEditor().Settings.PreloadObjects) {
+				GetGame().ObjectDelete(GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_NONE));				
+			}
+			
+			LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
+		}
+		
+		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
 #endif
 		
 		EditorHudToolbarView = new EditorHudToolbar();
@@ -120,32 +130,35 @@ class EditorHudController: EditorControllerBase
 		m_Editor.GetEditorHud().EditorMapWidget.AddChild(map_marker.GetLayoutRoot());
 	}
 	
-	int ReloadPlaceableObjects() 
+	static array<ref EditorPlaceableItem> LoadPlaceableObjects() 
 	{ 
+		EditorLog.Trace("EditorHudController::LoadPlaceableObjects");
 		g_Game.ReportProgress("Loading Placeable Objects");
+		
+		array<ref EditorPlaceableItem> placeable_items();
 		TStringArray config_paths = {};
 		config_paths.Insert(CFG_VEHICLESPATH);
 		config_paths.Insert(CFG_WEAPONSPATH);
 		config_paths.Insert(CFG_MAGAZINESPATH);
 		
 		foreach (string path: config_paths) {
-			
 			for (int i = 0; i < GetWorkbenchGame().ConfigGetChildrenCount(path); i++) {
 				string type;
 		        GetWorkbenchGame().ConfigGetChildName(path, i, type);
-				
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
 
-				if (placeable_item && !IsForbiddenItem(placeable_item.Type)) {
-					LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
+				if (!placeable_item || IsForbiddenItem(placeable_item.Type)) {
+					continue;
 				}
+				
+				placeable_items.Insert(placeable_item);
 		    }
 		}
 		
-		return LeftbarSpacerData.Count();
+		return placeable_items;
 	}
 	
-	bool IsForbiddenItem(string Model)
+	static bool IsForbiddenItem(string Model)
 	{
 		//! In theory should be safe but just in case
 		if (Model.Contains("Fx")) return true;

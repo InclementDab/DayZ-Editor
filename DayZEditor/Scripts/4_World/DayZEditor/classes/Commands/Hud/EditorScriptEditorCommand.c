@@ -4,13 +4,22 @@ class EditorScriptEditorCommand: EditorCommand
 	{
 		EditorMultilineEditBoxDialog edit_dialog = new EditorMultilineEditBoxDialog("Script Console");
 		
-		string script_test;
-		edit_dialog.ShowDialog(script_test);
+		string script_content;
+		edit_dialog.ShowDialog(script_content);
 		
-		string file_name = "$profile:Editor/test.c";
+		string sanitized_content;
+		for (int i = 0; i < script_content.Length(); i++) {
+			if (script_content[i] == "\n") {
+				continue;
+			}
+			
+			sanitized_content += script_content[i];
+		}
+		
+		string file_name = "$saves:Editor/_discard.c";
 		FileHandle handle = OpenFile(file_name, FileMode.WRITE);
 		FPrintln(handle, "static void main() {");
-		FPrintln(handle, script_test);
+		FPrintln(handle, sanitized_content);
 		FPrintln(handle, "}");
 		
 		if (handle) {
@@ -24,6 +33,8 @@ class EditorScriptEditorCommand: EditorCommand
 		}
 		
 		script_module.Call(null, "main", null);
+		
+		DeleteFile(file_name);
 	}
 	
 	override string GetName() 
