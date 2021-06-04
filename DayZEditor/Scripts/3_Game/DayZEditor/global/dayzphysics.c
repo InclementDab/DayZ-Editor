@@ -56,7 +56,6 @@ static vector ObjectGetSize(notnull Object obj)
 {
 	vector size[2];
 	vector result;
-	
 	obj.ClippingInfo(size);
 	for (int i = 0; i < 3; i++) {
 		result[i] = Math.AbsFloat(size[0][i]) + Math.AbsFloat(size[1][i]);
