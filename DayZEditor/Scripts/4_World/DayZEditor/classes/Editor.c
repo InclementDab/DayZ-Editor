@@ -434,7 +434,8 @@ class Editor
 			return false;
 		}
 		
-		if (GetFocus()) {
+		Widget focus = GetFocus();
+		if (focus && focus.IsInherited(EditBoxWidget)) {
 			return false;
 		}
 		
