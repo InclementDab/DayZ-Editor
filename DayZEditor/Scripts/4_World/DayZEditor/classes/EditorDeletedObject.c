@@ -20,7 +20,7 @@ class EditorDeletedObject: EditorWorldObject
 		
 		vector clip_info[2];
 		m_WorldObject.ClippingInfo(clip_info);
-	
+		
 		m_LineVerticies[0] = clip_info[0];
 		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
 		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
@@ -30,7 +30,7 @@ class EditorDeletedObject: EditorWorldObject
 		m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
 		m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
 		
-		m_BottomCenter = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
+		m_BottomCenter = m_WorldObject.GetGlobalPos(AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3])));
 		
 		// todo: probably use the events system to insert this stuff into the UI
 		// use GetListItem()
