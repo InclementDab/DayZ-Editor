@@ -109,7 +109,7 @@ class EditorObjectManagerModule: JMModuleBase
 		delete target;
 	}
 	
-		void SelectHiddenObject(EditorDeletedObject target)
+	void SelectHiddenObject(EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::SelectHiddenObject");
 		m_SelectedDeletedObjects.InsertEditorDeletedObject(target);
