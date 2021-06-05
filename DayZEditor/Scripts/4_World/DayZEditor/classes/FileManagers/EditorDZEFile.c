@@ -10,18 +10,16 @@ class EditorDZEFile: EditorFileType
 		}
 		
 		// Temporary fix, Binarize always = 0
-		//JsonFileLoader<EditorSaveData>.JsonLoadFile(file, save_data);
 		EditorJsonLoader<EditorSaveData>.LoadFromFile(file, save_data);
 		
 		// bugfix to fix the id not incrementing
 		EditorSaveData bug_fix_save_data = new EditorSaveData();
 		foreach (EditorObjectData object_data: save_data.EditorObjects) {
-			
-			if (GetGame().GetModelName(object_data.Type) != "UNKNOWN_P3D_FILE") {
-				bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Scale, object_data.Flags));
-			} else {
+			if (GetGame().GetModelName(object_data.Type) == "UNKNOWN_P3D_FILE") {
 				EditorLog.Warning("Ignoring %1 on import. Invalid type, possible for crash", object_data.Type);
 			}
+			
+			bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Scale, object_data.Flags));
 		}
 			
 		foreach (int id: save_data.DeletedObjects) {
@@ -56,7 +54,6 @@ class EditorDZEFile: EditorFileType
 		}
 
 		// Temporary fix, Binarize always = 0
-		//JsonFileLoader<EditorSaveData>.JsonSaveFile(file, data);
 		EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
 		return;
 		
