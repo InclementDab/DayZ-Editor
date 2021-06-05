@@ -409,7 +409,7 @@ class Editor
 				else if (KeyState(KeyCode.KC_LSHIFT)) {
 					if (ObjectUnderCursor) {						
 						ClearSelection();
-						SelectObject(CreateObject(ObjectUnderCursor));
+						HideMapObject(ObjectUnderCursor);
 					}
 				} else {
 					
