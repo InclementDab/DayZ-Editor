@@ -412,10 +412,9 @@ class Editor
 						HideMapObject(ObjectUnderCursor);
 					}
 				} else {
-					
-					vector pos = CurrentMousePosition;					
+					vector pos = CurrentMousePosition;
 					pos[1] = m_EditorCamera.GetPosition()[1];
-					m_EditorCamera.SetPosition(pos);
+					m_EditorCamera.LerpCameraPosition(pos, 0.1);
 				}
 				
 				break;

@@ -204,6 +204,27 @@ class EditorCamera: Camera
 		d[0] = dir[0] * sin;
 	}
 	
+	void LerpCameraPosition(vector targetpos, float time)
+	{
+		thread _LerpCameraPosition(GetPosition(), targetpos, time);
+	}
+	
+	private void _LerpCameraPosition(vector startpos, vector targetpos, float time)
+	{
+		MoveEnabled = false;
+		
+		int td = 0;
+		while (td < time * 1000) {
+			float time_value = 1 / (time * 1000) * td;
+			vector step = EditorMath.SmoothLerpVector(startpos, targetpos, time_value);
+			SetPosition(step);
+			td += 10;
+			Sleep(10);
+		}
+		
+		MoveEnabled = true;
+	}
+	
 	void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
