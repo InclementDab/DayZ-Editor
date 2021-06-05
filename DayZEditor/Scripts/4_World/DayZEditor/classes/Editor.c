@@ -230,6 +230,14 @@ class Editor
 			}
 		}
 		
+		if (ObjectUnderCursor) {
+			m_EditorHudController.ObjectReadoutName = ObjectUnderCursor.GetType();
+		} else {
+			m_EditorHudController.ObjectReadoutName = string.Empty;
+		}
+		
+		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
+		
 		
 		int log_lvl = EditorLog.CurrentLogLevel;
 		EditorLog.CurrentLogLevel = LogLevel.WARNING;
