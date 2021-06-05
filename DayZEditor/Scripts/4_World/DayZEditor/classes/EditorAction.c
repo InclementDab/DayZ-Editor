@@ -123,16 +123,18 @@ class EditorAction
 		editor_object.SetOrientation(params.param3);
 	}
 	
-	void Hide(Param1<Object> param)
+	void Hide(Param1<EditorDeletedObject> param)
 	{
 		//EditorLog.Trace("EditorAction::Hide %1", param.param1.ToString());
-		CF.ObjectManager.HideMapObject(param.param1);
+		param.param1.Hide();
+		//CF.ObjectManager.HideMapObject(param.param1);
 	}
 	
-	void Unhide(Param1<Object> param)
+	void Unhide(Param1<EditorDeletedObject> param)
 	{
 		//EditorLog.Trace("EditorAction::Unhide %1", param.param1.ToString());
-		CF.ObjectManager.UnhideMapObject(param.param1);
+		param.param1.Show();
+		//CF.ObjectManager.UnhideMapObject(param.param1);
 	}
 	
 	void Lock(Param1<EditorObject> param)

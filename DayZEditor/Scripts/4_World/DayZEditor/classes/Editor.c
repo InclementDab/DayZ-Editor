@@ -932,12 +932,38 @@ class Editor
 		
 		EditorAction action = new EditorAction("Unhide", "Hide");
 		// todo refactor
-		action.InsertUndoParameter(new Param1<Object>(map_object.GetWorldObject()));
-		action.InsertRedoParameter(new Param1<Object>(map_object.GetWorldObject()));
+		action.InsertUndoParameter(new Param1<EditorDeletedObject>(map_object));
+		action.InsertRedoParameter(new Param1<EditorDeletedObject>(map_object));
 		
 		Statistics.RemovedObjects++;
 		
 		m_ObjectManager.HideMapObject(map_object);
+		map_object.Hide();
+
+		if (create_undo) {
+			InsertAction(action);
+		}
+		
+		return true;
+	}
+	
+	bool UnhideMapObject(EditorDeletedObject map_object, bool create_undo = true)
+	{
+		if (!map_object) { 
+			return false;
+		}
+		
+		if (!m_ObjectManager.IsObjectHidden(map_object)) { 
+			return false;
+		}
+		
+		EditorAction action = new EditorAction("Hide", "Unhide");
+		// todo refactor
+		action.InsertUndoParameter(new Param1<EditorDeletedObject>(map_object));
+		action.InsertRedoParameter(new Param1<EditorDeletedObject>(map_object));
+				
+		m_ObjectManager.HideMapObject(map_object);
+		map_object.Show();
 
 		if (create_undo) {
 			InsertAction(action);
