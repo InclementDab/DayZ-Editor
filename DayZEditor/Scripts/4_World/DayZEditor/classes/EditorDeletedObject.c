@@ -1,8 +1,10 @@
 class EditorDeletedObject: EditorWorldObject
 {
 	protected bool m_IsSelected;
-	protected vector m_OriginalPosition;
-	protected vector m_OriginalOrientation;
+	
+	protected string m_Type;
+	protected vector m_Position;
+	protected vector m_Orientation;
 	protected vector m_BottomCenter;
 	
 	private vector m_LineVerticies[8];
@@ -14,9 +16,8 @@ class EditorDeletedObject: EditorWorldObject
 	void EditorDeletedObject(notnull Object object)
 	{
 		m_WorldObject = object;
-		m_OriginalPosition = m_WorldObject.GetPosition();
-		m_OriginalOrientation = m_WorldObject.GetOrientation();
-		
+		m_Position = m_WorldObject.GetPosition();
+		m_Orientation = m_WorldObject.GetOrientation();
 		
 		vector clip_info[2];
 		m_WorldObject.ClippingInfo(clip_info);
@@ -42,6 +43,11 @@ class EditorDeletedObject: EditorWorldObject
 	
 	void ~EditorDeletedObject()
 	{
+		// just for the sake of cache clearing
+		if (m_IsSelected) {
+			OnDeselected();
+		}
+		
 		CF.ObjectManager.UnhideMapObject(m_WorldObject);
 		delete m_EditorDeletedListItem;
 		delete m_EditorDeletedObjectWorldMarker;
@@ -64,6 +70,8 @@ class EditorDeletedObject: EditorWorldObject
 		if (m_EditorDeletedListItem) {
 			m_EditorDeletedListItem.Select();
 		}
+		
+		CF.ObjectManager.UnhideMapObject(m_WorldObject, false);
 	}
 	
 	void OnDeselected()
@@ -73,6 +81,8 @@ class EditorDeletedObject: EditorWorldObject
 		if (m_EditorDeletedListItem) {
 			m_EditorDeletedListItem.Deselect();
 		}
+		
+		CF.ObjectManager.HideMapObject(m_WorldObject, false);
 	}
 	
 	bool IsSelected()
@@ -82,12 +92,12 @@ class EditorDeletedObject: EditorWorldObject
 	
 	vector GetOriginalPosition()
 	{
-		return m_OriginalPosition;
+		return m_Position;
 	}
 	
 	vector GetOriginalOrientation()
 	{
-		return m_OriginalOrientation;
+		return m_Orientation;
 	}
 	
 	vector GetBottomPosition()

@@ -319,6 +319,11 @@ class EditorHudController: EditorControllerBase
 			if (Class.CastTo(placed_list_item, list[i])) {
 				GetEditor().SelectObject(placed_list_item.GetEditorObject());
 			}
+			
+			EditorDeletedListItem deleted_list_item;
+			if (Class.CastTo(deleted_list_item, list[i])) {
+				GetEditor().SelectHiddenObject(deleted_list_item.GetDeletedObject());
+			}
 		}
 	}
 	

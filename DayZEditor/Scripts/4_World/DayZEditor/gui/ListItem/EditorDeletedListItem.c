@@ -74,4 +74,9 @@ class EditorDeletedListItem: EditorListItem
 	{
 		return m_EditorDeletedObject.IsSelected();
 	}
+	
+	EditorDeletedObject GetDeletedObject()
+	{
+		return m_EditorDeletedObject;
+	}
 }
