@@ -109,18 +109,18 @@ PanelWidgetClass EditorPosElement {
          clipchildren 1
          color 1 1 1 0.9608
          position 0 0
-         size 1 0.9
+         size 1 16
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
          scriptclass "ViewBinding"
          style Default
          text "reee"
          "limit visible" 1
          "exact text" 0
-         font "gui/fonts/metronbook"
+         font "gui/fonts/sdf_MetronLight24"
          {
           ScriptParamsClass {
            Binding_Name "X"
@@ -202,18 +202,18 @@ PanelWidgetClass EditorPosElement {
          keepsafezone 0
          color 1 1 1 0.9961
          position 0 0
-         size 1 0.9
+         size 1 16
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
          scriptclass "ViewBinding"
          style highlight_green_1
          text "reee"
          "limit visible" 1
          "exact text" 0
-         font "gui/fonts/metronbook"
+         font "gui/fonts/sdf_MetronLight24"
          {
           ScriptParamsClass {
            Binding_Name "Y"
@@ -297,19 +297,19 @@ PanelWidgetClass EditorPosElement {
          keepsafezone 0
          color 1 1 1 0.9961
          position 0 0
-         size 1 0.9
+         size 1 16
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
          scriptclass "ViewBinding"
          style highlight_blue_1
          text "reee"
          "limit visible" 1
          "Use default text" 0
          "exact text" 0
-         font "gui/fonts/metronbook"
+         font "gui/fonts/sdf_MetronLight24"
          {
           ScriptParamsClass {
            Binding_Name "Z"
