@@ -23,7 +23,7 @@ class EditorDeletedObjectWorldMarker: EditorMarker
 		}
 			
 		// Is the marker in bounds?
-		vector screen_pos = GetGame().GetScreenPos(m_EditorDeletedObject.GetOriginalPosition());
+		vector screen_pos = GetGame().GetScreenPos(m_EditorDeletedObject.GetBottomPosition());
 		if (screen_pos[0] != 0 && screen_pos[0] != m_ScreenX && screen_pos[1] != 0 && screen_pos[1] != m_ScreenY && screen_pos[2] > 0) {
 			SetPos(screen_pos[0], screen_pos[1]);
 			Show(true);

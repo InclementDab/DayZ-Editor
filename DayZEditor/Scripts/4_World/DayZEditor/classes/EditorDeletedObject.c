@@ -3,6 +3,10 @@ class EditorDeletedObject: EditorWorldObject
 	protected bool m_IsSelected;
 	protected vector m_OriginalPosition;
 	protected vector m_OriginalOrientation;
+	protected vector m_BottomCenter;
+	
+	private vector m_LineVerticies[8];
+	
 	protected ref EditorDeletedListItem m_EditorDeletedListItem;
 	
 	protected ref EditorDeletedObjectWorldMarker m_EditorDeletedObjectWorldMarker;
@@ -12,6 +16,21 @@ class EditorDeletedObject: EditorWorldObject
 		m_WorldObject = object;
 		m_OriginalPosition = m_WorldObject.GetPosition();
 		m_OriginalOrientation = m_WorldObject.GetOrientation();
+		
+		
+		vector clip_info[2];
+		m_WorldObject.ClippingInfo(clip_info);
+	
+		m_LineVerticies[0] = clip_info[0];
+		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
+		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
+		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
+		m_LineVerticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
+		m_LineVerticies[5] = clip_info[1];
+		m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
+		m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
+		
+		m_BottomCenter = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		
 		// todo: probably use the events system to insert this stuff into the UI
 		// use GetListItem()
@@ -42,12 +61,18 @@ class EditorDeletedObject: EditorWorldObject
 	{
 		m_IsSelected = true;
 		m_EditorDeletedObjectWorldMarker = new EditorDeletedObjectWorldMarker(this);
+		if (m_EditorDeletedListItem) {
+			m_EditorDeletedListItem.Select();
+		}
 	}
 	
 	void OnDeselected()
 	{
 		m_IsSelected = false;
 		delete m_EditorDeletedObjectWorldMarker;
+		if (m_EditorDeletedListItem) {
+			m_EditorDeletedListItem.Deselect();
+		}
 	}
 	
 	bool IsSelected()
@@ -63,6 +88,11 @@ class EditorDeletedObject: EditorWorldObject
 	vector GetOriginalOrientation()
 	{
 		return m_OriginalOrientation;
+	}
+	
+	vector GetBottomPosition()
+	{
+		return m_BottomCenter;
 	}
 	
 	EditorDeletedListItem GetListItem()

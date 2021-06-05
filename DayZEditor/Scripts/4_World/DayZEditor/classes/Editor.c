@@ -366,6 +366,7 @@ class Editor
 				
 				if (!target || target == m_EditorHud.EditorMapWidget) {
 					ClearSelection();
+					ClearHiddenObjectSelection();
 					GetCameraTrackManager().ClearSelection();
 				}
 				
