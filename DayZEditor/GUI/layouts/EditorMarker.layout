@@ -29,7 +29,8 @@ FrameWidgetClass EditorMarkerFrame {
    draggable 0
    scriptclass ""
    {
-    ImageWidgetClass EditorMarkerImage {
+    PanelWidgetClass EditorMarkerColor {
+     visible 1
      clipchildren 1
      inheritalpha 1
      ignorepointer 1
@@ -42,7 +43,8 @@ FrameWidgetClass EditorMarkerFrame {
      hexactsize 1
      vexactsize 1
      priority 251
-     mode blend
+     style rover_sim_colorable
+     "no focus" 1
     }
    }
   }

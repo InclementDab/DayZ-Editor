@@ -10,6 +10,7 @@ class EditorDeletedObjectWorldMarker: EditorMarker
 		m_MapWidget = GetEditor().GetEditorHud().EditorMapWidget;
 		m_EditorDeletedObject = deleted_object;
 		GetScreenSize(m_ScreenX, m_ScreenY);
+		SetColor(LIST_ITEM_COLOR_ON_DELETED);
 	}
 	
 	override void Update()

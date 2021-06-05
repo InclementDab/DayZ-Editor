@@ -35,6 +35,11 @@ class EditorMarker: ScriptView
 		}
 	}
 	
+	void SetColor(int color)
+	{
+		m_LayoutRoot.FindAnyWidget("EditorMarkerColor").SetColor(color);
+	}
+	
 	protected bool IsMouseInside(int c_x, int c_y)
 	{
 		float x, y, w, h;
