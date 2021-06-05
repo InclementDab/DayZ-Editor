@@ -32,7 +32,9 @@ class EditorHudController: EditorControllerBase
 	// View Properties
 	protected Widget LeftbarFrame;
 	protected ImageWidget LeftbarHideIcon;
+	
 	protected ScrollWidget LeftbarScroll;
+	protected ScrollWidget RightbarScroll;
 	
 	protected Widget RightbarFrame;
 	protected ImageWidget RightbarHideIcon;
@@ -215,6 +217,7 @@ class EditorHudController: EditorControllerBase
 				CategoryPlacements = true;
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
+				RightbarScroll.VScrollToPos(0);
 				break;
 			}
 			
@@ -225,6 +228,7 @@ class EditorHudController: EditorControllerBase
 				CategoryDeletions = true;
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
+				RightbarScroll.VScrollToPos(0);
 				break;
 			}
 		}
@@ -370,6 +374,18 @@ class EditorHudController: EditorControllerBase
 		}
 	}
 	*/
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		Print(w.GetName());
+		
+		return super.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		return super.OnMouseLeave(w, enterW, x, y);
+	}
 	
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{

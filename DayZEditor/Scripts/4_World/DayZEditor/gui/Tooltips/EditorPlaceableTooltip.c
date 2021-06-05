@@ -1,4 +1,4 @@
-class EditorTooltip: ScriptViewTemplate<EditorTooltipController>
+class EditorPlaceableTooltip: ScriptViewTemplate<EditorPlaceableTooltipController>
 {
 	protected TextWidget HeaderLabel;
 	
@@ -42,11 +42,6 @@ class EditorTooltip: ScriptViewTemplate<EditorTooltipController>
 		}
 		
 		m_LayoutRoot.SetPos(x, y);
-	}
-		
-	override typename GetControllerType() 
-	{
-		return EditorTooltipController;
 	}
 
 	override string GetLayoutFile() 

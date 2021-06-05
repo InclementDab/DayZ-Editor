@@ -1,13 +1,13 @@
-class EditorTooltipController: Controller
+class EditorPlaceableTooltipController: Controller
 {
 	string ContentTitle;
 	string ContentText;
 	
 	Object ContentItemData;
 	
-	void ~EditorTooltipController()
+	void ~EditorPlaceableTooltipController()
 	{
-		EditorLog.Trace("~EditorTooltipController");
+		EditorLog.Trace("~EditorPlaceableTooltipController");
 #ifndef COMPONENT_SYSTEM
 		if (ContentItemData) {
 			GetWorkbenchGame().ObjectDelete(ContentItemData);

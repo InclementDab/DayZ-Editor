@@ -93,7 +93,7 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorTooltip tooltip = new EditorTooltip();
+		EditorPlaceableTooltip tooltip = new EditorPlaceableTooltip();
 		
 		float size_x, size_y, pos_x, pos_y;
 		m_LayoutRoot.GetScreenPos(pos_x, pos_y);
