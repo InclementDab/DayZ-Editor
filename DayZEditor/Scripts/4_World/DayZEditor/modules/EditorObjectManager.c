@@ -9,6 +9,9 @@ class EditorObjectManagerModule: JMModuleBase
 	// Stored list of all Placed Objects, indexed by their WorldObject ID
 	private ref EditorObjectMap					m_WorldObjectIndex;
 	
+	// Stored list of all Hidden Objects, indexed by their WorldObject ID
+	private ref EditorDeletedObjectMap 			m_DeletedObjects;
+	
 	static ref map<int, ref OLinkT> WorldObjects = new map<int, ref OLinkT>();
 		
 	// Current Selected PlaceableListItem
@@ -20,6 +23,7 @@ class EditorObjectManagerModule: JMModuleBase
 		m_WorldObjectIndex 	= new EditorObjectMap();
 		m_PlacedObjects 	= new EditorObjectMap();
 		m_SelectedObjects 	= new EditorObjectMap();
+		m_DeletedObjects	= new EditorDeletedObjectMap();
 	}
 	
 	EditorObject CreateObject(EditorObjectData editor_object_data)
@@ -71,7 +75,19 @@ class EditorObjectManagerModule: JMModuleBase
 			DeselectObject(target);
 		else
 			SelectObject(target);
-		
+	}
+	
+	void HideMapObject(EditorDeletedObject target)
+	{
+		EditorLog.Trace("EditorObjectManager::HideMapObject");
+		m_DeletedObjects.InsertEditorDeletedObject(target);
+	}
+	
+	void UnhideMapObject(EditorDeletedObject target)
+	{
+		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
+		m_DeletedObjects.RemoveEditorDeletedObject(target);
+		delete target;
 	}
 	
 	// Call to clear selection
@@ -88,20 +104,7 @@ class EditorObjectManagerModule: JMModuleBase
 		m_PlacedObjects.Clear();
 		m_SelectedObjects.Clear();
 	}
-	
-	array<int> GetDeletedObjects()
-	{		
-		array<int> deleted_objects = {};
-		array<Object> registered = CF.ObjectManager.GetHiddenMapObjects();
-		foreach (Object obj: registered) {
-			if (obj) {
-				deleted_objects.Insert(obj.GetID());
-			}
-		}
-		
-		return deleted_objects;
-	}
-			
+				
 	override void OnMissionStart()
 	{
 		// On Load unhide em all
@@ -122,6 +125,11 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		g_Game.ReportProgress(string.Format("Cached %1 map objects", WorldObjects.Count().ToString()));
 		EditorLog.Info("Cached %1 map objects", WorldObjects.Count().ToString());
+	}
+	
+	bool IsObjectHidden(EditorDeletedObject deleted_object)
+	{
+		return (m_DeletedObjects[deleted_object.GetID()] != null);
 	}
 	
 	Object GetWorldObject(int id)
@@ -145,6 +153,11 @@ class EditorObjectManagerModule: JMModuleBase
 	EditorObjectMap GetPlacedObjects()
 	{
 		return m_PlacedObjects; 
+	}
+	
+	EditorDeletedObjectMap GetDeletedObjects()
+	{
+		return m_DeletedObjects;
 	}
 		
 	EditorObject GetPlacedObjectById(int id)

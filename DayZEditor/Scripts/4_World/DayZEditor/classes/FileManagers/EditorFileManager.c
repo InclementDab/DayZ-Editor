@@ -77,7 +77,11 @@ class EditorSaveData
 			}
 		}
 		
-		save_data.DeletedObjects = editor.GetObjectManager().GetDeletedObjects();
+		save_data.DeletedObjects = {};
+		EditorDeletedObjectMap deleted_objects = editor.GetObjectManager().GetDeletedObjects();
+		foreach (int id, EditorDeletedObject _: deleted_objects) {
+			save_data.DeletedObjects.Insert(id);
+		}
 		
 		return save_data;
 	}

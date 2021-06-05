@@ -915,17 +915,29 @@ class Editor
 		return HideMapObject(m_ObjectManager.GetWorldObject(id), create_undo);
 	}
 	
-	// Is CF.ObjectManager.IsMapObjectHidden busted?
-	bool HideMapObject(Object map_object, bool create_undo = true)
+	bool HideMapObject(Object object, bool create_undo = true)
 	{
-		if (!map_object) return false;
-		if (CF.ObjectManager.IsMapObjectHidden(map_object)) return false;
+		return HideMapObject(new EditorDeletedObject(object), create_undo);
+	}
+	
+	bool HideMapObject(EditorDeletedObject map_object, bool create_undo = true)
+	{
+		if (!map_object) { 
+			return false;
+		}
+		
+		if (m_ObjectManager.IsObjectHidden(map_object)) { 
+			return false;
+		}
+		
 		EditorAction action = new EditorAction("Unhide", "Hide");
-		action.InsertUndoParameter(new Param1<Object>(map_object));
-		action.InsertRedoParameter(new Param1<Object>(map_object));
+		// todo refactor
+		action.InsertUndoParameter(new Param1<Object>(map_object.GetWorldObject()));
+		action.InsertRedoParameter(new Param1<Object>(map_object.GetWorldObject()));
 		
 		Statistics.RemovedObjects++;
-		CF.ObjectManager.HideMapObject(map_object);
+		
+		m_ObjectManager.HideMapObject(map_object);
 
 		if (create_undo) {
 			InsertAction(action);
@@ -1119,6 +1131,7 @@ class Editor
 	EditorCameraTrackManagerModule GetCameraTrackManager() return m_CameraTrackManager;
 	EditorObjectMap GetSelectedObjects() return m_ObjectManager.GetSelectedObjects(); 
 	EditorObjectMap GetPlacedObjects() return m_ObjectManager.GetPlacedObjects(); 
+	EditorDeletedObjectMap GetDeletedObjects() return m_ObjectManager.GetDeletedObjects();
 	EditorObjectDataMap GetSessionCache() return m_SessionCache; 		
 	EditorObject GetEditorObject(int id) return m_ObjectManager.GetEditorObject(id); 	
 	EditorObject GetEditorObject(notnull Object world_object) return m_ObjectManager.GetEditorObject(world_object);	

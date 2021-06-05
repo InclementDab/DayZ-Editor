@@ -22,6 +22,27 @@ class EditorObjectMap: map<int, ref EditorObject>
 	}
 }
 
+class EditorDeletedObjectMap: map<int, ref EditorDeletedObject>
+{
+	int InsertEditorDeletedObject(EditorDeletedObject editor_deleted_object)
+	{
+		if (!editor_deleted_object) {
+			return -1;
+		}
+		
+		return Insert(editor_deleted_object.GetID(), editor_deleted_object);
+	}
+	
+	void RemoveEditorDeletedObject(EditorDeletedObject editor_deleted_object)
+	{
+		if (!editor_deleted_object) {
+			return;
+		}
+		
+		Remove(editor_deleted_object.GetID());
+	}
+}
+
 class EditorObjectDataMap: map<int, ref EditorObjectData>
 {
 	int InsertData(EditorObjectData data)
