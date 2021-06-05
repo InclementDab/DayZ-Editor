@@ -22,7 +22,7 @@ class EditorObjectMap: map<int, ref EditorObject>
 	}
 }
 
-class EditorDeletedObjectMap: map<int, autoptr EditorDeletedObject>
+class EditorDeletedObjectMap: map<int, ref EditorDeletedObject>
 {
 	int InsertEditorDeletedObject(EditorDeletedObject editor_deleted_object)
 	{
