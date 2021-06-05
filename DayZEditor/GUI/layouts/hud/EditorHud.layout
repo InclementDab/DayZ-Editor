@@ -317,6 +317,7 @@ FrameWidgetClass EditorFrame {
              vexactsize 1
              scriptclass "ViewBinding"
              style Default
+             "no focus" 1
              {
               ImageWidgetClass LeftbarPanelSearchBarIcon {
                ignorepointer 1
