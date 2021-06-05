@@ -914,6 +914,8 @@ FrameWidgetClass EditorFrame {
          }
          {
           ScriptParamsClass {
+           Binding_Name "CategoryDeletions"
+           Two_Way_Binding 1
           }
          }
         }
@@ -944,6 +946,8 @@ FrameWidgetClass EditorFrame {
          }
          {
           ScriptParamsClass {
+           Binding_Name "CategoryPlacements"
+           Two_Way_Binding 1
           }
          }
         }

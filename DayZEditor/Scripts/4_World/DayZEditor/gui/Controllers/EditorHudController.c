@@ -5,6 +5,9 @@ class EditorHudController: EditorControllerBase
 	
 	string ObjectReadoutName;
 	
+	bool CategoryPlacements;
+	bool CategoryDeletions;
+	
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
@@ -200,6 +203,18 @@ class EditorHudController: EditorControllerBase
 			case "cam_y":
 			case "cam_z": {				
 				GetEditor().GetCamera().SetPosition(Vector(cam_x, cam_y, cam_z));
+				break;
+			}
+			
+			case "CategoryPlacements": {
+				CategoryDeletions = false;
+				NotifyPropertyChanged("CategoryDeletions", false);
+				break;
+			}
+			
+			case "CategoryDeletions": {
+				CategoryPlacements = false;
+				NotifyPropertyChanged("CategoryPlacements", false);				
 				break;
 			}
 		}
