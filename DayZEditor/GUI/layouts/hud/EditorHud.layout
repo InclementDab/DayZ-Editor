@@ -303,10 +303,11 @@ FrameWidgetClass EditorFrame {
            vexactsize 1
            style rover_sim_colorable
            {
-            PanelWidgetClass LeftbarPanelSearchBarIconSpacer {
+            ButtonWidgetClass LeftbarPanelSearchBarIconButton {
              visible 1
-             ignorepointer 1
-             color 0.1216 0.1216 0.1216 0.6275
+             disabled 1
+             ignorepointer 0
+             color 0.7529 0.3686 0.3255 1
              size 32 32
              halign right_ref
              valign center_ref
@@ -314,7 +315,8 @@ FrameWidgetClass EditorFrame {
              vexactpos 1
              hexactsize 1
              vexactsize 1
-             style rover_sim_colorable
+             scriptclass "ViewBinding"
+             style Default
              {
               ImageWidgetClass LeftbarPanelSearchBarIcon {
                ignorepointer 1
@@ -326,12 +328,23 @@ FrameWidgetClass EditorFrame {
                vexactpos 0
                hexactsize 0
                vexactsize 0
-               image0 "set:dayz_editor_gui image:search"
+               scriptclass "ViewBinding"
+               image0 ""
                mode blend
                "src alpha" 1
                "no wrap" 1
                stretch 0
                filter 1
+               {
+                ScriptParamsClass {
+                 Binding_Name "SearchBarIcon"
+                }
+               }
+              }
+             }
+             {
+              ScriptParamsClass {
+               Relay_Command "OnSearchButtonPress"
               }
              }
             }

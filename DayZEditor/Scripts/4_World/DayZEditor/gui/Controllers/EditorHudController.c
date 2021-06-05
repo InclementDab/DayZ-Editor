@@ -1,6 +1,7 @@
 class EditorHudController: EditorControllerBase
 {
 	string SearchBarData;
+	string SearchBarIcon = "set:dayz_editor_gui image:search";
 	string Version = Editor.Version;
 	
 	string ObjectReadoutName;
@@ -51,6 +52,7 @@ class EditorHudController: EditorControllerBase
 	protected ButtonWidget BrushToggleButton;
 	protected ButtonWidget PlacementsTabButton;
 	protected ButtonWidget DeletionsTabButton;
+	protected ButtonWidget LeftbarPanelSearchBarIconButton;
 	
 	// Camera Track
 	protected Widget CameraTrackWrapper;
@@ -197,13 +199,21 @@ class EditorHudController: EditorControllerBase
 		switch (property_name) {
 					
 			case "SearchBarData": {
-				
 				for (int j = 0; j < LeftbarSpacerData.Count(); j++) {
 					EditorPlaceableListItem placeable_item = LeftbarSpacerData[j];
 					placeable_item.GetLayoutRoot().Show(placeable_item.FilterType(SearchBarData)); 
 				}
 				
 				LeftbarScroll.VScrollToPos(0);
+				
+				if (SearchBarData.Length() > 0) {
+					SearchBarIcon = "set:dayz_gui image:icon_x";
+				} else {
+					SearchBarIcon = "set:dayz_editor_gui image:search";
+				}
+				
+				NotifyPropertyChanged("SearchBarIcon");
+				
 				break;
 			}			
 			
@@ -240,6 +250,12 @@ class EditorHudController: EditorControllerBase
 				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
 				DeletionsTabButton.SetColor(RightbarFrame.GetColor());
 				RightbarScroll.VScrollToPos(0);
+				break;
+			}
+			
+			case "SearchBarIcon": {
+				// this could probably be a command with SetCanExecute but im not feeling it 
+				LeftbarPanelSearchBarIconButton.Enable(SearchBarData.Length() > 0);
 				break;
 			}
 		}
@@ -287,6 +303,15 @@ class EditorHudController: EditorControllerBase
 		GetEditor().GetCameraTrackManager().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
 	}
 
+	void OnSearchButtonPress(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudController::OnSearchButtonPress");
+		if (SearchBarData.Length() > 0) {
+			SearchBarData = string.Empty;
+			NotifyPropertyChanged("SearchBarData");
+		}
+	}
+	
 	void OnCameraTrackStart()
 	{
 		CameraTrackRunButton.SetText("Stop");
