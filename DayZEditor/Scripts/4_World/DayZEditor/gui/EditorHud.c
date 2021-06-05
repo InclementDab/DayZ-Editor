@@ -70,6 +70,12 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		thread _DelayedDragBoxCheck(x, y);
 	}
 	
+	void ScrollToListItem(EditorListItem list_item)
+	{
+		
+		//VScrollToWidget(list_item.GetLayoutRoot());
+	}
+	
 	private void _DelayedDragBoxCheck(int start_x, int start_y)
 	{
 		int current_x, current_y;
@@ -143,7 +149,4 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	
 	static float DialogLastX = -1;
 	static float DialogLastY = -1;
-	
-	static ref EditorHudController CurrentEditorHudController;
-	static ref EditorHudToolbarController CurrentEditorHudToolbarController;
 }

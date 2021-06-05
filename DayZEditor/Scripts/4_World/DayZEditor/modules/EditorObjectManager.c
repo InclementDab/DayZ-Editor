@@ -160,8 +160,8 @@ class EditorObjectManagerModule: JMModuleBase
 		g_Game.ReportProgress("Caching Map Objects");
 		EditorLog.Info("Caching Map Objects");
 		
-		ref array<Object> objects = {};
-		ref array<CargoBase> cargos = {};
+		array<Object> objects = {};
+		array<CargoBase> cargos = {};
 		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 100000, objects, cargos);
 
 		foreach (Object o: objects) {

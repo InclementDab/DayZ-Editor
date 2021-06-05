@@ -24,12 +24,6 @@ class EditorHudToolbarController: EditorControllerBase
 	
 	protected ButtonWidget BrushToggleButton;
 			
-	void EditorHudToolbarController()
-	{
-		Debug_Logging = true;
-		EditorHud.CurrentEditorHudToolbarController = this;
-	}
-	
 	void ~EditorHudToolbarController()
 	{
 		delete BrushTypeBoxData;
