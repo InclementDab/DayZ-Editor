@@ -6,7 +6,7 @@ class EditorDeletedListItem: EditorListItem
 	{
 		m_EditorDeletedObject = deleted_object;
 		
-		m_TemplateController.Label = m_EditorDeletedObject.GetID().ToString();
+		m_TemplateController.Label = m_EditorDeletedObject.GetWorldObject().GetType();
 		m_TemplateController.NotifyPropertyChanged("Label");
 		
 		//m_TemplateController.Icon = m_EditorDeletedObject.GetData().Icon;

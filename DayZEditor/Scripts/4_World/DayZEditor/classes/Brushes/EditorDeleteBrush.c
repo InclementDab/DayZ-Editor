@@ -18,7 +18,9 @@ class DeleteBrush: EditorBrush
 			if (eo) {
 				GetEditor().DeleteObject(eo);
 			} else {
-				GetEditor().HideMapObject(r);
+				if (!r.IsKindOf("BrushBase")) {
+					GetEditor().HideMapObject(r);
+				}
 			}
 		}		
 	}
