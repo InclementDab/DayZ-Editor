@@ -38,7 +38,6 @@ class EditorHudController: EditorControllerBase
 	
 	protected Widget RightbarFrame;
 	protected ImageWidget RightbarHideIcon;
-	protected ButtonWidget BrushToggleButton;
 	
 	protected WrapSpacerWidget RightbarPlacementsList;
 	protected WrapSpacerWidget RightbarDeletionsList;
@@ -47,6 +46,10 @@ class EditorHudController: EditorControllerBase
 		
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected EditBoxWidget LeftbarSearchBar;
+	
+	protected ButtonWidget BrushToggleButton;
+	protected ButtonWidget PlacementsTabButton;
+	protected ButtonWidget DeletionsTabButton;
 	
 	// Camera Track
 	protected Widget CameraTrackWrapper;
@@ -290,25 +293,7 @@ class EditorHudController: EditorControllerBase
 		CameraTrackButtonOutline.SetColor(COLOR_WHITE);
 		CameraTrackRunButton.SetState(1);
 	}
-	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
 		
-		if (button == MouseState.RIGHT) {
-		
-			switch (w) {
-				case LeftbarSearchBar: {
-					SearchBarData = string.Empty;
-					NotifyPropertyChanged("SearchBarData");
-					break;
-				}
-			}	
-		}
-	
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-	
 	void DoMultiSelect(int index_0, int index_1, ObservableCollection<EditorListItem> list)
 	{
 		int bottom, top;
@@ -322,7 +307,7 @@ class EditorHudController: EditorControllerBase
 		
 		for (int i = bottom; i < top; i++) {
 			EditorPlacedListItem placed_list_item;
-			// this is bad and wont work
+			// this is bad and wont work.. well it will but i dont like it
 			if (Class.CastTo(placed_list_item, list[i])) {
 				GetEditor().SelectObject(placed_list_item.GetEditorObject());
 			}
@@ -349,41 +334,59 @@ class EditorHudController: EditorControllerBase
 		}
 	}
 	
-	// Raycast to see if TranslationWidget is under cursor	
-	/*		
-	RaycastRVParams raycast_params = new RaycastRVParams(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * EditorSettings.OBJECT_VIEW_DISTANCE);
-	ref array<ref RaycastRVResult> raycast_result = new array<ref RaycastRVResult>();
-	DayZPhysics.RaycastRVProxy(raycast_params, raycast_result);
-	
-
-	if (raycast_result.Count() > 0) {
-		Object obj = raycast_result.Get(0).obj;
-		if ((obj.GetType() == "TranslationWidget" || obj.GetType() == "RotationWidget")) {
-			EditorEvents.DragInvoke(obj, m_Editor.GetTranslationWidget().GetEditorObject(), raycast_result.Get(0));
-			return true;
-		}
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
 		
-		EditorObject editor_object = m_Editor.GetObjectManager().GetEditorObject(obj);
-		if (editor_object != null) {
-			if (input.LocalValue("UAWalkRunTemp")) {
-				EditorObjectManager.ToggleSelection(editor_object);
-			} else if (!input.LocalValue("UATurbo")) {
-				EditorEvents.ClearSelection(this);
-			} else EditorEvents.SelectObject(this, editor_object);
-			return true;
+		if (button == MouseState.RIGHT) {
+		
+			switch (w) {
+				case LeftbarSearchBar: {
+					SearchBarData = string.Empty;
+					NotifyPropertyChanged("SearchBarData");
+					break;
+				}
+			}	
 		}
-	}
-	*/
 	
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+		
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		Print(w.GetName());
+		//EditorLog.Trace("EditorHudController::OnMouseEnter");
+		
+		
+		string tooltip_text;
+		switch (w) {
+			case PlacementsTabButton: {
+				tooltip_text = "" + GetEditor().GetPlacedObjects().Count() + " Placed Objects";
+				break;
+			}
+			
+			case DeletionsTabButton: {
+				tooltip_text = "" + GetEditor().GetDeletedObjects().Count() + " Deleted Objects";
+				break;
+			}
+		}
+		
+		if (tooltip_text != string.Empty) {
+			float b_x, b_y, b_w, b_h;
+			w.GetScreenPos(b_x, b_y);
+			w.GetScreenSize(b_w, b_h);
+			
+			EditorTooltip tooltip = new EditorTooltip(tooltip_text, b_x, b_y + b_h);
+			EditorHud.SetCurrentTooltip(tooltip);
+		}
 		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
+		//EditorLog.Trace("EditorHudController::OnMouseLeave");
+		EditorHud.SetCurrentTooltip(null);
+		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
