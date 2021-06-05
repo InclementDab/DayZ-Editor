@@ -83,6 +83,13 @@ class EditorObjectManagerModule: JMModuleBase
 		m_DeletedObjects.InsertEditorDeletedObject(target);
 	}
 	
+	void UnhideMapObject(int target)
+	{
+		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
+		delete m_DeletedObjects[target];
+		m_DeletedObjects.Remove(target);
+	}
+	
 	void UnhideMapObject(EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
@@ -129,7 +136,12 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	bool IsObjectHidden(EditorDeletedObject deleted_object)
 	{
-		return (m_DeletedObjects[deleted_object.GetID()] != null);
+		return (IsObjectHidden(deleted_object.GetID()));
+	}
+	
+	bool IsObjectHidden(int id)
+	{
+		return (m_DeletedObjects[id] != null);
 	}
 	
 	Object GetWorldObject(int id)

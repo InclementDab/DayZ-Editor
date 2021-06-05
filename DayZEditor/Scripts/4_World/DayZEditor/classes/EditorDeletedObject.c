@@ -14,10 +14,13 @@ class EditorDeletedObject: EditorWorldObject
 		// use GetListItem()
 		m_EditorDeletedListItem = new EditorDeletedListItem(this);
 		GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData.Insert(m_EditorDeletedListItem);
+		
+		CF.ObjectManager.HideMapObject(m_WorldObject);
 	}
 	
 	void ~EditorDeletedObject()
 	{
+		CF.ObjectManager.UnhideMapObject(m_WorldObject);
 		delete m_EditorDeletedListItem;
 	}
 	
@@ -29,16 +32,6 @@ class EditorDeletedObject: EditorWorldObject
 	int GetID()
 	{
 		return m_WorldObject.GetID();
-	}
-	
-	void Hide(bool update_pathgraph = false)
-	{
-		CF.ObjectManager.HideMapObject(m_WorldObject, update_pathgraph);
-	}
-	
-	void Show(bool update_pathgraph = false)
-	{
-		CF.ObjectManager.UnhideMapObject(m_WorldObject, update_pathgraph);
 	}
 	
 	EditorDeletedListItem GetListItem()
