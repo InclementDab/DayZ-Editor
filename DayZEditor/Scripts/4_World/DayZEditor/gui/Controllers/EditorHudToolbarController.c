@@ -202,7 +202,7 @@ class EditorHudToolbarController: EditorControllerBase
 				w.GetScreenPos(pos_x, pos_y);
 				w.GetScreenSize(size_x, size_y);
 								
-				EditorCommandTooltip tooltip = new EditorCommandTooltip(editor_command, pos_x, pos_y + size_y);
+				EditorTooltip tooltip = EditorTooltip.CreateOnButton(editor_command, w, TooltipPositions.BOTTOM_LEFT);
 				if (!editor_command.CanExecute()) {
 					tooltip.GetLayoutRoot().SetAlpha(100);
 				}

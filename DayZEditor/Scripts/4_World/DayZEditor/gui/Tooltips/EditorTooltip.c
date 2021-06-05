@@ -8,22 +8,23 @@ enum TooltipPositions
 
 class EditorTooltip: ScriptViewTemplate<EditorCommandTooltipController>
 {	
-	void EditorTooltip(string text, float x, float y)
+	void EditorTooltip(string text, float x, float y, string shortcut_text = "")
 	{
-		m_TemplateController.Name = text;		
-		m_TemplateController.NotifyPropertyChanged("Name");
+		m_TemplateController.Name = text;				
+		m_TemplateController.Shortcut = shortcut_text;
+		m_TemplateController.NotifyPropertyChanged();
 		
 		SetPos(x, y);
 	}
 	
-	static EditorTooltip CreateOnButton(string text, Widget button, TooltipPositions position)
+	static EditorTooltip CreateOnButton(string text, Widget button, TooltipPositions position, string shortcut_text = "")
 	{
 		float pos_x, pos_y;
 		float b_x, b_y, b_w, b_h;
 		button.GetScreenPos(b_x, b_y);
 		button.GetScreenSize(b_w, b_h);
 		
-		EditorTooltip tooltip(text, pos_x, pos_y);
+		EditorTooltip tooltip(text, pos_x, pos_y, shortcut_text);
 		
 		float w, h;
 		tooltip.GetLayoutRoot().GetScreenSize(w, h);
@@ -56,6 +57,17 @@ class EditorTooltip: ScriptViewTemplate<EditorCommandTooltipController>
 		
 		tooltip.SetPos(pos_x, pos_y);
 		return tooltip;
+	}
+	
+	static EditorTooltip CreateOnButton(EditorCommand editor_command, Widget button, TooltipPositions position)
+	{
+		string text = editor_command.GetName();
+		string shortcut;
+		if (editor_command.GetShortcutString() != string.Empty) {
+			shortcut = string.Format("(%1)", editor_command.GetShortcutString());
+		}
+				
+		return EditorTooltip.CreateOnButton(text, button, position, shortcut);
 	}
 	
 	void SetPos(float x, float y)

@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass EditorCommandTooltip {
  ignorepointer 1
- color 0.098 0.098 0.098 1
+ color 0.0588 0.0588 0.0588 1
  position 0 0
  size 225 32
  hexactpos 1
@@ -42,6 +42,7 @@ WrapSpacerWidgetClass EditorCommandTooltip {
    }
   }
   TextWidgetClass EditorCommandShortcut {
+   visible 1
    clipchildren 0
    inheritalpha 1
    ignorepointer 1

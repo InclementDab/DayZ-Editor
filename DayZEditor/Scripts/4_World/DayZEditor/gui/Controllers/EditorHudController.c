@@ -359,7 +359,7 @@ class EditorHudController: EditorControllerBase
 
 		switch (w) {
 			case PlacementsTabButton: {
-				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " Placed Objects", w, TooltipPositions.BOTTOM_RIGHT));
+				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " Placed Objects", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
