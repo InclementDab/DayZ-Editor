@@ -219,8 +219,12 @@ class EditorHudController: EditorControllerBase
 				NotifyPropertyChanged("CategoryDeletions", false);
 				// forcing to be true, otherwise it will just show nothing
 				CategoryPlacements = true;
+				
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
+				
+				PlacementsTabButton.SetColor(RightbarFrame.GetColor());
+				DeletionsTabButton.SetColor(ARGB(255, 15, 15, 15));
 				RightbarScroll.VScrollToPos(0);
 				break;
 			}
@@ -232,6 +236,9 @@ class EditorHudController: EditorControllerBase
 				CategoryDeletions = true;
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
+				
+				PlacementsTabButton.SetColor(ARGB(255, 15, 15, 15));
+				DeletionsTabButton.SetColor(RightbarFrame.GetColor());
 				RightbarScroll.VScrollToPos(0);
 				break;
 			}
