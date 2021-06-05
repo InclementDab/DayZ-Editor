@@ -146,6 +146,8 @@ class EditorObjectManagerModule: JMModuleBase
 		m_WorldObjectIndex.Clear();
 		m_PlacedObjects.Clear();
 		m_SelectedObjects.Clear();
+		m_DeletedObjects.Clear();
+		m_SelectedDeletedObjects.Clear();
 	}
 				
 	override void OnMissionStart()
