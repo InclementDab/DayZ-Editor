@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass EditBoxPrefab {
  visible 1
- size 0.8 30
+ size 0.8 18
  halign center_ref
  valign center_ref
  hexactpos 1

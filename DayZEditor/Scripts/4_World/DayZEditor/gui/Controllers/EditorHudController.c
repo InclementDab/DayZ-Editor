@@ -3,7 +3,7 @@ class EditorHudController: EditorControllerBase
 	string SearchBarData;
 	string Version = Editor.Version;
 	
-	int PlaceableCategorySelection = 0;
+	string ObjectReadoutName;
 	
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
@@ -12,7 +12,10 @@ class EditorHudController: EditorControllerBase
 	ref EditorHudToolbar EditorHudToolbarView;
 	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
-	ref ObservableCollection<ref EditorListItem> RightbarSpacerData 		= new ObservableCollection<ref EditorListItem>(this);
+	
+	//
+	ref ObservableCollection<ref EditorListItem> RightbarPlacedData 		= new ObservableCollection<ref EditorListItem>(this);
+	ref ObservableCollection<ref EditorListItem> RightbarDeletionData 		= new ObservableCollection<ref EditorListItem>(this);
 	
 	// Logger
 	LogLevel CurrentLogLevel = LogLevel.DEBUG;
@@ -228,7 +231,7 @@ class EditorHudController: EditorControllerBase
 	{
 		EditorLog.Trace("EditorHudController::ButtonCreateFolderExecute");
 		EditorCollapsibleListItem category(null);
-		RightbarSpacerData.Insert(category);
+		RightbarPlacedData.Insert(category);
 	}	
 	
 	void CameraTrackToggleExecute(ButtonCommandArgs args) 

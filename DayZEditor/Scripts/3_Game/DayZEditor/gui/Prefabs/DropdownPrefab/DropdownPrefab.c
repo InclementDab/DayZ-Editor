@@ -98,10 +98,12 @@ class DropdownListPrefab<Class TValue>: ScriptView
 		m_IsListVisible = state;
 
 		for (int i = 0; i < m_ItemList.Count(); i++) {
-			float s_x, s_y, s_l, s_h;
+			float s_x, s_y, s_l, s_h, p_x, p_y, p_h, p_l;
 			GetLayoutRoot().GetScreenPos(s_x, s_y);
+			GetLayoutRoot().FindAnyWidget("DropdownPrefabPanel").GetScreenPos(p_x, p_y);
+			GetLayoutRoot().FindAnyWidget("DropdownPrefabPanel").GetScreenSize(p_l, p_h);
 			m_ItemList[i].GetLayoutRoot().GetScreenSize(s_l, s_h);
-			m_ItemList[i].GetLayoutRoot().SetPos(s_x, s_y + (s_h * (i + 1)));
+			m_ItemList[i].GetLayoutRoot().SetPos(p_x, p_y + s_h + (s_h * i));
 			m_ItemList[i].GetLayoutRoot().Show(state);
 		}
 	}

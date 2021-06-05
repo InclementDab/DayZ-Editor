@@ -3,7 +3,7 @@ WrapSpacerWidgetClass EditorDialog {
  ignorepointer 1
  color 0.0588 0.0588 0.0588 0.9804
  position 0 0
- size 0.4 0.4
+ size 0.25 0
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -14,7 +14,7 @@ WrapSpacerWidgetClass EditorDialog {
  scriptclass ""
  style Colorable
  "Ignore invisible" 0
- Padding 10
+ Padding 1
  Margin 0
  "Size To Content H" 1
  "Size To Content V" 1
@@ -25,13 +25,13 @@ WrapSpacerWidgetClass EditorDialog {
    visible 1
    ignorepointer 0
    color 1 1 1 0.3922
-   position 0 37
-   size 1 0.1
+   position 0 0
+   size 1 26
    halign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 0
+   vexactsize 1
    draggable 1
    scriptclass ""
    {
@@ -50,7 +50,7 @@ WrapSpacerWidgetClass EditorDialog {
       TextWidgetClass TitleText {
        clipchildren 1
        ignorepointer 1
-       size 1 0.8
+       size 1 0.9
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -77,20 +77,21 @@ WrapSpacerWidgetClass EditorDialog {
       PanelWidgetClass TitleClosePanel {
        ignorepointer 1
        color 0.7843 0.2941 0.2745 1
-       position 2 0
-       size 0.05 0.9
+       position 0 0
+       size 26 26
        halign right_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 0
-       vexactsize 0
+       hexactsize 1
+       vexactsize 1
        style rover_sim_colorable
        {
         ButtonWidgetClass TitleClose {
          visible 1
          ignorepointer 0
          color 0.6667 0.6667 0.6667 1
+         position 0 0
          size 1 1
          halign center_ref
          valign center_ref
@@ -105,7 +106,7 @@ WrapSpacerWidgetClass EditorDialog {
          font "gui/fonts/Metron-Bold"
          {
           ScriptParamsClass {
-           Relay_Command "CloseDialog"
+           Relay_Command "ExitDialogExecute"
           }
          }
         }
@@ -118,7 +119,7 @@ WrapSpacerWidgetClass EditorDialog {
   WrapSpacerWidgetClass DialogButtons {
    ignorepointer 1
    color 0 0 0 0
-   size 1 0.2
+   size 1 0
    halign center_ref
    hexactpos 0
    vexactpos 0
@@ -128,8 +129,9 @@ WrapSpacerWidgetClass EditorDialog {
    priority 3
    scriptclass "ViewBinding"
    style Empty
-   Padding 5
+   Padding 20
    Margin 0
+   "Size To Content V" 1
    content_halign center
    content_valign center
    {
@@ -143,7 +145,7 @@ WrapSpacerWidgetClass EditorDialog {
    clipchildren 0
    ignorepointer 1
    position 0 0
-   size 0.93 0.7
+   size 0.98 0
    halign center_ref
    valign center_ref
    hexactpos 0
@@ -152,6 +154,8 @@ WrapSpacerWidgetClass EditorDialog {
    vexactsize 0
    priority 2
    scriptclass "ViewBinding"
+   Padding 3
+   Margin 3
    "Size To Content V" 1
    {
     ScriptParamsClass {

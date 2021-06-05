@@ -453,7 +453,7 @@ class EditorObject: EditorWorldObject
 		}
 		
 		m_EditorPlacedListItem = new EditorPlacedListItem(this);
-		GetEditor().GetEditorHud().GetTemplateController().RightbarSpacerData.Insert(m_EditorPlacedListItem);
+		GetEditor().GetEditorHud().GetTemplateController().RightbarPlacedData.Insert(m_EditorPlacedListItem);
 	}
 	
 	void EnableObjectMarker(bool enable) 
