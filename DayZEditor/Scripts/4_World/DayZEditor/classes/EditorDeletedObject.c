@@ -16,6 +16,16 @@ class EditorDeletedObject: EditorWorldObject
 		GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData.Insert(m_EditorDeletedListItem);
 	}
 	
+	void ~EditorDeletedObject()
+	{
+		delete m_EditorDeletedListItem;
+	}
+	
+	string GetType()
+	{
+		return m_WorldObject.GetType();
+	}
+	
 	int GetID()
 	{
 		return m_WorldObject.GetID();

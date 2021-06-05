@@ -17,8 +17,8 @@ class EditorHudController: EditorControllerBase
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	
 	//
-	ref ObservableCollection<ref EditorListItem> RightbarPlacedData 		= new ObservableCollection<ref EditorListItem>(this);
-	ref ObservableCollection<ref EditorListItem> RightbarDeletionData 		= new ObservableCollection<ref EditorListItem>(this);
+	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
+	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
 	
 	// Logger
 	LogLevel CurrentLogLevel = LogLevel.DEBUG;
@@ -302,7 +302,7 @@ class EditorHudController: EditorControllerBase
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	
-	void DoMultiSelect(int index_0, int index_1, ObservableCollection<ref EditorListItem> list)
+	void DoMultiSelect(int index_0, int index_1, ObservableCollection<EditorListItem> list)
 	{
 		int bottom, top;
 		bottom = Math.Min(index_0, index_1);
@@ -315,6 +315,7 @@ class EditorHudController: EditorControllerBase
 		
 		for (int i = bottom; i < top; i++) {
 			EditorPlacedListItem placed_list_item;
+			// this is bad and wont work
 			if (Class.CastTo(placed_list_item, list[i])) {
 				GetEditor().SelectObject(placed_list_item.GetEditorObject());
 			}
