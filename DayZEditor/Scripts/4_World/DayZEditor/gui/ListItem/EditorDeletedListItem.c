@@ -30,7 +30,7 @@ class EditorDeletedListItem: EditorListItem
 				} 
 				
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					GetEditor().ClearHiddenObjectSelection();
+					GetEditor().ClearSelection();
 				}
 				
 				GetEditor().SelectHiddenObject(m_EditorDeletedObject);
@@ -68,6 +68,11 @@ class EditorDeletedListItem: EditorListItem
 		}
 		
 		return true;
+	}
+	
+	override void Select()
+	{
+		ListItemContent.SetColor(LIST_ITEM_COLOR_ON_DELETED);
 	}
 	
 	override bool IsSelected()

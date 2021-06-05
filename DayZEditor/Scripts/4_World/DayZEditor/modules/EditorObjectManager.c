@@ -86,6 +86,9 @@ class EditorObjectManagerModule: JMModuleBase
 		EditorLog.Trace("EditorObjectManager::ClearSelection");		
 		foreach (EditorObject editor_object: m_SelectedObjects)
 			DeselectObject(editor_object);
+		
+		foreach (EditorDeletedObject deleted_object: m_SelectedDeletedObjects)
+			DeselectHiddenObject(deleted_object);
 	}
 	
 	// Hidden object stuff
@@ -133,14 +136,7 @@ class EditorObjectManagerModule: JMModuleBase
 		else
 			SelectHiddenObject(target);
 	}
-	
-	void ClearHiddenObjectSelection()
-	{
-		EditorLog.Trace("EditorObjectManager::ClearHiddenObjectSelection");
-		foreach (EditorDeletedObject deleted_object: m_SelectedDeletedObjects)
-			DeselectHiddenObject(deleted_object);
-	}
-	
+		
 	void Clear()
 	{
 		m_WorldObjectIndex.Clear();

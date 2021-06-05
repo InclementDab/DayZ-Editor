@@ -211,14 +211,18 @@ class EditorHudController: EditorControllerBase
 			case "CategoryPlacements": {
 				CategoryDeletions = false;
 				NotifyPropertyChanged("CategoryDeletions", false);
+				// forcing to be true, otherwise it will just show nothing
+				CategoryPlacements = true;
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
 				break;
 			}
 			
-			case "CategoryDeletions": {
-				CategoryPlacements = false;
+			case "CategoryDeletions": {				
+				CategoryPlacements = false;				
 				NotifyPropertyChanged("CategoryPlacements", false);				
+				// forcing to be true, otherwise it will just show nothing
+				CategoryDeletions = true;
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
 				break;

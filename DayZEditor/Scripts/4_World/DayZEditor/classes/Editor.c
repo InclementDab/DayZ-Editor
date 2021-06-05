@@ -366,7 +366,6 @@ class Editor
 				
 				if (!target || target == m_EditorHud.EditorMapWidget) {
 					ClearSelection();
-					ClearHiddenObjectSelection();
 					GetCameraTrackManager().ClearSelection();
 				}
 				
@@ -408,7 +407,7 @@ class Editor
 				} 
 				
 				else if (KeyState(KeyCode.KC_LSHIFT)) {
-					if (ObjectUnderCursor) {						
+					if (ObjectUnderCursor) {			
 						ClearSelection();
 						HideMapObject(ObjectUnderCursor);
 					}
@@ -1078,11 +1077,6 @@ class Editor
 	void ToggleHiddenObjectSelection(EditorDeletedObject target)
 	{
 		m_ObjectManager.ToggleHiddenObjectSelection(target);
-	}
-	
-	void ClearHiddenObjectSelection()
-	{
-		m_ObjectManager.ClearHiddenObjectSelection();
 	}
 	
 	void Clear()

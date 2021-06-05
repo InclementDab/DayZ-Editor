@@ -185,7 +185,6 @@ class EditorHudToolbarController: EditorControllerBase
 			return super.OnMouseEnter(w, x, y);
 		}
 		
-		
 		switch (w.GetTypeName()) {
 			
 			case "SliderWidget": {
