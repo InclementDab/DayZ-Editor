@@ -2,7 +2,7 @@ WrapSpacerWidgetClass EditorCommandTooltip {
  ignorepointer 1
  color 0.098 0.098 0.098 1
  position 0 0
- size 225 0
+ size 225 32
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -21,7 +21,7 @@ WrapSpacerWidgetClass EditorCommandTooltip {
    inheritalpha 1
    ignorepointer 1
    position 0 0
-   size 48 48
+   size 0 0
    halign center_ref
    valign center_ref
    hexactpos 1

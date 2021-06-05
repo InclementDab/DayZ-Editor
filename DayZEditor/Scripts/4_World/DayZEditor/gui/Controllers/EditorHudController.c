@@ -47,6 +47,7 @@ class EditorHudController: EditorControllerBase
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected EditBoxWidget LeftbarSearchBar;
 	
+	protected ButtonWidget CinematicCameraButton;
 	protected ButtonWidget BrushToggleButton;
 	protected ButtonWidget PlacementsTabButton;
 	protected ButtonWidget DeletionsTabButton;
@@ -355,30 +356,24 @@ class EditorHudController: EditorControllerBase
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseEnter");
-		
-		
-		string tooltip_text;
+
 		switch (w) {
 			case PlacementsTabButton: {
-				tooltip_text = "" + GetEditor().GetPlacedObjects().Count() + " Placed Objects";
+				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " Placed Objects", w, TooltipPositions.BOTTOM_RIGHT));
 				break;
 			}
 			
 			case DeletionsTabButton: {
-				tooltip_text = "" + GetEditor().GetDeletedObjects().Count() + " Deleted Objects";
+				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " Deleted Objects", w, TooltipPositions.BOTTOM_LEFT));
+				break;
+			}
+			
+			case CinematicCameraButton: {
+				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("CameraTrack", w, TooltipPositions.TOP_LEFT));
 				break;
 			}
 		}
-		
-		if (tooltip_text != string.Empty) {
-			float b_x, b_y, b_w, b_h;
-			w.GetScreenPos(b_x, b_y);
-			w.GetScreenSize(b_w, b_h);
-			
-			EditorTooltip tooltip = new EditorTooltip(tooltip_text, b_x, b_y + b_h);
-			EditorHud.SetCurrentTooltip(tooltip);
-		}
-		
+				
 		return super.OnMouseEnter(w, x, y);
 	}
 	
