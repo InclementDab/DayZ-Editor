@@ -263,7 +263,7 @@ FrameWidgetClass EditorFrame {
        clipchildren 1
        ignorepointer 0
        keepsafezone 1
-       color 0.0196 0.0196 0.0196 0.7843
+       color 0.1176 0.1176 0.1176 1
        size 0.92 1
        hexactpos 0
        vexactpos 0
