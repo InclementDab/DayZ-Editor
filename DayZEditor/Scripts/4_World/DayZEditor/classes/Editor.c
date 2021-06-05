@@ -922,11 +922,7 @@ class Editor
 	}
 	
 	bool HideMapObject(EditorDeletedObject map_object, bool create_undo = true)
-	{
-		if (!map_object) { 
-			return false;
-		}
-		
+	{		
 		if (m_ObjectManager.IsObjectHidden(map_object)) { 
 			return false;
 		}
@@ -947,6 +943,23 @@ class Editor
 		return true;
 	}
 	
+	void HideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Unhide", "Hide");
+
+		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
+			action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
+			action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
+			
+			Statistics.RemovedObjects++;
+			m_ObjectManager.HideMapObject(deleted_object);
+		}
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
+	
 	bool UnhideMapObject(int id, bool create_undo = true)
 	{		
 		if (!m_ObjectManager.IsObjectHidden(id)) { 
@@ -965,6 +978,23 @@ class Editor
 		}
 		
 		return true;
+	}
+	
+	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Hide", "Unhide");
+
+		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
+			action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
+			action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
+			
+			Statistics.RemovedObjects++;
+			m_ObjectManager.UnhideMapObject(deleted_object);
+		}
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
 	}
 	
 	/*
@@ -992,10 +1022,6 @@ class Editor
 		return true;
 	}
 	*/
-	void HideMapObjects(array<Object> map_objects)
-	{
-		
-	}
 	
 	void LockObject(EditorObject editor_object)
 	{
@@ -1196,6 +1222,7 @@ class Editor
 	EditorObjectManagerModule GetObjectManager() return m_ObjectManager;
 	EditorCameraTrackManagerModule GetCameraTrackManager() return m_CameraTrackManager;
 	EditorObjectMap GetSelectedObjects() return m_ObjectManager.GetSelectedObjects(); 
+	EditorDeletedObjectMap GetSelectedHiddenObjects() return m_ObjectManager.GetSelectedHiddenObjects();
 	EditorObjectMap GetPlacedObjects() return m_ObjectManager.GetPlacedObjects(); 
 	EditorDeletedObjectMap GetDeletedObjects() return m_ObjectManager.GetDeletedObjects();
 	EditorObjectDataMap GetSessionCache() return m_SessionCache; 		

@@ -9,6 +9,12 @@ class EditorDeleteCommand: EditorCommand
 			return;
 		}
 		
+		EditorDeletedObjectMap deleted_objects = m_Editor.GetSelectedHiddenObjects();
+		if (deleted_objects.Count() > 0) {
+			m_Editor.UnhideMapObjects(deleted_objects);
+			return;
+		}
+		
 		EditorObjectMap objects = m_Editor.GetSelectedObjects();
 		m_Editor.DeleteObjects(objects);		
 	}

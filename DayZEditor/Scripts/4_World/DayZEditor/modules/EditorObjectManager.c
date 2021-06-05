@@ -207,6 +207,11 @@ class EditorObjectManagerModule: JMModuleBase
 	{
 		return m_DeletedObjects;
 	}
+	
+	EditorDeletedObjectMap GetSelectedHiddenObjects()
+	{
+		return m_SelectedDeletedObjects;
+	}
 		
 	EditorObject GetPlacedObjectById(int id)
 	{
