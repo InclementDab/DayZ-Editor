@@ -46,7 +46,7 @@ PanelWidgetClass DropdownElement {
      "size to text v" 1
      {
       ScriptParamsClass {
-       Debug_Logging 1
+       Debug_Logging 0
        Binding_Name "Text"
       }
      }
