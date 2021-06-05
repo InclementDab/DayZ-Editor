@@ -141,20 +141,9 @@ class EditorObjectManagerModule: JMModuleBase
 	{
 		m_WorldObjectIndex.Clear();
 		m_PlacedObjects.Clear();
-		m_SelectedObjects.Clear();
-		
-		// Why THIS is required for this VERY SPECIFIC reason is COMPLETELY boggling to me.
-		// but it works
-		foreach (int _, EditorDeletedObject dd: m_DeletedObjects) {
-			delete dd;
-		}
-		
-		foreach (int __, EditorDeletedObject ddd: m_SelectedDeletedObjects) {
-			delete ddd;
-		}
-		
-		m_DeletedObjects.Clear();
-		m_SelectedDeletedObjects.Clear();		
+		m_SelectedObjects.Clear();		
+		m_DeletedObjects.ClearSafe();
+		m_SelectedDeletedObjects.ClearSafe();		
 	}
 				
 	override void OnMissionStart()

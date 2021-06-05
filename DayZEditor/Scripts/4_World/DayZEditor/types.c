@@ -41,6 +41,15 @@ class EditorDeletedObjectMap: map<int, ref EditorDeletedObject>
 		
 		Remove(editor_deleted_object.GetID());
 	}
+	
+	void ClearSafe()
+	{
+		foreach (int _, EditorDeletedObject deleted_object: this) {
+			delete deleted_object;
+		}
+		
+		Clear();
+	}
 }
 
 class EditorObjectDataMap: map<int, ref EditorObjectData>
