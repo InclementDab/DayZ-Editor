@@ -72,7 +72,7 @@ class EditorPlacedListItem: EditorListItem
 				if (KeyState(KeyCode.KC_LSHIFT)) {
 					int this_index, that_index;
 					EditorListItem tertiary_item;
-					ObservableCollection<ref EditorListItem> list_items = GetEditor().GetEditorHud().GetTemplateController().RightbarSpacerData;
+					ObservableCollection<ref EditorListItem> list_items = GetEditor().GetEditorHud().GetTemplateController().RightbarPlacedData;
 					for (int i = 0; i <= list_items.Count(); i++) {
 						if (list_items[i] == this) {
 							this_index = i;

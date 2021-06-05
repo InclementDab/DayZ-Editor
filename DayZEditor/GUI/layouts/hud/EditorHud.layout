@@ -772,7 +772,7 @@ FrameWidgetClass EditorFrame {
            content_halign right
            {
             ScriptParamsClass {
-             Binding_Name "RightbarSpacerData"
+             Binding_Name "RightbarPlacedData"
              Two_Way_Binding 1
             }
            }
@@ -1444,6 +1444,7 @@ FrameWidgetClass EditorFrame {
            "text valign" center
            {
             ScriptParamsClass {
+             Binding_Name "ObjectReadoutName"
             }
            }
           }
