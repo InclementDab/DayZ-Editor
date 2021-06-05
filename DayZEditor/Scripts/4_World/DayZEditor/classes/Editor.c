@@ -1038,6 +1038,26 @@ class Editor
 		m_ObjectManager.ClearSelection();
 	}
 	
+	void SelectHiddenObject(EditorDeletedObject target)
+	{
+		m_ObjectManager.SelectHiddenObject(target);
+	}
+	
+	void DeselectHiddenObject(EditorDeletedObject target)
+	{
+		m_ObjectManager.DeselectHiddenObject(target);
+	}
+	
+	void ToggleHiddenObjectSelection(EditorDeletedObject target)
+	{
+		m_ObjectManager.ToggleHiddenObjectSelection(target);
+	}
+	
+	void ClearHiddenObjectSelection()
+	{
+		m_ObjectManager.ClearHiddenObjectSelection();
+	}
+	
 	void Clear()
 	{
 		EditorSaveFile = string.Empty;	

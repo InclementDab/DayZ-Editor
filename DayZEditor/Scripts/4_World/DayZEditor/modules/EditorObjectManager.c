@@ -12,6 +12,8 @@ class EditorObjectManagerModule: JMModuleBase
 	// Stored list of all Hidden Objects, indexed by their WorldObject ID
 	private ref EditorDeletedObjectMap 			m_DeletedObjects;
 	
+	private ref EditorDeletedObjectMap			m_SelectedDeletedObjects;
+	
 	static ref map<int, ref OLinkT> WorldObjects = new map<int, ref OLinkT>();
 		
 	// Current Selected PlaceableListItem
@@ -19,11 +21,12 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	override void Init()
 	{
-		EditorLog.Trace("EditorObjectManager::CreateObjects");
+		EditorLog.Trace("EditorObjectManager::Init");
 		m_WorldObjectIndex 	= new EditorObjectMap();
 		m_PlacedObjects 	= new EditorObjectMap();
 		m_SelectedObjects 	= new EditorObjectMap();
 		m_DeletedObjects	= new EditorDeletedObjectMap();
+		m_SelectedDeletedObjects	= new EditorDeletedObjectMap();
 	}
 	
 	EditorObject CreateObject(EditorObjectData editor_object_data)
@@ -66,7 +69,7 @@ class EditorObjectManagerModule: JMModuleBase
 		EditorEvents.ObjectDeselected(this, target);
 		target.OnDeselected();
 	}	
-	
+		
 	// Call to toggle selection
 	void ToggleSelection(EditorObject target)
 	{
@@ -76,7 +79,16 @@ class EditorObjectManagerModule: JMModuleBase
 		else
 			SelectObject(target);
 	}
+		
+	// Call to clear selection
+	void ClearSelection()
+	{
+		EditorLog.Trace("EditorObjectManager::ClearSelection");		
+		foreach (EditorObject editor_object: m_SelectedObjects)
+			DeselectObject(editor_object);
+	}
 	
+	// Hidden object stuff
 	void HideMapObject(EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::HideMapObject");
@@ -97,12 +109,36 @@ class EditorObjectManagerModule: JMModuleBase
 		delete target;
 	}
 	
-	// Call to clear selection
-	void ClearSelection()
+		void SelectHiddenObject(EditorDeletedObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::ClearSelection");		
-		foreach (EditorObject editor_object: m_SelectedObjects)
-			DeselectObject(editor_object);
+		EditorLog.Trace("EditorObjectManager::SelectHiddenObject");
+		m_SelectedDeletedObjects.InsertEditorDeletedObject(target);
+		EditorEvents.DeletedObjectSelected(this, target);
+		target.OnSelected();
+	}
+	
+	void DeselectHiddenObject(EditorDeletedObject target)
+	{
+		EditorLog.Trace("EditorObjectManager::DeselectHiddenObject");
+		m_SelectedDeletedObjects.RemoveEditorDeletedObject(target);
+		EditorEvents.DeletedObjectDeselected(this, target);
+		target.OnDeselected();
+	}
+	
+	void ToggleHiddenObjectSelection(EditorDeletedObject target)
+	{
+		EditorLog.Trace("EditorObjectManager::ToggleHiddenObjectSelection");
+		if (target.IsSelected())
+			DeselectHiddenObject(target);
+		else
+			SelectHiddenObject(target);
+	}
+	
+	void ClearHiddenObjectSelection()
+	{
+		EditorLog.Trace("EditorObjectManager::ClearHiddenObjectSelection");
+		foreach (EditorDeletedObject deleted_object: m_SelectedDeletedObjects)
+			DeselectHiddenObject(deleted_object);
 	}
 	
 	void Clear()

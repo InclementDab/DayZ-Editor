@@ -1,8 +1,11 @@
 class EditorDeletedObject: EditorWorldObject
 {
+	protected bool m_IsSelected;
 	protected vector m_OriginalPosition;
 	protected vector m_OriginalOrientation;
 	protected ref EditorDeletedListItem m_EditorDeletedListItem;
+	
+	protected ref EditorDeletedObjectWorldMarker m_EditorDeletedObjectWorldMarker;
 	
 	void EditorDeletedObject(notnull Object object)
 	{
@@ -22,6 +25,7 @@ class EditorDeletedObject: EditorWorldObject
 	{
 		CF.ObjectManager.UnhideMapObject(m_WorldObject);
 		delete m_EditorDeletedListItem;
+		delete m_EditorDeletedObjectWorldMarker;
 	}
 	
 	string GetType()
@@ -32,6 +36,33 @@ class EditorDeletedObject: EditorWorldObject
 	int GetID()
 	{
 		return m_WorldObject.GetID();
+	}
+	
+	void OnSelected()
+	{
+		m_IsSelected = true;
+		m_EditorDeletedObjectWorldMarker = new EditorDeletedObjectWorldMarker(this);
+	}
+	
+	void OnDeselected()
+	{
+		m_IsSelected = false;
+		delete m_EditorDeletedObjectWorldMarker;
+	}
+	
+	bool IsSelected()
+	{
+		return m_IsSelected;
+	}
+	
+	vector GetOriginalPosition()
+	{
+		return m_OriginalPosition;
+	}
+	
+	vector GetOriginalOrientation()
+	{
+		return m_OriginalOrientation;
 	}
 	
 	EditorDeletedListItem GetListItem()

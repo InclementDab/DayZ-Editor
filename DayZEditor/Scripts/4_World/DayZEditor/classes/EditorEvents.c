@@ -33,6 +33,20 @@ class EditorEvents
 		OnObjectDeselected.Invoke(context, target);
 	}
 	
+	static ref ScriptInvoker OnDeletedObjectSelected = new ScriptInvoker();
+	static void DeletedObjectSelected(Class context, EditorDeletedObject target)
+	{
+		EditorLog.Trace("EditorEvents::ObjectDeselected");
+		OnDeletedObjectSelected.Invoke(context, target);
+	}
+	
+	static ref ScriptInvoker OnDeletedObjectDeselected = new ScriptInvoker();
+	static void DeletedObjectDeselected(Class context, EditorDeletedObject target)
+	{
+		EditorLog.Trace("EditorEvents::ObjectDeselected");
+		OnDeletedObjectDeselected.Invoke(context, target);
+	}
+	
 	// Called AFTER Editor starts placing
 	static ref ScriptInvoker OnStartPlacing = new ScriptInvoker();
 	static void StartPlacing(Class context, EditorPlaceableItem target)

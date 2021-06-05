@@ -17,4 +17,56 @@ class EditorDeletedListItem: EditorListItem
 		//m_TemplateController.Icon = m_EditorDeletedObject.GetData().Icon;
 		//m_TemplateController.NotifyPropertyChanged("Icon");
 	}
+	
+	bool ListItemExecute(ButtonCommandArgs args)
+	{
+		switch (args.GetMouseButton()) {
+
+			case MouseState.LEFT: {
+
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					GetEditor().ToggleHiddenObjectSelection(m_EditorDeletedObject);
+					return true;
+				} 
+				
+				if (!KeyState(KeyCode.KC_LSHIFT)) {
+					GetEditor().ClearHiddenObjectSelection();
+				}
+				
+				GetEditor().SelectHiddenObject(m_EditorDeletedObject);
+				/*
+				// Multi select handling
+				if (KeyState(KeyCode.KC_LSHIFT)) {
+					int this_index, that_index;
+					EditorListItem tertiary_item;
+					ObservableCollection<EditorListItem> list_items = GetEditor().GetEditorHud().GetTemplateController().RightbarPlacedData;
+					for (int i = 0; i <= list_items.Count(); i++) {
+						if (list_items[i] == this) {
+							this_index = i;
+							continue;
+						}
+						
+						if (list_items[i] && list_items[i].IsSelected()) {
+							that_index = i;
+							continue;
+						}
+					}
+						
+					GetEditor().GetEditorHud().GetTemplateController().DoMultiSelect(this_index, that_index, list_items);
+				}
+				*/
+				return true;
+			}
+			
+			case MouseState.MIDDLE: {
+				EditorCamera camera = GetEditor().GetCamera();
+				vector pos = m_EditorDeletedObject.GetOriginalPosition();
+				pos[1] = camera.GetPosition()[1];
+				camera.SetPosition(pos);
+				return true;
+			}			
+		}
+		
+		return true;
+	}
 }
