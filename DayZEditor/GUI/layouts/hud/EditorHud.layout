@@ -726,7 +726,7 @@ FrameWidgetClass EditorFrame {
        ignorepointer 0
        keepsafezone 1
        color 0.1176 0.1176 0.1176 1
-       size 0.92 0.98
+       size 0.92 1
        halign center_ref
        valign bottom_ref
        hexactpos 0
@@ -736,13 +736,98 @@ FrameWidgetClass EditorFrame {
        priority 1
        style rover_sim_colorable
        {
+        PanelWidgetClass TabPanel {
+         ignorepointer 1
+         color 0.1176 0.1176 0.1176 1
+         size 1 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          ButtonWidgetClass DeletionsTabButton {
+           color 0.0784 0.0784 0.0784 1
+           position 0 0
+           size 0.5 20
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           scriptclass "ViewBinding"
+           style Colorable
+           font "gui/fonts/etelkatextpro"
+           "text color" 0.7451 0.7451 0.7451 1
+           switch toggle
+           {
+            TextWidgetClass DeletionsText {
+             ignorepointer 1
+             size 1 1
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             text "Deletions"
+             font "gui/fonts/etelkatextpro"
+             "text halign" center
+             "text valign" center
+            }
+           }
+           {
+            ScriptParamsClass {
+             Binding_Name "CategoryDeletions"
+             Two_Way_Binding 1
+            }
+           }
+          }
+          ButtonWidgetClass PlacementsTabButton {
+           color 0.1176 0.1176 0.1176 1
+           position 0 0
+           size 0.5 20
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           scriptclass "ViewBinding"
+           style Colorable
+           font "gui/fonts/etelkatextpro"
+           "disabled text color" 1 1 1 0.9961
+           switch toggle
+           {
+            TextWidgetClass PlacementsText {
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             text "Placements"
+             font "gui/fonts/etelkatextpro"
+             "text halign" center
+             "text valign" center
+            }
+           }
+           {
+            ScriptParamsClass {
+             Binding_Name "CategoryPlacements"
+             Two_Way_Binding 1
+            }
+           }
+          }
+         }
+        }
         ScrollWidgetClass RightbarScroll {
          visible 1
          clipchildren 0
          ignorepointer 0
          keepsafezone 0
          color 0.3529 0.3529 0.3529 1
-         position -2 0
+         position 0 22
          size 1 1
          halign center_ref
          hexactpos 1
@@ -858,93 +943,6 @@ FrameWidgetClass EditorFrame {
          {
           ScriptParamsClass {
            Relay_Command "RightbarHideExecute"
-          }
-         }
-        }
-       }
-      }
-      PanelWidgetClass TabPanel {
-       ignorepointer 1
-       color 0.1176 0.1176 0.1176 1
-       position 0 0
-       size 0.92 22
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       style rover_sim_colorable
-       {
-        ButtonWidgetClass DeletionsTabButton {
-         color 0.0784 0.0784 0.0784 1
-         position 0 0
-         size 0.5 20
-         halign right_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style Colorable
-         font "gui/fonts/etelkatextpro"
-         "text color" 0.7451 0.7451 0.7451 1
-         switch toggle
-         {
-          TextWidgetClass DeletionsText {
-           ignorepointer 1
-           size 1 1
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           text "Deletions"
-           font "gui/fonts/etelkatextpro"
-           "text halign" center
-           "text valign" center
-          }
-         }
-         {
-          ScriptParamsClass {
-           Binding_Name "CategoryDeletions"
-           Two_Way_Binding 1
-          }
-         }
-        }
-        ButtonWidgetClass PlacementsTabButton {
-         color 0.1176 0.1176 0.1176 1
-         position 0 0
-         size 0.5 20
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style Colorable
-         font "gui/fonts/etelkatextpro"
-         "disabled text color" 1 1 1 0.9961
-         switch toggle
-         {
-          TextWidgetClass PlacementsText {
-           ignorepointer 1
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           text "Placements"
-           font "gui/fonts/etelkatextpro"
-           "text halign" center
-           "text valign" center
-          }
-         }
-         {
-          ScriptParamsClass {
-           Binding_Name "CategoryPlacements"
-           Two_Way_Binding 1
           }
          }
         }
