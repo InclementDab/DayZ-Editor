@@ -174,9 +174,8 @@ class EditorCameraTrackManagerModule: JMModuleBase
 	void Stop()
 	{
 		m_CameraTrackRunning = false;
-		GetEditor().GetCamera().SetPosition(m_CameraTrackStartPosition);
-		GetEditor().GetCamera().SetPosition(m_CameraTrackStartOrientation);
-
+		//GetEditor().GetCamera().SetPosition(m_CameraTrackStartPosition);
+		//GetEditor().GetCamera().SetPosition(m_CameraTrackStartOrientation);
 	}
 	
 	bool IsRunning()
