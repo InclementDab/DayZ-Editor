@@ -230,6 +230,10 @@ class Editor
 			}
 		}
 		
+		// Just shutting the logger up for a minute
+		int log_lvl = EditorLog.CurrentLogLevel;
+		EditorLog.CurrentLogLevel = LogLevel.WARNING;
+		
 		if (ObjectUnderCursor) {
 			m_EditorHudController.ObjectReadoutName = ObjectUnderCursor.GetType();
 		} else {
@@ -238,9 +242,6 @@ class Editor
 		
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		
-		
-		int log_lvl = EditorLog.CurrentLogLevel;
-		EditorLog.CurrentLogLevel = LogLevel.WARNING;
 		if (m_EditorCamera) {
 			vector cam_pos = m_EditorCamera.GetPosition();
 			
