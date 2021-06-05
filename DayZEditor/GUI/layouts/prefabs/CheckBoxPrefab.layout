@@ -1,6 +1,7 @@
 FrameWidgetClass CheckBoxPrefab {
  visible 1
  clipchildren 0
+ ignorepointer 1
  size 0.85 18
  halign center_ref
  valign center_ref
