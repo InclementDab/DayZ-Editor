@@ -369,7 +369,7 @@ class EditorHudController: EditorControllerBase
 			}
 			
 			case CinematicCameraButton: {
-				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("CameraTrack", w, TooltipPositions.TOP_LEFT));
+				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("Camera Tracks", w, TooltipPositions.TOP_LEFT));
 				break;
 			}
 		}
