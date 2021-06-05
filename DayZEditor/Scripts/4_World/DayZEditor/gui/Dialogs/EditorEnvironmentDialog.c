@@ -60,7 +60,6 @@ class EditorEnvironmentDialog: EditorDialogBase
 {	
 	void EditorEnvironmentDialog(string title)
 	{
-		//Debug_Logging = true;
 		int year, month, day, hour, minute;
 		GetGame().GetWorld().GetDate(year, month, day, hour, minute);
 		float time = minute * 60 + hour * 3600;
@@ -72,9 +71,6 @@ class EditorEnvironmentDialog: EditorDialogBase
 		
 		float wind = GetGame().GetWeather().GetWindSpeed();
 		
-		float exposure = GetGame().GetWorld().GetEyeAccom();
-		
-
 		GroupPrefab group_prefab = new GroupPrefab("Weather", m_Controller, string.Empty);		
 		group_prefab.Insert(new SliderPrefab("Date", m_Controller, "date", date, 1, 365));
 		group_prefab.Insert(new SliderPrefab("Time", m_Controller, "time", time, 0, 86400));
