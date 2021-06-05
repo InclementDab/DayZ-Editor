@@ -5,7 +5,7 @@ class EditorHudController: EditorControllerBase
 	
 	string ObjectReadoutName;
 	
-	bool CategoryPlacements;
+	bool CategoryPlacements = true;
 	bool CategoryDeletions;
 	
 	float cam_x, cam_y, cam_z;	
@@ -37,7 +37,10 @@ class EditorHudController: EditorControllerBase
 	protected Widget RightbarFrame;
 	protected ImageWidget RightbarHideIcon;
 	protected ButtonWidget BrushToggleButton;
-		
+	
+	protected WrapSpacerWidget RightbarPlacementsList;
+	protected WrapSpacerWidget RightbarDeletionsList;
+	
 	protected GridSpacerWidget InfobarObjPosFrame;
 		
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
@@ -209,12 +212,16 @@ class EditorHudController: EditorControllerBase
 			case "CategoryPlacements": {
 				CategoryDeletions = false;
 				NotifyPropertyChanged("CategoryDeletions", false);
+				RightbarPlacementsList.Show(CategoryPlacements);
+				RightbarDeletionsList.Show(CategoryDeletions);
 				break;
 			}
 			
 			case "CategoryDeletions": {
 				CategoryPlacements = false;
 				NotifyPropertyChanged("CategoryPlacements", false);				
+				RightbarPlacementsList.Show(CategoryPlacements);
+				RightbarDeletionsList.Show(CategoryDeletions);
 				break;
 			}
 		}

@@ -752,7 +752,7 @@ FrameWidgetClass EditorFrame {
          style blank
          "Scrollbar V" 1
          {
-          WrapSpacerWidgetClass RightbarSpacer {
+          WrapSpacerWidgetClass RightbarPlacementsList {
            visible 1
            ignorepointer 0
            keepsafezone 0
