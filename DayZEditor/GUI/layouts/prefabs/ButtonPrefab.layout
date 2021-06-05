@@ -1,7 +1,7 @@
 PanelWidgetClass ButtonPanel {
  clipchildren 1
  ignorepointer 1
- size 110 28
+ size 115 28
  halign center_ref
  valign bottom_ref
  hexactpos 0

@@ -108,7 +108,7 @@ PanelWidgetClass EditorPosElement {
          visible 1
          clipchildren 1
          color 1 1 1 0.9608
-         position 0 0
+         position 0 -1
          size 1 16
          valign center_ref
          hexactpos 1
@@ -201,7 +201,7 @@ PanelWidgetClass EditorPosElement {
          visible 1
          keepsafezone 0
          color 1 1 1 0.9961
-         position 0 0
+         position 0 -1
          size 1 16
          valign center_ref
          hexactpos 1
@@ -296,7 +296,7 @@ PanelWidgetClass EditorPosElement {
          clipchildren 1
          keepsafezone 0
          color 1 1 1 0.9961
-         position 0 0
+         position 0 -1
          size 1 16
          valign center_ref
          hexactpos 1
