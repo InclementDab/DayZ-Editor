@@ -70,9 +70,10 @@ class EditorPlacedListItem: EditorListItem
 				
 				// Multi select handling
 				if (KeyState(KeyCode.KC_LSHIFT)) {
-					int this_index, that_index;
+					int this_index;
+					int that_index = -1;
 					EditorListItem tertiary_item;
-					ObservableCollection<EditorListItem> list_items = GetEditor().GetEditorHud().GetTemplateController().RightbarPlacedData;
+					ObservableCollection<EditorListItem> list_items = GetEditor().GetEditorHud().GetTemplateController().RightbarPlacedData;					
 					for (int i = 0; i <= list_items.Count(); i++) {
 						if (list_items[i] == this) {
 							this_index = i;
@@ -84,7 +85,11 @@ class EditorPlacedListItem: EditorListItem
 							continue;
 						}
 					}
-						
+					
+					if (that_index == -1) {
+						break;
+					}
+					
 					GetEditor().GetEditorHud().GetTemplateController().DoMultiSelect(this_index, that_index, list_items);
 				}
 				

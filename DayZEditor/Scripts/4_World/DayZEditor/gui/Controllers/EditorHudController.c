@@ -69,10 +69,7 @@ class EditorHudController: EditorControllerBase
 	{
 		EditorLog.Trace("EditorHudController");
 		
-#ifndef COMPONENT_SYSTEM
-		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
-		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
-		
+#ifndef COMPONENT_SYSTEM		
 		EditorLog.OnLog.Insert(OnEditorLog);
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
@@ -83,10 +80,7 @@ class EditorHudController: EditorControllerBase
 	{
 		EditorLog.Trace("~EditorHudController");
 		
-#ifndef COMPONENT_SYSTEM
-		EditorEvents.OnObjectSelected.Remove(OnObjectSelected);
-		EditorEvents.OnObjectDeselected.Remove(OnObjectDeselected);
-		
+#ifndef COMPONENT_SYSTEM		
 		EditorLog.OnLog.Remove(OnEditorLog);
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
@@ -456,16 +450,6 @@ class EditorHudController: EditorControllerBase
 		}
 		
 		return false;
-	}
-	
-	private void OnObjectSelected(Class context, EditorObject target)
-	{
-		InfobarObjPosFrame.Show(m_Editor.GetObjectManager().GetSelectedObjects().Count() > 0);
-	}
-	
-	private void OnObjectDeselected(Class context, EditorObject target)
-	{
-		InfobarObjPosFrame.Show(m_Editor.GetObjectManager().GetSelectedObjects().Count() > 0);
 	}
 	
 	void SetInfoObjectPosition(vector position)
