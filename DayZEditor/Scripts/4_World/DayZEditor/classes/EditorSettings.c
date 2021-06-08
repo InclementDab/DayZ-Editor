@@ -10,7 +10,7 @@ class EditorSettings: EditorProfileSettings
 	bool ShowBoundingBoxes 			= true;
 	bool BrushedObjectMarkers 		= false;
 	bool PreloadObjects				= false;
-	bool DisableWorldCache			= true; // BIG NO
+	bool DisableWorldCache			= false;
 	bool DebugMode 					= false;
 	
 	string EditorProtoFile 			= "$profile:/Editor/MapGroupProto.xml";
