@@ -30,19 +30,7 @@ class EditorWorldObject
 			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
-/*
-		if (obj.IsInherited(DayZCreatureAI)) {
-			DayZCreatureAI creature;
-			if (Class.CastTo(creature, obj)) {
-				Print(creature.GetAIAgent());
-				obj.DisableSimulation(true);
-				obj.DisableSimulation(false);
-				Print(creature.GetAIAgent());
-				
-				creature.InitAIAgent(null);
-			}
-		}
-		*/
+
 		// Needed for AI Placement			
 		if (EntityAI.Cast(obj)) {
 			EntityAI.Cast(obj).DisableSimulation(true);
