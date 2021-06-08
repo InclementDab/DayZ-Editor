@@ -21,12 +21,12 @@ class EditorWorldObject
 		Object obj;
 		if (GetGame().IsKindOf(type, "DZ_LightAI")) {
 			if (!Class.CastTo(obj, GetGame().CreateObject(type, position, false, true))) {
-				EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
+				EditorLog.Warning("EditorWorldObject: Invalid Object %1", type);
 				return null;
 			}
 		}
 		
-		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS))) {
+		if (!obj && !Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS))) {
 			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
