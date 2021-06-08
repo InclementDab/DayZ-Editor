@@ -153,6 +153,11 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		// Loads all world objects into a map
 		WorldObjects.Clear();
+		
+		if (GetEditor().Settings.DisableWorldCache) {
+			return;
+		}
+		
 		g_Game.ReportProgress("Caching Map Objects");
 		EditorLog.Info("Caching Map Objects");
 		
