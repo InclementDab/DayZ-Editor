@@ -3,6 +3,18 @@
 echo Deploying to Release. Are you sure?
 pause
 
+set c=%CD%
+
+cd DayZEditor/Scripts/Data
+
+if not exist build.txt >build.txt echo 0
+for /f %%x in (build.txt) do (
+set /a var=%%x+1
+)
+>build.txt echo %var%
+
+cd %c%
+
 start /W "Build PBO" "%CD%/DayZEditor/Workbench/Batchfiles/ZBinarizeDeploy.bat"
 
 echo Uploading to Workshop

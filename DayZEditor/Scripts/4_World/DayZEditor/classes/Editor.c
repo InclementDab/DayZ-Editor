@@ -1211,6 +1211,19 @@ class Editor
 		Statistics.PlayTime += passed_time;
 	}
 	
+	static int GetBuildNumber()
+	{
+		if (!FileExist("DayZEditor\\Scripts\\Data\\build.txt")) {
+			return 0;
+		}
+		
+		FileHandle handle = OpenFile("DayZEditor\\Scripts\\Data\\build.txt", FileMode.READ);
+		array<int> values = {};
+		Print(ReadFile(handle, values, 5));
+		Print(values);
+		return -1;
+	}
+	
 	bool IsActive() return m_Active;
 	EditorHud GetEditorHud() return m_EditorHud;
 	EditorCamera GetCamera() return m_EditorCamera;
