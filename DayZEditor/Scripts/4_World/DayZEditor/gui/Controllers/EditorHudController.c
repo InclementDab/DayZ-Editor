@@ -227,7 +227,7 @@ class EditorHudController: EditorControllerBase
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
 				
-				PlacementsTabButton.SetColor(RightbarFrame.GetColor());
+				PlacementsTabButton.SetColor(COLOR_SALMON);
 				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
 				RightbarScroll.VScrollToPos(0);
 				break;
@@ -242,7 +242,7 @@ class EditorHudController: EditorControllerBase
 				RightbarDeletionsList.Show(CategoryDeletions);
 				
 				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
-				DeletionsTabButton.SetColor(RightbarFrame.GetColor());
+				DeletionsTabButton.SetColor(COLOR_SALMON);
 				RightbarScroll.VScrollToPos(0);
 				break;
 			}
