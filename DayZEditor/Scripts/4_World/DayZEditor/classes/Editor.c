@@ -79,7 +79,7 @@ class Editor
 	bool 										CollisionMode;
 
 	string 										BanReason = "null";
-	static const string 						Version = "1.11.2055pre";
+	static const string 						Version = "1.11." + GetBuildNumber();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -1213,15 +1213,22 @@ class Editor
 	
 	static int GetBuildNumber()
 	{
+		static const int BUILD_LENGTH = 1;
 		if (!FileExist("DayZEditor\\Scripts\\Data\\build.txt")) {
 			return 0;
 		}
 		
 		FileHandle handle = OpenFile("DayZEditor\\Scripts\\Data\\build.txt", FileMode.READ);
-		array<int> values = {};
-		Print(ReadFile(handle, values, 5));
-		Print(values);
-		return -1;
+		
+		int values[1];
+		string build_number;
+		while (ReadFile(handle, values, 1)) {
+			build_number += values[0].AsciiToString();
+		}
+		
+		CloseFile(handle);
+		
+		return build_number.ToInt();
 	}
 	
 	bool IsActive() return m_Active;
