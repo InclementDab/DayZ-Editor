@@ -5,13 +5,13 @@ modded class LoadingScreen
 {
 	static const ref array<ref LoadingScreenEntry> LOADING_SCREENS = {
 		new LoadingScreenEntry("0.edds", "Lad"),
-		new LoadingScreenEntry("1.edds", "Unknown"),
+		new LoadingScreenEntry("1.edds", "Relict"),
 		new LoadingScreenEntry("2.edds", "Suvi"), 
 		new LoadingScreenEntry("3.edds", "DanceOfJesus"),
 		new LoadingScreenEntry("4.edds", "Suvi"), 
 		new LoadingScreenEntry("5.edds", "Lavo"),
 		new LoadingScreenEntry("6.edds", "Lavo"),
-		new LoadingScreenEntry("7.edds", "Unknown"),
+		new LoadingScreenEntry("7.edds", "Kornflakes"),
 		new LoadingScreenEntry("8.edds", "Boba Fetish"),
 		new LoadingScreenEntry("9.edds", "Jonas"),
 		new LoadingScreenEntry("10.edds", "Fluzoo"),
@@ -23,6 +23,8 @@ modded class LoadingScreen
 		new LoadingScreenEntry("16.edds", "ZoD1Ac"),		
 		new LoadingScreenEntry("17.edds", "ollie"),		
 		new LoadingScreenEntry("18.edds", "Boba Fetish"),		
+		new LoadingScreenEntry("19.edds", "InclementDab"),		
+		new LoadingScreenEntry("20.edds", "Bosch"),		
 	};
 	
 	protected TextWidget m_ImageCredit;
