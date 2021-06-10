@@ -7,7 +7,7 @@ modded class MainMenu
 		layoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/GUI/layouts/EditorMainMenu.layout");
 		
 		m_Play						= layoutRoot.FindAnyWidget("play");
-		m_ChooseServer				= layoutRoot.FindAnyWidget("choose_server");
+		m_ChooseServer				= layoutRoot.FindAnyWidget("donate");
 		m_CustomizeCharacter		= layoutRoot.FindAnyWidget("customize_character");
 		m_PlayVideo					= layoutRoot.FindAnyWidget("play_video");
 		m_Tutorials					= layoutRoot.FindAnyWidget("tutorials");
@@ -97,5 +97,10 @@ modded class MainMenu
 	{
 		super.OnChangeCharacter(create_character);
 		m_EditorMainMenuStats.UpdateStats();
+	}
+	
+	override void OpenMenuServerBrowser()
+	{
+		GetGame().OpenURL("paypal.com/donate/?business=YPCJSENU7QZTA&currency_code=USD");
 	}
 }

@@ -15,7 +15,7 @@ modded class LoadingScreen
 		new LoadingScreenEntry("8.edds", "Boba Fetish"),
 		new LoadingScreenEntry("9.edds", "Jonas"),
 		new LoadingScreenEntry("10.edds", "Fluzoo"),
-		new LoadingScreenEntry("11.edds", "Mihalych"),
+		//new LoadingScreenEntry("11.edds", "Mihalych"),
 		new LoadingScreenEntry("12.edds", "TerrorisedCookie"),
 		new LoadingScreenEntry("13.edds", "DayZ"),
 		new LoadingScreenEntry("14.edds", "DanceOfJesus"),

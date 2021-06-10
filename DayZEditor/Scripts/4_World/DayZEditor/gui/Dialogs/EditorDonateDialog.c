@@ -11,7 +11,7 @@ class EditorDonateDialog: EditorDialogBase
 	
 	void OpenPaypal()
 	{
-		GetGame().OpenURL("paypal.me/InclementDab");
+		GetGame().OpenURL("paypal.com/donate/?business=YPCJSENU7QZTA&currency_code=USD");
 	}
 	
 	void OpenPatreon()

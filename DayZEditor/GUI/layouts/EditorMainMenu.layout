@@ -366,8 +366,8 @@ FrameWidgetClass main_menu_root {
         }
        }
       }
-      ButtonWidgetClass choose_server {
-       visible 0
+      ButtonWidgetClass donate {
+       visible 1
        color 0 0 0 1
        position 0 0
        size 1 40
@@ -384,7 +384,7 @@ FrameWidgetClass main_menu_root {
        "next up" "customize_character"
        "next down" "play"
        {
-        PanelWidgetClass choose_server_panel {
+        PanelWidgetClass donate_panel {
          ignorepointer 1
          color 0 0 0 0
          position 0 0
@@ -395,7 +395,7 @@ FrameWidgetClass main_menu_root {
          vexactsize 0
          style DayZDefaultPanel
          {
-          TextWidgetClass choose_server_label {
+          TextWidgetClass donate_label {
            ignorepointer 1
            size 1 22
            halign center_ref
@@ -404,7 +404,7 @@ FrameWidgetClass main_menu_root {
            vexactpos 0
            hexactsize 0
            vexactsize 1
-           text "#main_menu_change_server"
+           text "Donate to the Project"
            font "gui/fonts/sdf_MetronLight24"
            "text halign" center
            "text valign" center
