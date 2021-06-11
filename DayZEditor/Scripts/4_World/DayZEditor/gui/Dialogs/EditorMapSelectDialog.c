@@ -21,7 +21,7 @@ class EditorMapSelectDialog: EditorDialogBase
 			string name;
 			GetGame().ConfigGetChildName("CfgWorlds", i, name);
 			if (ExcludedMapItems.Find(name) == -1) {
-				m_ListBoxPrefab.InsertItem(name);
+				m_ListBoxPrefab.InsertItem(name, name);
 			}
 		}
 		

@@ -1,20 +1,6 @@
-/*class ListBoxPrefabEntryController: Controller
-{
-	string Caption;
-	DropdownListPrefabItemBase Value;
-	//TValue CalculatedValue; // Used for things like SliderWidget output
-		
-	override void PropertyChanged(string property_name)
-	{
-		if (GetParent()) {
-			g_Script.Call(GetParent(), "PrefabPropertyChanged", property_name);
-		}
-	}
-
-}*/
-
 class ListBoxPrefabEntryController<Class TValue>: Controller
 {
+	string Caption;
 	TValue Value;
 }
 
@@ -23,9 +9,13 @@ class ListBoxPrefabEntry<Class T>: ScriptView
 	ref ScriptInvoker Event_OnClick = new ScriptInvoker();
 	ref ScriptInvoker Event_OnDoubleClick = new ScriptInvoker();
 	
-	void ListBoxPrefabEntry(T data)
+	void ListBoxPrefabEntry(string caption, T data)
 	{
+		GetListBoxPrefabEntryController().Caption = caption;
+		GetListBoxPrefabEntryController().NotifyPropertyChanged("Caption");
+		
 		GetListBoxPrefabEntryController().Value = data;
+		GetListBoxPrefabEntryController().NotifyPropertyChanged("Value");
 	}
 	
 	ListBoxPrefabEntryController<T> GetListBoxPrefabEntryController() 
@@ -35,19 +25,24 @@ class ListBoxPrefabEntry<Class T>: ScriptView
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Event_OnClick.Invoke(this, w, x, y, button);
+		Event_OnClick.Invoke(GetListBoxPrefabEntryController().Value, w, x, y, button);
 		return super.OnClick(w, x, y, button);
 	}
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		Event_OnDoubleClick.Invoke(this, w, x, y, button);
+		Event_OnDoubleClick.Invoke(GetListBoxPrefabEntryController().Value, w, x, y, button);
 		return super.OnDoubleClick(w, x, y, button);
+	}
+	
+	T GetData()
+	{
+		return GetListBoxPrefabEntryController().Value;
 	}
 	
 	override string GetLayoutFile() 
 	{
-		return "DayZEditor/gui/Layouts/items/EditorSelectItemList.layout";
+		return "DayZEditor/gui/Layouts/prefabs/Listbox/EditorSelectItemList.layout";
 	}
 	
 	override typename GetControllerType()
@@ -63,44 +58,56 @@ class ListBoxPrefabController<Class T>: Controller
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{
 		super.CollectionChanged(collection_name, args);
-		
-		Print(args.ChangedIndex);
-		Print(args.ChangedValue);
-		Param1<T> value = Param1<T>.Cast(args.ChangedValue);
-		Print(value);
 	}
 }
 
 class ListBoxPrefab<Class T>: ScriptView
 {	
-	//autoptr TextListboxWidget ListBox;
 	private static const T DEFAULT_VALUE;
 		
+	ref ScriptInvoker Event_OnClick = new ScriptInvoker();
+	ref ScriptInvoker Event_OnDoubleClick = new ScriptInvoker();
+	
 	ListBoxPrefabController<T> GetListBoxPrefabController() 
 	{
 		return ListBoxPrefabController<T>.Cast(GetController());
 	}
 	
-	void InsertItem(T item)
+	protected T m_SelectedItem;
+	
+	void InsertItem(string caption, T item)
 	{
-		Print("InsertItem");
-		Print(item);
-		GetListBoxPrefabController().ListBoxData.Insert(new ListBoxPrefabEntry<T>(item));
+		ListBoxPrefabEntry<T> entry(caption, item);
+		entry.Event_OnClick.Insert(EntryOnClick);
+		entry.Event_OnDoubleClick.Insert(EntryOnDoubleClick);
+		
+		GetListBoxPrefabController().ListBoxData.Insert(entry);
 	}
 	
-	int GetSelectedRow()
+	void EntryOnClick(T entry, Widget w, int x, int y, int button)
 	{
-		return -1;
+		m_SelectedItem = entry;
+		Event_OnClick.Invoke(entry, w, x, y, button);
+	}
+	
+	void EntryOnDoubleClick(T entry, Widget w, int x, int y, int button)
+	{
+		Event_OnDoubleClick.Invoke(entry, w, x, y, button);
+	}
+	
+	int GetRowCount()
+	{
+		return GetListBoxPrefabController().ListBoxData.Count();
 	}
 	
 	T GetSelectedItem()
-	{
-		return DEFAULT_VALUE;
+	{		
+		return m_SelectedItem;
 	}
 	
 	override string GetLayoutFile() 
 	{
-		return "DayZEditor/gui/Layouts/prefabs/ListBoxWrapPrefab.layout";
+		return "DayZEditor/gui/Layouts/prefabs/Listbox/ListBoxWrapPrefab.layout";
 	}
 	
 	override typename GetControllerType() 

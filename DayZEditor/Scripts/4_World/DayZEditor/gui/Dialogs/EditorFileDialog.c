@@ -1,7 +1,9 @@
 class EditorFileDialog: EditorDialogBase
 {
 	protected autoptr EditBoxPrefab m_EditBoxPrefab;
-	protected autoptr ListBoxPrefab<ref EditorFile> m_ListBoxPrefab = new ListBoxPrefab<ref EditorFile>();
+	// strong reference, since ListBox cant strong ref it
+	protected autoptr array<ref EditorFile> m_LoadedFiles = {};
+	protected autoptr ListBoxPrefab<EditorFile> m_ListBoxPrefab;
 	protected string m_CurrentDirectory;
 	
 	protected string m_Filter;
@@ -11,7 +13,11 @@ class EditorFileDialog: EditorDialogBase
 		m_Filter = filter;		
 		m_EditBoxPrefab = new EditBoxPrefab("File", m_Controller, default_value);
 	 
+		m_ListBoxPrefab = new ListBoxPrefab<EditorFile>();
+		m_ListBoxPrefab.Event_OnClick.Insert(OnListItemClick);
+		m_ListBoxPrefab.Event_OnDoubleClick.Insert(OnListItemDoubleClick);
 		AddContent(m_ListBoxPrefab);
+		
 		LoadFileDirectory("$profile:\\Editor\\", m_Filter);
 				
 		AddContent(m_EditBoxPrefab);
@@ -76,14 +82,14 @@ class EditorFileDialog: EditorDialogBase
 		string filterdir = string.Format("%1%2", directory, filter);
 		EditorLog.Info("EditorFileDialog::Loading Directory %1", m_CurrentDirectory);
 		m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Clear();
-		ref	array<ref EditorFile> editor_file_array = {};
 		
-		editor_file_array.Insert(new EditorFile("...", "", FileSearchMode.FOLDERS));
-		LoadFiles(directory, filter, editor_file_array, FileSearchMode.FOLDERS);
-		LoadFiles(directory, filter, editor_file_array, FileSearchMode.FILES);
+		m_LoadedFiles.Clear();
+		m_LoadedFiles.Insert(new EditorFile("...", "", FileSearchMode.FOLDERS));
+		LoadFiles(directory, filter, m_LoadedFiles, FileSearchMode.FOLDERS);
+		LoadFiles(directory, filter, m_LoadedFiles, FileSearchMode.FILES);
 
-		foreach (EditorFile sorted_file: editor_file_array) {
-			m_ListBoxPrefab.InsertItem(sorted_file);
+		foreach (EditorFile sorted_file: m_LoadedFiles) {
+			m_ListBoxPrefab.InsertItem(sorted_file.FileName, sorted_file);
 		}
 	}
 	
@@ -99,42 +105,29 @@ class EditorFileDialog: EditorDialogBase
 		LoadFileDirectory(file_directory, m_Filter);
 	}
 	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	void OnListItemClick(EditorFile file, Widget w, int x, int y, int button)
+	{
+		if (file.FileName != string.Empty) {
+			m_EditBoxPrefab.GetPrefabController().Value = file.FileName;
+			m_EditBoxPrefab.GetPrefabController().NotifyPropertyChanged("Value");
+		}
+	}
+	
+	void OnListItemDoubleClick(EditorFile file, Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorFileDialog::OnMouseButtonDown");
 		
-		// Exception for fixing an issue with save dialogs prioritizing the selected item for the file name
-		if (w.IsInherited(ButtonWidget)) {
-			return super.OnMouseButtonDown(w, x, y, button);
-		}
-		
-		string file = GetCurrentSelectedFile();
-		if (file != string.Empty) {
-			m_EditBoxPrefab.GetPrefabController().Value = file;
-			m_EditBoxPrefab.GetPrefabController().NotifyPropertyChanged("Value");
-		}
-		
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-	
-	override bool OnDoubleClick(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorFileDialog::OnDoubleClick");
-		
-		string file = GetCurrentSelectedFile();
 		// Is that shit a folder?
-		if (file.Contains("\\")) {
-			LoadFileDirectory(m_CurrentDirectory + file, m_Filter);
-		} else if (file.Contains("...")) {
+		if (file.FileName.Contains("\\")) {
+			LoadFileDirectory(m_CurrentDirectory + file.FileName, m_Filter);
+		} else if (file.FileName.Contains("...")) {
 			BackDirectory();
 		} else {
 			CloseDialog(DialogResult.OK);
-			//LoadFile(file);
+			//LoadFile(file.FileName);
 		}
-		
-		return true;
 	}
-	
+		
 	// Abstracterino
 	void LoadFile(string file)
 	{
@@ -148,14 +141,5 @@ class EditorFileDialog: EditorDialogBase
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
 		return (w.GetName() == "ListBox");
-	}
-	
-	// Helper Method
-	private string GetCurrentSelectedFile()
-	{
-		string file;
-		if (m_ListBoxPrefab.GetSelectedRow() == -1) return string.Empty;
-		//m_ListBoxPrefab.ListBox.GetItemText(m_ListBoxPrefab.GetSelectedRow(), 0, file);
-		return file;
 	}
 }
