@@ -103,6 +103,11 @@ class EditorFileDialog: EditorDialogBase
 	{
 		EditorLog.Trace("EditorFileDialog::OnMouseButtonDown");
 		
+		// Exception for fixing an issue with save dialogs prioritizing the selected item for the file name
+		if (w.IsInherited(ButtonWidget)) {
+			return super.OnMouseButtonDown(w, x, y, button);
+		}
+		
 		string file = GetCurrentSelectedFile();
 		if (file != string.Empty) {
 			m_EditBoxPrefab.GetPrefabController().Value = file;
