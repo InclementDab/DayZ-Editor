@@ -18,6 +18,7 @@ WrapSpacerWidgetClass SelectItemList {
    {
     TextWidgetClass EditorSelectItemListLabel {
      ignorepointer 1
+     position 24 0
      size 0.8 1
      hexactpos 1
      vexactpos 1
@@ -37,9 +38,7 @@ WrapSpacerWidgetClass SelectItemList {
     }
     ImageWidgetClass EditorSelectItemListIcon {
      ignorepointer 1
-     position 0.05 0
      size 24 24
-     halign right_ref
      valign center_ref
      hexactpos 0
      vexactpos 0
