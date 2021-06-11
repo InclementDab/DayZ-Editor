@@ -1,0 +1,58 @@
+WrapSpacerWidgetClass SelectItemList {
+ color 0.3529 0.3529 0.3529 0.7059
+ size 1 24
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ Padding 0
+ Margin 0
+ {
+  ButtonWidgetClass EditorSelectItemListButton {
+   position 10 10
+   size 1 1
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   {
+    TextWidgetClass EditorSelectItemListLabel {
+     ignorepointer 1
+     size 0.8 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scriptclass "ViewBinding"
+     text "ChernarusPlus"
+     font "gui/fonts/sdf_MetronLight24"
+     "text offset" 5 0
+     text_proportion 0.8
+     "text valign" center
+     {
+      ScriptParamsClass {
+      }
+     }
+    }
+    ImageWidgetClass EditorSelectItemListIcon {
+     ignorepointer 1
+     position 0.05 0
+     size 24 24
+     halign right_ref
+     valign center_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     mode additive
+     "src alpha" 0
+     {
+      ScriptParamsClass {
+      }
+     }
+    }
+   }
+  }
+ }
+}
