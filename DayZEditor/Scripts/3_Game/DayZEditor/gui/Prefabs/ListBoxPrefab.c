@@ -13,6 +13,11 @@
 
 }*/
 
+class ListBoxPrefabEntryController<Class TValue>: Controller
+{
+	TValue Value;
+}
+
 class ListBoxPrefabEntry<Class T>: ScriptView
 {
 	ref ScriptInvoker Event_OnClick = new ScriptInvoker();
@@ -20,7 +25,12 @@ class ListBoxPrefabEntry<Class T>: ScriptView
 	
 	void ListBoxPrefabEntry(T data)
 	{
-		
+		GetListBoxPrefabEntryController().Value = data;
+	}
+	
+	ListBoxPrefabEntryController<T> GetListBoxPrefabEntryController() 
+	{
+		return ListBoxPrefabEntryController<T>.Cast(GetController());
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
@@ -33,6 +43,16 @@ class ListBoxPrefabEntry<Class T>: ScriptView
 	{
 		Event_OnDoubleClick.Invoke(this, w, x, y, button);
 		return super.OnDoubleClick(w, x, y, button);
+	}
+	
+	override string GetLayoutFile() 
+	{
+		return "DayZEditor/gui/Layouts/items/EditorSelectItemList.layout";
+	}
+	
+	override typename GetControllerType()
+	{
+		return (new ListBoxPrefabEntryController<T>()).Type();
 	}
 }
 
