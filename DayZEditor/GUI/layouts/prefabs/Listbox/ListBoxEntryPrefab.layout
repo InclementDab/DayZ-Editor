@@ -50,6 +50,7 @@ WrapSpacerWidgetClass SelectItemList {
      "src alpha" 0
      {
       ScriptParamsClass {
+       Binding_Name "Icon"
       }
      }
     }

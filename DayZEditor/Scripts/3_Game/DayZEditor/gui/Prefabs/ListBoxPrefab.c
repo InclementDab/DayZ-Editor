@@ -1,64 +1,6 @@
-class ListBoxPrefabEntryController<Class TValue>: Controller
-{
-	string Caption;
-	TValue Value;
-}
-
-class ListBoxPrefabEntry<Class T>: ScriptView
-{
-	ref ScriptInvoker Event_OnClick = new ScriptInvoker();
-	ref ScriptInvoker Event_OnDoubleClick = new ScriptInvoker();
-	
-	void ListBoxPrefabEntry(string caption, T data)
-	{
-		GetListBoxPrefabEntryController().Caption = caption;
-		GetListBoxPrefabEntryController().NotifyPropertyChanged("Caption");
-		
-		GetListBoxPrefabEntryController().Value = data;
-		GetListBoxPrefabEntryController().NotifyPropertyChanged("Value");
-	}
-	
-	ListBoxPrefabEntryController<T> GetListBoxPrefabEntryController() 
-	{
-		return ListBoxPrefabEntryController<T>.Cast(GetController());
-	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		Event_OnClick.Invoke(GetListBoxPrefabEntryController().Value, w, x, y, button);
-		return super.OnClick(w, x, y, button);
-	}
-	
-	override bool OnDoubleClick(Widget w, int x, int y, int button)
-	{
-		Event_OnDoubleClick.Invoke(GetListBoxPrefabEntryController().Value, w, x, y, button);
-		return super.OnDoubleClick(w, x, y, button);
-	}
-	
-	T GetData()
-	{
-		return GetListBoxPrefabEntryController().Value;
-	}
-	
-	override string GetLayoutFile() 
-	{
-		return "DayZEditor/gui/Layouts/prefabs/Listbox/EditorSelectItemList.layout";
-	}
-	
-	override typename GetControllerType()
-	{
-		return (new ListBoxPrefabEntryController<T>()).Type();
-	}
-}
-
 class ListBoxPrefabController<Class T>: Controller
 {
 	ref ObservableCollection<ref ListBoxPrefabEntry<T>> ListBoxData = new ObservableCollection<ref ListBoxPrefabEntry<T>>(this);
-	
-	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
-	{
-		super.CollectionChanged(collection_name, args);
-	}
 }
 
 class ListBoxPrefab<Class T>: ScriptView
@@ -73,6 +15,12 @@ class ListBoxPrefab<Class T>: ScriptView
 		return ListBoxPrefabController<T>.Cast(GetController());
 	}
 	
+	void ~ListBoxPrefab()
+	{
+		delete Event_OnClick;
+		delete Event_OnDoubleClick;
+	}
+	
 	protected T m_SelectedItem;
 	
 	void InsertItem(string caption, T item)
@@ -82,6 +30,15 @@ class ListBoxPrefab<Class T>: ScriptView
 		entry.Event_OnDoubleClick.Insert(EntryOnDoubleClick);
 		
 		GetListBoxPrefabController().ListBoxData.Insert(entry);
+	}
+	
+	void ClearItems()
+	{
+		for (int i = 0; i < GetListBoxPrefabController().ListBoxData.Count(); i++) {
+			delete GetListBoxPrefabController().ListBoxData[i];
+		}
+		
+		GetListBoxPrefabController().ListBoxData.Clear();
 	}
 	
 	void EntryOnClick(T entry, Widget w, int x, int y, int button)
@@ -107,7 +64,7 @@ class ListBoxPrefab<Class T>: ScriptView
 	
 	override string GetLayoutFile() 
 	{
-		return "DayZEditor/gui/Layouts/prefabs/Listbox/ListBoxWrapPrefab.layout";
+		return "DayZEditor/gui/Layouts/prefabs/Listbox/ListBoxPrefab.layout";
 	}
 	
 	override typename GetControllerType() 

@@ -2,8 +2,7 @@ class EditorFileDialog: EditorDialogBase
 {
 	protected autoptr EditBoxPrefab m_EditBoxPrefab;
 	// strong reference, since ListBox cant strong ref it
-	protected autoptr array<ref EditorFile> m_LoadedFiles = {};
-	protected autoptr ListBoxPrefab<EditorFile> m_ListBoxPrefab;
+	protected autoptr ListBoxPrefab<string> m_ListBoxPrefab;
 	protected string m_CurrentDirectory;
 	
 	protected string m_Filter;
@@ -13,7 +12,7 @@ class EditorFileDialog: EditorDialogBase
 		m_Filter = filter;		
 		m_EditBoxPrefab = new EditBoxPrefab("File", m_Controller, default_value);
 	 
-		m_ListBoxPrefab = new ListBoxPrefab<EditorFile>();
+		m_ListBoxPrefab = new ListBoxPrefab<string>();
 		m_ListBoxPrefab.Event_OnClick.Insert(OnListItemClick);
 		m_ListBoxPrefab.Event_OnDoubleClick.Insert(OnListItemDoubleClick);
 		AddContent(m_ListBoxPrefab);
@@ -25,7 +24,7 @@ class EditorFileDialog: EditorDialogBase
 		AddButton(DialogResult.Cancel);
 	}
 	
-	private void LoadFiles(string directory, string filter, inout array<ref EditorFile> folder_array, FileSearchMode search_mode)
+	private void LoadFiles(string directory, string filter, inout array<string> folder_array, FileSearchMode search_mode)
 	{
 		TStringArray name_array = new TStringArray();
 		string filename;
@@ -62,7 +61,7 @@ class EditorFileDialog: EditorDialogBase
 		
 		name_array.Sort();
 		foreach (string sorted_name: name_array) {
-			folder_array.Insert(new EditorFile(sorted_name, directory, search_mode));
+			folder_array.Insert(sorted_name);
 		}
 	}
 		
@@ -81,15 +80,15 @@ class EditorFileDialog: EditorDialogBase
 		m_CurrentDirectory = directory;
 		string filterdir = string.Format("%1%2", directory, filter);
 		EditorLog.Info("EditorFileDialog::Loading Directory %1", m_CurrentDirectory);
-		m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Clear();
-		
-		m_LoadedFiles.Clear();
-		m_LoadedFiles.Insert(new EditorFile("...", "", FileSearchMode.FOLDERS));
-		LoadFiles(directory, filter, m_LoadedFiles, FileSearchMode.FOLDERS);
-		LoadFiles(directory, filter, m_LoadedFiles, FileSearchMode.FILES);
+		m_ListBoxPrefab.ClearItems();
+		array<string> loaded_files = {};
+		loaded_files.Insert("...");
 
-		foreach (EditorFile sorted_file: m_LoadedFiles) {
-			m_ListBoxPrefab.InsertItem(sorted_file.FileName, sorted_file);
+		LoadFiles(directory, filter, loaded_files, FileSearchMode.FOLDERS);
+		LoadFiles(directory, filter, loaded_files, FileSearchMode.FILES);
+
+		foreach (string sorted_file: loaded_files) {
+			m_ListBoxPrefab.InsertItem(sorted_file, sorted_file);
 		}
 	}
 	
@@ -105,26 +104,27 @@ class EditorFileDialog: EditorDialogBase
 		LoadFileDirectory(file_directory, m_Filter);
 	}
 	
-	void OnListItemClick(EditorFile file, Widget w, int x, int y, int button)
+	void OnListItemClick(string file, Widget w, int x, int y, int button)
 	{
-		if (file.FileName != string.Empty) {
-			m_EditBoxPrefab.GetPrefabController().Value = file.FileName;
+		EditorLog.Trace("EditorFileDialog::OnListItemClick");
+		if (file != string.Empty) {
+			m_EditBoxPrefab.GetPrefabController().Value = file;
 			m_EditBoxPrefab.GetPrefabController().NotifyPropertyChanged("Value");
 		}
 	}
 	
-	void OnListItemDoubleClick(EditorFile file, Widget w, int x, int y, int button)
+	void OnListItemDoubleClick(string file, Widget w, int x, int y, int button)
 	{
-		EditorLog.Trace("EditorFileDialog::OnMouseButtonDown");
+		EditorLog.Trace("EditorFileDialog::OnListItemDoubleClick");
 		
 		// Is that shit a folder?
-		if (file.FileName.Contains("\\")) {
-			LoadFileDirectory(m_CurrentDirectory + file.FileName, m_Filter);
-		} else if (file.FileName.Contains("...")) {
+		if (file.Contains("\\")) {
+			LoadFileDirectory(m_CurrentDirectory + file, m_Filter);
+		} else if (file.Contains("...")) {
 			BackDirectory();
 		} else {
 			CloseDialog(DialogResult.OK);
-			//LoadFile(file.FileName);
+			//LoadFile(file);
 		}
 	}
 		
@@ -140,6 +140,8 @@ class EditorFileDialog: EditorDialogBase
 	// IDK why but this is crashing if we dont?!
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
+		Print("HA");
+		return true;
 		return (w.GetName() == "ListBox");
 	}
 }
