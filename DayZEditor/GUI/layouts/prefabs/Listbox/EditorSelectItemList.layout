@@ -1,5 +1,5 @@
 WrapSpacerWidgetClass SelectItemList {
- color 0.3529 0.3529 0.3529 0.7059
+ color 0.3529 0.3529 0.3529 0.1176
  size 1 24
  hexactpos 1
  vexactpos 1
@@ -32,12 +32,13 @@ WrapSpacerWidgetClass SelectItemList {
      "text valign" center
      {
       ScriptParamsClass {
-       Binding_Name "Value"
+       Binding_Name "Caption"
       }
      }
     }
     ImageWidgetClass EditorSelectItemListIcon {
      ignorepointer 1
+     color 1 1 1 0
      size 24 24
      valign center_ref
      hexactpos 0
