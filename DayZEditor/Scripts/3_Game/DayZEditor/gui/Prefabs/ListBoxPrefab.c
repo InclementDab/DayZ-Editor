@@ -1,5 +1,6 @@
 class ListBoxPrefabEntryController<Class TValue>: Controller
 {
+	string Caption;
 	TValue Value;
 }
 
@@ -8,9 +9,13 @@ class ListBoxPrefabEntry<Class T>: ScriptView
 	ref ScriptInvoker Event_OnClick = new ScriptInvoker();
 	ref ScriptInvoker Event_OnDoubleClick = new ScriptInvoker();
 	
-	void ListBoxPrefabEntry(T data)
+	void ListBoxPrefabEntry(string caption, T data)
 	{
+		GetListBoxPrefabEntryController().Caption = caption;
+		GetListBoxPrefabEntryController().NotifyPropertyChanged("Caption");
+		
 		GetListBoxPrefabEntryController().Value = data;
+		GetListBoxPrefabEntryController().NotifyPropertyChanged("Value");
 	}
 	
 	ListBoxPrefabEntryController<T> GetListBoxPrefabEntryController() 
@@ -20,13 +25,13 @@ class ListBoxPrefabEntry<Class T>: ScriptView
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		Event_OnClick.Invoke(this, w, x, y, button);
+		Event_OnClick.Invoke(GetListBoxPrefabEntryController().Value, w, x, y, button);
 		return super.OnClick(w, x, y, button);
 	}
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		Event_OnDoubleClick.Invoke(this, w, x, y, button);
+		Event_OnDoubleClick.Invoke(GetListBoxPrefabEntryController().Value, w, x, y, button);
 		return super.OnDoubleClick(w, x, y, button);
 	}
 	
@@ -60,36 +65,34 @@ class ListBoxPrefab<Class T>: ScriptView
 {	
 	private static const T DEFAULT_VALUE;
 		
+	ref ScriptInvoker Event_OnClick = new ScriptInvoker();
+	ref ScriptInvoker Event_OnDoubleClick = new ScriptInvoker();
+	
 	ListBoxPrefabController<T> GetListBoxPrefabController() 
 	{
 		return ListBoxPrefabController<T>.Cast(GetController());
 	}
 	
-	protected ListBoxPrefabEntry<T> m_SelectedItem;
+	protected T m_SelectedItem;
 	
-	void InsertItem(T item)
+	void InsertItem(string caption, T item)
 	{
-		ListBoxPrefabEntry<T> entry(item);
+		ListBoxPrefabEntry<T> entry(caption, item);
 		entry.Event_OnClick.Insert(EntryOnClick);
 		entry.Event_OnDoubleClick.Insert(EntryOnDoubleClick);
 		
-		GetListBoxPrefabController().ListBoxData.Insert(new ListBoxPrefabEntry<T>(item));
+		GetListBoxPrefabController().ListBoxData.Insert(entry);
 	}
 	
-	private void EntryOnClick(ListBoxPrefabEntry<T> entry, Widget w, int x, int y, int button)
+	void EntryOnClick(T entry, Widget w, int x, int y, int button)
 	{
-		Print("EntryONClick");
 		m_SelectedItem = entry;
+		Event_OnClick.Invoke(entry, w, x, y, button);
 	}
 	
-	private void EntryOnDoubleClick(ListBoxPrefabEntry<T> entry, Widget w, int x, int y, int button)
+	void EntryOnDoubleClick(T entry, Widget w, int x, int y, int button)
 	{
-		Print("EntryOnDoubleClick");
-	}
-	
-	int GetSelectedRow()
-	{
-		return GetListBoxPrefabController().ListBoxData.Find(m_SelectedItem);
+		Event_OnDoubleClick.Invoke(entry, w, x, y, button);
 	}
 	
 	int GetRowCount()
@@ -98,8 +101,8 @@ class ListBoxPrefab<Class T>: ScriptView
 	}
 	
 	T GetSelectedItem()
-	{
-		return m_SelectedItem.GetData();
+	{		
+		return m_SelectedItem;
 	}
 	
 	override string GetLayoutFile() 
