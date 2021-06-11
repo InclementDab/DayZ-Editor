@@ -83,7 +83,7 @@ class EditorFileDialog: EditorDialogBase
 		LoadFiles(directory, filter, editor_file_array, FileSearchMode.FILES);
 
 		foreach (EditorFile sorted_file: editor_file_array) {
-			m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Insert(sorted_file);
+			m_ListBoxPrefab.InsertItem(sorted_file);
 		}
 	}
 	

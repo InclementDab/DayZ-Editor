@@ -21,7 +21,7 @@ class EditorMapSelectDialog: EditorDialogBase
 			string name;
 			GetGame().ConfigGetChildName("CfgWorlds", i, name);
 			if (ExcludedMapItems.Find(name) == -1) {
-				m_ListBoxPrefab.GetListBoxPrefabController().ListBoxData.Insert(name);
+				m_ListBoxPrefab.InsertItem(name);
 			}
 		}
 		
@@ -36,7 +36,7 @@ class EditorMapSelectDialog: EditorDialogBase
 	{
 		ListBoxPrefab<string> list_box = m_ListBoxPrefab; // controller is ref'd inside this
 		DialogResult result = ShowDialog();
-		//selected_map = list_box.GetListBoxPrefabController().SelectedListBoxItem;
+		selected_map = list_box.GetSelectedItem();
 		delete m_ListBoxPrefab;
 		return result;
 	}

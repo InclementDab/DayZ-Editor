@@ -1,11 +1,53 @@
+/*class ListBoxPrefabEntryController: Controller
+{
+	string Caption;
+	DropdownListPrefabItemBase Value;
+	//TValue CalculatedValue; // Used for things like SliderWidget output
+		
+	override void PropertyChanged(string property_name)
+	{
+		if (GetParent()) {
+			g_Script.Call(GetParent(), "PrefabPropertyChanged", property_name);
+		}
+	}
+
+}*/
+
+class ListBoxPrefabEntry<Class T>: ScriptView
+{
+	ref ScriptInvoker Event_OnClick = new ScriptInvoker();
+	ref ScriptInvoker Event_OnDoubleClick = new ScriptInvoker();
+	
+	void ListBoxPrefabEntry(T data)
+	{
+		
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		Event_OnClick.Invoke(this, w, x, y, button);
+		return super.OnClick(w, x, y, button);
+	}
+	
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		Event_OnDoubleClick.Invoke(this, w, x, y, button);
+		return super.OnDoubleClick(w, x, y, button);
+	}
+}
+
 class ListBoxPrefabController<Class T>: Controller
 {
-	ref ObservableCollection<T> ListBoxData = new ObservableCollection<T>(this);
+	ref ObservableCollection<ref ListBoxPrefabEntry<T>> ListBoxData = new ObservableCollection<ref ListBoxPrefabEntry<T>>(this);
 	
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{
 		super.CollectionChanged(collection_name, args);
 		
+		Print(args.ChangedIndex);
+		Print(args.ChangedValue);
+		Param1<T> value = Param1<T>.Cast(args.ChangedValue);
+		Print(value);
 	}
 }
 
@@ -21,7 +63,9 @@ class ListBoxPrefab<Class T>: ScriptView
 	
 	void InsertItem(T item)
 	{
-		
+		Print("InsertItem");
+		Print(item);
+		GetListBoxPrefabController().ListBoxData.Insert(new ListBoxPrefabEntry<T>(item));
 	}
 	
 	int GetSelectedRow()
