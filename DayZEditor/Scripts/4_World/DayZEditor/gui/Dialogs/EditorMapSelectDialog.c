@@ -36,14 +36,14 @@ class EditorMapSelectDialog: EditorDialogBase
 	{
 		ListBoxPrefab<string> list_box = m_ListBoxPrefab; // controller is ref'd inside this
 		DialogResult result = ShowDialog();
-		selected_map = list_box.GetListBoxPrefabController().SelectedListBoxItem;
+		//selected_map = list_box.GetListBoxPrefabController().SelectedListBoxItem;
 		delete m_ListBoxPrefab;
 		return result;
 	}
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		if (w == m_ListBoxPrefab.ListBox && button == 0) {
+		if (/*w == m_ListBoxPrefab.ListBox && */button == 0) {
 			CloseDialog(DialogResult.OK);
 			return true;
 		}

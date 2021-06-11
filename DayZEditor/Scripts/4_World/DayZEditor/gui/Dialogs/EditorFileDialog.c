@@ -154,8 +154,8 @@ class EditorFileDialog: EditorDialogBase
 	private string GetCurrentSelectedFile()
 	{
 		string file;
-		if (m_ListBoxPrefab.ListBox.GetSelectedRow() == -1) return string.Empty;
-		m_ListBoxPrefab.ListBox.GetItemText(m_ListBoxPrefab.ListBox.GetSelectedRow(), 0, file);
+		if (m_ListBoxPrefab.GetSelectedRow() == -1) return string.Empty;
+		//m_ListBoxPrefab.ListBox.GetItemText(m_ListBoxPrefab.GetSelectedRow(), 0, file);
 		return file;
 	}
 }
