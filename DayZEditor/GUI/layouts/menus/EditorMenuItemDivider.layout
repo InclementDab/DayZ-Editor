@@ -1,21 +1,23 @@
-FrameWidgetClass EditorMenuDivider {
+PanelWidgetClass EditorMenuDivider {
  visible 1
  clipchildren 1
- position 0 0
- size 0.95 6
+ color 0.0588 0.0588 0.0588 1
+ size 298 8
  halign center_ref
+ valign center_ref
  hexactpos 1
  vexactpos 1
- hexactsize 0
+ hexactsize 1
  vexactsize 1
  priority 252
  scriptclass ""
+ style rover_sim_colorable
  {
   PanelWidgetClass EditorMenuDividerLine {
    visible 1
-   color 1 1 1 0.0588
-   position 0 0
-   size 1 1
+   color 1 1 1 0.1569
+   position 0 -3
+   size 0.95 1
    halign center_ref
    valign center_ref
    hexactpos 1
