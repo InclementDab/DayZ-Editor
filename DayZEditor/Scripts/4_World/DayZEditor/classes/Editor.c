@@ -593,6 +593,10 @@ class Editor
 			return null;
 		}
 		
+		if (editor_object.GetWorldObject() && editor_object.GetWorldObject().IsInherited(ItemBase)) {
+			EditorLog.Warning("%1 has persistence! If you place this it may cause duplications in your server!", editor_object.GetWorldObject().GetType());
+		}
+		
 		Statistics.PlacedObjects++;
 		EditorEvents.ObjectPlaced(this, editor_object);
 		
