@@ -5,8 +5,6 @@ class ListBoxPrefabController<Class T>: Controller
 
 class ListBoxPrefab<Class T>: ScriptView
 {	
-	private static const T DEFAULT_VALUE;
-		
 	ref ScriptInvoker Event_OnClick = new ScriptInvoker();
 	ref ScriptInvoker Event_OnDoubleClick = new ScriptInvoker();
 	
@@ -25,10 +23,8 @@ class ListBoxPrefab<Class T>: ScriptView
 	
 	void InsertItem(string caption, T item)
 	{
-		ListBoxPrefabEntry<T> entry(caption, item);
-		entry.Event_OnClick.Insert(EntryOnClick);
-		entry.Event_OnDoubleClick.Insert(EntryOnDoubleClick);
-		
+		ListBoxPrefabEntry<T> entry(caption, item);		
+		entry.SetOwner(this);
 		GetListBoxPrefabController().ListBoxData.Insert(entry);
 	}
 	

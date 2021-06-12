@@ -136,12 +136,4 @@ class EditorFileDialog: EditorDialogBase
 		edit_box.SetText(file);
 		CloseDialog(DialogResult.OK);
 	}
-	
-	// IDK why but this is crashing if we dont?!
-	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
-	{
-		Print("HA");
-		return true;
-		return (w.GetName() == "ListBox");
-	}
 }
