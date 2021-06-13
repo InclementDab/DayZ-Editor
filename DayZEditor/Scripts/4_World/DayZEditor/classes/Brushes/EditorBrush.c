@@ -2,17 +2,10 @@ class EditorBrush
 {
 	protected EntityAI m_BrushDecal;
 	protected ref EditorBrushData m_BrushData;
+	
+	static float BrushRadius = 10;
+	static float BrushDensity = 0.5;
 
-	protected static float m_BrushRadius = 10;
-	static void SetRadius(float radius) { m_BrushRadius = radius; }
-	static float GetRadius() 
-		return m_BrushRadius;
-	
-	protected static float m_BrushDensity = 0.5;
-	static void SetDensity(float density) { m_BrushDensity = density; }
-	static float GetDensity() 
-		return m_BrushDensity;
-	
 	// Private members
 	private vector m_LastMousePosition;
 
@@ -42,14 +35,12 @@ class EditorBrush
 		return new EditorBrush(settings);
 	}	
 	
-	
 	void SetBrushTexture(string texture)
 	{
 		EditorLog.Trace("EditorBrush::SetBrushTexture " + texture);
 		m_BrushDecal.SetObjectTexture(0, texture);
 		m_BrushDecal.Update();
 	}
-	
 	
 	void UpdateBrush()
 	{
@@ -61,9 +52,9 @@ class EditorBrush
 		Input input = GetGame().GetInput();
 
 		vector transform[4] = {
-			Vector(m_BrushRadius / 10, 0, 0),
-			Vector(0, m_BrushRadius / 10, 0),
-			Vector(0, 0, m_BrushRadius / 10),
+			Vector(BrushRadius / 10, 0, 0),
+			Vector(0, BrushRadius / 10, 0),
+			Vector(0, 0, BrushRadius / 10),
 			CurrentMousePosition
 		};
 		
@@ -94,7 +85,7 @@ class EditorBrush
 
 	void DuringMouseDown(vector position) 
 	{ 
-		if (vector.Distance(m_LastMousePosition, position) < (m_BrushRadius * Math.RandomFloat(0.5, 1))) return;
+		if (vector.Distance(m_LastMousePosition, position) < (BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
 		EditorObjectDataMap data_set = new EditorObjectDataMap();
@@ -104,11 +95,11 @@ class EditorBrush
 			flags = EditorObjectFlags.OBJECTMARKER;
 		}
 		
-		for (int i = 0; i < m_BrushDensity * 10; i++) {
+		for (int i = 0; i < BrushDensity * 10; i++) {
 						
 			vector pos = position;
-			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
-			pos[2] = pos[2] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
+			pos[0] = pos[0] + Math.RandomFloat(-BrushRadius / Math.PI, BrushRadius / Math.PI);
+			pos[2] = pos[2] + Math.RandomFloat(-BrushRadius / Math.PI, BrushRadius / Math.PI);
 			
 			if (m_BrushData) {
 				EditorBrushObject object_name = m_BrushData.GetRandomObject();

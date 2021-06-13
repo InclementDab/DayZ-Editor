@@ -81,8 +81,8 @@ class EditorHudToolbarController: EditorControllerBase
 			
 			case "BrushRadius":
 			case "BrushDensity": {
-				EditorBrush.SetRadius(BrushRadius / 2);
-				EditorBrush.SetDensity(BrushDensity);
+				EditorBrush.BrushRadius = BrushRadius / 2;
+				EditorBrush.BrushDensity = BrushDensity;
 				break;
 			}
 			
