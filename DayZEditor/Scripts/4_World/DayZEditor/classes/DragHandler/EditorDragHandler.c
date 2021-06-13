@@ -40,8 +40,8 @@ class EditorDragHandler
 		foreach (EditorObject selected_object_post: selected_objects) {
 			drag_undo.InsertRedoParameter(selected_object_post.GetTransformArray());
 			
-			if (EntityAI.Cast(selected_object.GetWorldObject())) {
-				EntityAI.Cast(selected_object.GetWorldObject()).DisableSimulation(false);
+			if (EntityAI.Cast(selected_object_post.GetWorldObject())) {
+				EntityAI.Cast(selected_object_post.GetWorldObject()).DisableSimulation(false);
 			}
 		}
 		
