@@ -1,5 +1,3 @@
-
-
 class EditorBrushDialogController: Controller
 {
 	string BrushName;
@@ -7,9 +5,9 @@ class EditorBrushDialogController: Controller
 	
 	protected EditorBrushData m_BrushData;
 
-	ref ObservableCollection<ref EditorBrushObject> BrushObjects;
+	ref ObservableCollection<ref EditorBrushObject> BrushObjects = new ObservableCollection<ref EditorBrushObject>(this);
 	
-	ref EditorBrushObjectArray BrushObjectArray;
+	ref array<ref EditorBrushObject> BrushObjectArray = {};
 	
 	void SetBrushData(EditorBrushData brush_data)
 	{
@@ -17,8 +15,6 @@ class EditorBrushDialogController: Controller
 		
 		BrushName = m_BrushData.Name;
 		BrushObjectArray = m_BrushData.PlaceableObjectTypes;
-		
-		BrushObjects = new ObservableCollection<ref EditorBrushObject>(this);
 	}
 	
 	override void PropertyChanged(string property_name)

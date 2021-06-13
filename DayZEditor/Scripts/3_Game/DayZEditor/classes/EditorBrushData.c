@@ -1,14 +1,11 @@
-typedef ref map<string, ref EditorBrushData> EditorBrushDataSet;
-
 // This is the data that will be loaded from XML
 class EditorBrushData
 {
 	string Name;
 	float MinRadius, MaxRadius;
-	
-	ref EditorBrushObjectArray PlaceableObjectTypes = {};
-
 	typename BrushClassName;
+	
+	ref array<ref EditorBrushObject> PlaceableObjectTypes = {};
 	
 	bool InsertPlaceableObject(EditorBrushObject placeable_object)
 	{

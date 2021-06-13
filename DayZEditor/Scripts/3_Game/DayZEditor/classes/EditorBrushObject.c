@@ -1,4 +1,3 @@
-typedef ref array<ref EditorBrushObject> EditorBrushObjectArray;
 class EditorBrushObject
 {
 	string Name;
