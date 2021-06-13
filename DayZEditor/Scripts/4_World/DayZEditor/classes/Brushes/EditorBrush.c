@@ -1,5 +1,3 @@
-typedef array<ref EditorBrush> EditorBrushSet;
-
 class EditorBrush
 {
 	protected EntityAI m_BrushDecal;
@@ -18,7 +16,6 @@ class EditorBrush
 	// Private members
 	private vector m_LastMousePosition;
 
-	
 	private void EditorBrush(EditorBrushData settings = null)
 	{
 		EditorLog.Trace("EditorBrush");
