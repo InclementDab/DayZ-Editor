@@ -107,7 +107,7 @@ class EditorBrush
 			flags = EditorObjectFlags.OBJECTMARKER;
 		}
 		
-		for (int i = 0; i < m_BrushDensity * 100; i++) {
+		for (int i = 0; i < m_BrushDensity * 10; i++) {
 						
 			vector pos = position;
 			pos[0] = pos[0] + Math.RandomFloat(-m_BrushRadius / Math.PI, m_BrushRadius / Math.PI);
