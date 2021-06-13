@@ -114,11 +114,6 @@
 		<BrushObject type="bldr_plnt_c_grassdry_summer" frequency="1.0"/>
 	</Brush>
 
-
-	<Brush name="Explosion">
-		<BrushObject type="ExplosionTest" frequency="0.2"/>
-	</Brush>
-
 	<!-- Delete Brush is handled in Code -->
 	<Brush name="Delete" class="DeleteBrush"/>
 </BrushTypes>
