@@ -101,4 +101,20 @@ class EditorObjectDragHandler: EditorDragHandler
 		
 		m_LastAngle = angle;
 	}
+	
+	vector GetAveragePosition(EditorObjectMap objects)
+	{
+		vector avg_position;
+		foreach (int id, EditorObject copy_object: objects) {
+			avg_position += copy_object.GetPosition();
+		}
+		
+		for (int i = 0; i < 3; i++) {
+			avg_position[i] = avg_position[i] / objects.Count();
+		}
+		
+		avg_position[1] = GetGame().SurfaceY(avg_position[0], avg_position[2]);
+		
+		return avg_position;
+	}
 }
