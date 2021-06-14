@@ -37,7 +37,13 @@ class EditorExportCommandBase: EditorCommand
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 		
 		if (FileExist(file_name) && warn_on_overwrite) {
-			if (MessageBox.Show("Are you sure?", "File " + file_name + " already exists. Overwrite?", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
+			// Easter egg
+			string egg;
+			if (Math.RandomIntInclusive(0, 100) == 69 || file_name == "PauseChamp.dze") {
+				egg = " PauseChamp";
+			}
+			
+			if (MessageBox.Show("Are you sure?", "File " + file_name + " already exists. Overwrite?" + egg, MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
 				return false;
 			}
 		}
