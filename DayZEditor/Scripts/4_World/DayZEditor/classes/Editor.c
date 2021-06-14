@@ -440,7 +440,8 @@ class Editor
 	bool OnKeyPress(int key)
 	{
 		// Dont process hotkeys if dialog is open
-		if (m_EditorHud.CurrentDialog) {
+												// HACK
+		if (m_EditorHud.CurrentDialog && key != KeyCode.KC_ESCAPE) {
 			return false;
 		}
 		
