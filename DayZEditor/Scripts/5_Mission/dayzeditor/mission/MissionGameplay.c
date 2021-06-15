@@ -13,6 +13,17 @@ modded class MissionGameplay
 		GetUApi().GetInputByName("UACameraToolSpeedIncrease").ForceDisable(true);
 		GetUApi().GetInputByName("UACameraToolSpeedDecrease").ForceDisable(true);
 		GetUApi().UpdateControls();
+		
+		/* Kill the weather! */
+		GetGame().GetWeather().GetFog().Set(0, 0, 0);
+		GetGame().GetWeather().GetFog().SetLimits(0, 0);
+		GetGame().GetWeather().GetOvercast().Set(0, 0, 0);
+		GetGame().GetWeather().GetOvercast().SetLimits(0, 0);
+		GetGame().GetWeather().GetRain().Set(0, 0, 0);
+		GetGame().GetWeather().GetRain().SetLimits(0, 0);
+		
+		GetGame().GetWeather().SetWind(vector.Zero);
+		GetGame().GetWeather().SetWindSpeed(0);
 	}
 	
 	override void OnKeyPress(int key)
