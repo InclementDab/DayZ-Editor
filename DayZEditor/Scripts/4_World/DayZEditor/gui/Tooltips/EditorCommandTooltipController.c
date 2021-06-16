@@ -1,4 +1,4 @@
-class EditorCommandTooltipController: Controller
+class EditorCommandTooltipController: ViewController
 {
 	string Name;
 	string Shortcut;
