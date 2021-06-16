@@ -3,7 +3,7 @@ class DialogBase: ScriptView
 	// Private members
 	protected DialogResult m_DialogResult = DialogResult.None;
 
-	// Controller
+	// ViewController
 	protected DialogBaseController m_DialogBaseController;
 	
 	// View Properties	

@@ -3,7 +3,7 @@ class SliderPrefab: PrefabBase<float>
 	static float BUTTON_INCREMENT_COEF = 0.1;
 	protected float m_Min, m_Max;
 	
-	void SliderPrefab(string caption, Controller binding_context, string binding_name, float default_value = DEFAULT_VALUE, float min = 0, float max = 100)
+	void SliderPrefab(string caption, Class binding_context, string binding_name, float default_value = DEFAULT_VALUE, float min = 0, float max = 100)
 	{
 		m_Min = min; m_Max = max;
 		
