@@ -136,10 +136,4 @@ modded class MVC
 		type_conversions.Insert(DropdownListPrefabItemBase, DropdownListPrefabItemConverter);
 		type_conversions.Insert(EditorFile, TypeConversionEditorFile);
 	}
-	
-	override void RegisterWidgetControllers(out TypenameHashMap widget_controllers)
-	{
-		super.RegisterWidgetControllers(widget_controllers);
-		widget_controllers.Insert(MultilineTextWidget, TextWidgetController);
-	}
 }
