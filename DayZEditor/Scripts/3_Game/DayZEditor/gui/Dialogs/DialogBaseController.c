@@ -1,4 +1,4 @@
-class DialogBaseController: Controller
+class DialogBaseController: ViewController
 {
 	string Title;
 		

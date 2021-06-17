@@ -62,7 +62,6 @@ GameProjectClass {
 						"JM/CF/XML/3_Game"
 						"JM/CF/ModStorage/3_Game"
 						"JM/CF/Permissions/3_Game"
-						"JM/CF/DebugUI/3_Game"
 						"DabsFramework/Scripts/3_Game"
 						"DayZEditor/scripts/3_Game"
 					}

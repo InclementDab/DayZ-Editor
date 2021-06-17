@@ -1,4 +1,4 @@
-class EditorPlaceableTooltipController: Controller
+class EditorPlaceableTooltipController: ViewController
 {
 	string ContentTitle;
 	string ContentText;

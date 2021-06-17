@@ -1,4 +1,4 @@
-class EditorBrushDialogController: Controller
+class EditorBrushDialogController: ViewController
 {
 	string BrushName;
 	bool AddBrushData;

@@ -1,4 +1,4 @@
-class DropdownListPrefabController<Class TValue>: Controller
+class DropdownListPrefabController<Class TValue>: ViewController
 {
 	string Caption;
 	DropdownListPrefabItemBase Value;

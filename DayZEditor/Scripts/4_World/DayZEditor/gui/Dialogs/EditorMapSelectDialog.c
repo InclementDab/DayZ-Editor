@@ -34,7 +34,7 @@ class EditorMapSelectDialog: EditorDialogBase
 	
 	DialogResult ShowDialog(out string selected_map)
 	{
-		ListBoxPrefab<string> list_box = m_ListBoxPrefab; // controller is ref'd inside this
+		ListBoxPrefab<string> list_box = m_ListBoxPrefab; // ViewController is ref'd inside this
 		DialogResult result = ShowDialog();
 		selected_map = list_box.GetSelectedItem();
 		delete m_ListBoxPrefab;

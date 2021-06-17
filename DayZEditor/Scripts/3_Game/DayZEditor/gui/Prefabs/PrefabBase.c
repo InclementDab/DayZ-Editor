@@ -1,4 +1,4 @@
-class PrefabBaseController<Class TValue>: Controller
+class PrefabBaseController<Class TValue>: ViewController
 {
 	string Caption;
 	TValue Value;
@@ -11,7 +11,6 @@ class PrefabBaseController<Class TValue>: Controller
 		}
 	}
 }
-
 
 class PrefabBase<Class TValue>: ScriptView
 {
