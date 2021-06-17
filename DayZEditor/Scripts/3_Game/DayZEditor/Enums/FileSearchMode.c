@@ -1,0 +1,5 @@
+enum FileSearchMode 
+{
+	FOLDERS,
+	FILES
+};
