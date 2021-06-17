@@ -1,4 +1,4 @@
-class EditorControllerBase: Controller
+class EditorControllerBase: ViewController
 {
 	protected Editor m_Editor;
 	

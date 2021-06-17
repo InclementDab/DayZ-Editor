@@ -124,7 +124,7 @@ class DropdownListPrefabItemConverter: TypeConversionTemplate<DropdownListPrefab
 
 
 
-modded class LayoutBindingManager
+modded class MVC
 {
 	override void RegisterConversionTemplates(out TypeConversionHashMap type_conversions)
 	{
@@ -135,11 +135,5 @@ modded class LayoutBindingManager
 		type_conversions.Insert(EditorBrushObject, TypeConversionBrushObject);
 		type_conversions.Insert(DropdownListPrefabItemBase, DropdownListPrefabItemConverter);
 		type_conversions.Insert(EditorFile, TypeConversionEditorFile);
-	}
-	
-	override void RegisterWidgetControllers(out TypenameHashMap widget_controllers)
-	{
-		super.RegisterWidgetControllers(widget_controllers);
-		widget_controllers.Insert(MultilineTextWidget, TextWidgetController);
 	}
 }

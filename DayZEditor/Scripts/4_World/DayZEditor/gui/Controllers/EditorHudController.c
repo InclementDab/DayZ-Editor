@@ -59,7 +59,7 @@ class EditorHudController: EditorControllerBase
 	protected ButtonWidget CameraTrackRunButton;
 	protected Widget CameraTrackButtonOutline;
 	
-	// Temp until sub controllers can be properties of parent controller
+	// Temp until sub ViewControllers can be properties of parent ViewController
 	EditorHudToolbarController GetToolbarController() 
 	{
 		return EditorHudToolbarController.Cast(EditorHudToolbarView.GetController());

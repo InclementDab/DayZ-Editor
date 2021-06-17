@@ -71,7 +71,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		AddContent(m_AdvancedGroup);
 		
 		if (editor_object.GetWorldObject().IsMan()) {
-			m_HumanGroup = new GroupPrefab("Human Controller", m_EditorObject, string.Empty);
+			m_HumanGroup = new GroupPrefab("Human ViewController", m_EditorObject, string.Empty);
 			m_HumanGroup.Insert(new CheckBoxPrefab("Selected Player", m_EditorObject, "Control"));
 			m_HumanGroup.Insert(new EditBoxPrefab("Animation", m_EditorObject, "CurrentAnimation"));
 			m_HumanGroup.Insert(new ButtonPrefab("Animate", m_EditorObject, "Animate"));

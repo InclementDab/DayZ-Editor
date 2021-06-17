@@ -1,4 +1,4 @@
-class EditorLogEntryController: Controller
+class EditorLogEntryController: ViewController
 {
 	string Message;
 }

@@ -1,4 +1,4 @@
-class ListBoxPrefabEntryController<Class TValue>: Controller
+class ListBoxPrefabEntryController<Class TValue>: ViewController
 {
 	string Icon;
 	string Caption;

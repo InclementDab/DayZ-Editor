@@ -1,4 +1,4 @@
-class EditorMenuItemController: Controller
+class EditorMenuItemController: ViewController
 {
 	string LabelText;
 	string IconPath;

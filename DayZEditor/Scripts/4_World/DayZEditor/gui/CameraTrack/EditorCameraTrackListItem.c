@@ -1,4 +1,4 @@
-class EditorCameraTrackListItemController: Controller
+class EditorCameraTrackListItemController: ViewController
 {	
 	protected Object m_WorldObject;
 	
