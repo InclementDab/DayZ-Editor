@@ -41,7 +41,7 @@ class EditorDragHandler
 			drag_undo.InsertRedoParameter(selected_object_post.GetTransformArray());
 			
 			if (EntityAI.Cast(selected_object_post.GetWorldObject())) {
-				EntityAI.Cast(selected_object_post.GetWorldObject()).DisableSimulation(false);
+				EntityAI.Cast(selected_object_post.GetWorldObject()).DisableSimulation(!selected_object_post.Simulate);
 			}
 		}
 		
