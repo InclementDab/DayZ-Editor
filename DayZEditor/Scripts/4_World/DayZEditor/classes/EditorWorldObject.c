@@ -18,15 +18,8 @@ class EditorWorldObject
 		type = type.Trim();
 		if (type == string.Empty) return null;
 		
-		Object obj;
-		if (GetGame().IsKindOf(type, "DZ_LightAI")) {
-			if (!Class.CastTo(obj, GetGame().CreateObject(type, position, false, true))) {
-				EditorLog.Warning("EditorWorldObject: Invalid Object %1", type);
-				return null;
-			}
-		}
-		
-		if (!obj && !Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS))) {
+		Object obj;		
+		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS | ECE_INITAI))) {
 			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
@@ -35,10 +28,11 @@ class EditorWorldObject
 		if (EntityAI.Cast(obj)) {
 			EntityAI.Cast(obj).DisableSimulation(true);
 		}
+		 
 		obj.SetOrientation(orientation);
 		obj.SetScale(scale);
 		obj.Update();
-		//obj.SetFlags(EntityFlags.STATIC, true);
+		
 		return obj;
 	}
 }
