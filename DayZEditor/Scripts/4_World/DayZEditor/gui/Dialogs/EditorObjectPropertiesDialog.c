@@ -45,25 +45,25 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		UpdateViewContext();
 		
 		m_GeneralGroup = new GroupPrefab("General", m_EditorObject, string.Empty);
-		m_GeneralGroup.Insert(new CheckBoxPrefab("Show", m_EditorObject, "Show", m_EditorObject.Show));
-		m_GeneralGroup.Insert(new EditBoxPrefab("Name", m_EditorObject, "Name", m_EditorObject.Name));
-		m_GeneralGroup.Insert(new VectorPrefab("Position", m_EditorObject, "Position", m_EditorObject.Position));
-		m_GeneralGroup.Insert(new VectorPrefab("Orientation", m_EditorObject, "Orientation", m_EditorObject.Orientation));
-		m_GeneralGroup.Insert(new EditBoxNumberPrefab("Scale", m_EditorObject, "Scale", m_EditorObject.GetScale().ToString(), 0.01));
+		m_GeneralGroup.Insert(new CheckBoxPrefab("Show", m_EditorObject, "Show"));
+		m_GeneralGroup.Insert(new EditBoxPrefab("Name", m_EditorObject, "Name"));
+		m_GeneralGroup.Insert(new VectorPrefab("Position", m_EditorObject, "Position"));
+		m_GeneralGroup.Insert(new VectorPrefab("Orientation", m_EditorObject, "Orientation"));
+		m_GeneralGroup.Insert(new EditBoxNumberPrefab("Scale", m_EditorObject, "Scale", 0.01));
 		//m_GeneralGroup.Insert(new CheckBoxPrefab("Editor Only", m_EditorObject, "EditorOnly", m_EditorObject.EditorOnly));
 		m_GeneralGroup.Open(GeneralGroup);
 		
 		m_ObjectGroup = new GroupPrefab("Object Settings", m_EditorObject, string.Empty);
-		m_ObjectGroup.Insert(new CheckBoxPrefab("Enable Simulation", m_EditorObject, "Simulate", m_EditorObject.Simulate));
-		m_ObjectGroup.Insert(new CheckBoxPrefab("Lock", m_EditorObject, "Locked", m_EditorObject.Locked));
-		m_ObjectGroup.Insert(new CheckBoxPrefab("Enable Physics", m_EditorObject, "Physics", m_EditorObject.Physics));
+		m_ObjectGroup.Insert(new CheckBoxPrefab("Enable Simulation", m_EditorObject, "Simulate"));
+		m_ObjectGroup.Insert(new CheckBoxPrefab("Lock", m_EditorObject, "Locked"));
+		m_ObjectGroup.Insert(new CheckBoxPrefab("Enable Physics", m_EditorObject, "Physics"));
 		m_ObjectGroup.Open(Object_Group);
 		
 		m_AdvancedGroup = new GroupPrefab("Debug", m_EditorObject, string.Empty);
-		m_AdvancedGroup.Insert(new TextBoxPrefab("Classname", m_EditorObject, "", m_EditorObject.GetWorldObject().GetType()));
+		m_AdvancedGroup.Insert(new TextBoxPrefab("Classname", m_EditorObject, "")); //m_EditorObject.GetWorldObject().GetType()
 		string id = "" + m_EditorObject.GetWorldObject().GetID();
-		m_AdvancedGroup.Insert(new TextBoxPrefab("ID", m_EditorObject, "", id));
-		m_AdvancedGroup.Insert(new TextBoxPrefab("Model", m_EditorObject, "", m_EditorObject.GetWorldObject().ConfigGetString("model")));
+		m_AdvancedGroup.Insert(new TextBoxPrefab("ID", m_EditorObject, "id"));
+		m_AdvancedGroup.Insert(new TextBoxPrefab("Model", m_EditorObject, "model")); //m_EditorObject.GetWorldObject().ConfigGetString("model")
 		m_AdvancedGroup.Open(AdvancedGroup);
 		
 		AddContent(m_GeneralGroup);

@@ -38,7 +38,7 @@ class EditorExportDialog: EditorDialogBase
 		AddContent(m_EditBoxPrefab);
 
 		GroupPrefab advanced_group = new GroupPrefab("Advanced", m_Controller, string.Empty);
-		advanced_group.Insert(new CheckBoxPrefab("Export Selected Objects", m_Controller, "export_selected", false));
+		advanced_group.Insert(new CheckBoxPrefab("Export Selected Objects", m_Controller, "export_selected"));
 
 		AddContent(advanced_group);
 		

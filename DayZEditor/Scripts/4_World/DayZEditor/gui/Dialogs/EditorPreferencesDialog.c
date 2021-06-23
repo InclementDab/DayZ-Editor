@@ -12,12 +12,12 @@ class EditorPreferencesDialog: EditorDialogBase
 		log_level.InsertItem("Error", LogLevel.ERROR);
 		general_group.Insert(log_level);
 		
-		general_group.Insert(new EditBoxNumberPrefab("Auto Save", m_Editor.Settings, "AutoSaveTimer", m_Editor.Settings.AutoSaveTimer.ToString()));
+		general_group.Insert(new EditBoxNumberPrefab("Auto Save", m_Editor.Settings, "AutoSaveTimer")); //m_Editor.Settings.AutoSaveTimer.ToString()
 		
 		GroupPrefab game_group = new GroupPrefab("Game", m_Editor.Settings, string.Empty);
-		game_group.Insert(new SliderPrefab("View Distance", m_Editor.Settings, "ViewDistance", m_Editor.Settings.ViewDistance, 0, 20000));
-		game_group.Insert(new SliderPrefab("Object View Distance", m_Editor.Settings, "ObjectViewDistance", m_Editor.Settings.ObjectViewDistance, 0, 8000));
-		game_group.Insert(new SliderPrefab("Marker View Distance", m_Editor.Settings, "MarkerViewDistance", m_Editor.Settings.MarkerViewDistance, 100, 5000));
+		game_group.Insert(new SliderPrefab("View Distance", m_Editor.Settings, "ViewDistance", 0, 20000));
+		game_group.Insert(new SliderPrefab("Object View Distance", m_Editor.Settings, "ObjectViewDistance", 0, 8000));
+		game_group.Insert(new SliderPrefab("Marker View Distance", m_Editor.Settings, "MarkerViewDistance", 100, 5000));
 		
 		GroupPrefab debug_group = new GroupPrefab("Editor", m_Editor.Settings, string.Empty);
 		debug_group.Insert(new EditBoxPrefab("Loot Spawns File", m_Editor.Settings, "EditorProtoFile"));
@@ -27,7 +27,7 @@ class EditorPreferencesDialog: EditorDialogBase
 		debug_group.Insert(new CheckBoxPrefab("Brushed Object Markers", m_Editor.Settings, "BrushedObjectMarkers"));
 		debug_group.Insert(new CheckBoxPrefab("Preload Objects", m_Editor.Settings, "PreloadObjects"));
 		debug_group.Insert(new CheckBoxPrefab("Disable World Cache", m_Editor.Settings, "DisableWorldCache"));
-		debug_group.Insert(new CheckBoxPrefab("Debug Mode", m_Editor.Settings, "DebugMode", m_Editor.Settings.DebugMode));
+		debug_group.Insert(new CheckBoxPrefab("Debug Mode", m_Editor.Settings, "DebugMode"));
 		
 		AddContent(general_group);
 		AddContent(game_group);

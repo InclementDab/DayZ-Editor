@@ -19,7 +19,7 @@ class EditorObject: EditorWorldObject
 	string Name;
 	vector Position;
 	vector Orientation;
-	float Scale;
+	float Scale = 1.0;
 	bool EditorOnly;
 	
 	// Object Properties
