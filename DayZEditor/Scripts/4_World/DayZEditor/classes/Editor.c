@@ -416,7 +416,12 @@ class Editor
 					vector current_pos = m_EditorCamera.GetPosition();
 					float distance_to_ground = GetGame().SurfaceY(current_pos[0], current_pos[2]);
 					pos[1] = pos[1] + distance_to_ground;
-					m_EditorCamera.LerpCameraPosition(pos, 0.1);
+					if (vector.Distance(pos, current_pos) > 1000) {
+						m_EditorCamera.SetPosition(pos);
+						m_EditorCamera.Update();
+					} else {
+						m_EditorCamera.LerpCameraPosition(pos, 0.1);
+					}
 				}
 				
 				break;
