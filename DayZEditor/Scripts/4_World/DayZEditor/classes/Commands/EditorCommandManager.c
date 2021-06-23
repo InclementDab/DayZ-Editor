@@ -54,7 +54,7 @@ class EditorCommandManager
 		DeleteCommand = RegisterCommand(EditorDeleteCommand);
 		RegisterCommand(EditorDuplicateCommand);
 		RegisterCommand(EditorFindAndReplaceCommand);
-	
+
 		CutCommand = RegisterCommand(EditorCutCommand);
 		CopyCommand = RegisterCommand(EditorCopyCommand);
 		PasteCommand = RegisterCommand(EditorPasteCommand);
@@ -68,11 +68,13 @@ class EditorCommandManager
 		RegisterCommand(EditorEnvironmentControlCommand);
 		RegisterCommand(EditorPreferencesCommand);
 		RegisterCommand(EditorCameraControlsCommand);
+		
 		RegisterCommand(EditorReloadHudCommand);
 		RegisterCommand(EditorReloadBrushesCommand);
+		RegisterCommand(EditorReloadCacheCommand);
+	
 		RegisterCommand(EditorLootEditorCommand);
 		RegisterCommand(EditorAddToFavoritesCommand);
-	
 		RegisterCommand(EditorPlaceObjectCommand);
 	
 		RegisterCommand(EditorBrushPropertiesCommand);

@@ -150,13 +150,18 @@ class EditorObjectManagerModule: JMModuleBase
 	{
 		// On Load unhide em all
 		CF.ObjectManager.UnhideAllMapObjects();
-		
-		// Loads all world objects into a map
-		WorldObjects.Clear();
-		
+				
 		if (GetEditor().Settings.DisableWorldCache) {
 			return;
 		}
+		
+		LoadWorldCache();
+	}
+	
+	void LoadWorldCache()
+	{
+		// Loads all world objects into a map
+		WorldObjects.Clear();
 		
 		g_Game.ReportProgress("Caching Map Objects");
 		EditorLog.Info("Caching Map Objects");
