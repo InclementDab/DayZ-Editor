@@ -1,23 +1,3 @@
-
-class TypeConversionEquation: TypeConversionTemplate<StringEvaluater>
-{
-	override void SetString(string value) 
-	{
-		m_Value = string.Empty;
-		for (int i = 0; i < value.Length(); i++) {
-			int ascii = value[i].Hash();
-			if (ascii >= 40 && ascii <= 57 || ascii == 32 || ascii == 94)
-				m_Value += value[i];
-		}
-	}
-	
-	override string GetString() 
-	{
-		return m_Value;
-	}	
-}
-
-
 class EditorWidget
 {
 	protected Widget m_LayoutRoot;
@@ -32,7 +12,6 @@ class EditorWidget
 	}
 }
 
-
 class TypeConversionEditorWidget: TypeConversionTemplate<EditorWidget>
 {	
 	override Widget GetWidget() 
@@ -46,7 +25,6 @@ class TypeConversionEditorWidget: TypeConversionTemplate<EditorWidget>
 	}	
 }
 
-
 class TypeConversionBrush: TypeConversionTemplate<EditorBrushData>
 {	
 	override void SetString(string value) 
@@ -59,7 +37,6 @@ class TypeConversionBrush: TypeConversionTemplate<EditorBrushData>
 		return m_Value.Name;
 	}
 }
-
 
 class TypeConversionBrushObject: TypeConversionTemplate<EditorBrushObject>
 {
