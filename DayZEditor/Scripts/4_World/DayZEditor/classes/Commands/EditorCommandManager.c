@@ -54,6 +54,7 @@ class EditorCommandManager
 		DeleteCommand = RegisterCommand(EditorDeleteCommand);
 		RegisterCommand(EditorDuplicateCommand);
 		RegisterCommand(EditorFindAndReplaceCommand);
+		RegisterCommand(EditorCopyPositionCommand);
 
 		CutCommand = RegisterCommand(EditorCutCommand);
 		CopyCommand = RegisterCommand(EditorCopyCommand);
