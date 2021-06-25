@@ -1,17 +1,3 @@
-class EditorWidget
-{
-	protected Widget m_LayoutRoot;
-	Widget GetLayoutRoot() 
-	{
-		return m_LayoutRoot; 
-	}
-	
-	void SetLayoutRoot(Widget layout_root) 
-	{
-		m_LayoutRoot = layout_root;
-	}
-}
-
 class TypeConversionEditorWidget: TypeConversionTemplate<EditorWidget>
 {	
 	override Widget GetWidget() 
@@ -60,14 +46,16 @@ class TypeConversionEditorFile: TypeConversionTemplate<EditorFile>
 {
 	override void SetString(string value) 
 	{
-		if (m_Value)
+		if (m_Value) {
 			m_Value.FileName = value;
+		}
 	}
 	
 	override string GetString() 
 	{
-		if (m_Value)
+		if (m_Value) {
 			return m_Value.FileName;
+		}
 		
 		return string.Empty;
 	}
@@ -77,8 +65,9 @@ class DropdownListPrefabItemConverter: TypeConversionTemplate<DropdownListPrefab
 {
 	override string GetString() 
 	{
-		if (m_Value)
+		if (m_Value) {
 			return m_Value.GetText();
+		}
 		
 		return string.Empty;
 	}
@@ -96,20 +85,5 @@ class DropdownListPrefabItemConverter: TypeConversionTemplate<DropdownListPrefab
 	override void SetWidget(Widget value) 
 	{
 		m_Value.OnWidgetScriptInit(value);
-	}
-}
-
-
-
-modded class MVC
-{
-	override void RegisterConversionTemplates(out TypeConversionHashMap type_conversions)
-	{
-		super.RegisterConversionTemplates(type_conversions);
-		type_conversions.Insert(EditorWidget, TypeConversionEditorWidget);
-		type_conversions.Insert(EditorBrushData, TypeConversionBrush);
-		type_conversions.Insert(EditorBrushObject, TypeConversionBrushObject);
-		type_conversions.Insert(DropdownListPrefabItemBase, DropdownListPrefabItemConverter);
-		type_conversions.Insert(EditorFile, TypeConversionEditorFile);
 	}
 }

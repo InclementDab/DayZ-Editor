@@ -32,9 +32,3 @@ class EditorBrushData
 		return brush_object;
 	}
 }
-
-
-
-
-
-
