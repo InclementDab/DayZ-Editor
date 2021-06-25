@@ -15,9 +15,10 @@ class EditorSettings: EditorProfileSettings
 	// Brush Settings
 	bool BrushedObjectMarkers 		= false;
 	bool BrushedListItems			= false;
-	
-	string EditorProtoFile 			= "$profile:/Editor/MapGroupProto.xml";
 	string EditorBrushFile 			= "$profile:/Editor/EditorBrushes.xml";
+	
+	// Loot Settings
+	string EditorProtoFile 			= "$profile:/Editor/MapGroupProto.xml";
 	
 	LogLevel SelectedLogLevel 		= LogLevel.INFO;
 

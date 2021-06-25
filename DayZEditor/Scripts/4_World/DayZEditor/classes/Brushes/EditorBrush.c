@@ -93,11 +93,11 @@ class EditorBrush
 		EditorSettings settings = GetEditor().Settings;
 		int flags;
 		if (settings.BrushedObjectMarkers) {
-			flags &= EditorObjectFlags.OBJECTMARKER;
+			flags |= EditorObjectFlags.OBJECTMARKER;
 		}
 		
 		if (settings.BrushedListItems) {
-			flags &= EditorObjectFlags.LISTITEM;
+			flags |= EditorObjectFlags.LISTITEM;
 		}
 		
 		for (int i = 0; i < BrushDensity * 10; i++) {

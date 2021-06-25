@@ -20,12 +20,12 @@ class EditorPreferencesDialog: EditorDialogBase
 		game_group.Insert(new SliderPrefab("Marker View Distance", m_Editor.Settings, "MarkerViewDistance", 100, 5000));
 		
 		GroupPrefab brush_settings = new GroupPrefab("Brush Settings", m_Editor.Settings, string.Empty);
+		brush_settings.Insert(new EditBoxPrefab("Brush File", m_Editor.Settings, "EditorBrushFile"));
 		brush_settings.Insert(new CheckBoxPrefab("Show Object Markers", m_Editor.Settings, "BrushedObjectMarkers"));
 		brush_settings.Insert(new CheckBoxPrefab("Show List Items", m_Editor.Settings, "BrushedListItems"));
 		
 		GroupPrefab advanced_group = new GroupPrefab("Advanced Settings", m_Editor.Settings, string.Empty);
 		advanced_group.Insert(new EditBoxPrefab("Loot Spawns File", m_Editor.Settings, "EditorProtoFile"));
-		advanced_group.Insert(new EditBoxPrefab("Brush File", m_Editor.Settings, "EditorBrushFile"));
 		advanced_group.Insert(new CheckBoxPrefab("Modal Dialogs", m_Editor.Settings, "LockCameraDuringDialogs"));
 		advanced_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", m_Editor.Settings, "ShowBoundingBoxes"));
 		advanced_group.Insert(new CheckBoxPrefab("Preload Objects", m_Editor.Settings, "PreloadObjects"));
