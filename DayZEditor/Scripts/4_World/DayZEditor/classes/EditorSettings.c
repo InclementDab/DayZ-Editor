@@ -33,12 +33,9 @@ class EditorSettings: EditorProfileSettings
 				break;
 			}
 			
-			case "ViewDistance": {
-				GetGame().GetWorld().SetViewDistance(ViewDistance);
-				break;
-			}
-			
+			case "ViewDistance":
 			case "ObjectViewDistance": {
+				GetGame().GetWorld().SetViewDistance(ViewDistance);
 				GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
 				break;
 			}
