@@ -1,15 +1,8 @@
 class EditorProfileSettings
 {
+	// This is a HashMap of all of the properties in the type, often used on Controllers, very valuable
 	protected ref PropertyTypeHashMap m_SavedVariablesList = new PropertyTypeHashMap(Type());
-	
-	void EditorProfileSettings()
-	{		
-		/*for (int i = 0; i < Type().GetVariableCount(); i++) {
-			string variable_name = Type().GetVariableName(i);
-			m_SavedVariablesList[variable_name] = Type().GetVariableType(i);
-		}*/
-	}
-	
+		
 	void Save()
 	{
 		for (int i = 0; i < Type().GetVariableCount(); i++) {
