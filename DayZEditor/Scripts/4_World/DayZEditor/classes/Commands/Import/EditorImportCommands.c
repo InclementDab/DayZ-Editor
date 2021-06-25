@@ -58,6 +58,11 @@ class EditorImportCommandBase: EditorCommand
 		}
 				
 		EditorLog.Info("Deleting %1 Objects", save_data.DeletedObjects.Count().ToString());
+		if (save_data.DeletedObjects.Count() > 0 && !GetEditor().GetObjectManager().IsWorldCacheLoaded()) {
+			EditorLog.Warning("World Cache not loaded, loading to avoid file corruption");
+			GetEditor().GetObjectManager().LoadWorldCache();
+		}
+		
 		foreach (int id: save_data.DeletedObjects) {
 			if (!GetEditor().HideMapObject(id)) {
 				EditorLog.Warning("Failed to delete building: %1", id.ToString());

@@ -19,6 +19,8 @@ class EditorObjectManagerModule: JMModuleBase
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
 	
+	private bool m_IsWorldCacheLoaded;
+	
 	override void Init()
 	{
 		EditorLog.Trace("EditorObjectManager::Init");
@@ -176,6 +178,13 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		g_Game.ReportProgress(string.Format("Cached %1 map objects", WorldObjects.Count().ToString()));
 		EditorLog.Info("Cached %1 map objects", WorldObjects.Count().ToString());
+		
+		m_IsWorldCacheLoaded = true;
+	}
+	
+	bool IsWorldCacheLoaded()
+	{
+		return m_IsWorldCacheLoaded;
 	}
 	
 	bool IsObjectHidden(EditorDeletedObject deleted_object)

@@ -6,7 +6,7 @@ class EditorDeletedObject: EditorWorldObject
 	protected vector m_Position;
 	protected vector m_Orientation;
 	protected vector m_BottomCenter;
-	
+		
 	private vector m_LineVerticies[8];
 	
 	protected ref EditorDeletedListItem m_EditorDeletedListItem;
