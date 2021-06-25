@@ -1,13 +1,13 @@
 class EditorProfileSettings
 {
-	protected ref map<string, typename> m_SavedVariablesList = new map<string, typename>();
+	protected ref PropertyTypeHashMap m_SavedVariablesList = new PropertyTypeHashMap(Type());
 	
 	void EditorProfileSettings()
-	{
-		for (int i = 0; i < Type().GetVariableCount(); i++) {
+	{		
+		/*for (int i = 0; i < Type().GetVariableCount(); i++) {
 			string variable_name = Type().GetVariableName(i);
 			m_SavedVariablesList[variable_name] = Type().GetVariableType(i);
-		}
+		}*/
 	}
 	
 	void Save()
