@@ -19,19 +19,24 @@ class EditorPreferencesDialog: EditorDialogBase
 		game_group.Insert(new SliderPrefab("Object View Distance", m_Editor.Settings, "ObjectViewDistance", 0, 8000));
 		game_group.Insert(new SliderPrefab("Marker View Distance", m_Editor.Settings, "MarkerViewDistance", 100, 5000));
 		
-		GroupPrefab debug_group = new GroupPrefab("Editor", m_Editor.Settings, string.Empty);
-		debug_group.Insert(new EditBoxPrefab("Loot Spawns File", m_Editor.Settings, "EditorProtoFile"));
-		debug_group.Insert(new EditBoxPrefab("Brush File", m_Editor.Settings, "EditorBrushFile"));
-		debug_group.Insert(new CheckBoxPrefab("Modal Dialogs", m_Editor.Settings, "LockCameraDuringDialogs"));
-		debug_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", m_Editor.Settings, "ShowBoundingBoxes"));
-		debug_group.Insert(new CheckBoxPrefab("Brushed Object Markers", m_Editor.Settings, "BrushedObjectMarkers"));
-		debug_group.Insert(new CheckBoxPrefab("Preload Objects", m_Editor.Settings, "PreloadObjects"));
-		debug_group.Insert(new CheckBoxPrefab("Disable World Cache", m_Editor.Settings, "DisableWorldCache"));
-		debug_group.Insert(new CheckBoxPrefab("Debug Mode", m_Editor.Settings, "DebugMode"));
+		GroupPrefab brush_settings = new GroupPrefab("Brush Settings", m_Editor.Settings, string.Empty);
+		brush_settings.Insert(new CheckBoxPrefab("Show Object Markers", m_Editor.Settings, "BrushedObjectMarkers"));
+		brush_settings.Insert(new CheckBoxPrefab("Show List Items", m_Editor.Settings, "BrushedListItems"));
+		
+		GroupPrefab advanced_group = new GroupPrefab("Advanced Settings", m_Editor.Settings, string.Empty);
+		advanced_group.Insert(new EditBoxPrefab("Loot Spawns File", m_Editor.Settings, "EditorProtoFile"));
+		advanced_group.Insert(new EditBoxPrefab("Brush File", m_Editor.Settings, "EditorBrushFile"));
+		advanced_group.Insert(new CheckBoxPrefab("Modal Dialogs", m_Editor.Settings, "LockCameraDuringDialogs"));
+		advanced_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", m_Editor.Settings, "ShowBoundingBoxes"));
+		advanced_group.Insert(new CheckBoxPrefab("Preload Objects", m_Editor.Settings, "PreloadObjects"));
+		advanced_group.Insert(new CheckBoxPrefab("Disable World Cache", m_Editor.Settings, "DisableWorldCache"));
+		advanced_group.Insert(new CheckBoxPrefab("Debug Mode", m_Editor.Settings, "DebugMode"));
 		
 		AddContent(general_group);
 		AddContent(game_group);
-		AddContent(debug_group);
+		AddContent(brush_settings);
+		AddContent(advanced_group);
+		
 		AddButton(DialogResult.OK);
 		AddButton("Close", DialogResult.Cancel);
 	}

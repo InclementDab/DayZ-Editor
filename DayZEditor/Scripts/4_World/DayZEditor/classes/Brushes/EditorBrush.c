@@ -90,9 +90,14 @@ class EditorBrush
 		
 		EditorObjectDataMap data_set = new EditorObjectDataMap();
 		
+		EditorSettings settings = GetEditor().Settings;
 		int flags;
-		if (GetEditor().Settings.BrushedObjectMarkers) {
-			flags = EditorObjectFlags.OBJECTMARKER;
+		if (settings.BrushedObjectMarkers) {
+			flags &= EditorObjectFlags.OBJECTMARKER;
+		}
+		
+		if (settings.BrushedListItems) {
+			flags &= EditorObjectFlags.LISTITEM;
 		}
 		
 		for (int i = 0; i < BrushDensity * 10; i++) {

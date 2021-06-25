@@ -8,10 +8,13 @@ class EditorSettings: EditorProfileSettings
 
 	bool LockCameraDuringDialogs 	= true;
 	bool ShowBoundingBoxes 			= true;
-	bool BrushedObjectMarkers 		= false;
 	bool PreloadObjects				= false;
 	bool DisableWorldCache			= false;
 	bool DebugMode 					= false;
+	
+	// Brush Settings
+	bool BrushedObjectMarkers 		= false;
+	bool BrushedListItems			= false;
 	
 	string EditorProtoFile 			= "$profile:/Editor/MapGroupProto.xml";
 	string EditorBrushFile 			= "$profile:/Editor/EditorBrushes.xml";
