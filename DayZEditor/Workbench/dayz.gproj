@@ -28,11 +28,13 @@ GameProjectClass {
 				"gui/imagesets/selection.imageset"
 				"gui/imagesets/console_toolbar.imageset"
 				"DayZEditor/gui/imagesets/dayz_editor_gui.imageset"
+				"DabsFramework/gui/imagesets/dabs_framework_prefabs.imageset"
 			}
 			widgetStyles {
 				"gui/looknfeel/dayzwidgets.styles" 
 				"gui/looknfeel/widgets.styles"
 				"DayZEditor/gui/looknfeel/editorwidgets.styles"
+				"DabsFramework/gui/looknfeel/dabs_framework_prefabs.styles"
 			}
 			ScriptModules {
 				ScriptModulePathClass {

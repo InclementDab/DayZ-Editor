@@ -1237,6 +1237,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
         CheckBoxWidgetClass LockPlayer {
          clipchildren 0
          inheritalpha 0
+         color 1 1 1 0.9961
          size 1 28
          valign center_ref
          hexactpos 0
@@ -1245,7 +1246,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 1
          scaled 1
          scriptclass "ViewBinding"
-         style dze_checkbox_white
+         style CheckBox_22px
          font "gui/fonts/etelkatextpro"
          checked 0
          {

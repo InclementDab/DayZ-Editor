@@ -32,7 +32,8 @@ class CfgMods
 			{
 				files[]=
 				{
-					"DayZEditor/gui/imagesets/dayz_editor_gui.imageset"
+					"DayZEditor/gui/imagesets/dayz_editor_gui.imageset",
+					"DabsFramework/gui/imagesets/dabs_framework_prefabs.imageset"
 				};
 			};
 
@@ -40,7 +41,8 @@ class CfgMods
 			{
 				files[]=
 				{
-					"DayZEditor/gui/looknfeel/editorwidgets.styles"
+					"DayZEditor/gui/looknfeel/editorwidgets.styles",
+					"DabsFramework/gui/looknfeel/dabs_framework_prefabs.styles"
 				};
 			};
 
