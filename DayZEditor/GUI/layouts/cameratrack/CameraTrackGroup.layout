@@ -20,7 +20,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
    vexactpos 1
    hexactsize 0
    vexactsize 0
-   style SlimOutline_WSW
+   style Outline_1px
    Padding 0
    Margin 0
    "Size To Content V" 1
@@ -82,7 +82,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           style Slim_Outline2
+           style Outline_1px
           }
          }
          {
@@ -173,7 +173,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        {
         PanelWidgetClass CameraSegmentTimeOutline {
          ignorepointer 1
-         color 1 1 1 0.9961
+         color 0.7059 0.7059 0.7059 1
          position -3 0
          size 1 18
          halign center_ref
@@ -182,7 +182,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         style Slim_Outline2
+         style Outline_1px
         }
        }
        {
@@ -213,11 +213,11 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        vexactsize 0
        scriptclass "ViewBinding"
        text "Delete"
-       "text color" 0.9412 0.6275 0.6275 1
+       "text color" 0.9412 0.9412 0.9412 1
        {
         PanelWidgetClass DeleteOutline {
          ignorepointer 1
-         color 1 0.4706 0.4706 1
+         color 0.7059 0.7059 0.7059 1
          position 0 0
          size 1 1
          halign center_ref
@@ -226,7 +226,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         style Slim_Outline2
+         style Outline_1px
         }
        }
        {
@@ -398,7 +398,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
                hexactsize 0
                vexactsize 1
                scriptclass "ViewBinding"
-               style highlight_green_1
+               style Green_Hightlight
                text "99999.99"
                "limit visible" 1
                "exact text" 1
@@ -445,7 +445,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
                hexactsize 0
                vexactsize 1
                scriptclass "ViewBinding"
-               style highlight_blue_1
+               style Blue_Highlight
                text "99999.99"
                "limit visible" 1
                "exact text" 1
@@ -608,7 +608,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
                hexactsize 0
                vexactsize 1
                scriptclass "ViewBinding"
-               style highlight_green_1
+               style Green_Hightlight
                text "99999.99"
                "limit visible" 1
                "exact text" 1
@@ -655,7 +655,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
                hexactsize 0
                vexactsize 1
                scriptclass "ViewBinding"
-               style highlight_blue_2
+               style Blue_Highlight
                text "99999.99"
                "limit visible" 1
                "exact text" 1
@@ -690,6 +690,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
        vexactsize 1
        {
         CheckBoxWidgetClass FlipOrientationCheckbox {
+         color 0.7059 0.7059 0.7059 0.9961
          position 0.25 0
          size 16 16
          valign center_ref
@@ -698,7 +699,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          hexactsize 1
          vexactsize 1
          scriptclass "ViewBinding"
-         style dze_checkbox_white
+         style CheckBox_16px
          {
           ScriptParamsClass {
            Binding_Name "FlipOrientation"
@@ -731,7 +732,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          {
           PanelWidgetClass PanelWidget6 {
            ignorepointer 1
-           color 0.9412 0.9412 0.9412 1
+           color 0.7059 0.7059 0.7059 1
            position 0 0
            size 1 1
            halign center_ref
@@ -740,7 +741,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           style Slim_Outline2
+           style Outline_1px
           }
          }
          {
@@ -750,6 +751,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          }
         }
         ButtonWidgetClass FlyToButton {
+         color 0.9412 0.9412 0.9412 1
          position 0.45 0
          size 0.15 18
          halign right_ref
@@ -763,7 +765,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
          {
           PanelWidgetClass FlyToOutline {
            ignorepointer 1
-           color 0.9412 0.9412 0.9412 1
+           color 0.7059 0.7059 0.7059 1
            position 0 0
            size 1 1
            halign center_ref
@@ -772,7 +774,7 @@ WrapSpacerWidgetClass CameraTrackGroupWrapper {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           style Slim_Outline2
+           style Outline_1px
           }
          }
          {

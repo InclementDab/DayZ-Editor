@@ -111,30 +111,6 @@ WrapSpacerWidgetClass ListItem {
           }
          }
         }
-        CheckBoxWidgetClass ListItemShow {
-         visible 1
-         clipchildren 1
-         inheritalpha 0
-         ignorepointer 0
-         color 0.7059 0.7059 0.7059 1
-         position 2 0
-         size 25 25
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style dze_checkbox_eye_icon
-         "no focus" 0
-         font "gui/fonts/metron-bold"
-         checked 0
-         {
-          ScriptParamsClass {
-           Relay_Command "ListItemCollapseExecute"
-          }
-         }
-        }
        }
       }
      }
