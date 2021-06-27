@@ -392,6 +392,7 @@ class Editor
 					
 					if (!target) {
 						m_EditorHud.DelayedDragBoxCheck();
+						return true;
 					}
 				}
 
