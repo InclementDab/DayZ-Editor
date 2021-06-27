@@ -371,7 +371,7 @@ class Editor
 				
 				if (!GetBrush() && GetSelectedObjects().Count() == 0) {
 					
-					if (ObjectUnderCursor) {
+					/*if (ObjectUnderCursor) {
 						EditorObject editor_object = m_ObjectManager.GetEditorObject(ObjectUnderCursor);
 						if (editor_object) {
 							
@@ -385,10 +385,10 @@ class Editor
 								ClearSelection();
 							}
 							
-							SelectObject(editor_object);*/
+							SelectObject(editor_object);
 							return true;
 						} 
-					} 
+					} */
 					
 					if (!target) {
 						m_EditorHud.DelayedDragBoxCheck();

@@ -160,8 +160,8 @@ class EditorPlacedListItem: EditorListItem
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		if (m_EditorObject.GetMarker()) {
-			m_EditorObject.GetMarker().Select();
+		if (m_EditorObject.GetMarker() && !m_EditorObject.GetMarker().IsSelected()) {
+			m_EditorObject.GetMarker().Highlight();
 		}
 		
 		return super.OnMouseEnter(w, x, y);
