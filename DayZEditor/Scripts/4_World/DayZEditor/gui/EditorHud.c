@@ -28,8 +28,9 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		EditorLog.Trace("EditorHud::Show");
 		m_LayoutRoot.Show(show);
 		
-		if (CurrentDialog)
+		if (CurrentDialog) {
 			CurrentDialog.GetLayoutRoot().Show(show);
+		}
 	}
 	
 	bool IsVisible() 
@@ -38,13 +39,17 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	}
 	
 	void ToggleCursor() 
-	{
+	{		
 		ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
 	}
 	
 	void ShowCursor(bool state) 
 	{
 		GetGame().GetUIManager().ShowCursor(state);
+		
+		if (!state) {
+			delete CurrentTooltip;
+		}
 	}
 		
 	void ShowScreenLogs(bool state)
