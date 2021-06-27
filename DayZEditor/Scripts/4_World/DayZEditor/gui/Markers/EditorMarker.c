@@ -1,6 +1,10 @@
 class EditorMarker: ScriptView
 {
 	protected bool m_Show = true;
+	
+	Widget EditorMarkerColor;
+	Widget EditorMarkerOutlineColor;
+	
 	void EditorMarker()
 	{
 		EditorLog.Trace("EditorMarker");
@@ -37,7 +41,12 @@ class EditorMarker: ScriptView
 	
 	void SetColor(int color)
 	{
-		m_LayoutRoot.FindAnyWidget("EditorMarkerColor").SetColor(color);
+		EditorMarkerColor.SetColor(color);
+	}
+	
+	void SetOutlineColor(int color)
+	{
+		EditorMarkerOutlineColor.SetColor(color);
 	}
 	
 	protected bool IsMouseInside(int c_x, int c_y)

@@ -103,16 +103,19 @@ class EditorObjectMarker: EditorMarker
 	void Select() 
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
+		SetOutlineColor(MARKER_OUTLINE_COLOR_SELECT);
 	}
 	
 	void Highlight()
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
+		SetOutlineColor(MARKER_OUTLINE_COLOR_HOVER);
 	}
 	
 	void Deselect() 
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
+		SetOutlineColor(MARKER_OUTLINE_COLOR_EMPTY);
 	}
 	
 	bool IsSelected() 

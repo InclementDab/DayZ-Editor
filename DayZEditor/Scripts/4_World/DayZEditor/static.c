@@ -1,6 +1,9 @@
+static const int MARKER_OUTLINE_COLOR_EMPTY = COLOR_EMPTY;
+static const int MARKER_OUTLINE_COLOR_HOVER = COLOR_BLACK;
+static const int MARKER_OUTLINE_COLOR_SELECT = COLOR_RED;
 
 static const float MARKER_ALPHA_ON_SHOW = 1;
-static const float MARKER_ALPHA_ON_HIDE = 0.25;
+static const float MARKER_ALPHA_ON_HIDE = 0.75;
 
 static const int DRAG_BOX_THRESHOLD = 15;
 static const int DRAG_BOX_THICKNESS = 1;
