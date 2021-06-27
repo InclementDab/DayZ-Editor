@@ -1,11 +1,11 @@
 class EditorHud: ScriptViewTemplate<EditorHudController>
 {
 	// Layout Elements
-	protected Widget NotificationFrame;
-	protected Widget MapContainer;
-	protected Widget LoggerFrame;
+	Widget NotificationFrame;
+	Widget MapContainer;
+	Widget LoggerFrame;
 	
-	protected CanvasWidget EditorCanvas;
+	CanvasWidget EditorCanvas;
 	
 	ref EditorCameraMapMarker CameraMapMarker;
 	
