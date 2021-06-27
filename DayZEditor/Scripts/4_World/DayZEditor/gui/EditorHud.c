@@ -50,6 +50,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		if (!state) {
 			delete CurrentTooltip;
 			delete CurrentMenu;
+			SetFocus(null);
 		}
 	}
 		

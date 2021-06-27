@@ -10,9 +10,11 @@ class EditorObjectDragHandler: EditorDragHandler
 		vector size, ground_position, surface_normal, local_dir, local_ori;
 		vector deltapos = m_EditorObject.GetPosition();
 		size = m_EditorObject.GetSize();
+		float scale = m_EditorObject.GetScale();
 		ground_position = GetGroundPosition(transform);
 		surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
 		float angle;
+		int i;
 		// Handle Z-Only motion
 		// Todo will people want this as a keybind?
 		if (KeyState(KeyCode.KC_LMENU)) {
@@ -32,6 +34,9 @@ class EditorObjectDragHandler: EditorDragHandler
 			angle = Math.Atan2(cursor_delta[0], cursor_delta[2]);
 			delta[0] = angle * Math.RAD2DEG;
 			delta.RotationMatrixFromAngles(transform);
+			for (i = 0; i < 3; i++) {
+				transform[i] = transform[i] * scale;
+			}
 			
 			if (m_Editor.MagnetMode) {
 				local_dir = vector.Direction(ground_position, cursor_pos);
@@ -39,6 +44,7 @@ class EditorObjectDragHandler: EditorDragHandler
 				transform[0] = surface_normal * local_dir;
 				transform[1] = surface_normal;
 				transform[2] = surface_normal * (local_dir * vector.Up);
+				
 			} else {
 				if (m_Editor.GroundMode) {
 					transform[3] = ground_position + transform[1] * vector.Distance(ground_position, transform[3]);
