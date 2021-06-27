@@ -31,19 +31,20 @@ class EditorMath
 		return 0;
 	}
 	
-	static void HSVtoRGB(int h, float s, float v, out float rgb[3])
+	static vector HSVtoRGB(float h, float s, float v)
 	{
-	    //if (h > 360 || h < 0 || s > 100 || s < 0 || v > 100 || v < 0){
-	    //    return;
-	    //}
-		
+	    /*if (h > 360 || h < 0 || s > 100 || s < 0 || v > 100 || v < 0) {
+	        return;
+	    }*/
+				
 		s /= 100;
 		v /= 100;
 	    float c = s * v;
-		int xx = (h / 60) % 2;
+		float xx = Remainder(h / 60, 2);
 	    float x = c * (1 - Math.AbsFloat(xx - 1));
+		Print(x);
 	    float m = v - c;
-	    if (h >= 0 && h < 60){
+	    if (h >= 0 && h < 60) {
 	        rgb[0] = c; rgb[1] = x; rgb[2] = 0;
 	    }
 	    else if (h >= 60 && h < 120) {
@@ -67,7 +68,7 @@ class EditorMath
 		}
 	}
 	
-	static float Remainder(int num, int divisor)
+	static float Remainder(float num, float divisor)
 	{
 	    return (num - divisor * (num / divisor));
 	}
