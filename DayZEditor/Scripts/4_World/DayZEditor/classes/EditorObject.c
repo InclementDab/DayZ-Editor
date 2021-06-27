@@ -570,7 +570,9 @@ class EditorObject: EditorWorldObject
 		
 	vector GetBottomCenter()
 	{		
-		return m_BasePoint.GetWorldPosition();
+		vector pos = GetPosition();
+		pos[1] = pos[1] - GetYDistance();
+		return pos;
 	}
 	
 	float GetYDistance()
