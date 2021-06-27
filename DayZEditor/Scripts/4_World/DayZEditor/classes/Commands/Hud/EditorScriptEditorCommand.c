@@ -2,7 +2,7 @@ class EditorScriptEditorCommand: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorMultilineEditBoxDialog edit_dialog = new EditorMultilineEditBoxDialog("Script Console");
+		EditorScriptEditorDialog edit_dialog = new EditorScriptEditorDialog("Script Console");
 		
 		string script_content;
 		edit_dialog.ShowDialog(script_content);
@@ -18,9 +18,8 @@ class EditorScriptEditorCommand: EditorCommand
 		
 		string file_name = "$saves:Editor/_discard.c";
 		FileHandle handle = OpenFile(file_name, FileMode.WRITE);
-		FPrintln(handle, "static void main() {");
-		FPrintln(handle, sanitized_content);
-		FPrintln(handle, "}");
+		string file_data = "static void main()\n{\n" + sanitized_content + "\n}";
+		FPrintln(handle, file_data);		
 		
 		if (handle) {
 			CloseFile(handle);
