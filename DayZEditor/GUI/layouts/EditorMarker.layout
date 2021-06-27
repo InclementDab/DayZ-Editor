@@ -34,7 +34,7 @@ FrameWidgetClass EditorMarkerFrame {
      clipchildren 1
      inheritalpha 1
      ignorepointer 1
-     color 0.6235 0.1569 0.5059 1
+     color 1 1 1 0.1961
      size 20 20
      halign center_ref
      valign center_ref
@@ -55,7 +55,7 @@ FrameWidgetClass EditorMarkerFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       style Outline_1px
+       style Outline_2px
       }
      }
     }
