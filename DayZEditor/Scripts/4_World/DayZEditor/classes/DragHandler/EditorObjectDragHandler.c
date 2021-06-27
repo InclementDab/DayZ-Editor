@@ -30,10 +30,11 @@ class EditorObjectDragHandler: EditorDragHandler
 		// Handle XY Rotation
 		else if (KeyState(KeyCode.KC_LSHIFT)) {
 			vector cursor_delta = ground_position - Editor.CurrentMousePosition;
-			vector delta = m_EditorObject.GetOrientation();
+			local_ori = m_EditorObject.GetOrientation();
 			angle = Math.Atan2(cursor_delta[0], cursor_delta[2]);
-			delta[0] = angle * Math.RAD2DEG;
-			delta.RotationMatrixFromAngles(transform);
+			local_ori[0] = local_ori[0] + ((angle - m_LastAngle) * Math.RAD2DEG);
+			local_ori.RotationMatrixFromAngles(transform);
+			
 			for (i = 0; i < 3; i++) {
 				transform[i] = transform[i] * scale;
 			}
