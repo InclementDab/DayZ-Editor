@@ -131,14 +131,14 @@ static void _GetWidgetRoot(out Widget w)
 
 static const int COLOR_SALMON	= ARGB(255, 192, 94, 83);
 static const int COLOR_SALMON_A	= ARGB(128, 50, 100, 100);
-static const int COLOR_CANDY 	= -1618884;
-static const int COLOR_APPLE 	= -9785268;
-static const int COLOR_JELLY 	= -1010901;
+static const int COLOR_CANDY 	= ARGB(255, 231, 76, 60);
+static const int COLOR_APPLE 	= ARGB(255, 106, 176, 76);
+static const int COLOR_JELLY 	= ARGB(255, 240, 147, 43);
 static const int COLOR_PALE_B   = ARGB(255, 50, 100, 200);
-static const int COLOR_BLACK	= -16777216;
-static const int COLOR_WHITE 	= -1;
-static const int COLOR_WHITE_A	= 855638015;
-static const int COLOR_EMPTY 	= 0;
+static const int COLOR_BLACK	= ARGB(255, 0, 0, 0);
+static const int COLOR_WHITE 	= ARGB(255, 255, 255, 255);
+static const int COLOR_WHITE_A	= ARGB(50, 255, 255, 255);
+static const int COLOR_EMPTY 	= ARGB(0, 0, 0, 0);
 //CameraTrackColors
 static const int COLOR_BLUE_LIGHT	= ARGB(120, 57, 148, 230);
 static const int COLOR_BLUE_HIGHLIGHT 	= ARGB(245, 10, 10, 40);
