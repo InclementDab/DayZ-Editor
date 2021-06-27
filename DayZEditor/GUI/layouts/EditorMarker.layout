@@ -2,7 +2,6 @@ FrameWidgetClass EditorMarkerFrame {
  visible 1
  clipchildren 0
  ignorepointer 0
- color 0.6863 0.2588 0.5804 1
  position 0 0
  size 20 20
  hexactpos 1
@@ -18,7 +17,6 @@ FrameWidgetClass EditorMarkerFrame {
    clipchildren 0
    inheritalpha 1
    ignorepointer 0
-   color 0.6863 0.2588 0.5804 1
    position 0 0
    size 20 20
    hexactpos 1
@@ -28,13 +26,15 @@ FrameWidgetClass EditorMarkerFrame {
    priority 250
    draggable 0
    scriptclass ""
+   style Empty
+   "no focus" 1
    {
     PanelWidgetClass EditorMarkerColor {
      visible 1
      clipchildren 1
      inheritalpha 1
      ignorepointer 1
-     color 1 1 1 0.1961
+     color 1 1 1 0.2941
      size 20 20
      halign center_ref
      valign center_ref
@@ -55,7 +55,7 @@ FrameWidgetClass EditorMarkerFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       style Outline_2px
+       style Outline_1px
       }
      }
     }

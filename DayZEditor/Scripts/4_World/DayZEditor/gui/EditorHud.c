@@ -3,6 +3,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	// Layout Elements
 	protected Widget NotificationFrame;
 	protected Widget MapContainer;
+	protected Widget LoggerFrame;
 	
 	protected CanvasWidget EditorCanvas;
 	
@@ -44,6 +45,11 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	void ShowCursor(bool state) 
 	{
 		GetGame().GetUIManager().ShowCursor(state);
+	}
+		
+	void ShowScreenLogs(bool state)
+	{
+		LoggerFrame.Show(state);
 	}
 		
 	void CreateNotification(string text, int color = -4301218, float duration = 4)

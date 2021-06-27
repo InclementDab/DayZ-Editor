@@ -137,7 +137,7 @@ static const int COLOR_JELLY 	= ARGB(255, 240, 147, 43);
 static const int COLOR_PALE_B   = ARGB(255, 50, 100, 200);
 static const int COLOR_BLACK	= ARGB(255, 0, 0, 0);
 static const int COLOR_WHITE 	= ARGB(255, 255, 255, 255);
-static const int COLOR_WHITE_A	= ARGB(50, 255, 255, 255);
+static const int COLOR_WHITE_A	= ARGB(75, 255, 255, 255);
 static const int COLOR_EMPTY 	= ARGB(0, 0, 0, 0);
 
 //CameraTrackColors

@@ -10,6 +10,7 @@ class EditorSettings: EditorProfileSettings
 	bool ShowBoundingBoxes 			= true;
 	bool PreloadObjects				= false;
 	bool DisableWorldCache			= false;
+	bool ShowScreenLogs				= true;
 	bool DebugMode 					= false;
 	
 	// Brush Settings
@@ -40,6 +41,11 @@ class EditorSettings: EditorProfileSettings
 				
 				GetGame().GetWorld().SetViewDistance(ViewDistance);
 				GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
+				break;
+			}
+			
+			case "ShowScreenLogs": {
+				GetEditor().GetEditorHud().ShowScreenLogs(ShowScreenLogs);
 				break;
 			}
 		}
