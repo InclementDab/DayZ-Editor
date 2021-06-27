@@ -1135,7 +1135,7 @@ FrameWidgetClass EditorFrame {
              vexactpos 1
              hexactsize 0
              vexactsize 0
-             style Slim_Outline2
+             style blank
             }
            }
            {
@@ -1334,13 +1334,13 @@ FrameWidgetClass EditorFrame {
     }
     FrameWidgetClass LoggerFrame {
      ignorepointer 1
-     position 0.15 0.03
-     size 0.17 0.2
+     position 290 21
+     size 425 230
      valign bottom_ref
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
      {
       ScrollWidgetClass LoggerScroll {
        ignorepointer 0
@@ -1351,6 +1351,7 @@ FrameWidgetClass EditorFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
+       style blank
        {
         WrapSpacerWidgetClass LoggerSpacer {
          ignorepointer 1
@@ -1424,7 +1425,8 @@ FrameWidgetClass EditorFrame {
         PanelWidgetClass CameraTrackMinimizePanel {
          ignorepointer 1
          color 0.7843 0.2941 0.2745 1
-         size 25 25
+         position 2 2
+         size 25 21
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -1532,7 +1534,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 1
          scriptclass "ViewBinding"
-         style Editor
+         style Slider_1px_alpha_50
          step 0.1
          {
           TextWidgetClass CameraTrackSmoothingReadout {
@@ -1589,7 +1591,7 @@ FrameWidgetClass EditorFrame {
          {
           PanelWidgetClass AddButtonOutline {
            ignorepointer 1
-           color 0.2745 0.8627 0.2745 0.9961
+           color 0.7059 0.7059 0.7059 0.9961
            size 1 1
            halign center_ref
            valign center_ref
@@ -1597,7 +1599,7 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           style Slim_Outline2
+           style Outline_1px
           }
          }
          {
@@ -1621,7 +1623,7 @@ FrameWidgetClass EditorFrame {
          {
           PanelWidgetClass CameraTrackButtonOutline {
            ignorepointer 1
-           color 1 1 1 0.9961
+           color 0.7059 0.7059 0.7059 0.9961
            size 1 1
            halign center_ref
            valign center_ref
@@ -1629,7 +1631,7 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           style Slim_Outline2
+           style Outline_1px
           }
          }
          {

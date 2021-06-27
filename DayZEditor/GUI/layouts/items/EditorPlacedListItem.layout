@@ -116,7 +116,7 @@ WrapSpacerWidgetClass ListItem {
          clipchildren 1
          inheritalpha 0
          ignorepointer 0
-         color 0.7059 0.7059 0.7059 1
+         color 0.7059 0.7059 0.7059 0
          position 2 0
          size 25 25
          valign center_ref
@@ -125,7 +125,7 @@ WrapSpacerWidgetClass ListItem {
          hexactsize 1
          vexactsize 1
          scriptclass "ViewBinding"
-         style dze_checkbox_eye_icon
+         style CheckBox_16px
          "no focus" 0
          font "gui/fonts/metron-bold"
          checked 0
