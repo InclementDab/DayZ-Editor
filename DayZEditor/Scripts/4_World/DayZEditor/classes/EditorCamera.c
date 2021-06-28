@@ -216,7 +216,7 @@ class EditorCamera: Camera
 		int td = 0;
 		while (td < time * 1000) {
 			float time_value = 1 / (time * 1000) * td;
-			vector step = EditorMath.SmoothLerpVector(startpos, targetpos, time_value);
+			vector step = Math.SmoothLerpVector(startpos, targetpos, time_value);
 			SetPosition(step);
 			td += 10;
 			Sleep(10);

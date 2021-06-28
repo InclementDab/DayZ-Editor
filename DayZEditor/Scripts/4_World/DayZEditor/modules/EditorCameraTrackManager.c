@@ -157,10 +157,10 @@ class EditorCameraTrackManagerModule: JMModuleBase
 				//vector center_point = AverageVectors(ctrl.GetPosition(), next_ctrl.GetPosition()) + vector.Up * ((CameraTrackSmoothing / 100) * vector.Distance(ctrl.GetPosition(), next_ctrl.GetPosition()));
 				//point = EditorMath.CalculateQuadraticBezierPoint(time_value, start_ctrl.GetPosition(), center_ctrl.GetPosition(), next_ctrl.GetPosition());
 				
-				vector position = EditorMath.LerpVector(start_ctrl.GetPosition(), end_ctrl.GetPosition(), time_value);
+				vector position = Math.LerpVector(start_ctrl.GetPosition(), end_ctrl.GetPosition(), time_value);
 				camera.SetPosition(position);
 				
-				vector orientation = EditorMath.SmoothLerpVector(start_ctrl.GetOrientation(), end_ctrl.GetOrientation(), time_value);
+				vector orientation = Math.SmoothLerpVector(start_ctrl.GetOrientation(), end_ctrl.GetOrientation(), time_value);
 				camera.SetOrientation(orientation);
 
 				td += 10;
