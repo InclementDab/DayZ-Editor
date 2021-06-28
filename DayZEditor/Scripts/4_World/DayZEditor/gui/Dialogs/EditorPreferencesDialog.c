@@ -33,17 +33,20 @@ class EditorPreferencesDialog: EditorDialogBase
 		advanced_group.Insert(new CheckBoxPrefab("Disable World Cache", m_Editor.Settings, "DisableWorldCache"));
 		advanced_group.Insert(new CheckBoxPrefab("Debug Mode", m_Editor.Settings, "DebugMode"));
 		
-		advanced_group.Insert(new ColorPickerPrefab("Marker Color", m_Editor.Settings, "MarkerColor"));
-		advanced_group.Insert(new ColorPickerPrefab("Highlight Color", m_Editor.Settings, "HighlightColor"));
-		advanced_group.Insert(new ColorPickerPrefab("Selected Color", m_Editor.Settings, "SelectionColor"));
+		GroupPrefab colors_group = new GroupPrefab("Colors", m_Editor.Settings, string.Empty);
+		colors_group.Insert(new ColorPickerPrefab("Marker Color", m_Editor.Settings, "MarkerColor"));
+		colors_group.Insert(new ColorPickerPrefab("Highlight Color", m_Editor.Settings, "HighlightColor"));
+		colors_group.Insert(new ColorPickerPrefab("Selected Color", m_Editor.Settings, "SelectionColor"));
 		
 		AddContent(general_group);
 		AddContent(game_group);
 		AddContent(brush_settings);
+		AddContent(colors_group);
 		AddContent(advanced_group);
 		
 		AddButton(DialogResult.OK);
 		AddButton("Close", DialogResult.Cancel);
+		AddButton("Defaults", "SetDefaults");
 	}
 	
 	protected override void DialogExitButtonCallback(DialogExitButton button)
@@ -53,5 +56,11 @@ class EditorPreferencesDialog: EditorDialogBase
 		}
 		
 		super.DialogExitButtonCallback(button);
+	}
+	
+	void SetDefaults()
+	{
+		m_Editor.Settings.SetDefaults();
+		GetController().NotifyPropertyChanged();
 	}
 }

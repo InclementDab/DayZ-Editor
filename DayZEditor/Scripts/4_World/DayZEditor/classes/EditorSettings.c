@@ -65,5 +65,12 @@ class EditorSettings: EditorProfileSettings
 				break;
 			}
 		}
-	}	
+	}
+	
+	void SetDefaults()
+	{
+		MarkerColor					= COLOR_WHITE_A;
+		HighlightColor				= COLOR_SALMON;
+		SelectionColor				= COLOR_BLUE;
+	}
 }
