@@ -31,21 +31,21 @@ class EditorMath
 		return 0;
 	}
 	
-	static vector HSVtoRGB(float h, float s, float v)
+	static void HSVtoRGB(float h, float s, float v, out float rgb[3])
 	{
-	    /*if (h > 360 || h < 0 || s > 100 || s < 0 || v > 100 || v < 0) {
+	    if (h > 360 || h < 0 || s > 100 || s < 0 || v > 100 || v < 0) {
 	        return;
-	    }*/
-				
+	    }
+
 		s /= 100;
 		v /= 100;
 	    float c = s * v;
-		float xx = Remainder(h / 60, 2);
-	    float x = c * (1 - Math.AbsFloat(xx - 1));
-		Print(x);
+		int vv = h / 60;		
+	    float x = c * (1 - Math.AbsFloat(Remainder(h / 60, 2) - 1));
 	    float m = v - c;
+		
 	    if (h >= 0 && h < 60) {
-	        rgb[0] = c; rgb[1] = x; rgb[2] = 0;
+	       	rgb[0] = c; rgb[1] = x; rgb[2] = 0;
 	    }
 	    else if (h >= 60 && h < 120) {
 	        rgb[0] = x; rgb[1] = c; rgb[2] = 0;
@@ -70,7 +70,7 @@ class EditorMath
 	
 	static float Remainder(float num, float divisor)
 	{
-	    return (num - divisor * (num / divisor));
+		return num - ((int)(num / divisor) * divisor);
 	}
 	
 	static float SmoothLerp(float a, float b, float t)
