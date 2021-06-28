@@ -1,6 +1,6 @@
 class EditorObjectMarker: EditorMarker
 {	
-	protected Editor m_Editor;
+	protected Editor m_Editor = GetEditor();
 	protected EditorObject m_EditorObject;
 
 	protected ref EditorDragHandler m_DragHandler;
@@ -9,7 +9,6 @@ class EditorObjectMarker: EditorMarker
 	{
 		EditorLog.Trace("EditorObjectMarker");
 		m_EditorObject = editor_object;
-		m_Editor = GetEditor();
 		
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	

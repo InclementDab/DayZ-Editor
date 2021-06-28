@@ -25,9 +25,16 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		if (m_MapWidget && m_MapWidget.IsVisible()) {
 			return;
 		}
+		
+		vector position = GetPosition();
+		
+		if (m_Editor.Settings.MarkerViewDistance < vector.Distance(GetGame().GetCurrentCameraPosition(), position)) {
+			m_LayoutRoot.Show(false);
+			return;
+		}
 			
 		// Is the marker in bounds?
-		vector screen_pos = GetGame().GetScreenPos(GetPosition());
+		vector screen_pos = GetGame().GetScreenPos(position);
 		if (screen_pos[0] != 0 && screen_pos[0] != m_ScreenX && screen_pos[1] != 0 && screen_pos[1] != m_ScreenY && screen_pos[2] > 0) {
 			SetPos(screen_pos[0], screen_pos[1]);
 			Show(m_Show);
@@ -53,15 +60,5 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		} 
 		
 		return m_EditorObject.GetBottomCenter();
-	}
-	
-	override void Show(bool show)
-	{
-		if (vector.Distance(m_Editor.GetCamera().GetPosition(), GetPosition()) > m_Editor.Settings.MarkerViewDistance) {
-			m_LayoutRoot.Show(false);
-			return;
-		}
-		
-		super.Show(show);
 	}
 }
