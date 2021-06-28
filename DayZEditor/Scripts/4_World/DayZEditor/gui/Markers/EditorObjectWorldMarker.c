@@ -13,21 +13,12 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	void OnEditorMapToggled(Class context, MapWidget editor_map, bool state)
 	{
-		m_LayoutRoot.Show(!state);
+		m_Show = !state;
 	}
 	
 	override void Update()
-	{
-		if (!m_LayoutRoot) {
-			return;
-		}
-		
-		if (m_MapWidget && m_MapWidget.IsVisible()) {
-			return;
-		}
-		
-		vector position = GetPosition();
-		
+	{		
+		vector position = GetPosition();		
 		if (m_Editor.Settings.MarkerViewDistance < vector.Distance(GetGame().GetCurrentCameraPosition(), position)) {
 			m_LayoutRoot.Show(false);
 			return;
