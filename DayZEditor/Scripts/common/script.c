@@ -1,5 +1,5 @@
 // RELEASE VERSION
-#define EDITOR_RELEASE
+#define EDITOR
 
 // LOGGING
 #define EDITORPRINT

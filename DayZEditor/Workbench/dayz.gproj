@@ -42,6 +42,7 @@ GameProjectClass {
 					Paths {
 						"scripts/1_Core"
 						"JM/CF/defines"
+						"DayZEditor/scripts/common"
 						"JM/CF/scripts/1_Core"
 						"DabsFramework/Scripts/1_Core"
 						"DayZEditor/scripts/1_Core"
@@ -60,6 +61,7 @@ GameProjectClass {
 					Paths {
 						"scripts/3_Game"
 						"JM/CF/defines"
+						"DayZEditor/scripts/common"
 						"JM/CF/scripts/3_Game"
 						"JM/CF/XML/3_Game"
 						"JM/CF/ModStorage/3_Game"
@@ -74,6 +76,7 @@ GameProjectClass {
 					Paths {
 						"scripts/4_World"
 						"JM/CF/defines"
+						"DayZEditor/scripts/common"
 						"JM/CF/scripts/4_World"
 						"JM/CF/ModStorage/4_World"
 						"JM/CF/Permissions/4_World"
@@ -87,6 +90,7 @@ GameProjectClass {
 					Paths {
 						"scripts/5_Mission"
 						"JM/CF/defines"
+						"DayZEditor/scripts/common"
 						"JM/CF/scripts/5_Mission"
 						"JM/CF/LayoutBindingManager/5_Mission"
 						"JM/CF/Permissions/5_Mission"
