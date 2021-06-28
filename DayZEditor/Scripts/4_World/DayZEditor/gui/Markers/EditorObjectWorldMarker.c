@@ -33,17 +33,15 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			return;
 		}
 			
-		// Is the marker in bounds?
 		vector screen_pos = GetGame().GetScreenPos(position);
-		if (screen_pos[0] != 0 && screen_pos[0] != m_ScreenX && screen_pos[1] != 0 && screen_pos[1] != m_ScreenY && screen_pos[2] > 0) {
-			SetPos(screen_pos[0], screen_pos[1]);
-			Show(m_Show);
+		// Overrides the hide if the camera isnt looking at the marker
+		if (screen_pos[0] == 0 || screen_pos[0] == m_ScreenX || screen_pos[1] == 0 || screen_pos[1] == m_ScreenY || screen_pos[2] < 0) {
+			m_LayoutRoot.Show(false);
+			return;
 		} 
 		
-		// Overrides the hide if the camera isnt looking at the marker
-		else { 
-			m_LayoutRoot.Show(false);
-		}
+		SetPos(screen_pos[0], screen_pos[1]);
+		Show(m_Show);
 	}
 	
 	protected vector GetPosition()
