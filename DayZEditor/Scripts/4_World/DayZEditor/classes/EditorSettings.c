@@ -13,6 +13,10 @@ class EditorSettings: EditorProfileSettings
 	bool ShowScreenLogs				= true;
 	bool DebugMode 					= false;
 	
+	int MarkerColor					= COLOR_WHITE_A;
+	int HighlightColor				= COLOR_SALMON;
+	int SelectionColor				= COLOR_BLUE;
+	
 	// Brush Settings
 	bool BrushedObjectMarkers 		= false;
 	bool BrushedListItems			= false;
@@ -46,6 +50,18 @@ class EditorSettings: EditorProfileSettings
 			
 			case "ShowScreenLogs": {
 				GetEditor().GetEditorHud().ShowScreenLogs(ShowScreenLogs);
+				break;
+			}
+			
+			case "MarkerColor": {
+				EditorObjectMap editor_objects = GetEditor().GetObjectManager().GetPlacedObjects();
+				foreach (int id, EditorObject editor_object: editor_objects) {
+					EditorObjectMarker marker = editor_object.GetMarker();
+					if (marker) {
+						marker.Update();
+					}
+				}
+				
 				break;
 			}
 		}

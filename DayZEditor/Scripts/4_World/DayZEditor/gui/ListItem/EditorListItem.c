@@ -1,16 +1,17 @@
 class EditorListItem: ScriptViewTemplate<EditorListItemController>
 {
+	protected Editor m_Editor = GetEditor();
 	protected Widget ListItemContent;
 	protected ButtonWidget ListItemShow;
 	
 	void Select() 
 	{
-		ListItemContent.SetColor(LIST_ITEM_COLOR_ON_SELECTED);
+		ListItemContent.SetColor(m_Editor.Settings.SelectionColor);
 	}
 	
 	void Highlight()
 	{
-		ListItemContent.SetColor(LIST_ITEM_COLOR_ON_HOVER);
+		ListItemContent.SetColor(m_Editor.Settings.HighlightColor);
 	}
 	
 	void Deselect() 

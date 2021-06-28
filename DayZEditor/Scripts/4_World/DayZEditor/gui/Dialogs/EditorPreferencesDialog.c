@@ -33,6 +33,10 @@ class EditorPreferencesDialog: EditorDialogBase
 		advanced_group.Insert(new CheckBoxPrefab("Disable World Cache", m_Editor.Settings, "DisableWorldCache"));
 		advanced_group.Insert(new CheckBoxPrefab("Debug Mode", m_Editor.Settings, "DebugMode"));
 		
+		advanced_group.Insert(new ColorPickerPrefab("Marker Color", m_Editor.Settings, "MarkerColor"));
+		advanced_group.Insert(new ColorPickerPrefab("Highlight Color", m_Editor.Settings, "HighlightColor"));
+		advanced_group.Insert(new ColorPickerPrefab("Selected Color", m_Editor.Settings, "SelectionColor"));
+		
 		AddContent(general_group);
 		AddContent(game_group);
 		AddContent(brush_settings);
