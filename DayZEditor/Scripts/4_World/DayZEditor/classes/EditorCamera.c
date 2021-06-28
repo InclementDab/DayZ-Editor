@@ -29,9 +29,7 @@ class EditorCamera: Camera
 	vector angularVelocity;
 	vector orientation;
 	
-	float ColorizeRed;
-	float ColorizeGreen;
-	float ColorizeBlue;
+	int ColorCorrection = COLOR_WHITE;
 	
 	bool HideCursorOnDrag;
 	
@@ -265,10 +263,10 @@ class EditorCamera: Camera
 				break;
 			}
 			
-			case "ColorizeRed":
-			case "ColorizeGreen":
-			case "ColorizeBlue": {
-				PPEffects.SetColorizationNV(ColorizeRed, ColorizeGreen, ColorizeBlue);
+			case "ColorCorrection": {
+				float a, r, g, b;
+				InverseARGBF(ColorCorrection, a, r, g, b);
+				PPEffects.SetColorizationNV(r, g, b);
 				break;
 			}
 		}		

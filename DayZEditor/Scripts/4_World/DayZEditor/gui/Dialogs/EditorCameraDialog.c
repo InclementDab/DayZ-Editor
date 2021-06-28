@@ -30,9 +30,7 @@ class EditorCameraDialog: EditorDialogBase
 		m_CameraGroup.Open(OpenCameraGroup);
 		
 		m_ColorCorrectionGroup = new GroupPrefab("Filters", m_EditorCamera, string.Empty);
-		m_ColorCorrectionGroup.Insert(new SliderPrefab("Red", m_EditorCamera, "ColorizeRed"));
-		m_ColorCorrectionGroup.Insert(new SliderPrefab("Green", m_EditorCamera, "ColorizeGreen"));
-		m_ColorCorrectionGroup.Insert(new SliderPrefab("Blue", m_EditorCamera, "ColorizeBlue"));
+		m_ColorCorrectionGroup.Insert(new ColorPickerPrefab("Color Correction", m_EditorCamera, "ColorCorrection"));
 		m_ColorCorrectionGroup.Open(OpenColorCorrectionGroup);
 		
 		m_AdvancedGroup = new GroupPrefab("Advanced", m_EditorCamera, string.Empty);
@@ -59,7 +57,6 @@ class EditorCameraDialog: EditorDialogBase
 		delete m_AdvancedGroup;
 	}
 
-	
 	void ResetDefaultExecute()
 	{
 		EditorLog.Trace("EditorCameraDialog::ResetDefaultExecute");
