@@ -51,9 +51,8 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			vector position;
 			vector object_transform[4];
 			m_EditorObject.GetTransform(object_transform);
-			set<Object> o;
 			vector ground_dir; int component;
-			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, o, NULL, m_EditorObject.GetWorldObject(), false, true); // set to ground only
+			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, null, null, m_EditorObject.GetWorldObject(), false, true); // set to ground only
 			return position;
 		} 
 		
