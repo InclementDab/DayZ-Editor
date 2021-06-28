@@ -16,6 +16,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	{	
 		EditorLog.Trace("EditorHud");
 		EditorMapWidget.Show(false);
+		
+		ShowScreenLogs(GetEditor().Settings.ShowScreenLogs);
 	}
 	
 	void ~EditorHud()

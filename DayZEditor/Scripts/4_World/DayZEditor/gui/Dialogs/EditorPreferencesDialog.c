@@ -10,14 +10,12 @@ class EditorPreferencesDialog: EditorDialogBase
 		log_level.InsertItem("Info", LogLevel.INFO);
 		log_level.InsertItem("Warning", LogLevel.WARNING);
 		log_level.InsertItem("Error", LogLevel.ERROR);
+		
 		general_group.Insert(log_level);
-		
 		general_group.Insert(new EditBoxNumberPrefab("Auto Save", m_Editor.Settings, "AutoSaveTimer")); //m_Editor.Settings.AutoSaveTimer.ToString()
-		
-		GroupPrefab game_group = new GroupPrefab("Game", m_Editor.Settings, string.Empty);
-		game_group.Insert(new SliderPrefab("View Distance", m_Editor.Settings, "ViewDistance", 0, 20000));
-		game_group.Insert(new SliderPrefab("Object View Distance", m_Editor.Settings, "ObjectViewDistance", 0, 8000));
-		game_group.Insert(new SliderPrefab("Marker View Distance", m_Editor.Settings, "MarkerViewDistance", 100, 5000));
+		general_group.Insert(new SliderPrefab("View Distance", m_Editor.Settings, "ViewDistance", 0, 20000));
+		general_group.Insert(new SliderPrefab("Object View Distance", m_Editor.Settings, "ObjectViewDistance", 0, 8000));
+		general_group.Insert(new SliderPrefab("Marker View Distance", m_Editor.Settings, "MarkerViewDistance", 100, 5000));
 		
 		GroupPrefab brush_settings = new GroupPrefab("Brush Settings", m_Editor.Settings, string.Empty);
 		brush_settings.Insert(new EditBoxPrefab("Brush File", m_Editor.Settings, "EditorBrushFile"));
@@ -39,7 +37,6 @@ class EditorPreferencesDialog: EditorDialogBase
 		colors_group.Insert(new ColorPickerPrefab("Selected Color", m_Editor.Settings, "SelectionColor"));
 		
 		AddContent(general_group);
-		AddContent(game_group);
 		AddContent(brush_settings);
 		AddContent(colors_group);
 		AddContent(advanced_group);
