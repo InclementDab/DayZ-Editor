@@ -57,7 +57,24 @@ class EditorPreferencesDialog: EditorDialogBase
 	
 	void SetDefaults()
 	{
+		EditorLog.Trace("EditorPreferencesDialog::SetDefaults");
 		m_Editor.Settings.SetDefaults();
-		GetController().NotifyPropertyChanged();
+		m_DialogBaseController.NotifyPropertyChanged();
+		
+		for (int i = 0; i < m_DialogBaseController.DialogContentData.Count(); i++) {
+			ScriptView view = m_DialogBaseController.DialogContentData[i];
+			if (view.IsInherited(GroupPrefab)) {
+				GroupPrefab group = GroupPrefab.Cast(view);
+				ObservableCollection<ref ScriptView> children = group.GetChildren();
+				for (int j = 0; j < children.Count(); j++) {
+					ScriptView child = children[j];
+					if (child) {
+						g_Script.Call(children[j], "ResetToDefault", null);
+					}
+				}				
+			}
+			
+			m_DialogBaseController.DialogContentData[i].GetController().NotifyPropertyChanged("Value");
+		}
 	}
 }

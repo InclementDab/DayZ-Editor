@@ -30,7 +30,7 @@ class EditorCameraDialog: EditorDialogBase
 		m_CameraGroup.Open(OpenCameraGroup);
 		
 		m_ColorCorrectionGroup = new GroupPrefab("Filters", m_EditorCamera, string.Empty);
-		m_ColorCorrectionGroup.Insert(new ColorPickerPrefab("Color Correction", m_EditorCamera, "ColorCorrection"));
+		m_ColorCorrectionGroup.Insert(new ColorPickerPrefab("Color Correction", m_EditorCamera, "ColorCorrection", false));
 		m_ColorCorrectionGroup.Open(OpenColorCorrectionGroup);
 		
 		m_AdvancedGroup = new GroupPrefab("Advanced", m_EditorCamera, string.Empty);
