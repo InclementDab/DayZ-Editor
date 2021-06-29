@@ -1,9 +1,9 @@
-class EditorPreferencesDialog: EditorDialogBase
+class EditorPreferencesDialog: EditorDialogCategoryBase
 {	
 	void EditorPreferencesDialog(string title)
 	{
 		GroupPrefab general_group = new GroupPrefab("General", m_Editor.Settings, string.Empty);
-		
+
 		DropdownListPrefab<LogLevel> log_level("Log Level", m_Editor.Settings, "SelectedLogLevel");
 		log_level.InsertItem("Trace", LogLevel.TRACE);
 		log_level.InsertItem("Debug", LogLevel.DEBUG);
@@ -36,10 +36,20 @@ class EditorPreferencesDialog: EditorDialogBase
 		colors_group.Insert(new ColorPickerPrefab("Highlight Color", m_Editor.Settings, "HighlightColor"));
 		colors_group.Insert(new ColorPickerPrefab("Selected Color", m_Editor.Settings, "SelectionColor"));
 		
-		AddContent(general_group);
+		DialogCategoryListItem general_category("General");
+		general_category.AddContent(general_group);
+		general_category.AddContent(brush_settings);
+		AddContent(general_category);
+		
+		DialogCategoryListItem advanced_category("Advanced");
+		advanced_category.AddContent(advanced_group);
+		advanced_category.AddContent(colors_group);
+		AddContent(advanced_category);
+		
+		/*AddContent(general_group);
 		AddContent(brush_settings);
 		AddContent(colors_group);
-		AddContent(advanced_group);
+		AddContent(advanced_group);*/
 		
 		AddButton(DialogResult.OK);
 		AddButton("Close", DialogResult.Cancel);
