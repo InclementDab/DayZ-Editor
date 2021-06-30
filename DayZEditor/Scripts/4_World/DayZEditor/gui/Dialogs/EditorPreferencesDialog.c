@@ -38,19 +38,20 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		
 		DialogCategoryListItem general_category("General");
 		general_category.AddContent(general_group);
-		general_category.AddContent(brush_settings);
 		AddContent(general_category);
+		
+		DialogCategoryListItem brush_category("Brushes");
+		brush_category.AddContent(brush_settings);
+		AddContent(brush_category);
+		
+		DialogCategoryListItem theme_category("Themes");
+		theme_category.AddContent(colors_group);
+		AddContent(theme_category);
 		
 		DialogCategoryListItem advanced_category("Advanced");
 		advanced_category.AddContent(advanced_group);
-		advanced_category.AddContent(colors_group);
 		AddContent(advanced_category);
-		
-		/*AddContent(general_group);
-		AddContent(brush_settings);
-		AddContent(colors_group);
-		AddContent(advanced_group);*/
-		
+				
 		AddButton(DialogResult.OK);
 		AddButton("Close", DialogResult.Cancel);
 		AddButton("Defaults", "SetDefaults");
