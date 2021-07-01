@@ -409,28 +409,34 @@ class EditorObject: EditorWorldObject
 	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) {
 		
 		EntityAI ent;
-		if (Class.CastTo(ent, GetWorldObject())) {
+		if (Class.CastTo(ent, GetWorldObject())) 
+		{
 			ent.PlaceOnSurfaceRotated(trans, pos, dx, dz, fAngle, align); 
 		}
 	}
 	
-	void ClippingInfo(out vector clip_info[2]) { 
+	void ClippingInfo(out vector clip_info[2]) 
+	{ 
 		GetWorldObject().ClippingInfo(clip_info); 
 	}
 	
-	void SetDirection(vector direction) { 
+	void SetDirection(vector direction) 
+	{ 
 		GetWorldObject().SetDirection(direction); 
 	}
 	
-	void AddChild(notnull IEntity child, int pivot, bool position_only = false) { 
+	void AddChild(notnull IEntity child, int pivot, bool position_only = false) 
+	{ 
 		GetWorldObject().AddChild(child, pivot, position_only); 
 	}
 	
-	vector GetTransformAxis(int axis) { 
+	vector GetTransformAxis(int axis) 
+	{ 
 		return GetWorldObject().GetTransformAxis(axis); 
 	}
 	
-	string GetModelName() { 
+	string GetModelName() 
+	{
 		return GetWorldObject().GetModelName(); 
 	}
 	
@@ -632,11 +638,13 @@ class EditorObject: EditorWorldObject
 			}
 		}
 		
-		if (m_BBoxBase)
+		if (m_BBoxBase) {
 			m_BBoxBase.ClearFlags(EntityFlags.VISIBLE, false);
+		}
 		
-		if (m_CenterLine)
+		if (m_CenterLine) {
 			m_CenterLine.ClearFlags(EntityFlags.VISIBLE, false);
+		}
 	}
 	
 	bool SetAnimation(string anim_name)
