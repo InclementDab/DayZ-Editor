@@ -175,13 +175,7 @@ class EditorObject: EditorWorldObject
 		
 		// this was commented out for a while and im not sure why
 		GetGame().ObjectDelete(m_WorldObject);
-				
-		// Store map objects
-		if (m_WorldObject) {
-			EditorLog.Debug("Removing world object %1", m_WorldObject.ToString());
-			CF.ObjectManager.HideMapObject(m_WorldObject);
-		}
-		
+						
 		delete m_EditorObjectWorldMarker; 
 		delete m_EditorPlacedListItem;
 		delete m_EditorObjectMapMarker;
