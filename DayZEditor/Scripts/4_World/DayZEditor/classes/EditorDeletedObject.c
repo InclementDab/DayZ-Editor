@@ -7,7 +7,7 @@ class EditorDeletedObject: EditorWorldObject
 	protected vector m_Orientation;
 	protected vector m_BottomCenter;
 		
-	private vector m_LineVerticies[8];
+	private vector m_LineVerticies[4];
 	
 	protected ref EditorDeletedListItem m_EditorDeletedListItem;
 	
@@ -26,10 +26,6 @@ class EditorDeletedObject: EditorWorldObject
 		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
 		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
 		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
-		m_LineVerticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
-		m_LineVerticies[5] = clip_info[1];
-		m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
-		m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
 		
 		m_BottomCenter = m_WorldObject.GetGlobalPos(AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3])));
 		
