@@ -69,6 +69,19 @@ class EditorSettings: EditorProfileSettings
 	
 	void SetDefaults()
 	{
+		ViewDistance 				= 8000;
+		ObjectViewDistance 			= 1500;
+		MarkerViewDistance 			= 1000;
+		
+		AutoSaveTimer 				= 240;
+
+		LockCameraDuringDialogs 	= true;
+		ShowBoundingBoxes 			= true;
+		PreloadObjects				= false;
+		DisableWorldCache			= false;
+		ShowScreenLogs				= true;
+		DebugMode 					= false;
+		
 		MarkerColor					= COLOR_WHITE_A;
 		HighlightColor				= COLOR_SALMON;
 		SelectionColor				= COLOR_BLUE;
