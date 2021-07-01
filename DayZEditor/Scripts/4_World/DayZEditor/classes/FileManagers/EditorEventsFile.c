@@ -33,7 +33,7 @@ class EditorEventsFile: EditorFileType
 		foreach (string type, ref array<ref EventDataPair> event_datas: optimized_positions) {
 			FPrintln(handle, string.Format("	<event name=\"%1\">", type));			
 			foreach (EventDataPair event_data: event_datas) {
-				FPrintln(handle, string.Format("		<pos x=\"%1\" y=\"%2\" z=\"%3\" a=\"%4\"/>", event_data.param1[0], event_data.param1[1], event_data.param1[2], event_data.param2[0]));
+				FPrintln(handle, string.Format("		<pos x=\"%1\" y=\"%2\" z=\"%3\" a=\"%4\"/>", event_data.param1[0], event_data.param1[1], event_data.param1[2], event_data.param2[1]));
 			}
 			
 			FPrintln(handle, string.Format("	</event>"));
