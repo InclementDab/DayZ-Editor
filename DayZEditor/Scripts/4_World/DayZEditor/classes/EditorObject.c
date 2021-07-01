@@ -172,10 +172,9 @@ class EditorObject: EditorWorldObject
 		EditorLog.Trace("~EditorObject");
 		Update();
 		DestroyBoundingBox();
-		
-		// this was commented out for a while and im not sure why
+	
 		GetGame().ObjectDelete(m_WorldObject);
-						
+
 		delete m_EditorObjectWorldMarker; 
 		delete m_EditorPlacedListItem;
 		delete m_EditorObjectMapMarker;
