@@ -395,11 +395,10 @@ class EditorObject: EditorWorldObject
 		}
 	}
 	
-	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) {
-		
+	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) 
+	{
 		EntityAI ent;
-		if (Class.CastTo(ent, GetWorldObject())) 
-		{
+		if (Class.CastTo(ent, GetWorldObject())) {
 			ent.PlaceOnSurfaceRotated(trans, pos, dx, dz, fAngle, align); 
 		}
 	}
@@ -517,15 +516,12 @@ class EditorObject: EditorWorldObject
 	
 	void DestroyBoundingBox()
 	{		
-		for (int i = 0; i < 12; i++)
-			if (m_BBoxLines[i])
-				GetGame().ObjectDelete(m_BBoxLines[i]);
+		for (int i = 0; i < 12; i++) {
+			GetGame().ObjectDelete(m_BBoxLines[i]);
+		}
 		
-		if (m_BBoxBase)
-			GetGame().ObjectDelete(m_BBoxBase);
-		
-		if (m_CenterLine)
-			GetGame().ObjectDelete(m_CenterLine);	
+		GetGame().ObjectDelete(m_BBoxBase);		
+		GetGame().ObjectDelete(m_CenterLine);	
 	}
 	
 	void Show(bool show) 
@@ -579,7 +575,6 @@ class EditorObject: EditorWorldObject
 		return result;
 	}
 		
-
 	Param3<int, vector, vector> GetTransformArray() 
 	{
 		return new Param3<int, vector, vector>(GetID(), GetPosition(), GetOrientation());
@@ -610,11 +605,13 @@ class EditorObject: EditorWorldObject
 			}
 		}
 		
-		if (m_BBoxBase)
+		if (m_BBoxBase) {
 			m_BBoxBase.SetFlags(EntityFlags.VISIBLE, false);
+		}
 		
-		if (m_CenterLine)
+		if (m_CenterLine) {
 			m_CenterLine.SetFlags(EntityFlags.VISIBLE, false);
+		}
 	}
 	
 	void HideBoundingBox()
