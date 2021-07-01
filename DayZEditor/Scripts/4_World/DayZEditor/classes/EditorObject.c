@@ -32,13 +32,7 @@ class EditorObject: EditorWorldObject
 	bool Control;
 	string CurrentAnimation;
 	bool Animate;
-	
-	// Object Flags
-	bool BoundingBoxEnabled;
-	bool WorldMarkerEnabled;
-	bool MapMarkerEnabled;
-	bool ListItemEnabled;
-	
+		
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 
@@ -84,7 +78,7 @@ class EditorObject: EditorWorldObject
 		return m_WorldObject;
 	}
 	
-	void EditorObject(EditorObjectData data)
+	void EditorObject(notnull EditorObjectData data)
 	{
 		EditorLog.Trace("EditorObject " + data);
 		m_Data = data;
@@ -146,20 +140,16 @@ class EditorObject: EditorWorldObject
 		}
 		
 		// Bounding Box
-		BoundingBoxEnabled = ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX);
-		if (BoundingBoxEnabled) thread EnableBoundingBox(BoundingBoxEnabled);
+		thread EnableBoundingBox(IsBoundingBoxEnabled());
 
 		// Map marker
-		MapMarkerEnabled = ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER);
-		if (MapMarkerEnabled) thread EnableMapMarker(MapMarkerEnabled);
+		thread EnableMapMarker(IsMapMarkerEnabled());
 
 		// World marker
-		WorldMarkerEnabled = ((m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER);
-		if (WorldMarkerEnabled) thread EnableObjectMarker(WorldMarkerEnabled);
+		thread EnableObjectMarker(IsWorldMarkerEnabled());
 
 		// Browser item
-		ListItemEnabled = ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM);
-		if (ListItemEnabled) thread EnableListItem(ListItemEnabled);
+		thread EnableListItem(IsListItemEnabled());
 
 		m_SnapPoints.Insert(new EditorSnapPoint(this, Vector(0, -GetYDistance(), 5)));
 
@@ -730,5 +720,25 @@ class EditorObject: EditorWorldObject
 			pb.DisableSimulation(!Control);
 			GetEditor().GetEditorHud().Show(!Control);
 		}
+	}
+	
+	bool IsBoundingBoxEnabled()
+	{
+		return ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX);
+	}
+	
+	bool IsMapMarkerEnabled()
+	{
+		return ((m_Data.Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER);
+	}
+	
+	bool IsWorldMarkerEnabled()
+	{
+		return ((m_Data.Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER);
+	}
+	
+	bool IsListItemEnabled()
+	{
+		return ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM);
 	}
 }
