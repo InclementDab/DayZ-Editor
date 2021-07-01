@@ -20,6 +20,7 @@ class EditorDeletedListItem: EditorListItem
 	
 	bool ListItemExecute(ButtonCommandArgs args)
 	{
+		EditorLog.Trace("EditorDeletedListItem::ListItemExecute");
 		switch (args.GetMouseButton()) {
 
 			case MouseState.LEFT: {
