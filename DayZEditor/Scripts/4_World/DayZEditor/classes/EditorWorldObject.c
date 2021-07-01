@@ -1,15 +1,14 @@
 class EditorWorldObject
 {
 	protected Object m_WorldObject;
-	Object GetWorldObject() {
+	Object GetWorldObject() 
+	{
 		return m_WorldObject;
 	}
 	
 	void ~EditorWorldObject()
 	{
-		if (m_WorldObject) {
-			GetGame().ObjectDelete(m_WorldObject);
-		}
+		GetGame().ObjectDelete(m_WorldObject);	
 	}
 	
 	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)
