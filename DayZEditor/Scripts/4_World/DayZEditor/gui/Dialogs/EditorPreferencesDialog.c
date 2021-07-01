@@ -1,6 +1,6 @@
 class EditorPreferencesDialog: EditorDialogCategoryBase
 {	
-	void EditorPreferencesDialog(string title)
+	void EditorPreferencesDialog(string title, string default_group = "General")
 	{
 		GroupPrefab general_group = new GroupPrefab("General", m_Editor.Settings, string.Empty);
 
@@ -51,7 +51,30 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		DialogCategoryListItem advanced_category("Advanced");
 		advanced_category.AddContent(advanced_group);
 		AddContent(advanced_category);
-				
+		
+		// Assign Active Category
+		switch (default_group) {
+			case "General": {
+				SetActiveCategory(general_category);
+				break;
+			}
+			
+			case "Brushes": {
+				SetActiveCategory(brush_category);
+				break;
+			}
+			
+			case "Themes": {
+				SetActiveCategory(theme_category);
+				break;
+			}
+			
+			case "Advanced": {
+				SetActiveCategory(advanced_category);
+				break;
+			}
+		}
+		
 		AddButton(DialogResult.OK);
 		AddButton("Close", DialogResult.Cancel);
 		AddButton("Defaults", "SetDefaults");

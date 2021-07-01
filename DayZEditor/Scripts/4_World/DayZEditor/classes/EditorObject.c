@@ -155,7 +155,6 @@ class EditorObject: EditorWorldObject
 
 		Update();
 	}
-	
 		
 	void ~EditorObject()
 	{
