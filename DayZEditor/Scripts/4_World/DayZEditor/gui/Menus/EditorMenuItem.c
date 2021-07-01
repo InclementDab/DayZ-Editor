@@ -47,6 +47,13 @@ class EditorMenuItemCategory: EditorMenuItem
 	{
 		EditorMenuItemCategoryIcon.Show(true);
 		
+		// Icon
+		if (editor_command) {
+			EditorMenuItemIcon.Show(editor_command.GetIcon() != string.Empty);
+			m_TemplateController.IconPath = editor_command.GetIcon();
+			m_TemplateController.NotifyPropertyChanged("IconPath");
+		}
+		
 		m_TemplateController.LabelText = label;
 		m_TemplateController.NotifyPropertyChanged("LabelText");
 		
