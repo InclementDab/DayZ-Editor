@@ -1116,11 +1116,11 @@ class Editor
 	{
 		EditorLog.Trace("Editor::CreateDefaultCharacter");
 		PlayerBase player;
-		if (GetWorkbenchGame().GetPlayer()) {
-			return PlayerBase.Cast(GetWorkbenchGame().GetPlayer());
+		if (GetGame().GetPlayer()) {
+			return PlayerBase.Cast(GetGame().GetPlayer());
 		} 
-		
-		if (Class.CastTo(player, GetWorkbenchGame().CreatePlayer(null, GetWorkbenchGame().CreateRandomPlayer(), position, 0, "NONE"))) {
+
+		if (Class.CastTo(player,  GetGame().CreatePlayer(null, GetGame().CreateRandomPlayer(), position, 0, "NONE"))) {
 			player.GetInventory().CreateInInventory("AviatorGlasses");
 	    	player.GetInventory().CreateInInventory("Shirt_RedCheck");
 	    	player.GetInventory().CreateInInventory("Jeans_Blue");
@@ -1196,6 +1196,12 @@ class Editor
 		}
 		
 		RestContext rest = GetRestApi().GetRestContext("https:\/\/dayz-editor-default-rtdb.firebaseio.com\/");
+		if (!rest) {
+			// Boom!
+			BanReason = "null";
+			return;
+		}
+		
 		BanReason = rest.GET_now(string.Format("bans/%1.json", GetGame().GetUserManager().GetSelectedUser().GetUid()));
 		
 		// Temporary hotfix until we can re-implement the old system
