@@ -113,6 +113,11 @@ class Editor
 		
 		// Init Statistics
 		Statistics			= EditorStatistics.GetInstance();
+								
+		// Camera Init
+		EditorLog.Info("Initializing Camera");
+		g_Game.ReportProgress("Initializing Camera");
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
 		
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
@@ -139,6 +144,9 @@ class Editor
 		m_EditorHud 		= new EditorHud();
 		EditorLog.Info("Initializing Hud");
 		m_EditorHudController = m_EditorHud.GetTemplateController();		
+		// Add camera marker to newly created hud
+		m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
+		m_EditorHud.GetTemplateController().InsertMapMarker(m_EditorHud.CameraMapMarker);
 		
 		m_Mission = GetGame().GetMission();
 		
@@ -491,25 +499,6 @@ class Editor
 		
 		m_Active = active;
 		
-		if (m_EditorCamera == null) {
-
-			EditorLog.Info("Initializing Camera");
-			
-			// Init Spawn Position
-			TIntArray center_pos = new TIntArray();		
-			string world_name;
-			GetGame().GetWorldName(world_name);
-			GetGame().ConfigGetIntArray(string.Format("CfgWorlds %1 centerPosition", world_name), center_pos);
-			
-			// Camera Init
-			m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
-			m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
-			m_EditorHud.GetTemplateController().InsertMapMarker(m_EditorHud.CameraMapMarker);
-			
-			// Registers character as EditorObject
-			//CreateObject(m_Player);
-		}
-		
 		m_EditorCamera.LookEnabled = m_Active;
 		m_EditorCamera.MoveEnabled = m_Active;
 		m_EditorCamera.SetActive(m_Active);
@@ -535,12 +524,12 @@ class Editor
 		}	
 		
 		if (!m_Active) {	
-			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
+			GetGame().SelectPlayer(null, m_Player);
 		}
 		
 		m_Player.DisableSimulation(m_Active);
 		m_Player.GetInputController().SetDisabled(m_Active);
-			
+		
 		EditorHud.SetCurrentTooltip(null);
 	}
 	
@@ -1120,7 +1109,9 @@ class Editor
 			return PlayerBase.Cast(GetGame().GetPlayer());
 		} 
 
-		if (Class.CastTo(player,  GetGame().CreatePlayer(null, GetGame().CreateRandomPlayer(), position, 0, "NONE"))) {
+		Object player_object = GetGame().CreateObject(GetGame().CreateRandomPlayer(), position);
+		// GetGame().CreatePlayer(null, GetGame().CreateRandomPlayer(), position, 0, "NONE")
+		if (Class.CastTo(player, player_object)) {
 			player.GetInventory().CreateInInventory("AviatorGlasses");
 	    	player.GetInventory().CreateInInventory("Shirt_RedCheck");
 	    	player.GetInventory().CreateInInventory("Jeans_Blue");

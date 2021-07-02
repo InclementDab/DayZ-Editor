@@ -66,7 +66,14 @@ class EditorClientModule: JMModuleBase
 			EditorLog.Info("Loading Offline Editor...");
 			g_Game.ReportProgress("Creating Mission");
 			vector center_pos = Editor.GetMapCenterPosition();
-			Editor.Create(Editor.CreateDefaultCharacter(Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500)));
+			PlayerBase player = Editor.CreateDefaultCharacter(Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
+			if (!player) {
+				Error("Player was not created, exiting");
+				return;
+			}
+			
+			GetGame().SelectPlayer(null, player);
+			Editor.Create(player);
 		} else {
 			EditorLog.Info("Loading Online Editor...");
 			Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
