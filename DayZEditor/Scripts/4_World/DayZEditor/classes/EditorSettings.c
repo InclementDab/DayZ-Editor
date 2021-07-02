@@ -11,6 +11,7 @@ class EditorSettings: EditorProfileSettings
 	bool PreloadObjects				= false;
 	bool DisableWorldCache			= false;
 	bool ShowScreenLogs				= true;
+	bool HighPrecisionCollision		= false;
 	bool DebugMode 					= false;
 	
 	int MarkerColor					= COLOR_WHITE_A;

@@ -29,6 +29,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		advanced_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", m_Editor.Settings, "ShowBoundingBoxes"));
 		advanced_group.Insert(new CheckBoxPrefab("Preload Objects", m_Editor.Settings, "PreloadObjects"));
 		advanced_group.Insert(new CheckBoxPrefab("Disable World Cache", m_Editor.Settings, "DisableWorldCache"));
+		advanced_group.Insert(new CheckBoxPrefab("High Precision Collision", m_Editor.Settings, "HighPrecisionCollision"));
 		advanced_group.Insert(new CheckBoxPrefab("Debug Mode", m_Editor.Settings, "DebugMode"));
 		
 		GroupPrefab colors_group = new GroupPrefab("Colors", m_Editor.Settings, string.Empty);
