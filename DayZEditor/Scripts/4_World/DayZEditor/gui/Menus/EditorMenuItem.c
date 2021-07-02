@@ -132,6 +132,7 @@ class EditorPreferencesListItem: EditorMenuItem
 	
 	void OnExecute(ButtonCommandArgs args)
 	{
+		delete EditorHud.CurrentMenu;
 		EditorPreferencesCommand preferences_command = EditorPreferencesCommand.Cast(GetEditor().CommandManager[EditorPreferencesCommand]);
 		preferences_command.OpenPreferences(m_TemplateController.LabelText);
 	}
