@@ -486,6 +486,7 @@ class EditorObject: EditorWorldObject
 		GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
 	}
 
+	private bool _boundingBoxesCreated;
 	void EnableBoundingBox(bool enable) 
 	{
 		EditorLog.Trace("EditorObject::EnableBoundingBox");
@@ -495,6 +496,8 @@ class EditorObject: EditorWorldObject
 		if (!enable || !GetEditor().Settings.ShowBoundingBoxes) {
 			return;
 		}
+		
+		_boundingBoxesCreated = enable;
 		
 		vector size = GetSize();
 		vector clip_info[2];
@@ -615,6 +618,11 @@ class EditorObject: EditorWorldObject
 		
 		// Global Settings Check
 		if (!GetEditor().Settings.ShowBoundingBoxes) return;
+		
+		// quick and dirty bugfix
+		if (!_boundingBoxesCreated) {
+			EnableBoundingBox(true);
+		}
 		
 		for (int i = 0; i < 12; i++) {
 			if (m_BBoxLines[i]) {

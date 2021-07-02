@@ -106,7 +106,7 @@ class EditorClientModule: JMModuleBase
 		
 		if (IsMissionOffline()) {
 			EditorLog.Info("Loading Offline Editor...");
-			g_Game.ReportProgress("Creating Mission");
+			g_Game.ReportProgress("Loading Mission");
 			vector center_pos = Editor.GetMapCenterPosition();
 			PlayerBase player = Editor.CreateDefaultCharacter(Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
 			if (!player) {

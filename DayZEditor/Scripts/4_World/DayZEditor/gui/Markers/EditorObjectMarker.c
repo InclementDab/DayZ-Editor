@@ -133,7 +133,7 @@ class EditorObjectMarker: EditorMarker
 			}
 		}
 		
-		if (m_Editor.Settings.MarkerTooltips) {
+		if (m_Editor.Settings.MarkerTooltips && !m_Editor.IsPlacing()) {
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DoTooltipCheck, 500);
 		}
 		return super.OnMouseEnter(w, x, y);

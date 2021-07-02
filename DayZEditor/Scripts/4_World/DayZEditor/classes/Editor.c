@@ -79,7 +79,7 @@ class Editor
 	bool 										CollisionMode;
 
 	string 										BanReason = "null";
-	static const string 						Version = "1.2." + GetBuildNumber() + "pre";
+	static const string 						Version = "1.2." + GetBuildNumber();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
