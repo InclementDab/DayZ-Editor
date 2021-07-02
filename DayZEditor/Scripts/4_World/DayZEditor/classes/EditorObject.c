@@ -156,7 +156,9 @@ class EditorObject: EditorWorldObject
 
 		m_SnapPoints.Insert(new EditorSnapPoint(this, Vector(0, -GetYDistance(), 5)));
 		
-		Health = m_WorldObject.GetHealth("", "Health");
+		if (m_WorldObject.HasDamageSystem()) {
+			Health = m_WorldObject.GetHealth("", "Health");
+		}
 
 		Update();
 	}
@@ -384,8 +386,10 @@ class EditorObject: EditorWorldObject
 			}
 			
 			case "Health": {
-				Health = Math.Clamp(Health, 0, 100);
-				m_WorldObject.SetHealth("", "Health", Health);
+				if (m_WorldObject.HasDamageSystem()) {
+					Health = Math.Clamp(Health, 0, 100);
+					m_WorldObject.SetHealth("", "Health", Health);
+				}
 				break;
 			}
 			
