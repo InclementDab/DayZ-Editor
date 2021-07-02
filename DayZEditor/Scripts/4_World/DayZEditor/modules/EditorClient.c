@@ -93,8 +93,8 @@ class EditorClientModule: JMModuleBase
 		GetEditor().SetActive(true);
 		
 		// Just resolves like 37 different issues surrounding DayZ and DayZ related titles
-		//GetEditor().SetActive(false);
-		//GetEditor().SetActive(true);
+		GetEditor().SetActive(false);
+		GetEditor().SetActive(true);
 	}
 	
 	// Inputs
