@@ -15,6 +15,8 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		general_group.Insert(new EditBoxNumberPrefab("Auto Save", m_Editor.Settings, "AutoSaveTimer")); //m_Editor.Settings.AutoSaveTimer.ToString()
 		general_group.Insert(new SliderPrefab("View Distance", m_Editor.Settings, "ViewDistance", 0, 20000));
 		general_group.Insert(new SliderPrefab("Object View Distance", m_Editor.Settings, "ObjectViewDistance", 0, 8000));
+		general_group.Insert(new CheckBoxPrefab("Show Screen Logs", m_Editor.Settings, "ShowScreenLogs"));
+		general_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", m_Editor.Settings, "ShowBoundingBoxes"));
 		
 		GroupPrefab marker_group = new GroupPrefab("Marker Settings", m_Editor.Settings, string.Empty);
 		marker_group.Insert(new CheckBoxPrefab("Show Tooltips", m_Editor.Settings, "MarkerTooltips"));
@@ -29,8 +31,6 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		GroupPrefab advanced_group = new GroupPrefab("Advanced Settings", m_Editor.Settings, string.Empty);
 		advanced_group.Insert(new EditBoxPrefab("Loot Spawns File", m_Editor.Settings, "EditorProtoFile"));
 		advanced_group.Insert(new CheckBoxPrefab("Modal Dialogs", m_Editor.Settings, "LockCameraDuringDialogs"));
-		advanced_group.Insert(new CheckBoxPrefab("Show Screen Logs", m_Editor.Settings, "ShowScreenLogs"));
-		advanced_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", m_Editor.Settings, "ShowBoundingBoxes"));
 		advanced_group.Insert(new CheckBoxPrefab("Preload Objects", m_Editor.Settings, "PreloadObjects"));
 		advanced_group.Insert(new CheckBoxPrefab("Disable World Cache", m_Editor.Settings, "DisableWorldCache"));
 		advanced_group.Insert(new CheckBoxPrefab("High Precision Collision", m_Editor.Settings, "HighPrecisionCollision"));
