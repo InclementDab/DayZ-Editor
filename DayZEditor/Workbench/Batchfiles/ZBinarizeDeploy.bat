@@ -7,11 +7,11 @@ set batchDirectory=%cd%
 cd ../../../
 cd DayZEditor/Scripts/Data
 
-if not exist build.txt >build.txt echo 0
-for /f %%x in (build.txt) do (
+if not exist build >build echo 0
+for /f %%x in (build) do (
 set /a var=%%x+1
 )
->build.txt echo %var%
+>build echo %var%
 
 cd %batchDirectory%
 

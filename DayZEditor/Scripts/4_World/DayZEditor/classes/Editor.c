@@ -1224,11 +1224,12 @@ class Editor
 	static int GetBuildNumber()
 	{
 		static const int BUILD_LENGTH = 1;
-		if (!FileExist("DayZEditor\\Scripts\\Data\\build.txt")) {
+		if (!FileExist("DayZEditor\\Scripts\\Data\\build")) {
+			Print("File doesnt exist");
 			return 0;
 		}
 		
-		FileHandle handle = OpenFile("DayZEditor\\Scripts\\Data\\build.txt", FileMode.READ);
+		FileHandle handle = OpenFile("DayZEditor\\Scripts\\Data\\build", FileMode.READ);
 		
 		int values[1];
 		string build_number;
