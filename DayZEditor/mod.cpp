@@ -1,10 +1,10 @@
 name = "DayZ Editor";
-picture = "DayZEditor/gui/images/dayz_editor_icon_black.edds";
-logo = "DayZEditor/gui/images/dayz_editor_icon_black.edds";
-logoSmall = "DayZEditor/gui/images/dayz_editor_icon_black.edds";
-logoOver = "DayZEditor/gui/images/dayz_editor_icon_black.edds";
+picture = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
+logo = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
+logoSmall = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
+logoOver = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
 tooltip = "DayZ Editor";
-overview = "";
+overview = "3D Editor Mod for DayZ";
 action = "";
-author = "";
-authorID = "";
+author = "InclementDab";
+authorID = "76561198247958888";
