@@ -133,7 +133,9 @@ class EditorObjectMarker: EditorMarker
 			}
 		}
 		
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DoTooltipCheck, 500);
+		if (m_Editor.Settings.MarkerTooltips) {
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DoTooltipCheck, 500);
+		}
 		return super.OnMouseEnter(w, x, y);
 	}
 	
@@ -146,7 +148,9 @@ class EditorObjectMarker: EditorMarker
 			}
 		}
 		
-		EditorHud.SetCurrentTooltip(null);
+		if (m_Editor.Settings.MarkerTooltips) {
+			EditorHud.SetCurrentTooltip(null);
+		}
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
