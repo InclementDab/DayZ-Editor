@@ -48,7 +48,7 @@ class CfgMods
 
 			class engineScriptModule
 			{
-				value = "";
+				value="";
 				files[] =
 				{
 					"DayZEditor/scripts/common",

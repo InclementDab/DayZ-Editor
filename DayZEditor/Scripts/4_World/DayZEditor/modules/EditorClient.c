@@ -68,13 +68,13 @@ class EditorClientModule: JMModuleBase
 			vector center_pos = Editor.GetMapCenterPosition();
 			PlayerBase player = Editor.CreateDefaultCharacter(Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
 			if (!player) {
+				g_Game.ReportProgress("Failed to create player, contact InclementDab");
 				Error("Player was not created, exiting");
 				return;
 			}
 			
 			GetGame().SelectPlayer(null, player);
-			
-			//Editor.Create(player);
+			Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
 		} else {
 			EditorLog.Info("Loading Online Editor...");
 			Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
@@ -93,8 +93,8 @@ class EditorClientModule: JMModuleBase
 		GetEditor().SetActive(true);
 		
 		// Just resolves like 37 different issues surrounding DayZ and DayZ related titles
-		GetEditor().SetActive(false);
-		GetEditor().SetActive(true);
+		//GetEditor().SetActive(false);
+		//GetEditor().SetActive(true);
 	}
 	
 	// Inputs
@@ -216,7 +216,7 @@ class EditorClientModule: JMModuleBase
 	private void OnEditorMoveObjectForward(UAInput input)
 	{
 		// nothing is selected and we are actively placing
-		if (GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing() && input.LocalPress()) {
+		if (GetEditor() && GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing() && input.LocalPress()) {
 			ObservableCollection<ref EditorPlaceableListItem> placeables = GetEditor().GetEditorHud().GetTemplateController().LeftbarSpacerData;
 			for (int i = 0; i < placeables.Count(); i++) {
 				if (placeables[i].IsSelected()) {
@@ -246,7 +246,7 @@ class EditorClientModule: JMModuleBase
 	private void OnEditorMoveObjectBackward(UAInput input)
 	{
 		// nothing is selected and we are actively placing
-		if (GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing() && input.LocalPress()) {
+		if (GetEditor() && GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing() && input.LocalPress()) {
 			ObservableCollection<ref EditorPlaceableListItem> placeables = GetEditor().GetEditorHud().GetTemplateController().LeftbarSpacerData;
 			for (int i = 0; i < placeables.Count(); i++) {
 				if (placeables[i].IsSelected()) {
