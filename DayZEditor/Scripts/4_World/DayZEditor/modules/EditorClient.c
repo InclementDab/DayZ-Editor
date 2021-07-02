@@ -6,6 +6,21 @@ enum EditorClientModuleRPC
 
 class EditorClientModule: JMModuleBase
 {
+	protected int m_KonamiCodeProgress;
+	
+	static const ref array<int> KONAMI_CODE = {
+		KeyCode.KC_UP,
+		KeyCode.KC_UP,
+		KeyCode.KC_DOWN,
+		KeyCode.KC_DOWN,
+		KeyCode.KC_LEFT,
+		KeyCode.KC_RIGHT,
+		KeyCode.KC_LEFT,
+		KeyCode.KC_RIGHT,
+		KeyCode.KC_B,
+		KeyCode.KC_A
+	};
+	
 	void EditorClientModule() 
 	{
 		EditorLog.Info("EditorClientModule");
@@ -44,6 +59,16 @@ class EditorClientModule: JMModuleBase
 		if (GetEditor()) {
 			GetEditor().Update(timeslice);
 		}
+		
+		if (m_KonamiCodeProgress != -1 && KeyState(KONAMI_CODE[m_KonamiCodeProgress])) {
+			m_KonamiCodeProgress++;
+		}
+		
+		if (m_KonamiCodeProgress >= KONAMI_CODE.Count()) {
+			GetEditor().GetEditorHud().CreateNotification("Konami Code Complete!", COLOR_GREEN);
+			m_KonamiCodeProgress = -1;
+		}
+		
 		/*
 		if (GetEditor() && GetEditor().GetCamera() && !IsMissionOffline()) {
 			ScriptRPC update_rpc = new ScriptRPC();
