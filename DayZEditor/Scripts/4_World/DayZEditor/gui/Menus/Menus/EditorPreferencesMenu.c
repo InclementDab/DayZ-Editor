@@ -4,10 +4,10 @@ class EditorPreferencesMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorPreferencesMenu");
 		
-		AddMenuButton(m_Editor.CommandManager[EditorPreferencesGeneralCommand]);
-		AddMenuButton(m_Editor.CommandManager[EditorPreferencesMarkersCommand]);
-		AddMenuButton(m_Editor.CommandManager[EditorPreferencesBrushesCommand]);
-		AddMenuButton(m_Editor.CommandManager[EditorPreferencesThemesCommand]);
-		AddMenuButton(m_Editor.CommandManager[EditorPreferencesAdvancedCommand]);
+		AddMenuItem(new EditorPreferencesListItem("General"));
+		AddMenuItem(new EditorPreferencesListItem("Markers"));
+		AddMenuItem(new EditorPreferencesListItem("Brushes"));
+		AddMenuItem(new EditorPreferencesListItem("Themes"));
+		AddMenuItem(new EditorPreferencesListItem("Advanced"));
 	}
 }

@@ -116,3 +116,24 @@ class EditorOpenRecentListItem: EditorMenuItem
 		open_command.OpenFile(m_TemplateController.LabelText);
 	}
 }
+
+class EditorPreferencesListItem: EditorMenuItem
+{	
+	void EditorPreferencesListItem(string setting)
+	{		
+		m_TemplateController.LabelText = setting;
+		m_TemplateController.NotifyPropertyChanged("LabelText");
+		
+		ViewBinding view_binding = m_TemplateController.GetViewBinding(EditorMenuItemButton);
+		if (view_binding) {
+			view_binding.Relay_Command = "OnExecute";
+		}
+	}
+	
+	void OnExecute(ButtonCommandArgs args)
+	{
+		EditorPreferencesCommand preferences_command = EditorPreferencesCommand.Cast(GetEditor().CommandManager[EditorPreferencesCommand]);
+		preferences_command.OpenPreferences(m_TemplateController.LabelText);
+	}
+}
+

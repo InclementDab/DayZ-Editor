@@ -71,11 +71,6 @@ class EditorCommandManager
 		
 		// All preferences
 		RegisterCommand(EditorPreferencesCommand);
-		RegisterCommand(EditorPreferencesGeneralCommand);
-		RegisterCommand(EditorPreferencesMarkersCommand);
-		RegisterCommand(EditorPreferencesBrushesCommand);
-		RegisterCommand(EditorPreferencesThemesCommand);
-		RegisterCommand(EditorPreferencesAdvancedCommand);
 		
 		RegisterCommand(EditorReloadHudCommand);
 		RegisterCommand(EditorReloadBrushesCommand);
