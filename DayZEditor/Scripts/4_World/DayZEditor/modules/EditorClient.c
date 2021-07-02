@@ -131,7 +131,7 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnEditorToggleCursor");
 		
 		// Dont want to toggle cursor on map
-		if (!GetEditor().IsActive() || GetEditor().GetEditorHud().EditorMapWidget.IsVisible() || EditorHud.CurrentDialog) {
+		if (!GetEditor().IsActive() || GetEditor().GetEditorHud().EditorMapWidget.IsVisible() || (EditorHud.CurrentDialog && GetEditor().Settings.LockCameraDuringDialogs)) {
 			return;
 		}
 		
