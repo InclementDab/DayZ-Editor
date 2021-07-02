@@ -4,7 +4,7 @@ modded class JMModuleConstructor
 	{
 		super.RegisterModules(modules);
 		modules.Insert(EditorClientModule);
-		modules.Insert(EditorServerModule);
+		//modules.Insert(EditorServerModule);
 		modules.Insert(EditorObjectManagerModule);
 		modules.Insert(EditorCameraTrackManagerModule);
 	}
