@@ -1178,7 +1178,7 @@ class Editor
 	{
 		array<ref BiosUser> users = {};
 		// Weird bug
-		if (!GetGame() || !GetGame().GetUserManager()) return;
+		if (!GetGame() || !GetGame().GetUserManager() || !GetGame().GetUserManager().GetSelectedUser()) return;
 		
 		GetGame().GetUserManager().GetUserList(users);
 		foreach (BiosUser user: users) {
