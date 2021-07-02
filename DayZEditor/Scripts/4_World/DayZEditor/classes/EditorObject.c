@@ -23,6 +23,7 @@ class EditorObject: EditorWorldObject
 	bool EditorOnly;
 	
 	// Object Properties
+	float Health = 100;
 	bool Show = true;
 	bool Locked;
 	bool Physics;
@@ -153,6 +154,8 @@ class EditorObject: EditorWorldObject
 		thread EnableListItem(IsListItemEnabled());
 
 		m_SnapPoints.Insert(new EditorSnapPoint(this, Vector(0, -GetYDistance(), 5)));
+		
+		Health = m_WorldObject.GetHealth("", "Health");
 
 		Update();
 	}
@@ -396,6 +399,12 @@ class EditorObject: EditorWorldObject
 			
 			case "AllowDamage": {
 				m_WorldObject.SetAllowDamage(AllowDamage);
+				break;
+			}
+			
+			case "Health": {
+				Health = Math.Clamp(Health, 0, 100);
+				m_WorldObject.SetHealth("", "Health", Health);
 				break;
 			}
 		}
