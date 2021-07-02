@@ -154,5 +154,11 @@ modded class DayZIntroScene
 				m_FunnyMemes.Insert(new_camera);
 			}
 		}
+		
+		if (KeyState(KeyCode.KC_BACK)) {
+			foreach (Object obj: m_FunnyMemes) {
+				GetGame().ObjectDelete(obj);
+			}
+		}
 	}
 }
