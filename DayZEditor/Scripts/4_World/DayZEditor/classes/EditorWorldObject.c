@@ -11,19 +11,13 @@ class EditorWorldObject
 		GetGame().ObjectDelete(m_WorldObject);	
 	}
 	
-	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1, bool physics = true)
+	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)
 	{
-		// Set to ECE_SETUP for AI compat. DONT ADD ECE_LOCAL
 		type = type.Trim();
 		if (type == string.Empty) return null;
 		
-		int flags = ECE_INITAI;
-		if (physics) {
-			flags |= ECE_CREATEPHYSICS;
-		}
-		
 		Object obj;		
-		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, flags))) {
+		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_CREATEPHYSICS | ECE_INITAI))) {
 			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}

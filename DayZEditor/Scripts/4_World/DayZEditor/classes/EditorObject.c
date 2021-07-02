@@ -300,7 +300,7 @@ class EditorObject: EditorWorldObject
 
 		switch (property_name) {
 			
-			/*case "Name": {
+			case "Name": {
 				SetDisplayName(Name);
 				break;
 			}
@@ -388,7 +388,7 @@ class EditorObject: EditorWorldObject
 				m_WorldObject.SetHealth("", "Health", Health);
 				break;
 			}
-			*/
+			
 			case "Collision": {
 				if (Collision) {
 					m_WorldObject.SetFlags(EntityFlags.SOLID, true);
