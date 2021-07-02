@@ -475,7 +475,9 @@ class EditorObject: EditorWorldObject
 	{
 		EditorLog.Trace("EditorObject::EnableBoundingBox");
 		DestroyBoundingBox();
-		if (!enable) {
+		
+		// Global Settings Check		
+		if (!enable || !GetEditor().Settings.ShowBoundingBoxes) {
 			return;
 		}
 		
