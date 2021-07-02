@@ -60,7 +60,15 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		advanced_category.AddContent(advanced_group);
 		AddContent(advanced_category);
 		
-		// Assign Active Category
+		// Assign Default Category
+		for (int i = 0; i < m_DialogCategoryBaseController.DialogCategoryData.Count(); i++) {
+			DialogCategoryListItem list_item = m_DialogCategoryBaseController.DialogCategoryData[i];
+			if (list_item.GetTemplateController().Caption == default_group) {
+				SetActiveCategory(list_item);
+			}
+		}
+		
+		/*
 		switch (default_group) {
 			case "General": {
 				SetActiveCategory(general_category);
@@ -87,7 +95,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 				break;
 			}
 		}
-		
+		*/
 		AddButton(DialogResult.OK);
 		AddButton("Close", DialogResult.Cancel);
 		AddButton("Defaults", "SetDefaults");
