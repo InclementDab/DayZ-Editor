@@ -29,6 +29,7 @@ class EditorObject: EditorWorldObject
 	bool Physics;
 	bool Simulate = true;
 	bool AllowDamage = false;
+	bool Collision = true;
 	
 	// Human Properties
 	bool Control;
@@ -299,7 +300,7 @@ class EditorObject: EditorWorldObject
 
 		switch (property_name) {
 			
-			case "Name": {
+			/*case "Name": {
 				SetDisplayName(Name);
 				break;
 			}
@@ -371,27 +372,7 @@ class EditorObject: EditorWorldObject
 				}
 				break;
 			}
-			
-			case "BoundingBoxEnabled": {
-				//EnableBoundingBox(BoundingBoxEnabled);
-				break;
-			}
-			
-			case "WorldMarkerEnabled": {
-				//EnableObjectMarker(WorldMarkerEnabled);
-				break;
-			}
-			
-			case "MapMarkerEnabled": {
-				//EnableMapMarker(MapMarkerEnabled);
-				break;
-			}
-			
-			case "ListItemEnabled": {
-				//EnableListItem(ListItemEnabled);
-				break;
-			}
-			
+						
 			case "EditorOnly": {
 				//m_Data.EditorOnly = EditorOnly;
 				break;
@@ -405,6 +386,17 @@ class EditorObject: EditorWorldObject
 			case "Health": {
 				Health = Math.Clamp(Health, 0, 100);
 				m_WorldObject.SetHealth("", "Health", Health);
+				break;
+			}
+			*/
+			case "Collision": {
+				if (Collision) {
+					m_WorldObject.SetFlags(EntityFlags.SOLID, true);
+				} else {
+					m_WorldObject.ClearFlags(EntityFlags.SOLID, true);
+				}
+				
+				m_WorldObject.Update();
 				break;
 			}
 		}
@@ -557,9 +549,9 @@ class EditorObject: EditorWorldObject
 		}
 		
 		if (Show) {
-			GetWorldObject().SetFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
+			GetWorldObject().SetFlags(EntityFlags.VISIBLE | EntityFlags.TOUCHTRIGGERS, true);
 		} else {
-			GetWorldObject().ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
+			GetWorldObject().ClearFlags(EntityFlags.VISIBLE | EntityFlags.TOUCHTRIGGERS, true);
 		}
 	}
 	
