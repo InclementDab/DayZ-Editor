@@ -90,9 +90,9 @@ class EditorEnvironmentDialog: EditorDialogBase
 		group_prefab.Insert(new SliderPrefab("Overcast", m_Controller, "overcast", 0, 1));
 		group_prefab.Insert(new SliderPrefab("Wind", m_Controller, "wind", 0, 1));
 		
-		map<string, int> lighting_config_data = GetGame().GetMission().GetWorldLighting().GetAllLightingConfigs();
+		map<int, string> lighting_config_data = GetGame().GetMission().GetWorldLighting().GetAllLightingConfigs();
 		DropdownListPrefab<int> lighting_config = new DropdownListPrefab<int>("Lighting Config", m_Controller, "LightingConfig");
-		foreach (string name, int value: lighting_config_data) {
+		foreach (int value, string name: lighting_config_data) {
 			lighting_config[name] = value;
 		}
 		

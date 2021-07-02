@@ -13,11 +13,14 @@ modded class WorldLighting
 		return m_CurrentLighting;
 	}
 	
-	map<string, int> GetAllLightingConfigs()
+	map<int, string> GetAllLightingConfigs()
 	{
-		map<string, int> lighting_configs = new map<string, int>();
-		lighting_configs["Default"] = 0;
-		lighting_configs["Dark_Nights"] = 1;
+		map<int, string> lighting_configs = new map<int, string>();
+		lighting_configs[0] = "Default";
+		lighting_configs[1] = "Dark_Nights";
+		
+		// todo: no idea how the hell im gonna support other maps but ill figure it out
+				
 		return lighting_configs;
 	}
 }
