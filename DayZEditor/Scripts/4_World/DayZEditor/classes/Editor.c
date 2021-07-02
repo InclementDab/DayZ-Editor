@@ -212,8 +212,8 @@ class Editor
 			if (ObjectInHand) {
 				collision_ignore = ObjectInHand.GetWorldObject();
 			}
-			
-			CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance, 0, !CollisionMode, Settings.HighPrecisionCollision);
+																												// High precision is experimental, but we want it on for LootEditor since its only placing the cylinders!
+			CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance, 0, !CollisionMode, Settings.HighPrecisionCollision || m_LootEditMode);
 		}
 		
 		if (Settings.DebugMode) {
