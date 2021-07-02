@@ -8,11 +8,20 @@ enum TooltipPositions
 
 class EditorTooltip: ScriptViewTemplate<EditorCommandTooltipController>
 {	
+	TextWidget EditorCommandText;
+	TextWidget EditorCommandShortcut;
+	
 	void EditorTooltip(string text, float x, float y, string shortcut_text = "")
 	{
 		m_TemplateController.Name = text;				
 		m_TemplateController.Shortcut = shortcut_text;
 		m_TemplateController.NotifyPropertyChanged();
+		
+		int text_x, text_y, short_x, short_y;
+		EditorCommandText.GetTextSize(text_x, text_y);
+		EditorCommandShortcut.GetTextSize(short_x, short_y);
+
+		GetLayoutRoot().SetSize(text_x + short_x + 40, text_y);
 		
 		SetPos(x, y);
 	}
