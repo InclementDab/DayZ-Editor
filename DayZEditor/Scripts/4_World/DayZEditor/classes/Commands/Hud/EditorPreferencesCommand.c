@@ -30,6 +30,19 @@ class EditorPreferencesGeneralCommand: EditorPreferencesCommand
 	}
 }
 
+class EditorPreferencesMarkersCommand: EditorPreferencesCommand
+{
+	override string GetName()
+	{
+		return "Markers";
+	}
+	
+	override string GetIcon() 
+	{
+		return "";
+	}
+}
+
 class EditorPreferencesBrushesCommand: EditorPreferencesCommand
 {
 	override string GetName()
