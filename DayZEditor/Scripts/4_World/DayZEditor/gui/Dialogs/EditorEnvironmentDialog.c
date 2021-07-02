@@ -3,13 +3,19 @@ class EditorEnvironmentDialogController: DialogBaseController
 {
 	protected World m_World;
 	protected Weather m_Weather;
+	protected WorldLighting m_WorldLighting;
 	
 	float date, time, rain, fog, overcast, wind;
 		
+	int LightingConfig;
+	
 	void EditorEnvironmentDialogController()
 	{
 		m_World = GetGame().GetWorld();
 		m_Weather = GetGame().GetWeather();
+		m_WorldLighting = GetGame().GetMission().GetWorldLighting();
+		
+		LightingConfig = m_WorldLighting.GetCurrentLighting();
 		
 		int year, month, day, hour, minute;
 		GetGame().GetWorld().GetDate(year, month, day, hour, minute);
@@ -63,6 +69,11 @@ class EditorEnvironmentDialogController: DialogBaseController
 				m_Weather.SetWindMaximumSpeed(wind);
 				break;
 			}
+			
+			case "LightingConfig": {
+				m_WorldLighting.SetGlobalLighting(LightingConfig);
+				break;
+			}
 		}
 	}
 }
@@ -78,7 +89,15 @@ class EditorEnvironmentDialog: EditorDialogBase
 		group_prefab.Insert(new SliderPrefab("Fog", m_Controller, "fog", 0, 1));
 		group_prefab.Insert(new SliderPrefab("Overcast", m_Controller, "overcast", 0, 1));
 		group_prefab.Insert(new SliderPrefab("Wind", m_Controller, "wind", 0, 1));
-				
+		
+		map<string, int> lighting_config_data = GetGame().GetMission().GetWorldLighting().GetAllLightingConfigs();
+		DropdownListPrefab<int> lighting_config = new DropdownListPrefab<int>("Lighting Config", m_Controller, "LightingConfig");
+		foreach (string name, int value: lighting_config_data) {
+			lighting_config[name] = value;
+		}
+		
+		group_prefab.Insert(lighting_config);
+		
 		AddContent(group_prefab);
 		AddButton(DialogResult.OK);
 	}
