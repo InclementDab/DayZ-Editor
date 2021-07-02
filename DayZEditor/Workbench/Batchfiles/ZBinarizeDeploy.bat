@@ -5,11 +5,7 @@ cd /D "%~dp0"
 set batchDirectory=%cd%
 
 cd ../../../
-
 cd DayZEditor/Scripts/Data
-
-echo %cd%
-pause
 
 if not exist build.txt >build.txt echo 0
 for /f %%x in (build.txt) do (
