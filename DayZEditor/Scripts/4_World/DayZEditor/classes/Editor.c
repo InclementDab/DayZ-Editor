@@ -243,7 +243,7 @@ class Editor
 		EditorLog.CurrentLogLevel = LogLevel.WARNING;
 		
 		if (ObjectUnderCursor) {
-			m_EditorHudController.ObjectReadoutName = ObjectUnderCursor.GetType();
+			m_EditorHudController.ObjectReadoutName = string.Format("%1 (%2)", ObjectUnderCursor.GetType(), ObjectUnderCursor.GetID());
 		} else {
 			m_EditorHudController.ObjectReadoutName = string.Empty;
 		}
