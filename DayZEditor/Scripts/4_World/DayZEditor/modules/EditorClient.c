@@ -73,7 +73,8 @@ class EditorClientModule: JMModuleBase
 			}
 			
 			GetGame().SelectPlayer(null, player);
-			Editor.Create(player);
+			
+			//Editor.Create(player);
 		} else {
 			EditorLog.Info("Loading Online Editor...");
 			Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
@@ -100,12 +101,12 @@ class EditorClientModule: JMModuleBase
 	private bool ShouldProcessInput(UAInput input)
 	{
 		// Check if LocalPress, Check if LControl is pressed, Check if game is focused
-		return (input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
+		return (GetEditor() && input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
 	}
 	
 	private bool ShouldProcessQuickInput(UAInput input)
 	{
-		return (input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
+		return (GetEditor() && input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
 	}
 	
 	private bool m_IsActive;

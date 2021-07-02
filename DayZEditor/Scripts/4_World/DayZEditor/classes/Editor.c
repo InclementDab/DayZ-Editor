@@ -523,7 +523,7 @@ class Editor
 			}
 		}	
 		
-		if (!m_Active) {	
+		if (!m_Active) {
 			GetGame().SelectPlayer(null, m_Player);
 		}
 		

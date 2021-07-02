@@ -79,13 +79,13 @@ class EditorCamera: Camera
 		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{		
-		if ( SendUpdateAccumalator > 0.5 ){
-			GetGame().UpdateSpectatorPosition(GetPosition());
+		/*if (SendUpdateAccumalator > 0.5){
+			//GetGame().UpdateSpectatorPosition(GetPosition());
 
 			SendUpdateAccumalator = 0;
 		}
 			
-		SendUpdateAccumalator = SendUpdateAccumalator + timeSlice;
+		SendUpdateAccumalator = SendUpdateAccumalator + timeSlice;*/
 		
 		vector transform[4];
 		GetTransform(transform);
