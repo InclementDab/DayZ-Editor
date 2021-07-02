@@ -1,12 +1,17 @@
 {
     "Departments": [{
-        "DepartmentName": "Example",
+        "DepartmentName": "Developers",
         "Sections": [{
                 "SectionName": "Developers",
                 "SectionLines": [
                     "InclementDab",
                     "Mango",
-                    "ZeRoY"
+                    "ZeRoY",
+                    "Gormirn",
+                    "Steve AKA Salutesh",
+                    "MarioE",
+                    "Suvi",
+                    "Not a Banana"
                 ]
             },
             {

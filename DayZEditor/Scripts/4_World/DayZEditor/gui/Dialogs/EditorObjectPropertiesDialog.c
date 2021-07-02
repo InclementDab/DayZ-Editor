@@ -57,6 +57,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Enable Simulation", m_EditorObject, "Simulate"));
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Lock", m_EditorObject, "Locked"));
 		m_ObjectGroup.Insert(new CheckBoxPrefab("Enable Physics", m_EditorObject, "Physics"));
+		m_ObjectGroup.Insert(new CheckBoxPrefab("Allow Damage", m_EditorObject, "AllowDamage"));
 		m_ObjectGroup.Open(Object_Group);
 		
 		m_AdvancedGroup = new GroupPrefab("Debug", m_EditorObject, string.Empty);

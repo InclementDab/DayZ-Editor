@@ -27,8 +27,7 @@ class EditorWorldObject
 		if (EntityAI.Cast(obj)) {
 			EntityAI.Cast(obj).DisableSimulation(true);
 		}
-		 
-		obj.SetAllowDamage(false);
+		
 		obj.SetOrientation(orientation);
 		obj.SetScale(scale);
 		obj.Update();

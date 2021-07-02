@@ -921,7 +921,7 @@ FrameWidgetClass main_menu_root {
    nocache 0
   }
   MultilineTextWidgetClass ModdedWarning {
-   visible 1
+   visible 0
    inheritalpha 1
    position 100 350
    size 540 30
@@ -931,7 +931,7 @@ FrameWidgetClass main_menu_root {
    vexactsize 1
    fixaspect outside
    priority 5
-   text "WARNING! The DayZ Editor is currently in BETA. Please report all bugs you find to our Discord"
+   text "Welcome to the DayZ Editor - Please report all bugs you find to our Discord"
    font "gui/fonts/sdf_MetronLight24"
    "exact text" 1
    "exact text size" 20

@@ -27,6 +27,7 @@ class EditorObject: EditorWorldObject
 	bool Locked;
 	bool Physics;
 	bool Simulate = true;
+	bool AllowDamage = false;
 	
 	// Human Properties
 	bool Control;
@@ -390,6 +391,11 @@ class EditorObject: EditorWorldObject
 			
 			case "EditorOnly": {
 				//m_Data.EditorOnly = EditorOnly;
+				break;
+			}
+			
+			case "AllowDamage": {
+				m_WorldObject.SetAllowDamage(AllowDamage);
 				break;
 			}
 		}
