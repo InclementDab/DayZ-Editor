@@ -1,27 +1,38 @@
-WrapSpacerWidgetClass EditorCommandTooltip {
+GridSpacerWidgetClass EditorCommandTooltip {
  ignorepointer 1
  color 0.0588 0.0588 0.0588 1
  position 0 0
- size 225 32
+ size 0 0
  hexactpos 1
  vexactpos 1
- hexactsize 1
- vexactsize 1
+ hexactsize 0
+ vexactsize 0
  priority 500
  style Colorable
- Padding 0
+ Padding 5
  Margin 5
  "Size To Content H" 1
  "Size To Content V" 1
  content_halign center
  content_valign center
+ Columns 4
+ Rows 1
  {
+  FrameWidgetClass LeftSpacer {
+   ignorepointer 1
+   position 10 10
+   size 5 16
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+  }
   TextWidgetClass EditorCommandText {
    clipchildren 0
    inheritalpha 1
    ignorepointer 1
    position 0 0
-   size 0 0
+   size 0 16
    halign center_ref
    valign center_ref
    hexactpos 1
@@ -29,8 +40,9 @@ WrapSpacerWidgetClass EditorCommandTooltip {
    hexactsize 1
    vexactsize 1
    scriptclass "ViewBinding"
-   font "gui/fonts/Metron16"
-   "exact text" 1
+   text "Name"
+   font "gui/fonts/sdf_MetronLight42"
+   "exact text" 0
    "size to text h" 1
    "size to text v" 1
    "text halign" center
@@ -46,17 +58,19 @@ WrapSpacerWidgetClass EditorCommandTooltip {
    clipchildren 0
    inheritalpha 1
    ignorepointer 1
-   size 48 48
+   size 0 16
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
+   draggable 0
    scriptclass "ViewBinding"
-   font "gui/fonts/MetronBook16"
+   text "Shortcut"
+   font "gui/fonts/sdf_MetronLight42"
    "text offset" 5 0
-   "exact text" 1
+   "exact text" 0
    "size to text h" 1
    "size to text v" 1
    "text halign" center
@@ -66,6 +80,15 @@ WrapSpacerWidgetClass EditorCommandTooltip {
      Binding_Name "Shortcut"
     }
    }
+  }
+  FrameWidgetClass RightSpacer {
+   ignorepointer 1
+   position 10 10
+   size 5 16
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
   }
  }
 }
