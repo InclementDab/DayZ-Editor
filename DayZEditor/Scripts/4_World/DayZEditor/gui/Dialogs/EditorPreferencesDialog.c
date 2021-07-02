@@ -68,34 +68,6 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 			}
 		}
 		
-		/*
-		switch (default_group) {
-			case "General": {
-				SetActiveCategory(general_category);
-				break;
-			}
-			
-			case "Markers": {
-				SetActiveCategory(marker_category);
-				break;
-			}
-			
-			case "Brushes": {
-				SetActiveCategory(brush_category);
-				break;
-			}
-			
-			case "Themes": {
-				SetActiveCategory(theme_category);
-				break;
-			}
-			
-			case "Advanced": {
-				SetActiveCategory(advanced_category);
-				break;
-			}
-		}
-		*/
 		AddButton(DialogResult.OK);
 		AddButton("Close", DialogResult.Cancel);
 		AddButton("Defaults", "SetDefaults");
