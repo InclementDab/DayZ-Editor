@@ -65,7 +65,7 @@ class EditorClientModule: JMModuleBase
 		}
 		
 		if (m_KonamiCodeProgress >= KONAMI_CODE.Count()) {
-			GetEditor().GetEditorHud().CreateNotification("Konami Code Complete!", COLOR_GREEN);
+			GetEditor().GetEditorHud().CreateNotification("Konami Code Complete!", ARGB(255, 255, 0, 255));
 			m_KonamiCodeProgress = -1;
 		}
 		
