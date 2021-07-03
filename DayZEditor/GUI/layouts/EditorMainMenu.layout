@@ -152,11 +152,13 @@ FrameWidgetClass main_menu_root {
        {
         PanelWidgetClass discord_panel {
          ignorepointer 1
+         color 0 0 0 0
          size 1 1
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         style rover_sim_colorable
          {
           TextWidgetClass discord_label {
            clipchildren 1
