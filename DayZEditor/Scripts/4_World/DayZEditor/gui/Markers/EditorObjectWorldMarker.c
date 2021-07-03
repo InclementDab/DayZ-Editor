@@ -29,7 +29,16 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		if (screen_pos[0] == 0 || screen_pos[0] == m_ScreenX || screen_pos[1] == 0 || screen_pos[1] == m_ScreenY || screen_pos[2] < 0) {
 			m_LayoutRoot.Show(false);
 			return;
-		} 
+		}
+		
+		ItemBase item;
+		if (Class.CastTo(item, m_EditorObject.GetWorldObject())) {
+			// If the object has a parent
+			if (item.GetHierarchyParent()) {
+				m_LayoutRoot.Show(false);
+				return;
+			}
+		}
 		
 		SetPos(screen_pos[0], screen_pos[1]);
 		Show(m_Show);
