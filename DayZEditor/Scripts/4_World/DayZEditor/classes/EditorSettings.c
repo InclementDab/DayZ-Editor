@@ -3,6 +3,7 @@ class EditorSettings: EditorProfileSettings
 	// General Settings
 	float ViewDistance 				= 8000;
 	float ObjectViewDistance 		= 1500;
+	float CameraSpeed				= 60;
 	int AutoSaveTimer 				= 240;
 
 	// Advanced Settings
@@ -68,6 +69,11 @@ class EditorSettings: EditorProfileSettings
 					}
 				}
 				
+				break;
+			}
+			
+			case "CameraSpeed": {
+				GetEditor().GetCamera().Speed = CameraSpeed;
 				break;
 			}
 		}
