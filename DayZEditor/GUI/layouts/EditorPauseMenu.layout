@@ -62,7 +62,7 @@ FrameWidgetClass FrameWidget {
    visible 1
    ignorepointer 1
    color 0 0 0 0.7843
-   position 0.688 -0.688
+   position -0.68798 0.68801
    size 1.6 0.9
    valign center_ref
    hexactpos 1
@@ -108,7 +108,7 @@ FrameWidgetClass FrameWidget {
      vexactpos 1
      hexactsize 0
      vexactsize 1
-     style DayZDefaultPanel
+     style Colorable
      "no focus" 0
      "next left" "news_main"
      "next right" "news_main"
@@ -306,7 +306,7 @@ FrameWidgetClass FrameWidget {
      vexactpos 1
      hexactsize 0
      vexactsize 1
-     style DayZDefaultPanel
+     style Colorable
      "no focus" 1
      Padding 0
      Margin 0

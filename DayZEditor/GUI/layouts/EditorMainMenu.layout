@@ -39,7 +39,7 @@ FrameWidgetClass main_menu_root {
      vexactpos 1
      hexactsize 0
      vexactsize 1
-     style DayZDefaultPanel
+     style Colorable
      "no focus" 0
      "next left" "news_main"
      "next right" "news_main"
@@ -51,6 +51,7 @@ FrameWidgetClass main_menu_root {
      "Size To Content V" 1
      {
       ButtonWidgetClass play {
+       visible 1
        color 0 0 0 0
        position 0 0
        size 1 90
@@ -68,6 +69,7 @@ FrameWidgetClass main_menu_root {
        "next down" "play_video"
        {
         PanelWidgetClass play_panel {
+         visible 1
          ignorepointer 1
          color 0 0 0 0
          position 0 0
@@ -120,24 +122,25 @@ FrameWidgetClass main_menu_root {
      vexactpos 1
      hexactsize 0
      vexactsize 1
-     style DayZDefaultPanelSides
+     style Colorable
      "no focus" 1
      Padding 0
      Margin 0
      "Size To Content V" 1
      {
-      ButtonWidgetClass play_video {
-       visible 0
-       color 0.0392 0.0392 0.0392 1
+      ButtonWidgetClass JoinDiscordButton {
+       visible 1
+       color 0 0 0 1
        position 0 0
-       size 1 38
+       size 1 36
        halign center_ref
        valign bottom_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 1
-       style DayZDefaultButtonTop
+       scriptclass "ViewBinding"
+       style Default
        "no focus" 0
        "next left" "news_main"
        "next right" "news_main"
@@ -147,32 +150,39 @@ FrameWidgetClass main_menu_root {
        font "gui/fonts/sdf_MetronLight24"
        switch normal
        {
-        PanelWidgetClass play_video_panel {
+        TextWidgetClass JoinDiscordText {
+         clipchildren 1
          ignorepointer 1
-         color 0 0 0 0
-         position 0 0
-         size 1 1
-         hexactpos 0
-         vexactpos 0
+         size 1 22
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
          hexactsize 0
-         vexactsize 0
-         style rover_sim_colorable
+         vexactsize 1
+         text "Join the Discord!"
+         font "gui/fonts/sdf_MetronLight42"
+         "text halign" center
+         "text valign" center
          {
-          TextWidgetClass play_video_label {
+          ImageWidgetClass DiscordIcon {
            ignorepointer 1
-           size 1 0.55
-           halign center_ref
+           position 6 0
+           size 36 36
            valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           text "#menu_introductionVideo"
-           font "gui/fonts/sdf_MetronLight30"
-           "text halign" center
-           "text valign" center
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:prefabs image:Discord_Icon"
+           mode blend
+           "src alpha" 1
           }
          }
+        }
+       }
+       {
+        ScriptParamsClass {
         }
        }
       }
@@ -442,7 +452,7 @@ FrameWidgetClass main_menu_root {
      Columns 1
      Rows 2
      {
-      ImageWidgetClass character_stats_header {
+      PanelWidgetClass character_stats_header {
        ignorepointer 1
        color 0 0 0 0.8627
        position 0 0
@@ -451,15 +461,7 @@ FrameWidgetClass main_menu_root {
        vexactpos 1
        hexactsize 0
        vexactsize 1
-       image0 "set:dayz_gui image:inv_header_1"
-       mode blend
-       "src alpha" 1
-       "no wrap" 1
-       stretch 1
-       "flip u" 0
-       "flip v" 0
-       filter 1
-       nocache 0
+       style rover_sim_colorable
        {
         TextWidgetClass character_stats_text {
          ignorepointer 1
@@ -488,7 +490,7 @@ FrameWidgetClass main_menu_root {
        vexactpos 1
        hexactsize 0
        vexactsize 1
-       style DayZDefaultPanelSides
+       style Colorable
        Padding 4
        Margin 6
        "Size To Content V" 1
