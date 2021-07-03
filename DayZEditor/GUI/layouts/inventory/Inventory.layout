@@ -21,6 +21,7 @@ FrameWidgetClass InventoryFrame {
    {
     PlayerPreviewWidgetClass PlayerPreview {
      ignorepointer 1
+     position 0 0
      size 900 1
      halign center_ref
      valign center_ref
@@ -320,7 +321,7 @@ FrameWidgetClass InventoryFrame {
         ScrollWidgetClass ItemSpawnerScrollbar {
          ignorepointer 1
          color 0.2353 0.2353 0.2353 0.3922
-         size 546 785
+         size 546 175
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -342,6 +343,138 @@ FrameWidgetClass InventoryFrame {
             ScriptParamsClass {
             }
            }
+          }
+         }
+        }
+        PanelWidgetClass ItemSelectorTitlePanel {
+         ignorepointer 1
+         color 0.1176 0.1176 0.1176 0.9412
+         size 546 30
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          TextWidgetClass TextWidget0 {
+           ignorepointer 1
+           size 1 26
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           text "Cothing Selection"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        ScrollWidgetClass ItemSelectorScrollbar {
+         visible 0
+         ignorepointer 1
+         color 0.2353 0.2353 0.2353 0.3922
+         size 546 175
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         "Scrollbar V" 1
+         {
+          WrapSpacerWidgetClass ItemSelectorContent {
+           ignorepointer 1
+           size 1 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           Padding 0
+           Margin 0
+           "Size To Content V" 1
+           {
+            ScriptParamsClass {
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass PanelWidget0 {
+       ignorepointer 1
+       position 0 -134
+       size 1 48
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass TextWidget1 {
+         ignorepointer 1
+         size 0.157 48
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Pants"
+         "text halign" center
+         "text valign" center
+        }
+        TextWidgetClass TextWidget2 {
+         ignorepointer 1
+         size 280 21
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "TTSKO Pants or something"
+         font "gui/fonts/sdf_MetronLight42"
+        }
+        FrameWidgetClass FrameWidget0 {
+         ignorepointer 1
+         position 10 0
+         size 125 48
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          ImageWidgetClass ImageWidget0 {
+           ignorepointer 1
+           position 38 0
+           size 48 48
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_gui image:arrow_right"
+           mode additive
+           "src alpha" 1
+          }
+          ImageWidgetClass ImageWidget1 {
+           ignorepointer 1
+           position -38 0
+           size 48 48
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           image0 "set:dayz_gui image:arrow_left"
+           mode blend
+           "src alpha" 1
           }
          }
         }
