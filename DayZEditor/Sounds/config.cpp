@@ -44,7 +44,7 @@ class CfgSoundSets
 	{
 		soundShaders[] = {"Notification_Soundshader"};
 	};
-	class THX_SoundSet: Editor_SoundSet
+	class THX_SoundSet: Editor_Soundset
 	{
 		soundShaders[] = {"THX_Soundshader"};
 	};
