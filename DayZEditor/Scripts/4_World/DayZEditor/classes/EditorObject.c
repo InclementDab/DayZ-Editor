@@ -759,8 +759,38 @@ class EditorObject: EditorWorldObject
 		return ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM);
 	}
 	
+	EditorObject GetAttachmentParent()
+	{
+		if (!ItemBase.Cast(m_WorldObject) || !ItemBase.Cast(m_WorldObject).GetHierarchyParent()) { // adding this because of the notnull check in GetEditorObject
+			return null;
+		}
+		
+		return GetEditor().GetEditorObject(ItemBase.Cast(m_WorldObject).GetHierarchyParent());
+	}
+	
 	bool IsAttachedToObject()
 	{
-		return (ItemBase.Cast(m_WorldObject) && ItemBase.Cast(m_WorldObject).GetHierarchyParent() != null);
+		return (GetAttachmentParent() != null);
+	}
+	
+	bool HasObjectAttachments()
+	{
+		return (ItemBase.Cast(m_WorldObject) && ItemBase.Cast(m_WorldObject).GetInventory().AttachmentCount() > 0);
+	}
+	
+	EditorObjectMap GetObjectAttachments()
+	{
+		ItemBase item = ItemBase.Cast(m_WorldObject);
+		EditorObjectMap editor_objects();
+		for (int i = 0; i < item.GetInventory().AttachmentCount(); i++) {
+			EntityAI attachment = item.GetInventory().GetAttachmentFromIndex(i);
+			if (!attachment) {
+				continue;
+			}
+			
+			editor_objects.InsertEditorObject(GetEditor().GetEditorObject(attachment));
+		}
+		
+		return editor_objects;
 	}
 }
