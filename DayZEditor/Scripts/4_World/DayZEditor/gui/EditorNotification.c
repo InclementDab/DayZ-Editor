@@ -20,27 +20,31 @@ class EditorNotification: ScriptView
 	
 	void Play(float duration, string sound = "Notification_SoundSet")
 	{	
-		thread _Animate(duration);		
+		bool egg = GetEditor().KEgg;
+		thread _Animate(duration, egg);		
 	}
 	
-	private void _Animate(float duration)
+	private void _Animate(float duration, bool egg)
 	{		
-		LerpMotion(0, 0.06);
-		if (GetEditor().KEgg) {
-			SEffectManager.PlaySoundOnObject("THX_SoundSet", GetEditor().GetCamera());
-		} else {
-			SEffectManager.PlaySoundOnObject("Notification_SoundSet", GetEditor().GetCamera());
+		string soundset = "Notification_SoundSet";
+		if (egg) {
+			soundset = "THX_SoundSet";
 		}
+		
+		float time = GetNotifAnimTime();
+		
+		LerpMotion(0, 0.06, time);
+		SEffectManager.PlaySoundOnObject(soundset, GetEditor().GetCamera());
 		Sleep(duration * 1000);
-		LerpMotion(0.06, 0);
+		LerpMotion(0.06, 0, time);
 		NotificationPanel.Show(false);
 	}
 	
-	private void LerpMotion(float start, float finish)
+	private void LerpMotion(float start, float finish, float time)
 	{
 		int i = 0;
-		while (i < GetNotifAnimTime() * 1000) {
-			NotificationPanel.SetPos(0, Math.Lerp(start, finish, (1 / GetNotifAnimTime()) * i / 1000));
+		while (i < time * 1000) {
+			NotificationPanel.SetPos(0, Math.Lerp(start, finish, (1 / time) * i / 1000));
 			Sleep(10);
 			i += 10;
 		}

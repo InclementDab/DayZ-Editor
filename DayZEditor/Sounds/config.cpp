@@ -56,7 +56,7 @@ class CfgSoundSets
 	};
 	class THX_SoundSet: Editor_SoundSet
 	{
-		soundShaders[] = {"THX_SoundSet"};
+		soundShaders[] = {"THX_Soundshader"};
 	};
 };
 
