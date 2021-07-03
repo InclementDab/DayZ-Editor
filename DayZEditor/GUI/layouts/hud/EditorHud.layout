@@ -607,12 +607,12 @@ FrameWidgetClass EditorFrame {
          keepsafezone 0
          color 0.3529 0.3529 0.3529 1
          position 0 22
-         size 1 1
+         size 1 980
          halign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
          style blank
          "Scrollbar V" 1
          {
