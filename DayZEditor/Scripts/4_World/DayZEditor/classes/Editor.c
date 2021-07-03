@@ -90,6 +90,8 @@ class Editor
 	private ref EditorMapGroupProto 			m_EditorMapGroupProto;
 	static float 								LootYOffset;
 	
+	bool										KEgg; // oh?
+	
 	private void Editor(PlayerBase player) 
 	{
 		EditorLog.Trace("Editor");

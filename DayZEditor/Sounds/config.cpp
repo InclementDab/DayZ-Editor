@@ -33,6 +33,10 @@ class CfgSoundShaders
 	{
 		samples[] = {{"DayZEditor\sounds\notification", 1}};
 	};
+	class THX_Soundshader: Editor_Soundshader
+	{
+		samples[] = {{"DayZEditor\sounds\thx", 1}};
+	};
 };
 
 
@@ -49,6 +53,10 @@ class CfgSoundSets
 	class Notification_SoundSet: Editor_Soundset
 	{
 		soundShaders[] = {"Notification_Soundshader"};
+	};
+	class THX_SoundSet: Editor_SoundSet
+	{
+		soundShaders[] = {"THX_SoundSet"};
 	};
 };
 

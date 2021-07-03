@@ -26,7 +26,11 @@ class EditorNotification: ScriptView
 	private void _Animate(float duration)
 	{		
 		LerpMotion(0, 0.06);
-		SEffectManager.PlaySoundOnObject("Notification_SoundSet", GetEditor().GetCamera());
+		if (GetEditor().KEgg) {
+			SEffectManager.PlaySoundOnObject("THX_SoundSet", GetEditor().GetCamera());
+		} else {
+			SEffectManager.PlaySoundOnObject("Notification_SoundSet", GetEditor().GetCamera());
+		}
 		Sleep(duration * 1000);
 		LerpMotion(0.06, 0);
 		NotificationPanel.Show(false);
@@ -35,11 +39,20 @@ class EditorNotification: ScriptView
 	private void LerpMotion(float start, float finish)
 	{
 		int i = 0;
-		while (i < NOTIF_ANIM_TIME * 1000) {
-			NotificationPanel.SetPos(0, Math.Lerp(start, finish, (1 / NOTIF_ANIM_TIME) * i / 1000));
+		while (i < GetNotifAnimTime() * 1000) {
+			NotificationPanel.SetPos(0, Math.Lerp(start, finish, (1 / GetNotifAnimTime()) * i / 1000));
 			Sleep(10);
 			i += 10;
 		}
+	}
+	
+	private float GetNotifAnimTime()
+	{
+		if (GetEditor().KEgg) {
+			return 9.0;
+		}
+		
+		return NOTIF_ANIM_TIME;
 	}
 	
 	override string GetLayoutFile() {
