@@ -1,6 +1,7 @@
 class EditorCommand: RelayCommand
 {	
 	protected Editor m_Editor;	
+	protected ref Param m_Param;
 	string Text;
 
 	override bool Execute(Class sender, CommandArgs args) 
@@ -62,6 +63,16 @@ class EditorCommand: RelayCommand
 		}
 		
 		return string.Empty;
+	}
+	
+	void SetData(Param param)
+	{
+		m_Param = param;
+	}
+	
+	Param GetData()
+	{
+		return m_Param;
 	}
 	
 	ShortcutKeys GetShortcut();

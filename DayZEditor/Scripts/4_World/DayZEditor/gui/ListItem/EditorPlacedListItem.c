@@ -118,7 +118,7 @@ class EditorPlacedListItem: EditorListItem
 					
 				int x, y;
 				GetMousePos(x, y);
-				EditorHud.CurrentMenu = new EditorPlacedContextMenu(x, y);
+				EditorHud.CurrentMenu = new EditorPlacedContextMenu(x, y, m_EditorObject);
 				
 				return true;
 			}

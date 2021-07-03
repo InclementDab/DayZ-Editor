@@ -71,7 +71,6 @@ class EditorCommandManager
 		
 		// All preferences
 		RegisterCommand(EditorPreferencesCommand);
-		
 		RegisterCommand(EditorReloadHudCommand);
 		RegisterCommand(EditorReloadBrushesCommand);
 		RegisterCommand(EditorReloadCacheCommand);
@@ -85,6 +84,7 @@ class EditorCommandManager
 		BrushDensityCommand = RegisterCommand(EditorBrushDensityCommand);
 		BrushRadiusCommand = RegisterCommand(EditorBrushRadiusCommand);
 	
+		RegisterCommand(EditorControlPlayerCommand);
 		RegisterCommand(EditorObjectPropertiesCommand);
 		RegisterCommand(EditorShowCommand);
 		RegisterCommand(EditorHideCommand);
