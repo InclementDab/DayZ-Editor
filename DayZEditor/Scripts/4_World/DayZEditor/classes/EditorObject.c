@@ -758,4 +758,9 @@ class EditorObject: EditorWorldObject
 	{
 		return ((m_Data.Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM);
 	}
+	
+	bool IsAttachedToObject()
+	{
+		return (ItemBase.Cast(m_WorldObject) && ItemBase.Cast(m_WorldObject).GetHierarchyParent() != null);
+	}
 }

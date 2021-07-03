@@ -31,13 +31,9 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			return;
 		}
 		
-		ItemBase item;
-		if (Class.CastTo(item, m_EditorObject.GetWorldObject())) {
-			// If the object has a parent
-			if (item.GetHierarchyParent()) {
-				m_LayoutRoot.Show(false);
-				return;
-			}
+		if (m_EditorObject.IsAttachedToObject()) {
+			m_LayoutRoot.Show(false);
+			return;
 		}
 		
 		SetPos(screen_pos[0], screen_pos[1]);
