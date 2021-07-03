@@ -128,7 +128,7 @@ FrameWidgetClass main_menu_root {
      Margin 0
      "Size To Content V" 1
      {
-      ButtonWidgetClass JoinDiscordButton {
+      ButtonWidgetClass discord {
        visible 1
        color 0 0 0 1
        position 0 0
@@ -150,33 +150,43 @@ FrameWidgetClass main_menu_root {
        font "gui/fonts/sdf_MetronLight24"
        switch normal
        {
-        TextWidgetClass JoinDiscordText {
-         clipchildren 1
+        PanelWidgetClass discord_panel {
          ignorepointer 1
-         size 1 22
-         halign center_ref
-         valign center_ref
+         size 1 1
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 1
-         text "Join the Discord!"
-         font "gui/fonts/sdf_MetronLight42"
-         "text halign" center
-         "text valign" center
+         vexactsize 0
          {
-          ImageWidgetClass DiscordIcon {
+          TextWidgetClass discord_label {
+           clipchildren 1
            ignorepointer 1
-           position 6 0
-           size 36 36
+           size 1 22
+           halign center_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
-           hexactsize 1
+           hexactsize 0
            vexactsize 1
-           image0 "set:prefabs image:Discord_Icon"
-           mode blend
-           "src alpha" 1
+           text "Join the Discord!"
+           font "gui/fonts/sdf_MetronLight42"
+           "text halign" center
+           "text valign" center
+           {
+            ImageWidgetClass DiscordIcon {
+             ignorepointer 1
+             position 6 0
+             size 36 36
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             image0 "set:prefabs image:Discord_Icon"
+             mode blend
+             "src alpha" 1
+            }
+           }
           }
          }
         }
