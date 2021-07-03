@@ -1,6 +1,7 @@
 modded class MainMenu 
 {
 	protected ref EditorMainMenuStats m_EditorMainMenuStats;
+	protected Widget m_JoinDiscord;
 	
 	override Widget Init()
 	{
@@ -17,6 +18,7 @@ modded class MainMenu
 		m_Exit						= layoutRoot.FindAnyWidget("exit_button");
 		m_PrevCharacter				= layoutRoot.FindAnyWidget("prev_character");
 		m_NextCharacter				= layoutRoot.FindAnyWidget("next_character");
+		m_JoinDiscord				= layoutRoot.FindAnyWidget("discord");
 
 		m_Version					= TextWidget.Cast( layoutRoot.FindAnyWidget( "version" ) );
 		m_ModdedWarning				= TextWidget.Cast( layoutRoot.FindAnyWidget( "ModdedWarning" ) );
@@ -90,7 +92,44 @@ modded class MainMenu
 			ColorHighlight(w);
 			return true;
 		}
+		
 		return false;
+	}
+	
+	override bool IsFocusable( Widget w )
+	{
+		if ( w )
+		{
+			if ( w == m_Play || w == m_ChooseServer || w == m_CustomizeCharacter || w == m_TutorialButton || w == m_MessageButton || w == m_SettingsButton );
+			{
+				return true;
+			}
+			
+			if ( w == m_Exit || w == m_PlayVideo );
+			{
+				return true;
+			}
+			
+			if ( w == m_NewsMain || w == m_NewsSec1 || w == m_NewsSec2 || w == m_PrevCharacter || w == m_NextCharacter || w == m_JoinDiscord);
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	override bool OnClick( Widget w, int x, int y, int button )
+	{
+		if (button == MouseState.LEFT) {
+			if (w == m_JoinDiscord) {
+				m_LastFocusedButton = m_JoinDiscord;
+				GetGame().OpenURL("discord.com/invite/5g742yH");
+				return true;
+			}	
+		}
+		
+		return super.OnClick(w, x, y, button);
 	}
 	
 	override void OnChangeCharacter(bool create_character = true)

@@ -149,6 +149,7 @@ modded class DayZIntroScene
 		        
 		        new_camera.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
 				new_camera.SetDynamicPhysicsLifeTime(-1);
+				new_camera.EnableDynamicCCD(true);
 				dBodySetMass(new_camera, 100);
 				m_FunnyMemes.Insert(new_camera);
 			}
