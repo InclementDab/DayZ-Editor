@@ -61,6 +61,8 @@ class EditorObjectManagerModule: JMModuleBase
 		m_SelectedObjects.InsertEditorObject(target);
 		EditorEvents.ObjectSelected(this, target);
 		target.OnSelected();
+		
+		// todo perhaps propagate selections to the children of the object?
 	}
 	
 	// Call to deselect an object
