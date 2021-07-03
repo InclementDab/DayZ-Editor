@@ -112,7 +112,7 @@ class EditorHudController: EditorControllerBase
 		
 	void Update()
 	{
-		Debug.DestroyAllShapes();
+		//Debug.DestroyAllShapes();
 /*
 		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
 		for (int i = 0; i < camera_tracks.Count(); i++) {

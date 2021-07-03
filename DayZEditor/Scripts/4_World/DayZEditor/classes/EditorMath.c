@@ -31,7 +31,7 @@ class EditorMath
 		
 	static void LerpBezier(float duration, vector p0, vector p1, vector p2, vector p3)
 	{
-		Debug.DestroyAllShapes();
+		//Debug.DestroyAllShapes();
 		Debug.DrawSphere(p0);
 		Debug.DrawSphere(p1);
 		Debug.DrawSphere(p2);
@@ -57,7 +57,7 @@ class EditorMath
 
 	static void LerpBezier(float duration, vector p0, vector p1, vector p2)
 	{
-		Debug.DestroyAllShapes();
+		//Debug.DestroyAllShapes();
 		Debug.DrawSphere(p0);
 		Debug.DrawSphere(p1);
 		Debug.DrawSphere(p2);
@@ -124,7 +124,7 @@ class BezierDraw
 
 	void RunBezierTimer()
 	{
-		Debug.DestroyAllShapes();
+		//Debug.DestroyAllShapes();
 		float i;
 		vector point = m_LinkRef0.Ptr().GetPosition();
 		vector old_point;
