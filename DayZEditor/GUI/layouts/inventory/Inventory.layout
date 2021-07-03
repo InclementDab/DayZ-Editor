@@ -1,0 +1,271 @@
+FrameWidgetClass InventoryFrame {
+ size 1 1
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ {
+  PanelWidgetClass InventoryPanel {
+   ignorepointer 1
+   color 0.1176 0.1176 0.1176 0.3922
+   size 1750 950
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    PlayerPreviewWidgetClass PlayerPreview {
+     ignorepointer 1
+     size 900 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+    }
+    PanelWidgetClass HandsPanel {
+     ignorepointer 1
+     color 1 1 1 0.3922
+     position 0 50
+     size 400 250
+     halign center_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style PanelOutline_1px_BlackBackground
+     {
+      PanelWidgetClass HandsTitlePanel {
+       ignorepointer 1
+       color 0.1176 0.1176 0.1176 0.9608
+       position 0 1
+       size 398 22
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass HandsTitleText {
+         ignorepointer 1
+         size 1 18
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Hands"
+         font "gui/fonts/sdf_MetronLight42"
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      ItemPreviewWidgetClass HandsItemPreview {
+       ignorepointer 1
+       position 0 22
+       size 396 226
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+      }
+     }
+    }
+    PanelWidgetClass PlayerInventoryPanel {
+     ignorepointer 1
+     color 1 1 1 0.9961
+     position 60 0
+     size 550 850
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_2px
+    }
+    PanelWidgetClass ItemSpawnerPanel {
+     ignorepointer 1
+     color 1 1 1 0.9961
+     position 60 0
+     size 550 850
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_2px
+     {
+      PanelWidgetClass ItemSpawnerTitlePanel {
+       ignorepointer 1
+       color 0.0784 0.0784 0.0784 1
+       position 0 2
+       size 546 26
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass ItemSpawnerTitleText {
+         ignorepointer 1
+         size 1 18
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Item Spawner"
+         font "gui/fonts/sdf_MetronLight42"
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      WrapSpacerWidgetClass ItemSpawnerWrapper {
+       ignorepointer 1
+       color 0.0588 0.0588 0.0588 0.3922
+       position 0 28
+       size 546 0
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       Padding 0
+       Margin 0
+       "Size To Content V" 1
+       {
+        PanelWidgetClass ItemSpawnerSearchBarPanel {
+         visible 1
+         ignorepointer 1
+         color 0.0784 0.0784 0.0784 1
+         position 0 0
+         size 546 34
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style rover_sim_colorable
+         {
+          ButtonWidgetClass ItemSpawnerlSearchBarIconButton {
+           visible 1
+           disabled 0
+           inheritalpha 0
+           ignorepointer 0
+           position 1 0
+           size 32 32
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           style Default
+           "no focus" 1
+           {
+            ImageWidgetClass ItemSpawnerPanelSearchBarIcon {
+             ignorepointer 1
+             position 0 0
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             scriptclass "ViewBinding"
+             image0 ""
+             mode blend
+             "src alpha" 1
+             "no wrap" 1
+             stretch 0
+             "flip u" 0
+             filter 1
+             {
+              ScriptParamsClass {
+              }
+             }
+            }
+           }
+           {
+            ScriptParamsClass {
+            }
+           }
+          }
+          EditBoxWidgetClass ItemSpawnerSearchBar {
+           visible 1
+           color 0.6353 0.6353 0.6353 1
+           position 5 0
+           size 510 32
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           style Default
+           text "Search...."
+           "limit visible" 0
+           "Use default text" 1
+           "exact text" 1
+           font "gui/fonts/metronbook"
+           {
+            ScriptParamsClass {
+             Two_Way_Binding 1
+            }
+           }
+          }
+         }
+        }
+        ScrollWidgetClass ItemSpawnerScrollbar {
+         ignorepointer 1
+         color 0.2353 0.2353 0.2353 0.3922
+         size 546 785
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         "Scrollbar V" 1
+         {
+          WrapSpacerWidgetClass ItemSpawnerContent {
+           ignorepointer 1
+           size 1 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           Padding 0
+           Margin 0
+           "Size To Content V" 1
+           {
+            ScriptParamsClass {
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
