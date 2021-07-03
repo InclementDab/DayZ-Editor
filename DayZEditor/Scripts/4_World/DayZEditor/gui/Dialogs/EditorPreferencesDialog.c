@@ -88,17 +88,19 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		m_Editor.Settings.SetDefaults();
 		
 		for (int i = 0; i < m_DialogBaseController.DialogContentData.Count(); i++) {
-			ScriptView view = m_DialogBaseController.DialogContentData[i];
-			if (view.IsInherited(GroupPrefab)) {
-				GroupPrefab group = GroupPrefab.Cast(view);
-				array<ref ScriptView> children = group.GetChildren();
-				for (int j = 0; j < children.Count(); j++) {
-					ScriptView child = children[j];
-					if (child) {
-						g_Script.Call(child, "ResetToDefault", null);
-					}
-				}				
+			GroupPrefab group = GroupPrefab.Cast(m_DialogBaseController.DialogContentData[i]);
+			if (!group) {
+				continue;		
 			}
+			
+			array<ref ScriptView> children = group.GetChildren();
+			for (int j = 0; j < children.Count(); j++) {
+				if (!children[j]) {
+					continue;
+				}
+				
+				g_Script.Call(children[j], "ResetToDefault", null);
+			}		
 		}
 	}
 }
