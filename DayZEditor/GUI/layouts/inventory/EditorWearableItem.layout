@@ -23,7 +23,7 @@ PanelWidgetClass EditorInventoryEditorWearableListItemPanel {
    "text valign" center
    {
     ScriptParamsClass {
-     Binding_Name "WearbleItems"
+     Binding_Name "DisplayName"
     }
    }
   }
