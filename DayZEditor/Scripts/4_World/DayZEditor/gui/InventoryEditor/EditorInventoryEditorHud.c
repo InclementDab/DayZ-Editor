@@ -35,51 +35,6 @@ class EditorInventoryEditorCamera: Camera
 	}
 }
 
-class EditorInventoryEditorController: ViewController
-{
-	static const ref TStringArray RADIO_BUTTONS = {
-		"ShoulderLeft",
-		"ShoulderRight",
-		"VestSlot",
-		"ShirtSlot",
-		"BeltSlot",
-		"LegsSlot",
-		"BackSlot",
-		"HeadSlot",
-		"FaceSlot",
-		"EyeSlot",
-		"GloveSlot",
-		"FeetSlot",
-		"ArmbandSlot"
-	};
-	
-	bool ShoulderLeft;
-	bool ShoulderRight;
-	bool VestSlot;
-	bool ShirtSlot;
-	bool BeltSlot;
-	bool LegsSlot;
-	bool BackSlot;
-	bool HeadSlot;
-	bool FaceSlot;
-	bool EyeSlot;
-	bool GloveSlot;
-	bool FeetSlot;
-	bool ArmbandSlot;
-	
-	override void PropertyChanged(string property_name)
-	{
-		// Radio Button Logic
-		foreach (string button: RADIO_BUTTONS) {
-			if (button == property_name) {
-				continue;
-			}
-			
-			EnScript.SetClassVar(this, button, 0, false);
-			NotifyPropertyChanged(button, false);
-		}
-	}
-}
 
 class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorController>
 {
@@ -105,7 +60,7 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		m_Camera.SetActive(false);
 		GetGame().ObjectDelete(m_Camera);
 	}
-	
+		
 	override string GetLayoutFile()
 	{
 		return "DayZEditor/GUI/layouts/Inventory/Inventory.layout";
