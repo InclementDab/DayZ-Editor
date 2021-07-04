@@ -96,18 +96,6 @@ class EditorInventoryEditorController: ViewController
 			LoadedWearableItems[slot] = new array<ref EditorWearableItem>();
 		}
 		
-		LoadWearableItems();
-		
-		foreach (string name, array<ref EditorWearableItem> wearable_array: LoadedWearableItems) {
-			Print(name);
-			foreach (EditorWearableItem wearable_item: wearable_array) {
-				Print("\t" + wearable_item.Type);
-			}
-		}
-	}
-	
-	void LoadWearableItems()
-	{
 		EditorLog.Trace("EditorInventoryEditorHud::LoadPlaceableObjects");
 		g_Game.ReportProgress("Loading Wearable Objects");
 		
@@ -123,6 +111,10 @@ class EditorInventoryEditorController: ViewController
 				TStringArray inventory_slots = {};
 		        GetGame().ConfigGetChildName(path, i, type);
 				GetGame().ConfigGetTextArray(path + " " + type + " inventorySlot", inventory_slots);
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") == 0) {
+					continue;
+				}
+				
 				EditorWearableItem wearable_item = new EditorWearableItem(type, GetGame().ConfigGetTextOut(path + " " + type + " displayName"), inventory_slots);
 				foreach (string inventory_slot: inventory_slots) {
 					// Check if its a supported inventory slot
@@ -137,14 +129,19 @@ class EditorInventoryEditorController: ViewController
 		    }
 		}
 		
-		//return placeable_items;
+		/*foreach (string name, array<ref EditorWearableItem> wearable_array: LoadedWearableItems) {
+			Print(name);
+			foreach (EditorWearableItem wearable_item: wearable_array) {
+				Print("\t" + wearable_item.Type);
+			}
+		}*/
 	}
 	
 	string GetInventorySlot(string radio_button)
 	{
 		switch (radio_button) {
 			case "ShoulderLeft": return "Shoulder";
-			case "ShoulderRight": return "LeftHand";
+			case "ShoulderRight": return "Shoulder";
 			case "VestSlot": return "Vest";
 			case "ShirtSlot": return "Body";
 			case "BeltSlot": return "Hips";
