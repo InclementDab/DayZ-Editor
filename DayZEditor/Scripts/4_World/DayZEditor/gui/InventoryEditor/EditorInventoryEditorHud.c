@@ -14,7 +14,7 @@ class EditorInventoryEditorCamera: Camera
 	
 	void OnFrame()
 	{
-		LookAt(GetGame().GetPlayer().GetPosition());
+		LookAt(GetGame().GetPlayer().GetPosition() + "0 1 0");
 	}
 	
 	void LerpToPosition(vector target_position, float animation_time)
