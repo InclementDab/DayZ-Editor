@@ -83,27 +83,27 @@ class EditorInventoryEditorController: ViewController
 
 class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorController>
 {
-	protected EditorInventoryEditorCamera m_EditorInventoryEditorCamera;
-	protected PlayerBase m_Player;
+	protected EditorInventoryEditorCamera m_Camera;
 	
-	void EditorInventoryEditorHud(PlayerBase player)
+	void EditorInventoryEditorHud()
 	{
-		m_Player = player;
-		m_EditorInventoryEditorCamera = EditorInventoryEditorCamera.Cast(GetGame().CreateObject("EditorInventoryEditorCamera", GetGame().GetCurrentCameraPosition()));
+		m_Camera = EditorInventoryEditorCamera.Cast(GetGame().CreateObject("EditorInventoryEditorCamera", GetGame().GetPlayer().GetPosition()));
+		
+		vector pos = GetGame().GetPlayer().GetPosition();
+		vector dir = GetGame().GetPlayer().GetDirection();
+		
+		vector target_pos = pos + "0 1.2 0" + (dir * 3.0) + (dir.Perpend() * 1.0);
+		//m_Camera.LerpToPosition(target_pos, 1.0);
+		m_Camera.SetPosition(target_pos);
+		m_Camera.Update();
+		
+		m_Camera.SetActive(true);
 	}
 	
-	void SetActive(bool active)
+	void ~EditorInventoryEditorHud()
 	{
-		m_EditorInventoryEditorCamera.SetActive(active);
-		if (active) {
-			vector pos = m_Player.GetPosition();
-			vector dir = m_Player.GetDirection();
-			
-			vector target_pos = pos + (dir * 3.0) + (dir.Perpend() * 1.0);
-			//m_EditorInventoryEditorCamera.LerpToPosition(target_pos, 1.0);
-			m_EditorInventoryEditorCamera.SetPosition(target_pos);
-			m_EditorInventoryEditorCamera.Update();
-		}
+		m_Camera.SetActive(false);
+		GetGame().ObjectDelete(m_Camera);
 	}
 	
 	override string GetLayoutFile()

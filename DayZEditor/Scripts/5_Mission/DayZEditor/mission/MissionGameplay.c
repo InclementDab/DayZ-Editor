@@ -95,8 +95,7 @@ modded class MissionGameplay
 			return;
 		}
 		
-		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(PlayerBase.Cast(GetGame().GetPlayer()));
-		m_EditorInventoryEditorHud.SetActive(true);
+		m_EditorInventoryEditorHud = new EditorInventoryEditorHud();
 		
 		// Vanilla stuff
 		PlayerBase.Cast(GetGame().GetPlayer()).OnInventoryMenuOpen();
@@ -108,9 +107,11 @@ modded class MissionGameplay
 	
 	override void HideInventory()
 	{
-		m_EditorInventoryEditorHud.SetActive(false);
 		delete m_EditorInventoryEditorHud;
-		GetEditor().GetEditorHud().ShowCursor(false);
+		
+		GetEditor().SetActive(true);
+		//GetEditor().GetEditorHud().ShowCursor(false);
+		
 		
 		MoveHudForInventory(false);
 		PlayerControlEnable(false);
