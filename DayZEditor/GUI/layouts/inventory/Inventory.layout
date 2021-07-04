@@ -202,7 +202,7 @@ FrameWidgetClass InventoryFrame {
        Margin 4
        {
         ButtonWidgetClass ShoulderLeftButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
@@ -240,7 +240,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass ShoulderRightButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
@@ -278,7 +278,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass HeadButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
@@ -316,7 +316,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass FaceButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
@@ -355,7 +355,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass EyesButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
@@ -393,7 +393,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass ShirtButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
@@ -431,7 +431,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass VestButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
@@ -469,7 +469,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass BackButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
@@ -507,7 +507,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass GlovesButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
@@ -545,7 +545,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass ArmbandButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 39
          halign center_ref
@@ -583,7 +583,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass BeltButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
@@ -621,7 +621,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass LegsButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
@@ -659,7 +659,7 @@ FrameWidgetClass InventoryFrame {
          }
         }
         ButtonWidgetClass FeetButton {
-         color 0.1176 0.1176 0.1176 0.7843
+         color 0.7529 0.3686 0.3255 1
          position 0 2
          size 40 40
          halign center_ref
