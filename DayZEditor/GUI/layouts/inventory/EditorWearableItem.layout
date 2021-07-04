@@ -17,7 +17,8 @@ PanelWidgetClass EditorWearableItem {
    vexactpos 1
    hexactsize 0
    vexactsize 1
-   style ButtonColorOnSelect
+   scriptclass "ViewBinding"
+   style EmptyHighlight
    {
     TextWidgetClass EditorWearableItemTypeText {
      ignorepointer 1
@@ -54,6 +55,11 @@ PanelWidgetClass EditorWearableItem {
        Selected_Item "Item"
       }
      }
+    }
+   }
+   {
+    ScriptParamsClass {
+     Two_Way_Binding 1
     }
    }
   }
