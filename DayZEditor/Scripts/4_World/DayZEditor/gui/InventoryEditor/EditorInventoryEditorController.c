@@ -7,15 +7,15 @@ class EditorWearableListItemController: ViewController
 
 class EditorWearableListItem: ScriptViewTemplate<EditorWearableListItemController>
 {
-	void EditorWearableListItem(string type, string display_name, TStringArray inventory_slots)
+	void EditorWearableListItem(EditorWearableItem wearable_item)
 	{
-		m_TemplateController.Type = type;
+		m_TemplateController.Type = wearable_item.Type;
 		m_TemplateController.NotifyPropertyChanged("Type");
 		
-		m_TemplateController.DisplayName = display_name;
+		m_TemplateController.DisplayName = wearable_item.DisplayName;
 		m_TemplateController.NotifyPropertyChanged("DisplayName");
 		
-		m_TemplateController.Slots.Copy(inventory_slots);
+		m_TemplateController.Slots.Copy(wearable_item.Slots);
 	}
 	
 	string GetType()
@@ -39,6 +39,19 @@ class EditorWearableListItem: ScriptViewTemplate<EditorWearableListItemControlle
 	}
 }
 
+class EditorWearableItem
+{
+	string Type;
+	string DisplayName;
+	ref TStringArray Slots = {};
+	
+	void EditorWearableItem(string type, string display_name, TStringArray slots)
+	{
+		Type = type;
+		DisplayName = display_name;
+		Slots.Copy(slots);
+	}
+}
 
 class EditorInventoryEditorController: ViewController
 {
@@ -73,22 +86,22 @@ class EditorInventoryEditorController: ViewController
 	bool ArmbandSlot;
 	
 	ref ObservableCollection<EditorWearableListItem> WearableItems = new ObservableCollection<EditorWearableListItem>(this);
-	ref map<string, ref array<ref EditorWearableListItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableListItem>>();
+	ref map<string, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
 	
 	void EditorInventoryEditorController()
 	{
 		foreach (string button: RADIO_BUTTONS) {
 			// Initialize the arrays!
 			string slot = GetInventorySlot(button);
-			LoadedWearableItems[slot] = new array<ref EditorWearableListItem>();
+			LoadedWearableItems[slot] = new array<ref EditorWearableItem>();
 		}
 		
 		LoadWearableItems();
 		
-		foreach (string name, array<ref EditorWearableListItem> wearable_array: LoadedWearableItems) {
+		foreach (string name, array<ref EditorWearableItem> wearable_array: LoadedWearableItems) {
 			Print(name);
-			foreach (EditorWearableListItem wearable_item: wearable_array) {
-				Print("\t" + wearable_item.GetType());
+			foreach (EditorWearableItem wearable_item: wearable_array) {
+				Print("\t" + wearable_item.Type);
 			}
 		}
 	}
@@ -110,14 +123,14 @@ class EditorInventoryEditorController: ViewController
 				TStringArray inventory_slots = {};
 		        GetGame().ConfigGetChildName(path, i, type);
 				GetGame().ConfigGetTextArray(path + " " + type + " inventorySlot", inventory_slots);
-				EditorWearableListItem wearable_item = new EditorWearableListItem(type, GetGame().ConfigGetTextOut(path + " " + type + " displayName"), inventory_slots);
+				EditorWearableItem wearable_item = new EditorWearableItem(type, GetGame().ConfigGetTextOut(path + " " + type + " displayName"), inventory_slots);
 				foreach (string inventory_slot: inventory_slots) {
 					// Check if its a supported inventory slot
 					if (LoadedWearableItems[inventory_slot]) {
 						LoadedWearableItems[inventory_slot].Insert(wearable_item);
 					}
 				}
-				
+
 				/*if (!placeable_item || IsForbiddenItem(placeable_item.Type)) {
 					continue;
 				}*/
@@ -153,11 +166,13 @@ class EditorInventoryEditorController: ViewController
 		// Radio Button Logic
 		foreach (string button: RADIO_BUTTONS) {
 			if (button == property_name) {
+				// Should be enough?				
 				WearableItems.Clear();
 				
 				string inventory_slot = GetInventorySlot(button);
-				foreach (EditorWearableListItem wearable: LoadedWearableItems[inventory_slot]) {
-					WearableItems.Insert(wearable);
+				foreach (EditorWearableItem wearable: LoadedWearableItems[inventory_slot]) {
+					// This is the part where we need to call NEW, not before
+					WearableItems.Insert(new EditorWearableListItem(wearable));
 				}
 				
 				continue;
