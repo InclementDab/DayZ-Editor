@@ -37,11 +37,47 @@ class EditorInventoryEditorCamera: Camera
 
 class EditorInventoryEditorController: ViewController
 {
-	PlayerBase Player;
+	static const ref TStringArray RADIO_BUTTONS = {
+		"ShoulderLeft",
+		"ShoulderRight",
+		"VestSlot",
+		"ShirtSlot",
+		"BeltSlot",
+		"LegsSlot",
+		"BackSlot",
+		"HeadSlot",
+		"FaceSlot",
+		"EyeSlot",
+		"GloveSlot",
+		"FeetSlot",
+		"ArmbandSlot"
+	};
 	
-	void EditorInventoryEditorController()
+	bool ShoulderLeft;
+	bool ShoulderRight;
+	bool VestSlot;
+	bool ShirtSlot;
+	bool BeltSlot;
+	bool LegsSlot;
+	bool BackSlot;
+	bool HeadSlot;
+	bool FaceSlot;
+	bool EyeSlot;
+	bool GloveSlot;
+	bool FeetSlot;
+	bool ArmbandSlot;
+	
+	override void PropertyChanged(string property_name)
 	{
-		PlayerBase.Cast(GetGame().GetPlayer());
+		// Radio Button Logic
+		foreach (string button: RADIO_BUTTONS) {
+			if (button == property_name) {
+				continue;
+			}
+			
+			EnScript.SetClassVar(this, button, 0, false);
+			NotifyPropertyChanged(button, false);
+		}
 	}
 }
 
@@ -64,7 +100,9 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 			vector dir = m_Player.GetDirection();
 			
 			vector target_pos = pos + (dir * 3.0) + (dir.Perpend() * 1.0);
-			m_EditorInventoryEditorCamera.LerpToPosition(target_pos, 1.0);
+			//m_EditorInventoryEditorCamera.LerpToPosition(target_pos, 1.0);
+			m_EditorInventoryEditorCamera.SetPosition(target_pos);
+			m_EditorInventoryEditorCamera.Update();
 		}
 	}
 	
