@@ -19,23 +19,6 @@ FrameWidgetClass InventoryFrame {
    vexactsize 1
    style rover_sim_colorable
    {
-    PlayerPreviewWidgetClass PlayerPreview {
-     ignorepointer 1
-     position 0 0
-     size 900 1
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 0
-     scriptclass "ViewBinding"
-     {
-      ScriptParamsClass {
-       Binding_Name "ValuePlayer"
-      }
-     }
-    }
     PanelWidgetClass HandsPanel {
      ignorepointer 1
      color 1 1 1 0.3922
@@ -89,7 +72,8 @@ FrameWidgetClass InventoryFrame {
       }
      }
     }
-    PanelWidgetClass PlayerInventoryPanel {
+    PanelWidgetClass AttachmentsPanel {
+     visible 0
      ignorepointer 1
      color 1 1 1 0.9961
      position 60 0
@@ -102,36 +86,10 @@ FrameWidgetClass InventoryFrame {
      vexactsize 1
      style Outline_2px
      {
-      PanelWidgetClass PlayerInventoryTitlePanel {
-       ignorepointer 1
-       color 0.1176 0.1176 0.1176 1
-       position 0 2
-       size 546 26
-       halign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       style rover_sim_colorable
-       {
-        TextWidgetClass PlayerInventoryTitleText {
-         ignorepointer 1
-         size 1 18
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         text "Player Inventory"
-         "text halign" center
-        }
-       }
-      }
       PanelWidgetClass AttachmentsPanelTitle {
        ignorepointer 1
        color 0.1176 0.1176 0.1176 0.9804
-       position 0 28
+       position 0 2
        size 546 28
        halign center_ref
        hexactpos 1
@@ -157,7 +115,7 @@ FrameWidgetClass InventoryFrame {
       PanelWidgetClass AttachmentsSlotsPanel {
        ignorepointer 1
        color 0.1176 0.1176 0.1176 0.3922
-       position 0 57
+       position 0 30
        size 546 80
        halign center_ref
        hexactpos 1
@@ -165,22 +123,11 @@ FrameWidgetClass InventoryFrame {
        hexactsize 1
        vexactsize 1
        style rover_sim_colorable
-       {
-        WrapSpacerWidgetClass GridSpacerWidget0 {
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-        }
-       }
       }
      }
     }
-    PanelWidgetClass ItemSpawnerPanel {
+    PanelWidgetClass ItemSelectorPanel {
+     visible 1
      ignorepointer 1
      color 1 1 1 0.9961
      position 60 0
@@ -192,7 +139,7 @@ FrameWidgetClass InventoryFrame {
      vexactsize 1
      style Outline_2px
      {
-      PanelWidgetClass ItemSpawnerTitlePanel {
+      PanelWidgetClass ItemSelectorTitlePanel {
        ignorepointer 1
        color 0.0784 0.0784 0.0784 1
        position 0 2
@@ -204,7 +151,7 @@ FrameWidgetClass InventoryFrame {
        vexactsize 1
        style rover_sim_colorable
        {
-        TextWidgetClass ItemSpawnerTitleText {
+        TextWidgetClass ItemSelectorTitleText {
          ignorepointer 1
          size 1 18
          halign center_ref
@@ -213,270 +160,567 @@ FrameWidgetClass InventoryFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         text "Item Spawner"
+         text "Item Selector"
          font "gui/fonts/sdf_MetronLight42"
          "text halign" center
          "text valign" center
         }
        }
       }
-      WrapSpacerWidgetClass ItemSpawnerWrapper {
+      WrapSpacerWidgetClass ItemSelectorContent {
        ignorepointer 1
-       color 0.0588 0.0588 0.0588 0.3922
-       position 0 28
-       size 546 0
+       position 0 58
+       size 1 0
        halign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
+       hexactsize 0
        vexactsize 0
        Padding 0
        Margin 0
        "Size To Content V" 1
-       {
-        PanelWidgetClass ItemSpawnerSearchBarPanel {
-         visible 1
-         ignorepointer 1
-         color 0.0784 0.0784 0.0784 1
-         position 0 0
-         size 546 34
-         halign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         style rover_sim_colorable
-         {
-          ButtonWidgetClass ItemSpawnerlSearchBarIconButton {
-           visible 1
-           disabled 0
-           inheritalpha 0
-           ignorepointer 0
-           position 1 0
-           size 32 32
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           {
-            ImageWidgetClass ItemSpawnerPanelSearchBarIcon {
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             scriptclass "ViewBinding"
-             image0 ""
-             mode blend
-             "src alpha" 1
-             "no wrap" 1
-             stretch 0
-             "flip u" 0
-             filter 1
-             {
-              ScriptParamsClass {
-              }
-             }
-            }
-           }
-           {
-            ScriptParamsClass {
-            }
-           }
-          }
-          EditBoxWidgetClass ItemSpawnerSearchBar {
-           visible 1
-           color 0.6353 0.6353 0.6353 1
-           position 5 0
-           size 510 32
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scriptclass "ViewBinding"
-           style Default
-           text "Search...."
-           "limit visible" 0
-           "Use default text" 1
-           "exact text" 1
-           font "gui/fonts/metronbook"
-           {
-            ScriptParamsClass {
-             Two_Way_Binding 1
-            }
-           }
-          }
-         }
-        }
-        ScrollWidgetClass ItemSpawnerScrollbar {
-         ignorepointer 1
-         color 0.2353 0.2353 0.2353 0.3922
-         size 546 175
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         "Scrollbar V" 1
-         {
-          WrapSpacerWidgetClass ItemSpawnerContent {
-           ignorepointer 1
-           size 1 1
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scriptclass "ViewBinding"
-           Padding 0
-           Margin 0
-           "Size To Content V" 1
-           {
-            ScriptParamsClass {
-            }
-           }
-          }
-         }
-        }
-        PanelWidgetClass ItemSelectorTitlePanel {
-         ignorepointer 1
-         color 0.1176 0.1176 0.1176 0.9412
-         size 546 30
-         halign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         style rover_sim_colorable
-         {
-          TextWidgetClass TextWidget0 {
-           ignorepointer 1
-           size 1 26
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           text "Cothing Selection"
-           "text halign" center
-           "text valign" center
-          }
-         }
-        }
-        ScrollWidgetClass ItemSelectorScrollbar {
-         visible 0
-         ignorepointer 1
-         color 0.2353 0.2353 0.2353 0.3922
-         size 546 175
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         "Scrollbar V" 1
-         {
-          WrapSpacerWidgetClass ItemSelectorContent {
-           ignorepointer 1
-           size 1 1
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scriptclass "ViewBinding"
-           Padding 0
-           Margin 0
-           "Size To Content V" 1
-           {
-            ScriptParamsClass {
-            }
-           }
-          }
-         }
-        }
-       }
       }
-      PanelWidgetClass PanelWidget0 {
+      PanelWidgetClass ItemSelectedTypePanel {
        ignorepointer 1
-       position 0 -134
-       size 1 48
-       valign center_ref
+       color 0.1176 0.1176 0.1176 0.9608
+       position 0 28
+       size 546 30
+       halign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 0
+       hexactsize 1
        vexactsize 1
+       style rover_sim_colorable
        {
-        TextWidgetClass TextWidget1 {
+        TextWidgetClass ItemSelectedTitleText {
          ignorepointer 1
-         size 0.157 48
+         size 1 18
+         halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         text "Pants"
+         scriptclass "ViewBinding"
+         text "Filtered List Name"
+         font "gui/fonts/sdf_MetronLight42"
          "text halign" center
          "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "Label"
+          }
+         }
         }
-        TextWidgetClass TextWidget2 {
+       }
+      }
+     }
+    }
+    WrapSpacerWidgetClass ItemListGridSpacer {
+     ignorepointer 1
+     color 0.3922 0.3922 0.3922 0.7843
+     position 9.95203 110
+     size 48 588
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Colorable
+     Padding 5
+     Margin 4
+     {
+      ButtonWidgetClass HeadButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass HeadIcon {
          ignorepointer 1
-         size 280 21
+         position 0 0
+         size 40 40
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "TTSKO Pants or something"
-         font "gui/fonts/sdf_MetronLight42"
+         scaled 1
+         image0 "set:dayz_inventory image:headgear"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
         }
-        FrameWidgetClass FrameWidget0 {
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "HeadSlot"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass FaceButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass FaceIcon {
+         visible 1
          ignorepointer 1
-         position 10 0
-         size 125 48
-         halign right_ref
+         position 0 0
+         size 40 40
+         halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         {
-          ImageWidgetClass ImageWidget0 {
-           ignorepointer 1
-           position 38 0
-           size 48 48
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           image0 "set:dayz_gui image:arrow_right"
-           mode additive
-           "src alpha" 1
-          }
-          ImageWidgetClass ImageWidget1 {
-           ignorepointer 1
-           position -38 0
-           size 48 48
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           image0 "set:dayz_gui image:arrow_left"
-           mode blend
-           "src alpha" 1
-          }
-         }
+         scaled 1
+         image0 "set:dayz_inventory image:mask"
+         mode additive
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "FaceSlot"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass EyesButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass EyesIcon {
+         ignorepointer 1
+         position 0 0
+         size 40 40
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_inventory image:eyewear"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "EyeSlot"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass ShirtButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass ShirtIcon {
+         ignorepointer 1
+         position 0 0
+         size 40 40
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_inventory image:body"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "ShirtSlot"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass VestButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass VestIcon {
+         ignorepointer 1
+         position 0 0
+         size 40 40
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_inventory image:vest"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "VestSlot"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass BackButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass BackIcon {
+         ignorepointer 1
+         position 0 0
+         size 40 40
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_inventory image:back"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "BackSlot"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass ShoulderLeftButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass ShoulderLeftIcon {
+         ignorepointer 1
+         position 0 0
+         size 40 40
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_inventory image:shoulderleft"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "ShoulderLeft"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass ShoulderRightButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass ShoulderRightIcon {
+         ignorepointer 1
+         position 0 0
+         size 40 40
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_inventory image:shoulderright"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "ShoulderRight"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass GlovesButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass GlovesIcon {
+         ignorepointer 1
+         position 0 0
+         size 40 40
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_inventory image:gloves"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "GlovesSlot"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass ArmbandButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 39
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass ArmbandIcon {
+         ignorepointer 1
+         position 0 0
+         size 40 40
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_inventory image:armband"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "ArmbandSlot"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass BeltButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass BeltIcon {
+         ignorepointer 1
+         position 0 0
+         size 40 40
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_inventory image:hips"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "BeltSlot"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass LegsButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass LegsIcon {
+         ignorepointer 1
+         position 0 0
+         size 40 40
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_inventory image:legs"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "LegsSlot"
+         Two_Way_Binding 1
+        }
+       }
+      }
+      ButtonWidgetClass FeetButton {
+       color 0.1176 0.1176 0.1176 0.7843
+       position 0 2
+       size 40 40
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       {
+        ImageWidgetClass FeetIcon {
+         ignorepointer 1
+         position 0 0
+         size 40 40
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_inventory image:feet"
+         mode blend
+         "src alpha" 1
+         "no wrap" 1
+         stretch 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "FeetSlot"
+         Two_Way_Binding 1
         }
        }
       }
