@@ -25,6 +25,7 @@ modded class LoadingScreen
 		new LoadingScreenEntry("18.edds", "Boba Fetish"),		
 		new LoadingScreenEntry("19.edds", "InclementDab"),		
 		new LoadingScreenEntry("20.edds", "Bosch"),		
+		new LoadingScreenEntry("21.edds", "DanceOfJesus"),		
 	};
 	
 	protected TextWidget m_ImageCredit;

@@ -1,5 +1,15 @@
 class EditorPreferencesDialog: EditorDialogCategoryBase
 {	
+	// Used elsewhere to load categories
+	static const ref TStringArray CATEGORIES = {
+		"General",
+		"Camera",
+		"Markers",
+		"Brushes",
+		"Themes",
+		"Advanced",
+	};
+	
 	void EditorPreferencesDialog(string title, string default_group = "General")
 	{
 		GroupPrefab general_group = new GroupPrefab("General", m_Editor.Settings, string.Empty);
@@ -17,6 +27,9 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		general_group.Insert(new SliderPrefab("Object View Distance", m_Editor.Settings, "ObjectViewDistance", 0, 8000));
 		general_group.Insert(new CheckBoxPrefab("Show Screen Logs", m_Editor.Settings, "ShowScreenLogs"));
 		general_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", m_Editor.Settings, "ShowBoundingBoxes"));
+		
+		GroupPrefab camera_group = new GroupPrefab("Camera Settings", m_Editor.Settings, string.Empty);
+		camera_group.Insert(new SliderPrefab("Camera Speed", m_Editor.Settings, "CameraSpeed", 0, 500));
 		
 		GroupPrefab marker_group = new GroupPrefab("Marker Settings", m_Editor.Settings, string.Empty);
 		marker_group.Insert(new CheckBoxPrefab("Show Tooltips", m_Editor.Settings, "MarkerTooltips"));
@@ -43,6 +56,10 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		DialogCategoryListItem general_category("General");
 		general_category.AddContent(general_group);
 		AddContent(general_category);
+		
+		DialogCategoryListItem camera_category("Camera");
+		camera_category.AddContent(camera_group);
+		AddContent(camera_category);
 		
 		DialogCategoryListItem marker_category("Markers");
 		marker_category.AddContent(marker_group);

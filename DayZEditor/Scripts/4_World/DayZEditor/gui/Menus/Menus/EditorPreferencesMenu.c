@@ -4,10 +4,8 @@ class EditorPreferencesMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorPreferencesMenu");
 		
-		AddMenuItem(new EditorPreferencesListItem("General"));
-		AddMenuItem(new EditorPreferencesListItem("Markers"));
-		AddMenuItem(new EditorPreferencesListItem("Brushes"));
-		AddMenuItem(new EditorPreferencesListItem("Themes"));
-		AddMenuItem(new EditorPreferencesListItem("Advanced"));
+		foreach (string category: EditorPreferencesDialog.CATEGORIES) {
+			AddMenuItem(new EditorPreferencesListItem(category));
+		}
 	}
 }

@@ -13,7 +13,7 @@ class EditorCamera: Camera
 	
 	float Smoothing = 0;
 	
-	float Speed = 60;
+	float Speed = GetEditor().Settings.CameraSpeed;
 	float Boost_Multiplier = 6.5;
 	float Drag = 0.05;
 	float Mouse_Sens = 35.0;

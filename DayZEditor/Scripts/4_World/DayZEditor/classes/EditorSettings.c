@@ -5,6 +5,9 @@ class EditorSettings: EditorProfileSettings
 	float ObjectViewDistance 		= 1500;
 	int AutoSaveTimer 				= 240;
 
+	// Camera Settings
+	float CameraSpeed				= 60;
+	
 	// Advanced Settings
 	bool LockCameraDuringDialogs 	= true;
 	bool ShowBoundingBoxes 			= true;
@@ -70,11 +73,17 @@ class EditorSettings: EditorProfileSettings
 				
 				break;
 			}
+			
+			case "CameraSpeed": {
+				GetEditor().GetCamera().Speed = CameraSpeed;
+				break;
+			}
 		}
 	}
 	
 	void SetDefaults()
 	{
+		CameraSpeed					= 60;
 		ViewDistance 				= 8000;
 		ObjectViewDistance 			= 1500;
 		MarkerViewDistance 			= 1000;
