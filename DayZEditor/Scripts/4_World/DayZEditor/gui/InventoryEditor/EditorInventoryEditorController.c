@@ -1,15 +1,19 @@
 class EditorWearableListItemController: ViewController
 {
 	string Type;
+	string DisplayName;
 	ref TStringArray Slots = {};
 }
 
 class EditorWearableListItem: ScriptViewTemplate<EditorWearableListItemController>
 {
-	void EditorWearableListItem(string type, TStringArray inventory_slots)
+	void EditorWearableListItem(string type, string display_name, TStringArray inventory_slots)
 	{
 		m_TemplateController.Type = type;
 		m_TemplateController.NotifyPropertyChanged("Type");
+		
+		m_TemplateController.DisplayName = display_name;
+		m_TemplateController.NotifyPropertyChanged("DisplayName");
 		
 		m_TemplateController.Slots.Copy(inventory_slots);
 	}
@@ -31,7 +35,7 @@ class EditorWearableListItem: ScriptViewTemplate<EditorWearableListItemControlle
 	
 	override string GetLayoutFile()
 	{
-		return "DayZEditor/GUI/layouts/Inventory/EditorInventoryEditorWearable.layout";
+		return "DayZEditor/GUI/layouts/Inventory/EditorWearableItem.layout";
 	}
 }
 
@@ -53,9 +57,7 @@ class EditorInventoryEditorController: ViewController
 		"FeetSlot",
 		"ArmbandSlot"
 	};
-	
-	ref ObservableCollection<EditorWearableListItem> WearableItems = new ObservableCollection<EditorWearableListItem>(this);
-	
+		
 	bool ShoulderLeft;
 	bool ShoulderRight;
 	bool VestSlot;
@@ -70,17 +72,25 @@ class EditorInventoryEditorController: ViewController
 	bool FeetSlot;
 	bool ArmbandSlot;
 	
+	ref ObservableCollection<EditorWearableListItem> WearableItems = new ObservableCollection<EditorWearableListItem>(this);
 	ref map<string, ref array<ref EditorWearableListItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableListItem>>();
 	
 	void EditorInventoryEditorController()
 	{
 		foreach (string button: RADIO_BUTTONS) {
 			// Initialize the arrays!
-			string slot = GetRadioCategory(button);
+			string slot = GetInventorySlot(button);
 			LoadedWearableItems[slot] = new array<ref EditorWearableListItem>();
 		}
 		
 		LoadWearableItems();
+		
+		foreach (string name, array<ref EditorWearableListItem> wearable_array: LoadedWearableItems) {
+			Print(name);
+			foreach (EditorWearableListItem wearable_item: wearable_array) {
+				Print("\t" + wearable_item.GetType());
+			}
+		}
 	}
 	
 	void LoadWearableItems()
@@ -95,13 +105,12 @@ class EditorInventoryEditorController: ViewController
 		config_paths.Insert(CFG_MAGAZINESPATH);
 		
 		foreach (string path: config_paths) {
-			for (int i = 0; i < GetWorkbenchGame().ConfigGetChildrenCount(path); i++) {
+			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
 				TStringArray inventory_slots = {};
-		        GetWorkbenchGame().ConfigGetChildName(path, i, type);
-				Print(path + type);
-				GetGame().ConfigGetTextArray(path + type, inventory_slots);
-				EditorWearableListItem wearable_item = new EditorWearableListItem(type, inventory_slots);
+		        GetGame().ConfigGetChildName(path, i, type);
+				GetGame().ConfigGetTextArray(path + " " + type + " inventorySlot", inventory_slots);
+				EditorWearableListItem wearable_item = new EditorWearableListItem(type, GetGame().ConfigGetTextOut(path + " " + type + " displayName"), inventory_slots);
 				foreach (string inventory_slot: inventory_slots) {
 					// Check if its a supported inventory slot
 					if (LoadedWearableItems[inventory_slot]) {
@@ -118,7 +127,7 @@ class EditorInventoryEditorController: ViewController
 		//return placeable_items;
 	}
 	
-	string GetRadioCategory(string radio_button)
+	string GetInventorySlot(string radio_button)
 	{
 		switch (radio_button) {
 			case "ShoulderLeft": return "Shoulder";
@@ -138,12 +147,19 @@ class EditorInventoryEditorController: ViewController
 		
 		return string.Empty;
 	}
-	
+		
 	override void PropertyChanged(string property_name)
 	{
 		// Radio Button Logic
 		foreach (string button: RADIO_BUTTONS) {
 			if (button == property_name) {
+				WearableItems.Clear();
+				
+				string inventory_slot = GetInventorySlot(button);
+				foreach (EditorWearableListItem wearable: LoadedWearableItems[inventory_slot]) {
+					WearableItems.Insert(wearable);
+				}
+				
 				continue;
 			}
 			
