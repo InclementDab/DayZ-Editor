@@ -51,8 +51,11 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		//m_Camera.LerpToPosition(target_pos, 1.0);
 		m_Camera.SetPosition(target_pos);
 		m_Camera.Update();
-		
 		m_Camera.SetActive(true);
+		
+		// Just default
+		m_TemplateController.ShoulderLeft = true;
+		m_TemplateController.NotifyPropertyChanged("ShoulderLeft");
 	}
 	
 	void ~EditorInventoryEditorHud()
