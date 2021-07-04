@@ -139,51 +139,10 @@ FrameWidgetClass InventoryFrame {
      vexactsize 1
      style Outline_2px
      {
-      PanelWidgetClass ItemSelectorTitlePanel {
-       ignorepointer 1
-       color 0.0784 0.0784 0.0784 1
-       position 0 2
-       size 546 26
-       halign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       style rover_sim_colorable
-       {
-        TextWidgetClass ItemSelectorTitleText {
-         ignorepointer 1
-         size 1 18
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         text "Item Selector"
-         font "gui/fonts/sdf_MetronLight42"
-         "text halign" center
-         "text valign" center
-        }
-       }
-      }
-      WrapSpacerWidgetClass ItemSelectorContent {
-       ignorepointer 1
-       position 0 58
-       size 1 0
-       halign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       Padding 0
-       Margin 0
-       "Size To Content V" 1
-      }
       PanelWidgetClass ItemSelectedTypePanel {
        ignorepointer 1
        color 0.1176 0.1176 0.1176 0.9608
-       position 0 28
+       position 0 2
        size 546 30
        halign center_ref
        hexactpos 1
@@ -214,18 +173,31 @@ FrameWidgetClass InventoryFrame {
         }
        }
       }
+      WrapSpacerWidgetClass ItemSelectorContent {
+       ignorepointer 1
+       position 0 32
+       size 546 -1
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 4
+       Margin 0
+       "Size To Content V" 1
+      }
      }
     }
-    WrapSpacerWidgetClass ItemListGridSpacer {
+    WrapSpacerWidgetClass ItemListWrapSpacer {
      ignorepointer 1
      color 0.3922 0.3922 0.3922 0.7843
-     position 9.95203 110
+     position 9.952 82
      size 48 588
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     style Colorable
+     style Empty
      Padding 5
      Margin 4
      {
