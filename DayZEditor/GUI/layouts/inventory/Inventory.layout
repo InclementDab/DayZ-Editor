@@ -182,9 +182,15 @@ FrameWidgetClass InventoryFrame {
        vexactpos 1
        hexactsize 1
        vexactsize 1
+       scriptclass "ViewBinding"
        Padding 4
        Margin 0
        "Size To Content V" 1
+       {
+        ScriptParamsClass {
+         Binding_Name "WearableItems"
+        }
+       }
       }
      }
     }
