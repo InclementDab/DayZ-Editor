@@ -1,0 +1,48 @@
+PanelWidgetClass EditorInventoryEditorWearableListItemPanel {
+ position 0.688 0
+ size 1 32
+ halign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ style blank
+ {
+  TextWidgetClass ItemTypeText {
+   ignorepointer 1
+   position 55 0
+   size 0.9 22
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scriptclass "ViewBinding"
+   text "ItemTypeName"
+   "text offset" 3 0
+   "text valign" center
+   {
+    ScriptParamsClass {
+     Binding_Name "WearbleItems"
+    }
+   }
+  }
+  ItemPreviewWidgetClass ItemPreview {
+   inheritalpha 0
+   ignorepointer 1
+   position 15 0
+   size 32 32
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scriptclass "ViewBinding"
+   {
+    ScriptParamsClass {
+     Selected_Item "Item"
+    }
+   }
+  }
+ }
+}
