@@ -773,7 +773,14 @@ class Editor
 	private void AutoSaveThread()
 	{
 		while (g_Editor) {
-			if (!Settings) continue;
+			if (!Settings) { 
+				Sleep(10000);
+				continue;
+			}
+			
+			if (Statistics) {
+				Statistics.Save();
+			}
 			
 			Settings.AutoSaveTimer = Math.Clamp(Settings.AutoSaveTimer, 10, int.MAX);
 			Sleep(Settings.AutoSaveTimer * 1000);
@@ -1086,6 +1093,7 @@ class Editor
 	
 	void Clear()
 	{
+		Statistics.Save();
 		EditorSaveFile = string.Empty;	
 		m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
 		m_ActionStack.Clear();
