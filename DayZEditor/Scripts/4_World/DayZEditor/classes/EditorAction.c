@@ -1,5 +1,7 @@
 class EditorActionStack: set<ref EditorAction>
 {
+	static const int MAX_SIZE = 512;
+	
 	int InsertAction(EditorAction value)
 	{	
 		int count = Count();
@@ -11,7 +13,11 @@ class EditorActionStack: set<ref EditorAction>
 			Remove(i);
 			i--; count--;
 		}
-
+		
+		if (count >= MAX_SIZE) {
+			Remove(count - 1);
+		}
+		
 		// Adds to bottom of stack
 		return InsertAt(value, 0);
 	}
