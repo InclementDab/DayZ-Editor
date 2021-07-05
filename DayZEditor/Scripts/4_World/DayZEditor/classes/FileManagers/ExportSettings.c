@@ -1,7 +1,7 @@
 class ExportSettings
 {
 	bool Binarized = false;
-	HeightType ExportHeightType;
+	ExportHeightType HeightType;
 	bool ExportSelectedOnly;
 	vector ExportOffset;
 	string ExportSetName;
