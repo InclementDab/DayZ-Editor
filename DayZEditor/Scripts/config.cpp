@@ -15,19 +15,9 @@ class CfgMods
 	class DZ_Editor
 	{
 		name = "DayZ Editor";
-		picture = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
-		logo = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
-		logoSmall = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
-		logoOver = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
-		tooltip = "DayZ Editor";
-		overview = "The DayZ Editor is a 3D Editing tool built to design areas, create screenshots, or test game mechanics. Please report all bugs / suggestions to our Discord at discord.io/DayZEditor. Created by InclementDab";
-		action = "https://dab.dev";
-		author = "InclementDab";
-		authorID = "76561198247958888";
 		version = "1.2";
 		dir = "DayZEditor";
 		credits = "InclementDab";
-		
 		creditsJson = "DayZEditor/Scripts/Data/Credits.json";
 		versionPath = "DayZEditor/scripts/Data/Version.hpp";
 		inputs = "DayZEditor/Scripts/Data/Inputs.xml";

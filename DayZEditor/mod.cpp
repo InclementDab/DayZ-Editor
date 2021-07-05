@@ -1,10 +1,10 @@
-name = "DayZ Editor";
+name = "$editor_name";
 picture = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
 logo = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
 logoSmall = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
 logoOver = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
-tooltip = "DayZ Editor";
-overview = "The DayZ Editor is a 3D Editing tool built to design areas, create screenshots, or test game mechanics. Please report all bugs / suggestions to our Discord at discord.io/DayZEditor. Created by InclementDab";
+tooltip = "$editor_tooltip";
+overview = "$editor_description";
 action = "https://dab.dev";
 author = "InclementDab";
 authorID = "76561198247958888";
