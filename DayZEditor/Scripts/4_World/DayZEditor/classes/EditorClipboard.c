@@ -44,8 +44,8 @@ class EditorClipboard
 		}
 	
 		string clipboard_data = JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects);
-		//clipboard_data.Replace("\n", "");
-		//clipboard_data.Replace(" ", "");
+		clipboard_data.Replace("\n", "");
+		clipboard_data.Replace(" ", "");
 		
 		GetGame().CopyToClipboard(clipboard_data);
 	}
@@ -65,24 +65,27 @@ class EditorClipboard
 
 		GetEditor().ClearSelection();
 		
+		EditorObjectDataMap created_objects();
 		foreach (EditorObjectData pasted_object: data) {
 			if (pasted_object.Type == string.Empty) {
 				continue;
 			}
 			
-			vector position = pasted_object.Position + Editor.CurrentMousePosition;
+			vector position = pasted_object.Position + Editor.CurrentMousePosition;						
+			created_objects.InsertData(EditorObjectData.Create(pasted_object.Type, position, pasted_object.Orientation, pasted_object.Scale, pasted_object.Flags));
+		}	
+		
+		EditorObjectMap editor_objects = GetEditor().CreateObjects(created_objects);
+		
+		foreach (int id, EditorObject editor_object: editor_objects) {
+			//editor_object.SetPosition(position);
+			
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",
 				"0 0 1",
-				position
+				editor_object.GetPosition()
 			};
-						
-			EditorObject editor_object = GetEditor().CreateObject(EditorObjectData.Create(pasted_object.Type, pasted_object.Position, pasted_object.Orientation, pasted_object.Scale, pasted_object.Flags));
-			//float surfacey = GetGame().SurfaceY(position[0], position[2]);
-			//vector size = editor_object.GetSize();
-			//position[1] = surfacey + size[1] / 2;
-			editor_object.SetPosition(position);
 			
 			if (GetEditor().MagnetMode) {
 				set<Object> o;
@@ -95,6 +98,6 @@ class EditorClipboard
 			}
 			
 			GetEditor().SelectObject(editor_object);
-		}	
+		}
 	}
 }
