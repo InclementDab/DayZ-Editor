@@ -595,7 +595,7 @@ class Editor
 			EditorLog.Warning("%1 has persistence! If you place this it may cause duplications in your server!", editor_object.GetWorldObject().GetType());
 		}
 		
-		Statistics.PlacedObjects++;
+		Statistics.EditorPlacedObjects++;
 		EditorEvents.ObjectPlaced(this, editor_object);
 		
 		if (!KeyState(KeyCode.KC_LSHIFT)) { 
@@ -936,7 +936,7 @@ class Editor
 		action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
 		action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
 		
-		Statistics.RemovedObjects++;
+		Statistics.EditorRemovedObjects++;
 		
 		m_ObjectManager.HideMapObject(map_object);
 
@@ -955,7 +955,7 @@ class Editor
 			action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
 			action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
 			
-			Statistics.RemovedObjects++;
+			Statistics.EditorRemovedObjects++;
 			m_ObjectManager.HideMapObject(deleted_object);
 		}
 		
@@ -992,7 +992,7 @@ class Editor
 			action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
 			action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
 			
-			Statistics.RemovedObjects++;
+			Statistics.EditorRemovedObjects++;
 			m_ObjectManager.UnhideMapObject(deleted_object);
 		}
 		
@@ -1220,7 +1220,7 @@ class Editor
 	
 	void UpdateStatTime(int passed_time)
 	{
-		Statistics.PlayTime += passed_time;
+		Statistics.EditorPlayTime += passed_time;
 	}
 	
 	static int GetBuildNumber()

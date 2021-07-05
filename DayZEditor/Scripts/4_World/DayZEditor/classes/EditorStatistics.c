@@ -1,4 +1,4 @@
-class EditorStatistics
+class EditorStatistics: EditorProfileSettings
 {
 	protected static ref EditorStatistics m_Instance;
 	
@@ -12,21 +12,7 @@ class EditorStatistics
 		return m_Instance;
 	}
 	
-	int PlayTime;
-	int PlacedObjects;
-	int RemovedObjects;
-	
-	void Load()
-	{
-		PlayTime = EditorSettings.GetProfileInt("EditorPlayTime", PlayTime);
-		PlacedObjects = EditorSettings.GetProfileInt("EditorPlacedObjects", PlacedObjects);
-		RemovedObjects = EditorSettings.GetProfileInt("EditorRemovedObjects", RemovedObjects);
-	}
-	
-	void Save()
-	{
-		EditorSettings.SetProfileInt("EditorPlayTime", PlayTime);
-		EditorSettings.SetProfileInt("EditorPlacedObjects", PlacedObjects);
-		EditorSettings.SetProfileInt("EditorRemovedObjects", RemovedObjects);
-	}
+	int EditorPlayTime;
+	int EditorPlacedObjects;
+	int EditorRemovedObjects;
 }

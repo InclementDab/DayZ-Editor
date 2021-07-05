@@ -39,9 +39,9 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 	
 	void UpdateStats()
 	{
-		m_TimePlayedValue.SetText(GetTimeString(EditorStatistics.GetInstance().PlayTime));
-		m_ObjectsPlacedValue.SetText(EditorStatistics.GetInstance().PlacedObjects.ToString());
-		m_ObjectsRemovedValue.SetText(EditorStatistics.GetInstance().RemovedObjects.ToString());
+		m_TimePlayedValue.SetText(GetTimeString(EditorStatistics.GetInstance().EditorPlayTime));
+		m_ObjectsPlacedValue.SetText(EditorStatistics.GetInstance().EditorPlacedObjects.ToString());
+		m_ObjectsRemovedValue.SetText(EditorStatistics.GetInstance().EditorRemovedObjects.ToString());
 	}
 	
 	protected string GetTimeString( float total_time )
