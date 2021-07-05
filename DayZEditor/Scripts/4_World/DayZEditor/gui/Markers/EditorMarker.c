@@ -9,13 +9,13 @@ class EditorMarker: ScriptView
 	{
 		EditorLog.Trace("EditorMarker");
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
-		//GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
 	void ~EditorMarker()
 	{
 		EditorLog.Trace("~EditorMarker");
-		//GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 	}
 	
 	void Update();
