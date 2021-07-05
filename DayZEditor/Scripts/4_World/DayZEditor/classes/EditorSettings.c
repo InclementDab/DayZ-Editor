@@ -1,4 +1,4 @@
-class EditorSettings: EditorProfileSettings
+class EditorSettings: ProfileSettings
 {	
 	// General Settings
 	float ViewDistance 				= 8000;

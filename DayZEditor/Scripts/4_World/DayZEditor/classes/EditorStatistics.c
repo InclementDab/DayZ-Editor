@@ -1,4 +1,4 @@
-class EditorStatistics: EditorProfileSettings
+class EditorStatistics: ProfileSettings
 {
 	protected static ref EditorStatistics m_Instance;
 	
