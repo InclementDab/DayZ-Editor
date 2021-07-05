@@ -1,11 +1,11 @@
-name = "$editor_name";
+name = "$STR_MOD_EDITOR_NAME";
 picture = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
 logo = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
 logoSmall = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
 logoOver = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
-tooltip = "$editor_tooltip";
-overview = "$editor_description";
+tooltip = "$STR_MOD_EDITOR_TOOLTIP";
+overview = "$STR_MOD_EDITOR_DESCRIPTION";
 action = "https://dab.dev";
-author = "InclementDab";
+author = "STR_MOD_EDITOR_AUTHOR";
 authorID = "76561198247958888";
 version = "1.2";

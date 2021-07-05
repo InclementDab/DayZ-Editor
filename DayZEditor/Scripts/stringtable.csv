@@ -1,4 +1,5 @@
 Language,original,english,czech,german,russian,polish,hungarian,italian,spanish,french,chinese,japanese,portuguese,chinesesimp,
-editor_name,DayZ Editor,DayZ Editor,,,,,,,,,,,,,
-editor_description,"The DayZ Editor is a 3D Editing tool built to design areas, create screenshots, or test game mechanics. Please report all bugs / suggestions to our Discord at discord.io/DayZEditor. Created by InclementDab","The DayZ Editor is a 3D Editing tool built to design areas, create screenshots, or test game mechanics. Please report all bugs / suggestions to our Discord at discord.io/DayZEditor. Created by InclementDab",,,,,,,,,,,,,
-editor_tooltip,DayZ Editor,DayZ Editor,,,,,,,,,,,,,
+STR_MOD_EDITOR_NAME,DayZ Editor,DayZ Editor,,,,,,,,,,,,,
+STR_MOD_EDITOR_DESCRIPTION,"The DayZ Editor is a 3D Editing tool built to design areas, create screenshots, or test game mechanics. Please report all bugs / suggestions to our Discord at discord.io/DayZEditor. Created by InclementDab","The DayZ Editor is a 3D Editing tool built to design areas, create screenshots, or test game mechanics. Please report all bugs / suggestions to our Discord at discord.io/DayZEditor. Created by InclementDab",,,,,,,,,,,,,
+STR_MOD_EDITOR_TOOLTIP,DayZ Editor,DayZ Editor,,,,,,,,,,,,,
+STR_MOD_EDITOR_AUTHOR,InclementDab,InclementDab,InclementDab,InclementDab,InclementDab,InclementDab,InclementDab,InclementDab,InclementDab,InclementDab,InclementDab,InclementDab,InclementDab,InclementDab,
