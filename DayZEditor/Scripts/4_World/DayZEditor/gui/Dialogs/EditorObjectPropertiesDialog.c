@@ -58,7 +58,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		// All of these bindings are directly on the world object
 		if (editor_object.GetWorldObject().IsInherited(EditorScriptedLight)) {			
 			m_LightGroup = new GroupPrefab("Light Controls", m_EditorObject.GetWorldObject(), string.Empty);
-			m_LightGroup.Insert(new SliderPrefab("Radius", m_EditorObject.GetWorldObject(), "Radius", 0, 10000));
+			m_LightGroup.Insert(new SliderPrefab("Radius", m_EditorObject.GetWorldObject(), "Radius", 0, 1000));
 			m_LightGroup.Insert(new CheckBoxPrefab("Cast Shadow", m_EditorObject.GetWorldObject(), "CastShadow"));
 			m_LightGroup.Insert(new CheckBoxPrefab("Enable Specular", m_EditorObject.GetWorldObject(), "EnableSpecular"));
 			m_LightGroup.Insert(new CheckBoxPrefab("Enable Linear", m_EditorObject.GetWorldObject(), "EnableLinear"));
