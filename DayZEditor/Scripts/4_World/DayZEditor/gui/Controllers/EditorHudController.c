@@ -385,17 +385,17 @@ class EditorHudController: EditorControllerBase
 
 		switch (w) {
 			case PlacementsTabButton: {
-				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " Placed Objects", w, TooltipPositions.BOTTOM_LEFT));
+				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case DeletionsTabButton: {
-				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " Deleted Objects", w, TooltipPositions.BOTTOM_LEFT));
+				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " #STR_EDITOR_DELETIONS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case CinematicCameraButton: {
-				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("Camera Tracks", w, TooltipPositions.TOP_LEFT));
+				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("#STR_EDITOR_CINEMATIC_CAMERA", w, TooltipPositions.TOP_LEFT));
 				break;
 			}
 		}
