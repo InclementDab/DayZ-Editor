@@ -8,7 +8,7 @@ class EditorCameraTrackAddNode: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Add Node";
+		return "#STR_EDITOR_CINEMATIC_CAMERA_ADD_NODE";
 	}
 	
 	override ShortcutKeys GetShortcut() 

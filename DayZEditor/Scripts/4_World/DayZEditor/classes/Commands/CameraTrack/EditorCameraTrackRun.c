@@ -11,7 +11,7 @@ class EditorCameraTrackRun: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Run Track";
+		return "#STR_EDITOR_CINEMATIC_CAMERA_RUN";
 	}
 	
 	/*override ShortcutKeys GetShortcut() 

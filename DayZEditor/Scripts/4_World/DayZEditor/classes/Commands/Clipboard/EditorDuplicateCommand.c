@@ -21,7 +21,7 @@ class EditorDuplicateCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Duplicate";
+		return "#STR_EDITOR_DUPLICATE";
 	}
 	
 	override ShortcutKeys GetShortcut() 

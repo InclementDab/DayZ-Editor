@@ -7,6 +7,6 @@ class EditorBrushPropertiesCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Edit Brush Properties";
+		return "#STR_EDITOR_CMD_EDIT_BRUSH";
 	}
 }

@@ -8,7 +8,7 @@ class EditorCopyCommand: EditorCommand
 
 	override string GetName() 
 	{
-		return "Copy";
+		return "#STR_EDITOR_COPY";
 	}
 	
 	override string GetIcon() 

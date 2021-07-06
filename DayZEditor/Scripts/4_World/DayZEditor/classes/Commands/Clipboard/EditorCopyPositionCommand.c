@@ -8,7 +8,7 @@ class EditorCopyPositionCommand: EditorCommand
 
 	override string GetName() 
 	{
-		return "Copy Current Position";
+		return "#STR_EDITOR_CMD_COPY_POS";
 	}
 		
 	override ShortcutKeys GetShortcut() 

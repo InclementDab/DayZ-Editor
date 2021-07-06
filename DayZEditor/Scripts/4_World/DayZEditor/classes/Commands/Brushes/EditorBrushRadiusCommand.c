@@ -11,6 +11,6 @@ class EditorBrushRadiusCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Brush Radius";
+		return "#STR_EDITOR_BRUSH_RADIUS";
 	}
 }

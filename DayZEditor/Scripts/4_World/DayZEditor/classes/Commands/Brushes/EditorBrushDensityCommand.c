@@ -11,6 +11,6 @@ class EditorBrushDensityCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Brush Density";
+		return "#STR_EDITOR_BRUSH_DENSITY";
 	}
 }

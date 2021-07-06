@@ -8,7 +8,7 @@ class EditorCutCommand: EditorCommand
 
 	override string GetName() 
 	{
-		return "Cut";
+		return "#STR_EDITOR_CUT";
 	} 
 	
 	override string GetIcon() 

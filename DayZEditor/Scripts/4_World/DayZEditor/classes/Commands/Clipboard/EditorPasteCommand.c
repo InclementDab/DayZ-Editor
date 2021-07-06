@@ -7,7 +7,7 @@ class EditorPasteCommand: EditorCommand
 
 	override string GetName() 
 	{
-		return "Paste";
+		return "#STR_EDITOR_PASTE";
 	}
 	
 	override string GetIcon() 

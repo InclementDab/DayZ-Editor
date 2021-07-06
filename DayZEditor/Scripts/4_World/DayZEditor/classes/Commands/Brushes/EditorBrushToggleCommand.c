@@ -33,6 +33,6 @@ class EditorBrushToggleCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Toggle Brush";
+		return "#STR_EDITOR_CMD_TOGGLE_BRUSH";
 	}
 }

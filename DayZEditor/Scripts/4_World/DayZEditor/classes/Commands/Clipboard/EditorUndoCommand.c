@@ -7,7 +7,7 @@ class EditorUndoCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Undo";
+		return "#STR_EDITOR_UNDO";
 	}
 	
 	override string GetIcon() 

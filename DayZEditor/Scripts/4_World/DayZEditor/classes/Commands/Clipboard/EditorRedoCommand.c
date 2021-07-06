@@ -7,7 +7,7 @@ class EditorRedoCommand: EditorCommand
 		
 	override string GetName() 
 	{
-		return "Redo";
+		return "#STR_EDITOR_REDO";
 	}
 	
 	override string GetIcon() 
