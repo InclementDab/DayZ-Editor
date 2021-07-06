@@ -15,11 +15,11 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		GroupPrefab general_group = new GroupPrefab("General", m_Editor.Settings, string.Empty);
 
 		DropdownListPrefab<LogLevel> log_level("Log Level", m_Editor.Settings, "SelectedLogLevel");
-		log_level["Trace"] = LogLevel.TRACE;
-		log_level["Debug"] = LogLevel.DEBUG;
-		log_level["Info"] = LogLevel.INFO;
-		log_level["Warning"] = LogLevel.WARNING;
-		log_level["Error"] = LogLevel.ERROR;
+		log_level["#STR_LOG_TRACE"] = LogLevel.TRACE;
+		log_level["#STR_LOG_DEBUG"] = LogLevel.DEBUG;
+		log_level["#STR_LOG_MESSAGE"] = LogLevel.INFO;
+		log_level["#STR_LOG_WARNING"] = LogLevel.WARNING;
+		log_level["#STR_LOG_ERROR"] = LogLevel.ERROR;
 		
 		general_group.Insert(log_level);
 		general_group.Insert(new EditBoxNumberPrefab("Auto Save", m_Editor.Settings, "AutoSaveTimer")); //m_Editor.Settings.AutoSaveTimer.ToString()

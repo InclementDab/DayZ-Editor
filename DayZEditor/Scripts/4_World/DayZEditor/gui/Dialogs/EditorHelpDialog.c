@@ -4,9 +4,9 @@ class EditorHelpDialog: EditorDialogBase
 	{
 		AddContent(new MessageBoxPrefab("#STR_EDITOR_HELP_DESC"));
 		
-		AddButton("Wiki", "OpenWiki");
-		AddButton("Discord", "OpenDiscord");
-		AddButton("Close", DialogResult.OK);
+		AddButton("#STR_EDITOR_WIKI", "OpenWiki");
+		AddButton("#STR_EDITOR_DISCORD", "OpenDiscord");
+		AddButton("#STR_EDITOR_CLOSE", DialogResult.OK);
 	}
 	
 	void OpenDiscord()

@@ -4,9 +4,9 @@ class EditorDonateDialog: EditorDialogBase
 	{
 		AddContent(new MessageBoxPrefab("#STR_EDITOR_DONATE_DESC"));
 		
-		AddButton("Paypal", "OpenPaypal");
-		AddButton("Patreon", "OpenPatreon");
-		AddButton("Close", DialogResult.OK);
+		AddButton("#STR_EDITOR_PAYPAL", "OpenPaypal");
+		AddButton("#STR_EDITOR_PATREON", "OpenPatreon");
+		AddButton("#STR_EDITOR_CLOSE", DialogResult.OK);
 	}
 	
 	void OpenPaypal()
