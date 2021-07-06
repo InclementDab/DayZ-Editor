@@ -8,7 +8,6 @@ FrameWidgetClass EditorMarkerFrame {
  vexactpos 1
  hexactsize 1
  vexactsize 1
- priority 250
  draggable 0
  scriptclass "ViewBinding"
  {
@@ -23,7 +22,6 @@ FrameWidgetClass EditorMarkerFrame {
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   priority 250
    draggable 0
    scriptclass ""
    style Empty
@@ -42,7 +40,6 @@ FrameWidgetClass EditorMarkerFrame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     priority 251
      style rover_sim_colorable
      "no focus" 1
      {
