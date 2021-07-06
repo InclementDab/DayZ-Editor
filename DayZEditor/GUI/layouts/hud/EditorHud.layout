@@ -362,7 +362,7 @@ FrameWidgetClass EditorFrame {
              vexactsize 0
              scriptclass "ViewBinding"
              style Default
-             text "Search...."
+             text "#STR_EDITOR_SEARCH"
              "limit visible" 0
              "Use default text" 1
              "exact text" 1

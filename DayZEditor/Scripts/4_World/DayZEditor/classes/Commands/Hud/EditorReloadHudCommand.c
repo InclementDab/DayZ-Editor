@@ -7,7 +7,7 @@ class EditorReloadHudCommand: EditorCommand
 
 	override string GetName() 
 	{
-		return "Reload UI";
+		return "#STR_EDITOR_CMD_RELOAD_UI";
 	}
 	
 	override string GetIcon() 
