@@ -232,7 +232,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       Padding 5
+       Padding 1
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
@@ -245,7 +245,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "#STR_EDITOR_FILE"
+         text "  #STR_EDITOR_FILE  "
          font "gui/fonts/etelkatextpro22"
          "exact text" 1
          "size to text h" 1
@@ -264,6 +264,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            vexactsize 0
            scriptclass "ViewBinding"
            style Default
+           "no focus" 1
            {
             ScriptParamsClass {
              Relay_Command "MenuBarExecute"
@@ -280,7 +281,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "#STR_EDITOR_EDIT"
+         text "  #STR_EDITOR_EDIT  "
          font "gui/fonts/etelkatextpro22"
          "exact text" 1
          "size to text h" 1
@@ -298,6 +299,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            scriptclass "ViewBinding"
+           "no focus" 1
            {
             ScriptParamsClass {
              Relay_Command "MenuBarExecute"
@@ -314,7 +316,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "#STR_EDITOR_VIEW"
+         text "  #STR_EDITOR_VIEW  "
          font "gui/fonts/etelkatextpro22"
          "exact text" 1
          "size to text h" 1
@@ -332,6 +334,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            scriptclass "ViewBinding"
+           "no focus" 1
            {
             ScriptParamsClass {
              Relay_Command "MenuBarExecute"
@@ -348,7 +351,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "#STR_EDITOR_EDITOR"
+         text "  #STR_EDITOR_EDITOR  "
          font "gui/fonts/etelkatextpro22"
          "exact text" 1
          "size to text h" 1
@@ -366,6 +369,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            scriptclass "ViewBinding"
+           "no focus" 1
            {
             ScriptParamsClass {
              Relay_Command "MenuBarExecute"
