@@ -172,6 +172,9 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true); 
 		}
 		
+		// Fallback
+		SetActive(false);
+		
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(UpdateStatTime);
 		
 		Settings.Save();
@@ -183,6 +186,7 @@ class Editor
 		delete m_SessionCache;
 		delete ObjectInHand;
 		delete m_RecentlyOpenedFiles;
+		GetGame().ObjectDelete(m_EditorCamera);
 	}
 	
 	static Editor Create(PlayerBase player)
