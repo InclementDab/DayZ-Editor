@@ -2,12 +2,12 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 {	
 	// Used elsewhere to load categories
 	static const ref TStringArray CATEGORIES = {
-		"General",
-		"Camera",
-		"Markers",
-		"Brushes",
-		"Themes",
-		"Advanced",
+		"#STR_EDITOR_GENERAL",
+		"#STR_EDITOR_CAMERA",
+		"#STR_EDITOR_MARKERS",
+		"#STR_EDITOR_BRUSHES",
+		"#STR_EDITOR_THEMES",
+		"#STR_EDITOR_ADVANCED",
 	};
 	
 	void EditorPreferencesDialog(string title, string default_group = "General")
@@ -53,27 +53,27 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		colors_group.Insert(new ColorPickerPrefab("Highlight Color", m_Editor.Settings, "HighlightColor"));
 		colors_group.Insert(new ColorPickerPrefab("Selected Color", m_Editor.Settings, "SelectionColor"));
 		
-		DialogCategoryListItem general_category("General");
+		DialogCategoryListItem general_category("#STR_EDITOR_GENERAL");
 		general_category.AddContent(general_group);
 		AddContent(general_category);
 		
-		DialogCategoryListItem camera_category("Camera");
+		DialogCategoryListItem camera_category("#STR_EDITOR_CAMERA");
 		camera_category.AddContent(camera_group);
 		AddContent(camera_category);
 		
-		DialogCategoryListItem marker_category("Markers");
+		DialogCategoryListItem marker_category("#STR_EDITOR_MARKERS");
 		marker_category.AddContent(marker_group);
 		AddContent(marker_category);
 		
-		DialogCategoryListItem brush_category("Brushes");
+		DialogCategoryListItem brush_category("#STR_EDITOR_BRUSHES");
 		brush_category.AddContent(brush_settings);
 		AddContent(brush_category);
 		
-		DialogCategoryListItem theme_category("Themes");
+		DialogCategoryListItem theme_category("#STR_EDITOR_THEMES");
 		theme_category.AddContent(colors_group);
 		AddContent(theme_category);
 		
-		DialogCategoryListItem advanced_category("Advanced");
+		DialogCategoryListItem advanced_category("#STR_EDITOR_ADVANCED");
 		advanced_category.AddContent(advanced_group);
 		AddContent(advanced_category);
 		
