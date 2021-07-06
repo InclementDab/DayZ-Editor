@@ -37,7 +37,7 @@ modded class InGameMenu
 		TextWidget version_widget = TextWidget.Cast(layoutRoot.FindAnyWidget("version"));		
 		string version;
 		GetGame().GetVersion(version);
-		version_widget.SetText(string.Format("#main_menu_version %1 - DayZ Editor Version %2", version, GetEditor().Version));
+		version_widget.SetText(string.Format("#main_menu_version %1 - #STR_EDITOR_MAIN_MENU_VERSION %2", version, GetEditor().Version));
 	}
 	
 	override void UpdateGUI() 
