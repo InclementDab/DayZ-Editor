@@ -82,6 +82,6 @@ class EditorImportCommandBase: EditorCommand
 	
 	string GetDialogButtonName() 
 	{
-		return "Import";
+		return "#STR_EDITOR_IMPORT";
 	}
 }

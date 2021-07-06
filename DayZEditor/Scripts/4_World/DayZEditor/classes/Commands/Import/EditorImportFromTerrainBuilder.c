@@ -2,7 +2,7 @@ class EditorImportFromTerrainBuilder: EditorImportCommandBase
 {
 	override string GetName() 
 	{
-		return "Import from Terrain Builder";
+		return "#STR_EDITOR_CMD_IMPORT_TB";
 	}
 	
 	override typename GetFileType() 

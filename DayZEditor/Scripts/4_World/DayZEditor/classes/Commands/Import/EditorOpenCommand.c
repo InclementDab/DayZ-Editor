@@ -26,7 +26,7 @@ class EditorOpenCommand: EditorImportCommandBase
 
 	override string GetName() 
 	{
-		return "Open";
+		return "#STR_EDITOR_OPEN";
 	}
 
 	override string GetIcon() 
@@ -46,6 +46,6 @@ class EditorOpenCommand: EditorImportCommandBase
 	
 	override string GetDialogButtonName() 
 	{
-		return "Open";
+		return "#STR_EDITOR_OPEN";
 	}
 }

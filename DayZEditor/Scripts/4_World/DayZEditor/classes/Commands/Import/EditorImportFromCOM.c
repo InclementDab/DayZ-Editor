@@ -2,7 +2,7 @@ class EditorImportFromCOM: EditorImportCommandBase
 {
 	override string GetName() 
 	{
-		return "Import from COM";
+		return "#STR_EDITOR_CMD_IMPORT_COM";
 	}
 	
 	override typename GetFileType() 
