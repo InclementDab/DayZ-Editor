@@ -175,7 +175,9 @@ class Editor
 		}
 		
 		// Fallback
-		SetActive(false);
+		if (GetGame()) {
+			SetActive(false);
+		}
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(UpdateStatTime);
 		
