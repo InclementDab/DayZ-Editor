@@ -533,11 +533,13 @@ class Editor
 		m_Player.GetInputController().SetDisabled(m_Active);
 		
 		EditorHud.SetCurrentTooltip(null);
+		
+		PPEffects.ResetAll();
 	}
 	
 	bool OnMouseEnterObject(IEntity target, int x, int y)
 	{
-		
+		 
 	}
 	
 	bool OnMouseExitObject(IEntity target, int x, int y)
