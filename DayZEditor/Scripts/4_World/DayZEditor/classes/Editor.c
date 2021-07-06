@@ -521,7 +521,12 @@ class Editor
 		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
+				if (!editor_object) {
+					continue;
+				}
+				
 				editor_object.GetMarker().Show(m_Active);
+				editor_object.HideBoundingBox();
 			}
 		}	
 		
@@ -529,11 +534,13 @@ class Editor
 			GetGame().SelectPlayer(null, m_Player);
 		}
 		
-		m_Player.DisableSimulation(m_Active);
-		m_Player.GetInputController().SetDisabled(m_Active);
+		// handles player death
+		if (m_Player) {
+			m_Player.DisableSimulation(m_Active);
+			m_Player.GetInputController().SetDisabled(m_Active);
+		}
 		
 		EditorHud.SetCurrentTooltip(null);
-		
 		PPEffects.ResetAll();
 	}
 	
