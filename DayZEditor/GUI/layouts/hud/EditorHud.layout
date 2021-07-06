@@ -1035,121 +1035,42 @@ FrameWidgetClass EditorFrame {
           }
          }
         }
-        TextWidgetClass InfobarCameraPositionText {
-         clipchildren 1
+        FrameWidgetClass InfobarCameraPositionFrame {
          ignorepointer 1
          position 0 0
-         size 0.075 1
-         halign right_ref
+         size 405 16
+         halign center_ref
          valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         text "#STR_EDITOR_CAMERA_POSITION"
-         font "gui/fonts/etelkatextpro"
-         "exact text" 0
-         "size to text h" 0
-         "size to text v" 0
-         "text halign" right
-         "text valign" center
-        }
-        FrameWidgetClass FrameWidget6 {
-         visible 0
-         clipchildren 0
-         ignorepointer 1
-         position 0 0
-         size 28 18
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
          {
-          ButtonWidgetClass InfobarCameraButton {
-           clipchildren 0
-           ignorepointer 0
-           color 1 1 1 0.1961
-           position 0 0
-           size 30 16
+          TextWidgetClass InfobarCameraPositionText {
+           clipchildren 1
+           ignorepointer 1
+           position 0.15 0
+           size 1 19
+           halign center_ref
            valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
            vexactsize 1
-           scriptclass "ViewBinding"
-           style MenuDefault
-           {
-            ImageWidgetClass InfobarCameraIcon {
-             visible 0
-             ignorepointer 1
-             position 0 0
-             size 18 18
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 1
-             vexactsize 1
-             image0 "set:dayz_editor_gui image:camera_alt"
-             mode additive
-             "src alpha" 0
-             "no wrap" 0
-             stretch 0
-             "flip u" 0
-             "flip v" 0
-             filter 1
-             nocache 0
-             pivot 0 0
-            }
-            ImageWidgetClass InfobarCinematicCameraIcon {
-             visible 1
-             inheritalpha 0
-             ignorepointer 1
-             position -1 -1
-             size 20 20
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 1
-             vexactsize 1
-             image0 "set:dayz_editor_gui image:camera"
-             mode additive
-             "src alpha" 1
-             "no wrap" 0
-             stretch 0
-             "flip u" 0
-             "flip v" 0
-             filter 1
-             nocache 0
-             pivot 0 0
-            }
-            PanelWidgetClass InfoBarCameraOutline {
-             ignorepointer 1
-             color 1 1 1 0.9961
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             style blank
-            }
-           }
-           {
-            ScriptParamsClass {
-             Relay_Command "CameraTrackToggleExecute"
-            }
-           }
+           text "#STR_EDITOR_CAMERA_POSITION"
+           font "gui/fonts/etelkatextpro"
+           "exact text" 0
+           "size to text h" 1
+           "size to text v" 0
+           "text halign" right
+           "text valign" center
           }
          }
         }
         FrameWidgetClass CinematicCameraFrame {
          ignorepointer 1
-         position 10 10
-         size 276 18
+         position 0 0
+         size 20 18
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -1189,120 +1110,159 @@ FrameWidgetClass EditorFrame {
           }
          }
         }
-        TextWidgetClass ObjectHoverSelectText {
+        WrapSpacerWidgetClass ObjectHoverSelectWrapper {
+         visible 1
+         clipchildren 0
          ignorepointer 1
-         size 0.22 19
+         position 0 0
+         size 450 18
          hexactpos 1
          vexactpos 1
-         hexactsize 0
+         hexactsize 1
          vexactsize 1
-         text "#STR_EDITOR_OBJECT :"
-         font "gui/fonts/etelkatextpro"
-         text_proportion 0.9
-         "text valign" center
+         Padding 0
+         Margin 0
          {
-          TextWidgetClass ObjectHoverSelectObjectReadout {
+          TextWidgetClass ObjectHoverSelectText {
            ignorepointer 1
-           size 0.87 19
-           halign right_ref
+           position 0 0
+           size 0.52 19
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           text "#STR_EDITOR_OBJECT :"
+           font "gui/fonts/etelkatextpro"
+           text_proportion 0.9
+           "size to text h" 1
+           "size to text v" 0
+           "text valign" center
+           {
+            TextWidgetClass ObjectHoverSelectObjectReadout {
+             ignorepointer 1
+             size 0.87 19
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scriptclass "ViewBinding"
+             text "Super_Huge_Classname_Prob_Streams"
+             font "gui/fonts/etelkatextpro"
+             "text offset" 3 0
+             text_proportion 0.9
+             "size to text h" 1
+             "text valign" center
+             {
+              ScriptParamsClass {
+               Binding_Name "ObjectReadoutName"
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+        WrapSpacerWidgetClass VersionFrame {
+         ignorepointer 1
+         size 350 18
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          TextWidgetClass VersionText {
+           ignorepointer 1
+           size 0.16 18
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 1
+           scriptclass ""
+           text "#STR_EDITOR_VERSION :"
+           font "gui/fonts/etelkatextpro"
+           "bold text" 1
+           "size to text h" 1
+           "size to text v" 1
+           "text valign" center
+          }
+          TextWidgetClass VersionNumber {
+           ignorepointer 1
+           position 0 0
+           size 0.18 18
+           halign center_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
            hexactsize 0
            vexactsize 1
            scriptclass "ViewBinding"
-           text "Super_Huge_Classname_Prob_Streams"
            font "gui/fonts/etelkatextpro"
-           "text offset" 3 0
-           text_proportion 0.9
+           "bold text" 1
+           "size to text h" 1
+           "size to text v" 0
            "text valign" center
            {
             ScriptParamsClass {
-             Binding_Name "ObjectReadoutName"
+             Binding_Name "Version"
             }
            }
           }
          }
         }
-        TextWidgetClass VersionNumber {
+        WrapSpacerWidgetClass CurrentFileWrapper {
          ignorepointer 1
-         position 0 0
-         size 0.2 1
-         halign right_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         font "gui/fonts/etelkatextpro"
-         "bold text" 1
-         "size to text h" 0
-         "size to text v" 1
-         "text valign" center
+         size 380 18
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
          {
-          ScriptParamsClass {
-           Binding_Name "Version"
+          TextWidgetClass MenuCurrentFileNameCaption {
+           ignorepointer 1
+           position 0 0
+           size 100 1
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 1
+           vexactsize 0
+           text "#STR_EDITOR_CURRENT_FILE :"
+           font "gui/fonts/etelkatextpro"
+           "exact text" 0
+           "size to text h" 1
+           "size to text v" 0
+           "text halign" right
+           "text valign" center
+          }
+          TextWidgetClass MenuCurrentFileNameText {
+           clipchildren 1
+           ignorepointer 1
+           size 0.11 1
+           halign right_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           style None
+           font "gui/fonts/etelkatextpro"
+           "text offset" 7 0
+           "exact text" 0
+           "size to text h" 1
+           "size to text v" 0
+           "text valign" center
+           {
+            ScriptParamsClass {
+             Binding_Name "m_Editor.EditorSaveFile"
+            }
+           }
           }
          }
-        }
-        TextWidgetClass VersionText {
-         ignorepointer 1
-         position 0 0
-         size 0.25 1
-         halign right_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         scriptclass ""
-         text "#STR_EDITOR_VERSION : "
-         font "gui/fonts/etelkatextpro"
-         "bold text" 1
-         "size to text h" 1
-         "size to text v" 1
-         "text valign" center
-        }
-        TextWidgetClass MenuCurrentFileNameText {
-         clipchildren 1
-         ignorepointer 1
-         size 0.11 1
-         halign right_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         style None
-         font "gui/fonts/etelkatextpro"
-         "text offset" 7 0
-         "exact text" 0
-         "size to text h" 0
-         "size to text v" 0
-         "text valign" center
-         {
-          ScriptParamsClass {
-           Binding_Name "m_Editor.EditorSaveFile"
-          }
-         }
-        }
-        TextWidgetClass MenuCurrentFileNameCaption {
-         ignorepointer 1
-         position 0 0
-         size 0.06 1
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         text "#STR_EDITOR_CURRENT_FILE : "
-         font "gui/fonts/etelkatextpro"
-         "exact text" 0
-         "size to text v" 0
-         "text halign" right
-         "text valign" center
         }
        }
       }
@@ -1379,10 +1339,10 @@ FrameWidgetClass EditorFrame {
      }
     }
     WrapSpacerWidgetClass CameraTrackWrapper {
-     visible 0
+     visible 1
      ignorepointer 1
      color 0.0196 0.0196 0.0196 0.7843
-     position 280 442
+     position 285 443
      size 0.235 0
      halign right_ref
      valign bottom_ref
@@ -1515,7 +1475,7 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass CameraTrackSmoothingText {
          ignorepointer 1
          position 2 0
-         size 135 20
+         size 200 20
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -1523,16 +1483,18 @@ FrameWidgetClass EditorFrame {
          vexactsize 1
          text "#STR_EDITOR_CINEMATIC_CAMERA_SMOOTHING"
          "text offset" 2 0
+         "size to text h" 1
          "text valign" center
         }
         SliderWidgetClass CameraTrackSmoothingSlider {
          color 0.5882 0.5882 0.5882 0.7451
-         position 150 0
-         size 0.6 18
+         position 5 0
+         size 250 18
+         halign right_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
+         hexactsize 1
          vexactsize 1
          scriptclass "ViewBinding"
          style Slider_1px_alpha_50
