@@ -766,8 +766,12 @@ class Editor
 	
 	void TeleportPlayerToCursor()
 	{
-		if (!m_Player) return;
-		m_Player.SetPosition(CurrentMousePosition);
+		if (!m_Player) { 
+			return;
+		}
+		
+		set<Object> _();
+		m_Player.SetPosition(MousePosToRay(_, m_Player, 3000, 0, false, true));
 	}
 	
 	private void AutoSaveThread()
