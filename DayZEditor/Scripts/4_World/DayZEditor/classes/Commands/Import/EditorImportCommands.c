@@ -27,7 +27,7 @@ class EditorImportCommandBase: EditorCommand
 			return null;
 		}
 		
-		file_name = "$profile:Editor/" + file_name;
+		file_name = Editor.ROOT_DIRECTORY + file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 		if (!FileExist(file_name)) {
 			EditorLog.Error("Could not find file %1", file_name);

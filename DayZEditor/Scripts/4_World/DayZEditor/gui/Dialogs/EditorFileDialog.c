@@ -17,7 +17,7 @@ class EditorFileDialog: EditorDialogBase
 		m_ListBoxPrefab.Event_OnDoubleClick.Insert(OnListItemDoubleClick);
 		AddContent(m_ListBoxPrefab);
 		
-		LoadFileDirectory("$profile:\\Editor\\", m_Filter);
+		LoadFileDirectory(Editor.ROOT_DIRECTORY, m_Filter);
 				
 		AddContent(m_EditBoxPrefab);
 		AddButton(button_name, DialogResult.OK);
@@ -108,7 +108,9 @@ class EditorFileDialog: EditorDialogBase
 	{
 		EditorLog.Trace("EditorFileDialog::OnListItemClick");
 		if (file != string.Empty) {
-			m_EditBoxPrefab.GetPrefabController().Value = file;
+			string folder_sanitized = m_CurrentDirectory;
+			folder_sanitized.Replace(Editor.ROOT_DIRECTORY, "");
+			m_EditBoxPrefab.GetPrefabController().Value = folder_sanitized + file;
 			m_EditBoxPrefab.GetPrefabController().NotifyPropertyChanged("Value");
 		}
 	}

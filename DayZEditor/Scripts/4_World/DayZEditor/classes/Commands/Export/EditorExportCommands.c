@@ -35,7 +35,7 @@ class EditorExportCommandBase : EditorCommand
 
 		export_settings.ExportSetName = file_name;
 
-		file_name = "$profile:Editor/" + file_name;
+		file_name = Editor.ROOT_DIRECTORY + file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 
 		if (FileExist(file_name) && warn_on_overwrite) {
