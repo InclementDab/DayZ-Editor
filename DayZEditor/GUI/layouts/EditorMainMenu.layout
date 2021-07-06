@@ -90,7 +90,7 @@ FrameWidgetClass main_menu_root {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           text "Open Editor"
+           text "#STR_EDITOR_OPEN_EDITOR"
            font "gui/fonts/sdf_MetronLight42"
            "text halign" center
            "text valign" center
@@ -170,7 +170,7 @@ FrameWidgetClass main_menu_root {
            vexactpos 1
            hexactsize 0
            vexactsize 1
-           text "Join the Discord!"
+           text "#STR_EDITOR_JOIN_DISCORD"
            font "gui/fonts/sdf_MetronLight42"
            "text halign" center
            "text valign" center
@@ -426,7 +426,7 @@ FrameWidgetClass main_menu_root {
            vexactpos 0
            hexactsize 0
            vexactsize 1
-           text "Donate to the Project"
+           text "#STR_EDITOR_DONATE_TO_PROJECT"
            font "gui/fonts/sdf_MetronLight24"
            "text halign" center
            "text valign" center
@@ -484,7 +484,7 @@ FrameWidgetClass main_menu_root {
          hexactsize 0
          vexactsize 1
          style Normal
-         text "EDITOR STATISTICS"
+         text "#STR_EDITOR_STAT"
          font "gui/fonts/sdf_MetronLight42"
          "exact text" 1
          "exact text size" 22
@@ -527,7 +527,7 @@ FrameWidgetClass main_menu_root {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           text "Editor Usage Time"
+           text "#STR_EDITOR_STAT_USAGE_TIME"
            "size to text h" 1
            "size to text v" 0
            "text halign" center
@@ -566,7 +566,7 @@ FrameWidgetClass main_menu_root {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           text "Items Placed"
+           text "#STR_EDITOR_STAT_ITEMS_PLACED"
            "size to text h" 1
            "size to text v" 0
            "text halign" center
@@ -605,7 +605,7 @@ FrameWidgetClass main_menu_root {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           text "Items Hidden"
+           text "#STR_EDITOR_STAT_ITEMS_HIDDEN"
            "size to text h" 1
            "size to text v" 0
            "text halign" center

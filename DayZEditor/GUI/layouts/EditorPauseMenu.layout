@@ -274,7 +274,7 @@ FrameWidgetClass FrameWidget {
          hexactsize 0
          vexactsize 0
          scaled 1
-         text "OPEN FILE"
+         text "#STR_MAINMENU_OPEN_FILE"
          font "gui/fonts/sdf_MetronLight72"
          "exact text" 0
          "size to text h" 0
@@ -428,7 +428,7 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         text "CHANGE MAP"
+         text "#STR_MAINMENU_CHANGE_MAP"
          font "gui/fonts/sdf_MetronLight72"
          "text halign" center
          "text valign" center
