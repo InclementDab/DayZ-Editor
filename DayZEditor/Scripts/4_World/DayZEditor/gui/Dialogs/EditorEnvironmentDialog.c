@@ -106,4 +106,9 @@ class EditorEnvironmentDialog: EditorDialogBase
 	{
 		return EditorEnvironmentDialogController;
 	}
+	
+	override string GetIcon() 
+	{
+		return "set:dayz_gui image:icon_moon";
+	}
 }

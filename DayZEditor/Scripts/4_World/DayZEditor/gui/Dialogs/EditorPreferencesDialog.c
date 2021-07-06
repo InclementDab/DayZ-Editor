@@ -99,6 +99,11 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		super.DialogExitButtonCallback(button);
 	}
 	
+	override string GetIcon() 
+	{
+		return "set:dayz_gui image:settings";
+	}
+	
 	void SetDefaults()
 	{
 		EditorLog.Trace("EditorPreferencesDialog::SetDefaults");

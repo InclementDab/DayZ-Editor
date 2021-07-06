@@ -138,4 +138,9 @@ class EditorFileDialog: EditorDialogBase
 		edit_box.SetText(file);
 		CloseDialog(DialogResult.OK);
 	}
+	
+	override string GetIcon() 
+	{
+		return "set:dayz_editor_gui image:open";
+	}
 }

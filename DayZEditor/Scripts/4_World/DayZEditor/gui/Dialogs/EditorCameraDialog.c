@@ -60,16 +60,19 @@ class EditorCameraDialog: EditorDialogBase
 	{
 		EditorLog.Trace("EditorCameraDialog::ResetDefaultExecute");
 		
-		m_EditorCamera.Speed = 60;
 		m_EditorCamera.Blur = 0;
 		m_EditorCamera.FOV = 1;
 		m_EditorCamera.NearPlane = 0;
 		
-		m_EditorCamera.PropertyChanged("Speed");
 		m_EditorCamera.PropertyChanged("Blur");
 		m_EditorCamera.PropertyChanged("FOV");
 		m_EditorCamera.PropertyChanged("NearPlane");
 		
 		PPEffects.ResetAll();
-	}	
+	}
+	
+	override string GetIcon() 
+	{
+		return "set:dayz_editor_gui image:camera_alt";
+	}
 }
