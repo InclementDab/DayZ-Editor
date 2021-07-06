@@ -45,7 +45,6 @@ modded class MainMenu
 		//	m_ScenePC.ResetIntroCamera();
 		//}
 		
-		m_PlayVideo.Show( false );
 		
 		m_PlayerName				= TextWidget.Cast( layoutRoot.FindAnyWidget("character_name_text") );
 			
