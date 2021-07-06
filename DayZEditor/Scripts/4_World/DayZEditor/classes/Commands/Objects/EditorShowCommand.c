@@ -15,6 +15,6 @@ class EditorShowCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Show";
+		return "#STR_EDITOR_SHOW";
 	}
 }

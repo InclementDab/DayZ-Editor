@@ -11,7 +11,7 @@ class EditorSnapCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Toggle Snapping";
+		return "#STR_EDITOR_CMD_SNAPPING_MODE";
 	}
 
 	override ShortcutKeys GetShortcut() 

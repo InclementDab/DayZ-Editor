@@ -4,4 +4,9 @@ class EditorPlaceObjectCommand: EditorCommand
 	{
 		m_Editor.PlaceObject();
 	}
+	
+	override string GetName()
+	{
+		return "#STR_EDITOR_PLACE_OBJECT";
+	}
 }

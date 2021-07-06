@@ -8,7 +8,7 @@ class EditorObjectPropertiesCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Properties";
+		return "#STR_EDITOR_PROPERTIES";
 	}
 	
 	override ShortcutKeys GetShortcut() 

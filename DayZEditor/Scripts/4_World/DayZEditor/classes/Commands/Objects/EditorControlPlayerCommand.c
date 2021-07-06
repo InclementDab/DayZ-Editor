@@ -17,6 +17,6 @@ class EditorControlPlayerCommand: EditorCommand
 	
 	override string GetName()
 	{
-		return "Control Player";
+		return "#STR_EDITOR_CMD_CONTROL_PLAYER";
 	}
 }

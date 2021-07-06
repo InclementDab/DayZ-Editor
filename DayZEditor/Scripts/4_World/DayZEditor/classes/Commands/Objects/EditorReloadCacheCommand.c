@@ -7,6 +7,6 @@ class EditorReloadCacheCommand: EditorCommand
 		
 	override string GetName() 
 	{
-		return "Reload World Cache";
+		return "#STR_EDITOR_CMD_RELOAD_WORLD_CACHE";
 	}
 }

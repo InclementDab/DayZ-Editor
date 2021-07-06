@@ -15,6 +15,6 @@ class EditorLockCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Lock";
+		return "#STR_EDITOR_LOCK";
 	}
 }

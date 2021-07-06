@@ -19,6 +19,6 @@ class EditorHideCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Hide";
+		return "#STR_EDITOR_HIDE";
 	}
 }

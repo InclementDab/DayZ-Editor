@@ -40,6 +40,6 @@ class EditorFindAndReplaceCommand: EditorCommand
 	
 	override string GetName()
 	{
-		return "Find and Replace";
+		return "#STR_EDITOR_CMD_FIND_AND_REPLACE";
 	}
 }

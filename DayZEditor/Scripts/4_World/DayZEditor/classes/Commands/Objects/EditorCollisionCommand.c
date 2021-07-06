@@ -11,7 +11,7 @@ class EditorCollisionCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Toggle Collision";
+		return "#STR_EDITOR_CMD_COLLISION_MODE";
 	}
 	
 	override ShortcutKeys GetShortcut() 

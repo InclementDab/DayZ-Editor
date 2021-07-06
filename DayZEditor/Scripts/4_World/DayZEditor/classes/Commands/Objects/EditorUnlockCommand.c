@@ -15,6 +15,6 @@ class EditorUnlockCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Unlock";
+		return "#STR_EDITOR_UNLOCK";
 	}
 }

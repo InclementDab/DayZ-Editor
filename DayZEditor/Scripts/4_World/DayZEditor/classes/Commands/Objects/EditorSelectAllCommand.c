@@ -9,7 +9,7 @@ class EditorSelectAllCommand: EditorCommand
 		
 	override string GetName() 
 	{
-		return "Select All...";
+		return "#STR_EDITOR_SELECT_ALL";
 	}
 		
 	override ShortcutKeys GetShortcut() 

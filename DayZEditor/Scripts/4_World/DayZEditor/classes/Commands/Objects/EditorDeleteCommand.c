@@ -21,7 +21,7 @@ class EditorDeleteCommand: EditorCommand
 		
 	override string GetName() 
 	{
-		return "Delete";
+		return "#STR_EDITOR_DELETE";
 	}
 	
 	override ShortcutKeys GetShortcut() 

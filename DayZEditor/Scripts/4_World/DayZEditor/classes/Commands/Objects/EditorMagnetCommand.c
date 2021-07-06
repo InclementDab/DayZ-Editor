@@ -11,7 +11,7 @@ class EditorMagnetCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Toggle Magnet Mode";
+		return "#STR_EDITOR_CMD_MAGNET_MODE";
 	}
 	
 	override ShortcutKeys GetShortcut() 

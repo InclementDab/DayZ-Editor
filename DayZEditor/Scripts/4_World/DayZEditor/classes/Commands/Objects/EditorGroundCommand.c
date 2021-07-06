@@ -11,7 +11,7 @@ class EditorGroundCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Toggle Ground Mode";
+		return "#STR_EDITOR_CMD_GROUND_MODE";
 	}
 	
 	override ShortcutKeys GetShortcut() 

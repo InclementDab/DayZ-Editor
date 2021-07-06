@@ -51,6 +51,6 @@ class EditorCheckDuplicatesCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Check for Duplicates";
+		return "#STR_EDITOR_CMD_CHECK_DUPLICATES";
 	}
 }
