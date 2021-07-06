@@ -1417,7 +1417,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 0
          hexactsize 0
          vexactsize 0
-         text "Cinematic Camera"
+         text "#STR_EDITOR_CINEMATIC_CAMERA"
          font "gui/fonts/etelkatextpro"
          "size to text v" 0
          "text halign" center
@@ -1521,7 +1521,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Camera Smoothing"
+         text "#STR_EDITOR_CINEMATIC_CAMERA_SMOOTHING"
          "text offset" 2 0
          "text valign" center
         }
