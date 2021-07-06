@@ -2,7 +2,7 @@ class EditorExitCommand: EditorCommand
 {	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		DialogResult result = EditorMessageBox.Show("Exit to main menu", "Do you want to close the DayZ Editor?", MessageBoxButtons.OKCancel);
+		DialogResult result = EditorMessageBox.Show(GetName(), "#STR_EDITOR_EXIT_MSG", MessageBoxButtons.OKCancel);
 		if (result != DialogResult.OK) { 
 			return;
 		}

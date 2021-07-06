@@ -2,7 +2,7 @@ class EditorHelpDialog: EditorDialogBase
 {
 	void EditorHelpDialog(string title)
 	{
-		AddContent(new MessageBoxPrefab("DayZ Editor support is handled through our Discord!\nClick 'Discord' to join and report bugs / ask questions\nFeedback is always much appreciated!"));
+		AddContent(new MessageBoxPrefab("#STR_EDITOR_HELP_DESC"));
 		
 		AddButton("Wiki", "OpenWiki");
 		AddButton("Discord", "OpenDiscord");

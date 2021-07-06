@@ -2,17 +2,17 @@ class EditorPreferencesCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		OpenPreferences();
+		OpenPreferences("#STR_EDITOR_GENERAL");
 	}
 	
-	void OpenPreferences(string name = "General")
+	void OpenPreferences(string name)
 	{
 		thread _OpenPreferences(name);
 	}
 	
 	private void _OpenPreferences(string name)
 	{
-		EditorPreferencesDialog dialog = new EditorPreferencesDialog("Editor Preferences", name);
+		EditorPreferencesDialog dialog = new EditorPreferencesDialog(GetName(), name);
 		DialogResult result = dialog.ShowDialog();
 	}
 	

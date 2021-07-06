@@ -2,7 +2,7 @@ class EditorDonateCommand: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{	
-		EditorDonateDialog donate_dialog("Donate");
+		EditorDonateDialog donate_dialog(GetName());
 		donate_dialog.ShowDialog();
 	}
 	

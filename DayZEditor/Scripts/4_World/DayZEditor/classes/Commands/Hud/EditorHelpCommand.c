@@ -2,7 +2,7 @@ class EditorHelpCommand: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorHelpDialog help_dialog("Help");
+		EditorHelpDialog help_dialog(GetName());
 		help_dialog.ShowDialog();
 	}
 	
