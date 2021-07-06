@@ -9,7 +9,7 @@ class EditorEditorMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager[EditorExportLoaderCache]);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorEnvironmentControlCommand]);
-		AddMenuCategory("Preferences...", EditorPreferencesMenu, m_Editor.CommandManager[EditorPreferencesCommand]);
+		AddMenuCategory("#STR_EDITOR_PREFERENCES", EditorPreferencesMenu, m_Editor.CommandManager[EditorPreferencesCommand]);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorJoinDiscordCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorOpenWikiCommand]);

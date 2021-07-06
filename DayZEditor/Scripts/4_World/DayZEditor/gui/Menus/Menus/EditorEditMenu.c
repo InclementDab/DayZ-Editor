@@ -8,8 +8,8 @@ class EditorEditMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager[EditorRedoCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorFindAndReplaceCommand]);
 		AddMenuDivider();
-		AddMenuCategory("Edit", EditorClipboardMenu);
-		AddMenuCategory("Transform Mode", EditorTransformModeMenu);
+		AddMenuCategory("#STR_EDITOR_EDIT", EditorClipboardMenu);
+		AddMenuCategory("#STR_EDITOR_TRANSFORM", EditorTransformModeMenu);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorCheckDuplicatesCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorScriptEditorCommand]);
