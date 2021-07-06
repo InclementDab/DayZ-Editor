@@ -245,7 +245,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Soubor"
+         text "#STR_EDITOR_FILE"
          font "gui/fonts/etelkatextpro22"
          "exact text" 1
          "size to text h" 1
@@ -280,7 +280,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Editovat"
+         text "#STR_EDITOR_EDIT"
          font "gui/fonts/etelkatextpro22"
          "exact text" 1
          "size to text h" 1
@@ -314,7 +314,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Prohlednout"
+         text "#STR_EDITOR_VIEW"
          font "gui/fonts/etelkatextpro22"
          "exact text" 1
          "size to text h" 1
@@ -348,7 +348,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Editor"
+         text "#STR_EDITOR_EDITOR"
          font "gui/fonts/etelkatextpro22"
          "exact text" 1
          "size to text h" 1
@@ -1443,7 +1443,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       text "Control Player"
+       text "#STR_EDITOR_CMD_CONTROL_PLAYER"
        font "gui/fonts/etelkatextpro"
        "size to text h" 1
        "size to text v" 0
