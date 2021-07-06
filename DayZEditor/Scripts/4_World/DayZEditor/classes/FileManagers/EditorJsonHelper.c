@@ -75,7 +75,7 @@ class EditorJsonLoader<Class T>
 			return;
 		}
 		
-		EditorLog.Info("EditorJsonLoader::LoadFromFile Loaded file: " + path + " ( Files over 500MB~ might have issues sometimes )");
+		EditorLog.Debug("EditorJsonLoader::LoadFromFile Loaded file: " + path + " ( Files over 500MB~ might have issues sometimes )");
 		CloseFile(fh);
 	}
 };

@@ -3,7 +3,7 @@ class EditorImportCommandBase: EditorCommand
 	protected override void Call(Class sender, CommandArgs args)
 	{
 		string extension = "*" + EditorFileType.Cast(GetFileType().Spawn()).GetExtension();
-		EditorLog.Info("Using filter %1", extension);
+		EditorLog.Debug("Using filter %1", extension);
 		EditorFileDialog file_dialog(GetName(), extension, "", GetDialogButtonName());
 		
 		string file_name;
@@ -57,7 +57,7 @@ class EditorImportCommandBase: EditorCommand
 			GetEditor().Clear();
 		}
 				
-		EditorLog.Info("Deleting %1 Objects", save_data.DeletedObjects.Count().ToString());
+		EditorLog.Debug("Deleting %1 Objects", save_data.DeletedObjects.Count().ToString());
 		if (save_data.DeletedObjects.Count() > 0 && !GetEditor().GetObjectManager().IsWorldCacheLoaded()) {
 			EditorLog.Warning("World Cache not loaded, loading to avoid file corruption");
 			GetEditor().GetObjectManager().LoadWorldCache();
@@ -69,7 +69,7 @@ class EditorImportCommandBase: EditorCommand
 			}
 		}
 		
-		EditorLog.Info("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
+		EditorLog.Debug("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
 		foreach (EditorObjectData data: save_data.EditorObjects) {
 			GetEditor().CreateObject(data, false);
 		}

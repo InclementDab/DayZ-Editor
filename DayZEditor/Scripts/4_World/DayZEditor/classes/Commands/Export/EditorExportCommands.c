@@ -55,7 +55,7 @@ class EditorExportCommandBase : EditorCommand
 
 		string message = string.Format("Saved %1 objects! (%2 deletions)", save_data.EditorObjects.Count().ToString(), CF.ObjectManager.GetHiddenMapObjects().Count());
 		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
-		EditorLog.Info(message);
+		EditorLog.Debug(message);
 		return true;
 	}
 
