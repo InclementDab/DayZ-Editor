@@ -63,6 +63,6 @@ class EditorExportCommandBase : EditorCommand
 
 	string GetDialogButtonName()
 	{
-		return "Export";
+		return "#STR_EDITOR_EXPORT";
 	}
 }

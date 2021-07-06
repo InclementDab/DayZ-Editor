@@ -18,7 +18,7 @@ class EditorPreferencesCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Preferences...";
+		return "#STR_EDITOR_PREFERENCES";
 	}
 	
 	override string GetIcon() 

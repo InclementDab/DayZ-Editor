@@ -7,6 +7,6 @@ class EditorAddToFavoritesCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Add to favorites...";
+		return "#STR_EDITOR_CMD_ADD_TO_FAVORITES";
 	}
 }

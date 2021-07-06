@@ -7,6 +7,6 @@ class EditorJoinDiscordCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Join our Discord...";
+		return "#STR_EDITOR_JOIN_DISCORD";
 	}
 }

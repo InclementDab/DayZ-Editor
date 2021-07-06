@@ -9,6 +9,6 @@ class EditorLootEditorCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Edit Loot Spawns";
+		return "#STR_EDITOR_LOOT_EDITOR";
 	}
 }

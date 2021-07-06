@@ -26,7 +26,7 @@ class EditorNewCommand: EditorCommand
 		
 	override string GetName() 
 	{
-		return "New";
+		return "#STR_EDITOR_NEW";
 	}
 
 	override string GetIcon() 

@@ -8,6 +8,6 @@ class EditorReloadBrushesCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Reload Brushes";
+		return "#STR_EDITOR_CMD_RELOAD_BRUSHES";
 	}
 }

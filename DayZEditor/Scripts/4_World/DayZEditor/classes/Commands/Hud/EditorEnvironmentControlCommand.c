@@ -8,7 +8,7 @@ class EditorEnvironmentControlCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Environment";
+		return "#STR_EDITOR_ENVIRONMENT";
 	}
 	
 	override string GetIcon() 

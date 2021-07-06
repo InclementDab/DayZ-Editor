@@ -7,6 +7,6 @@ class EditorExportToInitFile: EditorExportCommandBase
 	
 	override string GetName() 
 	{
-		return "Export to init.c";
+		return "#STR_EDITOR_CMD_EXPORT_INIT_C";
 	}
 }

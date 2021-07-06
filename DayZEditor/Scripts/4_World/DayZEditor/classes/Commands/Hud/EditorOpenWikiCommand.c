@@ -7,6 +7,6 @@ class EditorOpenWikiCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Wiki";
+		return "#STR_EDITOR_WIKI";
 	}
 }

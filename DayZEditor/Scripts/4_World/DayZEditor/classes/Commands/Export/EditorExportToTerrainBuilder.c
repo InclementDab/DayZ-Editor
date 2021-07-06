@@ -7,6 +7,6 @@ class EditorExportToTerrainBuilder: EditorExportCommandBase
 	
 	override string GetName() 
 	{
-		return "Export to Terrain Builder";
+		return "#STR_EDITOR_CMD_EXPORT_TB";
 	}
 }

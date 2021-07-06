@@ -23,7 +23,7 @@ class EditorSaveCommand: EditorExportCommandBase
 	
 	override string GetName() 
 	{
-		return "Save";
+		return "#STR_EDITOR_SAVE";
 	}
 	
 	override string GetIcon() 

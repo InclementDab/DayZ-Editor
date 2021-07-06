@@ -41,6 +41,6 @@ class EditorDumpSceneCommand: EditorCommand
 
 	override string GetName() 
 	{
-		return "Dump Camera Data";
+		return "#STR_EDITOR_CMD_DUMP_CAMERA";
 	}
 }

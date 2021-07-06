@@ -8,6 +8,6 @@ class EditorDonateCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Donate";
+		return "#STR_EDITOR_DONATE";
 	}
 }

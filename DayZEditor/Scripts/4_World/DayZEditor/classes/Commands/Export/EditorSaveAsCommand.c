@@ -18,7 +18,7 @@ class EditorSaveAsCommand: EditorExportCommandBase
 	
 	override string GetName() 
 	{
-		return "Save As...";
+		return "#STR_EDITOR_SAVEAS";
 	}
 	
 	override ShortcutKeys GetShortcut() 
@@ -33,6 +33,6 @@ class EditorSaveAsCommand: EditorExportCommandBase
 	
 	override string GetDialogButtonName() 
 	{
-		return "Save";
+		return "#STR_EDITOR_SAVE";
 	}
 }

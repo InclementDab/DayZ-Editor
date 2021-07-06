@@ -54,6 +54,6 @@ class EditorEscapeCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Escape";
+		return "#STR_EDITOR_EXIT";
 	}
 }

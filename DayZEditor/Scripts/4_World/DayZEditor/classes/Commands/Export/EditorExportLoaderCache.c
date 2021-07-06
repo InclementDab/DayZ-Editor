@@ -49,6 +49,6 @@ class EditorExportLoaderCache: EditorCommand
 	
 	override string GetName()
 	{
-		return "Export Loader Cache";
+		return "#STR_EDITOR_CMD_EXPORT_LOADER_CACHE";
 	}
 }

@@ -38,6 +38,6 @@ class EditorScriptEditorCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Script Editor";
+		return "#STR_EDITOR_CMD_SCRIPT_EDITOR";
 	}
 }

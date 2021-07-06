@@ -8,7 +8,7 @@ class EditorCameraControlsCommand: EditorCommand
 
 	override string GetName() 
 	{
-		return "Camera";
+		return "#STR_EDITOR_CAMERA";
 	}
 		
 	override string GetIcon() 

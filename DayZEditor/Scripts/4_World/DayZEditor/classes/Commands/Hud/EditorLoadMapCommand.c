@@ -16,6 +16,6 @@ class EditorLoadMapCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Select Map...";
+		return "#STR_EDITOR_SELECT_MAP";
 	}
 }

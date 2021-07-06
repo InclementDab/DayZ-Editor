@@ -8,6 +8,6 @@ class EditorHelpCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Help";
+		return "#STR_EDITOR_HELP";
 	}
 }

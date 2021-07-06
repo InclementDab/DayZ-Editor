@@ -7,6 +7,6 @@ class EditorExportToEvents: EditorExportCommandBase
 	
 	override string GetName() 
 	{
-		return "Export to Events File";
+		return "#STR_EDITOR_CMD_EXPORT_EVENTS";
 	}
 }

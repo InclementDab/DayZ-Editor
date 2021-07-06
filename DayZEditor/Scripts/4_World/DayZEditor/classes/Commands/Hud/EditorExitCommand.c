@@ -16,6 +16,6 @@ class EditorExitCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Exit";
+		return "#STR_EDITOR_EXIT";
 	}
 }

@@ -13,7 +13,7 @@ class EditorCloseCommand: EditorCommand
 			
 	override string GetName() 
 	{
-		return "Close";
+		return "#STR_EDITOR_CLOSE";
 	}
 	
 	override ShortcutKeys GetShortcut() 
