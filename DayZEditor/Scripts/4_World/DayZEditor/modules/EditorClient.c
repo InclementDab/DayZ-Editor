@@ -91,7 +91,6 @@ class EditorClientModule: JMModuleBase
 	private void CheckKonamiCode(int progress)
 	{
 		if (m_KonamiCodeProgress == progress) {
-			Print("Clearing progress");
 			m_KonamiCodeProgress = 0;
 		}
 	}
@@ -133,7 +132,6 @@ class EditorClientModule: JMModuleBase
 	override void OnMissionLoaded()
 	{
 		EditorLog.Trace("Editor::OnMissionLoaded");
-		GetEditor().SetActive(true);
 		
 		// Just resolves like 37 different issues surrounding DayZ and DayZ related titles
 		GetEditor().SetActive(false);

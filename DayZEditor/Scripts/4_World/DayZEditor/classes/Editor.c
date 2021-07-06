@@ -161,6 +161,8 @@ class Editor
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
 		
+		SetActive(true);
+		
 		thread AutoSaveThread();
 	}
 	
