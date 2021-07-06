@@ -2,7 +2,7 @@ class EditorScriptEditorCommand: EditorCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorScriptEditorDialog edit_dialog = new EditorScriptEditorDialog("Script Console");
+		EditorScriptEditorDialog edit_dialog = new EditorScriptEditorDialog(GetName());
 		
 		string script_content;
 		edit_dialog.ShowDialog(script_content);

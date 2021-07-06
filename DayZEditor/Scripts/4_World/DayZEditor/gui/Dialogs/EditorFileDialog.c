@@ -10,7 +10,7 @@ class EditorFileDialog: EditorDialogBase
 	void EditorFileDialog(string title, string filter = "*", string default_value = "", string button_name = "")
 	{
 		m_Filter = filter;		
-		m_EditBoxPrefab = new EditBoxPrefab("File", m_Controller, default_value);
+		m_EditBoxPrefab = new EditBoxPrefab("#STR_EDITOR_FILE", m_Controller, default_value);
 	 
 		m_ListBoxPrefab = new ListBoxPrefab<string>();
 		m_ListBoxPrefab.Event_OnClick.Insert(OnListItemClick);

@@ -2,7 +2,7 @@ class EditorCameraControlsCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorCameraDialog camera_dialog("Camera Properties");
+		EditorCameraDialog camera_dialog(GetName());
 		camera_dialog.ShowDialog();
 	}
 

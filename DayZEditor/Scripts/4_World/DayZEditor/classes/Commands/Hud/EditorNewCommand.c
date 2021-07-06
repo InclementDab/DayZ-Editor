@@ -2,7 +2,7 @@ class EditorNewCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorEditBoxDialog edit_dialog = new EditorEditBoxDialog("New File...");
+		EditorEditBoxDialog edit_dialog = new EditorEditBoxDialog(GetName());
 		string file_name;
 		DialogResult result = edit_dialog.ShowDialog(file_name);
 		if (result != DialogResult.OK) { 

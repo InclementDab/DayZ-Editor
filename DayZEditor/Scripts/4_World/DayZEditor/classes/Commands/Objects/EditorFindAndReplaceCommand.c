@@ -2,7 +2,7 @@ class EditorFindAndReplaceCommand: EditorCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{
-		EditorFindAndReplaceDialog dialog("Find and Replace");
+		EditorFindAndReplaceDialog dialog(GetName());
 		dialog.ShowDialog();
 	}
 	
