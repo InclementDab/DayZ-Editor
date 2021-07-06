@@ -2,7 +2,7 @@ class EditorImportFromInit: EditorImportCommandBase
 {
 	override string GetName() 
 	{
-		return "Import from Init.c";
+		return "Import from init.c";
 	}
 	
 	override typename GetFileType() 

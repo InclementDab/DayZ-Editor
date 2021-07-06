@@ -82,7 +82,8 @@ class EditorInitFile: EditorFileType
 		CloseFile(handle);
 	}
 	
-	override string GetExtension() {
+	override string GetExtension() 
+	{
 		return ".c";
 	}
 }

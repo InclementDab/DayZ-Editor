@@ -2,7 +2,7 @@ class EditorImportFromVPP: EditorImportCommandBase
 {
 	override string GetName() 
 	{
-		return "Import from .VPP";
+		return "Import from VPP";
 	}
 	
 	override typename GetFileType() 
