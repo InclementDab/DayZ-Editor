@@ -56,9 +56,9 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		AddContent(m_GeneralGroup);
 		
 		// All of these bindings are directly on the world object
-		if (editor_object.GetWorldObject().IsInherited(EditorScriptedLight)) {
+		if (editor_object.GetWorldObject().IsInherited(EditorScriptedLight)) {			
 			m_LightGroup = new GroupPrefab("Light Controls", m_EditorObject.GetWorldObject(), string.Empty);
-			m_LightGroup.Insert(new SliderPrefab("Radius", m_EditorObject.GetWorldObject(), "Radius"));
+			m_LightGroup.Insert(new SliderPrefab("Radius", m_EditorObject.GetWorldObject(), "Radius", 0, 10000));
 			m_LightGroup.Insert(new CheckBoxPrefab("Cast Shadow", m_EditorObject.GetWorldObject(), "CastShadow"));
 			m_LightGroup.Insert(new CheckBoxPrefab("Enable Specular", m_EditorObject.GetWorldObject(), "EnableSpecular"));
 			m_LightGroup.Insert(new CheckBoxPrefab("Enable Linear", m_EditorObject.GetWorldObject(), "EnableLinear"));
@@ -76,7 +76,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			m_LightGroup.Insert(new CheckBoxPrefab("Enable Flare", m_EditorObject.GetWorldObject(), "FlareVisible"));
 			m_LightGroup.Insert(new VectorPrefab("Flare Position", m_EditorObject.GetWorldObject(), "FlareRelativePosition"));
 
-			m_LightGroup.Insert(new SliderPrefab("Spot Light Angle", m_EditorObject.GetWorldObject(), "SpotLightAngle", 0, 360));
+			m_LightGroup.Insert(new SliderPrefab("Spot Light Angle", m_EditorObject.GetWorldObject(), "SpotLightAngle", 0, 180));
 			AddContent(m_LightGroup);
 		}
 		
