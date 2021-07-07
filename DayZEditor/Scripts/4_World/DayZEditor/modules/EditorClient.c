@@ -102,25 +102,18 @@ class EditorClientModule: JMModuleBase
 		
 	override void OnMissionStart()
 	{
-		EditorLog.Trace("Editor::OnMissionStart");		
+		EditorLog.Trace("Editor::OnMissionStart");
 		
-		if (IsMissionOffline()) {
-			EditorLog.Info("Loading Offline Editor...");
-			g_Game.ReportProgress("Loading Mission");
-			vector center_pos = Editor.GetMapCenterPosition();
-			PlayerBase player = Editor.CreateDefaultCharacter(Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
-			if (!player) {
-				g_Game.ReportProgress("Failed to create player, contact InclementDab");
-				Error("Player was not created, exiting");
-				return;
-			}
-			
-			GetGame().SelectPlayer(null, player);
-			Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
-		} else {
-			EditorLog.Info("Loading Online Editor...");
-			Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
+		g_Game.ReportProgress("Loading Mission");
+		vector center_pos = Editor.GetMapCenterPosition();
+		PlayerBase player = Editor.CreateDefaultCharacter(Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
+		if (!player) {
+			g_Game.ReportProgress("Failed to create player, contact InclementDab");
+			Error("Player was not created, exiting");
+			return;
 		}
+		
+		GetGame().SelectPlayer(null, player);
 	}
 	
 	override void OnMissionFinish()
@@ -133,10 +126,10 @@ class EditorClientModule: JMModuleBase
 	{
 		EditorLog.Trace("Editor::OnMissionLoaded");
 		
-		// Just resolves like 37 different issues surrounding DayZ and DayZ related titles
-		GetEditor().SetActive(true);
-		GetEditor().SetActive(false);
-		GetEditor().SetActive(true);
+		g_Game.ReportProgress("Mission Loaded");
+		EditorLog.Info("Loading Offline Editor...");
+		Editor editor = Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
+		editor.SetActive(true);
 	}
 	
 	// Inputs
