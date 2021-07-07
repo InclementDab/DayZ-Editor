@@ -175,8 +175,10 @@ class Editor
 		}
 		
 		// Fallback
-		if (GetGame()) {
-			SetActive(false);
+		if (GetGame() && m_Mission) {
+			// Causing more trouble than its worth, null ptrs
+			// fix if you need to delete editor safely when running for some reason (MP?)
+			//SetActive(false);
 		}
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(UpdateStatTime);
@@ -509,15 +511,22 @@ class Editor
 		
 		m_Active = active;
 		
-		m_EditorCamera.LookEnabled = m_Active;
-		m_EditorCamera.MoveEnabled = m_Active;
-		m_EditorCamera.SetActive(m_Active);
+		if (m_EditorCamera) {
+			m_EditorCamera.LookEnabled = m_Active;
+			m_EditorCamera.MoveEnabled = m_Active;
+			m_EditorCamera.SetActive(m_Active);
+		}
 		
-		m_EditorHud.Show(m_Active);
-		m_Mission.GetHud().Show(!m_Active);
-		m_Mission.GetHud().ShowHud(!m_Active);
-		m_Mission.GetHud().ShowHudUI(!m_Active);
-		m_Mission.GetHud().SetPermanentCrossHair(!m_Active);
+		if (m_EditorHud) {
+			m_EditorHud.Show(m_Active);
+		}
+		
+		if (m_Mission && m_Mission.GetHud()) {
+			m_Mission.GetHud().Show(!m_Active);
+			m_Mission.GetHud().ShowHud(!m_Active);
+			m_Mission.GetHud().ShowHudUI(!m_Active);
+			m_Mission.GetHud().SetPermanentCrossHair(!m_Active);
+		}
 		
 		// we are in 4_world and this game is bad :)
 		Widget hud_root;
