@@ -17,8 +17,8 @@ class EditorOpenCommand: EditorImportCommandBase
 		EditorSaveData save_data = ImportFile(file_name, true);
 		
 		if (save_data) {
-			m_Editor.SetSaveFile(file_name);
-			m_Editor.GetCamera().SetPosition(save_data.CameraPosition);
+			GetEditor().SetSaveFile(file_name);
+			GetEditor().GetCamera().SetPosition(save_data.CameraPosition);
 		}
 		
 		return save_data;
