@@ -33,7 +33,7 @@ class EditorObject: EditorWorldObject
 	
 	// Human Properties
 	bool Control;
-	string CurrentAnimation;
+	int CurrentAnimation;
 	bool Animate;
 		
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
@@ -367,11 +367,11 @@ class EditorObject: EditorWorldObject
 			}
 			
 			case "Animate": {
-				if (Animate) {
-					SetAnimation(CurrentAnimation);
-				} else {
-					ResetAnimation();
+				PlayerBase emote_player = PlayerBase.Cast(m_WorldObject);
+				if (emote_player) {
+					emote_player.GetEmoteManager().PlayEmote(CurrentAnimation);
 				}
+				
 				break;
 			}
 						

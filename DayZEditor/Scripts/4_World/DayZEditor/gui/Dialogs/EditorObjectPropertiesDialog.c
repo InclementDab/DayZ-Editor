@@ -93,8 +93,15 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		if (editor_object.GetWorldObject().IsMan()) {
 			m_HumanGroup = new GroupPrefab("#STR_EDITOR_HUMAN", m_EditorObject, string.Empty);
 			m_HumanGroup.Insert(new CheckBoxPrefab("#STR_EDITOR_SELECTED_PLAYER", m_EditorObject, "Control"));
-			m_HumanGroup.Insert(new EditBoxPrefab("#STR_EDITOR_ANIMATION", m_EditorObject, "CurrentAnimation"));
+			DropdownListPrefab<int> animations = new DropdownListPrefab<int>("#STR_EDITOR_ANIMATION", m_EditorObject, "CurrentAnimation");
+			map<string, int> emote_list = PlayerBase.GetEmoteList();
+			foreach (string emote_name, int emote_id: emote_list) {
+				animations[emote_name] = emote_id;
+			}
+			
+			m_HumanGroup.Insert(animations);
 			m_HumanGroup.Insert(new ButtonPrefab("#STR_EDITOR_CINEMATIC_CAMERA_RUN", m_EditorObject, "Animate"));
+			
 			m_HumanGroup.Open(HumanGroup);
 			AddContent(m_HumanGroup);
 		}
