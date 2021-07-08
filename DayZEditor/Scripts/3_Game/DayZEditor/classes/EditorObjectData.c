@@ -47,9 +47,7 @@ class EditorObjectData
 	}
 	
 	static EditorObjectData Create(string type, vector position, vector orientation, float scale, EditorObjectFlags flags)
-	{
-		EditorLog.Trace("EditorObjectData::Create");
-				
+	{				
 		if (GetGame().GetModelName(type) == "UNKNOWN_P3D_FILE") {
 			EditorLog.Warning(string.Format("EditorObjectData::Create %1 is not a valid Object Type!", type));
 			//return null;
