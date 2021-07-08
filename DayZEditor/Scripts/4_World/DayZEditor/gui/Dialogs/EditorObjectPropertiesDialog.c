@@ -3,12 +3,13 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	static bool GeneralGroup = true;
 	static bool Object_Group = true;
 	static bool HumanGroup = true;
-	static bool AdvancedGroup = false;
+	static bool LightGroup = true;
+	static bool DebugGroup = false;
 	
 	protected ref GroupPrefab m_GeneralGroup;
 	protected ref GroupPrefab m_ObjectGroup;
 	protected ref GroupPrefab m_HumanGroup;
-	protected ref GroupPrefab m_AdvancedGroup;
+	protected ref GroupPrefab m_DebugGroup;
 	protected ref GroupPrefab m_LightGroup;
 	
 	protected EditorObject m_EditorObject;
@@ -77,6 +78,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			m_LightGroup.Insert(new VectorPrefab("Flare Position", m_EditorObject.GetWorldObject(), "FlareRelativePosition"));
 
 			m_LightGroup.Insert(new SliderPrefab("Spot Light Angle", m_EditorObject.GetWorldObject(), "SpotLightAngle", 0, 180));
+			m_LightGroup.Open(LightGroup);
 			AddContent(m_LightGroup);
 		}
 		
@@ -106,13 +108,14 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			AddContent(m_HumanGroup);
 		}
 		
-		/*m_AdvancedGroup = new GroupPrefab("Debug", m_EditorObject, string.Empty);
-		m_AdvancedGroup.Insert(new TextBoxPrefab("Type", m_EditorObject, "")); //m_EditorObject.GetWorldObject().GetType()
+		m_DebugGroup = new GroupPrefab("Debug", m_EditorObject.GetData(), string.Empty);
+		m_DebugGroup.Insert(new TextBoxPrefab("Type", m_EditorObject.GetData(), "Type"));
 		string id = "" + m_EditorObject.GetWorldObject().GetID();
-		m_AdvancedGroup.Insert(new TextBoxPrefab("ID", m_EditorObject, "id"));
-		m_AdvancedGroup.Insert(new TextBoxPrefab("Model", m_EditorObject, "model")); //m_EditorObject.GetWorldObject().ConfigGetString("model")
-		m_AdvancedGroup.Open(AdvancedGroup);*/
-		//AddContent(m_AdvancedGroup);
+		m_DebugGroup.Insert(new TextBoxPrefab("ID", m_EditorObject.GetData(), "m_Id"));
+		m_DebugGroup.Insert(new TextBoxPrefab("Flags", m_EditorObject.GetData(), "Flags"));
+		m_DebugGroup.Insert(new TextBoxPrefab("Model", m_EditorObject.GetData(), "Model"));
+		m_DebugGroup.Open(DebugGroup);
+		AddContent(m_DebugGroup);
 	}
 	
 	private void UpdateViewContext()
@@ -123,15 +126,19 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		if (m_ObjectGroup)
 			Object_Group = m_ObjectGroup.IsOpen();
 		
-		if (m_AdvancedGroup)
-			AdvancedGroup = m_AdvancedGroup.IsOpen();
+		if (m_DebugGroup)
+			DebugGroup = m_DebugGroup.IsOpen();
 		
 		if (m_HumanGroup)
 			HumanGroup = m_HumanGroup.IsOpen();
 		
+		if (m_LightGroup)
+			LightGroup = m_LightGroup.IsOpen();
+		
 		delete m_GeneralGroup;
+		delete m_LightGroup;
 		delete m_ObjectGroup;
-		delete m_AdvancedGroup;
+		delete m_DebugGroup;
 		delete m_HumanGroup;
 	}
 	

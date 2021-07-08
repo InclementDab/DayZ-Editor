@@ -16,6 +16,9 @@ class EditorObjectData
 	//bool EditorOnly = false;
 	
 	[NonSerialized()]
+	string Model;
+	
+	[NonSerialized()]
 	vector BottomCenter;
 
 	EditorObjectFlags Flags;
@@ -54,6 +57,7 @@ class EditorObjectData
 		
 		EditorObjectData data = new EditorObjectData();
 		data.Type = type; 
+		data.Model = GetGame().GetModelName(data.Type);
 		data.Position = position; 
 		data.Orientation = orientation;
 		data.Scale = scale;
@@ -69,10 +73,13 @@ class EditorObjectData
 	static EditorObjectData Create(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL)
 	{
 		// We do this because all 'baked' objects are ID'd to 3. cant store a bunch of 3's can we?
-		if (target.GetID() == 3) return null;
+		if (target.GetID() == 3) { 
+			return null;
+		}
 		
 		EditorObjectData data = new EditorObjectData();
 		data.Type = target.GetType();
+		data.Model = GetGame().GetModelName(data.Type);
 		data.WorldObject = target;
 		data.Position = data.WorldObject.GetPosition(); 
 		data.Orientation = data.WorldObject.GetOrientation(); 
