@@ -15,6 +15,10 @@ class EditorDeletedObject: EditorWorldObject
 	
 	void EditorDeletedObject(notnull Object object)
 	{
+		if (!object) { 
+			return;
+		}
+		
 		m_WorldObject = object;
 		m_Position = m_WorldObject.GetPosition();
 		m_Orientation = m_WorldObject.GetOrientation();
