@@ -1,4 +1,4 @@
-name = "$STR_EDITOR_NAME";
+name = "$STR_EDITOR_MOD_NAME";
 picture = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
 logo = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
 logoSmall = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
