@@ -154,12 +154,6 @@ class EditorObjectManagerModule: JMModuleBase
 	{
 		// On Load unhide em all
 		CF.ObjectManager.UnhideAllMapObjects();
-				
-		if (GetEditor().Settings.DisableWorldCache) {
-			return;
-		}
-		
-		LoadWorldCache();
 	}
 	
 	void LoadWorldCache()

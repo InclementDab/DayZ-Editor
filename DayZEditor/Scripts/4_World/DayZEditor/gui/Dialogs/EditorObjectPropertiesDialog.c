@@ -108,7 +108,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			AddContent(m_HumanGroup);
 		}
 		
-		m_DebugGroup = new GroupPrefab("#STR_LOG_DEBUG", m_EditorObject.GetData(), string.Empty);
+		m_DebugGroup = new GroupPrefab("Debug", m_EditorObject.GetData(), string.Empty);
 		m_DebugGroup.Insert(new TextBoxPrefab("#STR_EDITOR_TYPE", m_EditorObject.GetData(), "Type"));
 		m_DebugGroup.Insert(new TextBoxPrefab("#STR_EDITOR_ID", m_EditorObject.GetData(), "m_Id"));
 		//m_DebugGroup.Insert(new TextBoxPrefab("Flags", m_EditorObject.GetData(), "Flags"));
