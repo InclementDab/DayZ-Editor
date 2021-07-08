@@ -1,5 +1,5 @@
 class EditorWorldObject
-{
+{	
 	protected Object m_WorldObject;
 	Object GetWorldObject() 
 	{
@@ -11,7 +11,7 @@ class EditorWorldObject
 		GetGame().ObjectDelete(m_WorldObject);	
 	}
 	
-	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)
+	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)	
 	{
 		type = type.Trim();
 		if (type == string.Empty) return null;

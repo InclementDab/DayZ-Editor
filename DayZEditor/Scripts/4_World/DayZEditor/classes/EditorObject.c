@@ -16,6 +16,7 @@ class EditorObject: EditorWorldObject
 	private vector m_LineVerticies[8];
 	
 	// Object Data
+	int ObjectID;
 	string Name;
 	vector Position;
 	vector Orientation;
@@ -269,6 +270,7 @@ class EditorObject: EditorWorldObject
 			return;
 		}
 		
+		ObjectID = m_WorldObject.GetID();
 		if (m_Data) {
 			m_Data.Position = GetPosition();
 			m_Data.Orientation = GetOrientation();

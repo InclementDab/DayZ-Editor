@@ -110,8 +110,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		m_DebugGroup = new GroupPrefab("Debug", m_EditorObject.GetData(), string.Empty);
 		m_DebugGroup.Insert(new TextBoxPrefab("#STR_EDITOR_TYPE", m_EditorObject.GetData(), "Type"));
-		m_DebugGroup.Insert(new TextBoxPrefab("#STR_EDITOR_ID", m_EditorObject.GetData(), "m_Id"));
-		//m_DebugGroup.Insert(new TextBoxPrefab("Flags", m_EditorObject.GetData(), "Flags"));
+		m_DebugGroup.Insert(new TextBoxPrefab("#STR_EDITOR_ID", m_EditorObject, "ObjectID"));
+		m_DebugGroup.Insert(new TextBoxPrefab("Flags", m_EditorObject.GetData(), "Flags"));
 		m_DebugGroup.Insert(new TextBoxPrefab("#STR_EDITOR_MODEL", m_EditorObject.GetData(), "Model"));
 		m_DebugGroup.Open(DebugGroup);
 		AddContent(m_DebugGroup);
