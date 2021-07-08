@@ -5,5 +5,5 @@ enum EditorObjectFlags
 	MAPMARKER = 4,
 	OBJECTMARKER = 8,
 	LISTITEM = 16,
-	ALL = 30 // 2 | 4 | 8 | 16
+	ALL = 2147483647 // Expandable 32 times!
 };
