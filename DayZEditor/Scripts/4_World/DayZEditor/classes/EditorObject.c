@@ -284,7 +284,7 @@ class EditorObject: EditorWorldObject
 		
 		
 		if (GetEditor().Settings.DebugMode) {
-			Debug.DestroyAllShapes();
+			//Debug.DestroyAllShapes();
 			foreach (EditorSnapPoint point: m_SnapPoints) {
 				Debug.DrawSphere(point.GetWorldObject().GetWorldPosition());
 			}

@@ -20,7 +20,7 @@ class EditorMapSelectDialog: EditorDialogBase
 		//m_SelectButton.Button.Enable(false);
 		//m_SelectButton.Button.SetAlpha(150);
 		
-		AddButton("Cancel", DialogResult.Cancel);
+		AddButton(DialogResult.Cancel);
 	}
 	
 	DialogResult ShowDialog(out string selected_map)

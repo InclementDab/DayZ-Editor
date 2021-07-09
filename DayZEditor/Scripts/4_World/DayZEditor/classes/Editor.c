@@ -235,7 +235,7 @@ class Editor
 		}
 	
 		if (!IsPlacing()) {
-			Object target = GetObjectUnderCursor(Settings.ViewDistance);
+			Object target = GetObjectUnderCursor(Settings.ObjectViewDistance);
 			if (target) {
 				if (target != ObjectUnderCursor) {
 					if (ObjectUnderCursor) { 
