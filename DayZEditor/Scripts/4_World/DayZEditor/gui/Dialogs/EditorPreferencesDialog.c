@@ -30,6 +30,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		
 		GroupPrefab camera_group = new GroupPrefab("Camera Settings", m_Editor.Settings, string.Empty);
 		camera_group.Insert(new SliderPrefab("Camera Speed", m_Editor.Settings, "CameraSpeed", 0, 500));
+		camera_group.Insert(new CheckBoxPrefab("Show Rule of 3rds", m_Editor.Settings, "RuleOfThirds"));
 		
 		GroupPrefab marker_group = new GroupPrefab("Marker Settings", m_Editor.Settings, string.Empty);
 		marker_group.Insert(new CheckBoxPrefab("Show Tooltips", m_Editor.Settings, "MarkerTooltips"));

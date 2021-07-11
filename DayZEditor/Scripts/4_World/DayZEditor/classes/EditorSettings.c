@@ -7,6 +7,7 @@ class EditorSettings: ProfileSettings
 
 	// Camera Settings
 	float CameraSpeed				= 60;
+	bool RuleOfThirds				= false;
 	
 	// Advanced Settings
 	bool LockCameraDuringDialogs 	= true;
@@ -76,6 +77,11 @@ class EditorSettings: ProfileSettings
 			
 			case "CameraSpeed": {
 				GetEditor().GetCamera().Speed = CameraSpeed;
+				break;
+			}
+			
+			case "RuleOfThirds": {
+				GetEditor().GetEditorHud().ShowRuleOfThirds(RuleOfThirds);
 				break;
 			}
 		}
