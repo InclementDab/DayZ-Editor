@@ -190,6 +190,8 @@ class EditorCamera: Camera
 		if (IsTargeting) {
 			LookAt(TargetPosition);
 		}
+		
+		EditorLog.Trace("EditorCamera::EOnFrame-");
 	}
 
 	void AngleToQuat( float angle, vector dir, out float d[4] )
