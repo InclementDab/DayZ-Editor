@@ -57,17 +57,20 @@ class CfgVehicles
 	{
 		scope = 1;
 		hiddenSelections[] = {"main"};
+		shadow = 0;
 	};
 	class GizmoArrow: GizmoBase
 	{
 		scope = 2;
 		model = "\DayZEditor\Editor\TranslationWidget.p3d";
+		shadow = 0;
 	};
 
 	class GizmoCenter: GizmoBase
 	{
 		scope = 2;
 		model = "\DayZEditor\Editor\TranslationCenter.p3d";
+		shadow = 0;
 	};
 
 	class RotationWidget: Inventory_Base
@@ -76,6 +79,7 @@ class CfgVehicles
 		itemSize[]={16,16};
 		model = "\DayZEditor\Editor\RotationWidget.p3d";
 		hiddenSelections[] = {"RotationX", "RotationY", "RotationZ"};
+		shadow = 0;
 	};
 
 	class BrushBase: Inventory_Base
@@ -84,6 +88,7 @@ class CfgVehicles
 		model = "\DayZEditor\Editor\BrushBase.p3d";
 		hiddenSelections[] = {"BrushBase"};
 		hiddenSelectionTextures[] = { "DayZEditor\\Editor\\data\\BrushDelete.paa" };
+		shadow = 0;
 	};
 
 	class BoundingBoxBase: HouseNoDestruct
@@ -91,9 +96,9 @@ class CfgVehicles
 		scope = 1;
 		model = "\DayZEditor\Editor\BoundingBoxBase.p3d";
 		hiddenSelections[] = {"BoundingBoxSelection"};
+		shadow = 0;
 	};
 
-	
 	class DebugCylinder: HouseNoDestruct
 	{
 		scope=2;

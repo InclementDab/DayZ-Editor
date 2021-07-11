@@ -1,5 +1,16 @@
 // filename, author
-typedef Param2<string, string> LoadingScreenEntry;
+
+class LoadingScreenEntry
+{
+	string File;
+	string Creator;
+	bool HideLogo;
+	
+	void LoadingScreenEntry(string file, string creator, bool hide_logo = false)
+	{
+		File = file; Creator = creator; HideLogo = hide_logo;
+	}
+}
 
 modded class LoadingScreen
 {
@@ -26,6 +37,7 @@ modded class LoadingScreen
 		new LoadingScreenEntry("19.edds", "InclementDab"),		
 		new LoadingScreenEntry("20.edds", "Bosch"),		
 		new LoadingScreenEntry("21.edds", "DanceOfJesus"),		
+		new LoadingScreenEntry("22.edds", "DanceOfJesus", true),		
 	};
 	
 	protected TextWidget m_ImageCredit;
@@ -65,9 +77,13 @@ modded class LoadingScreen
 		val = val + (val << 37);
 		val = Math.AbsInt(val);
 		val = val % LOADING_SCREENS.Count();
-		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1", LOADING_SCREENS[val].param1));
-		m_ImageCredit.SetText("Image by " + LOADING_SCREENS[val].param2);
+		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1", LOADING_SCREENS[val].File));
+		m_ImageCredit.SetText("Image by " + LOADING_SCREENS[val].Creator);
 		m_ImageWidgetBackground.SetImage(0);
+		
+		m_ImageCredit.Show(!LOADING_SCREENS[val].HideLogo);
+		m_ImageLogoMid.Show(!LOADING_SCREENS[val].HideLogo);
+		m_ImageLogoCorner.Show(!LOADING_SCREENS[val].HideLogo);
 #endif
 	}
 	
