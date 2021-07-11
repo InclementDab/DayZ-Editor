@@ -110,6 +110,15 @@ class CfgVehicles
 		scope=2;
 		model="DZ\gear\food\eeg.p3d";
 	};
+
+	class DZE_Logo_Graffiti: HouseNoDestruct
+	{
+		scope=2;
+		displayName="DZE_Logo_Graffiti";
+		descriptionShort="Hype train is a hoax";
+		model="\DayZEditor\Editor\Logo_Graffiti.p3d";
+		shadow = 0;
+	};
 /*
 	class CinematicCamera: HouseNoDestruct
 	{
