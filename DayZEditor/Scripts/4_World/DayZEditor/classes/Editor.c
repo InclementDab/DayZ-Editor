@@ -164,7 +164,7 @@ class Editor
 		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);		
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
 		
-		thread AutoSaveThread();
+		//thread AutoSaveThread();
 	}
 	
 	private void ~Editor() 

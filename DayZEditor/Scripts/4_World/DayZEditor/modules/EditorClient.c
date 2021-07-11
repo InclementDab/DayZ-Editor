@@ -62,7 +62,7 @@ class EditorClientModule: JMModuleBase
 		}
 		
 		// Konami suck
-		if (m_KonamiCodeCooldown != 0) {
+		/*if (m_KonamiCodeCooldown != 0) {
 			m_KonamiCodeCooldown -= timeslice;
 			m_KonamiCodeCooldown = Math.Clamp(m_KonamiCodeCooldown, 0, 100);
 		}
@@ -77,7 +77,7 @@ class EditorClientModule: JMModuleBase
 			GetEditor().GetEditorHud().CreateNotification("Konami Code Complete!", ARGB(255, 255, 0, 255));
 			GetEditor().KEgg = true;
 			m_KonamiCodeProgress = -1;
-		}
+		}*/
 		
 		/*
 		if (GetEditor() && GetEditor().GetCamera() && !IsMissionOffline()) {
