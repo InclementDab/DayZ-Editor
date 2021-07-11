@@ -78,7 +78,8 @@ class EditorCamera: Camera
 	}
 		
 	override void EOnFrame(IEntity other, float timeSlice)
-	{		
+	{
+		EditorLog.Trace("EditorCamera::EOnFrame");
 		/*if (SendUpdateAccumalator > 0.5){
 			//GetGame().UpdateSpectatorPosition(GetPosition());
 
