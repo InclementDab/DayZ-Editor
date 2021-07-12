@@ -58,14 +58,8 @@ modded class LoadingScreen
 		m_ImageCredit = TextWidget.Cast(m_WidgetRoot.FindAnyWidget("ImageCredit"));
 		
 #ifndef COMPONENT_SYSTEM
-		// nice
-		/*int val = TickCount(0);
-		val = val + (val << 37);
-		val = Math.AbsInt(val);
-		val = val % LOADING_SCREENS.Count();
-		*/
 		Math.Randomize(-1);
-		int val = Math.RandomInt(0, 1000) % LOADING_SCREENS.Count();
+		int val = Math.RandomInt(0, LOADING_SCREENS.Count() * 100) % LOADING_SCREENS.Count();
 		
 		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1", LOADING_SCREENS[val].File));
 		m_ImageCredit.SetText("Image by " + LOADING_SCREENS[val].Creator);
