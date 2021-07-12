@@ -9,23 +9,47 @@ FrameWidgetClass CameraMarkerRoot {
  vexactsize 1
  priority 98
  {
-  ImageWidgetClass CameraMarkerImage {
+  ImageWidgetClass CameraMarkerImageBlackoutline {
    visible 1
    ignorepointer 1
-   size 1 1
+   color 0.1176 0.1176 0.1176 1
+   position 0 0
+   size 60 60
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 0
-   vexactsize 0
+   hexactsize 1
+   vexactsize 1
    priority 101
-   imageTexture "{C46FDF47A15CB6BE}DayZEditor/GUI/icons/icon_adam.edds"
+   image0 "set:ccgui_enforce image:HudAttack"
+   imageTexture ""
    mode blend
    "src alpha" 1
    "no wrap" 1
    stretch 1
    filter 1
+   {
+    ImageWidgetClass CameraMarkerImageMain {
+     visible 1
+     ignorepointer 1
+     size 50 50
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     priority 101
+     image0 "set:ccgui_enforce image:HudAttack"
+     imageTexture ""
+     mode blend
+     "src alpha" 1
+     "no wrap" 1
+     stretch 1
+     filter 1
+    }
+   }
   }
  }
 }
