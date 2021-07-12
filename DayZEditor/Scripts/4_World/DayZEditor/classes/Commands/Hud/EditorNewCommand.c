@@ -12,7 +12,7 @@ class EditorNewCommand: EditorAsyncCommand
 		EditorFileManager.GetSafeFileName(file_name, ".dze");
 		
 		// Only supporting new in root dir atm
-		if (FileExist("$profile:Editor/" + file_name)) {
+		if (FileExist(Editor.ROOT_DIRECTORY + file_name)) {
 			if (MessageBox.Show("Are you sure?", "File " + file_name + " already exists. Overwrite?", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
 				return;
 			}

@@ -70,7 +70,7 @@ class Editor
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
 	protected string							EditorSaveFile;
-	static const string							ROOT_DIRECTORY = "$profile:/Editor/";
+	static const string							ROOT_DIRECTORY = "$saves:\\Editor\\";
 	
 	// modes
 	bool 										MagnetMode;

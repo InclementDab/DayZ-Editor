@@ -235,13 +235,11 @@ class EditorEventManager
 	{
 	}
 	
-
-	
 	static void ImportEventPositions()
 	{
 		m_Events = new array<ref EditorEventSpawn>();
 		
-		string file = "$profile:\\Editor\\cfgeventspawns.xml";
+		string file = Editor.ROOT_DIRECTORY + "cfgeventspawns.xml";
 		if (!FileExist(file)) {
 			Print("File not found!"); // todo replace with the new fileopen dialog result type
 			return;
@@ -255,7 +253,7 @@ class EditorEventManager
 	
 	static void ImportEvents()
 	{
-		string file = "$profile:\\Editor\\db\\events.xml";
+		string file = Editor.ROOT_DIRECTORY + "db\\events.xml";
 		if (!FileExist(file)) {
 			Print("File not found!");
 			return;
