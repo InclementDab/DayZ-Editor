@@ -24,8 +24,9 @@ class EditorDialogBase: DialogBase
 		
 		//! Set Dialog to last saved position
 		if (EditorHud.DialogLastX != -1 && EditorHud.DialogLastY != -1) {
-			m_LayoutRoot.SetPos(EditorHud.DialogLastX, EditorHud.DialogLastY);
-			return;
+			//! disabled due to issues
+			//m_LayoutRoot.SetPos(EditorHud.DialogLastX, EditorHud.DialogLastY);
+			//return;
 		}
 		
 		float du, dv, dx, dy;
