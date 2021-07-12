@@ -21,7 +21,8 @@ class EditorDeleteCommand: EditorCommand
 			return false;
 		}
 		
-		m_Editor.DeleteObjects(objects);	
+		EditorHud.SetCurrentTooltip(null);
+		m_Editor.DeleteObjects(objects);
 		
 		return true;	
 	}

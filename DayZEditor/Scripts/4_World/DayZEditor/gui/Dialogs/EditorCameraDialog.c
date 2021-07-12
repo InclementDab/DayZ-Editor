@@ -24,7 +24,7 @@ class EditorCameraDialog: EditorDialogBase
 		m_CameraGroup.Insert(new SliderPrefab("DOF Blur", m_EditorCamera, "DOFBlur", 0, 1));
 		m_CameraGroup.Insert(new SliderPrefab("Vignette", m_EditorCamera, "Vignette", 0, 1));
 		m_CameraGroup.Insert(new SliderPrefab("Sharpness", m_EditorCamera, "Sharpness", 0, 1));
-		m_CameraGroup.Insert(new SliderPrefab("Exposure", m_EditorCamera, "Exposure", 0, 1));
+		m_CameraGroup.Insert(new SliderPrefab("Exposure", m_EditorCamera, "Exposure", 0, 3));
 		m_CameraGroup.Insert(new SliderPrefab("Smoothing", m_EditorCamera, "Smoothing", 0, 1));
 		m_CameraGroup.Open(OpenCameraGroup);
 		

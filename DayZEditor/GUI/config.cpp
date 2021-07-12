@@ -369,13 +369,13 @@ class RscMapControl: DayZMapControl
 	maxSatelliteAlpha = 0.85;
 	alphaFadeStartScale = 2;
 	alphaFadeEndScale = 2;
+	colorLevels[]={0.64999998,0.60000002,0.44999999,0.94999999};
 	colorBackground[] = {0.969,0.957,0.949,1.0};
 	colorSea[] = {0.467,0.631,0.851,0.5};
 	colorForest[] = {0.624,0.78,0.388,0.5};
 	colorForestBorder[] = {0.0,0.0,0.0,0.0};
 	colorRocks[] = {0.0,0.0,0.0,0.3};
 	colorRocksBorder[] = {0.0,0.0,0.0,0.0};
-	colorLevels[] = {0.286,0.177,0.094,0.5};
 	colorMainCountlines[] = {0.572,0.354,0.188,0.5};
 	colorCountlines[] = {0.572,0.354,0.188,0.25};
 	colorMainCountlinesWater[] = {0.491,0.577,0.702,0.6};
