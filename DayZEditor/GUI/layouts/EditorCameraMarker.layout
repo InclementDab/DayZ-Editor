@@ -23,7 +23,6 @@ FrameWidgetClass CameraMarkerRoot {
    vexactsize 1
    priority 101
    image0 "set:ccgui_enforce image:HudAttack"
-   imageTexture ""
    mode blend
    "src alpha" 1
    "no wrap" 1
@@ -42,7 +41,6 @@ FrameWidgetClass CameraMarkerRoot {
      vexactsize 1
      priority 101
      image0 "set:ccgui_enforce image:HudAttack"
-     imageTexture ""
      mode blend
      "src alpha" 1
      "no wrap" 1

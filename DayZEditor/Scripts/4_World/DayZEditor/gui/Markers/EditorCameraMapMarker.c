@@ -19,7 +19,7 @@ class EditorCameraMapMarker: EditorMarker
 		Show(true);
 				
 		vector position = m_EditorMap.MapToScreen(m_Camera.GetPosition());
-		SetPos(position[0], position[1]);
+		SetPos(position[0] - 25, position[1] - 25);
 	}
 	
 	override string GetLayoutFile() 
