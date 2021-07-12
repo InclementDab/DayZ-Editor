@@ -1,5 +1,6 @@
 class EditorBrush
 {
+	protected EditorSettings m_EditorSettings;
 	protected EntityAI m_BrushDecal;
 	protected ref EditorBrushData m_BrushData;
 	
@@ -14,6 +15,7 @@ class EditorBrush
 		EditorLog.Trace("EditorBrush");
 		m_BrushData = settings;
 		m_BrushDecal = EntityAI.Cast(GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_NONE));
+		m_EditorSettings = GetEditor().Settings;
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
 
@@ -90,13 +92,12 @@ class EditorBrush
 		
 		EditorObjectDataMap data_set = new EditorObjectDataMap();
 		
-		EditorSettings settings = GetEditor().Settings;
 		int flags;
-		if (settings.BrushedObjectMarkers) {
+		if (m_EditorSettings.BrushedObjectMarkers) {
 			flags |= EditorObjectFlags.OBJECTMARKER;
 		}
 		
-		if (settings.BrushedListItems) {
+		if (m_EditorSettings.BrushedListItems) {
 			flags |= EditorObjectFlags.LISTITEM;
 		}
 		
