@@ -7,13 +7,13 @@ class EditorDeleteCommand: EditorCommand
 		if (manager.GetSelectedTracks().Count() > 0) {
 			EditorLog.Info("Deleting %1 Camera Tracks", manager.GetSelectedTracks().Count().ToString());
 			manager.DeleteCameraTracks(manager.GetSelectedTracks());
-			return false;
+			return true;
 		}
 		
 		EditorDeletedObjectMap deleted_objects = m_Editor.GetSelectedHiddenObjects();
 		if (deleted_objects.Count() > 0) {
 			m_Editor.UnhideMapObjects(deleted_objects);
-			return false;
+			return true;
 		}
 		
 		EditorObjectMap objects = m_Editor.GetSelectedObjects();
