@@ -183,6 +183,17 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		return (CurrentDialog && CurrentDialog.GetLayoutRoot() && CurrentDialog.GetLayoutRoot().FindAnyWidget(w.GetName()));
 	}
 	
-	static float DialogLastX = -1;
-	static float DialogLastY = -1;
+	protected ref map<typename, vector> m_LastDialogPosition = new map<typename, vector>();
+	
+	void RegisterLastDialogPosition(ScriptView dialog)
+	{
+		float x, y;
+		dialog.GetLayoutRoot().GetPos(x, y);
+		m_LastDialogPosition[dialog.Type()] = Vector(x, y, 0);
+	}
+	
+	vector GetLastDialogPosition(ScriptView dialog)
+	{
+		return m_LastDialogPosition[dialog.Type()];
+	}
 }
