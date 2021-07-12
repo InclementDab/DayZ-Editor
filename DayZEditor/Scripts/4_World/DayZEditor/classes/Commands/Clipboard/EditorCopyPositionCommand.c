@@ -1,9 +1,11 @@
 class EditorCopyPositionCommand: EditorCommand
 {
-	protected override void Call(Class sender, CommandArgs args) 
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		GetEditor().GetEditorHud().CreateNotification(string.Format("Copied current position clipboard!", GetEditor().GetSelectedObjects().Count()), COLOR_GREEN);
 		GetGame().CopyToClipboard(string.Format("%1, %2", GetGame().GetCurrentCameraPosition().ToString(true), GetGame().GetCurrentCameraDirection().ToString(true)));
+		return true;
 	}
 
 	override string GetName() 

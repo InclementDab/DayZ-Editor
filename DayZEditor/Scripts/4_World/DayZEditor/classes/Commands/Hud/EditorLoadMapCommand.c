@@ -1,4 +1,4 @@
-class EditorLoadMapCommand: EditorCommand
+class EditorLoadMapCommand: EditorAsyncCommand
 {	
 	protected override void Call(Class sender, CommandArgs args)
 	{

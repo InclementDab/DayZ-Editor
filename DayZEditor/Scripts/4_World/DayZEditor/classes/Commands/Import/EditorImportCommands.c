@@ -1,4 +1,4 @@
-class EditorImportCommandBase: EditorCommand
+class EditorImportCommandBase: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{
@@ -18,7 +18,7 @@ class EditorImportCommandBase: EditorCommand
 					
 		ImportFile(file_name);
 	}
-	
+		
 	protected EditorSaveData ImportFile(string file_name, bool clear_before = false)
 	{
 		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());

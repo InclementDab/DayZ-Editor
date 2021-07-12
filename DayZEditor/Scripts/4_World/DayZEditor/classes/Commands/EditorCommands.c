@@ -21,10 +21,8 @@ class EditorCommand: RelayCommand
 			EditorLog.Error("EditorCommand::Editor was null!");
 			return true;
 		} 
-		
-		thread Call(sender, args);
-		
-		return true;
+	
+		return false;
 	}
 	
 	override void CanExecuteChanged(bool state) 
@@ -42,9 +40,6 @@ class EditorCommand: RelayCommand
 			root.Enable(state);			
 		}		
 	}
-	
-	// Abstracts
-	protected void Call(Class sender, CommandArgs args);
 	
 	string GetName() 
 	{

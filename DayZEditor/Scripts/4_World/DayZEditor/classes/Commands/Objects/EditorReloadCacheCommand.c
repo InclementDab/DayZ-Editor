@@ -1,8 +1,10 @@
 class EditorReloadCacheCommand: EditorCommand
 {
-	protected override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		GetEditor().GetObjectManager().LoadWorldCache();
+		return true;
 	}
 		
 	override string GetName() 

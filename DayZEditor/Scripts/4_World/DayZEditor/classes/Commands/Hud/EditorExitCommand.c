@@ -1,4 +1,4 @@
-class EditorExitCommand: EditorCommand
+class EditorExitCommand: EditorAsyncCommand
 {	
 	protected override void Call(Class sender, CommandArgs args) 
 	{

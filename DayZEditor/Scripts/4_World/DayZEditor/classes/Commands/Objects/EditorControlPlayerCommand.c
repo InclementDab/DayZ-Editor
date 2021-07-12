@@ -1,10 +1,11 @@
 class EditorControlPlayerCommand: EditorCommand
 {
-	protected override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		Param1<EditorObject> data = Param1<EditorObject>.Cast(GetData());
 		if (!data) {
-			return;
+			return false;
 		}
 		
 		// Set the player as the current active
@@ -13,6 +14,7 @@ class EditorControlPlayerCommand: EditorCommand
 		
 		// Enable Player
 		m_Editor.SetActive(false);
+		return true;
 	}
 	
 	override string GetName()

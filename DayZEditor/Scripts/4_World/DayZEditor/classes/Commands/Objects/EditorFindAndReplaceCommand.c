@@ -1,4 +1,4 @@
-class EditorFindAndReplaceCommand: EditorCommand
+class EditorFindAndReplaceCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{

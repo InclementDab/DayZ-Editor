@@ -1,4 +1,4 @@
-class EditorCheckDuplicatesCommand: EditorCommand
+class EditorCheckDuplicatesCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{

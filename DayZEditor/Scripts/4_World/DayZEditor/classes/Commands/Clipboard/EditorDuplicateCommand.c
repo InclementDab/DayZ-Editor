@@ -1,7 +1,8 @@
 class EditorDuplicateCommand: EditorCommand
 {	
-	protected override void Call(Class sender, CommandArgs args) 
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
 		EditorObjectDataMap created_data();
 				
@@ -17,6 +18,8 @@ class EditorDuplicateCommand: EditorCommand
 				GetEditor().SelectObject(created_object);
 			}
 		}
+		
+		return true;
 	}
 	
 	override string GetName() 

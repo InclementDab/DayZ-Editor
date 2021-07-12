@@ -1,9 +1,11 @@
 class EditorCopyCommand: EditorCommand
 {	
-	protected override void Call(Class sender, CommandArgs args) 
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		GetEditor().GetEditorHud().CreateNotification(string.Format("Copied %1 items to clipboard!", GetEditor().GetSelectedObjects().Count()), COLOR_SALMON);
 		EditorClipboard.Copy();
+		return true;
 	}
 
 	override string GetName() 

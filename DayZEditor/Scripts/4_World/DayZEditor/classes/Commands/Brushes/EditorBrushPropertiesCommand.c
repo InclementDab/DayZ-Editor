@@ -1,4 +1,4 @@
-class EditorBrushPropertiesCommand: EditorCommand
+class EditorBrushPropertiesCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{

@@ -1,8 +1,10 @@
 class EditorJoinDiscordCommand: EditorCommand
 {
-	override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		GetGame().OpenURL("discord.com/invite/5g742yH");
+		return true;
 	}
 	
 	override string GetName() 

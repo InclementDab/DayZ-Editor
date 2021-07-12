@@ -1,4 +1,4 @@
-class EditorExportLoaderCache: EditorCommand
+class EditorExportLoaderCache: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{

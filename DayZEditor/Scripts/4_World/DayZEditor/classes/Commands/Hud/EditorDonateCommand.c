@@ -1,4 +1,4 @@
-class EditorDonateCommand: EditorCommand
+class EditorDonateCommand: EditorAsyncCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{	

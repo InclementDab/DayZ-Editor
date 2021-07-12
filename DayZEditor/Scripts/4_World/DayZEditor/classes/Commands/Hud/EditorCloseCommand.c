@@ -1,4 +1,4 @@
-class EditorCloseCommand: EditorCommand
+class EditorCloseCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{

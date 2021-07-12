@@ -1,15 +1,18 @@
 class EditorHideCommand: EditorCommand
 {
-	override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		if (m_Editor.IsPlacing()) {
-			return;
+			return false;
 		}
 		
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {
 			selected_object.Show(false);
 		}
+		
+		return true;
 	}
 	
 	override ShortcutKeys GetShortcut() 

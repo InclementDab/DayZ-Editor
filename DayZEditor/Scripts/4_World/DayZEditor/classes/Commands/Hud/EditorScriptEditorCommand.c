@@ -1,4 +1,4 @@
-class EditorScriptEditorCommand: EditorCommand
+class EditorScriptEditorCommand: EditorAsyncCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{

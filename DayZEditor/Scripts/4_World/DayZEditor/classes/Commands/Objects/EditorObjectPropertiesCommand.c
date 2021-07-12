@@ -1,4 +1,4 @@
-class EditorObjectPropertiesCommand: EditorCommand
+class EditorObjectPropertiesCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{

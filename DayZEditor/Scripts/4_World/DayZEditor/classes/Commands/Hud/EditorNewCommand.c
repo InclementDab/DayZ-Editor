@@ -1,4 +1,4 @@
-class EditorNewCommand: EditorCommand
+class EditorNewCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{

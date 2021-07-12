@@ -1,7 +1,8 @@
 class EditorDumpSceneCommand: EditorCommand
 {
-	protected override void Call(Class sender, CommandArgs args) 
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		string camera_data;
 		
 		vector pos = GetEditor().GetCamera().GetPosition();
@@ -37,6 +38,7 @@ class EditorDumpSceneCommand: EditorCommand
 		GetGame().CopyToClipboard(camera_data);
 		
 		GetEditor().GetEditorHud().CreateNotification("Camera Data copied to clipboard!");
+		return true;
 	}
 
 	override string GetName() 

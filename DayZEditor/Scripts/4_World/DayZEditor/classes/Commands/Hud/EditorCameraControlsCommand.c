@@ -1,4 +1,4 @@
-class EditorCameraControlsCommand: EditorCommand
+class EditorCameraControlsCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{

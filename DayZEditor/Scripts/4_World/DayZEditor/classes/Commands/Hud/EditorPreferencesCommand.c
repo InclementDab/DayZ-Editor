@@ -1,4 +1,4 @@
-class EditorPreferencesCommand: EditorCommand
+class EditorPreferencesCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
