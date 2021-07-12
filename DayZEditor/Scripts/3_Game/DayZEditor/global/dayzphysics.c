@@ -26,6 +26,7 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 		}
 	}*/
 	
+	
 	// groundonly && ignore && dBodyIsDynamic(ignore) &&
 	if (!groundonly && highprecision && DayZPhysics.RayCastBullet(ray_start, ray_end, interaction_layers, ignore, hit_object, hitPos, hitNormal, hit_else)) {
 		collisions.Insert(hit_object);
