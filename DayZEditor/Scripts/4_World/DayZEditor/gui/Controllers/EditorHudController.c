@@ -351,7 +351,7 @@ class EditorHudController: EditorControllerBase
 	// im not adding a trace to this lol
 	void OnEditorLog(LogLevel level, string message)
 	{
-		if (level < m_Editor.Settings.SelectedLogLevel) {
+		if (!m_Editor || !m_Editor.Settings || level < m_Editor.Settings.SelectedLogLevel) {
 			return;
 		}
 		
