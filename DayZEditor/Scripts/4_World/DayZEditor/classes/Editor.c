@@ -448,12 +448,11 @@ class Editor
 					}
 				}
 				
-				break;
+				return true;
 			}
 			
 			case MouseState.RIGHT: {
 				return true;	
-				break;
 			}
 		}
 		
