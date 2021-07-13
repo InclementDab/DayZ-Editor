@@ -7,10 +7,10 @@ class EditorPlacedContextMenu: EditorContextMenu
 		AddMenuButton(m_Editor.CommandManager[EditorCopyCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorPasteCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorDeleteCommand]);
-		AddMenuDivider();
 		if (context.GetWorldObject().IsMan()) {
 			// Just assigning the package *cool*
 			m_Editor.CommandManager[EditorControlPlayerCommand].SetData(new Param1<EditorObject>(context));
+			AddMenuDivider();
 			AddMenuButton(m_Editor.CommandManager[EditorControlPlayerCommand]);
 		}
 		
