@@ -79,7 +79,7 @@ class Editor
 	bool 										CollisionMode;
 
 	string 										BanReason = "null";
-	static const string 						Version = "1.21." + GetBuildNumber();
+	static const string 						Version = "1.22." + GetBuildNumber();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -157,9 +157,9 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
 		}
 				
-		//if (!Settings.DisableWorldCache) {
+		if (!Settings.DisableWorldCache) {
 			GetObjectManager().LoadWorldCache();
-		//}		
+		}
 		
 		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);		
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
