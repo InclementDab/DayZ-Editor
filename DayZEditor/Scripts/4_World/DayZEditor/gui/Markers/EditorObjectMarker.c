@@ -103,7 +103,7 @@ class EditorObjectMarker: EditorMarker
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
 		SetColor(m_Editor.Settings.SelectionColor);
-		SetOutlineColor(m_Editor.Settings.MarkerColor);
+		SetOutlineColor(m_Editor.Settings.MarkerPrimaryColor);
 	}
 	
 	void Highlight()
@@ -115,8 +115,8 @@ class EditorObjectMarker: EditorMarker
 	void Deselect() 
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
-		SetColor(m_Editor.Settings.MarkerColor);
-		SetOutlineColor(m_Editor.Settings.MarkerColor);
+		SetColor(m_Editor.Settings.MarkerPrimaryColor);
+		SetOutlineColor(m_Editor.Settings.MarkerPrimaryColor);
 	}
 	
 	bool IsSelected() 

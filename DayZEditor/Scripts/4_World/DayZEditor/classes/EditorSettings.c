@@ -21,7 +21,7 @@ class EditorSettings: ProfileSettings
 	// Marker Settings
 	bool MarkerTooltips				= true;
 	float MarkerViewDistance 		= 1000;
-	int MarkerColor					= COLOR_WHITE_A;
+	int MarkerPrimaryColor			= COLOR_WHITE_A;
 	
 	// Theme Settings
 	int HighlightColor				= COLOR_SALMON;
@@ -102,7 +102,7 @@ class EditorSettings: ProfileSettings
 		ShowScreenLogs				= true;
 		DebugMode 					= false;
 		
-		MarkerColor					= COLOR_WHITE_A;
+		MarkerPrimaryColor			= COLOR_WHITE_A;
 		HighlightColor				= COLOR_SALMON;
 		SelectionColor				= COLOR_BLUE;
 	}
