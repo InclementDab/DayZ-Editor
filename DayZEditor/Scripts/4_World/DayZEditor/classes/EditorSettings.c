@@ -4,6 +4,7 @@ class EditorSettings: ProfileSettings
 	float ViewDistance 				= 8000;
 	float ObjectViewDistance 		= 1500;
 	int AutoSaveTimer 				= 240;
+	float QuickMoveStepSize			= 0.1;
 
 	// Camera Settings
 	float CameraSpeed				= 60;
@@ -88,6 +89,7 @@ class EditorSettings: ProfileSettings
 	
 	void SetDefaults()
 	{
+		QuickMoveStepSize			= 0.1;
 		CameraSpeed					= 60;
 		ViewDistance 				= 8000;
 		ObjectViewDistance 			= 1500;
