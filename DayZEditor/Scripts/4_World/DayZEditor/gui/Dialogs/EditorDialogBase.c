@@ -23,7 +23,7 @@ class EditorDialogBase: DialogBase
 		EditorHud.CurrentDialog = this;
 		
 		//! Set Dialog to last saved position
-		if (m_EditorHud.GetLastDialogPosition(this)) {
+		if (m_EditorHud && m_EditorHud.GetLastDialogPosition(this)) {
 			vector pos = m_EditorHud.GetLastDialogPosition(this);
 			m_LayoutRoot.SetPos(pos[0], pos[1]);
 			return;
@@ -38,7 +38,7 @@ class EditorDialogBase: DialogBase
 	void ~EditorDialogBase()
 	{
 		//! Save last Dialog position
-		if (m_LayoutRoot) {
+		if (m_LayoutRoot && m_EditorHud) {
 			m_EditorHud.RegisterLastDialogPosition(this);
 		}
 		
