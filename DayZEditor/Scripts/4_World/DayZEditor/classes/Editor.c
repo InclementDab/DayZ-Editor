@@ -483,6 +483,10 @@ class Editor
 		if (!command) {
 			return false;
 		}
+		
+		if (!command.CanExecute()) {
+			return true;
+		}
 			
 		EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
 		CommandArgs args = new CommandArgs();
