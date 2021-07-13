@@ -7,6 +7,6 @@ class EditorExportToVPP: EditorExportCommandBase
 	
 	override string GetName() 
 	{
-		return "#STR_EDITOR_CMD_EXPORT_VPP";
+		return "#STR_EDITOR_CMD_EXPORT_VPP (*.vpp)";
 	}
 }

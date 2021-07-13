@@ -7,6 +7,6 @@ class EditorExportToExpansion: EditorExportCommandBase
 	
 	override string GetName() 
 	{
-		return "#STR_EDITOR_CMD_EXPORT_EXPANSION";
+		return "#STR_EDITOR_CMD_EXPORT_EXPANSION (*.map)";
 	}
 }
