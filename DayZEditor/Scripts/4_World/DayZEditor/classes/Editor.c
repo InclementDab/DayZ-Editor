@@ -752,7 +752,7 @@ class Editor
 		foreach (EditorAction action: m_ActionStack) {
 			if (!action.IsUndone()) {
 				action.CallUndo();
-				EditorLog.Debug("Undo complete");
+				EditorLog.Info("Undo complete");
 				return;
 			}
 		}
@@ -764,7 +764,7 @@ class Editor
 		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
 			if (m_ActionStack[i] && m_ActionStack[i].IsUndone()) {
 				m_ActionStack[i].CallRedo();
-				EditorLog.Debug("Redo complete");
+				EditorLog.Info("Redo complete");
 				return;
 			}
 		}

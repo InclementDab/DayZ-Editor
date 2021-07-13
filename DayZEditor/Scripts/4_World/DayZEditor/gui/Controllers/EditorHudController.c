@@ -22,7 +22,6 @@ class EditorHudController: EditorControllerBase
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
 	
 	// Logger
-	LogLevel CurrentLogLevel = LogLevel.DEBUG;
 	static const int MAX_LOG_ENTRIES = 15;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
 	
@@ -352,7 +351,7 @@ class EditorHudController: EditorControllerBase
 	// im not adding a trace to this lol
 	void OnEditorLog(LogLevel level, string message)
 	{
-		if (level < CurrentLogLevel) {
+		if (level < m_Editor.Settings.SelectedLogLevel) {
 			return;
 		}
 		

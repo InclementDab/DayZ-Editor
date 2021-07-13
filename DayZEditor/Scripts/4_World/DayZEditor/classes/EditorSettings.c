@@ -44,7 +44,6 @@ class EditorSettings: ProfileSettings
 						
 			case "SelectedLogLevel": {
 				EditorLog.Warning("Changed log level to %1", typename.EnumToString(LogLevel, SelectedLogLevel));
-				GetEditor().GetEditorHud().GetTemplateController().CurrentLogLevel = SelectedLogLevel;
 				break;
 			}
 			
