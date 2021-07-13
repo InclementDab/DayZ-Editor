@@ -327,9 +327,6 @@ class EditorMapGroupProto: XMLCallback
 	}
 }
 
-
-
-
 class EditorXMLManager
 {
 	static void LoadMapGroupProto(out EditorMapGroupProto group_proto, string filename)
