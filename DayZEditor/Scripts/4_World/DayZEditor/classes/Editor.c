@@ -969,6 +969,10 @@ class Editor
 	
 	bool HideMapObject(EditorDeletedObject map_object, bool create_undo = true)
 	{
+		if (!map_object || !map_object.GetWorldObject()) {
+			return false;
+		}
+		
 		m_ObjectManager.WorldObjects[map_object.GetWorldObject().GetID()] = map_object.GetWorldObject();
 		
 		if (m_ObjectManager.IsObjectHidden(map_object)) { 
