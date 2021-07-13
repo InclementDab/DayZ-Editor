@@ -14,7 +14,7 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	private ref EditorDeletedObjectMap			m_SelectedDeletedObjects;
 	
-	static ref map<int, Object> WorldObjects = new map<int, Object>();
+	static ref map<int, ref OLinkT> WorldObjects = new map<int, ref OLinkT>();
 		
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
@@ -173,7 +173,7 @@ class EditorObjectManagerModule: JMModuleBase
 				continue;
 			}
 			
-			WorldObjects.Insert(o.GetID(), o);	
+			WorldObjects.Insert(o.GetID(), new OLinkT(o));	
 		}
 		
 		g_Game.ReportProgress(string.Format("Cached %1 map objects", WorldObjects.Count().ToString()));
@@ -200,12 +200,12 @@ class EditorObjectManagerModule: JMModuleBase
 	Object GetWorldObject(int id)
 	{
 		if (WorldObjects[id])
-			return WorldObjects[id];
+			return WorldObjects[id].Ptr();
 		
 		return null;
 	}
 	
-	map<int, Object> GetWorldObjects()
+	map<int, ref OLinkT> GetWorldObjects()
 	{
 		return WorldObjects;
 	}
