@@ -46,7 +46,9 @@ class EditorBrush
 	
 	void UpdateBrush()
 	{
-		if (GetEditor().IsPlacing()) return;
+		if (GetEditor().IsPlacing()) {
+			return;
+		}
 		
 		set<Object> o;
 		vector CurrentMousePosition = MousePosToRay(o, null, GetEditor().Settings.ObjectViewDistance, 0, true);
@@ -69,8 +71,9 @@ class EditorBrush
 			
 		}*/
 		
-		if (GetWidgetUnderCursor()) 
+		if (GetWidgetUnderCursor()) {
 			return;
+		}
 		
 		if (input.LocalPress("UAFire")) {
 			OnMouseDown(CurrentMousePosition);
