@@ -452,7 +452,7 @@ class Editor
 			}
 			
 			case MouseState.RIGHT: {
-								
+				return true;	
 				break;
 			}
 		}
