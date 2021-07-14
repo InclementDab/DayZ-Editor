@@ -37,7 +37,7 @@ class EditorClientModule: JMModuleBase
 	override void OnInit()
 	{
 		EditorLog.Trace("Editor::OnInit");
-				
+						
 		// Keybinds
 		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
 		RegisterBinding(new JMModuleBinding("OnEditorToggleCursor", "EditorToggleCursor"));

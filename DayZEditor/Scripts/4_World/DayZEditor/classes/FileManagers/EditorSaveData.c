@@ -6,12 +6,16 @@ class EditorSaveData
 	// Do NOT use a map here. ID is stored in EditorObjectData anyway
 	ref array<ref EditorObjectData> EditorObjects = {};
 	
+	[NonSerialized()] // depreciated
 	ref array<int> DeletedObjects = {};
+	
+	ref array<ref EditorDeletedObjectData> EditorDeletedObjects = {};	
 		
 	void ~EditorSaveData()
 	{
 		delete EditorObjects;
 		delete DeletedObjects;
+		delete EditorDeletedObjects;
 	}
 	
 	static EditorSaveData CreateFromEditor(Editor editor, bool selected_only = false)
