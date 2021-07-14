@@ -15,7 +15,7 @@ class EditorDZEBinFile: EditorFileType
 			return save_data;
 		}
 		
-		if (!file_serializer.Read(save_data)) {
+		if (!save_data.Read(file_serializer)) {
 			file_serializer.Close();
 			EditorLog.Error("Could not read file %1", file);
 			return save_data;
@@ -55,11 +55,12 @@ class EditorDZEBinFile: EditorFileType
 			return;
 		}
 		
-		if (!file_serializer.Write(data)) {
+		data.Write(file_serializer);
+		/*if (!file_serializer.Write(data)) {
 			file_serializer.Close();
 			EditorLog.Error("Failed to write to file %1", file);
 			return;
-		}
+		}*/
 		
 		file_serializer.Close();
 	}
