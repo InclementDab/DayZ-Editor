@@ -55,6 +55,7 @@ class Editor
 	private ref EditorHud						m_EditorHud;
 	private ref EditorBrush						m_EditorBrush;
 	private ref EditorObjectDataMap			 	m_SessionCache;
+	private ref EditorDeletedObjectDataMap		m_DeletedSessionCache;
 	private EditorCamera 						m_EditorCamera;
 	
 	// Stack of Undo / Redo Actions
@@ -138,8 +139,9 @@ class Editor
 		CommandManager.Init();
 		
 		// Needs to exist on clients for Undo / Redo syncing
-		m_SessionCache 		= new EditorObjectDataMap();
-		m_ActionStack 		= new EditorActionStack();
+		m_SessionCache 			= new EditorObjectDataMap();
+		m_DeletedSessionCache   = new EditorDeletedObjectDataMap();
+		m_ActionStack 			= new EditorActionStack();
 		
 		// Init Hud
 		g_Game.ReportProgress("Initializing Hud");
@@ -192,6 +194,7 @@ class Editor
 		delete m_EditorHud;
 		delete m_EditorBrush;
 		delete m_SessionCache;
+		delete m_DeletedSessionCache;
 		delete ObjectInHand;
 		delete m_RecentlyOpenedFiles;
 		GetGame().ObjectDelete(m_EditorCamera);
@@ -854,6 +857,11 @@ class Editor
 		m_SessionCache.Remove(id);	
 	}
 	
+	void DeleteDeletedSessionData(int id)
+	{
+		m_DeletedSessionCache.Remove(id);
+	}
+	
 	bool IsPlacing() 
 	{
 		return ObjectInHand != null; 
@@ -971,7 +979,9 @@ class Editor
 		if (!map_object || !map_object.GetWorldObject()) {
 			return false;
 		}
-				
+		
+		m_DeletedSessionCache.InsertData(map_object.GetData());		
+		
 		if (m_ObjectManager.IsObjectHidden(map_object)) { 
 			return false;
 		}
@@ -1009,18 +1019,22 @@ class Editor
 		}
 	}
 	
-	bool UnhideMapObject(int id, bool create_undo = true)
+	bool UnhideMapObject(EditorDeletedObjectData data, bool create_undo = true)
 	{		
-		if (!m_ObjectManager.IsObjectHidden(id)) { 
+		if (!data || !data.WorldObject) {
+			return false;
+		}
+		
+		if (!m_ObjectManager.IsObjectHidden(data)) { 
 			return false;
 		}
 		
 		EditorAction action = new EditorAction("Hide", "Unhide");
 		// todo refactor
-		action.InsertUndoParameter(new Param1<int>(id));
-		action.InsertRedoParameter(new Param1<int>(id));
+		action.InsertUndoParameter(new Param1<int>(data.ID));
+		action.InsertRedoParameter(new Param1<int>(data.ID));
 				
-		m_ObjectManager.UnhideMapObject(id);
+		m_ObjectManager.UnhideMapObject(data.ID);
 
 		if (create_undo) {
 			InsertAction(action);
@@ -1300,10 +1314,12 @@ class Editor
 	EditorObjectMap GetPlacedObjects() return m_ObjectManager.GetPlacedObjects(); 
 	EditorDeletedObjectMap GetDeletedObjects() return m_ObjectManager.GetDeletedObjects();
 	EditorObjectDataMap GetSessionCache() return m_SessionCache; 		
+	EditorDeletedObjectDataMap GetDeletedSessionCache() return m_DeletedSessionCache;
 	EditorObject GetEditorObject(int id) return m_ObjectManager.GetEditorObject(id); 	
 	EditorObject GetEditorObject(notnull Object world_object) return m_ObjectManager.GetEditorObject(world_object);	
 	EditorObject GetPlacedObjectById(int id) return m_ObjectManager.GetPlacedObjectById(id); 	
 	EditorObjectData GetSessionDataById(int id) return m_SessionCache.Get(id); 
+	EditorDeletedObjectData GetDeletedSessionDataById(int id) return m_DeletedSessionCache[id];
 	EditorBrush GetBrush() return m_EditorBrush;
 	EditorActionStack GetActionStack() return m_ActionStack;
 }

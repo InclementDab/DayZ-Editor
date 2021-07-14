@@ -5,16 +5,12 @@ class EditorSaveData
 	
 	// Do NOT use a map here. ID is stored in EditorObjectData anyway
 	ref array<ref EditorObjectData> EditorObjects = {};
-	
-	//[NonSerialized()] // depreciated
-	//ref array<int> DeletedObjects = {};
-	
+		
 	ref array<ref EditorDeletedObjectData> EditorDeletedObjects = {};	
 		
 	void ~EditorSaveData()
 	{
 		delete EditorObjects;
-		//delete DeletedObjects;
 		delete EditorDeletedObjects;
 	}
 	
@@ -42,7 +38,6 @@ class EditorSaveData
 			}
 		}
 		
-		//save_data.DeletedObjects = {};
 		EditorDeletedObjectMap deleted_objects = editor.GetObjectManager().GetDeletedObjects();
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {
 			save_data.EditorDeletedObjects.Insert(deleted_object.GetData());

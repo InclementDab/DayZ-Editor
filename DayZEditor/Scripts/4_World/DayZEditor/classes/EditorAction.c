@@ -129,20 +129,32 @@ class EditorAction
 		editor_object.SetOrientation(params.param3);
 	}
 	
-	void Hide(Param1<int> param)
+	void Hide(Param1<int> params)
 	{
 		//EditorLog.Trace("EditorAction::Hide %1", param.param1.ToString());
 		
-		//todo
-		//GetEditor().HideMapObject(param.param1, false);
+		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
+		if (!data) {
+			EditorLog.Error("EditorAction::Create Data was null!");
+			return;
+		}
+		
+		GetEditor().HideMapObject(data, false);
 	}
 	
-	void Unhide(Param1<int> param)
+	void Unhide(Param1<int> params)
 	{
 		//EditorLog.Trace("EditorAction::Unhide %1", param.param1.ToString());
 		
 		//todo
-		//GetEditor().UnhideMapObject(param.param1, false);
+		
+		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
+		if (!data) {
+			EditorLog.Error("EditorAction::Create Data was null!");
+			return;
+		}
+		
+		GetEditor().UnhideMapObject(data, false);
 	}
 	
 	void Lock(Param1<EditorObject> param)

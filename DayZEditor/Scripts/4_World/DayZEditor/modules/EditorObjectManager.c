@@ -157,6 +157,11 @@ class EditorObjectManagerModule: JMModuleBase
 		return (IsObjectHidden(deleted_object.GetID()));
 	}
 	
+	bool IsObjectHidden(EditorDeletedObjectData deleted_object_data)
+	{
+		return (IsObjectHidden(deleted_object_data.ID));
+	}
+	
 	bool IsObjectHidden(int id)
 	{
 		return (m_DeletedObjects[id] != null);
