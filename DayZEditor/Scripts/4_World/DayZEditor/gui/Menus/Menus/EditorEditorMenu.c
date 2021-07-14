@@ -5,7 +5,6 @@ class EditorEditorMenu: EditorMenu
 		EditorLog.Trace("EditorEditorMenu");
 		
 		AddMenuButton(m_Editor.CommandManager[EditorReloadBrushesCommand]);
-		AddMenuButton(m_Editor.CommandManager[EditorExportLoaderCache]);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorEnvironmentControlCommand]);
 		AddMenuCategory("#STR_EDITOR_PREFERENCES", EditorPreferencesMenu, m_Editor.CommandManager[EditorPreferencesCommand]);

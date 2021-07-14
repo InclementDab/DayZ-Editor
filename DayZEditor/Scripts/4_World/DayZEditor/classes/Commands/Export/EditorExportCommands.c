@@ -1,4 +1,4 @@
-class EditorExportCommandBase : EditorAsyncCommand
+class EditorExportCommandBase: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{
