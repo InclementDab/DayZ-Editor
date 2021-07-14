@@ -954,15 +954,20 @@ class Editor
 			InsertAction(action);
 		}
 	}
-	
-	bool HideMapObject(int id, bool create_undo = true)
+
+	bool HideMapObject(string type, vector position, bool create_undo = true)
 	{
-		return HideMapObject(m_ObjectManager.GetWorldObject(id), create_undo);
+		return HideMapObject(new EditorDeletedObject(EditorDeletedObjectData.Create(type, position)), create_undo);
 	}
 	
 	bool HideMapObject(Object object, bool create_undo = true)
 	{
-		return HideMapObject(new EditorDeletedObject(object), create_undo);
+		return HideMapObject(new EditorDeletedObject(EditorDeletedObjectData.Create(object)), create_undo);
+	}
+		
+	bool HideMapObject(EditorDeletedObjectData deleted_object_data, bool create_undo = true)
+	{
+		return HideMapObject(new EditorDeletedObject(deleted_object_data), create_undo);
 	}
 	
 	bool HideMapObject(EditorDeletedObject map_object, bool create_undo = true)

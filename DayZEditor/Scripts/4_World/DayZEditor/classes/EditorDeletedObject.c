@@ -13,13 +13,18 @@ class EditorDeletedObject: EditorWorldObject
 	
 	protected ref EditorDeletedObjectWorldMarker m_EditorDeletedObjectWorldMarker;
 	
-	void EditorDeletedObject(notnull Object object)
+	protected ref EditorDeletedObjectData m_Data;
+	
+	void EditorDeletedObject(EditorDeletedObjectData data)
 	{
-		if (!object) { 
+		m_Data = data;
+		
+		m_WorldObject = m_Data.FindObject();
+		if (!m_WorldObject) {
+			EditorLog.Error("Failed to find object with name %1 at position %2", m_Data.Type, m_Data.Position.ToString());
 			return;
 		}
 		
-		m_WorldObject = object;
 		m_Position = m_WorldObject.GetPosition();
 		m_Orientation = m_WorldObject.GetOrientation();
 		
@@ -57,14 +62,19 @@ class EditorDeletedObject: EditorWorldObject
 		delete m_EditorDeletedObjectWorldMarker;
 	}
 	
+	EditorDeletedObjectData GetData()
+	{
+		return m_Data;
+	}
+	
 	string GetType()
 	{
-		return m_WorldObject.GetType();
+		return m_Data.Type;
 	}
 	
 	int GetID()
 	{
-		return m_WorldObject.GetID();
+		return m_Data.ID;
 	}
 	
 	void OnSelected()

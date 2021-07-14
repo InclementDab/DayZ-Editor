@@ -20,7 +20,7 @@ class DeleteBrush: EditorBrush
 				editor_objects.InsertEditorObject(eo);
 			} else {
 				if (!r.IsKindOf("BrushBase") && !r.IsKindOf("BoundingBoxBase") && !r.IsKindOf("Man")) {
-					deleted_objects.InsertEditorDeletedObject(new EditorDeletedObject(r));
+					deleted_objects.InsertEditorDeletedObject(new EditorDeletedObject(EditorDeletedObjectData.Create(r)));
 				}
 			}
 		}	

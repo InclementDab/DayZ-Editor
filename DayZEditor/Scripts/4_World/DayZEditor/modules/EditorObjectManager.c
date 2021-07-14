@@ -158,6 +158,8 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	void LoadWorldCache()
 	{
+		return;
+		
 		// Loads all world objects into a map
 		WorldObjects.Clear();
 		

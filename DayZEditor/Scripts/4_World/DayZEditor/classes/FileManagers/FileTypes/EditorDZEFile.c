@@ -22,8 +22,8 @@ class EditorDZEFile: EditorFileType
 			bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Scale, object_data.Flags));
 		}
 			
-		foreach (int id: save_data.DeletedObjects) {
-			bug_fix_save_data.DeletedObjects.Insert(id);
+		foreach (int id, EditorDeletedObjectData deleted_object: save_data.EditorDeletedObjects) {
+			bug_fix_save_data.EditorDeletedObjects.Insert(deleted_object);
 		}
 				
 		bug_fix_save_data.MapName = save_data.MapName;

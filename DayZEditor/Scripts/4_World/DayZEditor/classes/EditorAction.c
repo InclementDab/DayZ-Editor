@@ -132,13 +132,17 @@ class EditorAction
 	void Hide(Param1<int> param)
 	{
 		//EditorLog.Trace("EditorAction::Hide %1", param.param1.ToString());
-		GetEditor().HideMapObject(param.param1, false);
+		
+		//todo
+		//GetEditor().HideMapObject(param.param1, false);
 	}
 	
 	void Unhide(Param1<int> param)
 	{
 		//EditorLog.Trace("EditorAction::Unhide %1", param.param1.ToString());
-		GetEditor().UnhideMapObject(param.param1, false);
+		
+		//todo
+		//GetEditor().UnhideMapObject(param.param1, false);
 	}
 	
 	void Lock(Param1<EditorObject> param)

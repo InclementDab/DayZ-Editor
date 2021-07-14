@@ -57,13 +57,13 @@ class EditorImportCommandBase: EditorAsyncCommand
 			GetEditor().Clear();
 		}
 				
-		EditorLog.Debug("Deleting %1 Objects", save_data.DeletedObjects.Count().ToString());
-		if (save_data.DeletedObjects.Count() > 0 && !GetEditor().GetObjectManager().IsWorldCacheLoaded()) {
+		EditorLog.Debug("Deleting %1 Objects", save_data.EditorDeletedObjects.Count().ToString());
+		if (save_data.EditorDeletedObjects.Count() > 0 && !GetEditor().GetObjectManager().IsWorldCacheLoaded()) {
 			EditorLog.Warning("World Cache not loaded, loading to avoid file corruption");
 			GetEditor().GetObjectManager().LoadWorldCache();
 		}
 		
-		foreach (int id: save_data.DeletedObjects) {
+		foreach (EditorDeletedObjectData id: save_data.EditorDeletedObjects) {
 			if (!GetEditor().HideMapObject(id)) {
 				EditorLog.Warning("Failed to delete building: %1", id.ToString());
 			}
@@ -74,7 +74,7 @@ class EditorImportCommandBase: EditorAsyncCommand
 			GetEditor().CreateObject(data, false);
 		}
 		
-		GetEditor().GetEditorHud().CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.DeletedObjects.Count()), COLOR_GREEN);
+		GetEditor().GetEditorHud().CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorDeletedObjects.Count()), COLOR_GREEN);
 		return save_data;
 	}
 	
