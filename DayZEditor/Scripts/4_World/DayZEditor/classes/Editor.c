@@ -421,7 +421,6 @@ class Editor
 					
 					if (!target) {
 						m_EditorHud.DelayedDragBoxCheck();
-						return true;
 					}
 				}
 
@@ -448,11 +447,11 @@ class Editor
 					}
 				}
 				
-				return true;
+				break;
 			}
 			
 			case MouseState.RIGHT: {
-				return true;	
+				break;	
 			}
 		}
 		
