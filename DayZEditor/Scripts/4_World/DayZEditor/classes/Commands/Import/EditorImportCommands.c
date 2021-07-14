@@ -59,7 +59,7 @@ class EditorImportCommandBase: EditorAsyncCommand
 				
 		EditorLog.Debug("Deleting %1 Objects", save_data.EditorDeletedObjects.Count().ToString());		
 		foreach (EditorDeletedObjectData id: save_data.EditorDeletedObjects) {
-			if (!GetEditor().HideMapObject(id)) {
+			if (!GetEditor().HideMapObject(id, false)) {
 				EditorLog.Warning("Failed to delete building: %1", id.ToString());
 			}
 		}
