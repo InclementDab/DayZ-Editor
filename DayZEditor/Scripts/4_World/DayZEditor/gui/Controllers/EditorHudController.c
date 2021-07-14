@@ -107,6 +107,9 @@ class EditorHudController: EditorControllerBase
 		
 		EditorHudToolbarView = new EditorHudToolbar();
 		NotifyPropertyChanged("EditorHudToolbarView");
+		
+		PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
+		DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
 	}
 		
 	void Update()
@@ -229,7 +232,7 @@ class EditorHudController: EditorControllerBase
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
 				
-				PlacementsTabButton.SetColor(COLOR_SALMON);
+				PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
 				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
 				RightbarScroll.VScrollToPos(0);
 				break;
@@ -244,7 +247,7 @@ class EditorHudController: EditorControllerBase
 				RightbarDeletionsList.Show(CategoryDeletions);
 				
 				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
-				DeletionsTabButton.SetColor(COLOR_SALMON);
+				DeletionsTabButton.SetColor(m_Editor.Settings.SelectionColor);
 				RightbarScroll.VScrollToPos(0);
 				break;
 			}
