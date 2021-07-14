@@ -42,7 +42,7 @@ class EditorAction
 	
 	void ~EditorAction()
 	{
-		EditorLog.Trace("~EditorAction");
+		//EditorLog.Trace("~EditorAction");
 		
 		/*foreach (int i, Param p: UndoParameters)
 			GetEditor().DeleteSessionData(i);*/
