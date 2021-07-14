@@ -57,12 +57,7 @@ class EditorImportCommandBase: EditorAsyncCommand
 			GetEditor().Clear();
 		}
 				
-		EditorLog.Debug("Deleting %1 Objects", save_data.EditorDeletedObjects.Count().ToString());
-		if (save_data.EditorDeletedObjects.Count() > 0 && !GetEditor().GetObjectManager().IsWorldCacheLoaded()) {
-			EditorLog.Warning("World Cache not loaded, loading to avoid file corruption");
-			GetEditor().GetObjectManager().LoadWorldCache();
-		}
-		
+		EditorLog.Debug("Deleting %1 Objects", save_data.EditorDeletedObjects.Count().ToString());		
 		foreach (EditorDeletedObjectData id: save_data.EditorDeletedObjects) {
 			if (!GetEditor().HideMapObject(id)) {
 				EditorLog.Warning("Failed to delete building: %1", id.ToString());

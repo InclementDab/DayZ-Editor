@@ -157,10 +157,6 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
 		}
 				
-		if (!Settings.DisableWorldCache) {
-			GetObjectManager().LoadWorldCache();
-		}
-		
 		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);		
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
 		
@@ -975,9 +971,7 @@ class Editor
 		if (!map_object || !map_object.GetWorldObject()) {
 			return false;
 		}
-		
-		m_ObjectManager.WorldObjects[map_object.GetWorldObject().GetID()] = new OLinkT(map_object.GetWorldObject());
-		
+				
 		if (m_ObjectManager.IsObjectHidden(map_object)) { 
 			return false;
 		}

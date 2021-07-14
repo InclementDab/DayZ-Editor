@@ -73,7 +73,6 @@ class EditorCommandManager
 		RegisterCommand(EditorPreferencesCommand);
 		RegisterCommand(EditorReloadHudCommand);
 		RegisterCommand(EditorReloadBrushesCommand);
-		RegisterCommand(EditorReloadCacheCommand);
 	
 		RegisterCommand(EditorLootEditorCommand);
 		RegisterCommand(EditorAddToFavoritesCommand);
