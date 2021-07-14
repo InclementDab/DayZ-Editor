@@ -6,6 +6,7 @@ class EditorDeletedObjectData
 	
 	string Type;
 	vector Position;
+	int Flags;
 	
 	[NonSerialized()]
 	Object WorldObject;
@@ -17,11 +18,7 @@ class EditorDeletedObjectData
 	}
 	
 	static EditorDeletedObjectData Create(string type, vector position)
-	{
-		if (type == string.Empty) {
-			return null;
-		}
-		
+	{		
 		EditorDeletedObjectData data();
 		data.Type = type;
 		data.Position = position;
