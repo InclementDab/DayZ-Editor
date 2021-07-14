@@ -18,11 +18,14 @@ class EditorDeletedObject: EditorWorldObject
 	void EditorDeletedObject(EditorDeletedObjectData data)
 	{
 		m_Data = data;
-		
-		m_WorldObject = m_Data.FindObject();
+				
+		m_WorldObject = m_Data.WorldObject;
 		if (!m_WorldObject) {
-			EditorLog.Error("Failed to find object with name %1 at position %2", m_Data.Type, m_Data.Position.ToString());
-			return;
+			m_WorldObject = m_Data.FindObject();
+			if (!m_WorldObject) {
+				EditorLog.Error("Failed to find object with name %1 at position %2", m_Data.Type, m_Data.Position.ToString());
+				return;
+			}
 		}
 		
 		m_Position = m_WorldObject.GetPosition();
