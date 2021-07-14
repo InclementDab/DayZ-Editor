@@ -50,7 +50,7 @@ class EditorExportCommandBase: EditorAsyncCommand
 			}
 		}
 
-		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor, export_settings.ExportSelectedOnly);
+		EditorSaveData save_data = m_Editor.CreateSaveData(export_settings.ExportSelectedOnly);
 		file_type.Export(save_data, file_name, export_settings);
 
 		string message = string.Format("Saved %1 objects! (%2 deletions)", save_data.EditorObjects.Count().ToString(), CF.ObjectManager.GetHiddenMapObjects().Count());

@@ -1306,6 +1306,38 @@ class Editor
 		return build_number.ToInt();
 	}
 	
+	EditorSaveData CreateSaveData(bool selected_only = false)
+	{
+		EditorSaveData save_data = new EditorSaveData();
+		
+		// Save world name
+		save_data.MapName = GetGame().GetWorldName();
+		
+		// Save Camera Position
+		save_data.CameraPosition = GetCamera().GetPosition();
+		
+		// Save Objects
+		EditorObjectMap placed_objects = GetPlacedObjects();
+		if (selected_only) {
+			placed_objects = GetSelectedObjects();
+		}
+		
+		if (placed_objects) {
+			foreach (EditorObject editor_object: placed_objects) {
+				if (editor_object.GetType() != string.Empty) {
+					save_data.EditorObjects.Insert(editor_object.GetData());
+				}
+			}
+		}
+		
+		EditorDeletedObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
+		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {
+			save_data.EditorDeletedObjects.Insert(deleted_object.GetData());
+		}
+		
+		return save_data;
+	}
+	
 	bool IsActive() return m_Active;
 	EditorHud GetEditorHud() return m_EditorHud;
 	EditorCamera GetCamera() return m_EditorCamera;
