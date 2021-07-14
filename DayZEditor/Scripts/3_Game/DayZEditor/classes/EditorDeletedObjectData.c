@@ -41,7 +41,7 @@ class EditorDeletedObjectData
 		return data;
 	}
 	
-	Object FindObject(float radius = 1)
+	Object FindObject(float radius = 0.05)
 	{
 		array<Object> objects = {};
 		array<CargoBase> cargos = {};
