@@ -18,23 +18,29 @@ class EditorDeletedObjectData
 	
 	static EditorDeletedObjectData Create(string type, vector position)
 	{
+		if (type == string.Empty) {
+			return null;
+		}
+		
 		EditorDeletedObjectData data();
 		data.Type = type;
 		data.Position = position;
 		
 		// todo handle multiple objects of the same name in a 1m radius
 		data.WorldObject = data.FindObject(0.05);
-		
 		return data;
 	}
 	
 	static EditorDeletedObjectData Create(Object object)
 	{
+		if (!object) {
+			return null;
+		}
+		
 		EditorDeletedObjectData data();
 		data.Type = object.GetType();
-		data.Position = object.GetPosition();
+		data.Position = object.GetWorldPosition();
 		data.WorldObject = object;
-		
 		return data;
 	}
 	
