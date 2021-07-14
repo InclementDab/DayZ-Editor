@@ -986,29 +986,31 @@ class Editor
 			return false;
 		}
 		
-		EditorAction action = new EditorAction("Unhide", "Hide");
-		// todo refactor
-		action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
-		action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
+		if (create_undo) {
+			EditorAction action = new EditorAction("Unhide", "Hide");
+			action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
+			action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
+			InsertAction(action);
+		}
 		
 		Statistics.EditorRemovedObjects++;
 		
 		m_ObjectManager.HideMapObject(map_object);
-
-		if (create_undo) {
-			InsertAction(action);
-		}
 		
 		return true;
 	}
 	
 	void HideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
 	{
-		EditorAction action = new EditorAction("Unhide", "Hide");
+		if (create_undo) {
+			EditorAction action = new EditorAction("Unhide", "Hide");
+		}
 
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
-			action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
-			action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
+			if (create_undo) {
+				action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
+				action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
+			}
 			
 			Statistics.EditorRemovedObjects++;
 			m_ObjectManager.HideMapObject(deleted_object);
@@ -1029,27 +1031,29 @@ class Editor
 			return false;
 		}
 		
-		EditorAction action = new EditorAction("Hide", "Unhide");
-		// todo refactor
-		action.InsertUndoParameter(new Param1<int>(data.ID));
-		action.InsertRedoParameter(new Param1<int>(data.ID));
-				
-		m_ObjectManager.UnhideMapObject(data.ID);
-
 		if (create_undo) {
+			EditorAction action = new EditorAction("Hide", "Unhide");
+			action.InsertUndoParameter(new Param1<int>(data.ID));
+			action.InsertRedoParameter(new Param1<int>(data.ID));
 			InsertAction(action);
 		}
+		
+		m_ObjectManager.UnhideMapObject(data.ID);
 		
 		return true;
 	}
 	
 	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
 	{
-		EditorAction action = new EditorAction("Hide", "Unhide");
+		if (create_undo) {
+			EditorAction action = new EditorAction("Hide", "Unhide");
+		}
 
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
-			action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
-			action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
+			if (create_undo) {
+				action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
+				action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
+			}
 			
 			Statistics.EditorRemovedObjects++;
 			m_ObjectManager.UnhideMapObject(deleted_object);
@@ -1090,22 +1094,20 @@ class Editor
 	{
 		EditorAction action = new EditorAction("Unlock", "Lock");
 		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));
+		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
+		InsertAction(action);
 		
 		editor_object.Lock(true);
-		
-		InsertAction(action);
 	}
 	
 	void UnlockObject(EditorObject editor_object)
 	{
 		EditorAction action = new EditorAction("Lock", "Unlock");
 		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));
+		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
+		InsertAction(action);
 		
 		editor_object.Lock(false);
-		
-		InsertAction(action);
 	}
 	
 	void SelectObject(EditorObject target) 
