@@ -44,8 +44,8 @@ class EditorClipboard
 		}
 	
 		string clipboard_data = JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects);
-		clipboard_data.Replace("\n", "");
-		clipboard_data.Replace(" ", "");
+		//clipboard_data.Replace("\n", "");
+		//clipboard_data.Replace(" ", "");
 		
 		GetGame().CopyToClipboard(clipboard_data);
 	}
