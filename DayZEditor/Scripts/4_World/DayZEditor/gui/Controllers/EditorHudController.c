@@ -154,9 +154,13 @@ class EditorHudController: EditorControllerBase
 		config_paths.Insert(CFG_MAGAZINESPATH);
 		
 		foreach (string path: config_paths) {
-			for (int i = 0; i < GetWorkbenchGame().ConfigGetChildrenCount(path); i++) {
+			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
-		        GetWorkbenchGame().ConfigGetChildName(path, i, type);
+		        GetGame().ConfigGetChildName(path, i, type);
+				if (GetGame().ConfigGetInt(path + " " + type) < 1) {
+					continue;
+				}
+				
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
 
 				if (!placeable_item || IsForbiddenItem(placeable_item.Type)) {
