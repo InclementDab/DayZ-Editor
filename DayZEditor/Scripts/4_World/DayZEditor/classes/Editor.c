@@ -945,7 +945,6 @@ class Editor
 	void DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
-
 		foreach (int id, EditorObject editor_object: editor_object_map) {
 			if (!editor_object.Locked && editor_object.Show) {
 				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
@@ -1002,10 +1001,7 @@ class Editor
 	
 	void HideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
 	{
-		if (create_undo) {
-			EditorAction action = new EditorAction("Unhide", "Hide");
-		}
-		
+		EditorAction action = new EditorAction("Unhide", "Hide");
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {		
 			m_DeletedSessionCache.InsertData(deleted_object.GetData());		
 			if (create_undo) {
