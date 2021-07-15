@@ -10,7 +10,7 @@ class ExportSettings: FileSettingsBase
 	{
 		switch (m_FileType) {
 			case EditorDZEFile: {
-				settings.Insert(new CheckBoxPrefab("Binarized", this, "Binarized"));
+				//settings.Insert(new CheckBoxPrefab("Binarized", this, "Binarized"));
 				break;
 			}
 		}

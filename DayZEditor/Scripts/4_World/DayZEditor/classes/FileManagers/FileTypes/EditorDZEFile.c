@@ -30,7 +30,7 @@ class EditorDZEFile: EditorFileType
 	{
 		EditorSaveData save_data = new EditorSaveData();
 		EditorJsonLoader<EditorSaveData>.LoadFromFile(file, save_data);
-		
+				
 		// bugfix to fix the id not incrementing
 		EditorSaveData bug_fix_save_data = new EditorSaveData();
 		foreach (EditorObjectData object_data: save_data.EditorObjects) {
@@ -47,7 +47,7 @@ class EditorDZEFile: EditorFileType
 				
 		bug_fix_save_data.MapName = save_data.MapName;
 		bug_fix_save_data.CameraPosition = save_data.CameraPosition;
-		return save_data;
+		return bug_fix_save_data;
 	}
 	
 	override EditorSaveData Import(string file, ImportSettings settings)
