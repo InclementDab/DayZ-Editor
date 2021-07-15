@@ -60,9 +60,9 @@ class EditorDZEFile: EditorFileType
 		}
 		
 		if (file.Contains("dzebin")) {
-			save_data = LoadBinFile("$profile:/EditorFiles/" + file);
+			save_data = LoadBinFile(file);
 		} else {
-			save_data = LoadJsonFile("$profile:/EditorFiles/" + file);
+			save_data = LoadJsonFile(file);
 		}
 		
 		return save_data;
