@@ -23,8 +23,6 @@ class EditorFileDialog: EditorDialogBase
 		if (m_FileSettings) {
 			array<ref ScriptView> extra_settings = {};
 			m_FileSettings.GetFileSettings(extra_settings);
-			Print(extra_settings);
-			Print(extra_settings.Count());
 			if (extra_settings && extra_settings.Count() > 0) {
 				GroupPrefab settings_group = new GroupPrefab(m_FileSettings.GetSettingsName(), null, string.Empty);
 				foreach (ScriptView setting: extra_settings) {

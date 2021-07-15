@@ -14,15 +14,12 @@ class ExportSettings: FileSettingsBase
 				break;
 			}
 		}
+		
+		settings.Insert(new CheckBoxPrefab("Export Selected Only", this, "ExportSelectedOnly"));
 	}
 	
 	override string GetSettingsName()
 	{
 		return "Export Settings";
-	}
-	
-	void PropertyChanged(string property_name)
-	{
-		Print(property_name);
 	}
 }

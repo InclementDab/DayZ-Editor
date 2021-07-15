@@ -59,7 +59,7 @@ class EditorDZEFile: EditorFileType
 			return save_data;
 		}
 		
-		if (file.Contains("dzebin")) {
+		if (EditorSaveData.IsBinnedFile(file)) {
 			save_data = LoadBinFile(file);
 		} else {
 			save_data = LoadJsonFile(file);
