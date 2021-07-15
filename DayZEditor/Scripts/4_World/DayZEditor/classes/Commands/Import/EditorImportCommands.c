@@ -1,10 +1,13 @@
 class EditorImportCommandBase: EditorAsyncCommand
 {
+	protected ref ImportSettings m_ImportSettings = new ImportSettings();
+	
 	protected override void Call(Class sender, CommandArgs args)
 	{
 		string extension = "*" + EditorFileType.Cast(GetFileType().Spawn()).GetExtension();
 		EditorLog.Debug("Using filter %1", extension);
-		EditorFileDialog file_dialog(GetName(), extension, "", GetDialogButtonName());
+		m_ImportSettings.SetFileType(GetFileType());
+		EditorFileDialog file_dialog(GetName(), extension, "", GetDialogButtonName(), m_ImportSettings);
 		
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
@@ -15,11 +18,11 @@ class EditorImportCommandBase: EditorAsyncCommand
 			MessageBox.Show("Error", "No file name specified!", MessageBoxButtons.OK);
 			return;
 		}
-					
-		ImportFile(file_name);
+		
+		ImportFile(file_name, m_ImportSettings);
 	}
 		
-	protected EditorSaveData ImportFile(string file_name, bool clear_before = false)
+	protected EditorSaveData ImportFile(string file_name, ImportSettings settings, bool clear_before = false)
 	{
 		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
 		if (!file_type) {
@@ -35,7 +38,6 @@ class EditorImportCommandBase: EditorAsyncCommand
 		}
 		
 		EditorSaveData save_data = new EditorSaveData();
-		ImportSettings settings = new ImportSettings(); // todo
 		save_data = file_type.Import(file_name, settings);
 		
 		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {

@@ -11,6 +11,5 @@ class EditorExportMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager[EditorExportToCOM]);
 		AddMenuButton(m_Editor.CommandManager[EditorExportToEvents]);
 		AddMenuButton(m_Editor.CommandManager[EditorExportToMapGroupPos]);
-		AddMenuButton(m_Editor.CommandManager[EditorExportToDZEBin]);
 	}
 }

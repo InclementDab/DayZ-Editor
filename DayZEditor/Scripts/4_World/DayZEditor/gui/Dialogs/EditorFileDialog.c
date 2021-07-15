@@ -4,12 +4,13 @@ class EditorFileDialog: EditorDialogBase
 	// strong reference, since ListBox cant strong ref it
 	protected autoptr ListBoxPrefab<string> m_ListBoxPrefab;
 	protected string m_CurrentDirectory;
-	
+	protected FileSettingsBase m_FileSettings;
 	protected string m_Filter;
 	
-	void EditorFileDialog(string title, string filter = "*", string default_value = "", string button_name = "")
+	void EditorFileDialog(string title, string filter = "*", string default_value = "", string button_name = "", FileSettingsBase file_settings = null)
 	{
 		m_Filter = filter;		
+		m_FileSettings = file_settings;
 		m_EditBoxPrefab = new EditBoxPrefab("#STR_EDITOR_FILE", m_Controller, default_value);
 	 
 		m_ListBoxPrefab = new ListBoxPrefab<string>();
@@ -18,7 +19,17 @@ class EditorFileDialog: EditorDialogBase
 		AddContent(m_ListBoxPrefab);
 		
 		LoadFileDirectory(Editor.ROOT_DIRECTORY, m_Filter);
-				
+		
+		if (m_FileSettings) {
+			array<ref ScriptView> extra_settings = {};
+			m_FileSettings.GetFileSettings(extra_settings);
+			if (extra_settings) {
+				foreach (ScriptView setting: extra_settings) {
+					AddContent(setting);
+				}
+			}
+		}
+		
 		AddContent(m_EditBoxPrefab);
 		AddButton(button_name, DialogResult.OK);
 		AddButton(DialogResult.Cancel);

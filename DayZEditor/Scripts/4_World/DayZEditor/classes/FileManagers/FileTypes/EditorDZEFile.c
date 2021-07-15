@@ -1,15 +1,34 @@
 class EditorDZEFile: EditorFileType
 {
-	override EditorSaveData Import(string file, ImportSettings settings)
-	{
+	EditorSaveData LoadBinFile(string file)
+	{				
 		EditorSaveData save_data = new EditorSaveData();
 		
 		if (!FileExist(file)) {
 			EditorLog.Error("File not found %1", file);
 			return save_data;
 		}
+
+		FileSerializer file_serializer = new FileSerializer();
+		if (!file_serializer.Open(file, FileMode.READ)) {
+			EditorLog.Error("File in use %1", file);
+			return save_data;
+		}
 		
-		// Temporary fix, Binarize always = 0
+		if (!save_data.Read(file_serializer)) {
+			file_serializer.Close();
+			EditorLog.Error("Could not read file %1", file);
+			return save_data;
+		}
+		
+		file_serializer.Close();
+		
+		return save_data;
+	}
+	
+	EditorSaveData LoadJsonFile(string file)
+	{
+		EditorSaveData save_data = new EditorSaveData();
 		EditorJsonLoader<EditorSaveData>.LoadFromFile(file, save_data);
 		
 		// bugfix to fix the id not incrementing
@@ -28,23 +47,25 @@ class EditorDZEFile: EditorFileType
 				
 		bug_fix_save_data.MapName = save_data.MapName;
 		bug_fix_save_data.CameraPosition = save_data.CameraPosition;
+		return save_data;
+	}
+	
+	override EditorSaveData Import(string file, ImportSettings settings)
+	{
+		EditorSaveData save_data = new EditorSaveData();
 		
-		return bug_fix_save_data;
-		
-		/*
-		FileSerializer file_serializer = new FileSerializer();
-		if (!file_serializer.Open(file, FileMode.READ)) {
-			EditorLog.Error("File in use %1", file);
+		if (!FileExist(file)) {
+			EditorLog.Error("File not found %1", file);
 			return save_data;
 		}
 		
-		if (!file_serializer.Read(save_data)) {
-			file_serializer.Close();
-			EditorLog.Error("Unknown File Error %1", file);
-			return save_data;
+		if (file.Contains("dzebin")) {
+			save_data = LoadBinFile("$profile:/EditorFiles/" + file);
+		} else {
+			save_data = LoadJsonFile("$profile:/EditorFiles/" + file);
 		}
 		
-		file_serializer.Close();*/
+		return save_data;
 	}
 	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
@@ -53,22 +74,18 @@ class EditorDZEFile: EditorFileType
 			return;
 		}
 
-		// Temporary fix, Binarize always = 0
-		EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
-		return;
-		
-				
-		FileSerializer file_serializer = new FileSerializer();
-		if (!file_serializer.Open(file, FileMode.WRITE)) {
-			return;
-		}
-		
-		if (!file_serializer.Write(data)) {
+		if (settings.Binarized) {
+			FileSerializer file_serializer = new FileSerializer();
+			if (!file_serializer.Open(file, FileMode.WRITE)) {
+				EditorLog.Error("Failed to open file %1", file);
+				return;
+			}
+			
+			data.Write(file_serializer);
 			file_serializer.Close();
-			return;
+		} else {
+			EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
 		}
-		
-		file_serializer.Close();
 	}
 	
 	override string GetExtension() 

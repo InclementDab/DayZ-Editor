@@ -1,4 +1,4 @@
-class ImportSettings
+class ImportSettings: FileSettingsBase
 {
 
 }

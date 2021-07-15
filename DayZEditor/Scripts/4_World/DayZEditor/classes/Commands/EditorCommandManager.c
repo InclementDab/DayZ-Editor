@@ -97,7 +97,6 @@ class EditorCommandManager
 		RegisterCommand(EditorExportToCOM);
 		RegisterCommand(EditorExportToEvents);
 		RegisterCommand(EditorExportToMapGroupPos);
-		RegisterCommand(EditorExportToDZEBin);
 		
 		RegisterCommand(EditorCheckDuplicatesCommand);
 	
@@ -106,7 +105,6 @@ class EditorCommandManager
 		RegisterCommand(EditorImportFromTerrainBuilder);
 		RegisterCommand(EditorImportFromVPP);
 		RegisterCommand(EditorImportFromCOM);
-		RegisterCommand(EditorImportFromDZEBin);
 	
 		RegisterCommand(EditorScriptEditorCommand);
 	

@@ -9,6 +9,5 @@ class EditorImportMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager[EditorImportFromTerrainBuilder]);
 		AddMenuButton(m_Editor.CommandManager[EditorImportFromVPP]);
 		AddMenuButton(m_Editor.CommandManager[EditorImportFromCOM]);
-		AddMenuButton(m_Editor.CommandManager[EditorImportFromDZEBin]);
 	}
 }
