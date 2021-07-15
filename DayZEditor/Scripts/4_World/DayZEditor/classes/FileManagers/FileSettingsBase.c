@@ -6,5 +6,7 @@ class FileSettingsBase
 		m_FileType = type;
 	}
 	
+	string GetSettingsName();
+	
 	void GetFileSettings(out array<ref ScriptView> settings);
 }

@@ -20,18 +20,21 @@ class EditorFileDialog: EditorDialogBase
 		
 		LoadFileDirectory(Editor.ROOT_DIRECTORY, m_Filter);
 		
-		/*if (m_FileSettings) {
+		if (m_FileSettings) {
 			array<ref ScriptView> extra_settings = {};
 			m_FileSettings.GetFileSettings(extra_settings);
-			if (extra_settings) {
+			Print(extra_settings);
+			Print(extra_settings.Count());
+			if (extra_settings && extra_settings.Count() > 0) {
+				GroupPrefab settings_group = new GroupPrefab(m_FileSettings.GetSettingsName(), null, string.Empty);
 				foreach (ScriptView setting: extra_settings) {
-					AddContent(setting);
+					settings_group.Insert(setting);
 				}
+				
+				AddContent(settings_group);
 			}
-		}*/
-		
-		AddContent(new CheckBoxPrefab("Binarized", m_FileSettings, "Binarized"));
-		
+		}
+
 		AddContent(m_EditBoxPrefab);
 		AddButton(button_name, DialogResult.OK);
 		AddButton(DialogResult.Cancel);
