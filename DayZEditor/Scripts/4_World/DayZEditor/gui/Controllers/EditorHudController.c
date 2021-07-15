@@ -157,7 +157,8 @@ class EditorHudController: EditorControllerBase
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
 		        GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type) < 1) {
+				Print("scope " + GetGame().ConfigGetInt(path + " " + type + " scope"));
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
 					continue;
 				}
 				
