@@ -62,32 +62,12 @@ WrapSpacerWidgetClass ListItem {
        vexactsize 0
        style rover_sim_colorable
        {
-        EditBoxWidgetClass ListItemLabelEditor {
-         visible 0
-         position 0 0
-         size 0.5 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         style Editor
-         font "gui/fonts/Metron58"
-         {
-          ScriptParamsClass {
-           Binding_Name "Label"
-           Two_Way_Binding 1
-          }
-         }
-        }
         TextWidgetClass ListItemLabel {
          visible 1
          disabled 0
          clipchildren 1
          ignorepointer 1
-         position 30 0
+         position 20 0
          size 1 1
          halign center_ref
          valign center_ref
@@ -100,6 +80,7 @@ WrapSpacerWidgetClass ListItem {
          style Normal
          text "CATEGORY"
          font "gui/fonts/etelkatextpro"
+         "text offset" 5 0
          "bold text" 0
          "exact text" 0
          "size to text h" 0
@@ -111,30 +92,6 @@ WrapSpacerWidgetClass ListItem {
           }
          }
         }
-        CheckBoxWidgetClass ListItemShow {
-         visible 1
-         clipchildren 1
-         inheritalpha 0
-         ignorepointer 0
-         color 0.7059 0.7059 0.7059 0
-         position 2 0
-         size 25 25
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style CheckBox_16px
-         "no focus" 0
-         font "gui/fonts/metron-bold"
-         checked 0
-         {
-          ScriptParamsClass {
-           Relay_Command "ListItemCollapseExecute"
-          }
-         }
-        }
        }
       }
      }
@@ -143,31 +100,6 @@ WrapSpacerWidgetClass ListItem {
        Relay_Command "ListItemExecute"
       }
      }
-    }
-   }
-  }
-  WrapSpacerWidgetClass ListItemChildren {
-   visible 1
-   clipchildren 0
-   ignorepointer 1
-   size 1 0
-   halign right_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   draggable 0
-   scriptclass "ViewBinding"
-   "no focus" 1
-   Padding 0
-   Margin 0
-   "Size To Content H" 1
-   "Size To Content V" 1
-   content_halign right
-   {
-    ScriptParamsClass {
-     Binding_Name "ChildListItems"
-     Two_Way_Binding 1
     }
    }
   }
