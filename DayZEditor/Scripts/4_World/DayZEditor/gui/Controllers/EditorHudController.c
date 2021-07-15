@@ -157,7 +157,6 @@ class EditorHudController: EditorControllerBase
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
 		        GetGame().ConfigGetChildName(path, i, type);
-				Print("scope " + GetGame().ConfigGetInt(path + " " + type + " scope"));
 				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
 					continue;
 				}
@@ -185,6 +184,7 @@ class EditorHudController: EditorControllerBase
 		if (Model == "ItemOptics") return true;
 
 		//! Cursed items
+		if (Model == "AKM_TESTBED") return true;
 		if (Model == "Red9") return true;
 		if (Model == "QuickieBow") return true;
 		if (Model == "LargeTentBackPack") return true;
