@@ -55,6 +55,7 @@ class Editor
 	private ref EditorHud						m_EditorHud;
 	private ref EditorBrush						m_EditorBrush;
 	private ref EditorObjectDataMap			 	m_SessionCache;
+	private ref EditorDeletedObjectDataMap		m_DeletedSessionCache;
 	private EditorCamera 						m_EditorCamera;
 	
 	// Stack of Undo / Redo Actions
@@ -138,8 +139,9 @@ class Editor
 		CommandManager.Init();
 		
 		// Needs to exist on clients for Undo / Redo syncing
-		m_SessionCache 		= new EditorObjectDataMap();
-		m_ActionStack 		= new EditorActionStack();
+		m_SessionCache 			= new EditorObjectDataMap();
+		m_DeletedSessionCache   = new EditorDeletedObjectDataMap();
+		m_ActionStack 			= new EditorActionStack();
 		
 		// Init Hud
 		g_Game.ReportProgress("Initializing Hud");
@@ -157,10 +159,6 @@ class Editor
 			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
 		}
 				
-		if (!Settings.DisableWorldCache) {
-			GetObjectManager().LoadWorldCache();
-		}
-		
 		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);		
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
 		
@@ -196,6 +194,7 @@ class Editor
 		delete m_EditorHud;
 		delete m_EditorBrush;
 		delete m_SessionCache;
+		delete m_DeletedSessionCache;
 		delete ObjectInHand;
 		delete m_RecentlyOpenedFiles;
 		GetGame().ObjectDelete(m_EditorCamera);
@@ -858,6 +857,11 @@ class Editor
 		m_SessionCache.Remove(id);	
 	}
 	
+	void DeleteDeletedSessionData(int id)
+	{
+		m_DeletedSessionCache.Remove(id);
+	}
+	
 	bool IsPlacing() 
 	{
 		return ObjectInHand != null; 
@@ -941,7 +945,6 @@ class Editor
 	void DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
-
 		foreach (int id, EditorObject editor_object: editor_object_map) {
 			if (!editor_object.Locked && editor_object.Show) {
 				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
@@ -954,15 +957,20 @@ class Editor
 			InsertAction(action);
 		}
 	}
-	
-	bool HideMapObject(int id, bool create_undo = true)
+
+	bool HideMapObject(string type, vector position, bool create_undo = true)
 	{
-		return HideMapObject(m_ObjectManager.GetWorldObject(id), create_undo);
+		return HideMapObject(new EditorDeletedObject(EditorDeletedObjectData.Create(type, position)), create_undo);
 	}
 	
 	bool HideMapObject(Object object, bool create_undo = true)
 	{
-		return HideMapObject(new EditorDeletedObject(object), create_undo);
+		return HideMapObject(new EditorDeletedObject(EditorDeletedObjectData.Create(object)), create_undo);
+	}
+		
+	bool HideMapObject(EditorDeletedObjectData deleted_object_data, bool create_undo = true)
+	{
+		return HideMapObject(new EditorDeletedObject(deleted_object_data), create_undo);
 	}
 	
 	bool HideMapObject(EditorDeletedObject map_object, bool create_undo = true)
@@ -971,24 +979,22 @@ class Editor
 			return false;
 		}
 		
-		m_ObjectManager.WorldObjects[map_object.GetWorldObject().GetID()] = new OLinkT(map_object.GetWorldObject());
+		m_DeletedSessionCache.InsertData(map_object.GetData());		
 		
 		if (m_ObjectManager.IsObjectHidden(map_object)) { 
 			return false;
 		}
 		
-		EditorAction action = new EditorAction("Unhide", "Hide");
-		// todo refactor
-		action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
-		action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
+		if (create_undo) {
+			EditorAction action = new EditorAction("Unhide", "Hide");
+			action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
+			action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
+			InsertAction(action);
+		}
 		
 		Statistics.EditorRemovedObjects++;
 		
 		m_ObjectManager.HideMapObject(map_object);
-
-		if (create_undo) {
-			InsertAction(action);
-		}
 		
 		return true;
 	}
@@ -996,10 +1002,12 @@ class Editor
 	void HideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
-
-		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
-			action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
-			action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
+		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {		
+			m_DeletedSessionCache.InsertData(deleted_object.GetData());		
+			if (create_undo) {
+				action.InsertUndoParameter(new Param1<int>(id));
+				action.InsertRedoParameter(new Param1<int>(id));
+			}
 			
 			Statistics.EditorRemovedObjects++;
 			m_ObjectManager.HideMapObject(deleted_object);
@@ -1010,33 +1018,39 @@ class Editor
 		}
 	}
 	
-	bool UnhideMapObject(int id, bool create_undo = true)
+	bool UnhideMapObject(EditorDeletedObjectData data, bool create_undo = true)
 	{		
-		if (!m_ObjectManager.IsObjectHidden(id)) { 
+		if (!data || !data.WorldObject) {
 			return false;
 		}
 		
-		EditorAction action = new EditorAction("Hide", "Unhide");
-		// todo refactor
-		action.InsertUndoParameter(new Param1<int>(id));
-		action.InsertRedoParameter(new Param1<int>(id));
-				
-		m_ObjectManager.UnhideMapObject(id);
-
+		if (!m_ObjectManager.IsObjectHidden(data)) { 
+			return false;
+		}
+		
 		if (create_undo) {
+			EditorAction action = new EditorAction("Hide", "Unhide");
+			action.InsertUndoParameter(new Param1<int>(data.ID));
+			action.InsertRedoParameter(new Param1<int>(data.ID));
 			InsertAction(action);
 		}
+		
+		m_ObjectManager.UnhideMapObject(data.ID);
 		
 		return true;
 	}
 	
 	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
 	{
-		EditorAction action = new EditorAction("Hide", "Unhide");
-
+		if (create_undo) {
+			EditorAction action = new EditorAction("Hide", "Unhide");
+		}
+		
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
-			action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
-			action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
+			if (create_undo) {
+				action.InsertUndoParameter(new Param1<int>(id));
+				action.InsertRedoParameter(new Param1<int>(id));
+			}
 			
 			Statistics.EditorRemovedObjects++;
 			m_ObjectManager.UnhideMapObject(deleted_object);
@@ -1077,22 +1091,20 @@ class Editor
 	{
 		EditorAction action = new EditorAction("Unlock", "Lock");
 		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));
+		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
+		InsertAction(action);
 		
 		editor_object.Lock(true);
-		
-		InsertAction(action);
 	}
 	
 	void UnlockObject(EditorObject editor_object)
 	{
 		EditorAction action = new EditorAction("Lock", "Unlock");
 		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));
+		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
+		InsertAction(action);
 		
 		editor_object.Lock(false);
-		
-		InsertAction(action);
 	}
 	
 	void SelectObject(EditorObject target) 
@@ -1291,6 +1303,38 @@ class Editor
 		return build_number.ToInt();
 	}
 	
+	EditorSaveData CreateSaveData(bool selected_only = false)
+	{
+		EditorSaveData save_data = new EditorSaveData();
+		
+		// Save world name
+		save_data.MapName = GetGame().GetWorldName();
+		
+		// Save Camera Position
+		save_data.CameraPosition = GetCamera().GetPosition();
+		
+		// Save Objects
+		EditorObjectMap placed_objects = GetPlacedObjects();
+		if (selected_only) {
+			placed_objects = GetSelectedObjects();
+		}
+		
+		if (placed_objects) {
+			foreach (EditorObject editor_object: placed_objects) {
+				if (editor_object.GetType() != string.Empty) {
+					save_data.EditorObjects.Insert(editor_object.GetData());
+				}
+			}
+		}
+		
+		EditorDeletedObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
+		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {
+			save_data.EditorDeletedObjects.Insert(deleted_object.GetData());
+		}
+		
+		return save_data;
+	}
+	
 	bool IsActive() return m_Active;
 	EditorHud GetEditorHud() return m_EditorHud;
 	EditorCamera GetCamera() return m_EditorCamera;
@@ -1301,10 +1345,12 @@ class Editor
 	EditorObjectMap GetPlacedObjects() return m_ObjectManager.GetPlacedObjects(); 
 	EditorDeletedObjectMap GetDeletedObjects() return m_ObjectManager.GetDeletedObjects();
 	EditorObjectDataMap GetSessionCache() return m_SessionCache; 		
+	EditorDeletedObjectDataMap GetDeletedSessionCache() return m_DeletedSessionCache;
 	EditorObject GetEditorObject(int id) return m_ObjectManager.GetEditorObject(id); 	
 	EditorObject GetEditorObject(notnull Object world_object) return m_ObjectManager.GetEditorObject(world_object);	
 	EditorObject GetPlacedObjectById(int id) return m_ObjectManager.GetPlacedObjectById(id); 	
 	EditorObjectData GetSessionDataById(int id) return m_SessionCache.Get(id); 
+	EditorDeletedObjectData GetDeletedSessionDataById(int id) return m_DeletedSessionCache[id];
 	EditorBrush GetBrush() return m_EditorBrush;
 	EditorActionStack GetActionStack() return m_ActionStack;
 }

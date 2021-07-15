@@ -73,7 +73,6 @@ class EditorCommandManager
 		RegisterCommand(EditorPreferencesCommand);
 		RegisterCommand(EditorReloadHudCommand);
 		RegisterCommand(EditorReloadBrushesCommand);
-		RegisterCommand(EditorReloadCacheCommand);
 	
 		RegisterCommand(EditorLootEditorCommand);
 		RegisterCommand(EditorAddToFavoritesCommand);
@@ -98,7 +97,6 @@ class EditorCommandManager
 		RegisterCommand(EditorExportToCOM);
 		RegisterCommand(EditorExportToEvents);
 		RegisterCommand(EditorExportToMapGroupPos);
-		RegisterCommand(EditorExportLoaderCache);
 		
 		RegisterCommand(EditorCheckDuplicatesCommand);
 	

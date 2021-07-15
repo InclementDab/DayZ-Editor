@@ -7,8 +7,8 @@ class EditorDeletedListItem: EditorListItem
 		m_EditorDeletedObject = deleted_object;
 		
 		string item_name = m_EditorDeletedObject.GetType();
-		if (item_name.Length() >= 18) {
-			item_name = item_name.Substring(0, 15) + "...";
+		if (item_name.Length() >= 30) {
+			item_name = item_name.Substring(0, 28) + "...";
 		}
 		
 		m_TemplateController.Label = string.Format("%1 (%2)", item_name, m_EditorDeletedObject.GetID());
@@ -84,5 +84,10 @@ class EditorDeletedListItem: EditorListItem
 	EditorDeletedObject GetDeletedObject()
 	{
 		return m_EditorDeletedObject;
+	}
+	
+	override string GetLayoutFile() 
+	{
+		return "DayZEditor/gui/Layouts/items/EditorDeletionsListItem.layout";
 	}
 }

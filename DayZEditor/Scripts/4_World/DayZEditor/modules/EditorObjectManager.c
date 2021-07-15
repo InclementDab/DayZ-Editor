@@ -13,14 +13,10 @@ class EditorObjectManagerModule: JMModuleBase
 	private ref EditorDeletedObjectMap 			m_DeletedObjects;
 	
 	private ref EditorDeletedObjectMap			m_SelectedDeletedObjects;
-	
-	static ref map<int, ref OLinkT> WorldObjects = new map<int, ref OLinkT>();
-		
+
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
-	
-	private bool m_IsWorldCacheLoaded;
-	
+		
 	override void Init()
 	{
 		EditorLog.Trace("EditorObjectManager::Init");
@@ -155,61 +151,22 @@ class EditorObjectManagerModule: JMModuleBase
 		// On Load unhide em all
 		CF.ObjectManager.UnhideAllMapObjects();
 	}
-	
-	void LoadWorldCache()
-	{
-		// Loads all world objects into a map
-		WorldObjects.Clear();
 		
-		g_Game.ReportProgress("Caching Map Objects");
-		EditorLog.Info("Caching Map Objects");
-		
-		array<Object> objects = {};
-		array<CargoBase> cargos = {};
-		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 100000, objects, cargos);
-
-		foreach (Object o: objects) {
-			if (o.IsInherited(Man)) {
-				continue;
-			}
-			
-			WorldObjects.Insert(o.GetID(), new OLinkT(o));	
-		}
-		
-		g_Game.ReportProgress(string.Format("Cached %1 map objects", WorldObjects.Count().ToString()));
-		EditorLog.Info("Cached %1 map objects", WorldObjects.Count().ToString());
-		
-		m_IsWorldCacheLoaded = true;
-	}
-	
-	bool IsWorldCacheLoaded()
-	{
-		return m_IsWorldCacheLoaded;
-	}
-	
 	bool IsObjectHidden(EditorDeletedObject deleted_object)
 	{
 		return (IsObjectHidden(deleted_object.GetID()));
+	}
+	
+	bool IsObjectHidden(EditorDeletedObjectData deleted_object_data)
+	{
+		return (IsObjectHidden(deleted_object_data.ID));
 	}
 	
 	bool IsObjectHidden(int id)
 	{
 		return (m_DeletedObjects[id] != null);
 	}
-	
-	Object GetWorldObject(int id)
-	{
-		if (WorldObjects[id])
-			return WorldObjects[id].Ptr();
-		
-		return null;
-	}
-	
-	map<int, ref OLinkT> GetWorldObjects()
-	{
-		return WorldObjects;
-	}
-	
+			
 	EditorObjectMap GetSelectedObjects() 
 	{
 		return m_SelectedObjects; 

@@ -72,3 +72,24 @@ class EditorObjectDataMap: map<int, ref EditorObjectData>
 		Remove(data.GetID());
 	}
 }
+
+class EditorDeletedObjectDataMap: map<int, ref EditorDeletedObjectData>
+{
+	int InsertData(EditorDeletedObjectData data)
+	{
+		if (!data) {
+			return -1;
+		}
+		
+		return Insert(data.ID, data);
+	}
+	
+	void RemoveData(EditorDeletedObjectData data)
+	{
+		if (!data) {
+			return;
+		}
+		
+		Remove(data.ID);
+	}
+}

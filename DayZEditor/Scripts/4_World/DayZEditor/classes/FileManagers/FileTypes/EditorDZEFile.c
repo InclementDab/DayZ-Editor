@@ -1,17 +1,36 @@
 class EditorDZEFile: EditorFileType
 {
-	override EditorSaveData Import(string file, ImportSettings settings)
-	{
+	EditorSaveData LoadBinFile(string file)
+	{				
 		EditorSaveData save_data = new EditorSaveData();
 		
 		if (!FileExist(file)) {
 			EditorLog.Error("File not found %1", file);
 			return save_data;
 		}
+
+		FileSerializer file_serializer = new FileSerializer();
+		if (!file_serializer.Open(file, FileMode.READ)) {
+			EditorLog.Error("File in use %1", file);
+			return save_data;
+		}
 		
-		// Temporary fix, Binarize always = 0
+		if (!save_data.Read(file_serializer)) {
+			file_serializer.Close();
+			EditorLog.Error("Could not read file %1", file);
+			return save_data;
+		}
+		
+		file_serializer.Close();
+		
+		return save_data;
+	}
+	
+	EditorSaveData LoadJsonFile(string file)
+	{
+		EditorSaveData save_data = new EditorSaveData();
 		EditorJsonLoader<EditorSaveData>.LoadFromFile(file, save_data);
-		
+				
 		// bugfix to fix the id not incrementing
 		EditorSaveData bug_fix_save_data = new EditorSaveData();
 		foreach (EditorObjectData object_data: save_data.EditorObjects) {
@@ -22,29 +41,31 @@ class EditorDZEFile: EditorFileType
 			bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Scale, object_data.Flags));
 		}
 			
-		foreach (int id: save_data.DeletedObjects) {
-			bug_fix_save_data.DeletedObjects.Insert(id);
+		foreach (int id, EditorDeletedObjectData deleted_object: save_data.EditorDeletedObjects) {
+			bug_fix_save_data.EditorDeletedObjects.Insert(EditorDeletedObjectData.Create(deleted_object.Type, deleted_object.Position));
 		}
 				
 		bug_fix_save_data.MapName = save_data.MapName;
 		bug_fix_save_data.CameraPosition = save_data.CameraPosition;
-		
 		return bug_fix_save_data;
+	}
+	
+	override EditorSaveData Import(string file, ImportSettings settings)
+	{
+		EditorSaveData save_data = new EditorSaveData();
 		
-		/*
-		FileSerializer file_serializer = new FileSerializer();
-		if (!file_serializer.Open(file, FileMode.READ)) {
-			EditorLog.Error("File in use %1", file);
+		if (!FileExist(file)) {
+			EditorLog.Error("File not found %1", file);
 			return save_data;
 		}
 		
-		if (!file_serializer.Read(save_data)) {
-			file_serializer.Close();
-			EditorLog.Error("Unknown File Error %1", file);
-			return save_data;
+		if (EditorSaveData.IsBinnedFile(file)) {
+			save_data = LoadBinFile(file);
+		} else {
+			save_data = LoadJsonFile(file);
 		}
 		
-		file_serializer.Close();*/
+		return save_data;
 	}
 	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
@@ -53,25 +74,22 @@ class EditorDZEFile: EditorFileType
 			return;
 		}
 
-		// Temporary fix, Binarize always = 0
-		EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
-		return;
-		
-				
-		FileSerializer file_serializer = new FileSerializer();
-		if (!file_serializer.Open(file, FileMode.WRITE)) {
-			return;
-		}
-		
-		if (!file_serializer.Write(data)) {
+		if (settings.Binarized) {
+			FileSerializer file_serializer = new FileSerializer();
+			if (!file_serializer.Open(file, FileMode.WRITE)) {
+				EditorLog.Error("Failed to open file %1", file);
+				return;
+			}
+			
+			data.Write(file_serializer);
 			file_serializer.Close();
-			return;
+		} else {
+			EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
 		}
-		
-		file_serializer.Close();
 	}
 	
-	override string GetExtension() {
+	override string GetExtension() 
+	{
 		return ".dze";
 	}
 }
