@@ -44,6 +44,6 @@ class EditorSaveCommand: EditorExportCommandBase
 	
 	override string GetDialogButtonName() 
 	{
-		return "Save";
+		return "#STR_EDITOR_SAVE";
 	}
 }
