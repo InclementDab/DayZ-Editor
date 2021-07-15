@@ -1,8 +1,8 @@
-WrapSpacerWidgetClass ListItem {
+PanelWidgetClass ListItemContent {
  visible 1
  clipchildren 1
  ignorepointer 1
- color 0.0196 0.0196 0.0196 0
+ color 0.4196 0.6471 1 0
  position 0 0
  size 1 0.02
  hexactpos 1
@@ -10,60 +10,54 @@ WrapSpacerWidgetClass ListItem {
  hexactsize 0
  vexactsize 0
  draggable 0
- scriptclass "EditorListItemController"
- style Colorable
- Padding 0
- Margin 0
- "Size To Content H" 1
- "Size To Content V" 1
- content_halign right
- content_valign center
+ scriptclass ""
+ style rover_sim_colorable
  {
-  PanelWidgetClass ListItemContent {
-   ignorepointer 1
-   color 0.4196 0.6471 1 0
+  ButtonWidgetClass ListItemButton {
+   visible 1
+   clipchildren 0
+   ignorepointer 0
+   color 0.7529 0.3686 0.3255 1
    position 0 0
    size 1 1
    halign center_ref
    valign center_ref
-   hexactpos 0
-   vexactpos 0
+   hexactpos 1
+   vexactpos 1
    hexactsize 0
    vexactsize 0
-   style rover_sim_colorable
+   draggable 1
+   scriptclass "ViewBinding"
+   style Default
+   text_offset 25 0
+   text_halign left
+   font "gui/fonts/etelkatextpro"
    {
-    ButtonWidgetClass ListItemButton {
-     visible 1
-     clipchildren 0
-     ignorepointer 0
-     color 0.7529 0.3686 0.3255 1
-     position 0 0
-     size 1 1
+    TextWidgetClass ListItemLabel {
+     ignorepointer 1
+     position 0.03 0
+     size 0.97 1
      halign center_ref
      valign center_ref
-     hexactpos 1
+     hexactpos 0
      vexactpos 1
      hexactsize 0
      vexactsize 0
-     draggable 1
      scriptclass "ViewBinding"
-     style Empty
      text "IF_YOU_SEE_THIS_ITS_BROKEN"
-     text_offset 25 0
-     text_halign left
-     font "gui/fonts/etelkatextpro"
+     "text valign" center
      {
       ScriptParamsClass {
-       Selected_Item "Label"
-       Relay_Command "ListItemExecute"
+       Binding_Name "Label"
       }
      }
     }
    }
-  }
- }
- {
-  ScriptParamsClass {
+   {
+    ScriptParamsClass {
+     Relay_Command "ListItemExecute"
+    }
+   }
   }
  }
 }
