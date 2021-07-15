@@ -3,8 +3,6 @@ static const float MARKER_ALPHA_ON_HIDE = 1.0;
 
 static const int DRAG_BOX_THRESHOLD = 15;
 static const int DRAG_BOX_THICKNESS = 1;
-static const int DRAG_BOX_COLOR = ARGB(255, 0, 120, 215);
-static const int DRAG_BOX_FILL = ARGB(50, 0, 120, 215);
 
 static const int LIST_ITEM_COLOR_ON_DELETED = COLOR_RED;
 static const string LIST_ITEM_DEFAULT_ICON = "DayZEditor/gui/images/dayz_editor_icon_black.edds";

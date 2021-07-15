@@ -97,6 +97,12 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	
 	private void _DelayedDragBoxCheck(int start_x, int start_y)
 	{
+		int drag_box_color = GetEditor().Settings.SelectionColor;
+		
+		int a, r, g, b;
+		InverseARGB(drag_box_color, a, r, g, b);
+		int drag_box_color_fill = ARGB(50, r, g, b);			
+		
 		int current_x, current_y;
 		while ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && GetGame().GetInput().HasGameFocus()) {
 			GetMousePos(current_x, current_y);
@@ -107,14 +113,14 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 			
 			// Draw Drag Box
 			if (Math.AbsInt(start_x - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_BOX_THRESHOLD) {
-				EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
-				EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
-				EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
-				EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
+				EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, DRAG_BOX_THICKNESS, drag_box_color);
+				EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+				EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+				EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
 				
 				// Handles the fill operation
 				int x_avg = (start_x + current_x) / 2;
-				EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, DRAG_BOX_FILL);
+				EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, drag_box_color_fill);
 							
 				EditorObjectMap placed_objects = g_Editor.GetPlacedObjects();
 				foreach (EditorObject editor_object: placed_objects) {
