@@ -83,6 +83,12 @@ class EditorDZEFile: EditorFileType
 			
 			data.Write(file_serializer);
 			file_serializer.Close();
+			
+			// Added backup file in case of boom on the main bin file
+			if (GetEditor().Settings.ExportBackupFile) {
+				EditorJsonLoader<EditorSaveData>.SaveToFile(file + "_backup", data);
+			}
+			
 		} else {
 			EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
 		}
