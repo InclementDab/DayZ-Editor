@@ -139,7 +139,6 @@ class EditorAction
 		//EditorLog.Trace("EditorAction::Unhide %1", param.param1.ToString());
 				
 		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
-		Print(data);
 		if (!data) {
 			EditorLog.Error("EditorAction::Create Data was null!");
 			return;
