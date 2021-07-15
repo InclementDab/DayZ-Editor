@@ -40,14 +40,6 @@ class EditorAction
 		m_RedoAction = redo_action;
 	}
 	
-	void ~EditorAction()
-	{
-		//EditorLog.Trace("~EditorAction");
-		
-		/*foreach (int i, Param p: UndoParameters)
-			GetEditor().DeleteSessionData(i);*/
-	}
-	
 	string GetName() 
 	{ 
 		return name; 
@@ -147,6 +139,7 @@ class EditorAction
 		//EditorLog.Trace("EditorAction::Unhide %1", param.param1.ToString());
 				
 		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
+		Print(data);
 		if (!data) {
 			EditorLog.Error("EditorAction::Create Data was null!");
 			return;

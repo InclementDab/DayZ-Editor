@@ -1005,11 +1005,12 @@ class Editor
 		if (create_undo) {
 			EditorAction action = new EditorAction("Unhide", "Hide");
 		}
-
-		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
+		
+		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {		
+			m_DeletedSessionCache.InsertData(deleted_object.GetData());		
 			if (create_undo) {
-				action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
-				action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
+				action.InsertUndoParameter(new Param1<int>(id));
+				action.InsertRedoParameter(new Param1<int>(id));
 			}
 			
 			Statistics.EditorRemovedObjects++;
@@ -1048,11 +1049,11 @@ class Editor
 		if (create_undo) {
 			EditorAction action = new EditorAction("Hide", "Unhide");
 		}
-
+		
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
 			if (create_undo) {
-				action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
-				action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
+				action.InsertUndoParameter(new Param1<int>(id));
+				action.InsertRedoParameter(new Param1<int>(id));
 			}
 			
 			Statistics.EditorRemovedObjects++;
