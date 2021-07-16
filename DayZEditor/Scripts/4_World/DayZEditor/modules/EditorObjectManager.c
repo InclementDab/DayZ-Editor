@@ -27,7 +27,7 @@ class EditorObjectManagerModule: JMModuleBase
 		m_SelectedDeletedObjects	= new EditorDeletedObjectMap();
 	}
 	
-	EditorObject CreateObject(EditorObjectData editor_object_data)
+	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
 	{		
 		EditorLog.Trace("EditorObjectManager::CreateObject");
 
@@ -41,7 +41,7 @@ class EditorObjectManagerModule: JMModuleBase
 		return editor_object;
 	}
 
-	void DeleteObject(EditorObject target)
+	void DeleteObject(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::DeleteObject");
 		m_SelectedObjects.RemoveEditorObject(target);
@@ -51,7 +51,7 @@ class EditorObjectManagerModule: JMModuleBase
 	}
 	
 	// Call to select an object
-	void SelectObject(EditorObject target)
+	void SelectObject(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::SelectObject");
 		m_SelectedObjects.InsertEditorObject(target);
@@ -62,7 +62,7 @@ class EditorObjectManagerModule: JMModuleBase
 	}
 	
 	// Call to deselect an object
-	void DeselectObject(EditorObject target)
+	void DeselectObject(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::DeselectObject");
 		m_SelectedObjects.RemoveEditorObject(target);
@@ -71,7 +71,7 @@ class EditorObjectManagerModule: JMModuleBase
 	}	
 		
 	// Call to toggle selection
-	void ToggleSelection(EditorObject target)
+	void ToggleSelection(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::ToggleSelection");
 		if (target.IsSelected())
@@ -92,7 +92,7 @@ class EditorObjectManagerModule: JMModuleBase
 	}
 	
 	// Hidden object stuff
-	void HideMapObject(EditorDeletedObject target)
+	void HideMapObject(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::HideMapObject");
 		m_DeletedObjects.InsertEditorDeletedObject(target);
@@ -105,14 +105,14 @@ class EditorObjectManagerModule: JMModuleBase
 		m_DeletedObjects.Remove(target);
 	}
 	
-	void UnhideMapObject(EditorDeletedObject target)
+	void UnhideMapObject(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
 		m_DeletedObjects.RemoveEditorDeletedObject(target);
 		delete target;
 	}
 	
-	void SelectHiddenObject(EditorDeletedObject target)
+	void SelectHiddenObject(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::SelectHiddenObject");
 		m_SelectedDeletedObjects.InsertEditorDeletedObject(target);
@@ -120,7 +120,7 @@ class EditorObjectManagerModule: JMModuleBase
 		target.OnSelected();
 	}
 	
-	void DeselectHiddenObject(EditorDeletedObject target)
+	void DeselectHiddenObject(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::DeselectHiddenObject");
 		m_SelectedDeletedObjects.RemoveEditorDeletedObject(target);
@@ -128,7 +128,7 @@ class EditorObjectManagerModule: JMModuleBase
 		target.OnDeselected();
 	}
 	
-	void ToggleHiddenObjectSelection(EditorDeletedObject target)
+	void ToggleHiddenObjectSelection(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::ToggleHiddenObjectSelection");
 		if (target.IsSelected())
