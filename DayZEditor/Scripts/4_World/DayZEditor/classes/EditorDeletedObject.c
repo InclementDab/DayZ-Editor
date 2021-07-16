@@ -42,11 +42,6 @@ class EditorDeletedObject: EditorWorldObject
 		m_BottomCenter = m_WorldObject.GetGlobalPos(AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3])));
 		
 		// todo: probably use the events system to insert this stuff into the UI
-		// use GetListItem()
-		
-		
-		// major TODO: either MVC needs to be optimized, or the ScriptView type needs to be optimized, because this
-		// is the major source of lag when deleting objects en-mass at the moment
 		m_EditorDeletedListItem = new EditorDeletedListItem(this);		
 		GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData.Insert(m_EditorDeletedListItem);
 		
