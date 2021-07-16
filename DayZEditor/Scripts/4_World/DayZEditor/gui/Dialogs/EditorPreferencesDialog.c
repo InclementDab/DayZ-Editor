@@ -36,6 +36,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		
 		GroupPrefab marker_group = new GroupPrefab("Marker Settings", m_Editor.Settings, string.Empty);
 		marker_group.Insert(new CheckBoxPrefab("Show Tooltips", m_Editor.Settings, "MarkerTooltips"));
+		marker_group.Insert(new CheckBoxPrefab("Ground Occlusion", m_Editor.Settings, "MarkerGroundOcclusion"));
 		marker_group.Insert(new SliderPrefab("View Distance", m_Editor.Settings, "MarkerViewDistance", 100, 5000));
 		marker_group.Insert(new ColorPickerPrefab("Marker Color", m_Editor.Settings, "MarkerPrimaryColor"));
 		

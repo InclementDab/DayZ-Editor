@@ -21,6 +21,7 @@ class EditorSettings: ProfileSettings
 	
 	// Marker Settings
 	bool MarkerTooltips				= true;
+	bool MarkerGroundOcclusion		= false;
 	float MarkerViewDistance 		= 1000;
 	int MarkerPrimaryColor			= COLOR_WHITE_A;
 	
