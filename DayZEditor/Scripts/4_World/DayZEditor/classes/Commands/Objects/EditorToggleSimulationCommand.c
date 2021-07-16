@@ -7,6 +7,15 @@ class EditorToggleSimulationCommand: EditorCommand
 			return false;
 		}
 		
+		// if we are controlling the player
+		if (m_Editor.GetPlayer() && !m_Editor.IsActive()) {
+			EditorObject player_object = m_Editor.GetEditorObject(m_Editor.GetPlayer());
+			if (player_object) {
+				player_object.Simulate = !player_object.Simulate;
+				player_object.PropertyChanged("Simulate");
+			}
+		}
+		
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		if (selected_objects.Count() == 0) {
 			return false;
