@@ -80,7 +80,7 @@ class Editor
 	bool 										CollisionMode;
 
 	string 										BanReason = "null";
-	static const string 						Version = "1.22." + GetBuildNumber();
+	static const string 						Version = "1.23." + GetBuildNumber();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -428,10 +428,15 @@ class Editor
 			
 			case MouseState.MIDDLE: {
 				
+				// Shift + Middle Mouse logic
 				if (KeyState(KeyCode.KC_LSHIFT)) {
 					if (ObjectUnderCursor) {			
 						ClearSelection();
-						HideMapObject(ObjectUnderCursor);
+						if (GetEditorObject(ObjectUnderCursor)) {
+							DeleteObject(GetEditorObject(ObjectUnderCursor));
+						} else {
+							HideMapObject(ObjectUnderCursor);
+						}
 					}
 				} else {
 					vector pos = Vector(CurrentMousePosition[0], GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]), CurrentMousePosition[2]);
