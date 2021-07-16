@@ -89,6 +89,7 @@ class EditorCommandManager
 		RegisterCommand(EditorHideCommand);
 		RegisterCommand(EditorLockCommand);
 		RegisterCommand(EditorUnlockCommand);
+		RegisterCommand(EditorToggleSimulationCommand);
 	
 		RegisterCommand(EditorExportToInitFile);
 		RegisterCommand(EditorExportToExpansion);

@@ -276,12 +276,11 @@ class EditorObject: EditorWorldObject
 			m_Data.Orientation = GetOrientation();
 			m_Data.Scale = GetScale();
 			m_Data.BottomCenter = GetBottomCenter();
-			
-			Name = GetDisplayName();
-			Position = GetPosition();
-			Orientation = GetOrientation();
 		}
 		
+		Name = GetDisplayName();
+		Position = GetPosition();
+		Orientation = GetOrientation();
 		
 		if (GetEditor().Settings.DebugMode) {
 			//Debug.DestroyAllShapes();
