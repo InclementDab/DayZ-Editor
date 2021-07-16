@@ -1,6 +1,5 @@
 class EditorObjectMarker: EditorMarker
 {	
-	protected Editor m_Editor = GetEditor();
 	protected EditorObject m_EditorObject;
 
 	protected ref EditorDragHandler m_DragHandler;
