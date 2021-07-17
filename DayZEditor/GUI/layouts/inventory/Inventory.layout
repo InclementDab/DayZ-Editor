@@ -169,6 +169,7 @@ FrameWidgetClass InventoryFrame {
          {
           ScriptParamsClass {
            Binding_Name "WearableItems"
+           Two_Way_Binding 0
           }
          }
         }

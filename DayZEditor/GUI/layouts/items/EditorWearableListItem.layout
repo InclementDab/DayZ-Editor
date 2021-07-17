@@ -4,11 +4,11 @@ WrapSpacerWidgetClass ListItem {
  ignorepointer 1
  color 0.0196 0.0196 0.0196 0
  position 0 0
- size 1 0.02
+ size 1 14
  hexactpos 1
  vexactpos 1
  hexactsize 0
- vexactsize 0
+ vexactsize 1
  draggable 0
  scriptclass ""
  style Colorable

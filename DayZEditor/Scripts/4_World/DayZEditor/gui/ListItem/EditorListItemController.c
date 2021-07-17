@@ -1,4 +1,3 @@
-
 class EditorListItemController: ViewController
 {
 	string Label = "IF_YOU_SEE_THIS_ITS_BROKEN";

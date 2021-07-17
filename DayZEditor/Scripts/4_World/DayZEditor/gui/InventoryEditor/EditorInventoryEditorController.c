@@ -32,11 +32,11 @@ class EditorInventoryEditorController: ViewController
 	
 	ScrollWidget ItemSelectorScrollbar;
 	
-	ref ObservableCollection<EditorWearableListItem> WearableItems = new ObservableCollection<EditorWearableListItem>(this);
+	ref ObservableCollection<ref EditorWearableListItem> WearableItems = new ObservableCollection<ref EditorWearableListItem>(this);
 	ref map<string, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
 	
 	void EditorInventoryEditorController()
-	{
+	{		
 		foreach (string button: RADIO_BUTTONS) {
 			// Initialize the arrays!
 			string slot = GetInventorySlot(button);
@@ -46,7 +46,6 @@ class EditorInventoryEditorController: ViewController
 		EditorLog.Trace("EditorInventoryEditorController::LoadWearableObjects");
 		g_Game.ReportProgress("Loading Wearable Objects");
 		
-		//array<ref EditorWearableListItem> wearable_items();
 		TStringArray config_paths = {};
 		config_paths.Insert(CFG_VEHICLESPATH);
 		config_paths.Insert(CFG_WEAPONSPATH);
@@ -58,7 +57,7 @@ class EditorInventoryEditorController: ViewController
 				TStringArray inventory_slots = {};
 		        GetGame().ConfigGetChildName(path, i, type);
 				GetGame().ConfigGetTextArray(path + " " + type + " inventorySlot", inventory_slots);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) { // maybe 2 is the way
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 2) { // maybe 2 is the way
 					continue;
 				}
 				
@@ -138,9 +137,9 @@ class EditorInventoryEditorController: ViewController
 					list_item.OnItemSelected.Insert(OnListItemSelected);
 					WearableItems.Insert(list_item);
 				}
-				
+									
 				continue;
-			}
+			}			
 			
 			// Reset scroll bar
 			ItemSelectorScrollbar.VScrollToPos(0);
