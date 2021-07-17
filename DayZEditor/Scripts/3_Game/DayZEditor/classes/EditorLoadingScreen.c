@@ -24,6 +24,7 @@ modded class LoadingScreen
 		new LoadingScreenEntry("20.edds", "Bosch"),		
 		new LoadingScreenEntry("21.edds", "DanceOfJesus"),		
 		new LoadingScreenEntry("22.edds", "DanceOfJesus", true),		
+		new LoadingScreenEntry("23.edds", "Sanches"),
 	};
 	
 	protected TextWidget m_ImageCredit;
