@@ -15,7 +15,9 @@ class EditorInventoryEditorController: ViewController
 		"FeetSlot",
 		"ArmbandSlot"
 	};
-		
+	
+	PlayerBase Player;
+	
 	bool ShoulderLeft;
 	bool ShoulderRight;
 	bool VestSlot;
@@ -108,18 +110,17 @@ class EditorInventoryEditorController: ViewController
 		
 	void OnListItemSelected(EditorWearableListItem list_item, EditorWearableItem wearable_item)
 	{
-		PlayerBase player = GetEditor().GetPlayer();
-		if (!player) {
+		if (!Player) {
 			return; // wat
 		}
 		
 		int slot_id = InventorySlots.GetSlotIdFromString(list_item.GetSlot());
 		
 		// Clear existing item
-		GetGame().ObjectDelete(player.GetInventory().FindAttachment(slot_id));
+		GetGame().ObjectDelete(Player.GetInventory().FindAttachment(slot_id));
 		
 		// Create new item on player
-		player.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id);
+		Player.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id);
 		
 		// Deselect all other things
 		for (int i = 0; i < WearableItems.Count(); i++) {
@@ -128,9 +129,7 @@ class EditorInventoryEditorController: ViewController
 	}
 	
 	override void PropertyChanged(string property_name)
-	{
-		PlayerBase player = GetEditor().GetPlayer();
-		
+	{		
 		// Radio Button Logic
 		foreach (string button: RADIO_BUTTONS) {
 			if (button == property_name) {
@@ -145,8 +144,8 @@ class EditorInventoryEditorController: ViewController
 					WearableItems.Insert(list_item);
 					
 					// Assign active item from slot
-					if (player) {
-						EntityAI slot_item = player.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot));
+					if (Player) {
+						EntityAI slot_item = Player.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot));
 						if (slot_item && slot_item.GetType() == wearable.Type) {
 							list_item.Select();
 						}

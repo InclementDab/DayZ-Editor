@@ -360,7 +360,8 @@ class Editor
 				}
 				
 				else {
-					StartInventoryEditor();
+					// Default to m_Player
+					StartInventoryEditor(m_Player);
 				}
 			}
 		}
@@ -715,37 +716,44 @@ class Editor
 	
 	// Inventory Editor Stuff
 	protected ref EditorInventoryEditorHud m_EditorInventoryEditorHud;
-	void StartInventoryEditor()
+	void StartInventoryEditor(PlayerBase player)
 	{
 		delete m_EditorInventoryEditorHud;
 		
-		if (!GetGame().GetPlayer().GetHumanInventory().CanOpenInventory() || GetGame().GetPlayer().IsInventorySoftLocked() || !GetGame().GetPlayer().GetHumanInventory().IsInventoryUnlocked()) {
+		if (!player.GetHumanInventory().CanOpenInventory() || player.IsInventorySoftLocked() || !player.GetHumanInventory().IsInventoryUnlocked()) {
 			return;
 		}
 		
-		m_EditorInventoryEditorHud = new EditorInventoryEditorHud();
+		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(player);
 		
 		SetMissionHud(false);
 		// Vanilla stuff
-		m_Player.OnInventoryMenuOpen();
+		player.OnInventoryMenuOpen();
 		//m_Mission.MoveHudForInventory(true);
 		//PlayerControlDisable(INPUT_EXCLUDE_INVENTORY);
-		m_Player.GetInputController().SetDisabled(true);
+		player.GetInputController().SetDisabled(true);
 		
 		m_EditorHud.ShowCursor(true);
 	}
 	
 	void StopInventoryEditor()
 	{		
+		if (!m_EditorInventoryEditorHud) {
+			return;
+		}
+		
+		PlayerBase player = m_EditorInventoryEditorHud.GetPlayer();
+		
 		delete m_EditorInventoryEditorHud;
-		GetGame().SelectPlayer(null, GetEditor().GetPlayer());
+		
+		GetGame().SelectPlayer(null, player);
 		
 		SetMissionHud(true);
 		//MoveHudForInventory(false);
 		//PlayerControlEnable(false);
-		m_Player.OnInventoryMenuClose();
+		player.OnInventoryMenuClose();
 		//VicinityItemManager.GetInstance().ResetRefreshCounter();
-		m_Player.GetInputController().SetDisabled(false);
+		player.GetInputController().SetDisabled(false);
 	}
 	
 	void SetMissionHud(bool state)
