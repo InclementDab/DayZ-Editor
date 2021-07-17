@@ -352,6 +352,18 @@ class Editor
 				ObjectInHand.GetWorldObject().SetOrientation(hand_ori);			
 			}
 		}
+		
+		if (m_Player && !m_Active) {		
+			if (input.LocalPress("UAGear", false)) {
+				if (m_EditorInventoryEditorHud) {
+					StopInventoryEditor();
+				}
+				
+				else {
+					StartInventoryEditor();
+				}
+			}
+		}
 	}
 	
 	bool OnDoubleClick(int button)
@@ -522,6 +534,11 @@ class Editor
 		}
 		
 		m_Active = active;
+				
+		// Shut down Inventory Editor, done prior to the camera due to the destructor
+		if (m_EditorInventoryEditorHud) {
+			delete m_EditorInventoryEditorHud;
+		}
 		
 		if (m_EditorCamera) {
 			m_EditorCamera.LookEnabled = m_Active;
@@ -694,6 +711,51 @@ class Editor
 	{
 		EditorLootEditorDialog loot_editor_dialog("Attention!");
 		loot_editor_dialog.ShowDialog();
+	}
+	
+	// Inventory Editor Stuff
+	protected ref EditorInventoryEditorHud m_EditorInventoryEditorHud;
+	void StartInventoryEditor()
+	{
+		delete m_EditorInventoryEditorHud;
+		
+		if (!GetGame().GetPlayer().GetHumanInventory().CanOpenInventory() || GetGame().GetPlayer().IsInventorySoftLocked() || !GetGame().GetPlayer().GetHumanInventory().IsInventoryUnlocked()) {
+			return;
+		}
+		
+		m_EditorInventoryEditorHud = new EditorInventoryEditorHud();
+		
+		SetMissionHud(false);
+		// Vanilla stuff
+		m_Player.OnInventoryMenuOpen();
+		//m_Mission.MoveHudForInventory(true);
+		//PlayerControlDisable(INPUT_EXCLUDE_INVENTORY);
+		m_Player.GetInputController().SetDisabled(true);
+		
+		m_EditorHud.ShowCursor(true);
+	}
+	
+	void StopInventoryEditor()
+	{		
+		delete m_EditorInventoryEditorHud;
+		GetGame().SelectPlayer(null, GetEditor().GetPlayer());
+		
+		SetMissionHud(true);
+		//MoveHudForInventory(false);
+		//PlayerControlEnable(false);
+		m_Player.OnInventoryMenuClose();
+		//VicinityItemManager.GetInstance().ResetRefreshCounter();
+		m_Player.GetInputController().SetDisabled(false);
+	}
+	
+	void SetMissionHud(bool state)
+	{
+		if (m_Mission && m_Mission.GetHud()) {
+			m_Mission.GetHud().Show(state);
+			m_Mission.GetHud().ShowHud(state);
+			m_Mission.GetHud().ShowHudUI(state);
+			m_Mission.GetHud().SetPermanentCrossHair(state);
+		}
 	}
 	
 	// Kinda very jank i think

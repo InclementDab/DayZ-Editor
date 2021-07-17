@@ -80,46 +80,9 @@ modded class MissionGameplay
 	{
 		if (GetEditor() && GetEditor().IsActive()) {
 			GetModuleManager().OnUpdate(timeslice);
-			//GetEditor().OnUpdate(timeslice);
-		} else { 
-			super.OnUpdate(timeslice);
-		}
-	}
-		
-	protected ref EditorInventoryEditorHud m_EditorInventoryEditorHud;
-	override void ShowInventory()
-	{
-		Print("ShowInventory");
-		
-		delete m_EditorInventoryEditorHud;
-		
-		if (!GetGame().GetPlayer().GetHumanInventory().CanOpenInventory() || GetGame().GetPlayer().IsInventorySoftLocked() || !GetGame().GetPlayer().GetHumanInventory().IsInventoryUnlocked()) {
 			return;
-		}
-		
-		m_EditorInventoryEditorHud = new EditorInventoryEditorHud();
-		
-		// Vanilla stuff
-		PlayerBase.Cast(GetGame().GetPlayer()).OnInventoryMenuOpen();
-		MoveHudForInventory(true);
-		PlayerControlDisable(INPUT_EXCLUDE_INVENTORY);
-		
-		GetEditor().GetEditorHud().ShowCursor(true);
-	}
-	
-	override void HideInventory()
-	{
-		Print("HideInventory");
-		
-		delete m_EditorInventoryEditorHud;
-		
-		GetEditor().SetActive(true);
-		//GetEditor().GetEditorHud().ShowCursor(false);
-		
-		
-		MoveHudForInventory(false);
-		PlayerControlEnable(false);
-		PlayerBase.Cast(GetGame().GetPlayer()).OnInventoryMenuClose();
-		VicinityItemManager.GetInstance().ResetRefreshCounter();
+		} 
+				
+		super.OnUpdate(timeslice);
 	}
 }
