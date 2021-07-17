@@ -354,7 +354,7 @@ class Editor
 		}
 		
 		if (m_Player && !m_Active) {		
-			if (input.LocalPress("UAGear", false)) {
+			if (input.LocalPress("EditorToggleInventoryEditor", false)) {
 				if (m_EditorInventoryEditorHud) {
 					StopInventoryEditor();
 				}

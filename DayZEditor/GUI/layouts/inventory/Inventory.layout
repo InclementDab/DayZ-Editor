@@ -539,7 +539,7 @@ FrameWidgetClass InventoryFrame {
          }
          {
           ScriptParamsClass {
-           Binding_Name "GlovesSlot"
+           Binding_Name "GloveSlot"
            Two_Way_Binding 1
           }
          }

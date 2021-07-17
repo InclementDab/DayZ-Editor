@@ -58,7 +58,7 @@ class EditorInventoryEditorController: ViewController
 				TStringArray inventory_slots = {};
 		        GetGame().ConfigGetChildName(path, i, type);
 				GetGame().ConfigGetTextArray(path + " " + type + " inventorySlot", inventory_slots);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) { // maybe 2 is the way
 					continue;
 				}
 				
@@ -96,7 +96,7 @@ class EditorInventoryEditorController: ViewController
 			case "BeltSlot": return "Hips";
 			case "LegsSlot": return "Legs";
 			case "BackSlot": return "Back";
-			case "HeadSlot": return "Head";
+			case "HeadSlot": return "Headgear"; // Head does the funny face change
 			case "FaceSlot": return "Mask";
 			case "EyeSlot": return "Eyewear";
 			case "GloveSlot": return "Gloves";

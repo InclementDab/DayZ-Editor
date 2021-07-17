@@ -12,6 +12,7 @@ modded class MissionGameplay
 		GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
 		GetUApi().GetInputByName("UACameraToolSpeedIncrease").ForceDisable(true);
 		GetUApi().GetInputByName("UACameraToolSpeedDecrease").ForceDisable(true);
+		GetUApi().GetInputByName("UAGear").ForceDisable(true);
 		GetUApi().UpdateControls();
 		
 		/* Kill the weather! */
