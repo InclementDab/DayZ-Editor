@@ -103,6 +103,12 @@ class EditorInventoryEditorController: ViewController
 		return string.Empty;
 	}
 		
+	void OnListItemSelected(EditorWearableListItem list_item, EditorWearableItem wearable_item)
+	{
+		Print(wearable_item.Type);
+		Print(wearable_item.Slots);
+	}
+	
 	override void PropertyChanged(string property_name)
 	{
 		// Radio Button Logic
@@ -114,7 +120,9 @@ class EditorInventoryEditorController: ViewController
 				string inventory_slot = GetInventorySlot(button);
 				foreach (EditorWearableItem wearable: LoadedWearableItems[inventory_slot]) {
 					// This is the part where we need to call NEW, not before
-					WearableItems.Insert(new EditorWearableListItem(wearable));
+					EditorWearableListItem list_item = new EditorWearableListItem(wearable);
+					list_item.OnItemSelected.Insert(OnListItemSelected);
+					WearableItems.Insert(list_item);
 				}
 				
 				continue;
