@@ -3,10 +3,12 @@ class EditorWearableListItem: ScriptViewTemplate<EditorWearableListItemControlle
 	ref ScriptInvoker OnItemSelected = new ScriptInvoker();
 	
 	protected EditorWearableItem m_WearableItem;
+	protected string m_InventorySlot;
 	
-	void EditorWearableListItem(EditorWearableItem wearable_item)
+	void EditorWearableListItem(EditorWearableItem wearable_item, string inventory_slot)
 	{
 		m_WearableItem = wearable_item;
+		m_InventorySlot = inventory_slot;
 		m_TemplateController.Type = wearable_item.Type;
 		m_TemplateController.NotifyPropertyChanged("Type");
 		
@@ -29,6 +31,11 @@ class EditorWearableListItem: ScriptViewTemplate<EditorWearableListItemControlle
 	string GetType()
 	{
 		return m_TemplateController.Type;
+	}
+	
+	string GetSlot()
+	{
+		return m_InventorySlot;
 	}
 	
 	TStringArray GetInventorySlots()

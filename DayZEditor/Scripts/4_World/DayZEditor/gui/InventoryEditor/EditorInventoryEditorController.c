@@ -82,10 +82,12 @@ class EditorInventoryEditorController: ViewController
 		}*/
 	}
 	
+	// playerSlots[] = {"Slot_Shoulder","Slot_Melee","Slot_Vest","Slot_Body","Slot_Hips","Slot_Legs","Slot_Back","Slot_Headgear","Slot_Mask","Slot_Eyewear","Slot_Gloves","Slot_Feet","Slot_Armband"};
+	
 	string GetInventorySlot(string radio_button)
 	{
 		switch (radio_button) {
-			case "ShoulderLeft": return "Shoulder";
+			case "ShoulderLeft": return "Melee";
 			case "ShoulderRight": return "Shoulder";
 			case "VestSlot": return "Vest";
 			case "ShirtSlot": return "Body";
@@ -107,6 +109,20 @@ class EditorInventoryEditorController: ViewController
 	{
 		Print(wearable_item.Type);
 		Print(wearable_item.Slots);
+		Print(list_item.GetSlot());
+		
+		PlayerBase player = GetEditor().GetPlayer();
+		if (!player) {
+			return; // wat
+		}
+		
+		int slot_id = InventorySlots.GetSlotIdFromString(list_item.GetSlot());
+		
+		// Clear existing item
+		GetGame().ObjectDelete(player.GetInventory().FindAttachment(slot_id));
+		
+		// Create new item on player
+		player.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id);
 	}
 	
 	override void PropertyChanged(string property_name)
@@ -120,7 +136,7 @@ class EditorInventoryEditorController: ViewController
 				string inventory_slot = GetInventorySlot(button);
 				foreach (EditorWearableItem wearable: LoadedWearableItems[inventory_slot]) {
 					// This is the part where we need to call NEW, not before
-					EditorWearableListItem list_item = new EditorWearableListItem(wearable);
+					EditorWearableListItem list_item = new EditorWearableListItem(wearable, inventory_slot);
 					list_item.OnItemSelected.Insert(OnListItemSelected);
 					WearableItems.Insert(list_item);
 				}
