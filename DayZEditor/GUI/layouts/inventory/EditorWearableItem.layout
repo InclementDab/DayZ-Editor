@@ -35,7 +35,7 @@ PanelWidgetClass EditorWearableItem {
      "text valign" center
      {
       ScriptParamsClass {
-       Binding_Name "DisplayName"
+       Binding_Name "Type"
       }
      }
     }

@@ -89,6 +89,8 @@ modded class MissionGameplay
 	protected ref EditorInventoryEditorHud m_EditorInventoryEditorHud;
 	override void ShowInventory()
 	{
+		Print("ShowInventory");
+		
 		delete m_EditorInventoryEditorHud;
 		
 		if (!GetGame().GetPlayer().GetHumanInventory().CanOpenInventory() || GetGame().GetPlayer().IsInventorySoftLocked() || !GetGame().GetPlayer().GetHumanInventory().IsInventoryUnlocked()) {
@@ -107,6 +109,8 @@ modded class MissionGameplay
 	
 	override void HideInventory()
 	{
+		Print("HideInventory");
+		
 		delete m_EditorInventoryEditorHud;
 		
 		GetEditor().SetActive(true);

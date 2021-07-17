@@ -30,6 +30,8 @@ class EditorInventoryEditorController: ViewController
 	bool FeetSlot;
 	bool ArmbandSlot;
 	
+	ScrollWidget ItemSelectorScrollbar;
+	
 	ref ObservableCollection<EditorWearableListItem> WearableItems = new ObservableCollection<EditorWearableListItem>(this);
 	ref map<string, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
 	
@@ -41,7 +43,7 @@ class EditorInventoryEditorController: ViewController
 			LoadedWearableItems[slot] = new array<ref EditorWearableItem>();
 		}
 		
-		EditorLog.Trace("EditorInventoryEditorHud::LoadPlaceableObjects");
+		EditorLog.Trace("EditorInventoryEditorController::LoadWearableObjects");
 		g_Game.ReportProgress("Loading Wearable Objects");
 		
 		//array<ref EditorWearableListItem> wearable_items();
@@ -56,7 +58,7 @@ class EditorInventoryEditorController: ViewController
 				TStringArray inventory_slots = {};
 		        GetGame().ConfigGetChildName(path, i, type);
 				GetGame().ConfigGetTextArray(path + " " + type + " inventorySlot", inventory_slots);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") == 0) {
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
 					continue;
 				}
 				
@@ -107,10 +109,6 @@ class EditorInventoryEditorController: ViewController
 		
 	void OnListItemSelected(EditorWearableListItem list_item, EditorWearableItem wearable_item)
 	{
-		Print(wearable_item.Type);
-		Print(wearable_item.Slots);
-		Print(list_item.GetSlot());
-		
 		PlayerBase player = GetEditor().GetPlayer();
 		if (!player) {
 			return; // wat
@@ -143,6 +141,9 @@ class EditorInventoryEditorController: ViewController
 				
 				continue;
 			}
+			
+			// Reset scroll bar
+			ItemSelectorScrollbar.VScrollToPos(0);
 			
 			EnScript.SetClassVar(this, button, 0, false);
 			NotifyPropertyChanged(button, false);
