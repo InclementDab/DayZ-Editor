@@ -1,8 +1,9 @@
 class EditorOpenCommand: EditorImportCommandBase
-{	
+{		
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName());
+		m_ImportSettings.SetFileType(GetFileType());
+		EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName(), m_ImportSettings);
 		
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
@@ -14,11 +15,11 @@ class EditorOpenCommand: EditorImportCommandBase
 	
 	EditorSaveData OpenFile(string file_name)
 	{
-		EditorSaveData save_data = ImportFile(file_name, true);
+		EditorSaveData save_data = ImportFile(file_name, m_ImportSettings, true);
 		
 		if (save_data) {
-			m_Editor.SetSaveFile(file_name);
-			m_Editor.GetCamera().SetPosition(save_data.CameraPosition);
+			GetEditor().SetSaveFile(file_name);
+			GetEditor().GetCamera().SetPosition(save_data.CameraPosition);
 		}
 		
 		return save_data;
@@ -26,7 +27,7 @@ class EditorOpenCommand: EditorImportCommandBase
 
 	override string GetName() 
 	{
-		return "Open";
+		return "#STR_EDITOR_OPEN";
 	}
 
 	override string GetIcon() 
@@ -46,6 +47,6 @@ class EditorOpenCommand: EditorImportCommandBase
 	
 	override string GetDialogButtonName() 
 	{
-		return "Open";
+		return "#STR_EDITOR_OPEN";
 	}
 }

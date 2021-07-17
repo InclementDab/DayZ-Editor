@@ -1,4 +1,3 @@
-
 class EditorCOMFile: EditorFileType
 {
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
@@ -31,7 +30,8 @@ class EditorCOMFile: EditorFileType
 		return save_data;
 	}
 	
-	override string GetExtension() {
+	override string GetExtension() 
+	{
 		return ".json";
 	}
 }

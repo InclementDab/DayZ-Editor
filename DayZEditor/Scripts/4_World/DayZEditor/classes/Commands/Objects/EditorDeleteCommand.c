@@ -1,27 +1,35 @@
 class EditorDeleteCommand: EditorCommand
 {
-	protected override void Call(Class sender, CommandArgs args) 
+	override bool Execute(Class sender, CommandArgs args) 
 	{
+		super.Execute(sender, args);
 		EditorCameraTrackManagerModule manager = m_Editor.GetCameraTrackManager();
 		if (manager.GetSelectedTracks().Count() > 0) {
 			EditorLog.Info("Deleting %1 Camera Tracks", manager.GetSelectedTracks().Count().ToString());
 			manager.DeleteCameraTracks(manager.GetSelectedTracks());
-			return;
+			return true;
 		}
 		
 		EditorDeletedObjectMap deleted_objects = m_Editor.GetSelectedHiddenObjects();
 		if (deleted_objects.Count() > 0) {
 			m_Editor.UnhideMapObjects(deleted_objects);
-			return;
+			return true;
 		}
 		
 		EditorObjectMap objects = m_Editor.GetSelectedObjects();
-		m_Editor.DeleteObjects(objects);		
+		if (objects.Count() == 0) {
+			return false;
+		}
+		
+		EditorHud.SetCurrentTooltip(null);
+		m_Editor.DeleteObjects(objects);
+		
+		return true;	
 	}
 		
 	override string GetName() 
 	{
-		return "Delete";
+		return "#STR_EDITOR_DELETE";
 	}
 	
 	override ShortcutKeys GetShortcut() 

@@ -1,11 +1,14 @@
 class EditorUnlockCommand: EditorCommand
 {
-	override void Call(Class sender, CommandArgs args)
+	override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {		
 			GetEditor().UnlockObject(selected_object);
 		}
+		
+		return true;
 	}
 		
 	override ShortcutKeys GetShortcut() 
@@ -15,6 +18,6 @@ class EditorUnlockCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Unlock";
+		return "#STR_EDITOR_UNLOCK";
 	}
 }

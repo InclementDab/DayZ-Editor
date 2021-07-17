@@ -3,6 +3,6 @@ class EditorOpenRecentCommand: EditorCommand
 {
 	override string GetName()
 	{
-		return "Open Recent";
+		return "#STR_EDITOR_OPEN_RECENT";
 	}
 }

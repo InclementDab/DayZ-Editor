@@ -327,13 +327,9 @@ class EditorMapGroupProto: XMLCallback
 	}
 }
 
-
-
-
 class EditorXMLManager
 {
-
-	static void LoadMapGroupProto(out EditorMapGroupProto group_proto, string filename = "$profile:Editor/mapgroupproto.xml")
+	static void LoadMapGroupProto(out EditorMapGroupProto group_proto, string filename)
 	{
 		GetXMLApi().Read(filename, group_proto);
 	}

@@ -37,7 +37,7 @@ class EditorClientModule: JMModuleBase
 	override void OnInit()
 	{
 		EditorLog.Trace("Editor::OnInit");
-				
+						
 		// Keybinds
 		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
 		RegisterBinding(new JMModuleBinding("OnEditorToggleCursor", "EditorToggleCursor"));
@@ -62,7 +62,7 @@ class EditorClientModule: JMModuleBase
 		}
 		
 		// Konami suck
-		if (m_KonamiCodeCooldown != 0) {
+		/*if (m_KonamiCodeCooldown != 0) {
 			m_KonamiCodeCooldown -= timeslice;
 			m_KonamiCodeCooldown = Math.Clamp(m_KonamiCodeCooldown, 0, 100);
 		}
@@ -77,7 +77,7 @@ class EditorClientModule: JMModuleBase
 			GetEditor().GetEditorHud().CreateNotification("Konami Code Complete!", ARGB(255, 255, 0, 255));
 			GetEditor().KEgg = true;
 			m_KonamiCodeProgress = -1;
-		}
+		}*/
 		
 		/*
 		if (GetEditor() && GetEditor().GetCamera() && !IsMissionOffline()) {
@@ -91,7 +91,6 @@ class EditorClientModule: JMModuleBase
 	private void CheckKonamiCode(int progress)
 	{
 		if (m_KonamiCodeProgress == progress) {
-			Print("Clearing progress");
 			m_KonamiCodeProgress = 0;
 		}
 	}
@@ -103,25 +102,18 @@ class EditorClientModule: JMModuleBase
 		
 	override void OnMissionStart()
 	{
-		EditorLog.Trace("Editor::OnMissionStart");		
+		EditorLog.Trace("Editor::OnMissionStart");
 		
-		if (IsMissionOffline()) {
-			EditorLog.Info("Loading Offline Editor...");
-			g_Game.ReportProgress("Loading Mission");
-			vector center_pos = Editor.GetMapCenterPosition();
-			PlayerBase player = Editor.CreateDefaultCharacter(Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
-			if (!player) {
-				g_Game.ReportProgress("Failed to create player, contact InclementDab");
-				Error("Player was not created, exiting");
-				return;
-			}
-			
-			GetGame().SelectPlayer(null, player);
-			Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
-		} else {
-			EditorLog.Info("Loading Online Editor...");
-			Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
+		g_Game.ReportProgress("Loading Mission");
+		vector center_pos = Editor.GetMapCenterPosition();
+		PlayerBase player = Editor.CreateDefaultCharacter(Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
+		if (!player) {
+			g_Game.ReportProgress("Failed to create player, contact InclementDab");
+			Error("Player was not created, exiting");
+			return;
 		}
+		
+		GetGame().SelectPlayer(null, player);
 	}
 	
 	override void OnMissionFinish()
@@ -133,11 +125,11 @@ class EditorClientModule: JMModuleBase
 	override void OnMissionLoaded()
 	{
 		EditorLog.Trace("Editor::OnMissionLoaded");
-		GetEditor().SetActive(true);
 		
-		// Just resolves like 37 different issues surrounding DayZ and DayZ related titles
-		GetEditor().SetActive(false);
-		GetEditor().SetActive(true);
+		g_Game.ReportProgress("Mission Loaded");
+		EditorLog.Info("Loading Offline Editor...");
+		Editor editor = Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
+		editor.SetActive(true);
 	}
 	
 	// Inputs
@@ -278,9 +270,9 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectForward");
 		
-		float value = 0.1;
+		float value = GetEditor().Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
-			value = 0.001;
+			value *= 0.01;
 		}
 		
 		QuickTransformObjects(Vector(0, 0, value));
@@ -308,9 +300,9 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectBackward");
 		
-		float value = 0.1;
+		float value = GetEditor().Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
-			value = 0.001;
+			value *= 0.01;
 		}
 		
 		QuickTransformObjects(Vector(0, 0, -value));
@@ -321,9 +313,9 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectLeft");
 		
-		float value = 0.1;
+		float value = GetEditor().Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
-			value = 0.001;
+			value *= 0.01;
 		}
 		
 		QuickTransformObjects(Vector(-value, 0, 0));
@@ -334,9 +326,9 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectRight");
 		
-		float value = 0.1;
+		float value = GetEditor().Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
-			value = 0.001;
+			value *= 0.01;
 		}
 		
 		QuickTransformObjects(Vector(value, 0, 0));
@@ -347,9 +339,9 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectUp");
 		
-		float value = 0.1;
+		float value = GetEditor().Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
-			value = 0.001;
+			value *= 0.01;
 		}
 		
 		QuickTransformObjects(Vector(0, value, 0));
@@ -360,9 +352,9 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectDown");
 		
-		float value = 0.1;
+		float value = GetEditor().Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
-			value = 0.001;
+			value *= 0.01;
 		}
 		
 		QuickTransformObjects(Vector(0, -value, 0));

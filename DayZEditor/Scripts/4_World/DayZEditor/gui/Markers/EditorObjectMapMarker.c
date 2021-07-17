@@ -6,11 +6,15 @@ class EditorObjectMapMarker: EditorObjectMarker
 	{
 		m_DragHandler = new EditorMapDragHandler(m_EditorObject);
 		m_EditorMap = m_Editor.GetEditorHud().EditorMapWidget;
+		
+		GetLayoutRoot().SetSort(101);
 	}
 	
 	override void Update()
 	{
-		if (!m_EditorMap || !m_EditorMap.IsVisible()) return;
+		if (!m_EditorMap || !m_EditorMap.IsVisible()) { 
+			return;
+		}
 		
 		vector position = m_EditorMap.MapToScreen(m_EditorObject.GetPosition());
 		SetPos(position[0], position[1]);

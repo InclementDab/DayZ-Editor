@@ -6,14 +6,14 @@ class EditorPlacedListItem: EditorListItem
 		return m_EditorObject; 
 	}
 	
-	protected ref EditorDragHandler m_DragHandler;
+	protected ref EditorObjectDragHandler m_DragHandler;
 	
 	void EditorPlacedListItem(EditorObject editor_object)
 	{
 		EditorLog.Trace("EditorPlacedListItem::SetEditorObject"); 
 		m_EditorObject = editor_object;
 		
-		m_DragHandler = new EditorDragHandler(m_EditorObject);
+		m_DragHandler = new EditorObjectDragHandler(m_EditorObject);
 		
 		m_TemplateController.Label = m_EditorObject.GetDisplayName();
 		m_TemplateController.NotifyPropertyChanged("Label");
@@ -153,7 +153,7 @@ class EditorPlacedListItem: EditorListItem
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
 		EditorLog.Trace("EditorPlacedListItem::OnDrop");
-		m_DragHandler.OnDragFinish();
+		//m_DragHandler.OnDragFinish();
 		
 		return true;
 	}

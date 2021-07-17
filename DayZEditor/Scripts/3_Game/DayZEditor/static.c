@@ -112,6 +112,25 @@ static bool RecursiveGetParent(out Widget w, string name)
 	return false;
 }
 
+static bool RecursiveGetParent(out Widget w, typename type)
+{
+	if (!w) {
+		return false;
+	}
+	
+	if (w.IsInherited(type)) {
+		return true;
+	}
+	
+	w = w.GetParent();
+	
+	if (w) {
+		return RecursiveGetParent(w, type);
+	}
+	
+	return false;
+}
+
 static Widget GetWidgetRoot(Widget w)
 {
 	Widget parent = w;

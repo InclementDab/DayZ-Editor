@@ -1,4 +1,4 @@
-class EditorCloseCommand: EditorCommand
+class EditorCloseCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
@@ -13,7 +13,7 @@ class EditorCloseCommand: EditorCommand
 			
 	override string GetName() 
 	{
-		return "Close";
+		return "#STR_EDITOR_CLOSE";
 	}
 	
 	override ShortcutKeys GetShortcut() 

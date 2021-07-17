@@ -8,7 +8,8 @@ class EditorSaveCommand: EditorExportCommandBase
 		string file_name = m_Editor.GetSaveFile();
 		if (file_name == string.Empty) {
 			EditorLog.Info("Using filter %1", "*.dze");
-			EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName());
+			m_ExportSettings.SetFileType(GetFileType());
+			EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName(), m_ExportSettings);
 			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 				return;
 			}
@@ -16,14 +17,14 @@ class EditorSaveCommand: EditorExportCommandBase
 			warn_on_overwrite = true;
 		}
 		
-		if (ExportFile(file_name, new ExportSettings(), warn_on_overwrite)) {
+		if (ExportFile(file_name, m_ExportSettings, warn_on_overwrite)) {
 			m_Editor.SetSaveFile(file_name);
 		}
 	}
 	
 	override string GetName() 
 	{
-		return "Save";
+		return "#STR_EDITOR_SAVE";
 	}
 	
 	override string GetIcon() 
@@ -43,6 +44,6 @@ class EditorSaveCommand: EditorExportCommandBase
 	
 	override string GetDialogButtonName() 
 	{
-		return "Save";
+		return "#STR_EDITOR_SAVE";
 	}
 }

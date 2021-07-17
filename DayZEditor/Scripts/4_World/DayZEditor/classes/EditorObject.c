@@ -16,6 +16,7 @@ class EditorObject: EditorWorldObject
 	private vector m_LineVerticies[8];
 	
 	// Object Data
+	int ObjectID;
 	string Name;
 	vector Position;
 	vector Orientation;
@@ -33,7 +34,7 @@ class EditorObject: EditorWorldObject
 	
 	// Human Properties
 	bool Control;
-	string CurrentAnimation;
+	int CurrentAnimation;
 	bool Animate;
 		
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
@@ -269,20 +270,20 @@ class EditorObject: EditorWorldObject
 			return;
 		}
 		
+		ObjectID = m_WorldObject.GetID();
 		if (m_Data) {
 			m_Data.Position = GetPosition();
 			m_Data.Orientation = GetOrientation();
 			m_Data.Scale = GetScale();
 			m_Data.BottomCenter = GetBottomCenter();
-			
-			Name = GetDisplayName();
-			Position = GetPosition();
-			Orientation = GetOrientation();
 		}
 		
+		Name = GetDisplayName();
+		Position = GetPosition();
+		Orientation = GetOrientation();
 		
 		if (GetEditor().Settings.DebugMode) {
-			Debug.DestroyAllShapes();
+			//Debug.DestroyAllShapes();
 			foreach (EditorSnapPoint point: m_SnapPoints) {
 				Debug.DrawSphere(point.GetWorldObject().GetWorldPosition());
 			}
@@ -367,11 +368,11 @@ class EditorObject: EditorWorldObject
 			}
 			
 			case "Animate": {
-				if (Animate) {
-					SetAnimation(CurrentAnimation);
-				} else {
-					ResetAnimation();
+				PlayerBase emote_player = PlayerBase.Cast(m_WorldObject);
+				if (emote_player) {
+					emote_player.GetEmoteManager().PlayEmote(CurrentAnimation);
 				}
+				
 				break;
 			}
 						

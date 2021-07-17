@@ -1,8 +1,8 @@
-class EditorScriptEditorCommand: EditorCommand
+class EditorScriptEditorCommand: EditorAsyncCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorScriptEditorDialog edit_dialog = new EditorScriptEditorDialog("Script Console");
+		EditorScriptEditorDialog edit_dialog = new EditorScriptEditorDialog(GetName());
 		
 		string script_content;
 		edit_dialog.ShowDialog(script_content);
@@ -16,7 +16,7 @@ class EditorScriptEditorCommand: EditorCommand
 			sanitized_content += script_content[i];
 		}
 		
-		string file_name = "$saves:Editor/_discard.c";
+		string file_name = "$saves:_.c";
 		FileHandle handle = OpenFile(file_name, FileMode.WRITE);
 		string file_data = "static void main()\n{\n" + sanitized_content + "\n}";
 		FPrintln(handle, file_data);		
@@ -31,13 +31,13 @@ class EditorScriptEditorCommand: EditorCommand
 			return;
 		}
 		
-		script_module.Call(null, "main", null);
+		script_module.CallFunction(null, "main", null, null);
 		
 		DeleteFile(file_name);
 	}
 	
 	override string GetName() 
 	{
-		return "Script Editor";
+		return "#STR_EDITOR_CMD_SCRIPT_EDITOR";
 	}
 }

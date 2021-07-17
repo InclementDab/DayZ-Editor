@@ -1,12 +1,14 @@
 class EditorAddToFavoritesCommand: EditorCommand
 {
-	override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		
+		return true;
 	}
 	
 	override string GetName() 
 	{
-		return "Add to favorites...";
+		return "#STR_EDITOR_CMD_ADD_TO_FAVORITES";
 	}
 }

@@ -15,9 +15,9 @@ class CfgMods
 	class DZ_Editor
 	{
 		name = "DayZ Editor";
+		version = "1.2";
 		dir = "DayZEditor";
 		credits = "InclementDab";
-		author = "InclementDab";
 		creditsJson = "DayZEditor/Scripts/Data/Credits.json";
 		versionPath = "DayZEditor/scripts/Data/Version.hpp";
 		inputs = "DayZEditor/Scripts/Data/Inputs.xml";

@@ -1,4 +1,4 @@
-class EditorEnvironmentControlCommand: EditorCommand
+class EditorEnvironmentControlCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
@@ -8,7 +8,7 @@ class EditorEnvironmentControlCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Environment";
+		return "#STR_EDITOR_ENVIRONMENT";
 	}
 	
 	override string GetIcon() 

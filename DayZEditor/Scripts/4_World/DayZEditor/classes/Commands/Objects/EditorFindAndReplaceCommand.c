@@ -1,8 +1,8 @@
-class EditorFindAndReplaceCommand: EditorCommand
+class EditorFindAndReplaceCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{
-		EditorFindAndReplaceDialog dialog("Find and Replace");
+		EditorFindAndReplaceDialog dialog(GetName());
 		dialog.ShowDialog();
 	}
 	
@@ -40,6 +40,6 @@ class EditorFindAndReplaceCommand: EditorCommand
 	
 	override string GetName()
 	{
-		return "Find and Replace";
+		return "#STR_EDITOR_CMD_FIND_AND_REPLACE";
 	}
 }

@@ -7,6 +7,6 @@ class EditorExportToMapGroupPos: EditorExportCommandBase
 	
 	override string GetName() 
 	{
-		return "Export to MapGroupPos";
+		return "#STR_EDITOR_CMD_EXPORT_POS (*.xml)";
 	}
 }

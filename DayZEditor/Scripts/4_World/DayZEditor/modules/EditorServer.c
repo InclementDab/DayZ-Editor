@@ -71,7 +71,6 @@ class EditorServerModule: JMModuleBase
 	{
 		EditorLog.Trace("EditorServer::RPC_CreateObject");
 		EditorObjectData data = new EditorObjectData();
-		data.OnRead(ctx);
 		
 		GetGame().CreateObjectEx(data.Type, data.Position, ECE_NONE);
 	}

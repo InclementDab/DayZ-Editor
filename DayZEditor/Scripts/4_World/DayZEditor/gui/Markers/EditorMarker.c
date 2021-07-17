@@ -1,5 +1,6 @@
 class EditorMarker: ScriptView
 {
+	protected Editor m_Editor = GetEditor();
 	protected bool m_Show = true;
 	
 	Widget EditorMarkerColor;

@@ -24,7 +24,7 @@ class EditorCameraDialog: EditorDialogBase
 		m_CameraGroup.Insert(new SliderPrefab("DOF Blur", m_EditorCamera, "DOFBlur", 0, 1));
 		m_CameraGroup.Insert(new SliderPrefab("Vignette", m_EditorCamera, "Vignette", 0, 1));
 		m_CameraGroup.Insert(new SliderPrefab("Sharpness", m_EditorCamera, "Sharpness", 0, 1));
-		m_CameraGroup.Insert(new SliderPrefab("Exposure", m_EditorCamera, "Exposure", 0, 1));
+		m_CameraGroup.Insert(new SliderPrefab("Exposure", m_EditorCamera, "Exposure", 0, 3));
 		m_CameraGroup.Insert(new SliderPrefab("Smoothing", m_EditorCamera, "Smoothing", 0, 1));
 		m_CameraGroup.Open(OpenCameraGroup);
 		
@@ -60,16 +60,19 @@ class EditorCameraDialog: EditorDialogBase
 	{
 		EditorLog.Trace("EditorCameraDialog::ResetDefaultExecute");
 		
-		m_EditorCamera.Speed = 60;
 		m_EditorCamera.Blur = 0;
 		m_EditorCamera.FOV = 1;
 		m_EditorCamera.NearPlane = 0;
 		
-		m_EditorCamera.PropertyChanged("Speed");
 		m_EditorCamera.PropertyChanged("Blur");
 		m_EditorCamera.PropertyChanged("FOV");
 		m_EditorCamera.PropertyChanged("NearPlane");
 		
 		PPEffects.ResetAll();
-	}	
+	}
+	
+	override string GetIcon() 
+	{
+		return "set:dayz_editor_gui image:camera_alt";
+	}
 }

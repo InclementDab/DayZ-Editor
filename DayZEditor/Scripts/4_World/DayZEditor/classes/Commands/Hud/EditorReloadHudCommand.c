@@ -1,13 +1,15 @@
 class EditorReloadHudCommand: EditorCommand
 {
-	protected override void Call(Class sender, CommandArgs args) 
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		m_Editor.ReloadHud();
+		return true;
 	}
 
 	override string GetName() 
 	{
-		return "Reload UI";
+		return "#STR_EDITOR_CMD_RELOAD_UI";
 	}
 	
 	override string GetIcon() 

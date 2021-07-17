@@ -13,7 +13,6 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		m_PlaceableItem = placeable_item;
 		
-		ListItemShow.Show(false);
 		m_TemplateController.Label = placeable_item.Type;
 		m_TemplateController.NotifyPropertyChanged("Label");
 		
@@ -126,6 +125,7 @@ class EditorPlaceableListItem: EditorListItem
 		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
 		if (!GetEditor().IsPlacing()) {
 			GetEditor().CreateInHand(m_PlaceableItem);
+			w.Show(false);
 		}
 		
 		return true;
@@ -136,6 +136,7 @@ class EditorPlaceableListItem: EditorListItem
 		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
 		if (GetEditor().IsPlacing()) {
 			GetEditor().CommandManager[EditorPlaceObjectCommand].Execute(this, null);
+			w.Show(true);
 		}
 		
 		return true;

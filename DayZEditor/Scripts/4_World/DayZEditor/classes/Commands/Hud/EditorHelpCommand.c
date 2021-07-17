@@ -1,13 +1,13 @@
-class EditorHelpCommand: EditorCommand
+class EditorHelpCommand: EditorAsyncCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{
-		EditorHelpDialog help_dialog("Help");
+		EditorHelpDialog help_dialog(GetName());
 		help_dialog.ShowDialog();
 	}
 	
 	override string GetName() 
 	{
-		return "Help";
+		return "#STR_EDITOR_HELP";
 	}
 }

@@ -60,26 +60,6 @@ WrapSpacerWidgetClass ListItem {
        vexactsize 0
        style rover_sim_colorable
        {
-        EditBoxWidgetClass ListItemLabelEditor {
-         visible 0
-         position 0 0
-         size 0.5 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         style Editor
-         font "gui/fonts/Metron58"
-         {
-          ScriptParamsClass {
-           Binding_Name "Label"
-           Two_Way_Binding 1
-          }
-         }
-        }
         TextWidgetClass ListItemLabel {
          visible 1
          disabled 0
@@ -110,121 +90,6 @@ WrapSpacerWidgetClass ListItem {
           }
          }
         }
-        ImageWidgetClass ListItemIcon {
-         visible 0
-         ignorepointer 1
-         color 0.8627 0.8627 0.8627 1
-         position 0.03 0
-         size 24 24
-         halign right_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         mode blend
-         "src alpha" 1
-         "no wrap" 1
-         stretch 1
-         "flip v" 0
-         {
-          ButtonWidgetClass ListItemVisible {
-           visible 0
-           ignorepointer 0
-           position 0 0
-           size 1 1
-           halign right_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           scriptclass "ViewBinding"
-           style Empty
-           "no focus" 1
-           {
-            ScriptParamsClass {
-             Relay_Command "ListItemVisibleExecute"
-            }
-           }
-          }
-         }
-         {
-          ScriptParamsClass {
-           Binding_Name "Icon"
-          }
-         }
-        }
-        ButtonWidgetClass ListItemShow {
-         visible 0
-         clipchildren 1
-         color 0.7059 0.7059 0.7059 1
-         position 0.02 0
-         size 0.07 1
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         style Empty
-         "no focus" 0
-         font "gui/fonts/metron-bold"
-         switch toggle
-         {
-          ImageWidgetClass ListItemShow_Icon {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 23 23
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 0
-           hexactsize 1
-           vexactsize 1
-           scriptclass "ViewBinding"
-           image0 ""
-           mode blend
-           "src alpha" 1
-           stretch 0
-           {
-            ImageWidgetClass ListItemHide_Icon {
-             visible 0
-             inheritalpha 0
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             scriptclass "ViewBinding"
-             mode blend
-             "src alpha" 1
-             {
-              ScriptParamsClass {
-               Binding_Name "ExpandIcon"
-              }
-             }
-            }
-           }
-           {
-            ScriptParamsClass {
-             Binding_Name "CollapseIcon"
-            }
-           }
-          }
-         }
-         {
-          ScriptParamsClass {
-           Relay_Command "ListItemCollapseExecute"
-          }
-         }
-        }
        }
       }
      }
@@ -233,31 +98,6 @@ WrapSpacerWidgetClass ListItem {
        Relay_Command "ListItemExecute"
       }
      }
-    }
-   }
-  }
-  WrapSpacerWidgetClass ListItemChildren {
-   visible 1
-   clipchildren 0
-   ignorepointer 1
-   size 1 0
-   halign right_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   draggable 0
-   scriptclass "ViewBinding"
-   "no focus" 1
-   Padding 0
-   Margin 0
-   "Size To Content H" 1
-   "Size To Content V" 1
-   content_halign right
-   {
-    ScriptParamsClass {
-     Binding_Name "ChildListItems"
-     Two_Way_Binding 1
     }
    }
   }

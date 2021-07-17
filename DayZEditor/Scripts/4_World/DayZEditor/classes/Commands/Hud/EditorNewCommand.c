@@ -1,8 +1,8 @@
-class EditorNewCommand: EditorCommand
+class EditorNewCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorEditBoxDialog edit_dialog = new EditorEditBoxDialog("New File...");
+		EditorEditBoxDialog edit_dialog = new EditorEditBoxDialog(GetName(), "#STR_EDITOR_FILE", GetEditor().GetSaveFile());
 		string file_name;
 		DialogResult result = edit_dialog.ShowDialog(file_name);
 		if (result != DialogResult.OK) { 
@@ -12,7 +12,7 @@ class EditorNewCommand: EditorCommand
 		EditorFileManager.GetSafeFileName(file_name, ".dze");
 		
 		// Only supporting new in root dir atm
-		if (FileExist("$profile:Editor/" + file_name)) {
+		if (FileExist(Editor.ROOT_DIRECTORY + file_name)) {
 			if (MessageBox.Show("Are you sure?", "File " + file_name + " already exists. Overwrite?", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
 				return;
 			}
@@ -26,7 +26,7 @@ class EditorNewCommand: EditorCommand
 		
 	override string GetName() 
 	{
-		return "New";
+		return "#STR_EDITOR_NEW";
 	}
 
 	override string GetIcon() 

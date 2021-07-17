@@ -73,7 +73,6 @@ class EditorCommandManager
 		RegisterCommand(EditorPreferencesCommand);
 		RegisterCommand(EditorReloadHudCommand);
 		RegisterCommand(EditorReloadBrushesCommand);
-		RegisterCommand(EditorReloadCacheCommand);
 	
 		RegisterCommand(EditorLootEditorCommand);
 		RegisterCommand(EditorAddToFavoritesCommand);
@@ -90,6 +89,7 @@ class EditorCommandManager
 		RegisterCommand(EditorHideCommand);
 		RegisterCommand(EditorLockCommand);
 		RegisterCommand(EditorUnlockCommand);
+		RegisterCommand(EditorToggleSimulationCommand);
 	
 		RegisterCommand(EditorExportToInitFile);
 		RegisterCommand(EditorExportToExpansion);
@@ -98,7 +98,6 @@ class EditorCommandManager
 		RegisterCommand(EditorExportToCOM);
 		RegisterCommand(EditorExportToEvents);
 		RegisterCommand(EditorExportToMapGroupPos);
-		RegisterCommand(EditorExportLoaderCache);
 		
 		RegisterCommand(EditorCheckDuplicatesCommand);
 	

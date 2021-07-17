@@ -54,8 +54,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
        "no wrap" 1
        stretch 1
       }
-      ButtonWidgetClass MenuBarFile {
-       visible 1
+      ButtonWidgetClass MenuBarFile1 {
+       visible 0
        clipchildren 0
        color 0.749 0.3725 0.3725 1
        position 0 0
@@ -71,7 +71,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        text_offset 0 0
        font "gui/fonts/FiraCodeBold16"
        {
-        TextWidgetClass MenuBarFileLabel {
+        TextWidgetClass MenuBarFileLabel1 {
          clipchildren 0
          ignorepointer 1
          position 0 0.02
@@ -95,7 +95,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
         }
        }
       }
-      ButtonWidgetClass MenuBarEdit {
+      ButtonWidgetClass MenuBarEdit1 {
+       visible 0
        clipchildren 0
        color 0.749 0.3725 0.3725 1
        position 0 0
@@ -110,7 +111,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        "no focus" 1
        font "gui/fonts/FiraCodeBold16"
        {
-        TextWidgetClass MenuBarEditLabel {
+        TextWidgetClass MenuBarEditLabel1 {
          clipchildren 1
          ignorepointer 1
          position 0 0.02
@@ -132,8 +133,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
         }
        }
       }
-      ButtonWidgetClass MenuBarView {
-       visible 1
+      ButtonWidgetClass MenuBarView1 {
+       visible 0
        clipchildren 0
        color 0.749 0.3725 0.3725 1
        position 0 0
@@ -148,7 +149,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        "no focus" 1
        font "gui/fonts/FiraCodeBold16"
        {
-        TextWidgetClass MenuBarViewLabel {
+        TextWidgetClass MenuBarViewLabel1 {
          ignorepointer 1
          position 0 0.02
          size 1 0.95
@@ -170,8 +171,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
         }
        }
       }
-      ButtonWidgetClass MenuBarEditor {
-       visible 1
+      ButtonWidgetClass MenuBarEditor1 {
+       visible 0
        clipchildren 0
        color 0.749 0.3725 0.3725 1
        position 0 0
@@ -186,7 +187,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        "no focus" 1
        font "gui/fonts/FiraCodeBold16"
        {
-        TextWidgetClass MenuBarEditorLabel {
+        TextWidgetClass MenuBarEditorLabel1 {
          ignorepointer 1
          position 0 0.02
          size 1 0.95
@@ -205,6 +206,177 @@ WrapSpacerWidgetClass ToolbarWrapper {
        {
         ScriptParamsClass {
          Relay_Command "MenuBarExecute"
+        }
+       }
+      }
+     }
+    }
+    GridSpacerWidgetClass MenuBarGridSpacer {
+     ignorepointer 1
+     position 28 1
+     size 1 66
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     Padding 0
+     Margin 1
+     "Size To Content H" 1
+     "Size To Content V" 1
+     {
+      WrapSpacerWidgetClass MenuBarWrapSpacer {
+       ignorepointer 1
+       size 1 1
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       Padding 1
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       {
+        TextWidgetClass MenuBarFileLabel {
+         ignorepointer 1
+         size 0 0
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "  #STR_EDITOR_FILE  "
+         font "gui/fonts/etelkatextpro22"
+         "exact text" 1
+         "size to text h" 1
+         "size to text v" 1
+         "text halign" center
+         "text valign" center
+         {
+          ButtonWidgetClass MenuBarFile {
+           color 0.749 0.3725 0.3725 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           style Default
+           "no focus" 1
+           {
+            ScriptParamsClass {
+             Relay_Command "MenuBarExecute"
+            }
+           }
+          }
+         }
+        }
+        TextWidgetClass MenuBarEditLabel {
+         ignorepointer 1
+         size 0 0
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "  #STR_EDITOR_EDIT  "
+         font "gui/fonts/etelkatextpro22"
+         "exact text" 1
+         "size to text h" 1
+         "size to text v" 1
+         "text halign" center
+         "text valign" center
+         {
+          ButtonWidgetClass MenuBarEdit {
+           color 0.749 0.3725 0.3725 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           "no focus" 1
+           {
+            ScriptParamsClass {
+             Relay_Command "MenuBarExecute"
+            }
+           }
+          }
+         }
+        }
+        TextWidgetClass MenuBarViewLabel {
+         ignorepointer 1
+         size 0 0
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "  #STR_EDITOR_VIEW  "
+         font "gui/fonts/etelkatextpro22"
+         "exact text" 1
+         "size to text h" 1
+         "size to text v" 1
+         "text halign" center
+         "text valign" center
+         {
+          ButtonWidgetClass MenuBarView {
+           color 0.749 0.3725 0.3725 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           "no focus" 1
+           {
+            ScriptParamsClass {
+             Relay_Command "MenuBarExecute"
+            }
+           }
+          }
+         }
+        }
+        TextWidgetClass MenuBarEditorLabel {
+         ignorepointer 1
+         size 0 0
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "  #STR_EDITOR_EDITOR  "
+         font "gui/fonts/etelkatextpro22"
+         "exact text" 1
+         "size to text h" 1
+         "size to text v" 1
+         "text halign" center
+         "text valign" center
+         {
+          ButtonWidgetClass MenuBarEditor {
+           color 0.749 0.3725 0.3725 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "ViewBinding"
+           "no focus" 1
+           {
+            ScriptParamsClass {
+             Relay_Command "MenuBarExecute"
+            }
+           }
+          }
+         }
         }
        }
       }
@@ -1275,7 +1447,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       text "Control Player"
+       text "#STR_EDITOR_CMD_CONTROL_PLAYER"
        font "gui/fonts/etelkatextpro"
        "size to text h" 1
        "size to text v" 0

@@ -1,11 +1,13 @@
-class EditorExportCommandBase : EditorCommand
+class EditorExportCommandBase: EditorAsyncCommand
 {
+	protected ref ExportSettings m_ExportSettings = new ExportSettings();
+	
 	protected override void Call(Class sender, CommandArgs args)
 	{
-		EditorFileDialog file_dialog(GetName(), "*", "", GetDialogButtonName());
+		m_ExportSettings.SetFileType(GetFileType());
+		EditorFileDialog file_dialog(GetName(), "*", "", GetDialogButtonName(), m_ExportSettings);
 
 		string file_name;
-		ExportSettings export_settings = new ExportSettings();
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 			return;
 		}
@@ -15,7 +17,7 @@ class EditorExportCommandBase : EditorCommand
 			return;
 		}
 
-		ExportFile(file_name, export_settings, true);
+		ExportFile(file_name, m_ExportSettings, true);
 	}
 
 	protected bool ExportFile(string file_name, ExportSettings export_settings, bool warn_on_overwrite)
@@ -35,7 +37,7 @@ class EditorExportCommandBase : EditorCommand
 
 		export_settings.ExportSetName = file_name;
 
-		file_name = "$profile:Editor/" + file_name;
+		file_name = Editor.ROOT_DIRECTORY + file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 
 		if (FileExist(file_name) && warn_on_overwrite) {
@@ -50,12 +52,12 @@ class EditorExportCommandBase : EditorCommand
 			}
 		}
 
-		EditorSaveData save_data = EditorSaveData.CreateFromEditor(m_Editor, export_settings.ExportSelectedOnly);
+		EditorSaveData save_data = m_Editor.CreateSaveData(export_settings.ExportSelectedOnly);
 		file_type.Export(save_data, file_name, export_settings);
 
-		string message = string.Format("Saved %1 objects! (%2 deletions)", save_data.EditorObjects.Count().ToString(), CF.ObjectManager.GetHiddenMapObjects().Count());
+		string message = string.Format("Saved %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorDeletedObjects.Count());
 		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
-		EditorLog.Info(message);
+		EditorLog.Debug(message);
 		return true;
 	}
 
@@ -63,6 +65,6 @@ class EditorExportCommandBase : EditorCommand
 
 	string GetDialogButtonName()
 	{
-		return "Export";
+		return "#STR_EDITOR_EXPORT";
 	}
 }

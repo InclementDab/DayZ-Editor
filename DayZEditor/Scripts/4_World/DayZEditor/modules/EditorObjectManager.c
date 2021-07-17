@@ -13,14 +13,10 @@ class EditorObjectManagerModule: JMModuleBase
 	private ref EditorDeletedObjectMap 			m_DeletedObjects;
 	
 	private ref EditorDeletedObjectMap			m_SelectedDeletedObjects;
-	
-	static ref map<int, Object> WorldObjects = new map<int, Object>();
-		
+
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
-	
-	private bool m_IsWorldCacheLoaded;
-	
+		
 	override void Init()
 	{
 		EditorLog.Trace("EditorObjectManager::Init");
@@ -31,7 +27,7 @@ class EditorObjectManagerModule: JMModuleBase
 		m_SelectedDeletedObjects	= new EditorDeletedObjectMap();
 	}
 	
-	EditorObject CreateObject(EditorObjectData editor_object_data)
+	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
 	{		
 		EditorLog.Trace("EditorObjectManager::CreateObject");
 
@@ -45,7 +41,7 @@ class EditorObjectManagerModule: JMModuleBase
 		return editor_object;
 	}
 
-	void DeleteObject(EditorObject target)
+	void DeleteObject(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::DeleteObject");
 		m_SelectedObjects.RemoveEditorObject(target);
@@ -55,7 +51,7 @@ class EditorObjectManagerModule: JMModuleBase
 	}
 	
 	// Call to select an object
-	void SelectObject(EditorObject target)
+	void SelectObject(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::SelectObject");
 		m_SelectedObjects.InsertEditorObject(target);
@@ -66,7 +62,7 @@ class EditorObjectManagerModule: JMModuleBase
 	}
 	
 	// Call to deselect an object
-	void DeselectObject(EditorObject target)
+	void DeselectObject(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::DeselectObject");
 		m_SelectedObjects.RemoveEditorObject(target);
@@ -75,7 +71,7 @@ class EditorObjectManagerModule: JMModuleBase
 	}	
 		
 	// Call to toggle selection
-	void ToggleSelection(EditorObject target)
+	void ToggleSelection(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::ToggleSelection");
 		if (target.IsSelected())
@@ -96,7 +92,7 @@ class EditorObjectManagerModule: JMModuleBase
 	}
 	
 	// Hidden object stuff
-	void HideMapObject(EditorDeletedObject target)
+	void HideMapObject(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::HideMapObject");
 		m_DeletedObjects.InsertEditorDeletedObject(target);
@@ -109,14 +105,14 @@ class EditorObjectManagerModule: JMModuleBase
 		m_DeletedObjects.Remove(target);
 	}
 	
-	void UnhideMapObject(EditorDeletedObject target)
+	void UnhideMapObject(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
 		m_DeletedObjects.RemoveEditorDeletedObject(target);
 		delete target;
 	}
 	
-	void SelectHiddenObject(EditorDeletedObject target)
+	void SelectHiddenObject(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::SelectHiddenObject");
 		m_SelectedDeletedObjects.InsertEditorDeletedObject(target);
@@ -124,7 +120,7 @@ class EditorObjectManagerModule: JMModuleBase
 		target.OnSelected();
 	}
 	
-	void DeselectHiddenObject(EditorDeletedObject target)
+	void DeselectHiddenObject(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::DeselectHiddenObject");
 		m_SelectedDeletedObjects.RemoveEditorDeletedObject(target);
@@ -132,7 +128,7 @@ class EditorObjectManagerModule: JMModuleBase
 		target.OnDeselected();
 	}
 	
-	void ToggleHiddenObjectSelection(EditorDeletedObject target)
+	void ToggleHiddenObjectSelection(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::ToggleHiddenObjectSelection");
 		if (target.IsSelected())
@@ -154,68 +150,23 @@ class EditorObjectManagerModule: JMModuleBase
 	{
 		// On Load unhide em all
 		CF.ObjectManager.UnhideAllMapObjects();
-				
-		if (GetEditor().Settings.DisableWorldCache) {
-			return;
-		}
-		
-		LoadWorldCache();
 	}
-	
-	void LoadWorldCache()
-	{
-		// Loads all world objects into a map
-		WorldObjects.Clear();
 		
-		g_Game.ReportProgress("Caching Map Objects");
-		EditorLog.Info("Caching Map Objects");
-		
-		array<Object> objects = {};
-		array<CargoBase> cargos = {};
-		GetGame().GetObjectsAtPosition(Vector(7500, 0, 7500), 100000, objects, cargos);
-
-		foreach (Object o: objects) {
-			if (o.IsInherited(Man)) {
-				continue;
-			}
-			
-			WorldObjects.Insert(o.GetID(), o);	
-		}
-		
-		g_Game.ReportProgress(string.Format("Cached %1 map objects", WorldObjects.Count().ToString()));
-		EditorLog.Info("Cached %1 map objects", WorldObjects.Count().ToString());
-		
-		m_IsWorldCacheLoaded = true;
-	}
-	
-	bool IsWorldCacheLoaded()
-	{
-		return m_IsWorldCacheLoaded;
-	}
-	
 	bool IsObjectHidden(EditorDeletedObject deleted_object)
 	{
 		return (IsObjectHidden(deleted_object.GetID()));
+	}
+	
+	bool IsObjectHidden(EditorDeletedObjectData deleted_object_data)
+	{
+		return (IsObjectHidden(deleted_object_data.ID));
 	}
 	
 	bool IsObjectHidden(int id)
 	{
 		return (m_DeletedObjects[id] != null);
 	}
-	
-	Object GetWorldObject(int id)
-	{
-		if (WorldObjects[id])
-			return WorldObjects[id];
-		
-		return null;
-	}
-	
-	map<int, Object> GetWorldObjects()
-	{
-		return WorldObjects;
-	}
-	
+			
 	EditorObjectMap GetSelectedObjects() 
 	{
 		return m_SelectedObjects; 

@@ -1,11 +1,14 @@
 class EditorShowCommand: EditorCommand
 {
-	override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {		
 			selected_object.Show(true);
 		}
+		
+		return true;
 	}
 	
 	override ShortcutKeys GetShortcut() 
@@ -15,6 +18,6 @@ class EditorShowCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Show";
+		return "#STR_EDITOR_SHOW";
 	}
 }

@@ -45,7 +45,6 @@ modded class MainMenu
 		//	m_ScenePC.ResetIntroCamera();
 		//}
 		
-		m_PlayVideo.Show( false );
 		
 		m_PlayerName				= TextWidget.Cast( layoutRoot.FindAnyWidget("character_name_text") );
 			
@@ -63,7 +62,7 @@ modded class MainMenu
 		
 		string version;
 		GetGame().GetVersion(version);
-		m_Version.SetText(string.Format("#main_menu_version %1 - DayZ Editor Version %2", version, GetEditor().Version));
+		m_Version.SetText(string.Format("#main_menu_version %1 - #STR_EDITOR_MAIN_MENU_VERSION %2", version, GetEditor().Version));
 		
 		return layoutRoot;
 	}

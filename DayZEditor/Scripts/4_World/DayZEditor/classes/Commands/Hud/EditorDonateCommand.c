@@ -1,13 +1,13 @@
-class EditorDonateCommand: EditorCommand
+class EditorDonateCommand: EditorAsyncCommand
 {
 	override void Call(Class sender, CommandArgs args)
 	{	
-		EditorDonateDialog donate_dialog("Donate");
+		EditorDonateDialog donate_dialog(GetName());
 		donate_dialog.ShowDialog();
 	}
 	
 	override string GetName() 
 	{
-		return "Donate";
+		return "#STR_EDITOR_DONATE";
 	}
 }

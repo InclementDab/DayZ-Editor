@@ -1,6 +1,3 @@
-// filename, author
-typedef Param2<string, string> LoadingScreenEntry;
-
 modded class LoadingScreen
 {
 	static const ref array<ref LoadingScreenEntry> LOADING_SCREENS = {
@@ -26,6 +23,8 @@ modded class LoadingScreen
 		new LoadingScreenEntry("19.edds", "InclementDab"),		
 		new LoadingScreenEntry("20.edds", "Bosch"),		
 		new LoadingScreenEntry("21.edds", "DanceOfJesus"),		
+		new LoadingScreenEntry("22.edds", "DanceOfJesus", true),		
+		new LoadingScreenEntry("23.edds", "Sanches"),
 	};
 	
 	protected TextWidget m_ImageCredit;
@@ -60,14 +59,16 @@ modded class LoadingScreen
 		m_ImageCredit = TextWidget.Cast(m_WidgetRoot.FindAnyWidget("ImageCredit"));
 		
 #ifndef COMPONENT_SYSTEM
-		// nice
-		int val = TickCount(0);
-		val = val + (val << 37);
-		val = Math.AbsInt(val);
-		val = val % LOADING_SCREENS.Count();
-		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1", LOADING_SCREENS[val].param1));
-		m_ImageCredit.SetText("Image by " + LOADING_SCREENS[val].param2);
+		Math.Randomize(-1);
+		int val = Math.RandomInt(0, LOADING_SCREENS.Count() * 100) % LOADING_SCREENS.Count();
+		
+		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1", LOADING_SCREENS[val].File));
+		m_ImageCredit.SetText("Image by " + LOADING_SCREENS[val].Creator);
 		m_ImageWidgetBackground.SetImage(0);
+		
+		m_ImageCredit.Show(!LOADING_SCREENS[val].HideLogo);
+		m_ImageLogoMid.Show(!LOADING_SCREENS[val].HideLogo);
+		m_ImageLogoCorner.Show(!LOADING_SCREENS[val].HideLogo);
 #endif
 	}
 	

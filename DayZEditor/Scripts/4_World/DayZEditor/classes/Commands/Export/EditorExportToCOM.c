@@ -7,6 +7,6 @@ class EditorExportToCOM: EditorExportCommandBase
 	
 	override string GetName() 
 	{
-		return "Export to COM File";
+		return "#STR_EDITOR_CMD_EXPORT_COM (*.json)";
 	}
 }

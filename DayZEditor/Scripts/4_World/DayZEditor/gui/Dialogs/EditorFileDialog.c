@@ -4,21 +4,35 @@ class EditorFileDialog: EditorDialogBase
 	// strong reference, since ListBox cant strong ref it
 	protected autoptr ListBoxPrefab<string> m_ListBoxPrefab;
 	protected string m_CurrentDirectory;
-	
+	protected FileSettingsBase m_FileSettings;
 	protected string m_Filter;
 	
-	void EditorFileDialog(string title, string filter = "*", string default_value = "", string button_name = "")
+	void EditorFileDialog(string title, string filter = "*", string default_value = "", string button_name = "", FileSettingsBase file_settings = null)
 	{
 		m_Filter = filter;		
-		m_EditBoxPrefab = new EditBoxPrefab("File", m_Controller, default_value);
+		m_FileSettings = file_settings;
+		m_EditBoxPrefab = new EditBoxPrefab("#STR_EDITOR_FILE", m_Controller, default_value);
 	 
 		m_ListBoxPrefab = new ListBoxPrefab<string>();
 		m_ListBoxPrefab.Event_OnClick.Insert(OnListItemClick);
 		m_ListBoxPrefab.Event_OnDoubleClick.Insert(OnListItemDoubleClick);
 		AddContent(m_ListBoxPrefab);
 		
-		LoadFileDirectory("$profile:\\Editor\\", m_Filter);
+		LoadFileDirectory(Editor.ROOT_DIRECTORY, m_Filter);
+		
+		if (m_FileSettings) {
+			array<ref ScriptView> extra_settings = {};
+			m_FileSettings.GetFileSettings(extra_settings);
+			if (extra_settings && extra_settings.Count() > 0) {
+				GroupPrefab settings_group = new GroupPrefab(m_FileSettings.GetSettingsName(), null, string.Empty);
+				foreach (ScriptView setting: extra_settings) {
+					settings_group.Insert(setting);
+				}
 				
+				AddContent(settings_group);
+			}
+		}
+
 		AddContent(m_EditBoxPrefab);
 		AddButton(button_name, DialogResult.OK);
 		AddButton(DialogResult.Cancel);
@@ -108,7 +122,9 @@ class EditorFileDialog: EditorDialogBase
 	{
 		EditorLog.Trace("EditorFileDialog::OnListItemClick");
 		if (file != string.Empty) {
-			m_EditBoxPrefab.GetPrefabController().Value = file;
+			string folder_sanitized = m_CurrentDirectory;
+			folder_sanitized.Replace(Editor.ROOT_DIRECTORY, "");
+			m_EditBoxPrefab.GetPrefabController().Value = folder_sanitized + file;
 			m_EditBoxPrefab.GetPrefabController().NotifyPropertyChanged("Value");
 		}
 	}
@@ -135,5 +151,10 @@ class EditorFileDialog: EditorDialogBase
 		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
 		edit_box.SetText(file);
 		CloseDialog(DialogResult.OK);
+	}
+	
+	override string GetIcon() 
+	{
+		return "set:dayz_editor_gui image:open";
 	}
 }

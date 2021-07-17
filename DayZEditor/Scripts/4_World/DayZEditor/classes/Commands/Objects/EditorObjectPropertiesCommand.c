@@ -1,14 +1,14 @@
-class EditorObjectPropertiesCommand: EditorCommand
+class EditorObjectPropertiesCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorObjectPropertiesDialog properties_dialog("Edit Properties", m_Editor.GetSelectedObjects().GetElement(0));
+		EditorObjectPropertiesDialog properties_dialog(GetName(), m_Editor.GetSelectedObjects().GetElement(0));
 		properties_dialog.ShowDialog();
 	}
 	
 	override string GetName() 
 	{
-		return "Properties";
+		return "#STR_EDITOR_PROPERTIES";
 	}
 	
 	override ShortcutKeys GetShortcut() 

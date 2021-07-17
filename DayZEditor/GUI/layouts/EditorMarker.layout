@@ -1,4 +1,4 @@
-FrameWidgetClass EditorMarkerFrame {
+ButtonWidgetClass EditorMarkerColor {
  visible 1
  clipchildren 0
  ignorepointer 0
@@ -8,58 +8,20 @@ FrameWidgetClass EditorMarkerFrame {
  vexactpos 1
  hexactsize 1
  vexactsize 1
- priority 250
  draggable 0
  scriptclass "ViewBinding"
+ style Colorable
  {
-  ButtonWidgetClass EditorMarker {
-   visible 1
-   clipchildren 0
-   inheritalpha 1
-   ignorepointer 0
+  PanelWidgetClass EditorMarkerOutlineColor {
+   ignorepointer 1
+   color 1 1 1 0.9961
    position 0 0
-   size 20 20
+   size 1 1
    hexactpos 1
    vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   priority 250
-   draggable 0
-   scriptclass ""
-   style Empty
-   "no focus" 1
-   {
-    PanelWidgetClass EditorMarkerColor {
-     visible 1
-     clipchildren 1
-     inheritalpha 1
-     ignorepointer 1
-     color 1 1 1 0.2941
-     size 20 20
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     priority 251
-     style rover_sim_colorable
-     "no focus" 1
-     {
-      PanelWidgetClass EditorMarkerOutlineColor {
-       ignorepointer 1
-       color 1 1 1 0.9961
-       position 0 0
-       size 1 1
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       style Outline_1px
-      }
-     }
-    }
-   }
+   hexactsize 0
+   vexactsize 0
+   style Outline_1px
   }
  }
  {

@@ -1,12 +1,14 @@
 class EditorOpenWikiCommand: EditorCommand
 {
-	override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		GetGame().OpenURL("github.com/InclementDab/DayZ-Editor/wiki");
+		return true;
 	}
 	
 	override string GetName() 
 	{
-		return "Wiki";
+		return "#STR_EDITOR_WIKI";
 	}
 }

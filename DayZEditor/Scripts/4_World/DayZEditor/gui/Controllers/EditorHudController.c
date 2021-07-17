@@ -22,7 +22,6 @@ class EditorHudController: EditorControllerBase
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
 	
 	// Logger
-	LogLevel CurrentLogLevel = LogLevel.DEBUG;
 	static const int MAX_LOG_ENTRIES = 15;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
 	
@@ -108,6 +107,9 @@ class EditorHudController: EditorControllerBase
 		
 		EditorHudToolbarView = new EditorHudToolbar();
 		NotifyPropertyChanged("EditorHudToolbarView");
+		
+		PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
+		DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
 	}
 		
 	void Update()
@@ -152,9 +154,13 @@ class EditorHudController: EditorControllerBase
 		config_paths.Insert(CFG_MAGAZINESPATH);
 		
 		foreach (string path: config_paths) {
-			for (int i = 0; i < GetWorkbenchGame().ConfigGetChildrenCount(path); i++) {
+			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
-		        GetWorkbenchGame().ConfigGetChildName(path, i, type);
+		        GetGame().ConfigGetChildName(path, i, type);
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
+					continue;
+				}
+				
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
 
 				if (!placeable_item || IsForbiddenItem(placeable_item.Type)) {
@@ -164,6 +170,9 @@ class EditorHudController: EditorControllerBase
 				placeable_items.Insert(placeable_item);
 		    }
 		}
+		
+		placeable_items.Insert(EditorPlaceableItem.Create(EditorPointLight));
+		placeable_items.Insert(EditorPlaceableItem.Create(EditorSpotLight));
 		
 		return placeable_items;
 	}
@@ -175,6 +184,7 @@ class EditorHudController: EditorControllerBase
 		if (Model == "ItemOptics") return true;
 
 		//! Cursed items
+		if (Model == "AKM_TESTBED") return true;
 		if (Model == "Red9") return true;
 		if (Model == "QuickieBow") return true;
 		if (Model == "LargeTentBackPack") return true;
@@ -227,7 +237,7 @@ class EditorHudController: EditorControllerBase
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
 				
-				PlacementsTabButton.SetColor(COLOR_SALMON);
+				PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
 				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
 				RightbarScroll.VScrollToPos(0);
 				break;
@@ -242,7 +252,7 @@ class EditorHudController: EditorControllerBase
 				RightbarDeletionsList.Show(CategoryDeletions);
 				
 				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
-				DeletionsTabButton.SetColor(COLOR_SALMON);
+				DeletionsTabButton.SetColor(m_Editor.Settings.SelectionColor);
 				RightbarScroll.VScrollToPos(0);
 				break;
 			}
@@ -349,7 +359,7 @@ class EditorHudController: EditorControllerBase
 	// im not adding a trace to this lol
 	void OnEditorLog(LogLevel level, string message)
 	{
-		if (level < CurrentLogLevel) {
+		if (!m_Editor || !m_Editor.Settings || level < m_Editor.Settings.SelectedLogLevel) {
 			return;
 		}
 		
@@ -385,17 +395,17 @@ class EditorHudController: EditorControllerBase
 
 		switch (w) {
 			case PlacementsTabButton: {
-				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " Placed Objects", w, TooltipPositions.BOTTOM_LEFT));
+				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case DeletionsTabButton: {
-				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " Deleted Objects", w, TooltipPositions.BOTTOM_LEFT));
+				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " #STR_EDITOR_DELETIONS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case CinematicCameraButton: {
-				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("Camera Tracks", w, TooltipPositions.TOP_LEFT));
+				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("#STR_EDITOR_CINEMATIC_CAMERA", w, TooltipPositions.TOP_LEFT));
 				break;
 			}
 		}
@@ -413,7 +423,7 @@ class EditorHudController: EditorControllerBase
 	
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{
-		if (RecursiveGetParent(w, "LeftbarScroll") || RecursiveGetParent(w, "RightbarScroll")) {
+		if (RecursiveGetParent(w, ScrollWidget)) {
 			if (KeyState(KeyCode.KC_LCONTROL)) {
 				ScrollWidget.Cast(w).VScrollStep(wheel * 10);
 			}

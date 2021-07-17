@@ -2,7 +2,7 @@ class EditorImportFromExpansion: EditorImportCommandBase
 {
 	override string GetName() 
 	{
-		return "Import from .map";
+		return "#STR_EDITOR_CMD_IMPORT_EXPANSION (*.map)";
 	}
 	
 	override typename GetFileType() 

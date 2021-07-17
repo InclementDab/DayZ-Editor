@@ -23,12 +23,12 @@ class EditorPlaceableItem
 		GetWorkbenchGame().ConfigGetFullPath(string.Format("%1 %2", Path, Type), FullPath);
 	}
 	
-	void Init()
+	void Init(bool scripted = false)
 	{
 		//EditorLog.Trace("EditorPlaceableItem::Init");
 		
 		// No .p3d was specified
-		if (Model == string.Empty || Model.Length() <= 4) {
+		if ((Model == string.Empty || Model.Length() <= 4) && !scripted) {
 			delete this;
 		}
 		
@@ -55,6 +55,14 @@ class EditorPlaceableItem
 			//EditorLog.Warning(string.Format("%1 has no category!", placeable_item.Type));
 		}
 		
+		return placeable_item;
+	}
+	
+	static EditorPlaceableItem Create(typename scripted_type)
+	{
+		EditorPlaceableItem placeable_item = new EditorPlaceableItem("", scripted_type.ToString());		
+		placeable_item.Init(true);
+				
 		return placeable_item;
 	}
 	

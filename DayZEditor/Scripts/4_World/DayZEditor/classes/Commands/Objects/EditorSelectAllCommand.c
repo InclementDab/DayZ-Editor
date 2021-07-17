@@ -1,15 +1,19 @@
 class EditorSelectAllCommand: EditorCommand
 {
-	protected override void Call(Class sender, CommandArgs args) 
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		EditorObjectMap placed_objects = m_Editor.GetPlacedObjects();
-		foreach (EditorObject eo: placed_objects)
+		foreach (EditorObject eo: placed_objects) {
 			m_Editor.SelectObject(eo);
+		}
+		
+		return true;
 	}
 		
 	override string GetName() 
 	{
-		return "Select All...";
+		return "#STR_EDITOR_SELECT_ALL";
 	}
 		
 	override ShortcutKeys GetShortcut() 

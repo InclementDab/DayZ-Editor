@@ -6,6 +6,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	Widget LoggerFrame;
 	
 	CanvasWidget EditorCanvas;
+	// for camera drawing i.e. rule of 3rds
+	CanvasWidget EditorCameraCanvas;
 	
 	ref EditorCameraMapMarker CameraMapMarker;
 	
@@ -95,6 +97,12 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	
 	private void _DelayedDragBoxCheck(int start_x, int start_y)
 	{
+		int drag_box_color = GetEditor().Settings.SelectionColor;
+		
+		int a, r, g, b;
+		InverseARGB(drag_box_color, a, r, g, b);
+		int drag_box_color_fill = ARGB(50, r, g, b);			
+		
 		int current_x, current_y;
 		while ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && GetGame().GetInput().HasGameFocus()) {
 			GetMousePos(current_x, current_y);
@@ -105,14 +113,14 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 			
 			// Draw Drag Box
 			if (Math.AbsInt(start_x - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_BOX_THRESHOLD) {
-				EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
-				EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
-				EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
-				EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, DRAG_BOX_COLOR);
+				EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, DRAG_BOX_THICKNESS, drag_box_color);
+				EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+				EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+				EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
 				
 				// Handles the fill operation
 				int x_avg = (start_x + current_x) / 2;
-				EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, DRAG_BOX_FILL);
+				EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, drag_box_color_fill);
 							
 				EditorObjectMap placed_objects = g_Editor.GetPlacedObjects();
 				foreach (EditorObject editor_object: placed_objects) {
@@ -135,6 +143,23 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		}
 		
 		EditorCanvas.Clear();
+	}
+	
+	void ShowRuleOfThirds(bool state)
+	{
+		if (!state) {
+			EditorCameraCanvas.Clear();
+			return;
+		}
+		
+		int x, y;
+
+		GetScreenSize(x, y);				
+		EditorCameraCanvas.DrawLine(x / 3, 0, x / 3, y, 1, COLOR_BLACK);
+		EditorCameraCanvas.DrawLine((x / 3) * 2, 0, (x / 3) * 2, y, 1, COLOR_BLACK);
+		
+		EditorCameraCanvas.DrawLine(0, y / 3, x, y / 3, 1, COLOR_BLACK);
+		EditorCameraCanvas.DrawLine(0, (y / 3) * 2, x, (y / 3) * 2, 1, COLOR_BLACK);
 	}
 	
 	override string GetLayoutFile() 
@@ -164,6 +189,17 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		return (CurrentDialog && CurrentDialog.GetLayoutRoot() && CurrentDialog.GetLayoutRoot().FindAnyWidget(w.GetName()));
 	}
 	
-	static float DialogLastX = -1;
-	static float DialogLastY = -1;
+	protected ref map<typename, vector> m_LastDialogPosition = new map<typename, vector>();
+	
+	void RegisterLastDialogPosition(ScriptView dialog)
+	{
+		float x, y;
+		dialog.GetLayoutRoot().GetPos(x, y);
+		m_LastDialogPosition[dialog.Type()] = Vector(x, y, 0);
+	}
+	
+	vector GetLastDialogPosition(ScriptView dialog)
+	{
+		return m_LastDialogPosition[dialog.Type()];
+	}
 }

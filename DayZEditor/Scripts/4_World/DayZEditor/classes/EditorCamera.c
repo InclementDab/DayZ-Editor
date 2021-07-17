@@ -78,7 +78,8 @@ class EditorCamera: Camera
 	}
 		
 	override void EOnFrame(IEntity other, float timeSlice)
-	{		
+	{
+		//EditorLog.Trace("EditorCamera::EOnFrame");
 		/*if (SendUpdateAccumalator > 0.5){
 			//GetGame().UpdateSpectatorPosition(GetPosition());
 
@@ -189,6 +190,8 @@ class EditorCamera: Camera
 		if (IsTargeting) {
 			LookAt(TargetPosition);
 		}
+		
+		//EditorLog.Trace("EditorCamera::EOnFrame-");
 	}
 
 	void AngleToQuat( float angle, vector dir, out float d[4] )

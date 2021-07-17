@@ -1,14 +1,17 @@
 class EditorLootEditorCommand: EditorCommand
 {
-	protected override void Call(Class sender, CommandArgs args) 
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
-		Print(GetEditor().GetObjectManager().CurrentSelectedItem);
-		if (GetEditor().GetObjectManager().CurrentSelectedItem)
+		super.Execute(sender, args);
+		if (GetEditor().GetObjectManager().CurrentSelectedItem) {
 			m_Editor.EditLootSpawns(GetEditor().GetObjectManager().CurrentSelectedItem);
+		}
+		
+		return true;
 	}
 	
 	override string GetName() 
 	{
-		return "Edit Loot Spawns";
+		return "#STR_EDITOR_LOOT_EDITOR";
 	}
 }
