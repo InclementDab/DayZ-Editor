@@ -130,38 +130,37 @@ FrameWidgetClass InventoryFrame {
      visible 1
      ignorepointer 1
      color 0.098 0.098 0.098 0.7843
-     position 0 0
-     size 480 1080
-     valign center_ref
+     position 60 5
+     size 0.2 0.9
      hexactpos 1
      vexactpos 1
-     hexactsize 1
-     vexactsize 1
+     hexactsize 0
+     vexactsize 0
      style rover_sim_colorable
      {
       ScrollWidgetClass ItemSelectorScrollbar {
        ignorepointer 1
        color 0.3137 0.3137 0.3137 1
        position 0 0
-       size 480 1078
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        "Scrollbar V" 1
        "Scrollbar V Left" 1
        {
         WrapSpacerWidgetClass ItemSelectorContent {
          ignorepointer 1
          position 0 0
-         size 480 -1
+         size 1.01 -0.001
          halign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          scriptclass "ViewBinding"
          Padding 4
          Margin 0
@@ -180,7 +179,7 @@ FrameWidgetClass InventoryFrame {
     PanelWidgetClass ItemFilterSelectPanel {
      ignorepointer 1
      color 0.1176 0.1176 0.1176 1
-     position 480 0
+     position 5 5
      size 48 588
      hexactpos 1
      vexactpos 1

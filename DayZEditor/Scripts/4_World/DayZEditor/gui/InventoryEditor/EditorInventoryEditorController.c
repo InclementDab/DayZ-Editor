@@ -120,10 +120,17 @@ class EditorInventoryEditorController: ViewController
 		
 		// Create new item on player
 		player.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id);
+		
+		// Deselect all other things
+		for (int i = 0; i < WearableItems.Count(); i++) {
+			WearableItems[i].SetSelected(WearableItems[i] == list_item);
+		}
 	}
 	
 	override void PropertyChanged(string property_name)
 	{
+		PlayerBase player = GetEditor().GetPlayer();
+		
 		// Radio Button Logic
 		foreach (string button: RADIO_BUTTONS) {
 			if (button == property_name) {
@@ -136,6 +143,14 @@ class EditorInventoryEditorController: ViewController
 					EditorWearableListItem list_item = new EditorWearableListItem(wearable, inventory_slot);
 					list_item.OnItemSelected.Insert(OnListItemSelected);
 					WearableItems.Insert(list_item);
+					
+					// Assign active item from slot
+					if (player) {
+						EntityAI slot_item = player.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot));
+						if (slot_item && slot_item.GetType() == wearable.Type) {
+							list_item.Select();
+						}
+					}
 				}
 									
 				continue;

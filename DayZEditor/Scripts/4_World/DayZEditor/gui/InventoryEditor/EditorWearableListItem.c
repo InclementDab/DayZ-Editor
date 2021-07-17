@@ -5,9 +5,11 @@ class EditorWearableListItem: EditorListItem
 	protected EditorWearableItem m_WearableItem;
 	protected string m_InventorySlot;
 	
+	protected bool m_Selected;
+	
 	void EditorWearableListItem(EditorWearableItem wearable_item, string inventory_slot)
 	{
-		//EditorLog.Trace("EditorWearableListItem");
+		EditorLog.Trace("EditorWearableListItem");
 		m_WearableItem = wearable_item;
 		m_InventorySlot = inventory_slot;
 		m_TemplateController.Label = m_WearableItem.Type;
@@ -21,6 +23,30 @@ class EditorWearableListItem: EditorListItem
 	{
 		//EditorLog.Trace("~EditorWearableListItem");
 		delete OnItemSelected;
+	}
+	
+	void SetSelected(bool state)
+	{
+		if (state) Select();
+		else Deselect();
+	}
+	
+	// Locally storing for now
+	override void Select()
+	{
+		m_Selected = true;
+		super.Select();
+	}
+	
+	override void Deselect()
+	{
+		m_Selected = false;
+		super.Deselect();
+	}
+	
+	override bool IsSelected()
+	{
+		return m_Selected;
 	}
 	
 	bool ListItemExecute(ButtonCommandArgs args)
