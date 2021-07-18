@@ -41,6 +41,8 @@ class EditorInventoryEditorController: ViewController
 	ref ObservableCollection<ref EditorWearableListItem> WearableItems = new ObservableCollection<ref EditorWearableListItem>(this);
 	ref map<string, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
 	
+	const ref EditorWearableItem EmptyItem = new EditorWearableItem("<empty>", "<empty>", {"any"});
+	
 	void EditorInventoryEditorController()
 	{		
 		foreach (string button: RADIO_BUTTONS) {
@@ -133,6 +135,8 @@ class EditorInventoryEditorController: ViewController
 		// Very special, probably use some type of enum in the future
 		if (list_item.GetSlot() == "Hands" && GetEntityAsPlayer()) {
 			GetGame().ObjectDelete(GetEntityAsPlayer().GetHumanInventory().GetEntityInHands());
+			if (list_item == EmptyItem) return;
+			
 			ItemInHands = GetEntityAsPlayer().GetHumanInventory().CreateInHands(wearable_item.Type);
 			NotifyPropertyChanged("ItemInHands");
 		} 
@@ -142,6 +146,7 @@ class EditorInventoryEditorController: ViewController
 			
 			// Clear existing item
 			GetGame().ObjectDelete(m_Entity.GetInventory().FindAttachment(slot_id));
+			if (list_item == EmptyItem) return;
 			
 			// Create new item on player
 			m_Entity.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id);
@@ -155,43 +160,7 @@ class EditorInventoryEditorController: ViewController
 	
 	override void PropertyChanged(string property_name)
 	{		
-		// Radio Button Logic
-		foreach (string button: RADIO_BUTTONS) {
-			if (button == property_name) {
-				// Should be enough?				
-				WearableItems.Clear();
-				
-				string inventory_slot = GetInventorySlot(button);
-				foreach (EditorWearableItem wearable: LoadedWearableItems[inventory_slot]) {
-					// This is the part where we need to call NEW, not before
-					EditorWearableListItem list_item = new EditorWearableListItem(wearable, inventory_slot);
-					list_item.OnItemSelected.Insert(OnListItemSelected);
-					
-					// update by search bar
-					list_item.GetLayoutRoot().Show(list_item.FilterType(SearchBarData)); 
-					WearableItems.Insert(list_item);
-					
-					// Assign active item from slot
-					if (m_Entity) {
-						EntityAI slot_item = m_Entity.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot));
-						if (slot_item && slot_item.GetType() == wearable.Type) {
-							list_item.Select();
-						}
-					}
-				}
-									
-				continue;
-			}			
-			
-			// Reset scroll bar
-			ItemSelectorScrollbar.VScrollToPos(0);
-			
-			EnScript.SetClassVar(this, button, 0, false);
-			NotifyPropertyChanged(button, false);
-		}
-		
 		switch (property_name) {
-			
 			case "SearchBarData": {
 				for (int j = 0; j < WearableItems.Count(); j++) {
 					WearableItems[j].GetLayoutRoot().Show(WearableItems[j].FilterType(SearchBarData)); 
@@ -208,6 +177,67 @@ class EditorInventoryEditorController: ViewController
 				NotifyPropertyChanged("SearchBarIcon");
 				break;
 			}			
+		}
+		
+		if (!m_Entity) {
+			return;
+		}
+		
+		PlayerBase player = GetEntityAsPlayer();
+		
+		// Radio Button Logic
+		foreach (string button: RADIO_BUTTONS) {
+			if (button == property_name) {			
+				WearableItems.Clear();
+				
+				string inventory_slot = GetInventorySlot(button);
+				
+				// Register empty item
+				EditorWearableListItem empty_list_item = new EditorWearableListItem(EmptyItem, inventory_slot);			
+			
+				// Slot is empty
+				if (inventory_slot != "Hands" && !m_Entity.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot))) {
+					empty_list_item.Select();
+				}
+				
+				// Handle Hands
+				if (inventory_slot == "Hands" && player && !player.GetHumanInventory().GetEntityInHands()) {
+					empty_list_item.Select();
+				}
+				
+				empty_list_item.OnItemSelected.Insert(OnListItemSelected);
+				WearableItems.Insert(empty_list_item);	
+				
+				foreach (EditorWearableItem wearable: LoadedWearableItems[inventory_slot]) {
+					// This is the part where we need to call NEW, not before
+					EditorWearableListItem list_item = new EditorWearableListItem(wearable, inventory_slot);
+					list_item.OnItemSelected.Insert(OnListItemSelected);
+					
+					// update by search bar
+					list_item.GetLayoutRoot().Show(list_item.FilterType(SearchBarData)); 
+					WearableItems.Insert(list_item);
+					
+					// Assign active item from slot
+					EntityAI slot_item = m_Entity.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot));
+					if (slot_item && slot_item.GetType() == wearable.Type) {
+						list_item.Select();
+					}
+					
+					// Handle Hands
+					if (inventory_slot == "Hands" && player && player.GetHumanInventory().GetEntityInHands()) {
+						if (player.GetHumanInventory().GetEntityInHands().GetType() == wearable.Type) {
+							list_item.Select();
+						}
+					}
+				}
+				
+				// Reset scroll bar
+				ItemSelectorScrollbar.VScrollToPos(0);			
+				continue;
+			}			
+			
+			EnScript.SetClassVar(this, button, 0, false);
+			NotifyPropertyChanged(button, false);
 		}
 	}
 }
