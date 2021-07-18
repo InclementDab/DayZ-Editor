@@ -133,7 +133,7 @@ FrameWidgetClass InventoryFrame {
            filter 1
            {
             ScriptParamsClass {
-             Binding_Name "SearchBarIcon"
+             Binding_Name "SearchBarLeftIcon"
             }
            }
           }
@@ -164,7 +164,7 @@ FrameWidgetClass InventoryFrame {
          font "gui/fonts/metronbook"
          {
           ScriptParamsClass {
-           Binding_Name "SearchBarData"
+           Binding_Name "SearchBarLeft"
            Two_Way_Binding 1
           }
          }
@@ -344,7 +344,7 @@ FrameWidgetClass InventoryFrame {
            filter 1
            {
             ScriptParamsClass {
-             Binding_Name "SearchBarIcon"
+             Binding_Name "SearchBarRightIcon"
             }
            }
           }
@@ -375,7 +375,7 @@ FrameWidgetClass InventoryFrame {
          font "gui/fonts/metronbook"
          {
           ScriptParamsClass {
-           Binding_Name "SearchBarData"
+           Binding_Name "SearchBarRight"
            Two_Way_Binding 1
           }
          }

@@ -721,10 +721,6 @@ class Editor
 	{
 		delete m_EditorInventoryEditorHud;
 		
-		/*if (!player.GetHumanInventory().CanOpenInventory() || player.IsInventorySoftLocked() || !player.GetHumanInventory().IsInventoryUnlocked()) {
-			return;
-		}*/
-		
 		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(entity);
 		
 		PlayerBase player;

@@ -5,8 +5,11 @@ class EditorInventoryEditorController: ViewController
 	};
 	
 	protected EntityAI m_Entity;
-	string SearchBarData;
-	string SearchBarIcon = "set:dayz_editor_gui image:search";
+	string SearchBarLeft;
+	string SearchBarLeftIcon = "set:dayz_editor_gui image:search";
+	
+	string SearchBarRight;
+	string SearchBarRightIcon = "set:dayz_editor_gui image:search";
 	EntityAI CurrentActiveItem;
 
 	ref map<int, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<int, ref array<ref EditorWearableItem>>();
@@ -322,20 +325,38 @@ class EditorInventoryEditorController: ViewController
 	override void PropertyChanged(string property_name)
 	{		
 		switch (property_name) {
-			case "SearchBarData": {
-				for (int j = 0; j < WearableItems.Count(); j++) {
-					WearableItems[j].GetLayoutRoot().Show(WearableItems[j].FilterType(SearchBarData)); 
+			
+			case "SearchBarRight": {
+				for (int i = 0; i < CurrentItemAttachments.Count(); i++) {
+					CurrentItemAttachments[i].GetLayoutRoot().Show(CurrentItemAttachments[i].FilterType(SearchBarRight)); 
 				}
 				
 				ItemSelectorScrollbar.VScrollToPos(0);
 				
-				if (SearchBarData.Length() > 0) {
-					SearchBarIcon = "set:dayz_gui image:icon_x";
+				if (SearchBarRight.Length() > 0) {
+					SearchBarRightIcon = "set:dayz_gui image:icon_x";
 				} else {
-					SearchBarIcon = "set:dayz_editor_gui image:search";
+					SearchBarRightIcon = "set:dayz_editor_gui image:search";
 				}
 				
-				NotifyPropertyChanged("SearchBarIcon");
+				NotifyPropertyChanged("SearchBarRightIcon");
+				break;
+			}
+			
+			case "SearchBarLeft": {
+				for (int j = 0; j < WearableItems.Count(); j++) {
+					WearableItems[j].GetLayoutRoot().Show(WearableItems[j].FilterType(SearchBarLeft)); 
+				}
+				
+				ItemSelectorScrollbar.VScrollToPos(0);
+				
+				if (SearchBarLeft.Length() > 0) {
+					SearchBarLeftIcon = "set:dayz_gui image:icon_x";
+				} else {
+					SearchBarLeftIcon = "set:dayz_editor_gui image:search";
+				}
+				
+				NotifyPropertyChanged("SearchBarLeftIcon");
 				break;
 			}			
 		}
