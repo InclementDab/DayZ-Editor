@@ -1,24 +1,43 @@
 class EditorInventoryAttachmentSlotController: ViewController
 {
-	string Type;
+	string InventorySlot;
 	bool State;
 	string Icon;
+	
+	override void PropertyChanged(string property_name)
+	{
+		switch (property_name) {
+			case "State": {
+				EditorInventoryAttachmentSlot.Cast(GetParent()).OnStateChanged(State);
+				break;
+			}
+		}
+	}
 }
 
 class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmentSlotController>
 {
-	void EditorInventoryAttachmentSlot(string type, string icon)
+	ref ScriptInvoker OnItemSelected = new ScriptInvoker();
+	
+	void EditorInventoryAttachmentSlot(string slot, string icon)
 	{
-		m_TemplateController.Type = type;
-		m_TemplateController.NotifyPropertyChanged("Type");
+		m_TemplateController.InventorySlot = slot;
+		m_TemplateController.NotifyPropertyChanged("InventorySlot");
 		
 		m_TemplateController.Icon = icon;
 		m_TemplateController.NotifyPropertyChanged("Icon");
 	}
 	
-	string GetType()
+	void OnStateChanged(bool state)
+	{
+		if (state) {
+			OnItemSelected.Invoke(this);
+		}
+	}
+		
+	string GetSlot()
 	{	
-		return m_TemplateController.Type;
+		return m_TemplateController.InventorySlot;
 	}
 		
 	override string GetLayoutFile()
@@ -29,38 +48,6 @@ class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmen
 
 class EditorInventoryEditorController: ViewController
 {
-	static const ref TStringArray RADIO_BUTTONS = {
-		"Hands",
-		"ShoulderLeft",
-		"ShoulderRight",
-		"VestSlot",
-		"ShirtSlot",
-		"BeltSlot",
-		"LegsSlot",
-		"BackSlot",
-		"HeadSlot",
-		"FaceSlot",
-		"EyeSlot",
-		"GloveSlot",
-		"FeetSlot",
-		"ArmbandSlot"
-	};
-	
-	bool Hands;
-	bool ShoulderLeft;
-	bool ShoulderRight;
-	bool VestSlot;
-	bool ShirtSlot;
-	bool BeltSlot;
-	bool LegsSlot;
-	bool BackSlot;
-	bool HeadSlot;
-	bool FaceSlot;
-	bool EyeSlot;
-	bool GloveSlot;
-	bool FeetSlot;
-	bool ArmbandSlot;
-	
 	protected EntityAI m_Entity;
 	string SearchBarData;
 	string SearchBarIcon = "set:dayz_editor_gui image:search";
@@ -91,7 +78,9 @@ class EditorInventoryEditorController: ViewController
 		LoadedAttachmentSlots = GetAttachmentSlotsFromEntity(m_Entity);
 		foreach (string slot: LoadedAttachmentSlots) {
 			LoadedWearableItems[slot] = new array<ref EditorWearableItem>();
-			AttachmentSlotCategories.Insert(new EditorInventoryAttachmentSlot(slot, GetSlotImageFromSlotName(slot)));
+			EditorInventoryAttachmentSlot attachment_slot = new EditorInventoryAttachmentSlot(slot, GetSlotImageFromSlotName(slot));
+			attachment_slot.OnItemSelected.Insert(OnAttachmentSlotSelected);
+			AttachmentSlotCategories.Insert(attachment_slot);
 		}
 				
 		EditorLog.Trace("EditorInventoryEditorController::LoadWearableObjects");
@@ -153,28 +142,6 @@ class EditorInventoryEditorController: ViewController
 	}
 	
 	// playerSlots[] = {"Slot_Shoulder","Slot_Melee","Slot_Vest","Slot_Body","Slot_Hips","Slot_Legs","Slot_Back","Slot_Headgear","Slot_Mask","Slot_Eyewear","Slot_Gloves","Slot_Feet","Slot_Armband"};
-	
-	string GetInventorySlot(string radio_button)
-	{
-		switch (radio_button) {
-			case "Hands": return "Hands";
-			case "ShoulderLeft": return "Melee";
-			case "ShoulderRight": return "Shoulder";
-			case "VestSlot": return "Vest";
-			case "ShirtSlot": return "Body";
-			case "BeltSlot": return "Hips";
-			case "LegsSlot": return "Legs";
-			case "BackSlot": return "Back";
-			case "HeadSlot": return "Headgear"; // Head does the funny face change
-			case "FaceSlot": return "Mask";
-			case "EyeSlot": return "Eyewear";
-			case "GloveSlot": return "Gloves";
-			case "FeetSlot": return "Feet";
-			case "ArmbandSlot": return "Armband";
-		}
-		
-		return string.Empty;
-	}
 		
 	void OnListItemSelected(EditorWearableListItem list_item, EditorWearableItem wearable_item)
 	{
@@ -208,27 +175,8 @@ class EditorInventoryEditorController: ViewController
 		}
 	}
 	
-	override void PropertyChanged(string property_name)
-	{		
-		switch (property_name) {
-			case "SearchBarData": {
-				for (int j = 0; j < WearableItems.Count(); j++) {
-					WearableItems[j].GetLayoutRoot().Show(WearableItems[j].FilterType(SearchBarData)); 
-				}
-				
-				ItemSelectorScrollbar.VScrollToPos(0);
-				
-				if (SearchBarData.Length() > 0) {
-					SearchBarIcon = "set:dayz_gui image:icon_x";
-				} else {
-					SearchBarIcon = "set:dayz_editor_gui image:search";
-				}
-				
-				NotifyPropertyChanged("SearchBarIcon");
-				break;
-			}			
-		}
-		
+	void OnAttachmentSlotSelected(EditorInventoryAttachmentSlot attachment_slot)
+	{
 		if (!m_Entity) {
 			return;
 		}
@@ -236,16 +184,18 @@ class EditorInventoryEditorController: ViewController
 		PlayerBase player = GetEntityAsPlayer();
 		
 		// Radio Button Logic
-		foreach (string button: RADIO_BUTTONS) {
-			if (button != property_name) {			
-				EnScript.SetClassVar(this, button, 0, false);
-				NotifyPropertyChanged(button, false);
+		for (int i = 0; i < AttachmentSlotCategories.Count(); i++) {
+			
+			// Deselect all other attachments
+			if (AttachmentSlotCategories[i] != attachment_slot) {
+				AttachmentSlotCategories[i].GetTemplateController().State = false;
+				AttachmentSlotCategories[i].GetTemplateController().NotifyPropertyChanged("State", false);
 				continue;
 			}
 			
 			WearableItems.Clear();
 			
-			string inventory_slot = GetInventorySlot(button);
+			string inventory_slot = AttachmentSlotCategories[i].GetSlot();
 			
 			// Register empty item
 			EditorWearableListItem empty_list_item = new EditorWearableListItem(EmptyItem, inventory_slot);			
@@ -288,6 +238,28 @@ class EditorInventoryEditorController: ViewController
 			
 			// Reset scroll bar
 			ItemSelectorScrollbar.VScrollToPos(0);			
+		}
+	}
+	
+	override void PropertyChanged(string property_name)
+	{		
+		switch (property_name) {
+			case "SearchBarData": {
+				for (int j = 0; j < WearableItems.Count(); j++) {
+					WearableItems[j].GetLayoutRoot().Show(WearableItems[j].FilterType(SearchBarData)); 
+				}
+				
+				ItemSelectorScrollbar.VScrollToPos(0);
+				
+				if (SearchBarData.Length() > 0) {
+					SearchBarIcon = "set:dayz_gui image:icon_x";
+				} else {
+					SearchBarIcon = "set:dayz_editor_gui image:search";
+				}
+				
+				NotifyPropertyChanged("SearchBarIcon");
+				break;
+			}			
 		}
 	}
 }

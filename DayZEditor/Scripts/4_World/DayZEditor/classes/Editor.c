@@ -749,6 +749,8 @@ class Editor
 			GetGame().SelectPlayer(null, player);
 			player.OnInventoryMenuClose();
 			player.GetInputController().SetDisabled(false);
+		} else {
+			SetActive(true);
 		}
 		
 		delete m_EditorInventoryEditorHud;

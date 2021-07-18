@@ -22,8 +22,8 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		
 		
 		// Just default
-		m_TemplateController.ShoulderLeft = true;
-		m_TemplateController.NotifyPropertyChanged("ShoulderLeft");
+		//m_TemplateController.ShoulderLeft = true;
+		//m_TemplateController.NotifyPropertyChanged("ShoulderLeft");
 	}
 	
 	void ~EditorInventoryEditorHud()
