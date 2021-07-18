@@ -20,10 +20,10 @@ class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmen
 	{	
 		return m_TemplateController.Type;
 	}
-	
+		
 	override string GetLayoutFile()
 	{
-		return "";
+		return "DayZEditor/GUI/layouts/Inventory/InventoryButtons.layout";
 	}
 }
 
@@ -91,6 +91,7 @@ class EditorInventoryEditorController: ViewController
 		LoadedAttachmentSlots = GetAttachmentSlotsFromEntity(m_Entity);
 		foreach (string slot: LoadedAttachmentSlots) {
 			LoadedWearableItems[slot] = new array<ref EditorWearableItem>();
+			AttachmentSlotCategories.Insert(new EditorInventoryAttachmentSlot(slot, GetSlotImageFromSlotName(slot)));
 		}
 				
 		EditorLog.Trace("EditorInventoryEditorController::LoadWearableObjects");
@@ -138,6 +139,13 @@ class EditorInventoryEditorController: ViewController
 		}
 		
 		return result;
+	}
+	
+	static string GetSlotImageFromSlotName(string slot_name)
+	{
+		// crackhead shit
+		string slot_classname = string.Format("Slot_%1", slot_name);		
+		return GetGame().ConfigGetTextOut(string.Format("CfgSlots %1 ghostIcon", slot_classname));
 	}
 	
 	PlayerBase GetEntityAsPlayer()
