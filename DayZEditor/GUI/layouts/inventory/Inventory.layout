@@ -246,7 +246,7 @@ FrameWidgetClass InventoryFrame {
      "Size To Content V" 1
      {
       ScriptParamsClass {
-       Binding_Name "AttachmentSlotCategories"
+       Binding_Name "CurrentItemAttachmentSlotCategories"
       }
      }
     }
@@ -291,7 +291,7 @@ FrameWidgetClass InventoryFrame {
          "Size To Content V" 1
          {
           ScriptParamsClass {
-           Binding_Name "WearableItems"
+           Binding_Name "CurrentItemAttachments"
            Two_Way_Binding 0
           }
          }

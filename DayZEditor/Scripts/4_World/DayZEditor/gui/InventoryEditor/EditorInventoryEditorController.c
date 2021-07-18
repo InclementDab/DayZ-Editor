@@ -1,15 +1,27 @@
 class EditorInventoryEditorController: ViewController
 {
+	static const ref TStringArray BLACKLISTED_ATTACHMENTS = {
+		"LeftHand"
+	};
+	
 	protected EntityAI m_Entity;
 	string SearchBarData;
 	string SearchBarIcon = "set:dayz_editor_gui image:search";
 	ScrollWidget ItemSelectorScrollbar;
 	EntityAI ItemInHands;
 
+	// Categories
 	ref ObservableCollection<ref EditorInventoryAttachmentSlot> AttachmentSlotCategories = new ObservableCollection<ref EditorInventoryAttachmentSlot>(this);	
+	ref ObservableCollection<ref EditorInventoryAttachmentSlot> CurrentItemAttachmentSlotCategories = new ObservableCollection<ref EditorInventoryAttachmentSlot>(this);	
+	
+	// Lists
 	ref ObservableCollection<ref EditorWearableListItem> WearableItems = new ObservableCollection<ref EditorWearableListItem>(this);
+	ref ObservableCollection<ref EditorWearableListItem> CurrentItemAttachments = new ObservableCollection<ref EditorWearableListItem>(this);
+	
 	ref map<string, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
 	ref TStringArray LoadedAttachmentSlots = {};
+	
+	
 	
 	const ref EditorWearableItem EmptyItem = new EditorWearableItem("<empty>", "<empty>", {"any"});
 	
@@ -24,6 +36,10 @@ class EditorInventoryEditorController: ViewController
 		
 		LoadedAttachmentSlots = GetAttachmentSlotsFromEntity(m_Entity);
 		foreach (string slot: LoadedAttachmentSlots) {
+			if (BLACKLISTED_ATTACHMENTS.Find(slot) != -1) {
+				continue;
+			}
+			
 			LoadedWearableItems[slot] = new array<ref EditorWearableItem>();
 			EditorInventoryAttachmentSlot attachment_slot = new EditorInventoryAttachmentSlot(slot, GetSlotImageFromSlotName(slot));
 			attachment_slot.OnItemSelected.Insert(OnAttachmentSlotSelected);
@@ -148,7 +164,7 @@ class EditorInventoryEditorController: ViewController
 			
 			WearableItems.Clear();
 			
-			string inventory_slot = AttachmentSlotCategories[i].GetSlot();
+			string inventory_slot = AttachmentSlotCategories[i].GetSlot();			
 			
 			// Register empty item
 			EditorWearableListItem empty_list_item = new EditorWearableListItem(EmptyItem, inventory_slot);			

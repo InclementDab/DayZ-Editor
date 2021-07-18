@@ -22,6 +22,18 @@ class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmen
 	{	
 		return m_TemplateController.InventorySlot;
 	}
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton(m_TemplateController.InventorySlot, w, TooltipPositions.BOTTOM_RIGHT));
+		return true;
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		EditorHud.SetCurrentTooltip(null);
+		return true;
+	}
 		
 	override string GetLayoutFile()
 	{
