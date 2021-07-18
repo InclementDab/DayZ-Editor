@@ -144,8 +144,7 @@ class EditorInventoryEditorController: ViewController
 	static string GetSlotImageFromSlotName(string slot_name)
 	{
 		// crackhead shit
-		string slot_classname = string.Format("Slot_%1", slot_name);		
-		return GetGame().ConfigGetTextOut(string.Format("CfgSlots %1 ghostIcon", slot_classname));
+		return GetGame().ConfigGetTextOut(string.Format("CfgSlots Slot_%1 ghostIcon", slot_name));
 	}
 	
 	PlayerBase GetEntityAsPlayer()
