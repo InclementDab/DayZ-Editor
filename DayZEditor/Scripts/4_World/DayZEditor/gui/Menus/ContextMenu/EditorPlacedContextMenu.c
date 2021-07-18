@@ -10,10 +10,15 @@ class EditorPlacedContextMenu: EditorContextMenu
 		if (context.GetWorldObject().IsMan()) {
 			// Just assigning the package *cool*
 			m_Editor.CommandManager[EditorControlPlayerCommand].SetData(new Param1<EditorObject>(context));
-			m_Editor.CommandManager[EditorEditPlayerCommand].SetData(new Param1<PlayerBase>(PlayerBase.Cast(context.GetWorldObject())));
+			
 			AddMenuDivider();
 			AddMenuButton(m_Editor.CommandManager[EditorControlPlayerCommand]);
-			AddMenuButton(m_Editor.CommandManager[EditorEditPlayerCommand]);
+		}
+		
+		EntityAI entity;
+		if (Class.CastTo(entity, context.GetWorldObject()) && entity.GetInventory()) {
+			m_Editor.CommandManager[EditorEditInventoryCommand].SetData(new Param1<EntityAI>(entity));
+			AddMenuButton(m_Editor.CommandManager[EditorEditInventoryCommand]);
 		}
 		
 		AddMenuDivider();

@@ -17,10 +17,11 @@ class EditorInventoryEditorController: ViewController
 		"ArmbandSlot"
 	};
 	
-	PlayerBase Player;
+	protected EntityAI m_Entity;
 	string SearchBarData;
 	string SearchBarIcon = "set:dayz_editor_gui image:search";
 	ScrollWidget ItemSelectorScrollbar;
+	EntityAI ItemInHands;
 	
 	bool Hands;
 	bool ShoulderLeft;
@@ -84,6 +85,21 @@ class EditorInventoryEditorController: ViewController
 		}
 	}
 	
+	void SetEntity(notnull EntityAI entity)
+	{
+		m_Entity = entity;
+		
+		if (GetEntityAsPlayer()) {
+			ItemInHands = GetEntityAsPlayer().GetHumanInventory().GetEntityInHands();
+			NotifyPropertyChanged("ItemInHands");
+		}
+	}
+	
+	PlayerBase GetEntityAsPlayer()
+	{
+		return PlayerBase.Cast(m_Entity);
+	}
+	
 	// playerSlots[] = {"Slot_Shoulder","Slot_Melee","Slot_Vest","Slot_Body","Slot_Hips","Slot_Legs","Slot_Back","Slot_Headgear","Slot_Mask","Slot_Eyewear","Slot_Gloves","Slot_Feet","Slot_Armband"};
 	
 	string GetInventorySlot(string radio_button)
@@ -110,24 +126,25 @@ class EditorInventoryEditorController: ViewController
 		
 	void OnListItemSelected(EditorWearableListItem list_item, EditorWearableItem wearable_item)
 	{
-		if (!Player) {
+		if (!m_Entity) {
 			return; // wat
 		}
 		
 		// Very special, probably use some type of enum in the future
-		if (list_item.GetSlot() == "Hands") {
-			GetGame().ObjectDelete(Player.GetHumanInventory().GetEntityInHands());
-			Player.GetHumanInventory().CreateInHands(wearable_item.Type);
+		if (list_item.GetSlot() == "Hands" && GetEntityAsPlayer()) {
+			GetGame().ObjectDelete(GetEntityAsPlayer().GetHumanInventory().GetEntityInHands());
+			ItemInHands = GetEntityAsPlayer().GetHumanInventory().CreateInHands(wearable_item.Type);
+			NotifyPropertyChanged("ItemInHands");
 		} 
 		
 		else {
 			int slot_id = InventorySlots.GetSlotIdFromString(list_item.GetSlot());
 			
 			// Clear existing item
-			GetGame().ObjectDelete(Player.GetInventory().FindAttachment(slot_id));
+			GetGame().ObjectDelete(m_Entity.GetInventory().FindAttachment(slot_id));
 			
 			// Create new item on player
-			Player.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id);
+			m_Entity.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id);
 		}
 		
 		// Deselect all other things
@@ -155,8 +172,8 @@ class EditorInventoryEditorController: ViewController
 					WearableItems.Insert(list_item);
 					
 					// Assign active item from slot
-					if (Player) {
-						EntityAI slot_item = Player.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot));
+					if (m_Entity) {
+						EntityAI slot_item = m_Entity.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot));
 						if (slot_item && slot_item.GetType() == wearable.Type) {
 							list_item.Select();
 						}

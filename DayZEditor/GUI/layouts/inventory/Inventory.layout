@@ -69,6 +69,12 @@ FrameWidgetClass InventoryFrame {
        vexactpos 1
        hexactsize 1
        vexactsize 1
+       scriptclass "ViewBinding"
+       {
+        ScriptParamsClass {
+         Binding_Name "ItemInHands"
+        }
+       }
       }
      }
     }

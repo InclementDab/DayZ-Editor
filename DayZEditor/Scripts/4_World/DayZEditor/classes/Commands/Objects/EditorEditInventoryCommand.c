@@ -1,9 +1,9 @@
-class EditorEditPlayerCommand: EditorCommand
+class EditorEditInventoryCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		Param1<PlayerBase> data = Param1<PlayerBase>.Cast(GetData());
+		Param1<EntityAI> data = Param1<EntityAI>.Cast(GetData());
 		if (!data || !data.param1) {
 			return false;
 		}
@@ -15,6 +15,6 @@ class EditorEditPlayerCommand: EditorCommand
 	
 	override string GetName()
 	{
-		return "Edit Player...";
+		return "Edit Inventory";
 	}
 }

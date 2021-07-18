@@ -716,23 +716,23 @@ class Editor
 	
 	// Inventory Editor Stuff
 	protected ref EditorInventoryEditorHud m_EditorInventoryEditorHud;
-	void StartInventoryEditor(PlayerBase player)
+	void StartInventoryEditor(EntityAI entity)
 	{
 		delete m_EditorInventoryEditorHud;
 		
-		if (!player.GetHumanInventory().CanOpenInventory() || player.IsInventorySoftLocked() || !player.GetHumanInventory().IsInventoryUnlocked()) {
+		/*if (!player.GetHumanInventory().CanOpenInventory() || player.IsInventorySoftLocked() || !player.GetHumanInventory().IsInventoryUnlocked()) {
 			return;
+		}*/
+		
+		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(entity);
+		
+		PlayerBase player;
+		if (Class.CastTo(player, entity)) {
+			player.OnInventoryMenuOpen();
+			player.GetInputController().SetDisabled(true);
 		}
 		
-		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(player);
-		
-		SetMissionHud(false);
-		// Vanilla stuff
-		player.OnInventoryMenuOpen();
-		//m_Mission.MoveHudForInventory(true);
-		//PlayerControlDisable(INPUT_EXCLUDE_INVENTORY);
-		player.GetInputController().SetDisabled(true);
-		
+		SetMissionHud(false);	
 		m_EditorHud.ShowCursor(true);
 	}
 	
@@ -742,18 +742,18 @@ class Editor
 			return;
 		}
 		
-		PlayerBase player = m_EditorInventoryEditorHud.GetPlayer();
+		EntityAI entity = m_EditorInventoryEditorHud.GetEntity();
+		
+		PlayerBase player;
+		if (Class.CastTo(player, entity)) {
+			GetGame().SelectPlayer(null, player);
+			player.OnInventoryMenuClose();
+			player.GetInputController().SetDisabled(false);
+		}
 		
 		delete m_EditorInventoryEditorHud;
 		
-		GetGame().SelectPlayer(null, player);
-		
 		SetMissionHud(true);
-		//MoveHudForInventory(false);
-		//PlayerControlEnable(false);
-		player.OnInventoryMenuClose();
-		//VicinityItemManager.GetInstance().ResetRefreshCounter();
-		player.GetInputController().SetDisabled(false);
 	}
 	
 	void SetMissionHud(bool state)

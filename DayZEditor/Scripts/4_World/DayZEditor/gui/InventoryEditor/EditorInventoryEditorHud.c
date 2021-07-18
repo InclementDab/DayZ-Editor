@@ -1,16 +1,16 @@
 class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorController>
 {
 	protected EditorInventoryEditorCamera m_Camera;
-	protected PlayerBase m_Player;
+	protected EntityAI m_Entity;
 	
-	void EditorInventoryEditorHud(PlayerBase player)
+	void EditorInventoryEditorHud(notnull EntityAI entity)
 	{
-		m_Player = player;
-		m_Camera = EditorInventoryEditorCamera.Cast(GetGame().CreateObject("EditorInventoryEditorCamera", m_Player.GetPosition()));
-		m_Camera.SetTarget(m_Player);
+		m_Entity = entity;
+		m_Camera = EditorInventoryEditorCamera.Cast(GetGame().CreateObject("EditorInventoryEditorCamera", m_Entity.GetPosition()));
+		m_Camera.SetTarget(m_Entity);
 		
-		vector pos = m_Player.GetPosition();
-		vector dir = m_Player.GetDirection();
+		vector pos = m_Entity.GetPosition();
+		vector dir = m_Entity.GetDirection();
 		
 		vector target_pos = pos + "0 1.2 0" + (dir * 2.0) + (dir.Perpend() * 0.5);
 		//m_Camera.LerpToPosition(target_pos, 1.0);
@@ -18,7 +18,8 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		m_Camera.Update();
 		m_Camera.SetActive(true);
 		
-		m_TemplateController.Player = m_Player;
+		m_TemplateController.SetEntity(m_Entity);
+		
 		
 		// Just default
 		m_TemplateController.ShoulderLeft = true;
@@ -31,9 +32,9 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		GetGame().ObjectDelete(m_Camera);
 	}
 	
-	PlayerBase GetPlayer()
+	EntityAI GetEntity()
 	{
-		return m_Player;
+		return m_Entity;
 	}
 		
 	override string GetLayoutFile()
