@@ -80,6 +80,23 @@ class EditorWearableListItem: EditorListItem
 		return (m_WearableItem.Slots.Find(slot) != -1);
 	}
 	
+	bool FilterType(string filter)
+	{
+		if (filter == string.Empty) return true;
+		
+		string type_lower = m_WearableItem.Type;
+		type_lower.ToLower();
+		filter.ToLower();
+		
+		/*if (filter[0] == "@") {
+			type_lower = m_PlaceableItem.Mod.GetModName();
+			filter[0] = "";
+			type_lower.ToLower();
+		}*/
+		
+		return type_lower.Contains(filter);
+	}
+	
 	override string GetLayoutFile()
 	{
 		return "DayZEditor/gui/Layouts/items/EditorWearableListItem.layout";

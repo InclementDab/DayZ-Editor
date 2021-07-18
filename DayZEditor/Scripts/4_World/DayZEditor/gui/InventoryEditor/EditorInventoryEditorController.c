@@ -18,6 +18,9 @@ class EditorInventoryEditorController: ViewController
 	
 	PlayerBase Player;
 	
+	string SearchBarData;
+	string SearchBarIcon = "set:dayz_editor_gui image:search";
+	
 	bool ShoulderLeft;
 	bool ShoulderRight;
 	bool VestSlot;
@@ -160,6 +163,26 @@ class EditorInventoryEditorController: ViewController
 			
 			EnScript.SetClassVar(this, button, 0, false);
 			NotifyPropertyChanged(button, false);
+		}
+		
+		switch (property_name) {
+			
+			case "SearchBarData": {
+				for (int j = 0; j < WearableItems.Count(); j++) {
+					WearableItems[j].GetLayoutRoot().Show(WearableItems[j].FilterType(SearchBarData)); 
+				}
+				
+				ItemSelectorScrollbar.VScrollToPos(0);
+				
+				if (SearchBarData.Length() > 0) {
+					SearchBarIcon = "set:dayz_gui image:icon_x";
+				} else {
+					SearchBarIcon = "set:dayz_editor_gui image:search";
+				}
+				
+				NotifyPropertyChanged("SearchBarIcon");
+				break;
+			}			
 		}
 	}
 }
