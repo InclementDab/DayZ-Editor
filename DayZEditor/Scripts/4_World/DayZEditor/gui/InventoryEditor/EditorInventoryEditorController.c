@@ -103,7 +103,7 @@ class EditorInventoryEditorController: ViewController
 	
 	static string GetSlotImageFromSlotName(string slot_name)
 	{
-		if (!GetGame().ConfigIsExisting(string.Format("CfgSlots Slot_%1 ghostIcon", slot_name)) {
+		if (!GetGame().ConfigIsExisting(string.Format("CfgSlots Slot_%1 ghostIcon", slot_name))) {
 			return "set:dayz_inventory image:missing";
 		}
 		

@@ -5,26 +5,36 @@ class EditorInventoryEditorCamera: Camera
 	
 	void EditorInventoryEditorCamera()
 	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(OnFrame);
-	}
-	
-	void ~EditorInventoryEditorCamera()
-	{
-		if (GetGame()) {
-			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(OnFrame);
-		}
+		SetEventMask(EntityEvent.FRAME);
 	}
 	
 	void SetTarget(Object target)
 	{
 		m_Target = target;
 	}
-	
-	void OnFrame()
+		
+	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		if (m_Target) {
-			LookAt(m_Target.GetPosition() + "0 1 0");
+		if (!m_Target) {
+			return;
 		}
+		
+		vector target_pos = m_Target.GetPosition();
+		
+		Input input = GetGame().GetInput();
+		float zoom = input.LocalValue("EditorCameraForward") - input.LocalValue("EditorCameraBack");
+		float strafe = input.LocalValue("EditorCameraLeft") - input.LocalValue("EditorCameraRight");
+		
+		vector dir = vector.Direction(GetPosition(), target_pos);
+		dir.Normalize();
+		SetPosition(GetPosition() + (dir * zoom * timeSlice));
+				
+		vector position = EditorMath.RotateAroundPoint(target_pos, GetPosition(), vector.Up, Math.Cos(strafe * timeSlice), Math.Sin(strafe * timeSlice));
+		
+		SetPosition(position);
+		
+		// Last thing
+		LookAt(target_pos + "0 1 0");
 	}
 	
 	void LerpToPosition(vector target_position, float animation_time)
