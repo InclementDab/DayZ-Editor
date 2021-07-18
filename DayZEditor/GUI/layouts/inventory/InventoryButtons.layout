@@ -1,12 +1,13 @@
 WrapSpacerWidgetClass InventoryButtonCategories {
  color 0.0588 0.0588 0.0588 1
  position 0 0
- size 44 100
+ size 48 100
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
  Padding 0
+ Margin 4
  "Size To Content V" 1
  {
   ButtonWidgetClass InventoryFilterButton {
