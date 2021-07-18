@@ -251,7 +251,7 @@ FrameWidgetClass InventoryFrame {
      }
     }
     PanelWidgetClass AttachmentSelectorPanel {
-     visible 1
+     visible 0
      ignorepointer 1
      color 0.098 0.098 0.098 0.7843
      position 55 5

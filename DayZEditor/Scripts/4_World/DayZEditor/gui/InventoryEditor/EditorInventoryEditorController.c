@@ -118,6 +118,8 @@ class EditorInventoryEditorController: ViewController
 		CurrentActiveItem = current_item;
 		
 		if (!CurrentActiveItem) {
+			AttachmentSelectorPanel.Show(false);
+			AttachmentFilterSelectPanel.Show(false);
 			return;
 		}
 		
@@ -136,7 +138,7 @@ class EditorInventoryEditorController: ViewController
 			CurrentItemAttachmentSlotCategories.Insert(attachment_slot);
 		}
 				
-		/*
+		
 		// Sets default category to ON
 		if (CurrentItemAttachmentSlotCategories[0]) {
 			CurrentItemAttachmentSlotCategories[0].GetTemplateController().State = true;
@@ -144,7 +146,7 @@ class EditorInventoryEditorController: ViewController
 		}
 		
 		AttachmentSelectorPanel.Show(CurrentItemAttachmentSlotCategories.Count() > 0);
-		AttachmentFilterSelectPanel.Show(CurrentItemAttachmentSlotCategories.Count() > 0);*/
+		AttachmentFilterSelectPanel.Show(CurrentItemAttachmentSlotCategories.Count() > 0);
 	}
 	
 	// playerSlots[] = {"Slot_Shoulder","Slot_Melee","Slot_Vest","Slot_Body","Slot_Hips","Slot_Legs","Slot_Back","Slot_Headgear","Slot_Mask","Slot_Eyewear","Slot_Gloves","Slot_Feet","Slot_Armband"};
