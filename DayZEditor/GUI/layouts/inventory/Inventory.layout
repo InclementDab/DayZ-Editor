@@ -287,6 +287,44 @@ FrameWidgetClass InventoryFrame {
        Padding 5
        Margin 4
        {
+        ButtonWidgetClass HandsButton {
+         color 0.7529 0.3686 0.3255 1
+         position 0 2
+         size 40 40
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Default
+         {
+          ImageWidgetClass HandsIcon {
+           ignorepointer 1
+           position 0 0
+           size 40 40
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scaled 1
+           image0 "set:dayz_inventory image:hands"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 1
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "Hands"
+           Two_Way_Binding 1
+          }
+         }
+        }
         ButtonWidgetClass ShoulderLeftButton {
          color 0.7529 0.3686 0.3255 1
          position 0 2

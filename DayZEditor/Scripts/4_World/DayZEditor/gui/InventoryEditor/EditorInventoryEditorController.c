@@ -1,6 +1,7 @@
 class EditorInventoryEditorController: ViewController
 {
 	static const ref TStringArray RADIO_BUTTONS = {
+		"Hands",
 		"ShoulderLeft",
 		"ShoulderRight",
 		"VestSlot",
@@ -17,10 +18,11 @@ class EditorInventoryEditorController: ViewController
 	};
 	
 	PlayerBase Player;
-	
 	string SearchBarData;
 	string SearchBarIcon = "set:dayz_editor_gui image:search";
+	ScrollWidget ItemSelectorScrollbar;
 	
+	bool Hands;
 	bool ShoulderLeft;
 	bool ShoulderRight;
 	bool VestSlot;
@@ -34,8 +36,6 @@ class EditorInventoryEditorController: ViewController
 	bool GloveSlot;
 	bool FeetSlot;
 	bool ArmbandSlot;
-	
-	ScrollWidget ItemSelectorScrollbar;
 	
 	ref ObservableCollection<ref EditorWearableListItem> WearableItems = new ObservableCollection<ref EditorWearableListItem>(this);
 	ref map<string, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
@@ -61,31 +61,27 @@ class EditorInventoryEditorController: ViewController
 				string type;
 				TStringArray inventory_slots = {};
 		        GetGame().ConfigGetChildName(path, i, type);
-				GetGame().ConfigGetTextArray(path + " " + type + " inventorySlot", inventory_slots);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 2) { // maybe 2 is the way
+				string object_full_path = path + " " + type;
+				GetGame().ConfigGetTextArray(object_full_path + " inventorySlot", inventory_slots);
+				if (GetGame().ConfigGetInt(object_full_path + " scope") < 2) { // maybe 2 is the way
 					continue;
 				}
 				
-				EditorWearableItem wearable_item = new EditorWearableItem(type, GetGame().ConfigGetTextOut(path + " " + type + " displayName"), inventory_slots);
+				EditorWearableItem wearable_item = new EditorWearableItem(type, GetGame().ConfigGetTextOut(object_full_path + " displayName"), inventory_slots);
 				foreach (string inventory_slot: inventory_slots) {
 					// Check if its a supported inventory slot
 					if (LoadedWearableItems[inventory_slot]) {
 						LoadedWearableItems[inventory_slot].Insert(wearable_item);
 					}
 				}
-
-				/*if (!placeable_item || IsForbiddenItem(placeable_item.Type)) {
-					continue;
-				}*/
+				
+				// VERY special case :peepoHappy:
+				// because you can literally put ANYTHING in your hands
+				if (LoadedWearableItems["Hands"] && GetGame().IsKindOf(type, "Inventory_Base")) {
+					LoadedWearableItems["Hands"].Insert(wearable_item);
+				}
 		    }
 		}
-		
-		/*foreach (string name, array<ref EditorWearableItem> wearable_array: LoadedWearableItems) {
-			Print(name);
-			foreach (EditorWearableItem wearable_item: wearable_array) {
-				Print("\t" + wearable_item.Type);
-			}
-		}*/
 	}
 	
 	// playerSlots[] = {"Slot_Shoulder","Slot_Melee","Slot_Vest","Slot_Body","Slot_Hips","Slot_Legs","Slot_Back","Slot_Headgear","Slot_Mask","Slot_Eyewear","Slot_Gloves","Slot_Feet","Slot_Armband"};
@@ -93,6 +89,7 @@ class EditorInventoryEditorController: ViewController
 	string GetInventorySlot(string radio_button)
 	{
 		switch (radio_button) {
+			case "Hands": return "Hands";
 			case "ShoulderLeft": return "Melee";
 			case "ShoulderRight": return "Shoulder";
 			case "VestSlot": return "Vest";
@@ -117,13 +114,21 @@ class EditorInventoryEditorController: ViewController
 			return; // wat
 		}
 		
-		int slot_id = InventorySlots.GetSlotIdFromString(list_item.GetSlot());
+		// Very special, probably use some type of enum in the future
+		if (list_item.GetSlot() == "Hands") {
+			GetGame().ObjectDelete(Player.GetHumanInventory().GetEntityInHands());
+			Player.GetHumanInventory().CreateInHands(wearable_item.Type);
+		} 
 		
-		// Clear existing item
-		GetGame().ObjectDelete(Player.GetInventory().FindAttachment(slot_id));
-		
-		// Create new item on player
-		Player.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id);
+		else {
+			int slot_id = InventorySlots.GetSlotIdFromString(list_item.GetSlot());
+			
+			// Clear existing item
+			GetGame().ObjectDelete(Player.GetInventory().FindAttachment(slot_id));
+			
+			// Create new item on player
+			Player.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id);
+		}
 		
 		// Deselect all other things
 		for (int i = 0; i < WearableItems.Count(); i++) {

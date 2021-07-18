@@ -12,7 +12,7 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		vector pos = m_Player.GetPosition();
 		vector dir = m_Player.GetDirection();
 		
-		vector target_pos = pos + "0 1.2 0" + (dir * 3.0) + (dir.Perpend() * 1.0);
+		vector target_pos = pos + "0 0.8 0" + (dir * 2.0) + (dir.Perpend() * 1.0);
 		//m_Camera.LerpToPosition(target_pos, 1.0);
 		m_Camera.SetPosition(target_pos);
 		m_Camera.Update();

@@ -9,7 +9,7 @@ class EditorWearableListItem: EditorListItem
 	
 	void EditorWearableListItem(EditorWearableItem wearable_item, string inventory_slot)
 	{
-		EditorLog.Trace("EditorWearableListItem");
+		//EditorLog.Trace("EditorWearableListItem");
 		m_WearableItem = wearable_item;
 		m_InventorySlot = inventory_slot;
 		m_TemplateController.Label = m_WearableItem.Type;
