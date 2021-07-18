@@ -1,3 +1,32 @@
+class EditorInventoryAttachmentSlotController: ViewController
+{
+	string Type;
+	bool State;
+	string Icon;
+}
+
+class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmentSlotController>
+{
+	void EditorInventoryAttachmentSlot(string type, string icon)
+	{
+		m_TemplateController.Type = type;
+		m_TemplateController.NotifyPropertyChanged("Type");
+		
+		m_TemplateController.Icon = icon;
+		m_TemplateController.NotifyPropertyChanged("Icon");
+	}
+	
+	string GetType()
+	{	
+		return m_TemplateController.Type;
+	}
+	
+	override string GetLayoutFile()
+	{
+		return "";
+	}
+}
+
 class EditorInventoryEditorController: ViewController
 {
 	static const ref TStringArray RADIO_BUTTONS = {
@@ -17,12 +46,6 @@ class EditorInventoryEditorController: ViewController
 		"ArmbandSlot"
 	};
 	
-	protected EntityAI m_Entity;
-	string SearchBarData;
-	string SearchBarIcon = "set:dayz_editor_gui image:search";
-	ScrollWidget ItemSelectorScrollbar;
-	EntityAI ItemInHands;
-	
 	bool Hands;
 	bool ShoulderLeft;
 	bool ShoulderRight;
@@ -38,19 +61,38 @@ class EditorInventoryEditorController: ViewController
 	bool FeetSlot;
 	bool ArmbandSlot;
 	
+	protected EntityAI m_Entity;
+	string SearchBarData;
+	string SearchBarIcon = "set:dayz_editor_gui image:search";
+	ScrollWidget ItemSelectorScrollbar;
+	EntityAI ItemInHands;
+
+	ref ObservableCollection<ref EditorInventoryAttachmentSlot> AttachmentSlotCategories = new ObservableCollection<ref EditorInventoryAttachmentSlot>(this);	
 	ref ObservableCollection<ref EditorWearableListItem> WearableItems = new ObservableCollection<ref EditorWearableListItem>(this);
 	ref map<string, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
+	ref TStringArray LoadedAttachmentSlots = {};
 	
 	const ref EditorWearableItem EmptyItem = new EditorWearableItem("<empty>", "<empty>", {"any"});
 	
 	void EditorInventoryEditorController()
 	{		
-		foreach (string button: RADIO_BUTTONS) {
-			// Initialize the arrays!
-			string slot = GetInventorySlot(button);
-			LoadedWearableItems[slot] = new array<ref EditorWearableItem>();
+
+	}
+	
+	void SetEntity(notnull EntityAI entity)
+	{
+		m_Entity = entity;
+		
+		if (GetEntityAsPlayer()) {
+			ItemInHands = GetEntityAsPlayer().GetHumanInventory().GetEntityInHands();
+			NotifyPropertyChanged("ItemInHands");
 		}
 		
+		LoadedAttachmentSlots = GetAttachmentSlotsFromEntity(m_Entity);
+		foreach (string slot: LoadedAttachmentSlots) {
+			LoadedWearableItems[slot] = new array<ref EditorWearableItem>();
+		}
+				
 		EditorLog.Trace("EditorInventoryEditorController::LoadWearableObjects");
 		g_Game.ReportProgress("Loading Wearable Objects");
 		
@@ -87,14 +129,15 @@ class EditorInventoryEditorController: ViewController
 		}
 	}
 	
-	void SetEntity(notnull EntityAI entity)
+	static TStringArray GetAttachmentSlotsFromEntity(EntityAI entity)
 	{
-		m_Entity = entity;
-		
-		if (GetEntityAsPlayer()) {
-			ItemInHands = GetEntityAsPlayer().GetHumanInventory().GetEntityInHands();
-			NotifyPropertyChanged("ItemInHands");
+		TStringArray result = {};
+		GameInventory inventory = entity.GetInventory();
+		for (int i = 0; i < inventory.GetAttachmentSlotsCount(); i++) {			
+			result.Insert(InventorySlots.GetSlotName(inventory.GetAttachmentSlotId(i)));
 		}
+		
+		return result;
 	}
 	
 	PlayerBase GetEntityAsPlayer()
