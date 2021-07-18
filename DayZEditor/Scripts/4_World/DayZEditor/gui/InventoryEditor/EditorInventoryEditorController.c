@@ -1,50 +1,6 @@
-class EditorInventoryAttachmentSlotController: ViewController
-{
-	string InventorySlot;
-	bool State;
-	string Icon;
-	
-	override void PropertyChanged(string property_name)
-	{
-		switch (property_name) {
-			case "State": {
-				EditorInventoryAttachmentSlot.Cast(GetParent()).OnStateChanged(State);
-				break;
-			}
-		}
-	}
-}
 
-class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmentSlotController>
-{
-	ref ScriptInvoker OnItemSelected = new ScriptInvoker();
-	
-	void EditorInventoryAttachmentSlot(string slot, string icon)
-	{
-		m_TemplateController.InventorySlot = slot;
-		m_TemplateController.NotifyPropertyChanged("InventorySlot");
-		
-		m_TemplateController.Icon = icon;
-		m_TemplateController.NotifyPropertyChanged("Icon");
-	}
-	
-	void OnStateChanged(bool state)
-	{
-		if (state) {
-			OnItemSelected.Invoke(this);
-		}
-	}
-		
-	string GetSlot()
-	{	
-		return m_TemplateController.InventorySlot;
-	}
-		
-	override string GetLayoutFile()
-	{
-		return "DayZEditor/GUI/layouts/Inventory/InventoryButtons.layout";
-	}
-}
+
+
 
 class EditorInventoryEditorController: ViewController
 {
@@ -60,11 +16,6 @@ class EditorInventoryEditorController: ViewController
 	ref TStringArray LoadedAttachmentSlots = {};
 	
 	const ref EditorWearableItem EmptyItem = new EditorWearableItem("<empty>", "<empty>", {"any"});
-	
-	void EditorInventoryEditorController()
-	{		
-
-	}
 	
 	void SetEntity(notnull EntityAI entity)
 	{
@@ -121,13 +72,15 @@ class EditorInventoryEditorController: ViewController
 	
 	static TStringArray GetAttachmentSlotsFromEntity(EntityAI entity)
 	{
+		map<int, string> slots = new map<int, string>();
 		TStringArray result = {};
 		GameInventory inventory = entity.GetInventory();
-		for (int i = 0; i < inventory.GetAttachmentSlotsCount(); i++) {			
-			result.Insert(InventorySlots.GetSlotName(inventory.GetAttachmentSlotId(i)));
+		for (int i = 0; i < inventory.GetAttachmentSlotsCount(); i++) {
+			int id = inventory.GetAttachmentSlotId(i);
+			slots[id] = InventorySlots.GetSlotName(id);
 		}
 		
-		return result;
+		return slots.GetValueArray();
 	}
 	
 	static string GetSlotImageFromSlotName(string slot_name)
