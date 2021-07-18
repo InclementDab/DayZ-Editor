@@ -144,6 +144,9 @@ class EditorInventoryEditorController: ViewController
 					// This is the part where we need to call NEW, not before
 					EditorWearableListItem list_item = new EditorWearableListItem(wearable, inventory_slot);
 					list_item.OnItemSelected.Insert(OnListItemSelected);
+					
+					// update by search bar
+					list_item.GetLayoutRoot().Show(list_item.FilterType(SearchBarData)); 
 					WearableItems.Insert(list_item);
 					
 					// Assign active item from slot
