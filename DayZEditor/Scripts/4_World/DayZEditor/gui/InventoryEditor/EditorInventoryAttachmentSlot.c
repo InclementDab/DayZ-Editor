@@ -23,9 +23,14 @@ class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmen
 		return m_TemplateController.SlotId;
 	}
 	
-	string GetSlotDisplayName()
+	static string GetSlotDisplayName(int slot_id)
 	{
-		return InventorySlots.GetSlotDisplayName(m_TemplateController.SlotId);
+		string name = InventorySlots.GetSlotDisplayName(slot_id);
+		if (name == string.Empty) {
+			name = InventorySlots.GetSlotName(slot_id);
+		}
+		
+		return name;
 	}
 	
 	static string GetSlotImageFromSlotName(string slot_name)
@@ -40,7 +45,7 @@ class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmen
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton(GetSlotDisplayName(), w, TooltipPositions.BOTTOM_RIGHT));
+		EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton(GetSlotDisplayName(m_TemplateController.SlotId), w, TooltipPositions.BOTTOM_RIGHT));
 		return true;
 	}
 	
