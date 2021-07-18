@@ -1,6 +1,7 @@
 class EditorInventoryEditorCamera: Camera
 {
 	protected ref Timer m_LerpTimer = new Timer(CALL_CATEGORY_GAMEPLAY);
+	protected Object m_Target;
 	
 	void EditorInventoryEditorCamera()
 	{
@@ -14,9 +15,16 @@ class EditorInventoryEditorCamera: Camera
 		}
 	}
 	
+	void SetTarget(Object target)
+	{
+		m_Target = target;
+	}
+	
 	void OnFrame()
 	{
-		LookAt(GetGame().GetPlayer().GetPosition() + "0 1 0");
+		if (m_Target) {
+			LookAt(m_Target.GetPosition() + "0 1 0");
+		}
 	}
 	
 	void LerpToPosition(vector target_position, float animation_time)

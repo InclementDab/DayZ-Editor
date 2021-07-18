@@ -7,6 +7,7 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 	{
 		m_Player = player;
 		m_Camera = EditorInventoryEditorCamera.Cast(GetGame().CreateObject("EditorInventoryEditorCamera", m_Player.GetPosition()));
+		m_Camera.SetTarget(m_Player);
 		
 		vector pos = m_Player.GetPosition();
 		vector dir = m_Player.GetDirection();
