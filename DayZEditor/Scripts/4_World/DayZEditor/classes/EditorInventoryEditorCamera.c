@@ -15,7 +15,7 @@ class EditorInventoryEditorCamera: Camera
 		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		if (!m_Target) {
+		if (!m_Target || GetFocus()) {
 			return;
 		}
 		
