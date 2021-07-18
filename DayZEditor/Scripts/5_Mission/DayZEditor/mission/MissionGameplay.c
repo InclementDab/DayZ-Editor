@@ -12,6 +12,7 @@ modded class MissionGameplay
 		GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
 		GetUApi().GetInputByName("UACameraToolSpeedIncrease").ForceDisable(true);
 		GetUApi().GetInputByName("UACameraToolSpeedDecrease").ForceDisable(true);
+		GetUApi().GetInputByName("UAGear").ForceDisable(true);
 		GetUApi().UpdateControls();
 		
 		/* Kill the weather! */
@@ -76,14 +77,13 @@ modded class MissionGameplay
 	}
 	//override void OnMouseButtonRelease(int button){}
 
-	
 	override void OnUpdate(float timeslice)
 	{
 		if (GetEditor() && GetEditor().IsActive()) {
 			GetModuleManager().OnUpdate(timeslice);
-			//GetEditor().OnUpdate(timeslice);
-		} else { 
-			super.OnUpdate(timeslice);
-		}
+			return;
+		} 
+				
+		super.OnUpdate(timeslice);
 	}
 }

@@ -1,0 +1,68 @@
+PanelWidgetClass EditorWearableItem {
+ color 1 0 0 0
+ position 0.688 0
+ size 1 32
+ halign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ style rover_sim_colorable
+ {
+  ButtonWidgetClass EditorWearableItemButton {
+   color 0.7529 0.3686 0.3255 1
+   size 1 32
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scriptclass "ViewBinding"
+   style EmptyHighlight
+   {
+    TextWidgetClass EditorWearableItemTypeText {
+     ignorepointer 1
+     position 55 0
+     size 0.9 22
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scriptclass "ViewBinding"
+     text "ItemTypeName"
+     "text offset" 3 0
+     "text valign" center
+     {
+      ScriptParamsClass {
+       Binding_Name "Type"
+      }
+     }
+    }
+    ItemPreviewWidgetClass EditorWearableItemPreview {
+     inheritalpha 0
+     ignorepointer 1
+     position 15 0
+     size 32 32
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     {
+      ScriptParamsClass {
+       Selected_Item "Item"
+      }
+     }
+    }
+   }
+   {
+    ScriptParamsClass {
+     Two_Way_Binding 1
+     Relay_Command "ListItemExecute"
+    }
+   }
+  }
+ }
+}

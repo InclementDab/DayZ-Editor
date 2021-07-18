@@ -352,6 +352,19 @@ class Editor
 				ObjectInHand.GetWorldObject().SetOrientation(hand_ori);			
 			}
 		}
+		
+		if (m_Player && !m_Active) {		
+			if (input.LocalPress("EditorToggleInventoryEditor", false)) {
+				if (m_EditorInventoryEditorHud) {
+					StopInventoryEditor();
+				}
+				
+				else {
+					// Default to m_Player
+					StartInventoryEditor(m_Player);
+				}
+			}
+		}
 	}
 	
 	bool OnDoubleClick(int button)
@@ -522,6 +535,11 @@ class Editor
 		}
 		
 		m_Active = active;
+				
+		// Shut down Inventory Editor, done prior to the camera due to the destructor
+		if (m_EditorInventoryEditorHud) {
+			delete m_EditorInventoryEditorHud;
+		}
 		
 		if (m_EditorCamera) {
 			m_EditorCamera.LookEnabled = m_Active;
@@ -694,6 +712,58 @@ class Editor
 	{
 		EditorLootEditorDialog loot_editor_dialog("Attention!");
 		loot_editor_dialog.ShowDialog();
+	}
+	
+	// Inventory Editor Stuff
+	protected ref EditorInventoryEditorHud m_EditorInventoryEditorHud;
+	void StartInventoryEditor(PlayerBase player)
+	{
+		delete m_EditorInventoryEditorHud;
+		
+		if (!player.GetHumanInventory().CanOpenInventory() || player.IsInventorySoftLocked() || !player.GetHumanInventory().IsInventoryUnlocked()) {
+			return;
+		}
+		
+		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(player);
+		
+		SetMissionHud(false);
+		// Vanilla stuff
+		player.OnInventoryMenuOpen();
+		//m_Mission.MoveHudForInventory(true);
+		//PlayerControlDisable(INPUT_EXCLUDE_INVENTORY);
+		player.GetInputController().SetDisabled(true);
+		
+		m_EditorHud.ShowCursor(true);
+	}
+	
+	void StopInventoryEditor()
+	{		
+		if (!m_EditorInventoryEditorHud) {
+			return;
+		}
+		
+		PlayerBase player = m_EditorInventoryEditorHud.GetPlayer();
+		
+		delete m_EditorInventoryEditorHud;
+		
+		GetGame().SelectPlayer(null, player);
+		
+		SetMissionHud(true);
+		//MoveHudForInventory(false);
+		//PlayerControlEnable(false);
+		player.OnInventoryMenuClose();
+		//VicinityItemManager.GetInstance().ResetRefreshCounter();
+		player.GetInputController().SetDisabled(false);
+	}
+	
+	void SetMissionHud(bool state)
+	{
+		if (m_Mission && m_Mission.GetHud()) {
+			m_Mission.GetHud().Show(state);
+			m_Mission.GetHud().ShowHud(state);
+			m_Mission.GetHud().ShowHudUI(state);
+			m_Mission.GetHud().SetPermanentCrossHair(state);
+		}
 	}
 	
 	// Kinda very jank i think

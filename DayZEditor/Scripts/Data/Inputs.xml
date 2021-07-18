@@ -19,6 +19,7 @@
             <input name="EditorToggleUI" loc="Show / Hide UI" />
             <input name="EditorToggleCursor" loc="Toggle Cursor" />
             <input name="EditorTeleportPlayerToCursor" loc="Teleport Player to Cursor" />
+            <input name="EditorToggleInventoryEditor" loc="Toggle Inventory Editor" />
 			
 			<input name="EditorToggleMap" loc="Map" />
 			<input name="EditorDeleteObject" loc="Delete Object" />
@@ -93,6 +94,10 @@
 
         <input name="EditorToggleCursor">
             <btn name="kSpace"/>
+        </input>
+
+        <input name="EditorToggleInventoryEditor">
+            <btn name="kTab"/>
         </input>
 
         <input name="EditorToggleMap">

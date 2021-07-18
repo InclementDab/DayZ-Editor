@@ -84,6 +84,7 @@ class EditorCommandManager
 		BrushRadiusCommand = RegisterCommand(EditorBrushRadiusCommand);
 	
 		RegisterCommand(EditorControlPlayerCommand);
+		RegisterCommand(EditorEditPlayerCommand);
 		RegisterCommand(EditorObjectPropertiesCommand);
 		RegisterCommand(EditorShowCommand);
 		RegisterCommand(EditorHideCommand);
