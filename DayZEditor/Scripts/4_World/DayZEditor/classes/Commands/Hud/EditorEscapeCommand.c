@@ -45,12 +45,12 @@ class EditorEscapeCommand: EditorCommand
 
 		if (g_Game.GetMission().IsPaused()) {
 			g_Game.GetMission().Continue();
-			GetEditor().GetEditorHud().Show(true);
+			m_Editor.GetEditorHud().Show(true);
 			return true;
 		} 
 		
 		g_Game.GetMission().Pause();
-		GetEditor().GetEditorHud().Show(false);
+		m_Editor.GetEditorHud().Show(false);
 		return true;
 	}
 	
