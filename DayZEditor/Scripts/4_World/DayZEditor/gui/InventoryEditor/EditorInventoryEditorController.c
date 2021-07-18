@@ -17,31 +17,17 @@ class EditorInventoryEditorController: ViewController
 	
 	ref ObservableCollection<ref EditorInventoryAttachmentSlot> CurrentItemAttachmentSlotCategories = new ObservableCollection<ref EditorInventoryAttachmentSlot>(this);	
 	ref ObservableCollection<ref EditorWearableListItem> CurrentItemAttachments = new ObservableCollection<ref EditorWearableListItem>(this);
-	//ref map<string, ref array<ref EditorWearableItem>> CurrentItemLoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
-	
+
 	Widget AttachmentSelectorPanel;
 	Widget AttachmentFilterSelectPanel;
 	
 	const ref EditorWearableItem EmptyItem = new EditorWearableItem("<empty>", "<empty>", {"any"});
 	
-	void SetEntity(notnull EntityAI entity)
+	void EditorInventoryEditorController()
 	{
-		m_Entity = entity;
-				
-		LoadedAttachmentSlots = GetAttachmentSlotsFromEntity(m_Entity);
-		foreach (string slot: LoadedAttachmentSlots) {
-			if (BLACKLISTED_ATTACHMENTS.Find(slot) != -1) {
-				continue;
-			}
-			
-			EditorInventoryAttachmentSlot attachment_slot = new EditorInventoryAttachmentSlot(slot, GetSlotImageFromSlotName(slot));
-			attachment_slot.OnItemSelected.Insert(OnAttachmentSlotSelected);
-			AttachmentSlotCategories.Insert(attachment_slot);
-		}
-				
-		EditorLog.Trace("EditorInventoryEditorController::LoadWearableObjects");
+		EditorLog.Trace("EditorInventoryEditorController");
 		g_Game.ReportProgress("Loading Wearable Objects");
-		
+		// Load all of the possible wearables in the game		
 		TStringArray config_paths = {};
 		config_paths.Insert(CFG_VEHICLESPATH);
 		config_paths.Insert(CFG_WEAPONSPATH);
@@ -62,7 +48,7 @@ class EditorInventoryEditorController: ViewController
 				foreach (string inventory_slot: inventory_slots) {
 					// Check if its a supported inventory slot
 					if (!LoadedWearableItems[inventory_slot]) {
-						LoadedWearableItems[inventory_slot] = new array<ref EditorWearableItem>();
+						LoadedWearableItems[inventory_slot] = {};
 					}
 					
 					LoadedWearableItems[inventory_slot].Insert(wearable_item);
@@ -70,10 +56,30 @@ class EditorInventoryEditorController: ViewController
 				
 				// VERY special case :peepoHappy:
 				// because you can literally put ANYTHING in your hands
-				if (LoadedWearableItems["Hands"] && GetGame().IsKindOf(type, "Inventory_Base")) {
+				if (!LoadedWearableItems["Hands"]) {
+					LoadedWearableItems["Hands"] = {};
+				}
+				
+				if (GetGame().IsKindOf(type, "Inventory_Base") || GetGame().IsKindOf(type, "Weapon_Base")) {
 					LoadedWearableItems["Hands"].Insert(wearable_item);
 				}
 		    }
+		}
+	}
+	
+	void SetEntity(notnull EntityAI entity)
+	{
+		m_Entity = entity;
+				
+		LoadedAttachmentSlots = GetAttachmentSlotsFromEntity(m_Entity);
+		foreach (string slot: LoadedAttachmentSlots) {
+			if (BLACKLISTED_ATTACHMENTS.Find(slot) != -1) {
+				continue;
+			}
+			
+			EditorInventoryAttachmentSlot attachment_slot = new EditorInventoryAttachmentSlot(slot, GetSlotImageFromSlotName(slot));
+			attachment_slot.OnItemSelected.Insert(OnAttachmentSlotSelected);
+			AttachmentSlotCategories.Insert(attachment_slot);
 		}
 				
 		// Sets default enable			
