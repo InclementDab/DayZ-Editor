@@ -7,18 +7,17 @@ class EditorInventoryEditorController: ViewController
 	protected EntityAI m_Entity;
 	string SearchBarData;
 	string SearchBarIcon = "set:dayz_editor_gui image:search";
-	ScrollWidget ItemSelectorScrollbar;
-	ScrollWidget AttachmentSelectorScrollbar;
 	EntityAI CurrentActiveItem;
 
+	ref map<string, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
+	
 	ref ObservableCollection<ref EditorInventoryAttachmentSlot> AttachmentSlotCategories = new ObservableCollection<ref EditorInventoryAttachmentSlot>(this);	
 	ref ObservableCollection<ref EditorWearableListItem> WearableItems = new ObservableCollection<ref EditorWearableListItem>(this);
-	ref map<string, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
-	ref TStringArray LoadedAttachmentSlots = {};
-	
 	ref ObservableCollection<ref EditorInventoryAttachmentSlot> CurrentItemAttachmentSlotCategories = new ObservableCollection<ref EditorInventoryAttachmentSlot>(this);	
 	ref ObservableCollection<ref EditorWearableListItem> CurrentItemAttachments = new ObservableCollection<ref EditorWearableListItem>(this);
 
+	ScrollWidget ItemSelectorScrollbar;
+	ScrollWidget AttachmentSelectorScrollbar;
 	Widget AttachmentSelectorPanel;
 	Widget AttachmentFilterSelectPanel;
 	
@@ -72,8 +71,8 @@ class EditorInventoryEditorController: ViewController
 	{
 		m_Entity = entity;
 				
-		LoadedAttachmentSlots = GetAttachmentSlotsFromEntity(m_Entity);
-		foreach (string slot: LoadedAttachmentSlots) {
+		TStringArray attachment_slots = GetAttachmentSlotsFromEntity(m_Entity);
+		foreach (string slot: attachment_slots) {
 			if (BLACKLISTED_ATTACHMENTS.Find(slot) != -1) {
 				continue;
 			}
@@ -104,6 +103,10 @@ class EditorInventoryEditorController: ViewController
 	
 	static string GetSlotImageFromSlotName(string slot_name)
 	{
+		if (!GetGame().ConfigIsExisting(string.Format("CfgSlots Slot_%1 ghostIcon", slot_name)) {
+			return "set:dayz_inventory image:missing";
+		}
+		
 		// crackhead shit
 		return GetGame().ConfigGetTextOut(string.Format("CfgSlots Slot_%1 ghostIcon", slot_name));
 	}
@@ -142,15 +145,13 @@ class EditorInventoryEditorController: ViewController
 		// Sets default category to ON
 		if (CurrentItemAttachmentSlotCategories[0]) {
 			CurrentItemAttachmentSlotCategories[0].GetTemplateController().State = true;
-			CurrentItemAttachmentSlotCategories[0].GetTemplateController().NotifyPropertyChanged("State", false);
+			CurrentItemAttachmentSlotCategories[0].GetTemplateController().NotifyPropertyChanged("State");
 		}
 		
 		AttachmentSelectorPanel.Show(CurrentItemAttachmentSlotCategories.Count() > 0);
 		AttachmentFilterSelectPanel.Show(CurrentItemAttachmentSlotCategories.Count() > 0);
 	}
 	
-	// playerSlots[] = {"Slot_Shoulder","Slot_Melee","Slot_Vest","Slot_Body","Slot_Hips","Slot_Legs","Slot_Back","Slot_Headgear","Slot_Mask","Slot_Eyewear","Slot_Gloves","Slot_Feet","Slot_Armband"};
-		
 	void OnListItemSelected(EditorWearableListItem list_item, EditorWearableItem wearable_item)
 	{		
 		// Very special, probably use some type of enum in the future
