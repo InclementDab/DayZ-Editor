@@ -17,7 +17,10 @@ class EditorInventoryEditorController: ViewController
 	
 	ref ObservableCollection<ref EditorInventoryAttachmentSlot> CurrentItemAttachmentSlotCategories = new ObservableCollection<ref EditorInventoryAttachmentSlot>(this);	
 	ref ObservableCollection<ref EditorWearableListItem> CurrentItemAttachments = new ObservableCollection<ref EditorWearableListItem>(this);
-	ref map<string, ref array<ref EditorWearableItem>> CurrentItemLoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
+	//ref map<string, ref array<ref EditorWearableItem>> CurrentItemLoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
+	
+	Widget AttachmentSelectorPanel;
+	Widget AttachmentFilterSelectPanel;
 	
 	const ref EditorWearableItem EmptyItem = new EditorWearableItem("<empty>", "<empty>", {"any"});
 	
@@ -31,7 +34,6 @@ class EditorInventoryEditorController: ViewController
 				continue;
 			}
 			
-			LoadedWearableItems[slot] = new array<ref EditorWearableItem>();
 			EditorInventoryAttachmentSlot attachment_slot = new EditorInventoryAttachmentSlot(slot, GetSlotImageFromSlotName(slot));
 			attachment_slot.OnItemSelected.Insert(OnAttachmentSlotSelected);
 			AttachmentSlotCategories.Insert(attachment_slot);
@@ -59,9 +61,11 @@ class EditorInventoryEditorController: ViewController
 				EditorWearableItem wearable_item = new EditorWearableItem(type, GetGame().ConfigGetTextOut(object_full_path + " displayName"), inventory_slots);
 				foreach (string inventory_slot: inventory_slots) {
 					// Check if its a supported inventory slot
-					if (LoadedWearableItems[inventory_slot]) {
-						LoadedWearableItems[inventory_slot].Insert(wearable_item);
+					if (!LoadedWearableItems[inventory_slot]) {
+						LoadedWearableItems[inventory_slot] = new array<ref EditorWearableItem>();
 					}
+					
+					LoadedWearableItems[inventory_slot].Insert(wearable_item);
 				}
 				
 				// VERY special case :peepoHappy:
@@ -71,7 +75,7 @@ class EditorInventoryEditorController: ViewController
 				}
 		    }
 		}
-		
+				
 		// Sets default enable			
 		if (AttachmentSlotCategories[0]) {
 			AttachmentSlotCategories[0].GetTemplateController().State = true;
@@ -109,55 +113,27 @@ class EditorInventoryEditorController: ViewController
 		// Populate right side attachments list
 		TStringArray new_attachments = GetAttachmentSlotsFromEntity(CurrentActiveItem);
 		
+		//CurrentItemAttachments.Clear();
 		CurrentItemAttachmentSlotCategories.Clear();
 		foreach (string slot: new_attachments) {
 			if (BLACKLISTED_ATTACHMENTS.Find(slot) != -1) {
 				continue;
 			}
 			
-			CurrentItemLoadedWearableItems[slot] = new array<ref EditorWearableItem>();
 			EditorInventoryAttachmentSlot attachment_slot = new EditorInventoryAttachmentSlot(slot, GetSlotImageFromSlotName(slot));
 			attachment_slot.OnItemSelected.Insert(OnCurrentItemAttachmentSlotSelected);
 			CurrentItemAttachmentSlotCategories.Insert(attachment_slot);
 		}
-		
-		TStringArray config_paths = {};
-		config_paths.Insert(CFG_VEHICLESPATH);
-		config_paths.Insert(CFG_WEAPONSPATH);
-		config_paths.Insert(CFG_MAGAZINESPATH);
-		
-		foreach (string path: config_paths) {
-			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
-				string type;
-				TStringArray inventory_slots = {};
-		        GetGame().ConfigGetChildName(path, i, type);
-				string object_full_path = path + " " + type;
-				GetGame().ConfigGetTextArray(object_full_path + " inventorySlot", inventory_slots);
-				if (GetGame().ConfigGetInt(object_full_path + " scope") < 2) { // maybe 2 is the way
-					continue;
-				}
 				
-				EditorWearableItem wearable_item = new EditorWearableItem(type, GetGame().ConfigGetTextOut(object_full_path + " displayName"), inventory_slots);
-				foreach (string inventory_slot: inventory_slots) {
-					// Check if its a supported inventory slot
-					if (CurrentItemLoadedWearableItems[inventory_slot]) {
-						CurrentItemLoadedWearableItems[inventory_slot].Insert(wearable_item);
-					}
-				}
-				
-				// VERY special case :peepoHappy:
-				// because you can literally put ANYTHING in your hands
-				if (CurrentItemLoadedWearableItems["Hands"] && GetGame().IsKindOf(type, "Inventory_Base")) {
-					CurrentItemLoadedWearableItems["Hands"].Insert(wearable_item);
-				}
-		    }
-		}
-		
+		/*
 		// Sets default category to ON
 		if (CurrentItemAttachmentSlotCategories[0]) {
 			CurrentItemAttachmentSlotCategories[0].GetTemplateController().State = true;
-			CurrentItemAttachmentSlotCategories[0].GetTemplateController().NotifyPropertyChanged("State");
+			CurrentItemAttachmentSlotCategories[0].GetTemplateController().NotifyPropertyChanged("State", false);
 		}
+		
+		AttachmentSelectorPanel.Show(CurrentItemAttachmentSlotCategories.Count() > 0);
+		AttachmentFilterSelectPanel.Show(CurrentItemAttachmentSlotCategories.Count() > 0);*/
 	}
 	
 	// playerSlots[] = {"Slot_Shoulder","Slot_Melee","Slot_Vest","Slot_Body","Slot_Hips","Slot_Legs","Slot_Back","Slot_Headgear","Slot_Mask","Slot_Eyewear","Slot_Gloves","Slot_Feet","Slot_Armband"};
@@ -190,11 +166,7 @@ class EditorInventoryEditorController: ViewController
 	}
 		
 	void OnAttachmentSlotSelected(EditorInventoryAttachmentSlot attachment_slot)
-	{
-		if (!m_Entity) {
-			return;
-		}
-		
+	{		
 		PlayerBase player = GetEntityAsPlayer();
 		
 		// Radio Button Logic
@@ -227,6 +199,10 @@ class EditorInventoryEditorController: ViewController
 			empty_list_item.OnItemSelected.Insert(OnListItemSelected);
 			WearableItems.Insert(empty_list_item);	
 			
+			if (!LoadedWearableItems[inventory_slot]) {
+				continue;
+			}
+			
 			foreach (EditorWearableItem wearable: LoadedWearableItems[inventory_slot]) {
 				// This is the part where we need to call NEW, not before
 				EditorWearableListItem list_item = new EditorWearableListItem(wearable, inventory_slot);
@@ -239,7 +215,7 @@ class EditorInventoryEditorController: ViewController
 				// Assign active item from slot
 				EntityAI slot_item = m_Entity.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot));
 				if (slot_item && slot_item.GetType() == wearable.Type) {
-					SetCurrentActiveItem(slot_item);
+					//SetCurrentActiveItem(slot_item);
 					list_item.Select();
 				}
 				
@@ -276,11 +252,7 @@ class EditorInventoryEditorController: ViewController
 	}
 	
 	void OnCurrentItemAttachmentSlotSelected(EditorInventoryAttachmentSlot attachment_slot)
-	{
-		if (!m_Entity) {
-			return;
-		}
-		
+	{		
 		PlayerBase player = GetEntityAsPlayer();
 		
 		// Radio Button Logic
@@ -313,7 +285,7 @@ class EditorInventoryEditorController: ViewController
 			empty_list_item.OnItemSelected.Insert(OnCurrentItemAttachmentSelected);
 			CurrentItemAttachments.Insert(empty_list_item);	
 			
-			foreach (EditorWearableItem wearable: CurrentItemLoadedWearableItems[inventory_slot]) {
+			foreach (EditorWearableItem wearable: LoadedWearableItems[inventory_slot]) {
 				// This is the part where we need to call NEW, not before
 				EditorWearableListItem list_item = new EditorWearableListItem(wearable, inventory_slot);
 				list_item.OnItemSelected.Insert(OnCurrentItemAttachmentSelected);
