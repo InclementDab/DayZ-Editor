@@ -3,11 +3,11 @@ class EditorWearableListItem: EditorListItem
 	ref ScriptInvoker OnItemSelected = new ScriptInvoker();
 	
 	protected EditorWearableItem m_WearableItem;
-	protected string m_InventorySlot;
+	protected int m_InventorySlot;
 	
 	protected bool m_Selected;
 	
-	void EditorWearableListItem(EditorWearableItem wearable_item, string inventory_slot)
+	void EditorWearableListItem(EditorWearableItem wearable_item, int inventory_slot)
 	{
 		//EditorLog.Trace("EditorWearableListItem");
 		m_WearableItem = wearable_item;
@@ -60,7 +60,7 @@ class EditorWearableListItem: EditorListItem
 		return m_TemplateController.Label;
 	}
 	
-	string GetSlot()
+	int GetSlot()
 	{
 		return m_InventorySlot;
 	}

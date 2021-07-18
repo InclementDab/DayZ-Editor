@@ -1,7 +1,7 @@
 class EditorInventoryEditorController: ViewController
 {
-	static const ref TStringArray BLACKLISTED_ATTACHMENTS = {
-		"LeftHand"
+	static const ref TIntArray BLACKLISTED_ATTACHMENTS = {
+		InventorySlots.GetSlotIdFromString("LeftHand")
 	};
 	
 	protected EntityAI m_Entity;
@@ -9,7 +9,7 @@ class EditorInventoryEditorController: ViewController
 	string SearchBarIcon = "set:dayz_editor_gui image:search";
 	EntityAI CurrentActiveItem;
 
-	ref map<string, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<string, ref array<ref EditorWearableItem>>();
+	ref map<int, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<int, ref array<ref EditorWearableItem>>();
 	
 	ref ObservableCollection<ref EditorInventoryAttachmentSlot> AttachmentSlotCategories = new ObservableCollection<ref EditorInventoryAttachmentSlot>(this);	
 	ref ObservableCollection<ref EditorWearableListItem> WearableItems = new ObservableCollection<ref EditorWearableListItem>(this);
@@ -47,21 +47,23 @@ class EditorInventoryEditorController: ViewController
 				EditorWearableItem wearable_item = new EditorWearableItem(type, GetGame().ConfigGetTextOut(object_full_path + " displayName"), inventory_slots);
 				foreach (string inventory_slot: inventory_slots) {
 					// Check if its a supported inventory slot
-					if (!LoadedWearableItems[inventory_slot]) {
-						LoadedWearableItems[inventory_slot] = {};
+					int id = InventorySlots.GetSlotIdFromString(inventory_slot);
+					if (!LoadedWearableItems[id]) {
+						LoadedWearableItems[id] = {};
 					}
 					
-					LoadedWearableItems[inventory_slot].Insert(wearable_item);
+					LoadedWearableItems[id].Insert(wearable_item);
 				}
 				
 				// VERY special case :peepoHappy:
 				// because you can literally put ANYTHING in your hands
-				if (!LoadedWearableItems["Hands"]) {
-					LoadedWearableItems["Hands"] = {};
+				int hands_id = InventorySlots.GetSlotIdFromString("Hands");
+				if (!LoadedWearableItems[hands_id]) {
+					LoadedWearableItems[hands_id] = {};
 				}
 				
 				if (GetGame().IsKindOf(type, "Inventory_Base") || GetGame().IsKindOf(type, "Weapon_Base")) {
-					LoadedWearableItems["Hands"].Insert(wearable_item);
+					LoadedWearableItems[hands_id].Insert(wearable_item);
 				}
 		    }
 		}
@@ -71,13 +73,13 @@ class EditorInventoryEditorController: ViewController
 	{
 		m_Entity = entity;
 				
-		TStringArray attachment_slots = GetAttachmentSlotsFromEntity(m_Entity);
-		foreach (string slot: attachment_slots) {
+		TIntArray attachment_slots = GetAttachmentSlotsFromEntity(m_Entity);
+		foreach (int slot: attachment_slots) {
 			if (BLACKLISTED_ATTACHMENTS.Find(slot) != -1) {
 				continue;
 			}
 			
-			EditorInventoryAttachmentSlot attachment_slot = new EditorInventoryAttachmentSlot(slot, GetSlotImageFromSlotName(slot));
+			EditorInventoryAttachmentSlot attachment_slot = new EditorInventoryAttachmentSlot(slot);
 			attachment_slot.OnItemSelected.Insert(OnAttachmentSlotSelected);
 			AttachmentSlotCategories.Insert(attachment_slot);
 		}
@@ -89,26 +91,15 @@ class EditorInventoryEditorController: ViewController
 		}
 	}
 	
-	static TStringArray GetAttachmentSlotsFromEntity(EntityAI entity)
+	static TIntArray GetAttachmentSlotsFromEntity(EntityAI entity)
 	{
-		map<int, string> slots = new map<int, string>();
+		TIntArray slots = {};
 		GameInventory inventory = entity.GetInventory();
 		for (int i = 0; i < inventory.GetAttachmentSlotsCount(); i++) {
-			int id = inventory.GetAttachmentSlotId(i);
-			slots[id] = InventorySlots.GetSlotName(id);
+			slots.Insert(inventory.GetAttachmentSlotId(i));
 		}
 		
-		return slots.GetValueArray();
-	}
-	
-	static string GetSlotImageFromSlotName(string slot_name)
-	{
-		if (!GetGame().ConfigIsExisting(string.Format("CfgSlots Slot_%1 ghostIcon", slot_name))) {
-			return "set:dayz_inventory image:missing";
-		}
-		
-		// crackhead shit
-		return GetGame().ConfigGetTextOut(string.Format("CfgSlots Slot_%1 ghostIcon", slot_name));
+		return slots;
 	}
 	
 	PlayerBase GetEntityAsPlayer()
@@ -127,16 +118,16 @@ class EditorInventoryEditorController: ViewController
 		}
 		
 		// Populate right side attachments list
-		TStringArray new_attachments = GetAttachmentSlotsFromEntity(CurrentActiveItem);
+		TIntArray new_attachments = GetAttachmentSlotsFromEntity(CurrentActiveItem);
 		
 		//CurrentItemAttachments.Clear();
 		CurrentItemAttachmentSlotCategories.Clear();
-		foreach (string slot: new_attachments) {
+		foreach (int slot: new_attachments) {
 			if (BLACKLISTED_ATTACHMENTS.Find(slot) != -1) {
 				continue;
 			}
 			
-			EditorInventoryAttachmentSlot attachment_slot = new EditorInventoryAttachmentSlot(slot, GetSlotImageFromSlotName(slot));
+			EditorInventoryAttachmentSlot attachment_slot = new EditorInventoryAttachmentSlot(slot);
 			attachment_slot.OnItemSelected.Insert(OnCurrentItemAttachmentSlotSelected);
 			CurrentItemAttachmentSlotCategories.Insert(attachment_slot);
 		}
@@ -155,7 +146,7 @@ class EditorInventoryEditorController: ViewController
 	void OnListItemSelected(EditorWearableListItem list_item, EditorWearableItem wearable_item)
 	{		
 		// Very special, probably use some type of enum in the future
-		if (list_item.GetSlot() == "Hands" && GetEntityAsPlayer()) {
+		if (list_item.GetSlot() == InventorySlots.GetSlotIdFromString("Hands") && GetEntityAsPlayer()) {
 			GetGame().ObjectDelete(GetEntityAsPlayer().GetHumanInventory().GetEntityInHands());
 			if (list_item == EmptyItem) return;
 			
@@ -163,7 +154,7 @@ class EditorInventoryEditorController: ViewController
 		} 
 		
 		else {
-			int slot_id = InventorySlots.GetSlotIdFromString(list_item.GetSlot());
+			int slot_id = list_item.GetSlot();
 			
 			// Clear existing item
 			GetGame().ObjectDelete(m_Entity.GetInventory().FindAttachment(slot_id));
@@ -195,18 +186,19 @@ class EditorInventoryEditorController: ViewController
 			
 			WearableItems.Clear();
 			
-			string inventory_slot = AttachmentSlotCategories[i].GetSlot();			
-						
+			int inventory_slot = AttachmentSlotCategories[i].GetSlot();			
+			string slot_name = InventorySlots.GetSlotName(inventory_slot);	
+			
 			// Register empty item
 			EditorWearableListItem empty_list_item = new EditorWearableListItem(EmptyItem, inventory_slot);			
 		
 			// Slot is empty
-			if (inventory_slot != "Hands" && !m_Entity.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot))) {
+			if (slot_name != "Hands" && !m_Entity.GetInventory().FindAttachment(inventory_slot)) {
 				empty_list_item.Select();
 			}
 			
 			// Handle Hands
-			if (inventory_slot == "Hands" && player && !player.GetHumanInventory().GetEntityInHands()) {
+			if (slot_name == "Hands" && player && !player.GetHumanInventory().GetEntityInHands()) {
 				empty_list_item.Select();
 			}
 			
@@ -227,14 +219,14 @@ class EditorInventoryEditorController: ViewController
 				WearableItems.Insert(list_item);
 				
 				// Assign active item from slot
-				EntityAI slot_item = m_Entity.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot));
+				EntityAI slot_item = m_Entity.GetInventory().FindAttachment(inventory_slot);
 				if (slot_item && slot_item.GetType() == wearable.Type) {
 					//SetCurrentActiveItem(slot_item);
 					list_item.Select();
 				}
 				
 				// Handle Hands
-				if (inventory_slot == "Hands" && player && player.GetHumanInventory().GetEntityInHands()) {
+				if (slot_name == "Hands" && player && player.GetHumanInventory().GetEntityInHands()) {
 					if (player.GetHumanInventory().GetEntityInHands().GetType() == wearable.Type) {
 						list_item.Select();
 					}
@@ -249,7 +241,7 @@ class EditorInventoryEditorController: ViewController
 	// This is the stuff on the right side
 	void OnCurrentItemAttachmentSelected(EditorWearableListItem list_item, EditorWearableItem wearable_item)
 	{		
-		int slot_id = InventorySlots.GetSlotIdFromString(list_item.GetSlot());
+		int slot_id = list_item.GetSlot();
 		
 		// Clear existing item
 		GetGame().ObjectDelete(CurrentActiveItem.GetInventory().FindAttachment(slot_id));
@@ -281,18 +273,19 @@ class EditorInventoryEditorController: ViewController
 			
 			CurrentItemAttachments.Clear();
 			
-			string inventory_slot = CurrentItemAttachmentSlotCategories[i].GetSlot();			
-
+			int inventory_slot = CurrentItemAttachmentSlotCategories[i].GetSlot();			
+			string slot_name = InventorySlots.GetSlotName(inventory_slot);
+			
 			// Register empty item
 			EditorWearableListItem empty_list_item = new EditorWearableListItem(EmptyItem, inventory_slot);			
 		
 			// Slot is empty
-			if (inventory_slot != "Hands" && !m_Entity.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot))) {
+			if (slot_name != "Hands" && !m_Entity.GetInventory().FindAttachment(inventory_slot)) {
 				empty_list_item.Select();
 			}
 			
 			// Handle Hands
-			if (inventory_slot == "Hands" && player && !player.GetHumanInventory().GetEntityInHands()) {
+			if (slot_name == "Hands" && player && !player.GetHumanInventory().GetEntityInHands()) {
 				empty_list_item.Select();
 			}
 			
@@ -309,13 +302,13 @@ class EditorInventoryEditorController: ViewController
 				CurrentItemAttachments.Insert(list_item);
 				
 				// Assign active item from slot
-				EntityAI slot_item = m_Entity.GetInventory().FindAttachment(InventorySlots.GetSlotIdFromString(inventory_slot));
+				EntityAI slot_item = m_Entity.GetInventory().FindAttachment(inventory_slot);
 				if (slot_item && slot_item.GetType() == wearable.Type) {
 					list_item.Select();
 				}
 				
 				// Handle Hands
-				if (inventory_slot == "Hands" && player && player.GetHumanInventory().GetEntityInHands()) {
+				if (slot_name == "Hands" && player && player.GetHumanInventory().GetEntityInHands()) {
 					if (player.GetHumanInventory().GetEntityInHands().GetType() == wearable.Type) {
 						list_item.Select();
 					}

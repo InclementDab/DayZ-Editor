@@ -1,8 +1,9 @@
 class EditorInventoryAttachmentSlotController: ViewController
 {
-	string InventorySlot;
-	bool State;
+	int SlotId;
 	string Icon;
+
+	bool State;
 	
 	override void PropertyChanged(string property_name)
 	{

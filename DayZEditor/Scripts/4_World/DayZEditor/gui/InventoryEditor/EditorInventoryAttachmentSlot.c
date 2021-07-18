@@ -2,12 +2,12 @@ class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmen
 {
 	ref ScriptInvoker OnItemSelected = new ScriptInvoker();
 	
-	void EditorInventoryAttachmentSlot(string slot, string icon)
+	void EditorInventoryAttachmentSlot(int slot)
 	{
-		m_TemplateController.InventorySlot = slot;
-		m_TemplateController.NotifyPropertyChanged("InventorySlot");
+		m_TemplateController.SlotId = slot;
+		m_TemplateController.NotifyPropertyChanged("SlotId");
 		
-		m_TemplateController.Icon = icon;
+		m_TemplateController.Icon = GetSlotImageFromSlotName(InventorySlots.GetSlotName(slot));
 		m_TemplateController.NotifyPropertyChanged("Icon");
 	}
 	
@@ -18,14 +18,29 @@ class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmen
 		}
 	}
 		
-	string GetSlot()
+	int GetSlot()
 	{	
-		return m_TemplateController.InventorySlot;
+		return m_TemplateController.SlotId;
+	}
+	
+	string GetSlotDisplayName()
+	{
+		return InventorySlots.GetSlotDisplayName(m_TemplateController.SlotId);
+	}
+	
+	static string GetSlotImageFromSlotName(string slot_name)
+	{
+		if (!GetGame().ConfigIsExisting(string.Format("CfgSlots Slot_%1 ghostIcon", slot_name))) {
+			return "set:dayz_inventory image:missing";
+		}
+		
+		// crackhead shit
+		return GetGame().ConfigGetTextOut(string.Format("CfgSlots Slot_%1 ghostIcon", slot_name));
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton(m_TemplateController.InventorySlot, w, TooltipPositions.BOTTOM_RIGHT));
+		EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton(GetSlotDisplayName(), w, TooltipPositions.BOTTOM_RIGHT));
 		return true;
 	}
 	
