@@ -1,7 +1,3 @@
-
-
-
-
 class EditorInventoryEditorController: ViewController
 {
 	protected EntityAI m_Entity;
@@ -67,13 +63,17 @@ class EditorInventoryEditorController: ViewController
 					LoadedWearableItems["Hands"].Insert(wearable_item);
 				}
 		    }
+			
+			if (AttachmentSlotCategories[0]) {
+				AttachmentSlotCategories[0].GetTemplateController().State = true;
+				AttachmentSlotCategories[0].GetTemplateController().NotifyPropertyChanged("State");
+			}
 		}
 	}
 	
 	static TStringArray GetAttachmentSlotsFromEntity(EntityAI entity)
 	{
 		map<int, string> slots = new map<int, string>();
-		TStringArray result = {};
 		GameInventory inventory = entity.GetInventory();
 		for (int i = 0; i < inventory.GetAttachmentSlotsCount(); i++) {
 			int id = inventory.GetAttachmentSlotId(i);
