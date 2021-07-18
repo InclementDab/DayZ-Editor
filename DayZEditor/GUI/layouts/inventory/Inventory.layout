@@ -19,65 +19,6 @@ FrameWidgetClass InventoryFrame {
    vexactsize 0
    style rover_sim_colorable
    {
-    PanelWidgetClass HandsPanel {
-     ignorepointer 1
-     color 1 1 1 0.3922
-     position 0 50
-     size 400 250
-     halign center_ref
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style PanelOutline_1px_BlackBackground
-     {
-      PanelWidgetClass HandsTitlePanel {
-       ignorepointer 1
-       color 0.1176 0.1176 0.1176 0.9608
-       position 0 1
-       size 398 22
-       halign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       style rover_sim_colorable
-       {
-        TextWidgetClass HandsTitleText {
-         ignorepointer 1
-         size 1 18
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         text "Hands"
-         font "gui/fonts/sdf_MetronLight42"
-         "text halign" center
-         "text valign" center
-        }
-       }
-      }
-      ItemPreviewWidgetClass HandsItemPreview {
-       ignorepointer 1
-       position 0 22
-       size 396 226
-       halign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       {
-        ScriptParamsClass {
-         Binding_Name "ItemInHands"
-        }
-       }
-      }
-     }
-    }
     PanelWidgetClass AttachmentsPanel {
      visible 0
      ignorepointer 1
@@ -285,6 +226,77 @@ FrameWidgetClass InventoryFrame {
      {
       ScriptParamsClass {
        Binding_Name "AttachmentSlotCategories"
+      }
+     }
+    }
+    WrapSpacerWidgetClass AttachmentFilterSelectPanel {
+     ignorepointer 1
+     color 0.1176 0.1176 0.1176 1
+     position 8 5
+     size 44 588
+     halign right_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     style Colorable
+     Padding 0
+     Margin 0
+     "Size To Content V" 1
+     {
+      ScriptParamsClass {
+       Binding_Name "AttachmentSlotCategories"
+      }
+     }
+    }
+    PanelWidgetClass AttachmentSelectorPanel {
+     visible 1
+     ignorepointer 1
+     color 0.098 0.098 0.098 0.7843
+     position 55 5
+     size 0.2 0.9
+     halign right_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      ScrollWidgetClass AttachmentSelectorScrollbar {
+       ignorepointer 1
+       color 0.3137 0.3137 0.3137 1
+       position 0 0
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       "Scrollbar V" 1
+       {
+        WrapSpacerWidgetClass AttachmentSelectorContent {
+         ignorepointer 1
+         position 0 0
+         size 1 0
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         Padding 4
+         Margin 0
+         "Size To Content V" 1
+         {
+          ScriptParamsClass {
+           Binding_Name "WearableItems"
+           Two_Way_Binding 0
+          }
+         }
+        }
+       }
       }
      }
     }
