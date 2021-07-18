@@ -144,7 +144,6 @@ class EditorClientModule: JMModuleBase
 		return (GetEditor() && input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
 	}
 	
-	private bool m_IsActive;
 	private void OnEditorToggleActive(UAInput input)
 	{
 		if (!ShouldProcessInput(input)) return;
@@ -155,9 +154,9 @@ class EditorClientModule: JMModuleBase
 			GetEditor().ShowBanDialog(ban_reason);
 			return;
 		}
-				
-		GetEditor().SetActive(m_IsActive);
-		m_IsActive = !m_IsActive;
+		
+		bool active = GetEditor().IsActive(); // weird syntax bug?
+		GetEditor().SetActive(!active);
 	}	
 	
 	private void OnEditorToggleCursor(UAInput input)
@@ -173,7 +172,6 @@ class EditorClientModule: JMModuleBase
 		GetEditor().GetEditorHud().ToggleCursor();
 	}	
 	
-
 	private void OnEditorToggleUI(UAInput input)
 	{		
 		if (!ShouldProcessInput(input)) return;
@@ -182,6 +180,11 @@ class EditorClientModule: JMModuleBase
 		string ban_reason;
 		if (GetEditor().IsBannedClient(ban_reason)) {
 			GetEditor().ShowBanDialog(ban_reason);
+			return;
+		}
+		
+		if (GetEditor().IsInventoryEditorActive()) {
+			GetEditor().GetInventoryEditorHud().GetLayoutRoot().Show(!GetEditor().GetInventoryEditorHud().GetLayoutRoot().IsVisible());
 			return;
 		}
 		

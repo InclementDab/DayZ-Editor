@@ -199,6 +199,7 @@ class Editor
 		
 		delete Settings;
 		delete m_EditorHud;
+		delete m_EditorInventoryEditorHud;
 		delete m_EditorBrush;
 		delete m_SessionCache;
 		delete m_DeletedSessionCache;
@@ -1425,6 +1426,7 @@ class Editor
 	
 	bool IsActive() return m_Active;
 	EditorHud GetEditorHud() return m_EditorHud;
+	EditorInventoryEditorHud GetInventoryEditorHud() return m_EditorInventoryEditorHud;
 	EditorCamera GetCamera() return m_EditorCamera;
 	EditorObjectManagerModule GetObjectManager() return m_ObjectManager;
 	EditorCameraTrackManagerModule GetCameraTrackManager() return m_CameraTrackManager;

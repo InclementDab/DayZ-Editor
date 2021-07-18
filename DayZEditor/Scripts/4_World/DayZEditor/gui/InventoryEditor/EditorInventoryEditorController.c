@@ -218,7 +218,7 @@ class EditorInventoryEditorController: ViewController
 				list_item.OnItemSelected.Insert(OnListItemSelected);
 				
 				// update by search bar
-				list_item.GetLayoutRoot().Show(list_item.FilterType(SearchBarData)); 
+				list_item.GetLayoutRoot().Show(list_item.FilterType(SearchBarLeft)); 
 				WearableItems.Insert(list_item);
 				
 				// Assign active item from slot
@@ -301,12 +301,16 @@ class EditorInventoryEditorController: ViewController
 				list_item.OnItemSelected.Insert(OnCurrentItemAttachmentSelected);
 				
 				// update by search bar
-				//list_item.GetLayoutRoot().Show(list_item.FilterType(SearchBarData)); 
+				list_item.GetLayoutRoot().Show(list_item.FilterType(SearchBarRight)); 
 				CurrentItemAttachments.Insert(list_item);
 				
 				// Assign active item from slot
 				EntityAI slot_item = m_Entity.GetInventory().FindAttachment(inventory_slot);
-				if (slot_item && slot_item.GetType() == wearable.Type) {
+				if (!slot_item) {
+					continue;
+				}
+				
+				if (slot_item.GetType() == wearable.Type) {
 					list_item.Select();
 				}
 				
