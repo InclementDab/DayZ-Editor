@@ -24,14 +24,26 @@ class EditorInventoryEditorCamera: Camera
 		Input input = GetGame().GetInput();
 		float zoom = input.LocalValue("EditorCameraForward") - input.LocalValue("EditorCameraBack");
 		float strafe = input.LocalValue("EditorCameraLeft") - input.LocalValue("EditorCameraRight");
+		float altitude = input.LocalValue("EditorCameraDown") - input.LocalValue("EditorCameraUp");
+		
+		if (input.LocalValue("UATurbo")) {
+			zoom *= 3;
+			strafe *= 3;
+			altitude *= 3;
+		}
 		
 		vector dir = vector.Direction(GetPosition(), target_pos);
 		dir.Normalize();
 		SetPosition(GetPosition() + (dir * zoom * timeSlice));
 				
 		vector position = EditorMath.RotateAroundPoint(target_pos, GetPosition(), vector.Up, Math.Cos(strafe * timeSlice), Math.Sin(strafe * timeSlice));
+		position = EditorMath.RotateAroundPoint(target_pos + "0 1 0", position, GetDirection().Perpend(), Math.Cos(altitude * timeSlice), Math.Sin(altitude * timeSlice));
 		
-		SetPosition(position);
+		// dont let cam go below ground
+		float ground_y = GetGame().SurfaceY(position[0], position[2]);
+		position[1] = Math.Max(ground_y + 0.04, position[1]);
+		
+		SetPosition(position);		
 		
 		// Last thing
 		LookAt(target_pos + "0 1 0");
