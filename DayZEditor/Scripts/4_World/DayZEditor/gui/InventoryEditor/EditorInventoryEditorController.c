@@ -8,6 +8,7 @@ class EditorInventoryEditorController: ViewController
 	string SearchBarData;
 	string SearchBarIcon = "set:dayz_editor_gui image:search";
 	ScrollWidget ItemSelectorScrollbar;
+	ScrollWidget AttachmentSelectorScrollbar;
 	EntityAI CurrentActiveItem;
 
 	ref ObservableCollection<ref EditorInventoryAttachmentSlot> AttachmentSlotCategories = new ObservableCollection<ref EditorInventoryAttachmentSlot>(this);	
@@ -115,6 +116,10 @@ class EditorInventoryEditorController: ViewController
 	void SetCurrentActiveItem(EntityAI current_item)
 	{
 		CurrentActiveItem = current_item;
+		
+		if (!CurrentActiveItem) {
+			return;
+		}
 		
 		// Populate right side attachments list
 		TStringArray new_attachments = GetAttachmentSlotsFromEntity(CurrentActiveItem);
@@ -313,6 +318,8 @@ class EditorInventoryEditorController: ViewController
 					}
 				}
 			}
+			
+			AttachmentSelectorScrollbar.VScrollToPos(0);
 		}
 	}
 	
