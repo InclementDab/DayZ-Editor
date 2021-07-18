@@ -121,10 +121,8 @@ class EditorInventoryEditorController: ViewController
 		}
 		
 		// Populate right side attachments list
-		TIntArray new_attachments = GetAttachmentSlotsFromEntity(CurrentActiveItem);
-		
-		//CurrentItemAttachments.Clear();
 		CurrentItemAttachmentSlotCategories.Clear();
+		TIntArray new_attachments = GetAttachmentSlotsFromEntity(CurrentActiveItem);
 		foreach (int slot: new_attachments) {
 			if (BLACKLISTED_ATTACHMENTS.Find(slot) != -1) {
 				continue;
@@ -223,8 +221,11 @@ class EditorInventoryEditorController: ViewController
 				
 				// Assign active item from slot
 				EntityAI slot_item = m_Entity.GetInventory().FindAttachment(inventory_slot);
-				if (slot_item && slot_item.GetType() == wearable.Type) {
-					//SetCurrentActiveItem(slot_item);
+				if (!slot_item) {
+					continue;
+				}
+				
+				if (slot_item.GetType() == wearable.Type) {
 					list_item.Select();
 				}
 				
@@ -336,7 +337,6 @@ class EditorInventoryEditorController: ViewController
 				}
 				
 				ItemSelectorScrollbar.VScrollToPos(0);
-				
 				if (SearchBarRight.Length() > 0) {
 					SearchBarRightIcon = "set:dayz_gui image:icon_x";
 				} else {
@@ -352,8 +352,7 @@ class EditorInventoryEditorController: ViewController
 					WearableItems[j].GetLayoutRoot().Show(WearableItems[j].FilterType(SearchBarLeft)); 
 				}
 				
-				ItemSelectorScrollbar.VScrollToPos(0);
-				
+				AttachmentSelectorScrollbar.VScrollToPos(0);
 				if (SearchBarLeft.Length() > 0) {
 					SearchBarLeftIcon = "set:dayz_gui image:icon_x";
 				} else {

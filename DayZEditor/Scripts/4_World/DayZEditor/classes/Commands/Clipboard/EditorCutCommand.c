@@ -7,7 +7,7 @@ class EditorCutCommand: EditorCommand
 		EditorClipboard.Cut();
 		return true;
 	}
-
+	
 	override string GetName() 
 	{
 		return "#STR_EDITOR_CUT";

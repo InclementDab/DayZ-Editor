@@ -396,9 +396,8 @@ class Editor
 	{
 		EditorLog.Trace("Editor::OnMouseDown " + button);
 
-		
 		Widget target = GetWidgetUnderCursor();
-		if (!target || target.GetName() != "HudPanel") {
+		if (!target) { //target.GetName() != "HudPanel"
 			SetFocus(null);
 			if (EditorHud.CurrentMenu) {
 				delete EditorHud.CurrentMenu;
@@ -524,7 +523,7 @@ class Editor
 		}
 		
 		if (!command.CanExecute()) {
-			return false;
+			return true;
 		}
 			
 		EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
