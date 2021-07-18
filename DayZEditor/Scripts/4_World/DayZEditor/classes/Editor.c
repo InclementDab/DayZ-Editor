@@ -67,6 +67,7 @@ class Editor
 	private EditorObjectManagerModule 			m_ObjectManager;	
 	private EditorCameraTrackManagerModule		m_CameraTrackManager;
 	
+	private int 								m_LastMouseDown;
 	private bool 								m_Active;
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
@@ -90,6 +91,9 @@ class Editor
 	private vector 								m_PositionBeforeLootEditMode;
 	private ref EditorMapGroupProto 			m_EditorMapGroupProto;
 	static float 								LootYOffset;
+	
+	// Inventory Editor
+	protected ref EditorInventoryEditorHud 		m_EditorInventoryEditorHud;
 	
 	bool										KEgg; // oh?
 	
@@ -390,9 +394,10 @@ class Editor
 	bool OnMouseDown(int button)
 	{
 		EditorLog.Trace("Editor::OnMouseDown " + button);
+
 		
 		Widget target = GetWidgetUnderCursor();
-		if (!target) {
+		if (!target || target.GetName() != "HudPanel") {
 			SetFocus(null);
 			if (EditorHud.CurrentMenu) {
 				delete EditorHud.CurrentMenu;
@@ -475,6 +480,16 @@ class Editor
 			}
 		}
 		
+		/*
+		if (GetWorldTime() - m_LastMouseDown < 500) {
+			m_LastMouseDown = 0;
+			if (OnDoubleClick(button)) {
+				return true; // return is so we dont call GetWorldTime again
+			}
+		}
+	
+		m_LastMouseDown = GetWorldTime();
+		*/
 		return false;
 	}
 
@@ -508,7 +523,7 @@ class Editor
 		}
 		
 		if (!command.CanExecute()) {
-			return true;
+			return false;
 		}
 			
 		EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
@@ -551,19 +566,7 @@ class Editor
 			m_EditorHud.Show(m_Active);
 		}
 		
-		if (m_Mission && m_Mission.GetHud()) {
-			m_Mission.GetHud().Show(!m_Active);
-			m_Mission.GetHud().ShowHud(!m_Active);
-			m_Mission.GetHud().ShowHudUI(!m_Active);
-			m_Mission.GetHud().SetPermanentCrossHair(!m_Active);
-		}
-		
-		// we are in 4_world and this game is bad :)
-		Widget hud_root;
-		EnScript.GetClassVar(GetGame().GetMission(), "m_HudRootWidget", 0, hud_root);
-		if (hud_root) {
-			hud_root.Show(!m_Active);
-		}
+		SetMissionHud(!m_Active);
 
 		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
 		if (placed_objects) {
@@ -618,7 +621,7 @@ class Editor
 	EditorObject PlaceObject()
 	{
 		EditorLog.Trace("Editor::PlaceObject");
-		if (GetWidgetUnderCursor()) {
+		if (GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel") {
 			return null;
 		}
 		
@@ -714,8 +717,6 @@ class Editor
 		loot_editor_dialog.ShowDialog();
 	}
 	
-	// Inventory Editor Stuff
-	protected ref EditorInventoryEditorHud m_EditorInventoryEditorHud;
 	void StartInventoryEditor(EntityAI entity)
 	{
 		delete m_EditorInventoryEditorHud;
@@ -758,6 +759,11 @@ class Editor
 		SetMissionHud(true);
 	}
 	
+	bool IsInventoryEditorActive()
+	{
+		return (m_EditorInventoryEditorHud != null);	
+	}
+	
 	void SetMissionHud(bool state)
 	{
 		if (m_Mission && m_Mission.GetHud()) {
@@ -765,6 +771,12 @@ class Editor
 			m_Mission.GetHud().ShowHud(state);
 			m_Mission.GetHud().ShowHudUI(state);
 			m_Mission.GetHud().SetPermanentCrossHair(state);
+			// we are in 4_world and this game is bad :)
+			Widget hud_root;
+			EnScript.GetClassVar(m_Mission, "m_HudRootWidget", 0, hud_root);
+			if (hud_root) {
+				hud_root.Show(state);
+			}
 		}
 	}
 	

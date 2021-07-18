@@ -28,53 +28,27 @@ modded class MissionGameplay
 	}
 	
 	override void OnKeyPress(int key)
-	{	
-		// If Editor is NOT active, just do keypress
-		if (!GetEditor() || !GetEditor().IsActive()) {
+	{			
+		if (!GetEditor() || !GetEditor().OnKeyPress(key)) {
 			super.OnKeyPress(key);
-		} 
-		
-		// If Editor IS active, and DOESNT handle the key, do keypress
-		else if (!GetEditor().OnKeyPress(key)) {
-			super.OnKeyPress(key);
-		}		
+		}	
 	}
 	
 	override void OnKeyRelease(int key)
 	{
-		// If Editor is NOT active, just do keypress
-		if (!GetEditor() || !GetEditor().IsActive()) {			
+		if (!GetEditor() || !GetEditor().OnKeyRelease(key)) {
 			super.OnKeyRelease(key);
-		} 
-		
-		// If Editor IS active, and DOESNT handle the key, do keypress
-		else if (!GetEditor().OnKeyRelease(key)) {
-			super.OnKeyRelease(key);
-		}	
+		}
 	}
 	
-	private int m_LastMouseDown;
 	override void OnMouseButtonPress(int button)
 	{
 		// If Editor is NOT active, just do MouseDown
-		if (!GetEditor() || !GetEditor().IsActive()) {			
+		if (!GetEditor() || !GetEditor().OnMouseDown(button)) {			
 			super.OnMouseButtonPress(button);
 		} 
-		
-		// If Editor IS active, and DOESNT handle the mouse, do mousedown
-		else if (!GetEditor().OnMouseDown(button)) {
-			if (GetWorldTime() - m_LastMouseDown < 500) {
-				m_LastMouseDown = 0;
-				if (GetEditor().OnDoubleClick(button)) {
-					return; // return is so we dont call GetWorldTime again
-				}
-			}
-			
-			super.OnMouseButtonPress(button);
-		}
-		
-		m_LastMouseDown = GetWorldTime();
 	}
+	
 	//override void OnMouseButtonRelease(int button){}
 
 	override void OnUpdate(float timeslice)

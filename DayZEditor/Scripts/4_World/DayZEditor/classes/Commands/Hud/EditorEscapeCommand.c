@@ -8,6 +8,11 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		}
 		
+		if (m_Editor.IsInventoryEditorActive()) {
+			m_Editor.StopInventoryEditor();
+			return true;
+		}
+		
 		if (EditorHud.CurrentMenu) {
 			delete EditorHud.CurrentMenu;
 			return true;

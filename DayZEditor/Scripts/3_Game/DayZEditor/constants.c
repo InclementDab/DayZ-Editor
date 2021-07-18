@@ -8,7 +8,3 @@ static const string EDITOR_GUI_ICONS_FOLDER = EDITOR_GUI_FOLDER + "icons\\";
 static const string EDITOR_ICON_FOLDER = EDITOR_GUI_ICONS_FOLDER + "icon_folder_128x128.edds";
 static const string EDITOR_ICON_SAVE = EDITOR_GUI_ICONS_FOLDER + "icon_folder_save_128x128.edds";
 static const string EDITOR_ICON_OPEN = EDITOR_GUI_ICONS_FOLDER + "icon_folder_open_128x128.edds";
-
-
-
-
