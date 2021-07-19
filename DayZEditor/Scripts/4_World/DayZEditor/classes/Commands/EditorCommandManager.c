@@ -100,6 +100,8 @@ class EditorCommandManager
 		RegisterCommand(EditorExportToEvents);
 		RegisterCommand(EditorExportToMapGroupPos);
 		
+		RegisterCommand(EditorSearchCommand);
+		RegisterCommand(EditorSearchObjectCommand);
 		RegisterCommand(EditorCheckDuplicatesCommand);
 	
 		RegisterCommand(EditorImportFromInit);

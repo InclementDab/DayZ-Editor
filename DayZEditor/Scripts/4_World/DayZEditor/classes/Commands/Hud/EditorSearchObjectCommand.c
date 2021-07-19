@@ -9,9 +9,9 @@ class EditorSearchObjectCommand: EditorCommand
 			return true;
 		}
 		
+		m_Editor.GetEditorHud().ShowCursor(true);
 		m_Editor.GetEditorHud().GetTemplateController().SearchBarData = object.GetType();
 		m_Editor.GetEditorHud().GetTemplateController().NotifyPropertyChanged("SearchBarData");
-		SetFocus(GetEditor().GetEditorHud().LeftbarSearchBar);
 		return true;
 	}
 	
