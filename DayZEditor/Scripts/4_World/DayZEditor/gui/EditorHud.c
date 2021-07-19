@@ -14,6 +14,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	// todo protect this and move all Map logic in here?
 	MapWidget EditorMapWidget;
 	
+	EditBoxWidget LeftbarSearchBar;
+	
 	void EditorHud()
 	{	
 		EditorLog.Trace("EditorHud");
