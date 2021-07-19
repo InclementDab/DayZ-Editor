@@ -493,7 +493,7 @@ class Editor
 		return false;
 	}
 
-	bool OnMouseUp(int button)
+	bool OnMouseRelease(int button)
 	{
 		return false;
 	}
