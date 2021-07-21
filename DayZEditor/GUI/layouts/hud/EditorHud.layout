@@ -888,7 +888,7 @@ FrameWidgetClass EditorFrame {
                vexactsize 1
                scriptclass "ViewBinding"
                style ServerBrowser
-               "limit visible" 1
+               "limit visible" 0
                {
                 ScriptParamsClass {
                  Binding_Name "cam_x"
@@ -961,7 +961,7 @@ FrameWidgetClass EditorFrame {
                vexactsize 1
                scriptclass "ViewBinding"
                style ServerBrowser
-               "limit visible" 1
+               "limit visible" 0
                {
                 ScriptParamsClass {
                  Binding_Name "cam_y"
@@ -1033,7 +1033,7 @@ FrameWidgetClass EditorFrame {
                vexactsize 1
                scriptclass "ViewBinding"
                style ServerBrowser
-               "limit visible" 1
+               "limit visible" 0
                {
                 ScriptParamsClass {
                  Binding_Name "cam_z"
