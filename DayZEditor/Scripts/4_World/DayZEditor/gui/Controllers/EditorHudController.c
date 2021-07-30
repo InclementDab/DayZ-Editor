@@ -103,13 +103,14 @@ class EditorHudController: EditorControllerBase
 		}
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
+		
+		// Just a quickset on the color
+		PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
+		DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
 #endif
 		
 		EditorHudToolbarView = new EditorHudToolbar();
 		NotifyPropertyChanged("EditorHudToolbarView");
-		
-		PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
-		DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
 	}
 		
 	void Update()
