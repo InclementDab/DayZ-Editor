@@ -2,9 +2,9 @@ modded class DayZGame
 {
 	// args: string
 	ref ScriptInvoker OnProgressReport;
-	
+		
 	void DayZGame()
-	{
+	{	
 		#ifndef NO_GUI
 		delete m_loading;
 		m_loading = new EditorLoadingScreen(this);		
