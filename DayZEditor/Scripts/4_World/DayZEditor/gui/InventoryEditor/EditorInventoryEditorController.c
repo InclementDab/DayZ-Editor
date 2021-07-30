@@ -211,9 +211,10 @@ class EditorInventoryEditorController: ViewController
 			
 			foreach (EditorWearableItem wearable: LoadedWearableItems[inventory_slot]) {
 				// Great fix for weird items like magazines, which all rely on the same attachment slot name
-				if (!CanAddAsAttachment(CurrentActiveItem, wearable.Type)) {
-					continue;
-				}
+				// this function does not work on just players yet, only items, need to fix
+				//if (!CanAddAsAttachment(CurrentActiveItem, wearable.Type)) {
+				//	continue;
+				//}
 				
 				// This is the part where we need to call NEW, not before
 				EditorWearableListItem list_item = new EditorWearableListItem(wearable, inventory_slot);
