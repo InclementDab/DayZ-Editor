@@ -164,7 +164,7 @@ class EditorHudController: EditorControllerBase
 				
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
 
-				if (!placeable_item || IsForbiddenItem(placeable_item.Type)) {
+				if (!placeable_item) {
 					continue;
 				}
 				
@@ -178,25 +178,6 @@ class EditorHudController: EditorControllerBase
 		return placeable_items;
 	}
 	
-	static bool IsForbiddenItem(string Model)
-	{
-		//! In theory should be safe but just in case
-		if (Model.Contains("Fx")) return true;
-		if (Model == "ItemOptics") return true;
-
-		//! Cursed items
-		if (Model == "AKM_TESTBED") return true;
-		if (Model == "Red9") return true;
-		if (Model == "QuickieBow") return true;
-		if (Model == "LargeTentBackPack") return true;
-		if (Model == "SurvivorMale_Base" || Model == "SurvivorFemale_Base") return true;
-		if (GetGame().IsKindOf(Model, "GP25Base")) return true;
-		if (GetGame().IsKindOf(Model, "M203Base")) return true;
-	
-		//! Everything is fine... I hope... :pain:
-		return false;
-	}
-
 	override void PropertyChanged(string property_name)
 	{
 		EditorLog.Trace("EditorHudController::PropertyChanged: %1", property_name);

@@ -1,5 +1,5 @@
 class EditorPlaceableItem
-{
+{	
 	static autoptr map<string, EditorPlaceableItemCategory> LOADED_TYPES = GetTypes();
 	static autoptr array<ref ModStructure> LOADED_MODS = ModLoader.GetMods();
 	
@@ -35,7 +35,7 @@ class EditorPlaceableItem
 		Mod = LoadModData(Type, Path);
 		Category = LoadItemCategory();
 		
-		Icon = GetIcon(Mod);
+		//Icon = GetIcon(Mod);
 	}
 	
 	void ~EditorPlaceableItem()
@@ -47,6 +47,10 @@ class EditorPlaceableItem
 	// CAN RETURN NULL
 	static EditorPlaceableItem Create(string path, string type)
 	{
+		if (IsForbiddenItem(type)) {
+			return null;
+		}
+		
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem(path, type);		
 		placeable_item.Init();
 		
@@ -59,7 +63,7 @@ class EditorPlaceableItem
 	}
 	
 	static EditorPlaceableItem Create(typename scripted_type)
-	{
+	{		
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem("", scripted_type.ToString());		
 		placeable_item.Init(true);
 				
@@ -138,5 +142,24 @@ class EditorPlaceableItem
 		}
 		// default
 		return LIST_ITEM_DEFAULT_ICON;
+	}
+	
+	static bool IsForbiddenItem(string model)
+	{
+		//! In theory should be safe but just in case
+		if (model.Contains("Fx")) return true;
+		if (model == "ItemOptics") return true;
+
+		//! Cursed items
+		if (model == "AKM_TESTBED") return true;
+		if (model == "Red9") return true;
+		if (model == "QuickieBow") return true;
+		if (model == "LargeTentBackPack") return true;
+		if (model == "SurvivorMale_Base" || model == "SurvivorFemale_Base") return true;
+		if (GetGame().IsKindOf(model, "GP25Base")) return true;
+		if (GetGame().IsKindOf(model, "M203Base")) return true;
+	
+		//! Everything is fine... I hope... :pain:
+		return false;
 	}
 }
