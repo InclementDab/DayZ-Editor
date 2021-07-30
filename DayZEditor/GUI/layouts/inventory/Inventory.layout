@@ -78,7 +78,7 @@ FrameWidgetClass InventoryFrame {
      ignorepointer 1
      color 0.098 0.098 0.098 0.7843
      position 55 5
-     size 385 0.9
+     size 385 0.8
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -175,12 +175,12 @@ FrameWidgetClass InventoryFrame {
        ignorepointer 1
        color 0.3137 0.3137 0.3137 1
        position 0 34
-       size 1 1
+       size 385 830
        halign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 0
-       vexactsize 0
+       hexactsize 1
+       vexactsize 1
        "Scrollbar V" 1
        "Scrollbar V Left" 1
        {
@@ -385,6 +385,21 @@ FrameWidgetClass InventoryFrame {
      }
     }
    }
+  }
+  WrapSpacerWidgetClass FluidsWrapper {
+   visible 1
+   ignorepointer 1
+   color 0.098 0.098 0.098 0.7843
+   position 55 869
+   size 385 206
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style Colorable
+   Padding 0
+   Margin 0
+   "Size To Content V" 1
   }
  }
 }
