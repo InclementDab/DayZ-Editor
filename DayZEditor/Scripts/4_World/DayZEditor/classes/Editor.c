@@ -368,7 +368,14 @@ class Editor
 					// Default to m_Player
 					StartInventoryEditor(m_Player);
 				}
+				
+				return;
 			}
+			
+			// todo: somewhere in the stack, we aint calling this... why?
+			//if (input.LocalPress("UAGear", false)) {
+			//	GetGame().GetMission().ShowInventory();
+			//}
 		}
 	}
 	
