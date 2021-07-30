@@ -1,7 +1,8 @@
 ButtonWidgetClass EditorMarkerColor {
  visible 1
- clipchildren 0
+ clipchildren 1
  ignorepointer 0
+ color 1 1 1 0.9961
  position 0 0
  size 20 20
  hexactpos 1
@@ -10,7 +11,7 @@ ButtonWidgetClass EditorMarkerColor {
  vexactsize 1
  draggable 0
  scriptclass "ViewBinding"
- style Colorable
+ style EditorMarkerAlpha
  {
   PanelWidgetClass EditorMarkerOutlineColor {
    ignorepointer 1
