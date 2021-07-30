@@ -97,7 +97,9 @@
         </input>
 
         <input name="EditorToggleInventoryEditor">
-            <btn name="kTab"/>
+            <btn name="kLControl">
+               <btn name="kTab"/>
+            </btn>
         </input>
 
         <input name="EditorToggleMap">
