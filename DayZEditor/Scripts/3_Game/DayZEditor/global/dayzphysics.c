@@ -34,8 +34,6 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 	}
 	
 	DayZPhysics.RaycastRV(ray_start, ray_end, hitPos, hitNormal, hitComponentIndex, collisions, null, ignore, false, groundonly, 1, radius, CollisionFlags.ALLOBJECTS);
-	
-	
 	return hitPos;
 }
 
