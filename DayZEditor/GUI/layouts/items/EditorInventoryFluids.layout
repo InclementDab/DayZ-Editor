@@ -1,0 +1,83 @@
+WrapSpacerWidgetClass EditorInventoryFluids {
+ color 0.7059 0.7059 0.7059 0.9961
+ size 385 42
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ style Outline_1px
+ Padding 4
+ Margin 0
+ {
+  TextWidgetClass FluidType {
+   ignorepointer 1
+   position 0 0
+   size 1 16
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scriptclass "ViewBinding"
+   font "gui/fonts/sdf_MetronLight24"
+   "text offset" 6 0
+   "exact text" 0
+   "size to text h" 0
+   "size to text v" 0
+   {
+    ScriptParamsClass {
+     Binding_Name "Name"
+    }
+   }
+  }
+  FrameWidgetClass SliderFrame {
+   ignorepointer 1
+   size 1 20
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   {
+    SliderWidgetClass FluidSlider {
+     color 1 1 1 0.9961
+     size 375 18
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     style Slider_1px_alpha_50
+     flipped 0
+     {
+      TextWidgetClass FluidLevel {
+       ignorepointer 1
+       size 1 14
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       text "100"
+       font "gui/fonts/sdf_MetronLight24"
+       "text halign" center
+       "text valign" center
+       {
+        ScriptParamsClass {
+         Binding_Name "Amount"
+        }
+       }
+      }
+     }
+     {
+      ScriptParamsClass {
+       Binding_Name "Amount"
+      }
+     }
+    }
+   }
+  }
+ }
+}
