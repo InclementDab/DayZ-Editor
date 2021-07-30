@@ -164,8 +164,12 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleCursor");
 		
+		if (!GetEditor().IsActive() && !GetEditor().IsInventoryEditorActive()) {
+			return;
+		}
+		
 		// Dont want to toggle cursor on map
-		if (!GetEditor().IsActive() || GetEditor().GetEditorHud().EditorMapWidget.IsVisible() || (EditorHud.CurrentDialog && GetEditor().Settings.LockCameraDuringDialogs)) {
+		if (GetEditor().GetEditorHud().EditorMapWidget.IsVisible() || (EditorHud.CurrentDialog && GetEditor().Settings.LockCameraDuringDialogs)) {
 			return;
 		}
 		

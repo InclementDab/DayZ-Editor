@@ -1,0 +1,1 @@
+typedef Param2<string, CarFluid> VehicleFluidEntry;

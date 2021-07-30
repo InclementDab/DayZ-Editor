@@ -444,8 +444,7 @@ class EditorObject: EditorWorldObject
 	{
 		EditorLog.Trace("EditorObject::EnableListItem");
 		
-		if (m_EditorPlacedListItem)
-			delete m_EditorPlacedListItem;
+		delete m_EditorPlacedListItem;
 		
 		if (!enable) {
 			return;

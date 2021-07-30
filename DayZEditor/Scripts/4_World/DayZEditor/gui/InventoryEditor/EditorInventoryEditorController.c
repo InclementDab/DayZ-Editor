@@ -4,6 +4,13 @@ class EditorInventoryEditorController: ViewController
 		InventorySlots.GetSlotIdFromString("LeftHand")
 	};
 	
+	static const ref array<ref VehicleFluidEntry> FLUID_TYPES = {
+		new VehicleFluidEntry("fuelCapacity", CarFluid.FUEL),
+		new VehicleFluidEntry("brakeFluidCapacity", CarFluid.BRAKE),
+		new VehicleFluidEntry("oilCapacity", CarFluid.OIL),
+		new VehicleFluidEntry("coolantCapacity", CarFluid.COOLANT),
+	};
+	
 	protected EntityAI m_Entity;
 	string SearchBarLeft;
 	string SearchBarLeftIcon = "set:dayz_editor_gui image:search";
@@ -87,6 +94,12 @@ class EditorInventoryEditorController: ViewController
 			AttachmentSlotCategories.Insert(attachment_slot);
 		}
 				
+		foreach (VehicleFluidEntry fluid: FLUID_TYPES) {
+			if (m_Entity.ConfigGetFloat(fluid.param1) > 0) {
+				
+			}
+		}
+						
 		// Sets default enable			
 		if (AttachmentSlotCategories[0]) {
 			AttachmentSlotCategories[0].GetTemplateController().State = true;
