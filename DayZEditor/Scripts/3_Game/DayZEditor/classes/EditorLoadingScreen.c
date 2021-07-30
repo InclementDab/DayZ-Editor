@@ -25,6 +25,9 @@ modded class LoadingScreen
 		new LoadingScreenEntry("21.edds", "DanceOfJesus"),		
 		new LoadingScreenEntry("22.edds", "DanceOfJesus", true),		
 		new LoadingScreenEntry("23.edds", "Sanches"),
+		new LoadingScreenEntry("24.edds", "ItzMikeDocherty"),
+		new LoadingScreenEntry("25.edds", "[H]unter"),
+		new LoadingScreenEntry("26.edds", "DanceOfJesus"),	
 	};
 	
 	protected TextWidget m_ImageCredit;
