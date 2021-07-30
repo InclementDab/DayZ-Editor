@@ -1,4 +1,4 @@
-modded class LoadingScreen
+class EditorLoadingScreen: LoadingScreen
 {
 	static const ref array<ref LoadingScreenEntry> LOADING_SCREENS = {
 		new LoadingScreenEntry("0.edds", "Lad"),
@@ -32,7 +32,7 @@ modded class LoadingScreen
 	
 	protected TextWidget m_ImageCredit;
 	
-	void LoadingScreen(DayZGame game)
+	void EditorLoadingScreen(DayZGame game)
 	{		
 		m_DayZGame = game;
 		

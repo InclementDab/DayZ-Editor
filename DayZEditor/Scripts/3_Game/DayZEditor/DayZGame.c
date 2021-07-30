@@ -5,6 +5,12 @@ modded class DayZGame
 	
 	void DayZGame()
 	{
+		#ifndef NO_GUI
+		delete m_loading;
+		m_loading = new EditorLoadingScreen(this);		
+		m_loading.Show();
+		#endif
+		
 		ReportProgress("Loading Game");
 	}
 		
