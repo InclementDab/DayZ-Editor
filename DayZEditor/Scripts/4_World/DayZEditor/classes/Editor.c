@@ -1391,6 +1391,21 @@ class Editor
 		return build_number.ToInt();
 	}
 	
+	static Object GetObjectUnderCursor(float raycast_distance = 3000)
+	{
+		vector ray_start = GetGame().GetCurrentCameraPosition();
+		vector ray_end = ray_start + GetGame().GetPointerDirection() * raycast_distance;
+		
+		vector hitPos, hitNormal;
+		int hitComponentIndex;		
+		set<Object> collisions = new set<Object>;
+		
+	
+		DayZPhysics.RaycastRV(ray_start, ray_end, hitPos, hitNormal, hitComponentIndex, collisions);
+		
+		return collisions.Get(0);
+	}
+	
 	EditorSaveData CreateSaveData(bool selected_only = false)
 	{
 		EditorSaveData save_data = new EditorSaveData();

@@ -73,10 +73,6 @@ class GizmoZ: GizmoArrow
 	}
 }
 
-
-
-ref EditorGizmo m_EditorGizmoTemp;
-
 class EditorGizmo
 {
 	protected ref Timer m_Timer = new Timer(CALL_CATEGORY_SYSTEM);
@@ -120,7 +116,7 @@ class EditorGizmo
 	
 	private void UpdateFrame()
 	{
-		Object obj = GetObjectUnderCursor();
+		Object obj = Editor.GetObjectUnderCursor();
 		GizmoBase gizmo_base;
 		
 		//Print(obj);
