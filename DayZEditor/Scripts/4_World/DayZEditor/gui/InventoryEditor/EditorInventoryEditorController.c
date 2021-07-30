@@ -131,8 +131,7 @@ class EditorInventoryEditorController: ViewController
 			EditorInventoryAttachmentSlot attachment_slot = new EditorInventoryAttachmentSlot(slot);
 			attachment_slot.OnItemSelected.Insert(OnCurrentItemAttachmentSlotSelected);
 			CurrentItemAttachmentSlotCategories.Insert(attachment_slot);
-		}
-				
+		}		
 		
 		// Sets default category to ON
 		if (CurrentItemAttachmentSlotCategories[0]) {
@@ -179,7 +178,7 @@ class EditorInventoryEditorController: ViewController
 		for (int i = 0; i < AttachmentSlotCategories.Count(); i++) {
 			
 			// Deselect all other attachments
-			if (AttachmentSlotCategories[i] != attachment_slot) {
+			if (AttachmentSlotCategories[i] != attachment_slot) { // not adding bc drunk && AttachmentSlotCategories[i].GetTemplateController().State
 				AttachmentSlotCategories[i].GetTemplateController().State = false;
 				AttachmentSlotCategories[i].GetTemplateController().NotifyPropertyChanged("State", false);
 				continue;
@@ -211,12 +210,17 @@ class EditorInventoryEditorController: ViewController
 			}
 			
 			foreach (EditorWearableItem wearable: LoadedWearableItems[inventory_slot]) {
+				// Great fix for weird items like magazines, which all rely on the same attachment slot name
+				if (!CanAddAsAttachment(CurrentActiveItem, wearable.Type)) {
+					continue;
+				}
+				
 				// This is the part where we need to call NEW, not before
 				EditorWearableListItem list_item = new EditorWearableListItem(wearable, inventory_slot);
 				list_item.OnItemSelected.Insert(OnListItemSelected);
 				
 				// update by search bar
-				list_item.GetLayoutRoot().Show(list_item.FilterType(SearchBarLeft)); 
+				list_item.GetLayoutRoot().Show(list_item.FilterType(SearchBarLeft)); 				
 				WearableItems.Insert(list_item);
 				
 				// Assign active item from slot
@@ -253,7 +257,6 @@ class EditorInventoryEditorController: ViewController
 		
 		// Create new item on player
 		CurrentActiveItem.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id);
-	
 		
 		// Deselect all other things
 		for (int i = 0; i < CurrentItemAttachments.Count(); i++) {
@@ -297,12 +300,17 @@ class EditorInventoryEditorController: ViewController
 			CurrentItemAttachments.Insert(empty_list_item);	
 			
 			foreach (EditorWearableItem wearable: LoadedWearableItems[inventory_slot]) {
+				// Great fix for weird items like magazines, which all rely on the same attachment slot name
+				if (!CanAddAsAttachment(CurrentActiveItem, wearable.Type)) {
+					continue;
+				}
+				
 				// This is the part where we need to call NEW, not before
 				EditorWearableListItem list_item = new EditorWearableListItem(wearable, inventory_slot);
 				list_item.OnItemSelected.Insert(OnCurrentItemAttachmentSelected);
 				
 				// update by search bar
-				list_item.GetLayoutRoot().Show(list_item.FilterType(SearchBarRight)); 
+				list_item.GetLayoutRoot().Show(list_item.FilterType(SearchBarRight)); 				
 				CurrentItemAttachments.Insert(list_item);
 				
 				// Assign active item from slot
@@ -325,6 +333,21 @@ class EditorInventoryEditorController: ViewController
 			
 			AttachmentSelectorScrollbar.VScrollToPos(0);
 		}
+	}
+	
+	static bool CanAddAsAttachment(EntityAI item, string attachment)
+	{
+		if (!item) {
+			return false;
+		}
+		
+		EntityAI attachment_item = item.GetInventory().CreateAttachment(attachment);
+		if (!attachment_item) {
+			return false;
+		}
+		
+		GetGame().ObjectDelete(attachment_item);
+		return true;
 	}
 	
 	override void PropertyChanged(string property_name)
