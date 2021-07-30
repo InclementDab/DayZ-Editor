@@ -5,10 +5,10 @@ class EditorInventoryEditorController: ViewController
 	};
 	
 	static const ref array<ref VehicleFluidEntry> FLUID_TYPES = {
-		new VehicleFluidEntry("fuelCapacity", CarFluid.FUEL),
-		new VehicleFluidEntry("brakeFluidCapacity", CarFluid.BRAKE),
-		new VehicleFluidEntry("oilCapacity", CarFluid.OIL),
-		new VehicleFluidEntry("coolantCapacity", CarFluid.COOLANT),
+		new VehicleFluidEntry("fuelCapacity", 		CarFluid.FUEL, 		Colors.YELLOW),
+		new VehicleFluidEntry("brakeFluidCapacity", CarFluid.BRAKE, 	Colors.ORANGE),
+		new VehicleFluidEntry("oilCapacity", 		CarFluid.OIL, 		Colors.BLACK),
+		new VehicleFluidEntry("coolantCapacity", 	CarFluid.COOLANT, 	Colors.COLOR_WET),
 	};
 	
 	protected EntityAI m_Entity;
