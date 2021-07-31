@@ -1,3 +1,71 @@
+class EditorInventoryAttachment: SerializableBase
+{
+	string Type;
+	ref array<ref EditorInventoryAttachment> Attachments = {};
+	
+	void ~EditorInventoryAttachment()
+	{
+		delete Attachments;
+	}
+	
+	void AssignFromEntity(EntityAI entity)
+	{
+		Type = entity.GetType();
+		for (int i = 0; i < entity.GetInventory().AttachmentCount(); i++) {
+			EntityAI attachment = entity.GetInventory().GetAttachmentFromIndex(i);
+			if (!attachment) {
+				continue;
+			}
+			
+			EditorInventoryAttachment inv_attachment();
+			inv_attachment.AssignFromEntity(attachment);
+			Attachments.Insert(inv_attachment);
+		}
+	}
+	
+	override void Write(Serializer serializer, int version)
+	{
+		serializer.Write(Type);
+		serializer.Write(Attachments.Count());
+		foreach (EditorInventoryAttachment attachment: Attachments) {
+			attachment.Write(serializer, version);
+		}
+	}
+	
+	override bool Read(Serializer serializer, int version)
+	{
+		serializer.Read(Type);
+		
+		int length;
+		serializer.Read(length);
+		for (int i = 0; i < length; i++) {
+			EditorInventoryAttachment attachment();
+			attachment.Read(serializer, version);
+			Attachments.Insert(attachment);	
+		}
+		
+		return true;
+	}
+}
+
+class EditorInventoryData: EditorInventoryAttachment
+{
+	int Version = 1;
+		
+	override void Write(Serializer serializer, int version)
+	{
+		serializer.Write(Version);
+		super.Write(serializer, Version);
+	}
+	
+	override bool Read(Serializer serializer, int version)
+	{
+		serializer.Read(Version);
+		super.Read(serializer, Version);
+		return true;
+	}
+}
+
 class EditorInventoryEditorController: ViewController
 {
 	static const ref TIntArray BLACKLISTED_ATTACHMENTS = {
@@ -110,6 +178,13 @@ class EditorInventoryEditorController: ViewController
 			AttachmentSlotCategories[0].GetTemplateController().State = true;
 			AttachmentSlotCategories[0].GetTemplateController().NotifyPropertyChanged("State");
 		}
+	}
+	
+	EditorInventoryData GetInventoryData()
+	{
+		EditorInventoryData data();
+		data.AssignFromEntity(m_Entity);
+		return data;
 	}
 	
 	static TIntArray GetAttachmentSlotsFromEntity(EntityAI entity)

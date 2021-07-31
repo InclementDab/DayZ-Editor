@@ -28,6 +28,21 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		GetGame().ObjectDelete(m_Camera);
 	}
 	
+	void ImportExecute(ButtonCommandArgs args)
+	{
+		
+	}
+	
+	void ExportExecute(ButtonCommandArgs args)
+	{
+		EditorInventoryData data = m_TemplateController.GetInventoryData();
+		Print(data);
+		Print(data.Type);
+		foreach (EditorInventoryAttachment att: data.Attachments) {
+			Print(att);
+		}
+	}
+	
 	EntityAI GetEntity()
 	{
 		return m_Entity;
