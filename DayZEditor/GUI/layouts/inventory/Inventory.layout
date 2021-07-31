@@ -148,13 +148,13 @@ FrameWidgetClass InventoryFrame {
          visible 1
          color 0.6353 0.6353 0.6353 1
          position 32 0
-         size 0.871 1
+         size 333 34
          halign right_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          scriptclass "ViewBinding"
          style Default
          text "#STR_EDITOR_SEARCH"
@@ -398,7 +398,7 @@ FrameWidgetClass InventoryFrame {
    vexactsize 1
    scriptclass "ViewBinding"
    style Colorable
-   Padding 3
+   Padding 0
    Margin 0
    "Size To Content V" 1
    {
