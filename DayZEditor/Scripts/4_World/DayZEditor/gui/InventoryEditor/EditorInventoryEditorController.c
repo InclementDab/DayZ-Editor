@@ -1,9 +1,9 @@
-class EditorInventoryAttachment: SerializableBase
+class EditorInventoryAttachmentData: SerializableBase
 {
 	string Type;
-	ref array<ref EditorInventoryAttachment> Attachments = {};
+	ref array<ref EditorInventoryAttachmentData> Attachments = {};
 	
-	void ~EditorInventoryAttachment()
+	void ~EditorInventoryAttachmentData()
 	{
 		delete Attachments;
 	}
@@ -17,7 +17,7 @@ class EditorInventoryAttachment: SerializableBase
 				continue;
 			}
 			
-			EditorInventoryAttachment inv_attachment();
+			EditorInventoryAttachmentData inv_attachment();
 			inv_attachment.AssignFromEntity(attachment);
 			Attachments.Insert(inv_attachment);
 		}
@@ -27,7 +27,7 @@ class EditorInventoryAttachment: SerializableBase
 	{
 		serializer.Write(Type);
 		serializer.Write(Attachments.Count());
-		foreach (EditorInventoryAttachment attachment: Attachments) {
+		foreach (EditorInventoryAttachmentData attachment: Attachments) {
 			attachment.Write(serializer, version);
 		}
 	}
@@ -39,7 +39,7 @@ class EditorInventoryAttachment: SerializableBase
 		int length;
 		serializer.Read(length);
 		for (int i = 0; i < length; i++) {
-			EditorInventoryAttachment attachment();
+			EditorInventoryAttachmentData attachment();
 			attachment.Read(serializer, version);
 			Attachments.Insert(attachment);	
 		}
@@ -48,7 +48,7 @@ class EditorInventoryAttachment: SerializableBase
 	}
 }
 
-class EditorInventoryData: EditorInventoryAttachment
+class EditorInventoryData: EditorInventoryAttachmentData
 {
 	int Version = 1;
 		
