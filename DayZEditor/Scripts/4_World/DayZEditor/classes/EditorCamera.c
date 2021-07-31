@@ -2,6 +2,8 @@
 // make option Q and E go up and down no matter orientation
 class EditorCamera: Camera
 {
+	static const float TELEPORT_LERP_DISTANCE = 100;
+	
 	float FOV = 1;
 	float DOFDistance;
 	float DOFBlur;
@@ -46,6 +48,17 @@ class EditorCamera: Camera
 	void ~EditorCamera()
 	{
 		SelectTarget(null);
+	}
+	
+	// Safe and easy position set, used for teleporting
+	void SendToPosition(vector position)
+	{
+		if (vector.Distance(position, GetPosition()) > TELEPORT_LERP_DISTANCE) {
+			SetPosition(position);
+			Update();
+		} else {
+			LerpCameraPosition(position, 0.1);
+		}
 	}
 
 	void OnTargetSelected( Object target )

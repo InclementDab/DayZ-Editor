@@ -99,8 +99,8 @@ class EditorPlacedListItem: EditorListItem
 			case MouseState.MIDDLE: {
 				EditorCamera camera = GetEditor().GetCamera();
 				vector pos = m_EditorObject.GetPosition();
-				pos[1] = camera.GetPosition()[1];
-				camera.SetPosition(pos);
+				pos[1] = pos[1] + 10;
+				camera.SendToPosition(pos);
 				return true;
 			}
 			

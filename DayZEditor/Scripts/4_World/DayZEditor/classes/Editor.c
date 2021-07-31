@@ -469,14 +469,10 @@ class Editor
 				} else {
 					vector pos = Vector(CurrentMousePosition[0], GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]), CurrentMousePosition[2]);
 					vector current_pos = m_EditorCamera.GetPosition();
+					// this is no good
 					float distance_to_ground = GetGame().SurfaceY(current_pos[0], current_pos[2]);
 					pos[1] = pos[1] + distance_to_ground;
-					if (vector.Distance(pos, current_pos) > 1000) {
-						m_EditorCamera.SetPosition(pos);
-						m_EditorCamera.Update();
-					} else {
-						m_EditorCamera.LerpCameraPosition(pos, 0.1);
-					}
+					m_EditorCamera.SendToPosition(pos);
 				}
 				
 				break;
