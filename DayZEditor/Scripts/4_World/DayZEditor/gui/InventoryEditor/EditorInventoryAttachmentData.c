@@ -27,11 +27,15 @@ class EditorInventoryAttachmentData: SerializableBase
 	{
 		if (entity.GetType() != Type) {
 			EditorLog.Error("Type was incorrect, expected %1, got %2", Type, entity.GetType());
-			//return;
+			//return; // todo doesnt really work very well, need to do more general checks
 		}
 		
 		foreach (EditorInventoryAttachmentData attachment: Attachments) {
 			EntityAI attachment_item = entity.GetInventory().CreateAttachment(attachment.Type);
+			if (!attachment_item) {
+				continue;
+			}
+			
 			attachment.AssignToEntity(attachment_item);
 		}
 	}
