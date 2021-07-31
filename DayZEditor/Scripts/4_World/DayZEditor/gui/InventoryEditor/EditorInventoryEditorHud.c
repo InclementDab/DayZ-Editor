@@ -38,7 +38,7 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		EditorInventoryData data = m_TemplateController.GetInventoryData();
 		Print(data);
 		Print(data.Type);
-		foreach (EditorInventoryAttachment att: data.Attachments) {
+		foreach (EditorInventoryAttachmentData att: data.Attachments) {
 			Print(att);
 		}
 	}
