@@ -2,7 +2,7 @@
 // make option Q and E go up and down no matter orientation
 class EditorCamera: Camera
 {
-	static const float TELEPORT_LERP_DISTANCE = 100;
+	static const float TELEPORT_LERP_DISTANCE = 1000;
 	
 	float FOV = 1;
 	float DOFDistance;
