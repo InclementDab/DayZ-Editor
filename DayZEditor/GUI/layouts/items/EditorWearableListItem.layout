@@ -67,7 +67,7 @@ WrapSpacerWidgetClass ListItem {
          disabled 0
          clipchildren 1
          ignorepointer 1
-         position 1 0
+         position 3 0
          size 1 1
          halign center_ref
          valign center_ref
