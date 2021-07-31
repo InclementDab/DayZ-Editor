@@ -356,14 +356,13 @@ class EditorInventoryEditorController: ViewController
 	
 	void OnFluidAmountChanged(CarFluid fluid_type, float amount)
 	{
-		Print(amount);
 		Car car = Car.Cast(m_Entity);
 		if (!car) {
 			return;
 		}
 		
 		car.LeakAll(fluid_type);
-		car.Fill(fluid_type, amount * car.GetFluidCapacity(fluid_type));
+		car.Fill(fluid_type, amount);
 	}
 	
 	static bool CanAddAsAttachment(EntityAI item, string attachment)

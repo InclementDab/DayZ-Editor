@@ -16,7 +16,7 @@ class EditorInventoryFluidSlotController: ViewController
 				CalculatedValue = Math.Clamp(Math.Lerp(0, Max, Value), 0, Max);
 				NotifyPropertyChanged("CalculatedValue", false);
 				// Inform the gamers the fluid has changed
-				Parent.OnValueChanged.Invoke(FluidType, Value);
+				Parent.OnValueChanged.Invoke(FluidType, CalculatedValue);
 				break;
 			}
 			
