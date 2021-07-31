@@ -48,6 +48,9 @@ WrapSpacerWidgetClass EditorInventoryFluids {
      vexactsize 1
      scriptclass "ViewBinding"
      style Slider_1px_alpha_50
+     maximum 1
+     step 0.001
+     current 0.5
      flipped 0
      {
       TextWidgetClass FluidLevel {
@@ -66,14 +69,15 @@ WrapSpacerWidgetClass EditorInventoryFluids {
        "text valign" center
        {
         ScriptParamsClass {
-         Binding_Name "Amount"
+         Binding_Name "CalculatedValue"
         }
        }
       }
      }
      {
       ScriptParamsClass {
-       Binding_Name "Amount"
+       Binding_Name "Value"
+       Two_Way_Binding 1
       }
      }
     }

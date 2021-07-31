@@ -1,2 +1,2 @@
-// Config entry, CarFluid, Color
-typedef Param3<string, CarFluid, int> VehicleFluidEntry;
+// CarFluid, Color
+typedef Param2<CarFluid, int> VehicleFluidEntry;

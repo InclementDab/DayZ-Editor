@@ -4,11 +4,11 @@ class EditorInventoryEditorController: ViewController
 		InventorySlots.GetSlotIdFromString("LeftHand")
 	};
 	
-	static const ref array<ref VehicleFluidEntry> FLUID_TYPES = {
-		new VehicleFluidEntry("fuelCapacity", 		CarFluid.FUEL, 		Colors.YELLOW),
-		new VehicleFluidEntry("brakeFluidCapacity", CarFluid.BRAKE, 	Colors.ORANGE),
-		new VehicleFluidEntry("oilCapacity", 		CarFluid.OIL, 		Colors.BLACK),
-		new VehicleFluidEntry("coolantCapacity", 	CarFluid.COOLANT, 	Colors.COLOR_WET),
+	static const ref array<CarFluid> FLUID_TYPES = {
+		CarFluid.FUEL,
+		CarFluid.BRAKE,
+		CarFluid.OIL,
+		CarFluid.COOLANT,
 	};
 	
 	protected EntityAI m_Entity;
@@ -25,6 +25,7 @@ class EditorInventoryEditorController: ViewController
 	ref ObservableCollection<ref EditorWearableListItem> WearableItems = new ObservableCollection<ref EditorWearableListItem>(this);
 	ref ObservableCollection<ref EditorInventoryAttachmentSlot> CurrentItemAttachmentSlotCategories = new ObservableCollection<ref EditorInventoryAttachmentSlot>(this);	
 	ref ObservableCollection<ref EditorWearableListItem> CurrentItemAttachments = new ObservableCollection<ref EditorWearableListItem>(this);
+	ref ObservableCollection<ref EditorInventoryFluidSlot> FluidSliders = new ObservableCollection<ref EditorInventoryFluidSlot>(this);
 
 	ScrollWidget ItemSelectorScrollbar;
 	ScrollWidget AttachmentSelectorScrollbar;
@@ -94,9 +95,13 @@ class EditorInventoryEditorController: ViewController
 			AttachmentSlotCategories.Insert(attachment_slot);
 		}
 				
-		foreach (VehicleFluidEntry fluid: FLUID_TYPES) {
-			if (m_Entity.ConfigGetFloat(fluid.param1) > 0) {
-				
+		// Register all fluids for cars
+		Car car = Car.Cast(m_Entity);
+		foreach (CarFluid fluid: FLUID_TYPES) {
+			if (car && car.GetFluidCapacity(fluid) > 0) {
+				EditorInventoryFluidSlot fluid_slot = new EditorInventoryFluidSlot(fluid, car.GetFluidCapacity(fluid), car.GetFluidFraction(fluid));
+				fluid_slot.OnValueChanged.Insert(OnFluidAmountChanged);
+				FluidSliders.Insert(fluid_slot);
 			}
 		}
 						
@@ -347,6 +352,18 @@ class EditorInventoryEditorController: ViewController
 			
 			AttachmentSelectorScrollbar.VScrollToPos(0);
 		}
+	}
+	
+	void OnFluidAmountChanged(CarFluid fluid_type, float amount)
+	{
+		Print(amount);
+		Car car = Car.Cast(m_Entity);
+		if (!car) {
+			return;
+		}
+		
+		car.LeakAll(fluid_type);
+		car.Fill(fluid_type, amount * car.GetFluidCapacity(fluid_type));
 	}
 	
 	static bool CanAddAsAttachment(EntityAI item, string attachment)

@@ -396,10 +396,16 @@ FrameWidgetClass InventoryFrame {
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   scriptclass "ViewBinding"
    style Colorable
    Padding 0
    Margin 0
    "Size To Content V" 1
+   {
+    ScriptParamsClass {
+     Binding_Name "FluidSliders"
+    }
+   }
   }
  }
 }
