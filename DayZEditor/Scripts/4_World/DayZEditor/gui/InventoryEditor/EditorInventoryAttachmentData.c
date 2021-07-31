@@ -27,7 +27,7 @@ class EditorInventoryAttachmentData: SerializableBase
 	{
 		if (entity.GetType() != Type) {
 			EditorLog.Error("Type was incorrect, expected %1, got %2", Type, entity.GetType());
-			return;
+			//return;
 		}
 		
 		foreach (EditorInventoryAttachmentData attachment: Attachments) {

@@ -32,10 +32,16 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 	
 	void ClearExecute(ButtonCommandArgs args)
 	{
+		// Set current active to Empty
 		for (int i = 0; i < m_TemplateController.WearableItems.Count(); i++) {
 			if (m_TemplateController.WearableItems[i].GetWearableItem() == EditorInventoryEditorController.EmptyItem) {
 				m_TemplateController.WearableItems[i].ListItemExecute(null);
 			}
+		}
+		
+		// Just delete the rest of the stuff
+		for (int j = 0; j < m_Entity.GetInventory().AttachmentCount(); j++) {
+			GetGame().ObjectDelete(m_Entity.GetInventory().GetAttachmentFromIndex(j));
 		}
 	}
 	
@@ -56,7 +62,7 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 	
 	private void ImportExecuteThread()
 	{
-		EditorFileDialog file_dialog("Import Inventory Data", "*" + FILE_EXTENSION, "", "Import");
+		EditorFileDialog file_dialog("Import Inventory Data", "*.dzeinv", "", "Import");
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 			return;
@@ -83,7 +89,7 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 	private void ExportExecuteThread()
 	{
 		EditorInventoryData data = m_TemplateController.GetInventoryData();
-		EditorFileDialog file_dialog("Export Inventory Data", "*" + FILE_EXTENSION, "", "Export");
+		EditorFileDialog file_dialog("Export Inventory Data", "*.dzeinv", "", "Export");
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 			return;
