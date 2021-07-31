@@ -108,6 +108,7 @@ class EditorObjectMarker: EditorMarker
 	void Highlight()
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
+		SetColor(m_Editor.Settings.MarkerPrimaryColor);
 		SetOutlineColor(m_Editor.Settings.HighlightColor);
 	}
 	
