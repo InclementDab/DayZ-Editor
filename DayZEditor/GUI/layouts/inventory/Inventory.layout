@@ -508,45 +508,104 @@ FrameWidgetClass InventoryFrame {
     }
    }
   }
-  PanelWidgetClass ExitBackgroundOutline {
+  WrapSpacerWidgetClass TopCenterButtons {
    ignorepointer 1
-   color 0.7059 0.7059 0.7059 0.9961
-   position 0 5
-   size 100 26
+   size 1 48
    halign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
-   style PanelOutline_1px_BlackBackground
+   "Size To Content V" 1
+   content_halign center
    {
-    ButtonWidgetClass ExitButton {
-     color 0.7529 0.3647 0.3216 1
-     size 98 24
+    PanelWidgetClass ClearBackgroundOutline {
+     ignorepointer 1
+     color 0.7059 0.7059 0.7059 0.9961
+     position 0 5
+     size 150 26
      halign center_ref
-     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scriptclass "ViewBinding"
+     style PanelOutline_1px_BlackBackground
      {
-      TextWidgetClass ExitText {
-       ignorepointer 1
-       size 1 22
+      ButtonWidgetClass ClearButton {
+       color 0.7529 0.3647 0.3216 1
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
-       vexactsize 1
-       text "Exit"
-       "text halign" center
-       "text valign" center
+       vexactsize 0
+       scriptclass "ViewBinding"
+       {
+        TextWidgetClass ClearText {
+         ignorepointer 1
+         size 1 22
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Clear Inventory"
+         "text halign" center
+         "text valign" center
+        }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "ClearExecute"
+        }
+       }
       }
      }
+    }
+    PanelWidgetClass ExitBackgroundOutline {
+     ignorepointer 1
+     color 0.7059 0.7059 0.7059 0.9961
+     position 0 5
+     size 100 26
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style PanelOutline_1px_BlackBackground
      {
-      ScriptParamsClass {
+      ButtonWidgetClass ExitButton {
+       color 0.7529 0.3647 0.3216 1
+       size 98 24
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       {
+        TextWidgetClass ExitText {
+         ignorepointer 1
+         size 1 22
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Exit"
+         "text halign" center
+         "text valign" center
+        }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "ExitExecute"
+        }
+       }
       }
      }
     }
