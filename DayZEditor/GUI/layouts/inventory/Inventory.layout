@@ -185,7 +185,7 @@ FrameWidgetClass InventoryFrame {
        "Scrollbar V Left" 1
        {
         WrapSpacerWidgetClass ItemSelectorContent {
-         ignorepointer 1
+         ignorepointer 0
          position 0 0
          size 1 0
          halign center_ref
