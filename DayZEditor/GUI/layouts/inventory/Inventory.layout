@@ -78,11 +78,11 @@ FrameWidgetClass InventoryFrame {
      ignorepointer 1
      color 0.098 0.098 0.098 0.7843
      position 55 5
-     size 385 0.8
+     size 385 1031
      hexactpos 1
      vexactpos 1
      hexactsize 1
-     vexactsize 0
+     vexactsize 1
      style rover_sim_colorable
      {
       PanelWidgetClass ItemSelectorSearchBarPanel {
@@ -148,7 +148,7 @@ FrameWidgetClass InventoryFrame {
          visible 1
          color 0.6353 0.6353 0.6353 1
          position 32 0
-         size 0.831 1
+         size 0.871 1
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -175,7 +175,7 @@ FrameWidgetClass InventoryFrame {
        ignorepointer 1
        color 0.3137 0.3137 0.3137 1
        position 0 34
-       size 385 830
+       size 385 996
        halign center_ref
        hexactpos 1
        vexactpos 1
@@ -390,20 +390,163 @@ FrameWidgetClass InventoryFrame {
    visible 1
    ignorepointer 1
    color 0.098 0.098 0.098 0.7843
-   position 55 869
-   size 385 206
+   position 441 5
+   size 300 0
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
    scriptclass "ViewBinding"
    style Colorable
-   Padding 0
+   Padding 3
    Margin 0
    "Size To Content V" 1
    {
     ScriptParamsClass {
      Binding_Name "FluidSliders"
+    }
+   }
+  }
+  PanelWidgetClass ButtonsPanel {
+   ignorepointer 1
+   color 0.098 0.098 0.098 0.9961
+   position 55 5
+   size 385 34
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    ButtonWidgetClass ImportButton {
+     color 0.7529 0.3647 0.3216 1
+     position 10 0
+     size 110 22
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     {
+      TextWidgetClass ImportButtonText {
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Import"
+       "text halign" center
+       "text valign" center
+      }
+      PanelWidgetClass ImportOutline {
+       ignorepointer 1
+       color 0.7059 0.7059 0.7059 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style Outline_1px
+      }
+     }
+     {
+      ScriptParamsClass {
+      }
+     }
+    }
+    ButtonWidgetClass ExportButton {
+     color 0.7529 0.3647 0.3216 1
+     position 10 0
+     size 110 22
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     {
+      TextWidgetClass ExportButtonText {
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Export"
+       "text halign" center
+       "text valign" center
+      }
+      PanelWidgetClass ExportOutline {
+       ignorepointer 1
+       color 0.7059 0.7059 0.7059 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style Outline_1px
+      }
+     }
+     {
+      ScriptParamsClass {
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass ExitBackgroundOutline {
+   ignorepointer 1
+   color 0.7059 0.7059 0.7059 0.9961
+   position 0 5
+   size 100 26
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style PanelOutline_1px_BlackBackground
+   {
+    ButtonWidgetClass ExitButton {
+     color 0.7529 0.3647 0.3216 1
+     size 98 24
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     {
+      TextWidgetClass ExitText {
+       ignorepointer 1
+       size 1 22
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       text "Exit"
+       "text halign" center
+       "text valign" center
+      }
+     }
+     {
+      ScriptParamsClass {
+      }
+     }
     }
    }
   }
