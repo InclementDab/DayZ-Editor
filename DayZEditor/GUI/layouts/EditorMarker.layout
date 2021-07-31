@@ -11,7 +11,7 @@ ButtonWidgetClass EditorMarkerColor {
  vexactsize 1
  draggable 0
  scriptclass "ViewBinding"
- style EditorMarkerAlpha
+ style Alpha70
  {
   PanelWidgetClass EditorMarkerOutlineColor {
    ignorepointer 1
