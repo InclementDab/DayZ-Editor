@@ -10,6 +10,7 @@ class EditorInventoryFluidSlot: ScriptViewTemplate<EditorInventoryFluidSlotContr
 		m_TemplateController.Parent = this;
 		
 		m_TemplateController.Name = typename.EnumToString(CarFluid, fluid);
+		m_TemplateController.Name.ToLower();
 		m_TemplateController.NotifyPropertyChanged("Name");
 		
 		m_TemplateController.FluidType = fluid;
