@@ -67,14 +67,6 @@ class EditorObjectMarker: EditorMarker
 				camera.SendToPosition(pos);
 				return true;
 			}
-		}
-		
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		switch (button) {
 			
 			case MouseState.RIGHT: {
 				
@@ -92,12 +84,11 @@ class EditorObjectMarker: EditorMarker
 				
 				return true;
 			}
-			
 		}
 		
-		return super.OnClick(w, x, y, button);
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
-	
+
 	void Select() 
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
