@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass EditorInventoryFluids {
  color 0.7059 0.7059 0.7059 0
- size 385 32
+ size 385 38
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -20,7 +20,7 @@ WrapSpacerWidgetClass EditorInventoryFluids {
    {
     SliderWidgetClass FluidSlider {
      color 1 1 1 0.9961
-     position 0 2
+     position 0 4
      size 0.96 16
      halign center_ref
      valign bottom_ref
@@ -65,7 +65,7 @@ WrapSpacerWidgetClass EditorInventoryFluids {
     }
     TextWidgetClass FluidType {
      ignorepointer 1
-     position 0 1
+     position 0 3
      size 1 12
      hexactpos 1
      vexactpos 1
