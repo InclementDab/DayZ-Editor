@@ -1,6 +1,6 @@
 WrapSpacerWidgetClass EditorInventoryFluids {
- color 0.7059 0.7059 0.7059 0.9961
- size 385 42
+ color 0.7059 0.7059 0.7059 0
+ size 385 32
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -9,42 +9,24 @@ WrapSpacerWidgetClass EditorInventoryFluids {
  Padding 4
  Margin 0
  {
-  TextWidgetClass FluidType {
-   ignorepointer 1
-   position 0 0
-   size 1 16
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 1
-   scriptclass "ViewBinding"
-   font "gui/fonts/sdf_MetronLight24"
-   "text offset" 6 0
-   "exact text" 0
-   "size to text h" 0
-   "size to text v" 0
-   {
-    ScriptParamsClass {
-     Binding_Name "Name"
-    }
-   }
-  }
   FrameWidgetClass SliderFrame {
    ignorepointer 1
-   size 1 20
+   position 0 0
+   size 1 1
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 1
+   vexactsize 0
    {
     SliderWidgetClass FluidSlider {
      color 1 1 1 0.9961
-     size 375 18
+     position 0 2
+     size 0.96 16
      halign center_ref
-     valign center_ref
+     valign bottom_ref
      hexactpos 1
      vexactpos 1
-     hexactsize 1
+     hexactsize 0
      vexactsize 1
      scriptclass "ViewBinding"
      style Slider_1px_alpha_50
@@ -55,7 +37,7 @@ WrapSpacerWidgetClass EditorInventoryFluids {
      {
       TextWidgetClass FluidLevel {
        ignorepointer 1
-       size 1 14
+       size 1 12
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -78,6 +60,28 @@ WrapSpacerWidgetClass EditorInventoryFluids {
       ScriptParamsClass {
        Binding_Name "Value"
        Two_Way_Binding 1
+      }
+     }
+    }
+    TextWidgetClass FluidType {
+     ignorepointer 1
+     position 0 1
+     size 1 12
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scriptclass "ViewBinding"
+     text "FUEL"
+     font "gui/fonts/sdf_MetronLight42"
+     "text offset" 25 0
+     "exact text" 0
+     "size to text h" 0
+     "size to text v" 0
+     "text valign" center
+     {
+      ScriptParamsClass {
+       Binding_Name "Name"
       }
      }
     }
