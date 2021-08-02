@@ -4,13 +4,6 @@ class EditorInventoryEditorController: ViewController
 		InventorySlots.GetSlotIdFromString("LeftHand")
 	};
 	
-	static const ref array<CarFluid> FLUID_TYPES = {
-		CarFluid.FUEL,
-		CarFluid.BRAKE,
-		CarFluid.OIL,
-		CarFluid.COOLANT,
-	};
-	
 	protected EntityAI m_Entity;
 	string SearchBarLeft;
 	string SearchBarLeftIcon = "set:dayz_editor_gui image:search";
@@ -97,9 +90,10 @@ class EditorInventoryEditorController: ViewController
 				
 		// Register all fluids for cars
 		Car car = Car.Cast(m_Entity);
-		foreach (CarFluid fluid: FLUID_TYPES) {
-			if (car && car.GetFluidCapacity(fluid) > 0) {
-				EditorInventoryFluidSlot fluid_slot = new EditorInventoryFluidSlot(fluid, car.GetFluidCapacity(fluid), car.GetFluidFraction(fluid));
+		typename ty_fluid = CarFluid;
+		for (int i = 0; i < ty_fluid.GetVariableCount(); i++) {
+			if (car && car.GetFluidCapacity(i) > 0) {
+				EditorInventoryFluidSlot fluid_slot = new EditorInventoryFluidSlot(i, car.GetFluidCapacity(i), car.GetFluidFraction(i));
 				fluid_slot.OnValueChanged.Insert(OnFluidAmountChanged);
 				FluidSliders.Insert(fluid_slot);
 			}
