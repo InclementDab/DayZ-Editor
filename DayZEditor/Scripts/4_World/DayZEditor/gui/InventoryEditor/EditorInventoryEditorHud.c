@@ -70,7 +70,6 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		
 		file_name = Editor.ROOT_DIRECTORY + file_name;
 		EditorFileManager.GetSafeFileName(file_name, FILE_EXTENSION);
-		Print(file_name);
 		FileSerializer serializer();
 		if (!serializer.Open(file_name, FileMode.READ)) {
 			return;
@@ -97,7 +96,6 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		
 		file_name = Editor.ROOT_DIRECTORY + file_name;
 		EditorFileManager.GetSafeFileName(file_name, FILE_EXTENSION);
-		Print(file_name);		
 		FileSerializer serializer();
 		if (!serializer.Open(file_name, FileMode.WRITE)) {
 			return;
