@@ -15,6 +15,6 @@ class EditorEditInventoryCommand: EditorCommand
 	
 	override string GetName()
 	{
-		return "Edit Inventory";
+		return "#STR_EDITOR_EDIT_INVENTORY";
 	}
 }
