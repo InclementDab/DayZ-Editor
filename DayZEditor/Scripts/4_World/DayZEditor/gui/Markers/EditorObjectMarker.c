@@ -158,7 +158,9 @@ class EditorObjectMarker: EditorMarker
 			return;
 		}
 		
-		EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton(m_EditorObject.GetType(), GetLayoutRoot(), TooltipPositions.BOTTOM_LEFT, string.Format("(%1)", m_EditorObject.GetID())));
+		if (!EditorHud.CurrentMenu) {
+			EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton(m_EditorObject.GetType(), GetLayoutRoot(), TooltipPositions.BOTTOM_LEFT, string.Format("(%1)", m_EditorObject.GetID())));
+		}
 	}
 	
 	private const int DRAG_THRESHOLD = 5;
