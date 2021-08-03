@@ -20,6 +20,8 @@ class EditorPlacedContextMenu: EditorContextMenu
 			AddMenuButton(m_Editor.CommandManager[EditorControlPlayerCommand]);
 		}
 		
+		AddMenuButton(m_Editor.CommandManager[EditorAlignToSurfaceCommand]);
+		
 		AddMenuDivider();
 		if (context.Show) {
 			AddMenuButton(m_Editor.CommandManager[EditorHideCommand]);
