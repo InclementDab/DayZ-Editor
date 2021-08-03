@@ -15,6 +15,11 @@ class EditorSearchObjectCommand: EditorCommand
 		return true;
 	}
 	
+	override string GetName()
+	{
+		return "#STR_EDITOR_SEARCH_OBJECT";
+	}
+	
 	override ShortcutKeys GetShortcut() 
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_F };
