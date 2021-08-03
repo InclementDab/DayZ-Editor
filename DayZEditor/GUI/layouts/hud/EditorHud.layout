@@ -764,13 +764,13 @@ FrameWidgetClass EditorFrame {
      ignorepointer 1
      color 0.0588 0.0588 0.0588 1
      position 0 0
-     size 1 0.017
+     size 1 18
      halign right_ref
      valign bottom_ref
      hexactpos 0
      vexactpos 0
      hexactsize 0
-     vexactsize 0
+     vexactsize 1
      scaled 1
      priority 1
      style rover_sim_colorable
@@ -806,32 +806,32 @@ FrameWidgetClass EditorFrame {
         FrameWidgetClass CameraTextVectorSpacer {
          ignorepointer 1
          position 0 0
-         size 0.002 1
+         size 4 18
          hexactpos 0
          vexactpos 0
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
         }
         FrameWidgetClass InfobarCamPosFrame {
          visible 1
          ignorepointer 1
          position 0 0
-         size 0.16 1
+         size 315 18
          valign center_ref
          hexactpos 0
          vexactpos 0
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          {
           WrapSpacerWidgetClass InfoBarVectorWrapSpacer {
            clipchildren 0
            ignorepointer 1
            position -2 1.5
-           size 0.9 16
+           size 280 16
            halign right_ref
            hexactpos 1
            vexactpos 1
-           hexactsize 0
+           hexactsize 1
            vexactsize 1
            style Empty
            Margin 0
@@ -1050,7 +1050,7 @@ FrameWidgetClass EditorFrame {
         FrameWidgetClass InfobarCameraPositionFrame {
          ignorepointer 1
          position 0 0
-         size 405 16
+         size 397 16
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -1161,7 +1161,6 @@ FrameWidgetClass EditorFrame {
            vexactsize 1
            scriptclass "ViewBinding"
            font "gui/fonts/etelkatextpro"
-           "text offset" 3 0
            "size to text h" 1
            "size to text v" 0
            "text valign" center
@@ -1347,7 +1346,7 @@ FrameWidgetClass EditorFrame {
      }
     }
     WrapSpacerWidgetClass CameraTrackWrapper {
-     visible 0
+     visible 1
      ignorepointer 1
      color 0.0196 0.0196 0.0196 0.7843
      position 285 443
