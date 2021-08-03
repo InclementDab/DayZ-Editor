@@ -15,6 +15,6 @@ class EditorResetAlignmentCommand: EditorCommand
 	
 	override string GetName()
 	{
-		return "Reset Alignment";
+		return "#STR_EDITOR_RESET_ALIGNMENT";
 	}
 }

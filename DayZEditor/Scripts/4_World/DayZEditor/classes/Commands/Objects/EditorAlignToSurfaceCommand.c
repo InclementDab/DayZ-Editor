@@ -28,6 +28,6 @@ class EditorAlignToSurfaceCommand: EditorCommand
 	
 	override string GetName()
 	{
-		return "Align To Surface";
+		return "#STR_EDITOR_ALIGN_TO_SURFACE";
 	}
 }
