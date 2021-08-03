@@ -7,7 +7,7 @@ class EditorResetAlignmentCommand: EditorCommand
 		EditorAction align_undo = new EditorAction("SetTransform", "SetTransform");
 		EditorObjectMap editor_objects = m_Editor.GetSelectedObjects();
 		foreach (EditorObject editor_object: editor_objects) {
-			vector transform[3];
+			vector transform[4];
 			editor_object.GetTransform(transform);
 			align_undo.InsertUndoParameter(editor_object.GetTransformArray());
 			
