@@ -3,13 +3,13 @@ class EditorResetAlignmentCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		Param1<EditorObject> data = Param1<EditorObject>.Cast(GetData());
-		if (!data) {
-			return false;
+		
+		EditorObjectMap editor_objects = m_Editor.GetSelectedObjects();
+		foreach (EditorObject editor_object: editor_objects) {
+			editor_object.SetOrientation(vector.Zero);
+			editor_object.Update();
 		}
 		
-		data.param1.SetOrientation(vector.Zero);
-		data.param1.Update();
 		return true;
 	}
 	
