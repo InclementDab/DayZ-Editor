@@ -4,10 +4,13 @@ class EditorResetAlignmentCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		
+		EditorAction align_undo = new EditorAction("SetTransform", "SetTransform");
 		EditorObjectMap editor_objects = m_Editor.GetSelectedObjects();
 		foreach (EditorObject editor_object: editor_objects) {
 			vector transform[3];
 			editor_object.GetTransform(transform);
+			align_undo.InsertUndoParameter(editor_object.GetTransformArray());
+			
 			vector local_ori = editor_object.GetWorldObject().GetDirection();
 			transform[0] = vector.Up * local_ori;
 			transform[1] = vector.Up;
@@ -15,7 +18,11 @@ class EditorResetAlignmentCommand: EditorCommand
 			
 			editor_object.SetTransform(transform);
 			editor_object.Update();
+			
+			align_undo.InsertRedoParameter(editor_object.GetTransformArray());
 		}
+		
+		m_Editor.InsertAction(align_undo);
 		
 		return true;
 	}
