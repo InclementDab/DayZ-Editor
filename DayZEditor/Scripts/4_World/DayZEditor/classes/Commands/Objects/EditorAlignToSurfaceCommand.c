@@ -30,4 +30,9 @@ class EditorAlignToSurfaceCommand: EditorCommand
 	{
 		return "#STR_EDITOR_ALIGN_TO_SURFACE";
 	}
+	
+	override string GetIcon()
+	{
+		return "set:dayz_editor_gui image:magnet";
+	}
 }
