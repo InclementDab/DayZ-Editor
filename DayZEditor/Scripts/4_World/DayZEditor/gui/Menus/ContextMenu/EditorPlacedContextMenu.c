@@ -21,11 +21,18 @@ class EditorPlacedContextMenu: EditorContextMenu
 		}
 		
 		AddMenuDivider();
-		AddMenuButton(m_Editor.CommandManager[EditorShowCommand]);
-		AddMenuButton(m_Editor.CommandManager[EditorHideCommand]);
-		AddMenuDivider();
-		AddMenuButton(m_Editor.CommandManager[EditorLockCommand]);
-		AddMenuButton(m_Editor.CommandManager[EditorUnlockCommand]);
+		if (context.Show) {
+			AddMenuButton(m_Editor.CommandManager[EditorHideCommand]);
+		} else {
+			AddMenuButton(m_Editor.CommandManager[EditorShowCommand]);
+		}
+		
+		if (context.Locked) {
+			AddMenuButton(m_Editor.CommandManager[EditorUnlockCommand]);
+		} else {
+			AddMenuButton(m_Editor.CommandManager[EditorLockCommand]);
+		}
+		
 		AddMenuDivider();		
 		AddMenuButton(m_Editor.CommandManager[EditorDuplicateCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorObjectPropertiesCommand]);
