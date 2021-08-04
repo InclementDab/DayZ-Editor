@@ -291,7 +291,11 @@ class EditorClientModule: JMModuleBase
 			value *= 0.01;
 		}
 		
-		QuickTransformObjects(Vector(0, 0, value));
+		if (GetEditor().Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * value);
+		} else {
+			QuickTransformObjects(Vector(0, 0, value));
+		}
 	}
 
 	private void OnEditorMoveObjectBackward(UAInput input)
@@ -321,7 +325,11 @@ class EditorClientModule: JMModuleBase
 			value *= 0.01;
 		}
 		
-		QuickTransformObjects(Vector(0, 0, -value));
+		if (GetEditor().Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * -value);
+		} else {
+			QuickTransformObjects(Vector(0, 0, -value));
+		}
 	}
 	
 	private void OnEditorMoveObjectLeft(UAInput input)
@@ -334,7 +342,11 @@ class EditorClientModule: JMModuleBase
 			value *= 0.01;
 		}
 		
-		QuickTransformObjects(Vector(-value, 0, 0));
+		if (GetEditor().Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * vector.Up * value);
+		} else {
+			QuickTransformObjects(Vector(-value, 0, 0));
+		}
 	}	
 	
 	private void OnEditorMoveObjectRight(UAInput input)
@@ -347,7 +359,11 @@ class EditorClientModule: JMModuleBase
 			value *= 0.01;
 		}
 		
-		QuickTransformObjects(Vector(value, 0, 0));
+		if (GetEditor().Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * vector.Up * -value);
+		} else {
+			QuickTransformObjects(Vector(value, 0, 0));
+		}
 	}
 	
 	private void OnEditorMoveObjectUp(UAInput input)
@@ -360,7 +376,11 @@ class EditorClientModule: JMModuleBase
 			value *= 0.01;
 		}
 		
-		QuickTransformObjects(Vector(0, value, 0));
+		if (GetEditor().Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * vector.Aside * value);
+		} else {
+			QuickTransformObjects(Vector(0, value, 0));
+		}
 	}	
 	
 	private void OnEditorMoveObjectDown(UAInput input)
@@ -373,7 +393,11 @@ class EditorClientModule: JMModuleBase
 			value *= 0.01;
 		}
 		
-		QuickTransformObjects(Vector(0, -value, 0));
+		if (GetEditor().Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * vector.Aside * -value);
+		} else {
+			QuickTransformObjects(Vector(0, -value, 0));
+		}
 	}
 	
 	// RPC stuff
@@ -395,3 +419,4 @@ class EditorClientModule: JMModuleBase
 		}
 	}
 }
+	

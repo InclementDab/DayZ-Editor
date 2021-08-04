@@ -26,6 +26,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		general_group.Insert(new SliderPrefab("View Distance", m_Editor.Settings, "ViewDistance", 0, 20000));
 		general_group.Insert(new SliderPrefab("Object View Distance", m_Editor.Settings, "ObjectViewDistance", 0, 8000));
 		general_group.Insert(new EditBoxNumberPrefab("Quick Move Step", m_Editor.Settings, "QuickMoveStepSize", 0.01));	
+		general_group.Insert(new CheckBoxPrefab("Quick Move Follows Camera", m_Editor.Settings, "QuickMoveFollowsCamera"));	
 		
 		general_group.Insert(new CheckBoxPrefab("Show Screen Logs", m_Editor.Settings, "ShowScreenLogs"));
 		general_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", m_Editor.Settings, "ShowBoundingBoxes"));
