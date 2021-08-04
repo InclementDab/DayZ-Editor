@@ -174,7 +174,7 @@ class EditorObjectMarker: EditorMarker
 			int dist_y = Math.AbsInt(y - c_y);
 			
 			if (dist_x + dist_y > DRAG_THRESHOLD) {
-				GetEditor().SelectObject(m_EditorObject);
+				m_Editor.SelectObject(m_EditorObject);
 				m_DragHandler.OnDragStart();
 				return;
 			}
