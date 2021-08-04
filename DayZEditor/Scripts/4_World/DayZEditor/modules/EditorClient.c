@@ -127,6 +127,14 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnMissionLoaded");
 		
 		g_Game.ReportProgress("Mission Loaded");
+		
+		// Check if COM is running, because that means theres crackheads afoot!
+		if ("CommunityOfflineClient".ToType()) {
+			EditorLog.Error("The DayZ Editor cannot run with COM enabled, disable it in your Parameters file and restart the game with ONLY the DayZ Editor");
+			GetGame().GetUIManager().ShowDialog("Community Offline Mode Enabled", "The DayZ Editor cannot run with COM enabled, disable it in your Parameters file and restart the game with ONLY the DayZ Editor", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
+			return;
+		}
+		
 		EditorLog.Info("Loading Offline Editor...");
 		Editor editor = Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
 		editor.SetActive(true);
