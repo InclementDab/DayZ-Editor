@@ -439,7 +439,7 @@ FrameWidgetClass InventoryFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       text "Import"
+       text "#STR_EDITOR_IMPORT"
        "text halign" center
        "text valign" center
       }
@@ -484,7 +484,7 @@ FrameWidgetClass InventoryFrame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       text "Export"
+       text "#STR_EDITOR_EXPORT"
        "text halign" center
        "text valign" center
       }
@@ -554,7 +554,7 @@ FrameWidgetClass InventoryFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         text "Clear Inventory"
+         text "#STR_EDITOR_EDIT_INVENTORY"
          "text halign" center
          "text valign" center
         }
@@ -600,7 +600,7 @@ FrameWidgetClass InventoryFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         text "Exit"
+         text "#STR_EDITOR_EXIT"
          "text halign" center
          "text valign" center
         }
