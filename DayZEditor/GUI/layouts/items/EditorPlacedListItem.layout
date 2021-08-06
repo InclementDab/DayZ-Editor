@@ -20,7 +20,7 @@ WrapSpacerWidgetClass ListItem {
  content_valign center
  {
   PanelWidgetClass ListItemFrame {
-   ignorepointer 1
+   ignorepointer 0
    color 0.4196 0.6471 1 0
    position 0 0
    size 1 1
@@ -50,6 +50,7 @@ WrapSpacerWidgetClass ListItem {
      style Empty
      {
       PanelWidgetClass ListItemContent {
+       clipchildren 1
        ignorepointer 1
        color 0.4196 0.6471 1 0
        position 0 0
@@ -80,7 +81,7 @@ WrapSpacerWidgetClass ListItem {
          style Normal
          text "CATEGORY"
          font "gui/fonts/etelkatextpro"
-         "text offset" 5 0
+         "text offset" 2 2
          "bold text" 0
          "exact text" 0
          "size to text h" 0
@@ -89,6 +90,36 @@ WrapSpacerWidgetClass ListItem {
          {
           ScriptParamsClass {
            Binding_Name "Label"
+          }
+         }
+        }
+        ButtonWidgetClass ToggleLockedButton {
+         visible 1
+         color 1 1 1 0.0784
+         position 2 0
+         size 16 16
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         {
+          ImageWidgetClass LockedImage {
+           visible 0
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           image0 "set:dayz_gui image:icon_locked_sb"
+           mode additive
+           "src alpha" 1
+           filter 1
           }
          }
         }
