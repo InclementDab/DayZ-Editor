@@ -1,5 +1,5 @@
 modded class PlayerBase
-{
+{	
 	static map<string, int> GetEmoteList()
 	{
 		map<string, int> emotes();
