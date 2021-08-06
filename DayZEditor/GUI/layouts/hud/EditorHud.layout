@@ -816,7 +816,7 @@ FrameWidgetClass EditorFrame {
          visible 1
          ignorepointer 1
          position 0 0
-         size 315 18
+         size 280 18
          valign center_ref
          hexactpos 0
          vexactpos 0
@@ -827,11 +827,11 @@ FrameWidgetClass EditorFrame {
            clipchildren 0
            ignorepointer 1
            position -2 1.5
-           size 280 16
+           size 1 16
            halign right_ref
            hexactpos 1
            vexactpos 1
-           hexactsize 1
+           hexactsize 0
            vexactsize 1
            style Empty
            Margin 0
@@ -1050,7 +1050,7 @@ FrameWidgetClass EditorFrame {
         FrameWidgetClass InfobarCameraPositionFrame {
          ignorepointer 1
          position 0 0
-         size 397 16
+         size 210 16
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -1061,7 +1061,7 @@ FrameWidgetClass EditorFrame {
           TextWidgetClass InfobarCameraPositionText {
            clipchildren 1
            ignorepointer 1
-           position 0.15 0
+           position 0 0
            size 1 19
            halign center_ref
            valign center_ref
@@ -1071,15 +1071,64 @@ FrameWidgetClass EditorFrame {
            vexactsize 1
            text "#STR_EDITOR_CAMERA_POSITION"
            font "gui/fonts/etelkatextpro"
+           "text offset" -3 0
            "exact text" 0
-           "size to text h" 1
+           "size to text h" 0
            "size to text v" 0
            "text halign" right
            "text valign" center
           }
          }
         }
+        FrameWidgetClass PrecisionFrame {
+         ignorepointer 1
+         size 222 19
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          TextWidgetClass PrecisionText {
+           ignorepointer 1
+           position 0 0
+           size 1 19
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           text "Precision"
+           font "gui/fonts/etelkatextpro"
+           "text offset" -35 1
+           "exact text" 0
+           "size to text h" 0
+           "size to text v" 0
+           "text halign" right
+           "text valign" center
+          }
+          EditBoxWidgetClass PrecisionEditbox {
+           position 0 0
+           size 30 14
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           style ServerBrowser
+           text "0.05"
+           font "gui/fonts/sdf_MetronLight72"
+           {
+            ScriptParamsClass {
+             Two_Way_Binding 1
+            }
+           }
+          }
+         }
+        }
         FrameWidgetClass CinematicCameraFrame {
+         visible 1
          ignorepointer 1
          position 0 0
          size 20 18
@@ -1346,7 +1395,7 @@ FrameWidgetClass EditorFrame {
      }
     }
     WrapSpacerWidgetClass CameraTrackWrapper {
-     visible 0
+     visible 1
      ignorepointer 1
      color 0.0196 0.0196 0.0196 0.7843
      position 285 443
