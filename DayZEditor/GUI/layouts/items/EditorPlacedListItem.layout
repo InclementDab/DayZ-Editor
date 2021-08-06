@@ -103,6 +103,7 @@ WrapSpacerWidgetClass ListItem {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scriptclass "ViewBinding"
          style Empty
          {
           ImageWidgetClass LockedImage {
@@ -120,6 +121,11 @@ WrapSpacerWidgetClass ListItem {
            mode additive
            "src alpha" 1
            filter 1
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "OnToggleLockExecute"
           }
          }
         }

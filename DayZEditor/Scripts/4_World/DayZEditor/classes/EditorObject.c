@@ -710,6 +710,8 @@ class EditorObject: EditorWorldObject
 		if (marker) {
 			marker.Show(!Locked);
 		}
+		
+		m_EditorPlacedListItem.LockedImage.Show(Locked);
 	}
 	
 	void EnablePhysics(bool enable)

@@ -8,6 +8,8 @@ class EditorPlacedListItem: EditorListItem
 	
 	protected ref EditorObjectDragHandler m_DragHandler;
 	
+	ImageWidget LockedImage;
+	
 	void EditorPlacedListItem(EditorObject editor_object)
 	{
 		EditorLog.Trace("EditorPlacedListItem::SetEditorObject"); 
@@ -20,7 +22,9 @@ class EditorPlacedListItem: EditorListItem
 		
 		m_TemplateController.Icon = m_EditorObject.GetData().Icon;
 		m_TemplateController.NotifyPropertyChanged("Icon");
-				
+		
+		LockedImage.Show(m_EditorObject.Locked);
+		
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
@@ -141,6 +145,12 @@ class EditorPlacedListItem: EditorListItem
 		return true;
 	}
 	
+	bool OnToggleLockExecute(ButtonCommandArgs args)
+	{
+		m_EditorObject.Lock(!m_EditorObject.Locked);
+		return true;
+	}
+		
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorPlacedListItem::OnDrag");	
