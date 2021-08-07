@@ -1121,6 +1121,7 @@ FrameWidgetClass EditorFrame {
            font "gui/fonts/sdf_MetronLight72"
            {
             ScriptParamsClass {
+             Binding_Name "PrecisionLevel"
              Two_Way_Binding 1
             }
            }

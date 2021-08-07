@@ -9,6 +9,8 @@ class EditorHudController: EditorControllerBase
 	bool CategoryPlacements = true;
 	bool CategoryDeletions;
 	
+	StringEvaluater PrecisionLevel = "0.05";
+	
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
@@ -143,6 +145,11 @@ class EditorHudController: EditorControllerBase
 		m_Editor.GetEditorHud().EditorMapWidget.AddChild(map_marker.GetLayoutRoot());
 	}
 	
+	float GetPrecisionLevel()
+	{
+		return PrecisionLevel.Parse();
+	}
+	
 	static array<ref EditorPlaceableItem> LoadPlaceableObjects() 
 	{ 
 		EditorLog.Trace("EditorHudController::LoadPlaceableObjects");
@@ -242,6 +249,11 @@ class EditorHudController: EditorControllerBase
 			case "SearchBarIcon": {
 				// this could probably be a command with SetCanExecute but im not feeling it 
 				LeftbarPanelSearchBarIconButton.Enable(SearchBarData.Length() > 0);
+				break;
+			}
+			
+			case "PrecisionLevel": {
+				g_EditorPrecision = PrecisionLevel.Parse();
 				break;
 			}
 		}
