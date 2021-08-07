@@ -252,6 +252,7 @@ class EditorHudController: EditorControllerBase
 				break;
 			}
 			
+			// I literally hate this
 			case "PrecisionLevel": {
 				g_EditorPrecision = PrecisionLevel.Parse();
 				break;

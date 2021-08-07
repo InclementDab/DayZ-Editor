@@ -189,12 +189,12 @@ class EditorObjectManagerModule: JMModuleBase
 		
 	EditorObject GetPlacedObjectById(int id)
 	{
-		return m_PlacedObjects.Get(id); 
+		return m_PlacedObjects[id]; 
 	}
 	
 	EditorObject GetEditorObject(int id)
 	{
-		return m_PlacedObjects.Get(id); 
+		return m_PlacedObjects[id]; 
 	}
 	
 	EditorObject GetEditorObject(notnull Object world_object) 
