@@ -1308,7 +1308,6 @@ FrameWidgetClass EditorFrame {
            scriptclass "ViewBinding"
            style None
            font "gui/fonts/etelkatextpro"
-           "text offset" 7 0
            "exact text" 0
            "size to text h" 1
            "size to text v" 0
