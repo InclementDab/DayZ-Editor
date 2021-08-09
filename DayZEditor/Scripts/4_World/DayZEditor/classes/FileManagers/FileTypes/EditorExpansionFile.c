@@ -22,14 +22,20 @@ class EditorExpansionFile: EditorFileType
 	        	line.Split("|", tokens);  
 				
 				string type = tokens[0];
+				string trader_type;
 				// setting up for processing after the fact
 				if (type.Contains(".")) {
 					TStringArray tsplit = {};
 					type.Split(".", tsplit);
 					type = tsplit[0];
+					trader_type = tsplit[1];
 				}
 				
 				EditorObjectData data = EditorObjectData.Create(type, tokens[1].ToVector(), tokens[2].ToVector(), 1, EditorObjectFlags.ALL);
+				
+				if (trader_type != string.Empty) {
+					data.Parameters["ExpansionTraderType"] = new Param1<string>(trader_type);
+				}
 				
 				if (tokens[3] != string.Empty) {
 					tokens[3].Split(",", data.Attachments);
@@ -68,11 +74,10 @@ class EditorExpansionFile: EditorFileType
 			
 			EntityAI entity = EntityAI.Cast(editor_object.WorldObject);
 			if (entity) {
-				array<EntityAI> attachments = {};
+				array<EntityAI> attachments = {};				
 				entity.GetInventory().EnumerateInventory(InventoryTraversalType.INORDER, attachments);
 				foreach (EntityAI attachment: attachments) {
-					Print(attachment);
-					if (!attachment) {
+					if (entity.GetInventory().HasAttachment(attachment)) {
 						continue;
 					}
 										
