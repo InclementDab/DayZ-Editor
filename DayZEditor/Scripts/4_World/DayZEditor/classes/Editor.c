@@ -744,17 +744,16 @@ class Editor
 		EntityAI entity = m_EditorInventoryEditorHud.GetEntity();
 		
 		PlayerBase player;
-		if (Class.CastTo(player, entity)) {
+		/*if (Class.CastTo(player, entity)) {
 			GetGame().SelectPlayer(null, player);
 			player.OnInventoryMenuClose();
 			player.GetInputController().SetDisabled(false);
-		} else {
+			SetMissionHud(true);
+		} else {*/
 			SetActive(true);
-		}
+		//}
 		
 		delete m_EditorInventoryEditorHud;
-		
-		SetMissionHud(true);
 	}
 	
 	bool IsInventoryEditorActive()
