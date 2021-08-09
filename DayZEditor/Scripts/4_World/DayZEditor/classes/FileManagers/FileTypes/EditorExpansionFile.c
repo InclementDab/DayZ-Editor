@@ -50,12 +50,35 @@ class EditorExpansionFile: EditorFileType
 						
 			string line = string.Format("%1|%2|%3", editor_object.Type, editor_object.WorldObject.GetPosition().ToString(false), editor_object.WorldObject.GetOrientation().ToString(false));
 			FPrintln(handle, line);
+			
+			EntityAI entity = EntityAI.Cast(editor_object.WorldObject);
+			if (entity) {
+				string attachment_list;
+				for (int i = 0; i < entity.GetInventory().GetAttachmentSlotsCount(); i++) {
+					EntityAI attachment = entity.GetInventory().GetAttachmentFromIndex(i);
+					if (!attachment) {
+						continue;
+					}
+										
+					attachment_list += attachment.GetType() + ",";
+				}
+				
+				if (attachment_list[attachment_list.Length() - 1] == ",") {
+					attachment_list[attachment_list.Length() - 1] = "";
+				}
+								
+				if (attachment_list != string.Empty) {
+					line = string.Format("%1.Components|%2|%3|%4", editor_object.Type, editor_object.WorldObject.GetPosition().ToString(false), editor_object.WorldObject.GetOrientation().ToString(false), attachment_list);
+					FPrintln(handle, line);
+				}
+			}
 		}
 		
 		CloseFile(handle);
 	}
 	
-	override string GetExtension() {
+	override string GetExtension() 
+	{
 		return ".map";
 	}
 }
