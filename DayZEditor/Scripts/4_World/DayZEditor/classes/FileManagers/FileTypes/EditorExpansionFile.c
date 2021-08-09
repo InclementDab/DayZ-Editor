@@ -9,20 +9,35 @@ class EditorExpansionFile: EditorFileType
 			EditorLog.Error("File in use %1", file);
 			return null;
 		}
-		
+			
 		EditorSaveData save_data = new EditorSaveData();
 	
         string line;
         int line_size = FGets(handle, line);
 		while (line_size > 0) {
 			line.TrimInPlace();
-						
+			
 			if (line_size != 1 && line.Substring(0, 2) != "\/\/") {
 				TStringArray tokens = {};
 	        	line.Split("|", tokens);  
-	        	save_data.EditorObjects.Insert(EditorObjectData.Create(tokens[0], tokens[1].ToVector(), tokens[2].ToVector(), 1, EditorObjectFlags.ALL));
+				
+				string type = tokens[0];
+				// setting up for processing after the fact
+				if (type.Contains(".")) {
+					TStringArray tsplit = {};
+					type.Split(".", tsplit);
+					type = tsplit[0];
+				}
+				
+				EditorObjectData data = EditorObjectData.Create(type, tokens[1].ToVector(), tokens[2].ToVector(), 1, EditorObjectFlags.ALL);
+				
+				if (tokens[3] != string.Empty) {
+					tokens[3].Split(",", data.Attachments);
+				}
+				
+				save_data.EditorObjects.Insert(data);
 			}
-			
+						
 			line_size = FGets(handle, line);
 		}        
 
@@ -48,14 +63,15 @@ class EditorExpansionFile: EditorFileType
 				break;
 			}
 						
-			string line = string.Format("%1|%2|%3", editor_object.Type, editor_object.WorldObject.GetPosition().ToString(false), editor_object.WorldObject.GetOrientation().ToString(false));
-			FPrintln(handle, line);
+			string attachment_list;
+			string line;
 			
 			EntityAI entity = EntityAI.Cast(editor_object.WorldObject);
 			if (entity) {
-				string attachment_list;
-				for (int i = 0; i < entity.GetInventory().GetAttachmentSlotsCount(); i++) {
-					EntityAI attachment = entity.GetInventory().GetAttachmentFromIndex(i);
+				array<EntityAI> attachments = {};
+				entity.GetInventory().EnumerateInventory(InventoryTraversalType.INORDER, attachments);
+				foreach (EntityAI attachment: attachments) {
+					Print(attachment);
 					if (!attachment) {
 						continue;
 					}
@@ -66,12 +82,17 @@ class EditorExpansionFile: EditorFileType
 				if (attachment_list[attachment_list.Length() - 1] == ",") {
 					attachment_list[attachment_list.Length() - 1] = "";
 				}
-								
-				if (attachment_list != string.Empty) {
-					line = string.Format("%1.Components|%2|%3|%4", editor_object.Type, editor_object.WorldObject.GetPosition().ToString(false), editor_object.WorldObject.GetOrientation().ToString(false), attachment_list);
-					FPrintln(handle, line);
-				}
 			}
+			
+			// traders
+			Param1<string> trader_param = Param1<string>.Cast(editor_object.Parameters["ExpansionTraderType"]);
+			if (attachment_list != string.Empty && trader_param) {				
+				line = string.Format("%1.%5|%2|%3|%4", editor_object.Type, editor_object.WorldObject.GetPosition().ToString(false), editor_object.WorldObject.GetOrientation().ToString(false), attachment_list, trader_param.param1);
+			} else {
+				line = string.Format("%1|%2|%3", editor_object.Type, editor_object.WorldObject.GetPosition().ToString(false), editor_object.WorldObject.GetOrientation().ToString(false));
+			}
+			
+			FPrintln(handle, line);
 		}
 		
 		CloseFile(handle);

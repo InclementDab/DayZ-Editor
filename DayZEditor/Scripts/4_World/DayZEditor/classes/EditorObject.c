@@ -36,6 +36,9 @@ class EditorObject: EditorWorldObject
 	bool Control;
 	int CurrentAnimation;
 	bool Animate;
+	
+	// Custom stuff
+	string ExpansionTraderType;
 		
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
@@ -103,6 +106,17 @@ class EditorObject: EditorWorldObject
 		
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
+		}
+		
+		EntityAI entity = EntityAI.Cast(m_WorldObject);
+		if (entity) {
+			foreach (string attachment: data.Attachments) {
+				entity.GetInventory().CreateAttachment(attachment);
+			}
+		}
+		
+		if (data.Parameters["ExpansionTraderType"]) {
+			ExpansionTraderType = Param1<string>.Cast(data.Parameters["ExpansionTraderType"]).param1;
 		}
 		
 		vector clip_info[2];
@@ -402,6 +416,12 @@ class EditorObject: EditorWorldObject
 				}
 				
 				m_WorldObject.Update();
+				break;
+			}
+			
+			case "ExpansionTraderType": {
+				// storing the custom data
+				m_Data.Parameters["ExpansionTraderType"] = new Param1<string>(ExpansionTraderType);
 				break;
 			}
 		}

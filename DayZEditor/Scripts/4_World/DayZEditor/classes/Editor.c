@@ -742,7 +742,6 @@ class Editor
 		}
 		
 		EntityAI entity = m_EditorInventoryEditorHud.GetEntity();
-		
 		PlayerBase player;
 		/*if (Class.CastTo(player, entity)) {
 			GetGame().SelectPlayer(null, player);

@@ -89,6 +89,11 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_ObjectGroup.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", m_EditorObject, "Physics"));
 		m_ObjectGroup.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", m_EditorObject, "AllowDamage"));
 		//m_ObjectGroup.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_COLLISION", m_EditorObject, "Collision"));
+		string expansion_check = "ExpansionMarketModule";
+		if (expansion_check.ToType() && m_EditorObject.GetWorldObject().IsInherited(EntityAI)) {
+			m_ObjectGroup.Insert(new EditBoxPrefab("Trader Type", m_EditorObject, "ExpansionTraderType"));
+		}
+		
 		m_ObjectGroup.Open(Object_Group);
 		AddContent(m_ObjectGroup);
 		
