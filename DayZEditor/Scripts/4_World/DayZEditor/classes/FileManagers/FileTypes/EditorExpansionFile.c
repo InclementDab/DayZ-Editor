@@ -77,7 +77,7 @@ class EditorExpansionFile: EditorFileType
 				array<EntityAI> attachments = {};				
 				entity.GetInventory().EnumerateInventory(InventoryTraversalType.INORDER, attachments);
 				foreach (EntityAI attachment: attachments) {
-					if (entity.GetInventory().HasAttachment(attachment)) {
+					if (!entity.GetInventory().HasAttachment(attachment)) {
 						continue;
 					}
 										
