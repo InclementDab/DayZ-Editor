@@ -84,7 +84,7 @@ class EditorExpansionFile: EditorFileType
 					attachment_list += attachment.GetType() + ",";
 				}
 				
-				if (attachment_list[attachment_list.Length() - 1] == ",") {
+				if (attachment_list.Length() > 0 && attachment_list[attachment_list.Length() - 1] == ",") {
 					attachment_list[attachment_list.Length() - 1] = "";
 				}
 			}
