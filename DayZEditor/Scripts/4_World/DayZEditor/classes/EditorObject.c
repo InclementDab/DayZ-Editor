@@ -116,7 +116,7 @@ class EditorObject: EditorWorldObject
 		}
 		
 		if (data.Parameters["ExpansionTraderType"]) {
-			ExpansionTraderType = Param1<string>.Cast(data.Parameters["ExpansionTraderType"]).param1;
+			ExpansionTraderType = EditorObjectParam1<string>.Cast(data.Parameters["ExpansionTraderType"]).param1;
 		}
 		
 		vector clip_info[2];
@@ -290,6 +290,22 @@ class EditorObject: EditorWorldObject
 			m_Data.Orientation = GetOrientation();
 			m_Data.Scale = GetScale();
 			m_Data.BottomCenter = GetBottomCenter();
+			
+			// Update Attachments
+			EntityAI entity = EntityAI.Cast(GetWorldObject());
+			if (entity) {
+				m_Data.Attachments.Clear();
+				array<EntityAI> attachments = {};				
+				entity.GetInventory().EnumerateInventory(InventoryTraversalType.INORDER, attachments);
+				foreach (EntityAI attachment: attachments) {
+					if (!entity.GetInventory().HasAttachment(attachment)) {
+						continue;
+					}
+					
+					m_Data.Attachments.Insert(attachment.GetType());
+				}
+			}
+			
 		}
 		
 		Name = GetDisplayName();
@@ -420,8 +436,8 @@ class EditorObject: EditorWorldObject
 			}
 			
 			case "ExpansionTraderType": {
-				// storing the custom data
-				m_Data.Parameters["ExpansionTraderType"] = new Param1<string>(ExpansionTraderType);
+				// storing the custom data				
+				m_Data.Parameters["ExpansionTraderType"] = EditorObjectParam1<string>.Create(ExpansionTraderType);
 				break;
 			}
 		}

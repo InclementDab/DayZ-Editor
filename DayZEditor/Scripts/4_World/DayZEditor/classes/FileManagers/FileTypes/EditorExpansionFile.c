@@ -34,7 +34,7 @@ class EditorExpansionFile: EditorFileType
 				EditorObjectData data = EditorObjectData.Create(type, tokens[1].ToVector(), tokens[2].ToVector(), 1, EditorObjectFlags.ALL);
 				
 				if (trader_type != string.Empty) {
-					data.Parameters["ExpansionTraderType"] = new Param1<string>(trader_type);
+					data.Parameters["ExpansionTraderType"] = EditorObjectParam1<string>.Create(trader_type);
 				}
 				
 				if (tokens[3] != string.Empty) {
@@ -70,7 +70,6 @@ class EditorExpansionFile: EditorFileType
 				break;
 			}
 						
-			
 			string line;
 			EntityAI entity = EntityAI.Cast(editor_object.WorldObject);
 			if (entity) {
@@ -90,7 +89,7 @@ class EditorExpansionFile: EditorFileType
 			}
 			
 			// traders
-			Param1<string> trader_param = Param1<string>.Cast(editor_object.Parameters["ExpansionTraderType"]);
+			EditorObjectParam1<string> trader_param = EditorObjectParam1<string>.Cast(editor_object.Parameters["ExpansionTraderType"]);
 			if (attachment_list != string.Empty && trader_param) {				
 				line = string.Format("%1.%5|%2|%3|%4", editor_object.Type, editor_object.WorldObject.GetPosition().ToString(false), editor_object.WorldObject.GetOrientation().ToString(false), attachment_list, trader_param.param1);
 			} else {
