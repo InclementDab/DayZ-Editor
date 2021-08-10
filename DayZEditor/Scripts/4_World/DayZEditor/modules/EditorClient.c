@@ -314,8 +314,8 @@ class EditorClientModule: JMModuleBase
 					placeables[i].Deselect();
 					GetEditor().CreateInHand(placeables[i + 1].GetPlaceableItem());
 					placeables[i + 1].Select();
+					
 					GetEditor().GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i + 1) /  placeables.Count());
-					Print(i);
 					return;
 				}
 			}
