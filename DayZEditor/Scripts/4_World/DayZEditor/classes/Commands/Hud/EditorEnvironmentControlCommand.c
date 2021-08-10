@@ -2,7 +2,7 @@ class EditorEnvironmentControlCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorEnvironmentDialog dialog = new EditorEnvironmentDialog("Weather Controller");
+		EditorEnvironmentDialog dialog = new EditorEnvironmentDialog(GetName());
 		DialogResult result = dialog.ShowDialog();
 	}
 	

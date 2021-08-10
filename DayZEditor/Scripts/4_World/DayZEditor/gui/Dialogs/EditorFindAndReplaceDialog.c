@@ -12,12 +12,12 @@ class EditorFindAndReplaceDialog: EditorDialogBase
 	{
 		m_EditorFindAndReplaceDialogController = EditorFindAndReplaceDialogController.Cast(m_Controller);
 		
-		AddContent(new EditBoxPrefab("Find", m_Controller, "Find"));
-		AddContent(new EditBoxPrefab("Replace", m_Controller, "Replace"));
+		AddContent(new EditBoxPrefab("#STR_EDITOR_FIND", m_Controller, "Find"));
+		AddContent(new EditBoxPrefab("#STR_EDITOR_FIND_AND_REPLACE", m_Controller, "Replace"));
 		
-		AddButton("Find", "OnFind");
-		AddButton("Find + Replace", "OnFindAndReplace");
-		AddButton("Close", DialogResult.Cancel);
+		AddButton("#STR_EDITOR_FIND", "OnFind");
+		AddButton("#STR_EDITOR_FIND_AND_REPLACE", "OnFindAndReplace");
+		AddButton("#STR_EDITOR_CLOSE", DialogResult.Cancel);
 	}
 	
 	void OnFind(ButtonCommandArgs args)

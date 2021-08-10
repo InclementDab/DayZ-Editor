@@ -1,4 +1,3 @@
-
 class EditorEnvironmentDialogController: DialogBaseController
 {
 	protected World m_World;
@@ -82,16 +81,16 @@ class EditorEnvironmentDialog: EditorDialogBase
 {	
 	void EditorEnvironmentDialog(string title)
 	{
-		GroupPrefab group_prefab = new GroupPrefab("Weather", m_Controller, string.Empty);		
-		group_prefab.Insert(new SliderPrefab("Date", m_Controller, "date", 1, 365));
-		group_prefab.Insert(new SliderPrefab("Time", m_Controller, "time", 0, 86400));
-		group_prefab.Insert(new SliderPrefab("Rain", m_Controller, "rain", 0, 1));
-		group_prefab.Insert(new SliderPrefab("Fog", m_Controller, "fog", 0, 1));
-		group_prefab.Insert(new SliderPrefab("Overcast", m_Controller, "overcast", 0, 1));
-		group_prefab.Insert(new SliderPrefab("Wind", m_Controller, "wind", 0, 1));
+		GroupPrefab group_prefab = new GroupPrefab("#STR_EDITOR_WEATHER", m_Controller, string.Empty);		
+		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_DATE", m_Controller, "date", 1, 365));
+		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_TIME", m_Controller, "time", 0, 86400));
+		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_RAIN", m_Controller, "rain", 0, 1));
+		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_FOG", m_Controller, "fog", 0, 1));
+		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_OVERCAST", m_Controller, "overcast", 0, 1));
+		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_WIND", m_Controller, "wind", 0, 1));
 		
 		map<int, string> lighting_config_data = GetGame().GetMission().GetWorldLighting().GetAllLightingConfigs();
-		DropdownListPrefab<int> lighting_config = new DropdownListPrefab<int>("Lighting Config", m_Controller, "LightingConfig");
+		DropdownListPrefab<int> lighting_config = new DropdownListPrefab<int>("#STR_EDITOR_LIGHTING_CONFIG", m_Controller, "LightingConfig");
 		foreach (int value, string name: lighting_config_data) {
 			lighting_config[name] = value;
 		}
