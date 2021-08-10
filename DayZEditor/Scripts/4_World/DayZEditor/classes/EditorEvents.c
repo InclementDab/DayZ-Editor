@@ -1,4 +1,3 @@
-
 class EditorEvents
 {
 	// Called AFTER Object is created
