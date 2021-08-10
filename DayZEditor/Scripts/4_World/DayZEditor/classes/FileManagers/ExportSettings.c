@@ -1,6 +1,6 @@
 class ExportSettings: FileSettingsBase
 {
-	bool Binarized;
+	bool Binarized = true;
 	ExportHeightType HeightType;
 	bool ExportSelectedOnly;
 	vector ExportOffset;
