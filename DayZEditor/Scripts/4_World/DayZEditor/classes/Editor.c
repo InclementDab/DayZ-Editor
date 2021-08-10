@@ -358,7 +358,12 @@ class Editor
 			}
 		}
 		
-		if (m_Player && !m_Active) {		
+		if (m_Player && !m_Active) {	
+			// todo: somewhere in the stack, we aint calling this... why?
+			if (input.LocalPress("EditorToggleInventory", false)) {
+				GetGame().GetMission().ShowInventory();
+			}
+				
 			if (input.LocalPress("EditorToggleInventoryEditor", false)) {
 				if (m_EditorInventoryEditorHud) {
 					StopInventoryEditor();
@@ -371,11 +376,6 @@ class Editor
 				
 				return;
 			}
-			
-			// todo: somewhere in the stack, we aint calling this... why?
-			//if (input.LocalPress("UAGear", false)) {
-			//	GetGame().GetMission().ShowInventory();
-			//}
 		}
 	}
 	

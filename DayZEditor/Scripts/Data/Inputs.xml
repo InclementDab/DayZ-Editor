@@ -20,6 +20,7 @@
             <input name="EditorToggleCursor" loc="Toggle Cursor" />
             <input name="EditorTeleportPlayerToCursor" loc="Teleport Player to Cursor" />
             <input name="EditorToggleInventoryEditor" loc="Toggle Inventory Editor" />
+            <input name="EditorToggleInventory" loc="Toggle Inventory" />
 			
 			<input name="EditorToggleMap" loc="Map" />
 			<input name="EditorDeleteObject" loc="Delete Object" />
@@ -100,6 +101,10 @@
             <btn name="kLControl">
                <btn name="kTab"/>
             </btn>
+        </input>
+
+        <input name="EditorToggleInventory">
+            <btn name="kTab"/>
         </input>
 
         <input name="EditorToggleMap">
