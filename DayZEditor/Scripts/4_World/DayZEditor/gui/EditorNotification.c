@@ -1,4 +1,3 @@
-
 class EditorNotification: ScriptView
 {
 	static const float NOTIF_ANIM_TIME = 0.1;
@@ -59,7 +58,8 @@ class EditorNotification: ScriptView
 		return NOTIF_ANIM_TIME;
 	}
 	
-	override string GetLayoutFile() {
+	override string GetLayoutFile() 
+	{
 		return "DayZEditor/gui/layouts/EditorNotification.layout";
 	}
 }
