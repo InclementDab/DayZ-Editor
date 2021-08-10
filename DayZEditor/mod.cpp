@@ -6,6 +6,6 @@ logoOver = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
 tooltip = "$STR_EDITOR_TOOLTIP";
 overview = "$STR_EDITOR_DESCRIPTION";
 action = "https://dab.dev";
-author = "STR_EDITOR_AUTHOR";
+author = "$STR_EDITOR_AUTHOR";
 authorID = "76561198247958888";
 version = "1.2";
