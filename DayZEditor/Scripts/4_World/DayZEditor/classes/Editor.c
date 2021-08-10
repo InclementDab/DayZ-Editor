@@ -358,23 +358,29 @@ class Editor
 			}
 		}
 		
-		if (m_Player && !m_Active) {	
-			// todo: somewhere in the stack, we aint calling this... why?
-			if (input.LocalPress("EditorToggleInventory", false)) {
-				GetGame().GetMission().ShowInventory();
-			}
-				
+		// This is all the logic that controls inventory hud, not a fan but it works
+		if (m_Player && !m_Active) {					
 			if (input.LocalPress("EditorToggleInventoryEditor", false)) {
 				if (m_EditorInventoryEditorHud) {
 					StopInventoryEditor();
 				}
 				
 				else {
+					GetGame().GetMission().HideInventory();
 					// Default to m_Player
 					StartInventoryEditor(m_Player);
 				}
 				
 				return;
+			}
+			
+			// todo: somewhere in the stack, we aint calling this... why?
+			if (input.LocalPress("EditorToggleInventory", false)) {
+				if (m_EditorInventoryEditorHud) {
+					StopInventoryEditor();
+				}
+				
+				GetGame().GetMission().ShowInventory();
 			}
 		}
 	}
