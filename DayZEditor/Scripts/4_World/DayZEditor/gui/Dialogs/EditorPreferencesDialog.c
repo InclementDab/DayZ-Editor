@@ -12,7 +12,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 	
 	void EditorPreferencesDialog(string title, string default_group = "General")
 	{
-		GroupPrefab general_group = new GroupPrefab("General", m_Editor.Settings, string.Empty);
+		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", m_Editor.Settings, string.Empty);
 
 		DropdownListPrefab<LogLevel> log_level("Log Level", m_Editor.Settings, "SelectedLogLevel");
 		log_level["Trace"] = LogLevel.TRACE;
@@ -31,22 +31,22 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		general_group.Insert(new CheckBoxPrefab("Show Screen Logs", m_Editor.Settings, "ShowScreenLogs"));
 		general_group.Insert(new CheckBoxPrefab("Show Bounding Boxes", m_Editor.Settings, "ShowBoundingBoxes"));
 		
-		GroupPrefab camera_group = new GroupPrefab("Camera Settings", m_Editor.Settings, string.Empty);
+		GroupPrefab camera_group = new GroupPrefab("#STR_EDITOR_CAMERA", m_Editor.Settings, string.Empty);
 		camera_group.Insert(new SliderPrefab("Camera Speed", m_Editor.Settings, "CameraSpeed", 0, 500));
 		camera_group.Insert(new CheckBoxPrefab("Show Rule of 3rds", m_Editor.Settings, "RuleOfThirds"));
 		
-		GroupPrefab marker_group = new GroupPrefab("Marker Settings", m_Editor.Settings, string.Empty);
+		GroupPrefab marker_group = new GroupPrefab("#STR_EDITOR_MARKERS", m_Editor.Settings, string.Empty);
 		marker_group.Insert(new CheckBoxPrefab("Show Tooltips", m_Editor.Settings, "MarkerTooltips"));
 		marker_group.Insert(new CheckBoxPrefab("Ground Occlusion", m_Editor.Settings, "MarkerGroundOcclusion"));
 		marker_group.Insert(new SliderPrefab("View Distance", m_Editor.Settings, "MarkerViewDistance", 100, 5000));
 		marker_group.Insert(new ColorPickerPrefab("Marker Color", m_Editor.Settings, "MarkerPrimaryColor"));
 		
-		GroupPrefab brush_settings = new GroupPrefab("Brush Settings", m_Editor.Settings, string.Empty);
+		GroupPrefab brush_settings = new GroupPrefab("#STR_EDITOR_BRUSHES", m_Editor.Settings, string.Empty);
 		brush_settings.Insert(new EditBoxPrefab("Brush File", m_Editor.Settings, "EditorBrushFile"));
 		brush_settings.Insert(new CheckBoxPrefab("Show Object Markers", m_Editor.Settings, "BrushedObjectMarkers"));
 		brush_settings.Insert(new CheckBoxPrefab("Show List Items", m_Editor.Settings, "BrushedListItems"));
 		
-		GroupPrefab advanced_group = new GroupPrefab("Advanced Settings", m_Editor.Settings, string.Empty);
+		GroupPrefab advanced_group = new GroupPrefab("#STR_EDITOR_ADVANCED", m_Editor.Settings, string.Empty);
 		advanced_group.Insert(new EditBoxPrefab("Loot Spawns File", m_Editor.Settings, "EditorProtoFile"));
 		advanced_group.Insert(new CheckBoxPrefab("Modal Dialogs", m_Editor.Settings, "LockCameraDuringDialogs"));
 		advanced_group.Insert(new CheckBoxPrefab("Preload Objects", m_Editor.Settings, "PreloadObjects"));
@@ -54,7 +54,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		advanced_group.Insert(new CheckBoxPrefab("Export Backup on Bin", m_Editor.Settings, "ExportBackupFile"));
 		advanced_group.Insert(new CheckBoxPrefab("Debug Mode", m_Editor.Settings, "DebugMode"));
 		
-		GroupPrefab colors_group = new GroupPrefab("Colors", m_Editor.Settings, string.Empty);
+		GroupPrefab colors_group = new GroupPrefab("#STR_EDITOR_THEMES", m_Editor.Settings, string.Empty);
 		colors_group.Insert(new ColorPickerPrefab("Highlight Color", m_Editor.Settings, "HighlightColor"));
 		colors_group.Insert(new ColorPickerPrefab("Selected Color", m_Editor.Settings, "SelectionColor"));
 		
@@ -91,8 +91,8 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		}
 		
 		AddButton(DialogResult.OK);
-		AddButton("Close", DialogResult.Cancel);
-		AddButton("Defaults", "SetDefaults");
+		AddButton("#STR_EDITOR_CLOSE", DialogResult.Cancel);
+		AddButton("#STR_EDITOR_DEFAULTS", "SetDefaults");
 	}
 	
 	protected override void DialogExitButtonCallback(DialogExitButton button)
