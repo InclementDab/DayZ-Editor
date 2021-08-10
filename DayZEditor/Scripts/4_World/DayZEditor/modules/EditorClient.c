@@ -267,7 +267,7 @@ class EditorClientModule: JMModuleBase
 	private void OnEditorMoveObjectForward(UAInput input)
 	{
 		// nothing is selected and we are actively placing
-		if (GetEditor() && GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing() && input.LocalPress()) {
+		if (GetEditor() && GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing() && (input.LocalPress() || input.LocalHold())) {
 			ObservableCollection<ref EditorPlaceableListItem> placeables = GetEditor().GetEditorHud().GetTemplateController().LeftbarSpacerData;
 			for (int i = 0; i < placeables.Count(); i++) {
 				if (placeables[i].IsSelected()) {
@@ -278,6 +278,8 @@ class EditorClientModule: JMModuleBase
 					placeables[i].Deselect();
 					GetEditor().CreateInHand(placeables[i - 1].GetPlaceableItem());
 					placeables[i - 1].Select();
+					
+					GetEditor().GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i - 1) /  placeables.Count());
 					return;
 				}
 			}
@@ -301,7 +303,7 @@ class EditorClientModule: JMModuleBase
 	private void OnEditorMoveObjectBackward(UAInput input)
 	{
 		// nothing is selected and we are actively placing
-		if (GetEditor() && GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing() && input.LocalPress()) {
+		if (GetEditor() && GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing() && (input.LocalPress() || input.LocalHold())) {
 			ObservableCollection<ref EditorPlaceableListItem> placeables = GetEditor().GetEditorHud().GetTemplateController().LeftbarSpacerData;
 			for (int i = 0; i < placeables.Count(); i++) {
 				if (placeables[i].IsSelected()) {
@@ -312,6 +314,8 @@ class EditorClientModule: JMModuleBase
 					placeables[i].Deselect();
 					GetEditor().CreateInHand(placeables[i + 1].GetPlaceableItem());
 					placeables[i + 1].Select();
+					GetEditor().GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i + 1) /  placeables.Count());
+					Print(i);
 					return;
 				}
 			}

@@ -35,8 +35,8 @@ class EditorHudController: EditorControllerBase
 	protected Widget LeftbarFrame;
 	protected ImageWidget LeftbarHideIcon;
 	
-	protected ScrollWidget LeftbarScroll;
-	protected ScrollWidget RightbarScroll;
+	ScrollWidget LeftbarScroll;
+	ScrollWidget RightbarScroll;
 	
 	protected Widget RightbarFrame;
 	protected ImageWidget RightbarHideIcon;
