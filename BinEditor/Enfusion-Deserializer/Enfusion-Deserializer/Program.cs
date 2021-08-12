@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Remoting;
 using System.Text;
 
@@ -11,25 +12,20 @@ namespace Enfusion_Deserializer
     {
         static void Main(string[] args)
         {
-            File.Delete("P:\\profiles\\Client\\test.bin");
-
-            EnfusionSerializer stream = new("P:\\profiles\\Client\\test.bin", FileMode.CreateNew, FileAccess.ReadWrite);
-            //EnfusionSerializer stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze", FileMode.Open, FileAccess.ReadWrite);
+            //EnfusionSerializer stream = new("P:\\profiles\\Client\\test.bin", FileMode.CreateNew, FileAccess.ReadWrite);
+            EnfusionSerializer stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze", FileMode.Open, FileAccess.ReadWrite);
             EditorSaveData data = new();
-            /*stream.WriteInt(25);
-            stream.WriteBool(true);
-            stream.WriteFloat(2.235f);
-            stream.WriteString("Testuing");
-            stream.WriteVector(new vector(1, 2, 3));
-            */
-            
+            data.Read(stream);
+            stream.Close();
+
+
+            File.Delete("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze");
+            stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze", FileMode.CreateNew, FileAccess.ReadWrite);
+            data.Write(stream);
+            stream.Close();
 
             Console.WriteLine("Finished Writing");
-            data.Write(stream);
-            //Console.WriteLine(data.Read(stream));
-            //Console.WriteLine(data.MapName);
 
-            stream.Close();
             Console.ReadKey();
         }
     }
@@ -204,58 +200,6 @@ namespace Enfusion_Deserializer
         public override string ToString()
         {
             return $"{Type}: {Position}";
-        }
-    }
-
-    public abstract class EditorObjectParam
-    {
-        public List<string> Types = new();
-
-        public string GetSerializableType()
-        {
-            return "";
-        }
-
-        public abstract bool Write(EnfusionSerializer stream);
-
-        public abstract bool Read(EnfusionSerializer stream);
-    }
-
-    public class EditorObjectParam1: EditorObjectParam
-    {
-        public object param1;
-
-        public override bool Write(EnfusionSerializer stream)
-        {
-            return true;
-        }
-
-        public override bool Read(EnfusionSerializer stream)
-        {
-            foreach (string type in Types) {
-                switch (type) {
-                    case "string\0":
-                        param1 = stream.ReadString();
-                        Console.WriteLine(param1);
-                        return true;
-
-                    case "int\0":
-                        param1 = stream.ReadInt();
-                        return true;
-
-                    case "float\0":
-                        param1 = stream.ReadFloat();
-                        return true;
-
-                    case "bool\0":
-                        param1 = stream.ReadBool();
-                        return true;
-
-                    default: throw new NotSupportedException();
-                }
-            }
-
-            return false;
         }
     }
 }
