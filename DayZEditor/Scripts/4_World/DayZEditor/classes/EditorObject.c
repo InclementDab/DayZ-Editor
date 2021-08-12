@@ -116,7 +116,7 @@ class EditorObject: EditorWorldObject
 		}
 		
 		if (data.Parameters["ExpansionTraderType"]) {
-			ExpansionTraderType = EditorObjectParam1<string>.Cast(data.Parameters["ExpansionTraderType"]).param1;
+			ExpansionTraderType = SerializableParam1<string>.Cast(data.Parameters["ExpansionTraderType"]).param1;
 		}
 		
 		vector clip_info[2];
@@ -437,7 +437,7 @@ class EditorObject: EditorWorldObject
 			
 			case "ExpansionTraderType": {
 				// storing the custom data				
-				m_Data.Parameters["ExpansionTraderType"] = EditorObjectParam1<string>.Create(ExpansionTraderType);
+				m_Data.Parameters["ExpansionTraderType"] = SerializableParam1<string>.Create(ExpansionTraderType);
 				break;
 			}
 		}

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Enfusion_Deserializer
 {
-    public abstract class EditorObjectParam
+    public abstract class SerializableParam
     {
         public List<string> Types = new();
 
@@ -32,7 +32,7 @@ namespace Enfusion_Deserializer
         public abstract bool Read(EnfusionSerializer stream);
     }
 
-    public class EditorObjectParam1 : EditorObjectParam
+    public class SerializableParam1 : SerializableParam
     {
         public object param1;
 
@@ -47,7 +47,6 @@ namespace Enfusion_Deserializer
                 switch (type) {
                     case "string\0":
                         param1 = stream.ReadString();
-                        Console.WriteLine(param1);
                         return true;
 
                     case "int\0":

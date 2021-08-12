@@ -113,7 +113,7 @@ namespace Enfusion_Deserializer
 
         public List<string> Attachments = new();
 
-        public Dictionary<string, EditorObjectParam> Parameters = new();
+        public Dictionary<string, SerializableParam> Parameters = new();
 
         public bool Read(EnfusionSerializer stream, int version)
         {
@@ -170,7 +170,7 @@ namespace Enfusion_Deserializer
             }
 
             stream.WriteInt(Parameters.Count);
-            foreach (KeyValuePair<string, EditorObjectParam> param in Parameters) {
+            foreach (KeyValuePair<string, SerializableParam> param in Parameters) {
                 stream.WriteString(param.Key);
                 stream.WriteString(param.Value.GetSerializableType());
 
