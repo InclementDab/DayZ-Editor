@@ -97,6 +97,10 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_ObjectGroup.Open(Object_Group);
 		AddContent(m_ObjectGroup);
 		
+		if (editor_object.HasAnimations()) {
+			GroupPrefab animations_group = new GroupPrefab("Object Animations", m_EditorObject, string.Empty);
+		}
+		
 		if (editor_object.GetWorldObject().IsMan()) {
 			m_HumanGroup = new GroupPrefab("#STR_EDITOR_HUMAN", m_EditorObject, string.Empty);
 			m_HumanGroup.Insert(new CheckBoxPrefab("#STR_EDITOR_SELECTED_PLAYER", m_EditorObject, "Control"));

@@ -11,6 +11,7 @@ class EditorObject: EditorWorldObject
 	protected Object		m_BasePoint;
 	
 	protected ref array<ref EditorSnapPoint> m_SnapPoints = {};
+	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
 	private vector m_LineCenters[12]; 
 	private vector m_LineVerticies[8];
@@ -119,6 +120,16 @@ class EditorObject: EditorWorldObject
 			ExpansionTraderType = SerializableParam1<string>.Cast(data.Parameters["ExpansionTraderType"]).param1;
 		}
 		
+		// Load animations
+		string config_path = "CfgVehicles " + GetType() + " AnimationSources";
+		if (GetGame().ConfigIsExisting(config_path)) {
+			for (int j = 0; j < GetGame().ConfigGetChildrenCount(config_path); j++) {
+				string child_name;
+				GetGame().ConfigGetChildName(config_path, j, child_name);
+				m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(m_WorldObject, child_name);
+			}
+		}
+				
 		vector clip_info[2];
 		ClippingInfo(clip_info);
 	
@@ -817,6 +828,16 @@ class EditorObject: EditorWorldObject
 	bool HasObjectAttachments()
 	{
 		return (ItemBase.Cast(m_WorldObject) && ItemBase.Cast(m_WorldObject).GetInventory().AttachmentCount() > 0);
+	}
+	
+	map<string, ref EditorObjectAnimationSource> GetObjectAnimations()
+	{
+		return m_ObjectAnimations;
+	}
+	
+	bool HasAnimations()
+	{
+		return (m_ObjectAnimations.Count() != 0);
 	}
 	
 	EditorObjectMap GetObjectAttachments()

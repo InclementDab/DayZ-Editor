@@ -63,6 +63,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Editor\EditorSaveData.cs" />
+    <Compile Include="Editor\SerializableParam.cs" />
+    <Compile Include="Enfusion\EnfusionSerializer.cs" />
+    <Compile Include="Enfusion\vector.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
