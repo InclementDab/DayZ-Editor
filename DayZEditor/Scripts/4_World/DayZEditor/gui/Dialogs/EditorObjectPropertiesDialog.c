@@ -99,6 +99,13 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		if (editor_object.HasAnimations()) {
 			GroupPrefab animations_group = new GroupPrefab("Object Animations", m_EditorObject, string.Empty);
+			
+			map<string, ref EditorObjectAnimationSource> object_animations = editor_object.GetObjectAnimations();
+			foreach (string name, EditorObjectAnimationSource anim: object_animations) {
+				animations_group.Insert(new SliderPrefab(name, anim, "AnimationPhase", 0, 1));
+			}
+			
+			AddContent(animations_group);
 		}
 		
 		if (editor_object.GetWorldObject().IsMan()) {

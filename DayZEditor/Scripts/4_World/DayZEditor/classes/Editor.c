@@ -1443,7 +1443,7 @@ class Editor
 		
 		return save_data;
 	}
-	
+		
 	bool IsActive() return m_Active;
 	EditorHud GetEditorHud() return m_EditorHud;
 	EditorInventoryEditorHud GetInventoryEditorHud() return m_EditorInventoryEditorHud;

@@ -83,6 +83,7 @@ class EditorCommandManager
 		BrushDensityCommand = RegisterCommand(EditorBrushDensityCommand);
 		BrushRadiusCommand = RegisterCommand(EditorBrushRadiusCommand);
 	
+		RegisterCommand(EditorToggleLightCommand);
 		RegisterCommand(EditorResetAlignmentCommand);
 		RegisterCommand(EditorAlignToSurfaceCommand);
 		RegisterCommand(EditorControlPlayerCommand);

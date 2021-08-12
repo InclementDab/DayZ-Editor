@@ -122,11 +122,11 @@ class EditorObject: EditorWorldObject
 		
 		// Load animations
 		string config_path = "CfgVehicles " + GetType() + " AnimationSources";
-		if (GetGame().ConfigIsExisting(config_path)) {
+		if (GetGame().ConfigIsExisting(config_path) && entity) {
 			for (int j = 0; j < GetGame().ConfigGetChildrenCount(config_path); j++) {
 				string child_name;
 				GetGame().ConfigGetChildName(config_path, j, child_name);
-				m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(m_WorldObject, child_name);
+				m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(entity, child_name);
 			}
 		}
 				

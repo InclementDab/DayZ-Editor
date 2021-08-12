@@ -1,8 +1,20 @@
+class EditorCameraLight: SpotLightBase
+{
+	void EditorCameraLight()
+	{
+		SetBrightnessTo(10);
+		SetRadiusTo(150);
+		SetSpotLightAngle(100);
+	}
+}
+
 
 // make option Q and E go up and down no matter orientation
 class EditorCamera: Camera
 {
 	static const float TELEPORT_LERP_DISTANCE = 1000;
+	
+	protected EditorCameraLight m_EditorCameraLight;
 	
 	float FOV = 1;
 	float DOFDistance;
@@ -48,6 +60,18 @@ class EditorCamera: Camera
 	void ~EditorCamera()
 	{
 		SelectTarget(null);
+	}
+	
+	void ToggleLight()
+	{
+		if (!m_EditorCameraLight) { 
+			m_EditorCameraLight = EditorCameraLight.Cast(ScriptedLightBase.CreateLight(EditorCameraLight, GetPosition(), 0.2));
+			m_EditorCameraLight.SetDirection(GetDirection());
+			m_EditorCameraLight.AttachOnObject(this);
+			
+		} else {
+			GetGame().ObjectDelete(m_EditorCameraLight);
+		}
 	}
 	
 	// Safe and easy position set, used for teleporting
