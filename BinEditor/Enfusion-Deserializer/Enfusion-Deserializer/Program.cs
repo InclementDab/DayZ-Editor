@@ -16,19 +16,20 @@ namespace Enfusion_Deserializer
             EnfusionSerializer stream = new("P:\\profiles\\Client\\test.bin", FileMode.CreateNew, FileAccess.ReadWrite);
             //EnfusionSerializer stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze", FileMode.Open, FileAccess.ReadWrite);
             EditorSaveData data = new();
-            stream.WriteInt(25);
+            /*stream.WriteInt(25);
             stream.WriteBool(true);
             stream.WriteFloat(2.235f);
             stream.WriteString("Testuing");
             stream.WriteVector(new vector(1, 2, 3));
-
-            stream.Close();
+            */
+            
 
             Console.WriteLine("Finished Writing");
-            //data.Write(stream);
+            data.Write(stream);
             //Console.WriteLine(data.Read(stream));
             //Console.WriteLine(data.MapName);
 
+            stream.Close();
             Console.ReadKey();
         }
     }
@@ -37,7 +38,7 @@ namespace Enfusion_Deserializer
     {
         public static readonly string BIN_CHECK = "EditorBinned";
 
-        public int Version;
+        public int Version = 2;
         public string MapName;
         public vector CameraPosition;
 
@@ -80,6 +81,19 @@ namespace Enfusion_Deserializer
         public void Write(EnfusionSerializer stream)
         {
             stream.WriteString(BIN_CHECK);
+            stream.WriteInt(Version);
+            stream.WriteString(MapName);
+            stream.WriteVector(CameraPosition);
+
+            stream.WriteInt(EditorObjects.Count);
+            foreach (EditorObjectData data in EditorObjects) {
+                data.Write(stream, Version);
+            }
+
+            stream.WriteInt(EditorDeletedObjects.Count);
+            foreach (EditorDeletedObjectData data in EditorDeletedObjects) {
+                data.Write(stream, Version);
+            }
         }
     }
 
@@ -132,6 +146,33 @@ namespace Enfusion_Deserializer
             return true;
         }
 
+        public void Write(EnfusionSerializer stream, int version)
+        {
+            stream.WriteString(Type);
+            stream.WriteString(DisplayName);
+            stream.WriteVector(Position);
+            stream.WriteVector(Orientation);
+            stream.WriteFloat(Scale);
+            stream.WriteInt(Flags);
+
+            if (version < 2) {
+                return;
+            }
+
+            stream.WriteInt(Attachments.Count);
+            foreach (string attachment in Attachments) {
+                stream.WriteString(attachment);
+            }
+
+            stream.WriteInt(Parameters.Count);
+            foreach (KeyValuePair<string, EditorObjectParam> param in Parameters) {
+                stream.WriteString(param.Key);
+                stream.WriteString(param.Value.GetSerializableType());
+
+                param.Value.Write(stream);
+            }
+        }
+
         public override string ToString()
         {
             return $"{Type}: <{DisplayName}> at {Position}, {Orientation}";
@@ -153,6 +194,13 @@ namespace Enfusion_Deserializer
             return true;
         }
 
+        public void Write(EnfusionSerializer stream, int version)
+        {
+            stream.WriteString(Type);
+            stream.WriteVector(Position);
+            stream.WriteInt(Flags);
+        }
+
         public override string ToString()
         {
             return $"{Type}: {Position}";
@@ -163,7 +211,10 @@ namespace Enfusion_Deserializer
     {
         public List<string> Types = new();
 
-        //public abstract string GetSerializableType();
+        public string GetSerializableType()
+        {
+            return "";
+        }
 
         public abstract bool Write(EnfusionSerializer stream);
 
