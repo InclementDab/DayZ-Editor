@@ -181,7 +181,10 @@ class EditorObject: EditorWorldObject
 	void ~EditorObject()
 	{
 		EditorLog.Trace("~EditorObject");
-		Update();
+		if (m_Data) {
+			Update();
+		}
+		
 		DestroyBoundingBox();
 	
 		GetGame().ObjectDelete(m_WorldObject);
