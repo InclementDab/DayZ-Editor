@@ -22,43 +22,6 @@ namespace Enfusion_Deserializer
         }
     }
 
-    public class vector
-    {
-        public float X, Y, Z;
-
-        public vector(float x = 0, float y = 0, float z = 0)
-        {
-            X = x; Y = y; Z = z;
-        }
-
-        public float this[int index] {
-            get {
-                return index switch {
-                    0 => X,
-                    1 => Y,
-                    2 => Z,
-                    _ => throw new IndexOutOfRangeException(),
-                };
-            }
-
-            set {
-                switch (index) {
-                    case 0: X = value; break;
-                    case 1: Y = value; break;
-                    case 2: Z = value; break;
-                    default: throw new IndexOutOfRangeException();
-                }
-            }
-        }
-
-        public static readonly vector Zero = new();
-
-        public override string ToString()
-        {
-            return $"{X}, {Y}, {Z}";
-        }
-    }
-
     public class EditorSaveData
     {
         public int Version;
@@ -124,11 +87,13 @@ namespace Enfusion_Deserializer
             Scale = stream.ReadFloat();
             Flags = stream.ReadInt();
 
+            if (version < 2) {
+                return true;
+            }
+
             int attachment_count = stream.ReadInt();
             for (int i = 0; i < attachment_count; i++) {
-                string tt = stream.ReadString();
-                Console.WriteLine(tt);
-                Attachments.Add(tt);
+                Attachments.Add(stream.ReadString());
             }
 
             int parameters_count = stream.ReadInt();
@@ -147,7 +112,6 @@ namespace Enfusion_Deserializer
 
                 Parameters[param_key] = editor_object_param;
             }
-
 
             return true;
         }
@@ -196,7 +160,6 @@ namespace Enfusion_Deserializer
 
         public override bool Write(EnfusionSerializer stream)
         {
-
             return true;
         }
 
@@ -220,9 +183,9 @@ namespace Enfusion_Deserializer
                     case "bool\0":
                         param1 = stream.ReadBool();
                         return true;
-                }
 
-                
+                    default: throw new NotSupportedException();
+                }
             }
 
             return false;
