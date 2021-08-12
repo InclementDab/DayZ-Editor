@@ -5,6 +5,12 @@ using System.IO;
 using System.Runtime.Remoting;
 using System.Text;
 
+
+
+// todo: reading test.dze throws error due to the Parameter reading somewhere, not sure where but its something ig
+
+
+
 namespace Enfusion_Deserializer
 {
     public class Program
@@ -112,6 +118,8 @@ namespace Enfusion_Deserializer
 
         public List<string> Attachments = new();
 
+        public Dictionary<string, EditorObjectParam> Parameters = new();
+
         public bool Read(EnfusionSerializer stream, int version)
         {
             Type = stream.ReadString();
@@ -142,6 +150,8 @@ namespace Enfusion_Deserializer
                 EditorObjectParam editor_object_param = Activator.CreateInstance(null, $"Enfusion_Deserializer.{param_type_data[0]}").Unwrap() as EditorObjectParam;
                 editor_object_param.Types = param_template_types;
                 editor_object_param.Read(stream);
+
+                Parameters[param_key] = editor_object_param;
             }
 
 
@@ -206,6 +216,8 @@ namespace Enfusion_Deserializer
                         Console.WriteLine(stream.ReadString());
                         break;
                 }
+
+                default: return false;
             }
 
             return true;
