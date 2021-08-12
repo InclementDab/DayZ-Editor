@@ -214,13 +214,13 @@ namespace Enfusion_Deserializer
                     case "string":
                         //param1 = stream.ReadString();
                         Console.WriteLine(stream.ReadString());
-                        break;
+                        return true;
                 }
 
-                default: return false;
+                
             }
 
-            return true;
+            return false;
         }
     }
 
