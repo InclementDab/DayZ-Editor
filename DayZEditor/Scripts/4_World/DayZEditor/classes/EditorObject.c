@@ -109,11 +109,8 @@ class EditorObject: EditorWorldObject
 		}
 		
 		EntityAI entity = EntityAI.Cast(m_WorldObject);
-		Print(data.Type);
-		Print(entity);
 		if (entity) {
 			foreach (string attachment: data.Attachments) {
-				Print(attachment);
 				entity.GetInventory().CreateAttachment(attachment);
 			}
 		}
