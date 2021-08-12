@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Remoting;
 using System.Text;
 
 namespace Enfusion_Deserializer
@@ -133,8 +134,16 @@ namespace Enfusion_Deserializer
                 string param_type = stream.ReadString();
                 Console.WriteLine(param_key);
                 Console.WriteLine(param_type);
+                string[] param_type_data = param_type.Split('<');
 
+                param_type_data[1] = param_type_data[1].Replace('>', char.MinValue);
+                string[] param_template_types = param_type_data[1].Split(',');
+
+                EditorObjectParam editor_object_param = Activator.CreateInstance(null, $"Enfusion_Deserializer.{param_type_data[0]}").Unwrap() as EditorObjectParam;
+                editor_object_param.Types = param_template_types;
+                editor_object_param.Read(stream);
             }
+
 
             return true;
         }
@@ -163,6 +172,43 @@ namespace Enfusion_Deserializer
         public override string ToString()
         {
             return $"{Type}: {Position}";
+        }
+    }
+
+    public abstract class EditorObjectParam
+    {
+        public string[] Types;
+
+        //public abstract string GetSerializableType();
+
+        public abstract bool Write(EnfusionSerializer stream);
+
+        public abstract bool Read(EnfusionSerializer stream);
+    }
+
+    public class EditorObjectParam1: EditorObjectParam
+    {
+        public object param1;
+
+        public override bool Write(EnfusionSerializer stream)
+        {
+
+            return true;
+        }
+
+        public override bool Read(EnfusionSerializer stream)
+        {
+            foreach (string type in Types) {
+                Console.WriteLine(type);
+                switch (type) {
+                    case "string":
+                        //param1 = stream.ReadString();
+                        Console.WriteLine(stream.ReadString());
+                        break;
+                }
+            }
+
+            return true;
         }
     }
 
