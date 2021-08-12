@@ -25,14 +25,13 @@ FrameWidgetClass LoadingFrame {
     ImageWidgetClass ImageBackground {
      visible 1
      position 0 0
-     size 0.16 0.09
+     size 1920 1080
      halign center_ref
      valign center_ref
      hexactpos 0
      vexactpos 0
-     hexactsize 0
-     vexactsize 0
-     fixaspect outside
+     hexactsize 1
+     vexactsize 1
      image0 ""
      imageTexture "{0DBE2630AF5047FD}gui/textures/loading_screens/loading_screen_3_co.edds"
      mode blend

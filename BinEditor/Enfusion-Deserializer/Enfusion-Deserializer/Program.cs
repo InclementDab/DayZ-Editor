@@ -44,7 +44,6 @@ namespace Enfusion_Deserializer
         public bool Read(EnfusionSerializer stream)
         {
             string bin_check = stream.ReadString();
-            Console.WriteLine(bin_check);
             if (bin_check != BIN_CHECK) {
                 return false;
             }
