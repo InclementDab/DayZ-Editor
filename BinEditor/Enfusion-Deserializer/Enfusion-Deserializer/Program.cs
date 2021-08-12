@@ -109,6 +109,8 @@ namespace Enfusion_Deserializer
         public float Scale = 1;
         public int Flags;
 
+        public List<string> Attachments = new();
+
         public bool Read(EnfusionSerializer stream, int version)
         {
             Type = stream.ReadString();
@@ -117,6 +119,22 @@ namespace Enfusion_Deserializer
             Orientation = stream.ReadVector();
             Scale = stream.ReadFloat();
             Flags = stream.ReadInt();
+
+            int attachment_count = stream.ReadInt();
+            for (int i = 0; i < attachment_count; i++) {
+                string tt = stream.ReadString();
+                Console.WriteLine(tt);
+                Attachments.Add(tt);
+            }
+
+            int parameters_count = stream.ReadInt();
+            for (int i = 0; i < parameters_count; i++) {
+                string param_key = stream.ReadString();
+                string param_type = stream.ReadString();
+                Console.WriteLine(param_key);
+                Console.WriteLine(param_type);
+
+            }
 
             return true;
         }
