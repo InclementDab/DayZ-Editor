@@ -5,22 +5,17 @@ using System.IO;
 using System.Runtime.Remoting;
 using System.Text;
 
-
-
-// todo: reading test.dze throws error due to the Parameter reading somewhere, not sure where but its something ig
-
-
-
 namespace Enfusion_Deserializer
 {
     public class Program
     {
         static void Main(string[] args)
         {
+            //EnfusionSerializer stream = new("P:\\profiles\\Client\\test.bin", FileMode.Open, FileAccess.Read);
             EnfusionSerializer stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze", FileMode.Open, FileAccess.Read);
             EditorSaveData data = new();
-            Console.WriteLine(data.Read(stream));
 
+            Console.WriteLine(data.Read(stream));
             Console.WriteLine(data.MapName);
 
             Console.ReadKey();
@@ -145,10 +140,9 @@ namespace Enfusion_Deserializer
                 string[] param_type_data = param_type.Split('<');
 
                 param_type_data[1] = param_type_data[1].Replace('>', char.MinValue);
-                string[] param_template_types = param_type_data[1].Split(',');
 
-                EditorObjectParam editor_object_param = Activator.CreateInstance(null, $"Enfusion_Deserializer.{param_type_data[0]}").Unwrap() as EditorObjectParam;
-                editor_object_param.Types = param_template_types;
+                dynamic editor_object_param = Activator.CreateInstance(null, $"Enfusion_Deserializer.{param_type_data[0]}").Unwrap();
+                editor_object_param.Types.AddRange(param_type_data[1].Split(','));
                 editor_object_param.Read(stream);
 
                 Parameters[param_key] = editor_object_param;
@@ -187,7 +181,7 @@ namespace Enfusion_Deserializer
 
     public abstract class EditorObjectParam
     {
-        public string[] Types;
+        public List<string> Types = new();
 
         //public abstract string GetSerializableType();
 
@@ -209,11 +203,22 @@ namespace Enfusion_Deserializer
         public override bool Read(EnfusionSerializer stream)
         {
             foreach (string type in Types) {
-                Console.WriteLine(type);
                 switch (type) {
-                    case "string":
-                        //param1 = stream.ReadString();
-                        Console.WriteLine(stream.ReadString());
+                    case "string\0":
+                        param1 = stream.ReadString();
+                        Console.WriteLine(param1);
+                        return true;
+
+                    case "int\0":
+                        param1 = stream.ReadInt();
+                        return true;
+
+                    case "float\0":
+                        param1 = stream.ReadFloat();
+                        return true;
+
+                    case "bool\0":
+                        param1 = stream.ReadBool();
                         return true;
                 }
 
@@ -228,6 +233,13 @@ namespace Enfusion_Deserializer
     {
         public EnfusionSerializer(string path, FileMode mode, FileAccess access) : base(path, mode, access)
         { }
+
+        public bool ReadBool()
+        {
+            byte[] bytes = new byte[4];
+            Read(bytes, 0, 4);
+            return BitConverter.ToBoolean(bytes);
+        }
 
         public int ReadInt()
         {
