@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
@@ -12,6 +13,21 @@ namespace Enfusion_Deserializer
     {
         static void Main(string[] args)
         {
+            FileStream stream = new FileStream("C:\\Users\\tyler\\Desktop\\a3_flaxbt.p3d", FileMode.Open, FileAccess.ReadWrite);
+            byte[] stream_data = new byte[stream.Length];
+            Console.WriteLine(stream.Length);
+            stream.Read(stream_data, 0, (int)stream.Length);
+
+            byte[] test_data = BitConverter.GetBytes("class Animations");
+
+
+            for (int i = 0; i < stream_data.Length; i++) {
+                Console.Write(stream_data[i]);
+            }
+
+
+
+            /*
             //EnfusionSerializer stream = new("P:\\profiles\\Client\\test.bin", FileMode.CreateNew, FileAccess.ReadWrite);
             EnfusionSerializer stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze", FileMode.Open, FileAccess.ReadWrite);
             EditorSaveData data = new();
@@ -26,7 +42,7 @@ namespace Enfusion_Deserializer
 
             Console.WriteLine("Finished Writing");
 
-            Console.ReadKey();
+            */
         }
     }
 
