@@ -11,12 +11,23 @@ namespace Enfusion_Deserializer
     {
         static void Main(string[] args)
         {
-            //EnfusionSerializer stream = new("P:\\profiles\\Client\\test.bin", FileMode.Open, FileAccess.Read);
-            EnfusionSerializer stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze", FileMode.Open, FileAccess.Read);
-            EditorSaveData data = new();
+            File.Delete("P:\\profiles\\Client\\test.bin");
 
-            Console.WriteLine(data.Read(stream));
-            Console.WriteLine(data.MapName);
+            EnfusionSerializer stream = new("P:\\profiles\\Client\\test.bin", FileMode.CreateNew, FileAccess.ReadWrite);
+            //EnfusionSerializer stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze", FileMode.Open, FileAccess.ReadWrite);
+            EditorSaveData data = new();
+            stream.WriteInt(25);
+            stream.WriteBool(true);
+            stream.WriteFloat(2.235f);
+            stream.WriteString("Testuing");
+            stream.WriteVector(new vector(1, 2, 3));
+
+            stream.Close();
+
+            Console.WriteLine("Finished Writing");
+            //data.Write(stream);
+            //Console.WriteLine(data.Read(stream));
+            //Console.WriteLine(data.MapName);
 
             Console.ReadKey();
         }
@@ -24,6 +35,8 @@ namespace Enfusion_Deserializer
 
     public class EditorSaveData
     {
+        public static readonly string BIN_CHECK = "EditorBinned";
+
         public int Version;
         public string MapName;
         public vector CameraPosition;
@@ -35,7 +48,7 @@ namespace Enfusion_Deserializer
         {
             string bin_check = stream.ReadString();
             Console.WriteLine(bin_check);
-            if (bin_check != "EditorBinned") {
+            if (bin_check != BIN_CHECK) {
                 return false;
             }
 
@@ -62,6 +75,11 @@ namespace Enfusion_Deserializer
             }
 
             return true;
+        }
+
+        public void Write(EnfusionSerializer stream)
+        {
+            stream.WriteString(BIN_CHECK);
         }
     }
 
@@ -100,8 +118,6 @@ namespace Enfusion_Deserializer
             for (int i = 0; i < parameters_count; i++) {
                 string param_key = stream.ReadString();
                 string param_type = stream.ReadString();
-                Console.WriteLine(param_key);
-                Console.WriteLine(param_type);
                 string[] param_type_data = param_type.Split('<');
 
                 param_type_data[1] = param_type_data[1].Replace('>', char.MinValue);
@@ -191,58 +207,4 @@ namespace Enfusion_Deserializer
             return false;
         }
     }
-
-    public class EnfusionSerializer : FileStream
-    {
-        public EnfusionSerializer(string path, FileMode mode, FileAccess access) : base(path, mode, access)
-        { }
-
-        public bool ReadBool()
-        {
-            byte[] bytes = new byte[4];
-            Read(bytes, 0, 4);
-            return BitConverter.ToBoolean(bytes);
-        }
-
-        public int ReadInt()
-        {
-            byte[] bytes = new byte[4];
-            Read(bytes, 0, 4);
-            return BitConverter.ToInt32(bytes);
-        }
-
-        public float ReadFloat()
-        {
-            byte[] bytes = new byte[4];
-            Read(bytes, 0, 4);
-            return BitConverter.ToSingle(bytes);
-        }
-
-        public string ReadString()
-        {
-            byte[] bytes = new byte[4];
-            Read(bytes, 0, 4);
-            int length = BitConverter.ToInt32(bytes);
-
-            byte[] string_data = new byte[length];
-            Read(string_data, 0, length);
-            return Encoding.UTF8.GetString(string_data);
-        }
-
-        public vector ReadVector()
-        {
-            // Cuts the top off
-            byte[] bytes = new byte[4];
-            Read(bytes, 0, 4);
-            int length = BitConverter.ToInt32(bytes);
-            vector result = new();
-            for (int i = 0; i < length; i++) {
-                Read(bytes, 0, 4);
-                result[i] = BitConverter.ToSingle(bytes);
-            }
-
-            return result;
-        }
-    }
-
 }
