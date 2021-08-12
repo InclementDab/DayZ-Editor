@@ -295,10 +295,10 @@ class EditorObject: EditorWorldObject
 			EntityAI entity = EntityAI.Cast(GetWorldObject());
 			if (entity) {
 				m_Data.Attachments.Clear();
-				array<EntityAI> attachments = {};				
-				entity.GetInventory().EnumerateInventory(InventoryTraversalType.INORDER, attachments);
-				foreach (EntityAI attachment: attachments) {
-					if (!entity.GetInventory().HasAttachment(attachment)) {
+				array<EntityAI> attachments = {};
+				for (int i = 0; i < entity.GetInventory().AttachmentCount(); i++) {			
+					EntityAI attachment = entity.GetInventory().GetAttachmentFromIndex(i);
+					if (!attachment) {
 						continue;
 					}
 					
