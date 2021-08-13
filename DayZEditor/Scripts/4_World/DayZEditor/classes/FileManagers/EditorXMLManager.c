@@ -100,13 +100,11 @@ class EditorLootContainer
 
 class EditorMapGroupProtoGroup
 {
-	private string m_Name;
-	string GetName() { return m_Name; }
-	private int m_Lootmax;
+	protected string m_Name;
+	protected int m_Lootmax;
 	
-	private ref array<string> m_Usage;
-	private ref array<ref EditorLootContainer> m_LootContainer;
-	ref array<ref EditorLootContainer> GetLootContainer() { return m_LootContainer; }
+	protected ref array<string> m_Usage;
+	protected ref array<ref EditorLootContainer> m_LootContainer;
 	
 	void EditorMapGroupProtoGroup(string name, int lootmax)
 	{
@@ -132,25 +130,26 @@ class EditorMapGroupProtoGroup
 		m_LootContainer.Insert(container);
 		return m_LootContainer.Count();
 	}
+	
+	array<ref EditorLootContainer> GetLootContainer() 
+	{ 
+		return m_LootContainer; 
+	}
+	
+	string GetName() 
+	{ 
+		return m_Name; 
+	}
 }
 
 class EditorMapGroupProto: XMLCallback
 {
+	protected Object m_Building;
 	
 	ref array<ref EditorMapGroupProtoGroup> m_MapGroupProto = {};
 	
 	ref array<EditorObject> m_LootPositions = {};
-	
-	array<EditorObject> GetLootSpawns() {
-		return m_LootPositions;
-	}
-	
-	Object GetBuilding() {
-		return m_Building;
-	}
-	
-	protected Object m_Building;
-	
+		
 	void EditorMapGroupProto(Object building)
 	{
 		m_Building = building;
@@ -165,6 +164,16 @@ class EditorMapGroupProto: XMLCallback
 		delete m_LootPositions;
 		delete m_MapGroupProto;
 	}
+	
+	array<EditorObject> GetLootSpawns() 
+	{
+		return m_LootPositions;
+	}
+	
+	Object GetBuilding() 
+	{
+		return m_Building;
+	}
 		
 	override void OnSuccess(ref XMLDocument document)
 	{
@@ -176,17 +185,19 @@ class EditorMapGroupProto: XMLCallback
 		for (int i = 0; i < prototype.Count(); i++) {
 			
 			XMLTag group_tag = prototype[i];
-			if (group_tag.GetName() != "group") 
+			if (group_tag.GetName() != "group") {
 				continue;
+			}
+						
+			string grp_name;
+			if (group_tag.GetAttribute("name")) {
+				grp_name = group_tag.GetAttribute("name").ValueAsString();
+			}
 			
-			XMLAttribute group_name = group_tag.GetAttribute("name");
-			XMLAttribute group_lootmax = group_tag.GetAttribute("lootmax");
-			
-			if (group_name != null) 
-				string grp_name = group_name.ValueAsString();
-			
-			if (group_lootmax != null)
-				int grp_lootmax = group_lootmax.ValueAsInt();
+			int grp_lootmax;
+			if (group_tag.GetAttribute("lootmax")) {
+				grp_lootmax = group_tag.GetAttribute("lootmax").ValueAsInt();
+			}
 			
 			EditorMapGroupProtoGroup group = new EditorMapGroupProtoGroup(grp_name, grp_lootmax);
 			XMLElement group_children = group_tag.GetContent();
@@ -206,12 +217,18 @@ class EditorMapGroupProto: XMLCallback
 						XMLAttribute container_name = group_child.GetAttribute("name");
 						XMLAttribute container_lootmax = group_child.GetAttribute("lootmax");
 						
-						if (container_name != null)
-							string cont_name = container_name.ValueAsString();
-						if (container_lootmax != null)
-							int cont_lootmax = container_lootmax.ValueAsInt();
-						EditorLootContainer container = new EditorLootContainer(cont_name, cont_lootmax);
+						string cont_name;
+						int cont_lootmax;
 						
+						if (container_name) {
+							cont_name = container_name.ValueAsString();
+						}
+						
+						if (container_lootmax) {
+							cont_lootmax = container_lootmax.ValueAsInt();
+						}
+						
+						EditorLootContainer container = new EditorLootContainer(cont_name, cont_lootmax);
 						XMLElement container_children = group_child.GetContent();
 						for (int k = 0; k < container_children.Count(); k++) {
 							
@@ -220,34 +237,35 @@ class EditorMapGroupProto: XMLCallback
 							switch (container_child.GetName()) {
 								
 								case "category": {
-									XMLAttribute category_name = container_child.GetAttribute("name");
-									container.InsertCategory(category_name.ValueAsString());
+									container.InsertCategory(container_child.GetAttribute("name").ValueAsString());
 									break;
 								}
 								
 								case "tag": {
-									XMLAttribute tag_name = container_child.GetAttribute("name");
-									container.InsertTag(tag_name.ValueAsString());
+									container.InsertTag(container_child.GetAttribute("name").ValueAsString());
 									break;
 								}
 								
-								case "point": {
-									XMLAttribute point_pos 		= container_child.GetAttribute("pos");
-									XMLAttribute point_range 	= container_child.GetAttribute("range");
-									XMLAttribute point_height 	= container_child.GetAttribute("height");
-									XMLAttribute point_flags 	= container_child.GetAttribute("flags");
+								case "point": {									
+									vector pos;
+									float range, height;
+									int flags;
 									
-									if (point_pos != null) 
-										vector pos = point_pos.ValueAsVector(); 
+									if (container_child.GetAttribute("pos")) {
+										pos = container_child.GetAttribute("pos").ValueAsVector(); 
+									}
 									
-									if (point_range != null)
-										float range = point_range.ValueAsFloat(); 
+									if (container_child.GetAttribute("range")) {
+										range = container_child.GetAttribute("range").ValueAsFloat(); 
+									}
 									
-									if (point_height != null)
-										float height = point_height.ValueAsFloat();
+									if (container_child.GetAttribute("height")) {
+										height = container_child.GetAttribute("height").ValueAsFloat();
+									}
 									
-									if (point_flags != null)
-										int flags = point_flags.ValueAsInt();
+									if (container_child.GetAttribute("flags")) {
+										flags = container_child.GetAttribute("flags").ValueAsInt();
+									}
 									
 									pos = pos + m_Building.GetPosition();
 									container.InsertLootPoint(new EditorLootPoint(pos, range, height, flags));
