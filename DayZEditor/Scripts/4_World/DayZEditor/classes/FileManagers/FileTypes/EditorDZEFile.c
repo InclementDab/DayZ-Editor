@@ -39,10 +39,6 @@ class EditorDZEFile: EditorFileType
 			}
 			
 			EditorObjectData dta = EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Scale, object_data.Flags);
-			dta.EditorOnly = object_data.EditorOnly;
-			dta.Simulate = object_data.Simulate;
-			dta.Locked = object_data.Locked;
-			dta.AllowDamage = object_data.AllowDamage;
 			bug_fix_save_data.EditorObjects.Insert(dta);
 		}
 			

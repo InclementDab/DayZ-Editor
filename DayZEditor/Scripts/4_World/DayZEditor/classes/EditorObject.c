@@ -90,7 +90,6 @@ class EditorObject: EditorWorldObject
 	{
 		EditorLog.Trace("EditorObject " + data);
 		m_Data = data;
-		//EditorOnly = m_Data.EditorOnly;
 		
 		if (!m_Data.WorldObject) {
 			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale);			
