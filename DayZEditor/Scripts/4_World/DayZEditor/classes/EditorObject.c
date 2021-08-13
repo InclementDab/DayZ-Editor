@@ -120,6 +120,11 @@ class EditorObject: EditorWorldObject
 			ExpansionTraderType = SerializableParam1<string>.Cast(data.Parameters["ExpansionTraderType"]).param1;
 		}
 		
+		Locked = m_Data.Locked;
+		Simulate = m_Data.Simulate;
+		EditorOnly = m_Data.EditorOnly;
+		AllowDamage = m_Data.AllowDamage;
+		
 		// Load animations
 		string config_path = "CfgVehicles " + GetType() + " AnimationSources";
 		if (GetGame().ConfigIsExisting(config_path) && entity) {
