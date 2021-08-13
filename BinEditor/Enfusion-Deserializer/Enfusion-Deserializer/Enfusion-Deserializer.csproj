@@ -6,4 +6,8 @@
     <RootNamespace>Enfusion_Deserializer</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DayZ-Bin-Editor\DayZ-Bin-Editor.csproj" />
+  </ItemGroup>
+
 </Project>

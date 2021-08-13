@@ -88,9 +88,14 @@ namespace DayZ_Bin_Editor.Editor
         public float Scale = 1;
         public int Flags;
 
-        public List<string> Attachments = new();
+        public bool EditorOnly;
+        public bool Locked;
+        public bool AllowDamage;
+        public bool Simulate;
 
-        public Dictionary<string, SerializableParam> Parameters = new();
+        public List<string> Attachments = new List<string>();
+
+        public Dictionary<string, SerializableParam> Parameters = new Dictionary<string, SerializableParam>();
 
         public bool Read(EnfusionSerializer stream, int version)
         {
@@ -125,6 +130,15 @@ namespace DayZ_Bin_Editor.Editor
                 Parameters[param_key] = editor_object_param;
             }
 
+            if (version < 3) {
+                return true;
+            }
+
+            EditorOnly = stream.ReadBool();
+            Locked = stream.ReadBool();
+            AllowDamage = stream.ReadBool();
+            Simulate = stream.ReadBool();
+
             return true;
         }
 
@@ -153,6 +167,15 @@ namespace DayZ_Bin_Editor.Editor
 
                 param.Value.Write(stream);
             }
+
+            if (version < 3) {
+                return;
+            }
+
+            stream.WriteBool(EditorOnly);
+            stream.WriteBool(Locked);
+            stream.WriteBool(AllowDamage);
+            stream.WriteBool(Simulate);
         }
 
         public override string ToString()

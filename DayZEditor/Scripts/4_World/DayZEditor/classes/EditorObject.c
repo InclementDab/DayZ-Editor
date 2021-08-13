@@ -109,6 +109,7 @@ class EditorObject: EditorWorldObject
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
 		}
 		
+		// Version 2
 		EntityAI entity = EntityAI.Cast(m_WorldObject);
 		if (entity) {
 			foreach (string attachment: data.Attachments) {
@@ -120,21 +121,6 @@ class EditorObject: EditorWorldObject
 			ExpansionTraderType = SerializableParam1<string>.Cast(data.Parameters["ExpansionTraderType"]).param1;
 		}
 		
-		Locked = m_Data.Locked;
-		Simulate = m_Data.Simulate;
-		EditorOnly = m_Data.EditorOnly;
-		AllowDamage = m_Data.AllowDamage;
-		
-		// Load animations
-		string config_path = "CfgVehicles " + GetType() + " AnimationSources";
-		if (GetGame().ConfigIsExisting(config_path) && entity) {
-			for (int j = 0; j < GetGame().ConfigGetChildrenCount(config_path); j++) {
-				string child_name;
-				GetGame().ConfigGetChildName(config_path, j, child_name);
-				m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(entity, child_name);
-			}
-		}
-				
 		vector clip_info[2];
 		ClippingInfo(clip_info);
 	
@@ -174,22 +160,40 @@ class EditorObject: EditorWorldObject
 		}
 		
 		// Bounding Box
-		thread EnableBoundingBox(IsBoundingBoxEnabled());
+		EnableBoundingBox(IsBoundingBoxEnabled());
 
 		// Map marker
-		thread EnableMapMarker(IsMapMarkerEnabled());
+		EnableMapMarker(IsMapMarkerEnabled());
 
 		// World marker
-		thread EnableObjectMarker(IsWorldMarkerEnabled());
+		EnableObjectMarker(IsWorldMarkerEnabled());
 
 		// Browser item
-		thread EnableListItem(IsListItemEnabled());
+		EnableListItem(IsListItemEnabled());
 
-		m_SnapPoints.Insert(new EditorSnapPoint(this, Vector(0, -GetYDistance(), 5)));
-		
 		if (m_WorldObject.HasDamageSystem()) {
 			Health = m_WorldObject.GetHealth("", "Health");
 		}
+		
+		// Version 3
+		Locked = m_Data.Locked;
+		Simulate = m_Data.Simulate;
+		EditorOnly = m_Data.EditorOnly;
+		AllowDamage = m_Data.AllowDamage;
+		PropertyChanged("Locked");
+		PropertyChanged("Simulate");
+		PropertyChanged("EditorOnly");
+		PropertyChanged("AllowDamage");
+		
+		// Load animations
+		string config_path = "CfgVehicles " + GetType() + " AnimationSources";
+		if (GetGame().ConfigIsExisting(config_path) && entity) {
+			for (int j = 0; j < GetGame().ConfigGetChildrenCount(config_path); j++) {
+				string child_name;
+				GetGame().ConfigGetChildName(config_path, j, child_name);
+				m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(entity, child_name);
+			}
+		}				
 
 		Update();
 	}
@@ -765,6 +769,7 @@ class EditorObject: EditorWorldObject
 	void Lock(bool locked) 
 	{
 		Locked = locked;
+		m_Data.Locked = Locked;
 		
 		EditorObjectMarker marker = GetMarker();
 		if (marker) {
