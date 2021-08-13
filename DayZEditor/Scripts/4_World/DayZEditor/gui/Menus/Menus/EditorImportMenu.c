@@ -4,6 +4,7 @@ class EditorImportMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorImportMenu");
 		
+		AddMenuButton(m_Editor.CommandManager[EditorImportFromDZE]);
 		AddMenuButton(m_Editor.CommandManager[EditorImportFromInit]);
 		AddMenuButton(m_Editor.CommandManager[EditorImportFromExpansion]);
 		AddMenuButton(m_Editor.CommandManager[EditorImportFromTerrainBuilder]);

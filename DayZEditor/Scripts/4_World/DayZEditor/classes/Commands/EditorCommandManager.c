@@ -107,6 +107,7 @@ class EditorCommandManager
 		RegisterCommand(EditorSearchObjectCommand);
 		RegisterCommand(EditorCheckDuplicatesCommand);
 	
+		RegisterCommand(EditorImportFromDZE);
 		RegisterCommand(EditorImportFromInit);
 		RegisterCommand(EditorImportFromExpansion);
 		RegisterCommand(EditorImportFromTerrainBuilder);
