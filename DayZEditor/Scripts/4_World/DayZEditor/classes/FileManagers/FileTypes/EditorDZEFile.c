@@ -38,11 +38,18 @@ class EditorDZEFile: EditorFileType
 				EditorLog.Warning("Ignoring %1 on import. Invalid type, possible for crash", object_data.Type);
 			}
 			
-			bug_fix_save_data.EditorObjects.Insert(EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Scale, object_data.Flags));
+			EditorObjectData dta = EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Scale, object_data.Flags);
+			dta.EditorOnly = object_data.EditorOnly;
+			dta.Simulate = object_data.Simulate;
+			dta.Locked = object_data.Locked;
+			dta.AllowDamage = object_data.AllowDamage;
+			bug_fix_save_data.EditorObjects.Insert(dta);
 		}
 			
 		foreach (int id, EditorDeletedObjectData deleted_object: save_data.EditorDeletedObjects) {
-			bug_fix_save_data.EditorDeletedObjects.Insert(EditorDeletedObjectData.Create(deleted_object.Type, deleted_object.Position));
+			EditorDeletedObjectData deleted_dta = EditorDeletedObjectData.Create(deleted_object.Type, deleted_object.Position);
+			deleted_dta.Flags = deleted_object.Flags;
+			bug_fix_save_data.EditorDeletedObjects.Insert(deleted_dta);
 		}
 				
 		bug_fix_save_data.MapName = save_data.MapName;
