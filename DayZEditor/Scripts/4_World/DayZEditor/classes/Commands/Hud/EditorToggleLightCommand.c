@@ -3,11 +3,7 @@ class EditorToggleLightCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		
-		if (GetEditor().GetSelectedObjects().Count() > 0) {
-			return false;
-		}
-		
+				
 		GetEditor().GetCamera().ToggleLight();
 		
 		return true;
