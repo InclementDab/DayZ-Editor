@@ -179,8 +179,8 @@ class EditorHudController: EditorControllerBase
 		    }
 		}
 		
-		placeable_items.Insert(EditorPlaceableItem.Create(EditorPointLight));
-		placeable_items.Insert(EditorPlaceableItem.Create(EditorSpotLight));
+		placeable_items.Insert(EditorPlaceableItem.Create(NetworkSpotLight));
+		placeable_items.Insert(EditorPlaceableItem.Create(NetworkPointLight));
 		
 		return placeable_items;
 	}
