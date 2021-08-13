@@ -153,6 +153,8 @@ class EditorMapGroupProto: XMLCallback
 	void EditorMapGroupProto(Object building)
 	{
 		m_Building = building;
+		
+		EditorEvents.OnObjectDeleted.Insert(OnObjectDeleted);
 	}
 	
 	void ~EditorMapGroupProto()
@@ -173,6 +175,11 @@ class EditorMapGroupProto: XMLCallback
 	Object GetBuilding() 
 	{
 		return m_Building;
+	}
+	
+	void OnObjectDeleted(Class context, EditorObject target)
+	{
+		m_LootPositions.RemoveItem(target);
 	}
 		
 	override void OnSuccess(ref XMLDocument document)

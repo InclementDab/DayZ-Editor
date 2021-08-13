@@ -84,6 +84,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		m_ObjectGroup = new GroupPrefab("#STR_EDITOR_OBJECT", m_EditorObject, string.Empty);
 		m_ObjectGroup.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", m_EditorObject, "Health"));
+		m_ObjectGroup.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", m_EditorObject, "EditorOnly"));
 		m_ObjectGroup.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", m_EditorObject, "Simulate"));
 		m_ObjectGroup.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", m_EditorObject, "Locked"));
 		m_ObjectGroup.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", m_EditorObject, "Physics"));

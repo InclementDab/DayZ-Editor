@@ -22,7 +22,6 @@ class EditorObject: EditorWorldObject
 	vector Position;
 	vector Orientation;
 	float Scale = 1.0;
-	bool EditorOnly;
 	
 	// Object Properties
 	float Health = 100;
@@ -32,6 +31,7 @@ class EditorObject: EditorWorldObject
 	bool Simulate = true;
 	bool AllowDamage = false;
 	bool Collision = true;
+	bool EditorOnly = false;
 	
 	// Human Properties
 	bool Control;
@@ -304,6 +304,11 @@ class EditorObject: EditorWorldObject
 			m_Data.Orientation = GetOrientation();
 			m_Data.Scale = GetScale();
 			m_Data.BottomCenter = GetBottomCenter();
+			
+			m_Data.Locked = Locked;
+			m_Data.EditorOnly = EditorOnly;
+			m_Data.Simulate = Simulate;
+			m_Data.AllowDamage = AllowDamage;
 			
 			// Update Attachments
 			EntityAI entity = EntityAI.Cast(GetWorldObject());
