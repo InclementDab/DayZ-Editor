@@ -4,7 +4,12 @@ class EditorToggleLightCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		
+		if (GetEditor().GetSelectedObjects().Count() > 0) {
+			return false;
+		}
+		
 		GetEditor().GetCamera().ToggleLight();
+		
 		return true;
 	}
 	
@@ -15,6 +20,6 @@ class EditorToggleLightCommand: EditorCommand
 	
 	override ShortcutKeys GetShortcut()
 	{
-		return { KeyCode.KC_L };
+		return { KeyCode.KC_LSHIFT, KeyCode.KC_L };
 	}
 }
