@@ -346,12 +346,7 @@ class EditorObject: EditorWorldObject
 		Name = GetDisplayName();
 		Position = GetPosition();
 		Orientation = GetOrientation();
-		
-		// If network light
-		if (NetworkLightBase.Cast(m_WorldObject)) {
-			NetworkLightBase.Cast(m_WorldObject).Write(m_Data.Parameters);
-		}
-		
+				
 		if (GetEditor().Settings.DebugMode) {
 			//Debug.DestroyAllShapes();
 			foreach (EditorSnapPoint point: m_SnapPoints) {
