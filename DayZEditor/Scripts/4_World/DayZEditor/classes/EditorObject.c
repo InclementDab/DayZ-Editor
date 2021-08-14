@@ -120,6 +120,17 @@ class EditorObject: EditorWorldObject
 			ExpansionTraderType = SerializableParam1<string>.Cast(data.Parameters["ExpansionTraderType"]).param1;
 		}
 		
+		// Version 3
+		Locked = m_Data.Locked;
+		Simulate = m_Data.Simulate;
+		EditorOnly = m_Data.EditorOnly;
+		AllowDamage = m_Data.AllowDamage;
+		
+		// If network light
+		if (NetworkLightBase.Cast(m_WorldObject)) {
+			NetworkLightBase.Cast(m_WorldObject).Read(m_Data.Parameters);
+		}
+		
 		vector clip_info[2];
 		ClippingInfo(clip_info);
 	
@@ -174,11 +185,8 @@ class EditorObject: EditorWorldObject
 			Health = m_WorldObject.GetHealth("", "Health");
 		}
 		
-		// Version 3
-		Locked = m_Data.Locked;
-		Simulate = m_Data.Simulate;
-		EditorOnly = m_Data.EditorOnly;
-		AllowDamage = m_Data.AllowDamage;
+		// This is deliberately split due to issues with null errors, but i have to assign
+		// Locked higher up or it gets set to 0 always. this is a mess, please fix
 		PropertyChanged("Locked");
 		PropertyChanged("Simulate");
 		PropertyChanged("EditorOnly");
@@ -339,6 +347,11 @@ class EditorObject: EditorWorldObject
 		Position = GetPosition();
 		Orientation = GetOrientation();
 		
+		// If network light
+		if (NetworkLightBase.Cast(m_WorldObject)) {
+			NetworkLightBase.Cast(m_WorldObject).Write(m_Data.Parameters);
+		}
+		
 		if (GetEditor().Settings.DebugMode) {
 			//Debug.DestroyAllShapes();
 			foreach (EditorSnapPoint point: m_SnapPoints) {
@@ -468,6 +481,8 @@ class EditorObject: EditorWorldObject
 				break;
 			}
 		}
+			
+		Update();
 	}
 	
 	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) 

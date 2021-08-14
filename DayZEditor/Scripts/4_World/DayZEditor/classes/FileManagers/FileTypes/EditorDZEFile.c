@@ -67,7 +67,7 @@ class EditorDZEFile: EditorFileType
 		} else {
 			save_data = LoadJsonFile(file);
 		}
-		
+				
 		return save_data;
 	}
 	

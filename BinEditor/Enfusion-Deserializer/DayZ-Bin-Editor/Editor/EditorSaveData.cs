@@ -123,11 +123,14 @@ namespace DayZ_Bin_Editor.Editor
 
                 param_type_data[1] = param_type_data[1].Replace('>', char.MinValue);
 
-                dynamic editor_object_param = Activator.CreateInstance(null, $"Enfusion_Deserializer.{param_type_data[0]}").Unwrap();
+                dynamic editor_object_param = Activator.CreateInstance(null, $"DayZ_Bin_Editor.Editor.{param_type_data[0]}").Unwrap();
                 editor_object_param.Types.AddRange(param_type_data[1].Split(','));
                 editor_object_param.Read(stream);
 
                 Parameters[param_key] = editor_object_param;
+
+                Console.WriteLine(param_key);
+                Console.WriteLine(editor_object_param.param1);
             }
 
             if (version < 3) {
