@@ -5,25 +5,81 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DayZ_Bin_Editor"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800" UseLayoutRounding="False" Background="#FF1E1E1E" Foreground="Black">
-    
+        Title="DayZ-Bin-Editor" Height="500" Width="800" UseLayoutRounding="False" Background="#FF1E1E1E" Foreground="Black">
+
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCommand_Executed"/>
         <CommandBinding Command="ApplicationCommands.Save" Executed="SaveCommand_Executed"/>
         <CommandBinding Command="ApplicationCommands.Close" Executed="ExitCommand_Executed"/>
     </Window.CommandBindings>
 
-    <DockPanel HorizontalAlignment="Left" Height="20" LastChildFill="False" VerticalAlignment="Top" Width="792" Background="#FF141414">
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Command="Open"/>
+    <DockPanel HorizontalAlignment="Left" LastChildFill="False" VerticalAlignment="Top" Background="#FF141414">
+        <Menu DockPanel.Dock="Top" Foreground="#FFB4B4B4" Background="#FF191919">
+            <MenuItem Header="_File" Background="{x:Null}" BorderBrush="{x:Null}">
+                <MenuItem Command="Open" Foreground="#FFB4B4B4"/>
                 <MenuItem Command="Save"/>
                 <MenuItem Command="Close"/>
             </MenuItem>
         </Menu>
 
         <Grid Height="465" VerticalAlignment="Top" Width="790">
-            <ScrollViewer x:Name="ObjectScrollbar" HorizontalAlignment="Right" Height="430" Margin="0,25,0,0" VerticalAlignment="Top" Width="560"/>
+            <ScrollViewer x:Name="ObjectScrollbar" HorizontalAlignment="Right" Margin="0,25,0,0" VerticalAlignment="Top" Width="525" Height="377" Foreground="#FFB4B4B4" OpacityMask="#FFC14848">
+                <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF191919" Width="508" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <StackPanel x:Name="NameWrapper" Height="18" Width="505" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                        <TextBlock x:Name="NameCaption" TextWrapping="Wrap" Foreground="#FFB4B4B4" Width="80" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Text="Name" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="16"/>
+                        <TextBox x:Name="NameEditBox" Height="16" TextWrapping="Wrap" Text="NameEditBox" Width="300" BorderBrush="{x:Null}" Foreground="#FFB4B4B4" SelectionBrush="{x:Null}" Background="{x:Null}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <StackPanel x:Name="DisplayNameWrapper" Height="16" Width="505" Orientation="Horizontal" Margin="0,2,0,0">
+                        <TextBlock x:Name="DisplayNameCaption" TextWrapping="Wrap" Text="Display Name" Foreground="#FFB4B4B4" Width="80" HorizontalAlignment="Left" VerticalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="16"/>
+                        <TextBox x:Name="DisplayNameEditBox" Height="16" TextWrapping="Wrap" Text="DisplayNameEditBox" Foreground="#FFB4B4B4" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" Margin="0" Width="300" VerticalAlignment="Top" Padding="0,-1" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                    <StackPanel x:Name="PositionWrapper" Height="16" Width="505" Orientation="Horizontal" Margin="0,2,0,0">
+                        <TextBlock x:Name="PositionCaption" TextWrapping="Wrap" Text="Position" Foreground="#FFB4B4B4" Width="80" HorizontalAlignment="Left" VerticalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="16"/>
+                        <TextBlock x:Name="PosXCaption" Text="X" TextWrapping="Wrap" Width="10" Height="16"/>
+                        <TextBox x:Name="pos_X" Height="16" TextWrapping="Wrap" Foreground="#FFB4B4B4" Background="{x:Null}" BorderBrush="{x:Null}" SelectionBrush="{x:Null}" Width="110"/>
+                        <TextBlock x:Name="PosYCaption" Text="Y" TextWrapping="Wrap" Width="10" Height="16"/>
+                        <TextBox x:Name="pos_Y" Height="16" TextWrapping="Wrap" Foreground="#FFB4B4B4" Background="{x:Null}" BorderBrush="{x:Null}" Width="110"/>
+                        <TextBlock x:Name="PosZCaption" Text="Z" TextWrapping="Wrap" Width="10" Height="16"/>
+                        <TextBox x:Name="pos_Z" Height="16" TextWrapping="Wrap" Foreground="#FFB4B4B4" Background="{x:Null}" BorderBrush="{x:Null}" Margin="0,0,-10,0" Width="110"/>
+                    </StackPanel>
+                    <StackPanel x:Name="OrientationWrapper" Height="16" Width="505" Orientation="Horizontal" Margin="0,2,0,0">
+                        <TextBlock x:Name="OrientationCaption" TextWrapping="Wrap" Width="80" Height="16" HorizontalAlignment="Left" VerticalAlignment="Center"><Run Foreground="#FFB4B4B4" Text="Orientation"/><LineBreak/><Run Foreground="#FFB4B4B4"/></TextBlock>
+                        <TextBlock x:Name="X_Caption" Text="X" TextWrapping="Wrap" Width="10"/>
+                        <TextBox x:Name="Orientation_X" Height="16" TextWrapping="Wrap" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFB4B4B4" Width="110"/>
+                        <TextBlock x:Name="Y_Caption" Text="Y" TextWrapping="Wrap" Width="10" Height="16"/>
+                        <TextBox x:Name="Orientation_Y" Height="16" TextWrapping="Wrap" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFB4B4B4" Width="110"/>
+                        <TextBlock x:Name="Z_Caption" Text="Z" TextWrapping="Wrap" Width="10" Height="16"/>
+                        <TextBox x:Name="Orientation_Z" Height="16" TextWrapping="Wrap" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FFB4B4B4" Width="110" Margin="0,0,-2,0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                        <TextBlock TextWrapping="Wrap" Text="Scale" Width="77" Height="16"/>
+                        <TextBox TextWrapping="Wrap" Width="50" Background="{x:Null}" Text="1.0" Foreground="#FFB4B4B4" SelectionBrush="#FF2D2D2D" Height="16" BorderBrush="{x:Null}"/>
+                    </StackPanel>
+                    <StackPanel x:Name="FlagsMainWrapper" Height="31" Width="505" Orientation="Horizontal" Margin="0,2,0,0">
+                        <TextBlock x:Name="FlagsCaption" TextWrapping="Wrap" Height="16" Foreground="#FFB4B4B4" Margin="0,0,100,0" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center"><Run Text="Flags"/><LineBreak/><Run/></TextBlock>
+                        <StackPanel x:Name="FlagsCheckboxWrapper1" Width="160" UseLayoutRounding="False" ScrollViewer.VerticalScrollBarVisibility="Disabled" Margin="-55,0,0,1" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <CheckBox Content="Show BoundingBox" Margin="0,0,28.605,0" Foreground="#FFB4B4B4" Width="160" Height="16"/>
+                            <CheckBox Content="Show Map Marker" Margin="0,0,28.605,0" Foreground="#FFB4B4B4" Width="160" Height="16"/>
+                        </StackPanel>
+                        <StackPanel x:Name="FlagsCheckboxWrapper2" Width="160">
+                            <CheckBox Content="Show Object Marker" Foreground="#FFB4B4B4" Height="16" Margin="0,0,-30,0" Width="160" HorizontalAlignment="Left"/>
+                            <CheckBox Content="Show List Item" Foreground="#FFB4B4B4" Height="16" Margin="0,0,-30,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel x:Name="AdvancedMainWrapper" Width="505" Height="32" Orientation="Horizontal" Margin="0,5,0,0">
+                        <TextBlock x:Name="AdvancedCaption" Text="Advanced" TextWrapping="Wrap" Width="80" Height="16"/>
+                        <StackPanel x:Name="AdvancedCheckBoxWrapper1" Width="160">
+                            <CheckBox x:Name="EditorOnlyCheckBox" Content="Editor Only" Foreground="#FFB4B4B4" Width="160"/>
+                            <CheckBox x:Name="LockedCheckBox" Content="Locked" Foreground="#FFB4B4B4" Width="160"/>
+                        </StackPanel>
+                        <StackPanel x:Name="AdvancedCheckBoxWrapper2" Width="160">
+                            <CheckBox x:Name="AllowDamageCheckBox" Content="Allow Damage" Foreground="#FFB4B4B4"/>
+                            <CheckBox x:Name="SimulateCheckBox" Content="Simulate" Foreground="#FFB4B4B4"/>
+                        </StackPanel>
+                    </StackPanel>
+                </WrapPanel>
+            </ScrollViewer>
+
             <ScrollViewer x:Name="FileSelectScrollbar" HorizontalAlignment="Left" Height="430" Margin="0,25,0,0" VerticalAlignment="Top" Width="225" BorderBrush="#FFB4B4B4">
                 <ListBox x:Name="FileSelectList" Height="20" Width="208" VerticalContentAlignment="Top" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF282828" BorderBrush="{x:Null}" Foreground="#FFB4B4B4">
                     <ListBoxItem x:Name="FileSelectFileName" Content="ListBoxItem" Width="202" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Padding="0"/>
