@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DayZ_Bin_Editor.Enfusion;
+using Microsoft.CodeAnalysis;
 
 namespace DayZ_Bin_Editor.Editor
 {
@@ -20,10 +21,26 @@ namespace DayZ_Bin_Editor.Editor
         ALL = 2147483647
     }
 
+    [Generator]
+    public class GeneratedProperty : ISourceGenerator
+    {
+        public void Execute(GeneratorExecutionContext context)
+        {
+            
+            
+        }
+
+        public void Initialize(GeneratorInitializationContext context)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class EditorSaveData: INotifyPropertyChanged
     {
         public static readonly string BIN_CHECK = "EditorBinned";
 
+        //[GeneratedProperty]
         public int Version { get; set; } = 2;
         public string MapName { get; set; }
         public vector CameraPosition { get; set; }
@@ -48,7 +65,7 @@ namespace DayZ_Bin_Editor.Editor
             int objects_length = stream.ReadInt();
             Console.WriteLine("--Placements--");
             for (int i = 0; i < objects_length; i++) {
-                EditorObjectData editor_object = new EditorObjectData();
+                EditorObjectData editor_object = new();
                 editor_object.Read(stream, Version);
                 Console.WriteLine(editor_object.ToString());
                 EditorObjects.Add(editor_object);
@@ -57,7 +74,7 @@ namespace DayZ_Bin_Editor.Editor
             int deletions_length = stream.ReadInt();
             Console.WriteLine("--Deletions--");
             for (int i = 0; i < deletions_length; i++) {
-                EditorDeletedObjectData deletion_data = new EditorDeletedObjectData();
+                EditorDeletedObjectData deletion_data = new();
                 deletion_data.Read(stream, Version);
                 Console.WriteLine(deletion_data.ToString());
                 EditorDeletedObjects.Add(deletion_data);
