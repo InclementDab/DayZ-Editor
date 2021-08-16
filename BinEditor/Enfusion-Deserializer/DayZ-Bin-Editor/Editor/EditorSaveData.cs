@@ -28,8 +28,8 @@ namespace DayZ_Bin_Editor.Editor
         public string MapName { get; set; }
         public vector CameraPosition { get; set; }
 
-        public ObservableCollection<EditorObjectData> EditorObjects { get; set; } = new ObservableCollection<EditorObjectData>();
-        public ObservableCollection<EditorDeletedObjectData> EditorDeletedObjects { get; set; } = new ObservableCollection<EditorDeletedObjectData>();
+        public ObservableCollection<EditorObjectData> EditorObjects { get; set; } = new();
+        public ObservableCollection<EditorDeletedObjectData> EditorDeletedObjects { get; set; } = new();
 
         public bool Read(EnfusionSerializer stream)
         {
