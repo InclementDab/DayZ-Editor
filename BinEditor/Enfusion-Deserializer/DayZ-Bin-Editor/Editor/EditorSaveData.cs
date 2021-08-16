@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DayZ_Bin_Editor.Enfusion;
@@ -17,16 +20,16 @@ namespace DayZ_Bin_Editor.Editor
         ALL = 2147483647
     }
 
-    public class EditorSaveData
+    public class EditorSaveData: INotifyPropertyChanged
     {
         public static readonly string BIN_CHECK = "EditorBinned";
 
-        public int Version = 2;
-        public string MapName;
-        public vector CameraPosition;
+        public int Version { get; set; } = 2;
+        public string MapName { get; set; }
+        public vector CameraPosition { get; set; }
 
-        public List<EditorObjectData> EditorObjects = new List<EditorObjectData>();
-        public List<EditorDeletedObjectData> EditorDeletedObjects = new List<EditorDeletedObjectData>();
+        public ObservableCollection<EditorObjectData> EditorObjects { get; set; } = new ObservableCollection<EditorObjectData>();
+        public ObservableCollection<EditorDeletedObjectData> EditorDeletedObjects { get; set; } = new ObservableCollection<EditorDeletedObjectData>();
 
         public bool Read(EnfusionSerializer stream)
         {
@@ -36,8 +39,11 @@ namespace DayZ_Bin_Editor.Editor
             }
 
             Version = stream.ReadInt();
+            NotifyPropertyChanged("Version");
             MapName = stream.ReadString();
+            NotifyPropertyChanged("MapName");
             CameraPosition = stream.ReadVector();
+            NotifyPropertyChanged("CameraPosition");
 
             int objects_length = stream.ReadInt();
             Console.WriteLine("--Placements--");
@@ -76,6 +82,13 @@ namespace DayZ_Bin_Editor.Editor
             foreach (EditorDeletedObjectData data in EditorDeletedObjects) {
                 data.Write(stream, Version);
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected void NotifyPropertyChanged([CallerMemberName] string property_name = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property_name));
         }
     }
 
