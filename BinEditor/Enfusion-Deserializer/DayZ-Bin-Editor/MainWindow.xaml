@@ -6,18 +6,28 @@
         xmlns:local="clr-namespace:DayZ_Bin_Editor"
         mc:Ignorable="d"
         Title="MainWindow" Height="500" Width="800" UseLayoutRounding="False" Background="#FF1E1E1E" Foreground="Black">
-    <Grid Height="465" VerticalAlignment="Top" Margin="0.7,0,0.3,0" Width="790">
-        <DockPanel x:Name="MenuPanel" HorizontalAlignment="Left" Height="20" LastChildFill="False" Margin="0,0,-692,0" VerticalAlignment="Top" Width="792" Background="#FF141414">
-            <Button Content="File" Height="20" VerticalAlignment="Top" Width="75" BorderBrush="{x:Null}" Background="#FF191919" Foreground="#FFB4B4B4"/>
-            <Button Content="Edit" Height="20" VerticalAlignment="Top" Width="75" Foreground="#FFB4B4B4" BorderBrush="{x:Null}" Background="#FF191919"/>
-            <Button Content="Find" Height="20" VerticalAlignment="Top" Width="75" Foreground="#FFB4B4B4" BorderBrush="{x:Null}" Background="#FF191919"/>
-            <Button Content="Preferences" Height="20" VerticalAlignment="Top" Width="75" Foreground="#FFB4B4B4" BorderBrush="{x:Null}" Background="#FF191919"/>
-        </DockPanel>
-        <ScrollViewer x:Name="ObjectScrollbar" HorizontalAlignment="Right" Height="430" Margin="0,25,0,0" VerticalAlignment="Top" Width="560"/>
-        <ScrollViewer x:Name="FileSelectScrollbar" HorizontalAlignment="Left" Height="430" Margin="0,25,0,0" VerticalAlignment="Top" Width="225" BorderBrush="#FFB4B4B4">
-            <ListBox x:Name="FileSelectList" Height="20" Style="{DynamicResource SimpleListBox}" Width="208" VerticalContentAlignment="Top" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF282828" BorderBrush="{x:Null}" Foreground="#FFB4B4B4">
-                <ListBoxItem x:Name="FileSelectFileName" Content="ListBoxItem" Style="{DynamicResource SimpleListBoxItem}" Width="202" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Padding="0"/>
-            </ListBox>
-        </ScrollViewer>
-    </Grid>
+    
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open" Executed="OpenCommand_Executed"/>
+        <CommandBinding Command="ApplicationCommands.Save" Executed="SaveCommand_Executed"/>
+    </Window.CommandBindings>
+
+    <DockPanel HorizontalAlignment="Left" Height="20" LastChildFill="False" VerticalAlignment="Top" Width="792" Background="#FF141414">
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Command="Open"/>
+                <MenuItem Command="Save"/>
+            </MenuItem>
+        </Menu>
+
+        <Grid Height="465" VerticalAlignment="Top" Width="790">
+            <ScrollViewer x:Name="ObjectScrollbar" HorizontalAlignment="Right" Height="430" Margin="0,25,0,0" VerticalAlignment="Top" Width="560"/>
+            <ScrollViewer x:Name="FileSelectScrollbar" HorizontalAlignment="Left" Height="430" Margin="0,25,0,0" VerticalAlignment="Top" Width="225" BorderBrush="#FFB4B4B4">
+                <ListBox x:Name="FileSelectList" Height="20" Width="208" VerticalContentAlignment="Top" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#FF282828" BorderBrush="{x:Null}" Foreground="#FFB4B4B4">
+                    <ListBoxItem x:Name="FileSelectFileName" Content="ListBoxItem" Width="202" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Stretch" Padding="0"/>
+                </ListBox>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+
 </Window>

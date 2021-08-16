@@ -21,12 +21,15 @@ namespace DayZ_Bin_Editor
     /// </summary>
     public partial class MainWindow : Window
     {
+        protected MainWindowViewModel m_MainWindowViewModel = new MainWindowViewModel();
+
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = m_MainWindowViewModel;
         }
 
-        private void Open_Click(object sender, RoutedEventArgs e)
+        private void OpenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             OpenFileDialog file_dialog = new OpenFileDialog {
                 Filter = "DayZ Editor Files (*.dze)|*.dze"
@@ -35,7 +38,16 @@ namespace DayZ_Bin_Editor
             file_dialog.ShowDialog();
 
             string test = file_dialog.FileName;
+        }
+
+        private void SaveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
 
         }
+    }
+
+    public class MainWindowViewModel
+    {
+
     }
 }
