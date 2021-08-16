@@ -1,6 +1,9 @@
-﻿using Microsoft.Win32;
+﻿using DayZ_Bin_Editor.Editor;
+using DayZ_Bin_Editor.Enfusion;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,17 +40,21 @@ namespace DayZ_Bin_Editor
 
             file_dialog.ShowDialog();
 
-            string test = file_dialog.FileName;
+            EnfusionSerializer stream = new EnfusionSerializer(file_dialog.FileName, FileMode.Open, FileAccess.ReadWrite);
+
+            m_MainWindowViewModel.SaveData.Read(stream);
+            stream.Close();
         }
 
         private void SaveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
+            SaveFileDialog save_dialog = new SaveFileDialog();
+            save_dialog.ShowDialog();
         }
     }
 
     public class MainWindowViewModel
     {
-
+        public EditorSaveData SaveData { get; set; } = new EditorSaveData();
     }
 }
