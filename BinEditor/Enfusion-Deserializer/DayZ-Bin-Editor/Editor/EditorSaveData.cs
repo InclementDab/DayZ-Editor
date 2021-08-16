@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DayZ_Bin_Editor.Enfusion;
+using DayZ_Bin_Editor.Generators;
 using Microsoft.CodeAnalysis;
 
 namespace DayZ_Bin_Editor.Editor
@@ -21,27 +23,14 @@ namespace DayZ_Bin_Editor.Editor
         ALL = 2147483647
     }
 
-    [Generator]
-    public class GeneratedProperty : ISourceGenerator
-    {
-        public void Execute(GeneratorExecutionContext context)
-        {
-            
-            
-        }
-
-        public void Initialize(GeneratorInitializationContext context)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
+ 
     public class EditorSaveData: INotifyPropertyChanged
     {
         public static readonly string BIN_CHECK = "EditorBinned";
 
-        //[GeneratedProperty]
+        [GeneratedProperty]
         public int Version { get; set; } = 2;
+
         public string MapName { get; set; }
         public vector CameraPosition { get; set; }
 

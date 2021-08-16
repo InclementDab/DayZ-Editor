@@ -24,7 +24,7 @@ namespace DayZ_Bin_Editor
     /// </summary>
     public partial class MainWindow : Window
     {
-        protected MainWindowViewModel m_MainWindowViewModel = new MainWindowViewModel();
+        protected MainWindowViewModel m_MainWindowViewModel = new();
 
         public MainWindow()
         {
@@ -34,7 +34,7 @@ namespace DayZ_Bin_Editor
 
         private void OpenCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            OpenFileDialog file_dialog = new OpenFileDialog {
+            OpenFileDialog file_dialog = new() {
                 Filter = "DayZ Editor Files (*.dze)|*.dze"
             };
 
@@ -42,7 +42,7 @@ namespace DayZ_Bin_Editor
                 return;
             }
 
-            EnfusionSerializer stream = new EnfusionSerializer(file_dialog.FileName, FileMode.Open, FileAccess.ReadWrite);
+            EnfusionSerializer stream = new(file_dialog.FileName, FileMode.Open, FileAccess.Read);
 
             m_MainWindowViewModel.SaveData.Read(stream);
             stream.Close();
@@ -50,14 +50,20 @@ namespace DayZ_Bin_Editor
 
         private void SaveCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            SaveFileDialog save_dialog = new SaveFileDialog();
+            SaveFileDialog file_dialog = new() {
+                Filter = "DayZ Editor Files (*.dze)|*.dze"
+            };
 
-            if (save_dialog.ShowDialog() ?? false) {
+            if (file_dialog.ShowDialog() ?? false) {
                 return;
             }
 
+            EnfusionSerializer stream = new(file_dialog.FileName, FileMode.CreateNew, FileAccess.Write);
+
+            m_MainWindowViewModel.SaveData.Write(stream);
+            stream.Close();
         }
-        
+
         private void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Application.Current.Shutdown();
