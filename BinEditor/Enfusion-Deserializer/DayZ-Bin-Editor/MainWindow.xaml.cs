@@ -51,6 +51,11 @@ namespace DayZ_Bin_Editor
             SaveFileDialog save_dialog = new SaveFileDialog();
             save_dialog.ShowDialog();
         }
+        
+        private void ExitCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
     }
 
     public class MainWindowViewModel
