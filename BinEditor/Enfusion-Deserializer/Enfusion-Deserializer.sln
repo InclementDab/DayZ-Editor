@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Enfusion-Deserializer", "En
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DayZ-Bin-Editor", "DayZ-Bin-Editor\DayZ-Bin-Editor.csproj", "{77420A91-3D66-4B3E-B023-8D1F32E32253}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Code-Generators", "Code-Generators\Code-Generators.csproj", "{B0E73E85-45AB-433D-83FD-370C46503352}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Code-Generator", "Code-Generator\CodeGenerator.csproj", "{B0E73E85-45AB-433D-83FD-370C46503352}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

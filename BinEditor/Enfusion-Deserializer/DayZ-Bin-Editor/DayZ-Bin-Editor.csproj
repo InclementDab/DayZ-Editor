@@ -18,8 +18,6 @@
     <Page Remove="Simple Styles.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Code-Generators\Code-Generators.csproj" 
-    OutputItemType="Analyzer"
-		ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Code-Generator\CodeGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />
   </ItemGroup>
 </Project>
