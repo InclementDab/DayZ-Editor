@@ -45,6 +45,12 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		}
 	}
 	
+	void OpenInventoryExecute(ButtonCommandArgs args)
+	{
+		GetEditor().StopInventoryEditor();
+		GetGame().GetMission().ShowInventory();
+	}
+	
 	void ExitExecute(ButtonCommandArgs args)
 	{
 		GetEditor().StopInventoryEditor();
