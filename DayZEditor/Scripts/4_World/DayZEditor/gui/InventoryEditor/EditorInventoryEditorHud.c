@@ -40,8 +40,10 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		}
 		
 		// Just delete the rest of the stuff
-		for (int j = 0; j < m_Entity.GetInventory().AttachmentCount(); j++) {
-			GetGame().ObjectDelete(m_Entity.GetInventory().GetAttachmentFromIndex(j));
+		array<EntityAI> items = {};
+		m_Entity.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, items);
+		foreach (EntityAI item: items) {
+			GetGame().ObjectDelete(item);
 		}
 	}
 	

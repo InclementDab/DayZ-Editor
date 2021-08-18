@@ -21,6 +21,7 @@ class EditorHudToolbarController: EditorControllerBase
 	protected ImageWidget GroundButton_Icon;
 	protected ImageWidget SnapButton_Icon;
 	protected ImageWidget CollisionButton_Icon;
+	protected ImageWidget CameraLightButton_Icon;
 	
 	protected ButtonWidget BrushToggleButton;
 			
@@ -125,6 +126,16 @@ class EditorHudToolbarController: EditorControllerBase
 			case "ControlPlayerState": {
 				GetEditor().GetPlayer().GetInputController().SetDisabled(!ControlPlayerState);
 				Camera.GetCurrentCamera().DisableSimulation(ControlPlayerState);
+				break;
+			}
+			
+			case "m_Editor.CameraLight": {
+				GetEditor().GetCamera().SetLightState(m_Editor.CameraLight);
+				if (m_Editor.CameraLight) {
+					CameraLightButton_Icon.SetColor(COLOR_YELLOW);
+				} else {
+					CameraLightButton_Icon.SetColor(COLOR_WHITE);
+				}
 				break;
 			}
 		}

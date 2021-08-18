@@ -1153,6 +1153,93 @@ WrapSpacerWidgetClass ToolbarWrapper {
         }
        }
       }
+      GridSpacerWidgetClass Section5 {
+       ignorepointer 1
+       position 0 0
+       size 0 0
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Columns 4
+       Rows 1
+       {
+        ButtonWidgetClass CameraLightButton {
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 33
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass CameraLightButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           priority 1
+           image0 "set:dayz_editor_gui image:magnet"
+           mode blend
+           "src alpha" 1
+           "no wrap" 1
+           stretch 0
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "m_Editor.CameraLight"
+           Two_Way_Binding 1
+           Relay_Command "m_Editor.CommandManager.CameraToggleLight"
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider10 {
+       ignorepointer 1
+       position 0 0
+       size 19 33
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       {
+        PanelWidgetClass Divider11 {
+         ignorepointer 1
+         color 0 0 0 0.5882
+         position 0 0
+         size 0.1 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         style rover_sim_colorable
+        }
+       }
+      }
       XComboBoxWidgetClass BrushTypeBox {
        visible 1
        clipchildren 1
@@ -1461,49 +1548,6 @@ WrapSpacerWidgetClass ToolbarWrapper {
        vexactpos 1
        hexactsize 1
        vexactsize 0
-      }
-      FrameWidgetClass CameraLightFrame {
-       ignorepointer 1
-       color 0.7059 0.7059 0.7059 0
-       position 0 0
-       size 200 32
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       {
-        PanelWidgetClass CameraLightPanel {
-         ignorepointer 1
-         position 0 2
-         size 200 32
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         {
-          ButtonWidgetClass CameraLightButton {
-           color 0.7529 0.3647 0.3216 1
-           size 198 30
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scriptclass "ViewBinding"
-           text "#STR_CAMERA_LIGHT"
-           font "gui/fonts/etelkatextpro"
-           switch toggle
-           {
-            ScriptParamsClass {
-            }
-           }
-          }
-         }
-        }
-       }
       }
      }
     }

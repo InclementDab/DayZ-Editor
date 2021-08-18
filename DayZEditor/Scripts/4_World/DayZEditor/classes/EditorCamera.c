@@ -62,13 +62,12 @@ class EditorCamera: Camera
 		SelectTarget(null);
 	}
 	
-	void ToggleLight()
+	void SetLightState(bool state)
 	{
-		if (!m_EditorCameraLight) { 
+		if (state) {
 			m_EditorCameraLight = EditorCameraLight.Cast(ScriptedLightBase.CreateLight(EditorCameraLight, GetPosition(), 0.2));
 			m_EditorCameraLight.SetDirection(GetDirection());
 			m_EditorCameraLight.AttachOnObject(this);
-			
 		} else {
 			GetGame().ObjectDelete(m_EditorCameraLight);
 		}
