@@ -182,8 +182,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	static ref EditorMenu CurrentMenu;
 	
 	// ToolTip Control
-	protected static ref ScriptView CurrentTooltip;
-	static void SetCurrentTooltip(ScriptView current_tooltip) 
+	protected ref ScriptView CurrentTooltip;
+	void SetCurrentTooltip(ScriptView current_tooltip) 
 	{
 		delete CurrentTooltip;
 		

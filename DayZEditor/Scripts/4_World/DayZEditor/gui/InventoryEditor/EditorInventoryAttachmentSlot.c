@@ -45,13 +45,13 @@ class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmen
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton(GetSlotDisplayName(m_TemplateController.SlotId), w, TooltipPositions.BOTTOM_RIGHT));
+		GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton(GetSlotDisplayName(m_TemplateController.SlotId), w, TooltipPositions.BOTTOM_RIGHT));
 		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		EditorHud.SetCurrentTooltip(null);
+		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 		return true;
 	}
 		

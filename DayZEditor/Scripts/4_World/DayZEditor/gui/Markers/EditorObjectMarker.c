@@ -36,7 +36,7 @@ class EditorObjectMarker: EditorMarker
 		}
 		
 		// Delete the current tooltip to clean the UI a bit
-		EditorHud.SetCurrentTooltip(null);
+		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 		
 		switch (button) {
 			
@@ -144,7 +144,7 @@ class EditorObjectMarker: EditorMarker
 		}
 		
 		if (m_Editor.Settings.MarkerTooltips) {
-			EditorHud.SetCurrentTooltip(null);
+			GetEditor().GetEditorHud().SetCurrentTooltip(null);
 		}
 		
 		return super.OnMouseLeave(w, enterW, x, y);
@@ -159,7 +159,7 @@ class EditorObjectMarker: EditorMarker
 		}
 		
 		if (!EditorHud.CurrentMenu) {
-			EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton(m_EditorObject.GetType(), GetLayoutRoot(), TooltipPositions.BOTTOM_LEFT, string.Format("(%1)", m_EditorObject.GetID())));
+			GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton(m_EditorObject.GetType(), GetLayoutRoot(), TooltipPositions.BOTTOM_LEFT, string.Format("(%1)", m_EditorObject.GetID())));
 		}
 	}
 	

@@ -390,17 +390,17 @@ class EditorHudController: EditorControllerBase
 
 		switch (w) {
 			case PlacementsTabButton: {
-				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
+				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case DeletionsTabButton: {
-				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " #STR_EDITOR_DELETIONS", w, TooltipPositions.BOTTOM_LEFT));
+				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " #STR_EDITOR_DELETIONS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case CinematicCameraButton: {
-				EditorHud.SetCurrentTooltip(EditorTooltip.CreateOnButton("#STR_EDITOR_CINEMATIC_CAMERA", w, TooltipPositions.TOP_LEFT));
+				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("#STR_EDITOR_CINEMATIC_CAMERA", w, TooltipPositions.TOP_LEFT));
 				break;
 			}
 		}
@@ -411,7 +411,7 @@ class EditorHudController: EditorControllerBase
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseLeave");
-		EditorHud.SetCurrentTooltip(null);
+		m_Editor.GetEditorHud().SetCurrentTooltip(null);
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}

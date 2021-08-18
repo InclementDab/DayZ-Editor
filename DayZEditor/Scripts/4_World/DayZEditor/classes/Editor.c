@@ -598,7 +598,7 @@ class Editor
 			m_Player.GetInputController().SetDisabled(m_Active);
 		}
 		
-		EditorHud.SetCurrentTooltip(null);
+		m_EditorHud.SetCurrentTooltip(null);
 		PPEffects.ResetAll();
 	}
 	

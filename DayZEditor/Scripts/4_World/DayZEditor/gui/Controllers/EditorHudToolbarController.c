@@ -207,7 +207,7 @@ class EditorHudToolbarController: EditorControllerBase
 					tooltip.GetLayoutRoot().SetAlpha(100);
 				}
 				
-				EditorHud.SetCurrentTooltip(tooltip);
+				m_Editor.GetEditorHud().SetCurrentTooltip(tooltip);
 				
 			}
 		}
@@ -236,7 +236,7 @@ class EditorHudToolbarController: EditorControllerBase
 	{
 		//EditorLog.Trace("EditorHudToolbarController::OnMouseLeave %1", w.GetName());
 		
-		EditorHud.SetCurrentTooltip(null);
+		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 		
 		switch (w.GetTypeName()) {
 		

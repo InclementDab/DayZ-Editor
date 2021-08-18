@@ -108,14 +108,14 @@ class EditorPlaceableListItem: EditorListItem
 			tooltip.SetContent(GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE));
 		}		
 		
-		EditorHud.SetCurrentTooltip(tooltip);
+		GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
 		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		EditorHud.SetCurrentTooltip(null);
+		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
