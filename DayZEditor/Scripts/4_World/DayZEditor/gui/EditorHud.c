@@ -1,5 +1,7 @@
 class EditorHud: ScriptViewTemplate<EditorHudController>
 {
+	protected bool m_IsBoxSelectActive;
+	
 	// Layout Elements
 	Widget NotificationFrame;
 	Widget MapContainer;
@@ -81,6 +83,11 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		return EditorMapWidget.IsVisible();
 	}
 	
+	bool IsSelectionBoxActive()
+	{
+		return m_IsBoxSelectActive;
+	}
+	
 	void DelayedDragBoxCheck()
 	{
 		if (!IsVisible()) return;
@@ -106,7 +113,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		int drag_box_color_fill = ARGB(50, r, g, b);			
 		
 		int current_x, current_y;
-		while ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && GetGame().GetInput().HasGameFocus()) {
+		while ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && GetGame().GetInput().HasGameFocus()) {			
+			m_IsBoxSelectActive = true;
 			GetMousePos(current_x, current_y);
 			// @Sumrak :ANGERY:
 			current_x += 6;
@@ -144,6 +152,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 			Sleep(10);
 		}
 		
+		m_IsBoxSelectActive = false;
 		EditorCanvas.Clear();
 	}
 	
@@ -173,11 +182,14 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	static ref EditorMenu CurrentMenu;
 	
 	// ToolTip Control
-	private static ref ScriptView CurrentTooltip;
+	protected static ref ScriptView CurrentTooltip;
 	static void SetCurrentTooltip(ScriptView current_tooltip) 
 	{
-		if (CurrentTooltip) {
-			delete CurrentTooltip;
+		delete CurrentTooltip;
+		
+		// Dont create a tooltip if conditions are met
+		if (IsSelectionBoxActive()) {
+			return;
 		}
 		
 		CurrentTooltip = current_tooltip;
