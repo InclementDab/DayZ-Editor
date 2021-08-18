@@ -8,7 +8,7 @@ class EditorPlacedContextMenu: EditorContextMenu
 		AddMenuButton(m_Editor.CommandManager[EditorPasteCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorDeleteCommand]);
 		EntityAI entity;
-		if (Class.CastTo(entity, context.GetWorldObject()) && entity.GetInventory()) {
+		if (Class.CastTo(entity, context.GetWorldObject()) && entity.GetInventory() && entity.GetInventory().GetAttachmentSlotsCount() > 0) {
 			AddMenuDivider();
 			m_Editor.CommandManager[EditorEditInventoryCommand].SetData(new Param1<EntityAI>(entity));
 			AddMenuButton(m_Editor.CommandManager[EditorEditInventoryCommand]);
