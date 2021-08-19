@@ -34,6 +34,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		GroupPrefab camera_group = new GroupPrefab("#STR_EDITOR_CAMERA", m_Editor.Settings, string.Empty);
 		camera_group.Insert(new SliderPrefab("#STR_EDITOR_CAMERA_SPEED", m_Editor.Settings, "CameraSpeed", 0, 500));
 		camera_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_RULE_OF_THIRDS", m_Editor.Settings, "RuleOfThirds"));
+		camera_group.Insert(new CheckBoxPrefab("Allow Below Ground", m_Editor.Settings, "AllowBelowGround"));
 		
 		GroupPrefab marker_group = new GroupPrefab("#STR_EDITOR_MARKERS", m_Editor.Settings, string.Empty);
 		marker_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_TOOLTIPS", m_Editor.Settings, "MarkerTooltips"));

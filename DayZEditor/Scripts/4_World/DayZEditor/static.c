@@ -25,6 +25,16 @@ static string CreateEditorMission(string map_name = "ChernarusPlus")
 	EditorLog.Trace("CreateEditorMission");
 	string mission = "$saves:/Editor/Missions/DayZEditor." + map_name;
 	
+	if (!MakeDirectory("$saves:/Editor/")) {
+		EditorLog.Error("Failed to create Editor Directory");
+		return mission;
+	}
+	
+	if (!MakeDirectory("$saves:/Editor/Missions/")) {
+		EditorLog.Error("Failed to create Editor Mission Directory");
+		return mission;
+	}
+	
 	if (!FileExist(mission)) {
 		EditorLog.Info("Editor Mission not found, creating....");
 		MakeDirectory(mission);

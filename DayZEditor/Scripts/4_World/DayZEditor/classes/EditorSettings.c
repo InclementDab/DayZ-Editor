@@ -10,6 +10,7 @@ class EditorSettings: ProfileSettings
 	// Camera Settings
 	float CameraSpeed				= 60;
 	bool RuleOfThirds				= false;
+	bool AllowBelowGround 			= false;
 	
 	// Advanced Settings
 	bool LockCameraDuringDialogs 	= true;

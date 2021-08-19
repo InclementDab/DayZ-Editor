@@ -186,6 +186,10 @@ class EditorCamera: Camera
 
 		}
 
+		if (!GetEditor().Settings.AllowBelowGround) {
+			transform[3][1] = Math.Max(GetGame().SurfaceY(transform[3][0], transform[3][2]) + 0.1, transform[3][1]);
+		}
+		
 		SetTransform(transform);
 		
 		if (HideCursorOnDrag) {
