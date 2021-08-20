@@ -6,6 +6,8 @@ enum EditorClientModuleRPC
 
 class EditorClientModule: JMModuleBase
 {
+	protected Editor m_Editor;
+	
 	protected int m_KonamiCodeProgress;
 	protected float m_KonamiCodeCooldown;
 	
@@ -57,8 +59,8 @@ class EditorClientModule: JMModuleBase
 		
 	override void OnUpdate(float timeslice)
 	{
-		if (GetEditor()) {
-			GetEditor().Update(timeslice);
+		if (m_Editor) {
+			m_Editor.Update(timeslice);
 		}
 		
 		// Konami suck
@@ -74,16 +76,16 @@ class EditorClientModule: JMModuleBase
 		}
 		
 		if (m_KonamiCodeProgress >= KONAMI_CODE.Count()) {
-			GetEditor().GetEditorHud().CreateNotification("Konami Code Complete!", ARGB(255, 255, 0, 255));
-			GetEditor().KEgg = true;
+			m_Editor.GetEditorHud().CreateNotification("Konami Code Complete!", ARGB(255, 255, 0, 255));
+			m_Editor.KEgg = true;
 			m_KonamiCodeProgress = -1;
 		}*/
 		
 		/*
-		if (GetEditor() && GetEditor().GetCamera() && !IsMissionOffline()) {
+		if (m_Editor && m_Editor.GetCamera() && !IsMissionOffline()) {
 			ScriptRPC update_rpc = new ScriptRPC();
-			update_rpc.Write(GetEditor().GetCamera().GetPosition());
-			update_rpc.Write(GetEditor().GetCamera().GetOrientation());
+			update_rpc.Write(m_Editor.GetCamera().GetPosition());
+			update_rpc.Write(m_Editor.GetCamera().GetOrientation());
 			//update_rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_UPDATE, true);
 		}*/
 	}
@@ -137,20 +139,20 @@ class EditorClientModule: JMModuleBase
 		}
 		
 		EditorLog.Info("Loading Offline Editor...");
-		Editor editor = Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
-		editor.SetActive(true);
+		m_Editor = Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
+		m_Editor.SetActive(true);
 	}
 	
 	// Inputs
 	private bool ShouldProcessInput(UAInput input)
 	{
 		// Check if LocalPress, Check if LControl is pressed, Check if game is focused
-		return (GetEditor() && input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
+		return (m_Editor && input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
 	}
 	
 	private bool ShouldProcessQuickInput(UAInput input)
 	{
-		return (GetEditor() && input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
+		return (m_Editor && input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
 	}
 	
 	private void OnEditorToggleActive(UAInput input)
@@ -159,13 +161,13 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnEditorToggleActive");
 		
 		string ban_reason;
-		if (GetEditor().IsBannedClient(ban_reason)) {
-			GetEditor().ShowBanDialog(ban_reason);
+		if (m_Editor.IsBannedClient(ban_reason)) {
+			m_Editor.ShowBanDialog(ban_reason);
 			return;
 		}
 		
-		bool active = GetEditor().IsActive(); // weird syntax bug?
-		GetEditor().SetActive(!active);
+		bool active = m_Editor.IsActive(); // weird syntax bug?
+		m_Editor.SetActive(!active);
 	}	
 	
 	private void OnEditorToggleCursor(UAInput input)
@@ -173,16 +175,16 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleCursor");
 		
-		if (!GetEditor().IsActive() && !GetEditor().IsInventoryEditorActive()) {
+		if (!m_Editor.IsActive() && !m_Editor.IsInventoryEditorActive()) {
 			return;
 		}
 		
 		// Dont want to toggle cursor on map
-		if (GetEditor().GetEditorHud().EditorMapWidget.IsVisible() || (EditorHud.CurrentDialog && GetEditor().Settings.LockCameraDuringDialogs)) {
+		if (m_Editor.GetEditorHud().EditorMapWidget.IsVisible() || (EditorHud.CurrentDialog && m_Editor.Settings.LockCameraDuringDialogs)) {
 			return;
 		}
 		
-		GetEditor().GetEditorHud().ToggleCursor();
+		m_Editor.GetEditorHud().ToggleCursor();
 	}	
 	
 	private void OnEditorToggleUI(UAInput input)
@@ -191,33 +193,33 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnEditorToggleUI");
 		
 		string ban_reason;
-		if (GetEditor().IsBannedClient(ban_reason)) {
-			GetEditor().ShowBanDialog(ban_reason);
+		if (m_Editor.IsBannedClient(ban_reason)) {
+			m_Editor.ShowBanDialog(ban_reason);
 			return;
 		}
 		
-		if (GetEditor().IsInventoryEditorActive()) {
-			GetEditor().GetInventoryEditorHud().GetLayoutRoot().Show(!GetEditor().GetInventoryEditorHud().GetLayoutRoot().IsVisible());
+		if (m_Editor.IsInventoryEditorActive()) {
+			m_Editor.GetInventoryEditorHud().GetLayoutRoot().Show(!m_Editor.GetInventoryEditorHud().GetLayoutRoot().IsVisible());
 			return;
 		}
 		
-		GetEditor().GetEditorHud().Show(!GetEditor().GetEditorHud().IsVisible());
+		m_Editor.GetEditorHud().Show(!m_Editor.GetEditorHud().IsVisible());
 		
-		EditorObjectMap placed_objects =  GetEditor().GetPlacedObjects();
+		EditorObjectMap placed_objects =  m_Editor.GetPlacedObjects();
 		foreach (int id, EditorObject editor_object: placed_objects) {
 			EditorObjectMarker marker = editor_object.GetMarker();
 			if (marker) {
-				marker.Show(GetEditor().GetEditorHud().IsVisible());
+				marker.Show(m_Editor.GetEditorHud().IsVisible());
 			}
 		}
 		
 		// If player is active
-		if (!GetEditor().IsActive()) {
-			GetEditor().GetEditorHud().ShowCursor(GetEditor().GetEditorHud().IsVisible());
+		if (!m_Editor.IsActive()) {
+			m_Editor.GetEditorHud().ShowCursor(m_Editor.GetEditorHud().IsVisible());
 			
 			// A wacky way to disable motion while the UI is enabled
 			if (GetGame().GetPlayer()) {
-				GetGame().GetPlayer().DisableSimulation(GetEditor().GetEditorHud().IsVisible());
+				GetGame().GetPlayer().DisableSimulation(m_Editor.GetEditorHud().IsVisible());
 			}
 		}
 	}
@@ -227,13 +229,13 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleMap");
 		
-		if (!GetEditor().GetEditorHud().IsVisible()) return;
+		if (!m_Editor.GetEditorHud().IsVisible()) return;
 		
-		EditorHud editor_hud = GetEditor().GetEditorHud();
+		EditorHud editor_hud = m_Editor.GetEditorHud();
 		editor_hud.EditorMapWidget.Show(!editor_hud.EditorMapWidget.IsVisible());
 		editor_hud.ShowCursor(true);
 		
-		EditorEvents.MapToggled(this, GetEditor().GetEditorHud().EditorMapWidget, GetEditor().GetEditorHud().EditorMapWidget.IsVisible());
+		EditorEvents.MapToggled(this, m_Editor.GetEditorHud().EditorMapWidget, m_Editor.GetEditorHud().EditorMapWidget.IsVisible());
 	}	
 	
 	private void OnEditorDeleteObject(UAInput input)
@@ -243,7 +245,7 @@ class EditorClientModule: JMModuleBase
 		
 		EditorDeleteCommand command();
 		CommandArgs args();
-		args.Context = GetEditor().GetEditorHud();
+		args.Context = m_Editor.GetEditorHud();
 		command.Execute(this, args);
 	}
 	
@@ -252,12 +254,12 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorTeleportPlayerToCursor");
 				
-		GetEditor().TeleportPlayerToCursor();
+		m_Editor.TeleportPlayerToCursor();
 	}
 		
 	private void QuickTransformObjects(vector relative_position)
 	{
-		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
+		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		foreach (int id, EditorObject editor_object: selected_objects) {
 			editor_object.Position = relative_position + editor_object.GetPosition();
 			editor_object.PropertyChanged("Position");
@@ -267,8 +269,8 @@ class EditorClientModule: JMModuleBase
 	private void OnEditorMoveObjectForward(UAInput input)
 	{
 		// nothing is selected and we are actively placing
-		if (GetEditor() && GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing() && (input.LocalPress() || input.LocalHold())) {
-			ObservableCollection<ref EditorPlaceableListItem> placeables = GetEditor().GetEditorHud().GetTemplateController().LeftbarSpacerData;
+		if (m_Editor && m_Editor.GetSelectedObjects().Count() == 0 && m_Editor.IsPlacing() && (input.LocalPress() || input.LocalHold())) {
+			ObservableCollection<ref EditorPlaceableListItem> placeables = m_Editor.GetEditorHud().GetTemplateController().LeftbarSpacerData;
 			for (int i = 0; i < placeables.Count(); i++) {
 				if (placeables[i].IsSelected()) {
 					if (!placeables[i - 1]) {
@@ -276,10 +278,10 @@ class EditorClientModule: JMModuleBase
 					}
 					
 					placeables[i].Deselect();
-					GetEditor().CreateInHand(placeables[i - 1].GetPlaceableItem());
+					m_Editor.CreateInHand(placeables[i - 1].GetPlaceableItem());
 					placeables[i - 1].Select();
 					
-					GetEditor().GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i - 1) /  placeables.Count());
+					m_Editor.GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i - 1) /  placeables.Count());
 					return;
 				}
 			}
@@ -288,13 +290,13 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectForward");
 		
-		float value = GetEditor().Settings.QuickMoveStepSize;
+		float value = m_Editor.Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
 			value *= 0.01;
 		}
 		
-		if (GetEditor().Settings.QuickMoveFollowsCamera) {
-			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * value);
+		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * value);
 		} else {
 			QuickTransformObjects(Vector(0, 0, value));
 		}
@@ -303,8 +305,8 @@ class EditorClientModule: JMModuleBase
 	private void OnEditorMoveObjectBackward(UAInput input)
 	{
 		// nothing is selected and we are actively placing
-		if (GetEditor() && GetEditor().GetSelectedObjects().Count() == 0 && GetEditor().IsPlacing() && (input.LocalPress() || input.LocalHold())) {
-			ObservableCollection<ref EditorPlaceableListItem> placeables = GetEditor().GetEditorHud().GetTemplateController().LeftbarSpacerData;
+		if (m_Editor && m_Editor.GetSelectedObjects().Count() == 0 && m_Editor.IsPlacing() && (input.LocalPress() || input.LocalHold())) {
+			ObservableCollection<ref EditorPlaceableListItem> placeables = m_Editor.GetEditorHud().GetTemplateController().LeftbarSpacerData;
 			for (int i = 0; i < placeables.Count(); i++) {
 				if (placeables[i].IsSelected()) {
 					if (!placeables[i + 1]) {
@@ -312,10 +314,10 @@ class EditorClientModule: JMModuleBase
 					}
 					
 					placeables[i].Deselect();
-					GetEditor().CreateInHand(placeables[i + 1].GetPlaceableItem());
+					m_Editor.CreateInHand(placeables[i + 1].GetPlaceableItem());
 					placeables[i + 1].Select();
 					
-					GetEditor().GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i + 1) /  placeables.Count());
+					m_Editor.GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i + 1) /  placeables.Count());
 					return;
 				}
 			}
@@ -324,13 +326,13 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectBackward");
 		
-		float value = GetEditor().Settings.QuickMoveStepSize;
+		float value = m_Editor.Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
 			value *= 0.01;
 		}
 		
-		if (GetEditor().Settings.QuickMoveFollowsCamera) {
-			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * -value);
+		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * -value);
 		} else {
 			QuickTransformObjects(Vector(0, 0, -value));
 		}
@@ -341,13 +343,13 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectLeft");
 		
-		float value = GetEditor().Settings.QuickMoveStepSize;
+		float value = m_Editor.Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
 			value *= 0.01;
 		}
 		
-		if (GetEditor().Settings.QuickMoveFollowsCamera) {
-			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * vector.Up * value);
+		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * vector.Up * value);
 		} else {
 			QuickTransformObjects(Vector(-value, 0, 0));
 		}
@@ -358,13 +360,13 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectRight");
 		
-		float value = GetEditor().Settings.QuickMoveStepSize;
+		float value = m_Editor.Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
 			value *= 0.01;
 		}
 		
-		if (GetEditor().Settings.QuickMoveFollowsCamera) {
-			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * vector.Up * -value);
+		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * vector.Up * -value);
 		} else {
 			QuickTransformObjects(Vector(value, 0, 0));
 		}
@@ -375,13 +377,13 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectUp");
 		
-		float value = GetEditor().Settings.QuickMoveStepSize;
+		float value = m_Editor.Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
 			value *= 0.01;
 		}
 		
-		if (GetEditor().Settings.QuickMoveFollowsCamera) {
-			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * vector.Aside * value);
+		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * vector.Aside * value);
 		} else {
 			QuickTransformObjects(Vector(0, value, 0));
 		}
@@ -392,13 +394,13 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectDown");
 		
-		float value = GetEditor().Settings.QuickMoveStepSize;
+		float value = m_Editor.Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraTurbo")) {
 			value *= 0.01;
 		}
 		
-		if (GetEditor().Settings.QuickMoveFollowsCamera) {
-			QuickTransformObjects(GetEditor().GetCamera().GetDirection() * vector.Aside * -value);
+		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * vector.Aside * -value);
 		} else {
 			QuickTransformObjects(Vector(0, -value, 0));
 		}
