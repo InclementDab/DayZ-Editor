@@ -1072,6 +1072,10 @@ class Editor
 	
 	bool HideMapObject(EditorDeletedObject map_object, bool create_undo = true)
 	{
+		if (!CanHideMapObject(map_object.GetType())) {
+			return false;
+		}
+		
 		if (!map_object || !map_object.GetWorldObject()) {
 			return false;
 		}
@@ -1220,6 +1224,11 @@ class Editor
 		}
 		
 		return true;
+	}
+	
+	bool CanHideMapObject(string type)
+	{
+		return (!GetGame().IsKindOf(type, "BrushBase") && !GetGame().IsKindOf(type, "BoundingBoxBase") && !GetGame().IsKindOf(type, "Man") && !GetGame().IsKindOf(type, "EditorCamera"));
 	}
 	
 	void LockObject(EditorObject editor_object)

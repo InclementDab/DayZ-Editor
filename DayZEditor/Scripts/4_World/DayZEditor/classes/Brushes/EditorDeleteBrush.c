@@ -19,9 +19,7 @@ class DeleteBrush: EditorBrush
 			if (eo) {
 				editor_objects.InsertEditorObject(eo);
 			} else {
-				if (!r.IsKindOf("BrushBase") && !r.IsKindOf("BoundingBoxBase") && !r.IsKindOf("Man")) {
-					deleted_objects.Insert(EditorDeletedObjectData.Create(r));
-				}
+				deleted_objects.Insert(EditorDeletedObjectData.Create(r));
 			}
 		}	
 		
