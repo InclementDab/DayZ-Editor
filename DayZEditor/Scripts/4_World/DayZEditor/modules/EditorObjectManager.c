@@ -1,18 +1,22 @@
 class EditorObjectManagerModule: JMModuleBase
 {
-	// strong reference of Placed Objects
-	private ref EditorObjectMap					m_PlacedObjects;
+	// strong reference to objects, insert and remove expectedly
+	protected ref map<int, ref EditorObject> 		m_EditorObjectRefs;
+	protected ref map<int, ref EditorDeletedObject> m_EditorDeletedObjectRefs;
+	
+	// Stored list of all Placed Objects
+	protected ref EditorObjectMap					m_PlacedObjects;
 	
 	// Stored list of all selected Objects
-	private ref EditorObjectMap					m_SelectedObjects;
+	protected ref EditorObjectMap					m_SelectedObjects;
 	
 	// Stored list of all Placed Objects, indexed by their WorldObject ID
-	private ref EditorObjectMap					m_WorldObjectIndex;
-	
+	protected ref EditorObjectMap					m_WorldObjectIndex;
+		
 	// Stored list of all Hidden Objects, indexed by their WorldObject ID
-	private ref EditorDeletedObjectMap 			m_DeletedObjects;
+	protected ref EditorDeletedObjectMap 			m_DeletedObjects;
 	
-	private ref EditorDeletedObjectMap			m_SelectedDeletedObjects;
+	protected ref EditorDeletedObjectMap			m_SelectedDeletedObjects;
 
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
@@ -25,6 +29,9 @@ class EditorObjectManagerModule: JMModuleBase
 		m_SelectedObjects 	= new EditorObjectMap();
 		m_DeletedObjects	= new EditorDeletedObjectMap();
 		m_SelectedDeletedObjects	= new EditorDeletedObjectMap();
+		
+		m_EditorObjectRefs = new map<int, ref EditorObject>();
+		m_EditorDeletedObjectRefs = new map<int, ref EditorDeletedObject>();
 	}
 	
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
@@ -33,6 +40,9 @@ class EditorObjectManagerModule: JMModuleBase
 
 		EditorObject editor_object = new EditorObject(editor_object_data);
 		if (!editor_object) return null;
+		
+		// strong ref
+		m_EditorObjectRefs[editor_object.GetID()] = editor_object;
 		
 		m_PlacedObjects.InsertEditorObject(editor_object);
 		m_WorldObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object);
@@ -44,10 +54,13 @@ class EditorObjectManagerModule: JMModuleBase
 	void DeleteObject(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::DeleteObject");
+		
 		m_SelectedObjects.RemoveEditorObject(target);
 		m_PlacedObjects.RemoveEditorObject(target);
 		EditorEvents.ObjectDeleted(this, target);		
-		delete target;
+		
+		// remove strong ref
+		m_EditorObjectRefs.Remove(target.GetID());
 	}
 	
 	// Call to select an object
@@ -95,21 +108,29 @@ class EditorObjectManagerModule: JMModuleBase
 	void HideMapObject(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::HideMapObject");
+		
+		// strong ref
+		m_EditorDeletedObjectRefs[target.GetID()] = target;
+				
 		m_DeletedObjects.InsertEditorDeletedObject(target);
 	}
 	
 	void UnhideMapObject(int target)
 	{
 		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
-		delete m_DeletedObjects[target];
 		m_DeletedObjects.Remove(target);
+		
+		// remove strong ref
+		m_EditorDeletedObjectRefs.Remove(target);
 	}
 	
 	void UnhideMapObject(notnull EditorDeletedObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
 		m_DeletedObjects.RemoveEditorDeletedObject(target);
-		delete target;
+
+		// remove strong ref
+		m_EditorDeletedObjectRefs.Remove(target.GetID());
 	}
 	
 	void SelectHiddenObject(notnull EditorDeletedObject target)
@@ -138,12 +159,15 @@ class EditorObjectManagerModule: JMModuleBase
 	}
 		
 	void Clear()
-	{
+	{		
 		m_WorldObjectIndex.Clear();
 		m_PlacedObjects.Clear();
 		m_SelectedObjects.Clear();		
 		m_DeletedObjects.ClearSafe();
 		m_SelectedDeletedObjects.ClearSafe();		
+		
+		m_EditorObjectRefs.Clear();
+		m_EditorDeletedObjectRefs.Clear();
 	}
 				
 	override void OnMissionStart()
@@ -200,6 +224,13 @@ class EditorObjectManagerModule: JMModuleBase
 	EditorObject GetEditorObject(notnull Object world_object) 
 	{
 		return m_WorldObjectIndex.Get(world_object.GetID()); 
+	}
+	
+	void Debug()
+	{
+		EditorLog.Debug("EditorObjectManager Debug Info");
+		EditorLog.Debug(m_EditorObjectRefs.Count().ToString());
+		EditorLog.Debug(m_EditorDeletedObjectRefs.Count().ToString());
 	}
 	
 	override bool IsClient() 

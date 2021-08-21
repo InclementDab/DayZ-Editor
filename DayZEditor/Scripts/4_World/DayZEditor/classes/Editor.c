@@ -1098,14 +1098,33 @@ class Editor
 		return true;
 	}
 	
-	void HideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
+	void HideMapObjects(array<ref EditorDeletedObjectData> deleted_objects, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
-		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {		
+		foreach (EditorDeletedObjectData deleted_object: deleted_objects) {		
+			m_DeletedSessionCache.InsertData(deleted_object);		
+			if (create_undo) {
+				action.InsertUndoParameter(new Param1<int>(deleted_object.ID));
+				action.InsertRedoParameter(new Param1<int>(deleted_object.ID));
+			}
+			
+			Statistics.EditorRemovedObjects++;
+			m_ObjectManager.HideMapObject(new EditorDeletedObject(deleted_object));
+		}
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
+	
+	void HideMapObjects(array<ref EditorDeletedObject> deleted_objects, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Unhide", "Hide");
+		foreach (EditorDeletedObject deleted_object: deleted_objects) {		
 			m_DeletedSessionCache.InsertData(deleted_object.GetData());		
 			if (create_undo) {
-				action.InsertUndoParameter(new Param1<int>(id));
-				action.InsertRedoParameter(new Param1<int>(id));
+				action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
+				action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
 			}
 			
 			Statistics.EditorRemovedObjects++;
@@ -1116,7 +1135,7 @@ class Editor
 			InsertAction(action);
 		}
 	}
-	
+		
 	bool UnhideMapObject(EditorDeletedObjectData data, bool create_undo = true)
 	{		
 		if (!data || !data.WorldObject) {
@@ -1139,6 +1158,27 @@ class Editor
 		return true;
 	}
 	
+	void UnhideMapObjects(array<ref EditorDeletedObject> deleted_objects, bool create_undo = true)
+	{
+		if (create_undo) {
+			EditorAction action = new EditorAction("Hide", "Unhide");
+		}
+		
+		foreach (EditorDeletedObject deleted_object: deleted_objects) {						
+			if (create_undo) {
+				action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
+				action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
+			}
+			
+			Statistics.EditorRemovedObjects++;
+			m_ObjectManager.UnhideMapObject(deleted_object);
+		}
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}	
+	
 	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
 	{
 		if (create_undo) {
@@ -1160,7 +1200,6 @@ class Editor
 		}
 	}
 	
-	/*
 	bool UnhideMapObject(EditorDeletedObject map_object, bool create_undo = true)
 	{
 		if (!map_object) { 
@@ -1184,7 +1223,6 @@ class Editor
 		
 		return true;
 	}
-	*/
 	
 	void LockObject(EditorObject editor_object)
 	{

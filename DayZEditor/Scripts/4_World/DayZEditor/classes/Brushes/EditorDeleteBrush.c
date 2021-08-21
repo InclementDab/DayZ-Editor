@@ -13,14 +13,14 @@ class DeleteBrush: EditorBrush
 		//GetEditor().ClearSelection();
 		
 		EditorObjectMap editor_objects();
-		EditorDeletedObjectMap deleted_objects();
+		array<ref EditorDeletedObjectData> deleted_objects = {};
 		foreach (Object r: objects) {
 			EditorObject eo = GetEditor().GetEditorObject(r);
 			if (eo) {
 				editor_objects.InsertEditorObject(eo);
 			} else {
 				if (!r.IsKindOf("BrushBase") && !r.IsKindOf("BoundingBoxBase") && !r.IsKindOf("Man")) {
-					deleted_objects.InsertEditorDeletedObject(new EditorDeletedObject(EditorDeletedObjectData.Create(r)));
+					deleted_objects.Insert(EditorDeletedObjectData.Create(r));
 				}
 			}
 		}	
