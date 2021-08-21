@@ -785,7 +785,9 @@ class EditorObject: EditorWorldObject
 			marker.Show(!Locked);
 		}
 		
-		m_EditorPlacedListItem.LockedImage.Show(Locked);
+		if (m_EditorPlacedListItem) {
+			m_EditorPlacedListItem.LockedImage.Show(Locked);
+		}
 	}
 	
 	void EnablePhysics(bool enable)

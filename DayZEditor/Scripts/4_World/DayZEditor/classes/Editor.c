@@ -972,8 +972,6 @@ class Editor
 	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject " + editor_object_data);
-		Print("here");
-		Print(editor_object_data.Locked);
 		
 		// Cache Data (for undo / redo)
 		if (!editor_object_data) return null;
