@@ -23,8 +23,8 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		
 		general_group.Insert(log_level);
 		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_AUTO_SAVE", m_Editor.Settings, "AutoSaveTimer"));
-		general_group.Insert(new SliderPrefab("#STR_EDITOR_VIEW_DISTANCE", m_Editor.Settings, "ViewDistance", 0, 20000));
-		general_group.Insert(new SliderPrefab("#STR_EDITOR_OBJECT_VIEW_DISTANCE", m_Editor.Settings, "ObjectViewDistance", 0, 8000));
+		general_group.Insert(new SliderPrefab("#STR_EDITOR_VIEW_DISTANCE", m_Editor.Settings, "ViewDistance", 1, 20000));
+		general_group.Insert(new SliderPrefab("#STR_EDITOR_OBJECT_VIEW_DISTANCE", m_Editor.Settings, "ObjectViewDistance", 1, 8000));
 		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_QUICK_MOVE_STEP", m_Editor.Settings, "QuickMoveStepSize", 0.01));	
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_QUICK_MOVE_FOLLOWS", m_Editor.Settings, "QuickMoveFollowsCamera"));	
 		
