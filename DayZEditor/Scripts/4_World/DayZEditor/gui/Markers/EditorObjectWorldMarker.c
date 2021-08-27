@@ -1,5 +1,8 @@
 class EditorObjectWorldMarker: EditorObjectMarker
 {
+	static const float MARKER_MIN_SIZE = 10;
+	static const float MARKER_MAX_SIZE = 22;
+	
 	protected int m_ScreenX, m_ScreenY;
 	protected MapWidget m_MapWidget;
 	void EditorObjectWorldMarker(EditorObject editor_object)
@@ -18,8 +21,9 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	override void Update()
 	{		
-		vector position = GetPosition();		
-		if (m_Editor.Settings.MarkerViewDistance < vector.Distance(GetGame().GetCurrentCameraPosition(), position)) {
+		vector position = GetPosition();	
+		float distance = vector.Distance(GetGame().GetCurrentCameraPosition(), position);
+		if (m_Editor.Settings.MarkerViewDistance < distance) {
 			m_LayoutRoot.Show(false);
 			return;
 		}
@@ -36,6 +40,9 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			return;
 		}
 		
+		
+		float size = Math.Min(Math.Max(1000 / distance, MARKER_MIN_SIZE), MARKER_MAX_SIZE);
+		SetSize(size, size);
 		SetPos(screen_pos[0], screen_pos[1]);
 		Show(m_Show);
 	}
