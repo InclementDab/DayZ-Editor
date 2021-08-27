@@ -39,7 +39,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		GroupPrefab marker_group = new GroupPrefab("#STR_EDITOR_MARKERS", m_Editor.Settings, string.Empty);
 		marker_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_TOOLTIPS", m_Editor.Settings, "MarkerTooltips"));
 		marker_group.Insert(new CheckBoxPrefab("#STR_EDITOR_GROUND_OCCLUSION", m_Editor.Settings, "MarkerGroundOcclusion"));
-		marker_group.Insert(new SliderPrefab("#STR_EDITOR_VIEW_DISTANCE", m_Editor.Settings, "MarkerViewDistance", 100, 5000));
+		marker_group.Insert(new SliderPrefab("#STR_EDITOR_VIEW_DISTANCE", m_Editor.Settings, "MarkerViewDistance", 1, 5000));
 		marker_group.Insert(new ColorPickerPrefab("#STR_EDITOR_MARKER_COLOR", m_Editor.Settings, "MarkerPrimaryColor"));
 		
 		GroupPrefab brush_settings = new GroupPrefab("#STR_EDITOR_BRUSHES", m_Editor.Settings, string.Empty);
