@@ -155,8 +155,9 @@ class EditorCamera: Camera
 		bool decreaseSpeeds = input.LocalValue("EditorCameraSlow");
 		bool increaseSpeeds = input.LocalValue("EditorCameraTurbo");
 		
-		SetFOV(Math.Clamp(GetCurrentFOV() + zoomAmt, 0.01, 5));
-		
+		FOV = Math.Clamp(GetCurrentFOV() + zoomAmt, 0.01, 5);
+		SetFOV(FOV);
+
 		if (input.LocalValue("EditorCameraZoomReset")) {
 			SetFOV(1);
 		}
