@@ -281,6 +281,10 @@ class EditorClientModule: JMModuleBase
 					m_Editor.CreateInHand(placeables[i - 1].GetPlaceableItem());
 					placeables[i - 1].Select();
 					
+					// Handle tooltip showing
+					placeables[i].OnMouseLeave(null, null, 0, 0);
+					placeables[i - 1].OnMouseEnter(null, 0, 0);
+					
 					m_Editor.GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i - 1) /  placeables.Count());
 					return;
 				}
@@ -316,6 +320,10 @@ class EditorClientModule: JMModuleBase
 					placeables[i].Deselect();
 					m_Editor.CreateInHand(placeables[i + 1].GetPlaceableItem());
 					placeables[i + 1].Select();
+					
+					// Handle tooltip showing
+					placeables[i].OnMouseLeave(null, null, 0, 0);
+					placeables[i + 1].OnMouseEnter(null, 0, 0);
 					
 					m_Editor.GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i + 1) /  placeables.Count());
 					return;
