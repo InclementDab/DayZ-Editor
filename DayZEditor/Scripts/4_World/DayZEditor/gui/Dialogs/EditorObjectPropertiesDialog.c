@@ -2,12 +2,14 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 {
 	static bool GeneralGroup = true;
 	static bool Object_Group = true;
+	static bool AnimationGroup = true;
 	static bool HumanGroup = true;
 	static bool LightGroup = true;
 	static bool DebugGroup = false;
 	
 	protected ref GroupPrefab m_GeneralGroup;
 	protected ref GroupPrefab m_ObjectGroup;
+	protected ref GroupPrefab m_AnimationsGroup;
 	protected ref GroupPrefab m_HumanGroup;
 	protected ref GroupPrefab m_DebugGroup;
 	protected ref GroupPrefab m_LightGroup;
@@ -99,15 +101,17 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		AddContent(m_ObjectGroup);
 		
 		if (editor_object.HasAnimations()) {
-			GroupPrefab animations_group = new GroupPrefab("Object Animations", m_EditorObject, string.Empty);
+			m_AnimationsGroup = new GroupPrefab("Object Animations", m_EditorObject, string.Empty);
 			
 			map<string, ref EditorObjectAnimationSource> object_animations = editor_object.GetObjectAnimations();
 			foreach (string name, EditorObjectAnimationSource anim: object_animations) {
-				animations_group.Insert(new SliderPrefab(name, anim, "AnimationPhase", 0, 1));
+				m_AnimationsGroup.Insert(new SliderPrefab(name, anim, "AnimationPhase", 0, 1));
 			}
 			
-			AddContent(animations_group);
+			AddContent(m_AnimationsGroup);
 		}
+		
+		m_AnimationsGroup.Open(Object_Group && editor_object.HasAnimations());
 		
 		if (editor_object.GetWorldObject().IsMan()) {
 			m_HumanGroup = new GroupPrefab("#STR_EDITOR_HUMAN", m_EditorObject, string.Empty);
@@ -145,6 +149,9 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		if (m_ObjectGroup)
 			Object_Group = m_ObjectGroup.IsOpen();
 		
+		if (m_AnimationsGroup)
+			AnimationGroup = m_AnimationsGroup.IsOpen();
+		
 		if (m_DebugGroup)
 			DebugGroup = m_DebugGroup.IsOpen();
 		
@@ -157,6 +164,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		delete m_GeneralGroup;
 		delete m_LightGroup;
 		delete m_ObjectGroup;
+		delete m_AnimationsGroup;
 		delete m_DebugGroup;
 		delete m_HumanGroup;
 	}
