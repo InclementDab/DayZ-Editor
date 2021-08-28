@@ -36,15 +36,3 @@ static vector MousePosToRay(out set<Object> collisions, Object ignore = null, fl
 	DayZPhysics.RaycastRV(ray_start, ray_end, hitPos, hitNormal, hitComponentIndex, collisions, null, ignore, false, groundonly, 1, radius, CollisionFlags.ALLOBJECTS);
 	return hitPos;
 }
-
-static vector ObjectGetSize(notnull Object obj)
-{
-	vector size[2];
-	vector result;
-	obj.ClippingInfo(size);
-	for (int i = 0; i < 3; i++) {
-		result[i] = Math.AbsFloat(size[0][i]) + Math.AbsFloat(size[1][i]);
-	}
-	
-	return result;
-}
