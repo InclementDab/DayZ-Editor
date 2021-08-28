@@ -1,6 +1,89 @@
-class EditorObjectPropertiesDialog: EditorDialogBase
-{	
+// This is the handler for when the dialog has multiple objects selected
+class EditorMultiObjectCommandController
+{
 	protected ref array<EditorObject> m_EditorObjects = {};
+	
+	void EditorMultiObjectCommandController(notnull array<EditorObject> editor_objects)
+	{
+		m_EditorObjects.InsertArray(editor_objects);
+		
+		// Name will be, by default, the first object to be selected
+		// if there are multiple objects with different names, then the name dialog will go blank
+		if (m_EditorObjects.Count() > 0) {
+			Name = m_EditorObjects[0].Name;
+			Scale = m_EditorObjects[0].Scale.ToString();
+		}
+		
+		foreach (EditorObject editor_object: m_EditorObjects) {
+			if (Name != editor_object.Name) {
+				Name = string.Empty;
+			}
+			
+			if (Scale.Parse() != editor_object.Scale) {
+				Scale = string.Empty;
+			}
+			
+			Position += editor_object.GetPosition();
+			Orientation += editor_object.GetOrientation();
+		}
+		
+		// Average all values out to find center
+		for (int i = 0; i < 3; i++) {
+			Position[i] = Position[i] / m_EditorObjects.Count();
+			Orientation[i] = Orientation[i] / m_EditorObjects.Count();
+		}
+	}
+	
+	void ~EditorMultiObjectCommandController()
+	{
+		delete m_EditorObjects;
+	}
+	
+	bool Show = true;
+	string Name;
+	vector Position;
+	vector Orientation;
+	StringEvaluater Scale = "1.0";
+	
+	void PropertyChanged(string property_name)
+	{
+		foreach (EditorObject editor_object: m_EditorObjects) {
+			switch (property_name) {
+				case "Show": {
+					editor_object.Show = Show;
+					break;
+				}
+				
+				case "Name": {
+					editor_object.Name = Name;
+					break;
+				}
+							
+				case "Position": {
+					
+					break;
+				}
+				
+				case "Orientation": {
+					
+					break;
+				}
+				
+				case "Scale": {
+					editor_object.Scale = Scale.Parse();
+					break;
+				}
+			}
+			
+			editor_object.PropertyChanged(property_name);
+		}
+	}
+}
+
+class EditorObjectPropertiesDialog: EditorDialogBase
+{
+	protected ref array<EditorObject> m_EditorObjects = {};
+	protected ref EditorMultiObjectCommandController m_EditorMultiObjectCommandController;
 	
 	void EditorObjectPropertiesDialog(string title, notnull array<EditorObject> editor_objects)
 	{
@@ -12,6 +95,12 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
 		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
+	}
+	
+	void ~EditorObjectPropertiesDialog()
+	{
+		delete m_EditorObjects;
+		delete m_EditorMultiObjectCommandController;
 	}
 		
 	protected void OnObjectSelected(Class context, EditorObject editor_object)
@@ -28,7 +117,10 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	
 	void UpdateViewContext()
 	{
+		// cleanup content
 		ClearContent();
+		delete m_EditorMultiObjectCommandController;
+		
 		switch (m_EditorObjects.Count()) {			
 			case 1: {
 				SetEditorObject(m_EditorObjects[0]);
@@ -42,6 +134,20 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		}
 	}
 			
+	void SetMultipleEditorObjects(array<EditorObject> editor_objects)
+	{
+		m_EditorMultiObjectCommandController = new EditorMultiObjectCommandController(editor_objects);
+		
+		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", m_EditorMultiObjectCommandController, string.Empty);
+		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW", m_EditorMultiObjectCommandController, "Show"));
+		general_group.Insert(new EditBoxPrefab("#STR_EDITOR_NAME", m_EditorMultiObjectCommandController, "Name"));
+		general_group.Insert(new VectorPrefab("#STR_EDITOR_POSITION", m_EditorMultiObjectCommandController, "Position"));
+		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", m_EditorMultiObjectCommandController, "Orientation"));
+		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_SCALE", m_EditorMultiObjectCommandController, "Scale", 0.01));
+		
+		AddContent(general_group);
+	}
+	
 	// This function is a mess
 	void SetEditorObject(EditorObject editor_object)
 	{		
@@ -132,12 +238,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		// Auto resize
 		AutoSize();
 	}
-	
-	void SetMultipleEditorObjects(array<EditorObject> editor_objects)
-	{
-		
-	}
-			
+				
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		if (w.IsInherited(TextWidget)) {
