@@ -575,10 +575,9 @@ class Editor
 		
 		if (m_EditorHud) {
 			m_EditorHud.Show(m_Active);
+			m_EditorHud.SetCurrentTooltip(null);
 		}
-		
-		SetMissionHud(!m_Active);
-
+				
 		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
@@ -601,7 +600,7 @@ class Editor
 			m_Player.GetInputController().SetDisabled(m_Active);
 		}
 		
-		m_EditorHud.SetCurrentTooltip(null);
+		SetMissionHud(!m_Active);
 		PPEffects.ResetAll();
 	}
 	
@@ -771,19 +770,30 @@ class Editor
 	
 	void SetMissionHud(bool state)
 	{
-		if (m_Mission && m_Mission.GetHud()) {
-			m_Mission.GetHud().Show(state);
-			m_Mission.GetHud().ShowHud(state);
-			m_Mission.GetHud().ShowHudUI(state);
-			m_Mission.GetHud().SetPermanentCrossHair(state);
-			// we are in 4_world and this game is bad :)
-			Widget hud_root;
-			EnScript.GetClassVar(m_Mission, "m_HudRootWidget", 0, hud_root);
-			if (hud_root) {
-				hud_root.Show(state);
-			}
+		Mission mission = GetGame().GetMission();
+		if (!mission) {
+			EditorLog.Error("No mission active");
+			return;
+		}
+		
+		Hud hud = mission.GetHud();
+		if (!hud) {
+			EditorLog.Error("No Hud active");
+			return;
+		}
+		
+		hud.Show(state);
+		hud.ShowHud(state);
+		hud.ShowHudUI(state);
+		hud.SetPermanentCrossHair(state);
+		// we are in 4_world and this game is bad :)
+		Widget hud_root;
+		EnScript.GetClassVar(mission, "m_HudRootWidget", 0, hud_root);
+		if (hud_root) {
+			hud_root.Show(state);
 		}
 	}
+	
 	
 	// Kinda very jank i think
 	void InsertLootPosition(vector position)

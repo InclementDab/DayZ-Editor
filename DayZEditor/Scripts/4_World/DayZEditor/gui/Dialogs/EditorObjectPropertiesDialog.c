@@ -132,6 +132,9 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		m_DebugGroup.Insert(new TextBoxPrefab("#STR_EDITOR_MODEL", m_EditorObject.GetData(), "Model"));
 		m_DebugGroup.Open(DebugGroup);
 		AddContent(m_DebugGroup);
+		
+		// Auto resize
+		AutoSize();
 	}
 	
 	private void UpdateViewContext()
