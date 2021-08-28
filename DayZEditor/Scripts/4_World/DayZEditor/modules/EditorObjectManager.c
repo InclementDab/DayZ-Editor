@@ -39,8 +39,10 @@ class EditorObjectManagerModule: JMModuleBase
 		EditorLog.Trace("EditorObjectManager::CreateObject");
 
 		EditorObject editor_object = new EditorObject(editor_object_data);
-		if (!editor_object || !editor_object.GetWorldObject()) return null;
-		
+		if (!editor_object || !editor_object.GetWorldObject()) { 
+			return null;
+		}
+				
 		// strong ref
 		m_EditorObjectRefs[editor_object.GetID()] = editor_object;
 		

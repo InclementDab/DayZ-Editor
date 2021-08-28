@@ -208,7 +208,7 @@ class EditorObject: EditorWorldObject
 	void ~EditorObject()
 	{
 		EditorLog.Trace("~EditorObject");
-		if (m_Data) {
+		if (m_Data && m_WorldObject) {
 			Update();
 		}
 		
@@ -305,15 +305,12 @@ class EditorObject: EditorWorldObject
 	
 	void Update() 
 	{ 
-		GetWorldObject().Update(); 
-		
-		// Trash the object because its uncreatable
-		// Doesnt solve the issue but atleast it doesnt loop endlessly
 		if (!m_WorldObject) {
-			delete this;
 			return;
 		}
 		
+		m_WorldObject.Update(); 
+				
 		ObjectID = m_WorldObject.GetID();
 		if (m_Data) {
 			m_Data.Position = GetPosition();
@@ -327,7 +324,7 @@ class EditorObject: EditorWorldObject
 			m_Data.AllowDamage = AllowDamage;
 			
 			// Update Attachments
-			EntityAI entity = EntityAI.Cast(GetWorldObject());
+			EntityAI entity = EntityAI.Cast(m_WorldObject);
 			if (entity) {
 				m_Data.Attachments.Clear();
 				array<EntityAI> attachments = {};

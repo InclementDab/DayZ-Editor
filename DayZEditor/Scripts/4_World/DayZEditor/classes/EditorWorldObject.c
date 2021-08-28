@@ -17,8 +17,7 @@ class EditorWorldObject
 		if (type == string.Empty) return null;
 		
 		Object obj;		
-		// 2048 == ECE_INITAI
-		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_CREATEPHYSICS | 2048))) { 
+		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_CREATEPHYSICS | ECE_INITAI))) { 
 			EditorLog.Warning("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
