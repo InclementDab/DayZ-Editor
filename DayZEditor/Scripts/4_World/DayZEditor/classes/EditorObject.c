@@ -100,7 +100,7 @@ class EditorObject: EditorWorldObject
 		
 		// Trash the object because its uncreatable
 		if (!m_WorldObject) { 
-			EditorLog.Error("Object failed to create! If there was a crash, this item caused it: %1", m_Data.Type);
+			EditorLog.Warning("Object failed to create: %1", m_Data.Type);
 			return;
 		}
 		
