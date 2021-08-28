@@ -19,7 +19,7 @@ class EditorWorldObject
 		Object obj;		
 		// 2048 == ECE_INITAI
 		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_CREATEPHYSICS | 2048))) { 
-			EditorLog.Error("EditorWorldObject: Invalid Object %1", type);
+			EditorLog.Warning("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
 
