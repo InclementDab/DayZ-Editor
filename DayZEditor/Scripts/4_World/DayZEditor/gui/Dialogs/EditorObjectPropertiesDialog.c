@@ -12,6 +12,12 @@ class EditorMultiObjectCommandController
 		if (m_EditorObjects.Count() > 0) {
 			Name = m_EditorObjects[0].Name;
 		}
+		
+		foreach (EditorObject editor_object: m_EditorObjects) {
+			if (Name != editor_object.Name) {
+				Name = string.Empty;
+			}
+		}
 	}
 	
 	void ~EditorMultiObjectCommandController()
@@ -151,17 +157,12 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			return;
 		}
 		
-		switch (m_EditorObjects.Count()) {			
-			case 1: {
-				SetEditorObject(m_EditorObjects[0]);
-				break;
-			}
-			
-			default: {
-				SetMultipleEditorObjects(m_EditorObjects);
-				break;
-			}
+		if (m_EditorObjects.Count() == 1) {
+			SetEditorObject(m_EditorObjects[0]);
+			return;
 		}
+		
+		SetMultipleEditorObjects(m_EditorObjects);
 	}
 			
 	void SetMultipleEditorObjects(array<EditorObject> editor_objects)
@@ -185,11 +186,13 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		AddContent(general_group);
 		AddContent(object_group);
+		
+		AutoSize();
 	}
 	
 	// This function is a mess
 	void SetEditorObject(EditorObject editor_object)
-	{		
+	{				
 		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", editor_object, string.Empty);
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW", editor_object, "Show"));
 		general_group.Insert(new EditBoxPrefab("#STR_EDITOR_NAME", editor_object, "Name"));
