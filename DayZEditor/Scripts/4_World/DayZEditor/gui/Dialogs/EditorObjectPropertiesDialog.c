@@ -11,26 +11,6 @@ class EditorMultiObjectCommandController
 		// if there are multiple objects with different names, then the name dialog will go blank
 		if (m_EditorObjects.Count() > 0) {
 			Name = m_EditorObjects[0].Name;
-			Scale = m_EditorObjects[0].Scale.ToString();
-		}
-		
-		foreach (EditorObject editor_object: m_EditorObjects) {
-			if (Name != editor_object.Name) {
-				Name = string.Empty;
-			}
-			
-			if (Scale.Parse() != editor_object.Scale) {
-				Scale = string.Empty;
-			}
-			
-			Position += editor_object.GetPosition();
-			Orientation += editor_object.GetOrientation();
-		}
-		
-		// Average all values out to find center
-		for (int i = 0; i < 3; i++) {
-			Position[i] = Position[i] / m_EditorObjects.Count();
-			Orientation[i] = Orientation[i] / m_EditorObjects.Count();
 		}
 	}
 	
@@ -41,9 +21,17 @@ class EditorMultiObjectCommandController
 	
 	bool Show = true;
 	string Name;
-	vector Position;
-	vector Orientation;
-	StringEvaluater Scale = "1.0";
+	vector Position, DeltaPosition;
+	vector Orientation, DeltaOrientation;
+	float Scale = 1.0;
+	
+	float Health = 100;
+	bool Locked;
+	bool Physics;
+	bool Simulate = true;
+	bool AllowDamage = false;
+	bool Collision = true;
+	bool EditorOnly = false;
 	
 	void PropertyChanged(string property_name)
 	{
@@ -60,23 +48,61 @@ class EditorMultiObjectCommandController
 				}
 							
 				case "Position": {
-					
+					editor_object.Position += Position - DeltaPosition;
 					break;
 				}
 				
 				case "Orientation": {
-					
+					editor_object.Orientation += Orientation - DeltaOrientation;
 					break;
 				}
 				
 				case "Scale": {
-					editor_object.Scale = Scale.Parse();
+					editor_object.Scale = Scale;
+					break;
+				}
+				
+				case "Health": {
+					editor_object.Health = Health;
+					break;
+				}
+
+				case "Locked": {
+					editor_object.Locked = Locked;
+					break;
+				}
+				
+				case "Physics": {
+					editor_object.Physics = Physics;
+					break;
+				}
+				
+				case "Simulate": {
+					editor_object.Simulate = Simulate;
+					break;
+				}
+				
+				case "AllowDamage": {
+					editor_object.AllowDamage = AllowDamage;
+					break;
+				}
+				
+				case "Collision": {
+					editor_object.Collision = Collision;
+					break;
+				}
+				
+				case "EditorOnly": {
+					editor_object.EditorOnly = EditorOnly;
 					break;
 				}
 			}
 			
 			editor_object.PropertyChanged(property_name);
 		}
+		
+		DeltaPosition = Position;
+		DeltaOrientation = Orientation;
 	}
 }
 
@@ -121,6 +147,10 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		ClearContent();
 		delete m_EditorMultiObjectCommandController;
 		
+		if (m_EditorObjects.Count() == 0) {
+			return;
+		}
+		
 		switch (m_EditorObjects.Count()) {			
 			case 1: {
 				SetEditorObject(m_EditorObjects[0]);
@@ -145,7 +175,16 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", m_EditorMultiObjectCommandController, "Orientation"));
 		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_SCALE", m_EditorMultiObjectCommandController, "Scale", 0.01));
 		
+		GroupPrefab object_group = new GroupPrefab("#STR_EDITOR_OBJECT", m_EditorMultiObjectCommandController, string.Empty);
+		object_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", m_EditorMultiObjectCommandController, "Health"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", m_EditorMultiObjectCommandController, "EditorOnly"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", m_EditorMultiObjectCommandController, "Simulate"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", m_EditorMultiObjectCommandController, "Locked"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", m_EditorMultiObjectCommandController, "Physics"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", m_EditorMultiObjectCommandController, "AllowDamage"));
+		
 		AddContent(general_group);
+		AddContent(object_group);
 	}
 	
 	// This function is a mess
