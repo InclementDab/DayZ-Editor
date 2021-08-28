@@ -56,12 +56,16 @@ class EditorMarker: ScriptView
 	
 	void SetColor(int color)
 	{
-		EditorMarkerColor.SetColor(color);
+		if (EditorMarkerColor) {
+			EditorMarkerColor.SetColor(color);
+		}
 	}
 	
 	void SetOutlineColor(int color)
 	{
-		EditorMarkerOutlineColor.SetColor(color);
+		if (EditorMarkerOutlineColor) {
+			EditorMarkerOutlineColor.SetColor(color);
+		}
 	}
 	
 	protected bool IsMouseInside(int c_x, int c_y)
