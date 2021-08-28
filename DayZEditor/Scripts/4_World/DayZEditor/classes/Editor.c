@@ -68,7 +68,7 @@ class Editor
 	private EditorCameraTrackManagerModule		m_CameraTrackManager;
 	
 	private int 								m_LastMouseDown;
-	private MouseState							m_LastMouseInput;
+	private MouseState							m_LastMouseInput = -1;
 	private bool 								m_Active;
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
@@ -493,6 +493,7 @@ class Editor
 		if (GetWorldTime() - m_LastMouseDown < 500) {
 			m_LastMouseDown = 0;
 			if (OnDoubleClick(button) && m_LastMouseInput == button) {
+				m_LastMouseInput = -1;
 				return true; // return is so we dont call GetWorldTime again
 			}
 		}
