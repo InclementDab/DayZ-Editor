@@ -167,6 +167,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		delete m_AnimationsGroup;
 		delete m_DebugGroup;
 		delete m_HumanGroup;
+		
+		m_ContentSize = 0;
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
