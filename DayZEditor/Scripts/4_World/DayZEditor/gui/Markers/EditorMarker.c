@@ -10,6 +10,8 @@ class EditorMarker: ScriptView
 	{
 		EditorLog.Trace("EditorMarker");
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
+		SetColor(m_Editor.Settings.MarkerPrimaryColor);
+		SetOutlineColor(m_Editor.Settings.MarkerPrimaryColor);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
