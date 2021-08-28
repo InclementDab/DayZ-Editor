@@ -68,6 +68,7 @@ class Editor
 	private EditorCameraTrackManagerModule		m_CameraTrackManager;
 	
 	private int 								m_LastMouseDown;
+	private MouseState							m_LastMouseInput;
 	private bool 								m_Active;
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
@@ -394,14 +395,12 @@ class Editor
 		switch (button) {
 			
 			case MouseState.LEFT: {
-				
 				if (m_LootEditMode && !target) {
 					InsertLootPosition(CurrentMousePosition);
 				}
 				
 				return true;
 			}
-			
 		}
 		
 		return false;
@@ -490,16 +489,17 @@ class Editor
 			}
 		}
 		
-		/*
+		
 		if (GetWorldTime() - m_LastMouseDown < 500) {
 			m_LastMouseDown = 0;
-			if (OnDoubleClick(button)) {
+			if (OnDoubleClick(button) && m_LastMouseInput == button) {
 				return true; // return is so we dont call GetWorldTime again
 			}
 		}
 	
+		m_LastMouseInput = button;
 		m_LastMouseDown = GetWorldTime();
-		*/
+		
 		return false;
 	}
 
