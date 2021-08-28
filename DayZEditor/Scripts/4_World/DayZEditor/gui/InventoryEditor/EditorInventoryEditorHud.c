@@ -43,6 +43,10 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		array<EntityAI> items = {};
 		m_Entity.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, items);
 		foreach (EntityAI item: items) {
+			if (item.IsInherited(PlayerBase)) { // yep
+				continue;
+			}
+			
 			GetGame().ObjectDelete(item);
 		}
 	}
