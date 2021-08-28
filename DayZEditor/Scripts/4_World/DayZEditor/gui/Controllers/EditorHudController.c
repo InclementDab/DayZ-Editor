@@ -9,7 +9,7 @@ class EditorHudController: EditorControllerBase
 	bool CategoryPlacements = true;
 	bool CategoryDeletions;
 	
-	StringEvaluater PrecisionLevel = "0.05";
+	StringEvaluater PrecisionLevel = "0.5";
 	
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
@@ -75,6 +75,9 @@ class EditorHudController: EditorControllerBase
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 #endif
+		
+		// more hacking
+		g_EditorPrecision = GetPrecisionLevel();
 	}
 	
 	void ~EditorHudController() 
@@ -254,7 +257,7 @@ class EditorHudController: EditorControllerBase
 			
 			// I literally hate this
 			case "PrecisionLevel": {
-				g_EditorPrecision = PrecisionLevel.Parse();
+				g_EditorPrecision = GetPrecisionLevel();
 				break;
 			}
 		}
