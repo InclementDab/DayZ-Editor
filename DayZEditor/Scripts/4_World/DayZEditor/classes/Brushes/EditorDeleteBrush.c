@@ -13,13 +13,15 @@ class DeleteBrush: EditorBrush
 		//GetEditor().ClearSelection();
 		
 		EditorObjectMap editor_objects();
-		array<ref EditorDeletedObjectData> deleted_objects = {};
+		array<Object> deleted_objects = {};
 		foreach (Object r: objects) {
 			EditorObject eo = GetEditor().GetEditorObject(r);
 			if (eo) {
 				editor_objects.InsertEditorObject(eo);
 			} else {
-				deleted_objects.Insert(EditorDeletedObjectData.Create(r));
+				if (GetEditor().CanHideMapObject(r.GetType())) {
+					deleted_objects.Insert(r);
+				}
 			}
 		}	
 		
@@ -27,6 +29,7 @@ class DeleteBrush: EditorBrush
 			GetEditor().DeleteObjects(editor_objects);
 		}
 		
+		Print(deleted_objects.Count());
 		if (deleted_objects.Count() > 0) {
 			GetEditor().HideMapObjects(deleted_objects);
 		}

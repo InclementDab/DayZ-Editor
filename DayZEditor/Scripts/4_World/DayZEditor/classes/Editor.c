@@ -1112,11 +1112,45 @@ class Editor
 		return true;
 	}
 	
+	void HideMapObjects(array<Object> deleted_objects, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Unhide", "Hide");
+		
+		foreach (Object object: deleted_objects) {
+			if (!object) {
+				continue;
+			}
+			
+			if (!CanHideMapObject(object.GetType())) {
+				continue;
+			}
+			
+			if (m_ObjectManager.IsObjectHidden(object)) {
+				continue;
+			}
+			
+			EditorDeletedObjectData deleted_object_data = EditorDeletedObjectData.Create(object);
+			m_DeletedSessionCache[deleted_object_data.ID] = deleted_object_data;		
+			if (create_undo) {
+				action.InsertUndoParameter(new Param1<int>(deleted_object_data.ID));
+				action.InsertRedoParameter(new Param1<int>(deleted_object_data.ID));
+			}
+			
+			Statistics.EditorRemovedObjects++;
+			m_ObjectManager.HideMapObject(new EditorDeletedObject(deleted_object_data));
+		}
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
+	
+	/*
 	void HideMapObjects(array<ref EditorDeletedObjectData> deleted_objects, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
 		foreach (EditorDeletedObjectData deleted_object: deleted_objects) {
-			if (!CanHideMapObject(deleted_object.GetType())) {
+			if (!CanHideMapObject(deleted_object.Type)) {
 				continue;
 			}
 			
@@ -1165,7 +1199,8 @@ class Editor
 			InsertAction(action);
 		}
 	}
-		
+	*/	
+	
 	bool UnhideMapObject(EditorDeletedObjectData data, bool create_undo = true)
 	{		
 		if (!data || !data.WorldObject) {
@@ -1187,6 +1222,31 @@ class Editor
 		return true;
 	}
 	
+	bool UnhideMapObject(EditorDeletedObject map_object, bool create_undo = true)
+	{
+		if (!map_object) {  
+			return false;
+		}
+		
+		if (!m_ObjectManager.IsObjectHidden(map_object)) { 
+			return false;
+		}
+		
+		EditorAction action = new EditorAction("Hide", "Unhide");
+		// todo refactor
+		action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
+		action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
+				
+		m_ObjectManager.UnhideMapObject(map_object);
+
+		if (create_undo) {
+			InsertAction(action);
+		}
+		
+		return true;
+	}
+	
+	/*
 	void UnhideMapObjects(array<ref EditorDeletedObject> deleted_objects, bool create_undo = true)
 	{
 		if (create_undo) {
@@ -1207,6 +1267,7 @@ class Editor
 			InsertAction(action);
 		}
 	}	
+	*/
 	
 	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
 	{
@@ -1227,30 +1288,6 @@ class Editor
 		if (create_undo) {
 			InsertAction(action);
 		}
-	}
-	
-	bool UnhideMapObject(EditorDeletedObject map_object, bool create_undo = true)
-	{
-		if (!map_object) { 
-			return false;
-		}
-		
-		if (!m_ObjectManager.IsObjectHidden(map_object)) { 
-			return false;
-		}
-		
-		EditorAction action = new EditorAction("Hide", "Unhide");
-		// todo refactor
-		action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
-		action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
-				
-		m_ObjectManager.UnhideMapObject(map_object);
-
-		if (create_undo) {
-			InsertAction(action);
-		}
-		
-		return true;
 	}
 	
 	bool CanHideMapObject(string type)

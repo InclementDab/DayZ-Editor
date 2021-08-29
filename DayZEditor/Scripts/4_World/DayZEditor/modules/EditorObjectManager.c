@@ -29,7 +29,7 @@ class EditorObjectManagerModule: JMModuleBase
 		m_SelectedObjects 	= new EditorObjectMap();
 		m_DeletedObjects	= new EditorDeletedObjectMap();
 		m_SelectedDeletedObjects	= new EditorDeletedObjectMap();
-		
+
 		m_EditorObjectRefs = new map<int, ref EditorObject>();
 		m_EditorDeletedObjectRefs = new map<int, ref EditorDeletedObject>();
 	}
@@ -113,7 +113,7 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		// strong ref
 		m_EditorDeletedObjectRefs[target.GetID()] = target;
-				
+	
 		m_DeletedObjects.InsertEditorDeletedObject(target);
 	}
 	
@@ -121,12 +121,10 @@ class EditorObjectManagerModule: JMModuleBase
 	{
 		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
 		m_DeletedObjects.Remove(target);
-		
+				
 		// remove strong ref		
-		Print(target);
-		Print(m_EditorDeletedObjectRefs[target]);
-		
 		delete m_EditorDeletedObjectRefs[target];
+		m_EditorDeletedObjectRefs.Remove(target);
 	}
 	
 	void UnhideMapObject(notnull EditorDeletedObject target)
@@ -136,6 +134,7 @@ class EditorObjectManagerModule: JMModuleBase
 
 		// remove strong ref
 		delete m_EditorDeletedObjectRefs[target.GetID()];
+		m_EditorDeletedObjectRefs.Remove(target.GetID());
 	}
 	
 	void SelectHiddenObject(notnull EditorDeletedObject target)
@@ -194,6 +193,11 @@ class EditorObjectManagerModule: JMModuleBase
 	bool IsObjectHidden(int id)
 	{
 		return (m_DeletedObjects[id] != null);
+	}
+	
+	bool IsObjectHidden(Object object)
+	{
+		return (CF.ObjectManager.IsMapObjectHidden(object));
 	}
 			
 	EditorObjectMap GetSelectedObjects() 
