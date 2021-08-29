@@ -52,7 +52,7 @@ class EditorDeletedObjectMap: map<int, EditorDeletedObject>
 	}
 }
 
-class EditorObjectDataMap: map<int, ref EditorObjectData>
+class EditorObjectDataMap: map<int, EditorObjectData>
 {
 	int InsertData(EditorObjectData data)
 	{
@@ -73,7 +73,7 @@ class EditorObjectDataMap: map<int, ref EditorObjectData>
 	}
 }
 
-class EditorDeletedObjectDataMap: map<int, ref EditorDeletedObjectData>
+class EditorDeletedObjectDataMap: map<int, EditorDeletedObjectData>
 {
 	int InsertData(EditorDeletedObjectData data)
 	{

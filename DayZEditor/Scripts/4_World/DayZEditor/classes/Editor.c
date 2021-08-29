@@ -38,8 +38,8 @@ Editor GetEditor() {
 class Editor
 {
 	/* Private Members */
-	private Mission m_Mission;
-	private PlayerBase m_Player;
+	protected Mission m_Mission;
+	protected PlayerBase m_Player;
 		
 	// statics (updated in Update())
 	static Object								ObjectUnderCursor;
@@ -51,29 +51,29 @@ class Editor
 	ref EditorSettings 							Settings;
 	EditorStatistics							Statistics;
 	
-	// private Editor Members
-	private ref EditorHud						m_EditorHud;
-	private ref EditorBrush						m_EditorBrush;
-	private ref EditorObjectDataMap			 	m_SessionCache;
-	private ref EditorDeletedObjectDataMap		m_DeletedSessionCache;
-	private EditorCamera 						m_EditorCamera;
+	// protected Editor Members
+	protected ref EditorHud							m_EditorHud;
+	protected ref EditorBrush						m_EditorBrush;
+	protected ref map<int, ref EditorObjectData>	m_SessionCache; // strong ref of EditorObjectData
+	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
+	protected EditorCamera 							m_EditorCamera;
 	
 	// Stack of Undo / Redo Actions
-	private ref EditorActionStack 				m_ActionStack;
-	private ref ShortcutKeys 					m_CurrentKeys = new ShortcutKeys();
+	protected ref EditorActionStack 				m_ActionStack;
+	protected ref ShortcutKeys 						m_CurrentKeys = new ShortcutKeys();
 	
 	// private references
-	private EditorHudController 				m_EditorHudController;
-	private EditorObjectManagerModule 			m_ObjectManager;	
-	private EditorCameraTrackManagerModule		m_CameraTrackManager;
+	protected EditorHudController 					m_EditorHudController;
+	protected EditorObjectManagerModule 			m_ObjectManager;	
+	protected EditorCameraTrackManagerModule		m_CameraTrackManager;
 	
-	private int 								m_LastMouseDown;
-	private MouseState							m_LastMouseInput = -1;
-	private bool 								m_Active;
+	protected int 									m_LastMouseDown;
+	protected MouseState							m_LastMouseInput = -1;
+	protected bool 									m_Active;
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
-	protected string							EditorSaveFile;
-	static const string							ROOT_DIRECTORY = "$saves:\\Editor\\";
+	protected string								EditorSaveFile;
+	static const string								ROOT_DIRECTORY = "$saves:\\Editor\\";
 	
 	// modes
 	bool 										MagnetMode;
@@ -89,10 +89,10 @@ class Editor
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
 	// Loot Editing
-	private Object 								m_LootEditTarget;
-	private bool 								m_LootEditMode;
-	private vector 								m_PositionBeforeLootEditMode;
-	private ref EditorMapGroupProto 			m_EditorMapGroupProto;
+	protected Object 								m_LootEditTarget;
+	protected bool 								m_LootEditMode;
+	protected vector 								m_PositionBeforeLootEditMode;
+	protected ref EditorMapGroupProto 			m_EditorMapGroupProto;
 	static float 								LootYOffset;
 	
 	// Inventory Editor
@@ -146,8 +146,8 @@ class Editor
 		CommandManager.Init();
 		
 		// Needs to exist on clients for Undo / Redo syncing
-		m_SessionCache 			= new EditorObjectDataMap();
-		m_DeletedSessionCache   = new EditorDeletedObjectDataMap();
+		m_SessionCache 			= new map<int, ref EditorObjectData>();
+		m_DeletedSessionCache   = new map<int, ref EditorDeletedObjectData>();
 		m_ActionStack 			= new EditorActionStack();
 		
 		// Init Hud
@@ -1091,7 +1091,7 @@ class Editor
 			return false;
 		}
 		
-		m_DeletedSessionCache.InsertData(map_object.GetData());		
+		m_DeletedSessionCache[map_object.GetID()] = map_object.GetData();
 		
 		if (m_ObjectManager.IsObjectHidden(map_object)) { 
 			return false;
@@ -1115,7 +1115,7 @@ class Editor
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
 		foreach (EditorDeletedObjectData deleted_object: deleted_objects) {		
-			m_DeletedSessionCache.InsertData(deleted_object);		
+			m_DeletedSessionCache[deleted_object.GetID()] = deleted_object;		
 			if (create_undo) {
 				action.InsertUndoParameter(new Param1<int>(deleted_object.ID));
 				action.InsertRedoParameter(new Param1<int>(deleted_object.ID));
@@ -1134,7 +1134,7 @@ class Editor
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
 		foreach (EditorDeletedObject deleted_object: deleted_objects) {		
-			m_DeletedSessionCache.InsertData(deleted_object.GetData());		
+			m_DeletedSessionCache[deleted_object.GetID()] = deleted_object.GetData();
 			if (create_undo) {
 				action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
 				action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
@@ -1515,8 +1515,8 @@ class Editor
 	EditorDeletedObjectMap GetSelectedHiddenObjects() return m_ObjectManager.GetSelectedHiddenObjects();
 	EditorObjectMap GetPlacedObjects() return m_ObjectManager.GetPlacedObjects(); 
 	EditorDeletedObjectMap GetDeletedObjects() return m_ObjectManager.GetDeletedObjects();
-	EditorObjectDataMap GetSessionCache() return m_SessionCache; 		
-	EditorDeletedObjectDataMap GetDeletedSessionCache() return m_DeletedSessionCache;
+	map<int, ref EditorObjectData> GetSessionCache() return m_SessionCache; 		
+	map<int, ref EditorDeletedObjectData> GetDeletedSessionCache() return m_DeletedSessionCache;
 	EditorObject GetEditorObject(int id) return m_ObjectManager.GetEditorObject(id); 	
 	EditorObject GetEditorObject(notnull Object world_object) return m_ObjectManager.GetEditorObject(world_object);	
 	EditorObject GetPlacedObjectById(int id) return m_ObjectManager.GetPlacedObjectById(id); 	
