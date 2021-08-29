@@ -127,24 +127,27 @@ class EditorAction
 		
 		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
 		if (!data) {
-			EditorLog.Error("EditorAction::Create Data was null!");
+			EditorLog.Error("EditorAction::Hide Data was null!");
 			return;
 		}
 		
-		GetEditor().HideMapObject(data, false);
+		if (!GetEditor().HideMapObject(data, false)) {
+			EditorLog.Warning("EditorAction::Hide failed to hide object");
+		}
 	}
 	
 	void Unhide(Param1<int> params)
 	{
 		//EditorLog.Trace("EditorAction::Unhide %1", param.param1.ToString());
-				
 		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
 		if (!data) {
-			EditorLog.Error("EditorAction::Create Data was null!");
+			EditorLog.Error("EditorAction::Unhide Data was null!");
 			return;
 		}
 		
-		GetEditor().UnhideMapObject(data, false);
+		if (!GetEditor().UnhideMapObject(data, false)) {
+			EditorLog.Warning("EditorAction::Unhide failed to unhide object");
+		}
 	}
 	
 	void Lock(Param1<EditorObject> param)

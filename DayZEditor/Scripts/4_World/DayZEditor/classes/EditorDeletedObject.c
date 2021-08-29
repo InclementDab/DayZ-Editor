@@ -13,7 +13,7 @@ class EditorDeletedObject: EditorWorldObject
 	
 	protected ref EditorDeletedObjectWorldMarker m_EditorDeletedObjectWorldMarker;
 	
-	protected ref EditorDeletedObjectData m_Data;
+	protected EditorDeletedObjectData m_Data;
 	
 	void EditorDeletedObject(EditorDeletedObjectData data)
 	{

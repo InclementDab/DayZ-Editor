@@ -54,7 +54,7 @@ class Editor
 	// protected Editor Members
 	protected ref EditorHud							m_EditorHud;
 	protected ref EditorBrush						m_EditorBrush;
-	protected ref map<int, ref EditorObjectData>	m_SessionCache; // strong ref of EditorObjectData
+	protected ref map<int, ref EditorObjectData>			m_SessionCache; // strong ref of EditorObjectData
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
 	protected EditorCamera 							m_EditorCamera;
 	
@@ -964,6 +964,7 @@ class Editor
 		m_SessionCache.Remove(id);	
 	}
 	
+	
 	void DeleteDeletedSessionData(int id)
 	{
 		m_DeletedSessionCache.Remove(id);
@@ -1114,7 +1115,15 @@ class Editor
 	void HideMapObjects(array<ref EditorDeletedObjectData> deleted_objects, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
-		foreach (EditorDeletedObjectData deleted_object: deleted_objects) {		
+		foreach (EditorDeletedObjectData deleted_object: deleted_objects) {
+			if (!CanHideMapObject(deleted_object.GetType())) {
+				continue;
+			}
+			
+			if (m_ObjectManager.IsObjectHidden(deleted_object)) { 
+				continue;
+			}
+					
 			m_DeletedSessionCache[deleted_object.GetID()] = deleted_object;		
 			if (create_undo) {
 				action.InsertUndoParameter(new Param1<int>(deleted_object.ID));
@@ -1134,6 +1143,14 @@ class Editor
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
 		foreach (EditorDeletedObject deleted_object: deleted_objects) {		
+			if (!CanHideMapObject(deleted_object.GetType())) {
+				continue;
+			}
+			
+			if (m_ObjectManager.IsObjectHidden(deleted_object)) { 
+				continue;
+			}
+			
 			m_DeletedSessionCache[deleted_object.GetID()] = deleted_object.GetData();
 			if (create_undo) {
 				action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
@@ -1167,7 +1184,6 @@ class Editor
 		}
 		
 		m_ObjectManager.UnhideMapObject(data.ID);
-		
 		return true;
 	}
 	

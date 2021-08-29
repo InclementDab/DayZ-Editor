@@ -122,8 +122,11 @@ class EditorObjectManagerModule: JMModuleBase
 		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
 		m_DeletedObjects.Remove(target);
 		
-		// remove strong ref
-		m_EditorDeletedObjectRefs.Remove(target);
+		// remove strong ref		
+		Print(target);
+		Print(m_EditorDeletedObjectRefs[target]);
+		
+		delete m_EditorDeletedObjectRefs[target];
 	}
 	
 	void UnhideMapObject(notnull EditorDeletedObject target)
@@ -132,7 +135,7 @@ class EditorObjectManagerModule: JMModuleBase
 		m_DeletedObjects.RemoveEditorDeletedObject(target);
 
 		// remove strong ref
-		m_EditorDeletedObjectRefs.Remove(target.GetID());
+		delete m_EditorDeletedObjectRefs[target.GetID()];
 	}
 	
 	void SelectHiddenObject(notnull EditorDeletedObject target)
