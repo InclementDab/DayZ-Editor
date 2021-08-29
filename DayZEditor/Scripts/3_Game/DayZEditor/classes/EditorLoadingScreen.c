@@ -30,6 +30,7 @@ class EditorLoadingScreen: LoadingScreen
 		new LoadingScreenEntry("26.edds", "DanceOfJesus"),	
 		new LoadingScreenEntry("27.edds", "ItzMikeDocherty"),	
 		new LoadingScreenEntry("28.edds", "JanceOfDesus"),	
+		new LoadingScreenEntry("29.edds", "InclementDab"),	
 	};
 	
 	protected TextWidget m_ImageCredit;
