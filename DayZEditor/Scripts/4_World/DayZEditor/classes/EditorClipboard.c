@@ -65,17 +65,17 @@ class EditorClipboard
 
 		GetEditor().ClearSelection();
 		
-		EditorObjectDataMap created_objects();
+		array<ref EditorObjectData> created_data = {};
 		foreach (EditorObjectData pasted_object: data) {
 			if (pasted_object.Type == string.Empty) {
 				continue;
 			}
 			
 			vector position = pasted_object.Position + Editor.CurrentMousePosition;						
-			created_objects.InsertData(EditorObjectData.Create(pasted_object.Type, position, pasted_object.Orientation, pasted_object.Scale, pasted_object.Flags));
+			created_data.Insert(EditorObjectData.Create(pasted_object.Type, position, pasted_object.Orientation, pasted_object.Scale, pasted_object.Flags));
 		}	
 		
-		EditorObjectMap editor_objects = GetEditor().CreateObjects(created_objects);
+		EditorObjectMap editor_objects = GetEditor().CreateObjects(created_data);
 		
 		foreach (int id, EditorObject editor_object: editor_objects) {
 			//editor_object.SetPosition(position);

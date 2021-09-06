@@ -1005,14 +1005,14 @@ class Editor
 		return editor_object;
 	}
 		
-	EditorObjectMap CreateObjects(EditorObjectDataMap data_list, bool create_undo = true) 
+	EditorObjectMap CreateObjects(array<ref EditorObjectData> data_list, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject");
 		
 		EditorObjectMap object_set = new EditorObjectMap();
 		EditorAction action = new EditorAction("Delete", "Create");
 		
-		foreach (int id, EditorObjectData editor_object_data: data_list) {
+		foreach (EditorObjectData editor_object_data: data_list) {
 			
 			// Cache Data (for undo / redo)
 			if (!editor_object_data) continue;

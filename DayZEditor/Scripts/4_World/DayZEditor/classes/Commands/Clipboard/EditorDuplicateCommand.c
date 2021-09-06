@@ -4,10 +4,10 @@ class EditorDuplicateCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
-		EditorObjectDataMap created_data();
+		array<ref EditorObjectData> created_data = {};
 				
 		foreach (int i, EditorObject editor_object: selected_objects) {
-			created_data.InsertData(EditorObjectData.Create(editor_object.GetType(), editor_object.GetPosition(), editor_object.GetOrientation(), editor_object.GetScale(), editor_object.GetFlags()));
+			created_data.Insert(EditorObjectData.Create(editor_object.GetType(), editor_object.GetPosition(), editor_object.GetOrientation(), editor_object.GetScale(), editor_object.GetFlags()));
 		}
 		
 		EditorObjectMap created_objects = GetEditor().CreateObjects(created_data);
