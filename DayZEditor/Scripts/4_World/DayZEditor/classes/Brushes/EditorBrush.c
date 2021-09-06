@@ -93,7 +93,7 @@ class EditorBrush
 		if (vector.Distance(m_LastMousePosition, position) < (BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
-		EditorObjectDataMap data_set = new EditorObjectDataMap();
+		//EditorObjectDataMap data_set = new EditorObjectDataMap();
 		
 		int flags;
 		if (m_EditorSettings.BrushedObjectMarkers) {
@@ -103,6 +103,7 @@ class EditorBrush
 		if (m_EditorSettings.BrushedListItems) {
 			flags |= EditorObjectFlags.LISTITEM;
 		}
+		
 		
 		for (int i = 0; i < BrushDensity * 10; i++) {
 						
@@ -123,13 +124,12 @@ class EditorBrush
 				brushed_object.SetPosition(pos);
 				brushed_object.SetDirection(direction);
 				
-				EditorObjectData data = EditorObjectData.Create(brushed_object, flags);
-				data_set.Insert(data.GetID(), data);
+				GetEditor().CreateObject(brushed_object, flags, true);
 			}
 		}
 		
 
-		EditorObjectMap object_set = GetEditor().CreateObjects(data_set, true);		
+		//EditorObjectMap object_set = GetEditor().CreateObjects(data_set, true);		
 	}
 	
 	void OnMouseUp(vector position)

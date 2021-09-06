@@ -24,7 +24,7 @@ namespace Enfusion_Deserializer
             stream.Close();
 
             foreach (EditorObjectData dta in data.EditorObjects) {
-                Console.WriteLine(dta.Locked);
+                Console.WriteLine(dta.Scale);
             }
 
             //File.Delete("P:\\profiles\\Client\\Users\\tyler\\Editor\\test1.dze");

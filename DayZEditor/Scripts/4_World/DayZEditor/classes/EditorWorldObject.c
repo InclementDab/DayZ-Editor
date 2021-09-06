@@ -14,7 +14,9 @@ class EditorWorldObject
 	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)	
 	{
 		type = type.Trim();
-		if (type == string.Empty) return null;
+		if (type == string.Empty) {
+			return null;
+		}
 		
 		Object obj;		
 		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_CREATEPHYSICS | ECE_INITAI))) { 
