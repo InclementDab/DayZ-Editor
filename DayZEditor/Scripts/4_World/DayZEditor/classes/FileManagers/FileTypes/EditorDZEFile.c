@@ -72,11 +72,11 @@ class EditorDZEFile: EditorFileType
 	}
 	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
-	{
+	{		
 		if (FileExist(file) && !DeleteFile(file)) {
 			return;
 		}
-
+		
 		if (settings.Binarized) {
 			FileSerializer file_serializer = new FileSerializer();
 			if (!file_serializer.Open(file, FileMode.WRITE)) {
