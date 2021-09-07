@@ -1,3 +1,5 @@
+static bool HasShownScaleWarning = false; // i really really really hate this
+
 class EditorObject: EditorWorldObject
 {
 	protected EditorObjectData 				m_Data;
@@ -392,6 +394,11 @@ class EditorObject: EditorWorldObject
 				if (Scale < 0.001) {
 					Scale = 0.001;
 				}
+				
+				if (Scale != 1) {
+					thread TryShowScaleWarning();
+				}
+				
 				SetScale(Scale);
 				break;
 			}
@@ -475,6 +482,18 @@ class EditorObject: EditorWorldObject
 		}
 			
 		Update();
+	}
+	
+	// ALSO REALLY HATE THIS
+	private void TryShowScaleWarning()
+	{
+		if (HasShownScaleWarning) {
+			return;
+		}
+		
+		HasShownScaleWarning = true;
+		
+		EditorMessageBox.Show("Warning!", "FYI: Scale does not work when pushed to a live server! (Only works in the Editor) - This is a DayZ bug and the devs are aware", MessageBoxButtons.OK);
 	}
 	
 	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) 
