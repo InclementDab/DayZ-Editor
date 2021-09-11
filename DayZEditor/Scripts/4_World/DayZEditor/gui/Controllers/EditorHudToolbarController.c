@@ -57,6 +57,9 @@ class EditorHudToolbarController: EditorControllerBase
 	void ReloadBrushes(string filename)
 	{
 		EditorLog.Trace("EditorHudToolbarController::ReloadBrushes");
+		BrushToggleButtonState = false;
+		NotifyPropertyChanged("BrushToggleButtonState");
+		
 		BrushTypeBoxData.Clear();
 		XMLEditorBrushes xml_brushes = new XMLEditorBrushes(BrushTypeBoxData);
 		GetXMLApi().Read(filename, xml_brushes);
