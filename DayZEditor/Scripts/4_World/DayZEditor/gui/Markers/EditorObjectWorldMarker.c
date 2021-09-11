@@ -1,6 +1,6 @@
 class EditorObjectWorldMarker: EditorObjectMarker
 {
-	static const float MARKER_MIN_SIZE = 10;
+	static const float MARKER_MIN_SIZE = 12;
 	static const float MARKER_MAX_SIZE = 22;
 	
 	protected int m_ScreenX, m_ScreenY;
