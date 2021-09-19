@@ -187,6 +187,12 @@ class EditorPlaceableListItem: EditorListItem
 			GetGame().SaveProfile();
 		}
 		
+		// disappear when toggled off with favs toggled on
+		// removed due to some weird crash shenanigans, bed time! gl tyler
+		//if (GetEditor().GetEditorHud().GetTemplateController().FavoritesToggle && !GetTemplateController().Favorite) {
+			//GetLayoutRoot().Show(false);
+		//}
+		
 		return true;
 	}
 }
