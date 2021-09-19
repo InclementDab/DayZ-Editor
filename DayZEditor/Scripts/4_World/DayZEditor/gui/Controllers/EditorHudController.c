@@ -232,9 +232,9 @@ class EditorHudController: EditorControllerBase
 			case "FavoritesToggle": {
 				for (int i = 0; i < LeftbarSpacerData.Count(); i++) {
 					if (FavoritesToggle) {
-						LeftbarSpacerData[i].GetLayoutRoot().Show(LeftbarSpacerData[i].GetTemplateController().Favorite); 	 ///(SearchBarData == string.Empty || LeftbarSpacerData[i].FilterType(SearchBarData))
+						LeftbarSpacerData[i].GetLayoutRoot().Show(LeftbarSpacerData[i].GetTemplateController().Favorite && LeftbarSpacerData[i].FilterType(SearchBarData));
 					} else {
-						LeftbarSpacerData[i].GetLayoutRoot().Show(true); 	 // SearchBarData == string.Empty || LeftbarSpacerData[i].FilterType(SearchBarData)
+						LeftbarSpacerData[i].GetLayoutRoot().Show(LeftbarSpacerData[i].FilterType(SearchBarData)); 	 // SearchBarData == string.Empty || LeftbarSpacerData[i].FilterType(SearchBarData)
 					}
 				}
 				
