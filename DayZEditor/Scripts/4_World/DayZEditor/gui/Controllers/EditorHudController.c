@@ -60,6 +60,9 @@ class EditorHudController: EditorControllerBase
 	protected ButtonWidget CameraTrackRunButton;
 	protected Widget CameraTrackButtonOutline;
 	
+	// Favorites
+	protected ref array<string> m_FavoriteItems = {};
+	
 	// Temp until sub ViewControllers can be properties of parent ViewController
 	EditorHudToolbarController GetToolbarController() 
 	{
@@ -78,6 +81,9 @@ class EditorHudController: EditorControllerBase
 		
 		// more hacking
 		g_EditorPrecision = GetPrecisionLevel();
+		
+		// load favorites
+		GetGame().GetProfileStringList("EditorFavoriteItems", m_FavoriteItems);		
 	}
 	
 	void ~EditorHudController() 

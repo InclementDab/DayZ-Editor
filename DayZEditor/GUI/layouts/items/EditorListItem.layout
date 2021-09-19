@@ -113,6 +113,7 @@ WrapSpacerWidgetClass ListItem {
      style NewStyle
      {
       ScriptParamsClass {
+       Binding_Name "Favorite"
        Two_Way_Binding 1
       }
      }

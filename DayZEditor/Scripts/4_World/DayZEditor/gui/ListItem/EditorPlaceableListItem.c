@@ -169,4 +169,9 @@ class EditorPlaceableListItem: EditorListItem
 		
 		return false;
 	}
+	
+	override bool EnableFavorites()
+	{
+		return true;
+	}
 }

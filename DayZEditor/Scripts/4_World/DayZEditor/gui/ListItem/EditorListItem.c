@@ -3,6 +3,7 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 	protected Editor m_Editor = GetEditor();
 	protected Widget ListItemContent;
 	protected ButtonWidget ListItemShow;
+	protected ButtonWidget ListItemFavorites;
 	
 	void Select() 
 	{
@@ -27,6 +28,8 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 		if (!IsSelected()) {
 			Highlight();
 		}
+	
+		ListItemFavorites.Show(EnableFavorites());
 		
 		return true;
 	}
@@ -36,8 +39,19 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 		if (!IsSelected()) {
 			Deselect();
 		}
+				
+		// only hide when not favorited and disabled
+		ListItemFavorites.Show(m_TemplateController.Favorite);
+		if (!EnableFavorites()) {
+			ListItemFavorites.Show(false);
+		}
 		
 		return true;
+	}
+	
+	bool EnableFavorites()
+	{
+		return false;
 	}
 	
 	override string GetLayoutFile() 
