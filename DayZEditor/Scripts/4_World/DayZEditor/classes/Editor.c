@@ -84,7 +84,7 @@ class Editor
 	bool 										CameraLight;
 
 	string 										BanReason = "null";
-	static const string 						Version = "1.24." + GetBuildNumber();
+	static const string 						Version = "1.241." + GetBuildNumber();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
