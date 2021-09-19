@@ -112,13 +112,12 @@ class EditorHudController: EditorControllerBase
 			}
 			
 			EditorPlaceableListItem list_item = new EditorPlaceableListItem(placeable_item);
+			LeftbarSpacerData.Insert(list_item);
+			
 			// update favorites from properties			
 			if (favorite_items.Find(placeable_item.Type) != -1) {
-				list_item.GetTemplateController().Favorite = true;
-				list_item.GetTemplateController().NotifyPropertyChanged("Favorite");
+				list_item.SetFavorite(true);
 			}
-			
-			LeftbarSpacerData.Insert(list_item);
 		}
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());

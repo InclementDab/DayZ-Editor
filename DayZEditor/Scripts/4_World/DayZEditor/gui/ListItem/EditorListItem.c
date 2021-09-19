@@ -49,12 +49,19 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 		return true;
 	}
 	
+	void SetFavorite(bool favorite)
+	{
+		ListItemFavorites.Show(favorite);
+		GetTemplateController().Favorite = favorite;
+		GetTemplateController().NotifyPropertyChanged("Favorite");
+	}
+	
 	bool OnFavoriteToggle(ButtonCommandArgs args)
 	{
 		return false;
 	}
 	
-	bool EnableFavorites()
+	protected bool EnableFavorites()
 	{
 		return false;
 	}

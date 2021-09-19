@@ -20,7 +20,7 @@ class EditorObjectManagerModule: JMModuleBase
 
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
-		
+	
 	override void Init()
 	{
 		EditorLog.Trace("EditorObjectManager::Init");
