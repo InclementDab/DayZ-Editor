@@ -353,8 +353,8 @@ FrameWidgetClass EditorFrame {
              }
              {
               ScriptParamsClass {
-               Binding_Name "FavoritesEnable"
-               Two_Way_Binding 1
+               Two_Way_Binding 0
+               Relay_Command "OnFavoritesExecute"
               }
              }
             }

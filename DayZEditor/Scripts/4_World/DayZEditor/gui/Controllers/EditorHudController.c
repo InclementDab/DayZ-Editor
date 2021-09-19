@@ -19,7 +19,6 @@ class EditorHudController: EditorControllerBase
 	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	
-	//
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
 	
@@ -464,6 +463,16 @@ class EditorHudController: EditorControllerBase
 		}
 		
 		return false;
+	}
+	
+	bool OnFavoritesExecute(ButtonCommandArgs args)
+	{
+		// if on
+		if (args.GetButtonState()) {
+			
+		}
+		
+		return true;
 	}
 	
 	void SetInfoObjectPosition(vector position)
