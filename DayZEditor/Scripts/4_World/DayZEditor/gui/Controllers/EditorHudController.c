@@ -112,7 +112,7 @@ class EditorHudController: EditorControllerBase
 			}
 			
 			EditorPlaceableListItem list_item = new EditorPlaceableListItem(placeable_item);
-			// update favorites from properties
+			// update favorites from properties			
 			if (favorite_items.Find(placeable_item.Type) != -1) {
 				list_item.GetTemplateController().Favorite = true;
 				list_item.GetTemplateController().NotifyPropertyChanged("Favorite");
