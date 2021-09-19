@@ -101,7 +101,7 @@ WrapSpacerWidgetClass ListItem {
     }
     CheckBoxWidgetClass ListItemFavorites {
      visible 0
-     color 0.8627 0.8627 0.8627 1
+     color 1 0.8431 0 1
      position 5 0
      size 16 16
      valign center_ref

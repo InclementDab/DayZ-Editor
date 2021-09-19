@@ -315,7 +315,7 @@ FrameWidgetClass EditorFrame {
            style rover_sim_colorable
            {
             ButtonWidgetClass FavoritesTabButton {
-             color 0.7529 0.3686 0.3255 1
+             color 0.2941 0.4667 0.7451 1
              position 0 0
              size 1 1
              halign right_ref
