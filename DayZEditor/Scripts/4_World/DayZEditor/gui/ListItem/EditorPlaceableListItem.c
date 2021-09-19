@@ -55,7 +55,7 @@ class EditorPlaceableListItem: EditorListItem
 				Select();
 				int x, y;
 				GetMousePos(x, y);
-				EditorHud.CurrentMenu = new EditorPlaceableContextMenu(x, y);
+				EditorHud.CurrentMenu = new EditorPlaceableContextMenu(x, y, this);
 				break;
 			}
 		}
