@@ -8,6 +8,7 @@ class EditorHudController: EditorControllerBase
 	
 	bool CategoryPlacements = true;
 	bool CategoryDeletions;
+	bool FavoritesToggle;
 	
 	StringEvaluater PrecisionLevel = "0.5";
 	
@@ -80,9 +81,6 @@ class EditorHudController: EditorControllerBase
 		
 		// more hacking
 		g_EditorPrecision = GetPrecisionLevel();
-		
-		// load favorites
-		GetGame().GetProfileStringList("EditorFavoriteItems", m_FavoriteItems);		
 	}
 	
 	void ~EditorHudController() 
@@ -102,6 +100,10 @@ class EditorHudController: EditorControllerBase
 		
 		// Reload Placeables
 #ifndef COMPONENT_SYSTEM
+		
+		array<string> favorite_items = {};
+		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
+		
 		array<ref EditorPlaceableItem> placeable_items = LoadPlaceableObjects();
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
 			// Makes stuff look good when first loading
@@ -109,7 +111,14 @@ class EditorHudController: EditorControllerBase
 				GetGame().ObjectDelete(GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_NONE));				
 			}
 			
-			LeftbarSpacerData.Insert(new EditorPlaceableListItem(placeable_item));
+			EditorPlaceableListItem list_item = new EditorPlaceableListItem(placeable_item);
+			// update favorites from properties
+			if (favorite_items.Find(placeable_item.Type) != -1) {
+				list_item.GetTemplateController().Favorite = true;
+				list_item.GetTemplateController().NotifyPropertyChanged("Favorite");
+			}
+			
+			LeftbarSpacerData.Insert(list_item);
 		}
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
@@ -178,7 +187,6 @@ class EditorHudController: EditorControllerBase
 				}
 				
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
-
 				if (!placeable_item) {
 					continue;
 				}
@@ -201,8 +209,11 @@ class EditorHudController: EditorControllerBase
 					
 			case "SearchBarData": {
 				for (int j = 0; j < LeftbarSpacerData.Count(); j++) {
-					EditorPlaceableListItem placeable_item = LeftbarSpacerData[j];
-					placeable_item.GetLayoutRoot().Show(placeable_item.FilterType(SearchBarData)); 
+					if (FavoritesToggle) {
+						LeftbarSpacerData[j].GetLayoutRoot().Show(LeftbarSpacerData[j].GetTemplateController().Favorite && LeftbarSpacerData[j].FilterType(SearchBarData)); 	
+					} else {
+						LeftbarSpacerData[j].GetLayoutRoot().Show(LeftbarSpacerData[j].FilterType(SearchBarData)); 	
+					}
 				}
 				
 				LeftbarScroll.VScrollToPos(0);
@@ -216,7 +227,21 @@ class EditorHudController: EditorControllerBase
 				NotifyPropertyChanged("SearchBarIcon");
 				
 				break;
-			}			
+			}	
+			
+			case "FavoritesToggle": {
+				for (int i = 0; i < LeftbarSpacerData.Count(); i++) {
+					if (FavoritesToggle) {
+						LeftbarSpacerData[i].GetLayoutRoot().Show(LeftbarSpacerData[i].GetTemplateController().Favorite); 	 ///(SearchBarData == string.Empty || LeftbarSpacerData[i].FilterType(SearchBarData))
+					} else {
+						LeftbarSpacerData[i].GetLayoutRoot().Show(true); 	 // SearchBarData == string.Empty || LeftbarSpacerData[i].FilterType(SearchBarData)
+					}
+				}
+				
+				LeftbarScroll.VScrollToPos(0);
+				
+				break;
+			}		
 			
 			case "cam_x":
 			case "cam_y":
@@ -464,17 +489,7 @@ class EditorHudController: EditorControllerBase
 		
 		return false;
 	}
-	
-	bool OnFavoritesExecute(ButtonCommandArgs args)
-	{
-		// if on
-		if (args.GetButtonState()) {
-			
-		}
 		
-		return true;
-	}
-	
 	void SetInfoObjectPosition(vector position)
 	{
 		obj_x = position[0];

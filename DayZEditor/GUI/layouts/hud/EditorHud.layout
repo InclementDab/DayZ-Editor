@@ -328,7 +328,7 @@ FrameWidgetClass EditorFrame {
              style Default
              font "gui/fonts/etelkatextpro"
              "text color" 0.7451 0.7451 0.7451 1
-             switch normal
+             switch toggle
              {
               TextWidgetClass FavoritesText {
                visible 1
@@ -353,8 +353,8 @@ FrameWidgetClass EditorFrame {
              }
              {
               ScriptParamsClass {
-               Two_Way_Binding 0
-               Relay_Command "OnFavoritesExecute"
+               Binding_Name "FavoritesToggle"
+               Two_Way_Binding 1
               }
              }
             }

@@ -115,6 +115,7 @@ WrapSpacerWidgetClass ListItem {
       ScriptParamsClass {
        Binding_Name "Favorite"
        Two_Way_Binding 1
+       Relay_Command "OnFavoriteToggle"
       }
      }
     }

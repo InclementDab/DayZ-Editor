@@ -40,7 +40,7 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		return m_PlaceableItem;
 	}
-	
+		
 	bool ListItemExecute(ButtonCommandArgs args)
 	{
 		switch (args.GetMouseButton()) {
@@ -172,6 +172,19 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool EnableFavorites()
 	{
+		return true;
+	}
+	
+	// resave favorites
+	override bool OnFavoriteToggle(ButtonCommandArgs args)
+	{
+		EditorLog.Debug("Saving Favorites...");
+		array<string> favorite_items = {};
+		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
+		if (favorite_items.Find(m_PlaceableItem.Type) != -1) {
+			favorite_items.Insert(m_PlaceableItem.Type);
+			GetGame().SetProfileStringList("EditorFavoriteItems", favorite_items);
+		}
 		return true;
 	}
 }

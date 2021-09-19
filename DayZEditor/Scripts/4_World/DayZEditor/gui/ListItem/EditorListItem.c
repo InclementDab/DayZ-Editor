@@ -49,6 +49,11 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 		return true;
 	}
 	
+	bool OnFavoriteToggle(ButtonCommandArgs args)
+	{
+		return false;
+	}
+	
 	bool EnableFavorites()
 	{
 		return false;
