@@ -302,6 +302,64 @@ FrameWidgetClass EditorFrame {
          Margin 0
          content_halign center
          {
+          PanelWidgetClass SearchFavoriteTabPanel {
+           ignorepointer 1
+           color 0.1176 0.1176 0.1176 1
+           position 0 34
+           size 1 24
+           halign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+           {
+            ButtonWidgetClass FavoritesTabButton {
+             color 0.7529 0.3686 0.3255 1
+             position 0 0
+             size 1 1
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "ViewBinding"
+             style Default
+             font "gui/fonts/etelkatextpro"
+             "text color" 0.7451 0.7451 0.7451 1
+             switch normal
+             {
+              TextWidgetClass FavoritesText {
+               visible 1
+               inheritalpha 0
+               ignorepointer 1
+               position 0 -1
+               size 1 16
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               text "Filter Favorites"
+               font "gui/fonts/sdf_MetronLight24"
+               "exact text" 0
+               "size to text h" 0
+               "size to text v" 0
+               "text halign" center
+               "text valign" center
+              }
+             }
+             {
+              ScriptParamsClass {
+               Binding_Name "FavoritesEnable"
+               Two_Way_Binding 1
+              }
+             }
+            }
+           }
+          }
           PanelWidgetClass LeftbarPanelSearchBarPanel {
            visible 1
            ignorepointer 1
@@ -393,7 +451,7 @@ FrameWidgetClass EditorFrame {
            ignorepointer 0
            color 0.3137 0.3137 0.3137 1
            position 0 0
-           size 1 0.965
+           size 1 0.94
            halign center_ref
            hexactpos 0
            vexactpos 0
@@ -816,11 +874,11 @@ FrameWidgetClass EditorFrame {
          visible 1
          ignorepointer 1
          position 0 0
-         size 280 18
+         size 0.147 18
          valign center_ref
          hexactpos 0
          vexactpos 0
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
          {
           WrapSpacerWidgetClass InfoBarVectorWrapSpacer {
@@ -1050,12 +1108,12 @@ FrameWidgetClass EditorFrame {
         FrameWidgetClass InfobarCameraPositionFrame {
          ignorepointer 1
          position 0 0
-         size 210 16
+         size 0.1 16
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
          {
           TextWidgetClass InfobarCameraPositionText {
@@ -1082,11 +1140,11 @@ FrameWidgetClass EditorFrame {
         }
         FrameWidgetClass PrecisionFrame {
          ignorepointer 1
-         size 222 19
+         size 0.124 19
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
          {
           TextWidgetClass PrecisionText {
@@ -1177,10 +1235,10 @@ FrameWidgetClass EditorFrame {
          clipchildren 0
          ignorepointer 1
          position 0 0
-         size 450 18
+         size 0.25 18
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
          {
           TextWidgetClass ObjectHoverSelectText {
@@ -1224,10 +1282,10 @@ FrameWidgetClass EditorFrame {
         }
         WrapSpacerWidgetClass VersionFrame {
          ignorepointer 1
-         size 350 18
+         size 0.16 18
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
          {
           TextWidgetClass VersionText {
@@ -1272,10 +1330,10 @@ FrameWidgetClass EditorFrame {
         }
         WrapSpacerWidgetClass CurrentFileWrapper {
          ignorepointer 1
-         size 380 18
+         size 0.2 18
          hexactpos 1
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
          {
           TextWidgetClass MenuCurrentFileNameCaption {
