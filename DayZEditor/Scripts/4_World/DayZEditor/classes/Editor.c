@@ -313,6 +313,7 @@ class Editor
 		CommandManager[EditorOpenRecentCommand].SetCanExecute(m_RecentlyOpenedFiles.Count() > 0);
 		
 		CommandManager[EditorCameraTrackRun].SetCanExecute(m_CameraTrackManager.GetCameraTracks().Count() > 0);
+		CommandManager[EditorCloseCommand].SetCanExecute(EditorSaveFile != string.Empty);
 		
 		EditorLog.CurrentLogLevel = log_lvl;
 	}
@@ -1349,7 +1350,7 @@ class Editor
 	{
 		m_ObjectManager.ToggleHiddenObjectSelection(target);
 	}
-	
+		
 	void Clear()
 	{
 		Statistics.Save();
