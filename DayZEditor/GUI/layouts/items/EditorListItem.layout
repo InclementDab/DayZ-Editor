@@ -100,8 +100,9 @@ WrapSpacerWidgetClass ListItem {
     }
     CheckBoxWidgetClass ListItemFavorites {
      visible 0
+     inheritalpha 0
      color 1 0.8431 0 1
-     position 5 0
+     position 4 -1
      size 16 16
      valign center_ref
      hexactpos 1
@@ -109,7 +110,7 @@ WrapSpacerWidgetClass ListItem {
      hexactsize 1
      vexactsize 1
      scriptclass "ViewBinding"
-     style NewStyle
+     style Editor_Favorites_Checkbox
      {
       ScriptParamsClass {
        Binding_Name "Favorite"
