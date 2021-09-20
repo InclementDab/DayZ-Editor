@@ -1,1 +1,18 @@
-<WidgetStyles />
+<WidgetStyles>
+    <Widget Name="CheckBoxWidget">
+        <Style Name="Editor_Favorites_Checkbox" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="dayz_editor_gui" Color="0">
+            <State Name="Disabled">
+                <Item Name="CheckBox" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="CheckBox" Image="Star" />
+            </State>
+            <State Name="Mark">
+                <Item Name="CheckBox" Image="StarTicked" />
+            </State>
+            <State Name="Normal">
+                <Item Name="CheckBox" Image="Star" />
+            </State>
+        </Style>
+    </Widget>
+</WidgetStyles>
