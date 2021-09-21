@@ -13,9 +13,10 @@ FrameWidgetClass main_menu_root {
  {
   WrapSpacerWidgetClass play_panel_root {
    visible 1
+   clipchildren 1
    ignorepointer 1
    position 80 130
-   size 392 305
+   size 392 325
    halign right_ref
    valign bottom_ref
    hexactpos 1
@@ -449,6 +450,7 @@ FrameWidgetClass main_menu_root {
     }
     GridSpacerWidgetClass character_stats_root {
      visible 1
+     clipchildren 1
      ignorepointer 1
      position 100 340
      size 400 380
@@ -628,7 +630,7 @@ FrameWidgetClass main_menu_root {
          }
         }
         FrameWidgetClass DistanceTraveled {
-         visible 0
+         visible 1
          ignorepointer 1
          position 0 0
          size 48 24
@@ -645,7 +647,7 @@ FrameWidgetClass main_menu_root {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           text "#main_menu_distance_foot"
+           text "#STR_EDITOR_STAT_DISTANCE_FLOWN"
            "size to text h" 1
            "size to text v" 0
            "text halign" center

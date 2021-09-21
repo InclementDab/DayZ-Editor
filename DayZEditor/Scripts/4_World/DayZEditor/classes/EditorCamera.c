@@ -15,6 +15,7 @@ class EditorCamera: Camera
 	static const float TELEPORT_LERP_DISTANCE = 1000;
 	
 	protected EditorCameraLight m_EditorCameraLight;
+	protected EditorStatistics m_Statistics = EditorStatistics.GetInstance();
 	
 	float FOV = 1;
 	float DOFDistance;
@@ -124,8 +125,10 @@ class EditorCamera: Camera
 			
 		SendUpdateAccumalator = SendUpdateAccumalator + timeSlice;*/
 		
+		vector original_position_unchanged;
 		vector transform[4];
 		GetTransform(transform);
+		original_position_unchanged = transform[3];
 
 		Input input = GetGame().GetInput();
 		if (!KeyState(KeyCode.KC_LCONTROL)) {
@@ -190,8 +193,9 @@ class EditorCamera: Camera
 		if (!GetEditor().Settings.AllowBelowGround) {
 			transform[3][1] = Math.Max(GetGame().SurfaceY(transform[3][0], transform[3][2]) + 0.1, transform[3][1]);
 		}
-		
+				
 		SetTransform(transform);
+		m_Statistics.EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km
 		
 		if (HideCursorOnDrag) {
 			if (input.LocalPress("UATempRaiseWeapon")) {

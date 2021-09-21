@@ -10,10 +10,10 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 	
 	protected Widget m_ObjectsRemoved;
 	protected TextWidget m_ObjectsRemovedValue;
-	/*
+	
 	protected Widget m_DistanceTraveled;
 	protected TextWidget m_DistanceTraveledValue;
-	
+	/*
 	protected Widget m_LongRangeShot;
 	protected TextWidget m_LongRangeShotValue;*/
 	
@@ -29,10 +29,10 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 		
 		m_ObjectsRemoved = m_Root.FindAnyWidget("ItemsRemoved");
 		m_ObjectsRemovedValue = TextWidget.Cast(m_Root.FindAnyWidget("ItemsRemovedValue"));
-		/*
+		
 		m_DistanceTraveled = m_Root.FindAnyWidget( "DistanceTraveled" );
 		m_DistanceTraveledValue = TextWidget.Cast( m_Root.FindAnyWidget( "DistanceTraveledValue" ) );
-		
+		/*
 		m_LongRangeShot = m_Root.FindAnyWidget( "LongRangeShot" );
 		m_LongRangeShotValue = TextWidget.Cast( m_Root.FindAnyWidget( "LongRangeShotValue" ) );*/
 	}
@@ -42,6 +42,7 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 		m_TimePlayedValue.SetText(GetTimeString(EditorStatistics.GetInstance().EditorPlayTime));
 		m_ObjectsPlacedValue.SetText(EditorStatistics.GetInstance().EditorPlacedObjects.ToString());
 		m_ObjectsRemovedValue.SetText(EditorStatistics.GetInstance().EditorRemovedObjects.ToString());
+		m_DistanceTraveledValue.SetText(GetDistanceString(EditorStatistics.GetInstance().EditorDistanceFlown));
 	}
 	
 	protected string GetTimeString( float total_time )
@@ -82,30 +83,36 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 		return "0" + " " + minute_symbol;
 	}
 	
-	protected string GetDistanceString( float total_distance, bool meters_only = false )
+	protected string GetDistanceString(float total_distance, bool meters_only = false)
 	{
+		total_distance = 200000;
 		string meter_symbol = "m";							//define symbols
 		string kilometer_symbol = "km";
+		
+		if (total_distance > 40075) {
+			total_distance /= 40075;
+			return string.Format("%1x Arnd Earth", total_distance);
+		}
 		
 		if ( total_distance > 0 )
 		{
 			string distance_string;
 			
-			float kilometers = total_distance / 1000;
+			float kilometers = total_distance;
 			kilometers = Math.Round( kilometers );
 			if ( kilometers >= 10 && !meters_only )
 			{
-				distance_string = GetValueString( kilometers, true ) + " " + kilometer_symbol;		//kilometers
+				distance_string = GetValueString( kilometers, true ) + kilometer_symbol;		//kilometers
 			}
 			else
 			{
-				distance_string = GetValueString( total_distance ) + " " + meter_symbol;			//meters
+				distance_string = GetValueString( total_distance ) + meter_symbol;			//meters
 			}
 			
 			return distance_string;
 		}	
 	
-		return "0" + " " + meter_symbol;
+		return "0" + meter_symbol;
 	}
 	
 	protected string GetValueString( float total_value, bool show_decimals = false )
