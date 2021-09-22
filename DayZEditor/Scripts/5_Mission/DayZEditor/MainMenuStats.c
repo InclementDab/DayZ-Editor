@@ -86,12 +86,18 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 	protected string GetDistanceString(float total_distance, bool meters_only = false)
 	{
 		total_distance = 200000;
+		const int DISTANCE_TO_MOON = 384400;
+		const int CIRCUMFERENCE_OF_EARTH = 40075;
+		
 		string meter_symbol = "m";							//define symbols
 		string kilometer_symbol = "km";
 		
-		if (total_distance > 40075) {
-			total_distance /= 40075;
-			return string.Format("%1x Arnd Earth", total_distance);
+		if (total_distance > DISTANCE_TO_MOON * 0.5) {
+			return string.Format("%1 To The Moon", total_distance / DISTANCE_TO_MOON);
+		}
+		
+		if (total_distance > CIRCUMFERENCE_OF_EARTH) {
+			return string.Format("%1x Around Earth", total_distance / CIRCUMFERENCE_OF_EARTH);
 		}
 		
 		if ( total_distance > 0 )
