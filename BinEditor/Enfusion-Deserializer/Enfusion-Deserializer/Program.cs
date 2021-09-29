@@ -18,7 +18,7 @@ namespace Enfusion_Deserializer
         {
 
             //EnfusionSerializer stream = new("P:\\profiles\\Client\\test.bin", FileMode.CreateNew, FileAccess.ReadWrite);
-            EnfusionSerializer stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze", FileMode.Open, FileAccess.ReadWrite);
+            EnfusionSerializer stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\azs_trader.dze", FileMode.Open, FileAccess.ReadWrite);
             EditorSaveData data = new();
             data.Read(stream);
             stream.Close();
