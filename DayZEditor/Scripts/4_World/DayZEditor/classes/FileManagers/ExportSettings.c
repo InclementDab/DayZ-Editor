@@ -1,6 +1,7 @@
 class ExportSettings: FileSettingsBase
 {
 	bool Binarized = true;
+	bool ExportEntireMap;
 	ExportHeightType HeightType;
 	bool ExportSelectedOnly;
 	vector ExportOffset;
@@ -11,6 +12,11 @@ class ExportSettings: FileSettingsBase
 		switch (m_FileType) {
 			case EditorDZEFile: {
 				settings.Insert(new CheckBoxPrefab("Binarized", this, "Binarized"));
+				break;
+			}
+			
+			case EditorMapGroupPosFile: {
+				settings.Insert(new CheckBoxPrefab("Export Entire Map", this, "ExportEntireMap"));
 				break;
 			}
 		}
