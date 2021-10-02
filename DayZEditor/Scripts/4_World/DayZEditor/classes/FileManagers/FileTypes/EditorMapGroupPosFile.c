@@ -16,14 +16,15 @@ class EditorMapGroupPosFile: EditorFileType
 		FPrintln(handle, "<map>");
 		
 		foreach (EditorObjectData editor_object: data.EditorObjects) {
+			vector rpy = Vector(editor_object.Orientation[2], editor_object.Orientation[1], editor_object.Orientation[0]);
 			float a;
-			if (editor_object.Orientation[2] <= -90) {
-				a = -editor_object.Orientation[2] - 270;
+			if (rpy[2] <= -90) {
+				a = -rpy[2] - 270;
 			} else {
-				a = 90 - editor_object.Orientation[2];
+				a = 90 - rpy[2];
 			}
 			
-			FPrintln(handle, string.Format("	<group name=\"%1\" pos=\"%2\" rpy=\"%3\"/>", editor_object.Type, editor_object.Position.ToString(false), editor_object.Orientation.ToString(false), a));		 //a=\"%4\"
+			FPrintln(handle, string.Format("	<group name=\"%1\" pos=\"%2\" rpy=\"%3\" a=\"%4\"/>", editor_object.Type, editor_object.Position.ToString(false), rpy.ToString(false), a));		 //a=\"%4\"
 		}
 		
 		FPrintln(handle, "</map>");
