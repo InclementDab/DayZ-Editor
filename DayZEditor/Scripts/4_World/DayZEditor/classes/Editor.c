@@ -176,7 +176,10 @@ class Editor
 		
 		// Register Player Object as a hidden EditorObject
 		//CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER, false);
-				
+		
+		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
+		
 		thread AutoSaveThread();
 	}
 	
