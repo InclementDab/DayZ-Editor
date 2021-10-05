@@ -176,7 +176,7 @@ class Editor
 		
 		// Register Player Object as a hidden EditorObject
 		//CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER, false);
-		
+				
 		thread AutoSaveThread();
 	}
 	

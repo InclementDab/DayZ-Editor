@@ -200,8 +200,8 @@ del %modBuildDirectory%%modName%\Addons\!pboName!.pbo
 del %modBuildDirectory%%modName%\Addons\!pboName!.pbo.%keyName%.bisign
 
 echo Building PBO: !pboName!.pbo
-rem echo START /w %pboProject% %pboProject% +W -F +Stop -P -O -E=dayz "%workDrive%!prefixName!" "+Mod=%modBuildDirectory%%modName%" "-Key"
-rem START /w %pboProject% %pboProject% +W -F +Stop -P -O -E=dayz "%workDrive%!prefixName!" "+Mod=%modBuildDirectory%%modName%" "-Key"
+rem echo START /w %pboProject% %pboProject% -F +Stop -P -O -E=dayz "%workDrive%!prefixName!" "+Mod=%modBuildDirectory%%modName%" "-Key"
+rem START /w %pboProject% %pboProject% -F +Stop -P -O -E=dayz "%workDrive%!prefixName!" "+Mod=%modBuildDirectory%%modName%" "-Key"
 echo START /w %pboProject% %pboProject% -F +Stop -P %compression% -O -E=dayz +R "%workDrive%!prefixName!" "+Mod=%modBuildDirectory%%modName%" "-Key"
 START /w %pboProject% %pboProject% -F +Stop -P %compression% -O -E=dayz +R "%workDrive%!prefixName!" "+Mod=%modBuildDirectory%%modName%" "-Key"
 

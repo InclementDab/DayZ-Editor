@@ -179,8 +179,8 @@ del %licensedModBuildDirectory%%licensedModName%\Addons\!pboName!.pbo
 del %licensedModBuildDirectory%%licensedModName%\Addons\!pboName!.pbo.%keyName%.bisign
 
 echo Building PBO: !pboName!.pbo
-echo START /w %pboProject% %pboProject% +W -F +Stop -P -O +Z -E=dayz "%workDrive%!prefixName!" "+Mod=%licensedModBuildDirectory%%licensedModName%" "-Key"
-START /w %pboProject% %pboProject% +W -F +Stop -P -O +Z -E=dayz "%workDrive%!prefixName!" "+Mod=%licensedModBuildDirectory%%licensedModName%" "-Key"
+echo START /w %pboProject% %pboProject% -F +Stop -P -O +Z -E=dayz "%workDrive%!prefixName!" "+Mod=%licensedModBuildDirectory%%licensedModName%" "-Key"
+START /w %pboProject% %pboProject% -F +Stop -P -O +Z -E=dayz "%workDrive%!prefixName!" "+Mod=%licensedModBuildDirectory%%licensedModName%" "-Key"
 
 if not errorlevel 1 (
 	set currentFolder=
