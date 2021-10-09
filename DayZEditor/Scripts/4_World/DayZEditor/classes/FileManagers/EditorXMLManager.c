@@ -1,44 +1,10 @@
-
-class EditorXMLCallback<Class T>: XMLCallback
+class EditorLootPointData
 {
-	private T m_Data;
-	T GetData() { return m_Data; }
+	protected vector m_Position;
+	protected float m_Range, m_Height;
+	protected int m_Flags;
 	
-
-	private bool m_Success = false;
-	override void OnFailure(ref XMLDocument document)
-	{
-		EditorLog.Trace("EditorXMLCallback::OnFailure");
-		m_Failed = false;
-	}
-	
-	override void OnSuccess(ref XMLDocument document)
-	{
-		EditorLog.Trace("EditorXMLCallback::OnSuccess");
-		m_Success = true;
-	}
-	
-	bool GetSuccess() { return m_Success; }
-	
-	void LoadData(out Class data, XMLDocument document)
-	{
-		typename type = data.Type();
-				
-		for (int i = 0; i < type.GetVariableCount(); i++) {
-			typename var_type = type.GetVariableType(i);
-			
-		}
-	}
-}
-
-
-class EditorLootPoint
-{
-	private vector m_Position;
-	private float m_Range, m_Height;
-	private int m_Flags;
-	
-	void EditorLootPoint(vector position, float range, float height, int flags) 
+	void EditorLootPointData(vector position, float range, float height, int flags) 
 	{
 		m_Position = position;
 		m_Range = range;
@@ -54,47 +20,24 @@ class EditorLootPoint
 
 class EditorLootContainer
 {
-	private string m_Name;
-	private int m_Lootmax;
+	protected string m_Name;
+	protected int m_Lootmax;
 	
-	private ref array<string> m_Category;
-	private ref array<string> m_Tag;
-	private ref array<ref EditorLootPoint> m_LootPoints;
-	ref array<ref EditorLootPoint> GetLootPoints() { return m_LootPoints; }
+	ref array<string> Categories = {};
+	ref array<string> Tags = {};
+	ref array<ref EditorLootPointData> LootPoints = {};
 	
 	void EditorLootContainer(string name, int lootmax)
 	{
 		m_Name = name; m_Lootmax = lootmax;
-		m_Category = new array<string>();
-		m_Tag = new array<string>();
-		m_LootPoints = new array<ref EditorLootPoint>();
 	}
 	
 	void ~EditorLootContainer()
 	{
-		delete m_LootPoints;
-		delete m_Category;
-		delete m_Tag;
+		delete LootPoints;
+		delete Categories;
+		delete Tags;
 	}
-	
-	int InsertCategory(string category)
-	{
-		m_Category.Insert(category);
-		return m_Category.Count();
-	}	
-	
-	int InsertTag(string tag)
-	{
-		m_Tag.Insert(tag);
-		return m_Tag.Count();
-	}	
-	
-	int InsertLootPoint(EditorLootPoint lootpoint)
-	{
-		m_LootPoints.Insert(lootpoint);
-		return m_LootPoints.Count();
-	}
-	
 }
 
 
@@ -244,12 +187,12 @@ class EditorMapGroupProto: XMLCallback
 							switch (container_child.GetName()) {
 								
 								case "category": {
-									container.InsertCategory(container_child.GetAttribute("name").ValueAsString());
+									container.Categories.Insert(container_child.GetAttribute("name").ValueAsString());
 									break;
 								}
 								
 								case "tag": {
-									container.InsertTag(container_child.GetAttribute("name").ValueAsString());
+									container.Tags.Insert(container_child.GetAttribute("name").ValueAsString());
 									break;
 								}
 								
@@ -275,7 +218,7 @@ class EditorMapGroupProto: XMLCallback
 									}
 									
 									pos = pos + m_Building.GetPosition();
-									container.InsertLootPoint(new EditorLootPoint(pos, range, height, flags));
+									container.LootPoints.Insert(new EditorLootPointData(pos, range, height, flags));
 									break;
 								}
 								
@@ -306,12 +249,11 @@ class EditorMapGroupProto: XMLCallback
 				EditorLog.Info("Building Found!");	
 				array<ref EditorLootContainer> containers = group_proto.GetLootContainer();
 				foreach (EditorLootContainer cont: containers) {
-					array<ref EditorLootPoint> loot_points = cont.GetLootPoints();
-					foreach (EditorLootPoint loot_point: loot_points) {
+					foreach (EditorLootPointData loot_point: cont.LootPoints) {
 						InsertLootPoint(loot_point);
 					}
 					
-					EditorLog.Info("Loading %1 loot points for %2", loot_points.Count().ToString(), m_Building.GetType());
+					EditorLog.Info("Loading %1 loot points for %2", cont.LootPoints.Count().ToString(), m_Building.GetType());
 				}
 				return;
 			}			
@@ -320,7 +262,7 @@ class EditorMapGroupProto: XMLCallback
 		EditorLog.Warning("Building was not found!");
 	}
 	
-	void InsertLootPoint(EditorLootPoint loot_point)
+	void InsertLootPoint(EditorLootPointData loot_point)
 	{
 		EditorLog.Info("Inserting Loot Point %1", loot_point.GetPosition().ToString());
 		vector loot_pos = loot_point.GetPosition();	
@@ -346,7 +288,7 @@ class EditorMapGroupProto: XMLCallback
 		m_Building.Update();
 	}
 	
-	private void ErrorMessage(string message)
+	protected void ErrorMessage(string message)
 	{	
 		MessageBox.Show("Error", message, MessageBoxButtons.OK);
 	}
@@ -357,5 +299,37 @@ class EditorXMLManager
 	static void LoadMapGroupProto(out EditorMapGroupProto group_proto, string filename)
 	{
 		GetXMLApi().Read(filename, group_proto);
+	}
+}
+
+class EditorXMLCallback<Class T>: XMLCallback
+{
+	protected T m_Data;
+	T GetData() { return m_Data; }
+	
+
+	protected bool m_Success = false;
+	override void OnFailure(ref XMLDocument document)
+	{
+		EditorLog.Trace("EditorXMLCallback::OnFailure");
+		m_Failed = false;
+	}
+	
+	override void OnSuccess(ref XMLDocument document)
+	{
+		EditorLog.Trace("EditorXMLCallback::OnSuccess");
+		m_Success = true;
+	}
+	
+	bool GetSuccess() { return m_Success; }
+	
+	void LoadData(out Class data, XMLDocument document)
+	{
+		typename type = data.Type();
+				
+		for (int i = 0; i < type.GetVariableCount(); i++) {
+			typename var_type = type.GetVariableType(i);
+			
+		}
 	}
 }

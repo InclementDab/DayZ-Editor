@@ -192,7 +192,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	
 	// This function is a mess
 	void SetEditorObject(EditorObject editor_object)
-	{				
+	{		
 		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", editor_object, string.Empty);
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW", editor_object, "Show"));
 		general_group.Insert(new EditBoxPrefab("#STR_EDITOR_NAME", editor_object, "Name"));
