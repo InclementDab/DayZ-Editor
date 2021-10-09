@@ -193,12 +193,19 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	// This function is a mess
 	void SetEditorObject(EditorObject editor_object)
 	{		
+		Print(editor_object.GetType());
+		
 		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", editor_object, string.Empty);
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW", editor_object, "Show"));
 		general_group.Insert(new EditBoxPrefab("#STR_EDITOR_NAME", editor_object, "Name"));
 		general_group.Insert(new VectorPrefab("#STR_EDITOR_POSITION", editor_object, "Position"));
 		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", editor_object, "Orientation"));
 		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_SCALE", editor_object, "Scale", 0.01));
+		if (editor_object.GetWorldObject().IsInherited(EditorLootPoint)) {
+			general_group.Insert(new EditBoxNumberPrefab("Height", editor_object.GetWorldObject(), "Height"));
+			general_group.Insert(new EditBoxNumberPrefab("Range", editor_object.GetWorldObject(), "Range"));
+		}
+		
 		//general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", editor_object, "EditorOnly", editor_object.EditorOnly));
 		AddContent(general_group);
 		

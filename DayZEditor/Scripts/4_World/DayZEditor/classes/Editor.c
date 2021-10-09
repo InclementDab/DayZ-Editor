@@ -822,9 +822,14 @@ class Editor
 		loot_position_data += "	<container name=\"lootFloor\" lootmax=\"4\">\n";
 		
 		foreach (EditorObject loot_spawn: loot_spawns) {
+			EditorLootPoint loot_point = EditorLootPoint.Cast(loot_spawn.GetWorldObject());
+			if (!loot_point) {
+				continue;
+			}
+			
 			vector loot_pos = loot_spawn.GetPosition();
 			loot_pos[1] = loot_pos[1] - LootYOffset;
-			loot_position_data += string.Format("		<point pos=\"%1\" range=\"0.5\" height=\"1.5\" /> \n", loot_pos.ToString(false));
+			loot_position_data += string.Format("		<point pos=\"%1\" range=\"%2\" height=\"%3\" /> \n", loot_pos.ToString(false), loot_point.Range, loot_point.Height);
 		}
 		
 		loot_position_data += "	</container>\n";

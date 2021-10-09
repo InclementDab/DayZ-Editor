@@ -99,7 +99,7 @@ class CfgVehicles
 		shadow = 0;
 	};
 
-	class DebugCylinder: HouseNoDestruct
+	class EditorLootPoint: HouseNoDestruct
 	{
 		scope=2;
 		model="DayZEditor\editor\DebugCylinder.p3d";

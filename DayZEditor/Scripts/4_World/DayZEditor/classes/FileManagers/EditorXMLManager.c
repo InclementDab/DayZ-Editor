@@ -262,14 +262,15 @@ class EditorMapGroupProto: XMLCallback
 		EditorLog.Warning("Building was not found!");
 	}
 	
-	void InsertLootPoint(EditorLootPointData loot_point)
+	void InsertLootPoint(EditorLootPointData loot_point_data)
 	{
-		EditorLog.Info("Inserting Loot Point %1", loot_point.GetPosition().ToString());
-		vector loot_pos = loot_point.GetPosition();	
-		EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("DebugCylinder", loot_pos, vector.Zero, 1, EditorObjectFlags.OBJECTMARKER));
+		EditorLog.Info("Inserting Loot Point %1", loot_point_data.GetPosition().ToString());
+		vector loot_pos = loot_point_data.GetPosition();	
+		EditorObject loot_display = GetEditor().CreateObject(EditorObjectData.Create("EditorLootPoint", loot_pos, vector.Zero, 1, EditorObjectFlags.OBJECTMARKER));
 
-		// might be bad
-		//m_Building.AddChild(loot_display.GetWorldObject(), -1);
+		EditorLootPoint loot_point = EditorLootPoint.Cast(loot_display.GetWorldObject());
+		loot_point.Range = loot_point_data.GetRange();
+		loot_point.Height = loot_point_data.GetHeight();
 				
 		vector transform[4] = {
 			Vector(1, 0, 0),
@@ -278,9 +279,10 @@ class EditorMapGroupProto: XMLCallback
 			loot_pos
 		};
 		
-		transform[0][0] = loot_point.GetRange();
-		transform[1][1] = loot_point.GetHeight();
-		transform[2][2] = loot_point.GetRange();
+		
+		transform[0][0] = loot_point.Range;
+		transform[1][1] = loot_point.Height;
+		transform[2][2] = loot_point.Range;
 		
 		loot_display.SetTransform(transform);
 		m_LootPositions.Insert(loot_display);
