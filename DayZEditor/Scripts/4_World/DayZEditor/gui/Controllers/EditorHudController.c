@@ -126,14 +126,7 @@ class EditorHudController: EditorControllerBase
 			if (favorite_items.Find(placeable_item.Type) != -1) {
 				list_item.SetFavorite(true);
 			}
-			
-			array<ref EditorPlaceableItem> placeable_items = LoadPlaceableObjects();
-
-			if (Class.CastTo(placed_list_item, list[i])) {
-				GetEditor().SelectObject(placed_list_item.GetEditorObject());
-			}
 		}
-		
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
 		
