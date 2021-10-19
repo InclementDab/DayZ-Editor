@@ -4,6 +4,9 @@ class EditorHudController: EditorControllerBase
 	string SearchBarIcon = "set:dayz_editor_gui image:search";
 	string Version = Editor.Version;
 	
+	//
+	string PlacedSearchBarData;
+	
 	string ObjectReadoutName;
 	
 	bool CategoryPlacements = true;
@@ -19,6 +22,8 @@ class EditorHudController: EditorControllerBase
 	ref EditorHudToolbar EditorHudToolbarView;
 	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
+	//
+	//ref ObservableCollection<ref EditorPlacedListItem> RightbarPlacedData = new ObservableCollection<ref EditorPlacedListItem>(this);
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
@@ -49,11 +54,16 @@ class EditorHudController: EditorControllerBase
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
 	protected EditBoxWidget LeftbarSearchBar;
 	
+	//
+	protected EditBoxWidget PlacedSearchEditbox;
+	
 	protected ButtonWidget CinematicCameraButton;
 	protected ButtonWidget BrushToggleButton;
 	protected ButtonWidget PlacementsTabButton;
 	protected ButtonWidget DeletionsTabButton;
 	protected ButtonWidget LeftbarPanelSearchBarIconButton;
+	
+	protected ButtonWidget PlacedSearchIconButton;
 	
 	// Camera Track
 	protected Widget CameraTrackWrapper;
@@ -118,7 +128,13 @@ class EditorHudController: EditorControllerBase
 			if (favorite_items.Find(placeable_item.Type) != -1) {
 				list_item.SetFavorite(true);
 			}
+		array<ref EditorPlaceableItem> placeable_items = LoadPlaceableObjects();
+
+			if (Class.CastTo(placed_list_item, list[i])) {
+				GetEditor().SelectObject(placed_list_item.GetEditorObject());
 		}
+		
+		
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
 		
@@ -289,6 +305,28 @@ class EditorHudController: EditorControllerBase
 				g_EditorPrecision = GetPrecisionLevel();
 				break;
 			}
+			
+			case "PlacedSearchBarData": {
+				for (int k = 0; i < RightbarPlacedData.Count(); i++) {
+					if (!CategoryDeletions) {
+						RightbarPlacedData[i].GetLayoutRoot().Show(RightbarPlacedData[i].GetTemplateController().RightbarPlacedData[i].FilterType(PlacedSearchBarData)); 	
+					//} else //{
+						//RightbarPlacedData[k].GetLayoutRoot().Show(RightbarPlacedData[k].FilterType(PlacedSearchBarData)); 	
+					}
+				}
+				
+				LeftbarScroll.VScrollToPos(0);
+				
+				if (PlacedSearchBarData.Length() > 0) {
+					SearchBarIcon = "set:dayz_gui image:icon_x";
+				} else {
+					SearchBarIcon = "set:dayz_editor_gui image:search";
+				}
+				
+				NotifyPropertyChanged("SearchBarIcon");
+				
+				break;
+			}
 		}
 	}
 	
@@ -340,6 +378,10 @@ class EditorHudController: EditorControllerBase
 		if (SearchBarData.Length() > 0) {
 			SearchBarData = string.Empty;
 			NotifyPropertyChanged("SearchBarData");
+		}
+		if (PlacedSearchBarData.Length() > 0) {
+			PlacedSearchBarData = string.Empty;
+			NotifyPropertyChanged("PlacedSearchBarData");
 		}
 	}
 	
@@ -408,6 +450,11 @@ class EditorHudController: EditorControllerBase
 				case LeftbarSearchBar: {
 					SearchBarData = string.Empty;
 					NotifyPropertyChanged("SearchBarData");
+					break;
+				}
+				case PlacedSearchEditbox: {
+					PlacedSearchBarData = string.Empty;
+					NotifyPropertyChanged("PlacedSearchBarData");
 					break;
 				}
 			}	
