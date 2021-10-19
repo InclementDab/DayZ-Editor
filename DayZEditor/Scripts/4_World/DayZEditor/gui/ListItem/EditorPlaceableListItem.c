@@ -142,7 +142,7 @@ class EditorPlaceableListItem: EditorListItem
 		return true;
 	}
 		
-	bool FilterType(string filter)
+	override bool FilterType(string filter)
 	{
 		if (filter == string.Empty) return true;
 		

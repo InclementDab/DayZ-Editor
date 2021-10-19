@@ -22,8 +22,6 @@ class EditorHudController: EditorControllerBase
 	ref EditorHudToolbar EditorHudToolbarView;
 	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
-	//
-	//ref ObservableCollection<ref EditorPlacedListItem> RightbarPlacedData = new ObservableCollection<ref EditorPlacedListItem>(this);
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
@@ -307,11 +305,13 @@ class EditorHudController: EditorControllerBase
 			}
 			
 			case "PlacedSearchBarData": {
-				for (int k = 0; i < RightbarPlacedData.Count(); i++) {
-					if (!CategoryDeletions) {
-						RightbarPlacedData[i].GetLayoutRoot().Show(RightbarPlacedData[i].GetTemplateController().RightbarPlacedData[i].FilterType(PlacedSearchBarData)); 	
-					//} else //{
-						//RightbarPlacedData[k].GetLayoutRoot().Show(RightbarPlacedData[k].FilterType(PlacedSearchBarData)); 	
+				for (int k = 0; k < RightbarPlacedData.Count(); k++) {
+					if (CategoryPlacements) {
+						RightbarPlacedData[k].GetLayoutRoot().Show(RightbarPlacedData[k].FilterType(PlacedSearchBarData)); 	
+					} 
+						
+					if (CategoryDeletions) {
+						RightbarDeletionData[k].GetLayoutRoot().Show(RightbarDeletionData[k].FilterType(PlacedSearchBarData)); 	
 					}
 				}
 				

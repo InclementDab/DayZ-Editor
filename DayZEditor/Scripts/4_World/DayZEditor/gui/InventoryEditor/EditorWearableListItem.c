@@ -80,7 +80,7 @@ class EditorWearableListItem: EditorListItem
 		return (m_WearableItem.Slots.Find(slot) != -1);
 	}
 	
-	bool FilterType(string filter)
+	override bool FilterType(string filter)
 	{
 		if (filter == string.Empty) return true;
 		

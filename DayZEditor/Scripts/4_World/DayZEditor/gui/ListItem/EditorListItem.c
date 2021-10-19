@@ -66,6 +66,9 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 		return false;
 	}
 	
+	// abstract
+	bool FilterType(string filter);
+	
 	override string GetLayoutFile() 
 	{
 		return "DayZEditor/gui/Layouts/items/EditorListItem.layout";

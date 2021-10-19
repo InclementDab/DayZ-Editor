@@ -193,6 +193,23 @@ class EditorPlacedListItem: EditorListItem
 		return true;
 	}
 	
+	override bool FilterType(string filter)
+	{
+		if (filter == string.Empty) return true;
+		
+		string type_lower = m_EditorObject.GetType();
+		type_lower.ToLower();
+		filter.ToLower();
+		
+		if (filter[0] == "@") {
+			type_lower = m_EditorObject.GetData().Mod.GetModName();
+			filter[0] = "";
+			type_lower.ToLower();
+		}
+		
+		return type_lower.Contains(filter);
+	}
+	
 	override string GetLayoutFile()
 	{
 		return "DayZEditor/gui/Layouts/items/EditorPlacedListItem.layout";
