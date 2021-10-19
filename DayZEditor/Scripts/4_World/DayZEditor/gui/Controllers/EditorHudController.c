@@ -126,12 +126,13 @@ class EditorHudController: EditorControllerBase
 			if (favorite_items.Find(placeable_item.Type) != -1) {
 				list_item.SetFavorite(true);
 			}
-		array<ref EditorPlaceableItem> placeable_items = LoadPlaceableObjects();
+			
+			array<ref EditorPlaceableItem> placeable_items = LoadPlaceableObjects();
 
 			if (Class.CastTo(placed_list_item, list[i])) {
 				GetEditor().SelectObject(placed_list_item.GetEditorObject());
+			}
 		}
-		
 		
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
@@ -305,17 +306,19 @@ class EditorHudController: EditorControllerBase
 			}
 			
 			case "PlacedSearchBarData": {
-				for (int k = 0; k < RightbarPlacedData.Count(); k++) {
-					if (CategoryPlacements) {
-						RightbarPlacedData[k].GetLayoutRoot().Show(RightbarPlacedData[k].FilterType(PlacedSearchBarData)); 	
-					} 
-						
-					if (CategoryDeletions) {
-						RightbarDeletionData[k].GetLayoutRoot().Show(RightbarDeletionData[k].FilterType(PlacedSearchBarData)); 	
-					}
+				
+				ObservableCollection<EditorListItem> selected_list;
+				if (CategoryPlacements) {
+					selected_list = RightbarPlacedData;
+				} else {
+					selected_list = RightbarDeletionData;
+				}
+					
+				for (int k = 0; k < selected_list.Count(); k++) {
+					selected_list[k].GetLayoutRoot().Show(selected_list[k].FilterType(PlacedSearchBarData)); 	
 				}
 				
-				LeftbarScroll.VScrollToPos(0);
+				RightbarScroll.VScrollToPos(0);
 				
 				if (PlacedSearchBarData.Length() > 0) {
 					SearchBarIcon = "set:dayz_gui image:icon_x";
