@@ -621,8 +621,10 @@ class EditorObject: EditorWorldObject
 	
 	void DestroyBoundingBox()
 	{		
-		for (int i = 0; i < 12; i++) {
-			GetGame().ObjectDelete(m_BBoxLines[i]);
+		if (m_BBoxLines) {
+			for (int i = 0; i < 12; i++) {
+				GetGame().ObjectDelete(m_BBoxLines[i]);
+			}
 		}
 		
 		GetGame().ObjectDelete(m_BBoxBase);		
