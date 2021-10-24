@@ -9,6 +9,7 @@ class EditorSettings: ProfileSettings
 
 	// Camera Settings
 	float CameraSpeed				= 60;
+	float CameraTilt				= 0;
 	bool RuleOfThirds				= false;
 	bool AllowBelowGround 			= false;
 	

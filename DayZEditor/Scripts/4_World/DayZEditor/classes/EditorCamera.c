@@ -209,6 +209,7 @@ class EditorCamera: Camera
 		}
 		
 		
+		orientation = GetOrientation();
 		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
 			
 			angularVelocity = angularVelocity * Smoothing;			
@@ -217,20 +218,20 @@ class EditorCamera: Camera
 			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * temp_cam_rot_speed * 10);
 			
 			if (shouldRoll) {
-				angularVelocity[2] = angularVelocity[2] + ( speedInc * temp_cam_rot_speed * 10);
+				angularVelocity[2] = angularVelocity[2] + (speedInc * temp_cam_rot_speed * 10);
 			}
 			
-			orientation = GetOrientation();
+			
 			orientation[0] = orientation[0] - (angularVelocity[0] * timeSlice);
 			orientation[1] = orientation[1] - (angularVelocity[1] * timeSlice);
 			orientation[2] = orientation[2] - (angularVelocity[2] * timeSlice);
 
 			orientation[0] = Math.NormalizeAngle(orientation[0]);
 			orientation[1] = Math.Clamp(orientation[1], -89.9, 89.9);
-			orientation[2] = Math.NormalizeAngle(orientation[2]);
-
-			SetOrientation(orientation);
 		}
+		
+		orientation[2] = Math.NormalizeAngle(GetEditor().Settings.CameraTilt); //orientation[2]	
+		SetOrientation(orientation);
 
 		if (IsTargeting) {
 			LookAt(TargetPosition);
