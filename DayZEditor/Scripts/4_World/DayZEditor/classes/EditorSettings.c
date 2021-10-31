@@ -16,7 +16,7 @@ class EditorSettings: ProfileSettings
 	// Advanced Settings
 	bool LockCameraDuringDialogs 	= true;
 	bool ShowBoundingBoxes 			= true;
-	bool PreloadObjects				= false;
+	bool PreloadObjects				= false;	
 	bool ShowScreenLogs				= true;
 	bool HighPrecisionCollision		= false;
 	bool ExportBackupFile 			= true; // this is temporary until we know that the bin files are stable
@@ -95,6 +95,7 @@ class EditorSettings: ProfileSettings
 	{
 		QuickMoveStepSize			= 0.1;
 		CameraSpeed					= 60;
+		CameraTilt					= 0;
 		ViewDistance 				= 8000;
 		ObjectViewDistance 			= 1500;
 		MarkerViewDistance 			= 1000;
