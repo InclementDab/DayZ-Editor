@@ -2,39 +2,49 @@ class EditorObjectSpawnerFile: EditorFileType
 {
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
 	{
-		EditorLog.Trace("EditorObjectSpawnerFile::Export");
-		
-		/*
-		COMImportData export_data = new COMImportData();
-		export_data.name = "DayZ Editor Export";
+		EditorLog.Trace("EditorObjectSpawnerFile::Export");		
+		ObjectSpawnerData export_data = new ObjectSpawnerData();
 		foreach (EditorObjectData object_data: data.EditorObjects) {
-			export_data.m_SceneObjects.Insert(new Param3<string, vector, vector>(object_data.Type, object_data.Position, object_data.Orientation));
+			export_data.Objects.Insert(new ObjectSpawnerEntry(object_data.Type, object_data.Position, object_data.Orientation));
 		}
 		
-		JsonFileLoader<COMImportData>.JsonSaveFile(file, export_data);
-		*/
+		JsonFileLoader<ObjectSpawnerData>.JsonSaveFile(file, export_data);
+		
 	}
 	
 	override EditorSaveData Import(string file, ImportSettings settings)
 	{
-		EditorLog.Trace("EditorObjectSpawnerFile::Import");
-		
-		/*
+		EditorLog.Trace("EditorObjectSpawnerFile::Import");		
 		EditorSaveData save_data = new EditorSaveData();
-		COMImportData import_data = new COMImportData();
+		ObjectSpawnerData import_data = new ObjectSpawnerData();
 		
-		JsonFileLoader<COMImportData>.JsonLoadFile(file, import_data);
-		
-		
-		foreach (Param3<string, vector, vector> scene_object: import_data.m_SceneObjects) {
-			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.param1, scene_object.param2, scene_object.param3, 1, EditorObjectFlags.ALL));
+		JsonFileLoader<ObjectSpawnerData>.JsonLoadFile(file, import_data);
+		foreach (ObjectSpawnerEntry scene_object: import_data.Objects) {
+			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.name, scene_object.pos, scene_object.ypr, 1, EditorObjectFlags.ALL));
 		}
 		
-		return save_data;*/
+		return save_data;
 	}
 	
 	override string GetExtension() 
 	{
 		return ".json";
 	}
+}
+
+class ObjectSpawnerEntry
+{
+	string name;
+	vector pos;
+	vector ypr;
+	
+	void ObjectSpawnerEntry(string _name, vector _pos, vector _ypr)
+	{
+		name = _name; pos = _pos; ypr = _ypr;
+	}
+}
+
+class ObjectSpawnerData
+{
+	ref array<ref ObjectSpawnerEntry> Objects = {};
 }
