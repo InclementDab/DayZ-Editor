@@ -104,6 +104,7 @@ class EditorCommandManager
 		RegisterCommand(EditorExportToCOM);
 		RegisterCommand(EditorExportToEvents);
 		RegisterCommand(EditorExportToMapGroupPos);
+		RegisterCommand(EditorExportToObjectSpawner);
 		
 		RegisterCommand(EditorSearchCommand);
 		RegisterCommand(EditorSearchObjectCommand);
@@ -115,6 +116,7 @@ class EditorCommandManager
 		RegisterCommand(EditorImportFromTerrainBuilder);
 		RegisterCommand(EditorImportFromVPP);
 		RegisterCommand(EditorImportFromCOM);
+		RegisterCommand(EditorImportFromObjectSpawner);
 	
 		RegisterCommand(EditorScriptEditorCommand);
 	
