@@ -3,12 +3,20 @@ class EditorObjectSpawnerFile: EditorFileType
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
 	{
 		EditorLog.Trace("EditorObjectSpawnerFile::Export");		
-		ObjectSpawnerData export_data = new ObjectSpawnerData();
+		ObjectSpawnerJson export_data = new ObjectSpawnerJson();
 		foreach (EditorObjectData object_data: data.EditorObjects) {
-			export_data.Objects.Insert(new ObjectSpawnerEntry(object_data.Type, object_data.Position, object_data.Orientation));
+			ITEM_SpawnerObject spawn_object = new ITEM_SpawnerObject();
+			spawn_object.name = object_data.Type;
+			spawn_object.pos[0] = object_data.Position[0];
+			spawn_object.pos[1] = object_data.Position[1];
+			spawn_object.pos[2] = object_data.Position[2];
+			spawn_object.ypr[0] = object_data.Orientation[0];
+			spawn_object.ypr[1] = object_data.Orientation[1];
+			spawn_object.ypr[2] = object_data.Orientation[2];
+			export_data.Objects.Insert(spawn_object);
 		}
 		
-		JsonFileLoader<ObjectSpawnerData>.JsonSaveFile(file, export_data);
+		JsonFileLoader<ObjectSpawnerJson>.JsonSaveFile(file, export_data);
 		
 	}
 	
@@ -16,11 +24,11 @@ class EditorObjectSpawnerFile: EditorFileType
 	{
 		EditorLog.Trace("EditorObjectSpawnerFile::Import");		
 		EditorSaveData save_data = new EditorSaveData();
-		ObjectSpawnerData import_data = new ObjectSpawnerData();
+		ObjectSpawnerJson import_data = new ObjectSpawnerJson();
 		
-		JsonFileLoader<ObjectSpawnerData>.JsonLoadFile(file, import_data);
-		foreach (ObjectSpawnerEntry scene_object: import_data.Objects) {
-			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.name, scene_object.pos, scene_object.ypr, 1, EditorObjectFlags.ALL));
+		JsonFileLoader<ObjectSpawnerJson>.JsonLoadFile(file, import_data);
+		foreach (ITEM_SpawnerObject scene_object: import_data.Objects) {
+			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.name, Vector(scene_object.pos[0], scene_object.pos[1], scene_object.pos[2]), Vector(scene_object.ypr[0], scene_object.ypr[1], scene_object.ypr[2]), 1, EditorObjectFlags.ALL));
 		}
 		
 		return save_data;
@@ -30,21 +38,4 @@ class EditorObjectSpawnerFile: EditorFileType
 	{
 		return ".json";
 	}
-}
-
-class ObjectSpawnerEntry
-{
-	string name;
-	vector pos;
-	vector ypr;
-	
-	void ObjectSpawnerEntry(string _name, vector _pos, vector _ypr)
-	{
-		name = _name; pos = _pos; ypr = _ypr;
-	}
-}
-
-class ObjectSpawnerData
-{
-	ref array<ref ObjectSpawnerEntry> Objects = {};
 }
