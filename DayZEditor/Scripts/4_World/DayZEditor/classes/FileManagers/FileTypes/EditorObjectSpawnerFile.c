@@ -4,6 +4,7 @@ class EditorObjectSpawnerFile: EditorFileType
 	{
 		EditorLog.Trace("EditorObjectSpawnerFile::Export");		
 		ObjectSpawnerJson export_data = new ObjectSpawnerJson();
+		export_data.Objects = {};
 		foreach (EditorObjectData object_data: data.EditorObjects) {
 			ITEM_SpawnerObject spawn_object = new ITEM_SpawnerObject();
 			spawn_object.name = object_data.Type;
