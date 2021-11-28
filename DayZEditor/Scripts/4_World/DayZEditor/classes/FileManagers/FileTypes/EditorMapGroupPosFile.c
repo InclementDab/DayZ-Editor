@@ -29,7 +29,7 @@ class EditorMapGroupPosFile: EditorFileType
 				continue;
 			}
 			
-			if (!world_object.IsInherited(House)) {
+			if (!world_object.IsInherited(House) || world_object.IsKindOf("BoundingBoxBase")) {
 				continue;
 			}
 			
