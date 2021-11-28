@@ -30,11 +30,13 @@ modded class DayZIntroScene
 	{
 		delete m_Character;
 		
-		m_CharacterPos = Vector(0.685547, 50, 5.68823).Multiply4(m_CameraTrans);
+		m_CharacterPos = m_Camera.GetPosition() + m_Camera.GetDirection() * 5;
+		m_CharacterPos = m_CharacterPos + m_Camera.GetDirection() * vector.Forward * 0.2;
+		m_CharacterPos = m_CharacterPos + m_Camera.GetDirection() * vector.Up * -0.3;
+	
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
-		m_FunnyMeme.SetOrientation(m_CharacterRot);
-		vector pos = m_FunnyMeme.GetPosition() + Vector(0, 1, 0);
-		m_FunnyMeme.SetPosition(pos);
+		m_FunnyMeme.SetPosition(m_CharacterPos);
+		m_FunnyMeme.Update();
 		
 		//Snow snow = new Snow();
 		//pos[1] = pos[1] + 10;
@@ -82,8 +84,7 @@ modded class DayZIntroScene
 			Particle.Play(ParticleList.SNOW, m_FunnyMeme, Vector(0, 10, 0));
 			m_ChristmasSetup = true;
 		}*/
-		
-		
+				
 		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
 		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);
 		vector pos = m_FunnyMeme.GetPosition();
