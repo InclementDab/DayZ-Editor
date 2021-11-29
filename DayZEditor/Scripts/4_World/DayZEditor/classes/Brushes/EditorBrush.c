@@ -111,22 +111,29 @@ class EditorBrush
 			pos[0] = pos[0] + Math.RandomFloat(-BrushRadius / Math.PI, BrushRadius / Math.PI);
 			pos[2] = pos[2] + Math.RandomFloat(-BrushRadius / Math.PI, BrushRadius / Math.PI);
 			
-			if (m_BrushData) {
-				EditorBrushObject object_name = m_BrushData.GetRandomObject();
-				Object brushed_object = EditorWorldObject.CreateObject(object_name.Name, pos);
-				
-				vector size = ObjectGetSize(brushed_object);
-				vector direction = Math3D.GetRandomDir();
-				
-				pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + object_name.ZOffset;
-				direction[1] = Math.RandomFloat(-0.02, 0.02);
-				
-				brushed_object.SetPosition(pos);
-				brushed_object.SetDirection(direction);
-				
-				created_data.Insert(EditorObjectData.Create(brushed_object, flags));
-				
+			if (!m_BrushData) {
+				continue;
 			}
+			
+			EditorBrushObject object_name = m_BrushData.GetRandomObject();
+			if (!object_name) {
+				continue;
+			}
+			
+			Object brushed_object = EditorWorldObject.CreateObject(object_name.Name, pos);
+			
+			vector size = ObjectGetSize(brushed_object);
+			vector direction = Math3D.GetRandomDir();
+			
+			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + object_name.ZOffset;
+			direction[1] = Math.RandomFloat(-0.02, 0.02);
+			
+			brushed_object.SetPosition(pos);
+			brushed_object.SetDirection(direction);
+			
+			created_data.Insert(EditorObjectData.Create(brushed_object, flags));
+			
+		
 		}
 		
 		GetEditor().CreateObjects(created_data, true);
