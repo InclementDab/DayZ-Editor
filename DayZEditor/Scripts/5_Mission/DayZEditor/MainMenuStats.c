@@ -85,7 +85,6 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 	
 	protected string GetDistanceString(float total_distance, bool meters_only = false)
 	{
-		total_distance = 200000;
 		const int DISTANCE_TO_MOON = 384400;
 		const int CIRCUMFERENCE_OF_EARTH = 40075;
 		
