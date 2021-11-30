@@ -446,6 +446,61 @@ FrameWidgetClass main_menu_root {
        hexactsize 0
        vexactsize 1
       }
+      ButtonWidgetClass wiki {
+       visible 1
+       color 0 0 0 1
+       position 0 0
+       size 1 36
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Default
+       "no focus" 0
+       "next left" "news_main"
+       "next right" "news_main"
+       "next up" "play"
+       "next down" "tutorials"
+       text_proportion 0.55
+       font "gui/fonts/sdf_MetronLight24"
+       switch normal
+       {
+        PanelWidgetClass wiki_panel {
+         ignorepointer 1
+         color 0 0 0 0
+         size 1 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         style rover_sim_colorable
+         {
+          TextWidgetClass wiki_label {
+           clipchildren 1
+           ignorepointer 1
+           size 1 22
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           text "#STR_EDITOR_WIKI"
+           font "gui/fonts/sdf_MetronLight42"
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+       }
+       {
+        ScriptParamsClass {
+        }
+       }
+      }
      }
     }
     GridSpacerWidgetClass character_stats_root {
