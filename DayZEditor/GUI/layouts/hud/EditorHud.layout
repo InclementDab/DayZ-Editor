@@ -1517,13 +1517,12 @@ FrameWidgetClass EditorFrame {
        {
         WrapSpacerWidgetClass LoggerSpacer {
          ignorepointer 1
-         size 1 1
+         size 425 10
          halign center_ref
-         valign bottom_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          scriptclass "ViewBinding"
          Padding 0
          Margin 0

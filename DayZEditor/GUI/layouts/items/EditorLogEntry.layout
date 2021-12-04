@@ -1,10 +1,10 @@
 MultilineTextWidgetClass LogEntryText {
  ignorepointer 1
  position 0 0
- size 1 10
+ size 425 10
  hexactpos 1
  vexactpos 1
- hexactsize 0
+ hexactsize 1
  vexactsize 1
  scriptclass "ViewBinding"
  text "test"
