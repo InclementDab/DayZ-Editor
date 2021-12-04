@@ -78,6 +78,8 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	// Abstract
 	bool IsSelected;
 	
+	protected Editor m_Editor = GetEditor();
+	
 	void EditorCameraTrackListItem(vector position, vector orientation, float time, string name, bool flip = false)
 	{
 		GetTemplateController().Name = name;
@@ -87,9 +89,9 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	void OnSelected() 
 	{
 		IsSelected = true;
-		CameraTrackGroupWrapper.SetColor(COLOR_BLUE);
-		MainContainerWrapper.SetColor(COLOR_SALMON);
-		CameraTrackOptionButton.SetColor(COLOR_BLUE);
+		CameraTrackGroupWrapper.SetColor(m_Editor.Settings.SelectionColor);
+		MainContainerWrapper.SetColor(m_Editor.Settings.HighlightColor);
+		CameraTrackOptionButton.SetColor(m_Editor.Settings.MarkerPrimaryColor);
 	}
 		
 	void OnDeselected() 
