@@ -27,7 +27,7 @@ class EditorHudController: EditorControllerBase
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
 	
 	// Logger
-	static const int MAX_LOG_ENTRIES = 15;
+	static const int MAX_LOG_ENTRIES = 20;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
 	
 	// Camera bindings
@@ -430,9 +430,9 @@ class EditorHudController: EditorControllerBase
 		
 		EditorLogEntries.Insert(new EditorLogEntry(level, message));
 		if (EditorLogEntries.Count() > MAX_LOG_ENTRIES) {
-			// todo: this is booming my mind for whatever reason
-			//delete EditorLogEntries[1];
-			//EditorLogEntries.Remove(1);
+			for (int i = 19; i < 20; i++) {
+			EditorLogEntries.Remove(i);
+			}
 		}
 	}
 	
