@@ -4,7 +4,7 @@ class EditorScriptEditorDialog: EditorDialogBase
 		
 	void EditorScriptEditorDialog(string title)
 	{
-		m_MultilineEditBoxPrefab = new MultilineEditBoxPrefab();
+		m_MultilineEditBoxPrefab = new MultilineEditBoxPrefab("Script Editor", null, string.Empty);
 		AddContent(m_MultilineEditBoxPrefab);
 		
 		AddButton("Execute", DialogResult.OK);

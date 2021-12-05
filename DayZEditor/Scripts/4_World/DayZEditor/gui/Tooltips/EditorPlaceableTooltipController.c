@@ -7,7 +7,7 @@ class EditorPlaceableTooltipController: ViewController
 	
 	void ~EditorPlaceableTooltipController()
 	{
-		EditorLog.Trace("~EditorPlaceableTooltipController");
+		//EditorLog.Trace("~EditorPlaceableTooltipController");
 #ifndef COMPONENT_SYSTEM
 		if (ContentItemData) {
 			GetWorkbenchGame().ObjectDelete(ContentItemData);

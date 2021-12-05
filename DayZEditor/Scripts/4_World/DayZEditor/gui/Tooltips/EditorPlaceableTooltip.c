@@ -4,7 +4,7 @@ class EditorPlaceableTooltip: ScriptViewTemplate<EditorPlaceableTooltipControlle
 	
 	void SetTitle(string title)
 	{
-		EditorLog.Trace("EditorTooltip::SetTitle %1", title);
+		//EditorLog.Trace("EditorTooltip::SetTitle %1", title);
 		m_TemplateController.ContentTitle = title;
 		m_TemplateController.NotifyPropertyChanged("ContentTitle");
 		

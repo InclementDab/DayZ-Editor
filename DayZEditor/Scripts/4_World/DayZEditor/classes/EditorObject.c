@@ -42,6 +42,7 @@ class EditorObject: EditorWorldObject
 	
 	// Custom stuff
 	string ExpansionTraderType;
+	string TestingScript;
 		
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
@@ -363,10 +364,8 @@ class EditorObject: EditorWorldObject
 	// EditorObjects can also be psuedo-controllers
 	void PropertyChanged(string property_name)
 	{
-		EditorLog.Trace("EditorObject::PropertyChanged %1", property_name);
-
+		//EditorLog.Trace("EditorObject::PropertyChanged %1", property_name);
 		switch (property_name) {
-			
 			case "Name": {
 				SetDisplayName(Name);
 				break;
@@ -898,5 +897,49 @@ class EditorObject: EditorWorldObject
 		}
 		
 		return editor_objects;
+	}
+	
+	// pass in `this` in the context of the WorldObject
+	void ExecuteCode(string script_content = string.Empty)
+	{
+		Print(TestingScript);
+		if (script_content == string.Empty) {
+			script_content = TestingScript;
+		}
+		
+		if (script_content == string.Empty) {
+			EditorLog.Debug("No content to execute");
+			return;
+		}
+		
+		script_content.Replace("this", "world_object");
+		
+		string sanitized_content;
+		for (int i = 0; i < script_content.Length(); i++) {
+			if (script_content[i] == "\n") {
+				continue;
+			}
+			
+			sanitized_content += script_content[i];
+		}
+		
+		string file_name = "$saves:_.c";
+		FileHandle handle = OpenFile(file_name, FileMode.WRITE);
+		string file_data = "static void main(Object world_object)\n{\n" + sanitized_content + "\n}";
+		FPrintln(handle, file_data);		
+		
+		if (handle) {
+			CloseFile(handle);
+		}
+		
+		ScriptModule script_module = ScriptModule.LoadScript(GetGame().GetMission().MissionScript, file_name, true);
+		if (!script_module) {
+			MessageBox.Show("Error", "Invalid Syntax in Script Editor", MessageBoxButtons.OK);
+			return;
+		}
+		
+		script_module.CallFunction(null, "main", null, m_WorldObject);
+		
+		DeleteFile(file_name);	
 	}
 }
