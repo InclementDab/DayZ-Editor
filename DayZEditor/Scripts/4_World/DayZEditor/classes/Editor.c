@@ -482,7 +482,6 @@ class Editor
 					vector mouse_pos = Vector(CurrentMousePosition[0], GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]), CurrentMousePosition[2]);
 					vector camera_current_pos = m_EditorCamera.GetPosition();
 					float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
-					float camera_y_offset = camera_current_pos[1] - camera_surface_y;										
 					
 					// check if water is under mouse, to stop from teleporting under water			
 					if (IsSurfaceWater(mouse_pos)) {
@@ -490,7 +489,7 @@ class Editor
 						break;
 					} 
 						
-					m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_y_offset, mouse_pos[2]));
+					m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
 				}
 				
 				break;

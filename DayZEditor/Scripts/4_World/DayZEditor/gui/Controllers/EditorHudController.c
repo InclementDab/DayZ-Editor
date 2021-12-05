@@ -430,9 +430,7 @@ class EditorHudController: EditorControllerBase
 		
 		EditorLogEntries.Insert(new EditorLogEntry(level, message));
 		if (EditorLogEntries.Count() > MAX_LOG_ENTRIES) {
-			for (int i = 19; i < 20; i++) {
-			EditorLogEntries.Remove(i);
-			}
+			EditorLogEntries.Remove(MAX_LOG_ENTRIES);			
 		}
 	}
 	
