@@ -139,9 +139,12 @@ class EditorCamera: Camera
 		
 		float yawDiff = input.LocalValue("UAAimLeft") - input.LocalValue("UAAimRight");
 		float pitchDiff = input.LocalValue("UAAimDown") - input.LocalValue("UAAimUp");
-		float speedInc = input.LocalValue("UACameraToolSpeedIncrease" ) - input.LocalValue("UACameraToolSpeedDecrease");
 		float zoomAmt = input.LocalValue("EditorCameraZoomIn") - input.LocalValue("EditorCameraZoomOut");
-				
+		
+		if (KeyState(KeyCode.KC_C)) { //C = CameraSpeed modifier
+		float speedInc = input.LocalValue("EditorCameraToolSpeedIncrease" ) - input.LocalValue("EditorCameraToolSpeedDecrease");
+		}
+		
 		if (KeyState(KeyCode.KC_LSHIFT)) {
 			zoomAmt *= 0.1;
 		} else {
