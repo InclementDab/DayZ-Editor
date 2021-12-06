@@ -13,7 +13,8 @@
 			<input name="EditorCameraZoomIn" loc="Camera Zoom In" />
 			<input name="EditorCameraZoomOut" loc="Camera Zoom Out" />
 			<input name="EditorCameraZoomReset" loc="Camera Zoom Reset" />
-			
+			<input name="EditorCameraToolSpeedIncrease" loc="Camera Quick Increase" />
+			<input name="EditorCameraToolSpeedDecrease" loc="Camera Quick Decrease" />
 		
             <input name="EditorToggleActive" loc="Enable / Disable" />
             <input name="EditorToggleUI" loc="Show / Hide UI" />
