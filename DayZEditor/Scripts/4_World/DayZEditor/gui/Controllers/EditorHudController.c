@@ -6,6 +6,7 @@ class EditorHudController: EditorControllerBase
 	
 	//
 	string PlacedSearchBarData;
+	string PlacedSearchBarIcon = "set:dayz_editor_gui image:search";
 	
 	string ObjectReadoutName;
 	
@@ -60,7 +61,6 @@ class EditorHudController: EditorControllerBase
 	protected ButtonWidget PlacementsTabButton;
 	protected ButtonWidget DeletionsTabButton;
 	protected ButtonWidget LeftbarPanelSearchBarIconButton;
-	
 	protected ButtonWidget PlacedSearchIconButton;
 	
 	// Camera Track
@@ -236,6 +236,32 @@ class EditorHudController: EditorControllerBase
 				break;
 			}	
 			
+			case "PlacedSearchBarData": {
+				
+				ObservableCollection<EditorListItem> selected_list;
+				if (CategoryPlacements) {
+					selected_list = RightbarPlacedData;
+				} else {
+					selected_list = RightbarDeletionData;
+				}
+					
+				for (int k = 0; k < selected_list.Count(); k++) {
+					selected_list[k].GetLayoutRoot().Show(selected_list[k].FilterType(PlacedSearchBarData)); 	
+				}
+				
+				RightbarScroll.VScrollToPos(0);
+				
+				if (PlacedSearchBarData.Length() > 0) {
+					PlacedSearchBarIcon = "set:dayz_gui image:icon_x";
+				} else {
+					PlacedSearchBarIcon = "set:dayz_editor_gui image:search";
+				}
+				
+				NotifyPropertyChanged("PlacedSearchBarIcon");
+				
+				break;
+			}
+			
 			case "FavoritesToggle": {
 				for (int i = 0; i < LeftbarSpacerData.Count(); i++) {
 					if (FavoritesToggle) {
@@ -288,39 +314,20 @@ class EditorHudController: EditorControllerBase
 			
 			case "SearchBarIcon": {
 				// this could probably be a command with SetCanExecute but im not feeling it 
-				LeftbarPanelSearchBarIconButton.Enable(SearchBarData.Length() > 0);
+					LeftbarPanelSearchBarIconButton.Enable(SearchBarData.Length() > 0);
+					Print(SearchBarData.Length());
+				break;	
+			}
+			
+			case "PlacedSearchBarIcon": {
+				PlacedSearchIconButton.Enable(PlacedSearchBarData.Length() > 0);
+				Print(PlacedSearchBarData.Length());
 				break;
 			}
 			
 			// I literally hate this
 			case "PrecisionLevel": {
 				g_EditorPrecision = GetPrecisionLevel();
-				break;
-			}
-			
-			case "PlacedSearchBarData": {
-				
-				ObservableCollection<EditorListItem> selected_list;
-				if (CategoryPlacements) {
-					selected_list = RightbarPlacedData;
-				} else {
-					selected_list = RightbarDeletionData;
-				}
-					
-				for (int k = 0; k < selected_list.Count(); k++) {
-					selected_list[k].GetLayoutRoot().Show(selected_list[k].FilterType(PlacedSearchBarData)); 	
-				}
-				
-				RightbarScroll.VScrollToPos(0);
-				
-				if (PlacedSearchBarData.Length() > 0) {
-					SearchBarIcon = "set:dayz_gui image:icon_x";
-				} else {
-					SearchBarIcon = "set:dayz_editor_gui image:search";
-				}
-				
-				NotifyPropertyChanged("SearchBarIcon");
-				
 				break;
 			}
 		}
@@ -375,11 +382,17 @@ class EditorHudController: EditorControllerBase
 			SearchBarData = string.Empty;
 			NotifyPropertyChanged("SearchBarData");
 		}
+	}
+	
+	void OnSearchPlacedButtonPress(ButtonCommandArgs args)
+	{
+		EditorLog.Trace("EditorHudController::OnSearchPlacedButtonPress");
 		if (PlacedSearchBarData.Length() > 0) {
 			PlacedSearchBarData = string.Empty;
 			NotifyPropertyChanged("PlacedSearchBarData");
-		}
+		}	
 	}
+	
 	
 	void OnCameraTrackStart()
 	{
@@ -510,6 +523,9 @@ class EditorHudController: EditorControllerBase
 				m_Editor.GetCamera().MoveEnabled = false;
 				break;
 			}
+			case PlacedSearchEditbox:
+				m_Editor.GetCamera().MoveEnabled = false;
+				break;
 		}
 		
 		return false;
@@ -525,6 +541,9 @@ class EditorHudController: EditorControllerBase
 				m_Editor.GetCamera().MoveEnabled = true;
 				break;
 			}
+			case PlacedSearchEditbox:
+				m_Editor.GetCamera().MoveEnabled = true;
+				break;
 		}
 		
 		return false;
