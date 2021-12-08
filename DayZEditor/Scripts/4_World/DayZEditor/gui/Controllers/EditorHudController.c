@@ -443,7 +443,7 @@ class EditorHudController: EditorControllerBase
 		
 		EditorLogEntries.Insert(new EditorLogEntry(level, message));
 		if (EditorLogEntries.Count() > MAX_LOG_ENTRIES) {
-			EditorLogEntries.Remove(MAX_LOG_ENTRIES);			
+			EditorLogEntries.RemoveOrdered(0); // 0 = remove oldest, then since ordered next olded becomes 0. i think????
 		}
 	}
 	
