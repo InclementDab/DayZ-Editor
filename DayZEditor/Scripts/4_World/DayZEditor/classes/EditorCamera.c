@@ -139,9 +139,20 @@ class EditorCamera: Camera
 		
 		float yawDiff = input.LocalValue("UAAimLeft") - input.LocalValue("UAAimRight");
 		float pitchDiff = input.LocalValue("UAAimDown") - input.LocalValue("UAAimUp");
-		float speedInc = input.LocalValue("UACameraToolSpeedIncrease" ) - input.LocalValue("UACameraToolSpeedDecrease");
 		float zoomAmt = input.LocalValue("EditorCameraZoomIn") - input.LocalValue("EditorCameraZoomOut");
-				
+		
+		if (KeyState(KeyCode.KC_C)) { //C = CameraSpeed modifier
+		float speedInc = 0;
+			
+			if (input.LocalValue("EditorCameraToolSpeedIncrease" )) {
+				speedInc = input.LocalValue("EditorCameraToolSpeedIncrease") * 0 + 10;
+			}
+			
+			if (input.LocalValue("EditorCameraToolSpeedDecrease" )) {
+				speedInc = input.LocalValue("EditorCameraToolSpeedDecrease") * 0 + -10;			
+			}		
+		}
+		
 		if (KeyState(KeyCode.KC_LSHIFT)) {
 			zoomAmt *= 0.1;
 		} else {
@@ -168,7 +179,17 @@ class EditorCamera: Camera
 		if (MoveEnabled && !g_Game.GetMission().IsPaused()) {
 						
 			if (Boost_Multiplier > 0) {
-				Speed += Math.Clamp(timeSlice * 40.0 * Speed * speedInc / Boost_Multiplier, -Boost_Multiplier, Boost_Multiplier);
+				Speed += speedInc;
+				
+				//speed can become negative so stop that
+				if (Speed < 0) {
+					Speed = 2;
+				}
+				
+				//speed has no uper limit
+				if (Speed > 500) {
+					Speed = 500;
+				}
 				
 				float cam_speed = Speed;
 				if (decreaseSpeeds) {
