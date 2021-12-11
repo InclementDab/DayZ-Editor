@@ -276,13 +276,16 @@ class Editor
 		int log_lvl = EditorLog.CurrentLogLevel;
 		EditorLog.CurrentLogLevel = LogLevel.WARNING;
 		
-		if (ObjectUnderCursor) {
+		string name_optimization = m_EditorHudController.ObjectReadoutName;
+		if (ObjectUnderCursor) {			
 			m_EditorHudController.ObjectReadoutName = string.Format("%1 (%2)", ObjectUnderCursor.GetType(), ObjectUnderCursor.GetID());
 		} else {
 			m_EditorHudController.ObjectReadoutName = string.Empty;
 		}
-		
-		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
+
+		if (name_optimization != m_EditorHudController.ObjectReadoutName) {		
+			m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
+		}
 		
 		if (m_EditorCamera) {
 			vector cam_pos = m_EditorCamera.GetPosition();

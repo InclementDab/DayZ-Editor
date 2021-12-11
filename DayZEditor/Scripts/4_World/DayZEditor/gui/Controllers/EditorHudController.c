@@ -280,14 +280,12 @@ class EditorHudController: EditorControllerBase
 			
 			case "SearchBarIcon": {
 				// this could probably be a command with SetCanExecute but im not feeling it 
-					LeftbarPanelSearchBarIconButton.Enable(SearchBarData.Length() > 0);
-					Print(SearchBarData.Length());
+				LeftbarPanelSearchBarIconButton.Enable(SearchBarData.Length() > 0);
 				break;	
 			}
 			
 			case "PlacedSearchBarIcon": {
 				PlacedSearchIconButton.Enable(PlacedSearchBarData.Length() > 0);
-				Print(PlacedSearchBarData.Length());
 				break;
 			}
 			
