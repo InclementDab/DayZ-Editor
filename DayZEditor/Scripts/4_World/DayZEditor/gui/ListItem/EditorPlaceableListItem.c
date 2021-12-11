@@ -7,7 +7,7 @@ class EditorPlaceableListItem: EditorListItem
 		"Car"
 	};
 	
-	protected ref EditorPlaceableItem m_PlaceableItem;
+	protected EditorPlaceableItem m_PlaceableItem;
 	
 	void EditorPlaceableListItem(EditorPlaceableItem placeable_item)
 	{

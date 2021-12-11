@@ -17,6 +17,8 @@ class EditorObjectManagerModule: JMModuleBase
 	protected ref EditorDeletedObjectMap 			m_DeletedObjects;
 	
 	protected ref EditorDeletedObjectMap			m_SelectedDeletedObjects;
+	
+	protected ref array<ref EditorPlaceableItem>	m_PlaceableObjects;
 
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
@@ -29,9 +31,44 @@ class EditorObjectManagerModule: JMModuleBase
 		m_SelectedObjects 	= new EditorObjectMap();
 		m_DeletedObjects	= new EditorDeletedObjectMap();
 		m_SelectedDeletedObjects	= new EditorDeletedObjectMap();
+		m_PlaceableObjects  = LoadPlaceableObjects();
 
 		m_EditorObjectRefs = new map<int, ref EditorObject>();
 		m_EditorDeletedObjectRefs = new map<int, ref EditorDeletedObject>();
+	}
+	
+	static array<ref EditorPlaceableItem> LoadPlaceableObjects() 
+	{ 
+		EditorLog.Trace("EditorHudController::LoadPlaceableObjects");
+		g_Game.ReportProgress("Loading Placeable Objects");
+		
+		array<ref EditorPlaceableItem> placeable_items = {};
+		TStringArray config_paths = {};
+		config_paths.Insert(CFG_VEHICLESPATH);
+		config_paths.Insert(CFG_WEAPONSPATH);
+		config_paths.Insert(CFG_MAGAZINESPATH);
+		
+		foreach (string path: config_paths) {
+			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
+				string type;
+		        GetGame().ConfigGetChildName(path, i, type);
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
+					continue;
+				}
+				
+				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
+				if (!placeable_item) {
+					continue;
+				}
+				
+				placeable_items.Insert(placeable_item);
+		    }
+		}
+		
+		placeable_items.Insert(EditorPlaceableItem.Create(NetworkSpotLight));
+		placeable_items.Insert(EditorPlaceableItem.Create(NetworkPointLight));
+		
+		return placeable_items;
 	}
 	
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
@@ -233,6 +270,18 @@ class EditorObjectManagerModule: JMModuleBase
 	EditorObject GetEditorObject(notnull Object world_object) 
 	{
 		return m_WorldObjectIndex.Get(world_object.GetID()); 
+	}
+	
+	array<ref EditorPlaceableItem> GetPlaceableObjects()
+	{
+		return m_PlaceableObjects;
+	}
+	
+	// return a list of objects that use this p3d, useful for finding adequite replacements for 
+	// otherwise unplaceable objects
+	array<string> GetReplaceableObjects(string p3d)
+	{
+		
 	}
 	
 	void Debug()

@@ -1599,4 +1599,5 @@ class Editor
 	EditorDeletedObjectData GetDeletedSessionDataById(int id) return m_DeletedSessionCache[id];
 	EditorBrush GetBrush() return m_EditorBrush;
 	EditorActionStack GetActionStack() return m_ActionStack;
+	array<ref EditorPlaceableItem> GetPlaceableObjects() return m_ObjectManager.GetPlaceableObjects();
 }

@@ -112,7 +112,7 @@ class EditorHudController: EditorControllerBase
 		array<string> favorite_items = {};
 		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
 		
-		array<ref EditorPlaceableItem> placeable_items = LoadPlaceableObjects();
+		array<ref EditorPlaceableItem> placeable_items = GetEditor().GetObjectManager().GetPlaceableObjects();
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
 			// Makes stuff look good when first loading
 			if (GetEditor().Settings.PreloadObjects) {
@@ -172,40 +172,6 @@ class EditorHudController: EditorControllerBase
 	float GetPrecisionLevel()
 	{
 		return PrecisionLevel.Parse();
-	}
-	
-	static array<ref EditorPlaceableItem> LoadPlaceableObjects() 
-	{ 
-		EditorLog.Trace("EditorHudController::LoadPlaceableObjects");
-		g_Game.ReportProgress("Loading Placeable Objects");
-		
-		array<ref EditorPlaceableItem> placeable_items();
-		TStringArray config_paths = {};
-		config_paths.Insert(CFG_VEHICLESPATH);
-		config_paths.Insert(CFG_WEAPONSPATH);
-		config_paths.Insert(CFG_MAGAZINESPATH);
-		
-		foreach (string path: config_paths) {
-			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
-				string type;
-		        GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
-					continue;
-				}
-				
-				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
-				if (!placeable_item) {
-					continue;
-				}
-				
-				placeable_items.Insert(placeable_item);
-		    }
-		}
-		
-		placeable_items.Insert(EditorPlaceableItem.Create(NetworkSpotLight));
-		placeable_items.Insert(EditorPlaceableItem.Create(NetworkPointLight));
-		
-		return placeable_items;
 	}
 	
 	override void PropertyChanged(string property_name)
