@@ -8,6 +8,7 @@ class EditorPlaceableItem
 	
 	string Icon;
 	string Model;
+	string FullModel;
 	
 	ref TStringArray FullPath = {};
 	
@@ -19,7 +20,7 @@ class EditorPlaceableItem
 		//EditorLog.Trace("EditorPlaceableItem");
 		Path = path; Type = type;
 		
-		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", Path, Type), Model);
+		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", Path, Type), FullModel);
 		GetWorkbenchGame().ConfigGetFullPath(string.Format("%1 %2", Path, Type), FullPath);
 	}
 	
@@ -28,13 +29,18 @@ class EditorPlaceableItem
 		//EditorLog.Trace("EditorPlaceableItem::Init");
 		
 		// No .p3d was specified
-		if ((Model == string.Empty || Model.Length() <= 4) && !scripted) {
+		if ((FullModel == string.Empty || FullModel.Length() <= 4) && !scripted) {
 			delete this;
 		}
 		
 		Mod = LoadModData(Type, Path);
 		Category = LoadItemCategory();
 		
+		// format Model name
+		Model = FullModel;
+		array<string> model_split = {};
+		Model.Split("\\", model_split);
+		Model = model_split[model_split.Count() - 1];		
 		//Icon = GetIcon(Mod);
 	}
 	

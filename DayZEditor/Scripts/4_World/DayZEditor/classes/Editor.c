@@ -277,11 +277,7 @@ class Editor
 		EditorLog.CurrentLogLevel = LogLevel.WARNING;
 		
 		string name_optimization = m_EditorHudController.ObjectReadoutName;
-		if (ObjectUnderCursor) {			
-			m_EditorHudController.ObjectReadoutName = string.Format("%1 (%2)", ObjectUnderCursor.GetType(), ObjectUnderCursor.GetID());
-		} else {
-			m_EditorHudController.ObjectReadoutName = string.Empty;
-		}
+		m_EditorHudController.ObjectReadoutName = GetObjectName(ObjectUnderCursor);
 
 		if (name_optimization != m_EditorHudController.ObjectReadoutName) {		
 			m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
@@ -322,6 +318,43 @@ class Editor
 		CommandManager[EditorCloseCommand].SetCanExecute(EditorSaveFile != string.Empty);
 		
 		EditorLog.CurrentLogLevel = log_lvl;
+	}
+	
+	string GetObjectName(Object object)
+	{
+		if (!object) {
+			return string.Empty;
+		}
+		
+		if (object.GetType() != string.Empty) {
+			return string.Format("%1 (%2)", object.GetType(), object.GetID());
+		}
+		
+		// 1346854: tank_small_white.p3d
+		string debug_name = object.GetDebugNameNative();
+		if (debug_name == string.Empty) {
+			// lost cause, unlikely
+			return string.Empty;
+		}
+		
+		array<string> split_string = {};
+		debug_name.Split(":", split_string);
+		
+		// also unlikely
+		if (split_string.Count() == 1) {
+			return string.Empty;
+		}
+		
+		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(split_string[1].Trim());
+		Print(placeable_items);
+		// not ideal since we dont want to feed them the p3d, but doable
+		if (!placeable_items || placeable_items.Count() == 0) {
+			return string.Format("%1 (%2)", split_string[1], split_string[0]);
+		}
+		
+		Print(placeable_items.Count());
+		
+		return string.Format("%1 (%2)", placeable_items[0].Type, split_string[0]);
 	}
 	
 	// Get Selected player in Editor

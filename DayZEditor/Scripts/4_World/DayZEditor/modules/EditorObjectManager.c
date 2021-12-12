@@ -62,6 +62,9 @@ class EditorObjectManagerModule: JMModuleBase
 				}
 				
 				m_PlaceableObjects.Insert(placeable_item);
+				
+				Print(placeable_item.Model);
+				
 				if (!m_PlaceableObjectsByP3d[placeable_item.Model]) {
 					m_PlaceableObjectsByP3d[placeable_item.Model] = new array<EditorPlaceableItem>();
 				}
@@ -284,7 +287,11 @@ class EditorObjectManagerModule: JMModuleBase
 	// return a list of objects that use this p3d, useful for finding adequite replacements for 
 	// otherwise unplaceable objects
 	array<EditorPlaceableItem> GetReplaceableObjects(string p3d)
-	{
+	{	
+		Print(p3d);	
+		Print(m_PlaceableObjectsByP3d[p3d]);
+		
+		
 		return m_PlaceableObjectsByP3d[p3d];
 	}
 	
