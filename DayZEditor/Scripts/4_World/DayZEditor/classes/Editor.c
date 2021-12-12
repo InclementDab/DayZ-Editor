@@ -276,7 +276,7 @@ class Editor
 		int log_lvl = EditorLog.CurrentLogLevel;
 		EditorLog.CurrentLogLevel = LogLevel.WARNING;
 		
-		string name_optimization = m_EditorHudController.ObjectReadoutName;
+		string name_optimization = m_EditorHudController.ObjectReadoutName;		
 		m_EditorHudController.ObjectReadoutName = GetObjectName(ObjectUnderCursor);
 
 		if (name_optimization != m_EditorHudController.ObjectReadoutName) {		
@@ -324,6 +324,10 @@ class Editor
 	{
 		if (!object) {
 			return string.Empty;
+		}
+		
+		while (object.GetParent()) {
+			object = object.GetParent();
 		}
 		
 		if (object.GetType() != string.Empty) {
