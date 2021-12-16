@@ -134,6 +134,29 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			AddContent(light_group);
 		}
 		
+		if (editor_object.GetWorldObject().IsInherited(NetworkParticleBase)) {
+			GroupPrefab particle_group = new GroupPrefab("Particle Controls", editor_object.GetWorldObject(), string.Empty);
+			DropdownListPrefab<int> particle_types = new DropdownListPrefab<int>("Particle Type", editor_object.GetWorldObject(), "ParticleType");
+			
+			typename particle_list = ParticleList;
+			for (int i = 0; i < particle_list.GetVariableCount(); i++) {
+				if (particle_list.GetVariableType(i) != int) {
+					continue;
+				}
+				
+				int particle_value;
+				particle_list.GetVariableValue(null, i, particle_value);		
+				if (!ParticleList.IsValidId(particle_value)) {
+					continue;
+				}
+				
+				particle_types[particle_list.GetVariableName(i)] = particle_value;
+			}
+			
+			particle_group.Insert(particle_types);
+			AddContent(particle_group);
+		}
+		
 		GroupPrefab object_group = new GroupPrefab("#STR_EDITOR_OBJECT", editor_object, string.Empty);
 		object_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", editor_object, "Health"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", editor_object, "EditorOnly"));

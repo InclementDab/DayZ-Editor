@@ -38,9 +38,9 @@ modded class DayZIntroScene
 		m_FunnyMeme.SetPosition(m_CharacterPos);
 		m_FunnyMeme.Update();
 		
-		//Snow snow = new Snow();
-		//pos[1] = pos[1] + 10;
-		//SEffectManager.PlayInWorld(snow, pos);
+		Snow snow = new Snow();
+		m_CharacterPos[1] = m_CharacterPos[1] + 10;
+		SEffectManager.PlayInWorld(snow, m_CharacterPos);
 	}
 	
 	protected ref array<Object> m_ChristmasObjects = {};
@@ -64,7 +64,7 @@ modded class DayZIntroScene
 		
 		Input input = GetGame().GetInput();
 		// Christmas time :widepeepoHappy:
-		/*if (!m_ChristmasSetup) {
+		if (!m_ChristmasSetup) {
 			vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
 			tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
 			tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
@@ -83,7 +83,7 @@ modded class DayZIntroScene
 			
 			Particle.Play(ParticleList.SNOW, m_FunnyMeme, Vector(0, 10, 0));
 			m_ChristmasSetup = true;
-		}*/
+		}
 				
 		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
 		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);

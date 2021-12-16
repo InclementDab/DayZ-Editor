@@ -1,4 +1,4 @@
-#define EDITOR_PRINT
+// #define EDITOR_PRINT
 
 class EditorLog
 {

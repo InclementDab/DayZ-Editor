@@ -327,7 +327,7 @@ class Editor
 		}
 		
 		while (object.GetParent()) {
-			object = object.GetParent();
+			object = Object.Cast(object.GetParent());
 		}
 		
 		if (object.GetType() != string.Empty) {

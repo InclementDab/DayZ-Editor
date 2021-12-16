@@ -74,6 +74,8 @@ class EditorObjectManagerModule: JMModuleBase
 		// Statics that belong to Editor / DF
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkSpotLight));
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkPointLight));
+		
+		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkParticleBase));
 	}
 	
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
