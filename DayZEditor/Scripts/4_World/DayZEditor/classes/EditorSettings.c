@@ -1,14 +1,14 @@
 class EditorSettings: ProfileSettings
 {	
 	// General Settings
-	float ViewDistance 				= 8000;
-	float ObjectViewDistance 		= 1500;
+	float ViewDistance 				= 3000;
+	float ObjectViewDistance 		= 3000;
 	int AutoSaveTimer 				= 240;
 	float QuickMoveStepSize			= 0.1;
 	bool QuickMoveFollowsCamera		= false;
 
 	// Camera Settings
-	float CameraSpeed				= 60;
+	float CameraSpeed				= 25;
 	float CameraTilt				= 0;
 	bool RuleOfThirds				= false;
 	bool AllowBelowGround 			= false;
@@ -93,12 +93,12 @@ class EditorSettings: ProfileSettings
 	
 	void SetDefaults()
 	{
-		QuickMoveStepSize			= 0.1;
-		CameraSpeed					= 60;
-		CameraTilt					= 0;
-		ViewDistance 				= 8000;
-		ObjectViewDistance 			= 1500;
-		MarkerViewDistance 			= 1000;
+		QuickMoveStepSize			= 0.1; // dont know what this does (not changed)
+		CameraSpeed					= 0.05; // 25
+		CameraTilt					= 0.5; // 0
+		ViewDistance 				= 0.15; // 3000
+		ObjectViewDistance 			= 0.375; // 3000
+		MarkerViewDistance 			= 0.2; // 1000
 		
 		AutoSaveTimer 				= 240;
 
