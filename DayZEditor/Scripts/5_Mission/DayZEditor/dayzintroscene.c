@@ -1,3 +1,8 @@
+// themes go here
+#define EDITOR_CHRISTMAS
+//#define EDITOR_4TH_JULY
+//#define EDITOR_ANNIVERSARY
+
 modded class MissionMainMenu
 {
 	override void OnUpdate(float timeslice)
@@ -6,18 +11,28 @@ modded class MissionMainMenu
 		if (m_IntroScenePC)
 	    	m_IntroScenePC.OnUpdate(timeslice);
 	}
+	
+#ifdef EDITOR_CHRISTMAS
+	override void PlayMusic()
+	{
+		return;
+	}
+#endif
 }
 
 modded class DayZIntroScene
 {
 	// 😂
-	private Object m_FunnyMeme;
-	private ref array<Object> m_FunnyMemes = {};
+	protected Object m_FunnyMeme;
+	protected ref array<Object> m_FunnyMemes = {};
+	
+	protected bool m_ChristmasSetup = false;
+	protected float m_CameraTimer;
 	
 	float offset, totaltime;
 	int hour, minute;	
 	
-	private static const ref array<string> XmasGiftTypes = {
+	static const ref array<string> XmasGiftTypes = {
 		"XmasGiftRed1",
 		"XmasGiftRed2",
 		"XmasGiftBlue1",
@@ -25,25 +40,28 @@ modded class DayZIntroScene
 		"XmasGiftGreen1",
 		"XmasGiftGreen2"
 	};
-		
+	
+	protected ref array<Object> m_ChristmasObjects = {};
+
 	void DayZIntroScene()
 	{
 		delete m_Character;
 		
-		m_CharacterPos = m_Camera.GetPosition() + m_Camera.GetDirection() * 5.5;
-		m_CharacterPos = m_CharacterPos + m_Camera.GetDirection() * vector.Forward * -3.0;
+		m_CharacterPos = m_Camera.GetPosition() + m_Camera.GetDirection() * 5;
 		m_CharacterPos = m_CharacterPos + m_Camera.GetDirection() * vector.Up * -0.3;
+		m_CharacterPos[1] = GetGame().SurfaceY(pos[0], pos[2]) + 1.5;
 	
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
 		m_FunnyMeme.SetPosition(m_CharacterPos);
 		m_FunnyMeme.Update();
 		
+#ifdef EDITOR_CHRISTMAS
 		Snow snow = new Snow();
 		m_CharacterPos[1] = m_CharacterPos[1] + 10;
 		SEffectManager.PlayInWorld(snow, m_CharacterPos);
+#endif
 	}
 	
-	protected ref array<Object> m_ChristmasObjects = {};
 	void ~DayZIntroScene()
 	{
 		foreach (Object o: m_ChristmasObjects) {
@@ -55,15 +73,13 @@ modded class DayZIntroScene
 		}
 	}
 	
-
-	private bool m_ChristmasSetup = false;
-	private float m_CameraTimer;
 	void OnUpdate(float timeslice)
 	{
 		totaltime += timeslice / 2;
 		
 		Input input = GetGame().GetInput();
 		// Christmas time :widepeepoHappy:
+#ifdef EDITOR_CHRISTMAS
 		if (!m_ChristmasSetup) {
 			vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
 			tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
@@ -84,6 +100,7 @@ modded class DayZIntroScene
 			Particle.Play(ParticleList.SNOW, m_FunnyMeme, Vector(0, 10, 0));
 			m_ChristmasSetup = true;
 		}
+#endif
 				
 		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
 		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);
