@@ -2,6 +2,7 @@ modded class MainMenu
 {
 	protected ref EditorMainMenuStats m_EditorMainMenuStats;
 	protected Widget m_JoinDiscord;
+	protected Widget m_OpenWiki;
 	
 	override Widget Init()
 	{
@@ -19,6 +20,7 @@ modded class MainMenu
 		m_PrevCharacter				= layoutRoot.FindAnyWidget("prev_character");
 		m_NextCharacter				= layoutRoot.FindAnyWidget("next_character");
 		m_JoinDiscord				= layoutRoot.FindAnyWidget("discord");
+		m_OpenWiki					= layoutRoot.FindAnyWidget("wiki");
 
 		m_Version					= TextWidget.Cast( layoutRoot.FindAnyWidget( "version" ) );
 		m_ModdedWarning				= TextWidget.Cast( layoutRoot.FindAnyWidget( "ModdedWarning" ) );
@@ -121,11 +123,19 @@ modded class MainMenu
 	override bool OnClick( Widget w, int x, int y, int button )
 	{
 		if (button == MouseState.LEFT) {
-			if (w == m_JoinDiscord) {
-				m_LastFocusedButton = m_JoinDiscord;
-				GetGame().OpenURL("discord.com/invite/5g742yH");
-				return true;
-			}	
+			switch (w) {
+				case m_JoinDiscord: {
+					m_LastFocusedButton = m_JoinDiscord;
+					GetGame().OpenURL("discord.com/invite/5g742yH");
+					return true;
+				}
+				
+				case m_OpenWiki: {
+					m_LastFocusedButton = m_OpenWiki;
+					GetGame().OpenURL("github.com/InclementDab/DayZ-Editor/wiki");
+					return true;
+				}
+			}
 		}
 		
 		return super.OnClick(w, x, y, button);
@@ -141,4 +151,6 @@ modded class MainMenu
 	{
 		GetGame().OpenURL("paypal.com/donate/?business=YPCJSENU7QZTA&currency_code=USD");
 	}
+	
+	
 }
