@@ -6,6 +6,7 @@ class EditorSettings: ProfileSettings
 	int AutoSaveTimer 				= 240;
 	float QuickMoveStepSize			= 0.1;
 	bool QuickMoveFollowsCamera		= false;
+	bool SpawnItemsWithAttachments	= true;
 
 	// Camera Settings
 	float CameraSpeed				= 25;

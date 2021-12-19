@@ -25,8 +25,14 @@ class EditorWorldObject
 		}
 
 		// Needed for AI Placement			
-		if (EntityAI.Cast(obj)) {
-			EntityAI.Cast(obj).DisableSimulation(true);
+		EntityAI entity_ai;
+		if (Class.CastTo(entity_ai, obj)) {
+			entity_ai.DisableSimulation(true);
+			
+			// weeeeeeee
+			if (GetEditor().Settings.SpawnItemsWithAttachments) {
+				entity_ai.OnDebugSpawn();
+			}
 		}
 		
 		obj.SetOrientation(orientation);

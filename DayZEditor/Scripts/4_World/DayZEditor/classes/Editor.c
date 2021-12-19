@@ -516,6 +516,7 @@ class Editor
 						if (GetEditorObject(ObjectUnderCursor)) {
 							DeleteObject(GetEditorObject(ObjectUnderCursor));
 						} else {
+							GetGame().ObjectDelete(ObjectUnderCursor);
 							HideMapObject(ObjectUnderCursor);
 						}
 					}

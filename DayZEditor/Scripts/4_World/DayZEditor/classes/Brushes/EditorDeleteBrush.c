@@ -20,6 +20,7 @@ class DeleteBrush: EditorBrush
 				editor_objects.InsertEditorObject(eo);
 			} else {
 				if (GetEditor().CanHideMapObject(r.GetType())) {
+					GetGame().ObjectDelete(r);
 					deleted_objects.Insert(r);
 				}
 			}
@@ -29,7 +30,6 @@ class DeleteBrush: EditorBrush
 			GetEditor().DeleteObjects(editor_objects);
 		}
 		
-		Print(deleted_objects.Count());
 		if (deleted_objects.Count() > 0) {
 			GetEditor().HideMapObjects(deleted_objects);
 		}
