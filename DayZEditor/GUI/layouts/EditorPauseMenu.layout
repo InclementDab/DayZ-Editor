@@ -62,7 +62,7 @@ FrameWidgetClass FrameWidget {
    visible 1
    ignorepointer 1
    color 0 0 0 0.7843
-   position -0.68798 0.68801
+   position 0 0
    size 1.6 0.9
    valign center_ref
    hexactpos 1
@@ -857,6 +857,24 @@ FrameWidgetClass FrameWidget {
      }
     }
    }
+  }
+  ImageWidgetClass KeyboardLayout {
+   visible 0
+   ignorepointer 1
+   color 0.5882 0.5882 0.5882 1
+   position 175 230
+   size 1010 365
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   imageTexture "{D1D1B0C385B0C14B}DayZEditor/GUI/images/dayz_editor_keyboard.edds"
+   mode blend
+   "src alpha" 1
+   "no wrap" 1
+   stretch 1
+   filter 0
   }
  }
 }
