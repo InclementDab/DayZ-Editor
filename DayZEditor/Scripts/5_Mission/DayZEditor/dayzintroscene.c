@@ -47,9 +47,9 @@ modded class DayZIntroScene
 	{
 		delete m_Character;
 		
-		m_CharacterPos = m_Camera.GetPosition() + m_Camera.GetDirection() * 5;
+		m_CharacterPos = m_Camera.GetPosition() + m_Camera.GetDirection() * 6;
 		m_CharacterPos = m_CharacterPos + m_Camera.GetDirection() * vector.Up * -0.3;
-		m_CharacterPos[1] = GetGame().SurfaceY(m_CharacterPos[0], m_CharacterPos[2]) + 1.5;
+		m_CharacterPos[1] = GetGame().SurfaceY(m_CharacterPos[0], m_CharacterPos[2]) + 1;
 	
 		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
 		m_FunnyMeme.SetPosition(m_CharacterPos);
