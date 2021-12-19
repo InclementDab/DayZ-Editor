@@ -64,9 +64,11 @@ modded class DayZIntroScene
 	
 	void ~DayZIntroScene()
 	{
+#ifdef EDITOR_CHRISTMAS
 		foreach (Object o: m_ChristmasObjects) {
 			GetGame().ObjectDelete(o);
 		}
+#endif
 		
 		foreach (Object meme: m_FunnyMemes) {
 			GetGame().ObjectDelete(meme);
