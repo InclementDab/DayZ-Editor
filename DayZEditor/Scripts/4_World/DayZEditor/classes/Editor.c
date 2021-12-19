@@ -810,14 +810,15 @@ class Editor
 		
 		EntityAI entity = m_EditorInventoryEditorHud.GetEntity();
 		PlayerBase player;
-		/*if (Class.CastTo(player, entity)) {
+		if (Class.CastTo(player, entity)) {
 			GetGame().SelectPlayer(null, player);
 			player.OnInventoryMenuClose();
 			player.GetInputController().SetDisabled(false);
 			SetMissionHud(true);
-		} else {*/
+		} else { 
+			// fallback, for use with cars etc
 			SetActive(true);
-		//}
+		}
 		
 		delete m_EditorInventoryEditorHud;
 	}
