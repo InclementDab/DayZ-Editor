@@ -403,6 +403,8 @@ class Editor
 		}
 		
 		// This is all the logic that controls inventory hud, not a fan but it works
+		// update: it doesnt work
+		// update 2: it works
 		if (m_Player && !m_Active) {					
 			if (input.LocalPress("EditorToggleInventoryEditor", false)) {
 				if (m_EditorInventoryEditorHud) {
@@ -418,13 +420,16 @@ class Editor
 				return;
 			}
 			
-			// todo: somewhere in the stack, we aint calling this... why?
 			if (input.LocalPress("EditorToggleInventory", false)) {
 				if (m_EditorInventoryEditorHud) {
 					StopInventoryEditor();
 				}
 				
-				GetGame().GetMission().ShowInventory();
+				if (GetGame().GetMission().GetHud().InventoryShown) {
+					GetGame().GetMission().HideInventory();
+				} else {
+					GetGame().GetMission().ShowInventory();
+				}
 			}
 		}
 	}
