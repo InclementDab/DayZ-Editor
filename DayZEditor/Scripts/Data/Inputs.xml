@@ -36,7 +36,13 @@
     </inputs>
 
     <preset>
-		<input name="EditorCameraForward">
+    	<input name="EditorCameraToolSpeedIncrease">
+            <btn name="mWheelUp"/>
+        </input>
+        <input name="EditorCameraToolSpeedDecrease">
+            <btn name="mWheelDown"/>
+        </input>
+        <input name="EditorCameraForward">
             <btn name="kW"/>
         </input>
 		
