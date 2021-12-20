@@ -54,7 +54,6 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_MODAL_DIALOGS", m_Editor.Settings, "LockCameraDuringDialogs"));
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_PRELOAD_OBJECTS", m_Editor.Settings, "PreloadObjects"));
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_HIGH_PRECISION_COLLISION", m_Editor.Settings, "HighPrecisionCollision"));
-		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EXPORT_BACKUP_ON_BIN", m_Editor.Settings, "ExportBackupFile"));
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_DEBUG_MODE", m_Editor.Settings, "DebugMode"));
 		
 		GroupPrefab colors_group = new GroupPrefab("#STR_EDITOR_THEMES", m_Editor.Settings, string.Empty);

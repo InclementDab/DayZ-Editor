@@ -20,7 +20,6 @@ class EditorSettings: ProfileSettings
 	bool PreloadObjects				= false;	
 	bool ShowScreenLogs				= true;
 	bool HighPrecisionCollision		= false;
-	bool ExportBackupFile 			= true; // this is temporary until we know that the bin files are stable
 	bool DebugMode 					= false;
 	
 	// Marker Settings
