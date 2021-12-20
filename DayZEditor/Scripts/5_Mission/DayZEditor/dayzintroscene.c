@@ -9,7 +9,7 @@ modded class MissionMainMenu
 	
 	override void PlayMusic()
 	{
-		if (GetCurrentHoliday() == EditorHoliday.CHRISTMAS) {
+		if (Editor.GetCurrentHoliday() == EditorHoliday.CHRISTMAS) {
 			return;
 		}
 	}
@@ -28,7 +28,7 @@ modded class DayZIntroScene
 	protected float m_Offset, m_TotalTime;
 	protected int m_Hour, m_Minute;	
 	
-	protected EditorHoliday m_CurrentHoliday = GetCurrentHoliday();
+	protected EditorHoliday m_CurrentHoliday = Editor.GetCurrentHoliday();
 	
 	static const ref array<string> XmasGiftTypes = {
 		"XmasGiftRed1",
@@ -60,7 +60,7 @@ modded class DayZIntroScene
 	
 	void ~DayZIntroScene()
 	{
-		if (GetCurrentHoliday() == EditorHoliday.CHRISTMAS) {
+		if (m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
 			foreach (Object o: m_ChristmasObjects) {
 				GetGame().ObjectDelete(o);
 			}
