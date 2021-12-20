@@ -1,7 +1,35 @@
-// themes go here
-#define EDITOR_CHRISTMAS
-//#define EDITOR_4TH_JULY
-//#define EDITOR_ANNIVERSARY
+
+// todo: more holidays!
+enum EditorHoliday
+{
+	NONE,
+	CHRISTMAS,
+	ANNIVERSARY,
+	HALLOWEEN
+}
+
+EditorHoliday GetCurrentHoliday()
+{
+	int year, month, day;
+	GetYearMonthDayUTC(year, month, day);
+	if (month == 12 && day > 12) {
+		return EditorHoliday.CHRISTMAS;
+	}
+	
+	if (month == 1 && day < 12) {
+		return EditorHoliday.CHRISTMAS;
+	}
+	
+	if (month == 10 && day > 0 && day < 14) {
+		return EditorHoliday.ANNIVERSARY;
+	}
+	
+	if (month == 10 && day > 14) {
+		return EditorHoliday.HALLOWEEN;
+	}
+	
+	return EditorHoliday.NONE;
+}
 
 modded class MissionMainMenu
 {
@@ -12,12 +40,12 @@ modded class MissionMainMenu
 	    	m_IntroScenePC.OnUpdate(timeslice);
 	}
 	
-#ifdef EDITOR_CHRISTMAS
 	override void PlayMusic()
 	{
-		return;
+		if (GetCurrentHoliday() == EditorHoliday.CHRISTMAS) {
+			return;
+		}
 	}
-#endif
 }
 
 modded class DayZIntroScene
@@ -30,8 +58,10 @@ modded class DayZIntroScene
 	protected bool m_ChristmasSetup = false;
 	protected float m_CameraTimer;
 	
-	float offset, totaltime;
-	int hour, minute;	
+	protected float m_Offset, m_TotalTime;
+	protected int m_Hour, m_Minute;	
+	
+	protected EditorHoliday m_CurrentHoliday = GetCurrentHoliday();
 	
 	static const ref array<string> XmasGiftTypes = {
 		"XmasGiftRed1",
@@ -54,20 +84,20 @@ modded class DayZIntroScene
 		m_FunnyMeme.SetPosition(m_CharacterPos);
 		m_FunnyMeme.Update();
 		
-#ifdef EDITOR_CHRISTMAS
-		Snow snow = new Snow();
-		m_CharacterPos[1] = m_CharacterPos[1] + 10;
-		SEffectManager.PlayInWorld(snow, m_CharacterPos);
-#endif
+		if (m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
+			Snow snow = new Snow();
+			m_CharacterPos[1] = m_CharacterPos[1] + 10;
+			SEffectManager.PlayInWorld(snow, m_CharacterPos);
+		}
 	}
 	
 	void ~DayZIntroScene()
 	{
-#ifdef EDITOR_CHRISTMAS
-		foreach (Object o: m_ChristmasObjects) {
-			GetGame().ObjectDelete(o);
+		if (GetCurrentHoliday() == EditorHoliday.CHRISTMAS) {
+			foreach (Object o: m_ChristmasObjects) {
+				GetGame().ObjectDelete(o);
+			}
 		}
-#endif
 		
 		foreach (Object meme: m_FunnyMemes) {
 			GetGame().ObjectDelete(meme);
@@ -76,12 +106,11 @@ modded class DayZIntroScene
 	
 	void OnUpdate(float timeslice)
 	{
-		totaltime += timeslice / 2;
+		m_TotalTime += timeslice / 2;
 		
 		Input input = GetGame().GetInput();
 		// Christmas time :widepeepoHappy:
-#ifdef EDITOR_CHRISTMAS
-		if (!m_ChristmasSetup) {
+		if (m_CurrentHoliday == EditorHoliday.CHRISTMAS && !m_ChristmasSetup) {
 			vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
 			tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
 			tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
@@ -101,14 +130,13 @@ modded class DayZIntroScene
 			Particle.Play(ParticleList.SNOW, m_FunnyMeme, Vector(0, 10, 0));
 			m_ChristmasSetup = true;
 		}
-#endif
 				
 		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
 		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);
 		vector pos = m_FunnyMeme.GetPosition();
 		
 		// Makes camera 'hover' in position
-		pos[1] = pos[1] + Math.Sin(totaltime * Math.PI) / 1500;
+		pos[1] = pos[1] + Math.Sin(m_TotalTime * Math.PI) / 1500;
 		m_FunnyMeme.SetPosition(pos);
 		m_FunnyMeme.SetDirection(lookat);
 		m_FunnyMeme.Update();
@@ -116,9 +144,9 @@ modded class DayZIntroScene
 		// easter egg
 		if (KeyState(KeyCode.KC_NUMPADENTER)) {
 			vector ori = m_FunnyMeme.GetOrientation();
-			offset += 10;
-			if (offset > 360) offset = 0;
-			ori[2] = ori[2] + offset;
+			m_Offset += 10;
+			if (m_Offset > 360) m_Offset = 0;
+			ori[2] = ori[2] + m_Offset;
 			
 			m_FunnyMeme.SetOrientation(ori);
 			m_FunnyMeme.Update();
@@ -129,20 +157,19 @@ modded class DayZIntroScene
 				dBodyApplyTorqueImpulse(cam, trans[2].Normalized() * timeslice * 100 * 50);
 			}
 			
-			minute = (ori[2] / 360) * 60;
-			if (minute >= 60) {
-				minute = 0;
-				hour++;
+			m_Minute = (ori[2] / 360) * 60;
+			if (m_Minute >= 60) {
+				m_Minute = 0;
+				m_Hour++;
 			}
 			
-			if (hour > 24) {
-				hour = 0;
+			if (m_Hour > 24) {
+				m_Hour = 0;
 			}
 			
-			GetGame().GetWorld().SetDate(2018, 10, 1, hour, minute);
+			GetGame().GetWorld().SetDate(2018, 10, 1, m_Hour, m_Minute);
 		}
 		
-
 		// another easter egg
 		m_CameraTimer += timeslice;
 		if (m_CameraTimer > 1 && (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && GetGame().GetInput().HasGameFocus()) {
@@ -156,21 +183,33 @@ modded class DayZIntroScene
 	
 			vector newcam_pos = contact_pos;
 			newcam_pos[1] = newcam_pos[1] + 50;
-			Object new_camera = GetGame().CreateObjectEx("DSLRCamera", newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
-			//Object new_camera = GetGame().CreateObjectEx(XmasGiftTypes.GetRandomElement(), newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
 			
+			// determine object to drop from sky depending on holiday
+			Object object_to_drop;
+			switch (m_CurrentHoliday) {
+				case EditorHoliday.CHRISTMAS: {
+					object_to_drop = GetGame().CreateObjectEx(XmasGiftTypes.GetRandomElement(), newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
+					break;
+				}
+				
+				default: {
+					object_to_drop = GetGame().CreateObjectEx("DSLRCamera", newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
+					break;
+				}
+			}
+						
 			float scale = vector.Distance(contact_pos, start) * 0.25;	        
-			if (new_camera) {
+			if (object_to_drop) {
 				vector mins, maxs;
-		        new_camera.GetBounds(mins, maxs);
+		        object_to_drop.GetBounds(mins, maxs);
 		        vector center = (mins + maxs) * 0.5;
 		        vector size = maxs - mins;
 		        
-		        new_camera.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
-				new_camera.SetDynamicPhysicsLifeTime(-1);
-				new_camera.EnableDynamicCCD(true);
-				dBodySetMass(new_camera, 100);
-				m_FunnyMemes.Insert(new_camera);
+		        object_to_drop.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
+				object_to_drop.SetDynamicPhysicsLifeTime(-1);
+				object_to_drop.EnableDynamicCCD(true);
+				dBodySetMass(object_to_drop, 100);
+				m_FunnyMemes.Insert(object_to_drop);
 			}
 		}
 		
