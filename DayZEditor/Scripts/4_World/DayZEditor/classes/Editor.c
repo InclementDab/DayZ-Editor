@@ -1624,24 +1624,103 @@ class Editor
 		return save_data;
 	}
 		
-	bool IsActive() return m_Active;
-	EditorHud GetEditorHud() return m_EditorHud;
-	EditorInventoryEditorHud GetInventoryEditorHud() return m_EditorInventoryEditorHud;
-	EditorCamera GetCamera() return m_EditorCamera;
-	EditorObjectManagerModule GetObjectManager() return m_ObjectManager;
-	EditorCameraTrackManagerModule GetCameraTrackManager() return m_CameraTrackManager;
-	EditorObjectMap GetSelectedObjects() return m_ObjectManager.GetSelectedObjects(); 
-	EditorDeletedObjectMap GetSelectedHiddenObjects() return m_ObjectManager.GetSelectedHiddenObjects();
-	EditorObjectMap GetPlacedObjects() return m_ObjectManager.GetPlacedObjects(); 
-	EditorDeletedObjectMap GetDeletedObjects() return m_ObjectManager.GetDeletedObjects();
-	map<int, ref EditorObjectData> GetSessionCache() return m_SessionCache; 		
-	map<int, ref EditorDeletedObjectData> GetDeletedSessionCache() return m_DeletedSessionCache;
-	EditorObject GetEditorObject(int id) return m_ObjectManager.GetEditorObject(id); 	
-	EditorObject GetEditorObject(notnull Object world_object) return m_ObjectManager.GetEditorObject(world_object);	
-	EditorObject GetPlacedObjectById(int id) return m_ObjectManager.GetPlacedObjectById(id); 	
-	EditorObjectData GetSessionDataById(int id) return m_SessionCache.Get(id); 
-	EditorDeletedObjectData GetDeletedSessionDataById(int id) return m_DeletedSessionCache[id];
-	EditorBrush GetBrush() return m_EditorBrush;
-	EditorActionStack GetActionStack() return m_ActionStack;
-	array<ref EditorPlaceableItem> GetPlaceableObjects() return m_ObjectManager.GetPlaceableObjects();
+	bool IsActive() 
+	{
+		return m_Active;
+	}
+	
+	EditorHud GetEditorHud() 
+	{
+		return m_EditorHud;
+	}
+	
+	EditorInventoryEditorHud GetInventoryEditorHud() 
+	{
+		return m_EditorInventoryEditorHud;
+	}
+	
+	EditorCamera GetCamera() 
+	{
+		return m_EditorCamera;
+	}
+	
+	EditorObjectManagerModule GetObjectManager() 
+	{
+		return m_ObjectManager;
+	}
+	
+	EditorCameraTrackManagerModule GetCameraTrackManager() 
+	{
+		return m_CameraTrackManager;
+	}
+	
+	EditorObjectMap GetSelectedObjects() 
+	{
+		return m_ObjectManager.GetSelectedObjects(); 
+	}
+	
+	EditorDeletedObjectMap GetSelectedHiddenObjects()  
+	{
+		return m_ObjectManager.GetSelectedHiddenObjects();
+	}
+	
+	EditorObjectMap GetPlacedObjects() 
+	{
+		return m_ObjectManager.GetPlacedObjects(); 
+	}
+	
+	EditorDeletedObjectMap GetDeletedObjects() 
+	{
+		return m_ObjectManager.GetDeletedObjects();
+	}
+	
+	map<int, ref EditorObjectData> GetSessionCache() 
+	{
+		return m_SessionCache; 		
+	}
+	
+	map<int, ref EditorDeletedObjectData> GetDeletedSessionCache() 
+	{
+		return m_DeletedSessionCache;
+	}
+	
+	EditorObject GetEditorObject(int id) 
+	{
+		return m_ObjectManager.GetEditorObject(id); 	
+	}
+	
+	EditorObject GetEditorObject(notnull Object world_object) 
+	{
+		return m_ObjectManager.GetEditorObject(world_object);	
+	}
+	
+	EditorObject GetPlacedObjectById(int id) 
+	{
+		return m_ObjectManager.GetPlacedObjectById(id); 	
+	}
+	
+	EditorObjectData GetSessionDataById(int id) 
+	{
+		return m_SessionCache[id]; 
+	}
+	
+	EditorDeletedObjectData GetDeletedSessionDataById(int id) 
+	{
+		return m_DeletedSessionCache[id];
+	}
+	
+	EditorBrush GetBrush() 
+	{
+		return m_EditorBrush;
+	}
+	
+	EditorActionStack GetActionStack() 
+	{
+		return m_ActionStack;
+	}
+	
+	array<ref EditorPlaceableItem> GetPlaceableObjects() 
+	{
+		return m_ObjectManager.GetPlaceableObjects();
+	}
 }
