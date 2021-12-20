@@ -29,12 +29,7 @@ modded class PlayerBase
 	}
 	
 	override void OnDebugSpawn()
-	{
-		if (Editor.GetCurrentHoliday() == EditorHoliday.CHRISTMAS) {
-			GetInventory().CreateAttachment("SantasHat");
-			GetInventory().CreateAttachment("SantasBeard");
-		}
-		
+	{		
 		array<string> shirts = {
 			"TShirt_Beige",
 			"TShirt_Black",

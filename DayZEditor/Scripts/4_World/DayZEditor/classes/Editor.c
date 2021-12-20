@@ -321,7 +321,7 @@ class Editor
 		
 		EditorLog.CurrentLogLevel = log_lvl;
 	}
-	
+		
 	string GetObjectName(Object object)
 	{
 		if (!object) {
@@ -473,6 +473,14 @@ class Editor
 				if (IsPlacing()) {
 					PlaceObject();
 					return true;
+				}
+				
+				if (KeyState(KeyCode.KC_LCONTROL) && ObjectUnderCursor) {
+					string object_name = GetObjectName(ObjectUnderCursor);
+					if (!object_name.Contains("p3d")) { // hack
+						
+						return true;
+					}
 				}
 				
 				if (!target || target == m_EditorHud.EditorMapWidget) {
@@ -1390,24 +1398,25 @@ class Editor
 	static PlayerBase CreateDefaultCharacter(vector position = "0 0 0")
 	{
 		EditorLog.Trace("Editor::CreateDefaultCharacter");
-		PlayerBase player;
 		if (GetGame().GetPlayer()) {
 			return PlayerBase.Cast(GetGame().GetPlayer());
 		} 
 
-		Object player_object = GetGame().CreateObject(GetGame().CreateRandomPlayer(), position);
-		// GetGame().CreatePlayer(null, GetGame().CreateRandomPlayer(), position, 0, "NONE")
-		if (Class.CastTo(player, player_object)) {
-			player.GetInventory().CreateInInventory("AviatorGlasses");
-	    	player.GetInventory().CreateInInventory("Shirt_RedCheck");
-	    	player.GetInventory().CreateInInventory("Jeans_Blue");
-	    	player.GetInventory().CreateInInventory("WorkingBoots_Brown");
-	    	player.GetInventory().CreateInInventory("ConstructionHelmet_Yellow");
-	    	player.GetInventory().CreateInInventory("CivilianBelt");
-	    	player.GetInventory().CreateInInventory("TaloonBag_Blue");
-			player.GetHumanInventory().CreateInHands("SledgeHammer");
+		PlayerBase player = PlayerBase.Cast(GetGame().CreateObject(GetGame().CreateRandomPlayer(), position));
+		if (GetCurrentHoliday() == EditorHoliday.CHRISTMAS) {
+			player.GetInventory().CreateAttachment("SantasHat");
+			player.GetInventory().CreateAttachment("SantasBeard");
+		} else {
+			player.GetInventory().CreateInInventory("ConstructionHelmet_Yellow");
 		}
-	
+		
+		player.GetInventory().CreateInInventory("AviatorGlasses");
+    	player.GetInventory().CreateInInventory("Shirt_RedCheck");
+    	player.GetInventory().CreateInInventory("Jeans_Blue");
+    	player.GetInventory().CreateInInventory("WorkingBoots_Brown");
+    	player.GetInventory().CreateInInventory("CivilianBelt");
+    	player.GetInventory().CreateInInventory("TaloonBag_Blue");
+		player.GetHumanInventory().CreateInHands("SledgeHammer");	
 	    return player;
 	}
 			
