@@ -47,7 +47,6 @@ class Editor
 	static vector 								CurrentMousePosition;
 	
 	// public properties
-	ref EditorWorldObject 						ObjectInHand;
 	ref EditorCommandManager 					CommandManager;
 	ref EditorSettings 							Settings;
 	EditorStatistics							Statistics;
@@ -58,6 +57,7 @@ class Editor
 	protected ref map<int, ref EditorObjectData>			m_SessionCache; // strong ref of EditorObjectData
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
 	protected EditorCamera 							m_EditorCamera;
+	protected ref EditorWorldObject 				m_PlacingObject;
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorActionStack 				m_ActionStack;
@@ -206,7 +206,7 @@ class Editor
 		delete m_EditorBrush;
 		delete m_SessionCache;
 		delete m_DeletedSessionCache;
-		delete ObjectInHand;
+		delete m_PlacingObject;
 		delete m_RecentlyOpenedFiles;
 		GetGame().ObjectDelete(m_EditorCamera);
 	}
@@ -237,8 +237,8 @@ class Editor
 			CurrentMousePosition[1] = GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]);
 		} else {
 			Object collision_ignore;
-			if (ObjectInHand) {
-				collision_ignore = ObjectInHand.GetWorldObject();
+			if (m_PlacingObject) {
+				collision_ignore = m_PlacingObject.GetWorldObject();
 			}
 			
 			// Yeah, enfusions dumb, i know
@@ -325,8 +325,8 @@ class Editor
 	
 	void ProcessInput(Input input)
 	{
-		if (ObjectInHand && ObjectInHand.GetWorldObject()) {
-			vector hand_ori = ObjectInHand.GetWorldObject().GetOrientation();
+		if (m_PlacingObject && m_PlacingObject.GetWorldObject()) {
+			vector hand_ori = m_PlacingObject.GetWorldObject().GetOrientation();
 			float factor = 9;
 			if (KeyState(KeyCode.KC_LSHIFT)) {
 				factor /= 5;
@@ -338,12 +338,12 @@ class Editor
 			
 			if (input.LocalValue("UAZoomInOptics")) {				
 				hand_ori[0] = hand_ori[0] - factor;
-				ObjectInHand.GetWorldObject().SetOrientation(hand_ori);			
+				m_PlacingObject.GetWorldObject().SetOrientation(hand_ori);			
 			}
 			
 			if (input.LocalValue("UAZoomOutOptics")) {
 				hand_ori[0] = hand_ori[0] + factor;
-				ObjectInHand.GetWorldObject().SetOrientation(hand_ori);			
+				m_PlacingObject.GetWorldObject().SetOrientation(hand_ori);			
 			}
 		}
 		
@@ -641,10 +641,10 @@ class Editor
 			SetBrush(null);
 		
 		ClearSelection();
-		ObjectInHand = new EditorHologram(item);
+		m_PlacingObject = new EditorHologram(item);
 		
 		EditorEvents.StartPlacing(this, item);		
-		return ObjectInHand;
+		return m_PlacingObject;
 	}
 	
 	EditorObject PlaceObject()
@@ -654,10 +654,12 @@ class Editor
 			return null;
 		}
 		
-		if (!ObjectInHand) return null;	
+		if (!m_PlacingObject) {
+			return null;	
+		}
 		
 		EditorHologram editor_hologram;
-		if (!Class.CastTo(editor_hologram, ObjectInHand)) {
+		if (!Class.CastTo(editor_hologram, m_PlacingObject)) {
 			return null;
 		}
 		
@@ -700,7 +702,7 @@ class Editor
 	void StopPlacing()
 	{
 		EditorLog.Trace("Editor::StopPlacing");
-		delete ObjectInHand;
+		delete m_PlacingObject;
 		EditorEvents.StopPlacing(this);
 	}
 		
@@ -813,7 +815,6 @@ class Editor
 			hud_root.Show(state);
 		}
 	}
-	
 	
 	// Kinda very jank i think
 	void InsertLootPosition(vector position)
@@ -1498,12 +1499,7 @@ class Editor
 	{
 		m_DeletedSessionCache.Remove(id);
 	}
-	
-	bool IsPlacing() 
-	{
-		return ObjectInHand != null; 
-	}
-		
+			
 	void UpdateStatTime(int passed_time)
 	{
 		Statistics.EditorPlayTime += passed_time;
@@ -1657,5 +1653,20 @@ class Editor
 	array<EditorPlaceableItem> GetPlaceableObjects() 
 	{
 		return m_ObjectManager.GetPlaceableObjects();
+	}
+	
+	void SetPlacingObject(EditorWorldObject object)
+	{
+		m_PlacingObject = object;
+	}
+	
+	EditorWorldObject GetPlacingObject()
+	{
+		return m_PlacingObject;	
+	}
+	
+	bool IsPlacing() 
+	{
+		return m_PlacingObject != null; 
 	}
 }

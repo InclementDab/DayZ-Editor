@@ -29,7 +29,7 @@ class EditorDragHandler
 		
 		vector transform[4];
 		m_EditorObject.GetTransform(transform);
-		m_Editor.ObjectInHand = m_EditorObject;
+		m_Editor.SetPlacingObject(m_EditorObject);
 		
 		while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK && !(GetMouseState(MouseState.RIGHT) & MB_PRESSED_MASK)) {
 			OnDragging(transform, m_EditorObject);
@@ -47,7 +47,7 @@ class EditorDragHandler
 		
 		GetEditor().InsertAction(drag_undo);
 		
-		m_Editor.ObjectInHand = null;
+		m_Editor.SetPlacingObject(null);
 		OnDragFinish();
 	}
 	

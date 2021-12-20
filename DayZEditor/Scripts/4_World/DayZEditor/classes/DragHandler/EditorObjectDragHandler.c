@@ -6,7 +6,7 @@ class EditorObjectDragHandler: EditorDragHandler
 	{
 		m_Editor.GetEditorHud().SetCurrentTooltip(null);
 		
-		m_Editor.ObjectInHand = target;
+		m_Editor.SetPlacingObject(target);
 		vector cursor_pos = Editor.CurrentMousePosition;
 		
 		vector size, ground_position, surface_normal, local_dir, local_ori;

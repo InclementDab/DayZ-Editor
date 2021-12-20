@@ -29,8 +29,8 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool IsSelected() 
 	{
-		if (GetEditor().ObjectInHand) {
-			return (EditorHologram.Cast(GetEditor().ObjectInHand).GetPlaceableItem() == m_PlaceableItem);
+		if (GetEditor().GetPlacingObject()) {
+			return (EditorHologram.Cast(GetEditor().GetPlacingObject()).GetPlaceableItem() == m_PlaceableItem);
 		}
 		
 		return false;
