@@ -146,7 +146,7 @@ modded class DayZIntroScene
 
 		// another easter egg
 		m_CameraTimer += timeslice;
-		if (m_CameraTimer > 1 && (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+		if (m_CameraTimer > 1 && (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && GetGame().GetInput().HasGameFocus()) {
 			m_CameraTimer = 0;
 			vector start = GetGame().GetCurrentCameraPosition();
 			vector end = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * 5000;
