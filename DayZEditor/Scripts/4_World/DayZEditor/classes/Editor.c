@@ -492,6 +492,10 @@ class Editor
 			}
 			
 			case MouseState.RIGHT: {
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					GetGame().RequestExit(-1);
+				}
+				
 				break;	
 			}
 		}

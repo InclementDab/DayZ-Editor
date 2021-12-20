@@ -11,9 +11,16 @@ class EditorMapSelectDialog: EditorDialogBase
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgWorlds"); i++) {
 			string name;
 			GetGame().ConfigGetChildName("CfgWorlds", i, name);
-			if (ExcludedMapItems.Find(name) == -1) {
-				m_ListBoxPrefab.InsertItem(name, name);
+			if (ExcludedMapItems.Find(name) != -1) {
+				continue;	
 			}
+			
+			// quick check if you own dlc, i have no idea if this works
+			if (!GetGame().VerifyWorldOwnership(name)) {
+				continue;
+			}
+						
+			m_ListBoxPrefab.InsertItem(name, name);
 		}
 		
 		AddContent(new TextBoxPrefab("NOTE: The Editor automatically detects custom map mods. Just load them.", null, "hint"));    
