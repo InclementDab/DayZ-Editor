@@ -45,6 +45,7 @@ class XMLEditorBrushes: XMLCallback
 					string object_type;
 					float z_offset = 0;
 					float object_frequency = 1.0;
+					float minscale = 1, maxscale = 1;
 					
 					// type attribute
 					XMLAttribute object_type_attribute = brush_object.GetAttribute("type");
@@ -69,7 +70,16 @@ class XMLEditorBrushes: XMLCallback
 						object_frequency = brush_object.GetAttribute("frequency").ValueAsFloat();
 					}
 					
-					brush_settings.InsertPlaceableObject(new EditorBrushObject(object_type, object_frequency, z_offset));
+					// scale attributes
+					if (brush_object.GetAttribute("minscale")) {
+						minscale = brush_object.GetAttribute("minscale").ValueAsFloat();
+					}
+					
+					if (brush_object.GetAttribute("maxscale")) {
+						maxscale = brush_object.GetAttribute("maxscale").ValueAsFloat();
+					}
+					
+					brush_settings.InsertPlaceableObject(new EditorBrushObject(object_type, object_frequency, z_offset, minscale, maxscale));
 				}
 			}
 			

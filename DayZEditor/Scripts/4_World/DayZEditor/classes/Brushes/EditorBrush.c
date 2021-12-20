@@ -62,7 +62,6 @@ class EditorBrush
 			CurrentMousePosition
 		};
 		
-		
 		m_BrushDecal.SetTransform(transform);
 		
 		//if (GetEditor().GetUIManager().IsCursorOverUI()) return;
@@ -128,6 +127,7 @@ class EditorBrush
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + object_name.ZOffset;
 			direction[1] = Math.RandomFloat(-0.02, 0.02);
 			
+			brushed_object.SetScale(Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale));
 			brushed_object.SetPosition(pos);
 			brushed_object.SetDirection(direction);
 			
