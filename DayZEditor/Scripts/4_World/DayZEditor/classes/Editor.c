@@ -246,11 +246,6 @@ class Editor
 			CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance, 0, !CollisionMode, should_precice);
 		}
 		
-		if (Settings.DebugMode) {
-			//Debug.DestroyAllShapes();
-			//Debug.DrawSphere(CurrentMousePosition, 0.25, COLOR_GREEN_A);
-		}
-	
 		if (!IsPlacing()) {
 			Object target = GetObjectUnderCursor(Settings.ObjectViewDistance);
 			if (target) {
@@ -282,7 +277,6 @@ class Editor
 			m_EditorHudController.NotifyPropertyChanged("cam_x");
 			m_EditorHudController.NotifyPropertyChanged("cam_y");
 			m_EditorHudController.NotifyPropertyChanged("cam_z");
-			
 		}
 		
 		EditorObjectMap selected_objects = GetSelectedObjects();
@@ -308,83 +302,7 @@ class Editor
 		
 		EditorLog.CurrentLogLevel = log_lvl;
 	}
-			
-	EditorPlaceableItem GetReplaceableItem(Object object)
-	{
-		if (!object) {
-			return null;
-		}
 		
-		while (object.GetParent()) {
-			object = Object.Cast(object.GetParent());
-		}
-		
-		if (object.GetType() != string.Empty && !object.IsInherited(TreeHard) && !object.IsInherited(TreeSoft) && !object.IsInherited(BushHard) && !object.IsInherited(BushSoft)) {			
-			return GetPlaceableObject(object.GetType());
-		}
-		
-		// 1346854: tank_small_white.p3d
-		string debug_name = object.GetDebugNameNative();
-		if (debug_name == string.Empty) {
-			// lost cause, unlikely
-			return null;
-		}
-		
-		array<string> split_string = {};
-		debug_name.Split(":", split_string);
-		
-		// also unlikely
-		if (split_string.Count() == 1) {
-			return null;
-		}
-		
-		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(split_string[1].Trim());
-		// not ideal since we dont want to feed them the p3d, but doable
-		if (!placeable_items || placeable_items.Count() == 0) {			
-			return null;
-		}
-		
-		return placeable_items[0]; // better way to do other than index 0?
-	}
-	
-	string GetObjectName(Object object)
-	{
-		if (!object) {
-			return string.Empty;
-		}
-		
-		while (object.GetParent()) {
-			object = Object.Cast(object.GetParent());
-		}
-		
-		if (object.GetType() != string.Empty && !object.IsInherited(TreeHard) && !object.IsInherited(TreeSoft) && !object.IsInherited(BushHard) && !object.IsInherited(BushSoft)) {			
-			return string.Format("%1 (%2)", object.GetType(), object.GetID());
-		}
-		
-		// 1346854: tank_small_white.p3d
-		string debug_name = object.GetDebugNameNative();
-		if (debug_name == string.Empty) {
-			// lost cause, unlikely
-			return string.Empty;
-		}
-		
-		array<string> split_string = {};
-		debug_name.Split(":", split_string);
-		
-		// also unlikely
-		if (split_string.Count() == 1) {
-			return string.Empty;
-		}
-		
-		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(split_string[1].Trim());
-		// not ideal since we dont want to feed them the p3d, but doable
-		if (!placeable_items || placeable_items.Count() == 0) {
-			return string.Format("%1 (%2)", split_string[1], split_string[0]);
-		}
-				
-		return string.Format("%1 (%2)", placeable_items[0].Type, split_string[0]);
-	}
-	
 	// Get Selected player in Editor
 	PlayerBase GetPlayer()
 	{
@@ -590,7 +508,6 @@ class Editor
 	
 		m_LastMouseInput = button;
 		m_LastMouseDown = GetWorldTime();
-		
 		return false;
 	}
 	
@@ -1038,50 +955,6 @@ class Editor
 			}
 		}
 	}
-
-	void SetSaveFile(string save_file)
-	{
-		EditorSaveFile = save_file;
-		GetEditorHud().GetController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
-		
-		if (m_RecentlyOpenedFiles.Find(EditorSaveFile) != -1) {
-			m_RecentlyOpenedFiles.RemoveOrdered(m_RecentlyOpenedFiles.Find(EditorSaveFile));
-		}
-		
-		m_RecentlyOpenedFiles.Insert(EditorSaveFile);
-		if (m_RecentlyOpenedFiles.Count() > 3) {
-			m_RecentlyOpenedFiles.RemoveOrdered(0);
-		}
-		
-		GetGame().SetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
-		GetGame().SaveProfile();
-	}
-		
-	string GetSaveFile()
-	{
-		return EditorSaveFile;
-	}
-	
-	void SetBrush(EditorBrush brush) 
-	{
-		m_EditorBrush = brush; 
-	}
-	
-	void DeleteSessionData(int id) 
-	{
-		m_SessionCache.Remove(id);	
-	}
-	
-	
-	void DeleteDeletedSessionData(int id)
-	{
-		m_DeletedSessionCache.Remove(id);
-	}
-	
-	bool IsPlacing() 
-	{
-		return ObjectInHand != null; 
-	}
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 
 	{
@@ -1252,63 +1125,7 @@ class Editor
 			InsertAction(action);
 		}
 	}
-	
-	/*
-	void HideMapObjects(array<ref EditorDeletedObjectData> deleted_objects, bool create_undo = true)
-	{
-		EditorAction action = new EditorAction("Unhide", "Hide");
-		foreach (EditorDeletedObjectData deleted_object: deleted_objects) {
-			if (!CanHideMapObject(deleted_object.Type)) {
-				continue;
-			}
-			
-			if (m_ObjectManager.IsObjectHidden(deleted_object)) { 
-				continue;
-			}
-					
-			m_DeletedSessionCache[deleted_object.GetID()] = deleted_object;		
-			if (create_undo) {
-				action.InsertUndoParameter(new Param1<int>(deleted_object.ID));
-				action.InsertRedoParameter(new Param1<int>(deleted_object.ID));
-			}
-			
-			Statistics.EditorRemovedObjects++;
-			m_ObjectManager.HideMapObject(new EditorDeletedObject(deleted_object));
-		}
 		
-		if (create_undo) {
-			InsertAction(action);
-		}
-	}
-	
-	void HideMapObjects(array<ref EditorDeletedObject> deleted_objects, bool create_undo = true)
-	{
-		EditorAction action = new EditorAction("Unhide", "Hide");
-		foreach (EditorDeletedObject deleted_object: deleted_objects) {		
-			if (!CanHideMapObject(deleted_object.GetType())) {
-				continue;
-			}
-			
-			if (m_ObjectManager.IsObjectHidden(deleted_object)) { 
-				continue;
-			}
-			
-			m_DeletedSessionCache[deleted_object.GetID()] = deleted_object.GetData();
-			if (create_undo) {
-				action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
-				action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
-			}
-			
-			Statistics.EditorRemovedObjects++;
-			m_ObjectManager.HideMapObject(deleted_object);
-		}
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
-	}
-	*/	
-	
 	bool UnhideMapObject(EditorDeletedObjectData data, bool create_undo = true)
 	{		
 		if (!data || !data.WorldObject) {
@@ -1353,29 +1170,6 @@ class Editor
 		
 		return true;
 	}
-	
-	/*
-	void UnhideMapObjects(array<ref EditorDeletedObject> deleted_objects, bool create_undo = true)
-	{
-		if (create_undo) {
-			EditorAction action = new EditorAction("Hide", "Unhide");
-		}
-		
-		foreach (EditorDeletedObject deleted_object: deleted_objects) {						
-			if (create_undo) {
-				action.InsertUndoParameter(new Param1<int>(deleted_object.GetID()));
-				action.InsertRedoParameter(new Param1<int>(deleted_object.GetID()));
-			}
-			
-			Statistics.EditorRemovedObjects++;
-			m_ObjectManager.UnhideMapObject(deleted_object);
-		}
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
-	}	
-	*/
 	
 	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
 	{
@@ -1499,12 +1293,7 @@ class Editor
 		
 		return position;
 	}
-	
-	void UpdateStatTime(int passed_time)
-	{
-		Statistics.EditorPlayTime += passed_time;
-	}
-	
+		
 	static int GetBuildNumber()
 	{
 		static const int BUILD_LENGTH = 1;
@@ -1595,7 +1384,131 @@ class Editor
 		
 		return save_data;
 	}
+	
+	EditorPlaceableItem GetReplaceableItem(Object object)
+	{
+		if (!object) {
+			return null;
+		}
 		
+		while (object.GetParent()) {
+			object = Object.Cast(object.GetParent());
+		}
+		
+		if (object.GetType() != string.Empty && !object.IsInherited(TreeHard) && !object.IsInherited(TreeSoft) && !object.IsInherited(BushHard) && !object.IsInherited(BushSoft)) {			
+			return GetPlaceableObject(object.GetType());
+		}
+		
+		// 1346854: tank_small_white.p3d
+		string debug_name = object.GetDebugNameNative();
+		if (debug_name == string.Empty) {
+			// lost cause, unlikely
+			return null;
+		}
+		
+		array<string> split_string = {};
+		debug_name.Split(":", split_string);
+		
+		// also unlikely
+		if (split_string.Count() == 1) {
+			return null;
+		}
+		
+		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(split_string[1].Trim());
+		// not ideal since we dont want to feed them the p3d, but doable
+		if (!placeable_items || placeable_items.Count() == 0) {			
+			return null;
+		}
+		
+		return placeable_items[0]; // better way to do other than index 0?
+	}
+	
+	string GetObjectName(Object object)
+	{
+		if (!object) {
+			return string.Empty;
+		}
+		
+		while (object.GetParent()) {
+			object = Object.Cast(object.GetParent());
+		}
+		
+		if (object.GetType() != string.Empty && !object.IsInherited(TreeHard) && !object.IsInherited(TreeSoft) && !object.IsInherited(BushHard) && !object.IsInherited(BushSoft)) {			
+			return string.Format("%1 (%2)", object.GetType(), object.GetID());
+		}
+		
+		// 1346854: tank_small_white.p3d
+		string debug_name = object.GetDebugNameNative();
+		if (debug_name == string.Empty) {
+			// lost cause, unlikely
+			return string.Empty;
+		}
+		
+		array<string> split_string = {};
+		debug_name.Split(":", split_string);
+		
+		// also unlikely
+		if (split_string.Count() == 1) {
+			return string.Empty;
+		}
+		
+		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(split_string[1].Trim());
+		// not ideal since we dont want to feed them the p3d, but doable
+		if (!placeable_items || placeable_items.Count() == 0) {
+			return string.Format("%1 (%2)", split_string[1], split_string[0]);
+		}
+				
+		return string.Format("%1 (%2)", placeable_items[0].Type, split_string[0]);
+	}
+	
+	void SetSaveFile(string save_file)
+	{
+		EditorSaveFile = save_file;
+		m_EditorHud.GetController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
+		
+		if (m_RecentlyOpenedFiles.Find(EditorSaveFile) != -1) {
+			m_RecentlyOpenedFiles.RemoveOrdered(m_RecentlyOpenedFiles.Find(EditorSaveFile));
+		}
+		
+		m_RecentlyOpenedFiles.Insert(EditorSaveFile);
+		if (m_RecentlyOpenedFiles.Count() > 3) {
+			m_RecentlyOpenedFiles.RemoveOrdered(0);
+		}
+		
+		GetGame().SetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
+		GetGame().SaveProfile();
+	}
+		
+	string GetSaveFile()
+	{
+		return EditorSaveFile;
+	}
+	
+	void SetBrush(EditorBrush brush) 
+	{
+		m_EditorBrush = brush; 
+	}
+	
+	void DeleteSessionData(int id) 
+	{
+		m_SessionCache.Remove(id);	
+	}
+	
+	void DeleteDeletedSessionData(int id)
+	{
+		m_DeletedSessionCache.Remove(id);
+	}
+	
+	bool IsPlacing() 
+	{
+		return ObjectInHand != null; 
+	}
+		
+	void UpdateStatTime(int passed_time)
+	{
+		Statistics.EditorPlayTime += passed_time;
+	}
+	
 	void SelectObject(EditorObject target) 
 	{
 		m_ObjectManager.SelectObject(target);
