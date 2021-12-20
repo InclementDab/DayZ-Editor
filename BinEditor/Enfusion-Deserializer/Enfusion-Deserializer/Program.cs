@@ -27,8 +27,8 @@ namespace Enfusion_Deserializer
                 Console.WriteLine(dta.Scale);
             }
 
-            //File.Delete("P:\\profiles\\Client\\Users\\tyler\\Editor\\test1.dze");
-            //stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test1.dze", FileMode.CreateNew, FileAccess.ReadWrite);
+           // File.Delete("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze");
+            //stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze", FileMode.CreateNew, FileAccess.ReadWrite);
             //data.Write(stream);
             //stream.Close();
 
