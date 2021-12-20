@@ -1396,7 +1396,7 @@ class Editor
 			object = Object.Cast(object.GetParent());
 		}
 		
-		if (object.GetType() != string.Empty && !object.IsInherited(TreeHard) && !object.IsInherited(TreeSoft) && !object.IsInherited(BushHard) && !object.IsInherited(BushSoft)) {			
+		if (object.GetType() != string.Empty && !object.IsTree() && !object.IsBush() && !object.IsRock()) {			
 			return GetPlaceableObject(object.GetType());
 		}
 		
@@ -1434,7 +1434,7 @@ class Editor
 			object = Object.Cast(object.GetParent());
 		}
 		
-		if (object.GetType() != string.Empty && !object.IsInherited(TreeHard) && !object.IsInherited(TreeSoft) && !object.IsInherited(BushHard) && !object.IsInherited(BushSoft)) {			
+		if (object.GetType() != string.Empty && !object.IsTree() && !object.IsBush() && !object.IsRock()) {			
 			return string.Format("%1 (%2)", object.GetType(), object.GetID());
 		}
 		
