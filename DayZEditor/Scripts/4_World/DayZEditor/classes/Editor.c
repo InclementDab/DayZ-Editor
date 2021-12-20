@@ -321,7 +321,7 @@ class Editor
 		
 		EditorLog.CurrentLogLevel = log_lvl;
 	}
-		
+			
 	EditorPlaceableItem GetReplaceableItem(Object object)
 	{
 		if (!object) {
@@ -332,7 +332,7 @@ class Editor
 			object = Object.Cast(object.GetParent());
 		}
 		
-		if (object.GetType() != string.Empty) {			
+		if (object.GetType() != string.Empty && !object.IsInherited(TreeHard) && !object.IsInherited(TreeSoft) && !object.IsInherited(BushHard) && !object.IsInherited(BushSoft)) {			
 			return GetPlaceableObject(object.GetType());
 		}
 		
@@ -370,7 +370,7 @@ class Editor
 			object = Object.Cast(object.GetParent());
 		}
 		
-		if (object.GetType() != string.Empty) {			
+		if (object.GetType() != string.Empty && !object.IsInherited(TreeHard) && !object.IsInherited(TreeSoft) && !object.IsInherited(BushHard) && !object.IsInherited(BushSoft)) {			
 			return string.Format("%1 (%2)", object.GetType(), object.GetID());
 		}
 		
@@ -517,7 +517,6 @@ class Editor
 					EditorPlaceableItem placeable_object = GetReplaceableItem(ObjectUnderCursor);
 					if (placeable_object) {
 						EditorWorldObject object_in_hand = CreateInHand(placeable_object);
-						object_in_hand.GetWorldObject().SetPosition(ObjectUnderCursor.GetPosition());
 						object_in_hand.GetWorldObject().SetOrientation(ObjectUnderCursor.GetOrientation());
 						return true;
 					}
