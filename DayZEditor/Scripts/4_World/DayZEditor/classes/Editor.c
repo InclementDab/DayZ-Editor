@@ -31,7 +31,8 @@
 // and message me your feedback on discord :)
 
 ref Editor g_Editor;
-Editor GetEditor() {
+Editor GetEditor() 
+{
 	return g_Editor;
 }
 
@@ -83,8 +84,7 @@ class Editor
 	
 	bool 										CameraLight;
 
-	string 										BanReason = "null";
-	static const string 						Version = "1.242." + GetBuildNumber();
+	static const string 						Version = "1.25." + GetBuildNumber();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -107,9 +107,6 @@ class Editor
 
 		g_Editor = this;
 		m_Player = player;
-		
-		// Load ban data
-		LoadBanData();
 		
 		// Player god mode
 		m_Player.SetAllowDamage(false);
@@ -613,13 +610,7 @@ class Editor
 	// Call to enable / disable editor
 	void SetActive(bool active)
 	{	
-		EditorLog.Info("Set Active %1", active.ToString());
-		string ban_reason;
-		if (IsBannedClient(ban_reason) && active) {
-			ShowBanDialog(ban_reason);
-			return;
-		}
-		
+		EditorLog.Info("Set Active %1", active.ToString());		
 		m_Active = active;
 				
 		// Shut down Inventory Editor, done prior to the camera due to the destructor
@@ -1455,55 +1446,6 @@ class Editor
 		}
 		
 		return position;
-	}
-		
-	bool IsBannedClient(out string reason)
-	{
-		reason = BanReason;
-		return reason != "null";
-	}
-	
-	// This is a bit of a dodgy / hacky solution
-	void LoadBanData()
-	{
-		array<ref BiosUser> users = {};
-		// Weird bug
-		if (!GetGame() || !GetGame().GetUserManager() || !GetGame().GetUserManager().GetSelectedUser()) return;
-		
-		GetGame().GetUserManager().GetUserList(users);
-		foreach (BiosUser user: users) {
-			Print(user.GetName());
-			Print(user.GetUid());
-		}
-		
-		RestContext rest = GetRestApi().GetRestContext("https:\/\/dayz-editor-default-rtdb.firebaseio.com\/");
-		if (!rest) {
-			// Boom!
-			BanReason = "null";
-			return;
-		}
-		
-		BanReason = rest.GET_now(string.Format("bans/%1.json", GetGame().GetUserManager().GetSelectedUser().GetUid()));
-		
-		// Temporary hotfix until we can re-implement the old system
-		// dont really like it but it will have to do
-		if (BanReason == "App Error") {
-			BanReason = "null";
-		}
-		
-		if (BanReason == "Timeout") {
-			BanReason = "null";
-		}
-	}
-	
-	static void ShowBanDialog(string reason)
-	{
-		EditorLog.Warning("Banned Client Detected! Exiting...");
-		if (reason == "App Error") {
-			GetGame().GetUIManager().ShowDialog("Network Error", "Could not load network data, please check your internet connection and restart the DayZ Editor", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
-		} else {
-			GetGame().GetUIManager().ShowDialog("Banned from DayZ Editor", string.Format("You have been banned from using the DayZ Editor.\n%1\n If you believe this was in error, please contact InclementDab \# 0001 on Discord", reason), 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
-		}		
 	}
 	
 	void UpdateStatTime(int passed_time)

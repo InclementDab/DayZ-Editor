@@ -159,13 +159,7 @@ class EditorClientModule: JMModuleBase
 	{
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleActive");
-		
-		string ban_reason;
-		if (m_Editor.IsBannedClient(ban_reason)) {
-			m_Editor.ShowBanDialog(ban_reason);
-			return;
-		}
-		
+				
 		bool active = m_Editor.IsActive(); // weird syntax bug?
 		m_Editor.SetActive(!active);
 	}	
@@ -191,13 +185,7 @@ class EditorClientModule: JMModuleBase
 	{		
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleUI");
-		
-		string ban_reason;
-		if (m_Editor.IsBannedClient(ban_reason)) {
-			m_Editor.ShowBanDialog(ban_reason);
-			return;
-		}
-		
+				
 		if (m_Editor.IsInventoryEditorActive()) {
 			m_Editor.GetInventoryEditorHud().GetLayoutRoot().Show(!m_Editor.GetInventoryEditorHud().GetLayoutRoot().IsVisible());
 			return;
