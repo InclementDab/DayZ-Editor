@@ -242,8 +242,7 @@ class Editor
 			}
 			
 			// Yeah, enfusions dumb, i know
-			bool should_precice = (Settings.HighPrecisionCollision || m_LootEditMode);
-																												// High precision is experimental, but we want it on for LootEditor since its only placing the cylinders!
+			bool should_precice = (Settings.HighPrecisionCollision || m_LootEditMode);																					// High precision is experimental, but we want it on for LootEditor since its only placing the cylinders!
 			CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance, 0, !CollisionMode, should_precice);
 		}
 		
@@ -272,18 +271,6 @@ class Editor
 		// Just shutting the logger up for a minute
 		int log_lvl = EditorLog.CurrentLogLevel;
 		EditorLog.CurrentLogLevel = LogLevel.WARNING;
-		
-		string name_optimization = m_EditorHudController.ObjectReadoutName;		
-		m_EditorHudController.ObjectReadoutName = GetObjectName(ObjectUnderCursor);
-
-		if (name_optimization != m_EditorHudController.ObjectReadoutName) {
-			m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
-			if (m_EditorHudController.ObjectReadoutName.Contains(".p3d")) { // yeah its hacky but its cool!
-				m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_YELLOW);
-			} else {
-				m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_WHITE);
-			}
-		}
 		
 		if (m_EditorCamera) {
 			vector cam_pos = m_EditorCamera.GetPosition();
@@ -707,14 +694,25 @@ class Editor
 		PPEffects.ResetAll();
 	}
 	
-	bool OnMouseEnterObject(IEntity target, int x, int y)
+	bool OnMouseEnterObject(Object target, int x, int y)
 	{
-		 
+		m_EditorHudController.ObjectReadoutName = GetObjectName(target);
+		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
+		
+		if (m_EditorHudController.ObjectReadoutName.Contains(".p3d")) { // yeah its hacky but its cool!
+			m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_YELLOW);
+		} else {
+			m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_WHITE);
+		}
+		
+		return true;
 	}
 	
-	bool OnMouseExitObject(IEntity target, int x, int y)
+	bool OnMouseExitObject(Object target, int x, int y)
 	{
-
+		m_EditorHudController.ObjectReadoutName = "";
+		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
+		return true;
 	}	
 	
 	EditorWorldObject CreateInHand(EditorPlaceableItem item)

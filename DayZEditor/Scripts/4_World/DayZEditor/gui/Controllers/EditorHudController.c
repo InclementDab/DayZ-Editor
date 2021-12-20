@@ -104,7 +104,6 @@ class EditorHudController: EditorControllerBase
 #ifdef EDITOR_PRINT	
 		EditorLog.OnLog.Remove(OnEditorLog);
 #endif
-		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 #endif
 	}
