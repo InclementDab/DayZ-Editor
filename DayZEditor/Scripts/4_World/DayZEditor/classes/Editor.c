@@ -302,13 +302,7 @@ class Editor
 		
 		EditorLog.CurrentLogLevel = log_lvl;
 	}
-		
-	// Get Selected player in Editor
-	PlayerBase GetPlayer()
-	{
-		return m_Player;
-	}
-	
+			
 	void SetPlayer(PlayerBase player)
 	{
 		// You can only control one player, this is how
@@ -463,8 +457,8 @@ class Editor
 			
 			case MouseState.MIDDLE: {
 				
-				// Shift + Middle Mouse logic
-				if (KeyState(KeyCode.KC_LSHIFT)) {
+				// Ctrl + Middle Mouse logic
+				if (KeyState(KeyCode.KC_LCONTROL)) {
 					if (ObjectUnderCursor) {			
 						ClearSelection();
 						if (GetEditorObject(ObjectUnderCursor)) {
@@ -473,23 +467,28 @@ class Editor
 							GetGame().ObjectDelete(ObjectUnderCursor);
 							HideMapObject(ObjectUnderCursor);
 						}
-					}
-				} else {
-					// teleportation logic
-					vector mouse_pos = Vector(CurrentMousePosition[0], GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]), CurrentMousePosition[2]);
-					vector camera_current_pos = m_EditorCamera.GetPosition();
-					float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
-					
-					// check if water is under mouse, to stop from teleporting under water			
-					if (IsSurfaceWater(mouse_pos)) {
-						m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  camera_current_pos[1], mouse_pos[2]));
-						break;
-					} 
 						
-					m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
+						return true;
+					}
+				} 
+				
+				if (IsPlayerActive()) {
+					return false;
 				}
 				
-				break;
+				// teleportation logic
+				vector mouse_pos = Vector(CurrentMousePosition[0], GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]), CurrentMousePosition[2]);
+				vector camera_current_pos = m_EditorCamera.GetPosition();
+				float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
+				
+				// check if water is under mouse, to stop from teleporting under water			
+				if (IsSurfaceWater(mouse_pos)) {
+					m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  camera_current_pos[1], mouse_pos[2]));
+					break;
+				} 
+					
+				m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
+				return true;
 			}
 			
 			case MouseState.RIGHT: {
@@ -1668,5 +1667,16 @@ class Editor
 	bool IsPlacing() 
 	{
 		return m_PlacingObject != null; 
+	}
+	
+	bool IsPlayerActive()
+	{
+		return (m_Player && m_Player.IsControlledPlayer() && !m_Active);
+	}
+	
+	// Get Selected player in Editor
+	PlayerBase GetPlayer()
+	{
+		return m_Player;
 	}
 }
