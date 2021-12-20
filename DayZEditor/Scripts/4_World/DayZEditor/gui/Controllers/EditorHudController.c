@@ -118,7 +118,7 @@ class EditorHudController: EditorControllerBase
 		array<string> favorite_items = {};
 		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
 		
-		array<EditorPlaceableItem> placeable_items = GetEditor().GetPlaceableObjects();
+		array<ref EditorPlaceableItem> placeable_items = GetEditor().GetPlaceableObjects();
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
 			// Makes stuff look good when first loading
 			if (GetEditor().Settings.PreloadObjects) {
