@@ -283,7 +283,7 @@ class EditorObjectManagerModule: JMModuleBase
 		return m_PlaceableObjects[type];
 	}
 	
-	array<ref EditorPlaceableItem> GetPlaceableObjects()
+	array<EditorPlaceableItem> GetPlaceableObjects()
 	{
 		return m_PlaceableObjects.GetValueArray();
 	}

@@ -322,6 +322,44 @@ class Editor
 		EditorLog.CurrentLogLevel = log_lvl;
 	}
 		
+	EditorPlaceableItem GetReplaceableItem(Object object)
+	{
+		if (!object) {
+			return null;
+		}
+		
+		while (object.GetParent()) {
+			object = Object.Cast(object.GetParent());
+		}
+		
+		if (object.GetType() != string.Empty) {			
+			return GetPlaceableObject(object.GetType());
+		}
+		
+		// 1346854: tank_small_white.p3d
+		string debug_name = object.GetDebugNameNative();
+		if (debug_name == string.Empty) {
+			// lost cause, unlikely
+			return null;
+		}
+		
+		array<string> split_string = {};
+		debug_name.Split(":", split_string);
+		
+		// also unlikely
+		if (split_string.Count() == 1) {
+			return null;
+		}
+		
+		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(split_string[1].Trim());
+		// not ideal since we dont want to feed them the p3d, but doable
+		if (!placeable_items || placeable_items.Count() == 0) {			
+			return null;
+		}
+		
+		return placeable_items[0]; // better way to do other than index 0?
+	}
+	
 	string GetObjectName(Object object)
 	{
 		if (!object) {
@@ -332,7 +370,7 @@ class Editor
 			object = Object.Cast(object.GetParent());
 		}
 		
-		if (object.GetType() != string.Empty) {
+		if (object.GetType() != string.Empty) {			
 			return string.Format("%1 (%2)", object.GetType(), object.GetID());
 		}
 		
@@ -356,7 +394,7 @@ class Editor
 		if (!placeable_items || placeable_items.Count() == 0) {
 			return string.Format("%1 (%2)", split_string[1], split_string[0]);
 		}
-
+				
 		return string.Format("%1 (%2)", placeable_items[0].Type, split_string[0]);
 	}
 	
@@ -476,9 +514,11 @@ class Editor
 				}
 				
 				if (KeyState(KeyCode.KC_LCONTROL) && ObjectUnderCursor) {
-					string object_name = GetObjectName(ObjectUnderCursor);
-					if (!object_name.Contains("p3d")) { // hack
-						
+					EditorPlaceableItem placeable_object = GetReplaceableItem(ObjectUnderCursor);
+					if (placeable_object) {
+						EditorWorldObject object_in_hand = CreateInHand(placeable_object);
+						object_in_hand.GetWorldObject().SetPosition(ObjectUnderCursor.GetPosition());
+						object_in_hand.GetWorldObject().SetOrientation(ObjectUnderCursor.GetOrientation());
 						return true;
 					}
 				}
@@ -678,7 +718,7 @@ class Editor
 
 	}	
 	
-	void CreateInHand(EditorPlaceableItem item)
+	EditorWorldObject CreateInHand(EditorPlaceableItem item)
 	{
 		EditorLog.Trace("Editor::CreateInHand");
 		
@@ -690,6 +730,7 @@ class Editor
 		ObjectInHand = new EditorHologram(item);
 		
 		EditorEvents.StartPlacing(this, item);		
+		return ObjectInHand;
 	}
 	
 	EditorObject PlaceObject()
@@ -1698,7 +1739,12 @@ class Editor
 		return m_ActionStack;
 	}
 	
-	array<ref EditorPlaceableItem> GetPlaceableObjects() 
+	EditorPlaceableItem GetPlaceableObject(string type)
+	{
+		return m_ObjectManager.GetPlaceableObject(type);
+	}
+	
+	array<EditorPlaceableItem> GetPlaceableObjects() 
 	{
 		return m_ObjectManager.GetPlaceableObjects();
 	}
