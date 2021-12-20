@@ -18,7 +18,9 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	protected ref EditorDeletedObjectMap			m_SelectedDeletedObjects;
 	
-	protected ref map<string, ref EditorPlaceableItem>	m_PlaceableObjects;
+	protected ref array<ref EditorPlaceableItem>	m_PlaceableObjects;
+	
+	protected ref map<string, EditorPlaceableItem>	m_PlaceableObjectsByType;
 	
 	// lookup table by p3d
 	protected ref map<string, ref array<EditorPlaceableItem>>	m_PlaceableObjectsByP3d;
@@ -41,7 +43,8 @@ class EditorObjectManagerModule: JMModuleBase
 		// Loads placeable objects	
 		g_Game.ReportProgress("Loading Placeable Objects");
 		
-		m_PlaceableObjects = new map<string, ref EditorPlaceableItem>;
+		m_PlaceableObjects = {};
+		m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>;
 		m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableItem>>();
 		TStringArray config_paths = {};
 		config_paths.Insert(CFG_VEHICLESPATH);
@@ -61,7 +64,8 @@ class EditorObjectManagerModule: JMModuleBase
 					continue;
 				}
 				
-				m_PlaceableObjects[placeable_item.Type] = placeable_item; 
+				m_PlaceableObjects.Insert(placeable_item); 
+				m_PlaceableObjectsByType[placeable_item.Type] = placeable_item;
 				
 				if (!m_PlaceableObjectsByP3d[placeable_item.Model]) {
 					m_PlaceableObjectsByP3d[placeable_item.Model] = new array<EditorPlaceableItem>();
@@ -72,9 +76,9 @@ class EditorObjectManagerModule: JMModuleBase
 		}
 		
 		// Statics that belong to Editor / DF
-		m_PlaceableObjects["NetworkSpotLight"] = EditorPlaceableItem.Create(NetworkSpotLight);
-		m_PlaceableObjects["NetworkPointLight"] = EditorPlaceableItem.Create(NetworkPointLight);
-		m_PlaceableObjects["NetworkParticleBase"] = EditorPlaceableItem.Create(NetworkParticleBase);
+		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkSpotLight));
+		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkPointLight));
+		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkParticleBase));
 	}
 	
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
@@ -280,12 +284,12 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	EditorPlaceableItem GetPlaceableObject(string type)
 	{
-		return m_PlaceableObjects[type];
+		return m_PlaceableObjectsByType[type];
 	}
 	
-	array<EditorPlaceableItem> GetPlaceableObjects()
+	array<ref EditorPlaceableItem> GetPlaceableObjects()
 	{
-		return m_PlaceableObjects.GetValueArray();
+		return m_PlaceableObjects;
 	}
 	
 	// return a list of objects that use this p3d, useful for finding adequite replacements for 

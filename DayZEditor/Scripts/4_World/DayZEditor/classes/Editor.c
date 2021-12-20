@@ -1649,7 +1649,7 @@ class Editor
 		return m_ObjectManager.GetPlaceableObject(type);
 	}
 	
-	array<EditorPlaceableItem> GetPlaceableObjects() 
+	array<ref EditorPlaceableItem> GetPlaceableObjects() 
 	{
 		return m_ObjectManager.GetPlaceableObjects();
 	}
