@@ -91,11 +91,13 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	void DelayedDragBoxCheck()
 	{
 		if (!IsVisible()) return;
+			if (GetGame().GetInput().HasGameFocus()) {
+				int x, y;
+				x += 6;
+				GetMousePos(x, y);
+				thread _DelayedDragBoxCheck(x, y);
+		}
 		
-		int x, y;
-		x += 6;
-		GetMousePos(x, y);
-		thread _DelayedDragBoxCheck(x, y);
 	}
 	
 	void ScrollToListItem(EditorListItem list_item)
