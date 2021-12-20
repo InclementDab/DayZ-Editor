@@ -1355,8 +1355,18 @@ class Editor
 			InsertAction(action);
 		}
 	}
+		
+	void Clear()
+	{
+		Statistics.Save();
+		EditorSaveFile = string.Empty;	
+		m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
+		m_ActionStack.Clear();
+		m_SessionCache.Clear();
+		m_ObjectManager.Clear();
+	}
 	
-	bool CanHideMapObject(string type)
+		bool CanHideMapObject(string type)
 	{
 		return (!GetGame().IsKindOf(type, "BrushBase") && !GetGame().IsKindOf(type, "BoundingBoxBase") && !GetGame().IsKindOf(type, "Man") && !GetGame().IsKindOf(type, "EditorCamera"));
 	}
@@ -1380,62 +1390,7 @@ class Editor
 		
 		editor_object.Lock(false);
 	}
-	
-	void SelectObject(EditorObject target) 
-	{
-		m_ObjectManager.SelectObject(target);
-	}
-	
-	void DeselectObject(EditorObject target) 
-	{
-		m_ObjectManager.DeselectObject(target);
-	}
-	
-	void ToggleSelection(EditorObject target) 
-	{
-		m_ObjectManager.ToggleSelection(target);
-	}
 		
-	void ClearSelection() 
-	{
-		m_ObjectManager.ClearSelection();
-	}
-	
-	void SelectHiddenObject(EditorDeletedObject target)
-	{
-		m_ObjectManager.SelectHiddenObject(target);
-	}
-	
-	void DeselectHiddenObject(EditorDeletedObject target)
-	{
-		m_ObjectManager.DeselectHiddenObject(target);
-	}
-	
-	void ToggleHiddenObjectSelection(EditorDeletedObject target)
-	{
-		m_ObjectManager.ToggleHiddenObjectSelection(target);
-	}
-		
-	void Clear()
-	{
-		Statistics.Save();
-		EditorSaveFile = string.Empty;	
-		m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
-		m_ActionStack.Clear();
-		m_SessionCache.Clear();
-		m_ObjectManager.Clear();
-	}
-		
-	void InsertAction(EditorAction action) 
-	{
-		m_ActionStack.InsertAction(action);
-	}
-	
-	array<string> GetRecentFiles()
-	{
-		return m_RecentlyOpenedFiles;
-	}
-	
 	static PlayerBase CreateDefaultCharacter(vector position = "0 0 0")
 	{
 		EditorLog.Trace("Editor::CreateDefaultCharacter");
@@ -1624,6 +1579,51 @@ class Editor
 		return save_data;
 	}
 		
+	void SelectObject(EditorObject target) 
+	{
+		m_ObjectManager.SelectObject(target);
+	}
+	
+	void DeselectObject(EditorObject target) 
+	{
+		m_ObjectManager.DeselectObject(target);
+	}
+	
+	void ToggleSelection(EditorObject target) 
+	{
+		m_ObjectManager.ToggleSelection(target);
+	}
+		
+	void ClearSelection() 
+	{
+		m_ObjectManager.ClearSelection();
+	}
+	
+	void SelectHiddenObject(EditorDeletedObject target)
+	{
+		m_ObjectManager.SelectHiddenObject(target);
+	}
+	
+	void DeselectHiddenObject(EditorDeletedObject target)
+	{
+		m_ObjectManager.DeselectHiddenObject(target);
+	}
+	
+	void ToggleHiddenObjectSelection(EditorDeletedObject target)
+	{
+		m_ObjectManager.ToggleHiddenObjectSelection(target);
+	}
+		
+	void InsertAction(EditorAction action) 
+	{
+		m_ActionStack.InsertAction(action);
+	}
+	
+	array<string> GetRecentFiles()
+	{
+		return m_RecentlyOpenedFiles;
+	}
+	
 	bool IsActive() 
 	{
 		return m_Active;
