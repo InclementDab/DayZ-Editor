@@ -276,8 +276,13 @@ class Editor
 		string name_optimization = m_EditorHudController.ObjectReadoutName;		
 		m_EditorHudController.ObjectReadoutName = GetObjectName(ObjectUnderCursor);
 
-		if (name_optimization != m_EditorHudController.ObjectReadoutName) {		
+		if (name_optimization != m_EditorHudController.ObjectReadoutName) {
 			m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
+			if (m_EditorHudController.ObjectReadoutName.Contains(".p3d")) { // yeah its hacky but its cool!
+				m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_YELLOW);
+			} else {
+				m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_WHITE);
+			}
 		}
 		
 		if (m_EditorCamera) {

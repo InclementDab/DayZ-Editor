@@ -68,6 +68,9 @@ class EditorHudController: EditorControllerBase
 	protected ButtonWidget CameraTrackRunButton;
 	protected Widget CameraTrackButtonOutline;
 	
+	// Preview for Object Readout
+	TextWidget ObjectHoverSelectObjectReadout;
+	
 	// Favorites
 	protected ref array<string> m_FavoriteItems = {};
 	
