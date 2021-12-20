@@ -1,36 +1,3 @@
-
-// todo: more holidays!
-enum EditorHoliday
-{
-	NONE,
-	CHRISTMAS,
-	ANNIVERSARY,
-	HALLOWEEN
-}
-
-EditorHoliday GetCurrentHoliday()
-{
-	int year, month, day;
-	GetYearMonthDayUTC(year, month, day);
-	if (month == 12 && day > 12) {
-		return EditorHoliday.CHRISTMAS;
-	}
-	
-	if (month == 1 && day < 12) {
-		return EditorHoliday.CHRISTMAS;
-	}
-	
-	if (month == 10 && day > 0 && day < 14) {
-		return EditorHoliday.ANNIVERSARY;
-	}
-	
-	if (month == 10 && day > 14) {
-		return EditorHoliday.HALLOWEEN;
-	}
-	
-	return EditorHoliday.NONE;
-}
-
 modded class MissionMainMenu
 {
 	override void OnUpdate(float timeslice)

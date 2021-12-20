@@ -1494,6 +1494,29 @@ class Editor
 		return collisions.Get(0);
 	}
 	
+	static EditorHoliday GetCurrentHoliday()
+	{
+		int year, month, day;
+		GetYearMonthDayUTC(year, month, day);
+		if (month == 12 && day > 12) {
+			return EditorHoliday.CHRISTMAS;
+		}
+		
+		if (month == 1 && day < 12) {
+			return EditorHoliday.CHRISTMAS;
+		}
+		
+		if (month == 10 && day > 0 && day < 14) {
+			return EditorHoliday.ANNIVERSARY;
+		}
+		
+		if (month == 10 && day > 14) {
+			return EditorHoliday.HALLOWEEN;
+		}
+		
+		return EditorHoliday.NONE;
+	}
+	
 	EditorSaveData CreateSaveData(bool selected_only = false)
 	{
 		EditorSaveData save_data = new EditorSaveData();
