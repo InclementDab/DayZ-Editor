@@ -1338,7 +1338,7 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 1
-           text "#STR_EDITOR_OBJECT :"
+           text "#STR_EDITOR_OBJECT "
            font "gui/fonts/etelkatextpro"
            "size to text h" 1
            "size to text v" 0
@@ -1384,7 +1384,7 @@ FrameWidgetClass EditorFrame {
            hexactsize 0
            vexactsize 1
            scriptclass ""
-           text "#STR_EDITOR_VERSION :"
+           text "#STR_EDITOR_VERSION "
            font "gui/fonts/etelkatextpro"
            "bold text" 1
            "size to text h" 1
@@ -1432,7 +1432,7 @@ FrameWidgetClass EditorFrame {
            vexactpos 0
            hexactsize 1
            vexactsize 0
-           text "#STR_EDITOR_CURRENT_FILE :"
+           text "#STR_EDITOR_CURRENT_FILE "
            font "gui/fonts/etelkatextpro"
            "exact text" 0
            "size to text h" 1
@@ -1697,7 +1697,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 1
          vexactsize 1
          scriptclass "ViewBinding"
-         style Slider_1px_alpha_50
+         style Default
          step 0.1
          {
           TextWidgetClass CameraTrackSmoothingReadout {
@@ -1762,7 +1762,7 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           style Outline_1px
+           style blank
           }
          }
          {
@@ -1794,7 +1794,7 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           style Outline_1px
+           style blank
           }
          }
          {
