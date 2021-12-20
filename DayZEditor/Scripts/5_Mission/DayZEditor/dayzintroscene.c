@@ -25,6 +25,7 @@ modded class DayZIntroScene
 	// 😂
 	protected Object m_FunnyMeme;
 	protected ref array<Object> m_FunnyMemes = {};
+	protected ref array<Object> m_ChristmasObjects = {};
 	
 	protected bool m_ChristmasSetup = false;
 	protected float m_CameraTimer;
@@ -39,9 +40,7 @@ modded class DayZIntroScene
 		"XmasGiftBlue2",
 		"XmasGiftGreen1",
 		"XmasGiftGreen2"
-	};
-	
-	protected ref array<Object> m_ChristmasObjects = {};
+	};	
 
 	void DayZIntroScene()
 	{

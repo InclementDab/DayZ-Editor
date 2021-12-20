@@ -13,7 +13,7 @@ class EditorLoadingScreen: LoadingScreen
 		new LoadingScreenEntry("9.edds", "Jonas"),
 		new LoadingScreenEntry("10.edds", "Fluzoo"),
 		//new LoadingScreenEntry("11.edds", "Mihalych"),
-		new LoadingScreenEntry("12.edds", "TerrorisedCookie"),
+		//new LoadingScreenEntry("12.edds", "TerrorisedCookie"),
 		new LoadingScreenEntry("13.edds", "DayZ"),
 		new LoadingScreenEntry("14.edds", "DanceOfJesus"),
 		new LoadingScreenEntry("15.edds", "DanceOfJesus"),		
@@ -31,6 +31,7 @@ class EditorLoadingScreen: LoadingScreen
 		new LoadingScreenEntry("27.edds", "ItzMikeDocherty"),	
 		new LoadingScreenEntry("28.edds", "JanceOfDesus"),	
 		new LoadingScreenEntry("29.edds", "InclementDab"),	
+		new LoadingScreenEntry("30.edds", "Welliton"),	
 	};
 	
 	protected TextWidget m_ImageCredit;

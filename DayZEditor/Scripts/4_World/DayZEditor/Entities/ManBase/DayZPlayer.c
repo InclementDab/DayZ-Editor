@@ -27,4 +27,9 @@ modded class PlayerBase
 	override void CheckDeath()
 	{
 	}
+	
+	override void OnDebugSpawn()
+	{
+		
+	}
 }
