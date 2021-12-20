@@ -157,32 +157,6 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			AddContent(particle_group);
 		}
 		
-		GroupPrefab object_group = new GroupPrefab("#STR_EDITOR_OBJECT", editor_object, string.Empty);
-		object_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", editor_object, "Health"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", editor_object, "EditorOnly"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", editor_object, "Simulate"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", editor_object, "Locked"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", editor_object, "Physics"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", editor_object, "AllowDamage"));
-		//object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_COLLISION", editor_object, "Collision"));
-		string expansion_check = "ExpansionMarketModule";
-		if (expansion_check.ToType() && editor_object.GetWorldObject().IsInherited(EntityAI)) {
-			object_group.Insert(new EditBoxPrefab("Trader Type", editor_object, "ExpansionTraderType"));
-		}
-		
-		AddContent(object_group);
-		
-		if (editor_object.HasAnimations()) {
-			GroupPrefab animations_group = new GroupPrefab("Object Animations", editor_object, string.Empty);
-			
-			map<string, ref EditorObjectAnimationSource> object_animations = editor_object.GetObjectAnimations();
-			foreach (string name, EditorObjectAnimationSource anim: object_animations) {
-				animations_group.Insert(new SliderPrefab(name, anim, "AnimationPhase", 0, 1));
-			}
-			
-			AddContent(animations_group);
-		}
-		
 		if (editor_object.GetWorldObject().IsMan()) {
 			GroupPrefab human_group = new GroupPrefab("#STR_EDITOR_HUMAN", editor_object, string.Empty);
 			human_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SELECTED_PLAYER", editor_object, "Control"));
@@ -197,6 +171,32 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			
 			AddContent(human_group);
 		}
+		
+		if (editor_object.HasAnimations()) {
+			GroupPrefab animations_group = new GroupPrefab("Object Animations", editor_object, string.Empty);
+			
+			map<string, ref EditorObjectAnimationSource> object_animations = editor_object.GetObjectAnimations();
+			foreach (string name, EditorObjectAnimationSource anim: object_animations) {
+				animations_group.Insert(new SliderPrefab(name, anim, "AnimationPhase", 0, 1));
+			}
+			
+			AddContent(animations_group);
+		}
+		
+		GroupPrefab object_group = new GroupPrefab("#STR_EDITOR_OBJECT", editor_object, string.Empty);
+		object_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", editor_object, "Health"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", editor_object, "EditorOnly"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", editor_object, "Simulate"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", editor_object, "Locked"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", editor_object, "Physics"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", editor_object, "AllowDamage"));
+		//object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_COLLISION", editor_object, "Collision"));
+		string expansion_check = "ExpansionMarketModule";
+		if (expansion_check.ToType() && editor_object.GetWorldObject().IsInherited(EntityAI)) {
+			object_group.Insert(new EditBoxPrefab("Trader Type", editor_object, "ExpansionTraderType"));
+		}
+		
+		AddContent(object_group);
 		
 		//AddContent(new MultilineEditBoxPrefab("Execute Code", editor_object, "TestingScript"));
 		//AddContent(new ButtonPrefab("Execute", this, "ExecuteCode"));
