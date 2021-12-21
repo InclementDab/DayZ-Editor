@@ -2,9 +2,9 @@ EffectDef {
  Emitors {
   EmitorDef SmallSnow {
    ShapeType Box
-   ShapeSize 10 0 10
+   ShapeSize 10 0 5
    MaxNum 5000
-   BirthRate 500
+   BirthRate 495
    Offset 0 2 0
    Angles 0 180 0
    Material "{735D641EB0FC5209}system/wbdata/particleeditor/defaultmaterial.emat"
@@ -27,9 +27,9 @@ EffectDef {
   }
   EmitorDef MediumSnow {
    ShapeType Box
-   ShapeSize 10 0 10
+   ShapeSize 10 0 5
    MaxNum 2000
-   BirthRate 100
+   BirthRate 195
    Offset 0 2 0
    Angles 0 180 0
    Material "{735D641EB0FC5209}system/wbdata/particleeditor/defaultmaterial.emat"
@@ -52,9 +52,9 @@ EffectDef {
   }
   EmitorDef LargeSnow {
    ShapeType Box
-   ShapeSize 10 0 10
+   ShapeSize 10 0 5
    MaxNum 500
-   BirthRate 25
+   BirthRate 30
    Offset 0 2 0
    Angles 0 180 0
    Material "{735D641EB0FC5209}system/wbdata/particleeditor/defaultmaterial.emat"
