@@ -12,7 +12,6 @@ class EditorObject: EditorWorldObject
 	protected Object 		m_CenterLine;
 	protected Object		m_BasePoint;
 	
-	protected ref array<ref EditorSnapPoint> m_SnapPoints = {};
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
 	protected vector m_LineCenters[12]; 
@@ -164,10 +163,6 @@ class EditorObject: EditorWorldObject
 		m_BasePoint.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
 
 		AddChild(m_BasePoint, -1, true);
-
-		for (int i = 0; i < 8; i++) {
-			m_SnapPoints.Insert(new EditorSnapPoint(this, m_LineVerticies[i]));
-		}
 		
 		// Bounding Box
 		EnableBoundingBox(IsBoundingBoxEnabled());
@@ -347,13 +342,6 @@ class EditorObject: EditorWorldObject
 		Position = GetPosition();
 		Orientation = GetOrientation();
 				
-		if (GetEditor().Settings.DebugMode) {
-			//Debug.DestroyAllShapes();
-			foreach (EditorSnapPoint point: m_SnapPoints) {
-				Debug.DrawSphere(point.GetWorldObject().GetWorldPosition());
-			}
-		}
-		
 		// what is this stuff?
 		PlayerBase player = PlayerBase.Cast(m_WorldObject);
 		if (player && player == GetEditor().GetPlayer()) {
