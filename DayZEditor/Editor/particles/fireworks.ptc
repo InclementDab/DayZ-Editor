@@ -1,0 +1,75 @@
+EffectDef {
+ Emitors {
+  EmitorDef emitor1 {
+   ShapeType Ellipse
+   ShapeSize 15 0 2
+   MaxNum 3
+   BirthRate 0.25
+   BirthRateRND 0.25
+   Offset 0 5 0
+   Material "{EA2686148E09D4DD}graphics/Particles/materials/enviroment/ring_01.emat"
+   SizeMultiplier 4
+   SizeRND 2
+   RandomRotDir 0
+   StretchMultiplier 0
+   RandomAngle 0
+   BillboardingType Full
+   Velocity 0
+   AirResistance 0.5
+   GravityMultiply 0.15
+   Restitution 0
+   LifetimeByAnim 0
+   RandomFrame 0
+   LifeTime 2.5
+   LifeTimeRND 1
+   Color {
+    0 0.0372 0 0 0.1228 0.0743 0 0 0.1577 1 0 0 0.4421 0.9851 0 0 1 0 0 0
+   }
+   Alpha {
+    0 0 0.12976 0.16729 0.22922 0.93309 0.39705 0.91078 0.5136 0.69145 0.55711 0 1 0
+   }
+   Size {
+    0 0.0632 0.12743 0.171 0.1655 1 0.39083 1 0.64336 0.74349 0.90909 0 1 0
+   }
+   EffectTime 0
+   Repeat 1
+  }
+  EmitorDef test {
+   ShapeType Ellipse
+   ShapeSize 15 0 2
+   MaxNum 3
+   BirthRate 0.25
+   BirthRateRND 0.25
+   BirthRateVel 0
+   Offset 0 5 0
+   Material "{67927992D82BA30E}DayZEditor/Editor/emats/new_ring.emat"
+   SizeMultiplier 2
+   SizeRND 2
+   RandomRotDir 1
+   RotMultiplier 0
+   StretchMultiplier 0
+   StreakFullUV 0
+   VelAngle 0
+   RandomAngle 1
+   BillboardingType Full
+   Velocity 0
+   AirResistance 0.5
+   GravityMultiply 0.15
+   Restitution 0
+   LifetimeByAnim 0
+   RandomFrame 0
+   LifeTime 2.5
+   LifeTimeRND 0.5
+   Color {
+    0 0.0372 0 0 0.1228 0.0743 0 0 0.1577 1 0 0 0.4421 0.9851 0 0 1 0 0 0
+   }
+   Alpha {
+    0 0 0.12976 0.16729 0.22922 0.93309 0.39705 0.91078 0.5136 0.69145 0.55711 0 1 0
+   }
+   Size {
+    0 0.0632 0.12743 0.171 0.1655 1 0.39083 1 0.64336 0.74349 0.90909 0 1 0
+   }
+   EffectTime 2.5
+  }
+ }
+}
