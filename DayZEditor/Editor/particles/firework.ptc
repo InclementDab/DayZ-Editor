@@ -1,0 +1,92 @@
+EffectDef {
+ Emitors {
+  EmitorDef rocket {
+   ConeAngle 360 0 50
+   MaxNum 15
+   BirthRate 1
+   Offset 0 0 0
+   Material "{735D641EB0FC5209}system/wbdata/ParticleEditor/defaultMaterial.emat"
+   SizeMultiplier 0.075
+   StretchMultiplier 1.25
+   Velocity 5
+   Wind 0
+   LifeTime 2.5
+   Color {
+    0 1 1 1 1 1 1 1
+   }
+   Alpha {
+    0 0.1 1 0.1
+   }
+   EffectTime 5
+  }
+  EmitorDef firework {
+   ShapeType Ellipse
+   ShapeSize 25 0 2
+   ConeAngle 360 0 50
+   MaxNum 7
+   BirthRate 1.2
+   BirthRateRND 0.35
+   Offset 0 12.5 0
+   Material "{401BF44B30107952}DayZEditor/Editor/emats/firework1.emat"
+   SizeMultiplier 2
+   SizeRND 1
+   Velocity 0
+   GravityMultiply 0.015
+   Color {
+    0 1 0.7847 0 1 1 0.8 0
+   }
+   Alpha {
+    0 0.00431 0.26185 0.11638 0.39239 0.75862 0.60606 0.9569 0.83139 0.09483 1 0.00431
+   }
+   Size {
+    0 0 0.24476 0.05603 0.38228 0.62069 0.55245 0.98276 0.9697 0.75 1 0
+   }
+  }
+  EmitorDef firework2 {
+   ShapeType Ellipse
+   ShapeSize 25 0 2
+   ConeAngle 360 0 50
+   MaxNum 7
+   BirthRate 0.9
+   BirthRateRND 0.75
+   Offset 0 12.5 0
+   Material "{1EF3DD088F9DF75D}DayZEditor/Editor/emats/firework2.emat"
+   SizeMultiplier 2
+   SizeRND 0.25
+   Velocity 0
+   GravityMultiply 0.015
+   Color {
+    0 0 0.149 1 1 0 0.15 1
+   }
+   Alpha {
+    0 0.00431 0.26185 0.11638 0.39239 0.75862 0.60606 0.9569 0.83139 0.09483 1 0.00431
+   }
+   Size {
+    0 0 0.24476 0.05603 0.38228 0.62069 0.55245 0.98276 0.9697 0.75 1 0
+   }
+  }
+  EmitorDef firework3 {
+   ShapeType Ellipse
+   ShapeSize 25 0 2
+   ConeAngle 360 0 50
+   MaxNum 8
+   BirthRate 1.45
+   BirthRateRND 0.35
+   Offset 0 12.5 0
+   Material "{EAFB9A9082409F29}DayZEditor/Editor/emats/firework3.emat"
+   SizeMultiplier 2
+   SizeRND 0.5
+   Velocity 0
+   GravityMultiply 0.015
+   Color {
+    0 1 0.098 0.1137 1 1 0.1 0.1
+   }
+   Alpha {
+    0 0.00431 0.26185 0.11638 0.39239 0.75862 0.60606 0.9569 0.83139 0.09483 1 0.00431
+   }
+   Size {
+    0 0 0.24476 0.05603 0.38228 0.62069 0.55245 0.98276 0.9697 0.75 1 0
+   }
+  }
+ }
+}
