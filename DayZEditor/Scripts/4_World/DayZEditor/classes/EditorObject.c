@@ -479,7 +479,6 @@ class EditorObject: EditorWorldObject
 		}
 		
 		HasShownScaleWarning = true;
-		
 		EditorMessageBox.Show("Warning!", "FYI: Scale does not work when pushed to a live server! (Only works in the Editor) - This is a DayZ bug and the devs are aware", MessageBoxButtons.OK);
 	}
 	
@@ -577,12 +576,12 @@ class EditorObject: EditorWorldObject
 		vector position = AverageVectors(clip_info[0], clip_info[1]);
 		
 		for (int i = 0; i < 12; i++) {
-			
 			vector transform[4];			
 			transform[3] = m_LineCenters[i];
 			
-			for (int j = 0; j < 3; j++) 
+			for (int j = 0; j < 3; j++) {
 				transform[j][j] = ((position[j] == m_LineCenters[i][j]) * size[j]/2) + BOUNDING_BOX_THICKNESS;						
+			}
 			 
 			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_NONE));
 			m_BBoxLines[i].SetTransform(transform);			
