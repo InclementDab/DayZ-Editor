@@ -19,6 +19,8 @@ modded class MissionMainMenu
 
 modded class DayZIntroScene
 {
+	static const float CAMERA_DISTANCE_FROM_SCREEN = 4;
+	
 	// 😂
 	protected Object m_FunnyMeme;
 	protected ref array<Object> m_FunnyMemes = {};
@@ -45,7 +47,7 @@ modded class DayZIntroScene
 	{
 		delete m_Character;
 		
-		m_CharacterPos = m_Camera.GetPosition() + m_Camera.GetDirection() * 4;
+		m_CharacterPos = m_Camera.GetPosition() + m_Camera.GetDirection() * CAMERA_DISTANCE_FROM_SCREEN;
 		m_CharacterPos = m_CharacterPos + m_Camera.GetDirection() * vector.Up * -0.5;
 		m_CharacterPos[1] = GetGame().SurfaceY(m_CharacterPos[0], m_CharacterPos[2]) + 1.25;
 	
@@ -75,12 +77,12 @@ modded class DayZIntroScene
 	
 	void ~DayZIntroScene()
 	{
-		foreach (Object o: m_ChristmasObjects) {
-			GetGame().ObjectDelete(o);
+		foreach (Object christmas_object: m_ChristmasObjects) {
+			GetGame().ObjectDelete(christmas_object);
 		}	
 		
-		foreach (Object meme: m_FunnyMemes) {
-			GetGame().ObjectDelete(meme);
+		foreach (Object fallen_object: m_FunnyMemes) {
+			GetGame().ObjectDelete(fallen_object);
 		}
 	}
 	
@@ -101,6 +103,7 @@ modded class DayZIntroScene
 			
 			if (m_CurrentHoliday == EditorHoliday.NEWYEARS) {
 				Particle.Play(ParticleList.FIREWORK, m_FunnyMeme, Vector(0, 0, 0));
+				GetGame().GetWorld().SetDate(1, 1, 1, 0, 0);
 			}
 			
 			vector meme_pos = m_FunnyMeme.GetPosition();
@@ -119,9 +122,8 @@ modded class DayZIntroScene
 			Particle.Play(ParticleList.SNOWFOG, m_FunnyMeme, Vector(0, 0, 0));
 			m_ChristmasSetup = true;
 		}
-				
-		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 2;
-		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);
+		
+		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), m_Camera.GetPosition() + GetGame().GetPointerDirection() * (CAMERA_DISTANCE_FROM_SCREEN / 2));
 		vector pos = m_FunnyMeme.GetPosition();
 		
 		// Makes camera 'hover' in position
