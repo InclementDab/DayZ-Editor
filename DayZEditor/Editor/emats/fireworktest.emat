@@ -1,5 +1,0 @@
-Particle {
- AlbedoMap "{CDB51E8D21FB6F02}DayZEditor/GUI/images/fireworktest.edds" 
- Emissive 0 0 1 0
- BlendMode Additive_AlphaModulate
-}
