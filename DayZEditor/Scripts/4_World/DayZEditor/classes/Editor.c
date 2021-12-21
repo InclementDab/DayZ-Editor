@@ -1334,11 +1334,7 @@ class Editor
 	{
 		int year, month, day;
 		GetYearMonthDayUTC(year, month, day);
-		if (month == 12 && day > 12) {
-			return EditorHoliday.CHRISTMAS;
-		}
-		
-		if (month == 1 && day < 12) {
+		if ((month == 12 && day > 12) || (month == 1 && day < 12)) {
 			return EditorHoliday.CHRISTMAS;
 		}
 		
