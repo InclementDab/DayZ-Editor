@@ -95,6 +95,7 @@ modded class DayZIntroScene
 			}
 			
 			Particle.Play(ParticleList.SNOW, m_FunnyMeme, Vector(0, 0, 0));
+			Particle.Play(ParticleList.SNOWFOG, m_FunnyMeme, Vector(0, 0, 0));
 			m_ChristmasSetup = true;
 		}
 				
