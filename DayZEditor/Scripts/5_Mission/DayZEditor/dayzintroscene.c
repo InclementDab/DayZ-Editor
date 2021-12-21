@@ -23,7 +23,7 @@ modded class DayZIntroScene
 	
 	// 😂
 	protected Object m_FunnyMeme;
-	protected ref array<Object> m_FunnyMemes = {};
+	protected ref array<Object> m_FallenObjects = {};
 	protected ref array<Object> m_ChristmasObjects = {};
 	
 	protected bool m_ChristmasSetup = false;
@@ -81,7 +81,7 @@ modded class DayZIntroScene
 			GetGame().ObjectDelete(christmas_object);
 		}	
 		
-		foreach (Object fallen_object: m_FunnyMemes) {
+		foreach (Object fallen_object: m_FallenObjects) {
 			GetGame().ObjectDelete(fallen_object);
 		}
 	}
@@ -142,7 +142,7 @@ modded class DayZIntroScene
 			m_FunnyMeme.SetOrientation(ori);
 			m_FunnyMeme.Update();
 			
-			foreach (Object cam: m_FunnyMemes) {
+			foreach (Object cam: m_FallenObjects) {
 				vector trans[4];
 				cam.GetTransform(trans);
 				dBodyApplyTorqueImpulse(cam, trans[2].Normalized() * timeslice * 100 * 50);
@@ -201,13 +201,13 @@ modded class DayZIntroScene
 				object_to_drop.SetDynamicPhysicsLifeTime(-1);
 				object_to_drop.EnableDynamicCCD(true);
 				dBodySetMass(object_to_drop, 100);
-				m_FunnyMemes.Insert(object_to_drop);
+				m_FallenObjects.Insert(object_to_drop);
 			}
 		}
 		
 		if (KeyState(KeyCode.KC_BACK)) {
-			foreach (Object obj: m_FunnyMemes) {
-				GetGame().ObjectDelete(obj);
+			foreach (Object fallen_object: m_FallenObjects) {
+				GetGame().ObjectDelete(fallen_object);
 			}
 		}
 	}
