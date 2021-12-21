@@ -412,6 +412,11 @@ class Editor
 					return true;
 				}
 				
+				if (!target || target == m_EditorHud.EditorMapWidget) {
+					ClearSelection();
+					GetCameraTrackManager().ClearSelection();
+				}
+				
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					EditorPlaceableItem placeable_object = GetReplaceableItem(ObjectUnderCursor);
 					if (placeable_object) {
@@ -420,11 +425,6 @@ class Editor
 					}
 					
 					return true;
-				}
-				
-				if (!target || target == m_EditorHud.EditorMapWidget) {
-					ClearSelection();
-					GetCameraTrackManager().ClearSelection();
 				}
 				
 				if (!GetBrush() && GetSelectedObjects().Count() == 0) {
