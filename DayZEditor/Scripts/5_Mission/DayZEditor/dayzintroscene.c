@@ -72,20 +72,19 @@ modded class DayZIntroScene
 		m_FunnyMeme.SetPosition(m_CharacterPos);
 		m_FunnyMeme.Update();
 		
+		/*
 		if (m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
 			Snow snow = new Snow();
 			m_CharacterPos[1] = m_CharacterPos[1] + 10;
 			SEffectManager.PlayInWorld(snow, m_CharacterPos);
-		}
+		}*/
 	}
 	
 	void ~DayZIntroScene()
 	{
-		if (m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
-			foreach (Object o: m_ChristmasObjects) {
-				GetGame().ObjectDelete(o);
-			}
-		}
+		foreach (Object o: m_ChristmasObjects) {
+			GetGame().ObjectDelete(o);
+		}	
 		
 		foreach (Object meme: m_FunnyMemes) {
 			GetGame().ObjectDelete(meme);
