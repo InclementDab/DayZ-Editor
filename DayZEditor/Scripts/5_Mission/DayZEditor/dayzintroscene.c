@@ -19,17 +19,14 @@ modded class MissionMainMenu
 
 modded class DayZIntroScene
 {
-	static const float CAMERA_DISTANCE_FROM_SCREEN = 4;
+	static const float CAMERA_DISTANCE_FROM_SCREEN = 4.5;
 	
 	// 😂
-	protected Object m_FunnyMeme;
+	protected Object m_DSLRCamera;
 	protected ref array<Object> m_FallenObjects = {};
 	protected ref array<Object> m_ChristmasObjects = {};
 	
-	protected bool m_ChristmasSetup = false;
-	protected float m_CameraTimer;
-	
-	protected float m_Offset, m_TotalTime;
+	protected float m_Offset, m_TotalTime, m_CameraTimer;
 	protected int m_Hour, m_Minute;	
 	
 	protected EditorHoliday m_CurrentHoliday = Editor.GetCurrentHoliday();
@@ -55,24 +52,56 @@ modded class DayZIntroScene
 		switch (m_CurrentHoliday) {
 			case EditorHoliday.CHRISTMAS:
 			case EditorHoliday.NEWYEARS: {
-				m_FunnyMeme = GetGame().CreateObject("DSLRCameraChristmas", m_CharacterPos, true);
+				m_DSLRCamera = GetGame().CreateObject("DSLRCameraChristmas", m_CharacterPos, true);
 				break;
 			}
 			
 			case EditorHoliday.ANNIVERSARY: {
-				m_FunnyMeme = GetGame().CreateObject("DSLRCameraAnniversary", m_CharacterPos, true);
+				m_DSLRCamera = GetGame().CreateObject("DSLRCameraAnniversary", m_CharacterPos, true);
 				break;
 			}
 			
 			default: {
-				m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
+				m_DSLRCamera = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
 				break;
-			}
-			
+			}	
 		}
 		
-		m_FunnyMeme.SetPosition(m_CharacterPos);
-		m_FunnyMeme.Update();
+		m_DSLRCamera.SetPosition(m_CharacterPos);
+		m_DSLRCamera.Update();
+		
+		
+		if (m_CurrentHoliday == EditorHoliday.NEWYEARS || m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
+			// Christmas time :widepeepoHappy:
+			if (m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
+				vector tree_pos = m_Camera.GetPosition() + m_Camera.GetDirection() * 10;
+				tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
+				tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
+				tree_pos[1] = GetGame().SurfaceY(tree_pos[0], tree_pos[2]);
+				m_ChristmasObjects.Insert(GetGame().CreateObject("ChristmasTree_Green", tree_pos));
+				GetGame().GetWorld().SetDate(1, 1, 1, 9, 0);
+			}
+			
+			if (m_CurrentHoliday == EditorHoliday.NEWYEARS) {
+				Particle.Play(ParticleList.FIREWORK, m_DSLRCamera, Vector(0, 0, 0));
+				GetGame().GetWorld().SetDate(1, 1, 1, 0, 0);
+			}
+			
+			vector present_position = m_DSLRCamera.GetPosition();
+			for (int i = 0; i < 10; i++) {
+				vector gift_pos;
+				gift_pos[0] = present_position[0] + Math.RandomFloat(-5, 5);
+				gift_pos[2] = present_position[2] + Math.RandomFloat(-5, 5);
+				gift_pos[1] = GetGame().SurfaceY(present_position[0], present_position[2]) + 0.5;
+				
+				m_ChristmasObjects.Insert(GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos));
+			}
+			
+			Particle.Play(ParticleList.SNOW, m_DSLRCamera, Vector(0, 0, 0));
+			Particle.Play(ParticleList.SNOW, m_DSLRCamera, Vector(0, 0, 0));
+			Particle.Play(ParticleList.SNOWFOG, m_DSLRCamera, Vector(0, 0, 0));
+			Particle.Play(ParticleList.SNOWFOG, m_DSLRCamera, Vector(0, 0, 0));
+		}
 	}
 	
 	void ~DayZIntroScene()
@@ -89,58 +118,25 @@ modded class DayZIntroScene
 	void OnUpdate(float timeslice)
 	{
 		m_TotalTime += timeslice / 2;
-		
-		if ((m_CurrentHoliday == EditorHoliday.NEWYEARS || m_CurrentHoliday == EditorHoliday.CHRISTMAS) && !m_ChristmasSetup) {
-			// Christmas time :widepeepoHappy:
-			if (m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
-				vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
-				tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
-				tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
-				tree_pos[1] = GetGame().SurfaceY(tree_pos[0], tree_pos[2]);
-				m_ChristmasObjects.Insert(GetGame().CreateObject("ChristmasTree_Green", tree_pos));
-				GetGame().GetWorld().SetDate(1, 1, 1, 9, 0);
-			}
-			
-			if (m_CurrentHoliday == EditorHoliday.NEWYEARS) {
-				Particle.Play(ParticleList.FIREWORK, m_FunnyMeme, Vector(0, 0, 0));
-				GetGame().GetWorld().SetDate(1, 1, 1, 0, 0);
-			}
-			
-			vector meme_pos = m_FunnyMeme.GetPosition();
-			for (int i = 0; i < 10; i++) {
-				vector gift_pos;
-				gift_pos[0] = meme_pos[0] + Math.RandomFloat(-5, 5);
-				gift_pos[2] = meme_pos[2] + Math.RandomFloat(-5, 5);
-				gift_pos[1] = GetGame().SurfaceY(meme_pos[0], meme_pos[2]) + 0.5;
 				
-				m_ChristmasObjects.Insert(GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos));
-			}
-			
-			Particle.Play(ParticleList.SNOW, m_FunnyMeme, Vector(0, 0, 0));
-			Particle.Play(ParticleList.SNOW, m_FunnyMeme, Vector(0, 0, 0));
-			Particle.Play(ParticleList.SNOWFOG, m_FunnyMeme, Vector(0, 0, 0));
-			Particle.Play(ParticleList.SNOWFOG, m_FunnyMeme, Vector(0, 0, 0));
-			m_ChristmasSetup = true;
-		}
-		
-		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), m_Camera.GetPosition() + GetGame().GetPointerDirection() * (CAMERA_DISTANCE_FROM_SCREEN / 2));
-		vector pos = m_FunnyMeme.GetPosition();
+		vector lookat = vector.Direction(m_DSLRCamera.GetPosition(), m_Camera.GetPosition() + GetGame().GetPointerDirection() * (CAMERA_DISTANCE_FROM_SCREEN / 2));
+		vector pos = m_DSLRCamera.GetPosition();
 		
 		// Makes camera 'hover' in position
 		pos[1] = pos[1] + Math.Sin(m_TotalTime * Math.PI) / 1500;
-		m_FunnyMeme.SetPosition(pos);
-		m_FunnyMeme.SetDirection(lookat);
-		m_FunnyMeme.Update();
+		m_DSLRCamera.SetPosition(pos);
+		m_DSLRCamera.SetDirection(lookat);
+		m_DSLRCamera.Update();
 		
 		// easter egg
 		if (KeyState(KeyCode.KC_NUMPADENTER)) {
-			vector ori = m_FunnyMeme.GetOrientation();
+			vector ori = m_DSLRCamera.GetOrientation();
 			m_Offset += 10;
 			if (m_Offset > 360) m_Offset = 0;
 			ori[2] = ori[2] + m_Offset;
 			
-			m_FunnyMeme.SetOrientation(ori);
-			m_FunnyMeme.Update();
+			m_DSLRCamera.SetOrientation(ori);
+			m_DSLRCamera.Update();
 			
 			foreach (Object cam: m_FallenObjects) {
 				vector trans[4];
