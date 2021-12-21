@@ -71,13 +71,6 @@ modded class DayZIntroScene
 		
 		m_FunnyMeme.SetPosition(m_CharacterPos);
 		m_FunnyMeme.Update();
-		
-		/*
-		if (m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
-			Snow snow = new Snow();
-			m_CharacterPos[1] = m_CharacterPos[1] + 10;
-			SEffectManager.PlayInWorld(snow, m_CharacterPos);
-		}*/
 	}
 	
 	void ~DayZIntroScene()
@@ -103,6 +96,10 @@ modded class DayZIntroScene
 				tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
 				tree_pos[1] = GetGame().SurfaceY(tree_pos[0], tree_pos[2]);
 				m_ChristmasObjects.Insert(GetGame().CreateObject("ChristmasTree_Green", tree_pos));
+			}
+			
+			if (m_CurrentHoliday == EditorHoliday.NEWYEARS) {
+				Particle.Play(ParticleList.FIREWORK, m_FunnyMeme, Vector(0, 0, 0));
 			}
 			
 			vector meme_pos = m_FunnyMeme.GetPosition();
