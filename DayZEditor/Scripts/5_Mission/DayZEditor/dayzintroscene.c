@@ -118,10 +118,10 @@ modded class DayZIntroScene
 				}
 				
 				Particle.PlayOnObject(ParticleList.SNOW, m_DSLRCamera, Vector(0, 0, 0));
-				Particle.PlayOnObject(ParticleList.SNOW, m_DSLRCamera, Vector(0, 0, 0));
-				Particle.PlayOnObject(ParticleList.SNOWFOG, m_DSLRCamera, Vector(0, 0, 0));
 				Particle.PlayOnObject(ParticleList.SNOWFOG, m_DSLRCamera, Vector(0, 0, 0));
 			}
+			
+			m_ParticleSetup = true;
 		}
 		
 		vector lookat = vector.Direction(m_DSLRCamera.GetPosition(), m_Camera.GetPosition() + GetGame().GetPointerDirection() * (CAMERA_DISTANCE_FROM_SCREEN / 2));
