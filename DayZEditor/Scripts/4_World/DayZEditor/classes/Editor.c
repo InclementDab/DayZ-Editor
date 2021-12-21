@@ -1332,7 +1332,7 @@ class Editor
 	}
 	
 	static EditorHoliday GetCurrentHoliday()
-	{
+	{		
 		int year, month, day;
 		GetYearMonthDayUTC(year, month, day);
 		if (month == 12 && day > 12) {

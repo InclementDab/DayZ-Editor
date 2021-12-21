@@ -45,9 +45,9 @@ modded class DayZIntroScene
 	{
 		delete m_Character;
 		
-		m_CharacterPos = m_Camera.GetPosition() + m_Camera.GetDirection() * 6;
-		m_CharacterPos = m_CharacterPos + m_Camera.GetDirection() * vector.Up * -0.3;
-		m_CharacterPos[1] = GetGame().SurfaceY(m_CharacterPos[0], m_CharacterPos[2]) + 1;
+		m_CharacterPos = m_Camera.GetPosition() + m_Camera.GetDirection() * 4;
+		m_CharacterPos = m_CharacterPos + m_Camera.GetDirection() * vector.Up * -0.5;
+		m_CharacterPos[1] = GetGame().SurfaceY(m_CharacterPos[0], m_CharacterPos[2]) + 1.25;
 	
 		// determine camera model based on holiday
 		switch (m_CurrentHoliday) {
@@ -96,6 +96,7 @@ modded class DayZIntroScene
 				tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
 				tree_pos[1] = GetGame().SurfaceY(tree_pos[0], tree_pos[2]);
 				m_ChristmasObjects.Insert(GetGame().CreateObject("ChristmasTree_Green", tree_pos));
+				GetGame().GetWorld().SetDate(1, 1, 1, 9, 0);
 			}
 			
 			if (m_CurrentHoliday == EditorHoliday.NEWYEARS) {
@@ -107,7 +108,7 @@ modded class DayZIntroScene
 				vector gift_pos;
 				gift_pos[0] = meme_pos[0] + Math.RandomFloat(-5, 5);
 				gift_pos[2] = meme_pos[2] + Math.RandomFloat(-5, 5);
-				gift_pos[1] = GetGame().SurfaceY(meme_pos[0], meme_pos[2]);
+				gift_pos[1] = GetGame().SurfaceY(meme_pos[0], meme_pos[2]) + 0.5;
 				
 				m_ChristmasObjects.Insert(GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos));
 			}
@@ -119,7 +120,7 @@ modded class DayZIntroScene
 			m_ChristmasSetup = true;
 		}
 				
-		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 4;
+		vector mouse_pos = m_Camera.GetPosition() + GetGame().GetPointerDirection() * 2;
 		vector lookat = vector.Direction(m_FunnyMeme.GetPosition(), mouse_pos);
 		vector pos = m_FunnyMeme.GetPosition();
 		
