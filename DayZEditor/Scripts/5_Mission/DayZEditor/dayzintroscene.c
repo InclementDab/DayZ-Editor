@@ -30,7 +30,7 @@ modded class DayZIntroScene
 	protected int m_Hour, m_Minute;	
 	
 	protected EditorHoliday m_CurrentHoliday = Editor.GetCurrentHoliday();
-	
+		
 	static const ref array<string> XmasGiftTypes = {
 		"XmasGiftRed1",
 		"XmasGiftRed2",
@@ -70,7 +70,6 @@ modded class DayZIntroScene
 		m_DSLRCamera.SetPosition(m_CharacterPos);
 		m_DSLRCamera.Update();
 		
-		
 		if (m_CurrentHoliday == EditorHoliday.NEWYEARS || m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
 			// Christmas time :widepeepoHappy:
 			if (m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
@@ -87,7 +86,7 @@ modded class DayZIntroScene
 				GetGame().GetWorld().SetDate(1, 1, 1, 0, 0);
 			}
 			
-			vector present_position = m_DSLRCamera.GetPosition();
+			vector present_position = m_CharacterPos;
 			for (int i = 0; i < 10; i++) {
 				vector gift_pos;
 				gift_pos[0] = present_position[0] + Math.RandomFloat(-5, 5);
