@@ -21,6 +21,18 @@ class CfgVehicles
 		model = "\DayZEditor\Editor\Camera_xmas_Normal.p3d";
 	};
 
+	class DSLRCameraChristmas: HouseNoDestruct
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\Camera_xmas_Normal.p3d";
+	};
+
+	class DSLRCameraAnniversary: HouseNoDestruct
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\Camera_xmas_Normal.p3d";
+	};
+
 	class XmasGiftRed1: HouseNoDestruct
 	{
 		scope = 1;

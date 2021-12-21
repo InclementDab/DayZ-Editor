@@ -4,5 +4,6 @@ enum EditorHoliday
 	NONE,
 	CHRISTMAS,
 	ANNIVERSARY,
+	NEWYEARS,
 	HALLOWEEN
 };

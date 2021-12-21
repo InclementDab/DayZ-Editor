@@ -412,18 +412,19 @@ class Editor
 					return true;
 				}
 				
-				if (KeyState(KeyCode.KC_LCONTROL) && ObjectUnderCursor) {
+				if (!target || target == m_EditorHud.EditorMapWidget) {
+					ClearSelection();
+					GetCameraTrackManager().ClearSelection();
+				}
+				
+				if (KeyState(KeyCode.KC_LCONTROL)) {
 					EditorPlaceableItem placeable_object = GetReplaceableItem(ObjectUnderCursor);
 					if (placeable_object) {
 						EditorWorldObject object_in_hand = CreateInHand(placeable_object);
 						object_in_hand.GetWorldObject().SetOrientation(ObjectUnderCursor.GetOrientation());
-						return true;
 					}
-				}
-				
-				if (!target || target == m_EditorHud.EditorMapWidget) {
-					ClearSelection();
-					GetCameraTrackManager().ClearSelection();
+					
+					return true;
 				}
 				
 				if (!GetBrush() && GetSelectedObjects().Count() == 0) {
@@ -467,9 +468,9 @@ class Editor
 							GetGame().ObjectDelete(ObjectUnderCursor);
 							HideMapObject(ObjectUnderCursor);
 						}
-						
-						return true;
 					}
+					
+					return true;
 				} 
 				
 				if (IsPlayerActive()) {
@@ -1334,8 +1335,12 @@ class Editor
 	{
 		int year, month, day;
 		GetYearMonthDayUTC(year, month, day);
-		if ((month == 12 && day > 12) || (month == 1 && day < 12)) {
+		if (month == 12 && day > 12) {
 			return EditorHoliday.CHRISTMAS;
+		}
+		
+		if (month == 1 && day < 14) {
+			return EditorHoliday.NEWYEARS;
 		}
 		
 		if (month == 10 && day > 0 && day < 14) {
