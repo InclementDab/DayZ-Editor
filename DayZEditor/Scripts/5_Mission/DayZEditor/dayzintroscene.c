@@ -21,7 +21,7 @@ modded class DayZIntroScene
 {
 	static const float CAMERA_DISTANCE_FROM_SCREEN = 4.5;
 	static const float CHRISTMAS_TREE_DISTANCE_FROM_SCREEN = 10.0;
-	static const float FIREWORK_DISTANCE_FROM_SCREEN = 15.0;
+	static const float FIREWORK_DISTANCE_FROM_SCREEN = 25.0;
 	
 	
 	// 😂
