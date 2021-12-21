@@ -9,7 +9,7 @@ modded class MissionMainMenu
 	
 	override void PlayMusic()
 	{
-		if (Editor.GetCurrentHoliday() == EditorHoliday.CHRISTMAS) {
+		if (Editor.GetCurrentHoliday() == EditorHoliday.CHRISTMAS || Editor.GetCurrentHoliday() == EditorHoliday.NEWYEARS) {
 			return;
 		}
 		
@@ -20,6 +20,9 @@ modded class MissionMainMenu
 modded class DayZIntroScene
 {
 	static const float CAMERA_DISTANCE_FROM_SCREEN = 4.5;
+	static const float CHRISTMAS_TREE_DISTANCE_FROM_SCREEN = 10.0;
+	static const float FIREWORK_DISTANCE_FROM_SCREEN = 15.0;
+	
 	
 	// 😂
 	protected Object m_DSLRCamera;
@@ -29,6 +32,7 @@ modded class DayZIntroScene
 	protected float m_Offset, m_TotalTime, m_CameraTimer;
 	protected int m_Hour, m_Minute;	
 	
+	protected bool m_ParticleSetup;
 	protected EditorHoliday m_CurrentHoliday = Editor.GetCurrentHoliday();
 		
 	static const ref array<string> XmasGiftTypes = {
@@ -69,38 +73,6 @@ modded class DayZIntroScene
 		
 		m_DSLRCamera.SetPosition(m_CharacterPos);
 		m_DSLRCamera.Update();
-		
-		if (m_CurrentHoliday == EditorHoliday.NEWYEARS || m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
-			// Christmas time :widepeepoHappy:
-			if (m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
-				vector tree_pos = m_Camera.GetPosition() + m_Camera.GetDirection() * 10;
-				tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
-				tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
-				tree_pos[1] = GetGame().SurfaceY(tree_pos[0], tree_pos[2]);
-				m_ChristmasObjects.Insert(GetGame().CreateObject("ChristmasTree_Green", tree_pos));
-				GetGame().GetWorld().SetDate(1, 1, 1, 9, 0);
-			}
-			
-			if (m_CurrentHoliday == EditorHoliday.NEWYEARS) {
-				Particle.Play(ParticleList.FIREWORK, m_DSLRCamera, Vector(0, 0, 0));
-				GetGame().GetWorld().SetDate(1, 1, 1, 0, 0);
-			}
-			
-			vector present_position = m_CharacterPos;
-			for (int i = 0; i < 10; i++) {
-				vector gift_pos;
-				gift_pos[0] = present_position[0] + Math.RandomFloat(-5, 5);
-				gift_pos[2] = present_position[2] + Math.RandomFloat(-5, 5);
-				gift_pos[1] = GetGame().SurfaceY(present_position[0], present_position[2]) + 0.5;
-				
-				m_ChristmasObjects.Insert(GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos));
-			}
-			
-			Particle.Play(ParticleList.SNOW, m_DSLRCamera, Vector(0, 0, 0));
-			Particle.Play(ParticleList.SNOW, m_DSLRCamera, Vector(0, 0, 0));
-			Particle.Play(ParticleList.SNOWFOG, m_DSLRCamera, Vector(0, 0, 0));
-			Particle.Play(ParticleList.SNOWFOG, m_DSLRCamera, Vector(0, 0, 0));
-		}
 	}
 	
 	void ~DayZIntroScene()
@@ -118,6 +90,40 @@ modded class DayZIntroScene
 	{
 		m_TotalTime += timeslice / 2;
 				
+		if (!m_ParticleSetup) {
+			if (m_CurrentHoliday == EditorHoliday.NEWYEARS || m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
+				
+				// Christmas time :widepeepoHappy:
+				vector tree_pos = m_Camera.GetPosition() + m_Camera.GetDirection() * CHRISTMAS_TREE_DISTANCE_FROM_SCREEN;
+				tree_pos[0] = tree_pos[0] + Math.RandomFloat(-1, 1);
+				tree_pos[2] = tree_pos[2] + Math.RandomFloat(-1, 1);
+				tree_pos[1] = GetGame().SurfaceY(tree_pos[0], tree_pos[2]);
+				m_ChristmasObjects.Insert(GetGame().CreateObject("ChristmasTree_Green", tree_pos));
+				GetGame().GetWorld().SetDate(1, 1, 1, 9, 0);			
+				
+				// Set up presents
+				vector present_position = m_CharacterPos;
+				for (int i = 0; i < 10; i++) {
+					vector gift_pos;
+					gift_pos[0] = present_position[0] + Math.RandomFloat(-5, 5);
+					gift_pos[2] = present_position[2] + Math.RandomFloat(-5, 5);
+					gift_pos[1] = GetGame().SurfaceY(present_position[0], present_position[2]) + 0.5;
+					
+					m_ChristmasObjects.Insert(GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos));
+				}
+				
+				if (m_CurrentHoliday == EditorHoliday.NEWYEARS) {
+					Particle.PlayInWorld(ParticleList.FIREWORK, m_Camera.GetPosition() + m_Camera.GetDirection() * FIREWORK_DISTANCE_FROM_SCREEN);
+					GetGame().GetWorld().SetDate(1, 1, 1, 0, 0);
+				}
+				
+				Particle.PlayOnObject(ParticleList.SNOW, m_DSLRCamera, Vector(0, 0, 0));
+				Particle.PlayOnObject(ParticleList.SNOW, m_DSLRCamera, Vector(0, 0, 0));
+				Particle.PlayOnObject(ParticleList.SNOWFOG, m_DSLRCamera, Vector(0, 0, 0));
+				Particle.PlayOnObject(ParticleList.SNOWFOG, m_DSLRCamera, Vector(0, 0, 0));
+			}
+		}
+		
 		vector lookat = vector.Direction(m_DSLRCamera.GetPosition(), m_Camera.GetPosition() + GetGame().GetPointerDirection() * (CAMERA_DISTANCE_FROM_SCREEN / 2));
 		vector pos = m_DSLRCamera.GetPosition();
 		
