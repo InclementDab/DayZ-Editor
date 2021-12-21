@@ -412,13 +412,14 @@ class Editor
 					return true;
 				}
 				
-				if (KeyState(KeyCode.KC_LCONTROL) && ObjectUnderCursor) {
+				if (KeyState(KeyCode.KC_LCONTROL)) {
 					EditorPlaceableItem placeable_object = GetReplaceableItem(ObjectUnderCursor);
 					if (placeable_object) {
 						EditorWorldObject object_in_hand = CreateInHand(placeable_object);
 						object_in_hand.GetWorldObject().SetOrientation(ObjectUnderCursor.GetOrientation());
-						return true;
 					}
+					
+					return true;
 				}
 				
 				if (!target || target == m_EditorHud.EditorMapWidget) {
@@ -467,9 +468,9 @@ class Editor
 							GetGame().ObjectDelete(ObjectUnderCursor);
 							HideMapObject(ObjectUnderCursor);
 						}
-						
-						return true;
 					}
+					
+					return true;
 				} 
 				
 				if (IsPlayerActive()) {
