@@ -15,8 +15,9 @@ class EditorObject: EditorWorldObject
 	protected ref array<ref EditorSnapPoint> m_SnapPoints = {};
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
-	private vector m_LineCenters[12]; 
-	private vector m_LineVerticies[8];
+	protected vector m_LineCenters[12]; 
+	protected vector m_LineVerticies[8];
+	protected bool m_IsSelected;
 	
 	// Object Data
 	int ObjectID;
@@ -223,8 +224,11 @@ class EditorObject: EditorWorldObject
 		delete OnObjectDeselected;
 	}
 			
-	private bool m_IsSelected;
-	bool IsSelected() return m_IsSelected;
+	bool IsSelected() 
+	{
+		return m_IsSelected;
+	}
+	
 	void OnSelected()
 	{
 		if (m_IsSelected) return;
