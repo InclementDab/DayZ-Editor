@@ -1,28 +1,8 @@
-modded class MissionMainMenu
-{
-	override void OnUpdate(float timeslice)
-	{
-		super.OnUpdate(timeslice);
-		if (m_IntroScenePC)
-	    	m_IntroScenePC.OnUpdate(timeslice);
-	}
-	
-	override void PlayMusic()
-	{
-		if (Editor.GetCurrentHoliday() == EditorHoliday.CHRISTMAS || Editor.GetCurrentHoliday() == EditorHoliday.NEWYEARS) {
-			return;
-		}
-		
-		super.PlayMusic();
-	}
-}
-
 modded class DayZIntroScene
 {
 	static const float CAMERA_DISTANCE_FROM_SCREEN = 4.5;
 	static const float CHRISTMAS_TREE_DISTANCE_FROM_SCREEN = 10.0;
 	static const float FIREWORK_DISTANCE_FROM_SCREEN = 25.0;
-	
 	
 	// 😂
 	protected Object m_DSLRCamera;
