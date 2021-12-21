@@ -12,6 +12,8 @@ modded class MissionMainMenu
 		if (Editor.GetCurrentHoliday() == EditorHoliday.CHRISTMAS) {
 			return;
 		}
+		
+		super.PlayMusic();
 	}
 }
 
