@@ -1,0 +1,79 @@
+EffectDef {
+ Emitors {
+  EmitorDef SmallSnow {
+   ShapeType Box
+   ShapeSize 10 0 10
+   MaxNum 5000
+   BirthRate 500
+   Offset 0 2 0
+   Angles 0 180 0
+   Material "{735D641EB0FC5209}system/wbdata/particleeditor/defaultmaterial.emat"
+   ScaleX 0.2
+   ScaleY 0.2
+   SizeMultiplier 0.01
+   SizeRND 0.02
+   RandomRotDir 0
+   StretchMultiplier 0
+   StreakFullUV 0
+   RandomAngle 0
+   Sort 0
+   Velocity 0
+   AirResistance 1
+   GravityMultiply 0.03
+   GravityMultiplyRND 0
+   Wind 1
+   LifeTime 10
+   EffectTime 0
+  }
+  EmitorDef MediumSnow {
+   ShapeType Box
+   ShapeSize 10 0 10
+   MaxNum 2000
+   BirthRate 100
+   Offset 0 2 0
+   Angles 0 180 0
+   Material "{735D641EB0FC5209}system/wbdata/particleeditor/defaultmaterial.emat"
+   ScaleX 0.2
+   ScaleY 0.2
+   SizeMultiplier 0.025
+   SizeRND 0.045
+   RandomRotDir 0
+   StretchMultiplier 0
+   StreakFullUV 0
+   RandomAngle 0
+   Sort 0
+   Velocity 0
+   AirResistance 1.25
+   GravityMultiply 0.045
+   GravityMultiplyRND 0
+   Wind 1
+   LifeTime 10
+   EffectTime 0
+  }
+  EmitorDef LargeSnow {
+   ShapeType Box
+   ShapeSize 10 0 10
+   MaxNum 500
+   BirthRate 25
+   Offset 0 2 0
+   Angles 0 180 0
+   Material "{735D641EB0FC5209}system/wbdata/particleeditor/defaultmaterial.emat"
+   ScaleX 0.2
+   ScaleY 0.2
+   SizeMultiplier 0.03
+   SizeRND 0.07
+   RandomRotDir 0
+   StretchMultiplier 0
+   StreakFullUV 0
+   RandomAngle 1
+   Sort 0
+   Velocity 0
+   AirResistance 1.5
+   GravityMultiply 0.09
+   GravityMultiplyRND 0
+   Wind 1
+   LifeTime 10
+   EffectTime 0
+  }
+ }
+}
