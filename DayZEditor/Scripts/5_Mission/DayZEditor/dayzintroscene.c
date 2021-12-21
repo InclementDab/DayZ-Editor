@@ -79,12 +79,14 @@ modded class DayZIntroScene
 		
 		Input input = GetGame().GetInput();
 		// Christmas time :widepeepoHappy:
-		if (m_CurrentHoliday == EditorHoliday.CHRISTMAS && !m_ChristmasSetup) {
-			vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
-			tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
-			tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
-			tree_pos[1] = GetGame().SurfaceY(tree_pos[0], tree_pos[2]);
-			m_ChristmasObjects.Insert(GetGame().CreateObject("ChristmasTree_Green", tree_pos));
+		if (m_CurrentHoliday == EditorHoliday.NEWYEARS || m_CurrentHoliday == EditorHoliday.CHRISTMAS && !m_ChristmasSetup) {
+			if (m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
+				vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
+				tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
+				tree_pos[2] = tree_pos[2] + Math.RandomFloat(-3, 3);
+				tree_pos[1] = GetGame().SurfaceY(tree_pos[0], tree_pos[2]);
+				m_ChristmasObjects.Insert(GetGame().CreateObject("ChristmasTree_Green", tree_pos));
+			}
 			
 			vector meme_pos = m_FunnyMeme.GetPosition();
 			for (int i = 0; i < 10; i++) {
@@ -159,6 +161,7 @@ modded class DayZIntroScene
 			// determine object to drop from sky depending on holiday
 			Object object_to_drop;
 			switch (m_CurrentHoliday) {
+				case EditorHoliday.NEWYEARS:
 				case EditorHoliday.CHRISTMAS: {
 					object_to_drop = GetGame().CreateObjectEx(XmasGiftTypes.GetRandomElement(), newcam_pos, ECE_CREATEPHYSICS | ECE_SETUP);
 					break;
