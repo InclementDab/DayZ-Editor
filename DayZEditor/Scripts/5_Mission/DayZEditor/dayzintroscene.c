@@ -94,7 +94,7 @@ modded class DayZIntroScene
 				m_ChristmasObjects.Insert(GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos));
 			}
 			
-			Particle.Play(ParticleList.SNOW, m_FunnyMeme, Vector(0, 10, 0));
+			Particle.Play(ParticleList.SNOW, m_FunnyMeme, Vector(0, 0, 0));
 			m_ChristmasSetup = true;
 		}
 				
