@@ -49,7 +49,26 @@ modded class DayZIntroScene
 		m_CharacterPos = m_CharacterPos + m_Camera.GetDirection() * vector.Up * -0.3;
 		m_CharacterPos[1] = GetGame().SurfaceY(m_CharacterPos[0], m_CharacterPos[2]) + 1;
 	
-		m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
+		// determine camera model based on holiday
+		switch (m_CurrentHoliday) {
+			case EditorHoliday.CHRISTMAS:
+			case EditorHoliday.NEWYEARS: {
+				m_FunnyMeme = GetGame().CreateObject("DSLRCameraChristmas", m_CharacterPos, true);
+				break;
+			}
+			
+			case EditorHoliday.ANNIVERSARY: {
+				m_FunnyMeme = GetGame().CreateObject("DSLRCameraAnniversary", m_CharacterPos, true);
+				break;
+			}
+			
+			default: {
+				m_FunnyMeme = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
+				break;
+			}
+			
+		}
+		
 		m_FunnyMeme.SetPosition(m_CharacterPos);
 		m_FunnyMeme.Update();
 		
@@ -77,9 +96,8 @@ modded class DayZIntroScene
 	{
 		m_TotalTime += timeslice / 2;
 		
-		Input input = GetGame().GetInput();
-		// Christmas time :widepeepoHappy:
-		if (m_CurrentHoliday == EditorHoliday.NEWYEARS || m_CurrentHoliday == EditorHoliday.CHRISTMAS && !m_ChristmasSetup) {
+		if ((m_CurrentHoliday == EditorHoliday.NEWYEARS || m_CurrentHoliday == EditorHoliday.CHRISTMAS) && !m_ChristmasSetup) {
+			// Christmas time :widepeepoHappy:
 			if (m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
 				vector tree_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetCurrentCameraDirection() * 10;
 				tree_pos[0] = tree_pos[0] + Math.RandomFloat(-3, 3);
