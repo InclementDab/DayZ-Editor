@@ -48,7 +48,7 @@ EffectDef {
    BirthRate 120
    Offset 0 9 0
    Angles 0 180 0
-   Material "{59C6CB767F4C4D22}DabsFramework/GUI/graphics/emats/df_snow1.emat"
+   Material "{14AA3E7A304B5E0A}DayZEditor/Editor/emats/editor_snow1.emat"
    SizeMultiplier 0.035
    SizeRND 0.03
    RandomRotDir 1
