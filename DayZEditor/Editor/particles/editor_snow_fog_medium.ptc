@@ -1,0 +1,35 @@
+EffectDef {
+ Emitors {
+  EmitorDef emitor1 {
+   ShapeType Ellipse
+   ShapeSize 100 0 100
+   ConeAngle 90 360 360
+   MaxNum 15
+   BirthRate 2
+   Offset 0 20 0
+   Angles 0 0 0
+   LocalTransform 0
+   Material "{67FEB95AE2ECC2EA}graphics/Particles/materials/smoke/smoke_dust_01.emat"
+   ScaleX 1
+   ScaleY 1
+   SizeMultiplier 70
+   RandomRotDir 1
+   RotMultiplier 3
+   StretchMultiplier 0
+   StreakFullUV 0
+   RandomAngle 1
+   Sort 1
+   Velocity 0
+   AirResistance 0.5
+   GravityMultiply 0.05
+   Restitution 0
+   Spring 0
+   Wind 1
+   RandomFrame 1
+   LifeTime 20
+   Alpha {
+    0 0.15097 1 0.15459
+   }
+  }
+ }
+}
