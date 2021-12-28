@@ -1,7 +1,7 @@
 class EditorListItem: ScriptViewTemplate<EditorListItemController>
 {
 	protected Editor m_Editor = GetEditor();
-	protected Widget ListItemContent;
+	protected WrapSpacerWidget ListItem;
 	protected ButtonWidget ListItemShow;
 	
 	// Can be null!
@@ -9,17 +9,17 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 	
 	void Select() 
 	{
-		ListItemContent.SetColor(m_Editor.Settings.SelectionColor);
+		ListItem.SetColor(m_Editor.Settings.SelectionColor);
 	}
 	
 	void Highlight()
 	{
-		ListItemContent.SetColor(m_Editor.Settings.HighlightColor);
+		ListItem.SetColor(m_Editor.Settings.HighlightColor);
 	}
 	
 	void Deselect() 
 	{	
-		ListItemContent.SetColor(COLOR_EMPTY);
+		ListItem.SetColor(COLOR_EMPTY);
 	}
 	
 	// Abstract

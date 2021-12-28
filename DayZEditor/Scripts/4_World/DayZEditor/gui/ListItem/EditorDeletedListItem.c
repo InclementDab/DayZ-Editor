@@ -73,7 +73,7 @@ class EditorDeletedListItem: EditorListItem
 	
 	override void Select()
 	{
-		ListItemContent.SetColor(LIST_ITEM_COLOR_ON_DELETED);
+		ListItem.SetColor(LIST_ITEM_COLOR_ON_DELETED);
 	}
 	
 	override bool IsSelected()
