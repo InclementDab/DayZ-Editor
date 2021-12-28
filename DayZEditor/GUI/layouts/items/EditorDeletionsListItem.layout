@@ -1,4 +1,4 @@
-PanelWidgetClass ListItemContent {
+PanelWidgetClass ListItem {
  visible 1
  clipchildren 1
  ignorepointer 1
