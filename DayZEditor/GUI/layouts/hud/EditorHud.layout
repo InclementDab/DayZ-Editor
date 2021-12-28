@@ -13,30 +13,6 @@ FrameWidgetClass EditorFrame {
  draggable 0
  scriptclass "EditorHudController"
  {
-  FrameWidgetClass MapContainer {
-   clipchildren 0
-   ignorepointer 1
-   position 0 0
-   size 1 1
-   halign center_ref
-   valign center_ref
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   {
-    MapWidgetClass EditorMapWidget {
-     position 0 0
-     size 1 1
-     halign center_ref
-     valign center_ref
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
-    }
-   }
-  }
   FrameWidgetClass EditorHudFrame {
    visible 1
    ignorepointer 1
@@ -50,189 +26,6 @@ FrameWidgetClass EditorFrame {
    vexactsize 0
    priority 100
    {
-    FrameWidgetClass DebugFrame {
-     visible 0
-     ignorepointer 1
-     position 0.2 0.03
-     size 0.34 0.18
-     halign right_ref
-     valign bottom_ref
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
-     priority 250
-     scriptclass ""
-     {
-      PanelWidgetClass DebugPanel {
-       ignorepointer 1
-       size 0.5 1
-       halign right_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       style editor_quad_dark
-       {
-        WrapSpacerWidgetClass DebugWrapper {
-         ignorepointer 1
-         position 0 0
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         style Outline
-         Padding 0
-         Margin 0
-         content_halign center
-         {
-          TextWidgetClass DebugText1 {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 1 25
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           font "gui/fonts/metron"
-           "text offset" 5 0
-           {
-            ScriptParamsClass {
-             Binding_Name "DebugText1"
-            }
-           }
-          }
-          TextWidgetClass DebugText2 {
-           ignorepointer 1
-           position 0 0
-           size 1 25
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           font "gui/fonts/metron"
-           "text offset" 5 0
-           {
-            ScriptParamsClass {
-             Binding_Name "DebugText2"
-            }
-           }
-          }
-          TextWidgetClass DebugText3 {
-           visible 1
-           ignorepointer 1
-           position 0 0
-           size 1 25
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           draggable 0
-           scriptclass "ViewBinding"
-           font "gui/fonts/metron"
-           "text offset" 5 0
-           {
-            ScriptParamsClass {
-             Binding_Name "DebugText3"
-            }
-           }
-          }
-          TextWidgetClass DebugText4 {
-           ignorepointer 1
-           position 0 0
-           size 1 25
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           font "gui/fonts/metron"
-           "text offset" 5 0
-           {
-            ScriptParamsClass {
-             Binding_Name "DebugText4"
-            }
-           }
-          }
-          TextWidgetClass DebugText5 {
-           ignorepointer 1
-           position 0 0
-           size 1 25
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           font "gui/fonts/metron"
-           "text offset" 5 0
-           {
-            ScriptParamsClass {
-             Binding_Name "DebugText5"
-            }
-           }
-          }
-          TextWidgetClass DebugText6 {
-           ignorepointer 1
-           position 0 0
-           size 1 25
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           font "gui/fonts/metron"
-           "text offset" 5 0
-           {
-            ScriptParamsClass {
-             Binding_Name "DebugText6"
-            }
-           }
-          }
-         }
-        }
-       }
-      }
-      PanelWidgetClass DebugActionStackPanel {
-       ignorepointer 1
-       position 0 0
-       size 0.5 1
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       {
-        TextListboxWidgetClass DebugActionStackListbox {
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 1
-         draggable 0
-         scriptclass "ViewBinding"
-         style Default
-         lines 15
-         font "gui/fonts/metron16"
-         {
-          ScriptParamsClass {
-           Binding_Name "DebugActionStackListbox"
-          }
-         }
-        }
-       }
-      }
-     }
-    }
     CanvasWidgetClass EditorCanvas {
      ignorepointer 1
      position 0 0
@@ -244,18 +37,6 @@ FrameWidgetClass EditorFrame {
      hexactsize 0
      vexactsize 0
      priority 239
-    }
-    CanvasWidgetClass EditorCameraCanvas {
-     ignorepointer 1
-     position 0 0
-     size 1 1
-     halign center_ref
-     valign center_ref
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
-     priority 238
     }
     WrapSpacerWidgetClass LeftbarWrapper {
      visible 1
@@ -1469,30 +1250,6 @@ FrameWidgetClass EditorFrame {
       }
      }
     }
-    FrameWidgetClass OrientationFrame {
-     visible 0
-     ignorepointer 1
-     position 300 32
-     size 150 150
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     {
-      ItemPreviewWidgetClass OrientationView {
-       ignorepointer 1
-       position 0 0
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-      }
-     }
-    }
     FrameWidgetClass LoggerFrame {
      visible 1
      ignorepointer 1
@@ -1808,6 +1565,16 @@ FrameWidgetClass EditorFrame {
      }
     }
    }
+  }
+  MapWidgetClass EditorMapWidget {
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
   }
  }
  {
