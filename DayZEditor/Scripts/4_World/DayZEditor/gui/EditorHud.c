@@ -8,8 +8,6 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	Widget LoggerFrame;
 	
 	CanvasWidget EditorCanvas;
-	// for camera drawing i.e. rule of 3rds
-	CanvasWidget EditorCameraCanvas;
 	
 	ref EditorCameraMapMarker CameraMapMarker;
 	
@@ -161,18 +159,18 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	void ShowRuleOfThirds(bool state)
 	{
 		if (!state) {
-			EditorCameraCanvas.Clear();
+			EditorCanvas.Clear();
 			return;
 		}
 		
 		int x, y;
 
 		GetScreenSize(x, y);				
-		EditorCameraCanvas.DrawLine(x / 3, 0, x / 3, y, 1, COLOR_BLACK);
-		EditorCameraCanvas.DrawLine((x / 3) * 2, 0, (x / 3) * 2, y, 1, COLOR_BLACK);
+		EditorCanvas.DrawLine(x / 3, 0, x / 3, y, 1, COLOR_BLACK);
+		EditorCanvas.DrawLine((x / 3) * 2, 0, (x / 3) * 2, y, 1, COLOR_BLACK);
 		
-		EditorCameraCanvas.DrawLine(0, y / 3, x, y / 3, 1, COLOR_BLACK);
-		EditorCameraCanvas.DrawLine(0, (y / 3) * 2, x, (y / 3) * 2, 1, COLOR_BLACK);
+		EditorCanvas.DrawLine(0, y / 3, x, y / 3, 1, COLOR_BLACK);
+		EditorCanvas.DrawLine(0, (y / 3) * 2, x, (y / 3) * 2, 1, COLOR_BLACK);
 	}
 	
 	override string GetLayoutFile() 
