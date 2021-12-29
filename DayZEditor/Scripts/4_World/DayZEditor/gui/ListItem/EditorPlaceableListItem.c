@@ -175,24 +175,23 @@ class EditorPlaceableListItem: EditorListItem
 		return true;
 	}
 	
-	// resave favorites
-	override bool OnFavoriteToggle(ButtonCommandArgs args)
+	override bool OnFavoriteToggle(CheckBoxCommandArgs args)
 	{
 		array<string> favorite_items = {};
 		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
-		if (favorite_items.Find(m_PlaceableItem.Type) == -1) {
-			EditorLog.Debug("Adding Favorite %1", m_PlaceableItem.Type);
+		EditorLog.Debug("Toggling Favorite Favorite %1", m_PlaceableItem.Type);
+		if (!m_TemplateController.Favorite) {
 			favorite_items.Insert(m_PlaceableItem.Type);
-			GetGame().SetProfileStringList("EditorFavoriteItems", favorite_items);
-			GetGame().SaveProfile();
+		} else {
+			// fixes a bug where several versions of an item were being placed in
+			while (favorite_items.Find(m_PlaceableItem.Type) != -1) {
+				favorite_items.Remove(favorite_items.Find(m_PlaceableItem.Type));					
+			}
 		}
 		
-		// disappear when toggled off with favs toggled on
-		// removed due to some weird crash shenanigans, bed time! gl tyler
-		//if (GetEditor().GetEditorHud().GetTemplateController().FavoritesToggle && !GetTemplateController().Favorite) {
-			//GetLayoutRoot().Show(false);
-		//}
-		
+		Print(favorite_items.Count());
+		GetGame().SetProfileStringList("EditorFavoriteItems", favorite_items);
+		GetGame().SaveProfile();
 		return true;
 	}
 }

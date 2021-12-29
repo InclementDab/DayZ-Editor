@@ -10,4 +10,5 @@ class EditorListItemController: ViewController
 	bool Favorite;
 
 	ref ObservableCollection<ref EditorListItem> ChildListItems = new ObservableCollection<ref EditorListItem>(this);
+
 }

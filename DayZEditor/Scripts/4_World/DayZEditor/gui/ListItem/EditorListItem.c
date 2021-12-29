@@ -65,7 +65,7 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 		GetTemplateController().NotifyPropertyChanged("Favorite");
 	}
 	
-	bool OnFavoriteToggle(ButtonCommandArgs args)
+	bool OnFavoriteToggle(CheckBoxCommandArgs args)
 	{
 		return false;
 	}
