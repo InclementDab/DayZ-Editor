@@ -45,51 +45,44 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 		m_DistanceTraveledValue.SetText(GetDistanceString(EditorStatistics.GetInstance().EditorDistanceFlown));
 	}
 	
-	protected string GetTimeString( float total_time )
-	{
-		string day_symbol = "d";							//define symbols
-		string hour_symbol = "h";
-		string minute_symbol = "min";
+	static string GetTimeString(int total_time)
+	{		
+		if (total_time == 0) {
+			return "0 min";
+		}
+			
+		int days = total_time / 3600 / 24;
+		int hours = total_time / 3600 % 24;
+		int minutes = (total_time % 3600) / 60;
 		
-		if ( total_time > 0 )
-		{
-			string time_string;		
-			int time_seconds = total_time; 						//convert total time to int
-			
-			int days = time_seconds / 3600 / 24;
-			int hours = time_seconds / 3600 % 24;
-			int minutes = ( time_seconds % 3600 ) / 60;
-			
-			if ( days > 0 )
-			{
-				time_string += GetValueString( days ) + day_symbol;		//days
-				time_string += " ";										//separator
-			}
-			
-			if ( hours > 0 || days > 0 )
-			{
-				time_string += GetValueString( hours ) + hour_symbol;	//hours
-				time_string += " ";										//separator
-			}			
-
-			if ( minutes >= 0 )
-			{
-				time_string += GetValueString( minutes ) + minute_symbol;	//minutes
-			}			
-
-			return time_string;
+		string time_string;
+		
+		if (days > 0) {
+			time_string += GetValueString(days) + "d ";
 		}
 		
-		return "0" + " " + minute_symbol;
+		if (hours > 0 || days > 0) {
+			time_string += GetValueString(hours) + "h ";							
+		}			
+
+		if (minutes >= 0) {
+			time_string += GetValueString(minutes) + "min";
+		}
+
+		return time_string;
 	}
 	
-	protected string GetDistanceString(float total_distance, bool meters_only = false)
+	static string GetDistanceString(float total_distance, bool meters_only = false)
 	{
 		const int DISTANCE_TO_MOON = 384400;
 		const int CIRCUMFERENCE_OF_EARTH = 40075;
 		
 		string meter_symbol = "m";							//define symbols
 		string kilometer_symbol = "km";
+		
+		if (total_distance == 0) {
+			return "0m";
+		}
 		
 		if (total_distance > DISTANCE_TO_MOON * 0.5) {
 			return string.Format("%1 To The Moon", total_distance / DISTANCE_TO_MOON);
@@ -98,80 +91,49 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 		if (total_distance > CIRCUMFERENCE_OF_EARTH) {
 			return string.Format("%1x Around Earth", total_distance / CIRCUMFERENCE_OF_EARTH);
 		}
-		
-		if ( total_distance > 0 )
-		{
-			string distance_string;
-			
-			float kilometers = total_distance;
-			kilometers = Math.Round( kilometers );
-			if ( kilometers >= 10 && !meters_only )
-			{
-				distance_string = GetValueString( kilometers, true ) + kilometer_symbol;		//kilometers
-			}
-			else
-			{
-				distance_string = GetValueString( total_distance ) + meter_symbol;			//meters
-			}
-			
-			return distance_string;
-		}	
 	
-		return "0" + meter_symbol;
-	}
-	
-	protected string GetValueString( float total_value, bool show_decimals = false )
-	{
-		if ( total_value > 0 )
-		{
-			string out_string;
-			
-			int total_value_int = total_value;
-			string number_str = total_value_int.ToString();
-			
-			//number
-			if ( total_value >= 1000 )
-			{
-				int count;		
-				int first_length = number_str.Length() % 3;		//calculate position of the first separator
-				if ( first_length > 0 )
-				{
-					count = 3 - first_length;
-				}
-				
-				for ( int i = 0; i < number_str.Length(); ++i )
-				{
-					out_string += number_str.Get( i );
-					count ++;
-					
-					if ( count >= 3 )
-					{
-						out_string += " ";						//separator
-						count = 0;
-					}
-				}
-			}
-			else
-			{
-				out_string = number_str;
-			}
-			
-			//decimals
-			if ( show_decimals )
-			{
-				string total_value_str = total_value.ToString();
-				int decimal_idx = total_value_str.IndexOf( "." );
-			
-				if ( decimal_idx > -1 )
-				{
-					out_string.TrimInPlace();
-					out_string += total_value_str.Substring( decimal_idx, total_value_str.Length() - decimal_idx );
-				}
-			}
-
-			return out_string;
+		float kilometers = Math.Round(total_distance);
+		if (kilometers >= 10 && !meters_only) {
+			return GetValueString(kilometers, true) + "km";
 		}
 		
-		return "0";
+		return GetValueString(total_distance) + "m";
+	}
+	
+	static string GetValueString(float total_value, bool show_decimals = false)
+	{
+		if (total_value == 0) {
+			return "0";
+		}
+		
+		string out_string;
+		int total_value_int = total_value;
+		string number_str = total_value_int.ToString();
+		out_string = number_str;
+		//number
+		if (total_value >= 1000) {		
+			out_string = "";		
+			for (int i = 0; i < number_str.Length(); i++) {
+				out_string += number_str[i];
+				if (i % 3 == 1 && i != number_str.Length() - 1) {
+					out_string += ",";
+				}
+			}
+		}
+
+		//decimals
+		if (!show_decimals) {
+			return out_string;
+		}
+
+		string total_value_str = total_value.ToString();
+		int decimal_idx = total_value_str.IndexOf(".");
+	
+		if (decimal_idx > -1) {
+			out_string.TrimInPlace();
+			out_string += total_value_str.Substring(decimal_idx, total_value_str.Length() - decimal_idx);
+		}
+		
+		return out_string;
 	}
 }
