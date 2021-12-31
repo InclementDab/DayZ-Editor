@@ -85,7 +85,7 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 		}
 		
 		if (total_distance > DISTANCE_TO_MOON * 0.5) {
-			return string.Format("%1 To The Moon", total_distance / DISTANCE_TO_MOON);
+			return string.Format("%1x To The Moon", total_distance / DISTANCE_TO_MOON);
 		}
 		
 		if (total_distance > CIRCUMFERENCE_OF_EARTH) {
