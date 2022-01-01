@@ -1,13 +1,13 @@
 EffectDef {
  Emitors {
   EmitorDef Firework1_mid {
-   ShapeType Point
+   ShapeType OnSphere
    ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 0
+   ConeAngle 180 0 180
+   MaxNum 50
+   BirthRate 1000
+   Offset 0 4 0
+   Angles 0 0 0
    Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
    SizeMultiplier 0.3
    RandomRotDir 1
@@ -17,26 +17,30 @@ EffectDef {
    VelAngle 0
    RandomAngle 1
    BillboardingType Full
-   Velocity 3
+   Velocity 6
    GravityMultiply 0.09
    Spring 0.02
    AnimOnce 0
    LifetimeByAnim 0
+   LifeTime 2
+   LifeTimeRND 0
    Color {
     0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
    }
    Size {
     0 0.49065 0.27273 0.85514 0.52603 1 0.82673 0.52804 1 0.04206
    }
+   EffectTime 2
+   Repeat 0
   }
-  EmitorDef Firework1_mid45 {
-   ShapeType Point
+  EmitorDef Firework1_mid_cloned {
+   ShapeType OnSphere
    ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 45
+   ConeAngle -180 0 180
+   MaxNum 50
+   BirthRate 1000
+   Offset 0 4 0
+   Angles 0 180 0
    Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
    SizeMultiplier 0.3
    RandomRotDir 1
@@ -46,26 +50,30 @@ EffectDef {
    VelAngle 0
    RandomAngle 1
    BillboardingType Full
-   Velocity 3
+   Velocity 6
    GravityMultiply 0.09
    Spring 0.02
    AnimOnce 0
    LifetimeByAnim 0
+   LifeTime 2
+   LifeTimeRND 0
    Color {
     0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
    }
    Size {
     0 0.49065 0.27273 0.85514 0.52603 1 0.82673 0.52804 1 0.04206
    }
+   EffectTime 2
+   Repeat 0
   }
-  EmitorDef Firework1_mid90 {
-   ShapeType Point
+  EmitorDef Firework1_mid_cloned_cloned {
+   ShapeType OnSphere
    ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 90
+   ConeAngle -180 0 180
+   MaxNum 50
+   BirthRate 1000
+   Offset 0 4 0
+   Angles 0 0 0
    Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
    SizeMultiplier 0.3
    RandomRotDir 1
@@ -75,26 +83,30 @@ EffectDef {
    VelAngle 0
    RandomAngle 1
    BillboardingType Full
-   Velocity 3
+   Velocity 6
    GravityMultiply 0.09
    Spring 0.02
    AnimOnce 0
    LifetimeByAnim 0
+   LifeTime 2
+   LifeTimeRND 0
    Color {
     0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
    }
    Size {
     0 0.49065 0.27273 0.85514 0.52603 1 0.82673 0.52804 1 0.04206
    }
+   EffectTime 2
+   Repeat 0
   }
-  EmitorDef Firework1_mid135 {
-   ShapeType Point
+  EmitorDef Firework1_mid_cloned_cloned_cloned {
+   ShapeType OnSphere
    ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 135
+   ConeAngle 180 0 180
+   MaxNum 50
+   BirthRate 1000
+   Offset 0 4 0
+   Angles 0 180 0
    Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
    SizeMultiplier 0.3
    RandomRotDir 1
@@ -104,597 +116,21 @@ EffectDef {
    VelAngle 0
    RandomAngle 1
    BillboardingType Full
-   Velocity 3
+   Velocity 6
    GravityMultiply 0.09
    Spring 0.02
    AnimOnce 0
    LifetimeByAnim 0
+   LifeTime 2
+   LifeTimeRND 0
    Color {
     0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
    }
    Size {
     0 0.49065 0.27273 0.85514 0.52603 1 0.82673 0.52804 1 0.04206
    }
-  }
-  EmitorDef Firework1_mid180 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 180
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 3
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.49065 0.27273 0.85514 0.52603 1 0.82673 0.52804 1 0.04206
-   }
-  }
-  EmitorDef Firework1_mid225 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 225
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 3
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.49065 0.27273 0.85514 0.52603 1 0.82673 0.52804 1 0.04206
-   }
-  }
-  EmitorDef Firework1_mid270 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 270
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 3
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.49065 0.27273 0.85514 0.52603 1 0.82673 0.52804 1 0.04206
-   }
-  }
-  EmitorDef Firework1_mid315 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 315
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 3
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.49065 0.27273 0.85514 0.52603 1 0.82673 0.52804 1 0.04206
-   }
-  }
-  EmitorDef Firework1_center {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 0
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 1
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.13551 0.37451 0.58879 0.62704 0.5514 0.8547 0.13084 1 0.04206
-   }
-  }
-  EmitorDef Firework1_center90 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 90
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 1
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.13551 0.37451 0.58879 0.62704 0.5514 0.8547 0.13084 1 0.04206
-   }
-  }
-  EmitorDef Firework1_center180 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 180
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 1
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.13551 0.37451 0.58879 0.62704 0.5514 0.8547 0.13084 1 0.04206
-   }
-  }
-  EmitorDef Firework1_center270 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 270
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 1
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.13551 0.37451 0.58879 0.62704 0.5514 0.8547 0.13084 1 0.04206
-   }
-  }
-  EmitorDef Firework1 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 0
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
-  }
-  EmitorDef Firework1_30 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 30
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
-  }
-  EmitorDef Firework1_60 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 60
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
-  }
-  EmitorDef Firework1_90 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 90
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
-  }
-  EmitorDef Firework1_120 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 120
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
-  }
-  EmitorDef Firework1_150 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 150
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
-  }
-  EmitorDef Firework1_180 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 180
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
-  }
-  EmitorDef Firework1_210 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 210
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
-  }
-  EmitorDef Firework1_240 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 240
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
-  }
-  EmitorDef Firework1_270 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 270
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
-  }
-  EmitorDef Firework1_300 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 300
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
-  }
-  EmitorDef Firework1_330 {
-   ShapeType Point
-   ShapeSize 0 0 0
-   ConeAngle 0 0 0
-   MaxNum 1
-   BirthRate 1
-   Offset 0 60 0
-   Angles 0 90 330
-   Material "{3B3976BFD0641893}DayZEditor/Editor/emats/editor_fireworks.emat"
-   SizeMultiplier 0.3
-   RandomRotDir 1
-   RotMultiplier 20
-   StretchMultiplier 0
-   StreakFullUV 0
-   VelAngle 0
-   RandomAngle 1
-   BillboardingType Full
-   Velocity 5
-   GravityMultiply 0.09
-   Spring 0.02
-   AnimOnce 0
-   LifetimeByAnim 0
-   Color {
-    0 1 0.1 0 0.25 1 0.1 0 0.5 1 0.1 0 1 1 0.1 0
-   }
-   Size {
-    0 0.2757 0.49961 1 0.62315 0.82243 0.74981 0.25234 1 0.04206
-   }
+   EffectTime 2
+   Repeat 0
   }
  }
 }
