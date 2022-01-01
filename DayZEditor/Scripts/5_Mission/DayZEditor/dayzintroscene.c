@@ -4,6 +4,8 @@ modded class DayZIntroScene
 	static const float CHRISTMAS_TREE_DISTANCE_FROM_SCREEN = 10.0;
 	static const float FIREWORK_DISTANCE_FROM_SCREEN = 25.0;
 	
+	ref Timer fireworkTimer;
+	
 	// 😂
 	protected Object m_DSLRCamera;
 	protected ref array<Object> m_FallenObjects = {};
@@ -23,6 +25,18 @@ modded class DayZIntroScene
 		"XmasGiftGreen1",
 		"XmasGiftGreen2"
 	};	
+	
+	static const ref array<int> FireworkTypes = {
+		ParticleList.EDITOR_FIREWORK_RED,
+		ParticleList.EDITOR_FIREWORK_ORANGE,
+		ParticleList.EDITOR_FIREWORK_PURPLE,
+		ParticleList.EDITOR_FIREWORK_SILVER,
+		ParticleList.EDITOR_FIREWORK_GREEN,
+		ParticleList.EDITOR_FIREWORK_WHITE,
+		ParticleList.EDITOR_FIREWORK_BLUE,
+		ParticleList.EDITOR_FIREWORK_CYAN,
+		ParticleList.EDITOR_FIREWORK_RED
+	};
 
 	void DayZIntroScene()
 	{
@@ -31,7 +45,7 @@ modded class DayZIntroScene
 		m_CharacterPos = m_Camera.GetPosition() + m_Camera.GetDirection() * CAMERA_DISTANCE_FROM_SCREEN;
 		m_CharacterPos = m_CharacterPos + m_Camera.GetDirection() * vector.Up * -0.5;
 		m_CharacterPos[1] = GetGame().SurfaceY(m_CharacterPos[0], m_CharacterPos[2]) + 1.25;
-	
+		
 		// determine camera model based on holiday
 		switch (m_CurrentHoliday) {
 			case EditorHoliday.CHRISTMAS:
@@ -54,6 +68,7 @@ modded class DayZIntroScene
 		m_DSLRCamera.SetPosition(m_CharacterPos);
 		m_DSLRCamera.Update();
 	}
+					
 	
 	void ~DayZIntroScene()
 	{
@@ -66,10 +81,32 @@ modded class DayZIntroScene
 		}
 	}
 	
+	vector FireworkRandomDistance()
+	{
+		vector randDistance = m_DSLRCamera.GetWorldPosition();
+		randDistance[0] = randDistance[0] + Math.RandomFloat(-30, 30);
+		randDistance[1] = randDistance[1] + 8;
+		randDistance[2] = randDistance[2] + Math.RandomFloat(-30, 30);
+		return randDistance;
+	}
+	
+	void StartTimer()
+	{ 
+		fireworkTimer = new Timer(); 
+		fireworkTimer.Run(0.15, this, "PlayFireworks", NULL, true);
+
+		Print("timer started");
+	}
+	
+	void PlayFireworks()
+	{				
+		Particle.PlayInWorld(FireworkTypes.GetRandomElement(), FireworkRandomDistance());
+	}	
+	
 	void OnUpdate(float timeslice)
 	{
 		m_TotalTime += timeslice / 2;
-				
+		
 		if (!m_ParticleSetup) {
 			if (m_CurrentHoliday == EditorHoliday.NEWYEARS || m_CurrentHoliday == EditorHoliday.CHRISTMAS) {
 				
@@ -90,11 +127,11 @@ modded class DayZIntroScene
 					gift_pos[1] = GetGame().SurfaceY(present_position[0], present_position[2]) + 0.5;
 					
 					m_ChristmasObjects.Insert(GetGame().CreateObject(XmasGiftTypes.GetRandomElement(), gift_pos));
-				}
+				}	
 				
-				if (m_CurrentHoliday == EditorHoliday.NEWYEARS) { // need randomization of locations per firework also add all the fireworks to this
-					Particle.PlayInWorld(ParticleList.EDITOR_FIREWORK_RED, m_Camera.GetPosition() + m_Camera.GetDirection() * FIREWORK_DISTANCE_FROM_SCREEN);
+				if (m_CurrentHoliday == EditorHoliday.NEWYEARS) {
 					GetGame().GetWorld().SetDate(1, 1, 1, 0, 0);
+					StartTimer();
 				}
 				
 				Particle.PlayOnObject(ParticleList.EDITOR_SNOW, m_DSLRCamera, Vector(0, 0, 0));
