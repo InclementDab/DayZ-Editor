@@ -98,6 +98,8 @@ class Editor
 	// Inventory Editor
 	protected ref EditorInventoryEditorHud 		m_EditorInventoryEditorHud;
 	
+	protected ref Timer	m_StatisticsSaveTimer = new Timer(CALL_CATEGORY_GAMEPLAY);
+	
 	bool										KEgg; // oh?
 	
 	private void Editor(PlayerBase player) 
@@ -120,6 +122,7 @@ class Editor
 		
 		// Init Statistics
 		Statistics			= EditorStatistics.GetInstance();
+		m_StatisticsSaveTimer.Run(10.0, this, "OnStatisticsSave", null, true);
 								
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
@@ -224,6 +227,11 @@ class Editor
 		delete g_Editor;
 	}
 		
+	void OnStatisticsSave()
+	{
+		Statistics.Save();
+	}
+	
 	void Update(float timeslice)
 	{		
 		ProcessInput(GetGame().GetInput());
@@ -685,7 +693,6 @@ class Editor
 			EditorLog.Warning("%1 has persistence! If you place this it may cause duplications in your server!", editor_object.GetWorldObject().GetType());
 		}
 		
-		Statistics.EditorPlacedObjects++;
 		EditorEvents.ObjectPlaced(this, editor_object);
 		
 		if (!KeyState(KeyCode.KC_LSHIFT)) { 
@@ -945,12 +952,12 @@ class Editor
 				continue;
 			}
 			
-			if (Statistics) {
-				Statistics.Save();
+			// disabled
+			if (Settings.AutoSaveTimer == -1) {
+				continue;
 			}
 			
-			Settings.AutoSaveTimer = Math.Clamp(Settings.AutoSaveTimer, 10, int.MAX);
-			Sleep(Settings.AutoSaveTimer * 1000);
+			Sleep(Math.Clamp(Settings.AutoSaveTimer, 10, int.MAX) * 1000);
 			if (EditorSaveFile != string.Empty) {
 				CommandManager[EditorSaveCommand].Execute(this, null);
 			}
@@ -1118,7 +1125,6 @@ class Editor
 				action.InsertRedoParameter(new Param1<int>(deleted_object_data.ID));
 			}
 			
-			Statistics.EditorRemovedObjects++;
 			m_ObjectManager.HideMapObject(new EditorDeletedObject(deleted_object_data));
 		}
 		

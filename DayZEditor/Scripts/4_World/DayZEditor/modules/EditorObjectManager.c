@@ -24,6 +24,8 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	// lookup table by p3d
 	protected ref map<string, ref array<EditorPlaceableItem>>	m_PlaceableObjectsByP3d;
+	
+	protected EditorStatistics m_EditorStatistics;
 
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
@@ -31,6 +33,7 @@ class EditorObjectManagerModule: JMModuleBase
 	override void Init()
 	{
 		EditorLog.Trace("EditorObjectManager::Init");
+		m_EditorStatistics  = EditorStatistics.GetInstance();
 		m_WorldObjectIndex 	= new EditorObjectMap();
 		m_PlacedObjects 	= new EditorObjectMap();
 		m_SelectedObjects 	= new EditorObjectMap();
@@ -97,6 +100,8 @@ class EditorObjectManagerModule: JMModuleBase
 		m_WorldObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object);
 		
 		EditorEvents.ObjectCreated(this, editor_object);
+		
+		m_EditorStatistics.EditorPlacedObjects++;
 		return editor_object;
 	}
 
@@ -162,6 +167,8 @@ class EditorObjectManagerModule: JMModuleBase
 		m_EditorDeletedObjectRefs[target.GetID()] = target;
 	
 		m_DeletedObjects.InsertEditorDeletedObject(target);
+		
+		m_EditorStatistics.EditorRemovedObjects++;
 	}
 	
 	void UnhideMapObject(int target)
@@ -219,6 +226,7 @@ class EditorObjectManagerModule: JMModuleBase
 		
 		m_EditorObjectRefs.Clear();
 		m_EditorDeletedObjectRefs.Clear();
+		m_EditorStatistics.Save();
 	}
 				
 	override void OnMissionStart()
