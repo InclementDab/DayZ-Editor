@@ -7,6 +7,7 @@ class EditorSettings: ProfileSettings
 	float QuickMoveStepSize			= 0.1;
 	bool QuickMoveFollowsCamera		= false;
 	bool SpawnItemsWithAttachments	= true;
+	bool ShowScopeZeroObjects		= false;
 
 	// Camera Settings
 	float CameraSpeed				= 25;

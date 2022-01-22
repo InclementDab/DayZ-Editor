@@ -58,7 +58,7 @@ class EditorObjectManagerModule: JMModuleBase
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
 		        GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1 && !GetEditor().Settings.ShowScopeZeroObjects) {
 					continue;
 				}
 				
