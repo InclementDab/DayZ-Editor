@@ -112,7 +112,7 @@ class XMLEventsCallback: XMLCallback
 		return false;
 	}
 	
-	override void OnSuccess(ref XMLDocument document)
+	override void OnSuccess(XMLDocument document)
 	{
 		Print("XMLEventsCallback::Success");		
 		XMLElement xml_events = document.Get(1).GetContent();
@@ -179,14 +179,12 @@ class XMLEventSpawnsCallback: XMLCallback
 {
 	private ref array<ref EditorEventSpawn> m_Events;
 	
-	void XMLEventSpawnsCallback(ref array<ref EditorEventSpawn> events)
+	void XMLEventSpawnsCallback(array<ref EditorEventSpawn> events)
 	{
 		m_Events = events;
 	}
 	
-	
-	
-	override void OnSuccess(ref XMLDocument document)
+	override void OnSuccess(XMLDocument document)
 	{
 		Print("XMLEventSpawnsCallback::Success");		
 		XMLElement content = document.Get(1).GetContent();
@@ -217,7 +215,7 @@ class XMLEventSpawnsCallback: XMLCallback
 	}
 	
 	
-	override void OnFailure(ref XMLDocument document)
+	override void OnFailure(XMLDocument document)
 	{
 		Print("XMLEventSpawnsCallback::Failure");	
 	}

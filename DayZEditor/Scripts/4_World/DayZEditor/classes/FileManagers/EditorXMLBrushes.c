@@ -9,17 +9,17 @@ class XMLEditorBrushes: XMLCallback
 		m_Data = data;
 	}
 		
-	override void OnStart(ref XMLDocument document)
+	override void OnStart(XMLDocument document)
 	{
 		EditorLog.Trace("XMLEditorBrushes::OnStart");
 		EditorLog.Info("Loading Brushes...");
 	}
 	
-	override void OnSuccess(ref XMLDocument document)
+	override void OnSuccess(XMLDocument document)
 	{		
 		EditorLog.Trace("XMLEditorBrushes::OnSuccess");
 		
-		ref set<string> object_type_list = new set<string>();
+		set<string> object_type_list = new set<string>();
 		
 		// <BrushTypes>
 		for (int i = 0; i < document.Get(1).GetContent().Count(); i++) {
@@ -89,7 +89,7 @@ class XMLEditorBrushes: XMLCallback
 		EditorLog.Info("Loaded %1 Brushes!", m_Data.Count().ToString());
 	}
 	
-	override void OnFailure(ref XMLDocument document)
+	override void OnFailure(XMLDocument document)
 	{
 		EditorLog.Error("XMLEditorBrushes::OnFailure");
 	}

@@ -125,7 +125,7 @@ class EditorMapGroupProto: XMLCallback
 		m_LootPositions.RemoveItem(target);
 	}
 		
-	override void OnSuccess(ref XMLDocument document)
+	override void OnSuccess(XMLDocument document)
 	{
 		EditorLog.Trace("EditorMapGroupProto::OnSuccess"); 
 		
@@ -311,13 +311,13 @@ class EditorXMLCallback<Class T>: XMLCallback
 	
 
 	protected bool m_Success = false;
-	override void OnFailure(ref XMLDocument document)
+	override void OnFailure(XMLDocument document)
 	{
 		EditorLog.Trace("EditorXMLCallback::OnFailure");
 		m_Failed = false;
 	}
 	
-	override void OnSuccess(ref XMLDocument document)
+	override void OnSuccess(XMLDocument document)
 	{
 		EditorLog.Trace("EditorXMLCallback::OnSuccess");
 		m_Success = true;
