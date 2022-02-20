@@ -183,7 +183,7 @@ class Editor
 		thread AutoSaveThread();
 	}
 	
-	private void ~Editor() 
+	void ~Editor() 
 	{
 		EditorLog.Trace("~Editor");
 		if (!IsMissionOffline()) {

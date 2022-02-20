@@ -38,6 +38,8 @@ class EditorClientModule: JMModuleBase
 	// JMModuleBase Overrides
 	override void OnInit()
 	{
+		super.OnInit();
+		
 		EditorLog.Trace("Editor::OnInit");
 						
 		// Keybinds

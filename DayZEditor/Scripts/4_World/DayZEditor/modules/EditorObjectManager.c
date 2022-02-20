@@ -32,6 +32,8 @@ class EditorObjectManagerModule: JMModuleBase
 	
 	override void Init()
 	{
+		super.Init();
+		
 		EditorLog.Trace("EditorObjectManager::Init");
 		m_EditorStatistics  = EditorStatistics.GetInstance();
 		m_WorldObjectIndex 	= new EditorObjectMap();
@@ -58,7 +60,7 @@ class EditorObjectManagerModule: JMModuleBase
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
 		        GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1 && !GetEditor().Settings.ShowScopeZeroObjects) {
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) { // (GetEditor().Settings && !GetEditor().Settings.ShowScopeZeroObjects)
 					continue;
 				}
 				

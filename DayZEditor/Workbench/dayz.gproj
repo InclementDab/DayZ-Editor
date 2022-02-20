@@ -53,6 +53,8 @@ GameProjectClass {
 					Name "gameLib"
 					Paths {
 						"scripts/2_GameLib"
+						"JM/CF/defines"
+						"JM/CF/scripts/2_GameLib"
 					}
 					EntryPoint ""
 				}
@@ -61,11 +63,8 @@ GameProjectClass {
 					Paths {
 						"scripts/3_Game"
 						"JM/CF/defines"
-						"DayZEditor/scripts/common"
 						"JM/CF/scripts/3_Game"
-						"JM/CF/XML/3_Game"
-						"JM/CF/ModStorage/3_Game"
-						"JM/CF/Permissions/3_Game"
+						"DayZEditor/scripts/common"
 						"DabsFramework/Scripts/3_Game"
 						"DayZEditor/scripts/3_Game"
 					}
@@ -76,10 +75,8 @@ GameProjectClass {
 					Paths {
 						"scripts/4_World"
 						"JM/CF/defines"
-						"DayZEditor/scripts/common"
 						"JM/CF/scripts/4_World"
-						"JM/CF/ModStorage/4_World"
-						"JM/CF/Permissions/4_World"
+						"DayZEditor/scripts/common"
 						"DabsFramework/Scripts/4_World"
 						"DayZEditor/scripts/4_World"
 					}
@@ -90,10 +87,8 @@ GameProjectClass {
 					Paths {
 						"scripts/5_Mission"
 						"JM/CF/defines"
-						"DayZEditor/scripts/common"
 						"JM/CF/scripts/5_Mission"
-						"JM/CF/LayoutBindingManager/5_Mission"
-						"JM/CF/Permissions/5_Mission"
+						"DayZEditor/scripts/common"
 						"DabsFramework/Scripts/5_Mission"
 						"DayZEditor/scripts/5_Mission"
 					}
