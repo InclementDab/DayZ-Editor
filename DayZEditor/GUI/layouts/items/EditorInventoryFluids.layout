@@ -34,6 +34,8 @@ WrapSpacerWidgetClass EditorInventoryFluids {
      step 0.001
      current 0.5
      flipped 0
+     "fill in" 1
+     "listen to input" 1
      {
       TextWidgetClass FluidLevel {
        ignorepointer 1

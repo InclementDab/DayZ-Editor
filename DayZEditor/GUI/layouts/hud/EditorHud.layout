@@ -1456,6 +1456,8 @@ FrameWidgetClass EditorFrame {
          scriptclass "ViewBinding"
          style Default
          step 0.1
+         "fill in" 1
+         "listen to input" 1
          {
           TextWidgetClass CameraTrackSmoothingReadout {
            ignorepointer 1

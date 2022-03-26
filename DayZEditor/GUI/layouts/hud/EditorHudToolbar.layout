@@ -1215,6 +1215,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
          vexactsize 0
          scriptclass "ViewBinding"
          current 20
+         "fill in" 1
+         "listen to input" 1
          {
           ScriptParamsClass {
            Binding_Name "BrushRadius"
@@ -1291,6 +1293,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
          maximum 1
          step 0.01
          current 0.25
+         "fill in" 1
+         "listen to input" 1
          {
           ScriptParamsClass {
            Binding_Name "BrushDensity"
