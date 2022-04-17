@@ -97,8 +97,8 @@ class EditorSettings: ProfileSettings
 		QuickMoveStepSize			= 0.1; // dont know what this does (not changed)
 		CameraSpeed					= 0.05; // 25
 		CameraTilt					= 0.5; // 0
-		ViewDistance 				= 0.15; // 3000
-		ObjectViewDistance 			= 0.375; // 3000
+		ViewDistance 				= 0.065; // 3000 .15
+		ObjectViewDistance 			= 0.135; // 3000
 		MarkerViewDistance 			= 0.2; // 1000
 		
 		AutoSaveTimer 				= 240;
