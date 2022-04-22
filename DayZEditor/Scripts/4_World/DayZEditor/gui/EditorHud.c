@@ -130,10 +130,10 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 				
 				// Handles the fill operation
 				int x_avg = (start_x + current_x) / 2;
-				EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, drag_box_color_fill);
-							
+				EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, drag_box_color_fill); 
+				
 				EditorObjectMap placed_objects = g_Editor.GetPlacedObjects();
-				foreach (EditorObject editor_object: placed_objects) {
+				foreach (EditorObject editor_object: placed_objects) {					
 					
 					if (editor_object.IsSelected()) continue;
 					
@@ -142,8 +142,21 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 					if (object_marker) {
 						object_marker.GetPos(marker_x, marker_y);
 						
-						if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {		
-							g_Editor.SelectObject(editor_object);
+						//i think only checking if within cone of box select not distance
+						if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {
+							
+							float m_viewdist = GetEditor().Settings.MarkerViewDistance;
+							vector sel_obj = editor_object.GetPosition();
+							vector cam_pos = GetEditor().GetCamera().GetPosition();
+							float dist = vector.Distance(sel_obj, cam_pos);
+							
+							//check if within markerviewdistance to allow selection. i sowwy if fuck up cleannesssss
+							if (dist <= m_viewdist) {
+								//Print(sel_obj);
+								//Print(dist);
+								//Print(m_viewdist);
+								g_Editor.SelectObject(editor_object);
+							}
 						}
 					}
 				}		
@@ -155,7 +168,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		m_IsBoxSelectActive = false;
 		EditorCanvas.Clear();
 	}
-	
+
 	void ShowRuleOfThirds(bool state)
 	{
 		if (!state) {
