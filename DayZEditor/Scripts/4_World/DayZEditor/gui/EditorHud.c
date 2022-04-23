@@ -144,13 +144,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 						
 						//i think only checking if within cone of box select not distance
 						if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {
-							float m_viewdist = GetEditor().Settings.MarkerViewDistance;
-							vector sel_obj = editor_object.GetPosition();
-							vector cam_pos = GetEditor().GetCamera().GetPosition();
-							float dist = vector.Distance(sel_obj, cam_pos);
-							
-							//check if within markerviewdistance to allow selection. i sowwy if fuck up cleannesssss
-							if (dist <= m_viewdist) {
+							//check if within markerviewdistance to allow selection.
+							if (vector.Distance(editor_object.GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.Settings.MarkerViewDistance) {
 								g_Editor.SelectObject(editor_object);
 							}
 						}
