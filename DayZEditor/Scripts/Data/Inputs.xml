@@ -16,7 +16,7 @@
 			<input name="EditorCameraToolSpeedIncrease" loc="Camera Quick Increase" />
 			<input name="EditorCameraToolSpeedDecrease" loc="Camera Quick Decrease" />
 		
-            <input name="EditorToggleActive" loc="Enable / Disable" />
+            <input name="EditorToggleActive" loc="Toggle Player / Camera" />
             <input name="EditorToggleUI" loc="Show / Hide UI" />
             <input name="EditorToggleCursor" loc="Toggle Cursor" />
             <input name="EditorTeleportPlayerToCursor" loc="Teleport Player to Cursor" />
