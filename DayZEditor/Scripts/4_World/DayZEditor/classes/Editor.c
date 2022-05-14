@@ -954,7 +954,7 @@ class Editor
 	private void AutoSaveThread()
 	{
 		while (g_Editor) {
-			if (!Settings || Settings.AutoSaveTimer == -1) { 
+			if (!Settings || Settings.AutoSaveTimer <= 0) { 
 				Sleep(10000);
 				continue;
 			}

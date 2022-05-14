@@ -3,7 +3,7 @@ class EditorSettings: ProfileSettings
 	// General Settings
 	float ViewDistance 				= 3000;
 	float ObjectViewDistance 		= 3000;
-	int AutoSaveTimer 				= 240;
+	int AutoSaveTimer 			= 240;
 	float QuickMoveStepSize			= 0.1;
 	bool QuickMoveFollowsCamera		= false;
 	bool SpawnItemsWithAttachments	= true;
@@ -45,7 +45,7 @@ class EditorSettings: ProfileSettings
 
 	// Its a pseduo-controller, preferences dialogs!!
 	void PropertyChanged(string property_name)
-	{
+	{		
 		switch (property_name) {
 						
 			case "SelectedLogLevel": {
