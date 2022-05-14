@@ -2,11 +2,15 @@ class EditorImportCommandBase: EditorAsyncCommand
 {
 	protected ref ImportSettings m_ImportSettings = new ImportSettings();
 	
+	void EditorImportCommandBase()
+	{
+		m_ImportSettings.SetFileType(GetFileType());
+	}
+	
 	protected override void Call(Class sender, CommandArgs args)
 	{
 		string extension = "*" + EditorFileType.Cast(GetFileType().Spawn()).GetExtension();
 		EditorLog.Debug("Using filter %1", extension);
-		m_ImportSettings.SetFileType(GetFileType());
 		EditorFileDialog file_dialog(GetName(), extension, "", GetDialogButtonName(), m_ImportSettings);
 		
 		string file_name;
@@ -19,10 +23,10 @@ class EditorImportCommandBase: EditorAsyncCommand
 			return;
 		}
 		
-		ImportFile(file_name, m_ImportSettings);
+		ImportFile(file_name);
 	}
 		
-	protected EditorSaveData ImportFile(string file_name, ImportSettings settings, bool clear_before = false)
+	EditorSaveData ImportFile(string file_name, bool clear_before = false)
 	{
 		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
 		if (!file_type) {
@@ -38,7 +42,7 @@ class EditorImportCommandBase: EditorAsyncCommand
 		}
 		
 		EditorSaveData save_data = new EditorSaveData();
-		save_data = file_type.Import(file_name, settings);
+		save_data = file_type.Import(file_name, m_ImportSettings);
 		
 		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
 			EditorLog.Warning("Different map detected");
@@ -74,11 +78,16 @@ class EditorImportCommandBase: EditorAsyncCommand
 		GetEditor().GetEditorHud().CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorDeletedObjects.Count()), COLOR_GREEN);
 		return save_data;
 	}
-	
+		
 	typename GetFileType();
 	
 	string GetDialogButtonName() 
 	{
 		return "#STR_EDITOR_IMPORT";
+	}
+	
+	ImportSettings GetImportSettings()
+	{
+		return m_ImportSettings;
 	}
 }

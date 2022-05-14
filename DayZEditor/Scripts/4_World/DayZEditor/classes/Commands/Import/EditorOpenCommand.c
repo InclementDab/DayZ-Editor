@@ -1,8 +1,7 @@
 class EditorOpenCommand: EditorImportCommandBase
-{		
+{	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		m_ImportSettings.SetFileType(GetFileType());
 		EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName(), m_ImportSettings);
 		
 		string file_name;
@@ -10,12 +9,12 @@ class EditorOpenCommand: EditorImportCommandBase
 			return;
 		}
 		
-		OpenFile(file_name);
+		ImportFile(file_name, true);
 	}
 	
-	EditorSaveData OpenFile(string file_name)
+	override EditorSaveData ImportFile(string file_name, bool clear_before = false)
 	{
-		EditorSaveData save_data = ImportFile(file_name, m_ImportSettings, true);
+		EditorSaveData save_data = super.ImportFile(file_name, clear_before);
 		
 		if (save_data) {
 			GetEditor().SetSaveFile(file_name);
@@ -24,7 +23,7 @@ class EditorOpenCommand: EditorImportCommandBase
 		
 		return save_data;
 	}
-
+	
 	override string GetName() 
 	{
 		return "#STR_EDITOR_OPEN";
