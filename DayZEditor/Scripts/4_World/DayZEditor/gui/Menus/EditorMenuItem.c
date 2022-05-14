@@ -112,8 +112,9 @@ class EditorOpenRecentListItem: EditorMenuItem
 	
 	void OnExecute(ButtonCommandArgs args)
 	{
-		EditorOpenCommand open_command = EditorOpenCommand.Cast(GetEditor().CommandManager[EditorOpenCommand]);
-		open_command.ImportFile(m_TemplateController.LabelText);
+		EditorOpenCommand open_command = EditorOpenCommand.Cast(GetEditor().CommandManager[EditorOpenCommand]);	
+		GetEditor().LoadSaveData(open_command.ImportFile(m_TemplateController.LabelText), true);
+		GetEditor().SetSaveFile(m_TemplateController.LabelText);
 	}
 }
 

@@ -9,21 +9,10 @@ class EditorOpenCommand: EditorImportCommandBase
 			return;
 		}
 		
-		ImportFile(file_name, true);
+		GetEditor().LoadSaveData(ImportFile(file_name), true);
+		GetEditor().SetSaveFile(file_name);
 	}
-	
-	override EditorSaveData ImportFile(string file_name, bool clear_before = false)
-	{
-		EditorSaveData save_data = super.ImportFile(file_name, clear_before);
 		
-		if (save_data) {
-			GetEditor().SetSaveFile(file_name);
-			GetEditor().GetCamera().SetPosition(save_data.CameraPosition);
-		}
-		
-		return save_data;
-	}
-	
 	override string GetName() 
 	{
 		return "#STR_EDITOR_OPEN";

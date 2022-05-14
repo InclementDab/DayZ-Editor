@@ -26,7 +26,7 @@ class EditorImportCommandBase: EditorAsyncCommand
 		ImportFile(file_name);
 	}
 		
-	EditorSaveData ImportFile(string file_name, bool clear_before = false)
+	EditorSaveData ImportFile(string file_name)
 	{
 		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
 		if (!file_type) {
@@ -41,42 +41,7 @@ class EditorImportCommandBase: EditorAsyncCommand
 			return null;
 		}
 		
-		EditorSaveData save_data = new EditorSaveData();
-		save_data = file_type.Import(file_name, m_ImportSettings);
-		
-		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
-			EditorLog.Warning("Different map detected");
-			/*if (MessageBox.Show("Different Map Detected", string.Format("Switch map to %1?"), MessageBoxButtons.OKCancel) != DialogResult.OK) {
-				return null;
-			}
-			
-			EditorLog.Info("Loading Map %1", save_data.MapName);
-			g_Game.ReportProgress(string.Format("Loading Map %1", save_data.MapName));
-			
-			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
-			
-			m_Editor = GetEditor();
-			*/
-		}
-		
-		if (clear_before) {
-			GetEditor().Clear();
-		}
-				
-		EditorLog.Debug("Deleting %1 Objects", save_data.EditorDeletedObjects.Count().ToString());		
-		foreach (EditorDeletedObjectData id: save_data.EditorDeletedObjects) {
-			if (!GetEditor().HideMapObject(id, false)) {
-				EditorLog.Warning("Failed to delete building: %1", id.ToString());
-			}
-		}
-		
-		EditorLog.Debug("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
-		foreach (EditorObjectData data: save_data.EditorObjects) {
-			GetEditor().CreateObject(data, false);
-		}
-		
-		GetEditor().GetEditorHud().CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorDeletedObjects.Count()), COLOR_GREEN);
-		return save_data;
+		return file_type.Import(file_name, m_ImportSettings);
 	}
 		
 	typename GetFileType();

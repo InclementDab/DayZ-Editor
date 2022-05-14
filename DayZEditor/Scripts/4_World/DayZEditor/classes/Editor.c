@@ -1371,6 +1371,76 @@ class Editor
 		return EditorHoliday.NONE;
 	}
 	
+	// thread this!
+	void LoadSaveData(EditorSaveData save_data, bool clear_before = false)
+	{
+		if (!save_data) {
+			EditorLog.Error("Invalid Save Data");
+			return;
+		}
+		
+		int created_objects, deleted_objects;
+		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
+			EditorLog.Warning("Different map detected");
+			/*if (MessageBox.Show("Different Map Detected", string.Format("Switch map to %1?"), MessageBoxButtons.OKCancel) != DialogResult.OK) {
+				return null;
+			}
+			
+			EditorLog.Info("Loading Map %1", save_data.MapName);
+			g_Game.ReportProgress(string.Format("Loading Map %1", save_data.MapName));
+			
+			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
+			
+			m_Editor = GetEditor();
+			*/
+		}
+		
+		if (clear_before) {
+			GetEditor().Clear();
+		}
+				
+		EditorLog.Debug("Deleting %1 Objects", save_data.EditorDeletedObjects.Count().ToString());		
+		foreach (EditorDeletedObjectData id: save_data.EditorDeletedObjects) {
+			if (!HideMapObject(id, false)) {
+				EditorLog.Warning("Failed to delete building: %1", id.ToString());
+				created_objects++;
+			}
+		}
+		
+		EditorLog.Debug("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
+		foreach (EditorObjectData data: save_data.EditorObjects) {
+			if (CreateObject(data, false)) {
+				deleted_objects++;
+			}			
+		}
+		
+		string error_message;
+		if (created_objects < save_data.EditorObjects.Count()) {
+			error_message += string.Format("Failed to load %1 objects", save_data.EditorObjects.Count() - created_objects);
+		}
+		
+		if (deleted_objects < save_data.EditorDeletedObjects.Count()) {
+			if (error_message != string.Empty) {
+				error_message += "\n";
+			}
+			
+			error_message += string.Format("Failed to delete %1 objects", save_data.EditorDeletedObjects.Count() - deleted_objects);
+		}
+		
+		if (error_message != string.Empty) {
+			MessageBox.Show("Loading Error", error_message, MessageBoxButtons.OK);
+			
+			// Disable auto save since we loaded a shit file
+			Settings.AutoSaveTimer = -1;
+		}
+		
+		if (save_data.CameraPosition != vector.Zero) {
+			GetCamera().SetPosition(save_data.CameraPosition);
+		}
+		
+		m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorDeletedObjects.Count()), COLOR_GREEN);
+	}
+	
 	EditorSaveData CreateSaveData(bool selected_only = false)
 	{
 		EditorSaveData save_data = new EditorSaveData();
