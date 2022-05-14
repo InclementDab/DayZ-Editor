@@ -46,6 +46,13 @@ class Editor
 	static Object								ObjectUnderCursor;
 	static vector 								CurrentMousePosition;
 	
+	static const ref array<string> DELETION_BLACKLIST = {
+		"BrushBase",
+		"BoundingBoxBase",
+		"Man",
+		"EditorCamera"
+	};
+	
 	// public properties
 	ref EditorCommandManager 					CommandManager;
 	ref EditorSettings 							Settings;
@@ -1203,10 +1210,20 @@ class Editor
 		m_SessionCache.Clear();
 		m_ObjectManager.Clear();
 	}
-	
-		bool CanHideMapObject(string type)
+		
+	bool CanHideMapObject(string type)
 	{
-		return (!GetGame().IsKindOf(type, "BrushBase") && !GetGame().IsKindOf(type, "BoundingBoxBase") && !GetGame().IsKindOf(type, "Man") && !GetGame().IsKindOf(type, "EditorCamera"));
+		foreach (string deletion_blacklist: DELETION_BLACKLIST) {
+			if (deletion_blacklist == type) {
+				return false;
+			}
+			
+			if (GetGame().IsKindOf(type, deletion_blacklist)) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	void LockObject(EditorObject editor_object)
