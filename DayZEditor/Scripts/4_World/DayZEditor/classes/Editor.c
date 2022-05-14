@@ -1432,7 +1432,7 @@ class Editor
 		
 		if (error_message != string.Empty) {
 			EditorLog.Warning(error_message);
-			m_EditorHud.CreateNotification(error_message, COLOR_RED);
+			m_EditorHud.CreateNotification(error_message, COLOR_YELLOW);
 			
 			// Disable auto save since we loaded a shit file
 			Settings.AutoSaveTimer = -1;
