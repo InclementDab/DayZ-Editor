@@ -580,9 +580,9 @@ class EditorObject: EditorWorldObject
 		y_axis_mat[2][2] = BOUNDING_BOX_THICKNESS;
 		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1], bottom_center[2]);
 		
-		m_CenterLine = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE));
-		m_CenterLine.SetTransform(y_axis_mat);
-		AddChild(m_CenterLine, -1);
+		//m_CenterLine = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE));
+		//m_CenterLine.SetTransform(y_axis_mat);
+		//AddChild(m_CenterLine, -1);
 		Update();
 		
 		HideBoundingBox();

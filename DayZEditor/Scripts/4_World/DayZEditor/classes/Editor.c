@@ -279,8 +279,8 @@ class Editor
 		}
 		
 		// Just shutting the logger up for a minute
-		int log_lvl = EditorLog.CurrentLogLevel;
-		EditorLog.CurrentLogLevel = LogLevel.WARNING;
+		int log_lvl = EditorLog.GetLevel();
+		EditorLog.SetLevel(LogLevel.WARNING);
 		
 		if (m_EditorCamera) {
 			vector cam_pos = m_EditorCamera.GetPosition();
@@ -315,7 +315,7 @@ class Editor
 		CommandManager[EditorCameraTrackRun].SetCanExecute(m_CameraTrackManager.GetCameraTracks().Count() > 0);
 		CommandManager[EditorCloseCommand].SetCanExecute(EditorSaveFile != string.Empty);
 		
-		EditorLog.CurrentLogLevel = log_lvl;
+		EditorLog.SetLevel(log_lvl);
 	}
 			
 	void SetPlayer(PlayerBase player)
