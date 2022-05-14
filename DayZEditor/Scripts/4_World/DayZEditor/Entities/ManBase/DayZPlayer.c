@@ -80,4 +80,9 @@ modded class PlayerBase
 		GetInventory().CreateAttachment(pants.GetRandomElement());
 		GetInventory().CreateAttachment(shoes.GetRandomElement());
 	}
+	
+	// yeet
+	override void DepleteStamina(EStaminaModifiers modifier, float dT = -1)
+	{
+	}
 }

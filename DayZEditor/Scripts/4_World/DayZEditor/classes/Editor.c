@@ -1261,13 +1261,12 @@ class Editor
 			player.GetInventory().CreateInInventory("ConstructionHelmet_Yellow");
 		}
 		
-		player.GetInventory().CreateInInventory("AviatorGlasses");
     	player.GetInventory().CreateInInventory("Shirt_RedCheck");
     	player.GetInventory().CreateInInventory("Jeans_Blue");
     	player.GetInventory().CreateInInventory("WorkingBoots_Brown");
     	player.GetInventory().CreateInInventory("CivilianBelt");
     	player.GetInventory().CreateInInventory("TaloonBag_Blue");
-		player.GetHumanInventory().CreateInHands("SledgeHammer");	
+    	player.GetInventory().CreateInInventory("SledgeHammer");
 	    return player;
 	}
 			
