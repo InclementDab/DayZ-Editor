@@ -607,7 +607,7 @@ class Editor
 					continue;
 				}
 				
-				editor_object.GetMarker().Show(m_Active);
+				editor_object.GetMarker().Show(m_Active);			
 				editor_object.HideBoundingBox();
 			}
 		}	
@@ -1234,6 +1234,7 @@ class Editor
 		InsertAction(action);
 		
 		editor_object.Lock(true);
+		DeselectObject(editor_object);
 	}
 	
 	void UnlockObject(EditorObject editor_object)

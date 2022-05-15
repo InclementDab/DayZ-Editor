@@ -771,7 +771,7 @@ class EditorObject: EditorWorldObject
 		if (marker) {
 			marker.Show(!Locked);
 		}
-		
+				
 		if (m_EditorPlacedListItem) {
 			m_EditorPlacedListItem.LockedImage.Show(Locked);
 		}

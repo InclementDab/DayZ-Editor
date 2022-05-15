@@ -28,6 +28,16 @@ class EditorObjectMarker: EditorMarker
 		Deselect();
 	}
 		
+	override void Show(bool show)
+	{
+		// dont show if locked
+		if (show && m_EditorObject && m_EditorObject.Locked) {
+			return;
+		}
+		
+		super.Show(show);
+	}
+	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{		
 		// ignores the object if you are placing
