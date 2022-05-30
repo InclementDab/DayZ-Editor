@@ -73,9 +73,15 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 	}
 	
 	static string GetDistanceString(float total_distance, bool meters_only = false)
-	{
-		const int DISTANCE_TO_MOON = 384400;
+	{	// When bodies closest.
 		const int CIRCUMFERENCE_OF_EARTH = 40075;
+		const int DISTANCE_TO_MOON = 384400;  // 384400 km
+		const int DISTANCE_TO_MARS = 54600000; // 54.6 million km
+		const int DISTANCE_TO_SUN = 147500000; // 147.5 million km
+		const int DISTANCE_TO_JUPITER = 5880000000; // 588 million km
+		// very surprised if anyone can reach saturn NO CHEATING
+		const int DISTANCE_TO_SATURN = 1200000000; // 1.2 billion km
+		
 		
 		string meter_symbol = "m";							//define symbols
 		string kilometer_symbol = "km";
@@ -84,11 +90,27 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 			return "0m";
 		}
 		
-		if (total_distance > DISTANCE_TO_MOON * 0.5) {
-			return string.Format("%1x To The Moon", total_distance / DISTANCE_TO_MOON);
+		if (total_distance > DISTANCE_TO_SATURN) {
+			return string.Format("%1x To Saturn", total_distance / DISTANCE_TO_SATURN);
 		}
 		
-		if (total_distance > CIRCUMFERENCE_OF_EARTH) {
+		if (total_distance > DISTANCE_TO_SUN * 2) {
+			return string.Format("%1x To Jupiter", total_distance / DISTANCE_TO_JUPITER);
+		}
+		
+		if (total_distance > DISTANCE_TO_MARS * 2) {
+			return string.Format("%1x To The Sun", total_distance / DISTANCE_TO_SUN);
+		}
+		
+		if (total_distance > DISTANCE_TO_MARS * 0.25) {
+			return string.Format("%1x To Mars", total_distance / DISTANCE_TO_MARS);
+		}
+		
+		if (total_distance > DISTANCE_TO_MOON * 0.25) {
+			return string.Format("%1x To The Moon", total_distance / DISTANCE_TO_MOON);
+		}		
+		
+		if (total_distance > CIRCUMFERENCE_OF_EARTH * 0.25) {
 			return string.Format("%1x Around Earth", total_distance / CIRCUMFERENCE_OF_EARTH);
 		}
 	
