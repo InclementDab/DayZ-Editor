@@ -208,26 +208,6 @@ FrameWidgetClass InventoryFrame {
       }
      }
     }
-    WrapSpacerWidgetClass ItemFilterSelectPanel {
-     ignorepointer 1
-     color 0.1176 0.1176 0.1176 1
-     position 4 5
-     size 48 588
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scriptclass "ViewBinding"
-     style Colorable
-     Padding 0
-     Margin 0
-     "Size To Content V" 1
-     {
-      ScriptParamsClass {
-       Binding_Name "AttachmentSlotCategories"
-      }
-     }
-    }
     WrapSpacerWidgetClass AttachmentFilterSelectPanel {
      ignorepointer 1
      color 0.1176 0.1176 0.1176 1
@@ -377,6 +357,52 @@ FrameWidgetClass InventoryFrame {
           ScriptParamsClass {
            Binding_Name "SearchBarRight"
            Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    FrameWidgetClass Scroll_Frame {
+     ignorepointer 1
+     position 0 5
+     size 52 0.954
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+     {
+      ScrollWidgetClass ItemFilter_Scroll {
+       ignorepointer 1
+       size 58 1
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       style blank
+       "Scrollbar V" 1
+       "Scrollbar V Left" 1
+       {
+        WrapSpacerWidgetClass ItemFilterSelectPanel {
+         ignorepointer 0
+         color 0.1176 0.1176 0.1176 1
+         size 48 588
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Colorable
+         Padding 0
+         Margin 0
+         "Size To Content V" 1
+         {
+          ScriptParamsClass {
+           Binding_Name "AttachmentSlotCategories"
           }
          }
         }
