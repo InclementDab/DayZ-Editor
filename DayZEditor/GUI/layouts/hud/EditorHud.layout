@@ -1446,7 +1446,7 @@ FrameWidgetClass EditorFrame {
         SliderWidgetClass CameraTrackSmoothingSlider {
          color 0.5882 0.5882 0.5882 0.7451
          position 5 0
-         size 250 18
+         size 250 20
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1454,7 +1454,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 1
          vexactsize 1
          scriptclass "ViewBinding"
-         style Default
+         style Slider_1px_alpha_50
          step 0.1
          "fill in" 1
          "listen to input" 1
