@@ -23,7 +23,7 @@ class EditorImportCommandBase: EditorAsyncCommand
 			return;
 		}
 		
-		ImportFile(file_name);
+		GetEditor().LoadSaveData(ImportFile(file_name));
 	}
 		
 	EditorSaveData ImportFile(string file_name)

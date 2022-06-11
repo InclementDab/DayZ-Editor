@@ -89,4 +89,14 @@ class EditorLog: LoggerBase
 		MessageBox.ShowSynchronous("Error", msg, MessageBoxButtons.OK);
 #endif
 	}
+	
+	override bool DuplicateToConsole()
+	{
+		return true;
+	}
+	
+	override bool GetLogMask()
+	{
+		return LoggerInstanceMask.CLIENT | LoggerInstanceMask.SERVER;
+	}
 }
