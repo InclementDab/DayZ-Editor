@@ -2,11 +2,6 @@
 class EditorLog: LoggerBase
 {
 	static ref ScriptInvoker OnLog;
-	
-	
-	static string ExclusiveLogMode;
-	
-	private static string m_LastCalledType;	
 	protected static LogLevel m_CurrentLogLevel = LogLevel.INFO;
 	
 	static void EditorPrint(string msg, LogLevel level)
@@ -19,33 +14,23 @@ class EditorLog: LoggerBase
 			OnLog = new ScriptInvoker();
 		}
 		
+		int hour, minute, second;
+		GetHourMinuteSecond(hour, minute, second);
+		int time = GetGame().GetTime();
+		string formatted_time = string.Format("%1:%2:%3 %4", hour.ToStringLen(2), minute.ToStringLen(2), second.ToStringLen(2), time);
+		
 		OnLog.Invoke(level, msg);
 		
 		if (level == LogLevel.ERROR) {
 			Error2("Editor Error", msg);
 			return;
 		}
+	
+		DoLog(EditorLog, string.Format("[%1][%3]		: %2", typename.EnumToString(LogLevel, level), msg, formatted_time));
 		
-		string loglevel = typename.EnumToString(LogLevel, level);
-		
-		if (msg.Contains("::")) {
-			TStringArray msg_split();
-			msg.Split(":", msg_split);
-			
-			if (ExclusiveLogMode != string.Empty && ExclusiveLogMode != msg_split[0]) {
-				return;
-			}
-			
-			if (m_LastCalledType != msg_split[0]) {
-				m_LastCalledType = msg_split[0];
-				DoLog(EditorLog, string.Format("[%1::%2]:", loglevel, m_LastCalledType));
-			}			
-
-			DoLog(EditorLog, string.Format("	%1", msg.Substring(msg_split[0].Length() + 2, msg.Length() - msg_split[0].Length() - 2)));
-		} 
-		else if (ExclusiveLogMode == string.Empty) {
-			DoLog(EditorLog, string.Format("[%1] %2", loglevel, msg));
-		}
+#ifdef EDITOR_DEBUG
+		Print(String(msg)); // maybe add some extra logic to avoid clogging
+#endif
 	}
 	
 	static void SetLevel(LogLevel log_level)
@@ -88,11 +73,6 @@ class EditorLog: LoggerBase
 #else
 		MessageBox.ShowSynchronous("Error", msg, MessageBoxButtons.OK);
 #endif
-	}
-	
-	override bool DuplicateToConsole()
-	{
-		return true;
 	}
 	
 	override bool GetLogMask()
