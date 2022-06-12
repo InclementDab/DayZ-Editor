@@ -3,7 +3,8 @@ class EditorSettings: ProfileSettings
 	// General Settings
 	float ViewDistance 				= 3000;
 	float ObjectViewDistance 		= 3000;
-	int AutoSaveTimer 			= 240;
+	bool AutoSaveEnabled			= true;
+	float AutoSaveTimer 			= 240;
 	float QuickMoveStepSize			= 0.1;
 	bool QuickMoveFollowsCamera		= false;
 	bool SpawnItemsWithAttachments	= true;
@@ -101,6 +102,7 @@ class EditorSettings: ProfileSettings
 		ObjectViewDistance 			= 0.135; // 3000
 		MarkerViewDistance 			= 0.2; // 1000
 		
+		AutoSaveEnabled				= true;
 		AutoSaveTimer 				= 240;
 
 		LockCameraDuringDialogs 	= true;

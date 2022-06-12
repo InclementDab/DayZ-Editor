@@ -105,7 +105,8 @@ class Editor
 	// Inventory Editor
 	protected ref EditorInventoryEditorHud 		m_EditorInventoryEditorHud;
 	
-	protected ref Timer	m_StatisticsSaveTimer = new Timer(CALL_CATEGORY_GAMEPLAY);
+	protected ref Timer	m_StatisticsSaveTimer 	= new Timer(CALL_CATEGORY_GAMEPLAY);
+	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
 	
 	bool										KEgg; // oh?
 	
@@ -187,7 +188,7 @@ class Editor
 		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
 		
-		thread AutoSaveThread();
+		m_AutoSaveTimer.Run(Settings.AutoSaveTimer, this, "OnAutoSaveTimer");
 	}
 	
 	void ~Editor() 
@@ -951,19 +952,13 @@ class Editor
 		m_Player.SetPosition(MousePosToRay(_, m_Player, 3000, 0, false, true));
 	}
 	
-	private void AutoSaveThread()
-	{
-		while (g_Editor) {
-			if (!Settings || Settings.AutoSaveTimer <= 0) { 
-				Sleep(10000);
-				continue;
-			}
-			
-			Sleep(Math.Clamp(Settings.AutoSaveTimer, 10, int.MAX) * 1000);
-			if (EditorSaveFile != string.Empty) {
-				CommandManager[EditorSaveCommand].Execute(this, null);
-			}
+	protected void OnAutoSaveTimer()
+	{		
+		if (EditorSaveFile != string.Empty && Settings.AutoSaveEnabled) {
+			CommandManager[EditorSaveCommand].Execute(this, null);
 		}
+		
+		m_AutoSaveTimer.Run(Settings.AutoSaveTimer, this, "OnAutoSaveTimer");
 	}
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 

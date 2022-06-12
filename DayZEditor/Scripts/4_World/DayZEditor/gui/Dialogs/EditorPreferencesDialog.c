@@ -10,6 +10,10 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		"#STR_EDITOR_ADVANCED",
 	};
 	
+			// autoptr since assigned prior to the handover to the array
+	protected autoptr CheckBoxPrefab m_AutoSaveToggle;
+	protected autoptr ScriptView m_AutoSaveTimer;
+	
 	void EditorPreferencesDialog(string title, string default_group = "General")
 	{
 		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", m_Editor.Settings, string.Empty);
@@ -22,7 +26,16 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		log_level["Error"] = LogLevel.ERROR;
 		
 		general_group.Insert(log_level);
-		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_AUTO_SAVE", m_Editor.Settings, "AutoSaveTimer"));
+		
+		m_AutoSaveToggle = new CheckBoxPrefab("#STR_EDITOR_AUTO_SAVE", m_Editor.Settings, "AutoSaveEnabled");
+		general_group.Insert(m_AutoSaveToggle);
+		m_AutoSaveTimer = new SliderPrefab("#STR_EDITOR_AUTO_SAVE_TIMER", m_Editor.Settings, "AutoSaveTimer", 10, 600);
+		general_group.Insert(m_AutoSaveTimer);
+		
+		// update view state of auto save timer
+		PrefabBaseController<bool> controller = m_AutoSaveToggle.GetPrefabController();
+		m_AutoSaveTimer.GetLayoutRoot().Show(controller.Value);
+		
 		general_group.Insert(new SliderPrefab("#STR_EDITOR_VIEW_DISTANCE", m_Editor.Settings, "ViewDistance", 1, 20000));
 		general_group.Insert(new SliderPrefab("#STR_EDITOR_OBJECT_VIEW_DISTANCE", m_Editor.Settings, "ObjectViewDistance", 1, 8000));
 		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_QUICK_MOVE_STEP", m_Editor.Settings, "QuickMoveStepSize", 0.01));	
@@ -96,6 +109,15 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		AddButton(DialogResult.OK);
 		AddButton("#STR_EDITOR_CLOSE", DialogResult.Cancel);
 		AddButton("#STR_EDITOR_DEFAULTS", "SetDefaults");
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		// update view state of autosave timer
+		PrefabBaseController<bool> controller = m_AutoSaveToggle.GetPrefabController();
+		m_AutoSaveTimer.GetLayoutRoot().Show(controller.Value);
+		
+		return super.OnClick(w, x, y, button);
 	}
 	
 	protected override void DialogExitButtonCallback(DialogExitButton button)
