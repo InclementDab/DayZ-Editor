@@ -85,10 +85,8 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Trace("EditorHudController");
 		
 #ifndef COMPONENT_SYSTEM	
-#ifdef EDITOR_PRINT	
-		EditorLog.OnLog.Insert(OnEditorLog);
-#endif
-		
+
+		EditorLog.OnLog.Insert(OnEditorLog);		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 #endif
 		
@@ -101,9 +99,7 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Trace("~EditorHudController");
 		
 #ifndef COMPONENT_SYSTEM		
-#ifdef EDITOR_PRINT	
 		EditorLog.OnLog.Remove(OnEditorLog);
-#endif
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 #endif
 	}
