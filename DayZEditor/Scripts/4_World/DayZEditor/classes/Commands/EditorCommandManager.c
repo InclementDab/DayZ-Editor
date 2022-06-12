@@ -88,6 +88,7 @@ class EditorCommandManager
 		CameraToggleLight = RegisterCommand(EditorToggleLightCommand);
 		RegisterCommand(EditorResetAlignmentCommand);
 		RegisterCommand(EditorAlignToSurfaceCommand);
+		RegisterCommand(EditorSnapToSurfaceCommand);
 		RegisterCommand(EditorControlPlayerCommand);
 		RegisterCommand(EditorEditInventoryCommand);
 		RegisterCommand(EditorObjectPropertiesCommand);
