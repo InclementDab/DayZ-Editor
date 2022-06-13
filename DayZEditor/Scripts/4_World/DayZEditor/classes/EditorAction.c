@@ -25,35 +25,37 @@ class EditorActionStack: set<ref EditorAction>
 
 class EditorAction
 {
-	private string name;
-	private bool undone = false;
+	protected bool m_Undone;
+	protected string m_UndoAction, m_RedoAction;
 	
 	ref array<ref Param> UndoParameters = {};
 	ref array<ref Param> RedoParameters = {};
-	
-	string m_UndoAction, m_RedoAction;
 			
 	void EditorAction(string undo_action, string redo_action)
 	{
-		name = undo_action;
 		m_UndoAction = undo_action;
 		m_RedoAction = redo_action;
 	}
 	
-	string GetName() 
+	string GetUndoAction() 
 	{ 
-		return name; 
+		return m_UndoAction; 
+	}
+	
+	string GetRedoAction()
+	{
+		return m_RedoAction;
 	}
 	
 	bool IsUndone() 
 	{ 
-		return undone; 
+		return m_Undone; 
 	}
 	
 	void CallUndo()
 	{
-		EditorLog.Trace("EditorAction::CallUndo %1", name);		
-		undone = true;
+		EditorLog.Trace("EditorAction::CallUndo %1", m_UndoAction);		
+		m_Undone = true;
 		foreach (Param param: UndoParameters) {
 			g_Script.Call(this, m_UndoAction, param);
 		}
@@ -61,8 +63,8 @@ class EditorAction
 	
 	void CallRedo()
 	{
-		EditorLog.Trace("EditorAction::CallRedo %1", name);
-		undone = false;
+		EditorLog.Trace("EditorAction::CallRedo %1", m_UndoAction);
+		m_Undone = false;
 		foreach (Param param: RedoParameters) {
 			g_Script.Call(this, m_RedoAction, param);
 		}
@@ -123,7 +125,7 @@ class EditorAction
 	
 	void Hide(Param1<int> params)
 	{
-		//EditorLog.Trace("EditorAction::Hide %1", param.param1.ToString());
+		EditorLog.Trace("EditorAction::Hide %1", params.param1.ToString());
 		
 		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
 		if (!data) {
@@ -138,7 +140,7 @@ class EditorAction
 	
 	void Unhide(Param1<int> params)
 	{
-		//EditorLog.Trace("EditorAction::Unhide %1", param.param1.ToString());
+		EditorLog.Trace("EditorAction::Unhide %1", params.param1.ToString());
 		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
 		if (!data) {
 			EditorLog.Error("EditorAction::Unhide Data was null!");
