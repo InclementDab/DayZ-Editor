@@ -23,22 +23,21 @@ class EditorWorldObject
 			EditorLog.Warning("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
-
+		
 		// Needed for AI Placement			
 		EntityAI entity_ai;
 		if (Class.CastTo(entity_ai, obj)) {
 			entity_ai.DisableSimulation(true);
-			
+						
 			// weeeeeeee
-			if (GetEditor().Settings.SpawnItemsWithAttachments) {
+			if (GetEditor().Settings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
 				entity_ai.OnDebugSpawn();
 			}
-		}
+		}		
 		
 		obj.SetOrientation(orientation);
 		obj.SetScale(scale);
-		obj.Update();
-		
+		obj.Update();		
 		return obj;
 	}
 }

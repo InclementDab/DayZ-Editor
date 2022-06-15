@@ -89,6 +89,7 @@ class EditorBrush
 
 	void DuringMouseDown(vector position) 
 	{ 
+		
 		if (vector.Distance(m_LastMousePosition, position) < (BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
@@ -102,7 +103,6 @@ class EditorBrush
 		if (m_EditorSettings.BrushedListItems) {
 			flags |= EditorObjectFlags.LISTITEM;
 		}
-		
 		
 		for (int i = 0; i < BrushDensity * 10; i++) {
 						
@@ -133,7 +133,10 @@ class EditorBrush
 			brushed_object.SetDirection(direction);
 			
 			created_data.Insert(EditorObjectData.Create(brushed_object, flags));
+			
 		}
+		
+		
 		
 		GetEditor().CreateObjects(created_data, true);
 	}
