@@ -19,7 +19,7 @@ class EditorEscapeCommand: EditorCommand
 		} 
 		
 		if (m_Editor.IsPlacing()) {
-			m_Editor.StopPlacing();
+			m_Editor.ClearHand();
 			return true;
 		}
 		

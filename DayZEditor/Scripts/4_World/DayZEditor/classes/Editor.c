@@ -334,6 +334,46 @@ class Editor
 		CommandManager[EditorCloseCommand].SetCanExecute(EditorSaveFile != string.Empty);
 		
 		EditorLog.SetLevel(log_lvl);
+		
+		HandleHands();
+	}
+	
+	// maybe abstract this to a new class, like EditorHandsManager
+	void HandleHands()
+	{
+		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
+			if (!world_object) {
+				return;
+			}
+			
+			vector position = CurrentMousePosition;
+			if (hand_data) {
+				position += hand_data.PositionOffset;
+				position += "100 0 10";
+			}
+			
+			position[1] = position[1] + ObjectGetSize(world_object.GetWorldObject())[1] / 2;
+			vector transform[4] = {
+				"1 0 0",
+				"0 1 0",
+				"0 0 1",
+				position
+			};
+					
+			vector surface_normal = vector.Up;
+			float surface_height = GetGame().SurfaceY(position[0], position[2]);
+			if (MagnetMode) {
+				surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
+			}
+			
+			vector local_ori = world_object.GetWorldObject().GetDirection();// + hand_data.OrientationOffset;
+			local_ori.Normalize();
+			transform[0] = surface_normal * local_ori;
+			transform[1] = surface_normal;
+			transform[2] = surface_normal * (local_ori * vector.Up);
+			
+			world_object.GetWorldObject().SetTransform(transform);
+		}
 	}
 			
 	void SetPlayer(PlayerBase player)
@@ -682,7 +722,10 @@ class Editor
 	
 	void ClearHand()
 	{
-		m_PlacingObjects.Clear();
+		EditorLog.Trace("Editor::ClearHand");
+		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
+			RemoveFromHand(world_object);
+		}
 	}
 	
 	array<EditorWorldObject> GetPlacingObjects()
@@ -714,40 +757,7 @@ class Editor
 	{				
 		return AddInHand(new EditorHologram(item), hand_data);				
 	}
-	
-	/*
-	EditorHandMap CreateInHand(EditorPlaceableItem item)
-	{
-		EditorLog.Trace("Editor::CreateInHand");
 		
-		// Turn Brush off when you start to place
-		if (m_EditorBrush) {
-			SetBrush(null);
-		}
-		
-		m_ObjectManager.ClearSelection();
-		m_PlacingObjects.Clear();
-		m_PlacingObjects.Insert(new EditorHologram(item));	
-		return m_PlacingObjects;
-	}
-	
-	EditorHandMap CreateInHand(array<ref EditorPlaceableItem> items)
-	{
-		EditorLog.Trace("Editor::CreateInHand");
-		
-		// Turn Brush off when you start to place
-		if (m_EditorBrush != null)
-			SetBrush(null);
-		
-		m_ObjectManager.ClearSelection();
-		m_PlacingObjects.Clear();
-		foreach (EditorPlaceableItem item: items) {
-			m_PlacingObjects.Insert(new EditorHologram(item));
-		}		
-
-		return m_PlacingObjects;
-	}*/
-	
 	array<EditorObject> PlaceObject()
 	{
 		EditorLog.Trace("Editor::PlaceObject");
@@ -791,7 +801,7 @@ class Editor
 			EditorEvents.ObjectPlaced(this, editor_object);
 			
 			if (!KeyState(KeyCode.KC_LSHIFT)) { 
-				StopPlacing(); 
+				RemoveFromHand(placing_object); 
 			}
 			
 			if (editor_object) {
@@ -804,12 +814,6 @@ class Editor
 		return placed_objects;
 	}
 	
-	void StopPlacing()
-	{
-		EditorLog.Trace("Editor::StopPlacing");
-		m_PlacingObjects.Clear();
-	}
-		
 	void EditLootSpawns(EditorPlaceableItem placeable_item)
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.Type);

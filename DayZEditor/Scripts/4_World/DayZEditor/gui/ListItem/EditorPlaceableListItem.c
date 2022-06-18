@@ -20,8 +20,8 @@ class EditorPlaceableListItem: EditorListItem
 		m_TemplateController.NotifyPropertyChanged("Icon");
 		
 #ifndef COMPONENT_SYSTEM
-		EditorEvents.OnStartPlacing.Insert(OnStartPlacing);
-		EditorEvents.OnStopPlacing.Insert(OnStopPlacing);
+		EditorEvents.OnAddInHand.Insert(OnStartPlacing);
+		EditorEvents.OnRemoveFromHand.Insert(OnStopPlacing);
 #endif
 		
 		GetLayoutRoot().ClearFlags(WidgetFlags.DRAGGABLE);
@@ -58,6 +58,7 @@ class EditorPlaceableListItem: EditorListItem
 		switch (args.GetMouseButton()) {
 
 			case 0: {
+				GetEditor().ClearHand();
 				GetEditor().AddInHand(m_PlaceableItem);
 				Select();
 				break;
@@ -75,19 +76,22 @@ class EditorPlaceableListItem: EditorListItem
 		return true;
 	}
 	
-	void OnStartPlacing(Class context, array<ref EditorPlaceableItem> placeable_items)
+	void OnStartPlacing(Class context, EditorWorldObject world_object, EditorHandData hand_data)
 	{		
-		foreach (EditorPlaceableItem placeable_item: placeable_items) {
-			if (placeable_item == m_PlaceableItem) {
-				Select();
-				return;
-			}
+		EditorHologram hologram = EditorHologram.Cast(world_object);
+		if (!hologram) {
+			return;
 		}
-
-		Deselect();
+		
+		if (hologram.GetPlaceableItem() != m_PlaceableItem) {
+			Deselect();
+			return;
+		}
+		
+		Select();
 	}
 	
-	void OnStopPlacing(Class context)
+	void OnStopPlacing(Class context, EditorWorldObject world_object, EditorHandData hand_data)
 	{
 		Deselect();
 	}
