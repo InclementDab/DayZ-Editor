@@ -349,24 +349,25 @@ class Editor
 			vector position = CurrentMousePosition;
 			if (hand_data) {
 				position += hand_data.PositionOffset;
-				position += "100 0 10";
 			}
 			
 			position[1] = position[1] + ObjectGetSize(world_object.GetWorldObject())[1] / 2;
+			
+			
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",
 				"0 0 1",
 				position
 			};
-					
+			
 			vector surface_normal = vector.Up;
 			float surface_height = GetGame().SurfaceY(position[0], position[2]);
 			if (MagnetMode) {
 				surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
 			}
 			
-			vector local_ori = world_object.GetWorldObject().GetDirection();// + hand_data.OrientationOffset;
+			vector local_ori = world_object.GetWorldObject().GetDirection();
 			local_ori.Normalize();
 			transform[0] = surface_normal * local_ori;
 			transform[1] = surface_normal;
