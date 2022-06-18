@@ -36,6 +36,14 @@ Editor GetEditor()
 	return g_Editor;
 }
 
+class EditorHandData
+{
+	vector PositionOffset;
+	vector OrientationOffset;
+}
+
+typedef map<ref EditorWorldObject, ref EditorHandData> EditorHandMap;
+
 class Editor
 {
 	/* Private Members */
@@ -64,8 +72,8 @@ class Editor
 	protected ref EditorBrush						m_EditorBrush;
 	protected ref map<int, ref EditorObjectData>			m_SessionCache; // strong ref of EditorObjectData
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
-	protected EditorCamera 							m_EditorCamera;
-	protected ref set<ref EditorWorldObject>		m_PlacingObjects = new set<ref EditorWorldObject>();
+	protected EditorCamera 												m_EditorCamera;
+	protected ref EditorHandMap						m_PlacingObjects = new EditorHandMap();
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorActionStack 				m_ActionStack;
@@ -448,8 +456,9 @@ class Editor
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					EditorPlaceableItem placeable_object = GetReplaceableItem(ObjectUnderCursor);
 					if (placeable_object) {
-						set<ref EditorWorldObject> objects_in_hand = CreateInHand(placeable_object);
-						foreach (EditorWorldObject object_in_hand: objects_in_hand) {
+						ClearHand();
+						EditorHandMap objects_in_hand = AddInHand(placeable_object);
+						foreach (EditorWorldObject object_in_hand, EditorHandData hand_data: objects_in_hand) {
 							object_in_hand.GetWorldObject().SetOrientation(ObjectUnderCursor.GetOrientation());
 						}
 					}
@@ -664,23 +673,65 @@ class Editor
 		return true;
 	}	
 	
-	set<ref EditorWorldObject> CreateInHand(EditorPlaceableItem item)
+	void RemoveFromHand(EditorWorldObject world_object)
+	{
+		EditorEvents.RemoveFromHand(this, world_object, m_PlacingObjects[world_object]);
+		m_PlacingObjects.Remove(world_object);
+		delete world_object;		
+	}
+	
+	void ClearHand()
+	{
+		m_PlacingObjects.Clear();
+	}
+	
+	array<EditorWorldObject> GetPlacingObjects()
+	{
+		return m_PlacingObjects.GetKeyArray();
+	}
+	
+	EditorHandData GetObjectInHandData(EditorWorldObject world_object)
+	{
+		return m_PlacingObjects[world_object];
+	}
+	
+	EditorHandMap AddInHand(EditorWorldObject world_object, EditorHandData hand_data = null)
+	{		
+		EditorLog.Trace("Editor::AddInHand");
+		
+		// Turn Brush off when you start to place
+		if (m_EditorBrush) {
+			SetBrush(null);
+		}
+		
+		m_PlacingObjects[world_object] = hand_data;
+		EditorEvents.AddInHand(this, world_object, hand_data);
+		
+		return m_PlacingObjects;
+	}
+	
+	EditorHandMap AddInHand(EditorPlaceableItem item, EditorHandData hand_data = null)
+	{				
+		return AddInHand(new EditorHologram(item), hand_data);				
+	}
+	
+	/*
+	EditorHandMap CreateInHand(EditorPlaceableItem item)
 	{
 		EditorLog.Trace("Editor::CreateInHand");
 		
 		// Turn Brush off when you start to place
-		if (m_EditorBrush != null)
+		if (m_EditorBrush) {
 			SetBrush(null);
+		}
 		
 		m_ObjectManager.ClearSelection();
 		m_PlacingObjects.Clear();
-		m_PlacingObjects.Insert(new EditorHologram(item));
-				
-		EditorEvents.StartPlacing(this, {item});		
+		m_PlacingObjects.Insert(new EditorHologram(item));	
 		return m_PlacingObjects;
 	}
 	
-	set<ref EditorWorldObject> CreateInHand(array<ref EditorPlaceableItem> items)
+	EditorHandMap CreateInHand(array<ref EditorPlaceableItem> items)
 	{
 		EditorLog.Trace("Editor::CreateInHand");
 		
@@ -693,10 +744,9 @@ class Editor
 		foreach (EditorPlaceableItem item: items) {
 			m_PlacingObjects.Insert(new EditorHologram(item));
 		}		
-				
-		EditorEvents.StartPlacing(this, items);		
+
 		return m_PlacingObjects;
-	}
+	}*/
 	
 	array<EditorObject> PlaceObject()
 	{
@@ -710,7 +760,7 @@ class Editor
 		}
 		
 		array<EditorObject> placed_objects = {};
-		foreach (EditorWorldObject placing_object: m_PlacingObjects) {
+		foreach (EditorWorldObject placing_object, EditorHandData hand_data: m_PlacingObjects) {
 			EditorHologram editor_hologram;
 			if (!Class.CastTo(editor_hologram, placing_object)) {
 				return null;
@@ -758,7 +808,6 @@ class Editor
 	{
 		EditorLog.Trace("Editor::StopPlacing");
 		m_PlacingObjects.Clear();
-		EditorEvents.StopPlacing(this);
 	}
 		
 	void EditLootSpawns(EditorPlaceableItem placeable_item)
@@ -1786,31 +1835,6 @@ class Editor
 		return m_ObjectManager.GetPlaceableObjects();
 	}
 	
-	int AddPlacingObject(EditorWorldObject world_object)
-	{
-		return m_PlacingObjects.Insert(world_object);
-	}
-	
-	bool RemovePlacingObject(EditorWorldObject world_object)
-	{
-		if (m_PlacingObjects.Find(world_object) != -1) {
-			m_PlacingObjects.Remove(m_PlacingObjects.Find(world_object));
-			return true;
-		}
-		
-		return false;
-	}
-	
-	void ClearPlacingObjects()
-	{
-		m_PlacingObjects.Clear();
-	}
-	
-	set<ref EditorWorldObject> GetPlacingObjects()
-	{
-		return m_PlacingObjects;
-	}
-	
 	/*
 	void SetPlacingObject(EditorWorldObject object)
 	{
@@ -1831,7 +1855,7 @@ class Editor
 	{
 		return (m_Player && m_Player.IsControlledPlayer() && !m_Active);
 	}
-	
+		
 	// Get Selected player in Editor
 	PlayerBase GetPlayer()
 	{

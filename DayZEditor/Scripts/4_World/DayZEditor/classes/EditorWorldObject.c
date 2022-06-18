@@ -1,5 +1,8 @@
 class EditorWorldObject
 {	
+	vector PositionOffset;
+	vector OrientationOffset;
+	
 	protected Object m_WorldObject;
 	Object GetWorldObject() 
 	{

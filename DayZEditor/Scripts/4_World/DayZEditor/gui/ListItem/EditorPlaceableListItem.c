@@ -30,7 +30,7 @@ class EditorPlaceableListItem: EditorListItem
 	override bool IsSelected() 
 	{
 		if (GetEditor().IsPlacing()) {
-			set<ref EditorWorldObject> objects_in_hand = GetEditor().GetPlacingObjects();
+			array<EditorWorldObject> objects_in_hand = GetEditor().GetPlacingObjects();
 			foreach (EditorWorldObject object_in_hand: objects_in_hand) {
 				EditorHologram hologram = EditorHologram.Cast(object_in_hand);
 				if (!hologram) {
@@ -58,7 +58,7 @@ class EditorPlaceableListItem: EditorListItem
 		switch (args.GetMouseButton()) {
 
 			case 0: {
-				GetEditor().CreateInHand(m_PlaceableItem);
+				GetEditor().AddInHand(m_PlaceableItem);
 				Select();
 				break;
 			}
@@ -138,7 +138,7 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrag");	
 		if (!GetEditor().IsPlacing()) {
-			GetEditor().CreateInHand(m_PlaceableItem);
+			GetEditor().AddInHand(m_PlaceableItem);
 			w.Show(false);
 		}
 		

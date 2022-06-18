@@ -45,13 +45,19 @@ class EditorEvents
 		EditorLog.Trace("EditorEvents::ObjectDeselected");
 		OnDeletedObjectDeselected.Invoke(context, target);
 	}
-	
-	// Called AFTER Editor starts placing
-	static ref ScriptInvoker OnStartPlacing = new ScriptInvoker();
-	static void StartPlacing(Class context, array<ref EditorPlaceableItem> target)
+		
+	static ref ScriptInvoker OnAddInHand = new ScriptInvoker();
+	static void AddInHand(Class context, EditorWorldObject world_object, EditorHandData hand_data)
 	{
 		EditorLog.Trace("EditorEvents::StartPlacing");
-		OnStartPlacing.Invoke(context, target);
+		OnAddInHand.Invoke(context, world_object, hand_data);
+	}
+	
+	static ref ScriptInvoker OnRemoveFromHand = new ScriptInvoker();
+	static void RemoveFromHand(Class context, EditorWorldObject world_object, EditorHandData hand_data)
+	{
+		EditorLog.Trace("EditorEvents::RemoveFromHand");
+		OnRemoveFromHand.Invoke(context, world_object, hand_data);
 	}
 	
 	// Called AFTER Editor places object
@@ -60,14 +66,6 @@ class EditorEvents
 	{
 		EditorLog.Trace("EditorEvents::ObjectPlaced");
 		OnObjectPlaced.Invoke(context, target);
-	}
-	
-	// Called AFTER Editor stops
-	static ref ScriptInvoker OnStopPlacing = new ScriptInvoker();
-	static void StopPlacing(Class context)
-	{
-		EditorLog.Trace("EditorEvents::StopPlacing");
-		OnStopPlacing.Invoke(context);
 	}
 	
 	// Called AFTER Map is Toggled!

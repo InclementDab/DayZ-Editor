@@ -268,7 +268,7 @@ class EditorClientModule: JMModuleBase
 					}
 					
 					placeables[i].Deselect();
-					m_Editor.CreateInHand(placeables[i - 1].GetPlaceableItem());
+					m_Editor.AddInHand(placeables[i - 1].GetPlaceableItem());
 					placeables[i - 1].Select();
 					
 					// Handle tooltip showing
@@ -308,7 +308,7 @@ class EditorClientModule: JMModuleBase
 					}
 					
 					placeables[i].Deselect();
-					m_Editor.CreateInHand(placeables[i + 1].GetPlaceableItem());
+					m_Editor.AddInHand(placeables[i + 1].GetPlaceableItem());
 					placeables[i + 1].Select();
 					
 					// Handle tooltip showing
