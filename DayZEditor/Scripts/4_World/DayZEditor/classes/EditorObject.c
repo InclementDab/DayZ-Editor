@@ -186,14 +186,21 @@ class EditorObject: EditorWorldObject
 		PropertyChanged("AllowDamage");
 		
 		// Load animations
-		string config_path = "CfgVehicles " + GetType() + " AnimationSources";
-		if (GetGame().ConfigIsExisting(config_path) && entity) {
-			for (int j = 0; j < GetGame().ConfigGetChildrenCount(config_path); j++) {
-				string child_name;
-				GetGame().ConfigGetChildName(config_path, j, child_name);
-				m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(entity, child_name);
-			}
-		}				
+		array<string> paths = {
+			CFG_VEHICLESPATH,
+			CFG_WEAPONSPATH
+		};
+		
+		foreach (string path: paths) {
+			string config_path = path + " " + GetType() + " AnimationSources";
+			if (GetGame().ConfigIsExisting(config_path) && entity) {
+				for (int j = 0; j < GetGame().ConfigGetChildrenCount(config_path); j++) {
+					string child_name;
+					GetGame().ConfigGetChildName(config_path, j, child_name);
+					m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(entity, child_name, path);
+				}
+			}	
+		}			
 
 		Update();
 	}

@@ -29,8 +29,20 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool IsSelected() 
 	{
-		if (GetEditor().GetPlacingObject()) {
-			return (EditorHologram.Cast(GetEditor().GetPlacingObject()).GetPlaceableItem() == m_PlaceableItem);
+		if (GetEditor().IsPlacing()) {
+			set<ref EditorWorldObject> objects_in_hand = GetEditor().GetPlacingObjects();
+			foreach (EditorWorldObject object_in_hand: objects_in_hand) {
+				EditorHologram hologram = EditorHologram.Cast(object_in_hand);
+				if (!hologram) {
+					continue;
+				}
+				
+				if (hologram.GetPlaceableItem() != m_PlaceableItem) {
+					continue;
+				}
+				
+				return true;
+			}
 		}
 		
 		return false;
@@ -63,11 +75,13 @@ class EditorPlaceableListItem: EditorListItem
 		return true;
 	}
 	
-	void OnStartPlacing(Class context, EditorPlaceableItem placeable_item)
-	{
-		if (placeable_item == m_PlaceableItem) {
-			Select();
-			return;
+	void OnStartPlacing(Class context, array<ref EditorPlaceableItem> placeable_items)
+	{		
+		foreach (EditorPlaceableItem placeable_item: placeable_items) {
+			if (placeable_item == m_PlaceableItem) {
+				Select();
+				return;
+			}
 		}
 
 		Deselect();

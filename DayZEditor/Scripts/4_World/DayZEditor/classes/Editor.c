@@ -44,6 +44,7 @@ class Editor
 		
 	// statics (updated in Update())
 	static Object								ObjectUnderCursor;
+	static int 									ComponentUnderCursor;
 	static vector 								CurrentMousePosition;
 	
 	static const ref array<string> DELETION_BLACKLIST = {
@@ -64,7 +65,7 @@ class Editor
 	protected ref map<int, ref EditorObjectData>			m_SessionCache; // strong ref of EditorObjectData
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
 	protected EditorCamera 							m_EditorCamera;
-	protected ref EditorWorldObject 				m_PlacingObject;
+	protected ref set<ref EditorWorldObject>		m_PlacingObjects = new set<ref EditorWorldObject>();
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorActionStack 				m_ActionStack;
@@ -217,7 +218,7 @@ class Editor
 		delete m_EditorBrush;
 		delete m_SessionCache;
 		delete m_DeletedSessionCache;
-		delete m_PlacingObject;
+		delete m_PlacingObjects;
 		delete m_RecentlyOpenedFiles;
 		GetGame().ObjectDelete(m_EditorCamera);
 	}
@@ -253,8 +254,9 @@ class Editor
 			CurrentMousePosition[1] = GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]);
 		} else {
 			Object collision_ignore;
-			if (m_PlacingObject) {
-				collision_ignore = m_PlacingObject.GetWorldObject();
+			if (m_PlacingObjects.Count() > 0) {
+				// todo
+				//collision_ignore = m_PlacingObject.GetWorldObject();
 			}
 			
 			// Yeah, enfusions dumb, i know
@@ -262,20 +264,27 @@ class Editor
 			CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance, 0, !CollisionMode, should_precice);
 		}
 		
-		if (!IsPlacing()) {
-			Object target = GetObjectUnderCursor(Settings.ObjectViewDistance);
+		if (!IsPlacing()) {			
+			vector hit_pos, hit_normal;
+			int component_index;		
+			set<Object> collisions = new set<Object>;
+			DayZPhysics.RaycastRV(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * Settings.ObjectViewDistance, hit_pos, hit_normal, component_index, collisions);
+			
+			Object target = collisions[0];
 			if (target) {
-				if (target != ObjectUnderCursor) {
+				if (target != ObjectUnderCursor || component_index != ComponentUnderCursor) {
 					if (ObjectUnderCursor) { 
-						OnMouseExitObject(ObjectUnderCursor, x, y);
+						OnMouseExitObject(ObjectUnderCursor, x, y, ComponentUnderCursor);
 					}
-					OnMouseEnterObject(target, x, y);
+					OnMouseEnterObject(target, x, y, component_index);
 					ObjectUnderCursor = target;
+					ComponentUnderCursor = component_index;
 				} 
 				
 			} else if (ObjectUnderCursor) {
-				OnMouseExitObject(ObjectUnderCursor, x, y);
+				OnMouseExitObject(ObjectUnderCursor, x, y, ComponentUnderCursor);
 				ObjectUnderCursor = null;
+				ComponentUnderCursor = 0;
 			}
 		}
 		
@@ -335,7 +344,10 @@ class Editor
 	
 	void ProcessInput(Input input)
 	{
-		if (m_PlacingObject && m_PlacingObject.GetWorldObject()) {
+		if (IsPlacing()) {
+			
+			
+			/* TODO object in hand rotation!
 			vector hand_ori = m_PlacingObject.GetWorldObject().GetOrientation();
 			float factor = 9;
 			if (KeyState(KeyCode.KC_LSHIFT)) {
@@ -354,7 +366,7 @@ class Editor
 			if (input.LocalValue("UAZoomOutOptics")) {
 				hand_ori[0] = hand_ori[0] + factor;
 				m_PlacingObject.GetWorldObject().SetOrientation(hand_ori);			
-			}
+			}*/
 		}
 		
 		// This is all the logic that controls inventory hud, not a fan but it works
@@ -436,8 +448,10 @@ class Editor
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					EditorPlaceableItem placeable_object = GetReplaceableItem(ObjectUnderCursor);
 					if (placeable_object) {
-						EditorWorldObject object_in_hand = CreateInHand(placeable_object);
-						object_in_hand.GetWorldObject().SetOrientation(ObjectUnderCursor.GetOrientation());
+						set<ref EditorWorldObject> objects_in_hand = CreateInHand(placeable_object);
+						foreach (EditorWorldObject object_in_hand: objects_in_hand) {
+							object_in_hand.GetWorldObject().SetOrientation(ObjectUnderCursor.GetOrientation());
+						}
 					}
 					
 					return true;
@@ -627,9 +641,10 @@ class Editor
 		PPEffects.ResetAll();
 	}
 	
-	bool OnMouseEnterObject(Object target, int x, int y)
+	// also called when component index changes
+	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
-		m_EditorHudController.ObjectReadoutName = GetObjectName(target);
+		m_EditorHudController.ObjectReadoutName = GetObjectName(target, component_index);
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		
 		if (m_EditorHudController.ObjectReadoutName.Contains(".p3d")) { // yeah its hacky but its cool!
@@ -641,14 +656,15 @@ class Editor
 		return true;
 	}
 	
-	bool OnMouseExitObject(Object target, int x, int y)
+	// also called when component index changes
+	bool OnMouseExitObject(Object target, int x, int y, int component_index)
 	{
 		m_EditorHudController.ObjectReadoutName = "";
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		return true;
 	}	
 	
-	EditorWorldObject CreateInHand(EditorPlaceableItem item)
+	set<ref EditorWorldObject> CreateInHand(EditorPlaceableItem item)
 	{
 		EditorLog.Trace("Editor::CreateInHand");
 		
@@ -656,68 +672,92 @@ class Editor
 		if (m_EditorBrush != null)
 			SetBrush(null);
 		
-		ClearSelection();
-		m_PlacingObject = new EditorHologram(item);
-		
-		EditorEvents.StartPlacing(this, item);		
-		return m_PlacingObject;
+		m_ObjectManager.ClearSelection();
+		m_PlacingObjects.Clear();
+		m_PlacingObjects.Insert(new EditorHologram(item));
+				
+		EditorEvents.StartPlacing(this, {item});		
+		return m_PlacingObjects;
 	}
 	
-	EditorObject PlaceObject()
+	set<ref EditorWorldObject> CreateInHand(array<ref EditorPlaceableItem> items)
+	{
+		EditorLog.Trace("Editor::CreateInHand");
+		
+		// Turn Brush off when you start to place
+		if (m_EditorBrush != null)
+			SetBrush(null);
+		
+		m_ObjectManager.ClearSelection();
+		m_PlacingObjects.Clear();
+		foreach (EditorPlaceableItem item: items) {
+			m_PlacingObjects.Insert(new EditorHologram(item));
+		}		
+				
+		EditorEvents.StartPlacing(this, items);		
+		return m_PlacingObjects;
+	}
+	
+	array<EditorObject> PlaceObject()
 	{
 		EditorLog.Trace("Editor::PlaceObject");
 		if (GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel") {
 			return null;
 		}
 		
-		if (!m_PlacingObject) {
+		if (!m_PlacingObjects || m_PlacingObjects.Count() == 0) {
 			return null;	
 		}
 		
-		EditorHologram editor_hologram;
-		if (!Class.CastTo(editor_hologram, m_PlacingObject)) {
-			return null;
+		array<EditorObject> placed_objects = {};
+		foreach (EditorWorldObject placing_object: m_PlacingObjects) {
+			EditorHologram editor_hologram;
+			if (!Class.CastTo(editor_hologram, placing_object)) {
+				return null;
+			}
+			
+			Object entity = editor_hologram.GetWorldObject();
+			if (!entity) {
+				EditorLog.Warning("Invalid Entity from %1", editor_hologram.GetPlaceableItem().Type);
+				return null;
+			}
+			
+			EditorObjectData editor_object_data = EditorObjectData.Create(entity.GetType(), entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EditorObjectFlags.ALL);
+			if (!editor_object_data) {
+				EditorLog.Warning("Invalid Object data from %1", entity.GetType());
+				return null;
+			}
+			
+			EditorObject editor_object = CreateObject(editor_object_data);
+			if (!editor_object) { 
+				EditorLog.Warning("Invalid Editor Object from %1", entity.GetType());
+				return null;
+			}
+			
+			if (editor_object.GetWorldObject() && editor_object.GetWorldObject().IsInherited(ItemBase)) {
+				EditorLog.Warning("%1 has persistence! If you place this it may cause duplications in your server!", editor_object.GetWorldObject().GetType());
+			}
+			
+			EditorEvents.ObjectPlaced(this, editor_object);
+			
+			if (!KeyState(KeyCode.KC_LSHIFT)) { 
+				StopPlacing(); 
+			}
+			
+			if (editor_object) {
+				SelectObject(editor_object);
+			}
+			
+			placed_objects.Insert(editor_object);
 		}
-		
-		Object entity = editor_hologram.GetWorldObject();
-		if (!entity) {
-			EditorLog.Warning("Invalid Entity from %1", editor_hologram.GetPlaceableItem().Type);
-			return null;
-		}
-		
-		EditorObjectData editor_object_data = EditorObjectData.Create(entity.GetType(), entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EditorObjectFlags.ALL);
-		if (!editor_object_data) {
-			EditorLog.Warning("Invalid Object data from %1", entity.GetType());
-			return null;
-		}
-		
-		EditorObject editor_object = CreateObject(editor_object_data);
-		if (!editor_object) { 
-			EditorLog.Warning("Invalid Editor Object from %1", entity.GetType());
-			return null;
-		}
-		
-		if (editor_object.GetWorldObject() && editor_object.GetWorldObject().IsInherited(ItemBase)) {
-			EditorLog.Warning("%1 has persistence! If you place this it may cause duplications in your server!", editor_object.GetWorldObject().GetType());
-		}
-		
-		EditorEvents.ObjectPlaced(this, editor_object);
-		
-		if (!KeyState(KeyCode.KC_LSHIFT)) { 
-			StopPlacing(); 
-		}
-		
-		if (editor_object) {
-			SelectObject(editor_object);
-		}
-		
-		return editor_object;
+			
+		return placed_objects;
 	}
 	
 	void StopPlacing()
 	{
 		EditorLog.Trace("Editor::StopPlacing");
-		delete m_PlacingObject;
+		m_PlacingObjects.Clear();
 		EditorEvents.StopPlacing(this);
 	}
 		
@@ -1506,8 +1546,8 @@ class Editor
 		return placeable_items[0]; // better way to do other than index 0?
 	}
 	
-	string GetObjectName(Object object)
-	{
+	string GetObjectName(Object object, int component_index)
+	{		
 		if (!object) {
 			return string.Empty;
 		}
@@ -1516,8 +1556,17 @@ class Editor
 			object = Object.Cast(object.GetParent());
 		}
 		
+		string component_type = "component";
+		Building building = Building.Cast(object);
+		if (building) {
+			if (building.GetDoorIndex(component_index) != -1) {
+				component_index = building.GetDoorIndex(component_index);
+				component_type = "door";
+			}
+		}
+		
 		if (object.GetType() != string.Empty && !object.IsTree() && !object.IsBush() && !object.IsRock()) {			
-			return string.Format("%1 (%2)", object.GetType(), object.GetID());
+			return string.Format("%1 [%2, %3: %4]", object.GetType(), object.GetID(), component_type, component_index);
 		}
 		
 		// 1346854: tank_small_white.p3d
@@ -1538,10 +1587,10 @@ class Editor
 		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(split_string[1].Trim());
 		// not ideal since we dont want to feed them the p3d, but doable
 		if (!placeable_items || placeable_items.Count() == 0) {
-			return string.Format("%1 (%2)", split_string[1], split_string[0]);
+			return string.Format("%1 [%2, %3: %4]", split_string[1], split_string[0], component_type, component_index);
 		}
 				
-		return string.Format("%1 (%2)", placeable_items[0].Type, split_string[0]);
+		return string.Format("%1 [%2, %3: %4]", placeable_items[0].Type, split_string[0], component_type, component_index);
 	}
 	
 	void SetSaveFile(string save_file)
@@ -1737,6 +1786,32 @@ class Editor
 		return m_ObjectManager.GetPlaceableObjects();
 	}
 	
+	int AddPlacingObject(EditorWorldObject world_object)
+	{
+		return m_PlacingObjects.Insert(world_object);
+	}
+	
+	bool RemovePlacingObject(EditorWorldObject world_object)
+	{
+		if (m_PlacingObjects.Find(world_object) != -1) {
+			m_PlacingObjects.Remove(m_PlacingObjects.Find(world_object));
+			return true;
+		}
+		
+		return false;
+	}
+	
+	void ClearPlacingObjects()
+	{
+		m_PlacingObjects.Clear();
+	}
+	
+	set<ref EditorWorldObject> GetPlacingObjects()
+	{
+		return m_PlacingObjects;
+	}
+	
+	/*
 	void SetPlacingObject(EditorWorldObject object)
 	{
 		m_PlacingObject = object;
@@ -1745,11 +1820,11 @@ class Editor
 	EditorWorldObject GetPlacingObject()
 	{
 		return m_PlacingObject;	
-	}
+	}*/
 	
-	bool IsPlacing() 
+	bool IsPlacing()
 	{
-		return m_PlacingObject != null; 
+		return (m_PlacingObjects && m_PlacingObjects.Count() > 0); 
 	}
 	
 	bool IsPlayerActive()

@@ -2,6 +2,7 @@ class EditorObjectAnimationSource
 {	
 	protected EntityAI m_WorldObject;
 	protected string m_AnimationName;
+	protected string m_PathRoot;
 	
 	// 0..1 value of the current animation state
 	float AnimationPhase;
@@ -10,12 +11,13 @@ class EditorObjectAnimationSource
 	int InitPhase;
 	float AnimPeriod;
 	
-	void EditorObjectAnimationSource(EntityAI world_object, string animation_name)
+	void EditorObjectAnimationSource(EntityAI world_object, string animation_name, string path_root)
 	{
 		m_WorldObject = world_object;
 		m_AnimationName = animation_name;
+		m_PathRoot = path_root;
 		
-		string config_path = "CfgVehicles " + m_WorldObject.GetType() + " AnimationSources " + m_AnimationName;
+		string config_path = m_PathRoot + " " + m_WorldObject.GetType() + " AnimationSources " + m_AnimationName;
 		Source = GetGame().ConfigGetTextOut(config_path + " source");
 		InitPhase = GetGame().ConfigGetInt(config_path + " initPhase");
 		AnimPeriod = GetGame().ConfigGetFloat(config_path + " animPeriod");
