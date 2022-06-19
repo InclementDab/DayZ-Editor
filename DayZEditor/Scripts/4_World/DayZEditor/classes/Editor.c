@@ -120,12 +120,22 @@ class Editor
 	bool										KEgg; // oh?
 	
 	private void Editor(PlayerBase player) 
-	{
+	{		
 		EditorLog.Trace("Editor");
 		g_Game.ReportProgress("Loading Editor");
 
 		g_Editor = this;
 		m_Player = player;
+		
+		if (g_Game.IsDedicatedServer()) {
+			for (int i = 0; i < 100; i++) {
+                Print("[EDITOR][ERROR] SERVER ADMINISTRATOR ERROR! DAYZ EDITOR SHOULD NOT BE LOADED ON THE SERVER!");
+			}
+			
+			g_Game.RequestExit(-1);
+			delete this;
+			return;
+		}
 		
 		// Player god mode
 		m_Player.SetAllowDamage(false);
@@ -1052,7 +1062,7 @@ class Editor
 			CommandManager[EditorSaveCommand].Execute(this, null);
 		}
 		
-		m_AutoSaveTimer.Run(Settings.AutoSaveTimer, this, "OnAutoSaveTimer");
+		m_AutoSaveTimer.Run(Math.Max(Settings.AutoSaveTimer, 10), this, "OnAutoSaveTimer");
 	}
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 
