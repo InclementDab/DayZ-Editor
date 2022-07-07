@@ -8,7 +8,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DayZ_Bin_Editor.Enfusion;
-using DayZ_Bin_Editor.Generators;
 using Microsoft.CodeAnalysis;
 
 namespace DayZ_Bin_Editor.Editor
@@ -28,7 +27,6 @@ namespace DayZ_Bin_Editor.Editor
     {
         public static readonly string BIN_CHECK = "EditorBinned";
 
-        [GeneratedProperty]
         public int Version { get; set; } = 2;
 
         public string MapName { get; set; }

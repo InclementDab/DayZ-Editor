@@ -16,23 +16,40 @@ namespace Enfusion_Deserializer
     {
         static void Main(string[] args)
         {
+            foreach (string file_name in args)
+            {
+                if (file_name == string.Empty)
+                {
+                    Console.WriteLine("No file specified, drag a file over the exe to open it");
+                    Console.ReadKey();
+                    return;
+                }
 
-            //EnfusionSerializer stream = new("P:\\profiles\\Client\\test.bin", FileMode.CreateNew, FileAccess.ReadWrite);
-            EnfusionSerializer stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\azs_trader.dze", FileMode.Open, FileAccess.ReadWrite);
-            EditorSaveData data = new();
-            data.Read(stream);
-            stream.Close();
+                EnfusionSerializer stream = new(file_name, FileMode.Open, FileAccess.ReadWrite);
+                EditorSaveData data = new();
+                data.Read(stream);
+                stream.Close();
 
-            foreach (EditorObjectData dta in data.EditorObjects) {
-                Console.WriteLine(dta.Scale);
+                int count = 0;
+                foreach (EditorObjectData dta in data.EditorObjects)
+                {
+                    if (dta.Type.Contains("Static_"))
+                    {
+                        dta.Type = dta.Type.Replace("Static_", "StaticObj_");
+                        count++;
+                    }
+                }
+
+                File.Delete(file_name);
+                stream = new(file_name, FileMode.CreateNew, FileAccess.ReadWrite);
+                data.Write(stream);
+                stream.Close();
+
+                Console.WriteLine($"Fixed naming of {count} static objects");
             }
 
-           // File.Delete("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze");
-            //stream = new("P:\\profiles\\Client\\Users\\tyler\\Editor\\test.dze", FileMode.CreateNew, FileAccess.ReadWrite);
-            //data.Write(stream);
-            //stream.Close();
-
-            Console.WriteLine("Finished Writing");
+            Console.WriteLine($"fixed {args.Length} files");
+            Console.ReadLine();
         }
     }
 }
