@@ -104,7 +104,7 @@ class EditorMultiObjectCommandController
 				}
 			}
 			
-			editor_object.PropertyChanged(property_name);
+			editor_object.PropertyChanged(this, property_name);
 		}
 		
 		DeltaPosition = Position;

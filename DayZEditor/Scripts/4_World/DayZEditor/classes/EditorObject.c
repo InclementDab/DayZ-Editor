@@ -180,10 +180,10 @@ class EditorObject: EditorWorldObject
 		
 		// This is deliberately split due to issues with null errors, but i have to assign
 		// Locked higher up or it gets set to 0 always. this is a mess, please fix
-		PropertyChanged("Locked");
-		PropertyChanged("Simulate");
-		PropertyChanged("EditorOnly");
-		PropertyChanged("AllowDamage");
+		PropertyChanged(this, "Locked");
+		PropertyChanged(this, "Simulate");
+		PropertyChanged(this, "EditorOnly");
+		PropertyChanged(this, "AllowDamage");
 		
 		// Load animations
 		array<string> paths = {
@@ -355,7 +355,7 @@ class EditorObject: EditorWorldObject
 	}
 	
 	// EditorObjects can also be psuedo-controllers
-	void PropertyChanged(string property_name)
+	void PropertyChanged(Class source, string property_name)
 	{
 		//EditorLog.Trace("EditorObject::PropertyChanged %1", property_name);
 		switch (property_name) {

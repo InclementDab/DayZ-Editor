@@ -10,7 +10,7 @@ class EditorControlPlayerCommand: EditorCommand
 		
 		// Set the player as the current active
 		data.param1.Control = true;
-		data.param1.PropertyChanged("Control");
+		data.param1.PropertyChanged(this, "Control");
 		
 		// Enable Player
 		m_Editor.SetActive(false);
