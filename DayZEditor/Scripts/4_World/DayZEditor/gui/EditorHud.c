@@ -220,9 +220,4 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	{
 		return m_LastDialogPosition[dialog.Type()];
 	}
-	
-	override bool UseMouse()
-	{
-		return true;
-	}
 }
