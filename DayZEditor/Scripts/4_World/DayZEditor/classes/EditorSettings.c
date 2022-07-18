@@ -45,7 +45,7 @@ class EditorSettings: ProfileSettings
 	LogLevel SelectedLogLevel 		= LogLevel.INFO;
 
 	// Its a pseduo-controller, preferences dialogs!!
-	void PropertyChanged(string property_name)
+	void PropertyChanged(Class source, string property_name)
 	{		
 		switch (property_name) {
 						
