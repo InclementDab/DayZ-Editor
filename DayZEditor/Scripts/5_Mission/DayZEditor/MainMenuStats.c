@@ -39,10 +39,39 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 	
 	void UpdateStats()
 	{
-		m_TimePlayedValue.SetText(GetTimeString(EditorStatistics.GetInstance().EditorPlayTime));
-		m_ObjectsPlacedValue.SetText(EditorStatistics.GetInstance().EditorPlacedObjects.ToString());
-		m_ObjectsRemovedValue.SetText(EditorStatistics.GetInstance().EditorRemovedObjects.ToString());
-		m_DistanceTraveledValue.SetText(GetDistanceString(EditorStatistics.GetInstance().EditorDistanceFlown));
+		// backwards compatibility
+		EditorStatistics stats = EditorStatistics.GetInstance();
+		
+		
+		string play_time_string;
+		GetGame().GetProfileString("EditorPlayTime", play_time_string);
+		if (play_time_string.ToInt() > stats.EditorPlayTime) {
+			stats.EditorPlayTime = play_time_string.ToInt();
+		}
+		
+		string place_objects_string;
+		GetGame().GetProfileString("EditorPlacedObjects", place_objects_string);
+		if (place_objects_string.ToInt() > stats.EditorPlacedObjects) {
+			stats.EditorPlacedObjects = place_objects_string.ToInt();
+		}		
+		
+		string delete_objects_string;
+		GetGame().GetProfileString("EditorRemovedObjects", delete_objects_string);
+		if (delete_objects_string.ToInt() > stats.EditorRemovedObjects) {
+			stats.EditorRemovedObjects = delete_objects_string.ToInt();
+		}
+				
+		string distance_flown_string;
+		GetGame().GetProfileString("EditorDistanceFlown", distance_flown_string);
+		if (distance_flown_string.ToFloat() > stats.EditorDistanceFlown) {
+			stats.EditorDistanceFlown = distance_flown_string.ToFloat();
+		}	
+				
+		m_TimePlayedValue.SetText(GetTimeString(stats.EditorPlayTime));
+		m_ObjectsPlacedValue.SetText(stats.EditorPlacedObjects.ToString());
+		m_ObjectsRemovedValue.SetText(stats.EditorRemovedObjects.ToString());
+		m_DistanceTraveledValue.SetText(GetDistanceString(stats.EditorDistanceFlown));
+		stats.Save();
 	}
 	
 	static string GetTimeString(int total_time)
