@@ -100,7 +100,7 @@ class Editor
 	
 	bool 										CameraLight;
 
-	static const string 						Version = "1.25." + GetBuildNumber();
+	static const string 						Version = "1.29." + GetBuildNumber();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
