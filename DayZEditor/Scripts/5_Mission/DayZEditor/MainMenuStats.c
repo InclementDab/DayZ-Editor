@@ -42,7 +42,6 @@ class EditorMainMenuStats: ScriptedWidgetEventHandler
 		// backwards compatibility
 		EditorStatistics stats = EditorStatistics.GetInstance();
 		
-		
 		string play_time_string;
 		GetGame().GetProfileString("EditorPlayTime", play_time_string);
 		if (play_time_string.ToInt() > stats.EditorPlayTime) {

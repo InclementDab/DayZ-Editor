@@ -67,7 +67,7 @@ class EditorInitFile: EditorFileType
 			spawn_method.Insert("\n\n\/\/ Created Objects");
 		}
 		foreach (EditorObjectData editor_object: data.EditorObjects) {
-			spawn_method.Insert(string.Format("SpawnObject(\"%1\", \"%2\", \"%3\");", editor_object.Type, editor_object.Position.ToString(false), editor_object.Orientation.ToString(false)));
+			spawn_method.Insert(string.Format("SpawnObject(\"%1\", \"%2\", \"%3\", \"%4\");", editor_object.Type, editor_object.Position.ToString(false), editor_object.Orientation.ToString(false), editor_object.Scale));
 		}
 		
 		spawn_method.Insert("\n\n\/\/ Uncomment if you want to export loot from newly added buildings");

@@ -39,7 +39,7 @@ class EditorMultiObjectCommandController
 	bool Collision = true;
 	bool EditorOnly = false;
 	
-	void PropertyChanged(string property_name)
+	void PropertyChanged(Class source, string property_name)
 	{
 		foreach (EditorObject editor_object: m_EditorObjects) {
 			switch (property_name) {

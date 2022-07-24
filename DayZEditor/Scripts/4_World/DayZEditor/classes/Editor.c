@@ -100,7 +100,7 @@ class Editor
 	
 	bool 										CameraLight;
 
-	static const string 						Version = "1.25." + GetBuildNumber();
+	static const string 						Version = "1.30." + GetBuildNumber();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -404,28 +404,27 @@ class Editor
 	void ProcessInput(Input input)
 	{
 		if (IsPlacing()) {
-			
-			
-			/* TODO object in hand rotation!
-			vector hand_ori = m_PlacingObject.GetWorldObject().GetOrientation();
-			float factor = 9;
-			if (KeyState(KeyCode.KC_LSHIFT)) {
-				factor /= 5;
+			foreach (EditorWorldObject placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
+				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
+				float factor = 9;
+				if (KeyState(KeyCode.KC_LSHIFT)) {
+					factor /= 5;
+				}
+				
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					factor *= 5;
+				}
+				
+				if (input.LocalValue("UAZoomInOptics")) {				
+					hand_ori[0] = hand_ori[0] - factor;
+					placing_object.GetWorldObject().SetOrientation(hand_ori);			
+				}
+				
+				if (input.LocalValue("UAZoomOutOptics")) {
+					hand_ori[0] = hand_ori[0] + factor;
+					placing_object.GetWorldObject().SetOrientation(hand_ori);			
+				}
 			}
-			
-			if (KeyState(KeyCode.KC_LCONTROL)) {
-				factor *= 5;
-			}
-			
-			if (input.LocalValue("UAZoomInOptics")) {				
-				hand_ori[0] = hand_ori[0] - factor;
-				m_PlacingObject.GetWorldObject().SetOrientation(hand_ori);			
-			}
-			
-			if (input.LocalValue("UAZoomOutOptics")) {
-				hand_ori[0] = hand_ori[0] + factor;
-				m_PlacingObject.GetWorldObject().SetOrientation(hand_ori);			
-			}*/
 		}
 		
 		// This is all the logic that controls inventory hud, not a fan but it works
