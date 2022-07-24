@@ -280,8 +280,12 @@ class Editor
 				vector collision_ray_end = collision_ray_start + GetGame().GetPointerDirection() * Settings.ViewDistance;
 				set<Object> results = new set<Object>();
 				if (DayZPhysics.RaycastRV(collision_ray_start, collision_ray_end, _, _, __, results)) {
-					collision_ignore = results[0];
+					//collision_ignore = results[0];
+					//Print(collision_ignore.GetType());
+					
 				}
+				
+				collision_ignore = m_PlacingObjects.GetKey(0).GetWorldObject();
 			}
 			
 			// Yeah, enfusions dumb, i know
