@@ -272,9 +272,16 @@ class Editor
 			CurrentMousePosition[1] = GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]);
 		} else {
 			Object collision_ignore;
+			// we need to determine what object is under the cursor so we can ignore it on our next raycast
 			if (m_PlacingObjects.Count() > 0) {
-				// todo
-				//collision_ignore = m_PlacingObject.GetWorldObject();
+				vector _;
+				int __;
+				vector collision_ray_start = GetGame().GetCurrentCameraPosition();
+				vector collision_ray_end = collision_ray_start + GetGame().GetPointerDirection() * Settings.ViewDistance;
+				set<Object> results = new set<Object>();
+				if (DayZPhysics.RaycastRV(collision_ray_start, collision_ray_end, _, _, __, results)) {
+					collision_ignore = results[0];
+				}
 			}
 			
 			// Yeah, enfusions dumb, i know
