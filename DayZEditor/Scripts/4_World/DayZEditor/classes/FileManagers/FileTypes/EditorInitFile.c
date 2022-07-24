@@ -33,7 +33,15 @@ class EditorInitFile: EditorFileType
 				tokens[1]; // Building
 	        	tokens[3]; // Position
 	        	tokens[5]; // Orientation
+				tokens[7]; // Scale
 	        	*/
+				
+				float scale = 1.0;
+				if (tokens.Count() > 6) {
+					scale = tokens[7].ToFloat();
+				}
+				
+				Print(scale);
 				
 				save_data.EditorObjects.Insert(EditorObjectData.Create(tokens[1], tokens[3].ToVector(), tokens[5].ToVector(), 1, EditorObjectFlags.ALL));
 			}
