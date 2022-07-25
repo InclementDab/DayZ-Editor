@@ -3,12 +3,13 @@ class EditorCopyPositionCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		string copy_string = string.Format("[Camera Position]: %1, %2", GetGame().GetCurrentCameraPosition().ToString(true), GetGame().GetCurrentCameraDirection().ToString(true));
+		string copy_string = string.Format("[Camera Position]: %1, %2\n", GetGame().GetCurrentCameraPosition().ToString(true), GetGame().GetCurrentCameraDirection().ToString(true));
 		
 		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
 		if (selected_objects.Count() > 0) {
 			foreach (int id, EditorObject editor_object: selected_objects) {
 				copy_string += string.Format("[%1]: pos=%2, ori=%3, scl=%4", editor_object.Name, editor_object.Position.ToString(true), editor_object.Orientation.ToString(true), editor_object.Scale);
+				copy_string += "\n";
 			}
 		}
 		

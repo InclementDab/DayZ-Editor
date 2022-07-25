@@ -1,4 +1,4 @@
-static Object SpawnObject(string type, vector position, vector orientation, float scale)
+static Object SpawnObject(string type, vector position, vector orientation, float scale = 1.0)
 {
     Object obj = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS);
     if (!obj) {
