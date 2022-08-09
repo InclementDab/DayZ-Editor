@@ -293,7 +293,7 @@ class EditorCamera: Camera
 		MoveEnabled = true;
 	}
 	
-	void PropertyChanged(string property_name)
+	void PropertyChanged(Class source, string property_name)
 	{
 		switch (property_name) {
 						
