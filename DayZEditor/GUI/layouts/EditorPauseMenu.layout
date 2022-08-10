@@ -860,9 +860,9 @@ FrameWidgetClass FrameWidget {
   }
   PanelWidgetClass DefaultKeyBindsPanel {
    ignorepointer 1
-   color 0.1176 0.1176 0.1176 0.3922
+   color 0 0 0 0.549
    position 95 120
-   size 1200 600
+   size 965 600
    valign center_ref
    hexactpos 1
    vexactpos 1
@@ -870,24 +870,9 @@ FrameWidgetClass FrameWidget {
    vexactsize 1
    style rover_sim_colorable
    {
-    TextWidgetClass DefaultKeyBindsText {
-     ignorepointer 1
-     size 1 26
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     text "Default Key Binds"
-     font "gui/fonts/sdf_MetronLight30"
-     "size to text h" 1
-     "size to text v" 1
-     "text halign" center
-     "text valign" center
-    }
     GridSpacerWidgetClass KeybindsWrapper {
      ignorepointer 1
-     position 0 26
+     position 0 40
      size 1 574
      halign center_ref
      hexactpos 1
@@ -2169,7 +2154,7 @@ FrameWidgetClass FrameWidget {
         }
        }
       }
-      FrameWidgetClass Redo_KeyBind7 {
+      FrameWidgetClass Inventory_Editor_KeyBind {
        ignorepointer 1
        size 1 18
        halign center_ref
@@ -2178,7 +2163,7 @@ FrameWidgetClass FrameWidget {
        hexactsize 0
        vexactsize 1
        {
-        TextWidgetClass Redo_KeyBindText7 {
+        TextWidgetClass Inventory_Editor_KeyBindText {
          ignorepointer 1
          size 48 18
          valign center_ref
@@ -2186,13 +2171,13 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Redo :"
+         text "Inventory Editor :"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 1
          "size to text v" 0
          "text valign" center
         }
-        TextWidgetClass Redo_KeyBindKeys7 {
+        TextWidgetClass Inventory_Editor_KeyBindKeys {
          ignorepointer 1
          position 0 0
          size 135 18
@@ -2202,7 +2187,7 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Ctrl +Y"
+         text "Ctrl +Tab"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 0
          "size to text v" 0
@@ -2291,6 +2276,48 @@ FrameWidgetClass FrameWidget {
          "text valign" center
         }
        }
+      }
+     }
+    }
+    PanelWidgetClass PanelWidget1 {
+     ignorepointer 1
+     color 0 0 0 0.5882
+     position -2 0
+     size 4 570
+     halign center_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style rover_sim_colorable
+    }
+    PanelWidgetClass PanelWidget2 {
+     ignorepointer 1
+     color 0 0 0 0.5882
+     size 1 30
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      TextWidgetClass DefaultKeyBindsText {
+       ignorepointer 1
+       size 1 26
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       text "Default Key Binds"
+       font "gui/fonts/sdf_MetronLight30"
+       "size to text h" 1
+       "size to text v" 1
+       "text halign" center
+       "text valign" center
       }
      }
     }
