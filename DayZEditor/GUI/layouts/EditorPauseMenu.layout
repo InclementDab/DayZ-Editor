@@ -861,7 +861,7 @@ FrameWidgetClass FrameWidget {
   PanelWidgetClass DefaultKeyBindsPanel {
    ignorepointer 1
    position 95 120
-   size 540 600
+   size 1200 600
    valign center_ref
    hexactpos 1
    vexactpos 1
@@ -883,7 +883,7 @@ FrameWidgetClass FrameWidget {
      "text halign" center
      "text valign" center
     }
-    WrapSpacerWidgetClass KeybindsWrapper {
+    GridSpacerWidgetClass KeybindsWrapper {
      ignorepointer 1
      position 0 26
      size 1 574
@@ -892,9 +892,12 @@ FrameWidgetClass FrameWidget {
      vexactpos 1
      hexactsize 0
      vexactsize 1
-     Padding 0
+     Padding 5
      Margin 0
+     "Size To Content V" 1
      content_halign center
+     Columns 2
+     Rows 1
      {
       FrameWidgetClass New_KeyBind {
        ignorepointer 1
@@ -971,6 +974,129 @@ FrameWidgetClass FrameWidget {
          hexactsize 1
          vexactsize 1
          text "Ctrl + S"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass Open_KeyBind {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Open_KeyBindText {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Open File :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Open_KeyBindKeys {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Ctrl + O"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass Close_KeyBind {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Close_KeyBindText {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Close File :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Close_KeyBindKeys {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Ctrl + W"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass Save_As_KeyBind {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Save_As_KeyBindText {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Save As :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Save_As_KeyBindKeys {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Ctrl + Shift + S"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 0
          "size to text v" 0
@@ -1115,7 +1241,7 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Delete :"
+         text "Delete (Markers, Placements, Deletions):"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 1
          "size to text v" 0
@@ -1260,6 +1386,47 @@ FrameWidgetClass FrameWidget {
         }
        }
       }
+      FrameWidgetClass Magnet_Mode_KeyBind {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Magnet_Mode_KeyBindText {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Magnet Mode :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Magnet_Mode_KeyBindKeys {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Ctrl +1"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
       FrameWidgetClass Ground_Mode_KeyBind {
        ignorepointer 1
        size 1 18
@@ -1294,6 +1461,47 @@ FrameWidgetClass FrameWidget {
          hexactsize 1
          vexactsize 1
          text "Ctrl + 2"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass "Snapping Mode_KeyBind" {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass "Snapping Mode_KeyBindText" {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Snapping Mode :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass "Snapping Mode_KeyBindKeys" {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Ctrl +3"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 0
          "size to text v" 0
@@ -1343,7 +1551,7 @@ FrameWidgetClass FrameWidget {
         }
        }
       }
-      FrameWidgetClass Environment_KeyBind {
+      FrameWidgetClass Toggle_Light_KeyBind {
        ignorepointer 1
        size 1 18
        halign center_ref
@@ -1352,22 +1560,21 @@ FrameWidgetClass FrameWidget {
        hexactsize 0
        vexactsize 1
        {
-        TextWidgetClass Environment_KeyBindText {
+        TextWidgetClass Toggle_Light_KeyBindText {
          ignorepointer 1
-         position 0 0
          size 48 18
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Environment :"
+         text "Toggle Light :"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 1
          "size to text v" 0
          "text valign" center
         }
-        TextWidgetClass Environment_KeyBindKeys {
+        TextWidgetClass Toggle_Light_KeyBindKeys {
          ignorepointer 1
          position 0 0
          size 130 18
@@ -1377,7 +1584,48 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Ctrl + Shift + I"
+         text "Ctrl + 5"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass Copy_Current_Position_KeyBind {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Copy_Current_Position_KeyBindText {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Copy Current Position :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Copy_Current_Position_KeyBindKeys {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "P"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 0
          "size to text v" 0
@@ -1484,7 +1732,7 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Hide :"
+         text "Unlock :"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 1
          "size to text v" 0
@@ -1500,7 +1748,7 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "H"
+         text "Ctrl + L"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 0
          "size to text v" 0
@@ -1525,7 +1773,7 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Hide :"
+         text "Lock :"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 1
          "size to text v" 0
@@ -1541,7 +1789,7 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "H"
+         text "L"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 0
          "size to text v" 0
@@ -1566,7 +1814,7 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Hide :"
+         text "Toggle Simulation :"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 1
          "size to text v" 0
@@ -1582,7 +1830,7 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "H"
+         text "K"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 0
          "size to text v" 0
@@ -1607,7 +1855,7 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Hide :"
+         text "Search :"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 1
          "size to text v" 0
@@ -1616,14 +1864,14 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Search_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 130 18
          halign right_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "H"
+         text "Ctrl + F"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 0
          "size to text v" 0
@@ -1648,7 +1896,7 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "Hide :"
+         text "Search Object :"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 1
          "size to text v" 0
@@ -1664,7 +1912,295 @@ FrameWidgetClass FrameWidget {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         text "H"
+         text "Ctrl + Shift + F"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass Undo_KeyBind {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Undo_KeyBindText {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Undo :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Undo_KeyBindKeys {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Ctrl + Z"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass Redo_KeyBind {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Redo_KeyBindText {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Redo :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Redo_KeyBindKeys {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Ctrl +Y"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass Camera_KeyBind {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Camera_KeyBindText {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Camera Options :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Camera_KeyBindKeys {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Ctrl + Shift + T"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass Exit_KeyBind {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Exit_KeyBindText {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Exit /Pause :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Exit_KeyBindKeys {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Escape"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass Environment_KeyBind {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Environment_KeyBindText {
+         ignorepointer 1
+         position 0 0
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Environment :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Environment_KeyBindKeys {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Ctrl + Shift + I"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass Add_Node_KeyBind {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Add_Node_KeyBindText {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Add Node (Cinematic Camera) :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Add_Node_KeyBindKeys {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "P"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 0
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass Redo_KeyBind7 {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass Redo_KeyBindText7 {
+         ignorepointer 1
+         size 48 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Redo :"
+         font "gui/fonts/sdf_MetronLight30"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass Redo_KeyBindKeys7 {
+         ignorepointer 1
+         position 0 0
+         size 130 18
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Ctrl +Y"
          font "gui/fonts/sdf_MetronLight30"
          "size to text h" 0
          "size to text v" 0
