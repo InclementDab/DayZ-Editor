@@ -927,7 +927,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass New_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -968,7 +968,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Save_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1009,7 +1009,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Open_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1050,7 +1050,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Close_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1091,7 +1091,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Save_As_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1131,7 +1131,7 @@ FrameWidgetClass FrameWidget {
         }
         TextWidgetClass SelectAll_KeyBindKeys {
          ignorepointer 1
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1171,7 +1171,7 @@ FrameWidgetClass FrameWidget {
         }
         TextWidgetClass Cut_KeyBindKeys {
          ignorepointer 1
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1211,7 +1211,7 @@ FrameWidgetClass FrameWidget {
         }
         TextWidgetClass Paste_KeyBindKeys {
          ignorepointer 1
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1251,7 +1251,7 @@ FrameWidgetClass FrameWidget {
         }
         TextWidgetClass DeleteKeyBindKeys {
          ignorepointer 1
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1292,7 +1292,7 @@ FrameWidgetClass FrameWidget {
         }
         TextWidgetClass ReloadUI_KeyBindKeys {
          ignorepointer 1
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1332,7 +1332,7 @@ FrameWidgetClass FrameWidget {
         }
         TextWidgetClass ObjectProperties_KeyBindKeys {
          ignorepointer 1
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1373,7 +1373,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Duplicate_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1414,7 +1414,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Magnet_Mode_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1455,7 +1455,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Ground_Mode_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1496,7 +1496,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass "Snapping Mode_KeyBindKeys" {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1538,7 +1538,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Collision_Mode_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1579,7 +1579,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Toggle_Light_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1620,7 +1620,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Copy_Current_Position_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1661,7 +1661,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Show_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1702,7 +1702,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Hide_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1743,7 +1743,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Unlock_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1784,7 +1784,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Lock_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1825,7 +1825,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Search_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1866,7 +1866,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Search_Object_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1907,7 +1907,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Toggle_Simulation_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 110 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1948,7 +1948,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Undo_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -1989,7 +1989,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Redo_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -2030,7 +2030,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Camera_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -2071,7 +2071,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Exit_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -2113,7 +2113,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Environment_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -2154,7 +2154,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Add_Node_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -2195,7 +2195,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Redo_KeyBindKeys7 {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
@@ -2236,7 +2236,7 @@ FrameWidgetClass FrameWidget {
         TextWidgetClass Camera_Speed_Adjust_Up_KeyBindKeys {
          ignorepointer 1
          position 0 0
-         size 130 18
+         size 135 18
          halign right_ref
          valign center_ref
          hexactpos 1
