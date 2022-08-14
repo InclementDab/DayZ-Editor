@@ -6,16 +6,7 @@ class EditorScriptEditorCommand: EditorAsyncCommand
 		
 		string script_content;
 		edit_dialog.ShowDialog(script_content);
-		
-		string sanitized_content;
-		for (int i = 0; i < script_content.Length(); i++) {
-			if (script_content[i] == "\n") {
-				continue;
-			}
-			
-			sanitized_content += script_content[i];
-		}
-		
+				
 		string file_name = "$profile:_.c";
 		FileHandle handle = OpenFile(file_name, FileMode.WRITE);
 		string file_data = "static void main()\n{\n" + script_content + "\n}";
