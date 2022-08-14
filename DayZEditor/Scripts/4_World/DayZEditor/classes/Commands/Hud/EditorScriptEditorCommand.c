@@ -16,16 +16,16 @@ class EditorScriptEditorCommand: EditorAsyncCommand
 			sanitized_content += script_content[i];
 		}
 		
-		string file_name = "$saves:_.c";
+		string file_name = "$profile:_.c";
 		FileHandle handle = OpenFile(file_name, FileMode.WRITE);
-		string file_data = "static void main()\n{\n" + sanitized_content + "\n}";
+		string file_data = "static void main()\n{\n" + script_content + "\n}";
 		FPrintln(handle, file_data);		
 		
 		if (handle) {
 			CloseFile(handle);
 		}
 		
-		ScriptModule script_module = ScriptModule.LoadScript(GetGame().GetMission().MissionScript, file_name, true);
+		ScriptModule script_module = ScriptModule.LoadScript(GetGame().GetMission().MissionScript, file_name, false);
 		if (!script_module) {
 			MessageBox.Show("Error", "Invalid Syntax in Script Editor", MessageBoxButtons.OK);
 			return;
