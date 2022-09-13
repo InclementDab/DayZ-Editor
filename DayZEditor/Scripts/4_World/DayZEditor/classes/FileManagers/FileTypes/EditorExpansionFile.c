@@ -30,20 +30,26 @@ class EditorExpansionFile: EditorFileType
 					type = tsplit[0];
 					trader_type = tsplit[1];
 				}
-				
-				EditorObjectData data = EditorObjectData.Create(type, tokens[1].ToVector(), tokens[2].ToVector(), 1, EditorObjectFlags.ALL);
-				
-				if (trader_type != string.Empty) {
-					data.Parameters["ExpansionTraderType"] = SerializableParam1<string>.Create(trader_type);
+
+				if ( line.Substring(0, 1) == "-" ) {
+					int typelgth = type.Length() - 1;
+					type = type.Substring(1, typelgth);
+					EditorDeletedObjectData deldata = EditorDeletedObjectData.Create(type, tokens[1].ToVector());
+					save_data.EditorDeletedObjects.Insert(deldata);
+				} else {
+					EditorObjectData objdata = EditorObjectData.Create(type, tokens[1].ToVector(), tokens[2].ToVector(), 1, EditorObjectFlags.ALL);
+					
+					if (trader_type != string.Empty) {
+						objdata.Parameters["ExpansionTraderType"] = SerializableParam1<string>.Create(trader_type);
+					}
+					
+					if (tokens[3] != string.Empty) {
+						tokens[3].Split(",", objdata.Attachments);
+					}
+					save_data.EditorObjects.Insert(objdata);
 				}
-				
-				if (tokens[3] != string.Empty) {
-					tokens[3].Split(",", data.Attachments);
-				}
-				
-				save_data.EditorObjects.Insert(data);
 			}
-						
+			
 			line_size = FGets(handle, line);
 		}        
 
@@ -62,6 +68,21 @@ class EditorExpansionFile: EditorFileType
 			return;
 		}
 		
+		string line;
+		foreach (int id, EditorDeletedObjectData deleted_object: data.EditorDeletedObjects) {
+			// -Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
+			if (!deleted_object.WorldObject) {
+				EditorLog.Error("EditorExpansionFile::Invalid Object!");
+				break;
+			}
+
+			if ( deleted_object.WorldObject.GetType() == "" )
+				break;
+			
+			line = string.Format("-%1|%2|%3", deleted_object.WorldObject.GetType(), deleted_object.Position.ToString(false), deleted_object.WorldObject.GetOrientation().ToString(false));
+			FPrintln(handle, line);
+		}
+		
 		string attachment_list;
 		foreach (EditorObjectData editor_object: data.EditorObjects) {
 			// Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
@@ -69,8 +90,6 @@ class EditorExpansionFile: EditorFileType
 				EditorLog.Error("EditorExpansionFile::Invalid Object!");
 				break;
 			}
-						
-			string line;
 			EntityAI entity = EntityAI.Cast(editor_object.WorldObject);
 			if (entity) {
 				array<EntityAI> attachments = {};				
@@ -106,5 +125,10 @@ class EditorExpansionFile: EditorFileType
 	override string GetExtension() 
 	{
 		return ".map";
+	}
+	
+	override bool CanDoDeletion()
+	{
+		return true;
 	}
 }
