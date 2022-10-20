@@ -4,4 +4,9 @@ class EditorFileType
 	void Export(EditorSaveData data, string file, ExportSettings settings);
 	
 	string GetExtension();
+	
+	bool CanDoDeletion()
+	{
+		return false;
+	}
 }

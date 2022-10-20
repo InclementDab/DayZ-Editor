@@ -96,4 +96,9 @@ class EditorDZEFile: EditorFileType
 	{
 		return ".dze";
 	}
-}
+
+	override bool CanDoDeletion()
+	{
+		return true;
+	}
+};
