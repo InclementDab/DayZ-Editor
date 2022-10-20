@@ -57,6 +57,13 @@ class EditorClientModule: JMModuleBase
 		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectRight", "EditorMoveObjectRight"));
 		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectUp", "EditorMoveObjectUp"));
 		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectDown", "EditorMoveObjectDown"));
+		
+		RegisterBinding(new JMModuleBinding("OnEditorRotateObjectClockwise", "EditorRotateObjectClockwise"));
+		RegisterBinding(new JMModuleBinding("OnEditorRotateObjectCounterClockwise", "EditorRotateObjectCounterClockwise"));
+		
+		RegisterBinding(new JMModuleBinding("OnEditorScaleUp", "EditorScaleUp"));
+		RegisterBinding(new JMModuleBinding("OnEditorScaleDown", "EditorScaleDown"));
+		
 	}
 		
 	override void OnUpdate(float timeslice)
@@ -404,22 +411,83 @@ class EditorClientModule: JMModuleBase
 		}
 	}
 	
-	// RPC stuff
-	override int GetRPCMin() 
+	private float m_LastAngle;
+	
+	private void OnEditorRotateObjectClockwise(UAInput input)
 	{
-		return EditorClientModuleRPC.INVALID;
-	}
-
-	override int GetRPCMax()
-	{
-		return EditorClientModuleRPC.COUNT;
+		//if (!ShouldProcessQuickInput(input)) return;
+		
+		float value = m_Editor.Settings.QuickMoveStepSize;
+		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
+			value *= 0.025;
+		}
+		
+		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
+		vector projection_position = EditorObjectDragHandler.GetAveragePosition(selected_objects);
+		float angle = m_LastAngle + value;
+		
+		foreach (int id, EditorObject editor_object: selected_objects) {
+			editor_object.SetPosition(EditorMath.RotateAroundPoint(projection_position, editor_object.GetPosition(), vector.Up, Math.Cos(angle - m_LastAngle), Math.Sin(angle - m_LastAngle)));
+			vector new_ori = editor_object.GetOrientation();
+			new_ori[0] = new_ori[0] + ((angle - m_LastAngle) * Math.RAD2DEG);
+			editor_object.SetOrientation(new_ori);
+		}
+		
+		m_LastAngle = angle;
 	}
 	
-	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ref ParamsReadContext ctx)
+	private void OnEditorRotateObjectCounterClockwise(UAInput input)
 	{
-		switch (rpc_type) {
-			
+		//if (!ShouldProcessQuickInput(input)) return;
 		
+		float value = m_Editor.Settings.QuickMoveStepSize;
+		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
+			value *= 0.025;
+		}
+		
+		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
+		vector projection_position = EditorObjectDragHandler.GetAveragePosition(selected_objects);
+		float angle = m_LastAngle - value;
+		
+		foreach (int id, EditorObject editor_object: selected_objects) {
+			editor_object.SetPosition(EditorMath.RotateAroundPoint(projection_position, editor_object.GetPosition(), vector.Up, Math.Cos(angle - m_LastAngle), Math.Sin(angle - m_LastAngle)));
+			vector new_ori = editor_object.GetOrientation();
+			new_ori[0] = new_ori[0] + ((angle - m_LastAngle) * Math.RAD2DEG);
+			editor_object.SetOrientation(new_ori);
+		}
+		
+		m_LastAngle = angle;
+	}
+	
+	private void OnEditorScaleUp(UAInput input)
+	{
+		//if (!ShouldProcessQuickInput(input)) return;
+		
+		float value = m_Editor.Settings.QuickMoveStepSize * 0.1;
+		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
+			value *= 0.025;
+		}
+		
+		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
+		foreach (int id, EditorObject editor_object: selected_objects) {
+			editor_object.Scale += value;
+			editor_object.PropertyChanged(this, "Scale");
+		}
+	}
+	
+	private void OnEditorScaleDown(UAInput input)
+	{
+		//if (!ShouldProcessQuickInput(input)) return;
+		
+		float value = m_Editor.Settings.QuickMoveStepSize * 0.1;
+		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
+			value *= 0.025;
+		}
+		
+		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
+		foreach (int id, EditorObject editor_object: selected_objects) {
+			editor_object.Scale -= value;
+			editor_object.PropertyChanged(this, "Scale");
 		}
 	}
 }

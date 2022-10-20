@@ -1355,6 +1355,17 @@ class Editor
 		
 		editor_object.Lock(false);
 	}
+	
+	vector GetCameraProjectPosition(bool ground_only = true, float raycast_distance = 3000)
+	{
+		vector ray_start = GetGame().GetCurrentCameraPosition();
+		vector ray_end = ray_start + GetGame().GetCurrentCameraDirection() * raycast_distance;
+		
+		vector pos, normal;
+		int component;	
+		DayZPhysics.RaycastRV(ray_start, ray_end, pos, normal, component, null, null, null, false, ground_only);
+		return pos;
+	}
 		
 	static PlayerBase CreateDefaultCharacter(vector position = "0 0 0")
 	{

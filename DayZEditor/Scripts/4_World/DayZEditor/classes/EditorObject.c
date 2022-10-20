@@ -346,6 +346,7 @@ class EditorObject: EditorWorldObject
 		Name = GetDisplayName();
 		Position = GetPosition();
 		Orientation = GetOrientation();
+		Scale = GetScale();
 				
 		// what is this stuff?
 		PlayerBase player = PlayerBase.Cast(m_WorldObject);

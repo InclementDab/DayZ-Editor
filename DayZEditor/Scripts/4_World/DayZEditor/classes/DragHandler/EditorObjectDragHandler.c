@@ -110,7 +110,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		m_LastAngle = angle;
 	}
 	
-	vector GetAveragePosition(EditorObjectMap objects)
+	static vector GetAveragePosition(EditorObjectMap objects)
 	{
 		vector avg_position;
 		foreach (int id, EditorObject copy_object: objects) {

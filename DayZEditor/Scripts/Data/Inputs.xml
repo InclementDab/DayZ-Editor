@@ -32,6 +32,10 @@
 			<input name="EditorMoveObjectRight" loc="Move Object Right" />
 			<input name="EditorMoveObjectUp" loc="Move Object Up" />
 			<input name="EditorMoveObjectDown" loc="Move Object Down" />
+			<input name="EditorRotateObjectClockwise" loc="Rotate Objects Clockwise" />
+			<input name="EditorRotateObjectCounterClockwise" loc="Rotate Objects Counter Clockwise" />
+			<input name="EditorScaleUp" loc="Scale Objects Up" />
+			<input name="EditorScaleDown" loc="Scale Objects Down" />
         </actions>
     </inputs>
 
@@ -148,6 +152,30 @@
 
         <input name="EditorMoveObjectDown">
             <btn name="kNext" />
+        </input>
+
+        <input name="EditorRotateObjectClockwise">
+            <btn name="kLControl">
+                <btn name="kRight" />
+            </btn>
+        </input>
+
+        <input name="EditorRotateObjectCounterClockwise">
+            <btn name="kLControl">
+                <btn name="kLeft" />
+            </btn>
+        </input>
+
+        <input name="EditorScaleUp">
+            <btn name="kLControl">
+                <btn name="kPrior" />
+            </btn>
+        </input>
+
+        <input name="EditorScaleDown">
+            <btn name="kLControl">
+                <btn name="kNext" />
+            </btn>
         </input>
 
     </preset>
