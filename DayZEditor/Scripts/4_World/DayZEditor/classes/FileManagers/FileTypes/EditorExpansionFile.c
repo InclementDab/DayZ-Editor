@@ -69,14 +69,14 @@ class EditorExpansionFile: EditorFileType
 		}
 		
 		string line;
-		foreach (int id, EditorDeletedObjectData deleted_object: data.EditorDeletedObjects) {
+		foreach (EditorDeletedObjectData deleted_object: data.EditorDeletedObjects) {
 			// -Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
 			if (!deleted_object.WorldObject) {
 				EditorLog.Error("EditorExpansionFile::Invalid Object!");
 				break;
 			}
 
-			if ( deleted_object.WorldObject.GetType() == "" )
+			if (deleted_object.WorldObject.GetType() == "")
 				break;
 			
 			line = string.Format("-%1|%2|%3", deleted_object.WorldObject.GetType(), deleted_object.Position.ToString(false), deleted_object.WorldObject.GetOrientation().ToString(false));

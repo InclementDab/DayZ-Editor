@@ -279,6 +279,7 @@ class EditorObject: EditorWorldObject
 	{ 
 		if (Locked) return;
 		GetWorldObject().SetOrientation(pos);
+		GetWorldObject().SetScale(Scale);
 		Update();
 	}
 	
