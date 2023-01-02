@@ -231,7 +231,10 @@ class EditorObject: EditorWorldObject
 	
 	void OnSelected()
 	{
-		if (m_IsSelected) return;
+		if (Locked || IsSelected()) {
+			return;
+		}
+
 		EditorLog.Trace("EditorObject::OnSelected");
 		m_IsSelected = true;
 		ShowBoundingBox();
@@ -240,7 +243,10 @@ class EditorObject: EditorWorldObject
 	
 	void OnDeselected()
 	{
-		if (!m_IsSelected) return;
+		if (!IsSelected()) {
+			return;
+		}
+		
 		EditorLog.Trace("EditorObject::OnDeselected");
 		m_IsSelected = false;
 		HideBoundingBox();

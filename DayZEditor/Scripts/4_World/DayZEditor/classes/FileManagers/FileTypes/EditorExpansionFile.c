@@ -71,15 +71,16 @@ class EditorExpansionFile: EditorFileType
 		string line;
 		foreach (EditorDeletedObjectData deleted_object: data.EditorDeletedObjects) {
 			// -Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
-			if (!deleted_object.WorldObject) {
-				EditorLog.Error("EditorExpansionFile::Invalid Object!");
-				break;
-			}
+			//if (!deleted_object.WorldObject) {
+			//	EditorLog.Warning("EditorExpansionFile::Invalid Object!");
+			//	continue;
+			//}
 
-			if (deleted_object.WorldObject.GetType() == "")
-				break;
+			if (deleted_object.Type == "") {
+				continue;
+			}
 			
-			line = string.Format("-%1|%2|%3", deleted_object.WorldObject.GetType(), deleted_object.Position.ToString(false), deleted_object.WorldObject.GetOrientation().ToString(false));
+			line = string.Format("-%1|%2|%3", deleted_object.Type, deleted_object.Position.ToString(false), deleted_object.WorldObject.GetOrientation().ToString(false));
 			FPrintln(handle, line);
 		}
 		
@@ -87,9 +88,10 @@ class EditorExpansionFile: EditorFileType
 		foreach (EditorObjectData editor_object: data.EditorObjects) {
 			// Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
 			if (!editor_object.WorldObject) {
-				EditorLog.Error("EditorExpansionFile::Invalid Object!");
-				break;
+				EditorLog.Warning("EditorExpansionFile::Invalid Object!");
+				continue;
 			}
+			
 			EntityAI entity = EntityAI.Cast(editor_object.WorldObject);
 			if (entity) {
 				array<EntityAI> attachments = {};				

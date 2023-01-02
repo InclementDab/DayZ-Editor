@@ -9,7 +9,7 @@ class EditorEditBoxDialog: EditorDialogBase
 		AddButton(DialogResult.OK);
 		AddButton(DialogResult.Cancel);
 	}
-		
+	
 	DialogResult ShowDialog(out string edit_data)
 	{
 		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
