@@ -1,0 +1,1609 @@
+<WidgetStyles>
+    <Widget Name="PanelWidget">
+        <Style Name="RoundPanelOutline" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="Round_Outline_Bottom" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="Round_Outline_Left" />
+                <Item Name="LeftBottom" Image="Round_Outline_BottomLeft" />
+                <Item Name="LeftTop" Image="Round_Outline_TopLeft" />
+                <Item Name="Right" Image="Round_Outline_Right" />
+                <Item Name="RightBottom" Image="Round_Outline_BottomRight" />
+                <Item Name="RightTop" Image="Round_Outline_TopRight" />
+                <Item Name="Top" Image="Round_Outline_Top" />
+            </State>
+        </Style>
+        <Style Name="Outline_1px" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="OutlineBottom_1px" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="OutlineLeft_1px" />
+                <Item Name="LeftBottom" Image="OutlineBottomLeft_1px" />
+                <Item Name="LeftTop" Image="OutlineTopLeft_1px" />
+                <Item Name="Right" Image="OutlineRight_1px" />
+                <Item Name="RightBottom" Image="OutlineBottomRight_1px" />
+                <Item Name="RightTop" Image="OutlineTopRight_1px" />
+                <Item Name="Top" Image="OutlineTop_1px" />
+            </State>
+        </Style>
+        <Style Name="Outline_2px" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="OutlineBottom_2px" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="OutlineLeft_2px" />
+                <Item Name="LeftBottom" Image="OutlineBottomLeft_2px" />
+                <Item Name="LeftTop" Image="OutlineTopLeft_2px" />
+                <Item Name="Right" Image="OutlineRight_2px" />
+                <Item Name="RightBottom" Image="OutlineBottomRight_2px" />
+                <Item Name="RightTop" Image="OutlineTopRight_2px" />
+                <Item Name="Top" Image="OutlineTop_2px" />
+            </State>
+        </Style>
+        <Style Name="PanelOutline_1px_BlackBackground" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="1px_Outline_BlackCenter_Bottom" />
+                <Item Name="Center" Image="1px_Outline_BlackCenter_center" />
+                <Item Name="Left" Image="1px_Outline_BlackCenter_Left" />
+                <Item Name="LeftBottom" Image="1px_Outline_BlackCenter_BottomLeft" />
+                <Item Name="LeftTop" Image="1px_Outline_BlackCenter_TopLeft" />
+                <Item Name="Right" Image="1px_Outline_BlackCenter_Right" />
+                <Item Name="RightBottom" Image="1px_Outline_BlackCenter_BottomRight" />
+                <Item Name="RightTop" Image="1px_Outline_BlackCenter_TopRight" />
+                <Item Name="Top" Image="1px_Outline_BlackCenter_Top" />
+            </State>
+        </Style>
+        <Style Name="RoundedPanel_Colorable" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="RoundButtonHighlight_Bottom" />
+                <Item Name="Center" Image="RoundButtonHighlight_Center" />
+                <Item Name="Left" Image="RoundButtonHighlight_Left" />
+                <Item Name="LeftBottom" Image="RoundButtonHighlight_BottomLeft" />
+                <Item Name="LeftTop" Image="RoundButtonHighlight_TopLeft" />
+                <Item Name="Right" Image="RoundButtonHighlight_Right" />
+                <Item Name="RightBottom" Image="RoundButtonHighlight_BottomRight" />
+                <Item Name="RightTop" Image="RoundButtonHighlight_TopRight" />
+                <Item Name="Top" Image="RoundButtonHighlight_Top" />
+            </State>
+        </Style>
+        <Style Name="InvertedRoundedPanel" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="InvertedRound_Bottom_Highlight" />
+                <Item Name="Center" Image="InvertedRound_Center_Highlight" />
+                <Item Name="Left" Image="InvertedRound_Left_Highlight" />
+                <Item Name="LeftBottom" Image="InvertedRound_BottomLeft_Highlight" />
+                <Item Name="LeftTop" Image="InvertedRound_TopLeft_Highlight" />
+                <Item Name="Right" Image="InvertedRound_Right_Highlight" />
+                <Item Name="RightBottom" Image="InvertedRound_BottomRight_Highlight" />
+                <Item Name="RightTop" Image="InvertedRound_TopRight_Highlight" />
+                <Item Name="Top" Image="InvertedRound_Top_Highlight" />
+            </State>
+        </Style>
+        <Style Name="InvertedRoundedPanel_Outline" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="InvertedRound_Bottom_Outline" />
+                <Item Name="Center" Image="InvertedRound_Center_Outline" />
+                <Item Name="Left" Image="InvertedRound_Left_Outline" />
+                <Item Name="LeftBottom" Image="InvertedRound_BottomLeft_Outline" />
+                <Item Name="LeftTop" Image="InvertedRound_TopLeft_Outline" />
+                <Item Name="Right" Image="InvertedRound_Right_Outline" />
+                <Item Name="RightBottom" Image="InvertedRound_BottomRight_Outline" />
+                <Item Name="RightTop" Image="InvertedRound_TopRight_Outline" />
+                <Item Name="Top" Image="InvertedRound_Top_Outline" />
+            </State>
+        </Style>
+    </Widget>
+    <Widget Name="ButtonWidget">
+        <Style Name="RoundedButtonHightlight_50" Font="gui/fonts/MetronBook" ImageSet="prefabs" Color="2147483647">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="RoundButtonHighlight_50_Bottom" />
+                <Item Name="Center" Image="RoundedButtonHighlight_50_Center" />
+                <Item Name="Left" Image="RoundButtonHighlight_50_Left" />
+                <Item Name="LeftBottom" Image="RoundButtonHighlight_50_BottomLeft" />
+                <Item Name="LeftTop" Image="RoundButtonHighlight_50_TopLeft" />
+                <Item Name="Right" Image="RoundButtonHighlight_50_Right" />
+                <Item Name="RightBottom" Image="RoundButtonHighlight_50_BottomRight" />
+                <Item Name="RightTop" Image="RoundButtonHighlight_50_TopRight" />
+                <Item Name="Top" Image="RoundButtonHighlight_50_Top" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="RoundButtonHighlight_50_Bottom" />
+                <Item Name="Center" Image="RoundedButtonHighlight_50_Center" />
+                <Item Name="Left" Image="RoundButtonHighlight_50_Left" />
+                <Item Name="LeftBottom" Image="RoundButtonHighlight_50_BottomLeft" />
+                <Item Name="LeftTop" Image="RoundButtonHighlight_50_TopLeft" />
+                <Item Name="Right" Image="RoundButtonHighlight_50_Right" />
+                <Item Name="RightBottom" Image="RoundButtonHighlight_50_BottomRight" />
+                <Item Name="RightTop" Image="RoundButtonHighlight_50_TopRight" />
+                <Item Name="Top" Image="RoundButtonHighlight_50_Top" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="RoundButtonHighlight_50_Bottom" />
+                <Item Name="Center" Image="RoundedButtonHighlight_50_Center" />
+                <Item Name="Left" Image="RoundButtonHighlight_50_Left" />
+                <Item Name="LeftBottom" Image="RoundButtonHighlight_50_BottomLeft" />
+                <Item Name="LeftTop" Image="RoundButtonHighlight_50_TopLeft" />
+                <Item Name="Right" Image="RoundButtonHighlight_50_Right" />
+                <Item Name="RightBottom" Image="RoundButtonHighlight_50_BottomRight" />
+                <Item Name="RightTop" Image="RoundButtonHighlight_50_TopRight" />
+                <Item Name="Top" Image="RoundButtonHighlight_50_Top" />
+            </State>
+        </Style>
+        <Style Name="Outline_1px_Button" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="OutlineBottom_1px" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="OutlineLeft_1px" />
+                <Item Name="LeftBottom" Image="OutlineBottomLeft_1px" />
+                <Item Name="LeftTop" Image="OutlineTopLeft_1px" />
+                <Item Name="Right" Image="OutlineRight_1px" />
+                <Item Name="RightBottom" Image="OutlineBottomRight_1px" />
+                <Item Name="RightTop" Image="OutlineTopRight_1px" />
+                <Item Name="Top" Image="OutlineTop_1px" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="OutlineBottom_1px" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="OutlineLeft_1px" />
+                <Item Name="LeftBottom" Image="OutlineBottomLeft_1px" />
+                <Item Name="LeftTop" Image="OutlineTopLeft_1px" />
+                <Item Name="Right" Image="OutlineRight_1px" />
+                <Item Name="RightBottom" Image="OutlineBottomRight_1px" />
+                <Item Name="RightTop" Image="OutlineTopRight_1px" />
+                <Item Name="Top" Image="OutlineTop_1px" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="OutlineBottom_1px" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="OutlineLeft_1px" />
+                <Item Name="LeftBottom" Image="OutlineBottomLeft_1px" />
+                <Item Name="LeftTop" Image="OutlineTopLeft_1px" />
+                <Item Name="Right" Image="OutlineRight_1px" />
+                <Item Name="RightBottom" Image="OutlineBottomRight_1px" />
+                <Item Name="RightTop" Image="OutlineTopRight_1px" />
+                <Item Name="Top" Image="OutlineTop_1px" />
+            </State>
+        </Style>
+        <Style Name="ButtonColorOnSelect" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="3439329279">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 0" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 80" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="Alpha60" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="2583691263">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="Alpha 60" />
+                <Item Name="Center" Image="Alpha 60" />
+                <Item Name="Left" Image="Alpha 60" />
+                <Item Name="LeftBottom" Image="Alpha 60" />
+                <Item Name="LeftTop" Image="Alpha 60" />
+                <Item Name="Right" Image="Alpha 60" />
+                <Item Name="RightBottom" Image="Alpha 60" />
+                <Item Name="RightTop" Image="Alpha 60" />
+                <Item Name="Top" Image="Alpha 60" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 60" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="Alpha50" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="2147483647">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="Alpha 50" />
+                <Item Name="Center" Image="Alpha 50" />
+                <Item Name="Left" Image="Alpha 50" />
+                <Item Name="LeftBottom" Image="Alpha 50" />
+                <Item Name="LeftTop" Image="Alpha 50" />
+                <Item Name="Right" Image="Alpha 50" />
+                <Item Name="RightBottom" Image="Alpha 50" />
+                <Item Name="RightTop" Image="Alpha 50" />
+                <Item Name="Top" Image="Alpha 50" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 50" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="Alpha40" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="1728053247">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="Alpha 40" />
+                <Item Name="Center" Image="Alpha 40" />
+                <Item Name="Left" Image="Alpha 40" />
+                <Item Name="LeftBottom" Image="Alpha 40" />
+                <Item Name="LeftTop" Image="Alpha 40" />
+                <Item Name="Right" Image="Alpha 40" />
+                <Item Name="RightBottom" Image="Alpha 40" />
+                <Item Name="RightTop" Image="Alpha 40" />
+                <Item Name="Top" Image="Alpha 40" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 40" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="Alpha30" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="1291845631">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="Alpha 30" />
+                <Item Name="Center" Image="Alpha 30" />
+                <Item Name="Left" Image="Alpha 30" />
+                <Item Name="LeftBottom" Image="Alpha 30" />
+                <Item Name="LeftTop" Image="Alpha 30" />
+                <Item Name="Right" Image="Alpha 30" />
+                <Item Name="RightBottom" Image="Alpha 30" />
+                <Item Name="RightTop" Image="Alpha 30" />
+                <Item Name="Top" Image="Alpha 30" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 30" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="Alpha20" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="872415231">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="Alpha 20" />
+                <Item Name="Center" Image="Alpha 20" />
+                <Item Name="Left" Image="Alpha 20" />
+                <Item Name="LeftBottom" Image="Alpha 20" />
+                <Item Name="LeftTop" Image="Alpha 20" />
+                <Item Name="Right" Image="Alpha 20" />
+                <Item Name="RightBottom" Image="Alpha 20" />
+                <Item Name="RightTop" Image="Alpha 20" />
+                <Item Name="Top" Image="Alpha 20" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 20" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="Alpha10" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="436207615">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="Alpha 10" />
+                <Item Name="Center" Image="Alpha 10" />
+                <Item Name="Left" Image="Alpha 10" />
+                <Item Name="LeftBottom" Image="Alpha 10" />
+                <Item Name="LeftTop" Image="Alpha 10" />
+                <Item Name="Right" Image="Alpha 10" />
+                <Item Name="RightBottom" Image="Alpha 10" />
+                <Item Name="RightTop" Image="Alpha 10" />
+                <Item Name="Top" Image="Alpha 10" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 10" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="Alpha70" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="3003121663">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="Alpha 70" />
+                <Item Name="Center" Image="Alpha 70" />
+                <Item Name="Left" Image="Alpha 70" />
+                <Item Name="LeftBottom" Image="Alpha 70" />
+                <Item Name="LeftTop" Image="Alpha 70" />
+                <Item Name="Right" Image="Alpha 70" />
+                <Item Name="RightBottom" Image="Alpha 70" />
+                <Item Name="RightTop" Image="Alpha 70" />
+                <Item Name="Top" Image="Alpha 70" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 70" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="Alpha80" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="3439329279">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="Alpha 80" />
+                <Item Name="Center" Image="Alpha 80" />
+                <Item Name="Left" Image="Alpha 80" />
+                <Item Name="LeftBottom" Image="Alpha 80" />
+                <Item Name="LeftTop" Image="Alpha 80" />
+                <Item Name="Right" Image="Alpha 80" />
+                <Item Name="RightBottom" Image="Alpha 80" />
+                <Item Name="RightTop" Image="Alpha 80" />
+                <Item Name="Top" Image="Alpha 80" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 80" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="Alpha90" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="3858759679">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="Alpha 90" />
+                <Item Name="Center" Image="Alpha 90" />
+                <Item Name="Left" Image="Alpha 90" />
+                <Item Name="LeftBottom" Image="Alpha 90" />
+                <Item Name="LeftTop" Image="Alpha 90" />
+                <Item Name="Right" Image="Alpha 90" />
+                <Item Name="RightBottom" Image="Alpha 90" />
+                <Item Name="RightTop" Image="Alpha 90" />
+                <Item Name="Top" Image="Alpha 90" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 90" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="RoundedButton" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="RoundButtonHighlight_Bottom" />
+                <Item Name="Center" Image="RoundButtonHighlight_Center" />
+                <Item Name="Left" Image="RoundButtonHighlight_Left" />
+                <Item Name="LeftBottom" Image="RoundButtonHighlight_BottomLeft" />
+                <Item Name="LeftTop" Image="RoundButtonHighlight_TopLeft" />
+                <Item Name="Right" Image="RoundButtonHighlight_Right" />
+                <Item Name="RightBottom" Image="RoundButtonHighlight_BottomRight" />
+                <Item Name="RightTop" Image="RoundButtonHighlight_TopRight" />
+                <Item Name="Top" Image="RoundButtonHighlight_Top" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="RoundButtonHighlight_Bottom" />
+                <Item Name="Center" Image="RoundButtonHighlight_Center" />
+                <Item Name="Left" Image="RoundButtonHighlight_Left" />
+                <Item Name="LeftBottom" Image="RoundButtonHighlight_BottomLeft" />
+                <Item Name="LeftTop" Image="RoundButtonHighlight_TopLeft" />
+                <Item Name="Right" Image="RoundButtonHighlight_Right" />
+                <Item Name="RightBottom" Image="RoundButtonHighlight_BottomRight" />
+                <Item Name="RightTop" Image="RoundButtonHighlight_TopRight" />
+                <Item Name="Top" Image="RoundButtonHighlight_Top" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="RoundButtonHighlight_Bottom" />
+                <Item Name="Center" Image="RoundButtonHighlight_Center" />
+                <Item Name="Left" Image="RoundButtonHighlight_Left" />
+                <Item Name="LeftBottom" Image="RoundButtonHighlight_BottomLeft" />
+                <Item Name="LeftTop" Image="RoundButtonHighlight_TopLeft" />
+                <Item Name="Right" Image="RoundButtonHighlight_Right" />
+                <Item Name="RightBottom" Image="RoundButtonHighlight_BottomRight" />
+                <Item Name="RightTop" Image="RoundButtonHighlight_TopRight" />
+                <Item Name="Top" Image="RoundButtonHighlight_Top" />
+            </State>
+        </Style>
+        <Style Name="InvertedRoundedButton" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="InvertedRound_Bottom_Highlight" />
+                <Item Name="Center" Image="InvertedRound_Center_Highlight" />
+                <Item Name="Left" Image="InvertedRound_Left_Highlight" />
+                <Item Name="LeftBottom" Image="InvertedRound_BottomLeft_Highlight" />
+                <Item Name="LeftTop" Image="InvertedRound_TopLeft_Highlight" />
+                <Item Name="Right" Image="InvertedRound_Right_Highlight" />
+                <Item Name="RightBottom" Image="InvertedRound_BottomRight_Highlight" />
+                <Item Name="RightTop" Image="InvertedRound_TopRight_Highlight" />
+                <Item Name="Top" Image="InvertedRound_Top_Highlight" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="InvertedRound_Bottom_Highlight" />
+                <Item Name="Center" Image="InvertedRound_Center_Highlight" />
+                <Item Name="Left" Image="InvertedRound_Left_Highlight" />
+                <Item Name="LeftBottom" Image="InvertedRound_BottomLeft_Highlight" />
+                <Item Name="LeftTop" Image="InvertedRound_TopLeft_Highlight" />
+                <Item Name="Right" Image="InvertedRound_Right_Highlight" />
+                <Item Name="RightBottom" Image="InvertedRound_BottomRight_Highlight" />
+                <Item Name="RightTop" Image="InvertedRound_TopRight_Highlight" />
+                <Item Name="Top" Image="InvertedRound_Top_Highlight" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="InvertedRound_Bottom_Highlight" />
+                <Item Name="Center" Image="InvertedRound_Center_Highlight" />
+                <Item Name="Left" Image="InvertedRound_Left_Highlight" />
+                <Item Name="LeftBottom" Image="InvertedRound_BottomLeft_Highlight" />
+                <Item Name="LeftTop" Image="InvertedRound_TopLeft_Highlight" />
+                <Item Name="Right" Image="InvertedRound_Right_Highlight" />
+                <Item Name="RightBottom" Image="InvertedRound_BottomRight_Highlight" />
+                <Item Name="RightTop" Image="InvertedRound_TopRight_Highlight" />
+                <Item Name="Top" Image="InvertedRound_Top_Highlight" />
+            </State>
+        </Style>
+        <Style Name="ButtonTest" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="LeftOpen_Bottom" />
+                <Item Name="Center" Image="LeftOpen_Center" />
+                <Item Name="Left" Image="Left_BarIndicaitor" />
+                <Item Name="LeftBottom" Image="Left_BarIndicaitor" />
+                <Item Name="LeftTop" Image="Left_BarIndicaitor" />
+                <Item Name="Right" Image="LeftOpen_Right" />
+                <Item Name="RightBottom" Image="LeftOpen_BottomRight" />
+                <Item Name="RightTop" Image="LeftOpen_TopRight" />
+                <Item Name="Top" Image="LeftOpen_Top" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="Bottom" Image="LeftOpen_Bottom" />
+                <Item Name="Center" Image="LeftOpen_Right" />
+                <Item Name="Left" Image="Left_BarIndicaitor" />
+                <Item Name="LeftBottom" Image="Left_BarIndicaitor" />
+                <Item Name="LeftTop" Image="Left_BarIndicaitor" />
+                <Item Name="Right" Image="LeftOpen_Right" />
+                <Item Name="RightBottom" Image="LeftOpen_BottomRight" />
+                <Item Name="RightTop" Image="LeftOpen_TopRight" />
+                <Item Name="Top" Image="LeftOpen_Top" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="LeftOpen_Bottom" />
+                <Item Name="Center" Image="LeftOpen_Center" />
+                <Item Name="Left" Image="Left_BarIndicaitor" />
+                <Item Name="LeftBottom" Image="Left_BarIndicaitor" />
+                <Item Name="LeftTop" Image="Left_BarIndicaitor" />
+                <Item Name="Right" Image="LeftOpen_Right" />
+                <Item Name="RightBottom" Image="LeftOpen_BottomRight" />
+                <Item Name="RightTop" Image="LeftOpen_TopRight" />
+                <Item Name="Top" Image="LeftOpen_Top" />
+            </State>
+            <State Name="Pushed">
+                <Item Name="Bottom" Image="LeftOpen_Bottom" />
+                <Item Name="Center" Image="LeftOpen_Center" />
+                <Item Name="Left" Image="Left_BarIndicaitor" />
+                <Item Name="LeftBottom" Image="Left_BarIndicaitor" />
+                <Item Name="LeftTop" Image="Left_BarIndicaitor" />
+                <Item Name="Right" Image="LeftOpen_Right" />
+                <Item Name="RightBottom" Image="LeftOpen_BottomRight" />
+                <Item Name="RightTop" Image="LeftOpen_TopRight" />
+                <Item Name="Top" Image="LeftOpen_Top" />
+            </State>
+        </Style>
+    </Widget>
+    <Widget Name="CheckBoxWidget">
+        <Style Name="CheckBox_16px" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="CheckBox" Image="CheckBox_Disabled_16px" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="CheckBox" Image="CheckBox_Highlight_16px" />
+            </State>
+            <State Name="Mark">
+                <Item Name="CheckBox" Image="CheckBox_Mark_16px" />
+            </State>
+            <State Name="Normal">
+                <Item Name="CheckBox" Image="CheckBox_16px" />
+            </State>
+        </Style>
+        <Style Name="CheckBox_22px" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="CheckBox" Image="CheckBox_Disabled_22px" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="CheckBox" Image="CheckBox_Highlight_22px" />
+            </State>
+            <State Name="Mark">
+                <Item Name="CheckBox" Image="CheckBox_Mark_22px" />
+            </State>
+            <State Name="Normal">
+                <Item Name="CheckBox" Image="CheckBox_22px" />
+            </State>
+        </Style>
+        <Style Name="CheckBox_62px" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="CheckBox" Image="CheckBox_Disabled_62px" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="CheckBox" Image="CheckBox_Highlight_62px" />
+            </State>
+            <State Name="Mark">
+                <Item Name="CheckBox" Image="CheckBox_Mark_62px" />
+            </State>
+            <State Name="Normal">
+                <Item Name="CheckBox" Image="CheckBox_62px" />
+            </State>
+        </Style>
+        <Style Name="CheckBox_30px" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="CheckBox" Image="CheckBox_Disabled_30px" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="CheckBox" Image="CheckBox_Highlight_30px" />
+            </State>
+            <State Name="Mark">
+                <Item Name="CheckBox" Image="CheckBox_Mark_30px" />
+            </State>
+            <State Name="Normal">
+                <Item Name="CheckBox" Image="CheckBox_30px" />
+            </State>
+        </Style>
+    </Widget>
+    <Widget Name="SliderWidget">
+        <Style Name="Slider_1px_alpha_50" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="BarBottom" Image="" />
+                <Item Name="BarCenter" Image="" />
+                <Item Name="BarLeft" Image="" />
+                <Item Name="BarLeftBottom" Image="" />
+                <Item Name="BarLeftTop" Image="" />
+                <Item Name="BarRight" Image="" />
+                <Item Name="BarRightBottom" Image="" />
+                <Item Name="BarRightTop" Image="" />
+                <Item Name="BarTop" Image="" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="BarBottom" Image="" />
+                <Item Name="BarCenter" Image="" />
+                <Item Name="BarLeft" Image="" />
+                <Item Name="BarLeftBottom" Image="" />
+                <Item Name="BarLeftTop" Image="" />
+                <Item Name="BarRight" Image="" />
+                <Item Name="BarRightBottom" Image="" />
+                <Item Name="BarRightTop" Image="" />
+                <Item Name="BarTop" Image="" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="BarBottom" Image="" />
+                <Item Name="BarCenter" Image="Alpha 40" />
+                <Item Name="BarLeft" Image="" />
+                <Item Name="BarLeftBottom" Image="" />
+                <Item Name="BarLeftTop" Image="" />
+                <Item Name="BarRight" Image="" />
+                <Item Name="BarRightBottom" Image="" />
+                <Item Name="BarRightTop" Image="" />
+                <Item Name="BarTop" Image="" />
+                <Item Name="Bottom" Image="OutlineBottom_1px" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="OutlineLeft_1px" />
+                <Item Name="LeftBottom" Image="OutlineBottomLeft_1px" />
+                <Item Name="LeftTop" Image="OutlineTopLeft_1px" />
+                <Item Name="Right" Image="OutlineRight_1px" />
+                <Item Name="RightBottom" Image="OutlineBottomRight_1px" />
+                <Item Name="RightTop" Image="OutlineTopRight_1px" />
+                <Item Name="Top" Image="OutlineTop_1px" />
+            </State>
+        </Style>
+        <Style Name="RoundedSlider" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="0">
+            <State Name="Disabled">
+                <Item Name="BarBottom" Image="" />
+                <Item Name="BarCenter" Image="" />
+                <Item Name="BarLeft" Image="" />
+                <Item Name="BarLeftBottom" Image="" />
+                <Item Name="BarLeftTop" Image="" />
+                <Item Name="BarRight" Image="" />
+                <Item Name="BarRightBottom" Image="" />
+                <Item Name="BarRightTop" Image="" />
+                <Item Name="BarTop" Image="" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="BarBottom" Image="" />
+                <Item Name="BarCenter" Image="" />
+                <Item Name="BarLeft" Image="" />
+                <Item Name="BarLeftBottom" Image="" />
+                <Item Name="BarLeftTop" Image="" />
+                <Item Name="BarRight" Image="" />
+                <Item Name="BarRightBottom" Image="" />
+                <Item Name="BarRightTop" Image="" />
+                <Item Name="BarTop" Image="" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="BarBottom" Image="RoundButtonHighlight_50_Bottom" />
+                <Item Name="BarCenter" Image="RoundedButtonHighlight_50_Center" />
+                <Item Name="BarLeft" Image="RoundButtonHighlight_50_Left" />
+                <Item Name="BarLeftBottom" Image="RoundButtonHighlight_50_BottomLeft" />
+                <Item Name="BarLeftTop" Image="RoundButtonHighlight_50_TopLeft" />
+                <Item Name="BarRight" Image="RoundButtonHighlight_50_Right" />
+                <Item Name="BarRightBottom" Image="RoundButtonHighlight_50_BottomRight" />
+                <Item Name="BarRightTop" Image="RoundButtonHighlight_50_TopRight" />
+                <Item Name="BarTop" Image="RoundButtonHighlight_50_Top" />
+                <Item Name="Bottom" Image="Round_Outline_Bottom" />
+                <Item Name="Center" Image="InvertedRound_Center_Outline" />
+                <Item Name="Left" Image="Round_Outline_Left" />
+                <Item Name="LeftBottom" Image="Round_Outline_BottomLeft" />
+                <Item Name="LeftTop" Image="Round_Outline_TopLeft" />
+                <Item Name="Right" Image="Round_Outline_Right" />
+                <Item Name="RightBottom" Image="Round_Outline_BottomRight" />
+                <Item Name="RightTop" Image="Round_Outline_TopRight" />
+                <Item Name="Top" Image="Round_Outline_Top" />
+            </State>
+        </Style>
+    </Widget>
+    <Widget Name="EditBoxWidget">
+        <Style Name="Green_Hightlight" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="GreenHighlight" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="Blue_Highlight" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="BlueHighlight" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="No_Highlight" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="Alpha 0" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+    </Widget>
+    <Widget Name="WrapSpacerWidget">
+        <Style Name="Outline_1px" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="OutlineBottom_1px" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="OutlineLeft_1px" />
+                <Item Name="LeftBottom" Image="OutlineBottomLeft_1px" />
+                <Item Name="LeftTop" Image="OutlineTopLeft_1px" />
+                <Item Name="Right" Image="OutlineRight_1px" />
+                <Item Name="RightBottom" Image="OutlineBottomRight_1px" />
+                <Item Name="RightTop" Image="OutlineTopRight_1px" />
+                <Item Name="Top" Image="OutlineTop_1px" />
+            </State>
+        </Style>
+        <Style Name="Outline_1px_BlackBackground" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="1px_Outline_BlackCenter_Bottom" />
+                <Item Name="Center" Image="1px_Outline_BlackCenter_center" />
+                <Item Name="Left" Image="1px_Outline_BlackCenter_Left" />
+                <Item Name="LeftBottom" Image="1px_Outline_BlackCenter_BottomLeft" />
+                <Item Name="LeftTop" Image="1px_Outline_BlackCenter_TopLeft" />
+                <Item Name="Right" Image="1px_Outline_BlackCenter_Right" />
+                <Item Name="RightBottom" Image="1px_Outline_BlackCenter_BottomRight" />
+                <Item Name="RightTop" Image="1px_Outline_BlackCenter_TopRight" />
+                <Item Name="Top" Image="1px_Outline_BlackCenter_Top" />
+            </State>
+        </Style>
+    </Widget>
+    <Widget Name="GridSpacerWidget">
+        <Style Name="1px_Outline" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="Bottom" Image="OutlineBottom_1px" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="OutlineLeft_1px" />
+                <Item Name="LeftBottom" Image="OutlineBottomLeft_1px" />
+                <Item Name="LeftTop" Image="OutlineTopLeft_1px" />
+                <Item Name="Right" Image="OutlineRight_1px" />
+                <Item Name="RightBottom" Image="OutlineBottomRight_1px" />
+                <Item Name="RightTop" Image="OutlineTopRight_1px" />
+                <Item Name="Top" Image="OutlineTop_1px" />
+            </State>
+        </Style>
+    </Widget>
+    <Widget Name="TextListboxWidget">
+        <Style Name="TextListBox_NoScroll" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="dayz_gui" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="BottomCenter" Image="" />
+                <Item Name="BottomSeparator" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="HeaderBottomCenter" Image="" />
+                <Item Name="HeaderCenter" Image="" />
+                <Item Name="HeaderLeftBottom" Image="" />
+                <Item Name="HeaderLeftCenter" Image="" />
+                <Item Name="HeaderLeftTop" Image="" />
+                <Item Name="HeaderRightBottom" Image="" />
+                <Item Name="HeaderRightCenter" Image="" />
+                <Item Name="HeaderRightTop" Image="" />
+                <Item Name="HeaderTopCenter" Image="" />
+                <Item Name="Highlight" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftCenter" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="LeftTopWithTitle" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightCenter" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="RightTopWithTitle" Image="" />
+                <Item Name="ScrollBarBottom" Image="" />
+                <Item Name="ScrollBarCenter" Image="" />
+                <Item Name="ScrollBarTop" Image="" />
+                <Item Name="Separator" Image="" />
+                <Item Name="TitleCenter" Image="" />
+                <Item Name="TitleCenterSeparator" Image="" />
+                <Item Name="TitleLeftCenter" Image="" />
+                <Item Name="TitleRightCenter" Image="" />
+                <Item Name="TopCenter" Image="" />
+                <Item Name="TopSeparator" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="BottomCenter" Image="" />
+                <Item Name="BottomSeparator" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="HeaderBottomCenter" Image="" />
+                <Item Name="HeaderCenter" Image="" />
+                <Item Name="HeaderLeftBottom" Image="" />
+                <Item Name="HeaderLeftCenter" Image="" />
+                <Item Name="HeaderLeftTop" Image="" />
+                <Item Name="HeaderRightBottom" Image="" />
+                <Item Name="HeaderRightCenter" Image="" />
+                <Item Name="HeaderRightTop" Image="" />
+                <Item Name="HeaderTopCenter" Image="" />
+                <Item Name="Highlight" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftCenter" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="LeftTopWithTitle" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightCenter" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="RightTopWithTitle" Image="" />
+                <Item Name="ScrollBarBottom" Image="" />
+                <Item Name="ScrollBarCenter" Image="" />
+                <Item Name="ScrollBarTop" Image="" />
+                <Item Name="Separator" Image="" />
+                <Item Name="TitleCenter" Image="" />
+                <Item Name="TitleCenterSeparator" Image="" />
+                <Item Name="TitleLeftCenter" Image="" />
+                <Item Name="TitleRightCenter" Image="" />
+                <Item Name="TopCenter" Image="" />
+                <Item Name="TopSeparator" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="BottomCenter" Image="" />
+                <Item Name="BottomSeparator" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="HeaderBottomCenter" Image="" />
+                <Item Name="HeaderCenter" Image="" />
+                <Item Name="HeaderLeftBottom" Image="" />
+                <Item Name="HeaderLeftCenter" Image="" />
+                <Item Name="HeaderLeftTop" Image="" />
+                <Item Name="HeaderRightBottom" Image="" />
+                <Item Name="HeaderRightCenter" Image="" />
+                <Item Name="HeaderRightTop" Image="" />
+                <Item Name="HeaderTopCenter" Image="" />
+                <Item Name="Highlight" Image="editorQuadSelCenter" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftCenter" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="LeftTopWithTitle" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightCenter" Image="InventoryGridEmptyRight" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="RightTopWithTitle" Image="" />
+                <Item Name="ScrollBarBottom" Image="" />
+                <Item Name="ScrollBarCenter" Image="" />
+                <Item Name="ScrollBarTop" Image="" />
+                <Item Name="Separator" Image="" />
+                <Item Name="TitleCenter" Image="" />
+                <Item Name="TitleCenterSeparator" Image="" />
+                <Item Name="TitleLeftCenter" Image="" />
+                <Item Name="TitleRightCenter" Image="" />
+                <Item Name="TopCenter" Image="" />
+                <Item Name="TopSeparator" Image="" />
+            </State>
+        </Style>
+    </Widget>
+    <Widget Name="XComboBoxWidget">
+        <Style Name="XComboBox_NoHighlight" Font="gui/fonts/AmorSerifPro-Bold" ImageSet="rover_imageset" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="ArrowLeft" Image="ArrowLeftBlack" />
+                <Item Name="ArrowRight" Image="ArrowRightBlack" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="ArrowLeft" Image="ArrowLeft" />
+                <Item Name="ArrowRight" Image="ArrowRight" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="ArrowLeft" Image="ArrowLeft" />
+                <Item Name="ArrowRight" Image="ArrowRight" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="ArrowLeft" Image="ArrowLeft" />
+                <Item Name="ArrowRight" Image="ArrowRight" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+        <Style Name="SlimArrows_NoHighlight" Font="gui/fonts/Metron28" ImageSet="prefabs" Color="4294967295">
+            <State Name="Disabled">
+                <Item Name="ArrowLeft" Image="left_arrow" />
+                <Item Name="ArrowRight" Image="right_arrow" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Focus">
+                <Item Name="ArrowLeft" Image="left_arrow" />
+                <Item Name="ArrowRight" Image="right_arrow" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Highlight">
+                <Item Name="ArrowLeft" Image="left_arrow" />
+                <Item Name="ArrowRight" Image="right_arrow" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+            <State Name="Normal">
+                <Item Name="ArrowLeft" Image="left_arrow" />
+                <Item Name="ArrowRight" Image="right_arrow" />
+                <Item Name="Bottom" Image="" />
+                <Item Name="Center" Image="" />
+                <Item Name="Left" Image="" />
+                <Item Name="LeftBottom" Image="" />
+                <Item Name="LeftTop" Image="" />
+                <Item Name="Right" Image="" />
+                <Item Name="RightBottom" Image="" />
+                <Item Name="RightTop" Image="" />
+                <Item Name="Top" Image="" />
+            </State>
+        </Style>
+    </Widget>
+</WidgetStyles>

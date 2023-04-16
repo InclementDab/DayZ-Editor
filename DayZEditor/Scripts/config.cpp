@@ -3,14 +3,14 @@ class CfgPatches
 {
 	class Editor_Scripts
 	{
-        units[] = {};
-        weapons[] = {};
-        requiredVersion = 0.1;
+		units[] = {};
+		weapons[] = {};
+		requiredVersion = 0.1;
 		requiredAddons[] = {"DZ_Scripts", "JM_CF_Scripts", "DF_Scripts"};
 	};
 };
 
-class CfgMods 
+class CfgMods
 {
 	class DZ_Editor
 	{
@@ -23,66 +23,62 @@ class CfgMods
 		inputs = "DayZEditor/Scripts/Data/Inputs.xml";
 		type = "mod";
 		dependencies[] =
-		{
-			"Game", "World", "Mission"
-		};
+			{
+				"Game", "World", "Mission"};
 		class defs
 		{
 			class imageSets
 			{
-				files[]=
-				{
-					"DayZEditor/gui/imagesets/dayz_editor_gui.imageset",
-					"DabsFramework/gui/imagesets/prefabs.imageset"
+				files[] =
+					{
+						"DayZEditor/gui/imagesets/dayz_editor_gui.imageset",
+						"DabsFramework/gui/imagesets/prefabs.imageset",
 				};
 			};
 
 			class widgetStyles
 			{
-				files[]=
-				{
-					"DayZEditor/gui/looknfeel/editorwidgets.styles",
-					"DabsFramework/gui/looknfeel/prefabs.imageset"
+				files[] =
+					{
+						"DayZEditor/gui/looknfeel/editorwidgets.styles",
+						"DayZEditor/gui/looknfeel/prefabs.styles",
+						"DabsFramework/gui/looknfeel/prefabs.imageset",
 				};
 			};
 
 			class engineScriptModule
 			{
-				value="";
+				value = "";
 				files[] =
-				{
-					"DayZEditor/scripts/common",
-					"DayZEditor/scripts/1_core"
-				};
+					{
+						"DayZEditor/scripts/common",
+						"DayZEditor/scripts/1_core"};
 			};
 
 			class gameScriptModule
 			{
-				value="";
-				files[] = 
-				{
-					"DayZEditor/scripts/common",
-					"DayZEditor/scripts/3_Game"
-				};
+				value = "";
+				files[] =
+					{
+						"DayZEditor/scripts/common",
+						"DayZEditor/scripts/3_Game"};
 			};
 			class worldScriptModule
 			{
-				value="";
-				files[] = 
-				{
-					"DayZEditor/scripts/common",
-					"DayZEditor/scripts/4_World"
-				};
+				value = "";
+				files[] =
+					{
+						"DayZEditor/scripts/common",
+						"DayZEditor/scripts/4_World"};
 			};
 
-			class missionScriptModule 
+			class missionScriptModule
 			{
-				value="";
-				files[] = 
-				{
-					"DayZEditor/scripts/common",
-					"DayZEditor/scripts/5_Mission"
-				};
+				value = "";
+				files[] =
+					{
+						"DayZEditor/scripts/common",
+						"DayZEditor/scripts/5_Mission"};
 			};
 		};
 	};
