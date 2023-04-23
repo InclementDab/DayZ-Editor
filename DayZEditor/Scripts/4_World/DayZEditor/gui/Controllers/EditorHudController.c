@@ -136,9 +136,9 @@ class EditorHudController: EditorControllerBase
 				}
 			}
 						
-			// update favorites from properties			
+			// update favorites from properties		, bbroooklkkeeenn	
 			if (favorite_items.Find(placeable_item.Type) != -1) {
-				list_item.SetFavorite(true);
+				//list_item.SetFavorite(true);
 			}
 		}
 		
@@ -310,7 +310,7 @@ class EditorHudController: EditorControllerBase
 			}
 			
 			case "CategoryStatic": {				
-				CategoryPlacements = false;				
+				CategoryConfig = false;				
 				NotifyPropertyChanged("CategoryPlacements", false);				
 				// forcing to be true, otherwise it will just show nothing
 				CategoryDeletions = true;

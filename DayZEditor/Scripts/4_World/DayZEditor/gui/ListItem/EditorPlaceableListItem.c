@@ -13,7 +13,7 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		m_PlaceableItem = placeable_item;
 		
-		m_TemplateController.Label = placeable_item.Type;
+		m_TemplateController.Label = placeable_item.GetName();
 		m_TemplateController.NotifyPropertyChanged("Label");
 				
 #ifndef COMPONENT_SYSTEM

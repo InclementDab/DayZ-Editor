@@ -22,6 +22,17 @@ class EditorPlaceableItem: Managed
 		delete Model;
 	}
 	
+	string GetName()
+	{
+		switch (Category) {
+			case EditorPlaceableItemCategory.SCRIPTED:
+			case EditorPlaceableItemCategory.CONFIG: return Type;
+			case EditorPlaceableItemCategory.STATIC: return Model.GetFileName();
+		}
+		
+		return string.Empty;
+	}
+	
 	static EditorPlaceableItem Create(CF_File p3d)
 	{
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();	
@@ -98,9 +109,10 @@ class EditorPlaceableItem: Managed
 		if (model == "QuickieBow") return true;
 		if (model == "LargeTentBackPack") return true;
 		if (model == "SurvivorMale_Base" || model == "SurvivorFemale_Base") return true;
+		if (model == "Land_VASICore" || model == "FlagCarrierCore") return true;
 		if (GetGame().IsKindOf(model, "GP25Base")) return true;
 		if (GetGame().IsKindOf(model, "M203Base")) return true;
-	
+		
 		//! Everything is fine... I hope... :pain:
 		return false;
 	}
