@@ -15,6 +15,7 @@ class EditorObjectSpawnerFile: EditorFileType
 			spawn_object.ypr[1] = object_data.Orientation[1];
 			spawn_object.ypr[2] = object_data.Orientation[2];
 			spawn_object.scale = object_data.Scale;
+			spawn_object.enableCEPersistency = false;
 			export_data.Objects.Insert(spawn_object);
 		}
 		
