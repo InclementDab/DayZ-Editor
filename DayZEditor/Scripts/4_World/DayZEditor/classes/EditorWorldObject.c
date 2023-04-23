@@ -1,5 +1,16 @@
 class EditorWorldObject
-{		
+{
+	static const ref array<string> VALID_PATHS = { 
+		"DZ\\plants", 
+		"DZ\\plants_bliss",
+		"DZ\\rocks",
+		"DZ\\rocks_bliss",
+		"DZ/plants",
+		"DZ/plants_bliss",
+		"DZ/rocks",
+		"DZ/rocks_bliss"
+	};
+	
 	protected Object m_WorldObject;
 	Object GetWorldObject() 
 	{
@@ -18,15 +29,21 @@ class EditorWorldObject
 			return null;
 		}
 		
-		Object obj;		
-		if (!Class.CastTo(obj, GetGame().CreateObjectEx(type, position, ECE_CREATEPHYSICS | ECE_INITAI))) { 
+		Object object;	
+		if ((type.Contains("\\") || type.Contains("/")) && ValidateObjectPath(type)) {
+			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);
+		} else {
+			object = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);
+		}
+		
+		if (!object) { 
 			EditorLog.Warning("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
 		
 		// Needed for AI Placement			
 		EntityAI entity_ai;
-		if (Class.CastTo(entity_ai, obj)) {
+		if (Class.CastTo(entity_ai, object)) {
 			entity_ai.DisableSimulation(true);
 						
 			// weeeeeeee
@@ -35,9 +52,20 @@ class EditorWorldObject
 			}
 		}		
 		
-		obj.SetOrientation(orientation);
-		obj.SetScale(scale);
-		obj.Update();		
-		return obj;
+		object.SetOrientation(orientation);
+		object.SetScale(scale);
+		object.Update();		
+		return object;
+	}
+	
+	static bool ValidateObjectPath(string path)
+	{
+		foreach (string p: VALID_PATHS) {
+			if (path.Contains(p)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }
