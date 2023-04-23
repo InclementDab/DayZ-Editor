@@ -12,6 +12,8 @@ class EditorHudController: EditorControllerBase
 	
 	bool CategoryPlacements = true;
 	bool CategoryDeletions;
+	bool CategoryConfig = true;
+	bool CategoryStatic;
 	bool FavoritesToggle;
 	
 	StringEvaluater PrecisionLevel = "0.5";
@@ -47,6 +49,9 @@ class EditorHudController: EditorControllerBase
 	
 	protected WrapSpacerWidget RightbarPlacementsList;
 	protected WrapSpacerWidget RightbarDeletionsList;
+	
+	protected WrapSpacerWidget LeftbarPlacementsConfig, LeftbarPlacementsStatic;
+	protected ButtonWidget LeftbarCategoryConfig, LeftbarCategoryStatic;
 	
 	protected GridSpacerWidget InfobarObjPosFrame;
 		
@@ -277,6 +282,35 @@ class EditorHudController: EditorControllerBase
 				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
 				DeletionsTabButton.SetColor(m_Editor.Settings.SelectionColor);
 				RightbarScroll.VScrollToPos(0);
+				break;
+			}			
+			
+			case "CategoryConfig": {
+				CategoryStatic = false;
+				NotifyPropertyChanged("CategoryStatic", false);
+				// forcing to be true, otherwise it will just show nothing
+				CategoryConfig = true;
+				
+				LeftbarPlacementsConfig.Show(CategoryConfig);
+				LeftbarPlacementsStatic.Show(CategoryStatic);
+				
+				LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
+				LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
+				LeftbarScroll.VScrollToPos(0);
+				break;
+			}
+			
+			case "CategoryStatic": {				
+				CategoryPlacements = false;				
+				NotifyPropertyChanged("CategoryPlacements", false);				
+				// forcing to be true, otherwise it will just show nothing
+				CategoryDeletions = true;
+				LeftbarPlacementsConfig.Show(CategoryConfig);
+				LeftbarPlacementsStatic.Show(CategoryStatic);
+				
+				LeftbarCategoryConfig.SetColor(ARGB(255, 60, 60, 60));
+				LeftbarCategoryStatic.SetColor(m_Editor.Settings.SelectionColor);
+				LeftbarScroll.VScrollToPos(0);
 				break;
 			}
 			

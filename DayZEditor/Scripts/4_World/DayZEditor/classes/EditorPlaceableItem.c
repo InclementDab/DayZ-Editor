@@ -1,16 +1,10 @@
 class EditorPlaceableItem: Managed
-{	
-	static autoptr map<string, EditorPlaceableItemCategory> LOADED_TYPES = GetTypes();
-	static autoptr array<ref ModStructure> LOADED_MODS = ModLoader.GetMods();
-	
+{		
 	string Type; // Item Type
 	string Path; // config path
 		
 	ref CF_File Model;
-	
-	ModStructure Mod;
-	EditorPlaceableItemCategory Category;
-	
+		
 	private void EditorPlaceableItem()
 	{
 	}
@@ -62,23 +56,7 @@ class EditorPlaceableItem: Managed
 		target.ClippingInfo(size);
 		return (Math.AbsFloat(size[0][0]) + Math.AbsFloat(size[1][0]) + Math.AbsFloat(size[0][1]) + Math.AbsFloat(size[1][1]) + Math.AbsFloat(size[0][2]) + Math.AbsFloat(size[1][2]) > 0);
 	}
-	
-	static map<string, EditorPlaceableItemCategory> GetTypes()
-	{
-		map<string, EditorPlaceableItemCategory> types_map = new map<string, EditorPlaceableItemCategory>();
 		
-		types_map.Insert("house", 				EditorPlaceableItemCategory.BUILDING);
-		types_map.Insert("transport", 			EditorPlaceableItemCategory.VEHICLE);
-		types_map.Insert("inventory_base", 		EditorPlaceableItemCategory.ENTITY);
-		types_map.Insert("edible_base", 		EditorPlaceableItemCategory.ENTITY);
-		types_map.Insert("clothing_base", 		EditorPlaceableItemCategory.ENTITY);
-		types_map.Insert("weapon_base", 		EditorPlaceableItemCategory.ENTITY);
-		types_map.Insert("dz_lightai", 			EditorPlaceableItemCategory.HUMAN);
-		types_map.Insert("survivorbase", 		EditorPlaceableItemCategory.HUMAN);
-		
-		return types_map;
-	}
-	
 	static string GetIcon(ModStructure mod_info)
 	{
 		//EditorLog.Trace("EditorPlaceableItem::GetIcon");

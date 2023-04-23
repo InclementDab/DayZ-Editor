@@ -164,13 +164,7 @@ class EditorPlaceableListItem: EditorListItem
 		string type_lower = m_PlaceableItem.Type;
 		type_lower.ToLower();
 		filter.ToLower();
-		
-		if (filter[0] == "@") {
-			type_lower = m_PlaceableItem.Mod.GetModName();
-			filter[0] = "";
-			type_lower.ToLower();
-		}
-		
+				
 		return type_lower.Contains(filter);
 	}
 	
