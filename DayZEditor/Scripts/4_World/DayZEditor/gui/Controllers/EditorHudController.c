@@ -24,7 +24,8 @@ class EditorHudController: EditorControllerBase
 	// Main data
 	ref EditorHudToolbar EditorHudToolbarView;
 	
-	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerData = new ObservableCollection<ref EditorPlaceableListItem>(this);
+	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerConfig = new ObservableCollection<ref EditorPlaceableListItem>(this);
+	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerStatic = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
@@ -188,11 +189,12 @@ class EditorHudController: EditorControllerBase
 		switch (property_name) {
 					
 			case "SearchBarData": {
-				for (int j = 0; j < LeftbarSpacerData.Count(); j++) {
+				auto spacer_config = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
+				for (int j = 0; j < spacer_config.Count(); j++) {
 					if (FavoritesToggle) {
-						LeftbarSpacerData[j].GetLayoutRoot().Show(LeftbarSpacerData[j].GetTemplateController().Favorite && LeftbarSpacerData[j].FilterType(SearchBarData)); 	
+						spacer_config[j].GetLayoutRoot().Show(spacer_config[j].GetTemplateController().Favorite && spacer_config[j].FilterType(SearchBarData)); 	
 					} else {
-						LeftbarSpacerData[j].GetLayoutRoot().Show(LeftbarSpacerData[j].FilterType(SearchBarData)); 	
+						spacer_config[j].GetLayoutRoot().Show(spacer_config[j].FilterType(SearchBarData)); 	
 					}
 				}
 				
@@ -236,11 +238,12 @@ class EditorHudController: EditorControllerBase
 			}
 			
 			case "FavoritesToggle": {
-				for (int i = 0; i < LeftbarSpacerData.Count(); i++) {
+				auto spacer_config_favorites = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
+				for (int i = 0; i < spacer_config_favorites.Count(); i++) {
 					if (FavoritesToggle) {
-						LeftbarSpacerData[i].GetLayoutRoot().Show(LeftbarSpacerData[i].GetTemplateController().Favorite && LeftbarSpacerData[i].FilterType(SearchBarData));
+						spacer_config_favorites[i].GetLayoutRoot().Show(spacer_config_favorites[i].GetTemplateController().Favorite && spacer_config_favorites[i].FilterType(SearchBarData));
 					} else {
-						LeftbarSpacerData[i].GetLayoutRoot().Show(LeftbarSpacerData[i].FilterType(SearchBarData)); 	 // SearchBarData == string.Empty || LeftbarSpacerData[i].FilterType(SearchBarData)
+						spacer_config_favorites[i].GetLayoutRoot().Show(spacer_config_favorites[i].FilterType(SearchBarData)); 	 // SearchBarData == string.Empty || LeftbarSpacerData[i].FilterType(SearchBarData)
 					}
 				}
 				

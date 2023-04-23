@@ -356,7 +356,7 @@ FrameWidgetClass EditorFrame {
              content_valign center
              {
               ScriptParamsClass {
-               Binding_Name "LeftbarSpacerData"
+               Binding_Name "LeftbarSpacerConfig"
               }
              }
             }
@@ -380,7 +380,7 @@ FrameWidgetClass EditorFrame {
              content_valign center
              {
               ScriptParamsClass {
-               Binding_Name "LeftbarSpacerData"
+               Binding_Name "LeftbarSpacerStatic"
               }
              }
             }

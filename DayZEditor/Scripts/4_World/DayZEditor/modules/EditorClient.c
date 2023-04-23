@@ -267,7 +267,9 @@ class EditorClientModule: JMModuleBase
 	{
 		// nothing is selected and we are actively placing
 		if (m_Editor && m_Editor.GetSelectedObjects().Count() == 0 && m_Editor.IsPlacing() && (input.LocalPress() || input.LocalHold())) {
-			ObservableCollection<ref EditorPlaceableListItem> placeables = m_Editor.GetEditorHud().GetTemplateController().LeftbarSpacerData;
+			
+			EditorHudController controller = m_Editor.GetEditorHud().GetTemplateController();
+			auto placeables = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(controller.CategoryConfig, controller.LeftbarSpacerConfig, controller.LeftbarSpacerStatic);
 			for (int i = 0; i < placeables.Count(); i++) {
 				if (placeables[i].IsSelected()) {
 					if (!placeables[i - 1]) {
@@ -282,7 +284,7 @@ class EditorClientModule: JMModuleBase
 					placeables[i].OnMouseLeave(null, null, 0, 0);
 					placeables[i - 1].OnMouseEnter(null, 0, 0);
 					
-					m_Editor.GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i - 1) /  placeables.Count());
+					controller.LeftbarScroll.VScrollToPos01((i - 1) /  placeables.Count());
 					return;
 				}
 			}
@@ -307,7 +309,8 @@ class EditorClientModule: JMModuleBase
 	{
 		// nothing is selected and we are actively placing
 		if (m_Editor && m_Editor.GetSelectedObjects().Count() == 0 && m_Editor.IsPlacing() && (input.LocalPress() || input.LocalHold())) {
-			ObservableCollection<ref EditorPlaceableListItem> placeables = m_Editor.GetEditorHud().GetTemplateController().LeftbarSpacerData;
+			EditorHudController controller = m_Editor.GetEditorHud().GetTemplateController();
+			auto placeables = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(controller.CategoryConfig, controller.LeftbarSpacerConfig, controller.LeftbarSpacerStatic);
 			for (int i = 0; i < placeables.Count(); i++) {
 				if (placeables[i].IsSelected()) {
 					if (!placeables[i + 1]) {
@@ -322,7 +325,7 @@ class EditorClientModule: JMModuleBase
 					placeables[i].OnMouseLeave(null, null, 0, 0);
 					placeables[i + 1].OnMouseEnter(null, 0, 0);
 					
-					m_Editor.GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i + 1) /  placeables.Count());
+					controller.LeftbarScroll.VScrollToPos01((i + 1) /  placeables.Count());
 					return;
 				}
 			}

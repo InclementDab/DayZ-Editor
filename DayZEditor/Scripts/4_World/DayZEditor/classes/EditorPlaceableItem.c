@@ -1,8 +1,16 @@
+enum EditorPlaceableItemCategory
+{
+	CONFIG = 0,
+	STATIC = 1,
+	SCRIPTED = 2
+}
+
 class EditorPlaceableItem: Managed
 {		
 	string Type; // Item Type
 	string Path; // config path
-		
+	EditorPlaceableItemCategory Category;
+	
 	ref CF_File Model;
 		
 	private void EditorPlaceableItem()
@@ -18,6 +26,7 @@ class EditorPlaceableItem: Managed
 	{
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();	
 		placeable_item.Model = p3d;
+		placeable_item.Category = EditorPlaceableItemCategory.STATIC;
 		return placeable_item;
 	}
 	
@@ -31,6 +40,7 @@ class EditorPlaceableItem: Managed
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();	
 		placeable_item.Path = config_path; 
 		placeable_item.Type = config_type;
+		placeable_item.Category = EditorPlaceableItemCategory.CONFIG;
 		
 		string model;
 		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", config_path, config_type), model);
@@ -46,6 +56,7 @@ class EditorPlaceableItem: Managed
 	{		
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();		
 		placeable_item.Type = scripted_type.ToString();
+		placeable_item.Category = EditorPlaceableItemCategory.SCRIPTED;
 		return placeable_item;
 	}
 	
