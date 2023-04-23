@@ -123,13 +123,19 @@ class EditorHudController: EditorControllerBase
 		array<ref EditorPlaceableItem> placeable_items = GetEditor().GetPlaceableObjects();
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
 			// Makes stuff look good when first loading
-			if (GetEditor().Settings.PreloadObjects) {
-				GetGame().ObjectDelete(GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_NONE));				
+			switch (placeable_item.Category) {
+				case EditorPlaceableItemCategory.CONFIG: {
+					LeftbarSpacerConfig.Insert(new EditorPlaceableListItem(placeable_item));
+					break;
+				}
+				
+				case EditorPlaceableItemCategory.SCRIPTED:
+				case EditorPlaceableItemCategory.STATIC: {
+					LeftbarSpacerStatic.Insert(new EditorPlaceableListItem(placeable_item));
+					break;
+				}
 			}
-			
-			EditorPlaceableListItem list_item = new EditorPlaceableListItem(placeable_item);
-			LeftbarSpacerData.Insert(list_item);
-			
+						
 			// update favorites from properties			
 			if (favorite_items.Find(placeable_item.Type) != -1) {
 				list_item.SetFavorite(true);
