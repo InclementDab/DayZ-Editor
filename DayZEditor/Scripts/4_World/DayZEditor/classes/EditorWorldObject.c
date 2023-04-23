@@ -5,10 +5,6 @@ class EditorWorldObject
 		"DZ\\plants_bliss",
 		"DZ\\rocks",
 		"DZ\\rocks_bliss",
-		"DZ/plants",
-		"DZ/plants_bliss",
-		"DZ/rocks",
-		"DZ/rocks_bliss"
 	};
 	
 	protected Object m_WorldObject;
@@ -25,12 +21,13 @@ class EditorWorldObject
 	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)	
 	{
 		type = type.Trim();
+		type.Replace("\/", "\\");
 		if (type == string.Empty) {
 			return null;
 		}
 		
-		Object object;	
-		if ((type.Contains("\\") || type.Contains("/")) && ValidateObjectPath(type)) {
+		Object object;
+		if (type.Contains("\\") && ValidateObjectPath(type)) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);
 		} else {
 			object = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);

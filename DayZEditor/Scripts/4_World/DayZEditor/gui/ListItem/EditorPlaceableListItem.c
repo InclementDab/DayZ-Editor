@@ -15,10 +15,7 @@ class EditorPlaceableListItem: EditorListItem
 		
 		m_TemplateController.Label = placeable_item.Type;
 		m_TemplateController.NotifyPropertyChanged("Label");
-		
-		m_TemplateController.Icon = placeable_item.Icon;
-		m_TemplateController.NotifyPropertyChanged("Icon");
-		
+				
 #ifndef COMPONENT_SYSTEM
 		EditorEvents.OnAddInHand.Insert(OnStartPlacing);
 		EditorEvents.OnRemoveFromHand.Insert(OnStopPlacing);

@@ -1,78 +1,57 @@
-class EditorPlaceableItem
+class EditorPlaceableItem: Managed
 {	
 	static autoptr map<string, EditorPlaceableItemCategory> LOADED_TYPES = GetTypes();
 	static autoptr array<ref ModStructure> LOADED_MODS = ModLoader.GetMods();
 	
-	string Type;
-	string Path;
-	
-	string Icon;
-	string Model;
-	string FullModel;
-	
-	ref TStringArray FullPath = {};
+	string Type; // Item Type
+	string Path; // config path
+		
+	ref CF_File Model;
 	
 	ModStructure Mod;
 	EditorPlaceableItemCategory Category;
 	
-	private void EditorPlaceableItem(string path, string type)
+	private void EditorPlaceableItem()
 	{
-		//EditorLog.Trace("EditorPlaceableItem");
-		Path = path; Type = type;
-		
-		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", Path, Type), FullModel);
-		GetWorkbenchGame().ConfigGetFullPath(string.Format("%1 %2", Path, Type), FullPath);
 	}
-	
-	void Init(bool scripted = false)
-	{
-		//EditorLog.Trace("EditorPlaceableItem::Init");
 		
-		// No .p3d was specified
-		if ((FullModel == string.Empty || FullModel.Length() <= 4) && !scripted) {
-			delete this;
-		}
-		
-		Mod = LoadModData(Type, Path);
-		Category = LoadItemCategory();
-		
-		// format Model name
-		Model = FullModel;
-		array<string> model_split = {};
-		Model.Split("\\", model_split);
-		Model = model_split[model_split.Count() - 1];		
-		//Icon = GetIcon(Mod);
-	}
-	
 	void ~EditorPlaceableItem()
 	{
-		//EditorLog.Trace("~EditorPlaceableItem");
-		delete FullPath;
+		delete Model;
+	}
+	
+	static EditorPlaceableItem Create(CF_File p3d)
+	{
+		EditorPlaceableItem placeable_item = new EditorPlaceableItem();	
+		placeable_item.Model = p3d;
+		return placeable_item;
 	}
 	
 	// CAN RETURN NULL
-	static EditorPlaceableItem Create(string path, string type)
+	static EditorPlaceableItem Create(string config_path, string config_type)
 	{
-		if (IsForbiddenItem(type)) {
+		if (IsForbiddenItem(config_type)) {
 			return null;
 		}
 		
-		EditorPlaceableItem placeable_item = new EditorPlaceableItem(path, type);		
-		placeable_item.Init();
+		EditorPlaceableItem placeable_item = new EditorPlaceableItem();	
+		placeable_item.Path = config_path; 
+		placeable_item.Type = config_type;
 		
-		if (placeable_item && placeable_item.Category == EditorPlaceableItemCategory.UNKNOWN) {
-			// Todo: categories
-			//EditorLog.Warning(string.Format("%1 has no category!", placeable_item.Type));
-		}
-		
+		string model;
+		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", config_path, config_type), model);
+		placeable_item.Model = new CF_File(model);
+		if (!placeable_item.Model.IsValid()) {
+			return null;
+		}		
+				
 		return placeable_item;
 	}
 	
 	static EditorPlaceableItem Create(typename scripted_type)
 	{		
-		EditorPlaceableItem placeable_item = new EditorPlaceableItem("", scripted_type.ToString());		
-		placeable_item.Init(true);
-				
+		EditorPlaceableItem placeable_item = new EditorPlaceableItem();		
+		placeable_item.Type = scripted_type.ToString();
 		return placeable_item;
 	}
 	
@@ -82,38 +61,6 @@ class EditorPlaceableItem
 		vector size[2];
 		target.ClippingInfo(size);
 		return (Math.AbsFloat(size[0][0]) + Math.AbsFloat(size[1][0]) + Math.AbsFloat(size[0][1]) + Math.AbsFloat(size[1][1]) + Math.AbsFloat(size[0][2]) + Math.AbsFloat(size[1][2]) > 0);
-	}
-	
-	private ModStructure LoadModData(string type, string cfg_path)
-	{	
-		if (!LOADED_MODS) {
-			LOADED_MODS = ModLoader.GetMods();
-		}
-		
-		foreach (ModStructure mod: LOADED_MODS) {
-			string dir;
-			GetGame().ConfigGetText(string.Format("%1 dir", mod.GetModPath()), dir);			
-			if (Model.Contains(dir))
-				return mod;
-		}
-		
-		return null;
-	}
-	
-	private EditorPlaceableItemCategory LoadItemCategory()
-	{
-		string path = GetGame().ConfigPathToString(FullPath);
-		if (!LOADED_TYPES) {
-			LOADED_TYPES = GetTypes();
-		}
-		
-		foreach (string name, EditorPlaceableItemCategory category: LOADED_TYPES) {
-			if (path.Contains(name)) {
-				return category;
-			}
-		}
-
-		return -1;
 	}
 	
 	static map<string, EditorPlaceableItemCategory> GetTypes()

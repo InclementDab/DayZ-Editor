@@ -56,6 +56,7 @@ class EditorObjectManagerModule: JMModuleBase
 		config_paths.Insert(CFG_WEAPONSPATH);
 		config_paths.Insert(CFG_MAGAZINESPATH);
 		
+		// handle config objects
 		foreach (string path: config_paths) {
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
@@ -72,12 +73,32 @@ class EditorObjectManagerModule: JMModuleBase
 				m_PlaceableObjects.Insert(placeable_item); 
 				m_PlaceableObjectsByType[placeable_item.Type] = placeable_item;
 				
-				if (!m_PlaceableObjectsByP3d[placeable_item.Model]) {
-					m_PlaceableObjectsByP3d[placeable_item.Model] = new array<EditorPlaceableItem>();
+				if (!m_PlaceableObjectsByP3d[placeable_item.Model.GetFileName()]) {
+					m_PlaceableObjectsByP3d[placeable_item.Model.GetFileName()] = new array<EditorPlaceableItem>();
 				}
 				
-				m_PlaceableObjectsByP3d[placeable_item.Model].Insert(placeable_item);
+				m_PlaceableObjectsByP3d[placeable_item.Model.GetFileName()].Insert(placeable_item);
 		    }
+		}
+		
+		// handle static p3d objects
+		foreach (string file_path: EditorObject.VALID_PATHS) {
+			array<ref CF_File> files = {};
+			CF_Directory.GetFiles(file_path + "\\*", files);
+			foreach (CF_File file: files) {
+				if (file.GetExtension() != ".p3d") {
+					continue;
+				}
+				
+				EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(file);
+				m_PlaceableObjects.Insert(placeable_item_p3d);
+				
+				if (!m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()]) {
+					m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()] = new array<EditorPlaceableItem>();
+				}
+				
+				m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()].Insert(placeable_item_p3d);
+			}
 		}
 		
 		// Statics that belong to Editor / DF
