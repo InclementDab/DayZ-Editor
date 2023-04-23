@@ -15,7 +15,10 @@ class EditorWorldObject
 	
 	void ~EditorWorldObject()
 	{
+		Print(m_WorldObject);
+		Print("HI");
 		GetGame().ObjectDelete(m_WorldObject);	
+		Print(m_WorldObject);
 	}
 	
 	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)	
@@ -25,7 +28,7 @@ class EditorWorldObject
 		if (type == string.Empty) {
 			return null;
 		}
-		
+				
 		Object object;
 		if (type.Contains("\\") && ValidateObjectPath(type)) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);

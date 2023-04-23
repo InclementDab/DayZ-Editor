@@ -33,6 +33,17 @@ class EditorPlaceableItem: Managed
 		return string.Empty;
 	}
 	
+	string GetSpawnType()
+	{
+		switch (Category) {
+			case EditorPlaceableItemCategory.SCRIPTED:
+			case EditorPlaceableItemCategory.CONFIG: return Type;
+			case EditorPlaceableItemCategory.STATIC: return Model.GetFullPath();
+		}
+		
+		return string.Empty;
+	}
+	
 	static EditorPlaceableItem Create(CF_File p3d)
 	{
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();	

@@ -94,7 +94,7 @@ class EditorObject: EditorWorldObject
 		}
 		
 		m_WorldObject = m_Data.WorldObject;
-		
+				
 		// Trash the object because its uncreatable
 		if (!m_WorldObject) { 
 			EditorLog.Warning("Object failed to create: %1", m_Data.Type);
