@@ -117,25 +117,23 @@ class EditorBrush
 				continue;
 			}
 			
-			Object brushed_object = EditorWorldObject.CreateObject(object_name.Name, pos);
+			vector ori = Math3D.GetRandomDir().VectorToAngles() + Vector(0, Math.RandomFloat(-0.02, 0.02), 0);
+			Object brushed_object = EditorWorldObject.CreateObject(object_name.Name, pos, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale));
+			if (!brushed_object) {
+				continue;
+			}
 			
 			vector size = ObjectGetSize(brushed_object);
-			vector direction = Math3D.GetRandomDir();
+			
 			
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + object_name.ZOffset;
-			direction[1] = Math.RandomFloat(-0.02, 0.02);
 			
 			// just for u boba
-			brushed_object.SetScale(Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale));
-			brushed_object.SetPosition(pos);
-			brushed_object.SetDirection(direction);
-			
+			//brushed_object.SetPosition(pos);
+			//brushed_object.SetDirection(direction);
 			created_data.Insert(EditorObjectData.Create(brushed_object, flags));
-			
 		}
-		
-		
-		
+	
 		GetEditor().CreateObjects(created_data, true);
 	}
 	

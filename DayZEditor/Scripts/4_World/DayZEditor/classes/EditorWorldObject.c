@@ -25,9 +25,9 @@ class EditorWorldObject
 		if (type == string.Empty) {
 			return null;
 		}
-				
+		
 		Object object;
-		if (type.Contains("\\") && ValidateObjectPath(type)) {
+		if (type.Contains("\\")) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);
 		} else {
 			object = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);
@@ -53,16 +53,5 @@ class EditorWorldObject
 		object.SetScale(scale);
 		object.Update();		
 		return object;
-	}
-	
-	static bool ValidateObjectPath(string path)
-	{
-		foreach (string p: VALID_PATHS) {
-			if (path.Contains(p)) {
-				return true;
-			}
-		}
-		
-		return false;
 	}
 }

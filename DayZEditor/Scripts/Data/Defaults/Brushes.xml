@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <BrushTypes>
 	<Brush name="Betula Pendula">
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_1f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_1fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_1s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_2f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_2fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_2fc.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_2s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_2w.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_3f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_3fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_3fc.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_BetulaPendula_3s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_1f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_1fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_1s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_2f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_2fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_2fc.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_2s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_2w.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_3f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_3fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_3fc.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_BetulaPendula_3s.p3d" frequency="1.0" zoffset="-2"/>
 	</Brush>
 
 	<Brush name="Fagus Sylvatica">
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_1f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_1fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_1fc.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_1fd.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_1s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_2d.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_2f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_2fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_2s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_2sb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_3d.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_3f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_3fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_FagusSylvatica_3f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_1f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_1fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_1fc.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_1fd.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_1s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_2d.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_2f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_2fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_2s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_2sb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_3d.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_3f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_3fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_FagusSylvatica_3f.p3d" frequency="1.0" zoffset="-2"/>
 	</Brush>
 
 	<Brush name="Larix Decidua">
-		<BrushObject type="DZ\\plants\\tree\\t_LarixDecidua_1f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_LarixDecidua_1s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_LarixDecidua_2f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_LarixDecidua_2s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_LarixDecidua_3f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_LarixDecidua_3fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_LarixDecidua_1f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_LarixDecidua_1s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_LarixDecidua_2f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_LarixDecidua_2s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_LarixDecidua_3f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_LarixDecidua_3fb.p3d" frequency="1.0" zoffset="-2"/>
 	</Brush>
 
 	<Brush name="Picea Abies">
-		<BrushObject type="DZ\\plants\\tree\\t_PiceaAbies_1f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PiceaAbies_1s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PiceaAbies_1sb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PiceaAbies_2d.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PiceaAbies_2f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PiceaAbies_2fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PiceaAbies_2s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PiceaAbies_3d.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PiceaAbies_3f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PiceaAbies_3s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PiceaAbies_1f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PiceaAbies_1s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PiceaAbies_1sb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PiceaAbies_2d.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PiceaAbies_2f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PiceaAbies_2fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PiceaAbies_2s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PiceaAbies_3d.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PiceaAbies_3f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PiceaAbies_3s.p3d" frequency="1.0" zoffset="-2"/>
 	</Brush>
 
 	<Brush name="Pinus Sylvestris">
-		<BrushObject type="DZ\\plants\\tree\\t_PinusSylvestris_1f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PinusSylvestris_1s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PinusSylvestris_2f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PinusSylvestris_2fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PinusSylvestris_2s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PinusSylvestris_2sb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PinusSylvestris_3d.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PinusSylvestris_3fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PinusSylvestris_3fc.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_PinusSylvestris_3s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PinusSylvestris_1f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PinusSylvestris_1s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PinusSylvestris_2f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PinusSylvestris_2fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PinusSylvestris_2s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PinusSylvestris_2sb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PinusSylvestris_3d.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PinusSylvestris_3fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PinusSylvestris_3fc.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_PinusSylvestris_3s.p3d" frequency="1.0" zoffset="-2"/>
 	</Brush>
 
 	<Brush name="Quercus Robur">
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_1f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_1fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_1fc.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_1fd.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_1s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_2d.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_2f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_2fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_2fc.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_2s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_2sb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_2sc.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_3d.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_3f.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_3fb.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_3s.p3d" frequency="1.0" zoffset="-2"/>
-		<BrushObject type="DZ\\plants\\tree\\t_quercusRobur_3sb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_1f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_1fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_1fc.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_1fd.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_1s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_2d.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_2f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_2fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_2fc.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_2s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_2sb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_2sc.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_3d.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_3f.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_3fb.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_3s.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants/tree/t_quercusRobur_3sb.p3d" frequency="1.0" zoffset="-2"/>
 	</Brush>
 
 	<!-- Delete Brush is handled in Code -->

@@ -12,6 +12,7 @@ class EditorBrushData
 		// directly check for p3d in files
 		if (!FileExist(placeable_object.Name)) {
 			EditorLog.Warning("BrushObject %1 is not a valid p3d", placeable_object.Name);
+			return false;
 		}
 		
 		PlaceableObjectTypes.Insert(placeable_object);
