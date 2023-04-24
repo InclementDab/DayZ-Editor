@@ -12,7 +12,6 @@ class EditorBrush
 
 	private void EditorBrush(EditorBrushData settings = null)
 	{
-		EditorLog.Trace("EditorBrush");
 		m_BrushData = settings;
 		m_BrushDecal = EntityAI.Cast(GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_NONE));
 		m_EditorSettings = GetEditor().Settings;
@@ -20,8 +19,7 @@ class EditorBrush
 	}
 
 	void ~EditorBrush()
-	{
-		EditorLog.Trace("~EditorBrush");		
+	{	
 		GetGame().ObjectDelete(m_BrushDecal);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(UpdateBrush);
 	}
