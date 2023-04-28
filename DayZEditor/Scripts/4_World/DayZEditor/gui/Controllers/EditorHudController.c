@@ -146,7 +146,10 @@ class EditorHudController: EditorControllerBase
 		
 		// Just a quickset on the color
 		PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
-		DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
+		DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));		
+		
+		LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
+		LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
 #endif
 		
 		EditorHudToolbarView = new EditorHudToolbar();
