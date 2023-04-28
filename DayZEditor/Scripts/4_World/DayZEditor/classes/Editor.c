@@ -45,7 +45,7 @@ class EditorHandData
 
 typedef map<ref EditorWorldObject, ref EditorHandData> EditorHandMap;
 
-class Editor
+class Editor: Managed
 {
 	/* Private Members */
 	protected Mission m_Mission;
@@ -137,12 +137,7 @@ class Editor
 		return;
 #endif
 		
-		if (g_Game.IsMultiplayer()) {
-			GetGame().DisconnectSessionForce();
-			GetGame().GetUIManager().ShowDialog("Editor Error!", "You cannot run the DayZ Editor in a multiplayer environment. Launch the tool via the \"Open Editor\" button on the main menu!", 1, DBT_OK, DBB_OK, DMT_EXCLAMATION, null);
-			delete g_Editor;
-			return;
-		}
+		
 		
 		
 		// Player god mode
