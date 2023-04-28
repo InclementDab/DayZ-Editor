@@ -12,7 +12,7 @@ class CfgPatches
 
 class CfgMods
 {
-	class DZ_Editor
+	class DayZEditor
 	{
 		name = "DayZ Editor";
 		version = "1.2";
