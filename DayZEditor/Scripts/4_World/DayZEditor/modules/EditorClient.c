@@ -116,15 +116,6 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnMissionStart");
 		
 		g_Game.ReportProgress("Loading Mission");
-		vector center_pos = Editor.GetMapCenterPosition();
-		PlayerBase player = Editor.CreateDefaultCharacter(Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
-		if (!player) {
-			g_Game.ReportProgress("Failed to create player, contact InclementDab");
-			Error("Player was not created, exiting");
-			return;
-		}
-		
-		GetGame().SelectPlayer(null, player);
 	}
 	
 	override void OnMissionFinish()
@@ -139,6 +130,13 @@ class EditorClientModule: JMModuleBase
 		
 		g_Game.ReportProgress("Mission Loaded");
 		
+		vector center_pos = Editor.GetMapCenterPosition();
+		PlayerBase player = Editor.CreateDefaultCharacter(GetGame().CreateRandomPlayer(), Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
+		if (!player) {
+			Error("Player was not created, exiting");
+			return;
+		}
+
 		// Check if COM is running, because that means theres crackheads afoot!
 		string com_check = "CommunityOfflineClient";
 		if (com_check.ToType()) {
@@ -148,7 +146,7 @@ class EditorClientModule: JMModuleBase
 		}
 		
 		EditorLog.Info("Loading Offline Editor...");
-		m_Editor = Editor.Create(PlayerBase.Cast(GetGame().GetPlayer()));
+		m_Editor = Editor.Create(player);
 		m_Editor.SetActive(true);
 	}
 	

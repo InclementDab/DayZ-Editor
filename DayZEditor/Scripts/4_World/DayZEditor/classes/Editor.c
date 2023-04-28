@@ -680,6 +680,10 @@ class Editor: Managed
 		if (m_EditorCamera) {
 			m_EditorCamera.LookEnabled = m_Active;
 			m_EditorCamera.MoveEnabled = m_Active;
+			if (m_Active) {
+				GetGame().SelectPlayer(null, null);
+			}
+			
 			m_EditorCamera.SetActive(m_Active);
 		}
 		
@@ -1366,14 +1370,21 @@ class Editor: Managed
 		return pos;
 	}
 		
-	static PlayerBase CreateDefaultCharacter(vector position = "0 0 0")
+	static PlayerBase CreateDefaultCharacter(string type, vector position)
 	{
 		EditorLog.Trace("Editor::CreateDefaultCharacter");
 		if (GetGame().GetPlayer()) {
 			return PlayerBase.Cast(GetGame().GetPlayer());
 		} 
 
-		PlayerBase player = PlayerBase.Cast(GetGame().CreateObject(GetGame().CreateRandomPlayer(), position));
+		PlayerBase player = PlayerBase.Cast(GetGame().CreatePlayer(null, type, position, 0, string.Empty));
+		if (!player) {
+			EditorLog.Error("Failed to create new player, type %1", type);
+			return null;
+		}
+
+		player.SetPosition(position);
+		player.Update();
 		if (GetCurrentHoliday() == EditorHoliday.CHRISTMAS) {
 			player.GetInventory().CreateAttachment("SantasHat");
 			player.GetInventory().CreateAttachment("SantasBeard");
