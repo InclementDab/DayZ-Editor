@@ -813,7 +813,7 @@ class EditorObject: EditorWorldObject
 		
 		if (m_WorldObject && m_WorldObject.IsMan()) {
 			PlayerBase pb = PlayerBase.Cast(m_WorldObject);
-			GetGame().SelectPlayer(pb.GetIdentity(), pb);
+			GetGame().SelectPlayer(null, pb);
 			pb.DisableSimulation(!Control);
 			GetEditor().GetEditorHud().Show(!Control);
 		}
