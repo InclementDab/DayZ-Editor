@@ -127,16 +127,23 @@ class Editor
 
 		g_Editor = this;
 		m_Player = player;
+
+#ifdef SERVER
+		for (int i = 0; i < 100; i++) {
+            Print("[EDITOR][ERROR] SERVER ADMINISTRATOR ERROR! DAYZ EDITOR SHOULD NOT BE LOADED ON THE SERVER!");
+		}
 		
-		if (g_Game.IsDedicatedServer()) {
-			for (int i = 0; i < 100; i++) {
-                Print("[EDITOR][ERROR] SERVER ADMINISTRATOR ERROR! DAYZ EDITOR SHOULD NOT BE LOADED ON THE SERVER!");
-			}
-			
-			g_Game.RequestExit(-1);
-			delete this;
+		delete g_Editor;
+		return;
+#endif
+		
+		if (g_Game.IsMultiplayer()) {
+			GetGame().DisconnectSessionForce();
+			GetGame().GetUIManager().ShowDialog("Editor Error!", "You cannot run the DayZ Editor in a multiplayer environment. Launch the tool via the \"Open Editor\" button on the main menu!", 1, DBT_OK, DBB_OK, DMT_EXCLAMATION, null);
+			delete g_Editor;
 			return;
 		}
+		
 		
 		// Player god mode
 		m_Player.SetAllowDamage(false);
@@ -697,13 +704,13 @@ class Editor
 				editor_object.HideBoundingBox();
 			}
 		}	
-		
+				
 		if (!m_Active) {
 			GetGame().SelectPlayer(null, m_Player);
 		}
 		
 		// handles player death
-		if (m_Player) {
+		if (m_Player) {			
 			m_Player.DisableSimulation(m_Active);
 			m_Player.GetInputController().SetDisabled(m_Active);
 		}
