@@ -9,7 +9,7 @@ class EditorCameraMapMarker: EditorMarker
 		m_EditorMap = GetEditor().GetEditorHud().EditorMapWidget;
 	}
 	
-	override void Update()
+	override void Update(float dt)
 	{
 		if (!m_EditorMap || !m_EditorMap.IsVisible()) {
 			Show(false);

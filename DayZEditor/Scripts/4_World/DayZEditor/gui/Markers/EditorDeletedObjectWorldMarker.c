@@ -13,7 +13,7 @@ class EditorDeletedObjectWorldMarker: EditorMarker
 		SetColor(LIST_ITEM_COLOR_ON_DELETED);
 	}
 	
-	override void Update()
+	override void Update(float dt)
 	{
 		if (!m_LayoutRoot) {
 			return;

@@ -65,8 +65,8 @@ class Editor: Managed
 	
 	// public properties
 	ref EditorCommandManager 					CommandManager;
-	ref EditorSettings 							Settings;
-	EditorStatistics							Statistics;
+	EditorSettings Settings 	= EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
+	EditorStatistics Statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
 	
 	// protected Editor Members
 	protected ref EditorHud							m_EditorHud;
@@ -146,12 +146,7 @@ class Editor: Managed
 		// Initialize the profiles/editor directory;		
 		MakeDirectory(ROOT_DIRECTORY);
 		
-		// Init Settings
-		Settings 			= new EditorSettings();
-		Settings.Load();
-		
 		// Init Statistics
-		Statistics			= EditorStatistics.GetInstance();
 		m_StatisticsSaveTimer.Run(10.0, this, "OnStatisticsSave", null, true);
 								
 		// Camera Init
@@ -233,7 +228,6 @@ class Editor: Managed
 		Settings.Save();
 		Statistics.Save();
 		
-		delete Settings;
 		delete m_EditorHud;
 		delete m_EditorInventoryEditorHud;
 		delete m_EditorBrush;

@@ -19,6 +19,8 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		//m_Camera.LerpToPosition(target_pos, 1.0);
 		m_Camera.SetPosition(target_pos);
 		m_Camera.Update();
+		GetGame().SelectPlayer(null, null);
+
 		m_Camera.SetActive(true);
 		
 		m_TemplateController.SetEntity(m_Entity);

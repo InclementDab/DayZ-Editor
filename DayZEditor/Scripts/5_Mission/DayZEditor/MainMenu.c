@@ -140,17 +140,9 @@ modded class MainMenu
 		
 		return super.OnClick(w, x, y, button);
 	}
-	
-	override void OnChangeCharacter(bool create_character = true)
-	{
-		super.OnChangeCharacter(create_character);
-		m_EditorMainMenuStats.UpdateStats();
-	}
-	
+		
 	override void OpenMenuServerBrowser()
 	{
-		GetGame().OpenURL("paypal.com/donate/?business=YPCJSENU7QZTA&currency_code=USD");
+		GetGame().OpenURL("dab.dev/donate");
 	}
-	
-	
 }

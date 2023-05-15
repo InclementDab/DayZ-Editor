@@ -1,3 +1,4 @@
+[RegisterProfileSetting(EditorSettings)]
 class EditorSettings: ProfileSettings
 {	
 	// General Settings
@@ -74,7 +75,7 @@ class EditorSettings: ProfileSettings
 				foreach (int id, EditorObject editor_object: editor_objects) {
 					EditorObjectMarker marker = editor_object.GetMarker();
 					if (marker) {
-						marker.Update();
+						//marker.Update();
 					}
 				}
 				

@@ -19,7 +19,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		m_Show = !state;
 	}
 	
-	override void Update()
+	override void Update(float dt)
 	{
 		vector position = GetPosition();	
 		float distance = vector.Distance(GetGame().GetCurrentCameraPosition(), position);

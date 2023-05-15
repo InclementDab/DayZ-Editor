@@ -15,7 +15,6 @@ class EditorCamera: Camera
 	static const float TELEPORT_LERP_DISTANCE = 1000;
 	
 	protected EditorCameraLight m_EditorCameraLight;
-	protected EditorStatistics m_Statistics = EditorStatistics.GetInstance();
 	
 	float FOV = 1;
 	float DOFDistance;
@@ -216,7 +215,7 @@ class EditorCamera: Camera
 		}
 				
 		SetTransform(transform);
-		m_Statistics.EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km
+		GetEditor().Statistics.EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km
 		
 		if (HideCursorOnDrag) {
 			if (input.LocalPress("UATempRaiseWeapon")) {

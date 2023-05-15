@@ -10,7 +10,7 @@ class EditorObjectMapMarker: EditorObjectMarker
 		GetLayoutRoot().SetSort(101);
 	}
 	
-	override void Update()
+	override void Update(float dt)
 	{
 		if (!m_EditorMap || !m_EditorMap.IsVisible()) { 
 			return;
@@ -18,6 +18,6 @@ class EditorObjectMapMarker: EditorObjectMarker
 		
 		vector position = m_EditorMap.MapToScreen(m_EditorObject.GetPosition());
 		SetPos(position[0], position[1]);
-		super.Update();
+		super.Update(dt);
 	}
 }

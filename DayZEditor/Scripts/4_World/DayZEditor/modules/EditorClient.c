@@ -168,7 +168,12 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnEditorToggleActive");
 				
 		bool active = m_Editor.IsActive(); // weird syntax bug?
+		if (active) {
+			GetGame().SelectPlayer(null, null);
+		}
+		
 		m_Editor.SetActive(!active);
+
 	}	
 	
 	private void OnEditorToggleCursor(UAInput input)
