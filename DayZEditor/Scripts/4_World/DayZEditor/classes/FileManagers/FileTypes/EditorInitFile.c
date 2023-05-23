@@ -14,10 +14,10 @@ class EditorInitFile: EditorFileType
 		
 		EditorSaveData save_data = new EditorSaveData();
 		string file_contents;
-		int read_size = 2048;
+		int read_size = FILE_READ_SIZE;
 		while (read_size > 0) {
 			string read_contents;
-			read_size = ReadFile(handle, read_contents, 2048);
+			read_size = ReadFile(handle, read_contents, FILE_READ_SIZE);
 			file_contents += read_contents;
 		}
 		
