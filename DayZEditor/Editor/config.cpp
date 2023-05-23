@@ -67,20 +67,20 @@ class CfgVehicles
 	class Inventory_Base;
 	class GizmoBase: Inventory_Base
 	{
-		scope = 1;
+		scope = 0;
 		hiddenSelections[] = {"main"};
 		shadow = 0;
 	};
 	class GizmoArrow: GizmoBase
 	{
-		scope = 2;
+		scope = 0;
 		model = "\DayZEditor\Editor\TranslationWidget.p3d";
 		shadow = 0;
 	};
 
 	class GizmoCenter: GizmoBase
 	{
-		scope = 2;
+		scope = 0;
 		model = "\DayZEditor\Editor\TranslationCenter.p3d";
 		shadow = 0;
 	};
