@@ -72,7 +72,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		EditorLog.Trace("EditorHud::CreateNotification");
 		
 		EditorNotification notification = new EditorNotification(text, color);
-		notification.SetParent(NotificationFrame);
+		
 		notification.Play(duration);
 	}
 	
