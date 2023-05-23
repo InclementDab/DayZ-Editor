@@ -1,5 +1,7 @@
 class EditorInitFile: EditorFileType
 {
+	static const int FILE_READ_SIZE = 2048;
+	
 	override EditorSaveData Import(string file, ImportSettings settings)
 	{
 		EditorLog.Trace("EditorInitFile::Import");
@@ -11,10 +13,17 @@ class EditorInitFile: EditorFileType
 		}
 		
 		EditorSaveData save_data = new EditorSaveData();
-	
-        string line;
-        int line_size = FGets(handle, line);
-		while (line_size >= 1) {
+		string file_contents;
+		int read_size = 2048;
+		while (read_size > 0) {
+			string read_contents;
+			read_size = ReadFile(handle, read_contents, 2048);
+			file_contents += read_contents;
+		}
+		
+		array<string> file_contents_split = {};
+		file_contents.Split("\n", file_contents_split);
+		foreach (string line: file_contents_split) {
 
 			// Bit of a hacky way of doing this
 			// Other idea is to actually run the 'main' script and then enumerate all the spawned objects,
@@ -40,13 +49,9 @@ class EditorInitFile: EditorFileType
 				if (tokens.Count() > 6) {
 					scale = tokens[7].ToFloat();
 				}
-				
-				Print(scale);
-				
+								
 				save_data.EditorObjects.Insert(EditorObjectData.Create(tokens[1], tokens[3].ToVector(), tokens[5].ToVector(), 1, EditorObjectFlags.ALL));
 			}
-			
-			line_size = FGets(handle, line);
 		}        
 
 		CloseFile(handle);

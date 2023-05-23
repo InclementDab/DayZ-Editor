@@ -45,3 +45,14 @@ class LaunchBuildServer: DayZProjectManager
 		RunDayZBat(string.Format("P:\\%1\\Workbench\\Batchfiles\\LaunchLocalMP.bat", ModName));
 	}
 }
+
+
+[WorkbenchPluginAttribute("Kill DayZ", "Kills DayZ", "F10", "", {"ResourceManager", "ScriptEditor"})]
+class KillDayZTool: DayZProjectManager
+{
+	override void Run()
+	{
+		RunDayZBat(string.Format("P:\\%1\\Workbench\\Batchfiles\\Exit.bat", ModName), true);
+	}
+}
+
