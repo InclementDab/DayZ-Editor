@@ -11,11 +11,11 @@ ButtonWidgetClass EditorMarkerColor {
  vexactsize 1
  draggable 0
  scriptclass "ViewBinding"
- style Alpha70
+ style Colorable
  {
   PanelWidgetClass EditorMarkerOutlineColor {
    ignorepointer 1
-   color 1 1 1 0.9961
+   color 0.0588 0.0588 0.0588 1
    position 0 0
    size 1 1
    hexactpos 1
