@@ -56,4 +56,9 @@ class EditorDialogCategoryBase: DialogCategoryBase
 		super.OnClick(w, x, y, button);
 		return true; // Dialogs should consume the event whenever you click within
 	}
+	
+	override string GetLayoutFile() 
+	{
+		return "DayZEditor/gui/Layouts/dialogs/DialogCategoryBase.layout";
+	}
 }

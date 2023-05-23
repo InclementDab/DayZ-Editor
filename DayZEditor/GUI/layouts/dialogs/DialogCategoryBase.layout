@@ -1,0 +1,271 @@
+WrapSpacerWidgetClass CategorizedDialog {
+ color 0.0588 0.0588 0.0588 1
+ position 0 0
+ size 695 400
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ priority 998
+ style Colorable
+ Padding 1
+ Margin 0
+ "Size To Content V" 1
+ {
+  FrameWidgetClass WindowDragWrapper {
+   ignorepointer 0
+   size 1 26
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   draggable 1
+   {
+    PanelWidgetClass TitleBar {
+     ignorepointer 1
+     color 0.4196 0.6471 1 0.9412
+     position 0 0
+     size 1 26
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      ImageWidgetClass TitleIcon {
+       visible 0
+       ignorepointer 1
+       position 5 0
+       size 16 16
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       mode additive
+       "src alpha" 1
+       filter 1
+       {
+        ScriptParamsClass {
+         Binding_Name "Icon"
+        }
+       }
+      }
+      PanelWidgetClass TitleBarClosePanel {
+       ignorepointer 1
+       color 0.7843 0.2941 0.2745 1
+       position 2 2
+       size 22 22
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        ButtonWidgetClass TitleClose {
+         visible 1
+         ignorepointer 0
+         color 0.6667 0.6667 0.6667 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         priority 5
+         scriptclass "ViewBinding"
+         style Default
+         text "X"
+         font "gui/fonts/Metron-Bold"
+         {
+          ScriptParamsClass {
+           Relay_Command "ExitDialogExecute"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    TextWidgetClass TitleBarText {
+     ignorepointer 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scriptclass "ViewBinding"
+     text "Title"
+     font "gui/fonts/Metron"
+     "text halign" center
+     "text valign" center
+     {
+      ScriptParamsClass {
+       Binding_Name "Title"
+      }
+     }
+    }
+   }
+  }
+  FrameWidgetClass SpacerTitlebarContentPanel {
+   ignorepointer 1
+   size 1 10
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+  }
+  PanelWidgetClass SpacerLeftPanel {
+   ignorepointer 1
+   position 6 10
+   size 5 345
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style blank
+  }
+  PanelWidgetClass ListPanel {
+   visible 1
+   ignorepointer 1
+   color 0.3137 0.3137 0.3137 1
+   size 180 395
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style Outline_1px
+   {
+    ScrollWidgetClass ListPanelScrollbar {
+     ignorepointer 0
+     position 1 0
+     size 185 395
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     "Scrollbar V" 1
+     {
+      WrapSpacerWidgetClass LeftListPanelContent {
+       ignorepointer 0
+       color 0.1961 0.1961 0.1961 0
+       position 0 0
+       size 1 0
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       Margin 0
+       "Size To Content V" 1
+       {
+        ScriptParamsClass {
+         Binding_Name "DialogCategoryData"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass SpacerPanelTransparent {
+   ignorepointer 1
+   size 5 400
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style blank
+  }
+  PanelWidgetClass ItemContentPanel {
+   ignorepointer 1
+   color 1 1 1 0.3922
+   position 0 0
+   size 495 395
+   halign right_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style blank
+   {
+    ScrollWidgetClass ItemContentScrollbar {
+     ignorepointer 0
+     size 500 395
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     "Scrollbar V" 1
+     {
+      WrapSpacerWidgetClass ItemContent {
+       ignorepointer 1
+       size 1 0
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       Margin 0
+       "Size To Content V" 1
+       {
+        ScriptParamsClass {
+         Binding_Name "DialogContentData"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  WrapSpacerWidgetClass CategorizedDialogButtons {
+   ignorepointer 1
+   color 0.7059 0.7059 0.7059 1
+   position 0 0
+   size 1 60
+   halign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 1
+   scaled 1
+   priority 3
+   scriptclass "ViewBinding"
+   style Empty
+   Padding 5
+   Margin 0
+   content_halign center
+   content_valign center
+   {
+    ScriptParamsClass {
+     Binding_Name "DialogButtonData"
+    }
+   }
+  }
+  PanelWidgetClass ContentButtonSpacer {
+   ignorepointer 1
+   color 0.7059 0.7059 0.7059 0.9412
+   size 695 1
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style rover_sim_colorable
+  }
+ }
+}
