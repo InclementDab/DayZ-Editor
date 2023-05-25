@@ -1,8 +1,5 @@
 @echo off
 
-echo Deploying to Release. Are you sure?
-pause
-
 set c=%CD%
 
 cd DayZEditor/Scripts/Data

@@ -42,6 +42,15 @@ class EditorHudToolbarController: EditorControllerBase
 		
 #ifndef COMPONENT_SYSTEM
 		// Load Brushes		
+		
+		string brush_file = m_Editor.Settings.EditorBrushFile;
+		if (brush_file.Contains("'")) {
+			// bi wtf
+			brush_file.Replace("'", "");
+			m_Editor.Settings.EditorBrushFile = brush_file;
+			m_Editor.Settings.Save();
+		}
+		
 		if (!FileExist(m_Editor.Settings.EditorBrushFile)) {
 			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", m_Editor.Settings.EditorBrushFile)) {
 				EditorLog.Error("Could not copy brush data to %1", m_Editor.Settings.EditorBrushFile);

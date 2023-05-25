@@ -154,12 +154,12 @@ class EditorClientModule: JMModuleBase
 	private bool ShouldProcessInput(UAInput input)
 	{
 		// Check if LocalPress, Check if LControl is pressed, Check if game is focused
-		return (m_Editor && input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
+		return (m_Editor && input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget));
 	}
 	
 	private bool ShouldProcessQuickInput(UAInput input)
 	{
-		return (m_Editor && input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus());
+		return (m_Editor && input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget));
 	}
 	
 	private void OnEditorToggleActive(UAInput input)

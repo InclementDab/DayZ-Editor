@@ -136,10 +136,7 @@ class Editor: Managed
 		delete g_Editor;
 		return;
 #endif
-		
-		
-		
-		
+				
 		// Player god mode
 		m_Player.SetAllowDamage(false);
 
@@ -628,19 +625,23 @@ class Editor: Managed
 			return false;
 		}
 		
-		Widget focus = GetFocus();
-		if (focus && focus.IsInherited(EditBoxWidget)) {
+		if (!GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD)) {
 			return false;
 		}
 		
+		Widget focus = GetFocus();
+		if (focus && focus.IsInherited(EditBoxWidget)) {
+			return true;
+		}
+		
 		if (m_CurrentKeys.Find(key) != -1) {
-			return false;
+			return true;
 		}
 		
 		m_CurrentKeys.Insert(key);
 		EditorCommand command = CommandManager.GetCommandFromShortcut(m_CurrentKeys.GetMask());
 		if (!command) {
-			return false;
+			return true;
 		}
 		
 		if (!command.CanExecute()) {
