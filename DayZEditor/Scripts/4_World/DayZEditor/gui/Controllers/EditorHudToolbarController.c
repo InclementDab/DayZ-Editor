@@ -47,6 +47,7 @@ class EditorHudToolbarController: EditorControllerBase
 		if (brush_file.Contains("'")) {
 			// bi wtf
 			brush_file.Replace("'", "");
+			brush_file.Replace("\"", "");
 			m_Editor.Settings.EditorBrushFile = brush_file;
 			m_Editor.Settings.Save();
 		}

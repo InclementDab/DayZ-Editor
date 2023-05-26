@@ -130,6 +130,10 @@ class EditorCamera: Camera
 		original_position_unchanged = transform[3];
 
 		Input input = GetGame().GetInput();
+		if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
+			return;
+		}
+		
 		if (!KeyState(KeyCode.KC_LCONTROL)) {
 			float forward = input.LocalValue("EditorCameraForward") - input.LocalValue("EditorCameraBack");
 			float strafe = input.LocalValue("EditorCameraRight") - input.LocalValue("EditorCameraLeft");
@@ -141,7 +145,7 @@ class EditorCamera: Camera
 		float zoomAmt = input.LocalValue("EditorCameraZoomIn") - input.LocalValue("EditorCameraZoomOut");
 		
 		if (KeyState(KeyCode.KC_C)) { //C = CameraSpeed modifier
-		float speedInc = 0;
+			float speedInc = 0;
 			
 			if (input.LocalValue("EditorCameraToolSpeedIncrease" )) {
 				speedInc = input.LocalValue("EditorCameraToolSpeedIncrease") * 0 + 10;
