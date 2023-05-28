@@ -64,9 +64,9 @@ class EditorCameraDialog: EditorDialogBase
 		m_EditorCamera.FOV = 1;
 		m_EditorCamera.NearPlane = 0;
 		
-		m_EditorCamera.PropertyChanged(this, "Blur");
-		m_EditorCamera.PropertyChanged(this, "FOV");
-		m_EditorCamera.PropertyChanged(this, "NearPlane");
+		m_EditorCamera.PropertyChanged("Blur");
+		m_EditorCamera.PropertyChanged("FOV");
+		m_EditorCamera.PropertyChanged("NearPlane");
 		
 		PPEffects.ResetAll();
 	}

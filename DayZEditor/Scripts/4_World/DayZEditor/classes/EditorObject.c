@@ -180,10 +180,10 @@ class EditorObject: EditorWorldObject
 		
 		// This is deliberately split due to issues with null errors, but i have to assign
 		// Locked higher up or it gets set to 0 always. this is a mess, please fix
-		PropertyChanged(this, "Locked");
-		PropertyChanged(this, "Simulate");
-		PropertyChanged(this, "EditorOnly");
-		PropertyChanged(this, "AllowDamage");
+		PropertyChanged("Locked");
+		PropertyChanged("Simulate");
+		PropertyChanged("EditorOnly");
+		PropertyChanged("AllowDamage");
 		
 		// Load animations
 		array<string> paths = {
@@ -363,7 +363,7 @@ class EditorObject: EditorWorldObject
 	}
 	
 	// EditorObjects can also be psuedo-controllers
-	void PropertyChanged(Class source, string property_name)
+	void PropertyChanged(string property_name)
 	{
 		//EditorLog.Trace("EditorObject::PropertyChanged %1", property_name);
 		switch (property_name) {
@@ -653,6 +653,19 @@ class EditorObject: EditorWorldObject
 	float GetYDistance()
 	{
 		return ((GetPosition() - m_BasePoint.GetPosition())[1]);
+	}
+	
+	float GetAngle()
+	{	
+		vector orientation = GetOrientation();
+		float a;
+		if (orientation[1] <= -90) {
+			a = -orientation[1] - 270;
+		} else {
+			a = 90 - orientation[1];
+		}
+		
+		return a;
 	}
 	
 	vector GetTopCenter()

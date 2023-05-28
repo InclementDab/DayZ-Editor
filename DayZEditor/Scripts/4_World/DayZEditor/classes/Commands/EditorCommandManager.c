@@ -91,6 +91,7 @@ class EditorCommandManager
 		RegisterCommand(EditorSnapToSurfaceCommand);
 		RegisterCommand(EditorControlPlayerCommand);
 		RegisterCommand(EditorEditInventoryCommand);
+		RegisterCommand(EditorExportEventPos);
 		RegisterCommand(EditorObjectPropertiesCommand);
 		RegisterCommand(EditorShowCommand);
 		RegisterCommand(EditorHideCommand);

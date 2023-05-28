@@ -262,7 +262,7 @@ class EditorClientModule: JMModuleBase
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		foreach (int id, EditorObject editor_object: selected_objects) {
 			editor_object.Position = relative_position + editor_object.GetPosition();
-			editor_object.PropertyChanged(this, "Position");
+			editor_object.PropertyChanged("Position");
 		}
 	}
 	
@@ -477,7 +477,7 @@ class EditorClientModule: JMModuleBase
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		foreach (int id, EditorObject editor_object: selected_objects) {
 			editor_object.Scale += value;
-			editor_object.PropertyChanged(this, "Scale");
+			editor_object.PropertyChanged("Scale");
 		}
 	}
 	
@@ -493,7 +493,7 @@ class EditorClientModule: JMModuleBase
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		foreach (int id, EditorObject editor_object: selected_objects) {
 			editor_object.Scale -= value;
-			editor_object.PropertyChanged(this, "Scale");
+			editor_object.PropertyChanged("Scale");
 		}
 	}
 }

@@ -39,6 +39,9 @@ class EditorPlacedContextMenu: EditorContextMenu
 		
 		AddMenuDivider();		
 		AddMenuButton(m_Editor.CommandManager[EditorDuplicateCommand]);
+		
+		m_Editor.CommandManager[EditorExportEventPos].SetData(new Param1<EntityAI>(EntityAI.Cast(context.GetWorldObject())));
+		AddMenuButton(m_Editor.CommandManager[EditorExportEventPos]);
 		AddMenuButton(m_Editor.CommandManager[EditorObjectPropertiesCommand]);
 	}
 }

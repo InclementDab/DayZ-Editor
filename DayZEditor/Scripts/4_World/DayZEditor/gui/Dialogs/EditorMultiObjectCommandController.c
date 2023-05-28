@@ -43,7 +43,7 @@ class EditorMultiObjectCommandController
 	bool Collision = true;
 	bool EditorOnly = false;
 	
-	void PropertyChanged(Class source, string property_name)
+	void PropertyChanged(string property_name)
 	{		
 		foreach (EditorObject editor_object: m_EditorObjects) {
 			switch (property_name) {
@@ -136,7 +136,7 @@ class EditorMultiObjectCommandController
 				}
 			}
 			
-			editor_object.PropertyChanged(source, property_name);
+			editor_object.PropertyChanged(property_name);
 		}
 		
 		DeltaPosition = Position;

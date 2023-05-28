@@ -62,7 +62,7 @@ class EditorEnvironmentDialog: EditorDialogBase
 		
 	int LightingConfig;
 		
-	void PropertyChanged(Class source, string property_name)
+	void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
 						
