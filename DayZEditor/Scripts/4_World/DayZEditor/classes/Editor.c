@@ -487,7 +487,6 @@ class Editor: Managed
 				if (!GetCurrentControlCamera()) {
 					ControlCamera();
 				} else {
-					
 					// if player doesnt exist yet, create one
 					if (!PlayerBase.s_LastControlledPlayer) {
 						vector player_position;
@@ -503,6 +502,11 @@ class Editor: Managed
 				}
 			}
 		}
+	}
+	
+	bool ShouldProcessInput()
+	{
+		return (!GetDayZGame().IsLeftCtrlDown() && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget));
 	}
 	
 	bool DoCursorRaycast(out vector position, float max_distance = 3000, Object ignore_object = null)

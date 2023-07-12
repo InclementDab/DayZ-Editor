@@ -1,5 +1,14 @@
 modded class MissionGameplay
 {	
+	override void OnUpdate(float timeslice)
+	{
+		super.OnUpdate(timeslice);
+		
+		if (g_Editor && g_Editor.ShouldProcessInput()) {
+			g_Editor.ProcessInput(GetGame().GetInput());
+		}
+	}
+	
 	override void OnInit()
 	{
 		super.OnInit();

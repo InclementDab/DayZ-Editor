@@ -48,21 +48,9 @@ class EditorClientModule: JMModuleBase
 		return false;
 	}	
 	
-	// Inputs
-	private bool ShouldProcessInput(UAInput input)
-	{
-		// Check if LocalPress, Check if LControl is pressed, Check if game is focused
-		return (m_Editor && input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget));
-	}
-	
-	private bool ShouldProcessQuickInput(UAInput input)
-	{
-		return (m_Editor && input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget));
-	}
-		
 	private void OnEditorDeleteObject(UAInput input)
 	{
-		if (!ShouldProcessInput(input)) return;
+		if (!m_Editor.ShouldProcessInput()) return;
 		EditorLog.Trace("Editor::OnEditorDeleteObject");
 		
 		EditorDeleteCommand command();
@@ -107,7 +95,7 @@ class EditorClientModule: JMModuleBase
 			}
 		}
 		
-		if (!ShouldProcessQuickInput(input)) return;
+		if (!m_Editor.ShouldProcessInput()) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectForward");
 		
 		float value = m_Editor.Settings.QuickMoveStepSize;
@@ -148,7 +136,7 @@ class EditorClientModule: JMModuleBase
 			}
 		}
 		
-		if (!ShouldProcessQuickInput(input)) return;
+		if (!m_Editor.ShouldProcessInput()) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectBackward");
 		
 		float value = m_Editor.Settings.QuickMoveStepSize;
@@ -165,7 +153,7 @@ class EditorClientModule: JMModuleBase
 	
 	private void OnEditorMoveObjectLeft(UAInput input)
 	{
-		if (!ShouldProcessQuickInput(input)) return;
+		if (!m_Editor.ShouldProcessInput()) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectLeft");
 		
 		float value = m_Editor.Settings.QuickMoveStepSize;
@@ -182,7 +170,7 @@ class EditorClientModule: JMModuleBase
 	
 	private void OnEditorMoveObjectRight(UAInput input)
 	{
-		if (!ShouldProcessQuickInput(input)) return;
+		if (!m_Editor.ShouldProcessInput()) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectRight");
 		
 		float value = m_Editor.Settings.QuickMoveStepSize;
@@ -199,7 +187,7 @@ class EditorClientModule: JMModuleBase
 	
 	private void OnEditorMoveObjectUp(UAInput input)
 	{
-		if (!ShouldProcessQuickInput(input)) return;
+		if (!m_Editor.ShouldProcessInput()) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectUp");
 		
 		float value = m_Editor.Settings.QuickMoveStepSize;
@@ -216,7 +204,7 @@ class EditorClientModule: JMModuleBase
 	
 	private void OnEditorMoveObjectDown(UAInput input)
 	{
-		if (!ShouldProcessQuickInput(input)) return;
+		if (!m_Editor.ShouldProcessInput()) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectDown");
 		
 		float value = m_Editor.Settings.QuickMoveStepSize;
