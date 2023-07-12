@@ -10,7 +10,7 @@ class EditorCameraLight: SpotLightBase
 
 class ScriptedCamera: Camera
 {
-	void OnControlChanged(bool state);
+	void OnSelectCamera();
 }
 
 // make option Q and E go up and down no matter orientation
@@ -88,12 +88,14 @@ class EditorCamera: ScriptedCamera
 		}
 	}
 	
-	override void OnControlChanged(bool state)
+	override void OnSelectCamera()
 	{
-		super.OnControlChanged(state);
+		super.OnSelectCamera();
 		
-		MoveEnabled = state;
-		LookEnabled = state;
+		MoveEnabled = true;
+		LookEnabled = true;
+		
+		GetEditor().GetEditorHud().Show(true);
 	}
 
 	void OnTargetSelected( Object target )
@@ -127,6 +129,10 @@ class EditorCamera: ScriptedCamera
 		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
+		if (GetEditor().GetCurrentControl() != this) {
+			return;
+		}
+		
 		vector original_position_unchanged;
 		vector transform[4];
 		GetTransform(transform);

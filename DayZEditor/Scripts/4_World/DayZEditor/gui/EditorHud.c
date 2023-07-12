@@ -31,27 +31,20 @@ class EditorHud: ScriptView
 	{
 		super.Update(dt);
 				
-		PlayerBase controlled_player = PlayerBase.Cast(GetEditor().GetCurrentControl());
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("EditorToggleCursor")) {
 			if (!EditorMapWidget.IsVisible() && (!CurrentDialog || !GetEditor().Settings.LockCameraDuringDialogs)) {
-				ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
+				ShowCursor(!IsCursorVisible());
 			}
 		}
 		
-		if (input.LocalPress("EditorToggleHud")) {
-			/*
-			if (m_Editor.IsInventoryEditorActive()) {
-				m_Editor.GetInventoryEditorHud().GetLayoutRoot().Show(!m_Editor.GetInventoryEditorHud().GetLayoutRoot().IsVisible());
+		if (input.LocalPress("EditorToggleUI")) {
+			if (GetEditor().IsInventoryEditorActive()) {
+				GetEditor().GetInventoryEditorHud().GetLayoutRoot().Show(!GetEditor().GetInventoryEditorHud().GetLayoutRoot().IsVisible());
 				return;
-			}*/
+			}
 			
 			Show(!IsVisible());
-						
-			// If player is active
-			if (controlled_player) {			
-				controlled_player.DisableSimulation(IsVisible());
-			}
 		}
 		
 		if (input.LocalPress("EditorToggleMap")) {
@@ -64,13 +57,21 @@ class EditorHud: ScriptView
 	void Show(bool show) 
 	{
 		EditorLog.Trace("EditorHud::Show");
-		if (m_LayoutRoot) {
-			m_LayoutRoot.Show(show);
-		}
+		m_LayoutRoot.Show(show);
 		
 		if (CurrentDialog) {
 			CurrentDialog.GetLayoutRoot().Show(show);
 		}
+		
+		if (IsCursorVisible() && !show) {
+			ShowCursor(false);
+		}
+		
+		PlayerBase controlled_player = GetEditor().GetCurrentControlPlayer();
+		Hud hud = GetGame().GetMission().GetHud();
+		hud.ShowHudUI(g_Game.GetProfileOption(EDayZProfilesOptions.HUD) && !show && controlled_player != null);
+		hud.ShowQuickbarUI(g_Game.GetProfileOption(EDayZProfilesOptions.QUICKBAR) && !show && controlled_player != null);		
+		hud.HideCursor();
 	}
 	
 	bool IsVisible() 
@@ -81,6 +82,12 @@ class EditorHud: ScriptView
 	void ShowCursor(bool state) 
 	{
 		GetGame().GetUIManager().ShowCursor(state);
+		
+		// If player is active
+		PlayerBase controlled_player = GetEditor().GetCurrentControlPlayer();
+		if (controlled_player) {
+			controlled_player.DisableSimulation(IsCursorVisible());
+		}
 		
 		if (!state) {
 			delete CurrentTooltip;

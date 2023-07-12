@@ -191,6 +191,8 @@ class Editor: Managed
 		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
 		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(Update);
+		
 		m_AutoSaveTimer.Run(Settings.AutoSaveTimer, this, "OnAutoSaveTimer");
 	}
 	
@@ -220,7 +222,9 @@ class Editor: Managed
 	
 	void Update(float timeslice)
 	{		
-		ProcessInput(GetGame().GetInput());
+		if (ShouldProcessInput()) {
+			ProcessInput(GetGame().GetInput());
+		}
 		
 		set<Object> obj();
 		int x, y;
@@ -360,9 +364,6 @@ class Editor: Managed
 	// Leave null to use the default camera
 	void ControlCamera(ScriptedCamera camera = null)
 	{
-		// on release of control (we cant mod Entity, sorry for g_Script)
-		g_Script.CallFunction(m_CurrentControl, "OnControlChanged", null, false);
-		
 		if (!camera) {
 			camera = m_EditorCamera;
 			if (!camera) {
@@ -373,18 +374,13 @@ class Editor: Managed
 		
 		m_CurrentControl = camera;
 		camera.SetActive(true);
-		
-		g_Script.CallFunction(m_CurrentControl, "OnControlChanged", null, true);
+		camera.OnSelectCamera();
 	}
 	
 	void ControlPlayer(notnull PlayerBase player)
 	{
-		g_Script.CallFunction(m_CurrentControl, "OnControlChanged", null, false);
-		
 		m_CurrentControl = player;
 		GetGame().SelectPlayer(null, player);
-		
-		g_Script.CallFunction(m_CurrentControl, "OnControlChanged", null, true);
 	}
 	
 	Entity GetCurrentControl()
@@ -401,54 +397,6 @@ class Editor: Managed
 	{
 		return ScriptedCamera.Cast(m_CurrentControl);
 	}
-
-	// Call to enable / disable editor
-	/*void SetActive(bool active)
-	{	
-		EditorLog.Info("Set Active %1", active.ToString());
-		m_Active = active;
-			
-		// Shut down Inventory Editor, done prior to the camera due to the destructor
-		if (m_EditorInventoryEditorHud) {
-			delete m_EditorInventoryEditorHud;
-		}
-				
-		if (m_Active) {
-			m_EditorCamera.SetActive(true);
-		} else {
-			GetGame().SelectPlayer(null, GetGame().GetPlayer());
-		}
-		
-		if (m_EditorHud) {
-			m_EditorHud.Show(m_Active);
-			m_EditorHud.SetCurrentTooltip(null);
-		}
-				
-		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
-		if (placed_objects) {
-			foreach (EditorObject editor_object: placed_objects) {
-				if (!editor_object) {
-					continue;
-				}
-				
-				editor_object.GetMarker().Show(m_Active);			
-				editor_object.HideBoundingBox();
-			}
-		}	
-				
-		if (!m_Active) {
-			GetGame().SelectPlayer(null, m_Player);
-		}
-		
-		// handles player death
-		if (m_Player) {			
-			m_Player.DisableSimulation(m_Active);
-			m_Player.GetInputController().SetDisabled(m_Active);
-		}
-		
-		SetMissionHud(!m_Active);
-		PPEffects.ResetAll();
-	}*/
 		
 	void ProcessInput(Input input)
 	{
@@ -495,7 +443,12 @@ class Editor: Managed
 							player_position[1] = GetGame().SurfaceY(player_position[0], player_position[2]);
 						}
 						
-						PlayerBase.s_LastControlledPlayer = PlayerBase.Cast(GetGame().CreatePlayer(null, GetGame().CreateRandomPlayer(), player_position, 0, ""));
+						PlayerBase.s_LastControlledPlayer = CreateDefaultCharacter(GetGame().CreateDefaultPlayer(), player_position);
+						if (!PlayerBase.s_LastControlledPlayer) {
+							return;
+						}
+						
+						PlayerBase.s_LastControlledPlayer.SetAllowDamage(false);
 					}
 					
 					ControlPlayer(PlayerBase.s_LastControlledPlayer);

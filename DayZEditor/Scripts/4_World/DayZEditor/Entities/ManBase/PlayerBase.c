@@ -15,24 +15,18 @@ modded class PlayerBase
 		return emotes;
 	}
 	
-	void OnControlChanged(bool state)
+	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		GetInputController().SetDisabled(!state);
-		
-		Hud hud = GetGame().GetMission().GetHud();
-		if (hud) {
-			hud.ShowHudUI(g_Game.GetProfileOption(EDayZProfilesOptions.HUD) && state);
-			hud.ShowQuickbarUI(g_Game.GetProfileOption(EDayZProfilesOptions.QUICKBAR) && state);
-		}
-		
-		SetAllowDamage(!state);
+		GetInputController().SetDisabled(GetEditor().GetCurrentControl() != this);
 	}
-	
+		
 	override void OnSelectPlayer()
 	{
 		super.OnSelectPlayer();
 		
 		s_LastControlledPlayer = this;
+		
+		GetEditor().GetEditorHud().Show(false);
 	}
 	
 	override void EEKilled(Object killer)

@@ -28,7 +28,7 @@ class EditorLog: LoggerBase
 	
 		DoLog(EditorLog, string.Format("[%1][%3]		: %2", typename.EnumToString(LogLevel, level), msg, formatted_time));
 		
-#ifdef DIAG_DDEVELOPER
+#ifdef DIAG_DEVELOPER
 		Print(String(msg)); // maybe add some extra logic to avoid clogging
 #endif
 	}
