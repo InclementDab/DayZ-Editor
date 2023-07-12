@@ -24,7 +24,10 @@ class EditorTerrainBuilderFile: EditorFileType
 			int x_int = vals[0].ToInt();
 			x_int += 200000;			
 			
-			position[1] = position[1] - GetGame().SurfaceY(position[0], position[2]);
+			vector clipping_info[2];
+			Print(editor_object.WorldObject);
+			editor_object.WorldObject.ClippingInfo(clipping_info);
+			position[1] = position[1] - GetGame().SurfaceY(position[0], position[2]) + clipping_info[0][1];
 			
 			string type = editor_object.Type;
 			string model_name;
@@ -47,7 +50,7 @@ class EditorTerrainBuilderFile: EditorFileType
 		}
 		
 		CloseFile(handle);
-	}
+	} 
 	
 	override string GetExtension() {
 		return ".txt";

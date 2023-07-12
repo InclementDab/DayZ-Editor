@@ -123,6 +123,7 @@ class EditorPlaceableItem: Managed
 		if (model == "Land_VASICore" || model == "FlagCarrierCore") return true;
 		if (GetGame().IsKindOf(model, "GP25Base")) return true;
 		if (GetGame().IsKindOf(model, "M203Base")) return true;
+		if (model == "ItemOptics_Base") return true;
 		
 		//! Everything is fine... I hope... :pain:
 		return false;

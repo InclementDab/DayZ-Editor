@@ -1,4 +1,4 @@
-class EditorInventoryEditorCamera: Camera
+class EditorInventoryEditorCamera: ScriptedCamera
 {
 	protected ref Timer m_LerpTimer = new Timer(CALL_CATEGORY_GAMEPLAY);
 	protected Object m_Target;

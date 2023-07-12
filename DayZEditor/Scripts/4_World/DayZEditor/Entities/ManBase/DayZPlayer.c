@@ -13,13 +13,26 @@ modded class PlayerBase
 		return emotes;
 	}
 	
+	void OnControlChanged(bool state)
+	{
+		GetInputController().SetDisabled(!state);
+		
+		Hud hud = GetGame().GetMission().GetHud();
+		if (hud) {
+			hud.ShowHudUI(g_Game.GetProfileOption(EDayZProfilesOptions.HUD) && state);
+			hud.ShowQuickbarUI(g_Game.GetProfileOption(EDayZProfilesOptions.QUICKBAR) && state);
+		}
+		
+		SetAllowDamage(!state);
+	}
+	
 	override void EEKilled(Object killer)
 	{
-		//super.EEKilled(killer);
+		super.EEKilled(killer);
 		
 		// Quick! Before he stops breathing
-		if (this == PlayerBase.Cast(GetGame().GetPlayer())) {
-			GetEditor().SetActive(true);
+		if (this == GetEditor().GetCurrentControl()) {
+			GetEditor().ControlCamera(GetEditor().GetCamera());
 		}
 	}
 	

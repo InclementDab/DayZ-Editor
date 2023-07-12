@@ -1,4 +1,4 @@
-class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorController>
+class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorController>
 {
 	static const string FILE_EXTENSION = ".dzeinv";
 	
@@ -19,17 +19,26 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		//m_Camera.LerpToPosition(target_pos, 1.0);
 		m_Camera.SetPosition(target_pos);
 		m_Camera.Update();
-		GetGame().SelectPlayer(null, null);
-
-		m_Camera.SetActive(true);
-		
+			
 		m_TemplateController.SetEntity(m_Entity);
+		
+		GetEditor().ControlCamera(m_Camera);
 	}
 	
 	void ~EditorInventoryEditorHud()
 	{
-		m_Camera.SetActive(false);
+		// fallback
+		if (GetEditor().GetCurrentControl() == m_Camera) {
+			GetEditor().ControlCamera(GetEditor().GetCamera());
+		}
+		
 		GetGame().ObjectDelete(m_Camera);
+	}
+	
+	override void Update(float dt)
+	{
+		super.Update(dt);
+		
 	}
 	
 	void ClearExecute(ButtonCommandArgs args)
@@ -54,18 +63,21 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 	}
 	
 	void OpenInventoryExecute(ButtonCommandArgs args)
-	{		
-		GetGame().SelectPlayer(null, GetGame().GetPlayer());
-		GetGame().GetPlayer().DisableSimulation(false);
-		GetGame().GetPlayer().GetInputController().SetDisabled(false);
-		GetGame().GetMission().ShowInventory();		
+	{
+		PlayerBase player = PlayerBase.Cast(m_Entity);
+		// only supporting players, i cba to fuck with car inventories
+		if (!player) {
+			return;
+		}
 		
-		delete this;
+		GetEditor().ControlPlayer(player);
+		Close();
 	}
 	
 	void ExitExecute(ButtonCommandArgs args)
 	{
-		GetEditor().StopInventoryEditor();
+		GetEditor().ControlCamera(GetEditor().GetCamera());
+		Close();
 	}
 	
 	void ImportExecute(ButtonCommandArgs args)
@@ -121,6 +133,21 @@ class EditorInventoryEditorHud: ScriptViewTemplate<EditorInventoryEditorControll
 		
 		data.Write(serializer, 0); // version means nothing here
 		serializer.Close();
+	}
+	
+	override bool UseMouse()
+	{
+		return true;
+	}
+	
+	override array<string> GetInputExcludes()
+	{
+		return { "menu" };
+	}
+	
+	override array<int> GetInputRestrictions()
+	{
+		return { UAWalkRunForced };
 	}
 	
 	EntityAI GetEntity()

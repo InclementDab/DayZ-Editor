@@ -8,20 +8,15 @@ class EditorExportEventPos: EditorCommand
 			return false;
 		}
 		
-		string event_data = "<event name=\"DefaultEvent\"\n";
-		event_data += "	<zone smin=\"0\" smax=\"0\" dmin=\"1\" dmax=\"2\" s=\"20\">\n";
+		string event_data = string.Format("<group name=\"%1\">\n", data.param1.GetType());
 		EditorObjectMap editor_objects = m_Editor.GetSelectedObjects();
-		foreach (int id, EditorObject editor_object: editor_objects) {
-			if (editor_object.GetWorldObject() == data.param1) {
-				continue;
-			}
-			
+		foreach (int id, EditorObject editor_object: editor_objects) {			
 			vector position = data.param1.GetPosition();
-			position = position - editor_object.GetPosition();			
-			event_data += string.Format("	<pos x=\"%1\" y=\"%2\" z=\"%3\" a=\"%4\" group=\"%5\"\n", position[0], position[1], position[2], editor_object.GetAngle(), editor_object.GetType());			
+			position = position - editor_object.GetPosition();
+			event_data += string.Format("	<child type=\"%5\" deloot=\"0\" lootmax=\"5\" lootmin=\"0\" x=\"%1\" y=\"%2\" z=\"%3\" a=\"%4\" />\n", position[0], position[1], position[2], editor_object.GetAngle(), editor_object.GetType());			
 		}
 		
-		event_data += "</event>";
+		event_data += "</group>";
 		
 		GetGame().CopyToClipboard(event_data);
 		GetEditor().GetEditorHud().CreateNotification("Event Data copied to clipboard");

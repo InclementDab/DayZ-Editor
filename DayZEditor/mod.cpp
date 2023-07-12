@@ -1,8 +1,8 @@
 name = "$STR_EDITOR_MOD_NAME";
-picture = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
-logo = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
-logoSmall = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
-logoOver = "DayZEditor/gui/images/dayz_editor_icon_hq.edds";
+picture = "DayZEditor/gui/images/dayz_editor_icon_hq.paa";
+logo = "DayZEditor/gui/images/dayz_editor_icon_hq.paa";
+logoSmall = "DayZEditor/gui/images/dayz_editor_icon_hq.paa";
+logoOver = "DayZEditor/gui/images/dayz_editor_icon_hq.paa";
 tooltip = "$STR_EDITOR_TOOLTIP";
 overview = "$STR_EDITOR_DESCRIPTION";
 action = "https://dab.dev";

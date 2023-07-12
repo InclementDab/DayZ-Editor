@@ -12,8 +12,9 @@ set /a var=%%x+1
 
 cd %c%
 
-start /W "Build PBO" "%CD%/DayZEditor/Workbench/Batchfiles/ZBinarizeDeploy.bat"
+REM start /W "Build PBO" "%CD%/DayZEditor/Workbench/Batchfiles/ZBinarizeDeploy.bat"
 
-echo Uploading to Workshop
+echo Upload to Workshop?
+pause
 cd "%CD%/DayZEditor/Workbench/Deployment"
 start /W "Upload to Workshop" Deployment.exe release

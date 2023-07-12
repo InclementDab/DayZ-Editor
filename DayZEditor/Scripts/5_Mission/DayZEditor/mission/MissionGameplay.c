@@ -55,16 +55,6 @@ modded class MissionGameplay
 		}
 	}
 
-	override void OnUpdate(float timeslice)
-	{
-		if (GetEditor() && GetEditor().IsActive()) {
-			GetModuleManager().OnUpdate(timeslice);
-			return;
-		} 
-				
-		super.OnUpdate(timeslice);
-	}
-	
 	override void ShowInventory()
 	{
 		GetGame().GetPlayer().GetHumanInventory().UnlockInventory(LOCK_FROM_SCRIPT);

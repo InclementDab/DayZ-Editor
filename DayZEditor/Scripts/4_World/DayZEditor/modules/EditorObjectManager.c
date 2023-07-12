@@ -79,10 +79,11 @@ class EditorObjectManagerModule: JMModuleBase
 		}
 		
 		// handle static p3d objects
+		/*
 		array<ref CF_File> files = {};
-		
-		// search the WHOLE FUCKING GAME
+		// i want to search the WHOLE FUCKING GAME but i CANT
 		RecursiveGetFiles("*", files, "\\*.p3d");
+		
 		foreach (CF_File file: files) {
 			Print(file.GetFileName());
 			if (file.GetExtension() != ".p3d") {
@@ -97,6 +98,26 @@ class EditorObjectManagerModule: JMModuleBase
 			}
 			
 			m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()].Insert(placeable_item_p3d);
+		}*/
+		
+		const array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss"};
+		
+		foreach (string model_path: paths) {
+			array<ref CF_File> files = {};
+			if (CF_Directory.GetFiles(model_path + "/*.p3d", files, FindFileFlags.ARCHIVES)) {
+				foreach (CF_File file: files) {
+					Print(file.GetFullPath());
+				
+					EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(file);
+					m_PlaceableObjects.Insert(placeable_item_p3d);
+					
+					if (!m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()]) {
+						m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()] = new array<EditorPlaceableItem>();
+					}
+					
+					m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()].Insert(placeable_item_p3d);
+				}
+			}
 		}
 		
 		

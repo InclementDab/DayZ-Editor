@@ -1,4 +1,4 @@
-class EditorHud: ScriptViewTemplate<EditorHudController>
+class EditorHud: ScriptViewMenu
 {
 	protected bool m_IsBoxSelectActive;
 	
@@ -18,15 +18,42 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	
 	void EditorHud()
 	{	
-		EditorLog.Trace("EditorHud");
-		EditorMapWidget.Show(false);
-		
+		EditorLog.Trace("EditorHud");		
 		ShowScreenLogs(GetEditor().Settings.ShowScreenLogs);
 	}
 	
 	void ~EditorHud()
 	{
 		delete CameraMapMarker;
+	}
+	
+	override void Update(float dt)
+	{
+		super.Update(dt);
+				
+		PlayerBase controlled_player = PlayerBase.Cast(GetEditor().GetCurrentControl());
+		Input input = GetGame().GetInput();
+		if (input.LocalPress("EditorToggleCursor")) {
+			Print(EditorMapWidget.IsVisible());
+			if (EditorMapWidget.IsVisible() || (CurrentDialog && GetEditor().Settings.LockCameraDuringDialogs)) {
+				ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
+			}
+		}
+		
+		if (input.LocalPress("EditorToggleHud")) {
+			/*
+			if (m_Editor.IsInventoryEditorActive()) {
+				m_Editor.GetInventoryEditorHud().GetLayoutRoot().Show(!m_Editor.GetInventoryEditorHud().GetLayoutRoot().IsVisible());
+				return;
+			}*/
+			
+			Show(!IsVisible());
+						
+			// If player is active
+			if (controlled_player) {			
+				controlled_player.DisableSimulation(IsVisible());
+			}
+		}
 	}
 
 	void Show(bool show) 
@@ -45,12 +72,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	{
 		return m_LayoutRoot.IsVisible();
 	}
-	
-	void ToggleCursor() 
-	{		
-		ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
-	}
-	
+		
 	void ShowCursor(bool state) 
 	{
 		GetGame().GetUIManager().ShowCursor(state);
@@ -120,6 +142,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 			current_x += 6;
 			
 			EditorCanvas.Clear();
+			g_Editor.ClearSelection();
 			
 			// Draw Drag Box
 			if (Math.AbsInt(start_x - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_BOX_THRESHOLD) {
@@ -134,9 +157,6 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 				
 				EditorObjectMap placed_objects = g_Editor.GetPlacedObjects();
 				foreach (EditorObject editor_object: placed_objects) {					
-					
-					if (editor_object.IsSelected()) continue;
-					
 					float marker_x, marker_y;
 					EditorObjectMarker object_marker = editor_object.GetMarker();
 					if (object_marker) {
@@ -177,9 +197,29 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		EditorCanvas.DrawLine(0, (y / 3) * 2, x, (y / 3) * 2, 1, COLOR_BLACK);
 	}
 	
+	override bool UseMouse()
+	{
+		return true;
+	}
+	
+	override array<string> GetInputExcludes()
+	{
+		return { "menu" };
+	}
+	
+	override array<int> GetInputRestrictions()
+	{
+		return { UAWalkRunForced };
+	}
+	
 	override string GetLayoutFile() 
 	{
 		return "DayZEditor/gui/layouts/hud/EditorHud.layout";
+	}
+	
+	override typename GetControllerType()
+	{
+		return EditorHudController;
 	}
 	
 	// Modal Menu Control

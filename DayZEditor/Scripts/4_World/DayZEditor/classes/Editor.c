@@ -49,7 +49,6 @@ class Editor: Managed
 {
 	/* Private Members */
 	protected Mission m_Mission;
-	protected PlayerBase m_Player;
 		
 	// statics (updated in Update())
 	static Object								ObjectUnderCursor;
@@ -87,7 +86,7 @@ class Editor: Managed
 	
 	protected int 									m_LastMouseDown;
 	protected MouseState							m_LastMouseInput = -1;
-	protected bool 									m_Active;
+	
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
 	protected string								EditorSaveFile;
@@ -120,13 +119,12 @@ class Editor: Managed
 	
 	bool										KEgg; // oh?
 	
-	private void Editor(PlayerBase player) 
-	{		
+	private void Editor(vector position) 
+	{
 		EditorLog.Trace("Editor");
 		g_Game.ReportProgress("Loading Editor");
 
 		g_Editor = this;
-		m_Player = player;
 
 #ifdef SERVER
 		for (int i = 0; i < 100; i++) {
@@ -137,9 +135,6 @@ class Editor: Managed
 		return;
 #endif
 				
-		// Player god mode
-		m_Player.SetAllowDamage(false);
-
 		// Initialize the profiles/editor directory;		
 		MakeDirectory(ROOT_DIRECTORY);
 		
@@ -149,7 +144,8 @@ class Editor: Managed
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
 		g_Game.ReportProgress("Initializing Camera");
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", position, ECE_LOCAL));
+		ControlCamera(m_EditorCamera);
 		
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
@@ -175,6 +171,7 @@ class Editor: Managed
 		// Init Hud
 		g_Game.ReportProgress("Initializing Hud");
 		m_EditorHud 		= new EditorHud();
+		
 		EditorLog.Info("Initializing Hud");
 		m_EditorHudController = m_EditorHud.GetTemplateController();		
 		// Add camera marker to newly created hud
@@ -183,11 +180,6 @@ class Editor: Managed
 		
 		m_Mission = GetGame().GetMission();
 		
-		if (!IsMissionOffline()) {
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_CREATED, true);
-		}
-		
 		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
 		
@@ -195,9 +187,6 @@ class Editor: Managed
 		GetGame().GetWorld().SetPreferredViewDistance(Settings.ViewDistance);		
 		GetGame().GetWorld().SetViewDistance(Settings.ViewDistance);
 		GetGame().GetWorld().SetObjectViewDistance(Settings.ObjectViewDistance);
-		
-		// Register Player Object as a hidden EditorObject
-		//CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER, false);
 		
 		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
@@ -208,18 +197,7 @@ class Editor: Managed
 	void ~Editor() 
 	{
 		EditorLog.Trace("~Editor");
-		if (!IsMissionOffline()) {
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_DESTROYED, true); 
-		}
-		
-		// Fallback
-		if (GetGame() && m_Mission) {
-			// Causing more trouble than its worth, null ptrs
-			// fix if you need to delete editor safely when running for some reason (MP?)
-			//SetActive(false);
-		}
-		
+	
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(UpdateStatTime);
 		
 		Settings.Save();
@@ -235,10 +213,10 @@ class Editor: Managed
 		GetGame().ObjectDelete(m_EditorCamera);
 	}
 	
-	static Editor Create(PlayerBase player)
+	static Editor Create(vector position)
 	{
 		EditorLog.Trace("Editor::Create");
-		g_Editor = new Editor(player);
+		g_Editor = new Editor(position);
 		return g_Editor;
 	}
 	
@@ -366,9 +344,7 @@ class Editor: Managed
 				position += hand_data.PositionOffset;
 			}
 			
-			position[1] = position[1] + ObjectGetSize(world_object.GetWorldObject())[1] / 2;
-			
-			
+			position[1] = position[1] + ObjectGetSize(world_object.GetWorldObject())[1] / 2;			
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",
@@ -391,21 +367,102 @@ class Editor: Managed
 			world_object.GetWorldObject().SetTransform(transform);
 		}
 	}
-			
-	void SetPlayer(PlayerBase player)
+	
+	protected Entity m_CurrentControl;
+	
+	// Leave null to use the default camera
+	void ControlCamera(ScriptedCamera camera = null)
 	{
-		// You can only control one player, this is how
-		EditorObjectMap placed_objects = GetPlacedObjects();
-		foreach (int id, EditorObject placed_object: placed_objects) {
-			PlayerBase loop_player = PlayerBase.Cast(placed_object.GetWorldObject());
-			if (loop_player && loop_player != player) {
-				placed_object.Control = false;
+		// on release of control (we cant mod Entity, sorry for g_Script)
+		g_Script.CallFunction(m_CurrentControl, "OnControlChanged", null, false);
+		
+		if (!camera) {
+			camera = m_EditorCamera;
+			if (!camera) {
+				Error("Camera not found / initialized");
+				return;
 			}
 		}
 		
-		m_Player = player;
+		m_CurrentControl = camera;
+		camera.SetActive(true);
+		
+		g_Script.CallFunction(m_CurrentControl, "OnControlChanged", null, true);
 	}
 	
+	void ControlPlayer(notnull PlayerBase player)
+	{
+		g_Script.CallFunction(m_CurrentControl, "OnControlChanged", null, false);
+		
+		m_CurrentControl = player;
+		GetGame().SelectPlayer(null, player);
+		
+		g_Script.CallFunction(m_CurrentControl, "OnControlChanged", null, true);
+	}
+	
+	Entity GetCurrentControl()
+	{
+		return m_CurrentControl;
+	}
+	
+	PlayerBase GetCurrentControlPlayer()
+	{
+		return PlayerBase.Cast(m_CurrentControl);
+	}
+	
+	ScriptedCamera GetCurrentControlCamera()
+	{
+		return ScriptedCamera.Cast(m_CurrentControl);
+	}
+
+	// Call to enable / disable editor
+	/*void SetActive(bool active)
+	{	
+		EditorLog.Info("Set Active %1", active.ToString());
+		m_Active = active;
+			
+		// Shut down Inventory Editor, done prior to the camera due to the destructor
+		if (m_EditorInventoryEditorHud) {
+			delete m_EditorInventoryEditorHud;
+		}
+				
+		if (m_Active) {
+			m_EditorCamera.SetActive(true);
+		} else {
+			GetGame().SelectPlayer(null, GetGame().GetPlayer());
+		}
+		
+		if (m_EditorHud) {
+			m_EditorHud.Show(m_Active);
+			m_EditorHud.SetCurrentTooltip(null);
+		}
+				
+		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
+		if (placed_objects) {
+			foreach (EditorObject editor_object: placed_objects) {
+				if (!editor_object) {
+					continue;
+				}
+				
+				editor_object.GetMarker().Show(m_Active);			
+				editor_object.HideBoundingBox();
+			}
+		}	
+				
+		if (!m_Active) {
+			GetGame().SelectPlayer(null, m_Player);
+		}
+		
+		// handles player death
+		if (m_Player) {			
+			m_Player.DisableSimulation(m_Active);
+			m_Player.GetInputController().SetDisabled(m_Active);
+		}
+		
+		SetMissionHud(!m_Active);
+		PPEffects.ResetAll();
+	}*/
+		
 	void ProcessInput(Input input)
 	{
 		if (IsPlacing()) {
@@ -430,35 +487,12 @@ class Editor: Managed
 					placing_object.GetWorldObject().SetOrientation(hand_ori);			
 				}
 			}
-		}
-		
-		// This is all the logic that controls inventory hud, not a fan but it works
-		// update: it doesnt work
-		// update 2: it works
-		if (m_Player && !m_Active) {					
-			if (input.LocalPress("EditorToggleInventoryEditor", false)) {
-				if (m_EditorInventoryEditorHud) {
-					StopInventoryEditor();
-				}
-				
-				else {
-					GetGame().GetMission().HideInventory();
-					// Default to m_Player
-					StartInventoryEditor(m_Player);
-				}
-				
-				return;
-			}
-			
-			if (input.LocalPress("EditorToggleInventory", false)) {
-				if (m_EditorInventoryEditorHud) {
-					StopInventoryEditor();
-				}
-				
-				if (GetGame().GetMission().GetHud().InventoryShown) {
-					GetGame().GetMission().HideInventory();
-				} else {
-					GetGame().GetMission().ShowInventory();
+		} else {
+			if (input.LocalPress("EditorTeleportPlayerToCursor")) {
+				PlayerBase controlled_player = GetCurrentControlPlayer();
+				if (controlled_player) {
+					set<Object> _();
+					controlled_player.SetPosition(MousePosToRay(_, controlled_player, 3000, 0, false, true));
 				}
 			}
 		}
@@ -567,22 +601,6 @@ class Editor: Managed
 					return true;
 				} 
 				
-				if (IsPlayerActive()) {
-					return false;
-				}
-				
-				// teleportation logic
-				vector mouse_pos = Vector(CurrentMousePosition[0], GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]), CurrentMousePosition[2]);
-				vector camera_current_pos = m_EditorCamera.GetPosition();
-				float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
-				
-				// check if water is under mouse, to stop from teleporting under water			
-				if (IsSurfaceWater(mouse_pos)) {
-					m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  camera_current_pos[1], mouse_pos[2]));
-					break;
-				} 
-					
-				m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
 				return true;
 			}
 			
@@ -660,59 +678,7 @@ class Editor: Managed
 		m_CurrentKeys.Remove(m_CurrentKeys.Find(key));
 		return false;
 	}
-	
-	// Call to enable / disable editor
-	void SetActive(bool active)
-	{	
-		EditorLog.Info("Set Active %1", active.ToString());		
-		m_Active = active;
-				
-		// Shut down Inventory Editor, done prior to the camera due to the destructor
-		if (m_EditorInventoryEditorHud) {
-			delete m_EditorInventoryEditorHud;
-		}
 		
-		if (m_EditorCamera) {
-			m_EditorCamera.LookEnabled = m_Active;
-			m_EditorCamera.MoveEnabled = m_Active;
-			if (m_Active) {
-				GetGame().SelectPlayer(null, null);
-			}
-			
-			m_EditorCamera.SetActive(m_Active);
-		}
-		
-		if (m_EditorHud) {
-			m_EditorHud.Show(m_Active);
-			m_EditorHud.SetCurrentTooltip(null);
-		}
-				
-		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
-		if (placed_objects) {
-			foreach (EditorObject editor_object: placed_objects) {
-				if (!editor_object) {
-					continue;
-				}
-				
-				editor_object.GetMarker().Show(m_Active);			
-				editor_object.HideBoundingBox();
-			}
-		}	
-				
-		if (!m_Active) {
-			GetGame().SelectPlayer(null, m_Player);
-		}
-		
-		// handles player death
-		if (m_Player) {			
-			m_Player.DisableSimulation(m_Active);
-			m_Player.GetInputController().SetDisabled(m_Active);
-		}
-		
-		SetMissionHud(!m_Active);
-		PPEffects.ResetAll();
-	}
-	
 	// also called when component index changes
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
@@ -877,70 +843,23 @@ class Editor: Managed
 	
 	void StartInventoryEditor(EntityAI entity)
 	{
-		delete m_EditorInventoryEditorHud;
-		
-		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(entity);
-		
-		PlayerBase player;
-		if (Class.CastTo(player, entity)) {
-			player.OnInventoryMenuOpen();
-			player.GetInputController().SetDisabled(true);
+		if (m_EditorInventoryEditorHud) {
+			m_EditorInventoryEditorHud.Close();
 		}
 		
-		SetMissionHud(false);	
-		m_EditorHud.ShowCursor(true);
+		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(entity);
 	}
 	
 	void StopInventoryEditor()
-	{		
-		if (!m_EditorInventoryEditorHud) {
-			return;
+	{
+		if (m_EditorInventoryEditorHud) {
+			m_EditorInventoryEditorHud.Close();
 		}
-		
-		EntityAI entity = m_EditorInventoryEditorHud.GetEntity();
-		PlayerBase player;
-		if (Class.CastTo(player, entity)) {
-			GetGame().SelectPlayer(null, player);
-			player.OnInventoryMenuClose();
-			player.GetInputController().SetDisabled(false);
-			SetMissionHud(true);
-		} else { 
-			// fallback, for use with cars etc
-			SetActive(true);
-		}
-		
-		delete m_EditorInventoryEditorHud;
 	}
 	
 	bool IsInventoryEditorActive()
 	{
 		return (m_EditorInventoryEditorHud != null);	
-	}
-	
-	void SetMissionHud(bool state)
-	{
-		Mission mission = GetGame().GetMission();
-		if (!mission) {
-			EditorLog.Error("No mission active");
-			return;
-		}
-		
-		Hud hud = mission.GetHud();
-		if (!hud) {
-			EditorLog.Error("No Hud active");
-			return;
-		}
-		
-		hud.Show(state);
-		hud.ShowHud(state);
-		hud.ShowHudUI(state);
-		hud.SetPermanentCrossHair(state);
-		// we are in 4_world and this game is bad :)
-		Widget hud_root;
-		EnScript.GetClassVar(mission, "m_HudRootWidget", 0, hud_root);
-		if (hud_root) {
-			hud_root.Show(state);
-		}
 	}
 	
 	// Kinda very jank i think
@@ -1053,17 +972,7 @@ class Editor: Managed
 		
 		return false;
 	}
-	
-	void TeleportPlayerToCursor()
-	{
-		if (!m_Player) { 
-			return;
-		}
 		
-		set<Object> _();
-		m_Player.SetPosition(MousePosToRay(_, m_Player, 3000, 0, false, true));
-	}
-	
 	protected void OnAutoSaveTimer()
 	{		
 		if (EditorSaveFile != string.Empty && Settings.AutoSaveEnabled) {
@@ -1770,12 +1679,7 @@ class Editor: Managed
 	{
 		return m_RecentlyOpenedFiles;
 	}
-	
-	bool IsActive() 
-	{
-		return m_Active;
-	}
-	
+		
 	EditorHud GetEditorHud() 
 	{
 		return m_EditorHud;
@@ -1890,16 +1794,5 @@ class Editor: Managed
 	bool IsPlacing()
 	{
 		return (m_PlacingObjects && m_PlacingObjects.Count() > 0); 
-	}
-	
-	bool IsPlayerActive()
-	{
-		return (m_Player && m_Player.IsControlledPlayer() && !m_Active);
-	}
-		
-	// Get Selected player in Editor
-	PlayerBase GetPlayer()
-	{
-		return m_Player;
 	}
 }

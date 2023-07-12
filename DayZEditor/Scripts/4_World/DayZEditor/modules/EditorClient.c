@@ -44,8 +44,6 @@ class EditorClientModule: JMModuleBase
 						
 		// Keybinds
 		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
-		RegisterBinding(new JMModuleBinding("OnEditorToggleCursor", "EditorToggleCursor"));
-		RegisterBinding(new JMModuleBinding("OnEditorToggleUI", "EditorToggleUI"));
 		RegisterBinding(new JMModuleBinding("OnEditorTeleportPlayerToCursor", "EditorTeleportPlayerToCursor"));
 		
 		RegisterBinding(new JMModuleBinding("OnEditorToggleMap", "EditorToggleMap"));
@@ -146,8 +144,7 @@ class EditorClientModule: JMModuleBase
 		}
 		
 		EditorLog.Info("Loading Offline Editor...");
-		m_Editor = Editor.Create(player);
-		m_Editor.SetActive(true);
+		m_Editor = Editor.Create(player.GetPosition() + "0 5 0");
 	}
 	
 	// Inputs
@@ -167,62 +164,12 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleActive");
 				
-		bool active = m_Editor.IsActive(); // weird syntax bug?
-		if (active) {
-			GetGame().SelectPlayer(null, null);
+		if (!m_Editor.GetCurrentControl() || m_Editor.GetCurrentControl().Type() != EditorCamera) {
+			m_Editor.ControlCamera();
+		} else {
+			m_Editor.ControlPlayer(PlayerBase.Cast(GetGame().GetPlayer()));
 		}
-		
-		m_Editor.SetActive(!active);
-
 	}	
-	
-	private void OnEditorToggleCursor(UAInput input)
-	{
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorToggleCursor");
-		
-		if (!m_Editor.IsActive() && !m_Editor.IsInventoryEditorActive()) {
-			return;
-		}
-		
-		// Dont want to toggle cursor on map
-		if (m_Editor.GetEditorHud().EditorMapWidget.IsVisible() || (EditorHud.CurrentDialog && m_Editor.Settings.LockCameraDuringDialogs)) {
-			return;
-		}
-		
-		m_Editor.GetEditorHud().ToggleCursor();
-	}	
-	
-	private void OnEditorToggleUI(UAInput input)
-	{		
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorToggleUI");
-				
-		if (m_Editor.IsInventoryEditorActive()) {
-			m_Editor.GetInventoryEditorHud().GetLayoutRoot().Show(!m_Editor.GetInventoryEditorHud().GetLayoutRoot().IsVisible());
-			return;
-		}
-		
-		m_Editor.GetEditorHud().Show(!m_Editor.GetEditorHud().IsVisible());
-		
-		EditorObjectMap placed_objects =  m_Editor.GetPlacedObjects();
-		foreach (int id, EditorObject editor_object: placed_objects) {
-			EditorObjectMarker marker = editor_object.GetMarker();
-			if (marker) {
-				marker.Show(m_Editor.GetEditorHud().IsVisible());
-			}
-		}
-		
-		// If player is active
-		if (!m_Editor.IsActive()) {
-			m_Editor.GetEditorHud().ShowCursor(m_Editor.GetEditorHud().IsVisible());
-			
-			// A wacky way to disable motion while the UI is enabled
-			if (GetGame().GetPlayer()) {
-				GetGame().GetPlayer().DisableSimulation(m_Editor.GetEditorHud().IsVisible());
-			}
-		}
-	}
 	
 	private void OnEditorToggleMap(UAInput input)
 	{
@@ -248,15 +195,7 @@ class EditorClientModule: JMModuleBase
 		args.Context = m_Editor.GetEditorHud();
 		command.Execute(this, args);
 	}
-	
-	private void OnEditorTeleportPlayerToCursor(UAInput input)
-	{		
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorTeleportPlayerToCursor");
-				
-		m_Editor.TeleportPlayerToCursor();
-	}
-		
+			
 	private void QuickTransformObjects(vector relative_position)
 	{
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();

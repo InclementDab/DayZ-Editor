@@ -8,9 +8,13 @@ class EditorCameraLight: SpotLightBase
 	}
 }
 
+class ScriptedCamera: Camera
+{
+	void OnControlChanged(bool state);
+}
 
 // make option Q and E go up and down no matter orientation
-class EditorCamera: Camera
+class EditorCamera: ScriptedCamera
 {
 	static const float TELEPORT_LERP_DISTANCE = 1000;
 	
@@ -83,6 +87,14 @@ class EditorCamera: Camera
 			LerpCameraPosition(position, 0.1);
 		}
 	}
+	
+	override void OnControlChanged(bool state)
+	{
+		super.OnControlChanged(state);
+		
+		MoveEnabled = state;
+		LookEnabled = state;
+	}
 
 	void OnTargetSelected( Object target )
 	{
@@ -132,6 +144,20 @@ class EditorCamera: Camera
 		Input input = GetGame().GetInput();
 		if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
 			return;
+		}
+		
+		// teleportation logic
+		if (input.LocalPress("UAZoomIn")) {	
+			vector mouse_pos = Vector(Editor.CurrentMousePosition[0], GetGame().SurfaceY(Editor.CurrentMousePosition[0], Editor.CurrentMousePosition[2]), Editor.CurrentMousePosition[2]);
+			vector camera_current_pos = GetPosition();
+			float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
+			
+			// check if water is under mouse, to stop from teleporting under water			
+			if (GetEditor().IsSurfaceWater(mouse_pos)) {
+				SendToPosition(Vector(mouse_pos[0],  camera_current_pos[1], mouse_pos[2]));
+			} else {
+				SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
+			}
 		}
 		
 		if (!KeyState(KeyCode.KC_LCONTROL)) {
