@@ -1684,6 +1684,7 @@ FrameWidgetClass EditorFrame {
    }
   }
   MapWidgetClass EditorMapWidget {
+   visible 0
    position 0 0
    size 1 1
    halign center_ref

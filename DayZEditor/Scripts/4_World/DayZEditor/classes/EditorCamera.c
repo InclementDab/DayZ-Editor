@@ -127,15 +127,6 @@ class EditorCamera: ScriptedCamera
 		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		//EditorLog.Trace("EditorCamera::EOnFrame");
-		/*if (SendUpdateAccumalator > 0.5){
-			//GetGame().UpdateSpectatorPosition(GetPosition());
-
-			SendUpdateAccumalator = 0;
-		}
-			
-		SendUpdateAccumalator = SendUpdateAccumalator + timeSlice;*/
-		
 		vector original_position_unchanged;
 		vector transform[4];
 		GetTransform(transform);
@@ -245,24 +236,11 @@ class EditorCamera: ScriptedCamera
 		}
 				
 		SetTransform(transform);
-		GetEditor().Statistics.EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km
-		
-		if (HideCursorOnDrag) {
-			if (input.LocalPress("UATempRaiseWeapon")) {
-				GetEditor().GetEditorHud().ShowCursor(false);
-				
-			}
-			
-			if (input.LocalRelease("UATempRaiseWeapon")) {
-				GetEditor().GetEditorHud().ShowCursor(true);
-			}
-		}
-		
+		GetEditor().Statistics.EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km		
 		
 		orientation = GetOrientation();
 		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
-			
-			angularVelocity = angularVelocity * Smoothing;			
+			angularVelocity = angularVelocity * Smoothing;
 			float temp_cam_rot_speed = Math.Lerp(Mouse_Sens, Mouse_Sens * 0.01, Smoothing);
 			angularVelocity[0] = angularVelocity[0] + ( yawDiff * temp_cam_rot_speed * 10 );
 			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * temp_cam_rot_speed * 10);

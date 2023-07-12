@@ -7,23 +7,7 @@ enum EditorClientModuleRPC
 class EditorClientModule: JMModuleBase
 {
 	protected Editor m_Editor;
-	
-	protected int m_KonamiCodeProgress;
-	protected float m_KonamiCodeCooldown;
-	
-	static const ref array<int> KONAMI_CODE = {
-		KeyCode.KC_UP,
-		KeyCode.KC_UP,
-		KeyCode.KC_DOWN,
-		KeyCode.KC_DOWN,
-		KeyCode.KC_LEFT,
-		KeyCode.KC_RIGHT,
-		KeyCode.KC_LEFT,
-		KeyCode.KC_RIGHT,
-		KeyCode.KC_B,
-		KeyCode.KC_A
-	};
-	
+		
 	void EditorClientModule() 
 	{
 		EditorLog.Info("EditorClientModule");
@@ -41,12 +25,7 @@ class EditorClientModule: JMModuleBase
 		super.OnInit();
 		
 		EditorLog.Trace("Editor::OnInit");
-						
-		// Keybinds
-		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
-		RegisterBinding(new JMModuleBinding("OnEditorTeleportPlayerToCursor", "EditorTeleportPlayerToCursor"));
-		
-		RegisterBinding(new JMModuleBinding("OnEditorToggleMap", "EditorToggleMap"));
+					
 		RegisterBinding(new JMModuleBinding("OnEditorDeleteObject", "EditorDeleteObject"));
 		
 		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectForward", "EditorMoveObjectForward"));
@@ -63,89 +42,11 @@ class EditorClientModule: JMModuleBase
 		RegisterBinding(new JMModuleBinding("OnEditorScaleDown", "EditorScaleDown"));
 		
 	}
-		
-	override void OnUpdate(float timeslice)
-	{
-		if (m_Editor) {
-			m_Editor.Update(timeslice);
-		}
-		
-		// Konami suck
-		/*if (m_KonamiCodeCooldown != 0) {
-			m_KonamiCodeCooldown -= timeslice;
-			m_KonamiCodeCooldown = Math.Clamp(m_KonamiCodeCooldown, 0, 100);
-		}
-		
-		if (m_KonamiCodeProgress != -1 && KeyState(KONAMI_CODE[m_KonamiCodeProgress]) && m_KonamiCodeCooldown == 0) {
-			m_KonamiCodeProgress++;
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(CheckKonamiCode, 1000, false, m_KonamiCodeProgress);
-			m_KonamiCodeCooldown = 0.15;
-		}
-		
-		if (m_KonamiCodeProgress >= KONAMI_CODE.Count()) {
-			m_Editor.GetEditorHud().CreateNotification("Konami Code Complete!", ARGB(255, 255, 0, 255));
-			m_Editor.KEgg = true;
-			m_KonamiCodeProgress = -1;
-		}*/
-		
-		/*
-		if (m_Editor && m_Editor.GetCamera() && !IsMissionOffline()) {
-			ScriptRPC update_rpc = new ScriptRPC();
-			update_rpc.Write(m_Editor.GetCamera().GetPosition());
-			update_rpc.Write(m_Editor.GetCamera().GetOrientation());
-			//update_rpc.Send(null, EditorServerModuleRPC.EDITOR_CLIENT_UPDATE, true);
-		}*/
-	}
-	
-	private void CheckKonamiCode(int progress)
-	{
-		if (m_KonamiCodeProgress == progress) {
-			m_KonamiCodeProgress = 0;
-		}
-	}
 	
 	override bool IsServer() 
 	{
 		return false;
 	}	
-		
-	override void OnMissionStart()
-	{
-		EditorLog.Trace("Editor::OnMissionStart");
-		
-		g_Game.ReportProgress("Loading Mission");
-	}
-	
-	override void OnMissionFinish()
-	{
-		EditorLog.Trace("Editor::OnMissionFinish");
-		Editor.Destroy();
-	}
-		
-	override void OnMissionLoaded()
-	{
-		EditorLog.Trace("Editor::OnMissionLoaded");
-		
-		g_Game.ReportProgress("Mission Loaded");
-		
-		vector center_pos = Editor.GetMapCenterPosition();
-		PlayerBase player = Editor.CreateDefaultCharacter(GetGame().CreateRandomPlayer(), Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
-		if (!player) {
-			Error("Player was not created, exiting");
-			return;
-		}
-
-		// Check if COM is running, because that means theres crackheads afoot!
-		string com_check = "CommunityOfflineClient";
-		if (com_check.ToType()) {
-			EditorLog.Error("The DayZ Editor cannot run with COM enabled, disable it in your Parameters file and restart the game with ONLY the DayZ Editor");
-			GetGame().GetUIManager().ShowDialog("Community Offline Mode Enabled", "The DayZ Editor cannot run with COM enabled, disable it in your Parameters file and restart the game with ONLY the DayZ Editor", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
-			return;
-		}
-		
-		EditorLog.Info("Loading Offline Editor...");
-		m_Editor = Editor.Create(player.GetPosition() + "0 5 0");
-	}
 	
 	// Inputs
 	private bool ShouldProcessInput(UAInput input)
@@ -158,33 +59,7 @@ class EditorClientModule: JMModuleBase
 	{
 		return (m_Editor && input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget));
 	}
-	
-	private void OnEditorToggleActive(UAInput input)
-	{
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorToggleActive");
-				
-		if (!m_Editor.GetCurrentControl() || m_Editor.GetCurrentControl().Type() != EditorCamera) {
-			m_Editor.ControlCamera();
-		} else {
-			m_Editor.ControlPlayer(PlayerBase.Cast(GetGame().GetPlayer()));
-		}
-	}	
-	
-	private void OnEditorToggleMap(UAInput input)
-	{
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorToggleMap");
 		
-		if (!m_Editor.GetEditorHud().IsVisible()) return;
-		
-		EditorHud editor_hud = m_Editor.GetEditorHud();
-		editor_hud.EditorMapWidget.Show(!editor_hud.EditorMapWidget.IsVisible());
-		editor_hud.ShowCursor(true);
-		
-		EditorEvents.MapToggled(this, m_Editor.GetEditorHud().EditorMapWidget, m_Editor.GetEditorHud().EditorMapWidget.IsVisible());
-	}	
-	
 	private void OnEditorDeleteObject(UAInput input)
 	{
 		if (!ShouldProcessInput(input)) return;

@@ -1,5 +1,7 @@
 modded class PlayerBase
 {	
+	static PlayerBase s_LastControlledPlayer;
+	
 	static map<string, int> GetEmoteList()
 	{
 		map<string, int> emotes();
@@ -24,6 +26,13 @@ modded class PlayerBase
 		}
 		
 		SetAllowDamage(!state);
+	}
+	
+	override void OnSelectPlayer()
+	{
+		super.OnSelectPlayer();
+		
+		s_LastControlledPlayer = this;
 	}
 	
 	override void EEKilled(Object killer)

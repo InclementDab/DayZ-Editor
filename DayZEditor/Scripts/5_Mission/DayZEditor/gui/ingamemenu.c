@@ -1,5 +1,5 @@
 modded class InGameMenu
-{
+{	
 	override Widget Init()
 	{		
 		layoutRoot = GetGame().GetWorkspace().CreateWidgets("DayZEditor/GUI/layouts/EditorPauseMenu.layout");

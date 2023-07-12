@@ -1,4 +1,4 @@
-class EditorHud: ScriptViewMenu
+class EditorHud: ScriptView
 {
 	protected bool m_IsBoxSelectActive;
 	
@@ -34,8 +34,7 @@ class EditorHud: ScriptViewMenu
 		PlayerBase controlled_player = PlayerBase.Cast(GetEditor().GetCurrentControl());
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("EditorToggleCursor")) {
-			Print(EditorMapWidget.IsVisible());
-			if (EditorMapWidget.IsVisible() || (CurrentDialog && GetEditor().Settings.LockCameraDuringDialogs)) {
+			if (!EditorMapWidget.IsVisible() && (!CurrentDialog || !GetEditor().Settings.LockCameraDuringDialogs)) {
 				ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
 			}
 		}
@@ -53,6 +52,12 @@ class EditorHud: ScriptViewMenu
 			if (controlled_player) {			
 				controlled_player.DisableSimulation(IsVisible());
 			}
+		}
+		
+		if (input.LocalPress("EditorToggleMap")) {
+			EditorMapWidget.Show(!EditorMapWidget.IsVisible());
+			ShowCursor(true);
+			EditorEvents.MapToggled(this, EditorMapWidget, EditorMapWidget.IsVisible());
 		}
 	}
 
@@ -82,6 +87,11 @@ class EditorHud: ScriptViewMenu
 			delete CurrentMenu;
 			SetFocus(null);
 		}
+	}
+	
+	bool IsCursorVisible()
+	{
+		return GetGame().GetUIManager().IsCursorVisible();
 	}
 		
 	void ShowScreenLogs(bool state)
@@ -119,13 +129,7 @@ class EditorHud: ScriptViewMenu
 		GetMousePos(x, y);
 		thread _DelayedDragBoxCheck(x, y);		
 	}
-	
-	void ScrollToListItem(EditorListItem list_item)
-	{
-		
-		//VScrollToWidget(list_item.GetLayoutRoot());
-	}
-	
+
 	private void _DelayedDragBoxCheck(int start_x, int start_y)
 	{
 		int drag_box_color = GetEditor().Settings.SelectionColor;
@@ -197,21 +201,6 @@ class EditorHud: ScriptViewMenu
 		EditorCanvas.DrawLine(0, (y / 3) * 2, x, (y / 3) * 2, 1, COLOR_BLACK);
 	}
 	
-	override bool UseMouse()
-	{
-		return true;
-	}
-	
-	override array<string> GetInputExcludes()
-	{
-		return { "menu" };
-	}
-	
-	override array<int> GetInputRestrictions()
-	{
-		return { UAWalkRunForced };
-	}
-	
 	override string GetLayoutFile() 
 	{
 		return "DayZEditor/gui/layouts/hud/EditorHud.layout";
@@ -220,6 +209,11 @@ class EditorHud: ScriptViewMenu
 	override typename GetControllerType()
 	{
 		return EditorHudController;
+	}
+	
+	EditorHudController GetTemplateController()
+	{
+		return EditorHudController.Cast(m_Controller);
 	}
 	
 	// Modal Menu Control

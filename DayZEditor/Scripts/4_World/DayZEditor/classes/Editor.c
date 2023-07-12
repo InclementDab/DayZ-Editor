@@ -119,7 +119,7 @@ class Editor: Managed
 	
 	bool										KEgg; // oh?
 	
-	private void Editor(vector position) 
+	void Editor(vector position) 
 	{
 		EditorLog.Trace("Editor");
 		g_Game.ReportProgress("Loading Editor");
@@ -211,19 +211,6 @@ class Editor: Managed
 		delete m_PlacingObjects;
 		delete m_RecentlyOpenedFiles;
 		GetGame().ObjectDelete(m_EditorCamera);
-	}
-	
-	static Editor Create(vector position)
-	{
-		EditorLog.Trace("Editor::Create");
-		g_Editor = new Editor(position);
-		return g_Editor;
-	}
-	
-	static void Destroy()
-	{
-		EditorLog.Trace("Editor::Destroy");
-		delete g_Editor;
 	}
 		
 	void OnStatisticsSave()
@@ -495,7 +482,45 @@ class Editor: Managed
 					controlled_player.SetPosition(MousePosToRay(_, controlled_player, 3000, 0, false, true));
 				}
 			}
+			
+			if (input.LocalPress("EditorToggleActive")) {
+				if (!GetCurrentControlCamera()) {
+					ControlCamera();
+				} else {
+					
+					// if player doesnt exist yet, create one
+					if (!PlayerBase.s_LastControlledPlayer) {
+						vector player_position;
+						if (!DoCursorRaycast(player_position, 100.0)) {
+							player_position = GetCurrentControlCamera().GetPosition();
+							player_position[1] = GetGame().SurfaceY(player_position[0], player_position[2]);
+						}
+						
+						PlayerBase.s_LastControlledPlayer = PlayerBase.Cast(GetGame().CreatePlayer(null, GetGame().CreateRandomPlayer(), player_position, 0, ""));
+					}
+					
+					ControlPlayer(PlayerBase.s_LastControlledPlayer);
+				}
+			}
 		}
+	}
+	
+	bool DoCursorRaycast(out vector position, float max_distance = 3000, Object ignore_object = null)
+	{
+		vector raycast_direction;
+		if (m_EditorHud.IsCursorVisible()) {
+			raycast_direction = GetGame().GetPointerDirection();
+		} else {
+			raycast_direction = GetGame().GetCurrentCameraDirection();
+		}
+		
+		vector begin_pos = GetGame().GetCurrentCameraPosition();
+		vector end_pos = begin_pos + raycast_direction * max_distance;
+		int interaction_layers = PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.TERRAIN | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.DYNAMICITEM | PhxInteractionLayers.ITEM_LARGE | PhxInteractionLayers.FIREGEOM;
+		Object hit_object;
+		vector normal;
+		float fraction;
+		return DayZPhysics.RayCastBullet(begin_pos, end_pos, interaction_layers, ignore_object, hit_object, position, normal, fraction);
 	}
 	
 	bool OnDoubleClick(int button)
@@ -1322,28 +1347,12 @@ class Editor: Managed
 		return Vector(values[0], values[2], values[1]);
 	}
 	
-	static vector GetSafeStartPosition(float x, float z, float radius)
+	static vector GenerateSafeStartPosition(float radius = 2000.0)
 	{
-		vector position;
-		position[0] = Math.RandomFloat(x - radius, x + radius);
-		position[2] = Math.RandomFloat(z - radius, z + radius);
-		position[1] = GetGame().SurfaceY(position[0], position[2]) + 1;
-		
-		//if (GetGame().SurfaceIsSea(position[0], position[2])) {
-			// try again
-			//EditorLog.Debug("Landed in water, trying again");
-			//return GetSafeStartPosition(x, z, radius + 50); 
-		//}
-		
-		array<Object> position_objects = {};
-		array<CargoBase> position_cargos = {};
-		GetGame().GetObjectsAtPosition(position, 2, position_objects, position_cargos);
-		if (position_objects.Count() > 0) {
-			// try again
-			EditorLog.Debug("Landed in building, trying again");
-			return GetSafeStartPosition(x, z, radius + 50);
-		}
-		
+		vector position = GetMapCenterPosition();
+		position[0] = Math.RandomFloat(position[0] - radius, position[0] + radius);
+		position[2] = Math.RandomFloat(position[2] - radius, position[2] + radius);
+		position[1] = GetGame().SurfaceY(position[0], position[2]) + 25.0;		
 		return position;
 	}
 		
