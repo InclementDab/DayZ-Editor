@@ -56,19 +56,7 @@ modded class MissionGameplay
 		g_Editor = new Editor(Editor.GenerateSafeStartPosition());
 		g_Game.ReportProgress("DayZ Editor Loading complete");
 	}
-	
-	override void Pause()
-	{
-		super.Pause();
-		GetEditor().GetEditorHud().Show(false);
-	}
-	
-	override void Continue()
-	{
-		super.Continue();		
-		GetEditor().GetEditorHud().Show(GetEditor().GetCurrentControlCamera() != null);
-	}
-	
+		
 	override void OnKeyPress(int key)
 	{
 		if (!GetEditor() || !GetEditor().OnKeyPress(key)) {
