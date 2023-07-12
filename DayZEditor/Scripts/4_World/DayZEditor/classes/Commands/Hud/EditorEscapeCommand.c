@@ -23,6 +23,11 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		}
 		
+		if (m_Editor.IsPromptedForObjectSelection()) {
+			m_Editor.PromptForObjectSelection(null);
+			return true;
+		}
+		
 		if (m_Editor.GetSelectedObjects().Count() > 0) {
 			m_Editor.ClearSelection();
 			return true;

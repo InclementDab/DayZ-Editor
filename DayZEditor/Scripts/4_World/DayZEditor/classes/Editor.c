@@ -146,7 +146,6 @@ class Editor: Managed
 		EditorLog.Info("Initializing Camera");
 		g_Game.ReportProgress("Initializing Camera");
 		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", position, ECE_LOCAL));
-		ControlCamera(m_EditorCamera);
 		
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
@@ -191,6 +190,8 @@ class Editor: Managed
 		
 		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
+		
+		ControlCamera(m_EditorCamera);
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(Update);
 		
@@ -360,6 +361,22 @@ class Editor: Managed
 		}
 	}
 		
+	protected ScriptCaller m_ObjectSelectCallback;
+	
+	void PromptForObjectSelection(ScriptCaller callback)
+	{
+		m_ObjectSelectCallback = callback;
+		
+		if (m_ObjectSelectCallback) {
+			m_EditorHud.CreateNotification("Select a world object");
+		}
+	}
+	
+	bool IsPromptedForObjectSelection()
+	{
+		return m_ObjectSelectCallback != null;
+	}
+	
 	// Leave null to use the default camera
 	void ControlCamera(ScriptedCamera camera = null)
 	{
@@ -515,10 +532,17 @@ class Editor: Managed
 		
 		switch (button) {
 			
-			case MouseState.LEFT: {
-
+			case MouseState.LEFT: {				
 				if (IsPlacing()) {
 					PlaceObject();
+					return true;
+				}
+				
+				if (IsPromptedForObjectSelection()) {
+					m_ObjectSelectCallback.Invoke(ObjectUnderCursor);
+					if (ObjectUnderCursor) {
+						EditorBoundingBox.Destroy(ObjectUnderCursor);
+					}
 					return true;
 				}
 				
@@ -676,6 +700,10 @@ class Editor: Managed
 			m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_WHITE);
 		}
 		
+		if (IsPromptedForObjectSelection()) {
+			EditorBoundingBox.Create(target);
+		}
+		
 		return true;
 	}
 	
@@ -684,6 +712,11 @@ class Editor: Managed
 	{
 		m_EditorHudController.ObjectReadoutName = "";
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
+		
+		if (IsPromptedForObjectSelection()) {
+			EditorBoundingBox.Destroy(target);
+		}
+		
 		return true;
 	}	
 	

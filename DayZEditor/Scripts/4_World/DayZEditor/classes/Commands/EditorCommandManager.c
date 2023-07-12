@@ -107,6 +107,7 @@ class EditorCommandManager
 		RegisterCommand(EditorExportToEvents);
 		RegisterCommand(EditorExportToMapGroupPos);
 		RegisterCommand(EditorExportToObjectSpawner);
+		RegisterCommand(EditorExportRelativeToObject);
 		
 		RegisterCommand(EditorSearchCommand);
 		RegisterCommand(EditorSearchObjectCommand);

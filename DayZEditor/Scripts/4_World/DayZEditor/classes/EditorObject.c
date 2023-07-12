@@ -537,7 +537,7 @@ class EditorObject: EditorWorldObject
 		m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
 		GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
 	}
-
+	
 	private bool _boundingBoxesCreated;
 	void EnableBoundingBox(bool enable) 
 	{
@@ -569,7 +569,6 @@ class EditorObject: EditorWorldObject
 			
 			AddChild(m_BBoxLines[i], -1);
 		}
-		
 		
 		vector y_axis_mat[4];
 		vector bottom_center = GetBottomCenter() - GetPosition();
