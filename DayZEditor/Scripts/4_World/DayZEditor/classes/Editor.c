@@ -74,6 +74,7 @@ class Editor: Managed
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
 	protected EditorCamera 												m_EditorCamera;
 	protected ref EditorHandMap						m_PlacingObjects = new EditorHandMap();
+	protected Entity m_CurrentControl;
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorActionStack 				m_ActionStack;
@@ -358,9 +359,7 @@ class Editor: Managed
 			world_object.GetWorldObject().SetTransform(transform);
 		}
 	}
-	
-	protected Entity m_CurrentControl;
-	
+		
 	// Leave null to use the default camera
 	void ControlCamera(ScriptedCamera camera = null)
 	{
@@ -371,16 +370,20 @@ class Editor: Managed
 				return;
 			}
 		}
-		
+				
 		m_CurrentControl = camera;
 		camera.SetActive(true);
 		camera.OnSelectCamera();
+		
+		m_ObjectManager.ClearSelection();
 	}
 	
 	void ControlPlayer(notnull PlayerBase player)
 	{
 		m_CurrentControl = player;
 		GetGame().SelectPlayer(null, player);
+		
+		m_ObjectManager.ClearSelection();
 	}
 	
 	Entity GetCurrentControl()

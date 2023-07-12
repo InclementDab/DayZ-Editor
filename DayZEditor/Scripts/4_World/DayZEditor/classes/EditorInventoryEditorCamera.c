@@ -15,6 +15,10 @@ class EditorInventoryEditorCamera: ScriptedCamera
 		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
+		if (GetEditor().GetCurrentControl() != this) {
+			return;
+		}
+		
 		if (!m_Target || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
 			return;
 		}

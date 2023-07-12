@@ -95,7 +95,10 @@ class EditorCamera: ScriptedCamera
 		MoveEnabled = true;
 		LookEnabled = true;
 		
-		GetEditor().GetEditorHud().Show(true);
+		// literally just for startup
+		if (GetEditor().GetEditorHud()) {
+			GetEditor().GetEditorHud().Show(true);
+		}
 	}
 
 	void OnTargetSelected( Object target )

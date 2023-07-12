@@ -1,5 +1,12 @@
 modded class MissionGameplay
 {	
+	override void OnUpdate(float timeslice)
+	{
+		super.OnUpdate(timeslice);
+		
+		m_HudRootWidget.Show(GetGame().GetPlayer() == GetEditor().GetCurrentControl());
+	}
+	
 	override void OnInit()
 	{
 		super.OnInit();

@@ -23,13 +23,14 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 		m_TemplateController.SetEntity(m_Entity);
 		
 		GetEditor().ControlCamera(m_Camera);
+		GetEditor().GetEditorHud().Show(false);
 	}
 	
 	void ~EditorInventoryEditorHud()
 	{
 		// fallback
 		if (GetEditor().GetCurrentControl() == m_Camera) {
-			GetEditor().ControlCamera(GetEditor().GetCamera());
+			GetEditor().ControlCamera();
 		}
 		
 		GetGame().ObjectDelete(m_Camera);
@@ -39,6 +40,19 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 	{
 		super.Update(dt);
 		
+		Input input = GetGame().GetInput();
+		if (input.LocalPress("UAUIBack")) {
+			GetEditor().ControlCamera();
+			Close();
+		}
+		
+		if (input.LocalPress("EditorToggleUI")) {			
+			m_LayoutRoot.Show(!m_LayoutRoot.IsVisible());
+		}
+		
+		if (input.LocalPress("EditorToggleCursor")) {
+			GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
+		}
 	}
 	
 	void ClearExecute(ButtonCommandArgs args)
@@ -76,7 +90,7 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 	
 	void ExitExecute(ButtonCommandArgs args)
 	{
-		GetEditor().ControlCamera(GetEditor().GetCamera());
+		GetEditor().ControlCamera();
 		Close();
 	}
 	
@@ -139,17 +153,7 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 	{
 		return true;
 	}
-	
-	override array<string> GetInputExcludes()
-	{
-		return { "menu" };
-	}
-	
-	override array<int> GetInputRestrictions()
-	{
-		return { UAWalkRunForced };
-	}
-	
+		
 	EntityAI GetEntity()
 	{
 		return m_Entity;

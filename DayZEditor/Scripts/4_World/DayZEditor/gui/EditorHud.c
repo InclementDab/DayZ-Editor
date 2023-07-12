@@ -30,7 +30,12 @@ class EditorHud: ScriptView
 	override void Update(float dt)
 	{
 		super.Update(dt);
-				
+		
+		// kinda cursed but double inputs. maybe have a handler if you want more ui shit (loooot editor)
+		if (GetEditor().IsInventoryEditorActive()) {
+			return;
+		}
+		
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("EditorToggleCursor")) {
 			if (!EditorMapWidget.IsVisible() && (!CurrentDialog || !GetEditor().Settings.LockCameraDuringDialogs)) {
@@ -38,12 +43,7 @@ class EditorHud: ScriptView
 			}
 		}
 		
-		if (input.LocalPress("EditorToggleUI")) {
-			if (GetEditor().IsInventoryEditorActive()) {
-				GetEditor().GetInventoryEditorHud().GetLayoutRoot().Show(!GetEditor().GetInventoryEditorHud().GetLayoutRoot().IsVisible());
-				return;
-			}
-			
+		if (input.LocalPress("EditorToggleUI")) {			
 			Show(!IsVisible());
 		}
 		
@@ -70,8 +70,7 @@ class EditorHud: ScriptView
 		PlayerBase controlled_player = GetEditor().GetCurrentControlPlayer();
 		Hud hud = GetGame().GetMission().GetHud();
 		hud.ShowHudUI(g_Game.GetProfileOption(EDayZProfilesOptions.HUD) && !show && controlled_player != null);
-		hud.ShowQuickbarUI(g_Game.GetProfileOption(EDayZProfilesOptions.QUICKBAR) && !show && controlled_player != null);		
-		hud.HideCursor();
+		hud.ShowQuickbarUI(g_Game.GetProfileOption(EDayZProfilesOptions.QUICKBAR) && !show && controlled_player != null);
 	}
 	
 	bool IsVisible() 
