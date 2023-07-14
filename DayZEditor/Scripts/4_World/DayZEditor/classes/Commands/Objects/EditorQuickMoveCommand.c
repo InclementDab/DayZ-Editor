@@ -2,18 +2,17 @@ class EditorQuickMoveCommand: EditorCommand
 {
 	override bool Execute(Class sender, CommandArgs args)
 	{
-		float value = m_Editor.Settings.QuickMoveStepSize;
+		float value = GetEditor().Settings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
 		
-		
 		vector direction = GetDirection() * value;
-		if (m_Editor.Settings.QuickMoveFollowsCamera) {
-			direction = m_Editor.GetCamera().GetDirection() * value;
+		if (GetEditor().Settings.QuickMoveFollowsCamera) {
+			direction = GetEditor().GetCamera().GetDirection() * value;
 		}
 		
-		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
+		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
 		if (selected_objects.Count() == 0) {
 			return false;
 		}
@@ -29,6 +28,11 @@ class EditorQuickMoveCommand: EditorCommand
 	vector GetDirection()
 	{
 		return vector.Zero;
+	}
+	
+	override EditorShortcutKeyType GetShortcutType()
+	{
+		return EditorShortcutKeyType.HOLD;
 	}
 }
 

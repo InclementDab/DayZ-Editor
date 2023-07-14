@@ -1,6 +1,13 @@
+enum EditorShortcutKeyType
+{
+	PRESS,
+	DOUBLE,
+	HOLD
+};
+
 class EditorCommand: RelayCommand
 {	
-	protected Editor m_Editor;	
+	protected Editor m_Editor;
 	protected ref Param m_Param;
 	string Text;
 
@@ -86,5 +93,10 @@ class EditorCommand: RelayCommand
 	string GetShortcut()
 	{
 		return ClassName();
+	}
+	
+	EditorShortcutKeyType GetShortcutType()
+	{
+		return EditorShortcutKeyType.PRESS;
 	}
 }
