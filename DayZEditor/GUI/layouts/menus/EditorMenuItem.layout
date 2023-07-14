@@ -57,6 +57,7 @@ WrapSpacerWidgetClass EditorMenuItem {
        {
         TextWidgetClass EditorMenuItemLabel {
          visible 1
+         disabled 0
          clipchildren 1
          inheritalpha 1
          ignorepointer 1
@@ -108,8 +109,8 @@ WrapSpacerWidgetClass EditorMenuItem {
         }
         TextWidgetClass EditorMenuItemShortcut {
          visible 1
-         clipchildren 0
-         inheritalpha 0
+         clipchildren 1
+         inheritalpha 1
          ignorepointer 1
          position 10 0
          size 0.3 0.55

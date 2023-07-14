@@ -331,20 +331,20 @@
                 <btn name="kNext"/>
             </btn>
         </input>
-        <input name="EditorEnvironmentControlCommand">
+        <!--input name="EditorEnvironmentControlCommand">
             <btn name="kLControl">
                 <btn name="kLShift">
                     <btn name="kI"/>
                 </btn>
             </btn>
-        </input>
-        <input name="EditorSaveAsCommand">
+        </input-->
+        <!--input name="EditorSaveAsCommand">
             <btn name="kLControl">
                 <btn name="kLShift">
                     <btn name="kS"/>
                 </btn>
             </btn>
-        </input>
+        </input-->
         <input name="EditorGroundCommand">
             <btn name="kLControl">
                 <btn name="k2"/>
@@ -401,20 +401,20 @@
                 <btn name="kC"/>
             </btn>
         </input>
-        <input name="EditorCameraControlsCommand">
+        <!--input name="EditorCameraControlsCommand">
             <btn name="kLControl">
                 <btn name="kLShift">
                     <btn name="kT"/>
                 </btn>
             </btn>
-        </input>
-        <input name="EditorSearchObjectCommand">
+        </input-->
+        <!--input name="EditorSearchObjectCommand">
             <btn name="kLControl">
                 <btn name="kLShift">
                     <btn name="kF"/>
                 </btn>
             </btn>
-        </input>
+        </input-->
         <input name="EditorSaveCommand">
             <btn name="kLControl">
                 <btn name="kS"/>
@@ -456,13 +456,13 @@
                 <btn name="kF"/>
             </btn>
         </input>
-        <input name="EditorReloadHudCommand">
+        <!--input name="EditorReloadHudCommand">
             <btn name="kLControl">
                 <btn name="kLShift">
                     <btn name="kU"/>
                 </btn>
             </btn>
-        </input>
+        </input-->
         <input name="EditorToggleSimulationCommand">
             <btn name="kK"/>
         </input>
