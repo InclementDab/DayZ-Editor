@@ -23,6 +23,11 @@ class EditorRotateObjectClockwiseCommand: EditorCommand
 		m_LastAngle = angle;*/
 		return true;
 	}
+	
+	override EditorShortcutKeyType GetShortcutType()
+	{
+		return EditorShortcutKeyType.HOLD;
+	}
 }
 
 class EditorRotateObjectCounterClockwiseCommand: EditorCommand
@@ -48,5 +53,10 @@ class EditorRotateObjectCounterClockwiseCommand: EditorCommand
 		m_LastAngle = angle;
 		*/
 		return true;
+	}
+	
+	override EditorShortcutKeyType GetShortcutType()
+	{
+		return EditorShortcutKeyType.HOLD;
 	}
 }

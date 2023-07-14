@@ -15,6 +15,11 @@ class EditorScaleUpCommand: EditorCommand
 		
 		return true;
 	}
+	
+	override EditorShortcutKeyType GetShortcutType()
+	{
+		return EditorShortcutKeyType.HOLD;
+	}
 }
 
 class EditorScaleDownCommand: EditorCommand
@@ -33,5 +38,10 @@ class EditorScaleDownCommand: EditorCommand
 		}
 		
 		return true;
+	}
+	
+	override EditorShortcutKeyType GetShortcutType()
+	{
+		return EditorShortcutKeyType.HOLD;
 	}
 }

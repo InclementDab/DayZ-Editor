@@ -295,50 +295,40 @@
         </input>
         <input name="EditorMoveObjectForwardCommand">
             <btn name="kUp" />
-            <event name="clickorhold" />
         </input>
         <input name="EditorMoveObjectBackwardCommand">
             <btn name="kDown" />
-            <event name="clickorhold" />
         </input>
         <input name="EditorMoveObjectLeftCommand">
             <btn name="kLeft" />
-            <event name="clickorhold" />
         </input>
         <input name="EditorMoveObjectRightCommand">
             <btn name="kRight" />
-            <event name="clickorhold" />
         </input>
         <input name="EditorMoveObjectUpCommand">
             <btn name="kPrior" />
-            <event name="clickorhold" />
         </input>
         <input name="EditorMoveObjectDownCommand">
             <btn name="kNext" />
-            <event name="clickorhold" />
         </input>
         <input name="EditorRotateObjectClockwiseCommand">
             <btn name="kLControl">
                 <btn name="kRight" />
-                <event name="clickorhold" />
             </btn>
         </input>
         <input name="EditorRotateObjectCounterClockwiseCommand">
             <btn name="kLControl">
                 <btn name="kLeft" />
-                <event name="clickorhold" />
             </btn>
         </input>
         <input name="EditorScaleUpCommand">
             <btn name="kLControl">
                 <btn name="kPrior" />
-                <event name="clickorhold" />
             </btn>
         </input>
         <input name="EditorScaleDownCommand">
             <btn name="kLControl">
                 <btn name="kNext"/>
-                <event name="clickorhold" />
             </btn>
         </input>
         <!--input name="EditorEnvironmentControlCommand">

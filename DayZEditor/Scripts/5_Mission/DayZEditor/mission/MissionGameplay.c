@@ -45,6 +45,9 @@ modded class MissionGameplay
 						if (command.Execute(GetEditor().CommandManager, args)) {
 							return; // mucho importante
 						}
+						
+						// hate enf
+						execute = false;
 					}
 				}
 			}
