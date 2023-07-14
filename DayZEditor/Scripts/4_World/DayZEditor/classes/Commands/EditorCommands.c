@@ -54,13 +54,18 @@ class EditorCommand: RelayCommand
 	string GetShortcutString() 
 	{
 		string result;
-		map<int, ref array<string>> input_strings = InputUtils.GetComboButtonNamesFromInput(GetShortcut(), EInputDeviceType.MOUSE_AND_KEYBOARD);
-		foreach (int _, array<string> key_strings: input_strings) {
-			for (int i = 0; i < key_strings.Count(); i++) {
-				result += key_strings[i];
-				if (i != key_strings.Count() - 1) {
-					result += "+";
-				}
+		UAInput inp = GetUApi().GetInputByName(GetShortcut());
+		for (int i = 0; i < inp.BindKeyCount(); i++) { 
+			if (inp.CheckBindDevice(i, EInputDeviceType.MOUSE_AND_KEYBOARD)) {
+				string button_name = GetUApi().GetButtonName(inp.GetBindKey(i));
+				button_name.Replace("Left ", "");
+				button_name.Replace("Right ", "R");
+				
+				result += button_name;
+			}
+			
+			if (i != inp.BindKeyCount() - 1) {
+				result += " + ";
 			}
 		}
 		
