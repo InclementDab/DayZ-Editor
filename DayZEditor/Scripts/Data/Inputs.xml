@@ -25,16 +25,16 @@
 			
 			<input name="EditorToggleMap" loc="Map" />
 
-			<input name="EditorMoveObjectForward" loc="Move Object Forward" />
-			<input name="EditorMoveObjectBackward" loc="Move Object Backward" />
-			<input name="EditorMoveObjectLeft" loc="Move Object Left" />
-			<input name="EditorMoveObjectRight" loc="Move Object Right" />
-			<input name="EditorMoveObjectUp" loc="Move Object Up" />
-			<input name="EditorMoveObjectDown" loc="Move Object Down" />
-			<input name="EditorRotateObjectClockwise" loc="Rotate Objects Clockwise" />
-			<input name="EditorRotateObjectCounterClockwise" loc="Rotate Objects Counter Clockwise" />
-			<input name="EditorScaleUp" loc="Scale Objects Up" />
-			<input name="EditorScaleDown" loc="Scale Objects Down" />
+			<input name="EditorMoveObjectForwardCommand" loc="Move Object Forward" />
+			<input name="EditorMoveObjectBackwardCommand" loc="Move Object Backward" />
+			<input name="EditorMoveObjectLeftCommand" loc="Move Object Left" />
+			<input name="EditorMoveObjectRightCommand" loc="Move Object Right" />
+			<input name="EditorMoveObjectUpCommand" loc="Move Object Up" />
+			<input name="EditorMoveObjectDownCommand" loc="Move Object Down" />
+			<input name="EditorRotateObjectClockwiseCommand" loc="Rotate Objects Clockwise" />
+			<input name="EditorRotateObjectCounterClockwiseCommand" loc="Rotate Objects Counter Clockwise" />
+			<input name="EditorScaleUpCommand" loc="Scale Objects Up" />
+			<input name="EditorScaleDownCommand" loc="Scale Objects Down" />
 
             <input name="EditorEnvironmentControlCommand" loc="#STR_EDITOR_ENVIRONMENT"/>
             <input name="EditorBrushToggleCommand" loc="#STR_EDITOR_CMD_TOGGLE_BRUSH"/>
@@ -134,16 +134,16 @@
                 <input name="EditorToggleInventoryEditor"/>
                 <input name="EditorToggleInventory"/>
                 <input name="EditorToggleMap"/>
-                <input name="EditorMoveObjectForward"/>
-                <input name="EditorMoveObjectBackward"/>
-                <input name="EditorMoveObjectLeft"/>
-                <input name="EditorMoveObjectRight"/>
-                <input name="EditorMoveObjectUp"/>
-                <input name="EditorMoveObjectDown"/>
-                <input name="EditorRotateObjectClockwise"/>
-                <input name="EditorRotateObjectCounterClockwise"/>
-                <input name="EditorScaleUp"/>
-                <input name="EditorScaleDown"/>
+                <input name="EditorMoveObjectForwardCommand"/>
+                <input name="EditorMoveObjectBackwardCommand"/>
+                <input name="EditorMoveObjectLeftCommand"/>
+                <input name="EditorMoveObjectRightCommand"/>
+                <input name="EditorMoveObjectUpCommand"/>
+                <input name="EditorMoveObjectDownCommand"/>
+                <input name="EditorRotateObjectClockwiseCommand"/>
+                <input name="EditorRotateObjectCounterClockwiseCommand"/>
+                <input name="EditorScaleUpCommand"/>
+                <input name="EditorScaleDownCommand"/>
                 <input name="EditorEnvironmentControlCommand"/>
                 <input name="EditorBrushToggleCommand"/>
                 <input name="EditorImportFromVPP"/>
@@ -293,42 +293,52 @@
 		<input name="EditorTeleportPlayerToCursor">
             <btn name="kT" />
         </input>
-        <input name="EditorMoveObjectForward">
+        <input name="EditorMoveObjectForwardCommand">
             <btn name="kUp" />
+            <event name="clickorhold" />
         </input>
-        <input name="EditorMoveObjectBackward">
+        <input name="EditorMoveObjectBackwardCommand">
             <btn name="kDown" />
+            <event name="clickorhold" />
         </input>
-        <input name="EditorMoveObjectLeft">
+        <input name="EditorMoveObjectLeftCommand">
             <btn name="kLeft" />
+            <event name="clickorhold" />
         </input>
-        <input name="EditorMoveObjectRight">
+        <input name="EditorMoveObjectRightCommand">
             <btn name="kRight" />
+            <event name="clickorhold" />
         </input>
-        <input name="EditorMoveObjectUp">
+        <input name="EditorMoveObjectUpCommand">
             <btn name="kPrior" />
+            <event name="clickorhold" />
         </input>
-        <input name="EditorMoveObjectDown">
+        <input name="EditorMoveObjectDownCommand">
             <btn name="kNext" />
+            <event name="clickorhold" />
         </input>
-        <input name="EditorRotateObjectClockwise">
+        <input name="EditorRotateObjectClockwiseCommand">
             <btn name="kLControl">
                 <btn name="kRight" />
+                <event name="clickorhold" />
             </btn>
         </input>
-        <input name="EditorRotateObjectCounterClockwise">
+        <input name="EditorRotateObjectCounterClockwiseCommand">
             <btn name="kLControl">
                 <btn name="kLeft" />
+                <event name="clickorhold" />
             </btn>
         </input>
-        <input name="EditorScaleUp">
+        <input name="EditorScaleUpCommand">
             <btn name="kLControl">
                 <btn name="kPrior" />
+                <event name="clickorhold" />
             </btn>
         </input>
-        <input name="EditorScaleDown">
+        <input name="EditorScaleDownCommand">
             <btn name="kLControl">
                 <btn name="kNext"/>
+                <event name="clickorhold" />
             </btn>
         </input>
         <!--input name="EditorEnvironmentControlCommand">

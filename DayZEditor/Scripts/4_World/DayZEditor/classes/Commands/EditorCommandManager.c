@@ -129,6 +129,17 @@ class EditorCommandManager
 		RegisterCommand(EditorDonateCommand);
 		RegisterCommand(EditorHelpCommand);
 		
+		RegisterCommand(EditorMoveObjectForwardCommand);
+		RegisterCommand(EditorMoveObjectBackwardCommand);
+		RegisterCommand(EditorMoveObjectLeftCommand);
+		RegisterCommand(EditorMoveObjectRightCommand);
+		RegisterCommand(EditorMoveObjectUpCommand);
+		RegisterCommand(EditorMoveObjectDownCommand);
+		RegisterCommand(EditorRotateObjectClockwiseCommand);
+		RegisterCommand(EditorRotateObjectCounterClockwiseCommand);
+		RegisterCommand(EditorScaleUpCommand);
+		RegisterCommand(EditorScaleDownCommand);
+		
 		// Camera Track
 		CameraTrackAddNode = RegisterCommand(EditorCameraTrackAddNode);
 		CameraTrackRun = RegisterCommand(EditorCameraTrackRun);
