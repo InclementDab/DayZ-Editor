@@ -184,6 +184,15 @@ class EditorObject: EditorWorldObject
 		PropertyChanged("EditorOnly");
 		PropertyChanged("AllowDamage");
 		
+		// Needed for AI Placement			
+		EntityAI entity_ai;
+		if (Class.CastTo(entity_ai, m_WorldObject)) {						
+			// weeeeeeee
+			if (GetEditor().Settings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
+				entity_ai.OnDebugSpawn();
+			}
+		}	
+		
 		// Load animations
 		array<string> paths = {
 			CFG_VEHICLESPATH,

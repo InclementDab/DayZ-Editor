@@ -14,7 +14,7 @@ modded class PlayerBase
 		
 		return emotes;
 	}
-	
+		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
 		GetInputController().SetDisabled(GetEditor().GetCurrentControl() != this);

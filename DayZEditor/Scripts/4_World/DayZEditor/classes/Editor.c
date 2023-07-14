@@ -229,8 +229,8 @@ class Editor: Managed
 		
 		set<Object> obj();
 		int x, y;
-		GetMousePos(x, y);
-		
+		GetMousePos(x, y);		
+				
 		if (m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible()) {
 			CurrentMousePosition = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(x, y, 0));
 			CurrentMousePosition[1] = GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]);
@@ -330,7 +330,7 @@ class Editor: Managed
 			if (!world_object) {
 				return;
 			}
-			
+												
 			vector position = CurrentMousePosition;
 			if (hand_data) {
 				position += hand_data.PositionOffset;
@@ -356,7 +356,11 @@ class Editor: Managed
 			transform[1] = surface_normal;
 			transform[2] = surface_normal * (local_ori * vector.Up);
 			
-			world_object.GetWorldObject().SetTransform(transform);
+			// wowzers what a hack
+			EntityAI.Cast(world_object.GetWorldObject()).DisableSimulation(true);
+			world_object.GetWorldObject().SetPosition(position);
+			world_object.GetWorldObject().Update();
+			EntityAI.Cast(world_object.GetWorldObject()).DisableSimulation(false);
 		}
 	}
 		
@@ -386,20 +390,30 @@ class Editor: Managed
 				return;
 			}
 		}
-				
+		
+		if (m_CurrentControl) {			
+			m_CurrentControl.DisableSimulation(true);
+		}
+		
 		m_CurrentControl = camera;
 		camera.SetActive(true);
 		camera.OnSelectCamera();
 		
 		m_ObjectManager.ClearSelection();
+		m_CurrentControl.DisableSimulation(false);
 	}
 	
 	void ControlPlayer(notnull PlayerBase player)
 	{
+		if (m_CurrentControl) {
+			m_CurrentControl.DisableSimulation(true);
+		}
+		
 		m_CurrentControl = player;
-		GetGame().SelectPlayer(null, player);
+		GetGame().SelectPlayer(null, m_CurrentControl);
 		
 		m_ObjectManager.ClearSelection();
+		m_CurrentControl.DisableSimulation(false);
 	}
 	
 	Entity GetCurrentControl()

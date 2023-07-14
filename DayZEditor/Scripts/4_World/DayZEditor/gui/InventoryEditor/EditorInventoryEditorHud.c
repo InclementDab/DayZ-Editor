@@ -41,6 +41,11 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 		super.Update(dt);
 		
 		Input input = GetGame().GetInput();
+		// another hack. input management needs to be moved to commands, all im saayyinn
+		if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
+			return;
+		}
+		
 		if (input.LocalPress("UAUIBack")) {
 			GetEditor().ControlCamera();
 			Close();

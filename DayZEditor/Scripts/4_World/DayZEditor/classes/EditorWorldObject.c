@@ -38,17 +38,15 @@ class EditorWorldObject
 			return null;
 		}
 		
-		// Needed for AI Placement			
+		
 		EntityAI entity_ai;
 		if (Class.CastTo(entity_ai, object)) {
-			entity_ai.DisableSimulation(true);
+			//GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 37, false, true);
+			//GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 37, false, false);
+			//GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 37, false, true);
+		}
 						
-			// weeeeeeee
-			if (GetEditor().Settings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
-				entity_ai.OnDebugSpawn();
-			}
-		}		
-		
+		object.SetPosition(position);
 		object.SetOrientation(orientation);
 		object.SetScale(scale);
 		object.Update();		

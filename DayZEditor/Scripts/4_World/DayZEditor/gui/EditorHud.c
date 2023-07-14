@@ -32,7 +32,7 @@ class EditorHud: ScriptView
 		super.Update(dt);
 		
 		// kinda cursed but double inputs. maybe have a handler if you want more ui shit (loooot editor)
-		if (GetEditor().IsInventoryEditorActive()) {
+		if (GetEditor().IsInventoryEditorActive() || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
 			return;
 		}
 		

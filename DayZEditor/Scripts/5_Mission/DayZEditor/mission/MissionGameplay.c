@@ -1,59 +1,64 @@
 modded class MissionGameplay
 {	
 	override void OnUpdate(float timeslice)
-	{
-		bool player_control_enabled = GetEditor() && GetGame().GetPlayer() == GetEditor().GetCurrentControl();
-		
-		m_HudRootWidget.Show(player_control_enabled);
-		
+	{		
 		// Handle commands, and if we return TRUE, then dont run the rest of the missions update thread
 		if (GetEditor()) {
 			map<string, EditorCommand> commands = GetEditor().CommandManager.GetCommandShortcutMap();
-			foreach (string input_name, EditorCommand command: commands) {				
-				if (command && command.CanExecute()) {
-					bool execute;
-					switch (command.GetShortcutType()) {
-						case EditorShortcutKeyType.PRESS: {
-							if (GetGame().GetInput().LocalPress(input_name)) {
-								execute = true;
-							}
-							
-							break;
+			foreach (string input_name, EditorCommand command: commands) {		
+				if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
+					continue;
+				}
+						
+				if (!command || !command.CanExecute()) {
+					continue;
+				}
+				
+				bool execute;
+				switch (command.GetShortcutType()) {
+					case EditorShortcutKeyType.PRESS: {
+						if (GetGame().GetInput().LocalPress(input_name)) {
+							execute = true;
 						}
 						
-						case EditorShortcutKeyType.DOUBLE: {
-							if (GetGame().GetInput().LocalDbl(input_name)) {
-								execute = true;
-							}
-							
-							break;
-						}
-						
-						case EditorShortcutKeyType.HOLD: {
-							if (GetGame().GetInput().LocalHold(input_name)) {
-								execute = true;
-							}
-							
-							break;
-						}
+						break;
 					}
 					
-					if (execute) {
-						EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
-						CommandArgs args = new CommandArgs();
-						args.Context = GetEditor().GetEditorHud();
-						if (command.Execute(GetEditor().CommandManager, args)) {
-							return; // mucho importante
+					case EditorShortcutKeyType.DOUBLE: {
+						if (GetGame().GetInput().LocalDbl(input_name)) {
+							execute = true;
 						}
 						
-						// hate enf
-						execute = false;
+						break;
 					}
+					
+					case EditorShortcutKeyType.HOLD: {
+						if (GetGame().GetInput().LocalHold(input_name)) {
+							execute = true;
+						}
+						
+						break;
+					}
+				}
+				
+				if (execute) {
+					EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
+					CommandArgs args = new CommandArgs();
+					args.Context = GetEditor().GetEditorHud();
+					if (command.Execute(GetEditor().CommandManager, args)) {
+						return; // mucho importante
+					}
+					
+					// hate enf
+					execute = false;
 				}
 			}
 		}
 		
 		super.OnUpdate(timeslice);
+		
+		bool player_control_enabled = GetEditor() && GetEditor().GetCurrentControl() && GetEditor().GetCurrentControl().IsInherited(Man);
+		m_HudRootWidget.Show(player_control_enabled);
 	}
 	
 	override void OnInit()
