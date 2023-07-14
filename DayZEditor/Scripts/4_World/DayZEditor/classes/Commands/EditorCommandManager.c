@@ -1,7 +1,7 @@
 class EditorCommandManager
 {
 	protected ref map<typename, ref EditorCommand> m_Commands = new map<typename, ref EditorCommand>();
-	protected ref map<int, EditorCommand> m_CommandShortcutMap = new map<int, EditorCommand>();
+	protected ref map<string, EditorCommand> m_CommandShortcutMap = new map<string, EditorCommand>();
 
 	// This is done specifically for the ViewBindings that bind to these on the toolbar
 	// if you adapt ViewBinding to call a function, to acquire a delegate. ill give you $30
@@ -149,8 +149,8 @@ class EditorCommandManager
 		
 		this[command_type] = command;
 		
-		if (command.GetShortcut()) {
-			m_CommandShortcutMap.Insert(command.GetShortcut().GetMask(), command);
+		if (command.GetShortcut() != string.Empty) {
+			m_CommandShortcutMap[command.GetShortcut()] = command;
 		}	
 		
 		return command;	
@@ -171,8 +171,8 @@ class EditorCommandManager
 		return m_Commands.GetValueArray();
 	}
 	
-	EditorCommand GetCommandFromShortcut(int shortcut)
+	map<string, EditorCommand> GetCommandShortcutMap()
 	{
-		return m_CommandShortcutMap[shortcut];
+		return m_CommandShortcutMap;
 	}
 }

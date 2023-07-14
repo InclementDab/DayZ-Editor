@@ -12,9 +12,4 @@ class EditorCameraTrackAddNode: EditorCommand
 	{
 		return "#STR_EDITOR_CINEMATIC_CAMERA_ADD_NODE";
 	}
-	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_P };
-	}
 }

@@ -59,11 +59,6 @@ class EditorEscapeCommand: EditorCommand
 		return true;
 	}
 	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_ESCAPE };
-	}
-	
 	override string GetName() 
 	{
 		return "#STR_EDITOR_EXIT";

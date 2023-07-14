@@ -78,7 +78,6 @@ class Editor: Managed
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorActionStack 				m_ActionStack;
-	protected ref ShortcutKeys 						m_CurrentKeys = new ShortcutKeys();
 	
 	// private references
 	protected EditorHudController 					m_EditorHudController;
@@ -223,7 +222,7 @@ class Editor: Managed
 	}
 	
 	void Update(float timeslice)
-	{		
+	{
 		if (ShouldProcessInput()) {
 			ProcessInput(GetGame().GetInput());
 		}
@@ -637,57 +636,7 @@ class Editor: Managed
 		CGame game = GetGame();
 		return game.SurfaceIsSea( position[0], position[2] ) || game.SurfaceIsPond( position[0], position[2] );
 	}
-	
-	bool OnMouseRelease(int button)
-	{
-		return false;
-	}
-		
-	// Return TRUE if handled.	
-	bool OnKeyPress(int key)
-	{
-		// Dont process hotkeys if dialog is open
-												// HACK
-		if (m_EditorHud.CurrentDialog && key != KeyCode.KC_ESCAPE) {
-			return false;
-		}
-		
-		if (!GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD)) {
-			return false;
-		}
-		
-		Widget focus = GetFocus();
-		if (focus && focus.IsInherited(EditBoxWidget)) {
-			return true;
-		}
-		
-		if (m_CurrentKeys.Find(key) != -1) {
-			return true;
-		}
-		
-		m_CurrentKeys.Insert(key);
-		EditorCommand command = CommandManager.GetCommandFromShortcut(m_CurrentKeys.GetMask());
-		if (!command) {
-			return true;
-		}
-		
-		if (!command.CanExecute()) {
-			return true;
-		}
 			
-		EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
-		CommandArgs args = new CommandArgs();
-		args.Context = m_EditorHud;
-		command.Execute(this, args);
-		return true;
-	}
-		
-	bool OnKeyRelease(int key)
-	{
-		m_CurrentKeys.Remove(m_CurrentKeys.Find(key));
-		return false;
-	}
-		
 	// also called when component index changes
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{

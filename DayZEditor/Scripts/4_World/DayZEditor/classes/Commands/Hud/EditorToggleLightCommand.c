@@ -17,9 +17,4 @@ class EditorToggleLightCommand: EditorCommand
 	{
 		return "Toggle Light";
 	}
-	
-	override ShortcutKeys GetShortcut()
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_5 };
-	}
 }

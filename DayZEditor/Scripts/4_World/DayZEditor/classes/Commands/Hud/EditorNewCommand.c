@@ -33,9 +33,4 @@ class EditorNewCommand: EditorAsyncCommand
 	{
 		return "set:dayz_editor_gui image:new_alt";
 	}
-	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_N };
-	}
 }

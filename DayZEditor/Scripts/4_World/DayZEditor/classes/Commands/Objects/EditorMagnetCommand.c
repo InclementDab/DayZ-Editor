@@ -16,9 +16,4 @@ class EditorMagnetCommand: EditorCommand
 	{
 		return "#STR_EDITOR_CMD_MAGNET_MODE";
 	}
-	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_1 };
-	}
 }

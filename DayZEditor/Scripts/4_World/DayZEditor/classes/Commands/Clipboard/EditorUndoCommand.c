@@ -16,9 +16,4 @@ class EditorUndoCommand: EditorCommand
 	{
 		return "set:dayz_editor_gui image:undo";
 	}
-	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_Z };
-	}
 }

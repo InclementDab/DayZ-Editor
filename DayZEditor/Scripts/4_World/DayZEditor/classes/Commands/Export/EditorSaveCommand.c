@@ -32,11 +32,6 @@ class EditorSaveCommand: EditorExportCommandBase
 		return "set:dayz_editor_gui image:save";
 	}
 	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_S };
-	}
-	
 	override typename GetFileType() 
 	{
 		return EditorDZEFile;

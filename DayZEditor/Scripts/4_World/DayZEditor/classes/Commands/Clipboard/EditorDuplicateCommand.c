@@ -26,9 +26,4 @@ class EditorDuplicateCommand: EditorCommand
 	{
 		return "#STR_EDITOR_DUPLICATE";
 	}
-	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_J };
-	}
 }

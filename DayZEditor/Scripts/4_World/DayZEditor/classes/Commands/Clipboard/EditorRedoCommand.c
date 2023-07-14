@@ -16,9 +16,4 @@ class EditorRedoCommand: EditorCommand
 	{
 		return "set:dayz_editor_gui image:redo";
 	}
-	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_Y };
-	}
 }

@@ -22,18 +22,8 @@ class EditorSaveAsCommand: EditorExportCommandBase
 		return "#STR_EDITOR_SAVEAS";
 	}
 	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_S };
-	}
-	
 	override typename GetFileType() 
 	{
 		return EditorDZEFile;
-	}
-	
-	override string GetDialogButtonName() 
-	{
-		return "#STR_EDITOR_SAVE";
 	}
 }

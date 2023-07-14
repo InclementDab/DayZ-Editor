@@ -16,9 +16,4 @@ class EditorGroundCommand: EditorCommand
 	{
 		return "#STR_EDITOR_CMD_GROUND_MODE";
 	}
-	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_2 };
-	}
 }

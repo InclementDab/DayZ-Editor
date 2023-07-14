@@ -2,9 +2,27 @@ modded class MissionGameplay
 {	
 	override void OnUpdate(float timeslice)
 	{
-		super.OnUpdate(timeslice);
+		bool player_control_enabled = GetEditor() && GetGame().GetPlayer() == GetEditor().GetCurrentControl();
 		
-		m_HudRootWidget.Show(GetGame().GetPlayer() == GetEditor().GetCurrentControl());
+		m_HudRootWidget.Show(player_control_enabled);
+		
+		// Handle commands, and if we return TRUE, then dont run the rest of the missions update thread
+		if (GetEditor()) {
+			map<string, EditorCommand> commands = GetEditor().CommandManager.GetCommandShortcutMap();
+			foreach (string input_name, EditorCommand command: commands) {
+				if (GetGame().GetInput().LocalPress(input_name) && command && command.CanExecute()) {
+					Print(command);
+					EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
+					CommandArgs args = new CommandArgs();
+					args.Context = GetEditor().GetEditorHud();
+					if (command.Execute(GetEditor().CommandManager, args)) {
+						return; // mucho importante
+					}
+				}
+			}
+		}
+		
+		super.OnUpdate(timeslice);
 	}
 	
 	override void OnInit()
@@ -57,20 +75,6 @@ modded class MissionGameplay
 		g_Game.ReportProgress("DayZ Editor Loading complete");
 	}
 		
-	override void OnKeyPress(int key)
-	{
-		if (!GetEditor() || !GetEditor().OnKeyPress(key)) {
-			super.OnKeyPress(key);
-		}	
-	}
-	
-	override void OnKeyRelease(int key)
-	{
-		if (!GetEditor() || !GetEditor().OnKeyRelease(key)) {
-			super.OnKeyRelease(key);
-		}
-	}
-	
 	override void OnMouseButtonPress(int button)
 	{
 		if (!GetEditor() || !GetEditor().OnMouseDown(button)) {			
@@ -78,13 +82,6 @@ modded class MissionGameplay
 		} 
 	}
 	
-	override void OnMouseButtonRelease(int button)
-	{
-		if (!GetEditor() || !GetEditor().OnMouseRelease(button)) {
-			super.OnMouseButtonRelease(button);
-		}
-	}
-
 	override void ShowInventory()
 	{
 		GetGame().GetPlayer().GetHumanInventory().UnlockInventory(LOCK_FROM_SCRIPT);

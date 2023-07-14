@@ -15,9 +15,4 @@ class EditorCameraControlsCommand: EditorAsyncCommand
 	{
 		return "set:dayz_editor_gui image:camera_alt";
 	}
-	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_T };
-	}
 }

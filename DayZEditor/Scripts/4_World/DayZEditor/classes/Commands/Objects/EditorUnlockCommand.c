@@ -10,11 +10,6 @@ class EditorUnlockCommand: EditorCommand
 		
 		return true;
 	}
-		
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_L };
-	}
 	
 	override string GetName() 
 	{

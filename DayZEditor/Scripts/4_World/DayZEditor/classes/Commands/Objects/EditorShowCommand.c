@@ -11,11 +11,6 @@ class EditorShowCommand: EditorCommand
 		return true;
 	}
 	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_H };
-	}
-	
 	override string GetName() 
 	{
 		return "#STR_EDITOR_SHOW";

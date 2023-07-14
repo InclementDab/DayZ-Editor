@@ -53,11 +53,18 @@ class EditorCommand: RelayCommand
 		
 	string GetShortcutString() 
 	{
-		if (GetShortcut()) {
-			return GetShortcut().GetString();
+		string result;
+		map<int, ref array<string>> input_strings = InputUtils.GetComboButtonNamesFromInput(GetShortcut(), EInputDeviceType.MOUSE_AND_KEYBOARD);
+		foreach (int _, array<string> key_strings: input_strings) {
+			for (int i = 0; i < key_strings.Count(); i++) {
+				result += key_strings[i];
+				if (i != key_strings.Count() - 1) {
+					result += "+";
+				}
+			}
 		}
 		
-		return string.Empty;
+		return result;
 	}
 	
 	void SetData(Param param)
@@ -70,5 +77,9 @@ class EditorCommand: RelayCommand
 		return m_Param;
 	}
 	
-	ShortcutKeys GetShortcut();
+	// Good default to have, makes sense in XMLs
+	string GetShortcut()
+	{
+		return ClassName();
+	}
 }

@@ -29,11 +29,6 @@ class EditorToggleSimulationCommand: EditorCommand
 		return true;
 	}
 	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_K };
-	}
-	
 	override string GetName() 
 	{
 		return "Toggle Simulation";

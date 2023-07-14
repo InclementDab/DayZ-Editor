@@ -7,17 +7,6 @@ enum EditorClientModuleRPC
 class EditorClientModule: JMModuleBase
 {
 	protected Editor m_Editor;
-		
-	void EditorClientModule() 
-	{
-		EditorLog.Info("EditorClientModule");
-		g_Game.ReportProgress("Loading Client Module");
-	}
-	
-	void ~EditorClientModule() 
-	{
-		EditorLog.Info("~EditorClientModule");
-	}
 	
 	// JMModuleBase Overrides
 	override void OnInit()
@@ -25,9 +14,7 @@ class EditorClientModule: JMModuleBase
 		super.OnInit();
 		
 		EditorLog.Trace("Editor::OnInit");
-					
-		RegisterBinding(new JMModuleBinding("OnEditorDeleteObject", "EditorDeleteObject"));
-		
+				
 		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectForward", "EditorMoveObjectForward"));
 		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectBackward", "EditorMoveObjectBackward"));
 		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectLeft", "EditorMoveObjectLeft"));

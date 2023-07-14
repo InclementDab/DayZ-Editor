@@ -15,9 +15,4 @@ class EditorCloseCommand: EditorAsyncCommand
 	{
 		return "#STR_EDITOR_CLOSE";
 	}
-	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_W };
-	}
 }

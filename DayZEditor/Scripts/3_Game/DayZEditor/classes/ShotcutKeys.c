@@ -30,13 +30,13 @@ class ShortcutKeys: array<KeyCode>
 		// Special Cases
 		switch (key) {
 			
-			case KeyCode.KC_LCONTROL: return "Ctrl";
-			case KeyCode.KC_LSHIFT: return "Shift";			
-			case KeyCode.KC_LMENU: return "Alt";
+			case KeyCode.KC_LCONTROL: return "LControl";
+			case KeyCode.KC_LSHIFT: return "LShift";			
+			case KeyCode.KC_LMENU: return "LMenu";
 			
-			case KeyCode.KC_RCONTROL: return "RCtrl";
+			case KeyCode.KC_RCONTROL: return "RControl";
 			case KeyCode.KC_RSHIFT: return "RShift";			
-			case KeyCode.KC_RMENU: return "RAlt";
+			case KeyCode.KC_RMENU: return "RMenu";
 			
 			case KeyCode.KC_RETURN: return "Enter";
 			case KeyCode.KC_BACK: return "Backspace";

@@ -24,7 +24,6 @@
             <input name="EditorToggleInventory" loc="Toggle Inventory" />
 			
 			<input name="EditorToggleMap" loc="Map" />
-			<input name="EditorDeleteObject" loc="Delete Object" />
 
 			<input name="EditorMoveObjectForward" loc="Move Object Forward" />
 			<input name="EditorMoveObjectBackward" loc="Move Object Backward" />
@@ -36,6 +35,83 @@
 			<input name="EditorRotateObjectCounterClockwise" loc="Rotate Objects Counter Clockwise" />
 			<input name="EditorScaleUp" loc="Scale Objects Up" />
 			<input name="EditorScaleDown" loc="Scale Objects Down" />
+
+            <input name="EditorEnvironmentControlCommand" loc="#STR_EDITOR_ENVIRONMENT"/>
+            <input name="EditorBrushToggleCommand" loc="#STR_EDITOR_CMD_TOGGLE_BRUSH"/>
+            <input name="EditorImportFromVPP" loc="#STR_EDITOR_CMD_IMPORT_VPP (*.vpp)"/>
+            <input name="EditorSaveAsCommand" loc="#STR_EDITOR_SAVEAS"/>
+            <input name="EditorGroundCommand" loc="#STR_EDITOR_CMD_GROUND_MODE"/>
+            <input name="EditorPasteCommand" loc="#STR_EDITOR_PASTE"/>
+            <input name="EditorNewCommand" loc="#STR_EDITOR_NEW"/>
+            <input name="EditorDuplicateCommand" loc="#STR_EDITOR_DUPLICATE"/>
+            <input name="EditorAlignToSurfaceCommand" loc="#STR_EDITOR_ALIGN_TO_SURFACE"/>
+            <input name="EditorControlPlayerCommand" loc="#STR_EDITOR_CMD_CONTROL_PLAYER"/>
+            <input name="EditorObjectPropertiesCommand" loc="#STR_EDITOR_PROPERTIES"/>
+            <input name="EditorExportToTerrainBuilder" loc="#STR_EDITOR_CMD_EXPORT_TB (*.txt)"/>
+            <input name="EditorExportToObjectSpawner" loc="#STR_EDITOR_CMD_EXPORT_OBJECTSPAWNER (*.json)"/>
+            <input name="EditorImportFromExpansion" loc="#STR_EDITOR_CMD_IMPORT_EXPANSION (*.map)"/>
+            <input name="EditorOpenCommand" loc="#STR_EDITOR_OPEN"/>
+            <input name="EditorCopyPositionCommand" loc="#STR_EDITOR_CMD_COPY_POS"/>
+            <input name="EditorLootEditorCommand" loc="#STR_EDITOR_LOOT_EDITOR"/>
+            <input name="EditorRemoveFromFavoritesCommand" loc="#STR_EDITOR_CMD_REMOVE_FROM_FAVORITES"/>
+            <input name="EditorBrushRadiusCommand" loc="#STR_EDITOR_BRUSH_RADIUS"/>
+            <input name="EditorExportEventPos" loc="Copy Event To Clipboard"/>
+            <input name="EditorUnlockCommand" loc="#STR_EDITOR_UNLOCK"/>
+            <input name="EditorExportToVPP" loc="#STR_EDITOR_CMD_EXPORT_VPP (*.vpp)"/>
+            <input name="EditorHelpCommand" loc="#STR_EDITOR_HELP"/>
+            <input name="EditorDeleteCommand" loc="#STR_EDITOR_DELETE"/>
+            <input name="EditorUndoCommand" loc="#STR_EDITOR_UNDO"/>
+            <input name="EditorToggleLightCommand" loc="Toggle Light"/>
+            <input name="EditorSnapToSurfaceCommand" loc="#STR_EDITOR_SNAP_TO_SURFACE"/>
+            <input name="EditorBrushPropertiesCommand" loc="#STR_EDITOR_CMD_EDIT_BRUSH"/>
+            <input name="EditorCopyCommand" loc="#STR_EDITOR_COPY"/>
+            <input name="EditorCameraControlsCommand" loc="#STR_EDITOR_CAMERA"/>
+            <input name="EditorDonateCommand" loc="#STR_EDITOR_DONATE"/>
+            <input name="EditorImportFromDZE" loc="#STR_EDITOR_CMD_IMPORT_DZE (*.dze)"/>
+            <input name="EditorExportToMapGroupPos" loc="#STR_EDITOR_CMD_EXPORT_POS (*.xml)"/>
+            <input name="EditorSearchObjectCommand" loc="#STR_EDITOR_SEARCH_OBJECT"/>
+            <input name="EditorSaveCommand" loc="#STR_EDITOR_SAVE"/>
+            <input name="EditorMagnetCommand" loc="#STR_EDITOR_CMD_MAGNET_MODE"/>
+            <input name="EditorCollisionCommand" loc="#STR_EDITOR_CMD_COLLISION_MODE"/>
+            <input name="EditorPreferencesCommand" loc="#STR_EDITOR_PREFERENCES"/>
+            <input name="EditorLockCommand" loc="#STR_EDITOR_LOCK"/>
+            <input name="EditorCheckDuplicatesCommand" loc="#STR_EDITOR_CMD_CHECK_DUPLICATES"/>
+            <input name="EditorImportFromInit" loc="#STR_EDITOR_CMD_IMPORT_INIT_C (*.c)"/>
+            <input name="EditorImportFromTerrainBuilder" loc="#STR_EDITOR_CMD_IMPORT_TB (*.txt)"/>
+            <input name="EditorOpenWikiCommand" loc="#STR_EDITOR_WIKI"/>
+            <input name="EditorSnapCommand" loc="#STR_EDITOR_CMD_SNAPPING_MODE"/>
+            <input name="EditorRedoCommand" loc="#STR_EDITOR_REDO"/>
+            <input name="EditorBrushDensityCommand" loc="#STR_EDITOR_BRUSH_DENSITY"/>
+            <input name="EditorFindAndReplaceCommand" loc="#STR_EDITOR_CMD_FIND_AND_REPLACE"/>
+            <input name="EditorOpenRecentCommand" loc="#STR_EDITOR_OPEN_RECENT"/>
+            <input name="EditorSelectAllCommand" loc="#STR_EDITOR_SELECT_ALL"/>
+            <input name="EditorResetAlignmentCommand" loc="#STR_EDITOR_RESET_ALIGNMENT"/>
+            <input name="EditorCameraTrackAddNode" loc="#STR_EDITOR_CINEMATIC_CAMERA_ADD_NODE"/>
+            <input name="EditorCameraTrackRun" loc="#STR_EDITOR_CINEMATIC_CAMERA_RUN"/>
+            <input name="EditorExportToEvents" loc="#STR_EDITOR_CMD_EXPORT_EVENTS (*.xml)"/>
+            <input name="EditorImportFromCOM" loc="#STR_EDITOR_CMD_IMPORT_COM (*.json)"/>
+            <input name="EditorSearchCommand" loc="#STR_EDITOR_SEARCH"/>
+            <input name="EditorExitCommand" loc="#STR_EDITOR_EXIT"/>
+            <input name="EditorDumpSceneCommand" loc="#STR_EDITOR_CMD_DUMP_CAMERA"/>
+            <input name="EditorReloadHudCommand" loc="#STR_EDITOR_CMD_RELOAD_UI"/>
+            <input name="EditorToggleSimulationCommand" loc="Toggle Simulation"/>
+            <input name="EditorPlaceObjectCommand" loc="#STR_EDITOR_PLACE_OBJECT"/>
+            <input name="EditorImportFromObjectSpawner" loc="#STR_EDITOR_CMD_IMPORT_OBJECTSPAWNER (*.json)"/>
+            <input name="EditorEditInventoryCommand" loc="#STR_EDITOR_EDIT_INVENTORY"/>
+            <input name="EditorHideCommand" loc="#STR_EDITOR_HIDE"/>
+            <input name="EditorExportToInitFile" loc="#STR_EDITOR_CMD_EXPORT_INIT_C (*.c)"/>
+            <input name="EditorScriptEditorCommand" loc="#STR_EDITOR_CMD_SCRIPT_EDITOR"/>
+            <input name="EditorEscapeCommand" loc="#STR_EDITOR_EXIT"/>
+            <input name="EditorCutCommand" loc="#STR_EDITOR_CUT"/>
+            <input name="EditorReloadBrushesCommand" loc="#STR_EDITOR_CMD_RELOAD_BRUSHES"/>
+            <input name="EditorCloseCommand" loc="#STR_EDITOR_CLOSE"/>
+            <input name="EditorLoadMapCommand" loc="#STR_EDITOR_SELECT_MAP"/>
+            <input name="EditorAddToFavoritesCommand" loc="#STR_EDITOR_CMD_ADD_TO_FAVORITES"/>
+            <input name="EditorExportToCOM" loc="#STR_EDITOR_CMD_EXPORT_COM (*.json)"/>
+            <input name="EditorExportToExpansion" loc="#STR_EDITOR_CMD_EXPORT_EXPANSION (*.map)"/>
+            <input name="EditorShowCommand" loc="#STR_EDITOR_SHOW"/>
+            <input name="EditorJoinDiscordCommand" loc="#STR_EDITOR_JOIN_DISCORD"/>
+            <input name="EditorExportRelativeToObject" loc="Export Relative to Object"/>
         </actions>
     </inputs>
 
@@ -49,134 +125,258 @@
         <input name="EditorCameraForward">
             <btn name="kW"/>
         </input>
-		
 		<input name="EditorCameraBack">
             <btn name="kS"/>
         </input>
-		
 		<input name="EditorCameraLeft">
             <btn name="kA"/>
         </input>
-		
 		<input name="EditorCameraRight">
             <btn name="kD"/>
         </input>
-		
 		<input name="EditorCameraUp">
             <btn name="kQ"/>
         </input>
-		
 		<input name="EditorCameraDown">
             <btn name="kZ"/>
         </input>
-		
 		<input name="EditorCameraTurbo">
             <btn name="kLShift"/>
         </input>
-		
 		<input name="EditorCameraSlow">
             <btn name="kLMenu"/>
         </input>		
-		
 		<input name="EditorCameraZoomIn">
             <btn name="mBRight">
 				<btn name="mWheelDown"/>
 			</btn>
         </input>		
-		
 		<input name="EditorCameraZoomOut">
             <btn name="mBRight">
 				<btn name="mWheelUp"/>
 			</btn>
         </input>		
-		
 		<input name="EditorCameraZoomReset">
             <btn name="mBRight">
 				<btn name="mBMiddle"/>
 			</btn>
         </input>
-		
 		<input name="EditorToggleActive">
             <btn name="kHome"/>
         </input>
-        
 		<input name="EditorToggleUI">
             <btn name="kY"/>
         </input>
-
         <input name="EditorToggleCursor">
             <btn name="kSpace"/>
         </input>
-
         <input name="EditorToggleInventoryEditor">
             <btn name="kLControl">
                <btn name="kTab"/>
             </btn>
         </input>
-
         <input name="EditorToggleInventory">
             <btn name="kTab"/>
         </input>
-
         <input name="EditorToggleMap">
             <btn name="kM" />
-        </input>        
-		
-		<input name="EditorDeleteObject">
-            <btn name="kDelete" />
         </input>
-		
 		<input name="EditorTeleportPlayerToCursor">
             <btn name="kT" />
         </input>
-		
         <input name="EditorMoveObjectForward">
             <btn name="kUp" />
         </input>
-        
         <input name="EditorMoveObjectBackward">
             <btn name="kDown" />
         </input>
-
         <input name="EditorMoveObjectLeft">
             <btn name="kLeft" />
         </input>
-        
         <input name="EditorMoveObjectRight">
             <btn name="kRight" />
         </input>
-
         <input name="EditorMoveObjectUp">
             <btn name="kPrior" />
         </input>
-
         <input name="EditorMoveObjectDown">
             <btn name="kNext" />
         </input>
-
         <input name="EditorRotateObjectClockwise">
             <btn name="kLControl">
                 <btn name="kRight" />
             </btn>
         </input>
-
         <input name="EditorRotateObjectCounterClockwise">
             <btn name="kLControl">
                 <btn name="kLeft" />
             </btn>
         </input>
-
         <input name="EditorScaleUp">
             <btn name="kLControl">
                 <btn name="kPrior" />
             </btn>
         </input>
-
         <input name="EditorScaleDown">
             <btn name="kLControl">
-                <btn name="kNext" />
+                <btn name="kNext"/>
             </btn>
         </input>
-
+        <input name="EditorEnvironmentControlCommand">
+            <btn name="kLControl">
+                <btn name="kLShift">
+                    <btn name="kI"/>
+                </btn>
+            </btn>
+        </input>
+        <input name="EditorSaveAsCommand">
+            <btn name="kLControl">
+                <btn name="kLShift">
+                    <btn name="kS"/>
+                </btn>
+            </btn>
+        </input>
+        <input name="EditorGroundCommand">
+            <btn name="kLControl">
+                <btn name="k2"/>
+            </btn>
+        </input>
+        <input name="EditorPasteCommand">
+            <btn name="kLControl">
+                <btn name="kV"/>
+            </btn>
+        </input>
+        <input name="EditorNewCommand">
+            <btn name="kLControl">
+                <btn name="kN"/>
+            </btn>
+        </input>
+        <input name="EditorDuplicateCommand">
+            <btn name="kLControl">
+                <btn name="kJ"/>
+            </btn>
+        </input>
+        <input name="EditorObjectPropertiesCommand">
+            <btn name="kLControl">
+                <btn name="kT"/>
+            </btn>
+        </input>
+        <input name="EditorOpenCommand">
+            <btn name="kLControl">
+                <btn name="kO"/>
+            </btn>
+        </input>
+        <input name="EditorCopyPositionCommand">
+            <btn name="kP"/>
+        </input>
+        <input name="EditorUnlockCommand">
+            <btn name="kLControl">
+                <btn name="kL"/>
+            </btn>
+        </input>
+        <input name="EditorDeleteCommand">
+            <btn name="kDelete"/>
+        </input>
+        <input name="EditorUndoCommand">
+            <btn name="kLControl">
+                <btn name="kZ"/>
+            </btn>
+        </input>
+        <input name="EditorToggleLightCommand">
+            <btn name="kLControl">
+                <btn name="k5"/>
+            </btn>
+        </input>
+        <input name="EditorCopyCommand">
+            <btn name="kLControl">
+                <btn name="kC"/>
+            </btn>
+        </input>
+        <input name="EditorCameraControlsCommand">
+            <btn name="kLControl">
+                <btn name="kLShift">
+                    <btn name="kT"/>
+                </btn>
+            </btn>
+        </input>
+        <input name="EditorSearchObjectCommand">
+            <btn name="kLControl">
+                <btn name="kLShift">
+                    <btn name="kF"/>
+                </btn>
+            </btn>
+        </input>
+        <input name="EditorSaveCommand">
+            <btn name="kLControl">
+                <btn name="kS"/>
+            </btn>
+        </input>
+        <input name="EditorMagnetCommand">
+            <btn name="kLControl">
+                <btn name="k1"/>
+            </btn>
+        </input>
+        <input name="EditorCollisionCommand">
+            <btn name="kLControl">
+                <btn name="k4"/>
+            </btn>
+        </input>
+        <input name="EditorLockCommand">
+            <btn name="kL"/>
+        </input>
+        <input name="EditorSnapCommand">
+            <btn name="kLControl">
+                <btn name="k3"/>
+            </btn>
+        </input>
+        <input name="EditorRedoCommand">
+            <btn name="kLControl">
+                <btn name="kY"/>
+            </btn>
+        </input>
+        <input name="EditorSelectAllCommand">
+            <btn name="kLControl">
+                <btn name="kA"/>
+            </btn>
+        </input>
+        <input name="EditorCameraTrackAddNode">
+            <btn name="kP"/>
+        </input>
+        <input name="EditorSearchCommand">
+            <btn name="kLControl">
+                <btn name="kF"/>
+            </btn>
+        </input>
+        <input name="EditorReloadHudCommand">
+            <btn name="kLControl">
+                <btn name="kLShift">
+                    <btn name="kU"/>
+                </btn>
+            </btn>
+        </input>
+        <input name="EditorToggleSimulationCommand">
+            <btn name="kK"/>
+        </input>
+        <input name="EditorHideCommand">
+            <btn name="kH"/>
+        </input>
+        <input name="EditorEscapeCommand">
+            <btn name="kEscape"/>
+        </input>
+        <input name="EditorCutCommand">
+            <btn name="kLControl">
+                <btn name="kX"/>
+            </btn>
+        </input>
+        <input name="EditorCloseCommand">
+            <btn name="kLControl">
+                <btn name="kW"/>
+            </btn>
+        </input>
+        <input name="EditorShowCommand">
+            <btn name="kLControl">
+                <btn name="kH"/>
+            </btn>
+        </input>
     </preset>
 </modded_inputs>

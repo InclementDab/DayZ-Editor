@@ -15,11 +15,6 @@ class EditorHideCommand: EditorCommand
 		return true;
 	}
 	
-	override ShortcutKeys GetShortcut() 
-	{
-		return { KeyCode.KC_H };
-	}
-	
 	override string GetName() 
 	{
 		return "#STR_EDITOR_HIDE";
