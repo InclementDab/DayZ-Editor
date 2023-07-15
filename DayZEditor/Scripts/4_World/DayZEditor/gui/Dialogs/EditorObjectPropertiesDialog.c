@@ -159,7 +159,6 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		if (editor_object.GetWorldObject().IsMan()) {
 			GroupPrefab human_group = new GroupPrefab("#STR_EDITOR_HUMAN", editor_object, string.Empty);
-			human_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SELECTED_PLAYER", editor_object, "Control"));
 			DropdownListPrefab<int> animations = new DropdownListPrefab<int>("#STR_EDITOR_ANIMATION", editor_object, "CurrentAnimation");
 			map<string, int> emote_list = PlayerBase.GetEmoteList();
 			foreach (string emote_name, int emote_id: emote_list) {
