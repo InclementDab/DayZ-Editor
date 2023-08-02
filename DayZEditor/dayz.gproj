@@ -6,7 +6,10 @@ GameProjectClass {
 			platformHardware PC
 			skeletonDefinitions "DZ/Anims/cfg/skeletons.anim.xml"
 			FileSystem {
-			
+				FileSystemPathClass {
+					Name "Workdrive"
+					Directory "P:/"
+				} 
 			}
 			
 			imageSets {
@@ -37,12 +40,10 @@ GameProjectClass {
 				ScriptModulePathClass {
 					Name "core"
 					Paths {
+						"DabsFramework/Scripts/1_Core"
 						"scripts/1_Core"
 						"JM/CF/defines"
-						"DayZEditor/scripts/common"
 						"JM/CF/scripts/1_Core"
-						"DabsFramework/Scripts/1_Core"
-						"DayZEditor/scripts/1_Core"
 					}
 					EntryPoint ""
 				}
@@ -58,36 +59,30 @@ GameProjectClass {
 				ScriptModulePathClass {
 					Name "game"
 					Paths {
+						"DabsFramework/Scripts/3_Game"
 						"scripts/3_Game"
 						"JM/CF/defines"
 						"JM/CF/scripts/3_Game"
-						"DayZEditor/scripts/common"
-						"DabsFramework/Scripts/3_Game"
-						"DayZEditor/scripts/3_Game"
 					}
 					EntryPoint "CreateGame"
 				}
 				ScriptModulePathClass {
 					Name "world"
 					Paths {
+						"DabsFramework/Scripts/4_World"
 						"scripts/4_World"
 						"JM/CF/defines"
 						"JM/CF/scripts/4_World"
-						"DayZEditor/scripts/common"
-						"DabsFramework/Scripts/4_World"
-						"DayZEditor/scripts/4_World"
 					}
 					EntryPoint ""
 				}
 				ScriptModulePathClass {
 					Name "mission"
 					Paths {
+						"DabsFramework/Scripts/5_Mission"
 						"scripts/5_Mission"
 						"JM/CF/defines"
 						"JM/CF/scripts/5_Mission"
-						"DayZEditor/scripts/common"
-						"DabsFramework/Scripts/5_Mission"
-						"DayZEditor/scripts/5_Mission"
 					}
 					EntryPoint "CreateMission"
 				}
@@ -95,9 +90,8 @@ GameProjectClass {
 				ScriptModulePathClass {
 				Name "workbench"
 					Paths {
-						"scripts/editor/Workbench"
-						"scripts/editor/plugins"
-						"DayZEditor/scripts/editor/plugins"
+						"DabsFramework/Scripts/editor"
+						"DayZEditor/scripts/editor"
 					} 
 					EntryPoint ""
 				} 

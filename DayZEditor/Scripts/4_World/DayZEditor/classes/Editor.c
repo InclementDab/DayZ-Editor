@@ -506,7 +506,7 @@ class Editor: Managed
 		
 		vector begin_pos = GetGame().GetCurrentCameraPosition();
 		vector end_pos = begin_pos + raycast_direction * max_distance;
-		int interaction_layers = PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.TERRAIN | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.DYNAMICITEM | PhxInteractionLayers.ITEM_LARGE | PhxInteractionLayers.FIREGEOM;
+		int interaction_layers = PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.TERRAIN | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.DYNAMICITEM | PhxInteractionLayers.ITEM_LARGE;
 		Object hit_object;
 		vector normal;
 		float fraction;
