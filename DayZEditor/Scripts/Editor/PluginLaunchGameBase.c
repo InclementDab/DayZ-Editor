@@ -18,23 +18,28 @@ class PluginLaunchGameBase: PluginProject
 			return;
 		}
 		
-		if (launch_settings.RepositoryDir == string.Empty) {
-			ErrorDialog("You need to set the RepositoryDir setting in Plugins -> Configure -> Configure Project");
+		if (launch_settings.Repository == string.Empty) {
+			ErrorDialog("You need to set the Repository setting in Plugins -> Configure -> Configure Project");
 			return;
 		}		
 		
-		if (launch_settings.ProfileDir == string.Empty) {
-			ErrorDialog("You need to set the ProfileDir setting in Plugins -> Configure -> Configure Project");
+		if (launch_settings.Profiles == string.Empty) {
+			ErrorDialog("You need to set the Profiles setting in Plugins -> Configure -> Configure Project");
 			return;
 		}		
 		
-		if (launch_settings.MissionDir == string.Empty) {
-			ErrorDialog("You need to set the MissionDir setting in Plugins -> Configure -> Configure Project");
+		if (launch_settings.Missions == string.Empty) {
+			ErrorDialog("You need to set the Missions setting in Plugins -> Configure -> Configure Project");
 			return;
 		}		
 		
-		if (launch_settings.ModDir == string.Empty) {
-			ErrorDialog("You need to set the ModDir setting in Plugins -> Configure -> Configure Project");
+		if (launch_settings.Mods == string.Empty) {
+			ErrorDialog("You need to set the Mods setting in Plugins -> Configure -> Configure Project");
+			return;
+		}		
+		
+		if (launch_settings.ServerConfig == string.Empty) {
+			ErrorDialog("You need to set the ServerConfig setting in Plugins -> Configure -> Configure Project");
 			return;
 		}
 		
@@ -43,8 +48,12 @@ class PluginLaunchGameBase: PluginProject
 		}
 		
 		// Set up symlinks so game can launch with our cwd
-		MakeSymLink(game_directory + PATH_SEPERATOR_ALT + "Addons", workbench_directory + PATH_SEPERATOR_ALT + "Addons");
-		MakeSymLink(game_directory + PATH_SEPERATOR_ALT + "bliss", workbench_directory + PATH_SEPERATOR_ALT + "bliss");
+		PromiseSymLink(game_directory + PATH_SEPERATOR_ALT + "Addons", workbench_directory + PATH_SEPERATOR_ALT + "Addons");
+		PromiseSymLink(game_directory + PATH_SEPERATOR_ALT + "bliss", workbench_directory + PATH_SEPERATOR_ALT + "bliss");
+		
+		if (!FileExist(launch_settings.ServerConfig)) {
+			CopyFile(launch_settings.Repository + "\\ServerDZ.cfg", launch_settings.ServerConfig);
+		}
 		
 		// Set up filepatching, needs to either create or delete all links depending on the setting
 		if (launch_settings.FilePatching) {
@@ -54,7 +63,7 @@ class PluginLaunchGameBase: PluginProject
 				prefix.Replace("\n", "");
 				prefix.Replace("\r", "");
 				MakeDirectory(workbench_directory + PATH_SEPERATOR_ALT + prefix + "\\..\\");
-				MakeSymLink(root + PATH_SEPERATOR_ALT + prefix, workbench_directory + PATH_SEPERATOR + prefix);
+				PromiseSymLink(root + PATH_SEPERATOR_ALT + prefix, workbench_directory + PATH_SEPERATOR + prefix);
 			}
 		} else {
 			// Delete all extra folders in wb directory			
@@ -80,7 +89,7 @@ class PluginLaunchGameBase: PluginProject
 		array<string> mod_list = {};
 		m_ProjectSettings["Mods"].Split(";", mod_list);
 		for (int i = 0; i < mod_list.Count(); i++) {
-			formatted_mod_list += launch_settings.ModDir + PATH_SEPERATOR + mod_list[i];
+			formatted_mod_list += launch_settings.Mods + PATH_SEPERATOR + mod_list[i];
 			if (i != mod_list.Count() - 1) {
 				formatted_mod_list += ";";
 			}
@@ -91,18 +100,18 @@ class PluginLaunchGameBase: PluginProject
 		array<string> server_mod_list = {};
 		m_ProjectSettings["ServerMods"].Split(";", server_mod_list);
 		for (int j = 0; j < server_mod_list.Count(); j++) {
-			formatted_server_mod_list += launch_settings.ModDir + PATH_SEPERATOR + server_mod_list[j];
+			formatted_server_mod_list += launch_settings.Mods + PATH_SEPERATOR + server_mod_list[j];
 			if (j != server_mod_list.Count() - 1) {
 				formatted_server_mod_list += ";";
 			}
 		}
 		
-		MakeDirectory(launch_settings.ProfileDir);
-		MakeDirectory(launch_settings.MissionDir);
+		MakeDirectory(launch_settings.Profiles);
+		MakeDirectory(launch_settings.Missions);
 		
-		string client_profile_directory = string.Format("%1\\%2", launch_settings.ProfileDir, LaunchSettings.CLIENT_PROFILE_NAME);
-		string server_profile_directory = string.Format("%1\\%2", launch_settings.ProfileDir, LaunchSettings.SERVER_PROFILE_NAME);		
-		string server_mission = string.Format("%1\\%2.%3", launch_settings.MissionDir, mod_prefix, launch_settings.Map);
+		string client_profile_directory = string.Format("%1\\%2", launch_settings.Profiles, LaunchSettings.CLIENT_PROFILE_NAME);
+		string server_profile_directory = string.Format("%1\\%2", launch_settings.Profiles, LaunchSettings.SERVER_PROFILE_NAME);		
+		string server_mission = string.Format("%1\\%2.%3", launch_settings.Missions, mod_prefix, launch_settings.Map);
 		
 		// Make the folders if they dont exist yet
 		MakeDirectory(client_profile_directory);
@@ -116,15 +125,15 @@ class PluginLaunchGameBase: PluginProject
 		}
 		
 		// Copy maps and mission info
-		CopyFiles(string.Format("%1\\Profiles\\Maps\\%2", launch_settings.RepositoryDir, launch_settings.Map), server_profile_directory);
-		CopyFiles(string.Format("%1\\Profiles\\Global", launch_settings.RepositoryDir), server_profile_directory);
+		CopyFiles(string.Format("%1\\Profiles\\Maps\\%2", launch_settings.Repository, launch_settings.Map), server_profile_directory);
+		CopyFiles(string.Format("%1\\Profiles\\Global", launch_settings.Repository), server_profile_directory);
 		
-		CopyFiles(string.Format("%1\\Missions\\Rearmed.%2", launch_settings.RepositoryDir, launch_settings.Map), server_mission);
-		CopyFiles(string.Format("%1\\Missions\\Global", launch_settings.RepositoryDir), server_mission);
-		CopyFiles(string.Format("%1\\Missions\\Dev", launch_settings.RepositoryDir), server_mission);
+		CopyFiles(string.Format("%1\\Missions\\Rearmed.%2", launch_settings.Repository, launch_settings.Map), server_mission);
+		CopyFiles(string.Format("%1\\Missions\\Global", launch_settings.Repository), server_mission);
+		CopyFiles(string.Format("%1\\Missions\\Dev", launch_settings.Repository), server_mission);
 		
 		string client_launch_params = LaunchSettings.BASE_LAUNCH_PARAMS + string.Format(" \"-mod=%1\" \"-profiles=%2\"", formatted_mod_list, client_profile_directory);
-		string server_launch_params = LaunchSettings.BASE_LAUNCH_PARAMS + string.Format(" \"-mod=%1\" \"-profiles=%2\" \"-serverMod=%3\" \"-config=%4\" \"-mission=%5\" -server", formatted_mod_list, server_profile_directory, formatted_server_mod_list, m_ProjectSettings["ServerConfig"], server_mission);
+		string server_launch_params = LaunchSettings.BASE_LAUNCH_PARAMS + string.Format(" \"-mod=%1\" \"-profiles=%2\" \"-serverMod=%3\" \"-config=%4\" \"-mission=%5\" -server", formatted_mod_list, server_profile_directory, formatted_server_mod_list, launch_settings.ServerConfig, server_mission);
 			
 		string ip, password;
 		int port;
