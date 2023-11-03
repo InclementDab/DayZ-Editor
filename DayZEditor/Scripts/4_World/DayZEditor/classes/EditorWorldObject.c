@@ -30,7 +30,7 @@ class EditorWorldObject
 		if (type.Contains("\\")) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);
 		} else {
-			object = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);
+			object = GetGame().CreateObjectEx(type, position, ECE_SETUP);
 		}
 		
 		if (!object) { 

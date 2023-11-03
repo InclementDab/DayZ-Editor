@@ -3,12 +3,13 @@ class PluginLaunchGame: PluginLaunchGameBase
 {
 	void PluginLaunchGame()
 	{
+		KillTask(EXECUTABLE);
 		LaunchGame(m_LaunchSettings);
 	}
 	
 	override bool GetConnectionArguments(out string ip, out int port, out string password)
 	{
-		if (!m_LaunchSettings.AutoConnect) {
+		if (m_LaunchSettings.LaunchType != GameLaunchType.BOTH) {
 			return false;
 		}
 		

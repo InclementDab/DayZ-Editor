@@ -18,7 +18,7 @@ class PluginJoinRemote: PluginLaunchGameBase
 	[ButtonAttribute("Join", true)]
 	void Join()
 	{
-		m_LaunchSettings.Server = false;
+		m_LaunchSettings.LaunchType = GameLaunchType.CLIENT;
 		LaunchGame(m_LaunchSettings);
 	}
 	

@@ -128,13 +128,14 @@ class PluginLaunchGameBase: PluginProject
 		CopyFiles(string.Format("%1\\Profiles\\Maps\\%2", launch_settings.Repository, launch_settings.Map), server_profile_directory);
 		CopyFiles(string.Format("%1\\Profiles\\Global", launch_settings.Repository), server_profile_directory);
 		
-		CopyFiles(string.Format("%1\\Missions\\Rearmed.%2", launch_settings.Repository, launch_settings.Map), server_mission);
+		CopyFiles(string.Format("%1\\Missions\\%3.%2", launch_settings.Repository, launch_settings.Map, mod_prefix), server_mission);
 		CopyFiles(string.Format("%1\\Missions\\Global", launch_settings.Repository), server_mission);
 		CopyFiles(string.Format("%1\\Missions\\Dev", launch_settings.Repository), server_mission);
 		
 		string client_launch_params = LaunchSettings.BASE_LAUNCH_PARAMS + string.Format(" \"-mod=%1\" \"-profiles=%2\"", formatted_mod_list, client_profile_directory);
 		string server_launch_params = LaunchSettings.BASE_LAUNCH_PARAMS + string.Format(" \"-mod=%1\" \"-profiles=%2\" \"-serverMod=%3\" \"-config=%4\" \"-mission=%5\" -server", formatted_mod_list, server_profile_directory, formatted_server_mod_list, launch_settings.ServerConfig, server_mission);
-			
+		string offline_launch_params = LaunchSettings.BASE_LAUNCH_PARAMS + string.Format(" \"-mod=%1\" \"-profiles=%2\" \"-mission=%3\"", formatted_mod_list, client_profile_directory, server_mission);
+		
 		string ip, password;
 		int port;
 		if (GetConnectionArguments(ip, port, password)) {
@@ -145,15 +146,22 @@ class PluginLaunchGameBase: PluginProject
 		if (launch_settings.FilePatching) {
 			client_launch_params += " -filePatching";
 			server_launch_params += " -filePatching";
+			offline_launch_params += " -filePatching";
 		}
 				
-		if (launch_settings.Client) {
+		if ((launch_settings.LaunchType & GameLaunchType.CLIENT) == GameLaunchType.CLIENT) {
 			Workbench.RunCmd(string.Format("%1 %2", game_exe, client_launch_params));
 		}	
 		
-		if (launch_settings.Server) {
+		if ((launch_settings.LaunchType & GameLaunchType.SERVER) == GameLaunchType.SERVER) {
 			Workbench.RunCmd(string.Format("%1 %2", game_exe, server_launch_params));
 		}
+		
+		if ((launch_settings.LaunchType & GameLaunchType.OFFLINE) == GameLaunchType.OFFLINE) {
+			Workbench.RunCmd(string.Format("%1 %2", game_exe, offline_launch_params));
+		}
+		
+		
 	}
 	
 	bool GetConnectionArguments(out string ip, out int port, out string password)
