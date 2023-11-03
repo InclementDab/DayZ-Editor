@@ -159,9 +159,7 @@ class PluginLaunchGameBase: PluginProject
 		
 		if ((launch_settings.LaunchType & GameLaunchType.OFFLINE) == GameLaunchType.OFFLINE) {
 			Workbench.RunCmd(string.Format("%1 %2", game_exe, offline_launch_params));
-		}
-		
-		
+		}		
 	}
 	
 	bool GetConnectionArguments(out string ip, out int port, out string password)
