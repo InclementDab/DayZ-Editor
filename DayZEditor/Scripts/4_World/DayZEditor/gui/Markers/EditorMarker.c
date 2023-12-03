@@ -36,7 +36,7 @@ class EditorMarker: ScriptView
 		m_LayoutRoot.GetSize(x, y);
 	}
 	
-	void Show(bool show)
+	override void Show(bool show)
 	{
 		m_Show = show;
 		if (m_LayoutRoot && m_LayoutRoot.IsVisible() != show) {

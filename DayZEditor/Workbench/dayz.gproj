@@ -94,8 +94,7 @@ GameProjectClass {
 				ScriptModulePathClass {
 				Name "workbench"
 					Paths {
-						"DabsFramework/Scripts/editor"
-						"DayZEditor/scripts/editor"
+						"DabsFramework/Workbench/ToolAddons"
 					} 
 					EntryPoint ""
 				} 

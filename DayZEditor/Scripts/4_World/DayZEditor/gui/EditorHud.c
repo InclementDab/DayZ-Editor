@@ -54,7 +54,7 @@ class EditorHud: ScriptView
 		}
 	}
 
-	void Show(bool show) 
+	override void Show(bool show) 
 	{
 		EditorLog.Trace("EditorHud::Show");
 		m_LayoutRoot.Show(show);
@@ -73,7 +73,7 @@ class EditorHud: ScriptView
 		hud.ShowQuickbarUI(g_Game.GetProfileOption(EDayZProfilesOptions.QUICKBAR) && !show && controlled_player != null);
 	}
 	
-	bool IsVisible() 
+	override bool IsVisible() 
 	{
 		return m_LayoutRoot.IsVisible();
 	}
