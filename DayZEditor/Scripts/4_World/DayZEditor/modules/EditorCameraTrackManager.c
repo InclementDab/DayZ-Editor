@@ -12,27 +12,18 @@ class EditorCameraTrack
 	}
 }
 
-class EditorCameraTrackManagerModule: JMModuleBase
+class EditorCameraTrackManagerModule: Managed
 {
-	ref ScriptInvoker OnTrackStart;
-	ref ScriptInvoker OnTrackStop;
+	ref ScriptInvoker OnTrackStart = new ScriptInvoker();
+	ref ScriptInvoker OnTrackStop = new ScriptInvoker();
 	
-	ref array<ref EditorCameraTrackListItem> CameraTracks;
-	ref array<EditorCameraTrackListItem> SelectedCameraTracks;
+	ref array<ref EditorCameraTrackListItem> CameraTracks = {};
+	ref array<EditorCameraTrackListItem> SelectedCameraTracks = {};
 	
 	protected bool m_CameraTrackRunning;
 	protected vector m_CameraTrackStartPosition;
 	protected vector m_CameraTrackStartOrientation;
-	
-	override void Init()
-	{
-		OnTrackStart = new ScriptInvoker();
-		OnTrackStop = new ScriptInvoker();
 		
-		CameraTracks = {};
-		SelectedCameraTracks = {};
-	}
-	
 	void InsertCameraTrack(EditorCamera camera, float time, string name)
 	{
 		EditorLog.Trace("EditorCameraTrackManager::InsertCameraTrack");
@@ -181,21 +172,5 @@ class EditorCameraTrackManagerModule: JMModuleBase
 	bool IsRunning()
 	{
 		return m_CameraTrackRunning;
-	}
-	
-	// ??
-	void Pause()
-	{
-		
-	}
-	
-	override bool IsClient() 
-	{	
-		return true;
-	}
-	
-	override bool IsServer() 
-	{
-		return false;
 	}
 }

@@ -1,75 +1,101 @@
 enum EditorPlaceableItemCategory
+{	
+	UNKNOWN = -1,
+	
+	PLANTS,
+	BUSH,
+	ROCK,
+	CLUTTER,
+	STRUCTURES,
+	WRECK,
+	AI,
+	WATER,
+	VEHICLE,
+	
+	STATIC,
+	DYNAMIC,
+	SCRIPTED,
+}
+
+class EditorStaticPlaceableItem: EditorPlaceableItem
 {
-	CONFIG = 0,
-	STATIC = 1,
-	SCRIPTED = 2
+	protected ref CF_File m_Model;
+	
+	override EditorObjectData CreateData(vector position, vector orientation, float scale, int flags)
+	{
+		return EditorObjectData.Create(m_Type, position, orientation, scale, flags);
+	}
+}
+
+class EditorConfigPlaceableItem: EditorPlaceableItem
+{
+	protected string m_Path, m_Type;
+	
+	string GetPath()
+	{
+		return m_Path;
+	}
+	
+	string GetType()
+	{
+		return m_Type;
+	}
+	
+	override EditorObjectData CreateData(vector position, vector orientation, float scale, int flags)
+	{
+		return EditorObjectData.Create(m_Type, position, orientation, scale, flags);
+	}
 }
 
 class EditorPlaceableItem: Managed
 {		
-	string Type; // Item Type
-	string Path; // config path
-	EditorPlaceableItemCategory Category;
+	protected EditorPlaceableItemCategory m_Category;
 	
-	ref CF_File Model;
+	private void EditorPlaceableItem();
 		
-	private void EditorPlaceableItem()
+	string GetType()
 	{
-	}
-		
-	void ~EditorPlaceableItem()
-	{
-		delete Model;
-	}
-	
-	string GetName()
-	{
-		switch (Category) {
-			case EditorPlaceableItemCategory.SCRIPTED:
-			case EditorPlaceableItemCategory.CONFIG: return Type;
-			case EditorPlaceableItemCategory.STATIC: return Model.GetFileName();
-		}
-		
 		return string.Empty;
 	}
-	
-	string GetSpawnType()
+		
+	CF_File FindModel()
 	{
-		switch (Category) {
-			case EditorPlaceableItemCategory.SCRIPTED:
-			case EditorPlaceableItemCategory.CONFIG: return Type;
-			case EditorPlaceableItemCategory.STATIC: return Model.GetFullPath();
+		if (m_Model) {
+			return m_Model;
 		}
 		
-		return string.Empty;
+		string model;
+		GetGame().ConfigGetText(string.Format("%1 %2 model", config_path, config_type), model);
+		return new CF_File(model);
 	}
 	
-	static EditorPlaceableItem Create(CF_File p3d)
+	EditorObjectData CreateData(vector position, vector orientation, float scale, int flags)
+	{
+		return null;
+	}
+	
+	static EditorPlaceableItem Create(notnull CF_File p3d)
 	{
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();	
-		placeable_item.Model = p3d;
-		placeable_item.Category = EditorPlaceableItemCategory.STATIC;
+		placeable_item.m_Type = p3d.GetFileName();
+		placeable_item.m_Model = p3d;
+		placeable_item.m_Category = EditorPlaceableItemCategory.STATIC;
 		return placeable_item;
 	}
 	
 	// CAN RETURN NULL
-	static EditorPlaceableItem Create(string config_path, string config_type)
+	static EditorPlaceableItem Create(string path, string type)
 	{
 		if (IsForbiddenItem(config_type)) {
 			return null;
 		}
 		
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();	
-		placeable_item.Path = config_path; 
-		placeable_item.Type = config_type;
-		placeable_item.Category = EditorPlaceableItemCategory.CONFIG;
+		placeable_item.m_Path = path;
+		placeable_item.m_Type = type;
 		
-		string model;
-		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", config_path, config_type), model);
-		placeable_item.Model = new CF_File(model);
-		if (!placeable_item.Model.IsValid()) {
-			return null;
-		}		
+		//GetGame().ConfigIsExisting
+
 				
 		return placeable_item;
 	}
@@ -77,17 +103,9 @@ class EditorPlaceableItem: Managed
 	static EditorPlaceableItem Create(typename scripted_type)
 	{		
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();		
-		placeable_item.Type = scripted_type.ToString();
-		placeable_item.Category = EditorPlaceableItemCategory.SCRIPTED;
+		placeable_item.m_Type = scripted_type.ToString();
+		placeable_item.m_Category = EditorPlaceableItemCategory.SCRIPTED;
 		return placeable_item;
-	}
-	
-	// If model volume is 0, return false
-	private static bool IsValidObject(Object target)
-	{
-		vector size[2];
-		target.ClippingInfo(size);
-		return (Math.AbsFloat(size[0][0]) + Math.AbsFloat(size[1][0]) + Math.AbsFloat(size[0][1]) + Math.AbsFloat(size[1][1]) + Math.AbsFloat(size[0][2]) + Math.AbsFloat(size[1][2]) > 0);
 	}
 		
 	static string GetIcon(ModStructure mod_info)

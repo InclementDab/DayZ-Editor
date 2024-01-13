@@ -24,8 +24,7 @@ class EditorHudController: EditorControllerBase
 	// Main data
 	ref EditorHudToolbar EditorHudToolbarView;
 	
-	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerConfig = new ObservableCollection<ref EditorPlaceableListItem>(this);
-	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerStatic = new ObservableCollection<ref EditorPlaceableListItem>(this);
+	ref ObservableCollection<ref EditorTreeItem> Placeables = new ObservableCollection<ref EditorTreeItem>(this);
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);

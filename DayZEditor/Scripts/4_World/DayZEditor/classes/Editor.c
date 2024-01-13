@@ -91,7 +91,7 @@ class Editor: Managed
 	
 	// private references
 	protected EditorHudController 					m_EditorHudController;
-	protected EditorObjectManagerModule 			m_ObjectManager;	
+	protected ref EditorObjectManagerModule 		m_ObjectManager;	
 	protected EditorCameraTrackManagerModule		m_CameraTrackManager;
 	
 	protected int 									m_LastMouseDown;
@@ -159,7 +159,7 @@ class Editor: Managed
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
 		EditorLog.Info("Initializing Object Manager");
-		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
+		m_ObjectManager = new EditorObjectManagerModule();
 		
 		// Camera Track Manager
 		g_Game.ReportProgress("Initializing Camera Track Manager");
@@ -758,11 +758,12 @@ class Editor: Managed
 			
 			Object entity = editor_hologram.GetWorldObject();
 			if (!entity) {
-				EditorLog.Warning("Invalid Entity from %1", editor_hologram.GetPlaceableItem().Type);
+				EditorLog.Warning("Invalid Entity from %1", editor_hologram.GetPlaceableItem().GetType());
 				return null;
 			}
 			
-			EditorObjectData editor_object_data = EditorObjectData.Create(editor_hologram.GetPlaceableItem().GetSpawnType(), entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EditorObjectFlags.ALL);
+			
+			EditorObjectData editor_object_data = editor_hologram.GetPlaceableItem().CreateData(entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EditorObjectFlags.ALL);
 			if (!editor_object_data) {
 				EditorLog.Warning("Invalid Object data from %1", entity.GetType());
 				return null;
@@ -792,10 +793,10 @@ class Editor: Managed
 	
 	void EditLootSpawns(EditorPlaceableItem placeable_item)
 	{
-		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.Type);
+		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.GetType());
 		 
 		EditorLog.Info("Launching Loot Editor...");
-		m_LootEditTarget = GetGame().CreateObjectEx(placeable_item.Type, Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
+		m_LootEditTarget = GetGame().CreateObjectEx(placeable_item.GetType(), Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 		vector size = ObjectGetSize(m_LootEditTarget);
 		LootYOffset = size[1] / 2;
 		m_LootEditTarget.SetPosition(Vector(0, LootYOffset, 0));
@@ -1564,7 +1565,7 @@ class Editor: Managed
 			return string.Format("%1 [%2, %3: %4]", split_string[1], split_string[0], component_type, component_index);
 		}
 				
-		return string.Format("%1 [%2, %3: %4]", placeable_items[0].Type, split_string[0], component_type, component_index);
+		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetType(), split_string[0], component_type, component_index);
 	}
 	
 	void SetSaveFile(string save_file)

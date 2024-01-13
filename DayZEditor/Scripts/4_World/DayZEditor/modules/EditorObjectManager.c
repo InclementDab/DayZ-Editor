@@ -1,53 +1,40 @@
-class EditorObjectManagerModule: JMModuleBase
+class EditorObjectManagerModule: Managed
 {
 	// strong reference to objects, insert and remove expectedly
 	protected ref map<int, ref EditorObject> 		m_EditorObjectRefs;
 	protected ref map<int, ref EditorDeletedObject> m_EditorDeletedObjectRefs;
 	
 	// Stored list of all Placed Objects
-	protected ref EditorObjectMap					m_PlacedObjects;
+	protected ref EditorObjectMap					m_PlacedObjects = new EditorObjectMap();
 	
 	// Stored list of all selected Objects
-	protected ref EditorObjectMap					m_SelectedObjects;
+	protected ref EditorObjectMap					m_SelectedObjects = new EditorObjectMap();
 	
 	// Stored list of all Placed Objects, indexed by their WorldObject ID
-	protected ref EditorObjectMap					m_WorldObjectIndex;
+	protected ref EditorObjectMap					m_WorldObjectIndex = new EditorObjectMap();
 		
 	// Stored list of all Hidden Objects, indexed by their WorldObject ID
-	protected ref EditorDeletedObjectMap 			m_DeletedObjects;
+	protected ref EditorDeletedObjectMap 			m_DeletedObjects = new EditorDeletedObjectMap();
 	
-	protected ref EditorDeletedObjectMap			m_SelectedDeletedObjects;
+	protected ref EditorDeletedObjectMap			m_SelectedDeletedObjects = new EditorDeletedObjectMap();
 	
-	protected ref array<ref EditorPlaceableItem>	m_PlaceableObjects;
-	
-	protected ref map<string, EditorPlaceableItem>	m_PlaceableObjectsByType;
+	protected ref map<int, ref array<ref EditorPlaceableItem>> m_PlaceableItems = new map<int, ref array<ref EditorPlaceableItem>>();
+			
+	protected ref map<string, EditorPlaceableItem>	m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>();
 	
 	// lookup table by p3d
-	protected ref map<string, ref array<EditorPlaceableItem>>	m_PlaceableObjectsByP3d;
+	protected ref map<string, ref array<EditorPlaceableItem>>	m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableItem>>();
 	
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
 	
-	override void Init()
-	{
-		super.Init();
-		
+	void EditorObjectManager()
+	{		
 		EditorLog.Trace("EditorObjectManager::Init");
-		m_WorldObjectIndex 	= new EditorObjectMap();
-		m_PlacedObjects 	= new EditorObjectMap();
-		m_SelectedObjects 	= new EditorObjectMap();
-		m_DeletedObjects	= new EditorDeletedObjectMap();
-		m_SelectedDeletedObjects	= new EditorDeletedObjectMap();
-
-		m_EditorObjectRefs = new map<int, ref EditorObject>();
-		m_EditorDeletedObjectRefs = new map<int, ref EditorDeletedObject>();
 
 		// Loads placeable objects	
 		g_Game.ReportProgress("Loading Placeable Objects");
 		
-		m_PlaceableObjects = {};
-		m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>;
-		m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableItem>>();
 		TStringArray config_paths = {};
 		config_paths.Insert(CFG_VEHICLESPATH);
 		config_paths.Insert(CFG_WEAPONSPATH);
