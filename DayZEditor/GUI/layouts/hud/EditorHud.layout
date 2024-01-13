@@ -126,8 +126,7 @@ FrameWidgetClass EditorFrame {
                image0 ""
                mode blend
                "src alpha" 1
-               "no wrap" 1
-               stretch 0
+               "clamp mode" clamp
                filter 1
                {
                 ScriptParamsClass {
@@ -405,9 +404,9 @@ FrameWidgetClass EditorFrame {
          visible 1
          clipchildren 1
          color 0.0196 0.0196 0.0196 0.7843
-         position 0 0.04
          size 1 0.04
          halign right_ref
+         valign bottom_ref
          hexactpos 0
          vexactpos 0
          hexactsize 0
@@ -677,8 +676,7 @@ FrameWidgetClass EditorFrame {
              image0 ""
              mode blend
              "src alpha" 1
-             "no wrap" 1
-             stretch 0
+             "clamp mode" clamp
              filter 1
              {
               ScriptParamsClass {
@@ -736,8 +734,8 @@ FrameWidgetClass EditorFrame {
         ButtonWidgetClass RightbarHide {
          clipchildren 1
          color 0.0196 0.0196 0.0196 0.7843
-         position 0 0.04
          size 1 0.04
+         valign bottom_ref
          hexactpos 0
          vexactpos 0
          hexactsize 0
@@ -760,11 +758,9 @@ FrameWidgetClass EditorFrame {
            vexactsize 0
            scaled 1
            image0 "set:dayz_gui image:arrow_right"
-           imageTexture "{26FF075FC9718107}dta/gui/gui/imagesets/dayz_gui.edds"
+           imageTexture ""
            mode blend
            "src alpha" 1
-           "no wrap" 0
-           stretch 0
            "flip u" 0
            "flip v" 0
            nocache 1
@@ -1205,8 +1201,6 @@ FrameWidgetClass EditorFrame {
            image0 "set:dayz_editor_gui image:camera"
            mode additive
            "src alpha" 0
-           "no wrap" 0
-           stretch 0
            "flip u" 0
            "flip v" 0
            filter 1
