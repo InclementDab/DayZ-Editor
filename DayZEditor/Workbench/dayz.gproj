@@ -28,6 +28,8 @@ GameProjectClass {
 				"gui/imagesets/selection.imageset"
 				"gui/imagesets/console_toolbar.imageset"
 				"DayZEditor/gui/imagesets/dayz_editor_gui.imageset"
+				"DayZEditor/gui/icons/tree.imageset"
+				"DayZEditor/gui/icons/icons.imageset"
 				"DabsFramework/gui/imagesets/prefabs.imageset"
 			}
 			widgetStyles {
