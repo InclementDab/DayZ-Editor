@@ -35,83 +35,80 @@ class EditorObjectManagerModule: Managed
 		// Loads placeable objects	
 		g_Game.ReportProgress("Loading Placeable Objects");
 		
-		TStringArray config_paths = {};
-		config_paths.Insert(CFG_VEHICLESPATH);
-		config_paths.Insert(CFG_WEAPONSPATH);
-		config_paths.Insert(CFG_MAGAZINESPATH);
+		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
+		
+		array<ref EditorPlaceableItem> loaded_placeables = {};
 		
 		// handle config objects
 		foreach (string path: config_paths) {
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
 		        GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) { // (GetEditor().Settings && !GetEditor().Settings.ShowScopeZeroObjects)
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
 					continue;
 				}
 				
-				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
-				if (!placeable_item) {
-					continue;
-				}
-				
-				m_PlaceableObjects.Insert(placeable_item); 
-				m_PlaceableObjectsByType[placeable_item.Type] = placeable_item;
-				
-				if (!m_PlaceableObjectsByP3d[placeable_item.Model.GetFileName()]) {
-					m_PlaceableObjectsByP3d[placeable_item.Model.GetFileName()] = new array<EditorPlaceableItem>();
-				}
-				
-				m_PlaceableObjectsByP3d[placeable_item.Model.GetFileName()].Insert(placeable_item);
+				loaded_placeables.Insert(new EditorConfigPlaceableItem(path, type));				
+
 		    }
 		}
 		
-		// handle static p3d objects
-		/*
-		array<ref CF_File> files = {};
-		// i want to search the WHOLE FUCKING GAME but i CANT
-		RecursiveGetFiles("*", files, "\\*.p3d");
-		
-		foreach (CF_File file: files) {
-			Print(file.GetFileName());
-			if (file.GetExtension() != ".p3d") {
-				continue;
-			}
-			
-			EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(file);
-			m_PlaceableObjects.Insert(placeable_item_p3d);
-			
-			if (!m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()]) {
-				m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()] = new array<EditorPlaceableItem>();
-			}
-			
-			m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()].Insert(placeable_item_p3d);
-		}*/
-		
-		const array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss"};
-		
+		const array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
 		foreach (string model_path: paths) {
 			array<ref CF_File> files = {};
-			if (CF_Directory.GetFiles(model_path + "/*.p3d", files, FindFileFlags.ARCHIVES)) {
-				foreach (CF_File file: files) {
-					Print(file.GetFullPath());
-				
-					EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(file);
-					m_PlaceableObjects.Insert(placeable_item_p3d);
-					
-					if (!m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()]) {
-						m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()] = new array<EditorPlaceableItem>();
-					}
-					
-					m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()].Insert(placeable_item_p3d);
+			if (!CF_Directory.GetFiles(model_path + "/*.p3d", files, FindFileFlags.ARCHIVES)) {
+				continue;
+			}
+		
+		
+			foreach (CF_File file: files) {		
+				if (!file) {
+					continue;
 				}
+					
+				loaded_placeables.Insert(new EditorStaticPlaceableItem(file));
 			}
 		}
-		
-		
+	
 		// Statics that belong to Editor / DF
-		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkSpotLight));
-		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkPointLight));
-		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkParticleBase));
+		loaded_placeables.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
+		loaded_placeables.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
+		loaded_placeables.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
+		
+		foreach (EditorPlaceableItem placeable_item: loaded_placeables) {
+			if (!m_PlaceableItems[placeable_item.GetCategory()]) {
+				m_PlaceableItems[placeable_item.GetCategory()] = {};
+			}
+			
+			if (!m_PlaceableObjectsByP3d[placeable_item.GetModel()]) {
+				m_PlaceableObjectsByP3d[placeable_item.GetModel()] = {};
+			}
+			
+			m_PlaceableItems[placeable_item.GetCategory()].Insert(placeable_item);
+			m_PlaceableObjectsByP3d[placeable_item.GetModel()].Insert(placeable_item);
+			m_PlaceableObjectsByType[placeable_item.GetName()] = placeable_item;
+		}
+	}
+
+	static bool IsForbiddenItem(string model)
+	{
+		//! In theory should be safe but just in case
+		if (model.Contains("Fx")) return true;
+		if (model == "ItemOptics") return true;
+
+		//! Cursed items
+		if (model == "AKM_TESTBED") return true;
+		if (model == "Red9") return true;
+		if (model == "QuickieBow") return true;
+		if (model == "LargeTentBackPack") return true;
+		if (model == "SurvivorMale_Base" || model == "SurvivorFemale_Base") return true;
+		if (model == "Land_VASICore" || model == "FlagCarrierCore") return true;
+		if (GetGame().IsKindOf(model, "GP25Base")) return true;
+		if (GetGame().IsKindOf(model, "M203Base")) return true;
+		if (model == "ItemOptics_Base") return true;
+		
+		//! Everything is fine... I hope... :pain:
+		return false;
 	}
 	
 	static void RecursiveGetFiles(string directory, inout array<ref CF_File> files, string pattern = "*")
@@ -274,12 +271,6 @@ class EditorObjectManagerModule: Managed
 		m_EditorDeletedObjectRefs.Clear();
 		GetEditor().Statistics.Save();
 	}
-				
-	override void OnMissionStart()
-	{
-		// On Load unhide em all
-		CF.ObjectManager.UnhideAllMapObjects();
-	}
 		
 	bool IsObjectHidden(EditorDeletedObject deleted_object)
 	{
@@ -358,15 +349,5 @@ class EditorObjectManagerModule: Managed
 		EditorLog.Debug("EditorObjectManager Debug Info");
 		EditorLog.Debug(m_EditorObjectRefs.Count().ToString());
 		EditorLog.Debug(m_EditorDeletedObjectRefs.Count().ToString());
-	}
-	
-	override bool IsClient() 
-	{	
-		return true;
-	}
-	
-	override bool IsServer() 
-	{
-		return true;
 	}
 }

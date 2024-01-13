@@ -1,7 +1,7 @@
 // This is the data that will be loaded from XML
-class EditorBrushData
+class EditorBrushData: Managed
 {
-	string Name;
+	string Type;
 	float MinRadius, MaxRadius;
 	typename BrushClassName;
 	
@@ -10,8 +10,8 @@ class EditorBrushData
 	bool InsertPlaceableObject(EditorBrushObject placeable_object)
 	{
 		// directly check for p3d in files
-		if (!FileExist(placeable_object.Name)) {
-			EditorLog.Warning("BrushObject %1 is not a valid p3d", placeable_object.Name);
+		if (!FileExist(placeable_object.Type)) {
+			EditorLog.Warning("BrushObject %1 is not a valid p3d", placeable_object.Type);
 			return false;
 		}
 		

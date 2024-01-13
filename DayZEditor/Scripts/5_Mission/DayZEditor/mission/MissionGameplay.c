@@ -92,6 +92,8 @@ modded class MissionGameplay
 	{
 		super.OnMissionStart();		
 		g_Game.ReportProgress("Loading Mission");
+		
+		CF.ObjectManager.UnhideAllMapObjects();
 	}
 	
 	override void OnMissionFinish()

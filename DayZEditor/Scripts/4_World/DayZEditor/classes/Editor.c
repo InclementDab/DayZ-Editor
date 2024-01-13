@@ -92,7 +92,7 @@ class Editor: Managed
 	// private references
 	protected EditorHudController 					m_EditorHudController;
 	protected ref EditorObjectManagerModule 		m_ObjectManager;	
-	protected EditorCameraTrackManagerModule		m_CameraTrackManager;
+	protected ref EditorCameraTrackManagerModule	m_CameraTrackManager;
 	
 	protected int 									m_LastMouseDown;
 	protected MouseState							m_LastMouseInput = -1;
@@ -164,7 +164,7 @@ class Editor: Managed
 		// Camera Track Manager
 		g_Game.ReportProgress("Initializing Camera Track Manager");
 		EditorLog.Info("Initializing Camera Track Manager");
-		m_CameraTrackManager = EditorCameraTrackManagerModule.Cast(GetModuleManager().GetModule(EditorCameraTrackManagerModule));
+		m_CameraTrackManager = new EditorCameraTrackManagerModule();
 		
 		// Command Manager
 		g_Game.ReportProgress("Initializing Command Manager");
@@ -758,7 +758,7 @@ class Editor: Managed
 			
 			Object entity = editor_hologram.GetWorldObject();
 			if (!entity) {
-				EditorLog.Warning("Invalid Entity from %1", editor_hologram.GetPlaceableItem().GetType());
+				EditorLog.Warning("Invalid Entity from %1", editor_hologram.GetPlaceableItem().GetName());
 				return null;
 			}
 			
@@ -793,10 +793,10 @@ class Editor: Managed
 	
 	void EditLootSpawns(EditorPlaceableItem placeable_item)
 	{
-		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.GetType());
+		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.GetName());
 		 
 		EditorLog.Info("Launching Loot Editor...");
-		m_LootEditTarget = GetGame().CreateObjectEx(placeable_item.GetType(), Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
+		m_LootEditTarget = GetGame().CreateObjectEx(placeable_item.GetName(), Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 		vector size = ObjectGetSize(m_LootEditTarget);
 		LootYOffset = size[1] / 2;
 		m_LootEditTarget.SetPosition(Vector(0, LootYOffset, 0));
@@ -1565,7 +1565,7 @@ class Editor: Managed
 			return string.Format("%1 [%2, %3: %4]", split_string[1], split_string[0], component_type, component_index);
 		}
 				
-		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetType(), split_string[0], component_type, component_index);
+		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetName(), split_string[0], component_type, component_index);
 	}
 	
 	void SetSaveFile(string save_file)

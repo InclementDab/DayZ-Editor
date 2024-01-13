@@ -1,13 +1,13 @@
 class EditorBrushObject
 {
-	string Name;
+	string Type;
 	float Frequency;
 	float ZOffset;
 	float MinScale, MaxScale;
 	
-	void EditorBrushObject(string name, float frequency, float zoffset, float minscale = 1, float maxscale = 1) 
+	void EditorBrushObject(string type, float frequency, float zoffset, float minscale = 1, float maxscale = 1) 
 	{
-		Name = name; 
+		Type = type; 
 		Frequency = frequency; 
 		ZOffset = zoffset;
 		MinScale = minscale;

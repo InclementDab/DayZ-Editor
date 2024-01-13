@@ -1,4 +1,4 @@
-class EditorBrush
+class EditorBrush: Managed
 {
 	protected EditorSettings m_EditorSettings;
 	protected EntityAI m_BrushDecal;
@@ -87,7 +87,6 @@ class EditorBrush
 
 	void DuringMouseDown(vector position) 
 	{ 
-		
 		if (vector.Distance(m_LastMousePosition, position) < (BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
@@ -118,11 +117,9 @@ class EditorBrush
 			}
 			
 			vector ori = Math3D.GetRandomDir().VectorToAngles() + Vector(0, Math.RandomFloat(-0.02, 0.02), 0);
-			Object brushed_object = EditorWorldObject.CreateObject(object_name.Name, pos, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale));
-			if (!brushed_object) {
-				continue;
-			}
-			
+			EditorStaticPlaceableItem static_placeable = EditorStaticPlaceableItem(object_name.Type);
+			Object brushed_object = static_placeable.CreateObject(pos, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale));
+						
 			vector size = ObjectGetSize(brushed_object);
 			
 			
