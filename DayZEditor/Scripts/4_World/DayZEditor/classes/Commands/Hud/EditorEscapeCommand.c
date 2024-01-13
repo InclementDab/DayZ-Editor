@@ -18,6 +18,12 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		} 
 		
+		if (m_Editor.GetBrush()) {
+			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().BrushToggleButton.SetState(false);
+			m_Editor.SetBrush(null);
+			return true;
+		}
+		
 		if (m_Editor.IsPlacing()) {
 			m_Editor.ClearHand();
 			return true;
