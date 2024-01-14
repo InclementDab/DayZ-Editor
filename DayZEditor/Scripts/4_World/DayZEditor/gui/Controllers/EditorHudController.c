@@ -123,9 +123,12 @@ class EditorHudController: EditorControllerBase
 		
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
+		Print(w.GetName());
 		switch (w) {
 			case LeftDragZone: {
-				WidgetAnimator.AnimateColorHSV(LeftDragZone, "240 140 60", "239 131 175", 30);
+				//WidgetAnimator.AnimateColorHSV(LeftDragZone, "240 140 60", "239 131 175", 30);
+				//LeftDragZone.SetColor(COLOR_WHITE);
+				WidgetAnimator.AnimateColor(LeftDragZone, COLOR_WHITE, 50);
 				break;
 			}
 		}
@@ -149,7 +152,8 @@ class EditorHudController: EditorControllerBase
 	{
 		switch (w) {
 			case LeftDragZone: {
-				WidgetAnimator.AnimateColorHSV(LeftDragZone, "239 131 175", "240 140 60", 30);
+				WidgetAnimator.AnimateColor(LeftDragZone, COLOR_SALMON_A, 50);
+				//LeftDragZone.SetColor(COLOR_SALMON_A);
 				break;
 			}
 		}
