@@ -186,18 +186,24 @@ class EditorHudController: EditorControllerBase
 				WidgetAnimator.AnimateColor(LeftDragZone, COLOR_WHITE, 50);
 				break;
 			}
-			
+		}
+		
+		return super.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		switch (w) {
 			case MenuBarFile:
 			case MenuBarEdit:
 			case MenuBarView:
 			case MenuBarEditor: {
-				delete m_CurrentMenu;
 				m_CurrentMenu = CreateToolbarMenu(w);
-				break;
-			}	
+				return true;
+			}		
 		}
 		
-		return super.OnMouseEnter(w, x, y);
+		return super.OnClick(w, x, y, button);
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
