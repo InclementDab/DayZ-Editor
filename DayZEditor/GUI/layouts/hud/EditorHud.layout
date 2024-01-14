@@ -29,7 +29,7 @@ FrameWidgetClass EditorFrame {
    {
     CanvasWidgetClass EditorCanvas {
      ignorepointer 1
-     position 0 -0.0003
+     position 0.0002 -0.0003
      size 1 1
      halign center_ref
      valign center_ref
@@ -43,7 +43,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 0
      ignorepointer 1
      position 0 92
-     size 280 240
+     size 361 240
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -66,11 +66,11 @@ FrameWidgetClass EditorFrame {
        ignorepointer 1
        color 0.0588 0.0588 0.0588 1
        position 0 6
-       size 280 26
+       size 1 26
        halign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
+       hexactsize 0
        vexactsize 1
        scaled 0
        style rover_sim_colorable
@@ -80,12 +80,12 @@ FrameWidgetClass EditorFrame {
          disabled 1
          ignorepointer 1
          color 0.7843 0.7843 0.7843 1
-         position 20 0
-         size 190 18
+         position 0.09 0
+         size 0.91 18
          valign center_ref
-         hexactpos 1
+         hexactpos 0
          vexactpos 1
-         hexactsize 1
+         hexactsize 0
          vexactsize 1
          text "Filter..."
          font "gui/fonts/sdf_MetronBook24"
@@ -98,13 +98,15 @@ FrameWidgetClass EditorFrame {
         ImageWidgetClass SearchBarIcon {
          ignorepointer 1
          color 0.5451 0.698 0.3412 0.6627
-         size 16 16
+         position 0 0
+         size 0.74 0.724
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          scaled 1
+         fixaspect inside
          image0 "set:dayz_gui image:iconBacteria"
          mode blend
          "src alpha" 1
@@ -115,13 +117,14 @@ FrameWidgetClass EditorFrame {
       ScrollWidgetClass PlaceablesScroll {
        ignorepointer 1
        position 0 32
-       size 280 220
+       size 1 208
        hexactpos 1
        vexactpos 1
-       hexactsize 1
+       hexactsize 0
        vexactsize 1
        scaled 0
        style Colorable
+       "Scrollbar H" 1
        "Scrollbar V" 1
        "Scrollbar V Left" 1
        {
@@ -135,6 +138,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         fixaspect outside
          scriptclass "ViewBinding"
          {
           ScriptParamsClass {
@@ -142,7 +146,7 @@ FrameWidgetClass EditorFrame {
           }
          }
         }
-        PanelWidgetClass ScrollBackground {
+        PanelWidgetClass ScrollVertBackground {
          visible 1
          ignorepointer 1
          color 0.0588 0.0588 0.0588 0.9412
@@ -155,11 +159,37 @@ FrameWidgetClass EditorFrame {
          vexactsize 0
          style rover_sim_colorable
         }
+        PanelWidgetClass ScrollHorizBackground {
+         visible 1
+         ignorepointer 1
+         color 0.0588 0.0588 0.0588 0.9412
+         position 0 -8
+         size 1 8
+         halign center_ref
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         style rover_sim_colorable
+        }
+        ImageWidgetClass ScrollCornerBackground {
+         ignorepointer 1
+         color 0.1373 0.1373 0.1373 1
+         position -8 -8
+         size 8 8
+         valign bottom_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+        }
        }
       }
       PanelWidgetClass LeftDragZone {
        ignorepointer 0
        color 0.1961 0.3922 0.3922 0.502
+       position 0 0
        size 6 1
        halign right_ref
        valign center_ref

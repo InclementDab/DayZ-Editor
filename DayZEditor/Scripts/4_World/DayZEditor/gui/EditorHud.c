@@ -63,8 +63,8 @@ class EditorHud: ScriptView
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 		if (m_DraggedBar) {
-			m_DraggedBar.GetScreenPos(w, h);
-			m_DraggedBar.SetScreenPos(mouse_x, y);
+			m_DraggedBar.GetParent().GetSize(w, h);
+			m_DraggedBar.GetParent().SetSize(mouse_x, h);
 		}
 		
 		Input input = GetGame().GetInput();
@@ -72,10 +72,6 @@ class EditorHud: ScriptView
 			if (!EditorMapWidget.IsVisible() && (!CurrentDialog || !GetEditor().Settings.LockCameraDuringDialogs)) {
 				ShowCursor(!IsCursorVisible());
 			}
-		}
-		
-		if (input.LocalPress("EditorToggleUI")) {			
-			Show(!IsVisible());
 		}
 		
 		if (input.LocalPress("EditorToggleMap")) {

@@ -1743,7 +1743,23 @@ class Editor: Managed
 		return m_ObjectManager.GetPlaceableObjects();
 	}
 	
+	bool GetHudVisiblity()
+	{
+#ifdef DIAG_DEVELOPER
+		return m_EditorHud != null;
+#else
+		return m_EditorHud.IsVisible();
+#endif	
+	}
 	
+	void SetHudVisibility(bool state)
+	{
+#ifdef DIAG_DEVELOPER
+		m_EditorHud = new EditorHud();
+#else
+		m_EditorHud.Show(state);
+#endif
+	}
 	
 	bool IsPlacing()
 	{
