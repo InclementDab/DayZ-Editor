@@ -38,16 +38,76 @@ class EditorTreeItem: ScriptView
 	ImageWidget Icon, CollapseIcon, ParentDisplay, TreeDisplay;
 	WrapSpacerWidget Children;
 	
+	Widget Panel;
+	
 	void EditorTreeItem(string name)
 	{
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
 		
 		Text.SetText(name);
-	}
 		
+		SizeToChild size_to_child;
+		Panel.GetScript(size_to_child);
+		size_to_child.ResizeParentToChild();
+	}
+			
 	void OnCollapseExecute(ButtonCommandArgs args)
 	{
 		SetOpened(!IsOpen());
+	}
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		return super.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		switch (w) {
+			case Panel: {
+				
+				break;
+			}
+		}
+		
+		return super.OnMouseLeave(w, enterW, x, y);
+	}
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		switch (w) {
+			case Panel: {
+				SetFocus(w);
+				return true;
+			}
+		}
+		
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		switch (w) {
+			case Panel: {
+				WidgetAnimator.AnimateColor(Panel, ARGB(255, 75, 119, 190), 50);
+				return true;
+			}
+		}
+		
+		return super.OnFocus(w, x, y);
+	}
+	
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		switch (w) {
+			case Panel: {
+				WidgetAnimator.AnimateColor(Panel, ARGB(0, 0, 0, 0), 50);
+				return true;
+			}
+		}
+	
+		
+		return super.OnFocusLost(w, x, y);
 	}
 	
 	void SetOpened(bool state)

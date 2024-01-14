@@ -62,13 +62,10 @@ class EditorHud: ScriptView
 		
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
-		
-
 	
-		
 		if (m_DraggedBar) {			
-			Left.GetSize(w, h);
-			Left.SetSize(mouse_x, y - 74);
+			m_DraggedBar.GetParent().GetParent().GetSize(w, h);
+			m_DraggedBar.GetParent().GetParent().SetSize(mouse_x, y - 74);
 		}
 		
 		Input input = GetGame().GetInput();
