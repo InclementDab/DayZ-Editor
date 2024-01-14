@@ -39,14 +39,15 @@ class EditorBoundingBox: Managed
 			transform[3] = line_centers[i];
 			
 			for (int j = 0; j < 3; j++) {
-				transform[j][j] = ((position[j] == line_centers[i][j]) * size[j]/2) + BOUNDING_BOX_THICKNESS;						
+				transform[j][j] = ((position[j] == line_centers[i][j]) * size[j]) + BOUNDING_BOX_THICKNESS;						
 			}
 			 
 			Object bbox_line = GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_NONE);
-			bbox_line.SetTransform(transform);		
+			bbox_line.SetTransform(transform);
 			bbox_line.Update();	
 			
 			object.AddChild(bbox_line, -1, true);
+			object.Update();
 		}
 	}
 	

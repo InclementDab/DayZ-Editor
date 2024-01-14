@@ -174,7 +174,7 @@ class EditorObjectMarker: EditorMarker
 	}
 	
 	private const int DRAG_THRESHOLD = 5;
-	private void CheckDragBounds(int x, int y)
+	private void z(int x, int y)
 	{
 		while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
 			int c_x, c_y;
