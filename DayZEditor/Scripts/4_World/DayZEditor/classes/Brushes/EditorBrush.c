@@ -117,16 +117,17 @@ class EditorBrush: Managed
 			}
 			
 			vector ori = Math3D.GetRandomDir().VectorToAngles() + Vector(0, Math.RandomFloat(-0.02, 0.02), 0);
-			EditorStaticPlaceableItem static_placeable = EditorStaticPlaceableItem(new CF_File(object_name.Type));
-			Object brushed_object = static_placeable.CreateObject(pos, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale));
+			EditorStaticPlaceableItem static_placeable = EditorStaticPlaceableItem(object_name.Type);
+			Object brushed_object = static_placeable.CreateObject(pos, vector.Zero, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale));
 						
-			vector size = ObjectGetSize(brushed_object);
-			
+			vector size = ObjectGetSize(brushed_object);			
 			
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + object_name.ZOffset;
 			
 			// just for u boba
-			//brushed_object.SetPosition(pos);
+			brushed_object.SetPosition(pos);
+			brushed_object.SetDirection(ori);
+			brushed_object.Update();
 			//brushed_object.SetDirection(direction);
 			created_data.Insert(EditorObjectData.Create(brushed_object, flags));
 		}

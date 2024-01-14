@@ -130,12 +130,11 @@ PanelWidgetClass Root {
    }
   }
   WrapSpacerWidgetClass Children {
-   visible 0
+   visible 1
    clipchildren 0
    ignorepointer 1
-   position 0 0
+   position 0 16
    size 1 0
-   valign bottom_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -143,6 +142,7 @@ PanelWidgetClass Root {
    scriptclass "ViewBinding"
    Padding 0
    Margin 0
+   "Size To Content H" 1
    {
     ScriptParamsClass {
      Binding_Name "Children"

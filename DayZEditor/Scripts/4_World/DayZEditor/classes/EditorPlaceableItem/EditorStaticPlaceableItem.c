@@ -1,27 +1,26 @@
 class EditorStaticPlaceableItem: EditorPlaceableItem
 {
-	protected ref CF_File m_Model;
+	protected string m_Model;
 	
-	void EditorStaticPlaceableItem(notnull CF_File model)
+	void EditorStaticPlaceableItem(string model)
 	{
 		m_Model = model;
 	}
 	
 	override Object CreateObject(vector position, vector orientation, float scale)
-	{		
-		Print(m_Model);
-		Print(m_Model.GetFullPath());
-		Object object = GetGame().CreateStaticObjectUsingP3D(m_Model.GetFullPath(), position, orientation, scale);								
-		object.SetPosition(position);
-		object.SetOrientation(orientation);
-		object.SetScale(scale);
-		object.Update();		
-		return object;
+	{
+		return GetGame().CreateStaticObjectUsingP3D(m_Model, position, orientation, scale);
 	}
 	
 	override string GetName()
 	{
-		return m_Model.GetFileName();
+		array<string> items = {};
+		m_Model.Split("/", items);
+		if (items.Count() == 0) {
+			return string.Empty;
+		}
+		
+		return items[items.Count() - 1];
 	}
 	
 	override EditorPlaceableItemCategory GetCategory()
@@ -31,6 +30,6 @@ class EditorStaticPlaceableItem: EditorPlaceableItem
 	
 	override EditorObjectData CreateData(vector position, vector orientation, float scale, int flags)
 	{
-		return EditorObjectData.Create(m_Model.GetFullPath(), position, orientation, scale, flags);
+		return EditorObjectData.Create(m_Model, position, orientation, scale, flags);
 	}
 }

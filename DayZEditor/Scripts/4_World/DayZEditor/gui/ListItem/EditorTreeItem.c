@@ -1,11 +1,35 @@
 class EditorTreeItemController: ViewController
 {
 	ref ObservableCollection<ref EditorTreeItem> Children = new ObservableCollection<ref EditorTreeItem>(this);
+	
+	Widget CollapseWrapper;
+	
+	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
+	{
+		CollapseWrapper.Show(Children.Count() > 0);
+		
+		Param1<EditorTreeItem> item = Param1<EditorTreeItem>.Cast(args.ChangedValue);
+		EditorTreeItem script_view = EditorTreeItem.Cast(GetParent());
+		switch (args.ChangedAction) {
+			case NotifyCollectionChangedAction.Insert:
+			case NotifyCollectionChangedAction.InsertAt: {
+				item.param1.SetParentTree(script_view);
+				break;
+			}
+			
+			case NotifyCollectionChangedAction.Remove: {
+				item.param1.SetParentTree(null);
+				break;
+			}
+		}
+	}
 }
 
 class EditorTreeItem: ScriptView
 {
 	protected EditorTreeItemController m_TemplateController;
+	
+	protected EditorTreeItem m_Parent;
 	
 	TextWidget Text;
 	ImageWidget Icon, CollapseIcon;
@@ -17,7 +41,7 @@ class EditorTreeItem: ScriptView
 		
 		Text.SetText(name);
 	}
-	
+		
 	void OnCollapseExecute(ButtonCommandArgs args)
 	{
 		SetOpened(!IsOpen());
@@ -27,8 +51,13 @@ class EditorTreeItem: ScriptView
 	{
 		Children.Show(state);
 		
-		CollapseIcon.LoadImageFile(0, Ternary<string>.If(state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
+		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
 		CollapseIcon.SetImage(0);
+		
+		float w, h;
+		m_LayoutRoot.GetScreenSize(w, h);
+		
+		m_LayoutRoot.SetScreenSize(w, h * m_TemplateController.Children.Count());
 	}
 	
 	bool HasChildren()
@@ -39,6 +68,16 @@ class EditorTreeItem: ScriptView
 	bool IsOpen()
 	{
 		return Children.IsVisible();
+	}
+	
+	void SetParentTree(EditorTreeItem parent)
+	{
+		m_Parent = parent;
+	}
+	
+	EditorTreeItem GetParentTree()
+	{
+		return m_Parent;
 	}
 	
 	EditorTreeItemController GetTemplateController()

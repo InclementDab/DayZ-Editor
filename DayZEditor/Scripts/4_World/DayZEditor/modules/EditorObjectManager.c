@@ -1,8 +1,8 @@
 class EditorObjectManagerModule: Managed
 {
 	// strong reference to objects, insert and remove expectedly
-	protected ref map<int, ref EditorObject> 		m_EditorObjectRefs;
-	protected ref map<int, ref EditorDeletedObject> m_EditorDeletedObjectRefs;
+	protected ref map<int, ref EditorObject> 		m_EditorObjectRefs = new map<int, ref EditorObject>();
+	protected ref map<int, ref EditorDeletedObject> m_EditorDeletedObjectRefs = new map<int, ref EditorDeletedObject>();
 	
 	// Stored list of all Placed Objects
 	protected ref EditorObjectMap					m_PlacedObjects = new EditorObjectMap();
@@ -30,10 +30,8 @@ class EditorObjectManagerModule: Managed
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
 	
-	void EditorObjectManager()
-	{		
-		EditorLog.Trace("EditorObjectManager::Init");
-
+	void EditorObjectManagerModule()
+	{
 		// Loads placeable objects	
 		g_Game.ReportProgress("Loading Placeable Objects");
 		
@@ -64,7 +62,7 @@ class EditorObjectManagerModule: Managed
 					continue;
 				}
 				
-				m_AllPlaceableItems.Insert(new EditorStaticPlaceableItem(file));
+				m_AllPlaceableItems.Insert(new EditorStaticPlaceableItem(file.GetFullPath()));
 			}
 		}
 	
@@ -72,7 +70,7 @@ class EditorObjectManagerModule: Managed
 		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
 		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
 		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
-		
+			
 		foreach (EditorPlaceableItem placeable_item: m_AllPlaceableItems) {
 			if (!m_PlaceableItems[placeable_item.GetCategory()]) {
 				m_PlaceableItems[placeable_item.GetCategory()] = {};
@@ -116,7 +114,6 @@ class EditorObjectManagerModule: Managed
 		if (CF_Directory.GetFiles(directory + "*", directories, FindFileFlags.ARCHIVES)) {
 			foreach (CF_File subdirectory: directories) {
 				if (subdirectory.IsDirectory()) {
-					Print(subdirectory.GetFullPath() + "/");
 					RecursiveGetFiles(subdirectory.GetFullPath() + "/", files, pattern);
 				}
 			}

@@ -33,6 +33,8 @@ class CfgMods
 					{
 						"DayZEditor/gui/imagesets/dayz_editor_gui.imageset",
 						"DabsFramework/gui/imagesets/prefabs.imageset",
+						"DayZEditor/gui/icons/tree.imageset",
+						"DayZEditor/gui/icons/icons.imageset"
 				};
 			};
 
