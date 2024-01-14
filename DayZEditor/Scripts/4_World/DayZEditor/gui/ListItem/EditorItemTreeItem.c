@@ -29,12 +29,10 @@ class EditorItemTreeItem: EditorTreeItem
 	{
 		switch (w) {
 			case Panel: {
-				WidgetAnimator.AnimateColor(Panel, ARGB(0, 0, 0, 0), 50);				
-				GetEditor().RemoveFromHand(m_Hologram);
-				return true;
+				WidgetAnimator.AnimateColor(Panel, ARGB(0, 0, 0, 0), 50);
+				break;
 			}
 		}
-	
 		
 		return super.OnFocusLost(w, x, y);
 	}
@@ -42,12 +40,16 @@ class EditorItemTreeItem: EditorTreeItem
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		switch (w) {
-			case Panel: {
-				float w_f, h_f, x_p, y_p;
-				m_LayoutRoot.GetScreenSize(w_f, h_f);
-				m_LayoutRoot.GetScreenPos(x_p, y_p);
-				EditorPlaceableTooltip tooltip = new EditorPlaceableTooltip(m_PlaceableItem, x_p + w_f + 25, y);
-				GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
+			case Panel: {				
+				Widget scroller = m_LayoutRoot;
+				if (RecursiveGetParent(scroller, ScrollWidget)) {
+					float w_f, h_f, x_p, y_p;
+					scroller.GetScreenSize(w_f, h_f);
+					scroller.GetScreenPos(x_p, y_p);
+					EditorPlaceableTooltip tooltip = new EditorPlaceableTooltip(m_PlaceableItem, x_p + w_f + 25, y);
+					GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
+				}
+				
 				break;
 			}
 		}

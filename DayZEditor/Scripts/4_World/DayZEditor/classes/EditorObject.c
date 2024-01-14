@@ -1,12 +1,5 @@
 class EditorObject: Managed
-{
-	static const ref array<string> VALID_PATHS = { 
-		"DZ\\plants", 
-		"DZ\\plants_bliss",
-		"DZ\\rocks",
-		"DZ\\rocks_bliss",
-	};
-	
+{	
 	protected Object m_WorldObject;
 	protected EditorObjectData 				m_Data;
 	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;

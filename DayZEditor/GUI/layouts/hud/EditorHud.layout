@@ -1139,6 +1139,7 @@ FrameWidgetClass EditorFrame {
          Rows 1
          {
           ButtonWidgetClass CutButton {
+           disabled 0
            clipchildren 0
            ignorepointer 0
            color 0.7529 0.3686 0.3255 1

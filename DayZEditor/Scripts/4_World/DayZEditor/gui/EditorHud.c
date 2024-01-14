@@ -60,12 +60,30 @@ class EditorHud: ScriptView
 			m_TemplateController.cam_z = cam_pos[2];
 			m_TemplateController.NotifyPropertiesChanged({ "cam_x", "cam_y", "cam_z"} );
 		}
+		
+		array<EditorCommand> commands = GetEditor().CommandManager.GetCommands();
+		foreach (EditorCommand command: commands) {
+			auto view_binding = command.GetViewBinding();
+			if (!view_binding) {
+				continue;
+			}
+			
+			Widget root = view_binding.GetLayoutRoot();
+			bool can_execute = command.CanExecute();
+			if (can_execute) {
+				root.SetAlpha(1);
+			} else {
+				root.SetAlpha(0.25);
+			}
+			
+			root.Enable(can_execute);			
+		}
 				
 		// kinda cursed but double inputs. maybe have a handler if you want more ui shit (loooot editor)
 		if (GetEditor().IsInventoryEditorActive() || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
 			return;
 		}
-		
+				
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
 			m_DraggedBar = null;
 		}
@@ -83,6 +101,12 @@ class EditorHud: ScriptView
 		PlaceablesList.SetSize(w, Math.Max(h, y));
 		
 		Input input = GetGame().GetInput();
+		if (input.LocalPress("EditorPlaceObjectCommand") && !KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor()) {
+			GetEditor().ClearSelection();
+			
+			DelayedDragBoxCheck();
+		}
+		
 		if (input.LocalPress("EditorToggleCursor")) {
 			if (!EditorMapWidget.IsVisible() && (!CurrentDialog || !GetEditor().Settings.LockCameraDuringDialogs)) {
 				ShowCursor(!IsCursorVisible());
@@ -243,7 +267,7 @@ class EditorHud: ScriptView
 		int x, y;
 		x += 6;
 		GetMousePos(x, y);
-		thread _DelayedDragBoxCheck(x, y);		
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(_DelayedDragBoxCheck, 0, true, x, y);
 	}
 
 	private void _DelayedDragBoxCheck(int start_x, int start_y)
@@ -255,49 +279,47 @@ class EditorHud: ScriptView
 		int drag_box_color_fill = ARGB(50, r, g, b);			
 		
 		int current_x, current_y;
-		while ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && GetGame().GetInput().HasGameFocus()) {			
-			m_IsBoxSelectActive = true;
-			GetMousePos(current_x, current_y);
-			// @Sumrak :ANGERY:
-			current_x += 6;
-			
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) || !GetGame().GetInput().HasGameFocus()) {	
 			EditorCanvas.Clear();
-			g_Editor.ClearSelection();
-			
-			// Draw Drag Box
-			if (Math.AbsInt(start_x - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_BOX_THRESHOLD) {
-				EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, DRAG_BOX_THICKNESS, drag_box_color);
-				EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-				EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-				EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-				
-				// Handles the fill operation
-				int x_avg = (start_x + current_x) / 2;
-				EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, drag_box_color_fill); 
-				
-				EditorObjectMap placed_objects = g_Editor.GetPlacedObjects();
-				foreach (EditorObject editor_object: placed_objects) {					
-					float marker_x, marker_y;
-					EditorObjectMarker object_marker = editor_object.GetMarker();
-					if (object_marker) {
-						object_marker.GetPos(marker_x, marker_y);
-						
-						//i think only checking if within cone of box select not distance
-						if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {
-							//check if within markerviewdistance to allow selection.
-							if (vector.Distance(editor_object.GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.Settings.MarkerViewDistance) {
-								g_Editor.SelectObject(editor_object);
-							}
-						}
-					}
-				}		
-			}
-			
-			Sleep(10);
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(_DelayedDragBoxCheck);
+			return;
 		}
 		
-		m_IsBoxSelectActive = false;
+		GetMousePos(current_x, current_y);
+		// @Sumrak :ANGERY:
+		current_x += 6;
+		
 		EditorCanvas.Clear();
+		g_Editor.ClearSelection();
+		
+		// Draw Drag Box
+		if (Math.AbsInt(start_x - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_BOX_THRESHOLD) {
+			EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, DRAG_BOX_THICKNESS, drag_box_color);
+			EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+			EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+			EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+			
+			// Handles the fill operation
+			int x_avg = (start_x + current_x) / 2;
+			EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, drag_box_color_fill); 
+			
+			EditorObjectMap placed_objects = g_Editor.GetPlacedObjects();
+			foreach (EditorObject editor_object: placed_objects) {					
+				float marker_x, marker_y;
+				EditorObjectMarker object_marker = editor_object.GetMarker();
+				if (object_marker) {
+					object_marker.GetPos(marker_x, marker_y);
+					
+					//i think only checking if within cone of box select not distance
+					if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {
+						//check if within markerviewdistance to allow selection.
+						if (vector.Distance(editor_object.GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.Settings.MarkerViewDistance) {
+							g_Editor.SelectObject(editor_object);
+						}
+					}
+				}
+			}		
+		}
 	}
 
 	void ShowRuleOfThirds(bool state)

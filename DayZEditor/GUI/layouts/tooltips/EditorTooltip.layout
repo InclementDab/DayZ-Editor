@@ -4,7 +4,7 @@ PanelWidgetClass Root {
  clipchildren 1
  inheritalpha 0
  ignorepointer 1
- color 0.1529 0.1529 0.1529 0.4706
+ color 0.1529 0.1529 0.1529 0.902
  size 240 256
  hexactpos 1
  vexactpos 1

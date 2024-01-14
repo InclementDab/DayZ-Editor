@@ -33,7 +33,7 @@ class EditorTreeItem: ScriptView
 		m_LayoutRoot.SetScreenSize(w, state * 18 * (m_TemplateController.Children.Count() + 1));
 	}
 		
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
 		switch (w) {
 			case Panel: {
@@ -46,7 +46,7 @@ class EditorTreeItem: ScriptView
 			}
 		}
 		
-		return super.OnMouseButtonDown(w, x, y, button);
+		return super.OnMouseButtonUp(w, x, y, button);
 	}
 					
 	void SetParentTree(EditorTreeItem parent)

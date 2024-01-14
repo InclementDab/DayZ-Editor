@@ -543,8 +543,8 @@ class Editor: Managed
 			
 			case MouseState.LEFT: {				
 
+
 				
-				if (!GetBrush() && GetSelectedObjects().Count() == 0) {
 					
 					/*if (ObjectUnderCursor) {
 						EditorObject editor_object = m_ObjectManager.GetEditorObject(ObjectUnderCursor);
@@ -565,10 +565,8 @@ class Editor: Managed
 						} 
 					} */
 					
-					if (!target) {
-						m_EditorHud.DelayedDragBoxCheck();
-					}
-				}
+
+				
 
 				break;
 			}
@@ -653,7 +651,6 @@ class Editor: Managed
 	void RemoveFromHand(Object world_object)
 	{
 		m_PlacingObjects.Remove(world_object);
-		GetGame().ObjectDelete(world_object);	
 	}
 	
 	void ClearHand()
