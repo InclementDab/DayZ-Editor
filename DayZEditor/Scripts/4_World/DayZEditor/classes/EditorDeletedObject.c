@@ -1,4 +1,4 @@
-class EditorDeletedObject: Managed
+class EditorHiddenObject: Managed
 {
 	protected bool m_IsSelected;
 	
@@ -11,12 +11,15 @@ class EditorDeletedObject: Managed
 	
 	protected ref EditorDeletedListItem m_EditorDeletedListItem;
 	
-	protected ref EditorDeletedObjectWorldMarker m_EditorDeletedObjectWorldMarker;
+	protected ref EditorHiddenObjectWorldMarker m_EditorHiddenObjectWorldMarker;
 	
-	protected EditorDeletedObjectData m_Data;
+	protected EditorHiddenObjectData m_Data;
 	protected Object m_WorldObject;
 	
-	void EditorDeletedObject(EditorDeletedObjectData data)
+	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
+	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
+	
+	void EditorHiddenObject(EditorHiddenObjectData data)
 	{
 		m_Data = data;
 				
@@ -46,11 +49,10 @@ class EditorDeletedObject: Managed
 		m_EditorDeletedListItem = new EditorDeletedListItem(this);		
 		GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData.Insert(m_EditorDeletedListItem);
 		
-		
 		CF.ObjectManager.HideMapObject(m_WorldObject);
 	}
 	
-	void ~EditorDeletedObject()
+	void ~EditorHiddenObject()
 	{
 		// just for the sake of cache clearing
 		if (m_IsSelected) {
@@ -59,10 +61,10 @@ class EditorDeletedObject: Managed
 		
 		CF.ObjectManager.UnhideMapObject(m_WorldObject);
 		delete m_EditorDeletedListItem;
-		delete m_EditorDeletedObjectWorldMarker;
+		delete m_EditorHiddenObjectWorldMarker;
 	}
 	
-	EditorDeletedObjectData GetData()
+	EditorHiddenObjectData GetData()
 	{
 		return m_Data;
 	}
@@ -85,7 +87,7 @@ class EditorDeletedObject: Managed
 	void OnSelected()
 	{
 		m_IsSelected = true;
-		m_EditorDeletedObjectWorldMarker = new EditorDeletedObjectWorldMarker(this);
+		m_EditorHiddenObjectWorldMarker = new EditorHiddenObjectWorldMarker(this);
 		if (m_EditorDeletedListItem) {
 			m_EditorDeletedListItem.Select();
 		}
@@ -96,7 +98,7 @@ class EditorDeletedObject: Managed
 	void OnDeselected()
 	{
 		m_IsSelected = false;
-		delete m_EditorDeletedObjectWorldMarker;
+		delete m_EditorHiddenObjectWorldMarker;
 		if (m_EditorDeletedListItem) {
 			m_EditorDeletedListItem.Deselect();
 		}

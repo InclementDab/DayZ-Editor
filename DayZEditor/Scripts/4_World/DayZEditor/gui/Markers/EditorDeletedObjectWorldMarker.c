@@ -1,14 +1,14 @@
-class EditorDeletedObjectWorldMarker: EditorMarker
+class EditorHiddenObjectWorldMarker: EditorMarker
 {
 	protected int m_ScreenX, m_ScreenY;
 	protected MapWidget m_MapWidget;
-	protected EditorDeletedObject m_EditorDeletedObject;
+	protected EditorHiddenObject m_EditorHiddenObject;
 	
-	void EditorDeletedObjectWorldMarker(EditorDeletedObject deleted_object)
+	void EditorHiddenObjectWorldMarker(EditorHiddenObject deleted_object)
 	{
-		EditorLog.Trace("EditorDeletedObjectWorldMarker");
+		EditorLog.Trace("EditorHiddenObjectWorldMarker");
 		m_MapWidget = GetEditor().GetEditorHud().EditorMapWidget;
-		m_EditorDeletedObject = deleted_object;
+		m_EditorHiddenObject = deleted_object;
 		GetScreenSize(m_ScreenX, m_ScreenY);
 		SetColor(LIST_ITEM_COLOR_ON_DELETED);
 	}
@@ -24,7 +24,7 @@ class EditorDeletedObjectWorldMarker: EditorMarker
 		}
 			
 		// Is the marker in bounds?
-		vector screen_pos = GetGame().GetScreenPos(m_EditorDeletedObject.GetBottomPosition());
+		vector screen_pos = GetGame().GetScreenPos(m_EditorHiddenObject.GetBottomPosition());
 		if (screen_pos[0] != 0 && screen_pos[0] != m_ScreenX && screen_pos[1] != 0 && screen_pos[1] != m_ScreenY && screen_pos[2] > 0) {
 			SetPos(screen_pos[0], screen_pos[1]);
 			Show(true);

@@ -14,7 +14,7 @@ class EditorToggleSimulationCommand: EditorCommand
 			return true;
 		}
 		
-		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
+		array<EditorObject> selected_objects = m_Editor.GetSelectedObjects();
 		if (selected_objects.Count() == 0) {
 			return false;
 		}

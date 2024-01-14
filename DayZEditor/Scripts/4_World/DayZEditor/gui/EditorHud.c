@@ -327,7 +327,7 @@ class EditorHud: ScriptView
 			int x_avg = (start_x + current_x) / 2;
 			EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, drag_box_color_fill); 
 			
-			EditorObjectMap placed_objects = g_Editor.GetPlacedObjects();
+			array<EditorObject> placed_objects = g_Editor.GetPlacedObjects();
 			foreach (EditorObject editor_object: placed_objects) {					
 				float marker_x, marker_y;
 				EditorObjectMarker object_marker = editor_object.GetMarker();

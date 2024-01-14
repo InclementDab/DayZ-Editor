@@ -18,8 +18,7 @@ class EditorExportRelativeToObject: EditorCommand
 		object.GetTransform(mat);
 		
 		EditorSaveData save_data = new EditorSaveData();
-		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
-		foreach (int id, EditorObject editor_object: selected_objects) {
+		foreach (EditorObject editor_object: EditorObject.SelectedObjects) {
 			vector position = editor_object.GetWorldObject().GetPosition().InvMultiply4(mat);
 			vector orientation = editor_object.GetWorldObject().GetOrientation() - object.GetOrientation();
 			
@@ -37,12 +36,12 @@ class EditorExportRelativeToObject: EditorCommand
 		GetEditor().GetEditorHud().CreateNotification("Positions Saved to relative.c file", COLOR_GREEN);
 		
 		
-		m_Editor.ClearSelection();
+		EditorObject.ClearSelections();
 	}
 	
 	override bool CanExecute()
 	{
-		return GetEditor().GetSelectedObjects().Count() > 0;
+		return EditorObject.SelectedObjects.Count() > 0;
 	}
 	
 	override string GetName()

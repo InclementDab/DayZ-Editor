@@ -3,10 +3,9 @@ class EditorAlignToSurfaceCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		
-		EditorObjectMap editor_objects = m_Editor.GetSelectedObjects();		
+			
 		EditorAction align_undo = new EditorAction("SetTransform", "SetTransform");
-		foreach (EditorObject editor_object: editor_objects) {
+		foreach (EditorObject editor_object: EditorObject.SelectedObjects) {
 			vector transform[4];
 			
 			editor_object.GetWorldObject().GetTransform(transform);

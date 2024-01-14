@@ -3,19 +3,19 @@ class EditorDuplicateCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
-		array<ref EditorObjectData> created_data = {};
+		array<EditorObject> selected_objects = EditorObject.SelectedObjects;
+		array<Object> objects = {};
 				
-		foreach (int i, EditorObject editor_object: selected_objects) {
-			created_data.Insert(editor_object.CreateSerializedData());
+		foreach (EditorObject editor_object: selected_objects) {
+			objects.Insert(editor_object.GetWorldObject());
 		}
 		
-		EditorObjectMap created_objects = GetEditor().CreateObjects(created_data);
+		array<EditorObject> created_objects = GetEditor().CreateObjects(objects);
 		
-		GetEditor().ClearSelection();
-		foreach (int id, EditorObject created_object: created_objects) {
+		EditorObject.ClearSelections();
+		foreach (EditorObject created_object: created_objects) {
 			if (created_object) {
-				GetEditor().SelectObject(created_object);
+				created_object.SetSelected(true);
 			}
 		}
 		

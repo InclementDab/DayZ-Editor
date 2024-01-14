@@ -4,7 +4,7 @@ class EditorClipboard
 	{
 		EditorLog.Trace("EditorObjectManager::CutSelection");
 		
-		EditorObjectMap cut_objects = GetEditor().GetSelectedObjects();
+		array<EditorObject> cut_objects = EditorObject.SelectedObjects;
 		if (cut_objects.Count() == 0) {
 			return;
 		}
@@ -16,7 +16,7 @@ class EditorClipboard
 	static void Copy()
 	{
 		EditorLog.Trace("EditorObjectManager::CopySelection");
-		EditorObjectMap copy_objects = GetEditor().GetSelectedObjects();
+		array<EditorObject> copy_objects = EditorObject.SelectedObjects;
 		if (copy_objects.Count() == 0) {
 			return;
 		}
@@ -75,7 +75,7 @@ class EditorClipboard
 			created_data.Insert(EditorObjectData.Create(pasted_object.Type, position, pasted_object.Orientation, pasted_object.Scale, pasted_object.Flags));
 		}	
 		
-		EditorObjectMap editor_objects = GetEditor().CreateObjects(created_data);
+		array<EditorObject> editor_objects = GetEditor().CreateObjects(created_data);
 		
 		foreach (int id, EditorObject editor_object: editor_objects) {
 			//editor_object.SetPosition(position);

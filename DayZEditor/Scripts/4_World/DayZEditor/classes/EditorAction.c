@@ -125,7 +125,7 @@ class EditorAction: Managed
 	{
 		EditorLog.Trace("EditorAction::Hide %1", params.param1.ToString());
 		
-		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
+		EditorHiddenObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
 		if (!data) {
 			EditorLog.Error("EditorAction::Hide Data was null!");
 			return;
@@ -139,7 +139,7 @@ class EditorAction: Managed
 	void Unhide(Param1<int> params)
 	{
 		EditorLog.Trace("EditorAction::Unhide %1", params.param1.ToString());
-		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
+		EditorHiddenObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
 		if (!data) {
 			EditorLog.Error("EditorAction::Unhide Data was null!");
 			return;

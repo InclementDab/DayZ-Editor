@@ -29,7 +29,7 @@ class EditorExportCommandBase: EditorAsyncCommand
 		}
 
 		// Warn the user if they are exporting with deleted objects
-		if (GetEditor().GetObjectManager().GetDeletedObjects().Count() > 0 && !file_type.CanDoDeletion() ) {
+		if (GetEditor().GetDeletedObjects().Count() > 0 && !file_type.CanDoDeletion() ) {
 			if (EditorMessageBox.Show("Export Warning!", "NOTE: Exporting with this format does NOT support Object Deletion! You need to use .dze or .map file format for this (File > Save)", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
 				return false;
 			}
@@ -55,7 +55,7 @@ class EditorExportCommandBase: EditorAsyncCommand
 		EditorSaveData save_data = m_Editor.CreateSaveData(export_settings.ExportSelectedOnly);
 		file_type.Export(save_data, file_name, export_settings);
 
-		string message = string.Format("Saved %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorDeletedObjects.Count());
+		string message = string.Format("Saved %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count());
 		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
 		EditorLog.Debug(message);
 		return true;

@@ -34,8 +34,8 @@ class EditorExpansionFile: EditorFileType
 				if ( line.Substring(0, 1) == "-" ) {
 					int typelgth = type.Length() - 1;
 					type = type.Substring(1, typelgth);
-					EditorDeletedObjectData deldata = EditorDeletedObjectData.Create(type, tokens[1].ToVector());
-					save_data.EditorDeletedObjects.Insert(deldata);
+					EditorHiddenObjectData deldata = EditorHiddenObjectData.Create(type, tokens[1].ToVector());
+					save_data.EditorHiddenObjects.Insert(deldata);
 				} else {
 					EditorObjectData objdata = EditorObjectData.Create(type, tokens[1].ToVector(), tokens[2].ToVector(), 1, EFE_DEFAULT);
 					
@@ -69,7 +69,7 @@ class EditorExpansionFile: EditorFileType
 		}
 		
 		string line;
-		foreach (EditorDeletedObjectData deleted_object: data.EditorDeletedObjects) {
+		foreach (EditorHiddenObjectData deleted_object: data.EditorHiddenObjects) {
 			// -Land_Construction_House2|13108.842773 10.015385 6931.083984|-101.999985 0.000000 0.000000
 			//if (!deleted_object.WorldObject) {
 			//	EditorLog.Warning("EditorExpansionFile::Invalid Object!");

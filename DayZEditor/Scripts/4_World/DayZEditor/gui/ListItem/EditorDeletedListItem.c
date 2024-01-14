@@ -1,20 +1,20 @@
 class EditorDeletedListItem: EditorListItem
 {
-	protected EditorDeletedObject m_EditorDeletedObject;
+	protected EditorHiddenObject m_EditorHiddenObject;
 	
-	void EditorDeletedListItem(EditorDeletedObject deleted_object)
+	void EditorDeletedListItem(EditorHiddenObject deleted_object)
 	{
-		m_EditorDeletedObject = deleted_object;
+		m_EditorHiddenObject = deleted_object;
 		
-		string item_name = m_EditorDeletedObject.GetType();
+		string item_name = m_EditorHiddenObject.GetType();
 		if (item_name.Length() >= 30) {
 			item_name = item_name.Substring(0, 28) + "...";
 		}
 		
-		m_TemplateController.Label = string.Format("%1 (%2)", item_name, m_EditorDeletedObject.GetID());
+		m_TemplateController.Label = string.Format("%1 (%2)", item_name, m_EditorHiddenObject.GetID());
 		m_TemplateController.NotifyPropertyChanged("Label");
 		
-		//m_TemplateController.Icon = m_EditorDeletedObject.GetData().Icon;
+		//m_TemplateController.Icon = m_EditorHiddenObject.GetData().Icon;
 		//m_TemplateController.NotifyPropertyChanged("Icon");
 	}
 	
@@ -26,7 +26,7 @@ class EditorDeletedListItem: EditorListItem
 			case MouseState.LEFT: {
 
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					GetEditor().ToggleHiddenObjectSelection(m_EditorDeletedObject);
+					GetEditor().ToggleHiddenObjectSelection(m_EditorHiddenObject);
 					return true;
 				} 
 				
@@ -34,7 +34,7 @@ class EditorDeletedListItem: EditorListItem
 					GetEditor().ClearSelection();
 				}
 				
-				GetEditor().SelectHiddenObject(m_EditorDeletedObject);
+				GetEditor().SelectHiddenObject(m_EditorHiddenObject);
 				
 				// Multi select handling
 				if (KeyState(KeyCode.KC_LSHIFT)) {
@@ -61,7 +61,7 @@ class EditorDeletedListItem: EditorListItem
 			
 			case MouseState.MIDDLE: {
 				EditorCamera camera = GetEditor().GetCamera();
-				vector pos = m_EditorDeletedObject.GetOriginalPosition();
+				vector pos = m_EditorHiddenObject.GetOriginalPosition();
 				pos[1] = camera.GetPosition()[1];
 				camera.SetPosition(pos);
 				return true;
@@ -78,19 +78,19 @@ class EditorDeletedListItem: EditorListItem
 	
 	override bool IsSelected()
 	{
-		return m_EditorDeletedObject.IsSelected();
+		return m_EditorHiddenObject.IsSelected();
 	}
 	
-	EditorDeletedObject GetDeletedObject()
+	EditorHiddenObject GetDeletedObject()
 	{
-		return m_EditorDeletedObject;
+		return m_EditorHiddenObject;
 	}
 	
 	override bool FilterType(string filter)
 	{
 		if (filter == string.Empty) return true;
 		
-		string type_lower = m_EditorDeletedObject.GetType();
+		string type_lower = m_EditorHiddenObject.GetType();
 		type_lower.ToLower();
 		filter.ToLower();
 		

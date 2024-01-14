@@ -71,7 +71,7 @@ class EditorSettings: ProfileSettings
 			}
 			
 			case "MarkerColor": {
-				EditorObjectMap editor_objects = GetEditor().GetObjectManager().GetPlacedObjects();
+				array<EditorObject> editor_objects = GetEditor().GetObjectManager().GetPlacedObjects();
 				foreach (int id, EditorObject editor_object: editor_objects) {
 					EditorObjectMarker marker = editor_object.GetMarker();
 					if (marker) {

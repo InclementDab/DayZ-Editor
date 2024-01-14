@@ -129,16 +129,11 @@ class Editor: Managed
 		
 	// Stored list of all Placed Objects
 	protected ref array<ref EditorObject> m_PlacedObjects = {};
-	
-	// Stored list of all selected Objects
-	protected ref array<EditorObject> m_SelectedObjects = {};
-	
+		
 	// Stored list of all Placed Objects, indexed by their WorldObject ID
 	protected ref map<int, EditorObject> m_WorldObjectIndex = new map<int, EditorObject>();
 	
-	protected ref array<ref EditorDeletedObject> m_DeletedObjects = {};
-
-	protected ref array<EditorDeletedObject>	m_SelectedDeletedObjects = {};
+	protected ref array<ref EditorHiddenObject> m_DeletedObjects = {};
 	
 	protected ref array<ref EditorPlaceableItem> m_AllPlaceableItems = {};
 	
@@ -159,19 +154,7 @@ class Editor: Managed
 	
 	//0: EditorObject
 	static ref ScriptInvoker OnObjectDeleted = new ScriptInvoker();
-	
-	// 0: EditorObject
-	static ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
-	
-	// 0: EditorObject
-	static ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
-	
-	// 0: EditorDeletedObject
-	static ref ScriptInvoker OnDeletedObjectSelected = new ScriptInvoker();
-	
-	// 0: EditorDeletedObject
-	static ref ScriptInvoker OnDeletedObjectDeselected = new ScriptInvoker();
-		
+			
 	// 0: EditorHandData
 	static ref ScriptInvoker OnAddInHand = new ScriptInvoker();
 	
@@ -281,7 +264,7 @@ class Editor: Managed
 		
 		// Needs to exist on clients for Undo / Redo syncing
 		m_SessionCache 			= new map<int, ref EditorObjectData>();
-		m_DeletedSessionCache   = new map<int, ref EditorDeletedObjectData>();
+		m_DeletedSessionCache   = new map<int, ref EditorHiddenObjectData>();
 		m_ActionStack 			= new EditorActionStack();
 		
 		// Init Hud
@@ -392,7 +375,7 @@ class Editor: Managed
 			}
 		}
 		
-		EditorObjectMap selected_objects = GetSelectedObjects();
+		array<EditorObject> selected_objects = GetSelectedObjects();
 		if (m_EditorHud && selected_objects.Count() > 0 && selected_objects[0]) {
 			// Spams errors
 			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetWorldObject().GetPosition());
@@ -920,39 +903,38 @@ class Editor: Managed
 		m_PlacedObjects.Insert(editor_object);
 		return editor_object;
 	}
-	
-/*
-	EditorObjectMap CreateObjects(array<Object> data_list, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
+
+	array<EditorObject> CreateObjects(array<Object> objects, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject");
 		
-		EditorObjectMap object_set = new EditorObjectMap();
+		array<EditorObject> editor_objects = {};
 		EditorAction action = new EditorAction("Delete", "Create");
 		
-		foreach (EditorObjectData editor_object_data: data_list) {
-			
-			// Cache Data (for undo / redo)
-			if (!editor_object_data) continue;
-			m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
-			
+		foreach (Object object: objects) {			
 			// Create Object
-			EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
-			if (!editor_object) continue;
+			EditorObject editor_object = new EditorObject(object, flags);
+			m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
+		
+			OnObjectCreated.Invoke(editor_object);
+			Statistics.EditorPlacedObjects++;
 			
-			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
+			m_PlacedObjects.Insert(editor_object);
 			
-			object_set.Insert(editor_object.GetID(), editor_object);
-
+			if (create_undo) {
+				EditorObjectData data = editor_object.CreateSerializedData();
+				action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
+				action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));
+				editor_objects.Insert(editor_object);
+			}
 		}
 		
 		if (create_undo) {
 			InsertAction(action);
 		}
 
-		
-		return object_set;
-	}*/
+		return editor_objects;
+	}
 	
 	void DeleteObject(notnull EditorObject editor_object, bool create_undo = true) 
 	{
@@ -968,39 +950,24 @@ class Editor: Managed
 		delete editor_object;
 	}
 	
-/*
-	void DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true)
+	void DeleteObjects(notnull array<EditorObject> editor_objects, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
-		foreach (int id, EditorObject editor_object: editor_object_map) {
-			if (!editor_object.Locked && editor_object.Show) {
-				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
-				m_ObjectManager.DeleteObject(editor_object);
-			}
+		foreach (EditorObject editor_object: editor_objects) {
+			EditorObjectData data = editor_object.CreateSerializedData();
+			action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
+			action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));			
+		
+			OnObjectDeleted.Invoke(target);
+			delete editor_object;
 		}
 		
 		if (create_undo) {
 			InsertAction(action);
 		}
-	}*/
-
-	bool HideMapObject(string type, vector position, bool create_undo = true)
-	{
-		return HideMapObject(new EditorDeletedObject(EditorDeletedObjectData.Create(type, position)), create_undo);
 	}
 	
-	bool HideMapObject(Object object, bool create_undo = true)
-	{
-		return HideMapObject(new EditorDeletedObject(EditorDeletedObjectData.Create(object)), create_undo);
-	}
-		
-	bool HideMapObject(EditorDeletedObjectData deleted_object_data, bool create_undo = true)
-	{
-		return HideMapObject(new EditorDeletedObject(deleted_object_data), create_undo);
-	}
-	
-	bool HideMapObject(EditorDeletedObject map_object, bool create_undo = true)
+	bool HideMapObject(notnull Object map_object, bool create_undo = true)
 	{
 		if (!CanHideMapObject(map_object.GetType())) {
 			return false;
@@ -1030,40 +997,35 @@ class Editor: Managed
 		return true;
 	}
 	
-/*
 	void HideMapObjects(array<Object> deleted_objects, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
 		
-		foreach (Object object: deleted_objects) {
-			if (!object) {
-				continue;
-			}
-			
+		foreach (Object object: deleted_objects) {			
 			if (!CanHideMapObject(object.GetType())) {
 				continue;
 			}
 			
-			if (m_ObjectManager.IsObjectHidden(object)) {
+			if (IsObjectHidden(object)) {
 				continue;
 			}
 			
-			EditorDeletedObjectData deleted_object_data = EditorDeletedObjectData.Create(object);
+			EditorHiddenObjectData deleted_object_data = EditorHiddenObjectData.Create(object);
 			m_DeletedSessionCache[deleted_object_data.ID] = deleted_object_data;		
 			if (create_undo) {
 				action.InsertUndoParameter(new Param1<int>(deleted_object_data.ID));
 				action.InsertRedoParameter(new Param1<int>(deleted_object_data.ID));
 			}
 			
-			m_ObjectManager.HideMapObject(new EditorDeletedObject(deleted_object_data));
+			m_ObjectManager.HideMapObject(new EditorHiddenObject(deleted_object_data));
 		}
 		
 		if (create_undo) {
 			InsertAction(action);
 		}
-	}*/
+	}
 		
-	bool UnhideMapObject(EditorDeletedObjectData data, bool create_undo = true)
+	bool UnhideMapObject(EditorHiddenObjectData data, bool create_undo = true)
 	{		
 		if (!data || !data.WorldObject) {
 			return false;
@@ -1084,7 +1046,7 @@ class Editor: Managed
 		return true;
 	}
 	
-	bool UnhideMapObject(EditorDeletedObject map_object, bool create_undo = true)
+	bool UnhideMapObject(EditorHiddenObject map_object, bool create_undo = true)
 	{
 		if (!map_object) {  
 			return false;
@@ -1108,15 +1070,13 @@ class Editor: Managed
 		return true;
 	}
 	
-
-/*
-	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
+	void UnhideMapObjects(array<EditorHiddenObject> deleted_objects, bool create_undo = true)
 	{
 		if (create_undo) {
 			EditorAction action = new EditorAction("Hide", "Unhide");
 		}
 		
-		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
+		foreach (EditorHiddenObject deleted_object: deleted_objects) {						
 			if (create_undo) {
 				action.InsertUndoParameter(new Param1<int>(id));
 				action.InsertRedoParameter(new Param1<int>(id));
@@ -1129,8 +1089,8 @@ class Editor: Managed
 		if (create_undo) {
 			InsertAction(action);
 		}
-	}*/
-		
+	}
+	
 	void Clear()
 	{
 		Statistics.Save();
@@ -1333,8 +1293,8 @@ class Editor: Managed
 			GetEditor().Clear();
 		}
 				
-		EditorLog.Debug("Deleting %1 Objects", save_data.EditorDeletedObjects.Count().ToString());		
-		foreach (EditorDeletedObjectData id: save_data.EditorDeletedObjects) {
+		EditorLog.Debug("Deleting %1 Objects", save_data.EditorHiddenObjects.Count().ToString());		
+		foreach (EditorHiddenObjectData id: save_data.EditorHiddenObjects) {
 			if (HideMapObject(id, false)) {
 				deleted_objects++;
 			}
@@ -1356,12 +1316,12 @@ class Editor: Managed
 			error_message += string.Format("Failed to load %1 objects", save_data.EditorObjects.Count() - created_objects);
 		}
 		
-		if (deleted_objects < save_data.EditorDeletedObjects.Count()) {
+		if (deleted_objects < save_data.EditorHiddenObjects.Count()) {
 			if (error_message != string.Empty) {
 				error_message += "	";
 			}
 			
-			error_message += string.Format("Failed to delete %1 objects", save_data.EditorDeletedObjects.Count() - deleted_objects);
+			error_message += string.Format("Failed to delete %1 objects", save_data.EditorHiddenObjects.Count() - deleted_objects);
 		}
 		
 		if (error_message != string.Empty) {
@@ -1371,7 +1331,7 @@ class Editor: Managed
 			// Disable auto save since we loaded a shit file
 			Settings.AutoSaveTimer = -1;
 		} else {
-			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorDeletedObjects.Count()), COLOR_GREEN);
+			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()), COLOR_GREEN);
 		}
 	}
 	
@@ -1386,7 +1346,7 @@ class Editor: Managed
 		save_data.CameraPosition = GetCamera().GetPosition();
 		
 		// Save Objects
-		EditorObjectMap placed_objects = GetPlacedObjects();
+		array<EditorObject> placed_objects = GetPlacedObjects();
 		if (selected_only) {
 			placed_objects = GetSelectedObjects();
 		}
@@ -1399,9 +1359,9 @@ class Editor: Managed
 			}
 		}
 		
-		EditorDeletedObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
-		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {
-			save_data.EditorDeletedObjects.Insert(deleted_object.GetData());
+		EditorHiddenObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
+		foreach (int id, EditorHiddenObject deleted_object: deleted_objects) {
+			save_data.EditorHiddenObjects.Insert(deleted_object.GetData());
 		}
 		
 		return save_data;
@@ -1518,12 +1478,12 @@ class Editor: Managed
 		return m_ActionStack;
 	}	
 
-	bool IsObjectHidden(EditorDeletedObject deleted_object)
+	bool IsObjectHidden(EditorHiddenObject deleted_object)
 	{
 		return (IsObjectHidden(deleted_object.GetID()));
 	}
 	
-	bool IsObjectHidden(EditorDeletedObjectData deleted_object_data)
+	bool IsObjectHidden(EditorHiddenObjectData deleted_object_data)
 	{
 		return (IsObjectHidden(deleted_object_data.ID));
 	}
@@ -1537,25 +1497,15 @@ class Editor: Managed
 	{
 		return (CF.ObjectManager.IsMapObjectHidden(object));
 	}
-			
-	array<EditorObject> GetSelectedObjects() 
-	{
-		return m_SelectedObjects; 
-	}
-	
+		
 	array<ref EditorObject> GetPlacedObjects()
 	{
 		return m_PlacedObjects; 
 	}
 	
-	array<ref EditorDeletedObject> GetDeletedObjects()
+	array<ref EditorHiddenObject> GetDeletedObjects()
 	{
 		return m_DeletedObjects;
-	}
-	
-	array<EditorObject> GetSelectedHiddenObjects()
-	{
-		return m_SelectedDeletedObjects;
 	}
 				
 	EditorObject GetEditorObject(notnull Object world_object) 

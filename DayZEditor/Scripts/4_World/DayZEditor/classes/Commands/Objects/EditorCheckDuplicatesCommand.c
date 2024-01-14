@@ -2,23 +2,24 @@ class EditorCheckDuplicatesCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args)
 	{
-		EditorObjectMap duplicate_objects();
+		array<EditorObject> duplicate_objects = {};
 		
 		// prioritize selected objects first, else use all placed objects
-		EditorObjectMap editor_objects = GetEditor().GetSelectedObjects();
+		array<EditorObject> editor_objects = {};
 		if (editor_objects.Count() == 0) {
-			editor_objects = GetEditor().GetPlacedObjects();
+			array<ref EditorObject> placed = GetEditor().GetPlacedObjects();
+			foreach (EditorObject p: placed) {
+				editor_objects.Insert(p);
+			}
+		} else {
+			editor_objects = EditorObject.SelectedObjects;
 		}
 		
-		foreach (int id, EditorObject editor_object: editor_objects) {
+		foreach (EditorObject editor_object: editor_objects) {
 			Object world_object = editor_object.GetWorldObject();
 			array<Object> world_objects = {};
 			array<CargoBase> cargo_base = {};
 			GetGame().GetObjectsAtPosition3D(world_object.GetPosition(), 1, world_objects, cargo_base);
-			
-			if (duplicate_objects[id]) {
-				continue;
-			}
 			
 			foreach (Object found_object: world_objects) {
 				if (found_object == world_object) {
@@ -29,7 +30,7 @@ class EditorCheckDuplicatesCommand: EditorAsyncCommand
 					continue;
 				}
 				
-				duplicate_objects.InsertEditorObject(GetEditor().GetEditorObject(found_object));
+				duplicate_objects.Insert(GetEditor().GetEditorObject(found_object));
 			}
 		}
 		

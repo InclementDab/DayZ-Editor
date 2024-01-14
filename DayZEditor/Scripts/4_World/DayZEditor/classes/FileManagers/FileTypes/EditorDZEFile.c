@@ -42,10 +42,10 @@ class EditorDZEFile: EditorFileType
 			bug_fix_save_data.EditorObjects.Insert(dta);
 		}
 			
-		foreach (int id, EditorDeletedObjectData deleted_object: save_data.EditorDeletedObjects) {
-			EditorDeletedObjectData deleted_dta = EditorDeletedObjectData.Create(deleted_object.Type, deleted_object.Position);
+		foreach (int id, EditorHiddenObjectData deleted_object: save_data.EditorHiddenObjects) {
+			EditorHiddenObjectData deleted_dta = EditorHiddenObjectData.Create(deleted_object.Type, deleted_object.Position);
 			deleted_dta.Flags = deleted_object.Flags;
-			bug_fix_save_data.EditorDeletedObjects.Insert(deleted_dta);
+			bug_fix_save_data.EditorHiddenObjects.Insert(deleted_dta);
 		}
 				
 		bug_fix_save_data.MapName = save_data.MapName;

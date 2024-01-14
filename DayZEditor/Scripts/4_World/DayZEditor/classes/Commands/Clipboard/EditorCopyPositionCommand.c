@@ -5,7 +5,7 @@ class EditorCopyPositionCommand: EditorCommand
 		super.Execute(sender, args);
 		string copy_string = string.Format("[Camera Position]: %1, %2\n", GetGame().GetCurrentCameraPosition().ToString(true), GetGame().GetCurrentCameraDirection().ToString(true));
 		
-		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
+		array<EditorObject> selected_objects = EditorObject.SelectedObjects;
 		if (selected_objects.Count() > 0) {
 			foreach (int id, EditorObject editor_object: selected_objects) {
 				copy_string += string.Format("[%1]: pos=%2, ori=%3, dir=%4 scl=%5", editor_object.GetDisplayName(), editor_object.GetWorldObject().GetPosition().ToString(true), editor_object.GetWorldObject().GetOrientation().ToString(true), editor_object.GetWorldObject().GetDirection().ToString(true), editor_object.GetWorldObject().GetScale());
@@ -13,14 +13,14 @@ class EditorCopyPositionCommand: EditorCommand
 			}
 		}
 		
-		GetEditor().GetEditorHud().CreateNotification(string.Format("Copied position data to clipboard!", GetEditor().GetSelectedObjects().Count()), COLOR_GREEN);
+		GetEditor().GetEditorHud().CreateNotification(string.Format("Copied position data to clipboard!", EditorObject.SelectedObjects.Count()), COLOR_GREEN);
 		GetGame().CopyToClipboard(copy_string);
 		return true;
 	}
 	
 	override bool CanExecute()
 	{
-		return GetEditor().GetSelectedObjects().Count() > 0;
+		return EditorObject.SelectedObjects.Count() > 0;
 	}
 
 	override string GetName() 

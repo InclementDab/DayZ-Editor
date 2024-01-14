@@ -12,12 +12,12 @@ class DeleteBrush: EditorBrush
 		//DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, EditorBrush.GetRadius() / 2, CollisionFlags.ALLOBJECTS);
 		//GetEditor().ClearSelection();
 		
-		EditorObjectMap editor_objects();
+		array<EditorObject> editor_objects = {};
 		array<Object> deleted_objects = {};
 		foreach (Object r: objects) {
 			EditorObject eo = GetEditor().GetEditorObject(r);
 			if (eo) {
-				editor_objects.InsertEditorObject(eo);
+				editor_objects.Insert(eo);
 			} else {
 				if (GetEditor().CanHideMapObject(r.GetType())) {
 					GetGame().ObjectDelete(r);

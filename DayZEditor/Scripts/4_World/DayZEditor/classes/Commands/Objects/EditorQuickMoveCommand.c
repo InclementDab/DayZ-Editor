@@ -12,7 +12,7 @@ class EditorQuickMoveCommand: EditorCommand
 			direction = GetEditor().GetCamera().GetDirection() * value;
 		}
 		
-		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
+		array<EditorObject> selected_objects = EditorObject.SelectedObjects;
 		if (selected_objects.Count() == 0) {
 			return false;
 		}

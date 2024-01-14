@@ -15,6 +15,8 @@ class EditorObject: Managed
 		Vector(0, 0, 1),
 	};
 	
+	static ref array<EditorObject> SelectedObjects = {};
+		
 	protected UUID m_Uuid;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
@@ -365,9 +367,11 @@ class EditorObject: Managed
 				EditorBoundingBox.Create(m_Object);
 			}
 			
+			SelectedObjects.Insert(this);
 			OnObjectSelected.Invoke(this);
 		} else {
 			EditorBoundingBox.Destroy(m_Object);
+			SelectedObjects.RemoveItem(this);
 			OnObjectDeselected.Invoke(this);
 		}
 	}
@@ -430,6 +434,15 @@ class EditorObject: Managed
 		}
 		
 		return editor_objects;
+	}
+	
+	static void ClearSelections()
+	{
+		foreach (EditorObject selected_object: SelectedObjects) {
+			if (selected_object.IsSelected()) {
+				selected_object.SetSelected(false);
+			}
+		}
 	}
 }
 
