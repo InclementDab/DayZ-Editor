@@ -43,7 +43,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 0
      ignorepointer 1
      position 0 92
-     size 361 240
+     size 360 32
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -116,12 +116,13 @@ FrameWidgetClass EditorFrame {
       }
       ScrollWidgetClass PlaceablesScroll {
        ignorepointer 1
+       color 0.2353 0.2353 0.2353 0.8627
        position 0 32
-       size 1 208
+       size 1 1
        hexactpos 1
        vexactpos 1
        hexactsize 0
-       vexactsize 1
+       vexactsize 0
        scaled 0
        style Colorable
        "Scrollbar H" 1
@@ -133,71 +134,37 @@ FrameWidgetClass EditorFrame {
          ignorepointer 1
          color 0.0588 0.0588 0.0588 0.8627
          position 0 0
-         size 1 1
+         size 1 0.75
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         fixaspect outside
+         fixaspect inside
          scriptclass "ViewBinding"
+         Padding 0
+         Margin 0
+         "Size To Content H" 1
+         "Size To Content V" 1
          {
           ScriptParamsClass {
            Binding_Name "Placeables"
           }
          }
         }
-        PanelWidgetClass ScrollVertBackground {
-         visible 1
-         ignorepointer 1
-         color 0.0588 0.0588 0.0588 0.9412
-         position -8 0
-         size 8 1
+        PanelWidgetClass LeftDragZone {
+         ignorepointer 0
+         color 0.1961 0.3922 0.3922 0.502
+         position 0 0
+         size 6 1
+         halign right_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 0
-         style rover_sim_colorable
-        }
-        PanelWidgetClass ScrollHorizBackground {
-         visible 1
-         ignorepointer 1
-         color 0.0588 0.0588 0.0588 0.9412
-         position 0 -8
-         size 1 8
-         halign center_ref
-         valign bottom_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-        }
-        ImageWidgetClass ScrollCornerBackground {
-         ignorepointer 1
-         color 0.1373 0.1373 0.1373 1
-         position -8 -8
-         size 8 8
-         valign bottom_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         style Outline_2px
         }
        }
-      }
-      PanelWidgetClass LeftDragZone {
-       ignorepointer 0
-       color 0.1961 0.3922 0.3922 0.502
-       position 0 0
-       size 6 1
-       halign right_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 0
-       style Outline_2px
       }
      }
     }

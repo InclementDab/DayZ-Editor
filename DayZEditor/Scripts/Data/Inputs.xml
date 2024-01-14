@@ -17,7 +17,7 @@
 			<input name="EditorCameraToolSpeedDecrease" loc="Camera Quick Decrease" />
 		
             <input name="EditorToggleActive" loc="Toggle Player / Camera" />
-            <input name="EditorToggleUI" loc="Show / Hide UI" />
+            <input name="EditorToggleHudCommand" loc="Toggle UI" />
             <input name="EditorToggleCursor" loc="Toggle Cursor" />
             <input name="EditorTeleportPlayerToCursor" loc="Teleport Player to Cursor" />
             <input name="EditorToggleInventoryEditor" loc="Toggle Inventory Editor" />
@@ -128,7 +128,7 @@
                 <input name="EditorCameraToolSpeedIncrease"/>
                 <input name="EditorCameraToolSpeedDecrease"/>
                 <input name="EditorToggleActive"/>
-                <input name="EditorToggleUI"/>
+                <input name="EditorToggleHudCommand"/>
                 <input name="EditorToggleCursor"/>
                 <input name="EditorTeleportPlayerToCursor"/>
                 <input name="EditorToggleInventoryEditor"/>
@@ -273,7 +273,7 @@
 		<input name="EditorToggleActive">
             <btn name="kHome"/>
         </input>
-		<input name="EditorToggleUI">
+		<input name="EditorToggleHud">
             <btn name="kY"/>
         </input>
         <input name="EditorToggleCursor">
