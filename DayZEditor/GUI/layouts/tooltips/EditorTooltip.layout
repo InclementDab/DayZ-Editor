@@ -1,119 +1,57 @@
-WrapSpacerWidgetClass EditorTooltipRoot {
+PanelWidgetClass Root {
  visible 1
  disabled 0
  clipchildren 1
  inheritalpha 0
  ignorepointer 1
- color 0.1529 0.1529 0.1529 0.7059
- position 0 0
- size 150 0
+ color 0.1529 0.1529 0.1529 0.4706
+ size 240 256
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
  priority 50
  scriptclass ""
- style Colorable
- Padding 0
- Margin 0
- "Size To Content H" 1
- "Size To Content V" 1
- content_halign center
+ style DayZDefaultPanel
  {
-  WrapSpacerWidgetClass Header {
+  PanelWidgetClass Header {
    ignorepointer 1
-   color 0 0 0 0.9412
-   position 0 0
-   size 1 0
+   color 0.1176 0.1176 0.1176 1
+   size 1 16
    halign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 1
-   "Size To Content H" 1
-   "Size To Content V" 1
-   content_halign center
-   content_valign center
+   style rover_sim_colorable
    {
-    TextWidgetClass HeaderLabel {
-     visible 1
+    TextWidgetClass Text {
      ignorepointer 1
-     position 0 0
-     size 95 0
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scriptclass "ViewBinding"
-     font "gui/fonts/Metron28"
-     "exact text" 1
-     "size to text h" 1
-     "size to text v" 1
-     "text halign" center
-     "text valign" center
-     {
-      ScriptParamsClass {
-       Binding_Name "ContentTitle"
-      }
-     }
-    }
-   }
-  }
-  GridSpacerWidgetClass Content {
-   ignorepointer 1
-   position 0 0
-   size 1 0
-   halign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 1
-   "Size To Content V" 1
-   content_halign center
-   content_valign center
-   Columns 1
-   Rows 10
-   {
-    RichTextWidgetClass ContentText {
-     visible 1
-     ignorepointer 1
-     position 0 0
-     size 1 0.714
-     halign center_ref
+     position 10 0
+     size 1 1
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
      vexactsize 0
-     scriptclass "ViewBinding"
-     font "gui/fonts/Metron16"
-     "exact text" 1
-     "size to text v" 1
-     wrap 1
-     {
-      ScriptParamsClass {
-       Binding_Name "ContentText"
-      }
-     }
-    }
-    ItemPreviewWidgetClass ContentItem {
-     visible 1
-     ignorepointer 1
-     position 0 0
-     size 1 200
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     scriptclass "ViewBinding"
-     {
-      ScriptParamsClass {
-       Binding_Name "ContentItemData"
-      }
-     }
+     text "Building"
+     font "gui/fonts/MetronLight14"
+     "exact text" 0
+     "exact text size" 10
     }
    }
+  }
+  ItemPreviewWidgetClass Item {
+   visible 1
+   ignorepointer 1
+   position 0 16
+   size 240 240
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scriptclass ""
   }
  }
 }

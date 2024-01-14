@@ -11,7 +11,6 @@ class EditorHud: ScriptView
 	
 	// View Properties
 	Widget Left;
-	ScrollWidget PlaceablesScroll;
 	
 	// Layout Elements
 	Widget NotificationFrame;
@@ -49,7 +48,6 @@ class EditorHud: ScriptView
 		GetScreenSize(x, y);
 		Left.GetSize(w, h);
 		Left.SetSize(w, y - 74);
-		PlaceablesScroll.SetSize(1.0, y - 74 - 28);
 		
 		// kinda cursed but double inputs. maybe have a handler if you want more ui shit (loooot editor)
 		if (GetEditor().IsInventoryEditorActive() || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
@@ -384,7 +382,7 @@ class EditorHud: ScriptView
 		CurrentTooltip = current_tooltip;
 	}
 		
-	// Dialog Control
+	// Dialog Control`
 	static ref DialogBase CurrentDialog;
 	
 	static bool IsDialogCommand(Widget w) 

@@ -111,10 +111,10 @@ class EditorHudController: EditorControllerBase
 		
 		map<int, ref array<EditorPlaceableItem>> all_placeable_items = GetEditor().GetObjectManager().GetPlaceableItemsByCategory();
 		foreach (EditorPlaceableItemCategory category, array<EditorPlaceableItem> placeable_items: all_placeable_items) {
-			EditorTreeItem tree_item = new EditorTreeItem(typename.EnumToString(EditorPlaceableItemCategory, category));
+			EditorTreeItem tree_item = new EditorFolderTreeItem(typename.EnumToString(EditorPlaceableItemCategory, category));
 			
 			foreach (EditorPlaceableItem placeable_item: placeable_items) {
-				tree_item.GetTemplateController().Children.Insert(new EditorTreeItem(placeable_item.GetName()));
+				tree_item.GetTemplateController().Children.Insert(new EditorItemTreeItem(placeable_item));
 			}
 			
 			Placeables.Insert(tree_item);

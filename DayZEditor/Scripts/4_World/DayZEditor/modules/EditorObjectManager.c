@@ -46,6 +46,10 @@ class EditorObjectManagerModule: Managed
 					continue;
 				}
 				
+				if (IsForbiddenItem(type)) {
+					continue;
+				}
+				
 				m_AllPlaceableItems.Insert(new EditorConfigPlaceableItem(path, type));
 		    }
 		}

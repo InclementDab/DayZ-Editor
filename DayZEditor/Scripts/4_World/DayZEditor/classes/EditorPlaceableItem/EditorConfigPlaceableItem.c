@@ -13,7 +13,7 @@ class EditorConfigPlaceableItem: EditorPlaceableItem
 		if ((m_FullPath.Find("Weapon_Base") != -1) || (m_FullPath.Find("Inventory_Base")) != -1) {
 			m_Category = EditorPlaceableItemCategory.DYNAMIC;
 		} else if (m_FullPath.Find("HouseNoDestruct") != -1) {
-			m_Category = EditorPlaceableItemCategory.STRUCTURES;
+			m_Category = EditorPlaceableItemCategory.STRUCTURE;
 		} else if (m_FullPath.Find("Man") != -1) {
 			m_Category = EditorPlaceableItemCategory.AI;
 		} else if (m_FullPath.Find("Transport") != -1) {

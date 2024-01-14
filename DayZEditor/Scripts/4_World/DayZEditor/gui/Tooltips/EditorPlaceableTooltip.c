@@ -1,37 +1,24 @@
 class EditorPlaceableTooltip: ScriptViewTemplate<EditorPlaceableTooltipController>
 {
-	protected TextWidget HeaderLabel;
+	protected EditorPlaceableItem m_EditorPlaceableItem;
+	protected Object m_Object;
 	
-	void SetTitle(string title)
+	TextWidget Text;
+	ItemPreviewWidget Item;
+	
+	void EditorPlaceableTooltip(notnull EditorPlaceableItem placeable_item, float x, float y)
 	{
-		//EditorLog.Trace("EditorTooltip::SetTitle %1", title);
-		m_TemplateController.ContentTitle = title;
-		m_TemplateController.NotifyPropertyChanged("ContentTitle");
+		m_EditorPlaceableItem = placeable_item;
+
+		if (!IsBlacklistedItem(m_EditorPlaceableItem.GetName())) {
+			m_Object = m_EditorPlaceableItem.CreateObject(Vector(0, -1000, 0), vector.Zero, 1.0);
+			if (!placeable_item.IsInherited(EditorStaticPlaceableItem)) {
+				Item.SetItem(m_Object);
+			}
+		}
+			
+		Text.SetText(placeable_item.GetName());
 		
-		float w, h, lw, lh;
-		HeaderLabel.GetScreenSize(w, h);
-		m_LayoutRoot.GetScreenSize(lw, lh);
-		m_LayoutRoot.SetSize(w + 80, lh);
-	}
-	
-	void SetContent(string text)
-	{
-		//EditorLog.Trace("EditorTooltip::SetContent %1", text);
-
-		m_TemplateController.ContentText = text;
-		m_TemplateController.NotifyPropertyChanged("ContentText");
-	}
-	
-	void SetContent(Object item)
-	{
-		//EditorLog.Trace("EditorTooltip::SetContent %1", item.ToString());
-
-		m_TemplateController.ContentItemData = item;
-		m_TemplateController.NotifyPropertyChanged("ContentItemData");
-	}
-	
-	void SetPosition(float x, float y)
-	{
 		int sx, sy;
 		GetScreenSize(sx, sy);
 		
@@ -43,7 +30,24 @@ class EditorPlaceableTooltip: ScriptViewTemplate<EditorPlaceableTooltipControlle
 		
 		m_LayoutRoot.SetPos(x, y);
 	}
-
+	
+	void ~EditorPlaceableTooltip()
+	{
+		GetGame().ObjectDelete(m_Object);
+	}
+	
+	bool IsBlacklistedItem(string item_type)
+	{
+		array<string> blacklist = { "DZ_LightAI", "Man", "Car" };
+		foreach (string blacklist_check: blacklist) {
+			if (GetGame().IsKindOf(item_type, blacklist_check)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	override string GetLayoutFile() 
 	{
 		return "DayZEditor/gui/layouts/tooltips/EditorTooltip.layout";

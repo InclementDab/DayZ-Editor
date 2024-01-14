@@ -76,8 +76,6 @@ class EditorCommandManager
 		RegisterCommand(EditorReloadBrushesCommand);
 	
 		RegisterCommand(EditorLootEditorCommand);
-		RegisterCommand(EditorAddToFavoritesCommand);
-		RegisterCommand(EditorRemoveFromFavoritesCommand);
 		RegisterCommand(EditorPlaceObjectCommand);
 	
 		RegisterCommand(EditorBrushPropertiesCommand);

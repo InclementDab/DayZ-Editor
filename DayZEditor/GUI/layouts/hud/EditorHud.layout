@@ -43,7 +43,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 0
      ignorepointer 1
      position 0 92
-     size 360 32
+     size 360 250
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -115,6 +115,7 @@ FrameWidgetClass EditorFrame {
        }
       }
       ScrollWidgetClass PlaceablesScroll {
+       visible 1
        ignorepointer 1
        color 0.2353 0.2353 0.2353 0.8627
        position 0 32
@@ -134,11 +135,11 @@ FrameWidgetClass EditorFrame {
          ignorepointer 1
          color 0.0588 0.0588 0.0588 0.8627
          position 0 0
-         size 1 0.75
+         size 360 200
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          fixaspect inside
          scriptclass "ViewBinding"
          Padding 0
