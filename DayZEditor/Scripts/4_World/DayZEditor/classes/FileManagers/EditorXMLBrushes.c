@@ -27,7 +27,7 @@ class XMLEditorBrushes: XMLCallback
 			XMLTag brush = document.Get(1).GetContent().Get(i);
 			
 			EditorBrushData brush_settings = new EditorBrushData();
-			brush_settings.Name = brush.GetAttribute("name").ValueAsString();
+			brush_settings.Type = brush.GetAttribute("type").ValueAsString();
 			
 			if (brush.GetAttribute("class")) {
 				brush_settings.BrushClassName = brush.GetAttribute("class").ValueAsString().ToType();

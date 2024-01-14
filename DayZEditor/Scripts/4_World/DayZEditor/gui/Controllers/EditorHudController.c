@@ -197,6 +197,7 @@ class EditorHudController: EditorControllerBase
 		switch (property_name) {
 					
 			case "SearchBarData": {
+				/*
 				auto spacer_config = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
 				for (int j = 0; j < spacer_config.Count(); j++) {
 					if (FavoritesToggle) {
@@ -214,7 +215,7 @@ class EditorHudController: EditorControllerBase
 					SearchBarIcon = "set:dayz_editor_gui image:search";
 				}
 				
-				NotifyPropertyChanged("SearchBarIcon");
+				NotifyPropertyChanged("SearchBarIcon");*/
 				
 				break;
 			}	
@@ -246,6 +247,7 @@ class EditorHudController: EditorControllerBase
 			}
 			
 			case "FavoritesToggle": {
+				/*
 				auto spacer_config_favorites = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
 				for (int i = 0; i < spacer_config_favorites.Count(); i++) {
 					if (FavoritesToggle) {
@@ -256,7 +258,7 @@ class EditorHudController: EditorControllerBase
 				}
 				
 				LeftbarScroll.VScrollToPos(0);
-				
+				*/
 				break;
 			}		
 			

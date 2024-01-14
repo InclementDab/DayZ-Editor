@@ -18,7 +18,9 @@ class EditorObjectManagerModule: Managed
 	
 	protected ref EditorDeletedObjectMap			m_SelectedDeletedObjects = new EditorDeletedObjectMap();
 	
-	protected ref map<int, ref array<ref EditorPlaceableItem>> m_PlaceableItems = new map<int, ref array<ref EditorPlaceableItem>>();
+	protected ref array<ref EditorPlaceableItem> m_AllPlaceableItems = {};
+	
+	protected ref map<int, ref array<EditorPlaceableItem>> m_PlaceableItems = new map<int, ref array<EditorPlaceableItem>>();
 			
 	protected ref map<string, EditorPlaceableItem>	m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>();
 	
@@ -36,9 +38,7 @@ class EditorObjectManagerModule: Managed
 		g_Game.ReportProgress("Loading Placeable Objects");
 		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
-		
-		array<ref EditorPlaceableItem> loaded_placeables = {};
-		
+				
 		// handle config objects
 		foreach (string path: config_paths) {
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
@@ -48,8 +48,7 @@ class EditorObjectManagerModule: Managed
 					continue;
 				}
 				
-				loaded_placeables.Insert(new EditorConfigPlaceableItem(path, type));				
-
+				m_AllPlaceableItems.Insert(new EditorConfigPlaceableItem(path, type));
 		    }
 		}
 		
@@ -66,16 +65,16 @@ class EditorObjectManagerModule: Managed
 					continue;
 				}
 					
-				loaded_placeables.Insert(new EditorStaticPlaceableItem(file));
+				m_AllPlaceableItems.Insert(new EditorStaticPlaceableItem(file));
 			}
 		}
 	
 		// Statics that belong to Editor / DF
-		loaded_placeables.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
-		loaded_placeables.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
-		loaded_placeables.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
+		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
+		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
+		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
 		
-		foreach (EditorPlaceableItem placeable_item: loaded_placeables) {
+		foreach (EditorPlaceableItem placeable_item: m_AllPlaceableItems) {
 			if (!m_PlaceableItems[placeable_item.GetCategory()]) {
 				m_PlaceableItems[placeable_item.GetCategory()] = {};
 			}
@@ -334,7 +333,7 @@ class EditorObjectManagerModule: Managed
 	
 	array<ref EditorPlaceableItem> GetPlaceableObjects()
 	{
-		return m_PlaceableObjects;
+		return m_AllPlaceableItems;
 	}
 	
 	// return a list of objects that use this p3d, useful for finding adequite replacements for 

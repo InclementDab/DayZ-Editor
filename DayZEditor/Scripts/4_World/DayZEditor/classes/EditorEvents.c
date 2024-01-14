@@ -47,14 +47,14 @@ class EditorEvents
 	}
 		
 	static ref ScriptInvoker OnAddInHand = new ScriptInvoker();
-	static void AddInHand(Class context, EditorWorldObject world_object, EditorHandData hand_data)
+	static void AddInHand(Class context, Object world_object, EditorHandData hand_data)
 	{
 		EditorLog.Trace("EditorEvents::StartPlacing");
 		OnAddInHand.Invoke(context, world_object, hand_data);
 	}
 	
 	static ref ScriptInvoker OnRemoveFromHand = new ScriptInvoker();
-	static void RemoveFromHand(Class context, EditorWorldObject world_object, EditorHandData hand_data)
+	static void RemoveFromHand(Class context, Object world_object, EditorHandData hand_data)
 	{
 		EditorLog.Trace("EditorEvents::RemoveFromHand");
 		OnRemoveFromHand.Invoke(context, world_object, hand_data);

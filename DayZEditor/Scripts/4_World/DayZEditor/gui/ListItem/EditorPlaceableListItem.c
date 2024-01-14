@@ -27,14 +27,9 @@ class EditorPlaceableListItem: EditorListItem
 	override bool IsSelected() 
 	{
 		if (GetEditor().IsPlacing()) {
-			array<EditorWorldObject> objects_in_hand = GetEditor().GetPlacingObjects();
-			foreach (EditorWorldObject object_in_hand: objects_in_hand) {
-				EditorHologram hologram = EditorHologram.Cast(object_in_hand);
-				if (!hologram) {
-					continue;
-				}
-				
-				if (hologram.GetPlaceableItem() != m_PlaceableItem) {
+			array<Object> objects_in_hand = GetEditor().GetPlacingObjects();
+			foreach (Object object_in_hand: objects_in_hand) {
+				if (GetEditor().GetPlaceableObject(object_in_hand.GetType()) != m_PlaceableItem) {
 					continue;
 				}
 				
@@ -73,14 +68,10 @@ class EditorPlaceableListItem: EditorListItem
 		return true;
 	}
 	
-	void OnStartPlacing(Class context, EditorWorldObject world_object, EditorHandData hand_data)
+	void OnStartPlacing(Class context, Object world_object, EditorHandData hand_data)
 	{		
-		EditorHologram hologram = EditorHologram.Cast(world_object);
-		if (!hologram) {
-			return;
-		}
-		
-		if (hologram.GetPlaceableItem() != m_PlaceableItem) {
+		EditorPlaceableItem placeable_item = GetEditor().GetPlaceableObject(world_object.GetType());
+		if (placeable_item != m_PlaceableItem) {
 			Deselect();
 			return;
 		}
@@ -88,7 +79,7 @@ class EditorPlaceableListItem: EditorListItem
 		Select();
 	}
 	
-	void OnStopPlacing(Class context, EditorWorldObject world_object, EditorHandData hand_data)
+	void OnStopPlacing(Class context, Object world_object, EditorHandData hand_data)
 	{
 		Deselect();
 	}
@@ -113,14 +104,14 @@ class EditorPlaceableListItem: EditorListItem
 		m_LayoutRoot.GetScreenPos(pos_x, pos_y);
 		m_LayoutRoot.GetScreenSize(size_x, size_y);
 		
-		tooltip.SetTitle(m_PlaceableItem.Type);	
+		tooltip.SetTitle(m_PlaceableItem.GetName());	
 		tooltip.SetPosition(pos_x + size_x, pos_y);
 		
 		//! bugfix
 		GetEditor().GetObjectManager().CurrentSelectedItem = m_PlaceableItem;
 		
-		if (m_PlaceableItem && !IsBlacklistedItem(m_PlaceableItem.Type)) {
-			tooltip.SetContent(GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE));
+		if (m_PlaceableItem && !IsBlacklistedItem(m_PlaceableItem.GetName())) {
+			tooltip.SetContent(m_PlaceableItem.CreateObject(Vector(0, -1000, 0), vector.Zero, 1.0));
 		}		
 		
 		GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
@@ -161,7 +152,7 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		if (filter == string.Empty) return true;
 		
-		string type_lower = m_PlaceableItem.Type;
+		string type_lower = m_PlaceableItem.GetName();
 		type_lower.ToLower();
 		filter.ToLower();
 				
@@ -188,13 +179,13 @@ class EditorPlaceableListItem: EditorListItem
 	{
 		array<string> favorite_items = {};
 		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
-		EditorLog.Debug("Toggling Favorite Favorite %1", m_PlaceableItem.Type);
+		EditorLog.Debug("Toggling Favorite Favorite %1", m_PlaceableItem.GetName());
 		if (!m_TemplateController.Favorite) {
-			favorite_items.Insert(m_PlaceableItem.Type);
+			favorite_items.Insert(m_PlaceableItem.GetName());
 		} else {
 			// fixes a bug where several versions of an item were being placed in
-			while (favorite_items.Find(m_PlaceableItem.Type) != -1) {
-				favorite_items.Remove(favorite_items.Find(m_PlaceableItem.Type));					
+			while (favorite_items.Find(m_PlaceableItem.GetName()) != -1) {
+				favorite_items.Remove(favorite_items.Find(m_PlaceableItem.GetName()));					
 			}
 		}
 		

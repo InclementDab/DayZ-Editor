@@ -1,4 +1,4 @@
-class EditorDeletedObject: EditorWorldObject
+class EditorDeletedObject: Managed
 {
 	protected bool m_IsSelected;
 	
@@ -14,6 +14,7 @@ class EditorDeletedObject: EditorWorldObject
 	protected ref EditorDeletedObjectWorldMarker m_EditorDeletedObjectWorldMarker;
 	
 	protected EditorDeletedObjectData m_Data;
+	protected Object m_WorldObject;
 	
 	void EditorDeletedObject(EditorDeletedObjectData data)
 	{
@@ -74,6 +75,11 @@ class EditorDeletedObject: EditorWorldObject
 	int GetID()
 	{
 		return m_Data.ID;
+	}
+	
+	Object GetWorldObject()
+	{
+		return m_WorldObject;
 	}
 	
 	void OnSelected()

@@ -85,7 +85,7 @@ class EditorHudToolbarController: EditorControllerBase
 			case "BrushTypeSelection": {
 				
 				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
-					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
+					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Type;
 					NotifyPropertyChanged("BrushToggleButtonText", false);
 				}
 								
@@ -169,7 +169,7 @@ class EditorHudToolbarController: EditorControllerBase
 				m_Editor.CommandManager[EditorBrushToggleCommand].SetCanExecute(args.Source.Count() > 0);
 				
 				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
-					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
+					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Type;
 					NotifyPropertyChanged("BrushToggleButtonText", false);
 				}
 				break;

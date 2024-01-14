@@ -53,7 +53,7 @@ class EditorHandData
 	vector OrientationOffset;
 }
 
-typedef map<ref EditorWorldObject, ref EditorHandData> EditorHandMap;
+typedef map<Object, ref EditorHandData> EditorHandMap;
 
 class Editor: Managed
 {
@@ -259,7 +259,7 @@ class Editor: Managed
 					
 				}
 				
-				collision_ignore = m_PlacingObjects.GetKey(0).GetWorldObject();
+				collision_ignore = m_PlacingObjects.GetKey(0);
 			}
 			
 			// Yeah, enfusions dumb, i know
@@ -336,7 +336,7 @@ class Editor: Managed
 	// maybe abstract this to a new class, like EditorHandsManager
 	void HandleHands()
 	{
-		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
+		foreach (Object world_object, EditorHandData hand_data: m_PlacingObjects) {
 			if (!world_object) {
 				return;
 			}
@@ -346,7 +346,7 @@ class Editor: Managed
 				position += hand_data.PositionOffset;
 			}
 			
-			position[1] = position[1] + ObjectGetSize(world_object.GetWorldObject())[1] / 2;			
+			position[1] = position[1] + ObjectGetSize(world_object)[1] / 2;			
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",
@@ -360,17 +360,17 @@ class Editor: Managed
 				surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
 			}
 			
-			vector local_ori = world_object.GetWorldObject().GetDirection();
+			vector local_ori = world_object.GetDirection();
 			local_ori.Normalize();
 			transform[0] = surface_normal * local_ori;
 			transform[1] = surface_normal;
 			transform[2] = surface_normal * (local_ori * vector.Up);
 			
 			// wowzers what a hack
-			EntityAI.Cast(world_object.GetWorldObject()).DisableSimulation(true);
-			world_object.GetWorldObject().SetPosition(position);
-			world_object.GetWorldObject().Update();
-			EntityAI.Cast(world_object.GetWorldObject()).DisableSimulation(false);
+			EntityAI.Cast(world_object).DisableSimulation(true);
+			world_object.SetPosition(position);
+			world_object.Update();
+			EntityAI.Cast(world_object).DisableSimulation(false);
 		}
 	}
 		
@@ -444,8 +444,8 @@ class Editor: Managed
 	void ProcessInput(Input input)
 	{
 		if (IsPlacing()) {
-			foreach (EditorWorldObject placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
-				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
+			foreach (Object placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
+				vector hand_ori = placing_object.GetOrientation();
 				float factor = 9;
 				if (KeyState(KeyCode.KC_LSHIFT)) {
 					factor /= 5;
@@ -457,12 +457,12 @@ class Editor: Managed
 				
 				if (input.LocalValue("UAZoomInOptics")) {				
 					hand_ori[0] = hand_ori[0] - factor;
-					placing_object.GetWorldObject().SetOrientation(hand_ori);			
+					placing_object.SetOrientation(hand_ori);			
 				}
 				
 				if (input.LocalValue("UAZoomOutOptics")) {
 					hand_ori[0] = hand_ori[0] + factor;
-					placing_object.GetWorldObject().SetOrientation(hand_ori);			
+					placing_object.SetOrientation(hand_ori);			
 				}
 			}
 		} else {
@@ -579,8 +579,8 @@ class Editor: Managed
 					if (placeable_object) {
 						ClearHand();
 						EditorHandMap objects_in_hand = AddInHand(placeable_object);
-						foreach (EditorWorldObject object_in_hand, EditorHandData hand_data: objects_in_hand) {
-							object_in_hand.GetWorldObject().SetOrientation(ObjectUnderCursor.GetOrientation());
+						foreach (Object object_in_hand, EditorHandData hand_data: objects_in_hand) {
+							object_in_hand.SetOrientation(ObjectUnderCursor.GetOrientation());
 						}
 					}
 					
@@ -693,32 +693,31 @@ class Editor: Managed
 		return true;
 	}	
 	
-	void RemoveFromHand(EditorWorldObject world_object)
+	void RemoveFromHand(Object world_object)
 	{
 		EditorEvents.RemoveFromHand(this, world_object, m_PlacingObjects[world_object]);
 		m_PlacingObjects.Remove(world_object);
-		delete world_object;		
+		GetGame().ObjectDelete(world_object);	
 	}
 	
 	void ClearHand()
 	{
-		EditorLog.Trace("Editor::ClearHand");
-		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
+		foreach (Object world_object, EditorHandData hand_data: m_PlacingObjects) {
 			RemoveFromHand(world_object);
 		}
 	}
 	
-	array<EditorWorldObject> GetPlacingObjects()
+	array<Object> GetPlacingObjects()
 	{
 		return m_PlacingObjects.GetKeyArray();
 	}
 	
-	EditorHandData GetObjectInHandData(EditorWorldObject world_object)
+	EditorHandData GetObjectInHandData(Object world_object)
 	{
 		return m_PlacingObjects[world_object];
 	}
 	
-	EditorHandMap AddInHand(EditorWorldObject world_object, EditorHandData hand_data = null)
+	EditorHandMap AddInHand(Object world_object, EditorHandData hand_data = null)
 	{		
 		EditorLog.Trace("Editor::AddInHand");
 		
@@ -734,8 +733,8 @@ class Editor: Managed
 	}
 	
 	EditorHandMap AddInHand(EditorPlaceableItem item, EditorHandData hand_data = null)
-	{				
-		return AddInHand(new EditorHologram(item), hand_data);				
+	{
+		return AddInHand(item.CreateObject(Editor.CurrentMousePosition, vector.Zero, 1.0), hand_data);				
 	}
 		
 	array<EditorObject> PlaceObject()
@@ -750,28 +749,16 @@ class Editor: Managed
 		}
 		
 		array<EditorObject> placed_objects = {};
-		foreach (EditorWorldObject placing_object, EditorHandData hand_data: m_PlacingObjects) {
-			EditorHologram editor_hologram;
-			if (!Class.CastTo(editor_hologram, placing_object)) {
-				return null;
-			}
-			
-			Object entity = editor_hologram.GetWorldObject();
-			if (!entity) {
-				EditorLog.Warning("Invalid Entity from %1", editor_hologram.GetPlaceableItem().GetName());
-				return null;
-			}
-			
-			
-			EditorObjectData editor_object_data = editor_hologram.GetPlaceableItem().CreateData(entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EditorObjectFlags.ALL);
+		foreach (Object placing_object, EditorHandData hand_data: m_PlacingObjects) {						
+			EditorObjectData editor_object_data = EditorObjectData.Create(placing_object);
 			if (!editor_object_data) {
-				EditorLog.Warning("Invalid Object data from %1", entity.GetType());
+				EditorLog.Warning("Invalid Object data from %1", placing_object.GetType());
 				return null;
 			}
 			
-			EditorObject editor_object = CreateObject(editor_object_data);
+			EditorObject editor_object = CreateObject(placing_object);
 			if (!editor_object) { 
-				EditorLog.Warning("Invalid Editor Object from %1", entity.GetType());
+				EditorLog.Warning("Invalid Editor Object from %1", placing_object.GetType());
 				return null;
 			}
 						

@@ -1,5 +1,13 @@
-class EditorObject: EditorWorldObject
+class EditorObject: Managed
 {
+	static const ref array<string> VALID_PATHS = { 
+		"DZ\\plants", 
+		"DZ\\plants_bliss",
+		"DZ\\rocks",
+		"DZ\\rocks_bliss",
+	};
+	
+	protected Object m_WorldObject;
 	protected EditorObjectData 				m_Data;
 	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
@@ -71,14 +79,8 @@ class EditorObject: EditorWorldObject
 		return m_Data.Flags;
 	}
 	
-	override Object GetWorldObject() 
-	{
-		if (!m_WorldObject && m_Data) {
-			//EditorLog.Error("World Object was null! ID: %1", GetID().ToString());
-			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale);
-			m_Data.WorldObject = m_WorldObject;
-		}
-		
+	Object GetWorldObject() 
+	{		
 		return m_WorldObject;
 	}
 	
@@ -87,12 +89,10 @@ class EditorObject: EditorWorldObject
 		EditorLog.Trace("EditorObject " + data);
 		m_Data = data;
 		
-		if (!m_Data.WorldObject) {
-			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale);			
-			m_Data.WorldObject = m_WorldObject;
-		}
-		
 		m_WorldObject = m_Data.WorldObject;
+		if (!m_WorldObject) {
+			m_WorldObject = m_Data.CreateObject();
+		}	
 				
 		// Trash the object because its uncreatable
 		if (!m_WorldObject) { 

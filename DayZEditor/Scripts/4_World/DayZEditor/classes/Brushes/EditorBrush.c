@@ -26,7 +26,7 @@ class EditorBrush: Managed
 	
 	static EditorBrush Create(EditorBrushData settings) 
 	{
-		EditorLog.Trace("EditorBrush::Create " + settings.Name);
+		EditorLog.Trace("EditorBrush::Create " + settings.Type);
 
 		if (settings.BrushClassName) {
 			return EditorBrush.Cast(settings.BrushClassName.Spawn());
@@ -117,7 +117,7 @@ class EditorBrush: Managed
 			}
 			
 			vector ori = Math3D.GetRandomDir().VectorToAngles() + Vector(0, Math.RandomFloat(-0.02, 0.02), 0);
-			EditorStaticPlaceableItem static_placeable = EditorStaticPlaceableItem(object_name.Type);
+			EditorStaticPlaceableItem static_placeable = EditorStaticPlaceableItem(new CF_File(object_name.Type));
 			Object brushed_object = static_placeable.CreateObject(pos, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale));
 						
 			vector size = ObjectGetSize(brushed_object);
@@ -147,6 +147,6 @@ class EditorBrush: Managed
 	
 	string GetName() 
 	{ 
-		return m_BrushData.Name; 
+		return m_BrushData.Type; 
 	}
 }
