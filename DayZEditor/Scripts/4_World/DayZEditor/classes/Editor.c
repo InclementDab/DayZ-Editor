@@ -90,7 +90,6 @@ class Editor: Managed
 	protected ref EditorActionStack 				m_ActionStack;
 	
 	// private references
-	protected EditorHudController 					m_EditorHudController;
 	protected ref EditorObjectManagerModule 		m_ObjectManager;	
 	protected ref EditorCameraTrackManagerModule	m_CameraTrackManager;
 	
@@ -210,8 +209,7 @@ class Editor: Managed
 		g_Game.ReportProgress("Initializing Hud");
 		m_EditorHud 		= new EditorHud();
 		
-		EditorLog.Info("Initializing Hud");
-		m_EditorHudController = m_EditorHud.GetTemplateController();		
+		EditorLog.Info("Initializing Hud");		
 		// Add camera marker to newly created hud
 		m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
 		m_EditorHud.GetTemplateController().InsertMapMarker(m_EditorHud.CameraMapMarker);
@@ -539,38 +537,7 @@ class Editor: Managed
 			}
 		}
 		
-		switch (button) {
-			
-			case MouseState.LEFT: {				
-
-
-				
-					
-					/*if (ObjectUnderCursor) {
-						EditorObject editor_object = m_ObjectManager.GetEditorObject(ObjectUnderCursor);
-						if (editor_object) {
-							
-							// Removed due to bug with inside selection being weird
-							// Allows multiple objects to be dragged with selection
-							/*if (editor_object.IsSelected()) {
-								return true;
-							}
-							
-							if (!KeyState(KeyCode.KC_LSHIFT)) {
-								ClearSelection();
-							}
-							
-							SelectObject(editor_object);
-							return true;
-						} 
-					} */
-					
-
-				
-
-				break;
-			}
-			
+		switch (button) {			
 			case MouseState.MIDDLE: {
 				
 				// Ctrl + Middle Mouse logic
@@ -610,42 +577,31 @@ class Editor: Managed
 		return false;
 	}
 	
-	bool IsSurfaceWater( vector position )
+	bool IsSurfaceWater(vector position)
 	{
-		CGame game = GetGame();
-		return game.SurfaceIsSea( position[0], position[2] ) || game.SurfaceIsPond( position[0], position[2] );
+		return GetGame().SurfaceIsSea(position[0], position[2]) || GetGame().SurfaceIsPond(position[0], position[2]);
 	}
 			
 	// also called when component index changes
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
-		m_EditorHudController.ObjectReadoutName = GetObjectName(target, component_index);
-		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
-		
-		if (m_EditorHudController.ObjectReadoutName.Contains(".p3d")) { // yeah its hacky but its cool!
-			m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_YELLOW);
-		} else {
-			m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_WHITE);
-		}
-		
 		if (IsPromptedForObjectSelection()) {
 			EditorBoundingBox.Create(target);
+			return true;
 		}
 		
-		return true;
+		return m_EditorHud.OnMouseEnterObject(target, x, y, component_index);
 	}
 	
 	// also called when component index changes
 	bool OnMouseExitObject(Object target, int x, int y, int component_index)
-	{
-		m_EditorHudController.ObjectReadoutName = "";
-		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
-		
+	{		
 		if (IsPromptedForObjectSelection()) {
 			EditorBoundingBox.Destroy(target);
+			return true;
 		}
 		
-		return true;
+		return m_EditorHud.OnMouseExitObject(target, x, y, component_index);
 	}	
 	
 	void RemoveFromHand(Object world_object)
@@ -671,9 +627,7 @@ class Editor: Managed
 	}
 	
 	EditorHandMap AddInHand(Object world_object, EditorHandData hand_data = null)
-	{		
-		EditorLog.Trace("Editor::AddInHand");
-		
+	{
 		// Turn Brush off when you start to place
 		if (m_EditorBrush) {
 			SetBrush(null);
@@ -690,8 +644,6 @@ class Editor: Managed
 			
 	void EditLootSpawns(EditorPlaceableItem placeable_item)
 	{
-		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.GetName());
-		 
 		EditorLog.Info("Launching Loot Editor...");
 		m_LootEditTarget = GetGame().CreateObjectEx(placeable_item.GetName(), Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
 		vector size = ObjectGetSize(m_LootEditTarget);
@@ -808,11 +760,8 @@ class Editor: Managed
 
 	EditorHud ReloadHud() 
 	{
-		EditorLog.Trace("Editor::ReloadHud");
-		delete m_EditorHud;
-		
+		EditorLog.Trace("Editor::ReloadHud");		
 		m_EditorHud = new EditorHud();
-		m_EditorHudController = m_EditorHud.GetTemplateController();
 		return m_EditorHud;
 	}
 	
@@ -1417,54 +1366,7 @@ class Editor: Managed
 		
 		return placeable_items[0]; // better way to do other than index 0?
 	}
-	
-	string GetObjectName(Object object, int component_index)
-	{		
-		if (!object) {
-			return string.Empty;
-		}
 		
-		while (object.GetParent()) {
-			object = Object.Cast(object.GetParent());
-		}
-		
-		string component_type = "component";
-		Building building = Building.Cast(object);
-		if (building) {
-			if (building.GetDoorIndex(component_index) != -1) {
-				component_index = building.GetDoorIndex(component_index);
-				component_type = "door";
-			}
-		}
-		
-		if (object.GetType() != string.Empty && !object.IsTree() && !object.IsBush() && !object.IsRock()) {			
-			return string.Format("%1 [%2, %3: %4]", object.GetType(), object.GetID(), component_type, component_index);
-		}
-		
-		// 1346854: tank_small_white.p3d
-		string debug_name = object.GetDebugNameNative();
-		if (debug_name == string.Empty) {
-			// lost cause, unlikely
-			return string.Empty;
-		}
-		
-		array<string> split_string = {};
-		debug_name.Split(":", split_string);
-		
-		// also unlikely
-		if (split_string.Count() == 1) {
-			return string.Empty;
-		}
-		
-		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(split_string[1].Trim());
-		// not ideal since we dont want to feed them the p3d, but doable
-		if (!placeable_items || placeable_items.Count() == 0) {
-			return string.Format("%1 [%2, %3: %4]", split_string[1], split_string[0], component_type, component_index);
-		}
-				
-		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetName(), split_string[0], component_type, component_index);
-	}
-	
 	void SetSaveFile(string save_file)
 	{
 		EditorSaveFile = save_file;

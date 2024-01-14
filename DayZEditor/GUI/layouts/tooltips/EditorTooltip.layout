@@ -38,6 +38,7 @@ PanelWidgetClass Root {
      font "gui/fonts/MetronLight14"
      "exact text" 0
      "exact text size" 10
+     "text valign" center
     }
    }
   }

@@ -2,8 +2,6 @@ class EditorHudController: EditorControllerBase
 {
 	static const string NOTIFICATION_SOUND = "Notification_SoundSet";
 	
-	string SearchBarData;
-	string SearchBarIcon = "set:dayz_editor_gui image:search";
 	string Version = Editor.Version;
 	
 	//
@@ -297,13 +295,7 @@ class EditorHudController: EditorControllerBase
 				PlaceablesScroll.VScrollToPos(0);
 				break;
 			}
-			
-			case "SearchBarIcon": {
-				// this could probably be a command with SetCanExecute but im not feeling it 
-				LeftbarPanelSearchBarIconButton.Enable(SearchBarData.Length() > 0);
-				break;	
-			}
-			
+						
 			case "PlacedSearchBarIcon": {
 				PlacedSearchIconButton.Enable(PlacedSearchBarData.Length() > 0);
 				break;
@@ -403,13 +395,6 @@ class EditorHudController: EditorControllerBase
 			RightbarHideIcon.ClearFlags(WidgetFlags.FLIPU);
 		}
 	}
-		
-	void ButtonCreateFolderExecute(ButtonCommandArgs args) 
-	{
-		EditorLog.Trace("EditorHudController::ButtonCreateFolderExecute");
-		EditorCollapsibleListItem category(null);
-		RightbarPlacedData.Insert(category);
-	}	
 	
 	void CameraTrackToggleExecute(ButtonCommandArgs args) 
 	{
@@ -424,15 +409,6 @@ class EditorHudController: EditorControllerBase
 		GetEditor().GetCameraTrackManager().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
 	}
 
-	void OnSearchButtonPress(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::OnSearchButtonPress");
-		if (SearchBarData.Length() > 0) {
-			SearchBarData = string.Empty;
-			NotifyPropertyChanged("SearchBarData");
-		}
-	}
-	
 	void OnSearchPlacedButtonPress(ButtonCommandArgs args)
 	{
 		EditorLog.Trace("EditorHudController::OnSearchPlacedButtonPress");
@@ -441,7 +417,6 @@ class EditorHudController: EditorControllerBase
 			NotifyPropertyChanged("PlacedSearchBarData");
 		}	
 	}
-	
 	
 	void OnCameraTrackStart()
 	{
@@ -603,7 +578,7 @@ class EditorHudController: EditorControllerBase
 		
 		return false;
 	}
-		
+			
 	void SetInfoObjectPosition(vector position)
 	{
 		obj_x = position[0];

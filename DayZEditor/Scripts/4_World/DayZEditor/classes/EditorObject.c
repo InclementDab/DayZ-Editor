@@ -1,5 +1,156 @@
+class SnapPoint: ScriptedEntity
+{
+	static const float RESOLUTION = 0.02;
+	
+	void SnapPoint()
+	{
+		SetCollisionSphere(0.125);
+	}
+	
+	bool IsOccupied()
+	{
+		array<SnapPoint> results = {};
+		vector size = Vector(RESOLUTION * 3, RESOLUTION * 3, RESOLUTION * 3);
+		array<EntityAI> entities = {};
+		DayZPlayerUtils.SceneGetEntitiesInBox(GetWorldPosition() - size, GetWorldPosition() + size, entities);
+		foreach (EntityAI entity: entities) {			
+			SnapPoint snap_point = SnapPoint.Cast(entity);	
+			if (!snap_point || snap_point == this) {
+				continue;
+			}
+			
+			if (snap_point.GetParent() == GetParent() || !snap_point.GetParent() || !GetParent()) {
+				continue;
+			}
+						
+			return true;
+		}
+		
+		return false;
+	}
+	
+	//@ this function is carrying HARD
+	array<SnapPoint> GetAttachments()
+	{
+		array<SnapPoint> results = {};
+		vector size = Vector(RESOLUTION * 3, RESOLUTION * 3, RESOLUTION * 3);
+		array<EntityAI> entities = {};
+		DayZPlayerUtils.SceneGetEntitiesInBox(GetWorldPosition() - size, GetWorldPosition() + size, entities);
+		foreach (EntityAI entity: entities) {
+			SnapPoint snap_point = SnapPoint.Cast(entity);
+			if (!snap_point || snap_point == this) {
+				continue;
+			}
+			
+			if (results.Find(snap_point) != -1) {
+				continue;
+			}
+			
+			if (!snap_point.GetParent() || snap_point.GetParent() == GetParent()) {
+				continue;
+			}
+			
+			results.Insert(snap_point);
+		}
+		
+		return results;
+	}
+		
+	float Dot(notnull SnapPoint snap_point)
+	{
+		vector snap_point_world_transform[4];
+		snap_point.GetTransform(snap_point_world_transform);
+		
+		vector world_transform[4];
+		GetTransform(world_transform);
+		
+		float dot_value = vector.Distance(snap_point_world_transform[3], world_transform[3]) / 2.0;
+		for (int i = 0; i < 3; i++) {
+			dot_value += 1 - vector.Dot(snap_point_world_transform[i], world_transform[i]);
+		}		
+		
+		return dot_value;
+	}
+
+	vector GetWorldForward()
+	{
+		vector mat[4];
+		GetParent().GetTransform(mat);
+		return mat[2];
+	}
+	
+	vector GetWorldUp()
+	{
+		vector mat[4];
+		GetParent().GetTransform(mat);
+		return mat[1];
+	}
+		
+	void SnapTo(notnull SnapPoint anchor_point, out vector mat[4], bool reverse)
+	{		
+		vector anchor_world_transform[4];
+		anchor_point.GetTransform(anchor_world_transform);
+		Shape.CreateMatrix(anchor_world_transform);	
+		vector ident[4] = {
+			"1 0 0",
+			"0 1 0",
+			"0 0 1",
+			vector.Zero
+		};
+		
+		// Flipping the matrix first
+		vector matrix_reverser[4];
+		Math3D.YawPitchRollMatrix(Vector(0, 180 + reverse * 180, 180 + reverse * 180), matrix_reverser);
+		
+		vector coupling_matrix[4];
+		Math3D.MatrixMultiply4(anchor_world_transform, matrix_reverser, coupling_matrix);
+		
+		vector source_inverse[4];	
+		
+		vector matrix[4];
+		GetLocalTransform(matrix);
+		
+		Math3D.MatrixInvMultiply4(matrix, ident, source_inverse);
+		Math3D.MatrixMultiply4(coupling_matrix, source_inverse, mat);
+	}
+		
+	static array<SnapPoint> GetInBox(vector position, float size)
+	{
+		vector max = position + Vector(size, size, size);
+		vector min = position - Vector(size, size, size);
+		
+		array<EntityAI> entities = {};
+		DayZPlayerUtils.SceneGetEntitiesInBox(min, max, entities);
+		array<SnapPoint> results = {};
+		foreach (EntityAI entity: entities) {
+			SnapPoint result = SnapPoint.Cast(entity);
+			if (result && result.GetParent()) {
+				results.Insert(result);
+			}
+		}
+		
+		return results;
+	}
+}
+
+
 class EditorObject: Managed
 {	
+	static const ref array<vector> LINE_CENTER_DIRECTIONS = { 
+		Vector(-1, 0, 0), 
+		Vector(0, 0, -1), 
+		Vector(-1, 0, 0), 
+		Vector(0, 0, -1),
+		Vector(-1, 0, 0),
+		Vector(0, 0, 1),
+		Vector(-1, 0, 0),
+		Vector(1, 0, 0),
+		Vector(1, 0, 0),
+		Vector(1, 0, 0),
+		Vector(1, 0, 0),
+		Vector(0, 0, 1),
+	};
+	
 	protected Object m_WorldObject;
 	protected EditorObjectData 				m_Data;
 	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
@@ -44,38 +195,6 @@ class EditorObject: Managed
 		
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
-
-	void SetDisplayName(string display_name) 
-	{
-		m_Data.DisplayName = display_name;
-		m_EditorPlacedListItem.GetTemplateController().Label = m_Data.DisplayName;
-		m_EditorPlacedListItem.GetTemplateController().NotifyPropertyChanged("Label");
-	}
-	
-	string GetDisplayName() 
-	{
-		return m_Data.DisplayName; 
-	}
-	
-	string GetType() 
-	{
-		return m_Data.Type; 
-	}
-	
-	int GetID() 
-	{
-		return m_Data.GetID(); 
-	}
-
-	EditorObjectFlags GetFlags() 
-	{
-		return m_Data.Flags;
-	}
-	
-	Object GetWorldObject() 
-	{		
-		return m_WorldObject;
-	}
 	
 	void EditorObject(notnull EditorObjectData data)
 	{
@@ -147,6 +266,7 @@ class EditorObject: Managed
 		m_LineCenters[10] = AverageVectors(m_LineVerticies[5], m_LineVerticies[4]);		
 		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
 		
+
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		m_BasePoint = GetGame().CreateObjectEx("BoundingBoxBase", base_point, ECE_NONE);
 		m_BasePoint.SetScale(0.001);
@@ -154,9 +274,6 @@ class EditorObject: Managed
 
 		AddChild(m_BasePoint, -1, true);
 		
-		// Bounding Box
-		EnableBoundingBox(IsBoundingBoxEnabled());
-
 		// Map marker
 		EnableMapMarker(IsMapMarkerEnabled());
 
@@ -204,6 +321,9 @@ class EditorObject: Managed
 		}			
 
 		Update();
+#ifdef DIAG_DEVELOPER
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DiagOnFrameUpdate);
+#endif
 	}
 		
 	void ~EditorObject()
@@ -212,9 +332,7 @@ class EditorObject: Managed
 		if (m_Data && m_WorldObject) {
 			Update();
 		}
-		
-		DestroyBoundingBox();
-	
+			
 		GetGame().ObjectDelete(m_WorldObject);
 
 		delete m_EditorObjectWorldMarker; 
@@ -223,6 +341,63 @@ class EditorObject: Managed
 		
 		delete OnObjectSelected;
 		delete OnObjectDeselected;
+	}
+	
+#ifdef DIAG_DEVELOPER
+	void DiagOnFrameUpdate(float dt)
+	{		
+
+		vector transform[4];
+		m_WorldObject.GetTransform(transform);
+		for (int i = 0; i < 8; i++) {
+			vector pos = m_LineVerticies[i].Multiply4(transform);
+			Debug.DrawSphere(pos, 0.1, COLOR_GREEN, ShapeFlags.ONCE);
+			
+		}
+		
+		for (int j = 0; j < 12; j++) {
+			vector pos2 = m_LineCenters[j].Multiply4(transform);
+			//Debug.DrawSphere(pos2, 0.1, COLOR_APPLE, ShapeFlags.ONCE);
+			
+			vector mat[4];
+			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
+			mat[3] = pos2;
+			Shape.CreateMatrix(mat);
+			DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
+		}
+	}
+#endif
+	
+	void SetDisplayName(string display_name) 
+	{
+		m_Data.DisplayName = display_name;
+		m_EditorPlacedListItem.GetTemplateController().Label = m_Data.DisplayName;
+		m_EditorPlacedListItem.GetTemplateController().NotifyPropertyChanged("Label");
+	}
+	
+	string GetDisplayName() 
+	{
+		return m_Data.DisplayName; 
+	}
+	
+	string GetType() 
+	{
+		return m_Data.Type; 
+	}
+	
+	int GetID() 
+	{
+		return m_Data.GetID(); 
+	}
+
+	EditorObjectFlags GetFlags() 
+	{
+		return m_Data.Flags;
+	}
+	
+	Object GetWorldObject() 
+	{		
+		return m_WorldObject;
 	}
 			
 	bool IsSelected() 
@@ -238,7 +413,6 @@ class EditorObject: Managed
 
 		EditorLog.Trace("EditorObject::OnSelected");
 		m_IsSelected = true;
-		ShowBoundingBox();
 		OnObjectSelected.Invoke(this);
 	}
 	
@@ -250,7 +424,6 @@ class EditorObject: Managed
 		
 		EditorLog.Trace("EditorObject::OnDeselected");
 		m_IsSelected = false;
-		HideBoundingBox();
 		OnObjectDeselected.Invoke(this);
 	}
 	
@@ -259,7 +432,7 @@ class EditorObject: Managed
 		return m_Data;
 	}
 	
-	bool OnMouseEnter(int x, int y)	
+	bool OnMouseEnter(int zx, int y)	
 	{
 		return true;
 	}
@@ -539,66 +712,7 @@ class EditorObject: Managed
 		m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
 		GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
 	}
-	
-	private bool _boundingBoxesCreated;
-	void EnableBoundingBox(bool enable) 
-	{
-		EditorLog.Trace("EditorObject::EnableBoundingBox");
-		DestroyBoundingBox();
 		
-		// Global Settings Check		
-		if (!enable || !GetEditor().Settings.ShowBoundingBoxes) {
-			return;
-		}
-		
-		_boundingBoxesCreated = enable;
-		
-		vector size = GetSize();
-		vector clip_info[2];
-		ClippingInfo(clip_info);
-		vector position = AverageVectors(clip_info[0], clip_info[1]);
-		
-		for (int i = 0; i < 12; i++) {
-			vector transform[4];			
-			transform[3] = m_LineCenters[i];
-			
-			for (int j = 0; j < 3; j++) {
-				transform[j][j] = ((position[j] == m_LineCenters[i][j]) * size[j]/2) + BOUNDING_BOX_THICKNESS;						
-			}
-			 
-			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_NONE));
-			m_BBoxLines[i].SetTransform(transform);			
-			
-			AddChild(m_BBoxLines[i], -1);
-		}
-		
-		vector y_axis_mat[4];
-		vector bottom_center = GetBottomCenter() - GetPosition();
-		y_axis_mat[0][0] = BOUNDING_BOX_THICKNESS;
-		y_axis_mat[1][1] = 1000;
-		y_axis_mat[2][2] = BOUNDING_BOX_THICKNESS;
-		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1], bottom_center[2]);
-		
-		//m_CenterLine = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE));
-		//m_CenterLine.SetTransform(y_axis_mat);
-		//AddChild(m_CenterLine, -1);
-		Update();
-		
-		HideBoundingBox();
-	}
-	
-	void DestroyBoundingBox()
-	{		
-		if (m_BBoxLines) {
-			for (int i = 0; i < 12; i++) {
-				GetGame().ObjectDelete(m_BBoxLines[i]);
-			}
-		}
-		
-		GetGame().ObjectDelete(m_BBoxBase);		
-		GetGame().ObjectDelete(m_CenterLine);	
-	}
-	
 	void Show(bool show) 
 	{
 		Show = show;
@@ -679,52 +793,6 @@ class EditorObject: Managed
 		
 		return result;
 	}	
-
-	void ShowBoundingBox()
-	{
-		EditorLog.Trace("EditorObject::ShowBoundingBox");
-		
-		// Global Settings Check
-		if (!GetEditor().Settings.ShowBoundingBoxes) return;
-		
-		// quick and dirty bugfix
-		if (!_boundingBoxesCreated) {
-			EnableBoundingBox(true);
-		}
-		
-		for (int i = 0; i < 12; i++) {
-			if (m_BBoxLines[i]) {
-				m_BBoxLines[i].SetFlags(EntityFlags.VISIBLE, false);
-			}
-		}
-		
-		if (m_BBoxBase) {
-			m_BBoxBase.SetFlags(EntityFlags.VISIBLE, false);
-		}
-		
-		if (m_CenterLine) {
-			m_CenterLine.SetFlags(EntityFlags.VISIBLE, false);
-		}
-	}
-	
-	void HideBoundingBox()
-	{
-		EditorLog.Trace("EditorObject::HideBoundingBox");
-		
-		for (int i = 0; i < 12; i++) {
-			if (m_BBoxLines[i]) {
-				m_BBoxLines[i].ClearFlags(EntityFlags.VISIBLE, false);
-			}
-		}
-		
-		if (m_BBoxBase) {
-			m_BBoxBase.ClearFlags(EntityFlags.VISIBLE, false);
-		}
-		
-		if (m_CenterLine) {
-			m_CenterLine.ClearFlags(EntityFlags.VISIBLE, false);
-		}
-	}
 	
 	bool SetAnimation(string anim_name)
 	{

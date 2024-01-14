@@ -63,7 +63,7 @@ class EditorTreeItem: ScriptView
 	{
 		return m_TemplateController;
 	}
-	
+		
 	override typename GetControllerType()
 	{
 		return EditorTreeItemController;

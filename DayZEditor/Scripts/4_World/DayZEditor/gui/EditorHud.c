@@ -22,6 +22,8 @@ class EditorHud: ScriptView
 	CanvasWidget EditorCanvas;
 	ScrollWidget PlaceablesScroll;
 	
+	protected MultilineEditBoxWidget SearchBar;
+	
 	ref EditorCameraMapMarker CameraMapMarker;
 	
 	// todo protect this and move all Map logic in here?
@@ -189,6 +191,28 @@ class EditorHud: ScriptView
 		}
 		
 		return super.OnClick(w, x, y, button);
+	}
+	
+	override bool OnChange(Widget w, int x, int y, bool finished)
+	{
+		switch (w) {
+			case SearchBar: {
+				for (int i = 0; i < m_TemplateController.Placeables.Count(); i++) {
+					EditorFolderTreeItem tree_item = EditorFolderTreeItem.Cast(m_TemplateController.Placeables[i]);
+					if (!tree_item) {
+						continue;
+					}
+					
+					string text;
+					SearchBar.GetText(text);
+					tree_item.ApplyFilter(text);
+				}
+				
+				break;
+			}
+		}
+		
+		return super.OnChange(w, x, y, finished);
 	}
 	
 	override void Show(bool show) 
@@ -400,6 +424,71 @@ class EditorHud: ScriptView
 		toolbar_menu.GetLayoutRoot().SetPos(x, y + h);
 		
 		return toolbar_menu;
+	}
+	
+	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
+	{
+		m_TemplateController.ObjectReadoutName = GetFriendlyObjectName(target, component_index);
+		m_TemplateController.NotifyPropertyChanged("ObjectReadoutName");
+		
+		if (m_TemplateController.ObjectReadoutName.Contains(".p3d")) { // yeah its hacky but its cool!
+			m_TemplateController.ObjectHoverSelectObjectReadout.SetColor(COLOR_YELLOW);
+		} else {
+			m_TemplateController.ObjectHoverSelectObjectReadout.SetColor(COLOR_WHITE);
+		}
+		
+		return true;
+	}
+	
+	bool OnMouseExitObject(Object target, int x, int y, int component_index)
+	{
+		m_TemplateController.ObjectReadoutName = "";
+		m_TemplateController.NotifyPropertyChanged("ObjectReadoutName");
+	
+		return true;
+	}	
+	
+	static string GetFriendlyObjectName(notnull Object object, int component_index)
+	{		
+		while (object.GetParent()) {
+			object = Object.Cast(object.GetParent());
+		}
+		
+		string component_type = "component";
+		Building building = Building.Cast(object);
+		if (building) {
+			if (building.GetDoorIndex(component_index) != -1) {
+				component_index = building.GetDoorIndex(component_index);
+				component_type = "door";
+			}
+		}
+		
+		if (object.GetType() != string.Empty && !object.IsTree() && !object.IsBush() && !object.IsRock()) {			
+			return string.Format("%1 [%2, %3: %4]", object.GetType(), object.GetID(), component_type, component_index);
+		}
+		
+		// 1346854: tank_small_white.p3d
+		string debug_name = object.GetDebugNameNative();
+		if (debug_name == string.Empty) {
+			// lost cause, unlikely
+			return string.Empty;
+		}
+		
+		array<string> split_string = {};
+		debug_name.Split(":", split_string);
+		
+		// also unlikely
+		if (split_string.Count() == 1) {
+			return string.Empty;
+		}
+		
+		array<EditorPlaceableItem> placeable_items = GetEditor().GetObjectManager().GetReplaceableObjects(split_string[1].Trim());
+		// not ideal since we dont want to feed them the p3d, but doable
+		if (!placeable_items || placeable_items.Count() == 0) {
+			return string.Format("%1 [%2, %3: %4]", split_string[1], split_string[0], component_type, component_index);
+		}
+				
+		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetName(), split_string[0], component_type, component_index);
 	}
 	
 	// Modal Menu Control
