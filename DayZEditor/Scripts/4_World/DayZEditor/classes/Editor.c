@@ -131,6 +131,33 @@ class Editor: Managed
 	
 	bool										KEgg; // oh?
 	
+	//0: EditorObject
+	static ref ScriptInvoker OnObjectCreated = new ScriptInvoker();
+	
+	//0: EditorObject
+	static ref ScriptInvoker OnObjectDeleted = new ScriptInvoker();
+	
+	// 0: EditorObject
+	static ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
+	
+	// 0: EditorObject
+	static ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
+	
+	// 0: EditorDeletedObject
+	static ref ScriptInvoker OnDeletedObjectSelected = new ScriptInvoker();
+	
+	// 0: EditorDeletedObject
+	static ref ScriptInvoker OnDeletedObjectDeselected = new ScriptInvoker();
+		
+	// 0: EditorHandData
+	static ref ScriptInvoker OnAddInHand = new ScriptInvoker();
+	
+	// 0: EditorHandData
+	static ref ScriptInvoker OnRemoveFromHand = new ScriptInvoker();
+	
+	// 0: EditorObject
+	static ref ScriptInvoker OnObjectPlaced = new ScriptInvoker();
+	
 	void Editor(vector position) 
 	{
 		EditorLog.Trace("Editor");
@@ -217,14 +244,7 @@ class Editor: Managed
 		
 		Settings.Save();
 		Statistics.Save();
-		
-		delete m_EditorHud;
-		delete m_EditorInventoryEditorHud;
-		delete m_EditorBrush;
-		delete m_SessionCache;
-		delete m_DeletedSessionCache;
-		delete m_PlacingObjects;
-		delete m_RecentlyOpenedFiles;
+
 		GetGame().ObjectDelete(m_EditorCamera);
 	}
 		
@@ -298,22 +318,7 @@ class Editor: Managed
 			// Spams errors
 			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
-		
-		CommandManager[EditorCutCommand].SetCanExecute(selected_objects.Count() > 0);
-		CommandManager[EditorCopyCommand].SetCanExecute(selected_objects.Count() > 0);
-		//PasteCommand.SetCanExecute(EditorClipboard.IsClipboardValid());
 
-		CommandManager[EditorSnapCommand].SetCanExecute(false); // not implemented
-		
-		// Shit code. Theres better ways to do this CanUndo and CanRedo are slow
-		CommandManager[EditorUndoCommand].SetCanExecute(CanUndo());
-		CommandManager[EditorRedoCommand].SetCanExecute(CanRedo());
-		
-		CommandManager[EditorOpenRecentCommand].SetCanExecute(m_RecentlyOpenedFiles.Count() > 0);
-		
-		CommandManager[EditorCameraTrackRun].SetCanExecute(m_CameraTrackManager.GetCameraTracks().Count() > 0);
-		CommandManager[EditorCloseCommand].SetCanExecute(EditorSaveFile != string.Empty);
-				
 		foreach (Object world_object, EditorHandData hand_data: m_PlacingObjects) {
 			if (!world_object) {
 				return;
@@ -647,7 +652,6 @@ class Editor: Managed
 	
 	void RemoveFromHand(Object world_object)
 	{
-		EditorEvents.RemoveFromHand(this, world_object, m_PlacingObjects[world_object]);
 		m_PlacingObjects.Remove(world_object);
 		GetGame().ObjectDelete(world_object);	
 	}
@@ -679,8 +683,6 @@ class Editor: Managed
 		}
 		
 		m_PlacingObjects[world_object] = hand_data;
-		EditorEvents.AddInHand(this, world_object, hand_data);
-		
 		return m_PlacingObjects;
 	}
 	
@@ -688,48 +690,7 @@ class Editor: Managed
 	{
 		return AddInHand(item.CreateObject(Editor.CurrentMousePosition, vector.Zero, 1.0), hand_data);				
 	}
-		
-	array<EditorObject> PlaceObject()
-	{
-		EditorLog.Trace("Editor::PlaceObject");
-		if (GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel") {
-			//return null;
-		}
-		
-		if (!m_PlacingObjects || m_PlacingObjects.Count() == 0) {
-			return null;	
-		}
-		
-		array<EditorObject> placed_objects = {};
-		foreach (Object placing_object, EditorHandData hand_data: m_PlacingObjects) {						
-			EditorObjectData editor_object_data = EditorObjectData.Create(placing_object);
-			if (!editor_object_data) {
-				EditorLog.Warning("Invalid Object data from %1", placing_object.GetType());
-				return null;
-			}
 			
-			EditorObject editor_object = CreateObject(placing_object);
-			if (!editor_object) { 
-				EditorLog.Warning("Invalid Editor Object from %1", placing_object.GetType());
-				return null;
-			}
-						
-			EditorEvents.ObjectPlaced(this, editor_object);
-			
-			if (!KeyState(KeyCode.KC_LSHIFT)) { 
-				RemoveFromHand(placing_object); 
-			}
-			
-			if (editor_object) {
-				SelectObject(editor_object);
-			}
-			
-			placed_objects.Insert(editor_object);
-		}
-			
-		return placed_objects;
-	}
-	
 	void EditLootSpawns(EditorPlaceableItem placeable_item)
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.GetName());

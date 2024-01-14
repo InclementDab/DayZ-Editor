@@ -12,6 +12,11 @@ class EditorCameraTrackRun: EditorCommand
 		return true;
 	}
 	
+	override bool CanExecute()
+	{
+		return GetEditor().GetCameraTrackManager().GetCameraTracks().Count() > 0;
+	}
+	
 	override string GetName() 
 	{
 		return "#STR_EDITOR_CINEMATIC_CAMERA_RUN";

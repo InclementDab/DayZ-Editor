@@ -92,7 +92,6 @@ class EditorHud: ScriptView
 		if (input.LocalPress("EditorToggleMap")) {
 			EditorMapWidget.Show(!EditorMapWidget.IsVisible());
 			ShowCursor(true);
-			EditorEvents.MapToggled(this, EditorMapWidget, EditorMapWidget.IsVisible());
 		}
 	}
 	

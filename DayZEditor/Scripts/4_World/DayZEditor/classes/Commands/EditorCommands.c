@@ -32,22 +32,6 @@ class EditorCommand: RelayCommand
 		return false;
 	}
 	
-	override void CanExecuteChanged(bool state) 
-	{
-		//EditorLog.Trace("CanExecuteChanged: %1 - %2", state.ToString(), m_ViewBinding.GetLayoutRoot().GetName());
-		
-		if (m_ViewBinding) {
-			Widget root = m_ViewBinding.GetLayoutRoot();
-			if (state) {
-				root.SetAlpha(1);
-			} else {
-				root.SetAlpha(0.25);
-			}
-			
-			root.Enable(state);			
-		}		
-	}
-	
 	string GetName() 
 	{
 		return string.Empty;

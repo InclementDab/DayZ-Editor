@@ -7,6 +7,11 @@ class EditorRedoCommand: EditorCommand
 		return true;
 	}
 		
+	override bool CanExecute()
+	{
+		return GetEditor().CanRedo();
+	}
+	
 	override string GetName() 
 	{
 		return "#STR_EDITOR_REDO";

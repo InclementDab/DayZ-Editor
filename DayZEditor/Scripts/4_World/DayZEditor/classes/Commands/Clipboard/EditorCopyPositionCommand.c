@@ -17,6 +17,11 @@ class EditorCopyPositionCommand: EditorCommand
 		GetGame().CopyToClipboard(copy_string);
 		return true;
 	}
+	
+	override bool CanExecute()
+	{
+		return GetEditor().GetSelectedObjects().Count() > 0;
+	}
 
 	override string GetName() 
 	{

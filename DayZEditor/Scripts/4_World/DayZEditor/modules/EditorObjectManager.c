@@ -141,7 +141,7 @@ class EditorObjectManagerModule: Managed
 		m_PlacedObjects.InsertEditorObject(editor_object);
 		m_WorldObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object);
 		
-		EditorEvents.ObjectCreated(this, editor_object);
+		GetEditor().OnObjectCreated.Invoke(editor_object);
 		
 		GetEditor().Statistics.EditorPlacedObjects++;
 		return editor_object;
@@ -153,7 +153,7 @@ class EditorObjectManagerModule: Managed
 		
 		m_SelectedObjects.RemoveEditorObject(target);
 		m_PlacedObjects.RemoveEditorObject(target);
-		EditorEvents.ObjectDeleted(this, target);		
+		GetEditor().OnObjectDeleted.Invoke(target);		
 		
 		// remove strong ref
 		m_EditorObjectRefs.Remove(target.GetID());
@@ -164,7 +164,8 @@ class EditorObjectManagerModule: Managed
 	{
 		EditorLog.Trace("EditorObjectManager::SelectObject");
 		m_SelectedObjects.InsertEditorObject(target);
-		EditorEvents.ObjectSelected(this, target);
+		GetEditor().OnObjectSelected.Invoke(target);
+	
 		target.OnSelected();
 		
 		// todo perhaps propagate selections to the children of the object?
@@ -175,7 +176,7 @@ class EditorObjectManagerModule: Managed
 	{
 		EditorLog.Trace("EditorObjectManager::DeselectObject");
 		m_SelectedObjects.RemoveEditorObject(target);
-		EditorEvents.ObjectDeselected(this, target);
+		GetEditor().OnObjectDeselected.Invoke(target);
 		target.OnDeselected();
 	}	
 		
@@ -183,21 +184,24 @@ class EditorObjectManagerModule: Managed
 	void ToggleSelection(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::ToggleSelection");
-		if (target.IsSelected())
+		if (target.IsSelected()) {
 			DeselectObject(target);
-		else
+		} else {
 			SelectObject(target);
+		}
 	}
 		
 	// Call to clear selection
 	void ClearSelection()
 	{
 		EditorLog.Trace("EditorObjectManager::ClearSelection");		
-		foreach (EditorObject editor_object: m_SelectedObjects)
+		foreach (EditorObject editor_object: m_SelectedObjects) {
 			DeselectObject(editor_object);
+		}
 		
-		foreach (EditorDeletedObject deleted_object: m_SelectedDeletedObjects)
+		foreach (EditorDeletedObject deleted_object: m_SelectedDeletedObjects) {
 			DeselectHiddenObject(deleted_object);
+		}
 	}
 	
 	// Hidden object stuff
@@ -237,7 +241,7 @@ class EditorObjectManagerModule: Managed
 	{
 		EditorLog.Trace("EditorObjectManager::SelectHiddenObject");
 		m_SelectedDeletedObjects.InsertEditorDeletedObject(target);
-		EditorEvents.DeletedObjectSelected(this, target);
+		GetEditor().OnDeletedObjectSelected.Invoke(target);
 		target.OnSelected();
 	}
 	
@@ -245,7 +249,7 @@ class EditorObjectManagerModule: Managed
 	{
 		EditorLog.Trace("EditorObjectManager::DeselectHiddenObject");
 		m_SelectedDeletedObjects.RemoveEditorDeletedObject(target);
-		EditorEvents.DeletedObjectDeselected(this, target);
+		GetEditor().OnDeletedObjectDeselected.Invoke(target);
 		target.OnDeselected();
 	}
 	

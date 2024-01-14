@@ -10,6 +10,11 @@ class EditorCloseCommand: EditorAsyncCommand
 		
 		m_Editor.Clear();
 	}
+	
+	override bool CanExecute()
+	{
+		return GetEditor().GetSaveFile() != string.Empty;
+	}
 			
 	override string GetName() 
 	{

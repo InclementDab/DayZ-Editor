@@ -9,14 +9,8 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	{
 		m_MapWidget = m_Editor.GetEditorHud().EditorMapWidget;
 		m_DragHandler = new EditorObjectDragHandler(m_EditorObject);
-		EditorEvents.OnMapToggled.Insert(OnEditorMapToggled);
-		
+
 		GetScreenSize(m_ScreenX, m_ScreenY);
-	}
-	
-	void OnEditorMapToggled(Class context, MapWidget editor_map, bool state)
-	{
-		m_Show = !state;
 	}
 	
 	override void Update(float dt)

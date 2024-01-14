@@ -12,8 +12,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		AddButton(DialogResult.OK);
 		
-		EditorEvents.OnObjectSelected.Insert(OnObjectSelected);
-		EditorEvents.OnObjectDeselected.Insert(OnObjectDeselected);
+		GetEditor().OnObjectSelected.Insert(OnObjectSelected);
+		GetEditor().OnObjectDeselected.Insert(OnObjectDeselected);
 	}
 	
 	void ~EditorObjectPropertiesDialog()
@@ -37,13 +37,13 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		}
 	}
 		
-	protected void OnObjectSelected(Class context, EditorObject editor_object)
+	protected void OnObjectSelected(EditorObject editor_object)
 	{		
 		m_EditorObjects.Insert(editor_object);
 		UpdateViewContext();
 	}
 	
-	protected void OnObjectDeselected(Class context, EditorObject editor_object)
+	protected void OnObjectDeselected(EditorObject editor_object)
 	{
 		m_EditorObjects.RemoveItem(editor_object);
 		UpdateViewContext();
