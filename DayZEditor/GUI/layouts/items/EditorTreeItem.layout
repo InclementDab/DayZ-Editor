@@ -22,6 +22,7 @@ PanelWidgetClass Root {
    Padding 0
    Margin 0
    "Size To Content H" 1
+   "Size To Content V" 1
    content_valign center
    {
     ImageWidgetClass ParentDisplay {

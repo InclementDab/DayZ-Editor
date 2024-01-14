@@ -127,7 +127,7 @@ class Editor: Managed
 	protected ref Timer	m_StatisticsSaveTimer 	= new Timer(CALL_CATEGORY_GAMEPLAY);
 	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
 	
-	protected ScriptCaller m_ObjectSelectCallback;
+	protected ScriptCaller 					m_ObjectSelectCallback;
 	
 	bool										KEgg; // oh?
 	
@@ -343,12 +343,9 @@ class Editor: Managed
 			transform[0] = surface_normal * local_ori;
 			transform[1] = surface_normal;
 			transform[2] = surface_normal * (local_ori * vector.Up);
-			
-			// wowzers what a hack
-			EntityAI.Cast(world_object).DisableSimulation(true);
+						
 			world_object.SetPosition(position);
 			world_object.Update();
-			EntityAI.Cast(world_object).DisableSimulation(false);
 		}
 	}
 				
@@ -358,6 +355,14 @@ class Editor: Managed
 		
 		if (m_ObjectSelectCallback) {
 			m_EditorHud.CreateNotification("Select a world object");
+		}
+	}
+	
+	void SatisfyObjectSelectionPrompt(Object object)
+	{
+		m_ObjectSelectCallback.Invoke(object);
+		if (object) {
+			EditorBoundingBox.Destroy(object);
 		}
 	}
 	
@@ -532,36 +537,7 @@ class Editor: Managed
 		switch (button) {
 			
 			case MouseState.LEFT: {				
-				if (IsPlacing()) {
-					PlaceObject();
-					return true;
-				}
-				
-				if (IsPromptedForObjectSelection()) {
-					m_ObjectSelectCallback.Invoke(ObjectUnderCursor);
-					if (ObjectUnderCursor) {
-						EditorBoundingBox.Destroy(ObjectUnderCursor);
-					}
-					return true;
-				}
-				
-				if (!target || target == m_EditorHud.EditorMapWidget) {
-					ClearSelection();
-					GetCameraTrackManager().ClearSelection();
-				}
-				
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					EditorPlaceableItem placeable_object = GetReplaceableItem(ObjectUnderCursor);
-					if (placeable_object) {
-						ClearHand();
-						EditorHandMap objects_in_hand = AddInHand(placeable_object);
-						foreach (Object object_in_hand, EditorHandData hand_data: objects_in_hand) {
-							object_in_hand.SetOrientation(ObjectUnderCursor.GetOrientation());
-						}
-					}
-					
-					return true;
-				}
+
 				
 				if (!GetBrush() && GetSelectedObjects().Count() == 0) {
 					
@@ -717,7 +693,7 @@ class Editor: Managed
 	{
 		EditorLog.Trace("Editor::PlaceObject");
 		if (GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel") {
-			return null;
+			//return null;
 		}
 		
 		if (!m_PlacingObjects || m_PlacingObjects.Count() == 0) {

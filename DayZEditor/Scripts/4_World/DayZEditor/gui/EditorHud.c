@@ -67,15 +67,15 @@ class EditorHud: ScriptView
 		}
 		
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
-			//m_DraggedBar = null;
+			m_DraggedBar = null;
 		}
 		
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 	
 		if (m_DraggedBar) {			
-			//m_DraggedBar.GetParent().GetParent().GetSize(w, h);
-			//m_DraggedBar.GetParent().GetParent().SetSize(Math.Clamp(mouse_x, 40, 720), y - 74);
+			m_DraggedBar.GetParent().GetSize(w, h);
+			m_DraggedBar.GetParent().SetSize(Math.Clamp(mouse_x, 40, 720), y - 74);
 		}
 		
 		// minimum placeables list sizing looks better

@@ -96,6 +96,7 @@
             <input name="EditorReloadHudCommand" loc="#STR_EDITOR_CMD_RELOAD_UI"/>
             <input name="EditorToggleSimulationCommand" loc="Toggle Simulation"/>
             <input name="EditorPlaceObjectCommand" loc="#STR_EDITOR_PLACE_OBJECT"/>
+            <input name="EditorAddObjectCommand" loc="Add Object"/>
             <input name="EditorImportFromObjectSpawner" loc="#STR_EDITOR_CMD_IMPORT_OBJECTSPAWNER (*.json)"/>
             <input name="EditorEditInventoryCommand" loc="#STR_EDITOR_EDIT_INVENTORY"/>
             <input name="EditorHideCommand" loc="#STR_EDITOR_HIDE"/>
@@ -114,6 +115,7 @@
             <input name="EditorExportRelativeToObject" loc="Export Relative to Object"/>
 
             <sorting name="Editor" loc="#STR_EDITOR_EDITOR">
+                <input name="EditorPlaceObject"/>
                 <input name="EditorCameraForward"/>
                 <input name="EditorCameraBack"/>
                 <input name="EditorCameraLeft"/>
@@ -204,6 +206,7 @@
                 <input name="EditorReloadHudCommand"/>
                 <input name="EditorToggleSimulationCommand"/>
                 <input name="EditorPlaceObjectCommand"/>
+                <input name="EditorAddObjectCommand"/>
                 <input name="EditorImportFromObjectSpawner"/>
                 <input name="EditorEditInventoryCommand"/>
                 <input name="EditorHideCommand"/>
@@ -225,6 +228,14 @@
     </inputs>
 
     <preset>
+    	<input name="EditorPlaceObjectCommand">
+            <btn name="mBLeft"/>
+        </input>
+    	<input name="EditorAddObjectCommand">
+            <btn name="kLControl">
+                <btn name="mBLeft"/>
+            </btn>
+        </input>
     	<input name="EditorCameraToolSpeedIncrease">
             <btn name="mWheelUp"/>
         </input>

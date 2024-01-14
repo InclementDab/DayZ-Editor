@@ -11,9 +11,11 @@ class EditorPlaceableTooltip: ScriptViewTemplate<EditorPlaceableTooltipControlle
 		m_EditorPlaceableItem = placeable_item;
 
 		if (!IsBlacklistedItem(m_EditorPlaceableItem.GetName())) {
-			m_Object = m_EditorPlaceableItem.CreateObject(Vector(0, -1000, 0), vector.Zero, 1.0);
-			if (!placeable_item.IsInherited(EditorStaticPlaceableItem)) {
-				Item.SetItem(m_Object);
+			m_Object = m_EditorPlaceableItem.CreateObject(Vector(0, 0, 0), vector.Zero, 1.0);
+			EntityAI entity = EntityAI.Cast(m_Object);
+			if (entity && !placeable_item.IsInherited(EditorStaticPlaceableItem)) {
+				Item.SetItem(entity);
+				Item.SetView(entity.GetViewIndex());
 			}
 		}
 			

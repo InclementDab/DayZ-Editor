@@ -30,14 +30,14 @@ class EditorTreeItem: ScriptView
 		float w, h;
 		m_LayoutRoot.GetScreenSize(w, h);
 		
-		m_LayoutRoot.SetScreenSize(w, 20 + (state * 18 * (m_TemplateController.Children.Count() + 1)));
+		m_LayoutRoot.SetScreenSize(w, state * 18 * (m_TemplateController.Children.Count() + 1));
 	}
 		
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		switch (w) {
 			case Panel: {
-				if (button == 1) {
+				if (button == 0) {
 					SetFocus(w);
 					return true;
 				}
