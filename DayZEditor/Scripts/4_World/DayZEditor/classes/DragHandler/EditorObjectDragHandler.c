@@ -9,9 +9,9 @@ class EditorObjectDragHandler: EditorDragHandler
 		vector cursor_pos = Editor.CurrentMousePosition;
 		
 		vector size, ground_position, surface_normal, local_dir, local_ori;
-		vector deltapos = m_EditorObject.GetPosition();
+		vector deltapos = m_EditorObject.GetWorldObject().GetPosition();
 		size = m_EditorObject.GetSize();
-		float scale = m_EditorObject.GetScale();
+		float scale = m_EditorObject.GetWorldObject().GetScale();
 		ground_position = GetGroundPosition(transform);
 		surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
 		float angle;
@@ -19,7 +19,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		// Handle Z-Only motion
 		// Todo will people want this as a keybind?
 		if (KeyState(KeyCode.KC_LMENU)) {
-			cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), m_EditorObject.GetBottomCenter());
+			cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), m_EditorObject.GetBasePoint());
 			cursor_pos[1] = cursor_pos[1] + size[1] / 2;
 			if (m_Editor.MagnetMode) {
 				transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos + GetGame().GetCurrentCameraDirection() * 1);
@@ -31,7 +31,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		// Handle XY Rotation
 		else if (KeyState(KeyCode.KC_LSHIFT)) {
 			vector cursor_delta = ground_position - Editor.CurrentMousePosition;
-			local_ori = m_EditorObject.GetOrientation();
+			local_ori = m_EditorObject.GetWorldObject().GetOrientation();
 			angle = Math.Atan2(cursor_delta[0], cursor_delta[2]);
 			local_ori[0] = local_ori[0] + ((angle - m_LastAngle) * Math.RAD2DEG);
 			local_ori.RotationMatrixFromAngles(transform);
@@ -85,12 +85,12 @@ class EditorObjectDragHandler: EditorDragHandler
 				continue; 
 			}
 			
-			vector selected_pos = selected_object.GetPosition();
-			vector selected_ori = selected_object.GetOrientation();
+			vector selected_pos = selected_object.GetWorldObject().GetPosition();
+			vector selected_ori = selected_object.GetWorldObject().GetOrientation();
 			
 			// Handle Z-Only motion
 			if (KeyState(KeyCode.KC_LMENU)) {
-				selected_object.SetPosition(selected_object.GetPosition() + deltapos);
+				selected_object.GetWorldObject().SetPosition(selected_object.GetWorldObject().GetPosition() + deltapos);
 			}
 			
 			else if (KeyState(KeyCode.KC_LSHIFT)) {
@@ -98,12 +98,12 @@ class EditorObjectDragHandler: EditorDragHandler
 					continue;
 				}
 				
-				selected_object.SetPosition(EditorMath.RotateAroundPoint(transform[3], selected_object.GetPosition(), vector.Up, Math.Cos(angle - m_LastAngle), Math.Sin(angle - m_LastAngle)));
-				vector new_ori = selected_object.GetOrientation();
+				selected_object.GetWorldObject().SetPosition(EditorMath.RotateAroundPoint(transform[3], selected_object.GetWorldObject().GetPosition(), vector.Up, Math.Cos(angle - m_LastAngle), Math.Sin(angle - m_LastAngle)));
+				vector new_ori = selected_object.GetWorldObject().GetOrientation();
 				new_ori[0] = new_ori[0] + ((angle - m_LastAngle) * Math.RAD2DEG);
-				selected_object.SetOrientation(new_ori);
+				selected_object.GetWorldObject().SetOrientation(new_ori);
 			} else {
-				selected_object.SetPosition(selected_object.GetPosition() + deltapos);
+				selected_object.GetWorldObject().SetPosition(selected_object.GetWorldObject().GetPosition() + deltapos);
 			}
 		}
 		
@@ -114,7 +114,7 @@ class EditorObjectDragHandler: EditorDragHandler
 	{
 		vector avg_position;
 		foreach (int id, EditorObject copy_object: objects) {
-			avg_position += copy_object.GetPosition();
+			avg_position += copy_object.GetWorldObject().GetPosition();
 		}
 		
 		for (int i = 0; i < 3; i++) {

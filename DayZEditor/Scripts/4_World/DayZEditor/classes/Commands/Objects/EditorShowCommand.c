@@ -5,7 +5,7 @@ class EditorShowCommand: EditorCommand
 		super.Execute(sender, args);
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		foreach (EditorObject selected_object: selected_objects) {		
-			selected_object.Show(true);
+			selected_object.Hide(false);
 		}
 		
 		return true;

@@ -18,8 +18,7 @@ class EditorQuickMoveCommand: EditorCommand
 		}
 		
 		foreach (int id, EditorObject editor_object: selected_objects) {
-			editor_object.Position = direction + editor_object.GetPosition();
-			editor_object.PropertyChanged("Position");
+			editor_object.GetWorldObject().SetPosition(direction + editor_object.GetWorldObject().GetPosition());
 		}
 		
 		return true;

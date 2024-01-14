@@ -9,13 +9,12 @@ class EditorSnapToSurfaceCommand: EditorCommand
 		foreach (EditorObject editor_object: editor_objects) {
 			vector transform[4];
 			
-			editor_object.GetTransform(transform);
+			editor_object.GetWorldObject().GetTransform(transform);
 			align_undo.InsertUndoParameter(editor_object.GetTransformArray());
 			
 			// Get Ground Position
 			vector ground_position, ground_dir; 
-			int component;
-			DayZPhysics.RaycastRV(transform[3], transform[3] + transform[1] * -1000, ground_position, ground_dir, component, null, null, null, false, true);
+			
 			
 			vector surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
 			vector local_ori = editor_object.GetWorldObject().GetDirection();
@@ -24,9 +23,7 @@ class EditorSnapToSurfaceCommand: EditorCommand
 			transform[2] = surface_normal * (local_ori * vector.Up);
 			transform[3] = ground_position + (surface_normal * editor_object.GetYDistance());
 			
-			editor_object.SetTransform(transform);
-			
-			editor_object.Update();
+			editor_object.GetWorldObject().SetTransform(transform);
 			
 			align_undo.InsertRedoParameter(editor_object.GetTransformArray());
 		}

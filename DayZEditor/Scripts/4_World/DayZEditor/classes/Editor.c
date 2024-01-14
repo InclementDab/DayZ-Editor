@@ -78,10 +78,9 @@ class Editor: Managed
 	EditorStatistics Statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
 	
 	// protected Editor Members
-	protected ref EditorHud							m_EditorHud;
-	protected ref EditorBrush						m_EditorBrush;
-	protected ref map<int, ref EditorObjectData>			m_SessionCache; // strong ref of EditorObjectData
-	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
+	protected ref EditorHud	m_EditorHud;
+	protected ref EditorBrush m_EditorBrush;
+
 	protected EditorCamera 												m_EditorCamera;
 	protected ref EditorHandMap						m_PlacingObjects = new EditorHandMap();
 	protected Entity m_CurrentControl;
@@ -314,7 +313,7 @@ class Editor: Managed
 		EditorObjectMap selected_objects = GetSelectedObjects();
 		if (m_EditorHud && selected_objects.Count() > 0 && selected_objects[0]) {
 			// Spams errors
-			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
+			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetWorldObject().GetPosition());
 		}
 
 		foreach (Object world_object, EditorHandData hand_data: m_PlacingObjects) {
@@ -731,7 +730,7 @@ class Editor: Managed
 				continue;
 			}
 			
-			vector loot_pos = loot_spawn.GetPosition();
+			vector loot_pos = loot_spawn.GetWorldObject().GetPosition();
 			loot_pos[1] = loot_pos[1] - LootYOffset;
 			loot_position_data += string.Format("		<point pos=\"%1\" range=\"%2\" height=\"%3\" /> \n", loot_pos.ToString(false), loot_point.Range, loot_point.Height);
 		}
@@ -822,14 +821,14 @@ class Editor: Managed
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
-		EditorLog.Trace("Editor::CreateObject " + target);	
+		
+		
+		
 		return CreateObject(EditorObjectData.Create(target, flags), create_undo);
 	}
 	
 	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true) 
 	{
-		EditorLog.Trace("Editor::CreateObject " + editor_object_data);
-		
 		// Cache Data (for undo / redo)
 		if (!editor_object_data) return null;
 		m_SessionCache[editor_object_data.GetID()] = editor_object_data;

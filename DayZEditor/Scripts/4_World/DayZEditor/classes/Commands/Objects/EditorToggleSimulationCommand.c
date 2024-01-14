@@ -8,12 +8,10 @@ class EditorToggleSimulationCommand: EditorCommand
 		}
 		
 		// if we are controlling the player
-		if (m_Editor.GetCurrentControl() && m_Editor.GetCurrentControl().IsInherited(PlayerBase)) {
-			EditorObject player_object = m_Editor.GetEditorObject(m_Editor.GetCurrentControl());
-			if (player_object) {
-				player_object.Simulate = !player_object.Simulate;
-				player_object.PropertyChanged("Simulate");
-			}
+		EntityAI current_control = m_Editor.GetCurrentControl();
+		if (current_control) {
+			current_control.DisableSimulation(!current_control.GetIsSimulationDisabled());
+			return true;
 		}
 		
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
@@ -22,8 +20,12 @@ class EditorToggleSimulationCommand: EditorCommand
 		}
 		
 		foreach (int id, EditorObject editor_object: selected_objects) {
-			editor_object.Simulate = !editor_object.Simulate;
-			editor_object.PropertyChanged("Simulate");
+			EntityAI entity = EntityAI.Cast(editor_object.GetWorldObject());
+			if (!entity) {
+				continue;
+			}
+			
+			entity.DisableSimulation(!entity.GetIsSimulationDisabled());
 		}
 		
 		return true;

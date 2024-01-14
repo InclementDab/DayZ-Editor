@@ -128,8 +128,6 @@ class EditorObjectManagerModule: Managed
 	
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
 	{		
-		EditorLog.Trace("EditorObjectManager::CreateObject");
-
 		EditorObject editor_object = new EditorObject(editor_object_data);
 		if (!editor_object || !editor_object.GetWorldObject()) { 
 			return null;
@@ -149,8 +147,6 @@ class EditorObjectManagerModule: Managed
 
 	void DeleteObject(notnull EditorObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::DeleteObject");
-		
 		m_SelectedObjects.RemoveEditorObject(target);
 		m_PlacedObjects.RemoveEditorObject(target);
 		GetEditor().OnObjectDeleted.Invoke(target);		
@@ -162,7 +158,6 @@ class EditorObjectManagerModule: Managed
 	// Call to select an object
 	void SelectObject(notnull EditorObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::SelectObject");
 		m_SelectedObjects.InsertEditorObject(target);
 		GetEditor().OnObjectSelected.Invoke(target);
 	
@@ -174,7 +169,6 @@ class EditorObjectManagerModule: Managed
 	// Call to deselect an object
 	void DeselectObject(notnull EditorObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::DeselectObject");
 		m_SelectedObjects.RemoveEditorObject(target);
 		GetEditor().OnObjectDeselected.Invoke(target);
 		target.OnDeselected();
@@ -183,7 +177,6 @@ class EditorObjectManagerModule: Managed
 	// Call to toggle selection
 	void ToggleSelection(notnull EditorObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::ToggleSelection");
 		if (target.IsSelected()) {
 			DeselectObject(target);
 		} else {
@@ -193,8 +186,7 @@ class EditorObjectManagerModule: Managed
 		
 	// Call to clear selection
 	void ClearSelection()
-	{
-		EditorLog.Trace("EditorObjectManager::ClearSelection");		
+	{	
 		foreach (EditorObject editor_object: m_SelectedObjects) {
 			DeselectObject(editor_object);
 		}
@@ -207,7 +199,6 @@ class EditorObjectManagerModule: Managed
 	// Hidden object stuff
 	void HideMapObject(notnull EditorDeletedObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::HideMapObject");
 		
 		// strong ref
 		m_EditorDeletedObjectRefs[target.GetID()] = target;
@@ -219,7 +210,6 @@ class EditorObjectManagerModule: Managed
 	
 	void UnhideMapObject(int target)
 	{
-		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
 		m_DeletedObjects.Remove(target);
 				
 		// remove strong ref		
@@ -229,7 +219,6 @@ class EditorObjectManagerModule: Managed
 	
 	void UnhideMapObject(notnull EditorDeletedObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
 		m_DeletedObjects.RemoveEditorDeletedObject(target);
 
 		// remove strong ref
@@ -239,7 +228,6 @@ class EditorObjectManagerModule: Managed
 	
 	void SelectHiddenObject(notnull EditorDeletedObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::SelectHiddenObject");
 		m_SelectedDeletedObjects.InsertEditorDeletedObject(target);
 		GetEditor().OnDeletedObjectSelected.Invoke(target);
 		target.OnSelected();
@@ -247,7 +235,6 @@ class EditorObjectManagerModule: Managed
 	
 	void DeselectHiddenObject(notnull EditorDeletedObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::DeselectHiddenObject");
 		m_SelectedDeletedObjects.RemoveEditorDeletedObject(target);
 		GetEditor().OnDeletedObjectDeselected.Invoke(target);
 		target.OnDeselected();
@@ -255,7 +242,6 @@ class EditorObjectManagerModule: Managed
 	
 	void ToggleHiddenObjectSelection(notnull EditorDeletedObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::ToggleHiddenObjectSelection");
 		if (target.IsSelected())
 			DeselectHiddenObject(target);
 		else

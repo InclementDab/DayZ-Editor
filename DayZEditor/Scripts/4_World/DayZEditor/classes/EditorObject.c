@@ -15,6 +15,7 @@ class EditorObject: Managed
 		Vector(0, 0, 1),
 	};
 	
+	protected UUID m_Uuid;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
 	protected string m_DisplayName;
@@ -44,7 +45,7 @@ class EditorObject: Managed
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 	
 	void EditorObject(notnull Object object, EditorObjectFlags flags)
-	{	
+	{
 		m_Object = object;
 		m_Flags = flags;
 		
@@ -235,6 +236,42 @@ class EditorObject: Managed
 		return data;
 	}
 	
+	UUIDApi GetGuid()
+	{
+		return m_Uuid;
+	}
+	
+	bool GetGroundUnderObject(out vector position, out vector direction)
+	{
+		vector transform[3];
+		m_Object.GetTransform(transform);
+		
+		int component;
+		return DayZPhysics.RaycastRV(transform[3], transform[3] + transform[1] * -1000, position, direction, component, null, null, null, false, true);
+	}
+		
+	/*void PlaceOnSurface(vector position, vector direction)
+	{
+		vector normal = GetGame().SurfaceGetNormal(position[0], position[2]);
+		
+		vector mat[4];
+		direction.Normalized();
+		normal.Normalized();
+		
+		Math3D.DirectionAndUpMatrix(direction, normal, mat);
+		mat[3] = position;	
+	}*/
+	
+	vector GetBasePoint()
+	{
+		return m_BasePoint.GetWorldPosition();
+	}
+	
+	float GetYDistance()
+	{
+		return ((GetPosition() - m_BasePoint.GetPosition())[1]);
+	}
+	
 	bool OnMouseEnter(int zx, int y)	
 	{
 		return true;
@@ -261,6 +298,11 @@ class EditorObject: Managed
 		} else {
 			ClearFlag(EditorObjectFlags.HIDDEN);
 		}
+	}
+	
+	Param3<int, vector, vector> GetTransformArray() 
+	{
+		return new Param3<int, vector, vector>(GetID(), GetPosition(), GetOrientation());
 	}
 	
 	vector GetSize()

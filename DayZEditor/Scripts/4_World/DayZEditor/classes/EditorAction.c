@@ -54,7 +54,6 @@ class EditorAction: Managed
 	
 	void CallUndo()
 	{
-		EditorLog.Trace("EditorAction::CallUndo %1", m_UndoAction);		
 		m_Undone = true;
 		foreach (Param param: UndoParameters) {
 			g_Script.Call(this, m_UndoAction, param);
@@ -63,7 +62,6 @@ class EditorAction: Managed
 	
 	void CallRedo()
 	{
-		EditorLog.Trace("EditorAction::CallRedo %1", m_UndoAction);
 		m_Undone = false;
 		foreach (Param param: RedoParameters) {
 			g_Script.Call(this, m_RedoAction, param);

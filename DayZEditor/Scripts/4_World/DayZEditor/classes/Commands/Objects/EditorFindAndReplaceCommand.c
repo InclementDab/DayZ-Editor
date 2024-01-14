@@ -12,7 +12,7 @@ class EditorFindAndReplaceCommand: EditorAsyncCommand
 		EditorObjectMap found_objects();
 		EditorObjectMap editor_objects = GetEditor().GetPlacedObjects();
 		foreach (int _, EditorObject editor_object: editor_objects) {
-			string t1 = editor_object.GetType();
+			string t1 = editor_object.GetWorldObject().GetType();
 			t1.ToLower();
 			if (t1 != query) {
 				continue;
@@ -30,11 +30,12 @@ class EditorFindAndReplaceCommand: EditorAsyncCommand
 		array<ref EditorObjectData> created_data = {};
 		EditorObjectMap found_objects = FindObjects(query);
 		foreach (int _, EditorObject editor_object: found_objects) {
-			created_data.Insert(EditorObjectData.Create(replace, editor_object.GetData().Position, editor_object.GetData().Orientation, editor_object.GetData().Scale, editor_object.GetData().Flags));
+			EditorObjectData data = editor_object.CreateSerializedData();
+			data.Type = replace;
+			created_data.Insert(data);
 		}
 		
 		GetEditor().DeleteObjects(found_objects);
-		
 		return GetEditor().CreateObjects(created_data);
 	}
 	
