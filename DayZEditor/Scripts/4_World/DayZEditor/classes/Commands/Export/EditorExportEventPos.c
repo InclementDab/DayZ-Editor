@@ -12,8 +12,8 @@ class EditorExportEventPos: EditorCommand
 		EditorObjectMap editor_objects = m_Editor.GetSelectedObjects();
 		foreach (int id, EditorObject editor_object: editor_objects) {			
 			vector position = data.param1.GetPosition();
-			position = position - editor_object.GetPosition();
-			event_data += string.Format("	<child type=\"%5\" deloot=\"0\" lootmax=\"5\" lootmin=\"0\" x=\"%1\" y=\"%2\" z=\"%3\" a=\"%4\" />\n", position[0], position[1], position[2], editor_object.GetAngle(), editor_object.GetType());			
+			position = position - editor_object.GetWorldObject().GetPosition();
+			event_data += string.Format("	<child type=\"%5\" deloot=\"0\" lootmax=\"5\" lootmin=\"0\" x=\"%1\" y=\"%2\" z=\"%3\" a=\"%4\" />\n", position[0], position[1], position[2], editor_object.GetWorldObject().GetOrientation().VectorToYaw(), editor_object.GetWorldObject().GetType());
 		}
 		
 		event_data += "</group>";

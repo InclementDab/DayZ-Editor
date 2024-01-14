@@ -20,15 +20,15 @@ class EditorExportRelativeToObject: EditorCommand
 		EditorSaveData save_data = new EditorSaveData();
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
 		foreach (int id, EditorObject editor_object: selected_objects) {
-			vector position = editor_object.GetPosition().InvMultiply4(mat);
-			vector orientation = editor_object.Orientation - object.GetOrientation();
+			vector position = editor_object.GetWorldObject().GetPosition().InvMultiply4(mat);
+			vector orientation = editor_object.GetWorldObject().GetOrientation() - object.GetOrientation();
 			
 			vector editor_object_mat[4];
 			vector editor_object_mat_output[4];
-			editor_object.GetTransform(editor_object_mat);
+			editor_object.GetWorldObject().GetTransform(editor_object_mat);
 			
 			Math3D.MatrixInvMultiply4(mat, editor_object_mat, editor_object_mat_output);			
-			save_data.EditorObjects.Insert(EditorObjectData.Create(editor_object.GetType(), editor_object_mat_output, EditorObjectFlags.ALL));
+			save_data.EditorObjects.Insert(EditorObjectData.Create(editor_object.GetWorldObject().GetType(), editor_object_mat_output, EFE_DEFAULT));
 		}
 		
 		EditorInitFile init_file = new EditorInitFile();

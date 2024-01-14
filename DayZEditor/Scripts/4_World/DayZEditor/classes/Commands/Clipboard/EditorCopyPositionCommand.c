@@ -8,7 +8,7 @@ class EditorCopyPositionCommand: EditorCommand
 		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
 		if (selected_objects.Count() > 0) {
 			foreach (int id, EditorObject editor_object: selected_objects) {
-				copy_string += string.Format("[%1]: pos=%2, ori=%3, dir=%4 scl=%5", editor_object.Name, editor_object.Position.ToString(true), editor_object.Orientation.ToString(true), editor_object.GetWorldObject().GetDirection().ToString(true), editor_object.Scale);
+				copy_string += string.Format("[%1]: pos=%2, ori=%3, dir=%4 scl=%5", editor_object.GetDisplayName(), editor_object.GetWorldObject().GetPosition().ToString(true), editor_object.GetWorldObject().GetOrientation().ToString(true), editor_object.GetWorldObject().GetDirection().ToString(true), editor_object.GetWorldObject().GetScale());
 				copy_string += "\n";
 			}
 		}

@@ -70,7 +70,7 @@ class EditorObjectDragHandler: EditorDragHandler
 					transform[3] = cursor_pos + transform[1] * vector.Distance(ground_position, transform[3]);
 				}
 				
-			} else {
+			} else {				
 				transform[3] = cursor_pos;
 				transform[3][1] = transform[3][1] + m_EditorObject.GetYDistance();
 			} 			

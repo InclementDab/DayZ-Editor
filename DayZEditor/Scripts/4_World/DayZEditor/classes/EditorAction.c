@@ -23,7 +23,7 @@ class EditorActionStack: set<ref EditorAction>
 	}
 }
 
-class EditorAction
+class EditorAction: Managed
 {
 	protected bool m_Undone;
 	protected string m_UndoAction, m_RedoAction;

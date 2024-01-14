@@ -7,7 +7,7 @@ class EditorDuplicateCommand: EditorCommand
 		array<ref EditorObjectData> created_data = {};
 				
 		foreach (int i, EditorObject editor_object: selected_objects) {
-			created_data.Insert(EditorObjectData.Create(editor_object.GetType(), editor_object.GetPosition(), editor_object.GetOrientation(), editor_object.GetScale(), editor_object.GetFlags()));
+			created_data.Insert(editor_object.CreateSerializedData());
 		}
 		
 		EditorObjectMap created_objects = GetEditor().CreateObjects(created_data);

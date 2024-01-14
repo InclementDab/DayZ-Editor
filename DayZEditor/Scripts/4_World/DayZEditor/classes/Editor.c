@@ -334,7 +334,7 @@ class Editor: Managed
 				"0 0 1",
 				position
 			};
-			
+						
 			vector surface_normal = vector.Up;
 			float surface_height = GetGame().SurfaceY(position[0], position[2]);
 			if (MagnetMode) {
@@ -346,7 +346,7 @@ class Editor: Managed
 			transform[0] = surface_normal * local_ori;
 			transform[1] = surface_normal;
 			transform[2] = surface_normal * (local_ori * vector.Up);
-						
+			
 			world_object.SetPosition(position);
 			world_object.Update();
 		}
@@ -820,7 +820,7 @@ class Editor: Managed
 		m_AutoSaveTimer.Run(Math.Max(Settings.AutoSaveTimer, 60), this, "OnAutoSaveTimer");
 	}
 	
-	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 
+	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject " + target);	
 		return CreateObject(EditorObjectData.Create(target, flags), create_undo);

@@ -9,7 +9,9 @@ class EditorAlignToSurfaceCommand: EditorCommand
 		foreach (EditorObject editor_object: editor_objects) {
 			vector transform[4];
 			
-			editor_object.GetTransform(transform);
+			editor_object.GetWorldObject().GetTransform(transform);
+			Param4<vector, vector, vector, vector> transform_array = new Param4<vector, vector, vector, vector>(transform[0], transform[1], transform[2], transform[3]);
+			
 			align_undo.InsertUndoParameter(editor_object.GetTransformArray());
 			
 			// Get Ground Position

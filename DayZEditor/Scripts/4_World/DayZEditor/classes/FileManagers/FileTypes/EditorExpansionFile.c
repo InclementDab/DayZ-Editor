@@ -37,7 +37,7 @@ class EditorExpansionFile: EditorFileType
 					EditorDeletedObjectData deldata = EditorDeletedObjectData.Create(type, tokens[1].ToVector());
 					save_data.EditorDeletedObjects.Insert(deldata);
 				} else {
-					EditorObjectData objdata = EditorObjectData.Create(type, tokens[1].ToVector(), tokens[2].ToVector(), 1, EditorObjectFlags.ALL);
+					EditorObjectData objdata = EditorObjectData.Create(type, tokens[1].ToVector(), tokens[2].ToVector(), 1, EFE_DEFAULT);
 					
 					if (trader_type != string.Empty) {
 						objdata.Parameters["ExpansionTraderType"] = SerializableParam1<string>.Create(trader_type);

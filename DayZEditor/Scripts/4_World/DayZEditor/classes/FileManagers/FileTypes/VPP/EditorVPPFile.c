@@ -26,7 +26,7 @@ class EditorVPPFile: EditorFileType
 			string name = building.GetName();
 			TStringArray name_split = new TStringArray();
 			name.Split("-", name_split);
-			save_data.EditorObjects.Insert(EditorObjectData.Create(name_split.Get(0), building.GetPosition(), building.GetOrientation(), 1, EditorObjectFlags.ALL));
+			save_data.EditorObjects.Insert(EditorObjectData.Create(name_split.Get(0), building.GetPosition(), building.GetOrientation(), 1, EFE_DEFAULT));
 		}
 		
 		return save_data;
