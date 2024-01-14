@@ -39,8 +39,6 @@ class EditorHudController: EditorControllerBase
 	ScrollWidget PlaceablesScroll;
 	ScrollWidget RightbarScroll;
 	
-	Widget LeftDragZone;
-	
 	protected Widget RightbarFrame;
 	protected ImageWidget RightbarHideIcon;
 	
@@ -82,13 +80,7 @@ class EditorHudController: EditorControllerBase
 	string BrushToggleButtonText;
 	
 	bool ControlPlayerState;
-	
-	// View Properties
-	protected ButtonWidget MenuBarFile;
-	protected ButtonWidget MenuBarEdit;
-	protected ButtonWidget MenuBarView;
-	protected ButtonWidget MenuBarEditor;
-	
+		
 	protected ImageWidget MagnetButton_Icon;
 	protected ImageWidget GroundButton_Icon;
 	protected ImageWidget SnapButton_Icon;
@@ -99,9 +91,6 @@ class EditorHudController: EditorControllerBase
 	TextWidget NotificationText;
 	
 	Widget NotificationPanel;
-	
-	protected ref EditorMenu m_CurrentMenu;
-	protected ref EditorTooltip m_CurrentTooltip;
 	
 	// Favorites
 	protected ref array<string> m_FavoriteItems = {};
@@ -158,78 +147,6 @@ class EditorHudController: EditorControllerBase
 		}
 		
 		ReloadBrushes(m_Editor.Settings.EditorBrushFile);
-	}
-		
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		ViewBinding view_binding = GetViewBinding(w);
-		if (view_binding && !m_CurrentMenu) {
-			EditorCommand editor_command;
-			if (Class.CastTo(editor_command, view_binding.GetRelayCommand())) {
-				
-				float pos_x, pos_y, size_x, size_y;
-				w.GetScreenPos(pos_x, pos_y);
-				w.GetScreenSize(size_x, size_y);
-								
-				m_CurrentTooltip = EditorTooltip.CreateOnButton(editor_command, w, TooltipPositions.BOTTOM_LEFT);
-				if (!editor_command.CanExecute()) {
-					m_CurrentTooltip.GetLayoutRoot().SetAlpha(100);
-				}
-			}
-		}
-				
-		
-		switch (w) {
-			case LeftDragZone: {
-				//WidgetAnimator.AnimateColorHSV(LeftDragZone, "240 140 60", "239 131 175", 30);
-				//LeftDragZone.SetColor(COLOR_WHITE);
-				WidgetAnimator.AnimateColor(LeftDragZone, COLOR_WHITE, 50);
-				break;
-			}
-		}
-		
-		return super.OnMouseEnter(w, x, y);
-	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		switch (w) {
-			case MenuBarFile:
-			case MenuBarEdit:
-			case MenuBarView:
-			case MenuBarEditor: {
-				m_CurrentMenu = CreateToolbarMenu(w);
-				return true;
-			}		
-		}
-		
-		return super.OnClick(w, x, y, button);
-	}
-	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		switch (w) {
-			case LeftDragZone: {
-				
-				break;
-			}
-		}
-		
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		switch (w) {
-			case LeftDragZone: {
-				WidgetAnimator.AnimateColor(LeftDragZone, COLOR_SALMON_A, 50);
-				//LeftDragZone.SetColor(COLOR_SALMON_A);
-				break;
-			}
-		}
-		
-		delete m_CurrentTooltip;
-		return super.OnMouseLeave(w, enterW, x, y);
 	}
 				
 	void InsertMapMarker(EditorMarker map_marker)
@@ -716,53 +633,5 @@ class EditorHudController: EditorControllerBase
 		BrushTypeBoxData.Clear();
 		XMLEditorBrushes xml_brushes = new XMLEditorBrushes(BrushTypeBoxData);
 		GetXMLApi().Read(filename, xml_brushes);
-	}
-
-	// Relay Commands
-	void MenuBarExecute(ButtonCommandArgs args) 
-	{		
-		EditorLog.Trace("EditorHudToolbarController::MenuBarExecute");
-		if (!EditorHud.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
-			EditorHud.CurrentMenu = CreateToolbarMenu(args.Source);
-		} else {
-			delete EditorHud.CurrentMenu;
-		}
-	}	
-	
-	protected EditorMenu CreateToolbarMenu(Widget toolbar_button)
-	{
-		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
-				
-		EditorMenu toolbar_menu;
-		switch (toolbar_button) {
-			
-			case MenuBarFile: {
-				toolbar_menu = new EditorFileMenu();
-				break;
-			}
-			
-			case MenuBarEdit: {
-				toolbar_menu = new EditorEditMenu();
-				break;
-			}
-			
-			case MenuBarView: {
-				toolbar_menu = new EditorViewMenu();
-				break;
-			}
-			
-			case MenuBarEditor: {
-				toolbar_menu = new EditorEditorMenu(); // lol
-				break;
-			}
-		}
-		
-		// Sets position to bottom of button
-		float x, y, w, h;
-		toolbar_button.GetScreenPos(x, y);
-		toolbar_button.GetScreenSize(w, h);
-		toolbar_menu.GetLayoutRoot().SetPos(x, y + h);
-		
-		return toolbar_menu;
 	}
 }

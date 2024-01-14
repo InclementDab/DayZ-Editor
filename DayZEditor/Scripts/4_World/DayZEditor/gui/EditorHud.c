@@ -4,6 +4,12 @@ class EditorHud: ScriptView
 	protected EditorHudController m_TemplateController;
 	
 	// View Properties
+	protected ButtonWidget MenuBarFile;
+	protected ButtonWidget MenuBarEdit;
+	protected ButtonWidget MenuBarView;
+	protected ButtonWidget MenuBarEditor;
+	
+	// View Properties
 	Widget Left;
 	ScrollWidget PlaceablesScroll;
 	
@@ -11,6 +17,7 @@ class EditorHud: ScriptView
 	Widget NotificationFrame;
 	Widget MapContainer;
 	Widget LoggerFrame;
+	Widget LeftDragZone;
 	
 	CanvasWidget EditorCanvas;
 	
@@ -20,6 +27,11 @@ class EditorHud: ScriptView
 	MapWidget EditorMapWidget;
 	
 	EditBoxWidget LeftbarSearchBar;
+	
+	protected ref EditorMenu m_CurrentMenu;
+	protected ref EditorTooltip m_CurrentTooltip;
+	
+	protected Widget m_DraggedBar;
 	
 	void EditorHud()
 	{	
@@ -44,6 +56,17 @@ class EditorHud: ScriptView
 			return;
 		}
 		
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+			m_DraggedBar = null;
+		}
+		
+		int mouse_x, mouse_y;
+		GetMousePos(mouse_x, mouse_y);
+		if (m_DraggedBar) {
+			m_DraggedBar.GetScreenPos(w, h);
+			m_DraggedBar.SetScreenPos(mouse_x, y);
+		}
+		
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("EditorToggleCursor")) {
 			if (!EditorMapWidget.IsVisible() && (!CurrentDialog || !GetEditor().Settings.LockCameraDuringDialogs)) {
@@ -61,7 +84,79 @@ class EditorHud: ScriptView
 			EditorEvents.MapToggled(this, EditorMapWidget, EditorMapWidget.IsVisible());
 		}
 	}
-
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		switch (w) {
+			case LeftDragZone: {
+				m_DraggedBar = LeftDragZone;
+				break;
+			}
+		}
+		
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		ViewBinding view_binding = m_TemplateController.GetViewBinding(w);
+		if (view_binding && !m_CurrentMenu) {
+			EditorCommand editor_command;
+			if (Class.CastTo(editor_command, view_binding.GetRelayCommand())) {
+				
+				float pos_x, pos_y, size_x, size_y;
+				w.GetScreenPos(pos_x, pos_y);
+				w.GetScreenSize(size_x, size_y);
+								
+				m_CurrentTooltip = EditorTooltip.CreateOnButton(editor_command, w, TooltipPositions.BOTTOM_LEFT);
+				if (!editor_command.CanExecute()) {
+					m_CurrentTooltip.GetLayoutRoot().SetAlpha(100);
+				}
+			}
+		}
+				
+		
+		switch (w) {
+			case LeftDragZone: {
+				//WidgetAnimator.AnimateColorHSV(LeftDragZone, "240 140 60", "239 131 175", 30);
+				//LeftDragZone.SetColor(COLOR_WHITE);
+				WidgetAnimator.AnimateColor(LeftDragZone, COLOR_WHITE, 50);
+				break;
+			}
+		}
+		
+		return super.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		switch (w) {
+			case LeftDragZone: {
+				WidgetAnimator.AnimateColor(LeftDragZone, COLOR_SALMON_A, 50);
+				//LeftDragZone.SetColor(COLOR_SALMON_A);
+				break;
+			}
+		}
+		
+		delete m_CurrentTooltip;
+		return super.OnMouseLeave(w, enterW, x, y);
+	}
+		
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		switch (w) {
+			case MenuBarFile:
+			case MenuBarEdit:
+			case MenuBarView:
+			case MenuBarEditor: {
+				m_CurrentMenu = CreateToolbarMenu(w);
+				return true;
+			}		
+		}
+		
+		return super.OnClick(w, x, y, button);
+	}
+	
 	override void Show(bool show) 
 	{
 		m_LayoutRoot.Show(show);
@@ -225,6 +320,54 @@ class EditorHud: ScriptView
 	EditorHudController GetTemplateController()
 	{
 		return EditorHudController.Cast(m_Controller);
+	}
+	
+	// Relay Commands
+	void MenuBarExecute(ButtonCommandArgs args) 
+	{		
+		EditorLog.Trace("EditorHudToolbarController::MenuBarExecute");
+		if (!EditorHud.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
+			EditorHud.CurrentMenu = CreateToolbarMenu(args.Source);
+		} else {
+			delete EditorHud.CurrentMenu;
+		}
+	}	
+	
+	protected EditorMenu CreateToolbarMenu(Widget toolbar_button)
+	{
+		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
+				
+		EditorMenu toolbar_menu;
+		switch (toolbar_button) {
+			
+			case MenuBarFile: {
+				toolbar_menu = new EditorFileMenu();
+				break;
+			}
+			
+			case MenuBarEdit: {
+				toolbar_menu = new EditorEditMenu();
+				break;
+			}
+			
+			case MenuBarView: {
+				toolbar_menu = new EditorViewMenu();
+				break;
+			}
+			
+			case MenuBarEditor: {
+				toolbar_menu = new EditorEditorMenu(); // lol
+				break;
+			}
+		}
+		
+		// Sets position to bottom of button
+		float x, y, w, h;
+		toolbar_button.GetScreenPos(x, y);
+		toolbar_button.GetScreenSize(w, h);
+		toolbar_menu.GetLayoutRoot().SetPos(x, y + h);
+		
+		return toolbar_menu;
 	}
 	
 	// Modal Menu Control

@@ -2,14 +2,14 @@ modded class DayZGame
 {
 	// args: string
 	ref ScriptInvoker OnProgressReport;
-		
+			
 	void DayZGame()
 	{	
-		#ifndef NO_GUI
+#ifndef NO_GUI
 		delete m_loading;
 		m_loading = new EditorLoadingScreen(this);		
 		m_loading.Show();
-		#endif
+#endif
 		
 		ReportProgress("Loading Game");
 	}
@@ -21,10 +21,5 @@ modded class DayZGame
 		}
 		
 		OnProgressReport.Invoke(report);
-	}
-		
-	override void ConnectFromCLI()
-	{
-		GetGame().GetUIManager().ShowDialog("Editor Error!", "You cannot run the DayZ Editor in a multiplayer environment. Launch the tool via the \"Open Editor\" button on the main menu!", 1, DBT_OK, DBB_OK, DMT_EXCLAMATION, null);
 	}
 }
