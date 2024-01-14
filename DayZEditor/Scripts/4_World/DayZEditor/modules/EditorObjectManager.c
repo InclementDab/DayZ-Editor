@@ -52,19 +52,18 @@ class EditorObjectManagerModule: Managed
 		    }
 		}
 		
-		const array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
+		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
 		foreach (string model_path: paths) {
 			array<ref CF_File> files = {};
-			if (!CF_Directory.GetFiles(model_path + "/*.p3d", files, FindFileFlags.ARCHIVES)) {
+			if (!CF_Directory.GetFiles(model_path + "/*", files, FindFileFlags.ARCHIVES)) {
 				continue;
 			}
-		
-		
+				
 			foreach (CF_File file: files) {		
-				if (!file) {
+				if (!file || file.GetExtension() != ".p3d") {
 					continue;
 				}
-					
+				
 				m_AllPlaceableItems.Insert(new EditorStaticPlaceableItem(file));
 			}
 		}

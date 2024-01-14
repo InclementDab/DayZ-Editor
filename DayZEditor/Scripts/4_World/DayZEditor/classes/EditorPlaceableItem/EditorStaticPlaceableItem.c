@@ -9,6 +9,8 @@ class EditorStaticPlaceableItem: EditorPlaceableItem
 	
 	override Object CreateObject(vector position, vector orientation, float scale)
 	{		
+		Print(m_Model);
+		Print(m_Model.GetFullPath());
 		Object object = GetGame().CreateStaticObjectUsingP3D(m_Model.GetFullPath(), position, orientation, scale);								
 		object.SetPosition(position);
 		object.SetOrientation(orientation);
