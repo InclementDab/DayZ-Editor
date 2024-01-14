@@ -11,9 +11,11 @@ class EditorTreeItem: ScriptView
 	ImageWidget Icon, CollapseIcon;
 	WrapSpacerWidget Children;
 	
-	void EditorTreeItem()
+	void EditorTreeItem(string name)
 	{
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
+		
+		Text.SetText(name);
 	}
 	
 	void OnCollapseExecute(ButtonCommandArgs args)
@@ -37,6 +39,11 @@ class EditorTreeItem: ScriptView
 	bool IsOpen()
 	{
 		return Children.IsVisible();
+	}
+	
+	EditorTreeItemController GetTemplateController()
+	{
+		return m_TemplateController;
 	}
 	
 	override typename GetControllerType()

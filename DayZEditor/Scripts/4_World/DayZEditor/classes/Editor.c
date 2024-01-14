@@ -1743,16 +1743,7 @@ class Editor: Managed
 		return m_ObjectManager.GetPlaceableObjects();
 	}
 	
-	/*
-	void SetPlacingObject(EditorWorldObject object)
-	{
-		m_PlacingObject = object;
-	}
 	
-	EditorWorldObject GetPlacingObject()
-	{
-		return m_PlacingObject;	
-	}*/
 	
 	bool IsPlacing()
 	{

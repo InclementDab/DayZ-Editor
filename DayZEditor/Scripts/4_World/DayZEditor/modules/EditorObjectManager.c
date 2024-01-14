@@ -342,6 +342,11 @@ class EditorObjectManagerModule: Managed
 	{
 		return m_PlaceableObjectsByP3d[p3d];
 	}
+
+	map<int, ref array<EditorPlaceableItem>> GetPlaceableItemsByCategory()
+	{
+		return m_PlaceableItems;
+	}
 	
 	void Debug()
 	{

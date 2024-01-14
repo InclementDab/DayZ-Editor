@@ -89,12 +89,9 @@ class EditorHudController: EditorControllerBase
 	{
 		EditorLog.Trace("EditorHudController");
 		
-#ifndef COMPONENT_SYSTEM	
-
 		EditorLog.OnLog.Insert(OnEditorLog);		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-#endif
-		
+				
 		// more hacking
 		g_EditorPrecision = GetPrecisionLevel();
 	}
@@ -102,11 +99,9 @@ class EditorHudController: EditorControllerBase
 	void ~EditorHudController() 
 	{
 		EditorLog.Trace("~EditorHudController");
-		
-#ifndef COMPONENT_SYSTEM		
+				
 		EditorLog.OnLog.Remove(OnEditorLog);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-#endif
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
@@ -114,34 +109,21 @@ class EditorHudController: EditorControllerBase
 		super.OnWidgetScriptInit(w);
 		
 		// Reload Placeables
-#ifndef COMPONENT_SYSTEM
-		
 		array<string> favorite_items = {};
 		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
 		
-		array<ref EditorPlaceableItem> placeable_items = GetEditor().GetPlaceableObjects();
-		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
-			// Makes stuff look good when first loading
-			switch (placeable_item.Category) {
-				case EditorPlaceableItemCategory.CONFIG: {
-					LeftbarSpacerConfig.Insert(new EditorPlaceableListItem(placeable_item));
-					break;
-				}
-				
-				case EditorPlaceableItemCategory.SCRIPTED:
-				case EditorPlaceableItemCategory.STATIC: {
-					LeftbarSpacerStatic.Insert(new EditorPlaceableListItem(placeable_item));
-					break;
-				}
+		map<int, ref array<EditorPlaceableItem>> all_placeable_items = GetEditor().GetObjectManager().GetPlaceableItemsByCategory();
+		foreach (EditorPlaceableItemCategory category, array<EditorPlaceableItem> placeable_items: all_placeable_items) {
+			EditorTreeItem tree_item = new EditorTreeItem(typename.EnumToString(EditorPlaceableItemCategory, category));
+			
+			foreach (EditorPlaceableItem placeable_item: placeable_items) {
+				tree_item.GetTemplateController().Children.Insert(new EditorTreeItem(placeable_item.GetName()));
 			}
-						
-			// update favorites from properties		, bbroooklkkeeenn	
-			if (favorite_items.Find(placeable_item.Type) != -1) {
-				//list_item.SetFavorite(true);
-			}
+			
+			Placeables.Insert(tree_item);
 		}
 		
-		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
+		EditorLog.Info("Loaded %1 Placeable Objects", all_placeable_items.Count().ToString());
 		
 		// Just a quickset on the color
 		PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
@@ -149,7 +131,6 @@ class EditorHudController: EditorControllerBase
 		
 		LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
 		LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
-#endif
 		
 		EditorHudToolbarView = new EditorHudToolbar();
 		NotifyPropertyChanged("EditorHudToolbarView");
