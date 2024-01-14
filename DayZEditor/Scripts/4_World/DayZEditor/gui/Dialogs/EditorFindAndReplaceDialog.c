@@ -25,8 +25,8 @@ class EditorFindAndReplaceDialog: EditorDialogBase
 		EditorFindAndReplaceCommand cmd = EditorFindAndReplaceCommand.Cast(GetEditor().CommandManager[EditorFindAndReplaceCommand]);
 		array<EditorObject> found_objects = cmd.FindObjects(m_EditorFindAndReplaceDialogController.Find);
 		
-		foreach (int _, EditorObject editor_object: found_objects) {
-			GetEditor().SelectObject(editor_object);
+		foreach (EditorObject editor_object: found_objects) {
+			editor_object.SetSelected(true);
 		}
 		
 		if (found_objects.Count() == 0) {
@@ -41,8 +41,8 @@ class EditorFindAndReplaceDialog: EditorDialogBase
 		EditorFindAndReplaceCommand cmd = EditorFindAndReplaceCommand.Cast(GetEditor().CommandManager[EditorFindAndReplaceCommand]);
 		array<EditorObject> replaced_objects = cmd.FindAndReplaceObjects(m_EditorFindAndReplaceDialogController.Find, m_EditorFindAndReplaceDialogController.Replace);
 		
-		foreach (int _, EditorObject editor_object: replaced_objects) {
-			GetEditor().SelectObject(editor_object);
+		foreach (EditorObject editor_object: replaced_objects) {
+			editor_object.SetSelected(true);
 		}
 		
 		if (replaced_objects.Count() == 0) {

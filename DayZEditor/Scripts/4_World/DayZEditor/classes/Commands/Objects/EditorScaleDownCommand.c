@@ -7,7 +7,7 @@ class EditorScaleDownCommand: EditorCommand
 			value *= 0.025;
 		}
 		
-		array<EditorObject> selected_objects = EditorObject.SelectedObjects
+		array<EditorObject> selected_objects = EditorObject.SelectedObjects;
 		foreach (int id, EditorObject editor_object: selected_objects) {
 			editor_object.GetWorldObject().SetScale(editor_object.GetWorldObject().GetScale() - value);
 		}

@@ -26,7 +26,7 @@ class EditorPlacedContextMenu: EditorContextMenu
 		AddMenuButton(m_Editor.CommandManager[EditorExportRelativeToObject]);
 		
 		AddMenuDivider();
-		if (context.Show) {
+		/*if (context.Show) {
 			AddMenuButton(m_Editor.CommandManager[EditorHideCommand]);
 		} else {
 			AddMenuButton(m_Editor.CommandManager[EditorShowCommand]);
@@ -36,7 +36,7 @@ class EditorPlacedContextMenu: EditorContextMenu
 			AddMenuButton(m_Editor.CommandManager[EditorUnlockCommand]);
 		} else {
 			AddMenuButton(m_Editor.CommandManager[EditorLockCommand]);
-		}
+		}*/
 		
 		AddMenuDivider();		
 		AddMenuButton(m_Editor.CommandManager[EditorDuplicateCommand]);

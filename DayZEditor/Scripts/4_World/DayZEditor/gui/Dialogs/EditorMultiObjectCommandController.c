@@ -8,18 +8,6 @@ class EditorMultiObjectCommandController
 	{
 		m_EditorObjects.InsertArray(editor_objects);
 		
-		// Name will be, by default, the first object to be selected
-		// if there are multiple objects with different names, then the name dialog will go blank
-		if (m_EditorObjects.Count() > 0) {
-			Name = m_EditorObjects[0].Name;
-		}
-		
-		foreach (EditorObject editor_object: m_EditorObjects) {
-			if (Name != editor_object.Name) {
-				Name = string.Empty;
-			}
-		}
-		
 		// determine center point on startup
 		m_CenterPoint = GetCenterPoint(m_EditorObjects);
 	}
@@ -48,17 +36,17 @@ class EditorMultiObjectCommandController
 		foreach (EditorObject editor_object: m_EditorObjects) {
 			switch (property_name) {
 				case "Show": {
-					editor_object.Show = Show;
+					editor_object.SetFlag(EditorObjectFlags.HIDDEN * !Show);
 					break;
 				}
 				
 				case "Name": {
-					editor_object.Name = Name;
+					editor_object.SetDisplayName(Name);
 					break;
 				}
 							
 				case "Position": {
-					editor_object.Position += Position - DeltaPosition;
+					editor_object.GetWorldObject().SetPosition(editor_object.GetWorldObject().GetPosition() + Position - DeltaPosition);
 					break;
 				}
 				
@@ -79,7 +67,7 @@ class EditorMultiObjectCommandController
 					vector direction_of_rotation;
 					direction_of_rotation[index_moved] = 1;
 					
-					editor_object.SetPosition(EditorMath.RotateAroundPoint(m_CenterPoint, editor_object.Position, direction_of_rotation, Math.Cos(Orientation[index_moved] - DeltaOrientation[index_moved]), Math.Sin(Orientation[index_moved] - DeltaOrientation[index_moved])));
+					editor_object.GetWorldObject().SetPosition(EditorMath.RotateAroundPoint(m_CenterPoint, editor_object.GetWorldObject().GetPosition(), direction_of_rotation, Math.Cos(Orientation[index_moved] - DeltaOrientation[index_moved]), Math.Sin(Orientation[index_moved] - DeltaOrientation[index_moved])));
 					
 					/*
 					//holy FUCK this is hard
@@ -96,47 +84,35 @@ class EditorMultiObjectCommandController
 				}
 				
 				case "Scale": {
-					editor_object.Scale = Scale;
+					editor_object.GetWorldObject().SetScale(Scale);
 					break;
 				}
 				
 				case "Health": {
-					editor_object.Health = Health;
+					editor_object.GetWorldObject().SetHealth("", "", Health);
 					break;
 				}
 
 				case "Locked": {
-					editor_object.Locked = Locked;
+					editor_object.SetFlag(EditorObjectFlags.LOCKED * Locked);
 					break;
 				}
-				
-				case "Physics": {
-					editor_object.Physics = Physics;
-					break;
-				}
-				
+								
 				case "Simulate": {
-					editor_object.Simulate = Simulate;
+					editor_object.SetFlag(EditorObjectFlags.SIMULATE * Simulate);
 					break;
 				}
 				
 				case "AllowDamage": {
-					editor_object.AllowDamage = AllowDamage;
+					editor_object.SetFlag(EditorObjectFlags.ALLOW_DAMAGE * AllowDamage);
 					break;
 				}
-				
-				case "Collision": {
-					editor_object.Collision = Collision;
-					break;
-				}
-				
+								
 				case "EditorOnly": {
-					editor_object.EditorOnly = EditorOnly;
+					editor_object.SetFlag(EditorObjectFlags.EDITOR_ONLY * EditorOnly);
 					break;
 				}
 			}
-			
-			editor_object.PropertyChanged(property_name);
 		}
 		
 		DeltaPosition = Position;
@@ -147,7 +123,7 @@ class EditorMultiObjectCommandController
 	{
 		vector position;
 		foreach (EditorObject object: objects) {
-			position = position + object.Position;
+			position = position + object.GetWorldObject().GetPosition();
 		}
 		
 		for (int i = 0; i < 3; i++) {

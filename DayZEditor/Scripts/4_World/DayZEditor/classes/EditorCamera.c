@@ -245,7 +245,7 @@ class EditorCamera: ScriptedCamera
 		}
 				
 		SetTransform(transform);
-		GetEditor().Statistics.EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km		
+		GetEditor().Statistics.DistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km		
 		
 		orientation = GetOrientation();
 		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {

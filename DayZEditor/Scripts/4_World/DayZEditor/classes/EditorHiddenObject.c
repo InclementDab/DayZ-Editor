@@ -80,12 +80,7 @@ class EditorHiddenObject: Managed
 	{
 		return m_IsSelected;
 	}
-	
-	EditorHiddenObjectData GetData()
-	{
-		return m_Data;
-	}
-		
+			
 	Object GetObject()
 	{
 		return m_Object;
@@ -109,5 +104,14 @@ class EditorHiddenObject: Managed
 	EditorDeletedListItem GetListItem()
 	{
 		return m_EditorDeletedListItem;
+	}
+	
+	static void ClearSelections()
+	{
+		foreach (EditorHiddenObject selected_object: SelectedObjects) {
+			if (selected_object.IsSelected()) {
+				selected_object.SetSelected(false);
+			}
+		}
 	}
 }

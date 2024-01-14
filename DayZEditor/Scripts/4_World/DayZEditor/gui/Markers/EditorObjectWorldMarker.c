@@ -53,12 +53,12 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		if (m_Editor.GroundMode) {
 			vector position;
 			vector object_transform[4];
-			m_EditorObject.GetTransform(object_transform);
+			m_EditorObject.GetWorldObject().GetTransform(object_transform);
 			vector ground_dir; int component;
 			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, null, null, m_EditorObject.GetWorldObject(), false, true); // set to ground only
 			return position;
 		} 
 		
-		return m_EditorObject.GetBottomCenter();
+		return m_EditorObject.GetBasePoint();
 	}
 }

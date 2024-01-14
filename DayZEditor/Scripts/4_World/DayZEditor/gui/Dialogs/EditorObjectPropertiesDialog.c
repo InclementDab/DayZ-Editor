@@ -12,14 +12,10 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		AddButton(DialogResult.OK);
 		
-		GetEditor().OnObjectSelected.Insert(OnObjectSelected);
-		GetEditor().OnObjectDeselected.Insert(OnObjectDeselected);
-	}
-	
-	void ~EditorObjectPropertiesDialog()
-	{
-		delete m_EditorObjects;
-		delete m_EditorMultiObjectCommandController;
+		foreach (EditorObject editor_object: editor_objects) {
+			editor_object.OnObjectSelected.Insert(OnObjectSelected);
+			editor_object.OnObjectDeselected.Insert(OnObjectDeselected);
+		}
 	}
 	
 	void PropertyChanged(string property_name)
@@ -31,7 +27,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 					break;
 				}
 				
-				m_EditorObjects[0].ExecuteCode();
+				//m_EditorObjects[0].ExecuteCode();
 				break;
 			}
 		}
@@ -200,7 +196,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		//AddContent(new MultilineEditBoxPrefab("Execute Code", editor_object, "TestingScript"));
 		//AddContent(new ButtonPrefab("Execute", this, "ExecuteCode"));
 		
-		if (GetEditor().Settings.DebugMode) {
+		/*if (GetEditor().Settings.DebugMode) {
 			GroupPrefab debug_group = new GroupPrefab("Debug", editor_object.GetData(), string.Empty);
 			debug_group.Insert(new TextBoxPrefab("#STR_EDITOR_TYPE", editor_object.GetData(), "Type"));
 			debug_group.Insert(new TextBoxPrefab("#STR_EDITOR_ID", editor_object, "ObjectID"));
@@ -208,7 +204,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			debug_group.Insert(new TextBoxPrefab("#STR_EDITOR_MODEL", editor_object.GetData(), "Model"));
 			AddContent(debug_group);
 		}
-		
+		*/
 		// Auto resize
 		AutoSize();
 	}

@@ -6,12 +6,12 @@ class EditorDeletedListItem: EditorListItem
 	{
 		m_EditorHiddenObject = deleted_object;
 		
-		string item_name = m_EditorHiddenObject.GetType();
+		string item_name = m_EditorHiddenObject.GetObject().GetType();
 		if (item_name.Length() >= 30) {
 			item_name = item_name.Substring(0, 28) + "...";
 		}
 		
-		m_TemplateController.Label = string.Format("%1 (%2)", item_name, m_EditorHiddenObject.GetID());
+		m_TemplateController.Label = item_name;
 		m_TemplateController.NotifyPropertyChanged("Label");
 		
 		//m_TemplateController.Icon = m_EditorHiddenObject.GetData().Icon;
@@ -26,15 +26,15 @@ class EditorDeletedListItem: EditorListItem
 			case MouseState.LEFT: {
 
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					GetEditor().ToggleHiddenObjectSelection(m_EditorHiddenObject);
+					m_EditorHiddenObject.SetSelected(!m_EditorHiddenObject.IsSelected());
 					return true;
 				} 
 				
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					GetEditor().ClearSelection();
+					EditorHiddenObject.ClearSelections();
 				}
 				
-				GetEditor().SelectHiddenObject(m_EditorHiddenObject);
+				m_EditorHiddenObject.SetSelected(true);
 				
 				// Multi select handling
 				if (KeyState(KeyCode.KC_LSHIFT)) {
@@ -90,7 +90,7 @@ class EditorDeletedListItem: EditorListItem
 	{
 		if (filter == string.Empty) return true;
 		
-		string type_lower = m_EditorHiddenObject.GetType();
+		string type_lower = m_EditorHiddenObject.GetObject().GetType();
 		type_lower.ToLower();
 		filter.ToLower();
 		

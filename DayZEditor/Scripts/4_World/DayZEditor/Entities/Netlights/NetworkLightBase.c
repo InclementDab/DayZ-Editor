@@ -6,7 +6,7 @@ modded class NetworkLightBase
 		
 		// Forcing the parameters to save when i change something.... MIGHT LAG :)
 		if (GetEditor().GetEditorObject(this)) {
-			Write(GetEditor().GetEditorObject(this).GetData().Parameters);
+			Write(GetEditor().GetEditorObject(this).CreateSerializedData().Parameters);
 		}
 	}
 }

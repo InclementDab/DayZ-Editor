@@ -8,13 +8,13 @@ class EditorToggleSimulationCommand: EditorCommand
 		}
 		
 		// if we are controlling the player
-		EntityAI current_control = m_Editor.GetCurrentControl();
+		EntityAI current_control = EntityAI.Cast(m_Editor.GetCurrentControl());
 		if (current_control) {
 			current_control.DisableSimulation(!current_control.GetIsSimulationDisabled());
 			return true;
 		}
 		
-		array<EditorObject> selected_objects = EditorObject.SelectedObjects
+		array<EditorObject> selected_objects = EditorObject.SelectedObjects;
 		if (selected_objects.Count() == 0) {
 			return false;
 		}

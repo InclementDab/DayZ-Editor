@@ -17,7 +17,6 @@ class EditorObject: Managed
 	
 	static ref array<EditorObject> SelectedObjects = {};
 		
-	protected UUID m_Uuid;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
 	protected string m_DisplayName;
@@ -50,23 +49,7 @@ class EditorObject: Managed
 	{
 		m_Object = object;
 		m_Flags = flags;
-		
-		if (GetEditor()) {
-			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
-		}
-		
-		// Version 2
-		EntityAI entity = EntityAI.Cast(m_Object);
-		if (entity) {
-			foreach (string attachment: data.Attachments) {
-				entity.GetInventory().CreateAttachment(attachment);
-			}
-		}
-		
-		if (data.Parameters["ExpansionTraderType"]) {
-			ExpansionTraderType = SerializableParam1<string>.Cast(data.Parameters["ExpansionTraderType"]).param1;
-		}
-				
+						
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
 	
@@ -116,7 +99,7 @@ class EditorObject: Managed
 			DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
 									
 			snap_point.SetTransform(mat);
-			AddChild(snap_point, -1);
+			m_Object.AddChild(snap_point, -1);
 			
 			m_EditorSnapPoints.Insert(snap_point);
 		}
@@ -147,12 +130,12 @@ class EditorObject: Managed
 		// Load animations
 		array<string> paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 		foreach (string path: paths) {
-			string config_path = path + " " + GetType() + " AnimationSources";
-			if (GetGame().ConfigIsExisting(config_path) && entity) {
+			string config_path = path + " " + m_Object.GetType() + " AnimationSources";
+			if (GetGame().ConfigIsExisting(config_path) && entity_ai) {
 				for (int k = 0; k < GetGame().ConfigGetChildrenCount(config_path); k++) {
 					string child_name;
 					GetGame().ConfigGetChildName(config_path, k, child_name);
-					m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(entity, child_name, path);
+					m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(entity_ai, child_name, path);
 				}
 			}	
 		}			
@@ -200,15 +183,17 @@ class EditorObject: Managed
 		EditorObject editor_object = new EditorObject(object_data.CreateObject(), object_data.Flags);
 		
 		// Version 3
-		editor_object.Lock(object_data.Locked);
-		editor_object.SetSimulation(object_data.Simulate);
-		editor_object.SetEditorOnly(object_data.EditorOnly);
-		editor_object.SetAllowDamage(object_data.AllowDamage);
+		//editor_object.Lock(object_data.Locked);
+		//editor_object.SetSimulation(object_data.Simulate);
+		//editor_object.SetEditorOnly(object_data.EditorOnly);
+		//editor_object.SetAllowDamage(object_data.AllowDamage);
 		
 		// If network light
 		//if (NetworkLightBase.Cast(m_Object)) {
 		//	NetworkLightBase.Cast(m_Object).Read(m_Data.Parameters);
 		//}
+		
+		return editor_object;
 	}
 	
 	EditorObjectData CreateSerializedData()
@@ -217,7 +202,7 @@ class EditorObject: Managed
 		data.Position = m_Object.GetPosition();
 		data.Orientation = m_Object.GetOrientation();
 		data.Scale = m_Object.GetScale();
-		data.BottomCenter = m_Object.GetBottomCenter();
+		//data.BottomCenter = m_Object.GetBottomCenter();
 		data.Flags = m_Flags;
 		
 		// Update Attachments
@@ -237,15 +222,10 @@ class EditorObject: Managed
 		
 		return data;
 	}
-	
-	UUIDApi GetGuid()
-	{
-		return m_Uuid;
-	}
-	
+		
 	bool GetGroundUnderObject(out vector position, out vector direction)
 	{
-		vector transform[3];
+		vector transform[4];
 		m_Object.GetTransform(transform);
 		
 		int component;
@@ -271,7 +251,7 @@ class EditorObject: Managed
 	
 	float GetYDistance()
 	{
-		return ((GetPosition() - m_BasePoint.GetPosition())[1]);
+		return ((m_Object.GetPosition() - m_BasePoint.GetPosition())[1]);
 	}
 	
 	bool OnMouseEnter(int zx, int y)	
@@ -302,20 +282,25 @@ class EditorObject: Managed
 		}
 	}
 	
-	Param3<int, vector, vector> GetTransformArray() 
+	Param2<vector, vector> GetTransformArray() 
 	{
-		return new Param3<int, vector, vector>(GetID(), GetPosition(), GetOrientation());
+		return new Param2<vector, vector>(m_Object.GetPosition(), m_Object.GetOrientation());
 	}
 	
 	vector GetSize()
 	{
 		vector result;
 		vector clip_info[2];
-		ClippingInfo(clip_info);
+		m_Object.ClippingInfo(clip_info);
 		result[0] = Math.AbsFloat(clip_info[0][0]) + Math.AbsFloat(clip_info[1][0]);
 		result[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
 		result[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
 		return result;
+	}
+	
+	void SetDisplayName(string display_name)
+	{
+		m_DisplayName = display_name;
 	}
 	
 	string GetDisplayName()
@@ -423,7 +408,7 @@ class EditorObject: Managed
 	array<EditorObject> GetAttachments()
 	{
 		ItemBase item = ItemBase.Cast(m_Object);
-		array<EditorObject> attachments = {};
+		array<EditorObject> editor_objects = {};
 		for (int i = 0; i < item.GetInventory().AttachmentCount(); i++) {
 			EntityAI attachment = item.GetInventory().GetAttachmentFromIndex(i);
 			if (!attachment) {

@@ -31,7 +31,7 @@ class EditorObjectMarker: EditorMarker
 	override void Show(bool show)
 	{
 		// dont show if locked
-		if (show && m_EditorObject && m_EditorObject.Locked) {
+		if (show && m_EditorObject) {
 			return;
 		}
 		
@@ -54,7 +54,7 @@ class EditorObjectMarker: EditorMarker
 				
 				// We want to Toggle selection if you are holding control
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					m_Editor.ToggleSelection(m_EditorObject);
+					m_EditorObject.SetSelected(!m_EditorObject.IsSelected());
 					return true;
 				} 
 				
@@ -65,10 +65,10 @@ class EditorObjectMarker: EditorMarker
 				}
 				
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					m_Editor.ClearSelection();
+					EditorObject.ClearSelections();
 				}
 				
-				m_Editor.SelectObject(m_EditorObject);
+				m_EditorObject.SetSelected(true);
 				
 				thread CheckDragBounds(x, y);
 				return false;
@@ -76,7 +76,7 @@ class EditorObjectMarker: EditorMarker
 			
 			case MouseState.MIDDLE: {
 				EditorCamera camera = GetEditor().GetCamera();
-				vector pos = m_EditorObject.GetPosition();
+				vector pos = m_EditorObject.GetWorldObject().GetPosition();
 				pos[1] = camera.GetPosition()[1];
 				camera.SendToPosition(pos);
 				return true;
@@ -85,10 +85,10 @@ class EditorObjectMarker: EditorMarker
 			case MouseState.RIGHT: {
 				
 				if (!m_EditorObject.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
-					m_Editor.ClearSelection();
+					EditorObject.ClearSelections();
 				}
 				
-				m_Editor.SelectObject(m_EditorObject);
+				m_EditorObject.SetSelected(true);
 				
 				if (EditorHud.CurrentMenu) {
 					delete EditorHud.CurrentMenu;
@@ -169,7 +169,7 @@ class EditorObjectMarker: EditorMarker
 		}
 		
 		if (!EditorHud.CurrentMenu) {
-			GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton(m_EditorObject.GetType(), GetLayoutRoot(), TooltipPositions.BOTTOM_LEFT, string.Format("(%1)", m_EditorObject.GetID())));
+			GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton(m_EditorObject.GetWorldObject().GetType(), GetLayoutRoot(), TooltipPositions.BOTTOM_LEFT));
 		}
 	}
 	
@@ -184,7 +184,7 @@ class EditorObjectMarker: EditorMarker
 			int dist_y = Math.AbsInt(y - c_y);
 			
 			if (dist_x + dist_y > DRAG_THRESHOLD) {
-				m_Editor.SelectObject(m_EditorObject);
+				m_EditorObject.SetSelected(true);
 				m_DragHandler.OnDragStart();
 				return;
 			}

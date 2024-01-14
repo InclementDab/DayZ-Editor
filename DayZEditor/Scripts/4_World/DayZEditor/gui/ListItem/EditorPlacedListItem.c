@@ -19,11 +19,8 @@ class EditorPlacedListItem: EditorListItem
 		
 		m_TemplateController.Label = m_EditorObject.GetDisplayName();
 		m_TemplateController.NotifyPropertyChanged("Label");
-		
-		m_TemplateController.Icon = m_EditorObject.GetData().Icon;
-		m_TemplateController.NotifyPropertyChanged("Icon");
-		
-		LockedImage.Show(m_EditorObject.Locked);
+				
+		LockedImage.Show((m_EditorObject.GetFlags() & EditorObjectFlags.LOCKED) == EditorObjectFlags.LOCKED);
 		
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
@@ -46,7 +43,7 @@ class EditorPlacedListItem: EditorListItem
 	
 	bool ListItemShowExecute(ButtonCommandArgs args)
 	{
-		m_EditorObject.Show(!args.GetButtonState());
+		//m_EditorObject.Show(!args.GetButtonState());
 		return true;
 	}
 	
@@ -62,15 +59,15 @@ class EditorPlacedListItem: EditorListItem
 			case MouseState.LEFT: {
 
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					GetEditor().ToggleSelection(m_EditorObject);
+					m_EditorObject.SetSelected(!m_EditorObject.IsSelected());
 					return true;
 				} 
 				
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					GetEditor().ClearSelection();
+					EditorObject.ClearSelections();
 				}
 				
-				GetEditor().SelectObject(m_EditorObject);
+				m_EditorObject.SetSelected(true);
 				
 				// Multi select handling
 				if (KeyState(KeyCode.KC_LSHIFT)) {
@@ -102,7 +99,7 @@ class EditorPlacedListItem: EditorListItem
 			
 			case MouseState.MIDDLE: {
 				EditorCamera camera = GetEditor().GetCamera();
-				vector pos = m_EditorObject.GetPosition();
+				vector pos = m_EditorObject.GetWorldObject().GetPosition();
 				pos[1] = pos[1] + 10;
 				camera.SendToPosition(pos);
 				return true;
@@ -111,10 +108,10 @@ class EditorPlacedListItem: EditorListItem
 			case MouseState.RIGHT: {
 				
 				if (!m_EditorObject.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
-					GetEditor().ClearSelection();
+					EditorObject.ClearSelections();
 				}
 				
-				GetEditor().SelectObject(m_EditorObject);
+				m_EditorObject.SetSelected(true);
 				
 				if (EditorHud.CurrentMenu) {
 					delete EditorHud.CurrentMenu;
@@ -137,7 +134,7 @@ class EditorPlacedListItem: EditorListItem
 		switch (args.GetMouseButton()) {
 			
 			case 0: {
-				m_EditorObject.ShowWorldObject(args.GetButtonState());
+				//m_EditorObject.ShowWorldObject(args.GetButtonState());
 				break;
 			}
 		}
@@ -147,14 +144,14 @@ class EditorPlacedListItem: EditorListItem
 	
 	bool OnToggleLockExecute(ButtonCommandArgs args)
 	{
-		m_EditorObject.Lock(!m_EditorObject.Locked);
+		//m_EditorObject.Lock(!m_EditorObject.Locked);
 		return true;
 	}
 		
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		EditorLog.Trace("EditorPlacedListItem::OnDrag");	
-		GetEditor().SelectObject(m_EditorObject);
+		m_EditorObject.SetSelected(true);
 		m_DragHandler.OnDragStart();
 		
 		return true;
@@ -197,16 +194,10 @@ class EditorPlacedListItem: EditorListItem
 	{
 		if (filter == string.Empty) return true;
 		
-		string type_lower = m_EditorObject.GetType();
+		string type_lower = m_EditorObject.GetWorldObject().GetType();
 		type_lower.ToLower();
 		filter.ToLower();
-		
-		if (filter[0] == "@") {
-			type_lower = m_EditorObject.GetData().Mod.GetModName();
-			filter[0] = "";
-			type_lower.ToLower();
-		}
-		
+				
 		return type_lower.Contains(filter);
 	}
 	

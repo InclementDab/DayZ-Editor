@@ -108,7 +108,7 @@ class EditorHudController: EditorControllerBase
 		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
 		
 		float widest_x;
-		map<int, ref array<EditorPlaceableItem>> all_placeable_items = GetEditor().GetObjectManager().GetPlaceableItemsByCategory();
+		map<int, ref array<EditorPlaceableItem>> all_placeable_items = GetEditor().GetPlaceableItemsByCategory();
 		foreach (EditorPlaceableItemCategory category, array<EditorPlaceableItem> placeable_items: all_placeable_items) {
 			EditorTreeItem tree_item = new EditorFolderTreeItem(category.GetDisplayName());
 			
@@ -453,12 +453,12 @@ class EditorHudController: EditorControllerBase
 			EditorPlacedListItem placed_list_item;
 			// this is bad and wont work.. well it will but i dont like it
 			if (Class.CastTo(placed_list_item, list[i])) {				
-				GetEditor().SelectObject(placed_list_item.GetEditorObject());
+				placed_list_item.GetEditorObject().SetSelected(true);
 			}
 			
 			EditorDeletedListItem deleted_list_item;
 			if (Class.CastTo(deleted_list_item, list[i])) {
-				GetEditor().SelectHiddenObject(deleted_list_item.GetDeletedObject());
+				deleted_list_item.GetDeletedObject().SetSelected(true);
 			}
 		}
 	}

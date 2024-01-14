@@ -89,7 +89,6 @@ class Editor: Managed
 	protected ref EditorActionStack m_ActionStack = new EditorActionStack();
 	
 	// private references
-	protected ref EditorObjectManagerModule m_ObjectManager;	
 	protected ref EditorCameraTrackManagerModule m_CameraTrackManager;
 	
 	protected int 									m_LastMouseDown;
@@ -1036,7 +1035,6 @@ class Editor: Managed
 		EditorSaveFile = string.Empty;	
 		m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
 		m_ActionStack.Clear();
-		m_SessionCache.Clear();
 		
 		m_PlacedObjects.Clear();	
 		m_DeletedObjects.Clear();		
@@ -1065,7 +1063,7 @@ class Editor: Managed
 		InsertAction(action);
 		
 		editor_object.SetFlag(EditorObjectFlags.LOCKED);
-		DeselectObject(editor_object);
+		editor_object.SetSelected(false);
 	}
 	
 	void UnlockObject(EditorObject editor_object)
@@ -1076,6 +1074,7 @@ class Editor: Managed
 		InsertAction(action);
 		
 		editor_object.ClearFlag(EditorObjectFlags.LOCKED);
+		editor_object.SetSelected(false);
 	}
 	
 	vector GetCameraProjectPosition(bool ground_only = true, float raycast_distance = 3000)
@@ -1205,13 +1204,8 @@ class Editor: Managed
 		return EditorHoliday.NONE;
 	}
 		
-	void LoadSaveData(EditorSaveData save_data, bool clear_before = false)
-	{
-		if (!save_data) {
-			EditorLog.Error("Invalid Save Data");
-			return;
-		}
-		
+	void LoadSaveData(notnull EditorSaveData save_data, bool clear_before = false)
+	{		
 		int created_objects, deleted_objects;
 		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
 			EditorLog.Warning("Different map detected");
@@ -1234,14 +1228,14 @@ class Editor: Managed
 				
 		EditorLog.Debug("Deleting %1 Objects", save_data.EditorHiddenObjects.Count().ToString());		
 		foreach (EditorHiddenObjectData id: save_data.EditorHiddenObjects) {
-			if (HideMapObject(id, false)) {
+			if (HideMapObject(id.FindObject(), false)) {
 				deleted_objects++;
 			}
 		}
 		
 		EditorLog.Debug("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
 		foreach (EditorObjectData data: save_data.EditorObjects) {
-			if (CreateObject(data, false)) {
+			if (CreateObject(data.CreateObject(), false)) {
 				created_objects++;
 			}			
 		}
@@ -1285,22 +1279,22 @@ class Editor: Managed
 		save_data.CameraPosition = GetCamera().GetPosition();
 		
 		// Save Objects
-		array<EditorObject> placed_objects = GetPlacedObjects();
+		array<ref EditorObject> placed_objects = GetPlacedObjects();
 		if (selected_only) {
-			placed_objects = GetSelectedObjects();
+			placed_objects.Clear();
+			foreach (auto selected_object: EditorObject.SelectedObjects) {
+				placed_objects.Insert(selected_object);
+			}
 		}
 		
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
-				if (editor_object.GetType() != string.Empty) {
-					save_data.EditorObjects.Insert(editor_object.GetData());
-				}
+				save_data.EditorObjects.Insert(editor_object.CreateSerializedData());
 			}
 		}
 		
-		EditorHiddenObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
-		foreach (int id, EditorHiddenObject deleted_object: deleted_objects) {
-			save_data.EditorHiddenObjects.Insert(deleted_object.GetData());
+		foreach (EditorHiddenObject hidden_object: m_DeletedObjects) {
+			save_data.EditorHiddenObjects.Insert(hidden_object.CreateSerializedData());
 		}
 		
 		return save_data;
@@ -1335,7 +1329,7 @@ class Editor: Managed
 			return null;
 		}
 		
-		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(split_string[1].Trim());
+		array<EditorPlaceableItem> placeable_items = GetReplaceableObjects(split_string[1].Trim());
 		// not ideal since we dont want to feed them the p3d, but doable
 		if (!placeable_items || placeable_items.Count() == 0) {			
 			return null;
@@ -1396,12 +1390,7 @@ class Editor: Managed
 	{
 		return m_EditorCamera;
 	}
-	
-	EditorObjectManagerModule GetObjectManager() 
-	{
-		return m_ObjectManager;
-	}
-	
+		
 	EditorCameraTrackManagerModule GetCameraTrackManager() 
 	{
 		return m_CameraTrackManager;
@@ -1416,23 +1405,8 @@ class Editor: Managed
 	{
 		return m_ActionStack;
 	}	
-
-	bool IsObjectHidden(EditorHiddenObject deleted_object)
-	{
-		return (IsObjectHidden(deleted_object.GetID()));
-	}
 	
-	bool IsObjectHidden(EditorHiddenObjectData deleted_object_data)
-	{
-		return (IsObjectHidden(deleted_object_data.ID));
-	}
-	
-	bool IsObjectHidden(int id)
-	{
-		return (m_DeletedObjects[id] != null);
-	}
-	
-	bool IsObjectHidden(Object object)
+	bool IsObjectHidden(notnull Object object)
 	{
 		return (CF.ObjectManager.IsMapObjectHidden(object));
 	}

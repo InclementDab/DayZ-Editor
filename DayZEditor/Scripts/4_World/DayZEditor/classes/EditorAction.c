@@ -78,34 +78,26 @@ class EditorAction: Managed
 		RedoParameters.Insert(params);
 	}
 	
-	void Create(Param1<int> params)
-	{
-		//EditorLog.Trace("EditorAction::Create %1", params.param1.ToString());
-		EditorObjectData data = GetEditor().GetSessionDataById(params.param1);
-		if (!data) {
-			EditorLog.Error("EditorAction::Create Data was null!");
-			return;
-		}
-		
-		GetEditor().CreateObject(data, false);
+	void Create(Param1<ref EditorObjectData> params)
+	{		
+		GetEditor().CreateObject(params.param1.CreateObject(), false);
 	}
 	
-	void Delete(Param1<int> params)
+	void Delete(Param1<ref EditorObjectData> params)
 	{
-		//EditorLog.Trace("EditorAction::Delete %1", params.param1.ToString());
+		/*
 		EditorObject object = GetEditor().GetPlacedObjectById(params.param1);
 		if (!object) {
 			EditorLog.Error("EditorAction::Delete Object was null!");
 			return;
 		}
 		
-		GetEditor().DeleteObject(object, false);
+		GetEditor().DeleteObject(object, false);*/
 	}
 	
-	void SetTransform(Param3<int, vector, vector> params)
+	void SetTransform(Param3<ref EditorObjectData, vector, vector> params)
 	{
-		//EditorLog.Trace("EditorAction::SetTransform");
-		EditorObjectData editor_object_data = GetEditor().GetSessionDataById(params.param1);
+		/*EditorObjectData editor_object_data = GetEditor().GetSessionDataById(params.param1);
 		if (!editor_object_data) {
 			EditorLog.Error("EditorAction::SetTransform EditorObjectData was null!");
 			return;
@@ -118,12 +110,12 @@ class EditorAction: Managed
 		}
 
 		editor_object.SetPosition(params.param2);
-		editor_object.SetOrientation(params.param3);
+		editor_object.SetOrientation(params.param3);*/
 	}
 	
-	void Hide(Param1<int> params)
+	void Hide(Param1<ref EditorObjectData> params)
 	{
-		EditorLog.Trace("EditorAction::Hide %1", params.param1.ToString());
+		/*EditorLog.Trace("EditorAction::Hide %1", params.param1.ToString());
 		
 		EditorHiddenObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
 		if (!data) {
@@ -133,12 +125,12 @@ class EditorAction: Managed
 		
 		if (!GetEditor().HideMapObject(data, false)) {
 			EditorLog.Warning("EditorAction::Hide failed to hide object");
-		}
+		}*/
 	}
 	
-	void Unhide(Param1<int> params)
+	void Unhide(Param1<ref EditorObjectData> params)
 	{
-		EditorLog.Trace("EditorAction::Unhide %1", params.param1.ToString());
+		/*EditorLog.Trace("EditorAction::Unhide %1", params.param1.ToString());
 		EditorHiddenObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
 		if (!data) {
 			EditorLog.Error("EditorAction::Unhide Data was null!");
@@ -147,17 +139,17 @@ class EditorAction: Managed
 		
 		if (!GetEditor().UnhideMapObject(data, false)) {
 			EditorLog.Warning("EditorAction::Unhide failed to unhide object");
-		}
+		}*/
 	}
 	
 	void Lock(Param1<EditorObject> param)
 	{
-		param.param1.Lock(true);
+		//param.param1.Lock(true);
 	}
 	
 	void Unlock(Param1<EditorObject> param)
 	{
-		param.param1.Lock(false);
+		//param.param1.Lock(false);
 	}
 	
 	void CreateCameraTrack(SerializedCameraTrack params)

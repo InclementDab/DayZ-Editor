@@ -104,8 +104,7 @@ class EditorHud: ScriptView
 		
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("EditorPlaceObjectCommand") && !KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor()) {
-			GetEditor().ClearSelection();
-			
+			EditorObject.ClearSelections();
 			DelayedDragBoxCheck();
 		}
 		
@@ -314,7 +313,7 @@ class EditorHud: ScriptView
 		current_x += 6;
 		
 		EditorCanvas.Clear();
-		g_Editor.ClearSelection();
+		EditorObject.ClearSelections();
 		
 		// Draw Drag Box
 		if (Math.AbsInt(start_x - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_BOX_THRESHOLD) {
@@ -327,7 +326,7 @@ class EditorHud: ScriptView
 			int x_avg = (start_x + current_x) / 2;
 			EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, drag_box_color_fill); 
 			
-			array<EditorObject> placed_objects = g_Editor.GetPlacedObjects();
+			array<ref EditorObject> placed_objects = GetEditor().GetPlacedObjects();
 			foreach (EditorObject editor_object: placed_objects) {					
 				float marker_x, marker_y;
 				EditorObjectMarker object_marker = editor_object.GetMarker();
@@ -337,8 +336,8 @@ class EditorHud: ScriptView
 					//i think only checking if within cone of box select not distance
 					if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {
 						//check if within markerviewdistance to allow selection.
-						if (vector.Distance(editor_object.GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.Settings.MarkerViewDistance) {
-							g_Editor.SelectObject(editor_object);
+						if (vector.Distance(editor_object.GetWorldObject().GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.Settings.MarkerViewDistance) {
+							editor_object.SetSelected(true);
 						}
 					}
 				}
@@ -482,7 +481,7 @@ class EditorHud: ScriptView
 			return string.Empty;
 		}
 		
-		array<EditorPlaceableItem> placeable_items = GetEditor().GetObjectManager().GetReplaceableObjects(split_string[1].Trim());
+		array<EditorPlaceableItem> placeable_items = GetEditor().GetReplaceableObjects(split_string[1].Trim());
 		// not ideal since we dont want to feed them the p3d, but doable
 		if (!placeable_items || placeable_items.Count() == 0) {
 			return string.Format("%1 [%2, %3: %4]", split_string[1], split_string[0], component_type, component_index);
