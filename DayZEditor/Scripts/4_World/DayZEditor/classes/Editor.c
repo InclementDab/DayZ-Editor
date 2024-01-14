@@ -125,7 +125,32 @@ class Editor: Managed
 	protected ref Timer	m_StatisticsSaveTimer 	= new Timer(CALL_CATEGORY_GAMEPLAY);
 	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
 	
-	protected ScriptCaller 					m_ObjectSelectCallback;
+	protected ScriptCaller 						m_ObjectSelectCallback;
+		
+	// Stored list of all Placed Objects
+	protected ref array<ref EditorObject> m_PlacedObjects = {};
+	
+	// Stored list of all selected Objects
+	protected ref array<EditorObject> m_SelectedObjects = {};
+	
+	// Stored list of all Placed Objects, indexed by their WorldObject ID
+	protected ref map<int, EditorObject> m_WorldObjectIndex = new map<int, EditorObject>();
+	
+	protected ref array<ref EditorDeletedObject> m_DeletedObjects = {};
+
+	protected ref array<EditorDeletedObject>	m_SelectedDeletedObjects = {};
+	
+	protected ref array<ref EditorPlaceableItem> m_AllPlaceableItems = {};
+	
+	protected ref map<int, ref array<EditorPlaceableItem>> m_PlaceableItems = new map<int, ref array<EditorPlaceableItem>>();
+	
+	protected ref map<string, EditorPlaceableItem> m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>();
+	
+	// lookup table by p3d
+	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableItem>>();
+	
+	// Current Selected PlaceableListItem
+	EditorPlaceableItem CurrentSelectedItem;
 	
 	bool										KEgg; // oh?
 	
@@ -186,7 +211,62 @@ class Editor: Managed
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
 		EditorLog.Info("Initializing Object Manager");
-		m_ObjectManager = new EditorObjectManagerModule();
+		
+		// Loads placeable objects	
+		g_Game.ReportProgress("Loading Placeable Objects");
+		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
+				
+		// handle config objects
+		foreach (string path: config_paths) {
+			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
+				string type;
+		        GetGame().ConfigGetChildName(path, i, type);
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
+					continue;
+				}
+				
+				if (IsForbiddenItem(type)) {
+					continue;
+				}
+				
+				m_AllPlaceableItems.Insert(new EditorConfigPlaceableItem(path, type));
+		    }
+		}
+		
+		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
+		foreach (string model_path: paths) {
+			array<ref CF_File> files = {};
+			if (!CF_Directory.GetFiles(model_path + "/*", files, FindFileFlags.ARCHIVES)) {
+				continue;
+			}
+				
+			foreach (CF_File file: files) {		
+				if (!file || file.GetExtension() != ".p3d") {
+					continue;
+				}
+				
+				m_AllPlaceableItems.Insert(new EditorStaticPlaceableItem(file.GetFullPath()));
+			}
+		}
+	
+		// Statics that belong to Editor / DF
+		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
+		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
+		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
+			
+		foreach (EditorPlaceableItem placeable_item: m_AllPlaceableItems) {
+			if (!m_PlaceableItems[placeable_item.GetCategory()]) {
+				m_PlaceableItems[placeable_item.GetCategory()] = {};
+			}
+			
+			if (!m_PlaceableObjectsByP3d[placeable_item.GetModel()]) {
+				m_PlaceableObjectsByP3d[placeable_item.GetModel()] = {};
+			}
+			
+			m_PlaceableItems[placeable_item.GetCategory()].Insert(placeable_item);
+			m_PlaceableObjectsByP3d[placeable_item.GetModel()].Insert(placeable_item);
+			m_PlaceableObjectsByType[placeable_item.GetName()] = placeable_item;
+		}
 		
 		// Camera Track Manager
 		g_Game.ReportProgress("Initializing Camera Track Manager");
@@ -255,6 +335,8 @@ class Editor: Managed
 		if (ShouldProcessInput()) {
 			ProcessInput(GetGame().GetInput());
 		}
+	
+		Statistics.Playtime += timeslice;
 		
 		set<Object> obj();
 		int x, y;
@@ -821,35 +903,26 @@ class Editor: Managed
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
-		
-		
-		
-		return CreateObject(EditorObjectData.Create(target, flags), create_undo);
-	}
-	
-	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true) 
-	{
-		// Cache Data (for undo / redo)
-		if (!editor_object_data) return null;
-		m_SessionCache[editor_object_data.GetID()] = editor_object_data;
-		
-		// Create Object
-		
-		EditorObject editor_object = m_ObjectManager.CreateObject(editor_object_data);
-		if (!editor_object) return null;
-		
-		EditorAction action = new EditorAction("Delete", "Create");
-		action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-		action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
-		
+		EditorObject editor_object = new EditorObject(target, flags);
 		if (create_undo) {
+			EditorObjectData data = editor_object.CreateSerializedData();
+			EditorAction action = new EditorAction("Delete", "Create");
+			action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
+			action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));
 			InsertAction(action);
 		}
+	
+		m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
 		
+		OnObjectCreated.Invoke(editor_object);
+		Statistics.EditorPlacedObjects++;
+		
+		m_PlacedObjects.Insert(editor_object);
 		return editor_object;
 	}
-		
-	EditorObjectMap CreateObjects(array<ref EditorObjectData> data_list, bool create_undo = true) 
+	
+/*
+	EditorObjectMap CreateObjects(array<Object> data_list, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject");
 		
@@ -879,22 +952,23 @@ class Editor: Managed
 
 		
 		return object_set;
-	}
+	}*/
 	
-	void DeleteObject(EditorObject editor_object, bool create_undo = true) 
+	void DeleteObject(notnull EditorObject editor_object, bool create_undo = true) 
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
-		if (!editor_object.Locked && editor_object.Show) {
-			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
-			m_ObjectManager.DeleteObject(editor_object);
-		}
-		
 		if (create_undo) {
+			EditorObjectData data = editor_object.CreateSerializedData();
+			action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
+			action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));
 			InsertAction(action);
 		}
+	
+		OnObjectDeleted.Invoke(target);
+		delete editor_object;
 	}
 	
+/*
 	void DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
@@ -909,7 +983,7 @@ class Editor: Managed
 		if (create_undo) {
 			InsertAction(action);
 		}
-	}
+	}*/
 
 	bool HideMapObject(string type, vector position, bool create_undo = true)
 	{
@@ -956,6 +1030,7 @@ class Editor: Managed
 		return true;
 	}
 	
+/*
 	void HideMapObjects(array<Object> deleted_objects, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
@@ -986,7 +1061,7 @@ class Editor: Managed
 		if (create_undo) {
 			InsertAction(action);
 		}
-	}
+	}*/
 		
 	bool UnhideMapObject(EditorDeletedObjectData data, bool create_undo = true)
 	{		
@@ -1033,6 +1108,8 @@ class Editor: Managed
 		return true;
 	}
 	
+
+/*
 	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
 	{
 		if (create_undo) {
@@ -1052,7 +1129,7 @@ class Editor: Managed
 		if (create_undo) {
 			InsertAction(action);
 		}
-	}
+	}*/
 		
 	void Clear()
 	{
@@ -1061,7 +1138,9 @@ class Editor: Managed
 		m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
 		m_ActionStack.Clear();
 		m_SessionCache.Clear();
-		m_ObjectManager.Clear();
+		
+		m_PlacedObjects.Clear();	
+		m_DeletedObjects.Clear();		
 	}
 		
 	bool CanHideMapObject(string type)
@@ -1392,58 +1471,8 @@ class Editor: Managed
 	void SetBrush(EditorBrush brush) 
 	{
 		m_EditorBrush = brush; 
-	}
-	
-	void DeleteSessionData(int id) 
-	{
-		m_SessionCache.Remove(id);	
-	}
-	
-	void DeleteDeletedSessionData(int id)
-	{
-		m_DeletedSessionCache.Remove(id);
-	}
-			
-	void UpdateStatTime(int passed_time)
-	{
-		Statistics.EditorPlayTime += passed_time;
-	}
-	
-	void SelectObject(EditorObject target) 
-	{
-		m_ObjectManager.SelectObject(target);
-	}
-	
-	void DeselectObject(EditorObject target) 
-	{
-		m_ObjectManager.DeselectObject(target);
-	}
-	
-	void ToggleSelection(EditorObject target) 
-	{
-		m_ObjectManager.ToggleSelection(target);
-	}
-		
-	void ClearSelection() 
-	{
-		m_ObjectManager.ClearSelection();
-	}
-	
-	void SelectHiddenObject(EditorDeletedObject target)
-	{
-		m_ObjectManager.SelectHiddenObject(target);
-	}
-	
-	void DeselectHiddenObject(EditorDeletedObject target)
-	{
-		m_ObjectManager.DeselectHiddenObject(target);
-	}
-	
-	void ToggleHiddenObjectSelection(EditorDeletedObject target)
-	{
-		m_ObjectManager.ToggleHiddenObjectSelection(target);
-	}
-		
+	}	
+				
 	void InsertAction(EditorAction action) 
 	{
 		m_ActionStack.InsertAction(action);
@@ -1478,62 +1507,7 @@ class Editor: Managed
 	{
 		return m_CameraTrackManager;
 	}
-	
-	EditorObjectMap GetSelectedObjects() 
-	{
-		return m_ObjectManager.GetSelectedObjects(); 
-	}
-	
-	EditorDeletedObjectMap GetSelectedHiddenObjects()  
-	{
-		return m_ObjectManager.GetSelectedHiddenObjects();
-	}
-	
-	EditorObjectMap GetPlacedObjects() 
-	{
-		return m_ObjectManager.GetPlacedObjects(); 
-	}
-	
-	EditorDeletedObjectMap GetDeletedObjects() 
-	{
-		return m_ObjectManager.GetDeletedObjects();
-	}
-	
-	map<int, ref EditorObjectData> GetSessionCache() 
-	{
-		return m_SessionCache; 		
-	}
-	
-	map<int, ref EditorDeletedObjectData> GetDeletedSessionCache() 
-	{
-		return m_DeletedSessionCache;
-	}
-	
-	EditorObject GetEditorObject(int id) 
-	{
-		return m_ObjectManager.GetEditorObject(id); 	
-	}
-	
-	EditorObject GetEditorObject(notnull Object world_object) 
-	{
-		return m_ObjectManager.GetEditorObject(world_object);	
-	}
-	
-	EditorObject GetPlacedObjectById(int id) 
-	{
-		return m_ObjectManager.GetPlacedObjectById(id); 	
-	}
-	
-	EditorObjectData GetSessionDataById(int id) 
-	{
-		return m_SessionCache[id]; 
-	}
-	
-	EditorDeletedObjectData GetDeletedSessionDataById(int id) 
-	{
-		return m_DeletedSessionCache[id];
-	}
-	
+				
 	EditorBrush GetBrush() 
 	{
 		return m_EditorBrush;
@@ -1542,16 +1516,71 @@ class Editor: Managed
 	EditorActionStack GetActionStack() 
 	{
 		return m_ActionStack;
+	}	
+
+	bool IsObjectHidden(EditorDeletedObject deleted_object)
+	{
+		return (IsObjectHidden(deleted_object.GetID()));
+	}
+	
+	bool IsObjectHidden(EditorDeletedObjectData deleted_object_data)
+	{
+		return (IsObjectHidden(deleted_object_data.ID));
+	}
+	
+	bool IsObjectHidden(int id)
+	{
+		return (m_DeletedObjects[id] != null);
+	}
+	
+	bool IsObjectHidden(Object object)
+	{
+		return (CF.ObjectManager.IsMapObjectHidden(object));
+	}
+			
+	array<EditorObject> GetSelectedObjects() 
+	{
+		return m_SelectedObjects; 
+	}
+	
+	array<ref EditorObject> GetPlacedObjects()
+	{
+		return m_PlacedObjects; 
+	}
+	
+	array<ref EditorDeletedObject> GetDeletedObjects()
+	{
+		return m_DeletedObjects;
+	}
+	
+	array<EditorObject> GetSelectedHiddenObjects()
+	{
+		return m_SelectedDeletedObjects;
+	}
+				
+	EditorObject GetEditorObject(notnull Object world_object) 
+	{
+		return m_WorldObjectIndex[world_object.GetID()];
 	}
 	
 	EditorPlaceableItem GetPlaceableObject(string type)
 	{
-		return m_ObjectManager.GetPlaceableObject(type);
+		return m_PlaceableObjectsByType[type];
 	}
 	
-	array<ref EditorPlaceableItem> GetPlaceableObjects() 
+	array<ref EditorPlaceableItem> GetPlaceableObjects()
 	{
-		return m_ObjectManager.GetPlaceableObjects();
+		return m_AllPlaceableItems;
+	}
+	
+	array<EditorPlaceableItem> GetReplaceableObjects(string p3d)
+	{
+		return m_PlaceableObjectsByP3d[p3d];
+	}
+
+	map<int, ref array<EditorPlaceableItem>> GetPlaceableItemsByCategory()
+	{
+		return m_PlaceableItems;
 	}
 	
 	bool GetHudVisiblity()
@@ -1579,5 +1608,41 @@ class Editor: Managed
 	bool IsPlacing()
 	{
 		return (m_PlacingObjects && m_PlacingObjects.Count() > 0); 
+	}
+
+	static bool IsForbiddenItem(string model)
+	{
+		//! In theory should be safe but just in case
+		if (model.Contains("Fx")) return true;
+		if (model == "ItemOptics") return true;
+
+		//! Cursed items
+		if (model == "AKM_TESTBED") return true;
+		if (model == "Red9") return true;
+		if (model == "QuickieBow") return true;
+		if (model == "LargeTentBackPack") return true;
+		if (model == "SurvivorMale_Base" || model == "SurvivorFemale_Base") return true;
+		if (model == "Land_VASICore" || model == "FlagCarrierCore") return true;
+		if (GetGame().IsKindOf(model, "GP25Base")) return true;
+		if (GetGame().IsKindOf(model, "M203Base")) return true;
+		if (model == "ItemOptics_Base") return true;
+		
+		//! Everything is fine... I hope... :pain:
+		return false;
+	}
+	
+	static void RecursiveGetFiles(string directory, inout array<ref CF_File> files, string pattern = "*")
+	{		
+		array<ref CF_File> directories = {};
+		// first get all directories and recurse them
+		if (CF_Directory.GetFiles(directory + "*", directories, FindFileFlags.ARCHIVES)) {
+			foreach (CF_File subdirectory: directories) {
+				if (subdirectory.IsDirectory()) {
+					RecursiveGetFiles(subdirectory.GetFullPath() + "/", files, pattern);
+				}
+			}
+		}
+		
+		CF_Directory.GetFiles(directory + pattern, files, FindFileFlags.ARCHIVES);
 	}
 }

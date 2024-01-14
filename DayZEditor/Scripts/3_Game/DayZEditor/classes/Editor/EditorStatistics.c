@@ -1,8 +1,8 @@
 [RegisterProfileSetting(EditorStatistics)]
 class EditorStatistics: ProfileSettings
 {		
-	int EditorPlayTime;
-	int EditorPlacedObjects;
-	int EditorRemovedObjects;
-	float EditorDistanceFlown; // storing in km
+	float Playtime;
+	int PlacedObjects;
+	int RemovedObjects;
+	float DistanceFlown; // storing in km
 }

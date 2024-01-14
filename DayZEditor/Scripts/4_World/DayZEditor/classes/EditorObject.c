@@ -416,17 +416,17 @@ class EditorObject: Managed
 		return m_EditorSnapPoints;
 	}
 	
-	EditorObjectMap GetObjectAttachments()
+	array<EditorObject> GetAttachments()
 	{
 		ItemBase item = ItemBase.Cast(m_Object);
-		EditorObjectMap editor_objects();
+		array<EditorObject> attachments = {};
 		for (int i = 0; i < item.GetInventory().AttachmentCount(); i++) {
 			EntityAI attachment = item.GetInventory().GetAttachmentFromIndex(i);
 			if (!attachment) {
 				continue;
 			}
 			
-			editor_objects.InsertEditorObject(GetEditor().GetEditorObject(attachment));
+			editor_objects.Insert(GetEditor().GetEditorObject(attachment));
 		}
 		
 		return editor_objects;

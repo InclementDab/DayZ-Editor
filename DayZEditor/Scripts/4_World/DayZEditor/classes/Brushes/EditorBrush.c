@@ -90,7 +90,7 @@ class EditorBrush: Managed
 		if (vector.Distance(m_LastMousePosition, position) < (BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 		
-		array<ref EditorObjectData> created_data = {};
+		array<Object> brushed_objects = {};
 		
 		int flags;
 		if (m_EditorSettings.BrushedObjectMarkers) {
@@ -129,10 +129,10 @@ class EditorBrush: Managed
 			brushed_object.SetDirection(ori);
 			brushed_object.Update();
 			//brushed_object.SetDirection(direction);
-			created_data.Insert(EditorObjectData.Create(brushed_object, flags));
+			brushed_objects.Insert(brushed_object);
 		}
 	
-		GetEditor().CreateObjects(created_data, true);
+		GetEditor().CreateObjects(brushed_objects, flags);
 	}
 	
 	void OnMouseUp(vector position)
