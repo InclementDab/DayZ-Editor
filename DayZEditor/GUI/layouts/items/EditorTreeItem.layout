@@ -1,11 +1,14 @@
 PanelWidgetClass Root {
  visible 1
  clipchildren 0
+ position 0 0
  size 1 18
  hexactpos 1
  vexactpos 1
  hexactsize 0
  vexactsize 1
+ scaled 0
+ scriptclass ""
  {
   WrapSpacerWidgetClass Wrapper {
    visible 1
@@ -15,6 +18,7 @@ PanelWidgetClass Root {
    vexactpos 1
    hexactsize 0
    vexactsize 1
+   scaled 0
    Padding 0
    Margin 0
    "Size To Content H" 1
@@ -30,6 +34,7 @@ PanelWidgetClass Root {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scaled 0
      image0 "set:editor_tree image:tree_l"
      mode blend
      "src alpha" 1
@@ -45,6 +50,7 @@ PanelWidgetClass Root {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scaled 0
      image0 "set:editor_tree image:tree_t"
      mode blend
      "src alpha" 1
@@ -59,6 +65,7 @@ PanelWidgetClass Root {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scaled 0
      {
       ButtonWidgetClass Collapse {
        size 12 12
@@ -68,6 +75,7 @@ PanelWidgetClass Root {
        vexactpos 1
        hexactsize 1
        vexactsize 1
+       scaled 0
        scriptclass "ViewBinding"
        style Outline_1px_Button
        font "gui/fonts/etelkatextpro14"
@@ -84,6 +92,7 @@ PanelWidgetClass Root {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scaled 0
          image0 "set:dayz_gui image:Expand"
          mode additive
          "src alpha" 1
@@ -107,6 +116,7 @@ PanelWidgetClass Root {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scaled 0
     }
     ImageWidgetClass Icon {
      visible 0
@@ -117,6 +127,7 @@ PanelWidgetClass Root {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scaled 0
      image0 "set:icons image:folder"
      mode blend
      "src alpha" 1
@@ -131,6 +142,7 @@ PanelWidgetClass Root {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scaled 0
     }
     PanelWidgetClass Panel {
      ignorepointer 0
@@ -141,6 +153,7 @@ PanelWidgetClass Root {
      vexactpos 1
      hexactsize 1
      vexactsize 1
+     scaled 0
      scriptclass "SizeToChild"
      style rover_sim_colorable
      {
@@ -156,6 +169,7 @@ PanelWidgetClass Root {
        vexactpos 0
        hexactsize 1
        vexactsize 1
+       scaled 0
        draggable 0
        scriptclass "ViewBinding"
        style Normal
@@ -181,25 +195,28 @@ PanelWidgetClass Root {
       }
      }
     }
-   }
-  }
-  WrapSpacerWidgetClass Children {
-   visible 0
-   clipchildren 0
-   ignorepointer 1
-   position 0 18
-   size 1 0
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 1
-   scriptclass "ViewBinding"
-   Padding 0
-   Margin 0
-   "Size To Content H" 1
-   {
-    ScriptParamsClass {
-     Binding_Name "Children"
+    WrapSpacerWidgetClass Children {
+     visible 0
+     clipchildren 0
+     ignorepointer 1
+     size 1 0
+     halign center_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     scriptclass "ViewBinding"
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     "Size To Content V" 1
+     {
+      ScriptParamsClass {
+       Binding_Name "Children"
+      }
+     }
     }
    }
   }

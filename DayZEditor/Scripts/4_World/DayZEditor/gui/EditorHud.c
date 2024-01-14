@@ -17,8 +17,10 @@ class EditorHud: ScriptView
 	Widget MapContainer;
 	Widget LoggerFrame;
 	Widget LeftDragZone;
+	Widget PlaceablesList;
 	
 	CanvasWidget EditorCanvas;
+	ScrollWidget PlaceablesScroll;
 	
 	ref EditorCameraMapMarker CameraMapMarker;
 	
@@ -48,23 +50,37 @@ class EditorHud: ScriptView
 		GetScreenSize(x, y);
 		Left.GetSize(w, h);
 		Left.SetSize(w, y - 74);
-		
+		PlaceablesScroll.SetSize(1.0, y - 74 - 28);
+
+		if (GetEditor().GetCamera()) {
+			vector cam_pos = GetEditor().GetCamera().GetPosition();
+			
+			m_TemplateController.cam_x = cam_pos[0];
+			m_TemplateController.cam_y = cam_pos[1];
+			m_TemplateController.cam_z = cam_pos[2];
+			m_TemplateController.NotifyPropertiesChanged({ "cam_x", "cam_y", "cam_z"} );
+		}
+				
 		// kinda cursed but double inputs. maybe have a handler if you want more ui shit (loooot editor)
 		if (GetEditor().IsInventoryEditorActive() || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
 			return;
 		}
 		
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
-			m_DraggedBar = null;
+			//m_DraggedBar = null;
 		}
 		
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 	
 		if (m_DraggedBar) {			
-			m_DraggedBar.GetParent().GetParent().GetSize(w, h);
-			m_DraggedBar.GetParent().GetParent().SetSize(mouse_x, y - 74);
+			//m_DraggedBar.GetParent().GetParent().GetSize(w, h);
+			//m_DraggedBar.GetParent().GetParent().SetSize(Math.Clamp(mouse_x, 40, 720), y - 74);
 		}
+		
+		// minimum placeables list sizing looks better
+		PlaceablesList.GetSize(w, h);
+		PlaceablesList.SetSize(w, Math.Max(h, y));
 		
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("EditorToggleCursor")) {

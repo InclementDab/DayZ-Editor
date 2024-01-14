@@ -109,9 +109,10 @@ class EditorHudController: EditorControllerBase
 		array<string> favorite_items = {};
 		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
 		
+		float widest_x;
 		map<int, ref array<EditorPlaceableItem>> all_placeable_items = GetEditor().GetObjectManager().GetPlaceableItemsByCategory();
 		foreach (EditorPlaceableItemCategory category, array<EditorPlaceableItem> placeable_items: all_placeable_items) {
-			EditorTreeItem tree_item = new EditorFolderTreeItem(typename.EnumToString(EditorPlaceableItemCategory, category));
+			EditorTreeItem tree_item = new EditorFolderTreeItem(category.GetDisplayName());
 			
 			foreach (EditorPlaceableItem placeable_item: placeable_items) {
 				tree_item.GetTemplateController().Children.Insert(new EditorItemTreeItem(placeable_item));

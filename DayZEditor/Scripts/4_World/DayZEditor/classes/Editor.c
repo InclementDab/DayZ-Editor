@@ -127,6 +127,8 @@ class Editor: Managed
 	protected ref Timer	m_StatisticsSaveTimer 	= new Timer(CALL_CATEGORY_GAMEPLAY);
 	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
 	
+	protected ScriptCaller m_ObjectSelectCallback;
+	
 	bool										KEgg; // oh?
 	
 	void Editor(vector position) 
@@ -291,24 +293,8 @@ class Editor: Managed
 			}
 		}
 		
-		// Just shutting the logger up for a minute
-		int log_lvl = EditorLog.GetLevel();
-		EditorLog.SetLevel(LogLevel.WARNING);
-		
-		if (m_EditorCamera) {
-			vector cam_pos = m_EditorCamera.GetPosition();
-			
-			m_EditorHudController.cam_x = cam_pos[0];
-			m_EditorHudController.cam_y = cam_pos[1];
-			m_EditorHudController.cam_z = cam_pos[2];
-			
-			m_EditorHudController.NotifyPropertyChanged("cam_x");
-			m_EditorHudController.NotifyPropertyChanged("cam_y");
-			m_EditorHudController.NotifyPropertyChanged("cam_z");
-		}
-		
 		EditorObjectMap selected_objects = GetSelectedObjects();
-		if (selected_objects.Count() > 0 && selected_objects[0]) {
+		if (m_EditorHud && selected_objects.Count() > 0 && selected_objects[0]) {
 			// Spams errors
 			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
@@ -327,15 +313,7 @@ class Editor: Managed
 		
 		CommandManager[EditorCameraTrackRun].SetCanExecute(m_CameraTrackManager.GetCameraTracks().Count() > 0);
 		CommandManager[EditorCloseCommand].SetCanExecute(EditorSaveFile != string.Empty);
-		
-		EditorLog.SetLevel(log_lvl);
-		
-		HandleHands();
-	}
-	
-	// maybe abstract this to a new class, like EditorHandsManager
-	void HandleHands()
-	{
+				
 		foreach (Object world_object, EditorHandData hand_data: m_PlacingObjects) {
 			if (!world_object) {
 				return;
@@ -373,9 +351,7 @@ class Editor: Managed
 			EntityAI.Cast(world_object).DisableSimulation(false);
 		}
 	}
-		
-	protected ScriptCaller m_ObjectSelectCallback;
-	
+				
 	void PromptForObjectSelection(ScriptCaller callback)
 	{
 		m_ObjectSelectCallback = callback;
@@ -1755,7 +1731,11 @@ class Editor: Managed
 	void SetHudVisibility(bool state)
 	{
 #ifdef DIAG_DEVELOPER
-		m_EditorHud = new EditorHud();
+		if (state) {
+			m_EditorHud = new EditorHud();
+		} else {
+			delete m_EditorHud;
+		}
 #else
 		m_EditorHud.Show(state);
 #endif

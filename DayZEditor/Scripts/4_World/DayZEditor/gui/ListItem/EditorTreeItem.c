@@ -8,7 +8,7 @@ class EditorTreeItem: ScriptView
 	ImageWidget Icon, CollapseIcon, ParentDisplay, TreeDisplay;
 	WrapSpacerWidget Children;
 	
-	Widget Panel, CollapseWrapper;
+	Widget Panel, CollapseWrapper, Spacer0;
 	
 	void EditorTreeItem()
 	{

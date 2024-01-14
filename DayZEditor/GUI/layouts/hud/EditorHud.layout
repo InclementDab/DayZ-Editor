@@ -117,13 +117,13 @@ FrameWidgetClass EditorFrame {
       ScrollWidgetClass PlaceablesScroll {
        visible 1
        ignorepointer 1
-       color 0.2353 0.2353 0.2353 0.8627
+       color 0.0588 0.0588 0.0588 0.8627
        position 0 32
-       size 1 1
+       size 1 250
        hexactpos 1
        vexactpos 1
        hexactsize 0
-       vexactsize 0
+       vexactsize 1
        scaled 0
        style Colorable
        "Scrollbar H" 1
@@ -133,13 +133,13 @@ FrameWidgetClass EditorFrame {
         WrapSpacerWidgetClass PlaceablesList {
          visible 1
          ignorepointer 1
-         color 0.0588 0.0588 0.0588 0.8627
          position 0 0
-         size 360 200
+         size 720 1920
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scaled 0
          fixaspect inside
          scriptclass "ViewBinding"
          Padding 0
@@ -152,20 +152,20 @@ FrameWidgetClass EditorFrame {
           }
          }
         }
-        PanelWidgetClass LeftDragZone {
-         ignorepointer 0
-         color 0.1961 0.3922 0.3922 0.502
-         position 0 0
-         size 6 1
-         halign right_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 0
-         style Outline_2px
-        }
        }
+      }
+      PanelWidgetClass LeftDragZone {
+       ignorepointer 0
+       color 0.1961 0.3922 0.3922 0.502
+       position 0 0
+       size 6 1
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       style Outline_2px
       }
      }
     }

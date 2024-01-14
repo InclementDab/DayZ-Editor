@@ -30,6 +30,7 @@ class EditorPlaceableItemCategory: int
 			case WATER: return "Water";
 			case VEHICLE: return "Vehicles";
 			case STATIC: return "Static Objects";
+			case DYNAMIC: return "Dynamic Object";
 			case SCRIPTED: return "Scripted Objects";
 		}
 		

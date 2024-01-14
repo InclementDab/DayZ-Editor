@@ -9,5 +9,6 @@ class EditorFolderTreeItem: EditorTreeItem
 		m_TemplateController.Text = name;
 		m_TemplateController.NotifyPropertyChanged("Text");
 		CollapseWrapper.Show(true);
+		Spacer0.Show(true);
 	}
 }
