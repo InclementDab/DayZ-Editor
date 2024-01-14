@@ -44,7 +44,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 1
      ignorepointer 1
      position 0 0.055
-     size 280 0.93
+     size 360 0.93
      hexactpos 0
      vexactpos 0
      hexactsize 1
@@ -157,14 +157,13 @@ FrameWidgetClass EditorFrame {
          clipchildren 1
          ignorepointer 0
          position 0 34
-         size 1 900
-         halign center_ref
+         size 500 900
          hexactpos 1
          vexactpos 1
-         hexactsize 0
+         hexactsize 1
          vexactsize 1
          scriptclass ""
-         style dashed
+         style blank
          "next left" ""
          "next right" ""
          "Scrollbar V" 1

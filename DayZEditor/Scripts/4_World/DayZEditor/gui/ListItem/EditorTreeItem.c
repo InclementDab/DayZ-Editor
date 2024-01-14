@@ -2,10 +2,12 @@ class EditorTreeItemController: ViewController
 {
 	ref ObservableCollection<ref EditorTreeItem> Children = new ObservableCollection<ref EditorTreeItem>(this);
 	
+	Widget Icon;
 	Widget CollapseWrapper;
 	
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{
+		Icon.Show(Children.Count() > 0);
 		CollapseWrapper.Show(Children.Count() > 0);
 		
 		Param1<EditorTreeItem> item = Param1<EditorTreeItem>.Cast(args.ChangedValue);
@@ -14,6 +16,7 @@ class EditorTreeItemController: ViewController
 			case NotifyCollectionChangedAction.Insert:
 			case NotifyCollectionChangedAction.InsertAt: {
 				item.param1.SetParentTree(script_view);
+				item.param1.ParentDisplay.Show(true);
 				break;
 			}
 			
@@ -32,7 +35,7 @@ class EditorTreeItem: ScriptView
 	protected EditorTreeItem m_Parent;
 	
 	TextWidget Text;
-	ImageWidget Icon, CollapseIcon;
+	ImageWidget Icon, CollapseIcon, ParentDisplay, TreeDisplay;
 	WrapSpacerWidget Children;
 	
 	void EditorTreeItem(string name)
@@ -57,7 +60,7 @@ class EditorTreeItem: ScriptView
 		float w, h;
 		m_LayoutRoot.GetScreenSize(w, h);
 		
-		m_LayoutRoot.SetScreenSize(w, h * m_TemplateController.Children.Count());
+		m_LayoutRoot.SetScreenSize(w, 18 + (state * 18 * m_TemplateController.Children.Count()));
 	}
 	
 	bool HasChildren()

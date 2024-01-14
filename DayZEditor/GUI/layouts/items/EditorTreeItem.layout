@@ -1,7 +1,7 @@
 PanelWidgetClass Root {
  visible 1
  clipchildren 0
- size 1 16
+ size 1 18
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -10,7 +10,7 @@ PanelWidgetClass Root {
   WrapSpacerWidgetClass Wrapper {
    visible 1
    clipchildren 0
-   size 1 16
+   size 1 18
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -20,10 +20,26 @@ PanelWidgetClass Root {
    "Size To Content H" 1
    content_valign center
    {
+    ImageWidgetClass ParentDisplay {
+     visible 0
+     ignorepointer 1
+     position 0 0
+     size 18 18
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     image0 "set:editor_tree image:tree_l"
+     mode blend
+     "src alpha" 1
+     filter 0
+    }
     ImageWidgetClass TreeDisplay {
      visible 1
      ignorepointer 1
-     size 16 16
+     position 0 0
+     size 18 18
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -35,9 +51,10 @@ PanelWidgetClass Root {
      filter 0
     }
     FrameWidgetClass CollapseWrapper {
+     visible 0
      ignorepointer 0
      position 0 0
-     size 16 16
+     size 18 18
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -82,7 +99,7 @@ PanelWidgetClass Root {
      }
     }
     FrameWidgetClass Spacer {
-     visible 0
+     visible 1
      ignorepointer 1
      size 8 0
      valign center_ref
@@ -92,9 +109,10 @@ PanelWidgetClass Root {
      vexactsize 1
     }
     ImageWidgetClass Icon {
+     visible 0
      ignorepointer 1
      position 0 0
-     size 16 16
+     size 18 18
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -104,12 +122,22 @@ PanelWidgetClass Root {
      "src alpha" 1
      filter 0
     }
+    FrameWidgetClass Spacer0 {
+     visible 0
+     ignorepointer 1
+     size 8 0
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+    }
     TextWidgetClass Text {
      visible 1
      disabled 0
      clipchildren 1
      ignorepointer 1
-     position 16 0
+     position 18 0
      size 1 1
      valign center_ref
      hexactpos 1
@@ -120,9 +148,10 @@ PanelWidgetClass Root {
      scriptclass ""
      style Normal
      text "CATEGORY"
-     font "gui/fonts/etelkatextpro14"
+     font "gui/fonts/sdf_MetronBook24"
      "bold text" 0
-     "exact text" 0
+     "exact text" 1
+     "exact text size" 16
      "size to text h" 1
      "size to text v" 0
      "text valign" center
@@ -130,10 +159,10 @@ PanelWidgetClass Root {
    }
   }
   WrapSpacerWidgetClass Children {
-   visible 1
+   visible 0
    clipchildren 0
    ignorepointer 1
-   position 0 16
+   position 0 18
    size 1 0
    hexactpos 1
    vexactpos 1

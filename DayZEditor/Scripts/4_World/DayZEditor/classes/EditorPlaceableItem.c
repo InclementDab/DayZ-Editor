@@ -1,6 +1,6 @@
 enum EditorPlaceableItemCategory
 {	
-	UNKNOWN = -1,
+	UNKNOWN,
 	
 	PLANTS,		// \DZ\plants
 	ROCK,		// \DZ\rocks and \DZ\rocks_bliss
@@ -18,7 +18,7 @@ enum EditorPlaceableItemCategory
 
 class EditorPlaceableItem: Managed
 {
-	protected EditorPlaceableItemCategory m_Category;
+	protected EditorPlaceableItemCategory m_Category = EditorPlaceableItemCategory.UNKNOWN;
 		
 	EditorObjectData CreateData(vector position, vector orientation, float scale, int flags)
 	{
