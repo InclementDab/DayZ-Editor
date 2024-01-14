@@ -1,6 +1,11 @@
 class EditorHud: ScriptView
 {
 	protected bool m_IsBoxSelectActive;
+	protected EditorHudController m_TemplateController;
+	
+	// View Properties
+	Widget Left;
+	ScrollWidget PlaceablesScroll;
 	
 	// Layout Elements
 	Widget NotificationFrame;
@@ -18,18 +23,21 @@ class EditorHud: ScriptView
 	
 	void EditorHud()
 	{	
-		EditorLog.Trace("EditorHud");		
 		ShowScreenLogs(GetEditor().Settings.ShowScreenLogs);
 	}
-	
-	void ~EditorHud()
-	{
-		delete CameraMapMarker;
-	}
-	
+		
 	override void Update(float dt)
 	{
 		super.Update(dt);
+		
+		m_TemplateController = EditorHudController.Cast(m_Controller);
+		
+		float w, h;
+		int x, y;
+		GetScreenSize(x, y);
+		Left.GetSize(w, h);
+		Left.SetSize(w, y - 74);
+		PlaceablesScroll.SetSize(w, y - 74 - 28);
 		
 		// kinda cursed but double inputs. maybe have a handler if you want more ui shit (loooot editor)
 		if (GetEditor().IsInventoryEditorActive() || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
@@ -56,7 +64,6 @@ class EditorHud: ScriptView
 
 	override void Show(bool show) 
 	{
-		EditorLog.Trace("EditorHud::Show");
 		m_LayoutRoot.Show(show);
 		
 		if (CurrentDialog) {

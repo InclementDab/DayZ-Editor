@@ -37,12 +37,10 @@ class EditorHudController: EditorControllerBase
 	float CameraSmoothing = 50.0;
 	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
 
-	// View Properties
-	protected Widget LeftbarFrame;
-	protected ImageWidget LeftbarHideIcon;
-	
-	ScrollWidget LeftbarScroll;
+	ScrollWidget PlaceablesScroll;
 	ScrollWidget RightbarScroll;
+	
+	Widget LeftDragZone;
 	
 	protected Widget RightbarFrame;
 	protected ImageWidget RightbarHideIcon;
@@ -87,23 +85,10 @@ class EditorHudController: EditorControllerBase
 	
 	void EditorHudController() 
 	{
-		EditorLog.Trace("EditorHudController");
-		
-		EditorLog.OnLog.Insert(OnEditorLog);		
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-				
 		// more hacking
 		g_EditorPrecision = GetPrecisionLevel();
 	}
-	
-	void ~EditorHudController() 
-	{
-		EditorLog.Trace("~EditorHudController");
-				
-		EditorLog.OnLog.Remove(OnEditorLog);
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-	}
-	
+		
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
@@ -136,30 +121,42 @@ class EditorHudController: EditorControllerBase
 		NotifyPropertyChanged("EditorHudToolbarView");
 	}
 		
-	void Update()
+	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		//Debug.DestroyAllShapes();
-/*
-		array<EditorCameraTrackListItem> camera_tracks = GetCameraTracks();
-		for (int i = 0; i < camera_tracks.Count(); i++) {
-			EditorCameraTrackListItemController start_ctrl = camera_tracks[i].GetData();
-			if (!camera_tracks[i + 1]) {
-				continue;
+		switch (w) {
+			case LeftDragZone: {
+				WidgetAnimator.AnimateColorHSV(LeftDragZone, "240 140 60", "239 131 175", 30);
+				break;
 			}
-			
-			EditorCameraTrackListItemController end_ctrl = camera_tracks[i + 1].GetData();
-			
-			float value = 0;
-			vector last_position = start_ctrl.GetPosition();
-			while (value <= 1.0) {
-				vector position = EditorMath.LerpVector(start_ctrl.GetPosition(), end_ctrl.GetPosition(), value);
-				Debug.DrawLine(last_position, position, COLOR_WHITE);
-				last_position = position;
-				value += 0.05;
-			}
-		}*/
+		}
+		
+		return super.OnMouseEnter(w, x, y);
 	}
-			
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		switch (w) {
+			case LeftDragZone: {
+				
+				break;
+			}
+		}
+		
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		switch (w) {
+			case LeftDragZone: {
+				WidgetAnimator.AnimateColorHSV(LeftDragZone, "239 131 175", "240 140 60", 30);
+				break;
+			}
+		}
+		
+		return super.OnMouseLeave(w, enterW, x, y);
+	}
+				
 	void InsertMapMarker(EditorMarker map_marker)
 	{
 		EditorLog.Trace("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
@@ -290,7 +287,7 @@ class EditorHudController: EditorControllerBase
 				
 				LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
 				LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
-				LeftbarScroll.VScrollToPos(0);
+				PlaceablesScroll.VScrollToPos(0);
 				break;
 			}
 			
@@ -304,7 +301,7 @@ class EditorHudController: EditorControllerBase
 				
 				LeftbarCategoryConfig.SetColor(ARGB(255, 60, 60, 60));
 				LeftbarCategoryStatic.SetColor(m_Editor.Settings.SelectionColor);
-				LeftbarScroll.VScrollToPos(0);
+				PlaceablesScroll.VScrollToPos(0);
 				break;
 			}
 			
@@ -324,17 +321,6 @@ class EditorHudController: EditorControllerBase
 				g_EditorPrecision = GetPrecisionLevel();
 				break;
 			}
-		}
-	}
-	
-	void LeftbarHideExecute(ButtonCommandArgs args) 
-	{
-		LeftbarFrame.Show(!args.GetButtonState());
-		
-		if (args.GetButtonState()) {
-			LeftbarHideIcon.SetFlags(WidgetFlags.FLIPU);
-		} else {
-			LeftbarHideIcon.ClearFlags(WidgetFlags.FLIPU);
 		}
 	}
 	
@@ -446,6 +432,7 @@ class EditorHudController: EditorControllerBase
 		}
 	}
 	
+	/*
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
@@ -499,7 +486,7 @@ class EditorHudController: EditorControllerBase
 		m_Editor.GetEditorHud().SetCurrentTooltip(null);
 		
 		return super.OnMouseLeave(w, enterW, x, y);
-	}
+	}*/
 	
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{

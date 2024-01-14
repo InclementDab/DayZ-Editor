@@ -39,210 +39,120 @@ FrameWidgetClass EditorFrame {
      vexactsize 0
      priority 239
     }
-    WrapSpacerWidgetClass LeftbarWrapper {
-     visible 1
-     clipchildren 1
+    FrameWidgetClass Left {
+     clipchildren 0
      ignorepointer 1
-     position 0 0.055
-     size 360 0.93
-     hexactpos 0
-     vexactpos 0
+     position 0 56
+     size 280 240
+     hexactpos 1
+     vexactpos 1
      hexactsize 1
-     vexactsize 0
-     Padding 0
-     Margin 0
+     vexactsize 1
+     scaled 0
      {
-      PanelWidgetClass LeftbarFrame {
-       visible 1
-       clipchildren 1
-       ignorepointer 0
-       keepsafezone 1
-       color 0.098 0.098 0.098 0.902
-       position 0 0
-       size 0.92 1
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
+      PanelWidgetClass ScrollBackground {
+       ignorepointer 1
+       color 0.0588 0.0588 0.0588 0.9412
+       size 11 1
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
        vexactsize 0
-       priority 1
        style rover_sim_colorable
-       "no focus" 0
+      }
+      PanelWidgetClass SearchBarPanel {
+       visible 1
+       ignorepointer 1
+       color 0.0588 0.0588 0.0588 1
+       size 280 20
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       style rover_sim_colorable
        {
-        PanelWidgetClass LeftbarPanelSearchBarPanel {
+        MultilineEditBoxWidgetClass SearchBar {
          visible 1
+         disabled 1
          ignorepointer 1
-         color 0.0392 0.0392 0.0392 1
-         position 0 0
-         size 1 34
-         halign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 1
-         style rover_sim_colorable
-         {
-          ButtonWidgetClass LeftbarPanelSearchBarIconButton {
-           visible 1
-           disabled 1
-           ignorepointer 0
-           color 0.7529 0.3686 0.3255 1
-           size 32 32
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           {
-            ImageWidgetClass LeftbarPanelSearchBarIcon {
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             scriptclass "ViewBinding"
-             image0 ""
-             mode blend
-             "src alpha" 1
-             "clamp mode" clamp
-             filter 1
-             {
-              ScriptParamsClass {
-               Binding_Name "SearchBarIcon"
-              }
-             }
-            }
-           }
-           {
-            ScriptParamsClass {
-             Relay_Command "OnSearchButtonPress"
-            }
-           }
-          }
-          EditBoxWidgetClass LeftbarSearchBar {
-           visible 1
-           color 0.6353 0.6353 0.6353 1
-           position 32 0
-           size 0.831 1
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scriptclass "ViewBinding"
-           style Default
-           text "#STR_EDITOR_SEARCH"
-           "limit visible" 0
-           "Use default text" 1
-           "exact text" 1
-           font "gui/fonts/metronbook"
-           {
-            ScriptParamsClass {
-             Binding_Name "SearchBarData"
-             Two_Way_Binding 1
-            }
-           }
-          }
-         }
-        }
-        ScrollWidgetClass LeftbarScroll {
-         clipchildren 1
-         ignorepointer 0
-         position 0 34
-         size 500 900
+         color 0.7843 0.7843 0.7843 1
+         position 15 0
+         size 252 20
+         valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         scriptclass ""
-         style blank
-         "next left" ""
-         "next right" ""
-         "Scrollbar V" 1
-         "Scrollbar V Left" 1
+         text "Filter..."
+         font "gui/fonts/sdf_MetronBook24"
+         "exact text" 1
+         "exact text size" 18
+         text_proportion 0.55
+        }
+        ImageWidgetClass SearchBarIcon {
+         ignorepointer 1
+         color 1 1 1 0.7843
+         position 5 0
+         size 20 20
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         image0 "set:dayz_gui image:iconBacteria"
+         mode blend
+         "src alpha" 1
+         filter 1
+        }
+       }
+      }
+      ScrollWidgetClass PlaceablesScroll {
+       ignorepointer 1
+       position 0 20
+       size 280 220
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       style Colorable
+       "Scrollbar V" 1
+       "Scrollbar V Left" 1
+       {
+        WrapSpacerWidgetClass PlaceablesList {
+         ignorepointer 1
+         color 0.0588 0.0588 0.0588 0.8627
+         position 0 0
+         size 1 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
          {
-          WrapSpacerWidgetClass LeftbarPlacements {
-           disabled 0
-           clipchildren 1
-           ignorepointer 0
-           position 0 0
-           size 1 1
-           halign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           scriptclass "ViewBinding"
-           Padding 0
-           Margin 0
-           "Size To Content V" 1
-           content_halign center
-           content_valign center
-           {
-            ScriptParamsClass {
-             Binding_Name "Placeables"
-            }
-           }
+          ScriptParamsClass {
+           Binding_Name "Placeables"
           }
          }
         }
        }
       }
-      PanelWidgetClass LeftbarCollapsePanel {
-       visible 1
+      PanelWidgetClass LeftDragZone {
        ignorepointer 1
-       position 0 0
-       size 0.075 1
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
+       color 0.1059 0.1059 0.2353 1
+       size 2 1
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
        vexactsize 0
-       priority 1
-       {
-        ButtonWidgetClass LeftbarHide {
-         visible 1
-         clipchildren 1
-         color 0.0196 0.0196 0.0196 0.7843
-         size 1 0.04
-         halign right_ref
-         valign bottom_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         style DayZDefaultButtonNoBorder
-         switch toggle
-         {
-          ImageWidgetClass LeftbarHideIcon {
-           ignorepointer 1
-           position 0 0
-           size 1 1
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           image0 "set:dayz_gui image:arrow_left"
-           imageTexture "{60621763B985C925}dta/gui/gui/imagesets/dayz_gui@2x.edds"
-           mode blend
-           "src alpha" 1
-          }
-         }
-         {
-          ScriptParamsClass {
-           Relay_Command "LeftbarHideExecute"
-          }
-         }
-        }
-       }
+       style Outline_1px
       }
      }
     }
@@ -250,11 +160,11 @@ FrameWidgetClass EditorFrame {
      visible 1
      clipchildren 0
      ignorepointer 0
-     position 0 0.055
+     position 0 56
      size 280 0.93
      halign right_ref
-     hexactpos 0
-     vexactpos 0
+     hexactpos 1
+     vexactpos 1
      hexactsize 1
      vexactsize 0
      style Colorable
@@ -588,12 +498,12 @@ FrameWidgetClass EditorFrame {
      clipchildren 0
      ignorepointer 1
      position 0 0
-     size 1 0.054
+     size 1 56
      halign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
-     vexactsize 0
+     vexactsize 1
      priority 5
      scriptclass "ViewBinding"
      {
