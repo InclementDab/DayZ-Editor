@@ -26,7 +26,7 @@ class EditorFindAndReplaceCommand: EditorAsyncCommand
 	
 	array<EditorObject> FindAndReplaceObjects(string query, string replace)
 	{
-		array<ref EditorObjectData> created_data = {};
+		/*array<ref EditorObjectData> created_data = {};
 		array<EditorObject> found_objects = FindObjects(query);
 		foreach (EditorObject editor_object: found_objects) {
 			EditorObjectData data = editor_object.CreateSerializedData();
@@ -35,7 +35,8 @@ class EditorFindAndReplaceCommand: EditorAsyncCommand
 		}
 		
 		GetEditor().DeleteObjects(found_objects);
-		return GetEditor().CreateObjects(created_data);
+		return GetEditor().CreateObjects(created_data);*/
+		return {};
 	}
 	
 	override string GetName()

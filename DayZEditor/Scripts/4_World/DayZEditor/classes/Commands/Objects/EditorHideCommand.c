@@ -7,7 +7,7 @@ class EditorHideCommand: EditorCommand
 			return false;
 		}
 		
-		array<EditorObject> selected_objects = m_Editor.GetSelectedObjects();
+		array<EditorObject> selected_objects = EditorObject.SelectedObjects
 		foreach (EditorObject selected_object: selected_objects) {
 			selected_object.Hide(true);
 		}

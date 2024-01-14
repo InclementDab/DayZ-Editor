@@ -10,19 +10,17 @@ class EditorDeleteCommand: EditorCommand
 			return true;
 		}
 		
-		auto deleted_objects = m_Editor.GetSelectedHiddenObjects();
-		if (deleted_objects.Count() > 0) {
-			m_Editor.UnhideMapObjects(deleted_objects);
+		if (EditorHiddenObject.SelectedObjects.Count() > 0) {
+			m_Editor.UnhideMapObjects(EditorHiddenObject.SelectedObjects);
 			return true;
 		}
 		
-		array<EditorObject> objects = m_Editor.GetSelectedObjects();
-		if (objects.Count() == 0) {
+		if (EditorObject.SelectedObjects.Count() == 0) {
 			return false;
 		}
 		
 		m_Editor.GetEditorHud().SetCurrentTooltip(null);
-		m_Editor.DeleteObjects(objects);
+		m_Editor.DeleteObjects(EditorObject.SelectedObjects);
 		
 		return true;	
 	}

@@ -6,7 +6,7 @@ class EditorPlaceObjectCommand: EditorCommand
 		
 		array<Object> placing_objects = GetEditor().GetPlacingObjects();		
 		foreach (Object placing_object: placing_objects) {			
-			EditorObject editor_object = GetEditor().CreateObject(EditorObjectData.Create(placing_object));
+			EditorObject editor_object = GetEditor().CreateObject(placing_object);
 			if (!editor_object) { 
 				continue;
 			}
@@ -15,7 +15,7 @@ class EditorPlaceObjectCommand: EditorCommand
 				GetEditor().RemoveFromHand(placing_object); 
 			}
 			
-			GetEditor().SelectObject(editor_object);
+			editor_object.SetSelected(true);
 		}		
 		
 		/*

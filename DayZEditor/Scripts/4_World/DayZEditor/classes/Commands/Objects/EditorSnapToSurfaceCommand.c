@@ -4,7 +4,7 @@ class EditorSnapToSurfaceCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		
-		array<EditorObject> editor_objects = m_Editor.GetSelectedObjects();		
+		array<EditorObject> editor_objects = EditorObject.SelectedObjects		
 		EditorAction align_undo = new EditorAction("SetTransform", "SetTransform");
 		foreach (EditorObject editor_object: editor_objects) {
 			vector transform[4];

@@ -3,9 +3,9 @@ class EditorSelectAllCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		array<EditorObject> placed_objects = m_Editor.GetPlacedObjects();
+		array<ref EditorObject> placed_objects = m_Editor.GetPlacedObjects();
 		foreach (EditorObject eo: placed_objects) {
-			m_Editor.SelectObject(eo);
+			eo.SetSelected(true);
 		}
 		
 		return true;
