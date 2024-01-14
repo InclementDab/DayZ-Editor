@@ -79,10 +79,7 @@ class EditorObject: Managed
 		
 
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
-		m_BasePoint = GetGame().CreateObjectEx("BoundingBoxBase", base_point, ECE_NONE);
-		//m_BasePoint.SetScale();
-		//m_BasePoint.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
-
+		m_BasePoint = GetGame().CreateObjectEx("ScriptedEntity", base_point, ECE_SETUP);
 		m_Object.AddChild(m_BasePoint, -1, true);
 		
 		vector transform[4];
@@ -148,6 +145,9 @@ class EditorObject: Managed
 	void ~EditorObject()
 	{			
 		GetGame().ObjectDelete(m_Object);
+		GetGame().ObjectDelete(m_BBoxBase);
+		GetGame().ObjectDelete(m_CenterLine);
+		GetGame().ObjectDelete(m_BasePoint);
 				
 		foreach (auto snap_point: m_EditorSnapPoints) {
 			snap_point.Delete();
@@ -424,7 +424,7 @@ class EditorObject: Managed
 	static void ClearSelections()
 	{
 		foreach (EditorObject selected_object: SelectedObjects) {
-			if (selected_object.IsSelected()) {
+			if (selected_object && selected_object.IsSelected()) {
 				selected_object.SetSelected(false);
 			}
 		}
