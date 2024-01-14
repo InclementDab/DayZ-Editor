@@ -71,8 +71,7 @@ class EditorObjectDragHandler: EditorDragHandler
 				}
 				
 			} else {				
-				transform[3] = cursor_pos;
-				transform[3][1] = transform[3][1] + m_EditorObject.GetYDistance();
+				transform[3] = cursor_pos + m_EditorObject.GetBasePointOffset();
 			} 			
 		}
 		

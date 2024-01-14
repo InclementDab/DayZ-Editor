@@ -21,7 +21,7 @@ class EditorSnapToSurfaceCommand: EditorCommand
 			transform[0] = surface_normal * local_ori;
 			transform[1] = surface_normal;
 			transform[2] = surface_normal * (local_ori * vector.Up);
-			transform[3] = ground_position + (surface_normal * editor_object.GetYDistance());
+			transform[3] = ground_position + (surface_normal * editor_object.GetBasePointOffset());
 			
 			editor_object.GetWorldObject().SetTransform(transform);
 			

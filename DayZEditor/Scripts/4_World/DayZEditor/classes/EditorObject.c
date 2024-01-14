@@ -26,11 +26,12 @@ class EditorObject: Managed
 	protected ref EditorObjectWorldMarker m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem m_EditorPlacedListItem;
 	
-	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine, m_BasePoint;		
+	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
 	protected vector m_LineCenters[12]; 
 	protected vector m_LineVerticies[8];
+	protected vector m_BasePoint;
 	protected bool m_IsSelected;
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
 		
@@ -76,12 +77,10 @@ class EditorObject: Managed
 		m_LineCenters[9] = AverageVectors(m_LineVerticies[5], m_LineVerticies[2]);
 		m_LineCenters[10] = AverageVectors(m_LineVerticies[5], m_LineVerticies[4]);		
 		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
-		
+				
 
-		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
-		m_BasePoint = GetGame().CreateObjectEx("ScriptedEntity", base_point, ECE_SETUP);
-		m_Object.AddChild(m_BasePoint, -1, true);
-		
+		m_BasePoint = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
+			
 		vector transform[4];
 		m_Object.GetTransform(transform);
 		
@@ -147,7 +146,6 @@ class EditorObject: Managed
 		GetGame().ObjectDelete(m_Object);
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
-		GetGame().ObjectDelete(m_BasePoint);
 				
 		foreach (auto snap_point: m_EditorSnapPoints) {
 			snap_point.Delete();
@@ -175,6 +173,13 @@ class EditorObject: Managed
 			Shape.CreateMatrix(mat);
 			DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
 		}
+		
+		vector clip_info[2];
+		m_Object.ClippingInfo(clip_info);
+		Debug.DestroyAllShapes();
+		Debug.DrawSphere(clip_info[0].Multiply4(transform));
+		//Debug.DrawSphere(clip_info[1].Multiply4(transform));
+		//Print(m_BasePoint);
 	}
 #endif
 		
@@ -246,14 +251,17 @@ class EditorObject: Managed
 	
 	vector GetBasePoint()
 	{
-		return m_BasePoint.GetWorldPosition();
+		vector transform[4];
+		m_Object.GetTransform(transform);
+
+		return m_BasePoint.Multiply4(transform);
 	}
 	
-	float GetYDistance()
+	vector GetBasePointOffset()
 	{
-		return ((m_Object.GetPosition() - m_BasePoint.GetPosition())[1]);
+		return m_BasePoint * -1;
 	}
-	
+		
 	bool OnMouseEnter(int zx, int y)	
 	{
 		return true;
