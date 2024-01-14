@@ -6,7 +6,7 @@ class EditorSnapCommand: EditorCommand
 		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
 		if (!button_args || button_args.Source.GetName() != "SnapButton") {
 			m_Editor.SnappingMode = !m_Editor.SnappingMode;
-			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("m_Editor.SnappingMode");
+			m_Editor.GetEditorHud().GetTemplateController().NotifyPropertyChanged("m_Editor.SnappingMode");
 		}
 		
 		return true;

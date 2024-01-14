@@ -1,5 +1,7 @@
 class EditorHudController: EditorControllerBase
 {
+	static const string NOTIFICATION_SOUND = "Notification_SoundSet";
+	
 	string SearchBarData;
 	string SearchBarIcon = "set:dayz_editor_gui image:search";
 	string Version = Editor.Version;
@@ -20,10 +22,7 @@ class EditorHudController: EditorControllerBase
 	
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
-	
-	// Main data
-	ref EditorHudToolbar EditorHudToolbarView;
-	
+		
 	ref ObservableCollection<ref EditorTreeItem> Placeables = new ObservableCollection<ref EditorTreeItem>(this);
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
@@ -60,7 +59,6 @@ class EditorHudController: EditorControllerBase
 	protected EditBoxWidget PlacedSearchEditbox;
 	
 	protected ButtonWidget CinematicCameraButton;
-	protected ButtonWidget BrushToggleButton;
 	protected ButtonWidget PlacementsTabButton;
 	protected ButtonWidget DeletionsTabButton;
 	protected ButtonWidget LeftbarPanelSearchBarIconButton;
@@ -74,15 +72,40 @@ class EditorHudController: EditorControllerBase
 	// Preview for Object Readout
 	TextWidget ObjectHoverSelectObjectReadout;
 	
+	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>(this);
+
+	float BrushRadius = 65;
+	float BrushDensity = 0.25;
+	
+	bool BrushToggleButtonState;
+	int BrushTypeSelection;
+	string BrushToggleButtonText;
+	
+	bool ControlPlayerState;
+	
+	// View Properties
+	protected ButtonWidget MenuBarFile;
+	protected ButtonWidget MenuBarEdit;
+	protected ButtonWidget MenuBarView;
+	protected ButtonWidget MenuBarEditor;
+	
+	protected ImageWidget MagnetButton_Icon;
+	protected ImageWidget GroundButton_Icon;
+	protected ImageWidget SnapButton_Icon;
+	protected ImageWidget CollisionButton_Icon;
+	protected ImageWidget CameraLightButton_Icon;
+	
+	ButtonWidget BrushToggleButton;
+	TextWidget NotificationText;
+	
+	Widget NotificationPanel;
+	
+	protected ref EditorMenu m_CurrentMenu;
+	protected ref EditorTooltip m_CurrentTooltip;
+	
 	// Favorites
 	protected ref array<string> m_FavoriteItems = {};
-	
-	// Temp until sub ViewControllers can be properties of parent ViewController
-	EditorHudToolbarController GetToolbarController() 
-	{
-		return EditorHudToolbarController.Cast(EditorHudToolbarView.GetController());
-	}
-	
+		
 	void EditorHudController() 
 	{
 		// more hacking
@@ -117,13 +140,45 @@ class EditorHudController: EditorControllerBase
 		//LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
 		//LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
 		
-		EditorHudToolbarView = new EditorHudToolbar();
-		NotifyPropertyChanged("EditorHudToolbarView");
+		// Load Brushes		
+		string brush_file = m_Editor.Settings.EditorBrushFile;
+		if (brush_file.Contains("'")) {
+			// bi wtf
+			brush_file.Replace("'", "");
+			brush_file.Replace("\"", "");
+			m_Editor.Settings.EditorBrushFile = brush_file;
+			m_Editor.Settings.Save();
+		}
+		
+		if (!FileExist(m_Editor.Settings.EditorBrushFile)) {
+			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", m_Editor.Settings.EditorBrushFile)) {
+				EditorLog.Error("Could not copy brush data to %1", m_Editor.Settings.EditorBrushFile);
+				return;
+			}
+		}
+		
+		ReloadBrushes(m_Editor.Settings.EditorBrushFile);
 	}
 		
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		Print(w.GetName());
+		ViewBinding view_binding = GetViewBinding(w);
+		if (view_binding && !m_CurrentMenu) {
+			EditorCommand editor_command;
+			if (Class.CastTo(editor_command, view_binding.GetRelayCommand())) {
+				
+				float pos_x, pos_y, size_x, size_y;
+				w.GetScreenPos(pos_x, pos_y);
+				w.GetScreenSize(size_x, size_y);
+								
+				m_CurrentTooltip = EditorTooltip.CreateOnButton(editor_command, w, TooltipPositions.BOTTOM_LEFT);
+				if (!editor_command.CanExecute()) {
+					m_CurrentTooltip.GetLayoutRoot().SetAlpha(100);
+				}
+			}
+		}
+				
+		
 		switch (w) {
 			case LeftDragZone: {
 				//WidgetAnimator.AnimateColorHSV(LeftDragZone, "240 140 60", "239 131 175", 30);
@@ -131,6 +186,15 @@ class EditorHudController: EditorControllerBase
 				WidgetAnimator.AnimateColor(LeftDragZone, COLOR_WHITE, 50);
 				break;
 			}
+			
+			case MenuBarFile:
+			case MenuBarEdit:
+			case MenuBarView:
+			case MenuBarEditor: {
+				delete m_CurrentMenu;
+				m_CurrentMenu = CreateToolbarMenu(w);
+				break;
+			}	
 		}
 		
 		return super.OnMouseEnter(w, x, y);
@@ -158,6 +222,7 @@ class EditorHudController: EditorControllerBase
 			}
 		}
 		
+		delete m_CurrentTooltip;
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 				
@@ -323,6 +388,82 @@ class EditorHudController: EditorControllerBase
 			// I literally hate this
 			case "PrecisionLevel": {
 				g_EditorPrecision = GetPrecisionLevel();
+				break;
+			}
+			
+			case "BrushToggleButtonState":
+			case "BrushTypeSelection": {
+				
+				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
+					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Type;
+					NotifyPropertyChanged("BrushToggleButtonText", false);
+				}
+								
+				m_Editor.CommandManager[EditorBrushToggleCommand].Execute(this, new ButtonCommandArgs(BrushToggleButton, 0));
+
+				break;
+			}
+			
+			case "BrushRadius":
+			case "BrushDensity": {
+				EditorBrush.BrushRadius = BrushRadius / 2;
+				EditorBrush.BrushDensity = BrushDensity;
+				break;
+			}
+			
+			case "m_Editor.MagnetMode": {
+				
+				if (m_Editor.MagnetMode) {
+					MagnetButton_Icon.SetColor(COLOR_CANDY);
+				} else {
+					MagnetButton_Icon.SetColor(COLOR_WHITE);
+				}
+				break;
+			}
+			case "m_Editor.GroundMode": {
+				if (m_Editor.GroundMode) {
+					GroundButton_Icon.SetColor(COLOR_APPLE);
+				} else {
+					GroundButton_Icon.SetColor(COLOR_WHITE);
+				}
+				
+				break;
+			}
+			case "m_Editor.SnappingMode": {
+				if (m_Editor.SnappingMode) {
+					SnapButton_Icon.SetColor(COLOR_JELLY);
+				} else {
+					SnapButton_Icon.SetColor(COLOR_WHITE);
+				}
+				
+				break;
+			}
+			case "m_Editor.CollisionMode": {
+				if (m_Editor.CollisionMode) {
+					CollisionButton_Icon.SetColor(COLOR_PALE_B);
+				} else {
+					CollisionButton_Icon.SetColor(COLOR_WHITE);
+				}
+					
+				break;
+			}
+			case "ControlPlayerState": {
+				if (ControlPlayerState) {
+					GetEditor().ControlPlayer(PlayerBase.Cast(GetGame().GetPlayer()));
+				} else {
+					GetEditor().ControlCamera();
+				}
+				
+				break;
+			}
+			
+			case "m_Editor.CameraLight": {
+				GetEditor().GetCamera().SetLightState(m_Editor.CameraLight);
+				if (m_Editor.CameraLight) {
+					CameraLightButton_Icon.SetColor(COLOR_YELLOW);
+				} else {
+					CameraLightButton_Icon.SetColor(COLOR_WHITE);
+				}
 				break;
 			}
 		}
@@ -499,7 +640,7 @@ class EditorHudController: EditorControllerBase
 				ScrollWidget.Cast(w).VScrollStep(wheel * 10);
 			}
 		}
-
+		
 		return false;
 	}
 	
@@ -547,5 +688,75 @@ class EditorHudController: EditorControllerBase
 		NotifyPropertyChanged("obj_x");
 		NotifyPropertyChanged("obj_y");
 		NotifyPropertyChanged("obj_z");
+	}
+	
+	void ShowNotification(string text, int color, float duration)
+	{
+		NotificationPanel.SetColor(color);
+		NotificationText.SetText(text);
+		
+		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, -25, 100);
+		SEffectManager.PlaySoundOnObject(NOTIFICATION_SOUND, GetEditor().GetCamera());
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationPanel.SetPos, (duration * 1000) + 100, false, 0, 0, true);
+	}
+	
+	// Brush Management
+	void ReloadBrushes(string filename)
+	{
+		BrushToggleButtonState = false;
+		NotifyPropertyChanged("BrushToggleButtonState");
+		
+		BrushTypeBoxData.Clear();
+		XMLEditorBrushes xml_brushes = new XMLEditorBrushes(BrushTypeBoxData);
+		GetXMLApi().Read(filename, xml_brushes);
+	}
+
+	// Relay Commands
+	void MenuBarExecute(ButtonCommandArgs args) 
+	{		
+		EditorLog.Trace("EditorHudToolbarController::MenuBarExecute");
+		if (!EditorHud.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
+			EditorHud.CurrentMenu = CreateToolbarMenu(args.Source);
+		} else {
+			delete EditorHud.CurrentMenu;
+		}
+	}	
+	
+	protected EditorMenu CreateToolbarMenu(Widget toolbar_button)
+	{
+		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
+				
+		EditorMenu toolbar_menu;
+		switch (toolbar_button) {
+			
+			case MenuBarFile: {
+				toolbar_menu = new EditorFileMenu();
+				break;
+			}
+			
+			case MenuBarEdit: {
+				toolbar_menu = new EditorEditMenu();
+				break;
+			}
+			
+			case MenuBarView: {
+				toolbar_menu = new EditorViewMenu();
+				break;
+			}
+			
+			case MenuBarEditor: {
+				toolbar_menu = new EditorEditorMenu(); // lol
+				break;
+			}
+		}
+		
+		// Sets position to bottom of button
+		float x, y, w, h;
+		toolbar_button.GetScreenPos(x, y);
+		toolbar_button.GetScreenSize(w, h);
+		toolbar_menu.GetLayoutRoot().SetPos(x, y + h);
+		
+		return toolbar_menu;
 	}
 }

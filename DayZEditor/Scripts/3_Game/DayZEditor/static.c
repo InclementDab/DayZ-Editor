@@ -52,7 +52,7 @@ static void _GetWidgetRoot(out Widget w)
 }
 
 static const int COLOR_SALMON	= ARGB(255, 192, 94, 83);
-static const int COLOR_SALMON_A	= ARGB(128, 50, 100, 100);
+static const int COLOR_SALMON_A	= ARGB(128, 192, 94, 83);
 static const int COLOR_CANDY 	= ARGB(255, 231, 76, 60);
 static const int COLOR_APPLE 	= ARGB(255, 106, 176, 76);
 static const int COLOR_JELLY 	= ARGB(255, 240, 147, 43);

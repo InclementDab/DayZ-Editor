@@ -6,7 +6,7 @@ class EditorMagnetCommand: EditorCommand
 		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
 		if (!button_args || button_args.Source.GetName() != "MagnetButton") {
 			m_Editor.MagnetMode = !m_Editor.MagnetMode;
-			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("m_Editor.MagnetMode");
+			m_Editor.GetEditorHud().GetTemplateController().NotifyPropertyChanged("m_Editor.MagnetMode");
 		}
 		
 		return true;

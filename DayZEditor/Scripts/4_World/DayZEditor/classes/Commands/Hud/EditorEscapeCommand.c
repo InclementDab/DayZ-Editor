@@ -19,7 +19,7 @@ class EditorEscapeCommand: EditorCommand
 		} 
 		
 		if (m_Editor.GetBrush()) {
-			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().BrushToggleButton.SetState(false);
+			m_Editor.GetEditorHud().GetTemplateController().BrushToggleButton.SetState(false);
 			m_Editor.SetBrush(null);
 			return true;
 		}

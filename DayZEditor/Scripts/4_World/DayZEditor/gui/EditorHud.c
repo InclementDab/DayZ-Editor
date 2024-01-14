@@ -116,7 +116,7 @@ class EditorHud: ScriptView
 	{
 		EditorLog.Trace("EditorHud::CreateNotification");
 		
-		GetTemplateController().GetToolbarController().ShowNotification(text, color, duration);
+		GetTemplateController().ShowNotification(text, color, duration);
 	}
 	
 	bool IsMapVisible()
