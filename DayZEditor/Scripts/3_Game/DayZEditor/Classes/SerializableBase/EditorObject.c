@@ -260,15 +260,15 @@ class EditorObject: SerializableBase
 		serializer.Read(version);
 		serializer.Read(m_UUID);
 		
+		serializer.Read(m_Flags);
+		serializer.Read(m_DisplayName);
+		
 		string type;
 		serializer.Read(type);
 		vector transform[4];
 		serializer.Read(transform);
 		m_Object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
 		m_Object.SetTransform(transform);
-		
-		serializer.Read(m_Flags);
-		serializer.Read(m_DisplayName);
 		
 		return true;
 	}
