@@ -15,7 +15,8 @@ class EditorDZEFile: EditorFileType
 			return save_data;
 		}
 		
-		if (!save_data.Read(file_serializer)) {
+		int version;
+		if (!save_data.Read(file_serializer, version)) {
 			file_serializer.Close();
 			EditorLog.Error("Could not read file %1", file);
 			return save_data;
@@ -84,7 +85,7 @@ class EditorDZEFile: EditorFileType
 				return;
 			}
 			
-			data.Write(file_serializer);
+			data.Write(file_serializer, EditorSaveData.Version);
 			file_serializer.Close();
 			
 		} else {
