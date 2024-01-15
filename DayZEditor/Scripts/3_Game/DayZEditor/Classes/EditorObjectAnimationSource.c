@@ -1,4 +1,4 @@
-class EditorObjectAnimationSource
+class EditorObjectAnimationSource: Managed
 {	
 	protected EntityAI m_WorldObject;
 	protected string m_AnimationName;
