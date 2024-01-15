@@ -7,9 +7,7 @@ class EditorHudController: EditorControllerBase
 	//
 	string PlacedSearchBarData;
 	string PlacedSearchBarIcon = "set:dayz_editor_gui image:search";
-	
-	string ObjectReadoutName;
-	
+		
 	bool CategoryPlacements = true;
 	bool CategoryDeletions;
 	bool CategoryConfig = true;
@@ -79,7 +77,7 @@ class EditorHudController: EditorControllerBase
 	string BrushToggleButtonText;
 	
 	bool ControlPlayerState;
-		
+	
 	protected ImageWidget MagnetButton_Icon;
 	protected ImageWidget GroundButton_Icon;
 	protected ImageWidget SnapButton_Icon;

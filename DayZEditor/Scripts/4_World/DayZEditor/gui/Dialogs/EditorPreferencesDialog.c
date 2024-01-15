@@ -130,7 +130,6 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 	void SetDefaults()
 	{
 		EditorLog.Trace("EditorPreferencesDialog::SetDefaults");
-		m_Editor.GeneralSettings.SetDefaults();
 		
 		for (int i = 0; i < m_DialogBaseController.DialogContentData.Count(); i++) {
 			GroupPrefab group = GroupPrefab.Cast(m_DialogBaseController.DialogContentData[i]);

@@ -15,7 +15,6 @@ class EditorHud: ScriptView
 	// Layout Elements
 	Widget NotificationFrame;
 	Widget MapContainer;
-	Widget LoggerFrame;
 	Widget LeftDragZone, RightDragZone;
 	
 	CanvasWidget EditorCanvas;
@@ -29,6 +28,7 @@ class EditorHud: ScriptView
 	MapWidget EditorMapWidget;
 	
 	EditBoxWidget LeftbarSearchBar;
+	TextWidget ObjectHoverText;
 	
 	protected ref EditorMenu m_CurrentMenu;
 	protected ref EditorTooltip m_CurrentTooltip;
@@ -36,9 +36,7 @@ class EditorHud: ScriptView
 	protected Widget m_DraggedBar;
 	
 	void EditorHud()
-	{	
-		ShowScreenLogs(GetEditor().GeneralSettings.ShowScreenLogs);
-		
+	{		
 		float w, h;
 		int x, y;
 		GetScreenSize(x, y);
@@ -55,12 +53,12 @@ class EditorHud: ScriptView
 		m_TemplateController = EditorHudController.Cast(m_Controller);
 		
 		if (GetEditor().GetCamera()) {
-			vector cam_pos = GetEditor().GetCamera().GetPosition();
+			//vector cam_pos = GetEditor().GetCamera().GetPosition();
 			
-			m_TemplateController.cam_x = cam_pos[0];
-			m_TemplateController.cam_y = cam_pos[1];
-			m_TemplateController.cam_z = cam_pos[2];
-			m_TemplateController.NotifyPropertiesChanged({ "cam_x", "cam_y", "cam_z"} );
+			//m_TemplateController.cam_x = cam_pos[0];
+			//m_TemplateController.cam_y = cam_pos[1];
+			//m_TemplateController.cam_z = cam_pos[2];
+			//m_TemplateController.NotifyPropertiesChanged({ "cam_x", "cam_y", "cam_z"} );
 		}
 		
 		array<EditorCommand> commands = GetEditor().CommandManager.GetCommands();
@@ -274,12 +272,7 @@ class EditorHud: ScriptView
 	{
 		return GetGame().GetUIManager().IsCursorVisible();
 	}
-		
-	void ShowScreenLogs(bool state)
-	{
-		LoggerFrame.Show(state);
-	}
-		
+				
 	void CreateNotification(string text, int color = -4301218, float duration = 4)
 	{
 		EditorLog.Trace("EditorHud::CreateNotification");
@@ -443,23 +436,15 @@ class EditorHud: ScriptView
 	
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
-		m_TemplateController.ObjectReadoutName = GetFriendlyObjectName(target, component_index);
-		m_TemplateController.NotifyPropertyChanged("ObjectReadoutName");
-		
-		if (m_TemplateController.ObjectReadoutName.Contains(".p3d")) { // yeah its hacky but its cool!
-			m_TemplateController.ObjectHoverSelectObjectReadout.SetColor(COLOR_YELLOW);
-		} else {
-			m_TemplateController.ObjectHoverSelectObjectReadout.SetColor(COLOR_WHITE);
-		}
-		
+		string text = GetFriendlyObjectName(target, component_index);
+		ObjectHoverText.SetText(text);
+		ObjectHoverText.SetColor(Ternary<int>.If(text.Contains(".p3d"), COLOR_YELLOW, COLOR_WHITE));
 		return true;
 	}
 	
 	bool OnMouseExitObject(Object target, int x, int y, int component_index)
-	{
-		m_TemplateController.ObjectReadoutName = "";
-		m_TemplateController.NotifyPropertyChanged("ObjectReadoutName");
-	
+	{	
+		ObjectHoverText.SetText(string.Empty);
 		return true;
 	}	
 	
