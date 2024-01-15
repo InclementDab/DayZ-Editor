@@ -2547,7 +2547,7 @@ FrameWidgetClass EditorFrame {
     GridSpacerWidgetClass OnlineServiceInfo {
      ignorepointer 1
      position 360 18
-     size 280 36
+     size 280 79
      valign bottom_ref
      hexactpos 1
      vexactpos 1
@@ -2572,7 +2572,7 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass SessionId {
          ignorepointer 1
          position 0 0
-         size 1 12
+         size 1 16
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -2580,7 +2580,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 1
          text "Session ID:"
-         font "gui/fonts/etelkatextpro12"
+         font "gui/fonts/etelkatextpro16"
          "size to text h" 1
          "text valign" center
         }
@@ -2588,7 +2588,7 @@ FrameWidgetClass EditorFrame {
          visible 1
          ignorepointer 1
          color 0.3059 0.5608 0.3686 1
-         size 1 12
+         size 1 16
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -2596,7 +2596,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 1
          scriptclass "ViewBinding"
-         font "gui/fonts/etelkatextpro12"
+         font "gui/fonts/etelkatextpro16"
          "size to text h" 1
          "text valign" center
          {
@@ -2622,7 +2622,7 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass UserCount {
          ignorepointer 1
          position 0 0
-         size 1 12
+         size 1 18
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -2630,13 +2630,13 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 1
          text "User Count:"
-         font "gui/fonts/etelkatextpro12"
+         font "gui/fonts/MetronLight16"
          "size to text h" 1
          "text valign" center
         }
         TextWidgetClass UserCountData {
          ignorepointer 1
-         size 1 12
+         size 1 18
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -2644,7 +2644,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 1
          scriptclass "ViewBinding"
-         font "gui/fonts/etelkatextpro12"
+         font "gui/fonts/MetronLight16"
          "size to text h" 1
          "text valign" center
          {
@@ -2678,7 +2678,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 1
          text "Entity Count:"
-         font "gui/fonts/etelkatextpro12"
+         font "gui/fonts/etelkatextpro16"
          "size to text h" 1
          "text valign" center
         }
@@ -2692,7 +2692,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 1
          scriptclass "ViewBinding"
-         font "gui/fonts/etelkatextpro12"
+         font "gui/fonts/etelkatextpro16"
          "size to text h" 1
          "text valign" center
          {
