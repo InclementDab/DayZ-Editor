@@ -16,7 +16,8 @@ class EditorObject: Managed
 	};
 	
 	static ref array<EditorObject> SelectedObjects = {};
-		
+	
+	protected UUID m_Uuid;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
 	protected string m_DisplayName;
@@ -48,10 +49,11 @@ class EditorObject: Managed
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 	
-	void EditorObject(notnull Object object, EditorObjectFlags flags)
+	void EditorObject(notnull Object object, EditorObjectFlags flags, UUID uuid = UUID.Empty)
 	{
 		m_Object = object;
 		m_Flags = flags;
+		m_Uuid = Ternary<string>.If(uuid == UUID.Empty, UUID.Generate(), uuid);
 		
 		m_DisplayName = m_Object.GetType();
 						
@@ -190,6 +192,15 @@ class EditorObject: Managed
 	}
 #endif
 		
+	static EditorObject CreateFromSerializer(Serializer serializer)
+	{
+		EditorObjectData editor_object_data = new EditorObjectData();
+		
+		int version;
+		editor_object_data.Read(serializer, version);
+		return CreateFromSerializer(editor_object_data);
+	}
+	
 	static EditorObject CreateFromSerializer(notnull EditorObjectData object_data)
 	{
 		EditorObject editor_object = new EditorObject(object_data.CreateObject(), object_data.Flags);
@@ -212,6 +223,7 @@ class EditorObject: Managed
 	EditorObjectData CreateSerializedData()
 	{
 		EditorObjectData data = new EditorObjectData();
+		data.Uuid = m_Uuid;
 		data.Position = m_Object.GetPosition();
 		data.Orientation = m_Object.GetOrientation();
 		data.Scale = m_Object.GetScale();
@@ -403,6 +415,11 @@ class EditorObject: Managed
 	Object GetWorldObject() 
 	{		
 		return m_Object;
+	}
+	
+	UUID GetUUID()
+	{
+		return m_Uuid;
 	}
 	
 	array<EditorSnapPoint> GetEditorSnapPoints()

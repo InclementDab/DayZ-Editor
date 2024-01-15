@@ -7,7 +7,7 @@ class EditorStaticPlaceableItem: EditorPlaceableItem
 		m_Model = model;
 	}
 	
-	override Object CreateObject(vector position, vector orientation, float scale)
+	override Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)
 	{
 		return GetGame().CreateStaticObjectUsingP3D(m_Model, position, orientation, scale);
 	}
@@ -28,7 +28,7 @@ class EditorStaticPlaceableItem: EditorPlaceableItem
 		return EditorPlaceableItemCategory.STATIC;
 	}
 	
-	override EditorObjectData CreateData(vector position, vector orientation, float scale, int flags)
+	override EditorObjectData CreateData(vector position, vector orientation, float scale, int flags = EFE_DEFAULT)
 	{
 		return EditorObjectData.Create(m_Model, position, orientation, scale, flags);
 	}

@@ -42,12 +42,12 @@ class EditorPlaceableItem: Managed
 {
 	protected EditorPlaceableItemCategory m_Category = EditorPlaceableItemCategory.UNKNOWN;
 		
-	EditorObjectData CreateData(vector position, vector orientation, float scale, int flags)
+	EditorObjectData CreateData(vector position, vector orientation, float scale, int flags = EFE_DEFAULT)
 	{
 		return null;
 	}
 	
-	Object CreateObject(vector position, vector orientation, float scale)	
+	Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)	
 	{
 		return null;
 	}

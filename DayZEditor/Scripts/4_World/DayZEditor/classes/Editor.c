@@ -251,7 +251,6 @@ class Editor: Managed
 		CommandManager 		= new EditorCommandManager();
 		CommandManager.Init();
 		
-		
 		// Init Hud
 		g_Game.ReportProgress("Initializing Hud");
 		m_EditorHud 		= new EditorHud();
@@ -882,6 +881,11 @@ class Editor: Managed
 		Statistics.PlacedObjects++;
 		
 		m_PlacedObjects.Insert(editor_object);
+		
+		if (EditorOnlineSession.CurrentSession) {
+			EditorOnlineSession.CurrentSession.OutgoingSyncObjects(m_PlacedObjects);
+		}
+		
 		return editor_object;
 	}
 
@@ -912,6 +916,10 @@ class Editor: Managed
 		
 		if (create_undo) {
 			InsertAction(action);
+		}
+	
+		if (EditorOnlineSession.CurrentSession) {
+			EditorOnlineSession.CurrentSession.OutgoingSyncObjects(m_PlacedObjects);
 		}
 
 		return editor_objects;
@@ -1339,6 +1347,11 @@ class Editor: Managed
 		}
 		
 		return placeable_items[0]; // better way to do other than index 0?
+	}
+
+	void InsertPlacedObject(EditorObject editor_object)
+	{
+		m_PlacedObjects.Insert(editor_object);
 	}
 		
 	void SetSaveFile(string save_file)

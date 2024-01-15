@@ -47,7 +47,6 @@ class EditorItemTreeItem: EditorTreeItem
 					scroller.GetScreenSize(w_f, h_f);
 					scroller.GetScreenPos(x_p, y_p);
 					
-					
 					if (!IsBlacklistedItem(m_PlaceableItem.GetName())) {
 						EditorObjectTooltip tooltip = new EditorObjectTooltip(m_PlaceableItem.CreateObject(vector.Zero, vector.Zero, 1.0), x_p + w_f + 25, y);
 						GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
