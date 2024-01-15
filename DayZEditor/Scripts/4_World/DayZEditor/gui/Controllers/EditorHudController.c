@@ -21,7 +21,7 @@ class EditorHudController: EditorControllerBase
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 		
-	ref ObservableCollection<ref EditorTreeItem> Placeables = new ObservableCollection<ref EditorTreeItem>(this);
+	ref ObservableCollection<ref EditorTreeItem> LeftListItems = new ObservableCollection<ref EditorTreeItem>(this);
 	ref ObservableCollection<ref EditorTreeItem> RightListItems = new ObservableCollection<ref EditorTreeItem>(this);
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
@@ -35,8 +35,8 @@ class EditorHudController: EditorControllerBase
 	float CameraSmoothing = 50.0;
 	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
 
-	ScrollWidget PlaceablesScroll;
-	ScrollWidget RightbarScroll;
+	ScrollWidget LeftScroll;
+	ScrollWidget RightScroll;
 	
 	protected Widget RightbarFrame;
 	protected ImageWidget RightbarHideIcon;
@@ -117,7 +117,7 @@ class EditorHudController: EditorControllerBase
 				tree_item.GetTemplateController().Children.Insert(new EditorItemTreeItem(placeable_item));
 			}
 			
-			Placeables.Insert(tree_item);
+			LeftListItems.Insert(tree_item);
 		}
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", all_placeable_items.Count().ToString());
@@ -203,7 +203,7 @@ class EditorHudController: EditorControllerBase
 					selected_list[k].GetLayoutRoot().Show(selected_list[k].FilterType(PlacedSearchBarData)); 	
 				}
 				
-				RightbarScroll.VScrollToPos(0);
+				RightScroll.VScrollToPos(0);
 				
 				if (PlacedSearchBarData.Length() > 0) {
 					PlacedSearchBarIcon = "set:dayz_gui image:icon_x";
@@ -250,7 +250,7 @@ class EditorHudController: EditorControllerBase
 				
 				PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
 				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
-				RightbarScroll.VScrollToPos(0);
+				RightScroll.VScrollToPos(0);
 				break;
 			}
 			
@@ -264,7 +264,7 @@ class EditorHudController: EditorControllerBase
 				
 				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
 				DeletionsTabButton.SetColor(m_Editor.Settings.SelectionColor);
-				RightbarScroll.VScrollToPos(0);
+				RightScroll.VScrollToPos(0);
 				break;
 			}			
 			
@@ -279,7 +279,7 @@ class EditorHudController: EditorControllerBase
 				
 				LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
 				LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
-				PlaceablesScroll.VScrollToPos(0);
+				LeftScroll.VScrollToPos(0);
 				break;
 			}
 			
@@ -293,7 +293,7 @@ class EditorHudController: EditorControllerBase
 				
 				LeftbarCategoryConfig.SetColor(ARGB(255, 60, 60, 60));
 				LeftbarCategoryStatic.SetColor(m_Editor.Settings.SelectionColor);
-				PlaceablesScroll.VScrollToPos(0);
+				LeftScroll.VScrollToPos(0);
 				break;
 			}
 						

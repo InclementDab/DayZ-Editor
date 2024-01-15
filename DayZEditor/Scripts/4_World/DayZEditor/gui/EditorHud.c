@@ -10,17 +10,16 @@ class EditorHud: ScriptView
 	protected ButtonWidget MenuBarEditor;
 	
 	// View Properties
-	Widget Left;
+	Widget Left, Right;
 	
 	// Layout Elements
 	Widget NotificationFrame;
 	Widget MapContainer;
 	Widget LoggerFrame;
-	Widget LeftDragZone;
-	Widget PlaceablesList;
+	Widget LeftDragZone, RightDragZone;
 	
 	CanvasWidget EditorCanvas;
-	ScrollWidget PlaceablesScroll;
+	ScrollWidget LeftScroll, RightScroll;
 	
 	protected MultilineEditBoxWidget SearchBar;
 	
@@ -39,6 +38,14 @@ class EditorHud: ScriptView
 	void EditorHud()
 	{	
 		ShowScreenLogs(GetEditor().Settings.ShowScreenLogs);
+		
+		float w, h;
+		int x, y;
+		GetScreenSize(x, y);
+		Left.GetSize(w, h);
+		Left.SetSize(w, y - 110);
+		Right.GetSize(w, h);
+		Right.SetSize(w, y - 110);
 	}
 		
 	override void Update(float dt)
@@ -47,13 +54,6 @@ class EditorHud: ScriptView
 		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
 		
-		float w, h;
-		int x, y;
-		GetScreenSize(x, y);
-		Left.GetSize(w, h);
-		Left.SetSize(w, y - 74);
-		PlaceablesScroll.SetSize(1.0, y - 74 - 28);
-
 		if (GetEditor().GetCamera()) {
 			vector cam_pos = GetEditor().GetCamera().GetPosition();
 			
@@ -80,7 +80,7 @@ class EditorHud: ScriptView
 			
 			root.Enable(can_execute);			
 		}
-				
+						
 		// kinda cursed but double inputs. maybe have a handler if you want more ui shit (loooot editor)
 		if (GetEditor().IsInventoryEditorActive() || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
 			return;
@@ -90,18 +90,26 @@ class EditorHud: ScriptView
 			m_DraggedBar = null;
 		}
 		
+		int x, y;
+		GetScreenSize(x, y);
+		
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
-	
+			
 		if (m_DraggedBar) {			
-			m_DraggedBar.GetParent().GetSize(w, h);
-			m_DraggedBar.GetParent().SetSize(Math.Clamp(mouse_x, 40, 720), y - 74);
+			switch (m_DraggedBar.GetParent()) {
+				case Right: {
+					Right.SetSize(x - Math.Clamp(mouse_x, x - 720, x - 40), y - 74);
+					break;
+				}
+				
+				case Left: {
+					Left.SetSize(Math.Clamp(mouse_x, 40, 720), y - 74);
+					break;
+				}
+			}			
 		}
-		
-		// minimum placeables list sizing looks better
-		PlaceablesList.GetSize(w, h);
-		PlaceablesList.SetSize(w, Math.Max(h, y));
-		
+				
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("EditorPlaceObjectCommand") && !KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor()) {
 			EditorObject.ClearSelections();
@@ -120,11 +128,17 @@ class EditorHud: ScriptView
 		}
 	}
 	
+	void OnCreateNewFolder(ButtonCommandArgs args)
+	{
+		m_TemplateController.RightListItems.Insert(new EditorFolderTreeItem("New Folder"));
+	}
+	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		switch (w) {
-			case LeftDragZone: {
-				m_DraggedBar = LeftDragZone;
+			case LeftDragZone:
+			case RightDragZone: {
+				m_DraggedBar = w;
 				break;
 			}
 		}
@@ -152,10 +166,11 @@ class EditorHud: ScriptView
 				
 		
 		switch (w) {
-			case LeftDragZone: {
-				//WidgetAnimator.AnimateColorHSV(LeftDragZone, "240 140 60", "239 131 175", 30);
+			case LeftDragZone:
+			case RightDragZone: {
+				//WidgetAnimator.AnimateColorHSV(w, "240 140 60", "239 131 175", 30);
 				//LeftDragZone.SetColor(COLOR_WHITE);
-				WidgetAnimator.AnimateColor(LeftDragZone, COLOR_WHITE, 50);
+				WidgetAnimator.AnimateColor(w, COLOR_WHITE, 50);
 				break;
 			}
 		}
@@ -166,8 +181,9 @@ class EditorHud: ScriptView
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		switch (w) {
-			case LeftDragZone: {
-				WidgetAnimator.AnimateColor(LeftDragZone, COLOR_SALMON_A, 50);
+			case LeftDragZone:
+			case RightDragZone: {
+				WidgetAnimator.AnimateColor(w, COLOR_SALMON_A, 50);
 				//LeftDragZone.SetColor(COLOR_SALMON_A);
 				break;
 			}
@@ -196,8 +212,8 @@ class EditorHud: ScriptView
 	{
 		switch (w) {
 			case SearchBar: {
-				for (int i = 0; i < m_TemplateController.Placeables.Count(); i++) {
-					EditorFolderTreeItem tree_item = EditorFolderTreeItem.Cast(m_TemplateController.Placeables[i]);
+				for (int i = 0; i < m_TemplateController.LeftListItems.Count(); i++) {
+					EditorFolderTreeItem tree_item = EditorFolderTreeItem.Cast(m_TemplateController.LeftListItems[i]);
 					if (!tree_item) {
 						continue;
 					}
