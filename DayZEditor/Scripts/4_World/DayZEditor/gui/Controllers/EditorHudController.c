@@ -22,6 +22,8 @@ class EditorHudController: EditorControllerBase
 	ref ObservableCollection<ref EditorTreeItem> LeftListItems = new ObservableCollection<ref EditorTreeItem>(this);
 	ref ObservableCollection<ref EditorTreeItem> RightListItems = new ObservableCollection<ref EditorTreeItem>(this);
 	
+	ref EditorTreeItem PlacementsFolder, DeletionsFolder;
+	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
 	
@@ -134,6 +136,11 @@ class EditorHudController: EditorControllerBase
 				return;
 			}
 		}
+		
+		PlacementsFolder = new EditorFolderTreeItem("Placed Objects");
+		DeletionsFolder = new EditorFolderTreeItem("Deleted Objects");
+		RightListItems.Insert(PlacementsFolder);
+		RightListItems.Insert(DeletionsFolder);
 		
 		ReloadBrushes(m_Editor.GeneralSettings.EditorBrushFile);
 	}

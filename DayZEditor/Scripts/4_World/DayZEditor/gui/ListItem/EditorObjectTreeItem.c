@@ -1,13 +1,12 @@
-class EditorItemTreeItem: EditorTreeItem
+class EditorObjectTreeItem: EditorTreeItem
 {
-	protected EditorPlaceableItem m_PlaceableItem;
-	protected Object m_Hologram;
+	protected Object m_Object;
 	
-	void EditorItemTreeItem(EditorPlaceableItem placeable_item)
+	void EditorObjectTreeItem(Object object)
 	{
-		m_PlaceableItem = placeable_item;
+		m_Object = object;
 		
-		m_TemplateController.Text = m_PlaceableItem.GetName();
+		m_TemplateController.Text = m_Object.GetDisplayName();
 		m_TemplateController.NotifyPropertyChanged("Text");
 	}
 	
@@ -16,8 +15,7 @@ class EditorItemTreeItem: EditorTreeItem
 		switch (w) {
 			case Panel: {
 				WidgetAnimator.AnimateColor(Panel, ARGB(255, 75, 119, 190), 50);
-				m_Hologram = m_PlaceableItem.CreateObject(Editor.CurrentMousePosition, vector.Zero, 1.0);
-				GetEditor().AddInHand(m_Hologram);
+				GetEditor().AddInHand(m_Object);
 				return true;
 			}
 		}
@@ -46,7 +44,8 @@ class EditorItemTreeItem: EditorTreeItem
 					float w_f, h_f, x_p, y_p;
 					scroller.GetScreenSize(w_f, h_f);
 					scroller.GetScreenPos(x_p, y_p);
-					EditorObjectTooltip tooltip = new EditorObjectTooltip(m_PlaceableItem.CreateObject(vector.Zero, vector.Zero, 1.0), x_p + w_f + 25, y);
+					
+					EditorObjectTooltip tooltip = new EditorObjectTooltip(m_Object, x_p + w_f + 25, y);
 					GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
 				}
 				

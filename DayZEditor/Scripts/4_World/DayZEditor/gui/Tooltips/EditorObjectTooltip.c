@@ -1,4 +1,4 @@
-class EditorPlaceableTooltip: ScriptViewTemplate<EditorPlaceableTooltipController>
+class EditorObjectTooltip: ScriptViewTemplate<EditorPlaceableTooltipController>
 {
 	protected EditorPlaceableItem m_EditorPlaceableItem;
 	protected Object m_Object;
@@ -6,20 +6,17 @@ class EditorPlaceableTooltip: ScriptViewTemplate<EditorPlaceableTooltipControlle
 	TextWidget Text;
 	ItemPreviewWidget Item;
 	
-	void EditorPlaceableTooltip(notnull EditorPlaceableItem placeable_item, float x, float y)
+	void EditorObjectTooltip(notnull Object object, float x, float y)
 	{
-		m_EditorPlaceableItem = placeable_item;
+		m_Object = object;
 
-		if (!IsBlacklistedItem(m_EditorPlaceableItem.GetName())) {
-			m_Object = m_EditorPlaceableItem.CreateObject(Vector(0, 0, 0), vector.Zero, 1.0);
-			EntityAI entity = EntityAI.Cast(m_Object);
-			if (entity && !placeable_item.IsInherited(EditorStaticPlaceableItem)) {
-				Item.SetItem(entity);
-				Item.SetView(entity.GetViewIndex());
-			}
+		Text.SetText(m_Object.GetType());
+		
+		EntityAI entity = EntityAI.Cast(m_Object);
+		if (entity) {
+			Item.SetItem(entity);
+			Item.SetView(entity.GetViewIndex());
 		}
-			
-		Text.SetText(placeable_item.GetName());
 		
 		int sx, sy;
 		GetScreenSize(sx, sy);
@@ -33,7 +30,7 @@ class EditorPlaceableTooltip: ScriptViewTemplate<EditorPlaceableTooltipControlle
 		m_LayoutRoot.SetPos(x, y);
 	}
 	
-	void ~EditorPlaceableTooltip()
+	void ~EditorObjectTooltip()
 	{
 		GetGame().ObjectDelete(m_Object);
 	}

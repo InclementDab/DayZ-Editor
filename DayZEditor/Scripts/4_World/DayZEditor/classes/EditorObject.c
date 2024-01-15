@@ -113,8 +113,8 @@ class EditorObject: Managed
 		
 		// Browser item
 		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
-			m_EditorPlacedListItem = new EditorPlacedListItem(this);
-			GetEditor().GetEditorHud().GetTemplateController().RightbarPlacedData.Insert(m_EditorPlacedListItem);
+			GetEditor().GetEditorHud().GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(new EditorObjectTreeItem(m_Object));
+			
 		}
 				
 		// Needed for AI Placement			
