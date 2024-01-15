@@ -899,16 +899,11 @@ class Editor: Managed
 		OnObjectCreated.Invoke(editor_object);
 		Statistics.PlacedObjects++;
 		
-		m_PlacedObjects.Insert(editor_object);
-		
-		array<ref EditorObjectData> object_data = {};
-		foreach (EditorObject placed_object: m_PlacedObjects) {
-			object_data.Insert(placed_object.CreateSerializedData());
+		if (m_CurrentOnlineSession) {
+			m_CurrentOnlineSession.AddData(data);
 		}
 	
-		if (m_CurrentOnlineSession) {
-			m_CurrentOnlineSession.OutgoingSyncObjects(object_data);
-		}
+		m_PlacedObjects.Insert(editor_object);
 		
 		return editor_object;
 	}
@@ -930,25 +925,21 @@ class Editor: Managed
 			
 			m_PlacedObjects.Insert(editor_object);
 			
+			EditorObjectData data = editor_object.CreateSerializedData();
+			
 			if (create_undo) {
-				EditorObjectData data = editor_object.CreateSerializedData();
 				action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
 				action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));
 				editor_objects.Insert(editor_object);
+			}
+		
+			if (m_CurrentOnlineSession) {
+				m_CurrentOnlineSession.AddData(data);
 			}
 		}
 		
 		if (create_undo) {
 			InsertAction(action);
-		}
-	
-		array<ref EditorObjectData> object_data = {};
-		foreach (EditorObject placed_object: m_PlacedObjects) {
-			object_data.Insert(placed_object.CreateSerializedData());
-		}
-	
-		if (m_CurrentOnlineSession) {
-			m_CurrentOnlineSession.OutgoingSyncObjects(object_data);
 		}
 
 		return editor_objects;
@@ -957,11 +948,15 @@ class Editor: Managed
 	void DeleteObject(notnull EditorObject editor_object, bool create_undo = true) 
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
+		EditorObjectData data = editor_object.CreateSerializedData();
 		if (create_undo) {
-			EditorObjectData data = editor_object.CreateSerializedData();
 			action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
 			action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));
 			InsertAction(action);
+		}
+	
+		if (m_CurrentOnlineSession) {
+			m_CurrentOnlineSession.RemoveData(data);
 		}
 	
 		OnObjectDeleted.Invoke(editor_object);
@@ -971,10 +966,14 @@ class Editor: Managed
 	void DeleteObjects(notnull array<EditorObject> editor_objects, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
-		foreach (EditorObject editor_object: editor_objects) {		
+		foreach (EditorObject editor_object: editor_objects) {			
 			EditorObjectData data = editor_object.CreateSerializedData();
 			action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
 			action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));			
+		
+			if (m_CurrentOnlineSession) {
+				m_CurrentOnlineSession.RemoveData(data);
+			}
 		
 			OnObjectDeleted.Invoke(editor_object);
 		
