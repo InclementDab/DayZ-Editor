@@ -43,7 +43,20 @@ class EditorHud: ScriptView
 		Left.GetSize(w, h);
 		Left.SetSize(w, y - 110);
 		Right.GetSize(w, h);
-		Right.SetSize(w, y - 110);
+		Right.SetSize(w, y - 110);	
+	}
+	
+	void SetOnlineSession(EditorOnlineSession session)
+	{
+		if (session) {
+			m_TemplateController.OnlineSessionId = session.GetUuid();
+			m_TemplateController.OnlineUserCount = session.GetPlayers().Count();
+		} else {
+			m_TemplateController.OnlineSessionId = string.Empty;
+			m_TemplateController.OnlineUserCount = 0;
+		}
+		
+		m_TemplateController.NotifyPropertiesChanged({"OnlineSessionId", "OnlineUserCount"});
 	}
 		
 	override void Update(float dt)

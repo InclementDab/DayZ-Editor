@@ -148,6 +148,8 @@ class Editor: Managed
 	
 	bool KEgg; // oh?
 	
+	protected EditorOnlineSession m_CurrentOnlineSession;
+	
 	//0: EditorObject
 	static ref ScriptInvoker OnObjectCreated = new ScriptInvoker();
 	
@@ -278,6 +280,9 @@ class Editor: Managed
 		
 		// TODO!!! write a better autosave!!!
 		//m_AutoSaveTimer.Run(GeneralSettings.AutoSaveTimer, this, "OnAutoSaveTimer");
+	
+		GetDayZGame().GetEditorSessionManager().OnSessionJoin.Insert(OnOnlineSessionStart);
+		GetDayZGame().GetEditorSessionManager().OnSessionLeave.Insert(OnOnlineSessionEnd);
 	}
 	
 	void ~Editor() 
@@ -286,6 +291,20 @@ class Editor: Managed
 		Statistics.Save();
 
 		GetGame().ObjectDelete(m_EditorCamera);
+	}
+	
+	void OnOnlineSessionStart(EditorOnlineSession session)
+	{
+		m_CurrentOnlineSession = session;
+	
+		m_EditorHud.SetOnlineSession(m_CurrentOnlineSession);
+	}
+
+	void OnOnlineSessionEnd(EditorOnlineSession session)
+	{
+		m_CurrentOnlineSession = null;
+	
+		m_EditorHud.SetOnlineSession(null);
 	}
 		
 	void OnStatisticsSave()
@@ -887,8 +906,8 @@ class Editor: Managed
 			object_data.Insert(placed_object.CreateSerializedData());
 		}
 	
-		if (GetDayZGame().GetEditorSessionManager().GetCurrentSession()) {
-			GetDayZGame().GetEditorSessionManager().GetCurrentSession().OutgoingSyncObjects(object_data);
+		if (m_CurrentOnlineSession) {
+			m_CurrentOnlineSession.OutgoingSyncObjects(object_data);
 		}
 		
 		return editor_object;
@@ -928,8 +947,8 @@ class Editor: Managed
 			object_data.Insert(placed_object.CreateSerializedData());
 		}
 	
-		if (GetDayZGame().GetEditorSessionManager().GetCurrentSession()) {
-			GetDayZGame().GetEditorSessionManager().GetCurrentSession().OutgoingSyncObjects(object_data);
+		if (m_CurrentOnlineSession) {
+			m_CurrentOnlineSession.OutgoingSyncObjects(object_data);
 		}
 
 		return editor_objects;

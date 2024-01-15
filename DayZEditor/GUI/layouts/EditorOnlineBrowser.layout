@@ -118,6 +118,42 @@ PanelWidgetClass Root {
       }
      }
     }
+    GridSpacerWidgetClass JoinSpacer {
+     ignorepointer 1
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     "Size To Content V" 1
+     Columns 2
+     Rows 1
+     {
+      TextWidgetClass JoinText {
+       ignorepointer 1
+       position 0 0
+       size 40 12
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "Join (code):"
+       "text halign" right
+      }
+      EditBoxWidgetClass Join {
+       size 12 12
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Default
+      }
+     }
+    }
    }
   }
   GridSpacerWidgetClass ButtonContainer {
