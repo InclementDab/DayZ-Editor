@@ -143,6 +143,8 @@ class EditorObject: Managed
 		
 	void ~EditorObject()
 	{			
+		EditorBoundingBox.Destroy(m_Object);
+		
 		GetGame().ObjectDelete(m_Object);
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
@@ -173,13 +175,6 @@ class EditorObject: Managed
 			Shape.CreateMatrix(mat);
 			DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
 		}
-		
-		vector clip_info[2];
-		m_Object.ClippingInfo(clip_info);
-		Debug.DestroyAllShapes();
-		Debug.DrawSphere(clip_info[0].Multiply4(transform));
-		//Debug.DrawSphere(clip_info[1].Multiply4(transform));
-		//Print(m_BasePoint);
 	}
 #endif
 		
@@ -236,18 +231,6 @@ class EditorObject: Managed
 		int component;
 		return DayZPhysics.RaycastRV(transform[3], transform[3] + transform[1] * -1000, position, direction, component, null, null, null, false, true);
 	}
-		
-	/*void PlaceOnSurface(vector position, vector direction)
-	{
-		vector normal = GetGame().SurfaceGetNormal(position[0], position[2]);
-		
-		vector mat[4];
-		direction.Normalized();
-		normal.Normalized();
-		
-		Math3D.DirectionAndUpMatrix(direction, normal, mat);
-		mat[3] = position;	
-	}*/
 	
 	vector GetBasePoint()
 	{
@@ -436,6 +419,8 @@ class EditorObject: Managed
 				selected_object.SetSelected(false);
 			}
 		}
+		
+		SelectedObjects.Clear();
 	}
 }
 

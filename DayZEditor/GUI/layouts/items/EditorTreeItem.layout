@@ -146,6 +146,7 @@ PanelWidgetClass Root {
      scaled 0
     }
     PanelWidgetClass Panel {
+     visible 1
      ignorepointer 0
      color 0.2941 0.4667 0.7451 0
      position 18 0
@@ -155,6 +156,7 @@ PanelWidgetClass Root {
      hexactsize 1
      vexactsize 1
      scaled 0
+     draggable 0
      scriptclass "SizeToChild"
      style rover_sim_colorable
      {
@@ -163,11 +165,11 @@ PanelWidgetClass Root {
        disabled 0
        clipchildren 1
        ignorepointer 1
-       position 0 0
-       size 113 18
+       size 120 18
+       halign center_ref
        valign center_ref
        hexactpos 1
-       vexactpos 0
+       vexactpos 1
        hexactsize 1
        vexactsize 1
        scaled 0

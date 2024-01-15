@@ -371,7 +371,7 @@ class Editor: Managed
 				position += hand_data.PositionOffset;
 			}
 			
-			position[1] = position[1] + ObjectGetSize(world_object)[1] / 2;			
+			position[1] = position[1] + ObjectGetSize(world_object)[1];			
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",

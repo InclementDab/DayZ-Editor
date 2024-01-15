@@ -22,6 +22,7 @@ class EditorHudController: EditorControllerBase
 	float obj_x, obj_y, obj_z;
 		
 	ref ObservableCollection<ref EditorTreeItem> Placeables = new ObservableCollection<ref EditorTreeItem>(this);
+	ref ObservableCollection<ref EditorTreeItem> RightListItems = new ObservableCollection<ref EditorTreeItem>(this);
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
