@@ -42,7 +42,7 @@ class EditorBoundingBox: Managed
 				transform[j][j] = ((position[j] == line_centers[i][j]) * size[j]) + BOUNDING_BOX_THICKNESS;						
 			}
 			 
-			Object bbox_line = GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_NONE);
+			Object bbox_line = GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_LOCAL);
 			bbox_line.SetTransform(transform);
 			bbox_line.Update();	
 			

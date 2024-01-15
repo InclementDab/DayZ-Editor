@@ -17,7 +17,9 @@ modded class PlayerBase
 		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
+#ifndef SERVER
 		GetInputController().SetDisabled(GetEditor().GetCurrentControl() != this);
+#endif
 	}
 		
 	override void OnSelectPlayer()
