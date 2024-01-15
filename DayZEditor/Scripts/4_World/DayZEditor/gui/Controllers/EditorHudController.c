@@ -102,6 +102,11 @@ class EditorHudController: EditorControllerBase
 		// more hacking
 		g_EditorPrecision = GetPrecisionLevel();
 	}
+	
+	void AddToHand(Object obj)
+	{
+		GetEditor().AddInHand(obj);
+	}
 		
 	override void OnWidgetScriptInit(Widget w)
 	{
@@ -114,10 +119,10 @@ class EditorHudController: EditorControllerBase
 		float widest_x;
 		map<int, ref array<EditorPlaceableItem>> all_placeable_items = GetEditor().GetPlaceableItemsByCategory();
 		foreach (EditorPlaceableItemCategory category, array<EditorPlaceableItem> placeable_items: all_placeable_items) {
-			EditorTreeItem tree_item = new EditorFolderTreeItem(category.GetDisplayName());
+			EditorTreeItem tree_item = new EditorTreeItem(category.GetDisplayName(), null);
 			
 			foreach (EditorPlaceableItem placeable_item: placeable_items) {
-				tree_item.GetTemplateController().Children.Insert(new EditorItemTreeItem(placeable_item));
+				tree_item.GetTemplateController().Children.Insert(new EditorPlaceableTreeItem(placeable_item.GetName(), ScriptCaller.Create(AddToHand), placeable_item));
 			}
 			
 			LeftListItems.Insert(tree_item);
@@ -140,8 +145,8 @@ class EditorHudController: EditorControllerBase
 			}
 		}
 		
-		PlacementsFolder = new EditorFolderTreeItem("Placed Objects");
-		DeletionsFolder = new EditorFolderTreeItem("Deleted Objects");
+		PlacementsFolder = new EditorTreeItem("Placed Objects", null);
+		DeletionsFolder = new EditorTreeItem("Deleted Objects", null);
 		RightListItems.Insert(PlacementsFolder);
 		RightListItems.Insert(DeletionsFolder);
 		

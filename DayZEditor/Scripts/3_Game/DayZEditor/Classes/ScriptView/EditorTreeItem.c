@@ -7,21 +7,45 @@ class EditorTreeItem: ScriptView
 	TextWidget Text;
 	ImageWidget Icon, CollapseIcon, ParentDisplay, TreeDisplay;
 	WrapSpacerWidget ChildrenWrapper;
+	ButtonWidget Button;
 	
-	Widget Panel, CollapseWrapper, Spacer0, DragPanel;
+	Widget CollapseWrapper, Spacer0, DragPanel;
 	
 	protected bool m_IsBeingDragged;
 	
-	void EditorTreeItem()
+	protected ref ScriptCaller m_Callback;
+	
+	void EditorTreeItem(string text, ScriptCaller callback)
 	{
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
-		
+		m_TemplateController.Text = text;
+		m_TemplateController.NotifyPropertyChanged("Text");		
+		m_Callback = callback;
+				
 		ShowChildren(false);
 	}
 	
 	void OnCollapseExecute(ButtonCommandArgs args)
 	{
 		ShowChildren(!ChildrenWrapper.IsVisible());
+	}
+	
+	void ApplyFilter(string filter)
+	{
+		Show(false);
+		filter.ToLower();
+		
+		bool has_visible_children;
+		for (int i = 0; i < m_TemplateController.Children.Count(); i++) {
+			
+			string name = m_TemplateController.Children[i].GetTemplateController().Text;
+			name.ToLower();
+			
+			m_TemplateController.Children[i].Show(name.Contains(filter));
+			if (name.Contains(filter)) {
+				Show(true);
+			}
+		}
 	}
 	
 	void ShowChildren(bool state)
@@ -48,7 +72,7 @@ class EditorTreeItem: ScriptView
 			int x, y;
 			GetMousePos(x, y);
 			
-			Panel.SetPos(x, y);
+			Button.SetPos(x, y);
 			Text.SetPos(x, y);
 		}
 	}
@@ -64,84 +88,30 @@ class EditorTreeItem: ScriptView
 		
 		return super.OnDrag(w, x, y);
 	}
-
-	override bool OnDragging(Widget w, int x, int y, Widget reciever)
-	{
-		switch (w) {
-			case DragPanel: {
-				//float f_x, f_y;
-				//DragPanel.SetPos(x, y);
-				//Text.SetPos(x, y);
-				return true;
-			}
-		}
-		
-		return super.OnDragging(w, x, y, reciever);
-	}	
 	
-	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
+	void OnExecute(ButtonCommandArgs args)
 	{
-		switch (w) {
-			case DragPanel: {
-				//float f_x, f_y;
-				//DragPanel.SetPos(x, y);
-				//Text.SetPos(x, y);
-				return true;
-			}
+		if (args.GetMouseButton() != 0) {
+			return;
 		}
 		
-		return super.OnDraggingOver(w, x, y, reciever);
+		m_Callback.Invoke(this);
 	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget reciever)
-	{
-		switch (w) {
-			case DragPanel: {
-				//float f_x, f_y;
-				///Panel.GetPos(f_x, f_y);
-				//DragPanel.SetPos(f_x, f_y);
-				//DragPanel.Show(false);
-				
-				//Text.SetPos(f_x, f_y);
-				break;
-			}
-		}
 		
-		return super.OnDrop(w, x, y, reciever);
+	void SetSelected(bool state)
+	{
+		if (state) {
+			WidgetAnimator.AnimateColor(Button, ARGB(255, 75, 119, 190), 50);			
+		} else {
+			WidgetAnimator.AnimateColor(Button, ARGB(0, 0, 0, 0), 50);
+		}
 	}
-	
-	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
-	{
-		switch (w) {
-			case Panel: {
-				if (button == 0) {
-					//SetFocus(w);
-					return true;
-				}
-				
-				break;
-			}
-		}
 		
-		return super.OnMouseButtonUp(w, x, y, button);
-	}	
-	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	bool IsSelectable()
 	{
-		switch (w) {
-			case Panel: {
-				if (button == 0) {
-					SetFocus(w);
-					return true;
-				}
-				
-				break;
-			}
-		}
-		
-		return super.OnMouseButtonDown(w, x, y, button);
+		return true;
 	}
-			
+		
 	bool IsBlacklistedItem(string item_type)
 	{
 		array<string> blacklist = { "DZ_LightAI", "Man", "Car" };

@@ -141,7 +141,7 @@ class EditorHud: ScriptView
 	
 	void OnCreateNewFolder(ButtonCommandArgs args)
 	{
-		m_TemplateController.RightListItems.Insert(new EditorFolderTreeItem("New Folder"));
+		m_TemplateController.RightListItems.Insert(new EditorTreeItem("New Folder", null));
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
@@ -223,15 +223,10 @@ class EditorHud: ScriptView
 	{
 		switch (w) {
 			case SearchBar: {
-				for (int i = 0; i < m_TemplateController.LeftListItems.Count(); i++) {
-					EditorFolderTreeItem tree_item = EditorFolderTreeItem.Cast(m_TemplateController.LeftListItems[i]);
-					if (!tree_item) {
-						continue;
-					}
-					
+				for (int i = 0; i < m_TemplateController.LeftListItems.Count(); i++) {					
 					string text;
 					SearchBar.GetText(text);
-					tree_item.ApplyFilter(text);
+					m_TemplateController.LeftListItems[i].ApplyFilter(text);
 				}
 				
 				break;
@@ -351,7 +346,7 @@ class EditorHud: ScriptView
 			array<ref EditorObject> placed_objects = GetEditor().GetPlacedObjects();
 			foreach (EditorObject editor_object: placed_objects) {					
 				float marker_x, marker_y;
-				EditorObjectMarker object_marker = editor_object.GetMarker();
+				/*EditorObjectMarker object_marker = editor_object.GetMarker();
 				if (object_marker) {
 					object_marker.GetPos(marker_x, marker_y);
 					
@@ -362,7 +357,7 @@ class EditorHud: ScriptView
 							editor_object.SetSelected(true);
 						}
 					}
-				}
+				}*/
 			}		
 		}
 	}

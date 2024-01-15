@@ -25,11 +25,11 @@ class EditorObject: SerializableBase
 	protected string m_DisplayName;
 	
 	// View references
-	protected ref EditorObjectMapMarker	m_EditorObjectMapMarker;
+	/*protected ref EditorObjectMapMarker	m_EditorObjectMapMarker;
 	protected ref EditorObjectWorldMarker m_EditorObjectWorldMarker;
-	protected ref EditorPlacedListItem m_EditorPlacedListItem;
+	protected ref EditorPlacedListItem m_EditorPlacedListItem;*/
 	
-	protected EditorObjectTreeItem m_TreeItem;
+	protected ref EditorTreeItem m_TreeItem;
 	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
@@ -102,7 +102,7 @@ class EditorObject: SerializableBase
 			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
 			mat[3] = pos2;
 			Shape.CreateMatrix(mat);
-			DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
+			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
 		}
 	}
 #endif
@@ -156,7 +156,7 @@ class EditorObject: SerializableBase
 			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
 			mat[3] = snap_point_position;
 			Shape.CreateMatrix(mat);
-			DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
+			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
 									
 			snap_point.SetTransform(mat);
 			editor_object.m_Object.AddChild(snap_point, -1);
@@ -165,7 +165,7 @@ class EditorObject: SerializableBase
 		}
 		
 		// Map marker		
-		if (((editor_object.m_Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER)) {
+		/*if (((editor_object.m_Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER)) {
 			editor_object.m_EditorObjectMapMarker = new EditorObjectMapMarker(editor_object);
 			GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(editor_object.m_EditorObjectMapMarker);
 		}
@@ -174,19 +174,18 @@ class EditorObject: SerializableBase
 		if (((editor_object.m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER)) {
 			editor_object.m_EditorObjectWorldMarker = new EditorObjectWorldMarker(editor_object);
 		}
+		*/
 		
 		// Browser item
 		if (((editor_object.m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
-			EditorObjectTreeItem tree_item = new EditorObjectTreeItem(editor_object);
-			GetEditor().GetEditorHud().GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(tree_item);
-			editor_object.m_TreeItem = tree_item;
+			editor_object.m_TreeItem = new EditorTreeItem(editor_object.GetDisplayName(), ScriptCaller.Create(editor_object.OnTreeItemSelected));
 		}
 				
 		// Needed for AI Placement			
 		EntityAI entity_ai = EntityAI.Cast(editor_object.m_Object);
-		if (entity_ai && GetEditor().GeneralSettings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
-			entity_ai.OnDebugSpawn();
-		}	
+		//if (entity_ai && GetEditor().GeneralSettings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
+		//	entity_ai.OnDebugSpawn();
+		//}	
 		
 		// Load animations
 		array<string> paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
@@ -273,7 +272,17 @@ class EditorObject: SerializableBase
 		
 		return true;
 	}
-					
+	
+	EditorTreeItem GetTreeItem()
+	{
+		return m_TreeItem;
+	}
+	
+	void OnTreeItemSelected(EditorTreeItem tree_item)
+	{
+		SetSelected(tree_item.Button.GetState());
+	}
+			
 	bool GetGroundUnderObject(out vector position, out vector direction)
 	{
 		vector transform[4];
@@ -307,10 +316,7 @@ class EditorObject: SerializableBase
 	}
 			
 	void Hide(bool state) 
-	{
-		m_EditorObjectMapMarker.Show(!state);
-		m_EditorObjectWorldMarker.Show(!state);
-		
+	{		
 		if (!state) {
 			m_Object.SetFlags(EntityFlags.VISIBLE | EntityFlags.TOUCHTRIGGERS, true);
 		} else {
@@ -349,23 +355,7 @@ class EditorObject: SerializableBase
 	{
 		return m_DisplayName;
 	}
-			
-	// Returns active Marker, either World or Map marker
-	// Can return null
-	EditorObjectMarker GetMarker()
-	{
-		if (GetEditor().GetEditorHud().IsMapVisible()) {
-			return m_EditorObjectMapMarker;
-		}
 		
-		return m_EditorObjectWorldMarker;
-	}
-		
-	EditorPlacedListItem GetListItem()
-	{
-		return m_EditorPlacedListItem;
-	}
-	
 	void SetFlag(EditorObjectFlags flag)
 	{
 		m_Flags |= flag;
@@ -408,25 +398,6 @@ class EditorObject: SerializableBase
 		return m_IsSelected;
 	}
 		
-	EditorObject GetAttachmentParent()
-	{
-		if (!ItemBase.Cast(m_Object) || !ItemBase.Cast(m_Object).GetHierarchyParent()) { // adding this because of the notnull check in GetEditorObject
-			return null;
-		}
-		
-		return GetEditor().GetEditorObject(ItemBase.Cast(m_Object).GetHierarchyParent());
-	}
-	
-	bool IsAttachedToObject()
-	{
-		return (GetAttachmentParent() != null);
-	}
-	
-	bool HasObjectAttachments()
-	{
-		return (ItemBase.Cast(m_Object) && ItemBase.Cast(m_Object).GetInventory().AttachmentCount() > 0);
-	}
-	
 	map<string, ref EditorObjectAnimationSource> GetObjectAnimations()
 	{
 		return m_ObjectAnimations;
@@ -451,23 +422,7 @@ class EditorObject: SerializableBase
 	{
 		return m_EditorSnapPoints;
 	}
-	
-	array<EditorObject> GetAttachments()
-	{
-		ItemBase item = ItemBase.Cast(m_Object);
-		array<EditorObject> editor_objects = {};
-		for (int i = 0; i < item.GetInventory().AttachmentCount(); i++) {
-			EntityAI attachment = item.GetInventory().GetAttachmentFromIndex(i);
-			if (!attachment) {
-				continue;
-			}
-			
-			editor_objects.Insert(GetEditor().GetEditorObject(attachment));
-		}
 		
-		return editor_objects;
-	}
-	
 	void SetSynchDirty()
 	{
 		m_IsDirty = true;

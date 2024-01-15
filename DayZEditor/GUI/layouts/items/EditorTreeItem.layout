@@ -159,7 +159,7 @@ PanelWidgetClass Root {
      vexactsize 1
      scaled 0
     }
-    PanelWidgetClass Panel {
+    ButtonWidgetClass Button {
      visible 1
      ignorepointer 0
      color 0.2941 0.4667 0.7451 0
@@ -171,8 +171,8 @@ PanelWidgetClass Root {
      vexactsize 1
      scaled 0
      draggable 0
-     scriptclass "SizeToChild"
-     style rover_sim_colorable
+     scriptclass "ViewBinding"
+     style Colorable
      {
       TextWidgetClass Text {
        visible 1
@@ -207,8 +207,7 @@ PanelWidgetClass Root {
      }
      {
       ScriptParamsClass {
-       m_ChildName "Text"
-       m_ResizeHorizontal 1
+       Relay_Command "OnExecute"
       }
      }
     }

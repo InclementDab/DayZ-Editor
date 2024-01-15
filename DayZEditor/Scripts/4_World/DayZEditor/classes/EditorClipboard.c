@@ -35,9 +35,9 @@ class EditorClipboard
 		avg_position[1] = GetGame().SurfaceY(avg_position[0], avg_position[2]);
 		
 		foreach (EditorObject selected_object: copy_objects) {
- 			EditorObjectData data = selected_object.CreateSerializedData();
-			data.Position = selected_object.GetWorldObject().GetPosition() - avg_position;
-			world_objects.Insert(data);
+ 			//EditorObjectData data = selected_object.CreateSerializedData();
+			//data.Position = selected_object.GetWorldObject().GetPosition() - avg_position;
+			//world_objects.Insert(data);
 		}
 	
 		string clipboard_data = JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects);		

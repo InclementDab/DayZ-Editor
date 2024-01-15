@@ -1,4 +1,4 @@
-class EditorObjectTooltip: ScriptViewTemplate<EditorPlaceableTooltipController>
+class EditorObjectTooltip: ScriptView
 {
 	protected EditorPlaceableItem m_EditorPlaceableItem;
 	protected Object m_Object;

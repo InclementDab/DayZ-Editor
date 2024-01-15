@@ -890,6 +890,8 @@ class Editor: Managed
 			
 		m_PlacedObjects.Insert(editor_object);
 		
+		m_EditorHud.GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(editor_object.GetTreeItem());
+	
 		if (m_CurrentOnlineSession) {
 			m_CurrentOnlineSession.AddObject(editor_object);
 		}
@@ -911,7 +913,8 @@ class Editor: Managed
 			Statistics.PlacedObjects++;
 			
 			m_PlacedObjects.Insert(editor_object);
-						
+			m_EditorHud.GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(editor_object.GetTreeItem());				
+		
 			editor_objects.Insert(editor_object);
 			
 			if (m_CurrentOnlineSession) {
@@ -1288,7 +1291,7 @@ class Editor: Managed
 		
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
-				save_data.EditorObjects.Insert(editor_object.CreateSerializedData());
+				//save_data.EditorObjects.Insert(editor_object.CreateSerializedData());
 			}
 		}
 		

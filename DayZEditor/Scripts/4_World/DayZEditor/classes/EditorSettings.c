@@ -74,13 +74,6 @@ class EditorGeneralSettings: ProfileSettings
 		GetGame().GetWorld().SetViewDistance(ViewDistance);
 		GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
 		
-		array<ref EditorObject> editor_objects = GetEditor().GetPlacedObjects();
-		foreach (EditorObject editor_object: editor_objects) {
-			EditorObjectMarker marker = editor_object.GetMarker();
-			if (marker) {
-				//marker.Update();
-			}
-		}
 
 		GetEditor().GetCamera().Speed = CameraSpeed;
 		//GetEditor().GetEditorHud().ShowRuleOfThirds(RuleOfThirds);

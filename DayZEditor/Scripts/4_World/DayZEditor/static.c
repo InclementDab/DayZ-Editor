@@ -1,14 +1,3 @@
-static const float MARKER_ALPHA_ON_SHOW = 1.0;
-static const float MARKER_ALPHA_ON_HIDE = 1.0;
-
-static const int DRAG_BOX_THRESHOLD = 15;
-static const int DRAG_BOX_THICKNESS = 1;
-
-static const int LIST_ITEM_COLOR_ON_DELETED = COLOR_RED;
-static const string LIST_ITEM_DEFAULT_ICON = "DayZEditor/gui/images/dayz_editor_icon_black.edds";
-
-static const float BOUNDING_BOX_THICKNESS = 0.008;
-
 static void SpawnStaticObject(string type, vector position, vector orientation)
 {
 	EditorLog.Trace("SpawnStaticObject %1", type);

@@ -167,18 +167,18 @@ class EditorPlacedListItem: EditorListItem
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		if (m_EditorObject.GetMarker() && !m_EditorObject.GetMarker().IsSelected()) {
-			m_EditorObject.GetMarker().Highlight();
-		}
+		//if (m_EditorObject.GetMarker() && !m_EditorObject.GetMarker().IsSelected()) {
+		//	m_EditorObject.GetMarker().Highlight();
+		//}
 		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		if (m_EditorObject.GetMarker() && !m_EditorObject.GetMarker().IsSelected()) {
-			m_EditorObject.GetMarker().Deselect();
-		}
+		//if (m_EditorObject.GetMarker() && !m_EditorObject.GetMarker().IsSelected()) {
+		//	m_EditorObject.GetMarker().Deselect();
+		//}
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}

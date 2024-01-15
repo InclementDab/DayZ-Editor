@@ -12,7 +12,7 @@ class EditorSnapPoint: ScriptedEntity
 		array<EditorSnapPoint> results = {};
 		vector size = Vector(RESOLUTION * 3, RESOLUTION * 3, RESOLUTION * 3);
 		array<EntityAI> entities = {};
-		DayZPlayerUtils.SceneGetEntitiesInBox(GetWorldPosition() - size, GetWorldPosition() + size, entities);
+		//DayZPlayerUtils.SceneGetEntitiesInBox(GetWorldPosition() - size, GetWorldPosition() + size, entities);
 		foreach (EntityAI entity: entities) {			
 			EditorSnapPoint snap_point = EditorSnapPoint.Cast(entity);	
 			if (!snap_point || snap_point == this) {
@@ -35,7 +35,7 @@ class EditorSnapPoint: ScriptedEntity
 		array<EditorSnapPoint> results = {};
 		vector size = Vector(RESOLUTION * 3, RESOLUTION * 3, RESOLUTION * 3);
 		array<EntityAI> entities = {};
-		DayZPlayerUtils.SceneGetEntitiesInBox(GetWorldPosition() - size, GetWorldPosition() + size, entities);
+		//DayZPlayerUtils.SceneGetEntitiesInBox(GetWorldPosition() - size, GetWorldPosition() + size, entities);
 		foreach (EntityAI entity: entities) {
 			EditorSnapPoint snap_point = EditorSnapPoint.Cast(entity);
 			if (!snap_point || snap_point == this) {
@@ -120,7 +120,7 @@ class EditorSnapPoint: ScriptedEntity
 		vector min = position - Vector(size, size, size);
 		
 		array<EntityAI> entities = {};
-		DayZPlayerUtils.SceneGetEntitiesInBox(min, max, entities);
+		//DayZPlayerUtils.SceneGetEntitiesInBox(min, max, entities);
 		array<EditorSnapPoint> results = {};
 		foreach (EntityAI entity: entities) {
 			EditorSnapPoint result = EditorSnapPoint.Cast(entity);

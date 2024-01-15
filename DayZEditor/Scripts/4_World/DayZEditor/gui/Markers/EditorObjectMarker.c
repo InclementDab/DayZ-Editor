@@ -133,9 +133,9 @@ class EditorObjectMarker: EditorMarker
 	{
 		if (!IsSelected()) {
 			Highlight();
-			if (m_EditorObject.GetListItem()) {
-				m_EditorObject.GetListItem().Highlight();
-			}
+			//if (m_EditorObject.GetListItem()) {
+			//	m_EditorObject.GetListItem().Highlight();
+			//}
 		}
 		
 		if (m_Editor.GeneralSettings.MarkerTooltips && !m_Editor.IsPlacing()) {
@@ -148,9 +148,9 @@ class EditorObjectMarker: EditorMarker
 	{
 		if (!IsSelected()) {
 			Deselect();
-			if (m_EditorObject.GetListItem()) {
-				m_EditorObject.GetListItem().Deselect();
-			}
+			//if (m_EditorObject.GetListItem()) {
+			//	m_EditorObject.GetListItem().Deselect();
+			//}
 		}
 		
 		if (m_Editor.GeneralSettings.MarkerTooltips) {

@@ -33,12 +33,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			m_LayoutRoot.Show(false);
 			return;
 		}
-		
-		if (m_EditorObject.IsAttachedToObject()) {
-			m_LayoutRoot.Show(false);
-			return;
-		}
-		
+				
 		// there has to be some better math for this, some type of viewport angle magic that im not quite getting
 		// its trig, something to do with view angle
 		float size = Math.Min(Math.Max(1500 / distance, MARKER_MIN_SIZE), MARKER_MAX_SIZE);
