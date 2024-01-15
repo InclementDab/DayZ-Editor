@@ -510,7 +510,7 @@ FrameWidgetClass EditorFrame {
     FrameWidgetClass Right {
      ignorepointer 1
      position 0 92
-     size 360 250
+     size 360 350
      halign right_ref
      hexactpos 1
      vexactpos 1
@@ -589,7 +589,7 @@ FrameWidgetClass EditorFrame {
        ignorepointer 1
        color 0.0588 0.0588 0.0588 0.8627
        position 0 32
-       size 1 250
+       size 1 288
        hexactpos 1
        vexactpos 1
        hexactsize 0
@@ -623,6 +623,67 @@ FrameWidgetClass EditorFrame {
          }
         }
        }
+      }
+      PanelWidgetClass RightFooter {
+       ignorepointer 1
+       color 0.0588 0.0588 0.0588 0.9804
+       size 1 32
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        ButtonWidgetClass NewFolderButton {
+         position 12 0
+         size 28 28
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         style Colorable
+         "no focus" 1
+         {
+          ImageWidgetClass NewFolderButtonIcon {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "ButtonIcon"
+           image0 "set:icons image:folder_plus"
+           mode additive
+           "src alpha" 1
+           filter 0
+           {
+            ScriptParamsClass {
+             ColorOnSelect 123
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass RightDragZone {
+       ignorepointer 0
+       color 0.1961 0.3922 0.3922 0.502
+       size 6 1
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       style Outline_2px
       }
      }
     }
