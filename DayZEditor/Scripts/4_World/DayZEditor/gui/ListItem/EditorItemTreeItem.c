@@ -16,7 +16,7 @@ class EditorItemTreeItem: EditorTreeItem
 		switch (w) {
 			case Panel: {
 				WidgetAnimator.AnimateColor(Panel, ARGB(255, 75, 119, 190), 50);
-				m_Hologram = m_PlaceableItem.CreateObject(Editor.CurrentMousePosition, vector.Zero, 1.0);
+				m_Hologram = m_PlaceableItem.CreateObject(Editor.CurrentMousePosition, vector.Zero, 1.0, ECE_LOCAL);
 				GetEditor().AddInHand(m_Hologram);
 				return true;
 			}
@@ -48,7 +48,7 @@ class EditorItemTreeItem: EditorTreeItem
 					scroller.GetScreenPos(x_p, y_p);
 					
 					if (!IsBlacklistedItem(m_PlaceableItem.GetName())) {
-						EditorObjectTooltip tooltip = new EditorObjectTooltip(m_PlaceableItem.CreateObject(vector.Zero, vector.Zero, 1.0), x_p + w_f + 25, y);
+						EditorObjectTooltip tooltip = new EditorObjectTooltip(m_PlaceableItem.CreateObject(vector.Zero, vector.Zero, 1.0, ECE_LOCAL), x_p + w_f + 25, y);
 						GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
 					}
 				}
