@@ -281,8 +281,7 @@ class Editor: Managed
 		// TODO!!! write a better autosave!!!
 		//m_AutoSaveTimer.Run(GeneralSettings.AutoSaveTimer, this, "OnAutoSaveTimer");
 	
-		GetDayZGame().GetEditorSessionManager().OnSessionJoin.Insert(OnOnlineSessionStart);
-		GetDayZGame().GetEditorSessionManager().OnSessionLeave.Insert(OnOnlineSessionEnd);
+		GetDayZGame().GetEditorSessionManager().OnSyncRecieved.Insert(OnOnlineSyncRecieved);
 	}
 	
 	void ~Editor() 
@@ -293,18 +292,16 @@ class Editor: Managed
 		GetGame().ObjectDelete(m_EditorCamera);
 	}
 	
-	void OnOnlineSessionStart(EditorOnlineSession session)
+	void OnOnlineSyncRecieved(string uuid, EditorOnlineSession session)
 	{
-		m_CurrentOnlineSession = session;
-	
-		m_EditorHud.SetOnlineSession(m_CurrentOnlineSession);
-	}
+		Print("OnOnlineSyncRecieved");
+		Print(uuid);
+		Print(session);
+		if (session.IsMember(GetGame().GetPlayer().GetIdentity())) {
+			m_CurrentOnlineSession = session;
+		}
 
-	void OnOnlineSessionEnd(EditorOnlineSession session)
-	{
-		m_CurrentOnlineSession = null;
-	
-		m_EditorHud.SetOnlineSession(null);
+		m_EditorHud.SetOnlineSession(m_CurrentOnlineSession);
 	}
 		
 	void OnStatisticsSave()
@@ -885,26 +882,18 @@ class Editor: Managed
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
-		EditorObject editor_object = new EditorObject(target, flags);
-		EditorObjectData data = editor_object.CreateSerializedData();
-		if (create_undo) {
-			EditorAction action = new EditorAction("Delete", "Create");
-			action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
-			action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));
-			InsertAction(action);
-		}
-	
+		EditorObject editor_object = EditorObject.CreateNew(target, flags);
 		m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
 		
 		OnObjectCreated.Invoke(editor_object);
 		Statistics.PlacedObjects++;
-		
-		if (m_CurrentOnlineSession) {
-			m_CurrentOnlineSession.AddData(data);
-		}
-	
+			
 		m_PlacedObjects.Insert(editor_object);
 		
+		if (m_CurrentOnlineSession) {
+			m_CurrentOnlineSession.AddObject(editor_object);
+		}
+	
 		return editor_object;
 	}
 
@@ -913,50 +902,30 @@ class Editor: Managed
 		EditorLog.Trace("Editor::CreateObject");
 		
 		array<EditorObject> editor_objects = {};
-		EditorAction action = new EditorAction("Delete", "Create");
-		
 		foreach (Object object: objects) {			
 			// Create Object
-			EditorObject editor_object = new EditorObject(object, flags);
+			EditorObject editor_object = EditorObject.CreateNew(object, flags);
 			m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
 		
 			OnObjectCreated.Invoke(editor_object);
 			Statistics.PlacedObjects++;
 			
 			m_PlacedObjects.Insert(editor_object);
+						
+			editor_objects.Insert(editor_object);
 			
-			EditorObjectData data = editor_object.CreateSerializedData();
-			
-			if (create_undo) {
-				action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
-				action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));
-				editor_objects.Insert(editor_object);
-			}
-		
 			if (m_CurrentOnlineSession) {
-				m_CurrentOnlineSession.AddData(data);
+				m_CurrentOnlineSession.AddObject(editor_object);
 			}
 		}
 		
-		if (create_undo) {
-			InsertAction(action);
-		}
-
 		return editor_objects;
 	}
 	
 	void DeleteObject(notnull EditorObject editor_object, bool create_undo = true) 
-	{
-		EditorAction action = new EditorAction("Create", "Delete");
-		EditorObjectData data = editor_object.CreateSerializedData();
-		if (create_undo) {
-			action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
-			action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));
-			InsertAction(action);
-		}
-	
+	{		
 		if (m_CurrentOnlineSession) {
-			m_CurrentOnlineSession.RemoveData(data);
+			m_CurrentOnlineSession.RemoveObject(editor_object);
 		}
 	
 		OnObjectDeleted.Invoke(editor_object);
@@ -965,24 +934,15 @@ class Editor: Managed
 	
 	void DeleteObjects(notnull array<EditorObject> editor_objects, bool create_undo = true)
 	{
-		EditorAction action = new EditorAction("Create", "Delete");
-		foreach (EditorObject editor_object: editor_objects) {			
-			EditorObjectData data = editor_object.CreateSerializedData();
-			action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
-			action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));			
-		
+		foreach (EditorObject editor_object: editor_objects) {
 			if (m_CurrentOnlineSession) {
-				m_CurrentOnlineSession.RemoveData(data);
+				m_CurrentOnlineSession.RemoveObject(editor_object);
 			}
 		
 			OnObjectDeleted.Invoke(editor_object);
 		
 			m_PlacedObjects.RemoveItem(editor_object);
 			delete editor_object;
-		}
-		
-		if (create_undo) {
-			InsertAction(action);
 		}
 	}
 	

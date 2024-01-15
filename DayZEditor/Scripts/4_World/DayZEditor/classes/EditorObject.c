@@ -1,5 +1,7 @@
-class EditorObject: Managed
+class EditorObject: SerializableBase
 {	
+	static const int VERSION = 1;
+	
 	static const ref array<vector> LINE_CENTER_DIRECTIONS = { 
 		Vector(-1, 0, 0), 
 		Vector(0, 0, -1), 
@@ -17,7 +19,7 @@ class EditorObject: Managed
 	
 	static ref array<EditorObject> SelectedObjects = {};
 	
-	protected UUID m_Uuid;
+	protected UUID m_UUID;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
 	protected string m_DisplayName;
@@ -32,12 +34,13 @@ class EditorObject: Managed
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
-	protected vector m_LineCenters[12]; 
-	protected vector m_LineVerticies[8];
-	protected vector m_BasePoint;
+	protected vector m_LineCenters[12], m_LineVerticies[8], m_BasePoint; 
 	protected bool m_IsSelected;
+	
+	protected bool m_IsDirty;
+	
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
-		
+	
 	// Human Properties
 	int CurrentAnimation;
 	bool Animate;
@@ -49,107 +52,19 @@ class EditorObject: Managed
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 	
-	void EditorObject(notnull Object object, EditorObjectFlags flags, UUID uuid = UUID.Empty)
+	void EditorObject(UUID uuid)
 	{
-		m_Object = object;
-		m_Flags = flags;
-		m_Uuid = Ternary<string>.If(uuid == UUID.Empty, UUID.Generate(), uuid);
-		
-		m_DisplayName = m_Object.GetType();
-						
-		vector clip_info[2];
-		m_Object.ClippingInfo(clip_info);
-	
-		m_LineVerticies[0] = clip_info[0];
-		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
-		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
-		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
-		m_LineVerticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
-		m_LineVerticies[5] = clip_info[1];
-		m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
-		m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
+		m_UUID = uuid;
 				
-		m_LineCenters[0] = AverageVectors(m_LineVerticies[0], m_LineVerticies[1]);
-		m_LineCenters[1] = AverageVectors(m_LineVerticies[0], m_LineVerticies[3]);
-		m_LineCenters[2] = AverageVectors(m_LineVerticies[0], m_LineVerticies[7]);
-		m_LineCenters[3] = AverageVectors(m_LineVerticies[4], m_LineVerticies[7]);
-		m_LineCenters[4] = AverageVectors(m_LineVerticies[6], m_LineVerticies[7]);
-		
-		m_LineCenters[5] = AverageVectors(m_LineVerticies[1], m_LineVerticies[2]);
-		m_LineCenters[6] = AverageVectors(m_LineVerticies[1], m_LineVerticies[6]);
-		m_LineCenters[7] = AverageVectors(m_LineVerticies[3], m_LineVerticies[2]);
-		m_LineCenters[8] = AverageVectors(m_LineVerticies[3], m_LineVerticies[4]);
-		
-		m_LineCenters[9] = AverageVectors(m_LineVerticies[5], m_LineVerticies[2]);
-		m_LineCenters[10] = AverageVectors(m_LineVerticies[5], m_LineVerticies[4]);		
-		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
-				
-
-		m_BasePoint = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
-			
-		vector transform[4];
-		m_Object.GetTransform(transform);
-		
-		for (int j = 0; j < 12; j++) {
-			vector snap_point_position = m_LineCenters[j].Multiply4(transform);
-			EditorSnapPoint snap_point = EditorSnapPoint.Cast(GetGame().CreateObjectEx("EditorSnapPoint", snap_point_position, ECE_LOCAL));
-			
-			vector mat[4];
-			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
-			mat[3] = snap_point_position;
-			Shape.CreateMatrix(mat);
-			DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
-									
-			snap_point.SetTransform(mat);
-			m_Object.AddChild(snap_point, -1);
-			
-			m_EditorSnapPoints.Insert(snap_point);
-		}
-		
-		// Map marker		
-		if (((m_Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER)) {
-			m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
-			GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
-		}
-		
-		// World Marker
-		if (((m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER)) {
-			m_EditorObjectWorldMarker = new EditorObjectWorldMarker(this);
-		}
-		
-		// Browser item
-		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
-			EditorObjectTreeItem tree_item = new EditorObjectTreeItem(this);
-			GetEditor().GetEditorHud().GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(tree_item);
-			m_TreeItem = tree_item;
-		}
-				
-		// Needed for AI Placement			
-		EntityAI entity_ai = EntityAI.Cast(m_Object);
-		if (entity_ai && GetEditor().GeneralSettings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
-			entity_ai.OnDebugSpawn();
-		}	
-		
-		// Load animations
-		array<string> paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
-		foreach (string path: paths) {
-			string config_path = path + " " + m_Object.GetType() + " AnimationSources";
-			if (GetGame().ConfigIsExisting(config_path) && entity_ai) {
-				for (int k = 0; k < GetGame().ConfigGetChildrenCount(config_path); k++) {
-					string child_name;
-					GetGame().ConfigGetChildName(config_path, k, child_name);
-					m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(entity_ai, child_name, path);
-				}
-			}	
-		}			
-
 #ifdef DIAG_DEVELOPER
+#ifndef SERVER
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DiagOnFrameUpdate);
+#endif
 #endif
 	}
 		
 	void ~EditorObject()
-	{			
+	{
 		EditorBoundingBox.Destroy(m_Object);
 		
 		GetGame().ObjectDelete(m_Object);
@@ -191,48 +106,142 @@ class EditorObject: Managed
 		}
 	}
 #endif
-		
-	static EditorObject CreateFromSerializer(Serializer serializer)
-	{
-		EditorObjectData editor_object_data = new EditorObjectData();
-		
-		int version;
-		editor_object_data.Read(serializer, version);
-		return CreateFromSerializer(editor_object_data);
-	}
 	
-	static EditorObject CreateFromSerializer(notnull EditorObjectData object_data)
+	static EditorObject CreateNew(notnull Object object, EditorObjectFlags flags)
 	{
-		EditorObject editor_object = new EditorObject(object_data.CreateObject(), object_data.Flags);
+		EditorObject editor_object = new EditorObject(UUID.Generate());
+		editor_object.m_Object = object;
+		editor_object.m_Flags = flags;
 		
-		// Version 3
-		//editor_object.Lock(object_data.Locked);
-		//editor_object.SetSimulation(object_data.Simulate);
-		//editor_object.SetEditorOnly(object_data.EditorOnly);
-		//editor_object.SetAllowDamage(object_data.AllowDamage);
-		editor_object.SetDisplayName(object_data.DisplayName);
+		editor_object.m_DisplayName = editor_object.m_Object.GetType();
+						
+		vector clip_info[2];
+		editor_object.m_Object.ClippingInfo(clip_info);
+	
+		editor_object.m_LineVerticies[0] = clip_info[0];
+		editor_object.m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
+		editor_object.m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
+		editor_object.m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
+		editor_object.m_LineVerticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
+		editor_object.m_LineVerticies[5] = clip_info[1];
+		editor_object.m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
+		editor_object.m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
+				
+		editor_object.m_LineCenters[0] = AverageVectors(editor_object.m_LineVerticies[0], editor_object.m_LineVerticies[1]);
+		editor_object.m_LineCenters[1] = AverageVectors(editor_object.m_LineVerticies[0], editor_object.m_LineVerticies[3]);
+		editor_object.m_LineCenters[2] = AverageVectors(editor_object.m_LineVerticies[0], editor_object.m_LineVerticies[7]);
+		editor_object.m_LineCenters[3] = AverageVectors(editor_object.m_LineVerticies[4], editor_object.m_LineVerticies[7]);
+		editor_object.m_LineCenters[4] = AverageVectors(editor_object.m_LineVerticies[6], editor_object.m_LineVerticies[7]);
+
+		editor_object.m_LineCenters[5] = AverageVectors(editor_object.m_LineVerticies[1], editor_object.m_LineVerticies[2]);
+		editor_object.m_LineCenters[6] = AverageVectors(editor_object.m_LineVerticies[1], editor_object.m_LineVerticies[6]);
+		editor_object.m_LineCenters[7] = AverageVectors(editor_object.m_LineVerticies[3], editor_object.m_LineVerticies[2]);
+		editor_object.m_LineCenters[8] = AverageVectors(editor_object.m_LineVerticies[3], editor_object.m_LineVerticies[4]);
+
+		editor_object.m_LineCenters[9] = AverageVectors(editor_object.m_LineVerticies[5], editor_object.m_LineVerticies[2]);
+		editor_object.m_LineCenters[10] = AverageVectors(editor_object.m_LineVerticies[5], editor_object.m_LineVerticies[4]);		
+		editor_object.m_LineCenters[11] = AverageVectors(editor_object.m_LineVerticies[5], editor_object.m_LineVerticies[6]);
+				
+
+		editor_object.m_BasePoint = AverageVectors(AverageVectors(editor_object.m_LineVerticies[0], editor_object.m_LineVerticies[1]), AverageVectors(editor_object.m_LineVerticies[2], editor_object.m_LineVerticies[3]));
+			
+		vector transform[4];
+		editor_object.m_Object.GetTransform(transform);
 		
-		// If network light
-		//if (NetworkLightBase.Cast(m_Object)) {
-		//	NetworkLightBase.Cast(m_Object).Read(m_Data.Parameters);
-		//}
+		for (int j = 0; j < 12; j++) {
+			vector snap_point_position = editor_object.m_LineCenters[j].Multiply4(transform);
+			EditorSnapPoint snap_point = EditorSnapPoint.Cast(GetGame().CreateObjectEx("EditorSnapPoint", snap_point_position, ECE_LOCAL));
+			
+			vector mat[4];
+			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
+			mat[3] = snap_point_position;
+			Shape.CreateMatrix(mat);
+			DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
+									
+			snap_point.SetTransform(mat);
+			editor_object.m_Object.AddChild(snap_point, -1);
+			
+			editor_object.m_EditorSnapPoints.Insert(snap_point);
+		}
+		
+		// Map marker		
+		if (((editor_object.m_Flags & EditorObjectFlags.MAPMARKER) == EditorObjectFlags.MAPMARKER)) {
+			editor_object.m_EditorObjectMapMarker = new EditorObjectMapMarker(editor_object);
+			GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(editor_object.m_EditorObjectMapMarker);
+		}
+		
+		// World Marker
+		if (((editor_object.m_Flags & EditorObjectFlags.OBJECTMARKER) == EditorObjectFlags.OBJECTMARKER)) {
+			editor_object.m_EditorObjectWorldMarker = new EditorObjectWorldMarker(editor_object);
+		}
+		
+		// Browser item
+		if (((editor_object.m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
+			EditorObjectTreeItem tree_item = new EditorObjectTreeItem(editor_object);
+			GetEditor().GetEditorHud().GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(tree_item);
+			editor_object.m_TreeItem = tree_item;
+		}
+				
+		// Needed for AI Placement			
+		EntityAI entity_ai = EntityAI.Cast(editor_object.m_Object);
+		if (entity_ai && GetEditor().GeneralSettings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
+			entity_ai.OnDebugSpawn();
+		}	
+		
+		// Load animations
+		array<string> paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
+		foreach (string path: paths) {
+			string config_path = path + " " + editor_object.m_Object.GetType() + " AnimationSources";
+			if (GetGame().ConfigIsExisting(config_path) && entity_ai) {
+				for (int k = 0; k < GetGame().ConfigGetChildrenCount(config_path); k++) {
+					string child_name;
+					GetGame().ConfigGetChildName(config_path, k, child_name);
+					editor_object.m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(entity_ai, child_name, path);
+				}
+			}	
+		}
 		
 		return editor_object;
 	}
 	
-	EditorObjectData CreateSerializedData()
+	static EditorObject CreateNew(string type, vector transform[4], EditorObjectFlags flags)
 	{
-		EditorObjectData data = new EditorObjectData();
-		data.Uuid = m_Uuid;
-		data.Position = m_Object.GetPosition();
-		data.Orientation = m_Object.GetOrientation();
-		data.Scale = m_Object.GetScale();
-		//data.BottomCenter = m_Object.GetBottomCenter();
-		data.Flags = m_Flags;
-		data.DisplayName = m_DisplayName;
+		Object object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
+		object.SetTransform(transform);
+		return CreateNew(object, flags);
+	}
+	
+	static EditorObject CreateFromSerializer(Serializer serializer)
+	{
+		UUID uuid;
+		if (!serializer.Read(uuid)) {
+			return null;
+		}
+		
+		EditorObject editor_object = new EditorObject(uuid);
+		editor_object.Read(serializer, VERSION);
+		return editor_object;
+	}
+	
+	override void Write(Serializer serializer, int version)
+	{
+		serializer.Write(version);
+		serializer.Write(m_UUID);
+		serializer.Write(m_Flags);
+		serializer.Write(m_DisplayName);
+		
+		// Object properties
+		serializer.Write(m_Object.GetType());
+		vector transform[4];
+		m_Object.GetTransform(transform);
+		serializer.Write(transform);
+		
+		//if (NetworkLightBase.Cast(m_Object)) {
+		//	NetworkLightBase.Cast(m_Object).Read(m_Data.Parameters);
+		//}
 		
 		// Update Attachments
-		EntityAI entity = EntityAI.Cast(m_Object);
+		/*EntityAI entity = EntityAI.Cast(m_Object);
 		if (entity) {
 			data.Attachments.Clear();
 			array<EntityAI> attachments = {};
@@ -244,11 +253,27 @@ class EditorObject: Managed
 				
 				data.Attachments.Insert(attachment.GetType());
 			}
-		}
-		
-		return data;
+		}*/
 	}
+	
+	override bool Read(Serializer serializer, int version)
+	{
+		serializer.Read(version);
+		serializer.Read(m_UUID);
 		
+		string type;
+		serializer.Read(type);
+		vector transform[4];
+		serializer.Read(transform);
+		m_Object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
+		m_Object.SetTransform(transform);
+		
+		serializer.Read(m_Flags);
+		serializer.Read(m_DisplayName);
+		
+		return true;
+	}
+					
 	bool GetGroundUnderObject(out vector position, out vector direction)
 	{
 		vector transform[4];
@@ -419,7 +444,7 @@ class EditorObject: Managed
 	
 	UUID GetUUID()
 	{
-		return m_Uuid;
+		return m_UUID;
 	}
 	
 	array<EditorSnapPoint> GetEditorSnapPoints()
@@ -441,6 +466,16 @@ class EditorObject: Managed
 		}
 		
 		return editor_objects;
+	}
+	
+	void SetSynchDirty()
+	{
+		m_IsDirty = true;
+	}
+	
+	bool IsSynchDirty()
+	{
+		return m_IsDirty;
 	}
 	
 	static void ClearSelections()

@@ -28,7 +28,7 @@ class EditorServerBrowserViewMenu: ScriptViewMenu
 	{
 		Close();
 	}
-	
+		
 	override string GetLayoutFile()
 	{
 		return "DayZEditor\\GUI\\layouts\\EditorOnlineBrowser.layout";
