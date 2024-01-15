@@ -29,11 +29,12 @@ class EditorHud: ScriptView
 	
 	EditBoxWidget LeftbarSearchBar;
 	TextWidget ObjectHoverText;
-	
-	protected ref EditorMenu m_CurrentMenu;
+
 	protected ref EditorTooltip m_CurrentTooltip;
 	
 	protected Widget m_DraggedBar;
+	
+	protected ref ScriptView m_CurrentMenu;
 	
 	void EditorHud()
 	{		
@@ -46,10 +47,16 @@ class EditorHud: ScriptView
 		Right.SetSize(w, y - 110);	
 	}
 	
+	void OnJoinSessionExecute(ButtonCommandArgs args)
+	{
+		m_CurrentMenu = new EditorServerBrowserViewMenu();
+	}
+	
 	void SetOnlineSession(EditorOnlineSession session)
 	{
 		if (session) {
-			m_TemplateController.OnlineSessionId = session.GetUuid();
+			m_TemplateController.OnlineSessionId = String(session.GetUuid());
+			Print(m_TemplateController.OnlineSessionId);
 			m_TemplateController.OnlineUserCount = session.GetPlayers().Count();
 		} else {
 			m_TemplateController.OnlineSessionId = string.Empty;

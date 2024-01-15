@@ -612,7 +612,7 @@ FrameWidgetClass EditorFrame {
        clipchildren 0
        ignorepointer 1
        position 0 24
-       size 577 64
+       size 643 64
        hexactpos 1
        vexactpos 1
        hexactsize 1
@@ -1399,7 +1399,7 @@ FrameWidgetClass EditorFrame {
          "Size To Content V" 1
          content_halign center
          content_valign center
-         Columns 4
+         Columns 2
          Rows 1
          {
           ButtonWidgetClass CameraLightButton {
@@ -1443,6 +1443,69 @@ FrameWidgetClass EditorFrame {
              Binding_Name "m_Editor.CameraLight"
              Two_Way_Binding 1
              Relay_Command "m_Editor.CommandManager.CameraToggleLight"
+            }
+           }
+          }
+         }
+        }
+        PanelWidgetClass Divider12 {
+         ignorepointer 1
+         position 0 0
+         size 19 32
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          PanelWidgetClass Divider13 {
+           ignorepointer 1
+           color 0 0 0 0.5882
+           position 0 0
+           size 0.1 0.6
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style rover_sim_colorable
+          }
+         }
+        }
+        GridSpacerWidgetClass OnlineButtons {
+         ignorepointer 1
+         position 0 0
+         size 32 29
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         Padding 0
+         Margin 0
+         "Size To Content H" 1
+         "Size To Content V" 1
+         Columns 1
+         Rows 1
+         {
+          ButtonWidgetClass JoinSessionButton {
+           position 0 0
+           size 32 32
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scaled 0
+           scriptclass "ViewBinding"
+           style Default
+           "no focus" 1
+           text "J"
+           {
+            ScriptParamsClass {
+             Relay_Command "OnJoinSessionExecute"
             }
            }
           }
@@ -2596,12 +2659,15 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 1
          scriptclass "ViewBinding"
+         text "test"
          font "gui/fonts/etelkatextpro16"
          "size to text h" 1
+         "size to text v" 0
          "text valign" center
          {
           ScriptParamsClass {
            Binding_Name "OnlineSessionId"
+           Two_Way_Binding 0
           }
          }
         }
