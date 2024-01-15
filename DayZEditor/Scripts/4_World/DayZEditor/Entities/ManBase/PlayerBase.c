@@ -28,7 +28,9 @@ modded class PlayerBase
 		
 		s_LastControlledPlayer = this;
 		
-		GetEditor().GetEditorHud().Show(false);
+#ifndef SERVER
+		g_Editor = new Editor(GetPosition());
+#endif
 	}
 	
 	override void EEKilled(Object killer)

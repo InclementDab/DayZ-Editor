@@ -95,8 +95,9 @@ modded class MissionGameplay
 		
 		g_Game.ReportProgress("Loading DayZ Editor...");
 		
+		/*
 		g_Editor = new Editor(Editor.GenerateSafeStartPosition());
-		g_Game.ReportProgress("DayZ Editor Loading complete");
+		g_Game.ReportProgress("DayZ Editor Loading complete");*/
 	}
 		
 	override void OnMouseButtonPress(int button)
