@@ -2544,6 +2544,167 @@ FrameWidgetClass EditorFrame {
       }
      }
     }
+    GridSpacerWidgetClass OnlineServiceInfo {
+     ignorepointer 1
+     position 360 18
+     size 280 36
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     content_valign bottom
+     Columns 1
+     {
+      WrapSpacerWidgetClass SessionIdWrapper {
+       ignorepointer 1
+       position 10 10
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       {
+        TextWidgetClass SessionId {
+         ignorepointer 1
+         position 0 0
+         size 1 12
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Session ID:"
+         font "gui/fonts/etelkatextpro12"
+         "size to text h" 1
+         "text valign" center
+        }
+        TextWidgetClass SessionIdData {
+         visible 1
+         ignorepointer 1
+         color 0.3059 0.5608 0.3686 1
+         size 1 12
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         font "gui/fonts/etelkatextpro12"
+         "size to text h" 1
+         "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "OnlineSessionId"
+          }
+         }
+        }
+       }
+      }
+      WrapSpacerWidgetClass UserCountWrapper {
+       ignorepointer 1
+       position 10 10
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       {
+        TextWidgetClass UserCount {
+         ignorepointer 1
+         position 0 0
+         size 1 12
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "User Count:"
+         font "gui/fonts/etelkatextpro12"
+         "size to text h" 1
+         "text valign" center
+        }
+        TextWidgetClass UserCountData {
+         ignorepointer 1
+         size 1 12
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         font "gui/fonts/etelkatextpro12"
+         "size to text h" 1
+         "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "OnlineUserCount"
+          }
+         }
+        }
+       }
+      }
+      WrapSpacerWidgetClass EntityCountWrapper {
+       ignorepointer 1
+       position 10 10
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       {
+        TextWidgetClass EntityCount {
+         ignorepointer 1
+         position 0 0
+         size 1 12
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Entity Count:"
+         font "gui/fonts/etelkatextpro12"
+         "size to text h" 1
+         "text valign" center
+        }
+        TextWidgetClass EntityCountData {
+         ignorepointer 1
+         size 1 12
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         font "gui/fonts/etelkatextpro12"
+         "size to text h" 1
+         "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "OnlineEntityCount"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
    }
   }
   MapWidgetClass EditorMapWidget {

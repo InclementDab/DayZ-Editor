@@ -51,8 +51,12 @@ class EditorBoundingBox: Managed
 		}
 	}
 	
-	static void Destroy(notnull Object object)
-	{
+	static void Destroy(Object object)
+	{		
+		if (!object) {
+			return;			
+		}
+		
 		Object child = Object.Cast(object.GetChildren());
 		while (child) {
 			if (child.GetType() == "BoundingBoxBase") {

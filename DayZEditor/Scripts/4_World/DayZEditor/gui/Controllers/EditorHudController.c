@@ -14,6 +14,8 @@ class EditorHudController: EditorControllerBase
 	bool CategoryStatic;
 	bool FavoritesToggle;
 	
+	string OnlineSessionId, OnlineUserCount, OnlineEntityCount;
+	
 	StringEvaluater PrecisionLevel = "0.5";
 	
 	float cam_x, cam_y, cam_z;	
