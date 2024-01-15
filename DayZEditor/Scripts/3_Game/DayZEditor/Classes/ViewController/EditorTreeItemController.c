@@ -3,15 +3,15 @@ class EditorTreeItemController: ViewController
 	ref ObservableCollection<ref EditorTreeItem> Children = new ObservableCollection<ref EditorTreeItem>(this);
 	
 	string Text;
-	Widget Panel, Icon, Spacer1, CollapseWrapper, Spacer0, ChildrenWrapper;
+	Widget Button, ButtonText, Icon, Spacer1, CollapseWrapper, Spacer0, ChildrenWrapper;
 	
 	override void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
 			case "Text": {
-				SizeToChild size_to_child;
-				Panel.GetScript(size_to_child);
-				size_to_child.ResizeParentToChild();
+				float w, h;
+				ButtonText.GetScreenSize(w, h);
+				Button.SetScreenSize(w, h);
 				break;
 			}
 		}

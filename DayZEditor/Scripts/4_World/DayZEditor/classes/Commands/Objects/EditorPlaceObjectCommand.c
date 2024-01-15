@@ -4,6 +4,10 @@ class EditorPlaceObjectCommand: EditorCommand
 	{
 		super.Execute(sender, args);		
 		
+		if (GetWidgetUnderCursor()) {
+			return false;
+		}
+		
 		array<Object> placing_objects = GetEditor().GetPlacingObjects();		
 		foreach (Object placing_object: placing_objects) {			
 			EditorObject editor_object = GetEditor().CreateObject(placing_object);

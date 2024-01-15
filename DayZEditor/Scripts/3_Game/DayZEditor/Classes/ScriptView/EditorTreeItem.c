@@ -61,7 +61,7 @@ class EditorTreeItem: ScriptView
 	}
 		
 	override void Update(float dt)
-	{
+	{				
 		if (m_IsBeingDragged) {
 			
 			if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
@@ -95,7 +95,9 @@ class EditorTreeItem: ScriptView
 			return;
 		}
 		
-		m_Callback.Invoke(this);
+		if (m_Callback) {
+			m_Callback.Invoke(this);
+		}
 	}
 		
 	void SetSelected(bool state)

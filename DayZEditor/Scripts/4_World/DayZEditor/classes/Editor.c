@@ -693,7 +693,11 @@ class Editor: Managed
 			SetBrush(null);
 		}
 		
-		m_PlacingObjects[world_object] = hand_data;
+		if (hand_data) {
+			m_PlacingObjects[world_object] = hand_data;
+		} else {
+			m_PlacingObjects[world_object] = new EditorHandData();
+		}
 		return m_PlacingObjects;
 	}
 	
@@ -882,6 +886,10 @@ class Editor: Managed
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
+		if (m_PlacingObjects.Contains(target)) {
+		
+	}
+	
 		EditorObject editor_object = EditorObject.CreateNew(target, flags);
 		m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
 		
