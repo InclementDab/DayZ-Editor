@@ -867,8 +867,8 @@ class Editor: Managed
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
 		EditorObject editor_object = new EditorObject(target, flags);
+		EditorObjectData data = editor_object.CreateSerializedData();
 		if (create_undo) {
-			EditorObjectData data = editor_object.CreateSerializedData();
 			EditorAction action = new EditorAction("Delete", "Create");
 			action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
 			action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));
@@ -882,8 +882,13 @@ class Editor: Managed
 		
 		m_PlacedObjects.Insert(editor_object);
 		
-		if (EditorOnlineSession.CurrentSession) {
-			EditorOnlineSession.CurrentSession.OutgoingSyncObjects(m_PlacedObjects);
+		array<ref EditorObjectData> object_data = {};
+		foreach (EditorObject placed_object: m_PlacedObjects) {
+			object_data.Insert(placed_object.CreateSerializedData());
+		}
+	
+		if (GetDayZGame().GetEditorSessionManager().GetCurrentSession()) {
+			GetDayZGame().GetEditorSessionManager().GetCurrentSession().OutgoingSyncObjects(object_data);
 		}
 		
 		return editor_object;
@@ -918,8 +923,13 @@ class Editor: Managed
 			InsertAction(action);
 		}
 	
-		if (EditorOnlineSession.CurrentSession) {
-			EditorOnlineSession.CurrentSession.OutgoingSyncObjects(m_PlacedObjects);
+		array<ref EditorObjectData> object_data = {};
+		foreach (EditorObject placed_object: m_PlacedObjects) {
+			object_data.Insert(placed_object.CreateSerializedData());
+		}
+	
+		if (GetDayZGame().GetEditorSessionManager().GetCurrentSession()) {
+			GetDayZGame().GetEditorSessionManager().GetCurrentSession().OutgoingSyncObjects(object_data);
 		}
 
 		return editor_objects;

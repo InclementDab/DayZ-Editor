@@ -1,0 +1,194 @@
+PanelWidgetClass Root {
+ color 0.1569 0.1569 0.1569 0.7843
+ size 380 200
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ style DayZDefaultPanel
+ {
+  PanelWidgetClass Header {
+   ignorepointer 1
+   color 0.5725 0.3294 0.3294 1
+   size 1 12
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style DayZDefaultPanelTop
+   {
+    TextWidgetClass HeaderText {
+     ignorepointer 1
+     size 48 12
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "Join Online Session"
+     "size to text h" 1
+    }
+   }
+  }
+  WrapSpacerWidgetClass MainWrapper {
+   ignorepointer 1
+   position 0 22
+   size 0.8 145
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style Outline
+   content_halign center
+   {
+    GridSpacerWidgetClass HostSpacer {
+     ignorepointer 1
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     "Size To Content V" 1
+     Columns 2
+     Rows 1
+     {
+      TextWidgetClass HostText {
+       ignorepointer 1
+       position 0 0
+       size 40 12
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "Hostname:"
+       "text halign" right
+      }
+      EditBoxWidgetClass Host {
+       size 12 12
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Default
+      }
+     }
+    }
+    GridSpacerWidgetClass PasswordSpacer {
+     ignorepointer 1
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     "Size To Content V" 1
+     Columns 2
+     Rows 1
+     {
+      TextWidgetClass PassworText {
+       ignorepointer 1
+       position 0 0
+       size 40 12
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "Password:"
+       "text halign" right
+      }
+      PasswordEditBoxWidgetClass Password {
+       visible 1
+       size 12 12
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Default
+      }
+     }
+    }
+   }
+  }
+  GridSpacerWidgetClass ButtonContainer {
+   ignorepointer 1
+   position 0 5
+   size 0.8 14
+   halign center_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   content_halign center
+   content_valign center
+   Rows 1
+   {
+    ButtonWidgetClass CreateButton {
+     position 10 10
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     scriptclass "ViewBinding"
+     style Outline_1px_Button
+     text "Create"
+     font "gui/fonts/etelkatextpro14"
+     {
+      ScriptParamsClass {
+       Relay_Command "OnCreateExecute"
+      }
+     }
+    }
+    ButtonWidgetClass JoinButton {
+     position 10 10
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     scriptclass "ViewBinding"
+     style Outline_1px_Button
+     text "Join"
+     font "gui/fonts/etelkatextpro14"
+     {
+      ScriptParamsClass {
+       Relay_Command "OnJoinExecute"
+      }
+     }
+    }
+    ButtonWidgetClass CloseButton {
+     position 10 10
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     scriptclass "ViewBinding"
+     style Outline_1px_Button
+     text "Close"
+     font "gui/fonts/etelkatextpro14"
+     {
+      ScriptParamsClass {
+       Relay_Command "OnCloseExecute"
+      }
+     }
+    }
+   }
+  }
+ }
+}
