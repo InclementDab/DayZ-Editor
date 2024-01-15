@@ -1,12 +1,12 @@
 class EditorObjectTreeItem: EditorTreeItem
 {
-	protected Object m_Object;
+	protected EditorObject m_EditorObject;
 	
-	void EditorObjectTreeItem(Object object)
+	void EditorObjectTreeItem(EditorObject editor_object)
 	{
-		m_Object = object;
+		m_EditorObject = editor_object;
 		
-		m_TemplateController.Text = m_Object.GetDisplayName();
+		m_TemplateController.Text = m_EditorObject.GetDisplayName();
 		m_TemplateController.NotifyPropertyChanged("Text");
 	}
 	
@@ -15,7 +15,8 @@ class EditorObjectTreeItem: EditorTreeItem
 		switch (w) {
 			case Panel: {
 				WidgetAnimator.AnimateColor(Panel, ARGB(255, 75, 119, 190), 50);
-				GetEditor().AddInHand(m_Object);
+				//GetEditor().AddInHand(m_EditorObject);
+				m_EditorObject.SetSelected(true);
 				return true;
 			}
 		}
@@ -28,6 +29,7 @@ class EditorObjectTreeItem: EditorTreeItem
 		switch (w) {
 			case Panel: {
 				WidgetAnimator.AnimateColor(Panel, ARGB(0, 0, 0, 0), 50);
+				m_EditorObject.SetSelected(false);
 				break;
 			}
 		}
@@ -45,8 +47,9 @@ class EditorObjectTreeItem: EditorTreeItem
 					scroller.GetScreenSize(w_f, h_f);
 					scroller.GetScreenPos(x_p, y_p);
 					
-					EditorObjectTooltip tooltip = new EditorObjectTooltip(m_Object, x_p + w_f + 25, y);
-					GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
+					if (m_EditorObject.GetWorldObject() && !IsBlacklistedItem(m_EditorObject.GetWorldObject().GetType())) {
+						//GetEditor().GetEditorHud().SetCurrentTooltip(new EditorObjectTooltip(m_EditorObject.GetWorldObject(), x_p + w_f + 25, y));
+					}
 				}
 				
 				break;
@@ -60,7 +63,7 @@ class EditorObjectTreeItem: EditorTreeItem
 	{
 		switch (w) {
 			case Panel: {
-				GetEditor().GetEditorHud().SetCurrentTooltip(null);
+				//GetEditor().GetEditorHud().SetCurrentTooltip(null);
 				break;
 			}
 		}

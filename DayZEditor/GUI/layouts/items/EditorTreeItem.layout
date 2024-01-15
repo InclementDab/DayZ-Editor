@@ -13,11 +13,11 @@ PanelWidgetClass Root {
   WrapSpacerWidgetClass Wrapper {
    visible 1
    clipchildren 0
-   size 1 18
+   size 1 1
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 1
+   vexactsize 0
    scaled 0
    Padding 0
    Margin 0
@@ -57,6 +57,18 @@ PanelWidgetClass Root {
      "src alpha" 1
      filter 0
     }
+    FrameWidgetClass Spacer {
+     visible 1
+     ignorepointer 1
+     position 0 0
+     size 4 0
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+    }
     FrameWidgetClass CollapseWrapper {
      visible 0
      ignorepointer 0
@@ -69,6 +81,7 @@ PanelWidgetClass Root {
      scaled 0
      {
       ButtonWidgetClass Collapse {
+       visible 1
        size 12 12
        halign center_ref
        valign center_ref
@@ -108,10 +121,11 @@ PanelWidgetClass Root {
       }
      }
     }
-    FrameWidgetClass Spacer {
-     visible 1
+    FrameWidgetClass Spacer1 {
+     visible 0
      ignorepointer 1
-     size 8 0
+     position 0 0
+     size 4 0
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -137,7 +151,7 @@ PanelWidgetClass Root {
     FrameWidgetClass Spacer0 {
      visible 0
      ignorepointer 1
-     size 8 0
+     size 4 0
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -198,7 +212,7 @@ PanelWidgetClass Root {
       }
      }
     }
-    WrapSpacerWidgetClass Children {
+    WrapSpacerWidgetClass ChildrenWrapper {
      visible 0
      clipchildren 0
      ignorepointer 1

@@ -35,18 +35,6 @@ class EditorObjectTooltip: ScriptViewTemplate<EditorPlaceableTooltipController>
 		GetGame().ObjectDelete(m_Object);
 	}
 	
-	bool IsBlacklistedItem(string item_type)
-	{
-		array<string> blacklist = { "DZ_LightAI", "Man", "Car" };
-		foreach (string blacklist_check: blacklist) {
-			if (GetGame().IsKindOf(item_type, blacklist_check)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
 	override string GetLayoutFile() 
 	{
 		return "DayZEditor/gui/layouts/tooltips/EditorTooltip.layout";

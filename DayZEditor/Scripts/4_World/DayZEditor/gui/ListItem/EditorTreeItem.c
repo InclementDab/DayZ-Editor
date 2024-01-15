@@ -6,7 +6,7 @@ class EditorTreeItem: ScriptView
 	
 	TextWidget Text;
 	ImageWidget Icon, CollapseIcon, ParentDisplay, TreeDisplay;
-	WrapSpacerWidget Children;
+	WrapSpacerWidget ChildrenWrapper;
 	
 	Widget Panel, CollapseWrapper, Spacer0, DragPanel;
 	
@@ -15,24 +15,25 @@ class EditorTreeItem: ScriptView
 	void EditorTreeItem()
 	{
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
+		
+		ShowChildren(false);
 	}
 	
 	void OnCollapseExecute(ButtonCommandArgs args)
 	{
-		ShowChildren(!Children.IsVisible());
+		ShowChildren(!ChildrenWrapper.IsVisible());
 	}
 	
 	void ShowChildren(bool state)
 	{
-		Children.Show(state);
+		ChildrenWrapper.Show(state);
 		
 		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
 		CollapseIcon.SetImage(0);
 		
 		float w, h;
 		m_LayoutRoot.GetScreenSize(w, h);
-		
-		m_LayoutRoot.SetScreenSize(w, !state * 18 + state * (m_TemplateController.Children.Count() + 1));
+		m_LayoutRoot.SetScreenSize(w, Ternary<float>.If(state, 18 * (m_TemplateController.Children.Count()) + 18, 18));
 	}
 		
 	override void Update(float dt)
@@ -140,7 +141,19 @@ class EditorTreeItem: ScriptView
 		
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
-					
+			
+	bool IsBlacklistedItem(string item_type)
+	{
+		array<string> blacklist = { "DZ_LightAI", "Man", "Car" };
+		foreach (string blacklist_check: blacklist) {
+			if (GetGame().IsKindOf(item_type, blacklist_check)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+			
 	void SetParentTree(EditorTreeItem parent)
 	{
 		m_Parent = parent;

@@ -26,6 +26,8 @@ class EditorObject: Managed
 	protected ref EditorObjectWorldMarker m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem m_EditorPlacedListItem;
 	
+	protected EditorObjectTreeItem m_TreeItem;
+	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
@@ -50,6 +52,8 @@ class EditorObject: Managed
 	{
 		m_Object = object;
 		m_Flags = flags;
+		
+		m_DisplayName = m_Object.GetType();
 						
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
@@ -113,8 +117,9 @@ class EditorObject: Managed
 		
 		// Browser item
 		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
-			GetEditor().GetEditorHud().GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(new EditorObjectTreeItem(m_Object));
-			
+			EditorObjectTreeItem tree_item = new EditorObjectTreeItem(this);
+			GetEditor().GetEditorHud().GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(tree_item);
+			m_TreeItem = tree_item;
 		}
 				
 		// Needed for AI Placement			
@@ -149,6 +154,8 @@ class EditorObject: Managed
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
 				
+		delete m_TreeItem;
+		
 		foreach (auto snap_point: m_EditorSnapPoints) {
 			snap_point.Delete();
 		}
@@ -157,6 +164,11 @@ class EditorObject: Managed
 #ifdef DIAG_DEVELOPER
 	void DiagOnFrameUpdate(float dt)
 	{
+		if (!m_Object) {
+			delete this;
+			return;
+		}
+		
 		vector transform[4];
 		m_Object.GetTransform(transform);
 		for (int i = 0; i < 8; i++) {
@@ -187,6 +199,7 @@ class EditorObject: Managed
 		//editor_object.SetSimulation(object_data.Simulate);
 		//editor_object.SetEditorOnly(object_data.EditorOnly);
 		//editor_object.SetAllowDamage(object_data.AllowDamage);
+		editor_object.SetDisplayName(object_data.DisplayName);
 		
 		// If network light
 		//if (NetworkLightBase.Cast(m_Object)) {
@@ -204,6 +217,7 @@ class EditorObject: Managed
 		data.Scale = m_Object.GetScale();
 		//data.BottomCenter = m_Object.GetBottomCenter();
 		data.Flags = m_Flags;
+		data.DisplayName = m_DisplayName;
 		
 		// Update Attachments
 		EntityAI entity = EntityAI.Cast(m_Object);

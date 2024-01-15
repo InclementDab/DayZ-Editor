@@ -20,7 +20,7 @@ class EditorHudController: EditorControllerBase
 	float obj_x, obj_y, obj_z;
 		
 	ref ObservableCollection<ref EditorTreeItem> LeftListItems = new ObservableCollection<ref EditorTreeItem>(this);
-	ref ObservableCollection<ref EditorTreeItem> RightListItems = new ObservableCollection<ref EditorTreeItem>(this);
+	ref ObservableCollection<EditorTreeItem> RightListItems = new ObservableCollection<EditorTreeItem>(this);
 	
 	ref EditorTreeItem PlacementsFolder, DeletionsFolder;
 	

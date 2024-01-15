@@ -146,7 +146,7 @@ class Editor: Managed
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
 	
-	bool										KEgg; // oh?
+	bool KEgg; // oh?
 	
 	//0: EditorObject
 	static ref ScriptInvoker OnObjectCreated = new ScriptInvoker();
@@ -934,12 +934,14 @@ class Editor: Managed
 	void DeleteObjects(notnull array<EditorObject> editor_objects, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
-		foreach (EditorObject editor_object: editor_objects) {
+		foreach (EditorObject editor_object: editor_objects) {		
 			EditorObjectData data = editor_object.CreateSerializedData();
 			action.InsertUndoParameter(new Param1<ref EditorObjectData>(data));
 			action.InsertRedoParameter(new Param1<ref EditorObjectData>(data));			
 		
 			OnObjectDeleted.Invoke(editor_object);
+		
+			m_PlacedObjects.RemoveItem(editor_object);
 			delete editor_object;
 		}
 		
