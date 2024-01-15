@@ -117,16 +117,7 @@ class EditorHudController: EditorControllerBase
 			
 			LeftListItems.Insert(tree_item);
 		}
-		
-		EditorLog.Info("Loaded %1 Placeable Objects", all_placeable_items.Count().ToString());
-		
-		// Just a quickset on the color
-		PlacementsTabButton.SetColor(m_Editor.GeneralSettings.SelectionColor);
-		DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));		
-		
-		//LeftbarCategoryConfig.SetColor(m_Editor.GeneralSettings.SelectionColor);
-		//LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
-		
+				
 		// Load Brushes		
 		string brush_file = m_Editor.GeneralSettings.EditorBrushFile;
 		if (brush_file.Contains("'")) {

@@ -179,6 +179,7 @@ class Editor: Managed
 		EditorLog.Info("Initializing Camera");
 		g_Game.ReportProgress("Initializing Camera");
 		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", position, ECE_LOCAL));
+		Print(m_EditorCamera);
 		
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
@@ -1463,10 +1464,11 @@ class Editor: Managed
 			m_EditorHud = new EditorHud();
 		} else {
 			delete m_EditorHud;
+			return;
 		}
-#else
-		m_EditorHud.Show(state);
 #endif
+		
+		m_EditorHud.Show(state);
 	}
 	
 	bool IsPlacing()

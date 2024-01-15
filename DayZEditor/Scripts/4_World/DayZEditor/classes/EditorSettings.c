@@ -1,4 +1,4 @@
-[RegisterProfileSetting(EditorGeneralSettings, "#STR_EDITOR_GENERAL")]
+[RegisterProfileSetting(EditorGeneralSettings, "#STR_EDITOR_EDITOR")]
 class EditorGeneralSettings: ProfileSettings
 {	
 	
@@ -22,7 +22,7 @@ class EditorGeneralSettings: ProfileSettings
 	[RegisterProfileSettingSlider("#STR_EDITOR_GENERAL", "ObjectViewDistance", "#STR_EDITOR_OBJECT_VIEW_DISTANCE", 200, 40000)]
 	float ObjectViewDistance 		= 2400;
 	
-	//[RegisterProfileSettingMultistate("#STR_EDITOR_GENERAL", "AutoSaveEnabled", "#STR_EDITOR_AUTO_SAVE", {"#menu_yes", "#menu_no"})]
+	[RegisterProfileSettingMultistate("#STR_EDITOR_GENERAL", "AutoSaveEnabled", "#STR_EDITOR_AUTO_SAVE", {"#menu_yes", "#menu_no"})]
 	int AutoSaveEnabled			= true; // << remove!!!
 	
 	
@@ -53,8 +53,10 @@ class EditorGeneralSettings: ProfileSettings
 	int MarkerPrimaryColor			= COLOR_WHITE;
 	
 	// Theme Settings
-	//[RegisterProfileSettingColor("#STR_EDITOR_THEMES", "HighlightColor", "#STR_EDITOR_HIGHLIGHT_COLOR", false)]
+	[RegisterProfileSettingColor("#STR_EDITOR_THEMES", "HighlightColor", "#STR_EDITOR_HIGHLIGHT_COLOR", false)]
 	int HighlightColor				= COLOR_SALMON;
+	
+	[RegisterProfileSettingColor("#STR_EDITOR_THEMES", "SelectionColor", "#STR_EDITOR_SELECTION_COLOR", false)]
 	int SelectionColor				= COLOR_BLUE;
 	
 	// Brush Settings
@@ -68,7 +70,7 @@ class EditorGeneralSettings: ProfileSettings
 	LogLevel SelectedLogLevel 		= LogLevel.INFO;
 	
 	override void ApplyOptions()
-	{
+	{		
 		GetGame().GetWorld().SetViewDistance(ViewDistance);
 		GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
 		
@@ -81,6 +83,6 @@ class EditorGeneralSettings: ProfileSettings
 		}
 
 		GetEditor().GetCamera().Speed = CameraSpeed;
-		GetEditor().GetEditorHud().ShowRuleOfThirds(RuleOfThirds);
+		//GetEditor().GetEditorHud().ShowRuleOfThirds(RuleOfThirds);
 	}
 }
