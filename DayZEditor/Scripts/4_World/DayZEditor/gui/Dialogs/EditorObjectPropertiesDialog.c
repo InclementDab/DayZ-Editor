@@ -196,7 +196,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		//AddContent(new MultilineEditBoxPrefab("Execute Code", editor_object, "TestingScript"));
 		//AddContent(new ButtonPrefab("Execute", this, "ExecuteCode"));
 		
-		/*if (GetEditor().Settings.DebugMode) {
+		/*if (GetEditor().GeneralSettings.DebugMode) {
 			GroupPrefab debug_group = new GroupPrefab("Debug", editor_object.GetData(), string.Empty);
 			debug_group.Insert(new TextBoxPrefab("#STR_EDITOR_TYPE", editor_object.GetData(), "Type"));
 			debug_group.Insert(new TextBoxPrefab("#STR_EDITOR_ID", editor_object, "ObjectID"));

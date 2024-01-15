@@ -9,12 +9,12 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 	
 	void Select() 
 	{
-		ListItem.SetColor(m_Editor.Settings.SelectionColor);
+		ListItem.SetColor(m_Editor.GeneralSettings.SelectionColor);
 	}
 	
 	void Highlight()
 	{
-		ListItem.SetColor(m_Editor.Settings.HighlightColor);
+		ListItem.SetColor(m_Editor.GeneralSettings.HighlightColor);
 	}
 	
 	void Deselect() 

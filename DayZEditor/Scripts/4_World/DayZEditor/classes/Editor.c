@@ -74,7 +74,7 @@ class Editor: Managed
 	
 	// public properties
 	ref EditorCommandManager 					CommandManager;
-	EditorSettings Settings 	= EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
+	EditorGeneralSettings GeneralSettings = EditorGeneralSettings.Cast(GetDayZGame().GetProfileSetting(EditorGeneralSettings));
 	EditorStatistics Statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
 	
 	// protected Editor Members
@@ -266,9 +266,9 @@ class Editor: Managed
 		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
 		
 		// Just some stuff to do on load
-		GetGame().GetWorld().SetPreferredViewDistance(Settings.ViewDistance);		
-		GetGame().GetWorld().SetViewDistance(Settings.ViewDistance);
-		GetGame().GetWorld().SetObjectViewDistance(Settings.ObjectViewDistance);
+		GetGame().GetWorld().SetPreferredViewDistance(GeneralSettings.ViewDistance);		
+		GetGame().GetWorld().SetViewDistance(GeneralSettings.ViewDistance);
+		GetGame().GetWorld().SetObjectViewDistance(GeneralSettings.ObjectViewDistance);
 		
 		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
@@ -277,12 +277,13 @@ class Editor: Managed
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(Update);
 		
-		m_AutoSaveTimer.Run(Settings.AutoSaveTimer, this, "OnAutoSaveTimer");
+		// TODO!!! write a better autosave!!!
+		//m_AutoSaveTimer.Run(GeneralSettings.AutoSaveTimer, this, "OnAutoSaveTimer");
 	}
 	
 	void ~Editor() 
 	{
-		Settings.Save();
+		GeneralSettings.Save();
 		Statistics.Save();
 
 		GetGame().ObjectDelete(m_EditorCamera);
@@ -315,7 +316,7 @@ class Editor: Managed
 				vector _;
 				int __;
 				vector collision_ray_start = GetGame().GetCurrentCameraPosition();
-				vector collision_ray_end = collision_ray_start + GetGame().GetPointerDirection() * Settings.ViewDistance;
+				vector collision_ray_end = collision_ray_start + GetGame().GetPointerDirection() * GeneralSettings.ViewDistance;
 				set<Object> results = new set<Object>();
 				if (DayZPhysics.RaycastRV(collision_ray_start, collision_ray_end, _, _, __, results)) {
 					//collision_ignore = results[0];
@@ -327,15 +328,15 @@ class Editor: Managed
 			}
 			
 			// Yeah, enfusions dumb, i know
-			bool should_precice = (Settings.HighPrecisionCollision || m_LootEditMode);																					// High precision is experimental, but we want it on for LootEditor since its only placing the cylinders!
-			CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance, 0, !CollisionMode, should_precice);
+			bool should_precice = (GeneralSettings.HighPrecisionCollision || m_LootEditMode);																					// High precision is experimental, but we want it on for LootEditor since its only placing the cylinders!
+			CurrentMousePosition = MousePosToRay(obj, collision_ignore, GeneralSettings.ViewDistance, 0, !CollisionMode, should_precice);
 		}
 		
 		if (!IsPlacing()) {			
 			vector hit_pos, hit_normal;
 			int component_index;		
 			set<Object> collisions = new set<Object>;
-			DayZPhysics.RaycastRV(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * Settings.ObjectViewDistance, hit_pos, hit_normal, component_index, collisions);
+			DayZPhysics.RaycastRV(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * GeneralSettings.ObjectViewDistance, hit_pos, hit_normal, component_index, collisions);
 			
 			Object target = collisions[0];
 			if (target) {
@@ -700,13 +701,13 @@ class Editor: Managed
 		m_EditorCamera.SetPosition(Vector(10, LootYOffset, 10));
 		m_EditorCamera.LookAt(Vector(0, LootYOffset, 0));	
 		
-		if (!FileExist(Settings.EditorProtoFile)) {
+		if (!FileExist(GeneralSettings.EditorProtoFile)) {
 			EditorLog.Info("EditorProtoFile not found! Copying...");
-			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", Settings.EditorProtoFile);
+			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", GeneralSettings.EditorProtoFile);
 		}
 		
 		m_EditorMapGroupProto = new EditorMapGroupProto(m_LootEditTarget); 
-		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, Settings.EditorProtoFile);
+		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, GeneralSettings.EditorProtoFile);
 		
 		m_LootEditMode = true;
 		CollisionMode = true;
@@ -857,11 +858,11 @@ class Editor: Managed
 		
 	protected void OnAutoSaveTimer()
 	{		
-		if (EditorSaveFile != string.Empty && Settings.AutoSaveEnabled) {
+		if (EditorSaveFile != string.Empty && GeneralSettings.AutoSaveEnabled) {
 			CommandManager[EditorSaveCommand].Execute(this, null);
 		}
 		
-		m_AutoSaveTimer.Run(Math.Max(Settings.AutoSaveTimer, 60), this, "OnAutoSaveTimer");
+		//m_AutoSaveTimer.Run(Math.Max(GeneralSettings.AutoSaveTimer, 60), this, "OnAutoSaveTimer");
 	}
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
@@ -1262,7 +1263,7 @@ class Editor: Managed
 			m_EditorHud.CreateNotification(error_message, COLOR_YELLOW);
 			
 			// Disable auto save since we loaded a shit file
-			Settings.AutoSaveTimer = -1;
+			//Settings.AutoSaveTimer = -1;
 		} else {
 			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()), COLOR_GREEN);
 		}

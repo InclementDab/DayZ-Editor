@@ -10,7 +10,7 @@ class EditorDialogCategoryBase: DialogCategoryBase
 			m_EditorHud = m_Editor.GetEditorHud();	
 		}
 		
-		if (m_Editor && m_Editor.Settings.LockCameraDuringDialogs) {
+		if (m_Editor && m_Editor.GeneralSettings.LockCameraDuringDialogs) {
 			m_Editor.GetCamera().MoveEnabled = false;
 			m_Editor.GetCamera().LookEnabled = false;
 			m_EditorHud.ShowCursor(true);

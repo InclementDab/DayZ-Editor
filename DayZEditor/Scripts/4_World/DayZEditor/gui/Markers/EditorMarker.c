@@ -9,8 +9,8 @@ class EditorMarker: ScriptView
 	void EditorMarker()
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
-		SetColor(m_Editor.Settings.MarkerPrimaryColor);
-		SetOutlineColor(m_Editor.Settings.MarkerPrimaryColor);
+		SetColor(m_Editor.GeneralSettings.MarkerPrimaryColor);
+		SetOutlineColor(m_Editor.GeneralSettings.MarkerPrimaryColor);
 	}
 	
 	void SetPos(float x, float y) 

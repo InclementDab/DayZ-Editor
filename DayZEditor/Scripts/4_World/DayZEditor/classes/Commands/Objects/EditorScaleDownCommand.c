@@ -2,7 +2,7 @@ class EditorScaleDownCommand: EditorCommand
 {
 	override bool Execute(Class sender, CommandArgs args)
 	{
-		float value = m_Editor.Settings.QuickMoveStepSize * 0.1;
+		float value = m_Editor.GeneralSettings.QuickMoveStepSize * 0.1;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}

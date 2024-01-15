@@ -31,7 +31,7 @@ class EditorCamera: ScriptedCamera
 	
 	float Smoothing = 0;
 	
-	float Speed = GetEditor().Settings.CameraSpeed;
+	float Speed = GetEditor().GeneralSettings.CameraSpeed;
 	float Boost_Multiplier = 6.5;
 	float Drag = 0.05;
 	float Mouse_Sens = 35.0;
@@ -240,7 +240,7 @@ class EditorCamera: ScriptedCamera
 
 		}
 
-		if (!GetEditor().Settings.AllowBelowGround) {
+		if (!GetEditor().GeneralSettings.AllowBelowGround) {
 			transform[3][1] = Math.Max(GetGame().SurfaceY(transform[3][0], transform[3][2]) + 0.1, transform[3][1]);
 		}
 				
@@ -267,7 +267,7 @@ class EditorCamera: ScriptedCamera
 			orientation[1] = Math.Clamp(orientation[1], -89.9, 89.9);
 		}
 		
-		orientation[2] = Math.NormalizeAngle(GetEditor().Settings.CameraTilt); //orientation[2]	
+		orientation[2] = Math.NormalizeAngle(GetEditor().GeneralSettings.CameraTilt); //orientation[2]	
 		SetOrientation(orientation);
 
 		if (IsTargeting) {

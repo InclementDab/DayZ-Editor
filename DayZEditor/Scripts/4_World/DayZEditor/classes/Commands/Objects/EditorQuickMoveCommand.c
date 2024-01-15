@@ -2,13 +2,13 @@ class EditorQuickMoveCommand: EditorCommand
 {
 	override bool Execute(Class sender, CommandArgs args)
 	{
-		float value = GetEditor().Settings.QuickMoveStepSize;
+		float value = GetEditor().GeneralSettings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
 		
 		vector direction = GetDirection() * value;
-		if (GetEditor().Settings.QuickMoveFollowsCamera) {
+		if (GetEditor().GeneralSettings.QuickMoveFollowsCamera) {
 			direction = GetEditor().GetCamera().GetDirection() * value;
 		}
 		

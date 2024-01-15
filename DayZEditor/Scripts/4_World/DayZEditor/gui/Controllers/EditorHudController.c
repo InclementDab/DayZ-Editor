@@ -123,30 +123,30 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Info("Loaded %1 Placeable Objects", all_placeable_items.Count().ToString());
 		
 		// Just a quickset on the color
-		PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
+		PlacementsTabButton.SetColor(m_Editor.GeneralSettings.SelectionColor);
 		DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));		
 		
-		//LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
+		//LeftbarCategoryConfig.SetColor(m_Editor.GeneralSettings.SelectionColor);
 		//LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
 		
 		// Load Brushes		
-		string brush_file = m_Editor.Settings.EditorBrushFile;
+		string brush_file = m_Editor.GeneralSettings.EditorBrushFile;
 		if (brush_file.Contains("'")) {
 			// bi wtf
 			brush_file.Replace("'", "");
 			brush_file.Replace("\"", "");
-			m_Editor.Settings.EditorBrushFile = brush_file;
-			m_Editor.Settings.Save();
+			m_Editor.GeneralSettings.EditorBrushFile = brush_file;
+			m_Editor.GeneralSettings.Save();
 		}
 		
-		if (!FileExist(m_Editor.Settings.EditorBrushFile)) {
-			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", m_Editor.Settings.EditorBrushFile)) {
-				EditorLog.Error("Could not copy brush data to %1", m_Editor.Settings.EditorBrushFile);
+		if (!FileExist(m_Editor.GeneralSettings.EditorBrushFile)) {
+			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", m_Editor.GeneralSettings.EditorBrushFile)) {
+				EditorLog.Error("Could not copy brush data to %1", m_Editor.GeneralSettings.EditorBrushFile);
 				return;
 			}
 		}
 		
-		ReloadBrushes(m_Editor.Settings.EditorBrushFile);
+		ReloadBrushes(m_Editor.GeneralSettings.EditorBrushFile);
 	}
 				
 	void InsertMapMarker(EditorMarker map_marker)
@@ -248,7 +248,7 @@ class EditorHudController: EditorControllerBase
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
 				
-				PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
+				PlacementsTabButton.SetColor(m_Editor.GeneralSettings.SelectionColor);
 				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
 				RightScroll.VScrollToPos(0);
 				break;
@@ -263,7 +263,7 @@ class EditorHudController: EditorControllerBase
 				RightbarDeletionsList.Show(CategoryDeletions);
 				
 				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
-				DeletionsTabButton.SetColor(m_Editor.Settings.SelectionColor);
+				DeletionsTabButton.SetColor(m_Editor.GeneralSettings.SelectionColor);
 				RightScroll.VScrollToPos(0);
 				break;
 			}			
@@ -277,7 +277,7 @@ class EditorHudController: EditorControllerBase
 				LeftbarPlacementsConfig.Show(CategoryConfig);
 				LeftbarPlacementsStatic.Show(CategoryStatic);
 				
-				LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
+				LeftbarCategoryConfig.SetColor(m_Editor.GeneralSettings.SelectionColor);
 				LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
 				LeftScroll.VScrollToPos(0);
 				break;
@@ -292,7 +292,7 @@ class EditorHudController: EditorControllerBase
 				LeftbarPlacementsStatic.Show(CategoryStatic);
 				
 				LeftbarCategoryConfig.SetColor(ARGB(255, 60, 60, 60));
-				LeftbarCategoryStatic.SetColor(m_Editor.Settings.SelectionColor);
+				LeftbarCategoryStatic.SetColor(m_Editor.GeneralSettings.SelectionColor);
 				LeftScroll.VScrollToPos(0);
 				break;
 			}
@@ -467,14 +467,6 @@ class EditorHudController: EditorControllerBase
 	// im not adding a trace to this lol
 	void OnEditorLog(LogLevel level, string message)
 	{
-		if (!m_Editor || !m_Editor.Settings || level < m_Editor.Settings.SelectedLogLevel) {
-			return;
-		}
-		
-		EditorLogEntries.Insert(new EditorLogEntry(level, message));
-		if (EditorLogEntries.Count() > MAX_LOG_ENTRIES) {
-			EditorLogEntries.RemoveOrdered(0); // 0 = remove oldest, then since ordered next olded becomes 0. i think????
-		}
 	}
 	
 	/*

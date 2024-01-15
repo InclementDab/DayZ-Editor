@@ -4,7 +4,7 @@ class EditorRotateObjectClockwiseCommand: EditorCommand
 	{
 		// BAD CODEEEE
 		/*
-		float value = m_Editor.Settings.QuickMoveStepSize;
+		float value = m_Editor.GeneralSettings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
@@ -34,7 +34,7 @@ class EditorRotateObjectCounterClockwiseCommand: EditorCommand
 {
 	override bool Execute(Class sender, CommandArgs args)
 	{
-		/*float value = m_Editor.Settings.QuickMoveStepSize;
+		/*float value = m_Editor.GeneralSettings.QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}

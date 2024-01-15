@@ -1,11 +1,32 @@
-[RegisterProfileSetting(EditorSettings)]
-class EditorSettings: ProfileSettings
+[RegisterProfileSetting(EditorGeneralSettings, "#STR_EDITOR_GENERAL")]
+class EditorGeneralSettings: ProfileSettings
 {	
+	
+	/*
+	
+	general_group.Insert(new SliderPrefab("", m_Editor.Settings, "ViewDistance", 1, 20000));
+	general_group.Insert(new SliderPrefab("#", m_Editor.Settings, "ObjectViewDistance", 1, 8000));
+	general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_QUICK_MOVE_STEP", m_Editor.Settings, "QuickMoveStepSize", 0.01));	
+	general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_QUICK_MOVE_FOLLOWS", m_Editor.Settings, "QuickMoveFollowsCamera"));	
+	general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SPAWN_ITEMS_WITH_ATTACHMENTS", m_Editor.Settings, "SpawnItemsWithAttachments"));	
+	
+	general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_SCREEN_LOGS", m_Editor.Settings, "ShowScreenLogs"));
+	general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_BOUNDING_BOXES", m_Editor.Settings, "ShowBoundingBoxes"));
+	
+	*/
+	
 	// General Settings
+	[RegisterProfileSettingSlider("#STR_EDITOR_GENERAL", "ViewDistance", "#STR_EDITOR_VIEW_DISTANCE", 200, 40000)]
 	float ViewDistance 				= 3000;
-	float ObjectViewDistance 		= 3000;
-	bool AutoSaveEnabled			= true;
-	float AutoSaveTimer 			= 240;
+	
+	[RegisterProfileSettingSlider("#STR_EDITOR_GENERAL", "ObjectViewDistance", "#STR_EDITOR_OBJECT_VIEW_DISTANCE", 200, 40000)]
+	float ObjectViewDistance 		= 2400;
+	
+	[RegisterProfileSettingMultistate("#STR_EDITOR_GENERAL", "AutoSaveEnabled", "#STR_EDITOR_AUTO_SAVE", {"#menu_yes", "#menu_no"})]
+	bool AutoSaveEnabled			= true; // << remove!!!
+	
+	
+	//float AutoSaveTimer 			= 240;
 	float QuickMoveStepSize			= 0.1;
 	bool QuickMoveFollowsCamera		= false;
 	bool SpawnItemsWithAttachments	= true;
@@ -32,6 +53,7 @@ class EditorSettings: ProfileSettings
 	int MarkerPrimaryColor			= COLOR_WHITE;
 	
 	// Theme Settings
+	[RegisterProfileSettingColor("#STR_EDITOR_THEMES", "HighlightColor", "#STR_EDITOR_HIGHLIGHT_COLOR", false)]
 	int HighlightColor				= COLOR_SALMON;
 	int SelectionColor				= COLOR_BLUE;
 	
@@ -45,7 +67,32 @@ class EditorSettings: ProfileSettings
 	
 	LogLevel SelectedLogLevel 		= LogLevel.INFO;
 
-	// Its a pseduo-controller, preferences dialogs!!
+	
+	
+	void SetDefaults()
+	{
+		QuickMoveStepSize			= 0.1; // dont know what this does (not changed)
+		CameraSpeed					= 0.05; // 25
+		CameraTilt					= 0.5; // 0
+		ViewDistance 				= 0.065; // 3000 .15
+		ObjectViewDistance 			= 0.135; // 3000
+		MarkerViewDistance 			= 0.2; // 1000
+		
+		LockCameraDuringDialogs 	= true;
+		ShowBoundingBoxes 			= true;
+		PreloadObjects				= false;
+		ShowScreenLogs				= true;
+		DebugMode 					= false;
+		
+		MarkerPrimaryColor			= COLOR_WHITE_A;
+		HighlightColor				= COLOR_SALMON;
+		SelectionColor				= COLOR_BLUE;
+	}	
+}
+
+
+/*
+// Its a pseduo-controller, preferences dialogs!!
 	void PropertyChanged(string property_name)
 	{		
 		switch (property_name) {
@@ -93,27 +140,3 @@ class EditorSettings: ProfileSettings
 			}
 		}
 	}
-	
-	void SetDefaults()
-	{
-		QuickMoveStepSize			= 0.1; // dont know what this does (not changed)
-		CameraSpeed					= 0.05; // 25
-		CameraTilt					= 0.5; // 0
-		ViewDistance 				= 0.065; // 3000 .15
-		ObjectViewDistance 			= 0.135; // 3000
-		MarkerViewDistance 			= 0.2; // 1000
-		
-		AutoSaveEnabled				= true;
-		AutoSaveTimer 				= 240;
-
-		LockCameraDuringDialogs 	= true;
-		ShowBoundingBoxes 			= true;
-		PreloadObjects				= false;
-		ShowScreenLogs				= true;
-		DebugMode 					= false;
-		
-		MarkerPrimaryColor			= COLOR_WHITE_A;
-		HighlightColor				= COLOR_SALMON;
-		SelectionColor				= COLOR_BLUE;
-	}
-}

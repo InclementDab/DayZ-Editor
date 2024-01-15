@@ -119,7 +119,7 @@ class EditorObject: Managed
 				
 		// Needed for AI Placement			
 		EntityAI entity_ai = EntityAI.Cast(m_Object);
-		if (entity_ai && GetEditor().Settings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
+		if (entity_ai && GetEditor().GeneralSettings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
 			entity_ai.OnDebugSpawn();
 		}	
 		

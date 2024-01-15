@@ -37,7 +37,7 @@ class EditorHud: ScriptView
 	
 	void EditorHud()
 	{	
-		ShowScreenLogs(GetEditor().Settings.ShowScreenLogs);
+		ShowScreenLogs(GetEditor().GeneralSettings.ShowScreenLogs);
 		
 		float w, h;
 		int x, y;
@@ -117,7 +117,7 @@ class EditorHud: ScriptView
 		}
 		
 		if (input.LocalPress("EditorToggleCursor")) {
-			if (!EditorMapWidget.IsVisible() && (!CurrentDialog || !GetEditor().Settings.LockCameraDuringDialogs)) {
+			if (!EditorMapWidget.IsVisible() && (!CurrentDialog || !GetEditor().GeneralSettings.LockCameraDuringDialogs)) {
 				ShowCursor(!IsCursorVisible());
 			}
 		}
@@ -311,7 +311,7 @@ class EditorHud: ScriptView
 
 	private void _DelayedDragBoxCheck(int start_x, int start_y)
 	{
-		int drag_box_color = GetEditor().Settings.SelectionColor;
+		int drag_box_color = GetEditor().GeneralSettings.SelectionColor;
 		
 		int a, r, g, b;
 		InverseARGB(drag_box_color, a, r, g, b);
@@ -352,7 +352,7 @@ class EditorHud: ScriptView
 					//i think only checking if within cone of box select not distance
 					if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {
 						//check if within markerviewdistance to allow selection.
-						if (vector.Distance(editor_object.GetWorldObject().GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.Settings.MarkerViewDistance) {
+						if (vector.Distance(editor_object.GetWorldObject().GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.GeneralSettings.MarkerViewDistance) {
 							editor_object.SetSelected(true);
 						}
 					}

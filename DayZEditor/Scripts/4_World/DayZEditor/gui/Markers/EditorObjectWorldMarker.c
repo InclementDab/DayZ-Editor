@@ -22,7 +22,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		
 		vector position = GetPosition();	
 		float distance = vector.Distance(GetGame().GetCurrentCameraPosition(), position);
-		if (m_Editor.Settings.MarkerViewDistance < distance) {
+		if (m_Editor.GeneralSettings.MarkerViewDistance < distance) {
 			m_LayoutRoot.Show(false);
 			return;
 		}
