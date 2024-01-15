@@ -56,7 +56,6 @@ class EditorHud: ScriptView
 	{
 		if (session) {
 			m_TemplateController.OnlineSessionId = String(session.GetUuid());
-			Print(m_TemplateController.OnlineSessionId);
 			m_TemplateController.OnlineUserCount = session.GetPlayers().Count();
 		} else {
 			m_TemplateController.OnlineSessionId = string.Empty;

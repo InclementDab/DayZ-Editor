@@ -294,14 +294,13 @@ class Editor: Managed
 	
 	void OnOnlineSyncRecieved(string uuid, EditorOnlineSession session)
 	{
-		Print("OnOnlineSyncRecieved");
-		Print(uuid);
-		Print(session);
 		if (session.IsMember(GetGame().GetPlayer().GetIdentity())) {
 			m_CurrentOnlineSession = session;
 		}
 
 		m_EditorHud.SetOnlineSession(m_CurrentOnlineSession);
+	
+		m_PlacedObjects = m_CurrentOnlineSession.GetObjects();
 	}
 		
 	void OnStatisticsSave()
