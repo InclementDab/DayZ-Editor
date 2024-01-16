@@ -879,7 +879,7 @@ class Editor: Managed
 		string type = target.GetType();
 		vector transform[4];
 		target.GetTransform(transform);
-	
+		Print(transform);
 		EditorObject editor_object = new EditorObject(UUID.Generate(), type, transform, flags);
 		m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
 		
@@ -892,6 +892,7 @@ class Editor: Managed
 			m_CurrentOnlineSession.SetSynchDirty();
 		}
 	
+		target.Delete();
 	
 		return editor_object;
 	}

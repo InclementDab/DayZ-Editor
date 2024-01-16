@@ -63,6 +63,7 @@ class EditorObject: SerializableBase
 	{
 		m_UUID = uuid;
 		Type = type;
+		Print(transform);
 		copyarray(Transform, transform);
 		
 		Print(Type);
@@ -198,6 +199,8 @@ class EditorObject: SerializableBase
 		
 		Type = m_Object.GetType();
 		m_Object.GetTransform(Transform);
+		//Print(m_Object);
+		//Print(Transform);
 	}
 #endif
 		
@@ -207,7 +210,6 @@ class EditorObject: SerializableBase
 		vector transform[4];
 		int flags;
 		serializer.Read(type);
-		serializer.Read(transform);
 		serializer.Read(flags);
 		serializer.Read(display);
 		return new EditorObject(uuid, type, transform, flags);
@@ -219,7 +221,9 @@ class EditorObject: SerializableBase
 		
 		// Object properties
 		serializer.Write(Type);
+		Print(Type);
 		serializer.Write(Transform);
+		Print(Transform);
 		
 		serializer.Write(m_Flags);
 		serializer.Write(m_DisplayName);
