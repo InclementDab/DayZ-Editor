@@ -264,6 +264,13 @@ class EditorCamera: ScriptedCamera
 			LookAt(TargetPosition);
 		}
 		
+		if (GetEditor().GetCurrentOnlineSession()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(GetPosition());
+			rpc.Write(GetDirection());
+			rpc.Send(null, EditorOnlineSessionManager.RPC_REPORT_POSITION, false);
+		}
+		
 		//EditorLog.Trace("EditorCamera::EOnFrame-");
 	}
 
