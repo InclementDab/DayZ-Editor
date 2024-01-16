@@ -54,21 +54,18 @@ class EditorObject: SerializableBase
 	string TestingScript;
 	
 	string Type;
-	vector Transform[4];
+	vector Position, Orientation;
 		
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 	
-	void EditorObject(UUID uuid, string type, vector transform[4], EditorObjectFlags flags)
+	void EditorObject(UUID uuid, string type, vector position, vector orientation, EditorObjectFlags flags)
 	{
 		m_UUID = uuid;
 		Type = type;
-		Print(transform);
-		copyarray(Transform, transform);
-		
-		Print(Type);
-		Print(Transform);
-		
+		Position = position;
+		Orientation = orientation;
+				
 		m_DisplayName = type;
 		
 		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
@@ -76,8 +73,8 @@ class EditorObject: SerializableBase
 			GetEditor().GetEditorHud().GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(m_TreeItem);
 		}
 		
-		m_Object = GetGame().CreateObjectEx(Type, Transform[3], ECE_LOCAL);
-		m_Object.SetTransform(Transform);
+		m_Object = GetGame().CreateObjectEx(Type, Position, ECE_LOCAL);
+		m_Object.SetOrientation(Orientation);
 		
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
@@ -107,13 +104,16 @@ class EditorObject: SerializableBase
 		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
 		
 		m_BasePoint = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
-					
+		
+		vector transform[4];
+		m_Object.GetTransform(transform);	
+		
 		for (int j = 0; j < 12; j++) {
-			vector snap_point_position = m_LineCenters[j].Multiply4(Transform);
+			vector snap_point_position = m_LineCenters[j].Multiply4(transform);
 			EditorSnapPoint snap_point = EditorSnapPoint.Cast(GetGame().CreateObjectEx("EditorSnapPoint", snap_point_position, ECE_LOCAL));
 			
 			vector mat[4];
-			Math3D.DirectionAndUpMatrix(Transform[1], LINE_CENTER_DIRECTIONS[j], mat);
+			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
 			mat[3] = snap_point_position;
 			Shape.CreateMatrix(mat);
 			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
@@ -196,23 +196,20 @@ class EditorObject: SerializableBase
 		m_BottomCenter.Preview = m_Object;
 		m_BottomCenter.Offset = GetBasePoint();
 #endif
-		
-		Type = m_Object.GetType();
-		m_Object.GetTransform(Transform);
-		//Print(m_Object);
-		//Print(Transform);
 	}
 #endif
 		
 	static EditorObject CreateFromSerializer(string uuid, Serializer serializer)
 	{
 		string type, display;
-		vector transform[4];
+		vector position, orientation;
 		int flags;
 		serializer.Read(type);
+		serializer.Read(position);
+		serializer.Read(orientation);
 		serializer.Read(flags);
 		serializer.Read(display);
-		return new EditorObject(uuid, type, transform, flags);
+		return new EditorObject(uuid, type, position, orientation, flags);
 	}
 	
 	override void Write(Serializer serializer, int version)
@@ -220,10 +217,9 @@ class EditorObject: SerializableBase
 		serializer.Write(m_UUID);
 		
 		// Object properties
-		serializer.Write(Type);
-		Print(Type);
-		serializer.Write(Transform);
-		Print(Transform);
+		serializer.Write(m_Object.GetType());
+		serializer.Write(m_Object.GetPosition());
+		serializer.Write(m_Object.GetOrientation());
 		
 		serializer.Write(m_Flags);
 		serializer.Write(m_DisplayName);
@@ -235,7 +231,8 @@ class EditorObject: SerializableBase
 		
 		// Object properties
 		serializer.Read(Type);
-		serializer.Read(Transform);		
+		serializer.Read(Position);		
+		serializer.Read(Orientation);		
 		
 		serializer.Read(m_Flags);
 		serializer.Read(m_DisplayName);

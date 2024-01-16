@@ -876,13 +876,11 @@ class Editor: Managed
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{	
-		string type = target.GetType();
-		vector transform[4];
-		target.GetTransform(transform);
-		Print(transform);
-		EditorObject editor_object = new EditorObject(UUID.Generate(), type, transform, flags);
+		EditorObject editor_object = new EditorObject(UUID.Generate(), target.GetType(), target.GetPosition(), target.GetOrientation(), flags);
 		m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
 		
+		target.Delete();
+	
 		OnObjectCreated.Invoke(editor_object);
 		Statistics.PlacedObjects++;
 			
@@ -891,9 +889,7 @@ class Editor: Managed
 		if (m_CurrentOnlineSession) {
 			m_CurrentOnlineSession.SetSynchDirty();
 		}
-	
-		target.Delete();
-	
+		
 		return editor_object;
 	}
 
@@ -905,8 +901,9 @@ class Editor: Managed
 			vector transform[4];
 			object.GetTransform(transform);
 	
-			EditorObject editor_object = new EditorObject(UUID.Generate(), type, transform, flags);
+			EditorObject editor_object = new EditorObject(UUID.Generate(), object.GetType(), object.GetPosition(), object.GetOrientation(), flags);
 			m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
+			object.Delete();
 		
 			OnObjectCreated.Invoke(editor_object);
 			Statistics.PlacedObjects++;
