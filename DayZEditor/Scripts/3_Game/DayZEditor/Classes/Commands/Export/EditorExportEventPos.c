@@ -9,7 +9,8 @@ class EditorExportEventPos: EditorCommand
 		}
 		
 		string event_data = string.Format("<group name=\"%1\">\n", data.param1.GetType());
-		foreach (int id, EditorObject editor_object: EditorObject.SelectedObjects) {			
+		auto objects = EditorObject.GetSelectedEditorObjects();
+		foreach (EditorObject editor_object: objects) {			
 			vector position = data.param1.GetPosition();
 			position = position - editor_object.GetWorldObject().GetPosition();
 			event_data += string.Format("	<child type=\"%5\" deloot=\"0\" lootmax=\"5\" lootmin=\"0\" x=\"%1\" y=\"%2\" z=\"%3\" a=\"%4\" />\n", position[0], position[1], position[2], editor_object.GetWorldObject().GetOrientation().VectorToYaw(), editor_object.GetWorldObject().GetType());

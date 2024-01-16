@@ -15,12 +15,12 @@ class EditorDeleteCommand: EditorCommand
 			return true;
 		}
 		
-		if (EditorObject.SelectedObjects.Count() == 0) {
+		if (EditorObject.GetSelectedEditorObjects().Count() == 0) {
 			return false;
 		}
 		
 		m_Editor.GetEditorHud().SetCurrentTooltip(null);
-		m_Editor.DeleteObjects(EditorObject.SelectedObjects);
+		m_Editor.DeleteObjects(EditorObject.GetSelectedEditorObjects());
 		
 		return true;	
 	}

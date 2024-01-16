@@ -2,7 +2,7 @@ class EditorObjectPropertiesCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{		
-		EditorObjectPropertiesDialog properties_dialog(GetName(), EditorObject.SelectedObjects);
+		EditorObjectPropertiesDialog properties_dialog(GetName(), EditorObject.GetSelectedEditorObjects());
 		properties_dialog.ShowDialog();
 	}
 	

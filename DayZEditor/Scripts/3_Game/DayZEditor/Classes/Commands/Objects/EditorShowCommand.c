@@ -3,7 +3,7 @@ class EditorShowCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		array<EditorObject> selected_objects = EditorObject.SelectedObjects;
+		array<EditorObject> selected_objects = EditorObject.GetSelectedEditorObjects();
 		foreach (EditorObject selected_object: selected_objects) {		
 			selected_object.Hide(false);
 		}

@@ -12,7 +12,7 @@ class EditorCheckDuplicatesCommand: EditorAsyncCommand
 				editor_objects.Insert(p);
 			}
 		} else {
-			editor_objects = EditorObject.SelectedObjects;
+			editor_objects = EditorObject.GetSelectedEditorObjects();
 		}
 		
 		foreach (EditorObject editor_object: editor_objects) {

@@ -4,7 +4,7 @@ class EditorClipboard
 	{
 		EditorLog.Trace("EditorObjectManager::CutSelection");
 		
-		array<EditorObject> cut_objects = EditorObject.SelectedObjects;
+		array<EditorObject> cut_objects = EditorObject.GetSelectedEditorObjects();
 		if (cut_objects.Count() == 0) {
 			return;
 		}
@@ -16,7 +16,7 @@ class EditorClipboard
 	static void Copy()
 	{
 		EditorLog.Trace("EditorObjectManager::CopySelection");
-		array<EditorObject> copy_objects = EditorObject.SelectedObjects;
+		array<EditorObject> copy_objects = EditorObject.GetSelectedEditorObjects();
 		if (copy_objects.Count() == 0) {
 			return;
 		}

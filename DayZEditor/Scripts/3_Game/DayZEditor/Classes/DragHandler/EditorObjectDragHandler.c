@@ -78,7 +78,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		deltapos = transform[3] - deltapos;
 		
 		// Handle all child objects
-		array<EditorObject> selected_objects = EditorObject.SelectedObjects;	
+		array<EditorObject> selected_objects = EditorObject.GetSelectedEditorObjects();	
 		foreach (EditorObject selected_object: selected_objects) {
 			if (selected_object == target) { 
 				continue; 

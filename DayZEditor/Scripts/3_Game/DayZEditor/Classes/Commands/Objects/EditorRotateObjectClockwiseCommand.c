@@ -9,7 +9,7 @@ class EditorRotateObjectClockwiseCommand: EditorCommand
 			value *= 0.025;
 		}
 		
-		array<EditorObject> selected_objects = EditorObject.SelectedObjects
+		array<EditorObject> selected_objects = EditorObject.GetSelectedEditorObjects()
 		vector projection_position = EditorObjectDragHandler.GetAveragePosition(selected_objects);
 		float angle = m_LastAngle + value;
 		
@@ -39,7 +39,7 @@ class EditorRotateObjectCounterClockwiseCommand: EditorCommand
 			value *= 0.025;
 		}
 		
-		array<EditorObject> selected_objects = EditorObject.SelectedObjects
+		array<EditorObject> selected_objects = EditorObject.GetSelectedEditorObjects()
 		vector projection_position = EditorObjectDragHandler.GetAveragePosition(selected_objects);
 		float angle = m_LastAngle - value;
 		

@@ -18,7 +18,8 @@ class EditorExportRelativeToObject: EditorCommand
 		object.GetTransform(mat);
 		
 		EditorSaveData save_data = new EditorSaveData();
-		foreach (EditorObject editor_object: EditorObject.SelectedObjects) {
+		auto objects = EditorObject.GetSelectedEditorObjects();
+		foreach (EditorObject editor_object: objects) {
 			vector position = editor_object.GetWorldObject().GetPosition().InvMultiply4(mat);
 			vector orientation = editor_object.GetWorldObject().GetOrientation() - object.GetOrientation();
 			
@@ -41,7 +42,7 @@ class EditorExportRelativeToObject: EditorCommand
 	
 	override bool CanExecute()
 	{
-		return EditorObject.SelectedObjects.Count() > 0;
+		return EditorObject.GetSelectedEditorObjects().Count() > 0;
 	}
 	
 	override string GetName()

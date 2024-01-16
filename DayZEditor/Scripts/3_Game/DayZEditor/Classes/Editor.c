@@ -361,7 +361,7 @@ class Editor: Managed
 			}
 		}
 		
-		array<EditorObject> selected_objects = EditorObject.SelectedObjects;
+		array<EditorObject> selected_objects = EditorObject.GetSelectedEditorObjects();
 		if (m_EditorHud && selected_objects.Count() > 0 && selected_objects[0]) {
 			// Spams errors
 			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetWorldObject().GetPosition());
@@ -1270,7 +1270,8 @@ class Editor: Managed
 		array<EditorObject> placed_objects = GetPlacedObjects();
 		if (selected_only) {
 			placed_objects.Clear();
-			foreach (auto selected_object: EditorObject.SelectedObjects) {
+			array<EditorObject> selected_objects = EditorObject.GetSelectedEditorObjects();
+			foreach (auto selected_object: selected_objects) {
 				placed_objects.Insert(selected_object);
 			}
 		}

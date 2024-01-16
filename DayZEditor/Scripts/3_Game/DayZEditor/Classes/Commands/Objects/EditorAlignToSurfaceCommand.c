@@ -5,7 +5,8 @@ class EditorAlignToSurfaceCommand: EditorCommand
 		super.Execute(sender, args);
 			
 		EditorAction align_undo = new EditorAction("SetTransform", "SetTransform");
-		foreach (EditorObject editor_object: EditorObject.SelectedObjects) {
+		auto objects = EditorObject.GetSelectedEditorObjects();
+		foreach (EditorObject editor_object: objects) {
 			vector transform[4];
 			
 			editor_object.GetWorldObject().GetTransform(transform);

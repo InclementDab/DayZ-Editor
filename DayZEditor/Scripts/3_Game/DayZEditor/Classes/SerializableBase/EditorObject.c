@@ -1,4 +1,36 @@
-class EditorObject: SerializableBase
+class EditorSelectableBase: SerializableBase
+{	
+	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();
+	
+	protected bool m_IsSelected;
+	
+	static ref array<EditorSelectableBase> SelectedObjects = {};
+	
+	static void ClearSelections()
+	{
+		foreach (EditorSelectableBase selected_object: SelectedObjects) {
+			if (selected_object && selected_object.IsSelected()) {
+				selected_object.SetSelected(false);
+			}
+		}
+		
+		SelectedObjects.Clear();
+	}
+	
+	void SetSelected(bool selected)
+	{
+		m_IsSelected = selected;
+		
+		OnSelectionChanged.Invoke(this, m_IsSelected);
+	}
+	
+	bool IsSelected() 
+	{
+		return m_IsSelected;
+	}
+}
+
+class EditorObject: EditorSelectableBase
 {	
 	static const int VERSION = 1;
 	
@@ -16,9 +48,7 @@ class EditorObject: SerializableBase
 		Vector(1, 0, 0),
 		Vector(0, 0, 1),
 	};
-	
-	static ref array<EditorObject> SelectedObjects = {};
-	
+		
 	protected string m_UUID;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
@@ -37,7 +67,6 @@ class EditorObject: SerializableBase
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
 	protected vector m_LineCenters[12], m_LineVerticies[8], m_BasePoint; 
-	protected bool m_IsSelected;
 	
 	protected bool m_IsDirty;
 	
@@ -53,10 +82,7 @@ class EditorObject: SerializableBase
 	
 	string Type;
 	vector Position, Orientation;
-		
-	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
-	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
-	
+			
 	void EditorObject(UUID uuid, string type, vector position, vector orientation, EditorObjectFlags flags)
 	{
 		m_UUID = uuid;
@@ -68,7 +94,7 @@ class EditorObject: SerializableBase
 		m_DisplayName = type;
 		
 		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
-			m_TreeItem = new EditorTreeItem(m_DisplayName, ScriptCaller.Create(OnTreeItemSelected));
+			m_TreeItem = new EditorTreeItem(m_DisplayName, this);
 			GetEditor().GetEditorHud().GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(m_TreeItem);
 		}
 		
@@ -162,9 +188,7 @@ class EditorObject: SerializableBase
 		GetGame().ObjectDelete(m_Object);
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
-				
-		delete m_TreeItem;
-		
+						
 		foreach (auto snap_point: m_EditorSnapPoints) {
 			snap_point.Delete();
 		}
@@ -238,10 +262,18 @@ class EditorObject: SerializableBase
 		serializer.Read(m_DisplayName);
 		return true;
 	}
-		
-	void OnTreeItemSelected(EditorTreeItem tree_item)
+	
+	override void SetSelected(bool selected)
 	{
-		SetSelected(tree_item.Button.GetState());
+		super.SetSelected(selected);
+		
+		if (selected) {
+			if (((m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX)) {
+				EditorBoundingBox.Create(m_Object);
+			}
+		} else {
+			EditorBoundingBox.Destroy(m_Object);
+		}
 	}
 			
 	bool GetGroundUnderObject(out vector position, out vector direction)
@@ -336,29 +368,7 @@ class EditorObject: SerializableBase
 	{
 		return m_Flags;
 	}
-		
-	void SetSelected(bool selected)
-	{
-		m_IsSelected = selected;
-		if (selected) {
-			if (((m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX)) {
-				EditorBoundingBox.Create(m_Object);
-			}
 			
-			SelectedObjects.Insert(this);
-			OnObjectSelected.Invoke(this);
-		} else {
-			EditorBoundingBox.Destroy(m_Object);
-			SelectedObjects.RemoveItem(this);
-			OnObjectDeselected.Invoke(this);
-		}
-	}
-	
-	bool IsSelected() 
-	{
-		return m_IsSelected;
-	}
-		
 	map<string, ref EditorObjectAnimationSource> GetObjectAnimations()
 	{
 		return m_ObjectAnimations;
@@ -394,15 +404,17 @@ class EditorObject: SerializableBase
 		return m_IsDirty;
 	}
 	
-	static void ClearSelections()
+	static array<EditorObject> GetSelectedEditorObjects()
 	{
-		foreach (EditorObject selected_object: SelectedObjects) {
-			if (selected_object && selected_object.IsSelected()) {
-				selected_object.SetSelected(false);
+		array<EditorObject> editor_objects = {};
+		foreach (EditorSelectableBase selectable_base: SelectedObjects) {
+			EditorObject editor_object = EditorObject.Cast(selectable_base);
+			if (editor_object) {
+				editor_objects.Insert(editor_object);
 			}
 		}
 		
-		SelectedObjects.Clear();
+		return editor_objects;
 	}
 }
 

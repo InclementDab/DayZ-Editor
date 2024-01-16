@@ -9,8 +9,8 @@ class EditorObjectMarker: EditorMarker
 		EditorLog.Trace("EditorObjectMarker");
 		m_EditorObject = editor_object;
 		
-		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
-		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
+		//m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
+		//m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
 	
 	void ~EditorObjectMarker()

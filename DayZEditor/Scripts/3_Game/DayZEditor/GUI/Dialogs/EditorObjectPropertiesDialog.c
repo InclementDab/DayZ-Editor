@@ -13,8 +13,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		AddButton(DialogResult.OK);
 		
 		foreach (EditorObject editor_object: editor_objects) {
-			editor_object.OnObjectSelected.Insert(OnObjectSelected);
-			editor_object.OnObjectDeselected.Insert(OnObjectDeselected);
+			//editor_object.OnObjectSelected.Insert(OnObjectSelected);
+			//editor_object.OnObjectDeselected.Insert(OnObjectDeselected);
 		}
 	}
 	

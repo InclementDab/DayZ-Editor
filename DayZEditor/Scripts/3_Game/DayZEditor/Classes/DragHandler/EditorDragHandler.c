@@ -18,7 +18,7 @@ class EditorDragHandler
 	private void _OnDragging()
 	{
 		EditorAction drag_undo = new EditorAction("SetTransform", "SetTransform");
-		array<EditorObject> selected_objects = EditorObject.SelectedObjects;
+		array<EditorObject> selected_objects = EditorObject.GetSelectedEditorObjects();
 		foreach (EditorObject selected_object: selected_objects) {
 			drag_undo.InsertUndoParameter(selected_object.GetTransformArray());
 		}

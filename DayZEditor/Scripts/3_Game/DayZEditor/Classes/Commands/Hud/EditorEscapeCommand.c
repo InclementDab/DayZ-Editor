@@ -34,7 +34,7 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		}
 		
-		if (EditorObject.SelectedObjects.Count() > 0) {
+		if (EditorObject.GetSelectedEditorObjects().Count() > 0) {
 			EditorObject.ClearSelections();
 			return true;
 		}

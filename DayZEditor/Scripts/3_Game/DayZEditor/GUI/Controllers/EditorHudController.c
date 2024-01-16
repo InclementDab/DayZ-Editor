@@ -122,7 +122,7 @@ class EditorHudController: EditorControllerBase
 			EditorTreeItem tree_item = new EditorTreeItem(category.GetDisplayName(), null);
 			
 			foreach (EditorPlaceableItem placeable_item: placeable_items) {
-				tree_item.GetTemplateController().Children.Insert(new EditorPlaceableTreeItem(placeable_item.GetName(), ScriptCaller.Create(AddToHand), placeable_item));
+				tree_item.GetTemplateController().Children.Insert(new EditorPlaceableTreeItem(placeable_item.GetName(), placeable_item));
 			}
 			
 			LeftListItems.Insert(tree_item);

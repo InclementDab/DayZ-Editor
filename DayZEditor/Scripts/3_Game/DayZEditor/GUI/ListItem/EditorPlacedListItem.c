@@ -22,8 +22,8 @@ class EditorPlacedListItem: EditorListItem
 				
 		LockedImage.Show((m_EditorObject.GetFlags() & EditorObjectFlags.LOCKED) == EditorObjectFlags.LOCKED);
 		
-		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
-		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
+		//m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
+		//m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
 	
 	void ~EditorPlacedListItem()

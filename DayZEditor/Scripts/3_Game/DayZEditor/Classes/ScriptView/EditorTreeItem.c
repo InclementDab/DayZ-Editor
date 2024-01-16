@@ -13,14 +13,16 @@ class EditorTreeItem: ScriptView
 	
 	protected bool m_IsBeingDragged;
 	
-	protected ref ScriptCaller m_Callback;
+	protected EditorSelectableBase m_Selectable;
 	
-	void EditorTreeItem(string text, ScriptCaller callback)
+	void EditorTreeItem(string text, EditorSelectableBase selectable_base)
 	{
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
 		m_TemplateController.Text = text;
-		m_TemplateController.NotifyPropertyChanged("Text");		
-		m_Callback = callback;
+		m_TemplateController.NotifyPropertyChanged("Text");	
+			
+		m_Selectable = selectable_base;
+		m_Selectable.OnSelectionChanged.Insert(OnSelectionChange);
 				
 		ShowChildren(false);
 	}
@@ -95,23 +97,16 @@ class EditorTreeItem: ScriptView
 			return;
 		}
 		
-		if (m_Callback) {
-			m_Callback.Invoke(this);
-		}
+		m_Selectable.SetSelected(true);
 	}
 		
-	void SetSelected(bool state)
+	void OnSelectionChange(EditorSelectableBase selectable_base, bool state)
 	{
 		if (state) {
 			WidgetAnimator.AnimateColor(Button, ARGB(255, 75, 119, 190), 50);			
 		} else {
 			WidgetAnimator.AnimateColor(Button, ARGB(0, 0, 0, 0), 50);
 		}
-	}
-		
-	bool IsSelectable()
-	{
-		return true;
 	}
 		
 	bool IsBlacklistedItem(string item_type)

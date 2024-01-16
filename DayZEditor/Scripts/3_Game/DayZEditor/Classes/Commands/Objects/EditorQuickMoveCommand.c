@@ -12,7 +12,7 @@ class EditorQuickMoveCommand: EditorCommand
 			direction = GetEditor().GetCamera().GetDirection() * value;
 		}
 		
-		array<EditorObject> selected_objects = EditorObject.SelectedObjects;
+		array<EditorObject> selected_objects = EditorObject.GetSelectedEditorObjects();
 		if (selected_objects.Count() == 0) {
 			return false;
 		}
@@ -37,7 +37,7 @@ class EditorQuickMoveCommand: EditorCommand
 
 /*
 // nothing is selected and we are actively placing
-if (m_Editor && EditorObject.SelectedObjects.Count() == 0 && m_Editor.IsPlacing() && (input.LocalPress() || input.LocalHold())) {
+if (m_Editor && EditorObject.GetSelectedEditorObjects().Count() == 0 && m_Editor.IsPlacing() && (input.LocalPress() || input.LocalHold())) {
 	
 	EditorHudController controller = m_Editor.GetEditorHud().GetTemplateController();
 	auto placeables = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(controller.CategoryConfig, controller.LeftbarSpacerConfig, controller.LeftbarSpacerStatic);
@@ -70,7 +70,7 @@ class EditorMoveObjectForwardCommand: EditorQuickMoveCommand
 }
 
 /*
-if (m_Editor && EditorObject.SelectedObjects.Count() == 0 && m_Editor.IsPlacing() && (input.LocalPress() || input.LocalHold())) {
+if (m_Editor && EditorObject.GetSelectedEditorObjects().Count() == 0 && m_Editor.IsPlacing() && (input.LocalPress() || input.LocalHold())) {
 	EditorHudController controller = m_Editor.GetEditorHud().GetTemplateController();
 	auto placeables = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(controller.CategoryConfig, controller.LeftbarSpacerConfig, controller.LeftbarSpacerStatic);
 	for (int i = 0; i < placeables.Count(); i++) {

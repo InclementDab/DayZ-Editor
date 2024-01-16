@@ -1,4 +1,4 @@
-class EditorPlaceableItem: Managed
+class EditorPlaceableItem: EditorSelectableBase
 {
 	protected EditorPlaceableItemCategory m_Category = EditorPlaceableItemCategory.UNKNOWN;
 		
