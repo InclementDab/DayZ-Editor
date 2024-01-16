@@ -55,7 +55,7 @@ class EditorHandData
 
 typedef map<Object, ref EditorHandData> EditorHandMap;
 
-class Editor: EditorServer
+class Editor: Managed
 {
 	/* Private Members */
 	protected Mission m_Mission;
@@ -160,7 +160,12 @@ class Editor: EditorServer
 	// 0: EditorObject
 	static ref ScriptInvoker OnObjectPlaced = new ScriptInvoker();
 	
-	void Editor(vector position) 
+	protected EditorOnlineSession m_CurrentOnlineSession;
+	
+	// Stored list of all Placed Objects
+	ref map<string, ref EditorObject> m_PlacedObjects = new map<string, ref EditorObject>();
+	
+	void Editor() 
 	{
 		EditorLog.Trace("Editor");
 		g_Game.ReportProgress("Loading Editor");
@@ -175,7 +180,7 @@ class Editor: EditorServer
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
 		g_Game.ReportProgress("Initializing Camera");
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", position, ECE_LOCAL));
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", vector.Zero, ECE_LOCAL));
 		
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
@@ -465,7 +470,7 @@ class Editor: EditorServer
 	{
 		return ScriptedCamera.Cast(m_CurrentControl);
 	}
-		
+	
 	void ProcessInput(Input input)
 	{
 		if (IsPlacing()) {
@@ -1425,6 +1430,11 @@ class Editor: EditorServer
 	map<int, ref array<EditorPlaceableItem>> GetPlaceableItemsByCategory()
 	{
 		return m_PlaceableItems;
+	}
+
+	void SetOnlineSession(EditorOnlineSession session)
+	{
+		m_CurrentOnlineSession = session;
 	}
 
 	EditorOnlineSession GetCurrentOnlineSession()
