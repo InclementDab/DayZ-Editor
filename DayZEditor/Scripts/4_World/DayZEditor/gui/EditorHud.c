@@ -20,6 +20,8 @@ class EditorHud: ScriptView
 	CanvasWidget EditorCanvas;
 	ScrollWidget LeftScroll, RightScroll;
 	
+	TextWidget SessionIdData, UserCountData, EntityCountData;
+	
 	protected MultilineEditBoxWidget SearchBar;
 	
 	ref EditorCameraMapMarker CameraMapMarker;
@@ -72,14 +74,12 @@ class EditorHud: ScriptView
 	void SetOnlineSession(EditorOnlineSession session)
 	{
 		if (session) {
-			m_TemplateController.OnlineSessionId = String(session.GetUuid());
-			m_TemplateController.OnlineUserCount = session.GetPlayers().Count();
+			SessionIdData.SetText(session.GetUuid());
+			UserCountData.SetText(session.GetPlayers().Count().ToString());
 		} else {
-			m_TemplateController.OnlineSessionId = string.Empty;
-			m_TemplateController.OnlineUserCount = 0;
+			SessionIdData.SetText(string.Empty);
+			UserCountData.SetText(string.Empty);
 		}
-		
-		m_TemplateController.NotifyPropertiesChanged({"OnlineSessionId", "OnlineUserCount"});
 	}
 		
 	override void Update(float dt)
@@ -96,6 +96,8 @@ class EditorHud: ScriptView
 			//m_TemplateController.cam_z = cam_pos[2];
 			//m_TemplateController.NotifyPropertiesChanged({ "cam_x", "cam_y", "cam_z"} );
 		}
+		
+		EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
 		
 		array<EditorCommand> commands = GetEditor().CommandManager.GetCommands();
 		foreach (EditorCommand command: commands) {
