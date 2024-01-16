@@ -1,8 +1,7 @@
 class EditorJoinOnlineSessionViewController: ViewController
 {
 	bool Hide;
-	int Code;
-	
+
 	PasswordEditBoxWidget PasswordEditBox;
 	
 	override void PropertyChanged(string property_name)
@@ -20,6 +19,8 @@ class EditorJoinOnlineSessionView: ScriptViewMenu
 {
 	protected EditorJoinOnlineSessionViewController m_TemplateController;
 		
+	PasswordEditBoxWidget PasswordEditBox;
+	
 	void EditorJoinOnlineSessionView()
 	{
 		m_TemplateController = EditorJoinOnlineSessionViewController.Cast(m_Controller);
@@ -28,7 +29,7 @@ class EditorJoinOnlineSessionView: ScriptViewMenu
 	void OnJoinExecute(ButtonCommandArgs args)
 	{
 		ScriptRPC rpc = new ScriptRPC();
-		rpc.Write(m_TemplateController.Code);
+		rpc.Write(PasswordEditBox.GetText().ToInt());
 		rpc.Send(null, EditorOnlineSessionManager.RPC_REQUEST_JOIN_SESSION, true);
 		
 		Close();
