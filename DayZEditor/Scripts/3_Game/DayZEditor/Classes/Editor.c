@@ -164,9 +164,13 @@ class Editor: Managed
 	
 	// Stored list of all Placed Objects
 	ref map<string, ref EditorObject> m_PlacedObjects = new map<string, ref EditorObject>();
-	
+		
 	void Editor() 
 	{
+		if (GetGame().IsServer()) {
+			return;
+		}
+		
 		EditorLog.Trace("Editor");
 		g_Game.ReportProgress("Loading Editor");
 		g_Editor = this;
@@ -180,7 +184,7 @@ class Editor: Managed
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
 		g_Game.ReportProgress("Initializing Camera");
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", GenerateSafeStartPosition(), ECE_LOCAL));
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", GetGame().GetPlayer().GetPosition(), ECE_LOCAL));
 		
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
@@ -281,7 +285,7 @@ class Editor: Managed
 		// TODO!!! write a better autosave!!!
 		//m_AutoSaveTimer.Run(GeneralSettings.AutoSaveTimer, this, "OnAutoSaveTimer");
 	}
-	
+
 	void ~Editor() 
 	{
 		GeneralSettings.Save();
@@ -289,7 +293,7 @@ class Editor: Managed
 
 		GetGame().ObjectDelete(m_EditorCamera);
 	}
-	
+
 	void OnStatisticsSave()
 	{
 		Statistics.Save();
