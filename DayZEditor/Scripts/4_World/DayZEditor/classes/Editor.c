@@ -867,7 +867,11 @@ class Editor: EditorServer
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{	
-		EditorObject editor_object = EditorObject.CreateNew(target, flags);
+		string type = target.GetType();
+		vector transform[4];
+		target.GetTransform(transform);
+	
+		EditorObject editor_object = new EditorObject(UUID.Generate(), type, transform, flags);
 		m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
 		
 		OnObjectCreated.Invoke(editor_object);
@@ -891,8 +895,11 @@ class Editor: EditorServer
 		
 		array<EditorObject> editor_objects = {};
 		foreach (Object object: objects) {			
-			// Create Object
-			EditorObject editor_object = EditorObject.CreateNew(object, flags);
+			string type = object.GetType();
+			vector transform[4];
+			object.GetTransform(transform);
+	
+			EditorObject editor_object = new EditorObject(UUID.Generate(), type, transform, flags);
 			m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
 		
 			OnObjectCreated.Invoke(editor_object);
