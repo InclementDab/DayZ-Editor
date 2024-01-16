@@ -14,17 +14,24 @@ class EditorPointView: ScriptView
 	override void Update(float dt)
 	{
 		super.Update(dt);
+		
+		int mouse_x, mouse_y;
+		GetMousePos(mouse_x, mouse_y);
 				
 		vector transform[4];
 		m_EditorObject.GetWorldObject().GetTransform(transform);
 		
 		vector screen_position = GetGame().GetScreenPos(m_Offset.Multiply4(transform));
-		if (m_LayoutRoot) {
-			float w, h;
-			m_LayoutRoot.GetSize(w, h);
-			m_LayoutRoot.SetPos(screen_position[0] - w / 2, screen_position[1] - h / 2);
-			m_LayoutRoot.Show(screen_position[2] > 0);
-		}
+
+		float x, y, w, h;		
+		m_LayoutRoot.GetPos(x, y);
+		m_LayoutRoot.GetSize(w, h);
+		
+		bool is_in_bound = (mouse_x < x + h && mouse_x > x - h) && (mouse_y < y + h && mouse_y > y - h);
+		m_LayoutRoot.SetAlpha(is_in_bound);
+		
+		m_LayoutRoot.SetPos(screen_position[0] - w / 2, screen_position[1] - h / 2);
+		m_LayoutRoot.Show(screen_position[2] > 0);
 	}
 	
 	bool DoCursorRaycast(out vector position, float max_distance = 3000, Object ignore_object = null)
@@ -47,10 +54,19 @@ class EditorPointView: ScriptView
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		switch (button) {
-			
 			case MouseState.LEFT: {
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					m_EditorObject.SetSelected(!m_EditorObject.IsSelected());
+					return true;
+				}
+				
+				if (!KeyState(KeyCode.KC_LSHIFT)) {
+					m_EditorObject.ClearSelections();
+				}
+				
 				m_EditorObject.SetSelected(true);
-				return false;
+								
+				return true;
 			}
 			
 			case MouseState.MIDDLE: {
@@ -85,15 +101,35 @@ class EditorPointView: ScriptView
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		WidgetAnimator.AnimateColor(Image, ARGB(255, 102, 189, 181), 100);
+		switch (w) {
+			case m_LayoutRoot: {
+				//WidgetAnimator.Animate(m_LayoutRoot, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
+				break;
+			}
+			
+			case Image: {
+				WidgetAnimator.AnimateColor(Image, ARGB(255, 102, 189, 181), 100);
+				break;
+			}
+		}
 		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		WidgetAnimator.AnimateColor(Image, ARGB(255, 255, 255, 255), 100);
-		
+		switch (w) {
+			case m_LayoutRoot: {
+				//WidgetAnimator.Animate(m_LayoutRoot, WidgetAnimatorProperty.COLOR_A, 0.0, 100);
+				break;
+			}
+			
+			case Image: {
+				WidgetAnimator.AnimateColor(Image, ARGB(255, 255, 255, 255), 100);
+				break;
+			}
+		}
+			
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	

@@ -29,7 +29,7 @@ class EditorObject: SerializableBase
 	protected ref EditorObjectWorldMarker m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem m_EditorPlacedListItem;*/
 	
-	protected ref EditorPointView m_BottomCenter;
+	protected ref array<ref EditorPointView> m_PointViews = {};
 	
 	protected ref EditorTreeItem m_TreeItem;
 	
@@ -103,11 +103,15 @@ class EditorObject: SerializableBase
 		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
 		
 		m_BasePoint = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
-		m_BottomCenter = new EditorPointView(this, m_BasePoint);
+		m_PointViews.Insert(new EditorPointView(this, m_BasePoint));
+		
+		for (int i = 0; i < 8; i++) {
+			m_PointViews.Insert(new EditorPointView(this, m_LineVerticies[i]));
+		}
 		
 		vector transform[4];
 		m_Object.GetTransform(transform);	
-		
+
 		for (int j = 0; j < 12; j++) {
 			vector snap_point_position = m_LineCenters[j].Multiply4(transform);
 			EditorSnapPoint snap_point = EditorSnapPoint.Cast(GetGame().CreateObjectEx("EditorSnapPoint", snap_point_position, ECE_LOCAL));
@@ -178,7 +182,8 @@ class EditorObject: SerializableBase
 		m_Object.GetTransform(transform);
 		for (int i = 0; i < 8; i++) {
 			vector pos = m_LineVerticies[i].Multiply4(transform);
-			Debug.DrawSphere(pos, 0.1, COLOR_GREEN, ShapeFlags.ONCE);
+			
+			//Debug.DrawSphere(pos, 0.1, COLOR_GREEN, ShapeFlags.ONCE);
 		}
 		
 		for (int j = 0; j < 12; j++) {
