@@ -209,7 +209,6 @@ class EditorObject: SerializableBase
 		serializer.Read(display);
 		EditorObject editor_object = new EditorObject(uuid, type, transform, flags);		
 		
-		editor_object.Read(serializer, VERSION);
 		return editor_object;
 	}
 	
