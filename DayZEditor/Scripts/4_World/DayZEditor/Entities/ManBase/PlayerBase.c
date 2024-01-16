@@ -29,8 +29,7 @@ modded class PlayerBase
 		s_LastControlledPlayer = this;
 		
 #ifndef SERVER
-		g_Editor = new Editor(GetPosition());
-		GetDayZGame().GetEditorSessionManager().TemporaryLocalInstance = g_Editor;
+		g_Editor = new Editor();
 #endif
 	}
 	

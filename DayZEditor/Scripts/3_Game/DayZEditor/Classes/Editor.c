@@ -180,7 +180,7 @@ class Editor: Managed
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
 		g_Game.ReportProgress("Initializing Camera");
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", vector.Zero, ECE_LOCAL));
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", GenerateSafeStartPosition(), ECE_LOCAL));
 		
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
