@@ -19,7 +19,7 @@ class EditorObject: SerializableBase
 	
 	static ref array<EditorObject> SelectedObjects = {};
 	
-	protected UUID m_UUID;
+	protected string m_UUID;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
 	protected string m_DisplayName;
@@ -237,7 +237,7 @@ class EditorObject: SerializableBase
 	
 	override void Write(Serializer serializer, int version)
 	{
-		serializer.Write(version);
+		serializer.Write(m_UUID);
 		serializer.Write(m_Flags);
 		serializer.Write(m_DisplayName);
 		
@@ -248,7 +248,7 @@ class EditorObject: SerializableBase
 	
 	override bool Read(Serializer serializer, int version)
 	{
-		serializer.Read(version);
+		// dont read m_UUID because you will need to peek at it to find it in memory ;)
 		serializer.Read(m_Flags);
 		serializer.Read(m_DisplayName);
 		
