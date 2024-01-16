@@ -878,9 +878,7 @@ class Editor: EditorServer
 		Statistics.PlacedObjects++;
 			
 		m_PlacedObjects.Insert(editor_object.GetUUID(), editor_object);
-		
-		m_EditorHud.GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(editor_object.GetTreeItem());
-		
+			
 		if (m_CurrentOnlineSession) {
 			m_CurrentOnlineSession.SetSynchDirty();
 		}
@@ -891,8 +889,6 @@ class Editor: EditorServer
 
 	array<EditorObject> CreateObjects(array<Object> objects, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
-		EditorLog.Trace("Editor::CreateObject");
-		
 		array<EditorObject> editor_objects = {};
 		foreach (Object object: objects) {			
 			string type = object.GetType();
@@ -906,8 +902,6 @@ class Editor: EditorServer
 			Statistics.PlacedObjects++;
 			
 			m_PlacedObjects.Insert(editor_object.GetUUID(), editor_object);
-			m_EditorHud.GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(editor_object.GetTreeItem());				
-		
 			if (m_CurrentOnlineSession) {
 				m_CurrentOnlineSession.SetSynchDirty();
 			}

@@ -69,7 +69,11 @@ class EditorObject: SerializableBase
 		
 		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
 			m_TreeItem = new EditorTreeItem(m_DisplayName, ScriptCaller.Create(OnTreeItemSelected));
+			m_EditorHud.GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(m_TreeItem);
 		}
+		
+		m_Object = GetGame().CreateObjectEx(Type, Transform[3], ECE_LOCAL);
+		m_Object.SetTransform(Transform);
 		
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
@@ -135,9 +139,6 @@ class EditorObject: SerializableBase
 				}
 			}	
 		}
-		
-		m_Object = GetGame().CreateObjectEx(Type, Transform[3], ECE_LOCAL);
-		m_Object.SetTransform(Transform);
 				
 #ifdef DIAG_DEVELOPER
 #ifndef SERVER
@@ -188,7 +189,8 @@ class EditorObject: SerializableBase
 		}
 
 #ifndef SERVER		
-		m_BottomCenter.Position = GetBasePoint();
+		m_BottomCenter.Preview = m_Object;
+		m_BottomCenter.Offset = GetBasePoint();
 #endif
 		
 		Type = m_Object.GetType();
@@ -236,11 +238,6 @@ class EditorObject: SerializableBase
 		return true;
 	}
 		
-	EditorTreeItem GetTreeItem()
-	{
-		return m_TreeItem;
-	}
-	
 	void OnTreeItemSelected(EditorTreeItem tree_item)
 	{
 		SetSelected(tree_item.Button.GetState());

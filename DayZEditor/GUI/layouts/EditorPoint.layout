@@ -7,9 +7,10 @@ PanelWidgetClass Root {
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ draggable 1
  style rover_sim_colorable
  {
-  ImageWidgetClass ImageWidget0 {
+  ImageWidgetClass Image {
    clipchildren 0
    ignorepointer 1
    size 1 1
