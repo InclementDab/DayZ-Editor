@@ -50,6 +50,9 @@ class EditorObject: SerializableBase
 	// Custom stuff
 	string ExpansionTraderType;
 	string TestingScript;
+	
+	string Type;
+	vector Transform[4];
 		
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
@@ -107,7 +110,10 @@ class EditorObject: SerializableBase
 			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
 		}
 		
-		m_BottomCenter.Position = transform[3];
+		m_BottomCenter.Position = GetBasePoint();
+		
+		Type = m_Object.GetType();
+		m_Object.GetTransform(Transform);
 	}
 #endif
 	
@@ -223,6 +229,9 @@ class EditorObject: SerializableBase
 		
 		EditorObject editor_object = new EditorObject(uuid);
 		editor_object.Read(serializer, VERSION);
+		
+		Object object = GetGame().CreateObjectEx(editor_object.Type, editor_object.Transform[3], ECE_LOCAL);
+		object.SetTransform(editor_object.Transform);
 		return editor_object;
 	}
 	
@@ -233,29 +242,8 @@ class EditorObject: SerializableBase
 		serializer.Write(m_DisplayName);
 		
 		// Object properties
-		serializer.Write(m_Object.GetType());
-		vector transform[4];
-		m_Object.GetTransform(transform);
-		serializer.Write(transform);
-		
-		//if (NetworkLightBase.Cast(m_Object)) {
-		//	NetworkLightBase.Cast(m_Object).Read(m_Data.Parameters);
-		//}
-		
-		// Update Attachments
-		/*EntityAI entity = EntityAI.Cast(m_Object);
-		if (entity) {
-			data.Attachments.Clear();
-			array<EntityAI> attachments = {};
-			for (int i = 0; i < entity.GetInventory().AttachmentCount(); i++) {			
-				EntityAI attachment = entity.GetInventory().GetAttachmentFromIndex(i);
-				if (!attachment) {
-					continue;
-				}
-				
-				data.Attachments.Insert(attachment.GetType());
-			}
-		}*/
+		serializer.Write(Type);
+		serializer.Write(Transform);
 	}
 	
 	override bool Read(Serializer serializer, int version)
@@ -264,16 +252,11 @@ class EditorObject: SerializableBase
 		serializer.Read(m_Flags);
 		serializer.Read(m_DisplayName);
 		
-		string type;
-		serializer.Read(type);
-		vector transform[4];
-		serializer.Read(transform);
-		m_Object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
-		m_Object.SetTransform(transform);
-		
+		serializer.Read(Type);
+		serializer.Read(Transform);		
 		return true;
 	}
-	
+		
 	EditorTreeItem GetTreeItem()
 	{
 		return m_TreeItem;
