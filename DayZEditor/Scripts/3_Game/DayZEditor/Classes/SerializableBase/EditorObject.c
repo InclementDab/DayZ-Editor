@@ -29,6 +29,8 @@ class EditorObject: SerializableBase
 	protected ref EditorObjectWorldMarker m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem m_EditorPlacedListItem;*/
 	
+	protected ref EditorPointView m_BottomCenter = new EditorPointView();
+	
 	protected ref EditorTreeItem m_TreeItem;
 	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
@@ -55,7 +57,7 @@ class EditorObject: SerializableBase
 	void EditorObject(UUID uuid)
 	{
 		m_UUID = uuid;
-				
+		
 #ifdef DIAG_DEVELOPER
 #ifndef SERVER
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DiagOnFrameUpdate);
@@ -104,6 +106,8 @@ class EditorObject: SerializableBase
 			Shape.CreateMatrix(mat);
 			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
 		}
+		
+		m_BottomCenter.Position = transform[3];
 	}
 #endif
 	

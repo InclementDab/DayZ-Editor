@@ -1,6 +1,6 @@
 ImageSetClass  {
 	Name "icons"
-	RefSize 1024 128
+	RefSize 1280 128
 	Textures {
 		ImageSetTextureClass  {
 			mpix 1
@@ -20,39 +20,51 @@ ImageSetClass  {
 			Size 128 128
 			Flags 0
 		}
+		ImageSetDefClass circle_dot {
+			Name "circle_dot"
+			Pos 256 0
+			Size 128 128
+			Flags 0
+		}
 		ImageSetDefClass folder_gear {
 			Name "folder_gear"
-			Pos 256 0
+			Pos 384 0
 			Size 128 128
 			Flags 0
 		}
 		ImageSetDefClass folder_minus {
 			Name "folder_minus"
-			Pos 384 0
+			Pos 512 0
 			Size 128 128
 			Flags 0
 		}
 		ImageSetDefClass folder_open {
 			Name "folder_open"
-			Pos 512 0
+			Pos 640 0
 			Size 128 128
 			Flags 0
 		}
 		ImageSetDefClass folder_plus {
 			Name "folder_plus"
-			Pos 640 0
+			Pos 768 0
 			Size 128 128
 			Flags 0
 		}
 		ImageSetDefClass folder {
 			Name "folder"
-			Pos 768 0
+			Pos 896 0
 			Size 128 128
 			Flags 0
 		}
 		ImageSetDefClass loader {
 			Name "loader"
-			Pos 896 0
+			Pos 1024 0
+			Size 128 128
+			Flags 0
+		}
+		ImageSetDefClass location_dot {
+			Name "location_dot"
+			Pos 1152 0
 			Size 128 128
 			Flags 0
 		}

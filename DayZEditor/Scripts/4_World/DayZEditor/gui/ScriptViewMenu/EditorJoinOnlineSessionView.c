@@ -29,7 +29,7 @@ class EditorJoinOnlineSessionView: ScriptViewMenu
 	void OnJoinExecute(ButtonCommandArgs args)
 	{
 		ScriptRPC rpc = new ScriptRPC();
-		rpc.Write(PasswordEditBox.GetText().ToInt());
+		rpc.Write(PasswordEditBox.GetText());
 		rpc.Send(null, EditorOnlineSessionManager.RPC_REQUEST_JOIN_SESSION, true);
 		
 		Close();
