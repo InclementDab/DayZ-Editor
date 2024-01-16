@@ -7,8 +7,8 @@ class EditorPointView: ScriptView
 		super.Update(dt);
 		
 		vector screen_position = GetGame().GetScreenPos(Position);
-		m_LayoutRoot.SetPos(screen_position[0], screen_position[2]);
-		m_LayoutRoot.Show(screen_position[1] > 0);
+		m_LayoutRoot.SetPos(screen_position[0], screen_position[1]);
+		m_LayoutRoot.Show(screen_position[2] > 0);
 	}
 	
 	override string GetLayoutFile()

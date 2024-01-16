@@ -102,7 +102,6 @@ class EditorHud: ScriptView
 		//Print(GetEditor().GetCurrentOnlineSession());
 		if (GetEditor().GetCurrentOnlineSession()) {
 			string text = GetEditor().GetCurrentOnlineSession().GetUuid();
-			Print(text);
 			
 			SessionIdData.SetText(text);
 			UserCountData.SetText(GetEditor().GetCurrentOnlineSession().GetPlayers().Count().ToString());
