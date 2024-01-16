@@ -1,56 +1,62 @@
-ImageSetClass {
- Name "icons"
- RefSize 896 128
- Textures {
-  ImageSetTextureClass {
-   mpix 1
-   path "{902A22F5FA809870}DayZEditor/GUI/icons/icons.edds"
-  }
- }
- Images {
-  ImageSetDefClass checkbox_checked {
-   Name "checkbox_checked"
-   Pos 0 0
-   Size 128 128
-   Flags 0
-  }
-  ImageSetDefClass checkbox_unchecked {
-   Name "checkbox_unchecked"
-   Pos 128 0
-   Size 128 128
-   Flags 0
-  }
-  ImageSetDefClass folder_gear {
-   Name "folder_gear"
-   Pos 256 0
-   Size 128 128
-   Flags 0
-  }
-  ImageSetDefClass folder_minus {
-   Name "folder_minus"
-   Pos 384 0
-   Size 128 128
-   Flags 0
-  }
-  ImageSetDefClass folder_open {
-   Name "folder_open"
-   Pos 512 0
-   Size 128 128
-   Flags 0
-  }
-  ImageSetDefClass folder_plus {
-   Name "folder_plus"
-   Pos 640 0
-   Size 128 128
-   Flags 0
-  }
-  ImageSetDefClass folder {
-   Name "folder"
-   Pos 768 0
-   Size 128 128
-   Flags 0
-  }
- }
- Groups {
- }
+ImageSetClass  {
+	Name "icons"
+	RefSize 1024 128
+	Textures {
+		ImageSetTextureClass  {
+			mpix 1
+			path "DayZEditor\GUI\icons\icons.edds"
+		}
+	}
+	Images {
+		ImageSetDefClass checkbox_checked {
+			Name "checkbox_checked"
+			Pos 0 0
+			Size 128 128
+			Flags 0
+		}
+		ImageSetDefClass checkbox_unchecked {
+			Name "checkbox_unchecked"
+			Pos 128 0
+			Size 128 128
+			Flags 0
+		}
+		ImageSetDefClass folder_gear {
+			Name "folder_gear"
+			Pos 256 0
+			Size 128 128
+			Flags 0
+		}
+		ImageSetDefClass folder_minus {
+			Name "folder_minus"
+			Pos 384 0
+			Size 128 128
+			Flags 0
+		}
+		ImageSetDefClass folder_open {
+			Name "folder_open"
+			Pos 512 0
+			Size 128 128
+			Flags 0
+		}
+		ImageSetDefClass folder_plus {
+			Name "folder_plus"
+			Pos 640 0
+			Size 128 128
+			Flags 0
+		}
+		ImageSetDefClass folder {
+			Name "folder"
+			Pos 768 0
+			Size 128 128
+			Flags 0
+		}
+		ImageSetDefClass loader {
+			Name "loader"
+			Pos 896 0
+			Size 128 128
+			Flags 0
+		}
+	}
+	Groups {
+	}
 }

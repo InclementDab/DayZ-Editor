@@ -70,10 +70,16 @@ GridSpacerWidgetClass Root {
          hexactsize 0
          vexactsize 1
          scaled 0
+         scriptclass "ViewBinding"
          style DayZEditor
          text "Hide Code"
          font "gui/fonts/MetronBook"
          checked 0
+         {
+          ScriptParamsClass {
+           Binding_Name "Hide"
+          }
+         }
         }
        }
       }
@@ -115,6 +121,12 @@ GridSpacerWidgetClass Root {
          hexactsize 0
          vexactsize 1
          scaled 0
+         scriptclass "ViewBinding"
+         {
+          ScriptParamsClass {
+           Binding_Name "Code"
+          }
+         }
         }
        }
       }

@@ -1488,9 +1488,27 @@ FrameWidgetClass EditorFrame {
          Margin 0
          "Size To Content H" 1
          "Size To Content V" 1
-         Columns 1
+         Columns 2
          Rows 1
          {
+          ButtonWidgetClass CreateSessionButton {
+           position 0 0
+           size 32 32
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scaled 0
+           scriptclass "ViewBinding"
+           style Default
+           "no focus" 1
+           text "C"
+           {
+            ScriptParamsClass {
+             Relay_Command "OnCreateSessionExecute"
+            }
+           }
+          }
           ButtonWidgetClass JoinSessionButton {
            position 0 0
            size 32 32

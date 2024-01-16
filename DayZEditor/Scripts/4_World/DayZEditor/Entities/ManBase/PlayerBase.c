@@ -30,8 +30,6 @@ modded class PlayerBase
 		
 #ifndef SERVER
 		g_Editor = new Editor(GetPosition());
-		
-		EditorServerBrowserViewMenu.Instance = new EditorServerBrowserViewMenu();
 #endif
 	}
 	

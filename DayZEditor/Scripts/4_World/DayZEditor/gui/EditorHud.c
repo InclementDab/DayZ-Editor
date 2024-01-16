@@ -47,9 +47,26 @@ class EditorHud: ScriptView
 		Right.SetSize(w, y - 110);	
 	}
 	
+	void OnCreateSessionExecute(ButtonCommandArgs args)
+	{
+		m_CurrentMenu = new EditorCreateOnlineSessionView();
+		
+		float x, y, w, h;
+		args.Source.GetPos(x, y);
+		args.Source.GetSize(w, h);
+		
+		m_CurrentMenu.GetLayoutRoot().SetPos(x, y + h);
+	}
+	
 	void OnJoinSessionExecute(ButtonCommandArgs args)
 	{
-		m_CurrentMenu = new EditorServerBrowserViewMenu();
+		m_CurrentMenu = new EditorJoinOnlineSessionView();
+		
+		float x, y, w, h;
+		args.Source.GetPos(x, y);
+		args.Source.GetSize(w, h);
+		
+		m_CurrentMenu.GetLayoutRoot().SetPos(x, y + h);
 	}
 	
 	void SetOnlineSession(EditorOnlineSession session)

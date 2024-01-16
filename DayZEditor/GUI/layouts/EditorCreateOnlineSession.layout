@@ -70,10 +70,16 @@ GridSpacerWidgetClass Root {
          hexactsize 0
          vexactsize 1
          scaled 0
+         scriptclass "ViewBinding"
          style DayZEditor
          text "Public"
          font "gui/fonts/MetronBook"
          checked 0
+         {
+          ScriptParamsClass {
+           Binding_Name "Public"
+          }
+         }
         }
        }
       }
@@ -114,11 +120,17 @@ GridSpacerWidgetClass Root {
          hexactsize 0
          vexactsize 1
          scaled 0
+         scriptclass "ViewBinding"
          text "32"
          "limit visible" 0
          "Use default text" 0
          "exact text" 1
          font "gui/fonts/MetronBook"
+         {
+          ScriptParamsClass {
+           Binding_Name "MaxPlayers"
+          }
+         }
         }
        }
       }
@@ -159,10 +171,16 @@ GridSpacerWidgetClass Root {
          hexactsize 0
          vexactsize 1
          scaled 0
+         scriptclass "ViewBinding"
          text "test"
          "limit visible" 0
          font "gui/fonts/MetronBlack"
          "hide text" 1
+         {
+          ScriptParamsClass {
+           Binding_Name "Password"
+          }
+         }
         }
        }
       }
@@ -198,9 +216,70 @@ GridSpacerWidgetClass Root {
        scriptclass "ViewBinding"
        style Colorable
        "no focus" 1
-       text "Create"
        text_proportion 0.55
        font "gui/fonts/MetronBook"
+       {
+        WrapSpacerWidgetClass GridSpacerWidget3 {
+         visible 1
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         content_halign center
+         content_valign center
+         {
+          TextWidgetClass CreateButtonText {
+           ignorepointer 1
+           size 80 16
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scaled 0
+           text "Create"
+           font "gui/fonts/MetronBook"
+           "exact text" 0
+           "size to text h" 0
+           "size to text v" 0
+           "text halign" center
+           "text valign" center
+          }
+          FrameWidgetClass FrameWidget0 {
+           visible 0
+           ignorepointer 1
+           size 18 18
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ImageWidgetClass ImageWidget0 {
+             ignorepointer 1
+             size 22 22
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             image0 "set:icons image:loader"
+             mode blend
+             "src alpha" 1
+             "stretch mode" invalid
+            }
+           }
+          }
+         }
+        }
+       }
        {
         ScriptParamsClass {
          Relay_Command "OnCreateExecute"
