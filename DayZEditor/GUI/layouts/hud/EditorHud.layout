@@ -2692,7 +2692,7 @@ FrameWidgetClass EditorFrame {
     GridSpacerWidgetClass OnlineServiceInfo {
      ignorepointer 1
      position 360 18
-     size 280 79
+     size 470 79
      valign bottom_ref
      hexactpos 1
      vexactpos 1

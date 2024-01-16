@@ -99,7 +99,7 @@ class EditorHud: ScriptView
 		}
 		
 		EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
-
+		//Print(GetEditor().GetCurrentOnlineSession());
 		if (GetEditor().GetCurrentOnlineSession()) {
 			string text = GetEditor().GetCurrentOnlineSession().GetUuid();
 			Print(text);
