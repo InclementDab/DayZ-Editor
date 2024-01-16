@@ -71,10 +71,25 @@ class EditorHud: ScriptView
 		m_CurrentMenu.GetLayoutRoot().SetPos(x, y + h);
 	}
 	
+	void OnCopySessionExecute(ButtonCommandArgs args)
+	{
+		string code = GetEditor().GetCurrentOnlineSession().GetJoinCode();
+		GetGame().CopyToClipboard(code);
+		CreateNotification(string.Format("Code %1 copied to clipboard", code));
+	}
+	
+	void OnLeaveSessionExecute(ButtonCommandArgs args)
+	{
+		ScriptRPC().Send(null, EditorOnlineSessionManager.RPC_REQUEST_LEAVE_SESSION, true);
+	}
+	
 	void SetOnlineSession(EditorOnlineSession session)
 	{
 		if (session) {
-			SessionIdData.SetText(session.GetUuid());
+			string text = session.GetUuid();
+			Print(text);
+			
+			SessionIdData.SetText(text);
 			UserCountData.SetText(session.GetPlayers().Count().ToString());
 		} else {
 			SessionIdData.SetText(string.Empty);

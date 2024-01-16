@@ -1435,6 +1435,11 @@ class Editor: EditorServer
 	{
 		return m_PlaceableItems;
 	}
+
+	EditorOnlineSession GetCurrentOnlineSession()
+	{
+		return m_CurrentOnlineSession;
+	}
 	
 	bool GetHudVisiblity()
 	{

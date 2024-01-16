@@ -612,7 +612,7 @@ FrameWidgetClass EditorFrame {
        clipchildren 0
        ignorepointer 1
        position 0 24
-       size 643 64
+       size 703 64
        hexactpos 1
        vexactpos 1
        hexactsize 1
@@ -1476,6 +1476,34 @@ FrameWidgetClass EditorFrame {
           }
          }
         }
+        PanelWidgetClass Divider10 {
+         ignorepointer 1
+         position 0 0
+         size 19 32
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          PanelWidgetClass Divider11 {
+           ignorepointer 1
+           color 0 0 0 0.5882
+           position 0 0
+           size 0.1 0.6
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style rover_sim_colorable
+          }
+         }
+        }
         GridSpacerWidgetClass OnlineButtons {
          ignorepointer 1
          position 0 0
@@ -1488,7 +1516,7 @@ FrameWidgetClass EditorFrame {
          Margin 0
          "Size To Content H" 1
          "Size To Content V" 1
-         Columns 2
+         Columns 4
          Rows 1
          {
           ButtonWidgetClass CreateSessionButton {
@@ -1527,6 +1555,42 @@ FrameWidgetClass EditorFrame {
             }
            }
           }
+          ButtonWidgetClass CopySessionButton {
+           position 0 0
+           size 32 32
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scaled 0
+           scriptclass "ViewBinding"
+           style Default
+           "no focus" 1
+           text "S"
+           {
+            ScriptParamsClass {
+             Relay_Command "OnCopySessionExecute"
+            }
+           }
+          }
+          ButtonWidgetClass LeaveSessionButton {
+           position 0 0
+           size 32 32
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scaled 0
+           scriptclass "ViewBinding"
+           style Default
+           "no focus" 1
+           text "X"
+           {
+            ScriptParamsClass {
+             Relay_Command "OnLeaveSessionExecute"
+            }
+           }
+          }
          }
         }
         GridSpacerWidgetClass BrushFrame {
@@ -1546,9 +1610,9 @@ FrameWidgetClass EditorFrame {
          Columns 4
          Rows 1
          {
-          PanelWidgetClass Divider10 {
+          PanelWidgetClass Divider14 {
+           visible 1
            ignorepointer 1
-           position 0 0
            size 19 32
            halign center_ref
            valign center_ref
@@ -1558,15 +1622,15 @@ FrameWidgetClass EditorFrame {
            vexactsize 1
            scaled 0
            {
-            PanelWidgetClass Divider11 {
+            PanelWidgetClass Divider15 {
              ignorepointer 1
              color 0 0 0 0.5882
              position 0 0
              size 0.1 0.6
              halign center_ref
              valign center_ref
-             hexactpos 0
-             vexactpos 0
+             hexactpos 1
+             vexactpos 1
              hexactsize 0
              vexactsize 0
              scaled 0
@@ -2660,6 +2724,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scaled 0
          text "Session ID:"
          font "gui/fonts/etelkatextpro16"
          "size to text h" 1
@@ -2669,25 +2734,18 @@ FrameWidgetClass EditorFrame {
          visible 1
          ignorepointer 1
          color 0.3059 0.5608 0.3686 1
-         size 1 16
+         size 1 18
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         scriptclass "ViewBinding"
-         text "test"
+         scriptclass ""
          font "gui/fonts/etelkatextpro16"
          "size to text h" 1
          "size to text v" 0
          "text valign" center
-         {
-          ScriptParamsClass {
-           Binding_Name "OnlineSessionId"
-           Two_Way_Binding 0
-          }
-         }
         }
        }
       }
@@ -2713,8 +2771,9 @@ FrameWidgetClass EditorFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scaled 0
          text "User Count:"
-         font "gui/fonts/MetronLight16"
+         font "gui/fonts/etelkatextpro16"
          "size to text h" 1
          "text valign" center
         }
@@ -2761,6 +2820,7 @@ FrameWidgetClass EditorFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
+         scaled 0
          text "Entity Count:"
          font "gui/fonts/etelkatextpro16"
          "size to text h" 1
