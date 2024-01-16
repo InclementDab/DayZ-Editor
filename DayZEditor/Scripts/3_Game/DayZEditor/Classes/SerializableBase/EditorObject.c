@@ -220,13 +220,8 @@ class EditorObject: SerializableBase
 		return CreateNew(object, flags);
 	}
 	
-	static EditorObject CreateFromSerializer(Serializer serializer)
-	{
-		string uuid;
-		if (!serializer.Read(uuid)) {
-			return null;
-		}
-		
+	static EditorObject CreateFromSerializer(string uuid, Serializer serializer)
+	{		
 		EditorObject editor_object = new EditorObject(uuid);
 		editor_object.Read(serializer, VERSION);
 		
