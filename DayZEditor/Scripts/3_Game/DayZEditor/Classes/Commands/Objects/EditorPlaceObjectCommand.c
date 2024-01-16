@@ -10,7 +10,7 @@ class EditorPlaceObjectCommand: EditorCommand
 		
 		array<Object> placing_objects = GetEditor().GetPlacingObjects();		
 		foreach (Object placing_object: placing_objects) {			
-			EditorObject editor_object = GetEditor().CreateObject(placing_object);
+			EditorObject editor_object = GetEditor().CreateObject(placing_object, EFE_DEFAULT);
 			if (!editor_object) { 
 				continue;
 			}

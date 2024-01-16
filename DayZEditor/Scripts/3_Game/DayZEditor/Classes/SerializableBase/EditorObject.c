@@ -29,9 +29,7 @@ class EditorObject: SerializableBase
 	protected ref EditorObjectWorldMarker m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem m_EditorPlacedListItem;*/
 	
-#ifndef SERVER
-	protected ref EditorPointView m_BottomCenter = new EditorPointView();
-#endif
+	protected ref EditorPointView m_BottomCenter;
 	
 	protected ref EditorTreeItem m_TreeItem;
 	
@@ -65,6 +63,7 @@ class EditorObject: SerializableBase
 		Type = type;
 		Position = position;
 		Orientation = orientation;
+		m_Flags = flags;
 				
 		m_DisplayName = type;
 		
@@ -75,7 +74,7 @@ class EditorObject: SerializableBase
 		
 		m_Object = GetGame().CreateObjectEx(Type, Position, ECE_LOCAL);
 		m_Object.SetOrientation(Orientation);
-		
+				
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
 	
@@ -104,6 +103,7 @@ class EditorObject: SerializableBase
 		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
 		
 		m_BasePoint = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
+		m_BottomCenter = new EditorPointView(this, m_BasePoint);
 		
 		vector transform[4];
 		m_Object.GetTransform(transform);	
@@ -191,11 +191,6 @@ class EditorObject: SerializableBase
 			Shape.CreateMatrix(mat);
 			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
 		}
-
-#ifndef SERVER		
-		m_BottomCenter.Preview = m_Object;
-		m_BottomCenter.Offset = GetBasePoint();
-#endif
 	}
 #endif
 		

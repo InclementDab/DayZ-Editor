@@ -1,24 +1,28 @@
 class EditorPointView: ScriptView
 {	
-	Object Preview;
-	vector Offset;
+	protected EditorObject m_EditorObject;
+	protected vector m_Offset;
 	
 	ImageWidget Image;
+	
+	void EditorPointView(notnull EditorObject editor_object, vector offset)
+	{
+		m_EditorObject = editor_object;
+		m_Offset = offset;
+	}
 	
 	override void Update(float dt)
 	{
 		super.Update(dt);
-		
-		if (!Preview) {
-			return;
-		}
-		
+				
 		vector transform[4];
-		Preview.GetTransform(transform);
-			
-		vector screen_position = GetGame().GetScreenPos(Offset.Multiply4(transform));
+		m_EditorObject.GetWorldObject().GetTransform(transform);
+		
+		vector screen_position = GetGame().GetScreenPos(m_Offset.Multiply4(transform));
 		if (m_LayoutRoot) {
-			m_LayoutRoot.SetPos(screen_position[0], screen_position[1]);
+			float w, h;
+			m_LayoutRoot.GetSize(w, h);
+			m_LayoutRoot.SetPos(screen_position[0] - w / 2, screen_position[1] - h / 2);
 			m_LayoutRoot.Show(screen_position[2] > 0);
 		}
 	}
@@ -35,62 +39,31 @@ class EditorPointView: ScriptView
 		return DayZPhysics.RayCastBullet(begin_pos, end_pos, interaction_layers, ignore_object, hit_object, position, normal, fraction);
 	}
 	
-	override bool OnDragging(Widget w, int x, int y, Widget reciever)
+	void CheckForDragging()
 	{
-		vector position;
-		DoCursorRaycast(position, 3000, Preview);
 		
-		Preview.SetPosition(position);
-		
-		return super.OnDragging(w, x, y, reciever);
 	}
-	
-	/*override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{		
-		// ignores the object if you are placing
-		if (m_Editor.IsPlacing()) { 
-			return false;
-		}
 		
-		// Delete the current tooltip to clean the UI a bit
-		//GetEditor().GetEditorHud().SetCurrentTooltip(null);
-		
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
 		switch (button) {
 			
 			case MouseState.LEFT: {
-				
-				// We want to Toggle selection if you are holding control
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					m_EditorObject.SetSelected(!m_EditorObject.IsSelected());
-					return true;
-				} 
-				
-				// allows multiple objects to be dragged
-				if (m_EditorObject.IsSelected()) {
-					thread CheckDragBounds(x, y);
-					return true;
-				}
-				
-				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					EditorObject.ClearSelections();
-				}
-				
 				m_EditorObject.SetSelected(true);
-				
-				thread CheckDragBounds(x, y);
 				return false;
 			}
 			
 			case MouseState.MIDDLE: {
+				/*
 				EditorCamera camera = GetEditor().GetCamera();
 				vector pos = m_EditorObject.GetWorldObject().GetPosition();
 				pos[1] = camera.GetPosition()[1];
-				camera.SendToPosition(pos);
+				camera.SendToPosition(pos);*/
 				return true;
 			}
 			
 			case MouseState.RIGHT: {
-				
+				/*
 				if (!m_EditorObject.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
 					EditorObject.ClearSelections();
 				}
@@ -102,17 +75,17 @@ class EditorPointView: ScriptView
 				}
 				
 				EditorHud.CurrentMenu = new EditorPlacedContextMenu(x, y, m_EditorObject);
-				
+				*/
 				return true;
 			}
 		}
 		
 		return super.OnMouseButtonDown(w, x, y, button);
-	}*/
+	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		WidgetAnimator.AnimateColor(Image, ARGB(255, 44, 147, 55), 100);
+		WidgetAnimator.AnimateColor(Image, ARGB(255, 102, 189, 181), 100);
 		
 		return super.OnMouseEnter(w, x, y);
 	}
