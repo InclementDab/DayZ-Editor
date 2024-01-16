@@ -145,8 +145,6 @@ class Editor: EditorServer
 	
 	bool KEgg; // oh?
 	
-	protected EditorOnlineSession m_CurrentOnlineSession;
-	
 	//0: EditorObject
 	static ref ScriptInvoker OnObjectCreated = new ScriptInvoker();
 	
@@ -277,8 +275,6 @@ class Editor: EditorServer
 		
 		// TODO!!! write a better autosave!!!
 		//m_AutoSaveTimer.Run(GeneralSettings.AutoSaveTimer, this, "OnAutoSaveTimer");
-	
-		GetDayZGame().GetEditorSessionManager().OnSyncRecieved.Insert(OnOnlineSyncRecieved);
 	}
 	
 	void ~Editor() 
@@ -289,17 +285,6 @@ class Editor: EditorServer
 		GetGame().ObjectDelete(m_EditorCamera);
 	}
 	
-	void OnOnlineSyncRecieved(string uuid, EditorOnlineSession session)
-	{
-		if (!session.IsMember(GetGame().GetPlayer().GetIdentity())) {
-			return;
-		}
-	
-		m_CurrentOnlineSession = session;
-		m_CurrentOnlineSession.Service = this;
-		m_EditorHud.SetOnlineSession(m_CurrentOnlineSession);	
-	}
-		
 	void OnStatisticsSave()
 	{
 		Statistics.Save();

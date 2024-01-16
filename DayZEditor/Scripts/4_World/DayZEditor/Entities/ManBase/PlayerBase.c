@@ -30,6 +30,7 @@ modded class PlayerBase
 		
 #ifndef SERVER
 		g_Editor = new Editor(GetPosition());
+		GetDayZGame().GetEditorSessionManager().TemporaryLocalInstance = g_Editor;
 #endif
 	}
 	

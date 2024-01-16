@@ -82,21 +82,7 @@ class EditorHud: ScriptView
 	{
 		ScriptRPC().Send(null, EditorOnlineSessionManager.RPC_REQUEST_LEAVE_SESSION, true);
 	}
-	
-	void SetOnlineSession(EditorOnlineSession session)
-	{
-		if (session) {
-			string text = session.GetUuid();
-			Print(text);
 			
-			SessionIdData.SetText(text);
-			UserCountData.SetText(session.GetPlayers().Count().ToString());
-		} else {
-			SessionIdData.SetText(string.Empty);
-			UserCountData.SetText(string.Empty);
-		}
-	}
-		
 	override void Update(float dt)
 	{
 		super.Update(dt);
@@ -113,6 +99,17 @@ class EditorHud: ScriptView
 		}
 		
 		EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
+
+		if (GetEditor().GetCurrentOnlineSession()) {
+			string text = GetEditor().GetCurrentOnlineSession().GetUuid();
+			Print(text);
+			
+			SessionIdData.SetText(text);
+			UserCountData.SetText(GetEditor().GetCurrentOnlineSession().GetPlayers().Count().ToString());
+		} else {
+			SessionIdData.SetText(string.Empty);
+			UserCountData.SetText(string.Empty);
+		}
 		
 		array<EditorCommand> commands = GetEditor().CommandManager.GetCommands();
 		foreach (EditorCommand command: commands) {
