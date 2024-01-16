@@ -59,7 +59,7 @@ class EditorObject: SerializableBase
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 	
-	void EditorObject(UUID uuid, string type, vector transform[], EditorObjectFlags flags)
+	void EditorObject(UUID uuid, string type, vector transform[4], EditorObjectFlags flags)
 	{
 		m_UUID = uuid;
 		Type = type;
