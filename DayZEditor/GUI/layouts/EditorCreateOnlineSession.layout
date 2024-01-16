@@ -1,0 +1,173 @@
+PanelWidgetClass Root {
+ color 0.1569 0.1569 0.1569 0.7843
+ size 380 200
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ style DayZDefaultPanel
+ {
+  GridSpacerWidgetClass MainWrapper {
+   visible 1
+   ignorepointer 1
+   position 0 15
+   size 342 39
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style Colorable
+   content_halign center
+   Columns 2
+   Rows 2
+   {
+    TextWidgetClass HeaderText {
+     ignorepointer 1
+     size 48 14
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "Host Online Session"
+     font "gui/fonts/sdf_MetronBook24"
+     "size to text h" 1
+    }
+    FrameWidgetClass FrameWidget0 {
+     ignorepointer 1
+     position 10 10
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+    }
+    GridSpacerWidgetClass ButtonContainer {
+     ignorepointer 1
+     size 0.5 33
+     halign right_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     content_halign center
+     content_valign center
+     Rows 1
+     {
+      ButtonWidgetClass CreateButton {
+       position 10 10
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       scriptclass "ViewBinding"
+       style Outline_1px_Button
+       text "Create"
+       font "gui/fonts/etelkatextpro14"
+      }
+      ButtonWidgetClass CloseButton {
+       position 10 10
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       scriptclass "ViewBinding"
+       style Outline_1px_Button
+       text "Close"
+       font "gui/fonts/etelkatextpro14"
+      }
+     }
+    }
+    GridSpacerWidgetClass PublicSpacer {
+     ignorepointer 1
+     position 10 10
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     "Size To Content H" 1
+     "Size To Content V" 1
+     Columns 1
+     Rows 1
+     {
+      CheckBoxWidgetClass PublicCheck {
+       position 0 0
+       size 0.368 24
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scaled 0
+       style DayZEditor
+       text "Public"
+       font "gui/fonts/sdf_MetronBook24"
+       checked 1
+      }
+     }
+    }
+    GridSpacerWidgetClass PasswordSpacer {
+     ignorepointer 1
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     "Size To Content V" 1
+     Columns 2
+     Rows 1
+     {
+      TextWidgetClass PassworText {
+       ignorepointer 1
+       position 0 0
+       size 40 20
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       text "Password:"
+       font "gui/fonts/sdf_MetronBook24"
+       "text halign" right
+      }
+      PasswordEditBoxWidgetClass Password {
+       visible 1
+       size 12 20
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Default
+       "hide text" 1
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass Footer {
+   ignorepointer 1
+   color 0.5725 0.3294 0.3294 1
+   size 0.5 32
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style DayZDefaultPanelTop
+  }
+ }
+}

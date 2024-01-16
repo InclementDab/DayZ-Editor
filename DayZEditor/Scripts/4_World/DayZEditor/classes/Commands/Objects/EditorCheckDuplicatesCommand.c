@@ -7,7 +7,7 @@ class EditorCheckDuplicatesCommand: EditorAsyncCommand
 		// prioritize selected objects first, else use all placed objects
 		array<EditorObject> editor_objects = {};
 		if (editor_objects.Count() == 0) {
-			array<ref EditorObject> placed = GetEditor().GetPlacedObjects();
+			array<EditorObject> placed = GetEditor().GetPlacedObjects();
 			foreach (EditorObject p: placed) {
 				editor_objects.Insert(p);
 			}

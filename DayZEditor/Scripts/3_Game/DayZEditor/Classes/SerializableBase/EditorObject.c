@@ -225,7 +225,6 @@ class EditorObject: SerializableBase
 	override void Write(Serializer serializer, int version)
 	{
 		serializer.Write(version);
-		serializer.Write(m_UUID);
 		serializer.Write(m_Flags);
 		serializer.Write(m_DisplayName);
 		
@@ -258,8 +257,6 @@ class EditorObject: SerializableBase
 	override bool Read(Serializer serializer, int version)
 	{
 		serializer.Read(version);
-		serializer.Read(m_UUID);
-		
 		serializer.Read(m_Flags);
 		serializer.Read(m_DisplayName);
 		

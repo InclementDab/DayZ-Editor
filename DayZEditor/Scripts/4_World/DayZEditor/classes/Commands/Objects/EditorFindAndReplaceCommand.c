@@ -10,7 +10,7 @@ class EditorFindAndReplaceCommand: EditorAsyncCommand
 	{
 		query.ToLower();
 		array<EditorObject> found_objects = {};
-		array<ref EditorObject> editor_objects = GetEditor().GetPlacedObjects();
+		array<EditorObject> editor_objects = GetEditor().GetPlacedObjects();
 		foreach (EditorObject editor_object: editor_objects) {
 			string t1 = editor_object.GetWorldObject().GetType();
 			t1.ToLower();

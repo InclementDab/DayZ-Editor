@@ -55,7 +55,7 @@ class EditorHandData
 
 typedef map<Object, ref EditorHandData> EditorHandMap;
 
-class Editor: Managed
+class Editor: DabIsLazyBase
 {
 	/* Private Members */
 	protected Mission m_Mission;
@@ -125,10 +125,7 @@ class Editor: Managed
 	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
 	
 	protected ScriptCaller 						m_ObjectSelectCallback;
-		
-	// Stored list of all Placed Objects
-	protected ref array<ref EditorObject> m_PlacedObjects = {};
-		
+				
 	// Stored list of all Placed Objects, indexed by their WorldObject ID
 	protected ref map<int, EditorObject> m_WorldObjectIndex = new map<int, EditorObject>();
 	
@@ -300,7 +297,7 @@ class Editor: Managed
 
 		m_EditorHud.SetOnlineSession(m_CurrentOnlineSession);
 	
-		m_PlacedObjects = m_CurrentOnlineSession.GetObjects();
+		m_CurrentOnlineSession.ObjectsList = m_PlacedObjects;
 	}
 		
 	void OnStatisticsSave()
@@ -895,14 +892,10 @@ class Editor: Managed
 		OnObjectCreated.Invoke(editor_object);
 		Statistics.PlacedObjects++;
 			
-		m_PlacedObjects.Insert(editor_object);
+		m_PlacedObjects.Insert(editor_object.GetUUID(), editor_object);
 		
 		m_EditorHud.GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(editor_object.GetTreeItem());
-	
-		if (m_CurrentOnlineSession) {
-			m_CurrentOnlineSession.AddObject(editor_object);
-		}
-	
+		
 		return editor_object;
 	}
 
@@ -919,39 +912,27 @@ class Editor: Managed
 			OnObjectCreated.Invoke(editor_object);
 			Statistics.PlacedObjects++;
 			
-			m_PlacedObjects.Insert(editor_object);
+			m_PlacedObjects.Insert(editor_object.GetUUID(), editor_object);
 			m_EditorHud.GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(editor_object.GetTreeItem());				
 		
 			editor_objects.Insert(editor_object);
-			
-			if (m_CurrentOnlineSession) {
-				m_CurrentOnlineSession.AddObject(editor_object);
-			}
 		}
 		
 		return editor_objects;
 	}
 	
 	void DeleteObject(notnull EditorObject editor_object, bool create_undo = true) 
-	{		
-		if (m_CurrentOnlineSession) {
-			m_CurrentOnlineSession.RemoveObject(editor_object);
-		}
-	
+	{			
 		OnObjectDeleted.Invoke(editor_object);
 		delete editor_object;
 	}
 	
 	void DeleteObjects(notnull array<EditorObject> editor_objects, bool create_undo = true)
 	{
-		foreach (EditorObject editor_object: editor_objects) {
-			if (m_CurrentOnlineSession) {
-				m_CurrentOnlineSession.RemoveObject(editor_object);
-			}
-		
+		foreach (EditorObject editor_object: editor_objects) {		
 			OnObjectDeleted.Invoke(editor_object);
 		
-			m_PlacedObjects.RemoveItem(editor_object);
+			m_PlacedObjects.Remove(editor_object.GetUUID());
 			delete editor_object;
 		}
 	}
@@ -1288,7 +1269,7 @@ class Editor: Managed
 		save_data.CameraPosition = GetCamera().GetPosition();
 		
 		// Save Objects
-		array<ref EditorObject> placed_objects = GetPlacedObjects();
+		array<EditorObject> placed_objects = GetPlacedObjects();
 		if (selected_only) {
 			placed_objects.Clear();
 			foreach (auto selected_object: EditorObject.SelectedObjects) {
@@ -1345,11 +1326,6 @@ class Editor: Managed
 		}
 		
 		return placeable_items[0]; // better way to do other than index 0?
-	}
-
-	void InsertPlacedObject(EditorObject editor_object)
-	{
-		m_PlacedObjects.Insert(editor_object);
 	}
 		
 	void SetSaveFile(string save_file)
@@ -1425,9 +1401,9 @@ class Editor: Managed
 		return (CF.ObjectManager.IsMapObjectHidden(object));
 	}
 		
-	array<ref EditorObject> GetPlacedObjects()
+	array<EditorObject> GetPlacedObjects()
 	{
-		return m_PlacedObjects; 
+		return m_PlacedObjects.GetValueArray(); 
 	}
 	
 	array<ref EditorHiddenObject> GetDeletedObjects()
