@@ -8,7 +8,7 @@ class EditorControlPlayerCommand: EditorCommand
 			return false;
 		}
 		
-		PlayerBase player = PlayerBase.Cast(data.param1.GetWorldObject());
+		Man player = Man.Cast(data.param1.GetWorldObject());
 		if (!player) {
 			return false;
 		}

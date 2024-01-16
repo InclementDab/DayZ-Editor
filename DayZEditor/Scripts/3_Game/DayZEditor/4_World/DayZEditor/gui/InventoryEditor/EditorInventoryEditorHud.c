@@ -73,7 +73,7 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 		array<EntityAI> items = {};
 		m_Entity.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, items);
 		foreach (EntityAI item: items) {
-			if (item.IsInherited(PlayerBase)) { // yep
+			if (item.IsInherited(Man)) { // yep
 				continue;
 			}
 			
@@ -83,7 +83,7 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 	
 	void OpenInventoryExecute(ButtonCommandArgs args)
 	{
-		PlayerBase player = PlayerBase.Cast(m_Entity);
+		Man player = Man.Cast(m_Entity);
 		// only supporting players, i cba to fuck with car inventories
 		if (!player) {
 			return;

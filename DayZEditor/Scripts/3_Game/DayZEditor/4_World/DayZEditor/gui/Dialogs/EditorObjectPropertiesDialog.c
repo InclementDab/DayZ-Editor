@@ -106,7 +106,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		AddContent(general_group);
 		
 		// All of these bindings are directly on the world object
-		if (editor_object.GetWorldObject().IsInherited(NetworkLightBase)) {			
+		/*if (editor_object.GetWorldObject().IsInherited(NetworkLightBase)) {			
 			GroupPrefab light_group = new GroupPrefab("Light Controls", editor_object.GetWorldObject(), string.Empty);
 			light_group.Insert(new SliderPrefab("Radius", editor_object.GetWorldObject(), "Radius", 0, 1000));
 			light_group.Insert(new CheckBoxPrefab("Cast Shadow", editor_object.GetWorldObject(), "CastShadow"));
@@ -128,9 +128,9 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 
 			light_group.Insert(new SliderPrefab("Spot Light Angle", editor_object.GetWorldObject(), "SpotLightAngle", 0, 180));
 			AddContent(light_group);
-		}
+		}*/
 		
-		if (editor_object.GetWorldObject().IsInherited(NetworkParticleBase)) {
+		/*if (editor_object.GetWorldObject().IsInherited(NetworkParticleBase)) {
 			GroupPrefab particle_group = new GroupPrefab("Particle Controls", editor_object.GetWorldObject(), string.Empty);
 			DropdownListPrefab<int> particle_types = new DropdownListPrefab<int>("Particle Type", editor_object.GetWorldObject(), "ParticleType");
 			
@@ -151,12 +151,12 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			
 			particle_group.Insert(particle_types);
 			AddContent(particle_group);
-		}
+		}*/
 		
-		if (editor_object.GetWorldObject().IsMan()) {
+		/*if (editor_object.GetWorldObject().IsMan()) {
 			GroupPrefab human_group = new GroupPrefab("#STR_EDITOR_HUMAN", editor_object, string.Empty);
 			DropdownListPrefab<int> animations = new DropdownListPrefab<int>("#STR_EDITOR_ANIMATION", editor_object, "CurrentAnimation");
-			map<string, int> emote_list = PlayerBase.GetEmoteList();
+			map<string, int> emote_list = Man.GetEmoteList();
 			foreach (string emote_name, int emote_id: emote_list) {
 				animations[emote_name] = emote_id;
 			}

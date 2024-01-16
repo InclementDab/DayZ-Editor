@@ -1,13 +1,3 @@
-class EditorCameraLight: SpotLightBase
-{
-	void EditorCameraLight()
-	{
-		SetBrightnessTo(10);
-		SetRadiusTo(150);
-		SetSpotLightAngle(100);
-	}
-}
-
 class ScriptedCamera: Camera
 {
 	void OnSelectCamera();
@@ -18,7 +8,7 @@ class EditorCamera: ScriptedCamera
 {
 	static const float TELEPORT_LERP_DISTANCE = 1000;
 	
-	protected EditorCameraLight m_EditorCameraLight;
+	//protected EditorCameraLight m_EditorCameraLight;
 	
 	float FOV = 1;
 	float DOFDistance;
@@ -69,11 +59,11 @@ class EditorCamera: ScriptedCamera
 	void SetLightState(bool state)
 	{
 		if (state) {
-			m_EditorCameraLight = EditorCameraLight.Cast(ScriptedLightBase.CreateLight(EditorCameraLight, GetPosition(), 0.2));
-			m_EditorCameraLight.SetDirection(GetDirection());
-			m_EditorCameraLight.AttachOnObject(this);
+			//m_EditorCameraLight = EditorCameraLight.Cast(ScriptedLightBase.CreateLight(EditorCameraLight, GetPosition(), 0.2));
+			//m_EditorCameraLight.SetDirection(GetDirection());
+			//m_EditorCameraLight.AttachOnObject(this);
 		} else {
-			GetGame().ObjectDelete(m_EditorCameraLight);
+			//GetGame().ObjectDelete(m_EditorCameraLight);
 		}
 	}
 	

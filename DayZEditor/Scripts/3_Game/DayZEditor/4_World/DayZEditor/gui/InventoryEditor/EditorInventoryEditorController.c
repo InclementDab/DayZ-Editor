@@ -129,9 +129,9 @@ class EditorInventoryEditorController: ViewController
 		return slots;
 	}
 	
-	PlayerBase GetEntityAsPlayer()
+	Man GetEntityAsPlayer()
 	{
-		return PlayerBase.Cast(m_Entity);
+		return Man.Cast(m_Entity);
 	}
 	
 	void SetCurrentActiveItem(EntityAI current_item)
@@ -196,7 +196,7 @@ class EditorInventoryEditorController: ViewController
 		
 	void OnAttachmentSlotSelected(EditorInventoryAttachmentSlot attachment_slot)
 	{		
-		PlayerBase player = GetEntityAsPlayer();
+		Man player = GetEntityAsPlayer();
 		
 		// Radio Button Logic
 		for (int i = 0; i < AttachmentSlotCategories.Count(); i++) {
@@ -291,7 +291,7 @@ class EditorInventoryEditorController: ViewController
 	
 	void OnCurrentItemAttachmentSlotSelected(EditorInventoryAttachmentSlot attachment_slot)
 	{		
-		PlayerBase player = GetEntityAsPlayer();
+		Man player = GetEntityAsPlayer();
 		
 		// Radio Button Logic
 		for (int i = 0; i < CurrentItemAttachmentSlotCategories.Count(); i++) {

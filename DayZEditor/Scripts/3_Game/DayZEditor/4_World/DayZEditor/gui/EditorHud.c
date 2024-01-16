@@ -284,7 +284,7 @@ class EditorHud: ScriptView
 			ShowCursor(false);
 		}
 		
-		PlayerBase controlled_player = GetEditor().GetCurrentControlPlayer();
+		Man controlled_player = GetEditor().GetCurrentControlPlayer();
 		Hud hud = GetGame().GetMission().GetHud();
 		hud.ShowHudUI(g_Game.GetProfileOption(EDayZProfilesOptions.HUD) && !show && controlled_player != null);
 		hud.ShowQuickbarUI(g_Game.GetProfileOption(EDayZProfilesOptions.QUICKBAR) && !show && controlled_player != null);
@@ -300,7 +300,7 @@ class EditorHud: ScriptView
 		GetGame().GetUIManager().ShowCursor(state);
 		
 		// If player is active
-		PlayerBase controlled_player = GetEditor().GetCurrentControlPlayer();
+		Man controlled_player = GetEditor().GetCurrentControlPlayer();
 		if (controlled_player) {
 			controlled_player.DisableSimulation(IsCursorVisible());
 		}

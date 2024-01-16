@@ -69,7 +69,7 @@ class EditorObject: SerializableBase
 		
 		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
 			m_TreeItem = new EditorTreeItem(m_DisplayName, ScriptCaller.Create(OnTreeItemSelected));
-			m_EditorHud.GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(m_TreeItem);
+			GetEditor().GetEditorHud().GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(m_TreeItem);
 		}
 		
 		m_Object = GetGame().CreateObjectEx(Type, Transform[3], ECE_LOCAL);
@@ -466,7 +466,7 @@ class EditorObject: SerializableBase
 			}
 			
 			case "Animate": {
-				PlayerBase emote_player = PlayerBase.Cast(m_Object);
+				Man emote_player = Man.Cast(m_Object);
 				if (emote_player) {
 					emote_player.GetEmoteManager().PlayEmote(CurrentAnimation);
 				}

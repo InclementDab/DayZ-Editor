@@ -219,9 +219,9 @@ class Editor: EditorServer
 		}
 	
 		// Statics that belong to Editor / DF
-		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
-		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
-		m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
+		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
+		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
+		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
 			
 		foreach (EditorPlaceableItem placeable_item: m_AllPlaceableItems) {
 			if (!m_PlaceableItems[placeable_item.GetCategory()]) {
@@ -438,7 +438,7 @@ class Editor: EditorServer
 		m_CurrentControl.DisableSimulation(false);
 	}
 	
-	void ControlPlayer(notnull PlayerBase player)
+	void ControlPlayer(notnull Man player)
 	{
 		if (m_CurrentControl) {
 			m_CurrentControl.DisableSimulation(true);
@@ -456,9 +456,9 @@ class Editor: EditorServer
 		return m_CurrentControl;
 	}
 	
-	PlayerBase GetCurrentControlPlayer()
+	Man GetCurrentControlPlayer()
 	{
-		return PlayerBase.Cast(m_CurrentControl);
+		return Man.Cast(m_CurrentControl);
 	}
 	
 	ScriptedCamera GetCurrentControlCamera()
@@ -492,7 +492,7 @@ class Editor: EditorServer
 			}
 		} else {
 			if (input.LocalPress("EditorTeleportPlayerToCursor")) {
-				PlayerBase controlled_player = GetCurrentControlPlayer();
+				Man controlled_player = GetCurrentControlPlayer();
 				if (controlled_player) {
 					set<Object> _();
 					controlled_player.SetPosition(MousePosToRay(_, controlled_player, 3000, 0, false, true));
@@ -504,22 +504,22 @@ class Editor: EditorServer
 					ControlCamera();
 				} else {
 					// if player doesnt exist yet, create one
-					if (!PlayerBase.s_LastControlledPlayer) {
+					/*if (!Man.s_LastControlledPlayer) {
 						vector player_position;
 						if (!DoCursorRaycast(player_position, 100.0)) {
 							player_position = GetCurrentControlCamera().GetPosition();
 							player_position[1] = GetGame().SurfaceY(player_position[0], player_position[2]);
 						}
 						
-						PlayerBase.s_LastControlledPlayer = CreateDefaultCharacter(GetGame().CreateDefaultPlayer(), player_position);
-						if (!PlayerBase.s_LastControlledPlayer) {
+						Man.s_LastControlledPlayer = CreateDefaultCharacter(GetGame().CreateDefaultPlayer(), player_position);
+						if (!Man.s_LastControlledPlayer) {
 							return;
 						}
 						
-						PlayerBase.s_LastControlledPlayer.SetAllowDamage(false);
+						Man.s_LastControlledPlayer.SetAllowDamage(false);
 					}
 					
-					ControlPlayer(PlayerBase.s_LastControlledPlayer);
+					ControlPlayer(Man.s_LastControlledPlayer);*/
 				}
 			}
 		}
@@ -1069,14 +1069,14 @@ class Editor: EditorServer
 		return pos;
 	}
 		
-	static PlayerBase CreateDefaultCharacter(string type, vector position)
+	static Man CreateDefaultCharacter(string type, vector position)
 	{
 		EditorLog.Trace("Editor::CreateDefaultCharacter");
 		if (GetGame().GetPlayer()) {
-			return PlayerBase.Cast(GetGame().GetPlayer());
+			return GetGame().GetPlayer();
 		} 
 
-		PlayerBase player = PlayerBase.Cast(GetGame().CreatePlayer(null, type, position, 0, string.Empty));
+		Man player = Man.Cast(GetGame().CreatePlayer(null, type, position, 0, string.Empty));
 		if (!player) {
 			EditorLog.Error("Failed to create new player, type %1", type);
 			return null;

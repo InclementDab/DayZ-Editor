@@ -370,7 +370,7 @@ class EditorHudController: EditorControllerBase
 			}
 			case "ControlPlayerState": {
 				if (ControlPlayerState) {
-					GetEditor().ControlPlayer(PlayerBase.Cast(GetGame().GetPlayer()));
+					GetEditor().ControlPlayer(GetGame().GetPlayer());
 				} else {
 					GetEditor().ControlCamera();
 				}
