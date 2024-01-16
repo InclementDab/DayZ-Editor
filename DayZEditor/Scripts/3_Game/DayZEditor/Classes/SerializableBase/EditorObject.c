@@ -252,6 +252,7 @@ class EditorObject: SerializableBase
 		serializer.Read(m_Flags);
 		serializer.Read(m_DisplayName);
 		
+		// Object properties
 		serializer.Read(Type);
 		serializer.Read(Transform);		
 		return true;
@@ -397,7 +398,7 @@ class EditorObject: SerializableBase
 		return m_Object;
 	}
 	
-	UUID GetUUID()
+	string GetUUID()
 	{
 		return m_UUID;
 	}
