@@ -29,7 +29,9 @@ class EditorObject: SerializableBase
 	protected ref EditorObjectWorldMarker m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem m_EditorPlacedListItem;*/
 	
+#ifndef SERVER
 	protected ref EditorPointView m_BottomCenter = new EditorPointView();
+#endif
 	
 	protected ref EditorTreeItem m_TreeItem;
 	
@@ -109,8 +111,10 @@ class EditorObject: SerializableBase
 			Shape.CreateMatrix(mat);
 			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
 		}
-		
+
+#ifndef SERVER		
 		m_BottomCenter.Position = GetBasePoint();
+#endif
 		
 		Type = m_Object.GetType();
 		m_Object.GetTransform(Transform);

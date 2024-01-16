@@ -866,11 +866,7 @@ class Editor: EditorServer
 	}
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
-	{
-		if (m_PlacingObjects.Contains(target)) {
-		
-	}
-	
+	{	
 		EditorObject editor_object = EditorObject.CreateNew(target, flags);
 		m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
 		
@@ -881,6 +877,11 @@ class Editor: EditorServer
 		
 		m_EditorHud.GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(editor_object.GetTreeItem());
 		
+		if (m_CurrentOnlineSession) {
+			m_CurrentOnlineSession.SetSynchDirty();
+		}
+	
+	
 		return editor_object;
 	}
 
@@ -899,6 +900,10 @@ class Editor: EditorServer
 			
 			m_PlacedObjects.Insert(editor_object.GetUUID(), editor_object);
 			m_EditorHud.GetTemplateController().PlacementsFolder.GetTemplateController().Children.Insert(editor_object.GetTreeItem());				
+		
+			if (m_CurrentOnlineSession) {
+				m_CurrentOnlineSession.SetSynchDirty();
+			}
 		
 			editor_objects.Insert(editor_object);
 		}
