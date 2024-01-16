@@ -63,7 +63,10 @@ class EditorObject: SerializableBase
 	{
 		m_UUID = uuid;
 		Type = type;
-		Transform = transform;
+		copyarray(Transform, transform);
+		
+		Print(Type);
+		Print(Transform);
 		
 		m_DisplayName = type;
 		
@@ -207,9 +210,7 @@ class EditorObject: SerializableBase
 		serializer.Read(transform);
 		serializer.Read(flags);
 		serializer.Read(display);
-		EditorObject editor_object = new EditorObject(uuid, type, transform, flags);		
-		
-		return editor_object;
+		return new EditorObject(uuid, type, transform, flags);
 	}
 	
 	override void Write(Serializer serializer, int version)
