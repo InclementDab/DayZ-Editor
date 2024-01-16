@@ -55,7 +55,7 @@ class EditorHandData
 
 typedef map<Object, ref EditorHandData> EditorHandMap;
 
-class Editor: DabIsLazyBase
+class Editor: EditorServer
 {
 	/* Private Members */
 	protected Mission m_Mission;
@@ -291,13 +291,13 @@ class Editor: DabIsLazyBase
 	
 	void OnOnlineSyncRecieved(string uuid, EditorOnlineSession session)
 	{
-		if (session.IsMember(GetGame().GetPlayer().GetIdentity())) {
-			m_CurrentOnlineSession = session;
+		if (!session.IsMember(GetGame().GetPlayer().GetIdentity())) {
+			return;
 		}
-
-		m_EditorHud.SetOnlineSession(m_CurrentOnlineSession);
 	
-		m_CurrentOnlineSession.ObjectsList = m_PlacedObjects;
+		m_CurrentOnlineSession = session;
+		m_CurrentOnlineSession.Service = this;
+		m_EditorHud.SetOnlineSession(m_CurrentOnlineSession);	
 	}
 		
 	void OnStatisticsSave()

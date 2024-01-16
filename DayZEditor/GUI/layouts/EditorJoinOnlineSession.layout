@@ -71,7 +71,7 @@ GridSpacerWidgetClass Root {
          vexactsize 1
          scaled 0
          style DayZEditor
-         text "Public"
+         text "Hide Code"
          font "gui/fonts/MetronBook"
          checked 0
         }
@@ -98,7 +98,7 @@ GridSpacerWidgetClass Root {
          hexactsize 0
          vexactsize 1
          scaled 0
-         text "Max Players:"
+         text "Code:"
          font "gui/fonts/MetronBook"
          "exact text" 0
          "size to text h" 0
@@ -106,52 +106,8 @@ GridSpacerWidgetClass Root {
          "text halign" right
          "text valign" center
         }
-        EditBoxWidgetClass PasswordEditBox0 {
-         position 10 10
-         size 0.5 48
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scaled 0
-         text "32"
-         "limit visible" 0
-         "Use default text" 0
-         "exact text" 1
-         font "gui/fonts/MetronBook"
-        }
-       }
-      }
-      GridSpacerWidgetClass GridSpacerWidget0 {
-       ignorepointer 1
-       position 10 10
-       size 1 22
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       scaled 0
-       Rows 1
-       {
-        TextWidgetClass PasswordText {
+        PasswordEditBoxWidgetClass PasswordEditBox0 {
          visible 1
-         ignorepointer 1
-         position 10 10
-         size 0.141 47
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scaled 0
-         text "Password:"
-         font "gui/fonts/MetronBook"
-         "exact text" 0
-         "size to text h" 0
-         "size to text v" 0
-         "text halign" right
-         "text valign" center
-        }
-        PasswordEditBoxWidgetClass PasswordEditBox {
          position 10 10
          size 0.5 48
          hexactpos 1
@@ -159,10 +115,6 @@ GridSpacerWidgetClass Root {
          hexactsize 0
          vexactsize 1
          scaled 0
-         text "test"
-         "limit visible" 0
-         font "gui/fonts/MetronBlack"
-         "hide text" 1
         }
        }
       }
@@ -185,7 +137,7 @@ GridSpacerWidgetClass Root {
      Columns 1
      Rows 2
      {
-      ButtonWidgetClass CreateButton {
+      ButtonWidgetClass JoinButton {
        color 0 0 0 1
        size 0.5 1
        halign center_ref
@@ -198,12 +150,12 @@ GridSpacerWidgetClass Root {
        scriptclass "ViewBinding"
        style Colorable
        "no focus" 1
-       text "Create"
+       text "Join"
        text_proportion 0.55
        font "gui/fonts/MetronBook"
        {
         ScriptParamsClass {
-         Relay_Command "OnCreateExecute"
+         Relay_Command "OnJoinExecute"
         }
        }
       }
@@ -225,7 +177,7 @@ GridSpacerWidgetClass Root {
        font "gui/fonts/MetronBook"
        {
         ScriptParamsClass {
-         Relay_Command "OnjcancelExecute"
+         Relay_Command "OnCancelExecute"
         }
        }
       }
@@ -256,7 +208,7 @@ GridSpacerWidgetClass Root {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     text "Create Session"
+     text "Join Session"
      font "gui/fonts/etelkatextpro22"
      "exact text" 1
      "size to text h" 1

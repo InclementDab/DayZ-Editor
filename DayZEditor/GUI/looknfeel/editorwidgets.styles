@@ -5,13 +5,13 @@
                 <Item Name="CheckBox" Image="checkbox_unchecked" />
             </State>
             <State Name="Highlight">
-                <Item Name="CheckBox" Image="checkbox_checked" />
+                <Item Name="CheckBox" Image="checkbox_unchecked" />
             </State>
             <State Name="Mark">
                 <Item Name="CheckBox" Image="checkbox_checked" />
             </State>
             <State Name="Normal">
-                <Item Name="CheckBox" Image="checkbox_checked" />
+                <Item Name="CheckBox" Image="checkbox_unchecked" />
             </State>
         </Style>
     </Widget>
