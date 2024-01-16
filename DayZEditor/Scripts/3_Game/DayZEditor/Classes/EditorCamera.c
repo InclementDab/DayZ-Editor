@@ -264,6 +264,7 @@ class EditorCamera: ScriptedCamera
 			LookAt(TargetPosition);
 		}
 		
+		
 		if (GetEditor().GetCurrentOnlineSession()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Write(GetPosition());

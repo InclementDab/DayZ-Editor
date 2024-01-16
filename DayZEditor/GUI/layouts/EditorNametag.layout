@@ -1,0 +1,35 @@
+GridSpacerWidgetClass Root {
+ color 0 0 0 1
+ size 236 60
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ style DayZDefaultPanel
+ Padding 0
+ Margin 20
+ "Size To Content H" 1
+ content_halign center
+ content_valign center
+ Columns 1
+ Rows 1
+ {
+  TextWidgetClass Text {
+   inheritalpha 1
+   ignorepointer 1
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   text "InclementDab"
+   font "gui/fonts/MetronBook"
+   "size to text h" 1
+   "size to text v" 1
+   "text halign" center
+   "text valign" center
+  }
+ }
+}
