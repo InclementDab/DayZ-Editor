@@ -222,7 +222,7 @@ class EditorObject: SerializableBase
 	
 	static EditorObject CreateFromSerializer(Serializer serializer)
 	{
-		UUID uuid;
+		string uuid;
 		if (!serializer.Read(uuid)) {
 			return null;
 		}
