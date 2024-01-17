@@ -23,9 +23,11 @@ class EditorHudController: EditorControllerBase
 	float obj_x, obj_y, obj_z;
 		
 	ref ObservableCollection<ref EditorTreeItem> LeftListItems = new ObservableCollection<ref EditorTreeItem>(this);
-	ref ObservableCollection<EditorTreeItem> RightListItems = new ObservableCollection<EditorTreeItem>(this);
-	
-	ref EditorTreeItem PlacementsFolder, DeletionsFolder;
+	ref ObservableCollection<ref EditorTreeItem> RightListItems = new ObservableCollection<ref EditorTreeItem>(this);
+		
+	ref EditorTreeItem PlacementsFolderView, HiddenFolderView;
+	ref EditorPlaceableItemCategory PlacementsFolder = new EditorPlaceableItemCategory("Placed Objects");
+	ref EditorPlaceableItemCategory HiddenFolder = new EditorPlaceableItemCategory("Hidden Objects");
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
@@ -117,12 +119,12 @@ class EditorHudController: EditorControllerBase
 		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
 		
 		float widest_x;
-		map<int, ref array<EditorPlaceableItem>> all_placeable_items = GetDayZGame().GetPlaceableItemsByCategory();
+		map<EditorPlaceableItemCategory, ref array<EditorPlaceableItem>> all_placeable_items = GetDayZGame().GetPlaceableItemsByCategory();
 		foreach (EditorPlaceableItemCategory category, array<EditorPlaceableItem> placeable_items: all_placeable_items) {
-			EditorTreeItem tree_item = new EditorTreeItem(category.GetDisplayName(), null);
+			EditorTreeItem tree_item = new EditorTreeItem(category);
 			
 			foreach (EditorPlaceableItem placeable_item: placeable_items) {
-				tree_item.GetTemplateController().Children.Insert(new EditorPlaceableTreeItem(placeable_item.GetName(), placeable_item));
+				tree_item.GetTemplateController().Children.Insert(new EditorPlaceableTreeItem(placeable_item));
 			}
 			
 			LeftListItems.Insert(tree_item);
@@ -145,10 +147,8 @@ class EditorHudController: EditorControllerBase
 			}
 		}
 		
-		PlacementsFolder = new EditorTreeItem("Placed Objects", null);
-		DeletionsFolder = new EditorTreeItem("Deleted Objects", null);
-		RightListItems.Insert(PlacementsFolder);
-		RightListItems.Insert(DeletionsFolder);
+		RightListItems.Insert(new EditorTreeItem(PlacementsFolder));
+		RightListItems.Insert(new EditorTreeItem(PlacementsFolder));
 		
 		ReloadBrushes(m_Editor.GeneralSettings.EditorBrushFile);
 	}

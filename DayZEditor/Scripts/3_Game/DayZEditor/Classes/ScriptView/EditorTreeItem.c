@@ -15,14 +15,14 @@ class EditorTreeItem: ScriptView
 	
 	protected EditorSelectableBase m_Selectable;
 	
-	void EditorTreeItem(string text, EditorSelectableBase selectable_base)
+	void EditorTreeItem(notnull EditorSelectableBase selectable_base)
 	{
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
-		m_TemplateController.Text = text;
-		m_TemplateController.NotifyPropertyChanged("Text");	
-			
 		m_Selectable = selectable_base;
 		m_Selectable.OnSelectionChanged.Insert(OnSelectionChange);
+		
+		m_TemplateController.Text = m_Selectable.GetDisplayName();
+		m_TemplateController.NotifyPropertyChanged("Text");		
 				
 		ShowChildren(false);
 	}

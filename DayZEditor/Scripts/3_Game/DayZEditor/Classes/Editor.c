@@ -155,6 +155,8 @@ class Editor: Managed
 	
 	// Stored list of all Placed Objects
 	ref map<string, ref EditorObject> m_PlacedObjects = new map<string, ref EditorObject>();
+	
+	ref map<string, ref EditorCategory> m_Caregories = new map<string, ref EditorCategory>();
 		
 	void Editor() 
 	{

@@ -2,7 +2,7 @@ modded class DayZGame
 {
 	protected ref array<ref EditorPlaceableItem> m_AllPlaceableItems = {};
 	
-	protected ref map<int, ref array<EditorPlaceableItem>> m_PlaceableItems = new map<int, ref array<EditorPlaceableItem>>();
+	protected ref map<EditorPlaceableItemCategory, ref array<EditorPlaceableItem>> m_PlaceableItems = new map<EditorPlaceableItemCategory, ref array<EditorPlaceableItem>>();
 	
 	protected ref map<string, EditorPlaceableItem> m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>();
 	
@@ -19,17 +19,20 @@ modded class DayZGame
 		m_loading = new EditorLoadingScreen(this);		
 		m_loading.Show();
 #endif
+	}
 		
+	override bool OnInitialize()
+	{
 		// Loads placeable objects	
 		g_Game.ReportProgress("Loading Placeable Objects");
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 				
 		// handle config objects
 		foreach (string path: config_paths) {
-			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
+			for (int i = 0; i < ConfigGetChildrenCount(path); i++) {
 				string type;
-		        GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
+		        ConfigGetChildName(path, i, type);
+				if (ConfigGetInt(path + " " + type + " scope") < 1) {
 					continue;
 				}
 				
@@ -75,8 +78,10 @@ modded class DayZGame
 			m_PlaceableObjectsByP3d[placeable_item.GetModel()].Insert(placeable_item);
 			m_PlaceableObjectsByType[placeable_item.GetName()] = placeable_item;
 		}
+	
+		return super.OnInitialize();
 	}
-		
+	
 	void ReportProgress(string report)
 	{
 		if (!OnProgressReport) {
@@ -101,7 +106,7 @@ modded class DayZGame
 		return m_PlaceableObjectsByP3d[p3d];
 	}
 
-	map<int, ref array<EditorPlaceableItem>> GetPlaceableItemsByCategory()
+	map<EditorPlaceableItemCategory, ref array<EditorPlaceableItem>> GetPlaceableItemsByCategory()
 	{
 		return m_PlaceableItems;
 	}

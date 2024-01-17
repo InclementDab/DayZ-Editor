@@ -182,7 +182,7 @@ class EditorHud: ScriptView
 	
 	void OnCreateNewFolder(ButtonCommandArgs args)
 	{
-		m_TemplateController.RightListItems.Insert(new EditorTreeItem("New Folder", null));
+		//m_TemplateController.RightListItems.Insert(new EditorTreeItem("New Folder", null));
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
