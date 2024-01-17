@@ -50,17 +50,17 @@ modded class DayZIntroScene
 		switch (m_CurrentHoliday) {
 			case EditorHoliday.CHRISTMAS:
 			case EditorHoliday.NEWYEARS: {
-				m_DSLRCamera = GetGame().CreateObject("DSLRCameraChristmas", m_CharacterPos, true);
+				m_DSLRCamera = GetGame().CreateObject("StaticCameraChristmas", m_CharacterPos, true);
 				break;
 			}
 			
 			case EditorHoliday.ANNIVERSARY: {
-				m_DSLRCamera = GetGame().CreateObject("DSLRCameraAnniversary", m_CharacterPos, true);
+				m_DSLRCamera = GetGame().CreateObject("StaticCameraAnniversary", m_CharacterPos, true);
 				break;
 			}
 			
 			default: {
-				m_DSLRCamera = GetGame().CreateObject("DSLRCamera", m_CharacterPos, true);
+				m_DSLRCamera = GetGame().CreateObject("StaticCamera", m_CharacterPos, true);
 				break;
 			}	
 		}

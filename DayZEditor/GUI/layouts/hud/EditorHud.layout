@@ -14,310 +14,457 @@ FrameWidgetClass EditorFrame {
  draggable 0
  scriptclass ""
  {
-  FrameWidgetClass EditorHudFrame {
-   visible 1
+  CanvasWidgetClass EditorCanvas {
    ignorepointer 1
-   position 0 0
+   position -0.00072 0.001
    size 1 1
    halign center_ref
    valign center_ref
-   hexactpos 1
-   vexactpos 1
+   hexactpos 0
+   vexactpos 0
    hexactsize 0
    vexactsize 0
+   priority 239
+  }
+  PanelWidgetClass Toolbar {
+   ignorepointer 1
+   size 48 48
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+  }
+  FrameWidgetClass Left {
+   clipchildren 0
+   ignorepointer 1
+   position 0 92
+   size 360 350
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
    {
-    CanvasWidgetClass EditorCanvas {
+    PanelWidgetClass LeftColorHeader {
      ignorepointer 1
-     position -0.00072 0.001
-     size 1 1
+     color 1 0.4118 0.4118 1
+     size 1 6
      halign center_ref
-     valign center_ref
-     hexactpos 0
-     vexactpos 0
-     hexactsize 0
-     vexactsize 0
-     priority 239
-    }
-    FrameWidgetClass Left {
-     clipchildren 0
-     ignorepointer 1
-     position 0 92
-     size 360 350
      hexactpos 1
      vexactpos 1
-     hexactsize 1
+     hexactsize 0
      vexactsize 1
      scaled 0
+     style rover_sim_colorable
+    }
+    PanelWidgetClass LeftSearchPanel {
+     visible 1
+     ignorepointer 1
+     color 0.0588 0.0588 0.0588 1
+     position 0 6
+     size 1 26
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
      {
-      PanelWidgetClass LeftColorHeader {
-       ignorepointer 1
-       color 1 0.4118 0.4118 1
-       size 1 6
-       halign center_ref
-       hexactpos 1
+      MultilineEditBoxWidgetClass LeftSearch {
+       visible 1
+       disabled 0
+       ignorepointer 0
+       color 0.7843 0.7843 0.7843 1
+       position 0.09 0
+       size 0.91 18
+       valign center_ref
+       hexactpos 0
        vexactpos 1
        hexactsize 0
        vexactsize 1
        scaled 0
-       style rover_sim_colorable
+       scriptclass ""
+       text "Filter..."
+       font "gui/fonts/sdf_MetronLight24"
+       "exact text" 1
+       "exact text size" 18
+       text_proportion 0.55
+       lines 1
+       "limit visible" 0
       }
-      PanelWidgetClass LeftSearchPanel {
+      ImageWidgetClass LeftSearchIcon {
+       ignorepointer 1
+       color 0.5451 0.698 0.3412 0.6627
+       position 0 0
+       size 0.74 0.724
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       fixaspect inside
+       image0 "set:dayz_gui image:iconBacteria"
+       mode blend
+       "src alpha" 1
+       filter 1
+      }
+     }
+    }
+    ScrollWidgetClass LeftScroll {
+     visible 1
+     ignorepointer 1
+     color 0.0588 0.0588 0.0588 0.8627
+     position 0 32
+     size 1 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     style Colorable
+     "Scrollbar H" 1
+     "Scrollbar V" 1
+     "Scrollbar V Left" 1
+     {
+      WrapSpacerWidgetClass LeftList {
        visible 1
        ignorepointer 1
-       color 0.0588 0.0588 0.0588 1
-       position 0 6
-       size 1 26
-       halign center_ref
+       size 720 1
        hexactpos 1
        vexactpos 1
-       hexactsize 0
-       vexactsize 1
+       hexactsize 1
+       vexactsize 0
        scaled 0
-       style rover_sim_colorable
+       fixaspect inside
+       scriptclass "ViewBinding"
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
        {
-        MultilineEditBoxWidgetClass LeftSearch {
-         visible 1
-         disabled 0
-         ignorepointer 0
-         color 0.7843 0.7843 0.7843 1
-         position 0.09 0
-         size 0.91 18
-         valign center_ref
-         hexactpos 0
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scaled 0
-         scriptclass ""
-         text "Filter..."
-         font "gui/fonts/sdf_MetronLight24"
-         "exact text" 1
-         "exact text size" 18
-         text_proportion 0.55
-         lines 1
-         "limit visible" 0
-        }
-        ImageWidgetClass LeftSearchIcon {
-         ignorepointer 1
-         color 0.5451 0.698 0.3412 0.6627
-         position 0 0
-         size 0.74 0.724
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 1
-         fixaspect inside
-         image0 "set:dayz_gui image:iconBacteria"
-         mode blend
-         "src alpha" 1
-         filter 1
+        ScriptParamsClass {
+         Binding_Name "LeftListItems"
         }
        }
       }
-      ScrollWidgetClass LeftScroll {
+     }
+    }
+    PanelWidgetClass LeftDragZone {
+     ignorepointer 0
+     color 0.1961 0.3922 0.3922 0.502
+     position 0 0
+     size 6 1
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+     style Outline_2px
+    }
+   }
+  }
+  FrameWidgetClass Right {
+   clipchildren 0
+   ignorepointer 1
+   position 0 92
+   size 360 350
+   halign right_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   {
+    PanelWidgetClass RightColorHeader {
+     ignorepointer 1
+     color 1 0.4118 0.4118 1
+     size 1 6
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
+    }
+    PanelWidgetClass RightSearchPanel {
+     visible 1
+     ignorepointer 1
+     color 0.0588 0.0588 0.0588 1
+     position 0 6
+     size 1 26
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
+     {
+      MultilineEditBoxWidgetClass RightSearch {
        visible 1
+       disabled 0
+       ignorepointer 0
+       color 0.7843 0.7843 0.7843 1
+       position 0.09 0
+       size 0.91 18
+       valign center_ref
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scaled 0
+       scriptclass ""
+       text "Filter..."
+       font "gui/fonts/sdf_MetronLight24"
+       "exact text" 1
+       "exact text size" 18
+       text_proportion 0.55
+       lines 1
+       "limit visible" 0
+      }
+      ImageWidgetClass RightSearchIcon {
        ignorepointer 1
-       color 0.0588 0.0588 0.0588 0.8627
-       position 0 32
-       size 1 1
+       color 0.5451 0.698 0.3412 0.6627
+       position 0 0
+       size 0.74 0.724
+       valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 0
        scaled 0
-       style Colorable
-       "Scrollbar H" 1
-       "Scrollbar V" 1
-       "Scrollbar V Left" 1
+       fixaspect inside
+       image0 "set:dayz_gui image:iconBacteria"
+       mode blend
+       "src alpha" 1
+       filter 1
+      }
+     }
+    }
+    ScrollWidgetClass RightScroll {
+     visible 1
+     ignorepointer 1
+     color 0.0588 0.0588 0.0588 0.8627
+     position 0 32
+     size 1 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     style Colorable
+     "Scrollbar H" 1
+     "Scrollbar V" 1
+     "Scrollbar V Left" 1
+     {
+      WrapSpacerWidgetClass RightList {
+       visible 1
+       ignorepointer 1
+       size 720 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       scaled 0
+       fixaspect inside
+       scriptclass "ViewBinding"
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
        {
-        WrapSpacerWidgetClass LeftList {
-         visible 1
-         ignorepointer 1
-         size 720 1
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 0
-         scaled 0
-         fixaspect inside
-         scriptclass "ViewBinding"
-         Padding 0
-         Margin 0
-         "Size To Content H" 1
-         "Size To Content V" 1
-         {
-          ScriptParamsClass {
-           Binding_Name "LeftListItems"
-          }
-         }
+        ScriptParamsClass {
+         Binding_Name "RightListItems"
         }
        }
       }
-      PanelWidgetClass LeftDragZone {
-       ignorepointer 0
-       color 0.1961 0.3922 0.3922 0.502
-       position 0 0
-       size 6 1
+     }
+    }
+    PanelWidgetClass RightFooter {
+     ignorepointer 1
+     color 0.0588 0.0588 0.0588 0.9804
+     position 0 -64
+     size 1 32
+     halign center_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
+     {
+      ButtonWidgetClass NewFolderButton {
+       position 12 0
+       size 28 28
        halign right_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 1
-       vexactsize 0
-       style Outline_2px
-      }
-     }
-    }
-    FrameWidgetClass Right {
-     clipchildren 0
-     ignorepointer 1
-     position 0 92
-     size 360 350
-     halign right_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     {
-      PanelWidgetClass RightColorHeader {
-       ignorepointer 1
-       color 1 0.4118 0.4118 1
-       size 1 6
-       halign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
        vexactsize 1
        scaled 0
-       style rover_sim_colorable
-      }
-      PanelWidgetClass RightSearchPanel {
-       visible 1
-       ignorepointer 1
-       color 0.0588 0.0588 0.0588 1
-       position 0 6
-       size 1 26
-       halign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       scaled 0
-       style rover_sim_colorable
+       scriptclass "ViewBinding"
+       style ButtonColorOnSelect
+       "no focus" 1
        {
-        MultilineEditBoxWidgetClass RightSearch {
-         visible 1
-         disabled 0
-         ignorepointer 0
-         color 0.7843 0.7843 0.7843 1
-         position 0.09 0
-         size 0.91 18
-         valign center_ref
-         hexactpos 0
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scaled 0
-         scriptclass ""
-         text "Filter..."
-         font "gui/fonts/sdf_MetronLight24"
-         "exact text" 1
-         "exact text size" 18
-         text_proportion 0.55
-         lines 1
-         "limit visible" 0
-        }
-        ImageWidgetClass RightSearchIcon {
+        ImageWidgetClass NewFolderButtonIcon {
          ignorepointer 1
-         color 0.5451 0.698 0.3412 0.6627
-         position 0 0
-         size 0.74 0.724
+         size 1 1
+         halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 0
          scaled 0
-         fixaspect inside
-         image0 "set:dayz_gui image:iconBacteria"
-         mode blend
+         scriptclass "ButtonIcon"
+         image0 "set:icons image:folder_plus"
+         mode additive
          "src alpha" 1
-         filter 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "OnCreateNewFolder"
         }
        }
       }
-      ScrollWidgetClass RightScroll {
-       visible 1
+     }
+    }
+    PanelWidgetClass RightDragZone {
+     ignorepointer 0
+     color 0.1961 0.3922 0.3922 0.502
+     size 6 1
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+     scaled 0
+     style Outline_2px
+    }
+   }
+  }
+  PanelWidgetClass NotificationPanel {
+   visible 0
+   ignorepointer 1
+   color 0.2588 0.6863 0.3647 1
+   position 0 70
+   size 1 20
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+   style rover_sim_colorable
+   {
+    TextWidgetClass NotificationText {
+     visible 1
+     ignorepointer 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     scriptclass ""
+     text "NotificationText"
+     font "gui/fonts/metron"
+     "text halign" center
+     "text valign" center
+    }
+   }
+  }
+  PanelWidgetClass ToolbarFrame {
+   visible 0
+   clipchildren 0
+   ignorepointer 1
+   color 0.0588 0.0588 0.0588 0.9804
+   position 0 0
+   size 1 92
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+   scriptclass ""
+   style rover_sim_colorable
+   {
+    PanelWidgetClass Menubar {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     color 0.0588 0.0588 0.0588 1
+     position 0 0
+     size 1 24
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
+     {
+      WrapSpacerWidgetClass MenuBarWrapper {
+       clipchildren 0
        ignorepointer 1
-       color 0.0588 0.0588 0.0588 0.8627
-       position 0 32
+       position 0 0
        size 1 1
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 0
        scaled 0
-       style Colorable
-       "Scrollbar H" 1
-       "Scrollbar V" 1
-       "Scrollbar V Left" 1
+       style Empty
+       Padding 0
+       Margin 0
+       content_valign center
        {
-        WrapSpacerWidgetClass RightList {
-         visible 1
+        ImageWidgetClass ToolbarIcon {
          ignorepointer 1
-         size 720 1
+         position 0 0
+         size 26 26
          hexactpos 1
          vexactpos 1
          hexactsize 1
-         vexactsize 0
+         vexactsize 1
          scaled 0
-         fixaspect inside
-         scriptclass "ViewBinding"
-         Padding 0
-         Margin 0
-         "Size To Content H" 1
-         "Size To Content V" 1
-         {
-          ScriptParamsClass {
-           Binding_Name "RightListItems"
-          }
-         }
+         imageTexture "{1A57E6DE48397D04}DayZEditor/GUI/images/dayz_editor_icon_black.edds"
+         mode blend
+         "src alpha" 1
+         "clamp mode" clamp
+         "stretch mode" stretch_w_h
         }
-       }
-      }
-      PanelWidgetClass RightFooter {
-       ignorepointer 1
-       color 0.0588 0.0588 0.0588 0.9804
-       position 0 -64
-       size 1 32
-       halign center_ref
-       valign bottom_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       scaled 0
-       style rover_sim_colorable
-       {
-        ButtonWidgetClass NewFolderButton {
-         position 12 0
-         size 28 28
-         halign right_ref
+        TextWidgetClass MenuBarFileLabel {
+         ignorepointer 1
+         size 0 0
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
          vexactsize 1
          scaled 0
-         scriptclass "ViewBinding"
-         style ButtonColorOnSelect
-         "no focus" 1
+         text "  #STR_EDITOR_FILE  "
+         font "gui/fonts/sdf_MetronBook24"
+         "exact text" 1
+         "exact text size" 16
+         "size to text h" 1
+         "size to text v" 1
+         "text halign" center
+         "text valign" center
          {
-          ImageWidgetClass NewFolderButtonIcon {
-           ignorepointer 1
+          ButtonWidgetClass MenuBarFile {
+           color 0.749 0.3725 0.3725 1
            size 1 1
            halign center_ref
            valign center_ref
@@ -326,301 +473,1190 @@ FrameWidgetClass EditorFrame {
            hexactsize 0
            vexactsize 0
            scaled 0
-           scriptclass "ButtonIcon"
-           image0 "set:icons image:folder_plus"
-           mode additive
+           scriptclass "ViewBinding"
+           style Default
+           "no focus" 1
+           {
+            ScriptParamsClass {
+             Relay_Command "MenuBarExecute"
+            }
+           }
+          }
+         }
+        }
+        TextWidgetClass MenuBarEditLabel {
+         ignorepointer 1
+         size 0 0
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         text "  #STR_EDITOR_EDIT  "
+         font "gui/fonts/sdf_MetronBook24"
+         "exact text" 1
+         "exact text size" 16
+         "size to text h" 1
+         "size to text v" 1
+         "text halign" center
+         "text valign" center
+         {
+          ButtonWidgetClass MenuBarEdit {
+           color 0.749 0.3725 0.3725 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "ViewBinding"
+           "no focus" 1
+           {
+            ScriptParamsClass {
+             Relay_Command "MenuBarExecute"
+            }
+           }
+          }
+         }
+        }
+        TextWidgetClass MenuBarViewLabel {
+         ignorepointer 1
+         size 0 0
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         text "  #STR_EDITOR_VIEW  "
+         font "gui/fonts/sdf_MetronBook24"
+         "exact text" 1
+         "exact text size" 16
+         "size to text h" 1
+         "size to text v" 1
+         "text halign" center
+         "text valign" center
+         {
+          ButtonWidgetClass MenuBarView {
+           color 0.749 0.3725 0.3725 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "ViewBinding"
+           "no focus" 1
+           {
+            ScriptParamsClass {
+             Relay_Command "MenuBarExecute"
+            }
+           }
+          }
+         }
+        }
+        TextWidgetClass MenuBarEditorLabel {
+         ignorepointer 1
+         size 0 0
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         text "  #STR_EDITOR_EDITOR  "
+         font "gui/fonts/sdf_MetronBook24"
+         "exact text" 1
+         "exact text size" 16
+         "size to text h" 1
+         "size to text v" 1
+         "text halign" center
+         "text valign" center
+         {
+          ButtonWidgetClass MenuBarEditor {
+           color 0.749 0.3725 0.3725 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "ViewBinding"
+           "no focus" 1
+           {
+            ScriptParamsClass {
+             Relay_Command "MenuBarExecute"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    WrapSpacerWidgetClass ToolsWrapper {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     position 0 24
+     size 705 64
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     style Colorable
+     Margin 0
+     {
+      PanelWidgetClass Divider8 {
+       visible 1
+       ignorepointer 1
+       size 19 32
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider9 {
+         ignorepointer 1
+         color 0 0 0 0.5882
+         position 0 0
+         size 0.1 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass Section0 {
+       ignorepointer 1
+       position 0 0
+       size 0 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Rows 1
+       {
+        ButtonWidgetClass NewButton {
+         visible 1
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 33
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text_offset 0 0
+         switch normal
+         {
+          ImageWidgetClass NewButton_Icon {
+           visible 1
+           clipchildren 1
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           draggable 0
+           image0 ""
+           imageTexture "{9D99EDE9BFE0A0F4}DayZEditor/GUI/icons/icon_new2.edds"
+           mode blend
            "src alpha" 1
+           "clamp mode" clamp
+           "stretch mode" stretch_w_h
            filter 0
           }
          }
          {
           ScriptParamsClass {
-           Relay_Command "OnCreateNewFolder"
+           Relay_Command "m_Editor.CommandManager.NewCommand"
           }
          }
         }
-       }
-      }
-      PanelWidgetClass RightDragZone {
-       ignorepointer 0
-       color 0.1961 0.3922 0.3922 0.502
-       size 6 1
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 0
-       scaled 0
-       style Outline_2px
-      }
-     }
-    }
-    PanelWidgetClass NotificationPanel {
-     visible 1
-     ignorepointer 1
-     color 0.2588 0.6863 0.3647 1
-     position 0 70
-     size 1 20
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     scaled 0
-     style rover_sim_colorable
-     {
-      TextWidgetClass NotificationText {
-       visible 1
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 0
-       scriptclass ""
-       text "NotificationText"
-       font "gui/fonts/metron"
-       "text halign" center
-       "text valign" center
-      }
-     }
-    }
-    PanelWidgetClass ToolbarFrame {
-     visible 1
-     clipchildren 0
-     ignorepointer 1
-     color 0.0588 0.0588 0.0588 0.9804
-     position 0 0
-     size 1 92
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     scaled 0
-     scriptclass ""
-     style rover_sim_colorable
-     {
-      PanelWidgetClass Menubar {
-       visible 1
-       clipchildren 0
-       ignorepointer 1
-       color 0.0588 0.0588 0.0588 1
-       position 0 0
-       size 1 24
-       halign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       scaled 0
-       style rover_sim_colorable
-       {
-        WrapSpacerWidgetClass MenuBarWrapper {
+        ButtonWidgetClass OpenButton {
+         visible 1
          clipchildren 0
-         ignorepointer 1
+         color 0.7529 0.3686 0.3255 1
          position 0 0
-         size 1 1
+         size 33 33
+         valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          scaled 0
-         style Empty
-         Padding 0
-         Margin 0
-         content_valign center
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text_offset 0 0
+         switch normal
          {
-          ImageWidgetClass ToolbarIcon {
+          ImageWidgetClass OpenButton_Icon {
+           visible 1
+           inheritalpha 1
            ignorepointer 1
            position 0 0
-           size 26 26
+           size 1 1
+           halign center_ref
+           valign center_ref
            hexactpos 1
            vexactpos 1
-           hexactsize 1
-           vexactsize 1
+           hexactsize 0
+           vexactsize 0
            scaled 0
-           imageTexture "{1A57E6DE48397D04}DayZEditor/GUI/images/dayz_editor_icon_black.edds"
-           mode blend
+           draggable 0
+           image0 ""
+           imageTexture "{F60B1EEFA69CEB68}DayZEditor/GUI/icons/icon_folder.edds"
+           mode additive
            "src alpha" 1
            "clamp mode" clamp
            "stretch mode" stretch_w_h
+           filter 0
           }
-          TextWidgetClass MenuBarFileLabel {
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.OpenCommand"
+          }
+         }
+        }
+        ButtonWidgetClass SaveButton {
+         visible 1
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 33
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text_offset 0 0
+         switch normal
+         {
+          ImageWidgetClass SaveButton_Icon {
+           visible 1
+           inheritalpha 1
            ignorepointer 1
-           size 0 0
+           position 0 0
+           size 1 1
+           halign center_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
-           hexactsize 1
-           vexactsize 1
+           hexactsize 0
+           vexactsize 0
            scaled 0
-           text "  #STR_EDITOR_FILE  "
-           font "gui/fonts/sdf_MetronBook24"
-           "exact text" 1
-           "exact text size" 16
-           "size to text h" 1
-           "size to text v" 1
-           "text halign" center
-           "text valign" center
-           {
-            ButtonWidgetClass MenuBarFile {
-             color 0.749 0.3725 0.3725 1
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             scriptclass "ViewBinding"
-             style Default
-             "no focus" 1
-             {
-              ScriptParamsClass {
-               Relay_Command "MenuBarExecute"
-              }
-             }
-            }
-           }
+           draggable 0
+           image0 ""
+           imageTexture "{5E2BA9CFCF99DFE0}DayZEditor/GUI/icons/icon_save.edds"
+           mode additive
+           "src alpha" 1
+           "clamp mode" clamp
+           "stretch mode" stretch_w_h
+           filter 0
           }
-          TextWidgetClass MenuBarEditLabel {
-           ignorepointer 1
-           size 0 0
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           text "  #STR_EDITOR_EDIT  "
-           font "gui/fonts/sdf_MetronBook24"
-           "exact text" 1
-           "exact text size" 16
-           "size to text h" 1
-           "size to text v" 1
-           "text halign" center
-           "text valign" center
-           {
-            ButtonWidgetClass MenuBarEdit {
-             color 0.749 0.3725 0.3725 1
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             scriptclass "ViewBinding"
-             "no focus" 1
-             {
-              ScriptParamsClass {
-               Relay_Command "MenuBarExecute"
-              }
-             }
-            }
-           }
-          }
-          TextWidgetClass MenuBarViewLabel {
-           ignorepointer 1
-           size 0 0
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           text "  #STR_EDITOR_VIEW  "
-           font "gui/fonts/sdf_MetronBook24"
-           "exact text" 1
-           "exact text size" 16
-           "size to text h" 1
-           "size to text v" 1
-           "text halign" center
-           "text valign" center
-           {
-            ButtonWidgetClass MenuBarView {
-             color 0.749 0.3725 0.3725 1
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             scriptclass "ViewBinding"
-             "no focus" 1
-             {
-              ScriptParamsClass {
-               Relay_Command "MenuBarExecute"
-              }
-             }
-            }
-           }
-          }
-          TextWidgetClass MenuBarEditorLabel {
-           ignorepointer 1
-           size 0 0
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           text "  #STR_EDITOR_EDITOR  "
-           font "gui/fonts/sdf_MetronBook24"
-           "exact text" 1
-           "exact text size" 16
-           "size to text h" 1
-           "size to text v" 1
-           "text halign" center
-           "text valign" center
-           {
-            ButtonWidgetClass MenuBarEditor {
-             color 0.749 0.3725 0.3725 1
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             scriptclass "ViewBinding"
-             "no focus" 1
-             {
-              ScriptParamsClass {
-               Relay_Command "MenuBarExecute"
-              }
-             }
-            }
-           }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.SaveCommand"
           }
          }
         }
        }
       }
-      WrapSpacerWidgetClass ToolsWrapper {
-       visible 1
-       clipchildren 0
+      PanelWidgetClass Divider6 {
        ignorepointer 1
-       position 0 24
-       size 703 64
+       position 0 0
+       size 19 32
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider7 {
+         ignorepointer 1
+         color 0 0 0 0.5882
+         position 0 0
+         size 0.1 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass Section1 {
+       ignorepointer 1
+       position 0 0
+       size 0 32
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
        scaled 0
-       style Colorable
        Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Columns 2
+       Rows 1
        {
-        PanelWidgetClass Divider8 {
+        ButtonWidgetClass UndoButton {
+         visible 1
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         size 33 33
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text_offset 0 0
+         switch normal
+         {
+          ImageWidgetClass UndoButton_Icon {
+           disabled 0
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           draggable 0
+           image0 "set:dayz_editor_gui image:undo"
+           mode additive
+           "src alpha" 1
+           "clamp mode" clamp
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.UndoCommand"
+          }
+         }
+        }
+        ButtonWidgetClass RedoButton {
+         clipchildren 0
+         ignorepointer 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 33
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         switch normal
+         {
+          ImageWidgetClass RedoButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           image0 "set:dayz_editor_gui image:redo"
+           mode additive
+           "src alpha" 1
+           "clamp mode" clamp
+           "flip u" 0
+           filter 0
+           "Transition width" 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.RedoCommand"
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider2 {
+       ignorepointer 1
+       position 0 0
+       size 19 32
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider3 {
+         ignorepointer 1
+         color 0 0 0 0.5882
+         position 0 0
+         size 0.1 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass Section2 {
+       ignorepointer 1
+       position 0 0
+       size 0 0
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Rows 1
+       {
+        ButtonWidgetClass CutButton {
+         disabled 0
+         clipchildren 0
+         ignorepointer 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         font "gui/fonts/Metron"
+         switch normal
+         {
+          ImageWidgetClass CutButton_Icon {
+           visible 1
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           image0 "set:dayz_editor_gui image:cut"
+           mode additive
+           "src alpha" 1
+           "clamp mode" clamp
+           "flip u" 0
+           filter 0
+           "Transition width" 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Debug_Logging 0
+           Relay_Command "m_Editor.CommandManager.CutCommand"
+          }
+         }
+        }
+        ButtonWidgetClass CopyButton {
+         clipchildren 0
+         ignorepointer 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         font "gui/fonts/Metron"
+         switch normal
+         {
+          ImageWidgetClass CopyButton_Icon {
+           visible 1
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass ""
+           image0 "set:dayz_editor_gui image:copy"
+           mode additive
+           "src alpha" 1
+           "clamp mode" clamp
+           "flip u" 1
+           filter 0
+           pivot 0.5 0.5
+           "Transition width" 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Debug_Logging 0
+           Relay_Command "m_Editor.CommandManager.CopyCommand"
+          }
+         }
+        }
+        ButtonWidgetClass PasteButton {
+         clipchildren 0
+         ignorepointer 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         font "gui/fonts/Metron"
+         switch normal
+         {
+          ImageWidgetClass PasteButton_Icon {
+           visible 1
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass ""
+           image0 "set:dayz_editor_gui image:paste"
+           mode additive
+           "src alpha" 1
+           "clamp mode" clamp
+           "flip u" 1
+           filter 0
+           "Transition width" 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Debug_Logging 0
+           Relay_Command "m_Editor.CommandManager.PasteCommand"
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider4 {
+       ignorepointer 1
+       position 0 0
+       size 19 32
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider5 {
+         ignorepointer 1
+         color 0 0 0 0.5882
+         position 0 0
+         size 0.1 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass Section3 {
+       ignorepointer 1
+       position 0 0
+       size 0 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Columns 4
+       Rows 1
+       {
+        ButtonWidgetClass MagnetButton {
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass MagnetButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           priority 1
+           image0 "set:dayz_editor_gui image:magnet"
+           mode blend
+           "src alpha" 1
+           "clamp mode" clamp
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "m_Editor.MagnetMode"
+           Two_Way_Binding 1
+           Relay_Command "m_Editor.CommandManager.MagnetCommand"
+          }
+         }
+        }
+        ButtonWidgetClass GroundButton {
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 32
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass GroundButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           image0 "set:dayz_editor_gui image:ground"
+           mode blend
+           "src alpha" 1
+           "clamp mode" clamp
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "m_Editor.GroundMode"
+           Two_Way_Binding 1
+           Relay_Command "m_Editor.CommandManager.GroundCommand"
+          }
+         }
+        }
+        ButtonWidgetClass SnapButton {
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 32
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass SnapButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           draggable 0
+           image0 "set:dayz_editor_gui image:snapping"
+           mode blend
+           "src alpha" 1
+           "clamp mode" clamp
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "m_Editor.SnappingMode"
+           Two_Way_Binding 1
+           Relay_Command "m_Editor.CommandManager.SnapCommand"
+          }
+         }
+        }
+        ButtonWidgetClass CollisionButton {
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 32
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass CollisionButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           draggable 0
+           scriptclass ""
+           image0 "set:dayz_editor_gui image:collision"
+           mode blend
+           "src alpha" 1
+           "clamp mode" clamp
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "m_Editor.CollisionMode"
+           Two_Way_Binding 1
+           Relay_Command "m_Editor.CommandManager.CollisionCommand"
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider0 {
+       ignorepointer 1
+       position 0 0
+       size 19 32
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider1 {
+         ignorepointer 1
+         color 0 0 0 0.5882
+         position 0 0
+         size 0.1 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass Section5 {
+       ignorepointer 1
+       position 0 0
+       size 0 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Columns 2
+       Rows 1
+       {
+        ButtonWidgetClass CameraLightButton {
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         font "gui/fonts/metron-bold"
+         switch toggle
+         {
+          ImageWidgetClass CameraLightButton_Icon {
+           inheritalpha 1
+           ignorepointer 1
+           position 0 0
+           size 29 29
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scaled 0
+           priority 1
+           image0 "set:dayz_gui image:icon_sun"
+           mode blend
+           "src alpha" 1
+           "clamp mode" clamp
+           filter 1
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "m_Editor.CameraLight"
+           Two_Way_Binding 1
+           Relay_Command "m_Editor.CommandManager.CameraToggleLight"
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider12 {
+       ignorepointer 1
+       position 0 0
+       size 19 32
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider13 {
+         ignorepointer 1
+         color 0 0 0 0.5882
+         position 0 0
+         size 0.1 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass OnlineButtons0 {
+       ignorepointer 1
+       position 0 0
+       size 32 29
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 4
+       Rows 1
+       {
+        ButtonWidgetClass DiscordButton {
+         position 0 0
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         {
+          ImageWidgetClass "DiscordButton.Icon" {
+           ignorepointer 1
+           size 0.8 0.8
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           image0 "set:icons image:discord"
+           mode blend
+           "src alpha" 1
+           "stretch mode" invalid
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "OnDiscordButtonExecute"
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider10 {
+       ignorepointer 1
+       position 0 0
+       size 19 32
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider11 {
+         ignorepointer 1
+         color 0 0 0 0.5882
+         position 0 0
+         size 0.1 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass OnlineButtons {
+       ignorepointer 1
+       position 0 0
+       size 32 29
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 4
+       Rows 1
+       {
+        ButtonWidgetClass CreateSessionButton {
+         position 0 0
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text "C"
+         {
+          ScriptParamsClass {
+           Relay_Command "OnCreateSessionExecute"
+          }
+         }
+        }
+        ButtonWidgetClass JoinSessionButton {
+         position 0 0
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text "J"
+         {
+          ScriptParamsClass {
+           Relay_Command "OnJoinSessionExecute"
+          }
+         }
+        }
+        ButtonWidgetClass CopySessionButton {
+         position 0 0
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text "S"
+         {
+          ScriptParamsClass {
+           Relay_Command "OnCopySessionExecute"
+          }
+         }
+        }
+        ButtonWidgetClass LeaveSessionButton {
+         position 0 0
+         size 32 32
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text "X"
+         {
+          ScriptParamsClass {
+           Relay_Command "OnLeaveSessionExecute"
+          }
+         }
+        }
+       }
+      }
+      GridSpacerWidgetClass BrushFrame {
+       ignorepointer 1
+       position 0 0
+       size 530 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Columns 4
+       Rows 1
+       {
+        PanelWidgetClass Divider14 {
          visible 1
          ignorepointer 1
          size 19 32
@@ -632,7 +1668,7 @@ FrameWidgetClass EditorFrame {
          vexactsize 1
          scaled 0
          {
-          PanelWidgetClass Divider9 {
+          PanelWidgetClass Divider15 {
            ignorepointer 1
            color 0 0 0 0.5882
            position 0 0
@@ -648,317 +1684,32 @@ FrameWidgetClass EditorFrame {
           }
          }
         }
-        GridSpacerWidgetClass Section0 {
-         ignorepointer 1
+        XComboBoxWidgetClass BrushTypeBox {
+         visible 1
+         clipchildren 1
+         ignorepointer 0
          position 0 0
-         size 0 32
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scaled 0
-         Margin 0
-         "Size To Content H" 1
-         "Size To Content V" 1
-         content_halign center
-         content_valign center
-         Rows 1
-         {
-          ButtonWidgetClass NewButton {
-           visible 1
-           clipchildren 0
-           color 0.7529 0.3686 0.3255 1
-           position 0 0
-           size 33 33
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           text_offset 0 0
-           switch normal
-           {
-            ImageWidgetClass NewButton_Icon {
-             visible 1
-             clipchildren 1
-             inheritalpha 1
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             draggable 0
-             image0 ""
-             imageTexture "{9D99EDE9BFE0A0F4}DayZEditor/GUI/icons/icon_new2.edds"
-             mode blend
-             "src alpha" 1
-             "clamp mode" clamp
-             "stretch mode" stretch_w_h
-             filter 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Relay_Command "m_Editor.CommandManager.NewCommand"
-            }
-           }
-          }
-          ButtonWidgetClass OpenButton {
-           visible 1
-           clipchildren 0
-           color 0.7529 0.3686 0.3255 1
-           position 0 0
-           size 33 33
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           text_offset 0 0
-           switch normal
-           {
-            ImageWidgetClass OpenButton_Icon {
-             visible 1
-             inheritalpha 1
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             draggable 0
-             image0 ""
-             imageTexture "{F60B1EEFA69CEB68}DayZEditor/GUI/icons/icon_folder.edds"
-             mode additive
-             "src alpha" 1
-             "clamp mode" clamp
-             "stretch mode" stretch_w_h
-             filter 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Relay_Command "m_Editor.CommandManager.OpenCommand"
-            }
-           }
-          }
-          ButtonWidgetClass SaveButton {
-           visible 1
-           clipchildren 0
-           color 0.7529 0.3686 0.3255 1
-           position 0 0
-           size 33 33
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           text_offset 0 0
-           switch normal
-           {
-            ImageWidgetClass SaveButton_Icon {
-             visible 1
-             inheritalpha 1
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             draggable 0
-             image0 ""
-             imageTexture "{5E2BA9CFCF99DFE0}DayZEditor/GUI/icons/icon_save.edds"
-             mode additive
-             "src alpha" 1
-             "clamp mode" clamp
-             "stretch mode" stretch_w_h
-             filter 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Relay_Command "m_Editor.CommandManager.SaveCommand"
-            }
-           }
-          }
-         }
-        }
-        PanelWidgetClass Divider6 {
-         ignorepointer 1
-         position 0 0
-         size 19 32
+         size 250 32
          halign center_ref
-         valign center_ref
+         valign bottom_ref
          hexactpos 0
          vexactpos 0
          hexactsize 1
          vexactsize 1
          scaled 0
+         draggable 0
+         scriptclass "ViewBinding"
+         style debugUI
+         "no focus" 0
+         font "gui/fonts/etelkatextpro"
          {
-          PanelWidgetClass Divider7 {
-           ignorepointer 1
-           color 0 0 0 0.5882
-           position 0 0
-           size 0.1 0.6
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           style rover_sim_colorable
-          }
-         }
-        }
-        GridSpacerWidgetClass Section1 {
-         ignorepointer 1
-         position 0 0
-         size 0 32
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scaled 0
-         Margin 0
-         "Size To Content H" 1
-         "Size To Content V" 1
-         content_halign center
-         content_valign center
-         Columns 2
-         Rows 1
-         {
-          ButtonWidgetClass UndoButton {
+          ButtonWidgetClass BrushToggleButton {
            visible 1
-           clipchildren 0
-           color 0.7529 0.3686 0.3255 1
-           size 33 33
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           text_offset 0 0
-           switch normal
-           {
-            ImageWidgetClass UndoButton_Icon {
-             disabled 0
-             inheritalpha 1
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             draggable 0
-             image0 "set:dayz_editor_gui image:undo"
-             mode additive
-             "src alpha" 1
-             "clamp mode" clamp
-             filter 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Relay_Command "m_Editor.CommandManager.UndoCommand"
-            }
-           }
-          }
-          ButtonWidgetClass RedoButton {
-           clipchildren 0
+           clipchildren 1
            ignorepointer 0
            color 0.7529 0.3686 0.3255 1
            position 0 0
-           size 33 33
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           switch normal
-           {
-            ImageWidgetClass RedoButton_Icon {
-             inheritalpha 1
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             image0 "set:dayz_editor_gui image:redo"
-             mode additive
-             "src alpha" 1
-             "clamp mode" clamp
-             "flip u" 0
-             filter 0
-             "Transition width" 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Relay_Command "m_Editor.CommandManager.RedoCommand"
-            }
-           }
-          }
-         }
-        }
-        PanelWidgetClass Divider2 {
-         ignorepointer 1
-         position 0 0
-         size 19 32
-         halign center_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scaled 0
-         {
-          PanelWidgetClass Divider3 {
-           ignorepointer 1
-           color 0 0 0 0.5882
-           position 0 0
-           size 0.1 0.6
+           size 0.74 0.93
            halign center_ref
            valign center_ref
            hexactpos 0
@@ -966,890 +1717,478 @@ FrameWidgetClass EditorFrame {
            hexactsize 0
            vexactsize 0
            scaled 0
-           style rover_sim_colorable
+           priority 5
+           scriptclass "ViewBinding"
+           style Default
+           "no focus" 1
+           text_offset 0 0
+           switch toggle
+           {
+            TextWidgetClass BrushToggleButtonText {
+             visible 0
+             ignorepointer 1
+             color 0 1 1 0
+             position 0 0
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             scriptclass "ViewBinding"
+             font "gui/fonts/etelkatextpro"
+             "size to text h" 0
+             "size to text v" 0
+             "text halign" center
+             "text valign" center
+             {
+              ScriptParamsClass {
+               Binding_Name "BrushToggleButtonText"
+              }
+             }
+            }
+           }
+           {
+            ScriptParamsClass {
+             Binding_Name "BrushToggleButtonState"
+             Two_Way_Binding 1
+             Relay_Command "m_Editor.CommandManager.BrushToggleCommand"
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "BrushTypeBoxData"
+           Selected_Item "BrushTypeSelection"
           }
          }
         }
-        GridSpacerWidgetClass Section2 {
+        FrameWidgetClass BrushRadiusFrame {
+         visible 1
+         disabled 0
+         clipchildren 0
          ignorepointer 1
          position 0 0
-         size 0 0
+         size 140 28
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         {
+          SliderWidgetClass BrushRadiusSlider {
+           visible 1
+           color 1 1 1 0.1961
+           size 0.857 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "ViewBinding"
+           current 20
+           "fill in" 1
+           "listen to input" 1
+           {
+            ScriptParamsClass {
+             Binding_Name "BrushRadius"
+             Two_Way_Binding 1
+             Relay_Command "m_Editor.CommandManager.BrushRadiusCommand"
+            }
+           }
+          }
+          TextWidgetClass BrushRadiusText {
+           visible 1
+           ignorepointer 1
+           size 0.4 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "ViewBinding"
+           text "0"
+           font "gui/fonts/metron"
+           "text halign" center
+           "text valign" center
+           {
+            ScriptParamsClass {
+             Binding_Name "BrushRadius"
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.BrushRadiusCommand"
+          }
+         }
+        }
+        PanelWidgetClass BrushDensityFrame {
+         visible 1
+         ignorepointer 1
+         position 0 0
+         size 140 28
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "ViewBinding"
+         {
+          SliderWidgetClass BrushDensitySlider {
+           visible 1
+           color 1 1 1 0.1961
+           position 0 0
+           size 0.857 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "ViewBinding"
+           maximum 1
+           step 0.01
+           current 0.25
+           "fill in" 1
+           "listen to input" 1
+           {
+            ScriptParamsClass {
+             Binding_Name "BrushDensity"
+             Two_Way_Binding 1
+             Relay_Command "m_Editor.CommandManager.BrushDensityCommand"
+            }
+           }
+          }
+          TextWidgetClass BrushDensityText {
+           visible 1
+           ignorepointer 1
+           position 0 0
+           size 0.4 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "ViewBinding"
+           text "0"
+           font "gui/fonts/metron"
+           "text halign" center
+           "text valign" center
+           {
+            ScriptParamsClass {
+             Binding_Name "BrushDensity"
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.BrushDensityCommand"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass InfobarFrame {
+   visible 0
+   disabled 0
+   clipchildren 1
+   ignorepointer 1
+   color 0.0588 0.0588 0.0588 1
+   position 0 0
+   size 1 18
+   halign right_ref
+   valign bottom_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+   priority 1
+   style rover_sim_colorable
+   {
+    WrapSpacerWidgetClass InfobarWrapper {
+     clipchildren 1
+     ignorepointer 1
+     position 0 1
+     size 1 18
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     content_halign right
+     content_valign bottom
+     {
+      FrameWidgetClass NotificationFrame {
+       visible 1
+       ignorepointer 1
+       position 0 0.03
+       size 1 0.06
+       halign center_ref
+       hexactpos 1
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+      }
+      FrameWidgetClass CameraTextVectorSpacer {
+       ignorepointer 1
+       position 0 0
+       size 4 18
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+      }
+      FrameWidgetClass InfobarCamPosFrame {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 0.147 18
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 1
+       {
+        WrapSpacerWidgetClass InfoBarVectorWrapSpacer {
+         clipchildren 0
+         ignorepointer 1
+         position -2 1.5
+         size 1 16
+         halign right_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 0
-         scaled 0
-         Margin 0
-         "Size To Content H" 1
-         "Size To Content V" 1
-         content_halign center
-         content_valign center
-         Rows 1
-         {
-          ButtonWidgetClass CutButton {
-           disabled 0
-           clipchildren 0
-           ignorepointer 0
-           color 0.7529 0.3686 0.3255 1
-           position 0 0
-           size 33 32
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           font "gui/fonts/Metron"
-           switch normal
-           {
-            ImageWidgetClass CutButton_Icon {
-             visible 1
-             inheritalpha 1
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             image0 "set:dayz_editor_gui image:cut"
-             mode additive
-             "src alpha" 1
-             "clamp mode" clamp
-             "flip u" 0
-             filter 0
-             "Transition width" 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Debug_Logging 0
-             Relay_Command "m_Editor.CommandManager.CutCommand"
-            }
-           }
-          }
-          ButtonWidgetClass CopyButton {
-           clipchildren 0
-           ignorepointer 0
-           color 0.7529 0.3686 0.3255 1
-           position 0 0
-           size 33 32
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           font "gui/fonts/Metron"
-           switch normal
-           {
-            ImageWidgetClass CopyButton_Icon {
-             visible 1
-             inheritalpha 1
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             scriptclass ""
-             image0 "set:dayz_editor_gui image:copy"
-             mode additive
-             "src alpha" 1
-             "clamp mode" clamp
-             "flip u" 1
-             filter 0
-             pivot 0.5 0.5
-             "Transition width" 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Debug_Logging 0
-             Relay_Command "m_Editor.CommandManager.CopyCommand"
-            }
-           }
-          }
-          ButtonWidgetClass PasteButton {
-           clipchildren 0
-           ignorepointer 0
-           color 0.7529 0.3686 0.3255 1
-           position 0 0
-           size 33 32
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           font "gui/fonts/Metron"
-           switch normal
-           {
-            ImageWidgetClass PasteButton_Icon {
-             visible 1
-             inheritalpha 1
-             ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             scriptclass ""
-             image0 "set:dayz_editor_gui image:paste"
-             mode additive
-             "src alpha" 1
-             "clamp mode" clamp
-             "flip u" 1
-             filter 0
-             "Transition width" 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Debug_Logging 0
-             Relay_Command "m_Editor.CommandManager.PasteCommand"
-            }
-           }
-          }
-         }
-        }
-        PanelWidgetClass Divider4 {
-         ignorepointer 1
-         position 0 0
-         size 19 32
-         halign center_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
          vexactsize 1
-         scaled 0
+         style Empty
+         Margin 0
          {
-          PanelWidgetClass Divider5 {
+          PanelWidgetClass InfoBarCam_X_Main {
            ignorepointer 1
-           color 0 0 0 0.5882
-           position 0 0
-           size 0.1 0.6
-           halign center_ref
+           color 1 1 1 0.9412
+           size 0.32 1
            valign center_ref
            hexactpos 0
            vexactpos 0
            hexactsize 0
            vexactsize 0
-           scaled 0
-           style rover_sim_colorable
-          }
-         }
-        }
-        GridSpacerWidgetClass Section3 {
-         ignorepointer 1
-         position 0 0
-         size 0 32
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scaled 0
-         Margin 0
-         "Size To Content H" 1
-         "Size To Content V" 1
-         content_halign center
-         content_valign center
-         Columns 4
-         Rows 1
-         {
-          ButtonWidgetClass MagnetButton {
-           clipchildren 0
-           color 0.7529 0.3686 0.3255 1
-           position 0 0
-           size 33 32
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           font "gui/fonts/metron-bold"
-           switch toggle
+           style blank
            {
-            ImageWidgetClass MagnetButton_Icon {
-             inheritalpha 1
+            PanelWidgetClass InfoBar_X_Background {
+             clipchildren 1
              ignorepointer 1
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             priority 1
-             image0 "set:dayz_editor_gui image:magnet"
-             mode blend
-             "src alpha" 1
-             "clamp mode" clamp
-             filter 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Binding_Name "m_Editor.MagnetMode"
-             Two_Way_Binding 1
-             Relay_Command "m_Editor.CommandManager.MagnetCommand"
-            }
-           }
-          }
-          ButtonWidgetClass GroundButton {
-           clipchildren 0
-           color 0.7529 0.3686 0.3255 1
-           position 0 0
-           size 33 32
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           font "gui/fonts/metron-bold"
-           switch toggle
-           {
-            ImageWidgetClass GroundButton_Icon {
-             inheritalpha 1
-             ignorepointer 1
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             image0 "set:dayz_editor_gui image:ground"
-             mode blend
-             "src alpha" 1
-             "clamp mode" clamp
-             filter 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Binding_Name "m_Editor.GroundMode"
-             Two_Way_Binding 1
-             Relay_Command "m_Editor.CommandManager.GroundCommand"
-            }
-           }
-          }
-          ButtonWidgetClass SnapButton {
-           clipchildren 0
-           color 0.7529 0.3686 0.3255 1
-           position 0 0
-           size 33 32
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           font "gui/fonts/metron-bold"
-           switch toggle
-           {
-            ImageWidgetClass SnapButton_Icon {
-             inheritalpha 1
-             ignorepointer 1
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             draggable 0
-             image0 "set:dayz_editor_gui image:snapping"
-             mode blend
-             "src alpha" 1
-             "clamp mode" clamp
-             filter 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Binding_Name "m_Editor.SnappingMode"
-             Two_Way_Binding 1
-             Relay_Command "m_Editor.CommandManager.SnapCommand"
-            }
-           }
-          }
-          ButtonWidgetClass CollisionButton {
-           clipchildren 0
-           color 0.7529 0.3686 0.3255 1
-           position 0 0
-           size 33 32
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           font "gui/fonts/metron-bold"
-           switch toggle
-           {
-            ImageWidgetClass CollisionButton_Icon {
-             inheritalpha 1
-             ignorepointer 1
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             draggable 0
-             scriptclass ""
-             image0 "set:dayz_editor_gui image:collision"
-             mode blend
-             "src alpha" 1
-             "clamp mode" clamp
-             filter 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Binding_Name "m_Editor.CollisionMode"
-             Two_Way_Binding 1
-             Relay_Command "m_Editor.CommandManager.CollisionCommand"
-            }
-           }
-          }
-         }
-        }
-        PanelWidgetClass Divider0 {
-         ignorepointer 1
-         position 0 0
-         size 19 32
-         halign center_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scaled 0
-         {
-          PanelWidgetClass Divider1 {
-           ignorepointer 1
-           color 0 0 0 0.5882
-           position 0 0
-           size 0.1 0.6
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           style rover_sim_colorable
-          }
-         }
-        }
-        GridSpacerWidgetClass Section5 {
-         ignorepointer 1
-         position 0 0
-         size 0 32
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scaled 0
-         Margin 0
-         "Size To Content H" 1
-         "Size To Content V" 1
-         content_halign center
-         content_valign center
-         Columns 2
-         Rows 1
-         {
-          ButtonWidgetClass CameraLightButton {
-           clipchildren 0
-           color 0.7529 0.3686 0.3255 1
-           position 0 0
-           size 33 32
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           font "gui/fonts/metron-bold"
-           switch toggle
-           {
-            ImageWidgetClass CameraLightButton_Icon {
-             inheritalpha 1
-             ignorepointer 1
-             position 0 0
-             size 29 29
-             halign center_ref
+             color 0.7647 0.1804 0.102 1
+             position 1 0
+             size 16 14
              valign center_ref
              hexactpos 1
              vexactpos 1
              hexactsize 1
              vexactsize 1
-             scaled 0
-             priority 1
-             image0 "set:dayz_gui image:icon_sun"
-             mode blend
-             "src alpha" 1
-             "clamp mode" clamp
-             filter 1
-            }
-           }
-           {
-            ScriptParamsClass {
-             Binding_Name "m_Editor.CameraLight"
-             Two_Way_Binding 1
-             Relay_Command "m_Editor.CommandManager.CameraToggleLight"
-            }
-           }
-          }
-         }
-        }
-        PanelWidgetClass Divider12 {
-         ignorepointer 1
-         position 0 0
-         size 19 32
-         halign center_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scaled 0
-         {
-          PanelWidgetClass Divider13 {
-           ignorepointer 1
-           color 0 0 0 0.5882
-           position 0 0
-           size 0.1 0.6
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           style rover_sim_colorable
-          }
-         }
-        }
-        PanelWidgetClass Divider10 {
-         ignorepointer 1
-         position 0 0
-         size 19 32
-         halign center_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scaled 0
-         {
-          PanelWidgetClass Divider11 {
-           ignorepointer 1
-           color 0 0 0 0.5882
-           position 0 0
-           size 0.1 0.6
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           style rover_sim_colorable
-          }
-         }
-        }
-        GridSpacerWidgetClass OnlineButtons {
-         ignorepointer 1
-         position 0 0
-         size 32 29
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         Padding 0
-         Margin 0
-         "Size To Content H" 1
-         "Size To Content V" 1
-         Columns 4
-         Rows 1
-         {
-          ButtonWidgetClass CreateSessionButton {
-           position 0 0
-           size 32 32
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           text "C"
-           {
-            ScriptParamsClass {
-             Relay_Command "OnCreateSessionExecute"
-            }
-           }
-          }
-          ButtonWidgetClass JoinSessionButton {
-           position 0 0
-           size 32 32
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           text "J"
-           {
-            ScriptParamsClass {
-             Relay_Command "OnJoinSessionExecute"
-            }
-           }
-          }
-          ButtonWidgetClass CopySessionButton {
-           position 0 0
-           size 32 32
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           text "S"
-           {
-            ScriptParamsClass {
-             Relay_Command "OnCopySessionExecute"
-            }
-           }
-          }
-          ButtonWidgetClass LeaveSessionButton {
-           position 0 0
-           size 32 32
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
-           style Default
-           "no focus" 1
-           text "X"
-           {
-            ScriptParamsClass {
-             Relay_Command "OnLeaveSessionExecute"
-            }
-           }
-          }
-         }
-        }
-        GridSpacerWidgetClass BrushFrame {
-         ignorepointer 1
-         position 0 0
-         size 530 32
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         Padding 0
-         Margin 0
-         "Size To Content H" 1
-         "Size To Content V" 1
-         content_halign center
-         content_valign center
-         Columns 4
-         Rows 1
-         {
-          PanelWidgetClass Divider14 {
-           visible 1
-           ignorepointer 1
-           size 19 32
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           {
-            PanelWidgetClass Divider15 {
-             ignorepointer 1
-             color 0 0 0 0.5882
-             position 0 0
-             size 0.1 0.6
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
              style rover_sim_colorable
-            }
-           }
-          }
-          XComboBoxWidgetClass BrushTypeBox {
-           visible 1
-           clipchildren 1
-           ignorepointer 0
-           position 0 0
-           size 250 32
-           halign center_ref
-           valign bottom_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           draggable 0
-           scriptclass "ViewBinding"
-           style debugUI
-           "no focus" 0
-           font "gui/fonts/etelkatextpro"
-           {
-            ButtonWidgetClass BrushToggleButton {
-             visible 1
-             clipchildren 1
-             ignorepointer 0
-             color 0.7529 0.3686 0.3255 1
-             position 0 0
-             size 0.74 0.93
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             priority 5
-             scriptclass "ViewBinding"
-             style Default
-             "no focus" 1
-             text_offset 0 0
-             switch toggle
              {
-              TextWidgetClass BrushToggleButtonText {
-               visible 0
+              TextWidgetClass InfoBar_X_Label {
                ignorepointer 1
-               color 0 1 1 0
                position 0 0
-               size 1 1
-               halign center_ref
+               size 16 16
+               halign right_ref
                valign center_ref
-               hexactpos 0
-               vexactpos 0
-               hexactsize 0
-               vexactsize 0
-               scaled 0
-               scriptclass "ViewBinding"
-               font "gui/fonts/etelkatextpro"
-               "size to text h" 0
-               "size to text v" 0
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text "X"
                "text halign" center
                "text valign" center
-               {
-                ScriptParamsClass {
-                 Binding_Name "BrushToggleButtonText"
-                }
-               }
-              }
-             }
-             {
-              ScriptParamsClass {
-               Binding_Name "BrushToggleButtonState"
-               Two_Way_Binding 1
-               Relay_Command "m_Editor.CommandManager.BrushToggleCommand"
               }
              }
             }
-           }
-           {
-            ScriptParamsClass {
-             Binding_Name "BrushTypeBoxData"
-             Selected_Item "BrushTypeSelection"
+            EditBoxWidgetClass InfoBar_X_Value {
+             inheritalpha 0
+             position -2 -1
+             size 0.8 16
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scriptclass "ViewBinding"
+             style ServerBrowser
+             "limit visible" 0
+             {
+              ScriptParamsClass {
+               Binding_Name "cam_x"
+               Two_Way_Binding 1
+              }
+             }
             }
            }
           }
-          FrameWidgetClass BrushRadiusFrame {
-           visible 1
-           disabled 0
-           clipchildren 0
+          FrameWidgetClass x_y_spacer {
            ignorepointer 1
            position 0 0
-           size 140 28
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
+           size 0 0.9
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+          }
+          PanelWidgetClass InfoBarCam_Y_Main {
+           ignorepointer 1
+           color 1 1 1 0.9412
+           position 0 0
+           size 0.32 1
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style blank
            {
-            SliderWidgetClass BrushRadiusSlider {
-             visible 1
-             color 1 1 1 0.1961
-             size 0.857 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             scriptclass "ViewBinding"
-             current 20
-             "fill in" 1
-             "listen to input" 1
-             {
-              ScriptParamsClass {
-               Binding_Name "BrushRadius"
-               Two_Way_Binding 1
-               Relay_Command "m_Editor.CommandManager.BrushRadiusCommand"
-              }
-             }
-            }
-            TextWidgetClass BrushRadiusText {
-             visible 1
+            PanelWidgetClass InfoBar_Y_Background {
+             clipchildren 1
              ignorepointer 1
-             size 0.4 1
-             halign center_ref
+             color 0.6157 0.8157 0.2196 1
+             position 1 0
+             size 16 14
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             style rover_sim_colorable
+             {
+              TextWidgetClass InfoBar_Y_Label {
+               ignorepointer 1
+               position 1 0
+               size 16 16
+               halign right_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text "Y"
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+            EditBoxWidgetClass InfoBar_Y_Value {
+             inheritalpha 0
+             position -2 -1
+             size 0.8 16
+             halign right_ref
              valign center_ref
              hexactpos 1
              vexactpos 1
              hexactsize 0
-             vexactsize 0
-             scaled 0
+             vexactsize 1
              scriptclass "ViewBinding"
-             text "0"
-             font "gui/fonts/metron"
-             "text halign" center
-             "text valign" center
+             style ServerBrowser
+             "limit visible" 0
              {
               ScriptParamsClass {
-               Binding_Name "BrushRadius"
+               Binding_Name "cam_y"
+               Two_Way_Binding 1
               }
              }
-            }
-           }
-           {
-            ScriptParamsClass {
-             Relay_Command "m_Editor.CommandManager.BrushRadiusCommand"
             }
            }
           }
-          PanelWidgetClass BrushDensityFrame {
-           visible 1
+          FrameWidgetClass y_z_spacer {
            ignorepointer 1
+           size 0 0.9
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+          }
+          PanelWidgetClass InfoBarCam_Z_Main {
+           ignorepointer 1
+           color 1 1 1 0.9412
            position 0 0
-           size 140 28
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scaled 0
-           scriptclass "ViewBinding"
+           size 0.32 1
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           style blank
            {
-            SliderWidgetClass BrushDensitySlider {
-             visible 1
-             color 1 1 1 0.1961
-             position 0 0
-             size 0.857 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             scriptclass "ViewBinding"
-             maximum 1
-             step 0.01
-             current 0.25
-             "fill in" 1
-             "listen to input" 1
-             {
-              ScriptParamsClass {
-               Binding_Name "BrushDensity"
-               Two_Way_Binding 1
-               Relay_Command "m_Editor.CommandManager.BrushDensityCommand"
-              }
-             }
-            }
-            TextWidgetClass BrushDensityText {
-             visible 1
+            PanelWidgetClass InfoBar_Z_Background {
+             clipchildren 1
              ignorepointer 1
-             position 0 0
-             size 0.4 1
-             halign center_ref
+             color 0.2588 0.4824 0.9176 1
+             position 1 0
+             size 16 14
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             style rover_sim_colorable
+             {
+              TextWidgetClass InfoBar_Z_Label {
+               ignorepointer 1
+               position 0 0
+               size 16 17
+               halign right_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text "Z"
+               "text halign" center
+               "text valign" center
+              }
+             }
+            }
+            EditBoxWidgetClass InfoBar_Z_Value {
+             inheritalpha 0
+             position -1 -1
+             size 0.8 16
+             halign right_ref
              valign center_ref
              hexactpos 1
              vexactpos 1
              hexactsize 0
-             vexactsize 0
-             scaled 0
+             vexactsize 1
              scriptclass "ViewBinding"
-             text "0"
-             font "gui/fonts/metron"
-             "text halign" center
-             "text valign" center
+             style ServerBrowser
+             "limit visible" 0
              {
               ScriptParamsClass {
-               Binding_Name "BrushDensity"
+               Binding_Name "cam_z"
+               Two_Way_Binding 1
               }
              }
-            }
-           }
-           {
-            ScriptParamsClass {
-             Relay_Command "m_Editor.CommandManager.BrushDensityCommand"
             }
            }
           }
@@ -1857,993 +2196,701 @@ FrameWidgetClass EditorFrame {
         }
        }
       }
+      FrameWidgetClass InfobarCameraPositionFrame {
+       ignorepointer 1
+       position 0 0
+       size 0.1 16
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass InfobarCameraPositionText {
+         clipchildren 1
+         ignorepointer 1
+         position 0 0
+         size 1 19
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 1
+         text "#STR_EDITOR_CAMERA_POSITION"
+         font "gui/fonts/etelkatextpro"
+         "text offset" -3 0
+         "exact text" 0
+         "size to text h" 0
+         "size to text v" 0
+         "text halign" right
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass PrecisionFrame {
+       ignorepointer 1
+       size 0.124 19
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass PrecisionText {
+         ignorepointer 1
+         position 0 0
+         size 1 19
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Precision"
+         font "gui/fonts/etelkatextpro"
+         "text offset" -35 1
+         "exact text" 0
+         "size to text h" 0
+         "size to text v" 0
+         "text halign" right
+         "text valign" center
+        }
+        EditBoxWidgetClass PrecisionEditbox {
+         position 0 0
+         size 30 14
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style ServerBrowser
+         text "0.05"
+         font "gui/fonts/sdf_MetronLight72"
+         {
+          ScriptParamsClass {
+           Binding_Name "PrecisionLevel"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
+      FrameWidgetClass CinematicCameraFrame {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 20 18
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass ""
+       {
+        ButtonWidgetClass CinematicCameraButton {
+         size 18 18
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         {
+          ScriptParamsClass {
+           Relay_Command "CameraTrackToggleExecute"
+          }
+         }
+        }
+        ImageWidgetClass CinematicCameraIcon {
+         ignorepointer 1
+         position -4 0
+         size 25 23
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         image0 "set:dayz_editor_gui image:camera"
+         mode additive
+         "src alpha" 0
+         "flip u" 0
+         "flip v" 0
+         filter 1
+        }
+       }
+      }
+      WrapSpacerWidgetClass ObjectHoverSelectWrapper {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       position 0 0
+       size 0.25 18
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass ObjectHoverSelectText {
+         clipchildren 1
+         ignorepointer 1
+         position 0 0
+         size 0 19
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "#STR_EDITOR_OBJECT "
+         font "gui/fonts/etelkatextpro"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass ObjectHoverText {
+         clipchildren 1
+         ignorepointer 1
+         size 0 19
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass ""
+         font "gui/fonts/etelkatextpro"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+       }
+      }
+      WrapSpacerWidgetClass VersionFrame {
+       ignorepointer 1
+       size 0.16 18
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass VersionText {
+         ignorepointer 1
+         size 0.16 18
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 1
+         scriptclass ""
+         text "#STR_EDITOR_VERSION "
+         font "gui/fonts/etelkatextpro"
+         "bold text" 1
+         "size to text h" 1
+         "size to text v" 1
+         "text valign" center
+        }
+        TextWidgetClass VersionNumber {
+         ignorepointer 1
+         position 0 0
+         size 0.18 18
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         font "gui/fonts/etelkatextpro"
+         "bold text" 1
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "Version"
+          }
+         }
+        }
+       }
+      }
+      WrapSpacerWidgetClass CurrentFileWrapper {
+       ignorepointer 1
+       size 0.2 18
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       {
+        TextWidgetClass MenuCurrentFileNameCaption {
+         ignorepointer 1
+         position 0 0
+         size 100 1
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 1
+         vexactsize 0
+         text "#STR_EDITOR_CURRENT_FILE "
+         font "gui/fonts/etelkatextpro"
+         "exact text" 0
+         "size to text h" 1
+         "size to text v" 0
+         "text halign" right
+         "text valign" center
+        }
+        TextWidgetClass MenuCurrentFileNameText {
+         clipchildren 1
+         ignorepointer 1
+         size 0.11 1
+         halign right_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         style None
+         font "gui/fonts/etelkatextpro"
+         "exact text" 0
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "m_Editor.EditorSaveFile"
+          }
+         }
+        }
+       }
+      }
      }
     }
-    PanelWidgetClass InfobarFrame {
-     clipchildren 1
+   }
+  }
+  WrapSpacerWidgetClass CameraTrackWrapper {
+   visible 0
+   ignorepointer 1
+   color 0.0196 0.0196 0.0196 0.7843
+   position 285 443
+   size 0.235 0
+   halign right_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   style Colorable
+   Padding 1
+   Margin 1
+   "Size To Content V" 1
+   {
+    PanelWidgetClass CameraTrackPanel {
      ignorepointer 1
-     color 0.0588 0.0588 0.0588 1
+     color 0.0784 0.0784 0.0784 1
      position 0 0
-     size 1 18
-     halign right_ref
+     size 1 25
+     halign center_ref
      valign bottom_ref
-     hexactpos 0
-     vexactpos 0
+     hexactpos 1
+     vexactpos 1
      hexactsize 0
      vexactsize 1
-     scaled 0
-     priority 1
      style rover_sim_colorable
      {
-      WrapSpacerWidgetClass InfobarWrapper {
-       clipchildren 1
+      TextWidgetClass CameraTrackPanelText {
        ignorepointer 1
-       position 0 1
-       size 1 18
+       size 1 1.15
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 0
+       vexactsize 0
+       text "#STR_EDITOR_CINEMATIC_CAMERA"
+       font "gui/fonts/etelkatextpro"
+       "size to text v" 0
+       "text halign" center
+       "text valign" center
+      }
+      PanelWidgetClass CameraTrackMinimizePanel {
+       ignorepointer 1
+       color 0.7843 0.2941 0.2745 1
+       position 2 2
+       size 25 21
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass CameraTrackMinimizeText {
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "-"
+         "exact text" 0
+         "text halign" center
+        }
+        ButtonWidgetClass CameraTrackMinimizeButton {
+         color 1 1 1 0.1961
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         {
+          ScriptParamsClass {
+           Relay_Command "CameraTrackToggleExecute"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    ScrollWidgetClass CameraNodeScrollBar {
+     ignorepointer 1
+     color 0.3137 0.3137 0.3137 1
+     position 0 0
+     size 1 350
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     "Scrollbar V" 1
+     {
+      WrapSpacerWidgetClass CameraNodeList {
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scriptclass "ViewBinding"
+       Padding 4
+       Margin 0
+       "Size To Content V" 1
+       {
+        ScriptParamsClass {
+         Binding_Name "CameraTrackData"
+         Two_Way_Binding 1
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass CameraTrackSliderPanel {
+     ignorepointer 1
+     color 0.0784 0.0784 0.0784 1
+     position 0 0
+     size 1 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      TextWidgetClass CameraTrackSmoothingText {
+       ignorepointer 1
+       position 2 0
+       size 200 20
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "#STR_EDITOR_CINEMATIC_CAMERA_SMOOTHING"
+       "text offset" 2 0
+       "size to text h" 1
+       "text valign" center
+      }
+      SliderWidgetClass CameraTrackSmoothingSlider {
+       color 0.5882 0.5882 0.5882 0.7451
+       position 5 0
+       size 250 20
        halign right_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 0
+       hexactsize 1
        vexactsize 1
-       Padding 0
-       Margin 0
-       "Size To Content H" 1
-       content_halign right
-       content_valign bottom
+       scriptclass "ViewBinding"
+       style Slider_1px_alpha_50
+       step 0.1
+       "fill in" 1
+       "listen to input" 1
        {
-        FrameWidgetClass NotificationFrame {
-         visible 1
+        TextWidgetClass CameraTrackSmoothingReadout {
          ignorepointer 1
-         position 0 0.03
-         size 1 0.06
-         halign center_ref
-         hexactpos 1
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-        }
-        FrameWidgetClass CameraTextVectorSpacer {
-         ignorepointer 1
-         position 0 0
-         size 4 18
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-        }
-        FrameWidgetClass InfobarCamPosFrame {
-         visible 1
-         ignorepointer 1
-         position 0 0
-         size 0.147 18
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 1
-         {
-          WrapSpacerWidgetClass InfoBarVectorWrapSpacer {
-           clipchildren 0
-           ignorepointer 1
-           position -2 1.5
-           size 1 16
-           halign right_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           style Empty
-           Margin 0
-           {
-            PanelWidgetClass InfoBarCam_X_Main {
-             ignorepointer 1
-             color 1 1 1 0.9412
-             size 0.32 1
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             style blank
-             {
-              PanelWidgetClass InfoBar_X_Background {
-               clipchildren 1
-               ignorepointer 1
-               color 0.7647 0.1804 0.102 1
-               position 1 0
-               size 16 14
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 1
-               vexactsize 1
-               style rover_sim_colorable
-               {
-                TextWidgetClass InfoBar_X_Label {
-                 ignorepointer 1
-                 position 0 0
-                 size 16 16
-                 halign right_ref
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 text "X"
-                 "text halign" center
-                 "text valign" center
-                }
-               }
-              }
-              EditBoxWidgetClass InfoBar_X_Value {
-               inheritalpha 0
-               position -2 -1
-               size 0.8 16
-               halign right_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 1
-               scriptclass "ViewBinding"
-               style ServerBrowser
-               "limit visible" 0
-               {
-                ScriptParamsClass {
-                 Binding_Name "cam_x"
-                 Two_Way_Binding 1
-                }
-               }
-              }
-             }
-            }
-            FrameWidgetClass x_y_spacer {
-             ignorepointer 1
-             position 0 0
-             size 0 0.9
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-            }
-            PanelWidgetClass InfoBarCam_Y_Main {
-             ignorepointer 1
-             color 1 1 1 0.9412
-             position 0 0
-             size 0.32 1
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             style blank
-             {
-              PanelWidgetClass InfoBar_Y_Background {
-               clipchildren 1
-               ignorepointer 1
-               color 0.6157 0.8157 0.2196 1
-               position 1 0
-               size 16 14
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 1
-               vexactsize 1
-               style rover_sim_colorable
-               {
-                TextWidgetClass InfoBar_Y_Label {
-                 ignorepointer 1
-                 position 1 0
-                 size 16 16
-                 halign right_ref
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 text "Y"
-                 "text halign" center
-                 "text valign" center
-                }
-               }
-              }
-              EditBoxWidgetClass InfoBar_Y_Value {
-               inheritalpha 0
-               position -2 -1
-               size 0.8 16
-               halign right_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 1
-               scriptclass "ViewBinding"
-               style ServerBrowser
-               "limit visible" 0
-               {
-                ScriptParamsClass {
-                 Binding_Name "cam_y"
-                 Two_Way_Binding 1
-                }
-               }
-              }
-             }
-            }
-            FrameWidgetClass y_z_spacer {
-             ignorepointer 1
-             size 0 0.9
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-            }
-            PanelWidgetClass InfoBarCam_Z_Main {
-             ignorepointer 1
-             color 1 1 1 0.9412
-             position 0 0
-             size 0.32 1
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-             style blank
-             {
-              PanelWidgetClass InfoBar_Z_Background {
-               clipchildren 1
-               ignorepointer 1
-               color 0.2588 0.4824 0.9176 1
-               position 1 0
-               size 16 14
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 1
-               vexactsize 1
-               style rover_sim_colorable
-               {
-                TextWidgetClass InfoBar_Z_Label {
-                 ignorepointer 1
-                 position 0 0
-                 size 16 17
-                 halign right_ref
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 text "Z"
-                 "text halign" center
-                 "text valign" center
-                }
-               }
-              }
-              EditBoxWidgetClass InfoBar_Z_Value {
-               inheritalpha 0
-               position -1 -1
-               size 0.8 16
-               halign right_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 1
-               scriptclass "ViewBinding"
-               style ServerBrowser
-               "limit visible" 0
-               {
-                ScriptParamsClass {
-                 Binding_Name "cam_z"
-                 Two_Way_Binding 1
-                }
-               }
-              }
-             }
-            }
-           }
-          }
-         }
-        }
-        FrameWidgetClass InfobarCameraPositionFrame {
-         ignorepointer 1
-         position 0 0
-         size 0.1 16
+         size 35 16
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         {
-          TextWidgetClass InfobarCameraPositionText {
-           clipchildren 1
-           ignorepointer 1
-           position 0 0
-           size 1 19
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 1
-           text "#STR_EDITOR_CAMERA_POSITION"
-           font "gui/fonts/etelkatextpro"
-           "text offset" -3 0
-           "exact text" 0
-           "size to text h" 0
-           "size to text v" 0
-           "text halign" right
-           "text valign" center
-          }
-         }
-        }
-        FrameWidgetClass PrecisionFrame {
-         ignorepointer 1
-         size 0.124 19
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         {
-          TextWidgetClass PrecisionText {
-           ignorepointer 1
-           position 0 0
-           size 1 19
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           text "Precision"
-           font "gui/fonts/etelkatextpro"
-           "text offset" -35 1
-           "exact text" 0
-           "size to text h" 0
-           "size to text v" 0
-           "text halign" right
-           "text valign" center
-          }
-          EditBoxWidgetClass PrecisionEditbox {
-           position 0 0
-           size 30 14
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scriptclass "ViewBinding"
-           style ServerBrowser
-           text "0.05"
-           font "gui/fonts/sdf_MetronLight72"
-           {
-            ScriptParamsClass {
-             Binding_Name "PrecisionLevel"
-             Two_Way_Binding 1
-            }
-           }
-          }
-         }
-        }
-        FrameWidgetClass CinematicCameraFrame {
-         visible 1
-         ignorepointer 1
-         position 0 0
-         size 20 18
-         hexactpos 1
-         vexactpos 1
          hexactsize 1
          vexactsize 1
-         scriptclass ""
+         scriptclass "ViewBinding"
+         text "0.05"
+         "text halign" center
+         "text valign" center
          {
-          ButtonWidgetClass CinematicCameraButton {
-           size 18 18
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scriptclass "ViewBinding"
-           {
-            ScriptParamsClass {
-             Relay_Command "CameraTrackToggleExecute"
-            }
-           }
-          }
-          ImageWidgetClass CinematicCameraIcon {
-           ignorepointer 1
-           position -4 0
-           size 25 23
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           image0 "set:dayz_editor_gui image:camera"
-           mode additive
-           "src alpha" 0
-           "flip u" 0
-           "flip v" 0
-           filter 1
+          ScriptParamsClass {
+           Binding_Name "CameraSmoothing"
           }
          }
         }
-        WrapSpacerWidgetClass ObjectHoverSelectWrapper {
-         visible 1
-         clipchildren 0
-         ignorepointer 1
-         position 0 0
-         size 0.25 18
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         {
-          TextWidgetClass ObjectHoverSelectText {
-           clipchildren 1
-           ignorepointer 1
-           position 0 0
-           size 0 19
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           text "#STR_EDITOR_OBJECT "
-           font "gui/fonts/etelkatextpro"
-           "size to text h" 1
-           "size to text v" 0
-           "text valign" center
-          }
-          TextWidgetClass ObjectHoverText {
-           clipchildren 1
-           ignorepointer 1
-           size 0 19
-           halign right_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass ""
-           font "gui/fonts/etelkatextpro"
-           "size to text h" 1
-           "size to text v" 0
-           "text valign" center
-          }
-         }
-        }
-        WrapSpacerWidgetClass VersionFrame {
-         ignorepointer 1
-         size 0.16 18
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         {
-          TextWidgetClass VersionText {
-           ignorepointer 1
-           size 0.16 18
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 1
-           scriptclass ""
-           text "#STR_EDITOR_VERSION "
-           font "gui/fonts/etelkatextpro"
-           "bold text" 1
-           "size to text h" 1
-           "size to text v" 1
-           "text valign" center
-          }
-          TextWidgetClass VersionNumber {
-           ignorepointer 1
-           position 0 0
-           size 0.18 18
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           scriptclass "ViewBinding"
-           font "gui/fonts/etelkatextpro"
-           "bold text" 1
-           "size to text h" 1
-           "size to text v" 0
-           "text valign" center
-           {
-            ScriptParamsClass {
-             Binding_Name "Version"
-            }
-           }
-          }
-         }
-        }
-        WrapSpacerWidgetClass CurrentFileWrapper {
-         ignorepointer 1
-         size 0.2 18
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         {
-          TextWidgetClass MenuCurrentFileNameCaption {
-           ignorepointer 1
-           position 0 0
-           size 100 1
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 1
-           vexactsize 0
-           text "#STR_EDITOR_CURRENT_FILE "
-           font "gui/fonts/etelkatextpro"
-           "exact text" 0
-           "size to text h" 1
-           "size to text v" 0
-           "text halign" right
-           "text valign" center
-          }
-          TextWidgetClass MenuCurrentFileNameText {
-           clipchildren 1
-           ignorepointer 1
-           size 0.11 1
-           halign right_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           scriptclass "ViewBinding"
-           style None
-           font "gui/fonts/etelkatextpro"
-           "exact text" 0
-           "size to text h" 1
-           "size to text v" 0
-           "text valign" center
-           {
-            ScriptParamsClass {
-             Binding_Name "m_Editor.EditorSaveFile"
-            }
-           }
-          }
-         }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "CameraSmoothing"
+         Two_Way_Binding 1
         }
        }
       }
      }
     }
-    WrapSpacerWidgetClass CameraTrackWrapper {
-     visible 0
+    PanelWidgetClass CameraTrackButtonPanel {
      ignorepointer 1
-     color 0.0196 0.0196 0.0196 0.7843
-     position 285 443
-     size 0.235 0
-     halign right_ref
+     color 0.0784 0.0784 0.0784 1
+     position 0 0
+     size 1 22
+     halign center_ref
      valign bottom_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
-     vexactsize 0
-     style Colorable
-     Padding 1
-     Margin 1
-     "Size To Content V" 1
+     vexactsize 1
+     style rover_sim_colorable
      {
-      PanelWidgetClass CameraTrackPanel {
-       ignorepointer 1
-       color 0.0784 0.0784 0.0784 1
-       position 0 0
-       size 1 25
-       halign center_ref
-       valign bottom_ref
+      ButtonWidgetClass AddNodeButton {
+       position 20 1
+       size 90 20
        hexactpos 1
        vexactpos 1
-       hexactsize 0
+       hexactsize 1
        vexactsize 1
-       style rover_sim_colorable
+       scriptclass "ViewBinding"
+       text "Add Node"
        {
-        TextWidgetClass CameraTrackPanelText {
+        PanelWidgetClass AddButtonOutline {
          ignorepointer 1
-         size 1 1.15
+         color 0.7059 0.7059 0.7059 0.9961
+         size 1 1
          halign center_ref
          valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         text "#STR_EDITOR_CINEMATIC_CAMERA"
-         font "gui/fonts/etelkatextpro"
-         "size to text v" 0
-         "text halign" center
-         "text valign" center
-        }
-        PanelWidgetClass CameraTrackMinimizePanel {
-         ignorepointer 1
-         color 0.7843 0.2941 0.2745 1
-         position 2 2
-         size 25 21
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         style rover_sim_colorable
-         {
-          TextWidgetClass CameraTrackMinimizeText {
-           ignorepointer 1
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           text "-"
-           "exact text" 0
-           "text halign" center
-          }
-          ButtonWidgetClass CameraTrackMinimizeButton {
-           color 1 1 1 0.1961
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scriptclass "ViewBinding"
-           {
-            ScriptParamsClass {
-             Relay_Command "CameraTrackToggleExecute"
-            }
-           }
-          }
-         }
+         hexactsize 0
+         vexactsize 0
+         style blank
+        }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "m_Editor.CommandManager.CameraTrackAddNode"
         }
        }
       }
-      ScrollWidgetClass CameraNodeScrollBar {
+      ButtonWidgetClass CameraTrackRunButton {
+       position 20 1
+       size 80 20
+       halign right_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       text "Run"
+       switch toggle
+       {
+        PanelWidgetClass CameraTrackButtonOutline {
+         ignorepointer 1
+         color 0.7059 0.7059 0.7059 0.9961
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         style blank
+        }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "m_Editor.CommandManager.CameraTrackRun"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  GridSpacerWidgetClass OnlineServiceInfo {
+   ignorepointer 1
+   position 360 18
+   size 470 77
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   content_valign bottom
+   Columns 1
+   {
+    WrapSpacerWidgetClass SessionIdWrapper {
+     ignorepointer 1
+     position 10 10
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     {
+      TextWidgetClass SessionId {
        ignorepointer 1
-       color 0.3137 0.3137 0.3137 1
        position 0 0
-       size 1 350
+       size 1 16
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 1
-       "Scrollbar V" 1
-       {
-        WrapSpacerWidgetClass CameraNodeList {
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         Padding 4
-         Margin 0
-         "Size To Content V" 1
-         {
-          ScriptParamsClass {
-           Binding_Name "CameraTrackData"
-           Two_Way_Binding 1
-          }
-         }
-        }
-       }
+       scaled 0
+       text "Session ID:"
+       font "gui/fonts/etelkatextpro16"
+       "size to text h" 1
+       "size to text v" 0
+       "text valign" center
       }
-      PanelWidgetClass CameraTrackSliderPanel {
+      TextWidgetClass SessionIdData {
+       visible 1
        ignorepointer 1
-       color 0.0784 0.0784 0.0784 1
-       position 0 0
-       size 1 22
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       style rover_sim_colorable
-       {
-        TextWidgetClass CameraTrackSmoothingText {
-         ignorepointer 1
-         position 2 0
-         size 200 20
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         text "#STR_EDITOR_CINEMATIC_CAMERA_SMOOTHING"
-         "text offset" 2 0
-         "size to text h" 1
-         "text valign" center
-        }
-        SliderWidgetClass CameraTrackSmoothingSlider {
-         color 0.5882 0.5882 0.5882 0.7451
-         position 5 0
-         size 250 20
-         halign right_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style Slider_1px_alpha_50
-         step 0.1
-         "fill in" 1
-         "listen to input" 1
-         {
-          TextWidgetClass CameraTrackSmoothingReadout {
-           ignorepointer 1
-           size 35 16
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scriptclass "ViewBinding"
-           text "0.05"
-           "text halign" center
-           "text valign" center
-           {
-            ScriptParamsClass {
-             Binding_Name "CameraSmoothing"
-            }
-           }
-          }
-         }
-         {
-          ScriptParamsClass {
-           Binding_Name "CameraSmoothing"
-           Two_Way_Binding 1
-          }
-         }
-        }
-       }
-      }
-      PanelWidgetClass CameraTrackButtonPanel {
-       ignorepointer 1
-       color 0.0784 0.0784 0.0784 1
-       position 0 0
-       size 1 22
+       color 0.3059 0.5608 0.3686 1
+       size 1 18
        halign center_ref
-       valign bottom_ref
+       valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
        vexactsize 1
-       style rover_sim_colorable
+       scriptclass ""
+       font "gui/fonts/etelkatextpro16"
+       "size to text h" 1
+       "size to text v" 0
+       "text valign" center
+      }
+     }
+    }
+    WrapSpacerWidgetClass UserCountWrapper {
+     ignorepointer 1
+     position 10 10
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     {
+      TextWidgetClass UserCount {
+       ignorepointer 1
+       position 0 0
+       size 1 18
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scaled 0
+       text "User Count:"
+       font "gui/fonts/etelkatextpro16"
+       "size to text h" 1
+       "text valign" center
+      }
+      TextWidgetClass UserCountData {
+       ignorepointer 1
+       size 1 18
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       font "gui/fonts/MetronLight16"
+       "size to text h" 1
+       "text valign" center
        {
-        ButtonWidgetClass AddNodeButton {
-         position 20 1
-         size 90 20
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         text "Add Node"
-         {
-          PanelWidgetClass AddButtonOutline {
-           ignorepointer 1
-           color 0.7059 0.7059 0.7059 0.9961
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           style blank
-          }
-         }
-         {
-          ScriptParamsClass {
-           Relay_Command "m_Editor.CommandManager.CameraTrackAddNode"
-          }
-         }
-        }
-        ButtonWidgetClass CameraTrackRunButton {
-         position 20 1
-         size 80 20
-         halign right_ref
-         valign bottom_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         text "Run"
-         switch toggle
-         {
-          PanelWidgetClass CameraTrackButtonOutline {
-           ignorepointer 1
-           color 0.7059 0.7059 0.7059 0.9961
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           style blank
-          }
-         }
-         {
-          ScriptParamsClass {
-           Relay_Command "m_Editor.CommandManager.CameraTrackRun"
-          }
-         }
+        ScriptParamsClass {
+         Binding_Name "OnlineUserCount"
         }
        }
       }
      }
     }
-    GridSpacerWidgetClass OnlineServiceInfo {
+    WrapSpacerWidgetClass EntityCountWrapper {
      ignorepointer 1
-     position 360 18
-     size 470 77
-     valign bottom_ref
+     position 10 10
+     size 48 48
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scaled 0
-     content_valign bottom
-     Columns 1
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
      {
-      WrapSpacerWidgetClass SessionIdWrapper {
+      TextWidgetClass EntityCount {
        ignorepointer 1
-       position 10 10
-       size 48 48
+       position 0 0
+       size 1 12
+       halign center_ref
+       valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
+       hexactsize 0
        vexactsize 1
-       Padding 0
-       Margin 0
-       "Size To Content H" 1
-       {
-        TextWidgetClass SessionId {
-         ignorepointer 1
-         position 0 0
-         size 1 16
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scaled 0
-         text "Session ID:"
-         font "gui/fonts/etelkatextpro16"
-         "size to text h" 1
-         "size to text v" 0
-         "text valign" center
-        }
-        TextWidgetClass SessionIdData {
-         visible 1
-         ignorepointer 1
-         color 0.3059 0.5608 0.3686 1
-         size 1 18
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scriptclass ""
-         font "gui/fonts/etelkatextpro16"
-         "size to text h" 1
-         "size to text v" 0
-         "text valign" center
-        }
-       }
+       scaled 0
+       text "Entity Count:"
+       font "gui/fonts/etelkatextpro16"
+       "size to text h" 1
+       "text valign" center
       }
-      WrapSpacerWidgetClass UserCountWrapper {
+      TextWidgetClass EntityCountData {
        ignorepointer 1
-       position 10 10
-       size 48 48
+       size 1 12
+       halign center_ref
+       valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
+       hexactsize 0
        vexactsize 1
-       Padding 0
-       Margin 0
-       "Size To Content H" 1
+       scriptclass "ViewBinding"
+       font "gui/fonts/etelkatextpro16"
+       "size to text h" 1
+       "text valign" center
        {
-        TextWidgetClass UserCount {
-         ignorepointer 1
-         position 0 0
-         size 1 18
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scaled 0
-         text "User Count:"
-         font "gui/fonts/etelkatextpro16"
-         "size to text h" 1
-         "text valign" center
-        }
-        TextWidgetClass UserCountData {
-         ignorepointer 1
-         size 1 18
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scriptclass "ViewBinding"
-         font "gui/fonts/MetronLight16"
-         "size to text h" 1
-         "text valign" center
-         {
-          ScriptParamsClass {
-           Binding_Name "OnlineUserCount"
-          }
-         }
-        }
-       }
-      }
-      WrapSpacerWidgetClass EntityCountWrapper {
-       ignorepointer 1
-       position 10 10
-       size 48 48
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       Padding 0
-       Margin 0
-       "Size To Content H" 1
-       {
-        TextWidgetClass EntityCount {
-         ignorepointer 1
-         position 0 0
-         size 1 12
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scaled 0
-         text "Entity Count:"
-         font "gui/fonts/etelkatextpro16"
-         "size to text h" 1
-         "text valign" center
-        }
-        TextWidgetClass EntityCountData {
-         ignorepointer 1
-         size 1 12
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scriptclass "ViewBinding"
-         font "gui/fonts/etelkatextpro16"
-         "size to text h" 1
-         "text valign" center
-         {
-          ScriptParamsClass {
-           Binding_Name "OnlineEntityCount"
-          }
-         }
+        ScriptParamsClass {
+         Binding_Name "OnlineEntityCount"
         }
        }
       }

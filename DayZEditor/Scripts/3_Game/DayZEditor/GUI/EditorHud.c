@@ -91,6 +91,11 @@ class EditorHud: ScriptView
 		return m_CurrentPlacingContext;
 	}
 		
+	void OnDiscordButtonExecute(ButtonCommandArgs args)
+	{
+		
+	}
+	
 	void OnCreateSessionExecute(ButtonCommandArgs args)
 	{
 		m_CurrentMenu = new EditorCreateOnlineSessionView();
