@@ -106,4 +106,15 @@ class CfgVehicles
 		model = "\DayZEditor\Editor\CinematicCamera.p3d";
 		hiddenSelections[] = {"CinematicCameraHighlight"};
 	};*/
+	
+	class jdGizmo: HouseNoDestruct
+	{
+		scope=2;
+		model="DayZEditor\editor\Gizmo.p3d";
+	};
+	class jdTestBox1: HouseNoDestruct
+	{
+		scope=2;
+		model="DayZEditor\editor\TestBox1.p3d";
+	};
 };
