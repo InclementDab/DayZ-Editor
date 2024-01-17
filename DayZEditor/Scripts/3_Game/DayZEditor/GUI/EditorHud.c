@@ -4,7 +4,7 @@ class EditorHud: ScriptView
 	protected EditorHudController m_TemplateController;
 		
 	// View Properties
-	Widget Left, Right;
+	Widget Left, Right, FileTab;
 	
 	// Layout Elements
 	Widget LeftDragZone, RightDragZone;
@@ -33,11 +33,15 @@ class EditorHud: ScriptView
 		
 		float w, h;
 		int x, y;
+				
+		// Script sizing for menu bars and whatnot
 		GetScreenSize(x, y);
 		Left.GetSize(w, h);
 		Left.SetSize(w, y - 110);
 		Right.GetSize(w, h);
 		Right.SetSize(w, y - 110);	
+		
+
 
 		m_CurrentPlacingContext = InsertPlacedCategory(new EditorCategory("Placed Objects"));
 		InsertPlacedCategory(new EditorCategory("Hidden Objects"));
@@ -116,22 +120,11 @@ class EditorHud: ScriptView
 	{
 		super.Update(dt);
 		
-		m_TemplateController = EditorHudController.Cast(m_Controller);
-		
 		if (GetGame().GetInput().LocalPress("UAFire") && !GetWidgetUnderCursor()) {
 			EditorSelectableBase.ClearSelections();
 			return;
 		}
-		
-		if (GetEditor().GetCamera()) {
-			//vector cam_pos = GetEditor().GetCamera().GetPosition();
-			
-			//m_TemplateController.cam_x = cam_pos[0];
-			//m_TemplateController.cam_y = cam_pos[1];
-			//m_TemplateController.cam_z = cam_pos[2];
-			//m_TemplateController.NotifyPropertiesChanged({ "cam_x", "cam_y", "cam_z"} );
-		}
-		
+				
 		EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
 		//Print(GetEditor().GetCurrentOnlineSession());
 		if (GetEditor().GetCurrentOnlineSession()) {
@@ -190,11 +183,30 @@ class EditorHud: ScriptView
 				}
 			}			
 		}
+		
+		float w, h;
+		float total_bar_width;
+		Left.GetSize(w, h);
+		total_bar_width += w;
+		Right.GetSize(w, h);
+		total_bar_width += w;
+		
+		FileTab.GetSize(w, h);
+		FileTab.SetSize(x - total_bar_width, h);
+		
+		Left.GetSize(w, h);
+		FileTab.SetPos(w, 92);
 				
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("EditorPlaceObjectCommand") && !KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor()) {
 			EditorObject.ClearSelections();
 			DelayedDragBoxCheck();
+		}
+		
+		if (input.LocalPress("EditorToggleCursor")) {
+			if (!CurrentDialog || !GetEditor().GeneralSettings.LockCameraDuringDialogs) {
+				ShowCursor(!IsCursorVisible());
+			}
 		}
 	}
 	

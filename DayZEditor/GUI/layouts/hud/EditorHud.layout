@@ -16,7 +16,7 @@ FrameWidgetClass EditorFrame {
  {
   CanvasWidgetClass EditorCanvas {
    ignorepointer 1
-   position -0.00059 0.00039
+   position -0.00064 0.0004
    size 1 1
    halign center_ref
    valign center_ref
@@ -146,6 +146,7 @@ FrameWidgetClass EditorFrame {
            vexactsize 0
            scaled 0
            style Default
+           "no focus" 1
            {
             ImageWidgetClass "Undo.Icon" {
              ignorepointer 1
@@ -178,6 +179,7 @@ FrameWidgetClass EditorFrame {
          {
           ButtonWidgetClass "Redo.Button" {
            visible 1
+           position 0 0
            size 0.75 0.75
            halign center_ref
            valign center_ref
@@ -186,6 +188,7 @@ FrameWidgetClass EditorFrame {
            hexactsize 0
            vexactsize 0
            scaled 0
+           "no focus" 1
            {
             ImageWidgetClass "Redo.Icon" {
              ignorepointer 1
@@ -247,7 +250,9 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 0
          scaled 0
+         draggable 0
          style Default
+         "no focus" 1
          {
           ImageWidgetClass "Minimize.Icon" {
            ignorepointer 1
@@ -291,6 +296,7 @@ FrameWidgetClass EditorFrame {
          vexactsize 0
          scaled 0
          style Default
+         "no focus" 1
          {
           ImageWidgetClass "Exit.Icon" {
            ignorepointer 1
@@ -338,12 +344,13 @@ FrameWidgetClass EditorFrame {
        image0 "set:icons image:shovel_snow"
        mode blend
        "src alpha" 1
+       filter 0
       }
      }
     }
     PanelWidgetClass "Menu.Seperator" {
      ignorepointer 1
-     color 1 1 1 0.0784
+     color 0.3137 0.3137 0.3137 1
      size 1 1
      halign center_ref
      valign bottom_ref
@@ -359,9 +366,8 @@ FrameWidgetClass EditorFrame {
   PanelWidgetClass FileTab {
    ignorepointer 1
    color 0.0824 0.0824 0.0824 1
-   position 0 92
+   position 360 92
    size 1200 42
-   halign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
@@ -393,6 +399,7 @@ FrameWidgetClass EditorFrame {
        scriptclass "ViewBinding"
        Padding 0
        Margin 0
+       "Size To Content H" 1
        content_valign center
        {
         ScriptParamsClass {
@@ -418,7 +425,7 @@ FrameWidgetClass EditorFrame {
    {
     PanelWidgetClass "Tools.Seperator" {
      ignorepointer 1
-     color 1 1 1 0.0784
+     color 0.3137 0.3137 0.3137 1
      size 1 1
      halign center_ref
      valign bottom_ref
@@ -473,6 +480,11 @@ FrameWidgetClass EditorFrame {
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
+       {
+        ScriptParamsClass {
+         Binding_Name "LeftListItems"
+        }
+       }
       }
      }
     }
@@ -534,6 +546,11 @@ FrameWidgetClass EditorFrame {
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
+       {
+        ScriptParamsClass {
+         Binding_Name "RightListItems"
+        }
+       }
       }
      }
     }
