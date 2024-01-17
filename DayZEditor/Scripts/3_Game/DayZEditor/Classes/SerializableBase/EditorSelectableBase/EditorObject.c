@@ -34,8 +34,11 @@ class EditorObject: EditorSelectableBase
 	protected vector m_LineCenters[12], m_LineVerticies[8], m_BasePoint; 
 	
 	protected bool m_IsDirty;
+	protected string m_DisplayName;
 	
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
+	
+	protected ref EditorTreeItem m_TreeItem;
 	
 	// Human Properties
 	int CurrentAnimation;
@@ -58,8 +61,11 @@ class EditorObject: EditorSelectableBase
 				
 		m_DisplayName = type;
 		
-		if (((m_Flags & EditorObjectFlags.LISTITEM) != EditorObjectFlags.LISTITEM)) {
-			delete m_TreeItem;
+		m_TreeItem = new EditorTreeItem(m_DisplayName, this);
+		
+		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
+			
+			GetEditor().GetEditorHud().GetCurrentPlacingCategory().AddChild(this);
 		}
 		
 		m_Object = GetGame().CreateObjectEx(Type, Position, ECE_LOCAL);
@@ -240,7 +246,17 @@ class EditorObject: EditorSelectableBase
 			EditorBoundingBox.Destroy(m_Object);
 		}
 	}
-			
+	
+	override EditorTreeItem GetTreeItem()
+	{
+		return m_TreeItem;
+	}
+		
+	string GetDisplayName()
+	{
+		return m_DisplayName;
+	}
+		
 	bool GetGroundUnderObject(out vector position, out vector direction)
 	{
 		vector transform[4];

@@ -40,7 +40,7 @@ class EditorDeletedListItem: EditorListItem
 				if (KeyState(KeyCode.KC_LSHIFT)) {
 					int this_index, that_index;
 					EditorListItem tertiary_item;
-					ObservableCollection<EditorListItem> list_items = GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData;
+					/*ObservableCollection<EditorListItem> list_items = GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData;
 					for (int i = 0; i <= list_items.Count(); i++) {
 						if (list_items[i] == this) {
 							this_index = i;
@@ -53,7 +53,7 @@ class EditorDeletedListItem: EditorListItem
 						}
 					}
 						
-					GetEditor().GetEditorHud().GetTemplateController().DoMultiSelect(this_index, that_index, list_items);
+					GetEditor().GetEditorHud().GetTemplateController().DoMultiSelect(this_index, that_index, list_items);*/
 				}
 				
 				return true;

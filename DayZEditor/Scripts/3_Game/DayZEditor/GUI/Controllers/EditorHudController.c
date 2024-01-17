@@ -24,13 +24,7 @@ class EditorHudController: EditorControllerBase
 		
 	ref ObservableCollection<ref EditorTreeItem> LeftListItems = new ObservableCollection<ref EditorTreeItem>(this);
 	ref ObservableCollection<ref EditorTreeItem> RightListItems = new ObservableCollection<ref EditorTreeItem>(this);
-	
-	ref EditorPlaceableObjectDataCategory PlacementsFolder = new EditorPlaceableObjectDataCategory("Placed Objects");
-	ref EditorPlaceableObjectDataCategory HiddenFolder = new EditorPlaceableObjectDataCategory("Hidden Objects");
-	
-	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
-	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
-	
+		
 	// Logger
 	static const int MAX_LOG_ENTRIES = 20;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
@@ -145,13 +139,10 @@ class EditorHudController: EditorControllerBase
 				return;
 			}
 		}
-		
-		RightListItems.Insert(PlacementsFolder.GetTreeItem());
-		RightListItems.Insert(HiddenFolder.GetTreeItem());
-		
+				
 		ReloadBrushes(m_Editor.GeneralSettings.EditorBrushFile);
 	}
-				
+		
 	void InsertMapMarker(EditorMarker map_marker)
 	{
 		EditorLog.Trace("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
@@ -197,9 +188,9 @@ class EditorHudController: EditorControllerBase
 				
 				ObservableCollection<EditorListItem> selected_list;
 				if (CategoryPlacements) {
-					selected_list = RightbarPlacedData;
+					//selected_list = RightbarPlacedData;
 				} else {
-					selected_list = RightbarDeletionData;
+					//selected_list = RightbarDeletionData;
 				}
 					
 				for (int k = 0; k < selected_list.Count(); k++) {

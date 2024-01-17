@@ -9,7 +9,7 @@ class EditorStaticPlaceableItem: EditorPlaceableObjectData
 		array<string> items = {};
 		m_Model.Split("/", items);
 		if (items.Count() != 0) {
-			SetDisplayName(items[items.Count() - 1]);
+			//SetDisplayName(items[items.Count() - 1]);
 		}	
 	}
 	

@@ -13,13 +13,15 @@ class EditorTreeItem: ScriptView
 	
 	protected bool m_IsBeingDragged;
 	
-	protected ref ScriptCaller m_OnCalled;
+	protected EditorSelectableBase m_Selectable;
 	
-	void EditorTreeItem(ScriptCaller on_clicked)
+	void EditorTreeItem(string text, EditorSelectableBase selectable)
 	{
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
-		m_OnCalled = on_clicked;
+		m_Selectable = selectable;
 				
+		SetText(text);
+		
 		ShowChildren(false);
 	}
 	
@@ -102,7 +104,15 @@ class EditorTreeItem: ScriptView
 			return;
 		}
 		
-		m_OnCalled.Invoke(true);
+		if (!KeyState(KeyCode.KC_LSHIFT)) {
+			EditorSelectableBase.ClearSelections();
+		}
+		
+		if (KeyState(KeyCode.KC_LCONTROL)) {
+			m_Selectable.SetSelected(!m_Selectable.IsSelected());
+		} else {
+			m_Selectable.SetSelected(true);
+		}
 	}
 		
 	void OnSelectionChange(bool state)

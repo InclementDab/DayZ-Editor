@@ -3,24 +3,10 @@ class EditorSelectableBase: SerializableBase
 	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();
 	
 	protected bool m_IsSelected;
-	protected string m_DisplayName;
-	
-	protected ref EditorTreeItem m_TreeItem = new EditorTreeItem(ScriptCaller.Create(SetSelected));
-	
-	void SetDisplayName(string display_name)
-	{
-		m_DisplayName = display_name;		
-		m_TreeItem.SetText(m_DisplayName);
-	}
-	
+		
 	EditorTreeItem GetTreeItem()
-	{		
-		return m_TreeItem;
-	}
-	
-	string GetDisplayName()
 	{
-		return m_DisplayName;
+		return null;
 	}
 	
 	void SetSelected(bool selected)
@@ -39,6 +25,16 @@ class EditorSelectableBase: SerializableBase
 	bool IsSelected() 
 	{
 		return m_IsSelected;
+	}
+	
+	string GetModel()
+	{
+		return string.Empty;
+	}
+	
+	string GetName()
+	{
+		return string.Empty;
 	}
 	
 	static ref array<EditorSelectableBase> SelectedObjects = {};

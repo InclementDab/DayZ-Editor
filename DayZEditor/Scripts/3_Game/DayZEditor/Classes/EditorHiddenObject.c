@@ -32,10 +32,6 @@ class EditorHiddenObject: Managed
 		
 		m_BottomCenter = m_Object.GetGlobalPos(AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3])));
 		
-		// todo: probably use the events system to insert this stuff into the UI
-		m_EditorDeletedListItem = new EditorDeletedListItem(this);		
-		GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData.Insert(m_EditorDeletedListItem);
-		
 		CF.ObjectManager.HideMapObject(m_Object);
 	}
 	

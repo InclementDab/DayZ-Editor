@@ -5,8 +5,6 @@ class EditorScriptedPlaceableItem: EditorPlaceableObjectData
 	void EditorScriptedPlaceableItem(typename type)
 	{
 		m_Type = type;
-		
-		SetDisplayName(m_Type.ToString());
 	}
 		
 	override Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)

@@ -7,8 +7,6 @@ class EditorConfigPlaceableItem: EditorPlaceableObjectData
 	{
 		m_Path = path;
 		m_Type = type;
-				
-		SetDisplayName(type);
 	}
 	
 	override EditorPlaceableObjectDataCategory GetCategory()

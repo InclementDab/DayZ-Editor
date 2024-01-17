@@ -49,11 +49,6 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		}
 		
-		if (m_Editor.IsLootEditActive()) {
-			m_Editor.FinishEditLootSpawns();
-			return true;
-		} 
-
 		if (g_Game.GetMission().IsPaused()) {
 			m_Editor.GetEditorHud().Show(m_Editor.GetCurrentControl() == m_Editor.GetCamera());
 			g_Game.GetMission().Continue();

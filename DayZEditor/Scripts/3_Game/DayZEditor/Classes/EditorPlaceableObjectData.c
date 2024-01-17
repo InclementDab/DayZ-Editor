@@ -16,17 +16,7 @@ class EditorPlaceableObjectData: EditorSelectableBase
 	{
 		return EditorPlaceableObjectDataCategory.UNKNOWN;
 	}
-	
-	string GetName()
-	{
-		return string.Empty;
-	}
-	
-	string GetModel()
-	{
-		return string.Empty;
-	}
-	
+		
 	override void SetSelected(bool selected)
 	{
 		super.SetSelected(selected);

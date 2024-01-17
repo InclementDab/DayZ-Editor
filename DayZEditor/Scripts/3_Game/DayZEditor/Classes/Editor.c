@@ -111,13 +111,6 @@ class Editor: Managed
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
-	// Loot Editing
-	protected Object 							m_LootEditTarget;
-	protected bool 								m_LootEditMode;
-	protected vector 							m_PositionBeforeLootEditMode;
-	protected ref EditorMapGroupProto 			m_EditorMapGroupProto;
-	static float 								LootYOffset;
-	
 	// Inventory Editor
 	protected ref EditorInventoryEditorHud 		m_EditorInventoryEditorHud;
 	
@@ -155,9 +148,7 @@ class Editor: Managed
 	
 	// Stored list of all Placed Objects
 	ref map<string, ref EditorObject> m_PlacedObjects = new map<string, ref EditorObject>();
-	
-	ref map<string, ref EditorCategory> m_Caregories = new map<string, ref EditorCategory>();
-		
+			
 	void Editor() 
 	{
 		if (GetGame().IsServer()) {
@@ -197,7 +188,7 @@ class Editor: Managed
 		// Init Hud
 		g_Game.ReportProgress("Initializing Hud");
 		m_EditorHud 		= new EditorHud();
-		
+				
 		EditorLog.Info("Initializing Hud");		
 		// Add camera marker to newly created hud
 		m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
@@ -235,7 +226,7 @@ class Editor: Managed
 	{
 		Statistics.Save();
 	}
-	
+		
 	protected Object m_DragTarget;
 	protected vector m_DragOffset;
 	protected void CheckForDragging(Object object)
@@ -307,8 +298,7 @@ class Editor: Managed
 			}
 			
 			// Yeah, enfusions dumb, i know
-			bool should_precice = (GeneralSettings.HighPrecisionCollision || m_LootEditMode);																					// High precision is experimental, but we want it on for LootEditor since its only placing the cylinders!
-			CurrentMousePosition = MousePosToRay(obj, collision_ignore, GeneralSettings.ViewDistance, 0, !CollisionMode, should_precice);
+			CurrentMousePosition = MousePosToRay(obj, collision_ignore, GeneralSettings.ViewDistance, 0, !CollisionMode, GeneralSettings.HighPrecisionCollision);
 		}
 		
 		if (!IsPlacing()) {			
@@ -530,25 +520,7 @@ class Editor: Managed
 		float fraction;
 		return DayZPhysics.RayCastBullet(begin_pos, end_pos, interaction_layers, ignore_object, hit_object, position, normal, fraction);
 	}
-	
-	bool OnDoubleClick(int button)
-	{
-		EditorLog.Trace("Editor::OnDoubleClick");
-		Widget target = GetWidgetUnderCursor();
-		switch (button) {
-			
-			case MouseState.LEFT: {
-				if (m_LootEditMode && !target) {
-					InsertLootPosition(CurrentMousePosition);
-				}
-				
-				return true;
-			}
-		}
 		
-		return false;
-	}
-	
 	bool OnMouseDown(int button)
 	{
 		EditorLog.Trace("Editor::OnMouseDown " + button);
@@ -587,17 +559,6 @@ class Editor: Managed
 			}
 		}
 		
-		
-		if (GetWorldTime() - m_LastMouseDown < 500) {
-			m_LastMouseDown = 0;
-			if (OnDoubleClick(button) && m_LastMouseInput == button) {
-				m_LastMouseInput = -1;
-				return true; // return is so we dont call GetWorldTime again
-			}
-		}
-	
-		m_LastMouseInput = button;
-		m_LastMouseDown = GetWorldTime();
 		return false;
 	}
 	
@@ -670,46 +631,6 @@ class Editor: Managed
 	{
 		return AddInHand(item.CreateObject(Editor.CurrentMousePosition, vector.Zero, 1.0), hand_data);				
 	}
-			
-	void EditLootSpawns(EditorPlaceableObjectData placeable_item)
-	{
-		EditorLog.Info("Launching Loot Editor...");
-		m_LootEditTarget = GetGame().CreateObjectEx(placeable_item.GetName(), Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
-		vector size = ObjectGetSize(m_LootEditTarget);
-		LootYOffset = size[1] / 2;
-		m_LootEditTarget.SetPosition(Vector(0, LootYOffset, 0));
-		m_LootEditTarget.SetOrientation(Vector(90, 0, 0));
-		
-		GetCamera().Speed = 10;
-		m_PositionBeforeLootEditMode = m_EditorCamera.GetPosition();
-		m_EditorCamera.SetPosition(Vector(10, LootYOffset, 10));
-		m_EditorCamera.LookAt(Vector(0, LootYOffset, 0));	
-		
-		if (!FileExist(GeneralSettings.EditorProtoFile)) {
-			EditorLog.Info("EditorProtoFile not found! Copying...");
-			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", GeneralSettings.EditorProtoFile);
-		}
-		
-		m_EditorMapGroupProto = new EditorMapGroupProto(m_LootEditTarget); 
-		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, GeneralSettings.EditorProtoFile);
-		
-		m_LootEditMode = true;
-		CollisionMode = true;
-		GetEditorHud().GetTemplateController().NotifyPropertyChanged("CollisionMode");
-		
-		thread EditLootSpawnsDialog();
-	}
-	
-	private void EditLootSpawnsDialog()
-	{
-		MessageBox.Show("Attention!", "Double Click: Add new Loot Position\nEscape: Exit Loot Editor (Copies loot positions to clipboard)", MessageBoxButtons.OK);
-	}
-
-	private void EditLootSpawnFinishedDialog()
-	{
-		EditorLootEditorDialog loot_editor_dialog("Attention!");
-		loot_editor_dialog.ShowDialog();
-	}
 	
 	void StartInventoryEditor(EntityAI entity)
 	{
@@ -730,61 +651,6 @@ class Editor: Managed
 	bool IsInventoryEditorActive()
 	{
 		return (m_EditorInventoryEditorHud != null);	
-	}
-	
-	// Kinda very jank i think
-	void InsertLootPosition(vector position)
-	{
-		m_EditorMapGroupProto.InsertLootPoint(new EditorLootPointData(position, 1, 1, 32));
-	}
-	
-	void FinishEditLootSpawns()
-	{
-		EditorLog.Trace("Editor::FinishEditLootSpawns");
-		
-		EditorLog.Info("Closing Loot Editor");
-		array<EditorObject> loot_spawns = m_EditorMapGroupProto.GetLootSpawns();
-		Object building = m_EditorMapGroupProto.GetBuilding();
-		string loot_position_data;
-		
-		loot_position_data += string.Format("<group name=\"%1\" lootmax=\"4\">\n", building.GetType());
-		// this shits a mess
-		loot_position_data += "	<usage name=\"Industrial\" />\n";
-		loot_position_data += "	<usage name=\"Farm\" />\n";
-		loot_position_data += "	<usage name=\"Military\" />\n";
-		loot_position_data += "	<container name=\"lootFloor\" lootmax=\"4\">\n";
-		
-		foreach (EditorObject loot_spawn: loot_spawns) {
-			EditorLootPoint loot_point = EditorLootPoint.Cast(loot_spawn.GetWorldObject());
-			if (!loot_point) {
-				continue;
-			}
-			
-			vector loot_pos = loot_spawn.GetWorldObject().GetPosition();
-			loot_pos[1] = loot_pos[1] - LootYOffset;
-			loot_position_data += string.Format("		<point pos=\"%1\" range=\"%2\" height=\"%3\" /> \n", loot_pos.ToString(false), loot_point.Range, loot_point.Height);
-		}
-		
-		loot_position_data += "	</container>\n";
-		loot_position_data += "</group>\n";
-		
-		GetGame().CopyToClipboard(loot_position_data);
-		
-		delete m_EditorMapGroupProto;
-		
-		GetGame().ObjectDelete(m_LootEditTarget);
-		GetCamera().Speed = 60;
-		m_EditorCamera.SetPosition(m_PositionBeforeLootEditMode);
-
-		m_LootEditMode = false;
-		CollisionMode = false;
-		
-		thread EditLootSpawnFinishedDialog();
-	}
-	
-	bool IsLootEditActive() 
-	{ 
-		return m_LootEditMode; 
 	}
 
 	EditorHud ReloadHud() 
@@ -860,9 +726,7 @@ class Editor: Managed
 		Statistics.PlacedObjects++;
 			
 		m_PlacedObjects.Insert(editor_object.GetUUID(), editor_object);
-		
-		m_EditorHud.GetTemplateController().PlacementsFolder.GetTreeItem().GetTemplateController().Children.Insert(editor_object.GetTreeItem());
-		
+			
 		if (m_CurrentOnlineSession) {
 			m_CurrentOnlineSession.SetSynchDirty();
 		} 

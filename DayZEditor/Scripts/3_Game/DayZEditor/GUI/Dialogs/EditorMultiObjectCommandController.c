@@ -41,7 +41,7 @@ class EditorMultiObjectCommandController
 				}
 				
 				case "Name": {
-					editor_object.SetDisplayName(Name);
+					//editor_object.SetDisplayName(Name);
 					break;
 				}
 							

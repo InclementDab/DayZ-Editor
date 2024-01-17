@@ -38,6 +38,10 @@ class EditorHud: ScriptView
 	
 	protected ref ScriptView m_CurrentMenu;
 	
+	protected ref map<string, ref EditorCategory> m_PlacedCategories = new map<string, ref EditorCategory>();
+	
+	protected EditorCategory m_CurrentPlacingContext;
+	
 	void EditorHud()
 	{		
 		float w, h;
@@ -47,8 +51,29 @@ class EditorHud: ScriptView
 		Left.SetSize(w, y - 110);
 		Right.GetSize(w, h);
 		Right.SetSize(w, y - 110);	
+		
+		m_CurrentPlacingContext = InsertPlacedCategory(new EditorCategory("Placed Objects"));
+		InsertPlacedCategory(new EditorCategory("Hidden Objects"));
 	}
 	
+	EditorCategory InsertPlacedCategory(notnull EditorCategory editor_category)
+	{
+		m_PlacedCategories[editor_category.GetName()] = editor_category;
+		m_TemplateController.RightListItems.Insert(editor_category.GetTreeItem());
+		
+		return editor_category;
+	}
+	
+	EditorCategory GetPlacedCategory(string category)
+	{
+		return m_PlacedCategories[category];
+	}
+	
+	EditorCategory GetCurrentPlacingCategory()
+	{
+		return m_CurrentPlacingContext;
+	}
+		
 	void OnCreateSessionExecute(ButtonCommandArgs args)
 	{
 		m_CurrentMenu = new EditorCreateOnlineSessionView();
