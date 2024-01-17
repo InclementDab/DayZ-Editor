@@ -37,6 +37,8 @@ class EditorObject: EditorSelectableBase
 	protected string m_DisplayName;
 	
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
+	
+	protected Object m_TranslationGizmo;
 		
 	// Human Properties
 	int CurrentAnimation;

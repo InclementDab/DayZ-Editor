@@ -13,19 +13,19 @@ class CfgVehicles
 {
 	class HouseNoDestruct;
 
-	class DSLRCamera: HouseNoDestruct
+	class StaticCamera: HouseNoDestruct
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\CameraNormal.p3d";
 	};
 
-	class DSLRCameraChristmas: HouseNoDestruct
+	class StaticCameraChristmas: HouseNoDestruct
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\Camera_xmas_Normal.p3d";
 	};
 
-	class DSLRCameraAnniversary: HouseNoDestruct
+	class StaticCameraAnniversary: HouseNoDestruct
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\Camera.p3d";

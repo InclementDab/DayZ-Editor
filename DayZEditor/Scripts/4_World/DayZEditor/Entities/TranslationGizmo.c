@@ -1,0 +1,4 @@
+class TranslationGizmo: Object
+{
+	
+}
