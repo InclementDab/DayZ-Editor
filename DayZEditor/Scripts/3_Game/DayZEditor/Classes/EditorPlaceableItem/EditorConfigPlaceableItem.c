@@ -7,18 +7,25 @@ class EditorConfigPlaceableItem: EditorPlaceableItem
 	{
 		m_Path = path;
 		m_Type = type;
-		
+				
+		m_DisplayName = type;
+	}
+	
+	override EditorPlaceableItemCategory GetCategory()
+	{
 		GetGame().ConfigGetFullPath(string.Format("%1 %2", m_Path, m_Type), m_FullPath);
 		
 		if ((m_FullPath.Find("Weapon_Base") != -1) || (m_FullPath.Find("Inventory_Base")) != -1) {
-			m_Category = EditorPlaceableItemCategory.DYNAMIC;
+			return EditorPlaceableItemCategory.DYNAMIC;
 		} else if (m_FullPath.Find("HouseNoDestruct") != -1) {
-			m_Category = EditorPlaceableItemCategory.STRUCTURE;
+			return EditorPlaceableItemCategory.STRUCTURE;
 		} else if (m_FullPath.Find("Man") != -1) {
-			m_Category = EditorPlaceableItemCategory.AI;
+			return EditorPlaceableItemCategory.AI;
 		} else if (m_FullPath.Find("Transport") != -1) {
-			m_Category = EditorPlaceableItemCategory.VEHICLE;
+			return EditorPlaceableItemCategory.VEHICLE;
 		}
+		
+		return EditorPlaceableItemCategory.UNKNOWN;
 	}
 	
 	override Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)
@@ -37,12 +44,7 @@ class EditorConfigPlaceableItem: EditorPlaceableItem
 		object.Update();		
 		return object;
 	}
-	
-	override string GetName()
-	{
-		return m_Type;
-	}
-	
+			
 	override string GetModel()
 	{
 		string model;

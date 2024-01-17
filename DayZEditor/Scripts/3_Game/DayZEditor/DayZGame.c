@@ -25,6 +25,7 @@ modded class DayZGame
 	{
 		// Loads placeable objects	
 		g_Game.ReportProgress("Loading Placeable Objects");
+				
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 				
 		// handle config objects
@@ -64,8 +65,11 @@ modded class DayZGame
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
-			
+		
 		foreach (EditorPlaceableItem placeable_item: m_AllPlaceableItems) {
+			
+		
+		
 			if (!m_PlaceableItems[placeable_item.GetCategory()]) {
 				m_PlaceableItems[placeable_item.GetCategory()] = {};
 			}

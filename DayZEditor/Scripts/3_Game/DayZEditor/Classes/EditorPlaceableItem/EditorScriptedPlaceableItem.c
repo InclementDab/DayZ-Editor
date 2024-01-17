@@ -5,6 +5,8 @@ class EditorScriptedPlaceableItem: EditorPlaceableItem
 	void EditorScriptedPlaceableItem(typename type)
 	{
 		m_Type = type;
+		
+		m_DisplayName = m_Type.ToString();
 	}
 		
 	override Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)
@@ -24,16 +26,11 @@ class EditorScriptedPlaceableItem: EditorPlaceableItem
 		return object;
 	}
 	
-	override string GetName()
-	{
-		return m_Type.ToString();
-	}
-	
 	override EditorPlaceableItemCategory GetCategory()
 	{
 		return EditorPlaceableItemCategory.SCRIPTED;
 	}
-		
+			
 	override EditorObjectData CreateData(vector position, vector orientation, float scale, int flags = EFE_DEFAULT)
 	{
 		return EditorObjectData.Create(m_Type.ToString(), position, orientation, scale, flags);

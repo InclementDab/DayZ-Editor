@@ -14,4 +14,6 @@ class EditorPlaceableItemCategory: EditorCategory
 	static const ref EditorPlaceableItemCategory STATIC = new EditorPlaceableItemCategory("Static Objects");	// Static
 	static const ref EditorPlaceableItemCategory DYNAMIC = new EditorPlaceableItemCategory("Dynamic Objects");  	// Inventory_Base
 	static const ref EditorPlaceableItemCategory SCRIPTED = new EditorPlaceableItemCategory("Scripted Objects");
+	
+	static ref array<EditorPlaceableItemCategory> All = { UNKNOWN, PLANTS, ROCK, CLUTTER, STRUCTURE, WRECK, AI, WATER, VEHICLE, STATIC, DYNAMIC, SCRIPTED }; 
 }

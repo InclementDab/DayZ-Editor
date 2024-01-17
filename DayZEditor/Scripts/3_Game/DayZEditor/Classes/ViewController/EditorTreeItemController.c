@@ -3,20 +3,8 @@ class EditorTreeItemController: ViewController
 	ref ObservableCollection<ref EditorTreeItem> Children = new ObservableCollection<ref EditorTreeItem>(this);
 	
 	string Text;
-	Widget Button, ButtonText, Icon, Spacer1, CollapseWrapper, Spacer0, ChildrenWrapper;
-	
-	override void PropertyChanged(string property_name)
-	{
-		switch (property_name) {
-			case "Text": {
-				float w, h;
-				ButtonText.GetScreenSize(w, h);
-				Button.SetScreenSize(w, h);
-				break;
-			}
-		}
-	}
-	
+	Widget Icon, Spacer1, CollapseWrapper, Spacer0, ChildrenWrapper;
+		
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{
 		Icon.Show(Children.Count() > 0);

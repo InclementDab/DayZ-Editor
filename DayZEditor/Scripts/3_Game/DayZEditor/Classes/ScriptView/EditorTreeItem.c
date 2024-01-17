@@ -13,17 +13,19 @@ class EditorTreeItem: ScriptView
 	
 	protected bool m_IsBeingDragged;
 	
-	protected EditorSelectableBase m_Selectable;
+	protected ref ScriptCaller m_OnCalled;
 	
-	void EditorTreeItem(notnull EditorSelectableBase selectable_base)
+	void EditorTreeItem(string text, ScriptCaller on_clicked)
 	{
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
-		m_Selectable = selectable_base;
-		m_Selectable.OnSelectionChanged.Insert(OnSelectionChange);
+		m_OnCalled = on_clicked;
 		
-		m_TemplateController.Text = m_Selectable.GetDisplayName();
-		m_TemplateController.NotifyPropertyChanged("Text");		
+		Text.SetText(text);
 				
+		float w, h;
+		Text.GetScreenSize(w, h);
+		Button.SetScreenSize(w, h);
+		
 		ShowChildren(false);
 	}
 	
@@ -97,10 +99,10 @@ class EditorTreeItem: ScriptView
 			return;
 		}
 		
-		m_Selectable.SetSelected(true);
+		m_OnCalled.Invoke(true);
 	}
 		
-	void OnSelectionChange(EditorSelectableBase selectable_base, bool state)
+	void OnSelectionChange(bool state)
 	{
 		if (state) {
 			WidgetAnimator.AnimateColor(Button, ARGB(255, 75, 119, 190), 50);			

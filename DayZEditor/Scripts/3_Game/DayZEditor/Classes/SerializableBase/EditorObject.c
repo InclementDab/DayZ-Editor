@@ -28,8 +28,6 @@ class EditorObject: EditorSelectableBase
 	
 	protected ref array<ref EditorPointView> m_PointViews = {};
 	
-	protected ref EditorTreeItem m_TreeItem;
-	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
@@ -60,9 +58,8 @@ class EditorObject: EditorSelectableBase
 				
 		m_DisplayName = type;
 		
-		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
-			m_TreeItem = new EditorTreeItem(this);
-			GetEditor().GetEditorHud().GetTemplateController().PlacementsFolderView.GetTemplateController().Children.Insert(m_TreeItem);
+		if (((m_Flags & EditorObjectFlags.LISTITEM) != EditorObjectFlags.LISTITEM)) {
+			delete m_TreeItem;
 		}
 		
 		m_Object = GetGame().CreateObjectEx(Type, Position, ECE_LOCAL);

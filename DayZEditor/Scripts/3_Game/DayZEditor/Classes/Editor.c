@@ -625,6 +625,7 @@ class Editor: Managed
 		} else {
 			m_PlacingObjects[world_object] = new EditorHandData();
 		}
+		
 		return m_PlacingObjects;
 	}
 	
@@ -822,10 +823,12 @@ class Editor: Managed
 		Statistics.PlacedObjects++;
 			
 		m_PlacedObjects.Insert(editor_object.GetUUID(), editor_object);
-			
+		
+		m_EditorHud.GetTemplateController().PlacementsFolder.GetTreeItem().GetTemplateController().Children.Insert(editor_object.GetTreeItem());
+		
 		if (m_CurrentOnlineSession) {
 			m_CurrentOnlineSession.SetSynchDirty();
-		}
+		} 
 		
 		return editor_object;
 	}

@@ -24,8 +24,7 @@ class EditorHudController: EditorControllerBase
 		
 	ref ObservableCollection<ref EditorTreeItem> LeftListItems = new ObservableCollection<ref EditorTreeItem>(this);
 	ref ObservableCollection<ref EditorTreeItem> RightListItems = new ObservableCollection<ref EditorTreeItem>(this);
-		
-	ref EditorTreeItem PlacementsFolderView, HiddenFolderView;
+	
 	ref EditorPlaceableItemCategory PlacementsFolder = new EditorPlaceableItemCategory("Placed Objects");
 	ref EditorPlaceableItemCategory HiddenFolder = new EditorPlaceableItemCategory("Hidden Objects");
 	
@@ -121,10 +120,10 @@ class EditorHudController: EditorControllerBase
 		float widest_x;
 		map<EditorPlaceableItemCategory, ref array<EditorPlaceableItem>> all_placeable_items = GetDayZGame().GetPlaceableItemsByCategory();
 		foreach (EditorPlaceableItemCategory category, array<EditorPlaceableItem> placeable_items: all_placeable_items) {
-			EditorTreeItem tree_item = new EditorTreeItem(category);
+			EditorTreeItem tree_item = category.GetTreeItem();
 			
 			foreach (EditorPlaceableItem placeable_item: placeable_items) {
-				tree_item.GetTemplateController().Children.Insert(new EditorPlaceableTreeItem(placeable_item));
+				tree_item.GetTemplateController().Children.Insert(placeable_item.GetTreeItem());
 			}
 			
 			LeftListItems.Insert(tree_item);
@@ -147,8 +146,8 @@ class EditorHudController: EditorControllerBase
 			}
 		}
 		
-		RightListItems.Insert(new EditorTreeItem(PlacementsFolder));
-		RightListItems.Insert(new EditorTreeItem(PlacementsFolder));
+		RightListItems.Insert(PlacementsFolder.GetTreeItem());
+		RightListItems.Insert(HiddenFolder.GetTreeItem());
 		
 		ReloadBrushes(m_Editor.GeneralSettings.EditorBrushFile);
 	}

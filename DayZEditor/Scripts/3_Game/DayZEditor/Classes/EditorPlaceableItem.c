@@ -1,7 +1,5 @@
 class EditorPlaceableItem: EditorSelectableBase
 {
-	protected EditorPlaceableItemCategory m_Category = EditorPlaceableItemCategory.UNKNOWN;
-		
 	protected Object m_Object;
 	
 	EditorObjectData CreateData(vector position, vector orientation, float scale, int flags = EFE_DEFAULT)
@@ -16,7 +14,7 @@ class EditorPlaceableItem: EditorSelectableBase
 	
 	EditorPlaceableItemCategory GetCategory()
 	{
-		return m_Category;
+		return EditorPlaceableItemCategory.UNKNOWN;
 	}
 	
 	string GetName()
@@ -38,7 +36,7 @@ class EditorPlaceableItem: EditorSelectableBase
 			GetEditor().AddInHand(m_Object, new EditorHandData());
 		} else {
 			GetEditor().RemoveFromHand(m_Object);
-			m_Object.Delete();
+			GetGame().ObjectDelete(m_Object);
 		}
 	}
 			
