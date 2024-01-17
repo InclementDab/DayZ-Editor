@@ -43,12 +43,7 @@ class EditorEscapeCommand: EditorCommand
 			m_Editor.GetCameraTrackManager().ClearSelection();
 			return true;
 		}
-		
-		if (m_Editor.GetEditorHud().IsMapVisible()) {
-			m_Editor.GetEditorHud().EditorMapWidget.Show(false);
-			return true;
-		}
-		
+				
 		if (g_Game.GetMission().IsPaused()) {
 			m_Editor.GetEditorHud().Show(m_Editor.GetCurrentControl() == m_Editor.GetCamera());
 			g_Game.GetMission().Continue();

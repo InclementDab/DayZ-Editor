@@ -145,12 +145,6 @@ class EditorHudController: EditorControllerBase
 		ReloadBrushes(m_Editor.GeneralSettings.EditorBrushFile);
 	}
 		
-	void InsertMapMarker(EditorMarker map_marker)
-	{
-		EditorLog.Trace("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
-		m_Editor.GetEditorHud().EditorMapWidget.AddChild(map_marker.GetLayoutRoot());
-	}
-	
 	float GetPrecisionLevel()
 	{
 		return PrecisionLevel.Parse();

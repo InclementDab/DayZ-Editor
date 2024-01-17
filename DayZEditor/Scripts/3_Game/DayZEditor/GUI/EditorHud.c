@@ -2,19 +2,11 @@ class EditorHud: ScriptView
 {
 	protected bool m_IsBoxSelectActive;
 	protected EditorHudController m_TemplateController;
-	
-	// View Properties
-	protected ButtonWidget MenuBarFile;
-	protected ButtonWidget MenuBarEdit;
-	protected ButtonWidget MenuBarView;
-	protected ButtonWidget MenuBarEditor;
-	
+		
 	// View Properties
 	Widget Left, Right;
 	
 	// Layout Elements
-	Widget NotificationFrame;
-	Widget MapContainer;
 	Widget LeftDragZone, RightDragZone;
 	
 	CanvasWidget EditorCanvas;
@@ -22,16 +14,6 @@ class EditorHud: ScriptView
 	
 	TextWidget SessionIdData, UserCountData, EntityCountData;
 	
-	protected MultilineEditBoxWidget SearchBar;
-	
-	ref EditorCameraMapMarker CameraMapMarker;
-	
-	// todo protect this and move all Map logic in here?
-	MapWidget EditorMapWidget;
-	
-	EditBoxWidget LeftbarSearchBar;
-	TextWidget ObjectHoverText;
-
 	protected ref EditorTooltip m_CurrentTooltip;
 	
 	protected Widget m_DraggedBar;
@@ -214,17 +196,6 @@ class EditorHud: ScriptView
 			EditorObject.ClearSelections();
 			DelayedDragBoxCheck();
 		}
-		
-		if (input.LocalPress("EditorToggleCursor")) {
-			if (!EditorMapWidget.IsVisible() && (!CurrentDialog || !GetEditor().GeneralSettings.LockCameraDuringDialogs)) {
-				ShowCursor(!IsCursorVisible());
-			}
-		}
-		
-		if (input.LocalPress("EditorToggleMap")) {
-			EditorMapWidget.Show(!EditorMapWidget.IsVisible());
-			ShowCursor(true);
-		}
 	}
 	
 	void OnCreateNewFolder(ButtonCommandArgs args)
@@ -291,25 +262,11 @@ class EditorHud: ScriptView
 		delete m_CurrentTooltip;
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
-		
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		switch (w) {
-			case MenuBarFile:
-			case MenuBarEdit:
-			case MenuBarView:
-			case MenuBarEditor: {
-				m_CurrentMenu = CreateToolbarMenu(w);
-				return true;
-			}		
-		}
-		
-		return super.OnClick(w, x, y, button);
-	}
-	
+			
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		switch (w) {
+			/*
 			case SearchBar: {
 				for (int i = 0; i < m_TemplateController.LeftListItems.Count(); i++) {					
 					string text;
@@ -318,7 +275,7 @@ class EditorHud: ScriptView
 				}
 				
 				break;
-			}
+			}*/
 		}
 		
 		return super.OnChange(w, x, y, finished);
@@ -375,12 +332,7 @@ class EditorHud: ScriptView
 		
 		GetTemplateController().ShowNotification(text, color, duration);
 	}
-	
-	bool IsMapVisible()
-	{
-		return EditorMapWidget.IsVisible();
-	}
-	
+		
 	bool IsSelectionBoxActive()
 	{
 		return m_IsBoxSelectActive;
@@ -481,66 +433,18 @@ class EditorHud: ScriptView
 	{
 		return EditorHudController.Cast(m_Controller);
 	}
-	
-	// Relay Commands
-	void MenuBarExecute(ButtonCommandArgs args) 
-	{		
-		EditorLog.Trace("EditorHudToolbarController::MenuBarExecute");
-		if (!EditorHud.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
-			EditorHud.CurrentMenu = CreateToolbarMenu(args.Source);
-		} else {
-			delete EditorHud.CurrentMenu;
-		}
-	}	
-	
-	protected EditorMenu CreateToolbarMenu(Widget toolbar_button)
-	{
-		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
-				
-		EditorMenu toolbar_menu;
-		switch (toolbar_button) {
 			
-			case MenuBarFile: {
-				toolbar_menu = new EditorFileMenu();
-				break;
-			}
-			
-			case MenuBarEdit: {
-				toolbar_menu = new EditorEditMenu();
-				break;
-			}
-			
-			case MenuBarView: {
-				toolbar_menu = new EditorViewMenu();
-				break;
-			}
-			
-			case MenuBarEditor: {
-				toolbar_menu = new EditorEditorMenu(); // lol
-				break;
-			}
-		}
-		
-		// Sets position to bottom of button
-		float x, y, w, h;
-		toolbar_button.GetScreenPos(x, y);
-		toolbar_button.GetScreenSize(w, h);
-		toolbar_menu.GetLayoutRoot().SetPos(x, y + h);
-		
-		return toolbar_menu;
-	}
-	
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
 		string text = GetFriendlyObjectName(target, component_index);
-		ObjectHoverText.SetText(text);
-		ObjectHoverText.SetColor(Ternary<int>.If(text.Contains(".p3d"), COLOR_YELLOW, COLOR_WHITE));
+		//ObjectHoverText.SetText(text);
+		//ObjectHoverText.SetColor(Ternary<int>.If(text.Contains(".p3d"), COLOR_YELLOW, COLOR_WHITE));
 		return true;
 	}
 	
 	bool OnMouseExitObject(Object target, int x, int y, int component_index)
 	{	
-		ObjectHoverText.SetText(string.Empty);
+		//ObjectHoverText.SetText(string.Empty);
 		return true;
 	}	
 	

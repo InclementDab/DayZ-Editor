@@ -7,7 +7,6 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	protected MapWidget m_MapWidget;
 	void EditorObjectWorldMarker(EditorObject editor_object)
 	{
-		m_MapWidget = m_Editor.GetEditorHud().EditorMapWidget;
 		m_DragHandler = new EditorObjectDragHandler(m_EditorObject);
 
 		GetScreenSize(m_ScreenX, m_ScreenY);

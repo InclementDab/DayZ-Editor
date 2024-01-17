@@ -6,7 +6,6 @@ class EditorCameraMapMarker: EditorMarker
 	void EditorCameraMapMarker(Camera camera)
 	{	
 		m_Camera = camera;
-		m_EditorMap = GetEditor().GetEditorHud().EditorMapWidget;
 	}
 	
 	override void Update(float dt)
