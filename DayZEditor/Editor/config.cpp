@@ -5,14 +5,12 @@ class CfgPatches
 		units[] = {};
 		weapons[] = {};
 		requiredVersion = 0.1;
-		requiredAddons[] = {"DZ_Data", "DZ_Worlds_Chernarusplus_World"};
+		requiredAddons[] = {"DZ_Data"};
 	};
 };
 
-
 class CfgVehicles
 {
-	class Static;
 	class HouseNoDestruct;
 
 	class DSLRCamera: HouseNoDestruct
@@ -64,37 +62,7 @@ class CfgVehicles
 		model = "\DayZEditor\Editor\xmas_gift_blue2.p3d";
 	};
 
-	class Inventory_Base;
-	class GizmoBase: Inventory_Base
-	{
-		scope = 0;
-		hiddenSelections[] = {"main"};
-		shadow = 0;
-	};
-	class GizmoArrow: GizmoBase
-	{
-		scope = 0;
-		model = "\DayZEditor\Editor\TranslationWidget.p3d";
-		shadow = 0;
-	};
-
-	class GizmoCenter: GizmoBase
-	{
-		scope = 0;
-		model = "\DayZEditor\Editor\TranslationCenter.p3d";
-		shadow = 0;
-	};
-
-	class RotationWidget: Inventory_Base
-	{
-		scope = 1;
-		itemSize[]={16,16};
-		model = "\DayZEditor\Editor\RotationWidget.p3d";
-		hiddenSelections[] = {"RotationX", "RotationY", "RotationZ"};
-		shadow = 0;
-	};
-
-	class BrushBase: Inventory_Base
+	class BrushBase: HouseNoDestruct
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\BrushBase.p3d";
