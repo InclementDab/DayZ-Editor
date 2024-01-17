@@ -12,25 +12,25 @@ class EditorObjectDragHandler: EditorDragHandler
 		return position;
 	}
 	
-	static void Drag(notnull EditorObject editor_object, float distance, vector offset)
+	static void Drag(notnull Object object, vector offset)
 	{
 		vector transform[4];		
-		editor_object.GetWorldObject().GetTransform(transform);
+		object.GetTransform(transform);
 		vector original_position = transform[3];
 		
-		vector cursor_position = DoCursorRaycast(3000, editor_object.GetWorldObject());
+		vector cursor_position = DoCursorRaycast(3000, object);
 		
 		// Attempted placement position, now filter it
-		transform[3] = cursor_position - offset.Multiply3(transform);		
+		transform[3] = cursor_position.InvMultiply4(transform) + offset.Multiply4(transform);
 		
 		if (KeyState(KeyCode.KC_LMENU)) {			
 			Debug.DrawCylinder(cursor_position, 0.1, 1000, COLOR_GREEN, ShapeFlags.ONCE);
-			transform[3][0] = editor_object.GetWorldObject().GetPosition()[0];
-			transform[3][2] = editor_object.GetWorldObject().GetPosition()[2];
+			transform[3][0] = object.GetPosition()[0];
+			transform[3][2] = object.GetPosition()[2];
 		}
 		
 		if (KeyState(KeyCode.KC_LSHIFT)) {
-			transform[3] = editor_object.GetWorldObject().GetPosition();
+			transform[3] = object.GetPosition();
 			
 			Shape.CreateArrow(transform[3], cursor_position, 1, COLOR_WHITE, ShapeFlags.ONCE);
 						
@@ -52,7 +52,7 @@ class EditorObjectDragHandler: EditorDragHandler
 			
 		}
 		
-		editor_object.GetWorldObject().SetTransform(transform);
+		object.SetTransform(transform);
 		//editor_object.GetWorldObject().SetPosition(cursor_position - m_Offset.Multiply3(transform));
 	}
 	

@@ -236,11 +236,48 @@ class Editor: Managed
 		Statistics.Save();
 	}
 	
+	protected Object m_DragTarget;
+	protected vector m_DragOffset;
+	protected void CheckForDragging(Object object)
+	{
+		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) == MB_PRESSED_MASK) {
+			m_DragTarget = object;
+			
+			vector position;	
+			vector end_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * 3000;
+			int interaction_layers = PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.TERRAIN | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.DYNAMICITEM | PhxInteractionLayers.ITEM_LARGE;
+			Object hit_object;
+			vector normal;
+			float fraction;
+			DayZPhysics.RayCastBullet(GetGame().GetCurrentCameraPosition(), end_pos, interaction_layers, null, hit_object, position, normal, fraction);
+			
+			vector transform[4];
+			m_DragTarget.GetTransform(transform);
+			
+			m_DragOffset = position.InvMultiply4(transform);
+		}
+	}
+	
 	void Update(float timeslice)
 	{
 		if (ShouldProcessInput()) {
 			ProcessInput(GetGame().GetInput());
 		}
+		
+		if (GetGame().GetInput().LocalPress("UAFire")) {
+			Object object = GetObjectUnderCursor();
+			if (object && m_WorldObjectIndex[object.GetID()]) {
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CheckForDragging, 100, false, object);
+			}
+		}
+		
+		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)  != MB_PRESSED_MASK) {
+			m_DragTarget = null;
+		}
+		
+		if (m_DragTarget) {
+			EditorObjectDragHandler.Drag(m_DragTarget, m_DragOffset);
+		}		
 	
 		Statistics.Playtime += timeslice;
 		

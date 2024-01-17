@@ -30,7 +30,7 @@ class EditorPointView: ScriptView
 		m_EditorObject.GetWorldObject().GetTransform(transform);
 		
 		if (m_IsDragging) {
-			EditorObjectDragHandler.Drag(m_EditorObject, m_PlacementDistance, m_Offset);
+			EditorObjectDragHandler.Drag(m_EditorObject.GetWorldObject(), m_Offset);
 		}
 
 		float x, y, w, h;		

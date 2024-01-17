@@ -180,6 +180,7 @@ class EditorObject: EditorSelectableBase
 			
 			vector mat[4];
 			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
+			Math3D.MatrixMultiply3(transform, mat, mat);
 			mat[3] = pos2;
 			Shape.CreateMatrix(mat);
 			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
