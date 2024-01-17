@@ -1,4 +1,4 @@
-class EditorPlaceableObjectDataCategory: EditorCategory
+class EditorPlaceableObjectDataCategory: EditorPlaceableObjectData
 {	
 	static const ref EditorPlaceableObjectDataCategory UNKNOWN = new EditorPlaceableObjectDataCategory("Unknown");
 	
@@ -16,4 +16,15 @@ class EditorPlaceableObjectDataCategory: EditorCategory
 	static const ref EditorPlaceableObjectDataCategory SCRIPTED = new EditorPlaceableObjectDataCategory("Scripted Objects");
 	
 	static ref array<EditorPlaceableObjectDataCategory> All = { UNKNOWN, PLANTS, ROCK, CLUTTER, STRUCTURE, WRECK, AI, WATER, VEHICLE, STATIC, DYNAMIC, SCRIPTED }; 
+	
+	protected string m_Name;
+	void EditorPlaceableObjectDataCategory(string name)
+	{
+		m_Name = name;
+	}
+	
+	override string GetName()
+	{
+		return m_Name;
+	}
 }
