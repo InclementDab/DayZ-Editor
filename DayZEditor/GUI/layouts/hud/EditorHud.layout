@@ -16,7 +16,7 @@ FrameWidgetClass EditorFrame {
  {
   CanvasWidgetClass EditorCanvas {
    ignorepointer 1
-   position -0.00072 0.001
+   position -0.00049 0.001
    size 1 1
    halign center_ref
    valign center_ref
@@ -28,11 +28,260 @@ FrameWidgetClass EditorFrame {
   }
   PanelWidgetClass Toolbar {
    ignorepointer 1
-   size 48 48
+   color 0.1216 0.1216 0.1216 1
+   size 1 42
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
+   scaled 0
+   style rover_sim_colorable
+   {
+    ImageWidgetClass Icon {
+     ignorepointer 1
+     size 32 32
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     image0 "set:icons image:shovel_snow"
+     mode blend
+     "src alpha" 1
+    }
+    WrapSpacerWidgetClass FileMenuWrapper {
+     ignorepointer 1
+     position 47 0
+     size 1602 41
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     style Colorable
+     content_valign center
+     {
+      ButtonWidgetClass FileButton {
+       color 1 1 1 0.3922
+       size 40 25
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       style DayZDefaultButtonTop
+       text "File"
+       font "gui/fonts/MetronBook"
+      }
+     }
+    }
+    PanelWidgetClass SearchWrapper {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     position 0 0
+     size 0.4 42
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style blank
+     {
+      PanelWidgetClass SearchBarPanel {
+       ignorepointer 1
+       color 0.1569 0.1569 0.1569 1
+       size 0.93 27
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scaled 0
+       style rover_sim_colorable
+       {
+        EditBoxWidgetClass SearchBar {
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         text "Search..."
+         font "gui/fonts/MetronBook"
+        }
+       }
+      }
+      GridSpacerWidgetClass UndoWrapper {
+       clipchildren 1
+       ignorepointer 1
+       position -84 0
+       size 84 42
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       content_halign center
+       content_valign center
+       Columns 2
+       Rows 1
+       {
+        FrameWidgetClass Undo {
+         ignorepointer 1
+         position 0 0
+         size 0 0
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          ButtonWidgetClass "Undo.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Default
+           {
+            ImageWidgetClass "Undo.Icon" {
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:rotate_left"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Redo {
+         ignorepointer 1
+         position 0 0
+         size 0 0
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          ButtonWidgetClass "Redo.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           {
+            ImageWidgetClass "Redo.Icon" {
+             ignorepointer 1
+             position 0 0
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:rotate_right"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    GridSpacerWidgetClass ExplorerWrapper {
+     ignorepointer 1
+     size 84 42
+     halign right_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     Padding 0
+     Margin 0
+     Columns 2
+     Rows 1
+     {
+      FrameWidgetClass Minimize {
+       ignorepointer 1
+       position 0 0
+       size 0 0
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        ButtonWidgetClass "Minimize.Button" {
+         visible 1
+         size 0.75 0.75
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style Default
+         {
+          ImageWidgetClass "Minimize.Icon" {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           image0 "set:icons image:rotate_left"
+           mode blend
+           "src alpha" 1
+           filter 0
+           nocache 0
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
   }
   FrameWidgetClass Left {
    clipchildren 0
@@ -143,11 +392,6 @@ FrameWidgetClass EditorFrame {
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
-       {
-        ScriptParamsClass {
-         Binding_Name "LeftListItems"
-        }
-       }
       }
      }
     }
@@ -276,11 +520,6 @@ FrameWidgetClass EditorFrame {
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
-       {
-        ScriptParamsClass {
-         Binding_Name "RightListItems"
-        }
-       }
       }
      }
     }
@@ -327,11 +566,6 @@ FrameWidgetClass EditorFrame {
          mode additive
          "src alpha" 1
          filter 0
-        }
-       }
-       {
-        ScriptParamsClass {
-         Relay_Command "OnCreateNewFolder"
         }
        }
       }
@@ -404,7 +638,7 @@ FrameWidgetClass EditorFrame {
      visible 1
      clipchildren 0
      ignorepointer 1
-     color 0.0588 0.0588 0.0588 1
+     color 0.0941 0.0941 0.0941 1
      position 0 0
      size 1 24
      halign center_ref
@@ -476,11 +710,6 @@ FrameWidgetClass EditorFrame {
            scriptclass "ViewBinding"
            style Default
            "no focus" 1
-           {
-            ScriptParamsClass {
-             Relay_Command "MenuBarExecute"
-            }
-           }
           }
          }
         }
@@ -514,11 +743,6 @@ FrameWidgetClass EditorFrame {
            scaled 0
            scriptclass "ViewBinding"
            "no focus" 1
-           {
-            ScriptParamsClass {
-             Relay_Command "MenuBarExecute"
-            }
-           }
           }
          }
         }
@@ -552,11 +776,6 @@ FrameWidgetClass EditorFrame {
            scaled 0
            scriptclass "ViewBinding"
            "no focus" 1
-           {
-            ScriptParamsClass {
-             Relay_Command "MenuBarExecute"
-            }
-           }
           }
          }
         }
@@ -590,11 +809,6 @@ FrameWidgetClass EditorFrame {
            scaled 0
            scriptclass "ViewBinding"
            "no focus" 1
-           {
-            ScriptParamsClass {
-             Relay_Command "MenuBarExecute"
-            }
-           }
           }
          }
         }
@@ -702,11 +916,6 @@ FrameWidgetClass EditorFrame {
            filter 0
           }
          }
-         {
-          ScriptParamsClass {
-           Relay_Command "m_Editor.CommandManager.NewCommand"
-          }
-         }
         }
         ButtonWidgetClass OpenButton {
          visible 1
@@ -749,11 +958,6 @@ FrameWidgetClass EditorFrame {
            filter 0
           }
          }
-         {
-          ScriptParamsClass {
-           Relay_Command "m_Editor.CommandManager.OpenCommand"
-          }
-         }
         }
         ButtonWidgetClass SaveButton {
          visible 1
@@ -794,11 +998,6 @@ FrameWidgetClass EditorFrame {
            "clamp mode" clamp
            "stretch mode" stretch_w_h
            filter 0
-          }
-         }
-         {
-          ScriptParamsClass {
-           Relay_Command "m_Editor.CommandManager.SaveCommand"
           }
          }
         }
@@ -887,11 +1086,6 @@ FrameWidgetClass EditorFrame {
            filter 0
           }
          }
-         {
-          ScriptParamsClass {
-           Relay_Command "m_Editor.CommandManager.UndoCommand"
-          }
-         }
         }
         ButtonWidgetClass RedoButton {
          clipchildren 0
@@ -928,11 +1122,6 @@ FrameWidgetClass EditorFrame {
            "flip u" 0
            filter 0
            "Transition width" 0
-          }
-         }
-         {
-          ScriptParamsClass {
-           Relay_Command "m_Editor.CommandManager.RedoCommand"
           }
          }
         }
@@ -1022,12 +1211,6 @@ FrameWidgetClass EditorFrame {
            "Transition width" 0
           }
          }
-         {
-          ScriptParamsClass {
-           Debug_Logging 0
-           Relay_Command "m_Editor.CommandManager.CutCommand"
-          }
-         }
         }
         ButtonWidgetClass CopyButton {
          clipchildren 0
@@ -1070,12 +1253,6 @@ FrameWidgetClass EditorFrame {
            "Transition width" 0
           }
          }
-         {
-          ScriptParamsClass {
-           Debug_Logging 0
-           Relay_Command "m_Editor.CommandManager.CopyCommand"
-          }
-         }
         }
         ButtonWidgetClass PasteButton {
          clipchildren 0
@@ -1115,12 +1292,6 @@ FrameWidgetClass EditorFrame {
            "flip u" 1
            filter 0
            "Transition width" 0
-          }
-         }
-         {
-          ScriptParamsClass {
-           Debug_Logging 0
-           Relay_Command "m_Editor.CommandManager.PasteCommand"
           }
          }
         }
@@ -1207,13 +1378,6 @@ FrameWidgetClass EditorFrame {
            filter 0
           }
          }
-         {
-          ScriptParamsClass {
-           Binding_Name "m_Editor.MagnetMode"
-           Two_Way_Binding 1
-           Relay_Command "m_Editor.CommandManager.MagnetCommand"
-          }
-         }
         }
         ButtonWidgetClass GroundButton {
          clipchildren 0
@@ -1249,13 +1413,6 @@ FrameWidgetClass EditorFrame {
            "src alpha" 1
            "clamp mode" clamp
            filter 0
-          }
-         }
-         {
-          ScriptParamsClass {
-           Binding_Name "m_Editor.GroundMode"
-           Two_Way_Binding 1
-           Relay_Command "m_Editor.CommandManager.GroundCommand"
           }
          }
         }
@@ -1296,13 +1453,6 @@ FrameWidgetClass EditorFrame {
            filter 0
           }
          }
-         {
-          ScriptParamsClass {
-           Binding_Name "m_Editor.SnappingMode"
-           Two_Way_Binding 1
-           Relay_Command "m_Editor.CommandManager.SnapCommand"
-          }
-         }
         }
         ButtonWidgetClass CollisionButton {
          clipchildren 0
@@ -1340,13 +1490,6 @@ FrameWidgetClass EditorFrame {
            "src alpha" 1
            "clamp mode" clamp
            filter 0
-          }
-         }
-         {
-          ScriptParamsClass {
-           Binding_Name "m_Editor.CollisionMode"
-           Two_Way_Binding 1
-           Relay_Command "m_Editor.CommandManager.CollisionCommand"
           }
          }
         }
@@ -1433,13 +1576,6 @@ FrameWidgetClass EditorFrame {
            filter 1
           }
          }
-         {
-          ScriptParamsClass {
-           Binding_Name "m_Editor.CameraLight"
-           Two_Way_Binding 1
-           Relay_Command "m_Editor.CommandManager.CameraToggleLight"
-          }
-         }
         }
        }
       }
@@ -1514,11 +1650,6 @@ FrameWidgetClass EditorFrame {
            "stretch mode" invalid
           }
          }
-         {
-          ScriptParamsClass {
-           Relay_Command "OnDiscordButtonExecute"
-          }
-         }
         }
        }
       }
@@ -1577,11 +1708,6 @@ FrameWidgetClass EditorFrame {
          style Default
          "no focus" 1
          text "C"
-         {
-          ScriptParamsClass {
-           Relay_Command "OnCreateSessionExecute"
-          }
-         }
         }
         ButtonWidgetClass JoinSessionButton {
          position 0 0
@@ -1595,11 +1721,6 @@ FrameWidgetClass EditorFrame {
          style Default
          "no focus" 1
          text "J"
-         {
-          ScriptParamsClass {
-           Relay_Command "OnJoinSessionExecute"
-          }
-         }
         }
         ButtonWidgetClass CopySessionButton {
          position 0 0
@@ -1613,11 +1734,6 @@ FrameWidgetClass EditorFrame {
          style Default
          "no focus" 1
          text "S"
-         {
-          ScriptParamsClass {
-           Relay_Command "OnCopySessionExecute"
-          }
-         }
         }
         ButtonWidgetClass LeaveSessionButton {
          position 0 0
@@ -1631,11 +1747,6 @@ FrameWidgetClass EditorFrame {
          style Default
          "no focus" 1
          text "X"
-         {
-          ScriptParamsClass {
-           Relay_Command "OnLeaveSessionExecute"
-          }
-         }
         }
        }
       }
@@ -1743,26 +1854,8 @@ FrameWidgetClass EditorFrame {
              "size to text v" 0
              "text halign" center
              "text valign" center
-             {
-              ScriptParamsClass {
-               Binding_Name "BrushToggleButtonText"
-              }
-             }
             }
            }
-           {
-            ScriptParamsClass {
-             Binding_Name "BrushToggleButtonState"
-             Two_Way_Binding 1
-             Relay_Command "m_Editor.CommandManager.BrushToggleCommand"
-            }
-           }
-          }
-         }
-         {
-          ScriptParamsClass {
-           Binding_Name "BrushTypeBoxData"
-           Selected_Item "BrushTypeSelection"
           }
          }
         }
@@ -1795,13 +1888,6 @@ FrameWidgetClass EditorFrame {
            current 20
            "fill in" 1
            "listen to input" 1
-           {
-            ScriptParamsClass {
-             Binding_Name "BrushRadius"
-             Two_Way_Binding 1
-             Relay_Command "m_Editor.CommandManager.BrushRadiusCommand"
-            }
-           }
           }
           TextWidgetClass BrushRadiusText {
            visible 1
@@ -1819,16 +1905,6 @@ FrameWidgetClass EditorFrame {
            font "gui/fonts/metron"
            "text halign" center
            "text valign" center
-           {
-            ScriptParamsClass {
-             Binding_Name "BrushRadius"
-            }
-           }
-          }
-         }
-         {
-          ScriptParamsClass {
-           Relay_Command "m_Editor.CommandManager.BrushRadiusCommand"
           }
          }
         }
@@ -1862,13 +1938,6 @@ FrameWidgetClass EditorFrame {
            current 0.25
            "fill in" 1
            "listen to input" 1
-           {
-            ScriptParamsClass {
-             Binding_Name "BrushDensity"
-             Two_Way_Binding 1
-             Relay_Command "m_Editor.CommandManager.BrushDensityCommand"
-            }
-           }
           }
           TextWidgetClass BrushDensityText {
            visible 1
@@ -1887,16 +1956,6 @@ FrameWidgetClass EditorFrame {
            font "gui/fonts/metron"
            "text halign" center
            "text valign" center
-           {
-            ScriptParamsClass {
-             Binding_Name "BrushDensity"
-            }
-           }
-          }
-         }
-         {
-          ScriptParamsClass {
-           Relay_Command "m_Editor.CommandManager.BrushDensityCommand"
           }
          }
         }
@@ -2038,12 +2097,6 @@ FrameWidgetClass EditorFrame {
              scriptclass "ViewBinding"
              style ServerBrowser
              "limit visible" 0
-             {
-              ScriptParamsClass {
-               Binding_Name "cam_x"
-               Two_Way_Binding 1
-              }
-             }
             }
            }
           }
@@ -2111,12 +2164,6 @@ FrameWidgetClass EditorFrame {
              scriptclass "ViewBinding"
              style ServerBrowser
              "limit visible" 0
-             {
-              ScriptParamsClass {
-               Binding_Name "cam_y"
-               Two_Way_Binding 1
-              }
-             }
             }
            }
           }
@@ -2183,12 +2230,6 @@ FrameWidgetClass EditorFrame {
              scriptclass "ViewBinding"
              style ServerBrowser
              "limit visible" 0
-             {
-              ScriptParamsClass {
-               Binding_Name "cam_z"
-               Two_Way_Binding 1
-              }
-             }
             }
            }
           }
@@ -2268,12 +2309,6 @@ FrameWidgetClass EditorFrame {
          style ServerBrowser
          text "0.05"
          font "gui/fonts/sdf_MetronLight72"
-         {
-          ScriptParamsClass {
-           Binding_Name "PrecisionLevel"
-           Two_Way_Binding 1
-          }
-         }
         }
        }
       }
@@ -2295,11 +2330,6 @@ FrameWidgetClass EditorFrame {
          hexactsize 1
          vexactsize 1
          scriptclass "ViewBinding"
-         {
-          ScriptParamsClass {
-           Relay_Command "CameraTrackToggleExecute"
-          }
-         }
         }
         ImageWidgetClass CinematicCameraIcon {
          ignorepointer 1
@@ -2404,11 +2434,6 @@ FrameWidgetClass EditorFrame {
          "size to text h" 1
          "size to text v" 0
          "text valign" center
-         {
-          ScriptParamsClass {
-           Binding_Name "Version"
-          }
-         }
         }
        }
       }
@@ -2454,11 +2479,6 @@ FrameWidgetClass EditorFrame {
          "size to text h" 1
          "size to text v" 0
          "text valign" center
-         {
-          ScriptParamsClass {
-           Binding_Name "m_Editor.EditorSaveFile"
-          }
-         }
         }
        }
       }
@@ -2545,11 +2565,6 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 0
          scriptclass "ViewBinding"
-         {
-          ScriptParamsClass {
-           Relay_Command "CameraTrackToggleExecute"
-          }
-         }
         }
        }
       }
@@ -2580,12 +2595,6 @@ FrameWidgetClass EditorFrame {
        Padding 4
        Margin 0
        "Size To Content V" 1
-       {
-        ScriptParamsClass {
-         Binding_Name "CameraTrackData"
-         Two_Way_Binding 1
-        }
-       }
       }
      }
     }
@@ -2643,17 +2652,6 @@ FrameWidgetClass EditorFrame {
          text "0.05"
          "text halign" center
          "text valign" center
-         {
-          ScriptParamsClass {
-           Binding_Name "CameraSmoothing"
-          }
-         }
-        }
-       }
-       {
-        ScriptParamsClass {
-         Binding_Name "CameraSmoothing"
-         Two_Way_Binding 1
         }
        }
       }
@@ -2695,11 +2693,6 @@ FrameWidgetClass EditorFrame {
          style blank
         }
        }
-       {
-        ScriptParamsClass {
-         Relay_Command "m_Editor.CommandManager.CameraTrackAddNode"
-        }
-       }
       }
       ButtonWidgetClass CameraTrackRunButton {
        position 20 1
@@ -2725,11 +2718,6 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 0
          style blank
-        }
-       }
-       {
-        ScriptParamsClass {
-         Relay_Command "m_Editor.CommandManager.CameraTrackRun"
         }
        }
       }
@@ -2839,11 +2827,6 @@ FrameWidgetClass EditorFrame {
        font "gui/fonts/MetronLight16"
        "size to text h" 1
        "text valign" center
-       {
-        ScriptParamsClass {
-         Binding_Name "OnlineUserCount"
-        }
-       }
       }
      }
     }
@@ -2888,11 +2871,6 @@ FrameWidgetClass EditorFrame {
        font "gui/fonts/etelkatextpro16"
        "size to text h" 1
        "text valign" center
-       {
-        ScriptParamsClass {
-         Binding_Name "OnlineEntityCount"
-        }
-       }
       }
      }
     }

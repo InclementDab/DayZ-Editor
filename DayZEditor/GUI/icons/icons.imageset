@@ -188,39 +188,57 @@ ImageSetClass  {
 			Size 128 128
 			Flags 0
 		}
+		ImageSetDefClass minus {
+			Name "minus"
+			Pos 0 384
+			Size 128 128
+			Flags 0
+		}
 		ImageSetDefClass paste {
 			Name "paste"
-			Pos 0 384
+			Pos 128 384
 			Size 128 128
 			Flags 0
 		}
 		ImageSetDefClass rotate_left {
 			Name "rotate_left"
-			Pos 128 384
+			Pos 256 384
 			Size 128 128
 			Flags 0
 		}
 		ImageSetDefClass rotate_right {
 			Name "rotate_right"
-			Pos 256 384
+			Pos 384 384
 			Size 128 128
 			Flags 0
 		}
 		ImageSetDefClass rotate {
 			Name "rotate"
-			Pos 384 384
+			Pos 512 384
 			Size 128 128
 			Flags 0
 		}
 		ImageSetDefClass scissors {
 			Name "scissors"
-			Pos 512 384
+			Pos 640 384
+			Size 128 128
+			Flags 0
+		}
+		ImageSetDefClass shovel_snow {
+			Name "shovel_snow"
+			Pos 768 384
 			Size 128 128
 			Flags 0
 		}
 		ImageSetDefClass sun_bright {
 			Name "sun_bright"
-			Pos 640 384
+			Pos 896 384
+			Size 128 128
+			Flags 0
+		}
+		ImageSetDefClass xmark {
+			Name "xmark"
+			Pos 1024 384
 			Size 128 128
 			Flags 0
 		}
