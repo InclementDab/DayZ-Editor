@@ -9,6 +9,11 @@ class EditorConfigPlaceableItem: EditorPlaceableObjectData
 		m_Type = type;
 	}
 	
+	override string GetName()
+	{
+		return m_Type;
+	}
+	
 	override EditorPlaceableObjectDataCategory GetCategory()
 	{
 		GetGame().ConfigGetFullPath(string.Format("%1 %2", m_Path, m_Type), m_FullPath);

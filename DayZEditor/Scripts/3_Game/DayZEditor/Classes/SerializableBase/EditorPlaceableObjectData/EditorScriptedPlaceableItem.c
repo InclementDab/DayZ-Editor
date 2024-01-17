@@ -6,6 +6,11 @@ class EditorScriptedPlaceableItem: EditorPlaceableObjectData
 	{
 		m_Type = type;
 	}
+	
+	override string GetName()
+	{
+		return m_Type.ToString();
+	}
 		
 	override Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)
 	{		

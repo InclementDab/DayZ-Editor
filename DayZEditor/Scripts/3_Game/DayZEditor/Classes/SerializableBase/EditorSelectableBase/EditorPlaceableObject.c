@@ -7,7 +7,7 @@ class EditorPlaceableObject: EditorSelectableBase
     {
         m_PlaceableObject = placeable_object;
 		
-		m_TreeItem = new EditorPlaceableTreeItem(m_PlaceableObject.GetName(), this);
+		m_TreeItem = new EditorTreeItem(m_PlaceableObject.GetName(), this);
     }
 	
 	override EditorTreeItem GetTreeItem()

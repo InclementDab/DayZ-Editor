@@ -1,6 +1,6 @@
 class EditorStaticPlaceableItem: EditorPlaceableObjectData
 {
-	protected string m_Model;
+	protected string m_Model, m_Name;
 	
 	void EditorStaticPlaceableItem(string model)
 	{
@@ -9,8 +9,13 @@ class EditorStaticPlaceableItem: EditorPlaceableObjectData
 		array<string> items = {};
 		m_Model.Split("/", items);
 		if (items.Count() != 0) {
-			//SetDisplayName(items[items.Count() - 1]);
+			m_Name = items[items.Count() - 1];
 		}	
+	}
+	
+	override string GetName()
+	{
+		return m_Name;
 	}
 	
 	override EditorPlaceableObjectDataCategory GetCategory()
