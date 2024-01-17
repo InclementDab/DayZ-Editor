@@ -1,13 +1,13 @@
 modded class DayZGame
 {
-	protected ref array<ref EditorPlaceableItem> m_AllPlaceableItems = {};
+	protected ref array<ref EditorPlaceableObjectData> m_AllPlaceableItems = {};
 	
-	protected ref map<EditorPlaceableItemCategory, ref array<EditorPlaceableItem>> m_PlaceableItems = new map<EditorPlaceableItemCategory, ref array<EditorPlaceableItem>>();
+	protected ref map<EditorPlaceableObjectDataCategory, ref array<EditorPlaceableObjectData>> m_PlaceableItems = new map<EditorPlaceableObjectDataCategory, ref array<EditorPlaceableObjectData>>();
 	
-	protected ref map<string, EditorPlaceableItem> m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>();
+	protected ref map<string, EditorPlaceableObjectData> m_PlaceableObjectsByType = new map<string, EditorPlaceableObjectData>();
 	
 	// lookup table by p3d
-	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableItem>>();
+	protected ref map<string, ref array<EditorPlaceableObjectData>> m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableObjectData>>();
 	
 	// args: string
 	ref ScriptInvoker OnProgressReport;
@@ -66,7 +66,7 @@ modded class DayZGame
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
 		
-		foreach (EditorPlaceableItem placeable_item: m_AllPlaceableItems) {
+		foreach (EditorPlaceableObjectData placeable_item: m_AllPlaceableItems) {
 			
 		
 		
@@ -95,22 +95,22 @@ modded class DayZGame
 		OnProgressReport.Invoke(report);
 	}
 
-	EditorPlaceableItem GetPlaceableObject(string type)
+	EditorPlaceableObjectData GetPlaceableObject(string type)
 	{
 		return m_PlaceableObjectsByType[type];
 	}
 	
-	array<ref EditorPlaceableItem> GetPlaceableObjects()
+	array<ref EditorPlaceableObjectData> GetPlaceableObjects()
 	{
 		return m_AllPlaceableItems;
 	}
 	
-	array<EditorPlaceableItem> GetReplaceableObjects(string p3d)
+	array<EditorPlaceableObjectData> GetReplaceableObjects(string p3d)
 	{
 		return m_PlaceableObjectsByP3d[p3d];
 	}
 
-	map<EditorPlaceableItemCategory, ref array<EditorPlaceableItem>> GetPlaceableItemsByCategory()
+	map<EditorPlaceableObjectDataCategory, ref array<EditorPlaceableObjectData>> GetPlaceableItemsByCategory()
 	{
 		return m_PlaceableItems;
 	}

@@ -531,7 +531,7 @@ class EditorHud: ScriptView
 			return string.Empty;
 		}
 		
-		array<EditorPlaceableItem> placeable_items = GetDayZGame().GetReplaceableObjects(split_string[1].Trim());
+		array<EditorPlaceableObjectData> placeable_items = GetDayZGame().GetReplaceableObjects(split_string[1].Trim());
 		// not ideal since we dont want to feed them the p3d, but doable
 		if (!placeable_items || placeable_items.Count() == 0) {
 			return string.Format("%1 [%2, %3: %4]", split_string[1], split_string[0], component_type, component_index);

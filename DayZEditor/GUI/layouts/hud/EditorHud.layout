@@ -2691,7 +2691,7 @@ FrameWidgetClass EditorFrame {
     GridSpacerWidgetClass OnlineServiceInfo {
      ignorepointer 1
      position 360 18
-     size 470 79
+     size 470 77
      valign bottom_ref
      hexactpos 1
      vexactpos 1
@@ -2727,6 +2727,7 @@ FrameWidgetClass EditorFrame {
          text "Session ID:"
          font "gui/fonts/etelkatextpro16"
          "size to text h" 1
+         "size to text v" 0
          "text valign" center
         }
         TextWidgetClass SessionIdData {

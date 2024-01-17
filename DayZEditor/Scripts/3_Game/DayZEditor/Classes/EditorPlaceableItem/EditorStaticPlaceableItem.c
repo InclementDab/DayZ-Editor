@@ -1,4 +1,4 @@
-class EditorStaticPlaceableItem: EditorPlaceableItem
+class EditorStaticPlaceableItem: EditorPlaceableObjectData
 {
 	protected string m_Model;
 	
@@ -9,13 +9,13 @@ class EditorStaticPlaceableItem: EditorPlaceableItem
 		array<string> items = {};
 		m_Model.Split("/", items);
 		if (items.Count() != 0) {
-			m_DisplayName = items[items.Count() - 1];
+			SetDisplayName(items[items.Count() - 1]);
 		}	
 	}
 	
-	override EditorPlaceableItemCategory GetCategory()
+	override EditorPlaceableObjectDataCategory GetCategory()
 	{
-		return EditorPlaceableItemCategory.STATIC;
+		return EditorPlaceableObjectDataCategory.STATIC;
 	}
 	
 	override Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)

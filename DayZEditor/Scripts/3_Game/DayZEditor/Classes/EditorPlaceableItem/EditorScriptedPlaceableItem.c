@@ -1,4 +1,4 @@
-class EditorScriptedPlaceableItem: EditorPlaceableItem
+class EditorScriptedPlaceableItem: EditorPlaceableObjectData
 {
 	protected typename m_Type;
 		
@@ -6,7 +6,7 @@ class EditorScriptedPlaceableItem: EditorPlaceableItem
 	{
 		m_Type = type;
 		
-		m_DisplayName = m_Type.ToString();
+		SetDisplayName(m_Type.ToString());
 	}
 		
 	override Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)
@@ -26,9 +26,9 @@ class EditorScriptedPlaceableItem: EditorPlaceableItem
 		return object;
 	}
 	
-	override EditorPlaceableItemCategory GetCategory()
+	override EditorPlaceableObjectDataCategory GetCategory()
 	{
-		return EditorPlaceableItemCategory.SCRIPTED;
+		return EditorPlaceableObjectDataCategory.SCRIPTED;
 	}
 			
 	override EditorObjectData CreateData(vector position, vector orientation, float scale, int flags = EFE_DEFAULT)

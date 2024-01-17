@@ -1,19 +1,19 @@
-class EditorPlaceableItemCategory: EditorCategory
+class EditorPlaceableObjectDataCategory: EditorCategory
 {	
-	static const ref EditorPlaceableItemCategory UNKNOWN = new EditorPlaceableItemCategory("Unknown");
+	static const ref EditorPlaceableObjectDataCategory UNKNOWN = new EditorPlaceableObjectDataCategory("Unknown");
 	
-	static const ref EditorPlaceableItemCategory PLANTS = new EditorPlaceableItemCategory("Plants");		// \DZ\plants
-	static const ref EditorPlaceableItemCategory ROCK = new EditorPlaceableItemCategory("Rocks");		// \DZ\rocks and \DZ\rocks_bliss
-	static const ref EditorPlaceableItemCategory CLUTTER = new EditorPlaceableItemCategory("Clutter");	// 
-	static const ref EditorPlaceableItemCategory STRUCTURE = new EditorPlaceableItemCategory("Structures");	// HouseNoDestruct
-	static const ref EditorPlaceableItemCategory WRECK = new EditorPlaceableItemCategory("Wrecks");		// \DZ\structures\Wrecks
-	static const ref EditorPlaceableItemCategory AI = new EditorPlaceableItemCategory("AI");			// DZ_LightAI
-	static const ref EditorPlaceableItemCategory WATER = new EditorPlaceableItemCategory("Water");		
-	static const ref EditorPlaceableItemCategory VEHICLE = new EditorPlaceableItemCategory("Vehicles");	// Car
+	static const ref EditorPlaceableObjectDataCategory PLANTS = new EditorPlaceableObjectDataCategory("Plants");		// \DZ\plants
+	static const ref EditorPlaceableObjectDataCategory ROCK = new EditorPlaceableObjectDataCategory("Rocks");		// \DZ\rocks and \DZ\rocks_bliss
+	static const ref EditorPlaceableObjectDataCategory CLUTTER = new EditorPlaceableObjectDataCategory("Clutter");	// 
+	static const ref EditorPlaceableObjectDataCategory STRUCTURE = new EditorPlaceableObjectDataCategory("Structures");	// HouseNoDestruct
+	static const ref EditorPlaceableObjectDataCategory WRECK = new EditorPlaceableObjectDataCategory("Wrecks");		// \DZ\structures\Wrecks
+	static const ref EditorPlaceableObjectDataCategory AI = new EditorPlaceableObjectDataCategory("AI");			// DZ_LightAI
+	static const ref EditorPlaceableObjectDataCategory WATER = new EditorPlaceableObjectDataCategory("Water");		
+	static const ref EditorPlaceableObjectDataCategory VEHICLE = new EditorPlaceableObjectDataCategory("Vehicles");	// Car
 	
-	static const ref EditorPlaceableItemCategory STATIC = new EditorPlaceableItemCategory("Static Objects");	// Static
-	static const ref EditorPlaceableItemCategory DYNAMIC = new EditorPlaceableItemCategory("Dynamic Objects");  	// Inventory_Base
-	static const ref EditorPlaceableItemCategory SCRIPTED = new EditorPlaceableItemCategory("Scripted Objects");
+	static const ref EditorPlaceableObjectDataCategory STATIC = new EditorPlaceableObjectDataCategory("Static Objects");	// Static
+	static const ref EditorPlaceableObjectDataCategory DYNAMIC = new EditorPlaceableObjectDataCategory("Dynamic Objects");  	// Inventory_Base
+	static const ref EditorPlaceableObjectDataCategory SCRIPTED = new EditorPlaceableObjectDataCategory("Scripted Objects");
 	
-	static ref array<EditorPlaceableItemCategory> All = { UNKNOWN, PLANTS, ROCK, CLUTTER, STRUCTURE, WRECK, AI, WATER, VEHICLE, STATIC, DYNAMIC, SCRIPTED }; 
+	static ref array<EditorPlaceableObjectDataCategory> All = { UNKNOWN, PLANTS, ROCK, CLUTTER, STRUCTURE, WRECK, AI, WATER, VEHICLE, STATIC, DYNAMIC, SCRIPTED }; 
 }

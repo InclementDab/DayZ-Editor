@@ -1,4 +1,4 @@
-class EditorPlaceableItem: EditorSelectableBase
+class EditorPlaceableObjectData: EditorSelectableBase
 {
 	protected Object m_Object;
 	
@@ -12,9 +12,9 @@ class EditorPlaceableItem: EditorSelectableBase
 		return null;
 	}
 	
-	EditorPlaceableItemCategory GetCategory()
+	EditorPlaceableObjectDataCategory GetCategory()
 	{
-		return EditorPlaceableItemCategory.UNKNOWN;
+		return EditorPlaceableObjectDataCategory.UNKNOWN;
 	}
 	
 	string GetName()
@@ -42,7 +42,7 @@ class EditorPlaceableItem: EditorSelectableBase
 			
 	static string GetIcon(ModStructure mod_info)
 	{
-		//EditorLog.Trace("EditorPlaceableItem::GetIcon");
+		//EditorLog.Trace("EditorPlaceableObjectData::GetIcon");
 		if (mod_info) {
 			string logo = mod_info.GetModLogo();
 			if (logo == string.Empty)

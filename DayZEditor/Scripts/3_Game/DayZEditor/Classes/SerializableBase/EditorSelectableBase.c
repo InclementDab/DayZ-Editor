@@ -5,20 +5,16 @@ class EditorSelectableBase: SerializableBase
 	protected bool m_IsSelected;
 	protected string m_DisplayName;
 	
-	protected ref EditorTreeItem m_TreeItem;
-		
+	protected ref EditorTreeItem m_TreeItem = new EditorTreeItem(ScriptCaller.Create(SetSelected));
+	
 	void SetDisplayName(string display_name)
 	{
-		m_DisplayName = display_name;
-		m_TreeItem.Text.SetText(m_DisplayName);
+		m_DisplayName = display_name;		
+		m_TreeItem.SetText(m_DisplayName);
 	}
 	
 	EditorTreeItem GetTreeItem()
 	{		
-		if (!m_TreeItem) {
-			m_TreeItem = new EditorTreeItem(m_DisplayName, ScriptCaller.Create(SetSelected));
-		}
-		
 		return m_TreeItem;
 	}
 	

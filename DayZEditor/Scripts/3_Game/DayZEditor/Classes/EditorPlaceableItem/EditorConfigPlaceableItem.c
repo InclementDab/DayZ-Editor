@@ -1,4 +1,4 @@
-class EditorConfigPlaceableItem: EditorPlaceableItem
+class EditorConfigPlaceableItem: EditorPlaceableObjectData
 {
 	protected string m_Path, m_Type;
 	protected ref array<string> m_FullPath = {};
@@ -8,24 +8,24 @@ class EditorConfigPlaceableItem: EditorPlaceableItem
 		m_Path = path;
 		m_Type = type;
 				
-		m_DisplayName = type;
+		SetDisplayName(type);
 	}
 	
-	override EditorPlaceableItemCategory GetCategory()
+	override EditorPlaceableObjectDataCategory GetCategory()
 	{
 		GetGame().ConfigGetFullPath(string.Format("%1 %2", m_Path, m_Type), m_FullPath);
 		
 		if ((m_FullPath.Find("Weapon_Base") != -1) || (m_FullPath.Find("Inventory_Base")) != -1) {
-			return EditorPlaceableItemCategory.DYNAMIC;
+			return EditorPlaceableObjectDataCategory.DYNAMIC;
 		} else if (m_FullPath.Find("HouseNoDestruct") != -1) {
-			return EditorPlaceableItemCategory.STRUCTURE;
+			return EditorPlaceableObjectDataCategory.STRUCTURE;
 		} else if (m_FullPath.Find("Man") != -1) {
-			return EditorPlaceableItemCategory.AI;
+			return EditorPlaceableObjectDataCategory.AI;
 		} else if (m_FullPath.Find("Transport") != -1) {
-			return EditorPlaceableItemCategory.VEHICLE;
+			return EditorPlaceableObjectDataCategory.VEHICLE;
 		}
 		
-		return EditorPlaceableItemCategory.UNKNOWN;
+		return EditorPlaceableObjectDataCategory.UNKNOWN;
 	}
 	
 	override Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)

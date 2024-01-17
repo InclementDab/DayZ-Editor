@@ -25,8 +25,8 @@ class EditorHudController: EditorControllerBase
 	ref ObservableCollection<ref EditorTreeItem> LeftListItems = new ObservableCollection<ref EditorTreeItem>(this);
 	ref ObservableCollection<ref EditorTreeItem> RightListItems = new ObservableCollection<ref EditorTreeItem>(this);
 	
-	ref EditorPlaceableItemCategory PlacementsFolder = new EditorPlaceableItemCategory("Placed Objects");
-	ref EditorPlaceableItemCategory HiddenFolder = new EditorPlaceableItemCategory("Hidden Objects");
+	ref EditorPlaceableObjectDataCategory PlacementsFolder = new EditorPlaceableObjectDataCategory("Placed Objects");
+	ref EditorPlaceableObjectDataCategory HiddenFolder = new EditorPlaceableObjectDataCategory("Hidden Objects");
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
@@ -118,11 +118,11 @@ class EditorHudController: EditorControllerBase
 		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
 		
 		float widest_x;
-		map<EditorPlaceableItemCategory, ref array<EditorPlaceableItem>> all_placeable_items = GetDayZGame().GetPlaceableItemsByCategory();
-		foreach (EditorPlaceableItemCategory category, array<EditorPlaceableItem> placeable_items: all_placeable_items) {
+		map<EditorPlaceableObjectDataCategory, ref array<EditorPlaceableObjectData>> all_placeable_items = GetDayZGame().GetPlaceableItemsByCategory();
+		foreach (EditorPlaceableObjectDataCategory category, array<EditorPlaceableObjectData> placeable_items: all_placeable_items) {
 			EditorTreeItem tree_item = category.GetTreeItem();
 			
-			foreach (EditorPlaceableItem placeable_item: placeable_items) {
+			foreach (EditorPlaceableObjectData placeable_item: placeable_items) {
 				tree_item.GetTemplateController().Children.Insert(placeable_item.GetTreeItem());
 			}
 			

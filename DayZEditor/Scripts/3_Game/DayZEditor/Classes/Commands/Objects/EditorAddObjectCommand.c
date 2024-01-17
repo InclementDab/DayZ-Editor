@@ -4,7 +4,7 @@ class EditorAddObjectCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 
-		EditorPlaceableItem placeable_object = GetEditor().GetReplaceableItem(Editor.ObjectUnderCursor);
+		EditorPlaceableObjectData placeable_object = GetEditor().GetReplaceableItem(Editor.ObjectUnderCursor);
 		if (placeable_object) {
 			GetEditor().ClearHand();
 			EditorHandMap objects_in_hand = GetEditor().AddInHand(placeable_object);

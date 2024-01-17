@@ -132,7 +132,7 @@ class Editor: Managed
 	protected ref array<ref EditorHiddenObject> m_DeletedObjects = {};
 		
 	// Current Selected PlaceableListItem
-	EditorPlaceableItem CurrentSelectedItem;
+	EditorPlaceableObjectData CurrentSelectedItem;
 	
 	bool KEgg; // oh?
 	
@@ -666,12 +666,12 @@ class Editor: Managed
 		return m_PlacingObjects;
 	}
 	
-	EditorHandMap AddInHand(EditorPlaceableItem item, EditorHandData hand_data = null)
+	EditorHandMap AddInHand(EditorPlaceableObjectData item, EditorHandData hand_data = null)
 	{
 		return AddInHand(item.CreateObject(Editor.CurrentMousePosition, vector.Zero, 1.0), hand_data);				
 	}
 			
-	void EditLootSpawns(EditorPlaceableItem placeable_item)
+	void EditLootSpawns(EditorPlaceableObjectData placeable_item)
 	{
 		EditorLog.Info("Launching Loot Editor...");
 		m_LootEditTarget = GetGame().CreateObjectEx(placeable_item.GetName(), Vector(0, 0, 0), ECE_CREATEPHYSICS | ECE_SETUP | ECE_UPDATEPATHGRAPH);
@@ -1266,7 +1266,7 @@ class Editor: Managed
 		return save_data;
 	}
 	
-	EditorPlaceableItem GetReplaceableItem(Object object)
+	EditorPlaceableObjectData GetReplaceableItem(Object object)
 	{
 		if (!object) {
 			return null;
@@ -1295,7 +1295,7 @@ class Editor: Managed
 			return null;
 		}
 		
-		array<EditorPlaceableItem> placeable_items = GetDayZGame().GetReplaceableObjects(split_string[1].Trim());
+		array<EditorPlaceableObjectData> placeable_items = GetDayZGame().GetReplaceableObjects(split_string[1].Trim());
 		// not ideal since we dont want to feed them the p3d, but doable
 		if (!placeable_items || placeable_items.Count() == 0) {			
 			return null;

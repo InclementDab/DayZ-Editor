@@ -15,18 +15,21 @@ class EditorTreeItem: ScriptView
 	
 	protected ref ScriptCaller m_OnCalled;
 	
-	void EditorTreeItem(string text, ScriptCaller on_clicked)
+	void EditorTreeItem(ScriptCaller on_clicked)
 	{
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
 		m_OnCalled = on_clicked;
-		
+				
+		ShowChildren(false);
+	}
+	
+	void SetText(string text)
+	{
 		Text.SetText(text);
 				
 		float w, h;
 		Text.GetScreenSize(w, h);
 		Button.SetScreenSize(w, h);
-		
-		ShowChildren(false);
 	}
 	
 	void OnCollapseExecute(ButtonCommandArgs args)
