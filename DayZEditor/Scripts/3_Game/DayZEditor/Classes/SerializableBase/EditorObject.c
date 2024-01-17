@@ -21,6 +21,12 @@ class EditorSelectableBase: SerializableBase
 	{
 		m_IsSelected = selected;
 		
+		if (m_IsSelected) {
+			SelectedObjects.Insert(this);
+		} else {
+			SelectedObjects.RemoveItem(this);
+		}
+		
 		OnSelectionChanged.Invoke(this, m_IsSelected);
 	}
 	
@@ -129,10 +135,10 @@ class EditorObject: EditorSelectableBase
 		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
 		
 		m_BasePoint = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
-		m_PointViews.Insert(new EditorPointView(this, m_BasePoint));
+		m_PointViews.Insert(new EditorPointView(this, m_BasePoint, 1000));
 		
 		for (int i = 0; i < 8; i++) {
-			m_PointViews.Insert(new EditorPointView(this, m_LineVerticies[i]));
+			m_PointViews.Insert(new EditorPointView(this, m_LineVerticies[i], 30));
 		}
 		
 		vector transform[4];

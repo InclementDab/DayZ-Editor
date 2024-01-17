@@ -355,6 +355,39 @@ FrameWidgetClass EditorFrame {
       }
      }
     }
+    PanelWidgetClass NotificationPanel {
+     visible 1
+     ignorepointer 1
+     color 0.2588 0.6863 0.3647 1
+     position 0 70
+     size 1 20
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
+     {
+      TextWidgetClass NotificationText {
+       visible 1
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       scriptclass ""
+       text "NotificationText"
+       font "gui/fonts/metron"
+       "text halign" center
+       "text valign" center
+      }
+     }
+    }
     PanelWidgetClass ToolbarFrame {
      visible 1
      clipchildren 0
@@ -371,40 +404,6 @@ FrameWidgetClass EditorFrame {
      scriptclass ""
      style rover_sim_colorable
      {
-      PanelWidgetClass NotificationPanel {
-       visible 0
-       ignorepointer 1
-       color 0.2588 0.6863 0.3647 1
-       position 0 0
-       size 1 20
-       halign center_ref
-       valign bottom_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       scaled 0
-       style rover_sim_colorable
-       {
-        TextWidgetClass NotificationText {
-         visible 1
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 0
-         scriptclass ""
-         text "NotificationText"
-         font "gui/fonts/metron"
-         "text halign" center
-         "text valign" center
-        }
-       }
-      }
       PanelWidgetClass Menubar {
        visible 1
        clipchildren 0

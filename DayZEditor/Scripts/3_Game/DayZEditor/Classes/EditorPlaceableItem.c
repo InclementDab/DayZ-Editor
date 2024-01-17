@@ -2,6 +2,8 @@ class EditorPlaceableItem: EditorSelectableBase
 {
 	protected EditorPlaceableItemCategory m_Category = EditorPlaceableItemCategory.UNKNOWN;
 		
+	protected Object m_Object;
+	
 	EditorObjectData CreateData(vector position, vector orientation, float scale, int flags = EFE_DEFAULT)
 	{
 		return null;
@@ -25,6 +27,19 @@ class EditorPlaceableItem: EditorSelectableBase
 	string GetModel()
 	{
 		return string.Empty;
+	}
+	
+	override void SetSelected(bool selected)
+	{
+		super.SetSelected(selected);
+		
+		if (selected) {
+			m_Object = CreateObject(vector.Zero, vector.Zero, 1.0, ECE_LOCAL);
+			GetEditor().AddInHand(m_Object, new EditorHandData());
+		} else {
+			GetEditor().RemoveFromHand(m_Object);
+			m_Object.Delete();
+		}
 	}
 			
 	static string GetIcon(ModStructure mod_info)

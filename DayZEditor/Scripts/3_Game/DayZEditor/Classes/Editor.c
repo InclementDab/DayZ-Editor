@@ -130,16 +130,7 @@ class Editor: Managed
 	protected ref map<int, EditorObject> m_WorldObjectIndex = new map<int, EditorObject>();
 	
 	protected ref array<ref EditorHiddenObject> m_DeletedObjects = {};
-	
-	protected ref array<ref EditorPlaceableItem> m_AllPlaceableItems = {};
-	
-	protected ref map<int, ref array<EditorPlaceableItem>> m_PlaceableItems = new map<int, ref array<EditorPlaceableItem>>();
-	
-	protected ref map<string, EditorPlaceableItem> m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>();
-	
-	// lookup table by p3d
-	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableItem>>();
-	
+		
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
 	
@@ -189,63 +180,7 @@ class Editor: Managed
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
 		EditorLog.Info("Initializing Object Manager");
-		
-		// Loads placeable objects	
-		g_Game.ReportProgress("Loading Placeable Objects");
-		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 				
-		// handle config objects
-		foreach (string path: config_paths) {
-			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
-				string type;
-		        GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
-					continue;
-				}
-				
-				if (IsForbiddenItem(type)) {
-					continue;
-				}
-				
-				m_AllPlaceableItems.Insert(new EditorConfigPlaceableItem(path, type));
-		    }
-		}
-		
-		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
-		foreach (string model_path: paths) {
-			array<ref CF_File> files = {};
-			if (!CF_Directory.GetFiles(model_path + "/*", files, FindFileFlags.ARCHIVES)) {
-				continue;
-			}
-				
-			foreach (CF_File file: files) {		
-				if (!file || file.GetExtension() != ".p3d") {
-					continue;
-				}
-				
-				m_AllPlaceableItems.Insert(new EditorStaticPlaceableItem(file.GetFullPath()));
-			}
-		}
-	
-		// Statics that belong to Editor / DF
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
-			
-		foreach (EditorPlaceableItem placeable_item: m_AllPlaceableItems) {
-			if (!m_PlaceableItems[placeable_item.GetCategory()]) {
-				m_PlaceableItems[placeable_item.GetCategory()] = {};
-			}
-			
-			if (!m_PlaceableObjectsByP3d[placeable_item.GetModel()]) {
-				m_PlaceableObjectsByP3d[placeable_item.GetModel()] = {};
-			}
-			
-			m_PlaceableItems[placeable_item.GetCategory()].Insert(placeable_item);
-			m_PlaceableObjectsByP3d[placeable_item.GetModel()].Insert(placeable_item);
-			m_PlaceableObjectsByType[placeable_item.GetName()] = placeable_item;
-		}
-		
 		// Camera Track Manager
 		g_Game.ReportProgress("Initializing Camera Track Manager");
 		EditorLog.Info("Initializing Camera Track Manager");
@@ -1300,7 +1235,7 @@ class Editor: Managed
 		}
 		
 		if (object.GetType() != string.Empty && !object.IsTree() && !object.IsBush() && !object.IsRock()) {			
-			return GetPlaceableObject(object.GetType());
+			return GetDayZGame().GetPlaceableObject(object.GetType());
 		}
 		
 		// 1346854: tank_small_white.p3d
@@ -1318,7 +1253,7 @@ class Editor: Managed
 			return null;
 		}
 		
-		array<EditorPlaceableItem> placeable_items = GetReplaceableObjects(split_string[1].Trim());
+		array<EditorPlaceableItem> placeable_items = GetDayZGame().GetReplaceableObjects(split_string[1].Trim());
 		// not ideal since we dont want to feed them the p3d, but doable
 		if (!placeable_items || placeable_items.Count() == 0) {			
 			return null;
@@ -1415,26 +1350,6 @@ class Editor: Managed
 		return m_WorldObjectIndex[world_object.GetID()];
 	}
 	
-	EditorPlaceableItem GetPlaceableObject(string type)
-	{
-		return m_PlaceableObjectsByType[type];
-	}
-	
-	array<ref EditorPlaceableItem> GetPlaceableObjects()
-	{
-		return m_AllPlaceableItems;
-	}
-	
-	array<EditorPlaceableItem> GetReplaceableObjects(string p3d)
-	{
-		return m_PlaceableObjectsByP3d[p3d];
-	}
-
-	map<int, ref array<EditorPlaceableItem>> GetPlaceableItemsByCategory()
-	{
-		return m_PlaceableItems;
-	}
-
 	void SetOnlineSession(EditorOnlineSession session)
 	{
 		m_CurrentOnlineSession = session;
@@ -1471,27 +1386,6 @@ class Editor: Managed
 	bool IsPlacing()
 	{
 		return (m_PlacingObjects && m_PlacingObjects.Count() > 0); 
-	}
-
-	static bool IsForbiddenItem(string model)
-	{
-		//! In theory should be safe but just in case
-		if (model.Contains("Fx")) return true;
-		if (model == "ItemOptics") return true;
-
-		//! Cursed items
-		if (model == "AKM_TESTBED") return true;
-		if (model == "Red9") return true;
-		if (model == "QuickieBow") return true;
-		if (model == "LargeTentBackPack") return true;
-		if (model == "SurvivorMale_Base" || model == "SurvivorFemale_Base") return true;
-		if (model == "Land_VASICore" || model == "FlagCarrierCore") return true;
-		if (GetGame().IsKindOf(model, "GP25Base")) return true;
-		if (GetGame().IsKindOf(model, "M203Base")) return true;
-		if (model == "ItemOptics_Base") return true;
-		
-		//! Everything is fine... I hope... :pain:
-		return false;
 	}
 	
 	static void RecursiveGetFiles(string directory, inout array<ref CF_File> files, string pattern = "*")

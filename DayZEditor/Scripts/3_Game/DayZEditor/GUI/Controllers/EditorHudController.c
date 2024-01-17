@@ -117,7 +117,7 @@ class EditorHudController: EditorControllerBase
 		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
 		
 		float widest_x;
-		map<int, ref array<EditorPlaceableItem>> all_placeable_items = GetEditor().GetPlaceableItemsByCategory();
+		map<int, ref array<EditorPlaceableItem>> all_placeable_items = GetDayZGame().GetPlaceableItemsByCategory();
 		foreach (EditorPlaceableItemCategory category, array<EditorPlaceableItem> placeable_items: all_placeable_items) {
 			EditorTreeItem tree_item = new EditorTreeItem(category.GetDisplayName(), null);
 			
@@ -591,10 +591,10 @@ class EditorHudController: EditorControllerBase
 		NotificationPanel.SetColor(color);
 		NotificationText.SetText(text);
 		
-		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, -25, 100);
+		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, 90, 100);
 		SEffectManager.PlaySoundOnObject(NOTIFICATION_SOUND, GetEditor().GetCamera());
 		
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationPanel.SetPos, (duration * 1000) + 100, false, 0, 0, true);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationPanel.SetPos, (duration * 1000) + 100, false, 0, 70, true);
 	}
 	
 	// Brush Management

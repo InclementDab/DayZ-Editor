@@ -47,7 +47,7 @@ class EditorDragHandler
 	
 	void OnDragging(out vector transform[4], notnull EditorObject target);
 	
-	vector GetGroundPosition(vector transform[4])
+	static vector GetGroundPosition(vector transform[4])
 	{
 		// Raycast ground below object
 		vector ground, ground_dir; 

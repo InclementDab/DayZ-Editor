@@ -17,7 +17,7 @@ PanelWidgetClass Root {
    inheritalpha 1
    ignorepointer 0
    position 0 0
-   size 14 14
+   size 18 18
    halign center_ref
    valign center_ref
    hexactpos 1
