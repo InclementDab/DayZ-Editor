@@ -1,7 +1,5 @@
-class EditorPlaceableObjectData: EditorSelectableBase
-{
-	protected Object m_Object;
-	
+class EditorPlaceableObjectData: SerializableBase
+{	
 	EditorObjectData CreateData(vector position, vector orientation, float scale, int flags = EFE_DEFAULT)
 	{
 		return null;
@@ -16,20 +14,17 @@ class EditorPlaceableObjectData: EditorSelectableBase
 	{
 		return EditorPlaceableObjectDataCategory.UNKNOWN;
 	}
-		
-	override void SetSelected(bool selected)
+					
+	string GetName()
 	{
-		super.SetSelected(selected);
-		
-		if (selected) {
-			m_Object = CreateObject(vector.Zero, vector.Zero, 1.0, ECE_LOCAL);
-			GetEditor().AddInHand(m_Object, new EditorHandData());
-		} else {
-			GetEditor().RemoveFromHand(m_Object);
-			GetGame().ObjectDelete(m_Object);
-		}
+		return string.Empty;
 	}
-			
+	
+	string GetModel()
+	{
+		return string.Empty;
+	}
+	
 	static string GetIcon(ModStructure mod_info)
 	{
 		//EditorLog.Trace("EditorPlaceableObjectData::GetIcon");

@@ -39,11 +39,16 @@ class EditorHud: ScriptView
 	protected ref ScriptView m_CurrentMenu;
 	
 	protected ref map<string, ref EditorCategory> m_PlacedCategories = new map<string, ref EditorCategory>();
+	protected ref map<string, ref EditorCategory> m_PlaceableCategories = new map<string, ref EditorCategory>();
 	
 	protected EditorCategory m_CurrentPlacingContext;
 	
+	protected ref array<ref EditorPlaceableObject> m_Placeables = {};
+	
 	void EditorHud()
 	{		
+		m_TemplateController = EditorHudController.Cast(m_Controller);
+		
 		float w, h;
 		int x, y;
 		GetScreenSize(x, y);
@@ -54,6 +59,19 @@ class EditorHud: ScriptView
 		
 		m_CurrentPlacingContext = InsertPlacedCategory(new EditorCategory("Placed Objects"));
 		InsertPlacedCategory(new EditorCategory("Hidden Objects"));
+		
+		map<EditorPlaceableObjectDataCategory, ref array<EditorPlaceableObjectData>> placeable_items = GetDayZGame().GetPlaceableItemsByCategory();
+		foreach (EditorPlaceableObjectDataCategory category, array<EditorPlaceableObjectData> items: placeable_items) {
+			Print(category);
+			m_PlaceableCategories[category.GetName()] = category;
+			m_TemplateController.LeftListItems.Insert(category.GetTreeItem());
+			
+			foreach (EditorPlaceableObjectData data: items) {
+				EditorPlaceableObject placeable_object = new EditorPlaceableObject(data);
+				m_Placeables.Insert(placeable_object);
+				category.AddChild(placeable_object);
+			}
+		}	
 	}
 	
 	EditorCategory InsertPlacedCategory(notnull EditorCategory editor_category)

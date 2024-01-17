@@ -20,7 +20,7 @@ modded class DayZGame
 		m_loading.Show();
 #endif
 	}
-		
+	
 	override bool OnInitialize()
 	{
 		// Loads placeable objects	
@@ -67,9 +67,6 @@ modded class DayZGame
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
 		
 		foreach (EditorPlaceableObjectData placeable_item: m_AllPlaceableItems) {
-			
-		
-		
 			if (!m_PlaceableItems[placeable_item.GetCategory()]) {
 				m_PlaceableItems[placeable_item.GetCategory()] = {};
 			}

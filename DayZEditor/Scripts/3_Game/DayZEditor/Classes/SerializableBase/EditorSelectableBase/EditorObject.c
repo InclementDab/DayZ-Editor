@@ -37,9 +37,7 @@ class EditorObject: EditorSelectableBase
 	protected string m_DisplayName;
 	
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
-	
-	protected ref EditorTreeItem m_TreeItem;
-	
+		
 	// Human Properties
 	int CurrentAnimation;
 	bool Animate;

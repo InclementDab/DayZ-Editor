@@ -111,18 +111,7 @@ class EditorHudController: EditorControllerBase
 		array<string> favorite_items = {};
 		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
 		
-		float widest_x;
-		map<EditorPlaceableObjectDataCategory, ref array<EditorPlaceableObjectData>> all_placeable_items = GetDayZGame().GetPlaceableItemsByCategory();
-		foreach (EditorPlaceableObjectDataCategory category, array<EditorPlaceableObjectData> placeable_items: all_placeable_items) {
-			EditorTreeItem tree_item = category.GetTreeItem();
-			
-			foreach (EditorPlaceableObjectData placeable_item: placeable_items) {
-				tree_item.GetTemplateController().Children.Insert(placeable_item.GetTreeItem());
-			}
-			
-			LeftListItems.Insert(tree_item);
-		}
-				
+		float widest_x;				
 		// Load Brushes		
 		string brush_file = m_Editor.GeneralSettings.EditorBrushFile;
 		if (brush_file.Contains("'")) {

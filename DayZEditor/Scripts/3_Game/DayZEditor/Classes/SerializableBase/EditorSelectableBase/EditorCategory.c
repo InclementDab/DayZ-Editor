@@ -1,8 +1,8 @@
 class EditorCategory: EditorSelectableBase
 {
+	// todo maybe ref this here from now on
 	protected ref array<EditorSelectableBase> m_Children = {};
 	
-	protected ref EditorTreeItem m_TreeItem;
 	protected string m_Name;
 	
 	void EditorCategory(string name)

@@ -4,9 +4,11 @@ class EditorSelectableBase: SerializableBase
 	
 	protected bool m_IsSelected;
 		
+	protected ref EditorTreeItem m_TreeItem;
+	
 	EditorTreeItem GetTreeItem()
 	{
-		return null;
+		return m_TreeItem;
 	}
 	
 	void SetSelected(bool selected)
