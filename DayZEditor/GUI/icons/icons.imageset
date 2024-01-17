@@ -1,6 +1,6 @@
 ImageSetClass  {
 	Name "icons"
-	RefSize 1280 512
+	RefSize 5120 2048
 	Textures {
 		ImageSetTextureClass  {
 			mpix 1
@@ -11,235 +11,235 @@ ImageSetClass  {
 		ImageSetDefClass arrow_down_to_line {
 			Name "arrow_down_to_line"
 			Pos 0 0
-			Size 128 128
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass arrows_to_circle {
 			Name "arrows_to_circle"
-			Pos 128 0
-			Size 128 128
+			Pos 512 0
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass arrows_to_dot {
 			Name "arrows_to_dot"
-			Pos 256 0
-			Size 128 128
+			Pos 1024 0
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass arrows_to_dotted_line {
 			Name "arrows_to_dotted_line"
-			Pos 384 0
-			Size 128 128
+			Pos 1536 0
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass arrows_to_eye {
 			Name "arrows_to_eye"
-			Pos 512 0
-			Size 128 128
+			Pos 2048 0
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass arrows_to_line {
 			Name "arrows_to_line"
-			Pos 640 0
-			Size 128 128
+			Pos 2560 0
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass checkbox_checked {
 			Name "checkbox_checked"
-			Pos 768 0
-			Size 128 128
+			Pos 3072 0
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass checkbox_unchecked {
 			Name "checkbox_unchecked"
-			Pos 896 0
-			Size 128 128
+			Pos 3584 0
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass circle_dot {
 			Name "circle_dot"
-			Pos 1024 0
-			Size 128 128
+			Pos 4096 0
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass copy {
 			Name "copy"
-			Pos 1152 0
-			Size 128 128
+			Pos 4608 0
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass discord {
 			Name "discord"
-			Pos 0 128
-			Size 128 128
+			Pos 0 512
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass file_arrow_down {
 			Name "file_arrow_down"
-			Pos 128 128
-			Size 128 128
+			Pos 512 512
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass file_arrow_up {
 			Name "file_arrow_up"
-			Pos 256 128
-			Size 128 128
+			Pos 1024 512
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass file_check {
 			Name "file_check"
-			Pos 384 128
-			Size 128 128
+			Pos 1536 512
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass file_export {
 			Name "file_export"
-			Pos 512 128
-			Size 128 128
+			Pos 2048 512
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass file_import {
 			Name "file_import"
-			Pos 640 128
-			Size 128 128
+			Pos 2560 512
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass file_lines {
 			Name "file_lines"
-			Pos 768 128
-			Size 128 128
+			Pos 3072 512
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass file_lock {
 			Name "file_lock"
-			Pos 896 128
-			Size 128 128
+			Pos 3584 512
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass file_user {
 			Name "file_user"
-			Pos 1024 128
-			Size 128 128
+			Pos 4096 512
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass file {
 			Name "file"
-			Pos 1152 128
-			Size 128 128
+			Pos 4608 512
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass floppy_disk_pen {
 			Name "floppy_disk_pen"
-			Pos 0 256
-			Size 128 128
+			Pos 0 1024
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass floppy_disk {
 			Name "floppy_disk"
-			Pos 128 256
-			Size 128 128
+			Pos 512 1024
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass folder_gear {
 			Name "folder_gear"
-			Pos 256 256
-			Size 128 128
+			Pos 1024 1024
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass folder_minus {
 			Name "folder_minus"
-			Pos 384 256
-			Size 128 128
+			Pos 1536 1024
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass folder_open {
 			Name "folder_open"
-			Pos 512 256
-			Size 128 128
+			Pos 2048 1024
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass folder_plus {
 			Name "folder_plus"
-			Pos 640 256
-			Size 128 128
+			Pos 2560 1024
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass folder {
 			Name "folder"
-			Pos 768 256
-			Size 128 128
+			Pos 3072 1024
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass loader {
 			Name "loader"
-			Pos 896 256
-			Size 128 128
+			Pos 3584 1024
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass location_dot {
 			Name "location_dot"
-			Pos 1024 256
-			Size 128 128
+			Pos 4096 1024
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass magnet {
 			Name "magnet"
-			Pos 1152 256
-			Size 128 128
+			Pos 4608 1024
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass minus {
 			Name "minus"
-			Pos 0 384
-			Size 128 128
+			Pos 0 1536
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass paste {
 			Name "paste"
-			Pos 128 384
-			Size 128 128
+			Pos 512 1536
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass rotate_left {
 			Name "rotate_left"
-			Pos 256 384
-			Size 128 128
+			Pos 1024 1536
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass rotate_right {
 			Name "rotate_right"
-			Pos 384 384
-			Size 128 128
+			Pos 1536 1536
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass rotate {
 			Name "rotate"
-			Pos 512 384
-			Size 128 128
+			Pos 2048 1536
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass scissors {
 			Name "scissors"
-			Pos 640 384
-			Size 128 128
+			Pos 2560 1536
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass shovel_snow {
 			Name "shovel_snow"
-			Pos 768 384
-			Size 128 128
+			Pos 3072 1536
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass sun_bright {
 			Name "sun_bright"
-			Pos 896 384
-			Size 128 128
+			Pos 3584 1536
+			Size 512 512
 			Flags 0
 		}
 		ImageSetDefClass xmark {
 			Name "xmark"
-			Pos 1024 384
-			Size 128 128
+			Pos 4096 1536
+			Size 512 512
 			Flags 0
 		}
 	}

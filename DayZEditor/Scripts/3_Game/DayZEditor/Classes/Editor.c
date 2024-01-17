@@ -325,12 +325,6 @@ class Editor: Managed
 			}
 		}
 		
-		array<EditorObject> selected_objects = EditorObject.GetSelectedEditorObjects();
-		if (m_EditorHud && selected_objects.Count() > 0 && selected_objects[0]) {
-			// Spams errors
-			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetWorldObject().GetPosition());
-		}
-
 		foreach (Object world_object, EditorHandData hand_data: m_PlacingObjects) {
 			if (!world_object) {
 				return;

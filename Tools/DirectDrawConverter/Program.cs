@@ -13,7 +13,7 @@ namespace DirectDrawConverter
         {
             const string OUTPUT_NAME = "icons";
             const int ROW_COUNT = 10;
-            const int IMAGE_MAX_SIZE = 128; // this is the space allocated to each image
+            const int IMAGE_MAX_SIZE = 512; // this is the space allocated to each image
             const string ICON_DIR = "P:\\DayZEditor\\GUI\\icons";
             
             DirectoryInfo dest_directory = Directory.CreateDirectory(ICON_DIR);
@@ -40,11 +40,10 @@ namespace DirectDrawConverter
 
                     case ".svg": {
                         SvgDocument doc = SvgDocument.Open(file.ToString());
-
-                        float w_aspect = doc.Bounds.Width < doc.Bounds.Height ? doc.Bounds.Width / doc.Bounds.Height : 1;
-                        float h_aspect = doc.Bounds.Width > doc.Bounds.Height ? doc.Bounds.Height / doc.Bounds.Width : 1;
+                        double w_aspect = doc.Bounds.Width / 512.0;
+                        
                         // we bound to the larger of the two aspects
-                        source_bitmaps[file_name] = doc.Draw((int)((float)IMAGE_MAX_SIZE * w_aspect), (int)((float)IMAGE_MAX_SIZE * h_aspect));
+                        source_bitmaps[file_name] = doc.Draw(IMAGE_MAX_SIZE * (int)w_aspect, IMAGE_MAX_SIZE);
                         break;
                     }
                 }                
