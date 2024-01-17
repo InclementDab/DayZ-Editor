@@ -19,6 +19,7 @@ class EditorTreeItem: ScriptView
 	{
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
 		m_Selectable = selectable;
+		m_Selectable.OnSelectionChanged.Insert(OnSelectionChange);
 				
 		SetText(text);
 		
@@ -115,7 +116,7 @@ class EditorTreeItem: ScriptView
 		}
 	}
 		
-	void OnSelectionChange(bool state)
+	void OnSelectionChange(EditorSelectableBase selectable, bool state)
 	{
 		if (state) {
 			WidgetAnimator.AnimateColor(Button, ARGB(255, 75, 119, 190), 50);			
