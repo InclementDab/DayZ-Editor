@@ -135,6 +135,7 @@ FrameWidgetClass EditorFrame {
        style RoundedPanel_Colorable
        {
         EditBoxWidgetClass SearchBar {
+         color 1 1 1 0.7843
          size 1 1
          halign center_ref
          valign center_ref
@@ -143,8 +144,16 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 0
          scaled 0
+         scriptclass "ViewBinding"
+         "no focus" 0
          text "Search..."
          font "gui/fonts/MetronBook"
+         {
+          ScriptParamsClass {
+           Binding_Name "Search"
+           Two_Way_Binding 1
+          }
+         }
         }
        }
       }

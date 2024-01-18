@@ -1,35 +1,11 @@
-class EditorFileHeadView: ScriptView
-{	
-	SpacerWidget TextSpacer;
-	TextWidget Text;
-	
-	void EditorFileHeadView(string text)
-	{
-		Text.SetText(text);
-		
-		float w, h;
-		TextSpacer.GetScreenSize(w, h);
-		Print(w);
-		
-		Text.GetScreenSize(w, h);
-		Print(w);
-		
-	}
-	
-	override string GetLayoutFile()
-	{
-		return "DayZEditor\\GUI\\layouts\\FileHead.layout";
-	}
-}
-
-class EditorHudController: EditorControllerBase
+class EditorHudController: ViewController
 {
-	static const string NOTIFICATION_SOUND = "Notification_SoundSet";
-	
 	string Version = Editor.Version;
 	
 	string OnlineSessionId, OnlineEntityCount;
 	int OnlineUserCount;
+	
+	string Search;
 	
 	StringEvaluater PrecisionLevel = "0.5";
 	
@@ -38,40 +14,13 @@ class EditorHudController: EditorControllerBase
 		
 	ref ObservableCollection<ref EditorFileHeadView> OpenFiles = new ObservableCollection<ref EditorFileHeadView>(this);
 	
-	// Logger
-	static const int MAX_LOG_ENTRIES = 20;
-	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
-	
 	// Camera bindings
 	float CameraSmoothing = 50.0;
 	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
 	
 	ScrollWidget LeftScroll;
-	ScrollWidget RightScroll;
-	
-	protected Widget RightbarFrame;
-	protected ImageWidget RightbarHideIcon;
-	
-	protected WrapSpacerWidget RightbarPlacementsList;
-	protected WrapSpacerWidget RightbarDeletionsList;
-	
-	protected WrapSpacerWidget LeftbarPlacementsConfig, LeftbarPlacementsStatic;
-	protected ButtonWidget LeftbarCategoryConfig, LeftbarCategoryStatic;
-	
-	protected GridSpacerWidget InfobarObjPosFrame;
+	ScrollWidget RightScroll;	
 		
-	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
-	protected EditBoxWidget LeftbarSearchBar;
-	
-	//
-	protected EditBoxWidget PlacedSearchEditbox;
-	
-	protected ButtonWidget CinematicCameraButton;
-	protected ButtonWidget PlacementsTabButton;
-	protected ButtonWidget DeletionsTabButton;
-	protected ButtonWidget LeftbarPanelSearchBarIconButton;
-	protected ButtonWidget PlacedSearchIconButton;
-	
 	// Camera Track
 	protected Widget CameraTrackWrapper;
 	protected ButtonWidget CameraTrackRunButton;
@@ -98,10 +47,7 @@ class EditorHudController: EditorControllerBase
 	protected ImageWidget CameraLightButton_Icon;
 	
 	ButtonWidget BrushToggleButton;
-	TextWidget NotificationText;
-	
-	Widget NotificationPanel;
-	
+		
 	// Favorites
 	protected ref array<string> m_FavoriteItems = {};
 		
@@ -126,23 +72,23 @@ class EditorHudController: EditorControllerBase
 		
 		float widest_x;				
 		// Load Brushes		
-		string brush_file = m_Editor.GeneralSettings.EditorBrushFile;
+		string brush_file = GetEditor().GeneralSettings.EditorBrushFile;
 		if (brush_file.Contains("'")) {
 			// bi wtf
 			brush_file.Replace("'", "");
 			brush_file.Replace("\"", "");
-			m_Editor.GeneralSettings.EditorBrushFile = brush_file;
-			m_Editor.GeneralSettings.Save();
+			GetEditor().GeneralSettings.EditorBrushFile = brush_file;
+			GetEditor().GeneralSettings.Save();
 		}
 		
-		if (!FileExist(m_Editor.GeneralSettings.EditorBrushFile)) {
-			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", m_Editor.GeneralSettings.EditorBrushFile)) {
-				EditorLog.Error("Could not copy brush data to %1", m_Editor.GeneralSettings.EditorBrushFile);
+		if (!FileExist(GetEditor().GeneralSettings.EditorBrushFile)) {
+			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", GetEditor().GeneralSettings.EditorBrushFile)) {
+				EditorLog.Error("Could not copy brush data to %1", GetEditor().GeneralSettings.EditorBrushFile);
 				return;
 			}
 		}
 				
-		ReloadBrushes(m_Editor.GeneralSettings.EditorBrushFile);
+		ReloadBrushes(GetEditor().GeneralSettings.EditorBrushFile);
 	}
 		
 	float GetPrecisionLevel()
@@ -200,6 +146,16 @@ class EditorHudController: EditorControllerBase
 	{
 	}
 	
+	override void PropertyChanged(string property_name)
+	{
+		switch (property_name) {
+			case "Search": {
+				
+				break;
+			}
+		}
+	}
+	
 	/*
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
@@ -230,17 +186,17 @@ class EditorHudController: EditorControllerBase
 
 		switch (w) {
 			case PlacementsTabButton: {
-				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
+				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case DeletionsTabButton: {
-				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " #STR_EDITOR_DELETIONS", w, TooltipPositions.BOTTOM_LEFT));
+				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " #STR_EDITOR_DELETIONS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case CinematicCameraButton: {
-				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("#STR_EDITOR_CINEMATIC_CAMERA", w, TooltipPositions.TOP_LEFT));
+				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("#STR_EDITOR_CINEMATIC_CAMERA", w, TooltipPositions.TOP_LEFT));
 				break;
 			}
 		}
@@ -251,7 +207,7 @@ class EditorHudController: EditorControllerBase
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseLeave");
-		m_Editor.GetEditorHud().SetCurrentTooltip(null);
+		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}*/
@@ -266,54 +222,7 @@ class EditorHudController: EditorControllerBase
 		
 		return false;
 	}
-	
-	override bool OnFocus(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorHud::OnFocus");
 		
-		switch (w) {
-			
-			case LeftbarSearchBar: {
-				m_Editor.GetCamera().MoveEnabled = false;
-				break;
-			}
-			case PlacedSearchEditbox:
-				m_Editor.GetCamera().MoveEnabled = false;
-				break;
-		}
-		
-		return false;
-	}
-	
-	override bool OnFocusLost(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorHud::OnFocusLost");
-		
-		switch (w) {
-			
-			case LeftbarSearchBar: {
-				m_Editor.GetCamera().MoveEnabled = true;
-				break;
-			}
-			case PlacedSearchEditbox:
-				m_Editor.GetCamera().MoveEnabled = true;
-				break;
-		}
-		
-		return false;
-	}
-		
-	void ShowNotification(string text, int color, float duration)
-	{
-		NotificationPanel.SetColor(color);
-		NotificationText.SetText(text);
-		
-		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, 90, 100);
-		SEffectManager.PlaySoundOnObject(NOTIFICATION_SOUND, GetEditor().GetCamera());
-		
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationPanel.SetPos, (duration * 1000) + 100, false, 0, 70, true);
-	}
-	
 	// Brush Management
 	void ReloadBrushes(string filename)
 	{

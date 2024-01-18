@@ -14,6 +14,9 @@ class EditorHud: ScriptView
 	
 	TextWidget SessionIdData, UserCountData, EntityCountData;
 	
+	Widget NotificationPanel;
+	TextWidget NotificationText;
+	
 	protected ref EditorTooltip m_CurrentTooltip;
 	
 	protected Widget m_DraggedBar;
@@ -26,7 +29,7 @@ class EditorHud: ScriptView
 	protected EditorCategory m_CurrentPlacingContext;
 	
 	protected ref array<ref EditorPlaceableObject> m_Placeables = {};
-	
+
 	void EditorHud()
 	{		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
@@ -217,8 +220,21 @@ class EditorHud: ScriptView
 		//m_TemplateController.RightListItems.Insert(new EditorTreeItem("New Folder", null));
 	}
 	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		Print(w);
+		return super.OnFocus(w, x, y);
+	}
+
+	override bool OnFocusLost(Widget w, int x, int y)
+	{
+		
+		return super.OnFocusLost(w, x, y);
+	}
+	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
+		Print(w);
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
@@ -252,7 +268,6 @@ class EditorHud: ScriptView
 		if (icon) {
 			WidgetAnimator.Animate(icon, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
 		}
-		
 		
 		switch (w) {
 			case LeftDragZone:
@@ -352,9 +367,13 @@ class EditorHud: ScriptView
 				
 	void CreateNotification(string text, int color = -4301218, float duration = 4)
 	{
-		EditorLog.Trace("EditorHud::CreateNotification");
+		NotificationPanel.SetColor(color);
+		NotificationText.SetText(text);
 		
-		GetTemplateController().ShowNotification(text, color, duration);
+		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, 90, 100);
+		SEffectManager.PlaySoundOnObject("Notification_SoundSet", GetEditor().GetCamera());
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationPanel.SetPos, (duration * 1000) + 100, false, 0, 70, true);
 	}
 		
 	bool IsSelectionBoxActive()
