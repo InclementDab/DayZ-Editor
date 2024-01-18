@@ -14,9 +14,9 @@ FrameWidgetClass EditorFrame {
  draggable 0
  scriptclass ""
  {
-  CanvasWidgetClass EditorCanvas {
+  CanvasWidgetClass Whiteboard {
    ignorepointer 1
-   position 0.00156 0
+   position 0 0
    size 1 1
    halign center_ref
    valign center_ref
@@ -125,54 +125,6 @@ FrameWidgetClass EditorFrame {
       }
      }
     }
-    PanelWidgetClass RightFooter {
-     ignorepointer 1
-     color 0.0588 0.0588 0.0588 0.9804
-     position 0 -32
-     size 1 32
-     halign center_ref
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     scaled 0
-     style rover_sim_colorable
-     {
-      ButtonWidgetClass NewFolderButton {
-       position 12 0
-       size 28 28
-       halign right_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       scriptclass "ViewBinding"
-       style ButtonColorOnSelect
-       "no focus" 1
-       {
-        ImageWidgetClass NewFolderButtonIcon {
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 0
-         scriptclass "ButtonIcon"
-         image0 "set:icons image:folder_plus"
-         mode additive
-         "src alpha" 1
-         filter 0
-        }
-       }
-      }
-     }
-    }
     PanelWidgetClass RightDragZone {
      ignorepointer 0
      size 3 1
@@ -265,11 +217,12 @@ FrameWidgetClass EditorFrame {
     WrapSpacerWidgetClass "Tools.Wrapper" {
      ignorepointer 1
      position 0 0
-     size 1 1
+     size 0.75 1
      hexactpos 1
      vexactpos 1
      hexactsize 0
      vexactsize 0
+     scaled 0
      Padding 0
      Margin 0
      {
@@ -1257,6 +1210,167 @@ FrameWidgetClass EditorFrame {
      scaled 0
      style rover_sim_colorable
     }
+    WrapSpacerWidgetClass "Tools.Wrapper2" {
+     ignorepointer 1
+     position 0 0
+     size 0.25 1
+     halign right_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     Padding 0
+     Margin 0
+     content_halign right
+     content_valign bottom
+     {
+      PanelWidgetClass Divider10 {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 20 42
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider11 {
+         visible 1
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 2 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass TreeTools {
+       ignorepointer 1
+       size 32 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign right
+       content_valign bottom
+       Columns 5
+       Rows 1
+       {
+        FrameWidgetClass ExportFolder {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "ExportFolder.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "ExportFolder.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:file_export"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass NewFolder {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "NewFolder.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "NewFolder.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:folder_plus"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
    }
   }
   PanelWidgetClass Menu {
@@ -1637,7 +1751,7 @@ FrameWidgetClass EditorFrame {
            scaled 0
            text "Edit"
            font "gui/fonts/MetronBook"
-           "exact text" 1
+           "exact text" 0
            "size to text h" 0
            "text halign" center
            "text valign" center
@@ -1685,7 +1799,7 @@ FrameWidgetClass EditorFrame {
            scaled 0
            text "View"
            font "gui/fonts/MetronBook"
-           "exact text" 1
+           "exact text" 0
            "size to text h" 0
            "text halign" center
            "text valign" center

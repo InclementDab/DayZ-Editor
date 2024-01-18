@@ -8,7 +8,7 @@ class EditorHud: ScriptView
 	// Layout Elements
 	Widget LeftDragZone, RightDragZone;
 	
-	CanvasWidget EditorCanvas;
+	CanvasWidget Whiteboard;
 	ScrollWidget LeftScroll, RightScroll;
 	
 	TextWidget SessionIdData, UserCountData, EntityCountData;
@@ -186,19 +186,19 @@ class EditorHud: ScriptView
 			// @Sumrak :ANGERY:
 			current_x += 6;
 			
-			EditorCanvas.Clear();
+			Whiteboard.Clear();
 			EditorObject.ClearSelections();
 			
 			// Draw Drag Box
 			if (Math.AbsInt(m_DragX - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(m_DragY - current_y) > DRAG_BOX_THRESHOLD) {
-				EditorCanvas.DrawLine(m_DragX, m_DragY, current_x, m_DragY, DRAG_BOX_THICKNESS, drag_box_color);
-				EditorCanvas.DrawLine(m_DragX, m_DragY, m_DragX, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-				EditorCanvas.DrawLine(m_DragX, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-				EditorCanvas.DrawLine(current_x, m_DragY, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+				Whiteboard.DrawLine(m_DragX, m_DragY, current_x, m_DragY, DRAG_BOX_THICKNESS, drag_box_color);
+				Whiteboard.DrawLine(m_DragX, m_DragY, m_DragX, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+				Whiteboard.DrawLine(m_DragX, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+				Whiteboard.DrawLine(current_x, m_DragY, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
 				
 				// Handles the fill operation
 				int x_avg = (m_DragX + current_x) / 2;
-				EditorCanvas.DrawLine(x_avg, m_DragY, x_avg, current_y, current_x - m_DragX, drag_box_color_fill); 
+				Whiteboard.DrawLine(x_avg, m_DragY, x_avg, current_y, current_x - m_DragX, drag_box_color_fill); 
 				
 				array<EditorObject> placed_objects = GetEditor().GetPlacedObjects();
 				foreach (EditorObject editor_object: placed_objects) {					
@@ -442,18 +442,18 @@ class EditorHud: ScriptView
 	void ShowRuleOfThirds(bool state)
 	{
 		if (!state) {
-			EditorCanvas.Clear();
+			Whiteboard.Clear();
 			return;
 		}
 		
 		int x, y;
 
 		GetScreenSize(x, y);				
-		EditorCanvas.DrawLine(x / 3, 0, x / 3, y, 1, COLOR_BLACK);
-		EditorCanvas.DrawLine((x / 3) * 2, 0, (x / 3) * 2, y, 1, COLOR_BLACK);
+		Whiteboard.DrawLine(x / 3, 0, x / 3, y, 1, COLOR_BLACK);
+		Whiteboard.DrawLine((x / 3) * 2, 0, (x / 3) * 2, y, 1, COLOR_BLACK);
 		
-		EditorCanvas.DrawLine(0, y / 3, x, y / 3, 1, COLOR_BLACK);
-		EditorCanvas.DrawLine(0, (y / 3) * 2, x, (y / 3) * 2, 1, COLOR_BLACK);
+		Whiteboard.DrawLine(0, y / 3, x, y / 3, 1, COLOR_BLACK);
+		Whiteboard.DrawLine(0, (y / 3) * 2, x, (y / 3) * 2, 1, COLOR_BLACK);
 	}
 	
 	override string GetLayoutFile() 
