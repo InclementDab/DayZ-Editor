@@ -350,7 +350,7 @@ class Editor: Managed
 			world_object.Update();
 		}
 	}
-	
+		
 	// EditorSounds is helpful
 	void PlaySound(string sound_set)
 	{

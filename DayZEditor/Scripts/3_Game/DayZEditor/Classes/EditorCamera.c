@@ -1,3 +1,28 @@
+class Ray: Managed
+{
+	static const ref Ray INVALID = new Ray();	
+	
+	vector Position;
+	vector Direction;
+	
+	void Ray(vector position = vector.Zero, vector direction = vector.Zero)
+	{
+		Position = position;
+		Direction = direction;
+	}
+	
+	vector GetPoint(float distance)
+	{
+		return Position + Direction * distance;
+	}
+	
+	void Debug()
+	{
+		//Shape.CreateSphere(COLOR_WHITE, ShapeFlags.ONCE, Position, 0.1);
+		Shape.CreateArrow(Position, GetPoint(1.0), 1.0, COLOR_GREEN, ShapeFlags.ONCE);
+	}
+}
+
 class ScriptedCamera: Camera
 {
 	void OnSelectCamera();
@@ -10,6 +35,9 @@ class EditorCamera: ScriptedCamera
 	
 	protected float m_ServerUpdateAccumulator;
 	protected vector m_LinearVelocity, m_AngularVelocity;
+	
+	protected vector m_ViewDragStartPosition;
+	protected vector m_ViewDragStartMat[4] = {};
 	
 	void EditorCamera()
 	{
@@ -35,25 +63,82 @@ class EditorCamera: ScriptedCamera
 									input.LocalValue_ID(UAMoveUp) 		- input.LocalValue_ID(UAMoveDown), 
 									input.LocalValue_ID(UAMoveForward) 	- input.LocalValue_ID(UAMoveBack)) * timeSlice * 5.0 * (1 + input.LocalValue_ID(UATurbo) * 5.0);
 		
-
-		float yaw = (input.LocalValue_ID(UAAimRight) - input.LocalValue_ID(UAAimLeft)) * timeSlice;
-		float pitch = (input.LocalValue_ID(UAAimUp) - input.LocalValue_ID(UAAimDown)) * timeSlice;
+		vector view_delta = vector.Forward;
 		
-		// We need a delta vector created in camera coordinate space.
-		// this is a vector that points forward towards the looking direction of the next frame
-		vector view_delta = Vector(Math.Sin(yaw), pitch, Math.Cos(yaw)).Normalized().Multiply3(transform);
+		Ray cursor_ray = GetCursorRay();
 		
-		// Finally we construct a transform from our new view delta and move it by our linear velocity
-		transform = { vector.Up * view_delta, vector.Up, view_delta, m_LinearVelocity.Multiply4(transform) };
-
+		// Cursor is off, time to do regular camera things
+		if (!GetGame().GetUIManager().IsCursorVisible()) {
+			vector view = Vector(input.LocalValue_ID(UAAimRight) - input.LocalValue_ID(UAAimLeft), 
+					input.LocalValue_ID(UAAimUp) - input.LocalValue_ID(UAAimDown), 
+					0) * timeSlice;
+			
+			// We need a delta vector created in camera coordinate space.
+			// this is a vector that points forward towards the looking direction of the next frame
+			view_delta = Vector(Math.Sin(view[0]), view[1], Math.Cos(view[0])).Normalized().Multiply3(transform);
+			
+			// Finally we construct a transform from our new view delta and move it by our linear velocity
+			transform = { vector.Up * view_delta, vector.Up, view_delta, m_LinearVelocity.Multiply4(transform) };
+		} 
+		
+		else if (input.LocalPress_ID(UATempRaiseWeapon)) {
+			Math3D.MatrixIdentity4(m_ViewDragStartMat);
+			GetTransform(m_ViewDragStartMat);
+			
+		}
+		
+		else if (input.LocalValue_ID(UATempRaiseWeapon)) {		
+	
+			vector matrix[3] = { vector.Up * transform[2], -vector.Up, -transform[2] };
+			Math3D.MatrixOrthogonalize3(matrix);
+			
+			Math3D.MatrixMultiply3(matrix, m_ViewDragStartMat, matrix);
+			
+			vector pointer = GetGame().GetPointerDirection().InvMultiply3(matrix);
+			pointer.Normalize();
+			
+			transform = { vector.Up * pointer, vector.Up, pointer, m_LinearVelocity.Multiply4(transform) };
+		} else {
+			transform[3] = m_LinearVelocity.Multiply4(transform);
+		}
+			
+		
+		Math3D.MatrixOrthogonalize4(transform);
+				
 		SetTransform(transform);
 		
 		transform[3] = Vector(0, 0, 1).Multiply4(transform);
 		Shape.CreateMatrix(transform);
-			
+	
 		// Decay linear velocity
-		m_LinearVelocity = m_LinearVelocity * GetEditor().GetProfileSettings().Smoothing;
+		m_LinearVelocity = m_LinearVelocity * Math.Pow(GetEditor().GetProfileSettings().Smoothing, 2);
 		m_AngularVelocity = m_AngularVelocity * 0.5;
+	}
+	
+	Ray PerformCursorRaycast()
+	{
+		Ray cursor_ray = GetCursorRay();
+		Ray output_ray = new Ray();
+		
+		float fraction;
+		if (!DayZPhysics.RayCastBullet(cursor_ray.Position, cursor_ray.Position + cursor_ray.Direction * 1000.0, PhxInteractionLayers.TERRAIN, this, null, output_ray.Position, output_ray.Direction, fraction)) {
+			return Ray.INVALID;
+		}
+		
+		return output_ray;
+	}
+	
+	Ray GetCursorRay()
+	{
+		vector transform[4];
+		GetTransform(transform);
+		Ray ray = new Ray(transform[3], transform[2]);
+
+		if (GetGame().GetUIManager().IsCursorVisible()) {
+			ray.Direction = GetGame().GetPointerDirection();
+		}
+		
+		return ray;
 	}
 }
 
