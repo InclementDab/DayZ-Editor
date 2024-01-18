@@ -22,65 +22,49 @@ class CfgMods
 		versionPath = "DayZEditor/scripts/Data/Version.hpp";
 		inputs = "DayZEditor/Scripts/Data/Inputs.xml";
 		type = "mod";
-		dependencies[] =
-			{
-				"Game", "World", "Mission"};
+		dependencies[] = {"Game", "World", "Mission"};
 		class defs
 		{
 			class imageSets
 			{
-				files[] =
-					{
-						"DayZEditor/gui/imagesets/dayz_editor_gui.imageset",
-						"DabsFramework/gui/imagesets/prefabs.imageset",
-						"DayZEditor/gui/icons/tree.imageset",
-						"DayZEditor/gui/icons/icons.imageset"
+				files[] = {
+					"DayZEditor/gui/imagesets/dayz_editor_gui.imageset",
+					"DabsFramework/gui/imagesets/prefabs.imageset",
+					"DayZEditor/gui/icons/tree.imageset",
+					"DayZEditor/gui/icons/icons.imageset"
 				};
 			};
 
 			class widgetStyles
 			{
-				files[] =
-					{
-						"DayZEditor/gui/looknfeel/editorwidgets.styles",
-						"DayZEditor/gui/looknfeel/prefabs.styles",
-						"DabsFramework/gui/looknfeel/prefabs.imageset",
+				files[] = {
+					"DayZEditor/gui/looknfeel/editorwidgets.styles",
+					"DayZEditor/gui/looknfeel/prefabs.styles",
+					"DabsFramework/gui/looknfeel/prefabs.imageset"
 				};
 			};
 
 			class engineScriptModule
 			{
 				value = "";
-				files[] =
-					{
-						"DayZEditor/scripts/common",
-						"DayZEditor/scripts/1_core"};
+				files[] = {"DayZEditor/scripts/1_core"};
 			};
 
 			class gameScriptModule
 			{
 				value = "";
-				files[] =
-					{
-						"DayZEditor/scripts/common",
-						"DayZEditor/scripts/3_Game"};
+				files[] = {"DayZEditor/scripts/3_Game"};
 			};
 			class worldScriptModule
 			{
 				value = "";
-				files[] =
-					{
-						"DayZEditor/scripts/common",
-						"DayZEditor/scripts/4_World"};
+				files[] = {"DayZEditor/scripts/4_World"};
 			};
 
 			class missionScriptModule
 			{
 				value = "";
-				files[] =
-					{
-						"DayZEditor/scripts/common",
-						"DayZEditor/scripts/5_Mission"};
+				files[] = {"DayZEditor/scripts/5_Mission"};
 			};
 		};
 	};
