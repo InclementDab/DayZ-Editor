@@ -10,9 +10,9 @@ class EditorPlaceableObjectData: SerializableBase
 		return null;
 	}
 	
-	EditorPlaceableObjectDataCategory GetCategory()
+	EditorObjectDataCategory GetCategory()
 	{
-		return EditorPlaceableObjectDataCategory.UNKNOWN;
+		return EditorObjectDataCategory.UNKNOWN;
 	}
 					
 	string GetName()

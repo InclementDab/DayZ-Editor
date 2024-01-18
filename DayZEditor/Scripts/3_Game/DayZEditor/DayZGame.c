@@ -2,7 +2,7 @@ modded class DayZGame
 {
 	protected ref array<ref EditorPlaceableObjectData> m_AllPlaceableItems = {};
 	
-	protected ref map<EditorPlaceableObjectDataCategory, ref array<EditorPlaceableObjectData>> m_PlaceableItems = new map<EditorPlaceableObjectDataCategory, ref array<EditorPlaceableObjectData>>();
+	protected ref map<EditorObjectDataCategory, ref array<EditorPlaceableObjectData>> m_PlaceableItems = new map<EditorObjectDataCategory, ref array<EditorPlaceableObjectData>>();
 	
 	protected ref map<string, EditorPlaceableObjectData> m_PlaceableObjectsByType = new map<string, EditorPlaceableObjectData>();
 	
@@ -107,7 +107,7 @@ modded class DayZGame
 		return m_PlaceableObjectsByP3d[p3d];
 	}
 
-	map<EditorPlaceableObjectDataCategory, ref array<EditorPlaceableObjectData>> GetPlaceableItemsByCategory()
+	map<EditorObjectDataCategory, ref array<EditorPlaceableObjectData>> GetPlaceableItemsByCategory()
 	{
 		return m_PlaceableItems;
 	}

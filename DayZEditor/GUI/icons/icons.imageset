@@ -1,332 +1,332 @@
-ImageSetClass  {
-	Name "icons"
-	RefSize 5120 3072
-	Textures {
-		ImageSetTextureClass  {
-			mpix 1
-			path "DayZEditor\GUI\icons\icons.edds"
-		}
-	}
-	Images {
-		ImageSetDefClass arrow_down_1_9 {
-			Name "arrow_down_1_9"
-			Pos 0 0
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass arrow_down_9_1 {
-			Name "arrow_down_9_1"
-			Pos 512 0
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass arrow_down_arrow_up {
-			Name "arrow_down_arrow_up"
-			Pos 1024 0
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass arrow_down_short_wide {
-			Name "arrow_down_short_wide"
-			Pos 1536 0
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass arrow_down_to_line {
-			Name "arrow_down_to_line"
-			Pos 2048 0
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass arrow_down {
-			Name "arrow_down"
-			Pos 2560 0
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass arrows_to_circle {
-			Name "arrows_to_circle"
-			Pos 3072 0
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass arrows_to_dot {
-			Name "arrows_to_dot"
-			Pos 3584 0
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass arrows_to_dotted_line {
-			Name "arrows_to_dotted_line"
-			Pos 4096 0
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass arrows_to_eye {
-			Name "arrows_to_eye"
-			Pos 4608 0
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass arrows_to_line {
-			Name "arrows_to_line"
-			Pos 0 512
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass camera_cctv {
-			Name "camera_cctv"
-			Pos 512 512
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass camera_movie {
-			Name "camera_movie"
-			Pos 1024 512
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass camera_polaroid {
-			Name "camera_polaroid"
-			Pos 1536 512
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass camera_retro {
-			Name "camera_retro"
-			Pos 2048 512
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass camera {
-			Name "camera"
-			Pos 2560 512
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass checkbox_checked {
-			Name "checkbox_checked"
-			Pos 3072 512
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass checkbox_unchecked {
-			Name "checkbox_unchecked"
-			Pos 3584 512
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass circle_dot {
-			Name "circle_dot"
-			Pos 4096 512
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass copy {
-			Name "copy"
-			Pos 4608 512
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass discord {
-			Name "discord"
-			Pos 0 1024
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass eye_slash {
-			Name "eye_slash"
-			Pos 512 1024
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass file_arrow_down {
-			Name "file_arrow_down"
-			Pos 1024 1024
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass file_arrow_up {
-			Name "file_arrow_up"
-			Pos 1536 1024
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass file_check {
-			Name "file_check"
-			Pos 2048 1024
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass file_export {
-			Name "file_export"
-			Pos 2560 1024
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass file_import {
-			Name "file_import"
-			Pos 3072 1024
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass file_lines {
-			Name "file_lines"
-			Pos 3584 1024
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass file_lock {
-			Name "file_lock"
-			Pos 4096 1024
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass file_user {
-			Name "file_user"
-			Pos 4608 1024
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass file {
-			Name "file"
-			Pos 0 1536
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass floppy_disk_pen {
-			Name "floppy_disk_pen"
-			Pos 512 1536
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass floppy_disk {
-			Name "floppy_disk"
-			Pos 1024 1536
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass folder_gear {
-			Name "folder_gear"
-			Pos 1536 1536
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass folder_minus {
-			Name "folder_minus"
-			Pos 2048 1536
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass folder_open {
-			Name "folder_open"
-			Pos 2560 1536
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass folder_plus {
-			Name "folder_plus"
-			Pos 3072 1536
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass folder {
-			Name "folder"
-			Pos 3584 1536
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass globe {
-			Name "globe"
-			Pos 4096 1536
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass loader {
-			Name "loader"
-			Pos 4608 1536
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass location_dot {
-			Name "location_dot"
-			Pos 0 2048
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass lock_open {
-			Name "lock_open"
-			Pos 512 2048
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass lock {
-			Name "lock"
-			Pos 1024 2048
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass magnet {
-			Name "magnet"
-			Pos 1536 2048
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass minus {
-			Name "minus"
-			Pos 2048 2048
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass paste {
-			Name "paste"
-			Pos 2560 2048
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass rotate_left {
-			Name "rotate_left"
-			Pos 3072 2048
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass rotate_right {
-			Name "rotate_right"
-			Pos 3584 2048
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass rotate {
-			Name "rotate"
-			Pos 4096 2048
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass scissors {
-			Name "scissors"
-			Pos 4608 2048
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass shovel_snow {
-			Name "shovel_snow"
-			Pos 0 2560
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass sun_bright {
-			Name "sun_bright"
-			Pos 512 2560
-			Size 512 512
-			Flags 0
-		}
-		ImageSetDefClass xmark {
-			Name "xmark"
-			Pos 1024 2560
-			Size 512 512
-			Flags 0
-		}
-	}
-	Groups {
-	}
+ImageSetClass {
+ Name "icons"
+ RefSize 5120 3072
+ Textures {
+  ImageSetTextureClass {
+   mpix 1
+   path "{902A22F5FA809870}DayZEditor/GUI/icons/icons.edds"
+  }
+ }
+ Images {
+  ImageSetDefClass arrow_down_1_9 {
+   Name "arrow_down_1_9"
+   Pos 0 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass arrow_down_9_1 {
+   Name "arrow_down_9_1"
+   Pos 512 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass arrow_down_arrow_up {
+   Name "arrow_down_arrow_up"
+   Pos 1024 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass arrow_down_short_wide {
+   Name "arrow_down_short_wide"
+   Pos 1536 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass arrow_down_to_line {
+   Name "arrow_down_to_line"
+   Pos 2048 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass arrow_down {
+   Name "arrow_down"
+   Pos 2560 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass arrows_to_circle {
+   Name "arrows_to_circle"
+   Pos 3072 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass arrows_to_dot {
+   Name "arrows_to_dot"
+   Pos 3584 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass arrows_to_dotted_line {
+   Name "arrows_to_dotted_line"
+   Pos 4096 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass arrows_to_eye {
+   Name "arrows_to_eye"
+   Pos 4608 0
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass arrows_to_line {
+   Name "arrows_to_line"
+   Pos 0 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass camera_cctv {
+   Name "camera_cctv"
+   Pos 512 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass camera_movie {
+   Name "camera_movie"
+   Pos 1024 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass camera_polaroid {
+   Name "camera_polaroid"
+   Pos 1536 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass camera_retro {
+   Name "camera_retro"
+   Pos 2048 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass camera {
+   Name "camera"
+   Pos 2560 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass checkbox_checked {
+   Name "checkbox_checked"
+   Pos 3072 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass checkbox_unchecked {
+   Name "checkbox_unchecked"
+   Pos 3584 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass circle_dot {
+   Name "circle_dot"
+   Pos 4096 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass copy {
+   Name "copy"
+   Pos 4608 512
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass discord {
+   Name "discord"
+   Pos 0 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass eye_slash {
+   Name "eye_slash"
+   Pos 512 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass file_arrow_down {
+   Name "file_arrow_down"
+   Pos 1024 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass file_arrow_up {
+   Name "file_arrow_up"
+   Pos 1536 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass file_check {
+   Name "file_check"
+   Pos 2048 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass file_export {
+   Name "file_export"
+   Pos 2560 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass file_import {
+   Name "file_import"
+   Pos 3072 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass file_lines {
+   Name "file_lines"
+   Pos 3584 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass file_lock {
+   Name "file_lock"
+   Pos 4096 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass file_user {
+   Name "file_user"
+   Pos 4608 1024
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass file {
+   Name "file"
+   Pos 0 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass floppy_disk_pen {
+   Name "floppy_disk_pen"
+   Pos 512 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass floppy_disk {
+   Name "floppy_disk"
+   Pos 1024 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass folder_gear {
+   Name "folder_gear"
+   Pos 1536 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass folder_minus {
+   Name "folder_minus"
+   Pos 2048 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass folder_open {
+   Name "folder_open"
+   Pos 2560 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass folder_plus {
+   Name "folder_plus"
+   Pos 3072 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass folder {
+   Name "folder"
+   Pos 3584 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass globe {
+   Name "globe"
+   Pos 4096 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass loader {
+   Name "loader"
+   Pos 4608 1536
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass location_dot {
+   Name "location_dot"
+   Pos 0 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass lock_open {
+   Name "lock_open"
+   Pos 512 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass lock {
+   Name "lock"
+   Pos 1024 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass magnet {
+   Name "magnet"
+   Pos 1536 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass minus {
+   Name "minus"
+   Pos 2048 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass paste {
+   Name "paste"
+   Pos 2560 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass rotate_left {
+   Name "rotate_left"
+   Pos 3072 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass rotate_right {
+   Name "rotate_right"
+   Pos 3584 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass rotate {
+   Name "rotate"
+   Pos 4096 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass scissors {
+   Name "scissors"
+   Pos 4608 2048
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass shovel_snow {
+   Name "shovel_snow"
+   Pos 0 2560
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass sun_bright {
+   Name "sun_bright"
+   Pos 512 2560
+   Size 512 512
+   Flags 0
+  }
+  ImageSetDefClass xmark {
+   Name "xmark"
+   Pos 1024 2560
+   Size 512 512
+   Flags 0
+  }
+ }
+ Groups {
+ }
 }

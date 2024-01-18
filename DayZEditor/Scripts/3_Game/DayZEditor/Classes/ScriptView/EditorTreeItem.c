@@ -37,6 +37,13 @@ class EditorTreeItem: ScriptView
 		Button.SetScreenSize(w, h);
 	}
 	
+	void SetIcon(string icon)
+	{
+		Icon.Show(true);
+		Icon.LoadImageFile(0, icon);
+		Icon.SetImage(0);
+	}
+	
 	void OnCollapseExecute(ButtonCommandArgs args)
 	{
 		ShowChildren(!ChildrenWrapper.IsVisible());

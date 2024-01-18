@@ -112,6 +112,11 @@ FrameWidgetClass EditorFrame {
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
+       {
+        ScriptParamsClass {
+         Binding_Name "RightListItems"
+        }
+       }
       }
      }
     }
@@ -170,6 +175,11 @@ FrameWidgetClass EditorFrame {
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
+       {
+        ScriptParamsClass {
+         Binding_Name "LeftListItems"
+        }
+       }
       }
      }
     }

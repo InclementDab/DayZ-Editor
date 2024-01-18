@@ -85,7 +85,8 @@ WrapSpacerWidgetClass Root {
      vexactsize 0
     }
     ImageWidgetClass Icon {
-     visible 1
+     visible 0
+     disabled 0
      ignorepointer 1
      position 0 0
      size 18 18

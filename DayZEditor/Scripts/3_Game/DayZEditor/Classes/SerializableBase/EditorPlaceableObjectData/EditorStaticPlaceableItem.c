@@ -18,9 +18,9 @@ class EditorStaticPlaceableItem: EditorPlaceableObjectData
 		return m_Name;
 	}
 	
-	override EditorPlaceableObjectDataCategory GetCategory()
+	override EditorObjectDataCategory GetCategory()
 	{
-		return EditorPlaceableObjectDataCategory.STATIC;
+		return EditorObjectDataCategory.STATIC;
 	}
 	
 	override Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)

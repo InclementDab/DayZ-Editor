@@ -29,9 +29,9 @@ class EditorScriptedPlaceableItem: EditorPlaceableObjectData
 		return object;
 	}
 	
-	override EditorPlaceableObjectDataCategory GetCategory()
+	override EditorObjectDataCategory GetCategory()
 	{
-		return EditorPlaceableObjectDataCategory.SCRIPTED;
+		return EditorObjectDataCategory.SCRIPTED;
 	}
 			
 	override EditorObjectData CreateData(vector position, vector orientation, float scale, int flags = EFE_DEFAULT)

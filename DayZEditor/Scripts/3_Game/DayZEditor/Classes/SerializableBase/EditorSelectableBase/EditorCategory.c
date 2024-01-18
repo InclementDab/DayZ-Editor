@@ -3,17 +3,18 @@ class EditorCategory: EditorSelectableBase
 	// todo maybe ref this here from now on
 	protected ref array<EditorSelectableBase> m_Children = {};
 	
-	protected string m_Name;
+	protected EditorObjectDataCategory m_Category;
 	
-	void EditorCategory(string name)
+	void EditorCategory(EditorObjectDataCategory category)
 	{
-		m_Name = name;
-		m_TreeItem = new EditorTreeItem(m_Name, this);
+		m_Category = category;
+		m_TreeItem = new EditorTreeItem(m_Category.GetName(), this);
+		m_TreeItem.SetIcon(m_Category.GetIcon());
 	}
 	
 	override string GetName()
 	{
-		return m_Name;
+		return m_Category.GetName();
 	}
 		
 	void AddChild(notnull EditorSelectableBase child)

@@ -14,21 +14,21 @@ class EditorConfigPlaceableItem: EditorPlaceableObjectData
 		return m_Type;
 	}
 	
-	override EditorPlaceableObjectDataCategory GetCategory()
+	override EditorObjectDataCategory GetCategory()
 	{
 		GetGame().ConfigGetFullPath(string.Format("%1 %2", m_Path, m_Type), m_FullPath);
 		
 		if ((m_FullPath.Find("Weapon_Base") != -1) || (m_FullPath.Find("Inventory_Base")) != -1) {
-			return EditorPlaceableObjectDataCategory.DYNAMIC;
+			return EditorObjectDataCategory.DYNAMIC;
 		} else if (m_FullPath.Find("HouseNoDestruct") != -1) {
-			return EditorPlaceableObjectDataCategory.STRUCTURE;
+			return EditorObjectDataCategory.STRUCTURE;
 		} else if (m_FullPath.Find("Man") != -1) {
-			return EditorPlaceableObjectDataCategory.AI;
+			return EditorObjectDataCategory.AI;
 		} else if (m_FullPath.Find("Transport") != -1) {
-			return EditorPlaceableObjectDataCategory.VEHICLE;
+			return EditorObjectDataCategory.VEHICLE;
 		}
 		
-		return EditorPlaceableObjectDataCategory.UNKNOWN;
+		return EditorObjectDataCategory.UNKNOWN;
 	}
 	
 	override Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)
