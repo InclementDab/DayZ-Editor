@@ -33,8 +33,8 @@ class EditorHudController: EditorControllerBase
 	
 	StringEvaluater PrecisionLevel = "0.5";
 	
-	ref ObservableCollection<ref EditorTreeItem> LeftListItems = new ObservableCollection<ref EditorTreeItem>(this);
-	ref ObservableCollection<ref EditorTreeItem> RightListItems = new ObservableCollection<ref EditorTreeItem>(this);
+	ref ObservableCollection<EditorTreeItem> LeftListItems = new ObservableCollection<EditorTreeItem>(this);
+	ref ObservableCollection<EditorTreeItem> RightListItems = new ObservableCollection<EditorTreeItem>(this);
 		
 	ref ObservableCollection<ref EditorFileHeadView> OpenFiles = new ObservableCollection<ref EditorFileHeadView>(this);
 	
@@ -45,7 +45,7 @@ class EditorHudController: EditorControllerBase
 	// Camera bindings
 	float CameraSmoothing = 50.0;
 	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
-
+	
 	ScrollWidget LeftScroll;
 	ScrollWidget RightScroll;
 	

@@ -429,6 +429,10 @@ class Editor: Managed
 	{
 		if (IsPlacing()) {
 			foreach (Object placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
+				if (!placing_object) {
+					continue;
+				}
+				
 				vector hand_ori = placing_object.GetOrientation();
 				float factor = 9;
 				if (KeyState(KeyCode.KC_LSHIFT)) {

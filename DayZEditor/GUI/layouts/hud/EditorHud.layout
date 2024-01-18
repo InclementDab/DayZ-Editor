@@ -16,7 +16,7 @@ FrameWidgetClass EditorFrame {
  {
   CanvasWidgetClass EditorCanvas {
    ignorepointer 1
-   position -0.00064 0.0004
+   position -0.00037 0.00008
    size 1 1
    halign center_ref
    valign center_ref
@@ -38,10 +38,10 @@ FrameWidgetClass EditorFrame {
    scaled 0
    style rover_sim_colorable
    {
-    WrapSpacerWidgetClass FileMenuWrapper {
-     visible 0
+    WrapSpacerWidgetClass MenuBar {
+     visible 1
      ignorepointer 1
-     position 47 0
+     position 64 0
      size 240 40
      hexactpos 1
      vexactpos 1
@@ -49,19 +49,61 @@ FrameWidgetClass EditorFrame {
      vexactsize 1
      scaled 0
      style Colorable
+     Padding 0
+     Margin 0
      content_valign center
      {
-      ButtonWidgetClass FileButton {
-       color 1 1 1 0.3922
-       size 40 25
+      FrameWidgetClass File {
+       visible 1
+       ignorepointer 1
+       color 1 1 1 0
+       size 60 30
+       halign center_ref
+       valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
        scaled 0
-       style DayZDefaultButtonTop
-       text "File"
-       font "gui/fonts/MetronBook"
+       {
+        ButtonWidgetClass "File.Button" {
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         style Empty
+         {
+          PanelWidgetClass "File.Icon" {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+          }
+         }
+        }
+        TextWidgetClass "File.Text" {
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "File"
+         font "gui/fonts/MetronBook"
+         "size to text h" 0
+         "text halign" center
+         "text valign" center
+        }
+       }
       }
      }
     }
@@ -145,11 +187,12 @@ FrameWidgetClass EditorFrame {
            hexactsize 0
            vexactsize 0
            scaled 0
-           style Default
+           style Empty
            "no focus" 1
            {
             ImageWidgetClass "Undo.Icon" {
              ignorepointer 1
+             color 1 1 1 0.3922
              size 1 1
              halign center_ref
              valign center_ref
@@ -188,10 +231,12 @@ FrameWidgetClass EditorFrame {
            hexactsize 0
            vexactsize 0
            scaled 0
+           style Empty
            "no focus" 1
            {
             ImageWidgetClass "Redo.Icon" {
              ignorepointer 1
+             color 1 1 1 0.3922
              position 0 0
              size 1 1
              halign center_ref
@@ -363,11 +408,1019 @@ FrameWidgetClass EditorFrame {
     }
    }
   }
+  PanelWidgetClass Tools {
+   ignorepointer 1
+   color 0.0941 0.0941 0.0941 1
+   position 0 42
+   size 1 92
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+   style rover_sim_colorable
+   {
+    WrapSpacerWidgetClass "Tools.Wrapper" {
+     ignorepointer 1
+     size 1 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     Padding 0
+     Margin 0
+     {
+      PanelWidgetClass Divider16 {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 20 42
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider17 {
+         visible 1
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 2 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass FileTools {
+       ignorepointer 1
+       size 32 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 5
+       Rows 1
+       {
+        FrameWidgetClass New {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "New.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "New.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:file"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Open {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Open.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Open.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:folder_open"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Save {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Save.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Save.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:floppy_disk"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass SaveAs {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "SaveAs.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "SaveAs.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:floppy_disk_pen"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider18 {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 20 42
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider19 {
+         visible 1
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 2 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass ClipboardTools {
+       ignorepointer 1
+       size 32 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Rows 1
+       {
+        FrameWidgetClass Cut {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Cut.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Cut.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:scissors"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Copy {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Copy.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Copy.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:copy"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Paste {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Paste.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Paste.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:paste"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider110 {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 20 42
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider111 {
+         visible 1
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 2 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass LockTools {
+       ignorepointer 1
+       size 32 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 2
+       Rows 1
+       {
+        FrameWidgetClass Lock {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Lock.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Lock.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:lock"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Unlock {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Unlock.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Unlock.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:lock_open"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider112 {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 20 42
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider113 {
+         visible 1
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 2 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass PlacementTools {
+       ignorepointer 1
+       size 32 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 4
+       Rows 1
+       {
+        FrameWidgetClass Magnet {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Magnet.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Magnet.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:magnet"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Ground {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Ground.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Ground.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:arrow_down_to_line"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Snapping {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Snapping.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Snapping.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:arrows_to_dot"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider114 {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 20 42
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider115 {
+         visible 1
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 2 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass EnvironmentTools {
+       ignorepointer 1
+       size 32 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 4
+       Rows 1
+       {
+        FrameWidgetClass Weather {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Weather.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Weather.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:sun_bright"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Camera {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Camera.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Camera.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:camera_movie"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Online {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Online.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Online.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:globe"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider116 {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 20 42
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider117 {
+         visible 1
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 2 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass "Tools.Seperator" {
+     ignorepointer 1
+     color 0.3137 0.3137 0.3137 1
+     size 1 1
+     halign center_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
+    }
+   }
+  }
   PanelWidgetClass FileTab {
    ignorepointer 1
    color 0.0824 0.0824 0.0824 1
-   position 360 90
-   size 1200 42
+   position 360 134
+   size 0 42
    hexactpos 1
    vexactpos 1
    hexactsize 1
@@ -411,37 +1464,10 @@ FrameWidgetClass EditorFrame {
     }
    }
   }
-  PanelWidgetClass Tools {
-   ignorepointer 1
-   color 0.0941 0.0941 0.0941 1
-   position 0 42
-   size 1 48
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 1
-   scaled 0
-   style rover_sim_colorable
-   {
-    PanelWidgetClass "Tools.Seperator" {
-     ignorepointer 1
-     color 0.3137 0.3137 0.3137 1
-     size 1 1
-     halign center_ref
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     scaled 0
-     style rover_sim_colorable
-    }
-   }
-  }
   FrameWidgetClass Left {
    clipchildren 0
    ignorepointer 1
-   position 0 90
+   position 0 134
    size 360 350
    hexactpos 1
    vexactpos 1
@@ -505,7 +1531,7 @@ FrameWidgetClass EditorFrame {
   FrameWidgetClass Right {
    clipchildren 0
    ignorepointer 1
-   position 0 90
+   position 0 134
    size 360 350
    halign right_ref
    hexactpos 1
@@ -603,15 +1629,14 @@ FrameWidgetClass EditorFrame {
     }
     PanelWidgetClass RightDragZone {
      ignorepointer 0
-     color 0.1961 0.3922 0.3922 0.502
-     size 6 1
+     size 3 1
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 0
      scaled 0
-     style Outline_2px
+     style rover_sim_colorable
     }
    }
   }

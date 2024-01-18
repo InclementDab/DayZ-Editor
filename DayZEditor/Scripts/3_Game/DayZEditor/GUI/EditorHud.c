@@ -40,9 +40,7 @@ class EditorHud: ScriptView
 		Left.SetSize(w, y - 110);
 		Right.GetSize(w, h);
 		Right.SetSize(w, y - 110);	
-		
-
-
+	
 		m_CurrentPlacingContext = InsertPlacedCategory(new EditorCategory("Placed Objects"));
 		InsertPlacedCategory(new EditorCategory("Hidden Objects"));
 		
@@ -160,7 +158,8 @@ class EditorHud: ScriptView
 			return;
 		}
 				
-		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
+			m_DraggedBar.SetColor(COLOR_WHITE);
 			m_DraggedBar = null;
 		}
 		
@@ -169,16 +168,19 @@ class EditorHud: ScriptView
 		
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
-			
-		if (m_DraggedBar) {			
+		
+		
+		if (m_DraggedBar) {
 			switch (m_DraggedBar.GetParent()) {
 				case Right: {
 					Right.SetSize(x - Math.Clamp(mouse_x, x - 720, x - 40), y - 74);
+					m_DraggedBar.SetColor(COLOR_BLUE);
 					break;
 				}
 				
 				case Left: {
 					Left.SetSize(Math.Clamp(mouse_x, 40, 720), y - 74);
+					m_DraggedBar.SetColor(COLOR_BLUE);
 					break;
 				}
 			}			
@@ -195,7 +197,7 @@ class EditorHud: ScriptView
 		FileTab.SetSize(x - total_bar_width, h);
 		
 		Left.GetSize(w, h);
-		FileTab.SetPos(w, 92);
+		FileTab.SetPos(w, 90);
 				
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("EditorPlaceObjectCommand") && !KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor()) {
@@ -246,13 +248,18 @@ class EditorHud: ScriptView
 			}
 		}
 				
+		Widget icon = FindWidgetClass(w, "Icon");
+		if (icon) {
+			WidgetAnimator.Animate(icon, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
+		}
+		
 		
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
 				//WidgetAnimator.AnimateColorHSV(w, "240 140 60", "239 131 175", 30);
 				//LeftDragZone.SetColor(COLOR_WHITE);
-				WidgetAnimator.AnimateColor(w, COLOR_WHITE, 50);
+				//WidgetAnimator.AnimateColor(w, COLOR_WHITE, 50);
 				break;
 			}
 		}
@@ -262,10 +269,15 @@ class EditorHud: ScriptView
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
+		Widget icon = FindWidgetClass(w, "Icon");
+		if (icon) {
+			WidgetAnimator.Animate(icon, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 100);
+		}
+		
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
-				WidgetAnimator.AnimateColor(w, COLOR_SALMON_A, 50);
+				//WidgetAnimator.AnimateColor(w, COLOR_BLUE, 50);
 				//LeftDragZone.SetColor(COLOR_SALMON_A);
 				break;
 			}
