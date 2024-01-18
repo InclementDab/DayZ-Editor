@@ -159,11 +159,11 @@ PanelWidgetClass Root {
      vexactsize 1
      scaled 0
     }
-    ButtonWidgetClass Button {
+    PanelWidgetClass Button {
      visible 1
      ignorepointer 0
      color 0.2941 0.4667 0.7451 0
-     size 200 18
+     size 199 18
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -171,8 +171,8 @@ PanelWidgetClass Root {
      vexactsize 1
      scaled 0
      draggable 0
-     scriptclass "ViewBinding"
-     style Colorable
+     scriptclass ""
+     style rover_sim_colorable
      {
       TextWidgetClass Text {
        visible 1
@@ -198,11 +198,6 @@ PanelWidgetClass Root {
        "size to text h" 1
        "size to text v" 0
        "text valign" center
-      }
-     }
-     {
-      ScriptParamsClass {
-       Relay_Command "OnExecute"
       }
      }
     }

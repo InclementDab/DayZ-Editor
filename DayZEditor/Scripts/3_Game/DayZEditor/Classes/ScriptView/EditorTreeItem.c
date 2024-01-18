@@ -87,6 +87,31 @@ class EditorTreeItem: ScriptView
 		}
 	}
 	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		if (w != Button) {
+			return super.OnMouseButtonDown(w, x, y, button);
+		}
+		
+		switch (button) {
+			case 0: {
+				if (!KeyState(KeyCode.KC_LSHIFT)) {
+					EditorSelectableBase.ClearSelections();
+				}
+				
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					m_Selectable.SetSelected(!m_Selectable.IsSelected());
+				} else {
+					m_Selectable.SetSelected(true);
+				}
+				
+				return true;
+			}
+		}
+		
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+	
 	override bool OnDrag(Widget w, int x, int y)
 	{
 		switch (w) {
@@ -98,24 +123,7 @@ class EditorTreeItem: ScriptView
 		
 		return super.OnDrag(w, x, y);
 	}
-	
-	void OnExecute(ButtonCommandArgs args)
-	{
-		if (args.GetMouseButton() != 0) {
-			return;
-		}
-		
-		if (!KeyState(KeyCode.KC_LSHIFT)) {
-			EditorSelectableBase.ClearSelections();
-		}
-		
-		if (KeyState(KeyCode.KC_LCONTROL)) {
-			m_Selectable.SetSelected(!m_Selectable.IsSelected());
-		} else {
-			m_Selectable.SetSelected(true);
-		}
-	}
-		
+			
 	void OnSelectionChange(EditorSelectableBase selectable, bool state)
 	{
 		Button.SetColor(ARGB(255, 75, 119, 190) * state);

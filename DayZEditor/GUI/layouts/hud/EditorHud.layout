@@ -296,11 +296,12 @@ FrameWidgetClass EditorFrame {
          vexactsize 0
          scaled 0
          draggable 0
-         style Default
+         style Empty
          "no focus" 1
          {
           ImageWidgetClass "Minimize.Icon" {
            ignorepointer 1
+           color 1 1 1 0.3922
            size 1 1
            halign center_ref
            valign center_ref
@@ -340,11 +341,12 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 0
          scaled 0
-         style Default
+         style Empty
          "no focus" 1
          {
           ImageWidgetClass "Exit.Icon" {
            ignorepointer 1
+           color 1 1 1 0.3922
            size 1 1
            halign center_ref
            valign center_ref

@@ -20,18 +20,13 @@ class EditorObject: EditorSelectableBase
 	protected string m_UUID;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
-	
-	// View references
-	/*protected ref EditorObjectMapMarker	m_EditorObjectMapMarker;
-	protected ref EditorObjectWorldMarker m_EditorObjectWorldMarker;
-	protected ref EditorPlacedListItem m_EditorPlacedListItem;*/
-	
+		
 	protected ref array<ref EditorPointView> m_PointViews = {};
 	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
-	protected vector m_LineCenters[12], m_LineVerticies[8], m_BasePoint; 
+	protected vector m_LineCenters[12], m_LineVerticies[8], m_BasePoint, m_TopPoint; 
 	
 	protected bool m_IsDirty;
 	protected string m_DisplayName;
@@ -100,6 +95,8 @@ class EditorObject: EditorSelectableBase
 		
 		m_BasePoint = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		m_PointViews.Insert(new EditorPointView(this, m_BasePoint, 1000));
+		
+		m_TopPoint = AverageVectors(m_LineVerticies[0], m_LineVerticies[2]);
 		
 		for (int i = 0; i < 8; i++) {
 			m_PointViews.Insert(new EditorPointView(this, m_LineVerticies[i], 30));
@@ -242,6 +239,8 @@ class EditorObject: EditorSelectableBase
 			if (((m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX)) {
 				EditorBoundingBox.Create(m_Object);
 			}
+			
+			m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
 		} else {
 			EditorBoundingBox.Destroy(m_Object);
 		}
@@ -272,6 +271,14 @@ class EditorObject: EditorSelectableBase
 		m_Object.GetTransform(transform);
 
 		return m_BasePoint.Multiply4(transform);
+	}
+	
+	vector GetTopPoint()
+	{
+		vector transform[4];
+		m_Object.GetTransform(transform);
+
+		return m_TopPoint.Multiply4(transform);
 	}
 	
 	vector GetBasePointOffset()

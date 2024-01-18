@@ -107,7 +107,7 @@ class CfgVehicles
 		hiddenSelections[] = {"CinematicCameraHighlight"};
 	};*/
 	
-	class jdGizmo: HouseNoDestruct
+	class TranslationGizmo: HouseNoDestruct
 	{
 		scope=2;
 		model="DayZEditor\editor\Gizmo.p3d";
