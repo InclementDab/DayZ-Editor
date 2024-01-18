@@ -1,14 +1,17 @@
-PanelWidgetClass Root {
+WrapSpacerWidgetClass Root {
  visible 1
  clipchildren 0
  position 0 0
- size 500 18
+ size 1 0
  hexactpos 1
  vexactpos 1
- hexactsize 1
+ hexactsize 0
  vexactsize 1
  scaled 0
  scriptclass ""
+ Padding 0
+ Margin 0
+ "Size To Content V" 1
  {
   WrapSpacerWidgetClass Wrapper {
    ignorepointer 1
@@ -158,16 +161,24 @@ PanelWidgetClass Root {
    visible 1
    ignorepointer 1
    position 0 18
-   size 18 0
+   size 18 1
    hexactpos 1
    vexactpos 1
    hexactsize 1
-   vexactsize 1
+   vexactsize 0
    scaled 0
+   scriptclass "SizeToParent"
    image0 "set:editor_tree image:tree_l"
    mode blend
    "src alpha" 1
+   "clamp mode" invalid
+   "stretch mode" invalid
    filter 0
+   {
+    ScriptParamsClass {
+     m_ResizeVertical 1
+    }
+   }
   }
   WrapSpacerWidgetClass ChildrenWrapper {
    visible 0

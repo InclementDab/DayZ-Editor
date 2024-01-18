@@ -59,6 +59,10 @@ class EditorTreeItem: ScriptView
 		
 		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
 		CollapseIcon.SetImage(0);
+				
+		float w, h;
+		ChildrenWrapper.GetSize(w, h);
+		WrapPadding.SetScreenSize(18, h);
 	}
 		
 	override void Update(float dt)
