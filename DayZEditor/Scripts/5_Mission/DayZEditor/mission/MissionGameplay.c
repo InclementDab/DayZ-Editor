@@ -4,8 +4,8 @@ modded class MissionGameplay
 	{		
 		// Handle commands, and if we return TRUE, then dont run the rest of the missions update thread
 		if (GetEditor()) {
-			map<string, EditorCommand> commands = GetEditor().CommandManager.GetCommandShortcutMap();
-			foreach (string input_name, EditorCommand command: commands) {		
+			map<string, Command> commands = GetEditor().GetCommandShortcutMap();
+			foreach (string input_name, Command command: commands) {		
 				if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
 					continue;
 				}
@@ -14,43 +14,30 @@ modded class MissionGameplay
 					continue;
 				}
 				
-				bool execute;
 				switch (command.GetShortcutType()) {
-					case EditorShortcutKeyType.PRESS: {
+					case ShortcutKeyType.PRESS: {
 						if (GetGame().GetInput().LocalPress(input_name)) {
-							execute = true;
+							command.Execute(true);
 						}
 						
 						break;
 					}
 					
-					case EditorShortcutKeyType.DOUBLE: {
+					case ShortcutKeyType.DOUBLE: {
 						if (GetGame().GetInput().LocalDbl(input_name)) {
-							execute = true;
+							command.Execute(true);
 						}
 						
 						break;
 					}
 					
-					case EditorShortcutKeyType.HOLD: {
+					case ShortcutKeyType.HOLD: {
 						if (GetGame().GetInput().LocalHold(input_name)) {
-							execute = true;
+							command.Execute(true);
 						}
 						
 						break;
 					}
-				}
-				
-				if (execute) {
-					EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
-					CommandArgs args = new CommandArgs();
-					args.Context = GetEditor().GetEditorHud();
-					if (command.Execute(GetEditor().CommandManager, args)) {
-						return; // mucho importante
-					}
-					
-					// hate enf
-					execute = false;
 				}
 			}
 		}

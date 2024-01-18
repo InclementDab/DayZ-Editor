@@ -6,11 +6,7 @@ class EditorHiddenObject: Managed
 	protected vector m_Position, m_Orientation, m_BottomCenter;
 		
 	private vector m_LineVerticies[4];
-	
-	protected ref EditorDeletedListItem m_EditorDeletedListItem;
-	
-	protected ref EditorHiddenObjectWorldMarker m_EditorHiddenObjectWorldMarker;
-	
+		
 	protected Object m_Object;
 	
 	static ref array<EditorHiddenObject> SelectedObjects = {};
@@ -96,12 +92,7 @@ class EditorHiddenObject: Managed
 	{
 		return m_BottomCenter;
 	}
-	
-	EditorDeletedListItem GetListItem()
-	{
-		return m_EditorDeletedListItem;
-	}
-	
+		
 	static void ClearSelections()
 	{
 		foreach (EditorHiddenObject selected_object: SelectedObjects) {

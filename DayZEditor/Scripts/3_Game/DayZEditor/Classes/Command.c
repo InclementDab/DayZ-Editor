@@ -1,34 +1,32 @@
-enum EditorShortcutKeyType
+enum ShortcutKeyType
 {
 	PRESS,
 	DOUBLE,
-	HOLD
+	HOLD,
+	TOGGLE
 };
 
-class EditorCommand: RelayCommand
-{	
-	protected Editor m_Editor;
-	protected ref Param m_Param;
+class Command: Managed
+{
+	Widget Button, Icon;
 	string Text;
 
-	override bool Execute(Class sender, CommandArgs args) 
+	void Execute(bool state) 
 	{
-		super.Execute(sender, args);
-		if (EditorHud.CurrentMenu) {
-			delete EditorHud.CurrentMenu;		
-		}
-		
-		if (!m_Editor) {
-			m_Editor = GetEditor();
-		}
-		
-		// Needs to be since we do ShowDialog alot
-		if (!m_Editor) {
-			Error("EditorCommand::Editor was null!");
-			return true;
-		} 
+	}
 	
-		return false;
+	void OnWidgetScriptInit(Widget w)
+	{
+		Button = ScriptView.FindWidgetClass(w, "Button");		
+		Icon = ImageWidget.Cast(ScriptView.FindWidgetClass(w, "Icon"));
+		if (Icon) {
+			
+		}
+	}
+		
+	bool CanExecute()
+	{
+		return true;
 	}
 	
 	string GetName() 
@@ -69,8 +67,8 @@ class EditorCommand: RelayCommand
 		return ClassName();
 	}
 	
-	EditorShortcutKeyType GetShortcutType()
+	ShortcutKeyType GetShortcutType()
 	{
-		return EditorShortcutKeyType.PRESS;
+		return ShortcutKeyType.PRESS;
 	}
 }

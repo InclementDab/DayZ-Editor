@@ -151,14 +151,7 @@ class EditorAction: Managed
 	{
 		//param.param1.Lock(false);
 	}
-	
-	void CreateCameraTrack(SerializedCameraTrack params)
-	{
-		EditorLog.Trace("EditorAction::CreateCameraTrack %1", params.param5);
-		EditorCameraTrackListItem list_item(params.param1, params.param2, params.param3, params.param5, params.param4);
-		GetEditor().GetCameraTrackManager().InsertCameraTrack(list_item);
-	}
-	
+		
 	void DeleteCameraTrack(SerializedCameraTrack params)
 	{
 		EditorLog.Trace("EditorAction::DeleteCameraTrack %1", params.param1.ToString());

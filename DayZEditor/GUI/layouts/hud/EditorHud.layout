@@ -64,11 +64,6 @@ FrameWidgetClass EditorFrame {
        Margin 0
        "Size To Content H" 1
        content_valign center
-       {
-        ScriptParamsClass {
-         Binding_Name "OpenFiles"
-        }
-       }
       }
      }
     }
@@ -117,11 +112,6 @@ FrameWidgetClass EditorFrame {
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
-       {
-        ScriptParamsClass {
-         Binding_Name "RightListItems"
-        }
-       }
       }
      }
     }
@@ -180,11 +170,6 @@ FrameWidgetClass EditorFrame {
        Margin 0
        "Size To Content H" 1
        "Size To Content V" 1
-       {
-        ScriptParamsClass {
-         Binding_Name "LeftListItems"
-        }
-       }
       }
      }
     }
@@ -1117,7 +1102,7 @@ FrameWidgetClass EditorFrame {
          }
         }
         FrameWidgetClass Online {
-         ignorepointer 1
+         ignorepointer 0
          position 0 0
          size 42 42
          halign center_ref
@@ -1127,6 +1112,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 1
          vexactsize 1
          scaled 0
+         scriptclass ""
          {
           ButtonWidgetClass "Online.Button" {
            visible 1
@@ -1138,6 +1124,7 @@ FrameWidgetClass EditorFrame {
            hexactsize 0
            vexactsize 0
            scaled 0
+           scriptclass ""
            style Empty
            "no focus" 1
            switch once
@@ -1253,11 +1240,6 @@ FrameWidgetClass EditorFrame {
              "src alpha" 1
              filter 0
              nocache 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Relay_Command "OnAfterlifeExecute"
             }
            }
           }
@@ -2061,12 +2043,6 @@ FrameWidgetClass EditorFrame {
          "no focus" 0
          text "Search..."
          font "gui/fonts/MetronBook"
-         {
-          ScriptParamsClass {
-           Binding_Name "Search"
-           Two_Way_Binding 1
-          }
-         }
         }
        }
       }

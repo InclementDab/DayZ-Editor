@@ -78,9 +78,7 @@ class Editor: Managed
 		"Man",
 		"EditorCamera"
 	};
-	
-	// public properties
-	ref EditorCommandManager 					CommandManager;
+
 	EditorGeneralSettings GeneralSettings = EditorGeneralSettings.Cast(GetDayZGame().GetProfileSetting(EditorGeneralSettings));
 	EditorStatistics Statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
 	
@@ -94,10 +92,7 @@ class Editor: Managed
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorActionStack m_ActionStack = new EditorActionStack();
-	
-	// private references
-	protected ref EditorCameraTrackManagerModule m_CameraTrackManager;
-	
+		
 	protected int 									m_LastMouseDown;
 	protected MouseState							m_LastMouseInput = -1;
 	
@@ -117,10 +112,7 @@ class Editor: Managed
 	static const string 						Version = "1.30." + GetBuildNumber();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
-	
-	// Inventory Editor
-	protected ref EditorInventoryEditorHud 		m_EditorInventoryEditorHud;
-	
+		
 	protected ref Timer	m_StatisticsSaveTimer 	= new Timer(CALL_CATEGORY_GAMEPLAY);
 	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
 	
@@ -156,6 +148,11 @@ class Editor: Managed
 	// Stored list of all Placed Objects
 	ref map<string, ref EditorObject> m_PlacedObjects = new map<string, ref EditorObject>();
 			
+	
+	ref map<typename, ref Command> Commands = new map<typename, ref Command>();
+	
+	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
+	
 	void Editor() 
 	{
 		if (GetGame().IsServer()) {
@@ -176,22 +173,7 @@ class Editor: Managed
 		EditorLog.Info("Initializing Camera");
 		g_Game.ReportProgress("Initializing Camera");
 		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", GetGame().GetPlayer().GetPosition(), ECE_LOCAL));
-		
-		// Object Manager
-		g_Game.ReportProgress("Initializing Object Manager");
-		EditorLog.Info("Initializing Object Manager");
-				
-		// Camera Track Manager
-		g_Game.ReportProgress("Initializing Camera Track Manager");
-		EditorLog.Info("Initializing Camera Track Manager");
-		m_CameraTrackManager = new EditorCameraTrackManagerModule();
-		
-		// Command Manager
-		g_Game.ReportProgress("Initializing Command Manager");
-		EditorLog.Info("Initializing Command Manager");
-		CommandManager 		= new EditorCommandManager();
-		CommandManager.Init();
-		
+					
 		// Init Hud
 		g_Game.ReportProgress("Initializing Hud");
 		m_EditorHud 		= new EditorHud();
@@ -210,6 +192,20 @@ class Editor: Managed
 		
 		ControlCamera(m_EditorCamera);
 		
+		foreach (typename command_type: RegisterCommand.Instances) {		
+			Command command = Command.Cast(command_type.Spawn());
+			if (!command) {
+				Error("Invalid command");
+				continue;
+			}
+			
+			Commands[command_type] = command;
+			
+			if (command.GetShortcut() != string.Empty) {
+				m_CommandShortcutMap[command.GetShortcut()] = command;
+			}
+		}
+		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(Update);
 		
 		// TODO!!! write a better autosave!!!
@@ -222,11 +218,6 @@ class Editor: Managed
 		Statistics.Save();
 
 		GetGame().ObjectDelete(m_EditorCamera);
-	}
-
-	void OnStatisticsSave()
-	{
-		Statistics.Save();
 	}
 		
 	protected Object m_DragTarget;
@@ -256,7 +247,17 @@ class Editor: Managed
 		if (ShouldProcessInput()) {
 			ProcessInput(GetGame().GetInput());
 		}
+		
+		foreach (Command command: Commands) {			
+			if (command.Button) {
+				float alpha = Ternary<float>.If(command.CanExecute(), 1.0, 0.25);
+				command.Button.Enable(command.CanExecute());
+				//root.SetAlpha(alpha);
+			}
 				
+			
+		}
+		
 		if (GetGame().GetInput().LocalPress("UAFire")) {
 			Object object = GetObjectUnderCursor();
 			if (object && m_WorldObjectIndex[object.GetID()]) {
@@ -531,9 +532,6 @@ class Editor: Managed
 		Widget target = GetWidgetUnderCursor();
 		if (!target) { //target.GetName() != "HudPanel"
 			SetFocus(null);
-			if (EditorHud.CurrentMenu) {
-				delete EditorHud.CurrentMenu;
-			}
 		}
 		
 		switch (button) {			
@@ -635,27 +633,6 @@ class Editor: Managed
 		return AddInHand(item.CreateObject(Editor.CurrentMousePosition, vector.Zero, 1.0), hand_data);				
 	}
 	
-	void StartInventoryEditor(EntityAI entity)
-	{
-		if (m_EditorInventoryEditorHud) {
-			m_EditorInventoryEditorHud.Close();
-		}
-		
-		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(entity);
-	}
-	
-	void StopInventoryEditor()
-	{
-		if (m_EditorInventoryEditorHud) {
-			m_EditorInventoryEditorHud.Close();
-		}
-	}
-	
-	bool IsInventoryEditorActive()
-	{
-		return (m_EditorInventoryEditorHud != null);	
-	}
-
 	EditorHud ReloadHud() 
 	{
 		EditorLog.Trace("Editor::ReloadHud");		
@@ -707,15 +684,6 @@ class Editor: Managed
 		}
 		
 		return false;
-	}
-		
-	protected void OnAutoSaveTimer()
-	{		
-		if (EditorSaveFile != string.Empty && GeneralSettings.AutoSaveEnabled) {
-			CommandManager[EditorSaveCommand].Execute(this, null);
-		}
-		
-		//m_AutoSaveTimer.Run(Math.Max(GeneralSettings.AutoSaveTimer, 60), this, "OnAutoSaveTimer");
 	}
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
@@ -1221,22 +1189,12 @@ class Editor: Managed
 	{
 		return m_EditorHud;
 	}
-	
-	EditorInventoryEditorHud GetInventoryEditorHud() 
-	{
-		return m_EditorInventoryEditorHud;
-	}
-	
+		
 	EditorCamera GetCamera() 
 	{
 		return m_EditorCamera;
 	}
-		
-	EditorCameraTrackManagerModule GetCameraTrackManager() 
-	{
-		return m_CameraTrackManager;
-	}
-				
+						
 	EditorBrush GetBrush() 
 	{
 		return m_EditorBrush;
@@ -1275,6 +1233,11 @@ class Editor: Managed
 	EditorOnlineSession GetCurrentOnlineSession()
 	{
 		return m_CurrentOnlineSession;
+	}
+	
+	map<string, Command> GetCommandShortcutMap()
+	{
+		return m_CommandShortcutMap;
 	}
 	
 	bool GetHudVisiblity()

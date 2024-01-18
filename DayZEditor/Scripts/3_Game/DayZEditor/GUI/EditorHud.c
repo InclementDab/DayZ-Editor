@@ -16,8 +16,6 @@ class EditorHud: ScriptView
 	Widget Notification;
 	TextWidget NotificationText;
 	
-	protected ref EditorTooltip m_CurrentTooltip;
-	
 	protected Widget m_DraggedBar;
 	protected int m_DragX = -1, m_DragY = -1;
 	
@@ -159,24 +157,6 @@ class EditorHud: ScriptView
 			UserCountData.SetText(string.Empty);
 		}
 		
-		array<EditorCommand> commands = GetEditor().CommandManager.GetCommands();
-		foreach (EditorCommand command: commands) {
-			auto view_binding = command.GetViewBinding();
-			if (!view_binding) {
-				continue;
-			}
-			
-			Widget root = view_binding.GetLayoutRoot();
-			bool can_execute = command.CanExecute();
-			if (can_execute) {
-				root.SetAlpha(1);
-			} else {
-				root.SetAlpha(0.25);
-			}
-			
-			root.Enable(can_execute);			
-		}
-		
 		if (GetGame().GetInput().LocalPress("UAFire") && GetGame().GetInput().HasGameFocus()) {
 			GetMousePos(m_DragX, m_DragY);
 		} 
@@ -207,12 +187,7 @@ class EditorHud: ScriptView
 				}				
 			}
 		}
-						
-		// kinda cursed but double inputs. maybe have a handler if you want more ui shit (loooot editor)
-		if (GetEditor().IsInventoryEditorActive() || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
-			return;
-		}
-				
+							
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
 			m_DraggedBar.SetColor(COLOR_WHITE);
 			m_DraggedBar = null;
@@ -294,18 +269,18 @@ class EditorHud: ScriptView
 	{
 		ViewBinding view_binding = m_TemplateController.GetViewBinding(w);
 		if (view_binding && !m_CurrentMenu) {
-			EditorCommand editor_command;
+			/*EditorCommand editor_command;
 			if (Class.CastTo(editor_command, view_binding.GetRelayCommand())) {
 				
 				float pos_x, pos_y, size_x, size_y;
 				w.GetScreenPos(pos_x, pos_y);
 				w.GetScreenSize(size_x, size_y);
-								
-				m_CurrentTooltip = EditorTooltip.CreateOnButton(editor_command, w, TooltipPositions.BOTTOM_LEFT);
+				
+				//m_CurrentTooltip = EditorTooltip.CreateOnButton(editor_command, w, TooltipPositions.BOTTOM_LEFT);
 				if (!editor_command.CanExecute()) {
 					m_CurrentTooltip.GetLayoutRoot().SetAlpha(100);
 				}
-			}
+			}*/
 		}
 				
 		Widget icon = FindWidgetClass(w, "Icon");
@@ -344,7 +319,6 @@ class EditorHud: ScriptView
 			}
 		}
 		
-		delete m_CurrentTooltip;
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 			
@@ -401,7 +375,6 @@ class EditorHud: ScriptView
 		
 		if (!state) {
 			delete CurrentTooltip;
-			delete CurrentMenu;
 			SetFocus(null);
 		}
 	}
@@ -516,10 +489,7 @@ class EditorHud: ScriptView
 				
 		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetName(), split_string[0], component_type, component_index);
 	}
-	
-	// Modal Menu Control
-	static ref EditorMenu CurrentMenu;
-	
+		
 	// ToolTip Control
 	static ref ScriptView CurrentTooltip;
 

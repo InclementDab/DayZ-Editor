@@ -13,11 +13,7 @@ class EditorHudController: ViewController
 	ref ObservableCollection<EditorTreeItem> RightListItems = new ObservableCollection<EditorTreeItem>(this);
 		
 	ref ObservableCollection<ref EditorFileHeadView> OpenFiles = new ObservableCollection<ref EditorFileHeadView>(this);
-	
-	// Camera bindings
-	float CameraSmoothing = 50.0;
-	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
-	
+		
 	ScrollWidget LeftScroll;
 	ScrollWidget RightScroll;	
 		
@@ -91,51 +87,6 @@ class EditorHudController: ViewController
 		return PrecisionLevel.Parse();
 	}
 		
-	void CameraTrackToggleExecute(ButtonCommandArgs args) 
-	{
-		EditorLog.Trace("EditorHudController::CameraTrackToggleExecute");
-		CameraTrackWrapper.Show(!CameraTrackWrapper.IsVisible());
-	}
-
-	void CameraTrackInsertNode(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
-		string name = "CameraTrack" + CameraTrackData.Count();
-		GetEditor().GetCameraTrackManager().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
-	}
-
-	void OnCameraTrackStart()
-	{
-		CameraTrackRunButton.SetText("Stop");
-		CameraTrackRunButton.SetColor(COLOR_RED);
-		CameraTrackButtonOutline.SetColor(COLOR_RED);
-	}
-	
-	void OnCameraTrackStop()
-	{
-		CameraTrackRunButton.SetText("Start");
-		CameraTrackRunButton.SetColor(COLOR_WHITE_A);
-		CameraTrackButtonOutline.SetColor(COLOR_WHITE);
-		CameraTrackRunButton.SetState(1);
-	}
-		
-	void DoMultiSelect(int index_0, int index_1, array<EditorSelectableBase> list)
-	{
-		int bottom, top;
-		bottom = Math.Min(index_0, index_1);
-		top = Math.Max(index_0, index_1);
-		
-		if (list.Count() < top) {
-			EditorLog.Error("Could not multi select, top was out of range of list array");
-			return;
-		}
-		
-		for (int i = bottom; i < top; i++) {			
-			EditorPlacedListItem placed_list_item;
-			
-		}
-	}
-	
 	override void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
