@@ -83,6 +83,22 @@ class EditorHud: ScriptView
 		
 	}
 	
+	void OnAfterlifeExecute(ButtonCommandArgs args)
+	{
+		array<Object> objects = {};
+		GetGame().GetObjectsAtPosition(GetGame().GetCurrentCameraPosition(), 300, objects, null);
+		
+		foreach (Object object: objects) {
+			bool hidden = CF.ObjectManager.IsMapObjectHidden(object);
+			
+			if (hidden) {
+				CF.ObjectManager.UnhideMapObject(object, false);
+			} else {
+				CF.ObjectManager.HideMapObject(object, false);
+			}
+		}	
+	}
+	
 	void OnCreateSessionExecute(ButtonCommandArgs args)
 	{
 		m_CurrentMenu = new EditorCreateOnlineSessionView();
@@ -129,7 +145,6 @@ class EditorHud: ScriptView
 		
 		if (GetGame().GetInput().LocalPress("UAFire") && !GetWidgetUnderCursor()) {
 			EditorSelectableBase.ClearSelections();
-			return;
 		}
 				
 		EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
@@ -162,60 +177,34 @@ class EditorHud: ScriptView
 			root.Enable(can_execute);			
 		}
 		
-		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK == MB_PRESSED_MASK) && GetGame().GetInput().HasGameFocus() && m_DragX == -1 && m_DragY == -1) {
+		if (GetGame().GetInput().LocalPress("UAFire") && GetGame().GetInput().HasGameFocus()) {
 			GetMousePos(m_DragX, m_DragY);
 		} 
 		
+		Whiteboard.Clear();
+
 		if (m_DragX != -1 && m_DragY != -1) {
 			
 			if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) != MB_PRESSED_MASK) {
 				m_DragX = -1;
 				m_DragY = -1;
-
 				return;
 			}
-			
-			int drag_box_color = GetEditor().GeneralSettings.SelectionColor;
-			
-			int a, r, g, b;
-			InverseARGB(drag_box_color, a, r, g, b);
-			int drag_box_color_fill = ARGB(50, r, g, b);			
-			
-			int current_x, current_y;			
-			GetMousePos(current_x, current_y);
-			// @Sumrak :ANGERY:
-			current_x += 6;
-			
-			Whiteboard.Clear();
-			EditorObject.ClearSelections();
-			
-			// Draw Drag Box
-			if (Math.AbsInt(m_DragX - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(m_DragY - current_y) > DRAG_BOX_THRESHOLD) {
-				Whiteboard.DrawLine(m_DragX, m_DragY, current_x, m_DragY, DRAG_BOX_THICKNESS, drag_box_color);
-				Whiteboard.DrawLine(m_DragX, m_DragY, m_DragX, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-				Whiteboard.DrawLine(m_DragX, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-				Whiteboard.DrawLine(current_x, m_DragY, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-				
-				// Handles the fill operation
-				int x_avg = (m_DragX + current_x) / 2;
-				Whiteboard.DrawLine(x_avg, m_DragY, x_avg, current_y, current_x - m_DragX, drag_box_color_fill); 
-				
-				array<EditorObject> placed_objects = GetEditor().GetPlacedObjects();
-				foreach (EditorObject editor_object: placed_objects) {					
-					float marker_x, marker_y;
-					/*EditorObjectMarker object_marker = editor_object.GetMarker();
-					if (object_marker) {
-						object_marker.GetPos(marker_x, marker_y);
+												
+			// Handles the fill operation
+			int x_avg = (m_DragX + mouse_x) / 2;
+			Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE); 
 						
-						//i think only checking if within cone of box select not distance
-						if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {
-							//check if within markerviewdistance to allow selection.
-							if (vector.Distance(editor_object.GetWorldObject().GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.GeneralSettings.MarkerViewDistance) {
-								editor_object.SetSelected(true);
-							}
-						}
-					}*/
-				}		
+			foreach (EditorSelectableBase selectable_item: EditorSelectableBase.All) {
+				EditorTreeItem view = selectable_item.GetTreeItem();
+				if (view) {
+					float tree_x, tree_y;
+					view.GetLayoutRoot().GetScreenPos(tree_x, tree_y);
+										
+					if ((tree_x < Math.Max(m_DragX, mouse_x) && tree_x > Math.Min(m_DragX, mouse_x)) && (tree_y < Math.Max(m_DragY, mouse_y) && tree_y > Math.Min(m_DragY, mouse_y))) {
+						selectable_item.SetSelected(true);
+					}
+				}				
 			}
 		}
 						
@@ -266,9 +255,7 @@ class EditorHud: ScriptView
 		Notification.SetSize(x - total_bar_width, h);
 				
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
-			if (!CurrentDialog || !GetEditor().GeneralSettings.LockCameraDuringDialogs) {
-				ShowCursor(!IsCursorVisible());
-			}
+			ShowCursor(!IsCursorVisible());
 		}
 	}
 	
@@ -325,6 +312,8 @@ class EditorHud: ScriptView
 		if (icon) {
 			WidgetAnimator.Animate(icon, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
 		}
+		
+		icon = FindWidgetClass(w, "Arrow");
 		
 		switch (w) {
 			case LeftDragZone:

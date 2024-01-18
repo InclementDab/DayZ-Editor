@@ -40,10 +40,19 @@ namespace DirectDrawConverter
 
                     case ".svg": {
                         SvgDocument doc = SvgDocument.Open(file.ToString());
-                        double w_aspect = doc.Bounds.Width / 512.0;
-                        
+
+                        double w_aspect = 1.0;
+                        double h_aspect = 1.0;
+                        if (doc.Bounds.Width > IMAGE_MAX_SIZE || doc.Bounds.Height > IMAGE_MAX_SIZE) {
+                            w_aspect = doc.Bounds.Width / IMAGE_MAX_SIZE;
+                        }
                         // we bound to the larger of the two aspects
-                        source_bitmaps[file_name] = doc.Draw(IMAGE_MAX_SIZE * (int)w_aspect, IMAGE_MAX_SIZE);
+                        if (w_aspect > 1.0) {
+                            h_aspect = 1.0 / w_aspect;
+                            w_aspect = 1.0;
+                        }                        
+
+                        source_bitmaps[file_name] = doc.Draw((int)(IMAGE_MAX_SIZE * w_aspect), (int)(IMAGE_MAX_SIZE * h_aspect));
                         break;
                     }
                 }                
@@ -80,6 +89,7 @@ namespace DirectDrawConverter
                 bool is_empty = true;                
                 int w_centering_offset = (IMAGE_MAX_SIZE - source_bitmap.Value.Size.Width) / 2;
                 int h_centering_offset = (IMAGE_MAX_SIZE - source_bitmap.Value.Size.Height) / 2;
+                Console.WriteLine(source_bitmap.Value.Size.Height);
                 for (int x = 0; x < source_bitmap.Value.Size.Width; x++) {
                     for (int y = 0; y < source_bitmap.Value.Size.Height; y++) {
                         Color color = source_bitmap.Value.GetPixel(x, y);

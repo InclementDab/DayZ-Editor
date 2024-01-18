@@ -73,48 +73,5 @@ WrapSpacerWidgetClass Root {
     }
    }
   }
-  FrameWidgetClass Delete {
-   ignorepointer 1
-   position 0 0
-   size 42 42
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   {
-    ButtonWidgetClass "Delete.Button" {
-     visible 1
-     size 0.6 0.6
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     scaled 0
-     style Default
-     {
-      ImageWidgetClass "Delete.Icon" {
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 0
-       image0 "set:icons image:xmark"
-       mode blend
-       "src alpha" 1
-       filter 0
-       nocache 0
-      }
-     }
-    }
-   }
-  }
  }
 }

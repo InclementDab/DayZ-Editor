@@ -1,16 +1,26 @@
 class EditorSelectableBase: SerializableBase
 {
+	static ref array<EditorSelectableBase> All = {};
+	static ref array<EditorSelectableBase> SelectedObjects = {};
+	
 	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();
 	
 	protected bool m_IsSelected;
 		
 	protected ref EditorTreeItem m_TreeItem;
 	
-	void ~EditorSelectableBase()
+	void EditorSelectableBase()
 	{
-		delete m_TreeItem;
+		All.Insert(this);
 	}
 	
+	void ~EditorSelectableBase()
+	{
+		All.RemoveItem(this);
+		
+		delete m_TreeItem;
+	}
+		
 	EditorTreeItem GetTreeItem()
 	{
 		return m_TreeItem;
@@ -44,7 +54,6 @@ class EditorSelectableBase: SerializableBase
 		return string.Empty;
 	}
 	
-	static ref array<EditorSelectableBase> SelectedObjects = {};
 	static void ClearSelections()
 	{
 		foreach (EditorSelectableBase selected_object: SelectedObjects) {

@@ -23,7 +23,7 @@ class TranslationGizmo: House
 		float fraction;
 		
 		
-		DayZPhysics.RayCastBullet(ray_start, ray_end, PhxInteractionLayers.DEFAULT, null, hit_object, position, normal, fraction);
+		//DayZPhysics.RayCastBullet(ray_start, ray_end, PhxInteractionLayers.DEFAULT, null, hit_object, position, normal, fraction);
 		//Print(hit_object);		
 	}
 }

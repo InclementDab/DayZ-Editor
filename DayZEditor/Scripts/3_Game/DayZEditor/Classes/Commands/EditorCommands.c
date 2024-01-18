@@ -62,15 +62,6 @@ class EditorCommand: RelayCommand
 		return result;
 	}
 	
-	void SetData(Param param)
-	{
-		m_Param = param;
-	}
-	
-	Param GetData()
-	{
-		return m_Param;
-	}
 	
 	// Good default to have, makes sense in XMLs
 	string GetShortcut()

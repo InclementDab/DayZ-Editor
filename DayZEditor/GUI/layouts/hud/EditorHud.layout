@@ -77,7 +77,7 @@ FrameWidgetClass EditorFrame {
   FrameWidgetClass Right {
    clipchildren 0
    ignorepointer 1
-   position 0 134
+   position 0 126
    size 360 350
    halign right_ref
    hexactpos 1
@@ -141,7 +141,7 @@ FrameWidgetClass EditorFrame {
   FrameWidgetClass Left {
    clipchildren 0
    ignorepointer 1
-   position 0 134
+   position 0 126
    size 360 350
    hexactpos 1
    vexactpos 1
@@ -206,7 +206,7 @@ FrameWidgetClass EditorFrame {
    ignorepointer 1
    color 0.0941 0.0941 0.0941 1
    position 0 42
-   size 1 92
+   size 1 84
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -217,7 +217,7 @@ FrameWidgetClass EditorFrame {
     WrapSpacerWidgetClass "Tools.Wrapper" {
      ignorepointer 1
      position 0 0
-     size 0.75 1
+     size 0.46 1
      hexactpos 1
      vexactpos 1
      hexactsize 0
@@ -1192,6 +1192,216 @@ FrameWidgetClass EditorFrame {
          vexactsize 0
          scaled 0
          style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass DeletionTools {
+       ignorepointer 1
+       size 32 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 4
+       Rows 1
+       {
+        FrameWidgetClass Afterlife {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Afterlife.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "ViewBinding"
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Afterlife.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:eye_slash"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+           {
+            ScriptParamsClass {
+             Relay_Command "OnAfterlifeExecute"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      GridSpacerWidgetClass BrushTools {
+       ignorepointer 1
+       size 32 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 4
+       Rows 1
+       {
+        FrameWidgetClass NewLeftFolder {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "NewLeftFolder.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "NewLeftFolder.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:folder_plus"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Brush {
+         ignorepointer 1
+         position 0 0
+         size 210 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "Brush.Button" {
+           visible 1
+           size 0.91 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            PanelWidgetClass "Brush.Panel" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             style Outline_1px
+            }
+            PanelWidgetClass "Brush.Arrow" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign right_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             fixaspect fixwidth
+             style rover_sim_colorable
+             {
+              ImageWidgetClass Arrow {
+               ignorepointer 1
+               color 0.0588 0.0588 0.0588 1
+               position 0 0
+               size 0.85 0.85
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               scaled 0
+               image0 "set:icons image:arrow_down_short_wide"
+               mode blend
+               "src alpha" 1
+               filter 0
+              }
+             }
+            }
+           }
+          }
+         }
         }
        }
       }
@@ -3048,8 +3258,8 @@ FrameWidgetClass EditorFrame {
    visible 1
    ignorepointer 1
    color 0.4549 0.5765 0.4549 0
-   position 360 134
-   size 670 22
+   position 360 105
+   size 670 20
    hexactpos 1
    vexactpos 1
    hexactsize 1

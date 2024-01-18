@@ -13,7 +13,7 @@ class EditorPlaceableTreeItem: EditorTreeItem
 					EditorPlaceableObjectData data = EditorPlaceableObject.Cast(m_Selectable).GetPlaceableObjectData();
 					
 					if (!IsBlacklistedItem(data.GetName())) {
-						EditorHud.CurrentTooltip = new EditorObjectTooltip(data.CreateObject(vector.Zero, vector.Zero, 1.0, ECE_LOCAL), x_p + w_f + 25, y);
+						//EditorHud.CurrentTooltip = new EditorObjectTooltip(data.CreateObject(vector.Zero, vector.Zero, 1.0, ECE_LOCAL), x_p + w_f + 25, y);
 					}
 				}
 				
