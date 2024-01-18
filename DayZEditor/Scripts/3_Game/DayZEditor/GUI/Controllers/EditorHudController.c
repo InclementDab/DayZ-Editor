@@ -136,11 +136,6 @@ class EditorHudController: ViewController
 		}
 	}
 	
-	// im not adding a trace to this lol
-	void OnEditorLog(LogLevel level, string message)
-	{
-	}
-	
 	override void PropertyChanged(string property_name)
 	{
 		switch (property_name) {

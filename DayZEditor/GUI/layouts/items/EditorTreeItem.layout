@@ -2,73 +2,25 @@ PanelWidgetClass Root {
  visible 1
  clipchildren 0
  position 0 0
- size 1 18
+ size 500 18
  hexactpos 1
  vexactpos 1
- hexactsize 0
+ hexactsize 1
  vexactsize 1
  scaled 0
  scriptclass ""
  {
   WrapSpacerWidgetClass Wrapper {
-   visible 1
-   clipchildren 0
-   size 1 1
+   ignorepointer 1
+   size 1 18
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 0
+   vexactsize 1
    scaled 0
    Padding 0
    Margin 0
-   "Size To Content H" 1
-   "Size To Content V" 1
-   content_valign center
    {
-    ImageWidgetClass ParentDisplay {
-     visible 0
-     ignorepointer 1
-     position 0 0
-     size 18 18
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     image0 "set:editor_tree image:tree_l"
-     mode blend
-     "src alpha" 1
-     filter 0
-    }
-    ImageWidgetClass TreeDisplay {
-     visible 1
-     ignorepointer 1
-     position 0 0
-     size 18 18
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     image0 "set:editor_tree image:tree_t"
-     mode blend
-     "src alpha" 1
-     filter 0
-    }
-    FrameWidgetClass Spacer {
-     visible 1
-     ignorepointer 1
-     position 0 0
-     size 4 0
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-    }
     FrameWidgetClass CollapseWrapper {
      visible 0
      ignorepointer 0
@@ -121,20 +73,8 @@ PanelWidgetClass Root {
       }
      }
     }
-    FrameWidgetClass Spacer1 {
-     visible 0
-     ignorepointer 1
-     position 0 0
-     size 4 0
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-    }
     ImageWidgetClass Icon {
-     visible 0
+     visible 1
      ignorepointer 1
      position 0 0
      size 18 18
@@ -149,21 +89,32 @@ PanelWidgetClass Root {
      filter 0
     }
     FrameWidgetClass Spacer0 {
-     visible 0
      ignorepointer 1
-     size 4 0
-     valign center_ref
+     size 10 1
      hexactpos 1
      vexactpos 1
      hexactsize 1
-     vexactsize 1
-     scaled 0
+     vexactsize 0
+     {
+      PanelWidgetClass PanelWidget1 {
+       ignorepointer 1
+       size 1 12
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+      }
+     }
     }
     PanelWidgetClass Button {
      visible 1
      ignorepointer 0
      color 0.2941 0.4667 0.7451 0
-     size 199 18
+     position 18 0
+     size 85 18
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -201,28 +152,42 @@ PanelWidgetClass Root {
       }
      }
     }
-    WrapSpacerWidgetClass ChildrenWrapper {
-     visible 0
-     clipchildren 0
-     ignorepointer 1
-     size 1 0
-     halign center_ref
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     scaled 0
-     scriptclass "ViewBinding"
-     Padding 0
-     Margin 0
-     "Size To Content H" 1
-     "Size To Content V" 1
-     {
-      ScriptParamsClass {
-       Binding_Name "Children"
-      }
-     }
+   }
+  }
+  ImageWidgetClass WrapPadding {
+   visible 1
+   ignorepointer 1
+   position 0 18
+   size 18 0
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   image0 "set:editor_tree image:tree_l"
+   mode blend
+   "src alpha" 1
+   filter 0
+  }
+  WrapSpacerWidgetClass ChildrenWrapper {
+   visible 0
+   clipchildren 0
+   ignorepointer 1
+   position 18 18
+   size 500 0
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   scriptclass "ViewBinding"
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   {
+    ScriptParamsClass {
+     Binding_Name "Children"
     }
    }
   }

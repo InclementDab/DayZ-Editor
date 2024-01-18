@@ -5,11 +5,11 @@ class EditorTreeItem: ScriptView
 	protected EditorTreeItem m_Parent;
 	
 	TextWidget Text;
-	ImageWidget Icon, CollapseIcon, ParentDisplay, TreeDisplay;
+	ImageWidget Icon, CollapseIcon, TreeDisplay;
 	WrapSpacerWidget ChildrenWrapper;
 	ButtonWidget Button;
 	
-	Widget CollapseWrapper, Spacer0, DragPanel;
+	Widget CollapseWrapper, WrapPadding;
 	
 	protected bool m_IsBeingDragged;
 	protected string m_Text;
@@ -55,22 +55,10 @@ class EditorTreeItem: ScriptView
 	void ShowChildren(bool state)
 	{
 		ChildrenWrapper.Show(state);
+		WrapPadding.Show(state);
 		
 		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
 		CollapseIcon.SetImage(0);
-		
-		float w, h;
-		m_LayoutRoot.GetScreenSize(w, h);		
-		h = 0;
-		for (int i = 0; i < m_TemplateController.Children.Count(); i++) {
-			if (m_TemplateController.Children[i].IsVisible()) {
-				float w_c, w_h;
-				m_TemplateController.Children[i].GetLayoutRoot().GetScreenSize(w_c, w_h);
-				h += w_h;
-			}
-		}
-		
-		m_LayoutRoot.SetScreenSize(w, h + 18);
 	}
 		
 	override void Update(float dt)
@@ -116,14 +104,7 @@ class EditorTreeItem: ScriptView
 	}
 	
 	override bool OnDrag(Widget w, int x, int y)
-	{
-		switch (w) {
-			case DragPanel: {
-				m_IsBeingDragged = true;
-				return true;
-			}
-		}
-		
+	{		
 		return super.OnDrag(w, x, y);
 	}
 			
