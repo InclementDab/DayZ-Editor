@@ -188,11 +188,6 @@ class Editor: Managed
 		// Init Hud
 		g_Game.ReportProgress("Initializing Hud");
 		m_EditorHud 		= new EditorHud();
-				
-		EditorLog.Info("Initializing Hud");		
-		// Add camera marker to newly created hud
-		m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
-		m_EditorHud.GetTemplateController().InsertMapMarker(m_EditorHud.CameraMapMarker);
 		
 		m_Mission = GetGame().GetMission();
 		
@@ -276,30 +271,27 @@ class Editor: Managed
 		int x, y;
 		GetMousePos(x, y);		
 				
-		if (m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible()) {
-			CurrentMousePosition = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(x, y, 0));
-			CurrentMousePosition[1] = GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]);
-		} else {
-			Object collision_ignore;
-			// we need to determine what object is under the cursor so we can ignore it on our next raycast
-			if (m_PlacingObjects.Count() > 0) {
-				vector _;
-				int __;
-				vector collision_ray_start = GetGame().GetCurrentCameraPosition();
-				vector collision_ray_end = collision_ray_start + GetGame().GetPointerDirection() * GeneralSettings.ViewDistance;
-				set<Object> results = new set<Object>();
-				if (DayZPhysics.RaycastRV(collision_ray_start, collision_ray_end, _, _, __, results)) {
-					//collision_ignore = results[0];
-					//Print(collision_ignore.GetType());
-					
-				}
+
+		Object collision_ignore;
+		// we need to determine what object is under the cursor so we can ignore it on our next raycast
+		if (m_PlacingObjects.Count() > 0) {
+			vector _;
+			int __;
+			vector collision_ray_start = GetGame().GetCurrentCameraPosition();
+			vector collision_ray_end = collision_ray_start + GetGame().GetPointerDirection() * GeneralSettings.ViewDistance;
+			set<Object> results = new set<Object>();
+			if (DayZPhysics.RaycastRV(collision_ray_start, collision_ray_end, _, _, __, results)) {
+				//collision_ignore = results[0];
+				//Print(collision_ignore.GetType());
 				
-				collision_ignore = m_PlacingObjects.GetKey(0);
 			}
 			
-			// Yeah, enfusions dumb, i know
-			CurrentMousePosition = MousePosToRay(obj, collision_ignore, GeneralSettings.ViewDistance, 0, !CollisionMode, GeneralSettings.HighPrecisionCollision);
+			collision_ignore = m_PlacingObjects.GetKey(0);
 		}
+		
+		// Yeah, enfusions dumb, i know
+		CurrentMousePosition = MousePosToRay(obj, collision_ignore, GeneralSettings.ViewDistance, 0, !CollisionMode, GeneralSettings.HighPrecisionCollision);
+	
 		
 		if (!IsPlacing()) {			
 			vector hit_pos, hit_normal;
@@ -325,12 +317,6 @@ class Editor: Managed
 			}
 		}
 		
-		array<EditorObject> selected_objects = EditorObject.GetSelectedEditorObjects();
-		if (m_EditorHud && selected_objects.Count() > 0 && selected_objects[0]) {
-			// Spams errors
-			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetWorldObject().GetPosition());
-		}
-
 		foreach (Object world_object, EditorHandData hand_data: m_PlacingObjects) {
 			if (!world_object) {
 				return;
@@ -443,6 +429,10 @@ class Editor: Managed
 	{
 		if (IsPlacing()) {
 			foreach (Object placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
+				if (!placing_object) {
+					continue;
+				}
+				
 				vector hand_ori = placing_object.GetOrientation();
 				float factor = 9;
 				if (KeyState(KeyCode.KC_LSHIFT)) {

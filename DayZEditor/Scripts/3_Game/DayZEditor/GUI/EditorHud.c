@@ -2,19 +2,11 @@ class EditorHud: ScriptView
 {
 	protected bool m_IsBoxSelectActive;
 	protected EditorHudController m_TemplateController;
-	
+		
 	// View Properties
-	protected ButtonWidget MenuBarFile;
-	protected ButtonWidget MenuBarEdit;
-	protected ButtonWidget MenuBarView;
-	protected ButtonWidget MenuBarEditor;
-	
-	// View Properties
-	Widget Left, Right;
+	Widget Left, Right, FileTab;
 	
 	// Layout Elements
-	Widget NotificationFrame;
-	Widget MapContainer;
 	Widget LeftDragZone, RightDragZone;
 	
 	CanvasWidget EditorCanvas;
@@ -22,16 +14,6 @@ class EditorHud: ScriptView
 	
 	TextWidget SessionIdData, UserCountData, EntityCountData;
 	
-	protected MultilineEditBoxWidget SearchBar;
-	
-	ref EditorCameraMapMarker CameraMapMarker;
-	
-	// todo protect this and move all Map logic in here?
-	MapWidget EditorMapWidget;
-	
-	EditBoxWidget LeftbarSearchBar;
-	TextWidget ObjectHoverText;
-
 	protected ref EditorTooltip m_CurrentTooltip;
 	
 	protected Widget m_DraggedBar;
@@ -51,12 +33,14 @@ class EditorHud: ScriptView
 		
 		float w, h;
 		int x, y;
+				
+		// Script sizing for menu bars and whatnot
 		GetScreenSize(x, y);
 		Left.GetSize(w, h);
 		Left.SetSize(w, y - 110);
 		Right.GetSize(w, h);
 		Right.SetSize(w, y - 110);	
-
+	
 		m_CurrentPlacingContext = InsertPlacedCategory(new EditorCategory("Placed Objects"));
 		InsertPlacedCategory(new EditorCategory("Hidden Objects"));
 		
@@ -134,22 +118,11 @@ class EditorHud: ScriptView
 	{
 		super.Update(dt);
 		
-		m_TemplateController = EditorHudController.Cast(m_Controller);
-		
 		if (GetGame().GetInput().LocalPress("UAFire") && !GetWidgetUnderCursor()) {
 			EditorSelectableBase.ClearSelections();
 			return;
 		}
-		
-		if (GetEditor().GetCamera()) {
-			//vector cam_pos = GetEditor().GetCamera().GetPosition();
-			
-			//m_TemplateController.cam_x = cam_pos[0];
-			//m_TemplateController.cam_y = cam_pos[1];
-			//m_TemplateController.cam_z = cam_pos[2];
-			//m_TemplateController.NotifyPropertiesChanged({ "cam_x", "cam_y", "cam_z"} );
-		}
-		
+				
 		EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
 		//Print(GetEditor().GetCurrentOnlineSession());
 		if (GetEditor().GetCurrentOnlineSession()) {
@@ -185,7 +158,8 @@ class EditorHud: ScriptView
 			return;
 		}
 				
-		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
+			m_DraggedBar.SetColor(COLOR_WHITE);
 			m_DraggedBar = null;
 		}
 		
@@ -194,20 +168,36 @@ class EditorHud: ScriptView
 		
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
-			
-		if (m_DraggedBar) {			
+		
+		
+		if (m_DraggedBar) {
 			switch (m_DraggedBar.GetParent()) {
 				case Right: {
 					Right.SetSize(x - Math.Clamp(mouse_x, x - 720, x - 40), y - 74);
+					m_DraggedBar.SetColor(COLOR_BLUE);
 					break;
 				}
 				
 				case Left: {
 					Left.SetSize(Math.Clamp(mouse_x, 40, 720), y - 74);
+					m_DraggedBar.SetColor(COLOR_BLUE);
 					break;
 				}
 			}			
 		}
+		
+		float w, h;
+		float total_bar_width;
+		Left.GetSize(w, h);
+		total_bar_width += w;
+		Right.GetSize(w, h);
+		total_bar_width += w;
+		
+		FileTab.GetSize(w, h);
+		FileTab.SetSize(x - total_bar_width, h);
+		
+		Left.GetSize(w, h);
+		FileTab.SetPos(w, 90);
 				
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("EditorPlaceObjectCommand") && !KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor()) {
@@ -216,14 +206,9 @@ class EditorHud: ScriptView
 		}
 		
 		if (input.LocalPress("EditorToggleCursor")) {
-			if (!EditorMapWidget.IsVisible() && (!CurrentDialog || !GetEditor().GeneralSettings.LockCameraDuringDialogs)) {
+			if (!CurrentDialog || !GetEditor().GeneralSettings.LockCameraDuringDialogs) {
 				ShowCursor(!IsCursorVisible());
 			}
-		}
-		
-		if (input.LocalPress("EditorToggleMap")) {
-			EditorMapWidget.Show(!EditorMapWidget.IsVisible());
-			ShowCursor(true);
 		}
 	}
 	
@@ -263,13 +248,18 @@ class EditorHud: ScriptView
 			}
 		}
 				
+		Widget icon = FindWidgetClass(w, "Icon");
+		if (icon) {
+			WidgetAnimator.Animate(icon, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
+		}
+		
 		
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
 				//WidgetAnimator.AnimateColorHSV(w, "240 140 60", "239 131 175", 30);
 				//LeftDragZone.SetColor(COLOR_WHITE);
-				WidgetAnimator.AnimateColor(w, COLOR_WHITE, 50);
+				//WidgetAnimator.AnimateColor(w, COLOR_WHITE, 50);
 				break;
 			}
 		}
@@ -279,10 +269,15 @@ class EditorHud: ScriptView
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
+		Widget icon = FindWidgetClass(w, "Icon");
+		if (icon) {
+			WidgetAnimator.Animate(icon, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 100);
+		}
+		
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
-				WidgetAnimator.AnimateColor(w, COLOR_SALMON_A, 50);
+				//WidgetAnimator.AnimateColor(w, COLOR_BLUE, 50);
 				//LeftDragZone.SetColor(COLOR_SALMON_A);
 				break;
 			}
@@ -291,25 +286,11 @@ class EditorHud: ScriptView
 		delete m_CurrentTooltip;
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
-		
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		switch (w) {
-			case MenuBarFile:
-			case MenuBarEdit:
-			case MenuBarView:
-			case MenuBarEditor: {
-				m_CurrentMenu = CreateToolbarMenu(w);
-				return true;
-			}		
-		}
-		
-		return super.OnClick(w, x, y, button);
-	}
-	
+			
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		switch (w) {
+			/*
 			case SearchBar: {
 				for (int i = 0; i < m_TemplateController.LeftListItems.Count(); i++) {					
 					string text;
@@ -318,7 +299,7 @@ class EditorHud: ScriptView
 				}
 				
 				break;
-			}
+			}*/
 		}
 		
 		return super.OnChange(w, x, y, finished);
@@ -375,12 +356,7 @@ class EditorHud: ScriptView
 		
 		GetTemplateController().ShowNotification(text, color, duration);
 	}
-	
-	bool IsMapVisible()
-	{
-		return EditorMapWidget.IsVisible();
-	}
-	
+		
 	bool IsSelectionBoxActive()
 	{
 		return m_IsBoxSelectActive;
@@ -481,66 +457,18 @@ class EditorHud: ScriptView
 	{
 		return EditorHudController.Cast(m_Controller);
 	}
-	
-	// Relay Commands
-	void MenuBarExecute(ButtonCommandArgs args) 
-	{		
-		EditorLog.Trace("EditorHudToolbarController::MenuBarExecute");
-		if (!EditorHud.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
-			EditorHud.CurrentMenu = CreateToolbarMenu(args.Source);
-		} else {
-			delete EditorHud.CurrentMenu;
-		}
-	}	
-	
-	protected EditorMenu CreateToolbarMenu(Widget toolbar_button)
-	{
-		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
-				
-		EditorMenu toolbar_menu;
-		switch (toolbar_button) {
 			
-			case MenuBarFile: {
-				toolbar_menu = new EditorFileMenu();
-				break;
-			}
-			
-			case MenuBarEdit: {
-				toolbar_menu = new EditorEditMenu();
-				break;
-			}
-			
-			case MenuBarView: {
-				toolbar_menu = new EditorViewMenu();
-				break;
-			}
-			
-			case MenuBarEditor: {
-				toolbar_menu = new EditorEditorMenu(); // lol
-				break;
-			}
-		}
-		
-		// Sets position to bottom of button
-		float x, y, w, h;
-		toolbar_button.GetScreenPos(x, y);
-		toolbar_button.GetScreenSize(w, h);
-		toolbar_menu.GetLayoutRoot().SetPos(x, y + h);
-		
-		return toolbar_menu;
-	}
-	
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
 		string text = GetFriendlyObjectName(target, component_index);
-		ObjectHoverText.SetText(text);
-		ObjectHoverText.SetColor(Ternary<int>.If(text.Contains(".p3d"), COLOR_YELLOW, COLOR_WHITE));
+		//ObjectHoverText.SetText(text);
+		//ObjectHoverText.SetColor(Ternary<int>.If(text.Contains(".p3d"), COLOR_YELLOW, COLOR_WHITE));
 		return true;
 	}
 	
 	bool OnMouseExitObject(Object target, int x, int y, int component_index)
 	{	
-		ObjectHoverText.SetText(string.Empty);
+		//ObjectHoverText.SetText(string.Empty);
 		return true;
 	}	
 	

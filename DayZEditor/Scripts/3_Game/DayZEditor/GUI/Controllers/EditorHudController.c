@@ -1,30 +1,43 @@
+class EditorFileHeadView: ScriptView
+{	
+	SpacerWidget TextSpacer;
+	TextWidget Text;
+	
+	void EditorFileHeadView(string text)
+	{
+		Text.SetText(text);
+		
+		float w, h;
+		TextSpacer.GetScreenSize(w, h);
+		Print(w);
+		
+		Text.GetScreenSize(w, h);
+		Print(w);
+		
+	}
+	
+	override string GetLayoutFile()
+	{
+		return "DayZEditor\\GUI\\layouts\\FileHead.layout";
+	}
+}
+
 class EditorHudController: EditorControllerBase
 {
 	static const string NOTIFICATION_SOUND = "Notification_SoundSet";
 	
 	string Version = Editor.Version;
 	
-	//
-	string PlacedSearchBarData;
-	string PlacedSearchBarIcon = "set:dayz_editor_gui image:search";
-		
-	bool CategoryPlacements = true;
-	bool CategoryDeletions;
-	bool CategoryConfig = true;
-	bool CategoryStatic;
-	bool FavoritesToggle;
-	
 	string OnlineSessionId, OnlineEntityCount;
 	int OnlineUserCount;
 	
 	StringEvaluater PrecisionLevel = "0.5";
 	
-	float cam_x, cam_y, cam_z;	
-	float obj_x, obj_y, obj_z;
+	ref ObservableCollection<EditorTreeItem> LeftListItems = new ObservableCollection<EditorTreeItem>(this);
+	ref ObservableCollection<EditorTreeItem> RightListItems = new ObservableCollection<EditorTreeItem>(this);
 		
-	ref ObservableCollection<ref EditorTreeItem> LeftListItems = new ObservableCollection<ref EditorTreeItem>(this);
-	ref ObservableCollection<ref EditorTreeItem> RightListItems = new ObservableCollection<ref EditorTreeItem>(this);
-		
+	ref ObservableCollection<ref EditorFileHeadView> OpenFiles = new ObservableCollection<ref EditorFileHeadView>(this);
+	
 	// Logger
 	static const int MAX_LOG_ENTRIES = 20;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
@@ -32,7 +45,7 @@ class EditorHudController: EditorControllerBase
 	// Camera bindings
 	float CameraSmoothing = 50.0;
 	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
-
+	
 	ScrollWidget LeftScroll;
 	ScrollWidget RightScroll;
 	
@@ -132,254 +145,11 @@ class EditorHudController: EditorControllerBase
 		ReloadBrushes(m_Editor.GeneralSettings.EditorBrushFile);
 	}
 		
-	void InsertMapMarker(EditorMarker map_marker)
-	{
-		EditorLog.Trace("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
-		m_Editor.GetEditorHud().EditorMapWidget.AddChild(map_marker.GetLayoutRoot());
-	}
-	
 	float GetPrecisionLevel()
 	{
 		return PrecisionLevel.Parse();
 	}
-	
-	override void PropertyChanged(string property_name)
-	{
-		EditorLog.Trace("EditorHudController::PropertyChanged: %1", property_name);
 		
-		switch (property_name) {
-					
-			case "SearchBarData": {
-				/*
-				auto spacer_config = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
-				for (int j = 0; j < spacer_config.Count(); j++) {
-					if (FavoritesToggle) {
-						spacer_config[j].GetLayoutRoot().Show(spacer_config[j].GetTemplateController().Favorite && spacer_config[j].FilterType(SearchBarData)); 	
-					} else {
-						spacer_config[j].GetLayoutRoot().Show(spacer_config[j].FilterType(SearchBarData)); 	
-					}
-				}
-				
-				LeftbarScroll.VScrollToPos(0);
-				
-				if (SearchBarData.Length() > 0) {
-					SearchBarIcon = "set:dayz_gui image:icon_x";
-				} else {
-					SearchBarIcon = "set:dayz_editor_gui image:search";
-				}
-				
-				NotifyPropertyChanged("SearchBarIcon");*/
-				
-				break;
-			}	
-			
-			case "PlacedSearchBarData": {
-				
-				ObservableCollection<EditorListItem> selected_list;
-				if (CategoryPlacements) {
-					//selected_list = RightbarPlacedData;
-				} else {
-					//selected_list = RightbarDeletionData;
-				}
-					
-				for (int k = 0; k < selected_list.Count(); k++) {
-					selected_list[k].GetLayoutRoot().Show(selected_list[k].FilterType(PlacedSearchBarData)); 	
-				}
-				
-				RightScroll.VScrollToPos(0);
-				
-				if (PlacedSearchBarData.Length() > 0) {
-					PlacedSearchBarIcon = "set:dayz_gui image:icon_x";
-				} else {
-					PlacedSearchBarIcon = "set:dayz_editor_gui image:search";
-				}
-				
-				NotifyPropertyChanged("PlacedSearchBarIcon");
-				
-				break;
-			}
-			
-			case "FavoritesToggle": {
-				/*
-				auto spacer_config_favorites = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
-				for (int i = 0; i < spacer_config_favorites.Count(); i++) {
-					if (FavoritesToggle) {
-						spacer_config_favorites[i].GetLayoutRoot().Show(spacer_config_favorites[i].GetTemplateController().Favorite && spacer_config_favorites[i].FilterType(SearchBarData));
-					} else {
-						spacer_config_favorites[i].GetLayoutRoot().Show(spacer_config_favorites[i].FilterType(SearchBarData)); 	 // SearchBarData == string.Empty || LeftbarSpacerData[i].FilterType(SearchBarData)
-					}
-				}
-				
-				LeftbarScroll.VScrollToPos(0);
-				*/
-				break;
-			}		
-			
-			case "cam_x":
-			case "cam_y":
-			case "cam_z": {				
-				GetEditor().GetCamera().SetPosition(Vector(cam_x, cam_y, cam_z));
-				break;
-			}
-			
-			case "CategoryPlacements": {
-				CategoryDeletions = false;
-				NotifyPropertyChanged("CategoryDeletions", false);
-				// forcing to be true, otherwise it will just show nothing
-				CategoryPlacements = true;
-				
-				RightbarPlacementsList.Show(CategoryPlacements);
-				RightbarDeletionsList.Show(CategoryDeletions);
-				
-				PlacementsTabButton.SetColor(m_Editor.GeneralSettings.SelectionColor);
-				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
-				RightScroll.VScrollToPos(0);
-				break;
-			}
-			
-			case "CategoryDeletions": {				
-				CategoryPlacements = false;				
-				NotifyPropertyChanged("CategoryPlacements", false);				
-				// forcing to be true, otherwise it will just show nothing
-				CategoryDeletions = true;
-				RightbarPlacementsList.Show(CategoryPlacements);
-				RightbarDeletionsList.Show(CategoryDeletions);
-				
-				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
-				DeletionsTabButton.SetColor(m_Editor.GeneralSettings.SelectionColor);
-				RightScroll.VScrollToPos(0);
-				break;
-			}			
-			
-			case "CategoryConfig": {
-				CategoryStatic = false;
-				NotifyPropertyChanged("CategoryStatic", false);
-				// forcing to be true, otherwise it will just show nothing
-				CategoryConfig = true;
-				
-				LeftbarPlacementsConfig.Show(CategoryConfig);
-				LeftbarPlacementsStatic.Show(CategoryStatic);
-				
-				LeftbarCategoryConfig.SetColor(m_Editor.GeneralSettings.SelectionColor);
-				LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
-				LeftScroll.VScrollToPos(0);
-				break;
-			}
-			
-			case "CategoryStatic": {				
-				CategoryConfig = false;				
-				NotifyPropertyChanged("CategoryPlacements", false);				
-				// forcing to be true, otherwise it will just show nothing
-				CategoryDeletions = true;
-				LeftbarPlacementsConfig.Show(CategoryConfig);
-				LeftbarPlacementsStatic.Show(CategoryStatic);
-				
-				LeftbarCategoryConfig.SetColor(ARGB(255, 60, 60, 60));
-				LeftbarCategoryStatic.SetColor(m_Editor.GeneralSettings.SelectionColor);
-				LeftScroll.VScrollToPos(0);
-				break;
-			}
-						
-			case "PlacedSearchBarIcon": {
-				PlacedSearchIconButton.Enable(PlacedSearchBarData.Length() > 0);
-				break;
-			}
-			
-			// I literally hate this
-			case "PrecisionLevel": {
-				g_EditorPrecision = GetPrecisionLevel();
-				break;
-			}
-			
-			case "BrushToggleButtonState":
-			case "BrushTypeSelection": {
-				
-				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
-					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Type;
-					NotifyPropertyChanged("BrushToggleButtonText", false);
-				}
-								
-				m_Editor.CommandManager[EditorBrushToggleCommand].Execute(this, new ButtonCommandArgs(BrushToggleButton, 0));
-
-				break;
-			}
-			
-			case "BrushRadius":
-			case "BrushDensity": {
-				EditorBrush.BrushRadius = BrushRadius / 2;
-				EditorBrush.BrushDensity = BrushDensity;
-				break;
-			}
-			
-			case "m_Editor.MagnetMode": {
-				
-				if (m_Editor.MagnetMode) {
-					MagnetButton_Icon.SetColor(COLOR_CANDY);
-				} else {
-					MagnetButton_Icon.SetColor(COLOR_WHITE);
-				}
-				break;
-			}
-			case "m_Editor.GroundMode": {
-				if (m_Editor.GroundMode) {
-					GroundButton_Icon.SetColor(COLOR_APPLE);
-				} else {
-					GroundButton_Icon.SetColor(COLOR_WHITE);
-				}
-				
-				break;
-			}
-			case "m_Editor.SnappingMode": {
-				if (m_Editor.SnappingMode) {
-					SnapButton_Icon.SetColor(COLOR_JELLY);
-				} else {
-					SnapButton_Icon.SetColor(COLOR_WHITE);
-				}
-				
-				break;
-			}
-			case "m_Editor.CollisionMode": {
-				if (m_Editor.CollisionMode) {
-					CollisionButton_Icon.SetColor(COLOR_PALE_B);
-				} else {
-					CollisionButton_Icon.SetColor(COLOR_WHITE);
-				}
-					
-				break;
-			}
-			case "ControlPlayerState": {
-				if (ControlPlayerState) {
-					GetEditor().ControlPlayer(GetGame().GetPlayer());
-				} else {
-					GetEditor().ControlCamera();
-				}
-				
-				break;
-			}
-			
-			case "m_Editor.CameraLight": {
-				GetEditor().GetCamera().SetLightState(m_Editor.CameraLight);
-				if (m_Editor.CameraLight) {
-					CameraLightButton_Icon.SetColor(COLOR_YELLOW);
-				} else {
-					CameraLightButton_Icon.SetColor(COLOR_WHITE);
-				}
-				break;
-			}
-		}
-	}
-	
-	void RightbarHideExecute(ButtonCommandArgs args) 
-	{
-		RightbarFrame.Show(!args.GetButtonState());
-				
-		if (args.GetButtonState()) {
-			RightbarHideIcon.SetFlags(WidgetFlags.FLIPU);
-		} else {
-			RightbarHideIcon.ClearFlags(WidgetFlags.FLIPU);
-		}
-	}
-	
 	void CameraTrackToggleExecute(ButtonCommandArgs args) 
 	{
 		EditorLog.Trace("EditorHudController::CameraTrackToggleExecute");
@@ -393,15 +163,6 @@ class EditorHudController: EditorControllerBase
 		GetEditor().GetCameraTrackManager().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
 	}
 
-	void OnSearchPlacedButtonPress(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::OnSearchPlacedButtonPress");
-		if (PlacedSearchBarData.Length() > 0) {
-			PlacedSearchBarData = string.Empty;
-			NotifyPropertyChanged("PlacedSearchBarData");
-		}	
-	}
-	
 	void OnCameraTrackStart()
 	{
 		CameraTrackRunButton.SetText("Stop");
@@ -417,7 +178,7 @@ class EditorHudController: EditorControllerBase
 		CameraTrackRunButton.SetState(1);
 	}
 		
-	void DoMultiSelect(int index_0, int index_1, ObservableCollection<EditorListItem> list)
+	void DoMultiSelect(int index_0, int index_1, array<EditorSelectableBase> list)
 	{
 		int bottom, top;
 		bottom = Math.Min(index_0, index_1);
@@ -428,22 +189,9 @@ class EditorHudController: EditorControllerBase
 			return;
 		}
 		
-		for (int i = bottom; i < top; i++) {
-			// if this element is filtered out
-			if (!list[i].FilterType(PlacedSearchBarData)) {
-				continue;
-			}
-			
+		for (int i = bottom; i < top; i++) {			
 			EditorPlacedListItem placed_list_item;
-			// this is bad and wont work.. well it will but i dont like it
-			if (Class.CastTo(placed_list_item, list[i])) {				
-				placed_list_item.GetEditorObject().SetSelected(true);
-			}
 			
-			EditorDeletedListItem deleted_list_item;
-			if (Class.CastTo(deleted_list_item, list[i])) {
-				deleted_list_item.GetDeletedObject().SetSelected(true);
-			}
 		}
 	}
 	
@@ -554,17 +302,7 @@ class EditorHudController: EditorControllerBase
 		
 		return false;
 	}
-			
-	void SetInfoObjectPosition(vector position)
-	{
-		obj_x = position[0];
-		obj_y = position[1];
-		obj_z = position[2];
-		NotifyPropertyChanged("obj_x");
-		NotifyPropertyChanged("obj_y");
-		NotifyPropertyChanged("obj_z");
-	}
-	
+		
 	void ShowNotification(string text, int color, float duration)
 	{
 		NotificationPanel.SetColor(color);

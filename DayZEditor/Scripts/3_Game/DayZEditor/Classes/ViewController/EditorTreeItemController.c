@@ -1,6 +1,6 @@
 class EditorTreeItemController: ViewController
 {
-	ref ObservableCollection<ref EditorTreeItem> Children = new ObservableCollection<ref EditorTreeItem>(this);
+	ref ObservableCollection<EditorTreeItem> Children = new ObservableCollection<EditorTreeItem>(this);
 	
 	string Text;
 	Widget Icon, Spacer1, CollapseWrapper, Spacer0, ChildrenWrapper;

@@ -118,11 +118,7 @@ class EditorTreeItem: ScriptView
 		
 	void OnSelectionChange(EditorSelectableBase selectable, bool state)
 	{
-		if (state) {
-			WidgetAnimator.AnimateColor(Button, ARGB(255, 75, 119, 190), 50);			
-		} else {
-			WidgetAnimator.AnimateColor(Button, ARGB(0, 0, 0, 0), 50);
-		}
+		Button.SetColor(ARGB(255, 75, 119, 190) * state);
 	}
 		
 	bool IsBlacklistedItem(string item_type)

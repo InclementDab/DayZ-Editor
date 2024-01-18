@@ -6,6 +6,11 @@ class EditorSelectableBase: SerializableBase
 		
 	protected ref EditorTreeItem m_TreeItem;
 	
+	void ~EditorSelectableBase()
+	{
+		delete m_TreeItem;
+	}
+	
 	EditorTreeItem GetTreeItem()
 	{
 		return m_TreeItem;
