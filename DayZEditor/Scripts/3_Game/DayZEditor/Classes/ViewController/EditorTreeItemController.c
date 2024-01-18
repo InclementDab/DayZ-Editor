@@ -2,7 +2,6 @@ class EditorTreeItemController: ViewController
 {
 	ref ObservableCollection<EditorTreeItem> Children = new ObservableCollection<EditorTreeItem>(this);
 	
-	string Text;
 	Widget Icon, Spacer1, CollapseWrapper, Spacer0, ChildrenWrapper;
 		
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)

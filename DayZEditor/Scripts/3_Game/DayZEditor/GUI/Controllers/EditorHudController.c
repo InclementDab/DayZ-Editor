@@ -56,12 +56,7 @@ class EditorHudController: ViewController
 		// more hacking
 		g_EditorPrecision = GetPrecisionLevel();
 	}
-	
-	void AddToHand(Object obj)
-	{
-		GetEditor().AddInHand(obj);
-	}
-		
+			
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
@@ -150,6 +145,13 @@ class EditorHudController: ViewController
 	{
 		switch (property_name) {
 			case "Search": {
+				for (int i = 0; i < LeftListItems.Count(); i++) {
+					for (int j = 0; j < LeftListItems[i].GetTemplateController().Children.Count(); j++) {
+						LeftListItems[i].GetTemplateController().Children[j].ApplyFilter(Search);
+					}
+					
+					LeftListItems[i].ShowChildren(true);
+				}
 				
 				break;
 			}

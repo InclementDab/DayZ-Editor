@@ -12,6 +12,7 @@ class EditorTreeItem: ScriptView
 	Widget CollapseWrapper, Spacer0, DragPanel;
 	
 	protected bool m_IsBeingDragged;
+	protected string m_Text;
 	
 	protected EditorSelectableBase m_Selectable;
 	
@@ -20,8 +21,9 @@ class EditorTreeItem: ScriptView
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
 		m_Selectable = selectable;
 		m_Selectable.OnSelectionChanged.Insert(OnSelectionChange);
-				
-		SetText(text);
+		
+		m_Text = text;
+		SetText(m_Text);
 		
 		ShowChildren(false);
 	}
@@ -42,20 +44,12 @@ class EditorTreeItem: ScriptView
 	
 	void ApplyFilter(string filter)
 	{
-		Show(false);
 		filter.ToLower();
-		
-		bool has_visible_children;
-		for (int i = 0; i < m_TemplateController.Children.Count(); i++) {
-			
-			string name = m_TemplateController.Children[i].GetTemplateController().Text;
-			name.ToLower();
-			
-			m_TemplateController.Children[i].Show(name.Contains(filter));
-			if (name.Contains(filter)) {
-				Show(true);
-			}
-		}
+	
+		string name = m_Text;
+		name.ToLower();
+	
+		m_LayoutRoot.Show(name.Contains(filter));
 	}
 	
 	void ShowChildren(bool state)
@@ -66,8 +60,17 @@ class EditorTreeItem: ScriptView
 		CollapseIcon.SetImage(0);
 		
 		float w, h;
-		m_LayoutRoot.GetScreenSize(w, h);
-		m_LayoutRoot.SetScreenSize(w, Ternary<float>.If(state, 18 * (m_TemplateController.Children.Count()) + 18, 18));
+		m_LayoutRoot.GetScreenSize(w, h);		
+		h = 0;
+		for (int i = 0; i < m_TemplateController.Children.Count(); i++) {
+			if (m_TemplateController.Children[i].IsVisible()) {
+				float w_c, w_h;
+				m_TemplateController.Children[i].GetLayoutRoot().GetScreenSize(w_c, w_h);
+				h += w_h;
+			}
+		}
+		
+		m_LayoutRoot.SetScreenSize(w, h + 18);
 	}
 		
 	override void Update(float dt)
