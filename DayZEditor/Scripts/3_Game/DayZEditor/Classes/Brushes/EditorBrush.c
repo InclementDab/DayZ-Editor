@@ -1,6 +1,5 @@
 class EditorBrush: Managed
 {
-	protected EditorGeneralSettings m_EditorSettings;
 	protected EntityAI m_BrushDecal;
 	protected ref EditorBrushData m_BrushData;
 	
@@ -14,7 +13,6 @@ class EditorBrush: Managed
 	{
 		m_BrushData = settings;
 		m_BrushDecal = EntityAI.Cast(GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_NONE));
-		m_EditorSettings = GetEditor().GeneralSettings;
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
 
@@ -49,7 +47,7 @@ class EditorBrush: Managed
 		}
 		
 		set<Object> o;
-		vector CurrentMousePosition = MousePosToRay(o, null, GetEditor().GeneralSettings.ObjectViewDistance, 0, true);
+		vector CurrentMousePosition = MousePosToRay(o, null, 3000.0, 0, true);
 		
 		Input input = GetGame().GetInput();
 
@@ -91,16 +89,7 @@ class EditorBrush: Managed
 		m_LastMousePosition = position;
 		
 		array<Object> brushed_objects = {};
-		
-		int flags;
-		if (m_EditorSettings.BrushedObjectMarkers) {
-			flags |= EditorObjectFlags.OBJECTMARKER;
-		}
-		
-		if (m_EditorSettings.BrushedListItems) {
-			flags |= EditorObjectFlags.LISTITEM;
-		}
-		
+			
 		for (int i = 0; i < BrushDensity * 10; i++) {
 						
 			vector pos = position;
@@ -132,7 +121,7 @@ class EditorBrush: Managed
 			brushed_objects.Insert(brushed_object);
 		}
 	
-		GetEditor().CreateObjects(brushed_objects, flags);
+		GetEditor().CreateObjects(brushed_objects, EFE_DEFAULT);
 	}
 	
 	void OnMouseUp(vector position)

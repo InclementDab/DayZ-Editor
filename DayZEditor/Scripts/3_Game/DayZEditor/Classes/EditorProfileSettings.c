@@ -1,5 +1,5 @@
-[RegisterProfileSetting(EditorGeneralSettings, "#STR_EDITOR_EDITOR")]
-class EditorGeneralSettings: ProfileSettings
+[RegisterProfileSetting(EditorProfileSettings, "#STR_EDITOR_EDITOR")]
+class EditorProfileSettings: ProfileSettings
 {	
 	
 	/*
@@ -25,18 +25,14 @@ class EditorGeneralSettings: ProfileSettings
 	[RegisterProfileSettingMultistate("#STR_EDITOR_GENERAL", "AutoSaveEnabled", "#STR_EDITOR_AUTO_SAVE", {"#menu_yes", "#menu_no"})]
 	int AutoSaveEnabled			= true; // << remove!!!
 	
+	[RegisterProfileSettingSlider("STR_EDITOR_CAMERA", "Smoothing", "Smoothing", 0.0, 1.0)]
+	float Smoothing = 0.0;
 	
 	//float AutoSaveTimer 			= 240;
 	float QuickMoveStepSize			= 0.1;
 	bool QuickMoveFollowsCamera		= false;
 	bool SpawnItemsWithAttachments	= true;
 	bool ShowScopeZeroObjects		= false;
-
-	// Camera Settings
-	float CameraSpeed				= 25;
-	float CameraTilt				= 0;
-	bool RuleOfThirds				= false;
-	bool AllowBelowGround 			= false;
 	
 	// Advanced Settings
 	bool LockCameraDuringDialogs 	= true;
@@ -75,7 +71,6 @@ class EditorGeneralSettings: ProfileSettings
 		GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
 		
 
-		GetEditor().GetCamera().Speed = CameraSpeed;
 		//GetEditor().GetHud().ShowRuleOfThirds(RuleOfThirds);
 	}
 }

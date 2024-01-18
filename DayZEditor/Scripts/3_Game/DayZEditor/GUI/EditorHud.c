@@ -45,6 +45,7 @@ class EditorHud: ScriptView
 			
 		m_CurrentPlacingContext = InsertPlacedCategory(new EditorCategory(new EditorObjectDataCategory("Placed Objects")));
 		InsertPlacedCategory(new EditorCategory(new EditorObjectDataCategory("Hidden Objects")));
+		InsertPlacedCategory(new EditorCategory(new EditorObjectDataCategory("Brushed Objects")));
 		
 		map<EditorObjectDataCategory, ref array<EditorPlaceableObjectData>> placeable_items = GetDayZGame().GetPlaceableItemsByCategory();
 		foreach (EditorObjectDataCategory category, array<EditorPlaceableObjectData> items: placeable_items) {

@@ -26,6 +26,7 @@ FrameWidgetClass Root {
    scaled 0
    {
     MapWidgetClass Map {
+     visible 0
      size 1 1
      halign center_ref
      valign center_ref

@@ -3,6 +3,61 @@ class ScriptedCamera: Camera
 	void OnSelectCamera();
 }
 
+class EditorCamera: ScriptedCamera
+{
+	static int RPC_UPDATE = 2592529;
+	static float UPDATE_ACCUMULATOR_INTERVAL = 0.5;
+	
+	protected float m_ServerUpdateAccumulator;
+	protected vector m_LinearVelocity, m_AngularVelocity;
+	
+	void EditorCamera()
+	{
+		SetEventMask(EntityEvent.FRAME);
+	}
+	
+	override void EOnFrame(IEntity other, float timeSlice)
+	{
+		vector transform[4];
+		GetTransform(transform);
+		
+		m_ServerUpdateAccumulator += timeSlice;
+		if (m_ServerUpdateAccumulator > UPDATE_ACCUMULATOR_INTERVAL) {
+			m_ServerUpdateAccumulator = 0;
+
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(transform);
+			rpc.Send(null, RPC_UPDATE, true);
+		}
+
+		Input input = GetGame().GetInput();
+		m_LinearVelocity += Vector(input.LocalValue_ID(UAMoveRight) 	- input.LocalValue_ID(UAMoveLeft), 
+									input.LocalValue_ID(UAMoveUp) 		- input.LocalValue_ID(UAMoveDown), 
+									input.LocalValue_ID(UAMoveForward) 	- input.LocalValue_ID(UAMoveBack)) * timeSlice * 5.0 * (1 + input.LocalValue_ID(UATurbo) * 5.0);
+		
+
+		float yaw = (input.LocalValue_ID(UAAimRight) - input.LocalValue_ID(UAAimLeft)) * timeSlice;
+		float pitch = (input.LocalValue_ID(UAAimUp) - input.LocalValue_ID(UAAimDown)) * timeSlice;
+		
+		// We need a delta vector created in camera coordinate space.
+		// this is a vector that points forward towards the looking direction of the next frame
+		vector view_delta = Vector(Math.Sin(yaw), pitch, Math.Cos(yaw)).Normalized().Multiply3(transform);
+		
+		// Finally we construct a transform from our new view delta and move it by our linear velocity
+		transform = { vector.Up * view_delta, vector.Up, view_delta, m_LinearVelocity.Multiply4(transform) };
+
+		SetTransform(transform);
+		
+		transform[3] = Vector(0, 0, 1).Multiply4(transform);
+		Shape.CreateMatrix(transform);
+			
+		// Decay linear velocity
+		m_LinearVelocity = m_LinearVelocity * GetEditor().GetProfileSettings().Smoothing;
+		m_AngularVelocity = m_AngularVelocity * 0.5;
+	}
+}
+
+/*
 // make option Q and E go up and down no matter orientation
 class EditorCamera: ScriptedCamera
 {

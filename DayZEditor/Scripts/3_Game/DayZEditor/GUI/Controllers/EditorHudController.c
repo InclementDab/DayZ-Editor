@@ -63,23 +63,23 @@ class EditorHudController: ViewController
 		
 		float widest_x;				
 		// Load Brushes		
-		string brush_file = GetEditor().GeneralSettings.EditorBrushFile;
+		string brush_file = GetEditor().GetProfileSettings().EditorBrushFile;
 		if (brush_file.Contains("'")) {
 			// bi wtf
 			brush_file.Replace("'", "");
 			brush_file.Replace("\"", "");
-			GetEditor().GeneralSettings.EditorBrushFile = brush_file;
-			GetEditor().GeneralSettings.Save();
+			GetEditor().GetProfileSettings().EditorBrushFile = brush_file;
+			GetEditor().GetProfileSettings().Save();
 		}
 		
-		if (!FileExist(GetEditor().GeneralSettings.EditorBrushFile)) {
-			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", GetEditor().GeneralSettings.EditorBrushFile)) {
-				EditorLog.Error("Could not copy brush data to %1", GetEditor().GeneralSettings.EditorBrushFile);
+		if (!FileExist(GetEditor().GetProfileSettings().EditorBrushFile)) {
+			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", GetEditor().GetProfileSettings().EditorBrushFile)) {
+				EditorLog.Error("Could not copy brush data to %1", GetEditor().GetProfileSettings().EditorBrushFile);
 				return;
 			}
 		}
 				
-		ReloadBrushes(GetEditor().GeneralSettings.EditorBrushFile);
+		ReloadBrushes(GetEditor().GetProfileSettings().EditorBrushFile);
 	}
 		
 	float GetPrecisionLevel()
