@@ -19,7 +19,7 @@ class EditorExportEventPos: EditorCommand
 		event_data += "</group>";
 		
 		GetGame().CopyToClipboard(event_data);
-		GetEditor().GetEditorHud().CreateNotification("Event Data copied to clipboard");
+		GetEditor().GetEditorHud().ShowNotification("Event Data copied to clipboard");
 		
 		return true;
 	}

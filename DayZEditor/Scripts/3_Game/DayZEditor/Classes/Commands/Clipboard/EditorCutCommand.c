@@ -3,7 +3,7 @@ class EditorCutCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		GetEditor().GetEditorHud().CreateNotification(string.Format("Cut %1 items to clipboard!", EditorObject.GetSelectedEditorObjects().Count()), COLOR_SALMON);
+		GetEditor().GetEditorHud().ShowNotification(string.Format("Cut %1 items to clipboard!", EditorObject.GetSelectedEditorObjects().Count()), COLOR_SALMON);
 		EditorClipboard.Cut();
 		return true;
 	}

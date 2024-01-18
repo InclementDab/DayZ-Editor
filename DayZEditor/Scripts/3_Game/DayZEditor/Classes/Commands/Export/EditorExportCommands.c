@@ -56,7 +56,7 @@ class EditorExportCommandBase: EditorAsyncCommand
 		file_type.Export(save_data, file_name, export_settings);
 
 		string message = string.Format("Saved %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count());
-		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
+		m_Editor.GetEditorHud().ShowNotification(message, COLOR_GREEN);
 		EditorLog.Debug(message);
 		return true;
 	}

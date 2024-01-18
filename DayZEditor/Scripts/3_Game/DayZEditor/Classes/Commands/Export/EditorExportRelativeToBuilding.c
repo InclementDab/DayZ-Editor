@@ -34,7 +34,7 @@ class EditorExportRelativeToObject: EditorCommand
 		EditorInitFile init_file = new EditorInitFile();
 		init_file.Export(save_data, Editor.ROOT_DIRECTORY + "relative.c", new ExportSettings());
 		
-		GetEditor().GetEditorHud().CreateNotification("Positions Saved to relative.c file", COLOR_GREEN);
+		GetEditor().GetEditorHud().ShowNotification("Positions Saved to relative.c file", COLOR_GREEN);
 		
 		
 		EditorObject.ClearSelections();
