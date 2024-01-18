@@ -86,8 +86,8 @@ class EditorCamera: ScriptedCamera
 		LookEnabled = true;
 		
 		// literally just for startup
-		if (GetEditor().GetEditorHud()) {
-			GetEditor().GetEditorHud().Show(true);
+		if (GetEditor().GetHud()) {
+			GetEditor().GetHud().Show(true);
 		}
 	}
 

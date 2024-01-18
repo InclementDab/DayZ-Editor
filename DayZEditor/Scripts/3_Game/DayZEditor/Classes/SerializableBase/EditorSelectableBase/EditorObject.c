@@ -60,7 +60,7 @@ class EditorObject: EditorSelectableBase
 		
 		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
 			
-			GetEditor().GetEditorHud().GetCurrentPlacingCategory().AddChild(this);
+			GetEditor().GetHud().GetCurrentPlacingCategory().AddChild(this);
 		}
 		
 		m_Object = GetGame().CreateObjectEx(Type, Position, ECE_LOCAL);

@@ -156,10 +156,10 @@ class EditorAction: Managed
 	{
 		EditorLog.Trace("EditorAction::DeleteCameraTrack %1", params.param1.ToString());
 		
-		/*foreach (EditorCameraTrackListItem list_item: GetEditor().GetEditorHud().GetTemplateController().CameraTrackItems) {
+		/*foreach (EditorCameraTrackListItem list_item: GetEditor().GetHud().GetTemplateController().CameraTrackItems) {
 			
 		}*/
 		
-		//GetEditor().GetEditorHud().GetTemplateController().RemoveCameraTrack(params.param1);	
+		//GetEditor().GetHud().GetTemplateController().RemoveCameraTrack(params.param1);	
 	}
 }

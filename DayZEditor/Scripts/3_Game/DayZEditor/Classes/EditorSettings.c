@@ -76,6 +76,6 @@ class EditorGeneralSettings: ProfileSettings
 		
 
 		GetEditor().GetCamera().Speed = CameraSpeed;
-		//GetEditor().GetEditorHud().ShowRuleOfThirds(RuleOfThirds);
+		//GetEditor().GetHud().ShowRuleOfThirds(RuleOfThirds);
 	}
 }

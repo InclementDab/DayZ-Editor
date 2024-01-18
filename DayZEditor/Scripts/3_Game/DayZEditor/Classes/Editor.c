@@ -1183,7 +1183,7 @@ class Editor: Managed
 		return m_RecentlyOpenedFiles;
 	}
 		
-	EditorHud GetEditorHud() 
+	EditorHud GetHud() 
 	{
 		return m_EditorHud;
 	}

@@ -28,7 +28,7 @@ class EditorPlaceableTreeItem: EditorTreeItem
 	{
 		switch (w) {
 			case Button: {
-				delete GetEditor().GetEditorHud().CurrentTooltip;
+				delete GetEditor().GetHud().CurrentTooltip;
 				break;
 			}
 		}

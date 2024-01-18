@@ -134,17 +134,17 @@ class EditorHudController: ViewController
 
 		switch (w) {
 			case PlacementsTabButton: {
-				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
+				GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case DeletionsTabButton: {
-				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " #STR_EDITOR_DELETIONS", w, TooltipPositions.BOTTOM_LEFT));
+				GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " #STR_EDITOR_DELETIONS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case CinematicCameraButton: {
-				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("#STR_EDITOR_CINEMATIC_CAMERA", w, TooltipPositions.TOP_LEFT));
+				GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("#STR_EDITOR_CINEMATIC_CAMERA", w, TooltipPositions.TOP_LEFT));
 				break;
 			}
 		}
@@ -155,7 +155,7 @@ class EditorHudController: ViewController
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseLeave");
-		delete GetEditor().GetEditorHud().CurrentTooltip;
+		delete GetEditor().GetHud().CurrentTooltip;
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}*/
