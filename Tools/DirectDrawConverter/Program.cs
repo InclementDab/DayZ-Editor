@@ -120,7 +120,11 @@ namespace DirectDrawConverter
                 }
             }
 
-            File.Delete(dest_directory + $"\\{OUTPUT_NAME}.imageset");
+            if (!File.Delete(dest_directory + $"\\{OUTPUT_NAME}.imageset")) {
+                Console.WriteLine($"Could not delete {dest_directory + $"\\{OUTPUT_NAME}.imageset")} as it appears to be open...");
+                Console.ReadKey();
+                return;
+            }
             File.WriteAllText(dest_directory + $"\\{OUTPUT_NAME}.imageset", image_set.ToStringy());
             //File.WriteAllText(dest_directory + $"\\{OUTPUT_NAME}.edds.meta", meta_file.ToStringy());
             Console.WriteLine($"Outputting to {output_file}");
