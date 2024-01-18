@@ -38,11 +38,11 @@ FrameWidgetClass EditorFrame {
    scaled 0
    style rover_sim_colorable
    {
-    WrapSpacerWidgetClass MenuBar {
+    GridSpacerWidgetClass MenuBar {
      visible 1
      ignorepointer 1
-     position 64 0
-     size 240 40
+     position 50 0
+     size 328 40
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -52,12 +52,12 @@ FrameWidgetClass EditorFrame {
      Padding 0
      Margin 0
      content_valign center
+     Rows 1
      {
       FrameWidgetClass File {
-       visible 1
        ignorepointer 1
-       color 1 1 1 0
-       size 60 30
+       position 0 0
+       size 124 42
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -67,16 +67,21 @@ FrameWidgetClass EditorFrame {
        scaled 0
        {
         ButtonWidgetClass "File.Button" {
-         size 1 1
+         visible 1
+         color 0.2745 0.2745 0.2745 1
+         size 0.9 1
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         style Empty
+         scaled 0
+         style Default
+         "no focus" 1
+         switch normal
          {
-          PanelWidgetClass "File.Icon" {
+          TextWidgetClass "File.Text" {
            ignorepointer 1
            size 1 1
            halign center_ref
@@ -85,23 +90,110 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 0
+           scaled 0
+           text "File"
+           font "gui/fonts/MetronBook"
+           "size to text h" 0
+           "text halign" center
+           "text valign" center
           }
          }
         }
-        TextWidgetClass "File.Text" {
-         ignorepointer 1
-         size 1 1
+       }
+      }
+      FrameWidgetClass Edit {
+       ignorepointer 1
+       position 0 0
+       size 110 42
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        ButtonWidgetClass "Edit.Button" {
+         visible 1
+         color 0.2745 0.2745 0.2745 1
+         size 0.9 1
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
          vexactsize 0
-         text "File"
-         font "gui/fonts/MetronBook"
-         "size to text h" 0
-         "text halign" center
-         "text valign" center
+         scaled 0
+         style Default
+         "no focus" 1
+         switch normal
+         {
+          TextWidgetClass "Edit.Text" {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           text "Edit"
+           font "gui/fonts/MetronBook"
+           "exact text" 1
+           "size to text h" 0
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+       }
+      }
+      FrameWidgetClass View {
+       ignorepointer 1
+       position 0 0
+       size 108 42
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        ButtonWidgetClass "View.Button" {
+         visible 1
+         color 0.2745 0.2745 0.2745 1
+         size 0.9 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style Default
+         "no focus" 0
+         switch normal
+         {
+          TextWidgetClass "View.Text" {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           text "View"
+           font "gui/fonts/MetronBook"
+           "exact text" 1
+           "size to text h" 0
+           "text halign" center
+           "text valign" center
+          }
+         }
         }
        }
       }

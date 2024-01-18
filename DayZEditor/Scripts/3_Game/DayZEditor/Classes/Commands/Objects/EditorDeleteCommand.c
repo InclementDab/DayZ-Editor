@@ -19,7 +19,7 @@ class EditorDeleteCommand: EditorCommand
 			return false;
 		}
 		
-		m_Editor.GetEditorHud().SetCurrentTooltip(null);
+		delete EditorHud.CurrentTooltip;
 		m_Editor.DeleteObjects(EditorObject.GetSelectedEditorObjects());
 		
 		return true;	

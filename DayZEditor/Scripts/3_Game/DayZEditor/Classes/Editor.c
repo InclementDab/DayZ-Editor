@@ -256,7 +256,7 @@ class Editor: Managed
 		if (ShouldProcessInput()) {
 			ProcessInput(GetGame().GetInput());
 		}
-		
+				
 		if (GetGame().GetInput().LocalPress("UAFire")) {
 			Object object = GetObjectUnderCursor();
 			if (object && m_WorldObjectIndex[object.GetID()]) {

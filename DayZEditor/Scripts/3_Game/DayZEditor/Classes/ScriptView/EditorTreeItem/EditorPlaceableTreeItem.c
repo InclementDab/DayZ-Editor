@@ -13,8 +13,7 @@ class EditorPlaceableTreeItem: EditorTreeItem
 					EditorPlaceableObjectData data = EditorPlaceableObject.Cast(m_Selectable).GetPlaceableObjectData();
 					
 					if (!IsBlacklistedItem(data.GetName())) {
-						EditorObjectTooltip tooltip = new EditorObjectTooltip(data.CreateObject(vector.Zero, vector.Zero, 1.0, ECE_LOCAL), x_p + w_f + 25, y);
-						GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
+						EditorHud.CurrentTooltip = new EditorObjectTooltip(data.CreateObject(vector.Zero, vector.Zero, 1.0, ECE_LOCAL), x_p + w_f + 25, y);
 					}
 				}
 				
@@ -29,7 +28,7 @@ class EditorPlaceableTreeItem: EditorTreeItem
 	{
 		switch (w) {
 			case Button: {
-				GetEditor().GetEditorHud().SetCurrentTooltip(null);
+				delete GetEditor().GetEditorHud().CurrentTooltip;
 				break;
 			}
 		}

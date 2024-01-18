@@ -204,7 +204,7 @@ class EditorHudController: ViewController
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseLeave");
-		GetEditor().GetEditorHud().SetCurrentTooltip(null);
+		delete GetEditor().GetEditorHud().CurrentTooltip;
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}*/

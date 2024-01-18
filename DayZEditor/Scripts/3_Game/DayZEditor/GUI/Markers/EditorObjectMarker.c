@@ -89,7 +89,7 @@ class EditorObjectMarker: EditorMarker
 		}
 		
 		if (m_Editor.GeneralSettings.MarkerTooltips) {
-			GetEditor().GetEditorHud().SetCurrentTooltip(null);
+			delete EditorHud.CurrentTooltip;
 		}
 		
 		return super.OnMouseLeave(w, enterW, x, y);
@@ -104,7 +104,7 @@ class EditorObjectMarker: EditorMarker
 		}
 		
 		if (!EditorHud.CurrentMenu) {
-			GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton(m_EditorObject.GetWorldObject().GetType(), GetLayoutRoot(), TooltipPositions.BOTTOM_LEFT));
+			EditorHud.CurrentTooltip = EditorTooltip.CreateOnButton(m_EditorObject.GetWorldObject().GetType(), GetLayoutRoot(), TooltipPositions.BOTTOM_LEFT);
 		}
 	}
 	

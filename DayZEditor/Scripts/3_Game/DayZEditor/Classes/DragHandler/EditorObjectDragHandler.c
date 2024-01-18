@@ -65,7 +65,7 @@ class EditorObjectDragHandler: EditorDragHandler
 	
 	override void OnDragging(out vector transform[4], notnull EditorObject target)
 	{
-		m_Editor.GetEditorHud().SetCurrentTooltip(null);
+		delete m_Editor.GetEditorHud().CurrentTooltip;
 		
 		vector cursor_pos = Editor.CurrentMousePosition;
 		

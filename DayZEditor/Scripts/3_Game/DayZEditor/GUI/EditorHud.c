@@ -1,6 +1,5 @@
 class EditorHud: ScriptView
 {
-	protected bool m_IsBoxSelectActive;
 	protected EditorHudController m_TemplateController;
 		
 	// View Properties
@@ -20,6 +19,7 @@ class EditorHud: ScriptView
 	protected ref EditorTooltip m_CurrentTooltip;
 	
 	protected Widget m_DraggedBar;
+	protected int m_DragX = -1, m_DragY = -1;
 	
 	protected ref ScriptView m_CurrentMenu;
 	
@@ -121,6 +121,12 @@ class EditorHud: ScriptView
 	{
 		super.Update(dt);
 		
+		int x, y;
+		GetScreenSize(x, y);
+		
+		int mouse_x, mouse_y;
+		GetMousePos(mouse_x, mouse_y);
+		
 		if (GetGame().GetInput().LocalPress("UAFire") && !GetWidgetUnderCursor()) {
 			EditorSelectableBase.ClearSelections();
 			return;
@@ -155,6 +161,63 @@ class EditorHud: ScriptView
 			
 			root.Enable(can_execute);			
 		}
+		
+		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK == MB_PRESSED_MASK) && GetGame().GetInput().HasGameFocus() && m_DragX == -1 && m_DragY == -1) {
+			GetMousePos(m_DragX, m_DragY);
+		} 
+		
+		if (m_DragX != -1 && m_DragY != -1) {
+			
+			if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) != MB_PRESSED_MASK) {
+				m_DragX = -1;
+				m_DragY = -1;
+
+				return;
+			}
+			
+			int drag_box_color = GetEditor().GeneralSettings.SelectionColor;
+			
+			int a, r, g, b;
+			InverseARGB(drag_box_color, a, r, g, b);
+			int drag_box_color_fill = ARGB(50, r, g, b);			
+			
+			int current_x, current_y;			
+			GetMousePos(current_x, current_y);
+			// @Sumrak :ANGERY:
+			current_x += 6;
+			
+			EditorCanvas.Clear();
+			EditorObject.ClearSelections();
+			
+			// Draw Drag Box
+			if (Math.AbsInt(m_DragX - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(m_DragY - current_y) > DRAG_BOX_THRESHOLD) {
+				EditorCanvas.DrawLine(m_DragX, m_DragY, current_x, m_DragY, DRAG_BOX_THICKNESS, drag_box_color);
+				EditorCanvas.DrawLine(m_DragX, m_DragY, m_DragX, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+				EditorCanvas.DrawLine(m_DragX, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+				EditorCanvas.DrawLine(current_x, m_DragY, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+				
+				// Handles the fill operation
+				int x_avg = (m_DragX + current_x) / 2;
+				EditorCanvas.DrawLine(x_avg, m_DragY, x_avg, current_y, current_x - m_DragX, drag_box_color_fill); 
+				
+				array<EditorObject> placed_objects = GetEditor().GetPlacedObjects();
+				foreach (EditorObject editor_object: placed_objects) {					
+					float marker_x, marker_y;
+					/*EditorObjectMarker object_marker = editor_object.GetMarker();
+					if (object_marker) {
+						object_marker.GetPos(marker_x, marker_y);
+						
+						//i think only checking if within cone of box select not distance
+						if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {
+							//check if within markerviewdistance to allow selection.
+							if (vector.Distance(editor_object.GetWorldObject().GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.GeneralSettings.MarkerViewDistance) {
+								editor_object.SetSelected(true);
+							}
+						}
+					}*/
+				}		
+			}
+		}
 						
 		// kinda cursed but double inputs. maybe have a handler if you want more ui shit (loooot editor)
 		if (GetEditor().IsInventoryEditorActive() || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
@@ -164,14 +227,7 @@ class EditorHud: ScriptView
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
 			m_DraggedBar.SetColor(COLOR_WHITE);
 			m_DraggedBar = null;
-		}
-		
-		int x, y;
-		GetScreenSize(x, y);
-		
-		int mouse_x, mouse_y;
-		GetMousePos(mouse_x, mouse_y);
-		
+		}		
 		
 		if (m_DraggedBar) {
 			switch (m_DraggedBar.GetParent()) {
@@ -209,13 +265,7 @@ class EditorHud: ScriptView
 		Notification.GetSize(w, h);
 		Notification.SetSize(x - total_bar_width, h);
 				
-		Input input = GetGame().GetInput();
-		if (input.LocalPress("EditorPlaceObjectCommand") && !KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor()) {
-			EditorObject.ClearSelections();
-			DelayedDragBoxCheck();
-		}
-		
-		if (input.LocalPress("EditorToggleCursor")) {
+		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
 			if (!CurrentDialog || !GetEditor().GeneralSettings.LockCameraDuringDialogs) {
 				ShowCursor(!IsCursorVisible());
 			}
@@ -388,76 +438,7 @@ class EditorHud: ScriptView
 	{
 		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.COLOR_A, 0.0, 250);
 	}
-		
-	bool IsSelectionBoxActive()
-	{
-		return m_IsBoxSelectActive;
-	}
 	
-	void DelayedDragBoxCheck()
-	{
-		if (!IsVisible() || !GetGame().GetInput().HasGameFocus()) { 
-			return;
-		}
-
-		int x, y;
-		x += 6;
-		GetMousePos(x, y);
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(_DelayedDragBoxCheck, 0, true, x, y);
-	}
-
-	private void _DelayedDragBoxCheck(int start_x, int start_y)
-	{
-		int drag_box_color = GetEditor().GeneralSettings.SelectionColor;
-		
-		int a, r, g, b;
-		InverseARGB(drag_box_color, a, r, g, b);
-		int drag_box_color_fill = ARGB(50, r, g, b);			
-		
-		int current_x, current_y;
-		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) || !GetGame().GetInput().HasGameFocus()) {	
-			EditorCanvas.Clear();
-			GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(_DelayedDragBoxCheck);
-			return;
-		}
-		
-		GetMousePos(current_x, current_y);
-		// @Sumrak :ANGERY:
-		current_x += 6;
-		
-		EditorCanvas.Clear();
-		EditorObject.ClearSelections();
-		
-		// Draw Drag Box
-		if (Math.AbsInt(start_x - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_BOX_THRESHOLD) {
-			EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, DRAG_BOX_THICKNESS, drag_box_color);
-			EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-			EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-			EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-			
-			// Handles the fill operation
-			int x_avg = (start_x + current_x) / 2;
-			EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, drag_box_color_fill); 
-			
-			array<EditorObject> placed_objects = GetEditor().GetPlacedObjects();
-			foreach (EditorObject editor_object: placed_objects) {					
-				float marker_x, marker_y;
-				/*EditorObjectMarker object_marker = editor_object.GetMarker();
-				if (object_marker) {
-					object_marker.GetPos(marker_x, marker_y);
-					
-					//i think only checking if within cone of box select not distance
-					if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {
-						//check if within markerviewdistance to allow selection.
-						if (vector.Distance(editor_object.GetWorldObject().GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.GeneralSettings.MarkerViewDistance) {
-							editor_object.SetSelected(true);
-						}
-					}
-				}*/
-			}		
-		}
-	}
-
 	void ShowRuleOfThirds(bool state)
 	{
 		if (!state) {
@@ -551,19 +532,8 @@ class EditorHud: ScriptView
 	static ref EditorMenu CurrentMenu;
 	
 	// ToolTip Control
-	protected ref ScriptView CurrentTooltip;
-	void SetCurrentTooltip(ScriptView current_tooltip) 
-	{
-		delete CurrentTooltip;
-		
-		// Dont create a tooltip if conditions are met
-		if (IsSelectionBoxActive()) {
-			return;
-		}
-		
-		CurrentTooltip = current_tooltip;
-	}
-		
+	static ref ScriptView CurrentTooltip;
+
 	// Dialog Control`
 	static ref DialogBase CurrentDialog;
 	
