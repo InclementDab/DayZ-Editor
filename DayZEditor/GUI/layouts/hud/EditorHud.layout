@@ -366,7 +366,7 @@ FrameWidgetClass EditorFrame {
   PanelWidgetClass FileTab {
    ignorepointer 1
    color 0.0824 0.0824 0.0824 1
-   position 360 92
+   position 360 90
    size 1200 42
    hexactpos 1
    vexactpos 1
@@ -415,7 +415,7 @@ FrameWidgetClass EditorFrame {
    ignorepointer 1
    color 0.0941 0.0941 0.0941 1
    position 0 42
-   size 1 49
+   size 1 48
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -441,7 +441,7 @@ FrameWidgetClass EditorFrame {
   FrameWidgetClass Left {
    clipchildren 0
    ignorepointer 1
-   position 0 92
+   position 0 90
    size 360 350
    hexactpos 1
    vexactpos 1
@@ -490,23 +490,22 @@ FrameWidgetClass EditorFrame {
     }
     PanelWidgetClass LeftDragZone {
      ignorepointer 0
-     color 0.1961 0.3922 0.3922 0.502
      position 0 0
-     size 6 1
+     size 2 1
      halign right_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 0
-     style Outline_2px
+     style rover_sim_colorable
     }
    }
   }
   FrameWidgetClass Right {
    clipchildren 0
    ignorepointer 1
-   position 0 92
+   position 0 90
    size 360 350
    halign right_ref
    hexactpos 1
