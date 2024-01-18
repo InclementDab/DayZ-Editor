@@ -197,13 +197,13 @@ class EditorHud: ScriptView
 		if (m_DraggedBar) {
 			switch (m_DraggedBar.GetParent()) {
 				case Right: {
-					Right.SetSize(x - Math.Clamp(mouse_x, x - 720, x - 40), y - 74);
+					Right.SetSize(x - Math.Clamp(mouse_x, x - 720, x - 60), y - 74);
 					m_DraggedBar.SetColor(COLOR_BLUE);
 					break;
 				}
 				
 				case Left: {
-					Left.SetSize(Math.Clamp(mouse_x, 40, 720), y - 74);
+					Left.SetSize(Math.Clamp(mouse_x, 60, 720), y - 74);
 					m_DraggedBar.SetColor(COLOR_BLUE);
 					break;
 				}
