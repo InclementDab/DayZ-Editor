@@ -116,19 +116,7 @@ class EditorTreeItem: ScriptView
 	{
 		Button.SetColor(ARGB(255, 75, 119, 190) * state);
 	}
-		
-	bool IsBlacklistedItem(string item_type)
-	{
-		array<string> blacklist = { "DZ_LightAI", "Man", "Car" };
-		foreach (string blacklist_check: blacklist) {
-			if (GetGame().IsKindOf(item_type, blacklist_check)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-			
+					
 	void SetParentTree(EditorTreeItem parent)
 	{
 		m_Parent = parent;

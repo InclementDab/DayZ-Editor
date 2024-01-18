@@ -14,7 +14,7 @@ class EditorHud: ScriptView
 	
 	TextWidget SessionIdData, UserCountData, EntityCountData;
 	
-	Widget NotificationPanel;
+	Widget Notification;
 	TextWidget NotificationText;
 	
 	protected ref EditorTooltip m_CurrentTooltip;
@@ -109,7 +109,7 @@ class EditorHud: ScriptView
 	{
 		string code = GetEditor().GetCurrentOnlineSession().GetJoinCode();
 		GetGame().CopyToClipboard(code);
-		CreateNotification(string.Format("Code %1 copied to clipboard", code));
+		ShowNotification(string.Format("Code %1 copied to clipboard", code));
 	}
 	
 	void OnLeaveSessionExecute(ButtonCommandArgs args)
@@ -197,10 +197,17 @@ class EditorHud: ScriptView
 		total_bar_width += w;
 		
 		FileTab.GetSize(w, h);
-		FileTab.SetSize(x - total_bar_width, h);
-		
+		FileTab.SetSize(x - total_bar_width, h);		
 		Left.GetSize(w, h);
 		FileTab.SetPos(w, 90);
+		
+		float _;			
+		
+		Notification.GetPos(_, h);
+		Notification.SetPos(w, h);
+		
+		Notification.GetSize(w, h);
+		Notification.SetSize(x - total_bar_width, h);
 				
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("EditorPlaceObjectCommand") && !KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor()) {
@@ -365,15 +372,21 @@ class EditorHud: ScriptView
 		return GetGame().GetUIManager().IsCursorVisible();
 	}
 				
-	void CreateNotification(string text, int color = -4301218, float duration = 4)
+	void ShowNotification(string text, int color = -9137292, float duration = 4.0)
 	{
-		NotificationPanel.SetColor(color);
+		Notification.SetColor(color);
 		NotificationText.SetText(text);
+				
+		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.POSITION_Y, 120.00, 134.00, 30);
+		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.COLOR_A, 0.0, 1.0, 30);
 		
-		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, 90, 100);
-		SEffectManager.PlaySoundOnObject("Notification_SoundSet", GetEditor().GetCamera());
-		
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationPanel.SetPos, (duration * 1000) + 100, false, 0, 70, true);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(HideNotification);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(HideNotification, 1000 * duration);
+	}
+	
+	void HideNotification()
+	{
+		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.COLOR_A, 0.0, 250);
 	}
 		
 	bool IsSelectionBoxActive()

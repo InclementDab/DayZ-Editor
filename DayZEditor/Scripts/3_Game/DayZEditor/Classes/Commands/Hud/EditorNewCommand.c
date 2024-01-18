@@ -21,7 +21,7 @@ class EditorNewCommand: EditorAsyncCommand
 		m_Editor.Clear();
 		m_Editor.SetSaveFile(file_name);
 		
-		GetEditor().GetEditorHud().CreateNotification("New File Created", COLOR_GREEN);
+		GetEditor().GetEditorHud().ShowNotification("New File Created", COLOR_GREEN);
 	}
 		
 	override string GetName() 

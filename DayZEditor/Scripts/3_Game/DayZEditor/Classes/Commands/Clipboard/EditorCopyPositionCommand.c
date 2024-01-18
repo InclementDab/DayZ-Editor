@@ -13,7 +13,7 @@ class EditorCopyPositionCommand: EditorCommand
 			}
 		}
 		
-		GetEditor().GetEditorHud().CreateNotification(string.Format("Copied position data to clipboard!", EditorObject.GetSelectedEditorObjects().Count()), COLOR_GREEN);
+		GetEditor().GetEditorHud().ShowNotification(string.Format("Copied position data to clipboard!", EditorObject.GetSelectedEditorObjects().Count()), COLOR_GREEN);
 		GetGame().CopyToClipboard(copy_string);
 		return true;
 	}

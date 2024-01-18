@@ -76,6 +76,14 @@ WrapSpacerWidgetClass Root {
       }
      }
     }
+    FrameWidgetClass Spacer1 {
+     ignorepointer 1
+     size 6 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+    }
     ImageWidgetClass Icon {
      visible 1
      ignorepointer 1
@@ -93,24 +101,11 @@ WrapSpacerWidgetClass Root {
     }
     FrameWidgetClass Spacer0 {
      ignorepointer 1
-     size 10 1
+     size 6 1
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 0
-     {
-      PanelWidgetClass PanelWidget1 {
-       ignorepointer 1
-       size 1 12
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       style rover_sim_colorable
-      }
-     }
     }
     PanelWidgetClass Button {
      visible 1

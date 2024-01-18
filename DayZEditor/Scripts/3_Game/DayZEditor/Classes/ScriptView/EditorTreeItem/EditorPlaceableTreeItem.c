@@ -1,5 +1,5 @@
 class EditorPlaceableTreeItem: EditorTreeItem
-{	
+{
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		switch (w) {
@@ -10,10 +10,12 @@ class EditorPlaceableTreeItem: EditorTreeItem
 					scroller.GetScreenSize(w_f, h_f);
 					scroller.GetScreenPos(x_p, y_p);
 					
-					//if (!IsBlacklistedItem(m_PlaceableItem.GetName())) {
-						//EditorObjectTooltip tooltip = new EditorObjectTooltip(m_PlaceableItem.CreateObject(vector.Zero, vector.Zero, 1.0, ECE_LOCAL), x_p + w_f + 25, y);
-						//GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
-					//}
+					EditorPlaceableObjectData data = EditorPlaceableObject.Cast(m_Selectable).GetPlaceableObjectData();
+					
+					if (!IsBlacklistedItem(data.GetName())) {
+						EditorObjectTooltip tooltip = new EditorObjectTooltip(data.CreateObject(vector.Zero, vector.Zero, 1.0, ECE_LOCAL), x_p + w_f + 25, y);
+						GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
+					}
 				}
 				
 				break;
@@ -27,11 +29,23 @@ class EditorPlaceableTreeItem: EditorTreeItem
 	{
 		switch (w) {
 			case Button: {
-				//GetEditor().GetEditorHud().SetCurrentTooltip(null);
+				GetEditor().GetEditorHud().SetCurrentTooltip(null);
 				break;
 			}
 		}
 		
 		return super.OnMouseLeave(w, enterW, x, y);
+	}
+	
+	static bool IsBlacklistedItem(string item_type)
+	{
+		array<string> blacklist = { "DZ_LightAI", "Man", "Car" };
+		foreach (string blacklist_check: blacklist) {
+			if (GetGame().IsKindOf(item_type, blacklist_check)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

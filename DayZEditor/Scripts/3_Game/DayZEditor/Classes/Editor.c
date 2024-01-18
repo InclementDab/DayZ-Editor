@@ -40,6 +40,13 @@
 // if today is that day. fix it.
 // and message me your feedback on discord :)
 
+class EditorSounds: Managed
+{
+	static const string HIGHLIGHT = "Highlight_SoundSet";
+	static const string PLOP = "Plop_SoundSet";
+	static const string PLOPLOW = "PlopLow_SoundSet";
+}
+
 
 ref Editor g_Editor;
 Editor GetEditor() 
@@ -351,13 +358,19 @@ class Editor: Managed
 			world_object.Update();
 		}
 	}
+	
+	// EditorSounds is helpful
+	void PlaySound(string sound_set)
+	{
+		SEffectManager.PlaySoundOnObject(sound_set, m_EditorCamera);
+	}
 				
 	void PromptForObjectSelection(ScriptCaller callback)
 	{
 		m_ObjectSelectCallback = callback;
 		
 		if (m_ObjectSelectCallback) {
-			m_EditorHud.CreateNotification("Select a world object");
+			m_EditorHud.ShowNotification("Select a world object");
 		}
 	}
 	
@@ -721,6 +734,8 @@ class Editor: Managed
 			m_CurrentOnlineSession.SetSynchDirty();
 		} 
 		
+		PlaySound(EditorSounds.PLOP);
+		
 		return editor_object;
 	}
 
@@ -747,6 +762,8 @@ class Editor: Managed
 			editor_objects.Insert(editor_object);
 		}
 		
+		PlaySound(EditorSounds.PLOP);
+		
 		return editor_objects;
 	}
 	
@@ -754,6 +771,8 @@ class Editor: Managed
 	{			
 		OnObjectDeleted.Invoke(editor_object);
 		delete editor_object;
+		
+		PlaySound(EditorSounds.PLOPLOW);
 	}
 	
 	void DeleteObjects(notnull array<EditorObject> editor_objects, bool create_undo = true)
@@ -764,6 +783,8 @@ class Editor: Managed
 			m_PlacedObjects.Remove(editor_object.GetUUID());
 			delete editor_object;
 		}
+		
+		PlaySound(EditorSounds.PLOPLOW);
 	}
 	
 	bool HideMapObject(notnull Object map_object, bool create_undo = true)
@@ -1078,12 +1099,12 @@ class Editor: Managed
 		
 		if (error_message != string.Empty) {
 			EditorLog.Warning(error_message);
-			m_EditorHud.CreateNotification(error_message, COLOR_YELLOW);
+			m_EditorHud.ShowNotification(error_message, COLOR_YELLOW);
 			
 			// Disable auto save since we loaded a shit file
 			//Settings.AutoSaveTimer = -1;
 		} else {
-			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()), COLOR_GREEN);
+			m_EditorHud.ShowNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()), COLOR_GREEN);
 		}
 	}
 	

@@ -37,7 +37,7 @@ class EditorDumpSceneCommand: EditorCommand
 		
 		GetGame().CopyToClipboard(camera_data);
 		
-		GetEditor().GetEditorHud().CreateNotification("Camera Data copied to clipboard!");
+		GetEditor().GetEditorHud().ShowNotification("Camera Data copied to clipboard!");
 		return true;
 	}
 
