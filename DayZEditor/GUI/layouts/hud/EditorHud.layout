@@ -16,7 +16,7 @@ FrameWidgetClass EditorFrame {
  {
   CanvasWidgetClass EditorCanvas {
    ignorepointer 1
-   position -0.00086 0.00008
+   position 0.00156 0
    size 1 1
    halign center_ref
    valign center_ref
@@ -26,208 +26,135 @@ FrameWidgetClass EditorFrame {
    vexactsize 0
    priority 239
   }
-  PanelWidgetClass Menu {
+  PanelWidgetClass FileTab {
    ignorepointer 1
-   color 0.1216 0.1216 0.1216 1
-   position 0 0
-   size 1 42
+   color 0.0824 0.0824 0.0824 1
+   position 360 134
+   size 0 26
    hexactpos 1
    vexactpos 1
-   hexactsize 0
+   hexactsize 1
    vexactsize 1
    scaled 0
    style rover_sim_colorable
    {
-    GridSpacerWidgetClass MenuBar {
-     visible 1
+    ScrollWidgetClass "FileTab.Scroller" {
      ignorepointer 1
-     position 50 0
-     size 328 40
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     style Colorable
-     Padding 0
-     Margin 0
-     content_valign center
-     Rows 1
-     {
-      FrameWidgetClass File {
-       ignorepointer 1
-       position 0 0
-       size 124 42
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       {
-        ButtonWidgetClass "File.Button" {
-         visible 1
-         color 0.2745 0.2745 0.2745 1
-         size 0.9 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 0
-         style Default
-         "no focus" 1
-         switch normal
-         {
-          TextWidgetClass "File.Text" {
-           ignorepointer 1
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           text "File"
-           font "gui/fonts/MetronBook"
-           "size to text h" 0
-           "text halign" center
-           "text valign" center
-          }
-         }
-        }
-       }
-      }
-      FrameWidgetClass Edit {
-       ignorepointer 1
-       position 0 0
-       size 110 42
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       {
-        ButtonWidgetClass "Edit.Button" {
-         visible 1
-         color 0.2745 0.2745 0.2745 1
-         size 0.9 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 0
-         style Default
-         "no focus" 1
-         switch normal
-         {
-          TextWidgetClass "Edit.Text" {
-           ignorepointer 1
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           text "Edit"
-           font "gui/fonts/MetronBook"
-           "exact text" 1
-           "size to text h" 0
-           "text halign" center
-           "text valign" center
-          }
-         }
-        }
-       }
-      }
-      FrameWidgetClass View {
-       ignorepointer 1
-       position 0 0
-       size 108 42
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       {
-        ButtonWidgetClass "View.Button" {
-         visible 1
-         color 0.2745 0.2745 0.2745 1
-         size 0.9 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 0
-         style Default
-         "no focus" 0
-         switch normal
-         {
-          TextWidgetClass "View.Text" {
-           ignorepointer 1
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           text "View"
-           font "gui/fonts/MetronBook"
-           "exact text" 1
-           "size to text h" 0
-           "text halign" center
-           "text valign" center
-          }
-         }
-        }
-       }
-      }
-     }
-    }
-    PanelWidgetClass SearchWrapper {
-     visible 1
-     clipchildren 0
-     ignorepointer 1
-     position 0 0
-     size 0.4 42
+     size 1 1
      halign center_ref
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
-     vexactsize 1
+     vexactsize 0
      scaled 0
-     style blank
      {
-      PanelWidgetClass SearchBarPanel {
+      WrapSpacerWidgetClass "FileTab.Wrapper" {
        ignorepointer 1
-       color 0.1569 0.1569 0.1569 1
-       size 0.93 27
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
+       vexactsize 0
+       scaled 0
+       scriptclass "ViewBinding"
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       content_valign center
+       {
+        ScriptParamsClass {
+         Binding_Name "OpenFiles"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  FrameWidgetClass Right {
+   clipchildren 0
+   ignorepointer 1
+   position 0 134
+   size 360 350
+   halign right_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   {
+    ScrollWidgetClass RightScroll {
+     visible 1
+     ignorepointer 1
+     color 0.0588 0.0588 0.0588 0.8627
+     position 0 0
+     size 1 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     style Colorable
+     "Scrollbar H" 1
+     "Scrollbar V" 1
+     "Scrollbar V Left" 1
+     {
+      WrapSpacerWidgetClass RightList {
+       visible 1
+       ignorepointer 1
+       size 720 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       scaled 0
+       fixaspect inside
+       scriptclass "ViewBinding"
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       {
+        ScriptParamsClass {
+         Binding_Name "RightListItems"
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass RightFooter {
+     ignorepointer 1
+     color 0.0588 0.0588 0.0588 0.9804
+     position 0 -32
+     size 1 32
+     halign center_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
+     {
+      ButtonWidgetClass NewFolderButton {
+       position 12 0
+       size 28 28
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
        vexactsize 1
        scaled 0
-       style RoundedPanel_Colorable
+       scriptclass "ViewBinding"
+       style ButtonColorOnSelect
+       "no focus" 1
        {
-        EditBoxWidgetClass SearchBar {
-         color 1 1 1 0.7843
+        ImageWidgetClass NewFolderButtonIcon {
+         ignorepointer 1
          size 1 1
          halign center_ref
          valign center_ref
@@ -236,277 +163,89 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 0
          scaled 0
-         scriptclass "ViewBinding"
-         "no focus" 0
-         text "Search..."
-         font "gui/fonts/MetronBook"
-         {
-          ScriptParamsClass {
-           Binding_Name "Search"
-           Two_Way_Binding 1
-          }
-         }
-        }
-       }
-      }
-      GridSpacerWidgetClass UndoWrapper {
-       clipchildren 1
-       ignorepointer 1
-       position -84 0
-       size 84 42
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       Padding 0
-       Margin 0
-       content_halign center
-       content_valign center
-       Columns 2
-       Rows 1
-       {
-        FrameWidgetClass Undo {
-         ignorepointer 1
-         position 0 0
-         size 0 0
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         {
-          ButtonWidgetClass "Undo.Button" {
-           visible 1
-           size 0.75 0.75
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           style Empty
-           "no focus" 1
-           {
-            ImageWidgetClass "Undo.Icon" {
-             ignorepointer 1
-             color 1 1 1 0.3922
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             image0 "set:icons image:rotate_left"
-             mode blend
-             "src alpha" 1
-             filter 0
-             nocache 0
-            }
-           }
-          }
-         }
-        }
-        FrameWidgetClass Redo {
-         ignorepointer 1
-         position 0 0
-         size 0 0
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         {
-          ButtonWidgetClass "Redo.Button" {
-           visible 1
-           position 0 0
-           size 0.75 0.75
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           style Empty
-           "no focus" 1
-           {
-            ImageWidgetClass "Redo.Icon" {
-             ignorepointer 1
-             color 1 1 1 0.3922
-             position 0 0
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             image0 "set:icons image:rotate_right"
-             mode blend
-             "src alpha" 1
-             filter 0
-             nocache 0
-            }
-           }
-          }
-         }
+         scriptclass "ButtonIcon"
+         image0 "set:icons image:folder_plus"
+         mode additive
+         "src alpha" 1
+         filter 0
         }
        }
       }
      }
     }
-    GridSpacerWidgetClass ExplorerWrapper {
-     ignorepointer 1
-     size 84 42
-     halign right_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     Padding 0
-     Margin 0
-     Columns 2
-     Rows 1
-     {
-      FrameWidgetClass Minimize {
-       ignorepointer 1
-       position 0 0
-       size 0 0
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       {
-        ButtonWidgetClass "Minimize.Button" {
-         visible 1
-         size 0.75 0.75
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 0
-         draggable 0
-         style Empty
-         "no focus" 1
-         {
-          ImageWidgetClass "Minimize.Icon" {
-           ignorepointer 1
-           color 1 1 1 0.3922
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           image0 "set:icons image:minus"
-           mode blend
-           "src alpha" 1
-           filter 0
-           nocache 0
-          }
-         }
-        }
-       }
-      }
-      FrameWidgetClass Exit {
-       ignorepointer 1
-       position 0 0
-       size 0 0
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       {
-        ButtonWidgetClass "Exit.Button" {
-         visible 1
-         size 0.75 0.75
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 0
-         style Empty
-         "no focus" 1
-         {
-          ImageWidgetClass "Exit.Icon" {
-           ignorepointer 1
-           color 1 1 1 0.3922
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           image0 "set:icons image:xmark"
-           mode blend
-           "src alpha" 1
-           filter 0
-           nocache 0
-          }
-         }
-        }
-       }
-      }
-     }
-    }
-    FrameWidgetClass Logo {
-     ignorepointer 1
-     position 4 0
-     size 42 42
+    PanelWidgetClass RightDragZone {
+     ignorepointer 0
+     size 3 1
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
-     vexactsize 1
+     vexactsize 0
      scaled 0
-     {
-      ImageWidgetClass "Logo.Icon" {
-       ignorepointer 1
-       size 0.75 0.75
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 0
-       image0 "set:icons image:shovel_snow"
-       mode blend
-       "src alpha" 1
-       filter 0
-      }
-     }
+     style rover_sim_colorable
     }
-    PanelWidgetClass "Menu.Seperator" {
+   }
+  }
+  FrameWidgetClass Left {
+   clipchildren 0
+   ignorepointer 1
+   position 0 134
+   size 360 350
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   {
+    ScrollWidgetClass LeftScroll {
+     visible 1
      ignorepointer 1
-     color 0.3137 0.3137 0.3137 1
+     color 0.0588 0.0588 0.0588 0.8627
+     position 0 0
      size 1 1
-     halign center_ref
-     valign bottom_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
-     vexactsize 1
+     vexactsize 0
      scaled 0
+     style Colorable
+     "Scrollbar H" 1
+     "Scrollbar V" 1
+     "Scrollbar V Left" 1
+     {
+      WrapSpacerWidgetClass LeftList {
+       visible 1
+       ignorepointer 1
+       size 720 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       scaled 0
+       fixaspect inside
+       scriptclass "ViewBinding"
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       {
+        ScriptParamsClass {
+         Binding_Name "LeftListItems"
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass LeftDragZone {
+     ignorepointer 0
+     position 0 0
+     size 2 1
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
      style rover_sim_colorable
     }
    }
@@ -525,6 +264,7 @@ FrameWidgetClass EditorFrame {
    {
     WrapSpacerWidgetClass "Tools.Wrapper" {
      ignorepointer 1
+     position 0 0
      size 1 1
      hexactpos 1
      vexactpos 1
@@ -1519,199 +1259,472 @@ FrameWidgetClass EditorFrame {
     }
    }
   }
-  PanelWidgetClass FileTab {
+  PanelWidgetClass Menu {
+   clipchildren 0
    ignorepointer 1
-   color 0.0824 0.0824 0.0824 1
-   position 360 134
-   size 0 26
+   color 0.1216 0.1216 0.1216 1
+   position 0 0
+   size 1 42
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
    scaled 0
    style rover_sim_colorable
    {
-    ScrollWidgetClass "FileTab.Scroller" {
-     ignorepointer 1
-     size 1 1
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     scaled 0
-     {
-      WrapSpacerWidgetClass "FileTab.Wrapper" {
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 0
-       scriptclass "ViewBinding"
-       Padding 0
-       Margin 0
-       "Size To Content H" 1
-       content_valign center
-       {
-        ScriptParamsClass {
-         Binding_Name "OpenFiles"
-        }
-       }
-      }
-     }
-    }
-   }
-  }
-  FrameWidgetClass Left {
-   clipchildren 0
-   ignorepointer 1
-   position 0 134
-   size 360 350
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   scaled 0
-   {
-    ScrollWidgetClass LeftScroll {
+    GridSpacerWidgetClass MenuBar {
      visible 1
+     clipchildren 0
      ignorepointer 1
-     color 0.0588 0.0588 0.0588 0.8627
-     position 0 0
-     size 1 1
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     scaled 0
-     style Colorable
-     "Scrollbar H" 1
-     "Scrollbar V" 1
-     "Scrollbar V Left" 1
-     {
-      WrapSpacerWidgetClass LeftList {
-       visible 1
-       ignorepointer 1
-       size 720 1
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 0
-       scaled 0
-       fixaspect inside
-       scriptclass "ViewBinding"
-       Padding 0
-       Margin 0
-       "Size To Content H" 1
-       "Size To Content V" 1
-       {
-        ScriptParamsClass {
-         Binding_Name "LeftListItems"
-        }
-       }
-      }
-     }
-    }
-    PanelWidgetClass LeftDragZone {
-     ignorepointer 0
-     position 0 0
-     size 2 1
-     halign right_ref
-     valign center_ref
+     position 50 0
+     size 328 40
      hexactpos 1
      vexactpos 1
      hexactsize 1
-     vexactsize 0
-     style rover_sim_colorable
-    }
-   }
-  }
-  FrameWidgetClass Right {
-   clipchildren 0
-   ignorepointer 1
-   position 0 134
-   size 360 350
-   halign right_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   scaled 0
-   {
-    ScrollWidgetClass RightScroll {
-     visible 1
-     ignorepointer 1
-     color 0.0588 0.0588 0.0588 0.8627
-     position 0 0
-     size 1 1
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     scaled 0
-     style Colorable
-     "Scrollbar H" 1
-     "Scrollbar V" 1
-     "Scrollbar V Left" 1
-     {
-      WrapSpacerWidgetClass RightList {
-       visible 1
-       ignorepointer 1
-       size 720 1
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 0
-       scaled 0
-       fixaspect inside
-       scriptclass "ViewBinding"
-       Padding 0
-       Margin 0
-       "Size To Content H" 1
-       "Size To Content V" 1
-       {
-        ScriptParamsClass {
-         Binding_Name "RightListItems"
-        }
-       }
-      }
-     }
-    }
-    PanelWidgetClass RightFooter {
-     ignorepointer 1
-     color 0.0588 0.0588 0.0588 0.9804
-     position 0 -32
-     size 1 32
-     halign center_ref
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
      vexactsize 1
      scaled 0
-     style rover_sim_colorable
+     style Colorable
+     Padding 0
+     Margin 0
+     content_valign center
+     Rows 1
      {
-      ButtonWidgetClass NewFolderButton {
-       position 12 0
-       size 28 28
-       halign right_ref
+      FrameWidgetClass File {
+       clipchildren 0
+       inheritalpha 0
+       ignorepointer 1
+       position 0 0
+       size 124 42
+       halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
        scaled 0
-       scriptclass "ViewBinding"
-       style ButtonColorOnSelect
-       "no focus" 1
        {
-        ImageWidgetClass NewFolderButtonIcon {
+        ButtonWidgetClass "File.Button" {
+         visible 1
+         clipchildren 1
+         color 0.2745 0.2745 0.2745 1
+         size 0.9 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style Default
+         "no focus" 1
+         switch normal
+         {
+          TextWidgetClass "File.Text" {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           text "File"
+           font "gui/fonts/MetronBook"
+           "size to text h" 0
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        PanelWidgetClass "File.Menu" {
+         visible 0
+         disabled 0
          ignorepointer 1
+         color 0.0588 0.0588 0.0588 1
+         position 0 1
+         size 274 478
+         hexactpos 0
+         vexactpos 0
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         style rover_sim_colorable
+         {
+          ImageWidgetClass "File.Panel" {
+           visible 0
+           ignorepointer 1
+           color 0.098 0.098 0.098 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 0
+           vexactpos 0
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           fixaspect outside
+           imageTexture "{6FE68A91E67552D5}DayZExpansion/Core/GUI/textures/expansion_icon.edds"
+           mode blend
+           "src alpha" 1
+           "clamp mode" invalid
+           "stretch mode" invalid
+           filter 0
+          }
+          GridSpacerWidgetClass "File.Wrapper" {
+           visible 1
+           ignorepointer 1
+           size 1 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           style Empty
+           "Size To Content H" 1
+           "Size To Content V" 1
+           content_halign center
+           Columns 1
+           {
+            FrameWidgetClass "File.New" {
+             ignorepointer 1
+             position 0 0
+             size 1 56
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scaled 0
+             {
+              ButtonWidgetClass "File.New.Button" {
+               visible 1
+               color 0.2745 0.2745 0.2745 1
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               scaled 0
+               style Default
+               "no focus" 1
+               switch normal
+               {
+                TextWidgetClass "File.New.Text" {
+                 ignorepointer 1
+                 position 57 0
+                 size 208 48
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 text "New"
+                 font "gui/fonts/MetronBook"
+                 "exact text" 1
+                 "size to text h" 1
+                 "text valign" center
+                }
+                ImageWidgetClass "File.New.Icon" {
+                 ignorepointer 1
+                 color 1 1 1 0.3922
+                 position 12 0
+                 size 30 30
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 image0 "set:icons image:file"
+                 mode blend
+                 "src alpha" 1
+                 filter 0
+                 nocache 0
+                }
+               }
+              }
+             }
+            }
+            FrameWidgetClass "File.New0" {
+             ignorepointer 1
+             position 0 0
+             size 1 56
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scaled 0
+             {
+              ButtonWidgetClass "File.New.Button0" {
+               visible 1
+               color 0.2745 0.2745 0.2745 1
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               scaled 0
+               style Default
+               "no focus" 1
+               switch normal
+               {
+                TextWidgetClass "File.New.Text0" {
+                 ignorepointer 1
+                 position 57 0
+                 size 208 48
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 text "Open"
+                 font "gui/fonts/MetronBook"
+                 "exact text" 1
+                 "size to text h" 1
+                 "text valign" center
+                }
+                ImageWidgetClass "File.New.Icon0" {
+                 ignorepointer 1
+                 color 1 1 1 0.3922
+                 position 12 0
+                 size 30 30
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 image0 "set:icons image:file"
+                 mode blend
+                 "src alpha" 1
+                 filter 0
+                 nocache 0
+                }
+               }
+              }
+             }
+            }
+            FrameWidgetClass "File.New1" {
+             ignorepointer 1
+             position 0 0
+             size 1 56
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scaled 0
+             {
+              ButtonWidgetClass "File.New.Button1" {
+               visible 1
+               color 0.2745 0.2745 0.2745 1
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               scaled 0
+               style Default
+               "no focus" 1
+               switch normal
+               {
+                TextWidgetClass "File.New.Text1" {
+                 ignorepointer 1
+                 position 57 0
+                 size 208 48
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 text "Save"
+                 font "gui/fonts/MetronBook"
+                 "exact text" 1
+                 "size to text h" 1
+                 "text valign" center
+                }
+                ImageWidgetClass "File.New.Icon1" {
+                 ignorepointer 1
+                 color 1 1 1 0.3922
+                 position 12 0
+                 size 30 30
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 image0 "set:icons image:file"
+                 mode blend
+                 "src alpha" 1
+                 filter 0
+                 nocache 0
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+          TextWidgetClass F {
+           ignorepointer 1
+           color 1 1 1 0.0392
+           size 314 674
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "F"
+           font "gui/fonts/sdf_MetronBook72"
+           "outline size" 1
+           "outline color" 1 1 1 0.0392
+           "exact text" 0
+           "exact text size" 72
+          }
+         }
+        }
+       }
+      }
+      FrameWidgetClass Edit {
+       ignorepointer 1
+       position 0 0
+       size 110 42
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        ButtonWidgetClass "Edit.Button" {
+         visible 1
+         color 0.2745 0.2745 0.2745 1
+         size 0.9 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style Default
+         "no focus" 1
+         switch normal
+         {
+          TextWidgetClass "Edit.Text" {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           text "Edit"
+           font "gui/fonts/MetronBook"
+           "exact text" 1
+           "size to text h" 0
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+       }
+      }
+      FrameWidgetClass View {
+       ignorepointer 1
+       position 0 0
+       size 108 42
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        ButtonWidgetClass "View.Button" {
+         visible 1
+         color 0.2745 0.2745 0.2745 1
+         size 0.9 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style Default
+         "no focus" 0
+         switch normal
+         {
+          TextWidgetClass "View.Text" {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           text "View"
+           font "gui/fonts/MetronBook"
+           "exact text" 1
+           "size to text h" 0
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass SearchWrapper {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     position 0 0
+     size 0.4 42
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style blank
+     {
+      PanelWidgetClass SearchBarPanel {
+       ignorepointer 1
+       color 0.1569 0.1569 0.1569 1
+       size 0.93 27
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scaled 0
+       style RoundedPanel_Colorable
+       {
+        EditBoxWidgetClass SearchBar {
+         color 1 1 1 0.7843
          size 1 1
          halign center_ref
          valign center_ref
@@ -1720,24 +1733,276 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 0
          scaled 0
-         scriptclass "ButtonIcon"
-         image0 "set:icons image:folder_plus"
-         mode additive
-         "src alpha" 1
-         filter 0
+         scriptclass "ViewBinding"
+         "no focus" 0
+         text "Search..."
+         font "gui/fonts/MetronBook"
+         {
+          ScriptParamsClass {
+           Binding_Name "Search"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
+      GridSpacerWidgetClass UndoWrapper {
+       clipchildren 1
+       ignorepointer 1
+       position -84 0
+       size 84 42
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       content_halign center
+       content_valign center
+       Columns 2
+       Rows 1
+       {
+        FrameWidgetClass Undo {
+         ignorepointer 1
+         position 0 0
+         size 0 0
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          ButtonWidgetClass "Undo.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           {
+            ImageWidgetClass "Undo.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:rotate_left"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Redo {
+         ignorepointer 1
+         position 0 0
+         size 0 0
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         {
+          ButtonWidgetClass "Redo.Button" {
+           visible 1
+           position 0 0
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           {
+            ImageWidgetClass "Redo.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             position 0 0
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:icons image:rotate_right"
+             mode blend
+             "src alpha" 1
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
         }
        }
       }
      }
     }
-    PanelWidgetClass RightDragZone {
-     ignorepointer 0
-     size 3 1
+    GridSpacerWidgetClass ExplorerWrapper {
+     ignorepointer 1
+     size 84 42
+     halign right_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     Padding 0
+     Margin 0
+     Columns 2
+     Rows 1
+     {
+      FrameWidgetClass Minimize {
+       ignorepointer 1
+       position 0 0
+       size 0 0
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        ButtonWidgetClass "Minimize.Button" {
+         visible 1
+         size 0.75 0.75
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         draggable 0
+         style Empty
+         "no focus" 1
+         {
+          ImageWidgetClass "Minimize.Icon" {
+           ignorepointer 1
+           color 1 1 1 0.3922
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           image0 "set:icons image:minus"
+           mode blend
+           "src alpha" 1
+           filter 0
+           nocache 0
+          }
+         }
+        }
+       }
+      }
+      FrameWidgetClass Exit {
+       ignorepointer 1
+       position 0 0
+       size 0 0
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        ButtonWidgetClass "Exit.Button" {
+         visible 1
+         size 0.75 0.75
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style Empty
+         "no focus" 1
+         {
+          ImageWidgetClass "Exit.Icon" {
+           ignorepointer 1
+           color 1 1 1 0.3922
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           image0 "set:icons image:xmark"
+           mode blend
+           "src alpha" 1
+           filter 0
+           nocache 0
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    FrameWidgetClass Logo {
+     ignorepointer 1
+     position 4 0
+     size 42 42
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
-     vexactsize 0
+     vexactsize 1
+     scaled 0
+     {
+      ImageWidgetClass "Logo.Icon" {
+       ignorepointer 1
+       size 0.75 0.75
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       image0 "set:icons image:shovel_snow"
+       mode blend
+       "src alpha" 1
+       filter 0
+      }
+     }
+    }
+    PanelWidgetClass "Menu.Seperator" {
+     ignorepointer 1
+     color 0.3137 0.3137 0.3137 1
+     size 1 1
+     halign center_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
      scaled 0
      style rover_sim_colorable
     }
