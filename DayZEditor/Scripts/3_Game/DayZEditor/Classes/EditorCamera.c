@@ -125,7 +125,7 @@ class EditorCamera: ScriptedCamera
 		if (GetEditor().GetCurrentControl() != this) {
 			return;
 		}
-		
+				
 		vector original_position_unchanged;
 		vector transform[4];
 		GetTransform(transform);

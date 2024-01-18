@@ -254,8 +254,6 @@ class Editor: Managed
 				command.Button.Enable(command.CanExecute());
 				//root.SetAlpha(alpha);
 			}
-				
-			
 		}
 		
 		if (GetGame().GetInput().LocalPress("UAFire")) {

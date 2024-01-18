@@ -3,7 +3,7 @@ class EditorHud: ScriptView
 	protected EditorHudController m_TemplateController;
 		
 	// View Properties
-	Widget Left, Right, FileTab;
+	Widget Left, Right, Inner, Tools, Menu;
 	
 	// Layout Elements
 	Widget LeftDragZone, RightDragZone;
@@ -157,21 +157,9 @@ class EditorHud: ScriptView
 			SessionIdData.SetText(string.Empty);
 			UserCountData.SetText(string.Empty);
 		}
-		
-		if (GetGame().GetInput().LocalPress("UAFire") && GetGame().GetInput().HasGameFocus()) {
-			GetMousePos(m_DragX, m_DragY);
-		} 
-		
+				
 		Whiteboard.Clear();
-
-		if (m_DragX != -1 && m_DragY != -1) {
-			
-			if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) != MB_PRESSED_MASK) {
-				m_DragX = -1;
-				m_DragY = -1;
-				return;
-			}
-												
+		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) == MB_PRESSED_MASK && m_DragX != -1 && m_DragY != -1) {												
 			// Handles the fill operation
 			int x_avg = (m_DragX + mouse_x) / 2;
 			Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE); 
@@ -187,6 +175,10 @@ class EditorHud: ScriptView
 					}
 				}				
 			}
+		}
+
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+			m_DragX = -1; m_DragY = -1;
 		}
 							
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
@@ -211,25 +203,23 @@ class EditorHud: ScriptView
 		}
 		
 		float w, h;
-		float total_bar_width;
+		float inner_width = x;
+		float inner_height = y;
 		Left.GetSize(w, h);
-		total_bar_width += w;
+		float inner_x = w;
+		
+		inner_width -= w;
 		Right.GetSize(w, h);
-		total_bar_width += w;
+		inner_width -= w;
 		
-		FileTab.GetSize(w, h);
-		FileTab.SetSize(x - total_bar_width, h);		
-		Left.GetSize(w, h);
-		FileTab.SetPos(w, 90);
+		Tools.GetSize(w, h);
+		float inner_y = h;
+		inner_height -= h;
 		
-		float _;			
+		// Set size of inner
+		Inner.SetSize(inner_width, inner_height);
+		Inner.SetPos(inner_x, inner_y);	
 		
-		Notification.GetPos(_, h);
-		Notification.SetPos(w, h);
-		
-		Notification.GetSize(w, h);
-		Notification.SetSize(x - total_bar_width, h);
-				
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
 			ShowCursor(!IsCursorVisible());
 		}
@@ -242,7 +232,6 @@ class EditorHud: ScriptView
 	
 	override bool OnFocus(Widget w, int x, int y)
 	{
-		Print(w);
 		return super.OnFocus(w, x, y);
 	}
 
@@ -254,13 +243,16 @@ class EditorHud: ScriptView
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		Print(w);
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
 				m_DraggedBar = w;
 				break;
 			}
+		}
+		
+		if (!w) {
+			m_DragX = x; m_DragY = y;
 		}
 		
 		return super.OnMouseButtonDown(w, x, y, button);
@@ -390,7 +382,7 @@ class EditorHud: ScriptView
 		Notification.SetColor(color);
 		NotificationText.SetText(text);
 				
-		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.POSITION_Y, 120.00, 134.00, 30);
+		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.POSITION_Y, 0, 25, 30);
 		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.COLOR_A, 0.0, 1.0, 30);
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(HideNotification);
