@@ -7,6 +7,7 @@ class EditorHudController: ViewController
 	
 	string Search;
 	int JoinCode;
+	string RotatingJoinCode;
 	
 	StringEvaluater PrecisionLevel = "0.5";
 	

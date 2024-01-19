@@ -75,10 +75,15 @@ class EditorHud: ScriptView
 		if (GetGame().GetInput().LocalPress("UAFire") && !GetWidgetUnderCursor()) {
 			EditorSelectableBase.ClearSelections();
 		}
+		
+		if (GetEditor().GetCurrentOnlineSession()) {
+			m_TemplateController.RotatingJoinCode = GetEditor().GetCurrentOnlineSession().GetJoinCode();
+			m_TemplateController.NotifyPropertyChanged("RotatingJoinCode");
+		}
 				
-		EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
+		//EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
 		//Print(GetEditor().GetCurrentOnlineSession());
-		OnlineServerDetails.Show(GetEditor().GetCurrentOnlineSession() != null);
+		//OnlineServerDetails.Show(GetEditor().GetCurrentOnlineSession() != null);
 						
 		Whiteboard.Clear();
 		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) == MB_PRESSED_MASK && m_DragX != -1 && m_DragY != -1) {												
@@ -154,6 +159,7 @@ class EditorHud: ScriptView
 	
 	void OnWebExecute(ButtonCommandArgs args)
 	{
+		Print(OnlineOutline);
 		OnlineOutline.Show(!OnlineOutline.IsVisible());
 	}
 		

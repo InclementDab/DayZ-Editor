@@ -2497,6 +2497,7 @@ FrameWidgetClass Root {
                vexactpos 1
                hexactsize 1
                vexactsize 1
+               scriptclass "ViewBinding"
                style Empty
                "no focus" 1
                {
@@ -2521,18 +2522,18 @@ FrameWidgetClass Root {
                    vexactpos 1
                    hexactsize 0
                    vexactsize 0
-                   scriptclass "ViewBinding"
+                   scriptclass ""
                    text "Join"
                    font "gui/fonts/MetronBook"
                    "text halign" center
                    "text valign" center
-                   {
-                    ScriptParamsClass {
-                     Relay_Command "OnJoinExecute"
-                    }
-                   }
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 Relay_Command "OnJoinExecute"
                 }
                }
               }
@@ -2543,6 +2544,8 @@ FrameWidgetClass Root {
                vexactpos 1
                hexactsize 1
                vexactsize 1
+               draggable 0
+               scriptclass "ViewBinding"
                {
                 PanelWidgetClass "Online.Host.Button.Panel" {
                  ignorepointer 1
@@ -2565,18 +2568,18 @@ FrameWidgetClass Root {
                    vexactpos 1
                    hexactsize 0
                    vexactsize 0
-                   scriptclass "ViewBinding"
+                   scriptclass ""
                    text "Host..."
                    font "gui/fonts/MetronBook"
                    "text halign" center
                    "text valign" center
-                   {
-                    ScriptParamsClass {
-                     Relay_Command "OnHostExecute"
-                    }
-                   }
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 Relay_Command "OnHostExecute"
                 }
                }
               }
