@@ -119,8 +119,6 @@ foreach (DirectoryInfo directory in source_directory.EnumerateDirectories()) {
     dds_stream.Close();
 
     Console.WriteLine($"Output to {output_file} complete, took {(DateTime.Now - dds_start).TotalSeconds}");
-
-    return;
 }
 
 void ProgressChanged(object sender, ProgressEventArgs e)
