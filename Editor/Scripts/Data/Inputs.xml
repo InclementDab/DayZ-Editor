@@ -52,7 +52,7 @@
             <input name="EditorExportToVPP" loc="#STR_EDITOR_CMD_EXPORT_VPP (*.vpp)"/>
             <input name="EditorHelpCommand" loc="#STR_EDITOR_HELP"/>
             <input name="EditorDeleteCommand" loc="#STR_EDITOR_DELETE"/>
-            <input name="EditorUndoCommand" loc="#STR_EDITOR_UNDO"/>
+            <input name="UndoCommand" loc="#STR_EDITOR_UNDO"/>
             <input name="EditorToggleLightCommand" loc="Toggle Light"/>
             <input name="EditorSnapToSurfaceCommand" loc="#STR_EDITOR_SNAP_TO_SURFACE"/>
             <input name="EditorBrushPropertiesCommand" loc="#STR_EDITOR_CMD_EDIT_BRUSH"/>
@@ -72,7 +72,7 @@
             <input name="EditorImportFromTerrainBuilder" loc="#STR_EDITOR_CMD_IMPORT_TB (*.txt)"/>
             <input name="EditorOpenWikiCommand" loc="#STR_EDITOR_WIKI"/>
             <input name="EditorSnapCommand" loc="#STR_EDITOR_CMD_SNAPPING_MODE"/>
-            <input name="EditorRedoCommand" loc="#STR_EDITOR_REDO"/>
+            <input name="RedoCommand" loc="#STR_EDITOR_REDO"/>
             <input name="EditorBrushDensityCommand" loc="#STR_EDITOR_BRUSH_DENSITY"/>
             <input name="EditorFindAndReplaceCommand" loc="#STR_EDITOR_CMD_FIND_AND_REPLACE"/>
             <input name="EditorOpenRecentCommand" loc="#STR_EDITOR_OPEN_RECENT"/>
@@ -162,7 +162,7 @@
                 <input name="EditorExportToVPP"/>
                 <input name="EditorHelpCommand"/>
                 <input name="EditorDeleteCommand"/>
-                <input name="EditorUndoCommand"/>
+                <input name="UndoCommand"/>
                 <input name="EditorToggleLightCommand"/>
                 <input name="EditorSnapToSurfaceCommand"/>
                 <input name="EditorBrushPropertiesCommand"/>
@@ -182,7 +182,7 @@
                 <input name="EditorImportFromTerrainBuilder"/>
                 <input name="EditorOpenWikiCommand"/>
                 <input name="EditorSnapCommand"/>
-                <input name="EditorRedoCommand"/>
+                <input name="RedoCommand"/>
                 <input name="EditorBrushDensityCommand"/>
                 <input name="EditorFindAndReplaceCommand"/>
                 <input name="EditorOpenRecentCommand"/>
@@ -389,10 +389,8 @@
         <input name="EditorDeleteCommand">
             <btn name="kDelete"/>
         </input>
-        <input name="EditorUndoCommand">
-            <btn name="kLControl">
-                <btn name="kZ"/>
-            </btn>
+        <input name="UndoCommand">
+            <btn name="kZ"/>
         </input>
         <input name="EditorToggleLightCommand">
             <btn name="kLControl">
@@ -441,10 +439,8 @@
                 <btn name="k3"/>
             </btn>
         </input>
-        <input name="EditorRedoCommand">
-            <btn name="kLControl">
-                <btn name="kY"/>
-            </btn>
+        <input name="RedoCommand">
+            <btn name="kY"/>
         </input>
         <input name="EditorSelectAllCommand">
             <btn name="kLControl">

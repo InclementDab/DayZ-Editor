@@ -6,24 +6,42 @@ enum ShortcutKeyType
 	TOGGLE
 };
 
+[RegisterCommand(UndoCommand)]
+class UndoCommand: Command
+{
+	override void Execute(bool state) 
+	{
+		Print("UNDO");
+		GetEditor().Undo();
+	}
+	
+	override bool CanExecute()
+	{
+		return GetEditor().CanUndo();
+	}
+}
+
+[RegisterCommand(RedoCommand)]
+class RedoCommand: Command
+{
+	override void Execute(bool state) 
+	{
+		Print("REDO");
+		GetEditor().Redo();
+	}
+	
+	override bool CanExecute()
+	{
+		return GetEditor().CanRedo();
+	}
+}
+
 class Command: Managed
 {
-	Widget Button, Icon;
-	string Text;
-
 	void Execute(bool state) 
 	{
 	}
-	
-	void OnWidgetScriptInit(Widget w)
-	{
-		Button = ScriptView.FindWidgetClass(w, "Button");		
-		Icon = ImageWidget.Cast(ScriptView.FindWidgetClass(w, "Icon"));
-		if (Icon) {
 			
-		}
-	}
-		
 	bool CanExecute()
 	{
 		return true;

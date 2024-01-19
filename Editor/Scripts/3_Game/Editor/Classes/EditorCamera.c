@@ -46,6 +46,11 @@ class EditorCamera: ScriptedCamera
 	
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
+		// We are holding control down, essentially
+		if (GetEditor().IsProcessingCommand()) {
+			return;
+		}
+		
 		vector transform[4];
 		GetTransform(transform);
 		

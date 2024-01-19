@@ -275,14 +275,7 @@ class EditorHud: ScriptView
 				}
 			}*/
 		}
-				
-		Widget icon = FindWidgetClass(w, "Icon");
-		if (icon) {
-			WidgetAnimator.Animate(icon, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
-		}
-		
-		icon = FindWidgetClass(w, "Arrow");
-		
+					
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
@@ -298,10 +291,7 @@ class EditorHud: ScriptView
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		Widget icon = FindWidgetClass(w, "Icon");
-		if (icon) {
-			WidgetAnimator.Animate(icon, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 100);
-		}
+
 		
 		switch (w) {
 			case LeftDragZone:

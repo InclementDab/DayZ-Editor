@@ -148,8 +148,7 @@ class Editor: Managed
 	ref map<string, ref EditorObject> m_PlacedObjects = new map<string, ref EditorObject>();
 			
 	
-	ref map<typename, ref Command> Commands = new map<typename, ref Command>();
-	
+	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
 	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
 	
 	void Editor() 
@@ -193,7 +192,7 @@ class Editor: Managed
 				continue;
 			}
 			
-			Commands[command_type] = command;
+			m_Commands[command_type] = command;
 			
 			if (command.GetShortcut() != string.Empty) {
 				m_CommandShortcutMap[command.GetShortcut()] = command;
@@ -234,22 +233,49 @@ class Editor: Managed
 			m_DragOffset = position.InvMultiply4(transform);
 		}
 	}
-	
-	void Update(float timeslice)
-	{
-		if (ShouldProcessInput()) {
-			ProcessInput(GetGame().GetInput());
-		}
 		
-		foreach (Command command: Commands) {			
-			if (command.Button) {
-				float alpha = Ternary<float>.If(command.CanExecute(), 1.0, 0.25);
-				command.Button.Enable(command.CanExecute());
-				//root.SetAlpha(alpha);
+	void Update(float timeslice)
+	{		
+		if (IsProcessingCommand()) {
+			foreach (string input_name, Command command: m_CommandShortcutMap) {		
+				if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
+					continue;
+				}
+						
+				if (!command || !command.CanExecute()) {
+					continue;
+				}
+				
+				switch (command.GetShortcutType()) {
+					case ShortcutKeyType.PRESS: {
+						if (GetGame().GetInput().LocalPress(input_name)) {
+							command.Execute(true);
+						}
+						
+						break;
+					}
+					
+					case ShortcutKeyType.DOUBLE: {
+						if (GetGame().GetInput().LocalDbl(input_name)) {
+							command.Execute(true);
+						}
+						
+						break;
+					}
+					
+					case ShortcutKeyType.HOLD: {
+						if (GetGame().GetInput().LocalHold(input_name)) {
+							command.Execute(true);
+						}
+						
+						break;
+					}
+				}
 			}
 		}
 		
-		if (GetGame().GetInput().LocalPress("UAFire")) {
+		
+		if (GetGame().GetInput().LocalPress_ID(UAFire)) {
 			Object object = GetObjectUnderCursor();
 			if (object && m_WorldObjectIndex[object.GetID()]) {
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CheckForDragging, 100, false, object);
@@ -493,9 +519,11 @@ class Editor: Managed
 		}
 	}
 	
-	bool ShouldProcessInput()
+	//! DayZ doesnt support 3 deep keybinding. LCTRL + SHIFT + S etc... 
+	// so all commands must be appended with ctrl - this is standard windows expectation anyway
+	bool IsProcessingCommand()
 	{
-		return (!GetDayZGame().IsLeftCtrlDown() && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget));
+		return (GetDayZGame().IsLeftCtrlDown() && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && !GetFocus());
 	}
 	
 	bool DoCursorRaycast(out vector position, float max_distance = 3000, Object ignore_object = null)
@@ -630,7 +658,7 @@ class Editor: Managed
 		m_EditorHud = new EditorHud();
 		return m_EditorHud;
 	}
-	
+		
 	void Undo()
 	{
 		EditorLog.Trace("EditorObjectManager::Undo");
@@ -1262,6 +1290,11 @@ class Editor: Managed
 	EditorProfileSettings GetProfileSettings()
 	{
 		return EditorProfileSettings.Cast(GetDayZGame().GetProfileSetting(EditorProfileSettings));
+	}
+	
+	Command GetCommand(typename command)
+	{
+		return m_Commands[command];
 	}
 	
 	static void RecursiveGetFiles(string directory, inout array<ref CF_File> files, string pattern = "*")
