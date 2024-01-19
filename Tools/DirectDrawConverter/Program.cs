@@ -8,7 +8,7 @@ using Svg;
 
 
 const int IMAGE_MAX_SIZE = 512; // this is the space allocated to each image
-const int IMAGE_SIZE = 256;
+const int IMAGE_SIZE = 64;
 
 string folder_output = "P:\\Editor\\GUI\\icons";
 DirectoryInfo dest_directory = Directory.CreateDirectory(folder_output);
@@ -107,9 +107,9 @@ foreach (DirectoryInfo directory in source_directory.EnumerateDirectories()) {
     Stream dds_stream = new FileStream(output_file, FileMode.CreateNew);
     DdsFile.Save(
         dds_stream,
-        DdsFileFormat.BC3,
+        DdsFileFormat.BC1,
         DdsErrorMetric.Perceptual,
-        BC7CompressionSpeed.Medium,
+        BC7CompressionSpeed.Slow,
         false,
         false,
         ResamplingAlgorithm.Bilinear,
@@ -119,6 +119,8 @@ foreach (DirectoryInfo directory in source_directory.EnumerateDirectories()) {
     dds_stream.Close();
 
     Console.WriteLine($"Output to {output_file} complete, took {(DateTime.Now - dds_start).TotalSeconds}");
+
+    return;
 }
 
 void ProgressChanged(object sender, ProgressEventArgs e)
@@ -126,3 +128,86 @@ void ProgressChanged(object sender, ProgressEventArgs e)
     Console.Clear();
     Console.WriteLine($"{e.Percent}%");
 }    
+
+/*
+static void EDDSToDDS(string source_file, string output_file)
+{
+    List<int> copy_blocks = new List<int>();
+    List<int> LZ4_blocks = new List<int>();
+    List<byte> Decoded_blocks = new List<byte>();
+
+    var find_blocks = (BinaryReader reader) => {
+        while (true) {
+            byte[] blocks = reader.ReadBytes(4);
+            char[] dd = System.Text.Encoding.UTF8.GetChars(blocks);
+
+            string block = new string(dd);
+            int size = reader.ReadInt32();
+            Console.WriteLine(block);
+            switch (block) {
+                case "COPY": {
+                    Console.WriteLine(size);
+                    copy_blocks.Add(size);
+                    break;
+                }
+                case "LZ4": {
+                    Console.WriteLine(size);
+                    LZ4_blocks.Add(size); 
+                    break;
+                }
+
+                default: reader.BaseStream.Seek(-8, SeekOrigin.Current); return;
+            }
+        }
+    };
+
+    using (var reader = new BinaryReader(File.Open(source_file, FileMode.Open))) {
+        byte[] dds_header = reader.ReadBytes(128);
+        byte[] dds_header_dx10 = {};
+
+        if (dds_header[84]=='D' && dds_header[85] == 'X' && dds_header[86] == '1' && dds_header[87] == '0') {
+            dds_header_dx10 = reader.ReadBytes(20);
+        }
+
+        find_blocks(reader);
+
+        foreach (int count in copy_blocks) {
+            byte[] buff = reader.ReadBytes(count);
+            Decoded_blocks.InsertRange(0, buff);
+        }
+
+        foreach (int Length in LZ4_blocks) {
+            uint size = reader.ReadUInt32();
+            byte[] target = new byte[size];
+
+            int num = 0;
+            LZ4ChainDecoder lz4ChainDecoder = new LZ4ChainDecoder(65536, 0);
+            int count1;
+            int idx = 0;
+            for (; num < Length - 4; num += (count1 + 4)) {
+                count1 = reader.ReadInt32() & int.MaxValue;
+                byte[] numArray = reader.ReadBytes(count1);
+                byte[] buffer = new byte[65536];
+                int count2 = 0;
+                LZ4EncoderExtensions.DecodeAndDrain((ILZ4Decoder)lz4ChainDecoder, numArray, 0, count1, buffer, 0, 65536, out count2);
+
+                Array.Copy(buffer, 0, target, idx, count2);
+
+                idx += count2;
+            }
+
+            Decoded_blocks.InsertRange(0, target);
+        }
+
+        if (dds_header_dx10!= null) {
+            Decoded_blocks.InsertRange(0, dds_header_dx10);
+        }
+
+        Decoded_blocks.InsertRange(0, dds_header);
+        byte[] final = Decoded_blocks.ToArray();
+
+        using (var wr = File.Create(output_file)) {
+            wr.Write(final, 0, final.Length);
+        }
+    }
+}*/

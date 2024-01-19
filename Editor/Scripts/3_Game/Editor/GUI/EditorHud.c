@@ -154,6 +154,11 @@ class EditorHud: ScriptView
 		
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
 			ShowCursor(!IsCursorVisible());
+			
+			
+			if (IsCursorVisible()) {
+				SetCursorWidget(GetGame().GetWorkspace().CreateWidgets("Editor\\GUI\\layouts\\loading.layout"));
+			}
 		}
 	}
 	
