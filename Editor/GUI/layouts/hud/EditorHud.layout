@@ -364,7 +364,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:icons image:file"
+             image0 "set:regular image:file"
              mode blend
              "src alpha" 1
              filter 0
