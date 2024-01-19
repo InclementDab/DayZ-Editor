@@ -6,6 +6,7 @@ class EditorHudController: ViewController
 	int OnlineUserCount;
 	
 	string Search;
+	int JoinCode;
 	
 	StringEvaluater PrecisionLevel = "0.5";
 	
@@ -29,6 +30,7 @@ class EditorHudController: ViewController
 
 	float BrushRadius = 65;
 	float BrushDensity = 0.25;
+	
 	
 	bool BrushToggleButtonState;
 	int BrushTypeSelection;

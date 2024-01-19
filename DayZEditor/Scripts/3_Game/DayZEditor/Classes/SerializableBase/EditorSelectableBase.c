@@ -52,9 +52,9 @@ class EditorSelectableBase: SerializableBase
 		m_IsLocked = locked;
 		
 		if (m_IsLocked) {
-			OnLockChanged.Insert(this);
+			LockedObjects.Insert(this);
 		} else {
-			OnLockChanged.RemoveItem(this);
+			LockedObjects.RemoveItem(this);
 		}
 				
 		OnLockChanged.Invoke(this);

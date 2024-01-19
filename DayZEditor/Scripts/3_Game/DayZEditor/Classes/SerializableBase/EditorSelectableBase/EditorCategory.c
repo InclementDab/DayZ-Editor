@@ -16,7 +16,7 @@ class EditorCategory: EditorSelectableBase
 	{
 		super.SetLocked(locked);
 		
-		m_TreeItem.SetIcon();
+		//m_TreeItem.SetIcon();
 	}
 	
 	override string GetName()

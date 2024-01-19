@@ -11,14 +11,16 @@ class EditorHud: ScriptView
 	CanvasWidget Whiteboard;
 	ScrollWidget LeftScroll, RightScroll;
 	
-	TextWidget SessionIdData, UserCountData, EntityCountData;
+	Widget OnlineOutline, OnlineServerDetails;
+	
+	TextWidget Session, UserCountData, EntityCountData;
 	
 	Widget Notification;
 	TextWidget NotificationText;
 	
 	protected Widget m_DraggedBar;
 	protected int m_DragX = -1, m_DragY = -1;
-	
+		
 	protected ref ScriptView m_CurrentMenu;
 	
 	protected ref map<string, ref EditorCategory> m_PlacedCategories = new map<string, ref EditorCategory>();
@@ -58,6 +60,113 @@ class EditorHud: ScriptView
 				m_PlaceableCategories[category.GetName()].AddChild(placeable_object);
 			}
 		}	
+	}
+	
+	override void Update(float dt)
+	{
+		super.Update(dt);
+		
+		int x, y;
+		GetScreenSize(x, y);
+		
+		int mouse_x, mouse_y;
+		GetMousePos(mouse_x, mouse_y);
+		
+		if (GetGame().GetInput().LocalPress("UAFire") && !GetWidgetUnderCursor()) {
+			EditorSelectableBase.ClearSelections();
+		}
+				
+		EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
+		//Print(GetEditor().GetCurrentOnlineSession());
+		OnlineServerDetails.Show(GetEditor().GetCurrentOnlineSession() != null);
+						
+		Whiteboard.Clear();
+		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) == MB_PRESSED_MASK && m_DragX != -1 && m_DragY != -1) {												
+			// Handles the fill operation
+			int x_avg = (m_DragX + mouse_x) / 2;
+			Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE); 
+						
+			foreach (EditorSelectableBase selectable_item: EditorSelectableBase.All) {
+				EditorTreeItem view = selectable_item.GetTreeItem();
+				if (view) {
+					float tree_x, tree_y;
+					view.GetLayoutRoot().GetScreenPos(tree_x, tree_y);
+										
+					if ((tree_x < Math.Max(m_DragX, mouse_x) && tree_x > Math.Min(m_DragX, mouse_x)) && (tree_y < Math.Max(m_DragY, mouse_y) && tree_y > Math.Min(m_DragY, mouse_y))) {
+						selectable_item.SetSelected(true);
+					}
+				}				
+			}
+		}
+
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+			m_DragX = -1; m_DragY = -1;
+		}
+							
+		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
+			m_DraggedBar.SetColor(COLOR_WHITE);
+			m_DraggedBar = null;
+		}		
+		
+		if (m_DraggedBar) {
+			switch (m_DraggedBar.GetParent()) {
+				case Right: {
+					Right.SetSize(x - Math.Clamp(mouse_x, x - 720, x - 60), y - 74);
+					m_DraggedBar.SetColor(COLOR_BLUE);
+					break;
+				}
+				
+				case Left: {
+					Left.SetSize(Math.Clamp(mouse_x, 60, 720), y - 74);
+					m_DraggedBar.SetColor(COLOR_BLUE);
+					break;
+				}
+			}			
+		}
+		
+		float w, h;
+		float inner_width = x;
+		float inner_height = y;
+		Left.GetSize(w, h);
+		float inner_x = w;
+		
+		inner_width -= w;
+		Right.GetSize(w, h);
+		inner_width -= w;
+		
+		Tools.GetSize(w, h);
+		float inner_y = h;
+		inner_height -= h;
+		
+		float floor_width, floor_height;
+		Floor.GetSize(floor_width, floor_height);
+		
+		// Set size of inner
+		Inner.SetSize(inner_width, inner_height);
+		Floor.SetSize(inner_width, floor_height);
+		Floor.SetPos(inner_x, 0);
+		Inner.SetPos(inner_x, inner_y);	
+		
+		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
+			ShowCursor(!IsCursorVisible());
+		}
+	}
+	
+	void OnWebExecute(ButtonCommandArgs args)
+	{
+		OnlineOutline.Show(!OnlineOutline.IsVisible());
+	}
+		
+	void OnJoinExecute(ButtonCommandArgs args)
+	{
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(m_TemplateController.JoinCode.ToString());
+		rpc.Send(null, EditorOnlineSessionManager.RPC_REQUEST_JOIN_SESSION, false);
+	}
+	
+	void OnHostExecute(ButtonCommandArgs args)
+	{
+		ScriptRPC().Send(null, EditorOnlineSessionManager.RPC_REQUEST_CREATE_SESSION, false);
 	}
 	
 	EditorCategory InsertPlacedCategory(notnull EditorCategory editor_category)
@@ -131,104 +240,6 @@ class EditorHud: ScriptView
 	void OnLeaveSessionExecute(ButtonCommandArgs args)
 	{
 		ScriptRPC().Send(null, EditorOnlineSessionManager.RPC_REQUEST_LEAVE_SESSION, true);
-	}
-			
-	override void Update(float dt)
-	{
-		super.Update(dt);
-		
-		int x, y;
-		GetScreenSize(x, y);
-		
-		int mouse_x, mouse_y;
-		GetMousePos(mouse_x, mouse_y);
-		
-		if (GetGame().GetInput().LocalPress("UAFire") && !GetWidgetUnderCursor()) {
-			EditorSelectableBase.ClearSelections();
-		}
-				
-		EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
-		//Print(GetEditor().GetCurrentOnlineSession());
-		if (GetEditor().GetCurrentOnlineSession()) {
-			string text = GetEditor().GetCurrentOnlineSession().GetUuid();
-			
-			SessionIdData.SetText(text);
-			UserCountData.SetText(GetEditor().GetCurrentOnlineSession().GetPlayers().Count().ToString());
-		} else {
-			SessionIdData.SetText(string.Empty);
-			UserCountData.SetText(string.Empty);
-		}
-				
-		Whiteboard.Clear();
-		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) == MB_PRESSED_MASK && m_DragX != -1 && m_DragY != -1) {												
-			// Handles the fill operation
-			int x_avg = (m_DragX + mouse_x) / 2;
-			Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE); 
-						
-			foreach (EditorSelectableBase selectable_item: EditorSelectableBase.All) {
-				EditorTreeItem view = selectable_item.GetTreeItem();
-				if (view) {
-					float tree_x, tree_y;
-					view.GetLayoutRoot().GetScreenPos(tree_x, tree_y);
-										
-					if ((tree_x < Math.Max(m_DragX, mouse_x) && tree_x > Math.Min(m_DragX, mouse_x)) && (tree_y < Math.Max(m_DragY, mouse_y) && tree_y > Math.Min(m_DragY, mouse_y))) {
-						selectable_item.SetSelected(true);
-					}
-				}				
-			}
-		}
-
-		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
-			m_DragX = -1; m_DragY = -1;
-		}
-							
-		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
-			m_DraggedBar.SetColor(COLOR_WHITE);
-			m_DraggedBar = null;
-		}		
-		
-		if (m_DraggedBar) {
-			switch (m_DraggedBar.GetParent()) {
-				case Right: {
-					Right.SetSize(x - Math.Clamp(mouse_x, x - 720, x - 60), y - 74);
-					m_DraggedBar.SetColor(COLOR_BLUE);
-					break;
-				}
-				
-				case Left: {
-					Left.SetSize(Math.Clamp(mouse_x, 60, 720), y - 74);
-					m_DraggedBar.SetColor(COLOR_BLUE);
-					break;
-				}
-			}			
-		}
-		
-		float w, h;
-		float inner_width = x;
-		float inner_height = y;
-		Left.GetSize(w, h);
-		float inner_x = w;
-		
-		inner_width -= w;
-		Right.GetSize(w, h);
-		inner_width -= w;
-		
-		Tools.GetSize(w, h);
-		float inner_y = h;
-		inner_height -= h;
-		
-		float floor_width, floor_height;
-		Floor.GetSize(floor_width, floor_height);
-		
-		// Set size of inner
-		Inner.SetSize(inner_width, inner_height);
-		Floor.SetSize(inner_width, floor_height);
-		Floor.SetPos(inner_x, 0);
-		Inner.SetPos(inner_x, inner_y);	
-		
-		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
-			ShowCursor(!IsCursorVisible());
-		}
 	}
 	
 	void OnCreateNewFolder(ButtonCommandArgs args)

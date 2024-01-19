@@ -145,7 +145,7 @@ FrameWidgetClass Root {
     ScrollWidgetClass RightScroll {
      visible 1
      ignorepointer 1
-     color 0.0588 0.0588 0.0588 0.8627
+     color 0.1373 0.1373 0.1569 1
      position 0 0
      size 1 1
      hexactpos 1
@@ -208,7 +208,7 @@ FrameWidgetClass Root {
     ScrollWidgetClass LeftScroll {
      visible 1
      ignorepointer 1
-     color 0.0588 0.0588 0.0588 0.8627
+     color 0.1373 0.1373 0.1569 1
      position 0 0
      size 1 1
      hexactpos 1
@@ -1164,55 +1164,6 @@ FrameWidgetClass Root {
              vexactsize 0
              scaled 0
              image0 "set:icons image:camera_movie"
-             mode blend
-             "src alpha" 1
-             filter 0
-             nocache 0
-            }
-           }
-          }
-         }
-        }
-        FrameWidgetClass Online {
-         ignorepointer 0
-         position 0 0
-         size 42 42
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scaled 0
-         scriptclass ""
-         {
-          ButtonWidgetClass "Online.Button" {
-           visible 1
-           size 0.75 0.75
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           scriptclass ""
-           style Empty
-           "no focus" 1
-           switch once
-           {
-            ImageWidgetClass "Online.Icon" {
-             ignorepointer 1
-             color 1 1 1 0.3922
-             size 1 1
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 0
-             image0 "set:icons image:globe"
              mode blend
              "src alpha" 1
              filter 0
@@ -2230,6 +2181,434 @@ FrameWidgetClass Root {
       }
      }
     }
+    FrameWidgetClass Online {
+     clipchildren 0
+     ignorepointer 0
+     position 360 0
+     size 42 42
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     scriptclass ""
+     {
+      ButtonWidgetClass "Online.Button" {
+       visible 1
+       size 0.75 0.75
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       scriptclass "ViewBinding"
+       style Empty
+       "no focus" 1
+       switch once
+       {
+        ImageWidgetClass "Online.Icon" {
+         ignorepointer 1
+         color 1 1 1 0.3922
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         image0 "set:icons image:globe"
+         mode blend
+         "src alpha" 1
+         filter 0
+         nocache 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "OnWebExecute"
+        }
+       }
+      }
+      PanelWidgetClass "Online.Panel" {
+       ignorepointer 1
+       color 0.1373 0.1373 0.1569 1
+       position -2 49
+       size 248 214
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       style rover_sim_colorable
+       {
+        PanelWidgetClass "Online.Outline" {
+         visible 1
+         ignorepointer 1
+         color 0.3922 0.3922 0.3922 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style Outline_1px
+         {
+          GridSpacerWidgetClass "Online.Spacer" {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           "Size To Content H" 1
+           "Size To Content V" 1
+           content_halign center
+           content_valign bottom
+           Columns 1
+           {
+            GridSpacerWidgetClass "Online.ServerDetails" {
+             visible 1
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             Padding 4
+             "Size To Content H" 1
+             "Size To Content V" 1
+             content_halign center
+             content_valign center
+             Columns 2
+             {
+              TextWidgetClass TextWidget0 {
+               ignorepointer 1
+               size 0.5 16
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               text "Players:"
+               font "gui/fonts/MetronBook"
+               "text halign" right
+               "text valign" center
+              }
+              TextWidgetClass UserCount1 {
+               ignorepointer 1
+               position 10 10
+               size 0.5 16
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               scriptclass "ViewBinding"
+               text "3"
+               font "gui/fonts/MetronBook"
+               "text valign" center
+               {
+                ScriptParamsClass {
+                 Binding_Name "m_PlayerCount"
+                }
+               }
+              }
+              TextWidgetClass TextWidget3 {
+               ignorepointer 1
+               position 0 0
+               size 0.5 16
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               scaled 0
+               text "Entities:"
+               font "gui/fonts/MetronBook"
+               "text halign" right
+               "text valign" center
+              }
+              SliderWidgetClass SliderWidget0 {
+               color 0.3529 0.3922 0.3922 1
+               position 10 10
+               size 0.5 16
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               scaled 1
+               scriptclass "ViewBinding"
+               style Default
+               "no focus" 0
+               maximum 512
+               current 1
+               vertical 0
+               flipped 0
+               "fill in" 1
+               "draw marker" 0
+               "listen to input" 1
+               {
+                TextWidgetClass TextWidget4 {
+                 ignorepointer 1
+                 size 0.5 16
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 1
+                 scriptclass "ViewBinding"
+                 text "512"
+                 font "gui/fonts/MetronBook"
+                 "size to text h" 1
+                 "text halign" center
+                 "text valign" center
+                 {
+                  ScriptParamsClass {
+                   Binding_Name "m_EntityCount"
+                  }
+                 }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 Binding_Name "m_EntityCount"
+                }
+               }
+              }
+              TextWidgetClass TextWidget5 {
+               ignorepointer 1
+               position 10 10
+               size 0.5 16
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               scaled 0
+               text "Join Code:"
+               font "gui/fonts/MetronBook"
+               "text halign" right
+               "text valign" center
+              }
+              TextWidgetClass TextWidget6 {
+               ignorepointer 1
+               position 10 10
+               size 0.5 16
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               scriptclass "ViewBinding"
+               text "1234"
+               font "gui/fonts/MetronBook"
+               "text valign" center
+               {
+                ScriptParamsClass {
+                 Binding_Name "RotatingJoinCode"
+                }
+               }
+              }
+             }
+            }
+            GridSpacerWidgetClass "Online.InviteCode" {
+             visible 1
+             ignorepointer 1
+             size 1 20
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scaled 0
+             Columns 2
+             Rows 1
+             {
+              TextWidgetClass "Online.InviteCode.Text" {
+               ignorepointer 1
+               size 48 48
+               halign right_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scaled 0
+               text "Invite Code:"
+               font "gui/fonts/MetronBook"
+               "exact text" 0
+               "size to text h" 0
+               "size to text v" 0
+               "text halign" right
+               "text valign" center
+              }
+              EditBoxWidgetClass "Online.InviteCode.Editbox" {
+               position 0 10
+               size 0.45 43
+               halign center_ref
+               valign bottom_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               scriptclass "ViewBinding"
+               text "1234"
+               "limit visible" 0
+               "Use default text" 0
+               "exact text" 1
+               font "gui/fonts/MetronBook"
+               {
+                ScriptParamsClass {
+                 Binding_Name "JoinCode"
+                 Two_Way_Binding 1
+                }
+               }
+              }
+             }
+            }
+            GridSpacerWidgetClass "Online.Button.Spacer" {
+             ignorepointer 1
+             size 1 97
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scaled 0
+             Padding 8
+             Margin 8
+             content_halign center
+             Columns 1
+             Rows 2
+             {
+              ButtonWidgetClass "Online.Join.Button" {
+               size 48 48
+               halign center_ref
+               valign bottom_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               style Empty
+               "no focus" 1
+               {
+                PanelWidgetClass "Online.Join.Button.Panel" {
+                 ignorepointer 1
+                 color 0.3961 0.0902 0.0902 1
+                 size 1 1
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 style rover_sim_colorable
+                 {
+                  TextWidgetClass "Online.Join.Button.Text" {
+                   ignorepointer 1
+                   size 1 1
+                   halign center_ref
+                   valign center_ref
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 0
+                   vexactsize 0
+                   scriptclass "ViewBinding"
+                   text "Join"
+                   font "gui/fonts/MetronBook"
+                   "text halign" center
+                   "text valign" center
+                   {
+                    ScriptParamsClass {
+                     Relay_Command "OnJoinExecute"
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+              ButtonWidgetClass "Online.Host.Button" {
+               position 10 10
+               size 48 48
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               {
+                PanelWidgetClass "Online.Host.Button.Panel" {
+                 ignorepointer 1
+                 color 0.0588 0.0588 0.0588 0.7843
+                 size 1 1
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 0
+                 style rover_sim_colorable
+                 {
+                  TextWidgetClass "Online.Host.Button.Text" {
+                   ignorepointer 1
+                   size 1 1
+                   halign center_ref
+                   valign center_ref
+                   hexactpos 1
+                   vexactpos 1
+                   hexactsize 0
+                   vexactsize 0
+                   scriptclass "ViewBinding"
+                   text "Host..."
+                   font "gui/fonts/MetronBook"
+                   "text halign" center
+                   "text valign" center
+                   {
+                    ScriptParamsClass {
+                     Relay_Command "OnHostExecute"
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+          TextWidgetClass Session {
+           ignorepointer 1
+           color 0.3922 0.3922 0.3922 1
+           position 8 2
+           size 436 10
+           halign right_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scaled 0
+           text "00000000-0000-0000-0000-00000000"
+           font "gui/fonts/MetronLight"
+           "exact text" 1
+           "size to text h" 1
+           "text halign" right
+           "text valign" center
+          }
+         }
+        }
+       }
+      }
+     }
+    }
     GridSpacerWidgetClass ExplorerWrapper {
      ignorepointer 1
      size 84 42
@@ -2454,7 +2833,7 @@ FrameWidgetClass Root {
      }
     }
     GridSpacerWidgetClass OnlineServiceInfo {
-     visible 0
+     visible 1
      ignorepointer 1
      position 1 -75
      size 470 79
