@@ -1,6 +1,0 @@
-Particle {
- AlbedoMap "{E19C969D44286785}DayZEditor/GUI/images/snow1.edds" 
- Ambient 0.8627 0.8627 0.8627 1
- NormalMap "{88938001626C2CCB}DayZEditor/GUI/images/snow1_nohq.edds" 
- BlendMode Additive_AlphaModulate
-}

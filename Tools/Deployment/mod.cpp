@@ -1,8 +1,8 @@
 name = "DayZ Editor";
-picture = "DayZEditor/gui/images/dayz_editor_icon_black.edds";
-logo = "DayZEditor/gui/images/dayz_editor_icon_black.edds";
-logoSmall = "DayZEditor/gui/images/dayz_editor_icon_black.edds";
-logoOver = "DayZEditor/gui/images/dayz_editor_icon_black.edds";
+picture = "Editor/gui/images/dayz_editor_icon_black.edds";
+logo = "Editor/gui/images/dayz_editor_icon_black.edds";
+logoSmall = "Editor/gui/images/dayz_editor_icon_black.edds";
+logoOver = "Editor/gui/images/dayz_editor_icon_black.edds";
 tooltip = "DayZ Editor";
 overview = "";
 action = "";

@@ -1,0 +1,32 @@
+ImageSetClass {
+ Name "editor_tree"
+ RefSize 48 16
+ Textures {
+  ImageSetTextureClass {
+   mpix 1
+   path "{03CBC8A793843A1D}Editor/GUI/icons/tree.edds"
+  }
+ }
+ Images {
+  ImageSetDefClass tree_t {
+   Name "tree_t"
+   Pos 0 0
+   Size 16 16
+   Flags 0
+  }
+  ImageSetDefClass tree_c {
+   Name "tree_c"
+   Pos 16 0
+   Size 16 16
+   Flags 0
+  }
+  ImageSetDefClass tree_l {
+   Name "tree_l"
+   Pos 32 0
+   Size 16 16
+   Flags 0
+  }
+ }
+ Groups {
+ }
+}

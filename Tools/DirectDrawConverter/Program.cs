@@ -14,7 +14,7 @@ namespace DirectDrawConverter
             const string OUTPUT_NAME = "icons";
             const int ROW_COUNT = 10;
             const int IMAGE_MAX_SIZE = 512; // this is the space allocated to each image
-            const string ICON_DIR = "P:\\DayZEditor\\GUI\\icons";
+            const string ICON_DIR = "P:\\Editor\\GUI\\icons";
             
             DirectoryInfo dest_directory = Directory.CreateDirectory(ICON_DIR);
             DirectoryInfo source_directory = Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\Source");

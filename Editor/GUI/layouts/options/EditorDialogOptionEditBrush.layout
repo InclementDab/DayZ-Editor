@@ -1,0 +1,148 @@
+PanelWidgetClass EditorEditBrushElement {
+ size 1 48
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ scriptclass ""
+ {
+  WrapSpacerWidgetClass EditorEditBrushElementSpacer {
+   ignorepointer 1
+   size 0.7 24
+   halign right_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   {
+    WrapSpacerWidgetClass EditorEditBrushElementWraper {
+     ignorepointer 1
+     position 0 0
+     size 525 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     "Size To Content V" 1
+     content_valign center
+     {
+      PanelWidgetClass EditorEditBrushElementPanel {
+       ignorepointer 1
+       position 0 0
+       size 525 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        EditBoxWidgetClass EditorEditBrushElementEditBox_Brush {
+         visible 1
+         size 262 24
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Editor
+         text "reee"
+         "exact text" 1
+         font "gui/fonts/etelkatextpro"
+        }
+        EditBoxWidgetClass EditorEditBrushElementEditBox_Val {
+         visible 1
+         position 30 0
+         size 50 24
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Editor
+         text "reee"
+         "exact text" 1
+         font "gui/fonts/etelkatextpro"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  TextWidgetClass EditorEditBrushElementLabel {
+   ignorepointer 1
+   size 0.3 24
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   text "Text"
+   font "gui/fonts/etelkatextpro"
+   "text offset" -5 0
+   "text halign" right
+   "text valign" center
+  }
+  ButtonWidgetClass EditorEditBrushElementButton {
+   position 25 0
+   size 24 24
+   halign center_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   {
+    ImageWidgetClass EditorEditBrushElementButtonIcon {
+     ignorepointer 1
+     size 24 24
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     imageTexture "{5A6F839399731FB9}Editor/gui/icons/icon_minus_circle_128x128.edds"
+     mode blend
+     "src alpha" 1
+     "no wrap" 1
+     stretch 1
+    }
+   }
+  }
+  TextWidgetClass EditorEditBrushEditLabel {
+   ignorepointer 1
+   position 0.3 0
+   size 262 24
+   hexactpos 0
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "Text"
+   font "gui/fonts/etelkatextpro"
+   "text halign" center
+   "text valign" center
+  }
+  TextWidgetClass EditorEditBrushValLabel {
+   ignorepointer 1
+   position 0.4735 0
+   size 50 24
+   hexactpos 0
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "Text"
+   font "gui/fonts/etelkatextpro"
+   "text halign" center
+   "text valign" center
+  }
+ }
+}

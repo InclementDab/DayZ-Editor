@@ -2,7 +2,7 @@
 
 set c=%CD%
 
-cd DayZEditor/Scripts/Data
+cd Editor/Scripts/Data
 
 if not exist build.txt >build.txt echo 0
 for /f %%x in (build.txt) do (
@@ -12,9 +12,9 @@ set /a var=%%x+1
 
 cd %c%
 
-REM start /W "Build PBO" "%CD%/DayZEditor/Workbench/Batchfiles/ZBinarizeDeploy.bat"
+REM start /W "Build PBO" "%CD%/Editor/Workbench/Batchfiles/ZBinarizeDeploy.bat"
 
 echo Upload to Workshop?
 pause
-cd "%CD%/DayZEditor/Workbench/Deployment"
+cd "%CD%/Editor/Workbench/Deployment"
 start /W "Upload to Workshop" Deployment.exe release

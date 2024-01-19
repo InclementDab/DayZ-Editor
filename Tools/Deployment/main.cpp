@@ -89,10 +89,10 @@ void SteamHandler::UpdateItem(WorkshopItemInfo& info, std::string changeLog)
 	if (mod_file.is_open()) {
 
 		mod_file << "name = \"DayZ Editor\";\n";
-		mod_file << "picture = \"DayZEditor/gui/images/dayz_editor_icon_black.edds\";\n";
-		mod_file << "logo = \"DayZEditor/gui/images/dayz_editor_icon_black.edds\";\n";
-		mod_file << "logoSmall = \"DayZEditor/gui/images/dayz_editor_icon_black.edds\";\n";
-		mod_file << "logoOver = \"DayZEditor/gui/images/dayz_editor_icon_black.edds\";\n";
+		mod_file << "picture = \"Editor/gui/images/dayz_editor_icon_black.edds\";\n";
+		mod_file << "logo = \"Editor/gui/images/dayz_editor_icon_black.edds\";\n";
+		mod_file << "logoSmall = \"Editor/gui/images/dayz_editor_icon_black.edds\";\n";
+		mod_file << "logoOver = \"Editor/gui/images/dayz_editor_icon_black.edds\";\n";
 		mod_file << "tooltip = \"DayZ Editor\";\n";
 		mod_file << "overview = \"\";\n";
 		mod_file << "action = \"\";\n";
@@ -214,7 +214,7 @@ int main(int argc, char** argv)
 		mod1.name = "DayZ-Editor";
 		mod1.path = mod_path + "@" + mod1.name + "\\";
 	
-		std::ifstream version_file("P:\\DayZEditor\\Workbench\\version");
+		std::ifstream version_file("P:\\Editor\\Workbench\\version");
 
 		if (version_file.is_open()) {
 			std::string version;

@@ -1,0 +1,5 @@
+Particle {
+ AlbedoMap "{0452E81CDAB1F0D6}Editor/GUI/images/fireworks.edds" 
+ Emissive 1 1 1 0
+ BlendMode Additive_AlphaModulate
+}
