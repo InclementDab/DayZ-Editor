@@ -82,34 +82,54 @@ class EditorCamera: ScriptedCamera
 		} 
 		
 		else if (input.LocalPress_ID(UATempRaiseWeapon)) {
-			Math3D.MatrixIdentity4(m_ViewDragStartMat);
-			GetTransform(m_ViewDragStartMat);
-			
+			m_ViewDragStartPosition = GetGame().GetPointerDirection();
+			vector mat[4];
+			GetTransform(mat);
+			copyarray(m_ViewDragStartMat, mat);
 		}
 		
 		else if (input.LocalValue_ID(UATempRaiseWeapon)) {		
-	
-			vector matrix[3] = { vector.Up * transform[2], -vector.Up, -transform[2] };
+		
+			vector start_matrix[4] = { m_ViewDragStartPosition * vector.Up, vector.Up, m_ViewDragStartPosition, Vector(0, 0, 1).Multiply4(transform) };
+			
+			vector pointer = GetGame().GetPointerDirection().InvMultiply3(m_ViewDragStartMat);
+			Shape.CreateSphere(COLOR_GREEN, ShapeFlags.ONCE, pointer + transform[3], 0.2);
+			
+			vector mid_matrix[4] = { transform[0], transform[1], transform[2], transform[3] };
+			
+			pointer = pointer.Multiply3(transform);
+			pointer.Normalize();
+			vector matrix[4] = { pointer * m_ViewDragStartMat[1], m_ViewDragStartMat[1], pointer, Vector(0, 0, 1).Multiply4(transform) };
 			Math3D.MatrixOrthogonalize3(matrix);
 			
-			Math3D.MatrixMultiply3(matrix, m_ViewDragStartMat, matrix);
 			
-			vector pointer = GetGame().GetPointerDirection().InvMultiply3(matrix);
-			pointer.Normalize();
+			Shape.CreateMatrix(start_matrix);
+			//Math3D.MatrixMultiply3(matrix, m_ViewDragStartMat, matrix);
 			
-			transform = { vector.Up * pointer, vector.Up, pointer, m_LinearVelocity.Multiply4(transform) };
+			
+			//pointer = pointer.InvMultiply3(transform);
+			//Debug.DrawSphere(pointer, 0.2, COLOR_WHITE, ShapeFlags.ONCE);
+			
+		
+			//
+			//transform = { vector.Up * pointer, vector.Up, pointer, m_LinearVelocity.Multiply4(transform) };
+			
+			vector u[4] = { vector.Aside, vector.Up, vector.Forward, vector.Zero };
+			
+			//Shape.CreateMatrix(x);
+			//Math3D.MatrixInvMultiply3(x, u, x);
+			//Math3D.MatrixMultiply3(transform, x, transform);
+			
+			
 		} else {
 			transform[3] = m_LinearVelocity.Multiply4(transform);
 		}
 			
 		
-		Math3D.MatrixOrthogonalize4(transform);
-				
-		SetTransform(transform);
+		transform[3][1] = Math.Max(transform[3][1], GetNearPlane() + GetGame().SurfaceY(transform[3][0], transform[3][2]));
+		Math3D.MatrixOrthogonalize4(transform);		
+		SetTransform(transform);	
 		
-		transform[3] = Vector(0, 0, 1).Multiply4(transform);
-		Shape.CreateMatrix(transform);
-	
 		// Decay linear velocity
 		m_LinearVelocity = m_LinearVelocity * Math.Pow(GetEditor().GetProfileSettings().Smoothing, 2);
 		m_AngularVelocity = m_AngularVelocity * 0.5;
