@@ -31,6 +31,17 @@ GameProjectClass {
 				"Editor/gui/icons/tree.imageset"
 				"Editor/gui/icons/icons.imageset"
 				"DabsFramework/gui/imagesets/prefabs.imageset"
+
+				"DabsFramework/gui/icons/brands.imageset"
+				"DabsFramework/gui/icons/duotone.imageset"
+				"DabsFramework/gui/icons/light.imageset"
+				"DabsFramework/gui/icons/regular.imageset"
+				"DabsFramework/gui/icons/sharp-light.imageset"
+				"DabsFramework/gui/icons/sharp-regular.imageset"
+				"DabsFramework/gui/icons/sharp-solid.imageset"
+				"DabsFramework/gui/icons/sharp-thin.imageset"
+				"DabsFramework/gui/icons/sharp-solid.imageset"
+				"DabsFramework/gui/icons/sharp-thin.imageset"
 			}
 			widgetStyles {
 				"gui/looknfeel/dayzwidgets.styles" 
