@@ -13,21 +13,24 @@ FrameWidgetClass Root {
  {
   ImageWidgetClass Background {
    ignorepointer 1
-   size 1 1
+   position 0 0
+   size 0.16 0.09
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 0
+   fixaspect outside
    image0 "{B917F14A6DA177DA}Editor/GUI/images/prarie.edds"
-   "clamp mode" wrap
-   "stretch mode" stretch_w
+   "src alpha" 0
+   "clamp mode" clamp
+   "stretch mode" stretch_w_h
   }
   FrameWidgetClass FrameWidget0 {
    clipchildren 0
    ignorepointer 1
-   position 50 -149
+   position 23 -150
    size 617 369
    halign center_ref
    valign center_ref

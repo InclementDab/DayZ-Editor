@@ -11,7 +11,7 @@ class EditorHud: ScriptView
 	CanvasWidget Whiteboard;
 	ScrollWidget LeftScroll, RightScroll;
 	
-	Widget OnlineOutline, OnlineServerDetails;
+	Widget OutlinePanel, OnlineServerDetails;
 	
 	TextWidget Session, UserCountData, EntityCountData;
 	
@@ -159,8 +159,7 @@ class EditorHud: ScriptView
 	
 	void OnWebExecute(ButtonCommandArgs args)
 	{
-		Print(OnlineOutline);
-		OnlineOutline.Show(!OnlineOutline.IsVisible());
+		OutlinePanel.Show(!OutlinePanel.IsVisible());
 	}
 		
 	void OnJoinExecute(ButtonCommandArgs args)
@@ -172,7 +171,7 @@ class EditorHud: ScriptView
 	
 	void OnHostExecute(ButtonCommandArgs args)
 	{
-		ScriptRPC().Send(null, EditorOnlineSessionManager.RPC_REQUEST_CREATE_SESSION, false);
+		ScriptRPC().Send(null, EditorOnlineSessionManager.RPC_REQUEST_CREATE_SESSION, true);
 	}
 	
 	EditorCategory InsertPlacedCategory(notnull EditorCategory editor_category)
@@ -213,29 +212,7 @@ class EditorHud: ScriptView
 			}
 		}	
 	}
-	
-	void OnCreateSessionExecute(ButtonCommandArgs args)
-	{
-		m_CurrentMenu = new EditorCreateOnlineSessionView();
-		
-		float x, y, w, h;
-		args.Source.GetPos(x, y);
-		args.Source.GetSize(w, h);
-		
-		m_CurrentMenu.GetLayoutRoot().SetPos(x, y + h);
-	}
-	
-	void OnJoinSessionExecute(ButtonCommandArgs args)
-	{
-		m_CurrentMenu = new EditorJoinOnlineSessionView();
-		
-		float x, y, w, h;
-		args.Source.GetPos(x, y);
-		args.Source.GetSize(w, h);
-		
-		m_CurrentMenu.GetLayoutRoot().SetPos(x, y + h);
-	}
-	
+			
 	void OnCopySessionExecute(ButtonCommandArgs args)
 	{
 		string code = GetEditor().GetCurrentOnlineSession().GetJoinCode();
