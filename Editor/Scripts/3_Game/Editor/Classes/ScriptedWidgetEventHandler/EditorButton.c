@@ -13,7 +13,6 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 		if (CommandType.ToType()) {
 			m_Command = GetEditor().GetCommand(CommandType.ToType());
-			Print(m_Command);
 		}
 	}
 	

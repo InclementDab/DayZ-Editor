@@ -145,7 +145,7 @@ FrameWidgetClass Root {
     ScrollWidgetClass RightScroll {
      visible 1
      ignorepointer 1
-     color 0.1373 0.1373 0.1569 1
+     color 0.1373 0.1373 0.1569 0.3922
      position 0 0
      size 1 1
      hexactpos 1
@@ -208,7 +208,7 @@ FrameWidgetClass Root {
     ScrollWidgetClass LeftScroll {
      visible 1
      ignorepointer 1
-     color 0.1373 0.1373 0.1569 1
+     color 0.1373 0.1373 0.1569 0.7843
      position 0 0
      size 1 1
      hexactpos 1

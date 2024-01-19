@@ -108,7 +108,7 @@ class Editor: Managed
 	
 	bool 										CameraLight;
 
-	static const string 						Version = "1.30." + GetBuildNumber();
+	static const string 						Version = "2.0";
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 		
@@ -274,106 +274,16 @@ class Editor: Managed
 			}
 		}
 		
-		
-		if (GetGame().GetInput().LocalPress_ID(UAFire)) {
-			Object object = GetObjectUnderCursor();
-			if (object && m_WorldObjectIndex[object.GetID()]) {
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CheckForDragging, 100, false, object);
-			}
+		if (GetGame().GetInput().LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {
+			CreateObjects(m_PlacingObjects.GetKeyArray());
 		}
 		
-		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)  != MB_PRESSED_MASK) {
+		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) != MB_PRESSED_MASK) {
 			m_DragTarget = null;
 		}
 		
 		if (m_DragTarget) {
 			EditorObjectDragHandler.Drag(m_DragTarget, m_DragOffset);
-		}		
-	
-		Statistics.Playtime += timeslice;
-		
-		set<Object> obj();
-		int x, y;
-		GetMousePos(x, y);		
-				
-
-		Object collision_ignore;
-		// we need to determine what object is under the cursor so we can ignore it on our next raycast
-		if (m_PlacingObjects.Count() > 0) {
-			vector _;
-			int __;
-			vector collision_ray_start = GetGame().GetCurrentCameraPosition();
-			vector collision_ray_end = collision_ray_start + GetGame().GetPointerDirection() * GetProfileSettings().ViewDistance;
-			set<Object> results = new set<Object>();
-			if (DayZPhysics.RaycastRV(collision_ray_start, collision_ray_end, _, _, __, results)) {
-				//collision_ignore = results[0];
-				//Print(collision_ignore.GetType());
-				
-			}
-			
-			collision_ignore = m_PlacingObjects.GetKey(0);
-		}
-		
-		// Yeah, enfusions dumb, i know
-		CurrentMousePosition = MousePosToRay(obj, collision_ignore, GetProfileSettings().ViewDistance, 0, !CollisionMode, GetProfileSettings().HighPrecisionCollision);
-	
-		
-		if (!IsPlacing()) {			
-			vector hit_pos, hit_normal;
-			int component_index;		
-			set<Object> collisions = new set<Object>;
-			DayZPhysics.RaycastRV(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * GetProfileSettings().ObjectViewDistance, hit_pos, hit_normal, component_index, collisions);
-			
-			Object target = collisions[0];
-			if (target) {
-				if (target != ObjectUnderCursor || component_index != ComponentUnderCursor) {
-					if (ObjectUnderCursor) { 
-						OnMouseExitObject(ObjectUnderCursor, x, y, ComponentUnderCursor);
-					}
-					OnMouseEnterObject(target, x, y, component_index);
-					ObjectUnderCursor = target;
-					ComponentUnderCursor = component_index;
-				} 
-				
-			} else if (ObjectUnderCursor) {
-				OnMouseExitObject(ObjectUnderCursor, x, y, ComponentUnderCursor);
-				ObjectUnderCursor = null;
-				ComponentUnderCursor = 0;
-			}
-		}
-		
-		foreach (Object world_object, EditorHandData hand_data: m_PlacingObjects) {
-			if (!world_object) {
-				return;
-			}
-												
-			vector position = CurrentMousePosition;
-			if (hand_data) {
-				position += hand_data.PositionOffset;
-			}
-			
-			position[1] = position[1] + ObjectGetSize(world_object)[1];			
-			vector transform[4] = {
-				"1 0 0",
-				"0 1 0",
-				"0 0 1",
-				position
-			};
-						
-			vector surface_normal = vector.Up;
-			float surface_height = GetGame().SurfaceY(position[0], position[2]);
-			if (MagnetMode) {
-				surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
-			}
-			
-			vector local_ori = world_object.GetDirection();
-			local_ori.Normalize();
-			transform[0] = surface_normal * local_ori;
-			transform[1] = surface_normal;
-			transform[2] = surface_normal * (local_ori * vector.Up);
-			
-			world_object.SetPosition(position);
-			world_object.Update();
 		}
 	}
 		
@@ -456,74 +366,11 @@ class Editor: Managed
 		return ScriptedCamera.Cast(m_CurrentControl);
 	}
 	
-	void ProcessInput(Input input)
-	{
-		if (IsPlacing()) {
-			foreach (Object placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
-				if (!placing_object) {
-					continue;
-				}
-				
-				vector hand_ori = placing_object.GetOrientation();
-				float factor = 9;
-				if (KeyState(KeyCode.KC_LSHIFT)) {
-					factor /= 5;
-				}
-				
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					factor *= 5;
-				}
-				
-				if (input.LocalValue("UAZoomInOptics")) {				
-					hand_ori[0] = hand_ori[0] - factor;
-					placing_object.SetOrientation(hand_ori);			
-				}
-				
-				if (input.LocalValue("UAZoomOutOptics")) {
-					hand_ori[0] = hand_ori[0] + factor;
-					placing_object.SetOrientation(hand_ori);			
-				}
-			}
-		} else {
-			if (input.LocalPress("EditorTeleportPlayerToCursor")) {
-				Man controlled_player = GetCurrentControlPlayer();
-				if (controlled_player) {
-					set<Object> _();
-					controlled_player.SetPosition(MousePosToRay(_, controlled_player, 3000, 0, false, true));
-				}
-			}
-			
-			if (input.LocalPress("EditorToggleActive")) {
-				if (!GetCurrentControlCamera()) {
-					ControlCamera();
-				} else {
-					// if player doesnt exist yet, create one
-					/*if (!Man.s_LastControlledPlayer) {
-						vector player_position;
-						if (!DoCursorRaycast(player_position, 100.0)) {
-							player_position = GetCurrentControlCamera().GetPosition();
-							player_position[1] = GetGame().SurfaceY(player_position[0], player_position[2]);
-						}
-						
-						Man.s_LastControlledPlayer = CreateDefaultCharacter(GetGame().CreateDefaultPlayer(), player_position);
-						if (!Man.s_LastControlledPlayer) {
-							return;
-						}
-						
-						Man.s_LastControlledPlayer.SetAllowDamage(false);
-					}
-					
-					ControlPlayer(Man.s_LastControlledPlayer);*/
-				}
-			}
-		}
-	}
-	
 	//! DayZ doesnt support 3 deep keybinding. LCTRL + SHIFT + S etc... 
 	// so all commands must be appended with ctrl - this is standard windows expectation anyway
 	bool IsProcessingCommand()
 	{
-		return (GetDayZGame().IsLeftCtrlDown() && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && !GetFocus());
+		return (GetDayZGame().IsLeftCtrlDown());
 	}
 	
 	bool DoCursorRaycast(out vector position, float max_distance = 3000, Object ignore_object = null)
@@ -544,70 +391,26 @@ class Editor: Managed
 		return DayZPhysics.RayCastBullet(begin_pos, end_pos, interaction_layers, ignore_object, hit_object, position, normal, fraction);
 	}
 		
-	bool OnMouseDown(int button)
-	{
-		EditorLog.Trace("Editor::OnMouseDown " + button);
-
-		Widget target = GetWidgetUnderCursor();
-		if (!target) { //target.GetName() != "HudPanel"
-			SetFocus(null);
-		}
-		
-		switch (button) {			
-			case MouseState.MIDDLE: {
-				
-				// Ctrl + Middle Mouse logic
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					if (ObjectUnderCursor) {			
-						EditorObject.ClearSelections();
-						if (GetEditorObject(ObjectUnderCursor)) {
-							DeleteObject(GetEditorObject(ObjectUnderCursor));
-						} else {
-							GetGame().ObjectDelete(ObjectUnderCursor);
-							HideMapObject(ObjectUnderCursor);
-						}
-					}
-					
-					return true;
-				} 
-				
-				return true;
-			}
-			
-			case MouseState.RIGHT: {				
-				break;	
-			}
-		}
-		
-		return false;
-	}
-	
 	bool IsSurfaceWater(vector position)
 	{
 		return GetGame().SurfaceIsSea(position[0], position[2]) || GetGame().SurfaceIsPond(position[0], position[2]);
 	}
-			
-	// also called when component index changes
-	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
-	{
-		if (IsPromptedForObjectSelection()) {
-			EditorBoundingBox.Create(target);
-			return true;
+		
+	EditorHandMap AddInHand(Object world_object, EditorHandData hand_data = null)
+	{		
+		if (hand_data) {
+			m_PlacingObjects[world_object] = hand_data;
+		} else {
+			m_PlacingObjects[world_object] = new EditorHandData();
 		}
 		
-		return m_EditorHud.OnMouseEnterObject(target, x, y, component_index);
+		return m_PlacingObjects;
 	}
 	
-	// also called when component index changes
-	bool OnMouseExitObject(Object target, int x, int y, int component_index)
-	{		
-		if (IsPromptedForObjectSelection()) {
-			EditorBoundingBox.Destroy(target);
-			return true;
-		}
-		
-		return m_EditorHud.OnMouseExitObject(target, x, y, component_index);
-	}	
+	EditorHandMap AddInHand(EditorPlaceableObjectData item, EditorHandData hand_data = null)
+	{
+		return AddInHand(item.CreateObject(Editor.CurrentMousePosition, vector.Zero, 1.0), hand_data);				
+	}
 	
 	void RemoveFromHand(Object world_object)
 	{
@@ -630,42 +433,18 @@ class Editor: Managed
 	{
 		return m_PlacingObjects[world_object];
 	}
-	
-	EditorHandMap AddInHand(Object world_object, EditorHandData hand_data = null)
-	{
-		// Turn Brush off when you start to place
-		if (m_EditorBrush) {
-			SetBrush(null);
-		}
 		
-		if (hand_data) {
-			m_PlacingObjects[world_object] = hand_data;
-		} else {
-			m_PlacingObjects[world_object] = new EditorHandData();
-		}
-		
-		return m_PlacingObjects;
-	}
-	
-	EditorHandMap AddInHand(EditorPlaceableObjectData item, EditorHandData hand_data = null)
-	{
-		return AddInHand(item.CreateObject(Editor.CurrentMousePosition, vector.Zero, 1.0), hand_data);				
-	}
-	
 	EditorHud ReloadHud() 
-	{
-		EditorLog.Trace("Editor::ReloadHud");		
+	{	
 		m_EditorHud = new EditorHud();
 		return m_EditorHud;
 	}
 		
 	void Undo()
 	{
-		EditorLog.Trace("EditorObjectManager::Undo");
 		foreach (EditorAction action: m_ActionStack) {
 			if (!action.IsUndone()) {
 				action.CallUndo();
-				EditorLog.Info("Undo complete");
 				return;
 			}
 		}
@@ -673,11 +452,9 @@ class Editor: Managed
 	
 	void Redo()
 	{
-		EditorLog.Trace("EditorObjectManager::Redo");
 		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
 			if (m_ActionStack[i] && m_ActionStack[i].IsUndone()) {
 				m_ActionStack[i].CallRedo();
-				EditorLog.Info("Redo complete");
 				return;
 			}
 		}
@@ -859,8 +636,6 @@ class Editor: Managed
 	void Clear()
 	{
 		Statistics.Save();
-		EditorSaveFile = string.Empty;	
-		m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
 		m_ActionStack.Clear();
 		
 		m_PlacedObjects.Clear();	
@@ -972,27 +747,6 @@ class Editor: Managed
 		return position;
 	}
 		
-	static int GetBuildNumber()
-	{
-		static const int BUILD_LENGTH = 1;
-		if (!FileExist("Editor\\Scripts\\Data\\build")) {
-			Print("File doesnt exist");
-			return 0;
-		}
-		
-		FileHandle handle = OpenFile("Editor\\Scripts\\Data\\build", FileMode.READ);
-		
-		int values[1];
-		string build_number;
-		while (ReadFile(handle, values, 1)) {
-			build_number += values[0].AsciiToString();
-		}
-		
-		CloseFile(handle);
-		
-		return build_number.ToInt();
-	}
-	
 	static Object GetObjectUnderCursor(float raycast_distance = 3000)
 	{
 		vector ray_start = GetGame().GetCurrentCameraPosition();
@@ -1128,12 +882,8 @@ class Editor: Managed
 		return save_data;
 	}
 	
-	EditorPlaceableObjectData GetReplaceableItem(Object object)
-	{
-		if (!object) {
-			return null;
-		}
-		
+	static EditorPlaceableObjectData GetReplaceableItem(notnull Object object)
+	{		
 		while (object.GetParent()) {
 			object = Object.Cast(object.GetParent());
 		}
@@ -1165,34 +915,6 @@ class Editor: Managed
 		
 		return placeable_items[0]; // better way to do other than index 0?
 	}
-		
-	void SetSaveFile(string save_file)
-	{
-		EditorSaveFile = save_file;
-		m_EditorHud.GetController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
-		
-		if (m_RecentlyOpenedFiles.Find(EditorSaveFile) != -1) {
-			m_RecentlyOpenedFiles.RemoveOrdered(m_RecentlyOpenedFiles.Find(EditorSaveFile));
-		}
-		
-		m_RecentlyOpenedFiles.Insert(EditorSaveFile);
-		if (m_RecentlyOpenedFiles.Count() > 3) {
-			m_RecentlyOpenedFiles.RemoveOrdered(0);
-		}
-		
-		GetGame().SetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
-		GetGame().SaveProfile();
-	}
-		
-	string GetSaveFile()
-	{
-		return EditorSaveFile;
-	}
-	
-	void SetBrush(EditorBrush brush) 
-	{
-		m_EditorBrush = brush; 
-	}	
 				
 	void InsertAction(EditorAction action) 
 	{
@@ -1213,12 +935,7 @@ class Editor: Managed
 	{
 		return m_EditorCamera;
 	}
-						
-	EditorBrush GetBrush() 
-	{
-		return m_EditorBrush;
-	}
-	
+		
 	EditorActionStack GetActionStack() 
 	{
 		return m_ActionStack;
@@ -1295,20 +1012,5 @@ class Editor: Managed
 	Command GetCommand(typename command)
 	{
 		return m_Commands[command];
-	}
-	
-	static void RecursiveGetFiles(string directory, inout array<ref CF_File> files, string pattern = "*")
-	{		
-		array<ref CF_File> directories = {};
-		// first get all directories and recurse them
-		if (CF_Directory.GetFiles(directory + "*", directories, FindFileFlags.ARCHIVES)) {
-			foreach (CF_File subdirectory: directories) {
-				if (subdirectory.IsDirectory()) {
-					RecursiveGetFiles(subdirectory.GetFullPath() + "/", files, pattern);
-				}
-			}
-		}
-		
-		CF_Directory.GetFiles(directory + pattern, files, FindFileFlags.ARCHIVES);
 	}
 }

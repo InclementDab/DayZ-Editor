@@ -11,15 +11,6 @@ modded class DayZGame
 	
 	// args: string
 	ref ScriptInvoker OnProgressReport;
-			
-	void DayZGame()
-	{	
-#ifndef SERVER
-		delete m_loading;
-		m_loading = new EditorLoadingScreen(this);		
-		m_loading.Show();
-#endif
-	}
 	
 	override bool OnInitialize()
 	{
@@ -131,6 +122,51 @@ modded class DayZGame
 		
 		//! Everything is fine... I hope... :pain:
 		return false;
+	}
+
+	override void OnRespawnEvent(int time)
+	{
+	}
+	
+	override void EnterLoginQueue(UIMenuPanel parent)
+	{
+	}
+	
+	override void EnterLoginTime(UIMenuPanel parent)
+	{
+	}
+		
+	// the weird loading screen order is
+	// game starts loading into server. creates the login queue
+	// after a period in queue, it deletes the login queue and creates login timer
+	// then after login timer is done, loading is done
+	
+	// Game Loading Screen
+	// this function gets called CONSTANTLY while loading in 
+	override void UpdateLoginQueue(float timeslice)
+	{
+		// probably need to make sure we are in the main menu here somehow
+	}
+	
+	// this function only gets called one time when you get loaded into the server,
+	// the loginTime is the amount of seconds until the engine will put you in
+	override void OnLoginTimeEvent(int loginTime)
+	{
+		//LoginTimeEvent.Invoke(loginTime);
+	}
+	
+	override void LoginTimeCountdown()
+	{
+	}
+	
+	// appears to be the best place to delete the loading screen
+	override void CancelLoginTimeCountdown()
+	{
+		
+	}
+	
+	override void CancelLoginQueue()
+	{
 	}
 }
 
