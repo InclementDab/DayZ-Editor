@@ -2,10 +2,13 @@ class EditorSelectableBase: SerializableBase
 {
 	static ref array<EditorSelectableBase> All = {};
 	static ref array<EditorSelectableBase> SelectedObjects = {};
+	static ref array<EditorSelectableBase> LockedObjects = {};
 	
 	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();
+	ref ScriptInvoker OnLockChanged = new ScriptInvoker();
 	
 	protected bool m_IsSelected;
+	protected bool m_IsLocked;
 		
 	protected ref EditorTreeItem m_TreeItem;
 	
@@ -36,12 +39,30 @@ class EditorSelectableBase: SerializableBase
 			SelectedObjects.RemoveItem(this);
 		}
 				
-		OnSelectionChanged.Invoke(this, m_IsSelected);
+		OnSelectionChanged.Invoke(this);
 	}
 	
 	bool IsSelected() 
 	{
 		return m_IsSelected;
+	}
+	
+	void SetLocked(bool locked)
+	{
+		m_IsLocked = locked;
+		
+		if (m_IsLocked) {
+			OnLockChanged.Insert(this);
+		} else {
+			OnLockChanged.RemoveItem(this);
+		}
+				
+		OnLockChanged.Invoke(this);
+	}
+	
+	bool IsLocked()
+	{
+		return m_IsLocked;
 	}
 	
 	string GetModel()

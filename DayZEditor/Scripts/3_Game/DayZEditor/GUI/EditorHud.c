@@ -3,7 +3,7 @@ class EditorHud: ScriptView
 	protected EditorHudController m_TemplateController;
 		
 	// View Properties
-	Widget Left, Right, Inner, Tools, Menu;
+	Widget Left, Right, Inner, Tools, Menu, Floor;
 	
 	// Layout Elements
 	Widget LeftDragZone, RightDragZone;
@@ -217,8 +217,13 @@ class EditorHud: ScriptView
 		float inner_y = h;
 		inner_height -= h;
 		
+		float floor_width, floor_height;
+		Floor.GetSize(floor_width, floor_height);
+		
 		// Set size of inner
 		Inner.SetSize(inner_width, inner_height);
+		Floor.SetSize(inner_width, floor_height);
+		Floor.SetPos(inner_x, 0);
 		Inner.SetPos(inner_x, inner_y);	
 		
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
@@ -289,7 +294,7 @@ class EditorHud: ScriptView
 			case RightDragZone: {
 				//WidgetAnimator.AnimateColorHSV(w, "240 140 60", "239 131 175", 30);
 				//LeftDragZone.SetColor(COLOR_WHITE);
-				//WidgetAnimator.AnimateColor(w, COLOR_WHITE, 50);
+				//WidgetAnimator.AnimateColor(w, COLOR_BLUE_LIGHT, 60);
 				break;
 			}
 		}
@@ -309,6 +314,7 @@ class EditorHud: ScriptView
 			case RightDragZone: {
 				//WidgetAnimator.AnimateColor(w, COLOR_BLUE, 50);
 				//LeftDragZone.SetColor(COLOR_SALMON_A);
+				//WidgetAnimator.AnimateColor(w, COLOR_WHITE, 60);
 				break;
 			}
 		}

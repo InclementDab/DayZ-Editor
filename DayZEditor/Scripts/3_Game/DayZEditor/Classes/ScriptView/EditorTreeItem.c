@@ -119,9 +119,9 @@ class EditorTreeItem: ScriptView
 		return super.OnDrag(w, x, y);
 	}
 			
-	void OnSelectionChange(EditorSelectableBase selectable, bool state)
+	void OnSelectionChange(EditorSelectableBase selectable)
 	{
-		Button.SetColor(ARGB(255, 75, 119, 190) * state);
+		Button.SetColor(ARGB(255, 75, 119, 190) * selectable.IsSelected());
 	}
 					
 	void SetParentTree(EditorTreeItem parent)

@@ -16,6 +16,9 @@ DayZExpansion/Scripts/thing.obf
 # User Configuration
 user.cfg
 
+# Lol
+Tools/DirectDrawConverter/svgs/**/**/*.svg
+
 # Text Editor Workspace Configuration
 .vscode/
 .idea/

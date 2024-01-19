@@ -134,7 +134,7 @@ FrameWidgetClass Root {
    clipchildren 0
    ignorepointer 1
    position 0 126
-   size 360 350
+   size 360 954
    halign right_ref
    hexactpos 1
    vexactpos 1
@@ -198,7 +198,7 @@ FrameWidgetClass Root {
    clipchildren 0
    ignorepointer 1
    position 0 126
-   size 360 350
+   size 360 954
    hexactpos 1
    vexactpos 1
    hexactsize 1
@@ -468,8 +468,9 @@ FrameWidgetClass Root {
           }
          }
         }
-        FrameWidgetClass SaveAs {
+        PanelWidgetClass SaveAs {
          ignorepointer 1
+         color 1 0.3922 0.3922 1
          position 0 0
          size 42 42
          halign center_ref
@@ -2379,912 +2380,481 @@ FrameWidgetClass Root {
     }
    }
   }
-  PanelWidgetClass InfobarFrame {
-   visible 0
-   disabled 0
-   clipchildren 1
+  PanelWidgetClass Floor {
+   clipchildren 0
    ignorepointer 1
-   color 0.0588 0.0588 0.0588 1
-   position 0 0
-   size 1 18
-   halign right_ref
-   valign bottom_ref
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 1
-   scaled 0
-   priority 1
-   style rover_sim_colorable
-   {
-    WrapSpacerWidgetClass InfobarWrapper {
-     clipchildren 1
-     ignorepointer 1
-     position 0 1
-     size 1 18
-     halign right_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     Padding 0
-     Margin 0
-     "Size To Content H" 1
-     content_halign right
-     content_valign bottom
-     {
-      FrameWidgetClass NotificationFrame {
-       visible 1
-       ignorepointer 1
-       position 0 0.03
-       size 1 0.06
-       halign center_ref
-       hexactpos 1
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-      }
-      FrameWidgetClass CameraTextVectorSpacer {
-       ignorepointer 1
-       position 0 0
-       size 4 18
-       hexactpos 0
-       vexactpos 0
-       hexactsize 1
-       vexactsize 1
-      }
-      FrameWidgetClass InfobarCamPosFrame {
-       visible 1
-       ignorepointer 1
-       position 0 0
-       size 0.147 18
-       valign center_ref
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 1
-       {
-        WrapSpacerWidgetClass InfoBarVectorWrapSpacer {
-         clipchildren 0
-         ignorepointer 1
-         position -2 1.5
-         size 1 16
-         halign right_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         style Empty
-         Margin 0
-         {
-          PanelWidgetClass InfoBarCam_X_Main {
-           ignorepointer 1
-           color 1 1 1 0.9412
-           size 0.32 1
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           style blank
-           {
-            PanelWidgetClass InfoBar_X_Background {
-             clipchildren 1
-             ignorepointer 1
-             color 0.7647 0.1804 0.102 1
-             position 1 0
-             size 16 14
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 1
-             vexactsize 1
-             style rover_sim_colorable
-             {
-              TextWidgetClass InfoBar_X_Label {
-               ignorepointer 1
-               position 0 0
-               size 16 16
-               halign right_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 1
-               vexactsize 1
-               text "X"
-               "text halign" center
-               "text valign" center
-              }
-             }
-            }
-            EditBoxWidgetClass InfoBar_X_Value {
-             inheritalpha 0
-             position -2 -1
-             size 0.8 16
-             halign right_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 1
-             scriptclass "ViewBinding"
-             style ServerBrowser
-             "limit visible" 0
-            }
-           }
-          }
-          FrameWidgetClass x_y_spacer {
-           ignorepointer 1
-           position 0 0
-           size 0 0.9
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-          }
-          PanelWidgetClass InfoBarCam_Y_Main {
-           ignorepointer 1
-           color 1 1 1 0.9412
-           position 0 0
-           size 0.32 1
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           style blank
-           {
-            PanelWidgetClass InfoBar_Y_Background {
-             clipchildren 1
-             ignorepointer 1
-             color 0.6157 0.8157 0.2196 1
-             position 1 0
-             size 16 14
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 1
-             vexactsize 1
-             style rover_sim_colorable
-             {
-              TextWidgetClass InfoBar_Y_Label {
-               ignorepointer 1
-               position 1 0
-               size 16 16
-               halign right_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 1
-               vexactsize 1
-               text "Y"
-               "text halign" center
-               "text valign" center
-              }
-             }
-            }
-            EditBoxWidgetClass InfoBar_Y_Value {
-             inheritalpha 0
-             position -2 -1
-             size 0.8 16
-             halign right_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 1
-             scriptclass "ViewBinding"
-             style ServerBrowser
-             "limit visible" 0
-            }
-           }
-          }
-          FrameWidgetClass y_z_spacer {
-           ignorepointer 1
-           size 0 0.9
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-          }
-          PanelWidgetClass InfoBarCam_Z_Main {
-           ignorepointer 1
-           color 1 1 1 0.9412
-           position 0 0
-           size 0.32 1
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           style blank
-           {
-            PanelWidgetClass InfoBar_Z_Background {
-             clipchildren 1
-             ignorepointer 1
-             color 0.2588 0.4824 0.9176 1
-             position 1 0
-             size 16 14
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 1
-             vexactsize 1
-             style rover_sim_colorable
-             {
-              TextWidgetClass InfoBar_Z_Label {
-               ignorepointer 1
-               position 0 0
-               size 16 17
-               halign right_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 1
-               vexactsize 1
-               text "Z"
-               "text halign" center
-               "text valign" center
-              }
-             }
-            }
-            EditBoxWidgetClass InfoBar_Z_Value {
-             inheritalpha 0
-             position -1 -1
-             size 0.8 16
-             halign right_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 1
-             scriptclass "ViewBinding"
-             style ServerBrowser
-             "limit visible" 0
-            }
-           }
-          }
-         }
-        }
-       }
-      }
-      FrameWidgetClass InfobarCameraPositionFrame {
-       ignorepointer 1
-       position 0 0
-       size 0.1 16
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       {
-        TextWidgetClass InfobarCameraPositionText {
-         clipchildren 1
-         ignorepointer 1
-         position 0 0
-         size 1 19
-         halign center_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 1
-         text "#STR_EDITOR_CAMERA_POSITION"
-         font "gui/fonts/etelkatextpro"
-         "text offset" -3 0
-         "exact text" 0
-         "size to text h" 0
-         "size to text v" 0
-         "text halign" right
-         "text valign" center
-        }
-       }
-      }
-      FrameWidgetClass PrecisionFrame {
-       ignorepointer 1
-       size 0.124 19
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       {
-        TextWidgetClass PrecisionText {
-         ignorepointer 1
-         position 0 0
-         size 1 19
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         text "Precision"
-         font "gui/fonts/etelkatextpro"
-         "text offset" -35 1
-         "exact text" 0
-         "size to text h" 0
-         "size to text v" 0
-         "text halign" right
-         "text valign" center
-        }
-        EditBoxWidgetClass PrecisionEditbox {
-         position 0 0
-         size 30 14
-         halign right_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style ServerBrowser
-         text "0.05"
-         font "gui/fonts/sdf_MetronLight72"
-        }
-       }
-      }
-      FrameWidgetClass CinematicCameraFrame {
-       visible 1
-       ignorepointer 1
-       position 0 0
-       size 20 18
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass ""
-       {
-        ButtonWidgetClass CinematicCameraButton {
-         size 18 18
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-        }
-        ImageWidgetClass CinematicCameraIcon {
-         ignorepointer 1
-         position -4 0
-         size 25 23
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         image0 "set:dayz_editor_gui image:camera"
-         mode additive
-         "src alpha" 0
-         "flip u" 0
-         "flip v" 0
-         filter 1
-        }
-       }
-      }
-      WrapSpacerWidgetClass ObjectHoverSelectWrapper {
-       visible 1
-       clipchildren 0
-       ignorepointer 1
-       position 0 0
-       size 0.25 18
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       {
-        TextWidgetClass ObjectHoverSelectText {
-         clipchildren 1
-         ignorepointer 1
-         position 0 0
-         size 0 19
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         text "#STR_EDITOR_OBJECT "
-         font "gui/fonts/etelkatextpro"
-         "size to text h" 1
-         "size to text v" 0
-         "text valign" center
-        }
-        TextWidgetClass ObjectHoverText {
-         clipchildren 1
-         ignorepointer 1
-         size 0 19
-         halign right_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scriptclass ""
-         font "gui/fonts/etelkatextpro"
-         "size to text h" 1
-         "size to text v" 0
-         "text valign" center
-        }
-       }
-      }
-      WrapSpacerWidgetClass VersionFrame {
-       ignorepointer 1
-       size 0.16 18
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       {
-        TextWidgetClass VersionText {
-         ignorepointer 1
-         size 0.16 18
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 1
-         scriptclass ""
-         text "#STR_EDITOR_VERSION "
-         font "gui/fonts/etelkatextpro"
-         "bold text" 1
-         "size to text h" 1
-         "size to text v" 1
-         "text valign" center
-        }
-        TextWidgetClass VersionNumber {
-         ignorepointer 1
-         position 0 0
-         size 0.18 18
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scriptclass "ViewBinding"
-         font "gui/fonts/etelkatextpro"
-         "bold text" 1
-         "size to text h" 1
-         "size to text v" 0
-         "text valign" center
-        }
-       }
-      }
-      WrapSpacerWidgetClass CurrentFileWrapper {
-       ignorepointer 1
-       size 0.2 18
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       {
-        TextWidgetClass MenuCurrentFileNameCaption {
-         ignorepointer 1
-         position 0 0
-         size 100 1
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 0
-         text "#STR_EDITOR_CURRENT_FILE "
-         font "gui/fonts/etelkatextpro"
-         "exact text" 0
-         "size to text h" 1
-         "size to text v" 0
-         "text halign" right
-         "text valign" center
-        }
-        TextWidgetClass MenuCurrentFileNameText {
-         clipchildren 1
-         ignorepointer 1
-         size 0.11 1
-         halign right_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         style None
-         font "gui/fonts/etelkatextpro"
-         "exact text" 0
-         "size to text h" 1
-         "size to text v" 0
-         "text valign" center
-        }
-       }
-      }
-     }
-    }
-   }
-  }
-  WrapSpacerWidgetClass CameraTrackWrapper {
-   visible 0
-   ignorepointer 1
-   color 0.0196 0.0196 0.0196 0.7843
-   position 285 443
-   size 0.235 0
-   halign right_ref
-   valign bottom_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   style Colorable
-   Padding 1
-   Margin 1
-   "Size To Content V" 1
-   {
-    PanelWidgetClass CameraTrackPanel {
-     ignorepointer 1
-     color 0.0784 0.0784 0.0784 1
-     position 0 0
-     size 1 25
-     halign center_ref
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     style rover_sim_colorable
-     {
-      TextWidgetClass CameraTrackPanelText {
-       ignorepointer 1
-       size 1 1.15
-       halign center_ref
-       valign center_ref
-       hexactpos 0
-       vexactpos 0
-       hexactsize 0
-       vexactsize 0
-       text "#STR_EDITOR_CINEMATIC_CAMERA"
-       font "gui/fonts/etelkatextpro"
-       "size to text v" 0
-       "text halign" center
-       "text valign" center
-      }
-      PanelWidgetClass CameraTrackMinimizePanel {
-       ignorepointer 1
-       color 0.7843 0.2941 0.2745 1
-       position 2 2
-       size 25 21
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       style rover_sim_colorable
-       {
-        TextWidgetClass CameraTrackMinimizeText {
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         text "-"
-         "exact text" 0
-         "text halign" center
-        }
-        ButtonWidgetClass CameraTrackMinimizeButton {
-         color 1 1 1 0.1961
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-        }
-       }
-      }
-     }
-    }
-    ScrollWidgetClass CameraNodeScrollBar {
-     ignorepointer 1
-     color 0.3137 0.3137 0.3137 1
-     position 0 0
-     size 1 350
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     "Scrollbar V" 1
-     {
-      WrapSpacerWidgetClass CameraNodeList {
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scriptclass "ViewBinding"
-       Padding 4
-       Margin 0
-       "Size To Content V" 1
-      }
-     }
-    }
-    PanelWidgetClass CameraTrackSliderPanel {
-     ignorepointer 1
-     color 0.0784 0.0784 0.0784 1
-     position 0 0
-     size 1 22
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     style rover_sim_colorable
-     {
-      TextWidgetClass CameraTrackSmoothingText {
-       ignorepointer 1
-       position 2 0
-       size 200 20
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       text "#STR_EDITOR_CINEMATIC_CAMERA_SMOOTHING"
-       "text offset" 2 0
-       "size to text h" 1
-       "text valign" center
-      }
-      SliderWidgetClass CameraTrackSmoothingSlider {
-       color 0.5882 0.5882 0.5882 0.7451
-       position 5 0
-       size 250 20
-       halign right_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       style Slider_1px_alpha_50
-       step 0.1
-       "fill in" 1
-       "listen to input" 1
-       {
-        TextWidgetClass CameraTrackSmoothingReadout {
-         ignorepointer 1
-         size 35 16
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         text "0.05"
-         "text halign" center
-         "text valign" center
-        }
-       }
-      }
-     }
-    }
-    PanelWidgetClass CameraTrackButtonPanel {
-     ignorepointer 1
-     color 0.0784 0.0784 0.0784 1
-     position 0 0
-     size 1 22
-     halign center_ref
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 1
-     style rover_sim_colorable
-     {
-      ButtonWidgetClass AddNodeButton {
-       position 20 1
-       size 90 20
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       text "Add Node"
-       {
-        PanelWidgetClass AddButtonOutline {
-         ignorepointer 1
-         color 0.7059 0.7059 0.7059 0.9961
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         style blank
-        }
-       }
-      }
-      ButtonWidgetClass CameraTrackRunButton {
-       position 20 1
-       size 80 20
-       halign right_ref
-       valign bottom_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       text "Run"
-       switch toggle
-       {
-        PanelWidgetClass CameraTrackButtonOutline {
-         ignorepointer 1
-         color 0.7059 0.7059 0.7059 0.9961
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         style blank
-        }
-       }
-      }
-     }
-    }
-   }
-  }
-  GridSpacerWidgetClass OnlineServiceInfo {
-   ignorepointer 1
-   position 360 18
-   size 470 77
+   color 0.1216 0.1216 0.1216 1
+   position 358 0
+   size 1200 32
    valign bottom_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
    scaled 0
-   content_valign bottom
-   Columns 1
+   style rover_sim_colorable
    {
-    WrapSpacerWidgetClass SessionIdWrapper {
+    PanelWidgetClass "Floor.Seperator" {
      ignorepointer 1
-     position 10 10
-     size 48 48
+     color 0.3137 0.3137 0.3137 1
+     size 1 1
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
+    }
+    FrameWidgetClass Marker {
+     ignorepointer 1
+     position 6 0
+     size 32 32
+     halign right_ref
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     Padding 0
-     Margin 0
-     "Size To Content H" 1
      {
-      TextWidgetClass SessionId {
-       ignorepointer 1
-       position 0 0
-       size 1 16
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       scaled 0
-       text "Session ID:"
-       font "gui/fonts/etelkatextpro16"
-       "size to text h" 1
-       "size to text v" 0
-       "text valign" center
-      }
-      TextWidgetClass SessionIdData {
+      ButtonWidgetClass "Marker.Button" {
        visible 1
-       ignorepointer 1
-       color 0.3059 0.5608 0.3686 1
-       size 1 18
+       position 0 0
+       size 0.75 0.75
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
-       vexactsize 1
-       scriptclass ""
-       font "gui/fonts/etelkatextpro16"
-       "size to text h" 1
-       "size to text v" 0
-       "text valign" center
+       vexactsize 0
+       scaled 0
+       style Empty
+       "no focus" 1
+       {
+        ImageWidgetClass "Marker.Icon" {
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         image0 "set:icons image:location_dot"
+         mode blend
+         "src alpha" 1
+         filter 0
+         nocache 0
+        }
+       }
       }
      }
     }
-    WrapSpacerWidgetClass UserCountWrapper {
+    GridSpacerWidgetClass OnlineServiceInfo {
+     visible 0
      ignorepointer 1
-     position 10 10
-     size 48 48
+     position 1 -75
+     size 470 79
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     Padding 0
-     Margin 0
-     "Size To Content H" 1
+     scaled 0
+     content_valign bottom
+     Columns 1
      {
-      TextWidgetClass UserCount {
+      WrapSpacerWidgetClass SessionIdWrapper {
        ignorepointer 1
-       position 0 0
-       size 1 18
-       halign center_ref
-       valign center_ref
+       position 10 10
+       size 48 48
        hexactpos 1
        vexactpos 1
-       hexactsize 0
+       hexactsize 1
        vexactsize 1
-       scaled 0
-       text "User Count:"
-       font "gui/fonts/etelkatextpro16"
-       "size to text h" 1
-       "text valign" center
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       {
+        TextWidgetClass SessionId {
+         ignorepointer 1
+         position 0 0
+         size 1 16
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scaled 0
+         text "Session ID:"
+         font "gui/fonts/etelkatextpro16"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        TextWidgetClass SessionIdData {
+         visible 1
+         ignorepointer 1
+         color 0.3059 0.5608 0.3686 1
+         size 1 18
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass ""
+         font "gui/fonts/etelkatextpro16"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+       }
       }
-      TextWidgetClass UserCountData {
+      WrapSpacerWidgetClass UserCountWrapper {
        ignorepointer 1
-       size 1 18
-       halign center_ref
-       valign center_ref
+       position 10 10
+       size 48 48
        hexactpos 1
        vexactpos 1
-       hexactsize 0
+       hexactsize 1
        vexactsize 1
-       scriptclass "ViewBinding"
-       font "gui/fonts/MetronLight16"
-       "size to text h" 1
-       "text valign" center
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       {
+        TextWidgetClass UserCount {
+         ignorepointer 1
+         position 0 0
+         size 1 18
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scaled 0
+         text "User Count:"
+         font "gui/fonts/etelkatextpro16"
+         "size to text h" 1
+         "text valign" center
+        }
+        TextWidgetClass UserCountData {
+         ignorepointer 1
+         size 1 18
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         font "gui/fonts/MetronLight16"
+         "size to text h" 1
+         "text valign" center
+        }
+       }
+      }
+      WrapSpacerWidgetClass EntityCountWrapper {
+       ignorepointer 1
+       position 10 10
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       {
+        TextWidgetClass EntityCount {
+         ignorepointer 1
+         position 0 0
+         size 1 12
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scaled 0
+         text "Entity Count:"
+         font "gui/fonts/etelkatextpro16"
+         "size to text h" 1
+         "text valign" center
+        }
+        TextWidgetClass EntityCountData {
+         ignorepointer 1
+         size 1 12
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         font "gui/fonts/etelkatextpro16"
+         "size to text h" 1
+         "text valign" center
+        }
+       }
       }
      }
     }
-    WrapSpacerWidgetClass EntityCountWrapper {
+    FrameWidgetClass "Floor.Camera" {
      ignorepointer 1
-     position 10 10
-     size 48 48
+     size 703 1
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
-     vexactsize 1
-     Padding 0
-     Margin 0
-     "Size To Content H" 1
+     vexactsize 0
+     scaled 0
      {
-      TextWidgetClass EntityCount {
+      FrameWidgetClass "Floor.Camera.Frame" {
        ignorepointer 1
-       position 0 0
-       size 1 12
-       halign center_ref
+       position 6 0
+       size 32 32
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 0
+       hexactsize 1
+       vexactsize 1
+       {
+        ButtonWidgetClass "Floor.Camera.Button" {
+         visible 1
+         position 0 0
+         size 0.75 0.75
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         style Empty
+         "no focus" 1
+         {
+          ImageWidgetClass "Floor.Camera.Icon" {
+           ignorepointer 1
+           color 1 1 1 0.3922
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           image0 "set:icons image:camera_polaroid"
+           mode blend
+           "src alpha" 1
+           filter 0
+           nocache 0
+          }
+         }
+        }
+       }
+      }
+      GridSpacerWidgetClass "Floor.Position" {
+       ignorepointer 1
+       position 62 0
+       size 345 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
        vexactsize 1
        scaled 0
-       text "Entity Count:"
-       font "gui/fonts/etelkatextpro16"
-       "size to text h" 1
-       "text valign" center
-      }
-      TextWidgetClass EntityCountData {
-       ignorepointer 1
-       size 1 12
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       scriptclass "ViewBinding"
-       font "gui/fonts/etelkatextpro16"
-       "size to text h" 1
-       "text valign" center
+       content_halign center
+       content_valign center
+       Rows 1
+       {
+        FrameWidgetClass "Position.X" {
+         visible 1
+         ignorepointer 1
+         position 10 10
+         size 80 48
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          EditBoxWidgetClass "Position.X.Text" {
+           ignorepointer 0
+           color 1 1 1 0.3922
+           position 28 0
+           size 84 1
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 0
+           scaled 0
+           style No_Highlight
+           "no focus" 0
+           text "12345"
+           "limit visible" 0
+           "Use default text" 0
+           "exact text" 1
+           font "gui/fonts/MetronLight"
+          }
+          FrameWidgetClass "Position.X.Frame" {
+           ignorepointer 1
+           position 0 0
+           size 28 28
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            TextWidgetClass "Position.X.Frame.Text" {
+             ignorepointer 1
+             color 1 0.2392 0.2392 1
+             position 0 0
+             size 0.8 0.8
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             text "X:"
+             font "gui/fonts/MetronBook"
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass "Position.Y" {
+         visible 1
+         ignorepointer 1
+         position 10 10
+         size 80 48
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          EditBoxWidgetClass "Position.Y.Text" {
+           ignorepointer 0
+           color 1 1 1 0.3922
+           position 28 0
+           size 84 1
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 0
+           scaled 0
+           style No_Highlight
+           "no focus" 0
+           text "12345"
+           "limit visible" 0
+           "Use default text" 0
+           "exact text" 1
+           font "gui/fonts/MetronLight"
+          }
+          FrameWidgetClass "Position.Y.Frame" {
+           ignorepointer 1
+           position 0 0
+           size 28 28
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            TextWidgetClass "Position.Y.Frame.Text" {
+             ignorepointer 1
+             color 0 0.7804 0.051 1
+             size 0.8 0.8
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             text "Y:"
+             font "gui/fonts/MetronBook"
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass "Position.Z" {
+         visible 1
+         ignorepointer 1
+         position 10 10
+         size 80 48
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          EditBoxWidgetClass "Position.Z.Text" {
+           ignorepointer 0
+           color 1 1 1 0.3922
+           position 28 0
+           size 84 1
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 0
+           scaled 0
+           style No_Highlight
+           "no focus" 0
+           text "12345"
+           "limit visible" 0
+           "Use default text" 0
+           "exact text" 1
+           font "gui/fonts/MetronLight"
+          }
+          FrameWidgetClass "Position.Z.Frame" {
+           ignorepointer 1
+           position 0 0
+           size 28 28
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            TextWidgetClass "Position.Z.Frame.Text" {
+             ignorepointer 1
+             color 0.5412 0.5412 1 1
+             size 0.8 0.8
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             text "Z:"
+             font "gui/fonts/MetronBook"
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+         }
+        }
+       }
       }
      }
     }
