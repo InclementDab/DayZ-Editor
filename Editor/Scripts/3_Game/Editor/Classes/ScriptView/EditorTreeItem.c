@@ -6,7 +6,7 @@ class EditorTreeItem: ScriptView
 	
 	TextWidget Text;
 	WrapSpacerWidget Children;
-	Widget Panel;
+	Widget Panel, Spacer;
 		
 	protected bool m_IsBeingDragged;
 	protected string m_Text;
@@ -111,6 +111,15 @@ class EditorTreeItem: ScriptView
 	void SetParentTree(EditorTreeItem parent)
 	{
 		m_Parent = parent;
+		
+		int i = 0;
+		EditorTreeItem upper_parent = parent;
+		while (upper_parent) {
+			i++;
+			upper_parent = upper_parent.GetParent();
+		}
+		
+		Spacer.SetSize(i * 14, 19.00);
 	}
 	
 	EditorTreeItem GetParentTree()

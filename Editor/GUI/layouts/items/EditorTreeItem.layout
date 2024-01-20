@@ -125,6 +125,7 @@ WrapSpacerWidgetClass EditorTreeItem {
    clipchildren 0
    ignorepointer 0
    color 0.0275 0.4353 0.5725 0
+   position 0 0
    size 106 18
    halign center_ref
    valign center_ref
