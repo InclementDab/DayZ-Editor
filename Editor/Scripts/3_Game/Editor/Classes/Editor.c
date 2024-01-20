@@ -282,7 +282,11 @@ class Editor: Managed
 			EditorObjectDragHandler.Drag(m_DragTarget, m_DragOffset);
 		}
 		
-		Ray ray = GetCamera().PerformCursorRaycast();
+		Ray ray1 = GetCamera().PerformCursorRaycast();
+		Ray ray2 = GetCamera().GetCursorRay();
+		
+		vector camera_orthogonal[4] = { ray1.Direction * ray2.Direction, ray2.Direction, ray1.Direction, ray1.Position };
+		Math3D.MatrixOrthogonalize4(camera_orthogonal);	
 		
 		vector rotation_mat[3];
 		Math3D.MatrixIdentity3(rotation_mat);
@@ -294,9 +298,13 @@ class Editor: Managed
 			Math3D.YawPitchRollMatrix(Vector(15, 0, 0), rotation_mat);
 		}
 		
+		Math3D.MatrixMultiply3(camera_orthogonal, rotation_mat, camera_orthogonal);
+		
+		Shape.CreateMatrix(camera_orthogonal);
+		
 		m_CursorNormal = m_CursorNormal.Multiply3(rotation_mat);
-		Print(m_CursorNormal);
-		ray.Debug();
+		//Print(m_CursorNormal);
+		ray1.Debug();
 		
 		foreach (Object object, EditorHandData data1: Placing) {
 			vector transform[4];
@@ -304,13 +312,15 @@ class Editor: Managed
 						
 			vector size = ObjectGetSize(object);
 			
-			transform = { m_CursorNormal, ray.Direction, m_CursorNormal * ray.Direction, ray.Position + Vector(0, (size[1] / 2) * ray.Direction.Length(), 0) };
-					
+			
+			
+			transform = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position + Vector(0, (size[1] / 2) * ray1.Direction.Length(), 0) };
+			
 			object.SetTransform(transform);
 			
 			// diag
-			transform[3] = ray.Position;
-			Shape.CreateMatrix(transform);
+			transform[3] = ray1.Position;
+			//Shape.CreateMatrix(transform);
 		}
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {

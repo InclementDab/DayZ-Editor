@@ -1,7 +1,7 @@
 PanelWidgetClass Root {
  clipchildren 0
  ignorepointer 1
- color 0 0 0 0
+ color 0 0 0 1
  position 0 0
  size 256 256
  hexactpos 1
@@ -25,9 +25,11 @@ PanelWidgetClass Root {
    hexactsize 1
    vexactsize 1
    scaled 0
-   image0 "set:icons image:circle_dot"
+   image0 "set:regular image:circle_dot"
    mode blend
    "src alpha" 1
+   "clamp mode" clamp
+   "stretch mode" none
    filter 0
   }
  }

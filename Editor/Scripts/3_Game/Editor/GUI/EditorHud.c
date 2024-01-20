@@ -185,7 +185,7 @@ class EditorHud: ScriptView
 		}
 			
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
-			if (!IsCursorVisible()) {
+			if (IsCursorVisible()) {
 				GetEditor().ClearPlacing();
 			}
 			
