@@ -646,14 +646,14 @@ FrameWidgetClass Root {
                "text valign" center
                {
                 ScriptParamsClass {
-                 Binding_Name "m_EntityCount"
+                 Binding_Name "OnlineEntityCount"
                 }
                }
               }
              }
              {
               ScriptParamsClass {
-               Binding_Name "m_EntityCount"
+               Binding_Name "OnlineEntityCount"
               }
              }
             }
@@ -870,12 +870,18 @@ FrameWidgetClass Root {
          hexactsize 1
          vexactsize 1
          scaled 0
+         scriptclass "ViewBinding"
          text "00000000-0000-0000-0000-00000000"
          font "gui/fonts/MetronLight"
          "exact text" 1
          "size to text h" 1
          "text halign" right
          "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "OnlineSessionId"
+          }
+         }
         }
        }
       }

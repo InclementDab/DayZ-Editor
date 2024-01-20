@@ -113,7 +113,7 @@ class EditorHud: ScriptView
 			m_TemplateController.OnlineUserCount = online.GetPlayers().Count();
 			m_TemplateController.NotifyPropertyChanged("OnlineUserCount");
 			
-			m_TemplateController.OnlineEntityCount = online.Service.GetPlacedObjects().Count().ToString();
+			m_TemplateController.OnlineEntityCount = online.Service.GetPlacedObjects().Count();
 			m_TemplateController.NotifyPropertyChanged("OnlineEntityCount");
 		}
 				

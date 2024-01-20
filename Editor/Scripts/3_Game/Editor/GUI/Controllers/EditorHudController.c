@@ -2,8 +2,8 @@ class EditorHudController: ViewController
 {
 	string Version = Editor.Version;
 	
-	string OnlineSessionId, OnlineEntityCount;
-	int OnlineUserCount;
+	string OnlineSessionId;
+	int OnlineUserCount, OnlineEntityCount;
 	
 	string Search;
 	int JoinCode;
