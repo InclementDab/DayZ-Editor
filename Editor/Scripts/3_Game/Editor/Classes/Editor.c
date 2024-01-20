@@ -287,7 +287,7 @@ class Editor: Managed
 			vector transform[4];
 			object.GetTransform(transform);
 						
-			transform = { "1 0 0", ray.Direction, ray.Direction * "1 0 0", ray.Position };
+			transform = { "1 0 0", ray.Direction, "1 0 0" * ray.Direction, ray.Position };
 			
 			object.SetTransform(transform);
 			//output_ray.Debug();
@@ -296,8 +296,6 @@ class Editor: Managed
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
 			foreach (Object object_to_place, EditorHandData data: Placing) {					
 				string uuid = UUID.Generate();				
-				Print(object_to_place);
-				
 				m_PlacedObjects[uuid] = new EditorObject(uuid, object_to_place, object_to_place.GetType(), EFE_DEFAULT);
 				
 				m_WorldObjectIndex[m_PlacedObjects[uuid].GetWorldObject().GetID()] = m_PlacedObjects[uuid];			
@@ -305,7 +303,6 @@ class Editor: Managed
 				OnObjectCreated.Invoke(m_PlacedObjects[uuid]);
 				
 				Placing.Remove(object_to_place);
-				Print(Placing.Count());
 			}
 			
 			PlaySound(EditorSounds.PLOP);

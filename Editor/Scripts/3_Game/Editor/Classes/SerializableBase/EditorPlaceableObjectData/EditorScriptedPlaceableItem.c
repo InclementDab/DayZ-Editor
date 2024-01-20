@@ -14,14 +14,7 @@ class EditorScriptedPlaceableItem: EditorPlaceableObjectData
 		
 	override Object CreateObject(vector transform[4], int flags = ECE_LOCAL)
 	{		
-		Object object = GetGame().CreateObjectEx(m_Type.ToString(), transform[3], flags);		
-		EntityAI entity_ai;
-		if (Class.CastTo(entity_ai, object)) {
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 37, false, true);
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 37, false, false);
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 37, false, true);
-		}
-						
+		Object object = GetGame().CreateObjectEx(m_Type.ToString(), transform[3], flags);				
 		object.SetTransform(transform);
 		object.Update();		
 		return object;
