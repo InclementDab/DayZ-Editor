@@ -231,6 +231,8 @@ class Editor: Managed
 			m_DragOffset = position.InvMultiply4(transform);
 		}
 	}
+	
+	protected vector m_CursorNormal = vector.Aside;
 		
 	void Update(float timeslice)
 	{		
@@ -281,6 +283,19 @@ class Editor: Managed
 		}
 		
 		Ray ray = GetCamera().PerformCursorRaycast();
+		
+		vector rotation_mat[3];
+		Math3D.MatrixIdentity3(rotation_mat);
+		if (GetGame().GetInput().LocalPress_ID(UAZoomInOptics)) {
+			Math3D.YawPitchRollMatrix(Vector(-15, 0, 0), rotation_mat);
+		}
+		
+		if (GetGame().GetInput().LocalPress_ID(UAZoomOutOptics)) {
+			Math3D.YawPitchRollMatrix(Vector(15, 0, 0), rotation_mat);
+		}
+		
+		m_CursorNormal = m_CursorNormal.Multiply3(rotation_mat);
+		Print(m_CursorNormal);
 		ray.Debug();
 		
 		foreach (Object object, EditorHandData data1: Placing) {
@@ -289,9 +304,13 @@ class Editor: Managed
 						
 			vector size = ObjectGetSize(object);
 			
-			transform = { "1 0 0", ray.Direction, "1 0 0" * ray.Direction, ray.Position + Vector(0, (size[1] / 2) * ray.Direction.Length(), 0) };
-			
+			transform = { m_CursorNormal, ray.Direction, m_CursorNormal * ray.Direction, ray.Position + Vector(0, (size[1] / 2) * ray.Direction.Length(), 0) };
+					
 			object.SetTransform(transform);
+			
+			// diag
+			transform[3] = ray.Position;
+			Shape.CreateMatrix(transform);
 		}
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
@@ -374,6 +393,15 @@ class Editor: Managed
 		
 		EditorObject.ClearSelections();
 		m_CurrentControl.DisableSimulation(false);
+	}
+	
+	void ClearPlacing()
+	{
+		foreach (Object object, EditorHandData data: Placing) {
+			GetGame().ObjectDelete(object);
+		}
+		
+		Placing.Clear();
 	}
 	
 	Entity GetCurrentControl()
