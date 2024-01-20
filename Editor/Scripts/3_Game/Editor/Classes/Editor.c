@@ -287,10 +287,11 @@ class Editor: Managed
 			vector transform[4];
 			object.GetTransform(transform);
 						
-			transform = { "1 0 0", ray.Direction, "1 0 0" * ray.Direction, ray.Position };
+			vector size = ObjectGetSize(object);
+			
+			transform = { "1 0 0", ray.Direction, "1 0 0" * ray.Direction, ray.Position + Vector(0, (size[1] / 2) * ray.Direction.Length(), 0) };
 			
 			object.SetTransform(transform);
-			//output_ray.Debug();
 		}
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
