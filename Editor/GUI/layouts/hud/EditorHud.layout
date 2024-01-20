@@ -2886,7 +2886,7 @@ FrameWidgetClass Root {
      hexactsize 1
      vexactsize 1
      scaled 0
-     scriptclass ""
+     scriptclass "EditorButton"
      {
       ButtonWidgetClass "Online.Button" {
        visible 1
@@ -2898,10 +2898,10 @@ FrameWidgetClass Root {
        hexactsize 0
        vexactsize 0
        scaled 0
-       scriptclass "EditorButton"
+       scriptclass ""
        style Empty
-       "no focus" 1
-       switch once
+       "no focus" 0
+       switch toggle
        {
         ImageWidgetClass "Online.Icon" {
          ignorepointer 1
@@ -2919,14 +2919,6 @@ FrameWidgetClass Root {
          "src alpha" 1
          filter 0
          nocache 0
-        }
-       }
-       {
-        ScriptParamsClass {
-         Red 255
-         Green 255
-         Blue 255
-         CommandType "WebToggleCommand"
         }
        }
       }
@@ -3306,6 +3298,14 @@ FrameWidgetClass Root {
          }
         }
        }
+      }
+     }
+     {
+      ScriptParamsClass {
+       Red 255
+       Green 255
+       Blue 255
+       CommandType "WebToggleCommand"
       }
      }
     }

@@ -3,7 +3,7 @@ class WebToggleCommand: Command
 {
 	override void Execute(bool state) 
 	{
-		GetEditor().GetHud().OutlinePanel.Show(!GetEditor().GetHud().OutlinePanel.IsVisible());
+		GetEditor().GetHud().OutlinePanel.Show(state);
 	}
 }
 
