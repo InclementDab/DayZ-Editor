@@ -620,6 +620,7 @@ FrameWidgetClass Root {
      vexactsize 0
      scaled 0
      style blank
+     "Scrollbar H" 1
      "Scrollbar V" 1
      "Scrollbar V Left" 1
      {

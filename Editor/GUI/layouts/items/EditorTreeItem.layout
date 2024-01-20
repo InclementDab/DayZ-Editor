@@ -1,4 +1,4 @@
-WrapSpacerWidgetClass Root {
+WrapSpacerWidgetClass EditorTreeItem {
  visible 1
  clipchildren 0
  position 0 0
@@ -11,9 +11,10 @@ WrapSpacerWidgetClass Root {
  scriptclass ""
  Padding 0
  Margin 0
+ "Size To Content H" 1
  "Size To Content V" 1
  {
-  WrapSpacerWidgetClass Wrapper {
+  WrapSpacerWidgetClass Main {
    ignorepointer 1
    size 1 18
    hexactpos 1
@@ -23,19 +24,20 @@ WrapSpacerWidgetClass Root {
    scaled 0
    Padding 0
    Margin 0
+   "Size To Content H" 1
    {
-    FrameWidgetClass CollapseWrapper {
-     visible 0
+    FrameWidgetClass Collapse {
+     visible 1
      ignorepointer 0
      position 0 0
-     size 18 18
+     size 24 1
      hexactpos 1
      vexactpos 1
      hexactsize 1
-     vexactsize 1
+     vexactsize 0
      scaled 0
      {
-      ButtonWidgetClass Collapse {
+      ButtonWidgetClass "Collapse.Button" {
        visible 1
        size 12 12
        halign center_ref
@@ -50,7 +52,7 @@ WrapSpacerWidgetClass Root {
        font "gui/fonts/etelkatextpro14"
        switch toggle
        {
-        ImageWidgetClass CollapseIcon {
+        ImageWidgetClass "Collapse.Icon" {
          visible 1
          ignorepointer 1
          position 0 0
@@ -76,49 +78,45 @@ WrapSpacerWidgetClass Root {
       }
      }
     }
-    FrameWidgetClass Spacer1 {
+    FrameWidgetClass Icon {
+     visible 1
      ignorepointer 1
-     size 6 1
+     size 24 1
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 0
+     {
+      ImageWidgetClass "Icon.Image" {
+       visible 1
+       disabled 0
+       ignorepointer 1
+       size 18 18
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       image0 "set:regular image:folder"
+       mode blend
+       "src alpha" 1
+       filter 0
+      }
+     }
     }
-    ImageWidgetClass Icon {
-     visible 0
-     disabled 0
-     ignorepointer 1
-     position 0 0
-     size 18 18
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     image0 "set:regular image:folder"
-     mode blend
-     "src alpha" 1
-     filter 0
-    }
-    FrameWidgetClass Spacer0 {
-     ignorepointer 1
-     size 6 1
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 0
-    }
-    PanelWidgetClass Button {
+    PanelWidgetClass Panel {
      visible 1
      ignorepointer 0
      color 0.0275 0.4353 0.5725 0
      position 18 0
-     size 85 18
+     size 85 1
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
-     vexactsize 1
+     vexactsize 0
      scaled 0
      draggable 0
      scriptclass ""
@@ -153,35 +151,12 @@ WrapSpacerWidgetClass Root {
     }
    }
   }
-  ImageWidgetClass WrapPadding {
+  WrapSpacerWidgetClass Children {
    visible 1
-   ignorepointer 1
-   position 0 18
-   size 18 1
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 0
-   scaled 0
-   scriptclass "SizeToParent"
-   image0 "set:editor_tree image:tree_l"
-   mode blend
-   "src alpha" 1
-   "clamp mode" invalid
-   "stretch mode" invalid
-   filter 0
-   {
-    ScriptParamsClass {
-     m_ResizeVertical 1
-    }
-   }
-  }
-  WrapSpacerWidgetClass ChildrenWrapper {
-   visible 0
    clipchildren 0
    ignorepointer 1
-   position 18 18
-   size 500 0
+   position 24 0
+   size 500 8
    hexactpos 1
    vexactpos 1
    hexactsize 1
@@ -194,7 +169,7 @@ WrapSpacerWidgetClass Root {
    "Size To Content V" 1
    {
     ScriptParamsClass {
-     Binding_Name "Children"
+     Binding_Name "ChildrenItems"
     }
    }
   }

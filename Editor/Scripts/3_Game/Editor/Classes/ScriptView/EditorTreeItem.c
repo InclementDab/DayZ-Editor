@@ -6,7 +6,7 @@ class EditorTreeItem: ScriptView
 	
 	TextWidget Text;
 	ImageWidget Icon, CollapseIcon, TreeDisplay;
-	WrapSpacerWidget ChildrenWrapper;
+	WrapSpacerWidget Children;
 	ButtonWidget Button;
 	
 	Widget CollapseWrapper, WrapPadding;
@@ -46,7 +46,7 @@ class EditorTreeItem: ScriptView
 	
 	void OnCollapseExecute(ButtonCommandArgs args)
 	{
-		ShowChildren(!ChildrenWrapper.IsVisible());
+		ShowChildren(!Children.IsVisible());
 	}
 	
 	void ApplyFilter(string filter)
@@ -61,15 +61,13 @@ class EditorTreeItem: ScriptView
 	
 	void ShowChildren(bool state)
 	{
-		ChildrenWrapper.Show(state);
-		WrapPadding.Show(state);
+		Children.Show(state);
 		
 		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
 		CollapseIcon.SetImage(0);
 				
 		float w, h;
-		ChildrenWrapper.GetSize(w, h);
-		WrapPadding.SetScreenSize(18, h);
+		Children.GetSize(w, h);
 	}
 		
 	override void Update(float dt)

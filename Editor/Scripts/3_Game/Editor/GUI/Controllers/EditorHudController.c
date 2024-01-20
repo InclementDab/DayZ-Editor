@@ -95,8 +95,8 @@ class EditorHudController: ViewController
 		switch (property_name) {
 			case "Search": {
 				for (int i = 0; i < LeftListItems.Count(); i++) {
-					for (int j = 0; j < LeftListItems[i].GetTemplateController().Children.Count(); j++) {
-						LeftListItems[i].GetTemplateController().Children[j].ApplyFilter(Search);
+					for (int j = 0; j < LeftListItems[i].GetTemplateController().ChildrenItems.Count(); j++) {
+						LeftListItems[i].GetTemplateController().ChildrenItems[j].ApplyFilter(Search);
 					}
 					
 					LeftListItems[i].ShowChildren(true);

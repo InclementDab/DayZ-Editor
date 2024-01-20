@@ -167,7 +167,7 @@ class EditorHud: ScriptView
 			m_DraggedBar.GetParent().SetSize(distance_from_wall, y - (tools_height + menu_height));
 			m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
 		}
-		
+			
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
 			ShowCursor(!IsCursorVisible());
 		

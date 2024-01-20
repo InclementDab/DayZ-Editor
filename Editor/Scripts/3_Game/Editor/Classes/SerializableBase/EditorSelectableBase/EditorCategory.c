@@ -28,7 +28,7 @@ class EditorCategory: EditorSelectableBase
 	{
 		m_Children.Insert(child);
 		
-		m_TreeItem.GetTemplateController().Children.Insert(child.GetTreeItem());
+		m_TreeItem.GetTemplateController().ChildrenItems.Insert(child.GetTreeItem());
 	}
 	
 	void RemoveChild(notnull EditorSelectableBase child)
