@@ -5,12 +5,9 @@ class EditorTreeItem: ScriptView
 	protected EditorTreeItem m_Parent;
 	
 	TextWidget Text;
-	ImageWidget Icon, CollapseIcon, TreeDisplay;
 	WrapSpacerWidget Children;
-	ButtonWidget Button;
-	
-	Widget CollapseWrapper, WrapPadding;
-	
+	Widget Panel;
+		
 	protected bool m_IsBeingDragged;
 	protected string m_Text;
 	
@@ -24,8 +21,6 @@ class EditorTreeItem: ScriptView
 		
 		m_Text = text;
 		SetText(m_Text);
-		
-		ShowChildren(false);
 	}
 	
 	void SetText(string text)
@@ -34,19 +29,21 @@ class EditorTreeItem: ScriptView
 				
 		float w, h;
 		Text.GetScreenSize(w, h);
-		Button.SetScreenSize(w, h);
+		Panel.SetScreenSize(w, h);
 	}
 	
 	void SetIcon(string icon)
 	{
-		Icon.Show(true);
-		Icon.LoadImageFile(0, icon);
-		Icon.SetImage(0);
+		m_TemplateController.IconImage = icon;
+		m_TemplateController.NotifyPropertyChanged("IconImage");
 	}
 	
 	void OnCollapseExecute(ButtonCommandArgs args)
 	{
-		ShowChildren(!Children.IsVisible());
+		Children.Show(!Children.IsVisible());	
+				
+		m_TemplateController.CollapseIcon = Ternary<string>.If(!Children.IsVisible(),"set:dayz_gui image:Expand", "set:dayz_gui image:Collapse");
+		m_TemplateController.NotifyPropertyChanged("CollapseIcon");
 	}
 	
 	void ApplyFilter(string filter)
@@ -57,17 +54,6 @@ class EditorTreeItem: ScriptView
 		name.ToLower();
 	
 		m_LayoutRoot.Show(name.Contains(filter));
-	}
-	
-	void ShowChildren(bool state)
-	{
-		Children.Show(state);
-		
-		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
-		CollapseIcon.SetImage(0);
-				
-		float w, h;
-		Children.GetSize(w, h);
 	}
 		
 	override void Update(float dt)
@@ -82,14 +68,14 @@ class EditorTreeItem: ScriptView
 			int x, y;
 			GetMousePos(x, y);
 			
-			Button.SetPos(x, y);
+			Panel.SetPos(x, y);
 			Text.SetPos(x, y);
 		}
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		if (w != Button) {
+		if (w != Panel) {
 			return super.OnMouseButtonDown(w, x, y, button);
 		}
 		
@@ -119,7 +105,7 @@ class EditorTreeItem: ScriptView
 			
 	void OnSelectionChange(EditorSelectableBase selectable)
 	{
-		Button.SetColor(ARGB(255, 7, 111, 146) * selectable.IsSelected());
+		Panel.SetColor(ARGB(255, 7, 111, 146) * selectable.IsSelected());
 	}
 					
 	void SetParentTree(EditorTreeItem parent)

@@ -27,7 +27,7 @@ WrapSpacerWidgetClass EditorTreeItem {
    "Size To Content H" 1
    {
     FrameWidgetClass Collapse {
-     visible 1
+     visible 0
      ignorepointer 0
      position 0 0
      size 24 1
@@ -64,10 +64,16 @@ WrapSpacerWidgetClass EditorTreeItem {
          hexactsize 1
          vexactsize 1
          scaled 0
+         scriptclass "ViewBinding"
          image0 "set:dayz_gui image:Expand"
          mode additive
          "src alpha" 1
          filter 0
+         {
+          ScriptParamsClass {
+           Binding_Name "CollapseIcon"
+          }
+         }
         }
        }
        {
@@ -79,7 +85,7 @@ WrapSpacerWidgetClass EditorTreeItem {
      }
     }
     FrameWidgetClass Icon {
-     visible 1
+     visible 0
      ignorepointer 1
      size 24 1
      hexactpos 1
@@ -99,10 +105,16 @@ WrapSpacerWidgetClass EditorTreeItem {
        hexactsize 1
        vexactsize 1
        scaled 0
+       scriptclass "ViewBinding"
        image0 "set:regular image:folder"
        mode blend
        "src alpha" 1
        filter 0
+       {
+        ScriptParamsClass {
+         Binding_Name "IconImage"
+        }
+       }
       }
      }
     }
@@ -151,15 +163,34 @@ WrapSpacerWidgetClass EditorTreeItem {
     }
    }
   }
-  WrapSpacerWidgetClass Children {
+  FrameWidgetClass "Main.Spacer" {
    visible 1
    clipchildren 0
    ignorepointer 1
-   position 24 0
-   size 500 8
+   position 0 0
+   size 8 0
    hexactpos 1
    vexactpos 1
    hexactsize 1
+   vexactsize 1
+   scriptclass "SizeToChild"
+   {
+    ScriptParamsClass {
+     m_ChildName "Children.Wrapper"
+     m_ResizeVertical 1
+    }
+   }
+  }
+  WrapSpacerWidgetClass Children {
+   visible 0
+   disabled 0
+   clipchildren 0
+   ignorepointer 1
+   position 24 0
+   size 1 8
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
    vexactsize 1
    scaled 0
    scriptclass "ViewBinding"

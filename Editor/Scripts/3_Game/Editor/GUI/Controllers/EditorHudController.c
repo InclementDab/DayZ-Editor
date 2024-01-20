@@ -99,7 +99,7 @@ class EditorHudController: ViewController
 						LeftListItems[i].GetTemplateController().ChildrenItems[j].ApplyFilter(Search);
 					}
 					
-					LeftListItems[i].ShowChildren(true);
+					LeftListItems[i].Children.Show(true);
 				}
 				
 				break;

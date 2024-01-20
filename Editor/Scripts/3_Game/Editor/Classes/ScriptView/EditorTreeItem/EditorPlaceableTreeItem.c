@@ -3,7 +3,7 @@ class EditorPlaceableTreeItem: EditorTreeItem
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		switch (w) {
-			case Button: {				
+			case Panel: {				
 				Widget scroller = m_LayoutRoot;
 				if (RecursiveGetParent(scroller, ScrollWidget)) {
 					float w_f, h_f, x_p, y_p;
@@ -27,7 +27,7 @@ class EditorPlaceableTreeItem: EditorTreeItem
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		switch (w) {
-			case Button: {
+			case Panel: {
 				delete GetEditor().GetHud().CurrentTooltip;
 				break;
 			}

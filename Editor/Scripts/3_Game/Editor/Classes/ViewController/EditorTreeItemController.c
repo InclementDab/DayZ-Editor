@@ -2,13 +2,22 @@ class EditorTreeItemController: ViewController
 {
 	ref ObservableCollection<EditorTreeItem> ChildrenItems = new ObservableCollection<EditorTreeItem>(this);
 	
-	Widget Icon, CollapseWrapper, ChildrenWrapper, WrapPadding;
+	string IconImage, CollapseIcon;
+	
+	Widget Icon, Collapse;
 		
-	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
+	override void PropertyChanged(string property_name)
 	{
-		Icon.Show(ChildrenItems.Count() > 0);		
-		CollapseWrapper.Show(ChildrenItems.Count() > 0);
-				
+		switch (property_name) {
+			case "IconImage": {
+				Icon.Show(IconImage != string.Empty);
+				break;
+			}
+		}
+	}
+	
+	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
+	{			
 		Param1<EditorTreeItem> item = Param1<EditorTreeItem>.Cast(args.ChangedValue);
 		EditorTreeItem script_view = EditorTreeItem.Cast(GetParent());
 		switch (args.ChangedAction) {
@@ -23,5 +32,7 @@ class EditorTreeItemController: ViewController
 				break;
 			}
 		}
+				
+		Collapse.Show(ChildrenItems.Count() > 0);
 	}
 }
