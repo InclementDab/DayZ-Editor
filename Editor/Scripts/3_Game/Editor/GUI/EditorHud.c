@@ -70,17 +70,7 @@ class EditorHud: ScriptView
 	void EditorHud()
 	{		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
-		
-		float w, h;
-		int x, y;
-				
-		// Script sizing for menu bars and whatnot
-		GetScreenSize(x, y);
-		Left.GetSize(w, h);
-		Left.SetSize(w, y - 110);
-		Right.GetSize(w, h);
-		Right.SetSize(w, y - 110);	
-			
+
 		m_CurrentPlacingContext = InsertPlacedCategory(new EditorCategory(new EditorObjectDataCategory("Placed Objects")));
 		InsertPlacedCategory(new EditorCategory(new EditorObjectDataCategory("Hidden Objects")));
 		InsertPlacedCategory(new EditorCategory(new EditorObjectDataCategory("Brushed Objects")));
@@ -153,33 +143,29 @@ class EditorHud: ScriptView
 		float menu_width, menu_height;
 		Menu.GetScreenSize(menu_width, menu_height);
 		
+		float tools_width, tools_height;
+		Tools.GetScreenSize(tools_width, tools_height);
+		
 		float left_width, left_height;
 		Left.GetScreenSize(left_width, left_height);
+		Left.SetScreenSize(left_width, x - menu_height - tools_height);
 		
 		float right_width, right_height;
 		Right.GetScreenSize(right_width, right_height);
-		
-		float tools_width, tools_height;
-		Tools.GetScreenSize(tools_width, tools_height);
+		Right.SetScreenSize(right_width, x - menu_height - tools_height);
 		
 		// Set size of inner
 		Inner.SetSize(x - right_width - left_width, y - tools_height - menu_height);
 		Inner.SetPos(left_width, tools_height + menu_height);	
 		
-		if (m_DraggedBar) {	
-			switch (m_DraggedBar.GetParent()) {
-				case Right: {
-					Right.SetSize(x - Math.Clamp(mouse_x, x - 720, x - 60), y - (tools_height + menu_height));
-					m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
-					break;
-				}
-				
-				case Left: {
-					Left.SetSize(Math.Clamp(mouse_x, 60, 720), y - (tools_height + menu_height));
-					m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
-					break;
-				}
-			}			
+		if (m_DraggedBar) {
+			int distance_from_wall = mouse_x;
+			if (distance_from_wall > x / 2) {
+				distance_from_wall = x - distance_from_wall;
+			}
+			
+			m_DraggedBar.GetParent().SetSize(distance_from_wall, y - (tools_height + menu_height));
+			m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
 		}
 		
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
@@ -406,12 +392,14 @@ class EditorHud: ScriptView
 	{
 		Notification.SetColor(color);
 		NotificationText.SetText(text);
-				
-		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.POSITION_Y, 0, 25, 30);
-		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.COLOR_A, 0.0, 1.0, 30);
+		
+		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.POSITION_Y, 0, 25, 90);
+		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.COLOR_A, 0.0, 1.0, 90);
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(HideNotification);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(HideNotification, 1000 * duration);
+		
+		GetEditor().PlaySound("Lock_SoundSet");
 	}
 	
 	void HideNotification()

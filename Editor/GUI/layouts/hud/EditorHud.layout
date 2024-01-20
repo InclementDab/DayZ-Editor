@@ -64,7 +64,7 @@ FrameWidgetClass Root {
      priority 101
      style rover_sim_colorable
      {
-      TextWidgetClass "Notification.Text" {
+      TextWidgetClass NotificationText {
        inheritalpha 1
        ignorepointer 1
        size 1 1
@@ -507,6 +507,7 @@ FrameWidgetClass Root {
    }
   }
   FrameWidgetClass Right {
+   visible 1
    clipchildren 0
    ignorepointer 1
    position 0 84
@@ -584,6 +585,7 @@ FrameWidgetClass Root {
    }
   }
   FrameWidgetClass Left {
+   visible 1
    clipchildren 0
    ignorepointer 1
    position 0 84
@@ -677,6 +679,7 @@ FrameWidgetClass Root {
    }
   }
   PanelWidgetClass Tools {
+   visible 1
    ignorepointer 1
    color 0.0941 0.0941 0.0941 1
    position 0 42
@@ -2161,6 +2164,7 @@ FrameWidgetClass Root {
    }
   }
   PanelWidgetClass Menu {
+   visible 1
    clipchildren 0
    ignorepointer 1
    color 0.1216 0.1216 0.1216 1

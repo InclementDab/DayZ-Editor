@@ -3,6 +3,7 @@ class UndoCommand: Command
 {
 	override void Execute(bool state) 
 	{
+		GetEditor().GetHud().ShowNotification("Undoing your mom");
 		GetEditor().Undo();
 	}
 	
