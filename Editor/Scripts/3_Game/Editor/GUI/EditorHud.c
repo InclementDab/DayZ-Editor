@@ -1,9 +1,45 @@
-class EditorHud: ScriptView
+[RegisterCommand(WebToggleCommand)]
+class WebToggleCommand: Command
 {
+	override void Execute(bool state) 
+	{
+		GetEditor().GetHud().OutlinePanel.Show(!GetEditor().GetHud().OutlinePanel.IsVisible());
+	}
+}
+
+typedef string Cursors;
+class Cursors: string
+{
+	static const Cursors I = "i_cursor";
+	static const Cursors LEFT_RIGHT = "left_right";
+}
+
+class EditorHud: ScriptView
+{		
+	ImageWidget Cursor, Foreground, Background;
+	
+	void SetCursor(Cursors cursor)
+	{
+		Cursor.Show(true);
+		
+		Foreground.LoadImageFile(0, string.Format("set:thin image:%1", cursor));
+		Foreground.SetImage(0);
+		
+		Background.LoadImageFile(0, string.Format("set:solid image:%1", cursor));
+		Background.SetImage(0);
+		
+		SetCursorWidget(Cursor);
+	}
+	
+	void ClearCursor()
+	{
+		Cursor.Show(false);
+	}
+	
 	protected EditorHudController m_TemplateController;
 		
 	// View Properties
-	Widget Left, Right, Inner, Tools, Menu, Floor;
+	Widget Left, Right, Inner, Tools, Menu;
 	
 	// Layout Elements
 	Widget LeftDragZone, RightDragZone;
@@ -30,7 +66,7 @@ class EditorHud: ScriptView
 	
 	protected ref array<ref EditorPlaceableObject> m_Placeables = {};
 	protected ref array<ref EditorObjectDataCategory> m_Data = {};
-
+	
 	void EditorHud()
 	{		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
@@ -109,64 +145,52 @@ class EditorHud: ScriptView
 		}
 							
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
-			m_DraggedBar.SetColor(COLOR_WHITE);
+			m_DraggedBar.GetChildren().SetColor(COLOR_WHITE);
 			m_DraggedBar = null;
+			ClearCursor();
 		}		
+				
+		float menu_width, menu_height;
+		Menu.GetScreenSize(menu_width, menu_height);
 		
-		if (m_DraggedBar) {
+		float left_width, left_height;
+		Left.GetScreenSize(left_width, left_height);
+		
+		float right_width, right_height;
+		Right.GetScreenSize(right_width, right_height);
+		
+		float tools_width, tools_height;
+		Tools.GetScreenSize(tools_width, tools_height);
+		
+		// Set size of inner
+		Inner.SetSize(x - right_width - left_width, y - tools_height - menu_height);
+		Inner.SetPos(left_width, tools_height + menu_height);	
+		
+		if (m_DraggedBar) {	
 			switch (m_DraggedBar.GetParent()) {
 				case Right: {
-					Right.SetSize(x - Math.Clamp(mouse_x, x - 720, x - 60), y - 74);
-					m_DraggedBar.SetColor(COLOR_BLUE);
+					Right.SetSize(x - Math.Clamp(mouse_x, x - 720, x - 60), y - (tools_height + menu_height));
+					m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
 					break;
 				}
 				
 				case Left: {
-					Left.SetSize(Math.Clamp(mouse_x, 60, 720), y - 74);
-					m_DraggedBar.SetColor(COLOR_BLUE);
+					Left.SetSize(Math.Clamp(mouse_x, 60, 720), y - (tools_height + menu_height));
+					m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
 					break;
 				}
 			}			
 		}
 		
-		float w, h;
-		float inner_width = x;
-		float inner_height = y;
-		Left.GetSize(w, h);
-		float inner_x = w;
-		
-		inner_width -= w;
-		Right.GetSize(w, h);
-		inner_width -= w;
-		
-		Tools.GetSize(w, h);
-		float inner_y = h;
-		inner_height -= h;
-		
-		float floor_width, floor_height;
-		Floor.GetSize(floor_width, floor_height);
-		
-		// Set size of inner
-		Inner.SetSize(inner_width, inner_height);
-		Floor.SetSize(inner_width, floor_height);
-		Floor.SetPos(inner_x, 0);
-		Inner.SetPos(inner_x, inner_y);	
-		
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
 			ShowCursor(!IsCursorVisible());
-			
-			
-			if (IsCursorVisible()) {
-				SetCursorWidget(GetGame().GetWorkspace().CreateWidgets("Editor\\GUI\\layouts\\loading.layout"));
-			}
+		
+			//if (IsCursorVisible()) {
+				//SetCursorWidget(GetGame().GetWorkspace().CreateWidgets("Editor\\GUI\\layouts\\loading.layout"));
+			//}
 		}
 	}
-	
-	void OnWebExecute(ButtonCommandArgs args)
-	{
-		OutlinePanel.Show(!OutlinePanel.IsVisible());
-	}
-		
+			
 	void OnJoinExecute(ButtonCommandArgs args)
 	{
 		ScriptRPC rpc = new ScriptRPC();
@@ -284,6 +308,8 @@ class EditorHud: ScriptView
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
+				SetCursor(Cursors.LEFT_RIGHT);
+				
 				//WidgetAnimator.AnimateColorHSV(w, "240 140 60", "239 131 175", 30);
 				//LeftDragZone.SetColor(COLOR_WHITE);
 				//WidgetAnimator.AnimateColor(w, COLOR_BLUE_LIGHT, 60);
@@ -296,11 +322,13 @@ class EditorHud: ScriptView
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-
-		
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
+				if (!m_DraggedBar) {
+					ClearCursor();
+				}
+				
 				//WidgetAnimator.AnimateColor(w, COLOR_BLUE, 50);
 				//LeftDragZone.SetColor(COLOR_SALMON_A);
 				//WidgetAnimator.AnimateColor(w, COLOR_WHITE, 60);
@@ -355,6 +383,7 @@ class EditorHud: ScriptView
 	void ShowCursor(bool state) 
 	{
 		GetGame().GetUIManager().ShowCursor(state);
+		ClearCursor();
 		
 		// If player is active
 		Man controlled_player = GetEditor().GetCurrentControlPlayer();

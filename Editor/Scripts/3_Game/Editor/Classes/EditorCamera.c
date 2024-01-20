@@ -94,7 +94,6 @@ class EditorCamera: ScriptedCamera
 		}
 		
 		else if (input.LocalValue_ID(UATempRaiseWeapon)) {		
-		
 			vector start_matrix[4] = { m_ViewDragStartPosition * vector.Up, vector.Up, m_ViewDragStartPosition, Vector(0, 0, 1).Multiply4(transform) };
 			
 			vector pointer = GetGame().GetPointerDirection().InvMultiply3(m_ViewDragStartMat);

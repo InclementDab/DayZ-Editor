@@ -30,8 +30,7 @@ class CfgMods
 				files[] = {
 					"Editor/gui/imagesets/dayz_editor_gui.imageset",
 					"DabsFramework/gui/imagesets/prefabs.imageset",
-					"Editor/gui/icons/tree.imageset",
-					"Editor/gui/icons/icons.imageset"
+					"Editor/gui/imagesets/tree.imageset"
 				};
 			};
 

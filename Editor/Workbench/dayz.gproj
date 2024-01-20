@@ -36,12 +36,12 @@ GameProjectClass {
 				"DabsFramework/gui/icons/duotone.imageset"
 				"DabsFramework/gui/icons/light.imageset"
 				"DabsFramework/gui/icons/regular.imageset"
-				"DabsFramework/gui/icons/sharp-light.imageset"
-				"DabsFramework/gui/icons/sharp-regular.imageset"
-				"DabsFramework/gui/icons/sharp-solid.imageset"
-				"DabsFramework/gui/icons/sharp-thin.imageset"
-				"DabsFramework/gui/icons/sharp-solid.imageset"
-				"DabsFramework/gui/icons/sharp-thin.imageset"
+				"DabsFramework/gui/icons/sharp_light.imageset"
+				"DabsFramework/gui/icons/sharp_regular.imageset"
+				"DabsFramework/gui/icons/sharp_solid.imageset"
+				"DabsFramework/gui/icons/sharp_thin.imageset"
+				"DabsFramework/gui/icons/sharp_solid.imageset"
+				"DabsFramework/gui/icons/sharp_thin.imageset"
 			}
 			widgetStyles {
 				"gui/looknfeel/dayzwidgets.styles" 

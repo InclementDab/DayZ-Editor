@@ -10,13 +10,16 @@ using Svg;
 const int IMAGE_MAX_SIZE = 512; // this is the space allocated to each image
 const int IMAGE_SIZE = 64;
 
-string folder_output = "P:\\Editor\\GUI\\icons";
+string folder_output = "P:\\DabsFramework\\GUI\\icons";
 DirectoryInfo dest_directory = Directory.CreateDirectory(folder_output);
 DirectoryInfo source_directory = Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\svgs");
 
 foreach (DirectoryInfo directory in source_directory.EnumerateDirectories()) {
     string output_file = dest_directory + $"\\{directory.Name}.dds";
+    output_file = output_file.Replace('-', '_');
+
     string enfusion_output_file = output_file.Replace("P:\\", "");
+    enfusion_output_file = enfusion_output_file.Replace("-", "_");
     enfusion_output_file = enfusion_output_file.Replace("dds", "edds");
 
     string formatted_directory_name = directory.Name;
@@ -98,9 +101,8 @@ foreach (DirectoryInfo directory in source_directory.EnumerateDirectories()) {
         }
     }
 
-    File.WriteAllText(dest_directory + $"\\{directory.Name}.imageset", image_set.ToStringy());
-
-    Console.WriteLine($"ImageSet generated {dest_directory + $"\\{directory.Name}.imageset"} complete, took {(DateTime.Now - file_start).TotalSeconds}");
+    File.WriteAllText(dest_directory + $"\\{directory.Name.Replace('-', '_')}.imageset", image_set.ToStringy());
+    Console.WriteLine($"ImageSet generated {dest_directory + $"\\{directory.Name.Replace('-', '_')}.imageset"} complete, took {(DateTime.Now - file_start).TotalSeconds}");
     File.Delete(output_file);
 
     DateTime dds_start = DateTime.Now;

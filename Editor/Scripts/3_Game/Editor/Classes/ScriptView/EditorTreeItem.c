@@ -121,7 +121,7 @@ class EditorTreeItem: ScriptView
 			
 	void OnSelectionChange(EditorSelectableBase selectable)
 	{
-		Button.SetColor(ARGB(255, 75, 119, 190) * selectable.IsSelected());
+		Button.SetColor(ARGB(255, 7, 111, 146) * selectable.IsSelected());
 	}
 					
 	void SetParentTree(EditorTreeItem parent)

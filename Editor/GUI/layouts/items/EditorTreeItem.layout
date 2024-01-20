@@ -95,7 +95,7 @@ WrapSpacerWidgetClass Root {
      hexactsize 1
      vexactsize 1
      scaled 0
-     image0 "set:icons image:folder"
+     image0 "set:regular image:folder"
      mode blend
      "src alpha" 1
      filter 0
@@ -111,7 +111,7 @@ WrapSpacerWidgetClass Root {
     PanelWidgetClass Button {
      visible 1
      ignorepointer 0
-     color 0.2941 0.4667 0.7451 0
+     color 0.0275 0.4353 0.5725 0
      position 18 0
      size 85 18
      valign center_ref
