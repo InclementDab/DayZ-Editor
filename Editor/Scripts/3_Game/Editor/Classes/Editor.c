@@ -305,10 +305,8 @@ class Editor: Managed
 				Placing.Remove(object_to_place);
 			}
 			
-			PlaySound(EditorSounds.PLOP);
-			
 			if (m_CurrentOnlineSession) {
-				m_CurrentOnlineSession.SetSynchDirty();
+				m_CurrentOnlineSession.Synchronize();
 			}
 		}
 	}
