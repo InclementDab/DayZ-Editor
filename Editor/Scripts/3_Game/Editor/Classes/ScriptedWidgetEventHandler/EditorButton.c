@@ -6,6 +6,7 @@ class EditorButton: ScriptedWidgetEventHandler
 	reference int Green = 255;
 	reference int Blue = 255;
 	reference string CommandType;	
+	reference string ButtonName;
 	
 	protected ButtonWidget m_ButtonWidget;
 	
@@ -13,18 +14,15 @@ class EditorButton: ScriptedWidgetEventHandler
 	{
 		w.SetHandler(this);
 		
-		if (!CommandType.ToType()) {
+		if (CommandType != string.Empty && !CommandType.ToType()) {
 			Error("Type not found! " + CommandType);
-			return;
 		}
 		
-		if (!ScriptView.FindWidgetClass(w, "Button")) {
-			Error("Button widget not found!");
-			return;
+		if (CommandType.ToType()) {
+			m_Command = GetEditor().GetCommand(CommandType.ToType());
 		}
 		
-		m_Command = GetEditor().GetCommand(CommandType.ToType());
-		m_ButtonWidget = ButtonWidget.Cast(ScriptView.FindWidgetClass(w, "Button"));
+		m_ButtonWidget = ButtonWidget.Cast(w.FindAnyWidget(ButtonName));
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
@@ -58,6 +56,11 @@ class EditorButton: ScriptedWidgetEventHandler
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		Widget icon = ScriptView.FindWidgetClass(w, "Icon");
+		if (!m_ButtonWidget) {
+			Print(w.GetName());
+			return true;
+		}
+		
 		if (icon && !m_ButtonWidget.GetState()) {
 			WidgetAnimator.AnimateColor(icon, ARGB(100, 255, 255, 255), 100);
 		}

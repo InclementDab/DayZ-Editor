@@ -140,7 +140,7 @@ class Editor: Managed
 	// 0: EditorObject
 	static ref ScriptInvoker OnObjectPlaced = new ScriptInvoker();
 	
-	protected EditorOnlineSession m_CurrentOnlineSession;
+	protected EditorOnline m_CurrentOnlineSession;
 	
 	// Stored list of all Placed Objects
 	ref map<string, ref EditorObject> m_PlacedObjects = new map<string, ref EditorObject>();
@@ -900,12 +900,12 @@ class Editor: Managed
 		return m_WorldObjectIndex[world_object.GetID()];
 	}
 	
-	void SetOnlineSession(EditorOnlineSession session)
+	void SetOnline(EditorOnline session)
 	{
 		m_CurrentOnlineSession = session;
 	}
 
-	EditorOnlineSession GetCurrentOnlineSession()
+	EditorOnline GetOnline()
 	{
 		return m_CurrentOnlineSession;
 	}

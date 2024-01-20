@@ -102,9 +102,19 @@ class EditorHud: ScriptView
 			EditorSelectableBase.ClearSelections();
 		}
 		
-		if (GetEditor().GetCurrentOnlineSession()) {
-			m_TemplateController.RotatingJoinCode = GetEditor().GetCurrentOnlineSession().GetJoinCode();
+		EditorOnline online = GetEditor().GetOnline();
+		if (online) {
+			m_TemplateController.RotatingJoinCode = online.GetJoinCode();
 			m_TemplateController.NotifyPropertyChanged("RotatingJoinCode");
+			
+			m_TemplateController.OnlineSessionId = online.GetUuid();
+			m_TemplateController.NotifyPropertyChanged("OnlineSessionId");
+			
+			m_TemplateController.OnlineUserCount = online.GetPlayers().Count();
+			m_TemplateController.NotifyPropertyChanged("OnlineUserCount");
+			
+			m_TemplateController.OnlineEntityCount = online.Service.GetPlacedObjects().Count().ToString();
+			m_TemplateController.NotifyPropertyChanged("OnlineEntityCount");
 		}
 				
 		//EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
@@ -167,6 +177,12 @@ class EditorHud: ScriptView
 			m_DraggedBar.GetParent().SetSize(distance_from_wall, y - (tools_height + menu_height));
 			m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
 		}
+		
+		EditorOnline online_session = GetEditor().GetOnline();
+		if (online_session) {
+			m_TemplateController.RotatingJoinCode = online_session.GetJoinCode();
+			m_TemplateController.NotifyPropertyChanged("RotatingJoinCode");
+		}
 			
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
 			ShowCursor(!IsCursorVisible());
@@ -181,12 +197,12 @@ class EditorHud: ScriptView
 	{
 		ScriptRPC rpc = new ScriptRPC();
 		rpc.Write(m_TemplateController.JoinCode.ToString());
-		rpc.Send(null, EditorOnlineSessionManager.RPC_REQUEST_JOIN_SESSION, false);
+		rpc.Send(null, EditorOnlineManager.RPC_REQUEST_JOIN_SESSION, false);
 	}
 	
 	void OnHostExecute(ButtonCommandArgs args)
 	{
-		ScriptRPC().Send(null, EditorOnlineSessionManager.RPC_REQUEST_CREATE_SESSION, true);
+		ScriptRPC().Send(null, EditorOnlineManager.RPC_REQUEST_CREATE_SESSION, true);
 	}
 	
 	EditorCategory InsertPlacedCategory(notnull EditorCategory editor_category)
@@ -230,14 +246,14 @@ class EditorHud: ScriptView
 			
 	void OnCopySessionExecute(ButtonCommandArgs args)
 	{
-		string code = GetEditor().GetCurrentOnlineSession().GetJoinCode();
+		string code = GetEditor().GetOnline().GetJoinCode();
 		GetGame().CopyToClipboard(code);
 		ShowNotification(string.Format("Code %1 copied to clipboard", code));
 	}
 	
 	void OnLeaveSessionExecute(ButtonCommandArgs args)
 	{
-		ScriptRPC().Send(null, EditorOnlineSessionManager.RPC_REQUEST_LEAVE_SESSION, true);
+		ScriptRPC().Send(null, EditorOnlineManager.RPC_REQUEST_LEAVE_SESSION, true);
 	}
 	
 	void OnCreateNewFolder(ButtonCommandArgs args)
