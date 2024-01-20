@@ -266,6 +266,7 @@ class EditorMapGroupProto: XMLCallback
 	{
 		EditorLog.Info("Inserting Loot Point %1", loot_point_data.GetPosition().ToString());
 		vector loot_pos = loot_point_data.GetPosition();	
+		/*
 		EditorObject loot_display = GetEditor().CreateObject(GetGame().CreateObjectEx("EditorLootPoint", loot_pos, ECE_SETUP), EditorObjectFlags.OBJECTMARKER);
 
 		EditorLootPoint loot_point = EditorLootPoint.Cast(loot_display.GetWorldObject());
@@ -287,7 +288,7 @@ class EditorMapGroupProto: XMLCallback
 		loot_display.GetWorldObject().SetTransform(transform);
 		m_LootPositions.Insert(loot_display);
 		
-		m_Building.Update();
+		m_Building.Update();*/
 	}
 	
 	protected void ErrorMessage(string message)

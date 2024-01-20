@@ -14,9 +14,17 @@ WrapSpacerWidgetClass EditorTreeItem {
  "Size To Content H" 1
  "Size To Content V" 1
  {
+  FrameWidgetClass Spacer {
+   ignorepointer 1
+   size 14 18
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+  }
   WrapSpacerWidgetClass Main {
    ignorepointer 1
-   size 1 18
+   size 0.88 18
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -182,7 +190,7 @@ WrapSpacerWidgetClass EditorTreeItem {
    }
   }
   WrapSpacerWidgetClass Children {
-   visible 0
+   visible 1
    disabled 0
    clipchildren 0
    ignorepointer 1

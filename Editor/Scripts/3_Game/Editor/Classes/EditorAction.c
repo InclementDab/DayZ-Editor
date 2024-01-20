@@ -80,7 +80,7 @@ class EditorAction: Managed
 	
 	void Create(Param1<ref EditorObjectData> params)
 	{		
-		GetEditor().CreateObject(params.param1.CreateObject(), false);
+		//GetEditor().CreateObject(params.param1.CreateObject(), false);
 	}
 	
 	void Delete(Param1<ref EditorObjectData> params)

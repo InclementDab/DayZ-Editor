@@ -36,7 +36,6 @@ class EditorPointView: ScriptView
 		float x, y, w, h;		
 		m_LayoutRoot.GetPos(x, y);
 		m_LayoutRoot.GetSize(w, h);
-		
 
 		vector transform_pos = m_Offset.Multiply4(transform);
 		vector screen_position = GetGame().GetScreenPos(transform_pos);

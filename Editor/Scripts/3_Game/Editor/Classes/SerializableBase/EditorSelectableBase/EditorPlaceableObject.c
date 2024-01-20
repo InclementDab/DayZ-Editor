@@ -8,6 +8,7 @@ class EditorPlaceableObject: EditorSelectableBase
         m_PlaceableObject = placeable_object;
 		
 		m_TreeItem = new EditorPlaceableTreeItem(m_PlaceableObject.GetName(), this);
+		m_TreeItem.SetIcon(m_PlaceableObject.GetIcon());
     }
 	
 	override EditorTreeItem GetTreeItem()
@@ -20,11 +21,13 @@ class EditorPlaceableObject: EditorSelectableBase
 		super.SetSelected(selected);
 		
 		if (selected) {
-			m_Object = m_PlaceableObject.CreateObject(vector.Zero, vector.Zero, 1.0, ECE_LOCAL);
-			GetEditor().AddInHand(m_Object, new EditorHandData());
-		} else {
-			GetEditor().RemoveFromHand(m_Object);
-			GetGame().ObjectDelete(m_Object);
+			vector transform[4];
+			Math3D.MatrixIdentity4(transform);
+			
+			Ray ray = GetEditor().GetCamera().PerformCursorRaycast();
+			transform[3] = ray.Position;
+			
+			GetEditor().Placing[m_PlaceableObject.CreateObject(transform)] = new EditorHandData();
 		}
 	}
 	

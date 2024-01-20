@@ -12,9 +12,9 @@ class EditorScriptedPlaceableItem: EditorPlaceableObjectData
 		return m_Type.ToString();
 	}
 		
-	override Object CreateObject(vector position, vector orientation, float scale, int flags = ECE_SETUP | ECE_LOCAL)
+	override Object CreateObject(vector transform[4], int flags = ECE_LOCAL)
 	{		
-		Object object = GetGame().CreateObjectEx(m_Type.ToString(), position, flags);		
+		Object object = GetGame().CreateObjectEx(m_Type.ToString(), transform[3], flags);		
 		EntityAI entity_ai;
 		if (Class.CastTo(entity_ai, object)) {
 			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 37, false, true);
@@ -22,9 +22,7 @@ class EditorScriptedPlaceableItem: EditorPlaceableObjectData
 			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 37, false, true);
 		}
 						
-		object.SetPosition(position);
-		object.SetOrientation(orientation);
-		object.SetScale(scale);
+		object.SetTransform(transform);
 		object.Update();		
 		return object;
 	}
@@ -32,10 +30,5 @@ class EditorScriptedPlaceableItem: EditorPlaceableObjectData
 	override EditorObjectDataCategory GetCategory()
 	{
 		return EditorObjectDataCategory.SCRIPTED;
-	}
-			
-	override EditorObjectData CreateData(vector position, vector orientation, float scale, int flags = EFE_DEFAULT)
-	{
-		return EditorObjectData.Create(m_Type.ToString(), position, orientation, scale, flags);
 	}
 }

@@ -33,7 +33,7 @@ class EditorObjectDataCategory: EditorPlaceableObjectData
 		return m_Name;
 	}
 	
-	string GetIcon()
+	override string GetIcon()
 	{
 		return m_Icon;
 	}

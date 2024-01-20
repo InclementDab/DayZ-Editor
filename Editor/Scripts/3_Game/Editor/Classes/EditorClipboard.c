@@ -66,6 +66,7 @@ class EditorClipboard
 			created_objects.Insert(dta.CreateObject());
 		}	
 		
+		/*
 		array<EditorObject> editor_objects = GetEditor().CreateObjects(created_objects);
 		
 		foreach (EditorObject editor_object: editor_objects) {
@@ -90,6 +91,6 @@ class EditorClipboard
 			}
 			
 			editor_object.SetSelected(true);
-		}
+		}*/
 	}
 }

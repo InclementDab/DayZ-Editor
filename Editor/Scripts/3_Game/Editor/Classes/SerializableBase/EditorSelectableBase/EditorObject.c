@@ -42,30 +42,20 @@ class EditorObject: EditorSelectableBase
 	// Custom stuff
 	string ExpansionTraderType;
 	string TestingScript;
-	
-	string Type;
-	vector Position, Orientation;
-			
-	void EditorObject(UUID uuid, string type, vector position, vector orientation, EditorObjectFlags flags)
+				
+	void EditorObject(UUID uuid, notnull Object object, string display_name, EditorObjectFlags flags)
 	{
 		m_UUID = uuid;
-		Type = type;
-		Position = position;
-		Orientation = orientation;
+		m_Object = object;
 		m_Flags = flags;
-				
-		m_DisplayName = type;
+		m_DisplayName = display_name;
 		
 		m_TreeItem = new EditorTreeItem(m_DisplayName, this);
 		
 		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
-			
 			GetEditor().GetHud().GetCurrentPlacingCategory().AddChild(this);
 		}
-		
-		m_Object = GetGame().CreateObjectEx(Type, Position, ECE_LOCAL);
-		m_Object.SetOrientation(Orientation);
-				
+						
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
 	
@@ -151,11 +141,12 @@ class EditorObject: EditorSelectableBase
 	void ~EditorObject()
 	{
 		EditorBoundingBox.Destroy(m_Object);
-		
-		GetGame().ObjectDelete(m_Object);
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
 						
+		delete m_PointViews;
+		delete m_ObjectAnimations;
+		
 		foreach (auto snap_point: m_EditorSnapPoints) {
 			snap_point.Delete();
 		}
@@ -163,12 +154,7 @@ class EditorObject: EditorSelectableBase
 	
 #ifdef DIAG_DEVELOPER
 	void DiagOnFrameUpdate(float dt)
-	{
-		if (!m_Object) {
-			delete this;
-			return;
-		}
-		
+	{		
 		vector transform[4];
 		m_Object.GetTransform(transform);
 		for (int i = 0; i < 8; i++) {
@@ -201,7 +187,9 @@ class EditorObject: EditorSelectableBase
 		serializer.Read(orientation);
 		serializer.Read(flags);
 		serializer.Read(display);
-		return new EditorObject(uuid, type, position, orientation, flags);
+		Object object = GetGame().CreateObjectEx(type, position, ECE_LOCAL);
+		object.SetOrientation(orientation);
+		return new EditorObject(uuid, object, display, flags);
 	}
 	
 	override void Write(Serializer serializer, int version)
@@ -216,21 +204,7 @@ class EditorObject: EditorSelectableBase
 		serializer.Write(m_Flags);
 		serializer.Write(m_DisplayName);
 	}
-	
-	override bool Read(Serializer serializer, int version)
-	{
-		// dont read m_UUID because you will need to peek at it to find it in memory ;)
 		
-		// Object properties
-		serializer.Read(Type);
-		serializer.Read(Position);		
-		serializer.Read(Orientation);		
-		
-		serializer.Read(m_Flags);
-		serializer.Read(m_DisplayName);
-		return true;
-	}
-	
 	override void SetSelected(bool selected)
 	{
 		super.SetSelected(selected);

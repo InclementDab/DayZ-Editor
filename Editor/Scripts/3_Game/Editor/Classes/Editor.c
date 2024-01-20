@@ -60,8 +60,6 @@ class EditorHandData
 	vector OrientationOffset;
 }
 
-typedef map<Object, ref EditorHandData> EditorHandMap;
-
 class Editor: Managed
 {
 	/* Private Members */
@@ -86,7 +84,7 @@ class Editor: Managed
 	protected ref EditorBrush m_EditorBrush;
 
 	protected EditorCamera m_EditorCamera;
-	protected ref EditorHandMap m_PlacingObjects = new EditorHandMap();
+	ref map<Object, ref EditorHandData> Placing = new map<Object, ref EditorHandData>();
 	protected Entity m_CurrentControl;
 	
 	// Stack of Undo / Redo Actions
@@ -273,17 +271,48 @@ class Editor: Managed
 				}
 			}
 		}
-		
-		if (GetGame().GetInput().LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {
-			CreateObjects(m_PlacingObjects.GetKeyArray());
-		}
-		
+			
 		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) != MB_PRESSED_MASK) {
 			m_DragTarget = null;
 		}
 		
 		if (m_DragTarget) {
 			EditorObjectDragHandler.Drag(m_DragTarget, m_DragOffset);
+		}
+		
+		Ray ray = GetCamera().PerformCursorRaycast();
+		ray.Debug();
+		
+		foreach (Object object, EditorHandData data1: Placing) {
+			vector transform[4];
+			object.GetTransform(transform);
+						
+			transform = { "1 0 0", ray.Direction, ray.Direction * "1 0 0", ray.Position };
+			
+			object.SetTransform(transform);
+			//output_ray.Debug();
+		}
+		
+		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
+			foreach (Object object_to_place, EditorHandData data: Placing) {					
+				string uuid = UUID.Generate();				
+				Print(object_to_place);
+				
+				m_PlacedObjects[uuid] = new EditorObject(uuid, object_to_place, object_to_place.GetType(), EFE_DEFAULT);
+				
+				m_WorldObjectIndex[m_PlacedObjects[uuid].GetWorldObject().GetID()] = m_PlacedObjects[uuid];			
+				
+				OnObjectCreated.Invoke(m_PlacedObjects[uuid]);
+				
+				Placing.Remove(object_to_place);
+				Print(Placing.Count());
+			}
+			
+			PlaySound(EditorSounds.PLOP);
+			
+			if (m_CurrentOnlineSession) {
+				m_CurrentOnlineSession.SetSynchDirty();
+			}
 		}
 	}
 		
@@ -396,44 +425,6 @@ class Editor: Managed
 		return GetGame().SurfaceIsSea(position[0], position[2]) || GetGame().SurfaceIsPond(position[0], position[2]);
 	}
 		
-	EditorHandMap AddInHand(Object world_object, EditorHandData hand_data = null)
-	{		
-		if (hand_data) {
-			m_PlacingObjects[world_object] = hand_data;
-		} else {
-			m_PlacingObjects[world_object] = new EditorHandData();
-		}
-		
-		return m_PlacingObjects;
-	}
-	
-	EditorHandMap AddInHand(EditorPlaceableObjectData item, EditorHandData hand_data = null)
-	{
-		return AddInHand(item.CreateObject(Editor.CurrentMousePosition, vector.Zero, 1.0), hand_data);				
-	}
-	
-	void RemoveFromHand(Object world_object)
-	{
-		m_PlacingObjects.Remove(world_object);
-	}
-	
-	void ClearHand()
-	{
-		foreach (Object world_object, EditorHandData hand_data: m_PlacingObjects) {
-			RemoveFromHand(world_object);
-		}
-	}
-	
-	array<Object> GetPlacingObjects()
-	{
-		return m_PlacingObjects.GetKeyArray();
-	}
-	
-	EditorHandData GetObjectInHandData(Object world_object)
-	{
-		return m_PlacingObjects[world_object];
-	}
-		
 	EditorHud ReloadHud() 
 	{	
 		m_EditorHud = new EditorHud();
@@ -481,56 +472,7 @@ class Editor: Managed
 		
 		return false;
 	}
-	
-	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
-	{	
-		EditorObject editor_object = new EditorObject(UUID.Generate(), target.GetType(), target.GetPosition(), target.GetOrientation(), flags);
-		m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
-		
-		target.Delete();
-	
-		OnObjectCreated.Invoke(editor_object);
-		Statistics.PlacedObjects++;
-			
-		m_PlacedObjects.Insert(editor_object.GetUUID(), editor_object);
-			
-		if (m_CurrentOnlineSession) {
-			m_CurrentOnlineSession.SetSynchDirty();
-		} 
-		
-		PlaySound(EditorSounds.PLOP);
-		
-		return editor_object;
-	}
 
-	array<EditorObject> CreateObjects(array<Object> objects, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
-	{
-		array<EditorObject> editor_objects = {};
-		foreach (Object object: objects) {			
-			string type = object.GetType();
-			vector transform[4];
-			object.GetTransform(transform);
-	
-			EditorObject editor_object = new EditorObject(UUID.Generate(), object.GetType(), object.GetPosition(), object.GetOrientation(), flags);
-			m_WorldObjectIndex[editor_object.GetWorldObject().GetID()] = editor_object;
-			object.Delete();
-		
-			OnObjectCreated.Invoke(editor_object);
-			Statistics.PlacedObjects++;
-			
-			m_PlacedObjects.Insert(editor_object.GetUUID(), editor_object);
-			if (m_CurrentOnlineSession) {
-				m_CurrentOnlineSession.SetSynchDirty();
-			}
-		
-			editor_objects.Insert(editor_object);
-		}
-		
-		PlaySound(EditorSounds.PLOP);
-		
-		return editor_objects;
-	}
-	
 	void DeleteObject(notnull EditorObject editor_object, bool create_undo = true) 
 	{			
 		OnObjectDeleted.Invoke(editor_object);
@@ -816,9 +758,9 @@ class Editor: Managed
 		
 		EditorLog.Debug("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
 		foreach (EditorObjectData data: save_data.EditorObjects) {
-			if (CreateObject(data.CreateObject(), false)) {
-				created_objects++;
-			}			
+			//if (CreateObject(data.CreateObject(), false)) {
+			//	created_objects++;
+			//}			
 		}
 		
 		if (save_data.CameraPosition != vector.Zero) {
@@ -1001,7 +943,7 @@ class Editor: Managed
 	
 	bool IsPlacing()
 	{
-		return (m_PlacingObjects && m_PlacingObjects.Count() > 0); 
+		return Placing.Count() > 0; 
 	}
 	
 	EditorProfileSettings GetProfileSettings()
