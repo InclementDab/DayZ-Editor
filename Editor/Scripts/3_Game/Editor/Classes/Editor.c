@@ -11,58 +11,20 @@ class EditorHandData
 {
 	vector PositionOffset;
 	vector OrientationOffset;
-}
-
-class INetworkableBase<Class T>: SerializableBase
-{	
-	const T EMPTY;
-	
-	protected bool m_IsDirty;
-	protected string m_Uuid;
-	
-	protected void NetworkableBase(notnull Serializer serializer)
-	{
-		if (!serializer.Read(m_Uuid)) {
-			Error("Failed to read uuid");
-			return;
-		}
-	}
-			
-	typename GetType()
-	{
-		return TemplateType<T>.GetType();
-	}
-	
-	override void Write(Serializer serializer, int version)
-	{
-	}
-	
-	override bool Read(Serializer serializer, int version)
-	{
-		return true;
-	}
-	
-	array<int> GetRPCS()
-	{
-		return {};
-	}
-}
+}			
 
 class Editor: SerializableBase
 {
-	static const int RPC_CREATE_SESSION = -35678227;
+	static const int RPC_NEW = 54363;
+	static const int RPC_DELETE = 54364;
+	static const int RPC_SYNC = 54365;
 	
-	static const int RPC_SYNC = -35678228;
-	static const int RPC_HEARTBEAT = -35678229;
-	static const int RPC_JOIN = -35678230;
-	static const int RPC_LEAVE = -35678231;	
-	
-	static const ref array<int> RPC_PROTOCOLS = { RPC_SYNC, RPC_HEARTBEAT, RPC_JOIN, RPC_LEAVE };
+	static const ref array<int> RPC_ALL = { RPC_NEW, RPC_DELETE, RPC_SYNC };
 	
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
 	// m_Editor is only valid on the local instance.
-	protected PlayerIdentity m_Identity;
+	protected Man m_Player;
 	
 	// All editors in lobby, including m_Editor
 	protected ref map<PlayerIdentity, Object> m_Editors = new map<PlayerIdentity, Object>();		
@@ -93,7 +55,7 @@ class Editor: SerializableBase
 	// protected Editor Members
 	protected ref EditorHud	m_EditorHud;
 
-	protected EditorCamera m_EditorCamera;
+	protected EditorCamera m_Camera;
 	ref map<Object, ref EditorHandData> Placing = new map<Object, ref EditorHandData>();
 	protected Entity m_CurrentControl;
 	
@@ -136,17 +98,19 @@ class Editor: SerializableBase
 	static ref ScriptInvoker OnObjectPlaced = new ScriptInvoker();
 	
 	// Stored list of all Placed Objects
-	ref map<string, ref EditorObject> m_PlacedObjects = new map<string, ref EditorObject>();
+	protected ref map<string, EditorObject> m_PlacedObjects = new map<string, EditorObject>();
+	
+	protected ref map<string, ref EditorNode> m_Nodes = new map<string, ref EditorNode>();
 			
 	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
 	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
 	
-	void Editor(PlayerIdentity editor) 
+	void Editor(Man player) 
 	{
-		m_Identity = editor;
+		m_Player = player;
 		
 		// Server
-		if (!m_Identity) {
+		if (!m_Player) {
 			return;
 		}
 		
@@ -166,21 +130,40 @@ class Editor: SerializableBase
 							
 		// Initialize the profiles/editor directory;		
 		MakeDirectory(ROOT_DIRECTORY);
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", GetGame().GetPlayer().GetPosition(), ECE_LOCAL));
+		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
 					
 		// Init Hud
 		m_EditorHud = new EditorHud();
 						
-		ControlCamera(m_EditorCamera);
+		ControlCamera(m_Camera);
 	}
 
 	void ~Editor() 
 	{
-		GetGame().ObjectDelete(m_EditorCamera);
+		GetGame().ObjectDelete(m_Camera);
 	}
 	
-	void Update(float timeslice)
+	void Update(bool doSim, float timeslice)
 	{		
+		if (doSim && IsDirty()) {
+			ScriptRPC rpc = new ScriptRPC();
+			Write(rpc, 0);
+			rpc.Send(null, Editor.RPC_SYNC, true);
+			m_IsDirty = false;
+		}
+		
+		foreach (string node_id, EditorNode node: m_Nodes) {
+			if (!node || !node.IsDirty) {
+				continue;
+			}
+			
+			ScriptRPC rpc_networkable = new ScriptRPC();
+			rpc_networkable.Write(node_id);
+			node.Write(rpc_networkable, 0);
+			rpc_networkable.Send(null, RPC_SYNC, true);
+			node.IsDirty = false;
+		}
+		
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
@@ -231,8 +214,8 @@ class Editor: SerializableBase
 			//EditorObjectDragHandler.Drag(m_DragTarget, m_DragOffset);
 		}
 		
-		Ray ray1 = GetCamera().PerformCursorRaycast();
-		Ray ray2 = GetCamera().GetCursorRay();
+		Ray ray1 = m_Camera.PerformCursorRaycast();
+		Ray ray2 = m_Camera.GetCursorRay();
 		
 		vector camera_orthogonal[4] = { ray1.Direction * ray2.Direction, ray2.Direction, ray1.Direction, ray1.Position };
 		Math3D.MatrixOrthogonalize4(camera_orthogonal);	
@@ -272,91 +255,107 @@ class Editor: SerializableBase
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
 			foreach (Object object_to_place, EditorHandData data: Placing) {					
-				string uuid = UUID.Generate();				
-				m_PlacedObjects[uuid] = new EditorObject(uuid, object_to_place, object_to_place.GetType(), EFE_DEFAULT);
-				
+				string uuid = UUID.Generate();	
+				EditorObject editor_object = new EditorObject(uuid, object_to_place, object_to_place.GetType(), EFE_DEFAULT);
+				m_PlacedObjects[uuid] = editor_object;
 				m_WorldObjects[object_to_place] = m_PlacedObjects[uuid];			
 				
 				OnObjectCreated.Invoke(m_PlacedObjects[uuid]);
 				
 				Placing.Remove(object_to_place);
+				
+				m_Nodes[uuid] = editor_object;
+				Register(uuid, editor_object);
 			}
 			
 			m_IsDirty = true;
 		}
 	}
 	
-	void Synchronize(PlayerIdentity identity = null)
-	{		
+	void Register(string uuid, EditorNode node)
+	{
 		ScriptRPC rpc = new ScriptRPC();
-		Write(rpc, 0);
-		rpc.Send(null, RPC_SYNC, true, identity);
-		
-		m_IsDirty = false;
+		rpc.Write(uuid);
+		rpc.Write(node.Type().ToString());
+		node.Write(rpc, node.GetVersion());
+		rpc.Send(null, RPC_NEW, true);
+	}
+	
+	void Unregister(string uuid)
+	{
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(uuid);
+		rpc.Send(null, RPC_DELETE, true);
 	}
 			
 	void RemovePlayer(notnull PlayerIdentity player_identity)
 	{
 		m_Editors.Remove(player_identity);
-
-		if (GetGame().IsDedicatedServer()) {
-			Synchronize(player_identity);
-		}
 	}
 				
 	void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
 	{		
-		switch (rpc_type) {		
-			case RPC_HEARTBEAT: {
-				// roundabout rpc
-				if (GetGame().IsServer()) {
-					vector position;
-					ctx.Read(position);
-					
-					vector direction;
-					ctx.Read(direction);
-					
-					ScriptRPC rpc_position = new ScriptRPC();
-					rpc_position.Write(sender);
-					rpc_position.Write(position);
-					rpc_position.Write(direction);
-					rpc_position.Send(null, RPC_HEARTBEAT, false);
-				} else {
-					PlayerIdentity sender_id;
-					ctx.Read(sender_id);
-					
-					vector camera_position;
-					ctx.Read(camera_position);					
-					
-					vector camera_direction;
-					ctx.Read(camera_direction);
-															
-					//m_Editors[sender_id].SetNametag(tag_data);
-					m_Editors[sender_id].SetPosition(camera_position);
-					m_Editors[sender_id].SetDirection(camera_direction);
-					m_Editors[sender_id].Update();
+		string uuid;
+		if (!ctx.Read(uuid)) {
+			Error("Failed to read uuid");
+			return;
+		}
+		
+		switch (rpc_type) {
+			case RPC_NEW: {						
+				string type;
+				if (!ctx.Read(type)) {
+					Error("Failed to read type");
+					break;
+				}
+			
+				// Create the object
+				EditorNode node = EditorNode.Cast(type.ToType().Spawn());
+				m_Nodes[uuid] = node;
+				
+				// Ping pong!
+				if (GetGame().IsDedicatedServer()) {
+					Register(uuid, node);
 				}
 				
 				break;
 			}
+			
+			case RPC_DELETE: {
+				delete m_Nodes[uuid];
 				
-			case RPC_SYNC: {					
-				Read(ctx, 0);				
-				OnSyncRecieved.Invoke();
-				
-				// ping pong!
 				if (GetGame().IsDedicatedServer()) {
-					Synchronize();
+					Unregister(uuid);
 				}
 				
 				break;
+			}
+			
+			case RPC_SYNC: {				
+				if (!m_Nodes[uuid]) {
+					Error("Cannot sync an un-networked item " + uuid);
+					break;
+				}
+				
+				m_Nodes[uuid].Read(ctx, m_Nodes[uuid].GetVersion());
+				
+				if (GetGame().IsDedicatedServer()) {
+					m_Nodes[uuid].IsDirty = true;
+				}
+				
+				break;
+			}
+		}
+		
+		foreach (string uuid_rpc, EditorNode node_rpc: m_Nodes) {
+			if (node_rpc.GetProtocols().Find(rpc_type) != -1) {
+				node_rpc.OnRPC(sender, rpc_type, ctx);
 			}
 		}
 	}
 		
 	override void Write(Serializer serializer, int version)
 	{
-		serializer.Write(m_Identity);
 		serializer.Write(Public);
 		serializer.Write(m_Password);
 		serializer.Write(m_MaxPlayers);
@@ -365,18 +364,19 @@ class Editor: SerializableBase
 		foreach (PlayerIdentity identity, Object _: m_Editors) {			
 			serializer.Write(identity);
 		}
-		
-		serializer.Write(m_MaxEntityCount);
-		
+				
 		serializer.Write(m_PlacedObjects.Count());
 		foreach (EditorObject object_data: m_PlacedObjects) {
 			object_data.Write(serializer, 0);
 		}
+		
+		vector mat[4];
+		m_Camera.GetTransform(mat);
+		serializer.Write(mat);
 	}
 	
 	override bool Read(Serializer serializer, int version)
 	{
-		serializer.Read(m_Identity);		
 		serializer.Read(Public);
 		serializer.Read(m_Password);
 		serializer.Read(m_MaxPlayers);
@@ -391,9 +391,7 @@ class Editor: SerializableBase
 				m_Editors[identity] = GetGame().CreateObjectEx("StaticCamera", vector.Zero, ECE_LOCAL);
 			}
 		}
-					
-		serializer.Read(m_MaxEntityCount);
-		
+							
 		int entity_count;
 		serializer.Read(entity_count);
 		for (int j = 0; j < entity_count; j++) {
@@ -408,6 +406,10 @@ class Editor: SerializableBase
 				m_PlacedObjects[uuid] = EditorObject.Create(uuid, serializer);
 			}
 		}
+		
+		vector mat[4];
+		serializer.Read(mat);
+		m_Camera.SetTransform(mat);
 		
 		return true;
 	}
@@ -459,7 +461,7 @@ class Editor: SerializableBase
 	// EditorSounds is helpful
 	void PlaySound(string sound_set)
 	{
-		SEffectManager.PlaySoundOnObject(sound_set, m_EditorCamera);
+		SEffectManager.PlaySoundOnObject(sound_set, m_Camera);
 	}
 				
 	void PromptForObjectSelection(ScriptCaller callback)
@@ -488,7 +490,7 @@ class Editor: SerializableBase
 	void ControlCamera(ScriptedCamera camera = null)
 	{
 		if (!camera) {
-			camera = m_EditorCamera;
+			camera = m_Camera;
 			if (!camera) {
 				Error("Camera not found / initialized");
 				return;
@@ -1019,7 +1021,7 @@ class Editor: SerializableBase
 		
 	EditorCamera GetCamera() 
 	{
-		return m_EditorCamera;
+		return m_Camera;
 	}
 		
 	EditorActionStack GetActionStack() 

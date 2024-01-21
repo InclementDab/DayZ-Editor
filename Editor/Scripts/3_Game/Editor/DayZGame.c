@@ -9,26 +9,36 @@ modded class DayZGame
 	// lookup table by p3d
 	protected ref map<string, ref array<EditorPlaceableObjectData>> m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableObjectData>>();
 
-#ifndef EDITOR_DECLARE
-#define EDITOR_DECLARE
-	protected ref Editor m_Editor;
-	
-	Editor GetEditor()
-	{
-		return m_Editor;
-	}
-#endif
-		
 	override void OnUpdate(bool doSim, float timeslice)
 	{
 		super.OnUpdate(doSim, timeslice);
 				
-		if (m_Editor) {		
-			m_Editor.Update(timeslice);
-			if (doSim && m_Editor.IsDirty()) {
-				m_Editor.Synchronize();
+		if (m_Editor) {
+			m_Editor.Update(doSim, timeslice);
+		}
+	}
+	
+	override void OnEvent(EventType eventTypeId, Param params)
+	{
+		super.OnEvent(eventTypeId, params);
+		
+		switch (eventTypeId) {
+			case MPSessionPlayerReadyEventTypeID: {
+				// Client -> Server
+				m_Editor = new Editor(GetPlayer());	
+				break;
 			}
 		}
+	}
+	
+	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
+	{				
+		// RPC is editor online session
+		if (Editor.RPC_ALL.Find(rpc_type) != -1) {			
+			m_Editor.OnRPC(sender, rpc_type, ctx);
+		}
+		
+		super.OnRPC(sender, target, rpc_type, ctx);
 	}
 	
 	override bool OnInitialize()
@@ -67,7 +77,7 @@ modded class DayZGame
 				m_AllPlaceableItems.Insert(new EditorStaticPlaceableItem(file.GetFullPath()));
 			}
 		}
-	
+		
 		// Statics that belong to Editor / DF
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
@@ -90,30 +100,6 @@ modded class DayZGame
 		return super.OnInitialize();
 	}
 	
-	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
-	{
-		super.OnRPC(sender, target, rpc_type, ctx);
-		
-		switch (rpc_type) {					
-			case Editor.RPC_CREATE_SESSION: {
-				if (GetGame().IsDedicatedServer()) {
-					Error("RPC_CREATE_SESSION can only be called on clients");
-					break;
-				}
-				
-				PlayerIdentity identity;
-				if (!ctx.Read(identity)) {	
-					Error("Invalid identity");
-					break;
-				}
-				
-				m_Editor = new Editor(identity);
-				m_Editor.Read(ctx, 0);
-				break;
-			}
-		}
-	}
-
 	EditorPlaceableObjectData GetPlaceableObject(string type)
 	{
 		return m_PlaceableObjectsByType[type];
@@ -199,6 +185,16 @@ modded class DayZGame
 	override void CancelLoginQueue()
 	{
 	}
+
+#ifndef EDITOR_DECLARE
+#define EDITOR_DECLARE
+	protected ref Editor m_Editor;
+	
+	Editor GetEditor()
+	{
+		return m_Editor;
+	}
+#endif
 }
 
 modded class DayZGame

@@ -1,38 +1,7 @@
-class Ray: Managed
-{
-	static const ref Ray INVALID = new Ray();	
-	
-	vector Position;
-	vector Direction;
-	
-	void Ray(vector position = vector.Zero, vector direction = vector.Zero)
-	{
-		Position = position;
-		Direction = direction;
-	}
-	
-	vector GetPoint(float distance)
-	{
-		return Position + Direction * distance;
-	}
-	
-	void Debug()
-	{
-		//Shape.CreateSphere(COLOR_WHITE, ShapeFlags.ONCE, Position, 0.1);
-		Shape.CreateArrow(Position, GetPoint(1.0), 1.0, COLOR_GREEN, ShapeFlags.ONCE);
-	}
-}
-
-class ScriptedCamera: Camera
-{
-	void OnSelectCamera();
-}
-
 class EditorCamera: ScriptedCamera
 {
-	static int RPC_UPDATE = 2592529;
 	static float UPDATE_ACCUMULATOR_INTERVAL = 0.5;
-	
+
 	protected float m_ServerUpdateAccumulator;
 	protected vector m_LinearVelocity, m_AngularVelocity;
 	
@@ -42,6 +11,32 @@ class EditorCamera: ScriptedCamera
 	void EditorCamera()
 	{
 		SetEventMask(EntityEvent.FRAME);
+	}
+
+	Ray PerformCursorRaycast(Object ignore = null)
+	{
+		Ray cursor_ray = GetCursorRay();
+		Ray output_ray = new Ray();
+		
+		float fraction;
+		if (!DayZPhysics.RayCastBullet(cursor_ray.Position, cursor_ray.Position + cursor_ray.Direction * 1000.0, PhxInteractionLayers.TERRAIN, ignore, null, output_ray.Position, output_ray.Direction, fraction)) {
+			return Ray.INVALID;
+		}
+		
+		return output_ray;
+	}
+	
+	Ray GetCursorRay()
+	{
+		vector transform[4];
+		GetTransform(transform);
+		Ray ray = new Ray(transform[3], transform[2]);
+
+		if (GetGame().GetUIManager().IsCursorVisible()) {
+			ray.Direction = GetGame().GetPointerDirection();
+		}
+		
+		return ray;
 	}
 	
 	override void EOnFrame(IEntity other, float timeSlice)
@@ -54,15 +49,6 @@ class EditorCamera: ScriptedCamera
 		vector transform[4];
 		GetTransform(transform);
 		
-		m_ServerUpdateAccumulator += timeSlice;
-		if (m_ServerUpdateAccumulator > UPDATE_ACCUMULATOR_INTERVAL) {
-			m_ServerUpdateAccumulator = 0;
-
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Write(transform);
-			rpc.Send(null, RPC_UPDATE, true);
-		}
-
 		Input input = GetGame().GetInput();
 		m_LinearVelocity += Vector(input.LocalValue_ID(UAMoveRight) 	- input.LocalValue_ID(UAMoveLeft), 
 									input.LocalValue_ID(UAMoveUp) 		- input.LocalValue_ID(UAMoveDown), 
@@ -138,34 +124,7 @@ class EditorCamera: ScriptedCamera
 		m_LinearVelocity = m_LinearVelocity * Math.Pow(GetDayZGame().GetEditor().GetProfileSettings().Smoothing, 2);
 		m_AngularVelocity = m_AngularVelocity * 0.5;
 	}
-	
-	Ray PerformCursorRaycast()
-	{
-		Ray cursor_ray = GetCursorRay();
-		Ray output_ray = new Ray();
-		
-		float fraction;
-		if (!DayZPhysics.RayCastBullet(cursor_ray.Position, cursor_ray.Position + cursor_ray.Direction * 1000.0, PhxInteractionLayers.TERRAIN, this, null, output_ray.Position, output_ray.Direction, fraction)) {
-			return Ray.INVALID;
-		}
-		
-		return output_ray;
-	}
-	
-	Ray GetCursorRay()
-	{
-		vector transform[4];
-		GetTransform(transform);
-		Ray ray = new Ray(transform[3], transform[2]);
-
-		if (GetGame().GetUIManager().IsCursorVisible()) {
-			ray.Direction = GetGame().GetPointerDirection();
-		}
-		
-		return ray;
-	}
 }
-
 /*
 // make option Q and E go up and down no matter orientation
 class EditorCamera: ScriptedCamera

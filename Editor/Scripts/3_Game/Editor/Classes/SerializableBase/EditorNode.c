@@ -23,6 +23,23 @@ class EditorNode: SerializableBase
 		
 		delete m_TreeItem;
 	}
+	
+	bool IsDirty;
+		
+	void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
+	{
+	}
+	
+	// All RPC's valid that route to OnRPC
+	array<int> GetProtocols()
+	{
+		return {};
+	}
+	
+	int GetVersion()
+	{
+		return 0;
+	}
 		
 	EditorTreeItem GetTreeItem()
 	{
