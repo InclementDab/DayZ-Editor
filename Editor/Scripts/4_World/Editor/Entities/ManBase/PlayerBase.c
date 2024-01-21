@@ -18,7 +18,7 @@ modded class PlayerBase
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
 #ifndef SERVER
-		GetInputController().SetDisabled(GetEditor().GetCurrentControl() != this);
+		GetInputController().SetDisabled(GetDayZGame().GetEditor().GetCurrentControl() != this);
 #endif
 	}
 		
@@ -27,10 +27,6 @@ modded class PlayerBase
 		super.OnSelectPlayer();
 		
 		s_LastControlledPlayer = this;
-		
-#ifndef SERVER
-		g_Editor = new Editor();
-#endif
 	}
 	
 	override void EEKilled(Object killer)
@@ -38,8 +34,8 @@ modded class PlayerBase
 		super.EEKilled(killer);
 		
 		// Quick! Before he stops breathing
-		if (this == GetEditor().GetCurrentControl()) {
-			GetEditor().ControlCamera(GetEditor().GetCamera());
+		if (this == GetDayZGame().GetEditor().GetCurrentControl()) {
+			GetDayZGame().GetEditor().ControlCamera(GetDayZGame().GetEditor().GetCamera());
 		}
 	}
 }

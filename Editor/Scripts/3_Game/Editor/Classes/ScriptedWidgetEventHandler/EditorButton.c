@@ -19,7 +19,8 @@ class EditorButton: ScriptedWidgetEventHandler
 		}
 		
 		if (CommandType.ToType()) {
-			m_Command = GetEditor().GetCommand(CommandType.ToType());
+			
+			m_Command = GetDayZGame().GetEditor().GetCommand(CommandType.ToType());
 		}
 		
 		m_ButtonWidget = ButtonWidget.Cast(w.FindAnyWidget(ButtonName));

@@ -64,7 +64,7 @@ modded class MainMenu
 		
 		string version;
 		GetGame().GetVersion(version);
-		m_Version.SetText(string.Format("#main_menu_version %1 - #STR_EDITOR_MAIN_MENU_VERSION %2", version, GetEditor().Version));
+		m_Version.SetText(string.Format("#main_menu_version %1 - #STR_EDITOR_MAIN_MENU_VERSION %2", version, GetDayZGame().GetEditor().Version));
 		
 		return layoutRoot;
 	}

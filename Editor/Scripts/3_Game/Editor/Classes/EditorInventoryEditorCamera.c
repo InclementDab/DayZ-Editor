@@ -15,7 +15,8 @@ class EditorInventoryEditorCamera: ScriptedCamera
 		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		if (GetEditor().GetCurrentControl() != this) {
+		
+		if (GetDayZGame().GetEditor().GetCurrentControl() != this) {
 			return;
 		}
 		

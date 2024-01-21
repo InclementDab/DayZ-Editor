@@ -37,7 +37,7 @@ modded class InGameMenu
 		TextWidget version_widget = TextWidget.Cast(layoutRoot.FindAnyWidget("version"));		
 		string version;
 		GetGame().GetVersion(version);
-		version_widget.SetText(string.Format("#main_menu_version %1 - #STR_EDITOR_MAIN_MENU_VERSION %2", version, GetEditor().Version));
+		version_widget.SetText(string.Format("#main_menu_version %1 - #STR_EDITOR_MAIN_MENU_VERSION %2", version, GetDayZGame().GetEditor().Version));
 	}
 	
 	override void UpdateGUI() 
@@ -51,26 +51,26 @@ modded class InGameMenu
 		if (!IsMissionOffline())
 			return;
 		
-		//GetEditor().CommandManager[EditorLoadMapCommand].Execute(this, null);
+		//GetDayZGame().GetEditor().CommandManager[EditorLoadMapCommand].Execute(this, null);
 	}
 	
 	override void OnClick_Respawn()
 	{
-		if (!GetEditor()) {
+		if (!GetDayZGame().GetEditor()) {
 			super.OnClick_Respawn();
 			return;
 		}
 		
-		//GetEditor().CommandManager[EditorOpenCommand].Execute(this, null);
+		//GetDayZGame().GetEditor().CommandManager[EditorOpenCommand].Execute(this, null);
 	}
 	
 	override void OnClick_Exit()
 	{
-		if (!GetEditor()) {
+		if (!GetDayZGame().GetEditor()) {
 			super.OnClick_Exit();
 			return;
 		}
 		
-		//GetEditor().CommandManager[EditorExitCommand].Execute(this, null);
+		//GetDayZGame().GetEditor().CommandManager[EditorExitCommand].Execute(this, null);
 	}
 }

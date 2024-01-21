@@ -1,3 +1,5 @@
+/*
+
 class EditorObjectDragHandler: EditorDragHandler
 {
 	static vector DoCursorRaycast(float max_distance = 3000, Object ignore_object = null)
@@ -42,13 +44,13 @@ class EditorObjectDragHandler: EditorDragHandler
 			//Math3D.MatrixMultiply3(transform_matrix, transform, transform);
 		}
 		
-		if (GetEditor().MagnetMode) {
+		if (GetDayZGame().GetEditor().MagnetMode) {
 			vector ground_position = GetGroundPosition(transform);
 			vector surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
 			Math3D.DirectionAndUpMatrix(transform[2], surface_normal, transform);
 		}
 		
-		if (GetEditor().GroundMode) {
+		if (GetDayZGame().GetEditor().GroundMode) {
 			
 		}
 		

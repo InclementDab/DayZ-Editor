@@ -486,7 +486,7 @@ FrameWidgetClass Inner {
     }
    }
   }
-  PanelWidgetClass OutlinePanel {
+  PanelWidgetClass Status {
    visible 1
    ignorepointer 1
    color 0.1373 0.1373 0.1569 1

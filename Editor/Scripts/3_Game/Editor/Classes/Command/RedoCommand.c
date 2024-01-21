@@ -3,11 +3,11 @@ class RedoCommand: Command
 {
 	override void Execute(bool state) 
 	{
-		GetEditor().Redo();
+		GetDayZGame().GetEditor().Redo();
 	}
 	
 	override bool CanExecute()
 	{
-		return GetEditor().CanRedo();
+		return GetDayZGame().GetEditor().CanRedo();
 	}
 }

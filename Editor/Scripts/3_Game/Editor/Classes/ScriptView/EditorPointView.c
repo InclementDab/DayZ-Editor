@@ -30,7 +30,8 @@ class EditorPointView: ScriptView
 		m_EditorObject.GetWorldObject().GetTransform(transform);
 		
 		if (m_IsDragging) {
-			EditorObjectDragHandler.Drag(m_EditorObject.GetWorldObject(), m_Offset);
+			
+			//EditorObjectDragHandler.Drag(m_EditorObject.GetWorldObject(), m_Offset);
 		}
 
 		float x, y, w, h;		
@@ -85,7 +86,7 @@ class EditorPointView: ScriptView
 			
 			case MouseState.MIDDLE: {
 				/*
-				EditorCamera camera = GetEditor().GetCamera();
+				EditorCamera camera = GetDayZGame().GetEditor().GetCamera();
 				vector pos = m_EditorObject.GetWorldObject().GetPosition();
 				pos[1] = camera.GetPosition()[1];
 				camera.SendToPosition(pos);*/

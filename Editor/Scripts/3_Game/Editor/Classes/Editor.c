@@ -7,63 +7,40 @@
      / // // //  `-._,_)' // / ``--...____..-' /// / //
 */
 
-
-//Print(__LINE__);
-//Print(__FILE__); // useful shit // tools.pak?????
-//Print(__void);
-//local string test;
-//Print(FLT_MAX);
-//Print(FLT_MIN);
-//__NULL_FUNCT
-
-
-///
-///
-/// SYNC JUNCTURES?!?!?!?
-///
-///
-
-/*
-
-<rootclass name="DefaultWeapon" /> <!-- weapons -->
-<rootclass name="DefaultMagazine" /> <!-- magazines -->
-<rootclass name="Inventory_Base" /> <!-- inventory items -->
-<rootclass name="HouseNoDestruct" reportMemoryLOD="no" /> <!-- houses, wrecks -->
-<rootclass name="SurvivorBase" act="character" reportMemoryLOD="no" /> <!-- player characters -->
-<rootclass name="DZ_LightAI" act="character" reportMemoryLOD="no" /> <!-- infected, animals -->
-<rootclass name="CarScript" act="car" reportMemoryLOD="no" /> <!-- cars (sedan, hatchback, transitBus, V3S, ...) -->
-
-*/
-
-
-// One day, someone important (likely Adam) will look over this codebase with a sny look of shame on their face
-// if today is that day. fix it.
-// and message me your feedback on discord :)
-
-class EditorSounds: Managed
-{
-	static const string HIGHLIGHT = "Highlight_SoundSet";
-	static const string PLOP = "Plop_SoundSet";
-	static const string PLOPLOW = "PlopLow_SoundSet";
-}
-
-
-ref Editor g_Editor;
-Editor GetEditor() 
-{
-	return g_Editor;
-}
-
 class EditorHandData
 {
 	vector PositionOffset;
 	vector OrientationOffset;
 }
 
-class Editor: Managed
+class Editor: SerializableBase
 {
-	/* Private Members */
-	protected Mission m_Mission;
+	static const int RPC_CREATE_SESSION = -35678227;
+	
+	static const int RPC_SYNC = -35678228;
+	static const int RPC_HEARTBEAT = -35678229;
+	static const int RPC_JOIN = -35678230;
+	static const int RPC_LEAVE = -35678231;	
+	
+	static const ref array<int> RPC_PROTOCOLS = { RPC_SYNC, RPC_HEARTBEAT, RPC_JOIN, RPC_LEAVE };
+	
+	static const int DEFAULT_ENTITY_COUNT = 512;
+	
+	// m_Editor is only valid on the local instance.
+	protected PlayerIdentity m_Identity;
+	
+	// All editors in lobby, including m_Editor
+	protected ref map<PlayerIdentity, Object> m_Editors = new map<PlayerIdentity, Object>();		
+	
+	bool Public;
+	protected string m_Password; // must be SHA before reaching clients
+	protected int m_MaxPlayers = 32;
+	protected int m_MaxEntityCount = 30;
+	
+	ref ScriptInvoker OnSyncRecieved = new ScriptInvoker();
+	
+	protected bool m_IsDirty;
+	
 		
 	// statics (updated in Update())
 	static Object								ObjectUnderCursor;
@@ -81,7 +58,6 @@ class Editor: Managed
 	
 	// protected Editor Members
 	protected ref EditorHud	m_EditorHud;
-	protected ref EditorBrush m_EditorBrush;
 
 	protected EditorCamera m_EditorCamera;
 	ref map<Object, ref EditorHandData> Placing = new map<Object, ref EditorHandData>();
@@ -98,32 +74,17 @@ class Editor: Managed
 	protected string EditorSaveFile;
 	static const string ROOT_DIRECTORY = "$saves:\\Editor\\";
 	
-	// modes
-	bool 										MagnetMode;
-	bool 										GroundMode;
-	bool 										SnappingMode;
-	bool 										CollisionMode;
+	static const string Version = "2.0";
 	
-	bool 										CameraLight;
-
-	static const string 						Version = "2.0";
-	
-	protected ref TStringArray					m_RecentlyOpenedFiles = {};
-		
-	protected ref Timer	m_StatisticsSaveTimer 	= new Timer(CALL_CATEGORY_GAMEPLAY);
-	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
-	
-	protected ScriptCaller 						m_ObjectSelectCallback;
+	protected ScriptCaller m_ObjectSelectCallback;
 				
 	// Stored list of all Placed Objects, indexed by their WorldObject ID
-	protected ref map<int, EditorObject> m_WorldObjectIndex = new map<int, EditorObject>();
+	protected ref map<Object, EditorObject> m_WorldObjects = new map<Object, EditorObject>();
 	
 	protected ref array<ref EditorHiddenObject> m_DeletedObjects = {};
 		
 	// Current Selected PlaceableListItem
 	EditorPlaceableObjectData CurrentSelectedItem;
-	
-	bool KEgg; // oh?
 	
 	//0: EditorObject
 	static ref ScriptInvoker OnObjectCreated = new ScriptInvoker();
@@ -140,48 +101,20 @@ class Editor: Managed
 	// 0: EditorObject
 	static ref ScriptInvoker OnObjectPlaced = new ScriptInvoker();
 	
-	protected EditorOnline m_CurrentOnlineSession;
-	
 	// Stored list of all Placed Objects
 	ref map<string, ref EditorObject> m_PlacedObjects = new map<string, ref EditorObject>();
 			
-	
 	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
 	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
 	
-	void Editor() 
+	void Editor(PlayerIdentity editor) 
 	{
-		if (GetGame().IsServer()) {
+		m_Identity = editor;
+		
+		// Server
+		if (!m_Identity) {
 			return;
 		}
-		
-		EditorLog.Trace("Editor");
-		g_Game.ReportProgress("Loading Editor");
-		g_Editor = this;
-				
-		// Initialize the profiles/editor directory;		
-		MakeDirectory(ROOT_DIRECTORY);
-		
-		// Init Statistics
-		m_StatisticsSaveTimer.Run(10.0, this, "OnStatisticsSave", null, true);
-								
-		// Camera Init
-		EditorLog.Info("Initializing Camera");
-		g_Game.ReportProgress("Initializing Camera");
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", GetGame().GetPlayer().GetPosition(), ECE_LOCAL));
-					
-		// Init Hud
-		g_Game.ReportProgress("Initializing Hud");
-		m_EditorHud 		= new EditorHud();
-		
-		m_Mission = GetGame().GetMission();
-		
-		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
-				
-		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
-		
-		ControlCamera(m_EditorCamera);
 		
 		foreach (typename command_type: RegisterCommand.Instances) {		
 			Command command = Command.Cast(command_type.Spawn());
@@ -195,45 +128,23 @@ class Editor: Managed
 			if (command.GetShortcut() != string.Empty) {
 				m_CommandShortcutMap[command.GetShortcut()] = command;
 			}
-		}
-		
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(Update);
-		
-		// TODO!!! write a better autosave!!!
-		//m_AutoSaveTimer.Run(GeneralSettings.AutoSaveTimer, this, "OnAutoSaveTimer");
+		}		
+							
+		// Initialize the profiles/editor directory;		
+		MakeDirectory(ROOT_DIRECTORY);
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", GetGame().GetPlayer().GetPosition(), ECE_LOCAL));
+					
+		// Init Hud
+		m_EditorHud = new EditorHud();
+						
+		ControlCamera(m_EditorCamera);
 	}
 
 	void ~Editor() 
 	{
-		Statistics.Save();
-
 		GetGame().ObjectDelete(m_EditorCamera);
 	}
-		
-	protected Object m_DragTarget;
-	protected vector m_DragOffset;
-	protected void CheckForDragging(Object object)
-	{
-		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) == MB_PRESSED_MASK) {
-			m_DragTarget = object;
-			
-			vector position;	
-			vector end_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * 3000;
-			int interaction_layers = PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.TERRAIN | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.DYNAMICITEM | PhxInteractionLayers.ITEM_LARGE;
-			Object hit_object;
-			vector normal;
-			float fraction;
-			DayZPhysics.RayCastBullet(GetGame().GetCurrentCameraPosition(), end_pos, interaction_layers, null, hit_object, position, normal, fraction);
-			
-			vector transform[4];
-			m_DragTarget.GetTransform(transform);
-			
-			m_DragOffset = position.InvMultiply4(transform);
-		}
-	}
 	
-	protected vector m_CursorNormal = vector.Aside;
-		
 	void Update(float timeslice)
 	{		
 		if (IsProcessingCommand()) {
@@ -279,7 +190,7 @@ class Editor: Managed
 		}
 		
 		if (m_DragTarget) {
-			EditorObjectDragHandler.Drag(m_DragTarget, m_DragOffset);
+			//EditorObjectDragHandler.Drag(m_DragTarget, m_DragOffset);
 		}
 		
 		Ray ray1 = GetCamera().PerformCursorRaycast();
@@ -326,19 +237,187 @@ class Editor: Managed
 				string uuid = UUID.Generate();				
 				m_PlacedObjects[uuid] = new EditorObject(uuid, object_to_place, object_to_place.GetType(), EFE_DEFAULT);
 				
-				m_WorldObjectIndex[m_PlacedObjects[uuid].GetWorldObject().GetID()] = m_PlacedObjects[uuid];			
+				m_WorldObjects[object_to_place] = m_PlacedObjects[uuid];			
 				
 				OnObjectCreated.Invoke(m_PlacedObjects[uuid]);
 				
 				Placing.Remove(object_to_place);
 			}
 			
-			if (m_CurrentOnlineSession) {
-				m_CurrentOnlineSession.Synchronize();
+			m_IsDirty = true;
+		}
+	}
+	
+	void Synchronize(PlayerIdentity identity = null)
+	{		
+		ScriptRPC rpc = new ScriptRPC();
+		Write(rpc, 0);
+		rpc.Send(null, RPC_SYNC, true, identity);
+		
+		m_IsDirty = false;
+	}
+			
+	void RemovePlayer(notnull PlayerIdentity player_identity)
+	{
+		m_Editors.Remove(player_identity);
+
+		if (GetGame().IsDedicatedServer()) {
+			Synchronize(player_identity);
+		}
+	}
+				
+	void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
+	{		
+		switch (rpc_type) {		
+			case RPC_HEARTBEAT: {
+				// roundabout rpc
+				if (GetGame().IsServer()) {
+					vector position;
+					ctx.Read(position);
+					
+					vector direction;
+					ctx.Read(direction);
+					
+					ScriptRPC rpc_position = new ScriptRPC();
+					rpc_position.Write(sender);
+					rpc_position.Write(position);
+					rpc_position.Write(direction);
+					rpc_position.Send(null, RPC_HEARTBEAT, false);
+				} else {
+					PlayerIdentity sender_id;
+					ctx.Read(sender_id);
+					
+					vector camera_position;
+					ctx.Read(camera_position);					
+					
+					vector camera_direction;
+					ctx.Read(camera_direction);
+															
+					//m_Editors[sender_id].SetNametag(tag_data);
+					m_Editors[sender_id].SetPosition(camera_position);
+					m_Editors[sender_id].SetDirection(camera_direction);
+					m_Editors[sender_id].Update();
+				}
+				
+				break;
+			}
+				
+			case RPC_SYNC: {					
+				Read(ctx, 0);				
+				OnSyncRecieved.Invoke();
+				
+				// ping pong!
+				if (GetGame().IsDedicatedServer()) {
+					Synchronize();
+				}
+				
+				break;
 			}
 		}
 	}
 		
+	override void Write(Serializer serializer, int version)
+	{
+		serializer.Write(m_Identity);
+		serializer.Write(Public);
+		serializer.Write(m_Password);
+		serializer.Write(m_MaxPlayers);
+		
+		serializer.Write(m_Editors.Count());
+		foreach (PlayerIdentity identity, Object _: m_Editors) {			
+			serializer.Write(identity);
+		}
+		
+		serializer.Write(m_MaxEntityCount);
+		
+		serializer.Write(m_PlacedObjects.Count());
+		foreach (EditorObject object_data: m_PlacedObjects) {
+			object_data.Write(serializer, 0);
+		}
+	}
+	
+	override bool Read(Serializer serializer, int version)
+	{
+		serializer.Read(m_Identity);		
+		serializer.Read(Public);
+		serializer.Read(m_Password);
+		serializer.Read(m_MaxPlayers);
+		
+		int editor_count;
+		serializer.Read(editor_count);	
+		for (int i = 0; i < editor_count; i++) {
+			PlayerIdentity identity;
+			serializer.Read(identity);
+			
+			if (!m_Editors[identity]) {
+				m_Editors[identity] = GetGame().CreateObjectEx("StaticCamera", vector.Zero, ECE_LOCAL);
+			}
+		}
+					
+		serializer.Read(m_MaxEntityCount);
+		
+		int entity_count;
+		serializer.Read(entity_count);
+		for (int j = 0; j < entity_count; j++) {
+			string uuid;
+			serializer.Read(uuid);
+
+			if (m_PlacedObjects[uuid]) {
+				// The object already exists
+				m_PlacedObjects[uuid].Read(serializer, 0);
+			} else {
+				// The object needs to be created
+				m_PlacedObjects[uuid] = EditorObject.CreateFromSerializer(uuid, serializer);
+			}
+		}
+		
+		return true;
+	}
+		
+	void SetSynchDirty()
+	{		
+		m_IsDirty = true;
+	}
+	
+	bool IsDirty()
+	{
+		return m_IsDirty;
+	}
+	
+	bool IsMember(notnull PlayerIdentity identity)
+	{
+		return m_Editors[identity] != null;
+	}
+	
+	array<PlayerIdentity> GetOnlineMembers()
+	{
+		return m_Editors.GetKeyArray();
+	}
+		
+	protected Object m_DragTarget;
+	protected vector m_DragOffset;
+	protected void CheckForDragging(Object object)
+	{
+		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) == MB_PRESSED_MASK) {
+			m_DragTarget = object;
+			
+			vector position;	
+			vector end_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * 3000;
+			int interaction_layers = PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.TERRAIN | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.DYNAMICITEM | PhxInteractionLayers.ITEM_LARGE;
+			Object hit_object;
+			vector normal;
+			float fraction;
+			DayZPhysics.RayCastBullet(GetGame().GetCurrentCameraPosition(), end_pos, interaction_layers, null, hit_object, position, normal, fraction);
+			
+			vector transform[4];
+			m_DragTarget.GetTransform(transform);
+			
+			m_DragOffset = position.InvMultiply4(transform);
+		}
+	}
+	
+	protected vector m_CursorNormal = vector.Aside;
+				
 	// EditorSounds is helpful
 	void PlaySound(string sound_set)
 	{
@@ -773,12 +852,12 @@ class Editor: Managed
 			
 			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
 			
-			m_Editor = GetEditor();
+			m_Editor = GetDayZGame().GetEditor();
 			*/
 		}
 		
 		if (clear_before) {
-			GetEditor().Clear();
+			GetDayZGame().GetEditor().Clear();
 		}
 				
 		EditorLog.Debug("Deleting %1 Objects", save_data.EditorHiddenObjects.Count().ToString());		
@@ -894,12 +973,7 @@ class Editor: Managed
 	{
 		m_ActionStack.InsertAction(action);
 	}
-	
-	array<string> GetRecentFiles()
-	{
-		return m_RecentlyOpenedFiles;
-	}
-		
+			
 	EditorHud GetHud() 
 	{
 		return m_EditorHud;
@@ -930,21 +1004,11 @@ class Editor: Managed
 		return m_DeletedObjects;
 	}
 				
-	EditorObject GetEditorObject(notnull Object world_object) 
+	EditorObject FindEditorObject(Object world_object) 
 	{
-		return m_WorldObjectIndex[world_object.GetID()];
-	}
-	
-	void SetOnline(EditorOnline session)
-	{
-		m_CurrentOnlineSession = session;
+		return m_WorldObjects[world_object];
 	}
 
-	EditorOnline GetOnline()
-	{
-		return m_CurrentOnlineSession;
-	}
-	
 	map<string, Command> GetCommandShortcutMap()
 	{
 		return m_CommandShortcutMap;

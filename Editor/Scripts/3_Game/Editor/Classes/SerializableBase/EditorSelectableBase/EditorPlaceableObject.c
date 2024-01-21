@@ -24,10 +24,11 @@ class EditorPlaceableObject: EditorNode
 			vector transform[4];
 			Math3D.MatrixIdentity4(transform);
 			
-			Ray ray = GetEditor().GetCamera().PerformCursorRaycast();
+			
+			Ray ray = GetDayZGame().GetEditor().GetCamera().PerformCursorRaycast();
 			transform[3] = ray.Position;
 			
-			GetEditor().Placing[m_PlaceableObject.CreateObject(transform)] = new EditorHandData();
+			GetDayZGame().GetEditor().Placing[m_PlaceableObject.CreateObject(transform)] = new EditorHandData();
 		}
 	}
 	

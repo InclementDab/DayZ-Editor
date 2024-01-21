@@ -53,7 +53,8 @@ class EditorObject: EditorNode
 		m_TreeItem = new EditorTreeItem(m_DisplayName, this);
 		
 		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
-			GetEditor().GetHud().GetCurrentPlacingCategory().AddChild(this);
+			
+			GetDayZGame().GetEditor().GetHud().GetCurrentPlacingCategory().AddChild(this);
 		}
 						
 		vector clip_info[2];
@@ -113,7 +114,7 @@ class EditorObject: EditorNode
 								
 		// Needed for AI Placement			
 		
-		//if (entity_ai && GetEditor().GeneralSettings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
+		//if (entity_ai && GetDayZGame().GetEditor().GeneralSettings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
 		//	entity_ai.OnDebugSpawn();
 		//}	
 		
@@ -385,7 +386,7 @@ class EditorObject: EditorNode
 				position_undo.InsertUndoParameter(GetTransformArray());
 				SetPosition(Position);
 				position_undo.InsertRedoParameter(GetTransformArray());
-				GetEditor().InsertAction(position_undo);
+				GetDayZGame().GetEditor().InsertAction(position_undo);
 				break;
 			}
 			
@@ -394,7 +395,7 @@ class EditorObject: EditorNode
 				orientation_undo.InsertUndoParameter(GetTransformArray());
 				SetOrientation(Orientation);
 				orientation_undo.InsertRedoParameter(GetTransformArray());
-				GetEditor().InsertAction(orientation_undo);
+				GetDayZGame().GetEditor().InsertAction(orientation_undo);
 				break;
 			}
 			

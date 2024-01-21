@@ -66,23 +66,24 @@ class EditorHudController: ViewController
 		
 		float widest_x;				
 		// Load Brushes		
-		string brush_file = GetEditor().GetProfileSettings().EditorBrushFile;
+		
+		string brush_file = GetDayZGame().GetEditor().GetProfileSettings().EditorBrushFile;
 		if (brush_file.Contains("'")) {
 			// bi wtf
 			brush_file.Replace("'", "");
 			brush_file.Replace("\"", "");
-			GetEditor().GetProfileSettings().EditorBrushFile = brush_file;
-			GetEditor().GetProfileSettings().Save();
+			GetDayZGame().GetEditor().GetProfileSettings().EditorBrushFile = brush_file;
+			GetDayZGame().GetEditor().GetProfileSettings().Save();
 		}
 		
-		if (!FileExist(GetEditor().GetProfileSettings().EditorBrushFile)) {
-			if (!CopyFile("Editor/scripts/data/Defaults/Brushes.xml", GetEditor().GetProfileSettings().EditorBrushFile)) {
-				EditorLog.Error("Could not copy brush data to %1", GetEditor().GetProfileSettings().EditorBrushFile);
+		if (!FileExist(GetDayZGame().GetEditor().GetProfileSettings().EditorBrushFile)) {
+			if (!CopyFile("Editor/scripts/data/Defaults/Brushes.xml", GetDayZGame().GetEditor().GetProfileSettings().EditorBrushFile)) {
+				EditorLog.Error("Could not copy brush data to %1", GetDayZGame().GetEditor().GetProfileSettings().EditorBrushFile);
 				return;
 			}
 		}
 				
-		ReloadBrushes(GetEditor().GetProfileSettings().EditorBrushFile);
+		ReloadBrushes(GetDayZGame().GetEditor().GetProfileSettings().EditorBrushFile);
 	}
 		
 	float GetPrecisionLevel()
@@ -137,17 +138,17 @@ class EditorHudController: ViewController
 
 		switch (w) {
 			case PlacementsTabButton: {
-				GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
+				GetDayZGame().GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetDayZGame().GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case DeletionsTabButton: {
-				GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetDeletedObjects().Count() + " #STR_EDITOR_DELETIONS", w, TooltipPositions.BOTTOM_LEFT));
+				GetDayZGame().GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetDayZGame().GetEditor().GetDeletedObjects().Count() + " #STR_EDITOR_DELETIONS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			
 			case CinematicCameraButton: {
-				GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("#STR_EDITOR_CINEMATIC_CAMERA", w, TooltipPositions.TOP_LEFT));
+				GetDayZGame().GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("#STR_EDITOR_CINEMATIC_CAMERA", w, TooltipPositions.TOP_LEFT));
 				break;
 			}
 		}
@@ -158,7 +159,7 @@ class EditorHudController: ViewController
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		//EditorLog.Trace("EditorHudController::OnMouseLeave");
-		delete GetEditor().GetHud().CurrentTooltip;
+		delete GetDayZGame().GetEditor().GetHud().CurrentTooltip;
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}*/

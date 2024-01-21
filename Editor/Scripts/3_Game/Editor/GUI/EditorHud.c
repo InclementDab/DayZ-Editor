@@ -3,7 +3,7 @@ class WebToggleCommand: Command
 {
 	override void Execute(bool state) 
 	{
-		GetEditor().GetHud().OutlinePanel.Show(state);
+		GetDayZGame().GetEditor().GetHud().OutlinePanel.Show(state); 
 	}
 }
 
@@ -15,7 +15,22 @@ class Cursors: string
 }
 
 class EditorHud: ScriptViewMenu
-{		
+{	
+	override bool UseMouse()
+	{
+		return true;
+	}
+	
+	override array<string> GetInputExcludes()
+	{
+		return { "menu" };
+	}
+	
+	override array<int> GetInputRestrictions()
+	{
+		return { UAWalkRunForced };
+	}
+	
 	ImageWidget Cursor, Foreground, Background;
 	
 	void SetCursor(Cursors cursor)
@@ -102,24 +117,18 @@ class EditorHud: ScriptViewMenu
 			EditorNode.ClearSelections();
 		}
 		
-		EditorOnline online = GetEditor().GetOnline();
-		if (online) {
-			m_TemplateController.RotatingJoinCode = online.GetJoinCode();
-			m_TemplateController.NotifyPropertyChanged("RotatingJoinCode");
+		Editor editor = GetDayZGame().GetEditor();
+					
+		m_TemplateController.OnlineUserCount = editor.GetOnlineMembers().Count();
+		m_TemplateController.NotifyPropertyChanged("OnlineUserCount");
 			
-			m_TemplateController.OnlineSessionId = online.GetUuid();
-			m_TemplateController.NotifyPropertyChanged("OnlineSessionId");
-			
-			m_TemplateController.OnlineUserCount = online.GetPlayers().Count();
-			m_TemplateController.NotifyPropertyChanged("OnlineUserCount");
-			
-			m_TemplateController.OnlineEntityCount = online.Service.GetPlacedObjects().Count();
-			m_TemplateController.NotifyPropertyChanged("OnlineEntityCount");
-		}
+		m_TemplateController.OnlineEntityCount = editor.GetPlacedObjects().Count();
+		m_TemplateController.NotifyPropertyChanged("OnlineEntityCount");
+		
 				
-		//EntityCountData.SetText(GetEditor().m_PlacedObjects.Count().ToString());
-		//Print(GetEditor().GetCurrentOnlineSession());
-		//OnlineServerDetails.Show(GetEditor().GetCurrentOnlineSession() != null);
+		//EntityCountData.SetText(GetDayZGame().GetEditor().m_PlacedObjects.Count().ToString());
+		//Print(GetDayZGame().GetEditor().GetCurrentOnlineSession());
+		//OnlineServerDetails.Show(GetDayZGame().GetEditor().GetCurrentOnlineSession() != null);
 						
 		Whiteboard.Clear();
 		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) == MB_PRESSED_MASK && m_DragX != -1 && m_DragY != -1) {												
@@ -177,16 +186,10 @@ class EditorHud: ScriptViewMenu
 			m_DraggedBar.GetParent().SetSize(distance_from_wall, y - (tools_height + menu_height));
 			m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
 		}
-		
-		EditorOnline online_session = GetEditor().GetOnline();
-		if (online_session) {
-			m_TemplateController.RotatingJoinCode = online_session.GetJoinCode();
-			m_TemplateController.NotifyPropertyChanged("RotatingJoinCode");
-		}
 			
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
 			if (IsCursorVisible()) {
-				GetEditor().ClearPlacing();
+				GetDayZGame().GetEditor().ClearPlacing();
 			}
 			
 			ShowCursor(!IsCursorVisible());
@@ -196,19 +199,7 @@ class EditorHud: ScriptViewMenu
 			//}
 		}
 	}
-			
-	void OnJoinExecute(ButtonCommandArgs args)
-	{
-		ScriptRPC rpc = new ScriptRPC();
-		rpc.Write(m_TemplateController.JoinCode.ToString());
-		rpc.Send(null, EditorOnlineManager.RPC_REQUEST_JOIN_SESSION, false);
-	}
-	
-	void OnHostExecute(ButtonCommandArgs args)
-	{
-		ScriptRPC().Send(null, EditorOnlineManager.RPC_REQUEST_CREATE_SESSION, true);
-	}
-	
+		
 	EditorCategory InsertPlacedCategory(notnull EditorCategory editor_category)
 	{
 		m_PlacedCategories[editor_category.GetName()] = editor_category;
@@ -246,18 +237,6 @@ class EditorHud: ScriptViewMenu
 				CF.ObjectManager.HideMapObject(object, false);
 			}
 		}	
-	}
-			
-	void OnCopySessionExecute(ButtonCommandArgs args)
-	{
-		string code = GetEditor().GetOnline().GetJoinCode();
-		GetGame().CopyToClipboard(code);
-		ShowNotification(string.Format("Code %1 copied to clipboard", code));
-	}
-	
-	void OnLeaveSessionExecute(ButtonCommandArgs args)
-	{
-		ScriptRPC().Send(null, EditorOnlineManager.RPC_REQUEST_LEAVE_SESSION, true);
 	}
 	
 	void OnCreateNewFolder(ButtonCommandArgs args)
@@ -375,7 +354,7 @@ class EditorHud: ScriptViewMenu
 			ShowCursor(false);
 		}
 		
-		Man controlled_player = GetEditor().GetCurrentControlPlayer();
+		Man controlled_player = GetDayZGame().GetEditor().GetCurrentControlPlayer();
 		Hud hud = GetGame().GetMission().GetHud();
 		hud.ShowHudUI(g_Game.GetProfileOption(EDayZProfilesOptions.HUD) && !show && controlled_player != null);
 		hud.ShowQuickbarUI(g_Game.GetProfileOption(EDayZProfilesOptions.QUICKBAR) && !show && controlled_player != null);
@@ -392,7 +371,7 @@ class EditorHud: ScriptViewMenu
 		ClearCursor();
 		
 		// If player is active
-		Man controlled_player = GetEditor().GetCurrentControlPlayer();
+		Man controlled_player = GetDayZGame().GetEditor().GetCurrentControlPlayer();
 		if (controlled_player) {
 			controlled_player.DisableSimulation(IsCursorVisible());
 		}
@@ -419,7 +398,7 @@ class EditorHud: ScriptViewMenu
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(HideNotification);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(HideNotification, 1000 * duration);
 		
-		GetEditor().PlaySound("Lock_SoundSet");
+		GetDayZGame().GetEditor().PlaySound("Lock_SoundSet");
 	}
 	
 	void HideNotification()

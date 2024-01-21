@@ -97,13 +97,14 @@ class EditorMapGroupProto: XMLCallback
 	{
 		m_Building = building;
 		
-		GetEditor().OnObjectDeleted.Insert(OnObjectDeleted);
+		
+		GetDayZGame().GetEditor().OnObjectDeleted.Insert(OnObjectDeleted);
 	}
 	
 	void ~EditorMapGroupProto()
 	{
 		foreach (EditorObject editor_object: m_LootPositions) {
-			GetEditor().DeleteObject(editor_object, false);
+			GetDayZGame().GetEditor().DeleteObjects({ editor_object }, false);
 		}
 		
 		delete m_LootPositions;
@@ -267,7 +268,7 @@ class EditorMapGroupProto: XMLCallback
 		EditorLog.Info("Inserting Loot Point %1", loot_point_data.GetPosition().ToString());
 		vector loot_pos = loot_point_data.GetPosition();	
 		/*
-		EditorObject loot_display = GetEditor().CreateObject(GetGame().CreateObjectEx("EditorLootPoint", loot_pos, ECE_SETUP), EditorObjectFlags.OBJECTMARKER);
+		EditorObject loot_display = GetDayZGame().GetEditor().CreateObject(GetGame().CreateObjectEx("EditorLootPoint", loot_pos, ECE_SETUP), EditorObjectFlags.OBJECTMARKER);
 
 		EditorLootPoint loot_point = EditorLootPoint.Cast(loot_display.GetWorldObject());
 		loot_point.Range = loot_point_data.GetRange();

@@ -5,8 +5,8 @@ modded class NetworkParticleBase
 		super.PropertyChanged(property_name);
 		
 		// Forcing the parameters to save when i change something.... MIGHT LAG :)
-		if (GetEditor().GetEditorObject(this)) {
-			//Write(GetEditor().GetEditorObject(this).CreateSerializedData().Parameters);
+		if (GetDayZGame().GetEditor().FindEditorObject(this)) {
+			//Write(GetDayZGame().GetEditor().GetEditorObject(this).CreateSerializedData().Parameters);
 		}
 	}
 }

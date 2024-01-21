@@ -47,7 +47,7 @@ class EditorCamera: ScriptedCamera
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
 		// We are holding control down, essentially
-		if (GetEditor().IsProcessingCommand()) {
+		if (GetDayZGame().GetEditor().IsProcessingCommand()) {
 			return;
 		}
 		
@@ -135,7 +135,7 @@ class EditorCamera: ScriptedCamera
 		SetTransform(transform);	
 		
 		// Decay linear velocity
-		m_LinearVelocity = m_LinearVelocity * Math.Pow(GetEditor().GetProfileSettings().Smoothing, 2);
+		m_LinearVelocity = m_LinearVelocity * Math.Pow(GetDayZGame().GetEditor().GetProfileSettings().Smoothing, 2);
 		m_AngularVelocity = m_AngularVelocity * 0.5;
 	}
 	
@@ -185,7 +185,7 @@ class EditorCamera: ScriptedCamera
 	
 	float Smoothing = 0;
 	
-	float Speed = GetEditor().GeneralSettings.CameraSpeed;
+	float Speed = GetDayZGame().GetEditor().GeneralSettings.CameraSpeed;
 	float Boost_Multiplier = 6.5;
 	float Drag = 0.05;
 	float Mouse_Sens = 35.0;
@@ -250,8 +250,8 @@ class EditorCamera: ScriptedCamera
 		LookEnabled = true;
 		
 		// literally just for startup
-		if (GetEditor().GetHud()) {
-			GetEditor().GetHud().Show(true);
+		if (GetDayZGame().GetEditor().GetHud()) {
+			GetDayZGame().GetEditor().GetHud().Show(true);
 		}
 	}
 
@@ -286,7 +286,7 @@ class EditorCamera: ScriptedCamera
 		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		if (GetEditor().GetCurrentControl() != this) {
+		if (GetDayZGame().GetEditor().GetCurrentControl() != this) {
 			return;
 		}
 				
@@ -307,7 +307,7 @@ class EditorCamera: ScriptedCamera
 			float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
 			
 			// check if water is under mouse, to stop from teleporting under water			
-			if (GetEditor().IsSurfaceWater(mouse_pos)) {
+			if (GetDayZGame().GetEditor().IsSurfaceWater(mouse_pos)) {
 				SendToPosition(Vector(mouse_pos[0],  camera_current_pos[1], mouse_pos[2]));
 			} else {
 				SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
@@ -394,12 +394,12 @@ class EditorCamera: ScriptedCamera
 
 		}
 
-		if (!GetEditor().GeneralSettings.AllowBelowGround) {
+		if (!GetDayZGame().GetEditor().GeneralSettings.AllowBelowGround) {
 			transform[3][1] = Math.Max(GetGame().SurfaceY(transform[3][0], transform[3][2]) + 0.1, transform[3][1]);
 		}
 				
 		SetTransform(transform);
-		GetEditor().Statistics.DistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km		
+		GetDayZGame().GetEditor().Statistics.DistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km		
 		
 		orientation = GetOrientation();
 		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
@@ -421,7 +421,7 @@ class EditorCamera: ScriptedCamera
 			orientation[1] = Math.Clamp(orientation[1], -89.9, 89.9);
 		}
 		
-		orientation[2] = Math.NormalizeAngle(GetEditor().GeneralSettings.CameraTilt); //orientation[2]	
+		orientation[2] = Math.NormalizeAngle(GetDayZGame().GetEditor().GeneralSettings.CameraTilt); //orientation[2]	
 		SetOrientation(orientation);
 
 		if (IsTargeting) {
@@ -429,11 +429,11 @@ class EditorCamera: ScriptedCamera
 		}
 		
 		
-		if (GetEditor().GetCurrentOnlineSession()) {
+		if (GetDayZGame().GetEditor().GetCurrentOnlineSession()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Write(GetPosition());
 			rpc.Write(GetDirection());
-			rpc.Send(null, EditorOnlineManager.RPC_REPORT_POSITION, false);
+			rpc.Send(null, EditorServerManager.RPC_REPORT_POSITION, false);
 		}
 		
 		//EditorLog.Trace("EditorCamera::EOnFrame-");

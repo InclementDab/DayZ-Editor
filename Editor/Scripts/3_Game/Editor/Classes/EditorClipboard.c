@@ -10,7 +10,8 @@ class EditorClipboard
 		}
 		
 		Copy();
-		GetEditor().DeleteObjects(cut_objects);
+		
+		GetDayZGame().GetEditor().DeleteObjects(cut_objects);
 	}
 	
 	static void Copy()
@@ -62,12 +63,12 @@ class EditorClipboard
 		array<Object> created_objects = {};
 		foreach (EditorObjectData pasted_object: data) {			
 			
-			EditorObjectData dta = EditorObjectData.Create(pasted_object.Type, pasted_object.Position + Editor.CurrentMousePosition, pasted_object.Orientation, pasted_object.Scale, pasted_object.Flags);
+			EditorObjectData dta = EditorObjectData.Create(pasted_object.Type, pasted_object.Position + GetDayZGame().GetEditor().GetCamera().PerformCursorRaycast().Position, pasted_object.Orientation, pasted_object.Scale, pasted_object.Flags);
 			created_objects.Insert(dta.CreateObject());
 		}	
 		
 		/*
-		array<EditorObject> editor_objects = GetEditor().CreateObjects(created_objects);
+		array<EditorObject> editor_objects = GetDayZGame().GetEditor().CreateObjects(created_objects);
 		
 		foreach (EditorObject editor_object: editor_objects) {
 			vector position = editor_object.GetWorldObject().GetPosition();
@@ -78,14 +79,14 @@ class EditorClipboard
 				position
 			};
 			
-			if (GetEditor().MagnetMode) {
+			if (GetDayZGame().GetEditor().MagnetMode) {
 				set<Object> o;
 				vector ground, ground_dir; int component;
 				DayZPhysics.RaycastRV(position, position + transform[1] * -1000, ground, ground_dir, component, o, NULL, editor_object.GetWorldObject(), false, true); // set to ground only
 				vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
 				
 				// BREAK STUFF I DARE YOU >:(
-				EntityAI.Cast(editor_object.GetWorldObject()).PlaceOnSurfaceRotated(transform, position, surface_normal[0] * -1, surface_normal[2] * -1, 0, GetEditor().MagnetMode);
+				EntityAI.Cast(editor_object.GetWorldObject()).PlaceOnSurfaceRotated(transform, position, surface_normal[0] * -1, surface_normal[2] * -1, 0, GetDayZGame().GetEditor().MagnetMode);
 				transform[3] = transform[3] - transform[1] * vector.Distance(ground, position);
 				editor_object.GetWorldObject().SetTransform(transform);				
 			}

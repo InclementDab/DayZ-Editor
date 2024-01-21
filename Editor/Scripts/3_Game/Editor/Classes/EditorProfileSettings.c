@@ -71,6 +71,6 @@ class EditorProfileSettings: ProfileSettings
 		GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
 		
 
-		//GetEditor().GetHud().ShowRuleOfThirds(RuleOfThirds);
+		//GetDayZGame().GetEditor().GetHud().ShowRuleOfThirds(RuleOfThirds);
 	}
 }

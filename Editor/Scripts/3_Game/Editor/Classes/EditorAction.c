@@ -80,30 +80,30 @@ class EditorAction: Managed
 	
 	void Create(Param1<ref EditorObjectData> params)
 	{		
-		//GetEditor().CreateObject(params.param1.CreateObject(), false);
+		//GetDayZGame().GetEditor().CreateObject(params.param1.CreateObject(), false);
 	}
 	
 	void Delete(Param1<ref EditorObjectData> params)
 	{
 		/*
-		EditorObject object = GetEditor().GetPlacedObjectById(params.param1);
+		EditorObject object = GetDayZGame().GetEditor().GetPlacedObjectById(params.param1);
 		if (!object) {
 			EditorLog.Error("EditorAction::Delete Object was null!");
 			return;
 		}
 		
-		GetEditor().DeleteObject(object, false);*/
+		GetDayZGame().GetEditor().DeleteObject(object, false);*/
 	}
 	
 	void SetTransform(Param3<ref EditorObjectData, vector, vector> params)
 	{
-		/*EditorObjectData editor_object_data = GetEditor().GetSessionDataById(params.param1);
+		/*EditorObjectData editor_object_data = GetDayZGame().GetEditor().GetSessionDataById(params.param1);
 		if (!editor_object_data) {
 			EditorLog.Error("EditorAction::SetTransform EditorObjectData was null!");
 			return;
 		}
 		
-		EditorObject editor_object = GetEditor().GetPlacedObjectById(editor_object_data.GetID());
+		EditorObject editor_object = GetDayZGame().GetEditor().GetPlacedObjectById(editor_object_data.GetID());
 		if (!editor_object) {
 			EditorLog.Error("EditorAction::SetTransform EditorObject was null!");
 			return;
@@ -117,13 +117,13 @@ class EditorAction: Managed
 	{
 		/*EditorLog.Trace("EditorAction::Hide %1", params.param1.ToString());
 		
-		EditorHiddenObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
+		EditorHiddenObjectData data = GetDayZGame().GetEditor().GetDeletedSessionDataById(params.param1);
 		if (!data) {
 			EditorLog.Error("EditorAction::Hide Data was null!");
 			return;
 		}
 		
-		if (!GetEditor().HideMapObject(data, false)) {
+		if (!GetDayZGame().GetEditor().HideMapObject(data, false)) {
 			EditorLog.Warning("EditorAction::Hide failed to hide object");
 		}*/
 	}
@@ -131,13 +131,13 @@ class EditorAction: Managed
 	void Unhide(Param1<ref EditorObjectData> params)
 	{
 		/*EditorLog.Trace("EditorAction::Unhide %1", params.param1.ToString());
-		EditorHiddenObjectData data = GetEditor().GetDeletedSessionDataById(params.param1);
+		EditorHiddenObjectData data = GetDayZGame().GetEditor().GetDeletedSessionDataById(params.param1);
 		if (!data) {
 			EditorLog.Error("EditorAction::Unhide Data was null!");
 			return;
 		}
 		
-		if (!GetEditor().UnhideMapObject(data, false)) {
+		if (!GetDayZGame().GetEditor().UnhideMapObject(data, false)) {
 			EditorLog.Warning("EditorAction::Unhide failed to unhide object");
 		}*/
 	}
@@ -156,10 +156,10 @@ class EditorAction: Managed
 	{
 		EditorLog.Trace("EditorAction::DeleteCameraTrack %1", params.param1.ToString());
 		
-		/*foreach (EditorCameraTrackListItem list_item: GetEditor().GetHud().GetTemplateController().CameraTrackItems) {
+		/*foreach (EditorCameraTrackListItem list_item: GetDayZGame().GetEditor().GetHud().GetTemplateController().CameraTrackItems) {
 			
 		}*/
 		
-		//GetEditor().GetHud().GetTemplateController().RemoveCameraTrack(params.param1);	
+		//GetDayZGame().GetEditor().GetHud().GetTemplateController().RemoveCameraTrack(params.param1);	
 	}
 }

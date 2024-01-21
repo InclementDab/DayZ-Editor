@@ -3,12 +3,11 @@ class UndoCommand: Command
 {
 	override void Execute(bool state) 
 	{
-		GetEditor().GetHud().ShowNotification("Undoing your mom");
-		GetEditor().Undo();
+		GetDayZGame().GetEditor().Undo();
 	}
 	
 	override bool CanExecute()
 	{
-		return GetEditor().CanUndo();
+		return GetDayZGame().GetEditor().CanUndo();
 	}
 }

@@ -8,15 +8,23 @@ modded class DayZGame
 	
 	// lookup table by p3d
 	protected ref map<string, ref array<EditorPlaceableObjectData>> m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableObjectData>>();
-	
-	// args: string
-	ref ScriptInvoker OnProgressReport;
+		
+	protected ref Editor m_Editor;
+		
+	override void OnUpdate(bool doSim, float timeslice)
+	{
+		super.OnUpdate(doSim, timeslice);
+				
+		if (m_Editor) {		
+			m_Editor.Update(timeslice);
+			if (doSim && m_Editor.IsDirty()) {
+				m_Editor.Synchronize();
+			}
+		}
+	}
 	
 	override bool OnInitialize()
-	{
-		// Loads placeable objects	
-		g_Game.ReportProgress("Loading Placeable Objects");
-				
+	{				
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 				
 		// handle config objects
@@ -74,13 +82,32 @@ modded class DayZGame
 		return super.OnInitialize();
 	}
 	
-	void ReportProgress(string report)
+	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{
-		if (!OnProgressReport) {
-			OnProgressReport = new ScriptInvoker();
-		}
+		super.OnRPC(sender, target, rpc_type, ctx);
 		
-		OnProgressReport.Invoke(report);
+		switch (rpc_type) {					
+			case Editor.RPC_CREATE_SESSION: {
+				if (GetGame().IsDedicatedServer()) {
+					Error("RPC_CREATE_SESSION can only be called on clients");
+					break;
+				}
+				
+				PlayerIdentity editor;
+				if (!ctx.Read(editor)) {	
+					Error("Invalid identity");
+					break;
+				}
+				
+				m_Editor = new Editor(editor);
+				break;
+			}
+		}
+	}
+
+	Editor GetEditor()
+	{
+		return m_Editor;
 	}
 
 	EditorPlaceableObjectData GetPlaceableObject(string type)

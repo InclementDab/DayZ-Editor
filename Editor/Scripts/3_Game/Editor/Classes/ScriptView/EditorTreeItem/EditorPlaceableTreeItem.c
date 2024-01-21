@@ -28,7 +28,8 @@ class EditorPlaceableTreeItem: EditorTreeItem
 	{
 		switch (w) {
 			case Panel: {
-				delete GetEditor().GetHud().CurrentTooltip;
+				
+				delete GetDayZGame().GetEditor().GetHud().CurrentTooltip;
 				break;
 			}
 		}

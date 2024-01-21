@@ -165,7 +165,7 @@ class XMLEventsCallback: XMLCallback
 				if (position == vector.Zero) continue;
 				if (GetGame().IsKindOf(ename, "DZ_LightAI")) continue;
 				
-				//GetEditor().CreateObject(EditorObjectData.Create(ename, position).CreateObject());
+				//GetDayZGame().GetEditor().CreateObject(EditorObjectData.Create(ename, position).CreateObject());
 				
 				//Object o = GetGame().CreateObjectEx(ename, position, ECE_NONE);
 				//o.SetFlags(EntityFlags.STATIC, true);
