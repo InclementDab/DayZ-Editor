@@ -14,8 +14,9 @@ class Cursors: string
 	static const Cursors LEFT_RIGHT = "left_right";
 }
 
-class EditorHud: ScriptViewMenu
+class EditorHud: ScriptView
 {	
+	/*
 	override bool UseMouse()
 	{
 		return true;
@@ -29,27 +30,9 @@ class EditorHud: ScriptViewMenu
 	override array<int> GetInputRestrictions()
 	{
 		return { UAWalkRunForced };
-	}
+	}*/
 	
-	ImageWidget Cursor, Foreground, Background;
-	
-	void SetCursor(Cursors cursor)
-	{
-		Cursor.Show(true);
-		
-		Foreground.LoadImageFile(0, string.Format("set:thin image:%1", cursor));
-		Foreground.SetImage(0);
-		
-		Background.LoadImageFile(0, string.Format("set:solid image:%1", cursor));
-		Background.SetImage(0);
-		
-		SetCursorWidget(Cursor);
-	}
-	
-	void ClearCursor()
-	{
-		Cursor.Show(false);
-	}
+	protected Widget m_Cursor;
 	
 	protected EditorHudController m_TemplateController;
 		
@@ -493,6 +476,26 @@ class EditorHud: ScriptViewMenu
 		}
 				
 		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetName(), split_string[0], component_type, component_index);
+	}
+	
+	void SetCursor(Cursors cursor)
+	{
+		m_Cursor.Show(true);
+		
+		ImageWidget foreground = FindWidget<ImageWidget>.SearchDown(m_Cursor, "Foreground");
+		foreground.LoadImageFile(0, string.Format("set:thin image:%1", cursor));
+		foreground.SetImage(0);
+		
+		ImageWidget background = FindWidget<ImageWidget>.SearchDown(m_Cursor, "Background");
+		background.LoadImageFile(0, string.Format("set:solid image:%1", cursor));
+		background.SetImage(0);
+		
+		SetCursorWidget(m_Cursor);
+	}
+	
+	void ClearCursor()
+	{
+		m_Cursor.Show(false);
 	}
 		
 	// ToolTip Control
