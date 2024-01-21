@@ -11,9 +11,9 @@ class EditorTreeItem: ScriptView
 	protected bool m_IsBeingDragged;
 	protected string m_Text;
 	
-	protected EditorSelectableBase m_Selectable;
+	protected EditorNode m_Selectable;
 	
-	void EditorTreeItem(string text, EditorSelectableBase selectable)
+	void EditorTreeItem(string text, EditorNode selectable)
 	{
 		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
 		m_Selectable = selectable;
@@ -82,7 +82,7 @@ class EditorTreeItem: ScriptView
 		switch (button) {
 			case 0: {
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					EditorSelectableBase.ClearSelections();
+					EditorNode.ClearSelections();
 				}
 				
 				if (KeyState(KeyCode.KC_LCONTROL)) {
@@ -103,7 +103,7 @@ class EditorTreeItem: ScriptView
 		return super.OnDrag(w, x, y);
 	}
 			
-	void OnSelectionChange(EditorSelectableBase selectable)
+	void OnSelectionChange(EditorNode selectable)
 	{
 		Panel.SetColor(ARGB(255, 7, 111, 146) * selectable.IsSelected());
 	}

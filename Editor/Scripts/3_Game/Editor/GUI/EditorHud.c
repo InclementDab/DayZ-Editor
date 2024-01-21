@@ -14,7 +14,7 @@ class Cursors: string
 	static const Cursors LEFT_RIGHT = "left_right";
 }
 
-class EditorHud: ScriptView
+class EditorHud: ScriptViewMenu
 {		
 	ImageWidget Cursor, Foreground, Background;
 	
@@ -99,7 +99,7 @@ class EditorHud: ScriptView
 		GetMousePos(mouse_x, mouse_y);
 		
 		if (GetGame().GetInput().LocalPress("UAFire") && !GetWidgetUnderCursor()) {
-			EditorSelectableBase.ClearSelections();
+			EditorNode.ClearSelections();
 		}
 		
 		EditorOnline online = GetEditor().GetOnline();
@@ -127,7 +127,7 @@ class EditorHud: ScriptView
 			int x_avg = (m_DragX + mouse_x) / 2;
 			Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE); 
 						
-			foreach (EditorSelectableBase selectable_item: EditorSelectableBase.All) {
+			foreach (EditorNode selectable_item: EditorNode.All) {
 				EditorTreeItem view = selectable_item.GetTreeItem();
 				if (view) {
 					float tree_x, tree_y;

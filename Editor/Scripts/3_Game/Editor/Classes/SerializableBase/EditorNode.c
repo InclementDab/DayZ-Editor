@@ -1,8 +1,8 @@
-class EditorSelectableBase: SerializableBase
+class EditorNode: SerializableBase
 {
-	static ref array<EditorSelectableBase> All = {};
-	static ref array<EditorSelectableBase> SelectedObjects = {};
-	static ref array<EditorSelectableBase> LockedObjects = {};
+	static ref array<EditorNode> All = {};
+	static ref array<EditorNode> SelectedObjects = {};
+	static ref array<EditorNode> LockedObjects = {};
 	
 	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();
 	ref ScriptInvoker OnLockChanged = new ScriptInvoker();
@@ -12,12 +12,12 @@ class EditorSelectableBase: SerializableBase
 		
 	protected ref EditorTreeItem m_TreeItem;
 	
-	void EditorSelectableBase()
+	void EditorNode()
 	{
 		All.Insert(this);
 	}
 	
-	void ~EditorSelectableBase()
+	void ~EditorNode()
 	{
 		All.RemoveItem(this);
 		
@@ -77,7 +77,7 @@ class EditorSelectableBase: SerializableBase
 	
 	static void ClearSelections()
 	{
-		foreach (EditorSelectableBase selected_object: SelectedObjects) {
+		foreach (EditorNode selected_object: SelectedObjects) {
 			if (selected_object && selected_object.IsSelected()) {
 				selected_object.SetSelected(false);
 			}

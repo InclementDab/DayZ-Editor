@@ -1,4 +1,4 @@
-class EditorObject: EditorSelectableBase
+class EditorObject: EditorNode
 {	
 	static const int VERSION = 1;
 	
@@ -359,7 +359,7 @@ class EditorObject: EditorSelectableBase
 	static array<EditorObject> GetSelectedEditorObjects()
 	{
 		array<EditorObject> editor_objects = {};
-		foreach (EditorSelectableBase selectable_base: SelectedObjects) {
+		foreach (EditorNode selectable_base: SelectedObjects) {
 			EditorObject editor_object = EditorObject.Cast(selectable_base);
 			if (editor_object) {
 				editor_objects.Insert(editor_object);

@@ -1,4 +1,4 @@
-class EditorPlaceableObject: EditorSelectableBase
+class EditorPlaceableObject: EditorNode
 {
 	protected EditorPlaceableObjectData m_PlaceableObject;
 	protected Object m_Object;

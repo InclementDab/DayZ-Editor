@@ -312,8 +312,6 @@ class Editor: Managed
 						
 			vector size = ObjectGetSize(object);
 			
-			
-			
 			transform = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position + Vector(0, (size[1] / 2) * ray1.Direction.Length(), 0) };
 			
 			object.SetTransform(transform);

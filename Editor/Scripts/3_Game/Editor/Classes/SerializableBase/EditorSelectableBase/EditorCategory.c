@@ -1,7 +1,7 @@
-class EditorCategory: EditorSelectableBase
+class EditorCategory: EditorNode
 {
 	// todo maybe ref this here from now on
-	protected ref array<EditorSelectableBase> m_Children = {};
+	protected ref array<EditorNode> m_Children = {};
 	
 	protected EditorObjectDataCategory m_Category;
 	
@@ -24,14 +24,14 @@ class EditorCategory: EditorSelectableBase
 		return m_Category.GetName();
 	}
 		
-	void AddChild(notnull EditorSelectableBase child)
+	void AddChild(notnull EditorNode child)
 	{
 		m_Children.Insert(child);
 		
 		m_TreeItem.GetTemplateController().ChildrenItems.Insert(child.GetTreeItem());
 	}
 	
-	void RemoveChild(notnull EditorSelectableBase child)
+	void RemoveChild(notnull EditorNode child)
 	{
 		m_Children.RemoveItem(child);
 	}
