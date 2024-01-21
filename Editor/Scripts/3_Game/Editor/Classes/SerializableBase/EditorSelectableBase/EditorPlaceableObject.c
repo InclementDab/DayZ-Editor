@@ -3,7 +3,7 @@ class EditorPlaceableObject: EditorNode
 	protected EditorPlaceableObjectData m_PlaceableObject;
 	protected Object m_Object;
 		
-    void EditorPlaceableObject(notnull EditorPlaceableObjectData placeable_object)
+    void EditorPlaceableObject()
     {
         m_PlaceableObject = placeable_object;
 		
@@ -11,7 +11,7 @@ class EditorPlaceableObject: EditorNode
 		m_TreeItem.SetIcon(m_PlaceableObject.GetIcon());
     }
 	
-	override EditorTreeItem GetTreeItem()
+	override EditorNodeView GetTreeItem()
 	{
 		return m_TreeItem;
 	}

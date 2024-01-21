@@ -56,12 +56,7 @@ class EditorHud: ScriptView
 	protected int m_DragX = -1, m_DragY = -1;
 		
 	protected ref ScriptView m_CurrentMenu;
-	
-	protected ref map<string, ref EditorCategory> m_PlacedCategories = new map<string, ref EditorCategory>();
-	protected ref map<string, ref EditorCategory> m_PlaceableCategories = new map<string, ref EditorCategory>();
-	
-	protected EditorCategory m_CurrentPlacingContext;
-	
+		
 	protected ref array<ref EditorPlaceableObject> m_Placeables = {};
 	protected ref array<ref EditorObjectDataCategory> m_Data = {};
 	
@@ -120,7 +115,7 @@ class EditorHud: ScriptView
 			Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE); 
 						
 			foreach (EditorNode selectable_item: EditorNode.All) {
-				EditorTreeItem view = selectable_item.GetTreeItem();
+				EditorNodeView view = selectable_item.GetTreeItem();
 				if (view) {
 					float tree_x, tree_y;
 					view.GetLayoutRoot().GetScreenPos(tree_x, tree_y);
@@ -183,7 +178,7 @@ class EditorHud: ScriptView
 		}
 	}
 		
-	EditorCategory InsertPlacedCategory(notnull EditorCategory editor_category)
+	EditorNode InsertPlacedCategory(notnull EditorNode editor_category)
 	{
 		m_PlacedCategories[editor_category.GetName()] = editor_category;
 		m_TemplateController.RightListItems.Insert(editor_category.GetTreeItem());
@@ -191,16 +186,11 @@ class EditorHud: ScriptView
 		return editor_category;
 	}
 	
-	EditorCategory GetPlacedCategory(string category)
+	EditorNode GetPlacedCategory(string category)
 	{
 		return m_PlacedCategories[category];
 	}
-	
-	EditorCategory GetCurrentPlacingCategory()
-	{
-		return m_CurrentPlacingContext;
-	}
-		
+			
 	void OnDiscordButtonExecute(ButtonCommandArgs args)
 	{
 		
@@ -224,7 +214,7 @@ class EditorHud: ScriptView
 	
 	void OnCreateNewFolder(ButtonCommandArgs args)
 	{
-		//m_TemplateController.RightListItems.Insert(new EditorTreeItem("New Folder", null));
+		//m_TemplateController.RightListItems.Insert(new EditorNodeView("New Folder", null));
 	}
 	
 	override bool OnFocus(Widget w, int x, int y)

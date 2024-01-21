@@ -104,7 +104,7 @@ class EditorMapGroupProto: XMLCallback
 	void ~EditorMapGroupProto()
 	{
 		foreach (EditorObject editor_object: m_LootPositions) {
-			GetDayZGame().GetEditor().DeleteObjects({ editor_object }, false);
+			//GetDayZGame().GetEditor().DeleteObjects({ editor_object }, false);
 		}
 		
 		delete m_LootPositions;

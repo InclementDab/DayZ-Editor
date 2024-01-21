@@ -17,7 +17,6 @@ class EditorObject: EditorNode
 		Vector(0, 0, 1),
 	};
 		
-	protected string m_UUID;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
 		
@@ -27,10 +26,7 @@ class EditorObject: EditorNode
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
 	protected vector m_LineCenters[12], m_LineVerticies[8], m_BasePoint, m_TopPoint; 
-	
-	protected bool m_IsDirty;
-	protected string m_DisplayName;
-	
+		
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
 	
 	protected Object m_TranslationGizmo;
@@ -42,18 +38,10 @@ class EditorObject: EditorNode
 	// Custom stuff
 	string ExpansionTraderType;
 	string TestingScript;
-				
-	void EditorObject(UUID uuid, notnull Object object, string display_name, EditorObjectFlags flags)
-	{
-		m_UUID = uuid;
-		m_Object = object;
-		m_Flags = flags;
-		m_DisplayName = display_name;
-		
-		m_TreeItem = new EditorTreeItem(m_DisplayName, this);
-		
+	
+	void EditorObject()
+	{		
 		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
-			
 			GetDayZGame().GetEditor().GetHud().GetCurrentPlacingCategory().AddChild(this);
 		}
 						
@@ -153,6 +141,58 @@ class EditorObject: EditorNode
 		}
 	}
 	
+	static EditorObject Create(notnull Object object, EditorObjectFlags flags)
+	{
+		ScriptReadWriteContext ctx = new ScriptReadWriteContext();
+		ctx.GetWriteContext().Write(object.GetType()); // DisplayName		
+		ctx.GetWriteContext().Write(object.GetType());
+		
+		vector transform[4];
+		m_Object.GetTransform(transform);
+		ctx.GetWriteContext().Write(transform);
+		
+		ctx.GetWriteContext().Write(flags);
+		
+		return new EditorObject(ctx.GetReadContext());
+	}
+	
+	override void Write(Serializer serializer, int version)
+	{
+		super.Write(serializer, version);
+		
+		// COMPLETELY SERIALIZE THE OBJECT
+		serializer.Write(m_Object.GetType());
+		
+		vector transform[4];
+		m_Object.GetTransform(transform);
+		serializer.Write(transform);
+		
+		serializer.Write(m_Flags);
+	}
+	
+	override bool Read(Serializer serializer, int version)
+	{
+		if (!super.Read(serializer, version)) {
+			return false;
+		}
+		
+		// COMPLETELY DESERIALIZE THE OBJECT
+		string type;
+		serializer.Read(type);
+		
+		vector transform[4];
+		serializer.Read(transform);
+		
+		if (!m_Object) {
+			m_Object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
+		}
+		
+		m_Object.SetTransform(transform);
+		
+		serializer.Read(m_Flags);
+		return true;
+	}
+			
 #ifdef DIAG_DEVELOPER
 	void DiagOnFrameUpdate(float dt)
 	{		
@@ -178,50 +218,6 @@ class EditorObject: EditorNode
 	}
 #endif
 		
-	static EditorObject Create(string uuid, Serializer serializer)
-	{
-		string type, display;
-		vector position, orientation;
-		int flags;
-		serializer.Read(type);
-		serializer.Read(position);
-		serializer.Read(orientation);
-		serializer.Read(flags);
-		serializer.Read(display);
-		Object object = GetGame().CreateObjectEx(type, position, ECE_LOCAL);
-		object.SetOrientation(orientation);
-		return new EditorObject(uuid, object, display, flags);
-	}
-	
-	override void Write(Serializer serializer, int version)
-	{
-		super.Write(serializer, version);
-		
-		// Object properties
-		serializer.Write(m_Object.GetType());
-		serializer.Write(m_Object.GetPosition());
-		serializer.Write(m_Object.GetOrientation());
-		
-		serializer.Write(m_Flags);
-		serializer.Write(m_DisplayName);
-	}
-	
-	override bool Read(Serializer serializer, int version)
-	{
-		if (!super.Read(serializer, version)) {
-			return false;
-		}
-		
-		serializer.Read(m_Object.GetType());
-		serializer.Read(m_Object.GetPosition());
-		serializer.Read(m_Object.GetOrientation());
-		
-		serializer.Read(m_Flags);
-		serializer.Read(m_DisplayName);
-		
-		return true;
-	}
-		
 	override void SetSelected(bool selected)
 	{
 		super.SetSelected(selected);
@@ -237,7 +233,7 @@ class EditorObject: EditorNode
 		}
 	}
 	
-	override EditorTreeItem GetTreeItem()
+	override EditorNodeView GetTreeItem()
 	{
 		return m_TreeItem;
 	}
@@ -352,25 +348,10 @@ class EditorObject: EditorNode
 	{		
 		return m_Object;
 	}
-	
-	string GetUUID()
-	{
-		return m_UUID;
-	}
-	
+		
 	array<EditorSnapPoint> GetEditorSnapPoints()
 	{
 		return m_EditorSnapPoints;
-	}
-		
-	void SetSynchDirty()
-	{
-		m_IsDirty = true;
-	}
-	
-	bool IsSynchDirty()
-	{
-		return m_IsDirty;
 	}
 	
 	static array<EditorObject> GetSelectedEditorObjects()

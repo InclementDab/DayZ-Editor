@@ -1,4 +1,4 @@
-class EditorPlaceableTreeItem: EditorTreeItem
+class EditorPlaceableTreeItem: EditorNodeView
 {
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{

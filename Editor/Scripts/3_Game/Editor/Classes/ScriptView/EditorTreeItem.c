@@ -1,8 +1,8 @@
-class EditorTreeItem: ScriptView
+class EditorNodeView: ScriptView
 {
-	protected EditorTreeItemController m_TemplateController;
+	protected EditorNodeViewController m_TemplateController;
 	
-	protected EditorTreeItem m_Parent;
+	protected EditorNodeView m_Parent;
 	
 	TextWidget Text;
 	WrapSpacerWidget Children;
@@ -13,9 +13,9 @@ class EditorTreeItem: ScriptView
 	
 	protected EditorNode m_Selectable;
 	
-	void EditorTreeItem(string text, EditorNode selectable)
+	void EditorNodeView(string text, EditorNode selectable)
 	{
-		m_TemplateController = EditorTreeItemController.Cast(m_Controller);
+		m_TemplateController = EditorNodeViewController.Cast(m_Controller);
 		m_Selectable = selectable;
 		m_Selectable.OnSelectionChanged.Insert(OnSelectionChange);
 		
@@ -108,12 +108,12 @@ class EditorTreeItem: ScriptView
 		Panel.SetColor(ARGB(255, 7, 111, 146) * selectable.IsSelected());
 	}
 					
-	void SetParentTree(EditorTreeItem parent)
+	void SetParentTree(EditorNodeView parent)
 	{
 		m_Parent = parent;
 		
 		int i = 0;
-		EditorTreeItem upper_parent = parent;
+		EditorNodeView upper_parent = parent;
 		while (upper_parent) {
 			i++;
 			upper_parent = upper_parent.GetParent();
@@ -122,23 +122,23 @@ class EditorTreeItem: ScriptView
 		Spacer.SetSize(i * 14, 19.00);
 	}
 	
-	EditorTreeItem GetParentTree()
+	EditorNodeView GetParentTree()
 	{
 		return m_Parent;
 	}
 	
-	EditorTreeItemController GetTemplateController()
+	EditorNodeViewController GetTemplateController()
 	{
 		return m_TemplateController;
 	}
 		
 	override typename GetControllerType()
 	{
-		return EditorTreeItemController;
+		return EditorNodeViewController;
 	}
 	
 	override string GetLayoutFile()
 	{
-		return "Editor\\GUI\\layouts\\items\\EditorTreeItem.layout";
+		return "Editor\\GUI\\layouts\\items\\EditorNodeView.layout";
 	}
 }

@@ -1,6 +1,6 @@
-class EditorTreeItemController: ViewController
+class EditorNodeViewController: ViewController
 {
-	ref ObservableCollection<EditorTreeItem> ChildrenItems = new ObservableCollection<EditorTreeItem>(this);
+	ref ObservableCollection<EditorNodeView> ChildrenItems = new ObservableCollection<EditorNodeView>(this);
 	
 	string IconImage, CollapseIcon;
 	
@@ -18,8 +18,8 @@ class EditorTreeItemController: ViewController
 	
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{			
-		Param1<EditorTreeItem> item = Param1<EditorTreeItem>.Cast(args.ChangedValue);
-		EditorTreeItem script_view = EditorTreeItem.Cast(GetParent());
+		Param1<EditorNodeView> item = Param1<EditorNodeView>.Cast(args.ChangedValue);
+		EditorNodeView script_view = EditorNodeView.Cast(GetParent());
 		switch (args.ChangedAction) {
 			case NotifyCollectionChangedAction.Insert:
 			case NotifyCollectionChangedAction.InsertAt: {

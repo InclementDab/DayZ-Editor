@@ -11,8 +11,8 @@ class EditorHudController: ViewController
 	
 	StringEvaluater PrecisionLevel = "0.5";
 	
-	ref ObservableCollection<EditorTreeItem> LeftListItems = new ObservableCollection<EditorTreeItem>(this);
-	ref ObservableCollection<EditorTreeItem> RightListItems = new ObservableCollection<EditorTreeItem>(this);
+	ref ObservableCollection<EditorNodeView> LeftListItems = new ObservableCollection<EditorNodeView>(this);
+	ref ObservableCollection<EditorNodeView> RightListItems = new ObservableCollection<EditorNodeView>(this);
 		
 	ref ObservableCollection<ref EditorFileHeadView> OpenFiles = new ObservableCollection<ref EditorFileHeadView>(this);
 		

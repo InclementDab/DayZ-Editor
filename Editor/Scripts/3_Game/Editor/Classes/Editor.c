@@ -13,13 +13,11 @@ class EditorHandData
 	vector OrientationOffset;
 }			
 
-class Editor: SerializableBase
+class Editor: EditorNode
 {
-	static const int RPC_NEW = 54363;
-	static const int RPC_DELETE = 54364;
 	static const int RPC_SYNC = 54365;
 	
-	static const ref array<int> RPC_ALL = { RPC_NEW, RPC_DELETE, RPC_SYNC };
+	static const ref array<int> RPC_ALL = { RPC_SYNC };
 	
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
@@ -27,7 +25,9 @@ class Editor: SerializableBase
 	protected Man m_Player;
 	
 	// All editors in lobby, including m_Editor
-	protected ref map<PlayerIdentity, Object> m_Editors = new map<PlayerIdentity, Object>();		
+	protected ref array<PlayerIdentity> m_Editors = {};
+	
+	protected ref map<PlayerIdentity, Object> m_CameraObjects = new map<PlayerIdentity, Object>();
 	
 	bool Public;
 	protected string m_Password; // must be SHA before reaching clients
@@ -36,8 +36,6 @@ class Editor: SerializableBase
 	
 	ref ScriptInvoker OnSyncRecieved = new ScriptInvoker();
 	
-	protected bool m_IsDirty;
-
 	// statics (updated in Update())
 	static Object								ObjectUnderCursor;
 	static int 									ComponentUnderCursor;
@@ -99,21 +97,14 @@ class Editor: SerializableBase
 	
 	// Stored list of all Placed Objects
 	protected ref map<string, EditorObject> m_PlacedObjects = new map<string, EditorObject>();
-	
-	protected ref map<string, ref EditorNode> m_Nodes = new map<string, ref EditorNode>();
-			
+				
 	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
 	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
 	
-	void Editor(Man player) 
-	{
-		m_Player = player;
+	protected EditorNode m_CurrentPlacingCategory;
 		
-		// Server
-		if (!m_Player) {
-			return;
-		}
-		
+	void Editor(notnull Serializer serializer) 
+	{		
 		foreach (typename command_type: RegisterCommand.Instances) {		
 			Command command = Command.Cast(command_type.Spawn());
 			if (!command) {
@@ -130,17 +121,42 @@ class Editor: SerializableBase
 							
 		// Initialize the profiles/editor directory;		
 		MakeDirectory(ROOT_DIRECTORY);
-		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
-					
-		// Init Hud
-		m_EditorHud = new EditorHud();
-						
-		ControlCamera(m_Camera);
 	}
 
 	void ~Editor() 
 	{
 		GetGame().ObjectDelete(m_Camera);
+	}
+	
+	static Editor Create(notnull Man player)
+	{
+		ScriptReadWriteContext ctx = new ScriptReadWriteContext();
+		ctx.GetWriteContext().Write(player.GetIdentity().GetName()); // DisplayName
+	
+		ctx.GetWriteContext().Write(m_Editors.Count());
+		foreach (PlayerIdentity identity: m_Editors) {			
+			ctx.GetWriteContext().Write(identity);
+		}
+				
+		ctx.GetWriteContext().Write(m_Children.Count());
+		foreach (EditorNode node: m_Children) {
+			node.Write(serializer, 0);
+		}
+		
+		vector mat[4];
+		m_Camera.GetTransform(mat);
+		ctx.GetWriteContext().Write(mat);
+		
+		Editor editor = new Editor(ctx.GetReadContext());
+		
+		editor.m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
+					
+		// Init Hud
+		editor.m_EditorHud = new EditorHud();
+						
+		editor.ControlCamera(m_Camera);
+		
+		return editor;
 	}
 	
 	void Update(bool doSim, float timeslice)
@@ -153,7 +169,7 @@ class Editor: SerializableBase
 		}
 		
 		foreach (string node_id, EditorNode node: m_Nodes) {
-			if (!node || !node.IsDirty) {
+			if (!node || !node.IsSynchDirty()) {
 				continue;
 			}
 			
@@ -161,7 +177,7 @@ class Editor: SerializableBase
 			rpc_networkable.Write(node_id);
 			node.Write(rpc_networkable, 0);
 			rpc_networkable.Send(null, RPC_SYNC, true);
-			node.IsDirty = false;
+			node.ClearSynchDirty();
 		}
 		
 		if (GetGame().IsDedicatedServer()) {
@@ -254,9 +270,9 @@ class Editor: SerializableBase
 		}
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
-			foreach (Object object_to_place, EditorHandData data: Placing) {					
-				string uuid = UUID.Generate();	
-				EditorObject editor_object = new EditorObject(uuid, object_to_place, object_to_place.GetType(), EFE_DEFAULT);
+			foreach (Object object_to_place, EditorHandData data: Placing) {
+				EditorObject editor_object = EditorObject.Create(object_to_place, EFE_DEFAULT);
+				string uuid = UUID.Generate();
 				m_PlacedObjects[uuid] = editor_object;
 				m_WorldObjects[object_to_place] = m_PlacedObjects[uuid];			
 				
@@ -264,90 +280,28 @@ class Editor: SerializableBase
 				
 				Placing.Remove(object_to_place);
 				
-				m_Nodes[uuid] = editor_object;
-				Register(uuid, editor_object);
+				m_Children[uuid] = editor_object;
 			}
 			
 			m_IsDirty = true;
 		}
 	}
-	
-	void Register(string uuid, EditorNode node)
-	{
-		ScriptRPC rpc = new ScriptRPC();
-		rpc.Write(uuid);
-		rpc.Write(node.Type().ToString());
-		node.Write(rpc, node.GetVersion());
-		rpc.Send(null, RPC_NEW, true);
-	}
-	
-	void Unregister(string uuid)
-	{
-		ScriptRPC rpc = new ScriptRPC();
-		rpc.Write(uuid);
-		rpc.Send(null, RPC_DELETE, true);
-	}
-			
-	void RemovePlayer(notnull PlayerIdentity player_identity)
-	{
-		m_Editors.Remove(player_identity);
-	}
-				
-	void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
+					
+	override void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
 	{		
-		string uuid;
-		if (!ctx.Read(uuid)) {
-			Error("Failed to read uuid");
-			return;
-		}
-		
 		switch (rpc_type) {
-			case RPC_NEW: {						
-				string type;
-				if (!ctx.Read(type)) {
-					Error("Failed to read type");
-					break;
-				}
-			
-				// Create the object
-				EditorNode node = EditorNode.Cast(type.ToType().Spawn());
-				m_Nodes[uuid] = node;
-				
-				// Ping pong!
-				if (GetGame().IsDedicatedServer()) {
-					Register(uuid, node);
-				}
-				
-				break;
-			}
-			
-			case RPC_DELETE: {
-				delete m_Nodes[uuid];
-				
-				if (GetGame().IsDedicatedServer()) {
-					Unregister(uuid);
-				}
-				
-				break;
-			}
-			
 			case RPC_SYNC: {				
-				if (!m_Nodes[uuid]) {
-					Error("Cannot sync an un-networked item " + uuid);
-					break;
-				}
-				
-				m_Nodes[uuid].Read(ctx, m_Nodes[uuid].GetVersion());
+				Read(ctx, 0);
 				
 				if (GetGame().IsDedicatedServer()) {
-					m_Nodes[uuid].IsDirty = true;
+					m_IsDirty = true;
 				}
 				
 				break;
 			}
 		}
 		
-		foreach (string uuid_rpc, EditorNode node_rpc: m_Nodes) {
+		foreach (string uuid_rpc, EditorNode node_rpc: m_Children) {
 			if (node_rpc.GetProtocols().Find(rpc_type) != -1) {
 				node_rpc.OnRPC(sender, rpc_type, ctx);
 			}
@@ -361,13 +315,13 @@ class Editor: SerializableBase
 		serializer.Write(m_MaxPlayers);
 		
 		serializer.Write(m_Editors.Count());
-		foreach (PlayerIdentity identity, Object _: m_Editors) {			
+		foreach (PlayerIdentity identity: m_Editors) {			
 			serializer.Write(identity);
 		}
 				
-		serializer.Write(m_PlacedObjects.Count());
-		foreach (EditorObject object_data: m_PlacedObjects) {
-			object_data.Write(serializer, 0);
+		serializer.Write(m_Children.Count());
+		foreach (EditorNode node: m_Children) {
+			node.Write(serializer, 0);
 		}
 		
 		vector mat[4];
@@ -387,8 +341,8 @@ class Editor: SerializableBase
 			PlayerIdentity identity;
 			serializer.Read(identity);
 			
-			if (!m_Editors[identity]) {
-				m_Editors[identity] = GetGame().CreateObjectEx("StaticCamera", vector.Zero, ECE_LOCAL);
+			if (!m_CameraObjects[identity]) {
+				m_CameraObjects[identity] = GetGame().CreateObjectEx("StaticCamera", vector.Zero, ECE_LOCAL);
 			}
 		}
 							
@@ -398,12 +352,12 @@ class Editor: SerializableBase
 			string uuid;
 			serializer.Read(uuid);
 
-			if (m_PlacedObjects[uuid]) {
+			if (m_Nodes[uuid]) {
 				// The object already exists
-				m_PlacedObjects[uuid].Read(serializer, 0);
+				m_Nodes[uuid].Read(serializer, 0);
 			} else {
 				// The object needs to be created
-				m_PlacedObjects[uuid] = EditorObject.Create(uuid, serializer);
+				
 			}
 		}
 		
@@ -413,25 +367,15 @@ class Editor: SerializableBase
 		
 		return true;
 	}
-		
-	void SetSynchDirty()
-	{		
-		m_IsDirty = true;
-	}
-	
-	bool IsDirty()
-	{
-		return m_IsDirty;
-	}
 	
 	bool IsMember(notnull PlayerIdentity identity)
 	{
-		return m_Editors[identity] != null;
+		return m_Editors.Find(identity) != -1;
 	}
 	
 	array<PlayerIdentity> GetOnlineMembers()
 	{
-		return m_Editors.GetKeyArray();
+		return m_Editors;
 	}
 		
 	protected Object m_DragTarget;
@@ -623,108 +567,6 @@ class Editor: SerializableBase
 		
 		return false;
 	}
-
-	void DeleteObject(notnull EditorObject editor_object, bool create_undo = true) 
-	{			
-		OnObjectDeleted.Invoke(editor_object);
-		delete editor_object;
-		
-		PlaySound(EditorSounds.PLOPLOW);
-	}
-	
-	void DeleteObjects(notnull array<EditorObject> editor_objects, bool create_undo = true)
-	{
-		foreach (EditorObject editor_object: editor_objects) {		
-			OnObjectDeleted.Invoke(editor_object);
-		
-			m_PlacedObjects.Remove(editor_object.GetUUID());
-			delete editor_object;
-		}
-		
-		PlaySound(EditorSounds.PLOPLOW);
-	}
-	
-	bool HideMapObject(notnull Object map_object, bool create_undo = true)
-	{
-		if (!CanHideMapObject(map_object.GetType())) {
-			return false;
-		}
-		
-		EditorHiddenObject hidden_object = new EditorHiddenObject(map_object);
-		if (create_undo) {
-			EditorAction action = new EditorAction("Unhide", "Hide");
-			//action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
-			//action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
-			InsertAction(action);
-		}
-		
-		Statistics.RemovedObjects++;
-		m_DeletedObjects.Insert(hidden_object);
-		return true;
-	}
-	
-	void HideMapObjects(notnull array<Object> deleted_objects, bool create_undo = true)
-	{
-		EditorAction action = new EditorAction("Unhide", "Hide");
-		
-		foreach (Object object: deleted_objects) {			
-			if (!CanHideMapObject(object.GetType())) {
-				continue;
-			}
-			
-			EditorHiddenObject hidden_object = new EditorHiddenObject(object);
-			EditorHiddenObjectData data = hidden_object.CreateSerializedData();
-			if (create_undo) {
-				action.InsertUndoParameter(new Param1<ref EditorHiddenObjectData>(data));
-				action.InsertRedoParameter(new Param1<ref EditorHiddenObjectData>(data));
-			}
-			
-			Statistics.RemovedObjects++;
-			m_DeletedObjects.Insert(hidden_object);
-		}
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
-	}
-		
-	bool UnhideMapObject(notnull EditorHiddenObject hidden_object, bool create_undo = true)
-	{				
-		EditorAction action = new EditorAction("Hide", "Unhide");
-		EditorHiddenObjectData data = hidden_object.CreateSerializedData();
-		action.InsertUndoParameter(new Param1<ref EditorHiddenObjectData>(data));
-		action.InsertRedoParameter(new Param1<ref EditorHiddenObjectData>(data));
-				
-		if (create_undo) {
-			InsertAction(action);
-		}
-	
-		delete hidden_object;
-		return true;
-	}
-	
-	void UnhideMapObjects(notnull array<EditorHiddenObject> hidden_objects, bool create_undo = true)
-	{
-		if (create_undo) {
-			EditorAction action = new EditorAction("Hide", "Unhide");
-		}
-		
-		foreach (EditorHiddenObject hidden_object: hidden_objects) {			
-			EditorHiddenObjectData data = hidden_object.CreateSerializedData();			
-			if (create_undo) {
-				action.InsertUndoParameter(new Param1<ref EditorHiddenObjectData>(data));
-				action.InsertRedoParameter(new Param1<ref EditorHiddenObjectData>(data));
-			}
-			
-			Statistics.RemovedObjects++;
-			
-			delete hidden_object;
-		}
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
-	}
 	
 	void Clear()
 	{
@@ -878,6 +720,7 @@ class Editor: SerializableBase
 		return EditorHoliday.NONE;
 	}
 		
+	/*
 	void LoadSaveData(notnull EditorSaveData save_data, bool clear_before = false)
 	{		
 		int created_objects, deleted_objects;
@@ -893,7 +736,7 @@ class Editor: SerializableBase
 			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
 			
 			m_Editor = GetDayZGame().GetEditor();
-			*/
+			
 		}
 		
 		if (clear_before) {
@@ -973,7 +816,7 @@ class Editor: SerializableBase
 		}
 		
 		return save_data;
-	}
+	}*/
 	
 	static EditorPlaceableObjectData GetReplaceableItem(notnull Object object)
 	{		

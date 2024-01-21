@@ -11,7 +11,7 @@ class EditorClipboard
 		
 		Copy();
 		
-		GetDayZGame().GetEditor().DeleteObjects(cut_objects);
+		//GetDayZGame().GetEditor().DeleteObjects(cut_objects);
 	}
 	
 	static void Copy()
