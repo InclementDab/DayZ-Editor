@@ -8,8 +8,16 @@ modded class DayZGame
 	
 	// lookup table by p3d
 	protected ref map<string, ref array<EditorPlaceableObjectData>> m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableObjectData>>();
-		
+
+#ifndef EDITOR_DECLARE
+#define EDITOR_DECLARE
 	protected ref Editor m_Editor;
+	
+	Editor GetEditor()
+	{
+		return m_Editor;
+	}
+#endif
 		
 	override void OnUpdate(bool doSim, float timeslice)
 	{
@@ -93,21 +101,17 @@ modded class DayZGame
 					break;
 				}
 				
-				PlayerIdentity editor;
-				if (!ctx.Read(editor)) {	
+				PlayerIdentity identity;
+				if (!ctx.Read(identity)) {	
 					Error("Invalid identity");
 					break;
 				}
 				
-				m_Editor = new Editor(editor);
+				m_Editor = new Editor(identity);
+				m_Editor.Read(ctx, 0);
 				break;
 			}
 		}
-	}
-
-	Editor GetEditor()
-	{
-		return m_Editor;
 	}
 
 	EditorPlaceableObjectData GetPlaceableObject(string type)

@@ -40,8 +40,7 @@ class Editor: SerializableBase
 	ref ScriptInvoker OnSyncRecieved = new ScriptInvoker();
 	
 	protected bool m_IsDirty;
-	
-		
+
 	// statics (updated in Update())
 	static Object								ObjectUnderCursor;
 	static int 									ComponentUnderCursor;
@@ -147,6 +146,10 @@ class Editor: SerializableBase
 	
 	void Update(float timeslice)
 	{		
+		if (GetGame().IsDedicatedServer()) {
+			return;
+		}
+		
 		if (IsProcessingCommand()) {
 			foreach (string input_name, Command command: m_CommandShortcutMap) {		
 				if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
