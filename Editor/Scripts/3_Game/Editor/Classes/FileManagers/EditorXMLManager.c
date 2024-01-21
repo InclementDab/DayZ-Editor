@@ -270,7 +270,7 @@ class EditorMapGroupProto: XMLCallback
 		/*
 		EditorObject loot_display = GetDayZGame().GetEditor().CreateObject(GetGame().CreateObjectEx("EditorLootPoint", loot_pos, ECE_SETUP), EditorObjectFlags.OBJECTMARKER);
 
-		EditorLootPoint loot_point = EditorLootPoint.Cast(loot_display.GetWorldObject());
+		EditorLootPoint loot_point = EditorLootPoint.Cast(loot_display.GetObject());
 		loot_point.Range = loot_point_data.GetRange();
 		loot_point.Height = loot_point_data.GetHeight();
 				
@@ -286,7 +286,7 @@ class EditorMapGroupProto: XMLCallback
 		transform[1][1] = loot_point.Height;
 		transform[2][2] = loot_point.Range;
 		
-		loot_display.GetWorldObject().SetTransform(transform);
+		loot_display.GetObject().SetTransform(transform);
 		m_LootPositions.Insert(loot_display);
 		
 		m_Building.Update();*/

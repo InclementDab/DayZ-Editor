@@ -178,7 +178,7 @@ class EditorObject: EditorNode
 	}
 #endif
 		
-	static EditorObject CreateFromSerializer(string uuid, Serializer serializer)
+	static EditorObject Create(string uuid, Serializer serializer)
 	{
 		string type, display;
 		vector position, orientation;
@@ -195,7 +195,7 @@ class EditorObject: EditorNode
 	
 	override void Write(Serializer serializer, int version)
 	{
-		serializer.Write(m_UUID);
+		super.Write(serializer, version);
 		
 		// Object properties
 		serializer.Write(m_Object.GetType());
@@ -204,6 +204,22 @@ class EditorObject: EditorNode
 		
 		serializer.Write(m_Flags);
 		serializer.Write(m_DisplayName);
+	}
+	
+	override bool Read(Serializer serializer, int version)
+	{
+		if (!super.Read(serializer, version)) {
+			return false;
+		}
+		
+		serializer.Read(m_Object.GetType());
+		serializer.Read(m_Object.GetPosition());
+		serializer.Read(m_Object.GetOrientation());
+		
+		serializer.Read(m_Flags);
+		serializer.Read(m_DisplayName);
+		
+		return true;
 	}
 		
 	override void SetSelected(bool selected)
@@ -332,7 +348,7 @@ class EditorObject: EditorNode
 		return (m_ObjectAnimations.Count() != 0);
 	}
 			
-	Object GetWorldObject() 
+	Object GetObject() 
 	{		
 		return m_Object;
 	}

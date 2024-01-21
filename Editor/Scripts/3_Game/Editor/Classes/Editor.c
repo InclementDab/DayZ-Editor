@@ -13,6 +13,41 @@ class EditorHandData
 	vector OrientationOffset;
 }
 
+class INetworkableBase<Class T>: SerializableBase
+{	
+	const T EMPTY;
+	
+	protected bool m_IsDirty;
+	protected string m_Uuid;
+	
+	protected void NetworkableBase(notnull Serializer serializer)
+	{
+		if (!serializer.Read(m_Uuid)) {
+			Error("Failed to read uuid");
+			return;
+		}
+	}
+			
+	typename GetType()
+	{
+		return TemplateType<T>.GetType();
+	}
+	
+	override void Write(Serializer serializer, int version)
+	{
+	}
+	
+	override bool Read(Serializer serializer, int version)
+	{
+		return true;
+	}
+	
+	array<int> GetRPCS()
+	{
+		return {};
+	}
+}
+
 class Editor: SerializableBase
 {
 	static const int RPC_CREATE_SESSION = -35678227;
@@ -370,7 +405,7 @@ class Editor: SerializableBase
 				m_PlacedObjects[uuid].Read(serializer, 0);
 			} else {
 				// The object needs to be created
-				m_PlacedObjects[uuid] = EditorObject.CreateFromSerializer(uuid, serializer);
+				m_PlacedObjects[uuid] = EditorObject.Create(uuid, serializer);
 			}
 		}
 		
