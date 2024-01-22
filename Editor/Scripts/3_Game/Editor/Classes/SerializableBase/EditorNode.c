@@ -48,7 +48,7 @@ class EditorNode: SerializableBase
 		delete m_NodeView;
 	}
 	
-	void Synchronize()
+	void Synchronize(PlayerIdentity exclude = null)
 	{	
 		ScriptRPC rpc = new ScriptRPC();
 		
@@ -59,11 +59,19 @@ class EditorNode: SerializableBase
 			parent = parent.GetParent();
 		}
 		
-		Print(uuid_string);
 		rpc.Write(uuid_string);
 		rpc.Write(Type().ToString());
 		Write(rpc, 0);
-		rpc.Send(null, RPC_SYNC, true);		
+		
+		array<PlayerIdentity> identities = {};
+		GetGame().GetPlayerIndentities(identities);
+		foreach (PlayerIdentity identity: identities) {
+			if (exclude && exclude.GetId() == identity.GetId()) {
+				continue;
+			}
+			
+			rpc.Send(null, RPC_SYNC, true, identity);
+		}
 	}
 						
 	void Add(notnull EditorNode node)
@@ -114,6 +122,10 @@ class EditorNode: SerializableBase
 	EditorNode GetParent()
 	{
 		return m_Parent;
+	}
+	
+	void OnSynchronized()
+	{
 	}
 					
 	override void Write(Serializer serializer, int version)

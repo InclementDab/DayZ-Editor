@@ -354,7 +354,6 @@ class Editor: SerializableBase
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
 			foreach (Object object_to_place, EditorHandData data: Placing) {
-				Print(object_to_place);
 				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), IconSolid.CIRCLE_DOT, object_to_place, EFE_DEFAULT);
 				
 				m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object);
@@ -374,75 +373,62 @@ class Editor: SerializableBase
 	}
 			
 	void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
-	{
-		/*foreach (string uuid_rpc, EditorNode node_rpc: m_Children) {
-			if (node_rpc.GetProtocols().Find(rpc_type) != -1) {
-				node_rpc.OnRPC(sender, rpc_type, ctx);
-			}
-		}*/
-		
+	{		
 		switch (rpc_type) {
 			case EditorNode.RPC_SYNC: {	
+				Print("EditorNode.RPC_SYNC");
+				string uuid, type;
+				array<string> uuid_split = {};
+				EditorNode node = m_Master;
 				if (GetGame().IsDedicatedServer()) {
-					
-					string uuid;
 					if (!ctx.Read(uuid)) {
-						Error("Invlaid id");
+						Error("Invalid id");
 						break;
 					}
-					
-					Print(uuid);
 
-					array<string> uuid_split = {};
 					uuid.Split("|", uuid_split);
-					EditorNode node = m_Master;
-					for (int i = 1; i < uuid_split.Count(); i++) {
-						if (node[uuid_split[i]]) {
-							node = node[uuid_split[i]];
+					for (int i = uuid_split.Count() - 2; i >= 0; i--) {
+						if (!node[uuid_split[i]]) {
+							Error("Node not networked yet " + uuid_split[i]);
+							continue;
 						}
-					}					
 						
-					string type;
+						node = node[uuid_split[i]];
+					}		
+					
 					if (!ctx.Read(type)) {
 						Error("Invlaid type");
 						break;
 					}
 					
-					
-								
-					/*		
-					if (!m_Master[uuid]) {				
-						m_Master[uuid] = EditorNode.Cast(type.ToType().Spawn());
-						
-						if (!m_Children[uuid]) {
-							Error("Invalid node type!");
-							return false;
-						}
-					}*/
-					
-					//m_Master[uuid].Read(serializer, version);
-					
+					node.Read(ctx, 0);
+					node.Synchronize(sender); // ping pong					
 					break;
 				}
 				
-
-
-
+				if (!ctx.Read(uuid)) {
+					Error("Invalid id");
+					break;
+				}
+				 
+				Print(uuid);
+				uuid.Split("|", uuid_split);
+				for (int j = uuid_split.Count() - 2; j >= 0; j--) {
+					if (!node[uuid_split[j]]) {
+						Error("Node not networked yet " + uuid_split[j]);
+						continue;
+					}
+					
+					node = node[uuid_split[j]];
+				}		
 				
+				if (!ctx.Read(type)) {
+					Error("Invlaid type");
+					break;
+				}
 				
-				
-				string x;
-				ctx.Read(x);
-				Print(x);
-			
-				string y;
-				ctx.Read(y);
-				Print(y);
-				
-				//m_Master[uuid].Read(ctx, 0);
-				
-				/// Return to sendah!
-				//m_Master.Synchronize();
+				node.Read(ctx, 0);
+				node.OnSynchronized();
 				break;
 			}
 		}
