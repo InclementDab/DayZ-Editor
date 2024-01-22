@@ -4,7 +4,7 @@ ImageSetClass {
  Textures {
   ImageSetTextureClass {
    mpix 1
-   path "{03CBC8A793843A1D}Editor/GUI/icons/tree.edds"
+   path "{CFC765CA2593B3F1}Editor/GUI/imagesets/tree.edds"
   }
  }
  Images {

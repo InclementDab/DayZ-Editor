@@ -105,12 +105,7 @@ class Editor: SerializableBase
 	{
 		m_Master.Add(node);
 	}
-	
-	EditorNode Get(string uuid)
-	{
-		return m_Master[uuid];
-	}
-	
+		
 	void Editor(Man player) 
 	{		
 		m_Player = player;
@@ -123,37 +118,35 @@ class Editor: SerializableBase
 			m_Master = new EditorNode(player.GetIdentity().GetId(), player.GetIdentity().GetName(), "");
 		}
 		
-		EditorNode objects = new EditorNode("Objects", "Objects", IconRegular.OBJECT_UNGROUP);
-		
 		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", IconRegular.OBJECT_GROUP);
 		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", IconRegular.HAND));
 		edited_objects.Add(new EditorNode("BrushedObjects", "Brushed Objects",IconRegular.BRUSH));
 		edited_objects.Add(new EditorNode("HiddenObjects", "Hidden Objects", IconRegular.HIPPO));
-		objects.Add(edited_objects);
+		m_Master.Add(edited_objects);
 
-		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects", IconRegular.HEXAGON);
-		placeable_objects.Add(new EditorNode("Unknown", "Unknown", IconRegular.CHESS_QUEEN));
-		placeable_objects.Add(new EditorNode("Plants", "Plants", IconRegular.TREE));
-		placeable_objects.Add(new EditorNode("Rocks", "Rocks", IconRegular.HILL_ROCKSLIDE));
-		placeable_objects.Add(new EditorNode("Clutter", "Clutter", IconRegular.TRASH));
-		placeable_objects.Add(new EditorNode("Structures", "Structures", IconRegular.HOUSE));
-		placeable_objects.Add(new EditorNode("Wrecks", "Wrecks", IconRegular.CAR_BURST));
-		placeable_objects.Add(new EditorNode("AI", "AI", IconRegular.PERSON));
-		placeable_objects.Add(new EditorNode("Water", "Water", IconRegular.WATER));
-		placeable_objects.Add(new EditorNode("Vehicles", "Vehicles", IconRegular.CAR));
-		placeable_objects.Add(new EditorNode("StaticObjects", "Static Objects", IconRegular.OBJECT_INTERSECT));
-		placeable_objects.Add(new EditorNode("DynamicObjects", "Dynamic Objects", IconRegular.SHIRT));
-		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", IconRegular.CODE));
+		m_Master.Add(new EditorNode("Unknown", "Unknown", IconRegular.CHESS_QUEEN));
+		m_Master.Add(new EditorNode("Plants", "Plants", IconRegular.TREE));
+		m_Master.Add(new EditorNode("Rocks", "Rocks", IconRegular.HILL_ROCKSLIDE));
+		m_Master.Add(new EditorNode("Clutter", "Clutter", IconRegular.TRASH));
+		m_Master.Add(new EditorNode("Structures", "Structures", IconRegular.HOUSE));
+		m_Master.Add(new EditorNode("Wrecks", "Wrecks", IconRegular.CAR_BURST));
+		m_Master.Add(new EditorNode("AI", "AI", IconRegular.PERSON));
+		m_Master.Add(new EditorNode("Water", "Water", IconRegular.WATER));
+		m_Master.Add(new EditorNode("Vehicles", "Vehicles", IconRegular.CAR));
+		m_Master.Add(new EditorNode("StaticObjects", "Static Objects", IconRegular.OBJECT_INTERSECT));
+		m_Master.Add(new EditorNode("DynamicObjects", "Dynamic Objects", IconRegular.SHIRT));
+		m_Master.Add(new EditorNode("ScriptedObjects", "Scripted Objects", IconRegular.CODE));
 
 		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 					
+		string category = "Unknown";
 		// handle config objects
 		foreach (string path: config_paths) {
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
 		        GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 2) {
 					continue;
 				}
 				
@@ -162,27 +155,27 @@ class Editor: SerializableBase
 				}
 				
 				array<string> full_path = {};
-				GetGame().ConfigGetFullPath(path, full_path);
+				GetGame().ConfigGetFullPath(path + " " + type, full_path);
 				
-				string category = "Unknown";
+				category = "Unknown";
 				if ((full_path.Find("Weapon_Base") != -1) || (full_path.Find("Inventory_Base")) != -1) {
 					category = "DynamicObjects";
 				} else if (full_path.Find("HouseNoDestruct") != -1) {
 					category = "Structures";
-				} else if (full_path.Find("Man") != -1) {
-					category = "AI";
-				} else if (full_path.Find("Transport") != -1) {
+				} else if (full_path.Find("Car") != -1) {
 					category = "Vehicles";
+				} else if (full_path.Find("Man") != -1 || (full_path.Find("DZ_LightAI"))) {
+					category = "AI";
 				}
 				
-				placeable_objects[category].Add(new EditorConfigPlaceable(type, type, IconRegular.BUILDING));
+				m_Master[category].Add(new EditorConfigPlaceable(type, type, IconRegular.BUILDING));
 		    }
 		}
 		
-		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
+		array<string> paths = { "DZ\\plants", "DZ\\plants_bliss", "DZ\\rocks", "DZ\\rocks_bliss" };
 		foreach (string model_path: paths) {
 			array<ref CF_File> files = {};
-			if (!CF_Directory.GetFiles(model_path + "/*", files, FindFileFlags.ARCHIVES)) {
+			if (!CF_Directory.GetFiles(model_path + "\\*", files, FindFileFlags.ARCHIVES)) {
 				continue;
 			}
 				
@@ -190,22 +183,29 @@ class Editor: SerializableBase
 				if (!file || file.GetExtension() != ".p3d") {
 					continue;
 				}
-			
-					
+				
 				string model_name;
 				array<string> items = {};
-				file.GetFullPath().Split("/", items);
+				string full_path_p3d = file.GetFullPath();
+				full_path_p3d.Replace("/", "\\");
+				full_path_p3d.Split("\\", items);
 				if (items.Count() != 0) {
 					model_name = items[items.Count() - 1];
-				}	
+				}
+				
+				category = "StaticObjects";
+				if ((items.Find("tree") != -1) || (items.Find("bush") != -1)) {
+					category = "Plants";
+				} else if (items.Find("clutter") != -1) {
+					category = "Clutter";
+				} else if (items.Find("rocks") != -1) {
+					category = "Rocks";
+				}
 			
-				placeable_objects["StaticObjects"].Add(new EditorStaticPlaceableItem(file.GetFullPath(), model_name, IconRegular.CIRCLE_C));
+				m_Master[category].Add(new EditorStaticPlaceableItem(file.GetFullPath(), model_name, IconRegular.CIRCLE_C));
 			}
 		}
-		
-		objects.Add(placeable_objects);
-		m_Master.Add(objects);
-	
+
 		// Statics that belong to Editor / DF
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
@@ -237,10 +237,13 @@ class Editor: SerializableBase
 	
 	
 		m_EditorHud = new EditorHud();
-		m_EditorHud.GetTemplateController().LeftListItems.Insert(Get("Objects")["PlaceableObjects"].GetNodeView());
-		m_EditorHud.GetTemplateController().LeftListItems.Insert(Get("Objects")["PlaceableObjects"].GetNodeView());
-		m_EditorHud.GetTemplateController().RightListItems.Insert(Get("Objects")["EditedObjects"].GetNodeView());
-		m_EditorHud.GetTemplateController().RightListItems.Insert(Get("Objects")["EditedObjects"].GetNodeView());
+
+		array<string> categories = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
+		foreach (string category1: categories) {
+			m_EditorHud.GetTemplateController().LeftListItems.Insert(m_Master[category1].GetNodeView());
+		}
+	
+		m_EditorHud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
 	}
 
 	void ~Editor() 
@@ -343,7 +346,7 @@ class Editor: SerializableBase
 			foreach (Object object_to_place, EditorHandData data: Placing) {
 				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), IconSolid.CIRCLE_DOT, object_to_place, EFE_DEFAULT);
 				
-				m_Master["Objects"]["EditedObjects"]["PlacedObjects"].Add(editor_object);
+				m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object);
 				
 				m_PlacedObjects[editor_object.GetUUID()] = editor_object;
 				m_WorldObjects[object_to_place] = editor_object;
@@ -351,7 +354,7 @@ class Editor: SerializableBase
 				OnObjectCreated.Invoke(editor_object);
 				
 				// Synchronize to this id
-				m_Master["Objects"]["EditedObjects"]["PlacedObjects"].Synchronize();
+				m_Master["EditedObjects"]["PlacedObjects"].Synchronize();
 				
 				// remove it from placing
 				Placing.Remove(object_to_place);

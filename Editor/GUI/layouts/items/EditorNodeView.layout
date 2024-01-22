@@ -2,7 +2,7 @@ FrameWidgetClass Root {
  visible 1
  clipchildren 0
  position 0 0
- size 250 18
+ size 613 18
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -23,25 +23,25 @@ FrameWidgetClass Root {
     FrameWidgetClass Spacer {
      ignorepointer 1
      position 0 0
-     size 14 19
+     size 18 18
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
     }
-    FrameWidgetClass Collapse {
-     visible 0
+    FrameWidgetClass CollapseFrame {
+     visible 1
      ignorepointer 0
      position 0 0
-     size 24 18
+     size 17 18
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      scaled 0
      {
-      ButtonWidgetClass "Collapse.Button" {
-       visible 1
+      ButtonWidgetClass Collapse {
+       visible 0
        position 0 0
        size 12 12
        halign center_ref
@@ -70,7 +70,7 @@ FrameWidgetClass Root {
          scaled 0
          scriptclass ""
          image0 "set:dayz_gui image:Expand"
-         mode additive
+         mode blend
          "src alpha" 1
          filter 0
         }
@@ -172,7 +172,7 @@ FrameWidgetClass Root {
    }
   }
   WrapSpacerWidgetClass Children {
-   visible 1
+   visible 0
    disabled 0
    clipchildren 0
    ignorepointer 1
@@ -192,6 +192,22 @@ FrameWidgetClass Root {
      Binding_Name "ChildrenItems"
     }
    }
+  }
+  ImageWidgetClass Texture {
+   visible 1
+   ignorepointer 1
+   position 9 0
+   size 3 1
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
+   image0 "set:editor_tree image:tree_l"
+   mode blend
+   "src alpha" 1
+   "clamp mode" clamp
+   filter 0
   }
  }
 }

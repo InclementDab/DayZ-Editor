@@ -13,13 +13,13 @@ class EditorNodeView: ScriptView
 	protected string m_Text;
 	protected bool m_Children;
 	
-	protected EditorNode m_Selectable;
+	protected EditorNode m_Node;
 	
-	void EditorNodeView(string text, EditorNode selectable, string icon)
+	void EditorNodeView(string text, EditorNode node, string icon)
 	{
 		m_TemplateController = EditorNodeViewController.Cast(m_Controller);
-		m_Selectable = selectable;
-		m_Selectable.OnSelectionChanged.Insert(OnSelectionChange);
+		m_Node = node;
+		m_Node.OnSelectionChanged.Insert(OnSelectionChange);
 		
 		m_Text = text;
 		SetText(m_Text);
@@ -33,7 +33,7 @@ class EditorNodeView: ScriptView
 		Text.SetText(text);
 				
 		float w, h;
-		Text.GetScreenSize(w, h);
+		Text.GetScreenSize(w, h);		
 		Panel.SetScreenSize(w, h);
 	}
 		
@@ -41,14 +41,21 @@ class EditorNodeView: ScriptView
 	{
 		m_Children = state;
 		
-		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, IconRegular.EXPAND, IconRegular.MINUS));
+		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
 		CollapseIcon.SetImage(0);
 		
 		float w, h;
+		Children.Show(m_Children);
 		Children.GetScreenSize(w, h);
 		float x, y;
-		m_LayoutRoot.GetScreenSize(x, y);
-		m_LayoutRoot.SetScreenSize(x, y + (h * state));
+		m_LayoutRoot.GetSize(x, y);
+		m_LayoutRoot.SetScreenSize(x, 18 + (h * state));
+		
+		// you only want to open upper containers when lower ones are opened. propagate up /\
+		EditorNode parent = m_Node.GetParent();
+		if (parent && state) {
+			parent.GetNodeView().ShowChildren(true);
+		}
 	}
 	
 	void OnCollapseExecute(ButtonCommandArgs args)
@@ -96,9 +103,9 @@ class EditorNodeView: ScriptView
 				}
 				
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					m_Selectable.SetSelected(!m_Selectable.IsSelected());
+					m_Node.SetSelected(!m_Node.IsSelected());
 				} else {
-					m_Selectable.SetSelected(true);
+					m_Node.SetSelected(true);
 				}
 				
 				return true;
@@ -124,26 +131,7 @@ class EditorNodeView: ScriptView
 	{
 		Panel.SetColor(ARGB(255, 7, 111, 146) * selectable.IsSelected());
 	}
-					
-	void SetParentTree(EditorNodeView parent)
-	{
-		m_Parent = parent;
-		
-		int i = 0;
-		EditorNodeView upper_parent = parent;
-		while (upper_parent) {
-			i++;
-			upper_parent = upper_parent.GetParent();
-		}
-		
-		//Spacer.SetSize(i * 14, 19.00);
-	}
-	
-	EditorNodeView GetParentTree()
-	{
-		return m_Parent;
-	}
-	
+						
 	EditorNodeViewController GetTemplateController()
 	{
 		return m_TemplateController;
