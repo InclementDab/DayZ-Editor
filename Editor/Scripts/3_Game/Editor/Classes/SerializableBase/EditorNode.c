@@ -47,64 +47,7 @@ class EditorNode: SerializableBase
 		
 		delete m_NodeView;
 	}
-	
-	EditorNode GetParentAtDepth(int depth)
-	{
-		EditorNode parent = GetParent();
-		while (depth > 0) {
-			if (!parent.GetParent()) {
-				Error("GetParentAtDepth ran out of depth " + depth);
-				return parent;
-			}
-			
-			parent = parent.GetParent();
-			depth--;
-		}
-		
-		return parent;
-	}
-	
-	int GetParentDepth()
-	{
-		int depth;
-		EditorNode parent = GetParent();
-		while (parent) {
-			depth++;
-			parent = parent.GetParent();
-		}
-		
-		return depth;
-	}
-	
-	void Synchronize(PlayerIdentity exclude = null)
-	{	
-		ScriptRPC rpc = new ScriptRPC();
-		
-		int tree_depth = GetParentDepth();		
-		rpc.Write(tree_depth);
-		
-		for (int i = tree_depth - 1; i >= 0; i--) {
-			EditorNode parent = GetParentAtDepth(tree_depth);			
-			rpc.Write(parent.GetUUID());
-			rpc.Write(parent.Type().ToString());
-		}
-		
-		rpc.Write(GetUUID());
-		rpc.Write(Type().ToString());
-	
-		Write(rpc, 0);
-		
-		array<PlayerIdentity> identities = {};
-		GetGame().GetPlayerIndentities(identities);
-		foreach (PlayerIdentity identity: identities) {
-			if (exclude && exclude.GetId() == identity.GetId()) {
-				continue;
-			}
-			
-			rpc.Send(null, RPC_SYNC, true, identity);
-		}
-	}
-						
+							
 	void Add(notnull EditorNode node)
 	{
 		Set(node.GetUUID(), node);
@@ -151,7 +94,35 @@ class EditorNode: SerializableBase
 	void OnSynchronized()
 	{
 	}
-					
+	
+	EditorNode GetParentAtDepth(int depth)
+	{
+		EditorNode parent = this;
+		while (depth > 0) {
+			if (!parent.GetParent()) {
+				Error("GetParentAtDepth ran out of depth " + depth);
+				return parent;
+			}
+			
+			parent = parent.GetParent();
+			depth--;
+		}
+		
+		return parent;
+	}
+	
+	int GetParentDepth()
+	{
+		int depth;
+		EditorNode parent = GetParent();
+		while (parent) {
+			depth++;
+			parent = parent.GetParent();
+		}
+		
+		return depth;
+	}
+						
 	override void Write(Serializer serializer, int version)
 	{		
 		serializer.Write(m_UUID);
@@ -160,7 +131,7 @@ class EditorNode: SerializableBase
 		
 		serializer.Write(m_Children.Count());
 		foreach (string uuid, EditorNode node: m_Children) {
-			serializer.Write(uuid);
+			serializer.Write(node.GetUUID());
 			serializer.Write(node.Type().ToString());
 			node.Write(serializer, version);
 		}
@@ -176,24 +147,24 @@ class EditorNode: SerializableBase
 		int count;
 		serializer.Read(count);
 		Print(count);
-		for (int i = 0; i << count; i++) {
+		for (int i = 0; i < count; i++) {
 			string uuid;
 			serializer.Read(uuid);
-			
+			Print(uuid);
 			string type;
 			serializer.Read(type);
+			Print(type);
+			Print(type.ToType());
 			
 			if (!m_Children[uuid]) {				
+				
 				m_Children[uuid] = EditorNode.Cast(type.ToType().Spawn());
 				
 				if (!m_Children[uuid]) {
-					Error("Invalid node type!");
+					//Error("Invalid node type " + type);
 					return false;
 				}
 			}
-			
-			Print(uuid);
-			Print(type);
 			
 			m_Children[uuid].Read(serializer, version);
 		}

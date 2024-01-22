@@ -364,7 +364,8 @@ class Editor: SerializableBase
 				OnObjectCreated.Invoke(editor_object);
 				
 				// Synchronize to this id
-				m_Master["EditedObjects"]["PlacedObjects"].Synchronize();
+				Synchronize(m_Master["EditedObjects"]["PlacedObjects"]);
+				//m_Master["EditedObjects"]["PlacedObjects"].Synchronize();
 				
 				// remove it from placing
 				Placing.Remove(object_to_place);
@@ -381,33 +382,45 @@ class Editor: SerializableBase
 		switch (rpc_type) {
 			case EditorNode.RPC_SYNC: {	
 				Print("EditorNode.RPC_SYNC");
+				
+				
 				int tree_depth;
 				if (!ctx.Read(tree_depth)) {
 					Error("Invalid depth");
 					break;
 				}
-				
+								
 				EditorNode current = m_Master;
-				for (int i = 0; i < tree_depth; i++) {
-					string parent_uuid;
-					ctx.Read(parent_uuid);
+				for (int i = 0; i < tree_depth - 1; i++) {
+					string uuid;
+					ctx.Read(uuid);
 					
-					string parent_type;
-					ctx.Read(parent_type);
+					string type;
+					ctx.Read(type);
+					Print(uuid);
+					if (!current[uuid]) {
+						current[uuid] = EditorNode.Cast(type.ToType().Spawn());
+				
+						if (!current[uuid]) {
+							Error("Invalid node type " + type);
+							continue;
+						}
+					}
 					
-					Print(parent_uuid);
-					Print(parent_type);
-					Print(current[parent_uuid]);
-					
-					current = current[parent_uuid];
+					current = current[uuid];
 				}
-				
-				break;
-				
+								
 				current.Read(ctx, 0);
 				
+				// Who do we sync back to? - doing predictive placement so not the client that pushed it.. yet
 				if (GetGame().IsDedicatedServer()) {
-					current.Synchronize(sender);
+					array<PlayerIdentity> identities = {};
+					Print(sender);
+					foreach (PlayerIdentity identity: identities) {
+						Print(identity);
+						//Synchronize(current, identity);
+					}
+					
 				} else {
 					current.OnSynchronized();
 				}
@@ -415,6 +428,23 @@ class Editor: SerializableBase
 				break;
 			}
 		}
+	}
+	
+	void Synchronize(notnull EditorNode node, PlayerIdentity identity = null)
+	{	
+		ScriptRPC rpc = new ScriptRPC();
+		
+		int tree_depth = node.GetParentDepth();
+		rpc.Write(tree_depth);
+
+		for (int i = tree_depth - 1; i >= 0; i--) {
+			EditorNode parent = node.GetParentAtDepth(i);
+			rpc.Write(parent.GetUUID());
+			rpc.Write(parent.Type().ToString());
+		}
+			
+		node.Write(rpc, 0);
+		rpc.Send(null, EditorNode.RPC_SYNC, true, identity);
 	}
 		
 	override void Write(Serializer serializer, int version)

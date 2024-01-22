@@ -36,6 +36,10 @@ class EditorObject: EditorNode
 	{		
 		m_Object = object;
 		m_Flags = flags;
+		
+		if (GetGame().IsDedicatedServer()) {
+			return;
+		}
 								
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
@@ -137,7 +141,7 @@ class EditorObject: EditorNode
 	
 	override void Write(Serializer serializer, int version)
 	{
-		super.Write(serializer, version);
+		
 		
 		// COMPLETELY SERIALIZE THE OBJECT
 		serializer.Write(m_Object.GetType());
@@ -147,14 +151,12 @@ class EditorObject: EditorNode
 		serializer.Write(transform);
 		
 		serializer.Write(m_Flags);
+		
+		super.Write(serializer, version);
 	}
 	
 	override bool Read(Serializer serializer, int version)
-	{
-		if (!super.Read(serializer, version)) {
-			return false;
-		}
-		
+	{		
 		// COMPLETELY DESERIALIZE THE OBJECT
 		string type;
 		serializer.Read(type);
@@ -169,7 +171,7 @@ class EditorObject: EditorNode
 		m_Object.SetTransform(transform);
 		
 		serializer.Read(m_Flags);
-		return true;
+		return super.Read(serializer, version);
 	}
 			
 #ifdef DIAG_DEVELOPER
