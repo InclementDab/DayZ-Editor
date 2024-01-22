@@ -2,9 +2,9 @@ class EditorConfigPlaceable: EditorPlaceable
 {
 	protected string m_Type;
 	
-	void EditorConfigPlaceable(string uuid, string display_name, string type)
+	void EditorConfigPlaceable(string uuid, string display_name, string icon)
 	{
-		m_Type = type;
+		m_Type = uuid;
 	}
 			
 	override Object CreateObject(vector transform[4], int flags = ECE_LOCAL)

@@ -2,7 +2,7 @@ class EditorScriptedPlaceableItem: EditorPlaceable
 {
 	protected typename m_Type;
 		
-	void EditorScriptedPlaceableItem(string uuid, string display_name, typename type)
+	void EditorScriptedPlaceableItem(string uuid, string display_name, string icon, typename type)
 	{
 		m_Type = type;
 	}

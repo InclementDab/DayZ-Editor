@@ -38,12 +38,17 @@ class EditorNodeView: ScriptView
 		m_TemplateController.NotifyPropertyChanged("IconImage");
 	}
 	
+	void Collapse(bool state)
+	{
+		Children.Show(!state);	
+		
+		m_TemplateController.CollapseIcon = Ternary<string>.If(!state,"set:dayz_gui image:Expand", "set:dayz_gui image:Collapse");
+		m_TemplateController.NotifyPropertyChanged("CollapseIcon");
+	}
+	
 	void OnCollapseExecute(ButtonCommandArgs args)
 	{
-		Children.Show(!Children.IsVisible());	
-				
-		m_TemplateController.CollapseIcon = Ternary<string>.If(!Children.IsVisible(),"set:dayz_gui image:Expand", "set:dayz_gui image:Collapse");
-		m_TemplateController.NotifyPropertyChanged("CollapseIcon");
+		Collapse(Children.IsVisible());
 	}
 	
 	void ApplyFilter(string filter)
@@ -96,6 +101,13 @@ class EditorNodeView: ScriptView
 		}
 		
 		return super.OnMouseButtonDown(w, x, y, button);
+	}
+	
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		Print("OnDoubleClick" + w);
+		
+		return super.OnDoubleClick(w, x, y, button);
 	}
 	
 	override bool OnDrag(Widget w, int x, int y)

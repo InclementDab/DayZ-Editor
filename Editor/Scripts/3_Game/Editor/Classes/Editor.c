@@ -118,32 +118,32 @@ class Editor: SerializableBase
 		MakeDirectory(ROOT_DIRECTORY);
 		
 		if (!m_Player) {
-			m_Master = new EditorNode("SERVER", "SERVER");
+			m_Master = new EditorNode("SERVER", "SERVER", "");
 		} else {
-			m_Master = new EditorNode(player.GetIdentity().GetId(), player.GetIdentity().GetName());
+			m_Master = new EditorNode(player.GetIdentity().GetId(), player.GetIdentity().GetName(), "");
 		}
 		
-		EditorNode objects = new EditorNode("Objects", "Objects");
+		EditorNode objects = new EditorNode("Objects", "Objects", IconRegular.OBJECT_UNGROUP);
 		
-		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects");
-		edited_objects.Add(new EditorCategory("PlacedObjects", "Placed Objects", "set:regular image:hand"));
-		edited_objects.Add(new EditorCategory("BrushedObjects", "Brushed Objects", "set:regular image:brush"));
-		edited_objects.Add(new EditorCategory("HiddenObjects", "Hidden Objects", "set:regular image:hide"));
+		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", IconRegular.OBJECT_GROUP);
+		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", IconRegular.HAND));
+		edited_objects.Add(new EditorNode("BrushedObjects", "Brushed Objects",IconRegular.BRUSH));
+		edited_objects.Add(new EditorNode("HiddenObjects", "Hidden Objects", IconRegular.HIPPO));
 		objects.Add(edited_objects);
 
-		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects");
-		placeable_objects.Add(new EditorCategory("Unknown", "Unknown"));
-		placeable_objects.Add(new EditorCategory("Plants", "Plants", "set:regular image:tree"));
-		placeable_objects.Add(new EditorCategory("Rocks", "Rocks", "set:regular image:rock"));
-		placeable_objects.Add(new EditorCategory("Clutter", "Clutter", "set:regular image:trash"));
-		placeable_objects.Add(new EditorCategory("Structures", "Structures", "set:regular image:house"));
-		placeable_objects.Add(new EditorCategory("Wrecks", "Wrecks", "set:regular image:car_burst"));
-		placeable_objects.Add(new EditorCategory("AI", "AI", "set:regular image:person"));
-		placeable_objects.Add(new EditorCategory("Water", "Water", "set:regular image:water"));
-		placeable_objects.Add(new EditorCategory("Vehicles", "Vehicles", "set:regular image:car"));
-		placeable_objects.Add(new EditorCategory("StaticObjects", "Static Objects", "set:regular image:object_intersect"));
-		placeable_objects.Add(new EditorCategory("DynamicObjects", "Dynamic Objects", "set:regular image:shirt"));
-		placeable_objects.Add(new EditorCategory("ScriptedObjects", "Scripted Objects", "set:regular image:code"));
+		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects", IconRegular.HEXAGON);
+		placeable_objects.Add(new EditorNode("Unknown", "Unknown", IconRegular.CHESS_QUEEN));
+		placeable_objects.Add(new EditorNode("Plants", "Plants", IconRegular.TREE));
+		placeable_objects.Add(new EditorNode("Rocks", "Rocks", IconRegular.HILL_ROCKSLIDE));
+		placeable_objects.Add(new EditorNode("Clutter", "Clutter", IconRegular.TRASH));
+		placeable_objects.Add(new EditorNode("Structures", "Structures", IconRegular.HOUSE));
+		placeable_objects.Add(new EditorNode("Wrecks", "Wrecks", IconRegular.CAR_BURST));
+		placeable_objects.Add(new EditorNode("AI", "AI", IconRegular.PERSON));
+		placeable_objects.Add(new EditorNode("Water", "Water", IconRegular.WATER));
+		placeable_objects.Add(new EditorNode("Vehicles", "Vehicles", IconRegular.CAR));
+		placeable_objects.Add(new EditorNode("StaticObjects", "Static Objects", IconRegular.OBJECT_INTERSECT));
+		placeable_objects.Add(new EditorNode("DynamicObjects", "Dynamic Objects", IconRegular.SHIRT));
+		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", IconRegular.CODE));
 
 		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
@@ -175,7 +175,7 @@ class Editor: SerializableBase
 					category = "Vehicles";
 				}
 				
-				placeable_objects[category] = new EditorConfigPlaceable(type, type, type);
+				placeable_objects[category].Add(new EditorConfigPlaceable(type, type, IconRegular.BUILDING));
 		    }
 		}
 		
@@ -199,7 +199,7 @@ class Editor: SerializableBase
 					model_name = items[items.Count() - 1];
 				}	
 			
-				placeable_objects["StaticObjects"] = new EditorStaticPlaceableItem(file.GetFullPath(), model_name, file.GetFullPath());
+				placeable_objects["StaticObjects"].Add(new EditorStaticPlaceableItem(file.GetFullPath(), model_name, IconRegular.CIRCLE_C));
 			}
 		}
 		
@@ -233,8 +233,14 @@ class Editor: SerializableBase
 							
 	
 		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
+		ControlCamera(m_Camera);	
+	
+	
 		m_EditorHud = new EditorHud();
-		ControlCamera(m_Camera);
+		m_EditorHud.GetTemplateController().LeftListItems.Insert(Get("Objects")["PlaceableObjects"].GetNodeView());
+		m_EditorHud.GetTemplateController().LeftListItems.Insert(Get("Objects")["PlaceableObjects"].GetNodeView());
+		m_EditorHud.GetTemplateController().RightListItems.Insert(Get("Objects")["EditedObjects"].GetNodeView());
+		m_EditorHud.GetTemplateController().RightListItems.Insert(Get("Objects")["EditedObjects"].GetNodeView());
 	}
 
 	void ~Editor() 
@@ -335,7 +341,7 @@ class Editor: SerializableBase
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
 			foreach (Object object_to_place, EditorHandData data: Placing) {
-				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), object_to_place, EFE_DEFAULT);
+				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), IconSolid.CIRCLE_DOT, object_to_place, EFE_DEFAULT);
 				
 				m_Master["Objects"]["EditedObjects"]["PlacedObjects"].Add(editor_object);
 				

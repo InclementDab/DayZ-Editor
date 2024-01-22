@@ -31,7 +31,7 @@ class EditorObject: EditorNode
 	
 	protected Object m_TranslationGizmo;
 	
-	void EditorObject(string uuid, string display_name, notnull Object object, int flags)
+	void EditorObject(string uuid, string display_name, string icon, notnull Object object, int flags)
 	{		
 		m_Object = object;
 		m_Flags = flags;

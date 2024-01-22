@@ -7,10 +7,13 @@ using PaintDotNet;
 using Svg;
 
 
+
 const int IMAGE_MAX_SIZE = 512; // this is the space allocated to each image
 const int IMAGE_SIZE = 64;
 
 string folder_output = "P:\\DabsFramework\\GUI\\icons";
+string script_output = "P:\\DabsFramework\\Scripts\\1_Core\\DabsFramework\\Icons";
+DirectoryInfo script_directory = Directory.CreateDirectory(script_output);
 DirectoryInfo dest_directory = Directory.CreateDirectory(folder_output);
 DirectoryInfo source_directory = Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\svgs");
 
@@ -53,6 +56,10 @@ foreach (DirectoryInfo directory in source_directory.EnumerateDirectories()) {
 
     DateTime file_start = DateTime.Now;
     Console.WriteLine($"Loading {files.Count()} files");
+
+    List<string> output_c = new();
+    string directory_upper = StringExtensions.FirstCharToUpper(directory.Name);
+    output_c.Add($"class Icon{directory_upper}\n{'{'}\n");
 
     int x_offset = 0, y_offset = 0;
     foreach (FileInfo file in files) {
@@ -99,8 +106,15 @@ foreach (DirectoryInfo directory in source_directory.EnumerateDirectories()) {
             x_offset = 0;
             y_offset += IMAGE_SIZE;
         }
+
+        if (!file_name.Any(Char.IsAsciiDigit)) {
+            output_c.Add($"\tstatic const string {file_name.ToUpper()} = \"set:{formatted_directory_name} image:{file_name}\";");
+        }
     }
 
+    output_c.Add("}");
+
+    File.WriteAllLines(script_directory + $"\\{directory.Name}.c", output_c);
     File.WriteAllText(dest_directory + $"\\{directory.Name.Replace('-', '_')}.imageset", image_set.ToStringy());
     Console.WriteLine($"ImageSet generated {dest_directory + $"\\{directory.Name.Replace('-', '_')}.imageset"} complete, took {(DateTime.Now - file_start).TotalSeconds}");
     File.Delete(output_file);
@@ -128,6 +142,18 @@ void ProgressChanged(object sender, ProgressEventArgs e)
     Console.Clear();
     Console.WriteLine($"{e.Percent}%");
 }    
+
+
+public static class StringExtensions
+{
+    public static string FirstCharToUpper(this string input) =>
+        input switch
+        {
+            null => throw new ArgumentNullException(nameof(input)),
+            "" => throw new ArgumentException($"{nameof(input)} cannot be empty", nameof(input)),
+            _ => string.Concat(input[0].ToString().ToUpper(), input.AsSpan(1))
+        };
+}
 
 /*
 static void EDDSToDDS(string source_file, string output_file)

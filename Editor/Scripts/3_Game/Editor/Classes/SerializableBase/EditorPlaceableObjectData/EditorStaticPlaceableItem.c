@@ -2,9 +2,9 @@ class EditorStaticPlaceableItem: EditorPlaceable
 {
 	protected string m_Model;
 	
-	void EditorStaticPlaceableItem(string uuid, string display_name, string model)
+	void EditorStaticPlaceableItem(string uuid, string display_name, string icon)
 	{
-		m_Model = model;
+		m_Model = uuid;
 	}
 	
 	override Object CreateObject(vector transform[4], int flags = ECE_LOCAL)

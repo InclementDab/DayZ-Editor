@@ -24,14 +24,15 @@ class EditorNode: SerializableBase
 	protected ref map<string, ref EditorNode> m_Children = new map<string, ref EditorNode>();
 
 	protected string m_DisplayName;
+	protected string m_Icon;
 	protected bool m_IsSelected; // local
 	protected EditorNode m_Parent;
 	
 	protected ref EditorNodeView m_NodeView;
 	
-	void EditorNode(string uuid, string display_name)
+	void EditorNode(string uuid, string display_name, string icon)
 	{
-		m_UUID = uuid;		
+		m_UUID = uuid;
 		m_DisplayName = display_name;
 		
 		All[m_UUID] = this;
@@ -162,6 +163,11 @@ class EditorNode: SerializableBase
 	{
 		return m_DisplayName;
 	}
+	
+	string GetIcon()
+	{
+		return m_Icon;
+	}
 		
 	EditorNodeView GetNodeView()
 	{
@@ -171,6 +177,8 @@ class EditorNode: SerializableBase
 	void SetSelected(bool selected)
 	{
 		m_IsSelected = selected;
+		
+		m_NodeView.Collapse(m_IsSelected);
 		
 		if (m_IsSelected) {
 			SelectedObjects.Insert(this);
