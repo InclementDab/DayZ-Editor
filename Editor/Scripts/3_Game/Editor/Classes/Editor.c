@@ -400,12 +400,7 @@ class Editor: SerializableBase
 					
 						node = node[type_split[0]];
 					}		
-					
-					if (!ctx.Read(type)) {
-						Error("Invlaid type");
-						break;
-					}
-					
+
 					node.Read(ctx, 0);
 					node.Synchronize(sender); // ping pong					
 					break;
@@ -426,12 +421,6 @@ class Editor: SerializableBase
 					
 					node = node[type_split[0]];
 				}		
-				
-				Print(node);
-				if (!ctx.Read(type)) {
-					Error("Invalid type");
-					break;
-				}
 				
 				node.Read(ctx, 0);
 				node.OnSynchronized();
