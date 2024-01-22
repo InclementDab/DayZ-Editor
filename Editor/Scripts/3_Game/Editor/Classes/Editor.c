@@ -117,8 +117,37 @@ class Editor: SerializableBase
 				
 		MakeDirectory(ROOT_DIRECTORY);
 		
-		m_Master = InitializeMaster(player);
+		if (!m_Player) {
+			m_Master = new EditorNode(UUID.Generate(), "SERVER");
+		} else {
+			m_Master = new EditorNode(player.GetIdentity().GetId(), player.GetIdentity().GetName());
+		}
 		
+		EditorNode objects = new EditorNode("Objects", "Objects");
+		
+		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects");
+		edited_objects.Add(new EditorCategory("PlacedObjects", "Placed Objects", "set:regular image:hand"));
+		edited_objects.Add(new EditorCategory("BrushedObjects", "Brushed Objects", "set:regular image:brush"));
+		edited_objects.Add(new EditorCategory("HiddenObjects", "Hidden Objects", "set:regular image:hide"));
+		objects.Add(edited_objects);
+
+		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects");
+		placeable_objects.Add(new EditorCategory("Unknown", "Unknown"));
+		placeable_objects.Add(new EditorCategory("Plants", "Plants", "set:regular image:tree"));
+		placeable_objects.Add(new EditorCategory("Rocks", "Rocks", "set:regular image:rock"));
+		placeable_objects.Add(new EditorCategory("Clutter", "Clutter", "set:regular image:trash"));
+		placeable_objects.Add(new EditorCategory("Structures", "Structures", "set:regular image:house"));
+		placeable_objects.Add(new EditorCategory("Wrecks", "Wrecks", "set:regular image:car_burst"));
+		placeable_objects.Add(new EditorCategory("AI", "AI", "set:regular image:person"));
+		placeable_objects.Add(new EditorCategory("Water", "Water", "set:regular image:water"));
+		placeable_objects.Add(new EditorCategory("Vehicles", "Vehicles", "set:regular image:car"));
+		placeable_objects.Add(new EditorCategory("StaticObjects", "Static Objects", "set:regular image:object_intersect"));
+		placeable_objects.Add(new EditorCategory("DynamicObjects", "Dynamic Objects", "set:regular image:shirt"));
+		placeable_objects.Add(new EditorCategory("ScriptedObjects", "Scripted Objects", "set:regular image:code"));
+		objects.Add(placeable_objects);
+
+		m_Master.Add(objects);
+				
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 					
 		// handle config objects
@@ -145,10 +174,10 @@ class Editor: SerializableBase
 				} else if (full_path.Find("Man") != -1) {
 					category = "AI";
 				} else if (full_path.Find("Transport") != -1) {
-					category = "Transport";
+					category = "Vehicles";
 				}
 				
-				m_Master["PlaceableObjects"][category] = new EditorConfigPlaceable(type, type, type);
+				m_Master["Objects"]["PlaceableObjects"][category] = new EditorConfigPlaceable(type, type, type);
 		    }
 		}
 		
@@ -172,7 +201,7 @@ class Editor: SerializableBase
 					model_name = items[items.Count() - 1];
 				}	
 			
-				m_Master["PlaceableObjects"]["StaticObjects"] = new EditorStaticPlaceableItem(file.GetFullPath(), model_name, file.GetFullPath());
+				m_Master["Objects"]["PlaceableObjects"]["StaticObjects"] = new EditorStaticPlaceableItem(file.GetFullPath(), model_name, file.GetFullPath());
 			}
 		}
 		
@@ -213,38 +242,7 @@ class Editor: SerializableBase
 	{
 		GetGame().ObjectDelete(m_Camera);
 	}
-	
-	static EditorNode InitializeMaster(Man player)
-	{
-		EditorNode master_node = new EditorNode(player.GetIdentity().GetId(), player.GetIdentity().GetName());
-		EditorNode objects = new EditorNode("Objects", "Objects");
 		
-		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects");
-		edited_objects.Add(new EditorCategory("PlacedObjects", "Placed Objects", "set:regular image:hand"));
-		edited_objects.Add(new EditorCategory("BrushedObjects", "Brushed Objects", "set:regular image:brush"));
-		edited_objects.Add(new EditorCategory("HiddenObjects", "Hidden Objects", "set:regular image:hide"));
-		objects.Add(edited_objects);
-
-		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects");
-		placeable_objects.Add(new EditorCategory("Unknown", "Unknown"));
-		placeable_objects.Add(new EditorCategory("Plants", "Plants", "set:regular image:tree"));
-		placeable_objects.Add(new EditorCategory("Rocks", "Rocks", "set:regular image:rock"));
-		placeable_objects.Add(new EditorCategory("Clutter", "Clutter", "set:regular image:trash"));
-		placeable_objects.Add(new EditorCategory("Structures", "Structures", "set:regular image:house"));
-		placeable_objects.Add(new EditorCategory("Wrecks", "Wrecks", "set:regular image:car_burst"));
-		placeable_objects.Add(new EditorCategory("AI", "AI", "set:regular image:person"));
-		placeable_objects.Add(new EditorCategory("Water", "Water", "set:regular image:water"));
-		placeable_objects.Add(new EditorCategory("Vehicles", "Vehicles", "set:regular image:car"));
-		placeable_objects.Add(new EditorCategory("StaticObjects", "Static Objects", "set:regular image:object_intersect"));
-		placeable_objects.Add(new EditorCategory("DynamicObjects", "Dynamic Objects", "set:regular image:shirt"));
-		placeable_objects.Add(new EditorCategory("ScriptedObjects", "Scripted Objects", "set:regular image:code"));
-		objects.Add(placeable_objects);
-
-		master_node.Add(objects);
-		
-		return master_node;
-	}
-	
 	void Update(bool doSim, float timeslice)
 	{
 		if (GetGame().IsDedicatedServer()) {
