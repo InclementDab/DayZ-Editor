@@ -100,8 +100,12 @@ class Editor: SerializableBase
 	void Editor(Man player) 
 	{		
 		m_Player = player;
-				
+		
 		MakeDirectory(ROOT_DIRECTORY);
+		
+		if (GetGame().IsDedicatedServer()) {
+			return;
+		}
 		
 		if (!m_Player) {
 			m_Master = new EditorNode("SERVER", "SERVER", "");
@@ -200,11 +204,7 @@ class Editor: SerializableBase
 		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
 			m_Master["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}
-				
-		if (GetGame().IsDedicatedServer()) {
-			return;
-		}
-						
+								
 		foreach (typename command_type: RegisterCommand.Instances) {		
 			Command command = Command.Cast(command_type.Spawn());
 			if (!command) {
