@@ -57,10 +57,10 @@ class EditorObjectView: ScriptView
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
-	override bool OnClick(Widget w, int x, int y, int button)
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		m_EditorObject.SetSelected(!m_EditorObject.IsSelected());
-		return super.OnClick(w, x, y, button);
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	
 	override string GetLayoutFile()

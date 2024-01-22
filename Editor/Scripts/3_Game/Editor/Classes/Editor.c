@@ -71,7 +71,7 @@ class Editor: SerializableBase
 	EditorStatistics Statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
 	
 	// protected Editor Members
-	protected ref EditorHud	m_EditorHud;
+	protected ref EditorHud	m_Hud;
 
 	protected EditorCamera m_Camera;
 	ref map<Object, ref EditorHandData> Placing = new map<Object, ref EditorHandData>();
@@ -90,41 +90,13 @@ class Editor: SerializableBase
 	
 	static const string Version = "2.0";
 	
-	protected ScriptCaller m_ObjectSelectCallback;
-				
-	// Stored list of all Placed Objects, indexed by their WorldObject ID
-	protected ref map<Object, EditorObject> m_WorldObjects = new map<Object, EditorObject>();
-	
 	protected ref array<ref EditorHiddenObject> m_DeletedObjects = {};
-			
-	//0: EditorObject
-	static ref ScriptInvoker OnObjectCreated = new ScriptInvoker();
-	
-	//0: EditorObject
-	static ref ScriptInvoker OnObjectDeleted = new ScriptInvoker();
-			
-	// 0: EditorHandData
-	static ref ScriptInvoker OnAddInHand = new ScriptInvoker();
-	
-	// 0: EditorHandData
-	static ref ScriptInvoker OnRemoveFromHand = new ScriptInvoker();
-	
-	// 0: EditorObject
-	static ref ScriptInvoker OnObjectPlaced = new ScriptInvoker();
-	
-	// Stored list of all Placed Objects
-	protected ref map<string, EditorObject> m_PlacedObjects = new map<string, EditorObject>();
 	
 	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
 	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
 			
 	protected ref EditorNode m_Master;
-	
-	void Add(notnull EditorNode node)
-	{
-		m_Master.Add(node);
-	}
-		
+			
 	void Editor(Man player) 
 	{		
 		m_Player = player;
@@ -252,14 +224,14 @@ class Editor: SerializableBase
 		ControlCamera(m_Camera);	
 	
 	
-		m_EditorHud = new EditorHud();
+		m_Hud = new EditorHud();
 
 		array<string> categories = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
 		foreach (string category1: categories) {
-			m_EditorHud.GetTemplateController().LeftListItems.Insert(m_Master[category1].GetNodeView());
+			m_Hud.GetTemplateController().LeftListItems.Insert(m_Master[category1].GetNodeView());
 		}
 	
-		m_EditorHud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
 	}
 
 	void ~Editor() 
@@ -352,13 +324,9 @@ class Editor: SerializableBase
 			transform = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position + Vector(0, (size[1] / 2) * ray1.Direction.Length(), 0) };
 			
 			object.SetTransform(transform);
-			
-			// diag
-			transform[3] = ray1.Position;
-			//Shape.CreateMatrix(transform);
 		}
 		
-		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
+		if (GetGame().GetInput().LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {
 			foreach (Object object_to_place, EditorHandData data: Placing) {
 				
 				vector transform_placed[4];
@@ -367,12 +335,7 @@ class Editor: SerializableBase
 				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), data.Placeable.GetIcon() , data.Placeable.GetUUID(), transform_placed, EFE_DEFAULT);
 				
 				m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object);
-				
-				m_PlacedObjects[editor_object.GetUUID()] = editor_object;
-				m_WorldObjects[object_to_place] = editor_object;
-				
-				OnObjectCreated.Invoke(editor_object);
-				
+	
 				// Synchronize to this id
 				Synchronize(m_Master["EditedObjects"]["PlacedObjects"]);
 				//m_Master["EditedObjects"]["PlacedObjects"].Synchronize();
@@ -382,8 +345,19 @@ class Editor: SerializableBase
 			}
 		}
 		
+		if (GetGame().GetInput().LocalHold_ID(UAFire)) {
+			foreach (EditorNode selected_node: EditorNode.SelectedObjects) {
+				EditorObject editor_object_cast = EditorObject.Cast(selected_node);
+				if (!editor_object_cast) {
+					continue;
+				}
+				
+			//	Placing[editor_object_cast.GetObject()] = new EditorHandData();
+			}
+		}
+		
 		if (GetGame().GetInput().LocalPress("EditorToggleUI")) {
-			m_EditorHud.Show(!m_EditorHud.IsVisible());
+			m_Hud.Show(!m_Hud.IsVisible());
 		}
 	}
 			
@@ -493,6 +467,11 @@ class Editor: SerializableBase
 		return super.Read(serializer, version);
 	}
 	
+	void Add(notnull EditorNode node)
+	{
+		m_Master.Add(node);
+	}
+	
 	bool IsMember(notnull PlayerIdentity identity)
 	{
 		return m_Editors.Find(identity) != -1;
@@ -531,28 +510,6 @@ class Editor: SerializableBase
 	void PlaySound(string sound_set)
 	{
 		SEffectManager.PlaySoundOnObject(sound_set, m_Camera);
-	}
-				
-	void PromptForObjectSelection(ScriptCaller callback)
-	{
-		m_ObjectSelectCallback = callback;
-		
-		if (m_ObjectSelectCallback) {
-			m_EditorHud.ShowNotification("Select a world object");
-		}
-	}
-	
-	void SatisfyObjectSelectionPrompt(Object object)
-	{
-		m_ObjectSelectCallback.Invoke(object);
-		if (object) {
-			EditorBoundingBox.Destroy(object);
-		}
-	}
-	
-	bool IsPromptedForObjectSelection()
-	{
-		return m_ObjectSelectCallback != null;
 	}
 	
 	// Leave null to use the default camera
@@ -625,7 +582,7 @@ class Editor: SerializableBase
 	bool DoCursorRaycast(out vector position, float max_distance = 3000, Object ignore_object = null)
 	{
 		vector raycast_direction;
-		if (m_EditorHud.IsCursorVisible()) {
+		if (m_Hud.IsCursorVisible()) {
 			raycast_direction = GetGame().GetPointerDirection();
 		} else {
 			raycast_direction = GetGame().GetCurrentCameraDirection();
@@ -647,8 +604,8 @@ class Editor: SerializableBase
 		
 	EditorHud ReloadHud() 
 	{	
-		m_EditorHud = new EditorHud();
-		return m_EditorHud;
+		m_Hud = new EditorHud();
+		return m_Hud;
 	}
 		
 	void Undo()
@@ -697,8 +654,7 @@ class Editor: SerializableBase
 	{
 		Statistics.Save();
 		m_ActionStack.Clear();
-		
-		m_PlacedObjects.Clear();	
+			
 		m_DeletedObjects.Clear();		
 	}
 		
@@ -920,12 +876,12 @@ class Editor: SerializableBase
 		
 		if (error_message != string.Empty) {
 			EditorLog.Warning(error_message);
-			m_EditorHud.ShowNotification(error_message, COLOR_YELLOW);
+			m_Hud.ShowNotification(error_message, COLOR_YELLOW);
 			
 			// Disable auto save since we loaded a shit file
 			//Settings.AutoSaveTimer = -1;
 		} else {
-			m_EditorHud.ShowNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()), COLOR_GREEN);
+			m_Hud.ShowNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()), COLOR_GREEN);
 		}
 	}
 	
@@ -1005,7 +961,7 @@ class Editor: SerializableBase
 			
 	EditorHud GetHud() 
 	{
-		return m_EditorHud;
+		return m_Hud;
 	}
 		
 	EditorCamera GetCamera() 
@@ -1022,22 +978,12 @@ class Editor: SerializableBase
 	{
 		return (CF.ObjectManager.IsMapObjectHidden(object));
 	}
-		
-	array<EditorObject> GetPlacedObjects()
-	{
-		return m_PlacedObjects.GetValueArray(); 
-	}
-	
+			
 	array<ref EditorHiddenObject> GetDeletedObjects()
 	{
 		return m_DeletedObjects;
 	}
-				
-	EditorObject FindEditorObject(Object world_object) 
-	{
-		return m_WorldObjects[world_object];
-	}
-
+	
 	map<string, Command> GetCommandShortcutMap()
 	{
 		return m_CommandShortcutMap;

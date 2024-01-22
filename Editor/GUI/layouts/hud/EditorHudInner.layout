@@ -1,4 +1,5 @@
 FrameWidgetClass Root {
+ ignorepointer 1
  size 1 1
  halign center_ref
  valign center_ref

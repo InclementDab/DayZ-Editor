@@ -78,15 +78,6 @@ class EditorHud: ScriptView
 		if (GetGame().GetInput().LocalPress("UAFire") && !GetWidgetUnderCursor()) {
 			EditorNode.ClearSelections();
 		}
-		
-		Editor editor = GetDayZGame().GetEditor();
-					
-		m_TemplateController.OnlineUserCount = editor.GetOnlineMembers().Count();
-		m_TemplateController.NotifyPropertyChanged("OnlineUserCount");
-			
-		m_TemplateController.OnlineEntityCount = editor.GetPlacedObjects().Count();
-		m_TemplateController.NotifyPropertyChanged("OnlineEntityCount");
-		
 				
 		//EntityCountData.SetText(GetDayZGame().GetEditor().m_PlacedObjects.Count().ToString());
 		//Print(GetDayZGame().GetEditor().GetCurrentOnlineSession());

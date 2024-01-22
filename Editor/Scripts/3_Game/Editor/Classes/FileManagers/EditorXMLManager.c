@@ -96,9 +96,6 @@ class EditorMapGroupProto: XMLCallback
 	void EditorMapGroupProto(Object building)
 	{
 		m_Building = building;
-		
-		
-		GetDayZGame().GetEditor().OnObjectDeleted.Insert(OnObjectDeleted);
 	}
 	
 	void ~EditorMapGroupProto()
