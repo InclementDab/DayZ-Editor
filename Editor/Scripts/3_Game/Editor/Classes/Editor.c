@@ -423,9 +423,8 @@ class Editor: SerializableBase
 				if (GetGame().IsDedicatedServer()) {
 					array<PlayerIdentity> identities = {};
 					GetGame().GetPlayerIndentities(identities);
-					Print(sender);
 					foreach (PlayerIdentity identity: identities) {
-						//if (sender.GetId() !=
+						//if (sender.GetId() != identity.GetId())
 						Synchronize(current, null);
 					}
 					
