@@ -45,8 +45,7 @@ class EditorObject: EditorNode
 		}
 		
 		Math3D.MatrixOrthogonalize4(m_Transform);		
-		m_Object = Editor.CreateObject(m_Type, m_Transform);	
-
+		m_Object = Editor.CreateObject(m_Type, m_Transform);
 		
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
