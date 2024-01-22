@@ -1,21 +1,9 @@
 class EditorNodeViewController: ViewController
 {
 	ref ObservableCollection<EditorNodeView> ChildrenItems = new ObservableCollection<EditorNodeView>(this);
-	
-	string IconImage, CollapseIcon;
-	
-	Widget Icon, Collapse;
 		
-	override void PropertyChanged(string property_name)
-	{
-		switch (property_name) {
-			case "IconImage": {
-				Icon.Show(IconImage != string.Empty);
-				break;
-			}
-		}
-	}
-	
+	Widget Collapse;
+		
 	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
 	{			
 		Param1<EditorNodeView> item = Param1<EditorNodeView>.Cast(args.ChangedValue);

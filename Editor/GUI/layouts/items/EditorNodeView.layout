@@ -50,7 +50,7 @@ WrapSpacerWidgetClass EditorTreeItem {
      font "gui/fonts/etelkatextpro14"
      switch toggle
      {
-      ImageWidgetClass "Collapse.Icon" {
+      ImageWidgetClass CollapseIcon {
        visible 1
        ignorepointer 1
        position 0 0
@@ -62,16 +62,11 @@ WrapSpacerWidgetClass EditorTreeItem {
        hexactsize 1
        vexactsize 1
        scaled 0
-       scriptclass "ViewBinding"
+       scriptclass ""
        image0 "set:dayz_gui image:Expand"
        mode additive
        "src alpha" 1
        filter 0
-       {
-        ScriptParamsClass {
-         Binding_Name "CollapseIcon"
-        }
-       }
       }
      }
      {
@@ -83,7 +78,7 @@ WrapSpacerWidgetClass EditorTreeItem {
    }
   }
   FrameWidgetClass Icon {
-   visible 0
+   visible 1
    ignorepointer 1
    position 0 0
    size 24 18
@@ -93,7 +88,7 @@ WrapSpacerWidgetClass EditorTreeItem {
    vexactsize 1
    scaled 0
    {
-    ImageWidgetClass "Icon.Image" {
+    ImageWidgetClass IconImage {
      visible 1
      disabled 0
      ignorepointer 1
@@ -106,16 +101,11 @@ WrapSpacerWidgetClass EditorTreeItem {
      hexactsize 1
      vexactsize 1
      scaled 0
-     scriptclass "ViewBinding"
+     scriptclass ""
      image0 "set:regular image:folder"
      mode blend
      "src alpha" 1
      filter 0
-     {
-      ScriptParamsClass {
-       Binding_Name "IconImage"
-      }
-     }
     }
    }
   }

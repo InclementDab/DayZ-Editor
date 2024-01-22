@@ -23,8 +23,7 @@ class EditorNode: SerializableBase
 	protected string m_UUID;	
 	protected ref map<string, ref EditorNode> m_Children = new map<string, ref EditorNode>();
 
-	protected string m_DisplayName;
-	protected string m_Icon;
+	protected string m_Icon, m_DisplayName;
 	protected bool m_IsSelected; // local
 	protected EditorNode m_Parent;
 	
@@ -34,11 +33,11 @@ class EditorNode: SerializableBase
 	{
 		m_UUID = uuid;
 		m_DisplayName = display_name;
-		
+		m_Icon = icon;
 		All[m_UUID] = this;
 		
 		if (!GetGame().IsDedicatedServer()) {
-			m_NodeView = new EditorNodeView(m_DisplayName, this);
+			m_NodeView = new EditorNodeView(m_DisplayName, this, m_Icon);
 		}
 	}
 	
@@ -112,6 +111,7 @@ class EditorNode: SerializableBase
 	{		
 		serializer.Write(m_UUID);
 		serializer.Write(m_DisplayName);
+		serializer.Write(m_Icon);
 		
 		serializer.Write(m_Children.Count());
 		foreach (string uuid, EditorNode node: m_Children) {
@@ -125,6 +125,7 @@ class EditorNode: SerializableBase
 	{
 		serializer.Read(m_UUID);	
 		serializer.Read(m_DisplayName);	
+		serializer.Read(m_Icon);	
 		int count;
 		serializer.Read(count);
 		for (int i = 0; i << count; i++) {

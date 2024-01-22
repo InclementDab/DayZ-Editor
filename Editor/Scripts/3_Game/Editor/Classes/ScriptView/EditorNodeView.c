@@ -7,13 +7,14 @@ class EditorNodeView: ScriptView
 	TextWidget Text;
 	WrapSpacerWidget Children;
 	Widget Panel, Spacer;
+	ImageWidget IconImage, CollapseIcon;
 		
 	protected bool m_IsBeingDragged;
 	protected string m_Text;
 	
 	protected EditorNode m_Selectable;
 	
-	void EditorNodeView(string text, EditorNode selectable)
+	void EditorNodeView(string text, EditorNode selectable, string icon)
 	{
 		m_TemplateController = EditorNodeViewController.Cast(m_Controller);
 		m_Selectable = selectable;
@@ -21,6 +22,9 @@ class EditorNodeView: ScriptView
 		
 		m_Text = text;
 		SetText(m_Text);
+		
+		IconImage.LoadImageFile(0, icon);
+		IconImage.SetImage(0);
 	}
 	
 	void SetText(string text)
@@ -31,19 +35,13 @@ class EditorNodeView: ScriptView
 		Text.GetScreenSize(w, h);
 		Panel.SetScreenSize(w, h);
 	}
-	
-	void SetIcon(string icon)
-	{
-		m_TemplateController.IconImage = icon;
-		m_TemplateController.NotifyPropertyChanged("IconImage");
-	}
-	
+		
 	void Collapse(bool state)
 	{
 		Children.Show(!state);	
 		
-		m_TemplateController.CollapseIcon = Ternary<string>.If(!state,"set:dayz_gui image:Expand", "set:dayz_gui image:Collapse");
-		m_TemplateController.NotifyPropertyChanged("CollapseIcon");
+		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state,"set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
+		CollapseIcon.SetImage(0);
 	}
 	
 	void OnCollapseExecute(ButtonCommandArgs args)
