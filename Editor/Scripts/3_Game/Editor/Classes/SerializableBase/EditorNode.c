@@ -48,18 +48,50 @@ class EditorNode: SerializableBase
 		delete m_NodeView;
 	}
 	
+	EditorNode GetParentAtDepth(int depth)
+	{
+		EditorNode parent = GetParent();
+		while (depth > 0) {
+			if (!parent.GetParent()) {
+				Error("GetParentAtDepth ran out of depth " + depth);
+				return parent;
+			}
+			
+			parent = parent.GetParent();
+			depth--;
+		}
+		
+		return parent;
+	}
+	
+	int GetParentDepth()
+	{
+		int depth;
+		EditorNode parent = GetParent();
+		while (parent) {
+			depth++;
+			parent = parent.GetParent();
+		}
+		
+		return depth;
+	}
+	
 	void Synchronize(PlayerIdentity exclude = null)
 	{	
 		ScriptRPC rpc = new ScriptRPC();
 		
-		string uuid_string = string.Format("%1-%2", GetUUID(), Type());
-		EditorNode parent = m_Parent;
-		while (parent) {
-			uuid_string += string.Format("|%1-%2", parent.GetUUID(), parent.Type());
-			parent = parent.GetParent();
+		int tree_depth = GetParentDepth();		
+		rpc.Write(tree_depth);
+		
+		for (int i = tree_depth - 1; i >= 0; i--) {
+			EditorNode parent = GetParentAtDepth(tree_depth);			
+			rpc.Write(parent.GetUUID());
+			rpc.Write(parent.Type().ToString());
 		}
 		
-		rpc.Write(uuid_string);
+		rpc.Write(GetUUID());
+		rpc.Write(Type().ToString());
+	
 		Write(rpc, 0);
 		
 		array<PlayerIdentity> identities = {};
@@ -92,14 +124,7 @@ class EditorNode: SerializableBase
 	}
 	
 	EditorNode Get(string uuid)
-	{
-		array<string> uuid_split = {};
-		uuid.Split("|", uuid_split);
-		if (uuid_split.Count() > 1) {
-			Print(uuid_split[uuid_split.Count() - 2]);
-		}
-		
-		
+	{		
 		return m_Children[uuid];
 	}
 	

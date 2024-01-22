@@ -381,49 +381,37 @@ class Editor: SerializableBase
 		switch (rpc_type) {
 			case EditorNode.RPC_SYNC: {	
 				Print("EditorNode.RPC_SYNC");
-				string uuid, type;
-				array<string> uuid_split = {};
-				array<string> type_split = {};
-				EditorNode node = m_Master;
+				int tree_depth;
+				if (!ctx.Read(tree_depth)) {
+					Error("Invalid depth");
+					break;
+				}
+				
+				EditorNode current = m_Master;
+				for (int i = 0; i < tree_depth; i++) {
+					string parent_uuid;
+					ctx.Read(parent_uuid);
+					
+					string parent_type;
+					ctx.Read(parent_type);
+					
+					Print(parent_uuid);
+					Print(parent_type);
+					Print(current[parent_uuid]);
+					
+					current = current[parent_uuid];
+				}
+				
+				break;
+				
+				current.Read(ctx, 0);
+				
 				if (GetGame().IsDedicatedServer()) {
-					if (!ctx.Read(uuid)) {
-						Error("Invalid id");
-						break;
-					}
-
-					uuid.Split("|", uuid_split);
-					for (int i = uuid_split.Count() - 2; i >= 0; i--) {
-						uuid_split[i].Split("-", type_split);
-						if (!node[type_split[0]]) {
-							node[type_split[0]] = EditorNode.Cast(type_split[1].ToType().Spawn());
-						}
-					
-						node = node[type_split[0]];
-					}		
-
-					node.Read(ctx, 0);
-					node.Synchronize(sender); // ping pong					
-					break;
+					current.Synchronize(sender);
+				} else {
+					current.OnSynchronized();
 				}
 				
-				if (!ctx.Read(uuid)) {
-					Error("Invalid id");
-					break;
-				}
-				 
-				Print(uuid);
-				uuid.Split("|", uuid_split);
-				for (int j = uuid_split.Count() - 2; j >= 0; j--) {
-					uuid_split[j].Split("-", type_split);
-					if (!node[type_split[0]]) {
-						node[type_split[0]] = EditorNode.Cast(type_split[1].ToType().Spawn());
-					}
-					
-					node = node[type_split[0]];
-				}		
-				
-				node.Read(ctx, 0);
-				node.OnSynchronized();
 				break;
 			}
 		}
