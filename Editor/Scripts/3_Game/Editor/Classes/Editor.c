@@ -18,7 +18,7 @@ class Editor: SerializableBase
 	// Handled in DayZGame
 	static const int RPC_SYNC = 54365;
 	
-	static const ref array<int> RPC_ALL = { RPC_SYNC };
+	static const ref array<int> RPC_ALL = { RPC_SYNC, EditorNode.RPC_SYNC };
 	
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
@@ -341,6 +341,7 @@ class Editor: SerializableBase
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
 			foreach (Object object_to_place, EditorHandData data: Placing) {
+				Print(object_to_place);
 				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), IconSolid.CIRCLE_DOT, object_to_place, EFE_DEFAULT);
 				
 				m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object);
@@ -369,33 +370,66 @@ class Editor: SerializableBase
 		
 		switch (rpc_type) {
 			case EditorNode.RPC_SYNC: {	
-				if (!GetGame().IsDedicatedServer()) {
+				if (GetGame().IsDedicatedServer()) {
 					
-					Print("HI:):):)");
+					string uuid;
+					if (!ctx.Read(uuid)) {
+						Error("Invlaid id");
+						break;
+					}
+					
+					Print(uuid);
+
+					array<string> uuid_split = {};
+					uuid.Split("|", uuid_split);
+					EditorNode node = m_Master;
+					for (int i = 1; i < uuid_split.Count(); i++) {
+						if (node[uuid_split[i]]) {
+							node = node[uuid_split[i]];
+						}
+					}					
+						
+					string type;
+					if (!ctx.Read(type)) {
+						Error("Invlaid type");
+						break;
+					}
+					
+					
+								
+					/*		
+					if (!m_Master[uuid]) {				
+						m_Master[uuid] = EditorNode.Cast(type.ToType().Spawn());
+						
+						if (!m_Children[uuid]) {
+							Error("Invalid node type!");
+							return false;
+						}
+					}*/
+					
+					//m_Master[uuid].Read(serializer, version);
 					
 					break;
 				}
 				
-				string uuid;
-				if (!ctx.Read(uuid)) {
-					Error("Invlaid id");
-					break;
-				}
+
+
+
 				
-				Print(uuid);
 				
-				string type;
-				if (!ctx.Read(type)) {
-					Error("Invlaid type");
-					break;
-				}
 				
+				string x;
+				ctx.Read(x);
+				Print(x);
 			
+				string y;
+				ctx.Read(y);
+				Print(y);
 				
-				m_Master[uuid].Read(ctx, 0);
+				//m_Master[uuid].Read(ctx, 0);
 				
-				// Return to sendah!
-				m_Master.Synchronize();
+				/// Return to sendah!
+				//m_Master.Synchronize();
 				break;
 			}
 		}

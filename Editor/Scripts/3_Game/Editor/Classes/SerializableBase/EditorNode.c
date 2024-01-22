@@ -56,8 +56,10 @@ class EditorNode: SerializableBase
 		EditorNode parent = m_Parent;
 		while (parent) {
 			uuid_string += string.Format("|%1", parent.GetUUID());
+			parent = parent.GetParent();
 		}
 		
+		Print(uuid_string);
 		rpc.Write(uuid_string);
 		rpc.Write(Type().ToString());
 		Write(rpc, 0);
@@ -84,6 +86,13 @@ class EditorNode: SerializableBase
 	
 	EditorNode Get(string uuid)
 	{
+		array<string> uuid_split = {};
+		uuid.Split("|", uuid_split);
+		if (uuid_split.Count() > 1) {
+			Print(uuid_split[uuid_split.Count() - 2]);
+		}
+		
+		
 		return m_Children[uuid];
 	}
 	
