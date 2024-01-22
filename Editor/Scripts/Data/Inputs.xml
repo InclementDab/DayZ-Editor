@@ -51,7 +51,7 @@
             <input name="EditorUnlockCommand" loc="#STR_EDITOR_UNLOCK"/>
             <input name="EditorExportToVPP" loc="#STR_EDITOR_CMD_EXPORT_VPP (*.vpp)"/>
             <input name="EditorHelpCommand" loc="#STR_EDITOR_HELP"/>
-            <input name="EditorDeleteCommand" loc="#STR_EDITOR_DELETE"/>
+            <input name="DeleteCommand" loc="#STR_EDITOR_DELETE"/>
             <input name="UndoCommand" loc="#STR_EDITOR_UNDO"/>
             <input name="EditorToggleLightCommand" loc="Toggle Light"/>
             <input name="EditorSnapToSurfaceCommand" loc="#STR_EDITOR_SNAP_TO_SURFACE"/>
@@ -161,7 +161,7 @@
                 <input name="EditorUnlockCommand"/>
                 <input name="EditorExportToVPP"/>
                 <input name="EditorHelpCommand"/>
-                <input name="EditorDeleteCommand"/>
+                <input name="DeleteCommand"/>
                 <input name="UndoCommand"/>
                 <input name="EditorToggleLightCommand"/>
                 <input name="EditorSnapToSurfaceCommand"/>
@@ -386,7 +386,7 @@
                 <btn name="kL"/>
             </btn>
         </input>
-        <input name="EditorDeleteCommand">
+        <input name="DeleteCommand">
             <btn name="kDelete"/>
         </input>
         <input name="UndoCommand">

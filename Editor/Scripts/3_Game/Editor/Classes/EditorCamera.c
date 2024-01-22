@@ -6,7 +6,7 @@ class EditorCamera: ScriptedCamera
 	protected vector m_LinearVelocity, m_AngularVelocity;
 	
 	protected vector m_ViewDragStartPosition;
-	protected vector m_ViewDragStartMat[4] = {};
+	protected vector m_ViewDragBasis[4];
 	
 	void EditorCamera()
 	{
@@ -73,27 +73,36 @@ class EditorCamera: ScriptedCamera
 		} 
 		
 		else if (input.LocalPress_ID(UATempRaiseWeapon)) {
-			m_ViewDragStartPosition = GetGame().GetPointerDirection();
-			vector mat[4];
-			GetTransform(mat);
-			copyarray(m_ViewDragStartMat, mat);
+			GetTransform(m_ViewDragBasis);
 		}
 		
 		else if (input.LocalValue_ID(UATempRaiseWeapon)) {		
 			vector start_matrix[4] = { m_ViewDragStartPosition * vector.Up, vector.Up, m_ViewDragStartPosition, Vector(0, 0, 1).Multiply4(transform) };
 			
-			vector pointer = GetGame().GetPointerDirection().InvMultiply3(m_ViewDragStartMat);
+			vector pointer = GetGame().GetPointerDirection().InvMultiply3(m_ViewDragBasis);
 			Shape.CreateSphere(COLOR_GREEN, ShapeFlags.ONCE, pointer + transform[3], 0.2);
 			
 			vector mid_matrix[4] = { transform[0], transform[1], transform[2], transform[3] };
 			
 			pointer = pointer.Multiply3(transform);
 			pointer.Normalize();
-			vector matrix[4] = { pointer * m_ViewDragStartMat[1], m_ViewDragStartMat[1], pointer, Vector(0, 0, 1).Multiply4(transform) };
+			vector matrix[4] = { pointer * m_ViewDragBasis[1], m_ViewDragBasis[1], pointer, Vector(0, 0, 1).Multiply4(transform) };
 			Math3D.MatrixOrthogonalize3(matrix);
 			
+			//Shape.CreateMatrix(start_matrix);
+			Shape.CreateMatrix(matrix);
 			
-			Shape.CreateMatrix(start_matrix);
+			
+			
+			vector camera_matrix[4];
+			GetTransform(camera_matrix);
+			camera_matrix[3] = Vector(0, 0, 1).Multiply4(camera_matrix);
+			
+			Math3D.MatrixMultiply3(camera_matrix, matrix, camera_matrix);
+			//Math3D.MatrixMultiply3(camera_matrix, start_matrix, camera_matrix);
+			
+			Shape.CreateMatrix(camera_matrix);
+			
 			//Math3D.MatrixMultiply3(matrix, m_ViewDragStartMat, matrix);
 			
 			

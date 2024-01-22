@@ -488,7 +488,7 @@ FrameWidgetClass Root {
    }
   }
   PanelWidgetClass Status {
-   visible 1
+   visible 0
    ignorepointer 1
    color 0.1373 0.1373 0.1569 1
    position -2 49
