@@ -27,7 +27,7 @@ class EditorNode: SerializableBase
 	protected bool m_IsSelected; // local
 	protected EditorNode m_Parent;
 	
-	protected ref EditorNodeView m_TreeItem;
+	protected ref EditorNodeView m_NodeView;
 	
 	void EditorNode(string uuid, string display_name)
 	{
@@ -37,7 +37,7 @@ class EditorNode: SerializableBase
 		All[m_UUID] = this;
 		
 		if (!GetGame().IsDedicatedServer()) {
-			m_TreeItem = new EditorNodeView(m_DisplayName, this);
+			m_NodeView = new EditorNodeView(m_DisplayName, this);
 		}
 	}
 	
@@ -45,7 +45,7 @@ class EditorNode: SerializableBase
 	{
 		All.Remove(m_UUID);
 		
-		delete m_TreeItem;
+		delete m_NodeView;
 	}
 	
 	void Synchronize()
@@ -77,7 +77,7 @@ class EditorNode: SerializableBase
 		
 		// Update visual display
 		if (!GetGame().IsDedicatedServer()) {
-			m_TreeItem.GetTemplateController().ChildrenItems.Insert(node.GetNodeView());
+			m_NodeView.GetTemplateController().ChildrenItems.Insert(node.GetNodeView());
 		}
 	}
 	
@@ -165,7 +165,7 @@ class EditorNode: SerializableBase
 		
 	EditorNodeView GetNodeView()
 	{
-		return m_TreeItem;
+		return m_NodeView;
 	}
 	
 	void SetSelected(bool selected)

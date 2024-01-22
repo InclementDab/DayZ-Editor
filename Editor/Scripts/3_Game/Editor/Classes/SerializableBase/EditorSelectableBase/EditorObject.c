@@ -208,12 +208,7 @@ class EditorObject: EditorNode
 			EditorBoundingBox.Destroy(m_Object);
 		}
 	}
-	
-	override EditorNodeView GetNodeView()
-	{
-		return m_TreeItem;
-	}
-		
+			
 	bool GetGroundUnderObject(out vector position, out vector direction)
 	{
 		vector transform[4];

@@ -100,13 +100,14 @@ class Editor: SerializableBase
 	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
 			
 	protected ref EditorNode m_Master;
-		
-	void AddNode(notnull EditorNode node)
+	
+
+	void Add(notnull EditorNode node)
 	{
 		m_Master.Add(node);
 	}
 	
-	EditorNode GetNode(string uuid)
+	EditorNode Get(string uuid)
 	{
 		return m_Master[uuid];
 	}
@@ -118,7 +119,7 @@ class Editor: SerializableBase
 		MakeDirectory(ROOT_DIRECTORY);
 		
 		if (!m_Player) {
-			m_Master = new EditorNode(UUID.Generate(), "SERVER");
+			m_Master = new EditorNode("SERVER", "SERVER");
 		} else {
 			m_Master = new EditorNode(player.GetIdentity().GetId(), player.GetIdentity().GetName());
 		}
