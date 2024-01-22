@@ -974,30 +974,7 @@ class Editor: SerializableBase
 	{
 		return m_CommandShortcutMap;
 	}
-	
-	bool GetHudVisiblity()
-	{
-#ifdef DIAG_DEVELOPER
-		return m_EditorHud != null;
-#else
-		return m_EditorHud.IsVisible();
-#endif	
-	}
-	
-	void SetHudVisibility(bool state)
-	{
-#ifdef DIAG_DEVELOPER
-		if (state) {
-			m_EditorHud = new EditorHud();
-		} else {
-			delete m_EditorHud;
-			return;
-		}
-#endif
-		
-		m_EditorHud.Show(state);
-	}
-	
+			
 	bool IsPlacing()
 	{
 		return Placing.Count() > 0; 

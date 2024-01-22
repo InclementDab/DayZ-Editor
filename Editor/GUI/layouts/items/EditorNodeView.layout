@@ -1,60 +1,105 @@
-WrapSpacerWidgetClass EditorTreeItem {
+FrameWidgetClass Root {
  visible 1
  clipchildren 0
  position 0 0
- size 560 0
+ size 250 18
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
  scaled 0
  scriptclass ""
- Padding 0
- Margin 0
- "Size To Content H" 1
- "Size To Content V" 1
  {
-  FrameWidgetClass Spacer {
+  WrapSpacerWidgetClass Wrapper {
    ignorepointer 1
-   position 0 0
-   size 14 19
+   size 1 18
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
-  }
-  FrameWidgetClass Collapse {
-   visible 0
-   ignorepointer 0
-   position 0 0
-   size 24 18
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   scaled 0
+   Padding 0
+   Margin 0
    {
-    ButtonWidgetClass "Collapse.Button" {
-     visible 1
+    FrameWidgetClass Spacer {
+     ignorepointer 1
      position 0 0
-     size 12 12
-     halign center_ref
-     valign center_ref
+     size 14 19
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+    }
+    FrameWidgetClass Collapse {
+     visible 0
+     ignorepointer 0
+     position 0 0
+     size 24 18
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      scaled 0
-     scriptclass "ViewBinding"
-     style Outline_1px_Button
-     font "gui/fonts/etelkatextpro14"
-     switch toggle
      {
-      ImageWidgetClass CollapseIcon {
+      ButtonWidgetClass "Collapse.Button" {
        visible 1
+       position 0 0
+       size 12 12
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       scriptclass "ViewBinding"
+       style Outline_1px_Button
+       font "gui/fonts/etelkatextpro14"
+       switch toggle
+       {
+        ImageWidgetClass CollapseIcon {
+         visible 1
+         ignorepointer 1
+         position 0 0
+         size 5 5
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass ""
+         image0 "set:dayz_gui image:Expand"
+         mode additive
+         "src alpha" 1
+         filter 0
+        }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "OnCollapseExecute"
+        }
+       }
+      }
+     }
+    }
+    FrameWidgetClass Icon {
+     visible 1
+     ignorepointer 1
+     position 0 0
+     size 24 18
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     {
+      ImageWidgetClass IconImage {
+       visible 1
+       disabled 0
        ignorepointer 1
        position 0 0
-       size 5 5
+       size 18 18
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -63,85 +108,21 @@ WrapSpacerWidgetClass EditorTreeItem {
        vexactsize 1
        scaled 0
        scriptclass ""
-       image0 "set:dayz_gui image:Expand"
-       mode additive
+       image0 "set:regular image:folder"
+       mode blend
        "src alpha" 1
        filter 0
       }
      }
-     {
-      ScriptParamsClass {
-       Relay_Command "OnCollapseExecute"
-      }
-     }
     }
-   }
-  }
-  FrameWidgetClass Icon {
-   visible 1
-   ignorepointer 1
-   position 0 0
-   size 24 18
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   scaled 0
-   {
-    ImageWidgetClass IconImage {
+    GridSpacerWidgetClass Panel {
      visible 1
      disabled 0
-     ignorepointer 1
+     clipchildren 0
+     ignorepointer 0
+     color 0.0275 0.4353 0.5725 0
      position 0 0
-     size 18 18
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     scriptclass ""
-     image0 "set:regular image:folder"
-     mode blend
-     "src alpha" 1
-     filter 0
-    }
-   }
-  }
-  GridSpacerWidgetClass Panel {
-   visible 1
-   disabled 0
-   clipchildren 0
-   ignorepointer 0
-   color 0.0275 0.4353 0.5725 0
-   position 0 0
-   size 106 18
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   scaled 0
-   draggable 0
-   scriptclass ""
-   style Colorable
-   Padding 0
-   Margin 0
-   "Size To Content H" 1
-   content_halign center
-   content_valign center
-   Columns 1
-   Rows 1
-   {
-    TextWidgetClass Text {
-     visible 1
-     disabled 0
-     clipchildren 1
-     ignorepointer 1
-     position 0 0
-     size 120 18
+     size 106 18
      halign center_ref
      valign center_ref
      hexactpos 1
@@ -151,46 +132,55 @@ WrapSpacerWidgetClass EditorTreeItem {
      scaled 0
      draggable 0
      scriptclass ""
-     style Normal
-     text "CATEGORY"
-     font "gui/fonts/sdf_MetronBook24"
-     "bold text" 0
-     "exact text" 1
-     "exact text size" 16
-     "size to text h" 1
-     "size to text v" 0
-     "text valign" center
-    }
-   }
-  }
-  FrameWidgetClass "Main.Spacer" {
-   visible 1
-   clipchildren 0
-   ignorepointer 1
-   position 0 0
-   size 8 0
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   scriptclass "SizeToChild"
-   {
-    ScriptParamsClass {
-     m_ChildName "Children.Wrapper"
-     m_ResizeVertical 1
+     style Colorable
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     content_halign center
+     content_valign center
+     Columns 1
+     Rows 1
+     {
+      TextWidgetClass Text {
+       visible 1
+       disabled 0
+       clipchildren 1
+       ignorepointer 1
+       position 0 0
+       size 120 18
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       draggable 0
+       scriptclass ""
+       style Normal
+       text "CATEGORY"
+       font "gui/fonts/sdf_MetronBook24"
+       "bold text" 0
+       "exact text" 1
+       "exact text size" 16
+       "size to text h" 1
+       "size to text v" 0
+       "text valign" center
+      }
+     }
     }
    }
   }
   WrapSpacerWidgetClass Children {
-   visible 0
+   visible 1
    disabled 0
    clipchildren 0
    ignorepointer 1
-   position 0 0
-   size 560 8
+   position 18 18
+   size 1 8
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
    scaled 0
    scriptclass "ViewBinding"

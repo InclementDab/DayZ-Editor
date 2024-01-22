@@ -1,5 +1,13 @@
 modded class DayZGame
 {
+#ifdef DIAG_DEVELOPER
+	// VERY handy when changing layouts :)
+	void Recompile()
+	{
+		m_Editor = new Editor(GetPlayer());
+	}
+#endif
+	
 	// server!
 	protected ref map<string, ref EditorNode> m_Nodes = new map<string, ref EditorNode>();
 	

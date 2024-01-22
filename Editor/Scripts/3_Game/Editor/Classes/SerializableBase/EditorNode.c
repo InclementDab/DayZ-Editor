@@ -179,7 +179,7 @@ class EditorNode: SerializableBase
 	{
 		m_IsSelected = selected;
 		
-		m_NodeView.Collapse(m_IsSelected);
+		m_NodeView.ShowChildren(m_IsSelected);
 		
 		if (m_IsSelected) {
 			SelectedObjects.Insert(this);

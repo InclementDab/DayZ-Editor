@@ -6,11 +6,12 @@ class EditorNodeView: ScriptView
 	
 	TextWidget Text;
 	WrapSpacerWidget Children;
-	Widget Panel, Spacer;
+	Widget Panel;
 	ImageWidget IconImage, CollapseIcon;
 		
 	protected bool m_IsBeingDragged;
 	protected string m_Text;
+	protected bool m_Children;
 	
 	protected EditorNode m_Selectable;
 	
@@ -36,17 +37,23 @@ class EditorNodeView: ScriptView
 		Panel.SetScreenSize(w, h);
 	}
 		
-	void Collapse(bool state)
+	void ShowChildren(bool state)
 	{
-		Children.Show(!state);	
+		m_Children = state;
 		
-		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state,"set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
+		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, IconRegular.EXPAND, IconRegular.MINUS));
 		CollapseIcon.SetImage(0);
+		
+		float w, h;
+		Children.GetScreenSize(w, h);
+		float x, y;
+		m_LayoutRoot.GetScreenSize(x, y);
+		m_LayoutRoot.SetScreenSize(x, y + (h * state));
 	}
 	
 	void OnCollapseExecute(ButtonCommandArgs args)
 	{
-		Collapse(Children.IsVisible());
+		ShowChildren(!m_Children);
 	}
 	
 	void ApplyFilter(string filter)
@@ -129,7 +136,7 @@ class EditorNodeView: ScriptView
 			upper_parent = upper_parent.GetParent();
 		}
 		
-		Spacer.SetSize(i * 14, 19.00);
+		//Spacer.SetSize(i * 14, 19.00);
 	}
 	
 	EditorNodeView GetParentTree()
