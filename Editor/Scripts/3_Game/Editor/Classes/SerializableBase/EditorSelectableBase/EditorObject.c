@@ -30,21 +30,12 @@ class EditorObject: EditorNode
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
 	
 	protected Object m_TranslationGizmo;
-		
-	// Human Properties
-	int CurrentAnimation;
-	bool Animate;
 	
-	// Custom stuff
-	string ExpansionTraderType;
-	string TestingScript;
-	
-	void EditorObject()
+	void EditorObject(string uuid, string display_name, notnull Object object, int flags)
 	{		
-		if (((m_Flags & EditorObjectFlags.LISTITEM) == EditorObjectFlags.LISTITEM)) {
-			GetDayZGame().GetEditor().GetHud().GetCurrentPlacingCategory().AddChild(this);
-		}
-						
+		m_Object = object;
+		m_Flags = flags;
+								
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
 	
@@ -141,21 +132,6 @@ class EditorObject: EditorNode
 		}
 	}
 	
-	static EditorObject Create(notnull Object object, EditorObjectFlags flags)
-	{
-		ScriptReadWriteContext ctx = new ScriptReadWriteContext();
-		ctx.GetWriteContext().Write(object.GetType()); // DisplayName		
-		ctx.GetWriteContext().Write(object.GetType());
-		
-		vector transform[4];
-		m_Object.GetTransform(transform);
-		ctx.GetWriteContext().Write(transform);
-		
-		ctx.GetWriteContext().Write(flags);
-		
-		return new EditorObject(ctx.GetReadContext());
-	}
-	
 	override void Write(Serializer serializer, int version)
 	{
 		super.Write(serializer, version);
@@ -182,7 +158,7 @@ class EditorObject: EditorNode
 		
 		vector transform[4];
 		serializer.Read(transform);
-		
+		Print(transform); // probably null
 		if (!m_Object) {
 			m_Object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
 		}
@@ -233,14 +209,9 @@ class EditorObject: EditorNode
 		}
 	}
 	
-	override EditorNodeView GetTreeItem()
+	override EditorNodeView GetNodeView()
 	{
 		return m_TreeItem;
-	}
-		
-	string GetDisplayName()
-	{
-		return m_DisplayName;
 	}
 		
 	bool GetGroundUnderObject(out vector position, out vector direction)

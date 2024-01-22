@@ -57,28 +57,12 @@ class EditorHud: ScriptView
 		
 	protected ref ScriptView m_CurrentMenu;
 		
-	protected ref array<ref EditorPlaceableObject> m_Placeables = {};
-	protected ref array<ref EditorObjectDataCategory> m_Data = {};
-	
 	void EditorHud()
 	{		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
 
-		m_CurrentPlacingContext = InsertPlacedCategory(new EditorCategory(new EditorObjectDataCategory("Placed Objects")));
-		InsertPlacedCategory(new EditorCategory(new EditorObjectDataCategory("Hidden Objects")));
-		InsertPlacedCategory(new EditorCategory(new EditorObjectDataCategory("Brushed Objects")));
-		
-		map<EditorObjectDataCategory, ref array<EditorPlaceableObjectData>> placeable_items = GetDayZGame().GetPlaceableItemsByCategory();
-		foreach (EditorObjectDataCategory category, array<EditorPlaceableObjectData> items: placeable_items) {
-			m_PlaceableCategories[category.GetName()] = new EditorCategory(category);
-			m_TemplateController.LeftListItems.Insert(m_PlaceableCategories[category.GetName()].GetTreeItem());
-			
-			foreach (EditorPlaceableObjectData data: items) {
-				EditorPlaceableObject placeable_object = new EditorPlaceableObject(data);
-				m_Placeables.Insert(placeable_object);
-				m_PlaceableCategories[category.GetName()].AddChild(placeable_object);
-			}
-		}	
+		m_TemplateController.LeftListItems.Insert(GetDayZGame().GetEditor().GetNode("PlaceableObjects").GetNodeView());
+		m_TemplateController.RightListItems.Insert(GetDayZGame().GetEditor().GetNode("Objects").GetNodeView());
 	}
 	
 	override void Update(float dt)
@@ -115,7 +99,7 @@ class EditorHud: ScriptView
 			Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE); 
 						
 			foreach (EditorNode selectable_item: EditorNode.All) {
-				EditorNodeView view = selectable_item.GetTreeItem();
+				EditorNodeView view = selectable_item.GetNodeView();
 				if (view) {
 					float tree_x, tree_y;
 					view.GetLayoutRoot().GetScreenPos(tree_x, tree_y);
@@ -177,20 +161,7 @@ class EditorHud: ScriptView
 			//}
 		}
 	}
-		
-	EditorNode InsertPlacedCategory(notnull EditorNode editor_category)
-	{
-		m_PlacedCategories[editor_category.GetName()] = editor_category;
-		m_TemplateController.RightListItems.Insert(editor_category.GetTreeItem());
-		
-		return editor_category;
-	}
-	
-	EditorNode GetPlacedCategory(string category)
-	{
-		return m_PlacedCategories[category];
-	}
-			
+					
 	void OnDiscordButtonExecute(ButtonCommandArgs args)
 	{
 		
@@ -413,7 +384,7 @@ class EditorHud: ScriptView
 			
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
-		string text = GetFriendlyObjectName(target, component_index);
+		//string text = GetFriendlyObjectName(target, component_index);
 		//ObjectHoverText.SetText(text);
 		//ObjectHoverText.SetColor(Ternary<int>.If(text.Contains(".p3d"), COLOR_YELLOW, COLOR_WHITE));
 		return true;
@@ -425,6 +396,7 @@ class EditorHud: ScriptView
 		return true;
 	}	
 	
+	/*
 	static string GetFriendlyObjectName(notnull Object object, int component_index)
 	{		
 		while (object.GetParent()) {
@@ -466,7 +438,7 @@ class EditorHud: ScriptView
 		}
 				
 		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetName(), split_string[0], component_type, component_index);
-	}
+	}*/
 	
 	void SetCursor(Cursors cursor)
 	{

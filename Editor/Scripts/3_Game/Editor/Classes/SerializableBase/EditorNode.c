@@ -1,8 +1,10 @@
 class EditorNode: SerializableBase
-{
-	static ref array<EditorNode> All = {};
-	static ref array<EditorNode> SelectedObjects = {};
-	static ref array<EditorNode> LockedObjects = {};
+{	
+	static const int RPC_SYNC = 154365;
+		
+	static ref map<string, EditorNode> All = new map<string, EditorNode>();
+	static ref array<EditorNode> SelectedObjects = {};	
+	static ref array<EditorNode> DirtyObjects = {};
 	
 	static void ClearSelections()
 	{
@@ -18,18 +20,21 @@ class EditorNode: SerializableBase
 	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();
 	ref ScriptInvoker OnLockChanged = new ScriptInvoker();
 
-	// UUID of children
+	protected string m_UUID;	
 	protected ref map<string, ref EditorNode> m_Children = new map<string, ref EditorNode>();
 
 	protected string m_DisplayName;
 	protected bool m_IsSelected; // local
-	protected bool m_IsDirty; // local
-
+	protected EditorNode m_Parent;
+	
 	protected ref EditorNodeView m_TreeItem;
 	
-	void EditorNode()
+	void EditorNode(string uuid, string display_name)
 	{
-		All.Insert(this);
+		m_UUID = uuid;		
+		m_DisplayName = display_name;
+		
+		All[m_UUID] = this;
 		
 		if (!GetGame().IsDedicatedServer()) {
 			m_TreeItem = new EditorNodeView(m_DisplayName, this);
@@ -38,54 +43,73 @@ class EditorNode: SerializableBase
 	
 	void ~EditorNode()
 	{
-		All.RemoveItem(this);
+		All.Remove(m_UUID);
 		
 		delete m_TreeItem;
 	}
 	
-	static EditorNode Create(string display_name)
+	void Synchronize()
+	{	
+		ScriptRPC rpc = new ScriptRPC();
+		
+		string uuid_string = m_UUID;
+		EditorNode parent = m_Parent;
+		while (parent) {
+			uuid_string += string.Format("|%1", parent.GetUUID());
+		}
+		
+		rpc.Write(uuid_string);
+		rpc.Write(Type().ToString());
+		Write(rpc, 0);
+		rpc.Send(null, RPC_SYNC, true);		
+	}
+						
+	void Add(notnull EditorNode node)
 	{
-		ScriptReadWriteContext ctx = new ScriptReadWriteContext();
-		ctx.GetWriteContext().Write(display_name);
-		ctx.GetWriteContext().Write(0);
-		return new EditorNode(ctx.GetReadContext());
+		Set(node.GetUUID(), node);
 	}
 	
-	void SetSynchDirty()
-	{
-		m_IsDirty = true;
-	}
-	
-	void ClearSynchDirty()
-	{
-		m_IsDirty = false;
-	}
-	
-	bool IsSynchDirty()
-	{
-		return m_IsDirty;
-	}
-	
-	void AddChild(string uuid, notnull EditorNode node)
+	void Set(string uuid, notnull EditorNode node)
 	{
 		m_Children[uuid] = node;
 		
+		node.SetParent(this);
+		
 		// Update visual display
 		if (!GetGame().IsDedicatedServer()) {
-			m_TreeItem.GetTemplateController().ChildrenItems.Insert(node.GetTreeItem());
+			m_TreeItem.GetTemplateController().ChildrenItems.Insert(node.GetNodeView());
 		}
 	}
 	
-	void RemoveChild(string uuid)
+	void Remove(string uuid)
 	{
 		delete m_Children[uuid];
 		m_Children.Remove(uuid);
 	}
-			
-	override void Write(Serializer serializer, int version)
+	
+	EditorNode Get(string uuid)
 	{
-		super.Write(serializer, version);
-		
+		return m_Children[uuid];
+	}
+	
+	map<string, ref EditorNode> GetChildren()
+	{
+		return m_Children;
+	}
+	
+	void SetParent(EditorNode parent)
+	{
+		m_Parent = parent;
+	}
+	
+	EditorNode GetParent()
+	{
+		return m_Parent;
+	}
+					
+	override void Write(Serializer serializer, int version)
+	{		
+		serializer.Write(m_UUID);
 		serializer.Write(m_DisplayName);
 		
 		serializer.Write(m_Children.Count());
@@ -98,10 +122,7 @@ class EditorNode: SerializableBase
 	
 	override bool Read(Serializer serializer, int version)
 	{
-		if (!super.Read(serializer, version)) {
-			return false;
-		}
-		
+		serializer.Read(m_UUID);	
 		serializer.Read(m_DisplayName);	
 		int count;
 		serializer.Read(count);
@@ -112,8 +133,13 @@ class EditorNode: SerializableBase
 			string type;
 			serializer.Read(type);
 			
-			if (!m_Children[uuid]) {
+			if (!m_Children[uuid]) {				
 				m_Children[uuid] = EditorNode.Cast(type.ToType().Spawn());
+				
+				if (!m_Children[uuid]) {
+					Error("Invalid node type!");
+					return false;
+				}
 			}
 			
 			m_Children[uuid].Read(serializer, version);
@@ -121,23 +147,23 @@ class EditorNode: SerializableBase
 		
 		return true;
 	}
-	
-	void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
+		
+	string GetUUID()
 	{
-	}
-	
-	// All RPC's valid that route to OnRPC
-	array<int> GetProtocols()
-	{
-		return {};
+		return m_UUID;
 	}
 	
 	int GetVersion()
 	{
 		return 0;
 	}
+	
+	string GetDisplayName()
+	{
+		return m_DisplayName;
+	}
 		
-	EditorNodeView GetTreeItem()
+	EditorNodeView GetNodeView()
 	{
 		return m_TreeItem;
 	}

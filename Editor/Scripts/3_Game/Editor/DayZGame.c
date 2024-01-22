@@ -1,14 +1,8 @@
 modded class DayZGame
 {
-	protected ref array<ref EditorPlaceableObjectData> m_AllPlaceableItems = {};
+	// server!
+	protected ref map<string, ref EditorNode> m_Nodes = new map<string, ref EditorNode>();
 	
-	protected ref map<EditorObjectDataCategory, ref array<EditorPlaceableObjectData>> m_PlaceableItems = new map<EditorObjectDataCategory, ref array<EditorPlaceableObjectData>>();
-	
-	protected ref map<string, EditorPlaceableObjectData> m_PlaceableObjectsByType = new map<string, EditorPlaceableObjectData>();
-	
-	// lookup table by p3d
-	protected ref map<string, ref array<EditorPlaceableObjectData>> m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableObjectData>>();
-
 	override void OnUpdate(bool doSim, float timeslice)
 	{
 		super.OnUpdate(doSim, timeslice);
@@ -40,86 +34,7 @@ modded class DayZGame
 		
 		super.OnRPC(sender, target, rpc_type, ctx);
 	}
-	
-	override bool OnInitialize()
-	{				
-		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
-				
-		// handle config objects
-		foreach (string path: config_paths) {
-			for (int i = 0; i < ConfigGetChildrenCount(path); i++) {
-				string type;
-		        ConfigGetChildName(path, i, type);
-				if (ConfigGetInt(path + " " + type + " scope") < 1) {
-					continue;
-				}
-				
-				if (IsForbiddenItem(type)) {
-					continue;
-				}
-				
-				m_AllPlaceableItems.Insert(new EditorConfigPlaceableItem(path, type));
-		    }
-		}
 		
-		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
-		foreach (string model_path: paths) {
-			array<ref CF_File> files = {};
-			if (!CF_Directory.GetFiles(model_path + "/*", files, FindFileFlags.ARCHIVES)) {
-				continue;
-			}
-				
-			foreach (CF_File file: files) {		
-				if (!file || file.GetExtension() != ".p3d") {
-					continue;
-				}
-				
-				m_AllPlaceableItems.Insert(new EditorStaticPlaceableItem(file.GetFullPath()));
-			}
-		}
-		
-		// Statics that belong to Editor / DF
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
-		
-		foreach (EditorPlaceableObjectData placeable_item: m_AllPlaceableItems) {
-			if (!m_PlaceableItems[placeable_item.GetCategory()]) {
-				m_PlaceableItems[placeable_item.GetCategory()] = {};
-			}
-			
-			if (!m_PlaceableObjectsByP3d[placeable_item.GetModel()]) {
-				m_PlaceableObjectsByP3d[placeable_item.GetModel()] = {};
-			}
-			
-			m_PlaceableItems[placeable_item.GetCategory()].Insert(placeable_item);
-			m_PlaceableObjectsByP3d[placeable_item.GetModel()].Insert(placeable_item);
-			m_PlaceableObjectsByType[placeable_item.GetName()] = placeable_item;
-		}
-	
-		return super.OnInitialize();
-	}
-	
-	EditorPlaceableObjectData GetPlaceableObject(string type)
-	{
-		return m_PlaceableObjectsByType[type];
-	}
-	
-	array<ref EditorPlaceableObjectData> GetPlaceableObjects()
-	{
-		return m_AllPlaceableItems;
-	}
-	
-	array<EditorPlaceableObjectData> GetReplaceableObjects(string p3d)
-	{
-		return m_PlaceableObjectsByP3d[p3d];
-	}
-
-	map<EditorObjectDataCategory, ref array<EditorPlaceableObjectData>> GetPlaceableItemsByCategory()
-	{
-		return m_PlaceableItems;
-	}
-
 	static bool IsForbiddenItem(string model)
 	{
 		//! In theory should be safe but just in case

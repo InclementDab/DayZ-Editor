@@ -1,6 +1,5 @@
 class EditorObjectTooltip: ScriptView
 {
-	protected EditorPlaceableObjectData m_EditorPlaceableObjectData;
 	protected Object m_Object;
 	
 	TextWidget Text;

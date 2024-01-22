@@ -13,8 +13,9 @@ class EditorHandData
 	vector OrientationOffset;
 }			
 
-class Editor: EditorNode
+class Editor: SerializableBase
 {
+	// Handled in DayZGame
 	static const int RPC_SYNC = 54365;
 	
 	static const ref array<int> RPC_ALL = { RPC_SYNC };
@@ -76,10 +77,7 @@ class Editor: EditorNode
 	protected ref map<Object, EditorObject> m_WorldObjects = new map<Object, EditorObject>();
 	
 	protected ref array<ref EditorHiddenObject> m_DeletedObjects = {};
-		
-	// Current Selected PlaceableListItem
-	EditorPlaceableObjectData CurrentSelectedItem;
-	
+			
 	//0: EditorObject
 	static ref ScriptInvoker OnObjectCreated = new ScriptInvoker();
 	
@@ -97,14 +95,98 @@ class Editor: EditorNode
 	
 	// Stored list of all Placed Objects
 	protected ref map<string, EditorObject> m_PlacedObjects = new map<string, EditorObject>();
-				
+	
 	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
 	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
-	
-	protected EditorNode m_CurrentPlacingCategory;
+			
+	protected ref EditorNode m_Master;
 		
-	void Editor(notnull Serializer serializer) 
+	void AddNode(notnull EditorNode node)
+	{
+		m_Master.Add(node);
+	}
+	
+	EditorNode GetNode(string uuid)
+	{
+		return m_Master[uuid];
+	}
+	
+	void Editor(Man player) 
 	{		
+		m_Player = player;
+				
+		MakeDirectory(ROOT_DIRECTORY);
+		
+		m_Master = InitializeMaster(player);
+		
+		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
+					
+		// handle config objects
+		foreach (string path: config_paths) {
+			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
+				string type;
+		        GetGame().ConfigGetChildName(path, i, type);
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1) {
+					continue;
+				}
+				
+				if (GetDayZGame().IsForbiddenItem(type)) {
+					continue;
+				}
+				
+				array<string> full_path = {};
+				GetGame().ConfigGetFullPath(path, full_path);
+				
+				string category = "Unknown";
+				if ((full_path.Find("Weapon_Base") != -1) || (full_path.Find("Inventory_Base")) != -1) {
+					category = "DynamicObjects";
+				} else if (full_path.Find("HouseNoDestruct") != -1) {
+					category = "Structures";
+				} else if (full_path.Find("Man") != -1) {
+					category = "AI";
+				} else if (full_path.Find("Transport") != -1) {
+					category = "Transport";
+				}
+				
+				m_Master["PlaceableObjects"][category] = new EditorConfigPlaceable(type, type, type);
+		    }
+		}
+		
+		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
+		foreach (string model_path: paths) {
+			array<ref CF_File> files = {};
+			if (!CF_Directory.GetFiles(model_path + "/*", files, FindFileFlags.ARCHIVES)) {
+				continue;
+			}
+				
+			foreach (CF_File file: files) {		
+				if (!file || file.GetExtension() != ".p3d") {
+					continue;
+				}
+			
+					
+				string model_name;
+				array<string> items = {};
+				file.GetFullPath().Split("/", items);
+				if (items.Count() != 0) {
+					model_name = items[items.Count() - 1];
+				}	
+			
+				m_Master["PlaceableObjects"]["StaticObjects"] = new EditorStaticPlaceableItem(file.GetFullPath(), model_name, file.GetFullPath());
+			}
+		}
+		
+		// Statics that belong to Editor / DF
+		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
+		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
+		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
+							
+		m_Master.Synchronize();
+		
+		if (GetGame().IsDedicatedServer()) {
+			return;
+		}
+						
 		foreach (typename command_type: RegisterCommand.Instances) {		
 			Command command = Command.Cast(command_type.Spawn());
 			if (!command) {
@@ -119,8 +201,12 @@ class Editor: EditorNode
 			}
 		}		
 							
-		// Initialize the profiles/editor directory;		
-		MakeDirectory(ROOT_DIRECTORY);
+	
+		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
+		m_EditorHud = new EditorHud();
+		ControlCamera(m_Camera);
+	
+		m_Master = new EditorNode(m_Player.GetIdentity().GetId(), m_Player.GetIdentity().GetName());
 	}
 
 	void ~Editor() 
@@ -128,58 +214,39 @@ class Editor: EditorNode
 		GetGame().ObjectDelete(m_Camera);
 	}
 	
-	static Editor Create(notnull Man player)
+	static EditorNode InitializeMaster(Man player)
 	{
-		ScriptReadWriteContext ctx = new ScriptReadWriteContext();
-		ctx.GetWriteContext().Write(player.GetIdentity().GetName()); // DisplayName
-	
-		ctx.GetWriteContext().Write(m_Editors.Count());
-		foreach (PlayerIdentity identity: m_Editors) {			
-			ctx.GetWriteContext().Write(identity);
-		}
-				
-		ctx.GetWriteContext().Write(m_Children.Count());
-		foreach (EditorNode node: m_Children) {
-			node.Write(serializer, 0);
-		}
+		EditorNode master_node = new EditorNode(player.GetIdentity().GetId(), player.GetIdentity().GetName());
+		EditorNode objects = new EditorNode("Objects", "Objects");
 		
-		vector mat[4];
-		m_Camera.GetTransform(mat);
-		ctx.GetWriteContext().Write(mat);
+		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects");
+		edited_objects.Add(new EditorCategory("PlacedObjects", "Placed Objects", "set:regular image:hand"));
+		edited_objects.Add(new EditorCategory("BrushedObjects", "Brushed Objects", "set:regular image:brush"));
+		edited_objects.Add(new EditorCategory("HiddenObjects", "Hidden Objects", "set:regular image:hide"));
+		objects.Add(edited_objects);
+
+		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects");
+		placeable_objects.Add(new EditorCategory("Unknown", "Unknown"));
+		placeable_objects.Add(new EditorCategory("Plants", "Plants", "set:regular image:tree"));
+		placeable_objects.Add(new EditorCategory("Rocks", "Rocks", "set:regular image:rock"));
+		placeable_objects.Add(new EditorCategory("Clutter", "Clutter", "set:regular image:trash"));
+		placeable_objects.Add(new EditorCategory("Structures", "Structures", "set:regular image:house"));
+		placeable_objects.Add(new EditorCategory("Wrecks", "Wrecks", "set:regular image:car_burst"));
+		placeable_objects.Add(new EditorCategory("AI", "AI", "set:regular image:person"));
+		placeable_objects.Add(new EditorCategory("Water", "Water", "set:regular image:water"));
+		placeable_objects.Add(new EditorCategory("Vehicles", "Vehicles", "set:regular image:car"));
+		placeable_objects.Add(new EditorCategory("StaticObjects", "Static Objects", "set:regular image:object_intersect"));
+		placeable_objects.Add(new EditorCategory("DynamicObjects", "Dynamic Objects", "set:regular image:shirt"));
+		placeable_objects.Add(new EditorCategory("ScriptedObjects", "Scripted Objects", "set:regular image:code"));
+		objects.Add(placeable_objects);
+
+		master_node.Add(objects);
 		
-		Editor editor = new Editor(ctx.GetReadContext());
-		
-		editor.m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
-					
-		// Init Hud
-		editor.m_EditorHud = new EditorHud();
-						
-		editor.ControlCamera(m_Camera);
-		
-		return editor;
+		return master_node;
 	}
 	
 	void Update(bool doSim, float timeslice)
-	{		
-		if (doSim && IsDirty()) {
-			ScriptRPC rpc = new ScriptRPC();
-			Write(rpc, 0);
-			rpc.Send(null, Editor.RPC_SYNC, true);
-			m_IsDirty = false;
-		}
-		
-		foreach (string node_id, EditorNode node: m_Nodes) {
-			if (!node || !node.IsSynchDirty()) {
-				continue;
-			}
-			
-			ScriptRPC rpc_networkable = new ScriptRPC();
-			rpc_networkable.Write(node_id);
-			node.Write(rpc_networkable, 0);
-			rpc_networkable.Send(null, RPC_SYNC, true);
-			node.ClearSynchDirty();
-		}
-		
+	{
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
@@ -271,45 +338,71 @@ class Editor: EditorNode
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
 			foreach (Object object_to_place, EditorHandData data: Placing) {
-				EditorObject editor_object = EditorObject.Create(object_to_place, EFE_DEFAULT);
-				string uuid = UUID.Generate();
-				m_PlacedObjects[uuid] = editor_object;
-				m_WorldObjects[object_to_place] = m_PlacedObjects[uuid];			
+				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), object_to_place, EFE_DEFAULT);
 				
-				OnObjectCreated.Invoke(m_PlacedObjects[uuid]);
+				m_Master["Objects"]["EditedObjects"]["PlacedObjects"].Add(editor_object);
 				
+				m_PlacedObjects[editor_object.GetUUID()] = editor_object;
+				m_WorldObjects[object_to_place] = editor_object;
+				
+				OnObjectCreated.Invoke(editor_object);
+				
+				// Synchronize to this id
+				m_Master["Objects"]["EditedObjects"]["PlacedObjects"].Synchronize();
+				
+				// remove it from placing
 				Placing.Remove(object_to_place);
-				
-				m_Children[uuid] = editor_object;
 			}
-			
-			m_IsDirty = true;
 		}
 	}
-					
-	override void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
-	{		
-		switch (rpc_type) {
-			case RPC_SYNC: {				
-				Read(ctx, 0);
-				
-				if (GetGame().IsDedicatedServer()) {
-					m_IsDirty = true;
-				}
-				
-				break;
-			}
-		}
-		
-		foreach (string uuid_rpc, EditorNode node_rpc: m_Children) {
+			
+	void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
+	{
+		/*foreach (string uuid_rpc, EditorNode node_rpc: m_Children) {
 			if (node_rpc.GetProtocols().Find(rpc_type) != -1) {
 				node_rpc.OnRPC(sender, rpc_type, ctx);
+			}
+		}*/
+		
+		switch (rpc_type) {
+			case EditorNode.RPC_SYNC: {	
+				if (!GetGame().IsDedicatedServer()) {
+					
+					Print("HI:):):)");
+					
+					break;
+				}
+				
+				string uuid;
+				if (!ctx.Read(uuid)) {
+					Error("Invlaid id");
+					break;
+				}
+				
+				Print(uuid);
+				
+				string type;
+				if (!ctx.Read(type)) {
+					Error("Invlaid type");
+					break;
+				}
+				
+			
+				
+				m_Master[uuid].Read(ctx, 0);
+				
+				// Return to sendah!
+				m_Master.Synchronize();
+				break;
 			}
 		}
 	}
 		
 	override void Write(Serializer serializer, int version)
 	{
+		super.Write(serializer, version);
+		
+		serializer.Write(m_Player);
 		serializer.Write(Public);
 		serializer.Write(m_Password);
 		serializer.Write(m_MaxPlayers);
@@ -319,18 +412,16 @@ class Editor: EditorNode
 			serializer.Write(identity);
 		}
 				
-		serializer.Write(m_Children.Count());
-		foreach (EditorNode node: m_Children) {
-			node.Write(serializer, 0);
-		}
-		
-		vector mat[4];
-		m_Camera.GetTransform(mat);
-		serializer.Write(mat);
+		m_Master.Write(serializer, version);
 	}
 	
 	override bool Read(Serializer serializer, int version)
 	{
+		if (!super.Read(serializer, version)) {
+			return false;
+		}
+		
+		serializer.Read(m_Player);
 		serializer.Read(Public);
 		serializer.Read(m_Password);
 		serializer.Read(m_MaxPlayers);
@@ -345,26 +436,8 @@ class Editor: EditorNode
 				m_CameraObjects[identity] = GetGame().CreateObjectEx("StaticCamera", vector.Zero, ECE_LOCAL);
 			}
 		}
-							
-		int entity_count;
-		serializer.Read(entity_count);
-		for (int j = 0; j < entity_count; j++) {
-			string uuid;
-			serializer.Read(uuid);
-
-			if (m_Nodes[uuid]) {
-				// The object already exists
-				m_Nodes[uuid].Read(serializer, 0);
-			} else {
-				// The object needs to be created
-				
-			}
-		}
-		
-		vector mat[4];
-		serializer.Read(mat);
-		m_Camera.SetTransform(mat);
-		
+					
+		m_Master.Read(serializer, version);
 		return true;
 	}
 	
@@ -818,6 +891,8 @@ class Editor: EditorNode
 		return save_data;
 	}*/
 	
+
+/*
 	static EditorPlaceableObjectData GetReplaceableItem(notnull Object object)
 	{		
 		while (object.GetParent()) {
@@ -850,7 +925,7 @@ class Editor: EditorNode
 		}
 		
 		return placeable_items[0]; // better way to do other than index 0?
-	}
+	}*/
 				
 	void InsertAction(EditorAction action) 
 	{

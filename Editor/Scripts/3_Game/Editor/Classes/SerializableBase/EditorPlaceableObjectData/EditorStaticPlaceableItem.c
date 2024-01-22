@@ -1,26 +1,10 @@
-class EditorStaticPlaceableItem: EditorPlaceableObjectData
+class EditorStaticPlaceableItem: EditorPlaceable
 {
-	protected string m_Model, m_Name;
+	protected string m_Model;
 	
-	void EditorStaticPlaceableItem(string model)
+	void EditorStaticPlaceableItem(string uuid, string display_name, string model)
 	{
 		m_Model = model;
-		
-		array<string> items = {};
-		m_Model.Split("/", items);
-		if (items.Count() != 0) {
-			m_Name = items[items.Count() - 1];
-		}	
-	}
-	
-	override string GetName()
-	{
-		return m_Name;
-	}
-	
-	override EditorObjectDataCategory GetCategory()
-	{
-		return EditorObjectDataCategory.STATIC;
 	}
 	
 	override Object CreateObject(vector transform[4], int flags = ECE_LOCAL)
