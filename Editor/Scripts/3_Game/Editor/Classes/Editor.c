@@ -37,7 +37,7 @@ class Editor: SerializableBase
 	// Handled in DayZGame
 	static const int RPC_SYNC = 54365;
 	
-	static const ref array<int> RPC_ALL = { RPC_SYNC, EditorNode.RPC_SYNC };
+	static const ref array<int> RPC_ALL = { RPC_SYNC };
 	
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
@@ -132,7 +132,6 @@ class Editor: SerializableBase
 		m_Master.Add(new EditorNode("DynamicObjects", "Dynamic Objects", IconRegular.SHIRT));
 		m_Master.Add(new EditorNode("ScriptedObjects", "Scripted Objects", IconRegular.CODE));
 
-		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 					
 		string category = "Unknown";
@@ -222,7 +221,6 @@ class Editor: SerializableBase
 	
 		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
 		ControlCamera(m_Camera);	
-	
 	
 		m_Hud = new EditorHud();
 
@@ -364,7 +362,7 @@ class Editor: SerializableBase
 	void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
 	{		
 		switch (rpc_type) {
-			case EditorNode.RPC_SYNC: {	
+			case RPC_SYNC: {	
 				Print("EditorNode.RPC_SYNC");
 				int tree_depth;
 				if (!ctx.Read(tree_depth)) {
@@ -425,7 +423,7 @@ class Editor: SerializableBase
 		}
 			
 		node.Write(rpc, 0);
-		rpc.Send(null, EditorNode.RPC_SYNC, true, identity);
+		rpc.Send(null, RPC_SYNC, true, identity);
 	}
 		
 	override void Write(Serializer serializer, int version)

@@ -1,7 +1,5 @@
 class EditorNode: SerializableBase
-{	
-	static const int RPC_SYNC = 154365;
-		
+{
 	static ref map<string, EditorNode> All = new map<string, EditorNode>();
 	static ref array<EditorNode> SelectedObjects = {};	
 	static ref array<EditorNode> DirtyObjects = {};
