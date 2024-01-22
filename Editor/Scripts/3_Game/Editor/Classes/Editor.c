@@ -206,13 +206,10 @@ class Editor: SerializableBase
 			}
 		}
 
-		// Statics that belong to Editor / DF
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
-							
-		//m_Master.Synchronize();
-		
+		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
+			m_Master["ScriptedObjects"].Add(new EditorConfigPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+		}
+				
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
