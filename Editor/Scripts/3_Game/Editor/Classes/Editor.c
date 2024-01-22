@@ -181,7 +181,7 @@ class Editor: SerializableBase
 					category = "AI";
 				}
 				
-				m_Master[category].Add(new EditorConfigPlaceable(type, type, IconRegular.BUILDING));
+				m_Master[category].Add(new EditorPlaceable(type, type, IconRegular.BUILDING));
 		    }
 		}
 		
@@ -215,12 +215,12 @@ class Editor: SerializableBase
 					category = "Rocks";
 				}
 			
-				m_Master[category].Add(new EditorStaticPlaceableItem(file.GetFullPath(), model_name, IconRegular.CIRCLE_C));
+				m_Master[category].Add(new EditorPlaceable(file.GetFullPath(), model_name, IconRegular.CIRCLE_C));
 			}
 		}
 
 		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
-			m_Master["ScriptedObjects"].Add(new EditorConfigPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+			m_Master["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}
 				
 		if (GetGame().IsDedicatedServer()) {
@@ -389,15 +389,14 @@ class Editor: SerializableBase
 					Error("Invalid depth");
 					break;
 				}
-								
+
 				EditorNode current = m_Master;
-				for (int i = 0; i < tree_depth - 1; i++) {
+				for (int i = 0; i < tree_depth; i++) {
 					string uuid;
 					ctx.Read(uuid);
 					
 					string type;
 					ctx.Read(type);
-					Print(uuid);
 					if (!current[uuid]) {
 						current[uuid] = EditorNode.Cast(type.ToType().Spawn());
 				
@@ -415,10 +414,11 @@ class Editor: SerializableBase
 				// Who do we sync back to? - doing predictive placement so not the client that pushed it.. yet
 				if (GetGame().IsDedicatedServer()) {
 					array<PlayerIdentity> identities = {};
+					GetGame().GetPlayerIndentities(identities);
 					Print(sender);
 					foreach (PlayerIdentity identity: identities) {
-						Print(identity);
-						//Synchronize(current, identity);
+						//if (sender.GetId() !=
+						Synchronize(current, null);
 					}
 					
 				} else {
@@ -448,9 +448,7 @@ class Editor: SerializableBase
 	}
 		
 	override void Write(Serializer serializer, int version)
-	{
-		super.Write(serializer, version);
-		
+	{		
 		serializer.Write(m_Player);
 		serializer.Write(Public);
 		serializer.Write(m_Password);
@@ -462,14 +460,12 @@ class Editor: SerializableBase
 		}
 				
 		m_Master.Write(serializer, version);
+		
+		super.Write(serializer, version);
 	}
 	
 	override bool Read(Serializer serializer, int version)
-	{
-		if (!super.Read(serializer, version)) {
-			return false;
-		}
-		
+	{		
 		serializer.Read(m_Player);
 		serializer.Read(Public);
 		serializer.Read(m_Password);
@@ -487,7 +483,7 @@ class Editor: SerializableBase
 		}
 					
 		m_Master.Read(serializer, version);
-		return true;
+		return super.Read(serializer, version);
 	}
 	
 	bool IsMember(notnull PlayerIdentity identity)

@@ -140,12 +140,7 @@ class EditorObject: EditorNode
 	}
 	
 	override void Write(Serializer serializer, int version)
-	{
-		
-		
-		// COMPLETELY SERIALIZE THE OBJECT
-		serializer.Write(m_Object.GetType());
-		
+	{		
 		vector transform[4];
 		m_Object.GetTransform(transform);
 		serializer.Write(transform);
@@ -156,19 +151,14 @@ class EditorObject: EditorNode
 	}
 	
 	override bool Read(Serializer serializer, int version)
-	{		
-		// COMPLETELY DESERIALIZE THE OBJECT
-		string type;
-		serializer.Read(type);
-		
+	{
 		vector transform[4];
 		serializer.Read(transform);
-		Print(transform); // probably null
-		if (!m_Object) {
-			m_Object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
+
+		if (!m_Object && !GetGame().IsDedicatedServer()) {
+			m_Object = GetGame().CreateObjectEx(m_UUID, transform[3], ECE_LOCAL);
+			m_Object.SetTransform(transform);
 		}
-		
-		m_Object.SetTransform(transform);
 		
 		serializer.Read(m_Flags);
 		return super.Read(serializer, version);

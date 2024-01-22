@@ -143,7 +143,8 @@ class EditorNode: SerializableBase
 	{
 		serializer.Read(m_UUID);
 		serializer.Read(m_DisplayName);	
-		serializer.Read(m_Icon);	
+		serializer.Read(m_Icon);
+			
 		int count;
 		serializer.Read(count);
 		Print(count);
