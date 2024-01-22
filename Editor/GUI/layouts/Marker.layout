@@ -1,4 +1,4 @@
-ButtonWidgetClass Marker {
+PanelWidgetClass Marker {
  visible 1
  position 0 0
  size 25 25
@@ -7,13 +7,12 @@ ButtonWidgetClass Marker {
  hexactsize 1
  vexactsize 1
  scaled 0
- style Empty
+ style blank
  "no focus" 1
- switch toggle
  {
   ImageWidgetClass MarkerImage {
-   ignorepointer 1
-   color 0.5843 0.7725 1 0.5882
+   ignorepointer 0
+   color 1 1 1 0.5882
    size 1 1
    halign center_ref
    valign center_ref
@@ -29,7 +28,7 @@ ButtonWidgetClass Marker {
   }
   ImageWidgetClass MarkerOutline {
    ignorepointer 1
-   color 0.302 0.4039 1 0.1961
+   color 0.0588 0.0588 0.0588 1
    size 1 1
    halign center_ref
    valign center_ref

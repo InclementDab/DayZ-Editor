@@ -10,14 +10,17 @@ class EditorObjectView: ScriptView
 		
 		array<string> icon_split = {};
 		m_EditorObject.GetIcon().Split(":", icon_split);
-		
 		if (icon_split.Count() > 2) {
-			MarkerImage.LoadImageFile(0, string.Format("set:thin image:%1", icon_split[2]));
+			Print(string.Format("set:solid image:%1", icon_split[2]));
+			MarkerImage.LoadImageFile(0, string.Format("set:solid image:%1", icon_split[2]));
 			MarkerOutline.LoadImageFile(0, string.Format("set:thin image:%1", icon_split[2]));
 		} else {
 			MarkerImage.LoadImageFile(0, m_EditorObject.GetIcon());
 			MarkerOutline.LoadImageFile(0, m_EditorObject.GetIcon());
 		}
+		
+		MarkerImage.SetImage(0);
+		MarkerOutline.SetImage(0);
 	}
 	
 	override void Update(float dt)
@@ -35,14 +38,14 @@ class EditorObjectView: ScriptView
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		WidgetAnimator.Animate(MarkerOutline, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
+		WidgetAnimator.Animate(MarkerImage, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
 		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		WidgetAnimator.Animate(MarkerOutline, WidgetAnimatorProperty.COLOR_A, 50.0 / 255.0, 100);
+		WidgetAnimator.Animate(MarkerImage, WidgetAnimatorProperty.COLOR_A, 150.0 / 255.0, 100);
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}

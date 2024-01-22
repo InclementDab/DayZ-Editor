@@ -76,12 +76,12 @@ class EditorObject: EditorNode
 		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
 		
 		m_BasePoint = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
-		m_PointViews.Insert(new EditorPointView(this, m_BasePoint, 1000));
+		//m_PointViews.Insert(new EditorPointView(this, m_BasePoint, 1000));
 		
 		m_TopPoint = AverageVectors(m_LineVerticies[0], m_LineVerticies[2]);
 		
 		for (int i = 0; i < 8; i++) {
-			m_PointViews.Insert(new EditorPointView(this, m_LineVerticies[i], 30));
+			//m_PointViews.Insert(new EditorPointView(this, m_LineVerticies[i], 30));
 		}
 
 		for (int j = 0; j < 12; j++) {

@@ -364,7 +364,7 @@ class Editor: SerializableBase
 				vector transform_placed[4];
 				object_to_place.GetTransform(transform_placed);
 				
-				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), IconSolid.CIRCLE_DOT, data.Placeable.GetUUID(), transform_placed, EFE_DEFAULT);
+				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), data.Placeable.GetIcon() , data.Placeable.GetUUID(), transform_placed, EFE_DEFAULT);
 				
 				m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object);
 				
