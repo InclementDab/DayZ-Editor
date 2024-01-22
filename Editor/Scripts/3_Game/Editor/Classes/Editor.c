@@ -370,6 +370,10 @@ class Editor: SerializableBase
 				Placing.Remove(object_to_place);
 			}
 		}
+		
+		if (GetGame().GetInput().LocalPress("EditorToggleUI")) {
+			m_EditorHud.Show(!m_EditorHud.IsVisible());
+		}
 	}
 			
 	void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
@@ -827,6 +831,11 @@ class Editor: SerializableBase
 		}
 		
 		return EditorHoliday.NONE;
+	}
+	
+	static int GetAutoSaveValue(float x)
+	{
+		return (5 * Math.Pow(x, 4) / 8) - (5 * Math.Pow(x, 3) / 12) - (45 * Math.Pow(x, 2) / 8) + (545 * x / 12) - 25;
 	}
 		
 	/*

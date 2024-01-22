@@ -108,19 +108,6 @@
 
             <sorting name="Editor" loc="#STR_EDITOR_EDITOR">
                 <input name="EditorPlaceObject"/>
-                <input name="EditorCameraForward"/>
-                <input name="EditorCameraBack"/>
-                <input name="EditorCameraLeft"/>
-                <input name="EditorCameraRight"/>
-                <input name="EditorCameraUp"/>
-                <input name="EditorCameraDown"/>
-                <input name="EditorCameraTurbo"/>
-                <input name="EditorCameraSlow"/>
-                <input name="EditorCameraZoomIn"/>
-                <input name="EditorCameraZoomOut"/>
-                <input name="EditorCameraZoomReset"/>
-                <input name="EditorCameraToolSpeedIncrease"/>
-                <input name="EditorCameraToolSpeedDecrease"/>
                 <input name="EditorToggleActive"/>
                 <input name="EditorToggleHudCommand"/>
                 <input name="EditorToggleCursor"/>
@@ -227,51 +214,6 @@
             <btn name="kLControl">
                 <btn name="mBLeft"/>
             </btn>
-        </input>
-    	<input name="EditorCameraToolSpeedIncrease">
-            <btn name="mWheelUp"/>
-        </input>
-        <input name="EditorCameraToolSpeedDecrease">
-            <btn name="mWheelDown"/>
-        </input>
-        <input name="EditorCameraForward">
-            <btn name="kW"/>
-        </input>
-		<input name="EditorCameraBack">
-            <btn name="kS"/>
-        </input>
-		<input name="EditorCameraLeft">
-            <btn name="kA"/>
-        </input>
-		<input name="EditorCameraRight">
-            <btn name="kD"/>
-        </input>
-		<input name="EditorCameraUp">
-            <btn name="kQ"/>
-        </input>
-		<input name="EditorCameraDown">
-            <btn name="kZ"/>
-        </input>
-		<input name="EditorCameraTurbo">
-            <btn name="kLShift"/>
-        </input>
-		<input name="EditorCameraSlow">
-            <btn name="kLMenu"/>
-        </input>		
-		<input name="EditorCameraZoomIn">
-            <btn name="mBRight">
-				<btn name="mWheelDown"/>
-			</btn>
-        </input>		
-		<input name="EditorCameraZoomOut">
-            <btn name="mBRight">
-				<btn name="mWheelUp"/>
-			</btn>
-        </input>		
-		<input name="EditorCameraZoomReset">
-            <btn name="mBRight">
-				<btn name="mBMiddle"/>
-			</btn>
         </input>
 		<input name="EditorToggleActive">
             <btn name="kHome"/>
