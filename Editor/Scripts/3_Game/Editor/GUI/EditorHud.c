@@ -61,8 +61,8 @@ class EditorHud: ScriptView
 	{		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
 		
-		m_Mission.GetHud().ShowHudUI(false);
-		m_Mission.GetHud().ShowQuickbarUI(false);
+		GetGame().GetMission().GetHud().ShowHudUI(false);
+		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 	}
 	
 	override void Update(float dt)
