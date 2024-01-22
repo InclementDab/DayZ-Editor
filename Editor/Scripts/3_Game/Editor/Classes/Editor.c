@@ -7,6 +7,19 @@
      / // // //  `-._,_)' // / ``--...____..-' /// / //
 */
 
+[RegisterCommand(DeleteCommand)]
+class DeleteCommand: Command
+{
+	override void Execute(bool state) 
+	{
+		Print("Cringe"); 
+		foreach (EditorNode node: EditorNode.SelectedObjects) {
+			Print(node);	
+			delete node;
+		}
+	}
+}
+
 class EditorHandData
 {
 	vector PositionOffset;
@@ -18,7 +31,7 @@ class Editor: SerializableBase
 	// Handled in DayZGame
 	static const int RPC_SYNC = 54365;
 	
-	static const ref array<int> RPC_ALL = { RPC_SYNC };
+	static const ref array<int> RPC_ALL = { RPC_SYNC, EditorNode.RPC_SYNC };
 	
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
@@ -206,13 +219,10 @@ class Editor: SerializableBase
 			}
 		}
 
-		// Statics that belong to Editor / DF
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
-		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
-							
-		//m_Master.Synchronize();
-		
+		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
+			m_Master["ScriptedObjects"].Add(new EditorConfigPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+		}
+				
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
@@ -321,11 +331,11 @@ class Editor: SerializableBase
 		
 		Math3D.MatrixMultiply3(camera_orthogonal, rotation_mat, camera_orthogonal);
 		
-		Shape.CreateMatrix(camera_orthogonal);
+		//Shape.CreateMatrix(camera_orthogonal);
 		
 		m_CursorNormal = m_CursorNormal.Multiply3(rotation_mat);
 		//Print(m_CursorNormal);
-		ray1.Debug();
+		//ray1.Debug();
 		
 		foreach (Object object, EditorHandData data1: Placing) {
 			vector transform[4];
@@ -344,6 +354,7 @@ class Editor: SerializableBase
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
 			foreach (Object object_to_place, EditorHandData data: Placing) {
+				Print(object_to_place);
 				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), IconSolid.CIRCLE_DOT, object_to_place, EFE_DEFAULT);
 				
 				m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object);
@@ -372,33 +383,66 @@ class Editor: SerializableBase
 		
 		switch (rpc_type) {
 			case EditorNode.RPC_SYNC: {	
-				if (!GetGame().IsDedicatedServer()) {
+				if (GetGame().IsDedicatedServer()) {
 					
-					Print("HI:):):)");
+					string uuid;
+					if (!ctx.Read(uuid)) {
+						Error("Invlaid id");
+						break;
+					}
+					
+					Print(uuid);
+
+					array<string> uuid_split = {};
+					uuid.Split("|", uuid_split);
+					EditorNode node = m_Master;
+					for (int i = 1; i < uuid_split.Count(); i++) {
+						if (node[uuid_split[i]]) {
+							node = node[uuid_split[i]];
+						}
+					}					
+						
+					string type;
+					if (!ctx.Read(type)) {
+						Error("Invlaid type");
+						break;
+					}
+					
+					
+								
+					/*		
+					if (!m_Master[uuid]) {				
+						m_Master[uuid] = EditorNode.Cast(type.ToType().Spawn());
+						
+						if (!m_Children[uuid]) {
+							Error("Invalid node type!");
+							return false;
+						}
+					}*/
+					
+					//m_Master[uuid].Read(serializer, version);
 					
 					break;
 				}
 				
-				string uuid;
-				if (!ctx.Read(uuid)) {
-					Error("Invlaid id");
-					break;
-				}
+
+
+
 				
-				Print(uuid);
 				
-				string type;
-				if (!ctx.Read(type)) {
-					Error("Invlaid type");
-					break;
-				}
 				
+				string x;
+				ctx.Read(x);
+				Print(x);
 			
+				string y;
+				ctx.Read(y);
+				Print(y);
 				
-				m_Master[uuid].Read(ctx, 0);
+				//m_Master[uuid].Read(ctx, 0);
 				
-				// Return to sendah!
-				m_Master.Synchronize();
+				/// Return to sendah!
+				//m_Master.Synchronize();
 				break;
 			}
 		}

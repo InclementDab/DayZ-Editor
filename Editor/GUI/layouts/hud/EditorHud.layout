@@ -2246,56 +2246,6 @@ FrameWidgetClass Root {
       }
      }
     }
-    FrameWidgetClass Online {
-     clipchildren 0
-     ignorepointer 0
-     position 360 0
-     size 42 42
-     halign right_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     scriptclass "EditorButton"
-     {
-      ButtonWidgetClass "Online.Button" {
-       visible 1
-       size 0.75 0.75
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 0
-       scriptclass ""
-       style Empty
-       "no focus" 0
-       switch toggle
-       {
-        ImageWidgetClass "Online.Icon" {
-         ignorepointer 1
-         color 1 1 1 0.3922
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 0
-         image0 "set:solid image:globe"
-         mode blend
-         "src alpha" 1
-         filter 0
-         nocache 0
-        }
-       }
-      }
-     }
-    }
     GridSpacerWidgetClass ExplorerWrapper {
      ignorepointer 1
      size 84 42

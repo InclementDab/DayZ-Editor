@@ -1,10 +1,11 @@
-FrameWidgetClass Inner {
- position 0 0
- size 1920 1080
+FrameWidgetClass Root {
+ size 1 1
+ halign center_ref
+ valign center_ref
  hexactpos 1
  vexactpos 1
- hexactsize 1
- vexactsize 1
+ hexactsize 0
+ vexactsize 0
  scaled 0
  {
   MapWidgetClass Map {
@@ -487,7 +488,7 @@ FrameWidgetClass Inner {
    }
   }
   PanelWidgetClass Status {
-   visible 1
+   visible 0
    ignorepointer 1
    color 0.1373 0.1373 0.1569 1
    position -2 49
