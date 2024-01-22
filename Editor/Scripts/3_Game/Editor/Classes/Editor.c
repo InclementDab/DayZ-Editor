@@ -36,8 +36,10 @@ class Editor: SerializableBase
 {
 	// Handled in DayZGame
 	static const int RPC_SYNC = 54365;
+	static const int RPC_REQUEST_SYNC = 54366;
 	
-	static const ref array<int> RPC_ALL = { RPC_SYNC };
+	static const ref array<int> RPC_ALL = { RPC_SYNC, RPC_REQUEST_SYNC };
+	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
 	
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
@@ -95,24 +97,14 @@ class Editor: SerializableBase
 	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
 	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
 			
-	protected ref EditorNode m_Master;
-			
+	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", IconSolid.PENCIL);			
 	void Editor(Man player) 
 	{		
 		m_Player = player;
 		
 		MakeDirectory(ROOT_DIRECTORY);
-		
-		if (GetGame().IsDedicatedServer()) {
-			return;
-		}
-		
-		if (!m_Player) {
-			m_Master = new EditorNode("SERVER", "SERVER", "");
-		} else {
-			m_Master = new EditorNode(player.GetIdentity().GetId(), player.GetIdentity().GetName(), "");
-		}
-		
+				
+		// Load all default categories and placements
 		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", IconRegular.OBJECT_GROUP);
 		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", IconRegular.HAND));
 		edited_objects.Add(new EditorNode("BrushedObjects", "Brushed Objects",IconRegular.BRUSH));
@@ -131,77 +123,81 @@ class Editor: SerializableBase
 		m_Master.Add(new EditorNode("StaticObjects", "Static Objects", IconRegular.OBJECT_INTERSECT));
 		m_Master.Add(new EditorNode("DynamicObjects", "Dynamic Objects", IconRegular.SHIRT));
 		m_Master.Add(new EditorNode("ScriptedObjects", "Scripted Objects", IconRegular.CODE));
-
-		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
-					
-		string category = "Unknown";
-		// handle config objects
-		foreach (string path: config_paths) {
-			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
-				string type;
-		        GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 2) {
-					continue;
-				}
-				
-				if (GetDayZGame().IsForbiddenItem(type)) {
-					continue;
-				}
-				
-				array<string> full_path = {};
-				GetGame().ConfigGetFullPath(path + " " + type, full_path);
-				
-				category = "Unknown";
-				if ((full_path.Find("Weapon_Base") != -1) || (full_path.Find("Inventory_Base")) != -1) {
-					category = "DynamicObjects";
-				} else if (full_path.Find("HouseNoDestruct") != -1) {
-					category = "Structures";
-				} else if (full_path.Find("Car") != -1) {
-					category = "Vehicles";
-				} else if (full_path.Find("Man") != -1 || (full_path.Find("DZ_LightAI"))) {
-					category = "AI";
-				}
-				
-				m_Master[category].Add(new EditorPlaceable(type, type, IconRegular.BUILDING));
-		    }
-		}
 		
-		array<string> paths = { "DZ\\plants", "DZ\\plants_bliss", "DZ\\rocks", "DZ\\rocks_bliss" };
-		foreach (string model_path: paths) {
-			array<ref CF_File> files = {};
-			if (!CF_Directory.GetFiles(model_path + "\\*", files, FindFileFlags.ARCHIVES)) {
-				continue;
+		if (GetGame().IsDedicatedServer()) {
+			array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
+						
+			string category = "Unknown";
+			// handle config objects
+			foreach (string path: config_paths) {
+				for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
+					string type;
+			        GetGame().ConfigGetChildName(path, i, type);
+					if (GetGame().ConfigGetInt(path + " " + type + " scope") < 2) {
+						continue;
+					}
+					
+					if (GetDayZGame().IsForbiddenItem(type)) {
+						continue;
+					}
+					
+					array<string> full_path = {};
+					GetGame().ConfigGetFullPath(path + " " + type, full_path);
+					
+					category = "Unknown";
+					if ((full_path.Find("Weapon_Base") != -1) || (full_path.Find("Inventory_Base")) != -1) {
+						category = "DynamicObjects";
+					} else if (full_path.Find("HouseNoDestruct") != -1) {
+						category = "Structures";
+					} else if (full_path.Find("Car") != -1) {
+						category = "Vehicles";
+					} else if (full_path.Find("Man") != -1 || (full_path.Find("DZ_LightAI"))) {
+						category = "AI";
+					}
+					
+					m_Master[category].Add(new EditorPlaceable(type, type, IconRegular.BUILDING));
+			    }
 			}
-				
-			foreach (CF_File file: files) {		
-				if (!file || file.GetExtension() != ".p3d") {
+			
+			array<string> paths = { "DZ\\plants", "DZ\\plants_bliss", "DZ\\rocks", "DZ\\rocks_bliss" };
+			foreach (string model_path: paths) {
+				array<ref CF_File> files = {};
+				if (!CF_Directory.GetFiles(model_path + "\\*", files, FindFileFlags.ARCHIVES)) {
 					continue;
 				}
+					
+				foreach (CF_File file: files) {		
+					if (!file || file.GetExtension() != ".p3d") {
+						continue;
+					}
+					
+					string model_name;
+					array<string> items = {};
+					string full_path_p3d = file.GetFullPath();
+					full_path_p3d.Replace("/", "\\");
+					full_path_p3d.Split("\\", items);
+					if (items.Count() != 0) {
+						model_name = items[items.Count() - 1];
+					}
+					
+					category = "StaticObjects";
+					if ((items.Find("tree") != -1) || (items.Find("bush") != -1)) {
+						category = "Plants";
+					} else if (items.Find("clutter") != -1) {
+						category = "Clutter";
+					} else if (items.Find("rocks") != -1) {
+						category = "Rocks";
+					}
 				
-				string model_name;
-				array<string> items = {};
-				string full_path_p3d = file.GetFullPath();
-				full_path_p3d.Replace("/", "\\");
-				full_path_p3d.Split("\\", items);
-				if (items.Count() != 0) {
-					model_name = items[items.Count() - 1];
+					m_Master[category].Add(new EditorPlaceable(file.GetFullPath(), model_name, IconRegular.CIRCLE_C));
 				}
-				
-				category = "StaticObjects";
-				if ((items.Find("tree") != -1) || (items.Find("bush") != -1)) {
-					category = "Plants";
-				} else if (items.Find("clutter") != -1) {
-					category = "Clutter";
-				} else if (items.Find("rocks") != -1) {
-					category = "Rocks";
-				}
-			
-				m_Master[category].Add(new EditorPlaceable(file.GetFullPath(), model_name, IconRegular.CIRCLE_C));
 			}
-		}
-
-		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
-			m_Master["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+	
+			foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
+				m_Master["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+			}
+			
+			return;
 		}
 								
 		foreach (typename command_type: RegisterCommand.Instances) {		
@@ -224,12 +220,14 @@ class Editor: SerializableBase
 	
 		m_Hud = new EditorHud();
 
-		array<string> categories = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
-		foreach (string category1: categories) {
+		foreach (string category1: CATEGORIES) {
 			m_Hud.GetTemplateController().LeftListItems.Insert(m_Master[category1].GetNodeView());
 		}
 	
 		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
+		
+		// Hud has loaded, request the stuff
+		ScriptRPC().Send(null, RPC_REQUEST_SYNC, true);
 	}
 
 	void ~Editor() 
@@ -362,6 +360,15 @@ class Editor: SerializableBase
 	void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
 	{		
 		switch (rpc_type) {
+			case RPC_REQUEST_SYNC: {
+				if (!GetGame().IsServer()) {
+					return;
+				}
+				
+				GetDayZGame().GetEditor().Synchronize(GetDayZGame().GetEditor().GetMaster(), sender);
+				break;
+			}
+			
 			case RPC_SYNC: {	
 				Print("EditorNode.RPC_SYNC");
 				int tree_depth;
@@ -370,6 +377,7 @@ class Editor: SerializableBase
 					break;
 				}
 
+
 				EditorNode current = m_Master;
 				for (int i = 0; i < tree_depth; i++) {
 					string uuid;
@@ -377,13 +385,17 @@ class Editor: SerializableBase
 					
 					string type;
 					ctx.Read(type);
-					if (!current[uuid]) {
-						current[uuid] = EditorNode.Cast(type.ToType().Spawn());
-				
-						if (!current[uuid]) {
+					
+					EditorNode node = current[uuid];
+					if (!node) {
+						node = EditorNode.Cast(type.ToType().Spawn());
+						if (!node) {
 							Error("Invalid node type " + type);
 							continue;
 						}
+						
+						current[uuid] = node;
+						node.SetParent(current[uuid]);
 					}
 					
 					current = current[uuid];
@@ -1000,5 +1012,10 @@ class Editor: SerializableBase
 	Command GetCommand(typename command)
 	{
 		return m_Commands[command];
+	}
+	
+	EditorNode GetMaster()
+	{	
+		return m_Master;
 	}
 }

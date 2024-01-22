@@ -152,18 +152,19 @@ class EditorNode: SerializableBase
 			serializer.Read(uuid);
 			string type;
 			serializer.Read(type);
-			
-			if (!m_Children[uuid]) {				
-				
-				m_Children[uuid] = EditorNode.Cast(type.ToType().Spawn());
-				
-				if (!m_Children[uuid]) {
+			EditorNode node = m_Children[uuid];
+			if (!node) {				
+				node = EditorNode.Cast(type.ToType().Spawn());
+				if (!node) {
 					Error("Invalid node type " + type);
 					return false;
 				}
+				
+				m_Children[uuid] = node;
 			}
 			
-			m_Children[uuid].Read(serializer, version);
+			node.Read(serializer, version);
+			node.SetParent(this);
 		}
 		
 		return super.Read(serializer, version);
