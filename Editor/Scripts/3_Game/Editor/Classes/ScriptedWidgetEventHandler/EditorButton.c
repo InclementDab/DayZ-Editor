@@ -1,3 +1,44 @@
+typedef int IconSize;
+class IconSize: int
+{
+	static const IconSize THIN = 0;
+	static const IconSize LIGHT = 1;
+	static const IconSize REGULAR = 2;
+	static const IconSize SOLID = 3;
+	static const ref array<string> SIZES = {"thin", "light", "regular", "solid"};
+	
+	string Resize(string image)
+	{
+		array<string> image_split = {};
+		image.Split(":", image_split);
+		if (image_split.Count() < 2) {
+			Error("Error reformatting");
+			return image;
+		}
+
+		return string.Format("set:%1 image:%2", SIZES[value], image_split[2]);
+	}
+}
+
+typedef string Icons;
+class Icons: string
+{
+	static const Icons A = "a";
+	
+	string Regular()
+	{
+		return Icons.Format(IconSize.REGULAR, value);
+	}
+	
+	static string Format(IconSize size, Icons image)
+	{
+		return string.Format("set:%1 image:%2", IconSize.SIZES[size], image);
+	}
+	
+
+}
+
+
 class EditorButton: ScriptedWidgetEventHandler
 {	
 	protected Command m_Command;

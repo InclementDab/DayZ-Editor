@@ -175,7 +175,7 @@ FrameWidgetClass Root {
          hexactsize 0
          vexactsize 0
          scaled 0
-         image0 "set:solid image:location_dot"
+         image0 "set:regular image:location_dot"
          mode blend
          "src alpha" 1
          filter 0
@@ -222,7 +222,7 @@ FrameWidgetClass Root {
          hexactsize 0
          vexactsize 0
          scaled 0
-         image0 "set:solid image:play_pause"
+         image0 "set:regular image:play_pause"
          mode blend
          "src alpha" 1
          filter 0
@@ -278,7 +278,7 @@ FrameWidgetClass Root {
            hexactsize 0
            vexactsize 0
            scaled 0
-           image0 "set:solid image:camera_polaroid"
+           image0 "set:regular image:camera_polaroid"
            mode blend
            "src alpha" 1
            filter 0

@@ -160,11 +160,11 @@ class EditorNode: SerializableBase
 					return false;
 				}
 				
+				node.SetParent(this);
 				m_Children[uuid] = node;
 			}
 			
 			node.Read(serializer, version);
-			node.SetParent(this);
 		}
 		
 		return super.Read(serializer, version);

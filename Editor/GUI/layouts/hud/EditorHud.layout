@@ -31,7 +31,7 @@ FrameWidgetClass Root {
    visible 1
    clipchildren 0
    ignorepointer 1
-   position 0 84
+   position 0 126
    size 360 954
    halign right_ref
    hexactpos 1
@@ -109,7 +109,7 @@ FrameWidgetClass Root {
    visible 1
    clipchildren 0
    ignorepointer 1
-   position 0 84
+   position 0 126
    size 360 954
    hexactpos 1
    vexactpos 1
@@ -205,7 +205,7 @@ FrameWidgetClass Root {
    ignorepointer 1
    color 0.0941 0.0941 0.0941 1
    position 0 42
-   size 1 42
+   size 1 84
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -308,7 +308,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:file"
+             image0 "set:regular image:file"
              mode blend
              "src alpha" 1
              filter 0
@@ -356,7 +356,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:folder_open"
+             image0 "set:regular image:folder_open"
              mode blend
              "src alpha" 1
              filter 0
@@ -404,7 +404,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:floppy_disk"
+             image0 "set:regular image:floppy_disk"
              mode blend
              "src alpha" 1
              filter 0
@@ -453,7 +453,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:floppy_disk_pen"
+             image0 "set:regular image:floppy_disk_pen"
              mode blend
              "src alpha" 1
              filter 0
@@ -547,7 +547,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:scissors"
+             image0 "set:regular image:scissors"
              mode blend
              "src alpha" 1
              filter 0
@@ -595,7 +595,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:copy"
+             image0 "set:regular image:copy"
              mode blend
              "src alpha" 1
              filter 0
@@ -643,7 +643,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:paste"
+             image0 "set:regular image:paste"
              mode blend
              "src alpha" 1
              filter 0
@@ -738,7 +738,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:lock"
+             image0 "set:regular image:lock"
              mode blend
              "src alpha" 1
              filter 0
@@ -786,7 +786,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:lock_open"
+             image0 "set:regular image:lock_open"
              mode blend
              "src alpha" 1
              filter 0
@@ -881,7 +881,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:magnet"
+             image0 "set:regular image:magnet"
              mode blend
              "src alpha" 1
              filter 0
@@ -929,7 +929,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:arrow_down_to_line"
+             image0 "set:regular image:arrow_down_to_line"
              mode blend
              "src alpha" 1
              filter 0
@@ -977,7 +977,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:arrows_to_dot"
+             image0 "set:regular image:arrows_to_dot"
              mode blend
              "src alpha" 1
              filter 0
@@ -1072,7 +1072,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:sun_bright"
+             image0 "set:regular image:sun_bright"
              mode blend
              "src alpha" 1
              filter 0
@@ -1120,7 +1120,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:camera_movie"
+             image0 "set:regular image:camera_movie"
              mode blend
              "src alpha" 1
              filter 0
@@ -1215,7 +1215,7 @@ FrameWidgetClass Root {
              hexactsize 1
              vexactsize 1
              scaled 0
-             image0 "set:solid image:eye_slash"
+             image0 "set:regular image:eye_slash"
              mode blend
              "src alpha" 1
              "clamp mode" invalid
@@ -1227,6 +1227,36 @@ FrameWidgetClass Root {
            }
           }
          }
+        }
+       }
+      }
+      PanelWidgetClass Divider1110 {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 20 42
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider1111 {
+         visible 1
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 2 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
         }
        }
       }
@@ -1283,7 +1313,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:folder_plus"
+             image0 "set:regular image:folder_plus"
              mode blend
              "src alpha" 1
              filter 0
@@ -1359,12 +1389,212 @@ FrameWidgetClass Root {
                hexactsize 0
                vexactsize 0
                scaled 0
-               image0 "set:solid image:arrow_down_short_wide"
+               image0 "set:regular image:arrow_down_short_wide"
                mode blend
                "src alpha" 1
                filter 0
               }
              }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider118 {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 20 42
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider119 {
+         visible 1
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 2 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass SelectionTools {
+       ignorepointer 1
+       size 32 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 4
+       Rows 1
+       {
+        FrameWidgetClass BoxSelect {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "BoxSelect.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "EditorButton"
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "BoxSelect.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 32 32
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scaled 0
+             image0 "set:regular image:square_dashed"
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" none
+             "flip u" 0
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass CircleSelect {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "CircleSelect.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "EditorButton"
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "CircleSelect.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 32 32
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scaled 0
+             image0 "set:regular image:circle_dashed"
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" none
+             "flip u" 0
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass LassoSelect {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         {
+          ButtonWidgetClass "LassoSelect.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "EditorButton"
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "LassoSelect.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 32 32
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scaled 0
+             image0 "set:regular image:lasso"
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" none
+             "flip u" 0
+             filter 0
+             nocache 0
             }
            }
           }
@@ -1488,7 +1718,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:file_export"
+             image0 "set:regular image:file_export"
              mode blend
              "src alpha" 1
              filter 0
@@ -1536,7 +1766,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:folder_plus"
+             image0 "set:regular image:folder_plus"
              mode blend
              "src alpha" 1
              filter 0
@@ -1734,7 +1964,7 @@ FrameWidgetClass Root {
                  hexactsize 1
                  vexactsize 1
                  scaled 0
-                 image0 "set:solid image:file"
+                 image0 "set:regular image:file"
                  mode blend
                  "src alpha" 1
                  filter 0
@@ -1798,7 +2028,7 @@ FrameWidgetClass Root {
                  hexactsize 1
                  vexactsize 1
                  scaled 0
-                 image0 "set:solid image:file"
+                 image0 "set:regular image:file"
                  mode blend
                  "src alpha" 1
                  filter 0
@@ -1862,7 +2092,7 @@ FrameWidgetClass Root {
                  hexactsize 1
                  vexactsize 1
                  scaled 0
-                 image0 "set:solid image:file"
+                 image0 "set:regular image:file"
                  mode blend
                  "src alpha" 1
                  filter 0
@@ -2186,7 +2416,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:rotate_left"
+             image0 "set:regular image:rotate_left"
              mode blend
              "src alpha" 1
              filter 0
@@ -2232,7 +2462,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:solid image:rotate_right"
+             image0 "set:regular image:rotate_right"
              mode blend
              "src alpha" 1
              filter 0
@@ -2296,7 +2526,7 @@ FrameWidgetClass Root {
            hexactsize 0
            vexactsize 0
            scaled 0
-           image0 "set:solid image:minus"
+           image0 "set:regular image:minus"
            mode blend
            "src alpha" 1
            filter 0
@@ -2341,7 +2571,7 @@ FrameWidgetClass Root {
            hexactsize 0
            vexactsize 0
            scaled 0
-           image0 "set:solid image:xmark"
+           image0 "set:regular image:xmark"
            mode blend
            "src alpha" 1
            filter 0
@@ -2393,7 +2623,7 @@ FrameWidgetClass Root {
      hexactsize 1
      vexactsize 1
      scaled 0
-     image0 "set:solid image:left_right"
+     image0 "set:regular image:left_right"
      mode blend
      "src alpha" 1
      "clamp mode" clamp

@@ -111,18 +111,20 @@ class Editor: SerializableBase
 		edited_objects.Add(new EditorNode("HiddenObjects", "Hidden Objects", IconRegular.HIPPO));
 		m_Master.Add(edited_objects);
 
-		m_Master.Add(new EditorNode("Unknown", "Unknown", IconRegular.CHESS_QUEEN));
-		m_Master.Add(new EditorNode("Plants", "Plants", IconRegular.TREE));
-		m_Master.Add(new EditorNode("Rocks", "Rocks", IconRegular.HILL_ROCKSLIDE));
-		m_Master.Add(new EditorNode("Clutter", "Clutter", IconRegular.TRASH));
-		m_Master.Add(new EditorNode("Structures", "Structures", IconRegular.HOUSE));
-		m_Master.Add(new EditorNode("Wrecks", "Wrecks", IconRegular.CAR_BURST));
-		m_Master.Add(new EditorNode("AI", "AI", IconRegular.PERSON));
-		m_Master.Add(new EditorNode("Water", "Water", IconRegular.WATER));
-		m_Master.Add(new EditorNode("Vehicles", "Vehicles", IconRegular.CAR));
-		m_Master.Add(new EditorNode("StaticObjects", "Static Objects", IconRegular.OBJECT_INTERSECT));
-		m_Master.Add(new EditorNode("DynamicObjects", "Dynamic Objects", IconRegular.SHIRT));
-		m_Master.Add(new EditorNode("ScriptedObjects", "Scripted Objects", IconRegular.CODE));
+		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects", IconRegular.ADDRESS_BOOK);
+		placeable_objects.Add(new EditorNode("Unknown", "Unknown", IconRegular.CHESS_QUEEN));
+		placeable_objects.Add(new EditorNode("Plants", "Plants", IconRegular.TREE));
+		placeable_objects.Add(new EditorNode("Rocks", "Rocks", IconRegular.HILL_ROCKSLIDE));
+		placeable_objects.Add(new EditorNode("Clutter", "Clutter", IconRegular.TRASH));
+		placeable_objects.Add(new EditorNode("Structures", "Structures", IconRegular.HOUSE));
+		placeable_objects.Add(new EditorNode("Wrecks", "Wrecks", IconRegular.CAR_BURST));
+		placeable_objects.Add(new EditorNode("AI", "AI", IconRegular.PERSON));
+		placeable_objects.Add(new EditorNode("Water", "Water", IconRegular.WATER));
+		placeable_objects.Add(new EditorNode("Vehicles", "Vehicles", IconRegular.CAR));
+		placeable_objects.Add(new EditorNode("StaticObjects", "Static Objects", IconRegular.OBJECT_INTERSECT));
+		placeable_objects.Add(new EditorNode("DynamicObjects", "Dynamic Objects", IconRegular.SHIRT));
+		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", IconRegular.CODE));
+		m_Master.Add(placeable_objects);
 		
 		if (GetGame().IsDedicatedServer()) {
 			array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
@@ -213,17 +215,12 @@ class Editor: SerializableBase
 				m_CommandShortcutMap[command.GetShortcut()] = command;
 			}
 		}		
-							
-	
+		
 		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
 		ControlCamera(m_Camera);	
 	
-		m_Hud = new EditorHud();
-
-		foreach (string category1: CATEGORIES) {
-			m_Hud.GetTemplateController().LeftListItems.Insert(m_Master[category1].GetNodeView());
-		}
-	
+		m_Hud = new EditorHud();		
+		m_Hud.GetTemplateController().LeftListItems.Insert(m_Master["PlaceableObjects"].GetNodeView());
 		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
 		
 		// Hud has loaded, request the stuff
@@ -376,7 +373,6 @@ class Editor: SerializableBase
 					Error("Invalid depth");
 					break;
 				}
-
 
 				EditorNode current = m_Master;
 				for (int i = 0; i < tree_depth; i++) {
