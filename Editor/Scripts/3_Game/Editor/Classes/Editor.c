@@ -360,7 +360,11 @@ class Editor: SerializableBase
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
 			foreach (Object object_to_place, EditorHandData data: Placing) {
-				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), IconSolid.CIRCLE_DOT, data.Placeable.GetUUID(), EFE_DEFAULT);
+				
+				vector transform_placed[4];
+				object_to_place.GetTransform(transform_placed);
+				
+				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), IconSolid.CIRCLE_DOT, data.Placeable.GetUUID(), transform_placed, EFE_DEFAULT);
 				
 				m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object);
 				
@@ -388,8 +392,6 @@ class Editor: SerializableBase
 		switch (rpc_type) {
 			case EditorNode.RPC_SYNC: {	
 				Print("EditorNode.RPC_SYNC");
-				
-				
 				int tree_depth;
 				if (!ctx.Read(tree_depth)) {
 					Error("Invalid depth");
@@ -844,11 +846,6 @@ class Editor: SerializableBase
 		return EditorHoliday.NONE;
 	}
 	
-	static int GetAutoSaveValue(float x)
-	{
-		return (5 * Math.Pow(x, 4) / 8) - (5 * Math.Pow(x, 3) / 12) - (45 * Math.Pow(x, 2) / 8) + (545 * x / 12) - 25;
-	}
-	
 	static Object CreateObject(string type, vector transform[4])
 	{
 		Object object;
@@ -857,12 +854,17 @@ class Editor: SerializableBase
 		} else {
 			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
 		}
-		
 		object.SetTransform(transform);
-		object.Update();
+		object.Update();	
+		
 		return object;
 	}
-		
+	
+	static int GetAutoSaveValue(float x)
+	{
+		return (5 * Math.Pow(x, 4) / 8) - (5 * Math.Pow(x, 3) / 12) - (45 * Math.Pow(x, 2) / 8) + (545 * x / 12) - 25;
+	}
+			
 	/*
 	void LoadSaveData(notnull EditorSaveData save_data, bool clear_before = false)
 	{		
