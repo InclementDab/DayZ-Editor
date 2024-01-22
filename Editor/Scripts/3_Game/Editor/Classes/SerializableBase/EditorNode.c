@@ -52,15 +52,14 @@ class EditorNode: SerializableBase
 	{	
 		ScriptRPC rpc = new ScriptRPC();
 		
-		string uuid_string = m_UUID;
+		string uuid_string = string.Format("%1-%2", GetUUID(), Type());
 		EditorNode parent = m_Parent;
 		while (parent) {
-			uuid_string += string.Format("|%1", parent.GetUUID());
+			uuid_string += string.Format("|%1-%2", parent.GetUUID(), parent.Type());
 			parent = parent.GetParent();
 		}
 		
 		rpc.Write(uuid_string);
-		rpc.Write(Type().ToString());
 		Write(rpc, 0);
 		
 		array<PlayerIdentity> identities = {};
@@ -140,15 +139,18 @@ class EditorNode: SerializableBase
 			serializer.Write(node.Type().ToString());
 			node.Write(serializer, version);
 		}
+		
+		super.Write(serializer, version);
 	}
 	
 	override bool Read(Serializer serializer, int version)
 	{
-		serializer.Read(m_UUID);	
+		serializer.Read(m_UUID);
 		serializer.Read(m_DisplayName);	
 		serializer.Read(m_Icon);	
 		int count;
 		serializer.Read(count);
+		Print(count);
 		for (int i = 0; i << count; i++) {
 			string uuid;
 			serializer.Read(uuid);
@@ -165,10 +167,13 @@ class EditorNode: SerializableBase
 				}
 			}
 			
+			Print(uuid);
+			Print(type);
+			
 			m_Children[uuid].Read(serializer, version);
 		}
 		
-		return true;
+		return super.Read(serializer, version);
 	}
 		
 	string GetUUID()

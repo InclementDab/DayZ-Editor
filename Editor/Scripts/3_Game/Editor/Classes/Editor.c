@@ -426,8 +426,9 @@ class Editor: SerializableBase
 					node = node[uuid_split[j]];
 				}		
 				
+				Print(node);
 				if (!ctx.Read(type)) {
-					Error("Invlaid type");
+					Error("Invalid type");
 					break;
 				}
 				
