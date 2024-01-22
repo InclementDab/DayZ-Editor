@@ -57,9 +57,14 @@ foreach (DirectoryInfo directory in source_directory.EnumerateDirectories()) {
     DateTime file_start = DateTime.Now;
     Console.WriteLine($"Loading {files.Count()} files");
 
-    List<string> output_c = new();
+    Set<string> output_c = new();
     string directory_upper = StringExtensions.FirstCharToUpper(directory.Name);
-    output_c.Add($"class Icon{directory_upper}\n{'{'}\n");
+
+    output_c.AddRange(new Set<string>(
+        "typedef string Icons;",
+        "class Icons: string",
+        "{"
+        ));
 
     int x_offset = 0, y_offset = 0;
     foreach (FileInfo file in files) {
@@ -108,7 +113,7 @@ foreach (DirectoryInfo directory in source_directory.EnumerateDirectories()) {
         }
 
         if (!file_name.Any(Char.IsAsciiDigit)) {
-            output_c.Add($"\tstatic const string {file_name.ToUpper()} = \"set:{formatted_directory_name} image:{file_name}\";");
+            output_c.Add($"\tstatic const Icon {file_name.ToUpper()} = \"image:{file_name}\";");
         }
     }
 

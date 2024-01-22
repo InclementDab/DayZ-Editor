@@ -1,44 +1,3 @@
-typedef int IconSize;
-class IconSize: int
-{
-	static const IconSize THIN = 0;
-	static const IconSize LIGHT = 1;
-	static const IconSize REGULAR = 2;
-	static const IconSize SOLID = 3;
-	static const ref array<string> SIZES = {"thin", "light", "regular", "solid"};
-	
-	string Resize(string image)
-	{
-		array<string> image_split = {};
-		image.Split(":", image_split);
-		if (image_split.Count() < 2) {
-			Error("Error reformatting");
-			return image;
-		}
-
-		return string.Format("set:%1 image:%2", SIZES[value], image_split[2]);
-	}
-}
-
-typedef string Icons;
-class Icons: string
-{
-	static const Icons A = "a";
-	
-	string Regular()
-	{
-		return Icons.Format(IconSize.REGULAR, value);
-	}
-	
-	static string Format(IconSize size, Icons image)
-	{
-		return string.Format("set:%1 image:%2", IconSize.SIZES[size], image);
-	}
-	
-
-}
-
-
 class EditorButton: ScriptedWidgetEventHandler
 {	
 	protected Command m_Command;
@@ -47,9 +6,10 @@ class EditorButton: ScriptedWidgetEventHandler
 	reference int Green = 255;
 	reference int Blue = 255;
 	reference string CommandType;	
-	reference string ButtonName;
+	reference Symbols Icon;
 	
-	protected ButtonWidget m_ButtonWidget;
+	protected ButtonWidget m_Button;
+	protected ImageWidget m_Icon;
 	
 	void OnWidgetScriptInit(Widget w)
 	{
@@ -60,17 +20,21 @@ class EditorButton: ScriptedWidgetEventHandler
 		}
 		
 		if (CommandType.ToType()) {
-			
 			m_Command = GetDayZGame().GetEditor().GetCommand(CommandType.ToType());
 		}
 		
-		m_ButtonWidget = ButtonWidget.Cast(w.FindAnyWidget(ButtonName));
+		m_Button = FindWidget<ButtonWidget>.SearchDown(w, "Button");
+		m_Icon = FindWidget<ImageWidget>.SearchDown(w, "Icon");
+		if (Icon != string.Empty) {
+			m_Icon.LoadImageFile(0, Icon.Regular());
+			m_Icon.SetImage(0);
+		}
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		if (button == 0) {
-			m_Command.Execute(m_ButtonWidget.GetState());
+		if (button == 0 && m_Command) {
+			m_Command.Execute(m_Button.GetState());
 		}
 		
 		return true;
@@ -79,7 +43,7 @@ class EditorButton: ScriptedWidgetEventHandler
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		if (finished) {
-			Print(m_ButtonWidget); // colors?
+			Print(m_Button); // colors?
 		}
 		
 		return super.OnChange(w, x, y, finished);
@@ -98,12 +62,12 @@ class EditorButton: ScriptedWidgetEventHandler
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		Widget icon = ScriptView.FindWidgetClass(w, "Icon");
-		if (!m_ButtonWidget) {
+		if (!m_Button) {
 			Print(w.GetName());
 			return true;
 		}
 		
-		if (icon && !m_ButtonWidget.GetState()) {
+		if (icon && !m_Button.GetState()) {
 			WidgetAnimator.AnimateColor(icon, ARGB(100, 255, 255, 255), 100);
 		}
 		

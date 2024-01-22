@@ -1,4 +1,4 @@
-[RegisterEditorObject(CameraTrack, "Add Node", IconRegular.CAMERA)]
+[RegisterEditorObject(CameraTrack, "Add Node", Symbols.CAMERA.Regular())]
 class CameraTrack: ScriptedEntity
 {
 

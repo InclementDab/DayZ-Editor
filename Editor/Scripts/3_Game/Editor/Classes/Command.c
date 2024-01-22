@@ -22,11 +22,6 @@ class Command: Managed
 		return string.Empty;
 	}
 	
-	string GetIcon() 
-	{
-		return string.Empty;
-	}
-		
 	string GetShortcutString() 
 	{
 		string result;
