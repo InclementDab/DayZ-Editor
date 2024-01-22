@@ -21,6 +21,7 @@ class EditorObject: EditorNode
 	protected EditorObjectFlags m_Flags;
 		
 	protected ref array<ref EditorPointView> m_PointViews = {};
+	protected ref EditorObjectView m_EditorObjectView;
 	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
@@ -96,6 +97,8 @@ class EditorObject: EditorNode
 		//if (entity_ai && GetDayZGame().GetEditor().GeneralSettings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
 		//	entity_ai.OnDebugSpawn();
 		//}	
+		
+		m_EditorObjectView = new EditorObjectView(this);
 		
 		// Load animations
 		EntityAI entity_ai = EntityAI.Cast(m_Object);

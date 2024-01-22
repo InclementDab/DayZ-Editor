@@ -1,0 +1,47 @@
+ButtonWidgetClass Marker {
+ visible 1
+ position 0 0
+ size 25 25
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ scaled 0
+ style Empty
+ "no focus" 1
+ switch toggle
+ {
+  ImageWidgetClass MarkerImage {
+   ignorepointer 1
+   color 0.5843 0.7725 1 0.5882
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scaled 0
+   image0 "set:solid image:camera"
+   mode blend
+   "src alpha" 1
+   filter 0
+  }
+  ImageWidgetClass MarkerOutline {
+   ignorepointer 1
+   color 0.302 0.4039 1 0.1961
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scaled 0
+   image0 "set:thin image:camera"
+   mode blend
+   "src alpha" 1
+   filter 0
+  }
+ }
+}
