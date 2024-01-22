@@ -133,6 +133,9 @@ class EditorNode: SerializableBase
 		foreach (string uuid, EditorNode node: m_Children) {
 			serializer.Write(node.GetUUID());
 			serializer.Write(node.Type().ToString());
+			
+			Print(node);
+			Print(uuid);
 			node.Write(serializer, version);
 		}
 		
@@ -147,15 +150,15 @@ class EditorNode: SerializableBase
 			
 		int count;
 		serializer.Read(count);
-		Print(count);
+		//Print(count);
 		for (int i = 0; i < count; i++) {
 			string uuid;
 			serializer.Read(uuid);
-			Print(uuid);
+			//Print(uuid);
 			string type;
 			serializer.Read(type);
-			Print(type);
-			Print(type.ToType());
+			//Print(type);
+			//Print(type.ToType());
 			
 			if (!m_Children[uuid]) {				
 				

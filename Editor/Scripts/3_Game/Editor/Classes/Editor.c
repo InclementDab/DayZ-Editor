@@ -20,11 +20,17 @@ class DeleteCommand: Command
 	}
 }
 
-class EditorHandData
+class EditorHandData: Managed
 {
-	vector PositionOffset;
-	vector OrientationOffset;
-}			
+	EditorPlaceable Placeable;
+	vector Matrix[4];
+	
+	void EditorHandData(notnull EditorPlaceable placeable, vector matrix[4])
+	{
+		Placeable = placeable;
+		copyarray(Matrix, matrix);
+	}
+}
 
 class Editor: SerializableBase
 {
@@ -354,7 +360,7 @@ class Editor: SerializableBase
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire) && GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "Panel") {
 			foreach (Object object_to_place, EditorHandData data: Placing) {
-				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), IconSolid.CIRCLE_DOT, object_to_place, EFE_DEFAULT);
+				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), IconSolid.CIRCLE_DOT, data.Placeable.GetUUID(), EFE_DEFAULT);
 				
 				m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object);
 				
@@ -841,6 +847,20 @@ class Editor: SerializableBase
 	static int GetAutoSaveValue(float x)
 	{
 		return (5 * Math.Pow(x, 4) / 8) - (5 * Math.Pow(x, 3) / 12) - (45 * Math.Pow(x, 2) / 8) + (545 * x / 12) - 25;
+	}
+	
+	static Object CreateObject(string type, vector transform[4])
+	{
+		Object object;
+		if (type.Contains("\\") || type.Contains("/")) {
+			object = GetGame().CreateStaticObjectUsingP3D(type, transform[3], transform[2].VectorToAngles(), 1.0, true);
+		} else {
+			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
+		}
+		
+		object.SetTransform(transform);
+		object.Update();
+		return object;
 	}
 		
 	/*

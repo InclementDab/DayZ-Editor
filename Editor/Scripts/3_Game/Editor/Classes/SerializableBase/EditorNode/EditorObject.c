@@ -18,6 +18,8 @@ class EditorObject: EditorNode
 	};
 		
 	protected Object m_Object;
+	protected string m_Type;
+	protected vector m_Transform[4];
 	protected EditorObjectFlags m_Flags;
 		
 	protected ref array<ref EditorPointView> m_PointViews = {};
@@ -32,9 +34,9 @@ class EditorObject: EditorNode
 	
 	protected Object m_TranslationGizmo;
 	
-	void EditorObject(string uuid, string display_name, string icon, notnull Object object, int flags)
-	{		
-		m_Object = object;
+	void EditorObject(string uuid, string display_name, string icon, string type, int flags)
+	{
+		m_Type = type;
 		m_Flags = flags;
 		
 		if (GetGame().IsDedicatedServer()) {
@@ -140,28 +142,35 @@ class EditorObject: EditorNode
 	}
 	
 	override void Write(Serializer serializer, int version)
-	{		
+	{
+		super.Write(serializer, version);
+		
+		serializer.Write(m_Type);
+		
 		vector transform[4];
 		m_Object.GetTransform(transform);
 		serializer.Write(transform);
 		
 		serializer.Write(m_Flags);
-		
-		super.Write(serializer, version);
 	}
 	
 	override bool Read(Serializer serializer, int version)
 	{
+		if (!super.Read(serializer, version)) {
+			return false;
+		}
+		
+		serializer.Read(m_Type);
+		
 		vector transform[4];
 		serializer.Read(transform);
 
-		if (!m_Object && !GetGame().IsDedicatedServer()) {
-			m_Object = GetGame().CreateObjectEx(m_UUID, transform[3], ECE_LOCAL);
-			m_Object.SetTransform(transform);
+		if (!m_Object) {
+			m_Object = Editor.CreateObject(m_Type, transform);
 		}
 		
 		serializer.Read(m_Flags);
-		return super.Read(serializer, version);
+		return true;
 	}
 			
 #ifdef DIAG_DEVELOPER
