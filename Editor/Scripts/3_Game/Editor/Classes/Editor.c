@@ -331,11 +331,11 @@ class Editor: SerializableBase
 		
 		Math3D.MatrixMultiply3(camera_orthogonal, rotation_mat, camera_orthogonal);
 		
-		Shape.CreateMatrix(camera_orthogonal);
+		//Shape.CreateMatrix(camera_orthogonal);
 		
 		m_CursorNormal = m_CursorNormal.Multiply3(rotation_mat);
 		//Print(m_CursorNormal);
-		ray1.Debug();
+		//ray1.Debug();
 		
 		foreach (Object object, EditorHandData data1: Placing) {
 			vector transform[4];

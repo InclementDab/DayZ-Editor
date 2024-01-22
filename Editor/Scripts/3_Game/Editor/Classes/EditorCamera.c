@@ -5,8 +5,10 @@ class EditorCamera: ScriptedCamera
 	protected float m_ServerUpdateAccumulator;
 	protected vector m_LinearVelocity, m_AngularVelocity;
 	
-	protected vector m_ViewDragStartPosition;
-	protected vector m_ViewDragBasis[4];
+	protected vector m_ViewDragDirection;
+	protected vector m_ViewDragUp;
+	protected vector m_ViewDragAside;
+	protected vector m_ViewDragBasis[3];
 	
 	void EditorCamera()
 	{
@@ -57,7 +59,7 @@ class EditorCamera: ScriptedCamera
 		vector view_delta = vector.Forward;
 		
 		Ray cursor_ray = GetCursorRay();
-		
+		Ray ground_ray = PerformCursorRaycast();
 		// Cursor is off, time to do regular camera things
 		if (!GetGame().GetUIManager().IsCursorVisible()) {
 			vector view = Vector(input.LocalValue_ID(UAAimRight) - input.LocalValue_ID(UAAimLeft), 
@@ -73,58 +75,31 @@ class EditorCamera: ScriptedCamera
 		} 
 		
 		else if (input.LocalPress_ID(UATempRaiseWeapon)) {
-			GetTransform(m_ViewDragBasis);
+			m_ViewDragDirection = GetGame().GetPointerDirection();
+			m_ViewDragUp = transform[1];
+			m_ViewDragAside = transform[2];
 		}
 		
-		else if (input.LocalValue_ID(UATempRaiseWeapon)) {		
-			vector start_matrix[4] = { m_ViewDragStartPosition * vector.Up, vector.Up, m_ViewDragStartPosition, Vector(0, 0, 1).Multiply4(transform) };
+		else if (input.LocalValue_ID(UATempRaiseWeapon)) {			
+			vector offset_matrix[4] = { m_ViewDragAside, m_ViewDragUp, m_ViewDragDirection, ground_ray.Position };
+			Math3D.MatrixOrthogonalize3(offset_matrix);
+			vector forward_normalized = GetGame().GetPointerDirection().InvMultiply3(offset_matrix).Normalized();
+			//forward_normalized = forward_normalized.Multiply3(transform);
+			Print(forward_normalized);
 			
-			vector pointer = GetGame().GetPointerDirection().InvMultiply3(m_ViewDragBasis);
-			Shape.CreateSphere(COLOR_GREEN, ShapeFlags.ONCE, pointer + transform[3], 0.2);
-			
-			vector mid_matrix[4] = { transform[0], transform[1], transform[2], transform[3] };
-			
-			pointer = pointer.Multiply3(transform);
-			pointer.Normalize();
-			vector matrix[4] = { pointer * m_ViewDragBasis[1], m_ViewDragBasis[1], pointer, Vector(0, 0, 1).Multiply4(transform) };
-			Math3D.MatrixOrthogonalize3(matrix);
-			
-			//Shape.CreateMatrix(start_matrix);
-			Shape.CreateMatrix(matrix);
-			
-			
-			
-			vector camera_matrix[4];
-			GetTransform(camera_matrix);
-			camera_matrix[3] = Vector(0, 0, 1).Multiply4(camera_matrix);
-			
-			Math3D.MatrixMultiply3(camera_matrix, matrix, camera_matrix);
-			//Math3D.MatrixMultiply3(camera_matrix, start_matrix, camera_matrix);
-			
-			Shape.CreateMatrix(camera_matrix);
-			
-			//Math3D.MatrixMultiply3(matrix, m_ViewDragStartMat, matrix);
-			
-			
-			//pointer = pointer.InvMultiply3(transform);
-			//Debug.DrawSphere(pointer, 0.2, COLOR_WHITE, ShapeFlags.ONCE);
-			
-		
-			//
-			//transform = { vector.Up * pointer, vector.Up, pointer, m_LinearVelocity.Multiply4(transform) };
-			
-			vector u[4] = { vector.Aside, vector.Up, vector.Forward, vector.Zero };
-			
-			//Shape.CreateMatrix(x);
-			//Math3D.MatrixInvMultiply3(x, u, x);
-			//Math3D.MatrixMultiply3(transform, x, transform);
-			
+			vector new_transform[4] = { (forward_normalized * m_ViewDragUp).Normalized(), (m_ViewDragAside * forward_normalized).Normalized(), forward_normalized, ground_ray.Position };
+			Math3D.MatrixOrthogonalize4(new_transform);
+			Shape.CreateMatrix(new_transform);
+
+			//Print(new_transform);
+			//Print(transform);
+			//Math3D.MatrixMultiply3(new_matrix, transform, transform);
 			
 		} else {
 			transform[3] = m_LinearVelocity.Multiply4(transform);
 		}
 			
-		
+		// Cannot allow camera to go through the floor
 		transform[3][1] = Math.Max(transform[3][1], GetNearPlane() + GetGame().SurfaceY(transform[3][0], transform[3][2]));
 		Math3D.MatrixOrthogonalize4(transform);		
 		SetTransform(transform);	
