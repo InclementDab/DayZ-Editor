@@ -60,7 +60,12 @@ class EditorHud: ScriptView
 	void EditorHud()
 	{		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
-
+	}
+	
+	override void OnWidgetScriptInit(Widget w)
+	{
+		super.OnWidgetScriptInit(w);
+		
 		m_TemplateController.LeftListItems.Insert(GetDayZGame().GetEditor()["Objects"]["PlaceableObjects"].GetNodeView());
 		m_TemplateController.RightListItems.Insert(GetDayZGame().GetEditor()["Objects"]["EditedObjects"].GetNodeView());
 	}

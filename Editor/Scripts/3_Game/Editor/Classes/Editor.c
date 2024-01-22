@@ -101,7 +101,6 @@ class Editor: SerializableBase
 			
 	protected ref EditorNode m_Master;
 	
-
 	void Add(notnull EditorNode node)
 	{
 		m_Master.Add(node);
@@ -145,10 +144,8 @@ class Editor: SerializableBase
 		placeable_objects.Add(new EditorCategory("StaticObjects", "Static Objects", "set:regular image:object_intersect"));
 		placeable_objects.Add(new EditorCategory("DynamicObjects", "Dynamic Objects", "set:regular image:shirt"));
 		placeable_objects.Add(new EditorCategory("ScriptedObjects", "Scripted Objects", "set:regular image:code"));
-		objects.Add(placeable_objects);
 
-		m_Master.Add(objects);
-				
+		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 					
 		// handle config objects
@@ -178,7 +175,7 @@ class Editor: SerializableBase
 					category = "Vehicles";
 				}
 				
-				m_Master["Objects"]["PlaceableObjects"][category] = new EditorConfigPlaceable(type, type, type);
+				placeable_objects[category] = new EditorConfigPlaceable(type, type, type);
 		    }
 		}
 		
@@ -202,16 +199,19 @@ class Editor: SerializableBase
 					model_name = items[items.Count() - 1];
 				}	
 			
-				m_Master["Objects"]["PlaceableObjects"]["StaticObjects"] = new EditorStaticPlaceableItem(file.GetFullPath(), model_name, file.GetFullPath());
+				placeable_objects["StaticObjects"] = new EditorStaticPlaceableItem(file.GetFullPath(), model_name, file.GetFullPath());
 			}
 		}
 		
+		objects.Add(placeable_objects);
+		m_Master.Add(objects);
+	
 		// Statics that belong to Editor / DF
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkSpotLight));
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkPointLight));
 		//m_AllPlaceableItems.Insert(new EditorScriptedPlaceableItem(NetworkParticleBase));
 							
-		m_Master.Synchronize();
+		//m_Master.Synchronize();
 		
 		if (GetGame().IsDedicatedServer()) {
 			return;
@@ -235,8 +235,6 @@ class Editor: SerializableBase
 		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
 		m_EditorHud = new EditorHud();
 		ControlCamera(m_Camera);
-	
-		m_Master = new EditorNode(m_Player.GetIdentity().GetId(), m_Player.GetIdentity().GetName());
 	}
 
 	void ~Editor() 

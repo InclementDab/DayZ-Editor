@@ -34,7 +34,7 @@ modded class DayZGame
 		
 		super.OnRPC(sender, target, rpc_type, ctx);
 	}
-		
+	
 	static bool IsForbiddenItem(string model)
 	{
 		//! In theory should be safe but just in case

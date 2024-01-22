@@ -74,11 +74,6 @@ class EditorNode: SerializableBase
 		m_Children[uuid] = node;
 		
 		node.SetParent(this);
-		
-		// Update visual display
-		if (!GetGame().IsDedicatedServer()) {
-			m_NodeView.GetTemplateController().ChildrenItems.Insert(node.GetNodeView());
-		}
 	}
 	
 	void Remove(string uuid)
@@ -100,6 +95,11 @@ class EditorNode: SerializableBase
 	void SetParent(EditorNode parent)
 	{
 		m_Parent = parent;
+		
+		// Update visual display
+		if (!GetGame().IsDedicatedServer()) {
+			m_Parent.GetNodeView().GetTemplateController().ChildrenItems.Insert(m_NodeView);
+		}
 	}
 	
 	EditorNode GetParent()

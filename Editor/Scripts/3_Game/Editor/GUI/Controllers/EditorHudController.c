@@ -9,8 +9,7 @@ class EditorHudController: ViewController
 	int JoinCode;
 	string RotatingJoinCode;
 	
-	StringEvaluater PrecisionLevel = "0.5";
-	
+
 	ref ObservableCollection<EditorNodeView> LeftListItems = new ObservableCollection<EditorNodeView>(this);
 	ref ObservableCollection<EditorNodeView> RightListItems = new ObservableCollection<EditorNodeView>(this);
 		
@@ -18,44 +17,9 @@ class EditorHudController: ViewController
 		
 	ScrollWidget LeftScroll;
 	ScrollWidget RightScroll;	
-		
-	// Camera Track
-	protected Widget CameraTrackWrapper;
-	protected ButtonWidget CameraTrackRunButton;
-	protected Widget CameraTrackButtonOutline;
-	
-	// Preview for Object Readout
-	TextWidget ObjectHoverSelectObjectReadout;
 	
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>(this);
 
-	float BrushRadius = 65;
-	float BrushDensity = 0.25;
-	
-	
-	bool BrushToggleButtonState;
-	int BrushTypeSelection;
-	string BrushToggleButtonText;
-	
-	bool ControlPlayerState;
-	
-	protected ImageWidget MagnetButton_Icon;
-	protected ImageWidget GroundButton_Icon;
-	protected ImageWidget SnapButton_Icon;
-	protected ImageWidget CollisionButton_Icon;
-	protected ImageWidget CameraLightButton_Icon;
-	
-	ButtonWidget BrushToggleButton;
-		
-	// Favorites
-	protected ref array<string> m_FavoriteItems = {};
-		
-	void EditorHudController() 
-	{
-		// more hacking
-		g_EditorPrecision = GetPrecisionLevel();
-	}
-			
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
@@ -67,6 +31,7 @@ class EditorHudController: ViewController
 		float widest_x;				
 		// Load Brushes		
 		
+		/*
 		string brush_file = GetDayZGame().GetEditor().GetProfileSettings().EditorBrushFile;
 		if (brush_file.Contains("'")) {
 			// bi wtf
@@ -81,16 +46,9 @@ class EditorHudController: ViewController
 				EditorLog.Error("Could not copy brush data to %1", GetDayZGame().GetEditor().GetProfileSettings().EditorBrushFile);
 				return;
 			}
-		}
+		}*/
+	}
 				
-		ReloadBrushes(GetDayZGame().GetEditor().GetProfileSettings().EditorBrushFile);
-	}
-		
-	float GetPrecisionLevel()
-	{
-		return PrecisionLevel.Parse();
-	}
-		
 	override void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
@@ -173,16 +131,5 @@ class EditorHudController: ViewController
 		}
 		
 		return false;
-	}
-		
-	// Brush Management
-	void ReloadBrushes(string filename)
-	{
-		BrushToggleButtonState = false;
-		NotifyPropertyChanged("BrushToggleButtonState");
-		
-		BrushTypeBoxData.Clear();
-		XMLEditorBrushes xml_brushes = new XMLEditorBrushes(BrushTypeBoxData);
-		GetXMLApi().Read(filename, xml_brushes);
 	}
 }

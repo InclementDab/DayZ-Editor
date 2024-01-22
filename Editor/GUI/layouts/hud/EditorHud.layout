@@ -315,13 +315,6 @@ FrameWidgetClass Root {
              nocache 0
             }
            }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
-            }
-           }
           }
          }
         }
@@ -368,13 +361,6 @@ FrameWidgetClass Root {
              "src alpha" 1
              filter 0
              nocache 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
             }
            }
           }
@@ -425,13 +411,6 @@ FrameWidgetClass Root {
              nocache 0
             }
            }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
-            }
-           }
           }
          }
         }
@@ -479,13 +458,6 @@ FrameWidgetClass Root {
              "src alpha" 1
              filter 0
              nocache 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
             }
            }
           }
@@ -582,13 +554,6 @@ FrameWidgetClass Root {
              nocache 0
             }
            }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
-            }
-           }
           }
          }
         }
@@ -637,13 +602,6 @@ FrameWidgetClass Root {
              nocache 0
             }
            }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
-            }
-           }
           }
          }
         }
@@ -690,13 +648,6 @@ FrameWidgetClass Root {
              "src alpha" 1
              filter 0
              nocache 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
             }
            }
           }
@@ -794,13 +745,6 @@ FrameWidgetClass Root {
              nocache 0
             }
            }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
-            }
-           }
           }
          }
         }
@@ -847,13 +791,6 @@ FrameWidgetClass Root {
              "src alpha" 1
              filter 0
              nocache 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
             }
            }
           }
@@ -951,13 +888,6 @@ FrameWidgetClass Root {
              nocache 0
             }
            }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
-            }
-           }
           }
          }
         }
@@ -1006,13 +936,6 @@ FrameWidgetClass Root {
              nocache 0
             }
            }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
-            }
-           }
           }
          }
         }
@@ -1059,13 +982,6 @@ FrameWidgetClass Root {
              "src alpha" 1
              filter 0
              nocache 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
             }
            }
           }
@@ -1163,13 +1079,6 @@ FrameWidgetClass Root {
              nocache 0
             }
            }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
-            }
-           }
           }
          }
         }
@@ -1216,13 +1125,6 @@ FrameWidgetClass Root {
              "src alpha" 1
              filter 0
              nocache 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
             }
            }
           }
@@ -1323,13 +1225,6 @@ FrameWidgetClass Root {
              nocache 0
             }
            }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
-            }
-           }
           }
          }
         }
@@ -1393,13 +1288,6 @@ FrameWidgetClass Root {
              "src alpha" 1
              filter 0
              nocache 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
             }
            }
           }
@@ -1477,13 +1365,6 @@ FrameWidgetClass Root {
                filter 0
               }
              }
-            }
-           }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
             }
            }
           }
@@ -1614,13 +1495,6 @@ FrameWidgetClass Root {
              nocache 0
             }
            }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
-            }
-           }
           }
          }
         }
@@ -1667,13 +1541,6 @@ FrameWidgetClass Root {
              "src alpha" 1
              filter 0
              nocache 0
-            }
-           }
-           {
-            ScriptParamsClass {
-             Red 255
-             Green 255
-             Blue 255
             }
            }
           }
@@ -2328,14 +2195,6 @@ FrameWidgetClass Root {
            }
           }
          }
-         {
-          ScriptParamsClass {
-           Red 241
-           Green 148
-           Blue 148
-           CommandType "UndoCommand"
-          }
-         }
         }
         FrameWidgetClass Redo {
          ignorepointer 1
@@ -2380,14 +2239,6 @@ FrameWidgetClass Root {
              nocache 0
             }
            }
-          }
-         }
-         {
-          ScriptParamsClass {
-           Red 255
-           Green 255
-           Blue 255
-           CommandType "RedoCommand"
           }
          }
         }
@@ -2442,15 +2293,6 @@ FrameWidgetClass Root {
          nocache 0
         }
        }
-      }
-     }
-     {
-      ScriptParamsClass {
-       Red 255
-       Green 255
-       Blue 100
-       CommandType "WebToggleCommand"
-       ButtonName "Online.Button"
       }
      }
     }
