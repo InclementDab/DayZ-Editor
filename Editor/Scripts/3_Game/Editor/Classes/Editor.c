@@ -383,6 +383,7 @@ class Editor: SerializableBase
 				Print("EditorNode.RPC_SYNC");
 				string uuid, type;
 				array<string> uuid_split = {};
+				array<string> type_split = {};
 				EditorNode node = m_Master;
 				if (GetGame().IsDedicatedServer()) {
 					if (!ctx.Read(uuid)) {
@@ -392,12 +393,12 @@ class Editor: SerializableBase
 
 					uuid.Split("|", uuid_split);
 					for (int i = uuid_split.Count() - 2; i >= 0; i--) {
-						if (!node[uuid_split[i]]) {
-							Error("Node not networked yet " + uuid_split[i]);
-							continue;
+						uuid_split[i].Split("-", type_split);
+						if (!node[type_split[0]]) {
+							node[type_split[0]] = EditorNode.Cast(type_split[1].ToType().Spawn());
 						}
-						
-						node = node[uuid_split[i]];
+					
+						node = node[type_split[0]];
 					}		
 					
 					if (!ctx.Read(type)) {
@@ -418,12 +419,12 @@ class Editor: SerializableBase
 				Print(uuid);
 				uuid.Split("|", uuid_split);
 				for (int j = uuid_split.Count() - 2; j >= 0; j--) {
-					if (!node[uuid_split[j]]) {
-						Error("Node not networked yet " + uuid_split[j]);
-						continue;
+					uuid_split[j].Split("-", type_split);
+					if (!node[type_split[0]]) {
+						node[type_split[0]] = EditorNode.Cast(type_split[1].ToType().Spawn());
 					}
 					
-					node = node[uuid_split[j]];
+					node = node[type_split[0]];
 				}		
 				
 				Print(node);
