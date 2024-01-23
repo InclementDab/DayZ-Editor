@@ -76,20 +76,36 @@ class EditorCamera: ScriptedCamera
 		
 		else if (input.LocalPress_ID(UATempRaiseWeapon)) {
 			m_ViewDragDirection = GetGame().GetPointerDirection();
-			m_ViewDragUp = transform[1];
-			m_ViewDragAside = transform[2];
+			m_ViewDragUp = ground_ray.Direction;
+			m_ViewDragAside = GetGame().GetPointerDirection() * transform[1];
 		}
 		
-		else if (input.LocalValue_ID(UATempRaiseWeapon)) {			
-			vector offset_matrix[4] = { m_ViewDragAside, m_ViewDragUp, m_ViewDragDirection, ground_ray.Position };
-			Math3D.MatrixOrthogonalize3(offset_matrix);
-			vector forward_normalized = GetGame().GetPointerDirection().InvMultiply3(offset_matrix).Normalized();
-			//forward_normalized = forward_normalized.Multiply3(transform);
-			Print(forward_normalized);
+		else if (input.LocalValue_ID(UATempRaiseWeapon)) {
+			vector offset_matrix[4] = { m_ViewDragDirection, m_ViewDragUp, m_ViewDragDirection * m_ViewDragUp, ground_ray.Position };
 			
-			vector new_transform[4] = { (forward_normalized * m_ViewDragUp).Normalized(), (m_ViewDragAside * forward_normalized).Normalized(), forward_normalized, ground_ray.Position };
-			Math3D.MatrixOrthogonalize4(new_transform);
-			Shape.CreateMatrix(new_transform);
+			vector pointer_dir = GetGame().GetPointerDirection().InvMultiply3(offset_matrix).Normalized();
+			vector pointer_aside = m_ViewDragAside.InvMultiply3(offset_matrix).Normalized();
+			Print(pointer_dir);
+			
+			vector movement_matrix[4] = { pointer_dir, pointer_dir * pointer_aside, pointer_aside, ground_ray.Position };			
+			//Shape.CreateMatrix(movement_matrix);
+			//Print(movement_matrix);
+			//Math3D.MatrixMultiply3(movement_matrix, transform, transform);
+			
+			
+			//Print(offset_matrix);
+			//Shape.CreateMatrix(offset_matrix);
+			
+			//Math3D.MatrixInvMultiply3(offset_matrix, transform, transform);
+			//SetTransform(transform);
+			
+			//vector forward_normalized = GetGame().GetPointerDirection().InvMultiply3(offset_matrix).Normalized();
+			//forward_normalized = forward_normalized.Multiply3(transform);
+			
+			
+			//vector new_transform[4] = { (forward_normalized * m_ViewDragUp).Normalized(), (m_ViewDragAside * forward_normalized).Normalized(), forward_normalized, ground_ray.Position };
+			//Math3D.MatrixOrthogonalize4(new_transform);
+			
 
 			//Print(new_transform);
 			//Print(transform);

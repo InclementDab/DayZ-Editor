@@ -137,10 +137,16 @@ class EditorObject: EditorNode
 		vector transform[4];
 		m_Object.GetTransform(transform);
 		m_TranslationGizmo.SetPosition(GetTopPoint());
+		
+		vector mat[4];
+		m_BoundingBoxSurfaces[ETransformationAxis.TOP].CreateMatrix(mat);
+		Math3D.MatrixMultiply4(transform, mat, mat);
+		m_TranslationGizmo.SetTransform(mat);
+		
 				
 		for (int i = 0; i < 6; i++) {
 			// Debug
-			m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+			//m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
 		}
 		
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);

@@ -329,7 +329,7 @@ class Editor: SerializableBase
 		
 		m_CursorNormal = m_CursorNormal.Multiply3(rotation_mat);
 		//Print(m_CursorNormal);
-		ray1.Debug();
+		//ray1.Debug();
 		
 		//Print(Placing.Count());
 		foreach (EditorObject editor_object_placing: Placing) {
