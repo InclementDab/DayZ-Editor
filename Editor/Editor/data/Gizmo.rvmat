@@ -5,6 +5,6 @@ emmisive[] = {2,2,2,2};
 specular[] = {0,0,0,0};
 specularPower = 0;
 //renderFlags[] = {"NoZWrite","AddBlend"};
-renderFlags[] = {"NoZWrite"};
+//renderFlags[] = {"NoZWrite"};
 PixelShaderID = "Normal";
 VertexShaderID = "Basic";
