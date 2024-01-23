@@ -18,8 +18,6 @@ class EditorObject: EditorNode
 	};
 		
 	protected Object m_Object;
-	protected string m_Type;
-	protected vector m_Transform[4];
 	protected EditorObjectFlags m_Flags;
 		
 	protected ref array<ref EditorPointView> m_PointViews = {};
@@ -36,17 +34,14 @@ class EditorObject: EditorNode
 	
 	void EditorObject(string uuid, string display_name, string icon, string type, vector transform[4], int flags)
 	{
-		m_Type = type;
-		m_Flags = flags;	
-		copyarray(m_Transform, transform);
-
+		m_Flags = flags;
+		
+		Math3D.MatrixOrthogonalize4(transform);		
+		m_Object = Editor.CreateObject(type, transform);
+		
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
-		
-		Math3D.MatrixOrthogonalize4(m_Transform);		
-		m_Object = Editor.CreateObject(m_Type, m_Transform);
-		
 		
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
@@ -96,11 +91,11 @@ class EditorObject: EditorNode
 		}
 
 		for (int j = 0; j < 12; j++) {
-			vector snap_point_position = m_LineCenters[j].Multiply4(m_Transform);
+			vector snap_point_position = m_LineCenters[j].Multiply4(transform);
 			EditorSnapPoint snap_point = EditorSnapPoint.Cast(GetGame().CreateObjectEx("EditorSnapPoint", snap_point_position, ECE_LOCAL));
 			
 			vector mat[4];
-			Math3D.DirectionAndUpMatrix(m_Transform[1], LINE_CENTER_DIRECTIONS[j], mat);
+			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
 			mat[3] = snap_point_position;
 			Shape.CreateMatrix(mat);
 			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
@@ -145,6 +140,7 @@ class EditorObject: EditorNode
 		EditorBoundingBox.Destroy(m_Object);
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
+		GetGame().ObjectDelete(m_TranslationGizmo);
 						
 		delete m_PointViews;
 		delete m_ObjectAnimations;
@@ -158,8 +154,12 @@ class EditorObject: EditorNode
 	{
 		super.Write(serializer, version);
 		
-		serializer.Write(m_Type);		
-		serializer.Write(m_Transform);
+		serializer.Write(m_Object.GetType());
+		
+		vector transform[4];
+		m_Object.GetTransform(transform);
+		serializer.Write(transform);
+		
 		serializer.Write(m_Flags);
 	}
 	
@@ -169,18 +169,18 @@ class EditorObject: EditorNode
 			return false;
 		}
 		
-		serializer.Read(m_Type);
+		string type;
+		serializer.Read(type);
 		
 		vector transform[4];
 		serializer.Read(transform);
-		copyarray(m_Transform, transform);
 		
-		if (!m_Object) {
-			Math3D.MatrixOrthogonalize4(m_Transform);		
-			m_Object = Editor.CreateObject(m_Type, m_Transform);
+		Math3D.MatrixOrthogonalize4(transform);
+		if (!m_Object) {	
+			m_Object = Editor.CreateObject(type, transform);
 		}
 		
-		m_Object.SetTransform(m_Transform);
+		m_Object.SetTransform(transform);
 		
 		serializer.Read(m_Flags);
 		return true;

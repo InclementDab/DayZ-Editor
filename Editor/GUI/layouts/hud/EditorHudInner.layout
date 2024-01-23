@@ -21,18 +21,6 @@ FrameWidgetClass Root {
    scaled 0
    fixaspect outside
   }
-  CanvasWidgetClass Whiteboard {
-   ignorepointer 1
-   position 0 0
-   size 1 1
-   halign center_ref
-   valign center_ref
-   hexactpos 0
-   vexactpos 0
-   hexactsize 0
-   vexactsize 0
-   priority 100
-  }
   PanelWidgetClass Notification {
    visible 1
    ignorepointer 1

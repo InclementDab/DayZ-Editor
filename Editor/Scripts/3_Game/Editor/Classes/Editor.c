@@ -264,15 +264,17 @@ class Editor: SerializableBase
 				Print(GetWidgetUnderCursor().GetName());
 			}
 			
-			
-			foreach (EditorObject editor_object_to_place: Placing) {				
-				m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object_to_place);
-	
-				// Synchronize to this id
-				Synchronize(m_Master["EditedObjects"]["PlacedObjects"]);
-				
-				// remove it from placing
-				Placing.RemoveItem(editor_object_to_place);
+			// Cursed but we ship it
+			if (!GetWidgetUnderCursor() || !GetWidgetUnderCursor().GetName().Contains("Panel")) {
+				foreach (EditorObject editor_object_to_place: Placing) {				
+					m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object_to_place);
+		
+					// Synchronize to this id
+					Synchronize(m_Master["EditedObjects"]["PlacedObjects"]);
+					
+					// remove it from placing
+					Placing.RemoveItem(editor_object_to_place);
+				}
 			}
 		}
 		

@@ -97,7 +97,7 @@ class EditorButton: ScriptedWidgetEventHandler
 	void OnExecuted(bool state)
 	{
 		SymbolSize size = Ternary<SymbolSize>.If(state, SymbolSize.SOLID, SymbolSize.REGULAR);
-		int color = Ternary<int>.If(state, m_LayoutRoot.GetColor(),	m_Icon.GetColor());
+		int color = Ternary<int>.If(state, m_LayoutRoot.GetColor(),	ARGB(100, 255, 255, 255));
 		
 		WidgetAnimator.AnimateColor(m_Icon, color, 50);
 		

@@ -75,35 +75,56 @@ class EditorHud: ScriptView
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 		
-		if (GetGame().GetInput().LocalPress("UAFire") && !GetWidgetUnderCursor()) {
+		Input input = GetGame().GetInput();						
+		
+		
+		if (input.LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {			
 			EditorNode.ClearSelections();
+			m_DragX = mouse_x;
+			m_DragY = mouse_y;
 		}
-				
-		//EntityCountData.SetText(GetDayZGame().GetEditor().m_PlacedObjects.Count().ToString());
-		//Print(GetDayZGame().GetEditor().GetCurrentOnlineSession());
-		//OnlineServerDetails.Show(GetDayZGame().GetEditor().GetCurrentOnlineSession() != null);
-						
+		
 		Whiteboard.Clear();
-		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) == MB_PRESSED_MASK && m_DragX != -1 && m_DragY != -1) {												
-			// Handles the fill operation
-			int x_avg = (m_DragX + mouse_x) / 2;
-			Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE); 
-						
-			foreach (EditorNode selectable_item: EditorNode.All) {
-				EditorNodeView view = selectable_item.GetNodeView();
-				if (view) {
-					float tree_x, tree_y;
-					view.GetLayoutRoot().GetScreenPos(tree_x, tree_y);
-										
-					if ((tree_x < Math.Max(m_DragX, mouse_x) && tree_x > Math.Min(m_DragX, mouse_x)) && (tree_y < Math.Max(m_DragY, mouse_y) && tree_y > Math.Min(m_DragY, mouse_y))) {
-						selectable_item.SetSelected(true);
-					}
-				}				
-			}
+		if (input.LocalHold_ID(UAFire)) {
+			// Rectangle
+			//int x_avg = (m_DragX + mouse_x) / 2;
+			//int y_avg = (m_DragY + mouse_y) / 2;
+			//Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE);		
+			
+			int width = mouse_x - m_DragX;
+			int height = mouse_y - m_DragY;
+			
+			int x_middle = m_DragX - (width / 2);
+			int y_middle = m_DragY - (height / 2);
+			
+			
+	        // Center of the oval
+	        float cx = width / 2;
+	        float cy = height / 2;
+	
+	        // Radius for x and y axes
+	        float rx = width / 2;
+	        float ry = height / 2;
+	
+	        // Y-coordinate for the horizontal lines	
+	        // Calculate the horizontal lines to approximate the oval
+	        for (int i = 0; i < 100; i++)
+	        {
+	            // Calculate points on the oval using parametric equations
+	            float x1 = cx - rx;
+	            float x2 = cx + rx;
+	
+	            // Draw a horizontal line at the current y-coordinate
+	            Whiteboard.DrawLine(x1 + x_middle, cy + y_middle, x2 + x_middle, cy + 1 + y_middle, 1, 0x644B77BE);
+	
+	            // Update the y-coordinate for the next horizontal line
+	            cy += 2 * ry / 100.0;
+	        }
 		}
-
-		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
-			m_DragX = -1; m_DragY = -1;
+		
+		if (input.LocalRelease_ID(UAFire)) {
+			m_DragX = -1;
+			m_DragY = -1;
 		}
 							
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
