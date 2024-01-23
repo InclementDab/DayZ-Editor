@@ -75,8 +75,9 @@ class EditorButton: ScriptedWidgetEventHandler
 		m_Button.SetHandler(this);
 		
 		m_Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");
+		
 		if (Icon != string.Empty) {
-			m_Icon.LoadImageFile(0, Icon.Regular());
+			m_Icon.LoadImageFile(0, Icon.WithSize(SymbolSize.REGULAR));
 			m_Icon.SetImage(0);
 		}
 		
@@ -126,7 +127,7 @@ class EditorButton: ScriptedWidgetEventHandler
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{		
 #ifndef WORKBENCH
-		WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
+		//WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
 #endif
 		
 		return true;
@@ -138,7 +139,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		//WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
 		
 		if (!m_Button.GetState()) {
-			WidgetAnimator.AnimateColor(m_Icon, ARGB(100, 255, 255, 255), 50);
+			//WidgetAnimator.AnimateColor(m_Icon, ARGB(100, 255, 255, 255), 50);
 		}
 #endif
 		
