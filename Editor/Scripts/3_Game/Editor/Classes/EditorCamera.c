@@ -75,20 +75,27 @@ class EditorCamera: ScriptedCamera
 		} 
 		
 		else if (input.LocalPress_ID(UATempRaiseWeapon)) {
+			m_ViewDragAside = (GetGame().GetPointerDirection() * transform[1]).Normalized();
+			m_ViewDragUp = transform[1];
 			m_ViewDragDirection = GetGame().GetPointerDirection();
-			m_ViewDragAside = (m_ViewDragDirection * vector.Up).Normalized();			
 		}
 		
 		else if (input.LocalValue_ID(UATempRaiseWeapon)) {
-			vector offset_matrix[3] = { m_ViewDragDirection, m_ViewDragDirection * m_ViewDragAside, m_ViewDragAside };
+			vector offset_matrix[3] = { m_ViewDragAside, m_ViewDragUp, m_ViewDragDirection };
 			Math3D.MatrixOrthogonalize3(offset_matrix);
-			vector pointer_dir = -1 * GetGame().GetPointerDirection().InvMultiply3(transform).Normalized();
-			Print(pointer_dir);
 			
-			view_delta = pointer_dir.Multiply3(transform);
+			vector pointer_dir = GetGame().GetPointerDirection().InvMultiply3(offset_matrix).Normalized();
+			vector up_dir = transform[1].InvMultiply3(offset_matrix).Normalized();
+			//Print(up_dir);
 			
-			//Print(view_delta);
-			//transform = { m_ViewDragDirection, vector.Up, m_ViewDragDirection * m_ViewDragAside, m_LinearVelocity.Multiply4(transform) };
+			vector test[3] = { pointer_dir, up_dir, up_dir * pointer_dir };
+			Print(test);
+			
+			Math3D.MatrixInvMultiply3(transform, test, transform);
+			//view_delta = pointer_dir.Multiply3(transform);
+			
+			////Print(view_delta);
+			//transform = { view_delta, vector.Up, view_delta * vector.Up, m_LinearVelocity.Multiply4(transform) };
 			
 			
 			/*
