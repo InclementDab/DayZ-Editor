@@ -5,8 +5,8 @@ class BoxSelectCommand: Command
 	{
 		super.Execute(state);
 		Print(state);
-		GetDayZGame().GetEditor().GetCommand(CircleSelectCommand).Execute(false);
-		GetDayZGame().GetEditor().GetCommand(LassoSelectCommand).Execute(false);
+		GetDayZGame().GetCommand(CircleSelectCommand).Execute(false);
+		GetDayZGame().GetCommand(LassoSelectCommand).Execute(false);
 	}
 	
 	override string GetName()
@@ -22,8 +22,8 @@ class CircleSelectCommand: Command
 	{
 		super.Execute(state);
 		
-		GetDayZGame().GetEditor().GetCommand(BoxSelectCommand).Execute(false);
-		GetDayZGame().GetEditor().GetCommand(LassoSelectCommand).Execute(false);
+		GetDayZGame().GetCommand(BoxSelectCommand).Execute(false);
+		GetDayZGame().GetCommand(LassoSelectCommand).Execute(false);
 	}
 	
 	override string GetName()
@@ -39,8 +39,8 @@ class LassoSelectCommand: Command
 	{
 		super.Execute(state);
 		
-		GetDayZGame().GetEditor().GetCommand(BoxSelectCommand).Execute(false);
-		GetDayZGame().GetEditor().GetCommand(CircleSelectCommand).Execute(false);
+		GetDayZGame().GetCommand(BoxSelectCommand).Execute(false);
+		GetDayZGame().GetCommand(CircleSelectCommand).Execute(false);
 	}
 	
 	override string GetName()
@@ -85,7 +85,7 @@ class EditorButton: ScriptedWidgetEventHandler
 			m_Icon.SetImage(0);
 		}
 		
-		m_Command = GetDayZGame().GetEditor().GetCommand(CommandType.ToType());
+		m_Command = GetDayZGame().GetCommand(CommandType.ToType());
 		Print(m_Command);
 		if (m_Command) {
 			m_Command.Buttons.Insert(this);

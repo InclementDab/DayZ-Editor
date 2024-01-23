@@ -7,9 +7,28 @@ modded class DayZGame
 		m_Editor = new Editor(GetPlayer());
 	}
 #endif
-	
 	// server!
 	protected ref map<string, ref EditorNode> m_Nodes = new map<string, ref EditorNode>();
+	
+	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
+	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
+			
+	void DayZGame()
+	{
+		foreach (typename command_type: RegisterCommand.Instances) {		
+			Command command = Command.Cast(command_type.Spawn());
+			if (!command) {
+				Error("Invalid command");
+				continue;
+			}
+			
+			m_Commands[command_type] = command;
+			
+			if (command.GetShortcut() != string.Empty) {
+				m_CommandShortcutMap[command.GetShortcut()] = command;
+			}
+		}	
+	}
 	
 	override void OnUpdate(bool doSim, float timeslice)
 	{
@@ -17,6 +36,44 @@ modded class DayZGame
 				
 		if (m_Editor) {
 			m_Editor.Update(doSim, timeslice);
+		}
+		
+		if (IsLeftCtrlDown()) {
+			foreach (string input_name, Command command: m_CommandShortcutMap) {		
+				if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
+					continue;
+				}
+						
+				if (!command || !command.CanExecute()) {
+					continue;
+				}
+				
+				switch (command.GetShortcutType()) {
+					case ShortcutKeyType.PRESS: {
+						if (GetGame().GetInput().LocalPress(input_name)) {
+							command.Execute(true);
+						}
+						
+						break;
+					}
+					
+					case ShortcutKeyType.DOUBLE: {
+						if (GetGame().GetInput().LocalDbl(input_name)) {
+							command.Execute(true);
+						}
+						
+						break;
+					}
+					
+					case ShortcutKeyType.HOLD: {
+						if (GetGame().GetInput().LocalHold(input_name)) {
+							command.Execute(true);
+						}
+						
+						break;
+					}
+				}
+			}
 		}
 	}
 	
@@ -41,6 +98,11 @@ modded class DayZGame
 		}
 		
 		super.OnRPC(sender, target, rpc_type, ctx);
+	}
+	
+	Command GetCommand(typename command)
+	{
+		return m_Commands[command];
 	}
 	
 	static bool IsForbiddenItem(string model)

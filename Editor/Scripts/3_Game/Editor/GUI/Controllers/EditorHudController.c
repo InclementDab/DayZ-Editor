@@ -65,63 +65,7 @@ class EditorHudController: ViewController
 			}
 		}
 	}
-	
-	/*
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
 		
-		if (button == MouseState.RIGHT) {
-		
-			switch (w) {
-				case LeftbarSearchBar: {
-					SearchBarData = string.Empty;
-					NotifyPropertyChanged("SearchBarData");
-					break;
-				}
-				case PlacedSearchEditbox: {
-					PlacedSearchBarData = string.Empty;
-					NotifyPropertyChanged("PlacedSearchBarData");
-					break;
-				}
-			}	
-		}
-	
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-		
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		//EditorLog.Trace("EditorHudController::OnMouseEnter");
-
-		switch (w) {
-			case PlacementsTabButton: {
-				GetDayZGame().GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetDayZGame().GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
-				break;
-			}
-			
-			case DeletionsTabButton: {
-				GetDayZGame().GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetDayZGame().GetEditor().GetDeletedObjects().Count() + " #STR_EDITOR_DELETIONS", w, TooltipPositions.BOTTOM_LEFT));
-				break;
-			}
-			
-			case CinematicCameraButton: {
-				GetDayZGame().GetEditor().GetHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("#STR_EDITOR_CINEMATIC_CAMERA", w, TooltipPositions.TOP_LEFT));
-				break;
-			}
-		}
-				
-		return super.OnMouseEnter(w, x, y);
-	}
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		//EditorLog.Trace("EditorHudController::OnMouseLeave");
-		delete GetDayZGame().GetEditor().GetHud().CurrentTooltip;
-		
-		return super.OnMouseLeave(w, enterW, x, y);
-	}*/
-	
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{
 		if (RecursiveGetParent(w, ScrollWidget)) {

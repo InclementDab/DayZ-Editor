@@ -92,11 +92,8 @@ class Editor: SerializableBase
 	
 	static const string Version = "2.0";
 	
-	protected ref array<ref EditorHiddenObject> m_DeletedObjects = {};
+	protected ref array<ref EditorHiddenObject> m_DeletedObjects = {};	
 	
-	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
-	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
-			
 	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", Symbols.PENCIL.Regular());			
 	void Editor(Man player) 
 	{		
@@ -126,95 +123,81 @@ class Editor: SerializableBase
 		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", Symbols.CODE.Regular()));
 		m_Master.Add(placeable_objects);
 		
-		if (GetGame().IsDedicatedServer()) {
-			array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
-						
-			string category = "Unknown";
-			// handle config objects
-			foreach (string path: config_paths) {
-				for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
-					string type;
-			        GetGame().ConfigGetChildName(path, i, type);
-					if (GetGame().ConfigGetInt(path + " " + type + " scope") < 2) {
-						continue;
-					}
+		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 					
-					if (GetDayZGame().IsForbiddenItem(type)) {
-						continue;
-					}
-					
-					array<string> full_path = {};
-					GetGame().ConfigGetFullPath(path + " " + type, full_path);
-					
-					category = "Unknown";
-					if ((full_path.Find("Weapon_Base") != -1) || (full_path.Find("Inventory_Base")) != -1) {
-						category = "DynamicObjects";
-					} else if (full_path.Find("HouseNoDestruct") != -1) {
-						category = "Structures";
-					} else if (full_path.Find("Car") != -1) {
-						category = "Vehicles";
-					} else if (full_path.Find("Man") != -1 || (full_path.Find("DZ_LightAI"))) {
-						category = "AI";
-					}
-					
-					m_Master[category].Add(new EditorPlaceable(type, type, Symbols.BUILDING.Regular()));
-			    }
-			}
-			
-			array<string> paths = { "DZ\\plants", "DZ\\plants_bliss", "DZ\\rocks", "DZ\\rocks_bliss" };
-			foreach (string model_path: paths) {
-				array<ref CF_File> files = {};
-				if (!CF_Directory.GetFiles(model_path + "\\*", files, FindFileFlags.ARCHIVES)) {
+		string category = "Unknown";
+		// handle config objects
+		foreach (string path: config_paths) {
+			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
+				string type;
+		        GetGame().ConfigGetChildName(path, i, type);
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 2) {
 					continue;
 				}
-					
-				foreach (CF_File file: files) {		
-					if (!file || file.GetExtension() != ".p3d") {
-						continue;
-					}
-					
-					string model_name;
-					array<string> items = {};
-					string full_path_p3d = file.GetFullPath();
-					full_path_p3d.Replace("/", "\\");
-					full_path_p3d.Split("\\", items);
-					if (items.Count() != 0) {
-						model_name = items[items.Count() - 1];
-					}
-					
-					category = "StaticObjects";
-					if ((items.Find("tree") != -1) || (items.Find("bush") != -1)) {
-						category = "Plants";
-					} else if (items.Find("clutter") != -1) {
-						category = "Clutter";
-					} else if (items.Find("rocks") != -1) {
-						category = "Rocks";
-					}
 				
-					m_Master[category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C.Regular()));
+				if (GetDayZGame().IsForbiddenItem(type)) {
+					continue;
 				}
-			}
-	
-			foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
-				m_Master["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
-			}
-			
-			return;
+				
+				array<string> full_path = {};
+				GetGame().ConfigGetFullPath(path + " " + type, full_path);
+				
+				category = "Unknown";
+				if ((full_path.Find("Weapon_Base") != -1) || (full_path.Find("Inventory_Base")) != -1) {
+					category = "DynamicObjects";
+				} else if (full_path.Find("HouseNoDestruct") != -1) {
+					category = "Structures";
+				} else if (full_path.Find("Car") != -1) {
+					category = "Vehicles";
+				} else if (full_path.Find("Man") != -1 || (full_path.Find("DZ_LightAI"))) {
+					category = "AI";
+				}
+				
+				m_Master[category].Add(new EditorPlaceable(type, type, Symbols.BUILDING.Regular()));
+		    }
 		}
-								
-		foreach (typename command_type: RegisterCommand.Instances) {		
-			Command command = Command.Cast(command_type.Spawn());
-			if (!command) {
-				Error("Invalid command");
+		
+		array<string> paths = { "DZ\\plants", "DZ\\plants_bliss", "DZ\\rocks", "DZ\\rocks_bliss" };
+		foreach (string model_path: paths) {
+			array<ref CF_File> files = {};
+			if (!CF_Directory.GetFiles(model_path + "\\*", files, FindFileFlags.ARCHIVES)) {
 				continue;
 			}
+				
+			foreach (CF_File file: files) {		
+				if (!file || file.GetExtension() != ".p3d") {
+					continue;
+				}
+				
+				string model_name;
+				array<string> items = {};
+				string full_path_p3d = file.GetFullPath();
+				full_path_p3d.Replace("/", "\\");
+				full_path_p3d.Split("\\", items);
+				if (items.Count() != 0) {
+					model_name = items[items.Count() - 1];
+				}
+				
+				category = "StaticObjects";
+				if ((items.Find("tree") != -1) || (items.Find("bush") != -1)) {
+					category = "Plants";
+				} else if (items.Find("clutter") != -1) {
+					category = "Clutter";
+				} else if (items.Find("rocks") != -1) {
+					category = "Rocks";
+				}
 			
-			m_Commands[command_type] = command;
-			
-			if (command.GetShortcut() != string.Empty) {
-				m_CommandShortcutMap[command.GetShortcut()] = command;
+				m_Master[category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C.Regular()));
 			}
-		}		
+		}
+
+		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
+			m_Master["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+		}
+			
+		if (GetGame().IsDedicatedServer()) {
+			return;
+		}
 		
 		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
 		ControlCamera(m_Camera);	
@@ -236,44 +219,6 @@ class Editor: SerializableBase
 	{
 		if (GetGame().IsDedicatedServer()) {
 			return;
-		}
-		
-		if (IsProcessingCommand()) {
-			foreach (string input_name, Command command: m_CommandShortcutMap) {		
-				if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
-					continue;
-				}
-						
-				if (!command || !command.CanExecute()) {
-					continue;
-				}
-				
-				switch (command.GetShortcutType()) {
-					case ShortcutKeyType.PRESS: {
-						if (GetGame().GetInput().LocalPress(input_name)) {
-							command.Execute(true);
-						}
-						
-						break;
-					}
-					
-					case ShortcutKeyType.DOUBLE: {
-						if (GetGame().GetInput().LocalDbl(input_name)) {
-							command.Execute(true);
-						}
-						
-						break;
-					}
-					
-					case ShortcutKeyType.HOLD: {
-						if (GetGame().GetInput().LocalHold(input_name)) {
-							command.Execute(true);
-						}
-						
-						break;
-					}
-				}
-			}
 		}
 			
 		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) != MB_PRESSED_MASK) {
@@ -576,13 +521,6 @@ class Editor: SerializableBase
 	ScriptedCamera GetCurrentControlCamera()
 	{
 		return ScriptedCamera.Cast(m_CurrentControl);
-	}
-	
-	//! DayZ doesnt support 3 deep keybinding. LCTRL + SHIFT + S etc... 
-	// so all commands must be appended with ctrl - this is standard windows expectation anyway
-	bool IsProcessingCommand()
-	{
-		return (GetDayZGame().IsLeftCtrlDown());
 	}
 	
 	bool DoCursorRaycast(out vector position, float max_distance = 3000, Object ignore_object = null)
@@ -989,12 +927,7 @@ class Editor: SerializableBase
 	{
 		return m_DeletedObjects;
 	}
-	
-	map<string, Command> GetCommandShortcutMap()
-	{
-		return m_CommandShortcutMap;
-	}
-			
+				
 	bool IsPlacing()
 	{
 		return Placing.Count() > 0; 
@@ -1004,12 +937,7 @@ class Editor: SerializableBase
 	{
 		return EditorProfileSettings.Cast(GetDayZGame().GetProfileSetting(EditorProfileSettings));
 	}
-	
-	Command GetCommand(typename command)
-	{
-		return m_Commands[command];
-	}
-	
+		
 	EditorNode GetMaster()
 	{	
 		return m_Master;

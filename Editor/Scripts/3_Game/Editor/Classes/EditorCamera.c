@@ -44,7 +44,7 @@ class EditorCamera: ScriptedCamera
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
 		// We are holding control down, essentially
-		if (GetDayZGame().GetEditor().IsProcessingCommand()) {
+		if (GetDayZGame().IsLeftCtrlDown()) {
 			return;
 		}
 		
