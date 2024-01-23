@@ -77,7 +77,7 @@ FrameWidgetClass Root {
        }
        {
         ScriptParamsClass {
-         Relay_Command "OnCollapseExecute"
+         Binding_Name "CollapseState"
         }
        }
       }

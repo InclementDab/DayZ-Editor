@@ -5,7 +5,7 @@ class EditorNodeView: ScriptView
 	protected EditorNodeView m_Parent;
 	
 	TextWidget Text;
-	WrapSpacerWidget Children;
+	
 	Widget Panel;
 	ImageWidget IconImage, CollapseIcon;
 		
@@ -39,17 +39,8 @@ class EditorNodeView: ScriptView
 		
 	void ShowChildren(bool state)
 	{
-		m_Children = state;
-		
-		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
-		CollapseIcon.SetImage(0);
-		
-		float w, h;
-		Children.Show(m_Children);
-		Children.GetScreenSize(w, h);
-		float x, y;
-		m_LayoutRoot.GetSize(x, y);
-		m_LayoutRoot.SetScreenSize(x, 18 + (h * state));
+		m_TemplateController.CollapseState = state;
+		m_TemplateController.NotifyPropertyChanged("CollapseState");
 		
 		// you only want to open upper containers when lower ones are opened. propagate up /\
 		EditorNode parent = m_Node.GetParent();
@@ -57,12 +48,7 @@ class EditorNodeView: ScriptView
 			parent.GetNodeView().ShowChildren(true);
 		}
 	}
-	
-	void OnCollapseExecute(ButtonCommandArgs args)
-	{
-		ShowChildren(!m_Children);
-	}
-	
+		
 	void ApplyFilter(string filter)
 	{
 		filter.ToLower();

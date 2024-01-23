@@ -8,13 +8,19 @@ enum ShortcutKeyType
 
 class Command: Managed
 {
-	ref array<EditorButton> Buttons = {};
+	protected bool m_Executed;
+	
+	ref ScriptInvoker OnExecute = new ScriptInvoker();
 	
 	void Execute(bool state) 
 	{
-		foreach (EditorButton button: Buttons) {
-			button.SetState(state);
-		}
+		m_Executed = state;
+		OnExecute.Invoke(m_Executed);
+	}
+	
+	bool IsExecuted()
+	{
+		return m_Executed;
 	}
 			
 	bool CanExecute()

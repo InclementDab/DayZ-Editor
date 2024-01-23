@@ -47,6 +47,7 @@ class EditorObject: EditorNode
 		Math3D.MatrixOrthogonalize4(m_Transform);		
 		m_Object = Editor.CreateObject(m_Type, m_Transform);
 		
+		
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
 	
@@ -74,6 +75,13 @@ class EditorObject: EditorNode
 		m_LineCenters[10] = AverageVectors(m_LineVerticies[5], m_LineVerticies[4]);		
 		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
 		
+				
+		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
+		if (scripted_entity) {
+			
+		}
+		
+				
 		m_BasePoint = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		//m_PointViews.Insert(new EditorPointView(this, m_BasePoint, 1000));
 		

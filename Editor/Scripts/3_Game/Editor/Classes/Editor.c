@@ -153,7 +153,7 @@ class Editor: SerializableBase
 					category = "AI";
 				}
 				
-				m_Master[category].Add(new EditorPlaceable(type, type, Symbols.BUILDING.Regular()));
+				m_Master["PlaceableObjects"][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING.Regular()));
 		    }
 		}
 		
@@ -187,12 +187,12 @@ class Editor: SerializableBase
 					category = "Rocks";
 				}
 			
-				m_Master[category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C.Regular()));
+				m_Master["PlaceableObjects"][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C.Regular()));
 			}
 		}
 
 		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
-			m_Master["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+			m_Master["PlaceableObjects"]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}
 			
 		if (GetGame().IsDedicatedServer()) {

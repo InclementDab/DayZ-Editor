@@ -32,6 +32,7 @@ class EditorNode: SerializableBase
 		m_UUID = uuid;
 		m_DisplayName = display_name;
 		m_Icon = icon;
+		
 		All[m_UUID] = this;
 		
 		if (!GetGame().IsDedicatedServer()) {

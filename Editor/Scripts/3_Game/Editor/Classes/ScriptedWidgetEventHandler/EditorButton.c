@@ -4,9 +4,11 @@ class BoxSelectCommand: Command
 	override void Execute(bool state)
 	{
 		super.Execute(state);
-		Print(state);
-		GetDayZGame().GetCommand(CircleSelectCommand).Execute(false);
-		GetDayZGame().GetCommand(LassoSelectCommand).Execute(false);
+		
+		if (state) {
+			GetDayZGame().GetCommand(CircleSelectCommand).Execute(false);
+			GetDayZGame().GetCommand(LassoSelectCommand).Execute(false);
+		}
 	}
 	
 	override string GetName()
@@ -22,8 +24,10 @@ class CircleSelectCommand: Command
 	{
 		super.Execute(state);
 		
-		GetDayZGame().GetCommand(BoxSelectCommand).Execute(false);
-		GetDayZGame().GetCommand(LassoSelectCommand).Execute(false);
+		if (state) {
+			GetDayZGame().GetCommand(BoxSelectCommand).Execute(false);
+			GetDayZGame().GetCommand(LassoSelectCommand).Execute(false);
+		}
 	}
 	
 	override string GetName()
@@ -39,8 +43,10 @@ class LassoSelectCommand: Command
 	{
 		super.Execute(state);
 		
-		GetDayZGame().GetCommand(BoxSelectCommand).Execute(false);
-		GetDayZGame().GetCommand(CircleSelectCommand).Execute(false);
+		if (state) {
+			GetDayZGame().GetCommand(BoxSelectCommand).Execute(false);
+			GetDayZGame().GetCommand(CircleSelectCommand).Execute(false);
+		}
 	}
 	
 	override string GetName()
@@ -60,22 +66,11 @@ class EditorButton: ScriptedWidgetEventHandler
 	protected ButtonWidget m_Button;
 	protected ImageWidget m_Icon;
 	
-	void ~EditorButton()
-	{
-		if (m_Command) {
-			m_Command.Buttons.RemoveItem(this);
-		}
-	}
-	
 	void OnWidgetScriptInit(Widget w)
 	{
 		m_LayoutRoot = w;
 		m_LayoutRoot.SetHandler(this);
-		
-		if (CommandType != string.Empty && !CommandType.ToType()) {
-			Error("Type not found! " + CommandType);
-		}
-		
+	
 		m_Button = FindWidget<ButtonWidget>.SearchDown(m_LayoutRoot, "Button");
 		m_Button.SetHandler(this);
 		
@@ -85,31 +80,27 @@ class EditorButton: ScriptedWidgetEventHandler
 			m_Icon.SetImage(0);
 		}
 		
-		m_Command = GetDayZGame().GetCommand(CommandType.ToType());
-		Print(m_Command);
-		if (m_Command) {
-			m_Command.Buttons.Insert(this);
-		}		
-#ifndef WORKBENCH
-
-#else
+		if (CommandType != string.Empty) {
+			m_Command = GetDayZGame().GetCommand(CommandType.ToType());
+			if (m_Command) {
+				m_Command.OnExecute.Insert(OnExecuted);
+			}
+		}
+		
+#ifdef WORKBENCH
 		// debug display
 		//m_Icon.SetColor(m_LayoutRoot.GetColor());
 #endif
 	}
+			
+	void OnExecuted(bool state)
+	{
+		SymbolSize size = Ternary<SymbolSize>.If(state, SymbolSize.SOLID, SymbolSize.REGULAR);
+		int color = Ternary<int>.If(state, m_LayoutRoot.GetColor(),	m_Icon.GetColor());
 		
-	void SetState(bool state)
-	{					
-		Print(state);								// Good little guide if you get confused
-		SymbolSize size = Ternary<SymbolSize>.If(state, SymbolSize.SOLID, 			SymbolSize.REGULAR);
-		int color = Ternary<int>.If(state, 				m_LayoutRoot.GetColor(),	m_Icon.GetColor());
-		
-//#ifndef WORKBENCH
 		WidgetAnimator.AnimateColor(m_Icon, color, 50);
-//#endif
-				
-		Icon = Icon.WithSize(size);
-		m_Icon.LoadImageFile(0, Icon);
+		
+		m_Icon.LoadImageFile(0, Icon.WithSize(size));
 		m_Icon.SetImage(0);
 	}
 	
@@ -125,10 +116,8 @@ class EditorButton: ScriptedWidgetEventHandler
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		if (button == 0) {
-			if (m_Command) {
-				m_Command.Execute(m_Button.GetState());
-			}
+		if (button == 0 && m_Command) {
+			m_Command.Execute(!m_Command.IsExecuted());
 		}
 		
 		return true;
