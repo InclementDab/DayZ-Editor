@@ -75,12 +75,16 @@ class EditorObject: EditorNode
 		m_LineCenters[10] = AverageVectors(m_LineVerticies[5], m_LineVerticies[4]);		
 		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
 		
-				
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
 		if (scripted_entity) {
-			
+			TriggerShape shape = scripted_entity.GetTriggerShape();
+			switch (shape) {
+				case TriggerShape.BOX: {
+					scripted_entity.SetCollisionBox("2 2 2", "-2 -2 -2");
+					break;
+				}
+			}
 		}
-		
 				
 		m_BasePoint = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		//m_PointViews.Insert(new EditorPointView(this, m_BasePoint, 1000));
@@ -201,6 +205,29 @@ class EditorObject: EditorNode
 			mat[3] = pos2;
 			Shape.CreateMatrix(mat);
 			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
+		}
+		
+		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
+		if (scripted_entity) {
+			TriggerShape shape = scripted_entity.GetTriggerShape();
+			switch (shape) {
+				case TriggerShape.BOX: {
+					vector min_max[2];
+					scripted_entity.GetCollisionBox(min_max);
+					
+					vector transform_box[4];
+					m_Object.GetTransform(transform_box);
+					
+					Shape bbox = Shape.Create(ShapeType.BBOX, COLOR_RED_A, ShapeFlags.NOZBUFFER | ShapeFlags.ONCE | ShapeFlags.TRANSP, min_max[0], min_max[1]);
+					bbox.SetMatrix(transform_box);
+					break;
+				}
+				
+				case TriggerShape.SPHERE: {
+					//Debug.DrawBox(
+					break;
+				}
+			}
 		}
 	}
 #endif

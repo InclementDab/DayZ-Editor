@@ -78,6 +78,7 @@ FrameWidgetClass Root {
        {
         ScriptParamsClass {
          Binding_Name "CollapseState"
+         Two_Way_Binding 1
         }
        }
       }

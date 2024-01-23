@@ -19,7 +19,7 @@ modded class PlayerBase
 	{
 #ifndef SERVER
 		if (GetDayZGame().GetEditor()) {
-			GetInputController().SetDisabled(GetDayZGame().GetEditor().GetCurrentControl() != this);
+			//GetInputController().SetDisabled(GetDayZGame().GetEditor().GetCurrentControl() != this);
 		}
 #endif
 	}
