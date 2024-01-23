@@ -44,11 +44,7 @@ class EditorObject: EditorNode
 		corners[5] = Vector(clip[1][0], clip[1][1], clip[1][2]);
 		corners[6] = Vector(clip[1][0], clip[1][1], clip[0][2]);
 		corners[7] = Vector(clip[0][0], clip[1][1], clip[0][2]);		
-		
-		for (int c = 0; c < 8; c++) {
-			GetDayZGame().DebugDrawText(c.ToString(), corners[c].Multiply4(transform), 1.0);
-		}
-		
+				
 		for (ETransformationAxis i = 0; i < 6; i++) {
 			switch (i) {
 				case ETransformationAxis.BOTTOM: {
