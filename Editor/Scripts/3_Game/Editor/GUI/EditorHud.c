@@ -7,13 +7,6 @@ class WebToggleCommand: Command
 	}
 }
 
-typedef string Cursors;
-class Cursors: string
-{
-	static const Cursors I = "i_cursor";
-	static const Cursors LEFT_RIGHT = "left_right";
-}
-
 class EditorHud: ScriptView
 {	
 	/*
@@ -85,7 +78,7 @@ class EditorHud: ScriptView
 		}
 		
 		Whiteboard.Clear();
-		if (input.LocalHold_ID(UAFire)) {
+		if (input.LocalHold_ID(UAFire) && EditorNode.SelectedObjects.Count() == 0) {
 			// Rectangle
 			//int x_avg = (m_DragX + mouse_x) / 2;
 			//int y_avg = (m_DragY + mouse_y) / 2;
@@ -249,11 +242,7 @@ class EditorHud: ScriptView
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
-				SetCursor(Cursors.LEFT_RIGHT);
-				
-				//WidgetAnimator.AnimateColorHSV(w, "240 140 60", "239 131 175", 30);
-				//LeftDragZone.SetColor(COLOR_WHITE);
-				//WidgetAnimator.AnimateColor(w, COLOR_BLUE_LIGHT, 60);
+				SetCursor(Symbols.LEFT_RIGHT);
 				break;
 			}
 		}
@@ -270,9 +259,6 @@ class EditorHud: ScriptView
 					ClearCursor();
 				}
 				
-				//WidgetAnimator.AnimateColor(w, COLOR_BLUE, 50);
-				//LeftDragZone.SetColor(COLOR_SALMON_A);
-				//WidgetAnimator.AnimateColor(w, COLOR_WHITE, 60);
 				break;
 			}
 		}
@@ -452,16 +438,16 @@ class EditorHud: ScriptView
 		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetName(), split_string[0], component_type, component_index);
 	}*/
 	
-	void SetCursor(Cursors cursor)
+	void SetCursor(Symbols cursor)
 	{
 		m_Cursor.Show(true);
 		
 		ImageWidget foreground = FindWidget<ImageWidget>.SearchDown(m_Cursor, "Foreground");
-		foreground.LoadImageFile(0, string.Format("set:thin image:%1", cursor));
+		foreground.LoadImageFile(0, string.Format("set:thin %1", cursor));
 		foreground.SetImage(0);
 		
 		ImageWidget background = FindWidget<ImageWidget>.SearchDown(m_Cursor, "Background");
-		background.LoadImageFile(0, string.Format("set:solid image:%1", cursor));
+		background.LoadImageFile(0, string.Format("set:solid %1", cursor));
 		background.SetImage(0);
 		
 		SetCursorWidget(m_Cursor);

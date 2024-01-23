@@ -13,7 +13,6 @@ class EditorObjectView: ScriptView
 		array<string> icon_split = {};
 		m_EditorObject.GetIcon().Split(":", icon_split);
 		if (icon_split.Count() > 2) {
-			Print(string.Format("set:solid image:%1", icon_split[2]));
 			Image.LoadImageFile(0, string.Format("set:solid image:%1", icon_split[2]));
 			Outline.LoadImageFile(0, string.Format("set:thin image:%1", icon_split[2]));
 		} else {
@@ -46,20 +45,39 @@ class EditorObjectView: ScriptView
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		WidgetAnimator.Animate(Image, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
-		
+		GetDayZGame().GetEditor().GetHud().SetCursor(Symbols.UP_DOWN_LEFT_RIGHT);
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		WidgetAnimator.Animate(Image, WidgetAnimatorProperty.COLOR_A, 150.0 / 255.0, 100);
-		
+		GetDayZGame().GetEditor().GetHud().ClearCursor();
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		m_EditorObject.SetSelected(!m_EditorObject.IsSelected());
+		switch (button) {
+			case 0: {
+				if (m_EditorObject.IsPlacing()) {
+					return true;
+				}
+				
+				if (!KeyState(KeyCode.KC_LSHIFT)) {
+					EditorNode.ClearSelections();
+				}
+				
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					m_EditorObject.SetSelected(!m_EditorObject.IsSelected());
+				} else {
+					m_EditorObject.SetSelected(true);
+				}
+				
+				return true;
+			}
+		}
+		
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	

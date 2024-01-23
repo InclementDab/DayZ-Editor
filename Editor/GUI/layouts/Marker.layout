@@ -8,6 +8,7 @@ PanelWidgetClass Marker {
  hexactsize 1
  vexactsize 1
  scaled 0
+ "no focus" 1
  {
   ImageWidgetClass Image {
    ignorepointer 1

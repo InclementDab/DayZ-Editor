@@ -335,14 +335,9 @@ class Editor: SerializableBase
 		foreach (EditorObject editor_object_placing: Placing) {
 			vector transform[4] = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position };
 			editor_object_placing.SetBaseTransform(transform);
-			//editor_object_placing
 		}
 		
-		if (GetGame().GetInput().LocalPress_ID(UAFire)) {
-			if (GetWidgetUnderCursor()) {
-				Print(GetWidgetUnderCursor().GetName());
-			}
-			
+		if (GetGame().GetInput().LocalPress_ID(UAFire)) {			
 			// Cursed but we ship it
 			if (!GetWidgetUnderCursor() || !GetWidgetUnderCursor().GetName().Contains("Panel")) {
 				foreach (EditorObject editor_object_to_place: Placing) {
@@ -376,8 +371,24 @@ class Editor: SerializableBase
 				if (!editor_object_cast) {
 					continue;
 				}
+								
+				vector current_transform[4];
+				editor_object_cast.GetBaseTransform(current_transform);
 				
-			//	Placing[editor_object_cast.GetObject()] = new EditorHandData();
+				if (KeyState(KeyCode.KC_LMENU)) {
+					vector v3 = (current_transform[1] * ray2.Direction);
+					float dist_z = vector.Dot(((ray2.Position - current_transform[3]) * current_transform[1]), v3) / v3.LengthSq();
+					
+					vector pos = ray2.Position + ray2.Direction * dist_z;
+					pos[0] = current_transform[3][0];
+					pos[2] = current_transform[3][2];
+					
+					current_transform = { current_transform[0], current_transform[1], current_transform[2], pos };
+					editor_object_cast.SetBaseTransform(current_transform);
+				} else {
+					transform = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position };
+					editor_object_cast.SetBaseTransform(transform);
+				}
 			}
 		}
 		

@@ -7,12 +7,10 @@ class EditorNode: SerializableBase
 	static void ClearSelections()
 	{
 		foreach (EditorNode selected_object: SelectedObjects) {
-			if (selected_object && selected_object.IsSelected()) {
+			if (selected_object) {
 				selected_object.SetSelected(false);
 			}
 		}
-		
-		SelectedObjects.Clear();
 	}
 	
 	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();

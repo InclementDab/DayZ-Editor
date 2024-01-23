@@ -107,8 +107,6 @@ class EditorObject: EditorNode
 			}	
 		}
 		
-		m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
-				
 #ifdef DIAG_DEVELOPER
 #ifndef SERVER
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DiagOnFrameUpdate);
@@ -136,12 +134,13 @@ class EditorObject: EditorNode
 	{		
 		vector transform[4];
 		m_Object.GetTransform(transform);
-		m_TranslationGizmo.SetPosition(GetTopPoint());
 		
-		vector mat[4];
-		m_BoundingBoxSurfaces[ETransformationAxis.TOP].CreateMatrix(mat);
-		Math3D.MatrixMultiply4(transform, mat, mat);
-		m_TranslationGizmo.SetTransform(mat);
+		if (m_TranslationGizmo) {
+			vector mat[4];
+			m_BoundingBoxSurfaces[ETransformationAxis.TOP].CreateMatrix(mat);
+			Math3D.MatrixMultiply4(transform, mat, mat);
+			m_TranslationGizmo.SetTransform(mat);
+		}
 		
 				
 		for (int i = 0; i < 6; i++) {
@@ -173,6 +172,11 @@ class EditorObject: EditorNode
 		}
 	}
 #endif
+	
+	bool IsPlacing()
+	{
+		return GetDayZGame().GetEditor().Placing.Find(this) != -1;
+	}
 	
 	override void Write(Serializer serializer, int version)
 	{
@@ -220,6 +224,8 @@ class EditorObject: EditorNode
 			m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
 		} else {
 			//EditorBoundingBox.Destroy(m_Object);
+			
+			GetGame().ObjectDelete(m_TranslationGizmo);
 		}
 	}
 			
@@ -239,6 +245,15 @@ class EditorObject: EditorNode
 		
 		Math3D.MatrixInvMultiply4(matrix, mat, matrix);
 		m_Object.SetTransform(matrix);		
+	}
+	
+	void GetBaseTransform(out vector mat[4])
+	{
+		vector matrix[4];		
+		m_BoundingBoxSurfaces[ETransformationAxis.BOTTOM].CreateMatrix(matrix);
+		
+		m_Object.GetTransform(mat);	
+		Math3D.MatrixMultiply4(mat, matrix, mat);
 	}
 	
 	vector GetBasePoint(bool world_coords = true)
