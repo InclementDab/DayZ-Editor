@@ -1,6 +1,14 @@
 modded class DayZGame
-{
+{		
 #ifdef DIAG_DEVELOPER
+	
+	ref array<ref Param3<string, vector, float>> DebugTexts = {};
+	
+	void DebugDrawText(string text, vector pos, float size)
+	{
+		DebugTexts.Insert(new Param3<string, vector, float>(text, pos, size));
+	}
+	
 	// VERY handy when changing layouts :)
 	void Recompile()
 	{

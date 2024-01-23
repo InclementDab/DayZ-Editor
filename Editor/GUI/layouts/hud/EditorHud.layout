@@ -2544,6 +2544,7 @@ FrameWidgetClass Root {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scaled 0
          draggable 0
          scriptclass "EditorButton"
          {
@@ -2559,6 +2560,7 @@ FrameWidgetClass Root {
            scaled 0
            style Empty
            "no focus" 1
+           switch toggle
            {
             ImageWidgetClass "Undo.Icon" {
              ignorepointer 1
@@ -2571,13 +2573,19 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:regular image:rotate_left"
+             image0 ""
              mode blend
              "src alpha" 1
              filter 0
              nocache 0
             }
            }
+          }
+         }
+         {
+          ScriptParamsClass {
+           CommandType "UndoCommand"
+           Icon "rotate_left"
           }
          }
         }
@@ -2589,6 +2597,7 @@ FrameWidgetClass Root {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         scaled 0
          scriptclass "EditorButton"
          {
           ButtonWidgetClass "Redo.Button" {
@@ -2617,13 +2626,19 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:regular image:rotate_right"
+             image0 ""
              mode blend
              "src alpha" 1
              filter 0
              nocache 0
             }
            }
+          }
+         }
+         {
+          ScriptParamsClass {
+           CommandType "RedoCommand"
+           Icon "rotate_right"
           }
          }
         }

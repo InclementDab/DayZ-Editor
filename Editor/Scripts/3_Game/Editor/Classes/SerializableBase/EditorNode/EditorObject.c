@@ -16,7 +16,8 @@ class EditorObject: EditorNode
 		Vector(1, 0, 0),
 		Vector(0, 0, 1),
 	};
-		
+	
+	protected string m_Type;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
 		
@@ -27,25 +28,25 @@ class EditorObject: EditorNode
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
 	protected vector m_LineCenters[12], m_LineVerticies[8], m_BasePoint, m_TopPoint; 
-		
+
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
 	
 	protected Object m_TranslationGizmo;
 	
 	void EditorObject(string uuid, string display_name, string icon, string type, vector transform[4], int flags)
 	{
+		m_Type = type;
 		m_Flags = flags;
 		
 		Math3D.MatrixOrthogonalize4(transform);		
 		m_Object = Editor.CreateObject(type, transform);
-		
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
 		
 		vector clip_info[2];
 		m_Object.ClippingInfo(clip_info);
-	
+				
 		m_LineVerticies[0] = clip_info[0];
 		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
 		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
@@ -137,7 +138,7 @@ class EditorObject: EditorNode
 		
 	void ~EditorObject()
 	{
-		EditorBoundingBox.Destroy(m_Object);
+		//EditorBoundingBox.Destroy(m_Object);
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
 		GetGame().ObjectDelete(m_TranslationGizmo);
@@ -154,7 +155,7 @@ class EditorObject: EditorNode
 	{
 		super.Write(serializer, version);
 		
-		serializer.Write(m_Object.GetType());
+		serializer.Write(m_Type);
 		
 		vector transform[4];
 		m_Object.GetTransform(transform);
@@ -169,15 +170,13 @@ class EditorObject: EditorNode
 			return false;
 		}
 		
-		string type;
-		serializer.Read(type);
+		serializer.Read(m_Type);
 		
 		vector transform[4];
 		serializer.Read(transform);
-		
 		Math3D.MatrixOrthogonalize4(transform);
 		if (!m_Object) {	
-			m_Object = Editor.CreateObject(type, transform);
+			m_Object = Editor.CreateObject(m_Type, transform);
 		}
 		
 		m_Object.SetTransform(transform);
@@ -186,11 +185,72 @@ class EditorObject: EditorNode
 		return true;
 	}
 			
-#ifdef DIAG_DEVELOPER
+#ifdef DIAG_DEVELOPER	
 	void DiagOnFrameUpdate(float dt)
 	{		
 		vector transform[4];
 		m_Object.GetTransform(transform);
+		
+		vector clip[8];
+		m_Object.ClippingInfo(clip);
+	
+		/*
+		enum ETransformationAxis
+		{
+			BOTTOM	= 0,
+			LEFT	= 1,
+			BACK	= 2,
+			TOP		= 3,
+			RIGHT	= 4,
+			FRONT	= 5
+		};		
+		*/
+		
+		// Corner positions
+		vector corners[8];
+		corners[0] = Vector(clip[0][0], clip[0][1], clip[0][2]);
+		corners[1] = Vector(clip[0][0], clip[0][1], clip[1][2]);
+		corners[2] = Vector(clip[1][0], clip[0][1], clip[1][2]);
+		corners[3] = Vector(clip[1][0], clip[0][1], clip[0][2]);
+		
+		corners[4] = Vector(clip[0][0], clip[1][1], clip[1][2]);
+		corners[5] = Vector(clip[1][0], clip[1][1], clip[1][2]);
+		corners[6] = Vector(clip[1][0], clip[1][1], clip[0][2]);
+		corners[7] = Vector(clip[0][0], clip[1][1], clip[0][2]);		
+		
+		array<ref Plane> planes = {};
+		
+		/*
+		planes[Axis.BOTTOM] = new Plane(corners[0], corners[2], Axis.Up(Axis.BOTTOM), Axis.Forward(Axis.BOTTOM));
+		planes[Axis.LEFT] = new Plane(corners[1], corners[5], Axis.Up(Axis.LEFT), Axis.Forward(Axis.LEFT));
+		planes[Axis.FRONT] = new Plane(corners[2], corners[6], Axis.Up(Axis.FRONT), Axis.Forward(Axis.FRONT));
+		planes[Axis.RIGHT] = new Plane(corners[3], corners[7], Axis.Up(Axis.RIGHT), Axis.Forward(Axis.RIGHT));
+		planes[Axis.BACK] = new Plane(corners[4], corners[0], Axis.Up(Axis.BACK), Axis.Forward(Axis.BACK));
+		planes[Axis.TOP] = new Plane(corners[5], corners[7], Axis.Up(Axis.TOP), Axis.Forward(Axis.TOP));		
+		*/
+		
+		for (int i = 0; i < 6; i++) {
+			bool top_or_bottom = (i == Axis.TOP || i == Axis.BOTTOM);
+			int j = Ternary<int>.If(top_or_bottom, i + 2, (i + 4) % 8);
+			vector plane_corners[2] = { corners[i], corners[j] };
+			planes.InsertAt(Axis.ALL[i].CreatePlane(plane_corners), i);
+			
+			// Debug
+			typename x = Axis;
+			typename y = int;
+			planes[i].Debug(x.GetVariableName(i + y.GetVariableCount()), transform);
+		}
+		
+		
+		
+		
+		// Corner debugging
+		for (int k = 0; k < 8; k++) {
+			Shape.CreateSphere(COLOR_PALE_B, ShapeFlags.DOUBLESIDE | ShapeFlags.ONCE, corners[k].Multiply4(transform), 0.05);
+			GetDayZGame().DebugDrawText(k.ToString(), corners[k].Multiply4(transform), 1);
+		}		
+					
+		/*
 		for (int i = 0; i < 8; i++) {
 			vector pos = m_LineVerticies[i].Multiply4(transform);
 			//Debug.DrawSphere(pos, 0.1, COLOR_GREEN, ShapeFlags.ONCE);
@@ -203,10 +263,10 @@ class EditorObject: EditorNode
 			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
 			Math3D.MatrixMultiply3(transform, mat, mat);
 			mat[3] = pos2;
-			Shape.CreateMatrix(mat);
+			//Shape.CreateMatrix(mat);
 			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
-		}
-		
+		}*/
+				
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
 		if (scripted_entity) {
 			TriggerShape shape = scripted_entity.GetTriggerShape();
@@ -238,12 +298,12 @@ class EditorObject: EditorNode
 		
 		if (selected) {
 			if (((m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX)) {
-				EditorBoundingBox.Create(m_Object);
+				//EditorBoundingBox.Create(m_Object);
 			}
 			
 			m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
 		} else {
-			EditorBoundingBox.Destroy(m_Object);
+			//EditorBoundingBox.Destroy(m_Object);
 		}
 	}
 			
