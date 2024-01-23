@@ -76,7 +76,7 @@ class Editor: SerializableBase
 	protected ref EditorHud	m_Hud;
 
 	protected EditorCamera m_Camera;
-	ref map<Object, ref EditorHandData> Placing = new map<Object, ref EditorHandData>();
+	ref array<ref EditorObject> Placing = {};
 	protected Entity m_CurrentControl;
 	
 	// Stack of Undo / Redo Actions
@@ -251,35 +251,28 @@ class Editor: SerializableBase
 		
 		m_CursorNormal = m_CursorNormal.Multiply3(rotation_mat);
 		//Print(m_CursorNormal);
-		//ray1.Debug();
+		ray1.Debug();
 		
-		foreach (Object object, EditorHandData data1: Placing) {
-			vector transform[4];
-			object.GetTransform(transform);
-						
-			vector size = ObjectGetSize(object);
-			
-			transform = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position + Vector(0, (size[1] / 2) * ray1.Direction.Length(), 0) };
-			
-			object.SetTransform(transform);
+		//Print(Placing.Count());
+		foreach (EditorObject editor_object_placing: Placing) {
+			vector transform[4] = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position - editor_object_placing.GetBasePointLocal() };
+			editor_object_placing.GetObject().SetTransform(transform);
 		}
 		
-		if (GetGame().GetInput().LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {
-			foreach (Object object_to_place, EditorHandData data: Placing) {
-				
-				vector transform_placed[4];
-				object_to_place.GetTransform(transform_placed);
-				
-				EditorObject editor_object = new EditorObject(UUID.Generate(), object_to_place.GetType(), data.Placeable.GetIcon() , data.Placeable.GetUUID(), transform_placed, EFE_DEFAULT);
-				
-				m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object);
+		if (GetGame().GetInput().LocalPress_ID(UAFire)) {
+			if (GetWidgetUnderCursor()) {
+				Print(GetWidgetUnderCursor().GetName());
+			}
+			
+			
+			foreach (EditorObject editor_object_to_place: Placing) {				
+				m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object_to_place);
 	
 				// Synchronize to this id
 				Synchronize(m_Master["EditedObjects"]["PlacedObjects"]);
-				//m_Master["EditedObjects"]["PlacedObjects"].Synchronize();
 				
 				// remove it from placing
-				Placing.Remove(object_to_place);
+				Placing.RemoveItem(editor_object_to_place);
 			}
 		}
 		
@@ -498,16 +491,7 @@ class Editor: SerializableBase
 		EditorObject.ClearSelections();
 		m_CurrentControl.DisableSimulation(false);
 	}
-	
-	void ClearPlacing()
-	{
-		foreach (Object object, EditorHandData data: Placing) {
-			GetGame().ObjectDelete(object);
-		}
 		
-		Placing.Clear();
-	}
-	
 	Entity GetCurrentControl()
 	{
 		return m_CurrentControl;

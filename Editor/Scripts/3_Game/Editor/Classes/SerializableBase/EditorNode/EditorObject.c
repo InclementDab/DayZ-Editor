@@ -256,6 +256,11 @@ class EditorObject: EditorNode
 		return DayZPhysics.RaycastRV(transform[3], transform[3] + transform[1] * -1000, position, direction, component, null, null, null, false, true);
 	}
 	
+	vector GetBasePointLocal()
+	{
+		return m_BasePoint;
+	}
+	
 	vector GetBasePoint()
 	{
 		vector transform[4];

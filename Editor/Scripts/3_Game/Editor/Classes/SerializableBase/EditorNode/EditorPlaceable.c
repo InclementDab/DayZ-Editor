@@ -14,7 +14,11 @@ class EditorPlaceable: EditorNode
 			
 			vector matrix[4];
 			Math3D.MatrixOrthogonalize4(matrix);
-			GetDayZGame().GetEditor().Placing[Editor.CreateObject(m_UUID, transform)] = new EditorHandData(this, matrix);
+			
+			EditorObject editor_object = new EditorObject(UUID.Generate(), m_UUID, GetIcon(), GetUUID(), matrix, EFE_DEFAULT);
+			GetDayZGame().GetEditor().Placing.Insert(editor_object);
+			
+			//GetDayZGame().GetEditor().Placing[Editor.CreateObject(m_UUID, transform)] = new EditorHandData(this, matrix);
 		}
 	}
 }

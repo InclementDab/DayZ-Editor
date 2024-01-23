@@ -33,11 +33,7 @@ modded class DayZGame
 	override void OnUpdate(bool doSim, float timeslice)
 	{
 		super.OnUpdate(doSim, timeslice);
-				
-		if (m_Editor) {
-			m_Editor.Update(doSim, timeslice);
-		}
-		
+						
 		if (IsLeftCtrlDown()) {
 			foreach (string input_name, Command command: m_CommandShortcutMap) {		
 				if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
@@ -74,6 +70,10 @@ modded class DayZGame
 					}
 				}
 			}
+		}
+		
+		if (m_Editor) {
+			m_Editor.Update(doSim, timeslice);
 		}
 	}
 	

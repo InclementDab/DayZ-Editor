@@ -142,7 +142,7 @@ class EditorHud: ScriptView
 			
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
 			if (IsCursorVisible()) {
-				GetDayZGame().GetEditor().ClearPlacing();
+				//GetDayZGame().GetEditor().ClearPlacing();
 			}
 			
 			ShowCursor(!IsCursorVisible());
