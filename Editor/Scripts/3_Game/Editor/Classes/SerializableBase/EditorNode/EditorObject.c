@@ -1,74 +1,78 @@
 class EditorObject: EditorNode
 {	
 	static const int VERSION = 1;
-	
-	static const ref array<vector> LINE_CENTER_DIRECTIONS = { 
-		Vector(-1, 0, 0), 
-		Vector(0, 0, -1), 
-		Vector(-1, 0, 0), 
-		Vector(0, 0, -1),
-		Vector(-1, 0, 0),
-		Vector(0, 0, 1),
-		Vector(-1, 0, 0),
-		Vector(1, 0, 0),
-		Vector(1, 0, 0),
-		Vector(1, 0, 0),
-		Vector(1, 0, 0),
-		Vector(0, 0, 1),
-	};
 		
+	protected string m_Type;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
 		
+	protected ref array<vector> m_Corners = {};
+	protected ref map<ETransformationAxis, ref Plane> m_BoundingBoxSurfaces = new map<ETransformationAxis, ref Plane>();
+	
 	protected ref array<ref EditorPointView> m_PointViews = {};
 	protected ref EditorObjectView m_EditorObjectView;
 	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
-	protected vector m_LineCenters[12], m_LineVerticies[8], m_BasePoint, m_TopPoint; 
-		
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
 	
 	protected Object m_TranslationGizmo;
 	
 	void EditorObject(string uuid, string display_name, string icon, string type, vector transform[4], int flags)
 	{
+		m_Type = type;
 		m_Flags = flags;
 		
 		Math3D.MatrixOrthogonalize4(transform);		
 		m_Object = Editor.CreateObject(type, transform);
-		
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
 		
-		vector clip_info[2];
-		m_Object.ClippingInfo(clip_info);
-	
-		m_LineVerticies[0] = clip_info[0];
-		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
-		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
-		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
-		m_LineVerticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
-		m_LineVerticies[5] = clip_info[1];
-		m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
-		m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
+		vector clip[2];
+		m_Object.ClippingInfo(clip);
 		
-		m_LineCenters[0] = AverageVectors(m_LineVerticies[0], m_LineVerticies[1]);
-		m_LineCenters[1] = AverageVectors(m_LineVerticies[0], m_LineVerticies[3]);
-		m_LineCenters[2] = AverageVectors(m_LineVerticies[0], m_LineVerticies[7]);
-		m_LineCenters[3] = AverageVectors(m_LineVerticies[4], m_LineVerticies[7]);
-		m_LineCenters[4] = AverageVectors(m_LineVerticies[6], m_LineVerticies[7]);
-
-		m_LineCenters[5] = AverageVectors(m_LineVerticies[1], m_LineVerticies[2]);
-		m_LineCenters[6] = AverageVectors(m_LineVerticies[1], m_LineVerticies[6]);
-		m_LineCenters[7] = AverageVectors(m_LineVerticies[3], m_LineVerticies[2]);
-		m_LineCenters[8] = AverageVectors(m_LineVerticies[3], m_LineVerticies[4]);
-
-		m_LineCenters[9] = AverageVectors(m_LineVerticies[5], m_LineVerticies[2]);
-		m_LineCenters[10] = AverageVectors(m_LineVerticies[5], m_LineVerticies[4]);		
-		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
+		// Corner positions
+		vector corners[8];
+		corners[0] = Vector(clip[0][0], clip[0][1], clip[0][2]);
+		corners[1] = Vector(clip[0][0], clip[0][1], clip[1][2]);
+		corners[2] = Vector(clip[1][0], clip[0][1], clip[1][2]);
+		corners[3] = Vector(clip[1][0], clip[0][1], clip[0][2]);
+		
+		corners[4] = Vector(clip[0][0], clip[1][1], clip[1][2]);
+		corners[5] = Vector(clip[1][0], clip[1][1], clip[1][2]);
+		corners[6] = Vector(clip[1][0], clip[1][1], clip[0][2]);
+		corners[7] = Vector(clip[0][0], clip[1][1], clip[0][2]);		
+				
+		for (ETransformationAxis i = 0; i < 6; i++) {
+			switch (i) {
+				case ETransformationAxis.BOTTOM: {
+					m_BoundingBoxSurfaces[i] = new Plane(corners[0], corners[2], vector.Up, vector.Aside);
+					break;
+				}				
+				case ETransformationAxis.LEFT: { 
+					m_BoundingBoxSurfaces[i] = new Plane(corners[0], corners[4], vector.Aside * -1, vector.Up);
+					break;
+				}
+				case ETransformationAxis.BACK: { 
+					m_BoundingBoxSurfaces[i] = new Plane(corners[3], corners[7], vector.Forward * -1, vector.Up);
+					break;
+				}
+				case ETransformationAxis.TOP: {
+					m_BoundingBoxSurfaces[i] = new Plane(corners[4], corners[6], vector.Up, vector.Aside);
+					break;
+				}
+				case ETransformationAxis.RIGHT: {
+					m_BoundingBoxSurfaces[i] = new Plane(corners[2], corners[6], vector.Aside, vector.Up);
+					break;
+				}				
+				case ETransformationAxis.FRONT: { 
+					m_BoundingBoxSurfaces[i] = new Plane(corners[1], corners[5], vector.Forward, vector.Up);
+					break;
+				}
+			}		
+		}
 		
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
 		if (scripted_entity) {
@@ -80,32 +84,7 @@ class EditorObject: EditorNode
 				}
 			}
 		}
-				
-		m_BasePoint = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
-		//m_PointViews.Insert(new EditorPointView(this, m_BasePoint, 1000));
-		
-		m_TopPoint = AverageVectors(m_LineVerticies[0], m_LineVerticies[2]);
-		
-		for (int i = 0; i < 8; i++) {
-			//m_PointViews.Insert(new EditorPointView(this, m_LineVerticies[i], 30));
-		}
-
-		for (int j = 0; j < 12; j++) {
-			vector snap_point_position = m_LineCenters[j].Multiply4(transform);
-			EditorSnapPoint snap_point = EditorSnapPoint.Cast(GetGame().CreateObjectEx("EditorSnapPoint", snap_point_position, ECE_LOCAL));
-			
-			vector mat[4];
-			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
-			mat[3] = snap_point_position;
-			Shape.CreateMatrix(mat);
-			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
-									
-			snap_point.SetTransform(mat);
-			m_Object.AddChild(snap_point, -1);
-			
-			m_EditorSnapPoints.Insert(snap_point);
-		}
-								
+												
 		// Needed for AI Placement			
 		
 		//if (entity_ai && GetDayZGame().GetEditor().GeneralSettings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
@@ -127,6 +106,8 @@ class EditorObject: EditorNode
 				}
 			}	
 		}
+		
+		m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
 				
 #ifdef DIAG_DEVELOPER
 #ifndef SERVER
@@ -137,7 +118,7 @@ class EditorObject: EditorNode
 		
 	void ~EditorObject()
 	{
-		EditorBoundingBox.Destroy(m_Object);
+		//EditorBoundingBox.Destroy(m_Object);
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
 		GetGame().ObjectDelete(m_TranslationGizmo);
@@ -150,61 +131,16 @@ class EditorObject: EditorNode
 		}
 	}
 	
-	override void Write(Serializer serializer, int version)
-	{
-		super.Write(serializer, version);
-		
-		serializer.Write(m_Object.GetType());
-		
-		vector transform[4];
-		m_Object.GetTransform(transform);
-		serializer.Write(transform);
-		
-		serializer.Write(m_Flags);
-	}
-	
-	override bool Read(Serializer serializer, int version)
-	{
-		if (!super.Read(serializer, version)) {
-			return false;
-		}
-		
-		string type;
-		serializer.Read(type);
-		
-		vector transform[4];
-		serializer.Read(transform);
-		
-		Math3D.MatrixOrthogonalize4(transform);
-		if (!m_Object) {	
-			m_Object = Editor.CreateObject(type, transform);
-		}
-		
-		m_Object.SetTransform(transform);
-		
-		serializer.Read(m_Flags);
-		return true;
-	}
-			
-#ifdef DIAG_DEVELOPER
+#ifdef DIAG_DEVELOPER	
 	void DiagOnFrameUpdate(float dt)
 	{		
 		vector transform[4];
 		m_Object.GetTransform(transform);
-		for (int i = 0; i < 8; i++) {
-			vector pos = m_LineVerticies[i].Multiply4(transform);
-			//Debug.DrawSphere(pos, 0.1, COLOR_GREEN, ShapeFlags.ONCE);
-		}
-		
-		for (int j = 0; j < 12; j++) {
-			vector pos2 = m_LineCenters[j].Multiply4(transform);
-			//Debug.DrawSphere(pos2, 0.1, COLOR_APPLE, ShapeFlags.ONCE);
-			vector mat[4];
-			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
-			Math3D.MatrixMultiply3(transform, mat, mat);
-			mat[3] = pos2;
-			Shape.CreateMatrix(mat);
-			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
+		m_TranslationGizmo.SetPosition(GetTopPoint());
+				
+		for (int i = 0; i < 6; i++) {
+			// Debug
+			m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
 		}
 		
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
@@ -231,19 +167,53 @@ class EditorObject: EditorNode
 		}
 	}
 #endif
+	
+	override void Write(Serializer serializer, int version)
+	{
+		super.Write(serializer, version);
 		
+		serializer.Write(m_Type);
+		
+		vector transform[4];
+		m_Object.GetTransform(transform);
+		serializer.Write(transform);
+		
+		serializer.Write(m_Flags);
+	}
+	
+	override bool Read(Serializer serializer, int version)
+	{
+		if (!super.Read(serializer, version)) {
+			return false;
+		}
+		
+		serializer.Read(m_Type);
+		
+		vector transform[4];
+		serializer.Read(transform);
+		Math3D.MatrixOrthogonalize4(transform);
+		if (!m_Object) {	
+			m_Object = Editor.CreateObject(m_Type, transform);
+		}
+		
+		m_Object.SetTransform(transform);
+		
+		serializer.Read(m_Flags);
+		return true;
+	}
+			
 	override void SetSelected(bool selected)
 	{
 		super.SetSelected(selected);
 		
 		if (selected) {
 			if (((m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX)) {
-				EditorBoundingBox.Create(m_Object);
+				//EditorBoundingBox.Create(m_Object);
 			}
 			
 			m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
 		} else {
-			EditorBoundingBox.Destroy(m_Object);
+			//EditorBoundingBox.Destroy(m_Object);
 		}
 	}
 			
@@ -255,43 +225,38 @@ class EditorObject: EditorNode
 		int component;
 		return DayZPhysics.RaycastRV(transform[3], transform[3] + transform[1] * -1000, position, direction, component, null, null, null, false, true);
 	}
-	
-	vector GetBasePointLocal()
-	{
-		return m_BasePoint;
-	}
-	
-	vector GetBasePoint()
-	{
-		vector transform[4];
-		m_Object.GetTransform(transform);
-
-		return m_BasePoint.Multiply4(transform);
-	}
-	
-	vector GetTopPoint()
-	{
-		vector transform[4];
-		m_Object.GetTransform(transform);
-
-		return m_TopPoint.Multiply4(transform);
-	}
-	
-	vector GetBasePointOffset()
-	{
-		return m_BasePoint * -1;
-	}
 		
-	bool OnMouseEnter(int zx, int y)	
-	{
-		return true;
+	void SetBaseTransform(vector mat[4])
+	{		
+		vector matrix[4];		
+		m_BoundingBoxSurfaces[ETransformationAxis.BOTTOM].CreateMatrix(matrix);
+		
+		Math3D.MatrixInvMultiply4(matrix, mat, matrix);
+		m_Object.SetTransform(matrix);		
 	}
 	
-	bool OnMouseLeave(int x, int y) 
+	vector GetBasePoint(bool world_coords = true)
 	{
-		return true;
+		if (world_coords) {
+			vector transform[4];
+			m_Object.GetTransform(transform);
+			return m_BoundingBoxSurfaces[ETransformationAxis.BOTTOM].GetPosition().Multiply4(transform);
+		}
+		
+		return m_BoundingBoxSurfaces[ETransformationAxis.BOTTOM].GetPosition();
 	}
-			
+	
+	vector GetTopPoint(bool world_coords = true)
+	{
+		if (world_coords) {
+			vector transform[4];
+			m_Object.GetTransform(transform);
+			return m_BoundingBoxSurfaces[ETransformationAxis.TOP].GetPosition().Multiply4(transform);
+		}
+		
+		return m_BoundingBoxSurfaces[ETransformationAxis.TOP].GetPosition();
+	}
+				
 	void Hide(bool state) 
 	{		
 		if (!state) {

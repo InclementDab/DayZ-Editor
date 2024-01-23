@@ -32,6 +32,86 @@ class EditorHandData: Managed
 	}
 }
 
+class EditorFootprint: Managed
+{
+	protected bool m_IsUndone;
+	
+	string ID = UUID.Empty;
+	string Type;
+	ref ScriptReadWriteContext Data = new ScriptReadWriteContext();
+	
+	bool IsUndone()
+	{
+		return m_IsUndone;
+	}
+	
+	void Undo()
+	{
+		m_IsUndone = true;
+		
+		int tree_depth;
+		if (!Data.GetReadContext().Read(tree_depth)) {
+			Error("Invalid depth");
+			return;
+		}
+
+		EditorNode current = GetDayZGame().GetEditor().GetMaster();
+		for (int i = 0; i < tree_depth; i++) {
+			string uuid;
+			Data.GetReadContext().Read(uuid);
+			
+			string type;
+			Data.GetReadContext().Read(type);
+			
+			EditorNode node = current[uuid];
+			if (!node) {
+				node = EditorNode.Cast(type.ToType().Spawn());
+				if (!node) {
+					Error("Invalid node type " + type);
+					continue;
+				}
+				
+				current[uuid] = node;
+				node.SetParent(current[uuid]);
+			}
+			
+			current = current[uuid];
+		}
+						
+		current.Read(Data.GetReadContext(), 0);
+	}
+		
+	void Redo()
+	{
+		m_IsUndone = false;
+	}
+}
+
+class EditorHistory: set<ref EditorFootprint>
+{
+	static const int MAX_SIZE = 512;
+	
+	int InsertAction(EditorFootprint value)
+	{	
+		int count = Count();
+		for (int i = 0; i < count; i++) {
+			if (!this[i].IsUndone()) {
+				break;
+			}
+			
+			Remove(i);
+			i--; count--;
+		}
+		
+		if (count >= MAX_SIZE) {
+			Remove(count - 1);
+		}
+		
+		// Adds to bottom of stack
+		return InsertAt(value, 0);
+	}
+}
+
 class Editor: SerializableBase
 {
 	// Handled in DayZGame
@@ -78,13 +158,7 @@ class Editor: SerializableBase
 	protected EditorCamera m_Camera;
 	ref array<ref EditorObject> Placing = {};
 	protected Entity m_CurrentControl;
-	
-	// Stack of Undo / Redo Actions
-	protected ref EditorActionStack m_ActionStack = new EditorActionStack();
-		
-	protected int 									m_LastMouseDown;
-	protected MouseState							m_LastMouseInput = -1;
-	
+				
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
 	protected string EditorSaveFile;
@@ -95,6 +169,10 @@ class Editor: SerializableBase
 	protected ref array<ref EditorHiddenObject> m_DeletedObjects = {};	
 	
 	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", Symbols.PENCIL.Regular());			
+	
+	// Stack of Undo / Redo Actions
+	protected ref EditorHistory m_History = new EditorHistory();
+	
 	void Editor(Man player) 
 	{		
 		m_Player = player;
@@ -255,8 +333,9 @@ class Editor: SerializableBase
 		
 		//Print(Placing.Count());
 		foreach (EditorObject editor_object_placing: Placing) {
-			vector transform[4] = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position - editor_object_placing.GetBasePointLocal() };
-			editor_object_placing.GetObject().SetTransform(transform);
+			vector transform[4] = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position };
+			editor_object_placing.SetBaseTransform(transform);
+			//editor_object_placing
 		}
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire)) {
@@ -266,7 +345,18 @@ class Editor: SerializableBase
 			
 			// Cursed but we ship it
 			if (!GetWidgetUnderCursor() || !GetWidgetUnderCursor().GetName().Contains("Panel")) {
-				foreach (EditorObject editor_object_to_place: Placing) {				
+				foreach (EditorObject editor_object_to_place: Placing) {
+					EditorFootprint footprint = new EditorFootprint();
+					int tree_depth = editor_object_to_place.GetParentDepth();
+					footprint.Data.GetWriteContext().Write(tree_depth);
+					for (int i = tree_depth - 1; i >= 0; i--) {
+						EditorNode parent = editor_object_to_place.GetParentAtDepth(i);
+						footprint.Data.GetWriteContext().Write(parent.GetUUID());
+						footprint.Data.GetWriteContext().Write(parent.Type().ToString());
+					}
+
+					editor_object_to_place.Write(footprint.Data.GetWriteContext(), 0);
+					
 					m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object_to_place);
 		
 					// Synchronize to this id
@@ -274,6 +364,8 @@ class Editor: SerializableBase
 					
 					// remove it from placing
 					Placing.RemoveItem(editor_object_to_place);
+					
+					m_History.InsertAction(footprint);
 				}
 			}
 		}
@@ -360,7 +452,6 @@ class Editor: SerializableBase
 	void Synchronize(notnull EditorNode node, PlayerIdentity identity = null)
 	{	
 		ScriptRPC rpc = new ScriptRPC();
-		
 		int tree_depth = node.GetParentDepth();
 		rpc.Write(tree_depth);
 
@@ -540,9 +631,9 @@ class Editor: SerializableBase
 		
 	void Undo()
 	{
-		foreach (EditorAction action: m_ActionStack) {
-			if (!action.IsUndone()) {
-				action.CallUndo();
+		foreach (EditorFootprint footprint: m_History) {
+			if (!footprint.IsUndone()) {
+				footprint.Undo();
 				return;
 			}
 		}
@@ -550,9 +641,9 @@ class Editor: SerializableBase
 	
 	void Redo()
 	{
-		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
-			if (m_ActionStack[i] && m_ActionStack[i].IsUndone()) {
-				m_ActionStack[i].CallRedo();
+		for (int i = m_History.Count() - 1; i >= 0; i--) {
+			if (m_History[i] && m_History[i].IsUndone()) {
+				m_History[i].Redo();
 				return;
 			}
 		}
@@ -560,8 +651,8 @@ class Editor: SerializableBase
 	
 	bool CanUndo() 
 	{
-		foreach (EditorAction action: m_ActionStack) {
-			if (action && !action.IsUndone()) {
+		foreach (EditorFootprint footprint: m_History) {
+			if (footprint && !footprint.IsUndone()) {
 				return true;
 			}
 		}
@@ -571,71 +662,15 @@ class Editor: SerializableBase
 	
 	bool CanRedo() 
 	{
-		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
-			if (m_ActionStack[i] && m_ActionStack[i].IsUndone()) {
+		for (int i = m_History.Count() - 1; i >= 0; i--) {
+			if (m_History[i] && m_History[i].IsUndone()) {
 				return true;
 			}
 		}
 		
 		return false;
 	}
-	
-	void Clear()
-	{
-		Statistics.Save();
-		m_ActionStack.Clear();
 			
-		m_DeletedObjects.Clear();		
-	}
-		
-	bool CanHideMapObject(string type)
-	{
-		foreach (string deletion_blacklist: DELETION_BLACKLIST) {
-			if (deletion_blacklist == type) {
-				return false;
-			}
-			
-			if (GetGame().IsKindOf(type, deletion_blacklist)) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
-	void LockObject(EditorObject editor_object)
-	{
-		EditorAction action = new EditorAction("Unlock", "Lock");
-		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
-		InsertAction(action);
-		
-		editor_object.SetFlag(EditorObjectFlags.LOCKED);
-		editor_object.SetSelected(false);
-	}
-	
-	void UnlockObject(EditorObject editor_object)
-	{
-		EditorAction action = new EditorAction("Lock", "Unlock");
-		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
-		InsertAction(action);
-		
-		editor_object.ClearFlag(EditorObjectFlags.LOCKED);
-		editor_object.SetSelected(false);
-	}
-	
-	vector GetCameraProjectPosition(bool ground_only = true, float raycast_distance = 3000)
-	{
-		vector ray_start = GetGame().GetCurrentCameraPosition();
-		vector ray_end = ray_start + GetGame().GetCurrentCameraDirection() * raycast_distance;
-		
-		vector pos, normal;
-		int component;	
-		DayZPhysics.RaycastRV(ray_start, ray_end, pos, normal, component, null, null, null, false, ground_only);
-		return pos;
-	}
-		
 	static Man CreateDefaultCharacter(string type, vector position)
 	{
 		EditorLog.Trace("Editor::CreateDefaultCharacter");
@@ -884,11 +919,6 @@ class Editor: SerializableBase
 		return placeable_items[0]; // better way to do other than index 0?
 	}*/
 				
-	void InsertAction(EditorAction action) 
-	{
-		m_ActionStack.InsertAction(action);
-	}
-			
 	EditorHud GetHud() 
 	{
 		return m_Hud;
@@ -899,11 +929,6 @@ class Editor: SerializableBase
 		return m_Camera;
 	}
 		
-	EditorActionStack GetActionStack() 
-	{
-		return m_ActionStack;
-	}	
-	
 	bool IsObjectHidden(notnull Object object)
 	{
 		return (CF.ObjectManager.IsMapObjectHidden(object));
