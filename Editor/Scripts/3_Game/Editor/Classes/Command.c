@@ -8,8 +8,13 @@ enum ShortcutKeyType
 
 class Command: Managed
 {
+	ref array<EditorButton> Buttons = {};
+	
 	void Execute(bool state) 
 	{
+		foreach (EditorButton button: Buttons) {
+			button.SetState(state);
+		}
 	}
 			
 	bool CanExecute()
