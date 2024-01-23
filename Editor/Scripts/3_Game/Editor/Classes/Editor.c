@@ -333,8 +333,9 @@ class Editor: SerializableBase
 		
 		//Print(Placing.Count());
 		foreach (EditorObject editor_object_placing: Placing) {
-			vector transform[4] = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position - editor_object_placing.GetBasePoint() };
-			editor_object_placing.GetObject().SetTransform(transform);
+			vector transform[4] = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position };
+			editor_object_placing.SetBaseTransform(transform);
+			//editor_object_placing
 		}
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire)) {

@@ -7,7 +7,7 @@ class EditorObject: EditorNode
 	protected EditorObjectFlags m_Flags;
 		
 	protected ref array<vector> m_Corners = {};
-	protected ref map<Axis, ref Plane> m_BoundingBoxSurfaces = new map<Axis, ref Plane>();
+	protected ref map<ETransformationAxis, ref Plane> m_BoundingBoxSurfaces = new map<ETransformationAxis, ref Plane>();
 	
 	protected ref array<ref EditorPointView> m_PointViews = {};
 	protected ref EditorObjectView m_EditorObjectView;
@@ -44,15 +44,38 @@ class EditorObject: EditorNode
 		corners[5] = Vector(clip[1][0], clip[1][1], clip[1][2]);
 		corners[6] = Vector(clip[1][0], clip[1][1], clip[0][2]);
 		corners[7] = Vector(clip[0][0], clip[1][1], clip[0][2]);		
-				
-		for (int i = 0; i < 6; i++) {
-			bool top_or_bottom = (i == Axis.TOP || i == Axis.BOTTOM);
-			int j = Ternary<int>.If(top_or_bottom, i + 2, (i + 4) % 8);
-			vector plane_corners[2] = { corners[i], corners[j] };
-			m_BoundingBoxSurfaces[i] = Axis.ALL[i].CreatePlane(plane_corners);
-
-			// Idk how i feel abt this being a scripted entity
-			m_EditorSnapPoints.Insert(EditorSnapPoint.Cast(GetGame().CreateObjectEx("EditorSnapPoint", m_BoundingBoxSurfaces[i].GetPosition().Multiply4(transform), ECE_LOCAL)));
+		
+		for (int c = 0; c < 8; c++) {
+			GetDayZGame().DebugDrawText(c.ToString(), corners[c].Multiply4(transform), 1.0);
+		}
+		
+		for (ETransformationAxis i = 0; i < 6; i++) {
+			switch (i) {
+				case ETransformationAxis.BOTTOM: {
+					m_BoundingBoxSurfaces[i] = new Plane(corners[0], corners[2], vector.Up, vector.Aside);
+					break;
+				}				
+				case ETransformationAxis.LEFT: { 
+					m_BoundingBoxSurfaces[i] = new Plane(corners[0], corners[4], vector.Aside * -1, vector.Up);
+					break;
+				}
+				case ETransformationAxis.BACK: { 
+					m_BoundingBoxSurfaces[i] = new Plane(corners[3], corners[7], vector.Forward * -1, vector.Up);
+					break;
+				}
+				case ETransformationAxis.TOP: {
+					m_BoundingBoxSurfaces[i] = new Plane(corners[4], corners[6], vector.Up, vector.Aside);
+					break;
+				}
+				case ETransformationAxis.RIGHT: {
+					m_BoundingBoxSurfaces[i] = new Plane(corners[2], corners[6], vector.Aside, vector.Up);
+					break;
+				}				
+				case ETransformationAxis.FRONT: { 
+					m_BoundingBoxSurfaces[i] = new Plane(corners[1], corners[5], vector.Forward, vector.Up);
+					break;
+				}
+			}		
 		}
 		
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
@@ -87,6 +110,8 @@ class EditorObject: EditorNode
 				}
 			}	
 		}
+		
+		m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
 				
 #ifdef DIAG_DEVELOPER
 #ifndef SERVER
@@ -109,6 +134,43 @@ class EditorObject: EditorNode
 			snap_point.Delete();
 		}
 	}
+	
+#ifdef DIAG_DEVELOPER	
+	void DiagOnFrameUpdate(float dt)
+	{		
+		vector transform[4];
+		m_Object.GetTransform(transform);
+		m_TranslationGizmo.SetPosition(GetTopPoint());
+				
+		for (int i = 0; i < 6; i++) {
+			// Debug
+			m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+		}
+		
+		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
+		if (scripted_entity) {
+			TriggerShape shape = scripted_entity.GetTriggerShape();
+			switch (shape) {
+				case TriggerShape.BOX: {
+					vector min_max[2];
+					scripted_entity.GetCollisionBox(min_max);
+					
+					vector transform_box[4];
+					m_Object.GetTransform(transform_box);
+					
+					Shape bbox = Shape.Create(ShapeType.BBOX, COLOR_RED_A, ShapeFlags.NOZBUFFER | ShapeFlags.ONCE | ShapeFlags.TRANSP, min_max[0], min_max[1]);
+					bbox.SetMatrix(transform_box);
+					break;
+				}
+				
+				case TriggerShape.SPHERE: {
+					//Debug.DrawBox(
+					break;
+				}
+			}
+		}
+	}
+#endif
 	
 	override void Write(Serializer serializer, int version)
 	{
@@ -144,61 +206,6 @@ class EditorObject: EditorNode
 		return true;
 	}
 			
-#ifdef DIAG_DEVELOPER	
-	void DiagOnFrameUpdate(float dt)
-	{		
-		vector transform[4];
-		m_Object.GetTransform(transform);
-
-		for (int i = 0; i < m_BoundingBoxSurfaces.Count(); i++) {
-			// Debug
-			typename x = Axis;
-			typename y = int;
-			m_BoundingBoxSurfaces[i].Debug(x.GetVariableName(i + y.GetVariableCount()), transform);
-		}
-					
-		/*
-		for (int i = 0; i < 8; i++) {
-			vector pos = m_LineVerticies[i].Multiply4(transform);
-			//Debug.DrawSphere(pos, 0.1, COLOR_GREEN, ShapeFlags.ONCE);
-		}
-		
-		for (int j = 0; j < 12; j++) {
-			vector pos2 = m_LineCenters[j].Multiply4(transform);
-			//Debug.DrawSphere(pos2, 0.1, COLOR_APPLE, ShapeFlags.ONCE);
-			vector mat[4];
-			Math3D.DirectionAndUpMatrix(transform[1], LINE_CENTER_DIRECTIONS[j], mat);
-			Math3D.MatrixMultiply3(transform, mat, mat);
-			mat[3] = pos2;
-			//Shape.CreateMatrix(mat);
-			//DayZPlayerUtils.DrawDebugText(j.ToString(), mat[3], 1);
-		}*/
-				
-		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
-		if (scripted_entity) {
-			TriggerShape shape = scripted_entity.GetTriggerShape();
-			switch (shape) {
-				case TriggerShape.BOX: {
-					vector min_max[2];
-					scripted_entity.GetCollisionBox(min_max);
-					
-					vector transform_box[4];
-					m_Object.GetTransform(transform_box);
-					
-					Shape bbox = Shape.Create(ShapeType.BBOX, COLOR_RED_A, ShapeFlags.NOZBUFFER | ShapeFlags.ONCE | ShapeFlags.TRANSP, min_max[0], min_max[1]);
-					bbox.SetMatrix(transform_box);
-					break;
-				}
-				
-				case TriggerShape.SPHERE: {
-					//Debug.DrawBox(
-					break;
-				}
-			}
-		}
-	}
-#endif
-		
 	override void SetSelected(bool selected)
 	{
 		super.SetSelected(selected);
@@ -223,14 +230,35 @@ class EditorObject: EditorNode
 		return DayZPhysics.RaycastRV(transform[3], transform[3] + transform[1] * -1000, position, direction, component, null, null, null, false, true);
 	}
 		
-	vector GetBasePoint()
-	{
-		return m_BoundingBoxSurfaces[Axis.BOTTOM].GetPosition();
+	void SetBaseTransform(vector mat[4])
+	{		
+		vector matrix[4];		
+		m_BoundingBoxSurfaces[ETransformationAxis.BOTTOM].CreateMatrix(matrix);
+		
+		Math3D.MatrixInvMultiply4(matrix, mat, matrix);
+		m_Object.SetTransform(matrix);		
 	}
 	
-	vector GetTopPoint()
+	vector GetBasePoint(bool world_coords = true)
 	{
-		return m_BoundingBoxSurfaces[Axis.TOP].GetPosition();
+		if (world_coords) {
+			vector transform[4];
+			m_Object.GetTransform(transform);
+			return m_BoundingBoxSurfaces[ETransformationAxis.BOTTOM].GetPosition().Multiply4(transform);
+		}
+		
+		return m_BoundingBoxSurfaces[ETransformationAxis.BOTTOM].GetPosition();
+	}
+	
+	vector GetTopPoint(bool world_coords = true)
+	{
+		if (world_coords) {
+			vector transform[4];
+			m_Object.GetTransform(transform);
+			return m_BoundingBoxSurfaces[ETransformationAxis.TOP].GetPosition().Multiply4(transform);
+		}
+		
+		return m_BoundingBoxSurfaces[ETransformationAxis.TOP].GetPosition();
 	}
 				
 	void Hide(bool state) 
