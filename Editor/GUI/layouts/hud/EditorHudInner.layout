@@ -561,11 +561,6 @@ FrameWidgetClass Root {
            text "3"
            font "gui/fonts/MetronBook"
            "text valign" center
-           {
-            ScriptParamsClass {
-             Binding_Name "OnlineUserCount"
-            }
-           }
           }
           TextWidgetClass TextWidget3 {
            ignorepointer 1
@@ -616,16 +611,6 @@ FrameWidgetClass Root {
              "size to text h" 1
              "text halign" center
              "text valign" center
-             {
-              ScriptParamsClass {
-               Binding_Name "OnlineEntityCount"
-              }
-             }
-            }
-           }
-           {
-            ScriptParamsClass {
-             Binding_Name "OnlineEntityCount"
             }
            }
           }
@@ -655,11 +640,6 @@ FrameWidgetClass Root {
            text "1234"
            font "gui/fonts/MetronBook"
            "text valign" center
-           {
-            ScriptParamsClass {
-             Binding_Name "RotatingJoinCode"
-            }
-           }
           }
          }
         }
@@ -707,12 +687,6 @@ FrameWidgetClass Root {
            "Use default text" 0
            "exact text" 1
            font "gui/fonts/MetronBook"
-           {
-            ScriptParamsClass {
-             Binding_Name "JoinCode"
-             Two_Way_Binding 1
-            }
-           }
           }
          }
         }
@@ -774,11 +748,6 @@ FrameWidgetClass Root {
              }
             }
            }
-           {
-            ScriptParamsClass {
-             Relay_Command "OnJoinExecute"
-            }
-           }
           }
           ButtonWidgetClass "Online.Host.Button" {
            position 10 10
@@ -820,11 +789,6 @@ FrameWidgetClass Root {
              }
             }
            }
-           {
-            ScriptParamsClass {
-             Relay_Command "OnHostExecute"
-            }
-           }
           }
          }
         }
@@ -849,9 +813,59 @@ FrameWidgetClass Root {
        "size to text h" 1
        "text halign" right
        "text valign" center
+      }
+     }
+    }
+   }
+  }
+  FrameWidgetClass Compass {
+   clipchildren 0
+   inheritalpha 0
+   ignorepointer 1
+   position 0 26
+   size 0.5 32
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+   {
+    ScrollWidgetClass "Compass.Scroll" {
+     clipchildren 0
+     ignorepointer 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     {
+      GridSpacerWidgetClass "Compass.Content" {
+       clipchildren 0
+       ignorepointer 1
+       color 0.0588 0.0588 0.0588 0.3922
+       position 0 0
+       size 747 32
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       scriptclass "ViewBinding"
+       Padding 15
+       Margin 0
+       "Size To Content H" 1
+       content_halign center
+       content_valign center
+       Columns 72
+       Rows 1
        {
         ScriptParamsClass {
-         Binding_Name "OnlineSessionId"
+         Binding_Name "CompassTicks"
         }
        }
       }

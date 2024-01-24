@@ -7,6 +7,24 @@ class WebToggleCommand: Command
 	}
 }
 
+class CompassTick: ScriptView
+{
+	TextWidget Text;
+	ImageWidget Icon;
+	
+	void CompassTick(string text, string icon)
+	{ 
+		Text.SetText(text);
+		Icon.LoadImageFile(0, icon);
+		Icon.SetImage(0);
+	}
+	
+	override string GetLayoutFile()
+	{
+		return "Editor\\GUI\\layouts\\hud\\CompassTick.layout";
+	}
+}
+
 class EditorHud: ScriptView
 {	
 	/*
@@ -54,6 +72,11 @@ class EditorHud: ScriptView
 	{		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
 		
+		for (int i = 0; i < 36; i++) {
+			string is = i.ToString();
+			m_TemplateController.CompassTicks.Insert(new CompassTick(is, Symbols.T.Thin()));
+		}
+		
 		GetGame().GetMission().GetHud().ShowHudUI(false);
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 	}
@@ -68,14 +91,15 @@ class EditorHud: ScriptView
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 		
-		Input input = GetGame().GetInput();						
-		
+		Input input = GetGame().GetInput();	
 		
 		if (input.LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {			
 			EditorNode.ClearSelections();
 			m_DragX = mouse_x;
 			m_DragY = mouse_y;
 		}
+		
+		float heading = GetDayZGame().GetEditor().GetCamera().GetDirection()[1];
 		
 		Whiteboard.Clear();
 		if (input.LocalHold_ID(UAFire) && EditorNode.SelectedObjects.Count() == 0) {

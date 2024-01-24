@@ -178,7 +178,9 @@ class Editor: SerializableBase
 		m_Player = player;
 		
 		MakeDirectory(ROOT_DIRECTORY);
-				
+		
+		
+		
 		// Load all default categories and placements
 		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP.Regular());
 		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", Symbols.HAND.Regular()));
@@ -282,6 +284,7 @@ class Editor: SerializableBase
 	
 		m_Hud = new EditorHud();		
 		m_Hud.GetTemplateController().LeftListItems.Insert(m_Master["PlaceableObjects"].GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
 		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
 		
 		// Hud has loaded, request the stuff
