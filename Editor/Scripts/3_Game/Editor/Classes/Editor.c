@@ -182,7 +182,7 @@ class Editor: SerializableBase
 		MakeDirectory(ROOT_DIRECTORY);
 		
 		EditorNode networked = new EditorNode("NetworkedObjects", "Networked Objects", Symbols.NETWORK_WIRED.Regular());
-		networked.Add(new EditorNetworkedObject(m_Identity.GetId(), m_Identity.GetName(), Symbols.PERSON.Regular(), m_Player));
+		networked.Add(new EditorObject(m_Player.GetNetworkIDString(), m_Identity.GetName(), Symbols.PERSON.Regular(), m_Player, EFE_DEFAULT));
 		m_Master.Add(networked);
 		
 		// Load all default categories and placements
@@ -305,7 +305,7 @@ class Editor: SerializableBase
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
-			
+					
 		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) != MB_PRESSED_MASK) {
 			m_DragTarget = null;
 		}
@@ -314,17 +314,18 @@ class Editor: SerializableBase
 			//EditorObjectDragHandler.Drag(m_DragTarget, m_DragOffset);
 		}
 		
+		Input input = GetGame().GetInput();
 		Raycast raycast = m_Camera.PerformCursorRaycast();		
 		vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
 		Math3D.MatrixOrthogonalize4(camera_orthogonal);	
 		
 		vector rotation_mat[3];
 		Math3D.MatrixIdentity3(rotation_mat);
-		if (GetGame().GetInput().LocalPress_ID(UAZoomInOptics)) {
+		if (input.LocalPress_ID(UAZoomInOptics)) {
 			Math3D.YawPitchRollMatrix(Vector(-15, 0, 0), rotation_mat);
 		}
 		
-		if (GetGame().GetInput().LocalPress_ID(UAZoomOutOptics)) {
+		if (input.LocalPress_ID(UAZoomOutOptics)) {
 			Math3D.YawPitchRollMatrix(Vector(15, 0, 0), rotation_mat);
 		}
 		
@@ -342,7 +343,23 @@ class Editor: SerializableBase
 			editor_object_placing.SetBaseTransform(transform);
 		}
 		
-		if (GetGame().GetInput().LocalPress_ID(UAFire)) {			
+		if (input.LocalPress_ID(UAFire)) {
+			if (raycast.Hit && EditorObject.ByObject[raycast.Hit]) {
+				EditorObject editor_object = EditorObject.ByObject[raycast.Hit];
+				
+				// The magic copy-paste code that handles all your interactive dreams. hasnt changed
+				if (!KeyState(KeyCode.KC_LSHIFT)) {
+					EditorNode.ClearSelections();
+				}
+				
+				if (KeyState(KeyCode.KC_LCONTROL)) {
+					editor_object.SetSelected(!editor_object.IsSelected());
+				} else {
+					editor_object.SetSelected(true);
+				}
+			}
+			
+			
 			// Cursed but we ship it
 			if (!GetWidgetUnderCursor() || !GetWidgetUnderCursor().GetName().Contains("Panel")) {
 				foreach (EditorObject editor_object_to_place: Placing) {
@@ -364,13 +381,13 @@ class Editor: SerializableBase
 					
 					// remove it from placing
 					Placing.RemoveItem(editor_object_to_place);
-					
+					PlaySound(EditorSounds.PLOP);
 					m_History.InsertAction(footprint);
 				}
 			}
 		}
 		
-		if (GetGame().GetInput().LocalHold_ID(UAFire)) {
+		if (input.LocalHold_ID(UAFire)) {
 			foreach (EditorNode selected_node: EditorNode.SelectedObjects) {
 				EditorObject editor_object_cast = EditorObject.Cast(selected_node);
 				if (!editor_object_cast) {
@@ -400,9 +417,22 @@ class Editor: SerializableBase
 			}
 		}
 		
+		if (input.LocalPress_ID(UAZoomIn)) {
+			m_Camera.FieldOfView = GameConstants.DZPLAYER_CAMERA_FOV_EYEZOOM;
+		}
+		
+		if (input.LocalRelease_ID(UAZoomIn)) { 
+			m_Camera.FieldOfView = 1.0;
+		}
+				
 		if (GetGame().GetInput().LocalHold_ID(UAZoomIn)) {
+			
+			
 			if (raycast.Hit) {
-				m_Master["NetworkedObjects"].Add(new EditorNetworkedObject(raycast.Hit.GetNetworkIDString(), raycast.Hit.GetNetworkIDString(), Symbols.BUILDING.Regular(), raycast.Hit));
+				//EntityAI.GetPersistentID
+				//Print(raycast.Hit);
+				
+				m_Master["NetworkedObjects"].Add(new EditorObject(raycast.Hit.GetNetworkIDString(), raycast.Hit.GetNetworkIDString(), Symbols.BUILDING.Regular(), raycast.Hit, EFE_DEFAULT));
 
 			}
 		}
@@ -794,14 +824,17 @@ class Editor: SerializableBase
 	
 	static Object CreateObject(string type, vector transform[4])
 	{
+		Math3D.MatrixOrthogonalize4(transform);
+		
 		Object object;
 		if (type.Contains("\\") || type.Contains("/")) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, transform[3], transform[2].VectorToAngles(), 1.0, true);
 		} else {
 			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
 		}
+		
 		object.SetTransform(transform);
-		object.Update();	
+		object.Update();
 		
 		return object;
 	}

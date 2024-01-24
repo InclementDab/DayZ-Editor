@@ -58,39 +58,32 @@ class TranslationGizmo: House
 		
 		vector gizmo_transform[4];
 		GetRenderTransform(gizmo_transform);
-		
-		vector start_point = GetGame().GetScreenPos(gizmo_transform[3]);
-		vector end_point = GetGame().GetScreenPos(GetMemoryPointPos("x").Multiply4(gizmo_transform));
-		
-		RayView ray_view = m_RayViews[0];
-		
 
-		float theta = Math.Atan2(end_point[1] - start_point[1], end_point[0] - start_point[0]);
-		
 		vector camera_transform[4];
 		GetDayZGame().GetEditor().GetCamera().GetTransform(camera_transform);
 		
 		vector gizmo_local_transform[4];
-		Math3D.MatrixInvMultiply4(gizmo_transform, camera_transform, gizmo_local_transform);
+		Math3D.MatrixInvMultiply4(camera_transform, gizmo_transform, gizmo_local_transform);
 
-		
 		//aPrint(inv_transform);
 		vector angles = Math3D.MatrixToAngles(gizmo_local_transform);		
 		
-		vector delta = end_point - start_point;		
+		vector start_point = GetGame().GetScreenPos(gizmo_transform[3]);
+		vector end_point = GetGame().GetScreenPos(GetMemoryPointPos("x").Multiply4(gizmo_transform));
+		vector delta = end_point - start_point;
 
-		ray_view.GetLayoutRoot().SetRotation(angles[1], angles[0], angles[2]);
+		//ray_view.GetLayoutRoot().SetRotation(angles[0], angles[1], angles[2]);
 
-		Math3D.MatrixInvMultiply4(camera_transform, gizmo_local_transform, gizmo_local_transform);
+		Math3D.MatrixMultiply4(camera_transform, gizmo_local_transform, gizmo_local_transform);
 		gizmo_local_transform[3] = Vector(0, 0, 1).Multiply4(camera_transform);
 		
 		
-		//Shape.CreateMatrix(gizmo_local_transform);
+		Shape.CreateMatrix(gizmo_local_transform);
 		
 		
 		float dist = vector.Distance(gizmo_transform[3], camera_transform[3]);
 
-		ray_view.GetLayoutRoot().SetPos(start_point[0], start_point[1]);
-		ray_view.GetLayoutRoot().SetSize(delta.Length(), 24);
+		//ray_view.GetLayoutRoot().SetPos(start_point[0], start_point[1]);
+		//ray_view.GetLayoutRoot().SetSize(delta.Length(), 24);
 	}
 }

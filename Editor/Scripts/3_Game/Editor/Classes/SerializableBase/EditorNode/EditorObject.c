@@ -1,5 +1,7 @@
 class EditorObject: EditorNode
 {	
+	static ref map<Object, EditorObject> ByObject = new map<Object, EditorObject>();
+	
 	static const int VERSION = 1;
 		
 	protected Object m_Object;
@@ -19,15 +21,19 @@ class EditorObject: EditorNode
 	
 	protected Object m_TranslationGizmo;
 	
-	void EditorObject(string uuid, string display_name, string icon, string type, vector transform[4], int flags)
+	void EditorObject(string uuid, string display_name, string icon, Object object, int flags = EFE_DEFAULT)
 	{
 		m_Flags = flags;
+		m_Object = object;
 		
-		Math3D.MatrixOrthogonalize4(transform);		
-		m_Object = Editor.CreateObject(type, transform);
+		if (m_Object) ByObject[m_Object] = this;
+		
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
+		
+		vector transform[4];
+		m_Object.GetTransform(transform);
 		
 		vector clip[2];
 		m_Object.ClippingInfo(clip);
@@ -87,9 +93,7 @@ class EditorObject: EditorNode
 		foreach (ETransformationAxis axis, Plane plane: m_BoundingBoxSurfaces) {
 			vector plane_matrix[4];
 			plane.CreateMatrix(plane_matrix);
-			Print(plane_matrix);
 			Math3D.MatrixMultiply4(plane_matrix, transform, plane_matrix);
-			Print(plane_matrix);
 			EditorSnapPoint snap_point = EditorSnapPoint.Cast(GetGame().CreateObjectEx("EditorSnapPoint", plane_matrix[3], ECE_LOCAL));
 			snap_point.SetTransform(plane_matrix);
 			m_Object.AddChild(snap_point, -1);
@@ -198,13 +202,11 @@ class EditorObject: EditorNode
 		
 		vector transform[4];
 		serializer.Read(transform);
-		Math3D.MatrixOrthogonalize4(transform);
 		if (!m_Object) {	
 			m_Object = Editor.CreateObject(type, transform);
+			if (m_Object) ByObject[m_Object] = this;
 		}
-		
-		m_Object.SetTransform(transform);
-		
+				
 		serializer.Read(m_Flags);
 		return true;
 	}
