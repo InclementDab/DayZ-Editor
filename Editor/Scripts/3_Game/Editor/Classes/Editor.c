@@ -124,6 +124,7 @@ class Editor: SerializableBase
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
 	// m_Editor is only valid on the local instance.
+	protected PlayerIdentity m_Identity;
 	protected Man m_Player;
 	
 	// All editors in lobby, including m_Editor
@@ -173,13 +174,16 @@ class Editor: SerializableBase
 	// Stack of Undo / Redo Actions
 	protected ref EditorHistory m_History = new EditorHistory();
 	
-	void Editor(Man player) 
-	{		
+	void Editor(PlayerIdentity identity, Man player) 
+	{
+		m_Identity = identity;
 		m_Player = player;
 		
 		MakeDirectory(ROOT_DIRECTORY);
 		
-		
+		EditorNode players = new EditorNode("Players", "Players", Symbols.PEOPLE.Regular());
+		players.Add(new EditorNetworkedObject(m_Identity.GetId(), m_Identity.GetName(), Symbols.PERSON.Regular(), m_Player));
+		m_Master.Add(players);
 		
 		// Load all default categories and placements
 		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP.Regular());

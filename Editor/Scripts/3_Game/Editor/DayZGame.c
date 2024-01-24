@@ -12,7 +12,7 @@ modded class DayZGame
 	// VERY handy when changing layouts :)
 	void Recompile()
 	{
-		m_Editor = new Editor(GetPlayer());
+		m_Editor = new Editor(GetPlayer().GetIdentity(), GetPlayer());
 	}
 #endif
 	// server!
@@ -90,9 +90,10 @@ modded class DayZGame
 		super.OnEvent(eventTypeId, params);
 		
 		switch (eventTypeId) {
-			case MPSessionPlayerReadyEventTypeID: {
+			case ClientReadyEventTypeID: {
 				// Client -> Server
-				m_Editor = new Editor(GetPlayer());	
+				ClientReadyEventParams client_ready_params = ClientReadyEventParams.Cast(params);
+				m_Editor = new Editor(client_ready_params.param1, client_ready_params.param2);	
 				break;
 			}
 		}
