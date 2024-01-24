@@ -1,7 +1,6 @@
 FrameWidgetClass Frame {
  visible 1
  clipchildren 0
- position 0 -12
  size 160 24
  hexactpos 1
  vexactpos 1

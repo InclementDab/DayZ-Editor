@@ -344,8 +344,10 @@ class Editor: SerializableBase
 		}
 		
 		if (input.LocalPress_ID(UAFire)) {
+			Print(EditorObject.ByObject[raycast.Hit]);
 			if (raycast.Hit && EditorObject.ByObject[raycast.Hit]) {
 				EditorObject editor_object = EditorObject.ByObject[raycast.Hit];
+				Print(editor_object);
 				
 				// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 				if (!KeyState(KeyCode.KC_LSHIFT)) {

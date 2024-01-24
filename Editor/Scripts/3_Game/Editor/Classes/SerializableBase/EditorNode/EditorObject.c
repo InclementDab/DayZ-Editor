@@ -25,9 +25,7 @@ class EditorObject: EditorNode
 	{
 		m_Flags = flags;
 		m_Object = object;
-		
-		if (m_Object) ByObject[m_Object] = this;
-		
+				
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
