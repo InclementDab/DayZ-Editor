@@ -22,3 +22,12 @@ class Ray: Managed
 		Shape.CreateArrow(Position, GetPoint(1.0), 1.0, COLOR_GREEN, ShapeFlags.ONCE);
 	}
 }
+
+class Raycast: Managed
+{
+	static const ref Raycast INVALID = new Raycast();
+	
+	ref Ray Source = new Ray();
+	ref Ray Bounce = new Ray();
+	Object Hit;
+}

@@ -63,7 +63,7 @@ class EditorClipboard
 		array<Object> created_objects = {};
 		foreach (EditorObjectData pasted_object: data) {			
 			
-			EditorObjectData dta = EditorObjectData.Create(pasted_object.Type, pasted_object.Position + GetDayZGame().GetEditor().GetCamera().PerformCursorRaycast().Position, pasted_object.Orientation, pasted_object.Scale, pasted_object.Flags);
+			EditorObjectData dta = EditorObjectData.Create(pasted_object.Type, pasted_object.Position + GetDayZGame().GetEditor().GetCamera().PerformCursorRaycast().Bounce.Position, pasted_object.Orientation, pasted_object.Scale, pasted_object.Flags);
 			created_objects.Insert(dta.CreateObject());
 		}	
 		

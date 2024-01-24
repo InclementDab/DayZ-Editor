@@ -4,21 +4,17 @@ class EditorPlaceable: EditorNode
 	{
 		super.SetSelected(selected);
 		
-		if (selected) {
-			vector transform[4];
-			Math3D.MatrixIdentity4(transform);
-			
-			
-			Ray ray = GetDayZGame().GetEditor().GetCamera().PerformCursorRaycast();
-			transform[3] = ray.Position;
+		if (selected) {			
+			Raycast raycast = GetDayZGame().GetEditor().GetCamera().PerformCursorRaycast();
 			
 			vector matrix[4];
-			Math3D.MatrixOrthogonalize4(matrix);
+			Math3D.MatrixIdentity4(matrix);
+			matrix[3] = raycast.Bounce.Position;
 			
 			EditorObject editor_object = new EditorObject(UUID.Generate(), m_UUID, GetIcon(), GetUUID(), matrix, EFE_DEFAULT);
 			GetDayZGame().GetEditor().Placing.Insert(editor_object);
-			
-			//GetDayZGame().GetEditor().Placing[Editor.CreateObject(m_UUID, transform)] = new EditorHandData(this, matrix);
+		} else {
+			GetDayZGame().GetEditor().Placing.Clear();
 		}
 	}
 }

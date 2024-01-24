@@ -288,7 +288,7 @@ class Editor: SerializableBase
 	
 		m_Hud = new EditorHud();		
 		m_Hud.GetTemplateController().LeftListItems.Insert(m_Master["PlaceableObjects"].GetNodeView());
-		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["Players"].GetNodeView());
 		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
 		
 		// Hud has loaded, request the stuff
@@ -314,10 +314,9 @@ class Editor: SerializableBase
 			//EditorObjectDragHandler.Drag(m_DragTarget, m_DragOffset);
 		}
 		
-		Ray ray1 = m_Camera.PerformCursorRaycast();
-		Ray ray2 = m_Camera.GetCursorRay();
+		Raycast raycast = m_Camera.PerformCursorRaycast();
 		
-		vector camera_orthogonal[4] = { ray1.Direction * ray2.Direction, ray2.Direction, ray1.Direction, ray1.Position };
+		vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
 		Math3D.MatrixOrthogonalize4(camera_orthogonal);	
 		
 		vector rotation_mat[3];
@@ -340,7 +339,7 @@ class Editor: SerializableBase
 		
 		//Print(Placing.Count());
 		foreach (EditorObject editor_object_placing: Placing) {
-			vector transform[4] = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position };
+			vector transform[4] = { m_CursorNormal, raycast.Source.Direction, m_CursorNormal * raycast.Source.Direction, raycast.Source.Position };
 			editor_object_placing.SetBaseTransform(transform);
 		}
 		
@@ -383,20 +382,25 @@ class Editor: SerializableBase
 				editor_object_cast.GetBaseTransform(current_transform);
 				
 				if (KeyState(KeyCode.KC_LMENU)) {
-					vector v3 = (current_transform[1] * ray2.Direction);
-					float dist_z = vector.Dot(((ray2.Position - current_transform[3]) * current_transform[1]), v3) / v3.LengthSq();
+					vector v3 = (current_transform[1] * raycast.Bounce.Direction);
+					float dist_z = vector.Dot(((raycast.Bounce.Position - current_transform[3]) * current_transform[1]), v3) / v3.LengthSq();
 					
-					vector pos = ray2.Position + ray2.Direction * dist_z;
+					vector pos = raycast.Bounce.Position + raycast.Bounce.Direction * dist_z;
 					pos[0] = current_transform[3][0];
 					pos[2] = current_transform[3][2];
 					
 					current_transform = { current_transform[0], current_transform[1], current_transform[2], pos };
 					editor_object_cast.SetBaseTransform(current_transform);
 				} else {
-					transform = { m_CursorNormal, ray1.Direction, m_CursorNormal * ray1.Direction, ray1.Position };
+					transform = { m_CursorNormal, raycast.Source.Direction, m_CursorNormal * raycast.Source.Direction, raycast.Source.Position };
 					editor_object_cast.SetBaseTransform(transform);
 				}
 			}
+		}
+		
+		if (GetGame().GetInput().LocalHold_ID(UAZoomIn)) {
+			Print(raycast.Hit);
+			
 		}
 		
 		if (GetGame().GetInput().LocalPress("EditorToggleUI")) {
