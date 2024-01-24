@@ -2,7 +2,6 @@ class EditorObject: EditorNode
 {	
 	static const int VERSION = 1;
 		
-	protected string m_Type;
 	protected Object m_Object;
 	protected EditorObjectFlags m_Flags;
 		
@@ -22,7 +21,6 @@ class EditorObject: EditorNode
 	
 	void EditorObject(string uuid, string display_name, string icon, string type, vector transform[4], int flags)
 	{
-		m_Type = type;
 		m_Flags = flags;
 		
 		Math3D.MatrixOrthogonalize4(transform);		
@@ -175,8 +173,13 @@ class EditorObject: EditorNode
 	{
 		super.Write(serializer, version);
 		
-		serializer.Write(m_Type);
+		string type = m_Object.GetType();
+		if (type == string.Empty) {
+			type = m_Object.GetShapeName();
+		}
 		
+		serializer.Write(type);
+				
 		vector transform[4];
 		m_Object.GetTransform(transform);
 		serializer.Write(transform);
@@ -190,13 +193,14 @@ class EditorObject: EditorNode
 			return false;
 		}
 		
-		serializer.Read(m_Type);
+		string type;
+		serializer.Read(type);
 		
 		vector transform[4];
 		serializer.Read(transform);
 		Math3D.MatrixOrthogonalize4(transform);
 		if (!m_Object) {	
-			m_Object = Editor.CreateObject(m_Type, transform);
+			m_Object = Editor.CreateObject(type, transform);
 		}
 		
 		m_Object.SetTransform(transform);
