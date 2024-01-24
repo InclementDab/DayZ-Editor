@@ -8,6 +8,7 @@ class EditorObject: EditorNode
 		
 	protected ref array<vector> m_Corners = {};
 	protected ref map<ETransformationAxis, ref Plane> m_BoundingBoxSurfaces = new map<ETransformationAxis, ref Plane>();
+	protected ref map<ETransformationAxis, EditorSnapPoint> m_SnapFaces = new map<ETransformationAxis, EditorSnapPoint>();
 	
 	protected ref array<ref EditorPointView> m_PointViews = {};
 	protected ref EditorObjectView m_EditorObjectView;
@@ -84,7 +85,19 @@ class EditorObject: EditorNode
 				}
 			}
 		}
-														
+									
+		foreach (ETransformationAxis axis, Plane plane: m_BoundingBoxSurfaces) {
+			vector plane_matrix[4];
+			plane.CreateMatrix(plane_matrix);
+			Print(plane_matrix);
+			Math3D.MatrixMultiply4(plane_matrix, transform, plane_matrix);
+			Print(plane_matrix);
+			EditorSnapPoint snap_point = EditorSnapPoint.Cast(GetGame().CreateObjectEx("EditorSnapPoint", plane_matrix[3], ECE_LOCAL));
+			snap_point.SetTransform(plane_matrix);
+			m_Object.AddChild(snap_point, -1);
+			m_SnapFaces[axis] = snap_point;
+		}
+							
 		m_EditorObjectView = new EditorObjectView(this);
 		
 #ifdef DIAG_DEVELOPER
@@ -125,7 +138,7 @@ class EditorObject: EditorNode
 				
 		for (int i = 0; i < 6; i++) {
 			// Debug
-			m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+			//m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
 		}
 		
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);

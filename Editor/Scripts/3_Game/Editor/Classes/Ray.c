@@ -30,4 +30,9 @@ class Raycast: Managed
 	ref Ray Source = new Ray();
 	ref Ray Bounce = new Ray();
 	Object Hit;
+	
+	void Debug()
+	{
+		Bounce.Debug();
+	}
 }

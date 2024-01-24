@@ -181,9 +181,9 @@ class Editor: SerializableBase
 		
 		MakeDirectory(ROOT_DIRECTORY);
 		
-		EditorNode players = new EditorNode("Players", "Players", Symbols.PEOPLE.Regular());
-		players.Add(new EditorNetworkedObject(m_Identity.GetId(), m_Identity.GetName(), Symbols.PERSON.Regular(), m_Player));
-		m_Master.Add(players);
+		EditorNode networked = new EditorNode("NetworkedObjects", "Networked Objects", Symbols.NETWORK_WIRED.Regular());
+		networked.Add(new EditorNetworkedObject(m_Identity.GetId(), m_Identity.GetName(), Symbols.PERSON.Regular(), m_Player));
+		m_Master.Add(networked);
 		
 		// Load all default categories and placements
 		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP.Regular());
@@ -288,7 +288,7 @@ class Editor: SerializableBase
 	
 		m_Hud = new EditorHud();		
 		m_Hud.GetTemplateController().LeftListItems.Insert(m_Master["PlaceableObjects"].GetNodeView());
-		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["Players"].GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["NetworkedObjects"].GetNodeView());
 		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
 		
 		// Hud has loaded, request the stuff
@@ -314,8 +314,7 @@ class Editor: SerializableBase
 			//EditorObjectDragHandler.Drag(m_DragTarget, m_DragOffset);
 		}
 		
-		Raycast raycast = m_Camera.PerformCursorRaycast();
-		
+		Raycast raycast = m_Camera.PerformCursorRaycast();		
 		vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
 		Math3D.MatrixOrthogonalize4(camera_orthogonal);	
 		
@@ -381,17 +380,20 @@ class Editor: SerializableBase
 				vector current_transform[4];
 				editor_object_cast.GetBaseTransform(current_transform);
 				
+				// Held distance placing
 				if (KeyState(KeyCode.KC_LMENU)) {
-					vector v3 = (current_transform[1] * raycast.Bounce.Direction);
-					float dist_z = vector.Dot(((raycast.Bounce.Position - current_transform[3]) * current_transform[1]), v3) / v3.LengthSq();
+					Debug.DrawSphere(raycast.Source.Position, vector.Distance(raycast.Source.Position, current_transform[3]), COLOR_RED, ShapeFlags.ADDITIVE | ShapeFlags.WIREFRAME | ShapeFlags.ONCE);
 					
-					vector pos = raycast.Bounce.Position + raycast.Bounce.Direction * dist_z;
-					pos[0] = current_transform[3][0];
-					pos[2] = current_transform[3][2];
-					
+					vector v3 = current_transform[1] * raycast.Source.Direction;					
+					float dist_z = vector.Dot(((raycast.Source.Position - current_transform[3]) * current_transform[1]), v3) / v3.LengthSq();
+					vector pos = raycast.Source.Position + raycast.Source.Direction * dist_z;
+															
 					current_transform = { current_transform[0], current_transform[1], current_transform[2], pos };
 					editor_object_cast.SetBaseTransform(current_transform);
-				} else {
+				} 
+				
+				// Any distance placing
+				else {
 					transform = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
 					editor_object_cast.SetBaseTransform(transform);
 				}
@@ -399,8 +401,10 @@ class Editor: SerializableBase
 		}
 		
 		if (GetGame().GetInput().LocalHold_ID(UAZoomIn)) {
-			Print(raycast.Hit);
-			
+			if (raycast.Hit) {
+				m_Master["NetworkedObjects"].Add(new EditorNetworkedObject(raycast.Hit.GetNetworkIDString(), raycast.Hit.GetNetworkIDString(), Symbols.BUILDING.Regular(), raycast.Hit));
+
+			}
 		}
 		
 		if (GetGame().GetInput().LocalPress("EditorToggleUI")) {

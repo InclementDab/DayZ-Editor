@@ -108,8 +108,17 @@ class EditorHud: ScriptView
 			int y_avg = (m_DragY + mouse_y) / 2;
 			Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE);		
 			
+			foreach (EditorNode node: EditorNode.All) {
+				if (node && node.GetNodeView()) {
+					float x_n, y_n;
+					node.GetNodeView().GetLayoutRoot().GetScreenPos(x_n, y_n);
+					if ((x_n < Math.Max(m_DragX, mouse_x) && x_n > Math.Min(m_DragX, mouse_x)) && (y_n < Math.Max(m_DragY, mouse_y) && y_n > Math.Min(m_DragY, mouse_y))) {
+						node.SetSelected(true);
+					}
+				}
+			}
 			
-			return;
+			/*
 			int width = mouse_x - m_DragX;
 			int height = mouse_y - m_DragY;
 			
@@ -138,7 +147,7 @@ class EditorHud: ScriptView
 	
 	            // Update the y-coordinate for the next horizontal line
 	            cy += 2 * ry / 100.0;
-	        }
+	        }*/
 		}
 		
 		if (input.LocalRelease_ID(UAFire)) {

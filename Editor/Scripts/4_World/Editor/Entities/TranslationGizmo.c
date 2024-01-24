@@ -1,5 +1,33 @@
 class RayView: ScriptView
 {
+	protected int m_Color;
+	
+	Widget Body, Arrow;
+	
+	void RayView(int color)
+	{
+		m_Color = color;
+		
+		Body.SetColor(color);
+		Arrow.SetColor(color);
+	}
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		WidgetAnimator.AnimateColor(Body, COLOR_YELLOW, 100);
+		WidgetAnimator.AnimateColor(Arrow, COLOR_YELLOW, 100);
+		
+		return super.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		WidgetAnimator.AnimateColor(Body, m_Color, 100);
+		WidgetAnimator.AnimateColor(Arrow, m_Color, 100);
+		
+		return super.OnMouseLeave(w, enterW, x, y);
+	} 
+	
 	override string GetLayoutFile()
 	{
 		return "Editor\\GUI\\layouts\\ray.layout";
@@ -12,7 +40,7 @@ class TranslationGizmo: House
 	
 	void TranslationGizmo()
 	{
-		m_RayViews.Insert(new RayView());
+		m_RayViews.Insert(new RayView(COLOR_RED));
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(OnUpdate);
 	}
@@ -28,29 +56,41 @@ class TranslationGizmo: House
 			return;
 		}
 		
-		vector transform[4];
-		GetRenderTransform(transform);
+		vector gizmo_transform[4];
+		GetRenderTransform(gizmo_transform);
 		
-		vector start_point = GetGame().GetScreenPos(transform[3]);
-		vector end_point = GetGame().GetScreenPos(GetMemoryPointPos("x").Multiply4(transform));
+		vector start_point = GetGame().GetScreenPos(gizmo_transform[3]);
+		vector end_point = GetGame().GetScreenPos(GetMemoryPointPos("x").Multiply4(gizmo_transform));
 		
-		RayView x = m_RayViews[0];
+		RayView ray_view = m_RayViews[0];
 		
-		x.GetLayoutRoot().SetSize(Math.AbsFloat(end_point[0] - start_point[0]), 10);
+
+		float theta = Math.Atan2(end_point[1] - start_point[1], end_point[0] - start_point[0]);
 		
-		float theta = Math.Atan2(end_point[1], start_point[1]);
-		
-		x.GetLayoutRoot().SetPos(start_point[0], start_point[1]);
-		
-		vector camera_transform[3];
+		vector camera_transform[4];
 		GetDayZGame().GetEditor().GetCamera().GetTransform(camera_transform);
 		
-		vector inv_transform[3];
-		Math3D.MatrixMultiply3(camera_transform, transform, inv_transform);
+		vector gizmo_local_transform[4];
+		Math3D.MatrixInvMultiply4(gizmo_transform, camera_transform, gizmo_local_transform);
+
 		
-		vector angles = Math3D.MatrixToAngles(inv_transform);
+		//aPrint(inv_transform);
+		vector angles = Math3D.MatrixToAngles(gizmo_local_transform);		
+		
+		vector delta = end_point - start_point;		
+
+		ray_view.GetLayoutRoot().SetRotation(angles[1], angles[0], angles[2]);
+
+		Math3D.MatrixInvMultiply4(camera_transform, gizmo_local_transform, gizmo_local_transform);
+		gizmo_local_transform[3] = Vector(0, 0, 1).Multiply4(camera_transform);
 		
 		
-		x.GetLayoutRoot().SetRotation(angles[0], angles[1], angles[2]);
+		//Shape.CreateMatrix(gizmo_local_transform);
+		
+		
+		float dist = vector.Distance(gizmo_transform[3], camera_transform[3]);
+
+		ray_view.GetLayoutRoot().SetPos(start_point[0], start_point[1]);
+		ray_view.GetLayoutRoot().SetSize(delta.Length(), 24);
 	}
 }
