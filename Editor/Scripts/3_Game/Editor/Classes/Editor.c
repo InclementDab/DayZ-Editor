@@ -339,7 +339,7 @@ class Editor: SerializableBase
 		
 		//Print(Placing.Count());
 		foreach (EditorObject editor_object_placing: Placing) {
-			vector transform[4] = { m_CursorNormal, raycast.Source.Direction, m_CursorNormal * raycast.Source.Direction, raycast.Source.Position };
+			vector transform[4] = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
 			editor_object_placing.SetBaseTransform(transform);
 		}
 		
@@ -392,7 +392,7 @@ class Editor: SerializableBase
 					current_transform = { current_transform[0], current_transform[1], current_transform[2], pos };
 					editor_object_cast.SetBaseTransform(current_transform);
 				} else {
-					transform = { m_CursorNormal, raycast.Source.Direction, m_CursorNormal * raycast.Source.Direction, raycast.Source.Position };
+					transform = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
 					editor_object_cast.SetBaseTransform(transform);
 				}
 			}

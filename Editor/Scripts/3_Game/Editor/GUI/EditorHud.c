@@ -104,10 +104,12 @@ class EditorHud: ScriptView
 		Whiteboard.Clear();
 		if (input.LocalHold_ID(UAFire) && EditorNode.SelectedObjects.Count() == 0) {
 			// Rectangle
-			//int x_avg = (m_DragX + mouse_x) / 2;
-			//int y_avg = (m_DragY + mouse_y) / 2;
-			//Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE);		
+			int x_avg = (m_DragX + mouse_x) / 2;
+			int y_avg = (m_DragY + mouse_y) / 2;
+			Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE);		
 			
+			
+			return;
 			int width = mouse_x - m_DragX;
 			int height = mouse_y - m_DragY;
 			

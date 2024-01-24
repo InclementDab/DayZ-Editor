@@ -84,28 +84,8 @@ class EditorObject: EditorNode
 				}
 			}
 		}
-												
-		// Needed for AI Placement			
-		
-		//if (entity_ai && GetDayZGame().GetEditor().GeneralSettings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
-		//	entity_ai.OnDebugSpawn();
-		//}	
-		
+														
 		m_EditorObjectView = new EditorObjectView(this);
-		
-		// Load animations
-		EntityAI entity_ai = EntityAI.Cast(m_Object);
-		array<string> paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
-		foreach (string path: paths) {
-			string config_path = path + " " + m_Object.GetType() + " AnimationSources";
-			if (GetGame().ConfigIsExisting(config_path) && entity_ai) {
-				for (int k = 0; k < GetGame().ConfigGetChildrenCount(config_path); k++) {
-					string child_name;
-					GetGame().ConfigGetChildName(config_path, k, child_name);
-					m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(entity_ai, child_name, path);
-				}
-			}	
-		}
 		
 #ifdef DIAG_DEVELOPER
 #ifndef SERVER
@@ -145,7 +125,7 @@ class EditorObject: EditorNode
 				
 		for (int i = 0; i < 6; i++) {
 			// Debug
-			//m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+			m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
 		}
 		
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);

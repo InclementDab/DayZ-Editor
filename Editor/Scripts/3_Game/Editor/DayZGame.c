@@ -90,10 +90,9 @@ modded class DayZGame
 		super.OnEvent(eventTypeId, params);
 		
 		switch (eventTypeId) {
-			case ClientReadyEventTypeID: {
+			case MPSessionPlayerReadyEventTypeID: {
 				// Client -> Server
-				ClientReadyEventParams client_ready_params = ClientReadyEventParams.Cast(params);
-				m_Editor = new Editor(client_ready_params.param1, client_ready_params.param2);	
+				m_Editor = new Editor(GetGame().GetPlayer().GetIdentity(), GetGame().GetPlayer());	
 				break;
 			}
 		}
