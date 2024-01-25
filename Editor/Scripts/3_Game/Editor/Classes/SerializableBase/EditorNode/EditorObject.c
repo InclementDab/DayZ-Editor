@@ -207,6 +207,8 @@ class EditorObject: EditorNode
 			m_Object = Editor.CreateObject(type, transform);
 			if (m_Object) ByObject[m_Object] = this;
 		}
+		
+		m_Object.SetTransform(transform);
 				
 		serializer.Read(m_Flags);
 		return true;
