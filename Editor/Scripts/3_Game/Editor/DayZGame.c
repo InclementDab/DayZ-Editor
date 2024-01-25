@@ -190,14 +190,13 @@ modded class DayZGame
 		//! Everything is fine... I hope... :pain:
 		return false;
 	}
-
-	EditorServer GetEditorServer()
-	{
-		return EditorServer.Cast(m_Master["SERVER"]);
-	}
 	
 	Editor GetEditor()
 	{
+		if (IsServer()) {
+			return EditorServer.Cast(m_Master["SERVER"]);
+		}
+		
 		return Editor.Cast(m_Master["SERVER"][GetUserManager().GetTitleInitiator().GetUid()]);
 	}
 }

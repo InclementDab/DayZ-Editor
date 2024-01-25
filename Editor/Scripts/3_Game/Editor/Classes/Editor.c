@@ -115,7 +115,6 @@ class Editor: EditorServer
 				}
 			}
 			
-			
 			// Cursed but we ship it
 			if (!GetWidgetUnderCursor() || !GetWidgetUnderCursor().GetName().Contains("Panel")) {
 				foreach (EditorObject editor_object_to_place: Placing) {
@@ -149,7 +148,7 @@ class Editor: EditorServer
 				if (!editor_object_cast) {
 					continue;
 				}
-								
+												
 				vector current_transform[4];
 				editor_object_cast.GetBaseTransform(current_transform);
 				
@@ -175,6 +174,7 @@ class Editor: EditorServer
 					
 					current_transform = { current_transform[0], current_transform[1], current_transform[2], pos };
 					editor_object_cast.SetBaseTransform(current_transform);
+					editor_object_cast.Synchronize();
 				} 
 				
 
@@ -185,7 +185,7 @@ class Editor: EditorServer
 					current_transform = { (current_transform[1] * new_forward).Normalized(), current_transform[1], new_forward, current_transform[3] };
 					
 					editor_object_cast.SetBaseTransform(current_transform);
-					
+					editor_object_cast.Synchronize();
 					/*
 					vector p1 = Vector(2, 0, 2).Multiply4(current_transform);
 					vector p2 = Vector(-2, 0, -2).Multiply4(current_transform);
@@ -198,9 +198,6 @@ class Editor: EditorServer
 					vector result = raycast.Source.Position + raycast.Source.Direction * t;
 					
 					*/
-
-					
-					
 				}
 				
 				
@@ -208,6 +205,7 @@ class Editor: EditorServer
 				else {
 					transform = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
 					editor_object_cast.SetBaseTransform(transform);
+					editor_object_cast.Synchronize();
 				}
 			}
 		}
