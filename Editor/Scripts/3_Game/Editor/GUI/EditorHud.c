@@ -88,8 +88,7 @@ class EditorHud: ScriptView
 		
 		Input input = GetGame().GetInput();	
 		
-		if (input.LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {			
-			EditorNode.ClearSelections();
+		if (input.LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {
 			m_DragX = mouse_x;
 			m_DragY = mouse_y;
 		}

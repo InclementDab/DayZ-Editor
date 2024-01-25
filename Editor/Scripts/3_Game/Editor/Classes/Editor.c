@@ -136,7 +136,7 @@ class Editor: SerializableBase
 	protected string m_Password; // must be SHA before reaching clients
 	protected int m_MaxPlayers = 32;
 	protected int m_MaxEntityCount = 30;
-	
+		
 	ref ScriptInvoker OnSyncRecieved = new ScriptInvoker();
 	
 	// statics (updated in Update())
@@ -155,6 +155,8 @@ class Editor: SerializableBase
 	
 	// protected Editor Members
 	protected ref EditorHud	m_Hud;
+	
+	ref EditorCursorTool Tool;
 
 	protected EditorCamera m_Camera;
 	ref array<ref EditorObject> Placing = {};
@@ -206,6 +208,11 @@ class Editor: SerializableBase
 		placeable_objects.Add(new EditorNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT));
 		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
 		m_Master.Add(placeable_objects);
+		
+		EditorNode brushes = new EditorNode("Brushes", "Brushes", Symbols.BRUSH);
+		brushes.Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
+		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
+		m_Master.Add(brushes);
 		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 					
@@ -288,6 +295,7 @@ class Editor: SerializableBase
 	
 		m_Hud = new EditorHud();		
 		m_Hud.GetTemplateController().LeftListItems.Insert(m_Master["PlaceableObjects"].GetNodeView());
+		m_Hud.GetTemplateController().LeftListItems.Insert(m_Master["Brushes"].GetNodeView());
 		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["NetworkedObjects"].GetNodeView());
 		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
 		
@@ -316,6 +324,11 @@ class Editor: SerializableBase
 		
 		Input input = GetGame().GetInput();
 		Raycast raycast = m_Camera.PerformCursorRaycast();		
+		
+		if (Tool && !Tool.Update(timeslice, raycast)) {
+			return; // MAYBE DDONT DO THIS HERE
+		}
+		
 		vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
 		Math3D.MatrixOrthogonalize4(camera_orthogonal);	
 		

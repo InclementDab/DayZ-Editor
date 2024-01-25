@@ -16,6 +16,7 @@ class EditorNode: SerializableBase
 	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();
 	ref ScriptInvoker OnLockChanged = new ScriptInvoker();
 
+	protected Editor m_Editor = GetDayZGame().GetEditor();
 	protected string m_UUID;	
 	protected ref map<string, ref EditorNode> m_Children = new map<string, ref EditorNode>();
 
