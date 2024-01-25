@@ -55,7 +55,7 @@ class Editor: EditorServer
 		GetGame().ObjectDelete(m_Camera);
 	}
 		
-	void Update(bool doSim, float timeslice)
+	override void Update(bool doSim, float timeslice)
 	{
 		Input input = GetGame().GetInput();
 		Raycast raycast = m_Camera.PerformCursorRaycast();		

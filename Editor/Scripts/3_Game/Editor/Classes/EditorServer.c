@@ -108,4 +108,8 @@ class EditorServer: EditorNode
 		}
 #endif
 	}
+	
+	void Update(bool doSim, float timeslice)
+	{
+	}
 }
