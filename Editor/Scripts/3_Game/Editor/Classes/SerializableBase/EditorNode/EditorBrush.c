@@ -44,7 +44,7 @@ class EditorBrush: EditorCursorTool
 			
 			EditorObject editor_object = new EditorObject(UUID.Generate(), m_UUID, GetIcon(), object, EFE_DEFAULT);
 			
-			GetDayZGame().GetEditor().GetMaster()["EditedObjects"]["BrushedObjects"].Add(editor_object);
+			GetDayZGame().GetEditor()["EditedObjects"]["BrushedObjects"].Add(editor_object);
 		
 			// remove it from placing
 			//Placing.RemoveItem(editor_objects);

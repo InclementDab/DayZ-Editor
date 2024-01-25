@@ -46,7 +46,7 @@ class EditorFootprint: Managed
 			return;
 		}
 
-		EditorNode current = GetDayZGame().GetEditor().GetMaster();
+		EditorNode current = GetDayZGame().GetEditor();
 		for (int i = 0; i < tree_depth; i++) {
 			string uuid;
 			Data.GetReadContext().Read(uuid);

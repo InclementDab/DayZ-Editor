@@ -1,23 +1,13 @@
 modded class DayZGame
-{		
-	ref array<ref Param3<string, vector, float>> DebugTexts = {};
-	
-	void DebugDrawText(string text, vector pos, float size)
-	{
-		DebugTexts.Insert(new Param3<string, vector, float>(text, pos, size));
-	}
-	
-	// VERY handy when changing layouts :)
-	void Recompile()
-	{
-		m_Editor = new Editor(GetPlayer().GetIdentity(), GetPlayer());
-	}
-	
-	// server!
-	protected ref map<string, ref EditorNode> m_Nodes = new map<string, ref EditorNode>();
+{
+	// Handled in DayZGame
+	static const int RPC_SYNC = 54365;
+	static const int RPC_REQUEST_SYNC = 54366;
 	
 	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
 	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
+	
+	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", Symbols.WINE_BOTTLE);
 			
 	void DayZGame()
 	{
@@ -44,7 +34,8 @@ modded class DayZGame
 			case MPSessionPlayerReadyEventTypeID: {
 				// Client -> Server
 				if (!m_Editor) {
-					m_Editor = new Editor(GetGame().GetPlayer().GetIdentity(), GetGame().GetPlayer());	
+					m_Editor = new Editor(GetGame().GetPlayer().GetIdentity().GetId(), GetGame().GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetGame().GetPlayer().GetIdentity(), GetGame().GetPlayer());	
+					Synchronize(m_Editor);
 				}
 				
 				break;
@@ -101,22 +92,101 @@ modded class DayZGame
 		
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{				
-		// RPC is editor online session
-		if (Editor.RPC_ALL.Find(rpc_type) != -1) {			
-			m_Editor.OnRPC(sender, rpc_type, ctx);
+		switch (rpc_type) {
+			case RPC_REQUEST_SYNC: {
+				if (!IsServer()) {
+					return;
+				}
+				
+				Synchronize(m_Master, sender);
+				break;
+			}
+			
+			case RPC_SYNC: {	
+				Print("EditorNode.RPC_SYNC");
+				int tree_depth;
+				if (!ctx.Read(tree_depth)) {
+					Error("Invalid depth");
+					break;
+				}
+
+				EditorNode current = m_Master;
+				for (int i = 0; i < tree_depth; i++) {
+					string uuid;
+					ctx.Read(uuid);
+					
+					string type;
+					ctx.Read(type);
+					
+					EditorNode node = current[uuid];
+					if (!node) {
+						node = EditorNode.Cast(type.ToType().Spawn());
+						if (!node) {
+							Error("Invalid node type " + type);
+							continue;
+						}
+						
+						current[uuid] = node;
+						node.SetParent(current[uuid]);
+					}
+					
+					current = current[uuid];
+				}
+								
+				current.Read(ctx, 0);
+				
+				// Who do we sync back to? - doing predictive placement so not the client that pushed it.. yet
+				if (GetGame().IsDedicatedServer()) {
+					array<PlayerIdentity> identities = {};
+					GetGame().GetPlayerIndentities(identities);
+					foreach (PlayerIdentity identity: identities) {
+						//if (sender.GetId() != identity.GetId())
+						Synchronize(current, null);
+					}
+					
+				} else {
+					current.OnSynchronized();
+				}
+				
+				break;
+			}
 		}
 		
 		super.OnRPC(sender, target, rpc_type, ctx);
 	}
 	
-	void StartEditor(notnull PlayerIdentity identity, notnull DayZPlayer player)
-	{
-		m_Editor = new Editor(identity, player);
+	void Synchronize(notnull EditorNode node, PlayerIdentity identity = null)
+	{	
+		ScriptRPC rpc = new ScriptRPC();
+		int tree_depth = node.GetParentDepth();
+		rpc.Write(tree_depth);
+
+		for (int i = tree_depth - 1; i >= 0; i--) {
+			EditorNode parent = node.GetParentAtDepth(i);
+			rpc.Write(parent.GetUUID());
+			rpc.Write(parent.Type().ToString());
+		}
+			
+		node.Write(rpc, 0);
+		rpc.Send(null, RPC_SYNC, true, identity);
 	}
 	
 	Command GetCommand(typename command)
 	{
 		return m_Commands[command];
+	}
+	
+	ref array<ref Param3<string, vector, float>> DebugTexts = {};
+	
+	void DebugDrawText(string text, vector pos, float size)
+	{
+		DebugTexts.Insert(new Param3<string, vector, float>(text, pos, size));
+	}
+	
+	// VERY handy when changing layouts :)
+	void Recompile()
+	{
+		m_Editor = new Editor(GetGame().GetPlayer().GetIdentity().GetId(), GetGame().GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetGame().GetPlayer().GetIdentity(), GetGame().GetPlayer());	
 	}
 	
 	static bool IsForbiddenItem(string model)

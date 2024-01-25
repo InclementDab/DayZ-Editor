@@ -17,13 +17,8 @@ class EditorColors
 	static const int SELECT = ARGB(255, 7, 111, 146);
 }
 
-class Editor: SerializableBase
+class Editor: EditorNode
 {
-	// Handled in DayZGame
-	static const int RPC_SYNC = 54365;
-	static const int RPC_REQUEST_SYNC = 54366;
-	
-	static const ref array<int> RPC_ALL = { RPC_SYNC, RPC_REQUEST_SYNC };
 	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
 	
 	static const int DEFAULT_ENTITY_COUNT = 512;
@@ -52,28 +47,27 @@ class Editor: SerializableBase
 	protected EditorCamera m_Camera;
 	ref array<ref EditorObject> Placing = {};
 	protected Entity m_CurrentControl;
-				
-	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", Symbols.PENCIL);			
+	
 	protected vector m_CursorNormal = vector.Aside;
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorHistory m_History = new EditorHistory();
 	
-	void Editor(PlayerIdentity identity, DayZPlayer player) 
+	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
 		m_Identity = identity;
 		m_Player = player;
 
 		EditorNode networked = new EditorNode("NetworkedObjects", "Networked Objects", Symbols.NETWORK_WIRED);
 		networked.Add(new EditorObject(m_Player.GetNetworkIDString(), m_Identity.GetName(), Symbols.PERSON, m_Player, EFE_DEFAULT));
-		m_Master.Add(networked);
+		Add(networked);
 		
 		// Load all default categories and placements
 		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP);
 		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", Symbols.HAND));
 		edited_objects.Add(new EditorNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
 		edited_objects.Add(new EditorNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
-		m_Master.Add(edited_objects);
+		Add(edited_objects);
 
 		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects", Symbols.ADDRESS_BOOK);
 		placeable_objects.Add(new EditorNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
@@ -88,12 +82,12 @@ class Editor: SerializableBase
 		placeable_objects.Add(new EditorNode("StaticObjects", "Static Objects", Symbols.OBJECT_INTERSECT));
 		placeable_objects.Add(new EditorNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT));
 		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
-		m_Master.Add(placeable_objects);
+		Add(placeable_objects);
 		
 		EditorNode brushes = new EditorNode("Brushes", "Brushes", Symbols.BRUSH);
 		brushes.Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
 		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
-		m_Master.Add(brushes);
+		Add(brushes);
 		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 					
@@ -125,7 +119,7 @@ class Editor: SerializableBase
 					category = "AI";
 				}
 				
-				m_Master["PlaceableObjects"][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING));
+				this["PlaceableObjects"][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING));
 		    }
 		}
 		
@@ -159,12 +153,12 @@ class Editor: SerializableBase
 					category = "Rocks";
 				}
 			
-				m_Master["PlaceableObjects"][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
+				this["PlaceableObjects"][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
 			}
 		}
 
 		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
-			m_Master["PlaceableObjects"]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+			this["PlaceableObjects"]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}
 			
 		if (GetGame().IsDedicatedServer()) {
@@ -175,13 +169,10 @@ class Editor: SerializableBase
 		m_Camera.SetActive(true);
 	
 		m_Hud = new EditorHud();		
-		m_Hud.GetTemplateController().LeftListItems.Insert(m_Master["PlaceableObjects"].GetNodeView());
-		m_Hud.GetTemplateController().LeftListItems.Insert(m_Master["Brushes"].GetNodeView());
-		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["NetworkedObjects"].GetNodeView());
-		m_Hud.GetTemplateController().RightListItems.Insert(m_Master["EditedObjects"].GetNodeView());
-		
-		// Hud has loaded, request the stuff
-		ScriptRPC().Send(null, RPC_REQUEST_SYNC, true);
+		m_Hud.GetTemplateController().LeftListItems.Insert(this["PlaceableObjects"].GetNodeView());
+		m_Hud.GetTemplateController().LeftListItems.Insert(this["Brushes"].GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(this["NetworkedObjects"].GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(this["EditedObjects"].GetNodeView());
 	}
 
 	void ~Editor() 
@@ -268,10 +259,10 @@ class Editor: SerializableBase
 
 					editor_object_to_place.Write(footprint.Data.GetWriteContext(), 0);
 					
-					m_Master["EditedObjects"]["PlacedObjects"].Add(editor_object_to_place);
+					this["EditedObjects"]["PlacedObjects"].Add(editor_object_to_place);
 		
 					// Synchronize to this id
-					Synchronize(m_Master["EditedObjects"]["PlacedObjects"]);
+					GetDayZGame().Synchronize(this["EditedObjects"]["PlacedObjects"]);
 					
 					// remove it from placing
 					Placing.RemoveItem(editor_object_to_place);
@@ -375,10 +366,10 @@ class Editor: SerializableBase
 
 				editor_node_to_delete.Write(footprint_delete.Data.GetWriteContext(), 0);
 				
-				m_Master["EditedObjects"]["PlacedObjects"].Remove(editor_node_to_delete.GetUUID());
+				this["EditedObjects"]["PlacedObjects"].Remove(editor_node_to_delete.GetUUID());
 	
 				// Synchronize to this id
-				Synchronize(m_Master["EditedObjects"]["PlacedObjects"]);
+				GetDayZGame().Synchronize(this["EditedObjects"]["PlacedObjects"]);
 				
 				// remove it from placing
 				EditorNode.SelectedObjects.RemoveItem(editor_node_to_delete);
@@ -422,88 +413,9 @@ class Editor: SerializableBase
 		}
 	}
 			
-	void OnRPC(PlayerIdentity sender, int rpc_type, ParamsReadContext ctx)
-	{		
-		switch (rpc_type) {
-			case RPC_REQUEST_SYNC: {
-				if (!GetGame().IsServer()) {
-					return;
-				}
-				
-				GetDayZGame().GetEditor().Synchronize(GetDayZGame().GetEditor().GetMaster(), sender);
-				break;
-			}
-			
-			case RPC_SYNC: {	
-				Print("EditorNode.RPC_SYNC");
-				int tree_depth;
-				if (!ctx.Read(tree_depth)) {
-					Error("Invalid depth");
-					break;
-				}
-
-				EditorNode current = m_Master;
-				for (int i = 0; i < tree_depth; i++) {
-					string uuid;
-					ctx.Read(uuid);
-					
-					string type;
-					ctx.Read(type);
-					
-					EditorNode node = current[uuid];
-					if (!node) {
-						node = EditorNode.Cast(type.ToType().Spawn());
-						if (!node) {
-							Error("Invalid node type " + type);
-							continue;
-						}
-						
-						current[uuid] = node;
-						node.SetParent(current[uuid]);
-					}
-					
-					current = current[uuid];
-				}
-								
-				current.Read(ctx, 0);
-				
-				// Who do we sync back to? - doing predictive placement so not the client that pushed it.. yet
-				if (GetGame().IsDedicatedServer()) {
-					array<PlayerIdentity> identities = {};
-					GetGame().GetPlayerIndentities(identities);
-					foreach (PlayerIdentity identity: identities) {
-						//if (sender.GetId() != identity.GetId())
-						Synchronize(current, null);
-					}
-					
-				} else {
-					current.OnSynchronized();
-				}
-				
-				break;
-			}
-		}
-	}
-	
-	void Synchronize(notnull EditorNode node, PlayerIdentity identity = null)
-	{	
-		ScriptRPC rpc = new ScriptRPC();
-		int tree_depth = node.GetParentDepth();
-		rpc.Write(tree_depth);
-
-		for (int i = tree_depth - 1; i >= 0; i--) {
-			EditorNode parent = node.GetParentAtDepth(i);
-			rpc.Write(parent.GetUUID());
-			rpc.Write(parent.Type().ToString());
-		}
-			
-		node.Write(rpc, 0);
-		rpc.Send(null, RPC_SYNC, true, identity);
-	}
-		
 	override void Write(Serializer serializer, int version)
 	{		
-		serializer.Write(m_Player);
+		serializer.Write(m_Identity);
 		serializer.Write(Public);
 		serializer.Write(m_Password);
 		serializer.Write(m_MaxPlayers);
@@ -513,14 +425,12 @@ class Editor: SerializableBase
 			serializer.Write(identity);
 		}
 				
-		m_Master.Write(serializer, version);
-		
 		super.Write(serializer, version);
 	}
 	
 	override bool Read(Serializer serializer, int version)
 	{		
-		serializer.Read(m_Player);
+		serializer.Read(m_Identity);
 		serializer.Read(Public);
 		serializer.Read(m_Password);
 		serializer.Read(m_MaxPlayers);
@@ -535,14 +445,8 @@ class Editor: SerializableBase
 				m_CameraObjects[identity] = GetGame().CreateObjectEx("StaticCamera", vector.Zero, ECE_LOCAL);
 			}
 		}
-					
-		m_Master.Read(serializer, version);
+		
 		return super.Read(serializer, version);
-	}
-	
-	void Add(notnull EditorNode node)
-	{
-		m_Master.Add(node);
 	}
 	
 	bool IsMember(notnull PlayerIdentity identity)
@@ -884,11 +788,6 @@ class Editor: SerializableBase
 		return EditorProfileSettings.Cast(GetDayZGame().GetProfileSetting(EditorProfileSettings));
 	}
 		
-	EditorNode GetMaster()
-	{	
-		return m_Master;
-	}
-	
 	void SetPlayer(DayZPlayer player)
 	{
 		m_Player = player;
