@@ -1,12 +1,3 @@
-[RegisterCommand(WebToggleCommand)]
-class WebToggleCommand: Command
-{
-	override void Execute(bool state) 
-	{
-		GetDayZGame().GetEditor().GetHud().OutlinePanel.Show(state); 
-	}
-}
-
 class CompassTick: ScriptView
 {
 	TextWidget Text;

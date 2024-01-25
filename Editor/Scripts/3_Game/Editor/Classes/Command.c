@@ -8,7 +8,7 @@ enum ShortcutKeyType
 
 class Command: Managed
 {
-	protected bool m_Executed;
+	protected bool m_Executed = GetDefaultState();
 	
 	ref ScriptInvoker OnExecute = new ScriptInvoker();
 	
@@ -26,6 +26,11 @@ class Command: Managed
 	bool CanExecute()
 	{
 		return true;
+	}
+	
+	bool GetDefaultState()
+	{
+		return false;
 	}
 	
 	string GetName() 
