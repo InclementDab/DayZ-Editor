@@ -30,7 +30,7 @@ modded class DayZGame
 	{
 		super.SetMissionPath(path);
 		
-		m_Master.Add(new EditorServer("SERVER", "SERVER", string.Empty));
+		m_Master.Add(new EditorServer("SERVER", "Editors", Symbols.CAMERA_SECURITY));
 		m_Master.Synchronize();
 	}
 		
@@ -43,7 +43,7 @@ modded class DayZGame
 				if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
 					continue;
 				}
-						
+						 
 				if (!command || !command.CanExecute()) {
 					continue;
 				}
@@ -155,7 +155,7 @@ modded class DayZGame
 		string uuid = GetPlayer().GetIdentity().GetId();
 		delete m_Master[uuid];
 		
-		m_Master[uuid] = new Editor(uuid, GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetPlayer().GetIdentity());
+		m_Master[uuid] = new Editor(uuid, GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetPlayer().GetIdentity(), GetPlayer());
 		m_Master.Synchronize();
 	}
 	

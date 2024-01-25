@@ -31,9 +31,7 @@ class EditorNode: SerializableBase
 		m_Icon = icon;
 		
 #ifndef SERVER
-		if (m_Icon != string.Empty) {
-			m_NodeView = new EditorNodeView(m_DisplayName, this, m_Icon);
-		}
+		m_NodeView = new EditorNodeView(m_DisplayName, this, m_Icon);
 #endif
 	}
 	
@@ -80,6 +78,11 @@ class EditorNode: SerializableBase
 	EditorNode Get(string uuid)
 	{		
 		return m_Children[uuid];
+	}
+	
+	EditorNode GetNode(string uuid)
+	{
+		return this[uuid];
 	}
 	
 	map<string, ref EditorNode> GetChildren()

@@ -33,20 +33,20 @@ class Editor: EditorServer
 	// Stack of Undo / Redo Actions
 	protected ref EditorHistory m_History = new EditorHistory();
 	
-	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity) 
+	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
 		m_Identity = identity;
-		m_Player = GetDayZGame().GetPlayerByIdentity(identity);		
+		m_Player = player;	
 		if (GetGame().IsDedicatedServer()) {
 			m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_SETUP));
 			return;
 		}
 		
 		m_Hud = new EditorHud();
-		m_Hud.GetTemplateController().LeftListItems.Insert(this["PlaceableObjects"].GetNodeView());
-		m_Hud.GetTemplateController().LeftListItems.Insert(this["Brushes"].GetNodeView());
-		m_Hud.GetTemplateController().RightListItems.Insert(GetDayZGame().GetMaster()["SERVER"].GetNodeView());
-		m_Hud.GetTemplateController().RightListItems.Insert(this["EditedObjects"].GetNodeView());
+		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("PlaceableObjects").GetNodeView());
+		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("Brushes").GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(GetDayZGame().GetMaster().GetNode("SERVER").GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(GetNode("EditedObjects").GetNodeView());
 	}
 
 	void ~Editor() 
@@ -289,6 +289,7 @@ class Editor: EditorServer
 		super.Write(serializer, version);
 		
 		serializer.Write(m_Identity);
+		serializer.Write(m_Player);
 		serializer.Write(m_Camera);
 	}
 	
@@ -299,9 +300,8 @@ class Editor: EditorServer
 		}
 		
 		serializer.Read(m_Identity);
-		m_Player = GetDayZGame().GetPlayerByIdentity(m_Identity);
-		serializer.Read(m_Camera);
-			
+		serializer.Read(m_Player);
+		serializer.Read(m_Camera);			
 		return true;
 	}
 						
