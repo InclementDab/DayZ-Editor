@@ -1,4 +1,4 @@
-modded class MissionMainMenu
+/*modded class MissionMainMenu
 {
 	override void OnUpdate(float timeslice)
 	{
@@ -15,4 +15,4 @@ modded class MissionMainMenu
 		
 		super.PlayMusic();
 	}
-}
+}*/

@@ -1,4 +1,4 @@
-modded class DayZIntroScene
+/*modded class DayZIntroScene
 {
 	static const float CAMERA_DISTANCE_FROM_SCREEN = 4.5;
 	static const float CHRISTMAS_TREE_DISTANCE_FROM_SCREEN = 10.0;
@@ -225,4 +225,4 @@ modded class DayZIntroScene
 			}
 		}
 	}
-}
+}*/

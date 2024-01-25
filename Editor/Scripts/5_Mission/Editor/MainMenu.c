@@ -1,4 +1,4 @@
-modded class MainMenu 
+/*modded class MainMenu 
 {
 	protected ref EditorMainMenuStats m_EditorMainMenuStats;
 	protected Widget m_JoinDiscord;
@@ -85,7 +85,7 @@ modded class MainMenu
 		
 		if (selected_map != string.Empty && result == DialogResult.OK) {
 			GetGame().PlayMission(CreateEditorMission(selected_map));
-		}*/
+		}
 	}
 
     override bool OnMouseEnter(Widget w, int x, int y)
@@ -146,4 +146,4 @@ modded class MainMenu
 	{
 		GetGame().OpenURL("dab.dev/donate");
 	}
-}
+}*/
