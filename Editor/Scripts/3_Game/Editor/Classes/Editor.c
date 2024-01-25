@@ -168,9 +168,7 @@ class Editor: SerializableBase
 	static const string ROOT_DIRECTORY = "$saves:\\Editor\\";
 	
 	static const string Version = "2.0";
-	
-	protected ref array<ref EditorHiddenObject> m_DeletedObjects = {};	
-	
+		
 	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", Symbols.PENCIL);			
 	
 	// Stack of Undo / Redo Actions
@@ -1056,17 +1054,7 @@ class Editor: SerializableBase
 	{
 		return m_Camera;
 	}
-		
-	bool IsObjectHidden(notnull Object object)
-	{
-		return (CF.ObjectManager.IsMapObjectHidden(object));
-	}
-			
-	array<ref EditorHiddenObject> GetDeletedObjects()
-	{
-		return m_DeletedObjects;
-	}
-				
+					
 	bool IsPlacing()
 	{
 		return Placing.Count() > 0; 

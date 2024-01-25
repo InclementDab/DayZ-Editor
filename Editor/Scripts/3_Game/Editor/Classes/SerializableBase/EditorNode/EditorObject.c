@@ -15,8 +15,7 @@ class EditorObject: EditorNode
 	protected ref EditorObjectView m_EditorObjectView;
 	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
-	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
-	
+
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
 	
 	protected Object m_TranslationGizmo;
@@ -115,7 +114,6 @@ class EditorObject: EditorNode
 		GetGame().ObjectDelete(m_TranslationGizmo);
 						
 		delete m_PointViews;
-		delete m_ObjectAnimations;
 		
 		foreach (auto snap_point: m_EditorSnapPoints) {
 			snap_point.Delete();
@@ -330,17 +328,7 @@ class EditorObject: EditorNode
 	{
 		return m_Flags;
 	}
-			
-	map<string, ref EditorObjectAnimationSource> GetObjectAnimations()
-	{
-		return m_ObjectAnimations;
-	}
-	
-	bool HasAnimations()
-	{
-		return (m_ObjectAnimations.Count() != 0);
-	}
-			
+						
 	Object GetObject() 
 	{		
 		return m_Object;

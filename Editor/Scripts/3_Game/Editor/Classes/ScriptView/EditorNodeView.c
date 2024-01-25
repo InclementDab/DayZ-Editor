@@ -17,6 +17,9 @@ class EditorNodeView: ScriptView
 	
 	protected EditorNode m_Node;
 	
+	protected ref EditorNodeTooltip m_NodeTooltip;
+	protected ref EditorEntityTooltip m_EntityTooltip;
+	
 	void EditorNodeView(string text, EditorNode node, Symbols icon)
 	{
 		m_TemplateController = EditorNodeViewController.Cast(m_Controller);
@@ -84,8 +87,10 @@ class EditorNodeView: ScriptView
 		//WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
 		
 		if (m_Icon != string.Empty) {
-			GetDayZGame().GetEditor().GetHud().SetCursor(m_Icon);
+			//GetDayZGame().GetEditor().GetHud().SetCursor(m_Icon);
 		}
+		
+		
 		
 		return true;
 	}
