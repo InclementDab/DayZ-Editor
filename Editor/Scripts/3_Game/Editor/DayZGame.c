@@ -32,6 +32,7 @@ modded class DayZGame
 		super.SetMissionPath(path);
 		
 		m_Master.Add(new EditorServer("SERVER", "SERVER", string.Empty));
+		m_Master.Synchronize();
 	}
 		
 	override void OnUpdate(bool doSim, float timeslice)
@@ -164,7 +165,7 @@ modded class DayZGame
 		string uuid = GetPlayer().GetIdentity().GetId();
 		delete m_Master[uuid];
 		
-		m_Master[uuid] = new Editor(uuid, GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetPlayer().GetIdentity(), GetPlayer());	
+		m_Master[uuid] = new Editor(uuid, GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetPlayer().GetIdentity());
 		m_Master.Synchronize();
 	}
 	
@@ -201,6 +202,10 @@ modded class DayZGame
 	
 	Editor GetEditor()
 	{		
+		if (!GetPlayer()) {
+			return null;
+		}
+		
 		string uuid = GetPlayer().GetIdentity().GetId();
 		return Editor.Cast(m_Master[uuid]);
 	}

@@ -33,15 +33,16 @@ class Editor: EditorServer
 	// Stack of Undo / Redo Actions
 	protected ref EditorHistory m_History = new EditorHistory();
 	
-	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
+	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity) 
 	{
 		m_Identity = identity;
-		m_Player = player;
+		m_Player = GetDayZGame().GetPlayerByIdentity(identity);
+		
 			
 		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));	
 		m_Camera.SetActive(true);
 	
-		m_Hud = new EditorHud();		
+		m_Hud = new EditorHud();
 		m_Hud.GetTemplateController().LeftListItems.Insert(this["PlaceableObjects"].GetNodeView());
 		m_Hud.GetTemplateController().LeftListItems.Insert(this["Brushes"].GetNodeView());
 		m_Hud.GetTemplateController().RightListItems.Insert(this["NetworkedObjects"].GetNodeView());

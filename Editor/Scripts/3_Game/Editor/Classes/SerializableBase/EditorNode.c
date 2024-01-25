@@ -15,7 +15,6 @@ class EditorNode: SerializableBase
 	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();
 	ref ScriptInvoker OnLockChanged = new ScriptInvoker();
 
-	protected Editor m_Editor = GetDayZGame().GetEditor();
 	protected string m_UUID;	
 	protected ref map<string, ref EditorNode> m_Children = new map<string, ref EditorNode>();
 
@@ -93,7 +92,7 @@ class EditorNode: SerializableBase
 		m_Parent = parent;
 		
 		// Update visual display
-		if (!GetGame().IsDedicatedServer()) {
+		if (m_Parent && m_Parent.GetNodeView()) {
 			m_Parent.GetNodeView().GetTemplateController().ChildrenItems.Insert(m_NodeView);
 		}
 	}
