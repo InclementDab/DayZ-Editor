@@ -1,6 +1,7 @@
 modded class DayZGame
 {
 	// Handled in DayZGame
+	static const int RPC_REQUEST_SYNC = 54364;
 	static const int RPC_NODE_SYNC = 54365;
 	
 	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
@@ -83,7 +84,12 @@ modded class DayZGame
 		
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{				
-		switch (rpc_type) {			
+		switch (rpc_type) {		
+			case RPC_REQUEST_SYNC: {
+				m_Master.Synchronize(sender);
+				break;
+			}
+				
 			case RPC_NODE_SYNC: {	
 				Print("EditorNode.RPC_NODE_SYNC");
 				int tree_depth;

@@ -6,12 +6,15 @@ class EditorServer: EditorNode
 	void EditorServer(string uuid, string display_name, Symbols icon)
 	{
 		// Load all default categories and placements
+		EditorNode main_node = new EditorNode(uuid, display_name, icon);
+		
 		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP);
 		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", Symbols.HAND));
 		edited_objects.Add(new EditorNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
 		edited_objects.Add(new EditorNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
 		Add(edited_objects);
-
+		
+#ifndef SERVER
 		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects", Symbols.ADDRESS_BOOK);
 		placeable_objects.Add(new EditorNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
 		placeable_objects.Add(new EditorNode("Plants", "Plants", Symbols.TREE));
@@ -31,7 +34,7 @@ class EditorServer: EditorNode
 		brushes.Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
 		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
 		Add(brushes);
-		
+				
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 					
 		string category = "Unknown";
@@ -103,5 +106,6 @@ class EditorServer: EditorNode
 		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
 			this["PlaceableObjects"]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}
+#endif
 	}
 }

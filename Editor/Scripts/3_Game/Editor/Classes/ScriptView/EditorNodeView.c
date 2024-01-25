@@ -49,7 +49,7 @@ class EditorNodeView: ScriptView
 		
 		// you only want to open upper containers when lower ones are opened. propagate up /\
 		EditorNode parent = m_Node.GetParent();
-		if (parent && state) {
+		if (parent) {
 			parent.GetNodeView().ShowChildren(true);
 		}
 	}

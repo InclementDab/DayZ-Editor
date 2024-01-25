@@ -1,9 +1,9 @@
 modded class MissionGameplay
-{	
+{		
 	override void OnUpdate(float timeslice)
 	{
 		super.OnUpdate(timeslice);
-	
+		
 		if (GetGame().GetInput().LocalPress("EditorToggleActive")) {
 			GetDayZGame().GetEditor().SetActive(!GetDayZGame().GetEditor().IsActive());
 		}
