@@ -20,14 +20,15 @@ class EditorButton: ScriptedWidgetEventHandler
 		m_Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");
 		
 		if (Icon != string.Empty) {
-			m_Icon.LoadImageFile(0, Icon.WithSize(SymbolSize.REGULAR));
+			m_Icon.LoadImageFile(0, Icon.Regular());
 			m_Icon.SetImage(0);
 		}
 		
 		if (CommandType != string.Empty) {
 			m_Command = GetDayZGame().GetCommand(CommandType.ToType());
 			if (m_Command) {
-				m_Command.OnExecute.Insert(OnExecuted);
+				m_Command.OnExecute.Insert(OnExecuted);				
+				m_Button.SetState(m_Command.GetDefaultState());
 			}
 		}
 		
@@ -44,11 +45,11 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 		WidgetAnimator.AnimateColor(m_Icon, color, 50);
 		
-		m_Icon.LoadImageFile(0, Icon.WithSize(size));
+		m_Icon.LoadImageFile(0, Ternary<string>.If(state, Icon.Solid(), Icon.Regular()));
 		m_Icon.SetImage(0);
 	}
 	
-	Symbol GetIcon()
+	Symbols GetIcon()
 	{
 		return Icon;
 	}

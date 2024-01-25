@@ -333,7 +333,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "file"
+           Icon "image:file"
           }
          }
         }
@@ -387,7 +387,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "folder_open"
+           Icon "image:folder_open"
           }
          }
         }
@@ -441,7 +441,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "floppy_disk"
+           Icon "image:floppy_disk"
           }
          }
         }
@@ -496,7 +496,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "floppy_disk_pen"
+           Icon "image:floppy_disk_pen"
           }
          }
         }
@@ -596,7 +596,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "scissors"
+           Icon "image:scissors"
           }
          }
         }
@@ -650,7 +650,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "copy"
+           Icon "image:copy"
           }
          }
         }
@@ -704,7 +704,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "paste"
+           Icon "image:paste"
           }
          }
         }
@@ -805,7 +805,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "lock"
+           Icon "image:lock"
           }
          }
         }
@@ -859,7 +859,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "lock_open"
+           Icon "image:lock_open"
           }
          }
         }
@@ -960,7 +960,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "magnet"
+           Icon "image:magnet"
           }
          }
         }
@@ -1014,7 +1014,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "arrow_down_to_line"
+           Icon "image:arrow_down_to_line"
           }
          }
         }
@@ -1068,7 +1068,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "arrows_to_dot"
+           Icon "image:arrows_to_dot"
           }
          }
         }
@@ -1169,7 +1169,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "sun_bright"
+           Icon "image:sun_bright"
           }
          }
         }
@@ -1223,7 +1223,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "camera_movie"
+           Icon "image:camera_movie"
           }
          }
         }
@@ -1327,7 +1327,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "eye_slash"
+           Icon "image:eye_slash"
           }
          }
         }
@@ -1428,7 +1428,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "folder_plus"
+           Icon "image:folder_plus"
           }
          }
         }
@@ -1616,7 +1616,7 @@ FrameWidgetClass Root {
          {
           ScriptParamsClass {
            CommandType "BoxSelectCommand"
-           Icon "square_dashed"
+           Icon "image:square_dashed"
           }
          }
         }
@@ -1672,7 +1672,7 @@ FrameWidgetClass Root {
              nocache 0
              {
               ScriptParamsClass {
-               Icon "circle_dashed"
+               Icon "image:circle_dashed"
               }
              }
             }
@@ -1682,7 +1682,7 @@ FrameWidgetClass Root {
          {
           ScriptParamsClass {
            CommandType "CircleSelectCommand"
-           Icon "circle_dashed"
+           Icon "image:circle_dashed"
           }
          }
         }
@@ -1741,7 +1741,7 @@ FrameWidgetClass Root {
          {
           ScriptParamsClass {
            CommandType "LassoSelectCommand"
-           Icon "lasso"
+           Icon "image:lasso"
           }
          }
         }
@@ -2585,7 +2585,7 @@ FrameWidgetClass Root {
          {
           ScriptParamsClass {
            CommandType "UndoCommand"
-           Icon "rotate_left"
+           Icon "image:rotate_left"
           }
          }
         }
@@ -2638,7 +2638,7 @@ FrameWidgetClass Root {
          {
           ScriptParamsClass {
            CommandType "RedoCommand"
-           Icon "rotate_right"
+           Icon "image:rotate_right"
           }
          }
         }

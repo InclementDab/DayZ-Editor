@@ -1,7 +1,5 @@
 modded class DayZGame
 {		
-#ifdef DIAG_DEVELOPER
-	
 	ref array<ref Param3<string, vector, float>> DebugTexts = {};
 	
 	void DebugDrawText(string text, vector pos, float size)
@@ -14,7 +12,7 @@ modded class DayZGame
 	{
 		m_Editor = new Editor(GetPlayer().GetIdentity(), GetPlayer());
 	}
-#endif
+	
 	// server!
 	protected ref map<string, ref EditorNode> m_Nodes = new map<string, ref EditorNode>();
 	
