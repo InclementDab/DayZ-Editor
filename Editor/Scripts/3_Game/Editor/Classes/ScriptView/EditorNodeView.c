@@ -87,6 +87,7 @@ class EditorNodeView: ScriptView
 		
 		GetDayZGame().GetEditor().GetHud().SetCursor(new EditorNodeTooltip(m_Icon, m_Node.GetUUID(), m_Node.GetUUID()));
 		
+		// todo: hack
 		EditorPlaceable placeable = EditorPlaceable.Cast(m_Node);
 		if (placeable) {
 			vector matrix[4];
