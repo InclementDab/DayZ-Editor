@@ -4,13 +4,18 @@ class CursorView: ScriptView
 	
 	void CursorView(Symbols cursor)
 	{
-		Foreground.LoadImageFile(0, cursor.Thin());
-		Foreground.SetImage(0);
-
-		Background.LoadImageFile(0, cursor.Solid());
-		Background.SetImage(0);
-		
 		SetCursorWidget(m_LayoutRoot);
+		m_LayoutRoot.Show(true);
+		
+		if (Foreground) {
+			Foreground.LoadImageFile(0, cursor.Thin());
+			Foreground.SetImage(0);
+		}
+
+		if (Background) {
+			Background.LoadImageFile(0, cursor.Solid());
+			Background.SetImage(0);
+		}
 	}
 	
 	void ~CursorView()

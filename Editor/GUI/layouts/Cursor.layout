@@ -1,4 +1,5 @@
 FrameWidgetClass Cursor {
+ visible 0
  clipchildren 0
  ignorepointer 1
  color 0.0588 0.0588 0.0588 1
@@ -9,7 +10,7 @@ FrameWidgetClass Cursor {
  hexactsize 1
  vexactsize 1
  {
-  ImageWidgetClass "Cursor.Background" {
+  ImageWidgetClass Background {
    visible 1
    clipchildren 0
    ignorepointer 1
@@ -30,7 +31,7 @@ FrameWidgetClass Cursor {
    "stretch mode" stretch_w_center
    filter 1
    {
-    ImageWidgetClass "Cursor.Foreground" {
+    ImageWidgetClass Foreground {
      visible 1
      clipchildren 0
      ignorepointer 1

@@ -87,12 +87,35 @@ class EditorNodeView: ScriptView
 		
 		GetDayZGame().GetEditor().GetHud().SetCursor(new EditorNodeTooltip(m_Icon, m_Node.GetUUID(), m_Node.GetUUID()));
 		
+		EditorPlaceable placeable = EditorPlaceable.Cast(m_Node);
+		if (placeable) {
+			vector matrix[4];
+			Math3D.MatrixIdentity4(matrix);			
+			Object object = Editor.CreateObject(placeable.GetUUID(), matrix);
+						
+			EntityAI entity = EntityAI.Cast(object);
+			if (entity) {
+				m_EntityTooltip = new EditorEntityTooltip(entity);
+				
+				float x_s, y_s, _;
+				m_LayoutRoot.GetScreenPos(x_s, y_s);
+				
+				GetDayZGame().GetEditor().GetHud().LeftDragZone.GetScreenPos(x_s, _);
+				
+				m_EntityTooltip.GetLayoutRoot().SetPos(x_s + 30, y_s);
+			}
+		}
+		
 		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{				
 		GetDayZGame().GetEditor().GetHud().ClearCursor();
+		
+		if (m_EntityTooltip) {
+			delete m_EntityTooltip;
+		}
 		
 		//if (!m_Button.GetState()) {
 			//WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);

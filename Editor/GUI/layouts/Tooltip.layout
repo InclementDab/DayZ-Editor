@@ -1,17 +1,20 @@
 PanelWidgetClass Root {
+ visible 0
  color 0.3137 0.3137 0.3137 1
- size 272 100
+ position 44 44
+ size 257 84
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
- scaled 0
+ scaled 1
+ priority 200
  scriptclass "SizeToChild"
- style Outline
+ style blank
  {
   GridSpacerWidgetClass Tooltip {
    color 0.0588 0.0784 0.0588 1
-   size 150 70
+   size 241 54
    halign center_ref
    valign center_ref
    hexactpos 1
@@ -24,7 +27,6 @@ PanelWidgetClass Root {
    Padding 4
    Margin 4
    "Size To Content H" 1
-   "Size To Content V" 1
    content_halign center
    content_valign center
    Columns 1
@@ -50,7 +52,7 @@ PanelWidgetClass Root {
      visible 1
      ignorepointer 1
      position 0 0
-     size 303 32
+     size 303 22
      halign center_ref
      valign center_ref
      hexactpos 1
@@ -66,53 +68,6 @@ PanelWidgetClass Root {
      Columns 2
      Rows 1
      {
-      FrameWidgetClass Icon {
-       ignorepointer 1
-       position 0 0
-       size 32 32
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       {
-        ImageWidgetClass Foreground {
-         visible 1
-         ignorepointer 1
-         size 0.8 0.8
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 0
-         image0 "set:thin image:shirt"
-         mode additive
-         "src alpha" 1
-         filter 0
-         {
-          ImageWidgetClass Background {
-           visible 1
-           ignorepointer 1
-           color 0.3725 0.749 0.749 1
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           image0 "set:solid image:shirt"
-           mode additive
-           "src alpha" 1
-           filter 0
-          }
-         }
-        }
-       }
-      }
       TextWidgetClass Description {
        ignorepointer 1
        position 0 0
@@ -137,9 +92,8 @@ PanelWidgetClass Root {
  }
  {
   ScriptParamsClass {
-   m_ChildName "Tooltip0"
+   m_ChildName "Tooltip"
    m_ResizeHorizontal 1
-   m_ResizeVertical 1
   }
  }
 }

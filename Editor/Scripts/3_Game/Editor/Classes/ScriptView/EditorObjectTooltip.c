@@ -1,5 +1,7 @@
 class EditorEntityTooltip: ScriptView
 {	
+	protected EntityAI m_Entity;
+	
 	ItemPreviewWidget Item;
 	PlayerPreviewWidget Player;
 	
@@ -12,6 +14,11 @@ class EditorEntityTooltip: ScriptView
 			Item.SetItem(entity);
 			Item.SetView(entity.GetViewIndex());
 		}
+	}
+	
+	void ~EditorEntityTooltip()
+	{
+		GetGame().ObjectDelete(m_Entity);
 	}
 			
 	override string GetLayoutFile() 
