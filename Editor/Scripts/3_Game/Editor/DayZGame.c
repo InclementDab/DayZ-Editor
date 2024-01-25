@@ -1,14 +1,13 @@
 modded class DayZGame
 {
 	// Handled in DayZGame
-	static const int RPC_SYNC = 54365;
-	static const int RPC_REQUEST_SYNC = 54366;
+	static const int RPC_NODE_SYNC = 54365;
 	
 	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
 	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
 	
 	// Created on client AND server, assumed existence always. RPC_SYNC and Synchronize will be relying on this
-	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", string.Empty);
+	protected ref EditorNode m_Master = new EditorNode(string.Empty, string.Empty, string.Empty);
 			
 	void DayZGame()
 	{
@@ -84,21 +83,11 @@ modded class DayZGame
 		
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{				
-		switch (rpc_type) {
-			case RPC_REQUEST_SYNC: {
-				if (!IsServer()) {
-					return;
-				}
-				
-				m_Master.Synchronize(sender);
-				break;
-			}
-			
-			case RPC_SYNC: {	
-				Print("EditorNode.RPC_SYNC");
+		switch (rpc_type) {			
+			case RPC_NODE_SYNC: {	
+				Print("EditorNode.RPC_NODE_SYNC");
 				int tree_depth;
 				if (!ctx.Read(tree_depth)) {
-					Error("Invalid depth");
 					break;
 				}
 
@@ -127,19 +116,20 @@ modded class DayZGame
 								
 				current.Read(ctx, 0);
 				
-				// Who do we sync back to? - doing predictive placement so not the client that pushed it.. yet
+				// Who do we sync back to?
 				if (GetGame().IsDedicatedServer()) {
 					array<PlayerIdentity> identities = {};
 					GetGame().GetPlayerIndentities(identities);
 					foreach (PlayerIdentity identity: identities) {
-						//if (sender.GetId() != identity.GetId())
-						current.Synchronize(null);
-					}
-					
-				} else {
-					current.OnSynchronized();
+						
+						// The client that sent the original RPC will not recieve it back - they are the most recent commit
+						if (sender.GetId() != identity.GetId()) {
+							current.Synchronize(identity);
+						}
+					}	
 				}
 				
+				current.OnSynchronized();
 				break;
 			}
 		}

@@ -56,7 +56,7 @@ class EditorNode: SerializableBase
 		}
 			
 		Write(rpc, 0);
-		rpc.Send(null, DayZGame.RPC_SYNC, true, identity);
+		rpc.Send(null, DayZGame.RPC_NODE_SYNC, true, identity);
 	}
 							
 	void Add(notnull EditorNode node)
