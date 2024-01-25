@@ -7,7 +7,8 @@ modded class DayZGame
 	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
 	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
 	
-	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", Symbols.WINE_BOTTLE);
+	// Created on client AND server, assumed existence always. RPC_SYNC and Synchronize will be relying on this
+	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", string.Empty);
 			
 	void DayZGame()
 	{
@@ -23,26 +24,16 @@ modded class DayZGame
 			if (command.GetShortcut() != string.Empty) {
 				m_CommandShortcutMap[command.GetShortcut()] = command;
 			}
-		}	
-	}
-	
-	override void OnEvent(EventType eventTypeId, Param params)
-	{
-		super.OnEvent(eventTypeId, params);
-		
-		switch (eventTypeId) {
-			case MPSessionPlayerReadyEventTypeID: {
-				// Client -> Server
-				if (!m_Editor) {
-					m_Editor = new Editor(GetGame().GetPlayer().GetIdentity().GetId(), GetGame().GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetGame().GetPlayer().GetIdentity(), GetGame().GetPlayer());	
-					Synchronize(m_Editor);
-				}
-				
-				break;
-			}
 		}
 	}
-	
+		
+	override void SetMissionPath(string path)
+	{
+		super.SetMissionPath(path);
+		
+		m_Master.Add(new EditorServer("SERVER", "SERVER", string.Empty));
+	}
+		
 	override void OnUpdate(bool doSim, float timeslice)
 	{
 		super.OnUpdate(doSim, timeslice);
@@ -85,8 +76,8 @@ modded class DayZGame
 			}
 		}
 		
-		if (m_Editor) {
-			m_Editor.Update(doSim, timeslice);
+		if (GetEditor()) {
+			GetEditor().Update(doSim, timeslice);
 		}
 	}
 		
@@ -98,7 +89,7 @@ modded class DayZGame
 					return;
 				}
 				
-				Synchronize(m_Master, sender);
+				m_Master.Synchronize(sender);
 				break;
 			}
 			
@@ -141,7 +132,7 @@ modded class DayZGame
 					GetGame().GetPlayerIndentities(identities);
 					foreach (PlayerIdentity identity: identities) {
 						//if (sender.GetId() != identity.GetId())
-						Synchronize(current, null);
+						current.Synchronize(null);
 					}
 					
 				} else {
@@ -153,22 +144,6 @@ modded class DayZGame
 		}
 		
 		super.OnRPC(sender, target, rpc_type, ctx);
-	}
-	
-	void Synchronize(notnull EditorNode node, PlayerIdentity identity = null)
-	{	
-		ScriptRPC rpc = new ScriptRPC();
-		int tree_depth = node.GetParentDepth();
-		rpc.Write(tree_depth);
-
-		for (int i = tree_depth - 1; i >= 0; i--) {
-			EditorNode parent = node.GetParentAtDepth(i);
-			rpc.Write(parent.GetUUID());
-			rpc.Write(parent.Type().ToString());
-		}
-			
-		node.Write(rpc, 0);
-		rpc.Send(null, RPC_SYNC, true, identity);
 	}
 	
 	Command GetCommand(typename command)
@@ -186,7 +161,16 @@ modded class DayZGame
 	// VERY handy when changing layouts :)
 	void Recompile()
 	{
-		m_Editor = new Editor(GetGame().GetPlayer().GetIdentity().GetId(), GetGame().GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetGame().GetPlayer().GetIdentity(), GetGame().GetPlayer());	
+		string uuid = GetPlayer().GetIdentity().GetId();
+		delete m_Master[uuid];
+		
+		m_Master[uuid] = new Editor(uuid, GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetPlayer().GetIdentity(), GetPlayer());	
+		m_Master.Synchronize();
+	}
+	
+	EditorNode GetMaster()
+	{
+		return m_Master;
 	}
 	
 	static bool IsForbiddenItem(string model)
@@ -209,14 +193,15 @@ modded class DayZGame
 		//! Everything is fine... I hope... :pain:
 		return false;
 	}
-	
-#ifndef EDITOR_DECLARE
-#define EDITOR_DECLARE
-	protected ref Editor m_Editor;
+
+	EditorServer GetEditorServer()
+	{
+		return EditorServer.Cast(m_Master["SERVER"]);
+	}
 	
 	Editor GetEditor()
-	{
-		return m_Editor;
+	{		
+		string uuid = GetPlayer().GetIdentity().GetId();
+		return Editor.Cast(m_Master[uuid]);
 	}
-#endif
 }

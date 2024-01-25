@@ -1,6 +1,5 @@
 class EditorNode: SerializableBase
 {
-	static ref map<string, EditorNode> All = new map<string, EditorNode>();
 	static ref array<EditorNode> SelectedObjects = {};	
 	static ref array<EditorNode> DirtyObjects = {};
 	
@@ -32,18 +31,33 @@ class EditorNode: SerializableBase
 		m_DisplayName = display_name;
 		m_Icon = icon;
 		
-		All[m_UUID] = this;
-		
-		if (!GetGame().IsDedicatedServer()) {
+#ifndef SERVER
+		if (m_Icon != string.Empty) {
 			m_NodeView = new EditorNodeView(m_DisplayName, this, m_Icon);
 		}
+#endif
 	}
 	
 	void ~EditorNode()
 	{
-		All.Remove(m_UUID);
-		
 		delete m_NodeView;
+	}
+	
+	void Synchronize(PlayerIdentity identity = null)
+	{	
+		ScriptRPC rpc = new ScriptRPC();
+		int tree_depth = GetParentDepth();
+		rpc.Write(tree_depth);
+
+		for (int i = tree_depth - 1; i >= 0; i--) {
+			EditorNode parent = GetParentAtDepth(i);
+			Print(parent.GetUUID());
+			rpc.Write(parent.GetUUID());
+			rpc.Write(parent.Type().ToString());
+		}
+			
+		Write(rpc, 0);
+		rpc.Send(null, DayZGame.RPC_SYNC, true, identity);
 	}
 							
 	void Add(notnull EditorNode node)
