@@ -51,6 +51,7 @@ class Editor: EditorServer
 
 	void ~Editor() 
 	{
+		delete m_Hud;
 		GetGame().ObjectDelete(m_Camera);
 	}
 		

@@ -197,12 +197,7 @@ modded class DayZGame
 	}
 	
 	Editor GetEditor()
-	{		
-		if (!GetPlayer()) {
-			return null;
-		}
-		
-		string uuid = GetPlayer().GetIdentity().GetId();
-		return Editor.Cast(m_Master["SERVER"][uuid]);
+	{
+		return Editor.Cast(m_Master["SERVER"][GetUserManager().GetTitleInitiator().GetUid()]);
 	}
 }
