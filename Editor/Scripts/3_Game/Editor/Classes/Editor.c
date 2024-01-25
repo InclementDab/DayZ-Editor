@@ -48,18 +48,6 @@ class Editor: SerializableBase
 		
 	ref ScriptInvoker OnSyncRecieved = new ScriptInvoker();
 	
-	// statics (updated in Update())
-	static Object								ObjectUnderCursor;
-	static int 									ComponentUnderCursor;
-	static vector 								CurrentMousePosition;
-	
-	static const ref array<string> DELETION_BLACKLIST = {
-		"BrushBase",
-		"BoundingBoxBase",
-		"Man",
-		"EditorCamera"
-	};
-
 	// protected Editor Members
 	protected ref EditorHud	m_Hud;
 	
@@ -69,14 +57,8 @@ class Editor: SerializableBase
 	ref array<ref EditorObject> Placing = {};
 	protected Entity m_CurrentControl;
 				
-	// todo: change this to some EditorFile struct that manages this better
-	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
-	protected string EditorSaveFile;
-	static const string ROOT_DIRECTORY = "$saves:\\Editor\\";
-	
-	static const string Version = "2.0";
-		
 	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", Symbols.PENCIL);			
+	protected vector m_CursorNormal = vector.Aside;
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorHistory m_History = new EditorHistory();
@@ -85,9 +67,7 @@ class Editor: SerializableBase
 	{
 		m_Identity = identity;
 		m_Player = player;
-		
-		MakeDirectory(ROOT_DIRECTORY);
-		
+
 		EditorNode networked = new EditorNode("NetworkedObjects", "Networked Objects", Symbols.NETWORK_WIRED);
 		networked.Add(new EditorObject(m_Player.GetNetworkIDString(), m_Identity.GetName(), Symbols.PERSON, m_Player, EFE_DEFAULT));
 		m_Master.Add(networked);
@@ -218,15 +198,7 @@ class Editor: SerializableBase
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
-							
-		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) != MB_PRESSED_MASK) {
-			m_DragTarget = null;
-		}
-		
-		if (m_DragTarget) {
-			//EditorObjectDragHandler.Drag(m_DragTarget, m_DragOffset);
-		}
-		
+				
 		Input input = GetGame().GetInput();
 		Raycast raycast = m_Camera.PerformCursorRaycast();		
 		
@@ -429,13 +401,24 @@ class Editor: SerializableBase
 			}
 		}
 		
-		if (GetGame().GetInput().LocalPress("EditorToggleUI")) {
-			m_Hud.Show(!m_Hud.IsVisible());
+		if (input.LocalPress("EditorToggleCursor")) {
+			GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
+		}
+		
+		if (input.LocalPress("EditorToggleHudCommand")) {
+			if (m_Camera.IsActive()) {
+				m_Hud.Show(!m_Hud.IsVisible());
+			}
 		}
 		
 		if (input.LocalPress("EditorToggleActive")) {
-			m_Camera.SetActive(false);
-			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
+			if (!m_Camera.IsActive()) {
+				m_Camera.SetActive(true);
+				m_Hud.Show(true);
+			} else {
+				m_Hud.Show(false);
+				GetGame().SelectPlayer(m_Identity, m_Player);
+			}
 		}
 	}
 			
@@ -571,31 +554,7 @@ class Editor: SerializableBase
 	{
 		return m_Editors;
 	}
-		
-	protected Object m_DragTarget;
-	protected vector m_DragOffset;
-	protected void CheckForDragging(Object object)
-	{
-		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) == MB_PRESSED_MASK) {
-			m_DragTarget = object;
-			
-			vector position;	
-			vector end_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * 3000;
-			int interaction_layers = PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.TERRAIN | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.DYNAMICITEM | PhxInteractionLayers.ITEM_LARGE;
-			Object hit_object;
-			vector normal;
-			float fraction;
-			DayZPhysics.RayCastBullet(GetGame().GetCurrentCameraPosition(), end_pos, interaction_layers, null, hit_object, position, normal, fraction);
-			
-			vector transform[4];
-			m_DragTarget.GetTransform(transform);
-			
-			m_DragOffset = position.InvMultiply4(transform);
-		}
-	}
-	
-	protected vector m_CursorNormal = vector.Aside;
-				
+					
 	// EditorSounds is helpful
 	void PlaySound(string sound_set)
 	{

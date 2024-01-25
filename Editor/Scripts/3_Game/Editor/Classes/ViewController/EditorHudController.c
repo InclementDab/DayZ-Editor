@@ -1,13 +1,6 @@
 class EditorHudController: ViewController
-{
-	string Version = Editor.Version;
-	
-	string OnlineSessionId;
-	int OnlineUserCount, OnlineEntityCount;
-	
+{	
 	string Search;
-	int JoinCode;
-	string RotatingJoinCode;
 	
 	ref ObservableCollection<EditorNodeView> LeftListItems = new ObservableCollection<EditorNodeView>(this);
 	ref ObservableCollection<EditorNodeView> RightListItems = new ObservableCollection<EditorNodeView>(this);

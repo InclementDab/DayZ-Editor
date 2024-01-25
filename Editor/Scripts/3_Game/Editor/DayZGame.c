@@ -82,20 +82,7 @@ modded class DayZGame
 			m_Editor.Update(doSim, timeslice);
 		}
 	}
-	
-	override void OnEvent(EventType eventTypeId, Param params)
-	{
-		super.OnEvent(eventTypeId, params);
 		
-		switch (eventTypeId) {
-			case MPSessionPlayerReadyEventTypeID: {
-				// Client -> Server
-				m_Editor = new Editor(GetGame().GetPlayer().GetIdentity(), GetGame().GetPlayer());	
-				break;
-			}
-		}
-	}
-	
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{				
 		// RPC is editor online session
@@ -104,6 +91,11 @@ modded class DayZGame
 		}
 		
 		super.OnRPC(sender, target, rpc_type, ctx);
+	}
+	
+	void StartEditor(notnull PlayerIdentity identity, notnull DayZPlayer player)
+	{
+		m_Editor = new Editor(identity, player);
 	}
 	
 	Command GetCommand(typename command)
@@ -131,52 +123,7 @@ modded class DayZGame
 		//! Everything is fine... I hope... :pain:
 		return false;
 	}
-
-	override void OnRespawnEvent(int time)
-	{
-	}
 	
-	override void EnterLoginQueue(UIMenuPanel parent)
-	{
-	}
-	
-	override void EnterLoginTime(UIMenuPanel parent)
-	{
-	}
-		
-	// the weird loading screen order is
-	// game starts loading into server. creates the login queue
-	// after a period in queue, it deletes the login queue and creates login timer
-	// then after login timer is done, loading is done
-	
-	// Game Loading Screen
-	// this function gets called CONSTANTLY while loading in 
-	override void UpdateLoginQueue(float timeslice)
-	{
-		// probably need to make sure we are in the main menu here somehow
-	}
-	
-	// this function only gets called one time when you get loaded into the server,
-	// the loginTime is the amount of seconds until the engine will put you in
-	override void OnLoginTimeEvent(int loginTime)
-	{
-		//LoginTimeEvent.Invoke(loginTime);
-	}
-	
-	override void LoginTimeCountdown()
-	{
-	}
-	
-	// appears to be the best place to delete the loading screen
-	override void CancelLoginTimeCountdown()
-	{
-		
-	}
-	
-	override void CancelLoginQueue()
-	{
-	}
-
 #ifndef EDITOR_DECLARE
 #define EDITOR_DECLARE
 	protected ref Editor m_Editor;

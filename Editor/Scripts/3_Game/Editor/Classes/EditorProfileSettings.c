@@ -58,10 +58,10 @@ class EditorProfileSettings: ProfileSettings
 	// Brush Settings
 	bool BrushedObjectMarkers 		= false;
 	bool BrushedListItems			= false;
-	string EditorBrushFile 			= Editor.ROOT_DIRECTORY + "Brushes.xml";
+	//string EditorBrushFile 			= Editor.ROOT_DIRECTORY + "Brushes.xml";
 	
 	// Loot Settings
-	string EditorProtoFile 			= Editor.ROOT_DIRECTORY + "MapGroupProto.xml";
+	//string EditorProtoFile 			= Editor.ROOT_DIRECTORY + "MapGroupProto.xml";
 	
 	LogLevel SelectedLogLevel 		= LogLevel.INFO;
 	

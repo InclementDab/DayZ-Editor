@@ -218,10 +218,6 @@ class EditorHud: ScriptView
 			m_DraggedBar.GetParent().SetSize(distance_from_wall, y - (tools_height + menu_height));
 			m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
 		}
-			
-		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
-			GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
-		}
 	}
 						
 	void OnDiscordButtonExecute(ButtonCommandArgs args)
@@ -327,12 +323,8 @@ class EditorHud: ScriptView
 	
 	override void Show(bool show) 
 	{
-		m_LayoutRoot.Show(show);
-		
-		if (CurrentDialog) {
-			CurrentDialog.GetLayoutRoot().Show(show);
-		}
-				
+		super.Show(show);
+						
 		Man controlled_player = GetDayZGame().GetEditor().GetCurrentControlPlayer();
 		Hud hud = GetGame().GetMission().GetHud();
 		hud.ShowHudUI(g_Game.GetProfileOption(EDayZProfilesOptions.HUD) && !show && controlled_player != null);
