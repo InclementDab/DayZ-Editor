@@ -1,7 +1,7 @@
 modded class PlayerBase
 {	
 	override void EOnFrame(IEntity other, float timeSlice)
-	{
+	{	
 #ifndef SERVER
 		if (GetDayZGame().GetEditor()) {
 			GetInputController().SetDisabled(GetDayZGame().GetEditor().IsActive());

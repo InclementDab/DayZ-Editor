@@ -164,7 +164,7 @@ class EditorNodeView: ScriptView
 			
 	void OnSelectionChange(EditorNode selectable)
 	{
-		Panel.SetColor(ARGB(255, 7, 111, 146) * selectable.IsSelected());
+		Panel.SetColor(EditorColors.SELECT * selectable.IsSelected());
 	}
 						
 	EditorNodeViewController GetTemplateController()

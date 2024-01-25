@@ -6,30 +6,44 @@ WrapSpacerWidgetClass Root {
  hexactsize 1
  vexactsize 1
  scaled 0
- style DayZDefaultPanelTop
+ style Colorable
  Padding 0
- Margin 0
+ Margin 4
  "Size To Content H" 1
  content_halign center
  {
-  ButtonWidgetClass Item {
+  FrameWidgetClass Item {
    visible 1
    ignorepointer 0
    color 0.7843 0.7843 0.7843 0.7843
-   size 1 28
+   size 300 26
    halign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 0
+   hexactsize 1
    vexactsize 1
    scaled 0
-   style DayZDefaultButtonAll
-   "no focus" 1
    {
+    PanelWidgetClass Panel {
+     disabled 0
+     ignorepointer 1
+     color 0.0275 0.4353 0.5725 0
+     position 0 0
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     fixaspect outside
+     style rover_sim_colorable
+    }
     TextWidgetClass Name {
      ignorepointer 1
-     position 45 0
-     size 55 21
+     position 44 0
+     size 0 22
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -37,15 +51,15 @@ WrapSpacerWidgetClass Root {
      vexactsize 1
      scaled 0
      text "Undo"
-     font "gui/fonts/MetronBook"
+     font "gui/fonts/Metron"
      "exact text" 0
      "size to text h" 1
      "text valign" center
     }
     FrameWidgetClass Icon {
      ignorepointer 1
-     position 9 0
-     size 24 24
+     position 12 0
+     size 20 20
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -55,6 +69,7 @@ WrapSpacerWidgetClass Root {
      {
       ImageWidgetClass "Icon.Image" {
        ignorepointer 1
+       color 1 1 1 0.7843
        size 1 1
        halign center_ref
        valign center_ref
@@ -73,7 +88,8 @@ WrapSpacerWidgetClass Root {
     }
     TextWidgetClass Shortcut {
      ignorepointer 1
-     position 13 0
+     color 1 1 1 0.7843
+     position 16 0
      size 55 21
      halign right_ref
      valign center_ref

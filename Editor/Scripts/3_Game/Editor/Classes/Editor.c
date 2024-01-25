@@ -9,16 +9,12 @@
 
 
 
-class EditorHandData: Managed
+class EditorColors
 {
-	EditorPlaceable Placeable;
-	vector Matrix[4];
+	private void EditorColors();
+	private void ~EditorColors();
 	
-	void EditorHandData(notnull EditorPlaceable placeable, vector matrix[4])
-	{
-		Placeable = placeable;
-		copyarray(Matrix, matrix);
-	}
+	static const int SELECT = ARGB(255, 7, 111, 146);
 }
 
 class Editor: SerializableBase
