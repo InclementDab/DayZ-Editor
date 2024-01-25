@@ -19,7 +19,5 @@ class EditorHudController: ViewController
 	ScrollWidget LeftScroll;
 	ScrollWidget RightScroll;	
 	
-	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>(this);
-	
 	// on this day, 1/23, DayZ Editor achieved beauty
 }

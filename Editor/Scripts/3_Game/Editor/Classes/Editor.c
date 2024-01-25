@@ -151,8 +151,6 @@ class Editor: SerializableBase
 		"EditorCamera"
 	};
 
-	EditorStatistics Statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
-	
 	// protected Editor Members
 	protected ref EditorHud	m_Hud;
 	
@@ -796,14 +794,13 @@ class Editor: SerializableBase
 			
 	static Man CreateDefaultCharacter(string type, vector position)
 	{
-		EditorLog.Trace("Editor::CreateDefaultCharacter");
 		if (GetGame().GetPlayer()) {
 			return GetGame().GetPlayer();
 		} 
 
 		Man player = Man.Cast(GetGame().CreatePlayer(null, type, position, 0, string.Empty));
 		if (!player) {
-			EditorLog.Error("Failed to create new player, type %1", type);
+			Error(string.Format("Failed to create new player, type %1", type));
 			return null;
 		}
 

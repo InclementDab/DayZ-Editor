@@ -1,4 +1,4 @@
-[RegisterProfileSetting(EditorProfileSettings, "#STR_EDITOR_EDITOR")]
+[RegisterProfileSetting(EditorProfileSettings, "EDITOR")]
 class EditorProfileSettings: ProfileSettings
 {	
 	
