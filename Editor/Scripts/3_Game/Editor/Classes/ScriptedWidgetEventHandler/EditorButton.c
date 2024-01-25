@@ -125,23 +125,23 @@ class EditorButton: ScriptedWidgetEventHandler
 	}
 		
 	override bool OnMouseEnter(Widget w, int x, int y)
-	{		
-#ifndef WORKBENCH
-		//WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
-#endif
+	{
+		WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
+		
+		if (Icon != string.Empty) {
+			GetDayZGame().GetEditor().GetHud().SetCursor(Icon);
+		}
 		
 		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{		
-#ifndef WORKBENCH
-		//WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
+	{				
+		GetDayZGame().GetEditor().GetHud().ClearCursor();
 		
 		if (!m_Button.GetState()) {
-			//WidgetAnimator.AnimateColor(m_Icon, ARGB(100, 255, 255, 255), 50);
+			WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
 		}
-#endif
 		
 		return true;
 	}

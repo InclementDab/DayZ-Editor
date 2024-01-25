@@ -25,7 +25,7 @@ class EditorNode: SerializableBase
 	
 	protected ref EditorNodeView m_NodeView;
 	
-	void EditorNode(string uuid, string display_name, string icon)
+	void EditorNode(string uuid, string display_name, Symbols icon)
 	{
 		m_UUID = uuid;
 		m_DisplayName = display_name;
@@ -184,7 +184,7 @@ class EditorNode: SerializableBase
 		return m_DisplayName;
 	}
 	
-	string GetIcon()
+	Symbols GetIcon()
 	{
 		return m_Icon;
 	}

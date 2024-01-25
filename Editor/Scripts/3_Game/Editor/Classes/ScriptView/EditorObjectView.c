@@ -10,17 +10,12 @@ class EditorObjectView: ScriptView
 		m_EditorObject = editor_object;
 		m_EditorObject.OnSelectionChanged.Insert(OnSelectionChange);
 		
-		array<string> icon_split = {};
-		m_EditorObject.GetIcon().Split(":", icon_split);
-		if (icon_split.Count() > 2) {
-			Image.LoadImageFile(0, string.Format("set:solid image:%1", icon_split[2]));
-			Outline.LoadImageFile(0, string.Format("set:thin image:%1", icon_split[2]));
-		} else {
-			Image.LoadImageFile(0, m_EditorObject.GetIcon());
-			Outline.LoadImageFile(0, m_EditorObject.GetIcon());
-		}
+		Symbols icon = m_EditorObject.GetIcon();
 		
+		Image.LoadImageFile(0, icon.Solid());
 		Image.SetImage(0);
+		
+		Outline.LoadImageFile(0, icon.Thin());
 		Outline.SetImage(0);
 	}
 	

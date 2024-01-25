@@ -2782,6 +2782,7 @@ FrameWidgetClass Root {
    {
     ImageWidgetClass "m_Cursor.Background" {
      visible 1
+     clipchildren 0
      ignorepointer 1
      color 0.0588 0.0588 0.0588 1
      position -8 -8
@@ -2802,7 +2803,7 @@ FrameWidgetClass Root {
      {
       ImageWidgetClass "m_Cursor.Foreground" {
        visible 1
-       clipchildren 1
+       clipchildren 0
        ignorepointer 1
        size 1 1
        halign center_ref

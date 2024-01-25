@@ -21,7 +21,7 @@ class EditorObject: EditorNode
 	
 	protected Object m_TranslationGizmo;
 	
-	void EditorObject(string uuid, string display_name, string icon, Object object, int flags = EFE_DEFAULT)
+	void EditorObject(string uuid, string display_name, Symbols icon, Object object, int flags = EFE_DEFAULT)
 	{
 		m_Flags = flags;
 		m_Object = object;

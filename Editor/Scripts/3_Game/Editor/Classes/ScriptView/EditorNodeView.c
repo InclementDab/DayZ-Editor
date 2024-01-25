@@ -13,18 +13,21 @@ class EditorNodeView: ScriptView
 	protected string m_Text;
 	protected bool m_Children;
 	
+	protected Symbols m_Icon;
+	
 	protected EditorNode m_Node;
 	
-	void EditorNodeView(string text, EditorNode node, string icon)
+	void EditorNodeView(string text, EditorNode node, Symbols icon)
 	{
 		m_TemplateController = EditorNodeViewController.Cast(m_Controller);
 		m_Node = node;
+		m_Icon = icon;
 		m_Node.OnSelectionChanged.Insert(OnSelectionChange);
 		
 		m_Text = text;
 		SetText(m_Text);
 		
-		IconImage.LoadImageFile(0, icon);
+		IconImage.LoadImageFile(0, m_Icon.Solid());
 		IconImage.SetImage(0);
 	}
 	
@@ -74,6 +77,28 @@ class EditorNodeView: ScriptView
 			Panel.SetPos(x, y);
 			Text.SetPos(x, y);
 		}
+	}
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		//WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
+		
+		if (m_Icon != string.Empty) {
+			GetDayZGame().GetEditor().GetHud().SetCursor(m_Icon);
+		}
+		
+		return true;
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{				
+		GetDayZGame().GetEditor().GetHud().ClearCursor();
+		
+		//if (!m_Button.GetState()) {
+			//WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
+		//}
+		
+		return true;
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)

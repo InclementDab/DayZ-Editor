@@ -169,7 +169,7 @@ class Editor: SerializableBase
 	
 	protected ref array<ref EditorHiddenObject> m_DeletedObjects = {};	
 	
-	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", Symbols.PENCIL.Regular());			
+	protected ref EditorNode m_Master = new EditorNode("MAIN", "MAIN", Symbols.PENCIL);			
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorHistory m_History = new EditorHistory();
@@ -181,30 +181,30 @@ class Editor: SerializableBase
 		
 		MakeDirectory(ROOT_DIRECTORY);
 		
-		EditorNode networked = new EditorNode("NetworkedObjects", "Networked Objects", Symbols.NETWORK_WIRED.Regular());
-		networked.Add(new EditorObject(m_Player.GetNetworkIDString(), m_Identity.GetName(), Symbols.PERSON.Regular(), m_Player, EFE_DEFAULT));
+		EditorNode networked = new EditorNode("NetworkedObjects", "Networked Objects", Symbols.NETWORK_WIRED);
+		networked.Add(new EditorObject(m_Player.GetNetworkIDString(), m_Identity.GetName(), Symbols.PERSON, m_Player, EFE_DEFAULT));
 		m_Master.Add(networked);
 		
 		// Load all default categories and placements
-		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP.Regular());
-		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", Symbols.HAND.Regular()));
-		edited_objects.Add(new EditorNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH.Regular()));
-		edited_objects.Add(new EditorNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO.Regular()));
+		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP);
+		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", Symbols.HAND));
+		edited_objects.Add(new EditorNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
+		edited_objects.Add(new EditorNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
 		m_Master.Add(edited_objects);
 
-		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects", Symbols.ADDRESS_BOOK.Regular());
-		placeable_objects.Add(new EditorNode("Unknown", "Unknown", Symbols.CHESS_QUEEN.Regular()));
-		placeable_objects.Add(new EditorNode("Plants", "Plants", Symbols.TREE.Regular()));
-		placeable_objects.Add(new EditorNode("Rocks", "Rocks", Symbols.HILL_ROCKSLIDE.Regular()));
-		placeable_objects.Add(new EditorNode("Clutter", "Clutter", Symbols.TRASH.Regular()));
-		placeable_objects.Add(new EditorNode("Structures", "Structures", Symbols.HOUSE.Regular()));
-		placeable_objects.Add(new EditorNode("Wrecks", "Wrecks", Symbols.CAR_BURST.Regular()));
-		placeable_objects.Add(new EditorNode("AI", "AI", Symbols.PERSON.Regular()));
-		placeable_objects.Add(new EditorNode("Water", "Water", Symbols.WATER.Regular()));
-		placeable_objects.Add(new EditorNode("Vehicles", "Vehicles", Symbols.CAR.Regular()));
-		placeable_objects.Add(new EditorNode("StaticObjects", "Static Objects", Symbols.OBJECT_INTERSECT.Regular()));
-		placeable_objects.Add(new EditorNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT.Regular()));
-		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", Symbols.CODE.Regular()));
+		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects", Symbols.ADDRESS_BOOK);
+		placeable_objects.Add(new EditorNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
+		placeable_objects.Add(new EditorNode("Plants", "Plants", Symbols.TREE));
+		placeable_objects.Add(new EditorNode("Rocks", "Rocks", Symbols.HILL_ROCKSLIDE));
+		placeable_objects.Add(new EditorNode("Clutter", "Clutter", Symbols.TRASH));
+		placeable_objects.Add(new EditorNode("Structures", "Structures", Symbols.HOUSE));
+		placeable_objects.Add(new EditorNode("Wrecks", "Wrecks", Symbols.CAR_BURST));
+		placeable_objects.Add(new EditorNode("AI", "AI", Symbols.PERSON));
+		placeable_objects.Add(new EditorNode("Water", "Water", Symbols.WATER));
+		placeable_objects.Add(new EditorNode("Vehicles", "Vehicles", Symbols.CAR));
+		placeable_objects.Add(new EditorNode("StaticObjects", "Static Objects", Symbols.OBJECT_INTERSECT));
+		placeable_objects.Add(new EditorNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT));
+		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
 		m_Master.Add(placeable_objects);
 		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
@@ -237,7 +237,7 @@ class Editor: SerializableBase
 					category = "AI";
 				}
 				
-				m_Master["PlaceableObjects"][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING.Regular()));
+				m_Master["PlaceableObjects"][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING));
 		    }
 		}
 		
@@ -271,7 +271,7 @@ class Editor: SerializableBase
 					category = "Rocks";
 				}
 			
-				m_Master["PlaceableObjects"][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C.Regular()));
+				m_Master["PlaceableObjects"][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
 			}
 		}
 
@@ -434,7 +434,7 @@ class Editor: SerializableBase
 				//EntityAI.GetPersistentID
 				//Print(raycast.Hit);
 				
-				m_Master["NetworkedObjects"].Add(new EditorObject(raycast.Hit.GetNetworkIDString(), raycast.Hit.GetNetworkIDString(), Symbols.BUILDING.Regular(), raycast.Hit, EFE_DEFAULT));
+				m_Master["NetworkedObjects"].Add(new EditorObject(raycast.Hit.GetNetworkIDString(), raycast.Hit.GetNetworkIDString(), Symbols.BUILDING, raycast.Hit, EFE_DEFAULT));
 
 			}
 		}
