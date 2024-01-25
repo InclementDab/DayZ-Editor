@@ -36,16 +36,16 @@ class Editor: EditorServer
 	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity) 
 	{
 		m_Identity = identity;
-		m_Player = GetDayZGame().GetPlayerByIdentity(identity);
+		m_Player = GetDayZGame().GetPlayerByIdentity(identity);		
+		if (GetGame().IsDedicatedServer()) {
+			m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_SETUP));
+			return;
+		}
 		
-			
-		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));	
-		m_Camera.SetActive(true);
-	
 		m_Hud = new EditorHud();
 		m_Hud.GetTemplateController().LeftListItems.Insert(this["PlaceableObjects"].GetNodeView());
 		m_Hud.GetTemplateController().LeftListItems.Insert(this["Brushes"].GetNodeView());
-		m_Hud.GetTemplateController().RightListItems.Insert(this["NetworkedObjects"].GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(GetDayZGame().GetMaster()["SERVER"].GetNodeView());
 		m_Hud.GetTemplateController().RightListItems.Insert(this["EditedObjects"].GetNodeView());
 	}
 
@@ -267,41 +267,42 @@ class Editor: EditorServer
 				m_Hud.Show(!m_Hud.IsVisible());
 			}
 		}
-		
-		if (input.LocalPress("EditorToggleActive")) {
-			if (!m_Camera.IsActive()) {
-				m_Camera.SetActive(true);
-				m_Hud.Show(true);
-			} else {
-				m_Hud.Show(false);
-				
-				GetDayZGame().SelectPlayer(m_Identity, m_Player);
-				Hud hud = GetDayZGame().GetMission().GetHud();
-				hud.ShowHudUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.HUD));
-				hud.ShowQuickbarUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.QUICKBAR));
-			}
+	}
+	
+	void SetActive(bool active)
+	{
+		if (active) {
+			m_Camera.SetActive(true);
+			m_Hud.Show(true);
+		} else {
+			m_Hud.Show(false);
+			
+			GetDayZGame().SelectPlayer(m_Identity, m_Player);
+			Hud hud = GetDayZGame().GetMission().GetHud();
+			hud.ShowHudUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.HUD));
+			hud.ShowQuickbarUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.QUICKBAR));
 		}
 	}
 			
 	override void Write(Serializer serializer, int version)
 	{		
-		serializer.Write(m_Identity);
-		
-		vector camera_transform[4];
-		m_Camera.GetTransform(camera_transform);	
-		serializer.Write(camera_transform);
-		
 		super.Write(serializer, version);
+		
+		serializer.Write(m_Identity);
+		serializer.Write(m_Camera);
 	}
 	
 	override bool Read(Serializer serializer, int version)
 	{		
+		if (!super.Read(serializer, version)) {
+			return false;
+		}
+		
 		serializer.Read(m_Identity);
-		
-		vector camera_transform[4];
-		serializer.Read(camera_transform);
-		
-		return super.Read(serializer, version);
+		m_Player = GetDayZGame().GetPlayerByIdentity(m_Identity);
+		serializer.Read(m_Camera);
+			
+		return true;
 	}
 						
 	// EditorSounds is helpful

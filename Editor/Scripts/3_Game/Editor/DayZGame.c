@@ -207,6 +207,6 @@ modded class DayZGame
 		}
 		
 		string uuid = GetPlayer().GetIdentity().GetId();
-		return Editor.Cast(m_Master[uuid]);
+		return Editor.Cast(m_Master["SERVER"][uuid]);
 	}
 }

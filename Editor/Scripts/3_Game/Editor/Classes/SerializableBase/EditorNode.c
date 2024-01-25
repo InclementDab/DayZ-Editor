@@ -232,4 +232,20 @@ class EditorNode: SerializableBase
 	{
 		return m_IsSelected;
 	}
+	
+#ifdef DIAG_DEVELOPER
+	void Debug(int depth)
+	{
+		string tabs;
+		for (int i = 0; i < depth; i++) {
+			tabs += "\t";
+		}
+		
+		PrintFormat("%3[%1] %2:", m_UUID, m_DisplayName, tabs);
+		
+		foreach (string uuid, EditorNode node: m_Children) {
+			node.Debug(depth + 1);
+		}
+	}
+#endif
 }

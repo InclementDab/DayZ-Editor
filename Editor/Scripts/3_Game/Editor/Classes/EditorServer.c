@@ -4,7 +4,7 @@ class EditorServer: EditorNode
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
 	void EditorServer(string uuid, string display_name, Symbols icon)
-	{		
+	{
 		// Load all default categories and placements
 		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP);
 		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", Symbols.HAND));
