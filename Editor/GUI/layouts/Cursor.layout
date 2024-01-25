@@ -9,6 +9,7 @@ FrameWidgetClass Cursor {
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ priority 999
  {
   ImageWidgetClass Background {
    visible 1

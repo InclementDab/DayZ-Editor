@@ -72,8 +72,8 @@ class EditorButton: ScriptedWidgetEventHandler
 	{
 		WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
 		
-		if (Icon != string.Empty) {
-			GetDayZGame().GetEditor().GetHud().SetCursor(new CursorView(Icon));
+		if (m_Command) {
+			GetDayZGame().GetEditor().GetHud().SetCursor(new EditorTooltip(Icon, m_Command.GetName(), m_Command.GetShortcutString()));
 		}
 		
 		return true;

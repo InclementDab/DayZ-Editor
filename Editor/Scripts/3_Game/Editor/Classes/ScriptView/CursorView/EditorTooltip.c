@@ -1,8 +1,8 @@
-class EditorNodeTooltip: CursorView
+class EditorTooltip: CursorView
 {
 	TextWidget Name, Description;
 
-	void EditorNodeTooltip(Symbols cursor, string name, string desc)
+	void EditorTooltip(Symbols cursor, string name, string desc)
 	{
 		Name.SetText(name);
 		Description.SetText(desc);
