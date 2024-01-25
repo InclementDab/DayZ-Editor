@@ -7,18 +7,7 @@
      / // // //  `-._,_)' // / ``--...____..-' /// / //
 */
 
-[RegisterCommand(DeleteCommand)]
-class DeleteCommand: Command
-{
-	override void Execute(bool state) 
-	{
-		Print("Cringe"); 
-		foreach (EditorNode node: EditorNode.SelectedObjects) {
-			Print(node);	
-			delete node;
-		}
-	}
-}
+
 
 class EditorHandData: Managed
 {
@@ -29,86 +18,6 @@ class EditorHandData: Managed
 	{
 		Placeable = placeable;
 		copyarray(Matrix, matrix);
-	}
-}
-
-class EditorFootprint: Managed
-{
-	protected bool m_IsUndone;
-	
-	string ID = UUID.Empty;
-	string Type;
-	ref ScriptReadWriteContext Data = new ScriptReadWriteContext();
-	
-	bool IsUndone()
-	{
-		return m_IsUndone;
-	}
-	
-	void Undo()
-	{
-		m_IsUndone = true;
-		
-		int tree_depth;
-		if (!Data.GetReadContext().Read(tree_depth)) {
-			Error("Invalid depth");
-			return;
-		}
-
-		EditorNode current = GetDayZGame().GetEditor().GetMaster();
-		for (int i = 0; i < tree_depth; i++) {
-			string uuid;
-			Data.GetReadContext().Read(uuid);
-			
-			string type;
-			Data.GetReadContext().Read(type);
-			
-			EditorNode node = current[uuid];
-			if (!node) {
-				node = EditorNode.Cast(type.ToType().Spawn());
-				if (!node) {
-					Error("Invalid node type " + type);
-					continue;
-				}
-				
-				current[uuid] = node;
-				node.SetParent(current[uuid]);
-			}
-			
-			current = current[uuid];
-		}
-						
-		current.Read(Data.GetReadContext(), 0);
-	}
-		
-	void Redo()
-	{
-		m_IsUndone = false;
-	}
-}
-
-class EditorHistory: set<ref EditorFootprint>
-{
-	static const int MAX_SIZE = 512;
-	
-	int InsertAction(EditorFootprint value)
-	{	
-		int count = Count();
-		for (int i = 0; i < count; i++) {
-			if (!this[i].IsUndone()) {
-				break;
-			}
-			
-			Remove(i);
-			i--; count--;
-		}
-		
-		if (count >= MAX_SIZE) {
-			Remove(count - 1);
-		}
-		
-		// Adds to bottom of stack
-		return InsertAt(value, 0);
 	}
 }
 
@@ -125,7 +34,7 @@ class Editor: SerializableBase
 	
 	// m_Editor is only valid on the local instance.
 	protected PlayerIdentity m_Identity;
-	protected Man m_Player;
+	protected DayZPlayer m_Player;
 	
 	// All editors in lobby, including m_Editor
 	protected ref array<PlayerIdentity> m_Editors = {};
@@ -172,7 +81,7 @@ class Editor: SerializableBase
 	// Stack of Undo / Redo Actions
 	protected ref EditorHistory m_History = new EditorHistory();
 	
-	void Editor(PlayerIdentity identity, Man player) 
+	void Editor(PlayerIdentity identity, DayZPlayer player) 
 	{
 		m_Identity = identity;
 		m_Player = player;
@@ -522,6 +431,11 @@ class Editor: SerializableBase
 		
 		if (GetGame().GetInput().LocalPress("EditorToggleUI")) {
 			m_Hud.Show(!m_Hud.IsVisible());
+		}
+		
+		if (input.LocalPress("EditorToggleActive")) {
+			m_Camera.SetActive(false);
+			GetGame().SelectPlayer(m_Player.GetIdentity(), m_Player);
 		}
 	}
 			

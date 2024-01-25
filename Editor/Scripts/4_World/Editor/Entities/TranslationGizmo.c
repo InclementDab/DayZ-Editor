@@ -108,15 +108,18 @@ class TranslationGizmo: House
 		
 		vector screen_origin = GetGame().GetScreenPos(origin);
 		vector screen_end = GetGame().GetScreenPos(end);
-
-		m_RayViews[0] = new RayView(COLOR_RED);
-		m_RayViews[1] = new GizmoOriginView();
+				
+		RayView ray_view = new RayView(COLOR_RED);
+		GizmoOriginView gizmo_origin = new GizmoOriginView();
+		
+		m_RayViews.Clear();
+		m_RayViews.Insert(ray_view);
+		m_RayViews.Insert(gizmo_origin);
+		
+		//Print(GetDayZGame().GetEditor().GetCamera().GetCurrentFOV() * Math.RAD2DEG);
 		
 		
-		GizmoOriginView gizmo_origin = m_RayViews[1];
-		RayView ray_view = m_RayViews[0];
-		
-
+	
 		float x, y;
 		ray_view.GetLayoutRoot().GetScreenSize(x, y);
 		
@@ -128,5 +131,9 @@ class TranslationGizmo: House
 
 		ray_view.GetLayoutRoot().SetRotation(0, 0, 180);
 		ray_view.GetLayoutRoot().SetSize(delta.Length(), 24);
+		
+		
+		gizmo_origin.GetLayoutRoot().GetScreenSize(x, y);
+		gizmo_origin.GetLayoutRoot().SetPos(screen_origin[0] - (x / 2), screen_origin[1] - (y / 2));
 	}
 }
