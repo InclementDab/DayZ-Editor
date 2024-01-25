@@ -108,7 +108,7 @@ class EditorObject: EditorNode
 	}
 		
 	void ~EditorObject()
-	{
+	{		
 		//EditorBoundingBox.Destroy(m_Object);
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
@@ -165,6 +165,11 @@ class EditorObject: EditorNode
 		}
 	}
 #endif
+		
+	override bool CanDelete()
+	{
+		return true;
+	}
 	
 	bool IsPlacing()
 	{

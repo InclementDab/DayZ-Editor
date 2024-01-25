@@ -344,10 +344,10 @@ class Editor: SerializableBase
 		}
 		
 		if (input.LocalPress_ID(UAFire)) {
-			Print(EditorObject.ByObject[raycast.Hit]);
+			//Print(EditorObject.ByObject[raycast.Hit]);
 			if (raycast.Hit && EditorObject.ByObject[raycast.Hit]) {
 				EditorObject editor_object = EditorObject.ByObject[raycast.Hit];
-				Print(editor_object);
+				//Print(editor_object);
 				
 				// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
@@ -403,13 +403,49 @@ class Editor: SerializableBase
 				if (KeyState(KeyCode.KC_LMENU)) {
 					Debug.DrawSphere(raycast.Source.Position, vector.Distance(raycast.Source.Position, current_transform[3]), COLOR_RED, ShapeFlags.ADDITIVE | ShapeFlags.WIREFRAME | ShapeFlags.ONCE);
 					
-					vector v3 = current_transform[1] * raycast.Source.Direction;					
+					vector v3 = current_transform[1] * raycast.Source.Direction;
+					if (KeyState(KeyCode.KC_LSHIFT)) {
+						v3 = vector.Aside * raycast.Source.Direction;
+					}
+					
 					float dist_z = vector.Dot(((raycast.Source.Position - current_transform[3]) * current_transform[1]), v3) / v3.LengthSq();
+					if (KeyState(KeyCode.KC_LSHIFT)) {
+						dist_z = vector.Dot(((raycast.Source.Position - current_transform[3]) * vector.Aside), v3) / v3.LengthSq();
+					}
+					
+					float d1 = vector.Dot(vector.Up, raycast.Source.Direction);
+					vector x = Math.Cos(d1) * (raycast.Source.Position - current_transform[3]);
+					Print(x);
+					
 					vector pos = raycast.Source.Position + raycast.Source.Direction * dist_z;
-															
+					
 					current_transform = { current_transform[0], current_transform[1], current_transform[2], pos };
 					editor_object_cast.SetBaseTransform(current_transform);
 				} 
+				
+				
+				if (KeyState(KeyCode.KC_LSHIFT) || KeyState(KeyCode.KC_LMENU)) {
+
+					
+					if (KeyState(KeyCode.KC_LSHIFT)) {
+						vector p1 = Vector(2, 0, 2).Multiply4(current_transform);
+						vector p2 = Vector(-2, 0, -2).Multiply4(current_transform);
+						
+						Shape.Create(ShapeType.BBOX, COLOR_GREEN, ShapeFlags.WIREFRAME | ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.ADDITIVE, p1, p2);
+						
+						float d = 1;
+						float t = -(vector.Dot(vector.Up, raycast.Source.Position) + current_transform[3][1]) / vector.Dot(vector.Up, raycast.Source.Direction);
+						
+						vector result = raycast.Source.Position + raycast.Source.Direction * t;
+						
+						
+	
+						
+						//current_transform = { current_transform[0], current_transform[1], current_transform[2], current_transform[3] };
+						
+						//editor_object_cast.SetBaseTransform(current_transform);
+					}
+				}
 				
 				// Any distance placing
 				else {
@@ -426,16 +462,43 @@ class Editor: SerializableBase
 		if (input.LocalRelease_ID(UAZoomIn)) { 
 			m_Camera.FieldOfView = 1.0;
 		}
-				
-		if (GetGame().GetInput().LocalHold_ID(UAZoomIn)) {
-			
-			
-			if (raycast.Hit) {
-				//EntityAI.GetPersistentID
-				//Print(raycast.Hit);
-				
-				m_Master["NetworkedObjects"].Add(new EditorObject(raycast.Hit.GetNetworkIDString(), raycast.Hit.GetNetworkIDString(), Symbols.BUILDING, raycast.Hit, EFE_DEFAULT));
 
+		if (GetGame().GetInput().LocalPress("EditorDeleteObject")) {
+			foreach (EditorNode editor_node_to_delete: EditorNode.SelectedObjects) {
+				if (!editor_node_to_delete.CanDelete()) {
+					continue;
+				}
+				
+				EditorFootprint footprint_delete = new EditorFootprint();
+				int delete_tree_depth = editor_node_to_delete.GetParentDepth();
+				footprint_delete.Data.GetWriteContext().Write(delete_tree_depth);
+				for (int i_d = delete_tree_depth - 1; i_d >= 0; i_d--) {
+					EditorNode delete_parent = editor_node_to_delete.GetParentAtDepth(i_d);
+					footprint_delete.Data.GetWriteContext().Write(delete_parent.GetUUID());
+					footprint_delete.Data.GetWriteContext().Write(delete_parent.Type().ToString());
+				}
+
+				editor_node_to_delete.Write(footprint_delete.Data.GetWriteContext(), 0);
+				
+				m_Master["EditedObjects"]["PlacedObjects"].Remove(editor_node_to_delete.GetUUID());
+	
+				// Synchronize to this id
+				Synchronize(m_Master["EditedObjects"]["PlacedObjects"]);
+				
+				// remove it from placing
+				EditorNode.SelectedObjects.RemoveItem(editor_node_to_delete);
+				
+				EditorObject editor_object_to_delete = EditorObject.Cast(editor_node_to_delete);
+				if (editor_object_to_delete) {
+					GetGame().ObjectDelete(editor_object_to_delete.GetObject());
+				}
+				
+				
+				delete editor_node_to_delete;
+				PlaySound(EditorSounds.HIGHLIGHT); // must co-exist
+				
+				
+				m_History.InsertAction(footprint_delete);
 			}
 		}
 		

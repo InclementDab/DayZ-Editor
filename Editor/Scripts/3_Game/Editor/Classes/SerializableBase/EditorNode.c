@@ -119,6 +119,11 @@ class EditorNode: SerializableBase
 		
 		return depth;
 	}
+	
+	bool CanDelete()
+	{
+		return false;
+	}
 						
 	override void Write(Serializer serializer, int version)
 	{		
