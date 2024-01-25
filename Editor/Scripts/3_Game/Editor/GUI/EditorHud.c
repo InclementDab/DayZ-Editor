@@ -54,6 +54,10 @@ class EditorHud: ScriptView
 	Widget Notification;
 	TextWidget NotificationText;
 	
+	SelectionMode CurrentSelectionMode = SelectionMode.BOX;
+	
+	protected ref array<vector> m_LassoHistory = {};
+	
 	protected Widget m_DraggedBar;
 	protected int m_DragX = -1, m_DragY = -1;
 		
@@ -94,56 +98,94 @@ class EditorHud: ScriptView
 		
 		Whiteboard.Clear();
 		if (input.LocalHold_ID(UAFire) && EditorNode.SelectedObjects.Count() == 0) {
-			// Rectangle
-			int x_avg = (m_DragX + mouse_x) / 2;
-			int y_avg = (m_DragY + mouse_y) / 2;
-			Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE);		
-			
-			foreach (EditorNode node: EditorNode.All) {
-				if (node && node.GetNodeView()) {
-					float x_n, y_n;
-					node.GetNodeView().GetLayoutRoot().GetScreenPos(x_n, y_n);
-					if ((x_n < Math.Max(m_DragX, mouse_x) && x_n > Math.Min(m_DragX, mouse_x)) && (y_n < Math.Max(m_DragY, mouse_y) && y_n > Math.Min(m_DragY, mouse_y))) {
-						node.SetSelected(true);
+							
+			switch (CurrentSelectionMode) {
+				
+				case SelectionMode.LASSO: {
+					vector current = Vector(mouse_x, mouse_y, 0);
+					if (m_LassoHistory.Count() > 0) {
+						vector last = m_LassoHistory[m_LassoHistory.Count() - 1];
+						
+						if (vector.Distance(last, current) > 16) {
+							m_LassoHistory.Insert(current);
+						}				
+					} else {
+						m_LassoHistory.Insert(current);
 					}
+					
+					for (int j = 0; j < m_LassoHistory.Count() - 1; j++) {
+						Whiteboard.DrawLine(m_LassoHistory[j][0], m_LassoHistory[j][1], m_LassoHistory[j + 1][0], m_LassoHistory[j + 1][1], 2, COLOR_BLACK);
+					}
+					
+					if (m_LassoHistory.Count() > 2) {
+						Whiteboard.DrawLine(m_LassoHistory[0][0], m_LassoHistory[0][1], m_LassoHistory[m_LassoHistory.Count() - 1][0], m_LassoHistory[m_LassoHistory.Count() - 1][1], 2, 0x644B77BE);
+					}
+					
+					break;
+				}
+				
+				case SelectionMode.BOX: {
+			
+					// Rectangle
+					int x_avg = (m_DragX + mouse_x) / 2;
+					int y_avg = (m_DragY + mouse_y) / 2;
+					Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE);		
+					
+					
+					foreach (EditorNode node: EditorNode.All) {
+						if (node && node.GetNodeView()) {
+							float x_n, y_n;
+							node.GetNodeView().GetLayoutRoot().GetScreenPos(x_n, y_n);
+							if ((x_n < Math.Max(m_DragX, mouse_x) && x_n > Math.Min(m_DragX, mouse_x)) && (y_n < Math.Max(m_DragY, mouse_y) && y_n > Math.Min(m_DragY, mouse_y))) {
+								node.SetSelected(true);
+							}
+						}
+					}
+					
+					break;
+				}
+				
+				case SelectionMode.ELLIPSE: {
+					
+					int width = mouse_x - m_DragX;
+					int height = mouse_y - m_DragY;
+					
+					int x_middle = m_DragX - (width / 2);
+					int y_middle = m_DragY - (height / 2);
+					
+					
+			        // Center of the oval
+			        float cx = width / 2;
+			        float cy = height / 2;
+			
+			        // Radius for x and y axes
+			        float rx = width / 2;
+			        float ry = height / 2;
+			
+			        // Y-coordinate for the horizontal lines	
+			        // Calculate the horizontal lines to approximate the oval
+			        for (int i = 0; i < 100; i++)
+			        {
+			            // Calculate points on the oval using parametric equations
+			            float x1 = cx - rx;
+			            float x2 = cx + rx;
+			
+			            // Draw a horizontal line at the current y-coordinate
+			            Whiteboard.DrawLine(x1 + x_middle, cy + y_middle, x2 + x_middle, cy + 1 + y_middle, 1, 0x644B77BE);
+			
+			            // Update the y-coordinate for the next horizontal line
+			            cy += 2 * ry / 100.0;
+			        }
+					
+					break;
 				}
 			}
-			
-			/*
-			int width = mouse_x - m_DragX;
-			int height = mouse_y - m_DragY;
-			
-			int x_middle = m_DragX - (width / 2);
-			int y_middle = m_DragY - (height / 2);
-			
-			
-	        // Center of the oval
-	        float cx = width / 2;
-	        float cy = height / 2;
-	
-	        // Radius for x and y axes
-	        float rx = width / 2;
-	        float ry = height / 2;
-	
-	        // Y-coordinate for the horizontal lines	
-	        // Calculate the horizontal lines to approximate the oval
-	        for (int i = 0; i < 100; i++)
-	        {
-	            // Calculate points on the oval using parametric equations
-	            float x1 = cx - rx;
-	            float x2 = cx + rx;
-	
-	            // Draw a horizontal line at the current y-coordinate
-	            Whiteboard.DrawLine(x1 + x_middle, cy + y_middle, x2 + x_middle, cy + 1 + y_middle, 1, 0x644B77BE);
-	
-	            // Update the y-coordinate for the next horizontal line
-	            cy += 2 * ry / 100.0;
-	        }*/
 		}
 		
 		if (input.LocalRelease_ID(UAFire)) {
 			m_DragX = -1;
 			m_DragY = -1;
+			m_LassoHistory.Clear();
 		}
 							
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
@@ -192,7 +234,7 @@ class EditorHud: ScriptView
 			//}
 		}
 	}
-					
+						
 	void OnDiscordButtonExecute(ButtonCommandArgs args)
 	{
 		
@@ -483,7 +525,7 @@ class EditorHud: ScriptView
 	{
 		m_Cursor.Show(false);
 	}
-		
+			
 	// ToolTip Control
 	static ref ScriptView CurrentTooltip;
 
