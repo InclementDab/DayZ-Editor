@@ -1,10 +1,3 @@
-enum SelectionMode
-{
-	BOX,
-	ELLIPSE,
-	LASSO // ???? are you CRAZY?
-};
-
 [RegisterCommand(BoxSelectCommand)]
 class BoxSelectCommand: Command
 {

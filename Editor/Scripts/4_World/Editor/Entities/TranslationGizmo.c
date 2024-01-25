@@ -30,17 +30,39 @@ class RayView: ScriptView
 	
 	override string GetLayoutFile()
 	{
-		return "Editor\\GUI\\layouts\\ray.layout";
+		return "Editor\\GUI\\layouts\\Gizmo\\Ray.layout";
+	}
+}
+
+class GizmoOriginView: ScriptView
+{
+	Widget Body;
+	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		WidgetAnimator.AnimateColor(Body, COLOR_YELLOW, 100);
+		return super.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		WidgetAnimator.AnimateColor(Body, COLOR_WHITE, 100);		
+		return super.OnMouseLeave(w, enterW, x, y);
+	} 
+	
+	override string GetLayoutFile()
+	{
+		return "Editor\\GUI\\layouts\\Gizmo\\Origin.layout";
 	}
 }
 
 class TranslationGizmo: House
 {
-	protected ref array<ref RayView> m_RayViews = {};
+	protected ref array<ref ScriptView> m_RayViews = {};
 	
 	void TranslationGizmo()
 	{
-		m_RayViews.Insert(new RayView(COLOR_GREEN));
+		//m_RayViews.Insert(new RayView(COLOR_GREEN));
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(OnUpdate);
 	}
@@ -78,19 +100,33 @@ class TranslationGizmo: House
 		ClearFlags(EntityFlags.VISIBLE, true);
 		
 		Debug.DrawSphere(gizmo_transform[3], 0.01, COLOR_RED, ShapeFlags.ONCE);
-		vector start_point = GetGame().GetScreenPos(gizmo_transform[3]);
-		vector end_point = GetGame().GetScreenPos(vector.Up.Multiply4(matrix));
+		vector origin = gizmo_transform[3];
+		vector end = Vector(0.5, 0, 0).Multiply4(gizmo_transform);
 		
-		vector delta = Vector(end_point[0], end_point[1], 0) - Vector(start_point[0], start_point[1], 0);
+		Shape.CreateSphere(ARGB(200, 255, 255, 255), ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.NOZWRITE, origin, 0.025);
+		Shape.CreateSphere(ARGB(200, 255, 255, 255), ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.NOZWRITE, end, 0.025);
+		
+		vector screen_origin = GetGame().GetScreenPos(origin);
+		vector screen_end = GetGame().GetScreenPos(end);
+
+		m_RayViews[0] = new RayView(COLOR_RED);
+		m_RayViews[1] = new GizmoOriginView();
+		
+		
+		GizmoOriginView gizmo_origin = m_RayViews[1];
 		RayView ray_view = m_RayViews[0];
 		
+
+		float x, y;
+		ray_view.GetLayoutRoot().GetScreenSize(x, y);
 		
-		//ray_view.GetLayoutRoot().SetTransform(gizmo_transform);
+		ray_view.GetLayoutRoot().SetScreenPos(screen_origin[0], screen_origin[1] - (y / 2));
 		
-		int x, y;
-		GetScreenSize(x, y);
-		ray_view.GetLayoutRoot().SetPos(start_point[0], start_point[1]);
-		ray_view.GetLayoutRoot().SetRotation(angles[0], angles[1], angles[2]);
+		
+		vector delta = screen_end - screen_origin;
+		delta[2] = 0;
+
+		ray_view.GetLayoutRoot().SetRotation(0, 0, 180);
 		ray_view.GetLayoutRoot().SetSize(delta.Length(), 24);
 	}
 }

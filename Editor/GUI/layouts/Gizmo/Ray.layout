@@ -1,7 +1,8 @@
 FrameWidgetClass Frame {
  visible 1
  clipchildren 0
- size 160 24
+ position 0 0
+ size 330 24
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -13,7 +14,7 @@ FrameWidgetClass Frame {
    clipchildren 1
    ignorepointer 1
    color 1 0 0 1
-   size 0.78 0.335
+   size 1 0.235
    valign center_ref
    hexactpos 1
    vexactpos 1
@@ -25,7 +26,7 @@ FrameWidgetClass Frame {
    clipchildren 1
    ignorepointer 1
    color 1 0 0 1
-   size 52 1
+   size 38 1
    halign right_ref
    valign center_ref
    hexactpos 1
