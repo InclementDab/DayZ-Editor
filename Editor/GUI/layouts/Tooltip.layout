@@ -1,0 +1,79 @@
+GridSpacerWidgetClass Tooltip {
+ color 0.0588 0.0784 0.0588 1
+ size 272 111
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ scaled 0
+ style Colorable
+ "Size To Content V" 1
+ content_halign center
+ content_valign center
+ Columns 1
+ Rows 2
+ {
+  TextWidgetClass Type {
+   ignorepointer 1
+   size 208 24
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   text "Hoodie_Black"
+   font "gui/fonts/MetronBook"
+   "exact text" 0
+   "size to text h" 1
+   "size to text v" 0
+   "text valign" center
+  }
+  WrapSpacerWidgetClass Row1Wrap {
+   ignorepointer 1
+   size 303 20
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   Padding 6
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   content_valign center
+   {
+    ImageWidgetClass Icon {
+     visible 1
+     ignorepointer 1
+     position 0 0
+     size 24 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     image0 "set:solid image:shirt"
+     mode additive
+     "src alpha" 1
+     filter 0
+    }
+    TextWidgetClass Name {
+     ignorepointer 1
+     position 0 0
+     size 206 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     text "Hoodie (Black)"
+     font "gui/fonts/MetronBook"
+     "exact text" 0
+     "size to text h" 1
+     "size to text v" 0
+     "text valign" center
+    }
+   }
+  }
+ }
+}

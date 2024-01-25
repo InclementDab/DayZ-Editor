@@ -61,8 +61,6 @@ class EditorHud: ScriptView
 	protected Widget m_DraggedBar;
 	protected int m_DragX = -1, m_DragY = -1;
 		
-	protected ref ScriptView m_CurrentMenu;
-		
 	void EditorHud()
 	{		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
@@ -222,15 +220,7 @@ class EditorHud: ScriptView
 		}
 			
 		if (GetGame().GetInput().LocalPress("EditorToggleCursor")) {
-			if (IsCursorVisible()) {
-				//GetDayZGame().GetEditor().ClearPlacing();
-			}
-			
-			ShowCursor(!IsCursorVisible());
-		
-			//if (IsCursorVisible()) {
-				//SetCursorWidget(GetGame().GetWorkspace().CreateWidgets("Editor\\GUI\\layouts\\loading.layout"));
-			//}
+			GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
 		}
 	}
 						
@@ -289,23 +279,7 @@ class EditorHud: ScriptView
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		ViewBinding view_binding = m_TemplateController.GetViewBinding(w);
-		if (view_binding && !m_CurrentMenu) {
-			/*EditorCommand editor_command;
-			if (Class.CastTo(editor_command, view_binding.GetRelayCommand())) {
-				
-				float pos_x, pos_y, size_x, size_y;
-				w.GetScreenPos(pos_x, pos_y);
-				w.GetScreenSize(size_x, size_y);
-				
-				//m_CurrentTooltip = EditorTooltip.CreateOnButton(editor_command, w, TooltipPositions.BOTTOM_LEFT);
-				if (!editor_command.CanExecute()) {
-					m_CurrentTooltip.GetLayoutRoot().SetAlpha(100);
-				}
-			}*/
-		}
-					
+	{					
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
@@ -358,44 +332,13 @@ class EditorHud: ScriptView
 		if (CurrentDialog) {
 			CurrentDialog.GetLayoutRoot().Show(show);
 		}
-		
-		if (IsCursorVisible() && !show) {
-			ShowCursor(false);
-		}
-		
+				
 		Man controlled_player = GetDayZGame().GetEditor().GetCurrentControlPlayer();
 		Hud hud = GetGame().GetMission().GetHud();
 		hud.ShowHudUI(g_Game.GetProfileOption(EDayZProfilesOptions.HUD) && !show && controlled_player != null);
 		hud.ShowQuickbarUI(g_Game.GetProfileOption(EDayZProfilesOptions.QUICKBAR) && !show && controlled_player != null);
 	}
-	
-	override bool IsVisible() 
-	{
-		return m_LayoutRoot.IsVisible();
-	}
-		
-	void ShowCursor(bool state) 
-	{
-		GetGame().GetUIManager().ShowCursor(state);
-		ClearCursor();
-		
-		// If player is active
-		Man controlled_player = GetDayZGame().GetEditor().GetCurrentControlPlayer();
-		if (controlled_player) {
-			controlled_player.DisableSimulation(IsCursorVisible());
-		}
-		
-		if (!state) {
-			delete CurrentTooltip;
-			SetFocus(null);
-		}
-	}
-	
-	bool IsCursorVisible()
-	{
-		return GetGame().GetUIManager().IsCursorVisible();
-	}
-				
+						
 	void ShowNotification(string text, int color = -9137292, float duration = 4.0)
 	{
 		Notification.SetColor(color);
@@ -524,10 +467,17 @@ class EditorHud: ScriptView
 	{
 		m_Cursor.Show(false);
 	}
-			
-	// ToolTip Control
-	static ref ScriptView CurrentTooltip;
-
+	
+	void SetTooltip()
+	{
+		
+	}
+	
+	void ClearTooltip()
+	{
+		
+	}
+	
 	// Dialog Control`
 	static ref DialogBase CurrentDialog;
 	

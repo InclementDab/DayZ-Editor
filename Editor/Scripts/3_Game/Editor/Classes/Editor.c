@@ -313,7 +313,7 @@ class Editor: SerializableBase
 		if (GetGame().IsDedicatedServer()) {
 			return;
 		}
-					
+							
 		if ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) != MB_PRESSED_MASK) {
 			m_DragTarget = null;
 		}
@@ -347,6 +347,7 @@ class Editor: SerializableBase
 		//Shape.CreateMatrix(camera_orthogonal);
 		
 		m_CursorNormal = m_CursorNormal.Multiply3(rotation_mat);
+				
 		//Print(m_CursorNormal);
 		//ray1.Debug();
 		
@@ -356,16 +357,21 @@ class Editor: SerializableBase
 			editor_object_placing.SetBaseTransform(transform);
 		}
 		
+		if (input.LocalPress_ID(UATempRaiseWeapon)) {
+			EditorNode.ClearSelections();
+			return;
+		}
+		
 		if (input.LocalPress_ID(UAFire)) {
 			//Print(EditorObject.ByObject[raycast.Hit]);
+			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
+			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
+				EditorNode.ClearSelections();
+			}
+			
 			if (raycast.Hit && EditorObject.ByObject[raycast.Hit]) {
 				EditorObject editor_object = EditorObject.ByObject[raycast.Hit];
 				//Print(editor_object);
-				
-				// The magic copy-paste code that handles all your interactive dreams. hasnt changed
-				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					EditorNode.ClearSelections();
-				}
 				
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					editor_object.SetSelected(!editor_object.IsSelected());
@@ -436,29 +442,32 @@ class Editor: SerializableBase
 					editor_object_cast.SetBaseTransform(current_transform);
 				} 
 				
-				
-				if (KeyState(KeyCode.KC_LSHIFT) || KeyState(KeyCode.KC_LMENU)) {
+
+				if (KeyState(KeyCode.KC_LSHIFT)) {
+					
+					vector new_forward = vector.Direction(current_transform[3], raycast.Bounce.Position).Normalized();
+					
+					current_transform = { (current_transform[1] * new_forward).Normalized(), current_transform[1], new_forward, current_transform[3] };
+					
+					editor_object_cast.SetBaseTransform(current_transform);
+					
+					/*
+					vector p1 = Vector(2, 0, 2).Multiply4(current_transform);
+					vector p2 = Vector(-2, 0, -2).Multiply4(current_transform);
+					
+					Shape.Create(ShapeType.BBOX, COLOR_GREEN, ShapeFlags.WIREFRAME | ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.ADDITIVE, p1, p2);
+					
+					float d = 1;
+					float t = -(vector.Dot(vector.Up, raycast.Source.Position) + current_transform[3][1]) / vector.Dot(vector.Up, raycast.Source.Direction);
+					
+					vector result = raycast.Source.Position + raycast.Source.Direction * t;
+					
+					*/
 
 					
-					if (KeyState(KeyCode.KC_LSHIFT)) {
-						vector p1 = Vector(2, 0, 2).Multiply4(current_transform);
-						vector p2 = Vector(-2, 0, -2).Multiply4(current_transform);
-						
-						Shape.Create(ShapeType.BBOX, COLOR_GREEN, ShapeFlags.WIREFRAME | ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.ADDITIVE, p1, p2);
-						
-						float d = 1;
-						float t = -(vector.Dot(vector.Up, raycast.Source.Position) + current_transform[3][1]) / vector.Dot(vector.Up, raycast.Source.Direction);
-						
-						vector result = raycast.Source.Position + raycast.Source.Direction * t;
-						
-						
-	
-						
-						//current_transform = { current_transform[0], current_transform[1], current_transform[2], current_transform[3] };
-						
-						//editor_object_cast.SetBaseTransform(current_transform);
-					}
+					
 				}
+				
 				
 				// Any distance placing
 				else {
@@ -733,25 +742,7 @@ class Editor: SerializableBase
 	{
 		return ScriptedCamera.Cast(m_CurrentControl);
 	}
-	
-	bool DoCursorRaycast(out vector position, float max_distance = 3000, Object ignore_object = null)
-	{
-		vector raycast_direction;
-		if (m_Hud.IsCursorVisible()) {
-			raycast_direction = GetGame().GetPointerDirection();
-		} else {
-			raycast_direction = GetGame().GetCurrentCameraDirection();
-		}
-		
-		vector begin_pos = GetGame().GetCurrentCameraPosition();
-		vector end_pos = begin_pos + raycast_direction * max_distance;
-		int interaction_layers = PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.TERRAIN | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.DYNAMICITEM | PhxInteractionLayers.ITEM_LARGE;
-		Object hit_object;
-		vector normal;
-		float fraction;
-		return DayZPhysics.RayCastBullet(begin_pos, end_pos, interaction_layers, ignore_object, hit_object, position, normal, fraction);
-	}
-		
+			
 	bool IsSurfaceWater(vector position)
 	{
 		return GetGame().SurfaceIsSea(position[0], position[2]) || GetGame().SurfaceIsPond(position[0], position[2]);

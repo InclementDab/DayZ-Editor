@@ -33,23 +33,18 @@ class EditorBrush: EditorCursorTool
 		if (GetGame().GetInput().LocalValue_ID(UAFire)) {
 			
 			//EditorObject editor_object = new EditorObject(UUID.Generate(), );
-			
-			for (int i = 0; i < Math.Ceil(ENTITY_COUNT_PER_SEC * dt); i++) {								
-				
-				
-			}
-			
+						
 			vector matrix[4];
 			Math3D.MatrixIdentity4(matrix);
 			matrix[3] = raycast.Bounce.Position;
 						
 			vector random = Vector(((2 * Math.RandomFloat01()) - 1) * m_Radius, 0, ((2 * Math.RandomFloat01()) - 1) * m_Radius).Multiply4(matrix);
-			matrix[3] = random + Vector(0, 2, 0);
+			matrix[3] = random + Vector(0, 4, 0);
 			Object object = Editor.CreateObject(GetBrushedTypes().GetRandomElement(), matrix);
 			
-			//EditorObject editor_object = new EditorObject(UUID.Generate(), m_UUID, GetIcon(), object, EFE_DEFAULT);
+			EditorObject editor_object = new EditorObject(UUID.Generate(), m_UUID, GetIcon(), object, EFE_DEFAULT);
 			
-			//m_Editor.GetMaster()["EditedObjects"]["BrushedObjects"].Add(editor_object);
+			GetDayZGame().GetEditor().GetMaster()["EditedObjects"]["BrushedObjects"].Add(editor_object);
 		
 			// remove it from placing
 			//Placing.RemoveItem(editor_objects);
