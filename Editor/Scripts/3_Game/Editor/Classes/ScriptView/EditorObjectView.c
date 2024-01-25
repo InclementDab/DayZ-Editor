@@ -40,7 +40,7 @@ class EditorObjectView: ScriptView
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		WidgetAnimator.Animate(Image, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
-		GetDayZGame().GetEditor().GetHud().SetCursor(Symbols.UP_DOWN_LEFT_RIGHT);
+		GetDayZGame().GetEditor().GetHud().SetCursor(new CursorView(Symbols.UP_DOWN_LEFT_RIGHT));
 		return super.OnMouseEnter(w, x, y);
 	}
 	

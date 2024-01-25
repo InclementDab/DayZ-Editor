@@ -34,8 +34,6 @@ class EditorHud: ScriptView
 		return { UAWalkRunForced };
 	}*/
 	
-	protected Widget m_Cursor;
-	
 	protected EditorHudController m_TemplateController;
 		
 	// View Properties
@@ -57,6 +55,8 @@ class EditorHud: ScriptView
 	SelectionMode CurrentSelectionMode = SelectionMode.BOX;
 	
 	protected ref array<vector> m_LassoHistory = {};
+	
+	protected ref CursorView m_Cursor;
 	
 	protected Widget m_DraggedBar;
 	protected int m_DragX = -1, m_DragY = -1;
@@ -283,7 +283,7 @@ class EditorHud: ScriptView
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
-				SetCursor(Symbols.LEFT_RIGHT);
+				SetCursor(new CursorView(Symbols.LEFT_RIGHT));
 				break;
 			}
 		}
@@ -447,37 +447,17 @@ class EditorHud: ScriptView
 				
 		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetName(), split_string[0], component_type, component_index);
 	}*/
-	
-	void SetCursor(Symbols cursor)
+		
+	void SetCursor(notnull CursorView cursor_view)
 	{
-		m_Cursor.Show(true);
-		
-		ImageWidget foreground = FindWidget<ImageWidget>.SearchDown(m_Cursor, "Foreground");
-		foreground.LoadImageFile(0, string.Format("set:thin %1", cursor));
-		foreground.SetImage(0);
-		
-		ImageWidget background = FindWidget<ImageWidget>.SearchDown(m_Cursor, "Background");
-		background.LoadImageFile(0, string.Format("set:solid %1", cursor));
-		background.SetImage(0);
-		
-		SetCursorWidget(m_Cursor);
+		m_Cursor = cursor_view;
 	}
 	
 	void ClearCursor()
 	{
-		m_Cursor.Show(false);
+		delete m_Cursor;
 	}
-	
-	void SetTooltip()
-	{
 		
-	}
-	
-	void ClearTooltip()
-	{
-		
-	}
-	
 	// Dialog Control`
 	static ref DialogBase CurrentDialog;
 	
