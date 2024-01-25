@@ -4,7 +4,7 @@ modded class PlayerBase
 	{
 #ifndef SERVER
 		if (GetDayZGame().GetEditor()) {
-			GetInputController().SetDisabled(GetDayZGame().GetEditor().GetCurrentControl() != this);
+			GetInputController().SetDisabled(GetDayZGame().GetEditor().IsActive());
 		}
 #endif
 	}
@@ -12,10 +12,12 @@ modded class PlayerBase
 	override void EEKilled(Object killer)
 	{
 		super.EEKilled(killer);
-		
+#ifndef SERVER
 		// Quick! Before he stops breathing
-		if (this == GetDayZGame().GetEditor().GetCurrentControl()) {
-			GetDayZGame().GetEditor().ControlCamera(GetDayZGame().GetEditor().GetCamera());
+		if (GetGame().GetPlayer() == this) {
+			GetDayZGame().GetEditor().GetHud().Show(true);
+			GetDayZGame().GetEditor().GetCamera().SetActive(true);
 		}
+#endif
 	}
 }

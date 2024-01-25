@@ -175,8 +175,8 @@ class Editor: SerializableBase
 			return;
 		}
 		
-		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
-		ControlCamera(m_Camera);	
+		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));	
+		m_Camera.SetActive(true);
 	
 		m_Hud = new EditorHud();		
 		m_Hud.GetTemplateController().LeftListItems.Insert(m_Master["PlaceableObjects"].GetNodeView());
@@ -417,7 +417,11 @@ class Editor: SerializableBase
 				m_Hud.Show(true);
 			} else {
 				m_Hud.Show(false);
-				GetGame().SelectPlayer(m_Identity, m_Player);
+				
+				GetDayZGame().SelectPlayer(m_Identity, m_Player);
+				Hud hud = GetDayZGame().GetMission().GetHud();
+				hud.ShowHudUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.HUD));
+				hud.ShowQuickbarUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.QUICKBAR));
 			}
 		}
 	}
@@ -561,57 +565,6 @@ class Editor: SerializableBase
 		SEffectManager.PlaySoundOnObject(sound_set, m_Camera);
 	}
 	
-	// Leave null to use the default camera
-	void ControlCamera(ScriptedCamera camera = null)
-	{
-		if (!camera) {
-			camera = m_Camera;
-			if (!camera) {
-				Error("Camera not found / initialized");
-				return;
-			}
-		}
-		
-		if (m_CurrentControl) {			
-			m_CurrentControl.DisableSimulation(true);
-		}
-		
-		m_CurrentControl = camera;
-		camera.SetActive(true);
-		camera.OnSelectCamera();
-		
-		EditorObject.ClearSelections();
-		m_CurrentControl.DisableSimulation(false);
-	}
-	
-	void ControlPlayer(notnull Man player)
-	{
-		if (m_CurrentControl) {
-			m_CurrentControl.DisableSimulation(true);
-		}
-		
-		m_CurrentControl = player;
-		GetGame().SelectPlayer(null, m_CurrentControl);
-		
-		EditorObject.ClearSelections();
-		m_CurrentControl.DisableSimulation(false);
-	}
-		
-	Entity GetCurrentControl()
-	{
-		return m_CurrentControl;
-	}
-	
-	Man GetCurrentControlPlayer()
-	{
-		return Man.Cast(m_CurrentControl);
-	}
-	
-	ScriptedCamera GetCurrentControlCamera()
-	{
-		return ScriptedCamera.Cast(m_CurrentControl);
-	}
-			
 	bool IsSurfaceWater(vector position)
 	{
 		return GetGame().SurfaceIsSea(position[0], position[2]) || GetGame().SurfaceIsPond(position[0], position[2]);
@@ -938,5 +891,15 @@ class Editor: SerializableBase
 	EditorNode GetMaster()
 	{	
 		return m_Master;
+	}
+	
+	void SetPlayer(DayZPlayer player)
+	{
+		m_Player = player;
+	}
+	
+	bool IsActive()
+	{
+		return m_Camera && m_Camera.IsActive();
 	}
 }

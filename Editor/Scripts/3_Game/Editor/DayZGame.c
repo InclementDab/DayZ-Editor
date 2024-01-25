@@ -36,6 +36,22 @@ modded class DayZGame
 		}	
 	}
 	
+	override void OnEvent(EventType eventTypeId, Param params)
+	{
+		super.OnEvent(eventTypeId, params);
+		
+		switch (eventTypeId) {
+			case MPSessionPlayerReadyEventTypeID: {
+				// Client -> Server
+				if (!m_Editor) {
+					m_Editor = new Editor(GetGame().GetPlayer().GetIdentity(), GetGame().GetPlayer());	
+				}
+				
+				break;
+			}
+		}
+	}
+	
 	override void OnUpdate(bool doSim, float timeslice)
 	{
 		super.OnUpdate(doSim, timeslice);

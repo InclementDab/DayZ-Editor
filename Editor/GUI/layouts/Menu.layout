@@ -1,0 +1,94 @@
+WrapSpacerWidgetClass Root {
+ color 0.2353 0.2353 0.2353 1
+ size 310 80
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ scaled 0
+ style DayZDefaultPanelTop
+ Padding 0
+ Margin 0
+ "Size To Content H" 1
+ content_halign center
+ {
+  ButtonWidgetClass Item {
+   visible 1
+   ignorepointer 0
+   color 0.7843 0.7843 0.7843 0.7843
+   size 1 28
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+   style DayZDefaultButtonAll
+   "no focus" 1
+   {
+    TextWidgetClass Name {
+     ignorepointer 1
+     position 45 0
+     size 55 21
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     text "Undo"
+     font "gui/fonts/MetronBook"
+     "exact text" 0
+     "size to text h" 1
+     "text valign" center
+    }
+    FrameWidgetClass Icon {
+     ignorepointer 1
+     position 9 0
+     size 24 24
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     {
+      ImageWidgetClass "Icon.Image" {
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       fixaspect inside
+       image0 "set:light image:rotate_left"
+       mode additive
+       "src alpha" 1
+       filter 0
+      }
+     }
+    }
+    TextWidgetClass Shortcut {
+     ignorepointer 1
+     position 13 0
+     size 55 21
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     text "Ctrl + Z"
+     font "gui/fonts/MetronBook"
+     "exact text" 0
+     "size to text h" 1
+     "text valign" center
+    }
+   }
+  }
+ }
+}

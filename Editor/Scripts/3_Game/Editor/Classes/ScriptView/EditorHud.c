@@ -320,17 +320,7 @@ class EditorHud: ScriptView
 		
 		return super.OnChange(w, x, y, finished);
 	}
-	
-	override void Show(bool show) 
-	{
-		super.Show(show);
-						
-		Man controlled_player = GetDayZGame().GetEditor().GetCurrentControlPlayer();
-		Hud hud = GetGame().GetMission().GetHud();
-		hud.ShowHudUI(g_Game.GetProfileOption(EDayZProfilesOptions.HUD) && !show && controlled_player != null);
-		hud.ShowQuickbarUI(g_Game.GetProfileOption(EDayZProfilesOptions.QUICKBAR) && !show && controlled_player != null);
-	}
-						
+							
 	void ShowNotification(string text, int color = -9137292, float duration = 4.0)
 	{
 		Notification.SetColor(color);
