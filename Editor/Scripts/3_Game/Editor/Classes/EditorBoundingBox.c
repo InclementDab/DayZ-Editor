@@ -1,5 +1,7 @@
 class EditorBoundingBox: Managed
 {
+	static const float THICKNESS = 0.05;
+	
 	static void Create(notnull Object object)
 	{
 		vector size = ObjectGetSize(object);
@@ -39,7 +41,7 @@ class EditorBoundingBox: Managed
 			transform[3] = line_centers[i];
 			
 			for (int j = 0; j < 3; j++) {
-				transform[j][j] = ((position[j] == line_centers[i][j]) * size[j]) + BOUNDING_BOX_THICKNESS;						
+				transform[j][j] = ((position[j] == line_centers[i][j]) * size[j]) + THICKNESS;						
 			}
 			 
 			Object bbox_line = GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_LOCAL);

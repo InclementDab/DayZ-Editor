@@ -27,15 +27,11 @@ modded class DayZIntroScene
 	};	
 	
 	static const ref array<int> FireworkTypes = {
-		ParticleList.EDITOR_FIREWORK_RED,
-		ParticleList.EDITOR_FIREWORK_ORANGE,
-		ParticleList.EDITOR_FIREWORK_PURPLE,
-		ParticleList.EDITOR_FIREWORK_SILVER,
-		ParticleList.EDITOR_FIREWORK_GREEN,
-		ParticleList.EDITOR_FIREWORK_WHITE,
-		ParticleList.EDITOR_FIREWORK_BLUE,
-		ParticleList.EDITOR_FIREWORK_CYAN,
-		ParticleList.EDITOR_FIREWORK_RED
+		ParticleList.FIREWORKS_EXPLOSION_THANKS1,
+		ParticleList.FIREWORKS_EXPLOSION_THANKS2,
+		ParticleList.FIREWORKS_EXPLOSION_THANKS3,
+		ParticleList.FIREWORKS_EXPLOSION_THANKS4,
+		ParticleList.FIREWORKS_EXPLOSION_THANKS5
 	};
 
 	void DayZIntroScene()
@@ -134,8 +130,8 @@ modded class DayZIntroScene
 					StartTimer();
 				}
 				
-				Particle.PlayOnObject(ParticleList.EDITOR_SNOW, m_DSLRCamera, Vector(0, 0, 0));
-				Particle.PlayOnObject(ParticleList.EDITOR_SNOWFOG_THIN, m_DSLRCamera, Vector(0, 0, 0));
+				//Particle.PlayOnObject(ParticleList.EDITOR_SNOW, m_DSLRCamera, Vector(0, 0, 0));
+				//Particle.PlayOnObject(ParticleList.EDITOR_SNOWFOG_THIN, m_DSLRCamera, Vector(0, 0, 0));
 			}
 			
 			m_ParticleSetup = true;

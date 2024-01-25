@@ -1,5 +1,0 @@
-enum ExportHeightType 
-{
-	ABSOLUTE,
-	RELATIVE
-};
