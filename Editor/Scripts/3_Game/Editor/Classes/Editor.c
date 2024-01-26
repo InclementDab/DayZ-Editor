@@ -253,6 +253,7 @@ class Editor: EditorServer
 		
 		if (input.LocalPress("EditorToggleCursor")) {
 			GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
+			m_Hud.ClearCursor();
 		}
 		
 		if (input.LocalPress("EditorToggleHudCommand")) {
@@ -459,7 +460,7 @@ class Editor: EditorServer
 		if (type.Contains("\\") || type.Contains("/")) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, transform[3], transform[2].VectorToAngles(), 1.0, true);
 		} else {
-			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
+			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL  | ECE_INITAI | ECE_CREATEPHYSICS);
 		}
 		
 		if (!object) {
