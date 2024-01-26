@@ -6,8 +6,8 @@ class EditorNodeView: ScriptView
 	
 	TextWidget Text;
 	
-	Widget Panel;
-	ImageWidget IconImage, CollapseIcon, Texture;
+	Widget Panel, Children;
+	ImageWidget Collapse, IconImage, CollapseIcon, Texture;
 		
 	protected bool m_IsBeingDragged;
 	protected string m_Text;
@@ -39,16 +39,33 @@ class EditorNodeView: ScriptView
 		Text.GetScreenSize(w, h);		
 		Panel.SetScreenSize(w, h);
 	}
-		
-	void ShowChildren(bool state)
+	
+	protected bool m_ChildrenVisible;
+	void ShowChildren(bool state, float offset = 0)
 	{
-		m_TemplateController.CollapseState = state;
-		m_TemplateController.NotifyPropertyChanged("CollapseState");
+		m_ChildrenVisible = state;
+		if (!CollapseIcon) {
+			Print(m_Node.GetDisplayName());
+			return;
+		}
+		
+		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
+		CollapseIcon.SetImage(0);
+		
+		float w, h;
+		Children.Show(state);
+		Children.GetScreenSize(w, h);
+		//Print(h);
+		float x, y;
+		m_LayoutRoot.GetSize(x, y);
+		offset += (h * state);
+		m_LayoutRoot.SetScreenSize(x, 18 + offset);
+		m_LayoutRoot.Update();
 		
 		// you only want to open upper containers when lower ones are opened. propagate up /\
 		EditorNode parent = m_Node.GetParent();
 		if (parent) {
-			parent.GetNodeView().ShowChildren(true);
+			parent.GetNodeView().ShowChildren(true, offset);
 		}
 	}
 		
@@ -77,6 +94,18 @@ class EditorNodeView: ScriptView
 			Panel.SetPos(x, y);
 			Text.SetPos(x, y);
 		}
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		switch (w) {
+			case Collapse: {
+				ShowChildren(!m_ChildrenVisible);
+				return true;
+			}
+		}
+		
+		return super.OnClick(w, x, y, button);
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)

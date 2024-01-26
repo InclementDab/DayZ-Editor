@@ -51,7 +51,7 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
-       scriptclass "ViewBinding"
+       scriptclass ""
        style Outline_1px_Button
        font "gui/fonts/etelkatextpro14"
        switch toggle
@@ -73,12 +73,6 @@ FrameWidgetClass Root {
          mode blend
          "src alpha" 1
          filter 0
-        }
-       }
-       {
-        ScriptParamsClass {
-         Binding_Name "CollapseState"
-         Two_Way_Binding 1
         }
        }
       }
