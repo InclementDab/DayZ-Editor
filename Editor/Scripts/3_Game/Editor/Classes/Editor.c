@@ -33,6 +33,11 @@ class Editor: EditorServer
 	// Stack of Undo / Redo Actions
 	protected ref EditorHistory m_History = new EditorHistory();
 	
+	bool IsLocal()
+	{
+		return m_UUID == GetGame().GetUserManager().GetTitleInitiator().GetUid();
+	}
+	
 	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
 		m_Identity = identity;
@@ -42,7 +47,8 @@ class Editor: EditorServer
 			return;
 		}
 		
-		if (player == GetGame().GetPlayer()) {
+		// Its me!
+		if (IsLocal()) {
 			m_Hud = new EditorHud();
 			m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("PlaceableObjects").GetNodeView());
 			m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("Brushes").GetNodeView());
