@@ -3797,8 +3797,8 @@ FrameWidgetClass Root {
      clipchildren 0
      ignorepointer 1
      color 0.098 0.098 0.098 1
-     position -42 -76
-     size 0 64
+     position -42 -44
+     size 0 32
      halign right_ref
      valign bottom_ref
      hexactpos 1
@@ -3848,6 +3848,17 @@ FrameWidgetClass Root {
      vexactsize 1
      style rover_sim_colorable
      {
+      ItemPreviewWidgetClass CursorEntityPreview {
+       ignorepointer 1
+       size 0.95 0.95
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 200
+      }
       ImageWidgetClass CursorEntityTexture {
        ignorepointer 1
        color 0.4471 0.5725 0.6863 0.7843
@@ -3866,16 +3877,6 @@ FrameWidgetClass Root {
        "stretch mode" stretch_w_h
        filter 0
        rotation 0 0 90
-      }
-      ItemPreviewWidgetClass CursorEntityPreview {
-       ignorepointer 1
-       size 0.95 0.95
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
       }
      }
     }

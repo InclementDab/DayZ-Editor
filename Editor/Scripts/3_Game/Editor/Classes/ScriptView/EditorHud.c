@@ -32,9 +32,7 @@ class EditorHud: ScriptView
 	{		
 		CursorTooltip.Show(name != string.Empty || type != string.Empty);
 		
-		vector mat[4];
-		Math3D.MatrixOrthogonalize4(mat);
-		m_TooltipObject = Editor.CreateObject(type, mat);
+		m_TooltipObject = GetGame().CreateObjectEx(type, vector.Zero, ECE_LOCAL);
 	
 		CursorEntity.Show(false);
 		if (m_TooltipObject) {
@@ -58,14 +56,13 @@ class EditorHud: ScriptView
 			Background.SetImage(0);
 		}
 		
-		SetCursorWidget(Cursor);
 		Cursor.Show(true);
 	}
 	
 	void ClearCursor()
 	{
+		Cursor.Show(false);
 		GetGame().ObjectDelete(m_TooltipObject);
-		SetCursorWidget(null);
 	}
 	
 	// View Properties
@@ -105,6 +102,12 @@ class EditorHud: ScriptView
 		
 		GetGame().GetMission().GetHud().ShowHudUI(false);
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
+		SetCursorWidget(Cursor);
+	}
+	
+	void ~EditorHud()
+	{
+		SetCursorWidget(null);
 	}
 	
 	override void Update(float dt)

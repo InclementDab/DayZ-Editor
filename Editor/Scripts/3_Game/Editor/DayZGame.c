@@ -158,9 +158,9 @@ modded class DayZGame
 	void Recompile()
 	{
 		string uuid = GetPlayer().GetIdentity().GetId();
-		delete m_Master[uuid];
+		delete m_Master["SERVER"][uuid];
 		
-		m_Master[uuid] = new Editor(uuid, GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetPlayer().GetIdentity(), GetPlayer());
+		m_Master["SERVER"][uuid] = new Editor(uuid, GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetPlayer().GetIdentity(), GetPlayer());
 		m_Master.Synchronize();
 	}
 	
