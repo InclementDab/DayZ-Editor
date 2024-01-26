@@ -154,25 +154,17 @@ class Editor: EditorServer
 				if (KeyState(KeyCode.KC_LMENU)) {
 					Debug.DrawSphere(raycast.Source.Position, vector.Distance(raycast.Source.Position, current_transform[3]), COLOR_RED, ShapeFlags.ADDITIVE | ShapeFlags.WIREFRAME | ShapeFlags.ONCE);
 					
-					vector v3 = current_transform[1] * raycast.Source.Direction;
-					if (KeyState(KeyCode.KC_LSHIFT)) {
-						v3 = vector.Aside * raycast.Source.Direction;
-					}
-					
+					vector v3 = current_transform[1] * raycast.Source.Direction;					
 					float dist_z = vector.Dot(((raycast.Source.Position - current_transform[3]) * current_transform[1]), v3) / v3.LengthSq();
-					if (KeyState(KeyCode.KC_LSHIFT)) {
-						dist_z = vector.Dot(((raycast.Source.Position - current_transform[3]) * vector.Aside), v3) / v3.LengthSq();
-					}
-					
+
 					float d1 = vector.Dot(vector.Up, raycast.Source.Direction);
 					vector x = Math.Cos(d1) * (raycast.Source.Position - current_transform[3]);
-					Print(x);
 					
 					vector pos = raycast.Source.Position + raycast.Source.Direction * dist_z;
 					
 					current_transform = { current_transform[0], current_transform[1], current_transform[2], pos };
 					editor_object_cast.SetBaseTransform(current_transform);
-					editor_object_cast.Synchronize();
+					
 				} 
 				
 
@@ -183,7 +175,6 @@ class Editor: EditorServer
 					current_transform = { (current_transform[1] * new_forward).Normalized(), current_transform[1], new_forward, current_transform[3] };
 					
 					editor_object_cast.SetBaseTransform(current_transform);
-					editor_object_cast.Synchronize();
 					/*
 					vector p1 = Vector(2, 0, 2).Multiply4(current_transform);
 					vector p2 = Vector(-2, 0, -2).Multiply4(current_transform);
@@ -203,8 +194,18 @@ class Editor: EditorServer
 				else {
 					transform = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
 					editor_object_cast.SetBaseTransform(transform);
-					editor_object_cast.Synchronize();
 				}
+			}
+		}
+		
+		if (input.LocalRelease_ID(UAFire)) {
+			foreach (EditorNode selected_node_synch: EditorNode.SelectedObjects) {
+				EditorObject editor_object_sync = EditorObject.Cast(selected_node_synch);
+				if (!editor_object_sync) {
+					continue;
+				}
+				
+				editor_object_sync.Synchronize();
 			}
 		}
 		

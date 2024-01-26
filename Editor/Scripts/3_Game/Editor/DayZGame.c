@@ -91,7 +91,6 @@ modded class DayZGame
 			}
 				
 			case RPC_NODE_SYNC: {	
-				Print("EditorNode.RPC_NODE_SYNC");
 				int tree_depth;
 				if (!ctx.Read(tree_depth)) {
 					break;
