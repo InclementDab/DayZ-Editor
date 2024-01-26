@@ -44,12 +44,8 @@ class EditorBrush: EditorCursorTool
 			
 			EditorObject editor_object = new EditorObject(UUID.Generate(), m_UUID, GetIcon(), object, EFE_DEFAULT);
 			
-			GetDayZGame().GetEditor()["EditedObjects"]["BrushedObjects"].Add(editor_object);
-			editor_object.Synchronize();
-		
-			// remove it from placing
-			//Placing.RemoveItem(editor_objects);
-			//m_Editor.PlaySound(EditorSounds.PLOP);
+			GetDayZGame().GetEditor()["EditedObjects"]["BrushedObjects"].Add(editor_object);		
+			GetDayZGame().GetEditor().PlaySound(EditorSounds.PLOP);
 			//m_History.InsertAction(footprint);
 			
 			return false;
@@ -58,7 +54,8 @@ class EditorBrush: EditorCursorTool
 		if (GetGame().GetInput().LocalRelease_ID(UAFire)) {
 			
 			// Synchronize to this id
-			//m_Editor.Synchronize(m_Editor.GetMaster()["EditedObjects"]["BrushedObjects"]);
+			GetDayZGame().GetEditor()["EditedObjects"]["BrushedObjects"].Synchronize();
+			
 			return false;
 		}
 		
