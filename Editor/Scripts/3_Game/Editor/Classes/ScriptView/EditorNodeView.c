@@ -58,6 +58,8 @@ class EditorNodeView: ScriptView
 		m_LayoutRoot.SetScreenSize(x, h * state + 18);
 		m_LayoutRoot.Update();
 		
+		Texture.Show(state);
+		
 		// you only want to open upper containers when lower ones are opened. propagate up /\
 		EditorNode parent = m_Node.GetParent();
 		if (parent) {

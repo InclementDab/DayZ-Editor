@@ -191,7 +191,7 @@ FrameWidgetClass Root {
    }
   }
   ImageWidgetClass Texture {
-   visible 1
+   visible 0
    ignorepointer 0
    color 1 1 1 0.3922
    position 10 0
