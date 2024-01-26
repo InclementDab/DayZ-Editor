@@ -20,6 +20,16 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 		m_IconWidget = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");
 				
+
+		
+#ifdef WORKBENCH
+		// debug display
+		//m_IconWidget.SetColor(m_LayoutRoot.GetColor());
+#endif
+	}
+	
+	void SetNode(EditorNode node)
+	{
 		if (Node != string.Empty) {			
 			m_Node = GetDayZGame().GetEditor()["Commands"][Node];
 			Print(m_Node);
@@ -31,11 +41,6 @@ class EditorButton: ScriptedWidgetEventHandler
 				m_IconWidget.SetImage(0);
 			}
 		}
-		
-#ifdef WORKBENCH
-		// debug display
-		//m_IconWidget.SetColor(m_LayoutRoot.GetColor());
-#endif
 	}
 			
 	void OnExecuted(bool state)

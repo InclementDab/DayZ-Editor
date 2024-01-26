@@ -129,8 +129,20 @@ modded class DayZGame
 		return false;
 	}
 	
+#ifdef WORKBENCH
+	protected ref Editor w_Editor;
+#endif
+	
 	Editor GetEditor()
 	{		
+#ifdef WORKBENCH
+		if (!w_Editor) {
+			w_Editor = new Editor("", "", "", null, null);
+		}
+		
+		return w_Editor;
+#endif
+		
 		if (IsServer()) {
 			return Editor.Cast(m_Master["SERVER"]);
 		}
