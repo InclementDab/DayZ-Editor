@@ -10,7 +10,7 @@ FrameWidgetClass Item {
   PanelWidgetClass Panel {
    disabled 0
    ignorepointer 1
-   color 0.4471 0.5725 0.6863 0
+   color 0.3255 0.451 0.5765 0
    position 0 0
    size 1 1
    halign center_ref

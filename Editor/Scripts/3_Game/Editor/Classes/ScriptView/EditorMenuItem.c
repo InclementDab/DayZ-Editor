@@ -26,8 +26,6 @@ class EditorCommandMenuItem: ScriptView
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		WidgetAnimator.Animate(Panel, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
-		WidgetAnimator.AnimateColor(Name, COLOR_BLACK, 100);
-		WidgetAnimator.AnimateColor(Shortcut, COLOR_BLACK, 100);
 		
 		return true;
 	}
@@ -35,8 +33,6 @@ class EditorCommandMenuItem: ScriptView
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		WidgetAnimator.Animate(Panel, WidgetAnimatorProperty.COLOR_A, 0, 100);
-		WidgetAnimator.AnimateColor(Name, COLOR_WHITE, 100);
-		WidgetAnimator.AnimateColor(Shortcut, COLOR_WHITE, 100);
 		return true;
 	}
 	
