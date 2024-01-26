@@ -24,10 +24,74 @@ class EditorObject: EditorNode
 	{
 		m_Flags = flags;
 		m_Object = object;
-				
-		if (GetGame().IsDedicatedServer()) {
-			return;
+		
+		if (!GetGame().IsDedicatedServer() && m_Object) {
+			InitObject(m_Object);
 		}
+	}
+		
+	void ~EditorObject()
+	{		
+		//EditorBoundingBox.Destroy(m_Object);
+		GetGame().ObjectDelete(m_BBoxBase);
+		GetGame().ObjectDelete(m_CenterLine);
+		GetGame().ObjectDelete(m_TranslationGizmo);
+						
+		delete m_PointViews;
+		
+		foreach (auto snap_point: m_EditorSnapPoints) {
+			snap_point.Delete();
+		}
+	}
+	
+#ifdef DIAG_DEVELOPER	
+	void DiagOnFrameUpdate(float dt)
+	{		
+		vector transform[4];
+		m_Object.GetTransform(transform);
+		
+		if (m_TranslationGizmo) {
+			vector mat[4];
+			m_BoundingBoxSurfaces[ETransformationAxis.TOP].CreateMatrix(mat);
+			Math3D.MatrixMultiply4(transform, mat, mat);
+			m_TranslationGizmo.SetTransform(mat);
+		}
+		
+				
+		for (int i = 0; i < 6; i++) {
+			// Debug
+			m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+		}
+		
+		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
+		if (scripted_entity) {
+			TriggerShape shape = scripted_entity.GetTriggerShape();
+			switch (shape) {
+				case TriggerShape.BOX: {
+					vector min_max[2];
+					scripted_entity.GetCollisionBox(min_max);
+					
+					vector transform_box[4];
+					m_Object.GetTransform(transform_box);
+					
+					Shape bbox = Shape.Create(ShapeType.BBOX, COLOR_RED_A, ShapeFlags.NOZBUFFER | ShapeFlags.ONCE | ShapeFlags.TRANSP, min_max[0], min_max[1]);
+					bbox.SetMatrix(transform_box);
+					break;
+				}
+				
+				case TriggerShape.SPHERE: {
+					//Debug.DrawBox(
+					break;
+				}
+			}
+		}
+	}
+#endif
+	
+	protected void InitObject(notnull Object object)
+	{
+		m_Object = object;
+		ByObject[object] = this;
 		
 		vector transform[4];
 		m_Object.GetTransform(transform);
@@ -106,64 +170,6 @@ class EditorObject: EditorNode
 #endif
 	}
 		
-	void ~EditorObject()
-	{		
-		//EditorBoundingBox.Destroy(m_Object);
-		GetGame().ObjectDelete(m_BBoxBase);
-		GetGame().ObjectDelete(m_CenterLine);
-		GetGame().ObjectDelete(m_TranslationGizmo);
-						
-		delete m_PointViews;
-		
-		foreach (auto snap_point: m_EditorSnapPoints) {
-			snap_point.Delete();
-		}
-	}
-	
-#ifdef DIAG_DEVELOPER	
-	void DiagOnFrameUpdate(float dt)
-	{		
-		vector transform[4];
-		m_Object.GetTransform(transform);
-		
-		if (m_TranslationGizmo) {
-			vector mat[4];
-			m_BoundingBoxSurfaces[ETransformationAxis.TOP].CreateMatrix(mat);
-			Math3D.MatrixMultiply4(transform, mat, mat);
-			m_TranslationGizmo.SetTransform(mat);
-		}
-		
-				
-		for (int i = 0; i < 6; i++) {
-			// Debug
-			m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
-		}
-		
-		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
-		if (scripted_entity) {
-			TriggerShape shape = scripted_entity.GetTriggerShape();
-			switch (shape) {
-				case TriggerShape.BOX: {
-					vector min_max[2];
-					scripted_entity.GetCollisionBox(min_max);
-					
-					vector transform_box[4];
-					m_Object.GetTransform(transform_box);
-					
-					Shape bbox = Shape.Create(ShapeType.BBOX, COLOR_RED_A, ShapeFlags.NOZBUFFER | ShapeFlags.ONCE | ShapeFlags.TRANSP, min_max[0], min_max[1]);
-					bbox.SetMatrix(transform_box);
-					break;
-				}
-				
-				case TriggerShape.SPHERE: {
-					//Debug.DrawBox(
-					break;
-				}
-			}
-		}
-	}
-#endif
-		
 	override bool CanDelete()
 	{
 		return true;
@@ -205,7 +211,9 @@ class EditorObject: EditorNode
 		serializer.Read(transform);
 		if (!m_Object) {	
 			m_Object = Editor.CreateObject(type, transform);
-			if (m_Object) ByObject[m_Object] = this;
+			if (!GetGame().IsDedicatedServer()) {
+				InitObject(m_Object);
+			}
 		}
 		
 		m_Object.SetTransform(transform);
