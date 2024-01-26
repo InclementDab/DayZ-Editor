@@ -7,8 +7,8 @@ class BoxSelectCommand: EditorNode
 				
 		if (selected) {
 			GetDayZGame().GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
-			GetDayZGame().GetMaster().GetNode("SERVER").GetNode("CircleSelectCommand").SetSelected(false);
-			GetDayZGame().GetMaster().GetNode("SERVER").GetNode("LassoSelectCommand").SetSelected(false);
+			GetDayZGame().GetMaster().GetNode("Commands").GetNode("CircleSelectCommand").SetSelected(false);
+			GetDayZGame().GetMaster().GetNode("Commands").GetNode("LassoSelectCommand").SetSelected(false);
 		}
 	}
 		

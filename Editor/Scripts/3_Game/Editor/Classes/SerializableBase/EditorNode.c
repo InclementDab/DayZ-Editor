@@ -334,7 +334,7 @@ class EditorNode: SerializableBase
 			tabs += "\t";
 		}
 		
-		PrintFormat("%3[%1] %2:", m_UUID, m_DisplayName, tabs);
+		PrintFormat("[%4]%3[%1] %2:", m_UUID, m_DisplayName, tabs, depth);
 		
 		foreach (string uuid, EditorNode node: m_Children) {
 			node.Debug(depth + 1);

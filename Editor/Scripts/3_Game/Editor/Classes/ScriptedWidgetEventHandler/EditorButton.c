@@ -20,8 +20,9 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 		m_IconWidget = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");
 				
-		if (Node != string.Empty) {
+		if (Node != string.Empty) {			
 			m_Node = GetDayZGame().GetEditor()["Commands"][Node];
+			Print(m_Node);
 			if (m_Node) {
 				m_Icon = m_Node.GetIcon();
 				m_Node.OnSelectionChanged.Insert(OnExecuted);				
@@ -54,7 +55,7 @@ class EditorButton: ScriptedWidgetEventHandler
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
-	{
+	{		
 		if (button == 0 && m_Node) {
 			m_Node.SetSelected(!m_Node.IsSelected());
 		}

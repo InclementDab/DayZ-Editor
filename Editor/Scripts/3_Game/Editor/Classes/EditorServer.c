@@ -6,13 +6,11 @@ class EditorServer: EditorNode
 	void EditorServer(string uuid, string display_name, Symbols icon)
 	{
 		// Load all default categories and placements
-		EditorNode main_node = new EditorNode(uuid, display_name, icon);
-				
 		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP);
 		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", Symbols.HAND));
 		edited_objects.Add(new EditorNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
 		edited_objects.Add(new EditorNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
-		main_node.Add(edited_objects);
+		Add(edited_objects);
 		
 #ifndef SERVER
 		EditorNode commands = new EditorNode("Commands", "Commands", Symbols.COMMAND);
@@ -22,7 +20,7 @@ class EditorServer: EditorNode
 		commands.Add(new DeleteCommand("DeleteCommand", "Delete", Symbols.TRASH));
 		commands.Add(new UndoCommand("UndoCommand", "Undo", Symbols.ROTATE_LEFT));
 		commands.Add(new RedoCommand("RedoCommand", "Redo", Symbols.ROTATE_RIGHT));
-		main_node.Add(commands);
+		Add(commands);
 		
 		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects", Symbols.ADDRESS_BOOK);
 		placeable_objects.Add(new EditorNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
@@ -37,12 +35,12 @@ class EditorServer: EditorNode
 		placeable_objects.Add(new EditorNode("StaticObjects", "Static Objects", Symbols.OBJECT_INTERSECT));
 		placeable_objects.Add(new EditorNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT));
 		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
-		main_node.Add(placeable_objects);
+		Add(placeable_objects);
 		
 		EditorNode brushes = new EditorNode("Brushes", "Brushes", Symbols.BRUSH);
 		brushes.Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
 		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
-		main_node.Add(brushes);
+		Add(brushes);
 				
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 					
@@ -74,7 +72,7 @@ class EditorServer: EditorNode
 					category = "AI";
 				}
 				
-				main_node["PlaceableObjects"][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING));
+				this["PlaceableObjects"][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING));
 		    }
 		}
 		
@@ -108,16 +106,14 @@ class EditorServer: EditorNode
 					category = "Rocks";
 				}
 			
-				main_node["PlaceableObjects"][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
+				this["PlaceableObjects"][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
 			}
 		}
 
 		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
-			main_node["PlaceableObjects"]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+			this["PlaceableObjects"]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}
 #endif
-		
-		Add(main_node);
 	}
 	
 	void Update(bool doSim, float timeslice)
