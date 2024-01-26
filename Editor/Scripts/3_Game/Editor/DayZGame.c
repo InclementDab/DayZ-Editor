@@ -157,10 +157,12 @@ modded class DayZGame
 	// VERY handy when changing layouts :)
 	void Recompile()
 	{
-		string uuid = GetPlayer().GetIdentity().GetId();
-		delete m_Master["SERVER"][uuid];
+		PlayerIdentity identity = GetPlayer().GetIdentity();
+		delete m_Master["SERVER"][identity.GetPlainId()];
 		
-		m_Master["SERVER"][uuid] = new Editor(uuid, GetPlayer().GetIdentity().GetName(), Symbols.CAMERA.Regular(), GetPlayer().GetIdentity(), GetPlayer());
+		Editor editor = new Editor(identity.GetPlainId(), identity.GetFullName(), Symbols.CAMERA.Regular(), identity, GetPlayer());
+		m_Master["SERVER"][identity.GetPlainId()] = editor;
+		
 		m_Master.Synchronize();
 	}
 	
@@ -196,10 +198,10 @@ modded class DayZGame
 			return Editor.Cast(m_Master["SERVER"]);
 		}
 		
-		if (!m_Master["SERVER"]) {
+		if (!m_Master["SERVER"] || !GetUserManager() || !GetUserManager().GetTitleInitiator()) {
 			return null;
 		}
-		
+				
 		return Editor.Cast(m_Master["SERVER"][GetUserManager().GetTitleInitiator().GetUid()]);
 	}
 }
