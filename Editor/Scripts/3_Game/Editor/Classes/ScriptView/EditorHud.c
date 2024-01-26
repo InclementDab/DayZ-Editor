@@ -47,7 +47,6 @@ class EditorHud: ScriptView
 		}
 		
 		CursorTooltipName.SetText(name);
-		CursorTooltipType.SetText(type);
 		
 		if (Foreground) {
 			Foreground.LoadImageFile(0, cursor.Thin());

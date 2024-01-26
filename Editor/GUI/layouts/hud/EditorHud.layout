@@ -29,7 +29,7 @@ FrameWidgetClass Root {
    priority 100
   }
   FrameWidgetClass Inner {
-   visible 0
+   visible 1
    ignorepointer 1
    position 0 0
    size 0 0
@@ -906,7 +906,7 @@ FrameWidgetClass Root {
    }
   }
   FrameWidgetClass Right {
-   visible 0
+   visible 1
    clipchildren 0
    ignorepointer 1
    position 0 126
@@ -984,7 +984,7 @@ FrameWidgetClass Root {
    }
   }
   FrameWidgetClass Left {
-   visible 0
+   visible 1
    clipchildren 0
    ignorepointer 1
    position 0 126
@@ -1079,7 +1079,7 @@ FrameWidgetClass Root {
    }
   }
   PanelWidgetClass Tools {
-   visible 0
+   visible 1
    ignorepointer 1
    color 0.0941 0.0941 0.0941 1
    position 0 42
@@ -2908,7 +2908,7 @@ FrameWidgetClass Root {
    }
   }
   PanelWidgetClass Menu {
-   visible 0
+   visible 1
    clipchildren 0
    ignorepointer 1
    color 0.1216 0.1216 0.1216 1
@@ -3739,7 +3739,7 @@ FrameWidgetClass Root {
    }
   }
   FrameWidgetClass Cursor {
-   visible 1
+   visible 0
    clipchildren 0
    ignorepointer 1
    color 0.0588 0.0588 0.0588 1
@@ -3813,7 +3813,7 @@ FrameWidgetClass Root {
      content_halign center
      content_valign center
      Columns 1
-     Rows 2
+     Rows 1
      {
       TextWidgetClass CursorTooltipName {
        visible 1
@@ -3827,24 +3827,6 @@ FrameWidgetClass Root {
        vexactsize 1
        text "TShirt (Colored Red)"
        font "gui/fonts/Metron"
-       "exact text" 0
-       "size to text h" 1
-       "text halign" center
-       "text valign" center
-      }
-      TextWidgetClass CursorTooltipType {
-       visible 1
-       ignorepointer 1
-       color 1 1 1 0.7843
-       size 76 24
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       text "TShirt_ColorRed"
-       font "gui/fonts/MetronBook"
        "exact text" 0
        "size to text h" 1
        "text halign" center
