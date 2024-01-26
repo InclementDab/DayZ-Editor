@@ -1,4 +1,4 @@
-[RegisterCommand(DeleteCommand, "Delete Selected Nodes")]
+[RegisterCommand(DeleteCommand, "Delete Selected Nodes", Symbols.TRASH_CAN)]
 class DeleteCommand: Command
 {
 	override void Execute(bool state) 

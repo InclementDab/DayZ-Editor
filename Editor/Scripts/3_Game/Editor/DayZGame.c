@@ -12,7 +12,7 @@ modded class DayZGame
 			
 	void DayZGame()
 	{
-		foreach (Param2<typename, string> command_param: RegisterCommand.Instances) {
+		foreach (Param3<typename, string, string> command_param: RegisterCommand.Instances) {
 			Command command = Command.Cast(command_param.param1.Spawn());
 			if (!command) {
 				Error("Invalid command");
@@ -20,6 +20,7 @@ modded class DayZGame
 			}
 			
 			command.SetDisplayName(command_param.param2);
+			command.SetIcon(command_param.param3);
 			m_Commands[command_param.param1] = command;
 			
 			if (command.GetShortcut() != string.Empty) {

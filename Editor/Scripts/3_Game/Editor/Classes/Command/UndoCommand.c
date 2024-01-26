@@ -1,4 +1,4 @@
-[RegisterCommand(UndoCommand, "Undo")]
+[RegisterCommand(UndoCommand, "Undo", Symbols.ROTATE_LEFT)]
 class UndoCommand: Command
 {
 	override void Execute(bool state) 

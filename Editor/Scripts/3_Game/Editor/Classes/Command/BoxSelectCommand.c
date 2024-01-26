@@ -1,4 +1,4 @@
-[RegisterCommand(BoxSelectCommand, "Box Selection")]
+[RegisterCommand(BoxSelectCommand, "Box Selection", Symbols.SQUARE_DASHED)]
 class BoxSelectCommand: Command
 {
 	override void Execute(bool state)

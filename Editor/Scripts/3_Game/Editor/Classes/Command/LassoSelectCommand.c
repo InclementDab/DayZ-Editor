@@ -1,4 +1,4 @@
-[RegisterCommand(LassoSelectCommand, "Lasso Selection")]
+[RegisterCommand(LassoSelectCommand, "Lasso Selection", Symbols.LASSO)]
 class LassoSelectCommand: Command
 {
 	override void Execute(bool state)

@@ -1,4 +1,4 @@
-[RegisterCommand(CircleSelectCommand, "Circle Selection")]
+[RegisterCommand(CircleSelectCommand, "Circle Selection", Symbols.CIRCLE_DASHED)]
 class CircleSelectCommand: Command
 {
 	override void Execute(bool state)

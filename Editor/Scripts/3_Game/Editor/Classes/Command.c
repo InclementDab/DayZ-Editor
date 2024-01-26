@@ -10,6 +10,7 @@ class Command: Managed
 {
 	protected bool m_Executed = GetDefaultState();
 	protected string m_DisplayName;
+	protected Symbols m_Icon;
 	
 	ref ScriptInvoker OnExecute = new ScriptInvoker();
 	
@@ -44,9 +45,14 @@ class Command: Managed
 		return m_DisplayName;
 	}
 	
+	void SetIcon(Symbols icon)
+	{
+		m_Icon = icon;
+	}
+	
 	Symbols GetIcon()
 	{
-		return string.Empty;
+		return m_Icon;
 	}
 	
 	// Good default to have, makes sense in XMLs
