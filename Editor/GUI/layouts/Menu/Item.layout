@@ -3,7 +3,7 @@ GridSpacerWidgetClass Panel {
  clipchildren 0
  ignorepointer 1
  color 0.1569 0.1569 0.098 1
- size 0 32
+ size 373 32
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -14,17 +14,17 @@ GridSpacerWidgetClass Panel {
  style Colorable
  Padding 20
  Margin 6
- "Size To Content H" 1
  content_halign center
  content_valign center
  Columns 2
  Rows 1
  {
-  FrameWidgetClass ItemIcon {
+  GridSpacerWidgetClass ItemIcon {
+   visible 1
    clipchildren 0
    ignorepointer 1
    position 0 0
-   size 128 24
+   size 87 24
    halign center_ref
    valign center_ref
    hexactpos 1
@@ -32,12 +32,17 @@ GridSpacerWidgetClass Panel {
    hexactsize 1
    vexactsize 1
    scaled 1
+   Padding 6
+   Margin 0
+   "Size To Content H" 1
+   Columns 2
+   Rows 1
    {
     FrameWidgetClass IconFrame {
      clipchildren 1
      ignorepointer 1
-     position 4 0
-     size 16 16
+     position 0 0
+     size 24 24
      valign center_ref
      hexactpos 1
      vexactpos 1
@@ -49,13 +54,13 @@ GridSpacerWidgetClass Panel {
        visible 1
        ignorepointer 1
        color 0.8314 0.8314 0.8314 1
-       size 1 1
+       size 16 16
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 0
-       vexactsize 0
+       hexactsize 1
+       vexactsize 1
        scaled 1
        image0 "set:solid image:floppy_disk"
        mode blend
@@ -68,6 +73,7 @@ GridSpacerWidgetClass Panel {
      visible 1
      ignorepointer 1
      color 0.8314 0.8314 0.8314 1
+     position 0 0
      size 76 24
      halign center_ref
      valign center_ref
@@ -76,7 +82,7 @@ GridSpacerWidgetClass Panel {
      hexactsize 1
      vexactsize 1
      scaled 1
-     text "Save As..."
+     text "File Save As..."
      font "gui/fonts/Metron"
      "exact text" 0
      "size to text h" 1
@@ -85,25 +91,90 @@ GridSpacerWidgetClass Panel {
     }
    }
   }
-  TextWidgetClass Shortcut {
+  GridSpacerWidgetClass Description {
    visible 1
    ignorepointer 1
-   color 0.5137 0.5137 0.5843 1
-   position 0 0
    size 76 24
-   halign center_ref
+   halign right_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
    scaled 1
-   text "Ctrl + Shift + S"
-   font "gui/fonts/Metron"
-   "exact text" 0
-   "size to text h" 1
-   "text halign" center
-   "text valign" center
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   content_halign center
+   content_valign center
+   Columns 1
+   Rows 1
+   {
+    FrameWidgetClass Caret {
+     visible 1
+     ignorepointer 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     {
+      ImageWidgetClass CaretImage {
+       ignorepointer 1
+       color 0.8314 0.8314 0.8314 1
+       position 7 0
+       size 14 14
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 1
+       image0 "set:regular image:arrow_right"
+       mode blend
+       "src alpha" 1
+       filter 1
+      }
+     }
+    }
+    FrameWidgetClass Shortcut {
+     visible 0
+     ignorepointer 1
+     position 0 0
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     {
+      TextWidgetClass ShortcutText {
+       visible 1
+       ignorepointer 1
+       color 0.5137 0.5137 0.5843 1
+       position 6 0
+       size 76 1
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       scaled 1
+       text "Ctrl + Shift + S"
+       font "gui/fonts/Metron"
+       "exact text" 0
+       "size to text h" 1
+       "text halign" right
+       "text valign" center
+      }
+     }
+    }
+   }
   }
  }
 }
