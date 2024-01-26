@@ -7,14 +7,23 @@ class EditorServer: EditorNode
 	{
 		// Load all default categories and placements
 		EditorNode main_node = new EditorNode(uuid, display_name, icon);
-		
+				
 		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP);
 		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", Symbols.HAND));
 		edited_objects.Add(new EditorNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
 		edited_objects.Add(new EditorNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
-		Add(edited_objects);
+		main_node.Add(edited_objects);
 		
 #ifndef SERVER
+		EditorNode commands = new EditorNode("Commands", "Commands", Symbols.COMMAND);
+		commands.Add(new BoxSelectCommand("BoxSelectCommand", "Box Select", Symbols.SQUARE_DASHED));
+		commands.Add(new CircleSelectCommand("CircleSelectCommand", "Circle Select", Symbols.CIRCLE_DASHED));
+		commands.Add(new LassoSelectCommand("LassoSelectCommand", "Lasso Select", Symbols.LASSO));
+		commands.Add(new DeleteCommand("DeleteCommand", "Delete", Symbols.TRASH));
+		commands.Add(new UndoCommand("UndoCommand", "Undo", Symbols.ROTATE_LEFT));
+		commands.Add(new RedoCommand("RedoCommand", "Redo", Symbols.ROTATE_RIGHT));
+		main_node.Add(commands);
+		
 		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects", Symbols.ADDRESS_BOOK);
 		placeable_objects.Add(new EditorNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
 		placeable_objects.Add(new EditorNode("Plants", "Plants", Symbols.TREE));
@@ -28,12 +37,12 @@ class EditorServer: EditorNode
 		placeable_objects.Add(new EditorNode("StaticObjects", "Static Objects", Symbols.OBJECT_INTERSECT));
 		placeable_objects.Add(new EditorNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT));
 		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
-		Add(placeable_objects);
+		main_node.Add(placeable_objects);
 		
 		EditorNode brushes = new EditorNode("Brushes", "Brushes", Symbols.BRUSH);
 		brushes.Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
 		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
-		Add(brushes);
+		main_node.Add(brushes);
 				
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 					
@@ -65,7 +74,7 @@ class EditorServer: EditorNode
 					category = "AI";
 				}
 				
-				this["PlaceableObjects"][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING));
+				main_node["PlaceableObjects"][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING));
 		    }
 		}
 		
@@ -99,14 +108,16 @@ class EditorServer: EditorNode
 					category = "Rocks";
 				}
 			
-				this["PlaceableObjects"][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
+				main_node["PlaceableObjects"][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
 			}
 		}
 
 		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
-			this["PlaceableObjects"]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+			main_node["PlaceableObjects"]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}
 #endif
+		
+		Add(main_node);
 	}
 	
 	void Update(bool doSim, float timeslice)

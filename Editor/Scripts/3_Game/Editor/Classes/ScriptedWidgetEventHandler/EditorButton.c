@@ -21,7 +21,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		m_IconWidget = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");
 				
 		if (Node != string.Empty) {
-			m_Node = GetDayZGame().GetMaster()["SERVER"]["CMDS"][Node];
+			m_Node = GetDayZGame().GetEditor()["Commands"][Node];
 			if (m_Node) {
 				m_Icon = m_Node.GetIcon();
 				m_Node.OnSelectionChanged.Insert(OnExecuted);				

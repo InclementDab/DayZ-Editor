@@ -2462,7 +2462,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           CommandType "BoxSelectCommand"
           }
          }
         }
@@ -2526,7 +2525,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           CommandType "CircleSelectCommand"
           }
          }
         }
@@ -2584,7 +2582,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           CommandType "LassoSelectCommand"
+           Node "LassoSelectCommand"
           }
          }
         }
@@ -3531,7 +3529,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           CommandType "UndoCommand"
           }
          }
         }
@@ -3583,7 +3580,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           CommandType "RedoCommand"
           }
          }
         }
