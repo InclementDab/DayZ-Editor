@@ -1,9 +1,7 @@
 class EditorNodeView: ScriptView
 {
 	protected EditorNodeViewController m_TemplateController;
-	
-	protected EditorNodeView m_Parent;
-	
+		
 	TextWidget Text;
 	
 	Widget Panel, Children;
@@ -55,7 +53,7 @@ class EditorNodeView: ScriptView
 		float w, h, x, y;
 		Children.GetScreenSize(w, h);		
 		m_LayoutRoot.GetScreenSize(x, y);
-		m_LayoutRoot.SetScreenSize(x, h * state + 18);
+		m_LayoutRoot.SetScreenSize(x, h * state + 24);
 		m_LayoutRoot.Update();
 		
 		Texture.Show(state);

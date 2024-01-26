@@ -2,7 +2,7 @@ FrameWidgetClass Root {
  visible 1
  clipchildren 0
  position 0 0
- size 0.99 18
+ size 0.99 24
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -11,29 +11,24 @@ FrameWidgetClass Root {
  scriptclass ""
  {
   WrapSpacerWidgetClass Wrapper {
+   clipchildren 0
+   inheritalpha 0
    ignorepointer 1
-   size 1 18
+   position 0 0
+   size 1 24
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 1
+   scaled 0
    Padding 0
    Margin 0
    {
-    FrameWidgetClass Spacer {
-     ignorepointer 1
-     position 0 0
-     size 18 18
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-    }
     FrameWidgetClass CollapseFrame {
      visible 1
      ignorepointer 0
      position 0 0
-     size 17 18
+     size 24 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -83,7 +78,7 @@ FrameWidgetClass Root {
      visible 1
      ignorepointer 1
      position 0 0
-     size 24 18
+     size 24 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -95,7 +90,7 @@ FrameWidgetClass Root {
        disabled 0
        ignorepointer 1
        position 0 0
-       size 18 18
+       size 16 16
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -118,7 +113,7 @@ FrameWidgetClass Root {
      ignorepointer 0
      color 0.0275 0.4353 0.5725 0
      position 0 0
-     size 106 18
+     size 78 0
      halign center_ref
      valign center_ref
      hexactpos 1
@@ -128,10 +123,10 @@ FrameWidgetClass Root {
      scaled 0
      draggable 0
      scriptclass ""
-     style Colorable
-     Padding 0
-     Margin 0
+     Padding 3
+     Margin 3
      "Size To Content H" 1
+     "Size To Content V" 1
      content_halign center
      content_valign center
      Columns 1
@@ -140,10 +135,10 @@ FrameWidgetClass Root {
       TextWidgetClass Text {
        visible 1
        disabled 0
-       clipchildren 1
+       clipchildren 0
        ignorepointer 1
        position 0 0
-       size 120 18
+       size 79 18
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -155,9 +150,9 @@ FrameWidgetClass Root {
        scriptclass ""
        style Normal
        text "CATEGORY"
-       font "gui/fonts/sdf_MetronBook24"
+       font "gui/fonts/Metron"
        "bold text" 0
-       "exact text" 1
+       "exact text" 0
        "exact text size" 16
        "size to text h" 1
        "size to text v" 0
@@ -172,7 +167,7 @@ FrameWidgetClass Root {
    disabled 0
    clipchildren 0
    ignorepointer 1
-   position 18 18
+   position 18 24
    size 1 1
    hexactpos 1
    vexactpos 1
@@ -194,8 +189,9 @@ FrameWidgetClass Root {
    visible 0
    ignorepointer 0
    color 1 1 1 0.3922
-   position 10 0
-   size 3 1
+   position 2 0
+   size 7 0.99
+   valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
