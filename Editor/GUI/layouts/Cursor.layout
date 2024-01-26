@@ -1,9 +1,8 @@
 FrameWidgetClass Cursor {
- visible 0
+ visible 1
  clipchildren 0
  ignorepointer 1
  color 0.0588 0.0588 0.0588 1
- position 0 0
  size 26 26
  hexactpos 1
  vexactpos 1
@@ -16,8 +15,8 @@ FrameWidgetClass Cursor {
    clipchildren 0
    ignorepointer 1
    color 0.0588 0.0588 0.0588 1
-   position -8 -8
-   size 24 24
+   position -9 -9
+   size 25 24
    halign right_ref
    valign bottom_ref
    hexactpos 1
@@ -50,6 +49,67 @@ FrameWidgetClass Cursor {
      "clamp mode" clamp
      "stretch mode" stretch_w_center
      filter 1
+    }
+   }
+  }
+  GridSpacerWidgetClass CursorTooltip {
+   visible 1
+   clipchildren 0
+   ignorepointer 1
+   color 0.098 0.098 0.098 1
+   position -42 -76
+   size 0 64
+   halign right_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 1
+   style Colorable
+   Padding 0
+   Margin 0
+   "Size To Content H" 1
+   "Size To Content V" 1
+   content_halign center
+   content_valign center
+   Columns 1
+   Rows 2
+   {
+    TextWidgetClass CursorTooltipName {
+     visible 0
+     ignorepointer 1
+     size 76 24
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "TShirt (Colored Red)"
+     font "gui/fonts/Metron"
+     "exact text" 0
+     "size to text h" 1
+     "text halign" center
+     "text valign" center
+    }
+    TextWidgetClass CursorTooltipType {
+     visible 0
+     ignorepointer 1
+     color 1 1 1 0.7843
+     size 76 24
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "TShirt_ColorRed"
+     font "gui/fonts/MetronBook"
+     "exact text" 0
+     "size to text h" 1
+     "text halign" center
+     "text valign" center
     }
    }
   }

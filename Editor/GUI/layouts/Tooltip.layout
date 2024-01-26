@@ -1,20 +1,42 @@
-PanelWidgetClass Root {
- visible 0
+GridSpacerWidgetClass Root {
+ visible 1
  color 0.3137 0.3137 0.3137 1
- position 44 44
- size 257 84
+ position 49 44
+ size 258 84
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
  scaled 1
  priority 200
- scriptclass "SizeToChild"
- style blank
+ scriptclass ""
+ style Colorable
+ "Size To Content H" 1
+ "Size To Content V" 1
+ Columns 1
+ Rows 2
  {
-  GridSpacerWidgetClass Tooltip {
-   color 0.0588 0.0784 0.0588 1
-   size 241 54
+  TextWidgetClass Name {
+   ignorepointer 1
+   size 208 24
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   text "Hoodie_Black"
+   font "gui/fonts/MetronBook"
+   "exact text" 1
+   "size to text h" 1
+   "size to text v" 0
+   "text halign" center
+   "text valign" center
+  }
+  GridSpacerWidgetClass Row1Wrap {
+   visible 1
+   ignorepointer 1
+   position 0 0
+   size 300 22
    halign center_ref
    valign center_ref
    hexactpos 1
@@ -22,25 +44,24 @@ PanelWidgetClass Root {
    hexactsize 1
    vexactsize 1
    scaled 0
-   fixaspect inside
-   style Colorable
-   Padding 4
-   Margin 4
+   Padding 0
+   Margin 0
    "Size To Content H" 1
    content_halign center
    content_valign center
-   Columns 1
-   Rows 2
+   Columns 2
+   Rows 1
    {
-    TextWidgetClass Name {
+    TextWidgetClass Description {
      ignorepointer 1
-     size 208 24
+     position 0 0
+     size 0 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      scaled 0
-     text "Hoodie_Black"
+     text "Hoodie (Black)"
      font "gui/fonts/MetronBook"
      "exact text" 1
      "size to text h" 1
@@ -48,52 +69,24 @@ PanelWidgetClass Root {
      "text halign" center
      "text valign" center
     }
-    GridSpacerWidgetClass Row1Wrap {
-     visible 1
-     ignorepointer 1
-     position 0 0
-     size 303 22
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     Padding 0
-     Margin 0
-     "Size To Content H" 1
-     content_halign center
-     content_valign center
-     Columns 2
-     Rows 1
-     {
-      TextWidgetClass Description {
-       ignorepointer 1
-       position 0 0
-       size 0 24
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       text "Hoodie (Black)"
-       font "gui/fonts/MetronBook"
-       "exact text" 1
-       "size to text h" 1
-       "size to text v" 0
-       "text halign" center
-       "text valign" center
-      }
-     }
-    }
    }
   }
- }
- {
-  ScriptParamsClass {
-   m_ChildName "Tooltip"
-   m_ResizeHorizontal 1
+  ImageWidgetClass Icon {
+   ignorepointer 1
+   position 0 0
+   size 64 64
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   image0 "set:solid image:shirt"
+   mode additive
+   "src alpha" 1
+   "clamp mode" wrap
+   filter 0
   }
  }
 }

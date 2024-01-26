@@ -115,7 +115,7 @@ class EditorNodeView: ScriptView
 		
 		EditorHud hud = GetDayZGame().GetEditor().GetHud();
 		
-		hud.SetCursor(new EditorTooltip(m_Icon, m_Node.GetUUID(), m_Node.GetUUID()));
+		hud.SetCursor(m_Icon, m_Node.GetUUID(), m_Node.GetUUID());
 		
 		EditorPlaceable placeable = EditorPlaceable.Cast(m_Node);
 		if (placeable) {
@@ -124,18 +124,13 @@ class EditorNodeView: ScriptView
 			if (entity) {
 				
 				DayZPlayer player = DayZPlayer.Cast(entity);
-				hud.Player.Show(player != null);
-				hud.Item.Show(player == null);
+				//hud.Player.Show(player != null);
+				//hud.Item.Show(player == null);
 				
-				if (player) {
-					hud.Player.SetPlayer(player);
-				} else {
-					hud.Item.SetItem(entity);
-					hud.Item.SetView(entity.GetViewIndex());
-				}
 				
-				hud.Tooltip.SetPos(30, y);
-				hud.Tooltip.Show(true);
+				
+				//hud.Tooltip.SetPos(30, y);
+				//hud.Tooltip.Show(true);
 			}
 		}
 		
@@ -151,7 +146,7 @@ class EditorNodeView: ScriptView
 		EditorHud hud = GetDayZGame().GetEditor().GetHud();
 		
 		hud.ClearCursor();
-		hud.Tooltip.Show(false);
+		//hud.Tooltip.Show(false);
 				
 		return true;
 	}
@@ -195,7 +190,9 @@ class EditorNodeView: ScriptView
 			
 	void OnSelectionChange(EditorNode selectable)
 	{
-		Panel.SetColor(EditorColors.SELECT * selectable.IsSelected());
+		if (Panel) {
+			Panel.SetColor(EditorColors.SELECT * selectable.IsSelected());
+		}
 	}
 						
 	EditorNodeViewController GetTemplateController()

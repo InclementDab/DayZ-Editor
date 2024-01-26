@@ -29,7 +29,7 @@ FrameWidgetClass Root {
    priority 100
   }
   FrameWidgetClass Inner {
-   visible 1
+   visible 0
    ignorepointer 1
    position 0 0
    size 0 0
@@ -903,68 +903,10 @@ FrameWidgetClass Root {
       }
      }
     }
-    PanelWidgetClass Tooltip {
-     visible 0
-     color 0.1059 0.1059 0.1059 1
-     position 30 0
-     size 256 256
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     style rover_sim_colorable
-     {
-      ImageWidgetClass Texture {
-       ignorepointer 1
-       color 0.2667 0.4549 0.6392 1
-       position 0 0
-       size 0.95 0.95
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 0
-       imageTexture "{E262CF82FD5DFF31}gui/textures/linear_gradient.edds"
-       mode additive
-       "src alpha" 1
-       "stretch mode" stretch_w_h
-       filter 0
-       rotation 0 0 90
-      }
-      ItemPreviewWidgetClass Item {
-       visible 0
-       ignorepointer 1
-       position 0 0
-       size 0.95 0.95
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 0
-      }
-      PlayerPreviewWidgetClass Player {
-       visible 0
-       ignorepointer 1
-       size 0.95 0.95
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 0
-      }
-     }
-    }
    }
   }
   FrameWidgetClass Right {
-   visible 1
+   visible 0
    clipchildren 0
    ignorepointer 1
    position 0 126
@@ -1042,7 +984,7 @@ FrameWidgetClass Root {
    }
   }
   FrameWidgetClass Left {
-   visible 1
+   visible 0
    clipchildren 0
    ignorepointer 1
    position 0 126
@@ -1137,7 +1079,7 @@ FrameWidgetClass Root {
    }
   }
   PanelWidgetClass Tools {
-   visible 1
+   visible 0
    ignorepointer 1
    color 0.0941 0.0941 0.0941 1
    position 0 42
@@ -2966,7 +2908,7 @@ FrameWidgetClass Root {
    }
   }
   PanelWidgetClass Menu {
-   visible 1
+   visible 0
    clipchildren 0
    ignorepointer 1
    color 0.1216 0.1216 0.1216 1
@@ -3796,8 +3738,8 @@ FrameWidgetClass Root {
     }
    }
   }
-  FrameWidgetClass m_Cursor {
-   visible 0
+  FrameWidgetClass Cursor {
+   visible 1
    clipchildren 0
    ignorepointer 1
    color 0.0588 0.0588 0.0588 1
@@ -3806,15 +3748,15 @@ FrameWidgetClass Root {
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   scaled 1
+   priority 999
    {
-    ImageWidgetClass "m_Cursor.Background" {
+    ImageWidgetClass Background {
      visible 1
      clipchildren 0
      ignorepointer 1
      color 0.0588 0.0588 0.0588 1
-     position -8 -8
-     size 24 24
+     position -9 -9
+     size 25 24
      halign right_ref
      valign bottom_ref
      hexactpos 1
@@ -3829,7 +3771,7 @@ FrameWidgetClass Root {
      "stretch mode" stretch_w_center
      filter 1
      {
-      ImageWidgetClass "m_Cursor.Foreground" {
+      ImageWidgetClass Foreground {
        visible 1
        clipchildren 0
        ignorepointer 1
@@ -3847,6 +3789,111 @@ FrameWidgetClass Root {
        "clamp mode" clamp
        "stretch mode" stretch_w_center
        filter 1
+      }
+     }
+    }
+    GridSpacerWidgetClass CursorTooltip {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     color 0.098 0.098 0.098 1
+     position -42 -76
+     size 0 64
+     halign right_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 1
+     style Colorable
+     Padding 0
+     Margin 6
+     "Size To Content H" 1
+     content_halign center
+     content_valign center
+     Columns 1
+     Rows 2
+     {
+      TextWidgetClass CursorTooltipName {
+       visible 1
+       ignorepointer 1
+       size 76 24
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "TShirt (Colored Red)"
+       font "gui/fonts/Metron"
+       "exact text" 0
+       "size to text h" 1
+       "text halign" center
+       "text valign" center
+      }
+      TextWidgetClass CursorTooltipType {
+       visible 1
+       ignorepointer 1
+       color 1 1 1 0.7843
+       size 76 24
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "TShirt_ColorRed"
+       font "gui/fonts/MetronBook"
+       "exact text" 0
+       "size to text h" 1
+       "text halign" center
+       "text valign" center
+      }
+     }
+    }
+    PanelWidgetClass CursorEntity {
+     visible 0
+     ignorepointer 1
+     color 0.1176 0.1176 0.1176 1
+     position -50 -274
+     size 196 196
+     halign right_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      ImageWidgetClass CursorEntityTexture {
+       ignorepointer 1
+       color 0.4471 0.5725 0.6863 0.7843
+       size 0.95 0.95
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       fixaspect fixwidth
+       imageTexture "{E262CF82FD5DFF31}gui/textures/linear_gradient.edds"
+       mode additive
+       "src alpha" 1
+       "stretch mode" stretch_w_h
+       filter 0
+       rotation 0 0 90
+      }
+      ItemPreviewWidgetClass CursorEntityPreview {
+       ignorepointer 1
+       size 0.95 0.95
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
       }
      }
     }

@@ -32,12 +32,7 @@ class Editor: EditorServer
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorHistory m_History = new EditorHistory();
-	
-	bool IsLocal()
-	{
-		return m_UUID == GetGame().GetUserManager().GetTitleInitiator().GetUid();
-	}
-	
+		
 	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
 		m_Identity = identity;
@@ -640,5 +635,10 @@ class Editor: EditorServer
 	bool IsActive()
 	{
 		return m_Camera && m_Camera.IsActive();
+	}
+	
+	bool IsLocal()
+	{
+		return m_UUID == GetGame().GetUserManager().GetTitleInitiator().GetUid();
 	}
 }

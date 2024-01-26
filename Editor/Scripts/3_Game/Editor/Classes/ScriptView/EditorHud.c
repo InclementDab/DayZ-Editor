@@ -19,7 +19,56 @@ class CompassTick: ScriptView
 class EditorHud: ScriptView
 {	
 	protected EditorHudController m_TemplateController;
+	
+	Widget Cursor, CursorTooltip;
+	TextWidget CursorTooltipName, CursorTooltipType;
+	ImageWidget Foreground, Background;
+	
+	Widget CursorEntity;
+	ItemPreviewWidget CursorEntityPreview;
+	protected Object m_TooltipObject;
+	
+	void SetCursor(Symbols cursor, string name = string.Empty, string type = string.Empty)
+	{		
+		CursorTooltip.Show(name != string.Empty || type != string.Empty);
 		
+		vector mat[4];
+		Math3D.MatrixOrthogonalize4(mat);
+		m_TooltipObject = Editor.CreateObject(type, mat);
+	
+		CursorEntity.Show(false);
+		if (m_TooltipObject) {
+			EntityAI entity = EntityAI.Cast(m_TooltipObject);
+			if (entity) {
+				CursorEntity.Show(true);
+				CursorEntityPreview.SetItem(entity);
+				CursorEntityPreview.SetView(entity.GetViewIndex());
+			}
+		}
+		
+		CursorTooltipName.SetText(name);
+		CursorTooltipType.SetText(type);
+		
+		if (Foreground) {
+			Foreground.LoadImageFile(0, cursor.Thin());
+			Foreground.SetImage(0);
+		}
+
+		if (Background) {
+			Background.LoadImageFile(0, cursor.Solid());
+			Background.SetImage(0);
+		}
+		
+		SetCursorWidget(Cursor);
+		Cursor.Show(true);
+	}
+	
+	void ClearCursor()
+	{
+		GetGame().ObjectDelete(m_TooltipObject);
+		SetCursorWidget(null);
+	}
+	
 	// View Properties
 	Widget Left, Right, Inner, Tools, Menu;
 	
@@ -36,15 +85,12 @@ class EditorHud: ScriptView
 	Widget Notification;
 	TextWidget NotificationText;
 	
-	Widget Tooltip;
 	ItemPreviewWidget Item;
 	PlayerPreviewWidget Player;
 	
 	SelectionMode CurrentSelectionMode = SelectionMode.BOX;
 	
 	protected ref array<vector> m_LassoHistory = {};
-	
-	protected ref CursorView m_Cursor;
 	
 	protected Widget m_DraggedBar;
 	protected int m_DragX = -1, m_DragY = -1;
@@ -268,7 +314,7 @@ class EditorHud: ScriptView
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
-				SetCursor(new CursorView(Symbols.LEFT_RIGHT));
+				SetCursor(Symbols.LEFT_RIGHT);
 				break;
 			}
 		}
@@ -418,17 +464,7 @@ class EditorHud: ScriptView
 				
 		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetName(), split_string[0], component_type, component_index);
 	}*/
-		
-	void SetCursor(notnull CursorView cursor_view)
-	{
-		m_Cursor = cursor_view;
-	}
-	
-	void ClearCursor()
-	{
-		delete m_Cursor;
-	}
-		
+				
 	// Dialog Control`
 	static ref DialogBase CurrentDialog;
 	
