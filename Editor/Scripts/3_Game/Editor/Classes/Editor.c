@@ -462,6 +462,10 @@ class Editor: EditorServer
 			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL);
 		}
 		
+		if (!object) {
+			return null;
+		}
+		
 		object.SetTransform(transform);
 		object.Update();
 		
