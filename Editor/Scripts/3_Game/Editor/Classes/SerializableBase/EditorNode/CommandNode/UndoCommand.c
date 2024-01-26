@@ -1,13 +1,13 @@
 [RegisterCommand(UndoCommand, "Undo", Symbols.ROTATE_LEFT)]
-class UndoCommand: Command
+class UndoCommand: EditorNode
 {
-	override void Execute(bool state) 
+	override void SetSelected(bool state) 
 	{
 		GetDayZGame().GetEditor().GetHud().ShowNotification("Test");
 		GetDayZGame().GetEditor().Undo();
 	}
-	
-	override bool CanExecute()
+		
+	override bool CanSelect()
 	{
 		return GetDayZGame().GetEditor().CanUndo();
 	}

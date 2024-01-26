@@ -1,8 +1,9 @@
 class EditorButton: ScriptedWidgetEventHandler
 {	
-	protected Command m_Command;
+	protected EditorNode m_Node;
 	
-	reference string CommandType;
+	// Assumed node is m_Master["SERVER"]["CMDS"]
+	reference string Node;
 	
 	protected Symbols m_Icon;
 	protected Widget m_LayoutRoot;
@@ -19,13 +20,13 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 		m_IconWidget = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");
 				
-		if (CommandType != string.Empty) {
-			m_Command = GetDayZGame().GetCommand(CommandType.ToType());
-			m_Icon = m_Command.Icon;
-			if (m_Command) {
-				m_Command.OnExecute.Insert(OnExecuted);				
-				m_Button.SetState(m_Command.GetDefaultState());
-				m_IconWidget.LoadImageFile(0, Ternary<Symbol>.If(m_Command.GetDefaultState(), m_Icon.Solid(), m_Icon.Regular()));
+		if (Node != string.Empty) {
+			m_Node = GetDayZGame().GetMaster()["SERVER"]["CMDS"][Node];
+			if (m_Node) {
+				m_Icon = m_Node.GetIcon();
+				m_Node.OnSelectionChanged.Insert(OnExecuted);				
+				m_Button.SetState(m_Node.GetDefaultState());
+				m_IconWidget.LoadImageFile(0, Ternary<Symbol>.If(m_Node.GetDefaultState(), m_Icon.Solid(), m_Icon.Regular()));
 				m_IconWidget.SetImage(0);
 			}
 		}
@@ -54,8 +55,8 @@ class EditorButton: ScriptedWidgetEventHandler
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		if (button == 0 && m_Command) {
-			m_Command.Execute(!m_Command.IsExecuted());
+		if (button == 0 && m_Node) {
+			m_Node.SetSelected(!m_Node.IsSelected());
 		}
 		
 		return true;
@@ -65,8 +66,8 @@ class EditorButton: ScriptedWidgetEventHandler
 	{
 		WidgetAnimator.Animate(m_IconWidget, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
 		
-		if (m_Command) {
-			GetDayZGame().GetEditor().GetHud().SetCursor(m_Icon, m_Command.DisplayName, m_Command.GetShortcutString());
+		if (m_Node) {
+			GetDayZGame().GetEditor().GetHud().SetCursor(m_Icon, m_Node.GetDisplayName(), m_Node.GetShortcutString());
 		}
 		
 		return true;

@@ -1,22 +1,31 @@
 class EditorCommandMenuItem: ScriptView
 {
-	Widget Panel;
+	Widget Panel, Shortcut, Caret;
 	ImageWidget Icon;
-	TextWidget Name, Shortcut;
+	TextWidget Name, ShortcutText;
 	
-	void EditorCommandMenuItem(typename command_type)
-	{
-		Command command = GetDayZGame().GetCommand(command_type);
-		if (!command) {
-			Error("Unregistered command " + command_type);
-			return;
+	void EditorCommandMenuItem(EditorNode node)
+	{		
+		Name.SetText(node.GetDisplayName());
+		
+		if (node.GetShortcutString() != string.Empty) {
+			Shortcut.Show(true);
+			ShortcutText.SetText(node.GetShortcutString());
 		}
 		
-		Name.SetText(command.DisplayName);
-		Shortcut.SetText(command.GetShortcutString());
+		if (node.GetChildren().Count() > 0) {
+			
+			map<string, ref EditorNode> nodes = node.GetChildren();
+			foreach (string uuid, EditorNode node1: nodes) {
+				
+				
+			}
+			
+			Caret.Show(true);
+		}
 		
-		if (command.Icon != string.Empty) {
-			Icon.LoadImageFile(0, command.Icon.Solid());
+		if (node.GetIcon() != string.Empty) {
+			Icon.LoadImageFile(0, node.GetIcon().Solid());
 			Icon.SetImage(0);
 			Icon.Show(true);
 		}

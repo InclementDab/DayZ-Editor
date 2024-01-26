@@ -29,10 +29,15 @@ class EditorNode: SerializableBase
 		m_UUID = uuid;
 		m_DisplayName = display_name;
 		m_Icon = icon;
-		
+				
 #ifndef SERVER
 #ifndef WORKBENCH
 		m_NodeView = new EditorNodeView(m_DisplayName, this, m_Icon);
+		
+		UAInput inp = GetUApi().GetInputByName(GetShortcut());
+		if (inp.BindKeyCount() > 0) {
+			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(PollShortcutExecution);
+		}
 #endif
 #endif
 	}
@@ -40,6 +45,48 @@ class EditorNode: SerializableBase
 	void ~EditorNode()
 	{
 		delete m_NodeView;
+	}
+	
+	protected void PollShortcutExecution()
+	{
+		if (!GetDayZGame().IsLeftCtrlDown() || GetFocus() && GetFocus().IsInherited(EditBoxWidget) || !CanSelect()) {
+			return;
+		}
+				 			
+		string input_name = GetShortcut();
+		switch (GetShortcutType()) {
+			case ShortcutKeyType.PRESS: {
+				if (GetGame().GetInput().LocalPress(input_name)) {
+					SetSelected(true);
+				}
+				
+				break;
+			}
+			
+			case ShortcutKeyType.DOUBLE: {
+				if (GetGame().GetInput().LocalDbl(input_name)) {
+					SetSelected(true);
+				}
+				
+				break;
+			}
+			
+			case ShortcutKeyType.HOLD: {
+				if (GetGame().GetInput().LocalHold(input_name)) {
+					SetSelected(true);
+				}
+				
+				break;
+			}
+			
+			case ShortcutKeyType.TOGGLE: {
+				if (GetGame().GetInput().LocalPress(input_name)) {
+					SetSelected(!IsSelected());
+				}
+				
+				break;
+			}
+		}
 	}
 	
 	void Synchronize(PlayerIdentity identity = null)
@@ -85,7 +132,7 @@ class EditorNode: SerializableBase
 	{
 		return this[uuid];
 	}
-	
+		
 	map<string, ref EditorNode> GetChildren()
 	{
 		return m_Children;
@@ -230,6 +277,48 @@ class EditorNode: SerializableBase
 		}
 				
 		OnSelectionChanged.Invoke(this);
+	}
+	
+	bool GetDefaultState()
+	{
+		return false;
+	}
+	
+	bool CanSelect()
+	{
+		return true;
+	}
+		
+	// Good default to have, makes sense in XMLs
+	string GetShortcut()
+	{
+		return ClassName();
+	}
+	
+	string GetShortcutString() 
+	{
+		string result;
+		UAInput inp = GetUApi().GetInputByName(GetShortcut());
+		for (int i = 0; i < inp.BindKeyCount(); i++) { 
+			if (inp.CheckBindDevice(i, EInputDeviceType.MOUSE_AND_KEYBOARD)) {
+				string button_name = GetUApi().GetButtonName(inp.GetBindKey(i));
+				button_name.Replace("Left ", "");
+				button_name.Replace("Right ", "R");
+				
+				result += button_name;
+			}
+			
+			if (i != inp.BindKeyCount() - 1) {
+				result += " + ";
+			}
+		}
+		
+		return result;
+	}
+	
+	ShortcutKeyType GetShortcutType()
+	{
+		return ShortcutKeyType.PRESS;
 	}
 	
 	bool IsSelected() 

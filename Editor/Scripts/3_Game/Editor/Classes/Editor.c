@@ -32,6 +32,8 @@ class Editor: EditorServer
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorHistory m_History = new EditorHistory();
+	
+	protected ref map<string, EditorNode> m_CommandShortcutMap = new map<string, EditorNode>();
 		
 	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
@@ -65,7 +67,7 @@ class Editor: EditorServer
 		if (!m_Camera) {
 			return;
 		}
-		
+			
 		if (GetWidgetUnderCursor() && !GetWidgetUnderCursor().GetName().Contains("Panel")) {
 			return;
 		}

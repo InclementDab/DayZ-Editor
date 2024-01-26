@@ -4,31 +4,9 @@ modded class DayZGame
 	static const int RPC_REQUEST_SYNC = 54364;
 	static const int RPC_NODE_SYNC = 54365;
 	
-	protected ref map<typename, ref Command> m_Commands = new map<typename, ref Command>();
-	protected ref map<string, Command> m_CommandShortcutMap = new map<string, Command>();
-	
 	// Created on client AND server, assumed existence always. RPC_SYNC and Synchronize will be relying on this
 	protected ref EditorNode m_Master = new EditorNode(string.Empty, string.Empty, string.Empty);
 			
-	void DayZGame()
-	{
-		foreach (Param3<typename, string, string> command_param: RegisterCommand.Instances) {
-			Command command = Command.Cast(command_param.param1.Spawn());
-			if (!command) {
-				Error("Invalid command");
-				continue;
-			}
-			
-			command.DisplayName = command_param.param2;
-			command.Icon = command_param.param3;
-			m_Commands[command_param.param1] = command;
-			
-			if (command.GetShortcut() != string.Empty) {
-				m_CommandShortcutMap[command.GetShortcut()] = command;
-			}
-		}
-	}
-		
 	override void SetMissionPath(string path)
 	{
 		super.SetMissionPath(path);
@@ -40,44 +18,6 @@ modded class DayZGame
 	override void OnUpdate(bool doSim, float timeslice)
 	{
 		super.OnUpdate(doSim, timeslice);
-						
-		if (IsLeftCtrlDown()) {
-			foreach (string input_name, Command command: m_CommandShortcutMap) {		
-				if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
-					continue;
-				}
-						 
-				if (!command || !command.CanExecute()) {
-					continue;
-				}
-				
-				switch (command.GetShortcutType()) {
-					case ShortcutKeyType.PRESS: {
-						if (GetGame().GetInput().LocalPress(input_name)) {
-							command.Execute(true);
-						}
-						
-						break;
-					}
-					
-					case ShortcutKeyType.DOUBLE: {
-						if (GetGame().GetInput().LocalDbl(input_name)) {
-							command.Execute(true);
-						}
-						
-						break;
-					}
-					
-					case ShortcutKeyType.HOLD: {
-						if (GetGame().GetInput().LocalHold(input_name)) {
-							command.Execute(true);
-						}
-						
-						break;
-					}
-				}
-			}
-		}
 		
 		if (GetEditor()) {
 			GetEditor().Update(doSim, timeslice);
@@ -143,12 +83,7 @@ modded class DayZGame
 		
 		super.OnRPC(sender, target, rpc_type, ctx);
 	}
-	
-	Command GetCommand(typename command)
-	{
-		return m_Commands[command];
-	}
-	
+		
 	ref array<ref Param3<string, vector, float>> DebugTexts = {};
 	
 	void DebugDrawText(string text, vector pos, float size)

@@ -1,7 +1,7 @@
 [RegisterCommand(DeleteCommand, "Delete Selected Nodes", Symbols.TRASH_CAN)]
-class DeleteCommand: Command
+class DeleteCommand: EditorNode
 {
-	override void Execute(bool state) 
+	override void SetSelected(bool state) 
 	{
 		Print("Cringe"); 
 		foreach (EditorNode node: EditorNode.SelectedObjects) {
