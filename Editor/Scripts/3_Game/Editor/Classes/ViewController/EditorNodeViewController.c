@@ -12,6 +12,10 @@ class EditorNodeViewController: ViewController
 	{
 		switch (property_name) {
 			case "CollapseState": {
+				if (!CollapseIcon) {
+					break;
+				}
+				
 				CollapseIcon.LoadImageFile(0, Ternary<string>.If(!CollapseState, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
 				CollapseIcon.SetImage(0);
 				

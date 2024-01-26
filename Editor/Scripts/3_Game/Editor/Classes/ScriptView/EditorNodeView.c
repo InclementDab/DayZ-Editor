@@ -16,9 +16,7 @@ class EditorNodeView: ScriptView
 	protected Symbols m_Icon;
 	
 	protected EditorNode m_Node;
-	
-	protected ref EditorEntityTooltip m_EntityTooltip;
-	
+
 	void EditorNodeView(string text, EditorNode node, Symbols icon)
 	{
 		m_TemplateController = EditorNodeViewController.Cast(m_Controller);
@@ -87,14 +85,29 @@ class EditorNodeView: ScriptView
 			WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
 		}
 		
-		GetDayZGame().GetEditor().GetHud().SetCursor(new EditorTooltip(m_Icon, m_Node.GetUUID(), m_Node.GetUUID()));
+		EditorHud hud = GetDayZGame().GetEditor().GetHud();
+		
+		hud.SetCursor(new EditorTooltip(m_Icon, m_Node.GetUUID(), m_Node.GetUUID()));
 		
 		EditorPlaceable placeable = EditorPlaceable.Cast(m_Node);
 		if (placeable) {
 			Object object = GetGame().CreateObjectEx(placeable.GetUUID(), vector.Zero, ECE_LOCAL);
 			EntityAI entity = EntityAI.Cast(object);
 			if (entity) {
-				GetDayZGame().GetEditor().GetHud().SetEntityTooltip(y, entity);
+				
+				DayZPlayer player = DayZPlayer.Cast(entity);
+				hud.Player.Show(player != null);
+				hud.Item.Show(player == null);
+				
+				if (player) {
+					hud.Player.SetPlayer(player);
+				} else {
+					hud.Item.SetItem(entity);
+					hud.Item.SetView(entity.GetViewIndex());
+				}
+				
+				hud.Tooltip.SetPos(30, y);
+				hud.Tooltip.Show(true);
 			}
 		}
 		
@@ -107,9 +120,10 @@ class EditorNodeView: ScriptView
 			WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
 		}
 		
-		GetDayZGame().GetEditor().GetHud().ClearCursor();
+		EditorHud hud = GetDayZGame().GetEditor().GetHud();
 		
-		GetDayZGame().GetEditor().GetHud().ClearEntityTooltip();
+		hud.ClearCursor();
+		hud.Tooltip.Show(false);
 				
 		return true;
 	}
