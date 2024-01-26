@@ -45,7 +45,7 @@ class EditorCommandMenuItem: ScriptView
 class EditorMenuItem: ScriptView
 {
 	Widget Panel;
-	ImageWidget IconWidget;
+	ImageWidget Foreground, Background;
 	TextWidget Name, Shortcut;
 	
 	void EditorMenuItem(string name, string desc = "", Symbols icon = "")
@@ -56,8 +56,11 @@ class EditorMenuItem: ScriptView
 		}
 		
 		if (icon != string.Empty) {
-			IconWidget.LoadImageFile(0, icon.Solid());
-			IconWidget.SetImage(0);
+			Background.LoadImageFile(0, icon.Solid());
+			Background.SetImage(0);			
+			
+			Foreground.LoadImageFile(0, icon.Thin());
+			Foreground.SetImage(0);
 		}
 	}	
 	

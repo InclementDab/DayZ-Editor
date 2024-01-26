@@ -1,117 +1,123 @@
-FrameWidgetClass Item {
- position 0 0
- size 1 34
- hexactpos 1
- vexactpos 1
- hexactsize 0
- vexactsize 1
- scaled 0
- {
-  PanelWidgetClass Panel {
-   disabled 0
+  GridSpacerWidgetClass Grid {
    ignorepointer 1
-   color 0.3255 0.451 0.5765 0
-   position 0 0
-   size 1 1
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   scaled 0
-   style rover_sim_colorable
-  }
-  TextWidgetClass Name {
-   visible 1
-   ignorepointer 1
-   size 76 24
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   text "TShirt (Colored Red)"
-   font "gui/fonts/Metron"
-   "exact text" 0
-   "size to text h" 1
-   "text halign" center
-   "text valign" center
-  }
-  FrameWidgetClass Icon {
-   ignorepointer 1
-   position 12 0
-   size 24 24
-   valign center_ref
+   color 0.098 0.098 0.098 1
+   size 72 34
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
    scaled 0
+   Padding 40
+   Margin 6
+   "Size To Content H" 1
+   content_halign center
+   Columns 2
+   Rows 1
    {
-    ImageWidgetClass Background {
-     visible 1
-     clipchildren 0
+    FrameWidgetClass IconFrame {
      ignorepointer 1
-     color 0.0588 0.0588 0.0588 1
-     position 0 0
-     size 0.8 0.8
-     halign center_ref
-     valign center_ref
+     position 10 10
+     size 217 48
      hexactpos 1
      vexactpos 1
-     hexactsize 0
-     vexactsize 0
+     hexactsize 1
+     vexactsize 1
      scaled 0
-     image0 "set:regular image:left_right"
-     mode blend
-     "src alpha" 1
-     "clamp mode" clamp
-     "stretch mode" stretch_w_center
-     filter 1
      {
-      ImageWidgetClass Foreground {
-       visible 1
-       clipchildren 0
+      FrameWidgetClass Icon {
        ignorepointer 1
-       size 1 1
-       halign center_ref
+       position 10 0
+       size 32 32
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 0
-       vexactsize 0
+       hexactsize 1
+       vexactsize 1
        scaled 0
-       image0 "set:thin image:left_right"
-       mode blend
-       "src alpha" 1
-       "clamp mode" clamp
-       "stretch mode" stretch_w_center
-       filter 1
+       userID 1
+       {
+        ImageWidgetClass Background {
+         visible 1
+         clipchildren 0
+         ignorepointer 1
+         color 0.3922 0.3922 0.3922 1
+         position 0 0
+         size 0.8 0.8
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         image0 "set:solid image:left_right"
+         mode blend
+         "src alpha" 1
+         "clamp mode" clamp
+         "stretch mode" stretch_w_center
+         filter 1
+         {
+          ImageWidgetClass Foreground {
+           visible 1
+           clipchildren 0
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           image0 "set:thin image:left_right"
+           mode blend
+           "src alpha" 1
+           "clamp mode" clamp
+           "stretch mode" stretch_w_center
+           filter 1
+          }
+         }
+        }
+       }
+      }
+      TextWidgetClass NameText {
+       visible 1
+       ignorepointer 1
+       position 52 0
+       size 76 24
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       text "Undo"
+       font "gui/fonts/Metron"
+       "exact text" 0
+       "size to text h" 1
+       "text valign" center
       }
      }
     }
+    TextWidgetClass Shortcut {
+     ignorepointer 1
+     color 1 1 1 0.7843
+     position 16 0
+     size 55 21
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     text "Ctrl + Z"
+     font "gui/fonts/Metron"
+     "exact text" 0
+     "size to text h" 1
+     "text halign" right
+     "text valign" center
+    }
    }
   }
-  TextWidgetClass Shortcut {
-   ignorepointer 1
-   color 1 1 1 0.7843
-   position 16 0
-   size 55 21
-   halign right_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   scaled 0
-   text "Ctrl + Z"
-   font "gui/fonts/Metron"
-   "exact text" 0
-   "size to text h" 1
-   "text halign" right
-   "text valign" center
-  }
- }
-}
+ 
