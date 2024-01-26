@@ -31,7 +31,9 @@ class EditorNode: SerializableBase
 		m_Icon = icon;
 		
 #ifndef SERVER
+#ifndef WORKBENCH
 		m_NodeView = new EditorNodeView(m_DisplayName, this, m_Icon);
+#endif
 #endif
 	}
 	

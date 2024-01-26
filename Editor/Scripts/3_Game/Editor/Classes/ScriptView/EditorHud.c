@@ -18,22 +18,7 @@ class CompassTick: ScriptView
 
 class EditorHud: ScriptView
 {	
-	/*
-	override bool UseMouse()
-	{
-		return true;
-	}
-	
-	override array<string> GetInputExcludes()
-	{
-		return { "menu" };
-	}
-	
-	override array<int> GetInputRestrictions()
-	{
-		return { UAWalkRunForced };
-	}*/
-	
+	protected ref EditorEntityTooltip m_EntityTooltip;	
 	protected EditorHudController m_TemplateController;
 		
 	// View Properties
@@ -219,7 +204,22 @@ class EditorHud: ScriptView
 			m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
 		}
 	}
-						
+			
+	void SetEntityTooltip(int y, notnull EntityAI entity)
+	{
+		m_EntityTooltip = new EditorEntityTooltip(entity);
+		
+		float x_s, y_s;
+		LeftDragZone.GetScreenPos(x_s, y_s);
+		
+		m_EntityTooltip.GetLayoutRoot().SetPos(x_s + 30, y);
+	}
+	
+	void ClearEntityTooltip()
+	{
+		delete m_EntityTooltip;
+	}
+				
 	void OnDiscordButtonExecute(ButtonCommandArgs args)
 	{
 		

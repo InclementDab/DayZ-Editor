@@ -7,7 +7,7 @@ class EditorNodeView: ScriptView
 	TextWidget Text;
 	
 	Widget Panel;
-	ImageWidget IconImage, CollapseIcon;
+	ImageWidget IconImage, CollapseIcon, Texture;
 		
 	protected bool m_IsBeingDragged;
 	protected string m_Text;
@@ -83,27 +83,18 @@ class EditorNodeView: ScriptView
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		//WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
+		if (w == Texture) {
+			WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
+		}
 		
 		GetDayZGame().GetEditor().GetHud().SetCursor(new EditorTooltip(m_Icon, m_Node.GetUUID(), m_Node.GetUUID()));
 		
-		// todo: hack
 		EditorPlaceable placeable = EditorPlaceable.Cast(m_Node);
 		if (placeable) {
-			vector matrix[4];
-			Math3D.MatrixIdentity4(matrix);			
-			Object object = Editor.CreateObject(placeable.GetUUID(), matrix);
-						
+			Object object = GetGame().CreateObjectEx(placeable.GetUUID(), vector.Zero, ECE_LOCAL);
 			EntityAI entity = EntityAI.Cast(object);
 			if (entity) {
-				m_EntityTooltip = new EditorEntityTooltip(entity);
-				
-				float x_s, y_s, _;
-				m_LayoutRoot.GetScreenPos(x_s, y_s);
-				
-				GetDayZGame().GetEditor().GetHud().LeftDragZone.GetScreenPos(x_s, _);
-				
-				m_EntityTooltip.GetLayoutRoot().SetPos(x_s + 30, y_s);
+				GetDayZGame().GetEditor().GetHud().SetEntityTooltip(y, entity);
 			}
 		}
 		
@@ -112,16 +103,14 @@ class EditorNodeView: ScriptView
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{				
-		GetDayZGame().GetEditor().GetHud().ClearCursor();
-		
-		if (m_EntityTooltip) {
-			delete m_EntityTooltip;
+		if (w == Texture) {
+			WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
 		}
 		
-		//if (!m_Button.GetState()) {
-			//WidgetAnimator.Animate(m_Icon, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
-		//}
+		GetDayZGame().GetEditor().GetHud().ClearCursor();
 		
+		GetDayZGame().GetEditor().GetHud().ClearEntityTooltip();
+				
 		return true;
 	}
 	
