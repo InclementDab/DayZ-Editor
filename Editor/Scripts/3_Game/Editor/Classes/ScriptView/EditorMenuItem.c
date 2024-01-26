@@ -1,7 +1,7 @@
 class EditorCommandMenuItem: ScriptView
 {
 	Widget Panel;
-	ImageWidget IconWidget;
+	ImageWidget Background, Foreground;
 	TextWidget Name, Shortcut;
 	
 	void EditorCommandMenuItem(typename command_type)
@@ -16,13 +16,18 @@ class EditorCommandMenuItem: ScriptView
 		Shortcut.SetText(command.GetShortcutString());
 		
 		if (command.GetIcon() != string.Empty) {
-			IconWidget.LoadImageFile(0, command.GetIcon().Solid());
+			Background.LoadImageFile(0, command.GetIcon().Solid());
+			Background.SetImage(0);
+			Foreground.LoadImageFile(0, command.GetIcon().Thin());
+			Foreground.SetImage(0);
 		}
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		WidgetAnimator.Animate(Panel, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
+		WidgetAnimator.AnimateColor(Name, COLOR_BLACK, 100);
+		WidgetAnimator.AnimateColor(Shortcut, COLOR_BLACK, 100);
 		
 		return true;
 	}
@@ -30,7 +35,8 @@ class EditorCommandMenuItem: ScriptView
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		WidgetAnimator.Animate(Panel, WidgetAnimatorProperty.COLOR_A, 0, 100);
-		
+		WidgetAnimator.AnimateColor(Name, COLOR_WHITE, 100);
+		WidgetAnimator.AnimateColor(Shortcut, COLOR_WHITE, 100);
 		return true;
 	}
 	

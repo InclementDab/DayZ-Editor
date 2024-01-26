@@ -88,6 +88,8 @@ class EditorHud: ScriptView
 		if (input.LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {
 			m_DragX = mouse_x;
 			m_DragY = mouse_y;
+			
+			Menu.Show(false);
 		}
 		
 		float heading = GetDayZGame().GetEditor().GetCamera().GetDirection()[1];
@@ -270,7 +272,6 @@ class EditorHud: ScriptView
 	{
 		Cursor.Show(false);
 		GetGame().ObjectDelete(m_TooltipObject);
-		Menu.Show(false);
 	}
 		
 	void OnDiscordButtonExecute(ButtonCommandArgs args)
