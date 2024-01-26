@@ -1,4 +1,4 @@
-[RegisterCommand(UndoCommand)]
+[RegisterCommand(UndoCommand, "Undo")]
 class UndoCommand: Command
 {
 	override void Execute(bool state) 

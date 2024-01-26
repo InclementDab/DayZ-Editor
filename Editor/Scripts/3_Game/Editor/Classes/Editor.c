@@ -37,9 +37,20 @@ class Editor: EditorServer
 	{
 		m_Identity = identity;
 		m_Player = player;	
-		if (GetGame().IsDedicatedServer()) {
-			m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_SETUP));
+		
+		// Its me!
+		if (!IsLocal()) {
+			return;
 		}
+		
+		m_Hud = new EditorHud();
+		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("PlaceableObjects").GetNodeView());
+		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("Brushes").GetNodeView());
+		//m_Hud.GetTemplateController().RightListItems.Insert(GetDayZGame().GetMaster().GetNode("SERVER").GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(GetNode("EditedObjects").GetNodeView());
+				
+		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
+		m_Camera.SetActive(true);
 	}
 
 	void ~Editor() 
@@ -51,8 +62,15 @@ class Editor: EditorServer
 	override void Update(bool doSim, float timeslice)
 	{
 		Input input = GetGame().GetInput();
-		Raycast raycast = m_Camera.PerformCursorRaycast();		
+		if (!m_Camera) {
+			return;
+		}
 		
+		if (GetWidgetUnderCursor() && !GetWidgetUnderCursor().GetName().Contains("Panel")) {
+			return;
+		}
+		
+		Raycast raycast = m_Camera.PerformCursorRaycast();	
 		if (Tool && !Tool.Update(timeslice, raycast)) {
 			return; // MAYBE DDONT DO THIS HERE
 		}
@@ -86,12 +104,11 @@ class Editor: EditorServer
 		}
 		
 		if (input.LocalPress_ID(UATempRaiseWeapon)) {
-			EditorNode.ClearSelections();
+			EditorNode.ClearSelections();			
 			return;
 		}
 		
 		if (input.LocalPress_ID(UAFire)) {
-			//Print(EditorObject.ByObject[raycast.Hit]);
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
 				EditorNode.ClearSelections();
@@ -99,8 +116,6 @@ class Editor: EditorServer
 			
 			if (raycast.Hit && EditorObject.ByObject[raycast.Hit]) {
 				EditorObject editor_object = EditorObject.ByObject[raycast.Hit];
-				//Print(editor_object);
-				
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					editor_object.SetSelected(!editor_object.IsSelected());
 				} else {
@@ -108,31 +123,29 @@ class Editor: EditorServer
 				}
 			}
 			
-			// Cursed but we ship it
-			if (!GetWidgetUnderCursor() || !GetWidgetUnderCursor().GetName().Contains("Panel")) {
-				foreach (EditorObject editor_object_to_place: Placing) {
-					EditorFootprint footprint = new EditorFootprint();
-					int tree_depth = editor_object_to_place.GetParentDepth();
-					footprint.Data.GetWriteContext().Write(tree_depth);
-					for (int i = tree_depth - 1; i >= 0; i--) {
-						EditorNode parent = editor_object_to_place.GetParentAtDepth(i);
-						footprint.Data.GetWriteContext().Write(parent.GetUUID());
-						footprint.Data.GetWriteContext().Write(parent.Type().ToString());
-					}
-
-					editor_object_to_place.Write(footprint.Data.GetWriteContext(), 0);
-					
-					this["EditedObjects"]["PlacedObjects"].Add(editor_object_to_place);
-		
-					// Synchronize to this id
-					this["EditedObjects"]["PlacedObjects"].Synchronize();
-					
-					// remove it from placing
-					Placing.RemoveItem(editor_object_to_place);
-					PlaySound(EditorSounds.PLOP);
-					m_History.InsertAction(footprint);
+			foreach (EditorObject editor_object_to_place: Placing) {
+				EditorFootprint footprint = new EditorFootprint();
+				int tree_depth = editor_object_to_place.GetParentDepth();
+				footprint.Data.GetWriteContext().Write(tree_depth);
+				for (int i = tree_depth - 1; i >= 0; i--) {
+					EditorNode parent = editor_object_to_place.GetParentAtDepth(i);
+					footprint.Data.GetWriteContext().Write(parent.GetUUID());
+					footprint.Data.GetWriteContext().Write(parent.Type().ToString());
 				}
+
+				editor_object_to_place.Write(footprint.Data.GetWriteContext(), 0);
+				
+				this["EditedObjects"]["PlacedObjects"].Add(editor_object_to_place);
+	
+				// Synchronize to this id
+				this["EditedObjects"]["PlacedObjects"].Synchronize();
+				
+				// remove it from placing
+				Placing.RemoveItem(editor_object_to_place);
+				PlaySound(EditorSounds.PLOP);
+				m_History.InsertAction(footprint);
 			}
+			
 		}
 		
 		if (input.LocalHold_ID(UAFire)) {
@@ -260,7 +273,7 @@ class Editor: EditorServer
 		}
 		
 		if (input.LocalPress("EditorToggleCursor")) {
-			GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
+			GetGame().GetUIManager().ShowUICursor(!GetGame().GetUIManager().IsCursorVisible());
 			m_Hud.ClearCursor();
 		}
 		
@@ -270,33 +283,7 @@ class Editor: EditorServer
 			}
 		}
 	}
-	
-	void SetActive(bool active)
-	{
-		// Its me!
-		if (!IsLocal()) {
-			return;
-		}
-		
-		m_Hud = new EditorHud();
-		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("PlaceableObjects").GetNodeView());
-		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("Brushes").GetNodeView());
-		//m_Hud.GetTemplateController().RightListItems.Insert(GetDayZGame().GetMaster().GetNode("SERVER").GetNodeView());
-		m_Hud.GetTemplateController().RightListItems.Insert(GetNode("EditedObjects").GetNodeView());
-		
-		if (active) {
-			m_Camera.SetActive(true);
-			m_Hud.Show(true);
-		} else {
-			m_Hud.Show(false);
-			
-			GetDayZGame().SelectPlayer(m_Identity, m_Player);
-			Hud hud = GetDayZGame().GetMission().GetHud();
-			hud.ShowHudUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.HUD));
-			hud.ShowQuickbarUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.QUICKBAR));
-		}
-	}
-			
+				
 	override void Write(Serializer serializer, int version)
 	{		
 		super.Write(serializer, version);
@@ -323,7 +310,26 @@ class Editor: EditorServer
 	{
 		SEffectManager.PlaySoundOnObject(sound_set, m_Camera);
 	}
-				
+			
+	void SetActive(bool active)
+	{
+		if (!IsLocal()) {
+			return;
+		}
+		
+		if (active) {
+			m_Camera.SetActive(true);
+			m_Hud.Show(true);
+		} else {
+			m_Hud.Show(false);
+			
+			GetDayZGame().SelectPlayer(m_Identity, m_Player);
+			Hud hud = GetDayZGame().GetMission().GetHud();
+			hud.ShowHudUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.HUD));
+			hud.ShowQuickbarUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.QUICKBAR));
+		}
+	}
+		
 	void Undo()
 	{
 		foreach (EditorFootprint footprint: m_History) {

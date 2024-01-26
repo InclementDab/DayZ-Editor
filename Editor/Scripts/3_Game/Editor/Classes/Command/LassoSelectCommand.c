@@ -1,4 +1,4 @@
-[RegisterCommand(LassoSelectCommand)]
+[RegisterCommand(LassoSelectCommand, "Lasso Selection")]
 class LassoSelectCommand: Command
 {
 	override void Execute(bool state)
@@ -10,10 +10,5 @@ class LassoSelectCommand: Command
 			GetDayZGame().GetCommand(BoxSelectCommand).Execute(false);
 			GetDayZGame().GetCommand(CircleSelectCommand).Execute(false);
 		}
-	}
-	
-	override string GetName()
-	{
-		return "Lasso Selection";
 	}
 }

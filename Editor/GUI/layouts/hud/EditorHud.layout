@@ -2905,7 +2905,7 @@ FrameWidgetClass Root {
     }
    }
   }
-  PanelWidgetClass Menu {
+  PanelWidgetClass Top {
    visible 1
    clipchildren 0
    ignorepointer 1
@@ -3877,6 +3877,28 @@ FrameWidgetClass Root {
        rotation 0 0 90
       }
      }
+    }
+   }
+  }
+  WrapSpacerWidgetClass Menu {
+   visible 0
+   ignorepointer 1
+   color 0.5882 0.5882 0.5882 1
+   size 300 0
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 1
+   scriptclass "ViewBinding"
+   style Outline_1px_BlackBackground
+   Padding 6
+   Margin 6
+   "Size To Content V" 1
+   content_halign center
+   {
+    ScriptParamsClass {
+     Binding_Name "MenuItems"
     }
    }
   }

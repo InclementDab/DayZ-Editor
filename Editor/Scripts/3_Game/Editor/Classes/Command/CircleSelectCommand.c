@@ -1,4 +1,4 @@
-[RegisterCommand(CircleSelectCommand)]
+[RegisterCommand(CircleSelectCommand, "Circle Selection")]
 class CircleSelectCommand: Command
 {
 	override void Execute(bool state)
@@ -10,10 +10,5 @@ class CircleSelectCommand: Command
 			GetDayZGame().GetCommand(BoxSelectCommand).Execute(false);
 			GetDayZGame().GetCommand(LassoSelectCommand).Execute(false);
 		}
-	}
-	
-	override string GetName()
-	{
-		return "Circle Selection";
 	}
 }

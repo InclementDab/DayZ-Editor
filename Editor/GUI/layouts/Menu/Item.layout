@@ -1,0 +1,91 @@
+FrameWidgetClass Item {
+ position 0 0
+ size 1 26
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ scaled 0
+ {
+  PanelWidgetClass Panel {
+   disabled 0
+   ignorepointer 1
+   color 0.0275 0.4353 0.5725 0
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scaled 0
+   style rover_sim_colorable
+  }
+  TextWidgetClass Name {
+   ignorepointer 1
+   position 44 0
+   size 0 22
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   text "Undo"
+   font "gui/fonts/Metron"
+   "exact text" 0
+   "size to text h" 1
+   "text valign" center
+  }
+  FrameWidgetClass Icon {
+   ignorepointer 1
+   position 12 0
+   size 20 20
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   {
+    ImageWidgetClass IconWidget {
+     ignorepointer 1
+     color 1 1 1 0.7843
+     position 0.736 0
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     fixaspect inside
+     image0 "set:solid image:rotate_left"
+     mode additive
+     "src alpha" 1
+     filter 1
+    }
+   }
+  }
+  TextWidgetClass Shortcut {
+   ignorepointer 1
+   color 1 1 1 0.7843
+   position 16 0
+   size 55 21
+   halign right_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   text "Ctrl + Z"
+   font "gui/fonts/MetronBook"
+   "exact text" 0
+   "size to text h" 1
+   "text valign" center
+  }
+ }
+}

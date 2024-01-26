@@ -124,7 +124,7 @@ FrameWidgetClass Root {
      draggable 0
      scriptclass ""
      Padding 3
-     Margin 3
+     Margin 1
      "Size To Content H" 1
      "Size To Content V" 1
      content_halign center
@@ -138,7 +138,7 @@ FrameWidgetClass Root {
        clipchildren 0
        ignorepointer 1
        position 0 0
-       size 79 18
+       size 79 22
        halign center_ref
        valign center_ref
        hexactpos 1

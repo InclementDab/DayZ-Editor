@@ -1,0 +1,26 @@
+FrameWidgetClass Divider {
+ position 0 0
+ size 290 6
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ {
+  PanelWidgetClass Line {
+   disabled 0
+   ignorepointer 1
+   color 0.3922 0.3922 0.3922 0.3922
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+   fixaspect outside
+   style rover_sim_colorable
+  }
+ }
+}

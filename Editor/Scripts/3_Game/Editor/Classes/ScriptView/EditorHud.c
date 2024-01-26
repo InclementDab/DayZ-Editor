@@ -29,7 +29,7 @@ class EditorHud: ScriptView
 	protected Object m_TooltipObject;
 		
 	// View Properties
-	Widget Left, Right, Inner, Tools, Menu;
+	Widget Left, Right, Inner, Tools, Menu, Top;
 	
 	// Layout Elements
 	Widget LeftDragZone, RightDragZone;
@@ -93,7 +93,7 @@ class EditorHud: ScriptView
 		float heading = GetDayZGame().GetEditor().GetCamera().GetDirection()[1];
 		
 		Whiteboard.Clear();
-		if (input.LocalHold_ID(UAFire) && EditorNode.SelectedObjects.Count() == 0) {
+		if (input.LocalHold_ID(UAFire) && EditorNode.SelectedObjects.Count() == 0 && !m_DraggedBar) {
 							
 			switch (CurrentSelectionMode) {
 				
@@ -183,6 +183,22 @@ class EditorHud: ScriptView
 			m_DragY = -1;
 			m_LassoHistory.Clear();
 		}
+		
+		if (input.LocalRelease_ID(UATempRaiseWeapon)) {
+			Widget w = GetWidgetUnderCursor();
+			RecursiveGetParent(w, "Root");
+			EditorNodeView node_view_under_cursor = EditorNodeView.AllEditorNodeViews[w];
+			if (!node_view_under_cursor) {
+				return;
+			}
+			
+			Menu.Show(false);
+			m_TemplateController.MenuItems.Clear();
+			if (node_view_under_cursor.CreateContextMenu(m_TemplateController.MenuItems)) {
+				Menu.Show(true);
+				Menu.SetScreenPos(mouse_x, mouse_y);
+			}
+		}
 							
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
 			m_DraggedBar.GetChildren().SetColor(COLOR_WHITE);
@@ -190,23 +206,23 @@ class EditorHud: ScriptView
 			ClearCursor();
 		}		
 				
-		float menu_width, menu_height;
-		Menu.GetScreenSize(menu_width, menu_height);
+		float top_width, top_height;
+		Top.GetScreenSize(top_width, top_height);
 		
 		float tools_width, tools_height;
 		Tools.GetScreenSize(tools_width, tools_height);
 		
 		float left_width, left_height;
 		Left.GetScreenSize(left_width, left_height);
-		Left.SetScreenSize(left_width, x - menu_height - tools_height);
+		Left.SetScreenSize(left_width, x - top_height - tools_height);
 		
 		float right_width, right_height;
 		Right.GetScreenSize(right_width, right_height);
-		Right.SetScreenSize(right_width, x - menu_height - tools_height);
+		Right.SetScreenSize(right_width, x - top_height - tools_height);
 		
 		// Set size of inner
-		Inner.SetSize(x - right_width - left_width, y - tools_height - menu_height);
-		Inner.SetPos(left_width, tools_height + menu_height);	
+		Inner.SetSize(x - right_width - left_width, y - tools_height - top_height);
+		Inner.SetPos(left_width, tools_height + top_height);	
 		
 		if (m_DraggedBar) {
 			int distance_from_wall = mouse_x;
@@ -214,8 +230,8 @@ class EditorHud: ScriptView
 				distance_from_wall = x - distance_from_wall;
 			}
 			
-			m_DraggedBar.GetParent().SetSize(distance_from_wall, y - (tools_height + menu_height));
-			m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
+			m_DraggedBar.GetParent().SetSize(distance_from_wall, y - (tools_height + top_height));
+			m_DraggedBar.GetChildren().SetColor(EditorColors.SELECT);
 		}
 	}
 
@@ -254,6 +270,7 @@ class EditorHud: ScriptView
 	{
 		Cursor.Show(false);
 		GetGame().ObjectDelete(m_TooltipObject);
+		Menu.Show(false);
 	}
 		
 	void OnDiscordButtonExecute(ButtonCommandArgs args)

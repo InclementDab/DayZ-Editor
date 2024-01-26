@@ -1,4 +1,4 @@
-[RegisterCommand(RedoCommand)]
+[RegisterCommand(RedoCommand, "Redo")]
 class RedoCommand: Command
 {
 	override void Execute(bool state) 

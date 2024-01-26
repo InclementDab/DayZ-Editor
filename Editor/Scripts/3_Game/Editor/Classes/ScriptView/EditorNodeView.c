@@ -1,5 +1,7 @@
 class EditorNodeView: ScriptView
 {
+	static ref map<Widget, EditorNodeView> AllEditorNodeViews = new map<Widget, EditorNodeView>();
+	
 	protected EditorNodeViewController m_TemplateController;
 		
 	TextWidget Text;
@@ -27,6 +29,21 @@ class EditorNodeView: ScriptView
 		
 		IconImage.LoadImageFile(0, m_Icon.Solid());
 		IconImage.SetImage(0);
+		
+		AllEditorNodeViews[m_LayoutRoot] = this;
+	}
+	
+	void ~EditorNodeView()
+	{
+		AllEditorNodeViews.Remove(m_LayoutRoot);
+	}
+	
+	bool CreateContextMenu(notnull inout ObservableCollection<ref ScriptView> menu_items)
+	{
+		menu_items.Insert(new EditorCommandMenuItem(UndoCommand));
+		menu_items.Insert(new EditorCommandMenuItem(RedoCommand));
+		menu_items.Insert(new EditorMenuDivider());
+		return true;
 	}
 	
 	void SetText(string text)

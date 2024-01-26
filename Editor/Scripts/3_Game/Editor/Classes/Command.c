@@ -9,6 +9,7 @@ enum ShortcutKeyType
 class Command: Managed
 {
 	protected bool m_Executed = GetDefaultState();
+	protected string m_DisplayName;
 	
 	ref ScriptInvoker OnExecute = new ScriptInvoker();
 	
@@ -33,9 +34,25 @@ class Command: Managed
 		return false;
 	}
 	
-	string GetName() 
+	void SetDisplayName(string display_name)
+	{
+		m_DisplayName = display_name;
+	}
+	
+	string GetDisplayName() 
+	{
+		return m_DisplayName;
+	}
+	
+	Symbols GetIcon()
 	{
 		return string.Empty;
+	}
+	
+	// Good default to have, makes sense in XMLs
+	string GetShortcut()
+	{
+		return ClassName();
 	}
 	
 	string GetShortcutString() 
@@ -57,13 +74,6 @@ class Command: Managed
 		}
 		
 		return result;
-	}
-	
-	
-	// Good default to have, makes sense in XMLs
-	string GetShortcut()
-	{
-		return ClassName();
 	}
 	
 	ShortcutKeyType GetShortcutType()

@@ -5,17 +5,6 @@ class EditorSnapPoint: ScriptedEntity
 	void EditorSnapPoint()
 	{
 		SetCollisionSphere(0.125);
-		
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(OnOneMoreFramePlease);
-	}
-	
-	void OnOneMoreFramePlease(float dt)
-	{
-		vector mat[4];
-		GetTransform(mat);
-		Shape.CreateMatrix(mat);
-		
-		
 	}
 	
 	bool IsOccupied()

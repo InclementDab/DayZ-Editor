@@ -12,14 +12,15 @@ modded class DayZGame
 			
 	void DayZGame()
 	{
-		foreach (typename command_type: RegisterCommand.Instances) {		
-			Command command = Command.Cast(command_type.Spawn());
+		foreach (Param2<typename, string> command_param: RegisterCommand.Instances) {
+			Command command = Command.Cast(command_param.param1.Spawn());
 			if (!command) {
 				Error("Invalid command");
 				continue;
 			}
 			
-			m_Commands[command_type] = command;
+			command.SetDisplayName(command_param.param2);
+			m_Commands[command_param.param1] = command;
 			
 			if (command.GetShortcut() != string.Empty) {
 				m_CommandShortcutMap[command.GetShortcut()] = command;
