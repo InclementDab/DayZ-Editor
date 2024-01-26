@@ -7,9 +7,9 @@ class EditorNodeView: ScriptView
 	TextWidget Text;
 	
 	Widget Panel, Children;
-	ImageWidget Collapse, IconImage, CollapseIcon, Texture;
+	ImageWidget IconImage, CollapseIcon, Texture;
+	ButtonWidget Collapse;
 	
-	protected bool m_ChildrenVisible;
 	protected bool m_IsBeingDragged;
 	protected string m_Text;
 	
@@ -42,23 +42,20 @@ class EditorNodeView: ScriptView
 	
 	void ShowChildren(bool state, float offset = 0)
 	{
-		m_ChildrenVisible = state;
 		if (!CollapseIcon) {
-			Print(m_Node.GetDisplayName());
 			return;
 		}
 		
+		Children.Show(state);
+		Children.Update(); //! importante
+			
 		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
 		CollapseIcon.SetImage(0);
 		
-		float w, h;
-		Children.Show(state);
-		Children.GetScreenSize(w, h);
-		//Print(h);
-		float x, y;
-		m_LayoutRoot.GetSize(x, y);
-		offset += (h * state);
-		m_LayoutRoot.SetScreenSize(x, 18 + offset);
+		float w, h, x, y;
+		Children.GetScreenSize(w, h);		
+		m_LayoutRoot.GetScreenSize(x, y);
+		m_LayoutRoot.SetScreenSize(x, h * state + 18);
 		m_LayoutRoot.Update();
 		
 		// you only want to open upper containers when lower ones are opened. propagate up /\
@@ -99,7 +96,7 @@ class EditorNodeView: ScriptView
 	{
 		switch (w) {
 			case Collapse: {
-				ShowChildren(!m_ChildrenVisible);
+				ShowChildren(Collapse.GetState());
 				return true;
 			}
 		}
@@ -109,8 +106,9 @@ class EditorNodeView: ScriptView
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		if (w == Texture) {
+		if (w == Texture || Collapse) {
 			WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
+			WidgetAnimator.Animate(Collapse, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
 		}
 		
 		EditorHud hud = GetDayZGame().GetEditor().GetHud();
@@ -139,39 +137,43 @@ class EditorNodeView: ScriptView
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{				
-		if (w == Texture) {
+		if (w == Texture || Collapse) {
 			WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
+			WidgetAnimator.Animate(Collapse, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
 		}
 		
-		EditorHud hud = GetDayZGame().GetEditor().GetHud();
-		
-		hud.ClearCursor();
-		//hud.Tooltip.Show(false);
-				
+		GetDayZGame().GetEditor().GetHud().ClearCursor();				
 		return true;
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		if (w != Panel) {
-			return super.OnMouseButtonDown(w, x, y, button);
-		}
-		
-		switch (button) {
-			case 0: {
-				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					EditorNode.ClearSelections();
-				}
-				
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					m_Node.SetSelected(!m_Node.IsSelected());
-				} else {
-					m_Node.SetSelected(true);
-				}
-				
-				return true;
+		switch (w) {
+			case Texture: {
+				ShowChildren(false);
+				break;
 			}
-		}
+			
+			case Panel: {
+				switch (button) {
+					case 0: {
+						if (!KeyState(KeyCode.KC_LSHIFT)) {
+							EditorNode.ClearSelections();
+						}
+						
+						if (KeyState(KeyCode.KC_LCONTROL)) {
+							m_Node.SetSelected(!m_Node.IsSelected());
+						} else {
+							m_Node.SetSelected(true);
+						}
+						
+						return true;
+					}
+				}
+				
+				break;
+			}
+		}	
 		
 		return super.OnMouseButtonDown(w, x, y, button);
 	}

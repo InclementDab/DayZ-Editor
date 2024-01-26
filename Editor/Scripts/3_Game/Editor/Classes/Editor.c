@@ -272,7 +272,7 @@ class Editor: EditorServer
 		m_Hud = new EditorHud();
 		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("PlaceableObjects").GetNodeView());
 		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("Brushes").GetNodeView());
-		m_Hud.GetTemplateController().RightListItems.Insert(GetDayZGame().GetMaster().GetNode("SERVER").GetNodeView());
+		//m_Hud.GetTemplateController().RightListItems.Insert(GetDayZGame().GetMaster().GetNode("SERVER").GetNodeView());
 		m_Hud.GetTemplateController().RightListItems.Insert(GetNode("EditedObjects").GetNodeView());
 		
 		if (active) {

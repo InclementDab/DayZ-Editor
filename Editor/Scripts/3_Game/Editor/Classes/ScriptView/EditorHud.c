@@ -21,50 +21,13 @@ class EditorHud: ScriptView
 	protected EditorHudController m_TemplateController;
 	
 	Widget Cursor, CursorTooltip;
-	TextWidget CursorTooltipName, CursorTooltipType;
+	TextWidget CursorTooltipName;
 	ImageWidget Foreground, Background;
 	
 	Widget CursorEntity;
 	ItemPreviewWidget CursorEntityPreview;
 	protected Object m_TooltipObject;
-	
-	void SetCursor(Symbols cursor, string name = string.Empty, string type = string.Empty)
-	{		
-		CursorTooltip.Show(name != string.Empty || type != string.Empty);
 		
-		m_TooltipObject = GetGame().CreateObjectEx(type, vector.Zero, ECE_LOCAL);
-	
-		CursorEntity.Show(false);
-		if (m_TooltipObject) {
-			EntityAI entity = EntityAI.Cast(m_TooltipObject);
-			if (entity) {
-				CursorEntity.Show(true);
-				CursorEntityPreview.SetItem(entity);
-				CursorEntityPreview.SetView(entity.GetViewIndex());
-			}
-		}
-		
-		CursorTooltipName.SetText(name);
-		
-		if (Foreground) {
-			Foreground.LoadImageFile(0, cursor.Thin());
-			Foreground.SetImage(0);
-		}
-
-		if (Background) {
-			Background.LoadImageFile(0, cursor.Solid());
-			Background.SetImage(0);
-		}
-		
-		Cursor.Show(true);
-	}
-	
-	void ClearCursor()
-	{
-		Cursor.Show(false);
-		GetGame().ObjectDelete(m_TooltipObject);
-	}
-	
 	// View Properties
 	Widget Left, Right, Inner, Tools, Menu;
 	
@@ -255,7 +218,43 @@ class EditorHud: ScriptView
 			m_DraggedBar.GetChildren().SetColor(ARGB(255, 7, 111, 146));
 		}
 	}
+
+	void SetCursor(Symbols cursor, string name = string.Empty, string type = string.Empty)
+	{		
+		CursorTooltip.Show(name != string.Empty || type != string.Empty);
+		
+		m_TooltipObject = GetGame().CreateObjectEx(type, vector.Zero, ECE_LOCAL);
 	
+		CursorEntity.Show(false);
+		if (m_TooltipObject) {
+			EntityAI entity = EntityAI.Cast(m_TooltipObject);
+			if (entity) {
+				CursorEntity.Show(true);
+				CursorEntityPreview.SetItem(entity);
+				CursorEntityPreview.SetView(entity.GetViewIndex());
+			}
+		}
+		
+		CursorTooltipName.SetText(name);
+		
+		if (Foreground) {
+			Foreground.LoadImageFile(0, cursor.Thin());
+			Foreground.SetImage(0);
+		}
+
+		if (Background) {
+			Background.LoadImageFile(0, cursor.Solid());
+			Background.SetImage(0);
+		}
+		
+		Cursor.Show(true);
+	}
+	
+	void ClearCursor()
+	{
+		Cursor.Show(false);
+		GetGame().ObjectDelete(m_TooltipObject);
+	}
 		
 	void OnDiscordButtonExecute(ButtonCommandArgs args)
 	{
