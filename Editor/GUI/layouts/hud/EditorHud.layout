@@ -904,7 +904,7 @@ FrameWidgetClass Root {
      }
     }
     PanelWidgetClass Tooltip {
-     visible 1
+     visible 0
      color 0.1059 0.1059 0.1059 1
      position 30 0
      size 256 256

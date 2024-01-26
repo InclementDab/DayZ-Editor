@@ -8,10 +8,10 @@ class EditorNodeView: ScriptView
 	
 	Widget Panel, Children;
 	ImageWidget Collapse, IconImage, CollapseIcon, Texture;
-		
+	
+	protected bool m_ChildrenVisible;
 	protected bool m_IsBeingDragged;
 	protected string m_Text;
-	protected bool m_Children;
 	
 	protected Symbols m_Icon;
 	
@@ -40,7 +40,6 @@ class EditorNodeView: ScriptView
 		Panel.SetScreenSize(w, h);
 	}
 	
-	protected bool m_ChildrenVisible;
 	void ShowChildren(bool state, float offset = 0)
 	{
 		m_ChildrenVisible = state;
