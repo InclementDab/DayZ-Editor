@@ -44,16 +44,6 @@ class Editor: EditorServer
 		m_Player = player;	
 		if (GetGame().IsDedicatedServer()) {
 			m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_SETUP));
-			return;
-		}
-		
-		// Its me!
-		if (IsLocal()) {
-			m_Hud = new EditorHud();
-			m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("PlaceableObjects").GetNodeView());
-			m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("Brushes").GetNodeView());
-			m_Hud.GetTemplateController().RightListItems.Insert(GetDayZGame().GetMaster().GetNode("SERVER").GetNodeView());
-			m_Hud.GetTemplateController().RightListItems.Insert(GetNode("EditedObjects").GetNodeView());
 		}
 	}
 
@@ -278,6 +268,17 @@ class Editor: EditorServer
 	
 	void SetActive(bool active)
 	{
+		// Its me!
+		if (!IsLocal()) {
+			return;
+		}
+		
+		m_Hud = new EditorHud();
+		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("PlaceableObjects").GetNodeView());
+		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("Brushes").GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(GetDayZGame().GetMaster().GetNode("SERVER").GetNodeView());
+		m_Hud.GetTemplateController().RightListItems.Insert(GetNode("EditedObjects").GetNodeView());
+		
 		if (active) {
 			m_Camera.SetActive(true);
 			m_Hud.Show(true);
