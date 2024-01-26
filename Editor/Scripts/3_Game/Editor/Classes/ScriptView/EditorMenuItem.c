@@ -1,7 +1,7 @@
 class EditorCommandMenuItem: ScriptView
 {
 	Widget Panel;
-	ImageWidget Background, Foreground;
+	ImageWidget Icon;
 	TextWidget Name, Shortcut;
 	
 	void EditorCommandMenuItem(typename command_type)
@@ -12,14 +12,13 @@ class EditorCommandMenuItem: ScriptView
 			return;
 		}
 		
-		Name.SetText(command.GetDisplayName());
+		Name.SetText(command.DisplayName);
 		Shortcut.SetText(command.GetShortcutString());
 		
-		if (command.GetIcon() != string.Empty) {
-			Background.LoadImageFile(0, command.GetIcon().Solid());
-			Background.SetImage(0);
-			Foreground.LoadImageFile(0, command.GetIcon().Thin());
-			Foreground.SetImage(0);
+		if (command.Icon != string.Empty) {
+			Icon.LoadImageFile(0, command.Icon.Solid());
+			Icon.SetImage(0);
+			Icon.Show(true);
 		}
 	}
 	
@@ -45,7 +44,7 @@ class EditorCommandMenuItem: ScriptView
 class EditorMenuItem: ScriptView
 {
 	Widget Panel;
-	ImageWidget Foreground, Background;
+	ImageWidget Icon;
 	TextWidget Name, Shortcut;
 	
 	void EditorMenuItem(string name, string desc = "", Symbols icon = "")
@@ -56,11 +55,9 @@ class EditorMenuItem: ScriptView
 		}
 		
 		if (icon != string.Empty) {
-			Background.LoadImageFile(0, icon.Solid());
-			Background.SetImage(0);			
-			
-			Foreground.LoadImageFile(0, icon.Thin());
-			Foreground.SetImage(0);
+			Icon.LoadImageFile(0, icon.Solid());
+			Icon.SetImage(0);
+			Icon.Show(true);
 		}
 	}	
 	

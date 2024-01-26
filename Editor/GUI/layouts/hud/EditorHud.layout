@@ -1196,7 +1196,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:file"
           }
          }
         }
@@ -1250,7 +1249,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:folder_open"
           }
          }
         }
@@ -1304,7 +1302,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:floppy_disk"
           }
          }
         }
@@ -1359,7 +1356,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:floppy_disk_pen"
           }
          }
         }
@@ -1459,7 +1455,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:scissors"
           }
          }
         }
@@ -1513,7 +1508,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:copy"
           }
          }
         }
@@ -1567,7 +1561,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:paste"
           }
          }
         }
@@ -1668,7 +1661,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:lock"
           }
          }
         }
@@ -1722,7 +1714,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:lock_open"
           }
          }
         }
@@ -1823,7 +1814,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:magnet"
           }
          }
         }
@@ -1877,7 +1867,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:arrow_down_to_line"
           }
          }
         }
@@ -1931,7 +1920,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:arrows_to_dot"
           }
          }
         }
@@ -2032,7 +2020,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:sun_bright"
           }
          }
         }
@@ -2086,7 +2073,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:camera_movie"
           }
          }
         }
@@ -2190,7 +2176,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:eye_slash"
           }
          }
         }
@@ -2291,7 +2276,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:folder_plus"
           }
          }
         }
@@ -2479,7 +2463,6 @@ FrameWidgetClass Root {
          {
           ScriptParamsClass {
            CommandType "BoxSelectCommand"
-           Icon "image:square_dashed"
           }
          }
         }
@@ -2535,7 +2518,6 @@ FrameWidgetClass Root {
              nocache 0
              {
               ScriptParamsClass {
-               Icon "image:circle_dashed"
               }
              }
             }
@@ -2545,7 +2527,6 @@ FrameWidgetClass Root {
          {
           ScriptParamsClass {
            CommandType "CircleSelectCommand"
-           Icon "image:circle_dashed"
           }
          }
         }
@@ -2604,7 +2585,6 @@ FrameWidgetClass Root {
          {
           ScriptParamsClass {
            CommandType "LassoSelectCommand"
-           Icon "image:lasso"
           }
          }
         }
@@ -2709,7 +2689,6 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Icon "image:bolt"
           }
          }
         }
@@ -3553,7 +3532,6 @@ FrameWidgetClass Root {
          {
           ScriptParamsClass {
            CommandType "UndoCommand"
-           Icon "image:rotate_left"
           }
          }
         }
@@ -3606,7 +3584,6 @@ FrameWidgetClass Root {
          {
           ScriptParamsClass {
            CommandType "RedoCommand"
-           Icon "image:rotate_right"
           }
          }
         }
@@ -3883,7 +3860,6 @@ FrameWidgetClass Root {
   WrapSpacerWidgetClass Menu {
    visible 0
    ignorepointer 1
-   color 0.098 0.098 0.098 1
    size 300 0
    hexactpos 1
    vexactpos 1
@@ -3891,11 +3867,11 @@ FrameWidgetClass Root {
    vexactsize 1
    scaled 1
    scriptclass "ViewBinding"
-   style Colorable
+   style Empty
    Padding 0
-   Margin 6
+   Margin 0
+   "Size To Content H" 1
    "Size To Content V" 1
-   content_halign center
    {
     ScriptParamsClass {
      Binding_Name "MenuItems"

@@ -21,11 +21,11 @@ class EditorButton: ScriptedWidgetEventHandler
 				
 		if (CommandType != string.Empty) {
 			m_Command = GetDayZGame().GetCommand(CommandType.ToType());
-			m_Icon = m_Command.GetIcon();
+			m_Icon = m_Command.Icon;
 			if (m_Command) {
 				m_Command.OnExecute.Insert(OnExecuted);				
 				m_Button.SetState(m_Command.GetDefaultState());
-				m_IconWidget.LoadImageFile(0, m_Icon.Regular());
+				m_IconWidget.LoadImageFile(0, Ternary<Symbol>.If(m_Command.GetDefaultState(), m_Icon.Solid(), m_Icon.Regular()));
 				m_IconWidget.SetImage(0);
 			}
 		}
@@ -66,7 +66,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		WidgetAnimator.Animate(m_IconWidget, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
 		
 		if (m_Command) {
-			GetDayZGame().GetEditor().GetHud().SetCursor(m_Icon, m_Command.GetDisplayName(), m_Command.GetShortcutString());
+			GetDayZGame().GetEditor().GetHud().SetCursor(m_Icon, m_Command.DisplayName, m_Command.GetShortcutString());
 		}
 		
 		return true;

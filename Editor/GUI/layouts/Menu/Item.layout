@@ -1,123 +1,109 @@
-  GridSpacerWidgetClass Grid {
+GridSpacerWidgetClass Panel {
+ visible 1
+ clipchildren 0
+ ignorepointer 1
+ color 0.1569 0.1569 0.098 1
+ size 0 32
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ scaled 1
+ style Colorable
+ Padding 20
+ Margin 6
+ "Size To Content H" 1
+ content_halign center
+ content_valign center
+ Columns 2
+ Rows 1
+ {
+  FrameWidgetClass ItemIcon {
+   clipchildren 0
    ignorepointer 1
-   color 0.098 0.098 0.098 1
-   size 72 34
+   position 0 0
+   size 128 24
+   halign center_ref
+   valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   scaled 0
-   Padding 40
-   Margin 6
-   "Size To Content H" 1
-   content_halign center
-   Columns 2
-   Rows 1
+   scaled 1
    {
     FrameWidgetClass IconFrame {
+     clipchildren 1
      ignorepointer 1
-     position 10 10
-     size 217 48
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     {
-      FrameWidgetClass Icon {
-       ignorepointer 1
-       position 10 0
-       size 32 32
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       userID 1
-       {
-        ImageWidgetClass Background {
-         visible 1
-         clipchildren 0
-         ignorepointer 1
-         color 0.3922 0.3922 0.3922 1
-         position 0 0
-         size 0.8 0.8
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 0
-         image0 "set:solid image:left_right"
-         mode blend
-         "src alpha" 1
-         "clamp mode" clamp
-         "stretch mode" stretch_w_center
-         filter 1
-         {
-          ImageWidgetClass Foreground {
-           visible 1
-           clipchildren 0
-           ignorepointer 1
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           image0 "set:thin image:left_right"
-           mode blend
-           "src alpha" 1
-           "clamp mode" clamp
-           "stretch mode" stretch_w_center
-           filter 1
-          }
-         }
-        }
-       }
-      }
-      TextWidgetClass NameText {
-       visible 1
-       ignorepointer 1
-       position 52 0
-       size 76 24
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       text "Undo"
-       font "gui/fonts/Metron"
-       "exact text" 0
-       "size to text h" 1
-       "text valign" center
-      }
-     }
-    }
-    TextWidgetClass Shortcut {
-     ignorepointer 1
-     color 1 1 1 0.7843
-     position 16 0
-     size 55 21
-     halign right_ref
+     position 4 0
+     size 16 16
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scaled 0
-     text "Ctrl + Z"
+     scaled 1
+     {
+      ImageWidgetClass Icon {
+       visible 1
+       ignorepointer 1
+       color 0.8314 0.8314 0.8314 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       image0 "set:solid image:floppy_disk"
+       mode blend
+       "src alpha" 1
+       filter 0
+      }
+     }
+    }
+    TextWidgetClass Name {
+     visible 1
+     ignorepointer 1
+     color 0.8314 0.8314 0.8314 1
+     size 76 24
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 1
+     text "Save As..."
      font "gui/fonts/Metron"
      "exact text" 0
      "size to text h" 1
-     "text halign" right
+     "text halign" center
      "text valign" center
     }
    }
   }
- 
+  TextWidgetClass Shortcut {
+   visible 1
+   ignorepointer 1
+   color 0.5137 0.5137 0.5843 1
+   position 0 0
+   size 76 24
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 1
+   text "Ctrl + Shift + S"
+   font "gui/fonts/Metron"
+   "exact text" 0
+   "size to text h" 1
+   "text halign" center
+   "text valign" center
+  }
+ }
+}

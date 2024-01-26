@@ -42,6 +42,9 @@ class EditorNodeView: ScriptView
 	{
 		menu_items.Insert(new EditorCommandMenuItem(UndoCommand));
 		menu_items.Insert(new EditorCommandMenuItem(RedoCommand));
+		menu_items.Insert(new EditorCommandMenuItem(BoxSelectCommand));
+		menu_items.Insert(new EditorCommandMenuItem(CircleSelectCommand));
+		menu_items.Insert(new EditorCommandMenuItem(LassoSelectCommand));
 		menu_items.Insert(new EditorMenuDivider());
 		return true;
 	}

@@ -19,8 +19,8 @@ modded class DayZGame
 				continue;
 			}
 			
-			command.SetDisplayName(command_param.param2);
-			command.SetIcon(command_param.param3);
+			command.DisplayName = command_param.param2;
+			command.Icon = command_param.param3;
 			m_Commands[command_param.param1] = command;
 			
 			if (command.GetShortcut() != string.Empty) {
