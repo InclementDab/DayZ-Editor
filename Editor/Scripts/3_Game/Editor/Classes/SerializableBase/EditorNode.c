@@ -50,7 +50,6 @@ class EditorNode: SerializableBase
 
 		for (int i = tree_depth - 1; i >= 0; i--) {
 			EditorNode parent = GetParentAtDepth(i);
-			Print(parent.GetUUID());
 			rpc.Write(parent.GetUUID());
 			rpc.Write(parent.Type().ToString());
 		}
