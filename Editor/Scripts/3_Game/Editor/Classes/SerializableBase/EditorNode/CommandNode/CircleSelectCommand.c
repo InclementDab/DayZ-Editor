@@ -1,4 +1,3 @@
-[RegisterCommand(CircleSelectCommand, "Circle Selection", Symbols.CIRCLE_DASHED)]
 class CircleSelectCommand: EditorNode
 {
 	override void SetSelected(bool selected)

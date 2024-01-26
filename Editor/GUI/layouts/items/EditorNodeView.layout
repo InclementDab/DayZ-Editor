@@ -113,7 +113,7 @@ FrameWidgetClass Root {
      ignorepointer 0
      color 0.0275 0.4353 0.5725 0
      position 0 0
-     size 78 0
+     size 390 0
      halign center_ref
      valign center_ref
      hexactpos 1
@@ -138,7 +138,7 @@ FrameWidgetClass Root {
        clipchildren 0
        ignorepointer 1
        position 0 0
-       size 79 22
+       size 230 22
        halign center_ref
        valign center_ref
        hexactpos 1

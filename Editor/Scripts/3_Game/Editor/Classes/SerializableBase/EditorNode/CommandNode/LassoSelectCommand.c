@@ -1,4 +1,3 @@
-[RegisterCommand(LassoSelectCommand, "Lasso Selection", Symbols.LASSO)]
 class LassoSelectCommand: EditorNode
 {
 	override void SetSelected(bool selected)

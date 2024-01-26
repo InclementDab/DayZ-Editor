@@ -1,4 +1,3 @@
-[RegisterCommand(BoxSelectCommand, "Box Selection", Symbols.SQUARE_DASHED)]
 class BoxSelectCommand: EditorNode
 {
 	override void SetSelected(bool selected)

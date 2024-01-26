@@ -1,4 +1,3 @@
-[RegisterCommand(UndoCommand, "Undo", Symbols.ROTATE_LEFT)]
 class UndoCommand: EditorNode
 {
 	override void SetSelected(bool state) 

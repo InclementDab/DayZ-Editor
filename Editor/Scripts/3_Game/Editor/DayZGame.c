@@ -6,7 +6,7 @@ modded class DayZGame
 	
 	// Created on client AND server, assumed existence always. RPC_SYNC and Synchronize will be relying on this
 	protected ref EditorNode m_Master = new EditorNode(string.Empty, string.Empty, string.Empty);
-			
+		
 	override void SetMissionPath(string path)
 	{
 		super.SetMissionPath(path);

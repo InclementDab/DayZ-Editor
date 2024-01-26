@@ -1,4 +1,3 @@
-[RegisterCommand(RedoCommand, "Redo", Symbols.ROTATE_RIGHT)]
 class RedoCommand: EditorNode
 {
 	override void SetSelected(bool state) 
