@@ -192,9 +192,13 @@ modded class DayZGame
 	}
 	
 	Editor GetEditor()
-	{
+	{		
 		if (IsServer()) {
 			return EditorServer.Cast(m_Master["SERVER"]);
+		}
+		
+		if (!m_Master["SERVER"]) {
+			return null;
 		}
 		
 		return Editor.Cast(m_Master["SERVER"][GetUserManager().GetTitleInitiator().GetUid()]);
