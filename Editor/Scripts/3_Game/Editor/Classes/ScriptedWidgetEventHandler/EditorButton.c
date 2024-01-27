@@ -28,7 +28,13 @@ class EditorButton: ScriptedWidgetEventHandler
 			return;
 		}
 		
-		if (Node != string.Empty) {			
+#ifdef WORKBENCH
+		if (!GetDayZGame()) {
+			return;
+		}
+#endif
+		
+		if (Node != string.Empty) {	
 			m_Node = GetDayZGame().GetEditor().GetCommand(Node);
 			Print(m_Node);
 			if (m_Node) {

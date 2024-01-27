@@ -24,7 +24,7 @@ modded class DayZGame
 		return m_Server;
 #else
 		if (!m_Editor) {
-			Man player = GetPlayer();
+			DayZPlayer player = GetPlayer();
 			PlayerIdentity identity = player.GetIdentity();
 			
 			m_Editor = new Editor(GetUserManager().GetTitleInitiator().GetUid(), GetUserManager().GetTitleInitiator().GetName(), Symbols.CAMERA, identity, player);
@@ -32,7 +32,7 @@ modded class DayZGame
 			m_Editor.Synchronize();
 		}
 				
-		return m_Server[GetUserManager().GetTitleInitiator().GetUid()];
+		return Editor.Cast(m_Server[GetUserManager().GetTitleInitiator().GetUid()]);
 #endif
 	}
 			

@@ -2235,7 +2235,7 @@ FrameWidgetClass Root {
          hexactsize 1
          vexactsize 1
          scaled 0
-         scriptclass "EditorButton"
+         scriptclass ""
          {
           ButtonWidgetClass "Brush.Button" {
            visible 1
@@ -2299,10 +2299,6 @@ FrameWidgetClass Root {
              }
             }
            }
-          }
-         }
-         {
-          ScriptParamsClass {
           }
          }
         }
@@ -2451,7 +2447,7 @@ FrameWidgetClass Root {
              hexactsize 1
              vexactsize 1
              scaled 0
-             scriptclass "EditorButton"
+             scriptclass ""
              image0 ""
              mode blend
              "src alpha" 1
@@ -2460,16 +2456,13 @@ FrameWidgetClass Root {
              "flip u" 0
              filter 0
              nocache 0
-             {
-              ScriptParamsClass {
-              }
-             }
             }
            }
           }
          }
          {
           ScriptParamsClass {
+           Node "CircleSelectCommand"
           }
          }
         }

@@ -70,6 +70,7 @@ class TreeView: ScriptView
 		float w, h, x, y;
 		Children.GetScreenSize(w, h);		
 		m_LayoutRoot.GetScreenSize(x, y);
+		Print(h);
 		m_LayoutRoot.SetScreenSize(x, h * state + 24);
 		m_LayoutRoot.Update();
 		

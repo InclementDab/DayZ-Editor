@@ -58,7 +58,7 @@ class Editor: TreeNode
 		edited_objects.Add(new TreeNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
 		Add(edited_objects);
 		
-#ifndef SERVER
+//#ifndef SERVER
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);
 		commands.Add(new BoxSelectCommand("BoxSelectCommand", "Box Select", Symbols.SQUARE_DASHED));
 		commands.Add(new CircleSelectCommand("CircleSelectCommand", "Circle Select", Symbols.CIRCLE_DASHED));
@@ -164,7 +164,7 @@ class Editor: TreeNode
 		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
 			this[PLACEABLE_OBJECTS]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}		
-#endif
+//#endif
 	}
 
 	void ~Editor() 
