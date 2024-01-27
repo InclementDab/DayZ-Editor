@@ -1,15 +1,5 @@
 modded class PlayerBase
-{	
-	override void OnSelectPlayer()
-	{
-		Print("OnSelectPlayer");
-		super.OnSelectPlayer();
-		
-		if (!GetDayZGame().GetEditor()) {
-			
-		}
-	}
-	
+{		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{	
 #ifndef SERVER
