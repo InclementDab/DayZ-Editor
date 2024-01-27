@@ -115,7 +115,6 @@ class CommandNode: TreeNode
 			
 			case ShortcutKeyType.TOGGLE: {
 				if (m_UAInput.LocalPress()) {
-					Print("HI");
 					SetSelected(!IsSelected());
 				}
 				

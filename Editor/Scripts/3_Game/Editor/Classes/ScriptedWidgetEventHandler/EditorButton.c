@@ -115,8 +115,6 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		Print("HA");
-		Print(m_Node);
 		if (button != 0 || !m_Node) {
 			return false;
 		}
@@ -124,7 +122,6 @@ class EditorButton: ScriptedWidgetEventHandler
 		switch (m_Node.GetShortcutType()) {
 			case ShortcutKeyType.DOUBLE: {
 				m_Node.SetSelected(!m_Node.IsSelected());
-				Print(m_Node.IsSelected());
 				OnExecuted(m_Node);
 				return true;
 			}
