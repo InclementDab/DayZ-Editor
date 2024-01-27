@@ -45,7 +45,29 @@ class EditorMenuTab: ScriptedWidgetEventHandler
 	
 	void OnExecuted(TreeNode node)
 	{
+		EditorHud hud = GetDayZGame().GetEditor().GetHud();
+				
+		hud.Menu.Show(false);
+		hud.GetTemplateController().MenuItems.Clear();
+		if (!node.IsSelected()) {
+			return;
+		}
 		
+		float x, y, w, h;
+		m_LayoutRoot.GetScreenPos(x, y);
+		m_LayoutRoot.GetScreenSize(w, h);
+		hud.Menu.SetScreenPos(x, y + h);
+		hud.Menu.Show(true);
+		
+		map<string, ref TreeNode> children = m_Node.GetChildren();
+		foreach (string uuid, TreeNode child: children) {
+			CommandNode command_node = CommandNode.Cast(child);
+			if (!command_node) {
+				continue;
+			}
+			
+			hud.GetTemplateController().MenuItems.Insert(new CommandMenuItem(command_node));
+		}		
 	}
 		
 	Widget GetLayoutRoot()
