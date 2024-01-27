@@ -289,6 +289,7 @@ class TreeNode: SerializableBase
 			}
 			
 			node.Read(serializer, version);
+			node.OnSynchronized();
 		}
 		
 		return super.Read(serializer, version);
@@ -322,9 +323,7 @@ class TreeNode: SerializableBase
 	void SetSelected(bool selected)
 	{
 		m_IsSelected = selected;
-		
-		m_NodeView.ShowChildren(m_IsSelected);
-		
+				
 		if (m_IsSelected) {
 			SelectedObjects.Insert(this);
 		} else {

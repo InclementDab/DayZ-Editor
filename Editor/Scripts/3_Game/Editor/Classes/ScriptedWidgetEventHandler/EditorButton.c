@@ -52,14 +52,14 @@ class EditorButton: ScriptedWidgetEventHandler
 #endif
 	}
 				
-	void OnExecuted(bool state)
+	void OnExecuted(TreeNode node)
 	{
-		SymbolSize size = Ternary<SymbolSize>.If(state, SymbolSize.SOLID, SymbolSize.REGULAR);
-		int color = Ternary<int>.If(state, m_LayoutRoot.GetColor(),	ARGB(100, 255, 255, 255));
+		SymbolSize size = Ternary<SymbolSize>.If(node.IsSelected(), SymbolSize.SOLID, SymbolSize.REGULAR);
+		int color = Ternary<int>.If(node.IsSelected(), m_LayoutRoot.GetColor(),	ARGB(100, 255, 255, 255));
 		
 		WidgetAnimator.AnimateColor(m_IconWidget, color, 50);
 		
-		m_IconWidget.LoadImageFile(0, Ternary<Symbol>.If(state, m_Icon.Solid(), m_Icon.Regular()));
+		m_IconWidget.LoadImageFile(0, Ternary<Symbol>.If(node.IsSelected(), m_Icon.Solid(), m_Icon.Regular()));
 		m_IconWidget.SetImage(0);
 	}
 		

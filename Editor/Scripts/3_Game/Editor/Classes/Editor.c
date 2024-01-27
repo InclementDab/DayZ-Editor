@@ -67,7 +67,7 @@ class Editor: TreeNode
 		commands.Add(new CopyCommand("Copy", "Copy", Symbols.COPY));
 		commands.Add(new CutCommand("Cut", "Cut", Symbols.SCISSORS));
 		commands.Add(new DeleteCommand("Delete", "Delete", Symbols.TRASH));
-		commands.Add(new GroundCommand("GroundCommand", "Ground Mode", Symbols.IMAGE_LANDSCAPE));
+		commands.Add(new GroundCommand("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE));
 		commands.Add(new LassoSelectCommand("LassoSelect", "Lasso Select", Symbols.LASSO));
 		commands.Add(new LockCommand("Lock", "Lock", Symbols.LOCK));
 		commands.Add(new MagnetCommand("Magnet", "Magnet", Symbols.MAGNET));
