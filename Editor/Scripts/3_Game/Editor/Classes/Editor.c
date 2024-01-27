@@ -59,12 +59,29 @@ class Editor: TreeNode
 		Add(edited_objects);
 		
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
-		commands.Add(new BoxSelectCommand("BoxSelect", "Box Select", Symbols.SQUARE_DASHED));
-		commands.Add(new CircleSelectCommand("CircleSelect", "Circle Select", Symbols.CIRCLE_DASHED));
-		commands.Add(new LassoSelectCommand("LassoSelect", "Lasso Select", Symbols.LASSO));
+		commands.Add(new AfterlifeCommand("Afterlife", "View Hidden", Symbols.GHOST));
+		commands.Add(new BoltCommand("Bolt", "Lightning Bolt", Symbols.BOLT));
+		commands.Add(new BoxSelectCommand("BoxSelect", "Box Selection", Symbols.SQUARE_DASHED));
+		commands.Add(new CameraCommand("Camera", "Camera", Symbols.CAMERA));
+		commands.Add(new CircleSelectCommand("CircleSelect", "Circle Selection", Symbols.CIRCLE_DASHED));
+		commands.Add(new CopyCommand("Copy", "Copy", Symbols.COPY));
+		commands.Add(new CutCommand("Cut", "Cut", Symbols.SCISSORS));
 		commands.Add(new DeleteCommand("Delete", "Delete", Symbols.TRASH));
-		commands.Add(new UndoCommand("Undo", "Undo", Symbols.ROTATE_LEFT));
+		commands.Add(new GroundCommand("GroundCommand", "Ground Mode", Symbols.IMAGE_LANDSCAPE));
+		commands.Add(new LassoSelectCommand("LassoSelect", "Lasso Select", Symbols.LASSO));
+		commands.Add(new LockCommand("Lock", "Lock", Symbols.LOCK));
+		commands.Add(new MagnetCommand("Magnet", "Magnet", Symbols.MAGNET));
+		commands.Add(new NewCommand("New", "New File", Symbols.FILE));
+		commands.Add(new OpenCommand("Open", "Open File", Symbols.FOLDER_OPEN));
+		commands.Add(new PasteCommand("Paste", "Paste", Symbols.PASTE));
 		commands.Add(new RedoCommand("Redo", "Redo", Symbols.ROTATE_RIGHT));
+		commands.Add(new SaveAsCommand("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN));
+		commands.Add(new SaveCommand("Save", "Save", Symbols.FLOPPY_DISK));
+		commands.Add(new SnappingCommand("Snap", "Snapping Mode", Symbols.THUMBTACK));
+		commands.Add(new UndoCommand("Undo", "Undo", Symbols.ROTATE_LEFT));
+		commands.Add(new UnlockCommand("Unlock", "Unlock", Symbols.LOCK_OPEN));
+		commands.Add(new WeatherCommand("Weather", "Weather", Symbols.CLOUD_SUN));
+		
 		Add(commands);
 		
 		TreeNode undo_redo = new TreeNode(UNDO_REDO, "History", Symbols.CLOCK_ROTATE_LEFT);
