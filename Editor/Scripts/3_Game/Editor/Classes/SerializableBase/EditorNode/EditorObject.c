@@ -60,7 +60,7 @@ class EditorObject: EditorNode
 				
 		for (int i = 0; i < 6; i++) {
 			// Debug
-			m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+			//m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
 		}
 		
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);

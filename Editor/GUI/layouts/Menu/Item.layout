@@ -2,7 +2,7 @@ FrameWidgetClass Frame {
  clipchildren 1
  ignorepointer 1
  position 0 0
- size 373 32
+ size 373 28
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -14,16 +14,16 @@ FrameWidgetClass Frame {
   GridSpacerWidgetClass Panel {
    visible 1
    clipchildren 0
-   ignorepointer 1
-   color 0.1569 0.1569 0.098 1
-   size 373 32
+   ignorepointer 0
+   color 0.1176 0.1176 0.098 1
+   size 1 1
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 1
-   vexactsize 1
-   scaled 1
+   hexactsize 0
+   vexactsize 0
+   scaled 0
    style Colorable
    Padding 20
    Margin 6
@@ -44,7 +44,7 @@ FrameWidgetClass Frame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scaled 1
+     scaled 0
      Padding 6
      Margin 0
      "Size To Content H" 1
@@ -61,7 +61,7 @@ FrameWidgetClass Frame {
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       scaled 1
+       scaled 0
        {
         ImageWidgetClass Icon {
          visible 1
@@ -74,7 +74,7 @@ FrameWidgetClass Frame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         scaled 1
+         scaled 0
          image0 "set:solid image:floppy_disk"
          mode blend
          "src alpha" 1
@@ -85,7 +85,6 @@ FrameWidgetClass Frame {
       TextWidgetClass Name {
        visible 1
        ignorepointer 1
-       color 0.8314 0.8314 0.8314 1
        position 0 0
        size 76 24
        halign center_ref
@@ -94,7 +93,7 @@ FrameWidgetClass Frame {
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       scaled 1
+       scaled 0
        text "File Save As..."
        font "gui/fonts/Metron"
        "exact text" 0
@@ -114,7 +113,7 @@ FrameWidgetClass Frame {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scaled 1
+     scaled 0
      Padding 0
      Margin 0
      "Size To Content H" 1
@@ -124,7 +123,7 @@ FrameWidgetClass Frame {
      Rows 1
      {
       FrameWidgetClass Caret {
-       visible 1
+       visible 0
        ignorepointer 1
        size 1 1
        halign center_ref
@@ -133,6 +132,7 @@ FrameWidgetClass Frame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
+       scaled 0
        {
         ImageWidgetClass CaretImage {
          ignorepointer 1
@@ -145,7 +145,7 @@ FrameWidgetClass Frame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         scaled 1
+         scaled 0
          image0 "set:regular image:arrow_right"
          mode blend
          "src alpha" 1
@@ -154,7 +154,7 @@ FrameWidgetClass Frame {
        }
       }
       FrameWidgetClass Shortcut {
-       visible 0
+       visible 1
        ignorepointer 1
        position 0 0
        size 1 1
@@ -164,6 +164,7 @@ FrameWidgetClass Frame {
        vexactpos 1
        hexactsize 0
        vexactsize 0
+       scaled 0
        {
         TextWidgetClass ShortcutText {
          visible 1
@@ -177,7 +178,7 @@ FrameWidgetClass Frame {
          vexactpos 1
          hexactsize 1
          vexactsize 0
-         scaled 1
+         scaled 0
          text "Ctrl + Shift + S"
          font "gui/fonts/Metron"
          "exact text" 0
@@ -202,13 +203,18 @@ FrameWidgetClass Frame {
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   scaled 1
+   scaled 0
    scriptclass "ViewBinding"
    style Empty
    Padding 0
    Margin 0
    "Size To Content H" 1
    "Size To Content V" 1
+   {
+    ScriptParamsClass {
+     Binding_Name "Children"
+    }
+   }
   }
  }
 }

@@ -1,4 +1,9 @@
-class EditorCommandMenuItem: ScriptView
+class EditorCommandMenuItemController: ViewController
+{
+	ref ObservableCollection<EditorNodeView> Children = new ObservableCollection<EditorNodeView>(this);
+}
+
+class EditorCommandMenuItem: ScriptViewTemplate<EditorCommandMenuItemController>
 {
 	Widget Panel, Shortcut, Caret;
 	ImageWidget Icon;
@@ -14,14 +19,13 @@ class EditorCommandMenuItem: ScriptView
 		}
 		
 		if (node.GetChildren().Count() > 0) {
-			
 			map<string, ref EditorNode> nodes = node.GetChildren();
 			foreach (string uuid, EditorNode node1: nodes) {
-				
-				
+				m_TemplateController.Children.Insert(node1.GetNodeView());
 			}
 			
 			Caret.Show(true);
+			Shortcut.Show(false);
 		}
 		
 		if (node.GetIcon() != string.Empty) {
@@ -33,61 +37,16 @@ class EditorCommandMenuItem: ScriptView
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		WidgetAnimator.Animate(Panel, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
-		
+		WidgetAnimator.AnimateColor(Panel, EditorColors.SELECT, 1);
+		WidgetAnimator.AnimateColor(ShortcutText, COLOR_WHITE, 1);
 		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		WidgetAnimator.Animate(Panel, WidgetAnimatorProperty.COLOR_A, 0, 100);
-		return true;
-	}
-	
-	override string GetLayoutFile()
-	{
-		return "Editor\\GUI\\layouts\\Menu\\Item.layout";
-	}
-}
-
-class EditorMenuItem: ScriptView
-{
-	Widget Panel;
-	ImageWidget Icon;
-	TextWidget Name, Shortcut;
-	
-	void EditorMenuItem(string name, string desc = "", Symbols icon = "")
-	{
-		Name.SetText(name);
-		if (desc != string.Empty) {
-			Shortcut.SetText(desc);
-		}
+		WidgetAnimator.AnimateColor(Panel, EditorColors.BACKGROUND_1, 100);
 		
-		if (icon != string.Empty) {
-			Icon.LoadImageFile(0, icon.Solid());
-			Icon.SetImage(0);
-			Icon.Show(true);
-		}
-	}	
-	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-				
-		
-		return true;
-	}
-	
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		WidgetAnimator.Animate(Panel, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
-		
-		return true;
-	}
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		WidgetAnimator.Animate(Panel, WidgetAnimatorProperty.COLOR_A, 0, 100);
-		
+		WidgetAnimator.AnimateColor(ShortcutText, ARGB(255, 131, 131, 149), 100);
 		return true;
 	}
 	

@@ -3856,7 +3856,7 @@ FrameWidgetClass Root {
   WrapSpacerWidgetClass Menu {
    visible 0
    ignorepointer 1
-   size 300 0
+   size 535 0
    hexactpos 1
    vexactpos 1
    hexactsize 1

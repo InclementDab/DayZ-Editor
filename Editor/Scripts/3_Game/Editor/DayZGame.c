@@ -23,6 +23,12 @@ modded class DayZGame
 			GetEditor().Update(doSim, timeslice);
 		}
 	}
+	
+	// Hope you remembered to register it
+	EditorNode FindCommandbyType(typename type)
+	{
+		return m_Master["SERVER"]["Commands"][type.ToString()];
+	}
 		
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{				

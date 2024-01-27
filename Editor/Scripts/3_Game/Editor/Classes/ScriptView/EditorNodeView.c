@@ -38,14 +38,15 @@ class EditorNodeView: ScriptView
 		AllEditorNodeViews.Remove(m_LayoutRoot);
 	}
 	
+	// should be on the node
 	bool CreateContextMenu(notnull inout ObservableCollection<ref ScriptView> menu_items)
 	{
-		/*menu_items.Insert(new EditorCommandMenuItem(UndoCommand));
-		menu_items.Insert(new EditorCommandMenuItem(RedoCommand));
-		menu_items.Insert(new EditorCommandMenuItem(BoxSelectCommand));
-		menu_items.Insert(new EditorCommandMenuItem(CircleSelectCommand));
-		menu_items.Insert(new EditorCommandMenuItem(LassoSelectCommand));
-		menu_items.Insert(new EditorMenuDivider());*/
+		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().FindCommandbyType(UndoCommand)));
+		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().FindCommandbyType(RedoCommand)));		
+		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().FindCommandbyType(BoxSelectCommand)));
+		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().FindCommandbyType(CircleSelectCommand)));
+		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().FindCommandbyType(LassoSelectCommand)));
+		menu_items.Insert(new EditorMenuDivider());
 		return true;
 	}
 	

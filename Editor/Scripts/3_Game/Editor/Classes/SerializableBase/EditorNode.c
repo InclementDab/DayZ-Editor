@@ -124,7 +124,11 @@ class EditorNode: SerializableBase
 	}
 	
 	EditorNode Get(string uuid)
-	{		
+	{
+		if (!m_Children.Contains(uuid)) {
+			Error(string.Format("[%1:%2] did not contain child: %3", m_UUID, m_DisplayName, uuid));
+		}
+		
 		return m_Children[uuid];
 	}
 	

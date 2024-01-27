@@ -79,61 +79,73 @@ class TranslationGizmo: House
 		}
 		
 		vector gizmo_transform[4];
-		GetRenderTransform(gizmo_transform);
+		GetTransform(gizmo_transform);
 
 		vector camera_transform[4];
 		GetDayZGame().GetEditor().GetCamera().GetTransform(camera_transform);
-				
+		
+		vector identity_matrix[4];
+		Math3D.MatrixIdentity4(identity_matrix);
+		
 		vector matrix[4];
-		Math3D.MatrixInvMultiply4(camera_transform, gizmo_transform, matrix);
+		Math3D.MatrixInvMultiply4(camera_transform, identity_matrix, matrix);
 		
-		vector angle_matrix[3];
-		Math3D.YawPitchRollMatrix(Vector(0, 90, 0), angle_matrix);
+		Math3D.MatrixMultiply4(matrix, camera_transform, matrix);
 		
-		Math3D.MatrixMultiply3(matrix, angle_matrix, matrix);
+		//vector angle_matrix[3];
+		//Math3D.YawPitchRollMatrix(Vector(0, 90, 0), angle_matrix);
+		
+		//Math3D.MatrixMultiply3(matrix, angle_matrix, matrix);
 		
 		//aPrint(inv_transform);
-		vector angles = Math3D.MatrixToAngles(matrix);		
+		//vector angles = Math3D.MatrixToAngles(matrix);		
 		
 		Shape.CreateMatrix(gizmo_transform);
 		
 		ClearFlags(EntityFlags.VISIBLE, true);
 		
-		Debug.DrawSphere(gizmo_transform[3], 0.01, COLOR_RED, ShapeFlags.ONCE);
-		vector origin = gizmo_transform[3];
-		vector end = Vector(0.5, 0, 0).Multiply4(gizmo_transform);
-		
-		Shape.CreateSphere(ARGB(200, 255, 255, 255), ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.NOZWRITE, origin, 0.025);
-		Shape.CreateSphere(ARGB(200, 255, 255, 255), ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.NOZWRITE, end, 0.025);
-		
-		vector screen_origin = GetGame().GetScreenPos(origin);
-		vector screen_end = GetGame().GetScreenPos(end);
-				
-		RayView ray_view = new RayView(COLOR_RED);
-		GizmoOriginView gizmo_origin = new GizmoOriginView();
-		
-		m_RayViews.Clear();
-		m_RayViews.Insert(ray_view);
-		m_RayViews.Insert(gizmo_origin);
-		
-		//Print(GetDayZGame().GetEditor().GetCamera().GetCurrentFOV() * Math.RAD2DEG);
-		
-		
-	
-		float x, y;
-		ray_view.GetLayoutRoot().GetScreenSize(x, y);
-		
-		ray_view.GetLayoutRoot().SetScreenPos(screen_origin[0], screen_origin[1] - (y / 2));
-		
-		
-		vector delta = screen_end - screen_origin;
-		delta[2] = 0;
+		Debug.DrawSphere(gizmo_transform[3], 0.01, COLOR_RED, ShapeFlags.ONCE);		
+		vector screen_origin = GetGame().GetScreenPos(gizmo_transform[3]);
+		m_RayViews.Clear();		
+		for (int i = 0; i < 3; i++) {
+			
+			Shape.CreateSphere(COLOR_GREEN, ShapeFlags.TRANSP | ShapeFlags.ONCE, gizmo_transform[i].Multiply4(gizmo_transform[3]), 0.01);
+			vector v = vector.Zero;
+			v[i] = 1.0;
+			vector screen_end = GetGame().GetScreenPos(v.Multiply4(gizmo_transform[3]));
+			//Print(v.Multiply4(gizmo_transform[3]));
+			
+			float distance_to_target = vector.Distance(gizmo_transform[3], gizmo_transform[i].Multiply4(gizmo_transform[3]));
+			//Print(distance_to_target);
+			//Shape.CreateSphere(ARGB(200, 255, 255, 255), ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.NOZWRITE, origin, 0.025);
+			//Shape.CreateSphere(ARGB(200, 255, 255, 255), ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.NOZWRITE, end, 0.025);
+						
+			// Size of 1m pixels in X direction
+			//float uniform_pixel_size = 1 / vector.Distance(Vector(screen_end[0], screen_end[1], 0), Vector(screen_origin[0], screen_origin[1], 0));
 
-		ray_view.GetLayoutRoot().SetRotation(0, 0, 180);
-		ray_view.GetLayoutRoot().SetSize(delta.Length(), 24);
-		
-		
-		gizmo_origin.GetLayoutRoot().GetScreenSize(x, y);
-		gizmo_origin.GetLayoutRoot().SetPos(screen_origin[0] - (x / 2), screen_origin[1] - (y / 2));
+			int color = COLOR_RED;
+			if (i == 1) { color = COLOR_GREEN; };
+			if (i == 2) { color = COLOR_BLUE; };
+			
+			RayView ray_view = new RayView(color);
+			m_RayViews.Insert(ray_view);
+			
+			//GizmoOriginView gizmo_origin = new GizmoOriginView();
+			//m_RayViews.Insert(gizmo_origin);
+								
+			float x, y;
+			ray_view.GetLayoutRoot().GetScreenSize(x, y);
+			
+			float screen_size = 2 * Math.Tan(GetDayZGame().GetEditor().GetCamera().GetCurrentFOV() / 2) * gizmo_transform[i].Length();			
+			
+			ray_view.GetLayoutRoot().SetScreenPos(screen_end[0], screen_end[1]);
+			
+			vector angles = Math3D.MatrixToAngles(matrix);
+			
+			ray_view.GetLayoutRoot().SetRotation(angles[0], angles[1], angles[2]);
+			//Print(uniform_pixel_size);
+			
+			ray_view.GetLayoutRoot().SetSize(screen_size * distance_to_target, 24 * distance_to_target);
+		}
 	}
 }
