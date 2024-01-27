@@ -16,9 +16,18 @@ modded class DayZGame
 		
 	Editor GetEditor()
 	{
+#ifdef WORKBENCH
+		return m_Editor;
+#endif
+		
 #ifdef SERVER
 		return m_Server;
 #else
+		// If we havent authenticated, were giving them the base
+		if (!m_Server.Contains(GetUserManager().GetTitleInitiator().GetUid())) {
+			return m_Server;
+		}
+		
 		return m_Server[GetUserManager().GetTitleInitiator().GetUid()];
 #endif
 	}

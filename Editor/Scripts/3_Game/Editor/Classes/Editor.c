@@ -45,37 +45,7 @@ class Editor: TreeNode
 	static const string UNDO_REDO = "UndoRedo";
 	static const string PLACEABLE_OBJECTS = "PlaceableObjects";
 	static const string BRUSHES = "Brushes";
-	
-	TreeNode GetObjects()
-	{
-		return this[EDITED_OBJECTS];
-	}
-	
-	TreeNode GetCommands()
-	{
-		return this[COMMANDS];
-	}
-	
-	TreeNode GetCommand(string command)
-	{
-		return this[COMMANDS][command];
-	}
-	
-	TreeNode GetUndoRedo()
-	{
-		return this[UNDO_REDO];
-	}
-	
-	TreeNode GetPlaceables()
-	{
-		return this[PLACEABLE_OBJECTS];
-	}
-	
-	TreeNode GetBrushes()
-	{
-		return this[BRUSHES];
-	}
-	
+		
 	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
 		m_Identity = identity;
@@ -842,6 +812,36 @@ class Editor: TreeNode
 	// Hope you remembered to register it
 	TreeNode FindCommandbyType(typename type)
 	{
-		return m_Children["Commands"][type.ToString()];
+		return this[COMMANDS][type.ToString()];
+	}
+	
+	TreeNode GetObjects()
+	{
+		return this[EDITED_OBJECTS];
+	}
+	
+	TreeNode GetCommands()
+	{
+		return this[COMMANDS];
+	}
+	
+	TreeNode GetCommand(string command)
+	{
+		return this[COMMANDS][command];
+	}
+	
+	TreeNode GetUndoRedo()
+	{
+		return this[UNDO_REDO];
+	}
+	
+	TreeNode GetPlaceables()
+	{
+		return this[PLACEABLE_OBJECTS];
+	}
+	
+	TreeNode GetBrushes()
+	{
+		return this[BRUSHES];
 	}
 }

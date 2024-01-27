@@ -107,6 +107,23 @@ class TreeNode: SerializableBase
 		Write(rpc, 0);
 		rpc.Send(null, DayZGame.RPC_NODE_SYNC, true, identity);
 	}
+	
+	bool Contains(string uuid)
+	{
+		array<string> full_path = {};
+		uuid.Split(PATH_SEPERATOR, full_path);
+		TreeNode node = this;
+		for (int i = 0; i < full_path.Count(); i++) {
+			if (!node) {
+				Error("Could not find child with id " + full_path[i]);
+				break;
+			}
+			
+			node = node.GetChildren()[uuid];
+		}
+		
+		return node != null;
+	}
 							
 	void Add(notnull TreeNode node)
 	{
