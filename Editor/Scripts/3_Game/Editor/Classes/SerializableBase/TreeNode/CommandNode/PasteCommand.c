@@ -1,0 +1,3 @@
+class PasteCommand: CommandNode
+{
+}

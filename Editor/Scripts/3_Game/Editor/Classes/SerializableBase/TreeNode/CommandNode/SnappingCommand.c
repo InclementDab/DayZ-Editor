@@ -1,0 +1,3 @@
+class SnappingCommand: CommandNode
+{
+}

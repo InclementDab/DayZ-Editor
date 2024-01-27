@@ -5,3 +5,8 @@ enum ShortcutKeyType
 	HOLD,
 	TOGGLE
 };
+
+// I think its wise
+class CommandNode: TreeNode
+{
+}

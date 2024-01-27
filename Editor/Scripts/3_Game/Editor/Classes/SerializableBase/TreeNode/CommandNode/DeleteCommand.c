@@ -1,4 +1,4 @@
-class DeleteCommand: TreeNode
+class DeleteCommand: CommandNode
 {
 	override void SetSelected(bool state) 
 	{

@@ -58,13 +58,13 @@ class Editor: TreeNode
 		edited_objects.Add(new TreeNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
 		Add(edited_objects);
 		
-		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);
-		commands.Add(new BoxSelectCommand("BoxSelectCommand", "Box Select", Symbols.SQUARE_DASHED));
-		commands.Add(new CircleSelectCommand("CircleSelectCommand", "Circle Select", Symbols.CIRCLE_DASHED));
-		commands.Add(new LassoSelectCommand("LassoSelectCommand", "Lasso Select", Symbols.LASSO));
-		commands.Add(new DeleteCommand("DeleteCommand", "Delete", Symbols.TRASH));
-		commands.Add(new UndoCommand("UndoCommand", "Undo", Symbols.ROTATE_LEFT));
-		commands.Add(new RedoCommand("RedoCommand", "Redo", Symbols.ROTATE_RIGHT));
+		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
+		commands.Add(new BoxSelectCommand("BoxSelect", "Box Select", Symbols.SQUARE_DASHED));
+		commands.Add(new CircleSelectCommand("CircleSelect", "Circle Select", Symbols.CIRCLE_DASHED));
+		commands.Add(new LassoSelectCommand("LassoSelect", "Lasso Select", Symbols.LASSO));
+		commands.Add(new DeleteCommand("Delete", "Delete", Symbols.TRASH));
+		commands.Add(new UndoCommand("Undo", "Undo", Symbols.ROTATE_LEFT));
+		commands.Add(new RedoCommand("Redo", "Redo", Symbols.ROTATE_RIGHT));
 		Add(commands);
 		
 		TreeNode undo_redo = new TreeNode(UNDO_REDO, "History", Symbols.CLOCK_ROTATE_LEFT);

@@ -1,4 +1,4 @@
-class BoxSelectCommand: TreeNode
+class BoxSelectCommand: CommandNode
 {
 	override void SetSelected(bool selected)
 	{

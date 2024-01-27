@@ -1,0 +1,3 @@
+class UnlockCommand: CommandNode
+{
+}

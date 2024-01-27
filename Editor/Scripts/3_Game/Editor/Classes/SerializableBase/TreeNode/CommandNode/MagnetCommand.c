@@ -1,0 +1,3 @@
+class MagnetCommand: CommandNode
+{
+}
