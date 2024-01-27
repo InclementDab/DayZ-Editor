@@ -1,5 +1,6 @@
 enum ShortcutKeyType
 {
+	NONE, // darn :(
 	PRESS, // 100ms
 	DOUBLE, // woah
 	HOLD, // EEEEEK like a poop?

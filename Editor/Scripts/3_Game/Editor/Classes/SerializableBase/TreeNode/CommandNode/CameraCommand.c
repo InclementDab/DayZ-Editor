@@ -1,3 +1,0 @@
-class CameraCommand: CommandNode
-{
-}

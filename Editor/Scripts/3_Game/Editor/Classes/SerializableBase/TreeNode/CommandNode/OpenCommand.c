@@ -1,3 +1,0 @@
-class OpenCommand: CommandNode
-{
-}

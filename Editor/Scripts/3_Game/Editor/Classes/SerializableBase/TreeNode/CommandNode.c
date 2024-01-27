@@ -2,12 +2,71 @@
 class CommandNode: TreeNode
 {
 	protected UAInput m_UAInput;
+	protected ShortcutKeyType m_ShortcutKeyType;
 	
-	void CommandNode(string uuid, string display_name, Symbols icon)
+	void CommandNode(string uuid, string display_name, Symbols icon, ShortcutKeyType key_type = ShortcutKeyType.NONE)
 	{
+		m_ShortcutKeyType = key_type;
+		
 #ifndef SERVER
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(PollShortcutExecution);
 #endif
+	}
+	
+	Editor GetEditor()
+	{
+		return Editor.Cast(m_Parent.GetParent());
+	}
+	
+	override void SetSelected(bool selected)
+	{
+		super.SetSelected(selected);
+		
+		switch (m_UUID) {
+			case "CursorToggle": {
+				GetGame().GetUIManager().ShowCursor(selected);
+				break;
+			}
+			
+			case "Undo": {
+				GetEditor().Undo();
+				break;
+			}
+			
+			case "Redo": {
+				GetEditor().Redo();
+				break;
+			}
+			
+			case "BoxSelect": {
+				GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
+				if (selected) {
+					m_Parent["CircleSelect"].SetSelected(false);
+					m_Parent["LassoSelect"].SetSelected(false);
+				}
+				
+				break;
+			}
+			
+			case "CircleSelect": {
+				GetEditor().GetHud().CurrentSelectionMode = SelectionMode.ELLIPSE;
+				if (selected) {
+					m_Parent["BoxSelect"].SetSelected(false);
+					m_Parent["LassoSelect"].SetSelected(false);
+				}
+					
+				break;
+			}
+			
+			case "LassoSelect": {
+				GetEditor().GetHud().CurrentSelectionMode = SelectionMode.LASSO;
+				if (selected) {
+					m_Parent["CircleSelect"].SetSelected(false);
+					m_Parent["BoxSelect"].SetSelected(false);
+				}
+				break;
+			}
+		}
 	}
 	
 	protected void PollShortcutExecution()
@@ -88,6 +147,6 @@ class CommandNode: TreeNode
 	
 	ShortcutKeyType GetShortcutType()
 	{
-		return ShortcutKeyType.PRESS;
+		return m_ShortcutKeyType;
 	}
 }

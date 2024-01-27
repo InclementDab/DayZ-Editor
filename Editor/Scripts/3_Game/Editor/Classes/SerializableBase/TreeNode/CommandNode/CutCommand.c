@@ -1,3 +1,0 @@
-class CutCommand: CommandNode
-{
-}
