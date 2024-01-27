@@ -1,6 +1,6 @@
 class EditorNodeViewController: ViewController
 {
-	ref ObservableCollection<EditorNodeView> ChildrenItems = new ObservableCollection<EditorNodeView>(this);
+	ref ObservableCollection<ref EditorNodeView> ChildrenItems = new ObservableCollection<ref EditorNodeView>(this);
 	
 	Widget Collapse;
 					

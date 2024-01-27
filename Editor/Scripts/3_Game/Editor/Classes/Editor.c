@@ -42,26 +42,144 @@ class Editor: EditorServer
 		m_Identity = identity;
 		m_Player = player;	
 		
-		// Its me!
-		if (!IsLocal()) {
-			return;
+		// Load all default categories and placements
+		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP);
+		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", Symbols.HAND));
+		edited_objects.Add(new EditorNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
+		edited_objects.Add(new EditorNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
+		Add(edited_objects);
+		
+#ifndef SERVER
+		EditorNode commands = new EditorNode("Commands", "Commands", Symbols.COMMAND);
+		commands.Add(new BoxSelectCommand("BoxSelectCommand", "Box Select", Symbols.SQUARE_DASHED));
+		commands.Add(new CircleSelectCommand("CircleSelectCommand", "Circle Select", Symbols.CIRCLE_DASHED));
+		commands.Add(new LassoSelectCommand("LassoSelectCommand", "Lasso Select", Symbols.LASSO));
+		commands.Add(new DeleteCommand("DeleteCommand", "Delete", Symbols.TRASH));
+		commands.Add(new UndoCommand("UndoCommand", "Undo", Symbols.ROTATE_LEFT));
+		commands.Add(new RedoCommand("RedoCommand", "Redo", Symbols.ROTATE_RIGHT));
+		Add(commands);
+		
+		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects", Symbols.ADDRESS_BOOK);
+		placeable_objects.Add(new EditorNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
+		placeable_objects.Add(new EditorNode("Plants", "Plants", Symbols.TREE));
+		placeable_objects.Add(new EditorNode("Rocks", "Rocks", Symbols.HILL_ROCKSLIDE));
+		placeable_objects.Add(new EditorNode("Clutter", "Clutter", Symbols.TRASH));
+		placeable_objects.Add(new EditorNode("Structures", "Structures", Symbols.HOUSE));
+		placeable_objects.Add(new EditorNode("Wrecks", "Wrecks", Symbols.CAR_BURST));
+		placeable_objects.Add(new EditorNode("AI", "AI", Symbols.PERSON));
+		placeable_objects.Add(new EditorNode("Water", "Water", Symbols.WATER));
+		placeable_objects.Add(new EditorNode("Vehicles", "Vehicles", Symbols.CAR));
+		placeable_objects.Add(new EditorNode("StaticObjects", "Static Objects", Symbols.OBJECT_INTERSECT));
+		placeable_objects.Add(new EditorNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT));
+		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
+		Add(placeable_objects);
+		
+		EditorNode brushes = new EditorNode("Brushes", "Brushes", Symbols.BRUSH);
+		brushes.Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
+		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
+		Add(brushes);
+#endif
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+		
+		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
+
+		string category = "Unknown";
+		// handle config objects
+		foreach (string path: config_paths) {
+			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
+				string type;
+		        GetGame().ConfigGetChildName(path, i, type);
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 2) {
+					continue;
+				}
+				
+				if (GetDayZGame().IsForbiddenItem(type)) {
+					continue;
+				}
+				
+				array<string> full_path = {};
+				GetGame().ConfigGetFullPath(path + " " + type, full_path);
+				
+				category = "Unknown";
+				if ((full_path.Find("Weapon_Base") != -1) || (full_path.Find("Inventory_Base")) != -1) {
+					category = "DynamicObjects";
+				} else if (full_path.Find("HouseNoDestruct") != -1) {
+					category = "Structures";
+				} else if (full_path.Find("Car") != -1) {
+					category = "Vehicles";
+				} else if (full_path.Find("Man") != -1 || (full_path.Find("DZ_LightAI"))) {
+					category = "AI";
+				}
+				
+				this["PlaceableObjects"][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING));
+		    }
 		}
 		
-		m_Hud = new EditorHud();
-		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("PlaceableObjects").GetNodeView());
-		m_Hud.GetTemplateController().LeftListItems.Insert(GetNode("Brushes").GetNodeView());
-		m_Hud.GetTemplateController().RightListItems.Insert(GetDayZGame().GetMaster().GetNode("SERVER").GetNodeView());
-		m_Hud.GetTemplateController().RightListItems.Insert(GetNode("EditedObjects").GetNodeView());
+		array<string> paths = { "DZ\\plants", "DZ\\plants_bliss", "DZ\\rocks", "DZ\\rocks_bliss" };
+		foreach (string model_path: paths) {
+			array<ref CF_File> files = {};
+			if (!CF_Directory.GetFiles(model_path + "\\*", files, FindFileFlags.ARCHIVES)) {
+				continue;
+			}
 				
-		// how long until this is a node?? :/
-		m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
-		m_Camera.SetActive(true);
+			foreach (CF_File file: files) {		
+				if (!file || file.GetExtension() != ".p3d") {
+					continue;
+				}
+				
+				string model_name;
+				array<string> items = {};
+				string full_path_p3d = file.GetFullPath();
+				full_path_p3d.Replace("/", "\\");
+				full_path_p3d.Split("\\", items);
+				if (items.Count() != 0) {
+					model_name = items[items.Count() - 1];
+				}
+				
+				category = "StaticObjects";
+				if ((items.Find("tree") != -1) || (items.Find("bush") != -1)) {
+					category = "Plants";
+				} else if (items.Find("clutter") != -1) {
+					category = "Clutter";
+				} else if (items.Find("rocks") != -1) {
+					category = "Rocks";
+				}
+			
+				this["PlaceableObjects"][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
+			}
+		}
+
+		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
+			this["PlaceableObjects"]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+		}
 	}
 
 	void ~Editor() 
 	{
 		delete m_Hud;
 		GetGame().ObjectDelete(m_Camera);
+	}
+	
+	override void OnSynchronized()
+	{
+		if (!m_Hud) {
+			m_Hud = new EditorHud(this);
+		}
+		
+		// how long until this is a node?? :/
+		if (!m_Camera) {
+			if (!m_Player) {
+				m_Player = DayZPlayer.Cast(m_Identity.GetPlayer());
+				if (m_Player) {
+					Error("Could not find player");
+					return;
+				}
+			}
+			
+			m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
+			m_Camera.SetActive(true);
+		}
 	}
 		
 	override void Update(float timeslice)
@@ -295,7 +413,9 @@ class Editor: EditorServer
 		super.Write(serializer, version);
 		
 		serializer.Write(m_Identity);
+		Print(m_Identity);
 		serializer.Write(m_Player);
+		Print(m_Player);
 		serializer.Write(m_Camera);
 	}
 	
@@ -306,7 +426,9 @@ class Editor: EditorServer
 		}
 		
 		serializer.Read(m_Identity);
+		Print(m_Identity);
 		serializer.Read(m_Player);
+		Print(m_Player);
 		serializer.Read(m_Camera);			
 		return true;
 	}
@@ -665,5 +787,11 @@ class Editor: EditorServer
 	bool IsLocal()
 	{
 		return m_UUID == GetGame().GetUserManager().GetTitleInitiator().GetUid();
+	}
+	
+	// Hope you remembered to register it
+	EditorNode FindCommandbyType(typename type)
+	{
+		return m_Children["Commands"][type.ToString()];
 	}
 }

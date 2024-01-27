@@ -22,29 +22,32 @@ class EditorNode: SerializableBase
 	protected bool m_IsSelected; // local
 	protected EditorNode m_Parent;
 	
-	protected ref EditorNodeView m_NodeView;
+	protected EditorNodeView m_NodeView; // Weak ref
 	
 	void EditorNode(string uuid, string display_name, Symbols icon)
 	{
 		m_UUID = uuid;
 		m_DisplayName = display_name;
 		m_Icon = icon;
-				
 #ifndef SERVER
-#ifndef WORKBENCH
-		m_NodeView = new EditorNodeView(m_DisplayName, this, m_Icon);
-		
 		UAInput inp = GetUApi().GetInputByName(GetShortcut());
 		if (inp.BindKeyCount() > 0) {
 			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(PollShortcutExecution);
 		}
 #endif
-#endif
 	}
 	
-	void ~EditorNode()
+	void LoadViews(inout notnull ObservableCollection<ref EditorNodeView> list_items)
 	{
-		delete m_NodeView;
+#ifndef WORKBENCH
+		EditorNodeView node_view = new EditorNodeView(this);
+		list_items.Insert(node_view);
+		m_NodeView = node_view;
+		
+		foreach (string uuid, EditorNode node: m_Children) {
+			node.LoadViews(node_view.GetTemplateController().ChildrenItems);
+		}
+#endif
 	}
 	
 	protected void PollShortcutExecution()
@@ -147,9 +150,9 @@ class EditorNode: SerializableBase
 		m_Parent = parent;
 		
 		// Update visual display
-		if (m_Parent && m_Parent.GetNodeView()) {
-			m_Parent.GetNodeView().GetTemplateController().ChildrenItems.Insert(m_NodeView);
-		}
+		//if (m_Parent && m_Parent.GetNodeView()) {
+		//	m_Parent.GetNodeView().GetTemplateController().ChildrenItems.Insert(m_NodeView);
+		//}
 	}
 	
 	EditorNode GetParent()

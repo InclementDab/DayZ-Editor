@@ -54,7 +54,7 @@ class EditorHud: ScriptView
 	protected Widget m_DraggedBar;
 	protected int m_DragX = -1, m_DragY = -1;
 		
-	void EditorHud()
+	void EditorHud(notnull Editor editor)
 	{		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
 		
@@ -66,6 +66,12 @@ class EditorHud: ScriptView
 		GetGame().GetMission().GetHud().ShowHudUI(false);
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 		SetCursorWidget(Cursor);
+		
+		Print(editor["PlaceableObjects"]);
+		editor.GetNode("PlaceableObjects").LoadViews(m_TemplateController.LeftListItems);
+		editor.GetNode("Brushes").LoadViews(m_TemplateController.LeftListItems);
+		editor.LoadViews(m_TemplateController.RightListItems);
+		editor.GetNode("EditedObjects").LoadViews(m_TemplateController.RightListItems);
 	}
 	
 	void ~EditorHud()

@@ -21,7 +21,7 @@ class EditorCommandMenuItem: ScriptViewTemplate<EditorCommandMenuItemController>
 		if (node.GetChildren().Count() > 0) {
 			map<string, ref EditorNode> nodes = node.GetChildren();
 			foreach (string uuid, EditorNode node1: nodes) {
-				m_TemplateController.Children.Insert(node1.GetNodeView());
+				//m_TemplateController.Children.Insert(node1.GetNodeView());
 			}
 			
 			Caret.Show(true);

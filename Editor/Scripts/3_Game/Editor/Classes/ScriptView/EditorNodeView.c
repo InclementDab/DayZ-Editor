@@ -11,23 +11,19 @@ class EditorNodeView: ScriptView
 	ButtonWidget Collapse;
 	
 	protected bool m_IsBeingDragged;
-	protected string m_Text;
-	
-	protected Symbols m_Icon;
-	
+
 	protected EditorNode m_Node;
 
-	void EditorNodeView(string text, EditorNode node, Symbols icon)
+	void EditorNodeView(EditorNode node)
 	{
 		m_TemplateController = EditorNodeViewController.Cast(m_Controller);
 		m_Node = node;
-		m_Icon = icon;
+		
 		m_Node.OnSelectionChanged.Insert(OnSelectionChange);
 		
-		m_Text = text;
-		SetText(m_Text);
+		SetText(m_Node.GetDisplayName());
 		
-		IconImage.LoadImageFile(0, m_Icon.Solid());
+		IconImage.LoadImageFile(0, m_Node.GetIcon().Solid());
 		IconImage.SetImage(0);
 		
 		AllEditorNodeViews[m_LayoutRoot] = this;
@@ -41,11 +37,11 @@ class EditorNodeView: ScriptView
 	// should be on the node
 	bool CreateContextMenu(notnull inout ObservableCollection<ref ScriptView> menu_items)
 	{
-		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().FindCommandbyType(UndoCommand)));
-		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().FindCommandbyType(RedoCommand)));		
-		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().FindCommandbyType(BoxSelectCommand)));
-		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().FindCommandbyType(CircleSelectCommand)));
-		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().FindCommandbyType(LassoSelectCommand)));
+		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().GetEditor().FindCommandbyType(UndoCommand)));
+		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().GetEditor().FindCommandbyType(RedoCommand)));		
+		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().GetEditor().FindCommandbyType(BoxSelectCommand)));
+		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().GetEditor().FindCommandbyType(CircleSelectCommand)));
+		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().GetEditor().FindCommandbyType(LassoSelectCommand)));
 		menu_items.Insert(new EditorMenuDivider());
 		return true;
 	}
@@ -59,7 +55,7 @@ class EditorNodeView: ScriptView
 		Panel.SetScreenSize(w, h);
 	}
 	
-	void ShowChildren(bool state, float offset = 0)
+	void ShowChildren(bool state)
 	{
 		if (!CollapseIcon) {
 			return;
@@ -82,7 +78,7 @@ class EditorNodeView: ScriptView
 		// you only want to open upper containers when lower ones are opened. propagate up /\
 		EditorNode parent = m_Node.GetParent();
 		if (parent) {
-			parent.GetNodeView().ShowChildren(true, offset);
+			parent.GetNodeView().ShowChildren(true);
 		}
 	}
 		
@@ -90,7 +86,7 @@ class EditorNodeView: ScriptView
 	{
 		filter.ToLower();
 	
-		string name = m_Text;
+		string name = m_Node.GetDisplayName();
 		name.ToLower();
 	
 		m_LayoutRoot.Show(name.Contains(filter));
@@ -134,7 +130,7 @@ class EditorNodeView: ScriptView
 		
 		EditorHud hud = GetDayZGame().GetEditor().GetHud();
 		
-		hud.SetCursor(m_Icon, m_Node.GetUUID(), m_Node.GetUUID());
+		hud.SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetUUID());
 		
 		EditorPlaceable placeable = EditorPlaceable.Cast(m_Node);
 		if (placeable) {

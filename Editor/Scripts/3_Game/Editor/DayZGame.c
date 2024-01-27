@@ -4,28 +4,33 @@ modded class DayZGame
 	static const int RPC_REQUEST_SYNC = 54364;
 	static const int RPC_NODE_SYNC = 54365;
 	
-	// Created on client AND server, assumed existence always. RPC_SYNC and Synchronize will be relying on this
-	protected ref EditorNode m_Master = new EditorNode(string.Empty, string.Empty, string.Empty);
+	protected ref EditorNode m_Server = new EditorNode("SERVER", "Editors", Symbols.CAMERA_SECURITY);
+	
+#ifdef WORKBENCH
+	protected ref Editor w_Editor = new Editor("", "", "", null, null);
+#endif
 		
-	override void SetMissionPath(string path)
-	{
-		super.SetMissionPath(path);
+	Editor GetEditor()
+	{		
+#ifdef WORKBENCH		
+		return w_Editor;
+#endif
 		
-		m_Master.Add(new EditorServer("SERVER", "Editors", Symbols.CAMERA_SECURITY));
-		m_Master.Synchronize();
+		return m_Server[GetUserManager().GetTitleInitiator().GetUid()];
 	}
-		
-	// Hope you remembered to register it
-	EditorNode FindCommandbyType(typename type)
+	
+	void AddEditor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player)
 	{
-		return m_Master["SERVER"]["Commands"][type.ToString()];
+		Editor editor = new Editor(uuid, display_name, icon, identity, player);		
+		m_Server.Add(editor);
+		editor.Synchronize();
 	}
-		
+			
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{				
 		switch (rpc_type) {		
 			case RPC_REQUEST_SYNC: {
-				m_Master.Synchronize(sender);
+				m_Server.Synchronize(sender);
 				break;
 			}
 				
@@ -35,7 +40,8 @@ modded class DayZGame
 					break;
 				}
 
-				EditorNode current = m_Master;
+				Print(tree_depth);
+				EditorNode current = m_Server;
 				for (int i = 0; i < tree_depth; i++) {
 					string uuid;
 					ctx.Read(uuid);
@@ -92,19 +98,14 @@ modded class DayZGame
 	void Recompile()
 	{
 		PlayerIdentity identity = GetPlayer().GetIdentity();
-		delete m_Master["SERVER"][identity.GetPlainId()];
+		delete m_Server[identity.GetPlainId()];
 		
 		Editor editor = new Editor(identity.GetPlainId(), identity.GetFullName(), Symbols.CAMERA.Regular(), identity, GetPlayer());
-		m_Master["SERVER"][identity.GetPlainId()] = editor;
+		m_Server[identity.GetPlainId()] = editor;
 		
-		m_Master.Synchronize();
+		editor.Synchronize();
 	}
-	
-	EditorNode GetMaster()
-	{
-		return m_Master;
-	}
-	
+		
 	static bool IsForbiddenItem(string model)
 	{
 		//! In theory should be safe but just in case
@@ -124,37 +125,5 @@ modded class DayZGame
 		
 		//! Everything is fine... I hope... :pain:
 		return false;
-	}
-	
-#ifdef WORKBENCH
-	protected ref Editor w_Editor;
-#endif
-	
-	Editor GetEditor()
-	{		
-#ifdef WORKBENCH
-		if (!w_Editor) {
-			w_Editor = new Editor("", "", "", null, null);
-		}
-		
-		return w_Editor;
-#endif
-		
-		Editor server = Editor.Cast(m_Master["SERVER"]);
-		if (IsServer()) {
-			return server;
-		}
-		
-		if (!server) {
-			return null;
-		}
-		
-		if (!GetUserManager() || !GetUserManager().GetTitleInitiator()) {
-			return null;
-		}
-		
-		string uuid = GetUserManager().GetTitleInitiator().GetUid();
-		
-		return Editor.Cast(server[uuid]);
 	}
 }
