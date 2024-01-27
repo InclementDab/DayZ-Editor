@@ -288,6 +288,13 @@ class Editor: EditorServer
 				m_Hud.Show(!m_Hud.IsVisible());
 			}
 		}
+		
+		if (GetGame().GetInput().LocalPress("EditorToggleActive")) {
+			GetDayZGame().GetEditor().SetActive(!GetDayZGame().GetEditor().IsActive());
+		}
+		
+		Widget root_widget = EnScriptVar<Widget>.Get(GetGame().GetMission(), "m_HudRootWidget");
+		root_widget.Show(!IsActive());
 	}
 				
 	override void Write(Serializer serializer, int version)

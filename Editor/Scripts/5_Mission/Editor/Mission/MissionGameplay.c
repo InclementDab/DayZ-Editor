@@ -3,13 +3,7 @@ modded class MissionGameplay
 	override void OnUpdate(float timeslice)
 	{
 		super.OnUpdate(timeslice);
-		
-		if (GetGame().GetInput().LocalPress("EditorToggleActive")) {
-			GetDayZGame().GetEditor().SetActive(!GetDayZGame().GetEditor().IsActive());
-		}
-		
-		m_HudRootWidget.Show(GetDayZGame().GetEditor() && !GetDayZGame().GetEditor().IsActive());
-		
+				
 #ifdef DIAG_DEVELOPER
 		DayZPlayerUtils.DrawStartFrame();
 		
