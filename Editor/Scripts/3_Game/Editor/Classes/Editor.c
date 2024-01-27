@@ -461,9 +461,7 @@ class Editor: TreeNode
 		super.Write(serializer, version);
 		
 		serializer.Write(m_Identity);
-		Print(m_Identity);
 		serializer.Write(m_Player);
-		Print(m_Player);
 		serializer.Write(m_Camera);
 	}
 	
@@ -473,10 +471,8 @@ class Editor: TreeNode
 			return false;
 		}
 		
-		serializer.Read(m_Identity);
-		Print(m_Identity);
+		serializer.Read(m_Identity);	
 		serializer.Read(m_Player);
-		Print(m_Player);
 		serializer.Read(m_Camera);			
 		return true;
 	}

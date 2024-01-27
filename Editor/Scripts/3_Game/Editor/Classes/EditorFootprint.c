@@ -1,28 +1,3 @@
-class EditorHistory: set<ref EditorFootprint>
-{
-	static const int MAX_SIZE = 512;
-	
-	int InsertAction(EditorFootprint value)
-	{	
-		int count = Count();
-		for (int i = 0; i < count; i++) {
-			if (!this[i].IsUndone()) {
-				break;
-			}
-			
-			Remove(i);
-			i--; count--;
-		}
-		
-		if (count >= MAX_SIZE) {
-			Remove(count - 1);
-		}
-		
-		// Adds to bottom of stack
-		return InsertAt(value, 0);
-	}
-}
-
 class EditorFootprint: TreeNode
 {
 	protected bool m_IsUndone;
