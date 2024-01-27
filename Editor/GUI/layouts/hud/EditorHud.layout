@@ -3463,7 +3463,7 @@ FrameWidgetClass Root {
      }
     }
     GridSpacerWidgetClass CursorTooltip {
-     visible 1
+     visible 0
      clipchildren 0
      ignorepointer 1
      color 0.098 0.098 0.098 1
