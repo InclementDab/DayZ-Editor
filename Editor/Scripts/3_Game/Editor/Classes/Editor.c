@@ -826,13 +826,7 @@ class Editor: TreeNode
 	{
 		return m_UUID == GetGame().GetUserManager().GetTitleInitiator().GetUid();
 	}
-	
-	// Hope you remembered to register it
-	TreeNode FindCommandbyType(typename type)
-	{
-		return this[COMMANDS][type.ToString()];
-	}
-	
+		
 	TreeNode GetObjects()
 	{
 		return this[EDITED_OBJECTS];
@@ -843,9 +837,9 @@ class Editor: TreeNode
 		return this[COMMANDS];
 	}
 	
-	TreeNode GetCommand(string command)
+	CommandNode GetCommand(string command)
 	{
-		return this[COMMANDS][command];
+		return CommandNode.Cast(this[COMMANDS][command]);
 	}
 	
 	TreeNode GetUndoRedo()

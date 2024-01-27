@@ -37,11 +37,16 @@ class TreeView: ScriptView
 	// should be on the node
 	bool CreateContextMenu(notnull inout ObservableCollection<ref ScriptView> menu_items)
 	{
-		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().GetEditor().FindCommandbyType(UndoCommand)));
-		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().GetEditor().FindCommandbyType(RedoCommand)));		
-		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().GetEditor().FindCommandbyType(BoxSelectCommand)));
-		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().GetEditor().FindCommandbyType(CircleSelectCommand)));
-		menu_items.Insert(new EditorCommandMenuItem(GetDayZGame().GetEditor().FindCommandbyType(LassoSelectCommand)));
+		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("Undo")));
+		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("Redo")));
+		menu_items.Insert(new EditorMenuDivider());
+		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("Cut")));
+		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("Copy")));
+		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("Paste")));
+		menu_items.Insert(new EditorMenuDivider());
+		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("BoxSelect")));
+		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("CircleSelect")));
+		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("LassoSelect")));
 		menu_items.Insert(new EditorMenuDivider());
 		return true;
 	}

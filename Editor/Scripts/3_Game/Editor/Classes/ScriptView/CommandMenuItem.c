@@ -1,15 +1,15 @@
-class EditorCommandMenuItemController: ViewController
+class CommandMenuItemController: ViewController
 {
 	ref ObservableCollection<TreeView> Children = new ObservableCollection<TreeView>(this);
 }
 
-class EditorCommandMenuItem: ScriptViewTemplate<EditorCommandMenuItemController>
+class CommandMenuItem: ScriptViewTemplate<CommandMenuItemController>
 {
 	Widget Panel, Shortcut, Caret;
 	ImageWidget Icon;
 	TextWidget Name, ShortcutText;
 	
-	void EditorCommandMenuItem(TreeNode node)
+	void CommandMenuItem(notnull CommandNode node)
 	{		
 		Name.SetText(node.GetDisplayName());
 		
