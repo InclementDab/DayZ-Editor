@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{4DC6E7634A876B93}Editor/GUI/images/sandbox.png"
+ Author "desktop-ucqosjo"
+ ChangeDate 1722314803
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "sandbox.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

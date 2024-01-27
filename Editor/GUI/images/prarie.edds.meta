@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{B917F14A6DA177DA}DayZEditor/GUI/images/prarie.edds"
+ Author "desktop-ucqosjo"
+ ChangeDate 540553267
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "prarie.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

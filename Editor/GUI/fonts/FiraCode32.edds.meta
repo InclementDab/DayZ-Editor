@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{5D634791F6348EBD}FiraCode/FiraCode32.edds"
+ Author "wrdg-2019"
+ ChangeDate -1527060237
+ Configurations {
+  TGAResourceClass PC {
+   SourceFile "FiraCode32.tga"
+  }
+  TGAResourceClass XBOX_ONE : PC {
+  }
+  TGAResourceClass PS4 : PC {
+  }
+  TGAResourceClass LINUX : PC {
+  }
+ }
+}
