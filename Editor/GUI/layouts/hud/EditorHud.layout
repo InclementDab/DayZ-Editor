@@ -2927,6 +2927,7 @@ FrameWidgetClass Root {
        }
        {
         ScriptParamsClass {
+         Menu "File"
         }
        }
       }
@@ -2941,6 +2942,7 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
+       scriptclass "EditorMenuTab"
        Padding 0
        Margin 6
        Columns 1
@@ -2982,6 +2984,11 @@ FrameWidgetClass Root {
          }
         }
        }
+       {
+        ScriptParamsClass {
+         Menu "Edit"
+        }
+       }
       }
       GridSpacerWidgetClass View {
        ignorepointer 1
@@ -2994,6 +3001,8 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
+       draggable 0
+       scriptclass "EditorMenuTab"
        Padding 0
        Margin 6
        Columns 1
@@ -3035,6 +3044,11 @@ FrameWidgetClass Root {
          }
         }
        }
+       {
+        ScriptParamsClass {
+         Menu "View"
+        }
+       }
       }
       GridSpacerWidgetClass Mission {
        ignorepointer 1
@@ -3047,6 +3061,7 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
+       scriptclass "EditorMenuTab"
        Padding 1
        Margin 6
        Columns 1
@@ -3086,6 +3101,11 @@ FrameWidgetClass Root {
            "text valign" center
           }
          }
+        }
+       }
+       {
+        ScriptParamsClass {
+         Menu "Mission"
         }
        }
       }

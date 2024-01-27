@@ -38,18 +38,15 @@ class TreeNode: SerializableBase
 #endif
 	}
 	
-	void LoadViews(inout notnull ObservableCollection<ref TreeView> list_items)
+	void LoadView(inout ObservableCollection<ref TreeView> parent_list)
 	{
-		TreeView node_view = new TreeView(this);
-		if (!list_items) {
-			PrintFormat("[%1] List Items not valid when adding %2", m_UUID, m_DisplayName);
-			return;
-		}
-		
-		list_items.Insert(node_view);
+		TreeView node_view = new TreeView(this);		
 		m_NodeView = node_view;
+		
+		parent_list.Insert(m_NodeView);
+		
 		foreach (string uuid, TreeNode node: m_Children) {
-			node.LoadViews(node_view.GetTemplateController().ChildrenItems);
+			node.LoadView(m_NodeView.GetTemplateController().ChildrenItems);
 		}
 	}
 	

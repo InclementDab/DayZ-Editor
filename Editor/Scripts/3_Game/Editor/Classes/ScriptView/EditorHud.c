@@ -44,7 +44,8 @@ class EditorHud: ScriptView
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 		SetCursorWidget(Cursor);
 		
-		editor.GetPlaceables().LoadViews(m_TemplateController.LeftListItems);
+		editor.GetPlaceables().LoadView(m_TemplateController.LeftListItems);
+		
 		//editor.GetNode("Brushes").LoadViews(m_TemplateController.LeftListItems);
 		//editor.LoadViews(m_TemplateController.RightListItems);
 		//editor.GetNode("EditedObjects").LoadViews(m_TemplateController.RightListItems);
@@ -165,23 +166,7 @@ class EditorHud: ScriptView
 			m_DragY = -1;
 			m_LassoHistory.Clear();
 		}
-		
-		if (input.LocalRelease_ID(UATempRaiseWeapon)) {
-			Widget w = GetWidgetUnderCursor();
-			RecursiveGetParent(w, "Root");
-			TreeView node_view_under_cursor = TreeView.AllTreeViews[w];
-			if (!node_view_under_cursor) {
-				return;
-			}
-			
-			Menu.Show(false);
-			m_TemplateController.MenuItems.Clear();
-			if (node_view_under_cursor.CreateContextMenu(m_TemplateController.MenuItems)) {
-				Menu.Show(true);
-				Menu.SetScreenPos(mouse_x, mouse_y);
-			}
-		}
-							
+									
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
 			m_DraggedBar.GetChildren().SetColor(COLOR_WHITE);
 			m_DraggedBar = null;

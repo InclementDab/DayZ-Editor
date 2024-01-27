@@ -33,24 +33,7 @@ class TreeView: ScriptView
 	{
 		AllTreeViews.Remove(m_LayoutRoot);
 	}
-	
-	// should be on the node
-	bool CreateContextMenu(notnull inout ObservableCollection<ref ScriptView> menu_items)
-	{
-		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("Undo")));
-		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("Redo")));
-		menu_items.Insert(new EditorMenuDivider());
-		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("Cut")));
-		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("Copy")));
-		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("Paste")));
-		menu_items.Insert(new EditorMenuDivider());
-		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("BoxSelect")));
-		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("CircleSelect")));
-		menu_items.Insert(new CommandMenuItem(GetDayZGame().GetEditor().GetCommand("LassoSelect")));
-		menu_items.Insert(new EditorMenuDivider());
-		return true;
-	}
-	
+		
 	void SetText(string text)
 	{
 		Text.SetText(text);
@@ -75,7 +58,6 @@ class TreeView: ScriptView
 		float w, h, x, y;
 		Children.GetScreenSize(w, h);		
 		m_LayoutRoot.GetScreenSize(x, y);
-		Print(h);
 		m_LayoutRoot.SetScreenSize(x, h * state + 24);
 		m_LayoutRoot.Update();
 		
@@ -97,12 +79,7 @@ class TreeView: ScriptView
 	
 		m_LayoutRoot.Show(name.Contains(filter));
 	}
-	
-	TreeNode GetSibling()
-	{
-		
-	}
-		
+			
 	override void Update(float dt)
 	{				
 		if (m_IsBeingDragged) {

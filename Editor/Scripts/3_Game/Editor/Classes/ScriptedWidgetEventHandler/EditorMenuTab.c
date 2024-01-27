@@ -35,7 +35,6 @@ class EditorMenuTab: ScriptedWidgetEventHandler
 		
 		if (Menu != string.Empty) {	
 			m_Node = GetDayZGame().GetEditor().GetMenu(Menu);
-			Print(m_Node);
 			if (m_Node) {
 				m_Node.OnSelectionChanged.Insert(OnExecuted);				
 				m_Button.SetState(m_Node.GetDefaultState());
