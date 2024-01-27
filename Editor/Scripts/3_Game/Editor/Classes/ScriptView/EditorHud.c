@@ -1,21 +1,3 @@
-class CompassTick: ScriptView
-{
-	TextWidget Text;
-	ImageWidget Icon;
-	
-	void CompassTick(string text, string icon)
-	{ 
-		Text.SetText(text);
-		Icon.LoadImageFile(0, icon);
-		Icon.SetImage(0);
-	}
-	
-	override string GetLayoutFile()
-	{
-		return "Editor\\GUI\\layouts\\hud\\CompassTick.layout";
-	}
-}
-
 class EditorHud: ScriptView
 {	
 	protected EditorHudController m_TemplateController;
@@ -57,12 +39,7 @@ class EditorHud: ScriptView
 	void EditorHud(notnull Editor editor)
 	{		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
-		
-		for (int i = 0; i < 36; i++) {
-			string is = i.ToString();
-			m_TemplateController.CompassTicks.Insert(new CompassTick(is, Symbols.T.Thin()));
-		}
-		
+				
 		GetGame().GetMission().GetHud().ShowHudUI(false);
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 		SetCursorWidget(Cursor);

@@ -13,7 +13,6 @@ class TreeNode: SerializableBase
 	}
 	
 	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();
-	ref ScriptInvoker OnLockChanged = new ScriptInvoker();
 
 	protected string m_UUID;	
 	protected ref map<string, ref TreeNode> m_Children = new map<string, ref TreeNode>();

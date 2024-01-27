@@ -9,8 +9,6 @@ class EditorHudController: ViewController
 		
 	ref ObservableCollection<ref EditorFileHeadView> OpenFiles = new ObservableCollection<ref EditorFileHeadView>(this);
 		
-	ref ObservableCollection<ref CompassTick> CompassTicks = new ObservableCollection<ref CompassTick>(this);
-	
 	ScrollWidget LeftScroll;
 	ScrollWidget RightScroll;	
 	
