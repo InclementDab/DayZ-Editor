@@ -77,7 +77,7 @@ class Editor: TreeNode
 		commands.Add(new CommandNode("Paste", "Paste", Symbols.PASTE, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK, ShortcutKeyType.PRESS));
+		commands.Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN, ShortcutKeyType.PRESS));

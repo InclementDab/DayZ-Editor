@@ -25,6 +25,7 @@ class CommandNode: TreeNode
 		switch (m_UUID) {
 			case "CursorToggle": {
 				GetGame().GetUIManager().ShowCursor(selected);
+				GetEditor().GetHud().ClearCursor();
 				break;
 			}
 			

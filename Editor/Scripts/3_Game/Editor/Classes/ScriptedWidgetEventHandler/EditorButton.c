@@ -33,7 +33,8 @@ class EditorButton: ScriptedWidgetEventHandler
 			return;
 		}
 #endif
-		
+	
+		// This is executing too early because GetEditor hasnt actually been inserted yet!, what doo?>????	
 		if (Node != string.Empty) {	
 			m_Node = GetDayZGame().GetEditor().GetCommand(Node);
 			if (m_Node) {
