@@ -44,7 +44,10 @@ class EditorHud: ScriptView
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 		SetCursorWidget(Cursor);
 		
-		editor.GetPlaceables().LoadView(m_TemplateController.LeftListItems);
+		m_TemplateController.LeftListItems.Insert(editor.GetPlaceables().GetNodeView());
+		m_TemplateController.LeftListItems.Insert(editor.GetBrushes().GetNodeView());
+		m_TemplateController.RightListItems.Insert(editor.GetUndoRedo().GetNodeView());
+
 		
 		//editor.GetNode("Brushes").LoadViews(m_TemplateController.LeftListItems);
 		//editor.LoadViews(m_TemplateController.RightListItems);

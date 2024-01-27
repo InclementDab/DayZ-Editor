@@ -32,7 +32,7 @@ class TreeNode: SerializableBase
 	protected bool m_IsSelected; // local
 	protected TreeNode m_Parent;
 	
-	protected TreeView m_NodeView; // Weak ref
+	protected ref TreeView m_NodeView;
 	
 	void TreeNode(string uuid, string display_name, Symbols icon)
 	{
@@ -40,19 +40,7 @@ class TreeNode: SerializableBase
 		m_DisplayName = display_name;
 		m_Icon = icon;
 	}
-	
-	void LoadView(inout ObservableCollection<ref TreeView> parent_list)
-	{
-		TreeView node_view = new TreeView(this);		
-		m_NodeView = node_view;
-		
-		parent_list.Insert(m_NodeView);
-		
-		foreach (string uuid, TreeNode node: m_Children) {
-			node.LoadView(m_NodeView.GetTemplateController().ChildrenItems);
-		}
-	}
-		
+			
 	void Synchronize(PlayerIdentity identity = null)
 	{	
 		ScriptRPC rpc = new ScriptRPC();
@@ -156,9 +144,9 @@ class TreeNode: SerializableBase
 		m_Parent = parent;
 		
 		// Update visual display
-		//if (m_Parent && m_Parent.GetNodeView()) {
-		//	m_Parent.GetNodeView().GetTemplateController().ChildrenItems.Insert(m_NodeView);
-		//}
+		if (m_Parent && m_Parent.GetNodeView()) {
+			m_Parent.GetNodeView().GetTemplateController().ChildrenItems.Insert(GetNodeView());
+		}
 	}
 	
 	TreeNode GetParent()
@@ -275,6 +263,10 @@ class TreeNode: SerializableBase
 		
 	TreeView GetNodeView()
 	{
+		if (!m_NodeView) {
+			m_NodeView = new TreeView(this);
+		}
+		
 		return m_NodeView;
 	}
 	
