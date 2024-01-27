@@ -13,6 +13,8 @@ class EditorFootprint: TreeNode
 	
 	void Undo()
 	{
+		WidgetAnimator.Animate(m_NodeView.Text, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
+		
 		m_IsUndone = true;
 		
 		Print("Undoing!");
@@ -50,6 +52,10 @@ class EditorFootprint: TreeNode
 		
 	void Redo()
 	{
+		WidgetAnimator.Animate(m_NodeView.Text, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
+		
 		m_IsUndone = false;
+		
+		Print("Redoing!");
 	}
 }

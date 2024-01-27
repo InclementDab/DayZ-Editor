@@ -40,6 +40,11 @@ class TreeNode: SerializableBase
 		m_DisplayName = display_name;
 		m_Icon = icon;
 	}
+	
+	void ~TreeNode()
+	{
+		delete m_NodeView;
+	}
 			
 	void Synchronize(PlayerIdentity identity = null)
 	{	
@@ -116,6 +121,14 @@ class TreeNode: SerializableBase
 	TreeNode GetNode(string uuid)
 	{
 		return this[uuid];
+	}
+	
+	ScriptReadWriteContext CreateCopy()
+	{
+		ScriptReadWriteContext ctx = new ScriptReadWriteContext();
+		ctx.GetWriteContext().Write(GetFullPath());		
+		Write(ctx.GetWriteContext(), 0);
+		return ctx;
 	}
 	
 	// {uuid}{PATH_SEPERATOR}{uuid}

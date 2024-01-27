@@ -32,7 +32,8 @@ class EditorObject: TreeNode
 		
 	void ~EditorObject()
 	{		
-		//EditorBoundingBox.Destroy(m_Object);
+		GetGame().ObjectDelete(m_Object);
+		EditorBoundingBox.Destroy(m_Object);
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
 		GetGame().ObjectDelete(m_TranslationGizmo);

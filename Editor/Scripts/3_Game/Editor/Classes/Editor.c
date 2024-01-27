@@ -89,6 +89,16 @@ class Editor: TreeNode
 		file_menu.Add(commands["Save"]);
 		file_menu.Add(commands["SaveAs"]);
 		menus.Add(file_menu);
+		
+		TreeNode edit_menu = new TreeNode("Edit", "Edit", Symbols.FILE_PEN);
+		menus.Add(edit_menu);
+		
+		TreeNode view_menu = new TreeNode("View", "View", Symbols.BINOCULARS);
+		menus.Add(view_menu);
+		
+		TreeNode mission_menu = new TreeNode("Mission", "Mission", Symbols.PERSON_RIFLE);
+		menus.Add(mission_menu);
+		
 		Add(menus);
 				
 		TreeNode undo_redo = new TreeNode(UNDO_REDO, "History", Symbols.CLOCK_ROTATE_LEFT);
@@ -226,10 +236,11 @@ class Editor: TreeNode
 		// What?
 		EnScript.SetClassVar(GetDayZGame(), "m_Editor", 0, this);
 	}
-		
-	void InsertAction(EditorFootprint value)
-	{			
-		foreach (string uuid, TreeNode undo_redo_node: this[UNDO_REDO].Children) {			
+	
+	void InsertHistory(string display_name, Symbols icon, ScriptReadWriteContext context)
+	{
+		// Clear the stack first
+		foreach (string uuid, TreeNode undo_redo_node: this[UNDO_REDO].Children) {	
 			EditorFootprint footprint = EditorFootprint.Cast(undo_redo_node);
 			if (!footprint) {
 				continue;
@@ -239,13 +250,13 @@ class Editor: TreeNode
 				break;
 			}	
 			
-			this[UNDO_REDO].Remove(uuid);
+			delete this[UNDO_REDO][uuid];
 		}
-				
-		// Adds to bottom of stack
-		this[UNDO_REDO].Add(value);
-	}
 		
+		string uuid_generated = string.Format("History:%1", this[UNDO_REDO].Children.Count());
+		this[UNDO_REDO][uuid_generated] = new EditorFootprint(uuid_generated, display_name, icon)
+	}
+				
 	void Update(float timeslice)
 	{
 		Input input = GetGame().GetInput();
@@ -311,27 +322,13 @@ class Editor: TreeNode
 			}
 			
 			foreach (EditorObject editor_object_to_place: Placing) {
-				EditorFootprint footprint = new EditorFootprint(UUID.Generate(), "Undo Place", Symbols.CLOCK_ROTATE_LEFT);
-				int tree_depth = editor_object_to_place.GetParentDepth();
-				footprint.Data.GetWriteContext().Write(tree_depth);
-				for (int i = tree_depth - 1; i >= 0; i--) {
-					TreeNode parent = editor_object_to_place.GetParentAtDepth(i);
-					footprint.Data.GetWriteContext().Write(parent.GetUUID());
-					footprint.Data.GetWriteContext().Write(parent.Type().ToString());
-				}
-
-				editor_object_to_place.Write(footprint.Data.GetWriteContext(), 0);
-				
+				InsertHistory(string.Format("Undo Place %1", editor_object_to_place.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, editor_object_to_place.CreateCopy());
 				this[EDITED_OBJECTS]["PlacedObjects"].Add(editor_object_to_place);
-	
-				// Synchronize to this id
 				this[EDITED_OBJECTS]["PlacedObjects"].Synchronize();
 				
 				// remove it from placing
 				Placing.RemoveItem(editor_object_to_place);
-				PlaySound(EditorSounds.PLOP);
-				
-				InsertAction(footprint);
+				PlaySound(EditorSounds.PLOP);				
 			}
 			
 		}
@@ -412,45 +409,7 @@ class Editor: TreeNode
 		if (input.LocalRelease_ID(UAZoomIn)) { 
 			m_Camera.FieldOfView = 1.0;
 		}
-		
-		if (GetGame().GetInput().LocalPress("EditorDeleteObject")) {
-			foreach (TreeNode editor_node_to_delete: TreeNode.SelectedObjects) {
-				if (!editor_node_to_delete.CanDelete()) {
-					continue;
-				}
 				
-				EditorFootprint footprint_delete = new EditorFootprint(UUID.Generate(), "Undo Delete", Symbols.CLOCK_ROTATE_LEFT);
-				int delete_tree_depth = editor_node_to_delete.GetParentDepth();
-				footprint_delete.Data.GetWriteContext().Write(delete_tree_depth);
-				for (int i_d = delete_tree_depth - 1; i_d >= 0; i_d--) {
-					TreeNode delete_parent = editor_node_to_delete.GetParentAtDepth(i_d);
-					footprint_delete.Data.GetWriteContext().Write(delete_parent.GetUUID());
-					footprint_delete.Data.GetWriteContext().Write(delete_parent.Type().ToString());
-				}
-
-				editor_node_to_delete.Write(footprint_delete.Data.GetWriteContext(), 0);
-				
-				this["EditedObjects"]["PlacedObjects"].Remove(editor_node_to_delete.GetUUID());
-	
-				// Synchronize to this id
-				this["EditedObjects"]["PlacedObjects"].Synchronize();
-				
-				// remove it from placing
-				TreeNode.SelectedObjects.RemoveItem(editor_node_to_delete);
-				
-				EditorObject editor_object_to_delete = EditorObject.Cast(editor_node_to_delete);
-				if (editor_object_to_delete) {
-					GetGame().ObjectDelete(editor_object_to_delete.GetObject());
-				}
-				
-				
-				delete editor_node_to_delete;
-				PlaySound(EditorSounds.HIGHLIGHT); // must co-exist
-				
-				InsertAction(footprint_delete);
-			}
-		}
-		
 		if (input.LocalPress("EditorToggleCursor")) {
 			bool cursor_state = !GetGame().GetUIManager().IsCursorVisible();
 			GetGame().GetUIManager().ShowCursor(cursor_state);
@@ -543,6 +502,7 @@ class Editor: TreeNode
 			
 			if (footprint.IsUndone()) {
 				footprint.Redo();
+				return;
 			}
 		}
 	}
