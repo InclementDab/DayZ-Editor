@@ -16,14 +16,10 @@ class EditorBrush: EditorCursorTool
 		m_Ring.Update();
 		
 		if (GetGame().GetInput().LocalPress_ID(UAFire)) {
-			
 			return false;
 		}
 		
 		if (GetGame().GetInput().LocalValue_ID(UAFire)) {
-			
-			//EditorObject editor_object = new EditorObject(UUID.Generate(), );
-						
 			vector matrix[4];
 			Math3D.MatrixIdentity4(matrix);
 			matrix[3] = raycast.Bounce.Position;
@@ -37,7 +33,6 @@ class EditorBrush: EditorCursorTool
 			GetDayZGame().GetEditor()["EditedObjects"]["BrushedObjects"].Add(editor_object);		
 			GetDayZGame().GetEditor().PlaySound(EditorSounds.PLOP);
 			//m_History.InsertAction(footprint);
-			
 			return false;
 		}
 		

@@ -2,7 +2,6 @@ class EditorButton: ScriptedWidgetEventHandler
 {	
 	protected EditorNode m_Node;
 	
-	// Assumed node is m_Master["SERVER"]["CMDS"]
 	reference string Node;
 	
 	protected Symbols m_Icon;

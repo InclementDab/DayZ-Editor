@@ -481,26 +481,4 @@ class EditorHud: ScriptView
 				
 		return string.Format("%1 [%2, %3: %4]", placeable_items[0].GetName(), split_string[0], component_type, component_index);
 	}*/
-				
-	// Dialog Control`
-	static ref DialogBase CurrentDialog;
-	
-	static bool IsDialogCommand(Widget w) 
-	{
-		return (CurrentDialog && CurrentDialog.GetLayoutRoot() && CurrentDialog.GetLayoutRoot().FindAnyWidget(w.GetName()));
-	}
-	
-	protected ref map<typename, vector> m_LastDialogPosition = new map<typename, vector>();
-	
-	void RegisterLastDialogPosition(ScriptView dialog)
-	{
-		float x, y;
-		dialog.GetLayoutRoot().GetPos(x, y);
-		m_LastDialogPosition[dialog.Type()] = Vector(x, y, 0);
-	}
-	
-	vector GetLastDialogPosition(ScriptView dialog)
-	{
-		return m_LastDialogPosition[dialog.Type()];
-	}
 }
