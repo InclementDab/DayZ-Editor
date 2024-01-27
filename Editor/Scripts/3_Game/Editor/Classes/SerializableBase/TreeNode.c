@@ -1,3 +1,11 @@
+enum ShortcutKeyType
+{
+	PRESS, // 100ms
+	DOUBLE, // woah
+	HOLD, // EEEEEK like a poop?
+	TOGGLE // ying and yang
+};
+
 class TreeNode: SerializableBase
 {
 	static const string PATH_SEPERATOR = "\\";
@@ -341,6 +349,7 @@ class TreeNode: SerializableBase
 	}
 		
 	// Good default to have, makes sense in XMLs
+	// todo: Probably going to be UUID
 	string GetShortcut()
 	{
 		return ClassName();

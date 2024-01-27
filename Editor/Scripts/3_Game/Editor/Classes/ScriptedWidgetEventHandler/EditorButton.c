@@ -38,21 +38,15 @@ class EditorButton: ScriptedWidgetEventHandler
 			m_Node = GetDayZGame().GetEditor().GetCommand(Node);
 			if (m_Node) {
 				m_Icon = m_Node.GetIcon();
-				m_Node.OnSelectionChanged.Insert(OnExecuted);				
-				m_Button.SetState(m_Node.GetDefaultState());
-				m_IconWidget.LoadImageFile(0, Ternary<Symbol>.If(m_Node.GetDefaultState(), m_Icon.Solid(), m_Icon.Regular()));
-				m_IconWidget.SetImage(0);
+				m_Node.OnSelectionChanged.Insert(OnExecuted);
+				m_Node.SetSelected(m_Node.GetDefaultState());
+				OnExecuted(m_Node);
 			}
 		}
-		
-#ifdef WORKBENCH
-		// debug display
-		//m_IconWidget.SetColor(m_LayoutRoot.GetColor());
-#endif
 	}
 				
 	void OnExecuted(TreeNode node)
-	{
+	{	
 		SymbolSize size = Ternary<SymbolSize>.If(node.IsSelected(), SymbolSize.SOLID, SymbolSize.REGULAR);
 		int color = Ternary<int>.If(node.IsSelected(), m_LayoutRoot.GetColor(),	ARGB(100, 255, 255, 255));
 		
@@ -74,8 +68,10 @@ class EditorButton: ScriptedWidgetEventHandler
 		}
 		
 		switch (m_Node.GetShortcutType()) {
+			case ShortcutKeyType.PRESS:
 			case ShortcutKeyType.HOLD: {
 				m_Node.SetSelected(true);
+				OnExecuted(m_Node);
 				return true;
 			}
 		}
@@ -92,6 +88,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		switch (m_Node.GetShortcutType()) {
 			case ShortcutKeyType.HOLD: {
 				m_Node.SetSelected(false);
+				OnExecuted(m_Node);
 				return true;
 			}
 		}
@@ -108,12 +105,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		switch (m_Node.GetShortcutType()) {
 			case ShortcutKeyType.TOGGLE: {
 				m_Node.SetSelected(!m_Node.IsSelected());
-				return true;
-			}
-			
-			case ShortcutKeyType.PRESS: {
-				m_Node.SetSelected(true);				
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(m_Node.SetSelected, false, 100, false);
+				OnExecuted(m_Node);
 				return true;
 			}
 		}
@@ -123,14 +115,17 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
+		Print("HA");
+		Print(m_Node);
 		if (button != 0 || !m_Node) {
 			return false;
 		}
 		
-		switch (m_Node.GetShortcutType()) {		
+		switch (m_Node.GetShortcutType()) {
 			case ShortcutKeyType.DOUBLE: {
-				m_Node.SetSelected(true);				
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(m_Node.SetSelected, false, 100, false);
+				m_Node.SetSelected(!m_Node.IsSelected());
+				Print(m_Node.IsSelected());
+				OnExecuted(m_Node);
 				return true;
 			}
 		}

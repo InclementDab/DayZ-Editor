@@ -17,7 +17,7 @@ FrameWidgetClass Root {
  {
   CanvasWidgetClass Whiteboard {
    ignorepointer 1
-   position 0 0
+   position -0.0008 0
    size 1 1
    halign center_ref
    valign center_ref
@@ -3176,6 +3176,7 @@ FrameWidgetClass Root {
        {
         FrameWidgetClass Undo {
          ignorepointer 1
+         color 0.8118 0.5059 0.5059 1
          position 0 0
          size 0 0
          halign center_ref
@@ -3230,6 +3231,7 @@ FrameWidgetClass Root {
         }
         FrameWidgetClass Redo {
          ignorepointer 1
+         color 0.5059 0.8118 0.5843 1
          position 0 0
          size 0 0
          hexactpos 1
