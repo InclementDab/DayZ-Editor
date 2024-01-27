@@ -92,8 +92,6 @@ class EditorHud: ScriptView
 			Menu.Show(false);
 		}
 		
-		float heading = GetDayZGame().GetEditor().GetCamera().GetDirection()[1];
-		
 		Whiteboard.Clear();
 		if (input.LocalHold_ID(UAFire) && EditorNode.SelectedObjects.Count() == 0 && !m_DraggedBar) {
 							

@@ -1,8 +1,6 @@
 class EditorCamera: ScriptedCamera
 {
 	static float UPDATE_ACCUMULATOR_INTERVAL = 0.5;
-
-	float Speed = 5.0;
 	
 	protected float m_ServerUpdateAccumulator;
 	float FieldOfView = 1.0;
@@ -36,7 +34,7 @@ class EditorCamera: ScriptedCamera
 		Input input = GetGame().GetInput();
 		m_LinearVelocity += Vector(input.LocalValue_ID(UAMoveRight) 	- input.LocalValue_ID(UAMoveLeft), 
 									input.LocalValue_ID(UAMoveUp) 		- input.LocalValue_ID(UAMoveDown), 
-									input.LocalValue_ID(UAMoveForward) 	- input.LocalValue_ID(UAMoveBack)) * timeSlice * Speed * (1 + input.LocalValue_ID(UATurbo) * 5.0);
+									input.LocalValue_ID(UAMoveForward) 	- input.LocalValue_ID(UAMoveBack)) * timeSlice * (1 + input.LocalValue_ID(UATurbo) * 5.0);
 		
 		vector view_delta = vector.Forward;
 		
@@ -97,7 +95,7 @@ class EditorCamera: ScriptedCamera
 		SetTransform(transform);	
 		
 		// Decay linear velocity
-		m_LinearVelocity = m_LinearVelocity * Math.Pow(GetDayZGame().GetEditor().GetProfileSettings().Smoothing, 2);
+		m_LinearVelocity = m_LinearVelocity * 0.25;
 		m_AngularVelocity = m_AngularVelocity * 0.5;
 		
 		// Set linear field of view

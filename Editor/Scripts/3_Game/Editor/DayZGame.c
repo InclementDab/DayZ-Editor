@@ -140,14 +140,21 @@ modded class DayZGame
 		return w_Editor;
 #endif
 		
+		Editor server = Editor.Cast(m_Master["SERVER"]);
 		if (IsServer()) {
-			return Editor.Cast(m_Master["SERVER"]);
+			return server;
 		}
 		
-		if (!m_Master["SERVER"] || !GetUserManager() || !GetUserManager().GetTitleInitiator()) {
+		if (!server) {
 			return null;
 		}
-				
-		return Editor.Cast(m_Master["SERVER"][GetUserManager().GetTitleInitiator().GetUid()]);
+		
+		if (!GetUserManager() || !GetUserManager().GetTitleInitiator()) {
+			return null;
+		}
+		
+		string uuid = GetUserManager().GetTitleInitiator().GetUid();
+		
+		return Editor.Cast(server[uuid]);
 	}
 }

@@ -229,14 +229,6 @@ class Editor: EditorServer
 			m_Camera.FieldOfView = 1.0;
 		}
 		
-		if (input.LocalPress_ID(UAZoomInOptics)) {
-			m_Camera.Speed += 0.1;
-		}
-		
-		if (input.LocalPress_ID(UAZoomOutOptics)) {
-			m_Camera.Speed -= 0.1;
-		}
-
 		if (GetGame().GetInput().LocalPress("EditorDeleteObject")) {
 			foreach (EditorNode editor_node_to_delete: EditorNode.SelectedObjects) {
 				if (!editor_node_to_delete.CanDelete()) {
