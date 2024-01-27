@@ -1,6 +1,8 @@
 // I think its wise... it was
 class CommandNode: TreeNode
 {
+	protected UAInput m_UAInput;
+	
 	void CommandNode(string uuid, string display_name, Symbols icon)
 	{
 #ifndef SERVER
@@ -20,12 +22,13 @@ class CommandNode: TreeNode
 				//Error("No input validated for " + Type().ToString());
 				return; // hoe ass bitch
 			}
-		}
+		}		
 		
 		switch (GetShortcutType()) {
 			case ShortcutKeyType.PRESS: {
-				if (m_UAInput.LocalClick()) {
+				if (m_UAInput.LocalPress()) {
 					SetSelected(true);
+					break;
 				}
 				
 				break;
@@ -52,7 +55,8 @@ class CommandNode: TreeNode
 			}
 			
 			case ShortcutKeyType.TOGGLE: {
-				if (m_UAInput.LocalClick()) {
+				if (m_UAInput.LocalPress()) {
+					Print("HI");
 					SetSelected(!IsSelected());
 				}
 				

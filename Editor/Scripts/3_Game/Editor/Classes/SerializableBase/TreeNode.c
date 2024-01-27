@@ -32,7 +32,6 @@ class TreeNode: SerializableBase
 	protected TreeNode m_Parent;
 	
 	protected TreeView m_NodeView; // Weak ref
-	protected UAInput m_UAInput;
 	
 	void TreeNode(string uuid, string display_name, Symbols icon)
 	{

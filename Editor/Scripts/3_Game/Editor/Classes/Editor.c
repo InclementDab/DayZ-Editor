@@ -82,6 +82,7 @@ class Editor: TreeNode
 		commands.Add(new UndoCommand("Undo", "Undo", Symbols.ROTATE_LEFT));
 		commands.Add(new UnlockCommand("Unlock", "Unlock", Symbols.LOCK_OPEN));
 		commands.Add(new WeatherCommand("Weather", "Weather", Symbols.CLOUD_SUN));
+		commands.Add(new CursorToggleCommand("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER));
 		Add(commands);
 		
 		TreeNode menus = new TreeNode(MENUS, "Menus", Symbols.SQUARE_LIST);

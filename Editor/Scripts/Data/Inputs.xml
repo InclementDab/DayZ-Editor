@@ -2,78 +2,78 @@
 <modded_inputs>
     <inputs>
         <actions>
-            <input name="CopyCommand" loc="Copy"/>
-            <input name="CutCommand" loc="Cut"/>
-            <input name="DeleteCommand" loc="Delete"/>
-            <input name="LockCommand" loc="Lock"/>
-            <input name="NewCommand" loc="New File"/>
-            <input name="OpenCommand" loc="Open File"/>
-            <input name="PasteCommand" loc="Paste"/>
-            <input name="RedoCommand" loc="Redo"/>
-            <input name="SaveAsCommand" loc="SaveAs"/>
-            <input name="SaveCommand" loc="Save File"/>
-            <input name="UndoCommand" loc="Undo"/>
-            <input name="UnlockCommand" loc="Unlock"/>
-            <input name="CursorToggleCommand" loc="Toggle Cursor"/>
+            <input name="Copy" loc="Copy"/>
+            <input name="Cut" loc="Cut"/>
+            <input name="Delete" loc="Delete"/>
+            <input name="Lock" loc="Lock"/>
+            <input name="New" loc="New File"/>
+            <input name="Open" loc="Open File"/>
+            <input name="Paste" loc="Paste"/>
+            <input name="Redo" loc="Redo"/>
+            <input name="SaveAs" loc="SaveAs"/>
+            <input name="Save" loc="Save File"/>
+            <input name="Undo" loc="Undo"/>
+            <input name="Unlock" loc="Unlock"/>
+            <input name="CursorToggle" loc="Toggle Cursor"/>
         </actions>
         
         <sorting name="Editor" loc="EDITOR">
-            <input name="CopyCommand"/>
-            <input name="CutCommand"/>
-            <input name="DeleteCommand"/>
-            <input name="LockCommand"/>
-            <input name="NewCommand"/>
-            <input name="OpenCommand"/>
-            <input name="PasteCommand"/>
-            <input name="RedoCommand"/>
-            <input name="SaveAsCommand"/>
-            <input name="SaveCommand"/>
-            <input name="UndoCommand"/>
-            <input name="UnlockCommand"/>
-            <input name="CursorToggleCommand"/>
+            <input name="Copy"/>
+            <input name="Cut"/>
+            <input name="Delete"/>
+            <input name="Lock"/>
+            <input name="New"/>
+            <input name="Open"/>
+            <input name="Paste"/>
+            <input name="Redo"/>
+            <input name="SaveAs"/>
+            <input name="Save"/>
+            <input name="Undo"/>
+            <input name="Unlock"/>
+            <input name="CursorToggle"/>
         </sorting>
     </inputs>
 
     <preset>
-        <input name="CopyCommand">
+        <input name="Copy">
             <btn name="kLControl">
                 <btn name="kC"/>
             </btn>
         </input>
-        <input name="CutCommand">
+        <input name="Cut">
             <btn name="kLControl">
                 <btn name="kX"/>
             </btn>
         </input>
-        <input name="DeleteCommand">
+        <input name="Delete">
             <btn name="kDelete"/>
         </input>
-        <input name="LockCommand">
+        <input name="Lock">
             <btn name="kLControl">
                 <btn name="kL"/>
             </btn>
         </input>
-        <input name="NewCommand">
+        <input name="New">
             <btn name="kLControl">
                 <btn name="kN"/>
             </btn>
         </input>
-        <input name="OpenCommand">
+        <input name="Open">
             <btn name="kLControl">
                 <btn name="kO"/>
             </btn>
         </input>
-        <input name="PasteCommand">
+        <input name="Paste">
             <btn name="kLControl">
                 <btn name="kV"/>
             </btn>
         </input>
-        <input name="RedoCommand">
+        <input name="Redo">
             <btn name="kLControl">
                 <btn name="kY"/>
             </btn>
         </input>
-        <input name="SaveAsCommand">
+        <input name="SaveAs">
             <btn name="kLControl" >
                 <event name="hold" />
             </btn>
@@ -81,22 +81,22 @@
                 <btn name="kS"/>
             </btn>
         </input>
-        <input name="SaveCommand">
+        <input name="Save">
             <btn name="kLControl">
                 <btn name="kS"/>
             </btn>
         </input>
-        <input name="UndoCommand">
+        <input name="Undo">
             <btn name="kLControl">
                 <btn name="kZ"/>
             </btn>
         </input>
-        <input name="UnlockCommand">
+        <input name="Unlock">
             <btn name="kLControl">
                 <btn name="kL"/>
             </btn>
         </input>
-        <input name="CursorToggleCommand">
+        <input name="CursorToggle">
             <btn name="kSpace"/>
         </input>
     </preset>
