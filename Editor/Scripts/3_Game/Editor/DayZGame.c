@@ -15,15 +15,6 @@ modded class DayZGame
 		m_Master.Synchronize();
 	}
 		
-	override void OnUpdate(bool doSim, float timeslice)
-	{
-		super.OnUpdate(doSim, timeslice);
-		
-		if (GetEditor()) {
-			GetEditor().Update(doSim, timeslice);
-		}
-	}
-	
 	// Hope you remembered to register it
 	EditorNode FindCommandbyType(typename type)
 	{

@@ -114,9 +114,18 @@ class EditorServer: EditorNode
 			this["PlaceableObjects"]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}
 #endif
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 	
-	void Update(bool doSim, float timeslice)
+	void ~EditorServer()
+	{
+		if (GetGame() && GetGame().GetUpdateQueue(CALL_CATEGORY_GUI)) {
+			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		}
+	}
+	
+	void Update(float timeslice)
 	{
 	}
 }
