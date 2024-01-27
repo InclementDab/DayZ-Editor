@@ -15,6 +15,7 @@ class EditorFootprint: TreeNode
 	{
 		m_IsUndone = true;
 		
+		Print("Undoing!");
 		int tree_depth;
 		if (!Data.GetReadContext().Read(tree_depth)) {
 			Error("Invalid depth");

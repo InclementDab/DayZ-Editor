@@ -226,9 +226,7 @@ class Editor: TreeNode
 		// What?
 		EnScript.SetClassVar(GetDayZGame(), "m_Editor", 0, this);
 	}
-	
-	static const int MAX_STACK_SIZE = 512;
-	
+		
 	void InsertAction(EditorFootprint value)
 	{			
 		foreach (string uuid, TreeNode undo_redo_node: this[UNDO_REDO].Children) {			
@@ -236,16 +234,16 @@ class Editor: TreeNode
 			if (!footprint) {
 				continue;
 			}
-			
+						
 			if (!footprint.IsUndone()) {
 				break;
 			}	
 			
-			this[UNDO_REDO].Children.Remove(uuid);
+			this[UNDO_REDO].Remove(uuid);
 		}
 				
 		// Adds to bottom of stack
-		this[UNDO_REDO].Children.Insert(value.GetUUID(), value);
+		this[UNDO_REDO].Add(value);
 	}
 		
 	void Update(float timeslice)
@@ -333,7 +331,7 @@ class Editor: TreeNode
 				Placing.RemoveItem(editor_object_to_place);
 				PlaySound(EditorSounds.PLOP);
 				
-				
+				InsertAction(footprint);
 			}
 			
 		}
