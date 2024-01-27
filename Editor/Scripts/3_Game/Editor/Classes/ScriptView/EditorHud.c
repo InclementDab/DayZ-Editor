@@ -47,6 +47,7 @@ class EditorHud: ScriptView
 		m_TemplateController.LeftListItems.Insert(editor.GetPlaceables().GetNodeView());
 		m_TemplateController.LeftListItems.Insert(editor.GetBrushes().GetNodeView());
 		m_TemplateController.RightListItems.Insert(editor.GetUndoRedo().GetNodeView());
+		m_TemplateController.RightListItems.Insert(editor.GetObjects().GetNodeView());
 
 		
 		//editor.GetNode("Brushes").LoadViews(m_TemplateController.LeftListItems);
