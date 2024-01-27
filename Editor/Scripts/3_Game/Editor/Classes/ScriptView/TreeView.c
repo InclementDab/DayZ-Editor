@@ -15,7 +15,7 @@ class TreeView: ScriptView
 	protected TreeNode m_Node;
 
 	void TreeView(TreeNode node)
-	{
+	{		
 		m_TemplateController = TreeViewController.Cast(m_Controller);
 		m_Node = node;
 		
@@ -90,6 +90,11 @@ class TreeView: ScriptView
 		name.ToLower();
 	
 		m_LayoutRoot.Show(name.Contains(filter));
+	}
+	
+	TreeNode GetSibling()
+	{
+		
 	}
 		
 	override void Update(float dt)

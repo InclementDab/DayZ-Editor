@@ -5,30 +5,27 @@ modded class DayZGame
 	static const int RPC_NODE_SYNC = 54365;
 	
 	protected ref TreeNode m_Server = new TreeNode("SERVER", "Editors", Symbols.CAMERA_SECURITY);
-	
+	protected ref Editor m_Editor;
+		
+	void DayZGame()
+	{
 #ifdef WORKBENCH
-	protected ref Editor w_Editor = new Editor("", "", "", null, null);
+		m_Editor = new Editor("WORKBENCH", "Debug", Symbols.CAMERA_SECURITY, null, null);
 #endif
+	}
 		
 	Editor GetEditor()
-	{		
-#ifdef WORKBENCH		
-		return w_Editor;
-#endif
-		
-		return m_Server[GetUserManager().GetTitleInitiator().GetUid()];
-	}
-	
-	void AddEditor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player)
 	{
-		Editor editor = new Editor(uuid, display_name, icon, identity, player);		
-		m_Server.Add(editor);
-		editor.Synchronize();
+#ifdef SERVER
+		return m_Server;
+#else
+		return m_Server[GetUserManager().GetTitleInitiator().GetUid()];
+#endif
 	}
 			
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{				
-		switch (rpc_type) {		
+		switch (rpc_type) {			
 			case RPC_REQUEST_SYNC: {
 				m_Server.Synchronize(sender);
 				break;
@@ -40,7 +37,6 @@ modded class DayZGame
 					break;
 				}
 
-				Print(tree_depth);
 				TreeNode current = m_Server;
 				for (int i = 0; i < tree_depth; i++) {
 					string uuid;

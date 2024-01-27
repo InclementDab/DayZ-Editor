@@ -1,5 +1,7 @@
 class TreeNode: SerializableBase
 {
+	static const string PATH_SEPERATOR = "\\";
+	
 	static ref array<TreeNode> SelectedObjects = {};	
 	static ref array<TreeNode> DirtyObjects = {};
 	
@@ -96,7 +98,7 @@ class TreeNode: SerializableBase
 		int tree_depth = GetParentDepth();
 		rpc.Write(tree_depth);
 
-		for (int i = tree_depth - 1; i >= 0; i--) {
+		for (int i = tree_depth; i >= 0; i--) {
 			TreeNode parent = GetParentAtDepth(i);
 			rpc.Write(parent.GetUUID());
 			rpc.Write(parent.Type().ToString());
@@ -129,15 +131,43 @@ class TreeNode: SerializableBase
 		if (!m_Children.Contains(uuid)) {
 			Error(string.Format("[%1:%2] did not contain child: %3", m_UUID, m_DisplayName, uuid));
 		}
+	
+		array<string> full_path = {};
+		uuid.Split(PATH_SEPERATOR, full_path);
+		TreeNode node = this;
+		for (int i = 0; i < full_path.Count(); i++) {
+			if (!node) {
+				Error("Could not find child with id " + full_path[i]);
+				break;
+			}
+			
+			node = node.GetChildren()[uuid];
+		}
 		
-		return m_Children[uuid];
+		return node;
 	}
 	
 	TreeNode GetNode(string uuid)
 	{
 		return this[uuid];
 	}
+	
+	// {uuid}{PATH_SEPERATOR}{uuid}
+	string GetFullPath()
+	{
+		string full_path;
+		int parent_depth = GetParentDepth();
+		for (int i = parent_depth - 1; i >= 0; i++) {
+			TreeNode node = GetParentAtDepth(i);
+			full_path += node.GetUUID();
+			if (i != 0) {
+				full_path += PATH_SEPERATOR;
+			}
+		}
 		
+		return full_path;
+	}
+	
 	map<string, ref TreeNode> GetChildren()
 	{
 		return m_Children;
@@ -157,7 +187,7 @@ class TreeNode: SerializableBase
 	{
 		return m_Parent;
 	}
-	
+		
 	void OnSynchronized()
 	{
 	}

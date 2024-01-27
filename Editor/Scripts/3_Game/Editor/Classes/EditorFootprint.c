@@ -23,7 +23,7 @@ class EditorHistory: set<ref EditorFootprint>
 	}
 }
 
-class EditorFootprint: Managed
+class EditorFootprint: TreeNode
 {
 	protected bool m_IsUndone;
 	
@@ -46,7 +46,7 @@ class EditorFootprint: Managed
 			return;
 		}
 
-		TreeNode current = GetDayZGame().GetEditor();
+		TreeNode current = GetParent();
 		for (int i = 0; i < tree_depth; i++) {
 			string uuid;
 			Data.GetReadContext().Read(uuid);

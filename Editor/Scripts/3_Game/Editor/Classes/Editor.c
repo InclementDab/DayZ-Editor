@@ -40,20 +40,56 @@ class Editor: TreeNode
 	
 	protected ref map<string, TreeNode> m_CommandShortcutMap = new map<string, TreeNode>();
 		
+	static const string EDITED_OBJECTS = "EditedObjects";
+	static const string COMMANDS = "Commands";
+	static const string UNDO_REDO = "UndoRedo";
+	static const string PLACEABLE_OBJECTS = "PlaceableObjects";
+	static const string BRUSHES = "Brushes";
+	
+	TreeNode GetObjects()
+	{
+		return this[EDITED_OBJECTS];
+	}
+	
+	TreeNode GetCommands()
+	{
+		return this[COMMANDS];
+	}
+	
+	TreeNode GetCommand(string command)
+	{
+		return this[COMMANDS][command];
+	}
+	
+	TreeNode GetUndoRedo()
+	{
+		return this[UNDO_REDO];
+	}
+	
+	TreeNode GetPlaceables()
+	{
+		return this[PLACEABLE_OBJECTS];
+	}
+	
+	TreeNode GetBrushes()
+	{
+		return this[BRUSHES];
+	}
+	
 	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
 		m_Identity = identity;
 		m_Player = player;	
 		
 		// Load all default categories and placements
-		TreeNode edited_objects = new TreeNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP);
+		TreeNode edited_objects = new TreeNode(EDITED_OBJECTS, "Edited Objects", Symbols.OBJECT_GROUP);
 		edited_objects.Add(new TreeNode("PlacedObjects", "Placed Objects", Symbols.HAND));
 		edited_objects.Add(new TreeNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
 		edited_objects.Add(new TreeNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
 		Add(edited_objects);
 		
 #ifndef SERVER
-		TreeNode commands = new TreeNode("Commands", "Commands", Symbols.COMMAND);
+		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);
 		commands.Add(new BoxSelectCommand("BoxSelectCommand", "Box Select", Symbols.SQUARE_DASHED));
 		commands.Add(new CircleSelectCommand("CircleSelectCommand", "Circle Select", Symbols.CIRCLE_DASHED));
 		commands.Add(new LassoSelectCommand("LassoSelectCommand", "Lasso Select", Symbols.LASSO));
@@ -62,7 +98,10 @@ class Editor: TreeNode
 		commands.Add(new RedoCommand("RedoCommand", "Redo", Symbols.ROTATE_RIGHT));
 		Add(commands);
 		
-		TreeNode placeable_objects = new TreeNode("PlaceableObjects", "Placeable Objects", Symbols.ADDRESS_BOOK);
+		TreeNode undo_redo = new TreeNode(UNDO_REDO, "History", Symbols.CLOCK_ROTATE_LEFT);
+		Add(undo_redo);
+		
+		TreeNode placeable_objects = new TreeNode(PLACEABLE_OBJECTS, "Placeable Objects", Symbols.ADDRESS_BOOK);
 		placeable_objects.Add(new TreeNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
 		placeable_objects.Add(new TreeNode("Plants", "Plants", Symbols.TREE));
 		placeable_objects.Add(new TreeNode("Rocks", "Rocks", Symbols.HILL_ROCKSLIDE));
@@ -77,11 +116,10 @@ class Editor: TreeNode
 		placeable_objects.Add(new TreeNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
 		Add(placeable_objects);
 		
-		TreeNode brushes = new TreeNode("Brushes", "Brushes", Symbols.BRUSH);
+		TreeNode brushes = new TreeNode(BRUSHES, "Brushes", Symbols.BRUSH);
 		brushes.Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
 		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
 		Add(brushes);
-#endif
 		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		
@@ -115,7 +153,7 @@ class Editor: TreeNode
 					category = "AI";
 				}
 				
-				this["PlaceableObjects"][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING));
+				this[PLACEABLE_OBJECTS][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING));
 		    }
 		}
 		
@@ -149,13 +187,14 @@ class Editor: TreeNode
 					category = "Rocks";
 				}
 			
-				this["PlaceableObjects"][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
+				this[PLACEABLE_OBJECTS][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
 			}
 		}
 
 		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
-			this["PlaceableObjects"]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
-		}
+			this[PLACEABLE_OBJECTS]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+		}		
+#endif
 	}
 
 	void ~Editor() 
@@ -188,6 +227,9 @@ class Editor: TreeNode
 			m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
 			m_Camera.SetActive(true);
 		}
+		
+		// What?
+		EnScript.SetClassVar(GetDayZGame(), "m_Editor", 0, this);
 	}
 		
 	void Update(float timeslice)
@@ -255,7 +297,7 @@ class Editor: TreeNode
 			}
 			
 			foreach (EditorObject editor_object_to_place: Placing) {
-				EditorFootprint footprint = new EditorFootprint();
+				EditorFootprint footprint = new EditorFootprint(UUID.Generate(), "Undo Place", Symbols.CLOCK_ROTATE_LEFT);
 				int tree_depth = editor_object_to_place.GetParentDepth();
 				footprint.Data.GetWriteContext().Write(tree_depth);
 				for (int i = tree_depth - 1; i >= 0; i--) {
@@ -362,7 +404,7 @@ class Editor: TreeNode
 					continue;
 				}
 				
-				EditorFootprint footprint_delete = new EditorFootprint();
+				EditorFootprint footprint_delete = new EditorFootprint(UUID.Generate(), "Undo Delete", Symbols.CLOCK_ROTATE_LEFT);
 				int delete_tree_depth = editor_node_to_delete.GetParentDepth();
 				footprint_delete.Data.GetWriteContext().Write(delete_tree_depth);
 				for (int i_d = delete_tree_depth - 1; i_d >= 0; i_d--) {
@@ -409,7 +451,7 @@ class Editor: TreeNode
 		}
 		
 		if (GetGame().GetInput().LocalPress("EditorToggleActive")) {
-			GetDayZGame().GetEditor().SetActive(!GetDayZGame().GetEditor().IsActive());
+			SetActive(!IsActive());
 		}
 		
 		Widget root_widget = EnScriptVar<Widget>.Get(GetGame().GetMission(), "m_HudRootWidget");
