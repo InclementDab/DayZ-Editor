@@ -43,7 +43,6 @@ class EditorNode: SerializableBase
 		EditorNodeView node_view = new EditorNodeView(this);
 		list_items.Insert(node_view);
 		m_NodeView = node_view;
-		
 		foreach (string uuid, EditorNode node: m_Children) {
 			node.LoadViews(node_view.GetTemplateController().ChildrenItems);
 		}

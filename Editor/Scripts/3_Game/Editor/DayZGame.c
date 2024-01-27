@@ -103,7 +103,7 @@ modded class DayZGame
 		Editor editor = new Editor(identity.GetPlainId(), identity.GetFullName(), Symbols.CAMERA.Regular(), identity, GetPlayer());
 		m_Server[identity.GetPlainId()] = editor;
 		
-		editor.Synchronize();
+		editor.OnSynchronized();
 	}
 		
 	static bool IsForbiddenItem(string model)

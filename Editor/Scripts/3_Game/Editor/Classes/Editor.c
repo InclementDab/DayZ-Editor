@@ -163,6 +163,7 @@ class Editor: EditorServer
 	
 	override void OnSynchronized()
 	{
+		delete m_Hud;
 		if (!m_Hud) {
 			m_Hud = new EditorHud(this);
 		}

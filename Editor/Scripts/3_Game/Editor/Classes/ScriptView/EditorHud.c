@@ -67,10 +67,9 @@ class EditorHud: ScriptView
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 		SetCursorWidget(Cursor);
 		
-		Print(editor["PlaceableObjects"]);
 		editor.GetNode("PlaceableObjects").LoadViews(m_TemplateController.LeftListItems);
 		editor.GetNode("Brushes").LoadViews(m_TemplateController.LeftListItems);
-		editor.LoadViews(m_TemplateController.RightListItems);
+		//editor.LoadViews(m_TemplateController.RightListItems);
 		editor.GetNode("EditedObjects").LoadViews(m_TemplateController.RightListItems);
 	}
 	
