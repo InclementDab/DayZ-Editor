@@ -59,8 +59,7 @@ class EditorMenuTab: ScriptedWidgetEventHandler
 		hud.Menu.SetScreenPos(x, y + h);
 		hud.Menu.Show(true);
 		
-		map<string, ref TreeNode> children = m_Node.GetChildren();
-		foreach (string uuid, TreeNode child: children) {
+		foreach (string uuid, TreeNode child: m_Node.Children) {
 			CommandNode command_node = CommandNode.Cast(child);
 			if (!command_node) {
 				continue;

@@ -18,9 +18,8 @@ class CommandMenuItem: ScriptViewTemplate<CommandMenuItemController>
 			ShortcutText.SetText(node.GetShortcutString());
 		}
 		
-		if (node.GetChildren().Count() > 0) {
-			map<string, ref TreeNode> nodes = node.GetChildren();
-			foreach (string uuid, TreeNode node1: nodes) {
+		if (node.Children.Count() > 0) {
+			foreach (string uuid, TreeNode node1: node.Children) {
 				//m_TemplateController.Children.Insert(node1.GetNodeView());
 			}
 			

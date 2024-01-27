@@ -26,7 +26,7 @@ class TreeNode: SerializableBase
 	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();
 
 	protected string m_UUID;	
-	protected ref map<string, ref TreeNode> m_Children = new map<string, ref TreeNode>();
+	ref map<string, ref TreeNode> Children = new map<string, ref TreeNode>();
 
 	protected string m_Icon, m_DisplayName;
 	protected bool m_IsSelected; // local
@@ -68,7 +68,7 @@ class TreeNode: SerializableBase
 				break;
 			}
 			
-			node = node.GetChildren()[uuid];
+			node = node.Children[uuid];
 		}
 		
 		return node != null;
@@ -81,20 +81,20 @@ class TreeNode: SerializableBase
 	
 	void Set(string uuid, notnull TreeNode node)
 	{
-		m_Children[uuid] = node;
+		Children[uuid] = node;
 
 		node.SetParent(this);
 	}
 	
 	void Remove(string uuid)
 	{
-		delete m_Children[uuid];
-		m_Children.Remove(uuid);
+		delete Children[uuid];
+		Children.Remove(uuid);
 	}
 	
 	TreeNode Get(string uuid)
 	{
-		if (!m_Children.Contains(uuid)) {
+		if (!Children.Contains(uuid)) {
 			Error(string.Format("[%1:%2] did not contain child: %3", m_UUID, m_DisplayName, uuid));
 		}
 	
@@ -107,7 +107,7 @@ class TreeNode: SerializableBase
 				break;
 			}
 			
-			node = node.GetChildren()[uuid];
+			node = node.Children[uuid];
 		}
 		
 		return node;
@@ -133,12 +133,7 @@ class TreeNode: SerializableBase
 		
 		return full_path;
 	}
-	
-	map<string, ref TreeNode> GetChildren()
-	{
-		return m_Children;
-	}
-	
+		
 	void SetParent(TreeNode parent)
 	{
 		m_Parent = parent;
@@ -197,8 +192,8 @@ class TreeNode: SerializableBase
 		serializer.Write(m_DisplayName);
 		serializer.Write(m_Icon);
 		
-		serializer.Write(m_Children.Count());
-		foreach (string uuid, TreeNode node: m_Children) {
+		serializer.Write(Children.Count());
+		foreach (string uuid, TreeNode node: Children) {
 			serializer.Write(node.GetUUID());
 			serializer.Write(node.Type().ToString());
 			
@@ -222,7 +217,7 @@ class TreeNode: SerializableBase
 			serializer.Read(uuid);
 			string type;
 			serializer.Read(type);
-			TreeNode node = m_Children[uuid];
+			TreeNode node = Children[uuid];
 			if (!node) {				
 				node = TreeNode.Cast(type.ToType().Spawn());
 				if (!node) {
@@ -231,7 +226,7 @@ class TreeNode: SerializableBase
 				}
 				
 				node.SetParent(this);
-				m_Children[uuid] = node;
+				Children[uuid] = node;
 			}
 			
 			node.Read(serializer, version);
@@ -308,7 +303,7 @@ class TreeNode: SerializableBase
 		
 		PrintFormat("[%4]%3[%1] %2:", m_UUID, m_DisplayName, tabs, depth);
 		
-		foreach (string uuid, TreeNode node: m_Children) {
+		foreach (string uuid, TreeNode node: Children) {
 			node.Debug(depth + 1);
 		}
 	}

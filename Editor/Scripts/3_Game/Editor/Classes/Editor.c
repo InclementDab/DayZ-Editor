@@ -35,9 +35,6 @@ class Editor: TreeNode
 	
 	protected vector m_CursorNormal = vector.Aside;
 	
-	// Stack of Undo / Redo Actions
-	protected ref EditorHistory m_History = new EditorHistory();
-	
 	protected ref map<string, TreeNode> m_CommandShortcutMap = new map<string, TreeNode>();
 		
 	static const string EDITED_OBJECTS = "EditedObjects";
@@ -229,6 +226,27 @@ class Editor: TreeNode
 		// What?
 		EnScript.SetClassVar(GetDayZGame(), "m_Editor", 0, this);
 	}
+	
+	static const int MAX_STACK_SIZE = 512;
+	
+	void InsertAction(EditorFootprint value)
+	{			
+		foreach (string uuid, TreeNode undo_redo_node: this[UNDO_REDO].Children) {			
+			EditorFootprint footprint = EditorFootprint.Cast(undo_redo_node);
+			if (!footprint) {
+				continue;
+			}
+			
+			if (!footprint.IsUndone()) {
+				break;
+			}	
+			
+			this[UNDO_REDO].Children.Remove(uuid);
+		}
+				
+		// Adds to bottom of stack
+		this[UNDO_REDO].Children.Insert(value.GetUUID(), value);
+	}
 		
 	void Update(float timeslice)
 	{
@@ -306,15 +324,16 @@ class Editor: TreeNode
 
 				editor_object_to_place.Write(footprint.Data.GetWriteContext(), 0);
 				
-				this["EditedObjects"]["PlacedObjects"].Add(editor_object_to_place);
+				this[EDITED_OBJECTS]["PlacedObjects"].Add(editor_object_to_place);
 	
 				// Synchronize to this id
-				this["EditedObjects"]["PlacedObjects"].Synchronize();
+				this[EDITED_OBJECTS]["PlacedObjects"].Synchronize();
 				
 				// remove it from placing
 				Placing.RemoveItem(editor_object_to_place);
 				PlaySound(EditorSounds.PLOP);
-				m_History.InsertAction(footprint);
+				
+				
 			}
 			
 		}
@@ -430,8 +449,7 @@ class Editor: TreeNode
 				delete editor_node_to_delete;
 				PlaySound(EditorSounds.HIGHLIGHT); // must co-exist
 				
-				
-				m_History.InsertAction(footprint_delete);
+				InsertAction(footprint_delete);
 			}
 		}
 		
@@ -504,7 +522,12 @@ class Editor: TreeNode
 		
 	void Undo()
 	{
-		foreach (EditorFootprint footprint: m_History) {
+		foreach (string uuid, TreeNode node: this[UNDO_REDO].Children) {
+			EditorFootprint footprint = EditorFootprint.Cast(node);
+			if (!footprint) {
+				continue;
+			}
+			
 			if (!footprint.IsUndone()) {
 				footprint.Undo();
 				return;
@@ -514,17 +537,22 @@ class Editor: TreeNode
 	
 	void Redo()
 	{
-		for (int i = m_History.Count() - 1; i >= 0; i--) {
-			if (m_History[i] && m_History[i].IsUndone()) {
-				m_History[i].Redo();
-				return;
+		for (int i = this[UNDO_REDO].Children.Count() - 1; i >= 0; i--) {
+			EditorFootprint footprint = EditorFootprint.Cast(this[UNDO_REDO].Children.GetElement(i));
+			if (!footprint) {
+				continue;
+			}
+			
+			if (footprint.IsUndone()) {
+				footprint.Redo();
 			}
 		}
 	}
 	
 	bool CanUndo() 
 	{
-		foreach (EditorFootprint footprint: m_History) {
+		foreach (string uuid, TreeNode node: this[UNDO_REDO].Children) {
+			EditorFootprint footprint = EditorFootprint.Cast(node);
 			if (footprint && !footprint.IsUndone()) {
 				return true;
 			}
@@ -535,8 +563,9 @@ class Editor: TreeNode
 	
 	bool CanRedo() 
 	{
-		for (int i = m_History.Count() - 1; i >= 0; i--) {
-			if (m_History[i] && m_History[i].IsUndone()) {
+		for (int i = this[UNDO_REDO].Children.Count() - 1; i >= 0; i--) {
+			EditorFootprint footprint = EditorFootprint.Cast(this[UNDO_REDO].Children.GetElement(i));
+			if (footprint && footprint.IsUndone()) {
 				return true;
 			}
 		}
